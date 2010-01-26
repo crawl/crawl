@@ -113,7 +113,7 @@ void religion_turn_end();
 
 int get_tension(god_type god = you.religion, bool count_travelling = true);
 
-void do_god_gift(bool prayed_for = false, bool force = false);
+bool do_god_gift(bool prayed_for = false, bool forced = false);
 
 std::vector<god_type> temple_god_list();
 

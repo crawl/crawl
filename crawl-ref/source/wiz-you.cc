@@ -891,5 +891,6 @@ void wizard_get_god_gift (void)
         return;
     }
 
-    do_god_gift(false, true);
+    if (!do_god_gift(false, true))
+        mpr("Nothing happens.");
 }

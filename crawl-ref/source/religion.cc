@@ -1211,13 +1211,14 @@ static void _show_pure_deck_chances()
 }
 #endif
 
-static void _give_nemelex_gift(bool forced = false)
+static bool _give_nemelex_gift(bool forced = false)
 {
     // Nemelex will give at least one gift early.
-    if (!you.num_gifts[GOD_NEMELEX_XOBEH]
+    if (forced
+        || !you.num_gifts[GOD_NEMELEX_XOBEH]
            && x_chance_in_y(you.piety + 1, piety_breakpoint(1))
         || one_chance_in(3) && x_chance_in_y(you.piety + 1, MAX_PIETY)
-           && !you.attribute[ATTR_CARD_COUNTDOWN] || forced)
+           && !you.attribute[ATTR_CARD_COUNTDOWN])
     {
         misc_item_type gift_type;
 
@@ -1287,7 +1288,10 @@ static void _give_nemelex_gift(bool forced = false)
             you.num_gifts[you.religion]++;
             take_note(Note(NOTE_GOD_GIFT, you.religion));
         }
+        return (true);
     }
+
+    return (false);
 }
 
 void mons_make_god_gift(monsters *mon, god_type god)
@@ -1946,14 +1950,14 @@ static void _delayed_gift_callback(const mgen_data &mg, int &midx,
     take_note(Note(NOTE_GOD_GIFT, you.religion));
 }
 
-void do_god_gift(bool prayed_for, bool forced)
+bool do_god_gift(bool prayed_for, bool forced)
 {
     ASSERT(you.religion != GOD_NO_GOD);
 
     // Zin and Jiyva worshippers are the only ones who can pray to ask their
     // god for stuff.
     if (prayed_for != (you.religion == GOD_ZIN || you.religion == GOD_JIYVA))
-        return;
+        return (false);
 
     god_acting gdact;
 
@@ -1961,14 +1965,14 @@ void do_god_gift(bool prayed_for, bool forced)
     int old_gifts = you.num_gifts[you.religion];
 #endif
 
+    bool success = false;
+
     // Consider a gift if we don't have a timeout and weren't already
     // praying when we prayed.
-    if (!player_under_penance() && !you.gift_timeout
-        || (prayed_for && you.religion == GOD_ZIN || you.religion == GOD_JIYVA)
-            || forced)
+    if (forced
+        || !player_under_penance() && !you.gift_timeout
+        || prayed_for && you.religion == GOD_ZIN || you.religion == GOD_JIYVA)
     {
-        bool success = false;
-
         // Remember to check for water/lava.
         switch (you.religion)
         {
@@ -1977,24 +1981,28 @@ void do_god_gift(bool prayed_for, bool forced)
 
         case GOD_ZIN:
             //jmf: this "good" god will feed you (a la Nethack)
-            if (prayed_for && zin_sustenance())
+            if (forced || prayed_for && zin_sustenance())
             {
                 god_speaks(you.religion, "Your stomach feels content.");
                 set_hunger(6000, true);
                 lose_piety(5 + random2avg(10, 2) + (you.gift_timeout ? 5 : 0));
                 _inc_gift_timeout(30 + random2avg(10, 2));
+                success = true;
             }
             break;
 
         case GOD_NEMELEX_XOBEH:
-            _give_nemelex_gift(forced);
+            success = _give_nemelex_gift(forced);
             break;
 
         case GOD_OKAWARU:
         case GOD_TROG:
-            if ((you.piety > 130
-                && random2(you.piety) > 120 || forced)
-                && one_chance_in(4))
+        {
+            const bool need_missiles = _need_missile_gift(forced);
+
+            if (forced && (!need_missiles || one_chance_in(4))
+                || (!forced && you.piety > 130 && random2(you.piety) > 120
+                    && one_chance_in(4)))
             {
                 if (you.religion == GOD_TROG
                     || (you.religion == GOD_OKAWARU && coinflip()))
@@ -2021,7 +2029,7 @@ void do_god_gift(bool prayed_for, bool forced)
                 break;
             }
 
-            if (_need_missile_gift(forced))
+            if (need_missiles)
             {
                 success = acquirement(OBJ_MISSILES, you.religion);
                 if (success)
@@ -2036,9 +2044,10 @@ void do_god_gift(bool prayed_for, bool forced)
                 break;
             }
             break;
-
+        }
         case GOD_YREDELEMNUL:
-            if (random2(you.piety) >= piety_breakpoint(2) && one_chance_in(4) || forced)
+            if (forced
+                || random2(you.piety) >= piety_breakpoint(2) && one_chance_in(4))
             {
                 // The maximum threshold occurs at piety_breakpoint(5).
                 int threshold = (you.piety - piety_breakpoint(2)) * 20 / 9;
@@ -2046,11 +2055,12 @@ void do_god_gift(bool prayed_for, bool forced)
 
                 _delayed_monster_done(" grants you @an@ undead servant@s@!",
                                       "", _delayed_gift_callback);
+                success = true;
             }
             break;
 
         case GOD_JIYVA:
-            if (prayed_for && jiyva_grant_jelly() || forced)
+            if (forced || prayed_for && jiyva_grant_jelly())
             {
                 int jelly_count = 0;
                 for (radius_iterator ri(you.pos(), 9); ri; ++ri)
@@ -2089,6 +2099,7 @@ void do_god_gift(bool prayed_for, bool forced)
                         mprf(MSGCH_PRAY, "%s!",
                              count_created > 1 ? "Some jellies appear"
                                                : "A jelly appears");
+                        success = true;
                     }
 
                     lose_piety(5 * count_created);
@@ -2108,15 +2119,21 @@ void do_god_gift(bool prayed_for, bool forced)
             {
                 if (you.piety >= piety_breakpoint(0)
                     && !you.had_book[BOOK_NECROMANCY])
+                {
                     gift = BOOK_NECROMANCY;
+                }
                 else if (you.piety >= piety_breakpoint(2)
-                    && !you.had_book[BOOK_DEATH])
+                         && !you.had_book[BOOK_DEATH])
+                {
                     gift = BOOK_DEATH;
+                }
                 else if (you.piety >= piety_breakpoint(3)
-                    && !you.had_book[BOOK_UNLIFE])
+                         && !you.had_book[BOOK_UNLIFE])
+                {
                     gift = BOOK_UNLIFE;
+                }
             }
-            else if (you.piety > 160 && random2(you.piety) > 100 || forced)
+            else if (forced || you.piety > 160 && random2(you.piety) > 100)
             {
                 if (you.religion == GOD_SIF_MUNA)
                     gift = OBJ_RANDOM;
@@ -2156,7 +2173,7 @@ void do_god_gift(bool prayed_for, bool forced)
                                               MAKE_ITEM_RANDOM_RACE,
                                               0, 0, you.religion);
                     if (thing_created == NON_ITEM)
-                        return;
+                        return (false);
 
                     // Mark the book type as known to avoid duplicate
                     // gifts if players don't read their gifts for some
@@ -2203,6 +2220,7 @@ void do_god_gift(bool prayed_for, bool forced)
              you.num_gifts[you.religion]);
     }
 #endif
+    return (success);
 }
 
 std::string god_name(god_type which_god, bool long_name)
