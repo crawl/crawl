@@ -4286,7 +4286,7 @@ static bool _dont_use_invis()
         mpr("You can't turn invisible.");
         return (true);
     }
-    else if (get_contamination_level() > 0
+    else if (get_contamination_level() > 5
              && !yesno("Invisibility will do you no good right now; "
                        "use anyways?", false, 'n'))
     {
