@@ -2834,6 +2834,8 @@ void monsters::banish(const std::string &)
 {
     coord_def old_pos = pos();
 
+    if (mons_is_projectile(type))
+        return;
     if (!silenced(pos()) && can_speak())
         simple_monster_message(this, (" screams as " + pronoun(PRONOUN_NOCAP)
             + " is devoured by a tear in reality.").c_str(),

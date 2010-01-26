@@ -3043,7 +3043,7 @@ bool can_go_straight(const coord_def& p1, const coord_def& p2,
 // The default suitable() function for choose_random_nearby_monster().
 bool choose_any_monster(const monsters* mon)
 {
-    return (true);
+    return (!mons_is_projectile(mon->type));
 }
 
 // Find a nearby monster and return its index, including you as a
