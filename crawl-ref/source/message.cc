@@ -169,7 +169,8 @@ enum prefix_type
 {
     P_NONE,
     P_NEW_CMD, // new command, but no new turn
-    P_NEW_TURN
+    P_NEW_TURN,
+    P_MORE     // single-character more prompt
 };
 
 // Could also go with coloured glyphs.
@@ -185,6 +186,10 @@ glyph prefix_glyph(prefix_type p)
     case P_NEW_CMD:
         g.ch = '-';
         g.col = DARKGRAY;
+        break;
+    case P_MORE:
+        g.ch = '+';
+        g.col = channel_to_colour(MSGCH_PROMPT);
         break;
     default:
         g.ch = ' ';
@@ -213,7 +218,7 @@ class message_window
 
     int use_last_line() const
     {
-        return (!more_enabled() || use_first_col());
+        return (!more_enabled() || first_col_more());
     }
 
     int width() const
@@ -247,9 +252,8 @@ class message_window
     // Whether to show msgwin-full more prompts.
     bool more_enabled() const
     {
-        // TODO: implementation of more() is incomplete for
-        //       !Options.clear_messages.
-        return (crawl_state.show_more_prompt && Options.clear_messages);
+        return (crawl_state.show_more_prompt
+                && (Options.clear_messages || Options.show_more));
     }
 
     int make_space(int n)
@@ -285,11 +289,18 @@ class message_window
         show();
         int last_row = crawl_view.msgsz.y;
         cgotoxy(1, last_row, GOTO_MSG);
-        textcolor(LIGHTGREY);
-        if (use_first_col())
-            cprintf("+");
+        if (first_col_more())
+        {
+            glyph g = prefix_glyph(P_MORE);
+            formatted_string f;
+            f.add_glyph(g);
+            f.display();
+        }
         else
+        {
+            textcolor(channel_to_colour(MSGCH_PROMPT));
             cprintf("--more--");
+        }
         readkey_more();
     }
 
@@ -325,6 +336,11 @@ public:
     {
         lines.clear();
         lines.resize(height());
+    }
+
+    bool first_col_more() const
+    {
+        return use_first_col();
     }
 
     bool use_first_col() const
