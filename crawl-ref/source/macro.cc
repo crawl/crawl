@@ -1148,10 +1148,8 @@ command_type key_to_command(int key, KeymapContext context)
     if (it == key_map.end())
         return CMD_NO_CMD;
 
-    command_type cmd = static_cast<command_type>(it->second);
-
+    const command_type cmd = static_cast<command_type>(it->second);
     ASSERT(context_for_command(cmd) == context);
-
 
     return cmd;
 }

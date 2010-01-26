@@ -1733,8 +1733,8 @@ static void _save_game_base()
     }
 
     /* tile dolls (empty for ASCII)*/
-    std::string dollFile = get_savedir_filename(you.your_name, "", "tdl");
 #ifdef USE_TILE
+    std::string dollFile = get_savedir_filename(you.your_name, "", "tdl");
     // Save the current equipment into a file.
     FILE *dollf = fopen(dollFile.c_str(), "w+");
     if (dollf)

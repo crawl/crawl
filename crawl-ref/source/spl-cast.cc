@@ -587,11 +587,8 @@ static int _get_dist_to_nearest_monster()
         if (mon == NULL)
             continue;
 
-        if (!mon->visible_to(&you)
-            || mons_is_unknown_mimic(mon))
-        {
+        if (!mon->visible_to(&you) || mons_is_unknown_mimic(mon))
             continue;
-        }
 
         // Plants/fungi don't count.
         if (mons_class_flag(mon->type, M_NO_EXP_GAIN))
@@ -999,7 +996,7 @@ static void _try_monster_cast(spell_type spell, int powc,
         mon->foe = MHITNOT;
     else if (!monster_at(spd.target))
     {
-        if (spd.isMe)
+        if (spd.isMe())
             mon->foe = MHITYOU;
         else
             mon->foe = MHITNOT;
@@ -1133,25 +1130,29 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
         const int range = calc_spell_range(spell, powc, false);
 
+        std::string title = "Casting: <white>";
+        title += spell_title(spell);
+        title += "</white>";
+
         if (!spell_direction(spd, beam, dir, targ, range,
                              needs_path, true, dont_cancel_me, prompt,
+                             title.c_str(),
                              testbits(flags, SPFLAG_NOT_SELF)))
         {
             return (SPRET_ABORT);
         }
 
-        if (spd.isMe && spell == SPELL_MEPHITIC_CLOUD)
+        if (spell == SPELL_MEPHITIC_CLOUD
+            && spd.isMe()
+            && i_feel_safe(false, false, true, 1)
+            && !yesno("Really target yourself?", false, 'n'))
         {
-            if (i_feel_safe(false, false, true, 1)
-                && !yesno("Really target yourself?", false, 'n'))
-            {
                 return (SPRET_ABORT);
-            }
         }
 
         beam.range = calc_spell_range(spell, powc, true);
 
-        if (testbits(flags, SPFLAG_NOT_SELF) && spd.isMe)
+        if (testbits(flags, SPFLAG_NOT_SELF) && spd.isMe())
         {
             if (spell == SPELL_TELEPORT_OTHER || spell == SPELL_POLYMORPH_OTHER
                 || spell == SPELL_BANISHMENT)
