@@ -66,7 +66,7 @@ bool is_feature(int feature, const coord_def& where)
     case 'W':
         return is_waypoint(where);
     case 'I':
-        return is_stash(where.x, where.y);
+        return is_stash(where);
     case '_':
         switch (grid)
         {

@@ -316,12 +316,12 @@ unsigned char is_waypoint(const coord_def &p)
     return curr_waypoints[p.x][p.y];
 }
 
-inline bool is_stash(const LevelStashes *ls, int x, int y)
+inline bool is_stash(const LevelStashes *ls, const coord_def& p)
 {
     if (!ls)
         return (false);
 
-    const Stash *s = ls->find_stash(x, y);
+    const Stash *s = ls->find_stash(p.x, p.y);
     return s && s->enabled;
 }
 
@@ -1363,7 +1363,7 @@ void travel_pathfind::get_features()
                     && !feat_is_water(feature)
                     && feature != DNGN_LAVA)
                 || is_waypoint(dc)
-                || is_stash(ls, dc.x, dc.y)
+                || is_stash(ls, dc)
                 || is_trap(dc))
             {
                 features->push_back(dc);
@@ -1535,7 +1535,7 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
                        && !feat_is_water(feature)
                        && feature != DNGN_LAVA
                     || is_waypoint(dc)
-                    || is_stash(ls, dc.x, dc.y)))
+                    || is_stash(ls, dc)))
             {
                 features->push_back(dc);
             }

@@ -108,7 +108,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
         while (true)
         {
             direction(beam, DIR_TARGET, TARG_ANY, -1, false, false, false,
-                     false, "Blink to where?");
+                      false, NULL, "Blink to where?");
 
             if (!beam.isValid || beam.target == you.pos())
             {
@@ -769,7 +769,7 @@ static int _healing_spell(int healed, bool divine_ability,
                                       you.religion == GOD_ELYVILON ?
                                             TARG_ANY : TARG_FRIEND,
                                       LOS_RADIUS,
-                                      false, true, true, "Heal whom?");
+                                      false, true, true, NULL, "Heal whom?");
     }
     else
     {

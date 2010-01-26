@@ -546,21 +546,22 @@ static int _create_plant(coord_def & target, int hp_adjust = 0)
 
 bool sunlight()
 {
-    int c_size = 5;
-    int x_offset[] = {-1, 0, 0, 0, 1};
-    int y_offset[] = { 0,-1, 0, 1, 0};
+    const int c_size = 5;
+    const int x_offset[] = {-1, 0, 0, 0, 1};
+    const int y_offset[] = { 0,-1, 0, 1, 0};
 
     dist spelld;
 
     bolt temp_bolt;
     temp_bolt.colour = YELLOW;
+
     direction(spelld, DIR_TARGET, TARG_HOSTILE, LOS_RADIUS, false, false,
-              false, false, "Select sunlight destination");
+              false, false, NULL, "Select sunlight destination.");
 
     if (!spelld.isValid)
         return (false);
 
-    coord_def base = spelld.target;
+    const coord_def base = spelld.target;
 
     int evap_count  = 0;
     int plant_count = 0;
@@ -667,7 +668,7 @@ bool sunlight()
         }
     }
 
-    // We damage clousd for a large radius, though.
+    // We damage clouds for a large radius, though.
     for (radius_iterator ai(base, 7); ai; ++ai)
     {
         if (env.cgrid(*ai) != EMPTY_CLOUD)
