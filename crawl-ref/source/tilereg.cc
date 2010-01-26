@@ -2142,7 +2142,7 @@ bool DungeonRegion::update_alt_text(std::string &alt)
     else
     {
         // For plain floor, output the stash description.
-        std::string stash = get_stash_desc(gc.x, gc.y);
+        const std::string stash = get_stash_desc(gc);
         if (!stash.empty())
             inf.body << "$" << stash;
     }
