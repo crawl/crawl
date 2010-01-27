@@ -1232,7 +1232,7 @@ void DungeonRegion::draw_minibars()
         ShapeBuffer buff;
 
         if (Options.tile_show_minimagicbar
-            && you.magic_points < you.max_magic_points)
+            && you.max_magic_points > 0)
         {
             static const VColour magic(0, 0, 255, 255);
             static const VColour magic_spent(0, 0, 0, 255);
@@ -1280,7 +1280,6 @@ void DungeonRegion::draw_minibars()
                      hp_colour == RED    ? wounded :
                      hp_colour == YELLOW ? damaged
                                          : healthy);
-
 
             buff.add(mx / 2 + health_divider,
                      my / 2 + healthbar_offset,
