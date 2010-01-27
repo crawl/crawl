@@ -377,6 +377,8 @@ public:
     actor_type atype() const { return ACT_PLAYER; }
     monsters* as_monster() { return NULL; }
     player* as_player() { return this; }
+    const monsters* as_monster() const { return NULL; }
+    const player* as_player() const { return this; }
 
     god_type  deity() const;
     bool      alive() const;
