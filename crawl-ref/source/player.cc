@@ -6945,11 +6945,12 @@ bool player::visible_to(const actor *looker) const
     if (this == looker)
         return (can_see_invisible() || !invisible());
 
-    const monsters* mon = dynamic_cast<const monsters*>(looker);
+    const monsters* mon = looker->as_monster();
     return (!invisible()
             || in_water()
             || mon->can_see_invisible()
-            || mons_sense_invis(mon));
+            || mons_sense_invis(mon)
+               && circle_def(pos(), 4, C_ROUND).contains(mon->pos()));
 }
 
 bool player::backlit(bool check_haloed) const
