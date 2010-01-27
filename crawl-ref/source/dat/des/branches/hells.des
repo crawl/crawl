@@ -11,6 +11,7 @@ function dis_setup(e)
    e.lflags("no_tele_control")
    e.lua_marker('O', item_pickup_change_flags {
                      level_flags="!no_tele_control", item="auto" } )
+   e.kmask('O = no_item_gen')
 -- turn granite statues into iron statues
 -- you still have to colour the statues, if desired
    dgn.set_feature_desc_short("granite statue", "iron statue")
@@ -24,6 +25,7 @@ function geh_setup(e)
    e.lflags("no_tele_control")
    e.lua_marker('O', item_pickup_change_flags {
                      level_flags="!no_tele_control", item="auto" } )
+   e.kmask('O = no_item_gen')
    e.lrockcol("brown")
    e.lfloorcol("darkgrey")
 --   e.lrocktile("???")
@@ -43,6 +45,7 @@ function coc_setup(e)
    e.lflags("no_tele_control")
    e.lua_marker('O', item_pickup_change_flags {
                      level_flags="!no_tele_control", item="auto" } )
+   e.kmask('O = no_item_gen')
    e.lrockcol("lightgrey")
    e.lfloorcol("white")
 --   e.lrocktile("???")
@@ -63,6 +66,7 @@ function tar_setup(e)
    e.lflags("no_tele_control")
    e.lua_marker('O', item_pickup_change_flags {
              level_flags="!no_tele_control", item="auto" } )
+   e.kmask('O = no_item_gen')
 end
 }}
 
