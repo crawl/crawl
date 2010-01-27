@@ -1610,6 +1610,7 @@ enum targ_mode_type
     TARG_ENEMY,  // hostile + neutral
     TARG_FRIEND,
     TARG_HOSTILE,
+    TARG_HOSTILE_SUBMERGED, // Target hostiles including submerged ones
     TARG_NUM_MODES
 };
 
