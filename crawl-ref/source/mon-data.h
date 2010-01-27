@@ -1186,7 +1186,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_MERFOLK_IMPALER, 'm', LIGHTBLUE, "merfolk impaler",
-    M_WARM_BLOOD,
+    M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     500, 8, MONS_MERFOLK, MONS_MERFOLK, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 26}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1199,7 +1199,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_MERFOLK_JAVELINEER, 'm', LIGHTGREY, "merfolk javelineer",
-    M_WARM_BLOOD | M_ARCHER,
+    M_WARM_BLOOD | M_ARCHER | M_SPEAKS,
     MR_NO_FLAGS,
     500, 8, MONS_MERFOLK, MONS_MERFOLK, MH_NATURAL, -4,
     { {AT_SHOOT, AF_PLAIN, 16}, {AT_HIT, AF_PLAIN, 17}, AT_NO_ATK, AT_NO_ATK },
@@ -1211,7 +1211,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_MERFOLK_AQUAMANCER, 'm', GREEN, "merfolk aquamancer",
-    M_WARM_BLOOD | M_SPELLCASTER | M_ACTUAL_SPELLS,
+    M_WARM_BLOOD | M_SPELLCASTER | M_ACTUAL_SPELLS | M_SPEAKS,
     MR_NO_FLAGS,
     500, 8, MONS_MERFOLK, MONS_MERFOLK, MH_NATURAL, -4,
     { {AT_HIT, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
