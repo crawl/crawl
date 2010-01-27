@@ -111,6 +111,14 @@ num8 NUM8
 num9 NUM9
 tried TRIED
 
+%rim 1
+demon_num1 DEMON_NUM1
+demon_num2 DEMON_NUM2
+demon_num3 DEMON_NUM3
+demon_num4 DEMON_NUM4
+demon_num5 DEMON_NUM5
+%rim 0
+
 slot_eq ITEM_SLOT_EQUIP
 slot_cursed ITEM_SLOT_CURSED
 slot_eq_cursed ITEM_SLOT_EQUIP_CURSED

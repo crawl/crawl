@@ -1029,6 +1029,21 @@ void DungeonRegion::pack_foreground(unsigned int bg, unsigned int fg, int x, int
         else if (mdam_flag == TILE_FLAG_MDAM_ADEAD)
             m_buf_main.add(TILE_MDAM_ALMOST_DEAD, x, y);
     }
+
+    if (fg & TILE_FLAG_DEMON)
+    {
+        unsigned int demon_flag = fg & TILE_FLAG_DEMON;
+        if (demon_flag == TILE_FLAG_DEMON_1)
+            m_buf_main.add(TILE_DEMON_NUM1, x, y);
+        else if (demon_flag == TILE_FLAG_DEMON_2)
+            m_buf_main.add(TILE_DEMON_NUM2, x, y);
+        else if (demon_flag == TILE_FLAG_DEMON_3)
+            m_buf_main.add(TILE_DEMON_NUM3, x, y);
+        else if (demon_flag == TILE_FLAG_DEMON_4)
+            m_buf_main.add(TILE_DEMON_NUM4, x, y);
+        else if (demon_flag == TILE_FLAG_DEMON_5)
+            m_buf_main.add(TILE_DEMON_NUM5, x, y);
+    }
 }
 
 void DungeonRegion::pack_cursor(cursor_type type, unsigned int tile)
