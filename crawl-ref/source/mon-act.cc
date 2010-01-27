@@ -2845,8 +2845,15 @@ static bool _mon_can_move_to_pos(const monsters *monster,
     }
 
     // Wandering mushrooms don't move while you are looking.
-    if (monster->type == MONS_WANDERING_MUSHROOM && you.see_cell(targ))
-        return (false);
+    if (monster->type == MONS_WANDERING_MUSHROOM)
+    {
+        if (!monster->friendly() && you.see_cell(targ)
+             || mon_enemies_around(monster))
+        {
+            return false;
+        }
+
+    }
 
     // Water elementals avoid fire and heat.
     if (monster->type == MONS_WATER_ELEMENTAL
