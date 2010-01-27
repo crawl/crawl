@@ -644,9 +644,12 @@ static bool _mons_check_foe(monsters *mon, const coord_def& p,
     return (false);
 }
 
+extern int snmf_calls;
+
 // Choose random nearest monster as a foe.
 void _set_nearest_monster_foe(monsters *mon)
 {
+    snmf_calls++;
     const bool friendly = mon->friendly();
     const bool neutral  = mon->neutral();
 

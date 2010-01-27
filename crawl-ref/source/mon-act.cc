@@ -2079,8 +2079,10 @@ static void _handle_monster_move(monsters *monster)
 // This is the routine that controls monster AI.
 //
 //---------------------------------------------------------------
+int snmf_calls;
 void handle_monsters()
 {
+    snmf_calls = 0;
     // Keep track of monsters that have already moved and don't allow
     // them to move again.
     memset(immobile_monster, 0, sizeof immobile_monster);
@@ -2111,6 +2113,8 @@ void handle_monsters()
     // monsters get their actions in the next round.
     for (int i = 0; i < MAX_MONSTERS; i++)
         menv[i].flags &= ~MF_JUST_SUMMONED;
+
+    dprf("Number of calls to _snmf: %d", snmf_calls);
 }
 
 static bool _jelly_divide(monsters *parent)
