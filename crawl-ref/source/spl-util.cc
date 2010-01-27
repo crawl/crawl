@@ -644,9 +644,12 @@ int apply_random_around_square(cell_func cf, const coord_def& where,
 int apply_one_neighbouring_square(cell_func cf, int power, actor *agent)
 {
     dist bmove;
+    direction_chooser_args args;
+    args.restricts = DIR_DIR;
+    args.mode = TARG_ANY;
 
     mpr("Which direction? [ESC to cancel]", MSGCH_PROMPT);
-    direction(bmove, DIR_DIR, TARG_ENEMY);
+    direction(bmove, args);
 
     if (!bmove.isValid)
     {
@@ -739,6 +742,8 @@ void apply_area_cloud( cloud_func func, const coord_def& where,
 
 // Select a spell direction and fill dist and pbolt appropriately.
 // Return false if the user canceled, true otherwise.
+// FIXME: this should accept a direction_chooser_args directly rather
+// than move the arguments into one.
 bool spell_direction( dist &spelld, bolt &pbolt,
                       targetting_type restrict, targ_mode_type mode,
                       int range,
@@ -749,9 +754,21 @@ bool spell_direction( dist &spelld, bolt &pbolt,
     if (range < 1)
         range = (pbolt.range < 1) ? LOS_RADIUS : pbolt.range;
 
-    direction(spelld, restrict, mode, range, false, needs_path,
-              may_target_monster, may_target_self, target_prefix,
-              top_prompt, NULL, cancel_at_self);
+    direction_chooser_args args;
+    args.restricts = restrict;
+    args.mode = mode;
+    args.range = range;
+    args.just_looking = false;
+    args.needs_path = needs_path;
+    args.may_target_monster = may_target_monster;
+    args.may_target_self = may_target_self;
+    args.target_prefix = target_prefix;
+    if (top_prompt)
+        args.top_prompt = top_prompt;
+    args.behaviour = NULL;
+    args.cancel_at_self = cancel_at_self;
+
+    direction(spelld, args);
 
     if (!spelld.isValid)
     {
