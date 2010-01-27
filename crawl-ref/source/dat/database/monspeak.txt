@@ -1966,7 +1966,7 @@ _Snake_Pit_Donald_
 
 @The_monster@ says, "At least the fast ones don't have weapons."
 
-@The_monster@ says, "So, naga are stealthy? Don't make me laugh."
+@The_monster@ says, "So, nagas are stealthy? Don't make me laugh."
 
 @The_monster@ says, "I wish they'd hurry up and stop blocking the corridors."
 
