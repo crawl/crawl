@@ -1249,6 +1249,9 @@ void DungeonRegion::draw_minibars()
         if (!on_screen(you.pos()))
              return;
 
+        // FIXME: to_screen_coords could be made into two versions: one
+        // that gives coords by pixel (the current one), one that gives
+        // them by grid.
         coord_def player_on_screen;
         to_screen_coords(you.pos(), player_on_screen);
 
