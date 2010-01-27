@@ -1228,10 +1228,10 @@ void DungeonRegion::render()
  * Draws miniature health and magic points bars on top of the player tile.
  *
  * Drawing of either is governed by options tile_show_minihealthbar and
- * tile_show_minimagicbar. By defaulth, both are on.
+ * tile_show_minimagicbar. By default, both are on.
  *
  * Intended behaviour is to display both if either is not full. (Unless
- * the bar is toggled off by options). --Eino & felirx
+ * the bar is toggled off by options.) --Eino & felirx
  */
 void DungeonRegion::draw_minibars()
 {
@@ -1246,20 +1246,19 @@ void DungeonRegion::draw_minibars()
 
         ShapeBuffer buff;
 
-       if (!on_screen(you.pos()))
-            return;
+        if (!on_screen(you.pos()))
+             return;
 
         coord_def player_on_screen;
         to_screen_coords(you.pos(), player_on_screen);
 
-        static const float tile_width = wx / mx;
+        static const float tile_width  = wx / mx;
         static const float tile_height = wy / my;
 
         player_on_screen.x = player_on_screen.x / tile_width;
         player_on_screen.y = player_on_screen.y / tile_height;
 
-        if (Options.tile_show_minimagicbar
-            && you.max_magic_points > 0)
+        if (Options.tile_show_minimagicbar && you.max_magic_points > 0)
         {
             static const VColour magic(0, 0, 255, 255);
             static const VColour magic_spent(0, 0, 0, 255);
@@ -1279,9 +1278,7 @@ void DungeonRegion::draw_minibars()
                      magic_spent);
         }
         else
-        {
             healthbar_offset += bar_height;
-        }
 
         if (Options.tile_show_minihealthbar)
         {
@@ -1316,7 +1313,6 @@ void DungeonRegion::draw_minibars()
         }
 
         buff.draw();
-
     }
 }
 
