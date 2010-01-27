@@ -2767,8 +2767,7 @@ static std::string _monster_stat_description(const monsters& mon)
 
     // Magic resistance at MAG_IMMUNE, but not for Rs, as there is then
     // too much information leak.
-    if (mon.type != MONS_RAKSHASA && mon.type != MONS_MARA
-        && mon.type != MONS_RAKSHASA_FAKE && mon.type != MONS_MARA_FAKE)
+    if (mon.type != MONS_RAKSHASA && mon.type != MONS_RAKSHASA_FAKE)
     {
         if (mons_immune_magic(&mon))
             result << pronoun << " is immune to magical enchantments.$";
