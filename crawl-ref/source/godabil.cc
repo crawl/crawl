@@ -1242,7 +1242,7 @@ bool _possible_evolution(const monsters * input,
     return (true);
 }
 
-bool mons_is_evolveable(const monsters * mon)
+bool mons_is_evolvable(const monsters * mon)
 {
     monster_conversion temp;
     return _possible_evolution(mon, temp);
@@ -1281,6 +1281,25 @@ void _cost_summary(int oklob_count, int wandering_count, int total_in_range)
 bool evolve_flora()
 {
     monster_conversion upgrade;
+
+    // This is a little sloppy, but cancel early if nothing useful is in
+    // range.
+    bool in_range = false;
+    for (radius_iterator rad(&you.get_los()); rad; ++rad)
+    {
+        monsters * temp = monster_at(*rad);
+        if (temp && mons_is_evolvable(temp))
+        {
+            in_range = true;
+            break;
+        }
+    }
+
+    if (!in_range)
+    {
+        mprf("No evolvable flora in sight.");
+        return (false);
+    }
 
     dist spelld;
     direction(spelld, DIR_TARGET, TARG_EVOLVABLE_PLANTS, LOS_RADIUS,
