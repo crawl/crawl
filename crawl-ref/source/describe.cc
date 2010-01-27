@@ -351,6 +351,11 @@ void add_autoinscription( item_def &item, std::string ainscrip)
     // Remove previous randart inscription.
     _trim_randart_inscrip(item);
 
+    add_inscription(item, ainscrip);
+}
+
+void add_inscription(item_def &item, std::string inscrip)
+{
     if (!item.inscription.empty())
     {
         if (ends_with(item.inscription, ","))
@@ -359,7 +364,7 @@ void add_autoinscription( item_def &item, std::string ainscrip)
             item.inscription += ", ";
     }
 
-    item.inscription += ainscrip;
+    item.inscription += inscrip;
 }
 
 struct property_descriptor

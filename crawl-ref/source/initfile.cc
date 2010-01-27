@@ -937,6 +937,7 @@ void game_options::reset_options()
     note_messages.clear();
     autoinscriptions.clear();
     autoinscribe_artefacts = true;
+    autoinscribe_cursed = true;
     note_items.clear();
     note_skill_levels.clear();
     travel_stop_message.clear();
@@ -2593,6 +2594,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             std::pair<text_pattern,std::string>(thesplit[0], thesplit[1]));
     }
     else BOOL_OPTION(autoinscribe_artefacts);
+    else BOOL_OPTION(autoinscribe_cursed);
     else if (key == "map_file_name")
     {
         map_file_name = field;
