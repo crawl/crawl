@@ -34,16 +34,16 @@ Aaron Curtis                 Ryan Kusnery              Sigurd
 Denzi                        Jukka Kuusisto            Edgar Simo
 Rachel Elizabeth Dillon      Janne Lahdenperä          Alex Smith
 Mike Drinen                  Maciej Lapinski           Solf
-Kieron Dunbar                Jordan Lewis              Johan Strandell
-Micha Elsner                 Icy Lich                  Roman Sêk
-Christopher Evenstar         Markus Maier              William Tanksley, Jr.
-Ben Goetter                  Arien Malec               Marc H. Thoben
-Rob Grant                    Paul Maloney              Jared 'Twinge' Tinney
-John Greenberg               Neil 'Mu' Middleton       Matt Titus
-GreyKnight                   Shawn M Moore             Steven Wheeler
-Joshua Gross                 Eva Myers                 Thomas Willem
-Brian Haase                  Wille Mäntylä             Jeremey Wilson
-Shayne Halvorson             Erkki Nurmi               Yelve Yakut
-Ciaran Hamilton              Mattias Nyberg            Zooko
-Chris Hamons                 nyra
+Kieron Dunbar                Jordan Lewis              Michael Spang
+Micha Elsner                 Icy Lich                  Johan Strandell
+Christopher Evenstar         Markus Maier              Roman Sêk
+Ben Goetter                  Arien Malec               William Tanksley, Jr.
+Rob Grant                    Paul Maloney              Marc H. Thoben
+John Greenberg               Neil 'Mu' Middleton       Jared 'Twinge' Tinney
+GreyKnight                   Shawn M Moore             Matt Titus
+Joshua Gross                 Eva Myers                 Steven Wheeler
+Brian Haase                  Wille Mäntylä             Thomas Willem
+Shayne Halvorson             Erkki Nurmi               Jeremey Wilson
+Ciaran Hamilton              Mattias Nyberg            Yelve Yakut
+Chris Hamons                 nyra                      Zooko
 
