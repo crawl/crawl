@@ -1550,9 +1550,10 @@ static void _monster_add_energy(monsters *monster)
 {
     if (monster->speed > 0)
     {
-        // Randomise to make counting off monster moves harder:
+        // Randomise to make counting off monster moves harder
         const int energy_gained =
-            std::max(1, div_rand_round(monster->speed * you.time_taken, 10));
+            std::max(1, div_rand_round(monster->speed * you.time_taken, 10))
+            + random2(3) - 1;
         monster->speed_increment += energy_gained;
     }
 }
