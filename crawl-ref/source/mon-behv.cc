@@ -477,7 +477,7 @@ void handle_behaviour(monsters *mon)
                         }
 
                     if (tcount > 0)
-                        mpr("The kraken's tentacles slip beneath the water.", MSGCH_WARNING);
+                        mpr("The kraken's tentacles slip beneath the water.", MSGCH_WARN);
                 }
             }
             break;
@@ -917,7 +917,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
                 }
 
             if (tcount > 0)
-                mpr("The kraken's tentacles slip beneath the water.", MSGCH_WARNING);
+                mpr("The kraken's tentacles slip beneath the water.", MSGCH_WARN);
         }
 
         break;
