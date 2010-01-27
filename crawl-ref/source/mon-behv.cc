@@ -209,8 +209,8 @@ void handle_behaviour(monsters *mon)
     // XXX: This is currently expensive, so we don't want to do it
     //      every turn for every monster.
     if (!isPacified && mon->foe == MHITNOT
-        && mon->behaviour != MON_SLEEP
-        && (proxPlayer || one_chance_in(3))
+        && mon->behaviour != BEH_SLEEP
+        && (proxPlayer || one_chance_in(3)))
     {
         _set_nearest_monster_foe(mon);
     }
