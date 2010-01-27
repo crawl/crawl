@@ -257,7 +257,7 @@ void splash_with_acid(int acid_strength, bool corrode_items)
     int dam = 0;
     const bool wearing_cloak = player_wearing_slot(EQ_CLOAK);
 
-    for (int slot = EQ_CLOAK; slot <= EQ_BODY_ARMOUR; slot++)
+    for (int slot = EQ_MIN_ARMOUR; slot <= EQ_MAX_ARMOUR; slot++)
     {
         if (!player_wearing_slot(slot))
         {
