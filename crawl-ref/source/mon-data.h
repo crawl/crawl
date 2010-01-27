@@ -2368,19 +2368,7 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LITTLE
 },
 
-// eyes and spores ('G')
-{
-    MONS_GIANT_SPORE, 'G', GREEN, "giant spore",
-    M_NO_FLAGS,
-    MR_RES_POISON,
-    0, 10, MONS_PLANT, MONS_GIANT_SPORE, MH_PLANT, -3,
-    { {AT_HIT, AF_PLAIN, 1}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 1, 0, 0, 1 },
-    0, 10, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
-    I_PLANT, HT_LAND, FL_LEVITATE, 15, DEFAULT_ENERGY,
-    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL
-},
-
+// eyes ('G')
 {
     MONS_GIANT_EYEBALL, 'G', WHITE, "giant eyeball",
     M_NO_SKELETON,
@@ -4409,7 +4397,7 @@ static monsterentry mondata[] = {
     MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_LARGE
 },
 
-// ball lightning / orb of fire ('*')
+// explodey things / orb of fire ('*')
 {
     MONS_BALL_LIGHTNING, '*', LIGHTCYAN, "ball lightning",
     M_CONFUSED | M_SPELLCASTER | M_SPECIAL_ABILITY | M_INSUBSTANTIAL,
@@ -4420,6 +4408,18 @@ static monsterentry mondata[] = {
     0, 10, MST_STORM_DRAGON, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
     I_PLANT, HT_LAND, FL_LEVITATE, 20, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LITTLE
+},
+
+{
+    MONS_GIANT_SPORE, '*', GREEN, "giant spore",
+    M_NO_FLAGS,
+    MR_RES_POISON,
+    0, 10, MONS_PLANT, MONS_GIANT_SPORE, MH_PLANT, -3,
+    { {AT_HIT, AF_PLAIN, 1}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 1, 0, 0, 1 },
+    0, 10, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
+    I_PLANT, HT_LAND, FL_LEVITATE, 15, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_SMALL
 },
 
 {
