@@ -206,8 +206,14 @@ void handle_behaviour(monsters *mon)
 
     // Pacified monsters leaving the level prefer not to attack.
     // Others choose the nearest foe.
-    if (!isPacified && mon->foe == MHITNOT)
+    // XXX: This is currently expensive, so we don't want to do it
+    //      every turn for every monster.
+    if (!isPacified && mon->foe == MHITNOT
+        && mon->behaviour != MON_SLEEP
+        && (proxPlayer || one_chance_in(3))
+    {
         _set_nearest_monster_foe(mon);
+    }
 
     // Monsters do not attack themselves. {dlb}
     if (mon->foe == mon->mindex())
