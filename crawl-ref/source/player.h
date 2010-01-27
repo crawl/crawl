@@ -65,7 +65,7 @@ public:
   coord_def prev_move;
 
   int hunger;
-  FixedVector<char, NUM_EQUIP> equip;
+  FixedVector<signed char, NUM_EQUIP> equip;
 
   int hp;
   int hp_max;
