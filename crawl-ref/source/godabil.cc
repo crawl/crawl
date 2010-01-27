@@ -1213,10 +1213,9 @@ struct monster_conversion
 // evolve_flora() can upgrade it, and set up a monster_conversion
 // structure for it.  Return true (and fill in possible_monster) if the
 // monster can be upgraded, and return false otherwise.
-bool _possible_evolution(monsters * input,
+bool _possible_evolution(const monsters * input,
                          monster_conversion & possible_monster)
 {
-    possible_monster.base_monster = input;
     switch (input->mons_species())
     {
     case MONS_PLANT:
@@ -1243,6 +1242,12 @@ bool _possible_evolution(monsters * input,
     return (true);
 }
 
+bool mons_is_evolveable(const monsters * mon)
+{
+    monster_conversion temp;
+    return _possible_evolution(mon, temp);
+}
+
 void _collect_adjacent_monsters(std::vector<monster_conversion> & available,
                                 const coord_def &  center)
 {
@@ -1251,7 +1256,10 @@ void _collect_adjacent_monsters(std::vector<monster_conversion> & available,
         monsters * candidate = monster_at(*adjacent);
         monster_conversion monster_upgrade;
         if (candidate && _possible_evolution(candidate, monster_upgrade))
+        {
+            monster_upgrade.base_monster = candidate;
             available.push_back(monster_upgrade);
+        }
     }
 }
 
@@ -1272,142 +1280,85 @@ void _cost_summary(int oklob_count, int wandering_count, int total_in_range)
 
 bool evolve_flora()
 {
-    // Collect adjacent monsters
-    std::vector<monster_conversion> available_monsters;
-    _collect_adjacent_monsters(available_monsters, you.pos());
+    monster_conversion upgrade;
 
-    // No monsters in range can be upgraded.
-    if (available_monsters.empty() )
+    dist spelld;
+    direction(spelld, DIR_TARGET, TARG_EVOLVABLE_PLANTS, LOS_RADIUS,
+              false, false, false, false, NULL,
+              "Select plant or fungus to evolve.");
+
+    monsters * target = monster_at(spelld.target);
+
+    if (!target)
     {
-        mpr("No flora in range can be evolved.");
+        mprf("Must target a creature.");
         return (false);
     }
 
-    // What are the total costs of all adjacent upgrades?
-    int piety_cost = 0;
-    int fruit_cost = 0;
-
-    int oklob_generation = 0;
-    int wandering_generation = 0;
-
-    for (unsigned i=0; i < available_monsters.size(); i++)
+    if (!_possible_evolution(target, upgrade))
     {
-        piety_cost += available_monsters[i].piety_cost;
-        fruit_cost += available_monsters[i].fruit_cost;
-        switch(available_monsters[i].new_type)
-        {
-        case MONS_OKLOB_PLANT:
-            oklob_generation++;
-            break;
-        case MONS_WANDERING_MUSHROOM:
-            wandering_generation++;
-            break;
+        if (mons_is_plant(target))
+            simple_monster_message(target, " has already reached the pinnacle of evolution.");
+        else
+            mprf("Only plants or fungi may be upgraded.");
 
-        default:
-            break;
-        }
+        return (false);
     }
 
-
     std::vector<std::pair<int, int> > collected_fruit;
-    int total_fruit = _collect_fruit(collected_fruit);
-    int useable_fruit = std::min(total_fruit, fruit_cost);
-
-    _cost_summary(useable_fruit, wandering_generation, available_monsters.size());
-
-    crawl_state.darken_range = 1;
-    viewwindow(false, false);
-
-    int target_fruit = useable_fruit;
-    // Ask the user how many fruit to use
-    if (useable_fruit > 1)
+    if (upgrade.fruit_cost)
     {
-        if(!_prompt_amount(useable_fruit, target_fruit,
-                           "How many oklobs will you create?"))
+        int total_fruit = _collect_fruit(collected_fruit);
+
+        if (total_fruit < upgrade.fruit_cost)
         {
-            crawl_state.darken_range = -1;
-            viewwindow(false,false);
+            mprf("Not enough fruit available.");
             return (false);
         }
     }
-    else
+
+    if (upgrade.piety_cost && upgrade.piety_cost > you.piety)
     {
-        delay(500);
+        mprf("Not enough piety");
+        return (false);
     }
 
-    crawl_state.darken_range = -1;
-    viewwindow(false, false);
-
-    int fruit_used = target_fruit;
-    int reduction = fruit_cost - target_fruit;
-
-    if (int(available_monsters.size()) <= reduction)
+    switch (target->type)
     {
-        mprf("Not enough fruit available.");
-        return false;
+    case MONS_PLANT:
+    case MONS_BUSH:
+        simple_monster_message(target, " can now spit acid.");
+        break;
+
+    case MONS_FUNGUS:
+    case MONS_BALLISTOMYCETE:
+    case MONS_TOADSTOOL:
+        simple_monster_message(target, " can now pick up its mycelia and move.");
+        break;
+
+    default:
+        break;
     }
 
-    int plants_evolved = 0;
-    int toadstools_evolved = 0;
-    int fungi_evolved = 0;
+    target->upgrade_type(upgrade.new_type, true, true);
+    target->god = GOD_FEDHAS;
+    target->attitude = ATT_FRIENDLY;
+    target->flags |= MF_NO_REWARD;
+    target->flags |= MF_ATT_CHANGE_ATTEMPT;
 
+    // Try to remove slowly dying in case we are upgrading a
+    // toadstool, and spore production in case we are upgrading a
+    // ballistomycete.
+    target->del_ench(ENCH_SLOWLY_DYING);
+    target->del_ench(ENCH_SPORE_PRODUCTION);
 
-    std::random_shuffle(available_monsters.begin(), available_monsters.end() );
+    if (upgrade.fruit_cost)
+        _decrease_amount(collected_fruit, upgrade.fruit_cost);
 
-    for (unsigned i=0; i < available_monsters.size(); i++)
+    if (upgrade.piety_cost)
     {
-        monsters * current_plant = available_monsters[i].base_monster;
-        monster_conversion current_target = available_monsters[i];
-
-        if (current_target.new_type == MONS_OKLOB_PLANT)
-        {
-            if (target_fruit)
-                target_fruit--;
-            else
-                continue;
-        }
-        else if (you.piety > current_target.piety_cost)
-        {
-            lose_piety(current_target.piety_cost);
-        }
-        // This would wipe out our remaining piety, so don't do it.
-        else
-        {
-            continue;
-        }
-
-        switch (current_plant->mons_species())
-        {
-        case MONS_PLANT:
-            plants_evolved++;
-            break;
-
-        case MONS_FUNGUS:
-        case MONS_BALLISTOMYCETE:
-            fungi_evolved++;
-            break;
-
-        case MONS_TOADSTOOL:
-            toadstools_evolved++;
-            break;
-        };
-
-        current_plant->upgrade_type(current_target.new_type, true, true);
-        current_plant->god = GOD_FEDHAS;
-        current_plant->attitude = ATT_FRIENDLY;
-        current_plant->flags |= MF_NO_REWARD;
-        current_plant->flags |= MF_ATT_CHANGE_ATTEMPT;
-
-        // Try to remove slowly dying in case we are upgrading a
-        // toadstool, and spore production in case we are upgrading a
-        // ballistomycete.
-        current_plant->del_ench(ENCH_SLOWLY_DYING);
-        current_plant->del_ench(ENCH_SPORE_PRODUCTION);
-    }
-
-    if (fruit_used)
-    {
-        _decrease_amount(collected_fruit, fruit_used);
+        lose_piety(upgrade.piety_cost);
+        mprf("Your piety has decreased.");
     }
 
     return (true);
