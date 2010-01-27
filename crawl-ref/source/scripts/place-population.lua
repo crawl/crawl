@@ -4,6 +4,10 @@ local output_file = "monster-report.out"
 
 local excluded_things = util.set({}) -- "plant", "fungus", "bush" })
 local use_random_maps = true
+local multiple_levels = false
+local start_level = nil
+local end_level = nil
+local ignore_uniques = true
 
 local function count_monsters_at(place, set)
   debug.goto_place(place)
@@ -11,12 +15,14 @@ local function count_monsters_at(place, set)
 
   local monsters_here = set or {  }
   for mons in test.level_monster_iterator() do
-    local mname = mons.name
-    if not excluded_things[mname] then
-      local mstat = monsters_here[mname] or { count = 0, exp = 0 }
-      mstat.count = mstat.count + 1
-      mstat.exp   = mstat.exp + mons.experience
-      monsters_here[mname] = mstat
+    if not ignore_uniques or not mons.unique then
+      local mname = mons.name
+      if not excluded_things[mname] then
+        local mstat = monsters_here[mname] or { count = 0, exp = 0 }
+        mstat.count = mstat.count + 1
+        mstat.exp   = mstat.exp + mons.experience
+        monsters_here[mname] = mstat
+      end
     end
   end
   return monsters_here
@@ -24,15 +30,23 @@ end
 
 local function report_monster_counts_at(place, mcount_map)
   local text = ''
-  text = text .. "\n-------------------------------------------\n"
-  text = text .. place .. " monsters per-level ("
-  text = text .. (use_random_maps and "using random maps"
-                  or "NO random maps") .. ")\n"
-  text = text .. "-------------------------------------------\n"
+  text = text .. "\n------------------------------------------------------------\n"
+  text = text .. place .. " monsters, " .. niters .. " iterations ("
+
+  local extras =
+    util.join(", ",
+              {
+                use_random_maps and "using random maps"
+                  or "NO random maps",
+                ignore_uniques and "NO uniques" or "uniques included"
+              })
+
+  text = text .. extras .. ")\n"
+  text = text .. "------------------------------------------------------------\n"
 
   local monster_counts = util.pairs(mcount_map)
   table.sort(monster_counts, function (a, b)
-                               return a[2].total > b[2].total
+                               return a[2].etotal > b[2].etotal
                              end)
 
   local total = 0
@@ -59,11 +73,17 @@ local function report_monster_counts_at(place, mcount_map)
   return text
 end
 
-local function report_monster_counts(mcounts)
+local function report_monster_counts(summary, mcounts)
   local places = util.keys(mcounts)
   table.sort(places)
 
   local text = ''
+
+  if multiple_levels then
+    text = text .. report_monster_counts_at(start_level .. " to " .. end_level,
+                                            summary)
+  end
+
   for _, place in ipairs(places) do
     text = text .. report_monster_counts_at(place, mcounts[place])
   end
@@ -151,10 +171,40 @@ local function calculate_monster_stats(iter_mpops)
   return final_stats
 end
 
+-- Given a table mapping places to lists of niters sets of monster counts
+-- and a list of places, returns one summary stats table.
+local function calculate_summary_stats(place_totals, places)
+  local function combine_iter_results(master, inst)
+    for mons, stat in pairs(inst) do
+      local mstat = master[mons] or { count = 0, exp = 0 }
+      mstat.count = mstat.count + stat.count
+      mstat.exp   = mstat.exp + stat.exp
+      master[mons] = mstat
+    end
+  end
+
+  local iters = { }
+  for i = 1, niters do
+    local iterstats = { }
+    for _, place in ipairs(places) do
+      combine_iter_results(iterstats, place_totals[place][i])
+    end
+    table.insert(iters, iterstats)
+  end
+  return calculate_monster_stats(iters)
+end
+
 local function count_monsters_from(start_place, end_place)
+  multiple_levels = start_place ~= end_place
+
   local place = start_place
   local mcounts = { }
+  local summary = { }
+  local places = { }
+  local place_totals = { }
   while place do
+    table.insert(places, place)
+
     local mset = { }
 
     local iter_mpops = { }
@@ -163,6 +213,12 @@ local function count_monsters_from(start_place, end_place)
                     i .. "/" .. niters .. ")")
       local res = count_monsters_at(place)
       table.insert(iter_mpops, res)
+
+      if multiple_levels then
+        local totals = place_totals[place] or { }
+        table.insert(totals, res)
+        place_totals[place] = totals
+      end
     end
 
     mcounts[place] = calculate_monster_stats(iter_mpops)
@@ -174,7 +230,11 @@ local function count_monsters_from(start_place, end_place)
     place = test.deeper_place_from(place)
   end
 
-  report_monster_counts(mcounts)
+  if multiple_levels then
+    summary = calculate_summary_stats(place_totals, places)
+  end
+
+  report_monster_counts(summary, mcounts)
 end
 
 local function parse_resets(resets)
@@ -197,6 +257,13 @@ local function branch_resets()
     end
     if arg == '-nomaps' then
       use_random_maps = false
+    end
+    if arg == '-uniques' then
+      ignore_uniques = false
+    end
+    local _, _, optiters = string.find(arg, "^-n=(%d+)")
+    if optiters then
+      niters = tonumber(optiters)
     end
   end
   return resets
@@ -230,11 +297,14 @@ implies that the entrance of the Snake Pit is assumed to be on Lair:3.
 
 You can also disable the use of random maps during level generation with:
                -nomaps
+
+Uniques are ignored by default; you can enable counts for uniques with:
+               -uniques
 ]])
   end
   return args[1], args[2] or args[1]
 end
 
 set_branch_depths()
-local lstart, lend = start_end_levels()
-count_monsters_from(lstart, lend)
+start_level, end_level = start_end_levels()
+count_monsters_from(start_level, end_level)
