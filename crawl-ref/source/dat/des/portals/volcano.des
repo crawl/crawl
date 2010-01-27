@@ -34,7 +34,7 @@
 # In addition, some volcanos have extra items taken from:
 #   "Random item"
 #   "Bad items"                (see setup_loot() for the list)
-#   "Fruit"                    
+#   "Fruit"
 #
 # See setup_loot() for more information.
 #
@@ -106,7 +106,7 @@ end
 
 function volcano_feat_descs()
     dgn.set_feature_desc_short("gate leading back to the Dungeon",
-                               "rocky tunnel")
+                               "rocky tunnel leading out of here")
     dgn.set_feature_desc_short("empty arch of ancient stone",
                                "rock-blocked tunnel")
 end
