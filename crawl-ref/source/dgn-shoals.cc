@@ -774,18 +774,20 @@ static bool _shoals_tide_sweep_items_clear(coord_def c)
 
     for (stack_iterator si(c); si; ++si)
     {
-        const coord_def target(_shoals_escape_place_from(c, NULL, &*si));
         // Don't abort tide entry because of items. If we can't sweep the
         // item clear here, let dungeon_terrain_changed teleport the item
         // to the nearest safe square.
-        int id = si.link();
-
+        item_def &item(*si);
         // Let the tide break up stacks
-        if (!one_chance_in(2))
+        if (!is_rune(item) && coinflip())
             continue;
 
+        const coord_def target(_shoals_escape_place_from(c, NULL, &item));
         if (!target.origin())
+        {
+            int id = si.link();
             move_item_to_grid(&id, target);
+        }
     }
 
     return true;
