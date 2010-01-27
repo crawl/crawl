@@ -1960,6 +1960,8 @@ _Snake_Pit_Donald_
 
 @The_monster@ says, "What sort of name is 'naga' anyway? They're not even good at nagging."
 
+@The_monster@ says, "At least there aren't any garudas. I hate garudas."
+
 @The_monster@ says, "You'd think there'd be more pits. I haven't seen any."
 
 @The_monster@ says, "I'm sick of this place. Or maybe that's poison..."
