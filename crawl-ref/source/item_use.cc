@@ -4453,7 +4453,10 @@ void zap_wand(int slot)
 
 
     if (you.confused())
-        zap_wand.target = you.pos() + coord_def(random2(13)-6, random2(13)-6);
+    {
+        zap_wand.target = you.pos() + coord_def(random_range(-6, 6),
+                                                random_range(-6, 6));
+    }
 
     if (wand.sub_type == WAND_RANDOM_EFFECTS)
         beam.effect_known = false;
@@ -4462,7 +4465,7 @@ void zap_wand(int slot)
     beam.attitude = ATT_FRIENDLY;
     beam.set_target(zap_wand);
 
-    bool aimed_at_self = (beam.target == you.pos());
+    const bool aimed_at_self = (beam.target == you.pos());
 
     // Check whether we may hit friends, use "safe" values for random effects
     // and unknown wands (highest possible range, and unresistable beam
