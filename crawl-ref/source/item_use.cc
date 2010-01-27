@@ -1412,8 +1412,12 @@ static bool _fire_choose_item_and_target(int& slot, dist& target,
         beh.m_slot = slot;
     }
 
-    direction(target, DIR_NONE, TARG_HOSTILE, -1, false, !teleport, true, false,
-              NULL, NULL, &beh);
+    direction_chooser_args args;
+    args.mode = TARG_HOSTILE;
+    args.needs_path = !teleport;
+    args.behaviour = &beh;
+
+    direction(target, args);
 
     if (!beh.active_item())
     {
@@ -2529,7 +2533,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         thr = *target;
     else
     {
-        direction(thr, DIR_NONE, TARG_HOSTILE);
+        direction_chooser_args args;
+        args.mode = TARG_HOSTILE;
+        direction(thr, args);
 
         if (!thr.isValid)
         {
@@ -4417,8 +4423,11 @@ void zap_wand(int slot)
                         _wand_range(type_zapped) : _max_wand_range();
     const std::string zap_title =
         "Zapping: " + get_menu_colour_prefix_tags(wand, DESC_INVENTORY);
-    direction(zap_wand, DIR_NONE, targ_mode, tracer_range,
-              false, true, true, false, NULL, zap_title.c_str());
+    direction_chooser_args args;
+    args.mode = targ_mode;
+    args.range = tracer_range;
+    args.top_prompt = zap_title;
+    direction(zap_wand, args);
 
     if (!zap_wand.isValid)
     {
