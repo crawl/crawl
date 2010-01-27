@@ -3794,7 +3794,7 @@ void display_char_status()
 
     // magic resistance
     const int mr = you.res_magic();
-    mprf("You are %s resistant to magic.", magic_res_adjective(mr).c_str());
+    mprf("You are %s resistant to hostile enchantments.", magic_res_adjective(mr).c_str());
 
     // character evaluates their ability to sneak around:
     mprf("You feel %s.", stealth_desc(check_stealth()).c_str());

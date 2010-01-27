@@ -2311,7 +2311,7 @@ std::string _status_mut_abilities()
         status.push_back("held");
 
     status.push_back(magic_res_adjective(you.res_magic())
-                     + " resistant to magic");
+                     + " resistant to hostile enchantments");
 
     // character evaluates their ability to sneak around:
     status.push_back(stealth_desc(check_stealth()));
