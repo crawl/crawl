@@ -1611,6 +1611,7 @@ enum targ_mode_type
     TARG_FRIEND,
     TARG_HOSTILE,
     TARG_HOSTILE_SUBMERGED, // Target hostiles including submerged ones
+    TARG_EVOLVABLE_PLANTS,  // Targetting mode for Fedhas' evolution
     TARG_NUM_MODES
 };
 

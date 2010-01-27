@@ -31,6 +31,7 @@
 #include "dungeon.h"
 #include "map_knowledge.h"
 #include "fprop.h"
+#include "godabil.h"
 #include "invent.h"
 #include "itemname.h"
 #include "items.h"
@@ -1146,6 +1147,8 @@ std::string _targ_mode_name(targ_mode_type mode)
     case TARG_HOSTILE:
     case TARG_HOSTILE_SUBMERGED:
         return ("hostiles");
+    case TARG_EVOLVABLE_PLANTS:
+        return ("plants");
     default:
         return ("buggy");
     }
@@ -1179,7 +1182,8 @@ coord_def direction_chooser::find_default_target() const
                                        LOS_FLIPVH);
     }
     else if (mode == TARG_ENEMY || mode == TARG_HOSTILE
-             || mode == TARG_HOSTILE_SUBMERGED)
+             || mode == TARG_HOSTILE_SUBMERGED
+             || mode == TARG_EVOLVABLE_PLANTS)
     {
         // Try to find an enemy monster.
 
@@ -1188,7 +1192,8 @@ coord_def direction_chooser::find_default_target() const
         if (mon_target
             // not made friendly since then
             && (mons_attitude(mon_target) == ATT_HOSTILE
-                || mode == TARG_ENEMY && !mon_target->friendly())
+                || mode == TARG_ENEMY && !mon_target->friendly()
+                || mode == TARG_EVOLVABLE_PLANTS && mons_is_evolveable(mon_target))
             // still in range
             && in_range(mon_target->pos()))
         {
@@ -2067,8 +2072,11 @@ static bool _mons_is_valid_target(const monsters *mon, int mode, int range)
 {
     // Monster types that you can't gain experience from don't count as
     // monsters.
-    if (mons_class_flag(mon->type, M_NO_EXP_GAIN))
+    if (mode != TARG_EVOLVABLE_PLANTS
+        && mons_class_flag(mon->type, M_NO_EXP_GAIN))
+    {
         return (false);
+    }
 
     // Unknown mimics don't count as monsters, either.
     if (mons_is_mimic(mon->type)
@@ -2203,6 +2211,9 @@ static bool _find_monster( const coord_def& where, int mode, bool need_path,
 
     if (mode == TARG_FRIEND)
         return (mon->friendly());
+
+    if (mode == TARG_EVOLVABLE_PLANTS)
+        return (mons_is_evolveable(mon));
 
     ASSERT(mode == TARG_ENEMY);
     if (mon->friendly())
