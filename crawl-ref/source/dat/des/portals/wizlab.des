@@ -1596,9 +1596,8 @@ KMONS:      5 = blue death / green death / cacodemon
 local wizname = crawl.make_name()
 
 kmons     ("1 = col:fire patrolling wizard name:" .. wizname .." name_replace"
-              .." name_definite spells:call_imp;summon_demon;haste;"
-              .."hellfire;blink_away;throw_flame hd:20 hp:150 ; demon blade"
-              .." . robe")
+              .." spells:call_imp;summon_demon;haste;hellfire;blink_away;throw_flame"
+              .." hd:20 hp:150 ; demon blade . robe")
 }}
 KITEM:      $ = gold / w:1 scroll of torment / w:1 scroll of summoning
 KITEM:      | = rod of demonology / ring of fire / ring of protection from fire /\
@@ -1660,9 +1659,9 @@ ccccccccccccccccccc..."""...cccccccccccccccccc
 ccccccccccccccccc...""...""...cccccccccccccccc
 cccccccccccccccc.."".......""..ccccccccccccccc
 ccccccccccccccc.."..".....".."..cccccccccccccc
-ccccccccccccccc."....lllll....".cccccccccccccc
-cccccccccccccc.."...ll"."ll..."..ccccccccccccc
-cccccccccccccc.".".ll"..."ll.".".ccccccccccccc
+ccccccccccccccc.".............".cccccccccccccc
+cccccccccccccc.."....."."....."..ccccccccccccc
+cccccccccccccc."."..."..."...".".ccccccccccccc
 ccccccccccccc.."...."..1.."...."..cccccccccccc
 ccccccccccccc.."..."".'''.""..."..cccccccccccc
 ccccccccccccc..".."xx"'_'"xx".."..cccccccccccc
