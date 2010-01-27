@@ -207,14 +207,8 @@ void handle_behaviour(monsters *mon)
 
     // Pacified monsters leaving the level prefer not to attack.
     // Others choose the nearest foe.
-    // XXX: This is currently expensive, so we don't want to do it
-    //      every turn for every monster.
-    if (!isPacified && mon->foe == MHITNOT
-        && mon->behaviour != BEH_SLEEP
-        && (proxPlayer || one_chance_in(3)))
-    {
+    if (!isPacified && mon->foe == MHITNOT)
         _set_nearest_monster_foe(mon);
-    }
 
     // Monsters do not attack themselves. {dlb}
     if (mon->foe == mon->mindex())
@@ -477,7 +471,7 @@ void handle_behaviour(monsters *mon)
                         }
 
                     if (tcount > 0)
-                        mpr("The kraken's tentacles slip beneath the water.", MSGCH_WARNING);
+                        mpr("The kraken's tentacles slip beneath the water.", MSGCH_WARN);
                 }
             }
             break;
@@ -917,7 +911,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
                 }
 
             if (tcount > 0)
-                mpr("The kraken's tentacles slip beneath the water.", MSGCH_WARNING);
+                mpr("The kraken's tentacles slip beneath the water.", MSGCH_WARN);
         }
 
         break;
