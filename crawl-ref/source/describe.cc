@@ -3736,9 +3736,10 @@ void describe_god( god_type which_god, bool give_title )
             if (jiyva_grant_jelly(false))
             {
                 have_any = true;
-                std::string buf = "You can pray to create a jelly shield.";
+                std::string buf = "Your slimes' item consumption is ";
+                buf += "temporarily halted under prayer.";
                 _print_final_god_abil_desc(which_god, buf,
-                                           ABIL_JIYVA_JELLY_SHIELD);
+                                           ABIL_JIYVA_JELLY_PARALYSE);
             }
         }
         else if (which_god == GOD_FEDHAS)
