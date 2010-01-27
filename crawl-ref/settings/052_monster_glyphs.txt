@@ -43,3 +43,9 @@ mon_glyph = insubstantial wisp : lightgrey p
 mon_glyph = shadow : darkgrey x20
 mon_glyph = vapour : lightgrey #
 mon_glyph = shadow wraith : blue W
+
+# elementals
+mon_glyph = earth elemental : brown #
+mon_glyph = fire elemental : yellow #
+mon_glyph = water elemental : lightblue {
+mon_glyph = air elemental : lightgrey v
