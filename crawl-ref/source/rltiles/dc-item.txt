@@ -164,6 +164,8 @@ i-confusion BRAND_CONFUSION
 i-penetration BRAND_PENETRATION
 i-reaping BRAND_REAPING
 # missile-only brands, order doesn't matter
+i-dispersal BRAND_DISPERSAL
+i-explosion BRAND_EXPLOSION
 i-venom BRAND_POISONED
 i-curare BRAND_CURARE
 i-electrocution BRAND_ELECTRIC
