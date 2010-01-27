@@ -1364,6 +1364,7 @@ bool evolve_flora()
     target->attitude = ATT_FRIENDLY;
     target->flags |= MF_NO_REWARD;
     target->flags |= MF_ATT_CHANGE_ATTEMPT;
+    behaviour_event(target, ME_ALERT);
 
     // Try to remove slowly dying in case we are upgrading a
     // toadstool, and spore production in case we are upgrading a
