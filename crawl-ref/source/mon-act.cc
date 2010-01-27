@@ -1680,6 +1680,14 @@ static void _handle_monster_move(monsters *monster)
         if (!monster->alive())
             break;
 
+        // Sleeping monsters don't do anything, so doing
+        // all the work below is a waste.
+        if (monster->behaviour == BEH_SLEEP)
+        {
+            monster->speed_increment -= non_move_energy;
+            continue;
+        }
+
         const coord_def old_pos = monster->pos();
 
 #if DEBUG_MONS_SCAN
