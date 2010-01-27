@@ -152,6 +152,14 @@ enum tile_flags
     TILE_FLAG_MDAM_SEV   = 0x02000000,
     TILE_FLAG_MDAM_ADEAD = 0x02800000,
 
+    // Demon difficulty has 5 possibilities, so uses 3 bits.
+    TILE_FLAG_DEMON   = 0x34000000,
+    TILE_FLAG_DEMON_5 = 0x04000000,
+    TILE_FLAG_DEMON_4 = 0x10000000,
+    TILE_FLAG_DEMON_3 = 0x14000000,
+    TILE_FLAG_DEMON_2 = 0x20000000,
+    TILE_FLAG_DEMON_1 = 0x24000000,
+
     // Background flags
     TILE_FLAG_RAY        = 0x00000800,
     TILE_FLAG_MM_UNSEEN  = 0x00001000,

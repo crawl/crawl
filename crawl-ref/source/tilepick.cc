@@ -1219,6 +1219,28 @@ int tileidx_monster(const monsters *mons, bool detected)
         break;
     }
 
+    if (Options.tile_show_demon_numbers)
+    {
+        switch (mons_char(mons->type))
+        {
+        case '1':
+            ch |= TILE_FLAG_DEMON_1;
+            break;
+        case '2':
+            ch |= TILE_FLAG_DEMON_2;
+            break;
+        case '3':
+            ch |= TILE_FLAG_DEMON_3;
+            break;
+        case '4':
+            ch |= TILE_FLAG_DEMON_4;
+            break;
+        case '5':
+            ch |= TILE_FLAG_DEMON_5;
+            break;
+        }
+    }
+
     return ch;
 }
 
