@@ -1193,7 +1193,7 @@ coord_def direction_chooser::find_default_target() const
             // not made friendly since then
             && (mons_attitude(mon_target) == ATT_HOSTILE
                 || mode == TARG_ENEMY && !mon_target->friendly()
-                || mode == TARG_EVOLVABLE_PLANTS && mons_is_evolveable(mon_target))
+                || mode == TARG_EVOLVABLE_PLANTS && mons_is_evolvable(mon_target))
             // still in range
             && in_range(mon_target->pos()))
         {
@@ -2213,7 +2213,7 @@ static bool _find_monster( const coord_def& where, int mode, bool need_path,
         return (mon->friendly());
 
     if (mode == TARG_EVOLVABLE_PLANTS)
-        return (mons_is_evolveable(mon));
+        return (mons_is_evolvable(mon));
 
     ASSERT(mode == TARG_ENEMY);
     if (mon->friendly())
