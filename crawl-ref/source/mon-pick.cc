@@ -1862,7 +1862,6 @@ int mons_pitslime_level(int mcls)
     case MONS_JELLY:
     case MONS_OOZE:
     case MONS_ACID_BLOB:
-    case MONS_GIANT_SPORE:
     case MONS_GIANT_EYEBALL:
         mlev++;
         break;
@@ -1922,7 +1921,6 @@ int mons_pitslime_rare(int mcls)
 
     case MONS_OOZE:
     case MONS_AZURE_JELLY:
-    case MONS_GIANT_SPORE:
     case MONS_GIANT_EYEBALL:
     case MONS_EYE_OF_DRAINING:
     case MONS_SHINING_EYE:
