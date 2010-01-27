@@ -872,6 +872,7 @@ KITEM:      | = ring of regeneration / ring of life protection / amulet of wardi
             potion of decay / potion of blood
 KITEM:      : = randbook disc:necromancy owner:Borgnjor
 SUBST:      | = |$:
+MARKER:     + = lua:restrict_door()
 :           wizlab_setup(_G, "Borgnjor's Mortuary")
 MAP
 cccccccccccccccccccccccccccccccccccccccccccccc
