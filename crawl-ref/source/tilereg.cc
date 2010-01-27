@@ -1209,6 +1209,15 @@ void DungeonRegion::render()
         }
 }
 
+/**
+ * Draws miniature health and magic points bars on top of the player tile.
+ *
+ * Drawing of either is governed by options tile_show_minihealthbar and
+ * tile_show_minimagicbar. By defaulth, both are on.
+ *
+ * Intended behaviour is to display both if either is not full. (Unless
+ * the bar is toggled off by options). --Eino & felirx
+ */
 void DungeonRegion::draw_minibars()
 {
     if (Options.tile_show_minihealthbar && you.hp < you.hp_max
@@ -1283,8 +1292,6 @@ void DungeonRegion::draw_minibars()
         buff.draw();
 
     }
-
-
 }
 
 void DungeonRegion::clear()
