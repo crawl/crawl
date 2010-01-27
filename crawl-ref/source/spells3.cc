@@ -45,6 +45,7 @@
 #include "coord.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
+#include "options.h"
 #include "player.h"
 #include "religion.h"
 #include "godconduct.h"
@@ -135,6 +136,8 @@ bool remove_curse(bool suppress_msg)
     {
         // Also sets wield_change.
         do_uncurse_item(*you.weapon());
+        if (Options.autoinscribe_cursed)
+            add_inscription(*you.weapon(), "was cursed");
         success = true;
     }
 
@@ -146,6 +149,8 @@ bool remove_curse(bool suppress_msg)
         if (you.equip[i] != -1 && you.inv[you.equip[i]].cursed())
         {
             do_uncurse_item(you.inv[you.equip[i]]);
+            if (Options.autoinscribe_cursed)
+               add_inscription(you.inv[you.equip[i]], "was cursed");
             success = true;
         }
     }

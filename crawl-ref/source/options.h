@@ -192,6 +192,7 @@ public:
     std::vector<int> note_skill_levels;       // Skill levels to note
 
     bool        autoinscribe_artefacts; // Auto-inscribe identified artefacts.
+    bool        autoinscribe_cursed; // Auto-inscribe previosly cursed items.
 
     bool        pickup_thrown;  // Pickup thrown missiles
     bool        pickup_dropped; // Pickup dropped objects

@@ -333,6 +333,7 @@ autoinscribe = distortion:!w
 # autoinscribe = potion.*mutation:!q
 # autoinscribe = royal jell:=g
 # autoinscribe_artefacts = false
+# autoinscribe_cursed = false
 
 ##### 4-n	Macro related Options #################
 #
