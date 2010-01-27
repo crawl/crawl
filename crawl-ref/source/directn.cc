@@ -1097,7 +1097,8 @@ bool direction_chooser::move_is_ok() const
             }
 
             if (!may_target_self && (mode == TARG_ENEMY
-                                     || mode == TARG_HOSTILE))
+                                     || mode == TARG_HOSTILE
+                                     || mode == TARG_HOSTILE_SUBMERGED))
             {
                 if (Options.allow_self_target == CONFIRM_CANCEL)
                 {
@@ -1143,6 +1144,7 @@ std::string _targ_mode_name(targ_mode_type mode)
     case TARG_FRIEND:
         return ("friends");
     case TARG_HOSTILE:
+    case TARG_HOSTILE_SUBMERGED:
         return ("hostiles");
     default:
         return ("buggy");
@@ -1176,7 +1178,8 @@ coord_def direction_chooser::find_default_target() const
                                        needs_path, TARG_ANY, range, true,
                                        LOS_FLIPVH);
     }
-    else if (mode == TARG_ENEMY || mode == TARG_HOSTILE)
+    else if (mode == TARG_ENEMY || mode == TARG_HOSTILE
+             || mode == TARG_HOSTILE_SUBMERGED)
     {
         // Try to find an enemy monster.
 
@@ -2075,7 +2078,7 @@ static bool _mons_is_valid_target(const monsters *mon, int mode, int range)
     }
 
     // Don't target submerged monsters.
-    if (mon->submerged())
+    if (mode != TARG_HOSTILE_SUBMERGED && mon->submerged())
         return (false);
 
     // Don't usually target unseen monsters...
@@ -2195,7 +2198,7 @@ static bool _find_monster( const coord_def& where, int mode, bool need_path,
     if (mode == TARG_ANY)
         return (true);
 
-    if (mode == TARG_HOSTILE)
+    if (mode == TARG_HOSTILE || mode == TARG_HOSTILE_SUBMERGED)
         return (mons_attitude(mon) == ATT_HOSTILE);
 
     if (mode == TARG_FRIEND)
