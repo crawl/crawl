@@ -123,7 +123,7 @@ bool can_wield(item_def *weapon, bool say_reason,
     if (!weapon)
         return (true);
 
-    for (int i = EQ_CLOAK; i <= EQ_AMULET; i++)
+    for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_WORN; i++)
     {
         if (you.equip[i] != -1 && &you.inv[you.equip[i]] == weapon)
         {
@@ -5642,7 +5642,7 @@ void read_scroll(int slot)
         // make sure there's something to curse first
         int count = 0;
         int affected = EQ_WEAPON;
-        for (int i = EQ_CLOAK; i <= EQ_BODY_ARMOUR; i++)
+        for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
         {
             if (you.equip[i] != -1 && !you.inv[you.equip[i]].cursed())
             {
@@ -5872,7 +5872,7 @@ void use_artefact(item_def &item, bool *show_msgs, bool unmeld)
 
 bool wearing_slot(int inv_slot)
 {
-    for (int i = EQ_CLOAK; i <= EQ_AMULET; ++i)
+    for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_WORN; ++i)
         if (inv_slot == you.equip[i])
             return (true);
 

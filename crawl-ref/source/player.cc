@@ -936,7 +936,7 @@ int player_equip_ego_type(int slot, int special, bool ignore_melded)
 
     case EQ_ALL_ARMOUR:
         // Check all armour slots:
-        for (int i = EQ_CLOAK; i <= EQ_BODY_ARMOUR; i++)
+        for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
         {
             // ... but skip ones you can't currently use!
             if (ignore_melded && !you_tran_can_wear(i))
@@ -2097,7 +2097,7 @@ int player_adjusted_evasion_penalty(const int scale)
     int piece_armour_evasion_penalty = 0;
 
     // Some lesser armours have small penalties now (barding).
-    for (int i = EQ_CLOAK; i < EQ_BODY_ARMOUR; i++)
+    for (int i = EQ_MIN_ARMOUR; i < EQ_MAX_ARMOUR; i++)
     {
         if (i == EQ_SHIELD || !player_wearing_slot(i))
             continue;
@@ -5104,7 +5104,7 @@ void dec_disease_player(int delay)
 int count_worn_ego(int which_ego)
 {
     int result = 0;
-    for (int slot = EQ_CLOAK; slot <= EQ_BODY_ARMOUR; ++slot)
+    for (int slot = EQ_MIN_ARMOUR; slot <= EQ_MAX_ARMOUR; ++slot)
     {
         if (you.equip[slot] != -1
             && get_armour_ego_type(you.inv[you.equip[slot]]) == which_ego)
@@ -6174,7 +6174,7 @@ int player::armour_class() const
 {
     int AC = 0;
 
-    for (int eq = EQ_CLOAK; eq <= EQ_BODY_ARMOUR; ++eq)
+    for (int eq = EQ_MIN_ARMOUR; eq <= EQ_MAX_ARMOUR; ++eq)
     {
         if (eq == EQ_SHIELD)
             continue;

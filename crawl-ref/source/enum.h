@@ -1292,6 +1292,9 @@ enum equipment_type
     EQ_AMULET,
     NUM_EQUIP,
 
+    EQ_MIN_ARMOUR = EQ_CLOAK,
+    EQ_MAX_ARMOUR = EQ_BODY_ARMOUR,
+    EQ_MAX_WORN   = EQ_AMULET,
     // these aren't actual equipment slots, they're categories for functions
     EQ_STAFF            = 100,         // weapon with base_type OBJ_STAVES
     EQ_RINGS,                          // check both rings
