@@ -2770,13 +2770,13 @@ static std::string _monster_stat_description(const monsters& mon)
     if (mon.type != MONS_RAKSHASA && mon.type != MONS_RAKSHASA_FAKE)
     {
         if (mons_immune_magic(&mon))
-            result << pronoun << " is immune to magical enchantments.$";
+            result << pronoun << " is immune to hostile enchantments.$";
         else // How resistant is it? Same scale as the player.
         {
             const int mr = mon.res_magic();
             if (mr >= 10)
             {
-                result << pronoun << make_stringf(" is %s resistant to magic.$",
+                result << pronoun << make_stringf(" is %s resistant to hostile enchantments.$",
                                                   magic_res_adjective(mr).c_str());
             }
         }
