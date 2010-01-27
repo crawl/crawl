@@ -1231,6 +1231,18 @@ void DungeonRegion::draw_minibars()
 
         ShapeBuffer buff;
 
+       if (!on_screen(you.pos()))
+            return;
+
+        coord_def player_on_screen;
+        to_screen_coords(you.pos(), player_on_screen);
+
+        static const float tile_width = wx / mx;
+        static const float tile_height = wy / my;
+
+        player_on_screen.x = player_on_screen.x / tile_width;
+        player_on_screen.y = player_on_screen.y / tile_height;
+
         if (Options.tile_show_minimagicbar
             && you.max_magic_points > 0)
         {
@@ -1240,15 +1252,15 @@ void DungeonRegion::draw_minibars()
             const float magic_divider = (float) you.magic_points
                                         / (float) you.max_magic_points;
 
-            buff.add(mx / 2,
-                     my / 2 + healthbar_offset + bar_height,
-                     mx / 2 + magic_divider,
-                     my / 2 + 1,
+            buff.add(player_on_screen.x,
+                     player_on_screen.y + healthbar_offset + bar_height,
+                     player_on_screen.x + magic_divider,
+                     player_on_screen.y + 1,
                      magic);
-            buff.add(mx / 2 + magic_divider,
-                     my / 2 + healthbar_offset + bar_height,
-                     mx / 2 + 1,
-                     my / 2 + 1,
+            buff.add(player_on_screen.x + magic_divider,
+                     player_on_screen.y + healthbar_offset + bar_height,
+                     player_on_screen.x + 1,
+                     player_on_screen.y + 1,
                      magic_spent);
         }
         else
@@ -1273,18 +1285,18 @@ void DungeonRegion::draw_minibars()
             static const VColour wounded(0, 0, 0, 255);
             static const VColour hp_spent(255,   0, 0, 255);
 
-            buff.add(mx / 2,
-                     my / 2 + healthbar_offset,
-                     mx / 2 + health_divider,
-                     my / 2 + healthbar_offset + bar_height,
+            buff.add(player_on_screen.x,
+                     player_on_screen.y + healthbar_offset,
+                     player_on_screen.x + health_divider,
+                     player_on_screen.y + healthbar_offset + bar_height,
                      hp_colour == RED    ? wounded :
                      hp_colour == YELLOW ? damaged
                                          : healthy);
 
-            buff.add(mx / 2 + health_divider,
-                     my / 2 + healthbar_offset,
-                     mx / 2 + 1,
-                     my / 2 + healthbar_offset + bar_height,
+            buff.add(player_on_screen.x + health_divider,
+                     player_on_screen.y + healthbar_offset,
+                     player_on_screen.x + 1,
+                     player_on_screen.y + healthbar_offset + bar_height,
                      hp_spent);
         }
 
