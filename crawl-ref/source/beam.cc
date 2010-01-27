@@ -2682,7 +2682,15 @@ static bool _monster_resists_mass_enchantment(monsters *monster,
             return (true);
         }
 
-        if (monster->check_res_magic(pow))
+        // Cause Fear around lots of plants/fungi shouldn't cause a flood
+        // of "is unaffected" messages. --Eino
+        if (mons_immune_magic(monster)
+            && mons_class_flag(monster->type, M_NO_EXP_GAIN)
+            && immobile_monster(monster))
+        {
+            return(true);
+        }
+        else if (monster->check_res_magic(pow))
         {
             simple_monster_message(monster,
                                    mons_immune_magic(monster)? " is unaffected."
