@@ -769,7 +769,7 @@ static int _healing_spell(int healed, bool divine_ability,
                                       you.religion == GOD_ELYVILON ?
                                             TARG_ANY : TARG_FRIEND,
                                       LOS_RADIUS,
-                                      false, true, true, NULL, "Heal whom?");
+                                      false, true, true, "Heal", NULL);
     }
     else
     {
