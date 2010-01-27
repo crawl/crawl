@@ -4415,7 +4415,10 @@ void zap_wand(int slot)
 
     int tracer_range = (alreadyknown && wand.sub_type != WAND_RANDOM_EFFECTS) ?
                         _wand_range(type_zapped) : _max_wand_range();
-    direction(zap_wand, DIR_NONE, targ_mode, tracer_range);
+    const std::string zap_title =
+        "Zapping: " + get_menu_colour_prefix_tags(wand, DESC_INVENTORY);
+    direction(zap_wand, DIR_NONE, targ_mode, tracer_range,
+              false, true, true, false, NULL, zap_title.c_str());
 
     if (!zap_wand.isValid)
     {
