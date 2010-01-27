@@ -1616,7 +1616,7 @@ static void _handle_monster_move(monsters *monster)
         && env.cgrid(monster->pos()) != EMPTY_CLOUD
         && !monster->submerged())
     {
-        _mons_in_cloud( monster );
+        _mons_in_cloud(monster);
     }
 
     // Apply monster enchantments once for every normal-speed
