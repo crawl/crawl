@@ -895,7 +895,7 @@ void full_describe_view()
         if (quant == 1)
         {
             // Get selected monster.
-            monsters* m = (monsters*)(sel[0]->data);
+            monsters* m = static_cast<monsters*>(sel[0]->data);
 
 #ifdef USE_TILE
             // Highlight selected monster on the screen.
@@ -924,13 +924,12 @@ void full_describe_view()
         else if (quant == 2)
         {
             // Get selected item.
-            item_def* i = (item_def*)(sel[0]->data);
+            const item_def* i = static_cast<const item_def*>(sel[0]->data);
             if (desc_menu.menu_action == InvMenu::ACT_EXAMINE)
-                describe_item( *i );
+                describe_item(*i);
             else // ACT_EXECUTE -> travel to item
             {
-                const coord_def c = i->pos;
-                start_travel( c );
+                start_travel(i->pos);
                 break;
             }
         }

@@ -3,6 +3,8 @@
  *  Created by: haranp on Sat Feb 17 13:35:54 2007 UTC
  */
 
+#include <limits.h>
+
 #include "AppHdr.h"
 
 #include "colour.h"
@@ -436,7 +438,7 @@ int formatted_string::find_last_colour() const
 
 formatted_string formatted_string::substr(size_t start, size_t substr_length) const
 {
-    const unsigned int NONE = (unsigned int)-1;
+    const unsigned int NONE = UINT_MAX; // from limits.h
     unsigned int last_FSOP_COLOUR = NONE;
     unsigned int last_FSOP_CURSOR = NONE;
 

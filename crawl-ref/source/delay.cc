@@ -1739,7 +1739,7 @@ static int _userdef_interrupt_activity( const delay_queue_item &idelay,
     {
         bool stop_run = false;
         if (clua.callfn("ch_stop_run", "M>b",
-                        (const monsters *) at.data, &stop_run))
+                        static_cast<const monsters *>(at.data), &stop_run))
         {
             if (stop_run)
                 return (true);
