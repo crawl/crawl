@@ -2692,9 +2692,7 @@ static bool _monster_resists_mass_enchantment(monsters *monster,
     }
     // Mass enchantments around lots of plants/fungi shouldn't cause a flood
     // of "is unaffected" messages. --Eino
-    else if (mons_immune_magic(monster)
-             && mons_class_flag(monster->type, M_NO_EXP_GAIN)
-             && mons_class_is_stationary(monster->type))
+    else if (mons_is_firewood(monster))
     {
         return(true);
     }
