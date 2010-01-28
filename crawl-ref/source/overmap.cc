@@ -351,7 +351,7 @@ static std::string _get_branches()
              dungeon_lid.depth);
     disp += buffer;
 
-    for(int i=1; i < NUM_BRANCHES; i++)
+    for (int i = BRANCH_FIRST_NON_DUNGEON; i < NUM_BRANCHES; i++)
     {
         const branch_type branch = branches[i].id;
 
