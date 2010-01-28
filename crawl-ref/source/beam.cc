@@ -2682,21 +2682,21 @@ static bool _monster_resists_mass_enchantment(monsters *monster,
             return (true);
         }
 
-        // Cause Fear around lots of plants/fungi shouldn't cause a flood
-        // of "is unaffected" messages. --Eino
-        if (mons_immune_magic(monster)
-            && mons_class_flag(monster->type, M_NO_EXP_GAIN)
-            && mons_class_is_stationary(monster->type))
-        {
-            return(true);
-        }
-        else if (monster->check_res_magic(pow))
+        if (monster->check_res_magic(pow))
         {
             simple_monster_message(monster,
                                    mons_immune_magic(monster)? " is unaffected."
                                                              : " resists.");
             return (true);
         }
+    }
+    // Mass enchantments around lots of plants/fungi shouldn't cause a flood
+    // of "is unaffected" messages. --Eino
+    else if (mons_immune_magic(monster)
+             && mons_class_flag(monster->type, M_NO_EXP_GAIN)
+             && mons_class_is_stationary(monster->type))
+    {
+        return(true);
     }
     else  // trying to enchant an unnatural creature doesn't work
     {
