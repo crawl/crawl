@@ -96,9 +96,7 @@ public:
 
     virtual int highlight_colour() const
     {
-        return menu_colour(get_text(),
-                           menu_colour_item_prefix( *( (item_def*) item) ),
-                           tag );
+        return menu_colour(get_text(), menu_colour_item_prefix(*item), tag);
     }
 
     virtual void select( int qty = -1 );

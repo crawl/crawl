@@ -1525,8 +1525,8 @@ static void _munge_bounced_bolt(bolt &old_bolt, bolt &new_bolt,
     ray_def temp_ray = new_ray;
     for (int tries = 0; tries < 20; tries++)
     {
-        shift = (double) random_range((int)(min * 10000),
-                                      (int)(max * 10000)) / 10000.0;
+        shift = random_range(static_cast<int>(min * 10000),
+                             static_cast<int>(max * 10000)) / 10000.0;
 
         if (new_deg < old_deg)
             shift = -shift;
@@ -1547,7 +1547,8 @@ static void _munge_bounced_bolt(bolt &old_bolt, bolt &new_bolt,
 #if DEBUG_DIAGNOSTICS || DEBUG_BEAM || DEBUG_CHAOS_BOUNCE
     mprf(MSGCH_DIAGNOSTICS,
          "chaos beam: old_deg = %5.2f, new_deg = %5.2f, shift = %5.2f",
-         (float) old_deg, (float) new_deg, (float) shift);
+         static_cast<float>(old_deg), static_cast<float>(new_deg),
+         static_cast<float>(shift));
 #endif
 
     // Don't use up range in bouncing off walls, so that chaos beams have

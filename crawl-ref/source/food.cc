@@ -2800,7 +2800,7 @@ static bool _vampire_consume_corpse(int slot, bool invent)
 
     // The draining delay doesn't have a start action, and we only need
     // the continue/finish messages if it takes longer than 1 turn.
-    start_delay(DELAY_FEED_VAMPIRE, duration, (int)invent, slot);
+    start_delay(DELAY_FEED_VAMPIRE, duration, invent, slot);
 
     return (true);
 }

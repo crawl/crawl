@@ -1118,7 +1118,7 @@ static bool _card_filter(std::string key, std::string body)
 
     for (int i = 0; i < NUM_CARDS; ++i)
     {
-        name = lowercase_string(card_name((card_type) i));
+        name = lowercase_string(card_name(static_cast<card_type>(i)));
 
         if (name.find(key) != std::string::npos)
             return (false);
@@ -1459,7 +1459,7 @@ static bool _handle_FAQ()
             if (j == 0)
             {
                 me = new MenuEntry(question, MEL_ITEM, 1, letter);
-                me->data = (void*) &question_keys[i];
+                me->data = &question_keys[i];
             }
             else
             {
@@ -1684,8 +1684,8 @@ static bool _find_description(bool &again, std::string& error_inout)
         else
         {
             std::ostringstream os;
-            os << "Too many matching " << pluralise(type) << " (" << key_list.size()
-               << ") to display.";
+            os << "Too many matching " << pluralise(type)
+               << " (" << key_list.size() << ") to display.";
             error_inout = os.str();
         }
         return (false);
@@ -1785,7 +1785,7 @@ static bool _find_description(bool &again, std::string& error_inout)
             UNUSED(doing_spells);
 #endif
 
-            me->data = (void*) &key_list[i];
+            me->data = &key_list[i];
         }
 
         desc_menu.add_entry(me);

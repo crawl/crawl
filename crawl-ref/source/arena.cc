@@ -366,9 +366,9 @@ namespace arena
             }
         }
 
-        std::string glyphs = strip_tag_prefix(spec, "ban_glyphs:");
+        const std::string glyphs = strip_tag_prefix(spec, "ban_glyphs:");
         for (unsigned int i = 0; i < glyphs.size(); i++)
-            banned_glyphs[(int)glyphs[i]] = true;
+            banned_glyphs[static_cast<int>(glyphs[i])] = true;
 
         std::vector<std::string> factions = split_string(" v ", spec);
 
@@ -961,7 +961,7 @@ namespace arena
                 continue;
 
             if (mons_is_unique(i)
-                && !arena_veto_random_monster( (monster_type) i))
+                && !arena_veto_random_monster(static_cast<monster_type>(i)))
             {
                 uniques_list.push_back(i);
             }
@@ -1045,10 +1045,10 @@ monster_type arena_pick_random_monster(const level_id &place, int power,
     {
         const std::vector<int> &uniques = arena::uniques_list;
 
-        monster_type type = (monster_type) uniques[random2(uniques.size())];
+        const int type = uniques[random2(uniques.size())];
         you.unique_creatures[type] = false;
 
-        return (type);
+        return static_cast<monster_type>(type);
     }
 
     if (!arena::cycle_random)
@@ -1060,7 +1060,8 @@ monster_type arena_pick_random_monster(const level_id &place, int power,
         if (arena::cycle_random_pos >= NUM_MONSTERS)
             arena::cycle_random_pos = 0;
 
-        const monster_type type = (monster_type) arena::cycle_random_pos;
+        const monster_type type =
+            static_cast<monster_type>(arena::cycle_random_pos);
 
         if (mons_rarity(type, place) == 0)
             continue;
@@ -1129,7 +1130,7 @@ void arena_placed_monster(monsters *monster)
     else
     {
         mprf(MSGCH_ERROR, "Placed neutral (%d) monster %s",
-             (int) monster->attitude,
+             static_cast<int>(monster->attitude),
              monster->name(DESC_PLAIN, true).c_str());
     }
 
