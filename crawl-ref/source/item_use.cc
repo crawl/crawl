@@ -123,7 +123,7 @@ bool can_wield(item_def *weapon, bool say_reason,
     if (!weapon)
         return (true);
 
-    for (int i = EQ_CLOAK; i <= EQ_AMULET; i++)
+    for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_WORN; i++)
     {
         if (you.equip[i] != -1 && &you.inv[you.equip[i]] == weapon)
         {
@@ -1412,8 +1412,12 @@ static bool _fire_choose_item_and_target(int& slot, dist& target,
         beh.m_slot = slot;
     }
 
-    direction(target, DIR_NONE, TARG_HOSTILE, -1, false, !teleport, true, false,
-              NULL, NULL, &beh);
+    direction_chooser_args args;
+    args.mode = TARG_HOSTILE;
+    args.needs_path = !teleport;
+    args.behaviour = &beh;
+
+    direction(target, args);
 
     if (!beh.active_item())
     {
@@ -2529,7 +2533,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         thr = *target;
     else
     {
-        direction(thr, DIR_NONE, TARG_HOSTILE);
+        direction_chooser_args args;
+        args.mode = TARG_HOSTILE;
+        direction(thr, args);
 
         if (!thr.isValid)
         {
@@ -4415,7 +4421,13 @@ void zap_wand(int slot)
 
     int tracer_range = (alreadyknown && wand.sub_type != WAND_RANDOM_EFFECTS) ?
                         _wand_range(type_zapped) : _max_wand_range();
-    direction(zap_wand, DIR_NONE, targ_mode, tracer_range);
+    const std::string zap_title =
+        "Zapping: " + get_menu_colour_prefix_tags(wand, DESC_INVENTORY);
+    direction_chooser_args args;
+    args.mode = targ_mode;
+    args.range = tracer_range;
+    args.top_prompt = zap_title;
+    direction(zap_wand, args);
 
     if (!zap_wand.isValid)
     {
@@ -4450,7 +4462,10 @@ void zap_wand(int slot)
 
 
     if (you.confused())
-        zap_wand.target = you.pos() + coord_def(random2(13)-6, random2(13)-6);
+    {
+        zap_wand.target = you.pos() + coord_def(random_range(-6, 6),
+                                                random_range(-6, 6));
+    }
 
     if (wand.sub_type == WAND_RANDOM_EFFECTS)
         beam.effect_known = false;
@@ -4459,7 +4474,7 @@ void zap_wand(int slot)
     beam.attitude = ATT_FRIENDLY;
     beam.set_target(zap_wand);
 
-    bool aimed_at_self = (beam.target == you.pos());
+    const bool aimed_at_self = (beam.target == you.pos());
 
     // Check whether we may hit friends, use "safe" values for random effects
     // and unknown wands (highest possible range, and unresistable beam
@@ -5642,7 +5657,7 @@ void read_scroll(int slot)
         // make sure there's something to curse first
         int count = 0;
         int affected = EQ_WEAPON;
-        for (int i = EQ_CLOAK; i <= EQ_BODY_ARMOUR; i++)
+        for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
         {
             if (you.equip[i] != -1 && !you.inv[you.equip[i]].cursed())
             {
@@ -5872,7 +5887,7 @@ void use_artefact(item_def &item, bool *show_msgs, bool unmeld)
 
 bool wearing_slot(int inv_slot)
 {
-    for (int i = EQ_CLOAK; i <= EQ_AMULET; ++i)
+    for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_WORN; ++i)
         if (inv_slot == you.equip[i])
             return (true);
 

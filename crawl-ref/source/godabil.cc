@@ -555,9 +555,14 @@ bool sunlight()
     bolt temp_bolt;
     temp_bolt.colour = YELLOW;
 
-    direction(spelld, DIR_TARGET, TARG_HOSTILE_SUBMERGED, LOS_RADIUS,
-              false, false, false, false, NULL,
-              "Select sunlight destination.");
+    direction_chooser_args args;
+    args.restricts = DIR_TARGET;
+    args.mode = TARG_HOSTILE_SUBMERGED;
+    args.range = LOS_RADIUS;
+    args.needs_path = false;
+    args.may_target_monster = false;
+    args.top_prompt = "Select sunlight destination.";
+    direction(spelld, args);
 
     if (!spelld.isValid)
         return (false);
@@ -1302,11 +1307,18 @@ bool evolve_flora()
     }
 
     dist spelld;
-    direction(spelld, DIR_TARGET, TARG_EVOLVABLE_PLANTS, LOS_RADIUS,
-              false, false, false, false, NULL,
-              "Select plant or fungus to evolve.");
 
-    monsters * target = monster_at(spelld.target);
+    direction_chooser_args args;
+    args.restricts = DIR_TARGET;
+    args.mode = TARG_EVOLVABLE_PLANTS;
+    args.range = LOS_RADIUS;
+    args.needs_path = false;
+    args.may_target_monster = false;
+    args.top_prompt = "Select plant or fungus to evolve.";
+    
+    direction(spelld, args);
+
+    monsters* target = monster_at(spelld.target);
 
     if (!target)
     {

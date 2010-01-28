@@ -460,47 +460,26 @@ static bool _is_target_in_range(const coord_def& where, int range)
 
 targetting_behaviour direction_chooser::stock_behaviour;
 
-void direction(dist &moves, targetting_type restricts,
-               targ_mode_type mode, int range,
-               bool just_looking, bool needs_path,
-               bool may_target_monster, bool may_target_self,
-               const char *target_prefix, const char *top_prompt,
-               targetting_behaviour *mod, bool cancel_at_self)
+void direction(dist &moves, const direction_chooser_args& args)
 {
-    std::string str_top_prompt;
-    if (top_prompt)
-        str_top_prompt = top_prompt;
-    direction_chooser(moves, restricts, mode, range, just_looking,
-                      needs_path, may_target_monster, may_target_self,
-                      target_prefix, str_top_prompt,
-                      mod, cancel_at_self).choose_direction();
+    direction_chooser(moves, args).choose_direction();
 }
 
 
 direction_chooser::direction_chooser(dist& moves_,
-                                     targetting_type restricts_,
-                                     targ_mode_type mode_,
-                                     int range_,
-                                     bool just_looking_,
-                                     bool needs_path_,
-                                     bool may_target_monster_,
-                                     bool may_target_self_,
-                                     const char *target_prefix_,
-                                     const std::string& top_prompt_,
-                                     targetting_behaviour *behaviour_,
-                                     bool cancel_at_self_) :
+                                     const direction_chooser_args& args) :
     moves(moves_),
-    restricts(restricts_),
-    mode(mode_),
-    range(range_),
-    just_looking(just_looking_),
-    needs_path(needs_path_),
-    may_target_monster(may_target_monster_),
-    may_target_self(may_target_self_),
-    target_prefix(target_prefix_),
-    top_prompt(top_prompt_),
-    behaviour(behaviour_),
-    cancel_at_self(cancel_at_self_)
+    restricts(args.restricts),
+    mode(args.mode),
+    range(args.range),
+    just_looking(args.just_looking),
+    needs_path(args.needs_path),
+    may_target_monster(args.may_target_monster),
+    may_target_self(args.may_target_self),
+    target_prefix(args.target_prefix),
+    top_prompt(args.top_prompt),
+    behaviour(args.behaviour),
+    cancel_at_self(args.cancel_at_self)
 {
     if (!behaviour)
         behaviour = &stock_behaviour;

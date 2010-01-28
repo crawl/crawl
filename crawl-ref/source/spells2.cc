@@ -1304,7 +1304,9 @@ bool cast_summon_elemental(int pow, god_type god,
     {
         mpr("Summon from material in which direction? ", MSGCH_PROMPT);
 
-        direction(smove, DIR_DIR, TARG_ANY);
+        direction_chooser_args args;
+        args.restricts = DIR_DIR;
+        direction(smove, args);
 
         if (!smove.isValid)
         {

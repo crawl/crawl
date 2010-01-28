@@ -380,6 +380,7 @@ MONS:    mummy, guardian mummy, mummy priest, greater mummy
 MARKER:  O = lua:item_pickup_change_flags { \
             branch_flags="!no_tele_control", item="auto" \
          }
+KMASK:   O = no_item_gen
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

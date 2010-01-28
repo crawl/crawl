@@ -49,18 +49,6 @@ local function hut_door_blocked(door)
   return not dgn.find_adjacent_point(door, good_square, passable_square)
 end
 
-local function verify_stair_connected(p)
-  local function good_square(c)
-    return dgn.grid(c.x, c.y) == floor
-  end
-  local function traversable_square(c)
-    local dfeat = dgn.grid(c.x, c.y)
-    return dfeat == floor or feat.is_stone_stair(dfeat)
-  end
-  test.map_assert(dgn.find_adjacent_point(p, good_square, traversable_square),
-                  "Stairs not connected at " .. p)
-end
-
 local function verify_stair_connectivity()
   local function is_stair(p)
     return feat.is_stone_stair(dgn.grid(p.x, p.y))
@@ -68,10 +56,6 @@ local function verify_stair_connectivity()
 
   local stair_pos = dgn.find_points(is_stair)
   test.map_assert(#stair_pos > 0, "No stairs in map?")
-
-  for _, stair in ipairs(stair_pos) do
-    verify_stair_connected(stair)
-  end
 end
 
 local function verify_hut_connectivity()

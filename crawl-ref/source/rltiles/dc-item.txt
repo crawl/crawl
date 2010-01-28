@@ -164,6 +164,8 @@ i-confusion BRAND_CONFUSION
 i-penetration BRAND_PENETRATION
 i-reaping BRAND_REAPING
 # missile-only brands, order doesn't matter
+i-dispersal BRAND_DISPERSAL
+i-explosion BRAND_EXPLOSION
 i-venom BRAND_POISONED
 i-curare BRAND_CURARE
 i-electrocution BRAND_ELECTRIC
@@ -357,6 +359,30 @@ boots1_brown ARM_BOOTS
 boots2_jackboots
 boots3_stripe
 boots4_green
+
+### Armour brands
+%sdir item/armour/brands
+i-running BRAND_ARM_RUNNING
+i-fire-res BRAND_ARM_FIRE_RESISTANCE
+i-cold-res BRAND_ARM_COLD_RESISTANCE
+i-poison-res BRAND_ARM_POISON_RESISTANCE
+i-see-invis BRAND_ARM_SEE_INVISIBLE
+i-darkness BRAND_ARM_DARKNESS
+i-strength BRAND_ARM_STRENGTH
+i-dexterity BRAND_ARM_DEXTERITY
+i-intelligence BRAND_ARM_INTELLIGENCE
+i-ponderous BRAND_ARM_PONDEROUSNESS
+i-levitation BRAND_ARM_LEVITATION
+i-magic-res BRAND_ARM_MAGIC_RESISTANCE
+i-protection BRAND_ARM_PROTECTION
+i-stealth BRAND_ARM_STEALTH
+i-resistance BRAND_ARM_RESISTANCE
+i-positive-energy BRAND_ARM_POSITIVE_ENERGY
+i-archmagi BRAND_ARM_ARCHMAGI
+i-preservation BRAND_ARM_PRESERVATION
+i-reflection BRAND_ARM_REFLECTION
+i-spirit BRAND_ARM_SPIRIT_SHIELD
+i-archery BRAND_ARM_ARCHERY
 
 ###########OBJ_WANDS
 %sdir item/wand

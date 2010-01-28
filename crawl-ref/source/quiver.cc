@@ -182,7 +182,7 @@ void choose_item_for_quiver()
     }
     else
     {
-        for (int i = EQ_CLOAK; i < NUM_EQUIP; i++)
+        for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_WORN; i++)
         {
             if (you.equip[i] == slot)
             {

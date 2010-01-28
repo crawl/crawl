@@ -65,7 +65,7 @@ public:
   coord_def prev_move;
 
   int hunger;
-  FixedVector<char, NUM_EQUIP> equip;
+  FixedVector<signed char, NUM_EQUIP> equip;
 
   int hp;
   int hp_max;
@@ -240,7 +240,7 @@ public:
   unsigned char normal_vision;        // how far the species gets to see
   unsigned char current_vision;       // current sight radius (cells)
 
-  unsigned char hell_exit;            // which level plyr goes to on hell exit.
+  unsigned char hell_exit;            // which level player goes to on hell exit
 
   // This field is here even in non-WIZARD compiles, since the
   // player might have been playing previously under wiz mode.
@@ -377,6 +377,8 @@ public:
     actor_type atype() const { return ACT_PLAYER; }
     monsters* as_monster() { return NULL; }
     player* as_player() { return this; }
+    const monsters* as_monster() const { return NULL; }
+    const player* as_player() const { return this; }
 
     god_type  deity() const;
     bool      alive() const;

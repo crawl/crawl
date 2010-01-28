@@ -1986,7 +1986,7 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
         return (false);
     }
 
-    for (int i = EQ_CLOAK; i <= EQ_BODY_ARMOUR; i++)
+    for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
     {
         if (item_dropped == you.equip[i] && you.equip[i] != -1)
         {
