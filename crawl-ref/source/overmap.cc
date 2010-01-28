@@ -426,6 +426,7 @@ std::string _print_altars_for_gods(const int gods[],    // list of gods
     std::string disp;
     char buffer[100];
     int num_printed = 0;
+    char const *colour;
 
     for(int cur_god = 0; cur_god < num_gods; cur_god++)
     {
@@ -433,31 +434,27 @@ std::string _print_altars_for_gods(const int gods[],    // list of gods
 
         // for each god, look through the notable altars list for a match
         bool has_altar_been_seen = false;
-        for ( altar_map_type::const_iterator na_iter = altars_present.begin();
-              na_iter != altars_present.end(); ++na_iter )
+        for (altar_map_type::const_iterator na_iter = altars_present.begin();
+             na_iter != altars_present.end(); ++na_iter )
         {
-            if(na_iter->second == god)
+            if (na_iter->second == god)
             {
                 has_altar_been_seen = true;
                 break;
             }
         }
 
-        if(has_altar_been_seen == false)
-        {
-            if(print_unseen == false)
-                continue;
+        colour = "darkgrey";
+        if (has_altar_been_seen)
+            colour = "white";
+        if (you.penance[god])
+            colour = (you.penance[god] > 10) ? "red" : "lightred";
 
-            snprintf(buffer, sizeof buffer,
-                     "<darkgrey>%s</darkgrey>",
-                     god_name(god, false).c_str());
-        }
-        else
-        {
-            snprintf(buffer, sizeof buffer,
-                     "<white>%s</white>",
-                     god_name(god, false).c_str());
-        }
+        if (!print_unseen && !strcmp(colour, "darkgrey"))
+            continue;
+
+        snprintf(buffer, sizeof buffer, "<%s>%s</%s>",
+                 colour, god_name(god, false).c_str(), colour);
         disp += buffer;
         num_printed++;
 
