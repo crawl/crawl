@@ -2686,7 +2686,7 @@ static bool _monster_resists_mass_enchantment(monsters *monster,
         // of "is unaffected" messages. --Eino
         if (mons_immune_magic(monster)
             && mons_class_flag(monster->type, M_NO_EXP_GAIN)
-            && immobile_monster(monster))
+            && mons_class_is_stationary(monster->type))
         {
             return(true);
         }
