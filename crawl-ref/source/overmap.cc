@@ -388,14 +388,14 @@ std::string _get_altars()
     std::string disp;
 
     // predefine the god order so the display appears sorted to the user
-    const int gauranteed_gods[] = { GOD_CHEIBRIADOS, GOD_ELYVILON, GOD_FEDHAS,
+    const int guaranteed_gods[] = { GOD_CHEIBRIADOS, GOD_ELYVILON, GOD_FEDHAS,
                                     GOD_KIKUBAAQUDGHA, GOD_MAKHLEB,
                                     GOD_NEMELEX_XOBEH, GOD_OKAWARU,
                                     GOD_SIF_MUNA, GOD_SHINING_ONE, GOD_TROG,
                                     GOD_VEHUMET, GOD_XOM, GOD_YREDELEMNUL,
                                     GOD_ZIN };
 
-    const int non_gauranteed_gods[] = {GOD_BEOGH, GOD_JIYVA, GOD_LUGONU};
+    const int non_guaranteed_gods[] = {GOD_BEOGH, GOD_JIYVA, GOD_LUGONU};
 
     disp += "\n<green>Altars:</green>";
     if (crawl_state.need_save || !crawl_state.updating_scores)
@@ -406,13 +406,13 @@ std::string _get_altars()
     disp += EOL;
 
     disp += _print_altars_for_gods(
-                gauranteed_gods,
-                sizeof(gauranteed_gods) / sizeof (gauranteed_gods[0]),
+                guaranteed_gods,
+                sizeof(guaranteed_gods) / sizeof(guaranteed_gods[0]),
                 true);
 
     disp += _print_altars_for_gods(
-                non_gauranteed_gods,
-                sizeof(non_gauranteed_gods) / sizeof (non_gauranteed_gods[0]),
+                non_guaranteed_gods,
+                sizeof(non_guaranteed_gods) / sizeof(non_guaranteed_gods[0]),
                 false);
 
     return disp;
