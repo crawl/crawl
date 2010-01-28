@@ -101,3 +101,6 @@ makefile.dep
 /source/debian/crawl-tiles
 /source/debian/crawl
 /source/debian/files
+
+# Windows thumbnail files
+Thumbs.db
