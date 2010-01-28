@@ -3626,6 +3626,9 @@ bool bolt::fuzz_invis_tracer()
 static bool _test_beam_hit(int attack, int defence, bool is_beam,
                            bool deflect, bool repel, defer_rand &r)
 {
+    if (attack == AUTOMATIC_HIT)
+        return (true);
+
     if (is_beam && deflect)
     {
         attack = r[0].random2(attack * 2) / 3;
@@ -3645,9 +3648,6 @@ static bool _test_beam_hit(int attack, int defence, bool is_beam,
     }
 
     dprf("Beam attack: %d, defence: %d", attack, defence);
-    // Reproducing old behavior here; magic dart is dodgable with DMsl
-    if (attack == AUTOMATIC_HIT)
-        return (true);
 
     attack = r[1].random2(attack);
     defence = r[2].random2avg(defence, 2);
@@ -3863,12 +3863,15 @@ bool bolt::misses_player()
     const int dodge_less = player_evasion(EV_IGNORE_PHASESHIFT);
     int real_tohit  = hit;
 
-    // Monsters shooting at an invisible player are very inaccurate.
-    if (you.invisible() && !can_see_invis)
-        real_tohit /= 2;
+    if (real_tohit != AUTOMATIC_HIT)
+    {
+        // Monsters shooting at an invisible player are very inaccurate.
+        if (you.invisible() && !can_see_invis)
+            real_tohit /= 2;
 
-    if (you.backlit() && !you.halo_radius())
-        real_tohit += 2 + random2(8);
+        if (you.backlit() && !you.halo_radius())
+            real_tohit += 2 + random2(8);
+    }
 
     // Wow, what a horrid test.  These cannot be blocked or dodged
     if (!is_beam && !is_blockable())
@@ -5009,11 +5012,15 @@ void bolt::affect_monster(monsters* mon)
 
     // Make a copy of the to-hit before we modify it.
     int beam_hit = hit;
-    if (mon->invisible() && !can_see_invis)
-        beam_hit /= 2;
 
-    if (mon->backlit() && !mon->halo_radius())
-        beam_hit += 2 + random2(8);
+    if (beam_hit != AUTOMATIC_HIT)
+    {
+        if (mon->invisible() && !can_see_invis)
+            beam_hit /= 2;
+
+        if (mon->backlit() && !mon->halo_radius())
+            beam_hit += 2 + random2(8);
+    }
 
     defer_rand r;
     int rand_ev = random2(mon->ev);
