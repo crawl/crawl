@@ -4096,6 +4096,13 @@ static bool _is_nontemple_god(god_type god)
     return (_is_god(god) && !_is_temple_god(god));
 }
 
+static bool _cmp_god_by_name(god_type god1, god_type god2)
+{
+    return (god_name(god1, false) < god_name(god2, false));
+}
+
+// Vector of temple gods.
+// Sorted by name for the benefit of the overmap.
 std::vector<god_type> temple_god_list()
 {
     std::vector<god_type> god_list;
@@ -4105,5 +4112,21 @@ std::vector<god_type> temple_god_list()
         if (_is_temple_god(god))
             god_list.push_back(god);
     }
+    std::sort(god_list.begin(), god_list.end(), _cmp_god_by_name);
+    return god_list;
+}
+
+// Vector of non-temple gods.
+// Sorted by name for the benefit of the overmap.
+std::vector<god_type> nontemple_god_list()
+{
+    std::vector<god_type> god_list;
+    for (int i = 0; i < NUM_GODS; i++)
+    {
+        god_type god = static_cast<god_type>(i);
+        if (_is_nontemple_god(god))
+            god_list.push_back(god);
+    }
+    std::sort(god_list.begin(), god_list.end(), _cmp_god_by_name);
     return god_list;
 }
