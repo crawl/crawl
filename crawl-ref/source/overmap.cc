@@ -428,14 +428,14 @@ static std::string _print_altars_for_gods(const int gods[],    // list of gods
     int num_printed = 0;
     char const *colour;
 
-    for(int cur_god = 0; cur_god < num_gods; cur_god++)
+    for (int cur_god = 0; cur_god < num_gods; cur_god++)
     {
         const god_type god = (god_type) gods[cur_god];
 
         // for each god, look through the notable altars list for a match
         bool has_altar_been_seen = false;
         for (altar_map_type::const_iterator na_iter = altars_present.begin();
-             na_iter != altars_present.end(); ++na_iter )
+             na_iter != altars_present.end(); ++na_iter)
         {
             if (na_iter->second == god)
             {
@@ -458,13 +458,13 @@ static std::string _print_altars_for_gods(const int gods[],    // list of gods
         disp += buffer;
         num_printed++;
 
-        if(num_printed % 5 == 0)
+        if (num_printed % 5 == 0)
             disp += EOL;
         else
             disp += std::string(17 - god_name(god, false).length(), ' ');
     }
 
-    if(num_printed > 0 && num_printed % 5 != 0)
+    if (num_printed > 0 && num_printed % 5 != 0)
         disp += EOL;
     return disp;
 }
