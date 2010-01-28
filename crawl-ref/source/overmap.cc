@@ -62,14 +62,14 @@ static void _seen_staircase(dungeon_feature_type which_staircase,
 static void _seen_other_thing(dungeon_feature_type which_thing,
                               const coord_def& pos);
 
-std::string _get_branches();
-std::string _get_altars();
-std::string _get_shops();
-std::string _get_portals();
-std::string _get_notes();
-std::string _print_altars_for_gods(const int gods[],
-                                   const int num_gods,
-                                   const bool print_unseen);
+static std::string _get_branches();
+static std::string _get_altars();
+static std::string _get_shops();
+static std::string _get_portals();
+static std::string _get_notes();
+static std::string _print_altars_for_gods(const int gods[],
+                                          const int num_gods,
+                                          const bool print_unseen);
 
 void seen_notable_thing(dungeon_feature_type which_thing, const coord_def& pos)
 {
@@ -328,7 +328,7 @@ std::string overview_description_string()
 }
 
 // iterate through every dungeon branch, listing the ones which have been found
-std::string _get_branches()
+static std::string _get_branches()
 {
     int num_printed_branches = 1;
     char buffer[100];
@@ -383,7 +383,7 @@ std::string _get_branches()
 }
 
 // iterate through every god and display their altar's discovery state by color
-std::string _get_altars()
+static std::string _get_altars()
 {
     std::string disp;
 
@@ -419,10 +419,10 @@ std::string _get_altars()
 }
 
 // Loops through gods, printing their altar status by color.
-std::string _print_altars_for_gods(const int gods[],    // list of gods
-                                   const int num_gods,  // list size
-                                   const bool print_unseen)
-{
+static std::string _print_altars_for_gods(const int gods[],    // list of gods
+                                          const int num_gods,  // list size
+                                          const bool print_unseen)
+{   
     std::string disp;
     char buffer[100];
     int num_printed = 0;
@@ -470,7 +470,7 @@ std::string _print_altars_for_gods(const int gods[],    // list of gods
 }
 
 // iterate through all discovered shops, printing what level they are on.
-std::string _get_shops()
+static std::string _get_shops()
 {
     std::string disp;
     level_id last_id;
@@ -530,7 +530,7 @@ std::string _get_shops()
 }
 
 // Loop through found portals and display them
-std::string _get_portals()
+static std::string _get_portals()
 {
     std::string disp;
 
@@ -545,7 +545,7 @@ std::string _get_portals()
 }
 
 // Loop through each branch, printing stored notes.
-std::string _get_notes()
+static std::string _get_notes()
 {
     std::string disp;
     char depth_str[3];
