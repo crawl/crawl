@@ -924,7 +924,7 @@ void full_describe_view()
         else if (quant == 2)
         {
             // Get selected item.
-            const item_def* i = static_cast<const item_def*>(sel[0]->data);
+            item_def* i = static_cast<item_def*>(sel[0]->data);
             if (desc_menu.menu_action == InvMenu::ACT_EXAMINE)
                 describe_item(*i);
             else // ACT_EXECUTE -> travel to item
