@@ -927,6 +927,9 @@ bool is_synthetic_key(int key)
     case KEY_MACRO_DISABLE_MORE:
     case KEY_MACRO_MORE_PROTECT:
     case KEY_REPEAT_KEYS:
+#ifdef USE_TILE
+    case CK_MOUSE_CMD:
+#endif
         return (true);
     default:
         return (false);
