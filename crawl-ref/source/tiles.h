@@ -122,7 +122,7 @@ void init_player_doll();
 void save_doll_file(FILE *dollf);
 
 int item_unid_type(const item_def &item);
-int tile_known_weapon_brand(const item_def item);
+int tile_known_brand(const item_def item);
 int tile_corpse_brand(const item_def item);
 
 int get_clean_map_idx(int tile_idx);
@@ -151,6 +151,14 @@ enum tile_flags
     TILE_FLAG_MDAM_HEAVY = 0x01800000,
     TILE_FLAG_MDAM_SEV   = 0x02000000,
     TILE_FLAG_MDAM_ADEAD = 0x02800000,
+
+    // Demon difficulty has 5 possibilities, so uses 3 bits.
+    TILE_FLAG_DEMON   = 0x34000000,
+    TILE_FLAG_DEMON_5 = 0x04000000,
+    TILE_FLAG_DEMON_4 = 0x10000000,
+    TILE_FLAG_DEMON_3 = 0x14000000,
+    TILE_FLAG_DEMON_2 = 0x20000000,
+    TILE_FLAG_DEMON_1 = 0x24000000,
 
     // Background flags
     TILE_FLAG_RAY        = 0x00000800,

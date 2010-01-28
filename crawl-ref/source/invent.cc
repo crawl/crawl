@@ -554,9 +554,10 @@ bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
             }
         }
     }
-    if (item->base_type == OBJ_WEAPONS || item->base_type == OBJ_MISSILES)
+    if (item->base_type == OBJ_WEAPONS || item->base_type == OBJ_MISSILES
+        || item->base_type == OBJ_ARMOUR)
     {
-        int brand = tile_known_weapon_brand(*item);
+        int brand = tile_known_brand(*item);
         if (brand)
             tileset.push_back(tile_def(brand, TEX_DEFAULT));
     }

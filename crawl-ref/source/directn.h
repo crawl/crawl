@@ -66,22 +66,37 @@ public:
     ray_def ray;        // ray chosen if necessary
 };
 
+struct direction_chooser_args
+{
+    targetting_type restricts;
+    targ_mode_type mode;
+    int range;
+    bool just_looking;
+    bool needs_path;
+    bool may_target_monster;
+    bool may_target_self;
+    const char *target_prefix;
+    std::string top_prompt;
+    targetting_behaviour *behaviour;
+    bool cancel_at_self;
+
+    direction_chooser_args() :
+        restricts(DIR_NONE),
+        mode(TARG_ANY),
+        range(-1),
+        just_looking(false),
+        needs_path(true),
+        may_target_monster(true),
+        may_target_self(false),
+        target_prefix(NULL),
+        behaviour(NULL),
+        cancel_at_self(false) {}
+};
+
 class direction_chooser
 {
 public:
-    // FIXME: wrap all these parameters in a struct.
-    direction_chooser(dist& moves_,
-                      targetting_type restricts_,
-                      targ_mode_type mode_,
-                      int range_,
-                      bool just_looking_,
-                      bool needs_path_,
-                      bool may_target_monster_,
-                      bool may_target_self_,
-                      const char *target_prefix_,
-                      const std::string& top_prompt_,
-                      targetting_behaviour *mod_,
-                      bool cancel_at_self_);
+    direction_chooser(dist& moves, const direction_chooser_args& args);
     bool choose_direction();
 
 private:
@@ -227,13 +242,7 @@ private:
     
 };
 
-void direction(dist &moves, targetting_type restricts = DIR_NONE,
-               targ_mode_type mode = TARG_ANY, int range = -1,
-               bool just_looking = false, bool needs_path = true,
-               bool may_target_monster = true, bool may_target_self = false,
-               const char *target_prefix = NULL,
-               const char *top_prompt = NULL,
-               targetting_behaviour *mod = NULL, bool cancel_at_self = false);
+void direction(dist &moves, const direction_chooser_args& args);
 
 bool in_los_bounds(const coord_def& p);
 bool in_viewport_bounds(int x, int y);

@@ -410,6 +410,8 @@ public:
     actor_type atype() const { return ACT_MONSTER; }
     monsters* as_monster() { return this; }
     player* as_player() { return NULL; }
+    const monsters* as_monster() const { return this; }
+    const player* as_player() const { return NULL; }
 
     // Hacks, with a capital H.
     void fix_speed();

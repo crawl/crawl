@@ -1311,7 +1311,7 @@ void TilesFramework::update_minimap_bounds()
     m_region_map->update_bounds();
 }
 
-int tile_known_weapon_brand(const item_def item)
+int tile_known_brand(const item_def item)
 {
     if (!item_type_known(item))
         return 0;
@@ -1321,6 +1321,12 @@ int tile_known_weapon_brand(const item_def item)
         const int brand = get_weapon_brand(item);
         if (brand != SPWPN_NORMAL)
             return (TILE_BRAND_FLAMING + get_weapon_brand(item) - 1);
+    }
+    else if (item.base_type == OBJ_ARMOUR)
+    {
+        const int brand = get_armour_ego_type(item);
+        if (brand != SPARM_NORMAL)
+            return (TILE_BRAND_ARM_RUNNING + get_armour_ego_type(item) - 1);
     }
     else if (item.base_type == OBJ_MISSILES)
     {
@@ -1342,6 +1348,10 @@ int tile_known_weapon_brand(const item_def item)
             return TILE_BRAND_PENETRATION;
         case SPMSL_REAPING:
             return TILE_BRAND_REAPING;
+        case SPMSL_DISPERSAL:
+            return TILE_BRAND_DISPERSAL;
+        case SPMSL_EXPLODING:
+            return TILE_BRAND_EXPLOSION;
         case SPMSL_ELECTRIC:
             return TILE_BRAND_ELECTRIC;
         case SPMSL_CONFUSION:
@@ -1413,8 +1423,8 @@ static void _fill_item_info(InventoryTile &desc, const item_def &item)
     else
         desc.quantity = -1;
 
-    if (type == OBJ_WEAPONS || type == OBJ_MISSILES)
-        desc.special = tile_known_weapon_brand(item);
+    if (type == OBJ_WEAPONS || type == OBJ_MISSILES || type == OBJ_ARMOUR)
+        desc.special = tile_known_brand(item);
     else if (type == OBJ_CORPSES)
         desc.special = tile_corpse_brand(item);
 

@@ -340,6 +340,7 @@ LROCKCOL:   lightmagenta
 LFLOORTILE: floor_tomb
 LROCKTILE:  wall_zot_magenta
 KITEM:      Z = Orb of Zot
+KMASK:      Z = no_item_gen
 
 #traps
 SUBST:    C = X:900 c:100 =

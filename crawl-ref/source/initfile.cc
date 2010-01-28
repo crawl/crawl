@@ -889,6 +889,7 @@ void game_options::reset_options()
 
     tile_show_minihealthbar = true;
     tile_show_minimagicbar  = true;
+    tile_show_demon_numbers = true;
 #endif
 
     // map each colour to itself as default
@@ -3216,6 +3217,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else INT_OPTION(tile_update_rate, 50, INT_MAX);
     else BOOL_OPTION(tile_show_minihealthbar);
     else BOOL_OPTION(tile_show_minimagicbar);
+    else BOOL_OPTION(tile_show_demon_numbers);
     else if (key == "tile_tag_pref")
     {
         tile_tag_pref = string2tag_pref(field.c_str());

@@ -1029,6 +1029,21 @@ void DungeonRegion::pack_foreground(unsigned int bg, unsigned int fg, int x, int
         else if (mdam_flag == TILE_FLAG_MDAM_ADEAD)
             m_buf_main.add(TILE_MDAM_ALMOST_DEAD, x, y);
     }
+
+    if (fg & TILE_FLAG_DEMON)
+    {
+        unsigned int demon_flag = fg & TILE_FLAG_DEMON;
+        if (demon_flag == TILE_FLAG_DEMON_1)
+            m_buf_main.add(TILE_DEMON_NUM1, x, y);
+        else if (demon_flag == TILE_FLAG_DEMON_2)
+            m_buf_main.add(TILE_DEMON_NUM2, x, y);
+        else if (demon_flag == TILE_FLAG_DEMON_3)
+            m_buf_main.add(TILE_DEMON_NUM3, x, y);
+        else if (demon_flag == TILE_FLAG_DEMON_4)
+            m_buf_main.add(TILE_DEMON_NUM4, x, y);
+        else if (demon_flag == TILE_FLAG_DEMON_5)
+            m_buf_main.add(TILE_DEMON_NUM5, x, y);
+    }
 }
 
 void DungeonRegion::pack_cursor(cursor_type type, unsigned int tile)
@@ -1137,78 +1152,7 @@ void DungeonRegion::render()
     m_buf_main_trans.draw();
     m_buf_main.draw();
 
-    if (Options.tile_show_minihealthbar && you.hp < you.hp_max
-        || Options.tile_show_minimagicbar
-           && you.magic_points < you.max_magic_points)
-    {
-        // Tiles are 32x32 pixels; 1/32 = 0.03125.
-        // The bars are two pixels high each.
-        const float bar_height = 0.0625;
-        float healthbar_offset = 0.875;
-
-        ShapeBuffer buff;
-
-        if (Options.tile_show_minimagicbar
-            && you.magic_points < you.max_magic_points)
-        {
-            static const VColour magic(0, 0, 255, 255);
-            static const VColour magic_spent(0, 0, 0, 255);
-
-            const float magic_divider = (float) you.magic_points
-                                        / (float) you.max_magic_points;
-
-            buff.add(mx / 2,
-                     my / 2 + healthbar_offset + bar_height,
-                     mx / 2 + magic_divider,
-                     my / 2 + 1,
-                     magic);
-            buff.add(mx / 2 + magic_divider,
-                     my / 2 + healthbar_offset + bar_height,
-                     mx / 2 + 1,
-                     my / 2 + 1,
-                     magic_spent);
-        }
-        else
-        {
-            healthbar_offset += bar_height;
-        }
-
-        if (Options.tile_show_minihealthbar)
-        {
-            const float min_hp = std::max(0, you.hp);
-            const float health_divider = min_hp / (float) you.hp_max;
-
-            const int hp_percent = (you.hp * 100) / you.hp_max;
-
-            int hp_colour = GREEN;
-            for (unsigned int i = 0; i < Options.hp_colour.size(); ++i)
-                if (hp_percent <= Options.hp_colour[i].first)
-                    hp_colour = Options.hp_colour[i].second;
-
-            static const VColour healthy(0,   255, 0, 255);
-            static const VColour damaged(255, 255, 0, 255);
-            static const VColour wounded(0, 0, 0, 255);
-            static const VColour hp_spent(255,   0, 0, 255);
-
-            buff.add(mx / 2,
-                     my / 2 + healthbar_offset,
-                     mx / 2 + health_divider,
-                     my / 2 + healthbar_offset + bar_height,
-                     hp_colour == RED    ? wounded :
-                     hp_colour == YELLOW ? damaged
-                                         : healthy);
-
-
-            buff.add(mx / 2 + health_divider,
-                     my / 2 + healthbar_offset,
-                     mx / 2 + 1,
-                     my / 2 + healthbar_offset + bar_height,
-                     hp_spent);
-        }
-
-        buff.draw();
-
-    }
+    draw_minibars();
 
     if (you.berserk())
     {
@@ -1278,6 +1222,101 @@ void DungeonRegion::render()
             m_tag_font->render_string(pc.x, pc.y, def.text,
                                       min_pos, max_pos, WHITE, false);
         }
+}
+
+/**
+ * Draws miniature health and magic points bars on top of the player tile.
+ *
+ * Drawing of either is governed by options tile_show_minihealthbar and
+ * tile_show_minimagicbar. By default, both are on.
+ *
+ * Intended behaviour is to display both if either is not full. (Unless
+ * the bar is toggled off by options.) --Eino & felirx
+ */
+void DungeonRegion::draw_minibars()
+{
+    if (Options.tile_show_minihealthbar && you.hp < you.hp_max
+        || Options.tile_show_minimagicbar
+           && you.magic_points < you.max_magic_points)
+    {
+        // Tiles are 32x32 pixels; 1/32 = 0.03125.
+        // The bars are two pixels high each.
+        const float bar_height = 0.0625;
+        float healthbar_offset = 0.875;
+
+        ShapeBuffer buff;
+
+        if (!on_screen(you.pos()))
+             return;
+
+        // FIXME: to_screen_coords could be made into two versions: one
+        // that gives coords by pixel (the current one), one that gives
+        // them by grid.
+        coord_def player_on_screen;
+        to_screen_coords(you.pos(), player_on_screen);
+
+        static const float tile_width  = wx / mx;
+        static const float tile_height = wy / my;
+
+        player_on_screen.x = player_on_screen.x / tile_width;
+        player_on_screen.y = player_on_screen.y / tile_height;
+
+        if (Options.tile_show_minimagicbar && you.max_magic_points > 0)
+        {
+            static const VColour magic(0, 0, 255, 255);
+            static const VColour magic_spent(0, 0, 0, 255);
+
+            const float magic_divider = (float) you.magic_points
+                                        / (float) you.max_magic_points;
+
+            buff.add(player_on_screen.x,
+                     player_on_screen.y + healthbar_offset + bar_height,
+                     player_on_screen.x + magic_divider,
+                     player_on_screen.y + 1,
+                     magic);
+            buff.add(player_on_screen.x + magic_divider,
+                     player_on_screen.y + healthbar_offset + bar_height,
+                     player_on_screen.x + 1,
+                     player_on_screen.y + 1,
+                     magic_spent);
+        }
+        else
+            healthbar_offset += bar_height;
+
+        if (Options.tile_show_minihealthbar)
+        {
+            const float min_hp = std::max(0, you.hp);
+            const float health_divider = min_hp / (float) you.hp_max;
+
+            const int hp_percent = (you.hp * 100) / you.hp_max;
+
+            int hp_colour = GREEN;
+            for (unsigned int i = 0; i < Options.hp_colour.size(); ++i)
+                if (hp_percent <= Options.hp_colour[i].first)
+                    hp_colour = Options.hp_colour[i].second;
+
+            static const VColour healthy(0,   255, 0, 255);
+            static const VColour damaged(255, 255, 0, 255);
+            static const VColour wounded(0, 0, 0, 255);
+            static const VColour hp_spent(255,   0, 0, 255);
+
+            buff.add(player_on_screen.x,
+                     player_on_screen.y + healthbar_offset,
+                     player_on_screen.x + health_divider,
+                     player_on_screen.y + healthbar_offset + bar_height,
+                     hp_colour == RED    ? wounded :
+                     hp_colour == YELLOW ? damaged
+                                         : healthy);
+
+            buff.add(player_on_screen.x + health_divider,
+                     player_on_screen.y + healthbar_offset,
+                     player_on_screen.x + 1,
+                     player_on_screen.y + healthbar_offset + bar_height,
+                     hp_spent);
+        }
+
+        buff.draw();
+    }
 }
 
 void DungeonRegion::clear()

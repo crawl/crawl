@@ -541,7 +541,7 @@ static void _adjust_ability(void)
 void list_armour()
 {
     std::ostringstream estr;
-    for (int i = EQ_CLOAK; i <= EQ_BODY_ARMOUR; i++)
+    for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
     {
         const int armour_id = you.equip[i];
         int       colour    = MSGCOL_BLACK;

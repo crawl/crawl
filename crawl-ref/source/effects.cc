@@ -2719,9 +2719,15 @@ void yell(bool force)
                 return;
             }
         }
-        
-        direction(targ, DIR_TARGET, TARG_HOSTILE, -1, false, false,
-                  false, false, NULL, "Gang up on whom?");
+
+        {
+            direction_chooser_args args;
+            args.restricts = DIR_TARGET;
+            args.mode = TARG_HOSTILE;
+            args.needs_path = false;
+            args.top_prompt = "Gang up on whom?";
+            direction(targ, args);
+        }
 
         if (targ.isCancel)
         {

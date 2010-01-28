@@ -1760,9 +1760,14 @@ void process_command( command_type cmd )
 
     case CMD_LOOK_AROUND:
     {
-        struct dist lmove;   // Will be initialised by direction().
-        direction(lmove, DIR_TARGET, TARG_ANY, -1, true, false, true, false,
-                  "Here", "Move the cursor around to observe a square.");
+        dist lmove;   // Will be initialised by direction().
+        direction_chooser_args args;
+        args.restricts = DIR_TARGET;
+        args.just_looking = true;
+        args.needs_path = false;
+        args.target_prefix = "Here";
+        args.may_target_monster = "Move the cursor around to observe a square.";
+        direction(lmove, args);
         if (lmove.isValid && lmove.isTarget && !lmove.isCancel
             && !crawl_state.arena_suspended)
         {
@@ -3254,7 +3259,9 @@ static void _open_door(coord_def move, bool check_confused)
         else
         {
             mpr("Which direction? ", MSGCH_PROMPT);
-            direction(door_move, DIR_DIR);
+            direction_chooser_args args;
+            args.restricts = DIR_DIR;
+            direction(door_move, args);
 
             if (!door_move.isValid)
                 return;
@@ -3509,7 +3516,9 @@ static void _close_door(coord_def move)
         else
         {
             mpr("Which direction? ", MSGCH_PROMPT);
-            direction(door_move, DIR_DIR);
+            direction_chooser_args args;
+            args.restricts = DIR_DIR;
+            direction(door_move, args);
 
             if (!door_move.isValid)
                 return;

@@ -275,14 +275,9 @@ static void _shoals_furniture(int margin)
         dgn_Vault_Excavatable_Feats.insert(DNGN_STONE_WALL);
 
         const coord_def p = _pick_shoals_island();
-        const char *SHOAL_RUNE_HUT = "shoal_rune";
+        const char *SHOAL_RUNE_HUT = "shoal_rune_hut";
         const map_def *vault = random_map_for_tag(SHOAL_RUNE_HUT);
-        {
-            // Place the rune
-            dgn_map_parameters mp("rune");
-            dgn_ensure_vault_placed(dgn_place_map(vault, false, false, p),
-                                    false);
-        }
+        dgn_ensure_vault_placed(dgn_place_map(vault, false, false, p), false);
 
         const int nhuts = std::min(8, int(_shoals_islands.islands.size()));
         for (int i = 2; i < nhuts; ++i)
@@ -292,7 +287,7 @@ static void _shoals_furniture(int margin)
             // again.
             int tries = 5;
             do
-                vault = random_map_for_tag("shoal_rune");
+                vault = random_map_for_tag("shoal_hut");
             while (!vault && --tries > 0);
             if (vault)
                 dgn_place_map(vault, false, false, _pick_shoals_island(), 0);
@@ -774,18 +769,20 @@ static bool _shoals_tide_sweep_items_clear(coord_def c)
 
     for (stack_iterator si(c); si; ++si)
     {
-        const coord_def target(_shoals_escape_place_from(c, NULL, &*si));
         // Don't abort tide entry because of items. If we can't sweep the
         // item clear here, let dungeon_terrain_changed teleport the item
         // to the nearest safe square.
-        int id = si.link();
-
+        item_def &item(*si);
         // Let the tide break up stacks
-        if (!one_chance_in(2))
+        if (!is_rune(item) && coinflip())
             continue;
 
+        const coord_def target(_shoals_escape_place_from(c, NULL, &item));
         if (!target.origin())
+        {
+            int id = si.link();
             move_item_to_grid(&id, target);
+        }
     }
 
     return true;
