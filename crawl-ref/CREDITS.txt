@@ -17,33 +17,34 @@ Walker) would like to thank:
 We'd also like to thank members of the Dungeon Crawl community who have
 contributed to Dungeon Crawl Stone Soup:
 
-Warwick Allison              R. Dan Henry              Dylan O'Donnell
-Juha Arpiainen               Brendan Hickey            Yuuma Oohara
-Roy Axenov                   Benoit Hudson             Pedro
-Max Bane                     Sylvia 'Onia' Hörnke      Erik Piper
-Bill Beher                   Iainuki                   Lemuel Pitkin
-Alexander Beisig             Ilyak                     Derek Ray
-Stu Black                    Matthew Ince              Remsleep
-Erik Inge Bolsø              Mitsuhiro Itakura         Will Rogers
-Peter Borgmann               Mikko Juola               David Rose
-Trent W. Buck                Jarmo Kielosto            Sebastian Salman
-Robert Burnham               Kornel Kisielewicz        Brett Scarborough
-Joe Buzzelli                 Daniel Klein              Darshan Shaligram
-Terje Bø                     Vambola Kotkas            Robert Shimmin
-Aaron Curtis                 Ryan Kusnery              Sigurd
-Denzi                        Jukka Kuusisto            Edgar Simo
-Rachel Elizabeth Dillon      Janne Lahdenperä          Alex Smith
-Mike Drinen                  Maciej Lapinski           Solf
-Kieron Dunbar                Jordan Lewis              Michael Spang
-Micha Elsner                 Icy Lich                  Johan Strandell
-Christopher Evenstar         Markus Maier              Roman Sêk
-Ben Goetter                  Arien Malec               William Tanksley, Jr.
-Rob Grant                    Paul Maloney              Marc H. Thoben
-John Greenberg               Neil 'Mu' Middleton       Jared 'Twinge' Tinney
-GreyKnight                   Shawn M Moore             Matt Titus
-Joshua Gross                 Eva Myers                 Steven Wheeler
-Brian Haase                  Wille Mäntylä             Thomas Willem
-Shayne Halvorson             Erkki Nurmi               Jeremey Wilson
-Ciaran Hamilton              Mattias Nyberg            Yelve Yakut
-Chris Hamons                 nyra                      Zooko
+Warwick Allison              R. Dan Henry              Yuuma Oohara
+Juha Arpiainen               Brendan Hickey            Pedro
+Roy Axenov                   Benoit Hudson             Erik Piper
+Max Bane                     Sylvia 'Onia' Hörnke      Lemuel Pitkin
+Bill Beher                   Iainuki                   Derek Ray
+Alexander Beisig             Ilyak                     Remsleep
+Stu Black                    Matthew Ince              Will Rogers
+Erik Inge Bolsø              Mitsuhiro Itakura         David Rose
+Peter Borgmann               Mikko Juola               Sebastian Salman
+Trent W. Buck                Jarmo Kielosto            Brett Scarborough
+Robert Burnham               Kornel Kisielewicz        Darshan Shaligram
+Joe Buzzelli                 Daniel Klein              Robert Shimmin
+Terje Bø                     Vambola Kotkas            Sigurd
+Henry Cipolla                Ryan Kusnery              Edgar Simo
+Aaron Curtis                 Jukka Kuusisto            Alex Smith
+Denzi                        Janne Lahdenperä          Solf
+Rachel Elizabeth Dillon      Maciej Lapinski           Michael Spang
+Mike Drinen                  Jordan Lewis              Johan Strandell
+Kieron Dunbar                Icy Lich                  Roman Sêk
+Micha Elsner                 Markus Maier              William Tanksley, Jr.
+Christopher Evenstar         Arien Malec               Marc H. Thoben
+Ben Goetter                  Paul Maloney              Jared 'Twinge' Tinney
+Rob Grant                    Neil 'Mu' Middleton       Matt Titus
+John Greenberg               Shawn M Moore             Steven Wheeler
+GreyKnight                   Eva Myers                 Thomas Willem
+Joshua Gross                 Wille Mäntylä             Jeremey Wilson
+Brian Haase                  Erkki Nurmi               Yelve Yakut
+Shayne Halvorson             Mattias Nyberg            Zooko
+Ciaran Hamilton              nyra
+Chris Hamons                 Dylan O'Donnell
 
