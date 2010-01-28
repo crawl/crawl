@@ -56,7 +56,7 @@ portal_vault_colour_map_type portal_vault_colours;
 annotation_map_type level_annotations;
 annotation_map_type level_exclusions;
 
-static void _seen_altar( god_type god, const coord_def& pos );
+static void _seen_altar(god_type god, const coord_def& pos);
 static void _seen_staircase(dungeon_feature_type which_staircase,
                             const coord_def& pos);
 static void _seen_other_thing(dungeon_feature_type which_thing,
@@ -67,8 +67,7 @@ static std::string _get_altars();
 static std::string _get_shops();
 static std::string _get_portals();
 static std::string _get_notes();
-static std::string _print_altars_for_gods(const int gods[],
-                                          const int num_gods,
+static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
                                           const bool print_unseen);
 
 void seen_notable_thing(dungeon_feature_type which_thing, const coord_def& pos)
@@ -387,16 +386,6 @@ static std::string _get_altars()
 {
     std::string disp;
 
-    // predefine the god order so the display appears sorted to the user
-    const int guaranteed_gods[] = { GOD_CHEIBRIADOS, GOD_ELYVILON, GOD_FEDHAS,
-                                    GOD_KIKUBAAQUDGHA, GOD_MAKHLEB,
-                                    GOD_NEMELEX_XOBEH, GOD_OKAWARU,
-                                    GOD_SIF_MUNA, GOD_SHINING_ONE, GOD_TROG,
-                                    GOD_VEHUMET, GOD_XOM, GOD_YREDELEMNUL,
-                                    GOD_ZIN };
-
-    const int non_guaranteed_gods[] = {GOD_BEOGH, GOD_JIYVA, GOD_LUGONU};
-
     disp += "\n<green>Altars:</green>";
     if (crawl_state.need_save || !crawl_state.updating_scores)
     {
@@ -404,23 +393,14 @@ static std::string _get_altars()
                 "<white>?/G</white> for information about gods)";
     }
     disp += EOL;
-
-    disp += _print_altars_for_gods(
-                guaranteed_gods,
-                sizeof(guaranteed_gods) / sizeof(guaranteed_gods[0]),
-                true);
-
-    disp += _print_altars_for_gods(
-                non_guaranteed_gods,
-                sizeof(non_guaranteed_gods) / sizeof(non_guaranteed_gods[0]),
-                false);
+    disp += _print_altars_for_gods(temple_god_list(), true);
+    disp += _print_altars_for_gods(nontemple_god_list(), false);
 
     return disp;
 }
 
 // Loops through gods, printing their altar status by color.
-static std::string _print_altars_for_gods(const int gods[],    // list of gods
-                                          const int num_gods,  // list size
+static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
                                           const bool print_unseen)
 {   
     std::string disp;
@@ -428,9 +408,9 @@ static std::string _print_altars_for_gods(const int gods[],    // list of gods
     int num_printed = 0;
     char const *colour;
 
-    for (int cur_god = 0; cur_god < num_gods; cur_god++)
+    for (unsigned int cur_god = 0; cur_god < gods.size(); cur_god++)
     {
-        const god_type god = (god_type) gods[cur_god];
+        const god_type god = gods[cur_god];
 
         // for each god, look through the notable altars list for a match
         bool has_altar_been_seen = false;
