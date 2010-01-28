@@ -317,7 +317,7 @@ std::string overview_description_string()
 {
     std::string disp;
 
-    disp += "                    <white>Overview of the Dungeon</white>\n" ;
+    disp += "                    <white>Dungeon Overview and Level Annotations</white>\n" ;
     disp += _get_branches();
     disp += _get_altars();
     disp += _get_shops();
@@ -482,7 +482,7 @@ std::string _get_shops()
     {
         disp +="\n<green>Shops:</green>";
         if (crawl_state.need_save || !crawl_state.updating_scores)
-            disp += " (use <white>Ctrl-F \"shop\"</white> to reach them)";
+            disp += " (use <white>Ctrl-F \"shop\"</white> to reach them - yellow denotes antique shop.)";
         disp += EOL;
     }
     last_id.depth = 10000;
@@ -575,7 +575,7 @@ std::string _get_notes()
 
     if (notes_exist)
     {
-        disp += "\n                    <white>Level Annotations</white>\n" ;
+        disp += "\n<green>Annotations</green>\n" ;
 
         for (int i = 0; i < NUM_BRANCHES; ++i)
         {
