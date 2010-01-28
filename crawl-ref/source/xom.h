@@ -42,8 +42,9 @@ enum xom_event_type
     XOM_GOOD_MUTATION,
     XOM_GOOD_MAJOR_ALLY,
     XOM_GOOD_LIGHTNING,
-    XOM_GOOD_SCENERY,
-    XOM_LAST_GOOD_ACT = XOM_GOOD_SCENERY,   // 20
+    XOM_GOOD_SCENERY,           //  20
+    XOM_GOOD_SNAKES,
+    XOM_LAST_GOOD_ACT = XOM_GOOD_SNAKES,   // 21
 
     // bad acts
     XOM_BAD_NOTHING,  // bad act suppressed
