@@ -378,7 +378,7 @@ void xom_tick()
 // marked as seen (explored) or known (mapped).  If seen_only is true,
 // grids only "seen" via magic mapping don't count.  Returns the
 // estimated percentage value of exploration.
-static int _exploration_estimate(bool seen_only = false)
+static int _exploration_estimate(bool seen_only = false, bool debug = false)
 {
     int seen  = 0;
     int total = 0;
@@ -417,9 +417,14 @@ static int _exploration_estimate(bool seen_only = false)
     while (total < 100 && tries < 1000);
 
 #ifdef DEBUG_XOM
-    mprf(MSGCH_DIAGNOSTICS,
-         "exploration estimate (%s): %d out of %d grids seen",
-         seen_only ? "explored" : "mapped", seen, total);
+    // No message during heavy-duty wizmode testing:
+    // Instead all results are written into xom_debug.stat.
+    if (!debug)
+    {
+        mprf(MSGCH_DIAGNOSTICS,
+             "exploration estimate (%s): %d out of %d grids seen",
+             seen_only ? "explored" : "mapped", seen, total);
+    }
 #endif
 
     // If we didn't get any qualifying grids, there are probably so few
@@ -540,7 +545,7 @@ static int _xom_makes_you_cast_random_spell(int sever, int tension,
         {
             // If the level is already mostly explored, there's a chance
             // we might try something else.
-            const int explored = _exploration_estimate();
+            const int explored = _exploration_estimate(false, debug);
             if (explored > 80 && x_chance_in_y(explored, 100))
                 return (XOM_DID_NOTHING);
         }
@@ -2290,7 +2295,7 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
         // This is not very interesting if the level is already fully
         // explored (presumably cleared).  Even then, it may
         // occasionally happen.
-        const int explored = _exploration_estimate(true);
+        const int explored = _exploration_estimate(true, debug);
         if (explored >= 80 && x_chance_in_y(explored, 120))
             return (XOM_DID_NOTHING);
 
@@ -3464,7 +3469,7 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
             // fully explored (presumably cleared).  If Xom is feeling
             // nasty, this is likelier to happen if the level is
             // unexplored.
-            const int explored = _exploration_estimate(true);
+            const int explored = _exploration_estimate(true, debug);
             if (nasty && (explored >= 40 || tension > 10)
                 || explored >= 60 + random2(40))
             {
@@ -3687,8 +3692,15 @@ static void _handle_accidental_death(const int orig_hp,
 int xom_acts(bool niceness, int sever, int tension, bool debug)
 {
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_RELIGION) || defined(DEBUG_XOM)
-    mprf(MSGCH_DIAGNOSTICS, "xom_acts(%u, %d, %d); piety: %u, interest: %u\n",
-         niceness, sever, tension, you.piety, you.gift_timeout);
+    if (!debug)
+    {
+        // This probably seems a bit odd, but we really don't want to display
+        // these when doing a heavy-duty wiz-mode debug test: just ends up
+        // as message spam and the player doesn't get any further information
+        // anyway. (jpeg)
+        mprf(MSGCH_DIAGNOSTICS, "xom_acts(%u, %d, %d); piety: %u, interest: %u\n",
+             niceness, sever, tension, you.piety, you.gift_timeout);
+    }
 #endif
 
 #ifdef WIZARD
@@ -3742,7 +3754,10 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
         tension = get_tension(which_god);
 
 #if defined(DEBUG_RELIGION) || defined(DEBUG_XOM) || defined(DEBUG_TENSION)
-    mprf(MSGCH_DIAGNOSTICS, "Xom tension: %d", tension);
+    // No message during heavy-duty wizmode testing:
+    // Instead all results are written into xom_debug.stat.
+    if (!debug)
+        mprf(MSGCH_DIAGNOSTICS, "Xom tension: %d", tension);
 #endif
 
     const int  orig_hp       = you.hp;
@@ -4162,13 +4177,33 @@ static const char* _xom_effect_to_name(int effect)
     return (result.c_str());
 }
 
+static char* _list_exploration_estimate()
+{
+    int explored = 0;
+    int mapped   = 0;
+    for (int k = 0; k < 10; ++k)
+    {
+        mapped   += _exploration_estimate(false, true);
+        explored += _exploration_estimate(true, true);
+    }
+    mapped /= 10;
+    explored /= 10;
+
+    snprintf(info, INFO_SIZE, "mapping estimate: %d%%\n"
+                              "exploration estimate: %d%%\n",
+             mapped, explored);
+
+    return (info);
+}
+
 // Loops over the entire piety spectrum and calls xom_acts() multiple
 // times for each value, then prints the results into a file.
-// TODO: Allow specification of niceness, tension, boredness, and repeats.
+// TODO: Allow specification of niceness, tension, and boredness.
 void debug_xom_effects()
 {
     // Repeat N times.
-    const int N = debug_prompt_for_int("How many iterations? ", true);
+    const int N = debug_prompt_for_int("How many iterations over the "
+                                       "entire piety range? ", true);
 
     if (N == 0)
     {
@@ -4190,8 +4225,9 @@ void debug_xom_effects()
 
     fprintf(ostat, "---- STARTING XOM DEBUG TESTING ----\n");
     fprintf(ostat, "%s\n", dump_overview_screen(false).c_str());
-    fprintf(ostat, "%s", screenshot().c_str());
-    fprintf(ostat, "\n%s\n", mpr_monster_list().c_str());
+    fprintf(ostat, "%s\n", screenshot().c_str());
+    fprintf(ostat, "%s\n", _list_exploration_estimate());
+    fprintf(ostat, "%s\n", mpr_monster_list().c_str());
     fprintf(ostat, " --> Tension: %d\n", tension);
 
     if (you.penance[GOD_XOM])
