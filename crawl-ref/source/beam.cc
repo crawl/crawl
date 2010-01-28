@@ -3219,14 +3219,10 @@ void bolt::drop_object()
     else if (item->sub_type == MI_LARGE_ROCK)
     {
         // Large rocks mulch to stone.
-        std::string sound_msg = "You hear a cracking sound!";
+        bool seen = you.see_cell(pos());
         if (you.see_cell(pos()))
-        {
-            mprf("%s shatters into pieces!",
-                 item->name(DESC_CAP_THE).c_str());
-            sound_msg = "";
-        }
-        noisy(12, pos(), sound_msg.c_str());
+            mprf("%s shatters into pieces!", item->name(DESC_CAP_THE).c_str());
+        noisy(12, pos(), seen ? "You hear a cracking sound!" : NULL);
 
         item->sub_type = MI_STONE;
         item->quantity = 10 + random2(41);
