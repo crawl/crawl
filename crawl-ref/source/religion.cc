@@ -4067,28 +4067,43 @@ static void _place_delayed_monsters()
     _delayed_failure.clear();
 }
 
+
+static bool _is_god(god_type god)
+{
+    return (god > GOD_NO_GOD && god < NUM_GODS);
+}
+
+static bool _is_temple_god(god_type god)
+{
+    if (!_is_god(god))
+        return (false);
+
+    switch(god)
+    {
+    case GOD_NO_GOD:
+    case GOD_LUGONU:
+    case GOD_BEOGH:
+    case GOD_JIYVA:
+        return false;
+
+    default:
+        return true;
+    }
+}
+
+static bool _is_nontemple_god(god_type god)
+{
+    return (_is_god(god) && !_is_temple_god(god));
+}
+
 std::vector<god_type> temple_god_list()
 {
     std::vector<god_type> god_list;
-
     for (int i = 0; i < NUM_GODS; i++)
     {
-        god_type god = (god_type) i;
-
-        // These never appear in any temples.
-        switch(god)
-        {
-        case GOD_NO_GOD:
-        case GOD_LUGONU:
-        case GOD_BEOGH:
-        case GOD_JIYVA:
-            continue;
-
-        default:
-            break;
-        }
-
-        god_list.push_back(god);
+        god_type god = static_cast<god_type>(i);
+        if (_is_temple_god(god))
+            god_list.push_back(god);
     }
     return god_list;
 }
