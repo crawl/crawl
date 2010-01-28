@@ -191,8 +191,9 @@ bool iood_act(monsters &mon, bool no_trail)
         // realistic (strafing!), but since the game has no non-cheesy
         // means of waiting a small fraction of a turn, we don't want it.
         const int old_t_pos = mon.props["iood_tpos"].get_short();
+        const coord_def rpos(static_cast<int>(round(x)), static_cast<int>(round(y)));
         if (old_t_pos && old_t_pos != (256 * target.x + target.y)
-            && (coord_def(round(x), round(y)) - target).rdist() <= 1
+            && (rpos - target).rdist() <= 1
             // ... but following an orb is ok.
             && _in_front(vx, vy, dx, dy, 1.5)) // ~97 degrees
         {
@@ -227,7 +228,7 @@ reflected:
     mon.props["iood_x"] = x;
     mon.props["iood_y"] = y;
 
-    coord_def pos(round(x), round(y));
+    const coord_def pos(static_cast<int>(round(x)), static_cast<int>(round(y)));
     if (!in_bounds(pos))
     {
         _iood_dissipate(mon);
