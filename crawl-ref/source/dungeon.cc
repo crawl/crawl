@@ -4451,15 +4451,6 @@ static bool _build_vaults(int level_number, const map_def *vault,
                 stair_exist[grd[stx][sty] - DNGN_STONE_STAIRS_DOWN_I] = 1;
             }
 
-    if (player_in_branch( BRANCH_DIS ))
-    {
-        for (sty = 0; sty < 5; sty++)
-            stair_exist[sty] = 1;
-
-        for (sty = 6; sty < 10; sty++)
-            stair_exist[sty] = 0;
-    }
-
     for (int j = 0; j < (coinflip()? 4 : 3); j++)
         for (int i = 0; i < 2; i++)
         {
