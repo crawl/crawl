@@ -2305,19 +2305,6 @@ static monsterentry mondata[] = {
     MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_HUGE
 },
 
-// efreeti ('E')
-{
-    MONS_EFREET, 'E', RED, "efreet",
-    M_SPELLCASTER | M_SPEAKS | M_GLOWS,
-    MR_RES_POISON | mrd(MR_RES_FIRE, 3) | MR_VUL_COLD,
-    0, 12, MONS_EFREET, MONS_EFREET, MH_DEMONIC, -3,
-    { {AT_HIT, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 7, 3, 5, 0 },
-    10, 5, MST_EFREET, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
-    I_HIGH, HT_LAND, FL_LEVITATE, 10, DEFAULT_ENERGY,
-    MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_LARGE
-},
-
 // frogs ('F')
 {
     MONS_GIANT_FROG, 'F', GREEN, "giant frog",
@@ -2915,7 +2902,19 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_BIG
 },
 
-// rakshasas ('R')
+// rakshasas and efreeti ('R')
+{
+    MONS_EFREET, 'R', RED, "efreet",
+    M_SPELLCASTER | M_SPEAKS | M_GLOWS,
+    MR_RES_POISON | mrd(MR_RES_FIRE, 3) | MR_VUL_COLD,
+    0, 12, MONS_EFREET, MONS_EFREET, MH_DEMONIC, -3,
+    { {AT_HIT, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 7, 3, 5, 0 },
+    10, 5, MST_EFREET, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
+    I_HIGH, HT_LAND, FL_LEVITATE, 10, DEFAULT_ENERGY,
+    MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_LARGE
+},
+
 {
     MONS_RAKSHASA, 'R', YELLOW, "rakshasa",
     M_SPELLCASTER | M_SEE_INVIS,
@@ -4539,7 +4538,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_AZRAEL, 'E', LIGHTRED, "Azrael",
+    MONS_AZRAEL, 'R', LIGHTRED, "Azrael",
     M_UNIQUE | M_SPELLCASTER | M_GLOWS | M_SPEAKS,
     MR_RES_POISON | mrd(MR_RES_FIRE, 3) | MR_VUL_COLD,
     0, 12, MONS_EFREET, MONS_EFREET, MH_DEMONIC, -3,
@@ -4814,7 +4813,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_MARA, 'R', LIGHTRED, "Mara",
+    MONS_MARA, 'R', LIGHTMAGENTA, "Mara",
     M_SPELLCASTER | M_SEE_INVIS | M_SPEAKS | M_UNIQUE,
     MR_RES_POISON | MR_RES_ELEC,
     0, 20, MONS_RAKSHASA, MONS_RAKSHASA, MH_DEMONIC, -6,
@@ -4828,7 +4827,7 @@ static monsterentry mondata[] = {
 // Illusions of Mara. Only two ever exist at the one time; identical stats to
 // Mara.
 {
-    MONS_MARA_FAKE, 'R', LIGHTRED, "Mara",
+    MONS_MARA_FAKE, 'R', LIGHTMAGENTA, "Mara",
     M_SPELLCASTER | M_SEE_INVIS | M_ACTUAL_SPELLS | M_SPEAKS,
     MR_RES_POISON | MR_RES_ELEC,
     0, 20, MONS_RAKSHASA_FAKE, MONS_RAKSHASA_FAKE, MH_DEMONIC, -6,
