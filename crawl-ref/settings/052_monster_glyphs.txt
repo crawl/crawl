@@ -33,6 +33,10 @@ mon_glyph = smoke demon : lightgrey 4
 mon_glyph = hellion : fire 3
 mon_glyph = ynoxinul : cyan 3
 
+# efreets
+mon_glyph = efreet : red E
+mon_glyph = Azrael : lightred E
+
 # jellies
 mon_glyph = acid blob : lightgreen
 # not in 0.5, but it would conflict with acid blobs
