@@ -1098,7 +1098,7 @@ static bool _userdef_item_selected(const item_def &i, int selector)
 #if defined(CLUA_BINDINGS)
     const char *luafn = selector == OSEL_WIELD ? "ch_item_wieldable"
                                                : NULL;
-    return (luafn && clua.callbooleanfn(false, luafn, "u", &i));
+    return (luafn && clua.callbooleanfn(false, luafn, "i", &i));
 #else
     return (false);
 #endif
