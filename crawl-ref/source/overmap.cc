@@ -126,7 +126,7 @@ static dungeon_feature_type portal_to_feature(portal_type p)
 
 static const char* portaltype_to_string(portal_type p)
 {
-    switch ( p )
+    switch (p)
     {
     case PORTAL_LABYRINTH:   return "<cyan>Labyrinth:</cyan>";
     case PORTAL_HELL:        return "<red>Hell:</red>";
@@ -138,7 +138,7 @@ static const char* portaltype_to_string(portal_type p)
 
 static std::string shoptype_to_string(shop_type s)
 {
-    switch ( s )
+    switch (s)
     {
     case SHOP_WEAPON:          return "(";
     case SHOP_WEAPON_ANTIQUE:  return "<yellow>(</yellow>";
@@ -459,7 +459,7 @@ static std::string _get_shops()
     {
         disp +="\n<green>Shops:</green>";
         if (crawl_state.need_save || !crawl_state.updating_scores)
-            disp += " (use <white>Ctrl-F \"shop\"</white> to reach them - yellow denotes antique shop.)";
+            disp += " (use <white>Ctrl-F \"shop\"</white> to reach them - yellow denotes antique shop)";
         disp += EOL;
     }
     last_id.depth = 10000;
@@ -492,9 +492,9 @@ static std::string _get_shops()
             disp += loc;
             column_count += loc.length();
 
+            disp += ": ";
             disp += "</brown>";
 
-            disp += ": ";
             column_count += 2;
 
             last_id = ci_shops->first.id;
