@@ -4488,7 +4488,7 @@ NAME:    onia_ninara_005_the_zoo_common
 WEIGHT:  9
 ORIENT:  float
 SHUFFLE: 1234567
-MONS:    giant gecko /giant iguana / giant newt /\
+MONS:    giant gecko / iguana / giant newt /\
          gila monster / komodo dragon
 MONS:    hog / jackal / wolf / hound / war dog
 MONS:    giant cockroach / giant ant / butterfly / killer bee / bumblebee /\
