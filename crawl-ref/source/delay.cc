@@ -26,6 +26,7 @@
 #include "fprop.h"
 #include "exclude.h"
 #include "food.h"
+#include "godpassive.h"
 #include "invent.h"
 #include "items.h"
 #include "itemname.h"
@@ -1506,6 +1507,7 @@ void armour_wear_effects(const int item_slot)
 
         case SPARM_PONDEROUSNESS:
             mpr("You feel rather ponderous.");
+            che_handle_change(CB_PONDEROUS, 1);
             you.redraw_evasion = true;
             break;
 
