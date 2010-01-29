@@ -1520,10 +1520,8 @@ static void tag_read_you(reader &th, char minorVersion)
 
     you.gift_timeout   = unmarshallByte(th);
 
-    if (minorVersion >= TAG_MINOR_CHEPONDER)
-        you.che_saved_ponderousness = unmarshallByte(th);
-    else
-        you.che_saved_ponderousness = 0;
+    if (minorVersion == TAG_MINOR_CHEPONDER)
+        unmarshallByte(th);
 
     you.normal_vision  = unmarshallByte(th);
     you.current_vision = unmarshallByte(th);
