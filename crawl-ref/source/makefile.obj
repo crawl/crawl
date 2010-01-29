@@ -50,6 +50,7 @@ ghost.o \
 godabil.o \
 godconduct.o \
 goditem.o \
+godpassive.o \
 godprayer.o \
 godwrath.o \
 hiscores.o \

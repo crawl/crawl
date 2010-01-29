@@ -32,6 +32,7 @@
 #include "food.h"
 #include "godabil.h"
 #include "goditem.h"
+#include "godpassive.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -1307,6 +1308,9 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
 
         // randart weapons:
         rf += scan_artefacts(ARTP_FIRE, calc_unid);
+
+        // Che bonus
+        rf += che_boost(CB_RFIRE);
     }
 
     // species:
@@ -1417,6 +1421,9 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
 
         // randart weapons:
         rc += scan_artefacts(ARTP_COLD, calc_unid);
+
+        // Che bonus
+        rc += che_boost(CB_RCOLD);
     }
 
     // mutations:
@@ -1826,6 +1833,9 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
 
         // randart wpns
         pl += scan_artefacts(ARTP_NEGATIVE_ENERGY, calc_unid);
+
+        // Che bonus
+        pl += che_boost(CB_RNEG);
     }
 
     // undead/demonic power

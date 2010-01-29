@@ -44,6 +44,7 @@
 #include "food.h"
 #include "godabil.h"
 #include "goditem.h"
+#include "godpassive.h"
 #include "godprayer.h"
 #include "godwrath.h"
 #include "hiscores.h"
@@ -2540,6 +2541,12 @@ void gain_piety(int original_gain)
         you.redraw_armour_class = true;
     }
 
+    if (you.religion == GOD_CHEIBRIADOS)
+    {
+        int diffrank = piety_rank(you.piety) - piety_rank(old_piety);
+        che_handle_change(CB_PIETY, diffrank);
+    }
+
     if (you.piety > 160 && old_piety <= 160)
     {
         // In case the best skill is Invocations, redraw the god title.
@@ -2762,6 +2769,12 @@ void lose_piety(int pgn)
     {
         // Every piety level change also affects AC from orcish gear.
         you.redraw_armour_class = true;
+    }
+
+    if (you.religion == GOD_CHEIBRIADOS)
+    {
+        int diffrank = piety_rank(you.piety) - piety_rank(old_piety);
+        che_handle_change(CB_PIETY, diffrank);
     }
 }
 
