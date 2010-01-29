@@ -785,7 +785,6 @@ enum conduct_type
     DID_KILL_PLANT,                       // Fedhas
     DID_ALLY_KILLED_PLANT,                // Fedhas
     DID_HASTY,                            // Cheibriados
-    DID_UNPONDEROUS,                      // Cheibriados
 
     NUM_CONDUCTS
 };
