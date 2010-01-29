@@ -2019,7 +2019,7 @@ enum monster_type                      // (int) menv[].type
 
     MONS_GIANT_NEWT,                   //  402
     MONS_GIANT_GECKO,                  //  403
-    MONS_GIANT_IGUANA,                 //  404
+    MONS_IGUANA,
     MONS_GILA_MONSTER,                 //  405
     MONS_KOMODO_DRAGON,                //  406
 

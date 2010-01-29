@@ -267,8 +267,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_GIANT_NEWT;
     case MONS_GIANT_GECKO:
         return TILEP_MONS_GIANT_GECKO;
-    case MONS_GIANT_IGUANA:
-        return TILEP_MONS_GIANT_IGUANA;
+    case MONS_IGUANA:
+        return TILEP_MONS_IGUANA;
     case MONS_GILA_MONSTER:
         return TILEP_MONS_GILA_MONSTER;
     case MONS_KOMODO_DRAGON:
@@ -1847,8 +1847,8 @@ static int _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_GIANT_NEWT;
     case MONS_GIANT_GECKO:
         return TILE_CORPSE_GIANT_GECKO;
-    case MONS_GIANT_IGUANA:
-        return TILE_CORPSE_GIANT_IGUANA;
+    case MONS_IGUANA:
+        return TILE_CORPSE_IGUANA;
     case MONS_GILA_MONSTER:
         return TILE_CORPSE_GILA_MONSTER;
     case MONS_KOMODO_DRAGON:
