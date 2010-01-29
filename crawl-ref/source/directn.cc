@@ -1375,6 +1375,21 @@ void direction_chooser::print_target_description() const
         print_target_monster_description();
 }
 
+std::string direction_chooser::target_interesting_terrain_description() const
+{
+    const dungeon_feature_type feature = grid_appearance(target());
+
+    // Only features which can make you lose the item are interesting.
+    // FIXME: extract the naming logic from here and use
+    // feat_has_solid_floor().
+    switch (feature)
+    {
+    case DNGN_DEEP_WATER: return " (water)";
+    case DNGN_LAVA:       return " (lava)";
+    default:              return "";
+    }
+}
+
 void direction_chooser::print_target_monster_description() const
 {
     // Do we see anything?
@@ -1383,10 +1398,17 @@ void direction_chooser::print_target_monster_description() const
         return;
 
     // FIXME: this duplicates code from _describe_monster.
-    std::string text = get_monster_equipment_desc(mon) + ".";
+
+    // Describe the monster, its equipment, and the terrain it's
+    // on (if relevant.)
+    std::string text = get_monster_equipment_desc(mon)
+        + target_interesting_terrain_description() + ".";
+
+    // Describe its wounds.
     const std::string wounds_desc = get_wounds_description(mon);
     if (!wounds_desc.empty())
         text += " " + mon->pronoun(PRONOUN_CAP) + wounds_desc;
+
     mprf(MSGCH_PROMPT, "%s: <lightgrey>%s</lightgrey>",
          target_prefix ? target_prefix : "Aim",
          text.c_str());
