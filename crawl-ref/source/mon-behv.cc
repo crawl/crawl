@@ -831,8 +831,9 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
         // against them, unless they have a current foe.
         // It won't turn friends hostile either.
         if (!mons_is_fleeing(mon) && !mons_is_panicking(mon)
-            && !mons_is_cornered(mon))
+            && !mons_is_cornered(mon) && !mons_is_seeking(mon))
         {
+            mon->lose_energy(EUT_NOTICE);
             mon->behaviour = BEH_SEEK;
         }
 
