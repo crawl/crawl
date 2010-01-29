@@ -47,7 +47,8 @@ enum tag_minor_version
     TAG_MINOR_RESET     = 0, // Minor tags were reset
     TAG_MINOR_MSGWIN    = 1, // New message history format.
     TAG_MINOR_CHEPONDER = 2, // Che prayer storing ponderousness.
-    TAG_MINOR_VERSION   = 2  // Current version.  (Keep equal to max.)
+    TAG_MINOR_NOCHEPONDER = 3, // Reverted the previous change.
+    TAG_MINOR_VERSION   = 3 // Current version.  (Keep equal to max.)
 };
 
 struct enum_info
