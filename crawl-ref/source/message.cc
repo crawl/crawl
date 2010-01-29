@@ -425,11 +425,6 @@ public:
         mesclr_line = next_line;
     }
 
-    bool just_cleared()
-    {
-        return (mesclr_line == next_line);
-    }
-
     void new_cmd(bool new_turn)
     {
         output_prefix(new_turn ? P_NEW_TURN : P_NEW_CMD);
@@ -1081,8 +1076,7 @@ void more(bool user_forced)
     }
 #endif
 
-    if (crawl_state.show_more_prompt && !suppress_messages
-        && !msgwin.just_cleared())
+    if (crawl_state.show_more_prompt && !suppress_messages)
     {
         // Really a prompt, but writing to MSGCH_PROMPT clears
         // autoclear_more.
