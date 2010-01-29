@@ -565,7 +565,7 @@ int line_reader::process_key(int ch)
         {
             int olen = length;
             length = text->length();
-            if (length >= (int) bufsz)
+            if (length >= static_cast<int>(bufsz))
                 length = bufsz - 1;
             memcpy(buffer, text->c_str(), length);
             buffer[length] = 0;
@@ -660,7 +660,7 @@ int line_reader::process_key(int ch)
     case CK_MOUSE_CLICK:
         return (-1);
     default:
-        if (isprint(ch) && length < (int) bufsz - 1)
+        if (isprint(ch) && length < static_cast<int>(bufsz) - 1)
         {
             if (pos < length)
             {
@@ -671,7 +671,7 @@ int line_reader::process_key(int ch)
                     c--;
                 }
             }
-            *cur++ = (char) ch;
+            *cur++ = static_cast<char>(ch);
             ++length;
             buffer[length] = 0;
             ++pos;

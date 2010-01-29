@@ -17,7 +17,7 @@ static int dlua_compiled_chunk_writer(lua_State *ls, const void *p,
                                       size_t sz, void *ud)
 {
     std::ostringstream &out = *static_cast<std::ostringstream*>(ud);
-    out.write((const char *) p, sz);
+    out.write(static_cast<const char *>(p), sz);
     return (0);
 }
 
