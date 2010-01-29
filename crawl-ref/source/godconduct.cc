@@ -859,6 +859,20 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
+        case DID_GLUTTONY:
+            if (you.religion == GOD_CHEIBRIADOS)
+            {
+                if (x_chance_in_y(level, 2000))
+                {
+                    // Honeycomb or greater guarantees piety gain.
+                    // Message in here to avoid grape message spam.
+                    simple_god_message(" encourages your appreciation of food.");
+                    piety_change = 1;
+                }
+                retval = true;
+            }
+            break;
+
         case DID_NOTHING:
         case DID_STABBING:                          // unused
         case DID_STIMULANTS:                        // unused
@@ -897,7 +911,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Deliberate Mutation", "Cause Glowing", "Use Unclean",
                 "Use Chaos", "Desecrate Orcish Remains", "Destroy Orcish Idol",
                 "Create Life", "Kill Slime", "Kill Plant", "Ally Kill Plant",
-                "Was Hasty"
+                "Was Hasty", "Gluttony"
             };
 
             COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS, c1);
