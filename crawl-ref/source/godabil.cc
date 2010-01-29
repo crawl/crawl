@@ -13,6 +13,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "database.h"
+#include "delay.h"
 #include "directn.h"
 #include "effects.h"
 #include "env.h"
@@ -1421,6 +1422,11 @@ bool ponderousify_armour()
     you.redraw_evasion = true;
 
     simple_god_message(" says: Use this wisely!");
+
+    // XXX: if the armour can have other wear effects, need to undo first.
+    if (item_is_equipped(arm))
+        armour_wear_effects(item_slot);
+
     return (true);
 }
 
