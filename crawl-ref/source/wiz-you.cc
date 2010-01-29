@@ -313,8 +313,12 @@ void wizard_set_piety()
             canned_msg(MSG_OK);
         return;
     }
-    you.piety = newpiety;
-    mprf("Set piety to %d.", you.piety);
+    mprf("Seting piety to %d.", newpiety);
+    int diff = newpiety - you.piety;
+    if (diff > 0)
+        gain_piety(diff);
+    else
+        lose_piety(-diff);
 
     // Automatically reduce penance to 0.
     if (you.penance[you.religion] > 0)
