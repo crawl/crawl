@@ -929,27 +929,6 @@ void zap_los_monsters(bool items_also)
     }
 }
 
-int integer_sqrt(int value)
-{
-    if (value <= 0)
-        return (value);
-
-    int very_old_retval = -1;
-    int old_retval = 0;
-    int retval = 1;
-
-    while (very_old_retval != old_retval
-        && very_old_retval != retval
-        && retval != old_retval)
-    {
-        very_old_retval = old_retval;
-        old_retval = retval;
-        retval = (value / old_retval + old_retval) / 2;
-    }
-
-    return (retval);
-}
-
 int random_rod_subtype()
 {
     return STAFF_FIRST_ROD + random2(NUM_STAVES - STAFF_FIRST_ROD);
