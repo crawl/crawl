@@ -1266,14 +1266,14 @@ static bool _init_artefact_properties(item_def &item)
     rap.set_max_size(ART_PROPERTIES);
 
     for (vec_size i = 0; i < ART_PROPERTIES; i++)
-        rap[i] = (short) 0;
+        rap[i] = static_cast<short>(0);
 
     if (is_unrandom_artefact( item ))
     {
-        const unrandart_entry *unrand = _seekunrandart( item );
+        const unrandart_entry *unrand = _seekunrandart(item);
 
         for (int i = 0; i < ART_PROPERTIES; i++)
-            rap[i] = (short) unrand->prpty[i];
+            rap[i] = static_cast<short>(unrand->prpty[i]);
 
         return (true);
     }
@@ -1291,7 +1291,7 @@ static bool _init_artefact_properties(item_def &item)
             do_curse_item(item);
             continue;
         }
-        rap[i] = (short) prop[i];
+        rap[i] = static_cast<short>(prop[i]);
     }
 
     return (true);
@@ -1314,7 +1314,7 @@ void artefact_wpn_properties( const item_def &item,
     if (item_ident( item, ISFLAG_KNOW_PROPERTIES ))
     {
         for (vec_size i = 0; i < ART_PROPERTIES; i++)
-            known[i] = (bool) true;
+            known[i] = static_cast<bool>(true);
     }
     else
     {
@@ -1334,10 +1334,10 @@ void artefact_wpn_properties( const item_def &item,
     }
     else if (is_unrandom_artefact( item ))
     {
-        const unrandart_entry *unrand = _seekunrandart( item );
+        const unrandart_entry *unrand = _seekunrandart(item);
 
         for (int i = 0; i < ART_PROPERTIES; i++)
-            proprt[i] = (short) unrand->prpty[i];
+            proprt[i] = static_cast<short>(unrand->prpty[i]);
     }
     else
     {
@@ -1414,7 +1414,7 @@ void artefact_wpn_learn_prop( item_def &item, artefact_prop_type prop )
     if (item_ident( item, ISFLAG_KNOW_PROPERTIES ))
         return;
 
-    known_vec[prop] = (bool) true;
+    known_vec[prop] = static_cast<bool>(true);
     if (Options.autoinscribe_artefacts)
         add_autoinscription( item, artefact_auto_inscription(item));
 }
@@ -1942,7 +1942,7 @@ bool make_item_randart( item_def &item, bool force_mundane )
     CrawlVector &known = item.props[KNOWN_PROPS_KEY].get_vector();
     known.set_max_size(ART_PROPERTIES);
     for (vec_size i = 0; i < ART_PROPERTIES; ++i)
-        known[i] = (bool) false;
+        known[i] = static_cast<bool>(false);
 
     item.flags |= ISFLAG_RANDART;
 
@@ -1996,7 +1996,7 @@ bool make_item_unrandart( item_def &item, int unrand_index )
         CrawlVector &known = item.props[KNOWN_PROPS_KEY].get_vector();
         known.set_max_size(ART_PROPERTIES);
         for (vec_size i = 0; i < ART_PROPERTIES; i++)
-            known[i] = (bool) false;
+            known[i] = static_cast<bool>(false);
     }
 
     const unrandart_entry *unrand = &unranddata[unrand_index - UNRAND_START];
