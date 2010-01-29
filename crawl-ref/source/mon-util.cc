@@ -481,14 +481,25 @@ bool mons_is_firewood(const monsters *mon)
             && mons_class_flag(mon->type, M_NO_EXP_GAIN));
 }
 
-bool mons_is_fast(const monsters *mon)
+// How fast a monster is considered for conduct purposes.
+int mons_fastness(const monsters *mon)
 {
-    int pspeed = 1000/player_movement_speed()/player_speed();
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Your delay: %d, your speed: %d, mon speed: %d",
-        player_movement_speed(), pspeed, mon->speed);
-#endif
-    return (mon->speed > pspeed);
+    int extra_energy = mons_base_speed(mon)
+                       - mon->action_energy(EUT_MOVE);
+    /*
+     * Also consider:
+     *   mon->has_ench(ENCH_HASTE); (affects mon->speed)
+     *   mon->has_ench(ENCH_SWIFT); (affects mon->action_energy(EUT_MOVE)
+     *   SPELL_HASTE, SPELL_HASTE_OTHER, SPELL_SWIFTNESS
+     *
+     * Don't want to encourage scumming, i.e., wait for monsters to
+     * haste before killing; keep monsters with SPELL_HASTE_OTHER
+     * around to speed up other monsters.
+     */
+    return (extra_energy >= 20 ? 4 :
+            extra_energy >= 10 ? 3 :
+            extra_energy >= 5  ? 2 :
+            extra_energy >  0  ? 1 : 0);
 }
 
 bool mons_is_projectile(int mc)
