@@ -5884,6 +5884,7 @@ int monsters::action_energy(energy_use_type et) const
         case EUT_SPECIAL: return mu.special;
         case EUT_SPELL:   return mu.spell;
         case EUT_ATTACK:  return mu.attack;
+        case EUT_NOTICE:  return mu.notice;
         case EUT_PICKUP:  return mu.pickup_percent;
         }
     }

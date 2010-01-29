@@ -46,6 +46,7 @@ public:
     char spell;
     char special;
     char item;    // Using an item (i.e., drinking a potion)
+    char notice;  // Noticing the player
 
     // Percent of monster->speed used when picking up an item; defaults
     // to 100%
@@ -53,9 +54,11 @@ public:
 
 public:
     mon_energy_usage(int mv = 10, int sw = 10, int att = 10, int miss = 10,
-                     int spl = 10, int spc = 10, int itm = 10, int pick = 100)
+                     int spl = 10, int spc = 10, int itm = 10, int notc = 4,
+                     int pick = 100)
         : move(mv), swim(sw), attack(att), missile(miss),
-          spell(spl), special(spc), item(itm), pickup_percent(pick)
+          spell(spl), special(spc), item(itm), notice(notc),
+          pickup_percent(pick)
     {
     }
 
@@ -96,6 +99,7 @@ public:
                                  combine(spell, o.spell),
                                  combine(special, o.special),
                                  combine(item, o.item),
+                                 combine(notice, o.notice),
                                  combine(pickup_percent, o.pickup_percent,
                                          100) );
     }

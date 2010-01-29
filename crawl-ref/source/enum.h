@@ -1274,7 +1274,8 @@ enum energy_use_type
     EUT_SPELL,
     EUT_SPECIAL,
     EUT_ITEM,
-    EUT_PICKUP
+    EUT_PICKUP,
+    EUT_NOTICE
 };
 
 enum equipment_type
