@@ -863,10 +863,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
         case DID_UNPONDEROUS:
             if (you.religion == GOD_CHEIBRIADOS)
-            {
-                simple_god_message(" is deeply saddened by you removing this blessed item.");
                 piety_change = -you.piety / 3;
-            }
             break;
 
         case DID_NOTHING:
