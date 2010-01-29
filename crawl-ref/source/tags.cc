@@ -1075,8 +1075,6 @@ static void tag_construct_you(writer &th)
         marshallShort(th, you.num_gifts[i]);
 
     marshallByte(th, you.gift_timeout);
-    marshallByte(th, you.che_saved_ponderousness);
-
     marshallByte(th, you.normal_vision);
     marshallByte(th, you.current_vision);
     marshallByte(th, you.hell_exit);
