@@ -1031,10 +1031,10 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_GIANT_IGUANA, 'l', BLUE, "giant iguana",
+    MONS_IGUANA, 'l', BLUE, "iguana",
     M_COLD_BLOOD,
     MR_NO_FLAGS,
-    400, 13, MONS_GIANT_NEWT, MONS_GIANT_IGUANA, MH_NATURAL, -3,
+    400, 13, MONS_GIANT_NEWT, MONS_IGUANA, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 3, 3, 5, 0 },
     5, 9, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_HISS,

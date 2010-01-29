@@ -38,7 +38,7 @@ killer_bee MONS_KILLER_BEE
 ## Lizards ('l')
 giant_newt MONS_GIANT_NEWT
 giant_gecko MONS_GIANT_GECKO
-giant_iguana MONS_GIANT_IGUANA
+iguana MONS_IGUANA
 gila_monster MONS_GILA_MONSTER
 komodo_dragon MONS_KOMODO_DRAGON
 

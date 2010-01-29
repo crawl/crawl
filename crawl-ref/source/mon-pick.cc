@@ -610,7 +610,7 @@ int mons_standard_level(int mcls)
     case MONS_GIANT_ANT:
     case MONS_GIANT_EYEBALL:
     case MONS_HOUND:
-    case MONS_GIANT_IGUANA:
+    case MONS_IGUANA:
     case MONS_OGRE:
     case MONS_ORC_WIZARD:
     case MONS_PHANTOM:
@@ -902,7 +902,7 @@ int mons_standard_rare(int mcls)
     case MONS_GIANT_BLOWFLY:
     case MONS_GIANT_COCKROACH:
     case MONS_GIANT_GECKO:
-    case MONS_GIANT_IGUANA:
+    case MONS_IGUANA:
     case MONS_GIANT_NEWT:
     case MONS_HIPPOGRIFF:
     case MONS_HYDRA:
@@ -1333,7 +1333,7 @@ int mons_lair_level(int mcls)
     case MONS_RAT:
     case MONS_QUOKKA:
     case MONS_GIANT_CENTIPEDE:
-    case MONS_GIANT_IGUANA:
+    case MONS_IGUANA:
         mlev += 0;
         break;
 
@@ -1444,7 +1444,7 @@ int mons_lair_rare(int mcls)
         return 75;
 
     case MONS_JACKAL:
-    case MONS_GIANT_IGUANA:
+    case MONS_IGUANA:
     case MONS_GILA_MONSTER:
         return 70;
 
