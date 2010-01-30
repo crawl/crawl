@@ -288,8 +288,8 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     special_damage_flavour(BEAM_NONE),
     shield(NULL), defender_shield(NULL),
     player_body_armour_penalty(0), player_shield_penalty(0),
-    player_armshld_tohit_penalty(0), can_do_unarmed(false),
-    miscast_level(-1), miscast_type(SPTYP_NONE),
+    player_armour_tohit_penalty(0), player_shield_tohit_penalty(0),
+    can_do_unarmed(false), miscast_level(-1), miscast_type(SPTYP_NONE),
     miscast_target(NULL), final_effects()
 {
     init_attack();
@@ -1380,11 +1380,22 @@ void melee_attack::player_announce_hit()
 
 std::string melee_attack::player_why_missed()
 {
-    if (player_armshld_tohit_penalty > 0
-        && (to_hit + player_armshld_tohit_penalty / 2
-            >= defender->melee_evasion(attacker)))
+    const int ev = defender->melee_evasion(attacker);
+    const int combined_penalty =
+        player_armour_tohit_penalty + player_shield_tohit_penalty;
+    if (to_hit < ev && to_hit + combined_penalty >= ev)
     {
-        return "Your armour prevents you from hitting ";
+        const bool armour_miss =
+            to_hit + player_armour_tohit_penalty > ev;
+        const bool shield_miss =
+            to_hit + player_shield_tohit_penalty > ev;
+
+        if (armour_miss && !shield_miss)
+            return "Your armour prevents you from hitting ";
+        else if (shield_miss && !armour_miss)
+            return "Your shield prevents you from hitting ";
+        else
+            return "Your shield and armour prevent you from hitting ";
     }
     else
         return "You miss ";
@@ -3756,25 +3767,34 @@ int melee_attack::calc_to_hit(bool random)
 
 // Calculates your armour+shield penalty. If random_factor is true,
 // be stochastic; if false, deterministic (e.g. for chardumps.)
-int melee_attack::player_armour_shield_tohit_penalty(bool random_factor)
-    const
+void melee_attack::calc_player_armour_shield_tohit_penalty(bool random_factor)
 {
     if (weapon && hands == HANDS_HALF)
-        return (maybe_roll_dice(1, player_body_armour_penalty, random_factor)
-                + maybe_roll_dice(2, player_shield_penalty, random_factor));
+    {
+        player_armour_tohit_penalty =
+            maybe_roll_dice(1, player_body_armour_penalty, random_factor);
+        player_shield_tohit_penalty =
+            maybe_roll_dice(2, player_shield_penalty, random_factor);
+    }
     else
-        return (maybe_roll_dice(1, player_body_armour_penalty, random_factor)
-                + maybe_roll_dice(1, player_shield_penalty, random_factor));
+    {
+        player_armour_tohit_penalty =
+            maybe_roll_dice(1, player_body_armour_penalty, random_factor);
+        player_shield_tohit_penalty =
+            maybe_roll_dice(1, player_shield_penalty, random_factor);
+    }
 }
 
 int melee_attack::player_to_hit(bool random_factor)
 {
-    player_armshld_tohit_penalty =
-        player_armour_shield_tohit_penalty(random_factor);
+    calc_player_armour_shield_tohit_penalty(random_factor);
 
-    dprf("Armour/shield to-hit penalty: %d", player_armshld_tohit_penalty);
+    dprf("Armour/shield to-hit penalty: %d/%d",
+         player_armour_tohit_penalty, player_shield_tohit_penalty);
 
-    can_do_unarmed = player_fights_well_unarmed(player_armshld_tohit_penalty);
+    can_do_unarmed =
+        player_fights_well_unarmed(player_armour_tohit_penalty
+                                   + player_shield_tohit_penalty);
     check_hand_half_bonus_eligible();
 
     int your_to_hit = 15 + (calc_stat_to_hit_base() / 2);
@@ -3852,7 +3872,7 @@ int melee_attack::player_to_hit(bool random_factor)
         your_to_hit -= 3;
 
     // armour penalty
-    your_to_hit -= player_armshld_tohit_penalty;
+    your_to_hit -= (player_armour_tohit_penalty + player_shield_tohit_penalty);
 
 #if DEBUG_DIAGNOSTICS
     int roll_hit = your_to_hit;
