@@ -96,9 +96,9 @@ function volcano_portal (e)
         dstorigin = "in a volcano",
         overmap = "dark tunnel",
         turns = timeout_turns,
-        floor = "floor",
         msg = messager })
     e.kfeat("O = enter_portal_vault")
+    e.tile("O = dngn_portal_volcano")
     e.kfeat("S = .")
     e.colour("O = red")
     e.tags("layout_caves")
