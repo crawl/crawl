@@ -101,6 +101,8 @@ function volcano_portal (e)
     e.tile("O = dngn_portal_volcano")
     e.kfeat("S = .")
     e.colour("O = red")
+    e.rtile("X = wall_pebble_red")
+    e.ftile("OS = floor_rough_red")
     e.tags("layout_caves")
 end
 
