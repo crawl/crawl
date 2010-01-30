@@ -108,6 +108,9 @@ static void _mons_summon_monster_illusion(monsters *caster,
                        "woven by " + caster->name(DESC_NOCAP_THE));
         if (!clone->has_ench(ENCH_ABJ))
             clone->mark_summoned(6, true, MON_SUMM_CLONE);
+        clone->del_ench(ENCH_CHARM);
+        clone->del_ench(ENCH_STICKY_FLAME);
+        clone->del_ench(ENCH_CORONA);
         behaviour_event(clone, ME_ALERT, MHITNOT, caster->pos());
 
         if (cloning_visible)
