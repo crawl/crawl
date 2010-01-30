@@ -11,7 +11,8 @@
 #include "traps.h"
 
 actor::actor()
-    : los_no_trans(los_def(coord_def(0,0), opacity_no_trans()))
+    : changed_los_center(true),
+      los_no_trans(los_def(coord_def(0,0), opacity_no_trans()))
 {
 }
 

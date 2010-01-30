@@ -124,6 +124,8 @@ void monsters::reset()
     ghost.reset(NULL);
     seen_context = "";
     props.clear();
+
+    changed_los_center = true;
 }
 
 void monsters::init_with(const monsters &mon)
