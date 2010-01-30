@@ -482,32 +482,24 @@ bool mons_is_firewood(const monsters *mon)
 }
 
 // How fast a monster is considered for conduct purposes.
-// XXX: This is so god-specific it should live elsewhere.
 int mons_fastness(const monsters *mon)
 {
     int extra_energy = mons_base_speed(mon)
                        - mon->action_energy(EUT_MOVE);
-    bool spell = mon->has_spell(SPELL_HASTE)
-                 || mon->has_spell(SPELL_SWIFTNESS)
-                 || mon->has_spell(SPELL_HASTE_OTHER);
     /*
      * Also consider:
      *   mon->has_ench(ENCH_HASTE); (affects mon->speed)
      *   mon->has_ench(ENCH_SWIFT); (affects mon->action_energy(EUT_MOVE)
+     *   SPELL_HASTE, SPELL_HASTE_OTHER, SPELL_SWIFTNESS
      *
      * Don't want to encourage scumming, i.e., wait for monsters to
      * haste before killing; keep monsters with SPELL_HASTE_OTHER
      * around to speed up other monsters.
-     *
-     * It would be reasonable to give piety for hasted monsters that
-     * hasted themselves, but that requires the source of hasting to
-     * be tracked.
      */
-    return ((spell ? 2 : 0) +
-            (extra_energy >= 20 ? 4 :
-             extra_energy >= 10 ? 3 :
-             extra_energy >= 5  ? 2 :
-             extra_energy >  0  ? 1 : 0));
+    return (extra_energy >= 20 ? 4 :
+            extra_energy >= 10 ? 3 :
+            extra_energy >= 5  ? 2 :
+            extra_energy >  0  ? 1 : 0);
 }
 
 bool mons_is_projectile(int mc)
