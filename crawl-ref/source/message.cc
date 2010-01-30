@@ -284,6 +284,9 @@ class message_window
     void more()
     {
         show();
+        if (crawl_state.arena)
+            return;
+
         int last_row = crawl_view.msgsz.y;
         cgotoxy(1, last_row, GOTO_MSG);
         if (first_col_more())
