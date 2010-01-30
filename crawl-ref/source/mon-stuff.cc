@@ -1736,10 +1736,10 @@ int monster_die(monsters *monster, killer_type killer,
                 }
 
                 // Cheibriados hates fast monsters.
-                int fast = mons_fastness(monster);
-                if (fast > 0 && !monster->cannot_move())
+                if (mons_is_fast(monster) && !monster->cannot_move())
                 {
-                    did_god_conduct(DID_KILL_FAST, fast, true, monster);
+                    did_god_conduct(DID_KILL_FAST, monster->hit_dice,
+                                    true, monster);
                 }
 
                 // Holy kills are always noticed.
