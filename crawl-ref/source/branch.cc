@@ -209,7 +209,7 @@ Branch branches[] = {
 
     { BRANCH_SHOALS, BRANCH_LAIR, 5, 4, BFLAG_ISLANDED, 0,
       DNGN_ENTER_SHOALS, DNGN_RETURN_FROM_SHOALS,
-      "Shoals", "the Shoals", "Shoal",
+      "Shoals", "the Shoals", "Shoals",
       NULL,
       true, true, BROWN, BROWN,
       mons_shoals_rare, mons_shoals_level,

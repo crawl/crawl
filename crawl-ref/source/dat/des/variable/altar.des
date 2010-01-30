@@ -121,7 +121,7 @@ b.b
 ENDMAP
 
 NAME:   lemuel_altar_in_water
-DEPTH:  D:2-18, Swamp, Shoal
+DEPTH:  D:2-18, Swamp, Shoals
 WEIGHT: 9
 : local brnd = crawl.random2(13)
 : if brnd > 10 then
@@ -146,7 +146,7 @@ ENDMAP
 
 NAME:   lemuel_altar_in_water2
 TAGS:   no_pool_fixup no_monster_gen
-DEPTH:  D:2-18, Lair, Snake, Swamp, Shoal
+DEPTH:  D:2-18, Lair, Snake, Swamp, Shoals
 WEIGHT: 1
 MAP
    www
@@ -159,7 +159,7 @@ MAP
 ENDMAP
 
 NAME:  lemuel_oklob_altar
-DEPTH: D:6-18, Lair, Snake, Shoal
+DEPTH: D:6-18, Lair, Snake, Shoals
 MONS:  oklob plant, plant
 MAP
  2
@@ -359,7 +359,7 @@ ENDMAP
 # The mix of deep and shallow water is intended to keep the centaurs from
 # escaping without requiring the player to be able to cross deep water.
 NAME:  lemuel_centaur_altar
-DEPTH: D:7-20, Shoal, Lair
+DEPTH: D:7-20, Shoals, Lair
 TAGS:  no_pool_fixup no_monster_gen
 MONS:  patrolling centaur
 MAP
