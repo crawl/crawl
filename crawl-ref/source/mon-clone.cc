@@ -132,7 +132,7 @@ static void _mons_summon_monster_illusion(monsters *caster,
             else
                 mprf("%s seems to draw %s out of %s!",
                      caster->name(DESC_CAP_THE).c_str(),
-                     foe->name(DESC_CAP_THE).c_str(),
+                     foe->name(DESC_NOCAP_THE).c_str(),
                      foe->pronoun(PRONOUN_REFLEXIVE).c_str());
         }
     }
