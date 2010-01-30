@@ -55,7 +55,8 @@ static bool _monster_clone_exists(monsters *mons)
 
 bool mons_is_illusion(monsters *mons)
 {
-    return mons->props.exists(clone_slave_key);
+    return (mons->type == MONS_PLAYER_ILLUSION
+            || mons->props.exists(clone_slave_key));
 }
 
 bool mons_is_illusion_cloneable(monsters *mons)
@@ -95,7 +96,13 @@ static void _mons_summon_monster_illusion(monsters *caster,
 
     // [ds] Bind the original target's attitude before calling
     // clone_mons, since clone_mons also updates arena bookkeeping.
-    unwind_var<mon_attitude_type> att(foe->attitude, caster->attitude);
+    //
+    // If an enslaved caster creates a clone from a regular hostile,
+    // the clone should still be friendly:
+    const mon_attitude_type clone_att =
+        caster->friendly() ? ATT_FRIENDLY : caster->attitude;
+
+    unwind_var<mon_attitude_type> att(foe->attitude, clone_att);
     bool cloning_visible = false;
     const int clone_idx = clone_mons(foe, true, &cloning_visible);
     if (clone_idx != NON_MONSTER)
@@ -108,9 +115,12 @@ static void _mons_summon_monster_illusion(monsters *caster,
                        "woven by " + caster->name(DESC_NOCAP_THE));
         if (!clone->has_ench(ENCH_ABJ))
             clone->mark_summoned(6, true, MON_SUMM_CLONE);
+
+        // Discard unsuitable enchantments.
         clone->del_ench(ENCH_CHARM);
         clone->del_ench(ENCH_STICKY_FLAME);
         clone->del_ench(ENCH_CORONA);
+
         behaviour_event(clone, ME_ALERT, MHITNOT, caster->pos());
 
         if (cloning_visible)
