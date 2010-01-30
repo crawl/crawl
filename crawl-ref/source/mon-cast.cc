@@ -21,6 +21,7 @@
 #include "misc.h"
 #include "message.h"
 #include "mon-behv.h"
+#include "mon-clone.h"
 #include "mon-iter.h"
 #include "mon-place.h"
 #include "mon-project.h"
@@ -809,7 +810,7 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     case SPELL_SHADOW_CREATURES:       // summon anything appropriate for level
     case SPELL_FAKE_RAKSHASA_SUMMON:
     case SPELL_FAKE_MARA_SUMMON:
-    case SPELL_SUMMON_PLAYER_GHOST:
+    case SPELL_SUMMON_ILLUSION:
     case SPELL_SUMMON_RAKSHASA:
     case SPELL_SUMMON_DEMON:
     case SPELL_SUMMON_UGLY_THING:
@@ -993,6 +994,7 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
     bool monsterNearby = mons_near(monster);
     bool finalAnswer   = false;   // as in: "Is that your...?" {dlb}
     const spell_type draco_breath = _get_draconian_breath_spell(monster);
+    actor *foe = monster->get_foe();
 
     // A polymorphed unique will retain his or her spells even in another
     // form. If the new form has the SPELLCASTER flag, casting happens as
@@ -1225,20 +1227,26 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
                 }
 
                 // Alligators shouldn't spam swiftness.
-                if (spell_cast == SPELL_SWIFTNESS && monster->type == MONS_ALLIGATOR)
-                    if ((long) monster->number + random2avg(170, 5) >= you.num_turns)
-                    {
-                        spell_cast = SPELL_NO_SPELL;
-                        continue;
-                    }
+                if (spell_cast == SPELL_SWIFTNESS
+                    && monster->type == MONS_ALLIGATOR
+                    && ((long) monster->number + random2avg(170, 5) >=
+                        you.num_turns))
+                {
+                    spell_cast = SPELL_NO_SPELL;
+                    continue;
+                }
 
-                // And Mara shouldn't cast player ghost if he can't see the player
-                if (spell_cast == SPELL_SUMMON_PLAYER_GHOST && monster->type == MONS_MARA)
-                    if (!monster->mon_see_cell(you.pos()))
-                    {
-                        spell_cast = SPELL_NO_SPELL;
-                        continue;
-                    }
+                // And Mara shouldn't cast player ghost if he can't
+                // see the player
+                if (spell_cast == SPELL_SUMMON_ILLUSION
+                    && monster->type == MONS_MARA
+                    && (!foe
+                        || !monster->can_see(foe)
+                        || !actor_is_illusion_cloneable(foe)))
+                {
+                    spell_cast = SPELL_NO_SPELL;
+                    continue;
+                }
 
                 // beam-type spells requiring tracers
                 if (spell_needs_tracer(spell_cast))
@@ -1591,7 +1599,17 @@ void mons_cast_haunt(monsters *monster)
     }
 
     _do_high_level_summon(monster, mons_near(monster), SPELL_HAUNT,
-                          _pick_random_wraith, random_range(3, 6), GOD_NO_GOD, &fpos);
+                          _pick_random_wraith, random_range(3, 6),
+                          GOD_NO_GOD, &fpos);
+}
+
+static void _mons_cast_summon_illusion(monsters *monster, spell_type spell)
+{
+    actor *foe = monster->get_foe();
+    if (!foe || !actor_is_illusion_cloneable(foe))
+        return;
+
+    mons_summon_illusion_from(monster, foe, spell);
 }
 
 void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
@@ -1704,10 +1722,11 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         return;
 
     case SPELL_INK_CLOUD:
-        big_cloud (CLOUD_INK, monster->kill_alignment(), monster->pos(), 30, 30);
+        big_cloud(CLOUD_INK, monster->kill_alignment(), monster->pos(), 30, 30);
 
-        simple_monster_message(monster, " squirts a massive cloud of ink into the water!");
-
+        simple_monster_message(
+            monster,
+            " squirts a massive cloud of ink into the water!");
         return;
 
     case SPELL_SUMMON_SMALL_MAMMALS:
@@ -1787,20 +1806,8 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         }
         return;
 
-    case SPELL_SUMMON_PLAYER_GHOST:
-
-        // Do nothing in the arena; this could instead create a ghost of an
-        // existant monster, but that would require the spell being dealth with
-        // as a bolt instead.
-        if (crawl_state.arena)
-            return;
-
-        mpr("There is a horrible, sudden wrenching feeling in your soul!", MSGCH_WARN);
-
-        create_monster(
-            mgen_data(MONS_PLAYER_GHOST, SAME_ATTITUDE(monster), monster,
-                          6, spell_cast, monster->pos(), monster->foe, 0, god));
-
+    case SPELL_SUMMON_ILLUSION:
+        _mons_cast_summon_illusion(monster, spell_cast);
         return;
 
     case SPELL_KRAKEN_TENTACLES:
@@ -1859,11 +1866,12 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
 
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
-            mgen_data summ_mon = mgen_data(MONS_MARA_FAKE, SAME_ATTITUDE(monster),
-                                 monster, 3, spell_cast, monster->pos(),
-                                 monster->foe, 0, god);
-            // This is somewhat hacky, to prevent "A Mara", and such, as MONS_FAKE_MARA
-            // is not M_UNIQUE.
+            mgen_data summ_mon =
+                mgen_data(MONS_MARA_FAKE, SAME_ATTITUDE(monster),
+                          monster, 3, spell_cast, monster->pos(),
+                          monster->foe, 0, god);
+            // This is somewhat hacky, to prevent "A Mara", and such,
+            // as MONS_FAKE_MARA is not M_UNIQUE.
             summ_mon.mname = "Mara";
             summ_mon.extra_flags |= MF_NAME_REPLACE;
 
@@ -1878,13 +1886,15 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
             new_fake->hit_points = monster->hit_points;
             new_fake->max_hit_points = monster->max_hit_points;
             mon_enchant_list::iterator ei;
-            for (ei = monster->enchantments.begin(); ei != monster->enchantments.end(); ++ei)
+            for (ei = monster->enchantments.begin();
+                 ei != monster->enchantments.end(); ++ei)
             {
                 new_fake->enchantments.insert(*ei);
             }
 
-            // Code basically lifted from clone_monster. In theory, it only needs
-            // to copy weapon and armour slots; instead, copy the whole inventory.
+            // Code basically lifted from clone_monster. In theory, it
+            // only needs to copy weapon and armour slots; instead,
+            // copy the whole inventory.
             for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
             {
                 const int old_index = monster->inv[i];

@@ -2114,12 +2114,9 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
         return (get_monster_data(type)->name);
 
     if (type == MONS_PLAYER_GHOST)
-    {
-        if (mon.is_summoned())
-            return (apostrophise(mon.mname) + " illusion");
-        else
-            return (apostrophise(mon.mname) + " ghost");
-    }
+        return (apostrophise(mon.mname) + " ghost");
+    else if (type == MONS_PLAYER_ILLUSION)
+        return (apostrophise(mon.mname) + " illusion");
 
     // Some monsters might want the name of a different creature.
     monster_type nametype = type;

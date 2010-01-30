@@ -43,6 +43,7 @@
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
+#include "mon-clone.h"
 #include "mon-place.h"
 #include "terrain.h"
 #include "mgen_data.h"

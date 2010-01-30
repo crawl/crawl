@@ -2023,6 +2023,8 @@ enum monster_type                      // (int) menv[].type
     MONS_GILA_MONSTER,                 //  405
     MONS_KOMODO_DRAGON,                //  406
 
+    MONS_PLAYER_ILLUSION,
+
     // Lava monsters:
     MONS_LAVA_WORM = 420,              //  420
     MONS_LAVA_FISH,
@@ -2931,7 +2933,7 @@ enum spell_type
     SPELL_MISLEAD,
     SPELL_FAKE_MARA_SUMMON,
     SPELL_SUMMON_RAKSHASA,
-    SPELL_SUMMON_PLAYER_GHOST,
+    SPELL_SUMMON_ILLUSION,
     SPELL_PRIMAL_WAVE,
     SPELL_CALL_TIDE,
     SPELL_IOOD,
