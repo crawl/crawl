@@ -24,6 +24,7 @@
 #include "libutil.h"
 #include "mislead.h"
 #include "mon-behv.h"
+#include "mon-clone.h"
 #include "mon-iter.h"
 #include "mon-place.h"
 #include "coord.h"
@@ -709,7 +710,8 @@ monster_type mons_species(int mc)
 monster_type mons_genus(int mc)
 {
     if (mc == RANDOM_DRACONIAN || mc == RANDOM_BASE_DRACONIAN
-        || mc == RANDOM_NONBASE_DRACONIAN)
+        || mc == RANDOM_NONBASE_DRACONIAN
+        || (mc == MONS_PLAYER_ILLUSION && player_genus(GENPC_DRACONIAN)))
     {
         return (MONS_DRACONIAN);
     }
@@ -744,6 +746,31 @@ monster_type draco_subspecies(const monsters *mon)
             return (MONS_PURPLE_DRACONIAN);
         default:
             break;
+        }
+    }
+
+    if (mon->type == MONS_PLAYER_ILLUSION)
+    {
+        switch (mon->ghost->species)
+        {
+        case SP_RED_DRACONIAN:
+            return MONS_RED_DRACONIAN;
+        case SP_WHITE_DRACONIAN:
+            return MONS_WHITE_DRACONIAN;
+        case SP_GREEN_DRACONIAN:
+            return MONS_GREEN_DRACONIAN;
+        case SP_YELLOW_DRACONIAN:
+            return MONS_YELLOW_DRACONIAN;
+        case SP_BLACK_DRACONIAN:
+            return MONS_BLACK_DRACONIAN;
+        case SP_PURPLE_DRACONIAN:
+            return MONS_PURPLE_DRACONIAN;
+        case SP_MOTTLED_DRACONIAN:
+            return MONS_MOTTLED_DRACONIAN;
+        case SP_PALE_DRACONIAN:
+            return MONS_PALE_DRACONIAN;
+        default:
+            return MONS_DRACONIAN;
         }
     }
 
@@ -835,8 +862,14 @@ bool mons_is_ghost_demon(int mc)
     return (mc == MONS_UGLY_THING
             || mc == MONS_VERY_UGLY_THING
             || mc == MONS_PLAYER_GHOST
+            || mc == MONS_PLAYER_ILLUSION
             || mc == MONS_DANCING_WEAPON
             || mc == MONS_PANDEMONIUM_DEMON);
+}
+
+bool mons_is_pghost(int mc)
+{
+    return (mc == MONS_PLAYER_GHOST || mc == MONS_PLAYER_ILLUSION);
 }
 
 bool mons_is_unique(int mc)
@@ -903,7 +936,7 @@ bool mons_class_can_regenerate(int mc)
 
 bool mons_can_regenerate(const monsters *mon)
 {
-    if (mon->type == MONS_PLAYER_GHOST && mon->ghost->species == SP_DEEP_DWARF)
+    if (mons_is_pghost(mon->type) && mon->ghost->species == SP_DEEP_DWARF)
         return (false);
 
     return (mons_class_can_regenerate(mon->type));
@@ -2250,17 +2283,6 @@ static bool _beneficial_beam_flavour(beam_type flavour)
     }
 }
 
-// For SUMMON_PLAYER_GHOST.
-bool _find_players_ghost ()
-{
-    bool found = false;
-    for (monster_iterator mi; mi; ++mi)
-        if (mi->type == MONS_PLAYER_GHOST && mi->mname == you.your_name)
-            found = true;
-
-    return found;
-}
-
 bool mons_should_fire(struct bolt &beam)
 {
 #ifdef DEBUG_DIAGNOSTICS
@@ -2424,7 +2446,7 @@ bool ms_quick_get_away( const monsters *mon /*unused*/, spell_type monspell )
 bool ms_waste_of_time( const monsters *mon, spell_type monspell )
 {
     bool ret = false;
-    const actor *foe = mon->get_foe();
+    actor *foe = mon->get_foe();
 
     // Keep friendly summoners from spamming summons constantly.
     if (mon->friendly()
@@ -2619,11 +2641,9 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
 
         break;
 
-    case SPELL_SUMMON_PLAYER_GHOST:
-        // Only ever want one at a time.
-        if (_find_players_ghost())
+    case SPELL_SUMMON_ILLUSION:
+        if (!foe || !actor_is_illusion_cloneable(foe))
             ret = true;
-
         break;
 
     case SPELL_FAKE_MARA_SUMMON:
@@ -2823,7 +2843,7 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
     // as male.
     else if (mon_type == MONS_MARA_FAKE)
         gender = GENDER_MALE;
-    else if (mons_is_unique(mon_type) && mon_type != MONS_PLAYER_GHOST)
+    else if (mons_is_unique(mon_type) && !mons_is_pghost(mon_type))
     {
         switch (mon_type)
         {
@@ -3482,7 +3502,7 @@ static mon_body_shape _get_ghost_shape(const monsters *mon)
 
 mon_body_shape get_mon_shape(const monsters *mon)
 {
-    if (mon->type == MONS_PLAYER_GHOST)
+    if (mons_is_pghost(mon->type))
         return _get_ghost_shape(mon);
     else if (mons_is_zombified(mon))
         return get_mon_shape(mon->base_monster);
@@ -3545,7 +3565,7 @@ mon_body_shape get_mon_shape(const int type)
         return (MON_SHAPE_HUMANOID);
     case 'p': // ghosts
         if (type != MONS_INSUBSTANTIAL_WISP
-            && type != MONS_PLAYER_GHOST) // handled elsewhere
+            && !mons_is_pghost(type)) // handled elsewhere
         {
             return (MON_SHAPE_HUMANOID);
         }

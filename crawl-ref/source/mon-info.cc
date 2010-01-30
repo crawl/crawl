@@ -152,7 +152,7 @@ bool monster_info::less_than(const monster_info& m1,
         }
     }
 
-    if (m1.m_fullname && m2.m_fullname || m1type == MONS_PLAYER_GHOST)
+    if (m1.m_fullname && m2.m_fullname || mons_is_pghost(m1type))
         return (m1.m_mon->name(DESC_PLAIN) < m2.m_mon->name(DESC_PLAIN));
 
 #if 0 // for now, sort brands together.

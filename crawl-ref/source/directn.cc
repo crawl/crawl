@@ -1764,7 +1764,7 @@ bool direction_chooser::do_main_loop()
         loop_done = looking_at_you() ? select_previous_target()
                                      : select(false, false);
         break;
-        
+
     case CMD_TARGET_PREV_TARGET: loop_done = select_previous_target(); break;
 
     // some modifiers to the basic selection command
@@ -2156,7 +2156,7 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
             return (mon->number == monl->number);
     }
 
-    if (mon->type == MONS_PLAYER_GHOST)
+    if (mon->type == MONS_PLAYER_GHOST || mon->type == MONS_PLAYER_ILLUSION)
         return (mon->name(DESC_PLAIN) == monl->name(DESC_PLAIN));
 
     // Else the two monsters are identical.
@@ -3352,7 +3352,7 @@ std::string get_monster_equipment_desc(const monsters *mon, bool full_desc,
     std::string desc = "";
     if (mondtype != DESC_NONE)
     {
-        if (print_attitude && mon->type == MONS_PLAYER_GHOST)
+        if (print_attitude && mons_is_pghost(mon->type))
             desc = get_ghost_description(*mon);
         else
             desc = mon->full_name(mondtype);
@@ -3389,12 +3389,9 @@ std::string get_monster_equipment_desc(const monsters *mon, bool full_desc,
                 else if (mon->type == MONS_PANDEMONIUM_DEMON)
                     str += "pandemonium demon";
                 else if (mon->type == MONS_PLAYER_GHOST)
-                {
-                    if (mon->is_summoned())
-                        str += "illusion";
-                    else
-                        str += "ghost";
-                }
+                    str += "ghost";
+                else if (mon->type == MONS_PLAYER_ILLUSION)
+                    str += "illusion";
                 else
                     str += "mimic";
             }

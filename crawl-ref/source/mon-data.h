@@ -1385,6 +1385,20 @@ static monsterentry mondata[] = {
     MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
+// player illusion (Mara) - stats are stored in ghost struct. Undead/demonic
+// flags are set based on the current player's species!
+{
+    MONS_PLAYER_ILLUSION, '@', WHITE, "player illusion",
+    M_FIGHTER | M_SPEAKS | M_SPELLCASTER | M_ACTUAL_SPELLS | M_INSUBSTANTIAL,
+    MR_RES_POISON,
+    0, 15, MONS_PLAYER_ILLUSION, MONS_PLAYER_ILLUSION, MH_NATURAL, -5,
+    { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 4, 2, 3, 0 },
+    1, 2, MST_GHOST, CE_NOCORPSE, Z_NOZOMBIE, S_SHOUT,
+    I_HIGH, HT_LAND, FL_LEVITATE, 10, DEFAULT_ENERGY,
+    MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_MEDIUM
+},
+
 {
     MONS_SHADOW, 'p', MAGENTA, "shadow",
     M_SEE_INVIS | M_INSUBSTANTIAL | M_GLOWS,

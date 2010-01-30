@@ -2525,7 +2525,7 @@
 },
 
 {
-    SPELL_SUMMON_PLAYER_GHOST, "Summon Player Ghost",
+    SPELL_SUMMON_ILLUSION, "Summon Illusion",
      SPTYP_SUMMONING,
      SPFLAG_MONSTER,
      5,

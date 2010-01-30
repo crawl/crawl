@@ -1723,7 +1723,7 @@ void TilesFramework::add_text_tag(text_tag_type type, const monsters* mon)
 
     const coord_def &gc = mon->pos();
 
-    if (mon->type == MONS_PLAYER_GHOST)
+    if (mons_is_pghost(mon->type))
     {
         // Beautification hack.  "Foo's ghost" is a little bit
         // verbose as a tag.  "Foo" on its own should be sufficient.

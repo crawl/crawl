@@ -2861,7 +2861,8 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
     if (mons.props.exists("description"))
         inf.body << mons.props["description"].get_string();
     // Don't get description for player ghosts.
-    else if (mons.type != MONS_PLAYER_GHOST)
+    else if (mons.type != MONS_PLAYER_GHOST
+             && mons.type != MONS_PLAYER_ILLUSION)
         inf.body << getLongDescription(db_name);
 
     // And quotes {due}
@@ -2929,10 +2930,11 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
     }
 
     case MONS_PLAYER_GHOST:
-        if (mons.is_summoned())
-            inf.body << "An illusion of " << get_ghost_description(mons) << ".$";
-        else
-            inf.body << "The apparition of " << get_ghost_description(mons) << ".$";
+        inf.body << "The apparition of " << get_ghost_description(mons) << ".$";
+        break;
+
+    case MONS_PLAYER_ILLUSION:
+        inf.body << "An illusion of " << get_ghost_description(mons) << ".$";
         break;
 
     case MONS_PANDEMONIUM_DEMON:

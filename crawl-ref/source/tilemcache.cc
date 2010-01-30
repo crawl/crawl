@@ -808,7 +808,7 @@ const dolls_data *mcache_ghost::doll() const
 
 bool mcache_ghost::valid(const monsters *mon)
 {
-    return (mon && mon->type == MONS_PLAYER_GHOST);
+    return (mon && mons_is_pghost(mon->type));
 }
 
 mcache_ghost::mcache_ghost(reader &th) : mcache_entry(th)

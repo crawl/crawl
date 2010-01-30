@@ -350,6 +350,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_FLAYED_GHOST:
         return TILEP_MONS_FLAYED_GHOST;
     case MONS_PLAYER_GHOST:
+    case MONS_PLAYER_ILLUSION:
         return TILEP_MONS_PLAYER_GHOST;
     case MONS_INSUBSTANTIAL_WISP:
         return TILEP_MONS_INSUBSTANTIAL_WISP;
