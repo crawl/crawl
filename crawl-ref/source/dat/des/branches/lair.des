@@ -633,7 +633,7 @@ MAP
 ENDMAP
 
 NAME:   Lemuel_yak_island_b
-DEPTH:  Swamp, Shoal
+DEPTH:  Swamp, Shoals
 TAGS:   no_pool_fixup uniq_yak_island
 WEIGHT: 5
 MONS:   yak / w:5 sheep / w:3 death yak

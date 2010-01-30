@@ -12,7 +12,7 @@
 # Appear rarely.
 #
 NAME:   overgrown_hall
-DEPTH:  Shoal
+DEPTH:  Shoals
 WEIGHT: 2
 MONS:   plant, fungus
 MONS:   cyclops / stone giant w:2
@@ -31,7 +31,7 @@ xxxxxxxxxxx
 ENDMAP
 
 NAME:   overgrown_tower
-DEPTH:  Shoal
+DEPTH:  Shoals
 WEIGHT: 2
 MONS:   plant, fungus
 SUBST:  + = x +
@@ -54,7 +54,7 @@ MAP
 ENDMAP
 
 NAME:   overgrown_statue
-DEPTH:  Shoal
+DEPTH:  Shoals
 WEIGHT: 1
 MONS:   plant
 MONS:   ice statue / orange crystal statue / silver statue
@@ -77,7 +77,7 @@ MAP
 ENDMAP
 
 NAME:   shoals_oasis
-DEPTH:  Shoal
+DEPTH:  Shoals
 WEIGHT: 1
 MONS:   plant
 SUBST:  . = 1:1 .
@@ -95,7 +95,7 @@ MAP
 ENDMAP
 
 NAME:   shoals_atoll
-DEPTH:  Shoal
+DEPTH:  Shoals
 KMONS:  1 = patrolling kraken
 KFEAT:  1 = deep_water
 KITEM:  1 = star_item, star_item, star_item, star_item, star_item
@@ -151,7 +151,7 @@ XW..ggwwwgg.xX
 ENDMAP
 
 NAME:   yaktaur_hedge
-DEPTH:  Shoal
+DEPTH:  Shoals
 MONS:   bush
 MONS:   yaktaur
 MAP
@@ -174,7 +174,7 @@ ENDMAP
 # Shoals: ranged attackers
 #
 NAME:   Shoal_1
-PLACE:  Shoal:5
+PLACE:  Shoals:5
 TAGS:   water_ok
 WEIGHT: 0
 MONS:   cyclops, yaktaur, yaktaur captain
@@ -214,7 +214,7 @@ ENDMAP
 # Shoals: fish
 #
 NAME:   Shoal_2
-PLACE:  Shoal:5
+PLACE:  Shoals:5
 TAGS:   water_ok
 WEIGHT: 0
 MONS:   cyclops,stone giant
@@ -253,7 +253,7 @@ ENDMAP
 # Shoals: statue on rune
 #
 NAME:   Shoal_3
-PLACE:  Shoal:5
+PLACE:  Shoals:5
 TAGS:   water_ok
 WEIGHT: 0
 KMONS:  x : ice statue / orange crystal statue / silver statue
@@ -268,7 +268,7 @@ ENDMAP
 # You may need controlled flight or apportation to get the liquid rune
 #
 NAME:   Shoal_4
-PLACE:  Shoal:5
+PLACE:  Shoals:5
 TAGS:   water_ok
 WEIGHT: 0
 KFEAT:  O = w
@@ -336,7 +336,7 @@ ENDMAP
 # The hut itself may not contain Ilsuiw if she had other engagements.
 
 NAME:    shoal_ilsuiw
-PLACE:   Shoal:$
+PLACE:   Shoals:$
 TAGS:    mini_float
 KMONS:   1 = Ilsuiw band, siren
 KMONS:   2 = merfolk impaler / merfolk javelineer

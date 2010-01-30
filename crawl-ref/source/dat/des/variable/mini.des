@@ -368,7 +368,7 @@ ENDMAP
 NAME:  centaur_isle
 TAGS:  no_monster_gen no_pool_fixup no_rotate
 SUBST: ? = *$
-DEPTH: D:6-12, Shoal
+DEPTH: D:6-12, Shoals
 MONS:  centaur
 MAP
           wwww
