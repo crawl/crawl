@@ -1437,9 +1437,9 @@ bool cast_fragmentation(int pow, const dist& spd)
                 beam.name       = "icy blast";
                 beam.colour     = WHITE;
                 beam.damage.num = 2;
-                    beam.flavour    = BEAM_ICE;
+                beam.flavour    = BEAM_ICE;
                 if (_player_hurt_monster(*mon, beam.damage.roll()),
-                                         BEAM_DISINTEGRATION);
+                                         BEAM_DISINTEGRATION)
                     beam.damage.num++;
                 break;
             }
