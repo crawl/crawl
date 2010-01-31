@@ -876,7 +876,7 @@ static void _yred_mirrors_injury(int dam, int death_source)
         if (mon->alive())
             print_wounds(mon);
 
-        lose_piety(ceil(sqrt(dam)));
+        lose_piety(ceil(sqrt((float)dam)));
     }
 }
 
