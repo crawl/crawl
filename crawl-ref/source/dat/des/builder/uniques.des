@@ -189,7 +189,7 @@ DEPTH:  1-3
 : place_unique(_G, "Jessica")
 
 NAME:   uniq_joseph
-DEPTH:  10-13, !Slime
+DEPTH:  7-12, !Slime
 : place_unique(_G, "Joseph")
 
 NAME:   uniq_josephine
