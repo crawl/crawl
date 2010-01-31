@@ -2226,7 +2226,9 @@ void mons_pacify(monsters *mon, mon_attitude_type att)
     mon->attitude = att;
     mon->flags |= MF_WAS_NEUTRAL;
 
-    if (!testbits(mon->flags, MF_GOT_HALF_XP) && !mon->is_summoned())
+    if (!testbits(mon->flags, MF_GOT_HALF_XP)
+        && !mon->is_summoned()
+        && !testbits(mon->flags, MF_NO_REWARD))
     {
         // Give the player half of the monster's XP.
         unsigned int exp_gain = 0, avail_gain = 0;
