@@ -66,7 +66,7 @@ void circle_def::init(int param, circle_type ctype)
     case C_CIRCLE:
         shape = SH_CIRCLE;
         radius_sq = param;
-        radius = ceil(sqrt(radius_sq));
+        radius = ceil(sqrt((float)radius_sq));
         break;
     case C_ROUND:
         shape = SH_CIRCLE;

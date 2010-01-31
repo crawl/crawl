@@ -593,7 +593,7 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item)
 
 static int _gold_to_donation(int gold)
 {
-    return static_cast<int>((gold * log(gold)) / MAX_PIETY);
+    return static_cast<int>((gold * log((float)gold)) / MAX_PIETY);
 }
 
 void offer_items()
