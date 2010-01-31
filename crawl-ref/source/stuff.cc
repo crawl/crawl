@@ -165,7 +165,13 @@ void set_redraw_status(unsigned long flags)
     you.redraw_status_flags |= flags;
 }
 
-static bool _tag_follower_at(const coord_def &pos)
+static bool _is_religious_follower(const monsters* mon)
+{
+    return ((you.religion == GOD_YREDELEMNUL || you.religion == GOD_BEOGH)
+            && is_follower(mon));
+}
+
+static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
 {
     if (!in_bounds(pos) || pos == you.pos())
         return (false);
@@ -176,17 +182,14 @@ static bool _tag_follower_at(const coord_def &pos)
 
     if (fmenv->type == MONS_PLAYER_GHOST
         || !fmenv->alive()
+        || fmenv->speed_increment < 50
         || fmenv->incapacitated()
-        || !mons_can_use_stairs(fmenv)
         || mons_is_stationary(fmenv))
     {
         return (false);
     }
 
     if (!monster_habitable_grid(fmenv, DNGN_FLOOR))
-        return (false);
-
-    if (fmenv->speed_increment < 50)
         return (false);
 
     // Only friendly monsters, or those actively seeking the
@@ -206,12 +209,24 @@ static bool _tag_follower_at(const coord_def &pos)
 
         // Undead will follow Yredelemnul worshippers, and orcs will
         // follow Beogh worshippers.
-        if ((you.religion != GOD_YREDELEMNUL && you.religion != GOD_BEOGH)
-            || !is_follower(fmenv))
-        {
+        if (!_is_religious_follower(fmenv))
             return (false);
-        }
     }
+
+    // Monsters that can't use stairs can still be marked as followers
+    // (though they'll be ignored for transit), so any adjacent real
+    // follower can follow through. (jpeg)
+    if (!mons_can_use_stairs(fmenv))
+    {
+        if (_is_religious_follower(fmenv))
+        {
+            fmenv->flags |= MF_TAKING_STAIRS;
+            return (true);
+        }
+        return (false);
+    }
+
+    real_follower = true;
 
     // Monster is chasing player through stairs.
     fmenv->flags |= MF_TAKING_STAIRS;
@@ -256,25 +271,24 @@ void tag_followers()
         for (int i = 0, size = places[place_set].size(); i < size; ++i)
         {
             const coord_def &p = places[place_set][i];
-
-            coord_def fp;
-            for (fp.x = p.x - 1; fp.x <= p.x + 1; ++fp.x)
-                for (fp.y = p.y - 1; fp.y <= p.y + 1; ++fp.y)
+            for (adjacent_iterator ai(p); ai; ++ai)
+            {
+                if ((*ai - you.pos()).abs() > radius2
+                    || travel_point_distance[ai->x][ai->y])
                 {
-                    if (fp == p || (fp - you.pos()).abs() > radius2
-                        || !in_bounds(fp) || travel_point_distance[fp.x][fp.y])
-                    {
-                        continue;
-                    }
-                    travel_point_distance[fp.x][fp.y] = 1;
-                    if (_tag_follower_at(fp))
-                    {
-                        // If we've run out of our follower allowance, bail.
-                        if (--n_followers <= 0)
-                            return;
-                        places[!place_set].push_back(fp);
-                    }
+                    continue;
                 }
+                travel_point_distance[ai->x][ai->y] = 1;
+
+                bool real_follower = false;
+                if (_tag_follower_at(*ai, real_follower))
+                {
+                    // If we've run out of our follower allowance, bail.
+                    if (real_follower && --n_followers <= 0)
+                        return;
+                    places[!place_set].push_back(*ai);
+                }
+            }
         }
         places[place_set].clear();
         place_set = !place_set;

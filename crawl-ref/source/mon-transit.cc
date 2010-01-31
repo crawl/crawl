@@ -241,7 +241,7 @@ void follower::load_mons_items()
 
 bool follower::place(bool near_player)
 {
-    for (int i = 0; i < MAX_MONSTERS - 5; ++i)
+    for (int i = 0; i < MAX_MONSTERS /*- 5*/; ++i)
     {
         // Find first empty slot in menv and copy monster into it.
         monsters &m = menv[i];
@@ -252,7 +252,7 @@ bool follower::place(bool near_player)
         bool placed = false;
 
         // In certain instances (currently, falling through a shaft)
-        // try to place monster a close as possible to its previous
+        // try to place monster as close as possible to its previous
         // <x,y> coordinates.
         if (!near_player && you.level_type == LEVEL_DUNGEON
             && in_bounds(m.pos()))

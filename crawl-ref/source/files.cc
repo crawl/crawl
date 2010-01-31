@@ -1102,6 +1102,14 @@ static bool _grab_follower_at(const coord_def &pos)
     if (!testbits(fmenv->flags, MF_TAKING_STAIRS))
         return (false);
 
+    // If a monster that can't use stairs was marked as a follower,
+    // it's because it's an ally and there might be another ally
+    // behind it that might want to push through.
+    // This means we don't actually send it on transit, but we do
+    // return true, so adjacent real followers are handled correctly. (jpeg)
+    if (!mons_can_use_stairs(fmenv))
+        return (true);
+
     level_id dest = level_id::current();
     if (you.char_direction == GDT_GAME_START)
         dest.depth = 1;
@@ -1200,7 +1208,6 @@ static void _grab_followers()
                  non_stair_using_allies > 1 ? "s" : "",
                  non_stair_using_allies > 1 ? ""  : "s");
         }
-
         memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
         std::vector<coord_def> places[2];
         int place_set = 0;
@@ -1210,23 +1217,22 @@ static void _grab_followers()
             for (int i = 0, size = places[place_set].size(); i < size; ++i)
             {
                 const coord_def &p = places[place_set][i];
-                coord_def fp;
-                for (fp.x = p.x - 1; fp.x <= p.x + 1; ++fp.x)
-                    for (fp.y = p.y - 1; fp.y <= p.y + 1; ++fp.y)
-                    {
-                        if (!in_bounds(fp) || travel_point_distance[fp.x][fp.y])
-                            continue;
-                        travel_point_distance[fp.x][fp.y] = 1;
-                        if (_grab_follower_at(fp))
-                            places[!place_set].push_back(fp);
-                    }
+                for (adjacent_iterator ai(p); ai; ++ai)
+                {
+                    if (travel_point_distance[ai->x][ai->y])
+                        continue;
+
+                    travel_point_distance[ai->x][ai->y] = 1;
+                    if (_grab_follower_at(*ai))
+                        places[!place_set].push_back(*ai);
+                }
             }
             places[place_set].clear();
             place_set = !place_set;
         }
     }
 
-    // Clear flags on the followers that didn't make it.
+    // Clear flags of monsters that didn't follow.
     for (int i = 0; i < MAX_MONSTERS; ++i)
     {
         monsters *mons = &menv[i];
@@ -1236,9 +1242,7 @@ static void _grab_followers()
     }
 
     if (pikel && !pikel->alive())
-    {
         pikel_band_neutralise(true);
-    }
 }
 
 // Should be called after _grab_followers(), so that items carried by
