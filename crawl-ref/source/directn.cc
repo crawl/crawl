@@ -1431,6 +1431,9 @@ void direction_chooser::print_target_object_description() const
 
 void direction_chooser::print_items_description() const
 {
+    if (!in_bounds(target()))
+        return;
+
     const item_def* item = top_item_at(target(), true);
     if (!item)
         return;
