@@ -2002,44 +2002,16 @@ static int _player_armour_racial_bonus(const item_def& item)
     return racial_bonus;
 }
 
-bool is_light_armour( const item_def &item )
+bool is_effectively_light_armour(const item_def *item)
 {
-    if (get_equip_race(item) == ISFLAG_ELVEN)
-        return (true);
-
-    switch (item.sub_type)
-    {
-    case ARM_ROBE:
-    case ARM_ANIMAL_SKIN:
-    case ARM_LEATHER_ARMOUR:
-    case ARM_TROLL_HIDE:
-    case ARM_TROLL_LEATHER_ARMOUR:
-    case ARM_STEAM_DRAGON_HIDE:
-    case ARM_STEAM_DRAGON_ARMOUR:
-    case ARM_MOTTLED_DRAGON_HIDE:
-    case ARM_MOTTLED_DRAGON_ARMOUR:
-        return (true);
-
-    default:
-        return (false);
-    }
+    return (!item
+            || (abs(property(*item, PARM_EVASION)) < 2));
 }
 
-bool player_light_armour(bool with_skill)
+bool player_effectively_in_light_armour()
 {
-    if (!player_wearing_slot(EQ_BODY_ARMOUR))
-        return (true);
-
-    // We're wearing some kind of body armour and it's not melded.
-    const int arm = you.equip[EQ_BODY_ARMOUR];
-
-    if (with_skill
-        && property(you.inv[arm], PARM_EVASION) + you.skills[SK_ARMOUR]/3 >= 0)
-    {
-        return (true);
-    }
-
-    return (is_light_armour(you.inv[arm]));
+    const item_def *armour = you.slot_item(EQ_BODY_ARMOUR);
+    return is_effectively_light_armour(armour);
 }
 
 //
@@ -6168,11 +6140,6 @@ void player::shield_block_succeeded(actor *foe)
     shield_blocks++;
     if (coinflip())
         exercise(SK_SHIELDS, 1);
-}
-
-bool player::wearing_light_armour(bool with_skill) const
-{
-    return (player_light_armour(with_skill));
 }
 
 void player::exercise(skill_type sk, int qty)
