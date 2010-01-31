@@ -137,8 +137,11 @@ bool remove_curse(bool suppress_msg)
         // Also sets wield_change.
         do_uncurse_item(*you.weapon());
         if (Options.autoinscribe_cursed)
-            if (you.weapon()->inscription.find("was cursed") == std::string::npos)
+            if (you.weapon()->inscription.find("was cursed") == std::string::npos
+                && !item_ident(*you.weapon(), ISFLAG_IDENT_MASK))
+            {
                 add_inscription(*you.weapon(), "was cursed");
+            }
         success = true;
     }
 
@@ -151,8 +154,11 @@ bool remove_curse(bool suppress_msg)
         {
             do_uncurse_item(you.inv[you.equip[i]]);
             if (Options.autoinscribe_cursed)
-                if (you.inv[you.equip[i]].inscription.find("was cursed") == std::string::npos)
+                if (you.inv[you.equip[i]].inscription.find("was cursed") == std::string::npos
+                    && !item_ident(you.inv[you.equip[i]], ISFLAG_IDENT_MASK))
+                {
                     add_inscription(you.inv[you.equip[i]], "was cursed");
+                }
             success = true;
         }
     }
