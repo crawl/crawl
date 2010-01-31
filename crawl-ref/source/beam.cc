@@ -5679,8 +5679,11 @@ bool bolt::knockback_actor(actor *act)
     ray.advance();
 
     const coord_def newpos(ray.pos());
-    if (newpos == oldpos || actor_at(newpos) || feat_is_solid(grd(newpos))
+    if (newpos == oldpos
+        || actor_at(newpos)
+        || feat_is_solid(grd(newpos))
         || !act->can_pass_through(newpos)
+        || !act->is_habitable(newpos)
         // Save is based on target's body weight.
         || random2(2500) < act->body_weight())
     {
