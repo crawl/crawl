@@ -563,12 +563,10 @@ bool prompt_stop_explore(int es_why)
 #define ES_altar  (Options.explore_stop & ES_ALTAR)
 #define ES_portal (Options.explore_stop & ES_PORTAL)
 
-// Adds interesting stuff on (x, y) to explore_discoveries.
-inline static void _check_interesting_square(int x, int y,
+// Adds interesting stuff on the point p to explore_discoveries.
+inline static void _check_interesting_square(const coord_def pos,
                                              explore_discoveries &ed)
 {
-    const coord_def pos(x, y);
-
     if (ES_item || ES_greedy || ES_glow || ES_art || ES_rune)
     {
         if (const monsters *mons = monster_at(pos))
@@ -875,12 +873,12 @@ command_type travel()
         // feature, stop exploring.
 
         explore_discoveries discoveries;
-        for (int y = 0; y < GYM; ++y)
-            for (int x = 0; x < GXM; ++x)
-            {
-                if (!mapshadow[x][y].seen() && is_terrain_seen(x, y))
-                    _check_interesting_square(x, y, discoveries);
-            }
+        for (rectangle_iterator ri(1); ri; ++ri)
+        {
+            const coord_def p(*ri);
+            if (!mapshadow(p).seen() && is_terrain_seen(p))
+                _check_interesting_square(p, discoveries);
+        }
 
         if (discoveries.prompt_stop())
             stop_running();
