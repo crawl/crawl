@@ -45,6 +45,7 @@ mapgen.log
 # Makefile-generated junk
 makefile.dep
 /source/*.d
+/source/*.ilk
 /source/rltiles/*.d
 /source/.cflags
 /source/.contrib-ok
