@@ -56,6 +56,7 @@ static bool _monster_clone_exists(monsters *mons)
 bool mons_is_illusion(monsters *mons)
 {
     return (mons->type == MONS_PLAYER_ILLUSION
+            || mons->type == MONS_MARA_FAKE
             || mons->props.exists(clone_slave_key));
 }
 
