@@ -190,3 +190,28 @@ int actor::body_weight(bool base) const
         return (0);
     }
 }
+
+bool actor::check_train_armour()
+{
+    if (const item_def *armour = slot_item(EQ_BODY_ARMOUR))
+    {
+        if (x_chance_in_y(item_mass(*armour), 1000))
+        {
+            this->exercise(SK_ARMOUR, 1);
+            return (true);
+        }
+    }
+    return (false);
+}
+
+bool actor::check_train_dodging()
+{
+    const item_def *armour = slot_item(EQ_BODY_ARMOUR);
+    const int mass = armour? item_mass(*armour) : 0;
+    if (!x_chance_in_y(mass, 800))
+    {
+        this->exercise(SK_DODGING, 1);
+        return (true);
+    }
+    return (false);
+}

@@ -3998,25 +3998,21 @@ void handle_time()
     _rot_inventory_food(time_delta);
 
     // Exercise armour *xor* stealth skill: {dlb}
-    if (!player_light_armour(true))
+    if (one_chance_in(6) && you.check_train_armour())
     {
-        // lowered random roll from 7 to 6 -- bwross
-        if (random2(1000) > item_mass(you.inv[you.equip[EQ_BODY_ARMOUR]])
-            && one_chance_in(6))
-        {
-            exercise(SK_ARMOUR, 1);
-        }
+        // Armour trained in check_train_armour
     }
     // Exercise stealth skill:
     else if (you.burden_state == BS_UNENCUMBERED
              && !you.berserk()
              && !you.attribute[ATTR_SHADOWS])
     {
-        // Diminishing returns for stealth training by waiting.
-        if ((you.equip[EQ_BODY_ARMOUR] == -1
-            || you.equip[EQ_BODY_ARMOUR] != -1
-                && random2(item_mass(you.inv[you.equip[EQ_BODY_ARMOUR]])) < 100)
-            && you.skills[SK_STEALTH] <= 2 + random2(3) && one_chance_in(18))
+        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
+        const int armour_mass = body_armour? item_mass(*body_armour) : 0;
+        if (!x_chance_in_y(armour_mass, 1000)
+            // Diminishing returns for stealth training by waiting.
+            && you.skills[SK_STEALTH] <= 2 + random2(3)
+            && one_chance_in(18))
         {
             exercise(SK_STEALTH, 1);
         }

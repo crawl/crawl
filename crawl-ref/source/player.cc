@@ -3197,22 +3197,28 @@ int check_stealth(void)
     if (you.confused())
         stealth /= 3;
 
-    const int arm   = you.equip[EQ_BODY_ARMOUR];
-    const int cloak = you.equip[EQ_CLOAK];
-    const int boots = you.equip[EQ_BOOTS];
+    const item_def *arm = you.slot_item(EQ_BODY_ARMOUR);
+    const item_def *cloak = you.slot_item(EQ_CLOAK);
+    const item_def *boots = you.slot_item(EQ_BOOTS);
 
-    if (arm != -1 && !player_light_armour())
-        stealth -= (item_mass( you.inv[arm] ) / 10);
+    if (arm)
+    {
+        // [ds] New stealth penalty formula from rob: SP = 6 * (EP^2)
+        const int ep = -property(*arm, PARM_EVASION);
+        const int penalty = 6 * ep * ep;
+        dprf("Stealth penalty for armour (ep: %d): %d", ep, penalty);
+        stealth -= penalty;
+    }
 
-    if (cloak != -1 && get_equip_race(you.inv[cloak]) == ISFLAG_ELVEN)
+    if (cloak && get_equip_race(*cloak) == ISFLAG_ELVEN)
         stealth += 20;
 
-    if (boots != -1)
+    if (boots)
     {
-        if (get_armour_ego_type( you.inv[boots] ) == SPARM_STEALTH)
+        if (get_armour_ego_type(*boots) == SPARM_STEALTH)
             stealth += 50;
 
-        if (get_equip_race(you.inv[boots]) == ISFLAG_ELVEN)
+        if (get_equip_race(*boots) == ISFLAG_ELVEN)
             stealth += 20;
     }
 

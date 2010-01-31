@@ -3909,8 +3909,8 @@ bool bolt::misses_player()
         train_shields_more = true;
     }
 
-    if (player_light_armour(true) && !aimed_at_feet && coinflip())
-        exercise(SK_DODGING, 1);
+    if (!aimed_at_feet && coinflip())
+        you.check_train_dodging();
 
     defer_rand r;
     bool miss = true;
@@ -3958,7 +3958,7 @@ bool bolt::misses_player()
     }
 
     if (coinflip() && train_shields_more)
-            exercise(SK_SHIELDS, one_chance_in(3) ? 1 : 0);
+        exercise(SK_SHIELDS, one_chance_in(3) ? 1 : 0);
 
     return (miss);
 }
@@ -4319,7 +4319,7 @@ void bolt::affect_player()
     hurted -= armour_damage_reduction;
 
     // shrapnel has triple AC reduction
-    if (flavour == BEAM_FRAG && !player_light_armour())
+    if (flavour == BEAM_FRAG)
     {
         hurted -= random2( 1 + you.armour_class() );
         hurted -= random2( 1 + you.armour_class() );
@@ -4330,15 +4330,8 @@ void bolt::affect_player()
          "Player damage: rolled=%d; after AC=%d", roll, hurted );
 #endif
 
-    if (you.equip[EQ_BODY_ARMOUR] != -1)
-    {
-        if (!player_light_armour(false) && one_chance_in(4)
-            && x_chance_in_y(item_mass(you.inv[you.equip[EQ_BODY_ARMOUR]]) + 1,
-                             1000))
-        {
-            exercise( SK_ARMOUR, 1 );
-        }
-    }
+    if (one_chance_in(4))
+        you.check_train_armour();
 
     bool was_affected = false;
     int  old_hp       = you.hp;
