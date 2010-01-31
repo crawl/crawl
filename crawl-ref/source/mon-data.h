@@ -2272,7 +2272,7 @@ static monsterentry mondata[] = {
 
 // elementals (E)
 {
-    MONS_EARTH_ELEMENTAL, 'E', BROWN, "earth elemental",
+    MONS_EARTH_ELEMENTAL, 'E', ETC_EARTH, "earth elemental",
     M_NO_FLAGS,
     mrd(MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC, 3),
     0, 13, MONS_EARTH_ELEMENTAL, MONS_EARTH_ELEMENTAL, MH_NONLIVING, MAG_IMMUNE,

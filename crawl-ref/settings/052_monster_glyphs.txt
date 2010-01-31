@@ -25,6 +25,7 @@ mon_glyph = minotaur : red t
 # spiders
 mon_glyph = trapdoor spider : brown
 mon_glyph = wolf spider : brown
+mon_glyph = scorpion : lightgrey
 
 # tier 4 demons
 mon_glyph = smoke demon : lightgrey 4
