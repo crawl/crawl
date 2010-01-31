@@ -449,7 +449,7 @@ bool player_in_hell(void)
 
 bool player_likes_water(bool permanently)
 {
-    return (you.can_swim() || (!permanently && beogh_water_walk()));
+    return (you.can_swim(permanently) || (!permanently && beogh_water_walk()));
 }
 
 bool player_in_bat_form()
@@ -5537,12 +5537,13 @@ bool player::in_water() const
             && feat_is_water(grd(this->pos())));
 }
 
-bool player::can_swim() const
+bool player::can_swim(bool permanently) const
 {
     // Transforming could be fatal if it would cause unequipment of
     // stat-boosting boots or heavy armour.
-    return ((species == SP_MERFOLK && merfolk_change_is_safe(true)
-             || you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST));
+    return ((species == SP_MERFOLK && merfolk_change_is_safe(true))
+            || (!permanently
+                && you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST));
 }
 
 int player::visible_igrd(const coord_def &where) const

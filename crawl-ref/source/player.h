@@ -324,7 +324,7 @@ public:
     void reset_prev_move();
 
     bool in_water() const;
-    bool can_swim() const;
+    bool can_swim(bool permanently = false) const;
     int visible_igrd(const coord_def&) const;
     bool is_levitating() const;
     bool cannot_speak() const;
