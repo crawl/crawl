@@ -1,5 +1,7 @@
 bin
 obj
+build.h
+compflag.h
 *.vcproj.*.user
 *.ncb
 *.suo
