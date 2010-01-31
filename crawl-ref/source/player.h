@@ -598,9 +598,8 @@ bool player_can_hit_monster(const monsters *mon);
 
 bool player_is_shapechanged(void);
 
-bool is_light_armour( const item_def &item );
-
-bool player_light_armour(bool with_skill = false);
+bool is_effectively_light_armour(const item_def *item);
+bool player_effectively_in_light_armour();
 
 bool player_under_penance(void);
 

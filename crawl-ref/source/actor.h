@@ -189,7 +189,6 @@ public:
     virtual bool check_train_armour();
     virtual bool check_train_dodging();
 
-    virtual bool wearing_light_armour(bool = false) const { return (true); }
     virtual int  skill(skill_type sk, bool skill_bump = false) const
     {
         return (0);
