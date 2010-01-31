@@ -1387,19 +1387,25 @@ std::string melee_attack::player_why_missed()
     if (to_hit < ev && to_hit + combined_penalty >= ev)
     {
         const bool armour_miss =
-            to_hit + player_armour_tohit_penalty > ev;
+            (player_armour_tohit_penalty
+             && to_hit + player_armour_tohit_penalty >= ev);
         const bool shield_miss =
-            to_hit + player_shield_tohit_penalty > ev;
+            (player_shield_tohit_penalty
+             && to_hit + player_shield_tohit_penalty >= ev);
+
+        const item_def *armour = you.slot_item(EQ_BODY_ARMOUR);
+        const std::string armour_name =
+            (armour? armour->name(DESC_BASENAME) : std::string("armour"));
 
         if (armour_miss && !shield_miss)
-            return "Your armour prevents you from hitting ";
+            return "Your " + armour_name + " prevents you from hitting ";
         else if (shield_miss && !armour_miss)
             return "Your shield prevents you from hitting ";
         else
-            return "Your shield and armour prevent you from hitting ";
+            return ("Your shield and " + armour_name
+                    + " prevent you from hitting ");
     }
-    else
-        return "You miss ";
+    return "You miss ";
 }
 
 void melee_attack::player_warn_miss()
