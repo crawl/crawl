@@ -985,7 +985,7 @@ void tutorial_finished()
 
         case 3:
             text = "You can ask other Crawl players for advice and help "
-                   "on the <w>#crawl</w> IRC (Internet Relay Chat) "
+                   "on the <w>##crawl</w> IRC (Internet Relay Chat) "
                    "channel on freenode (<w>irc.freenode.net</w>).";
             break;
 
