@@ -28,6 +28,8 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				Description="Generating build-specfic headers..."
+				CommandLine="set PATH=c:\cygwin\bin;c:\msysgit\mingw\bin;c:\msysgit\bin;c:\mingw\bin;%PATH%&#x0D;&#x0A;cd $(ProjectDir)&#x0D;&#x0A;perl.exe &quot;../util/gen_ver.pl&quot; build.h&#x0D;&#x0A;perl.exe &quot;../util/gen-cflg.pl&quot; compflag.h &quot;&lt;UNKNOWN&gt;&quot; &quot;&lt;UNKNOWN&gt;&quot;&#x0D;&#x0A;"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -107,6 +109,8 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				Description="Generating build-specfic headers..."
+				CommandLine="set PATH=c:\cygwin\bin;c:\msysgit\mingw\bin;c:\msysgit\bin;c:\mingw\bin;%PATH%&#x0D;&#x0A;cd $(ProjectDir)&#x0D;&#x0A;perl.exe &quot;../util/gen_ver.pl&quot; build.h&#x0D;&#x0A;perl.exe &quot;../util/gen-cflg.pl&quot; compflag.h &quot;&lt;UNKNOWN&gt;&quot; &quot;&lt;UNKNOWN&gt;&quot;&#x0D;&#x0A;"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -187,6 +191,8 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				Description="Generating build-specfic headers..."
+				CommandLine="set PATH=c:\cygwin\bin;c:\msysgit\mingw\bin;c:\msysgit\bin;c:\mingw\bin;%PATH%&#x0D;&#x0A;cd $(ProjectDir)&#x0D;&#x0A;perl.exe &quot;../util/gen_ver.pl&quot; build.h&#x0D;&#x0A;perl.exe &quot;../util/gen-cflg.pl&quot; compflag.h &quot;&lt;UNKNOWN&gt;&quot; &quot;&lt;UNKNOWN&gt;&quot;&#x0D;&#x0A;"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -265,6 +271,8 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				Description="Generating build-specfic headers..."
+				CommandLine="set PATH=c:\cygwin\bin;c:\msysgit\mingw\bin;c:\msysgit\bin;c:\mingw\bin;%PATH%&#x0D;&#x0A;cd $(ProjectDir)&#x0D;&#x0A;perl.exe &quot;../util/gen_ver.pl&quot; build.h&#x0D;&#x0A;perl.exe &quot;../util/gen-cflg.pl&quot; compflag.h &quot;&lt;UNKNOWN&gt;&quot; &quot;&lt;UNKNOWN&gt;&quot;&#x0D;&#x0A;"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -344,6 +352,8 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				Description="Generating build-specfic headers..."
+				CommandLine="set PATH=c:\cygwin\bin;c:\msysgit\mingw\bin;c:\msysgit\bin;c:\mingw\bin;%PATH%&#x0D;&#x0A;cd $(ProjectDir)&#x0D;&#x0A;perl.exe &quot;../util/gen_ver.pl&quot; build.h&#x0D;&#x0A;perl.exe &quot;../util/gen-cflg.pl&quot; compflag.h &quot;&lt;UNKNOWN&gt;&quot; &quot;&lt;UNKNOWN&gt;&quot;&#x0D;&#x0A;"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -424,6 +434,8 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
+				Description="Generating build-specfic headers..."
+				CommandLine="set PATH=c:\cygwin\bin;c:\msysgit\mingw\bin;c:\msysgit\bin;c:\mingw\bin;%PATH%&#x0D;&#x0A;cd $(ProjectDir)&#x0D;&#x0A;perl.exe &quot;../util/gen_ver.pl&quot; build.h&#x0D;&#x0A;perl.exe &quot;../util/gen-cflg.pl&quot; compflag.h &quot;&lt;UNKNOWN&gt;&quot; &quot;&lt;UNKNOWN&gt;&quot;&#x0D;&#x0A;"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -505,7 +517,8 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine="cd $(ProjectDir)\..&#x0D;&#x0A;perl util/gen-cflg.pl compflag.h &quot;&lt;unavailable&gt;&quot; &quot;&lt;unavailable&gt;&quot; &quot;&lt;unavailable&gt;&quot;&#x0D;&#x0A;perl util/gen_ver.pl build.h&#x0D;&#x0A;"
+				Description="Generating build-specfic headers..."
+				CommandLine="set PATH=c:\cygwin\bin;c:\msysgit\mingw\bin;c:\msysgit\bin;c:\mingw\bin;%PATH%&#x0D;&#x0A;cd $(ProjectDir)&#x0D;&#x0A;perl.exe &quot;../util/gen_ver.pl&quot; build.h&#x0D;&#x0A;perl.exe &quot;../util/gen-cflg.pl&quot; compflag.h &quot;&lt;UNKNOWN&gt;&quot; &quot;&lt;UNKNOWN&gt;&quot;&#x0D;&#x0A;"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -585,7 +598,8 @@
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
-				CommandLine="cd $(ProjectDir)\..&#x0D;&#x0A;perl util/gen-cflg.pl compflag.h &quot;&lt;unavailable&gt;&quot; &quot;&lt;unavailable&gt;&quot; &quot;&lt;unavailable&gt;&quot;&#x0D;&#x0A;perl util/gen_ver.pl build.h&#x0D;&#x0A;"
+				Description="Generating build-specfic headers..."
+				CommandLine="set PATH=c:\cygwin\bin;c:\msysgit\mingw\bin;c:\msysgit\bin;c:\mingw\bin;%PATH%&#x0D;&#x0A;cd $(ProjectDir)&#x0D;&#x0A;perl.exe &quot;../util/gen_ver.pl&quot; build.h&#x0D;&#x0A;perl.exe &quot;../util/gen-cflg.pl&quot; compflag.h &quot;&lt;UNKNOWN&gt;&quot; &quot;&lt;UNKNOWN&gt;&quot;&#x0D;&#x0A;"
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -677,7 +691,7 @@
 			>
 		</File>
 		<File
-			RelativePath="..\acr.cc"
+			RelativePath="..\actor-los.cc"
 			>
 		</File>
 		<File
@@ -761,6 +775,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\areas.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\areas.h"
+			>
+		</File>
+		<File
 			RelativePath="..\arena.cc"
 			>
 		</File>
@@ -785,11 +807,23 @@
 			>
 		</File>
 		<File
+			RelativePath="..\attitude-change.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\attitude-change.h"
+			>
+		</File>
+		<File
 			RelativePath="..\beam.cc"
 			>
 		</File>
 		<File
 			RelativePath="..\beam.h"
+			>
+		</File>
+		<File
+			RelativePath="..\behold.cc"
 			>
 		</File>
 		<File
@@ -878,6 +912,14 @@
 		</File>
 		<File
 			RelativePath="..\compflag.h"
+			>
+		</File>
+		<File
+			RelativePath="..\coord-circle.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\coord-circle.h"
 			>
 		</File>
 		<File
@@ -985,7 +1027,35 @@
 			>
 		</File>
 		<File
-			RelativePath="..\debug.cc"
+			RelativePath="..\dbg-asrt.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\dbg-crsh.h"
+			>
+		</File>
+		<File
+			RelativePath="..\dbg-maps.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\dbg-maps.h"
+			>
+		</File>
+		<File
+			RelativePath="..\dbg-scan.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\dbg-scan.h"
+			>
+		</File>
+		<File
+			RelativePath="..\dbg-util.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\dbg-util.h"
 			>
 		</File>
 		<File
@@ -1018,6 +1088,30 @@
 		</File>
 		<File
 			RelativePath="..\describe.h"
+			>
+		</File>
+		<File
+			RelativePath="..\dgn-height.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\dgn-height.h"
+			>
+		</File>
+		<File
+			RelativePath="..\dgn-shoals.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\dgn-shoals.h"
+			>
+		</File>
+		<File
+			RelativePath="..\dgn-swamp.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\dgn-swamp.h"
 			>
 		</File>
 		<File
@@ -1077,6 +1171,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\feature.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\feature.h"
+			>
+		</File>
+		<File
 			RelativePath="..\fight.cc"
 			>
 		</File>
@@ -1117,6 +1219,22 @@
 			>
 		</File>
 		<File
+			RelativePath="..\fprop.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\fprop.h"
+			>
+		</File>
+		<File
+			RelativePath="..\geom2d.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\geom2d.h"
+			>
+		</File>
+		<File
 			RelativePath="..\ghost.cc"
 			>
 		</File>
@@ -1133,11 +1251,43 @@
 			>
 		</File>
 		<File
+			RelativePath="..\godconduct.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\godconduct.h"
+			>
+		</File>
+		<File
 			RelativePath="..\goditem.cc"
 			>
 		</File>
 		<File
 			RelativePath="..\goditem.h"
+			>
+		</File>
+		<File
+			RelativePath="..\godpassive.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\godpassive.h"
+			>
+		</File>
+		<File
+			RelativePath="..\godprayer.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\godprayer.h"
+			>
+		</File>
+		<File
+			RelativePath="..\godwrath.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\godwrath.h"
 			>
 		</File>
 		<File
@@ -1273,6 +1423,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\l_feat.cc"
+			>
+		</File>
+		<File
 			RelativePath="..\l_file.cc"
 			>
 		</File>
@@ -1321,7 +1475,15 @@
 			>
 		</File>
 		<File
+			RelativePath="..\l_spells.cc"
+			>
+		</File>
+		<File
 			RelativePath="..\l_subvault.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\l_travel.cc"
 			>
 		</File>
 		<File
@@ -1577,11 +1739,27 @@
 			>
 		</File>
 		<File
+			RelativePath="..\los_def.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\los_def.h"
+			>
+		</File>
+		<File
 			RelativePath="..\losparam.cc"
 			>
 		</File>
 		<File
 			RelativePath="..\losparam.h"
+			>
+		</File>
+		<File
+			RelativePath="..\luaterp.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\luaterp.h"
 			>
 		</File>
 		<File
@@ -1593,11 +1771,23 @@
 			>
 		</File>
 		<File
+			RelativePath="..\main.cc"
+			>
+		</File>
+		<File
 			RelativePath="..\makeitem.cc"
 			>
 		</File>
 		<File
 			RelativePath="..\makeitem.h"
+			>
+		</File>
+		<File
+			RelativePath="..\map_knowledge.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\map_knowledge.h"
 			>
 		</File>
 		<File
@@ -1633,6 +1823,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\message-stream.cc"
+			>
+		</File>
+		<File
 			RelativePath="..\message.cc"
 			>
 		</File>
@@ -1641,11 +1835,15 @@
 			>
 		</File>
 		<File
-			RelativePath="..\mgrow.cc"
+			RelativePath="..\mgen_data.cc"
 			>
 		</File>
 		<File
-			RelativePath="..\mgrow.h"
+			RelativePath="..\mgen_data.h"
+			>
+		</File>
+		<File
+			RelativePath="..\mgen_enum.h"
 			>
 		</File>
 		<File
@@ -1657,7 +1855,75 @@
 			>
 		</File>
 		<File
+			RelativePath="..\mislead.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\mislead.h"
+			>
+		</File>
+		<File
+			RelativePath="..\mon-abil.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\mon-abil.h"
+			>
+		</File>
+		<File
+			RelativePath="..\mon-act.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\mon-act.h"
+			>
+		</File>
+		<File
+			RelativePath="..\mon-behv.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\mon-behv.h"
+			>
+		</File>
+		<File
+			RelativePath="..\mon-cast.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\mon-cast.h"
+			>
+		</File>
+		<File
+			RelativePath="..\mon-clone.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\mon-clone.h"
+			>
+		</File>
+		<File
 			RelativePath="..\mon-data.h"
+			>
+		</File>
+		<File
+			RelativePath="..\mon-enum.h"
+			>
+		</File>
+		<File
+			RelativePath="..\mon-gear.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\mon-gear.h"
+			>
+		</File>
+		<File
+			RelativePath="..\mon-grow.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\mon-grow.h"
 			>
 		</File>
 		<File
@@ -1669,6 +1935,30 @@
 			>
 		</File>
 		<File
+			RelativePath="..\mon-iter.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\mon-iter.h"
+			>
+		</File>
+		<File
+			RelativePath="..\mon-movetarget.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\mon-movetarget.h"
+			>
+		</File>
+		<File
+			RelativePath="..\mon-pathfind.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\mon-pathfind.h"
+			>
+		</File>
+		<File
 			RelativePath="..\mon-pick.cc"
 			>
 		</File>
@@ -1677,7 +1967,47 @@
 			>
 		</File>
 		<File
+			RelativePath="..\mon-place.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\mon-place.h"
+			>
+		</File>
+		<File
+			RelativePath="..\mon-project.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\mon-project.h"
+			>
+		</File>
+		<File
+			RelativePath="..\mon-speak.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\mon-speak.h"
+			>
+		</File>
+		<File
 			RelativePath="..\mon-spll.h"
+			>
+		</File>
+		<File
+			RelativePath="..\mon-stuff.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\mon-stuff.h"
+			>
+		</File>
+		<File
+			RelativePath="..\mon-transit.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\mon-transit.h"
 			>
 		</File>
 		<File
@@ -1689,39 +2019,23 @@
 			>
 		</File>
 		<File
-			RelativePath="..\monplace.cc"
+			RelativePath="..\mon_resist_def.cc"
 			>
 		</File>
 		<File
-			RelativePath="..\monplace.h"
+			RelativePath="..\mon_resist_def.h"
 			>
 		</File>
 		<File
-			RelativePath="..\monspeak.cc"
+			RelativePath="..\monster.cc"
 			>
 		</File>
 		<File
-			RelativePath="..\monspeak.h"
-			>
-		</File>
-		<File
-			RelativePath="..\monstuff.cc"
-			>
-		</File>
-		<File
-			RelativePath="..\monstuff.h"
+			RelativePath="..\monster.h"
 			>
 		</File>
 		<File
 			RelativePath="..\mpr.h"
-			>
-		</File>
-		<File
-			RelativePath="..\mstuff2.cc"
-			>
-		</File>
-		<File
-			RelativePath="..\mstuff2.h"
 			>
 		</File>
 		<File
@@ -1801,14 +2115,6 @@
 			>
 		</File>
 		<File
-			RelativePath="..\mtransit.cc"
-			>
-		</File>
-		<File
-			RelativePath="..\mtransit.h"
-			>
-		</File>
-		<File
 			RelativePath="..\mutation.cc"
 			>
 		</File>
@@ -1881,6 +2187,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\pattern.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\pattern.h"
+			>
+		</File>
+		<File
 			RelativePath="..\place.cc"
 			>
 		</File>
@@ -1942,6 +2256,30 @@
 		</File>
 		<File
 			RelativePath="..\shopping.h"
+			>
+		</File>
+		<File
+			RelativePath="..\shout.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\shout.h"
+			>
+		</File>
+		<File
+			RelativePath="..\show.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\show.h"
+			>
+		</File>
+		<File
+			RelativePath="..\showsymb.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\showsymb.h"
 			>
 		</File>
 		<File
@@ -2082,6 +2420,14 @@
 		</File>
 		<File
 			RelativePath="..\tags.h"
+			>
+		</File>
+		<File
+			RelativePath="..\teleport.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\teleport.h"
 			>
 		</File>
 		<File
@@ -2513,11 +2859,11 @@
 			>
 		</File>
 		<File
-			RelativePath="..\transfor.cc"
+			RelativePath="..\transform.cc"
 			>
 		</File>
 		<File
-			RelativePath="..\transfor.h"
+			RelativePath="..\transform.h"
 			>
 		</File>
 		<File
@@ -2565,7 +2911,71 @@
 			>
 		</File>
 		<File
+			RelativePath="..\viewchar.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\viewchar.h"
+			>
+		</File>
+		<File
+			RelativePath="..\viewgeom.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\viewgeom.h"
+			>
+		</File>
+		<File
+			RelativePath="..\viewmap.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\viewmap.h"
+			>
+		</File>
+		<File
 			RelativePath="..\winhdr.h"
+			>
+		</File>
+		<File
+			RelativePath="..\wiz-dgn.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\wiz-dgn.h"
+			>
+		</File>
+		<File
+			RelativePath="..\wiz-fsim.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\wiz-fsim.h"
+			>
+		</File>
+		<File
+			RelativePath="..\wiz-item.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\wiz-item.h"
+			>
+		</File>
+		<File
+			RelativePath="..\wiz-mon.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\wiz-mon.h"
+			>
+		</File>
+		<File
+			RelativePath="..\wiz-you.cc"
+			>
+		</File>
+		<File
+			RelativePath="..\wiz-you.h"
 			>
 		</File>
 		<File
