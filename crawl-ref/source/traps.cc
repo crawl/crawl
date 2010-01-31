@@ -1247,8 +1247,8 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
                 }
 
                 // Exercise only if the trap was unknown (to prevent scumming.)
-                if (!was_known && player_light_armour(true) && coinflip())
-                    exercise(SK_DODGING, 1);
+                if (!was_known && coinflip())
+                    you.check_train_dodging();
             }
         }
         else if (act.atype() == ACT_MONSTER)

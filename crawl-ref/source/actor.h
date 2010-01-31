@@ -186,6 +186,9 @@ public:
     virtual void hibernate(int power = 0) = 0;
     virtual void check_awaken(int disturbance) = 0;
 
+    virtual bool check_train_armour();
+    virtual bool check_train_dodging();
+
     virtual bool wearing_light_armour(bool = false) const { return (true); }
     virtual int  skill(skill_type sk, bool skill_bump = false) const
     {

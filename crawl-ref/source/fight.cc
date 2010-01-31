@@ -4547,23 +4547,14 @@ void melee_attack::mons_announce_dud_hit(const mon_attack_def &attk)
 void melee_attack::check_defender_train_dodging()
 {
     // It's possible to train both dodging and armour under the new scheme.
-    if (defender->wearing_light_armour(true)
-        && attacker_visible
-        && one_chance_in(3))
-    {
+    if (attacker_visible && one_chance_in(3) && defender->check_train_dodging())
         perceived_attack = true;
-        defender->exercise(SK_DODGING, 1);
-    }
 }
 
 void melee_attack::check_defender_train_armour()
 {
-    if (defender->wearing_light_armour())
-        return;
-
-    const item_def *arm = defender->slot_item(EQ_BODY_ARMOUR);
-    if (arm && coinflip() && x_chance_in_y(item_mass(*arm) + 1, 1000))
-        defender->exercise(SK_ARMOUR, coinflip()? 2 : 1);
+    if (coinflip())
+        defender->check_train_armour();
 }
 
 void melee_attack::mons_set_weapon(const mon_attack_def &attk)
