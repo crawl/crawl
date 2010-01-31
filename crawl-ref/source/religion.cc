@@ -1216,6 +1216,11 @@ static void _show_pure_deck_chances()
 
 static bool _give_nemelex_gift(bool forced = false)
 {
+    // But only if you're not levitating over deep water.
+    // Merfolk don't get gifts in deep water. {due}
+    if (!feat_has_solid_floor(grd(you.pos())))
+        return (false);
+
     // Nemelex will give at least one gift early.
     if (forced
         || !you.num_gifts[GOD_NEMELEX_XOBEH]
@@ -2001,6 +2006,10 @@ bool do_god_gift(bool prayed_for, bool forced)
         case GOD_OKAWARU:
         case GOD_TROG:
         {
+            // Break early if giving a gift now means it would be lost.
+            if (!feat_has_solid_floor(grd(you.pos())))
+                break;
+
             const bool need_missiles = _need_missile_gift(forced);
 
             if (forced && (!need_missiles || one_chance_in(4))
@@ -2091,6 +2100,10 @@ bool do_god_gift(bool prayed_for, bool forced)
         case GOD_KIKUBAAQUDGHA:
         case GOD_SIF_MUNA:
         case GOD_VEHUMET:
+
+            // Break early if giving a gift now means it would be lost.
+            if (!feat_has_solid_floor(grd(you.pos())))
+                break;
 
             unsigned int gift = NUM_BOOKS;
 

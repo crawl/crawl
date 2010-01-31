@@ -601,10 +601,9 @@ void offer_items()
     if (you.religion == GOD_NO_GOD)
         return;
 
-    int i = igrd(you.pos());
+    int i = you.visible_igrd(you.pos());
 
-    if (!god_likes_items(you.religion) && i != NON_ITEM
-        && you.visible_igrd(you.pos()) != NON_ITEM)
+    if (!god_likes_items(you.religion) && i != NON_ITEM)
     {
         simple_god_message(" doesn't care about such mundane gifts.",
                            you.religion);
