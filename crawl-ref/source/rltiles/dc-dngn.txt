@@ -644,12 +644,27 @@ wall/stone_gray1
 wall/stone_gray2
 wall/stone_gray3
 
-%variation WALL_STONE_GRAY darkgrey
 wall/stone_dark0 WALL_STONE_DARK
 wall/stone_dark1
 wall/stone_dark2
 wall/stone_dark3
-%resetcol
+
+# For the Doroklohe WizLab
+wall/stone_black_marked0 WALL_STONE_BLACK_MARKED
+wall/stone_black_marked1
+wall/stone_black_marked2
+wall/stone_black_marked3
+wall/stone_black_marked4
+wall/stone_black_marked5
+wall/stone_black_marked6
+wall/stone_black_marked7
+wall/stone_black_marked8
+# Includes the following to berak up the monotony.
+wall/stone_dark0
+wall/stone_dark1
+wall/stone_dark2
+wall/stone_dark3
+
 
 %sdir dc-dngn/floor/grass
 %weight 15
