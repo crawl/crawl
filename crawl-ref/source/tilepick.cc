@@ -3916,7 +3916,7 @@ void tilep_part_to_str(int number, char *buf)
         buf[1] = '0' + (number/ 10) % 10;
         buf[2] = '0' +  number      % 10;
     }
-    buf[3] ='\0';
+    buf[3] = '\0';
 }
 
 /*
@@ -3978,16 +3978,22 @@ void tilep_scan_parts(char *fbuf, dolls_data &doll)
         ibuf[ccount] = '\0';
         gcount++;
 
-        int idx = tilep_str_to_part(ibuf);
-        if (idx == 0)
-            doll.parts[p] = 0;
-        else if (idx == TILEP_SHOW_EQUIP)
+        const int idx = tilep_str_to_part(ibuf);
+        if (idx == TILEP_SHOW_EQUIP)
             doll.parts[p] = TILEP_SHOW_EQUIP;
+        else if (p == TILEP_PART_BASE)
+        {
+            doll.parts[p] = tilep_species_to_base_tile(you.species,
+                                                       you.experience_level)
+                            + (idx % 2);
+        }
+        else if (idx == 0)
+            doll.parts[p] = 0;
         else if (idx > tile_player_part_count[p])
             doll.parts[p] = tile_player_part_start[p];
         else
         {
-            int idx2 = tile_player_part_start[p] + idx - 1;
+            const int idx2 = tile_player_part_start[p] + idx - 1;
             if (idx2 < TILE_MAIN_MAX || idx2 >= TILEP_PLAYER_MAX)
                 doll.parts[p] = TILEP_SHOW_EQUIP;
             else
@@ -4004,15 +4010,23 @@ void tilep_print_parts(char *fbuf, const dolls_data &doll)
     char *ptr = fbuf;
     for (unsigned i = 0; parts_saved[i] != -1; ++i)
     {
-        int p = parts_saved[i];
+        const int p   = parts_saved[i];
         int idx = doll.parts[p];
-        if (idx != 0 && idx != TILEP_SHOW_EQUIP)
+        if (idx != TILEP_SHOW_EQUIP)
         {
-            idx = doll.parts[p] - tile_player_part_start[p] + 1;
-            if (idx < 0 || idx > tile_player_part_count[p])
-                idx = 0;
+            if (p == TILEP_PART_BASE)
+            {
+                idx = (idx - tile_player_part_start[TILEP_PART_BASE]) % 2;
+            }
+            else if (idx != 0)
+            {
+                idx = doll.parts[p] - tile_player_part_start[p] + 1;
+                if (idx < 0 || idx > tile_player_part_count[p])
+                    idx = 0;
+            }
         }
         tilep_part_to_str(idx, ptr);
+
         ptr += 3;
 
         *ptr = ':';

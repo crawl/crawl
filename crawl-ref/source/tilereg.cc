@@ -554,14 +554,6 @@ static bool _load_doll_data(const char *fn, dolls_data *dolls, int max,
                     break;
                 }
             }
-#if 0
-            // Probably segfaults within the tile edit menu.
-            if (*cur >= count)
-            {
-                mprf(MSGCH_WARN, "Doll %d could not be found in '%s'.",
-                                 *cur, dollsTxt);
-            }
-#endif
         }
         else // Load up to max dolls from file.
         {
@@ -4243,14 +4235,8 @@ static int _get_next_species_tile()
         return TILEP_BASE_DEEP_ELF;
     case SP_DEEP_ELF:
         return TILEP_BASE_DWARF;
-    case SP_MOUNTAIN_DWARF:
-    case SP_HALFLING:
-    case SP_HILL_ORC:
-    case SP_KOBOLD:
-    case SP_MUMMY:
-    case SP_NAGA:
-    case SP_OGRE:
-        return tilep_species_to_base_tile(you.species + 1);
+    case SP_MERFOLK:
+        return TILEP_BASE_MERFOLK_WATER;
     case SP_TROLL:
         return TILEP_BASE_DRACONIAN;
     case SP_BASE_DRACONIAN:
@@ -4273,6 +4259,13 @@ static int _get_next_species_tile()
         return TILEP_BASE_DRACONIAN_WHITE;
     case SP_WHITE_DRACONIAN:
         return TILEP_BASE_CENTAUR;
+    case SP_MOUNTAIN_DWARF:
+    case SP_HALFLING:
+    case SP_HILL_ORC:
+    case SP_KOBOLD:
+    case SP_MUMMY:
+    case SP_NAGA:
+    case SP_OGRE:
     case SP_CENTAUR:
     case SP_DEMIGOD:
     case SP_SPRIGGAN:
@@ -4280,7 +4273,6 @@ static int _get_next_species_tile()
     case SP_DEMONSPAWN:
     case SP_GHOUL:
     case SP_KENKU:
-    case SP_MERFOLK:
     case SP_VAMPIRE:
         return tilep_species_to_base_tile(you.species + 1);
     case SP_DEEP_DWARF:
