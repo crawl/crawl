@@ -1837,12 +1837,9 @@ static void _handle_monster_move(monsters *monster)
             {
                 if (monster->submerged())
                 {
-                    // Don't unsubmerge if the monster is too damaged or
-                    // if the monster is afraid, or if it's avoiding the
+                    // Don't unsubmerge if the monster is avoiding the
                     // cloud on top of the water.
-                    if (monster->hit_points <= monster->max_hit_points / 2
-                        || monster->has_ench(ENCH_FEAR)
-                        || avoid_cloud)
+                    if (avoid_cloud)
                     {
                         monster->speed_increment -= non_move_energy;
                         continue;
