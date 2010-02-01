@@ -4451,15 +4451,6 @@ static bool _build_vaults(int level_number, const map_def *vault,
                 stair_exist[grd[stx][sty] - DNGN_STONE_STAIRS_DOWN_I] = 1;
             }
 
-    if (player_in_branch( BRANCH_DIS ))
-    {
-        for (sty = 0; sty < 5; sty++)
-            stair_exist[sty] = 1;
-
-        for (sty = 6; sty < 10; sty++)
-            stair_exist[sty] = 0;
-    }
-
     for (int j = 0; j < (coinflip()? 4 : 3); j++)
         for (int i = 0; i < 2; i++)
         {
@@ -4908,7 +4899,8 @@ static bool _dgn_place_one_monster( const vault_placement &place,
 }
 
 // Grr, keep this in sync with vault_grid.
-dungeon_feature_type map_feature_at(map_def *map, const coord_def &c, int rawfeat)
+dungeon_feature_type map_feature_at(map_def *map, const coord_def &c,
+                                    int rawfeat)
 {
     if (rawfeat == -1)
         rawfeat = map->glyph_at(c);
@@ -4931,7 +4923,7 @@ dungeon_feature_type map_feature_at(map_def *map, const coord_def &c, int rawfea
         else if (f.feat >= 0)
             return static_cast<dungeon_feature_type>(f.feat);
         else if (f.glyph >= 0)
-            return map_feature_at(NULL, c, rawfeat);
+            return map_feature_at(NULL, c, f.glyph);
         else if (f.shop >= 0)
             return (DNGN_ENTER_SHOP);
 

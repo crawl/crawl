@@ -1180,22 +1180,46 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
 // using up the corpse might also lead to game balance problems. - bwr
 void cast_fulsome_distillation(int /*pow*/)
 {
+    int num_corpses = 0;
     int corpse = -1;
 
-    // Search items at the player's location for corpses.
+    // Determine how many corpses are available.
     for (stack_iterator si(you.pos(), true); si; ++si)
     {
         if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
         {
-            snprintf(info, INFO_SIZE, "Distill a potion from %s?",
-                     si->name(DESC_NOCAP_THE).c_str());
-
-            if (yesno(info, true, 0, false))
-            {
-                corpse = si->index();
-                break;
-            }
+            corpse = si->index();
+            ++num_corpses;
         }
+    }
+
+    // If there is only one corpse, distill it; otherwise, ask the player which
+    // corpse to use.
+    switch (num_corpses) {
+        case 0:
+            canned_msg(MSG_SPELL_FIZZLES);
+            return;
+        case 1:
+            // Use the only corpse available without prompting.
+            break;
+        default:
+            // Search items at the player's location for corpses.
+            // The last corpse detected earlier is irrelevant.
+            corpse = -1;
+            for (stack_iterator si(you.pos(), true); si; ++si)
+            {
+                if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
+                {
+                    snprintf(info, INFO_SIZE, "Distill a potion from %s?",
+                             si->name(DESC_NOCAP_THE).c_str());
+
+                    if (yesno(info, true, 0, false))
+                    {
+                        corpse = si->index();
+                        break;
+                    }
+                }
+            }
     }
 
     if (corpse == -1)
@@ -1413,9 +1437,9 @@ bool cast_fragmentation(int pow, const dist& spd)
                 beam.name       = "icy blast";
                 beam.colour     = WHITE;
                 beam.damage.num = 2;
-                    beam.flavour    = BEAM_ICE;
+                beam.flavour    = BEAM_ICE;
                 if (_player_hurt_monster(*mon, beam.damage.roll()),
-                                         BEAM_DISINTEGRATION);
+                                         BEAM_DISINTEGRATION)
                     beam.damage.num++;
                 break;
             }

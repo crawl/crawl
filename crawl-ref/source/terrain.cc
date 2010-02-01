@@ -552,6 +552,9 @@ bool feat_destroys_item(dungeon_feature_type feat, const item_def &item,
     {
     case DNGN_SHALLOW_WATER:
     case DNGN_DEEP_WATER:
+        if (is_rune(item) && item.plus == RUNE_ABYSSAL)
+            return (true);
+
         if (noisy)
             mprf(MSGCH_SOUND, "You hear a splash.");
         return (false);

@@ -1331,7 +1331,7 @@ void extension(int pow)
 
 void ice_armour(int pow, bool extending)
 {
-    if (!player_light_armour())
+    if (!player_effectively_in_light_armour())
     {
         if (!extending)
             mpr("You are wearing too much armour.");

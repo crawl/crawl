@@ -18,6 +18,7 @@
 #include "effects.h"
 #include "env.h"
 #include "food.h"
+#include "godpassive.h"
 #include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -633,9 +634,7 @@ void unwear_armour(int slot)
 
     case SPARM_PONDEROUSNESS:
         mpr("That put a bit of spring back into your step.");
-        // Cheibriados allows taking off ponderous armour during prayer.
-        if (!you.duration[DUR_PRAYER])
-            did_god_conduct(DID_UNPONDEROUS, 1);
+        che_handle_change(CB_PONDEROUS, -1);
         break;
 
     case SPARM_LEVITATION:

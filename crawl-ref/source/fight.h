@@ -131,7 +131,8 @@ public:
     int       player_shield_penalty;
 
     // Combined to-hit penalty from armour and shield.
-    int       player_armshld_tohit_penalty;
+    int       player_armour_tohit_penalty;
+    int       player_shield_tohit_penalty;
 
     bool      can_do_unarmed;
 
@@ -241,7 +242,7 @@ private:
     int  player_stat_modify_damage(int damage);
     int  player_aux_stat_modify_damage(int damage);
     int  player_to_hit(bool random_factor);
-    int  player_armour_shield_tohit_penalty(bool random_factor) const;
+    void calc_player_armour_shield_tohit_penalty(bool random_factor);
     void player_apply_attack_delay();
     int  player_apply_weapon_bonuses(int damage);
     int  player_apply_weapon_skill(int damage);

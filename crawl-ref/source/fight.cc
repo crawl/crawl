@@ -43,6 +43,7 @@
 #include "misc.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
+#include "mon-clone.h"
 #include "mon-place.h"
 #include "terrain.h"
 #include "mgen_data.h"
@@ -288,8 +289,8 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     special_damage_flavour(BEAM_NONE),
     shield(NULL), defender_shield(NULL),
     player_body_armour_penalty(0), player_shield_penalty(0),
-    player_armshld_tohit_penalty(0), can_do_unarmed(false),
-    miscast_level(-1), miscast_type(SPTYP_NONE),
+    player_armour_tohit_penalty(0), player_shield_tohit_penalty(0),
+    can_do_unarmed(false), miscast_level(-1), miscast_type(SPTYP_NONE),
     miscast_target(NULL), final_effects()
 {
     init_attack();
@@ -1380,14 +1381,31 @@ void melee_attack::player_announce_hit()
 
 std::string melee_attack::player_why_missed()
 {
-    if (player_armshld_tohit_penalty > 0
-        && (to_hit + player_armshld_tohit_penalty / 2
-            >= defender->melee_evasion(attacker)))
+    const int ev = defender->melee_evasion(attacker);
+    const int combined_penalty =
+        player_armour_tohit_penalty + player_shield_tohit_penalty;
+    if (to_hit < ev && to_hit + combined_penalty >= ev)
     {
-        return "Your armour prevents you from hitting ";
+        const bool armour_miss =
+            (player_armour_tohit_penalty
+             && to_hit + player_armour_tohit_penalty >= ev);
+        const bool shield_miss =
+            (player_shield_tohit_penalty
+             && to_hit + player_shield_tohit_penalty >= ev);
+
+        const item_def *armour = you.slot_item(EQ_BODY_ARMOUR);
+        const std::string armour_name =
+            (armour? armour->name(DESC_BASENAME) : std::string("armour"));
+
+        if (armour_miss && !shield_miss)
+            return "Your " + armour_name + " prevents you from hitting ";
+        else if (shield_miss && !armour_miss)
+            return "Your shield prevents you from hitting ";
+        else
+            return ("Your shield and " + armour_name
+                    + " prevent you from hitting ");
     }
-    else
-        return "You miss ";
+    return "You miss ";
 }
 
 void melee_attack::player_warn_miss()
@@ -3756,25 +3774,34 @@ int melee_attack::calc_to_hit(bool random)
 
 // Calculates your armour+shield penalty. If random_factor is true,
 // be stochastic; if false, deterministic (e.g. for chardumps.)
-int melee_attack::player_armour_shield_tohit_penalty(bool random_factor)
-    const
+void melee_attack::calc_player_armour_shield_tohit_penalty(bool random_factor)
 {
     if (weapon && hands == HANDS_HALF)
-        return (maybe_roll_dice(1, player_body_armour_penalty, random_factor)
-                + maybe_roll_dice(2, player_shield_penalty, random_factor));
+    {
+        player_armour_tohit_penalty =
+            maybe_roll_dice(1, player_body_armour_penalty, random_factor);
+        player_shield_tohit_penalty =
+            maybe_roll_dice(2, player_shield_penalty, random_factor);
+    }
     else
-        return (maybe_roll_dice(1, player_body_armour_penalty, random_factor)
-                + maybe_roll_dice(1, player_shield_penalty, random_factor));
+    {
+        player_armour_tohit_penalty =
+            maybe_roll_dice(1, player_body_armour_penalty, random_factor);
+        player_shield_tohit_penalty =
+            maybe_roll_dice(1, player_shield_penalty, random_factor);
+    }
 }
 
 int melee_attack::player_to_hit(bool random_factor)
 {
-    player_armshld_tohit_penalty =
-        player_armour_shield_tohit_penalty(random_factor);
+    calc_player_armour_shield_tohit_penalty(random_factor);
 
-    dprf("Armour/shield to-hit penalty: %d", player_armshld_tohit_penalty);
+    dprf("Armour/shield to-hit penalty: %d/%d",
+         player_armour_tohit_penalty, player_shield_tohit_penalty);
 
-    can_do_unarmed = player_fights_well_unarmed(player_armshld_tohit_penalty);
+    can_do_unarmed =
+        player_fights_well_unarmed(player_armour_tohit_penalty
+                                   + player_shield_tohit_penalty);
     check_hand_half_bonus_eligible();
 
     int your_to_hit = 15 + (calc_stat_to_hit_base() / 2);
@@ -3852,7 +3879,7 @@ int melee_attack::player_to_hit(bool random_factor)
         your_to_hit -= 3;
 
     // armour penalty
-    your_to_hit -= player_armshld_tohit_penalty;
+    your_to_hit -= (player_armour_tohit_penalty + player_shield_tohit_penalty);
 
 #if DEBUG_DIAGNOSTICS
     int roll_hit = your_to_hit;
@@ -4526,23 +4553,14 @@ void melee_attack::mons_announce_dud_hit(const mon_attack_def &attk)
 void melee_attack::check_defender_train_dodging()
 {
     // It's possible to train both dodging and armour under the new scheme.
-    if (defender->wearing_light_armour(true)
-        && attacker_visible
-        && one_chance_in(3))
-    {
+    if (attacker_visible && one_chance_in(3) && defender->check_train_dodging())
         perceived_attack = true;
-        defender->exercise(SK_DODGING, 1);
-    }
 }
 
 void melee_attack::check_defender_train_armour()
 {
-    if (defender->wearing_light_armour())
-        return;
-
-    const item_def *arm = defender->slot_item(EQ_BODY_ARMOUR);
-    if (arm && coinflip() && x_chance_in_y(item_mass(*arm) + 1, 1000))
-        defender->exercise(SK_ARMOUR, coinflip()? 2 : 1);
+    if (coinflip())
+        defender->check_train_armour();
 }
 
 void melee_attack::mons_set_weapon(const mon_attack_def &attk)

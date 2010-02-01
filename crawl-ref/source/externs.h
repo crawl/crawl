@@ -782,6 +782,4 @@ struct mon_display
        : type(m), glyph(gly), colour(col), detected(d) { }
 };
 
-#include "msvc.h"
-
 #endif // EXTERNS_H

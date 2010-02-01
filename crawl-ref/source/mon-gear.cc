@@ -1133,7 +1133,7 @@ static void _give_ammo(monsters *mon, int level,
             break;
 
         case MONS_MERFOLK:
-            if (!one_chance_in(3)
+            if (one_chance_in(3)
                 || active_monster_band == BAND_MERFOLK_JAVELINEER)
             {
                 item_race  = MAKE_ITEM_NO_RACE;

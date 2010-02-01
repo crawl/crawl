@@ -267,8 +267,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_GIANT_NEWT;
     case MONS_GIANT_GECKO:
         return TILEP_MONS_GIANT_GECKO;
-    case MONS_GIANT_IGUANA:
-        return TILEP_MONS_GIANT_IGUANA;
+    case MONS_IGUANA:
+        return TILEP_MONS_IGUANA;
     case MONS_GILA_MONSTER:
         return TILEP_MONS_GILA_MONSTER;
     case MONS_KOMODO_DRAGON:
@@ -350,6 +350,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_FLAYED_GHOST:
         return TILEP_MONS_FLAYED_GHOST;
     case MONS_PLAYER_GHOST:
+    case MONS_PLAYER_ILLUSION:
         return TILEP_MONS_PLAYER_GHOST;
     case MONS_INSUBSTANTIAL_WISP:
         return TILEP_MONS_INSUBSTANTIAL_WISP;
@@ -588,7 +589,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_JELLY;
     case MONS_SLIME_CREATURE:
         ASSERT(mon->number <= 5);
-        return TILEP_MONS_SLIME_CREATURE + mon->number / 2;
+        return TILEP_MONS_SLIME_CREATURE + (mon->number ? mon->number - 1 : 0);
     case MONS_PULSATING_LUMP:
         return TILEP_MONS_PULSATING_LUMP;
     case MONS_GIANT_AMOEBA:
@@ -1847,8 +1848,8 @@ static int _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_GIANT_NEWT;
     case MONS_GIANT_GECKO:
         return TILE_CORPSE_GIANT_GECKO;
-    case MONS_GIANT_IGUANA:
-        return TILE_CORPSE_GIANT_IGUANA;
+    case MONS_IGUANA:
+        return TILE_CORPSE_IGUANA;
     case MONS_GILA_MONSTER:
         return TILE_CORPSE_GILA_MONSTER;
     case MONS_KOMODO_DRAGON:
@@ -2570,7 +2571,7 @@ static int _tileidx_shop(coord_def where)
 int tileidx_feature(dungeon_feature_type feat, int gx, int gy)
 {
     int override = env.tile_flv[gx][gy].feat;
-    if (override && !feat_is_door(grd[gx][gy]))
+    if (override && !feat_is_door(grd[gx][gy]) && feat != DNGN_FLOOR)
         return override;
 
     switch (feat)

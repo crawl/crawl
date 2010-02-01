@@ -386,7 +386,7 @@ It is said that most copies of this spell suffer from a scribal error that makes
 %%%%
 Ozocubu's Armour
 
-This spell envelops the caster's body in a protective layer of ice, the power of which depends on his or her skill with ice magic. The caster and the caster's equipment are protected from the cold, but the spell will not function for casters already wearing heavy armour. The effects of this spell are boosted if the caster is in ice form.
+This spell envelops the caster's body in a protective layer of ice, the power of which depends on his or her skill with ice magic. The caster and the caster's equipment are protected from the cold, but the spell will not function for casters already wearing heavy armour (any body armour with an evasion penalty of 2 or more). The effects of this spell are boosted if the caster is in ice form.
 %%%%
 Ozocubu's Refrigeration
 

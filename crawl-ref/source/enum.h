@@ -337,6 +337,7 @@ enum branch_type                // you.where_are_you
 {
     BRANCH_MAIN_DUNGEON,
     BRANCH_ECUMENICAL_TEMPLE,
+    BRANCH_FIRST_NON_DUNGEON = BRANCH_ECUMENICAL_TEMPLE,
     BRANCH_ORCISH_MINES,
     BRANCH_ELVEN_HALLS,
     BRANCH_LAIR,
@@ -784,7 +785,7 @@ enum conduct_type
     DID_KILL_PLANT,                       // Fedhas
     DID_ALLY_KILLED_PLANT,                // Fedhas
     DID_HASTY,                            // Cheibriados
-    DID_UNPONDEROUS,                      // Cheibriados
+    DID_GLUTTONY,                         // Cheibriados
 
     NUM_CONDUCTS
 };
@@ -2018,9 +2019,11 @@ enum monster_type                      // (int) menv[].type
 
     MONS_GIANT_NEWT,                   //  402
     MONS_GIANT_GECKO,                  //  403
-    MONS_GIANT_IGUANA,                 //  404
+    MONS_IGUANA,
     MONS_GILA_MONSTER,                 //  405
     MONS_KOMODO_DRAGON,                //  406
+
+    MONS_PLAYER_ILLUSION,
 
     // Lava monsters:
     MONS_LAVA_WORM = 420,              //  420
@@ -2930,7 +2933,7 @@ enum spell_type
     SPELL_MISLEAD,
     SPELL_FAKE_MARA_SUMMON,
     SPELL_SUMMON_RAKSHASA,
-    SPELL_SUMMON_PLAYER_GHOST,
+    SPELL_SUMMON_ILLUSION,
     SPELL_PRIMAL_WAVE,
     SPELL_CALL_TIDE,
     SPELL_IOOD,

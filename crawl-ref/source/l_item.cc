@@ -14,6 +14,7 @@
 #include "colour.h"
 #include "command.h"
 #include "env.h"
+#include "enum.h"
 #include "invent.h"
 #include "item_use.h"
 #include "itemprop.h"
@@ -633,6 +634,46 @@ static int l_item_do_inc_quantity (lua_State *ls)
 
 IDEFN(inc_quantity, do_inc_quantity)
 
+unsigned long str_to_item_status_flags (std::string flag)
+{
+    unsigned long flags = 0;
+    if (flag.find("curse") != std::string::npos)
+        flags &= ISFLAG_KNOW_CURSE;
+    if (flag.find("type") != std::string::npos)
+        flags &= ISFLAG_KNOW_TYPE;
+    if (flag.find("pluses") != std::string::npos)
+        flags &= ISFLAG_KNOW_PLUSES;
+    if (flag.find("properties") != std::string::npos)
+        flags &= ISFLAG_KNOW_PROPERTIES;
+    if (flag == "any")
+        flags = ISFLAG_IDENT_MASK;
+
+    return (flags);
+}
+
+static int l_item_do_identified (lua_State *ls)
+{
+    ASSERT_DLUA;
+
+    UDATA_ITEM(item);
+
+    if (!item || !item->is_valid())
+    {
+        lua_pushnil(ls);
+        return (1);
+    }
+
+    unsigned long flags = ISFLAG_IDENT_MASK;
+
+    if (lua_isstring(ls, 1))
+        flags = str_to_item_status_flags (luaL_checkstring(ls, 1));
+
+    lua_pushboolean(ls, item_ident(*item, flags));
+    return (1);
+}
+
+IDEFN(identified, do_identified)
+
 // Library functions below
 static int l_item_inventory(lua_State *ls)
 {
@@ -831,7 +872,8 @@ static ItemAccessor item_attrs[] =
     { "pluses",            l_item_pluses },
     { "destroy",           l_item_destroy },
     { "dec_quantity",      l_item_dec_quantity },
-    { "inc_quantity",      l_item_inc_quantity }
+    { "inc_quantity",      l_item_inc_quantity },
+    { "identified",        l_item_identified }
 };
 
 static int item_get(lua_State *ls)

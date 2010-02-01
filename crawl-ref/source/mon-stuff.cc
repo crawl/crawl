@@ -34,6 +34,7 @@
 #include "misc.h"
 #include "mon-abil.h"
 #include "mon-behv.h"
+#include "mon-clone.h"
 #include "mon-iter.h"
 #include "mon-place.h"
 #include "mon-util.h"
@@ -513,8 +514,7 @@ static void _check_kill_milestone(const monsters *mons,
     if (mons->props.exists("original_was_unique"))
         is_unique = mons->props["original_was_unique"].get_bool();
 
-    // Don't give milestones for summoned ghosts {due}
-    if (mons->type == MONS_PLAYER_GHOST && !mons->is_summoned())
+    if (mons->type == MONS_PLAYER_GHOST)
     {
         std::string milestone = _milestone_kill_verb(killer) + "the ghost of ";
         milestone += get_ghost_description(*mons, true);
@@ -846,7 +846,7 @@ static void _fire_monster_death_event(monsters *monster,
     // "shaped Royal Jelly" don't unlock the vaults when the player's
     // ghost is killed).
     if (monster->mname == "shaped Royal Jelly"
-        && monster->type != MONS_PLAYER_GHOST)
+        && !mons_is_pghost(monster->type))
     {
         type = MONS_ROYAL_JELLY;
     }
@@ -3833,134 +3833,6 @@ void mons_clear_trapping_net(monsters *mon)
         remove_item_stationary(mitm[net]);
 
     mon->del_ench(ENCH_HELD, true);
-}
-
-bool mons_clonable(const monsters* mon, bool needs_adjacent)
-{
-    // No uniques or ghost demon monsters.  Also, figuring out the name
-    // for the clone of a named monster isn't worth it.
-    if (mons_is_unique(mon->type)
-        || mons_is_ghost_demon(mon->type)
-        || mon->is_named())
-    {
-        return (false);
-    }
-
-    if (needs_adjacent)
-    {
-        // Is there space for the clone?
-        bool square_found = false;
-        for (int i = 0; i < 8; i++)
-        {
-            const coord_def p = mon->pos() + Compass[i];
-
-            if (in_bounds(p)
-                && !actor_at(p)
-                && monster_habitable_grid(mon, grd(p)))
-            {
-                square_found = true;
-                break;
-            }
-        }
-        if (!square_found)
-            return (false);
-    }
-
-    // Is the monster carrying an artefact?
-    for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
-    {
-        const int index = mon->inv[i];
-
-        if (index == NON_ITEM)
-            continue;
-
-        if (is_artefact(mitm[index]))
-            return (false);
-    }
-
-    return (true);
-}
-
-int clone_mons(const monsters* orig, bool quiet, bool* obvious,
-               coord_def pos)
-{
-    // Is there an open slot in menv?
-    monsters* mons = get_free_monster();
-
-    if (!mons)
-        return (NON_MONSTER);
-
-    if (!in_bounds(pos))
-    {
-        // Find an adjacent square.
-        int squares = 0;
-        for (int i = 0; i < 8; i++)
-        {
-            const coord_def p = orig->pos() + Compass[i];
-
-            if (in_bounds(p)
-                && !actor_at(p)
-                && monster_habitable_grid(orig, grd(p)))
-            {
-                if (one_chance_in(++squares))
-                    pos = p;
-            }
-        }
-
-        if (squares == 0)
-            return (NON_MONSTER);
-    }
-
-    ASSERT( !actor_at(pos) );
-
-    *mons          = *orig;
-    mons->set_position(pos);
-    mgrd(pos)    = mons->mindex();
-
-    // Duplicate objects, or unequip them if they can't be duplicated.
-    for (int i = 0; i < NUM_MONSTER_SLOTS; i++)
-    {
-        const int old_index = orig->inv[i];
-
-        if (old_index == NON_ITEM)
-            continue;
-
-        const int new_index = get_item_slot(0);
-        if (new_index == NON_ITEM)
-        {
-            mons->unequip(mitm[old_index], i, 0, true);
-            mons->inv[i] = NON_ITEM;
-            continue;
-        }
-
-        mons->inv[i]      = new_index;
-        mitm[new_index] = mitm[old_index];
-        mitm[new_index].set_holding_monster(mons->mindex());
-    }
-
-    bool _obvious;
-    if (obvious == NULL)
-        obvious = &_obvious;
-    *obvious = false;
-
-    if (you.can_see(orig) && you.can_see(mons))
-    {
-        if (!quiet)
-            simple_monster_message(orig, " is duplicated!");
-        *obvious = true;
-    }
-
-    mark_interesting_monst(mons, mons->behaviour);
-    if (you.can_see(mons))
-    {
-        handle_seen_interrupt(mons);
-        viewwindow(false);
-    }
-
-    if (crawl_state.arena)
-        arena_placed_monster(mons);
-
-    return (mons->mindex());
 }
 
 std::string summoned_poof_msg(const monsters* monster, bool plural)

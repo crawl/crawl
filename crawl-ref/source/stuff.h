@@ -87,8 +87,6 @@ inline bool testbits(unsigned long flags, unsigned long test)
 bool is_trap_square(dungeon_feature_type grid);
 void zap_los_monsters(bool items_also);
 
-int integer_sqrt(int value);
-
 int random_rod_subtype();
 
 maybe_bool frombool(bool b);

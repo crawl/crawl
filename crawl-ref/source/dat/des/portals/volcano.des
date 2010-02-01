@@ -96,11 +96,13 @@ function volcano_portal (e)
         dstorigin = "in a volcano",
         overmap = "dark tunnel",
         turns = timeout_turns,
-        floor = "floor",
         msg = messager })
     e.kfeat("O = enter_portal_vault")
+    e.tile("O = dngn_portal_volcano")
     e.kfeat("S = .")
     e.colour("O = red")
+    e.rtile("X = wall_pebble_red")
+    e.ftile("OS = floor_rough_red")
     e.tags("layout_caves")
 end
 
@@ -118,6 +120,8 @@ function volcano_setup (e, metal)
     setup_loot(e)
     e.kfeat("< = exit_portal_vault")
     e.kfeat("I = exit_portal_vault")
+    e.tile("< = dngn_portal_volcano")
+    e.tile("I = dngn_portal_volcano")
     e.kfeat("^ = known alarm trap")
     e.subst("L : LLL.l")
     e.subst("L = lll.")

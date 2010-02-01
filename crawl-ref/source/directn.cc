@@ -895,7 +895,7 @@ void full_describe_view()
         if (quant == 1)
         {
             // Get selected monster.
-            monsters* m = (monsters*)(sel[0]->data);
+            monsters* m = static_cast<monsters*>(sel[0]->data);
 
 #ifdef USE_TILE
             // Highlight selected monster on the screen.
@@ -924,13 +924,12 @@ void full_describe_view()
         else if (quant == 2)
         {
             // Get selected item.
-            item_def* i = (item_def*)(sel[0]->data);
+            item_def* i = static_cast<item_def*>(sel[0]->data);
             if (desc_menu.menu_action == InvMenu::ACT_EXAMINE)
-                describe_item( *i );
+                describe_item(*i);
             else // ACT_EXECUTE -> travel to item
             {
-                const coord_def c = i->pos;
-                start_travel( c );
+                start_travel(i->pos);
                 break;
             }
         }
@@ -1376,6 +1375,21 @@ void direction_chooser::print_target_description() const
         print_target_monster_description();
 }
 
+std::string direction_chooser::target_interesting_terrain_description() const
+{
+    const dungeon_feature_type feature = grid_appearance(target());
+
+    // Only features which can make you lose the item are interesting.
+    // FIXME: extract the naming logic from here and use
+    // feat_has_solid_floor().
+    switch (feature)
+    {
+    case DNGN_DEEP_WATER: return " (water)";
+    case DNGN_LAVA:       return " (lava)";
+    default:              return "";
+    }
+}
+
 void direction_chooser::print_target_monster_description() const
 {
     // Do we see anything?
@@ -1384,10 +1398,17 @@ void direction_chooser::print_target_monster_description() const
         return;
 
     // FIXME: this duplicates code from _describe_monster.
-    std::string text = get_monster_equipment_desc(mon) + ".";
+
+    // Describe the monster, its equipment, and the terrain it's
+    // on (if relevant.)
+    std::string text = get_monster_equipment_desc(mon)
+        + target_interesting_terrain_description() + ".";
+
+    // Describe its wounds.
     const std::string wounds_desc = get_wounds_description(mon);
     if (!wounds_desc.empty())
         text += " " + mon->pronoun(PRONOUN_CAP) + wounds_desc;
+
     mprf(MSGCH_PROMPT, "%s: <lightgrey>%s</lightgrey>",
          target_prefix ? target_prefix : "Aim",
          text.c_str());
@@ -1410,6 +1431,9 @@ void direction_chooser::print_target_object_description() const
 
 void direction_chooser::print_items_description() const
 {
+    if (!in_bounds(target()))
+        return;
+
     const item_def* item = top_item_at(target(), true);
     if (!item)
         return;
@@ -1743,7 +1767,7 @@ bool direction_chooser::do_main_loop()
         loop_done = looking_at_you() ? select_previous_target()
                                      : select(false, false);
         break;
-        
+
     case CMD_TARGET_PREV_TARGET: loop_done = select_previous_target(); break;
 
     // some modifiers to the basic selection command
@@ -2135,7 +2159,7 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
             return (mon->number == monl->number);
     }
 
-    if (mon->type == MONS_PLAYER_GHOST)
+    if (mon->type == MONS_PLAYER_GHOST || mon->type == MONS_PLAYER_ILLUSION)
         return (mon->name(DESC_PLAIN) == monl->name(DESC_PLAIN));
 
     // Else the two monsters are identical.
@@ -3331,7 +3355,7 @@ std::string get_monster_equipment_desc(const monsters *mon, bool full_desc,
     std::string desc = "";
     if (mondtype != DESC_NONE)
     {
-        if (print_attitude && mon->type == MONS_PLAYER_GHOST)
+        if (print_attitude && mons_is_pghost(mon->type))
             desc = get_ghost_description(*mon);
         else
             desc = mon->full_name(mondtype);
@@ -3368,12 +3392,9 @@ std::string get_monster_equipment_desc(const monsters *mon, bool full_desc,
                 else if (mon->type == MONS_PANDEMONIUM_DEMON)
                     str += "pandemonium demon";
                 else if (mon->type == MONS_PLAYER_GHOST)
-                {
-                    if (mon->is_summoned())
-                        str += "illusion";
-                    else
-                        str += "ghost";
-                }
+                    str += "ghost";
+                else if (mon->type == MONS_PLAYER_ILLUSION)
+                    str += "illusion";
                 else
                     str += "mimic";
             }
