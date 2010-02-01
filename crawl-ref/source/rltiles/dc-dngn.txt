@@ -116,6 +116,12 @@ wall/brick_brown7
 %repeat WALL_BRICK WALL_BRICK_WHITE
 %resetcol
 
+# Variant of BRICK_WALL_BROWN with vines
+wall/brick_brown-vines1 WALL_BRICK_VINES WALL_BRICK_BROWN_VINES
+wall/brick_brown-vines2
+wall/brick_brown-vines3
+wall/brick_brown-vines4
+
 # The colorized versions of FLOOR_PEBBLE were made from
 # pebble_gray*.png, by colorizing the non-border color
 # with hue 30, sat 50, lum +20 in GIMP.
@@ -670,6 +676,10 @@ grass_sw
 grass_w
 grass_nw
 grass_full
+
+grass0-dirt-mix1 FLOOR_GRASS_DIRT_MIX
+grass0-dirt-mix2
+grass0-dirt-mix3
 
 %sdir dc-dngn
 wall/undead0 WALL_UNDEAD

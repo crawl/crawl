@@ -8,7 +8,7 @@
 #    xp:     14400 or so
 #    layout: mirrors; grey and white
 #
-# Erinya's Formal Garden
+# Eringya's Formal Garden
 #    crumbling stone walls.
 #    threat: centaurs, oklobs
 #    loot:   a staff and four spellbooks
@@ -136,7 +136,7 @@ function wizlab_setup (e, wizlab_desc)
     crawl.mark_milestone("br.enter", "entered " .. wizlab_desc .. ".")
     dgn.set_feature_desc_short("gate leading back to the Dungeon",
                                "portal leading out of here")
-    if wizlab_desc ~= "Erinya's Formal Garden" then
+    if wizlab_desc ~= "Eringya's Formal Garden" then
       dgn.set_feature_desc_short("empty arch of ancient stone",
                                "empty arch of stone")
     end
@@ -461,7 +461,7 @@ MAP
 ENDMAP
 
 ###############################################################################
-# Erinya's Formal Garden
+# Eringya's Formal Garden
 #
 # Map was based on this image: http://upload.wikimedia.org/wikipedia/commons/5
 #          /58/Plan_du_ch%C3%A2teau_et_des_jardins_de_Clagny_dessin%C3%A9_par_
@@ -469,7 +469,7 @@ ENDMAP
 #          full link).
 #
 # TODO: Tiles. Tiles galore!
-NAME:       wizlab_erinya
+NAME:       wizlab_eringya
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 MONS:       centaur col:green, centaur warrior col:lightgreen
@@ -536,7 +536,7 @@ grow_marker:add_triggerer(DgnTriggerer:new { type="turn",
 lua_marker("_", grow_marker)
 }}
 :           set_border_fill_type("stone_wall")
-:           wizlab_setup(_G, "Erinya's Formal Garden")
+:           wizlab_setup(_G, "Eringya's Formal Garden")
 :           dgn.set_feature_desc_short("empty arch of ancient stone",
 :                                      "rose-covered archway")
 :           dgn.set_feature_desc_long("empty arch of ancient stone",
@@ -1716,7 +1716,7 @@ ENDMAP
 # Botono's Bayou: A bay-like area with small huts, wizards that cast negative
 #    related spells, shadow dragons, rebranded swamp worms, wraiths, spectrals.
 # Ukta's Hut: phantoms, other "ghosts", ogre mages and ogres, druidic style,
-#    wooden walls set in a forest (more "earthy" than Erinya's Garden)
+#    wooden walls set in a forest (more "earthy" than Eringya's Garden)
 # The Alchemist's Tower: gold turned into things, things turned into gold.
 #
 
