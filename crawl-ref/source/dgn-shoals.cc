@@ -883,7 +883,7 @@ static int _shoals_tide_at(coord_def pos, int base_tide)
         return base_tide;
 
     const int distance =
-        static_cast<int>(sqrt((double)(pos - tide_caller->pos()).abs()));
+        static_cast<int>(sqrt((float)(pos - tide_caller->pos()).abs()));
     if (distance > TIDE_CALL_RADIUS)
         return base_tide;
 

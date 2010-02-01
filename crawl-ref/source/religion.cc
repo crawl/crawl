@@ -44,6 +44,7 @@
 #include "food.h"
 #include "godabil.h"
 #include "goditem.h"
+#include "godpassive.h"
 #include "godprayer.h"
 #include "godwrath.h"
 #include "hiscores.h"
@@ -300,7 +301,8 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "control the weather"
     },
     // Cheibriados
-    { "Cheibriados is slowing your {biology}.",
+    { "Cheibriados slows down and strengthens your metabolism, "
+      "and supports the use of ponderous armour.",
       "bend time to slow others",
       "",
       "inflict damage to those overly hasty",
@@ -407,7 +409,8 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "control the weather"
     },
     // Cheibriados
-    { "Cheibriados will no longer slow your {biology}.",
+    { "Cheibriados will no longer slow your metabolism or "
+      "support the use of ponderous armour.",
       "bend time to slow others",
       "",
       "inflict damage to those overly hasty",
@@ -1213,6 +1216,11 @@ static void _show_pure_deck_chances()
 
 static bool _give_nemelex_gift(bool forced = false)
 {
+    // But only if you're not levitating over deep water.
+    // Merfolk don't get gifts in deep water. {due}
+    if (!feat_has_solid_floor(grd(you.pos())))
+        return (false);
+
     // Nemelex will give at least one gift early.
     if (forced
         || !you.num_gifts[GOD_NEMELEX_XOBEH]
@@ -1998,6 +2006,10 @@ bool do_god_gift(bool prayed_for, bool forced)
         case GOD_OKAWARU:
         case GOD_TROG:
         {
+            // Break early if giving a gift now means it would be lost.
+            if (!feat_has_solid_floor(grd(you.pos())))
+                break;
+
             const bool need_missiles = _need_missile_gift(forced);
 
             if (forced && (!need_missiles || one_chance_in(4))
@@ -2088,6 +2100,10 @@ bool do_god_gift(bool prayed_for, bool forced)
         case GOD_KIKUBAAQUDGHA:
         case GOD_SIF_MUNA:
         case GOD_VEHUMET:
+
+            // Break early if giving a gift now means it would be lost.
+            if (!feat_has_solid_floor(grd(you.pos())))
+                break;
 
             unsigned int gift = NUM_BOOKS;
 
@@ -2390,9 +2406,8 @@ void dock_piety(int piety_loss, int penance)
             mprf("You feel%sguilty.",
                  (piety_loss == 1) ? " a little " :
                  (piety_loss <  5) ? " " :
-                 (piety_loss < 10) ? " very " :
-                 (piety_loss < 25) ? " extremely "
-                                   : " overwhelmingly ");
+                 (piety_loss < 10) ? " very "
+                                   : " extremely ");
         }
 
         last_piety_lecture = you.num_turns;
@@ -2539,6 +2554,12 @@ void gain_piety(int original_gain)
     {
         // Every piety level change also affects AC from orcish gear.
         you.redraw_armour_class = true;
+    }
+
+    if (you.religion == GOD_CHEIBRIADOS)
+    {
+        int diffrank = piety_rank(you.piety) - piety_rank(old_piety);
+        che_handle_change(CB_PIETY, diffrank);
     }
 
     if (you.piety > 160 && old_piety <= 160)
@@ -2763,6 +2784,12 @@ void lose_piety(int pgn)
     {
         // Every piety level change also affects AC from orcish gear.
         you.redraw_armour_class = true;
+    }
+
+    if (you.religion == GOD_CHEIBRIADOS)
+    {
+        int diffrank = piety_rank(you.piety) - piety_rank(old_piety);
+        che_handle_change(CB_PIETY, diffrank);
     }
 }
 
@@ -4067,28 +4094,66 @@ static void _place_delayed_monsters()
     _delayed_failure.clear();
 }
 
+
+static bool _is_god(god_type god)
+{
+    return (god > GOD_NO_GOD && god < NUM_GODS);
+}
+
+static bool _is_temple_god(god_type god)
+{
+    if (!_is_god(god))
+        return (false);
+
+    switch(god)
+    {
+    case GOD_NO_GOD:
+    case GOD_LUGONU:
+    case GOD_BEOGH:
+    case GOD_JIYVA:
+        return false;
+
+    default:
+        return true;
+    }
+}
+
+static bool _is_nontemple_god(god_type god)
+{
+    return (_is_god(god) && !_is_temple_god(god));
+}
+
+static bool _cmp_god_by_name(god_type god1, god_type god2)
+{
+    return (god_name(god1, false) < god_name(god2, false));
+}
+
+// Vector of temple gods.
+// Sorted by name for the benefit of the overmap.
 std::vector<god_type> temple_god_list()
 {
     std::vector<god_type> god_list;
-
     for (int i = 0; i < NUM_GODS; i++)
     {
-        god_type god = (god_type) i;
-
-        // These never appear in any temples.
-        switch(god)
-        {
-        case GOD_NO_GOD:
-        case GOD_LUGONU:
-        case GOD_BEOGH:
-        case GOD_JIYVA:
-            continue;
-
-        default:
-            break;
-        }
-
-        god_list.push_back(god);
+        god_type god = static_cast<god_type>(i);
+        if (_is_temple_god(god))
+            god_list.push_back(god);
     }
+    std::sort(god_list.begin(), god_list.end(), _cmp_god_by_name);
+    return god_list;
+}
+
+// Vector of non-temple gods.
+// Sorted by name for the benefit of the overmap.
+std::vector<god_type> nontemple_god_list()
+{
+    std::vector<god_type> god_list;
+    for (int i = 0; i < NUM_GODS; i++)
+    {
+        god_type god = static_cast<god_type>(i);
+        if (_is_nontemple_god(god))
+            god_list.push_back(god);
+    }
+    std::sort(god_list.begin(), god_list.end(), _cmp_god_by_name);
     return god_list;
 }

@@ -3657,6 +3657,7 @@ static int _prompt_ring_to_remove(int new_ring)
 
     mprf(" << or %s", left->name(DESC_INVENTORY).c_str());
     mprf(" > or %s", right->name(DESC_INVENTORY).c_str());
+    flush_prev_message();
 
     // Deactivate choice from tile inventory.
     // FIXME: We need to be able to get the choice (item letter)

@@ -1333,7 +1333,8 @@ mlist_min_height = 4
         (Note that the monster list is only available for ASCII.)
 
 msg_min_height = 6
-        You can reduce this to 5 give more space to the map display.
+        You can reduce this to give more space to the map display. The
+        minimum value is 5.
 
 msg_max_height = 10
         If there is extra space available after the monster list has

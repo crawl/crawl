@@ -781,10 +781,6 @@ giant goldfish
 
 This is what happens when you give your pet goldfish too much food!
 %%%%
-giant iguana
-
-A huge lizard with great crunching jaws.
-%%%%
 giant leech
 
 A huge blood-sucking leech. How horrible!
@@ -948,6 +944,10 @@ One of the most terrible denizens of the many Hells, the Ice Fiend is a huge icy
 ice statue
 
 An imposing statue carved in glistening ice. Freezing vapours swirl about it.
+%%%%
+iguana
+
+A huge lizard with great crunching jaws.
 %%%%
 imp
 

@@ -1939,8 +1939,10 @@ static void _eating(unsigned char item_class, int item_type)
             if (item_type == FOOD_MEAT_RATION || item_type == FOOD_BREAD_RATION)
                 duration = 3;
 
-            start_delay( DELAY_EAT, duration, 0, item_type );
-            lessen_hunger( food_value, true );
+            start_delay(DELAY_EAT, duration, 0, item_type);
+            lessen_hunger(food_value, true);
+            if (you.hunger_level() >= HS_FULL)
+                did_god_conduct(DID_GLUTTONY, food_value, true);
         }
         break;
 
@@ -2800,7 +2802,7 @@ static bool _vampire_consume_corpse(int slot, bool invent)
 
     // The draining delay doesn't have a start action, and we only need
     // the continue/finish messages if it takes longer than 1 turn.
-    start_delay(DELAY_FEED_VAMPIRE, duration, (int)invent, slot);
+    start_delay(DELAY_FEED_VAMPIRE, duration, invent, slot);
 
     return (true);
 }

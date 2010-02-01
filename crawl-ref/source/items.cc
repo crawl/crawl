@@ -668,7 +668,7 @@ void item_check(bool verbose)
 
     std::vector<const item_def*> items;
 
-    item_list_on_square( items, igrd(you.pos()), true );
+    item_list_on_square( items, you.visible_igrd(you.pos()), true );
 
     if (items.empty())
     {
@@ -1936,7 +1936,7 @@ const item_def* top_item_at(const coord_def& where, bool allow_mimic_item)
             return &get_mimic_item(mon);
     }
 
-    const int link = igrd(where);
+    const int link = you.visible_igrd(where);
     return (link == NON_ITEM) ? NULL : &mitm[link];
 }
 

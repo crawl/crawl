@@ -32,6 +32,7 @@
 #include "food.h"
 #include "godabil.h"
 #include "goditem.h"
+#include "godpassive.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -448,7 +449,7 @@ bool player_in_hell(void)
 
 bool player_likes_water(bool permanently)
 {
-    return (you.can_swim() || (!permanently && beogh_water_walk()));
+    return (you.can_swim(permanently) || (!permanently && beogh_water_walk()));
 }
 
 bool player_in_bat_form()
@@ -903,9 +904,9 @@ int player_equip( equipment_type slot, int sub_type, bool calc_unid )
 // Returns number of matches (jewellery returns zero -- no ego type).
 // [ds] There's no equivalent of calc_unid or req_id because as of now, weapons
 // and armour type-id on wield/wear.
-int player_equip_ego_type(int slot, int special, bool ignore_melded)
+int player_equip_ego_type( int slot, int special )
 {
-    if (ignore_melded && !you_tran_can_wear(slot))
+    if (!you_tran_can_wear(slot))
         return (0);
 
     int ret = 0;
@@ -939,7 +940,7 @@ int player_equip_ego_type(int slot, int special, bool ignore_melded)
         for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
         {
             // ... but skip ones you can't currently use!
-            if (ignore_melded && !you_tran_can_wear(i))
+            if (!you_tran_can_wear(i))
                 continue;
 
             if (you.equip[i] != -1
@@ -1307,6 +1308,9 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
 
         // randart weapons:
         rf += scan_artefacts(ARTP_FIRE, calc_unid);
+
+        // Che bonus
+        rf += che_boost(CB_RFIRE);
     }
 
     // species:
@@ -1417,6 +1421,9 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
 
         // randart weapons:
         rc += scan_artefacts(ARTP_COLD, calc_unid);
+
+        // Che bonus
+        rc += che_boost(CB_RCOLD);
     }
 
     // mutations:
@@ -1826,6 +1833,9 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
 
         // randart wpns
         pl += scan_artefacts(ARTP_NEGATIVE_ENERGY, calc_unid);
+
+        // Che bonus
+        pl += che_boost(CB_RNEG);
     }
 
     // undead/demonic power
@@ -1992,44 +2002,16 @@ static int _player_armour_racial_bonus(const item_def& item)
     return racial_bonus;
 }
 
-bool is_light_armour( const item_def &item )
+bool is_effectively_light_armour(const item_def *item)
 {
-    if (get_equip_race(item) == ISFLAG_ELVEN)
-        return (true);
-
-    switch (item.sub_type)
-    {
-    case ARM_ROBE:
-    case ARM_ANIMAL_SKIN:
-    case ARM_LEATHER_ARMOUR:
-    case ARM_TROLL_HIDE:
-    case ARM_TROLL_LEATHER_ARMOUR:
-    case ARM_STEAM_DRAGON_HIDE:
-    case ARM_STEAM_DRAGON_ARMOUR:
-    case ARM_MOTTLED_DRAGON_HIDE:
-    case ARM_MOTTLED_DRAGON_ARMOUR:
-        return (true);
-
-    default:
-        return (false);
-    }
+    return (!item
+            || (abs(property(*item, PARM_EVASION)) < 2));
 }
 
-bool player_light_armour(bool with_skill)
+bool player_effectively_in_light_armour()
 {
-    if (!player_wearing_slot(EQ_BODY_ARMOUR))
-        return (true);
-
-    // We're wearing some kind of body armour and it's not melded.
-    const int arm = you.equip[EQ_BODY_ARMOUR];
-
-    if (with_skill
-        && property(you.inv[arm], PARM_EVASION) + you.skills[SK_ARMOUR]/3 >= 0)
-    {
-        return (true);
-    }
-
-    return (is_light_armour(you.inv[arm]));
+    const item_def *armour = you.slot_item(EQ_BODY_ARMOUR);
+    return is_effectively_light_armour(armour);
 }
 
 //
@@ -3187,22 +3169,28 @@ int check_stealth(void)
     if (you.confused())
         stealth /= 3;
 
-    const int arm   = you.equip[EQ_BODY_ARMOUR];
-    const int cloak = you.equip[EQ_CLOAK];
-    const int boots = you.equip[EQ_BOOTS];
+    const item_def *arm = you.slot_item(EQ_BODY_ARMOUR);
+    const item_def *cloak = you.slot_item(EQ_CLOAK);
+    const item_def *boots = you.slot_item(EQ_BOOTS);
 
-    if (arm != -1 && !player_light_armour())
-        stealth -= (item_mass( you.inv[arm] ) / 10);
+    if (arm)
+    {
+        // [ds] New stealth penalty formula from rob: SP = 6 * (EP^2)
+        const int ep = -property(*arm, PARM_EVASION);
+        const int penalty = 6 * ep * ep;
+        dprf("Stealth penalty for armour (ep: %d): %d", ep, penalty);
+        stealth -= penalty;
+    }
 
-    if (cloak != -1 && get_equip_race(you.inv[cloak]) == ISFLAG_ELVEN)
+    if (cloak && get_equip_race(*cloak) == ISFLAG_ELVEN)
         stealth += 20;
 
-    if (boots != -1)
+    if (boots)
     {
-        if (get_armour_ego_type( you.inv[boots] ) == SPARM_STEALTH)
+        if (get_armour_ego_type(*boots) == SPARM_STEALTH)
             stealth += 50;
 
-        if (get_equip_race(you.inv[boots]) == ISFLAG_ELVEN)
+        if (get_equip_race(*boots) == ISFLAG_ELVEN)
             stealth += 20;
     }
 
@@ -5396,8 +5384,6 @@ void player::init()
     worshipped.init(0);
     num_gifts.init(0);
 
-    che_saved_ponderousness = 0;
-
     equip.init(-1);
 
     spells.init(SPELL_NO_SPELL);
@@ -5529,12 +5515,13 @@ bool player::in_water() const
             && feat_is_water(grd(this->pos())));
 }
 
-bool player::can_swim() const
+bool player::can_swim(bool permanently) const
 {
     // Transforming could be fatal if it would cause unequipment of
     // stat-boosting boots or heavy armour.
-    return ((species == SP_MERFOLK && merfolk_change_is_safe(true)
-             || you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST));
+    return ((species == SP_MERFOLK && merfolk_change_is_safe(true))
+            || (!permanently
+                && you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST));
 }
 
 int player::visible_igrd(const coord_def &where) const
@@ -6153,11 +6140,6 @@ void player::shield_block_succeeded(actor *foe)
     shield_blocks++;
     if (coinflip())
         exercise(SK_SHIELDS, 1);
-}
-
-bool player::wearing_light_armour(bool with_skill) const
-{
-    return (player_light_armour(with_skill));
 }
 
 void player::exercise(skill_type sk, int qty)

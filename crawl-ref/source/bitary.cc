@@ -15,7 +15,7 @@
 bit_array::bit_array(unsigned long s)
     : size(s)
 {
-    nwords = (int) ((size + LONGSIZE - 1) / LONGSIZE);
+    nwords = static_cast<int>((size + LONGSIZE - 1) / LONGSIZE);
     data = new unsigned long[nwords];
     reset();
 }

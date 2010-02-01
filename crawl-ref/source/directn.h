@@ -180,6 +180,8 @@ private:
     // terrain (i.e. floor.)
     void print_floor_description(bool boring_too) const;
 
+    std::string target_interesting_terrain_description() const;
+
     void describe_cell() const;
 
     // Move the target to where the mouse pointer is (on tiles.)

@@ -1018,7 +1018,7 @@ void TilesFramework::do_layout()
 
         // Shrink msgsz if too tall:
         while (m_region_tile->wy + m_region_msg->wy > m_windowsz.y
-               && crawl_view.msgsz.y > MSG_MIN_HEIGHT)
+               && crawl_view.msgsz.y > Options.msg_min_height)
         {
             m_region_msg->resize(m_region_msg->mx, --crawl_view.msgsz.y);
         }
@@ -1723,7 +1723,7 @@ void TilesFramework::add_text_tag(text_tag_type type, const monsters* mon)
 
     const coord_def &gc = mon->pos();
 
-    if (mon->type == MONS_PLAYER_GHOST)
+    if (mons_is_pghost(mon->type))
     {
         // Beautification hack.  "Foo's ghost" is a little bit
         // verbose as a tag.  "Foo" on its own should be sufficient.

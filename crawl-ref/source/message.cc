@@ -284,6 +284,9 @@ class message_window
     void more()
     {
         show();
+        if (crawl_state.arena)
+            return;
+
         int last_row = crawl_view.msgsz.y;
         cgotoxy(1, last_row, GOTO_MSG);
         if (first_col_more())
@@ -423,11 +426,6 @@ public:
     void mesclr()
     {
         mesclr_line = next_line;
-    }
-
-    bool just_cleared()
-    {
-        return (mesclr_line == next_line);
     }
 
     void new_cmd(bool new_turn)
@@ -1081,8 +1079,7 @@ void more(bool user_forced)
     }
 #endif
 
-    if (crawl_state.show_more_prompt && !suppress_messages
-        && !msgwin.just_cleared())
+    if (crawl_state.show_more_prompt && !suppress_messages)
     {
         // Really a prompt, but writing to MSGCH_PROMPT clears
         // autoclear_more.

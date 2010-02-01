@@ -25,6 +25,7 @@ mon_glyph = minotaur : red t
 # spiders
 mon_glyph = trapdoor spider : brown
 mon_glyph = wolf spider : brown
+mon_glyph = scorpion : lightgrey
 
 # tier 4 demons
 mon_glyph = smoke demon : lightgrey 4
@@ -33,10 +34,15 @@ mon_glyph = smoke demon : lightgrey 4
 mon_glyph = hellion : fire 3
 mon_glyph = ynoxinul : cyan 3
 
+# efreets
+mon_glyph = efreet : red E
+mon_glyph = Azrael : lightred E
+
 # jellies
 mon_glyph = acid blob : lightgreen
 # not in 0.5, but it would conflict with acid blobs
 mon_glyph = merged slime creature : green
+mon_glyph = giant spore : G
 
 # insubstantials
 mon_glyph = insubstantial wisp : lightgrey p

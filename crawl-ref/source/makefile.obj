@@ -50,6 +50,7 @@ ghost.o \
 godabil.o \
 godconduct.o \
 goditem.o \
+godpassive.o \
 godprayer.o \
 godwrath.o \
 hiscores.o \
@@ -112,6 +113,7 @@ mon-abil.o \
 mon-act.o \
 mon-behv.o \
 mon-cast.o \
+mon-clone.o \
 mon-gear.o \
 mon-grow.o \
 mon-info.o \

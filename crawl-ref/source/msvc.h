@@ -10,6 +10,7 @@
 #if defined(TARGET_COMPILER_VC)
 
 #include <io.h>
+#include <math.h>
 
 #define fileno _fileno
 #define itoa _itoa

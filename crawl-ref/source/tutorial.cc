@@ -985,7 +985,7 @@ void tutorial_finished()
 
         case 3:
             text = "You can ask other Crawl players for advice and help "
-                   "on the <w>#crawl</w> IRC (Internet Relay Chat) "
+                   "on the <w>##crawl</w> IRC (Internet Relay Chat) "
                    "channel on freenode (<w>irc.freenode.net</w>).";
             break;
 
@@ -3334,9 +3334,8 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
     {
         text << "You just miscast a spell. ";
 
-        item_def *armour = you.slot_item(EQ_BODY_ARMOUR);
-        item_def *shield = you.slot_item(EQ_SHIELD);
-        if (armour && !is_light_armour(*armour) || shield)
+        const item_def *shield = you.slot_item(EQ_SHIELD);
+        if (!player_effectively_in_light_armour() || shield)
         {
             text << "Wearing heavy body armour or using a shield, especially a "
                     "large one, can severely hamper your spellcasting "
@@ -3887,8 +3886,8 @@ void tutorial_describe_item(const item_def &item)
             }
 
             if (Tutorial.tutorial_type == TUT_MAGIC_CHAR
-                && !is_light_armour(item)
-                && get_armour_slot(item) == EQ_BODY_ARMOUR)
+                && get_armour_slot(item) == EQ_BODY_ARMOUR
+                && !is_effectively_light_armour(&item))
             {
                 ostr << "\nNote that body armour with high evasion penalties "
                         "may hinder your ability to learn and cast spells. "
