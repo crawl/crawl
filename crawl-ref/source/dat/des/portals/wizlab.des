@@ -482,6 +482,10 @@ COLOUR:     G = lightgrey
 KFEAT:      / = stone_arch
 KFEAT:      _ = altar_fedhas
 MARKER:     A = feat:stone_arch
+TILE:       c = wall_brick_vines
+TILE:       = = wall_brick_vines last_tile
+LROCKTILE:  wall_brick_vines
+LFLOORTILE: floor_grass
 ITEM:       any fixed theme book, any fixed level book, any staff
 {{
 
