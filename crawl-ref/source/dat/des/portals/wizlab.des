@@ -390,6 +390,7 @@ end
 }}
 SUBST:      ? = .
 COLOUR:     =cA< = darkgrey
+TILE:       =c = wall_stone_dark no_random
 COLOUR:     mMV = silver
 KMONS:      8 = ice statue col:silver spells:blink_other;blink_other;blink_other;\
                     blink_other;blink_other;major_healing name:strange_machine \
@@ -1315,6 +1316,8 @@ COLOUR:     =c = darkgrey
 COLOUR:     t = lightred / red w:3
 COLOUR:     AG = red
 COLOUR:     < = lightred
+TILE:       c = dngn_stone_dark
+LFLOORTILE: floor_pebble_white
 KFEAT:      ' = open_door
 KFEAT:      1234567 = .
 KMONS:      1234567 = nothing
@@ -1384,10 +1387,10 @@ local function summon_monks (data, triggerable, triggerer, marker, ev)
   end
 
   local msp = "human name:monk n_suf col:white hd:10 dur:2 sum:shadow_creatures" ..
-            " nas:old_memories tile:human_monk seen / rock troll name:monk n_suf"..
-            " dur:2 seen sum:shadow_creatures nas:old_memories tile:rock_troll_monk" ..
+            " nas:old_memories tile:mons_human_monk seen / rock troll name:monk n_suf"..
+            " dur:2 seen sum:shadow_creatures nas:old_memories tile:mons_rock_troll_monk" ..
             " / iron troll name:monk n_suf col:white dur:2 sum:shadow_creatures " ..
-            " nas:old_memories seen tile:iron_troll_monk w:5"
+            " nas:old_memories seen tile:mons_iron_troll_monk w:5"
 
   local count = 0
   for point in iter.circle_iterator(3) do
@@ -1473,7 +1476,8 @@ TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 {{
 local wizname = crawl.make_name()
 
-kmons ("    1 = col:silver patrolling wizard name:" .. wizname .. " name_replace"
+kmons ("    1 = col:silver patrolling wizard name:" .. string.gsub(wizname, " ", "_")
+         .. " name_replace"
          .. " name_definite spells:mephitic_cloud;freezing_cloud;poisonous_cloud;"
          .. "airstrike;blink_range;blink_range hd:20 hp:150 ;"
          .. " robe unrand:robe_of_clouds . quick blade ego:electrocution |"
@@ -1596,7 +1600,8 @@ KMONS:      5 = blue death / green death / cacodemon
 {{
 local wizname = crawl.make_name()
 
-kmons     ("1 = col:fire patrolling wizard name:" .. wizname .." name_replace"
+kmons     ("1 = col:fire patrolling wizard name:" .. string.gsub(wizname, " ", "_")
+              .. " name_replace"
               .." spells:call_imp;summon_demon;haste;hellfire;blink_away;throw_flame"
               .." hd:20 hp:150 ; demon blade . robe")
 }}
