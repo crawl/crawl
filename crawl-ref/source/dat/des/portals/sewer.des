@@ -47,11 +47,11 @@ function sewer_portal(e)
         dstorigin = "in the sewers",
         overmap = "glowing drain",
         turns = timeout_turns,
--- floor seems better than empty stone arch
---        floor = "stone_arch",
+        floor = "floor",
         msg = messager })
   e.kfeat("O = enter_portal_vault")
   e.colour("O = lightgreen")
+  e.tile("O = dngn_portal_sewer")
 end
 
 -- Use the following line in destination maps after all SUBSTs
