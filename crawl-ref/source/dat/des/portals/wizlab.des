@@ -390,7 +390,8 @@ end
 }}
 SUBST:      ? = .
 COLOUR:     =cA< = darkgrey
-TILE:       =c = wall_stone_dark no_random
+TILE:       c = wall_stone_dark
+TILE:       = = wall_stone_dark last_tile
 COLOUR:     mMV = silver
 KMONS:      8 = ice statue col:silver spells:blink_other;blink_other;blink_other;\
                     blink_other;blink_other;major_healing name:strange_machine \
