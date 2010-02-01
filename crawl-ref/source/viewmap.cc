@@ -7,6 +7,8 @@
 
 #include "viewmap.h"
 
+#include <algorithm>
+
 #include "branch.h"
 #include "cio.h"
 #include "colour.h"
