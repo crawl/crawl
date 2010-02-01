@@ -2571,7 +2571,7 @@ static int _tileidx_shop(coord_def where)
 int tileidx_feature(dungeon_feature_type feat, int gx, int gy)
 {
     int override = env.tile_flv[gx][gy].feat;
-    if (override && !feat_is_door(grd[gx][gy]))
+    if (override && !feat_is_door(grd[gx][gy]) && feat != DNGN_FLOOR)
         return override;
 
     switch (feat)
