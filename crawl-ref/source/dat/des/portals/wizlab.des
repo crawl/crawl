@@ -308,7 +308,7 @@ default-depth:
 ###############################################################################
 # Firstly, we have Tukima's Dance Studio.
 #
-# Todo: Mostly done, just improve the tiles.
+# Todo: Still needs silver mirror tile. Desperately.
 NAME:       wizlab_tukima
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
@@ -468,7 +468,7 @@ ENDMAP
 #          Maraine_XVIIe_si%C3%A8cle.jpg (concat it back together to get the
 #          full link).
 #
-# TODO: Tiles. Tiles galore!
+# TODO: Needs vine-covered statues, rose-covered archway.
 NAME:       wizlab_eringya
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
@@ -653,6 +653,7 @@ SUBST:      L=l, M=m, N=n, O=o, P=p, Q=q, R=r, S=s, T=t, U=u
 #           First the round layout...
 COLOUR:     _ = darkgrey
 KFEAT:      _ = stone_wall
+TILE:       _ = wall_stone_black_marked
 SUBST:      b=., c=., d=., e=., f=., g=., h=., i=., j=., k=.
 SUBST:      l=., m=., n=., o=., p=., q=., r=., s=., t=., u=.
 SUBST:      B=., C=., D=., E=., F=., G=., H=., I=., J=., K=.
@@ -746,11 +747,14 @@ KITEM:      | = superb_item
 #           Intentionally colouring the floor glyphs of the central room only.
 #           The squares beneath the boxes are to remain uncoloured.
 COLOUR:     ^ = darkgrey
+TILE:       ^ = wall_stone_black_marked
 COLOUR:     = = yellow
+TILE:       = = dngn_stone_wall_yellow last_tile
 KFEAT:      ^ = stone_wall
 COLOUR:     . = darkgrey / blue w:3 / cyan w:1
 MARKER:     ! = lua:portal_desc {wall_drop=1}
 MARKER:     = = lua:portal_desc {wall_drop=1}
+TILE:       ! = dngn_stone_wall_yellow
 {{
 
 function convert_boxes (data, triggerable, triggerer, marker, ev)
