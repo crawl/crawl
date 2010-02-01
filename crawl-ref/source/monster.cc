@@ -196,37 +196,27 @@ bool monsters::wants_submerge() const
     if (mons_base_type(this) == MONS_KRAKEN && _player_near_water())
         return (false);
 
-    // If we're in distress, we usually want to submerge.
-    if (env.cgrid(pos()) != EMPTY_CLOUD
-        || (hit_points < max_hit_points / 2
-            && random2(max_hit_points + 1) >= hit_points))
-    {
-        return (true);
-    }
-
     // Trapdoor spiders only hide themselves under the floor when they
-    // can't see their prey.
+    // can't see their prey, or are on low hp.
     if (type == MONS_TRAPDOOR_SPIDER)
     {
+        // If we're in distress, we usually want to submerge.
+        if (env.cgrid(pos()) != EMPTY_CLOUD
+            || (hit_points < max_hit_points / 2
+                && random2(max_hit_points + 1) >= hit_points))
+        {
+            return (true);
+        }
+
         const actor* _foe = get_foe();
         return (_foe == NULL || !can_see(_foe));
     }
 
-    const bool has_ranged_attack = (type == MONS_ELECTRIC_EEL
-                                    || type == MONS_LAVA_SNAKE);
-
-    int roll = 8;
-    // Shallow water takes a little more effort to submerge in, so we're
-    // less likely to bother.
-    if (grd(pos()) == DNGN_SHALLOW_WATER)
-        roll = roll * 7 / 5;
-
-    const actor *tfoe = get_foe();
-    if (tfoe && grid_distance(tfoe->pos(), pos()) > 1 && !has_ranged_attack)
-        roll /= 2;
-
     // Don't submerge if we just unsubmerged to shout.
-    return (one_chance_in(roll) && seen_context != "bursts forth shouting");
+    if (seen_context == "bursts forth shouting")
+        return (false);
+
+    return (!mons_landlubbers_in_reach(this));
 }
 
 bool monsters::submerged() const
@@ -5075,23 +5065,16 @@ void monsters::apply_enchantment(const mon_enchant &me)
         // and are more likely to surface.  -- bwr
         if (!monster_can_submerge(this, grid))
             del_ench(ENCH_SUBMERGED); // forced to surface
-        else if (hit_points <= max_hit_points / 2)
-            break;
         else if (type == MONS_TRAPDOOR_SPIDER)
         {
+            if (hit_points <= max_hit_points / 2)
+                break;
             // This should probably never happen.
             if (!mons_is_lurking(this))
                 del_ench(ENCH_SUBMERGED);
             break;
         }
-        else if (((type == MONS_ELECTRIC_EEL || type == MONS_LAVA_SNAKE || type == MONS_KRAKEN)
-                  && (one_chance_in(50) || (mons_near(this)
-                                            && hit_points == max_hit_points
-                                            && !one_chance_in(10))))
-                 || one_chance_in(200)
-                 || (mons_near(this)
-                     && hit_points == max_hit_points
-                     && !one_chance_in(5)))
+        else if (mons_landlubbers_in_reach(this))
         {
             del_ench(ENCH_SUBMERGED);
         }

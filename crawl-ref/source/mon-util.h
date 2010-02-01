@@ -348,6 +348,8 @@ bool mons_looks_distracted(const monsters *m);
 void mons_start_fleeing_from_sanctuary(monsters *monster);
 void mons_stop_fleeing_from_sanctuary(monsters *monster);
 
+bool mons_landlubbers_in_reach(const monsters *monster);
+
 bool mons_has_smite_attack(const monsters *monster);
 
 bool mons_class_is_confusable(int mc);
