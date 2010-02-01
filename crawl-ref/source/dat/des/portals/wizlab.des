@@ -392,6 +392,8 @@ SUBST:      ? = .
 COLOUR:     =cA< = darkgrey
 TILE:       c = wall_stone_dark
 TILE:       = = wall_stone_dark last_tile
+TILE:       V = dngn_dry_fountain_white
+LFLOORTILE: floor_pebble_white
 COLOUR:     mMV = silver
 KMONS:      8 = ice statue col:silver spells:blink_other;blink_other;blink_other;\
                     blink_other;blink_other;major_healing name:strange_machine \
@@ -1318,6 +1320,7 @@ COLOUR:     t = lightred / red w:3
 COLOUR:     AG = red
 COLOUR:     < = lightred
 TILE:       c = dngn_stone_dark
+TILE:       = = dngn_stone_dark last_tile
 LFLOORTILE: floor_pebble_white
 KFEAT:      ' = open_door
 KFEAT:      1234567 = .
