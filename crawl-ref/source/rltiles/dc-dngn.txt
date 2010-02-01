@@ -638,6 +638,13 @@ wall/stone_gray1
 wall/stone_gray2
 wall/stone_gray3
 
+%variation WALL_STONE_GRAY darkgrey
+wall/stone_dark0 WALL_STONE_DARK
+wall/stone_dark1
+wall/stone_dark2
+wall/stone_dark3
+%resetcol
+
 %sdir dc-dngn/floor/grass
 %weight 15
 grass0 FLOOR_GRASS
@@ -764,6 +771,13 @@ wall/stone2_gray0 DNGN_STONE_WALL DNGN_STONE_WALL_LIGHTGRAY
 wall/stone2_gray1
 wall/stone2_gray2
 wall/stone2_gray3
+
+%variation DNGN_STONE_WALL darkgrey
+wall/stone2_dark0 DNGN_STONE_DARK
+wall/stone2_dark1
+wall/stone2_dark2
+wall/stone2_dark3
+%resetcol
 
 %variation DNGN_STONE_WALL blue
 %hue 26 240
