@@ -217,8 +217,8 @@ public:
 class tile_spec
 {
 public:
-    tile_spec(const std::string &_key, bool _fix, bool _rand, bool _floor, bool _feat, const map_tile_list &_tiles)
-        : key(_key), fix(_fix), chose_fixed(false), no_random(_rand), floor(_floor), feat(_feat),
+    tile_spec(const std::string &_key, bool _fix, bool _rand, bool _last, bool _floor, bool _feat, const map_tile_list &_tiles)
+        : key(_key), fix(_fix), chose_fixed(false), no_random(_rand), last_tile(_last), floor(_floor), feat(_feat),
           fixed_tile(0), tiles(_tiles)
     {
     }
@@ -230,6 +230,7 @@ public:
     bool fix;
     bool chose_fixed;
     bool no_random;
+    bool last_tile;
     bool floor;
     bool feat;
     int fixed_tile;
@@ -477,7 +478,7 @@ private:
     {
         overlay_def() :
             colour(0), rocktile(0), floortile(0), tile(0),
-            no_random(false), property(0), height(INVALID_HEIGHT),
+            no_random(false), last_tile(false), property(0), height(INVALID_HEIGHT),
             keyspec_idx(0)
         {}
         int colour;
@@ -485,6 +486,7 @@ private:
         int floortile;
         int tile;
         bool no_random;
+        bool last_tile;
         int property;
         int height;      // heightmap height
         int keyspec_idx;
