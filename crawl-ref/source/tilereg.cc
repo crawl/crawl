@@ -754,7 +754,7 @@ static void _fill_doll_equipment(dolls_data &result)
         result.parts[TILEP_PART_ENCH] =
             (you.duration[DUR_LIQUID_FLAMES] ? TILEP_ENCH_STICKY_FLAME : 0);
     }
-    // Draconian head/wings
+    // Draconian head/wings.
     if (player_genus(GENPC_DRACONIAN))
     {
         int base = 0;
@@ -767,6 +767,9 @@ static void _fill_doll_equipment(dolls_data &result)
         if (result.parts[TILEP_PART_DRCWING] == TILEP_SHOW_EQUIP)
             result.parts[TILEP_PART_DRCWING] = wing;
     }
+    // Shadow.
+    if (result.parts[TILEP_PART_SHADOW] == TILEP_SHOW_EQUIP)
+        result.parts[TILEP_PART_SHADOW] = TILEP_SHADOW_SHADOW;
 
     // Various other slots.
     for (int i = 0; i < TILEP_PART_MAX; i++)
