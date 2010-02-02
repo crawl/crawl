@@ -8,7 +8,6 @@
  *
  * Maybe:
  *   - Redraw message window at same places that cause refresh?
- *   - condensing across turns?
  */
 
 #include "AppHdr.h"
