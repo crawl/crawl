@@ -801,7 +801,9 @@ cap_blue CAP_BLUE
 bandana_ybrown BANDANA_YBROWN
 hat_black HAT_BLACK
 gandalf GANDALF
-crown_gold
+crown_gold1
+crown_gold2
+crown_gold3
 cap_black1
 clown1
 feather_green FEATHER_GREEN
@@ -844,6 +846,9 @@ helm_green HELM_GREEN
 cheek_red
 iron_red IRON_RED
 blue_horn_gold BLUE_HORN_GOLD
+viking_brown1 VIKING
+viking_brown2
+viking_gold
 hood_white WHITE
 
 yellow_wing YELLOW_WING
