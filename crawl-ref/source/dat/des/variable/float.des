@@ -483,7 +483,7 @@ ENDMAP
 # and the walls are always diggable then.
 #
 NAME:    oklob_3
-DEPTH:   D:18-26, Lair:2-10, Elf:2-7
+DEPTH:   D:18-26, Lair:2-, Elf:2-7
 WEIGHT:  2
 ORIENT:  float
 SHUFFLE: ab" / AB'
@@ -519,7 +519,7 @@ ENDMAP
 #
 NAME:    onia_ninara_012_swampy_vault
 TAGS:    no_pool_fixup no_monster_gen
-DEPTH:   D:16-20, Lair:3-10, Snake
+DEPTH:   D:16-20, Lair:3-, Snake
 ORIENT:  float
 SHUFFLE: AB@
 SUBST: x = .:30 W x:4

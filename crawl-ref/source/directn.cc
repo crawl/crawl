@@ -1167,12 +1167,12 @@ coord_def direction_chooser::find_default_target() const
 
         // First try to pick our previous target.
         const monsters *mon_target = get_current_target();
-        if (mon_target
-            // not made friendly since then
-            && (mons_attitude(mon_target) == ATT_HOSTILE
+        if (mon_target != NULL
+            && (mode != TARG_EVOLVABLE_PLANTS
+                    && mons_attitude(mon_target) == ATT_HOSTILE
                 || mode == TARG_ENEMY && !mon_target->friendly()
-                || mode == TARG_EVOLVABLE_PLANTS && mons_is_evolvable(mon_target))
-            // still in range
+                || mode == TARG_EVOLVABLE_PLANTS
+                    && mons_is_evolvable(mon_target))
             && in_range(mon_target->pos()))
         {
             result = mon_target->pos();

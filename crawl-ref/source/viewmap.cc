@@ -7,6 +7,8 @@
 
 #include "viewmap.h"
 
+#include <algorithm>
+
 #include "branch.h"
 #include "cio.h"
 #include "colour.h"
@@ -427,6 +429,12 @@ static void _reset_travel_colours(std::vector<coord_def> &features,
     arrange_features(features);
 }
 
+// Sort glyphs within a group, for the feature list.
+static bool _comp_glyphs(const glyph& g1, const glyph& g2)
+{
+    return (g1.ch < g2.ch || g1.ch == g2.ch && g1.col < g2.col);
+}
+
 class feature_list
 {
     enum group
@@ -500,6 +508,8 @@ public:
             data[i].clear();
         for (rectangle_iterator ri(0); ri; ++ri)
             maybe_add(*ri);
+        for (unsigned int i = 0; i < NUM_GROUPS; ++i)
+            std::sort(data[i].begin(), data[i].end(), _comp_glyphs);
     }
 
     formatted_string format() const

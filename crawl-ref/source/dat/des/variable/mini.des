@@ -293,7 +293,7 @@ ENDMAP
 # Necromancer has a house with a fridge (and a nice garden) (Eino)
 #
 NAME:  eino_house_with_fridge
-DEPTH: D:8-20, Lair:2-10, Vault:1-4
+DEPTH: D:8-20, Lair:2-, Vault:1-4
 TAGS:  no_monster_gen no_item_gen mini_float
 MONS:  necromancer / patrolling necromancer, plant
 MONS:  rat simulacrum / hound simulacrum / sheep simulacrum / bear simulacrum

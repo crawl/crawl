@@ -9,9 +9,9 @@ ae = <curare-tipped
 
 # Don't autopickup in the Abyss
 < do
-local old_ch_autopickup = ch_autopickup or function() return true end
-function ch_autopickup(it)
-    return you.where() ~= "Abyss" and old_ch_autopickup(it)
+local old_ch_deny_autopickup = ch_deny_autopickup or function() return false end
+function ch_deny_autopickup(it)
+    return you.where() == "Abyss" or old_ch_deny_autopickup(it)
 end
 end >
 

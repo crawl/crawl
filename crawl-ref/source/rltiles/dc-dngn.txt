@@ -1132,6 +1132,8 @@ dngn_transit_pandemonium DNGN_TRANSIT_PANDEMONIUM
 
 # portal vault entrances
 volcano_portal DNGN_PORTAL_VOLCANO
+sewer_portal DNGN_PORTAL_SEWER
+ice_cave_portal DNGN_PORTAL_ICE_CAVE
 
 %sdir dc-dngn/altars
 dngn_altar DNGN_UNSEEN_ALTAR
