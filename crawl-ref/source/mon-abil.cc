@@ -1504,6 +1504,11 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
         return;
     }
 
+    // A (very) soft cap on colony growth, no activations if there are
+    // already a lot of ballistos on level.
+    if (candidates.size() > 50)
+        return;
+
     // If a spore or inactive ballisto died we will only activate one
     // other ballisto. If it was an active ballisto we will distribute
     // its count to others on the level.
