@@ -3345,15 +3345,7 @@ static inline void _finalise_tile(unsigned int *tile,
     else if (orig == TILE_DNGN_CLOSED_DOOR || orig == TILE_DNGN_OPEN_DOOR)
     {
         int override = env.tile_flv(gc).feat;
-        // Setting an override on a door specifically for undetected secret
-        // doors causes issues if there are a number of variants for that tile.
-        // In these instances, append "last_tile" and have the tile specifier
-        // for the door in question on its own line, and it should bypass any
-        // asserts or weird visual issues. Somewhat hackish. The following code
-        // assumes that if there is an override on a door location and that
-        // has no variations, that the override is not actually a door tile but
-        // the aforementioned secret door thing. {due}
-        if (override && tile_dngn_count(override) > 1)
+        if (override)
         {
             // XXX: This doesn't deal properly with detected doors.
             bool opened = (orig == TILE_DNGN_OPEN_DOOR);
