@@ -1319,6 +1319,14 @@ bool evolve_flora()
     
     direction(spelld, args);
 
+    if (!spelld.isValid)
+    {
+        // Check for user cancel.
+        canned_msg(MSG_OK);
+        return (false);
+    }
+
+
     monsters* target = monster_at(spelld.target);
 
     if (!target)
