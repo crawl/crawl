@@ -1969,7 +1969,6 @@ static void _delete_shop(int i)
 
 void shop()
 {
-    flush_prev_message();
     int i;
 
     for (i = 0; i < MAX_SHOPS; i++)
@@ -2626,7 +2625,7 @@ void ShoppingList::display()
             {
                 std::string prompt =
                    make_stringf("You cannot afford %s; travel there "
-                                "anyways? (y/N)",
+                                "anyway? (y/N)",
                                 describe_thing(*thing, DESC_NOCAP_A).c_str());
                 clrscr();
                 if (!yesno(prompt.c_str(), true, 'n'))

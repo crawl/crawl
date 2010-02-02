@@ -610,7 +610,7 @@ void game_options::reset_options()
 
     view_max_width   = std::max(33, VIEW_MIN_WIDTH);
     view_max_height  = std::max(21, VIEW_MIN_HEIGHT);
-    mlist_min_height = 5;
+    mlist_min_height = 4;
     msg_min_height   = std::max(6, MSG_MIN_HEIGHT);
     msg_max_height   = std::max(10, MSG_MIN_HEIGHT);
     mlist_allow_alternate_layout = false;
@@ -701,6 +701,7 @@ void game_options::reset_options()
     auto_list              = true;
 
     clear_messages         = false;
+    show_more              = true;
     pickup_dropped         = false;
     pickup_thrown          = true;
 
@@ -888,6 +889,7 @@ void game_options::reset_options()
 
     tile_show_minihealthbar = true;
     tile_show_minimagicbar  = true;
+    tile_show_demon_numbers = true;
 #endif
 
     // map each colour to itself as default
@@ -936,6 +938,7 @@ void game_options::reset_options()
     note_messages.clear();
     autoinscriptions.clear();
     autoinscribe_artefacts = true;
+    autoinscribe_cursed = true;
     note_items.clear();
     note_skill_levels.clear();
     travel_stop_message.clear();
@@ -2471,6 +2474,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(note_all_spells);
     else BOOL_OPTION(note_xom_effects);
     else BOOL_OPTION(clear_messages);
+    else BOOL_OPTION(show_more);
     else if (key == "flush")
     {
         if (subkey == "failure")
@@ -2591,6 +2595,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             std::pair<text_pattern,std::string>(thesplit[0], thesplit[1]));
     }
     else BOOL_OPTION(autoinscribe_artefacts);
+    else BOOL_OPTION(autoinscribe_cursed);
     else if (key == "map_file_name")
     {
         map_file_name = field;
@@ -3212,6 +3217,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else INT_OPTION(tile_update_rate, 50, INT_MAX);
     else BOOL_OPTION(tile_show_minihealthbar);
     else BOOL_OPTION(tile_show_minimagicbar);
+    else BOOL_OPTION(tile_show_demon_numbers);
     else if (key == "tile_tag_pref")
     {
         tile_tag_pref = string2tag_pref(field.c_str());

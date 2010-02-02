@@ -62,6 +62,16 @@ function TimedMessaging:init(tmarker, cm, verbose)
     self.check = 50
   end
 
+  if self.messages then
+    for _, message in ipairs(self.messages) do
+      local mes = message[2]
+      if string.find(mes, "$F") then
+        mes = util.expand_entity(self.entity, mes)
+      end
+      crawl.add_travel_stopper(mes)
+    end
+  end
+
   if verbose and self.initmsg then
     self:emit_message(cm, self.initmsg)
   end

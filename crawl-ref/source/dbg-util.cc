@@ -256,7 +256,7 @@ void debug_dump_mon(const monsters* mon, bool recurse)
         fprintf(stderr, EOL "Travelling:" EOL);
         fprintf(stderr, "    travel_target      = %d" EOL, mon->travel_target);
         fprintf(stderr, "    travel_path.size() = %lu" EOL,
-                (long unsigned int) mon->travel_path.size());
+                (unsigned long) mon->travel_path.size());
 
         if (mon->travel_path.size() > 0)
         {

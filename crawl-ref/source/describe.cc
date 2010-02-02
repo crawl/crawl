@@ -351,6 +351,11 @@ void add_autoinscription( item_def &item, std::string ainscrip)
     // Remove previous randart inscription.
     _trim_randart_inscrip(item);
 
+    add_inscription(item, ainscrip);
+}
+
+void add_inscription(item_def &item, std::string inscrip)
+{
     if (!item.inscription.empty())
     {
         if (ends_with(item.inscription, ","))
@@ -359,7 +364,7 @@ void add_autoinscription( item_def &item, std::string ainscrip)
             item.inscription += ", ";
     }
 
-    item.inscription += ainscrip;
+    item.inscription += inscrip;
 }
 
 struct property_descriptor
@@ -1346,16 +1351,6 @@ static std::string _describe_armour( const item_def &item, bool verbose )
     if (verbose && get_armour_slot(item) == EQ_BODY_ARMOUR)
     {
         description += "$$";
-        if (is_light_armour(item))
-        {
-            description += "This is a light armour. Wearing it will "
-                "exercise Dodging and Stealth.";
-        }
-        else
-        {
-            description += "This is a heavy armour. Wearing it will "
-                "exercise Armour.";
-        }
     }
 
     if (!is_artefact(item))
@@ -2767,17 +2762,16 @@ static std::string _monster_stat_description(const monsters& mon)
 
     // Magic resistance at MAG_IMMUNE, but not for Rs, as there is then
     // too much information leak.
-    if (mon.type != MONS_RAKSHASA && mon.type != MONS_MARA
-        && mon.type != MONS_RAKSHASA_FAKE && mon.type != MONS_MARA_FAKE)
+    if (mon.type != MONS_RAKSHASA && mon.type != MONS_RAKSHASA_FAKE)
     {
         if (mons_immune_magic(&mon))
-            result << pronoun << " is immune to magical enchantments.$";
+            result << pronoun << " is immune to hostile enchantments.$";
         else // How resistant is it? Same scale as the player.
         {
             const int mr = mon.res_magic();
             if (mr >= 10)
             {
-                result << pronoun << make_stringf(" is %s resistant to magic.$",
+                result << pronoun << make_stringf(" is %s resistant to hostile enchantments.$",
                                                   magic_res_adjective(mr).c_str());
             }
         }
@@ -2857,7 +2851,8 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
     if (mons.props.exists("description"))
         inf.body << mons.props["description"].get_string();
     // Don't get description for player ghosts.
-    else if (mons.type != MONS_PLAYER_GHOST)
+    else if (mons.type != MONS_PLAYER_GHOST
+             && mons.type != MONS_PLAYER_ILLUSION)
         inf.body << getLongDescription(db_name);
 
     // And quotes {due}
@@ -2925,10 +2920,11 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
     }
 
     case MONS_PLAYER_GHOST:
-        if (mons.is_summoned())
-            inf.body << "An illusion of " << get_ghost_description(mons) << ".$";
-        else
-            inf.body << "The apparition of " << get_ghost_description(mons) << ".$";
+        inf.body << "The apparition of " << get_ghost_description(mons) << ".$";
+        break;
+
+    case MONS_PLAYER_ILLUSION:
+        inf.body << "An illusion of " << get_ghost_description(mons) << ".$";
         break;
 
     case MONS_PANDEMONIUM_DEMON:
@@ -3067,7 +3063,7 @@ std::string get_ghost_description(const monsters &mons, bool concise)
 
     // We're fudging stats so that unarmed combat gets based off
     // of the ghost's species, not the player's stats... exact
-    // stats aren't required anyways, all that matters is whether
+    // stats aren't required anyway, all that matters is whether
     // dex >= str. -- bwr
     const int dex = 10;
     int str = 5;
@@ -3737,9 +3733,10 @@ void describe_god( god_type which_god, bool give_title )
             if (jiyva_grant_jelly(false))
             {
                 have_any = true;
-                std::string buf = "You can pray to create a jelly shield.";
+                std::string buf = "Your slimes' item consumption is ";
+                buf += "temporarily halted under prayer.";
                 _print_final_god_abil_desc(which_god, buf,
-                                           ABIL_JIYVA_JELLY_SHIELD);
+                                           ABIL_JIYVA_JELLY_PARALYSE);
             }
         }
         else if (which_god == GOD_FEDHAS)

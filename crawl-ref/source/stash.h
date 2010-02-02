@@ -77,7 +77,7 @@ public:
         return enabled && items.empty() && feat == DNGN_FLOOR;
     }
 
-    bool isAt(int xp, int yp) const { return x == xp && y == yp; }
+    bool isAt(const coord_def& c) const { return c.x == x && c.y == y; }
     int  abs_pos() const { return abspos; }
     int  getX() const { return x; }
     int  getY() const { return y; }
@@ -142,7 +142,7 @@ public:
 
     void add_item(const item_def &item, unsigned price);
 
-    bool isAt(int xp, int yp) const { return x == xp && y == yp; }
+    bool isAt(const coord_def& c) const { return x == c.x && y == c.y; }
 
     // Messy!
     struct shop_item
@@ -214,10 +214,10 @@ class LevelStashes
 public:
     LevelStashes();
 
-    Stash *find_stash(int x = -1, int y = -1);
-    const Stash *find_stash(int x = -1, int y = -1) const;
-    ShopInfo &get_shop(int x, int y);
-    const ShopInfo *find_shop(int x, int y) const;
+    const Stash *find_stash(coord_def c) const;
+    Stash *find_stash(coord_def c);
+    const ShopInfo *find_shop(const coord_def& c) const;
+    ShopInfo &get_shop(const coord_def& c);
 
     level_id where() const;
 
@@ -226,20 +226,12 @@ public:
 
     // Update stash at (x,y) on current level, defaulting to player's current
     // location if no parameters are supplied.
-    bool  update_stash(int x = -1, int y = -1);
+    bool  update_stash(const coord_def& c);
 
-    // Returns true if the square at (x,y) contains potentially interesting
+    // Returns true if the square at c contains potentially interesting
     // swag that merits a personal visit (for EXPLORE_GREEDY).
-    bool  needs_visit(int x, int y) const;
-    bool  needs_visit(const coord_def& c) const
-    {
-        return needs_visit(c.x, c.y);
-    }
-    bool  shop_needs_visit(int x, int y) const;
-    bool  shop_needs_visit(const coord_def& c) const
-    {
-        return shop_needs_visit(c.x, c.y);
-    }
+    bool  needs_visit(const coord_def& c) const;
+    bool  shop_needs_visit(const coord_def& c) const;
 
     // Add stash at (x,y), or player's current location if no parameters are
     // supplied
@@ -301,14 +293,9 @@ public:
     LevelStashes *find_current_level();
     LevelStashes *find_level(const level_id &pos);
 
-    ShopInfo &get_shop(int x, int y)
+    ShopInfo &get_shop(const coord_def& c)
     {
-        return get_current_level().get_shop(x, y);
-    }
-
-    ShopInfo &get_shop(const coord_def& p)
-    {
-        return get_shop(p.x, p.y);
+      return get_current_level().get_shop(c);
     }
 
     void remove_level(const level_id &which = level_id::current());
@@ -328,10 +315,10 @@ public:
     // Update stash at (x,y) on current level, defaulting to player's current
     // location if no parameters are supplied, return true if a stash was
     // updated.
-    bool update_stash(int x = -1, int y = -1);
+    bool update_stash(const coord_def& c);
 
     // Add stash at (x,y), or player's current location if no parameters are
-    // supplied
+    // supplied.
     void add_stash(int x = -1, int y = -1, bool verbose = false);
 
     // Mark square (x,y) as not stashworthy. The player's current location is
@@ -397,11 +384,11 @@ private:
 extern StashTracker StashTrack;
 
 void maybe_update_stashes();
-bool is_stash(int x, int y);
-inline bool is_stash( const coord_def& p ) { return is_stash(p.x, p.y); }
-std::string get_stash_desc(int x, int y);
-void describe_stash(int x, int y);
-std::vector<item_def> item_list_in_stash( coord_def pos );
+bool is_stash(const coord_def& c);
+std::string get_stash_desc(const coord_def& c);
+void describe_stash(const coord_def& c);
+
+std::vector<item_def> item_list_in_stash(const coord_def& pos);
 
 std::string userdef_annotate_item(const char *s, const item_def *item,
                                   bool exclusive = false);

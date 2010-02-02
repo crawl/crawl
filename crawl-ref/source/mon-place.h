@@ -101,6 +101,7 @@ monsters* get_free_monster();
 
 bool can_place_on_trap(int mon_type, trap_type trap);
 bool mons_airborne(int mcls, int flies, bool paralysed);
+void mons_add_blame(monsters *mon, const std::string &blame_string);
 
 // Active monster band may influence gear generation on band followers.
 extern band_type active_monster_band;

@@ -43,6 +43,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-util.h"
+#include "mon-stuff.h"
 #include "mutation.h"
 #include "notes.h"
 #include "options.h"
@@ -667,7 +668,7 @@ void item_check(bool verbose)
 
     std::vector<const item_def*> items;
 
-    item_list_on_square( items, igrd(you.pos()), true );
+    item_list_on_square( items, you.visible_igrd(you.pos()), true );
 
     if (items.empty())
     {
@@ -1314,6 +1315,13 @@ bool items_similar(const item_def &item1, const item_def &item2, bool ignore_ide
         }
     }
 
+    // Missiles need to be of the same brand, not just plusses.
+    if (item1.base_type == OBJ_MISSILES
+        && get_ammo_brand(item1) != get_ammo_brand(item2))
+    {
+        return (false);
+    }
+
     // Check the ID flags.
     if (!ignore_ident && ident_flags(item1) != ident_flags(item2))
         return (false);
@@ -1919,6 +1927,36 @@ bool move_top_item( const coord_def &pos, const coord_def &dest )
     return (true);
 }
 
+const item_def* top_item_at(const coord_def& where, bool allow_mimic_item)
+{
+    if (allow_mimic_item)
+    {
+        const monsters* mon = monster_at(where);
+        if (mon && mons_is_unknown_mimic(mon))
+            return &get_mimic_item(mon);
+    }
+
+    const int link = you.visible_igrd(where);
+    return (link == NON_ITEM) ? NULL : &mitm[link];
+}
+
+bool multiple_items_at(const coord_def& where, bool allow_mimic_item)
+{
+    int found_count = 0;
+
+    if (allow_mimic_item)
+    {
+        const monsters* mon = monster_at(where);
+        if (mon && mons_is_unknown_mimic(mon))
+            ++found_count;
+    }
+
+    for (stack_iterator si(where); si && found_count < 2; ++si)
+        ++found_count;
+
+    return (found_count > 1);
+}
+
 bool drop_item( int item_dropped, int quant_drop, bool try_offer )
 {
     if (quant_drop < 0 || quant_drop > you.inv[item_dropped].quantity)
@@ -1948,7 +1986,7 @@ bool drop_item( int item_dropped, int quant_drop, bool try_offer )
         return (false);
     }
 
-    for (int i = EQ_CLOAK; i <= EQ_BODY_ARMOUR; i++)
+    for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
     {
         if (item_dropped == you.equip[i] && you.equip[i] != -1)
         {
@@ -2309,7 +2347,7 @@ static bool _is_option_autopickup(const item_def &item, std::string &iname)
             return Options.force_autopickup[i].second;
 
 #ifdef CLUA_BINDINGS
-    const bool res = clua.callbooleanfn(false, "ch_force_autopickup", "is",
+    bool res = clua.callbooleanfn(false, "ch_force_autopickup", "is",
                                         &item, iname.c_str());
     if (!clua.error.empty())
         mprf(MSGCH_ERROR, "ch_force_autopickup failed: %s",
@@ -2318,6 +2356,14 @@ static bool _is_option_autopickup(const item_def &item, std::string &iname)
     if (res)
         return (true);
 
+    res = clua.callbooleanfn(false, "ch_deny_autopickup", "is",
+                             &item, iname.c_str());
+    if (!clua.error.empty())
+        mprf(MSGCH_ERROR, "ch_deny_autopickup failed: %s",
+             clua.error.c_str());
+
+    if (res)
+        return (false);
 #endif
 
     return (Options.autopickups & (1L << item.base_type));

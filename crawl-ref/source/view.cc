@@ -905,10 +905,8 @@ void viewwindow(bool monster_updates, bool show_updates)
 {
     if (you.duration[DUR_TIME_STEP])
         return;
-    flush_prev_message();
 
     screen_buffer_t *buffy(crawl_view.vbuf);
-
 
 #ifdef USE_TILE
     tiles.clear_text_tags(TAG_NAMED_MONSTER);

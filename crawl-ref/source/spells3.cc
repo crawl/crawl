@@ -45,6 +45,7 @@
 #include "coord.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
+#include "options.h"
 #include "player.h"
 #include "religion.h"
 #include "godconduct.h"
@@ -135,6 +136,12 @@ bool remove_curse(bool suppress_msg)
     {
         // Also sets wield_change.
         do_uncurse_item(*you.weapon());
+        if (Options.autoinscribe_cursed)
+            if (you.weapon()->inscription.find("was cursed") == std::string::npos
+                && !item_ident(*you.weapon(), ISFLAG_IDENT_MASK))
+            {
+                add_inscription(*you.weapon(), "was cursed");
+            }
         success = true;
     }
 
@@ -146,6 +153,12 @@ bool remove_curse(bool suppress_msg)
         if (you.equip[i] != -1 && you.inv[you.equip[i]].cursed())
         {
             do_uncurse_item(you.inv[you.equip[i]]);
+            if (Options.autoinscribe_cursed)
+                if (you.inv[you.equip[i]].inscription.find("was cursed") == std::string::npos
+                    && !item_ident(you.inv[you.equip[i]], ISFLAG_IDENT_MASK))
+                {
+                    add_inscription(you.inv[you.equip[i]], "was cursed");
+                }
             success = true;
         }
     }
@@ -1121,7 +1134,7 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
 //
 // Hides and other "animal part" items are intentionally left out, it's
 // unrequired complexity, and fresh flesh makes more "sense" for a spell
-// reforming the original monster out of ice anyways.
+// reforming the original monster out of ice anyway.
 bool cast_simulacrum(int pow, god_type god)
 {
     int count = 0;
@@ -1510,7 +1523,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
     // in case something happened in the exact turn that we teleported
     // (like picking up/dropping an item).
     viewwindow(false, true);
-    StashTrack.update_stash();
+    StashTrack.update_stash(you.pos());
 
     if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
         remove_condensation_shield();

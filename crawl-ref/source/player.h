@@ -65,7 +65,7 @@ public:
   coord_def prev_move;
 
   int hunger;
-  FixedVector<char, NUM_EQUIP> equip;
+  FixedVector<signed char, NUM_EQUIP> equip;
 
   int hp;
   int hp_max;
@@ -217,7 +217,6 @@ public:
   FixedVector<unsigned char, MAX_NUM_GODS>  worshipped;
   FixedVector<short,         MAX_NUM_GODS>  num_gifts;
 
-  char che_saved_ponderousness;
 
   FixedVector<unsigned char, NUM_MUTATIONS> mutation;
   FixedVector<unsigned char, NUM_MUTATIONS> demon_pow;
@@ -240,7 +239,7 @@ public:
   unsigned char normal_vision;        // how far the species gets to see
   unsigned char current_vision;       // current sight radius (cells)
 
-  unsigned char hell_exit;            // which level plyr goes to on hell exit.
+  unsigned char hell_exit;            // which level player goes to on hell exit
 
   // This field is here even in non-WIZARD compiles, since the
   // player might have been playing previously under wiz mode.
@@ -325,7 +324,7 @@ public:
     void reset_prev_move();
 
     bool in_water() const;
-    bool can_swim() const;
+    bool can_swim(bool permanently = false) const;
     int visible_igrd(const coord_def&) const;
     bool is_levitating() const;
     bool cannot_speak() const;
@@ -377,6 +376,8 @@ public:
     actor_type atype() const { return ACT_PLAYER; }
     monsters* as_monster() { return NULL; }
     player* as_player() { return this; }
+    const monsters* as_monster() const { return NULL; }
+    const player* as_player() const { return this; }
 
     god_type  deity() const;
     bool      alive() const;
@@ -591,15 +592,14 @@ bool player_in_hell(void);
 
 bool berserk_check_wielded_weapon(void);
 int player_equip( equipment_type slot, int sub_type, bool calc_unid = true );
-int player_equip_ego_type(int slot, int sub_type, bool ignore_melded = true);
+int player_equip_ego_type( int slot, int sub_type );
 bool player_equip_unrand( int unrand_index );
 bool player_can_hit_monster(const monsters *mon);
 
 bool player_is_shapechanged(void);
 
-bool is_light_armour( const item_def &item );
-
-bool player_light_armour(bool with_skill = false);
+bool is_effectively_light_armour(const item_def *item);
+bool player_effectively_in_light_armour();
 
 bool player_under_penance(void);
 

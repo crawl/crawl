@@ -149,6 +149,7 @@ public:
     char        race;            // preselected race
     char        cls;             // preselected class
     bool        clear_messages;   // clear messages each turn
+    bool        show_more;        // Show message-full more prompts.
     unsigned    friend_brand;     // Attribute for branding friendly monsters
     unsigned    neutral_brand;    // Attribute for branding neutral monsters
     bool        no_dark_brand;    // Attribute for branding friendly monsters
@@ -191,6 +192,7 @@ public:
     std::vector<int> note_skill_levels;       // Skill levels to note
 
     bool        autoinscribe_artefacts; // Auto-inscribe identified artefacts.
+    bool        autoinscribe_cursed; // Auto-inscribe previosly cursed items.
 
     bool        pickup_thrown;  // Pickup thrown missiles
     bool        pickup_dropped; // Pickup dropped objects
@@ -373,6 +375,7 @@ public:
 
     bool        tile_show_minihealthbar;
     bool        tile_show_minimagicbar;
+    bool        tile_show_demon_numbers;
 #endif
 
     typedef std::map<std::string, std::string> opt_map;

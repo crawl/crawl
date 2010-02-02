@@ -2019,7 +2019,7 @@ static void _generate_missile_item(item_def& item, int force_type,
 
     // Reduced quantity if special.
     if (item.sub_type == MI_JAVELIN
-        || item.sub_type == MI_NEEDLE
+        || (item.sub_type == MI_NEEDLE && get_ammo_brand(item) != SPMSL_POISONED)
         || get_ammo_brand(item) == SPMSL_RETURNING
         || (item.sub_type == MI_DART && get_ammo_brand(item) == SPMSL_POISONED))
     {

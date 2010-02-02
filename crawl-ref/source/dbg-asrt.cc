@@ -503,7 +503,7 @@ void do_crash_dump()
         // We crashed during exit() callbacks, so it's likely that
         // any global C++ instances we could reference would be
         // free'd and invalid, plus their content likely wouldn't help
-        // tracking it down anyways.  Thus, just do the bare bones
+        // tracking it down anyway.  Thus, just do the bare bones
         // info to stderr and quit.
         fprintf(stderr, "Crashed while calling exit()!!!!" EOL);
 

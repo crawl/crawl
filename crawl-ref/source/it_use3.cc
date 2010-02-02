@@ -201,14 +201,18 @@ static bool _reaching_weapon_attack(const item_def& wpn)
 {
     dist beam;
 
-    mpr("Attack whom?", MSGCH_PROMPT);
+    direction_chooser_args args;
+    args.restricts = DIR_TARGET;
+    args.mode = TARG_HOSTILE;
+    args.range = 2;
+    args.top_prompt = "Attack whom?";
 
-    direction(beam, DIR_TARGET, TARG_HOSTILE, 2);
+    direction(beam, args);
 
     if (!beam.isValid)
         return (false);
 
-    if (beam.isMe)
+    if (beam.isMe())
     {
         canned_msg(MSG_UNTHINKING_ACT);
         return (false);
@@ -762,6 +766,7 @@ bool evoke_item(int slot)
     int pract = 0; // By how much Evocations is practised.
     bool did_work   = false;  // Used for default "nothing happens" message.
     bool unevokable = false;
+    bool ident      = false;
 
     const unrandart_entry *entry = is_unrandom_artefact(item)
         ? get_unrand_entry(item.special) : NULL;
@@ -817,19 +822,7 @@ bool evoke_item(int slot)
                 make_hungry(50, false, true);
                 pract = 1;
                 did_work = true;
-
-                if (!item_type_known(item))
-                {
-                    set_ident_type( OBJ_STAVES, item.sub_type, ID_KNOWN_TYPE );
-                    set_ident_flags( item, ISFLAG_KNOW_TYPE );
-
-                    mprf("You are wielding %s.",
-                         item.name(DESC_NOCAP_A).c_str());
-
-                    more();
-
-                    you.wield_change = true;
-                }
+                ident = true;
             }
         }
         else
@@ -858,7 +851,7 @@ bool evoke_item(int slot)
 
         case MISC_CRYSTAL_BALL_OF_SEEING:
             if (_ball_of_seeing())
-                pract = 1;
+                pract = 1, ident = true;
             break;
 
         case MISC_AIR_ELEMENTAL_FAN:
@@ -868,6 +861,7 @@ bool evoke_item(int slot)
             {
                 cast_summon_elemental(100, GOD_NO_GOD, MONS_AIR_ELEMENTAL, 4);
                 pract = (one_chance_in(5) ? 1 : 0);
+                ident = true;
             }
             break;
 
@@ -878,6 +872,7 @@ bool evoke_item(int slot)
             {
                 cast_summon_elemental(100, GOD_NO_GOD, MONS_FIRE_ELEMENTAL, 4);
                 pract = (one_chance_in(5) ? 1 : 0);
+                ident = true;
             }
             break;
 
@@ -888,6 +883,7 @@ bool evoke_item(int slot)
             {
                 cast_summon_elemental(100, GOD_NO_GOD, MONS_EARTH_ELEMENTAL, 4);
                 pract = (one_chance_in(5) ? 1 : 0);
+                ident = true;
             }
             break;
 
@@ -903,17 +899,17 @@ bool evoke_item(int slot)
 
         case MISC_CRYSTAL_BALL_OF_ENERGY:
             if (_ball_of_energy())
-                pract = 1;
+                pract = 1, ident = true;
             break;
 
         case MISC_CRYSTAL_BALL_OF_FIXATION:
             if (_ball_of_fixation())
-                pract = 1;
+                pract = 1, ident = true;
             break;
 
         case MISC_DISC_OF_STORMS:
             if (_disc_of_storms())
-                pract = (coinflip() ? 2 : 1);
+                pract = (coinflip() ? 2 : 1), ident = true;
             break;
 
         default:
@@ -932,6 +928,17 @@ bool evoke_item(int slot)
         canned_msg(MSG_NOTHING_HAPPENS);
     else if (pract > 0)
         exercise( SK_EVOCATIONS, pract );
+
+    if (ident && !item_type_known(item))
+    {
+        set_ident_type( item.base_type, item.sub_type, ID_KNOWN_TYPE );
+        set_ident_flags( item, ISFLAG_KNOW_TYPE );
+
+        mprf("You are wielding %s.",
+             item.name(DESC_NOCAP_A).c_str());
+
+        you.wield_change = true;
+    }
 
     if (!unevokable)
         you.turn_is_over = true;

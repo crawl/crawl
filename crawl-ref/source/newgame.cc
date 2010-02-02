@@ -3514,7 +3514,8 @@ bool _give_items_skills()
 
         weap_skill = 2;
 
-        you.skills[(player_light_armour() ? SK_DODGING : SK_ARMOUR)] = 3;
+        you.skills[(player_effectively_in_light_armour()
+                    ? SK_DODGING : SK_ARMOUR)] = 3;
 
         break;
 
@@ -3618,7 +3619,8 @@ bool _give_items_skills()
         _newgame_make_item(3, EQ_NONE, OBJ_POTIONS, POT_HEALING);
 
         // Skills.
-        you.skills[(player_light_armour() ? SK_DODGING : SK_ARMOUR)] = 2;
+        you.skills[(player_effectively_in_light_armour()
+                    ? SK_DODGING : SK_ARMOUR)] = 2;
         you.skills[SK_FIGHTING]    = 2;
         you.skills[SK_SHIELDS]     = 2;
         you.skills[SK_LONG_BLADES] = 3;
@@ -4155,7 +4157,7 @@ bool _give_items_skills()
 
         switch (choice)
         {
-        default:  // This shouldn't happen anyways. -- bwr
+        default:  // This shouldn't happen anyway. -- bwr
         case DK_NECROMANCY:
             _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_NECROMANCY);
 

@@ -6,9 +6,11 @@
 #include "AppHdr.h"
 
 #include "cluautil.h"
+#include "libutil.h"
 #include "l_libs.h"
 
 #include "branch.h"
+#include "coord.h"
 #include "mapdef.h"
 
 #ifdef USE_TILE
@@ -136,7 +138,7 @@ LUAFN(dgn_ftile)
 #ifdef USE_TILE
     return dgn_map_add_transform(ls, &map_lines::add_floortile);
 #else
-    return 0;
+    return (0);
 #endif
 }
 
@@ -145,7 +147,7 @@ LUAFN(dgn_rtile)
 #ifdef USE_TILE
     return dgn_map_add_transform(ls, &map_lines::add_rocktile);
 #else
-    return 0;
+    return (0);
 #endif
 }
 
@@ -154,8 +156,27 @@ LUAFN(dgn_tile)
 #ifdef USE_TILE
     return dgn_map_add_transform(ls, &map_lines::add_spec_tile);
 #else
-    return 0;
+    return (0);
 #endif
+}
+
+LUAFN(dgn_tile_feat_changed)
+{
+#ifdef USE_TILE
+    COORDS(c, 1, 2);
+
+    if (lua_isnil(ls, 3))
+    {
+        env.tile_flv(c).feat = 0;
+        return (0);
+    }
+
+    unsigned short tile = get_tile_idx(ls, 3);
+    if (tile)
+        env.tile_flv(c).feat = tile;
+#endif
+
+    return (0);
 }
 
 const struct luaL_reg dgn_tile_dlib[] =
@@ -169,6 +190,7 @@ const struct luaL_reg dgn_tile_dlib[] =
 { "change_floor_tile", dgn_change_floor_tile },
 { "lev_floortile", dgn_lev_floortile },
 { "lev_rocktile", dgn_lev_rocktile },
+{ "tile_feat_changed", dgn_tile_feat_changed },
 
 { NULL, NULL }
 };

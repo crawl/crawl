@@ -124,6 +124,8 @@ void monsters::reset()
     ghost.reset(NULL);
     seen_context = "";
     props.clear();
+
+    changed_los_center = true;
 }
 
 void monsters::init_with(const monsters &mon)
@@ -1291,12 +1293,15 @@ static bool _is_signature_weapon(monsters *monster, const item_def &weapon)
         {
         case UNRAND_ASMODEUS:
             return (monster->type == MONS_ASMODEUS);
+
         case UNRAND_DISPATER:
             return (monster->type == MONS_DISPATER);
+
         case UNRAND_CEREBOV:
             return (monster->type == MONS_CEREBOV);
         }
     }
+
     return (false);
 }
 
@@ -1314,10 +1319,16 @@ static int _ego_damage_bonus(item_def &item)
 
 static bool _item_race_matches_monster(const item_def &item, monsters *mons)
 {
-    return (get_equip_race(item) == ISFLAG_ELVEN
-                && mons_genus(mons->type) == MONS_ELF
-            || get_equip_race(item) == ISFLAG_ORCISH
-                && mons_genus(mons->type) == MONS_ORC);
+    if (get_equip_race(item) == ISFLAG_ELVEN)
+        return (mons_genus(mons->type) == MONS_ELF);
+
+    if (get_equip_race(item) == ISFLAG_DWARVEN)
+        return (mons_genus(mons->type) == MONS_DWARF);
+
+    if (get_equip_race(item) == ISFLAG_ORCISH)
+        return (mons_genus(mons->type) == MONS_ORC);
+
+    return (false);
 }
 
 bool monsters::pickup_melee_weapon(item_def &item, int near)
@@ -2103,12 +2114,9 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
         return (get_monster_data(type)->name);
 
     if (type == MONS_PLAYER_GHOST)
-    {
-        if (mon.is_summoned())
-            return (apostrophise(mon.mname) + " illusion");
-        else
-            return (apostrophise(mon.mname) + " ghost");
-    }
+        return (apostrophise(mon.mname) + " ghost");
+    else if (type == MONS_PLAYER_ILLUSION)
+        return (apostrophise(mon.mname) + " illusion");
 
     // Some monsters might want the name of a different creature.
     monster_type nametype = type;
@@ -2713,6 +2721,13 @@ void monsters::moveto(const coord_def& c)
     if (c != pos() && in_bounds(pos()))
         mons_clear_trapping_net(this);
 
+    if (mons_is_projectile(type))
+    {
+        // Assume some means of displacement, normal moves will overwrite this.
+        props["iood_x"].get_float() += c.x - pos().x;
+        props["iood_y"].get_float() += c.y - pos().y;
+    }
+
     set_position(c);
 }
 
@@ -2825,6 +2840,8 @@ void monsters::banish(const std::string &)
 {
     coord_def old_pos = pos();
 
+    if (mons_is_projectile(type))
+        return;
     if (!silenced(pos()) && can_speak())
         simple_monster_message(this, (" screams as " + pronoun(PRONOUN_NOCAP)
             + " is devoured by a tear in reality.").c_str(),
@@ -5543,7 +5560,10 @@ bool monsters::invisible() const
 
 bool monsters::visible_to(const actor *looker) const
 {
-    bool vis = !invisible() || looker->can_see_invisible();
+    bool sense_invis = looker->atype() == ACT_MONSTER
+                       && mons_sense_invis(looker->as_monster());
+    bool vis = !invisible() || looker->can_see_invisible()
+               || sense_invis && adjacent(pos(), looker->pos());
     return (vis && (this == looker || !has_ench(ENCH_SUBMERGED)));
 }
 

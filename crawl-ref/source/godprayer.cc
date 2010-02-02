@@ -12,7 +12,6 @@
 #include "food.h"
 #include "fprop.h"
 #include "godabil.h"
-#include "godconduct.h"
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
@@ -114,7 +113,6 @@ bool god_accepts_prayer(god_type god)
 
     case GOD_BEOGH:
     case GOD_NEMELEX_XOBEH:
-    case GOD_CHEIBRIADOS:
         return (true);
 
     default:
@@ -331,9 +329,6 @@ static bool _altar_prayer()
     return (did_bless);
 }
 
-static void _cheibriados_start_prayer();
-static void _cheibriados_end_prayer();
-
 void pray()
 {
     if (silenced(you.pos()))
@@ -451,9 +446,6 @@ void pray()
         offer_items();
     }
 
-    if (!was_praying && you.religion == GOD_CHEIBRIADOS)
-        _cheibriados_start_prayer();
-
     if (!was_praying)
         do_god_gift(true);
 
@@ -464,8 +456,6 @@ void end_prayer(void)
 {
     mpr("Your prayer is over.", MSGCH_PRAY, you.religion);
     you.duration[DUR_PRAYER] = 0;
-    if (you.religion == GOD_CHEIBRIADOS)
-        _cheibriados_end_prayer();
 }
 
 static int _leading_sacrifice_group()
@@ -603,7 +593,7 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item)
 
 static int _gold_to_donation(int gold)
 {
-    return static_cast<int>((gold * (int)log((double)gold)) / MAX_PIETY);
+    return static_cast<int>((gold * log((float)gold)) / MAX_PIETY);
 }
 
 void offer_items()
@@ -611,10 +601,9 @@ void offer_items()
     if (you.religion == GOD_NO_GOD)
         return;
 
-    int i = igrd(you.pos());
+    int i = you.visible_igrd(you.pos());
 
-    if (!god_likes_items(you.religion) && i != NON_ITEM
-        && you.visible_igrd(you.pos()) != NON_ITEM)
+    if (!god_likes_items(you.religion) && i != NON_ITEM)
     {
         simple_god_message(" doesn't care about such mundane gifts.",
                            you.religion);
@@ -795,18 +784,3 @@ void offer_items()
     }
 }
 
-void _cheibriados_start_prayer()
-{
-    ASSERT(you.che_saved_ponderousness == 0);
-    you.che_saved_ponderousness =
-        player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS, false);
-}
-
-void _cheibriados_end_prayer()
-{
-    int diff = you.che_saved_ponderousness -
-        player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS, false);
-    you.che_saved_ponderousness = 0;
-    if (diff > 0)
-        did_god_conduct(DID_UNPONDEROUS, diff);
-}

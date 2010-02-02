@@ -172,7 +172,7 @@ static void _zap_animation(int colour, const monsters *mon = NULL,
         tiles.add_overlay(p, tileidx_zap(colour));
 #else
         view_update();
-        cgotoxy(drawp.x, drawp.y, GOTO_DNGN);
+        cgotoxy(drawp.x, drawp.y, GOTO_CRT);
         put_colour_ch(colour, dchar_glyph(DCHAR_FIRED_ZAP));
 #endif
 
@@ -1525,8 +1525,8 @@ static void _munge_bounced_bolt(bolt &old_bolt, bolt &new_bolt,
     ray_def temp_ray = new_ray;
     for (int tries = 0; tries < 20; tries++)
     {
-        shift = (double) random_range((int)(min * 10000),
-                                      (int)(max * 10000)) / 10000.0;
+        shift = random_range(static_cast<int>(min * 10000),
+                             static_cast<int>(max * 10000)) / 10000.0;
 
         if (new_deg < old_deg)
             shift = -shift;
@@ -1547,7 +1547,8 @@ static void _munge_bounced_bolt(bolt &old_bolt, bolt &new_bolt,
 #if DEBUG_DIAGNOSTICS || DEBUG_BEAM || DEBUG_CHAOS_BOUNCE
     mprf(MSGCH_DIAGNOSTICS,
          "chaos beam: old_deg = %5.2f, new_deg = %5.2f, shift = %5.2f",
-         (float) old_deg, (float) new_deg, (float) shift);
+         static_cast<float>(old_deg), static_cast<float>(new_deg),
+         static_cast<float>(shift));
 #endif
 
     // Don't use up range in bouncing off walls, so that chaos beams have
@@ -2697,6 +2698,12 @@ static bool _monster_resists_mass_enchantment(monsters *monster,
             return (true);
         }
     }
+    // Mass enchantments around lots of plants/fungi shouldn't cause a flood
+    // of "is unaffected" messages. --Eino
+    else if (mons_is_firewood(monster))
+    {
+        return(true);
+    }
     else  // trying to enchant an unnatural creature doesn't work
     {
         simple_monster_message(monster, " is unaffected.");
@@ -3220,14 +3227,10 @@ void bolt::drop_object()
     else if (item->sub_type == MI_LARGE_ROCK)
     {
         // Large rocks mulch to stone.
-        std::string sound_msg = "You hear a cracking sound!";
-        if (you.see_cell(pos()))
-        {
-            mprf("%s shatters into pieces!",
-                 item->name(DESC_CAP_THE).c_str());
-            sound_msg = "";
-        }
-        noisy(12, pos(), sound_msg.c_str());
+        bool in_view = you.see_cell(pos());
+        if (in_view)
+            mprf("%s shatters into pieces!", item->name(DESC_CAP_THE).c_str());
+        noisy(12, pos(), in_view ? NULL : "You hear a cracking sound!");
 
         item->sub_type = MI_STONE;
         item->quantity = 10 + random2(41);
@@ -3625,6 +3628,9 @@ bool bolt::fuzz_invis_tracer()
 static bool _test_beam_hit(int attack, int defence, bool is_beam,
                            bool deflect, bool repel, defer_rand &r)
 {
+    if (attack == AUTOMATIC_HIT)
+        return (true);
+
     if (is_beam && deflect)
     {
         attack = r[0].random2(attack * 2) / 3;
@@ -3644,9 +3650,6 @@ static bool _test_beam_hit(int attack, int defence, bool is_beam,
     }
 
     dprf("Beam attack: %d, defence: %d", attack, defence);
-    // Reproducing old behavior here; magic dart is dodgable with DMsl
-    if (attack == AUTOMATIC_HIT)
-        return (true);
 
     attack = r[1].random2(attack);
     defence = r[2].random2avg(defence, 2);
@@ -3862,12 +3865,15 @@ bool bolt::misses_player()
     const int dodge_less = player_evasion(EV_IGNORE_PHASESHIFT);
     int real_tohit  = hit;
 
-    // Monsters shooting at an invisible player are very inaccurate.
-    if (you.invisible() && !can_see_invis)
-        real_tohit /= 2;
+    if (real_tohit != AUTOMATIC_HIT)
+    {
+        // Monsters shooting at an invisible player are very inaccurate.
+        if (you.invisible() && !can_see_invis)
+            real_tohit /= 2;
 
-    if (you.backlit() && !you.halo_radius())
-        real_tohit += 2 + random2(8);
+        if (you.backlit() && !you.halo_radius())
+            real_tohit += 2 + random2(8);
+    }
 
     // Wow, what a horrid test.  These cannot be blocked or dodged
     if (!is_beam && !is_blockable())
@@ -3910,8 +3916,8 @@ bool bolt::misses_player()
         train_shields_more = true;
     }
 
-    if (player_light_armour(true) && !aimed_at_feet && coinflip())
-        exercise(SK_DODGING, 1);
+    if (!aimed_at_feet && coinflip())
+        you.check_train_dodging();
 
     defer_rand r;
     bool miss = true;
@@ -3959,7 +3965,7 @@ bool bolt::misses_player()
     }
 
     if (coinflip() && train_shields_more)
-            exercise(SK_SHIELDS, one_chance_in(3) ? 1 : 0);
+        exercise(SK_SHIELDS, one_chance_in(3) ? 1 : 0);
 
     return (miss);
 }
@@ -4320,7 +4326,7 @@ void bolt::affect_player()
     hurted -= armour_damage_reduction;
 
     // shrapnel has triple AC reduction
-    if (flavour == BEAM_FRAG && !player_light_armour())
+    if (flavour == BEAM_FRAG)
     {
         hurted -= random2( 1 + you.armour_class() );
         hurted -= random2( 1 + you.armour_class() );
@@ -4331,15 +4337,8 @@ void bolt::affect_player()
          "Player damage: rolled=%d; after AC=%d", roll, hurted );
 #endif
 
-    if (you.equip[EQ_BODY_ARMOUR] != -1)
-    {
-        if (!player_light_armour(false) && one_chance_in(4)
-            && x_chance_in_y(item_mass(you.inv[you.equip[EQ_BODY_ARMOUR]]) + 1,
-                             1000))
-        {
-            exercise( SK_ARMOUR, 1 );
-        }
-    }
+    if (one_chance_in(4))
+        you.check_train_armour();
 
     bool was_affected = false;
     int  old_hp       = you.hp;
@@ -5008,11 +5007,15 @@ void bolt::affect_monster(monsters* mon)
 
     // Make a copy of the to-hit before we modify it.
     int beam_hit = hit;
-    if (mon->invisible() && !can_see_invis)
-        beam_hit /= 2;
 
-    if (mon->backlit() && !mon->halo_radius())
-        beam_hit += 2 + random2(8);
+    if (beam_hit != AUTOMATIC_HIT)
+    {
+        if (mon->invisible() && !can_see_invis)
+            beam_hit /= 2;
+
+        if (mon->backlit() && !mon->halo_radius())
+            beam_hit += 2 + random2(8);
+    }
 
     defer_rand r;
     int rand_ev = random2(mon->ev);
@@ -5452,6 +5455,8 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
         return (MON_AFFECTED);
 
     case BEAM_HASTE:
+        if (YOU_KILL(thrower))
+            did_god_conduct(DID_HASTY, 6, effect_known);
         if (mon->del_ench(ENCH_SLOW, true))
         {
             if (simple_monster_message(mon, " is no longer moving slowly."))
@@ -5674,8 +5679,11 @@ bool bolt::knockback_actor(actor *act)
     ray.advance();
 
     const coord_def newpos(ray.pos());
-    if (newpos == oldpos || actor_at(newpos) || feat_is_solid(grd(newpos))
+    if (newpos == oldpos
+        || actor_at(newpos)
+        || feat_is_solid(grd(newpos))
         || !act->can_pass_through(newpos)
+        || !act->is_habitable(newpos)
         // Save is based on target's body weight.
         || random2(2500) < act->body_weight())
     {

@@ -781,10 +781,6 @@ giant goldfish
 
 This is what happens when you give your pet goldfish too much food!
 %%%%
-giant iguana
-
-A huge lizard with great crunching jaws.
-%%%%
 giant leech
 
 A huge blood-sucking leech. How horrible!
@@ -949,6 +945,10 @@ ice statue
 
 An imposing statue carved in glistening ice. Freezing vapours swirl about it.
 %%%%
+iguana
+
+A huge lizard with great crunching jaws.
+%%%%
 imp
 
 A small, ugly minor demon.  Its fanged maw seems locked in a permanent malign grin, and its horns protrude obscenely from its scaly pate.
@@ -1047,7 +1047,7 @@ A vaguely humanoid blob of putrid white flesh.
 %%%%
 lich
 
-A wizard who didn't want to die, a Lich is a skeletal, desiccated corpse kept alive by a mighty exercise of necromancy.  These undead creatures can wield great magic and are best avoided by all but the most confident.
+A wizard who didn't want to die, a lich is a skeletal, desiccated corpse kept alive by a mighty exercise of necromancy.  This undead creature can wield great magic and is best avoided by all but the most confident.
 %%%%
 lindwurm
 
@@ -1091,7 +1091,7 @@ A slender merfolk mystic with unusually webby hands. Its form shifts and glisten
 %%%%
 merfolk javelineer
 
-A sinewy merfolk fighter with a piercing gaze and a large bundle of javelins.
+A fearsome merfolk champion with a piercing gaze and a large bundle of javelins.
 %%%%
 mermaid
 

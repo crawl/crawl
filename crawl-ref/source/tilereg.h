@@ -283,6 +283,8 @@ protected:
     void pack_cursor(cursor_type type, unsigned int tile);
     void pack_buffers();
 
+    void draw_minibars();
+
     int get_buffer_index(const coord_def &gc);
     void to_screen_coords(const coord_def &gc, coord_def& pc) const;
 

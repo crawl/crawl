@@ -24,6 +24,7 @@ public:
                                        const circle_def& b);
     void init_arena(const coord_def& center);
     void set_center(const coord_def& center);
+    coord_def get_center();
     void set_opacity(const opacity_func& o);
     void set_bounds(const circle_def& b);
     circle_def get_bounds() const;

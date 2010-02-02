@@ -427,8 +427,9 @@ TAGS:    ossuary no_item_gen no_monster_gen no_rotate no_vmirror
 MONS:    orc skeleton / kobold skeleton / gnoll skeleton / orc skeleton
 MONS:    mummy
 MONS:    patrolling guardian mummy
+NSUBST:  = = 1:= / *:c
 # Loot: 22-30 items, with early loot!
-ITEM:    any scroll / any potion
+ITEM:    any scroll / any potion / nothing
 ITEM:    any scroll / any potion / nothing
 KITEM:   x = any scroll / any potion
 KMONS:   x = guardian mummy
@@ -445,9 +446,9 @@ cc.<.....................<.cc
 cc1.1....ccccc+ccccc....1.1cc
 cc......cc.........cc......cc
 cc.....cc...cc=cc...cc.....cc
-cc....cc...cmdxdmc...cc....cc
+cc....cc...cmdddmc...cc....cc
 cc....c...cmdddddmc...c....cc
-cc....+...=ddd<ddd=...+....cc
+cc....+...=dddxddd=...+....cc
 cc....c...cmdddddmc...c....cc
 cc....cc...cmdddmc...cc....cc
 cc.....cc...cc=cc...cc.....cc

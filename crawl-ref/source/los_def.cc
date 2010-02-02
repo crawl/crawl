@@ -66,6 +66,11 @@ void los_def::set_center(const coord_def& c)
     center = c;
 }
 
+coord_def los_def::get_center()
+{
+    return center;
+}
+
 void los_def::set_opacity(const opacity_func &o)
 {
     delete opc;

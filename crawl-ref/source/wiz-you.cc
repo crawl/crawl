@@ -251,20 +251,50 @@ void wizard_set_hunger_state()
         mpr("Ghouls can never be full or above!");
 }
 
-void wizard_gain_piety()
+void wizard_set_piety()
 {
     if (you.religion == GOD_NO_GOD)
     {
         mpr("You are not religious!");
         return;
     }
-    else if (you.religion == GOD_XOM)
+
+    mprf(MSGCH_PROMPT, "Enter new piety value (current = %d, Enter for 0): ",
+         you.piety);
+    char buf[30];
+    if (cancelable_get_line_autohist(buf, sizeof buf))
     {
-        you.piety = random2(MAX_PIETY+1); // reroll mood
-        if (one_chance_in(5))
-            you.gift_timeout = 0; // 20% chance to make Xom bored.
+        canned_msg(MSG_OK);
+        return;
+    }
+
+    const int newpiety = atoi(buf);
+    if (newpiety < 0 || newpiety > 200)
+    {
+        mpr("Piety needs to be between 0 and 200.");
+        return;
+    }
+
+    if (you.religion == GOD_XOM)
+    {
+        you.piety = newpiety;
+
+        // For Xom, also allow setting interest.
+        mprf(MSGCH_PROMPT, "Enter new interest (current = %d, Enter for 0): ",
+             you.gift_timeout);
+
+        if (cancelable_get_line_autohist(buf, sizeof buf))
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+        const int newinterest = atoi(buf);
+        if (newinterest >= 0 && newinterest < 256)
+            you.gift_timeout = newinterest;
         else
-            you.gift_timeout = random2(40) + random2(40);  // reroll interest
+            mpr("Interest must be between 0 and 255.");
+
+        mprf("Set piety to %d, interest to %d.", you.piety, newinterest);
 
         const std::string new_xom_favour = describe_xom_favour();
         const std::string msg = "You are now " + new_xom_favour;
@@ -272,35 +302,27 @@ void wizard_gain_piety()
         return;
     }
 
-    const int old_piety   = you.piety;
-    const int old_penance = you.penance[you.religion];
-    if (old_piety >= MAX_PIETY && !old_penance)
+    if (newpiety < 1)
     {
-        mprf("Your piety (%d) is already %s maximum.",
-             old_piety, old_piety == MAX_PIETY ? "at" : "above");
+        if (yesno("Are you sure you want to be excommunicated?", false, 'n'))
+        {
+            you.piety = 0;
+            excommunication();
+        }
+        else
+            canned_msg(MSG_OK);
+        return;
     }
+    mprf("Seting piety to %d.", newpiety);
+    int diff = newpiety - you.piety;
+    if (diff > 0)
+        gain_piety(diff);
+    else
+        lose_piety(-diff);
 
-    // Even at maximum, you can still gain gifts.
-    // Try at least once for maximum, or repeat until something
-    // happens. Rarely, this might result in several gifts during the
-    // same round!
-    do
-    {
-        gain_piety(50);
-    }
-    while (old_piety < MAX_PIETY && old_piety == you.piety
-           && old_penance == you.penance[you.religion]);
-
-    if (old_penance)
-    {
-        mprf("Congratulations, your penance was decreased from %d to %d!",
-             old_penance, you.penance[you.religion]);
-    }
-    else if (you.piety > old_piety)
-    {
-        mprf("Congratulations, your piety went from %d to %d!",
-             old_piety, you.piety);
-    }
+    // Automatically reduce penance to 0.
+    if (you.penance[you.religion] > 0)
+        dec_penance(you.penance[you.religion]);
 }
 
 //---------------------------------------------------------------
@@ -891,5 +913,6 @@ void wizard_get_god_gift (void)
         return;
     }
 
-    do_god_gift(false, true);
+    if (!do_god_gift(false, true))
+        mpr("Nothing happens.");
 }

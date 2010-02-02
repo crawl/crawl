@@ -1,7 +1,7 @@
 
 The Dungeon Crawl Stone Soup team (Peter Berger, Adam Borowski, Jude Brown,
-Matthew Cline, Paul Du Bois, Eino Keskitalo, Vsevolod Kozlov, Nat Lanza, 
-Jesse Luehrs, Steven Noonan, Haran Pilpel, David Ploog, Johanna Ploog, 
+Matthew Cline, Paul Du Bois, Eino Keskitalo, Vsevolod Kozlov, Nat Lanza,
+Jesse Luehrs, Steven Noonan, Haran Pilpel, David Ploog, Johanna Ploog,
 Stefan O'Rear, Charles Otto, David Lawrence Ramsey, Robert Vollmert, Enne
 Walker) would like to thank:
 
@@ -17,33 +17,34 @@ Walker) would like to thank:
 We'd also like to thank members of the Dungeon Crawl community who have
 contributed to Dungeon Crawl Stone Soup:
 
-Warwick Allison              Brendan Hickey            Yuuma Oohara
-Juha Arpiainen               Benoit Hudson             Pedro
-Roy Axenov                   Sylvia 'Onia' Hörnke      Erik Piper
-Max Bane                     Iainuki                   Lemuel Pitkin
-Bill Beher                   Ilyak                     Derek Ray
-Alexander Beisig             Matthew Ince              Remsleep
-Stu Black                    Mitsuhiro Itakura         Will Rogers
-Erik Inge Bolsø              Mikko Juola               David Rose
-Peter Borgmann               Jarmo Kielosto            Sebastian Salman
-Trent W. Buck                Kornel Kisielewicz        Brett Scarborough
-Robert Burnham               Daniel Klein              Darshan Shaligram
-Terje Bø                     Vambola Kotkas            Robert Shimmin
-Aaron Curtis                 Ryan Kusnery              Sigurd
-Denzi                        Jukka Kuusisto            Edgar Simo
-Rachel Elizabeth Dillon      Janne Lahdenperä          Alex Smith
-Mike Drinen                  Maciej Lapinski           Solf
-Kieron Dunbar                Jordan Lewis              Johan Strandell
-Micha Elsner                 Icy Lich                  Roman Sêk
-Christopher Evenstar         Markus Maier              William Tanksley, Jr.
-Ben Goetter                  Arien Malec               Marc H. Thoben
-Rob Grant                    Paul Maloney              Jared 'Twinge' Tinney
-John Greenberg               Neil 'Mu' Middleton       Matt Titus
-GreyKnight                   Shawn M Moore             Steven Wheeler
-Joshua Gross                 Eva Myers                 Thomas Willem
-Brian Haase                  Wille Mäntylä             Jeremey Wilson
-Shayne Halvorson             Erkki Nurmi               Yelve Yakut
-Ciaran Hamilton              Mattias Nyberg            Zooko
-Chris Hamons                 nyra
-R. Dan Henry                 Dylan O'Donnell
+Warwick Allison              R. Dan Henry              Yuuma Oohara
+Juha Arpiainen               Brendan Hickey            Pedro
+Roy Axenov                   Benoit Hudson             Erik Piper
+Max Bane                     Sylvia 'Onia' Hörnke      Lemuel Pitkin
+Bill Beher                   Iainuki                   Derek Ray
+Alexander Beisig             Ilyak                     Remsleep
+Stu Black                    Matthew Ince              Will Rogers
+Erik Inge Bolsø              Mitsuhiro Itakura         David Rose
+Peter Borgmann               Mikko Juola               Sebastian Salman
+Trent W. Buck                Jarmo Kielosto            Brett Scarborough
+Robert Burnham               Kornel Kisielewicz        Darshan Shaligram
+Joe Buzzelli                 Daniel Klein              Robert Shimmin
+Terje Bø                     Vambola Kotkas            Sigurd
+Henry Cipolla                Ryan Kusnery              Edgar Simo
+Aaron Curtis                 Jukka Kuusisto            Alex Smith
+Denzi                        Janne Lahdenperä          Solf
+Rachel Elizabeth Dillon      Maciej Lapinski           Michael Spang
+Mike Drinen                  Jordan Lewis              Johan Strandell
+Kieron Dunbar                Icy Lich                  Roman Sêk
+Micha Elsner                 Markus Maier              William Tanksley, Jr.
+Christopher Evenstar         Arien Malec               Marc H. Thoben
+Ben Goetter                  Paul Maloney              Jared 'Twinge' Tinney
+Rob Grant                    Neil 'Mu' Middleton       Matt Titus
+John Greenberg               Shawn M Moore             Steven Wheeler
+GreyKnight                   Eva Myers                 Thomas Willem
+Joshua Gross                 Wille Mäntylä             Jeremey Wilson
+Brian Haase                  Erkki Nurmi               Yelve Yakut
+Shayne Halvorson             Mattias Nyberg            Zooko
+Ciaran Hamilton              nyra
+Chris Hamons                 Dylan O'Donnell
 

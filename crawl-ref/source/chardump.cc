@@ -441,7 +441,7 @@ static void _sdump_misc(dump_params &par)
     _sdump_gold(par);
 }
 
-#define TO_PERCENT(x, y) (100.0f * ((float) (x)) / ((float) (y)))
+#define TO_PERCENT(x, y) (100.0f * (static_cast<float>(x)) / (static_cast<float>(y)))
 
 static std::string _sdump_turns_place_info(PlaceInfo place_info,
                                            std::string name = "")
@@ -464,7 +464,8 @@ static std::string _sdump_turns_place_info(PlaceInfo place_info,
     c = TO_PERCENT(place_info.turns_interlevel, place_info.turns_total);
     d = TO_PERCENT(place_info.turns_resting, non_interlevel);
     e = TO_PERCENT(place_info.turns_explore, non_interlevel);
-    f = (float) non_interlevel / (float) place_info.levels_seen;
+    f = static_cast<float>(non_interlevel) /
+        static_cast<float>(place_info.levels_seen);
 
     out =
         make_stringf("%14s | %5.1f | %5.1f | %5.1f | %5.1f | %5.1f | %13.1f\n",
@@ -1351,7 +1352,8 @@ static bool write_dump( const std::string &fname, dump_params &par)
 
 void display_notes()
 {
-    Menu scr;
+    formatted_scroller scr;
+    scr.set_flags(MF_START_AT_END);
     scr.set_tag("notes");
     scr.set_title(new MenuEntry("Turn   | Place   | Note"));
     for (unsigned int i = 0; i < note_list.size(); ++i)

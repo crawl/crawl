@@ -60,7 +60,6 @@ static const monster_level_up mon_grow[] =
     monster_level_up(MONS_DEEP_ELF_SUMMONER, MONS_DEEP_ELF_DEMONOLOGIST),
     monster_level_up(MONS_DEEP_ELF_CONJURER, MONS_DEEP_ELF_SORCERER),
 
-    monster_level_up(MONS_SNAPPING_TURTLE, MONS_ALLIGATOR_SNAPPING_TURTLE),
     monster_level_up(MONS_BABY_ALLIGATOR, MONS_ALLIGATOR),
 };
 

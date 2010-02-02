@@ -111,23 +111,23 @@ void maybe_update_stashes()
     }
 }
 
-bool is_stash(int x, int y)
+bool is_stash(const coord_def& c)
 {
     LevelStashes *ls = StashTrack.find_current_level();
     if (ls)
     {
-        Stash *s = ls->find_stash(x, y);
+        Stash *s = ls->find_stash(c);
         return (s && s->enabled);
     }
     return (false);
 }
 
-std::string get_stash_desc(int x, int y)
+std::string get_stash_desc(const coord_def& c)
 {
     LevelStashes *ls = StashTrack.find_current_level();
     if (ls)
     {
-        Stash *s = ls->find_stash(x, y);
+        Stash *s = ls->find_stash(c);
         if (s)
         {
             const std::string desc = s->description();
@@ -138,9 +138,9 @@ std::string get_stash_desc(int x, int y)
     return "";
 }
 
-void describe_stash(int x, int y)
+void describe_stash(const coord_def& c)
 {
-    std::string desc = get_stash_desc(x, y);
+    std::string desc = get_stash_desc(c);
     if (!desc.empty())
         mpr(desc.c_str(), MSGCH_EXAMINE_FILTER);
 }
@@ -151,14 +151,14 @@ std::vector<item_def> Stash::get_items() const
     return items;
 }
 
-std::vector<item_def> item_list_in_stash( coord_def pos )
+std::vector<item_def> item_list_in_stash(const coord_def& pos)
 {
     std::vector<item_def> ret;
 
     LevelStashes *ls = StashTrack.find_current_level();
     if (ls)
     {
-        Stash *s = ls->find_stash(pos.x, pos.y);
+        Stash *s = ls->find_stash(pos);
         if (s)
             ret = s->get_items();
     }
@@ -1179,72 +1179,69 @@ level_id LevelStashes::where() const
     return m_place;
 }
 
-Stash *LevelStashes::find_stash(int x, int y)
+Stash *LevelStashes::find_stash(coord_def c)
 {
-    if (x == -1 || y == -1)
-    {
-        x = you.pos().x;
-        y = you.pos().y;
-    }
-    const int abspos = (GXM * y) + x;
+    // FIXME: is this really necessary?
+    if (c.x == -1 || c.y == -1)
+        c = you.pos();
+
+    const int abspos = (GXM * c.y) + c.x;
     stashes_t::iterator st = m_stashes.find(abspos);
     return (st == m_stashes.end()? NULL : &st->second);
 }
 
-const Stash *LevelStashes::find_stash(int x, int y) const
+const Stash *LevelStashes::find_stash(coord_def c) const
 {
-    if (x == -1 || y == -1)
-    {
-        x = you.pos().x;
-        y = you.pos().y;
-    }
-    const int abspos = (GXM * y) + x;
+    // FIXME: is this really necessary?
+    if (c.x == -1 || c.y == -1)
+        c = you.pos();
+
+    const int abspos = (GXM * c.y) + c.x;
     stashes_t::const_iterator st = m_stashes.find(abspos);
     return (st == m_stashes.end()? NULL : &st->second);
 }
 
-const ShopInfo *LevelStashes::find_shop(int x, int y) const
+const ShopInfo *LevelStashes::find_shop(const coord_def& c) const
 {
     for (unsigned i = 0; i < m_shops.size(); ++i)
-        if (m_shops[i].isAt(x, y))
+        if (m_shops[i].isAt(c))
             return (&m_shops[i]);
 
     return (NULL);
 }
 
-bool LevelStashes::shop_needs_visit(int x, int y) const
+bool LevelStashes::shop_needs_visit(const coord_def& c) const
 {
-    const ShopInfo *shop = find_shop(x, y);
+    const ShopInfo *shop = find_shop(c);
     return (shop && !shop->is_visited());
 }
 
-bool LevelStashes::needs_visit(int x, int y) const
+bool LevelStashes::needs_visit(const coord_def& c) const
 {
-    const Stash *s = find_stash(x, y);
+    const Stash *s = find_stash(c);
     if (s && (s->unverified() || s->pickup_eligible()))
         return (true);
 
-    return (shop_needs_visit(x, y));
+    return (shop_needs_visit(c));
 }
 
-ShopInfo &LevelStashes::get_shop(int x, int y)
+ShopInfo &LevelStashes::get_shop(const coord_def& c)
 {
     for (unsigned i = 0; i < m_shops.size(); ++i)
-    {
-        if (m_shops[i].isAt(x, y))
+        if (m_shops[i].isAt(c))
             return m_shops[i];
-    }
-    ShopInfo si(x, y);
-    si.set_name(shop_name(coord_def(x, y)));
+
+    ShopInfo si(c.x, c.y);
+    si.set_name(shop_name(c));
     m_shops.push_back(si);
-    return get_shop(x, y);
+    return get_shop(c);
 }
 
-// Updates the stash at (x,y). Returns true if there was a stash at (x,y), false
+// Updates the stash at p. Returns true if there was a stash at p, false
 // otherwise.
-bool LevelStashes::update_stash(int x, int y)
+bool LevelStashes::update_stash(const coord_def& c)
 {
-    Stash *s = find_stash(x, y);
+    Stash *s = find_stash(c);
     if (s)
     {
         s->update();
@@ -1263,7 +1260,7 @@ void LevelStashes::kill_stash(const Stash &s)
 
 void LevelStashes::no_stash(int x, int y)
 {
-    Stash *s = find_stash(x, y);
+    Stash *s = find_stash(coord_def(x, y));
     bool en = false;
     if (s)
     {
@@ -1286,7 +1283,7 @@ void LevelStashes::no_stash(int x, int y)
 
 void LevelStashes::add_stash(int x, int y)
 {
-    Stash *s = find_stash(x, y);
+    Stash *s = find_stash(coord_def(x, y));
     if (s)
     {
         s->update();
@@ -1464,12 +1461,12 @@ LevelStashes *StashTracker::find_current_level()
 }
 
 
-bool StashTracker::update_stash(int x, int y)
+bool StashTracker::update_stash(const coord_def& c)
 {
     LevelStashes *lev = find_current_level();
     if (lev)
     {
-        bool res = lev->update_stash(x, y);
+        bool res = lev->update_stash(c);
         if (!lev->stash_count())
             remove_level();
         return (res);
@@ -1501,7 +1498,7 @@ void StashTracker::add_stash(int x, int y, bool verbose)
 
     if (verbose)
     {
-        Stash *s = current.find_stash(x, y);
+        Stash *s = current.find_stash(coord_def(x, y));
         if (s && s->enabled)
             mpr("Added stash.");
     }
@@ -1583,25 +1580,26 @@ void StashTracker::update_visible_stashes(
         return;
 
     LevelStashes *lev = find_current_level();
-    for (int cy = crawl_view.glos1.y; cy <= crawl_view.glos2.y; ++cy)
-        for (int cx = crawl_view.glos1.x; cx <= crawl_view.glos2.x; ++cx)
+    coord_def c;
+    for (c.y = crawl_view.glos1.y; c.y <= crawl_view.glos2.y; ++c.y)
+        for (c.x = crawl_view.glos1.x; c.x <= crawl_view.glos2.x; ++c.x)
         {
-            if (!in_bounds(cx, cy) || !you.see_cell(coord_def(cx, cy)))
+            if (!in_bounds(c) || !you.see_cell(c))
                 continue;
 
-            const dungeon_feature_type grid = grd[cx][cy];
-            if ((!lev || !lev->update_stash(cx, cy))
+            const dungeon_feature_type grid = grd(c);
+            if ((!lev || !lev->update_stash(c))
                 && mode == ST_AGGRESSIVE
-                && (_grid_has_perceived_item(coord_def(cx,cy))
+                && (_grid_has_perceived_item(c)
                     || !Stash::is_boring_feature(grid)))
             {
                 if (!lev)
                     lev = &get_current_level();
-                lev->add_stash(cx, cy);
+                lev->add_stash(c.x, c.y);
             }
 
             if (grid == DNGN_ENTER_SHOP)
-                get_shop(cx, cy);
+                get_shop(c);
         }
 
     if (lev && !lev->stash_count())
