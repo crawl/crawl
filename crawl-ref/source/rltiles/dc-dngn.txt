@@ -878,8 +878,14 @@ wall/dngn_transparent_wall DNGN_TRANSPARENT_WALL
 %repeat DNGN_TRANSPARENT_WALL DNGN_TRANSPARENT_WALL_DARKGRAY
 %resetcol
 
-
 wall/dngn_metal_wall DNGN_METAL_WALL
+
+%variation DNGN_METAL_WALL magenta
+%hue 28 300
+%hue 29 300
+%hue 30 300
+wall/dngn_metal_wall_brown DNGN_METAL_WALL_MAGENTA
+%resetcol
 
 %hue 150 120
 wall/dngn_green_crystal_wall DNGN_GREEN_CRYSTAL_WALL DNGN_CRYSTAL DNGN_CRYSTAL_GREEN

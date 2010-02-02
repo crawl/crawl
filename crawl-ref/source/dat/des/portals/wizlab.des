@@ -1132,6 +1132,9 @@ KITEM:      F = any book good_item, any book good_item, any book
 KMONS:      DEF = purple draconian
 COLOUR:     v = magenta
 COLOUR:     Uc = lightmagenta
+TILE:       c = wall_zot_magenta
+TILE:       v = dngn_metal_wall_magenta
+LFLOORTILE: floor_rough_magenta
 LFLOORCOL:  magenta
 MARKER:     + = lua:restrict_door()
 MARKER:     R = lua:fog_machine { \
