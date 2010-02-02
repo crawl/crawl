@@ -381,7 +381,7 @@ Create giant spores from corpses in your line of sight. The spores will explode,
 %%%%
 Evolution
 
-Turn plants and fungi adjacent to you iinto stronger species. Upgrading fungi requires piety, upgrading plants requires fruit.
+Turn plants and fungi adjacent to you into stronger species. Upgrading fungi requires piety, upgrading plants requires fruit.
 %%%%
 # Cheibriados
 Make Ponderous
