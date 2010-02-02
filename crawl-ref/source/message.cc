@@ -493,8 +493,12 @@ public:
     {
         if (!prev_msg)
             return;
-        store_msg(prev_msg);
+        message_item msg = prev_msg;
+        // Clear prev_msg before storing it, since
+        // writing out to the message window might
+        // in turn result in a recursive flush_prev.
         prev_msg = message_item();
+        store_msg(msg);
     }
 
     // XXX: this should not need to exist
