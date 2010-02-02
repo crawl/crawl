@@ -1465,7 +1465,8 @@ void ballisto_on_move(monsters * monster, const coord_def & position)
 
 // If 'monster' is a ballistomycete or spore activate some number of
 // ballistomycetes on the level.
-void activate_ballistomycetes( monsters * monster, const coord_def & origin)
+void activate_ballistomycetes(monsters * monster, const coord_def & origin,
+                              bool player_kill)
 {
     if (!monster || monster->type != MONS_BALLISTOMYCETE
                     && monster->type != MONS_GIANT_SPORE)
@@ -1476,19 +1477,32 @@ void activate_ballistomycetes( monsters * monster, const coord_def & origin)
     bool found_others = false;
 
     std::vector<monsters *> candidates;
+    int spore_count = 0;
     for (monster_iterator mi; mi; ++mi)
     {
         if (mi->mindex() != monster->mindex()
-            && mi->alive()
-            && mi->type == MONS_BALLISTOMYCETE)
+            && mi->alive())
+
         {
-            candidates.push_back(*mi);
+            if (mi->type == MONS_BALLISTOMYCETE)
+                candidates.push_back(*mi);
+            else if (mi->type == MONS_GIANT_SPORE)
+                spore_count++;
 
         }
+
     }
 
     if (candidates.empty())
+    {
+        if (spore_count == 0 && player_kill
+            && monster->attitude == ATT_HOSTILE)
+        {
+            mprf("You destroyed the fungal colony, you feel a bit more experienced.");
+            gain_exp(500);
+        }
         return;
+    }
 
     // If a spore or inactive ballisto died we will only activate one
     // other ballisto. If it was an active ballisto we will distribute
