@@ -3378,21 +3378,17 @@ void tilep_calc_flags(const int parts[], int flag[])
     if (parts[TILEP_PART_HELM] - 1 >= TILEP_HELM_FHELM_OFS)
         flag[TILEP_PART_BEARD] = TILEP_FLAG_HIDE;
 
-    if (parts[TILEP_PART_BASE] >= TILEP_BASE_NAGA
-        && parts[TILEP_PART_BASE] < tilep_species_to_base_tile(SP_NAGA + 1))
+    if (is_player_tile(parts[TILEP_PART_BASE], TILEP_BASE_NAGA))
     {
         flag[TILEP_PART_BOOTS] = flag[TILEP_PART_LEG] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_BODY]  = TILEP_FLAG_CUT_NAGA;
     }
-    else if (parts[TILEP_PART_BASE] >= TILEP_BASE_CENTAUR
-             && parts[TILEP_PART_BASE]
-                < tilep_species_to_base_tile(SP_CENTAUR + 1))
+    else if (is_player_tile(parts[TILEP_PART_BASE], TILEP_BASE_CENTAUR))
     {
         flag[TILEP_PART_BOOTS] = flag[TILEP_PART_LEG] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_BODY]  = TILEP_FLAG_CUT_CENTAUR;
     }
-    else if (parts[TILEP_PART_BASE] == TILEP_BASE_MERFOLK_WATER
-             || parts[TILEP_PART_BASE] == TILEP_BASE_MERFOLK_WATER + 1)
+    else if (is_player_tile(parts[TILEP_PART_BASE], TILEP_BASE_MERFOLK_WATER))
     {
         flag[TILEP_PART_BOOTS]  = TILEP_FLAG_HIDE;
         flag[TILEP_PART_LEG]    = TILEP_FLAG_HIDE;
@@ -3452,6 +3448,12 @@ int get_gender_from_tile(int parts[])
     if (gender == TILEP_GENDER_MALE || gender == TILEP_GENDER_FEMALE)
         return gender;
     return TILEP_GENDER_FEMALE;
+}
+
+bool is_player_tile(const int tile, const int base_tile)
+{
+    return (tile >= base_tile
+            && tile < base_tile + tile_player_count(base_tile));
 }
 
 int tilep_species_to_base_tile(int sp, int level)
@@ -3535,7 +3537,7 @@ void tilep_race_default(int sp, int gender, int level, int *parts)
     if (gender == -1)
         gender = get_gender_from_tile(parts);
 
-    int result = tilep_species_to_base_tile(sp, level) + gender;
+    int result = tilep_species_to_base_tile(sp, level);
     int hair   = 0;
     int beard  = 0;
     int wing   = 0;
@@ -3607,7 +3609,7 @@ void tilep_race_default(int sp, int gender, int level, int *parts)
             break;
         case SP_MERFOLK:
             result = you.in_water() ? TILEP_BASE_MERFOLK_WATER
-                                       : TILEP_BASE_MERFOLK;
+                                    : TILEP_BASE_MERFOLK;
             break;
         case SP_VAMPIRE:
             if (gender == TILEP_GENDER_MALE)
@@ -3632,7 +3634,7 @@ void tilep_race_default(int sp, int gender, int level, int *parts)
             break;
     }
 
-    parts[TILEP_PART_BASE]   = result;
+    parts[TILEP_PART_BASE] = result + gender;
 
     // Don't overwrite doll parts defined elsewhere.
     if (parts[TILEP_PART_HAIR] == TILEP_SHOW_EQUIP)

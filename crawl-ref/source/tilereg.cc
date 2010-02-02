@@ -586,6 +586,8 @@ void init_player_doll()
     if (mode == TILEP_MODE_LOADING)
     {
         player_doll = dolls[cur];
+        tilep_race_default(you.species, gender, you.experience_level,
+                           player_doll.parts);
         return;
     }
 
@@ -829,9 +831,8 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll, int x, int 
     }
 
     // Special case bardings from being cut off.
-    bool is_naga = (doll.parts[TILEP_PART_BASE] >= TILEP_BASE_NAGA
-                    && doll.parts[TILEP_PART_BASE]
-                       < tilep_species_to_base_tile(SP_NAGA + 1));
+    const bool is_naga = is_player_tile(doll.parts[TILEP_PART_BASE],
+                                        TILEP_BASE_NAGA);
 
     if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_NAGA_BARDING
         && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_NAGA_BARDING_RED)
@@ -839,9 +840,8 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll, int x, int 
         flags[TILEP_PART_BOOTS] = is_naga ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
 
-    bool is_cent = (doll.parts[TILEP_PART_BASE] >= TILEP_BASE_CENTAUR
-                    && doll.parts[TILEP_PART_BASE]
-                       < tilep_species_to_base_tile(SP_CENTAUR + 1));
+    const bool is_cent = is_player_tile(doll.parts[TILEP_PART_BASE],
+                                        TILEP_BASE_CENTAUR);
 
     if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
         && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED)
@@ -4217,71 +4217,6 @@ void DollEditRegion::clear()
     m_font_buf.clear();
 }
 
-// FIXME: Very hacky!
-// Returns the starting tile for the next species in the tiles list, or the
-// shadow tile if it's the last species.
-static int _get_next_species_tile()
-{
-    int sp = you.species;
-    if (player_genus(GENPC_DRACONIAN) && you.experience_level < 7)
-        sp = SP_BASE_DRACONIAN;
-
-    switch (sp)
-    {
-    case SP_HUMAN:
-        return TILEP_BASE_ELF;
-    case SP_HIGH_ELF:
-    case SP_SLUDGE_ELF:
-        return TILEP_BASE_DEEP_ELF;
-    case SP_DEEP_ELF:
-        return TILEP_BASE_DWARF;
-    case SP_MERFOLK:
-        return TILEP_BASE_MERFOLK_WATER;
-    case SP_TROLL:
-        return TILEP_BASE_DRACONIAN;
-    case SP_BASE_DRACONIAN:
-        return TILEP_BASE_DRACONIAN_BLACK;
-    case SP_BLACK_DRACONIAN:
-        return TILEP_BASE_DRACONIAN_GOLD;
-    case SP_YELLOW_DRACONIAN:
-        return TILEP_BASE_DRACONIAN_GREY;
-    case SP_GREY_DRACONIAN:
-        return TILEP_BASE_DRACONIAN_GREEN;
-    case SP_GREEN_DRACONIAN:
-        return TILEP_BASE_DRACONIAN_MOTTLED;
-    case SP_MOTTLED_DRACONIAN:
-        return TILEP_BASE_DRACONIAN_PALE;
-    case SP_PALE_DRACONIAN:
-        return TILEP_BASE_DRACONIAN_PURPLE;
-    case SP_PURPLE_DRACONIAN:
-        return TILEP_BASE_DRACONIAN_RED;
-    case SP_RED_DRACONIAN:
-        return TILEP_BASE_DRACONIAN_WHITE;
-    case SP_WHITE_DRACONIAN:
-        return TILEP_BASE_CENTAUR;
-    case SP_MOUNTAIN_DWARF:
-    case SP_HALFLING:
-    case SP_HILL_ORC:
-    case SP_KOBOLD:
-    case SP_MUMMY:
-    case SP_NAGA:
-    case SP_OGRE:
-    case SP_CENTAUR:
-    case SP_DEMIGOD:
-    case SP_SPRIGGAN:
-    case SP_MINOTAUR:
-    case SP_DEMONSPAWN:
-    case SP_GHOUL:
-    case SP_KENKU:
-    case SP_VAMPIRE:
-        return tilep_species_to_base_tile(you.species + 1);
-    case SP_DEEP_DWARF:
-        return TILEP_SHADOW_SHADOW;
-    default:
-        return TILEP_BASE_HUMAN;
-    }
-}
-
 static int _get_next_part(int cat, int part, int inc)
 {
     // Can't increment or decrement on show equip.
@@ -4296,7 +4231,7 @@ static int _get_next_part(int cat, int part, int inc)
     if (cat == TILEP_PART_BASE)
     {
         offset   = tilep_species_to_base_tile(you.species, you.experience_level);
-        max_part = _get_next_species_tile() - offset;
+        max_part = tile_player_count(offset);
     }
 
     ASSERT(inc > -max_part);
@@ -4374,7 +4309,7 @@ void DollEditRegion::render()
     // Draw current category of parts.
     int max_part = tile_player_part_count[m_cat_idx];
     if (m_cat_idx == TILEP_PART_BASE)
-        max_part = _get_next_species_tile() - tilep_species_to_base_tile() - 1;
+        max_part = tile_player_count(tilep_species_to_base_tile()) - 1;
 
     int show = std::min(max_show, max_part);
     int half_show = show / 2;
@@ -4563,7 +4498,8 @@ void DollEditRegion::run()
     m_mode = TILEP_MODE_LOADING;
     m_doll_idx = -1;
 
-    if (!_load_doll_data("dolls.txt", m_dolls, NUM_MAX_DOLLS, &m_mode, &m_doll_idx))
+    if (!_load_doll_data("dolls.txt", m_dolls, NUM_MAX_DOLLS,
+                         &m_mode, &m_doll_idx))
     {
         m_doll_idx = 0;
     }

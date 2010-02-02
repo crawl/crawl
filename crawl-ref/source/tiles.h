@@ -48,6 +48,7 @@ int tileidx_spell(spell_type spell);
 
 // Player tile related
 int get_gender_from_tile(int parts[]);
+bool is_player_tile(const int tile, const int base_tile);
 int tilep_species_to_base_tile(int sp = you.species,
                                int level = you.experience_level);
 void tilep_draconian_init(int sp, int level, int &base, int &head, int &wing);
