@@ -3401,11 +3401,6 @@ void tilep_calc_flags(const int parts[], int flag[])
     }
 }
 
-/*
- * Set default parts of each race
- * body + optional beard, hair, etc
- */
-
 static int _draconian_colour(int race, int level)
 {
     if (level < 0) // hack:monster
@@ -3440,13 +3435,14 @@ static int _draconian_colour(int race, int level)
     return (0);
 }
 
-int get_gender_from_tile(int parts[])
+int get_gender_from_tile(const int parts[])
 {
-    int gender = ((parts[TILEP_PART_BASE]
-                 - tile_player_part_start[TILEP_PART_BASE]) % 2);
+    const int gender = (parts[TILEP_PART_BASE]
+                        - tile_player_part_start[TILEP_PART_BASE]) % 2;
 
     if (gender == TILEP_GENDER_MALE || gender == TILEP_GENDER_FEMALE)
         return gender;
+
     return TILEP_GENDER_FEMALE;
 }
 
@@ -3532,12 +3528,16 @@ void tilep_draconian_init(int sp, int level, int &base, int &head, int &wing)
         wing = tile_player_part_start[TILEP_PART_DRCWING] + colour_offset;
 }
 
+// Set default parts of each race: body + optional beard, hair, etc.
 void tilep_race_default(int sp, int gender, int level, int *parts)
 {
     if (gender == -1)
         gender = get_gender_from_tile(parts);
 
     int result = tilep_species_to_base_tile(sp, level);
+    if (parts[TILEP_PART_BASE] != TILEP_SHOW_EQUIP)
+        result = (parts[TILEP_PART_BASE] - gender);
+
     int hair   = 0;
     int beard  = 0;
     int wing   = 0;
@@ -3960,7 +3960,7 @@ const int parts_saved[TILEP_PART_MAX + 1] =
 /*
  * scan input line from dolls.txt
  */
-void tilep_scan_parts(char *fbuf, dolls_data &doll)
+void tilep_scan_parts(char *fbuf, dolls_data &doll, int species, int level)
 {
     char  ibuf[8];
 
@@ -3985,9 +3985,11 @@ void tilep_scan_parts(char *fbuf, dolls_data &doll)
             doll.parts[p] = TILEP_SHOW_EQUIP;
         else if (p == TILEP_PART_BASE)
         {
-            doll.parts[p] = tilep_species_to_base_tile(you.species,
-                                                       you.experience_level)
-                            + (idx % 2);
+            const int base_tile = tilep_species_to_base_tile(species, level);
+            if (idx >= tile_player_count(base_tile))
+                doll.parts[p] = base_tile + (idx % 2);
+            else
+                doll.parts[p] = base_tile + idx;
         }
         else if (idx == 0)
             doll.parts[p] = 0;
@@ -4012,13 +4014,14 @@ void tilep_print_parts(char *fbuf, const dolls_data &doll)
     char *ptr = fbuf;
     for (unsigned i = 0; parts_saved[i] != -1; ++i)
     {
-        const int p   = parts_saved[i];
+        const int p = parts_saved[i];
         int idx = doll.parts[p];
         if (idx != TILEP_SHOW_EQUIP)
         {
             if (p == TILEP_PART_BASE)
             {
-                idx = (idx - tile_player_part_start[TILEP_PART_BASE]) % 2;
+                idx -= tilep_species_to_base_tile(you.species,
+                                                  you.experience_level);
             }
             else if (idx != 0)
             {

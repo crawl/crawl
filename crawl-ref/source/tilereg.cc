@@ -626,7 +626,7 @@ static void _create_random_doll(dolls_data &rdoll)
     _fill_doll_part(rdoll, TILEP_PART_BOOTS);
     _fill_doll_part(rdoll, TILEP_PART_HAIR);
 
-    // The following only are rolled with 50% chance.
+    // The following are only rolled with 50% chance.
     if (coinflip())
         _fill_doll_part(rdoll, TILEP_PART_CLOAK);
     if (coinflip())
@@ -637,7 +637,7 @@ static void _create_random_doll(dolls_data &rdoll)
         _fill_doll_part(rdoll, TILEP_PART_HELM);
 
     // Only male dolls get a chance at a beard.
-    if (rdoll.parts[TILEP_PART_BASE] % 2 == 1 && one_chance_in(4))
+    if (get_gender_from_tile(rdoll.parts) == TILEP_GENDER_MALE && one_chance_in(4))
         _fill_doll_part(rdoll, TILEP_PART_BEARD);
 }
 
