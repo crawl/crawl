@@ -45,6 +45,11 @@ MDEF(name)
     PLUARET(string, mons->name(DESC_PLAIN, true).c_str());
 }
 
+MDEF(unique)
+{
+    PLUARET(boolean, mons_is_unique(mons->type));
+}
+
 MDEF(base_name)
 {
     PLUARET(string, mons->base_name(DESC_PLAIN, true).c_str());
@@ -281,6 +286,7 @@ static MonsAccessor mons_attrs[] =
     { "full_name", l_mons_full_name },
     { "db_name",   l_mons_db_name   },
     { "type_name", l_mons_type_name },
+    { "unique"   , l_mons_unique },
 
     { "x"   , l_mons_x    },
     { "y"   , l_mons_y    },

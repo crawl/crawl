@@ -610,7 +610,7 @@ int mons_standard_level(int mcls)
     case MONS_GIANT_ANT:
     case MONS_GIANT_EYEBALL:
     case MONS_HOUND:
-    case MONS_GIANT_IGUANA:
+    case MONS_IGUANA:
     case MONS_OGRE:
     case MONS_ORC_WIZARD:
     case MONS_PHANTOM:
@@ -902,7 +902,7 @@ int mons_standard_rare(int mcls)
     case MONS_GIANT_BLOWFLY:
     case MONS_GIANT_COCKROACH:
     case MONS_GIANT_GECKO:
-    case MONS_GIANT_IGUANA:
+    case MONS_IGUANA:
     case MONS_GIANT_NEWT:
     case MONS_HIPPOGRIFF:
     case MONS_HYDRA:
@@ -1333,7 +1333,7 @@ int mons_lair_level(int mcls)
     case MONS_RAT:
     case MONS_QUOKKA:
     case MONS_GIANT_CENTIPEDE:
-    case MONS_GIANT_IGUANA:
+    case MONS_IGUANA:
         mlev += 0;
         break;
 
@@ -1444,7 +1444,7 @@ int mons_lair_rare(int mcls)
         return 75;
 
     case MONS_JACKAL:
-    case MONS_GIANT_IGUANA:
+    case MONS_IGUANA:
     case MONS_GILA_MONSTER:
         return 70;
 
@@ -1717,9 +1717,6 @@ int mons_shoals_level(int mcls)
 
     case MONS_CYCLOPS:          // will have a sheep band
     case MONS_SIREN:
-    case MONS_MERFOLK_IMPALER:
-    case MONS_MERFOLK_AQUAMANCER:
-    case MONS_MERFOLK_JAVELINEER:
     case MONS_OKLOB_PLANT:
     case MONS_SHARK:
     case MONS_KRAKEN:
@@ -1727,6 +1724,9 @@ int mons_shoals_level(int mcls)
         break;
 
     case MONS_ALLIGATOR_SNAPPING_TURTLE:
+    case MONS_MERFOLK_JAVELINEER:
+    case MONS_MERFOLK_IMPALER:
+    case MONS_MERFOLK_AQUAMANCER:
         mlev += 4;
         break;
 
@@ -1762,17 +1762,19 @@ int mons_shoals_rare(int mcls)
 
     case MONS_CYCLOPS:
     case MONS_CENTAUR:
-    case MONS_MERFOLK_AQUAMANCER:
-    case MONS_MERFOLK_IMPALER:
-    case MONS_MERFOLK_JAVELINEER:
         return 20;
 
     case MONS_SHARK:
         return 18;
 
+    case MONS_MERFOLK_AQUAMANCER:
+    case MONS_MERFOLK_IMPALER:
+        return 15;
+
     case MONS_OKLOB_PLANT:
     case MONS_KRAKEN:
     case MONS_ALLIGATOR_SNAPPING_TURTLE:
+    case MONS_MERFOLK_JAVELINEER:
         return 10;
 
     default:
@@ -1862,7 +1864,6 @@ int mons_pitslime_level(int mcls)
     case MONS_JELLY:
     case MONS_OOZE:
     case MONS_ACID_BLOB:
-    case MONS_GIANT_SPORE:
     case MONS_GIANT_EYEBALL:
         mlev++;
         break;
@@ -1922,7 +1923,6 @@ int mons_pitslime_rare(int mcls)
 
     case MONS_OOZE:
     case MONS_AZURE_JELLY:
-    case MONS_GIANT_SPORE:
     case MONS_GIANT_EYEBALL:
     case MONS_EYE_OF_DRAINING:
     case MONS_SHINING_EYE:

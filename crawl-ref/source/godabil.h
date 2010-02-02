@@ -33,6 +33,7 @@ bool plant_ring_from_fruit();
 int rain(const coord_def &target);
 int corpse_spores(beh_type behavior = BEH_FRIENDLY);
 bool evolve_flora();
+bool mons_is_evolvable(const monsters * mon);
 
 bool vehumet_supports_spell(spell_type spell);
 

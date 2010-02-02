@@ -13,6 +13,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "database.h"
+#include "delay.h"
 #include "directn.h"
 #include "effects.h"
 #include "env.h"
@@ -546,21 +547,28 @@ static int _create_plant(coord_def & target, int hp_adjust = 0)
 
 bool sunlight()
 {
-    int c_size = 5;
-    int x_offset[] = {-1, 0, 0, 0, 1};
-    int y_offset[] = { 0,-1, 0, 1, 0};
+    const int c_size = 5;
+    const int x_offset[] = {-1, 0, 0, 0, 1};
+    const int y_offset[] = { 0,-1, 0, 1, 0};
 
     dist spelld;
 
     bolt temp_bolt;
     temp_bolt.colour = YELLOW;
-    direction(spelld, DIR_TARGET, TARG_HOSTILE, LOS_RADIUS, false, false,
-              false, false, "Select sunlight destination");
+
+    direction_chooser_args args;
+    args.restricts = DIR_TARGET;
+    args.mode = TARG_HOSTILE_SUBMERGED;
+    args.range = LOS_RADIUS;
+    args.needs_path = false;
+    args.may_target_monster = false;
+    args.top_prompt = "Select sunlight destination.";
+    direction(spelld, args);
 
     if (!spelld.isValid)
         return (false);
 
-    coord_def base = spelld.target;
+    const coord_def base = spelld.target;
 
     int evap_count  = 0;
     int plant_count = 0;
@@ -667,7 +675,7 @@ bool sunlight()
         }
     }
 
-    // We damage clousd for a large radius, though.
+    // We damage clouds for a large radius, though.
     for (radius_iterator ai(base, 7); ai; ++ai)
     {
         if (env.cgrid(*ai) != EMPTY_CLOUD)
@@ -1020,7 +1028,7 @@ bool plant_ring_from_fruit()
         return (false);
     }
 
-    if ((int)adjacent.size() > target_count)
+    if (static_cast<int>(adjacent.size()) > target_count)
         prioritise_adjacent(you.pos(), adjacent);
 
     int hp_adjust = you.skills[SK_INVOCATIONS] * 10;
@@ -1211,10 +1219,9 @@ struct monster_conversion
 // evolve_flora() can upgrade it, and set up a monster_conversion
 // structure for it.  Return true (and fill in possible_monster) if the
 // monster can be upgraded, and return false otherwise.
-bool _possible_evolution(monsters * input,
+bool _possible_evolution(const monsters * input,
                          monster_conversion & possible_monster)
 {
-    possible_monster.base_monster = input;
     switch (input->mons_species())
     {
     case MONS_PLANT:
@@ -1241,6 +1248,12 @@ bool _possible_evolution(monsters * input,
     return (true);
 }
 
+bool mons_is_evolvable(const monsters * mon)
+{
+    monster_conversion temp;
+    return _possible_evolution(mon, temp);
+}
+
 void _collect_adjacent_monsters(std::vector<monster_conversion> & available,
                                 const coord_def &  center)
 {
@@ -1249,7 +1262,10 @@ void _collect_adjacent_monsters(std::vector<monster_conversion> & available,
         monsters * candidate = monster_at(*adjacent);
         monster_conversion monster_upgrade;
         if (candidate && _possible_evolution(candidate, monster_upgrade))
+        {
+            monster_upgrade.base_monster = candidate;
             available.push_back(monster_upgrade);
+        }
     }
 }
 
@@ -1270,142 +1286,120 @@ void _cost_summary(int oklob_count, int wandering_count, int total_in_range)
 
 bool evolve_flora()
 {
-    // Collect adjacent monsters
-    std::vector<monster_conversion> available_monsters;
-    _collect_adjacent_monsters(available_monsters, you.pos());
+    monster_conversion upgrade;
 
-    // No monsters in range can be upgraded.
-    if (available_monsters.empty() )
+    // This is a little sloppy, but cancel early if nothing useful is in
+    // range.
+    bool in_range = false;
+    for (radius_iterator rad(&you.get_los()); rad; ++rad)
     {
-        mpr("No flora in range can be evolved.");
+        monsters * temp = monster_at(*rad);
+        if (temp && mons_is_evolvable(temp))
+        {
+            in_range = true;
+            break;
+        }
+    }
+
+    if (!in_range)
+    {
+        mprf("No evolvable flora in sight.");
         return (false);
     }
 
-    // What are the total costs of all adjacent upgrades?
-    int piety_cost = 0;
-    int fruit_cost = 0;
+    dist spelld;
 
-    int oklob_generation = 0;
-    int wandering_generation = 0;
+    direction_chooser_args args;
+    args.restricts = DIR_TARGET;
+    args.mode = TARG_EVOLVABLE_PLANTS;
+    args.range = LOS_RADIUS;
+    args.needs_path = false;
+    args.may_target_monster = false;
+    args.top_prompt = "Select plant or fungus to evolve.";
+    
+    direction(spelld, args);
 
-    for (unsigned i=0; i < available_monsters.size(); i++)
+    if (!spelld.isValid)
     {
-        piety_cost += available_monsters[i].piety_cost;
-        fruit_cost += available_monsters[i].fruit_cost;
-        switch(available_monsters[i].new_type)
-        {
-        case MONS_OKLOB_PLANT:
-            oklob_generation++;
-            break;
-        case MONS_WANDERING_MUSHROOM:
-            wandering_generation++;
-            break;
-
-        default:
-            break;
-        }
+        // Check for user cancel.
+        canned_msg(MSG_OK);
+        return (false);
     }
 
 
-    std::vector<std::pair<int, int> > collected_fruit;
-    int total_fruit = _collect_fruit(collected_fruit);
-    int useable_fruit = std::min(total_fruit, fruit_cost);
+    monsters* target = monster_at(spelld.target);
 
-    _cost_summary(useable_fruit, wandering_generation, available_monsters.size());
-
-    crawl_state.darken_range = 1;
-    viewwindow(false, false);
-
-    int target_fruit = useable_fruit;
-    // Ask the user how many fruit to use
-    if (useable_fruit > 1)
+    if (!target)
     {
-        if(!_prompt_amount(useable_fruit, target_fruit,
-                           "How many oklobs will you create?"))
+        mprf("Must target a creature.");
+        return (false);
+    }
+
+    if (!_possible_evolution(target, upgrade))
+    {
+        if (mons_is_plant(target))
+            simple_monster_message(target, " has already reached the pinnacle of evolution.");
+        else
+            mprf("Only plants or fungi may be upgraded.");
+
+        return (false);
+    }
+
+    std::vector<std::pair<int, int> > collected_fruit;
+    if (upgrade.fruit_cost)
+    {
+        int total_fruit = _collect_fruit(collected_fruit);
+
+        if (total_fruit < upgrade.fruit_cost)
         {
-            crawl_state.darken_range = -1;
-            viewwindow(false,false);
+            mprf("Not enough fruit available.");
             return (false);
         }
     }
-    else
+
+    if (upgrade.piety_cost && upgrade.piety_cost > you.piety)
     {
-        delay(500);
+        mprf("Not enough piety");
+        return (false);
     }
 
-    crawl_state.darken_range = -1;
-    viewwindow(false, false);
-
-    int fruit_used = target_fruit;
-    int reduction = fruit_cost - target_fruit;
-
-    if (int(available_monsters.size()) <= reduction)
+    switch (target->type)
     {
-        mprf("Not enough fruit available.");
-        return false;
+    case MONS_PLANT:
+    case MONS_BUSH:
+        simple_monster_message(target, " can now spit acid.");
+        break;
+
+    case MONS_FUNGUS:
+    case MONS_BALLISTOMYCETE:
+    case MONS_TOADSTOOL:
+        simple_monster_message(target, " can now pick up its mycelia and move.");
+        break;
+
+    default:
+        break;
     }
 
-    int plants_evolved = 0;
-    int toadstools_evolved = 0;
-    int fungi_evolved = 0;
+    target->upgrade_type(upgrade.new_type, true, true);
+    target->god = GOD_FEDHAS;
+    target->attitude = ATT_FRIENDLY;
+    target->flags |= MF_NO_REWARD;
+    target->flags |= MF_ATT_CHANGE_ATTEMPT;
+    behaviour_event(target, ME_ALERT);
 
+    // Try to remove slowly dying in case we are upgrading a
+    // toadstool, and spore production in case we are upgrading a
+    // ballistomycete.
+    target->del_ench(ENCH_SLOWLY_DYING);
+    target->del_ench(ENCH_SPORE_PRODUCTION);
 
-    std::random_shuffle(available_monsters.begin(), available_monsters.end() );
+    if (upgrade.fruit_cost)
+        _decrease_amount(collected_fruit, upgrade.fruit_cost);
 
-    for (unsigned i=0; i < available_monsters.size(); i++)
+    if (upgrade.piety_cost)
     {
-        monsters * current_plant = available_monsters[i].base_monster;
-        monster_conversion current_target = available_monsters[i];
-
-        if (current_target.new_type == MONS_OKLOB_PLANT)
-        {
-            if (target_fruit)
-                target_fruit--;
-            else
-                continue;
-        }
-        else if (you.piety > current_target.piety_cost)
-        {
-            lose_piety(current_target.piety_cost);
-        }
-        // This would wipe out our remaining piety, so don't do it.
-        else
-        {
-            continue;
-        }
-
-        switch (current_plant->mons_species())
-        {
-        case MONS_PLANT:
-            plants_evolved++;
-            break;
-
-        case MONS_FUNGUS:
-        case MONS_BALLISTOMYCETE:
-            fungi_evolved++;
-            break;
-
-        case MONS_TOADSTOOL:
-            toadstools_evolved++;
-            break;
-        };
-
-        current_plant->upgrade_type(current_target.new_type, true, true);
-        current_plant->god = GOD_FEDHAS;
-        current_plant->attitude = ATT_FRIENDLY;
-        current_plant->flags |= MF_NO_REWARD;
-        current_plant->flags |= MF_ATT_CHANGE_ATTEMPT;
-
-        // Try to remove slowly dying in case we are upgrading a
-        // toadstool, and spore production in case we are upgrading a
-        // ballistomycete.
-        current_plant->del_ench(ENCH_SLOWLY_DYING);
-        current_plant->del_ench(ENCH_SPORE_PRODUCTION);
-    }
-
-    if (fruit_used)
-    {
-        _decrease_amount(collected_fruit, fruit_used);
+        lose_piety(upgrade.piety_cost);
+        mprf("Your piety has decreased.");
     }
 
     return (true);
@@ -1436,6 +1430,11 @@ bool ponderousify_armour()
     you.redraw_evasion = true;
 
     simple_god_message(" says: Use this wisely!");
+
+    // XXX: if the armour can have other wear effects, need to undo first.
+    if (item_is_equipped(arm))
+        armour_wear_effects(item_slot);
+
     return (true);
 }
 
@@ -1566,6 +1565,14 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
 #ifndef USE_TILE
     delay(1000);
 #endif
+
+    monsters *mon;
+    if (mon = monster_at(old_pos))
+    {
+        mon->blink();
+        if (mon = monster_at(old_pos))
+            mon->teleport(true);
+    }
 
     you.moveto(old_pos);
     you.duration[DUR_TIME_STEP] = 0;

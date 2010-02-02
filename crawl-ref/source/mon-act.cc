@@ -1256,10 +1256,6 @@ static bool _mons_throw(struct monsters *monster, struct bolt &pbolt,
                 pbolt.hit++;
         }
 
-        // POISON brand launchers poison ammo
-        if (bow_brand == SPWPN_VENOM && ammo_brand == SPMSL_NORMAL)
-            set_item_ego_type(item, OBJ_MISSILES, SPMSL_POISONED);
-
         // Vorpal brand increases damage dice size.
         if (bow_brand == SPWPN_VORPAL)
             diceMult = diceMult * 130 / 100;
@@ -1316,7 +1312,7 @@ static bool _mons_throw(struct monsters *monster, struct bolt &pbolt,
     else
     {
         // build shoot message
-        msg += item.name(DESC_NOCAP_A);
+        msg += item.name(DESC_NOCAP_A, false, false, false);
 
         // build beam name
         pbolt.name = item.name(DESC_PLAIN, false, false, false);
@@ -1554,9 +1550,10 @@ static void _monster_add_energy(monsters *monster)
 {
     if (monster->speed > 0)
     {
-        // Randomise to make counting off monster moves harder:
+        // Randomise to make counting off monster moves harder
         const int energy_gained =
-            std::max(1, div_rand_round(monster->speed * you.time_taken, 10));
+            std::max(1, div_rand_round(monster->speed * you.time_taken, 10))
+            + random2(3) - 1;
         monster->speed_increment += energy_gained;
     }
 }
@@ -1619,7 +1616,7 @@ static void _handle_monster_move(monsters *monster)
         && env.cgrid(monster->pos()) != EMPTY_CLOUD
         && !monster->submerged())
     {
-        _mons_in_cloud( monster );
+        _mons_in_cloud(monster);
     }
 
     // Apply monster enchantments once for every normal-speed
@@ -2849,8 +2846,15 @@ static bool _mon_can_move_to_pos(const monsters *monster,
     }
 
     // Wandering mushrooms don't move while you are looking.
-    if (monster->type == MONS_WANDERING_MUSHROOM && you.see_cell(targ))
-        return (false);
+    if (monster->type == MONS_WANDERING_MUSHROOM)
+    {
+        if (!monster->friendly() && you.see_cell(targ)
+             || mon_enemies_around(monster))
+        {
+            return false;
+        }
+
+    }
 
     // Water elementals avoid fire and heat.
     if (monster->type == MONS_WATER_ELEMENTAL

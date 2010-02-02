@@ -67,7 +67,9 @@ template<int> static int msgwin_get_line_autohist_temp(std::string prompt,
 #define msgwin_get_line_autohist(prompt, buf, len) \
     msgwin_get_line_autohist_temp<__LINE__>(prompt, buf, len)
 
-void msgwin_new_turn();
+// Tell the message window that the game is about to read a new
+// command from the player.
+void msgwin_new_cmd();
 
 class no_messages
 {
@@ -81,10 +83,8 @@ private:
 void save_messages(writer& outf);
 void load_messages(reader& inf);
 
-inline bool any_messages()
-{
-    return true;
-}
+// Have any messages been printed since the last clear?
+bool any_messages();
 
 void replay_messages();
 

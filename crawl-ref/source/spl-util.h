@@ -114,7 +114,9 @@ bool spell_direction( dist &spelld, bolt &pbolt,
                       // pbolt.range if applicable, otherwise LOS_RADIUS
                       int range = 0,
                       bool needs_path = true, bool may_target_monster = true,
-                      bool may_target_self = false, const char *prompt = NULL,
+                      bool may_target_self = false,
+                      const char *target_prefix = NULL,
+                      const char *prompt = NULL,
                       bool cancel_at_self = false );
 
 int spell_type2skill (unsigned int which_spelltype);

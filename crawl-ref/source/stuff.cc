@@ -65,9 +65,9 @@
 #include "tutorial.h"
 #include "view.h"
 
-stack_iterator::stack_iterator(const coord_def& pos, bool accesible)
+stack_iterator::stack_iterator(const coord_def& pos, bool accessible)
 {
-    cur_link = accesible ? you.visible_igrd(pos) : igrd(pos);
+    cur_link = accessible ? you.visible_igrd(pos) : igrd(pos);
     if ( cur_link != NON_ITEM )
         next_link = mitm[cur_link].link;
     else
@@ -165,7 +165,13 @@ void set_redraw_status(unsigned long flags)
     you.redraw_status_flags |= flags;
 }
 
-static bool _tag_follower_at(const coord_def &pos)
+static bool _is_religious_follower(const monsters* mon)
+{
+    return ((you.religion == GOD_YREDELEMNUL || you.religion == GOD_BEOGH)
+            && is_follower(mon));
+}
+
+static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
 {
     if (!in_bounds(pos) || pos == you.pos())
         return (false);
@@ -176,17 +182,14 @@ static bool _tag_follower_at(const coord_def &pos)
 
     if (fmenv->type == MONS_PLAYER_GHOST
         || !fmenv->alive()
+        || fmenv->speed_increment < 50
         || fmenv->incapacitated()
-        || !mons_can_use_stairs(fmenv)
         || mons_is_stationary(fmenv))
     {
         return (false);
     }
 
     if (!monster_habitable_grid(fmenv, DNGN_FLOOR))
-        return (false);
-
-    if (fmenv->speed_increment < 50)
         return (false);
 
     // Only friendly monsters, or those actively seeking the
@@ -206,12 +209,24 @@ static bool _tag_follower_at(const coord_def &pos)
 
         // Undead will follow Yredelemnul worshippers, and orcs will
         // follow Beogh worshippers.
-        if ((you.religion != GOD_YREDELEMNUL && you.religion != GOD_BEOGH)
-            || !is_follower(fmenv))
-        {
+        if (!_is_religious_follower(fmenv))
             return (false);
-        }
     }
+
+    // Monsters that can't use stairs can still be marked as followers
+    // (though they'll be ignored for transit), so any adjacent real
+    // follower can follow through. (jpeg)
+    if (!mons_can_use_stairs(fmenv))
+    {
+        if (_is_religious_follower(fmenv))
+        {
+            fmenv->flags |= MF_TAKING_STAIRS;
+            return (true);
+        }
+        return (false);
+    }
+
+    real_follower = true;
 
     // Monster is chasing player through stairs.
     fmenv->flags |= MF_TAKING_STAIRS;
@@ -256,25 +271,24 @@ void tag_followers()
         for (int i = 0, size = places[place_set].size(); i < size; ++i)
         {
             const coord_def &p = places[place_set][i];
-
-            coord_def fp;
-            for (fp.x = p.x - 1; fp.x <= p.x + 1; ++fp.x)
-                for (fp.y = p.y - 1; fp.y <= p.y + 1; ++fp.y)
+            for (adjacent_iterator ai(p); ai; ++ai)
+            {
+                if ((*ai - you.pos()).abs() > radius2
+                    || travel_point_distance[ai->x][ai->y])
                 {
-                    if (fp == p || (fp - you.pos()).abs() > radius2
-                        || !in_bounds(fp) || travel_point_distance[fp.x][fp.y])
-                    {
-                        continue;
-                    }
-                    travel_point_distance[fp.x][fp.y] = 1;
-                    if (_tag_follower_at(fp))
-                    {
-                        // If we've run out of our follower allowance, bail.
-                        if (--n_followers <= 0)
-                            return;
-                        places[!place_set].push_back(fp);
-                    }
+                    continue;
                 }
+                travel_point_distance[ai->x][ai->y] = 1;
+
+                bool real_follower = false;
+                if (_tag_follower_at(*ai, real_follower))
+                {
+                    // If we've run out of our follower allowance, bail.
+                    if (real_follower && --n_followers <= 0)
+                        return;
+                    places[!place_set].push_back(*ai);
+                }
+            }
         }
         places[place_set].clear();
         place_set = !place_set;
@@ -649,10 +663,11 @@ bool yes_or_no( const char* fmt, ... )
 
 // jmf: general helper (should be used all over in code)
 //      -- idea borrowed from Nethack
-bool yesno( const char *str, bool safe, int safeanswer, bool clear_after,
-            bool interrupt_delays, bool noprompt,
-            const explicit_keymap *map )
+bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
+           bool interrupt_delays, bool noprompt,
+           const explicit_keymap *map, GotoRegion region)
 {
+    bool message = (region == GOTO_MSG);
     if (interrupt_delays && !crawl_state.is_repeating_cmd())
         interrupt_activity( AI_FORCE_INTERRUPT );
 
@@ -661,7 +676,12 @@ bool yesno( const char *str, bool safe, int safeanswer, bool clear_after,
     while (true)
     {
         if (!noprompt)
-            mpr(prompt.c_str(), MSGCH_PROMPT);
+        {
+            if (message)
+                mpr(prompt.c_str(), MSGCH_PROMPT);
+            else
+                cprintf(prompt.c_str());
+        }
 
         int tmp = getchm(KMC_CONFIRM);
 
@@ -691,7 +711,7 @@ bool yesno( const char *str, bool safe, int safeanswer, bool clear_after,
             tmp = toupper( tmp );
         }
 
-        if (clear_after)
+        if (clear_after && message)
             mesclr();
 
         if (tmp == 'N')
@@ -699,7 +719,13 @@ bool yesno( const char *str, bool safe, int safeanswer, bool clear_after,
         else if (tmp == 'Y')
             return (true);
         else if (!noprompt)
-            mpr("[Y]es or [N]o only, please.");
+        {
+            const std::string pr = "[Y]es or [N]o only, please.";
+            if (message)
+                mpr(pr);
+            else
+                cprintf((EOL + pr + EOL).c_str());
+        }
     }
 }
 
@@ -915,27 +941,6 @@ void zap_los_monsters(bool items_also)
         // player sees nothing.
         monster_die(mon, KILL_DISMISSED, NON_MONSTER, true, true);
     }
-}
-
-int integer_sqrt(int value)
-{
-    if (value <= 0)
-        return (value);
-
-    int very_old_retval = -1;
-    int old_retval = 0;
-    int retval = 1;
-
-    while (very_old_retval != old_retval
-        && very_old_retval != retval
-        && retval != old_retval)
-    {
-        very_old_retval = old_retval;
-        old_retval = retval;
-        retval = (value / old_retval + old_retval) / 2;
-    }
-
-    return (retval);
 }
 
 int random_rod_subtype()

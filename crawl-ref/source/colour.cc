@@ -388,7 +388,7 @@ int str_to_colour( const std::string &str, int default_colour,
         const char *s = str.c_str();
         char *es = NULL;
         const int ci = static_cast<int>(strtol(s, &es, 10));
-        if (s != (const char *) es && es && ci >= 0 && ci < 16)
+        if (s != es && es && ci >= 0 && ci < 16)
             ret = ci;
     }
 

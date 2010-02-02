@@ -58,5 +58,5 @@ menu = $dangerous:.*dangerous_item.*
 #
 menu = lightred:.*equipped.* cursed
 menu = inventory:lightgreen:.*equipped.*
-menu = red: cursed
+menu = red: (a|the) cursed
 menu = green:uncursed

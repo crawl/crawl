@@ -64,7 +64,7 @@ The contents of this text are:
                 easy_exit_menu, sort_menus
 4-j     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
-                status_caption_colour, clear_messages,
+                status_caption_colour, clear_messages, show_more,
                 show_inventory_weights, show_gold_turns, show_beam,
                 item_stack_summary_minimum, list_rotten,
                 mlist_min_height, msg_min_height, msg_max_height,
@@ -82,7 +82,7 @@ The contents of this text are:
                 monster_damage, rotten_meat, equipment, floor, multiturn,
                 examine, examine_filter, diagnostics, error, tutorial
 4-m     Inscriptions.
-                autoinscribe, autoinscribe_artefacts
+                autoinscribe, autoinscribe_artefacts, autoinscribe_cursed
 4-n     Macro related Options.
                 flush.failure, flush.command, flush.message,
                 macro_meta_entry, additional_macro_file, bindkey
@@ -1286,6 +1286,11 @@ clear_messages = false
         between player actions (default is false which will delay the
         clearing of messages until the message space is full).
 
+show_more = true
+        Setting this option to false will cause the game not to prompt
+        if more than a window-full of messages are output at once. This
+        options has no effect if clear_messages is set.
+
 show_inventory_weights = false
         When this is set to true, inventory listings will mention the
         weight of each item.
@@ -1321,14 +1326,15 @@ list_rotten = true
         Additionally, this option will make a default message appear
         for Trolls, as well.
 
-mlist_min_height = 5
+mlist_min_height = 4
         If there is extra space available for the message area and
         monster list, the monster list will expand to this height
         before letting the message area get more.
         (Note that the monster list is only available for ASCII.)
 
 msg_min_height = 6
-        You can reduce this to 5 give more space to the map display.
+        You can reduce this to give more space to the map display. The
+        minimum value is 5.
 
 msg_max_height = 10
         If there is extra space available after the monster list has
@@ -1595,6 +1601,10 @@ autoinscribe = <regex>:<inscription>
 
 autoinscribe_artefacts = true
         Automatically inscribes identified artefacts with their properties.
+
+autoinscribe_cursed = true
+        Automatically inscribes items with "was cursed" when using a scroll of
+        remove curse, or when using the remove curse spell.
 
 4-n     Macro related Options.
 ------------------------------

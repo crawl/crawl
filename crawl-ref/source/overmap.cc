@@ -56,11 +56,19 @@ portal_vault_colour_map_type portal_vault_colours;
 annotation_map_type level_annotations;
 annotation_map_type level_exclusions;
 
-static void _seen_altar( god_type god, const coord_def& pos );
+static void _seen_altar(god_type god, const coord_def& pos);
 static void _seen_staircase(dungeon_feature_type which_staircase,
                             const coord_def& pos);
 static void _seen_other_thing(dungeon_feature_type which_thing,
                               const coord_def& pos);
+
+static std::string _get_branches();
+static std::string _get_altars();
+static std::string _get_shops();
+static std::string _get_portals();
+static std::string _get_notes();
+static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
+                                          const bool print_unseen);
 
 void seen_notable_thing(dungeon_feature_type which_thing, const coord_def& pos)
 {
@@ -118,7 +126,7 @@ static dungeon_feature_type portal_to_feature(portal_type p)
 
 static const char* portaltype_to_string(portal_type p)
 {
-    switch ( p )
+    switch (p)
     {
     case PORTAL_LABYRINTH:   return "<cyan>Labyrinth:</cyan>";
     case PORTAL_HELL:        return "<red>Hell:</red>";
@@ -130,7 +138,7 @@ static const char* portaltype_to_string(portal_type p)
 
 static std::string shoptype_to_string(shop_type s)
 {
-    switch ( s )
+    switch (s)
     {
     case SHOP_WEAPON:          return "(";
     case SHOP_WEAPON_ANTIQUE:  return "<yellow>(</yellow>";
@@ -146,18 +154,6 @@ static std::string shoptype_to_string(shop_type s)
     case SHOP_SCROLL:          return "?";
     default:                   return "x";
     }
-}
-
-static altar_map_type get_notable_altars(const altar_map_type &altars)
-{
-    altar_map_type notable_altars;
-    for ( altar_map_type::const_iterator na_iter = altars.begin();
-          na_iter != altars.end(); ++na_iter )
-    {
-        if (na_iter->first.id != BRANCH_ECUMENICAL_TEMPLE)
-            notable_altars[na_iter->first] = na_iter->second;
-    }
-    return (notable_altars);
 }
 
 inline static std::string place_desc(const level_pos &pos)
@@ -318,37 +314,52 @@ static std::string _portal_vaults_description_string()
 
 std::string overview_description_string()
 {
+    std::string disp;
+
+    disp += "                    <white>Dungeon Overview and Level Annotations</white>\n" ;
+    disp += _get_branches();
+    disp += _get_altars();
+    disp += _get_shops();
+	disp += _get_portals();
+    disp += _get_notes();
+
+    return disp.substr(0, disp.find_last_not_of('\n')+1);
+}
+
+// iterate through every dungeon branch, listing the ones which have been found
+static std::string _get_branches()
+{
+    int num_printed_branches = 1;
     char buffer[100];
     std::string disp;
-    bool seen_anything = false;
 
-    disp += "                    <white>Overview of the Dungeon</white>\n" ;
+    disp += "\n<green>Branches:</green>";
+    if (crawl_state.need_save || !crawl_state.updating_scores)
+    {
+        disp += " (use <white>G</white> to reach them and "
+                "<white>?/B</white> for more information)";
+    }
+    disp += EOL;
 
-    // print branches
-    int branchcount = 0;
-    for (int i = 0; i < NUM_BRANCHES; ++i)
+    level_id dungeon_lid(branches[0].id, 0);
+    dungeon_lid = find_deepest_explored(dungeon_lid);
+    snprintf(buffer, sizeof(buffer),
+             dungeon_lid.depth < 10 ?
+                    "<yellow>Dungeon</yellow> <darkgrey>(%d/27)</darkgrey>         " :
+                    "<yellow>Dungeon</yellow> <darkgrey>(%d/27)</darkgrey>         ",
+             dungeon_lid.depth);
+    disp += buffer;
+
+    for (int i = BRANCH_FIRST_NON_DUNGEON; i < NUM_BRANCHES; i++)
     {
         const branch_type branch = branches[i].id;
+
         if (stair_level.find(branch) != stair_level.end())
         {
-            if (!branchcount)
-            {
-                disp += "\n<green>Branches:</green>";
-                if (crawl_state.need_save || !crawl_state.updating_scores)
-                {
-                    disp += " (use <white>G</white> to reach them and "
-                            "<white>?/B</white> for more information)";
-                }
-                disp += EOL;
-                seen_anything = true;
-            }
-
-            ++branchcount;
             level_id lid(branches[i].id, 0);
             lid = find_deepest_explored(lid);
 
-            // account for the space of the depth. Fortunately it's only an issue
-            // for the Lair which has a short name anyway.
+            // Each branch entry takes up 21 spaces
             snprintf(buffer, sizeof buffer,
                 branches[i].depth < 10 ? "<yellow>%-6s</yellow> <darkgrey>(%d/%d)</darkgrey>: %-7s" :
                         lid.depth < 10 ? "<yellow>%-5s</yellow> <darkgrey>(%d/%d)</darkgrey>: %-7s" :
@@ -357,82 +368,99 @@ std::string overview_description_string()
                      lid.depth,
                      branches[i].depth,
                      stair_level[branch].describe(false, true).c_str());
+
             disp += buffer;
-            if ( (branchcount % 3) == 0 )
-                disp += "\n";
-            else
-                disp += "   ";
+            num_printed_branches++;
+
+            disp += (num_printed_branches % 3) == 0 ? "\n" : "   ";
         }
     }
-    if (branchcount && (branchcount % 4))
+
+    if (num_printed_branches % 3 != 0)
         disp += "\n";
+    return disp;
+}
 
-    // remove unworthy altars from the list we show the user. Yeah,
-    // one more round of map iteration.
-    const altar_map_type notable_altars = get_notable_altars(altars_present);
+// iterate through every god and display their altar's discovery state by color
+static std::string _get_altars()
+{
+    std::string disp;
 
-    // print altars
-    // we loop through everything a dozen times, oh well
-    if (!notable_altars.empty())
+    disp += "\n<green>Altars:</green>";
+    if (crawl_state.need_save || !crawl_state.updating_scores)
     {
-        disp += "\n<green>Altars:</green>";
-        if (crawl_state.need_save || !crawl_state.updating_scores)
-        {
-            disp += " (use <white>Ctrl-F \"altar\"</white> to reach them and "
-                    "<white>?/G</white> for information about gods)";
-        }
-        disp += EOL;
-        seen_anything = true;
+        disp += " (use <white>Ctrl-F \"altar\"</white> to reach them and "
+                "<white>?/G</white> for information about gods)";
     }
+    disp += EOL;
+    disp += _print_altars_for_gods(temple_god_list(), true);
+    disp += _print_altars_for_gods(nontemple_god_list(), false);
 
-    level_id last_id;
-    std::map<level_pos, god_type>::const_iterator ci_altar;
-    for (int cur_god = GOD_NO_GOD; cur_god < NUM_GODS; ++cur_god)
+    return disp;
+}
+
+// Loops through gods, printing their altar status by color.
+static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
+                                          const bool print_unseen)
+{   
+    std::string disp;
+    char buffer[100];
+    int num_printed = 0;
+    char const *colour;
+
+    for (unsigned int cur_god = 0; cur_god < gods.size(); cur_god++)
     {
-        if (cur_god == you.religion)
-            continue;
+        const god_type god = gods[cur_god];
 
-        last_id.depth = 10000;  // fake depth to be sure we don't match
-
-        // GOD_NO_GOD becomes your god
-        int real_god = (cur_god == GOD_NO_GOD ? you.religion : cur_god);
-
-        for (ci_altar = notable_altars.begin();
-             ci_altar != notable_altars.end(); ++ci_altar)
+        // for each god, look through the notable altars list for a match
+        bool has_altar_been_seen = false;
+        for (altar_map_type::const_iterator na_iter = altars_present.begin();
+             na_iter != altars_present.end(); ++na_iter)
         {
-            if (ci_altar->second == real_god)
+            if (na_iter->second == god)
             {
-                if (last_id.depth == 10000)
-                {
-                    disp += god_name( ci_altar->second, false );
-                    disp += ": ";
-                    disp += ci_altar->first.id.describe(false, true);
-                }
-                else
-                {
-                    if (last_id == ci_altar->first.id)
-                        disp += '*';
-                    else
-                    {
-                        disp += ", ";
-                        disp += ci_altar->first.id.describe(false, true);
-                    }
-                }
-                last_id = ci_altar->first.id;
+                has_altar_been_seen = true;
+                break;
             }
         }
-        if (last_id.depth != 10000)
-            disp += "\n";
+
+        colour = "darkgrey";
+        if (has_altar_been_seen)
+            colour = "white";
+        if (you.penance[god])
+            colour = (you.penance[god] > 10) ? "red" : "lightred";
+
+        if (!print_unseen && !strcmp(colour, "darkgrey"))
+            continue;
+
+        snprintf(buffer, sizeof buffer, "<%s>%s</%s>",
+                 colour, god_name(god, false).c_str(), colour);
+        disp += buffer;
+        num_printed++;
+
+        if (num_printed % 5 == 0)
+            disp += EOL;
+        else
+            disp += std::string(17 - god_name(god, false).length(), ' ');
     }
 
-    // print shops
+    if (num_printed > 0 && num_printed % 5 != 0)
+        disp += EOL;
+    return disp;
+}
+
+// iterate through all discovered shops, printing what level they are on.
+static std::string _get_shops()
+{
+    std::string disp;
+    level_id last_id;
+
     if (!shops_present.empty())
     {
         disp +="\n<green>Shops:</green>";
         if (crawl_state.need_save || !crawl_state.updating_scores)
-            disp += " (use <white>Ctrl-F \"shop\"</white> to reach them)";
+            disp += " (use <white>Ctrl-F \"shop\"</white> to reach them - yellow denotes antique shop)";
         disp += EOL;
-        seen_anything = true;
     }
     last_id.depth = 10000;
     std::map<level_pos, shop_type>::const_iterator ci_shops;
@@ -464,9 +492,9 @@ std::string overview_description_string()
             disp += loc;
             column_count += loc.length();
 
+            disp += ": ";
             disp += "</brown>";
 
-            disp += ": ";
             column_count += 2;
 
             last_id = ci_shops->first.id;
@@ -474,26 +502,33 @@ std::string overview_description_string()
         disp += shoptype_to_string(ci_shops->second);
         ++column_count;
     }
+
     if (!shops_present.empty())
         disp += "\n";
 
-    // print portals
+    return disp;
+}
+
+// Loop through found portals and display them
+static std::string _get_portals()
+{
+    std::string disp;
+
     if (!portals_present.empty() || !portal_vaults_present.empty())
     {
         disp += "\n<green>Portals:</green>\n";
-        seen_anything = true;
     }
     disp += _portals_description_string();
     disp += _portal_vaults_description_string();
 
-    if (!seen_anything)
-    {
-        if (crawl_state.need_save || !crawl_state.updating_scores)
-            disp += "You haven't discovered anything interesting yet.";
-        else
-            disp += "You didn't discover anything interesting.";
-    }
+    return disp;
+}
 
+// Loop through each branch, printing stored notes.
+static std::string _get_notes()
+{
+    std::string disp;
+    char depth_str[3];
     bool notes_exist = false;
     bool has_notes[NUM_BRANCHES];
 
@@ -517,7 +552,7 @@ std::string overview_description_string()
 
     if (notes_exist)
     {
-        disp += "\n\n                    <white>Level Annotations</white>\n" ;
+        disp += "\n<green>Annotations</green>\n" ;
 
         for (int i = 0; i < NUM_BRANCHES; ++i)
         {
@@ -526,22 +561,19 @@ std::string overview_description_string()
 
             Branch branch = branches[i];
 
-            disp += "\n<yellow>";
-            disp += branch.shortname;
-            disp += "</yellow>\n";
-
             for (int depth = 1; depth <= branch.depth; depth++)
             {
                 const level_id li(branch.id, depth);
 
                 if (get_level_annotation(li).length() > 0)
                 {
-                    char depth_str[3];
-                    sprintf(depth_str, "%2d", depth);
+                    sprintf(depth_str, "%d", depth);
 
-                    disp += "<white>";
+                    disp += "<yellow>";
+                    disp += branch.abbrevname;
+                    disp += "</yellow>:";
                     disp += depth_str;
-                    disp += ":</white> ";
+                    disp += " ";
                     disp += get_level_annotation(li);
                     disp += "\n";
                 }
@@ -549,7 +581,7 @@ std::string overview_description_string()
         }
     }
 
-    return disp.substr(0, disp.find_last_not_of('\n')+1);
+    return disp;
 }
 
 template <typename Z, typename Key>

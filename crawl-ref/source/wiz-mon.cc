@@ -409,7 +409,7 @@ void debug_stethoscope(int mon)
     {
         mpr("Which monster?", MSGCH_PROMPT);
 
-        direction(stth);
+        direction(stth, direction_chooser_args());
 
         if (!stth.isValid)
             return;
@@ -896,8 +896,10 @@ static void _move_player(const coord_def& where)
 static void _move_monster(const coord_def& where, int mid1)
 {
     dist moves;
-    direction(moves, DIR_NONE, TARG_ANY, -1, false, false, true, true,
-              "Move monster to where?");
+    direction_chooser_args args;
+    args.needs_path = false;
+    args.top_prompt = "Move monster to where?";
+    direction(moves, args);
 
     if (!moves.isValid || !in_bounds(moves.target))
         return;

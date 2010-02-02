@@ -398,6 +398,18 @@ Xom's power brushes against you for a moment.
 
 You hear Xom's avuncular chuckle.
 %%%%
+Xom snakes to sticks
+
+Xom transforms those around you.
+
+"I like them better like this."
+
+"Never liked these squiggly things."
+
+Xom touches your surroundings.
+
+@Xom good monster polymorph@
+%%%%
 Xom accidental homicide
 
 "Oops, I didn't mean to do *that*!"

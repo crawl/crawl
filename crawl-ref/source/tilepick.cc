@@ -267,8 +267,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_GIANT_NEWT;
     case MONS_GIANT_GECKO:
         return TILEP_MONS_GIANT_GECKO;
-    case MONS_GIANT_IGUANA:
-        return TILEP_MONS_GIANT_IGUANA;
+    case MONS_IGUANA:
+        return TILEP_MONS_IGUANA;
     case MONS_GILA_MONSTER:
         return TILEP_MONS_GILA_MONSTER;
     case MONS_KOMODO_DRAGON:
@@ -350,6 +350,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_FLAYED_GHOST:
         return TILEP_MONS_FLAYED_GHOST;
     case MONS_PLAYER_GHOST:
+    case MONS_PLAYER_ILLUSION:
         return TILEP_MONS_PLAYER_GHOST;
     case MONS_INSUBSTANTIAL_WISP:
         return TILEP_MONS_INSUBSTANTIAL_WISP;
@@ -588,7 +589,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_JELLY;
     case MONS_SLIME_CREATURE:
         ASSERT(mon->number <= 5);
-        return TILEP_MONS_SLIME_CREATURE + mon->number / 2;
+        return TILEP_MONS_SLIME_CREATURE + (mon->number ? mon->number - 1 : 0);
     case MONS_PULSATING_LUMP:
         return TILEP_MONS_PULSATING_LUMP;
     case MONS_GIANT_AMOEBA:
@@ -1219,6 +1220,28 @@ int tileidx_monster(const monsters *mons, bool detected)
         break;
     }
 
+    if (Options.tile_show_demon_numbers)
+    {
+        switch (mons_char(mons->type))
+        {
+        case '1':
+            ch |= TILE_FLAG_DEMON_1;
+            break;
+        case '2':
+            ch |= TILE_FLAG_DEMON_2;
+            break;
+        case '3':
+            ch |= TILE_FLAG_DEMON_3;
+            break;
+        case '4':
+            ch |= TILE_FLAG_DEMON_4;
+            break;
+        case '5':
+            ch |= TILE_FLAG_DEMON_5;
+            break;
+        }
+    }
+
     return ch;
 }
 
@@ -1825,8 +1848,8 @@ static int _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_GIANT_NEWT;
     case MONS_GIANT_GECKO:
         return TILE_CORPSE_GIANT_GECKO;
-    case MONS_GIANT_IGUANA:
-        return TILE_CORPSE_GIANT_IGUANA;
+    case MONS_IGUANA:
+        return TILE_CORPSE_IGUANA;
     case MONS_GILA_MONSTER:
         return TILE_CORPSE_GILA_MONSTER;
     case MONS_KOMODO_DRAGON:
@@ -2548,7 +2571,7 @@ static int _tileidx_shop(coord_def where)
 int tileidx_feature(dungeon_feature_type feat, int gx, int gy)
 {
     int override = env.tile_flv[gx][gy].feat;
-    if (override && !feat_is_door(grd[gx][gy]))
+    if (override && !feat_is_door(grd[gx][gy]) && feat != DNGN_FLOOR)
         return override;
 
     switch (feat)
@@ -3893,7 +3916,7 @@ void tilep_part_to_str(int number, char *buf)
         buf[1] = '0' + (number/ 10) % 10;
         buf[2] = '0' +  number      % 10;
     }
-    buf[3] ='\0';
+    buf[3] = '\0';
 }
 
 /*
@@ -3955,16 +3978,22 @@ void tilep_scan_parts(char *fbuf, dolls_data &doll)
         ibuf[ccount] = '\0';
         gcount++;
 
-        int idx = tilep_str_to_part(ibuf);
-        if (idx == 0)
-            doll.parts[p] = 0;
-        else if (idx == TILEP_SHOW_EQUIP)
+        const int idx = tilep_str_to_part(ibuf);
+        if (idx == TILEP_SHOW_EQUIP)
             doll.parts[p] = TILEP_SHOW_EQUIP;
+        else if (p == TILEP_PART_BASE)
+        {
+            doll.parts[p] = tilep_species_to_base_tile(you.species,
+                                                       you.experience_level)
+                            + (idx % 2);
+        }
+        else if (idx == 0)
+            doll.parts[p] = 0;
         else if (idx > tile_player_part_count[p])
             doll.parts[p] = tile_player_part_start[p];
         else
         {
-            int idx2 = tile_player_part_start[p] + idx - 1;
+            const int idx2 = tile_player_part_start[p] + idx - 1;
             if (idx2 < TILE_MAIN_MAX || idx2 >= TILEP_PLAYER_MAX)
                 doll.parts[p] = TILEP_SHOW_EQUIP;
             else
@@ -3981,15 +4010,23 @@ void tilep_print_parts(char *fbuf, const dolls_data &doll)
     char *ptr = fbuf;
     for (unsigned i = 0; parts_saved[i] != -1; ++i)
     {
-        int p = parts_saved[i];
+        const int p   = parts_saved[i];
         int idx = doll.parts[p];
-        if (idx != 0 && idx != TILEP_SHOW_EQUIP)
+        if (idx != TILEP_SHOW_EQUIP)
         {
-            idx = doll.parts[p] - tile_player_part_start[p] + 1;
-            if (idx < 0 || idx > tile_player_part_count[p])
-                idx = 0;
+            if (p == TILEP_PART_BASE)
+            {
+                idx = (idx - tile_player_part_start[TILEP_PART_BASE]) % 2;
+            }
+            else if (idx != 0)
+            {
+                idx = doll.parts[p] - tile_player_part_start[p] + 1;
+                if (idx < 0 || idx > tile_player_part_count[p])
+                    idx = 0;
+            }
         }
         tilep_part_to_str(idx, ptr);
+
         ptr += 3;
 
         *ptr = ':';

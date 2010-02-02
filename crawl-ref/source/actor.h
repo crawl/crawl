@@ -22,6 +22,8 @@ public:
 
     virtual monsters* as_monster() = 0;
     virtual player* as_player() = 0;
+    virtual const monsters* as_monster() const = 0;
+    virtual const player* as_player() const = 0;
 
     virtual kill_category kill_alignment() const = 0;
     virtual god_type  deity() const = 0;
@@ -184,7 +186,9 @@ public:
     virtual void hibernate(int power = 0) = 0;
     virtual void check_awaken(int disturbance) = 0;
 
-    virtual bool wearing_light_armour(bool = false) const { return (true); }
+    virtual bool check_train_armour();
+    virtual bool check_train_dodging();
+
     virtual int  skill(skill_type sk, bool skill_bump = false) const
     {
         return (0);
@@ -274,6 +278,7 @@ public:
 
 protected:
     los_def los;
+    bool changed_los_center; // hack to reduce monster los recalculations
     los_def los_no_trans; // only being updated for player
 };
 

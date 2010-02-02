@@ -69,7 +69,7 @@
      1000,
      LOS_RADIUS, LOS_RADIUS,
      0,
-     "Pull items from where?",
+     "Apport",
      false,
      false
 },
@@ -108,7 +108,7 @@
      100,
      4, 4,
      0,
-     "Where would you like to place the cloud?",
+     NULL,
      false,
      false
 },
@@ -305,7 +305,7 @@
      200,
      6, 6,
      0,
-     "Where do you want to put it?",
+     NULL,
      true,
      false
 },
@@ -422,7 +422,7 @@
      200,
      LOS_RADIUS, LOS_RADIUS,
      4, // SPTYP_NONE spells have no default noise level
-     "Smite whom?",
+     "Smite",
      false,
      false
 },
@@ -526,7 +526,7 @@
      200,
      6, 6,
      0,
-     "Where do you want to put it?",
+     NULL,
      true,
      false
 },
@@ -539,7 +539,7 @@
      200,
      6, 6,
      0,
-     "Where?",
+     NULL,
      true,
      false
 },
@@ -552,7 +552,7 @@
      200,
      LOS_RADIUS, LOS_RADIUS,
      0,
-     "Where?",
+     NULL,
      true,
      false
 },
@@ -2525,7 +2525,7 @@
 },
 
 {
-    SPELL_SUMMON_PLAYER_GHOST, "Summon Player Ghost",
+    SPELL_SUMMON_ILLUSION, "Summon Illusion",
      SPTYP_SUMMONING,
      SPFLAG_MONSTER,
      5,

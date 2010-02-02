@@ -1662,21 +1662,10 @@ static bool _damaging_card(card_type card, int power, deck_rarity_type rarity)
         ztype = (coinflip() ? ZAP_FIREBALL : firezaps[power_level]);
         break;
 
-    case CARD_FROST:
-        ztype = frostzaps[power_level];
-        break;
-
-    case CARD_HAMMER:
-        ztype = hammerzaps[power_level];
-        break;
-
-    case CARD_VENOM:
-        ztype = venomzaps[power_level];
-        break;
-
-    case CARD_SPARK:
-        ztype = sparkzaps[power_level];
-        break;
+    case CARD_FROST:  ztype = frostzaps[power_level];  break;
+    case CARD_HAMMER: ztype = hammerzaps[power_level]; break;
+    case CARD_VENOM:  ztype = venomzaps[power_level];  break;
+    case CARD_SPARK:  ztype = sparkzaps[power_level];  break;
 
     case CARD_PAIN:
         if (power_level == 2)
@@ -1693,13 +1682,14 @@ static bool _damaging_card(card_type card, int power, deck_rarity_type rarity)
         break;
     }
 
-    snprintf(info, INFO_SIZE, "You have drawn %s.  Aim where? ",
-             card_name(card));
+    std::string prompt = "You have drawn ";
+    prompt += card_name(card);
+    prompt += ".";
 
     bolt beam;
     beam.range = LOS_RADIUS;
     if (spell_direction(target, beam, DIR_NONE, TARG_HOSTILE,
-                        LOS_RADIUS, true, true, false, info)
+                        LOS_RADIUS, true, true, false, NULL, prompt.c_str())
         && player_tracer(ZAP_DEBUGGING_RAY, power/4, beam))
     {
         zapping(ztype, random2(power/4), beam);

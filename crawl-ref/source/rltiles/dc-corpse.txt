@@ -39,7 +39,7 @@ killer_bee CORPSE_KILLER_BEE
 %back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
 giant_newt CORPSE_GIANT_NEWT
 giant_gecko CORPSE_GIANT_GECKO
-giant_iguana CORPSE_GIANT_IGUANA
+iguana CORPSE_IGUANA
 gila_monster CORPSE_GILA_MONSTER
 komodo_dragon CORPSE_KOMODO_DRAGON
 

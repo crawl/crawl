@@ -103,7 +103,7 @@ DEPTH:  14-20, !Lair, !Slime
 : place_unique(_G, "Aizul")
 
 NAME:   uniq_azrael
-DEPTH:  14-16, 17-19, !Lair, !Slime, !Swamp, !Shoal
+DEPTH:  14-16, 17-19, !Lair, !Slime, !Swamp, !Shoals
 : place_unique(_G, "Azrael band")
 
 NAME:   uniq_blork_the_orc
@@ -121,7 +121,7 @@ DEPTH:  20-27, !Lair, !Slime
 
 NAME:   uniq_donald
 # XXX: add Vaults:1-4 when finished re-do of vaults.
-DEPTH:  Swamp, Snake, Shoal, Slime, Crypt:1-4, Blade, Elf:2-6, Orc:3-4
+DEPTH:  Swamp, Snake, Shoals, Slime, Crypt:1-4, Blade, Elf:2-6, Orc:3-4
 : place_unique(_G, "Donald")
 
 NAME:   uniq_duane
@@ -189,7 +189,7 @@ DEPTH:  1-3
 : place_unique(_G, "Jessica")
 
 NAME:   uniq_joseph
-DEPTH:  10-13, !Slime
+DEPTH:  7-12, !Slime
 : place_unique(_G, "Joseph")
 
 NAME:   uniq_josephine
@@ -337,11 +337,11 @@ DEPTH:  Hell
 : place_unique(_G, "Murray")
 
 NAME:   uniq_polyphemus
-DEPTH:  Shoal:1-5
+DEPTH:  Shoals
 : place_unique(_G, "Polyphemus band")
 
 NAME:   uniq_ilsuiw
-DEPTH:  Shoal:3-5
+DEPTH:  Shoals:3-
 : place_unique(_G, "Ilsuiw band")
 
 NAME:   uniq_khufu

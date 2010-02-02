@@ -667,7 +667,6 @@ static keyseq _getch_mul( int (*rgetch)() = NULL )
  */
 int getchm( int (*rgetch)() )
 {
-    flush_prev_message();
     return getchm( KMC_DEFAULT, rgetch );
 }
 
@@ -928,6 +927,9 @@ bool is_synthetic_key(int key)
     case KEY_MACRO_DISABLE_MORE:
     case KEY_MACRO_MORE_PROTECT:
     case KEY_REPEAT_KEYS:
+#ifdef USE_TILE
+    case CK_MOUSE_CMD:
+#endif
         return (true);
     default:
         return (false);
@@ -1149,10 +1151,8 @@ command_type key_to_command(int key, KeymapContext context)
     if (it == key_map.end())
         return CMD_NO_CMD;
 
-    command_type cmd = static_cast<command_type>(it->second);
-
+    const command_type cmd = static_cast<command_type>(it->second);
     ASSERT(context_for_command(cmd) == context);
-
 
     return cmd;
 }

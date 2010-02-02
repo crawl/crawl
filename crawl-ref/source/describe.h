@@ -85,6 +85,7 @@ template<class T> void process_description(T &proc, const describe_info &inf);
 
 std::string artefact_auto_inscription( const item_def& item );
 void add_autoinscription( item_def &item, std::string ainscrip);
+void add_inscription( item_def &item, std::string inscrip);
 
 const char *trap_name(trap_type trap);
 int str_to_trap(const std::string &s);

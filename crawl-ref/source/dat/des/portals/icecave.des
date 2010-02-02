@@ -48,6 +48,7 @@ function ice_cave_portal(e)
         msg = messager })
   e.kfeat("O = enter_portal_vault")
   e.colour("O = white")
+  e.tile("O = dngn_portal_ice_cave")
 end
 }}
 
@@ -78,6 +79,7 @@ dgn.set_lt_callback("ice_cave", "ice_cave_feat_descs")
 function ice_cave_colours(e)
   e.kfeat("< = exit_portal_vault")
   e.colour("< = white")
+  e.tile("< = dngn_portal_ice_cave")
   e.lrockcol("white")
   e.lfloorcol("blue")
   e.lrocktile("wall_ice")

@@ -1611,7 +1611,7 @@ static void _display_vampire_attributes()
        {EOL "<w>Resistances</w>" EOL
         "Poison resistance    ", "           ", "        ", "          ", " +       ", " +       ", " +    "},
 
-       {"Cold resistance      ", "           ", "        ", "          ", " +       ", " +       ", " ++   "},
+       {"Cold resistance      ", "           ", "        ", "          ", " +       ", " ++      ", " ++   "},
 
        {"Negative resistance  ", "           ", "        ", " +        ", " ++      ", " +++     ", " +++  "},
 

@@ -32,6 +32,7 @@
 #include "food.h"
 #include "godabil.h"
 #include "goditem.h"
+#include "godpassive.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -231,6 +232,11 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
                 else if (new_grid != DNGN_TRAP_MAGICAL && you.airborne())
                 {
                     // No prompt (shaft and mechanical traps ineffective, if flying)
+                }
+                else if (type == TRAP_TELEPORT && (player_equip(EQ_AMULET, AMU_STASIS, true)
+                         || scan_artefacts(ARTP_PREVENT_TELEPORTATION, false)))
+                {
+                    // No prompt (teleport traps are ineffective if wearing an amulet of stasis)
                 }
                 else
 #ifdef CLUA_BINDINGS
@@ -443,7 +449,7 @@ bool player_in_hell(void)
 
 bool player_likes_water(bool permanently)
 {
-    return (you.can_swim() || (!permanently && beogh_water_walk()));
+    return (you.can_swim(permanently) || (!permanently && beogh_water_walk()));
 }
 
 bool player_in_bat_form()
@@ -898,9 +904,9 @@ int player_equip( equipment_type slot, int sub_type, bool calc_unid )
 // Returns number of matches (jewellery returns zero -- no ego type).
 // [ds] There's no equivalent of calc_unid or req_id because as of now, weapons
 // and armour type-id on wield/wear.
-int player_equip_ego_type(int slot, int special, bool ignore_melded)
+int player_equip_ego_type( int slot, int special )
 {
-    if (ignore_melded && !you_tran_can_wear(slot))
+    if (!you_tran_can_wear(slot))
         return (0);
 
     int ret = 0;
@@ -931,10 +937,10 @@ int player_equip_ego_type(int slot, int special, bool ignore_melded)
 
     case EQ_ALL_ARMOUR:
         // Check all armour slots:
-        for (int i = EQ_CLOAK; i <= EQ_BODY_ARMOUR; i++)
+        for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
         {
             // ... but skip ones you can't currently use!
-            if (ignore_melded && !you_tran_can_wear(i))
+            if (!you_tran_can_wear(i))
                 continue;
 
             if (you.equip[i] != -1
@@ -1302,6 +1308,9 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
 
         // randart weapons:
         rf += scan_artefacts(ARTP_FIRE, calc_unid);
+
+        // Che bonus
+        rf += che_boost(CB_RFIRE);
     }
 
     // species:
@@ -1412,6 +1421,9 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
 
         // randart weapons:
         rc += scan_artefacts(ARTP_COLD, calc_unid);
+
+        // Che bonus
+        rc += che_boost(CB_RCOLD);
     }
 
     // mutations:
@@ -1821,6 +1833,9 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
 
         // randart wpns
         pl += scan_artefacts(ARTP_NEGATIVE_ENERGY, calc_unid);
+
+        // Che bonus
+        pl += che_boost(CB_RNEG);
     }
 
     // undead/demonic power
@@ -1987,44 +2002,16 @@ static int _player_armour_racial_bonus(const item_def& item)
     return racial_bonus;
 }
 
-bool is_light_armour( const item_def &item )
+bool is_effectively_light_armour(const item_def *item)
 {
-    if (get_equip_race(item) == ISFLAG_ELVEN)
-        return (true);
-
-    switch (item.sub_type)
-    {
-    case ARM_ROBE:
-    case ARM_ANIMAL_SKIN:
-    case ARM_LEATHER_ARMOUR:
-    case ARM_TROLL_HIDE:
-    case ARM_TROLL_LEATHER_ARMOUR:
-    case ARM_STEAM_DRAGON_HIDE:
-    case ARM_STEAM_DRAGON_ARMOUR:
-    case ARM_MOTTLED_DRAGON_HIDE:
-    case ARM_MOTTLED_DRAGON_ARMOUR:
-        return (true);
-
-    default:
-        return (false);
-    }
+    return (!item
+            || (abs(property(*item, PARM_EVASION)) < 2));
 }
 
-bool player_light_armour(bool with_skill)
+bool player_effectively_in_light_armour()
 {
-    if (!player_wearing_slot(EQ_BODY_ARMOUR))
-        return (true);
-
-    // We're wearing some kind of body armour and it's not melded.
-    const int arm = you.equip[EQ_BODY_ARMOUR];
-
-    if (with_skill
-        && property(you.inv[arm], PARM_EVASION) + you.skills[SK_ARMOUR]/3 >= 0)
-    {
-        return (true);
-    }
-
-    return (is_light_armour(you.inv[arm]));
+    const item_def *armour = you.slot_item(EQ_BODY_ARMOUR);
+    return is_effectively_light_armour(armour);
 }
 
 //
@@ -2092,7 +2079,7 @@ int player_adjusted_evasion_penalty(const int scale)
     int piece_armour_evasion_penalty = 0;
 
     // Some lesser armours have small penalties now (barding).
-    for (int i = EQ_CLOAK; i < EQ_BODY_ARMOUR; i++)
+    for (int i = EQ_MIN_ARMOUR; i < EQ_MAX_ARMOUR; i++)
     {
         if (i == EQ_SHIELD || !player_wearing_slot(i))
             continue;
@@ -2569,8 +2556,6 @@ void level_change(bool skip_attribute_increase)
         {
             mprf(MSGCH_INTRINSIC_GAIN,
                  "Welcome back to level %d!", new_exp);
-            if (!skip_more)
-                more();
 
             // No more prompts for this XL past this point.
 
@@ -2594,8 +2579,6 @@ void level_change(bool skip_attribute_increase)
 
             if (!(new_exp % 3) && !skip_attribute_increase)
                 _attribute_increase();
-            else if (!skip_more)
-                more();
 
             // No more prompts for this XL past this point.
 
@@ -3106,6 +3089,9 @@ void level_change(bool skip_attribute_increase)
 
         xom_is_stimulated(16);
 
+        if (!skip_more && any_messages())
+            more();
+
         learned_something_new(TUT_NEW_LEVEL);
     }
 
@@ -3183,22 +3169,28 @@ int check_stealth(void)
     if (you.confused())
         stealth /= 3;
 
-    const int arm   = you.equip[EQ_BODY_ARMOUR];
-    const int cloak = you.equip[EQ_CLOAK];
-    const int boots = you.equip[EQ_BOOTS];
+    const item_def *arm = you.slot_item(EQ_BODY_ARMOUR);
+    const item_def *cloak = you.slot_item(EQ_CLOAK);
+    const item_def *boots = you.slot_item(EQ_BOOTS);
 
-    if (arm != -1 && !player_light_armour())
-        stealth -= (item_mass( you.inv[arm] ) / 10);
+    if (arm)
+    {
+        // [ds] New stealth penalty formula from rob: SP = 6 * (EP^2)
+        const int ep = -property(*arm, PARM_EVASION);
+        const int penalty = 6 * ep * ep;
+        dprf("Stealth penalty for armour (ep: %d): %d", ep, penalty);
+        stealth -= penalty;
+    }
 
-    if (cloak != -1 && get_equip_race(you.inv[cloak]) == ISFLAG_ELVEN)
+    if (cloak && get_equip_race(*cloak) == ISFLAG_ELVEN)
         stealth += 20;
 
-    if (boots != -1)
+    if (boots)
     {
-        if (get_armour_ego_type( you.inv[boots] ) == SPARM_STEALTH)
+        if (get_armour_ego_type(*boots) == SPARM_STEALTH)
             stealth += 50;
 
-        if (get_equip_race(you.inv[boots]) == ISFLAG_ELVEN)
+        if (get_equip_race(*boots) == ISFLAG_ELVEN)
             stealth += 20;
     }
 
@@ -3241,11 +3233,7 @@ static void _attribute_increase()
 {
     mpr("Your experience leads to an increase in your attributes!",
         MSGCH_INTRINSIC_GAIN);
-
     learned_something_new(TUT_CHOOSE_STAT);
-    more();
-    mesclr();
-
     mpr("Increase (S)trength, (I)ntelligence, or (D)exterity? ", MSGCH_PROMPT);
 
     while (true)
@@ -3632,7 +3620,13 @@ void display_char_status()
     if (you.duration[DUR_SEE_INVISIBLE])
         mpr("You can see invisible.");
 
-    _output_expiring_message(DUR_INVIS, "You are invisible.");
+    std::string invis_mes = "You are invisible";
+    if (you.backlit())
+        invis_mes += " (but backlit and visible).";
+    else
+        invis_mes += ".";
+
+    _output_expiring_message(DUR_INVIS, invis_mes.c_str());
 
     if (you.confused())
         mpr("You are confused.");
@@ -3788,7 +3782,7 @@ void display_char_status()
 
     // magic resistance
     const int mr = you.res_magic();
-    mprf("You are %s resistant to magic.", magic_res_adjective(mr).c_str());
+    mprf("You are %s resistant to hostile enchantments.", magic_res_adjective(mr).c_str());
 
     // character evaluates their ability to sneak around:
     mprf("You feel %s.", stealth_desc(check_stealth()).c_str());
@@ -3813,7 +3807,7 @@ int player_mental_clarity(bool calc_unid, bool items)
 int player_spirit_shield(bool calc_unid)
 {
     return player_equip(EQ_AMULET, AMU_GUARDIAN_SPIRIT, calc_unid)
-           + player_equip_ego_type(EQ_HELMET, SPARM_SPIRIT_SHIELD);
+           + player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_SPIRIT_SHIELD);
 }
 
 // Returns whether the player has the effect of the amulet from a
@@ -5098,7 +5092,7 @@ void dec_disease_player(int delay)
 int count_worn_ego(int which_ego)
 {
     int result = 0;
-    for (int slot = EQ_CLOAK; slot <= EQ_BODY_ARMOUR; ++slot)
+    for (int slot = EQ_MIN_ARMOUR; slot <= EQ_MAX_ARMOUR; ++slot)
     {
         if (you.equip[slot] != -1
             && get_armour_ego_type(you.inv[you.equip[slot]]) == which_ego)
@@ -5390,8 +5384,6 @@ void player::init()
     worshipped.init(0);
     num_gifts.init(0);
 
-    che_saved_ponderousness = 0;
-
     equip.init(-1);
 
     spells.init(SPELL_NO_SPELL);
@@ -5523,12 +5515,13 @@ bool player::in_water() const
             && feat_is_water(grd(this->pos())));
 }
 
-bool player::can_swim() const
+bool player::can_swim(bool permanently) const
 {
     // Transforming could be fatal if it would cause unequipment of
     // stat-boosting boots or heavy armour.
-    return ((species == SP_MERFOLK && merfolk_change_is_safe(true)
-             || you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST));
+    return ((species == SP_MERFOLK && merfolk_change_is_safe(true))
+            || (!permanently
+                && you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST));
 }
 
 int player::visible_igrd(const coord_def &where) const
@@ -6149,11 +6142,6 @@ void player::shield_block_succeeded(actor *foe)
         exercise(SK_SHIELDS, 1);
 }
 
-bool player::wearing_light_armour(bool with_skill) const
-{
-    return (player_light_armour(with_skill));
-}
-
 void player::exercise(skill_type sk, int qty)
 {
     ::exercise(sk, qty);
@@ -6168,7 +6156,7 @@ int player::armour_class() const
 {
     int AC = 0;
 
-    for (int eq = EQ_CLOAK; eq <= EQ_BODY_ARMOUR; ++eq)
+    for (int eq = EQ_MIN_ARMOUR; eq <= EQ_MAX_ARMOUR; ++eq)
     {
         if (eq == EQ_SHIELD)
             continue;
@@ -6939,11 +6927,12 @@ bool player::visible_to(const actor *looker) const
     if (this == looker)
         return (can_see_invisible() || !invisible());
 
-    const monsters* mon = dynamic_cast<const monsters*>(looker);
+    const monsters* mon = looker->as_monster();
     return (!invisible()
             || in_water()
             || mon->can_see_invisible()
-            || mons_sense_invis(mon));
+            || mons_sense_invis(mon)
+               && circle_def(pos(), 4, C_ROUND).contains(mon->pos()));
 }
 
 bool player::backlit(bool check_haloed) const

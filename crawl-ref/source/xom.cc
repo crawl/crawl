@@ -378,7 +378,7 @@ void xom_tick()
 // marked as seen (explored) or known (mapped).  If seen_only is true,
 // grids only "seen" via magic mapping don't count.  Returns the
 // estimated percentage value of exploration.
-static int _exploration_estimate(bool seen_only = false)
+static int _exploration_estimate(bool seen_only = false, bool debug = false)
 {
     int seen  = 0;
     int total = 0;
@@ -417,9 +417,14 @@ static int _exploration_estimate(bool seen_only = false)
     while (total < 100 && tries < 1000);
 
 #ifdef DEBUG_XOM
-    mprf(MSGCH_DIAGNOSTICS,
-         "exploration estimate (%s): %d out of %d grids seen",
-         seen_only ? "explored" : "mapped", seen, total);
+    // No message during heavy-duty wizmode testing:
+    // Instead all results are written into xom_debug.stat.
+    if (!debug)
+    {
+        mprf(MSGCH_DIAGNOSTICS,
+             "exploration estimate (%s): %d out of %d grids seen",
+             seen_only ? "explored" : "mapped", seen, total);
+    }
 #endif
 
     // If we didn't get any qualifying grids, there are probably so few
@@ -540,7 +545,7 @@ static int _xom_makes_you_cast_random_spell(int sever, int tension,
         {
             // If the level is already mostly explored, there's a chance
             // we might try something else.
-            const int explored = _exploration_estimate();
+            const int explored = _exploration_estimate(false, debug);
             if (explored > 80 && x_chance_in_y(explored, 100))
                 return (XOM_DID_NOTHING);
         }
@@ -1736,6 +1741,108 @@ static int _xom_rearrange_pieces(int sever, bool debug = false)
     return (XOM_GOOD_SWAP_MONSTERS);
 }
 
+static int _xom_random_stickable(const int HD)
+{
+    int c;
+    static const int arr[12] = {WPN_CLUB, WPN_QUARTERSTAFF, WPN_BOW, WPN_SPEAR,
+                                WPN_BLOWGUN, WPN_GLAIVE, WPN_HALBERD, WPN_ANKUS,
+                                WPN_SCYTHE, WPN_LONGBOW, WPN_GIANT_CLUB,
+                                WPN_GIANT_SPIKED_CLUB};
+
+    // Maximum snake hd is 11 (anaconda) so random2(hd) gives us 0-10
+    // weapon_rarity also gives us 1-10.
+    do
+        c = random2(HD);
+    while (c > 11
+           || random2(HD) > weapon_rarity(arr[c]) && x_chance_in_y(c, HD));
+
+    return arr[c];
+}
+
+// A near-inversion of sticks_to_snakes with the following limitations:
+//  * Transformations are permanent.
+//  * Weapons are always non-cursed.
+//  * HD influences the enchantment and type of the weapon.
+//  * Weapon is not guaranteed to be useful.
+//  * Weapon will never be branded.
+static int _xom_snakes_to_sticks(int sever, bool debug = false)
+{
+    bool action = false;
+    for (monster_iterator mi(&you.get_los()); mi; ++mi)
+    {
+        if (mi->attitude != ATT_HOSTILE)
+            continue;
+
+        if (mons_genus(mi->type) == MONS_SNAKE)
+        {
+            if (!action)
+            {
+                if (debug)
+                    return (XOM_GOOD_SNAKES);
+
+                take_note(Note(NOTE_XOM_EFFECT, you.piety, -1,
+                               "snakes to sticks"), true);
+                god_speaks(GOD_XOM, _get_xom_speech("snakes to sticks").c_str());
+                action = true;
+            }
+
+            const object_class_type base_type =
+                    x_chance_in_y(3,5) ? OBJ_MISSILES
+                                       : OBJ_WEAPONS;
+
+            const int sub_type  = (base_type == OBJ_MISSILES ? MI_ARROW
+                                        : _xom_random_stickable(mi->hit_dice));
+
+            int thing_created = items(0, base_type, sub_type, true,
+                                      mi->hit_dice / 3 - 1, MAKE_ITEM_NO_RACE,
+                                      0, -1, -1);
+
+            if (thing_created == NON_ITEM)
+                continue;
+
+            item_def &doodad(mitm[thing_created]);
+
+            // Always limit the quantity to 1.
+            doodad.quantity = 1;
+
+            // Output some text since otherwise snakes will disappear silently.
+            mprf("%s reforms as %s", mi->name(DESC_CAP_THE).c_str(),
+                 doodad.name(DESC_NOCAP_A).c_str());
+
+            // Dismiss monster silently.
+            move_item_to_grid(&thing_created, mi->pos());
+            monster_die(*mi, KILL_DISMISSED, NON_MONSTER, true, false);
+        }
+#if 0
+        // Polymorph naga into wood golem, undecided as to whether it will
+        // remain or not.
+        else if (mons_genus(mi->type) == MONS_NAGA)
+        {
+            if (!action)
+            {
+                if (debug)
+                    return (XOM_GOOD_SNAKES);
+
+                take_note(Note(NOTE_XOM_EFFECT, you.piety, -1,
+                               "snakes to sticks"), true);
+                god_speaks(GOD_XOM, _get_xom_speech("snakes to sticks").c_str());
+                action = true;
+            }
+
+            // MONS_WOOD_GOLEM is not normally a suitable polymorph form
+            // so we have to force it using the last 'true' in the parameter
+            // list
+            monster_polymorph(*mi, MONS_WOOD_GOLEM, PPT_SAME, false, true);
+        }
+#endif
+    }
+
+    if (action)
+        return (XOM_GOOD_SNAKES);
+
+    return (XOM_DID_NOTHING);
+}
+
 static int _xom_animate_monster_weapon(int sever, bool debug = false)
 {
     std::vector<monsters *> mons_wpn;
@@ -2290,7 +2397,7 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
         // This is not very interesting if the level is already fully
         // explored (presumably cleared).  Even then, it may
         // occasionally happen.
-        const int explored = _exploration_estimate(true);
+        const int explored = _exploration_estimate(true, debug);
         if (explored >= 80 && x_chance_in_y(explored, 120))
             return (XOM_DID_NOTHING);
 
@@ -2348,6 +2455,8 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
         done = _xom_send_major_ally(sever, debug);
     else if (tension > 0 && x_chance_in_y(17, sever))
         done = _xom_throw_divine_lightning(debug);
+    else if (x_chance_in_y(18, sever))
+        done = _xom_snakes_to_sticks(sever, debug);
 
     return (done);
 }
@@ -3464,7 +3573,7 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
             // fully explored (presumably cleared).  If Xom is feeling
             // nasty, this is likelier to happen if the level is
             // unexplored.
-            const int explored = _exploration_estimate(true);
+            const int explored = _exploration_estimate(true, debug);
             if (nasty && (explored >= 40 || tension > 10)
                 || explored >= 60 + random2(40))
             {
@@ -3687,8 +3796,15 @@ static void _handle_accidental_death(const int orig_hp,
 int xom_acts(bool niceness, int sever, int tension, bool debug)
 {
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_RELIGION) || defined(DEBUG_XOM)
-    mprf(MSGCH_DIAGNOSTICS, "xom_acts(%u, %d, %d); piety: %u, interest: %u\n",
-         niceness, sever, tension, you.piety, you.gift_timeout);
+    if (!debug)
+    {
+        // This probably seems a bit odd, but we really don't want to display
+        // these when doing a heavy-duty wiz-mode debug test: just ends up
+        // as message spam and the player doesn't get any further information
+        // anyway. (jpeg)
+        mprf(MSGCH_DIAGNOSTICS, "xom_acts(%u, %d, %d); piety: %u, interest: %u\n",
+             niceness, sever, tension, you.piety, you.gift_timeout);
+    }
 #endif
 
 #ifdef WIZARD
@@ -3742,7 +3858,10 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
         tension = get_tension(which_god);
 
 #if defined(DEBUG_RELIGION) || defined(DEBUG_XOM) || defined(DEBUG_TENSION)
-    mprf(MSGCH_DIAGNOSTICS, "Xom tension: %d", tension);
+    // No message during heavy-duty wizmode testing:
+    // Instead all results are written into xom_debug.stat.
+    if (!debug)
+        mprf(MSGCH_DIAGNOSTICS, "Xom tension: %d", tension);
 #endif
 
     const int  orig_hp       = you.hp;
@@ -4141,6 +4260,7 @@ static const char* _xom_effect_to_name(int effect)
         "annoyance gift", "random item gift", "acquirement", "summon allies",
         "polymorph", "swap monsters", "teleportation", "vitrification",
         "mutation", "permanent ally", "lightning", "change scenery",
+        "snakes to sticks",
         // bad acts
         "nothing", "miscast (pseudo)", "miscast (minor)", "miscast (major)",
         "miscast (nasty)", "stat loss", "teleportation", "swap weapons",
@@ -4162,13 +4282,33 @@ static const char* _xom_effect_to_name(int effect)
     return (result.c_str());
 }
 
+static char* _list_exploration_estimate()
+{
+    int explored = 0;
+    int mapped   = 0;
+    for (int k = 0; k < 10; ++k)
+    {
+        mapped   += _exploration_estimate(false, true);
+        explored += _exploration_estimate(true, true);
+    }
+    mapped /= 10;
+    explored /= 10;
+
+    snprintf(info, INFO_SIZE, "mapping estimate: %d%%\n"
+                              "exploration estimate: %d%%\n",
+             mapped, explored);
+
+    return (info);
+}
+
 // Loops over the entire piety spectrum and calls xom_acts() multiple
 // times for each value, then prints the results into a file.
-// TODO: Allow specification of niceness, tension, boredness, and repeats.
+// TODO: Allow specification of niceness, tension, and boredness.
 void debug_xom_effects()
 {
     // Repeat N times.
-    const int N = debug_prompt_for_int("How many iterations? ", true);
+    const int N = debug_prompt_for_int("How many iterations over the "
+                                       "entire piety range? ", true);
 
     if (N == 0)
     {
@@ -4190,8 +4330,9 @@ void debug_xom_effects()
 
     fprintf(ostat, "---- STARTING XOM DEBUG TESTING ----\n");
     fprintf(ostat, "%s\n", dump_overview_screen(false).c_str());
-    fprintf(ostat, "%s", screenshot().c_str());
-    fprintf(ostat, "\n%s\n", mpr_monster_list().c_str());
+    fprintf(ostat, "%s\n", screenshot().c_str());
+    fprintf(ostat, "%s\n", _list_exploration_estimate());
+    fprintf(ostat, "%s\n", mpr_monster_list().c_str());
     fprintf(ostat, " --> Tension: %d\n", tension);
 
     if (you.penance[GOD_XOM])

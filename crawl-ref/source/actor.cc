@@ -11,7 +11,8 @@
 #include "traps.h"
 
 actor::actor()
-    : los_no_trans(los_def(coord_def(0,0), opacity_no_trans()))
+    : changed_los_center(true),
+      los_no_trans(los_def(coord_def(0,0), opacity_no_trans()))
 {
 }
 
@@ -112,6 +113,7 @@ bool actor::check_res_magic(int power)
 void actor::set_position(const coord_def &c)
 {
     position = c;
+    changed_los_center = (c == los.get_center());
     los.set_center(c);
     los_no_trans.set_center(c);
 }
@@ -187,4 +189,29 @@ int actor::body_weight(bool base) const
         end(0);
         return (0);
     }
+}
+
+bool actor::check_train_armour()
+{
+    if (const item_def *armour = slot_item(EQ_BODY_ARMOUR))
+    {
+        if (x_chance_in_y(item_mass(*armour), 1000))
+        {
+            this->exercise(SK_ARMOUR, 1);
+            return (true);
+        }
+    }
+    return (false);
+}
+
+bool actor::check_train_dodging()
+{
+    const item_def *armour = slot_item(EQ_BODY_ARMOUR);
+    const int mass = armour? item_mass(*armour) : 0;
+    if (!x_chance_in_y(mass, 800))
+    {
+        this->exercise(SK_DODGING, 1);
+        return (true);
+    }
+    return (false);
 }

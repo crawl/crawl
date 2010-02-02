@@ -88,7 +88,7 @@ static bool _handle_enchant_weapon( enchant_stat_type which_stat,
                                     bool quiet = false, int item_slot = -1 );
 static bool _handle_enchant_armour( int item_slot = -1 );
 
-static int  _fire_prompt_for_item(std::string& err);
+static int  _fire_prompt_for_item();
 static bool _fire_validate_item(int selected, std::string& err);
 
 // Rather messy - we've gathered all the can't-wield logic from wield_weapon()
@@ -123,7 +123,7 @@ bool can_wield(item_def *weapon, bool say_reason,
     if (!weapon)
         return (true);
 
-    for (int i = EQ_CLOAK; i <= EQ_AMULET; i++)
+    for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_WORN; i++)
     {
         if (you.equip[i] != -1 && &you.inv[you.equip[i]] == weapon)
         {
@@ -1223,7 +1223,7 @@ int get_next_fire_item(int current, int direction)
     {
         if (fire_order[i] == current)
         {
-            unsigned next =
+            unsigned int next =
                 (i + direction + fire_order.size()) % fire_order.size();
             return fire_order[next];
         }
@@ -1235,61 +1235,87 @@ class fire_target_behaviour : public targetting_behaviour
 {
 public:
     fire_target_behaviour()
-        : m_slot(-1), selected_from_inventory(false), need_prompt(false),
-          chosen_ammo(false)
+        : chosen_ammo(false),
+          selected_from_inventory(false),
+          need_redraw(false)
     {
         m_slot = you.m_quiver->get_fire_item(&m_noitem_reason);
+        set_prompt();
     }
 
     // targetting_behaviour API
     virtual command_type get_command(int key = -1);
-    virtual bool should_redraw();
-    virtual void mark_ammo_nonchosen();
-
-    void message_ammo_prompt(const std::string* pre_text = 0);
+    virtual bool should_redraw() const { return need_redraw; }
+    virtual void clear_redraw()        { need_redraw = false; }
+    virtual void update_top_prompt(std::string* p_top_prompt);
 
 public:
+    const item_def* active_item() const;
+    // FIXME: these should be privatized and given accessors.
     int m_slot;
-    std::string m_noitem_reason;
-    bool selected_from_inventory;
-    bool need_prompt;
     bool chosen_ammo;
+
+private:
+    void set_prompt();
+    void cycle_fire_item(bool forward);
+    void pick_fire_item_from_inventory();
+    void display_help();
+
+    std::string prompt;
+    std::string m_noitem_reason;
+    std::string internal_prompt;
+    bool selected_from_inventory;
+    bool need_redraw;
 };
 
-void fire_target_behaviour::message_ammo_prompt(const std::string* pre_text)
+void fire_target_behaviour::update_top_prompt(std::string* p_top_prompt)
 {
+    *p_top_prompt = internal_prompt;
+}
+
+const item_def* fire_target_behaviour::active_item() const
+{
+    if (m_slot == -1)
+        return NULL;
+    else
+        return &you.inv[m_slot];
+}
+
+void fire_target_behaviour::set_prompt()
+{
+    std::string old_prompt = internal_prompt; // Keep for comparison at the end.
+    internal_prompt.clear();
+
+    // Figure out if we have anything else to cycle to.
     const int next_item = get_next_fire_item(m_slot, +1);
-    bool no_other_items = (next_item == -1 || next_item == m_slot);
-
-    mesclr();
-
-    if (pre_text)
-        mpr(pre_text->c_str());
+    const bool no_other_items = (next_item == -1 || next_item == m_slot);
 
     std::ostringstream msg;
-    if (m_slot == -1)
+
+    // Build the action.
+    if (!active_item())
+    {
         msg << "Firing ";
+    }
     else
     {
-        const item_def& item_def = you.inv[m_slot];
         const launch_retval projected = is_launched(&you, you.weapon(),
-                                                    item_def);
-
-        if (projected == LRET_FUMBLED)
-            msg << "Awkwardly throwing ";
-        else if (projected == LRET_LAUNCHED)
-            msg << "Firing ";
-        else if (projected == LRET_THROWN)
-            msg << "Throwing ";
-        else
-            msg << "Buggy ";
+                                                    *active_item());
+        switch (projected)
+        {
+        case LRET_FUMBLED:  msg << "Awkwardly throwing "; break;
+        case LRET_LAUNCHED: msg << "Firing ";             break;
+        case LRET_THROWN:   msg << "Throwing ";           break;
+        }
     }
 
+    // And a key hint.
     msg << (no_other_items ? "(i - inventory)"
                            : "(i - inventory. (,) - cycle)")
         << ": ";
 
-    if (m_slot == -1)
+    // Describe the selected item for firing.
+    if (!active_item())
     {
         msg << "<red>" << m_noitem_reason << "</red>";
     }
@@ -1297,28 +1323,58 @@ void fire_target_behaviour::message_ammo_prompt(const std::string* pre_text)
     {
         const char* colour = (selected_from_inventory ? "lightgrey" : "w");
         msg << "<" << colour << ">"
-            << you.inv[m_slot].name(DESC_INVENTORY_EQUIP)
+            << active_item()->name(DESC_INVENTORY_EQUIP)
             << "</" << colour << ">";
     }
 
-    mpr(tagged_string_substr(msg.str(),
-                                                   0, crawl_view.msgsz.x),
-                              MSGCH_PROMPT);
+    // Write it out.
+    internal_prompt += tagged_string_substr(msg.str(), 0, crawl_view.msgsz.x);
+
+    // Never unset need_redraw here, because we might have cleared the
+    // screen or something else which demands a redraw.
+    if (internal_prompt != old_prompt)
+        need_redraw = true;
 }
 
-bool fire_target_behaviour::should_redraw()
+// Cycle to the next (forward == true) or previous (forward == false)
+// fire item.
+void fire_target_behaviour::cycle_fire_item(bool forward)
 {
-    if (need_prompt)
+    const int next = get_next_fire_item(m_slot, forward ? 1 : -1);
+    if (next != m_slot && next != -1)
     {
-        need_prompt = false;
-        return (true);
+        m_slot = next;
+        selected_from_inventory = false;
+        chosen_ammo = true;
     }
-    return (false);
+    set_prompt();
 }
 
-void fire_target_behaviour::mark_ammo_nonchosen()
+void fire_target_behaviour::pick_fire_item_from_inventory()
 {
-    chosen_ammo = false;
+    need_redraw = true;
+    std::string err;
+    const int selected = _fire_prompt_for_item();
+    if (selected >= 0 && _fire_validate_item(selected, err))
+    {
+        m_slot = selected;
+        selected_from_inventory = true;
+        chosen_ammo = true;
+    }
+    else if (!err.empty())
+    {
+        mpr(err);
+        more();
+    }
+    set_prompt();
+}
+
+void fire_target_behaviour::display_help()
+{
+    show_targetting_help();
+    redraw_screen();
+    need_redraw = true;
+    set_prompt();
 }
 
 command_type fire_target_behaviour::get_command(int key)
@@ -1328,44 +1384,11 @@ command_type fire_target_behaviour::get_command(int key)
 
     switch (key)
     {
-    case '(':
-    case CONTROL('N'):
-    case ')':
-    case CONTROL('P'):
-    {
-        const int direction = (key == CONTROL('P') || key == ')') ? -1 : +1;
-        const int next = get_next_fire_item(m_slot, direction);
-        if (next != m_slot && next != -1)
-        {
-            m_slot = next;
-            selected_from_inventory = false;
-            chosen_ammo = true;
-        }
-        // Do this stuff unconditionally to make the prompt redraw.
-        message_ammo_prompt();
-        need_prompt = true;
-        return (CMD_NO_CMD);
-    }
-    case 'i':
-    {
-        std::string err;
-        const int selected = _fire_prompt_for_item(err);
-        if (selected >= 0 && _fire_validate_item(selected, err))
-        {
-            m_slot = selected;
-            selected_from_inventory = true;
-            chosen_ammo = true;
-        }
-        message_ammo_prompt( err.length() ? &err : NULL );
-        need_prompt = true;
-        return (CMD_NO_CMD);
-    }
-    case '?':
-        show_targetting_help();
-        redraw_screen();
-        message_ammo_prompt();
-        need_prompt = true;
-        return (CMD_NO_CMD);
+    case '(': case CONTROL('N'): cycle_fire_item(true);  return (CMD_NO_CMD);
+    case ')': case CONTROL('P'): cycle_fire_item(false); return (CMD_NO_CMD);
+    case 'i': pick_fire_item_from_inventory(); return (CMD_NO_CMD);
+    case '?': display_help(); return (CMD_NO_CMD);
+    case CMD_TARGET_CANCEL: chosen_ammo = false; break;
     }
 
     return targetting_behaviour::get_command(key);
@@ -1389,12 +1412,14 @@ static bool _fire_choose_item_and_target(int& slot, dist& target,
         beh.m_slot = slot;
     }
 
-    beh.message_ammo_prompt();
+    direction_chooser_args args;
+    args.mode = TARG_HOSTILE;
+    args.needs_path = !teleport;
+    args.behaviour = &beh;
 
-    direction(target, DIR_NONE, TARG_HOSTILE, -1, false, !teleport, true, false,
-              NULL, &beh);
+    direction(target, args);
 
-    if (beh.m_slot == -1)
+    if (!beh.active_item())
     {
         canned_msg(MSG_OK);
         return (false);
@@ -1406,7 +1431,7 @@ static bool _fire_choose_item_and_target(int& slot, dist& target,
         return (false);
     }
 
-    you.m_quiver->on_item_fired(you.inv[beh.m_slot], beh.chosen_ammo);
+    you.m_quiver->on_item_fired(*beh.active_item(), beh.chosen_ammo);
     you.redraw_quiver = true;
     slot = beh.m_slot;
 
@@ -1416,14 +1441,10 @@ static bool _fire_choose_item_and_target(int& slot, dist& target,
 // Bring up an inventory screen and have user choose an item.
 // Returns an item slot, or -1 on abort/failure
 // On failure, returns error text, if any.
-static int _fire_prompt_for_item(std::string& err)
+static int _fire_prompt_for_item()
 {
     if (inv_count() < 1)
-    {
-        // canned_msg(MSG_NOTHING_CARRIED);         // Hmmm...
-        err = "You aren't carrying anything.";
         return -1;
-    }
 
     int slot = prompt_invent_item( "Fire/throw which item? (* to show all)",
                                    MT_INVLIST,
@@ -1431,10 +1452,8 @@ static int _fire_prompt_for_item(std::string& err)
                                    NULL, OPER_FIRE );
 
     if (slot == PROMPT_ABORT || slot == PROMPT_NOTHING)
-    {
-        err = "Nothing selected.";
         return -1;
-    }
+
     return slot;
 }
 
@@ -1549,7 +1568,7 @@ void throw_item_no_quiver()
     }
 
     std::string warn;
-    int slot = _fire_prompt_for_item(warn);
+    int slot = _fire_prompt_for_item();
 
     if (slot == -1)
     {
@@ -2112,7 +2131,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     if (launcher != NULL)
         bow_brand = get_weapon_brand(*launcher);
 
-    int  ammo_brand = get_ammo_brand(item);
+    int ammo_brand = get_ammo_brand(item);
 
     // Launcher brand does not affect ammunition.
     if (ammo_brand != SPMSL_NORMAL && bow_brand != SPWPN_NORMAL)
@@ -2152,17 +2171,12 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
 
     beam.name = item.name(DESC_PLAIN, false, false, false);
 
-    // Print type of item as influenced by launcher.
-    item_def ammo = item;
-
     // The chief advantage here is the extra damage this does
     // against susceptible creatures.
 
-    // Note: weapons & ammo of eg fire are not cumulative
-    // ammo of fire and weapons of frost don't work together,
-    // and vice versa.
-
     // Note that bow_brand is known since the bow is equipped.
+
+    bool beam_changed = false;
 
     // Chaos overides flame and frost/ice.
     if (bow_brand == SPWPN_CHAOS || ammo_brand == SPMSL_CHAOS)
@@ -2177,33 +2191,58 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         beam.effect_known = false;
 
         beam.flavour = BEAM_CHAOS;
-        beam.name    += " of chaos";
+        if (ammo_brand != SPMSL_CHAOS)
+        {
+            beam.name    += " of chaos";
+            ammo_name    += " of chaos";
+        }
+        else
+        {
+            set_ident_flags (item, ISFLAG_KNOW_TYPE);
+            beam_changed = true;
+        }
         beam.colour  = ETC_RANDOM;
-
-        ammo.special = SPMSL_CHAOS;
     }
     else if ((bow_brand == SPWPN_FLAME || ammo_brand == SPMSL_FLAME)
              && ammo_brand != SPMSL_FROST && bow_brand != SPWPN_FROST)
     {
         beam.flavour = BEAM_FIRE;
-        beam.name    += " of flame";
-        beam.colour  = RED;
+        if (ammo_brand != SPMSL_FLAME)
+        {
+            beam.name    += " of flame";
+            ammo_name    += " of flame";
+        }
+        else
+        {
+            set_ident_flags (item, ISFLAG_KNOW_TYPE);
+            beam_changed = true;
+        }
 
-        ammo.special = SPMSL_FLAME;
+        beam.colour  = RED;
     }
     else if ((bow_brand == SPWPN_FROST || ammo_brand == SPMSL_FROST)
              && ammo_brand != SPMSL_FLAME && bow_brand != SPWPN_FLAME)
     {
         beam.flavour = BEAM_COLD;
-        beam.name    += " of frost";
+        if (ammo_brand != SPMSL_FROST)
+        {
+            beam.name    += " of frost";
+            ammo_name   += " of frost";
+        }
+        else
+        {
+            set_ident_flags (item, ISFLAG_KNOW_TYPE);
+            beam_changed = true;
+        }
         beam.colour  = WHITE;
-
-        ammo.special = SPMSL_FROST;
     }
 
-    ASSERT(beam.flavour == BEAM_MISSILE || !is_artefact(item));
+    if (beam_changed)
+        beam.name = item.name(DESC_PLAIN, false, false, false);
 
-    ammo_name = ammo.name(DESC_PLAIN);
+    ammo_name = item.name(DESC_PLAIN);
+
+    ASSERT(beam.flavour == BEAM_MISSILE || !is_artefact(item));
 
     if (silver)
         beam.damage_funcs.push_back(_silver_damages_victim);
@@ -2240,31 +2279,32 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
             beam.hit_funcs.push_back(_rage_hit_victim);
     }
 
-    if (reaping && ammo.special != SPMSL_REAPING)
+    if (reaping && item.special != SPMSL_REAPING)
     {
         beam.name = "shadowy " + beam.name;
         ammo_name = "shadowy " + ammo_name;
     }
 
-    if (disperses && ammo.special != SPMSL_DISPERSAL)
+    if (disperses && item.special != SPMSL_DISPERSAL)
     {
         beam.name = "dispersing " + beam.name;
         ammo_name = "dispersing " + ammo_name;
     }
 
     // XXX: This doesn't make sense, but it works.
-    if (poisoned && ammo.special != SPMSL_POISONED)
+    if (poisoned && item.special != SPMSL_POISONED)
     {
+        beam.name = "poisoned " + beam.name;
         ammo_name = "poisoned " + ammo_name;
     }
 
-    if (penetrating && ammo.special != SPMSL_PENETRATION)
+    if (penetrating && item.special != SPMSL_PENETRATION)
     {
         beam.name = "penetrating " + beam.name;
         ammo_name = "penetrating " + ammo_name;
     }
 
-    if (silver && ammo.special != SPMSL_SILVER)
+    if (silver && item.special != SPMSL_SILVER)
     {
         beam.name = "silvery " + beam.name;
         ammo_name = "silvery " + ammo_name;
@@ -2292,11 +2332,11 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
              expl->name   += " fragments";
 
              const std::string short_name =
-                 ammo.name(DESC_PLAIN, false, false, false, false,
+                 item.name(DESC_PLAIN, false, false, false, false,
                            ISFLAG_IDENT_MASK | ISFLAG_COSMETIC_MASK
                            | ISFLAG_RACIAL_MASK);
 
-             expl->name = replace_all(expl->name, ammo.name(DESC_PLAIN),
+             expl->name = replace_all(expl->name, item.name(DESC_PLAIN),
                                       short_name);
          }
          expl->name = "explosion of " + expl->name;
@@ -2304,7 +2344,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
          beam.special_explosion = expl;
     }
 
-    if (exploding && ammo.special != SPMSL_EXPLODING)
+    if (exploding && item.special != SPMSL_EXPLODING)
     {
         beam.name = "exploding " + beam.name;
         ammo_name = "exploding " + ammo_name;
@@ -2493,7 +2533,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         thr = *target;
     else
     {
-        direction(thr, DIR_NONE, TARG_HOSTILE);
+        direction_chooser_args args;
+        args.mode = TARG_HOSTILE;
+        direction(thr, args);
 
         if (!thr.isValid)
         {
@@ -3615,6 +3657,7 @@ static int _prompt_ring_to_remove(int new_ring)
 
     mprf(" << or %s", left->name(DESC_INVENTORY).c_str());
     mprf(" > or %s", right->name(DESC_INVENTORY).c_str());
+    flush_prev_message();
 
     // Deactivate choice from tile inventory.
     // FIXME: We need to be able to get the choice (item letter)
@@ -4267,7 +4310,7 @@ static bool _dont_use_invis()
     }
     else if (get_contamination_level() > 0
              && !yesno("Invisibility will do you no good right now; "
-                       "use anyways?", false, 'n'))
+                       "use anyway?", false, 'n'))
     {
         return (true);
     }
@@ -4379,7 +4422,13 @@ void zap_wand(int slot)
 
     int tracer_range = (alreadyknown && wand.sub_type != WAND_RANDOM_EFFECTS) ?
                         _wand_range(type_zapped) : _max_wand_range();
-    direction(zap_wand, DIR_NONE, targ_mode, tracer_range);
+    const std::string zap_title =
+        "Zapping: " + get_menu_colour_prefix_tags(wand, DESC_INVENTORY);
+    direction_chooser_args args;
+    args.mode = targ_mode;
+    args.range = tracer_range;
+    args.top_prompt = zap_title;
+    direction(zap_wand, args);
 
     if (!zap_wand.isValid)
     {
@@ -4414,7 +4463,10 @@ void zap_wand(int slot)
 
 
     if (you.confused())
-        zap_wand.target = you.pos() + coord_def(random2(13)-6, random2(13)-6);
+    {
+        zap_wand.target = you.pos() + coord_def(random_range(-6, 6),
+                                                random_range(-6, 6));
+    }
 
     if (wand.sub_type == WAND_RANDOM_EFFECTS)
         beam.effect_known = false;
@@ -4423,7 +4475,7 @@ void zap_wand(int slot)
     beam.attitude = ATT_FRIENDLY;
     beam.set_target(zap_wand);
 
-    bool aimed_at_self = (beam.target == you.pos());
+    const bool aimed_at_self = (beam.target == you.pos());
 
     // Check whether we may hit friends, use "safe" values for random effects
     // and unknown wands (highest possible range, and unresistable beam
@@ -5606,7 +5658,7 @@ void read_scroll(int slot)
         // make sure there's something to curse first
         int count = 0;
         int affected = EQ_WEAPON;
-        for (int i = EQ_CLOAK; i <= EQ_BODY_ARMOUR; i++)
+        for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
         {
             if (you.equip[i] != -1 && !you.inv[you.equip[i]].cursed())
             {
@@ -5836,7 +5888,7 @@ void use_artefact(item_def &item, bool *show_msgs, bool unmeld)
 
 bool wearing_slot(int inv_slot)
 {
-    for (int i = EQ_CLOAK; i <= EQ_AMULET; ++i)
+    for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_WORN; ++i)
         if (inv_slot == you.equip[i])
             return (true);
 

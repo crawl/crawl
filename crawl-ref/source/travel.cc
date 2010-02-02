@@ -205,6 +205,35 @@ inline bool is_trap(const coord_def& c)
     return feat_is_trap(env.map_knowledge(c).feat());
 }
 
+inline bool _is_safe_trap (const coord_def& c)
+{
+#ifdef CLUA_BINDINGS
+    if (clua.callbooleanfn(false, "ch_cross_trap", "s", trap_name(c)))
+    {
+        return  (true);
+    }
+#endif
+
+    const trap_type trap = get_trap_type(c);
+
+    // Teleport traps are safe to travel through with -TELE
+    if (trap == TRAP_TELEPORT && (player_equip(EQ_AMULET, AMU_STASIS, true)
+        || scan_artefacts(ARTP_PREVENT_TELEPORTATION, false)))
+    {
+        return (true);
+    }
+
+    // Known shafts can be side-stepped and thus are safe for auto-travel.
+    if (trap == TRAP_SHAFT)
+    {
+        trap_def* shaft = find_trap(c);
+        return (shaft->is_known());
+    }
+
+    return (false);
+}
+
+
 // Returns an estimate for the time needed to cross this feature.
 // This is done, so traps etc. will usually be circumvented where possible.
 inline int feature_traverse_cost(dungeon_feature_type feature)
@@ -287,12 +316,12 @@ unsigned char is_waypoint(const coord_def &p)
     return curr_waypoints[p.x][p.y];
 }
 
-inline bool is_stash(const LevelStashes *ls, int x, int y)
+inline bool is_stash(const LevelStashes *ls, const coord_def& p)
 {
     if (!ls)
         return (false);
 
-    const Stash *s = ls->find_stash(x, y);
+    const Stash *s = ls->find_stash(p);
     return s && s->enabled;
 }
 
@@ -362,14 +391,18 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile)
         return (true);
     }
 
-    return (feat_is_traversable(static_cast<dungeon_feature_type>(grid))
-#ifdef CLUA_BINDINGS
-                || (is_trap(c)
-                    && clua.callbooleanfn(false, "ch_cross_trap",
-                                          "s", trap_name(c)))
-#endif
-            )
-            && !is_excluded(c);
+    // Excluded squares are never safe.
+    if (is_excluded(c))
+    {
+        return (false);
+    }
+
+    if (is_trap(c) && _is_safe_trap(c))
+    {
+        return (true);
+    }
+
+    return (feat_is_traversable(grid));
 }
 
 // Returns true if the location at (x,y) is monster-free and contains no clouds.
@@ -392,15 +425,8 @@ static bool _is_safe_move(const coord_def& c)
         //    should have been aborted already by the checks in view.cc.
     }
 
-    if (is_trap(c)
-#ifdef CLUA_BINDINGS
-        && !clua.callbooleanfn(false, "ch_cross_trap",
-                               "s", trap_name(c))
-#endif
-        )
-    {
-        return (false);
-    }
+    if (is_trap(c))
+        return (_is_safe_trap(c));
 
     const int cloud = env.cgrid(c);
     if (cloud == EMPTY_CLOUD)
@@ -537,12 +563,10 @@ bool prompt_stop_explore(int es_why)
 #define ES_altar  (Options.explore_stop & ES_ALTAR)
 #define ES_portal (Options.explore_stop & ES_PORTAL)
 
-// Adds interesting stuff on (x, y) to explore_discoveries.
-inline static void _check_interesting_square(int x, int y,
+// Adds interesting stuff on the point p to explore_discoveries.
+inline static void _check_interesting_square(const coord_def pos,
                                              explore_discoveries &ed)
 {
-    const coord_def pos(x, y);
-
     if (ES_item || ES_greedy || ES_glow || ES_art || ES_rune)
     {
         if (const monsters *mons = monster_at(pos))
@@ -849,12 +873,12 @@ command_type travel()
         // feature, stop exploring.
 
         explore_discoveries discoveries;
-        for (int y = 0; y < GYM; ++y)
-            for (int x = 0; x < GXM; ++x)
-            {
-                if (!mapshadow[x][y].seen() && is_terrain_seen(x, y))
-                    _check_interesting_square(x, y, discoveries);
-            }
+        for (rectangle_iterator ri(1); ri; ++ri)
+        {
+            const coord_def p(*ri);
+            if (!mapshadow(p).seen() && is_terrain_seen(p))
+                _check_interesting_square(p, discoveries);
+        }
 
         if (discoveries.prompt_stop())
             stop_running();
@@ -1076,7 +1100,7 @@ travel_pathfind::~travel_pathfind()
 static bool _is_greed_inducing_square(const LevelStashes *ls,
                                       const coord_def &c)
 {
-    if (ls && ls->needs_visit(c.x, c.y))
+    if (ls && ls->needs_visit(c))
         return (true);
 
     if (const monsters *mons = monster_at(c))
@@ -1327,17 +1351,17 @@ void travel_pathfind::get_features()
 
     memset(point_distance, 0, sizeof(travel_distance_grid_t));
 
-    for (int x = X_BOUND_1; x <= X_BOUND_2; ++x)
-        for (int y = Y_BOUND_1; y <= Y_BOUND_2; ++y)
+    coord_def dc;
+    for (dc.x = X_BOUND_1; dc.x <= X_BOUND_2; ++dc.x)
+        for (dc.y = Y_BOUND_1; dc.y <= Y_BOUND_2; ++dc.y)
         {
-            coord_def dc(x,y);
-            dungeon_feature_type feature = env.map_knowledge(dc).feat();
+            const dungeon_feature_type feature = env.map_knowledge(dc).feat();
 
             if ((feature != DNGN_FLOOR
                     && !feat_is_water(feature)
                     && feature != DNGN_LAVA)
                 || is_waypoint(dc)
-                || is_stash(ls, dc.x, dc.y)
+                || is_stash(ls, dc)
                 || is_trap(dc))
             {
                 features->push_back(dc);
@@ -1509,7 +1533,7 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
                        && !feat_is_water(feature)
                        && feature != DNGN_LAVA
                     || is_waypoint(dc)
-                    || is_stash(ls, dc.x, dc.y)))
+                    || is_stash(ls, dc)))
             {
                 features->push_back(dc);
             }

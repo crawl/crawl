@@ -26,6 +26,7 @@
 #include "fprop.h"
 #include "exclude.h"
 #include "food.h"
+#include "godpassive.h"
 #include "invent.h"
 #include "items.h"
 #include "itemname.h"
@@ -459,7 +460,7 @@ void stop_delay( bool stop_stair_travel )
 
     case DELAY_INTERRUPTIBLE:
         // Always stoppable by definition...
-        // try using a more specific type anyways. -- bwr
+        // try using a more specific type anyway. -- bwr
         _pop_delay();
         break;
 
@@ -1324,7 +1325,7 @@ static void _finish_delay(const delay_queue_item &delay)
             _pop_delay();
             handle_delay();
         }
-        StashTrack.update_stash(); // Stash-track the generated item(s).
+        StashTrack.update_stash(you.pos()); // Stash-track the generbated items.
         break;
     }
 
@@ -1506,6 +1507,7 @@ void armour_wear_effects(const int item_slot)
 
         case SPARM_PONDEROUSNESS:
             mpr("You feel rather ponderous.");
+            che_handle_change(CB_PONDEROUS, 1);
             you.redraw_evasion = true;
             break;
 
@@ -1739,7 +1741,7 @@ static int _userdef_interrupt_activity( const delay_queue_item &idelay,
     {
         bool stop_run = false;
         if (clua.callfn("ch_stop_run", "M>b",
-                        (const monsters *) at.data, &stop_run))
+                        static_cast<const monsters *>(at.data), &stop_run))
         {
             if (stop_run)
                 return (true);

@@ -243,7 +243,7 @@ sort_menus = inv: true : equipped, freshness, charged
 
 # status_caption_colour        = yellow
 # classic_hud                  = true
-# mlist_min_height             = 5
+# mlist_min_height             = 4
 # msg_min_height               = 6
 # msg_max_height               = 10
 # mlist_allow_alternate_layout = true
@@ -252,6 +252,7 @@ sort_menus = inv: true : equipped, freshness, charged
 # show_gold_turns              = true
 
 # clear_messages             = true
+# show_more                  = false
 # show_inventory_weights     = true
 # item_stack_summary_minimum = 5
 # list_rotten                = false
@@ -332,6 +333,7 @@ autoinscribe = distortion:!w
 # autoinscribe = potion.*mutation:!q
 # autoinscribe = royal jell:=g
 # autoinscribe_artefacts = false
+# autoinscribe_cursed = false
 
 ##### 4-n	Macro related Options #################
 #

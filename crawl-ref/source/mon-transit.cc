@@ -252,7 +252,7 @@ bool follower::place(bool near_player)
         bool placed = false;
 
         // In certain instances (currently, falling through a shaft)
-        // try to place monster a close as possible to its previous
+        // try to place monster as close as possible to its previous
         // <x,y> coordinates.
         if (!near_player && you.level_type == LEVEL_DUNGEON
             && in_bounds(m.pos()))

@@ -554,14 +554,6 @@ static bool _load_doll_data(const char *fn, dolls_data *dolls, int max,
                     break;
                 }
             }
-#if 0
-            // Probably segfaults within the tile edit menu.
-            if (*cur >= count)
-            {
-                mprf(MSGCH_WARN, "Doll %d could not be found in '%s'.",
-                                 *cur, dollsTxt);
-            }
-#endif
         }
         else // Load up to max dolls from file.
         {
@@ -1029,6 +1021,21 @@ void DungeonRegion::pack_foreground(unsigned int bg, unsigned int fg, int x, int
         else if (mdam_flag == TILE_FLAG_MDAM_ADEAD)
             m_buf_main.add(TILE_MDAM_ALMOST_DEAD, x, y);
     }
+
+    if (fg & TILE_FLAG_DEMON)
+    {
+        unsigned int demon_flag = fg & TILE_FLAG_DEMON;
+        if (demon_flag == TILE_FLAG_DEMON_1)
+            m_buf_main.add(TILE_DEMON_NUM1, x, y);
+        else if (demon_flag == TILE_FLAG_DEMON_2)
+            m_buf_main.add(TILE_DEMON_NUM2, x, y);
+        else if (demon_flag == TILE_FLAG_DEMON_3)
+            m_buf_main.add(TILE_DEMON_NUM3, x, y);
+        else if (demon_flag == TILE_FLAG_DEMON_4)
+            m_buf_main.add(TILE_DEMON_NUM4, x, y);
+        else if (demon_flag == TILE_FLAG_DEMON_5)
+            m_buf_main.add(TILE_DEMON_NUM5, x, y);
+    }
 }
 
 void DungeonRegion::pack_cursor(cursor_type type, unsigned int tile)
@@ -1137,78 +1144,7 @@ void DungeonRegion::render()
     m_buf_main_trans.draw();
     m_buf_main.draw();
 
-    if (Options.tile_show_minihealthbar && you.hp < you.hp_max
-        || Options.tile_show_minimagicbar
-           && you.magic_points < you.max_magic_points)
-    {
-        // Tiles are 32x32 pixels; 1/32 = 0.03125.
-        // The bars are two pixels high each.
-        const float bar_height = 0.0625;
-        float healthbar_offset = 0.875;
-
-        ShapeBuffer buff;
-
-        if (Options.tile_show_minimagicbar
-            && you.magic_points < you.max_magic_points)
-        {
-            static const VColour magic(0, 0, 255, 255);
-            static const VColour magic_spent(0, 0, 0, 255);
-
-            const float magic_divider = (float) you.magic_points
-                                        / (float) you.max_magic_points;
-
-            buff.add(mx / 2,
-                     my / 2 + healthbar_offset + bar_height,
-                     mx / 2 + magic_divider,
-                     my / 2 + 1,
-                     magic);
-            buff.add(mx / 2 + magic_divider,
-                     my / 2 + healthbar_offset + bar_height,
-                     mx / 2 + 1,
-                     my / 2 + 1,
-                     magic_spent);
-        }
-        else
-        {
-            healthbar_offset += bar_height;
-        }
-
-        if (Options.tile_show_minihealthbar)
-        {
-            const float min_hp = std::max(0, you.hp);
-            const float health_divider = min_hp / (float) you.hp_max;
-
-            const int hp_percent = (you.hp * 100) / you.hp_max;
-
-            int hp_colour = GREEN;
-            for (unsigned int i = 0; i < Options.hp_colour.size(); ++i)
-                if (hp_percent <= Options.hp_colour[i].first)
-                    hp_colour = Options.hp_colour[i].second;
-
-            static const VColour healthy(0,   255, 0, 255);
-            static const VColour damaged(255, 255, 0, 255);
-            static const VColour wounded(0, 0, 0, 255);
-            static const VColour hp_spent(255,   0, 0, 255);
-
-            buff.add(mx / 2,
-                     my / 2 + healthbar_offset,
-                     mx / 2 + health_divider,
-                     my / 2 + healthbar_offset + bar_height,
-                     hp_colour == RED    ? wounded :
-                     hp_colour == YELLOW ? damaged
-                                         : healthy);
-
-
-            buff.add(mx / 2 + health_divider,
-                     my / 2 + healthbar_offset,
-                     mx / 2 + 1,
-                     my / 2 + healthbar_offset + bar_height,
-                     hp_spent);
-        }
-
-        buff.draw();
-
-    }
+    draw_minibars();
 
     if (you.berserk())
     {
@@ -1280,6 +1216,101 @@ void DungeonRegion::render()
         }
 }
 
+/**
+ * Draws miniature health and magic points bars on top of the player tile.
+ *
+ * Drawing of either is governed by options tile_show_minihealthbar and
+ * tile_show_minimagicbar. By default, both are on.
+ *
+ * Intended behaviour is to display both if either is not full. (Unless
+ * the bar is toggled off by options.) --Eino & felirx
+ */
+void DungeonRegion::draw_minibars()
+{
+    if (Options.tile_show_minihealthbar && you.hp < you.hp_max
+        || Options.tile_show_minimagicbar
+           && you.magic_points < you.max_magic_points)
+    {
+        // Tiles are 32x32 pixels; 1/32 = 0.03125.
+        // The bars are two pixels high each.
+        const float bar_height = 0.0625;
+        float healthbar_offset = 0.875;
+
+        ShapeBuffer buff;
+
+        if (!on_screen(you.pos()))
+             return;
+
+        // FIXME: to_screen_coords could be made into two versions: one
+        // that gives coords by pixel (the current one), one that gives
+        // them by grid.
+        coord_def player_on_screen;
+        to_screen_coords(you.pos(), player_on_screen);
+
+        static const float tile_width  = wx / mx;
+        static const float tile_height = wy / my;
+
+        player_on_screen.x = player_on_screen.x / tile_width;
+        player_on_screen.y = player_on_screen.y / tile_height;
+
+        if (Options.tile_show_minimagicbar && you.max_magic_points > 0)
+        {
+            static const VColour magic(0, 0, 255, 255);
+            static const VColour magic_spent(0, 0, 0, 255);
+
+            const float magic_divider = (float) you.magic_points
+                                        / (float) you.max_magic_points;
+
+            buff.add(player_on_screen.x,
+                     player_on_screen.y + healthbar_offset + bar_height,
+                     player_on_screen.x + magic_divider,
+                     player_on_screen.y + 1,
+                     magic);
+            buff.add(player_on_screen.x + magic_divider,
+                     player_on_screen.y + healthbar_offset + bar_height,
+                     player_on_screen.x + 1,
+                     player_on_screen.y + 1,
+                     magic_spent);
+        }
+        else
+            healthbar_offset += bar_height;
+
+        if (Options.tile_show_minihealthbar)
+        {
+            const float min_hp = std::max(0, you.hp);
+            const float health_divider = min_hp / (float) you.hp_max;
+
+            const int hp_percent = (you.hp * 100) / you.hp_max;
+
+            int hp_colour = GREEN;
+            for (unsigned int i = 0; i < Options.hp_colour.size(); ++i)
+                if (hp_percent <= Options.hp_colour[i].first)
+                    hp_colour = Options.hp_colour[i].second;
+
+            static const VColour healthy(0,   255, 0, 255);
+            static const VColour damaged(255, 255, 0, 255);
+            static const VColour wounded(0, 0, 0, 255);
+            static const VColour hp_spent(255,   0, 0, 255);
+
+            buff.add(player_on_screen.x,
+                     player_on_screen.y + healthbar_offset,
+                     player_on_screen.x + health_divider,
+                     player_on_screen.y + healthbar_offset + bar_height,
+                     hp_colour == RED    ? wounded :
+                     hp_colour == YELLOW ? damaged
+                                         : healthy);
+
+            buff.add(player_on_screen.x + health_divider,
+                     player_on_screen.y + healthbar_offset,
+                     player_on_screen.x + 1,
+                     player_on_screen.y + healthbar_offset + bar_height,
+                     hp_spent);
+        }
+
+        buff.draw();
+    }
+}
+
 void DungeonRegion::clear()
 {
     m_tileb.clear();
@@ -1345,7 +1376,7 @@ static int _click_travel(const coord_def &gc, MouseEvent &event)
 }
 
 // FIXME: If the player is targeted, the game asks the player to target
-// something with the mouse, then targets the player anyways and treats
+// something with the mouse, then targets the player anyway and treats
 // mouse click as if it hadn't come during targeting (moves the player
 // to the clicked cell, whatever).
 static void _add_targeting_commands(const coord_def& pos)
@@ -2142,7 +2173,7 @@ bool DungeonRegion::update_alt_text(std::string &alt)
     else
     {
         // For plain floor, output the stash description.
-        std::string stash = get_stash_desc(gc.x, gc.y);
+        const std::string stash = get_stash_desc(gc);
         if (!stash.empty())
             inf.body << "$" << stash;
     }
@@ -4204,14 +4235,8 @@ static int _get_next_species_tile()
         return TILEP_BASE_DEEP_ELF;
     case SP_DEEP_ELF:
         return TILEP_BASE_DWARF;
-    case SP_MOUNTAIN_DWARF:
-    case SP_HALFLING:
-    case SP_HILL_ORC:
-    case SP_KOBOLD:
-    case SP_MUMMY:
-    case SP_NAGA:
-    case SP_OGRE:
-        return tilep_species_to_base_tile(you.species + 1);
+    case SP_MERFOLK:
+        return TILEP_BASE_MERFOLK_WATER;
     case SP_TROLL:
         return TILEP_BASE_DRACONIAN;
     case SP_BASE_DRACONIAN:
@@ -4234,6 +4259,13 @@ static int _get_next_species_tile()
         return TILEP_BASE_DRACONIAN_WHITE;
     case SP_WHITE_DRACONIAN:
         return TILEP_BASE_CENTAUR;
+    case SP_MOUNTAIN_DWARF:
+    case SP_HALFLING:
+    case SP_HILL_ORC:
+    case SP_KOBOLD:
+    case SP_MUMMY:
+    case SP_NAGA:
+    case SP_OGRE:
     case SP_CENTAUR:
     case SP_DEMIGOD:
     case SP_SPRIGGAN:
@@ -4241,7 +4273,6 @@ static int _get_next_species_tile()
     case SP_DEMONSPAWN:
     case SP_GHOUL:
     case SP_KENKU:
-    case SP_MERFOLK:
     case SP_VAMPIRE:
         return tilep_species_to_base_tile(you.species + 1);
     case SP_DEEP_DWARF:
@@ -4308,10 +4339,10 @@ void DollEditRegion::render()
     const int max_show = 9;
 
     // Layout options (units are in 32x32 squares)
-    const int left_gutter = 2;
-    const int item_line = 2;
+    const int left_gutter    = 2;
+    const int item_line      = 2;
     const int edit_doll_line = 5;
-    const int doll_line = 8;
+    const int doll_line      = 8;
     const int info_offset =
         left_gutter + std::max(max_show, (int)NUM_MAX_DOLLS) + 1;
 
@@ -4500,7 +4531,8 @@ void DollEditRegion::render()
         m_font_buf.add("Change category    up/down                 Copy doll           Ctrl-C", VColour::white, 0.0f, start_y + height * 1);
         m_font_buf.add("Change doll        0-9, Shift + arrows     Paste copied doll   Ctrl-V", VColour::white, 0.0f, start_y + height * 2);
         m_font_buf.add("Change doll mode   m                       Randomise doll      Ctrl-R", VColour::white, 0.0f, start_y + height * 3);
-        m_font_buf.add("Quit menu          q, Escape, Ctrl-S       Toggle equipment    *", VColour::white, 0.0f, start_y + height * 4);
+        m_font_buf.add("Save menu          Escape, Ctrl-S          Toggle equipment    *", VColour::white, 0.0f, start_y + height * 4);
+        m_font_buf.add("Quit menu          q, Ctrl-Q", VColour::white, 0.0f, start_y + height * 5);
     }
 
     m_font_buf.draw();
@@ -4554,16 +4586,22 @@ void DollEditRegion::run()
 
         switch (cmd)
         {
+        case CMD_DOLL_QUIT:
+            return;
         case CMD_DOLL_RANDOMIZE:
             _create_random_doll(m_dolls[m_doll_idx]);
             break;
         case CMD_DOLL_SELECT_NEXT_DOLL:
             m_doll_idx = (m_doll_idx + 1) % NUM_MAX_DOLLS;
             update_part_idx = true;
+            if (m_mode != TILEP_MODE_LOADING)
+                m_mode = TILEP_MODE_LOADING;
             break;
         case CMD_DOLL_SELECT_PREV_DOLL:
             m_doll_idx = (m_doll_idx + NUM_MAX_DOLLS - 1) % NUM_MAX_DOLLS;
             update_part_idx = true;
+            if (m_mode != TILEP_MODE_LOADING)
+                m_mode = TILEP_MODE_LOADING;
             break;
         case CMD_DOLL_SELECT_NEXT_PART:
             m_cat_idx = (m_cat_idx + 1) % TILEP_PART_MAX;
@@ -4637,11 +4675,16 @@ void DollEditRegion::run()
                 m_doll_idx = 0;
             else if (key >= '1' && key <= '9')
                 m_doll_idx = key - '1' + 1;
+            else
+                break;
+
+            if (m_mode != TILEP_MODE_LOADING)
+                m_mode = TILEP_MODE_LOADING;
             ASSERT(m_doll_idx < NUM_MAX_DOLLS);
             break;
         }
     }
-    while (cmd != CMD_DOLL_QUIT);
+    while (cmd != CMD_DOLL_SAVE);
 
     _save_doll_data(m_mode, m_doll_idx, &m_dolls[0]);
 

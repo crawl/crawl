@@ -260,6 +260,11 @@ bool silenced(const coord_def& p)
 /////////////
 // Halos
 
+bool haloed(const coord_def& p)
+{
+    return (you.halo_contains(p));
+}
+
 bool actor::haloed() const
 {
     return (you.halo_contains(pos()));
@@ -284,11 +289,7 @@ int player::halo_radius() const
 
 int monsters::halo_radius() const
 {
-    // Angels and Daevas are haloed.
-    if (holiness() == MH_HOLY)
-        return (2);
-    else
-        return (0);
+    return (0);
 }
 
 // XXX: This might become too expensive; possibly, keep

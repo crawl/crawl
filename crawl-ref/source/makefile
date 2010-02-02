@@ -755,7 +755,9 @@ TRACK_CFLAGS = $(subst ','\'',$(CC) $(CXX) $(ALL_CFLAGS))           # (stray ' f
 
 DEPS := $(shell ls $(OBJECTS:.o=.d) 2> /dev/null)
 
+ifneq ($(DEPS),)
 -include $(DEPS)
+endif
 
 endif
 

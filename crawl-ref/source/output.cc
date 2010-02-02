@@ -673,6 +673,8 @@ static void _get_status_lights(std::vector<status_light>& out)
     if (you.duration[DUR_INVIS])
     {
         int color = _dur_colour( BLUE, dur_expiring(DUR_INVIS) );
+        if (you.backlit())
+            color = DARKGREY;
         out.push_back(status_light(color, "Invis"));
     }
 
@@ -2164,7 +2166,13 @@ std::string _status_mut_abilities()
         status.push_back(_get_expiration_string(DUR_SILENCE, "silence"));
 
     if (you.duration[DUR_INVIS])
-        status.push_back(_get_expiration_string(DUR_INVIS, "invisible"));
+    {
+        std::string status_mes = "invisible";
+        if (you.backlit())
+            status_mes = "invisible (but backlit and visible)";
+
+        status.push_back(_get_expiration_string(DUR_INVIS, status_mes.c_str()));
+    }
 
     if (you.confused())
         status.push_back("confused");
@@ -2176,7 +2184,7 @@ std::string _status_mut_abilities()
         status.push_back("mighty");
 
     if (you.duration[DUR_BRILLIANCE])
-        status.push_back("brilliance");
+        status.push_back("brilliant");
 
     if (you.duration[DUR_AGILITY])
         status.push_back("agile");
@@ -2303,7 +2311,7 @@ std::string _status_mut_abilities()
         status.push_back("held");
 
     status.push_back(magic_res_adjective(you.res_magic())
-                     + " resistant to magic");
+                     + " resistant to hostile enchantments");
 
     // character evaluates their ability to sneak around:
     status.push_back(stealth_desc(check_stealth()));

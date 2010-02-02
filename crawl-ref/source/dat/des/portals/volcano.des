@@ -34,7 +34,7 @@
 # In addition, some volcanos have extra items taken from:
 #   "Random item"
 #   "Bad items"                (see setup_loot() for the list)
-#   "Fruit"                    
+#   "Fruit"
 #
 # See setup_loot() for more information.
 #
@@ -96,17 +96,19 @@ function volcano_portal (e)
         dstorigin = "in a volcano",
         overmap = "dark tunnel",
         turns = timeout_turns,
-        floor = "floor",
         msg = messager })
     e.kfeat("O = enter_portal_vault")
+    e.tile("O = dngn_portal_volcano")
     e.kfeat("S = .")
     e.colour("O = red")
+    e.rtile("X = wall_pebble_red")
+    e.ftile("OS = floor_rough_red")
     e.tags("layout_caves")
 end
 
 function volcano_feat_descs()
     dgn.set_feature_desc_short("gate leading back to the Dungeon",
-                               "rocky tunnel")
+                               "rocky tunnel leading out of here")
     dgn.set_feature_desc_short("empty arch of ancient stone",
                                "rock-blocked tunnel")
 end
@@ -118,6 +120,8 @@ function volcano_setup (e, metal)
     setup_loot(e)
     e.kfeat("< = exit_portal_vault")
     e.kfeat("I = exit_portal_vault")
+    e.tile("< = dngn_portal_volcano")
+    e.tile("I = dngn_portal_volcano")
     e.kfeat("^ = known alarm trap")
     e.subst("L : LLL.l")
     e.subst("L = lll.")

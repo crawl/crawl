@@ -107,8 +107,12 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
         // query for location {dlb}:
         while (true)
         {
-            direction(beam, DIR_TARGET, TARG_ANY, -1, false, false, false,
-                     false, "Blink to where?");
+            direction_chooser_args args;
+            args.restricts = DIR_TARGET;
+            args.needs_path = false;
+            args.may_target_monster = false;
+            args.top_prompt = "Blink to where?";
+            direction(beam, args);
 
             if (!beam.isValid || beam.target == you.pos())
             {
@@ -769,7 +773,7 @@ static int _healing_spell(int healed, bool divine_ability,
                                       you.religion == GOD_ELYVILON ?
                                             TARG_ANY : TARG_FRIEND,
                                       LOS_RADIUS,
-                                      false, true, true, "Heal whom?");
+                                      false, true, true, "Heal", NULL);
     }
     else
     {
@@ -1327,7 +1331,7 @@ void extension(int pow)
 
 void ice_armour(int pow, bool extending)
 {
-    if (!player_light_armour())
+    if (!player_effectively_in_light_armour())
     {
         if (!extending)
             mpr("You are wearing too much armour.");

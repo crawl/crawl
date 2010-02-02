@@ -495,6 +495,20 @@ static int crawl_article_a(lua_State *ls)
     return (1);
 }
 
+static int crawl_travel_stopper(lua_State *ls)
+{
+    const char *s = luaL_checkstring(ls, 1);
+
+    if (!s)
+        return (0);
+
+    std::string stopper = s;
+
+    Options.travel_stop_message.push_back(message_filter(stopper));
+
+    return (0);
+}
+
 LUARET1(crawl_game_started, boolean, crawl_state.need_save)
 LUARET1(crawl_random2, number, random2( luaL_checkint(ls, 1) ))
 LUARET1(crawl_one_chance_in, boolean, one_chance_in( luaL_checkint(ls, 1) ))
@@ -640,6 +654,7 @@ static const struct luaL_reg crawl_clib[] =
     { "msgch_num",      crawl_msgch_num },
     { "msgch_name",     crawl_msgch_name },
     { "take_note",      crawl_take_note },
+    { "add_travel_stopper", crawl_travel_stopper },
 
     { "regex",          crawl_regex },
     { "message_filter", crawl_message_filter },
