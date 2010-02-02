@@ -2347,7 +2347,7 @@ static bool _is_option_autopickup(const item_def &item, std::string &iname)
             return Options.force_autopickup[i].second;
 
 #ifdef CLUA_BINDINGS
-    const bool res = clua.callbooleanfn(false, "ch_force_autopickup", "is",
+    bool res = clua.callbooleanfn(false, "ch_force_autopickup", "is",
                                         &item, iname.c_str());
     if (!clua.error.empty())
         mprf(MSGCH_ERROR, "ch_force_autopickup failed: %s",
@@ -2356,6 +2356,14 @@ static bool _is_option_autopickup(const item_def &item, std::string &iname)
     if (res)
         return (true);
 
+    res = clua.callbooleanfn(false, "ch_deny_autopickup", "is",
+                             &item, iname.c_str());
+    if (!clua.error.empty())
+        mprf(MSGCH_ERROR, "ch_deny_autopickup failed: %s",
+             clua.error.c_str());
+
+    if (res)
+        return (false);
 #endif
 
     return (Options.autopickups & (1L << item.base_type));

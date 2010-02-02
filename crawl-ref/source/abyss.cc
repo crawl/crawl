@@ -328,15 +328,6 @@ static void _generate_area(const coord_def& topleft,
 #endif
             }
 
-            if (one_chance_in(20000))
-            {
-                // Not a vital thing, items shouldn't hurt.
-                grd(*ri) = DNGN_ENTER_PANDEMONIUM;
-#ifdef DEBUG_ABYSS
-                mpr("Placing a Pan portal.", MSGCH_DIAGNOSTICS);
-#endif
-            }
-
             if (one_chance_in(10000))
             {
                 // purely decorative
