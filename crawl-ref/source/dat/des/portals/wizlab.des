@@ -854,8 +854,12 @@ NAME:       wizlab_borgnjor
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 LFLOORCOL:  magenta
+LFLOORTILE: floor_pebble_magenta
 COLOUR:     =c = white
+TILE:       c = wall_stone_white
+TILE:       = = wall_stone_white last_tile
 COLOUR:     n = darkgrey
+TILE:       n = dngn_transparent_wall_darkgray
 COLOUR:     " = red
 KMONS:      a = human
 KMONS:      b = slave att:neutral
@@ -885,6 +889,17 @@ KITEM:      | = ring of regeneration / ring of life protection / amulet of wardi
 KITEM:      : = randbook disc:necromancy owner:Borgnjor
 SUBST:      | = |$:
 MARKER:     + = lua:restrict_door()
+:           dgn.set_feature_desc_short("stone wall", "oddly bright stone wall")
+:           dgn.set_feature_desc_long("stone wall", "It actually seems to glow and shimmer,"
+:                       .. " as though it were filled with life force.\n")
+:           dgn.set_feature_desc_short("translucent stone wall", "black glass")
+:           dgn.set_feature_desc_long("translucent stone wall", "Opaque rather than transparent,"
+:                  .. " though still clear enough to see through. It pulsates omniously, darkly,"
+:                       .. " as though it were a warm, beating black heart.\n")
+:           dgn.set_feature_desc_short("Floor", "worn and marked floor")
+:           dgn.set_feature_desc_long("Floor", "It seems to have been worn with the passage"
+:                       .. " of many thousands of feet. There's also a strange tinge of red"
+:                       .. " to it, like the colour of old blood...\n")
 :           wizlab_setup(_G, "Borgnjor's Mortuary")
 MAP
 cccccccccccccccccccccccccccccccccccccccccccccc

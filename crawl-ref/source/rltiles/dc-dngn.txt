@@ -644,6 +644,11 @@ wall/stone_gray1
 wall/stone_gray2
 wall/stone_gray3
 
+%variation WALL_STONE_GRAY white
+%lum 0 35
+%repeat WALL_STONE_GRAY WALL_STONE_WHITE
+%resetcol
+
 wall/stone_dark0 WALL_STONE_DARK
 wall/stone_dark1
 wall/stone_dark2
@@ -797,12 +802,10 @@ wall/stone2_gray1
 wall/stone2_gray2
 wall/stone2_gray3
 
-%variation DNGN_STONE_WALL darkgrey
 wall/stone2_dark0 DNGN_STONE_DARK
 wall/stone2_dark1
 wall/stone2_dark2
 wall/stone2_dark3
-%resetcol
 
 %variation DNGN_STONE_WALL blue
 %hue 26 240
@@ -860,7 +863,22 @@ wall/stone2_brown3
 %resetcol
 
 wall/dngn_wax_wall DNGN_WAX_WALL
+
 wall/dngn_transparent_wall DNGN_TRANSPARENT_WALL
+
+%variation DNGN_TRANSPARENT_WALL white
+%desat 180
+%lum 0 35
+%repeat DNGN_TRANSPARENT_WALL DNGN_TRANSPARENT_WALL_WHITE
+%resetcol
+
+%variation DNGN_TRANSPARENT_WALL darkgray
+%desat 180
+%lum 180 -40
+%repeat DNGN_TRANSPARENT_WALL DNGN_TRANSPARENT_WALL_DARKGRAY
+%resetcol
+
+
 wall/dngn_metal_wall DNGN_METAL_WALL
 
 %hue 150 120
