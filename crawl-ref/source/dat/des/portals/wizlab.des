@@ -850,6 +850,7 @@ ENDMAP
 # TODO:
 #       * rebrand features and make pretty
 #       * tiles
+#       * screaming slaves being drained of life force!
 NAME:       wizlab_borgnjor
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
@@ -965,8 +966,8 @@ ENDMAP
 # The western half of his lab is full of abominations, including the terrible
 # "Cigotuvi's Monster".
 #
-# TODO: Finish tweaking tiles. Cigotuvi's Monster further buff?
-#
+# TODO:     * door tile is *really* ugly, fix this?
+#           * Cigotuvi's Monster needs a much bigger buff. Convert to unique?
 NAME:       wizlab_cigotuvi
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
@@ -1035,9 +1036,10 @@ TILE:       + = no_random dngn_fleshy_orifice
 COLOUR:     m = yellow
 COLOUR:     c+ = lightred
 COLOUR:     W = green
-:           dgn.set_feature_desc_short("Some shallow water", "Viscous fluid")
+:           dgn.set_feature_desc_short("Some shallow water", "Viscous spinal fluid")
 :           dgn.set_feature_desc_long("Some shallow water", "This sticky "
-:            .. "fluid seems to be secreted by the nearby walls.\n")
+:            .. "fluid seems to be secreted by the nearby walls. It looks "
+:            .. "disgustingly like spinal fluid.\n")
 :           dgn.set_feature_desc_short("stone wall", "sinewy wall")
 :           dgn.set_feature_desc_long("stone wall", "These walls look"
 :            .. " strangely organic, but incredibly tough and durable.\n")
@@ -1048,17 +1050,17 @@ COLOUR:     W = green
 :           dgn.set_feature_desc_long("Floor", "This slick floor seems to pulse"
 :            .. " to an unknown beat.\n")
 : lua_marker('+', props_marker {
-:              door_description_noun="fleshy orifice",
-:              door_berserk_verb_open="You part the %s%s",
-:              door_berserk_adjective="with a squelch!",
-:              door_berserk_verb_close="You squeeze the %s%s closed",
-:              door_noisy_verb_open="You part the %s%s with a squelch!",
-:              door_noisy_verb_close="You squeeze the %s%s closed with a squelch!",
-:              door_airborne_verb_open="You reach down and part the %s%s.",
-:              door_airborne_verb_close="You reach down and squeeze the %s%s closed.",
-:              door_verb_open="You part the %s%s.",
-:              door_verb_close="You squeeze the %s%s shut."
-:            })
+:           door_description_noun="fleshy orifice",
+:           door_berserk_verb_open="You part the %s%s",
+:           door_berserk_adjective="with a squelch!",
+:           door_berserk_verb_close="You squeeze the %s%s closed",
+:           door_noisy_verb_open="You part the %s%s with a squelch!",
+:           door_noisy_verb_close="You squeeze the %s%s closed with a squelch!",
+:           door_airborne_verb_open="You reach down and part the %s%s.",
+:           door_airborne_verb_close="You reach down and squeeze the %s%s closed.",
+:           door_verb_open="You part the %s%s.",
+:           door_verb_close="You squeeze the %s%s shut."
+:           })
 KITEM:      $ = potion of degeneration / potion of decay / \
             potion of mutation / w:3 potion of strong poison / \
             w:2 potion of poison / w:5 potion of healing / \
@@ -1116,7 +1118,10 @@ ENDMAP
 ###############################################################################
 # Iskenderun's Mystic Tower
 #
-# TODO: Fix up the tiles to make them pretty. It's really quite boring.
+# TODO: Fix up the tiles to make them pretty. It's really quite boring. I've
+#       no idea how it could be improved or made interesting, but I think that
+#       a few boring maps is fine--it means that you don't know exactly what
+#       you're going to get.
 NAME:       wizlab_iskenderun
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup patrolling
@@ -1180,7 +1185,7 @@ ENDMAP
 ###############################################################################
 # Zonguldrok's Shrine
 #
-# TODO: Tiles (trees), redescriptions.
+# TODO: Tiles (dead trees), extend redescriptions.
 NAME:       wizlab_zonguldrok
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
@@ -1301,9 +1306,11 @@ lua_marker("L", Triggerable.synchronized_markers(wizard_appear_marker))
 
 }}
 :           dgn.set_feature_desc_short("granite statue", "gravestone")
-:           dgn.set_feature_desc_long("granite statue", "A nameless grave.")
+:           dgn.set_feature_desc_long("granite statue", "A nameless grave. The question "
+:               .. "remains: is it the grave that is nameless, or the person who lies "
+:               .. "in that grave?\n")
 :           dgn.set_feature_desc_short("floor", "ground")
-:           dgn.set_feature_desc_long("floor", "It looks dead.")
+:           dgn.set_feature_desc_long("floor", "No life grows here. It is completely dead.\n")
 SUBST:      M = x
 SUBST:      D = c
 COLOUR:     W = yellow
@@ -1347,7 +1354,7 @@ ENDMAP
 ###############################################################################
 # Wucad Mu's Monastery
 #
-# TODO: Rebrand everything properly!
+# TODO: I think this is done, apart from not having "alien"-esque statue tiles.
 NAME:       wizlab_wucad
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
@@ -1566,7 +1573,8 @@ ENDMAP
 ###############################################################################
 # Chambers of the Cloud Mage
 #
-# To-do: make it look as cool in tiles.
+# TODO: Needs an "ocean of clouds" tiles, and fluffy "cotton wool" cloud tiles.
+#       Most everything else is done, except redescriptions.
 NAME:       wizlab_cloud
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
@@ -1677,6 +1685,7 @@ ENDMAP
 ###############################################################################
 # Halls of the Hellbinder (by Mu.)
 #
+# TODO: Essential redescriptions, retiling, making it more "hellish".
 NAME:       wizlab_demon
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
@@ -1878,6 +1887,7 @@ ENDMAP
 NAME:       wizlab_ozocubu
 ORIENT:     encompass
 #TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+:           wizlab_setup(_G, "Ozocubu's Refrigerator")
 MAP
 ENDMAP
 
