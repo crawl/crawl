@@ -1197,15 +1197,17 @@ ITEM:       any scroll / any potion
 ITEM:       long sword unrand:sword_of_zonguldrok
 {{
 lua_marker("G", portal_desc { grave = 1 })
-lua_marker("W", portal_desc { wizard_grave = 1 })
-
-function spawn_zombie (x, y, spec)
-    dgn.terrain_changed(x, y, "floor", false, false, false)
-    local mons = dgn.create_monster(x, y, spec)
-    return mons
-end
+lua_marker("W", portal_desc { wizard_grave = 1,
+        desc="Zonguldrok's gravestone",
+        desc_long="A gravestone. The name 'Zonguldrok' is engrave on it in golden letters.\n"})
 
 function spawn_zombies (data, triggerable, triggerer, marker, ev)
+    function spawn_zombie (x, y, spec)
+        dgn.terrain_changed(x, y, "floor", false, false, false)
+        local mons = dgn.create_monster(x, y, spec)
+        return mons
+    end
+
     if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
         return
     end
@@ -1236,6 +1238,12 @@ function killed_zombie (data, triggerable, triggerer, marker, ev)
 end
 
 function awaken_wizard (data, triggerable, triggerer, marker, ev)
+    function spawn_zombie (x, y, spec)
+        dgn.terrain_changed(x, y, "floor", false, false, false)
+        local mons = dgn.create_monster(x, y, spec)
+        return mons
+    end
+
     if data.awoke == true then
         return
     end
@@ -1296,9 +1304,6 @@ lua_marker("L", Triggerable.synchronized_markers(wizard_appear_marker))
 :           dgn.set_feature_desc_long("granite statue", "A nameless grave.")
 :           dgn.set_feature_desc_short("floor", "ground")
 :           dgn.set_feature_desc_long("floor", "It looks dead.")
-#:          dgn.set_feature_desc_short("granite statue", "Zonguldrok's gravestone")
-#:          dgn.set_feature_desc_long("granite statue", "A gravestone.  The name " ..
-#:                          "'Zonguldrok' is ingraved unto it in golden letters.")
 SUBST:      M = x
 SUBST:      D = c
 COLOUR:     W = yellow
