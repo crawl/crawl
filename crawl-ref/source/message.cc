@@ -8,7 +8,6 @@
  *
  * Maybe:
  *   - Redraw message window at same places that cause refresh?
- *   - condensing across turns?
  */
 
 #include "AppHdr.h"
@@ -196,6 +195,8 @@ glyph prefix_glyph(prefix_type p)
     return (g);
 }
 
+static bool _pre_more(bool full);
+
 class message_window
 {
     int next_line;
@@ -281,12 +282,15 @@ class message_window
         }
     }
 
+    /*
+     * Handling of full-window-more.
+     */
     void more()
     {
-        show();
-        if (crawl_state.arena)
+        if (_pre_more(true))
             return;
 
+        show();
         int last_row = crawl_view.msgsz.y;
         cgotoxy(1, last_row, GOTO_MSG);
         if (first_col_more())
@@ -493,8 +497,12 @@ public:
     {
         if (!prev_msg)
             return;
-        store_msg(prev_msg);
+        message_item msg = prev_msg;
+        // Clear prev_msg before storing it, since
+        // writing out to the message window might
+        // in turn result in a recursive flush_prev.
         prev_msg = message_item();
+        store_msg(msg);
     }
 
     // XXX: this should not need to exist
@@ -1045,16 +1053,23 @@ static void readkey_more(bool user_forced)
         set_more_autoclear(true);
 }
 
-void more(bool user_forced)
+/*
+ * more() preprocessing.
+ *
+ * @param full Whether this is a prompt caused by a full
+ *             message window.
+ * @return Whether the more prompt should be skipped.
+ */
+static bool _pre_more(bool full)
 {
     if (crawl_state.game_crashed || crawl_state.seen_hups)
-        return;
+        return true;
 
 #ifdef DEBUG_DIAGNOSTICS
     if (you.running)
     {
         mesclr();
-        return;
+        return true;
     }
 #endif
 
@@ -1062,22 +1077,30 @@ void more(bool user_forced)
     {
         delay(Options.arena_delay);
         mesclr();
-        return;
+        return true;
     }
 
     if (crawl_state.is_replaying_keys())
     {
         mesclr();
-        return;
+        return true;
     }
 
 #ifdef WIZARD
     if(luaterp_running())
     {
         mesclr();
-        return;
+        return true;
     }
 #endif
+
+    return false;
+}
+
+void more(bool user_forced)
+{
+    if (_pre_more(false))
+        return;
 
     if (crawl_state.show_more_prompt && !suppress_messages)
     {
