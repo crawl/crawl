@@ -117,9 +117,9 @@ static bool _show_bloodcovered(const coord_def& where)
     return (!is_critical_feature(feat) && !feat_is_trap(feat));
 }
 
-static bool _show_spores(const coord_def & where)
+static bool _show_mold(const coord_def & where)
 {
-    if (!is_sporecovered(where))
+    if (!is_moldy(where))
         return (false);
 
     dungeon_feature_type feat = env.grid(where);
@@ -175,8 +175,8 @@ static unsigned short _feat_colour(const coord_def &where,
     }
     else if (_show_bloodcovered(where))
         colour = RED;
-    else if (_show_spores(where))
-        colour = you.spore_colour;
+    else if (_show_mold(where))
+        colour = you.mold_colour;
     else
     {
         colour = fdef.colour;
