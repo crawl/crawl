@@ -814,7 +814,12 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_ARMOUR_MIMIC:
     case MONS_SCROLL_MIMIC:
     case MONS_POTION_MIMIC:
-        return tileidx_item(get_mimic_item(mon));
+    {
+        int ch = tileidx_item(get_mimic_item(mon));
+        if (mons_is_known_mimic(mon))
+            ch |= TILE_FLAG_ANIM_WEP;
+        return (ch);
+    }
 
     case MONS_DANCING_WEAPON:
     {
