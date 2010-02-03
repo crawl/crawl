@@ -859,12 +859,32 @@ wall/stone2_brown3
 
 wall/dngn_wax_wall DNGN_WAX_WALL
 
-wall/dngn_transparent_wall DNGN_TRANSPARENT_WALL
+# Coloured glass walls
+wall/dngn_transparent_wall DNGN_TRANSPARENT_WALL DNGN_TRANSPAREN_WALL_CYAN
 
-%variation DNGN_TRANSPARENT_WALL white
-%desat 180
-%lum 0 35
-%repeat DNGN_TRANSPARENT_WALL DNGN_TRANSPARENT_WALL_WHITE
+%variation DNGN_TRANSPARENT_WALL blue
+%hue 180 240
+%repeat DNGN_TRANSPARENT_WALL DNGN_TRANSPARENT_WALL_BLUE
+%resetcol
+
+%variation DNGN_TRANSPARENT_WALL green
+%hue 240 120
+%repeat DNGN_TRANSPARENT_WALL_BLUE DNGN_TRANSPARENT_WALL_GREEN
+%resetcol
+
+%variation DNGN_TRANSPARENT_WALL red
+%hue 240 0
+%repeat DNGN_TRANSPARENT_WALL_BLUE DNGN_TRANSPARENT_WALL_RED
+%resetcol
+
+%variation DNGN_TRANSPARENT_WALL magenta
+%hue 240 300
+%repeat DNGN_TRANSPARENT_WALL_BLUE DNGN_TRANSPARENT_WALL_MAGENTA
+%resetcol
+
+%variation DNGN_TRANSPARENT_WALL brown
+%hue 240 30
+%repeat DNGN_TRANSPARENT_WALL_BLUE DNGN_TRANSPARENT_WALL_BROWN
 %resetcol
 
 %variation DNGN_TRANSPARENT_WALL darkgray
@@ -872,6 +892,18 @@ wall/dngn_transparent_wall DNGN_TRANSPARENT_WALL
 %lum 180 -40
 %repeat DNGN_TRANSPARENT_WALL DNGN_TRANSPARENT_WALL_DARKGRAY
 %resetcol
+
+%variation DNGN_TRANSPARENT_WALL yellow
+%hue 240 60
+%repeat DNGN_TRANSPARENT_WALL_BLUE DNGN_TRANSPARENT_WALL_YELLOW
+%resetcol
+
+%variation DNGN_TRANSPARENT_WALL white
+%desat 180
+%lum 0 35
+%repeat DNGN_TRANSPARENT_WALL DNGN_TRANSPARENT_WALL_WHITE
+%resetcol
+
 
 # Coloured metal walls
 wall/dngn_metal_wall DNGN_METAL_WALL
