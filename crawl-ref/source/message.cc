@@ -1205,7 +1205,7 @@ void replay_messages(void)
                 formatted_string line;
                 prefix_type p = P_NONE;
                 if (j == parts.size() - 1 && i + 1 < msgs.size()
-                    && msgs[i].turn > msgs[i-1].turn)
+                    && msgs[i+1].turn > msgs[i].turn)
                 {
                     p = P_TURN_END;
                 }
