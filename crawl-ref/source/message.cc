@@ -883,6 +883,7 @@ int msgwin_get_line(std::string prompt, char *buf, int len,
 
 void msgwin_new_turn()
 {
+    flush_prev_message();
     msgwin.new_cmdturn(true);
 }
 
