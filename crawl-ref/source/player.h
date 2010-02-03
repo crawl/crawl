@@ -107,6 +107,7 @@ public:
   bool redraw_evasion;
 
   unsigned char flash_colour;
+  unsigned char spore_colour;
 
   unsigned char hit_points_regeneration;
   unsigned char magic_points_regeneration;

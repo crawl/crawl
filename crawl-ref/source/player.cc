@@ -5302,6 +5302,7 @@ void player::init()
 
     your_name = "";
 
+    spore_colour = LIGHTCYAN;
     banished = false;
     banished_by.clear();
 
