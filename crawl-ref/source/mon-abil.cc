@@ -41,6 +41,8 @@
 #include "viewchar.h"
 
 #include <algorithm>
+#include <queue>
+#include <set>
 
 bool ugly_thing_mutate(monsters *ugly, bool proximity)
 {
@@ -1474,10 +1476,9 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
         return;
     }
 
-    bool found_others = false;
-
-    std::vector<monsters *> candidates;
     int spore_count = 0;
+    int ballisto_count = 0;
+
     for (monster_iterator mi; mi; ++mi)
     {
         if (mi->mindex() != monster->mindex()
@@ -1485,7 +1486,7 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
 
         {
             if (mi->type == MONS_BALLISTOMYCETE)
-                candidates.push_back(*mi);
+                ballisto_count++;
             else if (mi->type == MONS_GIANT_SPORE)
                 spore_count++;
 
@@ -1493,9 +1494,42 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
 
     }
 
+    std::vector<monsters *> candidates;
+    std::queue<coord_def> fringe;
+    fringe.push(origin);
+
+    std::set<unsigned> visited;
+
+    while (!fringe.empty())
+    {
+        coord_def current = fringe.front();
+        fringe.pop();
+
+        monsters * temp = monster_at(current);
+        if (temp
+            && temp->type == MONS_BALLISTOMYCETE
+            && temp->mindex()!=monster->mindex())
+        {
+            candidates.push_back(temp);
+        }
+
+        for (adjacent_iterator adj_it(current); adj_it; ++adj_it)
+        {
+            unsigned idx = adj_it->x + adj_it->y * X_WIDTH;
+            if (in_bounds(*adj_it)
+                && is_sporecovered(*adj_it)
+                && visited.insert(idx).second)
+            {
+                fringe.push(*adj_it);
+            }
+        }
+    }
+
     if (candidates.empty())
     {
-        if (spore_count == 0 && player_kill
+        if (player_kill
+            && spore_count == 0
+            && ballisto_count ==0
             && monster->attitude == ATT_HOSTILE)
         {
             mprf("You destroyed the fungal colony, you feel a bit more experienced.");
@@ -1520,6 +1554,7 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
 
     std::random_shuffle(candidates.begin(), candidates.end());
 
+    bool found_others = false;
     int index = 0;
     for (int i=0; i<activation_count; ++i)
     {
