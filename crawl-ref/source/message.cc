@@ -863,6 +863,9 @@ void msgwin_prompt(std::string prompt)
 void msgwin_reply(std::string reply)
 {
     messages.add(message_item(_prompt + reply, MSGCH_PROMPT, 0));
+    // Make the window think we cleared after this line, to
+    // avoid extra more prompts.
+    msgwin.mesclr();
 }
 
 int msgwin_get_line(std::string prompt, char *buf, int len,
