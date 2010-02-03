@@ -970,6 +970,18 @@ wall/dngn_green_crystal_wall DNGN_GREEN_CRYSTAL_WALL DNGN_CRYSTAL DNGN_CRYSTAL_G
 wall/tree1 DNGN_TREE
 wall/tree2
 
+%variation DNGN_TREE yellow
+wall/tree1_yellow DNGN_TREE_YELLOW
+wall/tree2_yellow
+
+%variation DNGN_TREE lightred
+wall/tree1_lightred DNGN_TREE_LIGHTRED
+wall/tree2_lightred
+
+%variation DNGN_TREE red
+wall/tree1_red DNGN_TREE_RED
+wall/tree2_red
+
 ## doors
 dngn_detected_secret_door DNGN_DETECTED_SECRET_DOOR
 dngn_closed_door DNGN_CLOSED_DOOR
