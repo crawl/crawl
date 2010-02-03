@@ -164,6 +164,8 @@ static void readkey_more(bool user_forced=false);
 enum prefix_type
 {
     P_NONE,
+    P_TURN_START,
+    P_TURN_END,
     P_NEW_CMD, // new command, but no new turn
     P_NEW_TURN,
     P_MORE     // single-character more prompt
@@ -175,12 +177,17 @@ glyph prefix_glyph(prefix_type p)
     glyph g;
     switch (p)
     {
-    case P_NEW_TURN:
+    case P_TURN_START:
         g.ch = '-';
         g.col = LIGHTGRAY;
         break;
+    case P_TURN_END:
+    case P_NEW_TURN:
+        g.ch = '_';
+        g.col = LIGHTGRAY;
+        break;
     case P_NEW_CMD:
-        g.ch = '-';
+        g.ch = '_';
         g.col = DARKGRAY;
         break;
     case P_MORE:
@@ -322,10 +329,19 @@ class message_window
 
     void output_prefix(prefix_type p)
     {
+        if (!use_first_col())
+            return;
         if (p <= prompt)
             return;
         prompt = p;
-        add_item("", p, true);
+        if (next_line > 0)
+        {
+            formatted_string line;
+            line.add_glyph(prefix_glyph(prompt));
+            line += lines[next_line-1].substr(1);
+            lines[next_line-1] = line;
+        }
+        show();
     }
 
 public:
@@ -390,7 +406,6 @@ public:
         for (size_t i = 0; i < lines.size(); ++i)
             out_line(lines[i], i);
         place_cursor();
-        // TODO: maybe output a last line --more--
     }
 
     // temporary: to be overwritten with next item, e.g. new turn
@@ -398,14 +413,7 @@ public:
     void add_item(std::string text, prefix_type first_col = P_NONE,
                   bool temporary = false)
     {
-        // XXX: using empty "text" to say we're doing a temp prefix.
-        if (text.empty())
-            text = " ";  // So the line_break doesn't return empty.
-        else
-        {
-            // Overwriting old prefix.
-            prompt = P_NONE;
-        }
+        prompt = P_NONE; // reset prompt
 
         std::vector<formatted_string> newlines;
         linebreak_string2(text, out_width());
@@ -487,8 +495,6 @@ public:
     void store_msg(const message_item& msg)
     {
         prefix_type p = P_NONE;
-        if (msg.turn > msgs[-1].turn)
-            p = P_NEW_TURN;
         msgs.push_back(msg);
         msgwin.add_item(msg.with_repeats(), p, false);
     }
@@ -1200,8 +1206,11 @@ void replay_messages(void)
             {
                 formatted_string line;
                 prefix_type p = P_NONE;
-                if (j == 0 && msgs[i].turn > msgs[i-1].turn)
-                    p = P_NEW_TURN;
+                if (j == parts.size() - 1 && i + 1 < msgs.size()
+                    && msgs[i].turn > msgs[i-1].turn)
+                {
+                    p = P_TURN_END;
+                }
                 line.add_glyph(prefix_glyph(p));
                 line += parts[j];
                 hist.add_item_formatted_string(line);
