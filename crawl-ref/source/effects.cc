@@ -1341,7 +1341,6 @@ void _acquirement_determine_food(int& type_wanted, int& quantity,
         // but it's easier to just give them a potion of blood
         // class type is set elsewhere
         type_wanted = POT_BLOOD;
-        quantity = 2 + random2(4);
     }
     else if (you.religion == GOD_FEDHAS)
     {
@@ -1379,6 +1378,12 @@ void _acquirement_determine_food(int& type_wanted, int& quantity,
     else if (type_wanted == FOOD_HONEYCOMB || type_wanted == FOOD_CHUNK)
     {
         quantity += random2avg(10, 2);
+    }
+    else if (type_wanted == POT_BLOOD)
+    {
+    // this was above in the vampire block, but gets overwritten by line 1371
+    // so moving here {due}
+        quantity = 2 + random2(4);
     }
 }
 
