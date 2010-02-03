@@ -4958,7 +4958,7 @@ void tile_place_item_marker(int x, int y, int idx)
         env.tile_bg[x][y] |= TILE_FLAG_CURSOR3;
 }
 
-// Called from monster_grid() in view.cc
+// Called from show_def::_update_monster() in show.cc
 void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
 {
     if (idx == NON_MONSTER)
@@ -5013,6 +5013,7 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
 
     if (foreground)
     {
+        // Add name tags.
         env.tile_fg[ep.x][ep.y] = t;
         const monsters *mon = &menv[idx];
 
