@@ -1551,7 +1551,7 @@ COLOUR:     +<co = white
 LFLOORCOL:  lightblue
 COLOUR:     wW# = silver
 :           set_border_fill_type('open_sea')
-:           wizlab_setup(_G, wizname .. "'s Chambers")
+:           wizlab_setup(_G, "The Chambers of " .. wizname .. " the Cloud Mage")
 #           Map is ugly because border_fill_type doesn't allow for (yet)
 #           recolouring.
 MAP
@@ -1658,7 +1658,7 @@ KITEM:      B = randbook disc:summoning
 NSUBST:     | = 1:B / *:|
 :           set_random_mon_list([[imp / shadow imp / lemure / manes / quasit / white imp / ]]
 :                        .. [[ufetubus / midge / red devil / rotting devil / hairy devil / ]])
-:           wizlab_setup(_G, wizname .. "'s Lair")
+:           wizlab_setup(_G, "The Hall of " .. wizname .. " the Hellbinder")
 MAP
 cccccccccccccccccccccccccccccccccccccccccccccc
 ccccccc.cccccc...................cccccc.cccccc
