@@ -1813,7 +1813,8 @@ void bolt::fire_wall_effect()
 {
     dungeon_feature_type feat;
     // Fire only affects wax walls and trees.
-    if ((feat = grd(pos())) != DNGN_WAX_WALL && feat != DNGN_TREES)
+    if ((feat = grd(pos())) != DNGN_WAX_WALL && feat != DNGN_TREES
+        || env.markers.property_at(pos(), MAT_ANY, "veto_fire") == "veto")
     {
         finish_beam();
         return;
@@ -1873,7 +1874,8 @@ void bolt::fire_wall_effect()
 void bolt::elec_wall_effect()
 {
     const dungeon_feature_type feat = grd(pos());
-    if (feat == DNGN_TREES)
+    if (feat == DNGN_TREES
+        && env.markers.property_at(pos(), MAT_ANY, "veto_fire") != "veto")
     {
         fire_wall_effect();
         return;

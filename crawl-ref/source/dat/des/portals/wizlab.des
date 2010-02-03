@@ -653,7 +653,7 @@ SUBST:      L=l, M=m, N=n, O=o, P=p, Q=q, R=r, S=s, T=t, U=u
 #           First the round layout...
 COLOUR:     _ = darkgrey
 KFEAT:      _ = stone_wall
-TILE:       _ = wall_stone_black_marked / wall_stone_dark w:4
+TILE:       _ = wall_stone_black_marked / wall_stone_dark w:4 / wall_stone_black_marked
 SUBST:      b=., c=., d=., e=., f=., g=., h=., i=., j=., k=.
 SUBST:      l=., m=., n=., o=., p=., q=., r=., s=., t=., u=.
 SUBST:      B=., C=., D=., E=., F=., G=., H=., I=., J=., K=.
@@ -747,7 +747,7 @@ KITEM:      | = superb_item
 #           Intentionally colouring the floor glyphs of the central room only.
 #           The squares beneath the boxes are to remain uncoloured.
 COLOUR:     ^ = darkgrey
-TILE:       ^ = wall_stone_black_marked / wall_stone_dark w:4
+TILE:       ^ = wall_stone_black_marked / wall_stone_dark w:4 / wall_stone_black_marked
 COLOUR:     = = yellow
 TILE:       = = dngn_stone_wall_yellow last_tile
 KFEAT:      ^ = stone_wall
@@ -1372,6 +1372,8 @@ ITEM:       potion of experience, manual of fighting / manual of armour / manual
             intelligence
 LFLOORCOL:  white
 {{
+dgn.persist.wucad_mu_died = false
+
 local function msgfn (data, triggerable, triggerer, marker, ev)
   if data.trig == true then
     return
@@ -1381,32 +1383,36 @@ local function msgfn (data, triggerable, triggerer, marker, ev)
     return
   end
 
+  if dgn.persist.wucad_mu_died == true then
+    return
+  end
+
   if data.spot == 1 then
-    crawl.mpr("Strange, shadowy figures dance through the air in front of you.")
+    crawl.mpr("Strange, shadowy figures dance through the air in front of you.", "talk_visual")
     data.trig = true
   elseif data.spot == 2 then
-    crawl.mpr("This room is filled with shadowy figures, quietly meditating.")
+    crawl.mpr("This room is filled with shadowy figures, quietly meditating.", "talk_visual")
     data.trig = true
   elseif data.spot == 3 then
-    crawl.mpr("Here, spectral monks perform complicated, martial routines; they fade quickly.")
+    crawl.mpr("Here, spectral monks perform complicated, martial routines; they fade quickly.", "talk_visual")
     data.trig = true
   elseif data.spot == 4 then
     if you.silenced() then
       return
     end
-    crawl.mpr("Faint laughter comes from somewhere. Too faint to be real.")
+    crawl.mpr("Faint laughter comes from somewhere. Too faint to be real.", "talk_visual")
     data.trig = true
   elseif data.spot == 5 then
     if you.silenced() then
       return
     end
-    crawl.mpr("There is a faint scream of pain from a crouched figure. This too fades quickly.")
+    crawl.mpr("There is a faint scream of pain from a crouched figure. This too fades quickly.", "talk_visual")
     data.trig = true
   elseif data.spot == 6 then
-    crawl.mpr("Grey monks gather around the fountain. They do not speak, nor look at each other.")
+    crawl.mpr("Grey monks gather around the fountain. They do not speak, nor look at each other.", "talk_visual")
     data.trig = true
   elseif data.spot == 7 then
-    crawl.mpr("A figure sits in silent meditation. It spots you, gestures wildly, and disappears.")
+    crawl.mpr("A figure sits in silent meditation. It spots you, gestures wildly, and disappears.", "talk_visual")
     data.trig = true
   end
 end
@@ -1427,6 +1433,10 @@ lua_marker('7', trigfn(7))
 
 local function summon_monks (data, triggerable, triggerer, marker, ev)
   if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
+    return
+  end
+
+  if dgn.persist.wucad_mu_died == true then
     return
   end
 
@@ -1452,23 +1462,66 @@ local function summon_monks (data, triggerable, triggerer, marker, ev)
   crawl.redraw_view()
 
   if count == 1 then
-    crawl.mpr("One of the shadowy figures appears more solid!")
+    crawl.mpr("One of the shadowy figures appears more solid!", "warning")
   elseif count > 1 then
-    crawl.mpr("Shadows coalesce into solid form.")
+    crawl.mpr("Shadows coalesce into solid form.", "warning")
   end
 end
 
 local summon_marker = TriggerableFunction:new ({ func=summon_monks,
     repeated=true })
 
-summon_marker:add_triggerer(DgnTriggerer:new {type="turn", delay_min=50,
-    delay_max=290 })
+summon_marker:add_triggerer(DgnTriggerer:new {type="turn", delay_min=150,
+    delay_max=400 })
+
+local function wucad_died (data, triggerable, triggerer, marker, ev)
+  dgn.persist.wucad_mu_died = true
+  crawl.mpr("The shadows inhabiting this place fade forever.", "talk_visual")
+end
+
+local wucad_marker = TriggerableFunction:new ({ func=wucad_died,
+    repeated=false })
+
+wucad_marker:add_triggerer(DgnTriggerer:new {type="monster_dies", 
+    target="Statue of Wucad Mu"})
 
 lua_marker('A', summon_marker)
+lua_marker('A', wucad_marker)
 
 }}
+MARKER:     G = lua:props_marker {veto_fragmentation="veto", veto_disintegrate="veto", \
+                                  veto_shatter="veto" }
+MARKER:     = = lua:props_marker {veto_fragmentation="veto", veto_disintegrate="veto", \
+                                  veto_shatter="veto" }
+MARKER:     + = lua:props_marker {veto_fragmentation="veto", veto_disintegrate="veto", \
+                                  veto_shatter="veto" }
+MARKER:     ' = lua:props_marker {veto_fragmentation="veto", veto_disintegrate="veto", \
+                                  veto_shatter="veto" }
+MARKER:     c = lua:props_marker {veto_fragmentation="veto", veto_disintegrate="veto", \
+                                  veto_shatter="veto" }
+MARKER:     t = lua:props_marker {veto_fragmentation="veto", veto_disintegrate="veto", \
+                                  veto_shatter="veto", veto_fire="veto" }
 :           wizlab_setup(_G, "Wucad Mu's Monastery")
 :           set_border_fill_type("trees")
+:           set_random_mon_list("shadow / phantom w:1 / flayed ghost w:1 / hungry ghost w:1")
+:           dgn.set_feature_desc_short("Trees", "autumnal tree")
+:           dgn.set_feature_desc_long("Trees", "These trees, large as they are, appear to be "
+:               .. "permanently locked in an autumnal moment: leaves, coloured red and gold, "
+:               .. "fall from branches and float gracefully to the floor. Before they even "
+:               .. "reach the ground, however, a shadow passes, and when the shimmer is gone, "
+:               .. "the leaves are once more on the branch, ready to fall again.\n")
+:           dgn.set_feature_desc_short("stone wall", "crumbled stone wall")
+:           dgn.set_feature_desc_long("stone wall", "These walls, though they have fallen "
+:               .. "into disrepair, appear as locked in time as the trees, ready to collapse, "
+:               .. "but utterly unable to.\n")
+:           dgn.set_feature_desc_short("granite statue", "strange statue")
+:           dgn.set_feature_desc_long("granite statue", "The features of this statue are strange "
+:               .. "and alien. Is it because the statue is worn and tarnished that it has become "
+:               .. "so unrecognisable? Or is it that the subject was something demonic and evil?\n")
+:           dgn.set_feature_desc_short("Floor", "timeless floor")
+:           dgn.set_feature_desc_long("Floor", "Though a thousand feet may have trod these floors, "
+:               .. "they appear timeless and indestructible.\n")
+
 MAP
 tttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttt

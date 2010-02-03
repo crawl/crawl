@@ -188,6 +188,9 @@ static void _spread_fire(const cloud_struct &cloud)
         // every neighbouring square gets a separate roll
         if (grd(*ai) == DNGN_TREES && one_chance_in(20))
         {
+            if (env.markers.property_at(*ai, MAT_ANY, "veto_fire") == "veto")
+                continue;
+
             if (you.see_cell(*ai))
                 mpr("The forest fire spreads!");
             grd(*ai) = dgn_tree_base_feature_at(*ai);
