@@ -795,28 +795,41 @@ bool tile_list_processor::write_data()
         std::string start_val = " = ";
         start_val += m_start_value;
 
+        std::string old_enum_name = "";
+        int count = 0;
         for (unsigned int i = 0; i < m_page.m_tiles.size(); i++)
         {
             const std::string &parts_ctg = m_page.m_tiles[i]->parts_ctg();
-            int enumcount = m_page.m_tiles[i]->enumcount();
+            const int enumcount = m_page.m_tiles[i]->enumcount();
 
-            std::string full_enum;
             if (enumcount == 0)
             {
-                fprintf(fp, "    %s_%s_FILLER_%d%s,\n", m_prefix.c_str(),
-                        ucname.c_str(), i, start_val.c_str());
+                if (old_enum_name.empty())
+                {
+                    fprintf(fp, "    %s_%s_FILLER_%d%s,\n", m_prefix.c_str(),
+                            ucname.c_str(), i, start_val.c_str());
+                }
+                else
+                {
+                    fprintf(fp, "    %s_%s_%d%s,\n", m_prefix.c_str(),
+                            old_enum_name.c_str(), ++count, start_val.c_str());
+                }
             }
             else if (parts_ctg.empty())
             {
                 const std::string &enumname = m_page.m_tiles[i]->enumname(0);
                 fprintf(fp, "    %s_%s%s,\n", m_prefix.c_str(),
                         enumname.c_str(), start_val.c_str());
+                old_enum_name = enumname;
+                count = 0;
             }
             else
             {
                 const std::string &enumname = m_page.m_tiles[i]->enumname(0);
                 fprintf(fp, "    %s_%s_%s%s,\n", m_prefix.c_str(),
                         parts_ctg.c_str(), enumname.c_str(), start_val.c_str());
+                old_enum_name = enumname;
+                count = 0;
             }
 
             for (int c = 1; c < enumcount; ++c)
@@ -945,16 +958,27 @@ bool tile_list_processor::write_data()
 
         fprintf(fp, "const char *_tile_%s_name[%s - %s] =\n{\n",
                 lcname.c_str(), max.c_str(), m_start_value.c_str());
+
+        std::string old_enum_name = "";
+        int count = 0;
         for (unsigned int i = 0; i < m_page.m_tiles.size(); i++)
         {
             if (m_page.m_tiles[i]->enumcount() == 0)
             {
-                fprintf(fp, "    \"%s_FILLER_%d\",\n", ucname.c_str(), i);
+                if (old_enum_name.empty())
+                    fprintf(fp, "    \"%s_FILLER_%d\",\n", ucname.c_str(), i);
+                else
+                {
+                    fprintf(fp, "    \"%s_%d\",\n", old_enum_name.c_str(),
+                            ++count);
+                }
             }
             else
             {
                 const std::string &enumname = m_page.m_tiles[i]->enumname(0);
                 fprintf(fp, "    \"%s\",\n", enumname.c_str());
+                old_enum_name = enumname;
+                count = 0;
             }
         }
         fprintf(fp, "};\n\n");

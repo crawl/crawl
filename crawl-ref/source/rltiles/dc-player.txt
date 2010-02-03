@@ -363,11 +363,11 @@ gimli GIMLI
 legolas LEGOLAS
 merry MERRY
 pipin PIPIN
-gil-galad
-isildur
+gil-galad GILGALAD
+isildur ISILDUR
 pj PJ
 sam SAM
-vanhel1
+vanhel1 VANHEL
 
 maxwell MAXWELL
 lears_chain_mail LEARS_CHAIN_MAIL
@@ -696,7 +696,7 @@ shield_long_cross SHIELD_LONG_CROSS
 shield_shaman SHIELD_SHAMAN
 shield_of_resistance SHIELD_OF_RESISTANCE
 shield_of_ignorance SHIELD_OF_IGNORANCE
-gil-galad
+gil-galad SHIELD_GILGALAD
 
 ## books
 %sdir player/hand2/misc
@@ -801,20 +801,22 @@ cap_blue CAP_BLUE
 bandana_ybrown BANDANA_YBROWN
 hat_black HAT_BLACK
 gandalf GANDALF
-crown_gold
-cap_black1
-clown1
+crown_gold1 CROWN
+crown_gold2
+crown_gold3
+cap_black1 CAP_BLACK
+clown1 CLOWN
 feather_green FEATHER_GREEN
 feather_red FEATHER_RED
 feather_blue FEATHER_BLUE
 feather_yellow FEATHER_YELLOW
 feather_white FEATHER_WHITE
-band_white
+band_white HEADBAND
 band_red
 band_yellow
 band_blue
 band_magenta
-taiso_blue
+taiso_blue TAISO
 taiso_magenta
 taiso_yellow
 taiso_red
@@ -844,6 +846,9 @@ helm_green HELM_GREEN
 cheek_red
 iron_red IRON_RED
 blue_horn_gold BLUE_HORN_GOLD
+viking_brown1 VIKING
+viking_brown2
+viking_gold
 hood_white WHITE
 
 yellow_wing YELLOW_WING
