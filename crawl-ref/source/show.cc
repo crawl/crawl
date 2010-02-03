@@ -324,7 +324,12 @@ void show_def::_update_monster(const monsters* mons)
     const coord_def e = grid2show(pos);
 
     if (mons_is_unknown_mimic(mons))
+    {
+#ifdef USE_TILE
+        tile_place_monster(mons->pos().x, mons->pos().y, mons->mindex(), true);
+#endif
         return;
+    }
 
     if (!mons->visible_to(&you))
     {
