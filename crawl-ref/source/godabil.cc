@@ -1454,7 +1454,7 @@ static int _slouch_monsters(coord_def where, int pow, int, actor* agent)
 
 int cheibriados_slouch(int pow)
 {
-    return (apply_area_visible(_slouch_monsters, pow));
+    return (apply_area_visible(_slouch_monsters, pow, false, &you));
 }
 
 ////////////////////////////////////////////////////////////////////////////
