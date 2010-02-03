@@ -43,6 +43,8 @@ feature_property_type str_to_fprop(const std::string &str)
         return (FPROP_NO_TELE_INTO);
     if (str == "no_tide")
         return (FPROP_NO_TIDE);
+    if (str == "no_submerge")
+        return (FPROP_NO_SUBMERGE);
 
     return (FPROP_NONE);
 }

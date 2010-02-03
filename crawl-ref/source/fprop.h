@@ -19,7 +19,8 @@ enum feature_property_type
     FPROP_NO_TELE_INTO  = FPROP_NO_RTELE_INTO | FPROP_NO_CTELE_INTO,
 
     // Squares that the tide should not affect.
-    FPROP_NO_TIDE       = (1 << 10)
+    FPROP_NO_TIDE       = (1 << 10),
+    FPROP_NO_SUBMERGE   = (1 << 11)
 };
 
 
