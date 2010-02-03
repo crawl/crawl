@@ -176,7 +176,7 @@ static unsigned short _feat_colour(const coord_def &where,
     else if (_show_bloodcovered(where))
         colour = RED;
     else if (_show_spores(where))
-        colour = LIGHTCYAN;
+        colour = you.spore_colour;
     else
     {
         colour = fdef.colour;

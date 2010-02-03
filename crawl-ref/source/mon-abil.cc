@@ -29,6 +29,7 @@
 #include "mon-speak.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
+#include "options.h"
 #include "random.h"
 #include "spl-mis.h"
 #include "spl-util.h"
@@ -1465,6 +1466,25 @@ void ballisto_on_move(monsters * monster, const coord_def & position)
     }
 }
 
+struct position_node
+{
+    position_node()
+    {
+        pos.x=0;
+        pos.y=0;
+        last = NULL;
+    }
+
+    coord_def pos;
+    const position_node * last;
+    bool operator < (const position_node & right) const
+    {
+        unsigned idx = pos.x + pos.y * X_WIDTH;
+        unsigned other_idx = right.pos.x + right.pos.y * X_WIDTH;
+        return  idx < other_idx;
+    }
+};
+
 // If 'monster' is a ballistomycete or spore activate some number of
 // ballistomycetes on the level.
 void activate_ballistomycetes(monsters * monster, const coord_def & origin,
@@ -1494,33 +1514,42 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
 
     }
 
-    std::vector<monsters *> candidates;
-    std::queue<coord_def> fringe;
-    fringe.push(origin);
+    position_node temp_node;
+    temp_node.pos = origin;
+    temp_node.last = NULL;
 
-    std::set<unsigned> visited;
+    std::set<position_node> visited;
+    std::vector<std::set<position_node>::iterator > candidates;
+    std::queue<std::set<position_node>::iterator > fringe;
+
+    std::set<position_node>::iterator current = visited.insert(temp_node).first;
+    fringe.push(current);
 
     while (!fringe.empty())
     {
-        coord_def current = fringe.front();
+        current = fringe.front();
         fringe.pop();
 
-        monsters * temp = monster_at(current);
-        if (temp
-            && temp->type == MONS_BALLISTOMYCETE
-            && temp->mindex()!=monster->mindex())
+        monsters * mons = monster_at(current->pos);
+        if (mons
+            && mons ->type == MONS_BALLISTOMYCETE
+            && mons->mindex()!=monster->mindex())
         {
-            candidates.push_back(temp);
+            candidates.push_back(current);
         }
 
-        for (adjacent_iterator adj_it(current); adj_it; ++adj_it)
+        for (adjacent_iterator adj_it(current->pos); adj_it; ++adj_it)
         {
-            unsigned idx = adj_it->x + adj_it->y * X_WIDTH;
             if (in_bounds(*adj_it)
-                && is_sporecovered(*adj_it)
-                && visited.insert(idx).second)
+                && is_sporecovered(*adj_it))
             {
-                fringe.push(*adj_it);
+                temp_node.pos = *adj_it;
+                temp_node.last = &(*current);
+
+                std::pair<std::set<position_node>::iterator, bool > res;
+                res = visited.insert(temp_node);
+                if (res.second)
+                    fringe.push(res.first);
             }
         }
     }
@@ -1554,16 +1583,17 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
 
     std::random_shuffle(candidates.begin(), candidates.end());
 
-    bool found_others = false;
     int index = 0;
+    you.spore_colour = LIGHTRED;
+
+    bool draw = false;
     for (int i=0; i<activation_count; ++i)
     {
         index = i % candidates.size();
 
-        monsters * spawner = candidates[index];
+        monsters * spawner = monster_at(candidates[index]->pos);
 
         spawner->number++;
-        found_others = true;
 
         // Change color and start the spore production timer if we
         // are moving from 0 to 1.
@@ -1574,8 +1604,33 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
             spawner->del_ench(ENCH_SPORE_PRODUCTION, false);
             spawner->add_ench(ENCH_SPORE_PRODUCTION);
         }
+
+        const position_node * thread = &(*candidates[index]);
+        while(thread)
+        {
+            if (you.see_cell(thread->pos))
+            {
+                view_update_at(thread->pos);
+                draw = true;
+            }
+
+            thread = thread->last;
+        }
     }
 
-    if (you.see_cell(origin) && found_others)
-        mprf("You feel the ballistomycetes will spawn a replacement spore.");
+    if (draw)
+    {
+        viewwindow(false, false);
+        int sp_delay = 150;
+
+        // Scale delay to match change in arena_delay.
+        if (crawl_state.arena)
+        {
+            sp_delay *= Options.arena_delay;
+            sp_delay /= 600;
+        }
+
+        delay(sp_delay);
+
+    }
 }
