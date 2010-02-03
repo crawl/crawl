@@ -653,7 +653,7 @@ SUBST:      L=l, M=m, N=n, O=o, P=p, Q=q, R=r, S=s, T=t, U=u
 #           First the round layout...
 COLOUR:     _ = darkgrey
 KFEAT:      _ = stone_wall
-TILE:       _ = wall_stone_black_marked
+TILE:       _ = wall_stone_black_marked / wall_stone_dark w:4
 SUBST:      b=., c=., d=., e=., f=., g=., h=., i=., j=., k=.
 SUBST:      l=., m=., n=., o=., p=., q=., r=., s=., t=., u=.
 SUBST:      B=., C=., D=., E=., F=., G=., H=., I=., J=., K=.
@@ -747,7 +747,7 @@ KITEM:      | = superb_item
 #           Intentionally colouring the floor glyphs of the central room only.
 #           The squares beneath the boxes are to remain uncoloured.
 COLOUR:     ^ = darkgrey
-TILE:       ^ = wall_stone_black_marked
+TILE:       ^ = wall_stone_black_marked / wall_stone_dark w:4
 COLOUR:     = = yellow
 TILE:       = = dngn_stone_wall_yellow last_tile
 KFEAT:      ^ = stone_wall
