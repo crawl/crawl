@@ -168,7 +168,8 @@ enum prefix_type
     P_TURN_END,
     P_NEW_CMD, // new command, but no new turn
     P_NEW_TURN,
-    P_MORE     // single-character more prompt
+    P_FULL_MORE,   // single-character more prompt (full window)
+    P_OTHER_MORE   // the other type of --more-- prompt
 };
 
 // Could also go with coloured glyphs.
@@ -190,9 +191,13 @@ glyph prefix_glyph(prefix_type p)
         g.ch = '_';
         g.col = DARKGRAY;
         break;
-    case P_MORE:
+    case P_FULL_MORE:
         g.ch = '+';
         g.col = channel_to_colour(MSGCH_PROMPT);
+        break;
+    case P_OTHER_MORE:
+        g.ch = '+';
+        g.col = LIGHTRED;
         break;
     default:
         g.ch = ' ';
@@ -202,7 +207,7 @@ glyph prefix_glyph(prefix_type p)
     return (g);
 }
 
-static bool _pre_more(bool full);
+static bool _pre_more();
 
 class message_window
 {
@@ -283,40 +288,9 @@ class message_window
         }
         else
         {
-            more();
+            more(true);
             clear();
             return (height()); // XXX: unused; perhaps height()-1 ?
-        }
-    }
-
-    /*
-     * Handling of full-window-more.
-     */
-    void more()
-    {
-        if (_pre_more(true))
-            return;
-
-        show();
-        int last_row = crawl_view.msgsz.y;
-        cgotoxy(1, last_row, GOTO_MSG);
-        if (first_col_more())
-        {
-            cursor_control con(true);
-            glyph g = prefix_glyph(P_MORE);
-            formatted_string f;
-            f.add_glyph(g);
-            f.display();
-            // Move cursor back for nicer display.
-            cgotoxy(1, last_row, GOTO_MSG);
-            // Need to read_key while cursor_control in scope.
-            readkey_more();
-        }
-        else
-        {
-            textcolor(channel_to_colour(MSGCH_PROMPT));
-            cprintf("--more--");
-            readkey_more();
         }
     }
 
@@ -448,6 +422,37 @@ public:
     bool any_messages()
     {
         return (next_line > mesclr_line);
+    }
+
+    /*
+     * Handling of more prompts (both types).
+     */
+    void more(bool full, bool user=false)
+    {
+        if (_pre_more())
+            return;
+
+        show();
+        int last_row = crawl_view.msgsz.y;
+        cgotoxy(1, last_row, GOTO_MSG);
+        if (first_col_more())
+        {
+            glyph g = prefix_glyph(full ? P_FULL_MORE : P_OTHER_MORE);
+            formatted_string f;
+            f.add_glyph(g);
+            f.display();
+            // Move cursor back for nicer display.
+            cgotoxy(1, last_row, GOTO_MSG);
+            // Need to read_key while cursor_control in scope.
+            cursor_control con(true);
+            readkey_more();
+        }
+        else
+        {
+            textcolor(channel_to_colour(MSGCH_PROMPT));
+            cprintf("--more--");
+            readkey_more(user);
+        }
     }
 };
 
@@ -834,7 +839,7 @@ void mpr(std::string text, msg_channel_type channel, int param)
     if (check_more(formatted_string::parse_string(text).tostring(),
                    channel))
     {
-        more();
+        more(true);
     }
 }
 
@@ -1048,9 +1053,7 @@ static void readkey_more(bool user_forced)
     int keypress;
     mouse_control mc(MOUSE_MODE_MORE);
     do
-    {
         keypress = c_getch();
-    }
     while (keypress != ' ' && keypress != '\r' && keypress != '\n'
            && keypress != ESCAPE && keypress != -1
            && (user_forced || keypress != CK_MOUSE_CLICK));
@@ -1062,11 +1065,9 @@ static void readkey_more(bool user_forced)
 /*
  * more() preprocessing.
  *
- * @param full Whether this is a prompt caused by a full
- *             message window.
  * @return Whether the more prompt should be skipped.
  */
-static bool _pre_more(bool full)
+static bool _pre_more()
 {
     if (crawl_state.game_crashed || crawl_state.seen_hups)
         return true;
@@ -1100,25 +1101,19 @@ static bool _pre_more(bool full)
     }
 #endif
 
+    if (!crawl_state.show_more_prompt || suppress_messages)
+    {
+        mesclr();
+        return true;
+    }
+
     return false;
 }
 
 void more(bool user_forced)
 {
-    if (_pre_more(false))
-        return;
-
-    if (crawl_state.show_more_prompt && !suppress_messages)
-    {
-        // Really a prompt, but writing to MSGCH_PROMPT clears
-        // autoclear_more.
-        mpr("--more--");
-        // And since it's not a prompt, we need to flush manually.
-        flush_prev_message();
-        readkey_more(user_forced);
-    }
-
-    mesclr();
+    flush_prev_message();
+    msgwin.more(false, user_forced);
 }
 
 static bool is_channel_dumpworthy(msg_channel_type channel)
