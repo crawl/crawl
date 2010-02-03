@@ -414,7 +414,7 @@ public:
         mesclr_line = next_line;
     }
 
-    void new_cmd(bool new_turn)
+    void new_cmdturn(bool new_turn)
     {
         output_prefix(new_turn ? P_NEW_TURN : P_NEW_CMD);
     }
@@ -791,6 +791,8 @@ static void debug_channel_arena(msg_channel_type channel)
     }
 }
 
+static long _last_msg_turn = -1; // Turn of last message.
+
 void mpr(std::string text, msg_channel_type channel, int param)
 {
     if (_msg_dump_file != NULL)
@@ -828,7 +830,9 @@ void mpr(std::string text, msg_channel_type channel, int param)
 
     std::string col = colour_to_str(colour_msg(colour));
     text = "<" + col + ">" + text + "</" + col + ">"; // XXX
-    messages.add(message_item(text, channel, param));
+    message_item msg = message_item(text, channel, param);
+    messages.add(msg);
+    _last_msg_turn = msg.turn;
 
     if (channel == MSGCH_ERROR)
         interrupt_activity(AI_FORCE_INTERRUPT);
@@ -877,14 +881,16 @@ int msgwin_get_line(std::string prompt, char *buf, int len,
     return ret;
 }
 
-static long _last_turn = -1;
+void msgwin_new_turn()
+{
+    msgwin.new_cmdturn(true);
+}
 
 void msgwin_new_cmd()
 {
     flush_prev_message();
-    bool new_turn = (you.num_turns > _last_turn);
-    _last_turn = you.num_turns;
-    msgwin.new_cmd(new_turn);
+    bool new_turn = (you.num_turns > _last_msg_turn);
+    msgwin.new_cmdturn(new_turn);
 }
 
 // mpr() an arbitrarily long list of strings without truncation or risk

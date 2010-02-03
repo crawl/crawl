@@ -70,6 +70,8 @@ template<int> static int msgwin_get_line_autohist_temp(std::string prompt,
 // Tell the message window that the game is about to read a new
 // command from the player.
 void msgwin_new_cmd();
+// Tell the message window that a new turn has started.
+void msgwin_new_turn();
 
 class no_messages
 {
