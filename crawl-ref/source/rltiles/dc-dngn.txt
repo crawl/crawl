@@ -873,13 +873,59 @@ wall/dngn_transparent_wall DNGN_TRANSPARENT_WALL
 %repeat DNGN_TRANSPARENT_WALL DNGN_TRANSPARENT_WALL_DARKGRAY
 %resetcol
 
+# Coloured metal walls
 wall/dngn_metal_wall DNGN_METAL_WALL
 
+%variation DNGN_METAL_WALL blue
+%hue 26 240
+%hue 27 240
+%hue 28 240
+%hue 29 240
+%hue 30 240
+%hue 31 240
+%hue 32 240
+%hue 33 240
+wall/dngn_metal_wall_brown DNGN_METAL_WALL_BLUE
+%resetcol
+
+%variation DNGN_METAL_WALL green
+%hue 240 120
+%repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_GREEN
+%resetcol
+
+%variation DNGN_METAL_WALL cyan
+%hue 240 180
+%repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_CYAN
+%resetcol
+
+%variation DNGN_METAL_WALL red
+%hue 240 0
+%repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_RED
+%resetcol
+
 %variation DNGN_METAL_WALL magenta
-%hue 28 300
-%hue 29 300
-%hue 30 300
-wall/dngn_metal_wall_brown DNGN_METAL_WALL_MAGENTA
+%hue 240 300
+%repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_MAGENTA
+%resetcol
+
+%variation DNGN_METAL_WALL brown
+%hue 240 30
+%repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_BROWN
+%resetcol
+
+%variation DNGN_METAL_WALL darkgray
+%lum 0 -20
+%repeat DNGN_METAL_WALL DNGN_METAL_WALL_DARKGRAY
+%resetcol
+
+%variation DNGN_METAL_WALL yellow
+%hue 240 60
+%repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_YELLOW
+%resetcol
+
+%variation DNGN_METAL_WALL white
+%lum 0 30
+%repeat DNGN_METAL_WALL DNGN_METAL_WALL_WHITE
 %resetcol
 
 %hue 150 120
