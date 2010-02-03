@@ -722,7 +722,7 @@ static void _dgn_check_terrain_blood(const coord_def &pos,
         if (old_feat != DNGN_FLOOR && !feat_is_solid(old_feat))
         {
             env.pgrid(pos) &= ~(FPROP_BLOODY);
-            env.pgrid(pos) &= ~(FPROP_SPORES);
+            env.pgrid(pos) &= ~(FPROP_MOLD);
         }
     }
     else
@@ -732,7 +732,7 @@ static void _dgn_check_terrain_blood(const coord_def &pos,
             || is_critical_feature(new_feat))
         {
             env.pgrid(pos) &= ~(FPROP_BLOODY);
-            env.pgrid(pos) &= ~(FPROP_SPORES);
+            env.pgrid(pos) &= ~(FPROP_MOLD);
         }
     }
 }

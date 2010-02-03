@@ -284,7 +284,7 @@ std::string raw_feature_description(dungeon_feature_type grid,
 std::string feature_description(dungeon_feature_type grid,
                                 trap_type trap = NUM_TRAPS, bool bloody = false,
                                 description_level_type dtype = DESC_CAP_A,
-                                bool add_stop = true, bool base_desc = false, bool spores = false);
+                                bool add_stop = true, bool base_desc = false, bool mold = false);
 
 void set_feature_desc_short(dungeon_feature_type grid,
                             const std::string &desc);

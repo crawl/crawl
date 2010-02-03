@@ -1793,8 +1793,8 @@ void bolt::digging_wall_effect()
         // Blood does not transfer onto floor.
         if (is_bloodcovered(pos()))
             env.pgrid(pos()) &= ~(FPROP_BLOODY);
-        if (is_sporecovered(pos()))
-            env.pgrid(pos()) &= ~(FPROP_SPORES);
+        if (is_moldy(pos()))
+            env.pgrid(pos()) &= ~(FPROP_MOLD);
 
         if (!msg_generated)
         {
@@ -1901,8 +1901,8 @@ void bolt::nuke_wall_effect()
         // Blood does not transfer onto floor.
         if (is_bloodcovered(pos()))
             env.pgrid(pos()) &= ~(FPROP_BLOODY);
-        if (is_sporecovered(pos()))
-            env.pgrid(pos()) &= ~(FPROP_SPORES);
+        if (is_moldy(pos()))
+            env.pgrid(pos()) &= ~(FPROP_MOLD);
 
         grd(pos()) = DNGN_FLOOR;
         if (player_can_hear(pos()))
@@ -1918,8 +1918,8 @@ void bolt::nuke_wall_effect()
         // Blood does not transfer onto floor.
         if (is_bloodcovered(pos()))
             env.pgrid(pos()) &= ~(FPROP_BLOODY);
-        if (is_sporecovered(pos()))
-            env.pgrid(pos()) &= ~(FPROP_SPORES);
+        if (is_moldy(pos()))
+            env.pgrid(pos()) &= ~(FPROP_MOLD);
 
         if (player_can_hear(pos()))
         {
@@ -3274,7 +3274,7 @@ void bolt::affect_ground()
         if (env.grid(pos()) >= DNGN_FLOOR_MIN
             && env.grid(pos())<= DNGN_FLOOR_MAX)
         {
-            env.pgrid(pos()) |= FPROP_SPORES;
+            env.pgrid(pos()) |= FPROP_MOLD;
         }
 
         if(x_chance_in_y(2, 21)

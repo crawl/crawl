@@ -1431,7 +1431,7 @@ void ballisto_on_move(monsters * monster, const coord_def & position)
         dungeon_feature_type ftype = env.grid(monster->pos());
 
         if (ftype >= DNGN_FLOOR_MIN && ftype <= DNGN_FLOOR_MAX)
-            env.pgrid(monster->pos()) |= FPROP_SPORES;
+            env.pgrid(monster->pos()) |= FPROP_MOLD;
 
         // The number field is used as a cooldown timer for this behavior.
         if (monster->number <= 0)
@@ -1541,7 +1541,7 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
         for (adjacent_iterator adj_it(current->pos); adj_it; ++adj_it)
         {
             if (in_bounds(*adj_it)
-                && is_sporecovered(*adj_it))
+                && is_moldy(*adj_it))
             {
                 temp_node.pos = *adj_it;
                 temp_node.last = &(*current);
@@ -1584,7 +1584,7 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
     std::random_shuffle(candidates.begin(), candidates.end());
 
     int index = 0;
-    you.spore_colour = LIGHTRED;
+    you.mold_colour = LIGHTRED;
 
     bool draw = false;
     for (int i=0; i<activation_count; ++i)
