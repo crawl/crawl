@@ -1560,7 +1560,7 @@ static monsterentry mondata[] = {
 // testudines and crocodiles ('t')
 {
     MONS_CROCODILE, 't', BROWN, "crocodile",
-    M_COLD_BLOOD,
+    M_COLD_BLOOD | M_SUBMERGES,
     MR_NO_FLAGS,
     600, 10, MONS_CROCODILE, MONS_CROCODILE, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1572,7 +1572,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_BABY_ALLIGATOR, 't', BLUE, "baby alligator",
-    M_COLD_BLOOD | M_SPELLCASTER,
+    M_COLD_BLOOD | M_SPELLCASTER | M_SUBMERGES,
     MR_NO_FLAGS,
     250, 10, MONS_CROCODILE, MONS_BABY_ALLIGATOR, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1584,7 +1584,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_ALLIGATOR, 't', LIGHTBLUE, "alligator",
-    M_COLD_BLOOD | M_SPELLCASTER,
+    M_COLD_BLOOD | M_SPELLCASTER | M_SUBMERGES,
     MR_NO_FLAGS,
     600, 10, MONS_CROCODILE, MONS_ALLIGATOR, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 30}, { AT_TAIL_SLAP, AF_PLAIN, 15 }, AT_NO_ATK, AT_NO_ATK },
@@ -3017,7 +3017,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_SEA_SNAKE, 'S', LIGHTCYAN, "sea snake",
-    M_COLD_BLOOD,
+    M_COLD_BLOOD | M_SUBMERGES,
     MR_NO_FLAGS,
     400, 10, MONS_SNAKE, MONS_SEA_SNAKE, MH_NATURAL, -3,
     { {AT_BITE, AF_POISON_STRONG, 24}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
