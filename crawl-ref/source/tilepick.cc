@@ -1193,8 +1193,11 @@ int tileidx_monster(const monsters *mons, bool detected)
     mons_get_damage_level(mons, damage_desc, damage_level);
 
     // If no messages about wounds, don't display an icon either.
-    if (monster_descriptor(mons->type, MDSC_NOMSG_WOUNDS))
+    if (monster_descriptor(mons->type, MDSC_NOMSG_WOUNDS)
+        || mons_is_unknown_mimic(mons))
+    {
         damage_level = MDAM_OKAY;
+    }
 
     switch (damage_level)
     {
