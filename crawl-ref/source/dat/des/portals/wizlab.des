@@ -1201,7 +1201,8 @@ lua_marker("W", portal_desc { wizard_grave = 1 })
 
 function spawn_zombie (x, y, spec)
     dgn.terrain_changed(x, y, "floor", false, false, false)
-    dgn.create_monster(x, y, spec)
+    local mons = dgn.create_monster(x, y, spec)
+    return mons
 end
 
 function spawn_zombies (data, triggerable, triggerer, marker, ev)
@@ -1241,8 +1242,10 @@ function awaken_wizard (data, triggerable, triggerer, marker, ev)
 
     local graves = dgn.find_marker_positions_by_prop("wizard_grave", 1)
     for _, pos in ipairs(graves) do
-        spawn_zombie(pos.x, pos.y, "generate_awake ancient lich "
-                 .."col:brown")
+        local lich = spawn_zombie(pos.x, pos.y, "generate_awake ancient lich "
+                 .."col:brown name:antique_lich name_replace name_descriptor"
+                 .." tile:mons_zonguldrok_lich")
+        lich.set_prop("description", "A lich who has grown expensive over countless years.\n")
     end
 
     data.awoke = true
