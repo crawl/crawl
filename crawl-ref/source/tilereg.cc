@@ -4534,37 +4534,43 @@ void DollEditRegion::run()
             _create_random_doll(m_dolls[m_doll_idx]);
             break;
         case CMD_DOLL_SELECT_NEXT_DOLL:
-            m_doll_idx = (m_doll_idx + 1) % NUM_MAX_DOLLS;
-            update_part_idx = true;
-            if (m_mode != TILEP_MODE_LOADING)
-                m_mode = TILEP_MODE_LOADING;
-            break;
         case CMD_DOLL_SELECT_PREV_DOLL:
-            m_doll_idx = (m_doll_idx + NUM_MAX_DOLLS - 1) % NUM_MAX_DOLLS;
+        {
+            const int bonus = (cmd == CMD_DOLL_SELECT_NEXT_DOLL ? 1
+                                        : NUM_MAX_DOLLS - 1);
+
+            m_doll_idx = (m_doll_idx + bonus) % NUM_MAX_DOLLS;
             update_part_idx = true;
             if (m_mode != TILEP_MODE_LOADING)
                 m_mode = TILEP_MODE_LOADING;
             break;
+        }
         case CMD_DOLL_SELECT_NEXT_PART:
-            m_cat_idx = (m_cat_idx + 1) % TILEP_PART_MAX;
-            update_part_idx = true;
-            break;
         case CMD_DOLL_SELECT_PREV_PART:
-            m_cat_idx = (m_cat_idx + TILEP_PART_MAX - 1) % TILEP_PART_MAX;
+        {
+            const int bonus = (cmd == CMD_DOLL_SELECT_NEXT_PART ? 1
+                                        : TILEP_PART_MAX - 1);
+
+            m_cat_idx = (m_cat_idx + bonus) % TILEP_PART_MAX;
             update_part_idx = true;
             break;
+        }
         case CMD_DOLL_CHANGE_PART_NEXT:
-            m_part_idx = _get_next_part(m_cat_idx, m_part_idx, 1);
-            if (m_dolls[m_doll_idx].parts[m_cat_idx] != TILEP_SHOW_EQUIP)
-                m_dolls[m_doll_idx].parts[m_cat_idx] = m_part_idx;
-            break;
         case CMD_DOLL_CHANGE_PART_PREV:
-            m_part_idx = _get_next_part(m_cat_idx, m_part_idx, -1);
-            if (m_dolls[m_doll_idx].parts[m_cat_idx] != TILEP_SHOW_EQUIP)
+            if (m_part_idx != TILEP_SHOW_EQUIP)
+            {
+                const int dir = (cmd == CMD_DOLL_CHANGE_PART_NEXT ? 1 : -1);
+                m_part_idx = _get_next_part(m_cat_idx, m_part_idx, dir);
+            }
+            m_dolls[m_doll_idx].parts[m_cat_idx] = m_part_idx;
+            break;
+        case CMD_DOLL_TOGGLE_EQUIP:
+            if (m_dolls[m_doll_idx].parts[m_cat_idx] == TILEP_SHOW_EQUIP)
                 m_dolls[m_doll_idx].parts[m_cat_idx] = m_part_idx;
+            else
+                m_dolls[m_doll_idx].parts[m_cat_idx] = TILEP_SHOW_EQUIP;
             break;
         case CMD_DOLL_CONFIRM_CHOICE:
-            m_dolls[m_doll_idx].parts[m_cat_idx] = m_part_idx;
             if (m_mode != TILEP_MODE_LOADING)
                 m_mode = TILEP_MODE_LOADING;
             break;
@@ -4596,12 +4602,6 @@ void DollEditRegion::run()
                     m_dolls[m_doll_idx].parts[i] = 0;
                 };
             }
-            break;
-        case CMD_DOLL_TOGGLE_EQUIP:
-            if (m_dolls[m_doll_idx].parts[m_cat_idx] == TILEP_SHOW_EQUIP)
-                m_dolls[m_doll_idx].parts[m_cat_idx] = m_part_idx;
-            else
-                m_dolls[m_doll_idx].parts[m_cat_idx] = TILEP_SHOW_EQUIP;
             break;
         case CMD_DOLL_TOGGLE_EQUIP_ALL:
             for (int i = 0; i < TILEP_PART_MAX; i++)
