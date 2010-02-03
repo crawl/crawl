@@ -59,9 +59,9 @@ std::string weird_smell();
 
 std::string weird_sound();
 
-bool mons_can_hurt_player(const monsters *mon);
-bool mons_is_safe(const monsters *mon, bool want_move = false,
-                  bool consider_user_options = true);
+bool mons_can_hurt_player(const monsters *mon, const bool want_move = false);
+bool mons_is_safe(const monsters *mon, const bool want_move = false,
+                  const bool consider_user_options = true);
 
 std::vector<monsters*> get_nearby_monsters(bool want_move = false,
                                            bool just_check = false,
