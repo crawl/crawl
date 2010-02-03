@@ -803,24 +803,27 @@ void DungeonRegion::pack_player(int x, int y, bool submerged)
 
 void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll, int x, int y, bool submerged, bool ghost)
 {
+    // Ordered from back to front.
     int p_order[TILEP_PART_MAX] =
     {
-        TILEP_PART_SHADOW,  //  0
+        // background
+        TILEP_PART_SHADOW,
         TILEP_PART_HALO,
         TILEP_PART_ENCH,
         TILEP_PART_DRCWING,
         TILEP_PART_CLOAK,
-        TILEP_PART_BASE,    //  5
+        // player
+        TILEP_PART_BASE,
         TILEP_PART_BOOTS,
         TILEP_PART_LEG,
         TILEP_PART_BODY,
         TILEP_PART_ARM,
-        TILEP_PART_HAND1,   // 10
-        TILEP_PART_HAND2,
         TILEP_PART_HAIR,
         TILEP_PART_BEARD,
         TILEP_PART_HELM,
-        TILEP_PART_DRCHEAD  // 15
+        TILEP_PART_HAND1,
+        TILEP_PART_HAND2,
+        TILEP_PART_DRCHEAD
     };
 
     int flags[TILEP_PART_MAX];
