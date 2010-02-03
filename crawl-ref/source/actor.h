@@ -78,6 +78,11 @@ public:
     virtual int       damage_brand(int which_attack = -1) = 0;
     virtual int       damage_type(int which_attack = -1) = 0;
     virtual item_def *weapon(int which_attack = -1) = 0;
+    // Yay for broken overloading.
+    const item_def *primary_weapon() const
+    {
+        return const_cast<actor*>(this)->weapon(0);
+    }
     virtual item_def *shield() = 0;
     virtual item_def *slot_item(equipment_type eq) = 0;
     // Just a wrapper; not to be overridden

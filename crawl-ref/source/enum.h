@@ -3208,6 +3208,13 @@ enum maybe_bool
     B_TRUE
 };
 
+enum reach_type
+{
+    REACH_NONE,
+    REACH_KNIGHT,
+    REACH_TWO
+};
+
 #ifdef USE_TILE
 enum screen_mode
 {

@@ -3758,9 +3758,14 @@ bool mons_landlubbers_in_reach(const monsters *monster)
         return (true);
     }
 
+    const reach_type range = monster->reach_range();
     actor *act;
-    // TODO: salamanders with weapons of reaching
-    for (adjacent_iterator ai(monster->pos()); ai; ++ai)
+    for (radius_iterator ai(monster->pos(),
+                            range ? 2 : 1,
+                            (range == REACH_KNIGHT) ? C_ROUND : C_SQUARE,
+                            NULL,
+                            true);
+                         ai; ++ai)
         if ((act = actor_at(*ai)) && !mons_aligned(monster->mindex(), act->mindex()))
             return (true);
 
