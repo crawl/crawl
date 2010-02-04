@@ -435,7 +435,7 @@ public:
 class TitleRegion : public ControlRegion
 {
 public:
-    TitleRegion(int width, int height);
+    TitleRegion(int width, int height, FTFont* font);
 
     virtual void render();
     virtual void clear() {};
@@ -443,11 +443,14 @@ public:
 
     virtual int handle_mouse(MouseEvent &event) { return 0; }
 
+    void update_message(std::string message);
+
 protected:
     virtual void on_resize() {}
 
     GenericTexture m_img;
     VertBuffer<PTVert> m_buf;
+    FontBuffer m_font_buf;
 };
 
 enum tile_doll_mode

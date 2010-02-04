@@ -98,6 +98,9 @@ public:
     void clear_overlays();
 
     void draw_title();
+    void update_title_msg(std::string load_msg);
+    void hide_title();
+
     void draw_doll_edit();
 
     MenuRegion *get_menu() { return m_region_menu; }

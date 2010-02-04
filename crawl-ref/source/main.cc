@@ -3779,15 +3779,24 @@ static bool _initialise(void)
         && Options.tile_title_screen)
     {
         tiles.draw_title();
+        tiles.update_title_msg("Loading Databases...");
     }
 #endif
 
     // Initialise internal databases.
     databaseSystemInit();
+#ifdef USE_TILE
+    if (Options.tile_title_screen)
+        tiles.update_title_msg("Loading Spells and Features...");
+#endif
 
     init_feat_desc_cache();
     init_spell_name_cache();
     init_spell_rarities();
+#ifdef USE_TILE
+    if (Options.tile_title_screen)
+        tiles.update_title_msg("Loading maps...");
+#endif
 
     // Read special levels and vaults.
     read_maps();
@@ -3799,6 +3808,13 @@ static bool _initialise(void)
 
     // System initialisation stuff.
     textbackground(0);
+#ifdef USE_TILE
+    if (Options.tile_title_screen)
+    {
+        tiles.update_title_msg("Loading complete, press any key to start.");
+        tiles.hide_title();
+    }
+#endif
 
     clrscr();
 

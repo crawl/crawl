@@ -4139,8 +4139,8 @@ void MenuRegion::set_more(const formatted_string &more)
 #endif
 }
 
-TitleRegion::TitleRegion(int width, int height) :
-    m_buf(&m_img, GL_QUADS)
+TitleRegion::TitleRegion(int width, int height, FTFont* font) :
+  m_buf(&m_img, GL_QUADS), m_font_buf(font)
 {
     sx = sy = 0;
     dx = dy = 1;
@@ -4191,12 +4191,23 @@ void TitleRegion::render()
 #endif
     set_transform();
     m_buf.draw();
+    m_font_buf.draw();
 }
 
 void TitleRegion::run()
 {
     mouse_control mc(MOUSE_MODE_MORE);
     getch();
+}
+
+/**
+ * We only want to show one line of message by default so clear the
+ * font buffer before adding the new message.
+ */
+void TitleRegion::update_message(std::string message)
+{
+    m_font_buf.clear();
+    m_font_buf.add(message, VColour::white, 0, 0);
 }
 
 DollEditRegion::DollEditRegion(ImageManager *im, FTFont *font) :
