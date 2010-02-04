@@ -31,13 +31,6 @@
 #include "terrain.h"
 #include "view.h"
 
-static bool _is_risky_sacrifice(const item_def& item)
-{
-    return (item.base_type == OBJ_ORBS || is_rune(item)
-            || item.base_type == OBJ_MISCELLANY
-               && item.sub_type == MISC_HORN_OF_GERYON);
-}
-
 static bool _confirm_pray_sacrifice(god_type god)
 {
     if (Options.stash_tracking == STM_EXPLICIT && is_stash(you.pos()))
@@ -49,8 +42,7 @@ static bool _confirm_pray_sacrifice(god_type god)
     for (stack_iterator si(you.pos(), true); si; ++si)
     {
         if (god_likes_item(god, *si)
-            && (_is_risky_sacrifice(*si)
-                || has_warning_inscription(*si, OPER_PRAY)))
+            && has_warning_inscription(*si, OPER_PRAY))
         {
             std::string prompt = "Really sacrifice stack with ";
             prompt += si->name(DESC_NOCAP_A);
@@ -683,6 +675,7 @@ void offer_items()
 
     int num_sacced = 0;
     int num_disliked = 0;
+    item_def *disliked_item;
 
     const int old_leading = _leading_sacrifice_group();
 
@@ -696,7 +689,10 @@ void offer_items()
         {
             i = next;
             if (disliked)
+            {
                 num_disliked++;
+                disliked_item = &item;
+            }
             continue;
         }
 
@@ -709,8 +705,7 @@ void offer_items()
         }
 
         if (god_likes_item(you.religion, item)
-            && (_is_risky_sacrifice(item)
-                || item.inscription.find("=p") != std::string::npos))
+            && (item.inscription.find("=p") != std::string::npos))
         {
             const std::string msg =
                   "Really sacrifice " + item.name(DESC_NOCAP_A) + "?";
@@ -771,9 +766,18 @@ void offer_items()
     // Explanatory messages if nothing the god likes is sacrificed.
     else if (num_sacced == 0 && num_disliked > 0)
     {
+        ASSERT(disliked_item);
+
+        if (disliked_item->base_type == OBJ_ORBS)
+            simple_god_message(" wants the Orb's power used on the surface!");
+        else if (is_rune(*disliked_item))
+            simple_god_message(" wants the runes to be proudly displayed.");
+        else if (disliked_item->base_type == OBJ_MISCELLANY
+                 && disliked_item->sub_type == MISC_HORN_OF_GERYON)
+            simple_god_message(" doesn't want your path blocked.");
         // Zin was handled above, and the other gods don't care about
         // sacrifices.
-        if (god_likes_fresh_corpses(you.religion))
+        else if (god_likes_fresh_corpses(you.religion))
             simple_god_message(" only cares about fresh corpses!");
         else if (you.religion == GOD_SHINING_ONE)
             simple_god_message(" only cares about unholy and evil items!");
@@ -783,4 +787,3 @@ void offer_items()
             simple_god_message(" expects you to use your decks, not offer them!");
     }
 }
-

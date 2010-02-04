@@ -47,7 +47,8 @@ int tileidx_monster(const monsters *mon, bool detected = false);
 int tileidx_spell(spell_type spell);
 
 // Player tile related
-int get_gender_from_tile(int parts[]);
+int get_gender_from_tile(const int parts[]);
+bool is_player_tile(const int tile, const int base_tile);
 int tilep_species_to_base_tile(int sp = you.species,
                                int level = you.experience_level);
 void tilep_draconian_init(int sp, int level, int &base, int &head, int &wing);
@@ -58,7 +59,8 @@ void tilep_calc_flags(const int parts[], int flag[]);
 void tilep_part_to_str(int number, char *buf);
 int  tilep_str_to_part(char *str);
 
-void tilep_scan_parts(char *fbuf, dolls_data &doll);
+void tilep_scan_parts(char *fbuf, dolls_data &doll, int species = you.species,
+                      int level = you.experience_level);
 void tilep_print_parts(char *fbuf, const dolls_data &doll);
 
 int tilep_equ_weapon(const item_def &item);

@@ -337,6 +337,7 @@ public:
     bool visible_to(const actor *looker) const;
     bool mon_see_cell(const coord_def& pos, bool reach = false) const;
     bool near_foe() const;
+    reach_type reach_range() const;
 
     const los_def& get_los_no_trans();
 

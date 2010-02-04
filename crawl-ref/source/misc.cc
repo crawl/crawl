@@ -2732,7 +2732,7 @@ bool go_berserk(bool intentional, bool potion)
         modify_stat(STAT_STRENGTH, 5, true, "going berserk");
 
     you.increase_duration(DUR_MIGHT, berserk_duration);
-    /// doubling the duration here since haste_player already cuts input
+    // doubling the duration here since haste_player already cuts input
     // durations in half
     haste_player(berserk_duration * 2);
 
@@ -2746,13 +2746,22 @@ bool go_berserk(bool intentional, bool potion)
 
 // Returns true if the monster has a path to the player, or it has to be
 // assumed that this is the case.
-static bool _mons_has_path_to_player(const monsters *mon)
+static bool _mons_has_path_to_player(const monsters *mon, bool want_move = false)
 {
     // Don't consider sleeping monsters safe, in case the player would
     // rather retreat and try another path for maximum stabbing chances.
     // TODO: This doesn't cover monsters encaged in glass.
     if (mon->asleep())
         return (true);
+
+    if (mons_is_stationary(mon))
+    {
+        int dist = grid_distance(you.pos(), mon->pos());
+        if (want_move)
+            dist--;
+        if (dist >= 2)
+            return (false);
+    }
 
     // If the monster is awake and knows a path towards the player
     // (even though the player cannot know this) treat it as unsafe.
@@ -2778,12 +2787,12 @@ static bool _mons_has_path_to_player(const monsters *mon)
     return (false);
 }
 
-bool mons_can_hurt_player(const monsters *mon)
+bool mons_can_hurt_player(const monsters *mon, const bool want_move)
 {
     // FIXME: This takes into account whether the player knows the map!
     // It also always returns true for sleeping monsters, but that's okay
     // for its current purposes. (Travel interruptions and tension.)
-    if (_mons_has_path_to_player(mon))
+    if (_mons_has_path_to_player(mon, want_move))
         return (true);
 
     // The monster need only see you to hurt you.
@@ -2798,9 +2807,12 @@ bool mons_can_hurt_player(const monsters *mon)
     return (false);
 }
 
-bool mons_is_safe(const monsters *mon, bool want_move,
-                  bool consider_user_options)
+bool mons_is_safe(const monsters *mon, const bool want_move,
+                  const bool consider_user_options)
 {
+    if (mons_is_unknown_mimic(mon))
+        return (true);
+
     int  dist    = grid_distance(you.pos(), mon->pos());
 
     bool is_safe = (mon->wont_attack()
@@ -2817,8 +2829,9 @@ bool mons_is_safe(const monsters *mon, bool want_move,
                        // monsters capable of throwing or zapping wands.
                     || (!you.see_cell_no_trans(mon->pos())
                             || mons_class_habitat(mon->type) == HT_WATER
-                            || mons_class_habitat(mon->type) == HT_LAVA)
-                        && !mons_can_hurt_player(mon));
+                            || mons_class_habitat(mon->type) == HT_LAVA
+                            || mons_is_stationary(mon))
+                        && !mons_can_hurt_player(mon, want_move));
 
 #ifdef CLUA_BINDINGS
     if (consider_user_options)

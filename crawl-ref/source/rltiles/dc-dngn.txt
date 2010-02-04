@@ -116,6 +116,12 @@ wall/brick_brown7
 %repeat WALL_BRICK WALL_BRICK_WHITE
 %resetcol
 
+# Variant of BRICK_WALL_BROWN with vines
+wall/brick_brown-vines1 WALL_BRICK_VINES WALL_BRICK_BROWN_VINES
+wall/brick_brown-vines2
+wall/brick_brown-vines3
+wall/brick_brown-vines4
+
 # The colorized versions of FLOOR_PEBBLE were made from
 # pebble_gray*.png, by colorizing the non-border color
 # with hue 30, sat 50, lum +20 in GIMP.
@@ -638,6 +644,28 @@ wall/stone_gray1
 wall/stone_gray2
 wall/stone_gray3
 
+%variation WALL_STONE_GRAY white
+%lum 0 35
+%repeat WALL_STONE_GRAY WALL_STONE_WHITE
+%resetcol
+
+wall/stone_dark0 WALL_STONE_DARK
+wall/stone_dark1
+wall/stone_dark2
+wall/stone_dark3
+
+# For the Doroklohe WizLab
+wall/stone_black_marked0 WALL_STONE_BLACK_MARKED
+wall/stone_black_marked1
+wall/stone_black_marked2
+wall/stone_black_marked3
+wall/stone_black_marked4
+wall/stone_black_marked5
+wall/stone_black_marked6
+wall/stone_black_marked7
+%weight 1
+wall/stone_black_marked8
+
 %sdir dc-dngn/floor/grass
 %weight 15
 grass0 FLOOR_GRASS
@@ -663,6 +691,10 @@ grass_sw
 grass_w
 grass_nw
 grass_full
+
+grass0-dirt-mix1 FLOOR_GRASS_DIRT_MIX
+grass0-dirt-mix2
+grass0-dirt-mix3
 
 %sdir dc-dngn
 wall/undead0 WALL_UNDEAD
@@ -765,6 +797,11 @@ wall/stone2_gray1
 wall/stone2_gray2
 wall/stone2_gray3
 
+wall/stone2_dark0 DNGN_STONE_DARK
+wall/stone2_dark1
+wall/stone2_dark2
+wall/stone2_dark3
+
 %variation DNGN_STONE_WALL blue
 %hue 26 240
 %hue 27 240
@@ -821,8 +858,107 @@ wall/stone2_brown3
 %resetcol
 
 wall/dngn_wax_wall DNGN_WAX_WALL
-wall/dngn_transparent_wall DNGN_TRANSPARENT_WALL
+
+# Coloured glass walls
+wall/dngn_transparent_wall DNGN_TRANSPARENT_WALL DNGN_TRANSPAREN_WALL_CYAN
+
+%variation DNGN_TRANSPARENT_WALL blue
+%hue 180 240
+%repeat DNGN_TRANSPARENT_WALL DNGN_TRANSPARENT_WALL_BLUE
+%resetcol
+
+%variation DNGN_TRANSPARENT_WALL green
+%hue 240 120
+%repeat DNGN_TRANSPARENT_WALL_BLUE DNGN_TRANSPARENT_WALL_GREEN
+%resetcol
+
+%variation DNGN_TRANSPARENT_WALL red
+%hue 240 0
+%repeat DNGN_TRANSPARENT_WALL_BLUE DNGN_TRANSPARENT_WALL_RED
+%resetcol
+
+%variation DNGN_TRANSPARENT_WALL magenta
+%hue 240 300
+%repeat DNGN_TRANSPARENT_WALL_BLUE DNGN_TRANSPARENT_WALL_MAGENTA
+%resetcol
+
+%variation DNGN_TRANSPARENT_WALL brown
+%hue 240 30
+%repeat DNGN_TRANSPARENT_WALL_BLUE DNGN_TRANSPARENT_WALL_BROWN
+%resetcol
+
+%variation DNGN_TRANSPARENT_WALL darkgray
+%desat 180
+%lum 180 -40
+%repeat DNGN_TRANSPARENT_WALL DNGN_TRANSPARENT_WALL_DARKGRAY
+%resetcol
+
+%variation DNGN_TRANSPARENT_WALL yellow
+%hue 240 60
+%repeat DNGN_TRANSPARENT_WALL_BLUE DNGN_TRANSPARENT_WALL_YELLOW
+%resetcol
+
+%variation DNGN_TRANSPARENT_WALL white
+%desat 180
+%lum 0 35
+%repeat DNGN_TRANSPARENT_WALL DNGN_TRANSPARENT_WALL_WHITE
+%resetcol
+
+
+# Coloured metal walls
 wall/dngn_metal_wall DNGN_METAL_WALL
+
+%variation DNGN_METAL_WALL blue
+%hue 26 240
+%hue 27 240
+%hue 28 240
+%hue 29 240
+%hue 30 240
+%hue 31 240
+%hue 32 240
+%hue 33 240
+wall/dngn_metal_wall_brown DNGN_METAL_WALL_BLUE
+%resetcol
+
+%variation DNGN_METAL_WALL green
+%hue 240 120
+%repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_GREEN
+%resetcol
+
+%variation DNGN_METAL_WALL cyan
+%hue 240 180
+%repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_CYAN
+%resetcol
+
+%variation DNGN_METAL_WALL red
+%hue 240 0
+%repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_RED
+%resetcol
+
+%variation DNGN_METAL_WALL magenta
+%hue 240 300
+%repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_MAGENTA
+%resetcol
+
+%variation DNGN_METAL_WALL brown
+%hue 240 30
+%repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_BROWN
+%resetcol
+
+%variation DNGN_METAL_WALL darkgray
+%lum 0 -20
+%repeat DNGN_METAL_WALL DNGN_METAL_WALL_DARKGRAY
+%resetcol
+
+%variation DNGN_METAL_WALL yellow
+%hue 240 60
+%repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_YELLOW
+%resetcol
+
+%variation DNGN_METAL_WALL white
+%lum 0 30
+%repeat DNGN_METAL_WALL DNGN_METAL_WALL_WHITE
+%resetcol
 
 %hue 150 120
 wall/dngn_green_crystal_wall DNGN_GREEN_CRYSTAL_WALL DNGN_CRYSTAL DNGN_CRYSTAL_GREEN
@@ -907,6 +1043,18 @@ wall/dngn_green_crystal_wall DNGN_GREEN_CRYSTAL_WALL DNGN_CRYSTAL DNGN_CRYSTAL_G
 wall/tree1 DNGN_TREE
 wall/tree2
 
+%variation DNGN_TREE yellow
+wall/tree1_yellow DNGN_TREE_YELLOW
+wall/tree2_yellow
+
+%variation DNGN_TREE lightred
+wall/tree1_lightred DNGN_TREE_LIGHTRED
+wall/tree2_lightred
+
+%variation DNGN_TREE red
+wall/tree1_red DNGN_TREE_RED
+wall/tree2_red
+
 ## doors
 dngn_detected_secret_door DNGN_DETECTED_SECRET_DOOR
 dngn_closed_door DNGN_CLOSED_DOOR
@@ -928,6 +1076,12 @@ fleshy_orifice_open
 
 dngn_orcish_idol DNGN_ORCISH_IDOL
 dngn_granite_statue DNGN_GRANITE_STATUE
+
+## Reworked statues for Zonguldrok Wizlab: gravestones
+gravestone_blank DNGN_GRAVESTONE
+gravestone_writing1
+gravestone_writing2
+gravestone_ornate DNGN_GRAVESTONE_ORNATE
 
 ## traps
 dngn_trap_dart DNGN_TRAP_DART
@@ -1127,6 +1281,14 @@ dngn_sparkling_fountain2
 dngn_blood_fountain DNGN_BLOOD_FOUNTAIN
 dngn_blood_fountain2
 dngn_dry_fountain DNGN_DRY_FOUNTAIN
+
+%variation DNGN_DRY_FOUNTAIN white
+%desat 30
+%lum 30 80
+%desat 0
+%lum 0 45
+%repeat DNGN_DRY_FOUNTAIN DNGN_DRY_FOUNTAIN_WHITE
+%resetcol
 
 ## Miscellaneous entries that get drawn on the background.
 ## Flavour is fixed again.

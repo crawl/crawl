@@ -296,7 +296,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     return (true);
 }
 
-static bool evoke_horn_of_geryon()
+static bool _evoke_horn_of_geryon(item_def &item)
 {
     // Note: This assumes that the Vestibule has not been changed.
     bool rc = false;
@@ -332,6 +332,7 @@ static bool evoke_horn_of_geryon()
                         case DNGN_ENTER_TARTARUS:
                             grd[count_x][count_y] = featm->feat;
                             env.markers.remove(marker);
+                            item.plus2++;
                             break;
                         default:
                             break;
@@ -888,7 +889,7 @@ bool evoke_item(int slot)
             break;
 
         case MISC_HORN_OF_GERYON:
-            if (evoke_horn_of_geryon())
+            if (_evoke_horn_of_geryon(item))
                 pract = 1;
             break;
 

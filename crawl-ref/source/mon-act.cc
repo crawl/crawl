@@ -740,11 +740,10 @@ static bool _handle_potion(monsters *monster, bolt & beem)
 static bool _handle_reaching(monsters *monster)
 {
     bool       ret = false;
-    item_def *wpn = monster->weapon(0);
-    const mon_attack_def attk(mons_attack_spec(monster, 0));
+    const reach_type range = monster->reach_range();
     actor *foe = monster->get_foe();
 
-    if (!foe)
+    if (!foe || !range)
         return (false);
 
     if (monster->submerged())
@@ -762,11 +761,10 @@ static bool _handle_reaching(monsters *monster)
         // The monster has to be attacking the correct position.
         && monster->target == foepos
         // With a reaching weapon OR ...
-        && ((wpn && get_weapon_brand(*wpn) == SPWPN_REACHING)
+        && (range > REACH_KNIGHT
             // ... with a native reaching attack, provided the attack
             // is not on a full diagonal.
-            || (attk.flavour == AF_REACH && attk.damage
-                && delta.abs() <= 5))
+            || delta.abs() <= 5)
         // And with no dungeon furniture in the way of the reaching
         // attack; if the middle square is empty, skip the LOS check.
         && (grd(middle) > DNGN_MAX_NONREACH
@@ -778,6 +776,7 @@ static bool _handle_reaching(monsters *monster)
         monster_attack_actor(monster, foe, false);
 
         // Player saw the item reach.
+        item_def *wpn = monster->weapon(0);
         if (wpn && !is_artefact(*wpn) && you.can_see(monster))
             set_ident_flags(*wpn, ISFLAG_KNOW_TYPE);
     }
@@ -1837,12 +1836,9 @@ static void _handle_monster_move(monsters *monster)
             {
                 if (monster->submerged())
                 {
-                    // Don't unsubmerge if the monster is too damaged or
-                    // if the monster is afraid, or if it's avoiding the
+                    // Don't unsubmerge if the monster is avoiding the
                     // cloud on top of the water.
-                    if (monster->hit_points <= monster->max_hit_points / 2
-                        || monster->has_ench(ENCH_FEAR)
-                        || avoid_cloud)
+                    if (avoid_cloud)
                     {
                         monster->speed_increment -= non_move_energy;
                         continue;
