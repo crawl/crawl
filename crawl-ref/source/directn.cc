@@ -399,7 +399,7 @@ void direction_chooser::describe_cell() const
         if (just_looking || (show_items_once && restricts != DIR_TARGET_OBJECT))
             print_items_description();
         if (just_looking)
-            print_floor_description(false);
+            print_floor_description(true);
     }
 
     flush_prev_message();
@@ -1453,7 +1453,7 @@ void direction_chooser::print_floor_description(bool boring_too) const
         return;
 
     mprf(MSGCH_EXAMINE_FILTER, "%s",
-         feature_description(target(), is_bloodcovered(target())).c_str());
+         feature_description(target(), true).c_str());
 }
 
 void direction_chooser::reinitialize_move_flags()
@@ -2668,7 +2668,7 @@ std::string feature_description(dungeon_feature_type grid,
     if (bloody)
         desc += ", spattered with blood";
     else if (mold)
-        desc += ", slightly moldy";
+        desc += ", covered with mold";
 
     return thing_do_grammar(dtype, add_stop, feat_is_trap(grid), desc);
 }
@@ -3019,7 +3019,7 @@ std::string feature_description(const coord_def& where, bool covering,
         if (bloody)
             marker_desc += ", spattered with blood";
         else if (mold)
-            marker_desc += ", slightly moldy";
+            marker_desc += ", covered with mold";
 
         return thing_do_grammar(dtype, add_stop, false, marker_desc);
     }
@@ -3076,7 +3076,7 @@ std::string feature_description(const coord_def& where, bool covering,
         if (bloody)
             desc += ", spattered with blood";
         else if (mold)
-            desc += ", slightly moldy";
+            desc += ", covered with mold";
 
         return thing_do_grammar(dtype, add_stop, false, desc);
     }
