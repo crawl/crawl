@@ -2810,6 +2810,9 @@ bool mons_can_hurt_player(const monsters *mon, const bool want_move)
 bool mons_is_safe(const monsters *mon, const bool want_move,
                   const bool consider_user_options)
 {
+    if (mons_is_unknown_mimic(mon))
+        return (true);
+
     int  dist    = grid_distance(you.pos(), mon->pos());
 
     bool is_safe = (mon->wont_attack()
