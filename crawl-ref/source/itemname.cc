@@ -1141,15 +1141,11 @@ std::string item_def::name_aux(description_level_type desc,
 
         }
 
-        if (know_cosmetic && !know_brand)
+        if (know_cosmetic
+            && get_equip_desc(*this) == ISFLAG_GLOWING
+            && !testbits(ignore_flags, ISFLAG_GLOWING))
         {
-            switch (get_equip_desc(*this))
-            {
-            case ISFLAG_GLOWING:
-                if (!testbits(ignore_flags, ISFLAG_GLOWING))
-                    buff << "glowing ";
-                break;
-            }
+            buff << "glowing ";
         }
 
         if (know_pluses)
