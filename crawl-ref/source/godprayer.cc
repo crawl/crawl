@@ -675,7 +675,7 @@ void offer_items()
 
     int num_sacced = 0;
     int num_disliked = 0;
-    item_def *disliked_item;
+    item_def *disliked_item = 0;
 
     const int old_leading = _leading_sacrifice_group();
 
