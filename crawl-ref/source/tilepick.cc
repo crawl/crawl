@@ -814,7 +814,12 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_ARMOUR_MIMIC:
     case MONS_SCROLL_MIMIC:
     case MONS_POTION_MIMIC:
-        return tileidx_item(get_mimic_item(mon));
+    {
+        int ch = tileidx_item(get_mimic_item(mon));
+        if (mons_is_known_mimic(mon))
+            ch |= TILE_FLAG_ANIM_WEP;
+        return (ch);
+    }
 
     case MONS_DANCING_WEAPON:
     {
@@ -1193,8 +1198,11 @@ int tileidx_monster(const monsters *mons, bool detected)
     mons_get_damage_level(mons, damage_desc, damage_level);
 
     // If no messages about wounds, don't display an icon either.
-    if (monster_descriptor(mons->type, MDSC_NOMSG_WOUNDS))
+    if (monster_descriptor(mons->type, MDSC_NOMSG_WOUNDS)
+        || mons_is_unknown_mimic(mons))
+    {
         damage_level = MDAM_OKAY;
+    }
 
     switch (damage_level)
     {
@@ -3345,7 +3353,15 @@ static inline void _finalise_tile(unsigned int *tile,
     else if (orig == TILE_DNGN_CLOSED_DOOR || orig == TILE_DNGN_OPEN_DOOR)
     {
         int override = env.tile_flv(gc).feat;
-        if (override)
+        // Setting an override on a door specifically for undetected secret
+        // doors causes issues if there are a number of variants for that tile.
+        // In these instances, append "last_tile" and have the tile specifier
+        // for the door in question on its own line, and it should bypass any
+        // asserts or weird visual issues. Somewhat hackish. The following code
+        // assumes that if there is an override on a door location and that
+        // has no variations, that the override is not actually a door tile but
+        // the aforementioned secret door thing. {due}
+        if (override && tile_dngn_count(override) > 1)
         {
             // XXX: This doesn't deal properly with detected doors.
             bool opened = (orig == TILE_DNGN_OPEN_DOOR);
@@ -3378,21 +3394,17 @@ void tilep_calc_flags(const int parts[], int flag[])
     if (parts[TILEP_PART_HELM] - 1 >= TILEP_HELM_FHELM_OFS)
         flag[TILEP_PART_BEARD] = TILEP_FLAG_HIDE;
 
-    if (parts[TILEP_PART_BASE] >= TILEP_BASE_NAGA
-        && parts[TILEP_PART_BASE] < tilep_species_to_base_tile(SP_NAGA + 1))
+    if (is_player_tile(parts[TILEP_PART_BASE], TILEP_BASE_NAGA))
     {
         flag[TILEP_PART_BOOTS] = flag[TILEP_PART_LEG] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_BODY]  = TILEP_FLAG_CUT_NAGA;
     }
-    else if (parts[TILEP_PART_BASE] >= TILEP_BASE_CENTAUR
-             && parts[TILEP_PART_BASE]
-                < tilep_species_to_base_tile(SP_CENTAUR + 1))
+    else if (is_player_tile(parts[TILEP_PART_BASE], TILEP_BASE_CENTAUR))
     {
         flag[TILEP_PART_BOOTS] = flag[TILEP_PART_LEG] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_BODY]  = TILEP_FLAG_CUT_CENTAUR;
     }
-    else if (parts[TILEP_PART_BASE] == TILEP_BASE_MERFOLK_WATER
-             || parts[TILEP_PART_BASE] == TILEP_BASE_MERFOLK_WATER + 1)
+    else if (is_player_tile(parts[TILEP_PART_BASE], TILEP_BASE_MERFOLK_WATER))
     {
         flag[TILEP_PART_BOOTS]  = TILEP_FLAG_HIDE;
         flag[TILEP_PART_LEG]    = TILEP_FLAG_HIDE;
@@ -3404,11 +3416,6 @@ void tilep_calc_flags(const int parts[], int flag[])
         flag[TILEP_PART_HAIR] = flag[TILEP_PART_HELM] = TILEP_FLAG_HIDE;
     }
 }
-
-/*
- * Set default parts of each race
- * body + optional beard, hair, etc
- */
 
 static int _draconian_colour(int race, int level)
 {
@@ -3444,14 +3451,21 @@ static int _draconian_colour(int race, int level)
     return (0);
 }
 
-int get_gender_from_tile(int parts[])
+int get_gender_from_tile(const int parts[])
 {
-    int gender = ((parts[TILEP_PART_BASE]
-                 - tile_player_part_start[TILEP_PART_BASE]) % 2);
+    const int gender = (parts[TILEP_PART_BASE]
+                        - tile_player_part_start[TILEP_PART_BASE]) % 2;
 
     if (gender == TILEP_GENDER_MALE || gender == TILEP_GENDER_FEMALE)
         return gender;
+
     return TILEP_GENDER_FEMALE;
+}
+
+bool is_player_tile(const int tile, const int base_tile)
+{
+    return (tile >= base_tile
+            && tile < base_tile + tile_player_count(base_tile));
 }
 
 int tilep_species_to_base_tile(int sp, int level)
@@ -3530,12 +3544,16 @@ void tilep_draconian_init(int sp, int level, int &base, int &head, int &wing)
         wing = tile_player_part_start[TILEP_PART_DRCWING] + colour_offset;
 }
 
+// Set default parts of each race: body + optional beard, hair, etc.
 void tilep_race_default(int sp, int gender, int level, int *parts)
 {
     if (gender == -1)
         gender = get_gender_from_tile(parts);
 
-    int result = tilep_species_to_base_tile(sp, level) + gender;
+    int result = tilep_species_to_base_tile(sp, level);
+    if (parts[TILEP_PART_BASE] != TILEP_SHOW_EQUIP)
+        result = (parts[TILEP_PART_BASE] - gender);
+
     int hair   = 0;
     int beard  = 0;
     int wing   = 0;
@@ -3607,7 +3625,7 @@ void tilep_race_default(int sp, int gender, int level, int *parts)
             break;
         case SP_MERFOLK:
             result = you.in_water() ? TILEP_BASE_MERFOLK_WATER
-                                       : TILEP_BASE_MERFOLK;
+                                    : TILEP_BASE_MERFOLK;
             break;
         case SP_VAMPIRE:
             if (gender == TILEP_GENDER_MALE)
@@ -3632,7 +3650,7 @@ void tilep_race_default(int sp, int gender, int level, int *parts)
             break;
     }
 
-    parts[TILEP_PART_BASE]   = result;
+    parts[TILEP_PART_BASE] = result + gender;
 
     // Don't overwrite doll parts defined elsewhere.
     if (parts[TILEP_PART_HAIR] == TILEP_SHOW_EQUIP)
@@ -3958,7 +3976,7 @@ const int parts_saved[TILEP_PART_MAX + 1] =
 /*
  * scan input line from dolls.txt
  */
-void tilep_scan_parts(char *fbuf, dolls_data &doll)
+void tilep_scan_parts(char *fbuf, dolls_data &doll, int species, int level)
 {
     char  ibuf[8];
 
@@ -3983,9 +4001,11 @@ void tilep_scan_parts(char *fbuf, dolls_data &doll)
             doll.parts[p] = TILEP_SHOW_EQUIP;
         else if (p == TILEP_PART_BASE)
         {
-            doll.parts[p] = tilep_species_to_base_tile(you.species,
-                                                       you.experience_level)
-                            + (idx % 2);
+            const int base_tile = tilep_species_to_base_tile(species, level);
+            if (idx >= tile_player_count(base_tile))
+                doll.parts[p] = base_tile + (idx % 2);
+            else
+                doll.parts[p] = base_tile + idx;
         }
         else if (idx == 0)
             doll.parts[p] = 0;
@@ -4010,13 +4030,14 @@ void tilep_print_parts(char *fbuf, const dolls_data &doll)
     char *ptr = fbuf;
     for (unsigned i = 0; parts_saved[i] != -1; ++i)
     {
-        const int p   = parts_saved[i];
+        const int p = parts_saved[i];
         int idx = doll.parts[p];
         if (idx != TILEP_SHOW_EQUIP)
         {
             if (p == TILEP_PART_BASE)
             {
-                idx = (idx - tile_player_part_start[TILEP_PART_BASE]) % 2;
+                idx -= tilep_species_to_base_tile(you.species,
+                                                  you.experience_level);
             }
             else if (idx != 0)
             {
@@ -4945,7 +4966,7 @@ void tile_place_item_marker(int x, int y, int idx)
         env.tile_bg[x][y] |= TILE_FLAG_CURSOR3;
 }
 
-// Called from monster_grid() in view.cc
+// Called from show_def::_update_monster() in show.cc
 void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
 {
     if (idx == NON_MONSTER)
@@ -5000,6 +5021,7 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
 
     if (foreground)
     {
+        // Add name tags.
         env.tile_fg[ep.x][ep.y] = t;
         const monsters *mon = &menv[idx];
 

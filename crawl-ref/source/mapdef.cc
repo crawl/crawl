@@ -533,6 +533,8 @@ void map_lines::apply_grid_overlay(const coord_def &c)
                 if (colour)
                     tile = tile_dngn_coloured(tile, colour);
                 int offset = random2(tile_dngn_count(tile));
+                if ((*overlay)(x, y).last_tile)
+                    offset = tile_dngn_count(tile) - 1;
                 if (grd(gc) == DNGN_FLOOR && !floor)
                     env.tile_flv(gc).floor = tile + offset;
                 else if (grd(gc) == DNGN_ROCK_WALL && !rock)
@@ -1270,6 +1272,7 @@ void map_lines::overlay_tiles(tile_spec &spec)
                 (*overlay)(pos, y).rocktile = spec.get_tile();
 
             (*overlay)(pos, y).no_random = spec.no_random;
+            (*overlay)(pos, y).last_tile = spec.last_tile;
             ++pos;
         }
     }
@@ -1797,6 +1800,7 @@ std::string map_lines::add_tile(const std::string &sub, bool is_floor, bool is_f
         return ("");
 
     bool no_random = strip_tag(s, "no_random");
+    bool last_tile = strip_tag(s, "last_tile");
 
     int sep = 0;
     std::string key;
@@ -1811,7 +1815,7 @@ std::string map_lines::add_tile(const std::string &sub, bool is_floor, bool is_f
     if (!err.empty())
         return (err);
 
-    tile_spec spec(key, sep == ':', no_random, is_floor, is_feat, list);
+    tile_spec spec(key, sep == ':', no_random, last_tile, is_floor, is_feat, list);
     overlay_tiles(spec);
 
     return ("");

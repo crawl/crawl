@@ -678,6 +678,12 @@ static void _get_status_lights(std::vector<status_light>& out)
         out.push_back(status_light(color, "Invis"));
     }
 
+    if (you.duration[DUR_CONTROL_TELEPORT])
+    {
+        int color = _dur_colour( MAGENTA, dur_expiring(DUR_CONTROL_TELEPORT) );
+        out.push_back(status_light(color, "cTele"));
+    }
+
     if (you.duration[DUR_SILENCE])
     {
         int color = _dur_colour( BLUE, dur_expiring(DUR_SILENCE) );

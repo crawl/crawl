@@ -3167,7 +3167,12 @@ bool god_likes_item(god_type god, const item_def& item)
                    && mons_species(item.plus) == MONS_ORC);
 
     case GOD_NEMELEX_XOBEH:
-        return (!is_deck(item));
+        return (!is_deck(item)
+                && !item.is_critical()
+                && !is_rune(item)
+                && (item.base_type != OBJ_MISCELLANY
+                    || item.sub_type != MISC_HORN_OF_GERYON
+                    || item.plus2));
 
     default:
         return (false);

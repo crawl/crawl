@@ -360,6 +360,20 @@ static bool _is_reseedable(const coord_def& c)
                || _is_monster_blocked(c));
 }
 
+static bool _adjacent_cells_are_safe(const coord_def &c)
+{
+    for (adjacent_iterator ai(c); ai; ++ai)
+    {
+        if (monsters* mon = monster_at(*ai))
+        {
+            if (!mons_is_safe(mon, true, true))
+                return (false);
+        }
+    }
+
+    return (true);
+}
+
 // Returns true if the square at (x,y) is okay to travel over. If ignore_hostile
 // is true, returns true even for dungeon features the character can normally
 // not cross safely (deep water, lava, traps).
@@ -384,23 +398,20 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile)
         return (false);
     }
 
+    if (!ignore_hostile && !_adjacent_cells_are_safe(c))
+        return (false);
+
     // If 'ignore_hostile' is true, we're ignoring hazards that can be
     // navigated over if the player is willing to take damage, or levitate.
     if (ignore_hostile && _is_reseedable(c))
-    {
         return (true);
-    }
 
     // Excluded squares are never safe.
     if (is_excluded(c))
-    {
         return (false);
-    }
 
     if (is_trap(c) && _is_safe_trap(c))
-    {
         return (true);
-    }
 
     return (feat_is_traversable(grid));
 }
@@ -417,7 +428,9 @@ static bool _is_safe_move(const coord_def& c)
         if (you.can_see(mon) && mons_class_flag(mon->type, M_NO_EXP_GAIN)
             && !fedhas_passthrough(mon)
             && !travel_kill_monster(mon))
+        {
             return (false);
+        }
 
         // If this is any *other* monster, it'll be visible and
         // a) Friendly, in which case we'll displace it, no problem.

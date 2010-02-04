@@ -13,6 +13,7 @@
 
 #include "beam.h"
 #include "colour.h"
+#include "coordit.h"
 #include "database.h"
 #include "directn.h"
 #include "fprop.h"
@@ -3746,4 +3747,27 @@ bool player_or_mon_in_sanct(const monsters* monster)
 {
     return (is_sanctuary(you.pos())
             || is_sanctuary(monster->pos()));
+}
+
+bool mons_landlubbers_in_reach(const monsters *monster)
+{
+    if (mons_has_ranged_spell(monster)
+        || mons_has_ranged_ability(monster)
+        || mons_has_ranged_attack(monster))
+    {
+        return (true);
+    }
+
+    const reach_type range = monster->reach_range();
+    actor *act;
+    for (radius_iterator ai(monster->pos(),
+                            range ? 2 : 1,
+                            (range == REACH_KNIGHT) ? C_ROUND : C_SQUARE,
+                            NULL,
+                            true);
+                         ai; ++ai)
+        if ((act = actor_at(*ai)) && !mons_aligned(monster->mindex(), act->mindex()))
+            return (true);
+
+    return (false);
 }
