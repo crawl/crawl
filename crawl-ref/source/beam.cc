@@ -3315,8 +3315,13 @@ void bolt::affect_ground()
                                               MHITNOT,
                                               MG_FORCE_PLACE));
 
-            if (rc != -1 && you.see_cell(pos()))
-                mpr("A fungus suddenly grows.");
+            if (rc != -1)
+            {
+                env.pgrid(pos()) &= ~FPROP_MOLD;
+                if (you.see_cell(pos()))
+                    mpr("A fungus suddenly grows.");
+
+            }
         }
     }
 

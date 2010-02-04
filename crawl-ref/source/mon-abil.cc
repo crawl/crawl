@@ -1452,8 +1452,13 @@ void ballisto_on_move(monsters * monster, const coord_def & position)
                                                   MHITNOT,
                                                   MG_FORCE_PLACE));
 
-                if (rc != -1 && you.can_see(&env.mons[rc]))
-                    mprf("A ballistomycete grows in the wake of the spore.");
+                if (rc != -1)
+                {
+                    // Don't leave mold on squares we place ballistos on
+                    env.pgrid(position) &= ~FPROP_MOLD;
+                    if  (you.can_see(&env.mons[rc]))
+                        mprf("A ballistomycete grows in the wake of the spore.");
+                }
 
                 monster->number = 40;
             }
@@ -1540,8 +1545,11 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
 
         for (adjacent_iterator adj_it(current->pos); adj_it; ++adj_it)
         {
+            monsters * temp = monster_at(*adj_it);
+
             if (in_bounds(*adj_it)
-                && is_moldy(*adj_it))
+                && (is_moldy(*adj_it)
+                    || temp && temp->type == MONS_BALLISTOMYCETE))
             {
                 temp_node.pos = *adj_it;
                 temp_node.last = &(*current);
