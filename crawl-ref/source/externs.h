@@ -618,12 +618,12 @@ public:
     long turns_resting;
     long turns_other;
 
-    double elapsed_total;
-    double elapsed_explore;
-    double elapsed_travel;
-    double elapsed_interlevel;
-    double elapsed_resting;
-    double elapsed_other;
+    long elapsed_total;
+    long elapsed_explore;
+    long elapsed_travel;
+    long elapsed_interlevel;
+    long elapsed_resting;
+    long elapsed_other;
 
 public:
     PlaceInfo();

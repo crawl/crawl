@@ -1496,7 +1496,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         viewwindow(false, true);
 
         // update corpses and fountains
-        if (env.elapsed_time != 0.0 && !just_created_level)
+        if (env.elapsed_time && !just_created_level)
             update_level( you.elapsed_time - env.elapsed_time );
 
         // Centaurs have difficulty with stairs
