@@ -522,7 +522,6 @@ bool melee_attack::attack()
 {
     // If a mimic is attacking or defending, it is thereafter known.
     identify_mimic(attacker);
-    identify_mimic(defender);
 
     coord_def defender_pos = defender->pos();
 
@@ -642,6 +641,7 @@ bool melee_attack::attack()
     bool retval = ((attacker->atype() == ACT_PLAYER) ? player_attack() :
                    (defender->atype() == ACT_PLAYER) ? mons_attack_you()
                                                      : mons_attack_mons());
+    identify_mimic(defender);
 
     if (env.sanctuary_time > 0 && retval && !cancel_attack
         && attacker != defender && !attacker->confused())
