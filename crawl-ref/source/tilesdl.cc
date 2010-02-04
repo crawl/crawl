@@ -129,11 +129,56 @@ void TilesFramework::shutdown()
     _shutdown_console();
 }
 
+/**
+ * Creates a new title region and sets it active
+ * Remember to call hide_title() when you're done
+ * showing the title.
+ */
 void TilesFramework::draw_title()
 {
-    TitleRegion* reg = new TitleRegion(m_windowsz.x, m_windowsz.y);
-    use_control_region(reg);
+    TitleRegion* reg = new TitleRegion(m_windowsz.x, m_windowsz.y,
+                                       m_fonts[m_msg_font].font);
+
+    m_layers[LAYER_TILE_CONTROL].m_regions.push_back(reg);
+    m_active_layer = LAYER_TILE_CONTROL;
+    redraw();
+}
+
+/**
+ * Updates the loading message text on the title
+ * screen
+ * Assumes that we only have one region on the layer
+ * If at some point it's possible to have multiple regions
+ * open while the title screen shows, the .at(0) will need
+ * to be changed and saved on a variable somewhere instead
+ */
+void TilesFramework::update_title_msg(std::string message)
+{
+    assert (m_layers[LAYER_TILE_CONTROL].m_regions.size() == 1);
+    assert (m_active_layer == LAYER_TILE_CONTROL);
+    TitleRegion* reg = reinterpret_cast<TitleRegion*> (m_layers[LAYER_TILE_CONTROL].m_regions.at(0));
+    reg->update_message(message);
+    redraw();
+}
+
+/**
+ * Deletes the dynamically reserved Titlescreen memory
+ * at end. Runs reg->run to get one key input from the user
+ * so that the title screen stays ope until any input is given.
+ * Assumes that we only have one region on the layer
+ * If at some point it's possible to have multiple regions
+ * open while the title screen shows, the .at(0) will need
+ * to be changed and saved on a variable somewhere instead
+ */
+void TilesFramework::hide_title()
+{
+    assert (m_layers[LAYER_TILE_CONTROL].m_regions.size() == 1);
+    assert (m_active_layer == LAYER_TILE_CONTROL);
+    TitleRegion* reg = reinterpret_cast<TitleRegion*> (m_layers[LAYER_TILE_CONTROL].m_regions.at(0));
+    redraw();
+    reg->run();
     delete reg;
+    m_layers[LAYER_TILE_CONTROL].m_regions.clear();
 }
 
 void TilesFramework::draw_doll_edit()
@@ -142,6 +187,7 @@ void TilesFramework::draw_doll_edit()
     use_control_region(reg);
     delete reg;
 }
+
 
 void TilesFramework::use_control_region(ControlRegion *reg)
 {
