@@ -1301,6 +1301,20 @@ static bool _mons_throw(struct monsters *monster, struct bolt &pbolt,
     if (mons_intel(monster) == I_HIGH)
         exHitBonus += 10;
 
+    // Identify before throwing, so we don't get different
+    // messages for first and subsequent missiles.
+    if (monster->observable())
+    {
+        if (projected == LRET_LAUNCHED
+               && item_type_known(mitm[monster->inv[MSLOT_WEAPON]])
+            || projected == LRET_THROWN
+               && mitm[hand_used].base_type == OBJ_MISSILES)
+        {
+            set_ident_flags(mitm[hand_used], ISFLAG_KNOW_TYPE);
+            set_ident_flags(item, ISFLAG_KNOW_TYPE);
+        }
+    }
+
     // Now, if a monster is, for some reason, throwing something really
     // stupid, it will have baseHit of 0 and damage of 0.  Ah well.
     std::string msg = monster->name(DESC_CAP_THE);
@@ -1319,17 +1333,8 @@ static bool _mons_throw(struct monsters *monster, struct bolt &pbolt,
     msg += ".";
 
     if (monster->observable())
-    {
         mpr(msg.c_str());
 
-        if (projected == LRET_LAUNCHED
-               && item_type_known(mitm[monster->inv[MSLOT_WEAPON]])
-            || projected == LRET_THROWN
-               && mitm[hand_used].base_type == OBJ_MISSILES)
-        {
-            set_ident_flags(mitm[hand_used], ISFLAG_KNOW_TYPE);
-        }
-    }
     throw_noise(monster, pbolt, item);
 
     // [dshaligram] When changing bolt names here, you must edit
