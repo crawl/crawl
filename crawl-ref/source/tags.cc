@@ -1080,7 +1080,7 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.hell_exit);
 
     // elapsed time
-    marshallFloat(th, (float)you.elapsed_time);
+    marshallLong(th, you.elapsed_time);
 
     // wizard mode used
     marshallByte(th, you.wizard);
@@ -1206,12 +1206,12 @@ static void marshallPlaceInfo(writer &th, PlaceInfo place_info)
     marshallLong(th, place_info.turns_resting);
     marshallLong(th, place_info.turns_other);
 
-    marshallFloat(th, place_info.elapsed_total);
-    marshallFloat(th, place_info.elapsed_explore);
-    marshallFloat(th, place_info.elapsed_travel);
-    marshallFloat(th, place_info.elapsed_interlevel);
-    marshallFloat(th, place_info.elapsed_resting);
-    marshallFloat(th, place_info.elapsed_other);
+    marshallLong(th, place_info.elapsed_total);
+    marshallLong(th, place_info.elapsed_explore);
+    marshallLong(th, place_info.elapsed_travel);
+    marshallLong(th, place_info.elapsed_interlevel);
+    marshallLong(th, place_info.elapsed_resting);
+    marshallLong(th, place_info.elapsed_other);
 }
 
 static void tag_construct_you_dungeon(writer &th)
@@ -1528,7 +1528,10 @@ static void tag_read_you(reader &th, char minorVersion)
     you.hell_exit      = unmarshallByte(th);
 
     // elapsed time
-    you.elapsed_time   = (double)unmarshallFloat(th);
+    if (minorVersion >= TAG_MINOR_INTTIME)
+        you.elapsed_time   = unmarshallLong(th);
+    else
+        you.elapsed_time   = (double)unmarshallFloat(th);
 
     // wizard mode
     you.wizard         = (bool) unmarshallByte(th);
@@ -1662,7 +1665,7 @@ static void tag_read_you_items(reader &th, char minorVersion)
         you.seen_armour[j] = unmarshallLong(th);
 }
 
-static PlaceInfo unmarshallPlaceInfo(reader &th)
+static PlaceInfo unmarshallPlaceInfo(reader &th, char minorVersion)
 {
     PlaceInfo place_info;
 
@@ -1685,12 +1688,24 @@ static PlaceInfo unmarshallPlaceInfo(reader &th)
     place_info.turns_resting    = unmarshallLong(th);
     place_info.turns_other      = unmarshallLong(th);
 
-    place_info.elapsed_total      = (double) unmarshallFloat(th);
-    place_info.elapsed_explore    = (double) unmarshallFloat(th);
-    place_info.elapsed_travel     = (double) unmarshallFloat(th);
-    place_info.elapsed_interlevel = (double) unmarshallFloat(th);
-    place_info.elapsed_resting    = (double) unmarshallFloat(th);
-    place_info.elapsed_other      = (double) unmarshallFloat(th);
+    if (minorVersion >= TAG_MINOR_INTTIME)
+    {
+        place_info.elapsed_total      = unmarshallLong(th);
+        place_info.elapsed_explore    = unmarshallLong(th);
+        place_info.elapsed_travel     = unmarshallLong(th);
+        place_info.elapsed_interlevel = unmarshallLong(th);
+        place_info.elapsed_resting    = unmarshallLong(th);
+        place_info.elapsed_other      = unmarshallLong(th);
+    }
+    else
+    {
+        place_info.elapsed_total      = (long) unmarshallFloat(th);
+        place_info.elapsed_explore    = (long) unmarshallFloat(th);
+        place_info.elapsed_travel     = (long) unmarshallFloat(th);
+        place_info.elapsed_interlevel = (long) unmarshallFloat(th);
+        place_info.elapsed_resting    = (long) unmarshallFloat(th);
+        place_info.elapsed_other      = (long) unmarshallFloat(th);
+    }
 
     return place_info;
 }
@@ -1738,7 +1753,7 @@ static void tag_read_you_dungeon(reader &th, char minorVersion)
     unmarshallMap(th, level_exclusions,
                   unmarshall_level_id, unmarshallStringNoMax);
 
-    PlaceInfo place_info = unmarshallPlaceInfo(th);
+    PlaceInfo place_info = unmarshallPlaceInfo(th, minorVersion);
     ASSERT(place_info.is_global());
     you.set_place_info(place_info);
 
@@ -1750,7 +1765,7 @@ static void tag_read_you_dungeon(reader &th, char minorVersion)
 
     for (int i = 0; i < count_p; i++)
     {
-        place_info = unmarshallPlaceInfo(th);
+        place_info = unmarshallPlaceInfo(th, minorVersion);
         ASSERT(!place_info.is_global());
         you.set_place_info(place_info);
     }
@@ -1793,7 +1808,7 @@ static void tag_construct_level(writer &th)
 
     marshallLong(th, env.level_flags);
 
-    marshallFloat(th, (float)you.elapsed_time);
+    marshallLong(th, you.elapsed_time);
 
     // Map grids.
     // how many X?
@@ -2188,7 +2203,10 @@ static void tag_read_level( reader &th, char minorVersion )
 
     env.level_flags  = (unsigned long) unmarshallLong(th);
 
-    env.elapsed_time = unmarshallFloat(th);
+    if (minorVersion >= TAG_MINOR_INTTIME)
+        env.elapsed_time = unmarshallLong(th);
+    else
+        env.elapsed_time = (long)unmarshallFloat(th);
 
     // Map grids.
     // how many X?

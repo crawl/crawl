@@ -3742,7 +3742,7 @@ static int _div(int num, int denom)
 // Do various time related actions...
 void handle_time()
 {
-    int base_time = static_cast<int>(fmod(you.elapsed_time, 200));
+    int base_time = you.elapsed_time % 200;
     int old_time = base_time - you.time_taken;
 
     // The checks below assume the function is called at least
@@ -4266,11 +4266,11 @@ static void _catchup_monster_moves(monsters *mon, int turns)
 // Update the level when the player returns to it.
 //
 //---------------------------------------------------------------
-void update_level(double elapsedTime)
+void update_level(long elapsedTime)
 {
     ASSERT(!crawl_state.arena);
 
-    const int turns = static_cast<int>(elapsedTime / 10.0);
+    const int turns = elapsedTime / 10;
 
 #if DEBUG_DIAGNOSTICS
     int mons_total = 0;
@@ -4832,17 +4832,15 @@ static void _maybe_spawn_mushroom(item_def & corpse, int rot_time)
 //
 // update_corpses
 //
-// Update all of the corpses and food chunks on the floor. (The
-// elapsed time is a double because this is called when we re-
-// enter a level and a *long* time may have elapsed).
+// Update all of the corpses and food chunks on the floor.
 //
 //---------------------------------------------------------------
-void update_corpses(double elapsedTime)
+void update_corpses(long elapsedTime)
 {
-    if (elapsedTime <= 0.0)
+    if (elapsedTime <= 0)
         return;
 
-    const long rot_time = static_cast<long>(elapsedTime / 20.0);
+    const long rot_time = elapsedTime / 20;
 
     for (int c = 0; c < MAX_ITEMS; ++c)
     {
@@ -4879,8 +4877,8 @@ void update_corpses(double elapsedTime)
             it.special -= rot_time;
     }
 
-    int fountain_checks = static_cast<int>(elapsedTime / 1000.0);
-    if (x_chance_in_y(static_cast<int>(elapsedTime) % 1000, 1000))
+    int fountain_checks = elapsedTime / 1000;
+    if (x_chance_in_y(elapsedTime % 1000, 1000))
         fountain_checks += 1;
 
     // Dry fountains may start flowing again.

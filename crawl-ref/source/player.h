@@ -55,8 +55,7 @@ public:
 
   unsigned short unrand_reacts;
 
-  double elapsed_time;        // total amount of elapsed time in the game
-  // This is NOT a fraction; double is merely used as a portable long long here
+  long elapsed_time;        // total amount of elapsed time in the game
 
   int disease;
 

@@ -1984,11 +1984,10 @@ bool StashTracker::display_search_results(
 
 void StashTracker::update_corpses()
 {
-    if (you.elapsed_time - last_corpse_update < 20.0)
+    if (you.elapsed_time - last_corpse_update < 20)
         return;
 
-    const long rot_time = static_cast<long>((you.elapsed_time -
-                                             last_corpse_update) / 20.0);
+    const long rot_time = (you.elapsed_time - last_corpse_update) / 20;
 
     last_corpse_update = you.elapsed_time;
 

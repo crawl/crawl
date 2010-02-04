@@ -93,8 +93,8 @@ void change_labyrinth(bool msg = false);
 
 bool forget_inventory(bool quiet = false);
 bool vitrify_area(int radius);
-void update_corpses(double elapsedTime);
-void update_level(double elapsedTime);
+void update_corpses(long elapsedTime);
+void update_level(long elapsedTime);
 void handle_time();
 void recharge_rods(long aut, bool floor_only);
 
