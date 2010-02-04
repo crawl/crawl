@@ -21,10 +21,6 @@
 #include <algorithm>
 #include <functional>
 
-#ifdef TARGET_OS_DOS
-#include <file.h>
-#endif
-
 #ifdef UNIX
 #include <fcntl.h>
 #include <unistd.h>

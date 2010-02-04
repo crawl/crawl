@@ -180,6 +180,7 @@
     #include "libdos.h"
 
     #include <dos.h>
+    #include <file.h>
 
     #define round(x) floor((x)+0.5)
 
