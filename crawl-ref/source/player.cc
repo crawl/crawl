@@ -3178,7 +3178,9 @@ int check_stealth(void)
         // [ds] New stealth penalty formula from rob: SP = 6 * (EP^2)
         const int ep = -property(*arm, PARM_EVASION);
         const int penalty = 6 * ep * ep;
+#if 0
         dprf("Stealth penalty for armour (ep: %d): %d", ep, penalty);
+#endif
         stealth -= penalty;
     }
 
