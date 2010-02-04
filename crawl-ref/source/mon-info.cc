@@ -243,14 +243,19 @@ void monster_info::to_string(int count, std::string& desc,
             out << count << " "
                 << m_mon->name(DESC_PLAIN);
         }
-        // Don't differentiate between dancing weapons, mimics, (very)
+        // Specialcase mimics, so they don't get described as piles of gold
+        // when that would be inappropriate. (HACK)
+        else if (mons_is_mimic(type))
+        {
+            out << count << " mimics";
+        }
+        // Don't differentiate between dancing weapons, (very)
         // ugly things or draconians of different types.
         else if (m_fullname
                  && type != MONS_DANCING_WEAPON
                  && mons_genus(type) != MONS_DRACONIAN
                  && type != MONS_UGLY_THING
                  && type != MONS_VERY_UGLY_THING
-                 && !mons_is_mimic(type)
                  && m_mon->mname.empty())
         {
             out << count << " "
