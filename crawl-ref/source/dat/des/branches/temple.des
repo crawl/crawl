@@ -666,6 +666,7 @@ KMONS:   1 = giant goldfish / electric eel / big fish
 : else
 SUBST:   W = w
 :end
+KPROP: wW1 = no_submerge
 #
 : local brnd = crawl.random2(10)
 : if brnd == 0 then
