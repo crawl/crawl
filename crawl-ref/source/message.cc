@@ -480,8 +480,11 @@ class message_store
 {
     store_t msgs;
     message_item prev_msg;
+    bool last_of_turn;
 
 public:
+    message_store() : last_of_turn(false) {}
+
     void add(const message_item& msg)
     {
         if (msg.channel != MSGCH_PROMPT && prev_msg.merge(msg))
@@ -514,6 +517,19 @@ public:
         // in turn result in a recursive flush_prev.
         prev_msg = message_item();
         store_msg(msg);
+        if (last_of_turn)
+        {
+            msgwin.new_cmdturn(true);
+            last_of_turn = false;
+        }
+    }
+
+    void new_turn()
+    {
+        if (prev_msg)
+            last_of_turn = true;
+        else
+            msgwin.new_cmdturn(true);
     }
 
     // XXX: this should not need to exist
@@ -883,8 +899,7 @@ int msgwin_get_line(std::string prompt, char *buf, int len,
 
 void msgwin_new_turn()
 {
-    flush_prev_message();
-    msgwin.new_cmdturn(true);
+    messages.new_turn();
 }
 
 void msgwin_new_cmd()
