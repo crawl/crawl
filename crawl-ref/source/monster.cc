@@ -130,6 +130,8 @@ void monsters::reset()
 
 void monsters::init_with(const monsters &mon)
 {
+    reset();
+
     mname             = mon.mname;
     type              = mon.type;
     base_monster      = mon.base_monster;
