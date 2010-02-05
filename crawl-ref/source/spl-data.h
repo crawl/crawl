@@ -291,7 +291,8 @@
      7,
      0,
      -1, -1,
-     0,
+     -4,   // Just a bit noisier than Blink, to keep this spell relevant
+           // for stabbers. [rob]
      NULL,
      false,
      true
