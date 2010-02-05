@@ -906,6 +906,8 @@ wall/dngn_transparent_wall DNGN_TRANSPARENT_WALL DNGN_TRANSPAREN_WALL_CYAN
 
 
 # Coloured metal walls
+wall/dngn_mirrored_wall DNGN_MIRROR_WALL
+
 wall/dngn_metal_wall DNGN_METAL_WALL
 
 %variation DNGN_METAL_WALL blue
