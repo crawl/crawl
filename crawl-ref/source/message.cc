@@ -289,7 +289,6 @@ class message_window
         else
         {
             more(true);
-            clear();
             return (height()); // XXX: unused; perhaps height()-1 ?
         }
     }
@@ -453,6 +452,7 @@ public:
             cprintf("--more--");
             readkey_more(user);
         }
+        clear(); // this could depend on options
     }
 };
 
