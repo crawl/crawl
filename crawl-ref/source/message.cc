@@ -212,7 +212,7 @@ static bool _pre_more();
 class message_window
 {
     int next_line;
-    int mesclr_line;    // last line-after-mesclr
+    int input_line;    // last line-after-input
     std::vector<formatted_string> lines;
     prefix_type prompt; // current prefix prompt
 
@@ -280,16 +280,34 @@ class message_window
         if (space >= n)
             return 0;
 
-        if (!more_enabled()
-            || !Options.clear_messages && mesclr_line >= n - space)
+        int s = 0;
+        if (input_line > 0)
         {
-            scroll(n - space);
-            return (n - space);
+            s = std::min(input_line, n - space);
+            scroll(s);
+            space += s;
+        }
+
+        if (space >= n)
+            return s;
+
+        else if (more_enabled())
+        {
+            more(true); // this clears, also
+            return (height()); // XXX: unused; perhaps height()-1 ?
         }
         else
         {
-            more(true);
-            return (height()); // XXX: unused; perhaps height()-1 ?
+            if (Options.clear_messages)
+            {
+                scroll(n - space);
+                return (s + n - space);
+            }
+            else
+            {
+                clear();
+                return (height());
+            }
         }
     }
 
@@ -319,7 +337,7 @@ class message_window
 
 public:
     message_window()
-        : next_line(0), mesclr_line(0), prompt(P_NONE)
+        : next_line(0), input_line(0), prompt(P_NONE)
     {
         clear_lines(); // initialize this->lines
     }
@@ -367,7 +385,7 @@ public:
         for (; i < height(); ++i)
             lines[i].clear();
         next_line -= n;
-        mesclr_line -= n;
+        input_line -= n;
     }
 
     // write to screen (without refresh)
@@ -408,9 +426,9 @@ public:
         show();
     }
 
-    void mesclr()
+    void got_input()
     {
-        mesclr_line = next_line;
+        input_line = next_line;
     }
 
     void new_cmdturn(bool new_turn)
@@ -420,7 +438,7 @@ public:
 
     bool any_messages()
     {
-        return (next_line > mesclr_line);
+        return (next_line > input_line);
     }
 
     /*
@@ -883,9 +901,7 @@ void msgwin_prompt(std::string prompt)
 void msgwin_reply(std::string reply)
 {
     messages.add(message_item(_prompt + reply, MSGCH_PROMPT, 0));
-    // Make the window think we cleared after this line, to
-    // avoid extra more prompts.
-    msgwin.mesclr();
+    msgwin.got_input();
 }
 
 void msgwin_got_input()
@@ -1060,7 +1076,7 @@ void mesclr(bool force)
     // ASSERT(!messages.have_prev());
     flush_prev_message();
 
-    msgwin.mesclr(); // Output new leading dash.
+    msgwin.got_input(); // Consider old messages as read.
 
     if (Options.clear_messages || force)
         msgwin.clear();
