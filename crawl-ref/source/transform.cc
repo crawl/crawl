@@ -128,7 +128,7 @@ _init_equipment_removal(transformation_type trans)
     for (int i = EQ_WEAPON + 1; i < NUM_EQUIP; ++i)
     {
         const equipment_type eq = static_cast<equipment_type>(i);
-        const item_def *pitem = you.slot_item(eq);
+        const item_def *pitem = you.slot_item(eq, true);
         if (pitem && !transform_allows_wearing_item(*pitem, trans))
             result.insert(eq);
     }
@@ -138,7 +138,7 @@ _init_equipment_removal(transformation_type trans)
 static void _unwear_equipment_slot(equipment_type eqslot)
 {
     const int slot = you.equip[eqslot];
-    item_def *item = you.slot_item(eqslot);
+    item_def *item = you.slot_item(eqslot, true);
     if (item == NULL)
         return;
 
@@ -162,7 +162,7 @@ static void _remove_equipment(const std::set<equipment_type>& removed,
     for (iter = removed.begin(); iter != removed.end(); ++iter)
     {
         const equipment_type e = *iter;
-        item_def *equip = you.slot_item(e);
+        item_def *equip = you.slot_item(e, true);
         if (equip == NULL)
             continue;
 

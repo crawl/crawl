@@ -1587,7 +1587,7 @@ bool monsters::pickup_armour(item_def &item, int near, bool force)
         return pickup(item, mslot, near);
 
     // Very simplistic armour evaluation (AC comparison).
-    if (const item_def *existing_armour = slot_item(eq))
+    if (const item_def *existing_armour = slot_item(eq, false))
     {
         if (!force)
         {
@@ -1952,7 +1952,7 @@ void monsters::wield_melee_weapon(int near)
     }
 }
 
-item_def *monsters::slot_item(equipment_type eq)
+item_def *monsters::slot_item(equipment_type eq, bool include_melded)
 {
     return (mslot_item(equip_slot_to_mslot(eq)));
 }

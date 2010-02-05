@@ -22,7 +22,7 @@ actor::~actor()
 
 bool actor::has_equipped(equipment_type eq, int sub_type) const
 {
-    const item_def *item = slot_item(eq);
+    const item_def *item = slot_item(eq, false);
     return (item && item->sub_type == sub_type);
 }
 
@@ -193,7 +193,7 @@ int actor::body_weight(bool base) const
 
 bool actor::check_train_armour()
 {
-    if (const item_def *armour = slot_item(EQ_BODY_ARMOUR))
+    if (const item_def *armour = slot_item(EQ_BODY_ARMOUR, false))
     {
         if (x_chance_in_y(item_mass(*armour), 1000))
         {
@@ -206,7 +206,7 @@ bool actor::check_train_armour()
 
 bool actor::check_train_dodging()
 {
-    const item_def *armour = slot_item(EQ_BODY_ARMOUR);
+    const item_def *armour = slot_item(EQ_BODY_ARMOUR, false);
     const int mass = armour? item_mass(*armour) : 0;
     if (!x_chance_in_y(mass, 800))
     {

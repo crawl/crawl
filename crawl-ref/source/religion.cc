@@ -3202,7 +3202,7 @@ bool player_can_join_god(god_type which_god)
 void god_welcome_identify_gear()
 {
     // Check for amulets of faith.
-    item_def *amulet = you.slot_item(EQ_AMULET);
+    item_def *amulet = you.slot_item(EQ_AMULET, false);
     if (amulet && amulet->sub_type == AMU_FAITH)
     {
         // The flash happens independent of item id.

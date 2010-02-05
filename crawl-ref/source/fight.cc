@@ -1393,7 +1393,7 @@ std::string melee_attack::player_why_missed()
             (player_shield_tohit_penalty
              && to_hit + player_shield_tohit_penalty >= ev);
 
-        const item_def *armour = you.slot_item(EQ_BODY_ARMOUR);
+        const item_def *armour = you.slot_item(EQ_BODY_ARMOUR, false);
         const std::string armour_name =
             (armour? armour->name(DESC_BASENAME) : std::string("armour"));
 
@@ -4399,7 +4399,8 @@ int melee_attack::mons_apply_defender_ac(int damage, int damage_max)
         int damage_reduction = random2(ac + 1);
         int guaranteed_damage_reduction = 0;
 
-        if (const item_def *body_armour = defender->slot_item(EQ_BODY_ARMOUR))
+        if (const item_def *body_armour =
+            defender->slot_item(EQ_BODY_ARMOUR, false))
         {
             if (defender->atype() == ACT_PLAYER)
             {
