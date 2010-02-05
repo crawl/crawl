@@ -2522,19 +2522,12 @@ void level_change(bool skip_attribute_increase)
     while (you.experience_level < 27
            && you.experience > exp_needed(you.experience_level + 2))
     {
-        bool skip_more = false;
-
         if (!skip_attribute_increase && !wiz_cmd)
         {
             crawl_state.cancel_cmd_all();
 
             if (is_processing_macro())
                 flush_input_buffer(FLUSH_ABORT_MACRO);
-        }
-        else if (crawl_state.is_replaying_keys()
-                 || crawl_state.is_repeating_cmd() || is_processing_macro())
-        {
-            skip_more = true;
         }
 
         const int old_hp = you.hp;
@@ -2579,8 +2572,6 @@ void level_change(bool skip_attribute_increase)
 
             if (!(new_exp % 3) && !skip_attribute_increase)
                 _attribute_increase();
-
-            // No more prompts for this XL past this point.
 
             int brek = 0;
 
@@ -2850,8 +2841,9 @@ void level_change(bool skip_attribute_increase)
                     default:
                         break;
                     }
-                    more();
+#ifdef USE_TILE
                     redraw_screen();
+#endif
                 }
 
                 if (you.experience_level == 14)
@@ -2893,8 +2885,9 @@ void level_change(bool skip_attribute_increase)
 #endif
                     mpr("Your scales start turning grey.",
                         MSGCH_INTRINSIC_GAIN);
-                    more();
+#ifdef USE_TILE
                     redraw_screen();
+#endif
                 }
 
                 if (!(you.experience_level % 3))
@@ -3088,9 +3081,6 @@ void level_change(bool skip_attribute_increase)
             you.max_level = you.experience_level;
 
         xom_is_stimulated(16);
-
-        if (!skip_more && any_messages())
-            more();
 
         learned_something_new(TUT_NEW_LEVEL);
     }
