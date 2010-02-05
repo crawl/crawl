@@ -247,7 +247,7 @@ ENDMAP
 # Firehouse
 #
 NAME:   lemuel_firehouse
-DEPTH:  Zot: 1-4
+DEPTH:  Zot:1-4
 ORIENT: float
 MONS:   orb of fire
 MONS:   fire elemental
@@ -322,6 +322,75 @@ MAP
      .............
 ENDMAP
 
+###################################################
+# Minmay's Elemental castle
+# 50% electricity, 25% fire, 25% ice
+NAME:    minmay_elemental_castle
+ORIENT:  float
+DEPTH:   Zot:1-4
+TAGS:    no_rotate
+: if crawl.coinflip() then
+MONS:    titan, storm dragon, electric golem
+SUBST:   F = 3
+ITEM:    disc of storms, air elemental fan, staff of air, book of the sky
+: elseif crawl.coinflip() then
+MONS:    frost giant, ice dragon
+MARKER:  F = lua:fog_machine { cloud_type = "freezing vapour", \
+              pow_min = 5, pow_max = 15, delay = 10, size = 1, \
+              walk_dist = 0, spread_rate= 0 }
+ITEM:    wand of cold, staff of cold, book of frost, book of ice
+SUBST:   w = l
+SUBST:   W = l..
+: else
+MONS:    fire giant, dragon
+MARKER:  F = lua:fog_machine { cloud_type = "flame", pow_min = 5, \
+              pow_max = 15, delay = 10, size = 1, walk_dist = 0, \
+              spread_rate= 0 }
+ITEM:    wand of fire, staff of fire, book of flames, book of fire
+: end
+SUBST:   1 = 112.
+SUBST:   2 = 221.
+SHUFFLE: defg
+MAP
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+WwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwW
+WwcccccccwwwwwwwwwwwwwwwwwwwwcccccccwW
+Wwcd*%.1cwwwwwwwwwwwwwwwwwwwwc1.%*gcwW
+Wwc*%...cwwwwwwwwwwwwwwwwwwwwc...%*cwW
+Wwc%....ccccccccc++++ccccccccc....%cwW
+Wwc................................cwW
+Wwc1........2............2........1cwW
+Wwcccc..........................ccccwW
+Wwwwwc...cccccccccccccccccccc...cwwwwW
+Wwwwwc...cccccccccccccccccccc...cwwwwW
+Wwwwwc...cccccccccccccccccccc...cwwwwW
+Wwwwwc.2.ccc*|*cccccccc*|*ccc.2.cwwwwW
+Wwwwwc...ccc...cccccccc...ccc...cwwwwW
+Wwwwwc...ccc...cccccccc...ccc...cwwwwW
+Wwwwwc...ccc.F.cccccccc.F.ccc...cwwwwW
+Wwwwwc...ccc...cccccccc...ccc...cwwwwW
+Wwwwwc...ccc...cccccccc...ccc...cwwwwW
+Wwwwwc..........................cwwwwW
+Wwwwwc..........................cwwwwW
+Wwwwwc...ccc..............ccc...cwwwwW
+Wwwwwc...ccc....2....2....ccc...cwwwwW
+Wwwwwc...ccc..............ccc...cwwwwW
+Wwwwwc...ccc..............ccc...cwwwwW
+Wwwwwc...ccc..............ccc...cwwwwW
+Wwwwwc.2.ccc1............1ccc.2.cwwwwW
+Wwwwwc...ccccccccc..ccccccccc...cwwwwW
+Wwwwwc...ccccccccc..ccccccccc...cwwwwW
+Wwwwwc...ccccccccc..ccccccccc...cwwwwW
+Wwcccc..........................ccccwW
+Wwc1........2............2........1cwW
+Wwc................................cwW
+Wwc%....cccccccccccccccccccccc....%cwW
+Wwc*%...cwwwwwwwwwwwwwwwwwwwwc...%*cwW
+Wwce*%.1cwwwwwwwwwwwwwwwwwwwwc1.%*fcwW
+WwcccccccwwwwwwwwwwwwwwwwwwwwcccccccwW
+WwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwW
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+ENDMAP
 
 
 ##############################################################################
