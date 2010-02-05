@@ -308,7 +308,6 @@ default-depth:
 ###############################################################################
 # Firstly, we have Tukima's Dance Studio.
 #
-# Todo: Still needs silver mirror tile. Desperately.
 NAME:       wizlab_tukima
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
@@ -394,7 +393,7 @@ TILE:       c = wall_stone_dark
 TILE:       V = dngn_dry_fountain_white
 LFLOORTILE: floor_pebble_white
 COLOUR:     mMV = silver
-TILE:       m = dngn_mirrored_wall
+TILE:       m = dngn_mirror_wall
 KMONS:      8 = ice statue col:silver spells:blink_other;blink_other;blink_other;\
                     blink_other;blink_other;major_healing name:strange_machine \
                     name_replace name_descriptor hd:13 hp:120
