@@ -52,6 +52,7 @@
 #include "jobs.h"
 #include "kills.h"
 #include "libutil.h"
+#include "macro.h"
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"
@@ -1806,6 +1807,10 @@ void save_game(bool leave_game, const char *farewellmsg)
     // Stack allocated std::string's go in seperate function,
     // so Valgrind doesn't complain.
     _save_game_base();
+    
+    // Prompt for saving macros
+    if(yesno("Save macros?", true, 'n'))
+        macro_save();
 
     // If just save, early out.
     if (!leave_game)
