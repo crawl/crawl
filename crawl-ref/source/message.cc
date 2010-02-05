@@ -77,6 +77,11 @@ struct message_item
         return (repeats > 0);
     }
 
+    std::string pure_text() const
+    {
+        return formatted_string::parse_string(text).tostring();
+    }
+
     std::string with_repeats() const
     {
         // TODO: colour the repeats indicator?
@@ -875,11 +880,8 @@ void mpr(std::string text, msg_channel_type channel, int param)
     if (channel == MSGCH_PROMPT || channel == MSGCH_ERROR)
         set_more_autoclear(false);
 
-    if (check_more(formatted_string::parse_string(text).tostring(),
-                   channel))
-    {
+    if (check_more(msg.pure_text(), channel))
         more(true);
-    }
 }
 
 static std::string show_prompt(std::string prompt)
@@ -1176,13 +1178,8 @@ std::string get_last_messages(int mcount)
     message_item msg;
     // XXX: should be using iterators here
     for (int i = 0; i < mcount && (msg = messages.get_store()[-i-1]); ++i)
-    {
         if (is_channel_dumpworthy(msg.channel))
-        {
-            text = formatted_string::parse_string(msg.text).tostring()
-                 + EOL + text;
-        }
-    }
+            text = msg.pure_text() + EOL + text;
 
     // An extra line of clearance.
     if (!text.empty())
