@@ -888,6 +888,11 @@ void msgwin_reply(std::string reply)
     msgwin.mesclr();
 }
 
+void msgwin_got_input()
+{
+    msgwin.got_input();
+}
+
 int msgwin_get_line(std::string prompt, char *buf, int len,
                     input_history *mh, int (*keyproc)(int& c))
 {
