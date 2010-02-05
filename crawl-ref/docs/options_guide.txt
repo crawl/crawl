@@ -64,7 +64,7 @@ The contents of this text are:
                 easy_exit_menu, sort_menus
 4-j     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
-                status_caption_colour, clear_messages, show_more,
+                status_caption_colour, clear_messages, show_more, small_more,
                 show_inventory_weights, show_gold_turns, show_beam,
                 item_stack_summary_minimum, list_rotten,
                 mlist_min_height, msg_min_height, msg_max_height,
@@ -1290,6 +1290,12 @@ show_more = true
         Setting this option to false will cause the game not to prompt
         if more than a window-full of messages are output at once. This
         options has no effect if clear_messages is set.
+
+small_more = true
+        With small_more = false, the --more-- prompt is on a separate
+        line at the bottom of the message window. With small_more = true
+        (default), it is just the bottom left character if clear_messages
+        is not set.
 
 show_inventory_weights = false
         When this is set to true, inventory listings will mention the
