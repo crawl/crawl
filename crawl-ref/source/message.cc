@@ -356,7 +356,7 @@ public:
 
     bool first_col_more() const
     {
-        return use_first_col();
+        return (use_first_col() && Options.small_more);
     }
 
     bool use_first_col() const
@@ -451,9 +451,9 @@ public:
 
         show();
         int last_row = crawl_view.msgsz.y;
-        cgotoxy(1, last_row, GOTO_MSG);
         if (first_col_more())
         {
+            cgotoxy(1, last_row, GOTO_MSG);
             glyph g = prefix_glyph(full ? P_FULL_MORE : P_OTHER_MORE);
             formatted_string f;
             f.add_glyph(g);
@@ -466,6 +466,7 @@ public:
         }
         else
         {
+            cgotoxy(use_first_col() ? 2 : 1, last_row, GOTO_MSG);
             textcolor(channel_to_colour(MSGCH_PROMPT));
             cprintf("--more--");
             readkey_more(user);

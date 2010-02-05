@@ -702,6 +702,8 @@ void game_options::reset_options()
 
     clear_messages         = false;
     show_more              = true;
+    small_more             = true;
+
     pickup_dropped         = false;
     pickup_thrown          = true;
 
@@ -2474,6 +2476,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(note_xom_effects);
     else BOOL_OPTION(clear_messages);
     else BOOL_OPTION(show_more);
+    else BOOL_OPTION(small_more);
     else if (key == "flush")
     {
         if (subkey == "failure")
