@@ -133,10 +133,14 @@ struct message_item
                      && repeats == 1 && other.repeats == 1
                      && short_ && other.short_)
             {
-                // short_ stays true
+                // Note that short_ stays true.
+
+                std::string sep = "<lightgrey>";
                 if (!_ends_in_punctuation(pure_text()))
-                    text += ";";
-                text += " ";
+                    sep += ";";
+                sep += " </lightgrey>";
+
+                text += sep;
                 text += other.text;
                 return true;
             }
