@@ -1595,9 +1595,6 @@ bool travel_pathfind::path_examine_point(const coord_def &c)
 
 // Try to avoid to let travel (including autoexplore) move the player right
 // next to a lurking (previously unseen) monster.
-// NOTE: This define should either be replaced with a proper option, or
-//       removed entirely.
-#define SAFE_EXPLORE
 void find_travel_pos(const coord_def& youpos,
                      char *move_x, char *move_y,
                      std::vector<coord_def>* features)
@@ -1617,7 +1614,6 @@ void find_travel_pos(const coord_def& youpos,
     const coord_def dest = tp.pathfind( rmode );
     coord_def new_dest = dest;
 
-#ifdef SAFE_EXPLORE
     // Check whether this step puts us adjacent to any grid we haven't ever
     // seen or any non-wall grid we cannot currently see.
     //
@@ -1665,7 +1661,7 @@ void find_travel_pos(const coord_def& youpos,
 #endif
         }
     }
-#endif
+
     if (new_dest.origin())
     {
         if (move_x && move_y)
