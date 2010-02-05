@@ -769,7 +769,7 @@ static bool _xom_annoyance_gift(int power, bool debug = false)
             return (true);
         }
 
-        const item_def *gloves = you.slot_item(EQ_GLOVES);
+        const item_def *gloves = you.slot_item(EQ_GLOVES, true);
         if (coinflip() && gloves && gloves->cursed())
         {
             if (debug)
@@ -782,7 +782,7 @@ static bool _xom_annoyance_gift(int power, bool debug = false)
             return (true);
         };
 
-        const item_def *amulet = you.slot_item(EQ_AMULET);
+        const item_def *amulet = you.slot_item(EQ_AMULET, true);
         if (coinflip() && amulet && amulet->cursed())
         {
             if (debug)
@@ -795,8 +795,8 @@ static bool _xom_annoyance_gift(int power, bool debug = false)
             return (true);
         };
 
-        const item_def *left_ring = you.slot_item(EQ_LEFT_RING);
-        const item_def *right_ring = you.slot_item(EQ_RIGHT_RING);
+        const item_def *left_ring = you.slot_item(EQ_LEFT_RING, true);
+        const item_def *right_ring = you.slot_item(EQ_RIGHT_RING, true);
         if (coinflip() && ((left_ring && left_ring->cursed())
                            || (right_ring && right_ring->cursed())))
         {
@@ -830,7 +830,7 @@ static bool _xom_annoyance_gift(int power, bool debug = false)
         }
     }
 
-    const item_def *cloak = you.slot_item(EQ_CLOAK);
+    const item_def *cloak = you.slot_item(EQ_CLOAK, true);
     if (coinflip() && cloak && cloak->cursed())
     {
         // If you are wearing a cursed cloak, then Xom will give you a
@@ -2467,13 +2467,13 @@ static bool _could_wear_eq(equipment_type eq)
     if (!you_tran_can_wear(eq, true))
         return (false);
 
-    return (you.slot_item(eq) == NULL);
+    return (!you.slot_item(eq, true));
 }
 
 static item_def* _tran_get_eq(equipment_type eq)
 {
     if (you_tran_can_wear(eq, true))
-        return (you.slot_item(eq));
+        return (you.slot_item(eq, true));
 
     return (NULL);
 }
