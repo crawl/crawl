@@ -171,7 +171,7 @@ function ch_mon_is_safe(mon, default_is_safe, moving, dist)
             local m        = mons_table[1][i]
             local min_dist = mons_table[2][i]
 
-            if m:matches(mon.name) then
+            if m:matches(mon:desc()) then
                 return min_dist <= dist
             end
         end
@@ -189,7 +189,7 @@ function ch_mon_is_safe(mon, default_is_safe, moving, dist)
         local m        = mons_table[1][i]
         local min_dist = mons_table[2][i]
 
-        if m:matches(mon.name) then
+        if m:matches(mon:desc()) then
             return min_dist <= dist
         end
     end
