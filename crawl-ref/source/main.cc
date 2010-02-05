@@ -287,6 +287,8 @@ int main( int argc, char *argv[] )
     // Warn player about their weapon, if unsuitable.
     wield_warning(false);
 
+    mpr("Press <w>?</w> for a list of commands and other information.");
+
     _prep_input();
 
     if (game_start)
