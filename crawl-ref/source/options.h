@@ -66,6 +66,7 @@ public:
     bool        mlist_targetting;
     bool        classic_hud;
     bool        msg_condense_repeats;
+    bool        msg_condense_short;
 
     // The view lock variables force centering the viewport around the PC @
     // at all times (the default). If view locking is not enabled, the viewport

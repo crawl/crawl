@@ -618,6 +618,7 @@ void game_options::reset_options()
     mlist_targetting = false;
     classic_hud = false;
     msg_condense_repeats = true;
+    msg_condense_short = true;
 
     view_lock_x = true;
     view_lock_y = true;
@@ -2436,6 +2437,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 #endif
     else BOOL_OPTION(classic_hud);
     else BOOL_OPTION(msg_condense_repeats);
+    else BOOL_OPTION(msg_condense_short);
     else BOOL_OPTION(view_lock_x);
     else BOOL_OPTION(view_lock_y);
     else if (key == "view_lock")
