@@ -485,8 +485,9 @@ union float_marshall_kludge
 {
     // [ds] Does ANSI C guarantee that sizeof(float) == sizeof(long)?
     // [haranp] no, unfortunately
-    float f_num;
-    long  l_num;
+    // [1KB] on 64 bit arches, long is 64 bits, while float is 32 bits.
+    float    f_num;
+    int32_t  l_num;
 };
 
 // single precision float -- marshall in network order.
