@@ -283,7 +283,7 @@ public:
             || you.level_type == LEVEL_ABYSS;
     }
 
-    StashTracker() : levels(), last_corpse_update(0.0)
+    StashTracker() : levels(), last_corpse_update(0)
     {
     }
 
@@ -343,7 +343,7 @@ private:
     typedef std::map<level_id, LevelStashes> stash_levels_t;
     stash_levels_t levels;
 
-    double last_corpse_update;
+    long last_corpse_update;
 
     friend class ST_ItemIterator;
 };

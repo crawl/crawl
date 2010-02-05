@@ -52,9 +52,6 @@
 // Global
 StashTracker StashTrack;
 
-#define ST_MAJOR_VER ((unsigned char) 4)
-#define ST_MINOR_VER ((unsigned char) 8)
-
 void stash_init_new_level()
 {
     // If there's an existing stash level for Pan, blow it away.
@@ -1534,12 +1531,8 @@ void StashTracker::write(std::ostream &os, bool identify) const
 
 void StashTracker::save(writer& outf) const
 {
-    // Write version info first - major + minor
-    marshallByte(outf, ST_MAJOR_VER);
-    marshallByte(outf, ST_MINOR_VER);
-
     // Time of last corpse update.
-    marshallFloat(outf, (float) last_corpse_update);
+    marshallLong(outf, last_corpse_update);
 
     // How many levels have we?
     marshallShort(outf, (short) levels.size());
@@ -1552,14 +1545,16 @@ void StashTracker::save(writer& outf) const
 
 void StashTracker::load(reader& inf)
 {
-    // Check version. Compatibility isn't important, since stash-tracking
-    // is non-critical.
-    unsigned char major = unmarshallByte(inf),
-                  minor = unmarshallByte(inf);
-    if (major != ST_MAJOR_VER || minor != ST_MINOR_VER) return ;
-
-    // Time of last corpse update.
-    last_corpse_update = (double) unmarshallFloat(inf);
+    if (inf.getMinorVersion() < TAG_MINOR_STASHVER)
+    {
+        // Stash version is now a part of the global save.
+        unmarshallByte(inf),
+        unmarshallByte(inf);
+        last_corpse_update = (long)unmarshallFloat(inf);
+    }
+    else
+        // Time of last corpse update.
+        last_corpse_update = unmarshallLong(inf);
 
     int count = unmarshallShort(inf);
 
