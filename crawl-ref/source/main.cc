@@ -720,7 +720,7 @@ static void _start_running( int dir, int mode )
     if (Tutorial.tutorial_events[TUT_SHIFT_RUN] && mode == RMODE_START)
         Tutorial.tutorial_events[TUT_SHIFT_RUN] = false;
 
-    if (i_feel_safe(true, true))
+    if (i_feel_safe(true))
         you.running.initialise(dir, mode);
 }
 
@@ -842,7 +842,7 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_MOVE_DOWN_LEFT:
     case CMD_MOVE_UP_RIGHT:
     case CMD_MOVE_DOWN_RIGHT:
-        if (!i_feel_safe(false, true))
+        if (!i_feel_safe())
         {
             return yesno("Really repeat movement command while monsters "
                          "are nearby?", false, 'n');
