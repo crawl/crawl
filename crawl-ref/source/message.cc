@@ -46,6 +46,22 @@
 #include "luaterp.h"
 #endif
 
+static bool _ends_in_punctuation(const std::string& text)
+{
+    switch (text[text.size() - 1])
+    {
+    case '.':
+    case '!':
+    case '?':
+    case ',':
+    case ';':
+    case ':':
+        return true;
+    default:
+        return false;
+    }
+}
+
 struct message_item
 {
     msg_channel_type    channel;        // message channel
@@ -53,9 +69,10 @@ struct message_item
     std::string         text;           // text of message (tagged string...)
     int                 repeats;
     long                turn;
+    bool                short_;         // short enough to merge?
 
     message_item() : channel(NUM_MESSAGE_CHANNELS), param(0),
-                     text(""), repeats(0), turn(-1)
+                     text(""), repeats(0), turn(-1), short_(true)
     {
     }
 
@@ -63,12 +80,13 @@ struct message_item
         : channel(chan), param(par), text(msg), repeats(1),
           turn(you.num_turns)
     {
+        short_ = pure_text().length() < 30;
     }
 
     message_item(std::string msg, msg_channel_type chan, int par,
                  int rep, int trn)
         : channel(chan), param(par), text(msg), repeats(rep),
-          turn(trn)
+          turn(trn), short_(false)
     {
     }
 
@@ -104,14 +122,26 @@ struct message_item
 
         if (!Options.msg_condense_repeats)
             return false;
-        if (other.channel == channel && other.param == param &&
-            other.text == text)
+        if (other.channel == channel && other.param == param)
         {
-            repeats += other.repeats;
-            return true;
+            if (Options.msg_condense_repeats && other.text == text)
+            {
+                repeats += other.repeats;
+                return true;
+            }
+            else if (Options.msg_condense_short
+                     && repeats == 1 && other.repeats == 1
+                     && short_ && other.short_)
+            {
+                // short_ stays true
+                if (!_ends_in_punctuation(pure_text()))
+                    text += ";";
+                text += " ";
+                text += other.text;
+                return true;
+            }
         }
-        else
-            return false;
+        return false;
     }
 };
 
