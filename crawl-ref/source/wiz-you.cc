@@ -316,7 +316,7 @@ void wizard_set_piety()
     mprf("Seting piety to %d.", newpiety);
     int diff = newpiety - you.piety;
     if (diff > 0)
-        gain_piety(diff);
+        gain_piety(diff, true);
     else
         lose_piety(-diff);
 
