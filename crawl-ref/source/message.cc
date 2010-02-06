@@ -277,7 +277,7 @@ class message_window
 
     int use_last_line() const
     {
-        return (!more_enabled() || first_col_more());
+        return (first_col_more());
     }
 
     int width() const
