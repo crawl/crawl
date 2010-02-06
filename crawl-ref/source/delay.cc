@@ -1081,6 +1081,9 @@ static void _finish_delay(const delay_queue_item &delay)
 
     case DELAY_ARMOUR_ON:
         armour_wear_effects(delay.parm1);
+        // If butchery (parm2), autopickup chunks.
+        if (Options.chunks_autopickup && delay.parm2)
+            autopickup();
         break;
 
     case DELAY_ARMOUR_OFF:
