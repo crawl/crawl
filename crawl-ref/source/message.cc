@@ -845,7 +845,7 @@ void dprf( const char *format, ... )
 
 static bool _updating_view = false;
 
-static bool check_more(std::string line, msg_channel_type channel)
+static bool check_more(const std::string& line, msg_channel_type channel)
 {
     for (unsigned i = 0; i < Options.force_more_message.size(); ++i)
         if (Options.force_more_message[i].is_filtered(channel, line))
