@@ -199,9 +199,10 @@ bool monster_can_submerge(const monsters *mons, dungeon_feature_type grid)
     if (testbits(env.pgrid(mons->pos()), FPROP_NO_SUBMERGE))
         return (false);
     if (mons_class_flag(mons->type, M_SUBMERGES))
-        switch (mons_primary_habitat(mons))
+        switch (mons_habitat(mons))
         {
         case HT_WATER:
+        case HT_AMPHIBIOUS:
             return (feat_is_watery(grid));
         case HT_LAVA:
             return (grid == DNGN_LAVA);
