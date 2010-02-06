@@ -260,11 +260,6 @@ class message_window
         return crawl_view.msgsz.y;
     }
 
-    int out_height() const
-    {
-        return (height() - (use_last_line() ? 0 : 1));
-    }
-
     int use_last_line() const
     {
         return (!more_enabled() || first_col_more());
@@ -385,6 +380,11 @@ public:
     {
         // XXX: broken (why?)
         lines.resize(height());
+    }
+
+    unsigned int out_height() const
+    {
+        return (height() - (use_last_line() ? 0 : 1));
     }
 
     void clear_lines()
@@ -965,6 +965,11 @@ void msgwin_new_cmd()
     flush_prev_message();
     bool new_turn = (you.num_turns > _last_msg_turn);
     msgwin.new_cmdturn(new_turn);
+}
+
+unsigned int msgwin_lines()
+{
+    return msgwin.out_height();
 }
 
 // mpr() an arbitrarily long list of strings without truncation or risk

@@ -48,6 +48,8 @@ class input_history;
 void msgwin_prompt(std::string prompt);
 void msgwin_reply(std::string reply);
 
+unsigned int msgwin_lines();
+
 // Tell the message window that previous messages may be considered
 // read, e.g. after reading input from the player.
 void msgwin_got_input();
