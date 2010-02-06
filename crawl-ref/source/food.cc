@@ -535,11 +535,8 @@ bool butchery(int which_corpse)
     if (!can_butcher)
     {
         // Try to find a butchering implement.
-        if (!gloved_butcher)
-        {
-            if (!_find_butchering_implement(butcher_tool))
-                return (false);
-        }
+        if (!_find_butchering_implement(butcher_tool) && !gloved_butcher)
+            return (false);
 
         if (butcher_tool == -1 && gloved_butcher)
             removed_gloves = true;
