@@ -382,7 +382,7 @@ static void _terminate_butchery(bool wpn_switch, bool removed_gloves,
 
     // Put on the removed gloves.
     if (removed_gloves && you.equip[EQ_GLOVES] != old_gloves)
-        start_delay(DELAY_ARMOUR_ON, 1, old_gloves);
+        start_delay(DELAY_ARMOUR_ON, 1, old_gloves, 1);
 }
 
 static bool _have_corpses_in_pack(bool remind)
