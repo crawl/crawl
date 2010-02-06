@@ -446,6 +446,7 @@ static bool _mon_exposed_in_cloud(const monsters *mon)
         return (false);
 
     return (!mon->visible_to(&you)
+            && you.see_cell(mon->pos())
             && is_opaque_cloud(env.cgrid(mon->pos()))
             && !mons_is_insubstantial(mon->type));
 }
@@ -1427,21 +1428,31 @@ void direction_chooser::print_target_monster_description() const
 {
     // Do we see anything?
     const monsters* mon = monster_at(target());
-    if (mon == NULL || mons_is_unknown_mimic(mon) || !you.can_see(mon))
+    if (mon == NULL || mons_is_unknown_mimic(mon))
         return;
 
-    // Prepare a lot of descriptions about the monster and its cell.
+    const bool visible = you.can_see(mon);
+    const bool exposed = _mon_exposed(mon);
+    if (!visible && !exposed)
+        return;
+
+    // OK, now we know that we have something to describe.
     std::vector<std::string> suffixes;
-    _push_back_if_nonempty(target_cloud_description(), &suffixes);
-    _push_back_if_nonempty(target_sanctuary_description(), &suffixes);
-    _push_back_if_nonempty(target_silence_description(), &suffixes);
-    _push_back_if_nonempty(target_interesting_terrain_description(), &suffixes);
-    _push_back_if_nonempty(get_wounds_description(mon), &suffixes);
-    _append_container(suffixes, _mon_enchantments_vector_string(mon));
-    _append_container(suffixes, _get_monster_desc_vector(mon));
+    std::string text;
+    // Cell features go first.
+    _append_container(suffixes, target_cell_description_suffixes());
+    if (visible)
+    {
+        // Only describe the monster if you can actually see it.
+        _append_container(suffixes, monster_description_suffixes(mon));
+        text = get_monster_equipment_desc(mon);
+    }
+    else
+    {
+        text = "Disturbance";
+    }
 
     // Build the final description string.
-    std::string text = get_monster_equipment_desc(mon);
     if (!suffixes.empty())
         text += " ("
             + comma_separated_line(suffixes.begin(), suffixes.end(), ", ")
@@ -1450,6 +1461,32 @@ void direction_chooser::print_target_monster_description() const
     mprf(MSGCH_PROMPT, "%s: <lightgrey>%s</lightgrey>",
          target_prefix ? target_prefix : "Aim",
          text.c_str());
+}
+
+// FIXME: this should really take a cell as argument.
+std::vector<std::string>
+direction_chooser::target_cell_description_suffixes() const
+{
+    std::vector<std::string> suffixes;
+    // Things which describe the cell.
+    _push_back_if_nonempty(target_cloud_description(), &suffixes);
+    _push_back_if_nonempty(target_sanctuary_description(), &suffixes);
+    _push_back_if_nonempty(target_silence_description(), &suffixes);
+    _push_back_if_nonempty(target_interesting_terrain_description(), &suffixes);
+
+    return suffixes;
+}
+
+std::vector<std::string> direction_chooser::monster_description_suffixes(
+    const monsters* mon) const
+{
+    std::vector<std::string> suffixes;
+
+    _push_back_if_nonempty(get_wounds_description(mon), &suffixes);
+    _append_container(suffixes, _mon_enchantments_vector_string(mon));
+    _append_container(suffixes, _get_monster_desc_vector(mon));
+
+    return suffixes;
 }
 
 void direction_chooser::print_target_object_description() const

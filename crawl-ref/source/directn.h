@@ -184,6 +184,9 @@ private:
     std::string target_cloud_description() const;
     std::string target_sanctuary_description() const;
     std::string target_silence_description() const;
+    std::vector<std::string> target_cell_description_suffixes() const;
+    std::vector<std::string> monster_description_suffixes(
+        const monsters* mon) const;
 
     void describe_cell() const;
 
