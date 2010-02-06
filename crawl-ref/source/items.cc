@@ -722,8 +722,7 @@ void item_check(bool verbose)
                 out_string += ' ';
             }
         }
-        formatted_mpr(formatted_string::parse_string(out_string),
-                      MSGCH_FLOOR_ITEMS);
+        mprnojoin(out_string, MSGCH_FLOOR_ITEMS);
         done_init_line = true;
     }
 
