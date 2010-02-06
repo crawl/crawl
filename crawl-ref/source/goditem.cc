@@ -57,19 +57,6 @@ bool is_holy_item(const item_def& item)
 
 bool is_potentially_unholy_item(const item_def& item)
 {
-    switch (item.base_type)
-    {
-    case OBJ_WEAPONS:
-        {
-        const int item_brand = get_weapon_brand(item);
-        if (item_brand == SPWPN_DISTORTION)
-            return (true);
-        }
-        break;
-    default:
-        break;
-    }
-
     return (false);
 }
 
@@ -235,8 +222,7 @@ bool is_chaotic_item(const item_def& item)
     case OBJ_WEAPONS:
         {
         const int item_brand = get_weapon_brand(item);
-        retval = (item_brand == SPWPN_DISTORTION
-                  || item_brand == SPWPN_CHAOS);
+        retval = (item_brand == SPWPN_CHAOS);
         }
         break;
     case OBJ_MISSILES:
