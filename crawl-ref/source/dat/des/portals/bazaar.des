@@ -45,7 +45,7 @@ function bazaar_portal()
                   floor = 'stone_arch'
               }
   else
-    return one_way_stair { desc = 'gateway to a bazaar',
+    return one_way_stair { desc = 'gateway to a bazaar', desc_long = desc_long,
                            dst = 'bazaar', floor = 'stone_arch' }
   end
 end
