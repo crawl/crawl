@@ -727,7 +727,7 @@ void item_check(bool verbose)
         done_init_line = true;
     }
 
-    if (verbose || static_cast<int>(items.size() + 1) < crawl_view.msgsz.y)
+    if (verbose || items.size() <= msgwin_lines() - 1)
     {
         if (!done_init_line)
             strm << "Things that are here:" << std::endl;
