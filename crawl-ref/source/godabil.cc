@@ -194,7 +194,7 @@ bool trog_burn_spellbooks()
     else
     {
          simple_god_message(" is delighted!", GOD_TROG);
-         gain_piety(totalpiety);
+         gain_piety(totalpiety, true); // Don't use piety pool.
     }
 
     return (true);
@@ -1316,7 +1316,7 @@ bool evolve_flora()
     args.needs_path = false;
     args.may_target_monster = false;
     args.top_prompt = "Select plant or fungus to evolve.";
-    
+
     direction(spelld, args);
 
     if (!spelld.isValid)
