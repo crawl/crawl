@@ -84,7 +84,7 @@ struct message_item
           turn(you.num_turns)
     {
          // Don't join long messages.
-         join = jn && pure_text().length() < 30;
+         join = jn && pure_text().length() < 40;
     }
 
     // Constructor for restored messages.
