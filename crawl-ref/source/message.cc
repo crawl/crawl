@@ -62,6 +62,8 @@ static bool _ends_in_punctuation(const std::string& text)
     }
 }
 
+static unsigned int msgwin_line_length();
+
 struct message_item
 {
     msg_channel_type    channel;        // message channel
@@ -270,11 +272,6 @@ class message_window
         return crawl_view.msgsz.x;
     }
 
-    int out_width() const
-    {
-        return (width() - (use_first_col() ? 1 : 0));
-    }
-
     void out_line(const formatted_string& line, int n) const
     {
         cgotoxy(1, n + 1, GOTO_MSG);
@@ -380,6 +377,11 @@ public:
     {
         // XXX: broken (why?)
         lines.resize(height());
+    }
+
+    unsigned int out_width() const
+    {
+        return (width() - (use_first_col() ? 1 : 0));
     }
 
     unsigned int out_height() const
@@ -965,6 +967,11 @@ void msgwin_new_cmd()
     flush_prev_message();
     bool new_turn = (you.num_turns > _last_msg_turn);
     msgwin.new_cmdturn(new_turn);
+}
+
+static unsigned int msgwin_line_length()
+{
+    return msgwin.out_width();
 }
 
 unsigned int msgwin_lines()
