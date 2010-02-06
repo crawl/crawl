@@ -3326,7 +3326,7 @@ static std::vector<std::string> _get_monster_behaviour_vector(
              // actually haven't noticed you.
              && !mons_is_batty(mon))
     {
-        descs.push_back("hasn't noticed you.");
+        descs.push_back("hasn't noticed you");
     }
 
     return descs;
@@ -3373,7 +3373,7 @@ static std::vector<std::string> _get_monster_desc_vector(const monsters *mon)
     {
         descs.push_back("fire blocked by "
                         + feature_description(blocking_feat, NUM_TRAPS, false,
-                                              DESC_NOCAP_A));
+                                              DESC_NOCAP_A, false));
     }
 
     return descs;
