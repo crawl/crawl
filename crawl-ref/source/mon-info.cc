@@ -223,7 +223,6 @@ void monster_info::to_string(int count, std::string& desc,
     if (!crawl_state.arena && you.misled())
         type = m_mon->get_mislead_type();
 
-
     if (count == 1)
     {
         if (mons_is_mimic(type))

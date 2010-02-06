@@ -46,10 +46,25 @@ LUAFN(moninf_get_damage_desc)
     return (1);
 }
 
+// FIXME: This is unsafe, since monster_info::to_string
+//        acccesses the underlying monsters*. monster_info
+//        should be changed to collect all info it needs
+//        on instantiation.
+LUAFN(moninf_get_desc)
+{
+    MONINF(ls, 1, mi);
+    std::string desc;
+    int col;
+    mi->to_string(1, desc, col);
+    lua_pushstring(ls, desc.c_str());
+    return (1);
+}
+
 static const struct luaL_reg moninf_lib[] =
 {
     MIREG(damage_level),
     MIREG(damage_desc),
+    MIREG(desc),
 
     { NULL, NULL }
 };

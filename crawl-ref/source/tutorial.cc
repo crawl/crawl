@@ -3334,7 +3334,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
     {
         text << "You just miscast a spell. ";
 
-        const item_def *shield = you.slot_item(EQ_SHIELD);
+        const item_def *shield = you.slot_item(EQ_SHIELD, false);
         if (!player_effectively_in_light_armour() || shield)
         {
             text << "Wearing heavy body armour or using a shield, especially a "
@@ -3690,7 +3690,7 @@ void tutorial_describe_item(const item_def &item)
                 return;
             }
 
-            item_def *weap = you.slot_item(EQ_WEAPON);
+            item_def *weap = you.slot_item(EQ_WEAPON, false);
             bool wielded = (weap && (*weap).slot == item.slot);
             bool long_text = false;
 

@@ -619,6 +619,15 @@ bool monsters::could_wield(const item_def &item, bool ignore_brand,
         if (undead_or_demonic() && is_holy_item(item))
             return (false);
 
+        // Holy monsters that aren't gifts of chaotic gods and monsters
+        // that are gifts of good gods won't use potentially unholy
+        // weapons.
+        if (((is_holy() && !is_chaotic_god(god)) || is_good_god(god))
+            && is_potentially_unholy_item(item))
+        {
+            return (false);
+        }
+
         // Holy monsters and monsters that are gifts of good gods won't
         // use unholy weapons.
         if ((is_holy() || is_good_god(god)) && is_unholy_item(item))
@@ -1587,7 +1596,7 @@ bool monsters::pickup_armour(item_def &item, int near, bool force)
         return pickup(item, mslot, near);
 
     // Very simplistic armour evaluation (AC comparison).
-    if (const item_def *existing_armour = slot_item(eq))
+    if (const item_def *existing_armour = slot_item(eq, false))
     {
         if (!force)
         {
@@ -1952,7 +1961,7 @@ void monsters::wield_melee_weapon(int near)
     }
 }
 
-item_def *monsters::slot_item(equipment_type eq)
+item_def *monsters::slot_item(equipment_type eq, bool include_melded)
 {
     return (mslot_item(equip_slot_to_mslot(eq)));
 }

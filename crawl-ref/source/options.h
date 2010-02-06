@@ -66,6 +66,7 @@ public:
     bool        mlist_targetting;
     bool        classic_hud;
     bool        msg_condense_repeats;
+    bool        msg_condense_short;
 
     // The view lock variables force centering the viewport around the PC @
     // at all times (the default). If view locking is not enabled, the viewport
@@ -150,6 +151,7 @@ public:
     char        cls;             // preselected class
     bool        clear_messages;   // clear messages each turn
     bool        show_more;        // Show message-full more prompts.
+    bool        small_more;       // Show one-char more prompts.
     unsigned    friend_brand;     // Attribute for branding friendly monsters
     unsigned    neutral_brand;    // Attribute for branding neutral monsters
     bool        no_dark_brand;    // Attribute for branding friendly monsters

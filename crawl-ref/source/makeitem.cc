@@ -1350,17 +1350,17 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             if (_got_distortion_roll(item_level))
                 rc = SPWPN_DISTORTION;
 
-            if (one_chance_in(6))
-                rc = coinflip() ? SPWPN_FLAMING : SPWPN_FREEZING;
-
-            if (one_chance_in(6))
-                rc = SPWPN_VENOM;
-
             if (one_chance_in(3))
                 rc = SPWPN_REACHING;
 
+            if (one_chance_in(6))
+                rc = coinflip() ? SPWPN_FLAMING : SPWPN_FREEZING;
+
             if (one_chance_in(5))
                 rc = SPWPN_ELECTROCUTION;
+
+            if (one_chance_in(6))
+                rc = SPWPN_VENOM;
             break;
 
         case WPN_HALBERD:

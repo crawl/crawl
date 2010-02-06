@@ -3636,8 +3636,8 @@ void jewellery_wear_effects(item_def &item)
 
 static int _prompt_ring_to_remove(int new_ring)
 {
-    const item_def *left  = you.slot_item(EQ_LEFT_RING);
-    const item_def *right = you.slot_item(EQ_RIGHT_RING);
+    const item_def *left  = you.slot_item(EQ_LEFT_RING, true);
+    const item_def *right = you.slot_item(EQ_RIGHT_RING, true);
 
     if (left->cursed() && right->cursed())
     {
@@ -3857,8 +3857,8 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove,
 // Does not do amulets.
 static bool _swap_rings(int ring_slot)
 {
-    const item_def* lring = you.slot_item(EQ_LEFT_RING);
-    const item_def* rring = you.slot_item(EQ_RIGHT_RING);
+    const item_def* lring = you.slot_item(EQ_LEFT_RING, true);
+    const item_def* rring = you.slot_item(EQ_RIGHT_RING, true);
 
     if (lring->cursed() && rring->cursed())
     {
@@ -3934,13 +3934,14 @@ bool puton_item(int item_slot)
         return (false);
     }
 
-    const bool lring = (you.slot_item(EQ_LEFT_RING)  != NULL);
-    const bool rring = (you.slot_item(EQ_RIGHT_RING) != NULL);
+    const bool lring = (you.slot_item(EQ_LEFT_RING, true)  != NULL);
+    const bool rring = (you.slot_item(EQ_RIGHT_RING, true) != NULL);
     const bool is_amulet = jewellery_is_amulet(item);
 
     if (!is_amulet)     // i.e. it's a ring
     {
-        const item_def* gloves = you.slot_item(EQ_GLOVES);
+        const item_def* gloves = you.slot_item(EQ_GLOVES, false);
+        // Cursed gloves cannot be removed.
         if (gloves && gloves->cursed())
         {
             mpr("You can't take your gloves off to put on a ring!");
@@ -3950,7 +3951,7 @@ bool puton_item(int item_slot)
         if (lring && rring)
             return _swap_rings(item_slot);
     }
-    else if (item_def* amulet = you.slot_item(EQ_AMULET))
+    else if (item_def* amulet = you.slot_item(EQ_AMULET, true))
     {
         // Remove the previous one.
         if (!check_warning_inscriptions(*amulet, OPER_REMOVE)
@@ -5907,7 +5908,7 @@ bool stasis_blocks_effect(bool identify,
 {
     if (wearing_amulet(AMU_STASIS))
     {
-        item_def *amulet = you.slot_item(EQ_AMULET);
+        item_def *amulet = you.slot_item(EQ_AMULET, false);
 
         if (msg)
         {

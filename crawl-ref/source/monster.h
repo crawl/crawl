@@ -231,7 +231,7 @@ public:
     int       damage_brand(int which_attack = -1);
     int       damage_type(int which_attack = -1);
 
-    item_def *slot_item(equipment_type eq);
+    item_def *slot_item(equipment_type eq, bool include_melded);
     item_def *mslot_item(mon_inv_type sl) const;
     item_def *weapon(int which_attack = -1);
     item_def *launcher();
