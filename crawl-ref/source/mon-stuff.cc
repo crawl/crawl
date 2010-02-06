@@ -2932,6 +2932,15 @@ void mons_get_damage_level(const monsters* monster, std::string& desc,
     desc += _wounded_damaged(monster->type) ? "damaged" : "wounded";
 }
 
+std::string get_wounds_description_sentence(const monsters *monster)
+{
+    const std::string wounds = get_wounds_description(monster);
+    if (wounds.empty())
+        return "";
+    else
+        return monster->pronoun(PRONOUN_CAP) + " is " + wounds + ".";
+}
+
 std::string get_wounds_description(const monsters *monster)
 {
     if (!monster->alive() || monster->hit_points == monster->max_hit_points)
@@ -2943,10 +2952,6 @@ std::string get_wounds_description(const monsters *monster)
     std::string desc;
     mon_dam_level_type dam_level;
     mons_get_damage_level(monster, desc, dam_level);
-
-    desc.insert(0, " is ");
-    desc += ".";
-
     return desc;
 }
 
