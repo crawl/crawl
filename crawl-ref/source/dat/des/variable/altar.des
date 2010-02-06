@@ -883,6 +883,11 @@ ENDMAP
 
 ### Kikubaaqudgha overflow altars #############################################
 
+# This vault contains a caged human who is killed with miasma once you see it 
+# and then is turned into a zombie.
+#
+# Much appreciated would be some voodoo to make sure it always makes a corpse 
+# after the human dies.
 NAME:   tgw_kikubaaqudgha
 TAGS:   uniq_altar_kikubaaqudgha temple_overflow_kikubaaqudgha
 DEPTH:  D:2-10
