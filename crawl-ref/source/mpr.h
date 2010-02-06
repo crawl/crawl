@@ -74,7 +74,14 @@ enum msg_colour_type
 
 msg_colour_type msg_colour(int colour);
 
-void mpr(std::string text, msg_channel_type channel = MSGCH_PLAIN, int param=0);
+void mpr(std::string text, msg_channel_type channel=MSGCH_PLAIN, int param=0,
+         bool nojoin=false);
+
+inline void mprnojoin(std::string text, msg_channel_type channel=MSGCH_PLAIN,
+                      int param=0)
+{
+    mpr(text, channel, param, true);
+}
 
 // 4.1-style mpr, currently named mprf for minimal disruption.
 void mprf( msg_channel_type channel, int param, const char *format, ... );

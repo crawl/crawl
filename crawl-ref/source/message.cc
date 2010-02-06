@@ -71,24 +71,27 @@ struct message_item
     std::string         text;           // text of message (tagged string...)
     int                 repeats;
     long                turn;
-    bool                short_;         // short enough to merge?
+    bool                join;           // may this message be joined with
+                                        // others?
 
     message_item() : channel(NUM_MESSAGE_CHANNELS), param(0),
-                     text(""), repeats(0), turn(-1), short_(true)
+                     text(""), repeats(0), turn(-1), join(true)
     {
     }
 
-    message_item(std::string msg, msg_channel_type chan, int par)
+    message_item(std::string msg, msg_channel_type chan, int par, bool jn)
         : channel(chan), param(par), text(msg), repeats(1),
           turn(you.num_turns)
     {
-        short_ = pure_text().length() < 30;
+         // Don't join long messages.
+         join = jn && pure_text().length() < 30;
     }
 
+    // Constructor for restored messages.
     message_item(std::string msg, msg_channel_type chan, int par,
                  int rep, int trn)
         : channel(chan), param(par), text(msg), repeats(rep),
-          turn(trn), short_(false)
+          turn(trn), join(false)
     {
     }
 
@@ -132,15 +135,25 @@ struct message_item
                 return true;
             }
             else if (Options.msg_condense_short
+                     && turn == other.turn
                      && repeats == 1 && other.repeats == 1
-                     && short_ && other.short_)
+                     && join && other.join)
             {
-                // Note that short_ stays true.
+                // Note that join stays true.
 
                 std::string sep = "<lightgrey>";
+                int seplen = 1;
                 if (!_ends_in_punctuation(pure_text()))
+                {
                     sep += ";";
+                    seplen++;
+                }
                 sep += " </lightgrey>";
+                if (pure_text().length() + seplen + other.pure_text().length()
+                    > msgwin_line_length())
+                {
+                    return false;
+                }
 
                 text += sep;
                 text += other.text;
@@ -840,6 +853,18 @@ static bool check_more(std::string line, msg_channel_type channel)
     return false;
 }
 
+static bool check_join(const std::string& line, msg_channel_type channel)
+{
+    switch (channel)
+    {
+    case MSGCH_EQUIPMENT:
+        return false;
+    default:
+        break;
+    }
+    return true;
+}
+
 static void debug_channel_arena(msg_channel_type channel)
 {
     switch (channel)
@@ -869,7 +894,7 @@ static void debug_channel_arena(msg_channel_type channel)
 
 static long _last_msg_turn = -1; // Turn of last message.
 
-void mpr(std::string text, msg_channel_type channel, int param)
+void mpr(std::string text, msg_channel_type channel, int param, bool nojoin)
 {
     if (_msg_dump_file != NULL)
         fprintf(_msg_dump_file, "%s\n", text.c_str());
@@ -904,9 +929,12 @@ void mpr(std::string text, msg_channel_type channel, int param)
     if (colour == MSGCOL_MUTED)
         return;
 
+    bool domore = check_more(text, channel);
+    bool join = !domore && !nojoin && check_join(text, channel);
+
     std::string col = colour_to_str(colour_msg(colour));
     text = "<" + col + ">" + text + "</" + col + ">"; // XXX
-    message_item msg = message_item(text, channel, param);
+    message_item msg = message_item(text, channel, param, join);
     messages.add(msg);
     _last_msg_turn = msg.turn;
 
@@ -916,7 +944,7 @@ void mpr(std::string text, msg_channel_type channel, int param)
     if (channel == MSGCH_PROMPT || channel == MSGCH_ERROR)
         set_more_autoclear(false);
 
-    if (check_more(msg.pure_text(), channel))
+    if (domore)
         more(true);
 }
 
@@ -939,7 +967,7 @@ void msgwin_prompt(std::string prompt)
 
 void msgwin_reply(std::string reply)
 {
-    messages.add(message_item(_prompt + reply, MSGCH_PROMPT, 0));
+    messages.add(message_item(_prompt + reply, MSGCH_PROMPT, 0, false));
     msgwin.got_input();
 }
 
