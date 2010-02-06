@@ -137,6 +137,24 @@ did so.)
 In the meantime, you can try to escape with digging, disintegration or
 teleportation.
 %%%%
+Q:labyrinth
+
+I'm in a labyrinth, and I can see a zombie minotaur but no exit. Help!
+%%%%
+A:labyrinth
+
+First, the exit and loot are guarded by a real non-undead minotaur. All
+zombie versions you might meet are *additional* ones that have no relation at
+all to where the exit might be.
+
+Each labyrinth consists of several layers of different wall types. The map
+border is always made of either metal or undiggable stone. From then, going
+inward, the wall types are first rock, then stone, then metal. To find the
+exit out of the labyrinth, you'll need to get to the centre of the metal area.
+Note that the exit itself might be found within a vault that has non-metal
+walls. Also, there might be secret doors and there might be traps, and of
+course there's a minotaur around, so do step carefully.
+%%%%
 Q:cheating
 
 Is there a cheating mode to Crawl where I can play without dying?
