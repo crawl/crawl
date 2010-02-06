@@ -364,7 +364,7 @@ bool check_awaken(monsters* monster)
     if (x_chance_in_y(mons_perc + 1, stealth))
         return (true); // Oops, the monster wakes up!
 
-    const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
+    const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, false);
     const int armour_mass = body_armour? item_mass(*body_armour) : 0;
     // You didn't wake the monster!
     if (!x_chance_in_y(armour_mass, 1000)

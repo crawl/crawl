@@ -7,12 +7,8 @@
 # Temple entries
 ##############################################################################
 
-##############################################################################
-# hall with pillars
-#
-NAME:   temple_hall_a
+NAME:   temple_hall
 TAGS:   temple_entry
-WEIGHT: 9
 ORIENT: float
 SUBST:  ? : c:20 x v b G:5
 MAP
@@ -33,7 +29,7 @@ c.......c
 c@..@..@c
 ENDMAP
 
-NAME:   temple_hall_b
+NAME:   temple_hall_moat
 TAGS:   temple_entry no_pool_fixup no_monster_gen
 WEIGHT: 1
 ORIENT: float
@@ -58,9 +54,7 @@ cwww.wwwc
 c@..@..@c
 ENDMAP
 
-##############################################################################
 # stairs with fountains
-#
 NAME:   temple_fountains
 TAGS:   temple_entry
 ORIENT: float
@@ -75,9 +69,7 @@ MAP
 ...?...
 ENDMAP
 
-##############################################################################
 # stairs with statues
-#
 NAME:   temple_statues
 TAGS:   temple_entry
 ORIENT: float
@@ -85,9 +77,6 @@ MAP
 GOG
 ENDMAP
 
-##############################################################################
-# the green room
-#
 NAME:   temple_green
 TAGS:   temple_entry
 ORIENT: float
@@ -102,9 +91,7 @@ b.......b
 bbbb?bbbb
 ENDMAP
 
-##############################################################################
-# Where's the entry to the temple?
-#
+# Hidden entry A: weight 1 (out of 10)
 NAME:   temple_secret_doors_a
 WEIGHT: 1
 TAGS:   temple_entry
@@ -123,6 +110,7 @@ ccccmmmmmc
 cccccccccc
 ENDMAP
 
+# Hidden entry B: weight 1 (out of 10)
 NAME:   temple_secret_doors_b
 WEIGHT: 1
 TAGS:   temple_entry
@@ -142,6 +130,7 @@ cccmmmmmccc
 ccccccccccc
 ENDMAP
 
+# Hidden entry C: weight 1 (out of 10)
 NAME:   temple_secret_doors_c
 WEIGHT: 1
 TAGS:   temple_entry
@@ -163,6 +152,7 @@ ccccc.ccc
 ccccc@ccc
 ENDMAP
 
+# Hidden entry D: weight 1 (out of 10)
 NAME:   temple_secret_doors_d
 WEIGHT: 1
 TAGS:   temple_entry
@@ -184,6 +174,7 @@ ccccc.ccccc
 ccccc@ccccc
 ENDMAP
 
+# Hidden entry E: weight 6 (out of 10)
 NAME:   temple_secret_doors_e
 WEIGHT: 6
 TAGS:   temple_entry no_rotate
@@ -207,9 +198,7 @@ cccccc.cccccc
 cccccc@cccccc
 ENDMAP
 
-##############################################################################
-# temple in pool
-#
+# Temple in pool A: weight 3 (out of 10)
 NAME:    temple_pool_a
 TAGS:    temple_entry no_monster_gen no_pool_fixup no_rotate
 WEIGHT:  3
@@ -230,6 +219,7 @@ wwwwwwwXwwwwwww.
 ................
 ENDMAP
 
+# Temple in pool B: weight 7 (out of 10)
 NAME:    temple_pool_b
 TAGS:    temple_entry no_monster_gen no_rotate
 WEIGHT:  7
@@ -250,9 +240,7 @@ wwwwLwwwwwGwwww.
 ................
 ENDMAP
 
-##############################################################################
 # The garden of good and evil
-#
 NAME:   temple_garden
 TAGS:   temple_entry no_monster_gen
 ORIENT: float
@@ -288,15 +276,12 @@ xxxxxxxxxx...........'''''................
 xxxxxxxxxxxx...........................
 ENDMAP
 
-##############################################################################
-# Firewalk I (Lemuel)
-#
+# Firewalk A: weight 3 (out of 10)
 # To reach the Temple, you just have to walk straight. Note that the
 # frequency of the flames is low enough that you have to spend a fair
 # amount of time off the path to get hit by one. And at this depth
 # they should not be fatal to anyone. -LP
-#
-NAME:    temple_firewalk
+NAME:    lemuel_temple_firewalk
 TAGS:    temple_entry uniq_firewalk no_item_gen no_monster_gen
 ORIENT:  float
 WEIGHT:  3
@@ -333,13 +318,10 @@ x.......O.......x
 xxxxxxxxxxxxxxxxx
 ENDMAP
 
-###############################################################################
-# Firewalk II (Lemuel)
-#
-# A second version, with the safe path marked. Personally I don't think
+# Firewalk B: weight 7 (out of 10)
+# New version, with the safe path marked. Personally I don't think
 # it's necessary, but it does make it harder to kill yourself. -LP
-#
-NAME:    temple_firewalk_marked
+NAME:    lemuel_temple_firewalk_marked
 TAGS:    temple_entry uniq_firewalk no_item_gen no_monster_gen
 WEIGHT:  7
 ORIENT:  float
@@ -377,6 +359,354 @@ x...e..gOg....d.x
 xxxxxxxxxxxxxxxxx
 ENDMAP
 
+NAME:   minmay_temple_entry_fiery
+TAGS:   temple_entry no_monster_gen
+ORIENT: float
+SUBST:  ' : .'l
+SUBST:  ' = .l
+SUBST:  l : l w:1
+MAP
+xxx.@..xx
+xxl'...xx
+xxll..xxx
+xlll'.xxx
+xll'.'lxx
+xxl.'llxx
+xxx'.lxxx
+xxxx.xxxx
+xccc+cccx
+xcG...Gcx
+xc.....cx
+xc..O..cx
+xc.....cx
+xcG...Gcx
+xcccccccx
+xxxxxxxxx
+ENDMAP
+
+NAME:   minmay_temple_entry_poolview
+TAGS:   temple_entry no_pool_fixup
+ORIENT: float
+SUBST:  ? : lw
+SUBST:  c : cx
+MAP
+ccccccccccccc
+c???????????c
+c???????????c
+c???????????c
+c???nnnnn???c
+c???n...nnnnc
+c???n.O.....@
+c???n...nnnnc
+c???nnnnn???c
+c???????????c
+c???????????c
+c???????????c
+ccccccccccccc
+ENDMAP
+
+NAME:   minmay_temple_entry_overgrown
+TAGS:   temple_entry
+ORIENT: float
+MONS:   plant, bush
+SUBST:  ?=.1, !=...1, 1:123, 2=2.., 3=12
+MAP
+!!!!!
+!???!
+!?O?!
+!???!
+!!!!!
+ENDMAP
+
+NAME:   minmay_temple_entry_junction
+TAGS:   temple_entry
+ORIENT: float
+SUBST:  T = TV U:1
+SUBST:  X : xc v:1 b:1
+KMASK:  T = no_monster_gen
+KMASK:  U = no_monster_gen
+MAP
+xxx...xxx
+xxX.T.Xxx
+xXX...XXx
+.........
+.T..O..T.
+.........
+xXX...XXx
+xxX.T.Xxx
+xxx...xxx
+ENDMAP
+
+NAME:   minmay_temple_entry_glass
+TAGS:   temple_entry
+ORIENT: float
+SUBST:  m : mb
+MAP
+...........
+.m.m.m.m.m.
+...........
+.m.......m.
+...........
+.m...O...m.
+...........
+.m.......m.
+...........
+.m.m.m.m.m.
+...........
+ENDMAP
+
+NAME:   minmay_temple_entry_trees
+TAGS:   temple_entry
+ORIENT: float
+SUBST:  t : t1
+MONS:   bush
+MAP
+.....
+.t.t.
+..O..
+.t.t.
+.....
+ENDMAP
+
+NAME:   minmay_temple_entry_spiral
+TAGS:   temple_entry
+ORIENT: float
+MAP
+cncncncnc@c
+n.......n.n
+c.cncnc.c.c
+n.n...n.n.n
+c.c.c.c.c.c
+n.n.nOn.n.n
+c.c.cnc.c.c
+n.n.....n.n
+c.cncncnc.c
+n.........n
+cncncncncnc
+ENDMAP
+
+NAME:   minmay_temple_entry_butterflies
+TAGS:   temple_entry
+ORIENT: float
+MONS:   butterfly
+SUBST:  . = .1
+MAP
+...
+.O.
+...
+ENDMAP
+
+NAME:   minmay_temple_entry_metal_lava
+TAGS:   temple_entry
+WEIGHT: 1
+ORIENT: float
+KMASK:  l = no_monster_gen 
+MAP
+vvvvvvv
+vlvlvlv
+@..O..@
+vlvlvlv
+vvvvvvv
+ENDMAP
+
+NAME:   minmay_temple_entry_nine_rooms
+TAGS:   temple_entry
+ORIENT: float
+NSUBST: A = 1:O / *=T:40 VU
+NSUBST: B = 1:. / *:c
+NSUBST: C = 1:. / *:c
+NSUBST: D = 1:. / *:c
+NSUBST: E = 1:. / *:c
+NSUBST: F = 1:. / *:c
+KMASK:  T = no_monster_gen
+KMASK:  U = no_monster_gen
+MAP
+ccBcccBcccBcc
+c...c...c...c
+B.A.D.A.E.A.B
+c...c...c...c
+ccDccc.cccEcc
+c...c...c...c
+B.A...A...A.B
+c...c...c...c
+ccCccc.cccFcc
+c...c...c...c
+B.A.C.A.F.A.B
+c...c...c...c
+ccBcccBcccBcc
+ENDMAP
+
+NAME:   minmay_temple_entry_steam
+TAGS:   temple_entry
+ORIENT: float
+# This steam is essentially harmless; hopefully players will figure that out.
+MARKER: l = lua:fog_machine { cloud_type = "steam", pow_min = 1, \
+        pow_max = 3, delay = 10, start_clouds = 1, size_min = 1, \
+        size_max = 3, spread_rate = -1 }
+KMASK:  W = no_monster_gen
+KMASK:  l = no_monster_gen
+MAP
+..WWW..
+.WWlWW.
+WWWWWWW
+WlWOWlW
+WWWWWWW
+.WWlWW.
+..WWW..
+ENDMAP
+
+NAME:   minmay_temple_entry_grid
+TAGS:   temple_entry
+ORIENT: float
+SUBST:  m : bm
+MAP
+.........
+...m.m...
+..m.m.m..
+.m.m.m.m.
+..m.O.m..
+.m.m.m.m.
+..m.m.m..
+...m.m...
+.........
+ENDMAP
+
+NAME:   minmay_temple_entry_hall
+TAGS:   temple_entry
+ORIENT: float
+SUBST:  c : c:80 xv
+SUBST:  T = T:80 UV
+KMASK:  T = no_monster_gen
+KMASK:  U = no_monster_gen
+MAP
+ccc+ccc
+c.....c
+c.T.T.c
++..O..+
+c.T.T.c
+c.....c
+ccc+ccc
+ENDMAP
+
+NAME:   minmay_temple_entry_purple_smoke
+TAGS:   temple_entry
+ORIENT: float
+MARKER: O = lua:fog_machine { cloud_type = "purple smoke", pow_min = 1, \
+        pow_max = 3, delay_min = 1, delay_max = 10, start_clouds = 5,  \
+        size_min = 1, size_max = 2, spread_rate = 1 }
+MAP
+.....
+.....
+..O..
+.....
+.....
+ENDMAP
+
+NAME:   minmay_temple_entry_statues_fountains
+TAGS:   temple_entry
+ORIENT: float
+SUBST:  T = T:80 UV
+KMASK:  T = no_monster_gen
+KMASK:  U = no_monster_gen
+MAP
+.......
+.G.G.G.
+..T.T..
+.G.O.G.
+..T.T..
+.G.G.G.
+.......
+ENDMAP
+
+NAME:   minmay_temple_entry_large_hall
+TAGS:   temple_entry
+ORIENT: float
+SUBST:  x : xxxc
+SUBST:  T = T:80 UV
+KMASK:  T = no_monster_gen
+KMASK:  U = no_monster_gen
+MAP
+xx@xx@xx@xx
+x.........x
+@.........@
+x..T...T..x
+x.........x
+@....O....@
+x.........x
+x..T...T..x
+@.........@
+x.........x
+xx@xx@xx@xx
+ENDMAP
+
+NAME:   minmay_temple_entry_secret_door
+TAGS:   temple_entry
+ORIENT: float
+NSUBST: m = 1:= / *:m
+MAP
+xxx+xxx
+x.....x
+x.mmm.x
++.mOm.+
+x.mmm.x
+x.....x
+xxx+xxx
+ENDMAP
+
+NAME:   minmay_temple_entry_steel_oval
+TAGS:   temple_entry
+WEIGHT: 1
+ORIENT: float
+MAP
+ ....vvv.... 
+...vv...vv...
+..v..vvv..v..
+.v..v...v..v.
+.v.v.vvv.v.v.
+v.v.v...v.v.v
+v.v.v.O.v.v.v
+v.v.v...v.v.v
+.v.v.vvv.v.v.
+.v..v...v..v.
+..v..vvv..v..
+...vv...vv...
+ ....vvv....
+ENDMAP
+
+NAME:   minmay_temple_entry_levitate
+TAGS:   temple_entry
+DEPTH:  D:6-7
+WEIGHT: 1
+ORIENT: float
+SUBST:  < : <>
+KMASK:  l = no_monster_gen
+MAP
+clclclclc
+l.......l
+c.clclc.c
+l.l...l.l
+c.c<O<c.c
+l.l...l.l
+c.clclc.c
+l.......l
+clclclclc
+ENDMAP
+
+NAME:   minmay_temple_entry_oklob
+TAGS:   temple_entry
+DEPTH:  D:7
+WEIGHT: 1
+ORIENT: float
+MONS:   plant, oklob plant
+MAP
+....1..
+1.111.1
+.11.11.
+.1.O211
+11.1111
+.111.1.
+1..11..
+ENDMAP
 
 ##############################################################################
 # Temple maps
@@ -386,7 +716,7 @@ ENDMAP
 # PLACE:  Temple
 # ORIENT: encompass
 # Altars are to be placed as B glyphs, modification a la SUBST or SHUFFLE are
-# allowed. You could place any number of altars between one and the number
+# allowed. You could place any number of altars between one and the number of
 # guaranteed gods. However, don't make temple maps with less than six altars.
 #
 # Guaranteed gods not present in a temple will get altars in the dungeon.
@@ -397,7 +727,7 @@ ENDMAP
 
 NAME:   circular_temple
 PLACE:  Temple
-WEIGHT: 30
+WEIGHT: 50
 TAGS:   no_rotate
 ORIENT: encompass
 MAP
@@ -546,6 +876,7 @@ ENDMAP
 
 NAME:   triangle_temple
 PLACE:  Temple
+WEIGHT: 20
 TAGS:   no_rotate
 ORIENT: encompass
 MAP
@@ -757,7 +1088,7 @@ ENDMAP
 
 ##########################################################################
 # Eino's temples
-NAME:    temple_eino_001a
+NAME:    temple_eino_lava_a
 PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
@@ -792,7 +1123,7 @@ cccccccclccccccclcccccccc
 ccccccccccccccccccccccccc
 ENDMAP
 
-NAME:    temple_eino_001b
+NAME:    temple_eino_lava_b
 PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
@@ -821,7 +1152,7 @@ cccccccclccccccclcccccccc
 ccccccccccccccccccccccccc
 ENDMAP
 
-NAME:    temple_eino_002
+NAME:    temple_eino_water
 PLACE:   Temple
 TAGS:    no_pool_fixup no_rotate
 ORIENT:  encompass
@@ -884,7 +1215,7 @@ cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
 ccccccccccccccccccccccccccccccccc
 ENDMAP
 
-NAME:    temple_eino_003
+NAME:    temple_eino_crystal_narrow_a
 PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
@@ -926,12 +1257,12 @@ bbbbbbbbbbbbb...bbbbbbbbbbbbb
 bbbbbbbbbbbbbbbbbbbbbbbbbbbbb
 ENDMAP
 
-NAME:    temple_eino_004
+NAME:    temple_eino_crystal_narrow_b
 PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
 SHUFFLE: {([
-WEIGHT:  3
+WEIGHT:  2
 MAP
 bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
 bbbbbbbbbbbbbbb...bbbbbbbbbbbbbbb
@@ -968,11 +1299,11 @@ bbbbbbbbbbbbbbb...bbbbbbbbbbbbbbb
 bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
 ENDMAP
 
-NAME:    temple_eino_005a
+NAME:    temple_eino_crystal_wide_a
 PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
-WEIGHT:  3
+WEIGHT:  2
 SHUFFLE: {([
 MAP
             bbbbb
@@ -993,11 +1324,11 @@ bbbbb.B....bb...bb....B.bbbbb
             bbbbb
 ENDMAP
 
-NAME:    temple_eino_005b
+NAME:    temple_eino_crystal_wide_b
 PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
-WEIGHT:  5
+WEIGHT:  3
 SHUFFLE: {([
 MAP
             bbbbb
@@ -1026,7 +1357,7 @@ PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
 SHUFFLE: {([
-WEIGHT:  5
+WEIGHT:  1
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x..x...xxx....xxxxxxx....xxx...x..x
@@ -1054,7 +1385,7 @@ PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
 SHUFFLE: {([
-WEIGHT:  5
+WEIGHT:  1
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x..x...xxx....xxxxxxx....xxx...x..x
@@ -1077,7 +1408,7 @@ x..x...xxx....xxxxxxx....xxx...x..x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:    temple_eino_007a
+NAME:    temple_eino_rhombus_a
 PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
@@ -1115,7 +1446,7 @@ xx...x...x.x...x.x.x.x.x...x.x...x...xx
             xxxxx     xxxxx
 ENDMAP
 
-NAME:    temple_eino_007b
+NAME:    temple_eino_rhombus_b
 PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
@@ -1155,7 +1486,7 @@ xx..x.x..x.x..x.x..x..x.x..x.x..x.x..xx
             xxxxx     xxxxx
 ENDMAP
 
-NAME:    temple_eino_007c
+NAME:    temple_eino_rhombus_c
 PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
@@ -1195,9 +1526,9 @@ xx...x..x.x..x.x..x.x..x...xx
        xxxxx     xxxxx
 ENDMAP
 
-
 NAME:    mini_greek_temple
 PLACE:   Temple
+WEIGHT:  20
 TAGS:    no_rotate
 ORIENT:  encompass
 SHUFFLE: {([

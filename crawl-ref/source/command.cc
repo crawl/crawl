@@ -1968,7 +1968,7 @@ static int _show_keyhelp_menu(const std::vector<formatted_string> &lines,
             "obtain more information on a certain\n"
             "aspect of Dungeon Crawl.\n"
 
-            "<w>?</w>: List of keys\n"
+            "<w>?</w>: List of commands\n"
             "<w>!</w>: Read Me!\n"
             "<w>^</w>: Quickstart Guide\n"
             "<w>:</w>: Browse character notes\n"

@@ -3441,8 +3441,7 @@ bool get_item_by_name(item_def *item, char* specs,
     case OBJ_ARMOUR:
     {
         char buf[80];
-        mpr("What ego type? ", MSGCH_PROMPT);
-        get_input_line( buf, sizeof( buf ) );
+        msgwin_get_line_autohist("What ego type? ", buf, sizeof(buf));
 
         if (buf[0] != '\0')
         {

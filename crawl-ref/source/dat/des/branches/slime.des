@@ -9,8 +9,14 @@
 # Weight balancer
 NAME: slime_dummy
 TAGS: slime_entry
+#
+# This is temporary, for testing purposes. Later on, we should either remove 
+# this altar; or have Slime:1-4 vaults with altars. There is no need to guarantee
+# a Jiyva altar in Slime:1-4.
+#
+KFEAT:  Z = altar_jiyva
 MAP
-O
+OZ
 ENDMAP
 
 # Slime entries featuring an altar to Jiyva

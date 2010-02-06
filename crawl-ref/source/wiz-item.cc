@@ -86,9 +86,9 @@ void wizard_create_spec_object()
         mpr("} - miscellany  X - corpses   % - food    $ - gold    ESC - exit",
             MSGCH_PROMPT);
 
-        mpr("What class of item? ", MSGCH_PROMPT);
+        msgwin_prompt("What class of item? ");
 
-        keyin = toupper( get_ch() );
+        keyin = toupper(get_ch());
 
         if (keyin == ')')
             class_wanted = OBJ_WEAPONS;
@@ -121,10 +121,12 @@ void wizard_create_spec_object()
         else if (keyin == ESCAPE || keyin == ' '
                 || keyin == '\r' || keyin == '\n')
         {
-            canned_msg( MSG_OK );
+            msgwin_reply("");
+            canned_msg(MSG_OK);
             return;
         }
     }
+    msgwin_reply(make_stringf("%c", keyin));
 
     // Allocate an item to play with.
     thing_created = get_item_slot();
@@ -194,11 +196,10 @@ void wizard_create_spec_object()
     }
     else
     {
+        std::string prompt = "What type of item? ";
         if (class_wanted == OBJ_BOOKS)
-            mpr("What type of item? (\"all\" for all) ", MSGCH_PROMPT);
-        else
-            mpr("What type of item? ", MSGCH_PROMPT);
-        get_input_line( specs, sizeof( specs ) );
+            prompt += "(\"all\" for all) ";
+        msgwin_get_line_autohist(prompt, specs, sizeof(specs));
 
         std::string temp = specs;
         trim_string(temp);

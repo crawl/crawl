@@ -4012,7 +4012,7 @@ void handle_time()
              && !you.berserk()
              && !you.attribute[ATTR_SHADOWS])
     {
-        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR);
+        const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, false);
         const int armour_mass = body_armour? item_mass(*body_armour) : 0;
         if (!x_chance_in_y(armour_mass, 1000)
             // Diminishing returns for stealth training by waiting.

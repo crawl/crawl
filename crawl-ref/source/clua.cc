@@ -418,6 +418,9 @@ int CLua::push_args(lua_State *ls, const char *format, va_list args,
         case 'M':
             push_monster(ls, va_arg(args, monsters *));
             break;
+        case 'I':
+            lua_push_moninf(ls, va_arg(args, monster_info *));
+            break;
         case 'A':
             argc += push_activity_interrupt(
                         ls, va_arg(args, activity_interrupt_data *));

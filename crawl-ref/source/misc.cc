@@ -58,6 +58,7 @@
 #include "mon-place.h"
 #include "coord.h"
 #include "mon-pathfind.h"
+#include "mon-info.h"
 #include "mon-iter.h"
 #include "mon-util.h"
 #include "mon-stuff.h"
@@ -2844,8 +2845,9 @@ bool mons_is_safe(const monsters *mon, const bool want_move,
 
         bool result = is_safe;
 
-        if (clua.callfn("ch_mon_is_safe", "Mbbd>b",
-                        mon, is_safe, moving, dist,
+        monster_info *mi = new monster_info(mon);
+        if (clua.callfn("ch_mon_is_safe", "Ibbd>b",
+                        mi, is_safe, moving, dist,
                         &result))
         {
             is_safe = result;

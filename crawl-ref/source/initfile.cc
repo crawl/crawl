@@ -618,6 +618,7 @@ void game_options::reset_options()
     mlist_targetting = false;
     classic_hud = false;
     msg_condense_repeats = true;
+    msg_condense_short = true;
 
     view_lock_x = true;
     view_lock_y = true;
@@ -702,6 +703,8 @@ void game_options::reset_options()
 
     clear_messages         = false;
     show_more              = true;
+    small_more             = true;
+
     pickup_dropped         = false;
     pickup_thrown          = true;
 
@@ -2327,8 +2330,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         // field is already cleaned up from trim_string()
         pizza = field;
     }
-
-    BOOL_OPTION(random_pick);
+    else BOOL_OPTION(random_pick);
     else BOOL_OPTION(good_random);
     else BOOL_OPTION(remember_name);
 #ifndef SAVE_DIR_PATH
@@ -2369,8 +2371,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                      field.c_str() );
         }
     }
-    INT_OPTION(ood_interesting, 0, 500);
-    INT_OPTION(rare_interesting, 0, 99);
+    else INT_OPTION(ood_interesting, 0, 500);
+    else INT_OPTION(rare_interesting, 0, 99);
     else if (key == "note_monsters")
     {
         append_vector(note_monsters, split_string(",", field));
@@ -2435,6 +2437,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 #endif
     else BOOL_OPTION(classic_hud);
     else BOOL_OPTION(msg_condense_repeats);
+    else BOOL_OPTION(msg_condense_short);
     else BOOL_OPTION(view_lock_x);
     else BOOL_OPTION(view_lock_y);
     else if (key == "view_lock")
@@ -2475,6 +2478,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(note_xom_effects);
     else BOOL_OPTION(clear_messages);
     else BOOL_OPTION(show_more);
+    else BOOL_OPTION(small_more);
     else if (key == "flush")
     {
         if (subkey == "failure")
@@ -2690,8 +2694,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             }
         }
     }
-
-    BOOL_OPTION(pickup_thrown);
+    else BOOL_OPTION(pickup_thrown);
     else BOOL_OPTION(pickup_dropped);
 #ifdef WIZARD
     else if (key == "fsim_kit")
@@ -2899,8 +2902,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else BOOL_OPTION(explore_greedy);
     else BOOL_OPTION(explore_improved);
-
-    BOOL_OPTION(trap_prompt);
+    else BOOL_OPTION(trap_prompt);
     else if (key == "stash_filter")
     {
         std::vector<std::string> seg = split_string(",", field);
@@ -2923,7 +2925,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             }
         }
     }
+#ifndef TARGET_COMPILER_VC
     // MSVC has a limit on how many if/else if can be chained together.
+    else
+#endif
     if (key == "menu_colour" || key == "menu_color")
     {
         std::vector<std::string> seg = split_string(",", field);
@@ -3222,7 +3227,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         tile_tag_pref = string2tag_pref(field.c_str());
     }
-#endif
+#endif // USE_TILE
 
     else if (key == "bindkey")
     {
