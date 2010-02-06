@@ -251,10 +251,21 @@ void create_sanctuary(const coord_def& center, int time)
 /////////////
 // Silence
 
+// pre-squared radius, calculated from remaining duration
+// dur starts at 10 (low power) and is capped at 100
+// maximal range: 6*6 + 1 = 37
+// last 6 turns: range 0, hence only the player silenced
+static int _silence_range(int dur)
+{
+    dur /= BASELINE_DELAY; // now roughly number of turns
+    return std::max(0, std::min(dur - 6, 37));
+}
+
 bool silenced(const coord_def& p)
 {
     // FIXME: implement for monsters
-    return (you.duration[DUR_SILENCE] && distance(p, you.pos()) <= 6*6 + 1);
+    return (you.duration[DUR_SILENCE]
+            && distance(p, you.pos()) <= _silence_range(you.duration[DUR_SILENCE]));
 }
 
 /////////////
