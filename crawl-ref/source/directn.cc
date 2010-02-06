@@ -130,7 +130,10 @@ static char _find_square(coord_def &mfp, int direction,
 static int  _targetting_cmd_to_compass( command_type command );
 static void _describe_oos_square(const coord_def& where);
 static void _extend_move_to_edge(dist &moves);
+static std::vector<std::string> _get_monster_desc_vector(const monsters *mon);
 static std::string _get_monster_desc(const monsters *mon);
+static std::vector<std::string> _mon_enchantments_vector_string(
+    const monsters* mon);
 
 #ifdef WIZARD
 static void _wizard_make_friendly(monsters* m)
@@ -1390,6 +1393,36 @@ std::string direction_chooser::target_interesting_terrain_description() const
     }
 }
 
+std::string direction_chooser::target_cloud_description() const {
+    const int cloud = env.cgrid(target());
+    if (cloud != EMPTY_CLOUD)
+        return cloud_name(cloud);
+    else
+        return "";
+}
+
+template<typename C1, typename C2>
+static void _append_container(C1& container_base, const C2& container_append)
+{
+    container_base.insert(container_base.end(),
+                          container_append.begin(), container_append.end());
+}
+
+std::string direction_chooser::target_sanctuary_description() const {
+    return is_sanctuary(target()) ? "sanctuary" : "";
+}
+
+std::string direction_chooser::target_silence_description() const {
+    return silenced(target()) ? "silenced" : "";
+}
+
+static void _push_back_if_nonempty(const std::string& str,
+                                   std::vector<std::string>* vec)
+{
+    if (!str.empty())
+        vec->push_back(str);
+}
+
 void direction_chooser::print_target_monster_description() const
 {
     // Do we see anything?
@@ -1397,17 +1430,22 @@ void direction_chooser::print_target_monster_description() const
     if (mon == NULL || mons_is_unknown_mimic(mon) || !you.can_see(mon))
         return;
 
-    // FIXME: this duplicates code from _describe_monster.
+    // Prepare a lot of descriptions about the monster and its cell.
+    std::vector<std::string> suffixes;
+    _push_back_if_nonempty(target_cloud_description(), &suffixes);
+    _push_back_if_nonempty(target_sanctuary_description(), &suffixes);
+    _push_back_if_nonempty(target_silence_description(), &suffixes);
+    _push_back_if_nonempty(target_interesting_terrain_description(), &suffixes);
+    _push_back_if_nonempty(get_wounds_description(mon), &suffixes);
+    _append_container(suffixes, _mon_enchantments_vector_string(mon));
+    _append_container(suffixes, _get_monster_desc_vector(mon));
 
-    // Describe the monster, its equipment, and the terrain it's
-    // on (if relevant.)
-    std::string text = get_monster_equipment_desc(mon)
-        + target_interesting_terrain_description() + ".";
-
-    // Describe its wounds.
-    const std::string wounds_desc = get_wounds_description(mon);
-    if (!wounds_desc.empty())
-        text += " " + mon->pronoun(PRONOUN_CAP) + wounds_desc;
+    // Build the final description string.
+    std::string text = get_monster_equipment_desc(mon);
+    if (!suffixes.empty())
+        text += " ("
+            + comma_separated_line(suffixes.begin(), suffixes.end(), ", ")
+            + ")";
 
     mprf(MSGCH_PROMPT, "%s: <lightgrey>%s</lightgrey>",
          target_prefix ? target_prefix : "Aim",
@@ -1955,10 +1993,10 @@ void get_square_desc(const coord_def &c, describe_info &inf,
             // If examine_mons is true (currently only for the Tiles
             // mouse-over information), set monster's
             // equipment/woundedness/enchantment description as title.
-            std::string desc   = get_monster_equipment_desc(mons) + ".\n";
-            std::string wounds = get_wounds_description(mons);
+            std::string desc         = get_monster_equipment_desc(mons) + ".\n";
+            const std::string wounds = get_wounds_description_sentence(mons);
             if (!wounds.empty())
-                desc += mons->pronoun(PRONOUN_CAP) + wounds + "\n";
+                desc += wounds + "\n";
             desc += _get_monster_desc(mons);
 
             inf.title = desc;
@@ -3221,7 +3259,8 @@ static std::string _stair_destination_description(const coord_def &pos)
 }
 #endif
 
-std::string _mon_enchantments_string(const monsters* mon)
+static std::vector<std::string> _mon_enchantments_vector_string(
+    const monsters* mon)
 {
     const bool paralysed = mon->paralysed();
     std::vector<std::string> enchant_descriptors;
@@ -3238,6 +3277,14 @@ std::string _mon_enchantments_string(const monsters* mon)
     if (paralysed)
         enchant_descriptors.push_back("paralysed");
 
+    return enchant_descriptors;
+}
+
+static std::string _mon_enchantments_string(const monsters* mon)
+{
+    const std::vector<std::string> enchant_descriptors =
+        _mon_enchantments_vector_string(mon);
+
     if (!enchant_descriptors.empty())
     {
         return
@@ -3249,6 +3296,87 @@ std::string _mon_enchantments_string(const monsters* mon)
     }
     else
         return "";
+}
+
+static std::vector<std::string> _get_monster_behaviour_vector(
+    const monsters* mon)
+{
+    std::vector<std::string> descs;
+
+    if (!mons_behaviour_perceptible(mon))
+        return descs;
+
+    if (mon->asleep())
+    {
+        descs.push_back(mons_is_confused(mon, true) ? "sleepwalking"
+                                                    : "resting");
+    }
+    // Applies to both friendlies and hostiles
+    else if (mons_is_fleeing(mon))
+    {
+        descs.push_back("retreating");
+    }
+    // hostile with target != you
+    else if (!mon->friendly()
+             && !mon->neutral()
+             && mon->foe != MHITYOU
+             && !crawl_state.arena_suspended
+             // Special case: batty monsters get set to BEH_WANDER as
+             // part of their special behaviour, so it doesn't mean they
+             // actually haven't noticed you.
+             && !mons_is_batty(mon))
+    {
+        descs.push_back("hasn't noticed you.");
+    }
+
+    return descs;
+}
+
+// FIXME: this duplicates _get_monster_desc(). Unite them.
+static std::vector<std::string> _get_monster_desc_vector(const monsters *mon)
+{
+    std::vector<std::string> descs;
+
+    if (you.beheld_by(mon))
+        descs.push_back("mesmerising");
+
+    _append_container(descs, _get_monster_behaviour_vector(mon));
+
+    if (mon->attitude == ATT_FRIENDLY)
+        descs.push_back("friendly");
+    else if (mon->good_neutral())
+        descs.push_back("peaceful");
+    else if (mon->neutral()) // don't differentiate between permanent or not
+        descs.push_back("indifferent");
+
+    if (mon->is_summoned() && (mon->type != MONS_RAKSHASA_FAKE
+                               && mon->type != MONS_MARA_FAKE))
+    {
+        descs.push_back("summoned");
+    }
+
+    if (mon->haloed())
+        descs.push_back("haloed");
+
+    if (mons_intel(mon) <= I_PLANT && mon->type != MONS_RAKSHASA_FAKE)
+        descs.push_back("mindless");
+
+    if (mons_enslaved_body_and_soul(mon))
+        descs.push_back("possessable"); // FIXME: better adjective
+    else if (mons_enslaved_soul(mon))
+        descs.push_back("disembodied soul");
+
+    dungeon_feature_type blocking_feat;
+    if (!crawl_state.arena_suspended
+        && mon->pos() != you.pos()
+        && _blocked_ray(mon->pos(), &blocking_feat))
+    {
+        descs.push_back("fire blocked by "
+                        + feature_description(blocking_feat, NUM_TRAPS, false,
+                                              DESC_NOCAP_A));
+    }
+
+    return descs;
 }
 
 // Returns the description string for a given monster, including attitude
@@ -3333,9 +3461,9 @@ static void _describe_monster(const monsters *mon)
 {
     // First print type and equipment.
     std::string text = get_monster_equipment_desc(mon) + ".";
-    const std::string wounds_desc = get_wounds_description(mon);
+    const std::string wounds_desc = get_wounds_description_sentence(mon);
     if (!wounds_desc.empty())
-        text += " " + mon->pronoun(PRONOUN_CAP) + wounds_desc;
+        text += " " + wounds_desc;
 
     mpr(text, MSGCH_EXAMINE);
 

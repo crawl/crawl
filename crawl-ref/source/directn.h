@@ -160,8 +160,8 @@ private:
     // Press: ? - help, Shift-Dir - straight line, t - giant bat
     void print_key_hints() const;
 
-    // Here: An almost dead orc wizard, wielding a glowing orcish
-    // dagger, and wearing an orcish robe.
+    // Here: An orc wizard, wielding a glowing orcish dagger, and wearing
+    // an orcish robe (miasma, silenced, almost dead)
     // OR:
     // Apport: A short sword.
     void print_target_description() const;
@@ -181,6 +181,9 @@ private:
     void print_floor_description(bool boring_too) const;
 
     std::string target_interesting_terrain_description() const;
+    std::string target_cloud_description() const;
+    std::string target_sanctuary_description() const;
+    std::string target_silence_description() const;
 
     void describe_cell() const;
 
