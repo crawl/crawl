@@ -1338,7 +1338,7 @@ mlist_min_height = 4
         before letting the message area get more.
         (Note that the monster list is only available for ASCII.)
 
-msg_min_height = 6
+msg_min_height = 7
         You can reduce this to give more space to the map display. The
         minimum value is 5.
 
