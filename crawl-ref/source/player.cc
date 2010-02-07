@@ -5310,6 +5310,7 @@ void player::init()
 
     your_name = "";
 
+    mold_colour = LIGHTCYAN;
     banished = false;
     banished_by.clear();
 
