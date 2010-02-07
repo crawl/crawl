@@ -893,6 +893,7 @@ void game_options::reset_options()
     tile_show_minihealthbar = true;
     tile_show_minimagicbar  = true;
     tile_show_demon_numbers = true;
+    tile_better_transparency = false;
 #endif
 
     // map each colour to itself as default
@@ -3227,6 +3228,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         tile_tag_pref = string2tag_pref(field.c_str());
     }
+    else BOOL_OPTION(tile_better_transparency);
 #endif // USE_TILE
 
     else if (key == "bindkey")
