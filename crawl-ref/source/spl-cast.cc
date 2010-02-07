@@ -2117,7 +2117,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_FULSOME_DISTILLATION:
-        cast_fulsome_distillation(powc);
+        if (!cast_fulsome_distillation(powc))
+            return (SPRET_ABORT);
         break;
 
     case SPELL_DEBUGGING_RAY:
