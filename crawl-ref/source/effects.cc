@@ -1283,8 +1283,8 @@ static bool _try_give_plain_armour(item_def &arm)
 
             // Two-handed weapons and ranged weapons conflict with shields.
             if (weapon
-                && (hands_reqd(*weapon, you.body_size()) == HANDS_TWO)
-                    || is_range_weapon(*weapon))
+                && (hands_reqd(*weapon, you.body_size()) == HANDS_TWO
+                    || is_range_weapon(*weapon)))
             {
                 continue;
             }
