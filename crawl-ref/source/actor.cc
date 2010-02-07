@@ -191,26 +191,26 @@ int actor::body_weight(bool base) const
     }
 }
 
-bool actor::check_train_armour()
+bool actor::check_train_armour(int amount)
 {
     if (const item_def *armour = slot_item(EQ_BODY_ARMOUR, false))
     {
         if (x_chance_in_y(item_mass(*armour), 1000))
         {
-            this->exercise(SK_ARMOUR, 1);
+            this->exercise(SK_ARMOUR, amount);
             return (true);
         }
     }
     return (false);
 }
 
-bool actor::check_train_dodging()
+bool actor::check_train_dodging(int amount)
 {
     const item_def *armour = slot_item(EQ_BODY_ARMOUR, false);
     const int mass = armour? item_mass(*armour) : 0;
     if (!x_chance_in_y(mass, 800))
     {
-        this->exercise(SK_DODGING, 1);
+        this->exercise(SK_DODGING, amount);
         return (true);
     }
     return (false);
