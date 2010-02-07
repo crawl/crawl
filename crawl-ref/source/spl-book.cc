@@ -39,6 +39,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
+#include "colour.h"
 
 #define SPELL_LIST_KEY "spell_list"
 
@@ -796,7 +797,7 @@ int spellbook_contents( item_def &book, read_book_action_type action,
                      && spell_levels >= levels_req
                      && spell_skills)
             {
-                colour = LIGHTBLUE;
+                colour = spell_highlight_by_utility(stype, colour);
             }
         }
 
@@ -1576,25 +1577,29 @@ static spell_type _choose_mem_spell(spell_list &spells,
 
         std::ostringstream desc;
 
+        int colour = LIGHTGRAY;
         if (grey)
-            desc << "<darkgrey>";
-        else if (red)
-            desc << "<lightred>";
+            colour = DARKGRAY;
+            
+        colour = spell_highlight_by_utility(spell);
+        
+        if (red)
+            colour = LIGHTRED;
+            
+        desc << "<" << colour_to_str(colour) << ">";
 
         desc << std::left;
         desc << std::setw(30) << spell_title(spell);
         desc << spell_schools_string(spell);
 
-        int so_far = desc.str().length() - ( (grey || red) ? 10 : 0);
+        int so_far = desc.str().length() - ( name_length_by_colour(colour)+2);
         if (so_far < 60)
             desc << std::string(60 - so_far, ' ');
 
         desc << std::setw(12) << failure_rate_to_string(spell_fail(spell))
              << spell_difficulty(spell);
-        if (grey)
-            desc << "</darkgrey>";
-        else if (red)
-            desc << "</lightred>";
+
+        desc << "</" << colour_to_str(colour) << ">";
 
         MenuEntry* me = new MenuEntry(desc.str(), MEL_ITEM, 1,
                                       index_to_letter(i % 52));

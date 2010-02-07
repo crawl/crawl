@@ -61,6 +61,7 @@
 #include "tutorial.h"
 #include "view.h"
 #include "shout.h"
+#include "colour.h"
 
 static bool _surge_identify_boosters(spell_type spell)
 {
@@ -137,9 +138,12 @@ static std::string _spell_base_description(spell_type spell, bool grey = false)
 {
     std::ostringstream desc;
 
+    int highlight = spell_highlight_by_utility(spell);
+
     if (grey)
-        desc << "<darkgrey>";
-    desc << std::left;
+        highlight = LIGHTGRAY;
+
+    desc << "<" << colour_to_str(highlight) << ">" << std::left;
 
     // spell name
     desc << std::setw(30) << spell_title(spell);
@@ -147,15 +151,14 @@ static std::string _spell_base_description(spell_type spell, bool grey = false)
     // spell schools
     desc << spell_schools_string(spell);
 
-    const int so_far = desc.str().length() - (grey ? 10 : 0);
+    const int so_far = desc.str().length() - (name_length_by_colour(highlight)+2);
     if (so_far < 60)
         desc << std::string(60 - so_far, ' ');
 
     // spell fail rate, level
     desc << std::setw(12) << failure_rate_to_string(spell_fail(spell))
          << spell_difficulty(spell);
-    if (grey)
-        desc << "</darkgrey>";
+    desc << "</" << colour_to_str(highlight) <<">";
 
     return desc.str();
 }
@@ -164,9 +167,12 @@ static std::string _spell_extra_description(spell_type spell, bool grey = false)
 {
     std::ostringstream desc;
 
+    int highlight = spell_highlight_by_utility(spell);
+
     if (grey)
-        desc << "<darkgrey>";
-    desc << std::left;
+        highlight = LIGHTGRAY;
+
+    desc << "<" << colour_to_str(highlight) << ">" << std::left;
 
     // spell name
     desc << std::setw(30) << spell_title(spell);
@@ -179,8 +185,7 @@ static std::string _spell_extra_description(spell_type spell, bool grey = false)
          << std::setw(12) << spell_hunger_string(spell)
          << spell_difficulty(spell);
 
-    if (grey)
-        desc << "</darkgrey>";
+    desc << "</" << colour_to_str(highlight) <<">";
 
     return desc.str();
 }

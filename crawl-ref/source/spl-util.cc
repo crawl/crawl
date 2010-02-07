@@ -34,6 +34,7 @@
 #include "religion.h"
 #include "spells4.h"
 #include "spl-cast.h"
+#include "spl-book.h" 
 #include "terrain.h"
 
 
@@ -1038,4 +1039,108 @@ spell_type zap_type_to_spell(zap_type zap)
         DEBUGSTR("zap_type_to_spell() only handles wand zaps for now");
     }
     return SPELL_NO_SPELL;
+}
+
+bool spell_is_useful(spell_type spell)
+{
+    if (you_cannot_memorise(spell) || god_hates_spell(you.religion, spell)) 
+        return (false);
+    if (you.duration[DUR_CONF] > 0) 
+        return (false);
+
+    // due to the way this function is used, you should generally try to be
+    // fairly specific about the curcimstances in which a spell is "useful".
+    switch (spell)
+    {
+    case SPELL_SWIFTNESS:
+        if (you.duration[DUR_LEVITATION] > 0 && you.duration[DUR_SWIFTNESS]  < 1)
+            return (true);
+        break;
+    case SPELL_HASTE:
+    case SPELL_BERSERKER_RAGE:
+        if (you.duration[DUR_SLOW] > 0)
+            return (true);
+        break;
+    case SPELL_CONTROL_TELEPORT:
+        if (you.duration[DUR_TELEPORT] > 0 && you.duration[DUR_CONTROL_TELEPORT] < 1)
+            return (true);
+        break;
+    case SPELL_FLY:
+        if (you.duration[DUR_LEVITATION] > 0 && you.duration[DUR_CONTROLLED_FLIGHT] < 1)
+            return (true);
+        break;
+    default: // quash unhandled constants warnings
+        break;
+    }
+
+    return (false);
+}
+
+bool spell_is_useless(spell_type spell)
+{
+    if (you_cannot_memorise(spell))
+        return (true);
+    if (you.duration[DUR_CONF] > 0) 
+        return (true);
+
+    switch(spell)
+    {
+    case SPELL_SWIFTNESS:
+        // I'm pretty sure this is the right number for speed,
+        // but I'm not certain ~DMB
+        if(player_movement_speed() <= 6)
+            return (true);
+        break;
+    case SPELL_LEVITATION:
+    case SPELL_FLY:
+        // is it really level 2 that allows flight? (must test) ~DMB
+        if (you.mutation[MUT_BIG_WINGS] == 2
+            || (you.species == SP_KENKU && you.experience_level >= 5))
+        {
+            return (true);
+        }
+        if (you.duration[DUR_LEVITATION] > 0)
+            return (true);
+        break;
+    case SPELL_REGENERATION:
+        if (you.species == SP_DEEP_DWARF)
+            return (true);
+        break;
+    case SPELL_INVISIBILITY:
+        if (you.duration[DUR_INVIS] > 0)
+            return (true);
+        if (you.backlit())
+            return (true);
+        break;
+    case SPELL_CONTROL_TELEPORT:
+        if (you.duration[DUR_CONTROL_TELEPORT] > 0)
+            return (true);
+        break;
+    default:
+        break; // quash unhandled constants warnings
+    }
+
+    return (false);
+}
+
+int spell_highlight_by_utility(spell_type spell, int default_color)
+{
+    // If your god hates the spell, that overrides all other concerns
+    if (god_hates_spell(you.religion, spell))
+        return (COL_FORBIDDEN);
+
+    if (god_likes_spell(you.religion, spell))
+        default_color = COL_FAVORED;
+
+    if (spell_is_useless(spell))
+        default_color = COL_USELESS;
+
+    // Specific utility should override general uselessness
+    // Note: its not an issue atm, but should undead-incompatible
+    // spells be added to 'spell_is_useful()' this will not play
+    // nicely. ~ DMB
+    if (spell_is_useful(spell))
+        default_color = COL_USEFUL;
+
+    return (default_color);
 }
