@@ -4561,7 +4561,7 @@ void melee_attack::check_defender_train_dodging()
 void melee_attack::check_defender_train_armour()
 {
     if (coinflip())
-        defender->check_train_armour();
+        defender->check_train_armour(coinflip()? 2 : 1);
 }
 
 void melee_attack::mons_set_weapon(const mon_attack_def &attk)
