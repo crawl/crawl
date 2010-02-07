@@ -37,7 +37,9 @@ enum spflag_type
     SPFLAG_INNATE               = 0x080000,      // an innate spell, even if
                                                  // use by a priest/wizard
     SPFLAG_NOISY                = 0x100000,      // makes noise, even if innate
-    SPFLAG_TESTING              = 0x200000       // a testing/debugging spell
+    SPFLAG_TESTING              = 0x200000,      // a testing/debugging spell
+    SPFLAG_CORPSE_VIOLATING     = 0x400000       // Conduct violation for Fedhas
+
 };
 
 enum spret_type

@@ -124,13 +124,14 @@ enum unrand_type
 
 enum unrand_flag_type
 {
-    UNRAND_FLAG_NONE    = 0x00,
-    UNRAND_FLAG_SPECIAL = 0x01,
-    UNRAND_FLAG_HOLY    = 0x02,
-    UNRAND_FLAG_UNHOLY  = 0x04,
-    UNRAND_FLAG_EVIL    = 0x08,
-    UNRAND_FLAG_UNCLEAN = 0x10,
-    UNRAND_FLAG_CHAOTIC = 0x20
+    UNRAND_FLAG_NONE             = 0x00,
+    UNRAND_FLAG_SPECIAL          = 0x01,
+    UNRAND_FLAG_HOLY             = 0x02,
+    UNRAND_FLAG_UNHOLY           = 0x04,
+    UNRAND_FLAG_EVIL             = 0x08,
+    UNRAND_FLAG_UNCLEAN          = 0x10,
+    UNRAND_FLAG_CHAOTIC          = 0x20,
+    UNRAND_FLAG_CORPSE_VIOLATING = 0x40
 };
 
 enum setup_missile_type

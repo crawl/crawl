@@ -3254,6 +3254,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     {
         did_god_conduct(DID_NECROMANCY, 2,
                         bow_brand == SPWPN_REAPING || ammo_brand_known);
+        did_god_conduct(DID_CORPSE_VIOLATION, 2,
+                        bow_brand == SPWPN_REAPING || ammo_brand_known);
     }
 
     if (ammo_brand == SPMSL_RAGE)

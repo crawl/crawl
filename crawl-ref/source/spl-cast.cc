@@ -883,6 +883,9 @@ static void _spellcasting_side_effects(spell_type spell, bool idonly = false)
     if (is_chaotic_spell(spell) && !crawl_state.is_god_acting())
         did_god_conduct(DID_CHAOS, 10 + spell_difficulty(spell));
 
+    if (is_corpse_violating_spell(spell) && !crawl_state.is_god_acting())
+        did_god_conduct(DID_CORPSE_VIOLATION, 10 + spell_difficulty(spell));
+
     // Linley says: Condensation Shield needs some disadvantages to keep
     // it from being a no-brainer... this isn't much, but its a start. - bwr
     if (spell_typematch(spell, SPTYP_FIRE))

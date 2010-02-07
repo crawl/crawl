@@ -763,7 +763,7 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
     case GOD_FEDHAS:
         dislikes.push_back("you or your allies destroy plants");
         dislikes.push_back("allied flora die");
-        dislikes.push_back("you use necromancy");
+        dislikes.push_back("you use necromancy on corpses or chunks");
         break;
 
     default:

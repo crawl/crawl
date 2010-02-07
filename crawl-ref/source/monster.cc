@@ -618,7 +618,7 @@ bool monsters::could_wield(const item_def &item, bool ignore_brand,
         // that are gifts of good gods or Fedhas won't use potentially
         // evil weapons.
         if (((is_holy() && !is_chaotic_god(god))
-                || (is_good_god(god) || god == GOD_FEDHAS))
+                || is_good_god(god))
             && is_potentially_evil_item(item))
         {
             return (false);
@@ -626,11 +626,14 @@ bool monsters::could_wield(const item_def &item, bool ignore_brand,
 
         // Holy monsters and monsters that are gifts of good gods or
         // Fedhas won't use evil weapons.
-        if (((is_holy() || is_good_god(god)) || god == GOD_FEDHAS)
+        if (((is_holy() || is_good_god(god)))
             && is_evil_item(item))
         {
             return (false);
         }
+
+        if (god == GOD_FEDHAS && is_corpse_violating_item(item))
+            return (false);
 
         // Holy monsters that aren't gifts of chaotic gods and monsters
         // that are gifts of good gods won't use chaotic weapons.
