@@ -9,6 +9,26 @@ local start_level = nil
 local end_level = nil
 local ignore_uniques = true
 
+local function canonical_name(mons)
+  local shapeshifter = mons.shapeshifter
+  if shapeshifter then
+    return shapeshifter
+  end
+
+  local mname = mons.name
+
+  if string.find(mname, 'ugly thing$') then
+    return "ugly thing"
+  end
+
+  local _, _, hydra_suffix = string.find(mname, '.*-headed (.*)')
+  if hydra_suffix then
+    mname = hydra_suffix
+  end
+
+  return mname
+end
+
 local function count_monsters_at(place, set)
   debug.goto_place(place)
   test.regenerate_level(nil, use_random_maps)
@@ -16,7 +36,7 @@ local function count_monsters_at(place, set)
   local monsters_here = set or {  }
   for mons in test.level_monster_iterator() do
     if not ignore_uniques or not mons.unique then
-      local mname = mons.name
+      local mname = canonical_name(mons)
       if not excluded_things[mname] then
         local mstat = monsters_here[mname] or { count = 0, exp = 0 }
         mstat.count = mstat.count + 1

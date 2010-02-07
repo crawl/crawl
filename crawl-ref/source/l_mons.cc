@@ -85,6 +85,18 @@ MDEF(hd)
     PLUARET(number, mons->hit_dice);
 }
 
+MDEF(shapeshifter)
+{
+    ASSERT_DLUA;
+    if (mons->has_ench(ENCH_GLOWING_SHAPESHIFTER))
+        lua_pushstring(ls, "glowing shapeshifter");
+    else if (mons->has_ench(ENCH_SHAPESHIFTER))
+        lua_pushstring(ls, "shapeshifter");
+    else
+        lua_pushnil(ls);
+    return (1);
+}
+
 static const char *_monuse_names[] =
 {
     "nothing", "open_doors", "starting_equipment", "weapons_armour",
@@ -281,12 +293,13 @@ struct MonsAccessor
 
 static MonsAccessor mons_attrs[] =
 {
-    { "name",      l_mons_name      },
-    { "base_name", l_mons_base_name },
-    { "full_name", l_mons_full_name },
-    { "db_name",   l_mons_db_name   },
-    { "type_name", l_mons_type_name },
-    { "unique"   , l_mons_unique },
+    { "name",         l_mons_name      },
+    { "base_name",    l_mons_base_name },
+    { "full_name",    l_mons_full_name },
+    { "db_name",      l_mons_db_name   },
+    { "type_name",    l_mons_type_name },
+    { "unique"   ,    l_mons_unique },
+    { "shapeshifter", l_mons_shapeshifter },
 
     { "x"   , l_mons_x    },
     { "y"   , l_mons_y    },
