@@ -4050,7 +4050,7 @@ bool monsters::has_multitargeting() const
         return (true);
 
     // Hacky little list for now. evk
-    return (type == MONS_HYDRA
+    return (has_hydra_multi_attack()
             || type == MONS_TENTACLED_MONSTROSITY
             || type == MONS_ELECTRIC_GOLEM);
 }
