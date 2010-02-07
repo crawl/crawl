@@ -1026,7 +1026,19 @@ static bool _fedhas_retribution()
         collect_radius_points(radius_points, you.pos(),
                               you.get_los_no_trans());
 
-        unsigned free_thresh = 30;
+        unsigned free_thresh = 24;
+
+        int max_idx = 3;
+        unsigned max_points = radius_points[max_idx].size();
+
+        for (unsigned i=max_idx + 1; i<radius_points.size(); i++)
+        {
+            if (radius_points[i].size() > max_points)
+            {
+                max_points = radius_points[i].size();
+                max_idx = i;
+            }
+        }
 
         mgen_data temp(MONS_OKLOB_PLANT,
                        BEH_HOSTILE, 0, 0, 0,
@@ -1037,10 +1049,9 @@ static bool _fedhas_retribution()
 
         temp.non_actor_summoner = "the enmity of Fedhas Madash";
 
-        // If we have a lot of space to work with (the circle with
-        // radius 6 is substantially unoccupied), we can do something
+        // If we have a lot of space to work with we can do something
         // flashy.
-        if (radius_points[5].size() > free_thresh)
+        if (radius_points[max_idx].size() > free_thresh)
         {
             int seen_count;
 
@@ -1054,7 +1065,7 @@ static bool _fedhas_retribution()
 
             temp.cls = MONS_OKLOB_PLANT;
 
-            place_ring(radius_points[5],
+            place_ring(radius_points[max_idx],
                        you.pos(),
                        temp,
                        random_range(3, 8), 1,
