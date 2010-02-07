@@ -133,6 +133,7 @@ bool _iood_hit(monsters &mon, const coord_def &pos, bool big_boom = false)
     const int pow = mon.props["iood_pow"].get_short();
     beam.damage = dice_def(8, stepdown_value(pow, 30, 30, 200, -1) / 4);
     beam.ex_size = 1;
+    beam.loudness = 7;
 
     monster_die(&mon, KILL_DISMISSED, NON_MONSTER);
 
