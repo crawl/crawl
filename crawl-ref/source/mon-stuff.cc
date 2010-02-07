@@ -1035,7 +1035,7 @@ static bool _spore_goes_pop(monsters *monster, killer_type killer,
     // FIXME: show_more == mons_near(monster)
     beam.explode();
 
-    activate_ballistomycetes(monster, beam.target);
+    activate_ballistomycetes(monster, beam.target, YOU_KILL(beam.killer()));
     // Monster died in explosion, so don't re-attach it to the grid.
     return (true);
 }
@@ -2145,7 +2145,7 @@ int monster_die(monsters *monster, killer_type killer,
     }
 
     if(monster->type == MONS_BALLISTOMYCETE)
-        activate_ballistomycetes(monster, monster->pos());
+        activate_ballistomycetes(monster, monster->pos(), YOU_KILL(killer));
 
     if (!wizard && !submerged)
         _monster_die_cloud(monster, !mons_reset, silent, summoned);

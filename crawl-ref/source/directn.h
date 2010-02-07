@@ -281,7 +281,7 @@ std::string get_monster_equipment_desc(const monsters *mon,
 
 int dos_direction_unmunge(int doskey);
 
-std::string feature_description(const coord_def& where, bool bloody = false,
+std::string feature_description(const coord_def& where, bool covering = false,
                                 description_level_type dtype = DESC_CAP_A,
                                 bool add_stop = true, bool base_desc = false);
 std::string raw_feature_description(dungeon_feature_type grid,
@@ -290,7 +290,7 @@ std::string raw_feature_description(dungeon_feature_type grid,
 std::string feature_description(dungeon_feature_type grid,
                                 trap_type trap = NUM_TRAPS, bool bloody = false,
                                 description_level_type dtype = DESC_CAP_A,
-                                bool add_stop = true, bool base_desc = false);
+                                bool add_stop = true, bool base_desc = false, bool mold = false);
 
 void set_feature_desc_short(dungeon_feature_type grid,
                             const std::string &desc);

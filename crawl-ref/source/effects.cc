@@ -4101,6 +4101,10 @@ static void _catchup_monster_moves(monsters *mon, int turns)
         return;
     }
 
+    // Don't shift giant spores since that would disrupt their trail.
+    if (mon->type == MONS_GIANT_SPORE)
+        return;
+
     // Let sleeping monsters lie.
     if (mon->asleep() || mon->paralysed())
         return;
