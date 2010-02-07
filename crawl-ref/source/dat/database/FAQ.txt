@@ -156,8 +156,8 @@ Note that the exit itself might be found within a vault that has non-metal
 walls. Also, there might be secret doors and there might be traps, and of
 course there's a minotaur around, so do step carefully.
 
-And while already on the topic of labyrinths, teleportation is guaranteed to
-land you away from the exit.
+And while already on the topic of labyrinths, be warned that teleportation is
+guaranteed to land you away from the exit.
 %%%%
 Q:starving
 
@@ -455,7 +455,7 @@ want, you can also write a patch that implements an existing FR or fixes a
 bug.
 
 If you'd like to write a patch but don't know how to go about it,
-patch_guide.txt in the docs/ folder is the file for you.
+patch_guide.txt in the docs/develop/ folder is the file for you.
 
 We really appreciate your help!
 %%%%
@@ -468,12 +468,12 @@ A:help
 A: There are several areas where you can get creative and outside help is
 much appreciated. These are:
 * the maps/vaults (see dat/ folder, docs/develop/levels/introduction.txt)
-* monster speech (see dat/database/, docs/monster_speech.txt)
+* monster speech (see dat/database/, docs/develop/monster_speech.txt)
 * monster/item/spell descriptions (see dat/descript/)
-* tiles (see source/rltiles/, docs/tiles_creation.txt)
+* tiles (see source/rltiles/, docs/develop/tiles_creation.txt)
 
 Also, if you'd like to write a patch but don't know how to go about it, read
-patch_guide.txt in the docs/ folder.
+patch_guide.txt in the docs/develop/ folder.
 
 If you've got some cool addition, you can send it over the mailing list, or
 post it as a Mantis item. You can also help us by giving feedback on the most
@@ -563,7 +563,7 @@ submit them as a Mantis item: http://crawl.develz.org/mantis/
 It's easiest for us if they are already in 32x32 png format, and preferrably
 zipped if there are several.
 
-See docs/tiles_creation.txt for a slightly more detailed explanation.
+See docs/develop/tiles_creation.txt for a slightly more detailed explanation.
 
 Thanks in advance!
 %%%%
