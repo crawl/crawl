@@ -312,14 +312,7 @@ class message_window
 
     int make_space(int n)
     {
-        int space = height() - next_line;
-
-        // We could use the last line anyway if we know we're
-        // showing the last message, but that would require
-        // only calling message_window::show when reading
-        // input -- that's not currently the case.
-        if (!use_last_line())
-            space--;
+        int space = out_height() - next_line;
 
         if (space >= n)
             return 0;
@@ -335,23 +328,21 @@ class message_window
         if (space >= n)
             return s;
 
-        else if (more_enabled())
+        if (more_enabled())
+            more(true);
+
+        // We could consider just scrolling off after --more--;
+        // that would require marking the last message before
+        // the prompt.
+        if (!Options.clear_messages && !more_enabled())
         {
-            more(true); // this clears, also
-            return (height()); // XXX: unused; perhaps height()-1 ?
+            scroll(n - space);
+            return (s + n - space);
         }
         else
         {
-            if (Options.clear_messages)
-            {
-                scroll(n - space);
-                return (s + n - space);
-            }
-            else
-            {
-                clear();
-                return (height());
-            }
+            clear();
+            return (height());
         }
     }
 
@@ -525,7 +516,6 @@ public:
             cprintf("--more--");
             readkey_more(user);
         }
-        clear(); // this could depend on options
     }
 };
 
@@ -1197,38 +1187,25 @@ static bool _pre_more()
 
 #ifdef DEBUG_DIAGNOSTICS
     if (you.running)
-    {
-        mesclr();
         return true;
-    }
 #endif
 
     if (crawl_state.arena)
     {
         delay(Options.arena_delay);
-        mesclr();
         return true;
     }
 
     if (crawl_state.is_replaying_keys())
-    {
-        mesclr();
         return true;
-    }
 
 #ifdef WIZARD
     if(luaterp_running())
-    {
-        mesclr();
         return true;
-    }
 #endif
 
     if (!crawl_state.show_more_prompt || suppress_messages)
-    {
-        mesclr();
         return true;
-    }
 
     return false;
 }
@@ -1237,6 +1214,7 @@ void more(bool user_forced)
 {
     flush_prev_message();
     msgwin.more(false, user_forced);
+    mesclr();
 }
 
 static bool is_channel_dumpworthy(msg_channel_type channel)
