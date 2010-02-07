@@ -19,7 +19,7 @@ end
 
 test_item_places(niters,
                  { { "Snake:$", "serpentine rune" },
-                   { "Shoal:$", "barnacled rune" },
+                   { "Shoals:$", "barnacled rune" },
                    { "Swamp:$", "decaying rune" },
                    { "Slime:$", "slimy rune" },
                    { "Vault:$", "silver rune" },
