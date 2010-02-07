@@ -535,12 +535,14 @@ static int _create_plant(coord_def & target, int hp_adjust = 0)
         if (you.see_cell(target))
         {
             if (hp_adjust)
-                mpr("A plant grows up from the ground, it is strengthened by Fedhas.");
+            {
+                mprf("A plant, strengthened by %s, grows up from the ground.",
+                     god_name(GOD_FEDHAS).c_str());
+            }
             else
                 mpr("A plant grows up from the ground.");
         }
     }
-
 
     return (plant != -1);
 }
