@@ -102,7 +102,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
-        case DID_NECROMANCY:
+        case DID_CORPSE_VIOLATION:
             if (you.religion == GOD_FEDHAS)
             {
                 if (known)
@@ -116,10 +116,10 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                     simple_god_message(" forgives your inadvertent necromancy, "
                                        "just this once.");
                 }
-                break;
             }
-            // else fall-through
+            break;
 
+        case DID_NECROMANCY:
         case DID_UNHOLY:
         case DID_ATTACK_HOLY:
             switch (you.religion)
