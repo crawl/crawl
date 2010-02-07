@@ -74,7 +74,10 @@ bool cast_iood(actor *caster, int pow, bolt *beam)
 
     // Move away from the caster's square.
     iood_act(mon, true);
-    mon.lose_energy(EUT_MOVE);
+    // We need to take at least one full move (for the above), but let's
+    // randomize it and take more so players won't get guaranteed instant
+    // damage.
+    mon.lose_energy(EUT_MOVE, 2, random2(3)+2);
     return (true);
 }
 
