@@ -248,8 +248,10 @@ static void _shoals_deepen_water()
 
             for (adjacent_iterator ai(c); ai; ++ai)
             {
-                coord_def adj(*ai);
-                if (!seen_points(adj) && grd(adj) == DNGN_DEEP_WATER)
+                const coord_def adj(*ai);
+                if (!seen_points(adj)
+                    && (adj - c).abs() == 1
+                    && grd(adj) == DNGN_DEEP_WATER)
                 {
                     npage.push_back(adj);
                     seen_points(adj) = true;
