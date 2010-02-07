@@ -102,7 +102,7 @@
        SPELL_BOLT_OF_COLD,
        SPELL_INVISIBILITY,
        SPELL_ANIMATE_DEAD,
-       SPELL_IRON_SHOT,
+       SPELL_IOOD,
        SPELL_INVISIBILITY
       }
     },
