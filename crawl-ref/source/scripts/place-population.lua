@@ -8,6 +8,7 @@ local multiple_levels = false
 local start_level = nil
 local end_level = nil
 local ignore_uniques = true
+local group_uniques = false
 
 local function canonical_name(mons)
   local shapeshifter = mons.shapeshifter
@@ -35,8 +36,12 @@ local function count_monsters_at(place, set)
 
   local monsters_here = set or {  }
   for mons in test.level_monster_iterator() do
-    if not ignore_uniques or not mons.unique then
+    local unique = mons.unique
+    if not ignore_uniques or not unique then
       local mname = canonical_name(mons)
+      if unique and group_uniques then
+        mname = "[UNIQUE]"
+      end
       if not excluded_things[mname] then
         local mstat = monsters_here[mname] or { count = 0, exp = 0 }
         mstat.count = mstat.count + 1
@@ -281,6 +286,9 @@ local function branch_resets()
     if arg == '-uniques' then
       ignore_uniques = false
     end
+    if arg == '-groupuniques' then
+      group_uniques = true
+    end
     local _, _, optiters = string.find(arg, "^-n=(%d+)")
     if optiters then
       niters = tonumber(optiters)
@@ -320,6 +328,12 @@ You can also disable the use of random maps during level generation with:
 
 Uniques are ignored by default; you can enable counts for uniques with:
                -uniques
+
+You can group all uniques together with
+               -groupuniques
+
+And you can set the number of iterations (default 150) with:
+               -n=[newnumber]
 ]])
   end
   return args[1], args[2] or args[1]
