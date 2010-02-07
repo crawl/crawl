@@ -2636,11 +2636,14 @@ void ShoppingList::display()
             start_translevel_travel(lp);
             break;
         }
-        else if (shopmenu.menu_action == Menu::ACT_EXAMINE && is_item)
+        else if (shopmenu.menu_action == Menu::ACT_EXAMINE)
         {
-            clrscr();
-            const item_def &item = get_thing_item(*thing);
-            describe_item( const_cast<item_def&>(item) );
+            if (is_item)
+            {
+                clrscr();
+                const item_def &item = get_thing_item(*thing);
+                describe_item( const_cast<item_def&>(item) );
+            }
         }
         else if (shopmenu.menu_action == Menu::ACT_MISC)
         {
