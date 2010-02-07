@@ -45,11 +45,13 @@ monster_type pick_local_zombifiable_monster_type(int power);
 
 class level_id;
 
-monster_type pick_random_monster(const level_id &place);
+monster_type pick_random_monster(const level_id &place,
+                                 bool *chose_ood_monster = NULL);
 
 monster_type pick_random_monster(const level_id &place,
                                  int power,
-                                 int &lev_mons);
+                                 int &lev_mons,
+                                 bool *chose_ood_monster);
 
 bool player_will_anger_monster(monster_type type, bool *holy = NULL,
                                bool *unholy = NULL, bool *lawful = NULL,
