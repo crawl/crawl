@@ -181,21 +181,8 @@ bool monsters::swimming() const
     return (feat_is_watery(grid) && mons_primary_habitat(this) == HT_WATER);
 }
 
-static bool _player_near_water()
-{
-    for (adjacent_iterator ai(you.pos()); ai; ++ai)
-        if (feat_is_water(grd(*ai)))
-            return (true);
-
-    return (false);
-}
-
 bool monsters::wants_submerge() const
 {
-    // Krakens never retreat when food (the player) is in range.
-    if (mons_base_type(this) == MONS_KRAKEN && _player_near_water())
-        return (false);
-
     // Trapdoor spiders only hide themselves under the floor when they
     // can't see their prey, or are on low hp.
     if (type == MONS_TRAPDOOR_SPIDER)
