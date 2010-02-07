@@ -3412,7 +3412,7 @@ static int _place_uniques(int level_number, char level_type)
     int num_placed = 0;
 
     // Magic numbers for dpeg's unique system.
-    const int A = 2;
+    int A = 2;
     const int B = 5;
     while (one_chance_in(A))
     {
@@ -3440,6 +3440,11 @@ static int _place_uniques(int level_number, char level_type)
         if (map_placed)
         {
             num_placed++;
+            // Make the placement chance drop steeply after
+            // some have been placed, to reduce chance of
+            // many uniques per level.
+            if (num_placed >= 3)
+                A++;
 #ifdef DEBUG_UNIQUE_PLACEMENT
             fprintf(ostat, "Placed valid unique map: %s.\n",
                     uniq_map->name.c_str());
