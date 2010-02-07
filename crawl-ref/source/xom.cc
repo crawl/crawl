@@ -474,7 +474,7 @@ static bool _teleportation_check(const spell_type spell = SPELL_TELEPORT_SELF)
     {
     case SPELL_BLINK:
     case SPELL_TELEPORT_SELF:
-        return (!item_blocks_teleport(false));
+        return (!item_blocks_teleport(false, false));
     default:
         return (true);
     }
