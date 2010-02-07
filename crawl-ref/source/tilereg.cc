@@ -4478,13 +4478,15 @@ void DollEditRegion::render()
     // self-explanatory.)
     {
         const int height = m_font->char_height();
+        const int width  = m_font->char_width();
         const float start_y = doll_name_y + height * 3;
-        m_font_buf.add("Change parts       left/right              Confirm choice      Enter", VColour::white, 0.0f, start_y);
-        m_font_buf.add("Change category    up/down                 Copy doll           Ctrl-C", VColour::white, 0.0f, start_y + height * 1);
-        m_font_buf.add("Change doll        0-9, Shift + arrows     Paste copied doll   Ctrl-V", VColour::white, 0.0f, start_y + height * 2);
-        m_font_buf.add("Change doll mode   m                       Randomise doll      Ctrl-R", VColour::white, 0.0f, start_y + height * 3);
-        m_font_buf.add("Save menu          Escape, Ctrl-S          Toggle equipment    *", VColour::white, 0.0f, start_y + height * 4);
-        m_font_buf.add("Quit menu          q, Ctrl-Q", VColour::white, 0.0f, start_y + height * 5);
+        const float start_x = width * 6;
+        m_font_buf.add("Change parts       left/right              Confirm choice      Enter",  VColour::white, start_x, start_y);
+        m_font_buf.add("Change category    up/down                 Copy doll           Ctrl-C", VColour::white, start_x, start_y + height * 1);
+        m_font_buf.add("Change doll        0-9, Shift + arrows     Paste copied doll   Ctrl-V", VColour::white, start_x, start_y + height * 2);
+        m_font_buf.add("Change doll mode   m                       Randomise doll      Ctrl-R", VColour::white, start_x, start_y + height * 3);
+        m_font_buf.add("Save menu          Escape, Ctrl-S          Toggle equipment    *",      VColour::white, start_x, start_y + height * 4);
+        m_font_buf.add("Quit menu          q, Ctrl-Q",                                          VColour::white, start_x, start_y + height * 5);
     }
 
     m_font_buf.draw();
