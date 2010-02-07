@@ -3488,6 +3488,80 @@ bool god_likes_fresh_corpses(god_type god)
             || (god == GOD_KIKUBAAQUDGHA && you.piety >= piety_breakpoint(4)));
 }
 
+bool god_likes_spell(god_type god, spell_type spell)
+{
+    switch(god)
+    {
+    case GOD_VEHUMET:
+        if (spell_typematch(spell, SPTYP_CONJURATION) || spell_typematch(spell, SPTYP_SUMMONING))
+            return (true);
+
+        if (spell == SPELL_SHATTER
+            || spell == SPELL_SANDBLAST
+            || spell == SPELL_FRAGMENTATION)
+        {
+            return (true);
+        }
+        break;
+
+    case GOD_KIKUBAAQUDGHA:
+        if(spell_typematch(spell, SPTYP_NECROMANCY))
+            return (true);
+        break;
+
+    default: // quash unhandled constants warnings
+        break;
+    }
+
+    return (false);
+}
+
+bool god_hates_spell(god_type god, spell_type spell)
+{
+    if ((is_good_god(you.religion) || you.religion == GOD_FEDHAS)
+        && spell_typematch(spell, SPTYP_NECROMANCY))
+    {
+        return (true);
+    }
+
+    if (is_good_god(you.religion) && spell == SPELL_NECROMUTATION) // probably redundant with the necro check
+        return (true);
+
+    switch(god)
+    {
+    case GOD_TROG:
+        return (true); // trog hates magic, and thus all spells.
+
+    case GOD_CHEIBRIADOS:
+        if (spell == SPELL_HASTE
+            || spell == SPELL_SWIFTNESS
+            || spell == SPELL_BERSERKER_RAGE)
+        {
+            return (true);
+        }
+
+        break;
+
+    case GOD_SHINING_ONE:
+        if (spell_typematch(spell, SPTYP_POISON))
+            return (true);
+        break;
+
+    case GOD_ZIN:
+        if (spell == SPELL_POLYMORPH_OTHER
+            || spell == SPELL_BANISHMENT
+            || spell == SPELL_SUMMON_UGLY_THING)
+        {
+            return (true);
+        }
+        break;
+
+    default: // quash unhandled constants warnings
+        break;
+    }
+    return (false);
+}
+
 harm_protection_type god_protects_from_harm(god_type god, bool actual)
 {
     const int min_piety = piety_breakpoint(0);
