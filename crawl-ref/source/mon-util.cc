@@ -3051,6 +3051,13 @@ bool mons_can_pass(const monsters *mon, dungeon_feature_type grid)
     return (mons_class_can_pass(montype, grid));
 }
 
+void mons_remove_from_grid(const monsters *mon)
+{
+    const coord_def pos = mon->pos();
+    if (map_bounds(pos) && mgrd(pos) == mon->mindex())
+        mgrd(pos) = NON_MONSTER;
+}
+
 mon_inv_type equip_slot_to_mslot(equipment_type eq)
 {
     switch (eq)

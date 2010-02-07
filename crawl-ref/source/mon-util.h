@@ -367,6 +367,8 @@ bool invalid_monster(const monsters *mon);
 bool invalid_monster_type(monster_type mt);
 bool invalid_monster_index(int i);
 
+void mons_remove_from_grid(const monsters *mon);
+
 bool monster_shover(const monsters *m);
 
 bool monster_senior(const monsters *first, const monsters *second,
