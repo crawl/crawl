@@ -114,9 +114,7 @@ void monsters::reset()
     foe             = MHITNOT;
     number          = 0;
 
-    if (in_bounds(pos()))
-        mgrd(pos()) = NON_MONSTER;
-
+    mons_remove_from_grid(this);
     position.reset();
     patrol_point.reset();
     travel_target = MTRAV_NONE;

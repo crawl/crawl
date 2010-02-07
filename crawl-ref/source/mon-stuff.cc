@@ -2188,6 +2188,7 @@ int monster_die(monsters *monster, killer_type killer,
         curr_PlaceInfo.assert_validity();
     }
 
+    mons_remove_from_grid(monster);
     _fire_monster_death_event(monster, killer, killer_index, false);
 
     if (crawl_state.arena)
