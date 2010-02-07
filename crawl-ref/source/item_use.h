@@ -116,8 +116,8 @@ void warn_shield_penalties();
 
 bool wearing_slot(int inv_slot);
 
-bool item_blocks_teleport(bool permit_id);
-bool stasis_blocks_effect(bool identify,
+bool item_blocks_teleport(bool calc_unid, bool permit_id);
+bool stasis_blocks_effect(bool calc_unid, bool identify,
                           const char *msg, int noise = 0,
                           const char *silencedmsg = NULL);
 

@@ -4441,7 +4441,7 @@ void zap_wand(int slot)
     if (alreadyknown && zap_wand.target == you.pos())
     {
         if (wand.sub_type == WAND_TELEPORTATION
-            && scan_artefacts(ARTP_PREVENT_TELEPORTATION, false))
+            && item_blocks_teleport(false, false))
         {
             mpr("You cannot teleport right now.");
             return;
@@ -5896,17 +5896,18 @@ bool wearing_slot(int inv_slot)
     return (false);
 }
 
-bool item_blocks_teleport(bool permit_id)
+bool item_blocks_teleport(bool calc_unid, bool permit_id)
 {
-    return (scan_artefacts(ARTP_PREVENT_TELEPORTATION)
-            || stasis_blocks_effect(permit_id, NULL));
+    return (scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid)
+            || stasis_blocks_effect(calc_unid, permit_id, NULL));
 }
 
-bool stasis_blocks_effect(bool identify,
+bool stasis_blocks_effect(bool calc_unid,
+                          bool identify,
                           const char *msg, int noise,
                           const char *silenced_msg)
 {
-    if (wearing_amulet(AMU_STASIS))
+    if (wearing_amulet(AMU_STASIS, calc_unid))
     {
         item_def *amulet = you.slot_item(EQ_AMULET, false);
 

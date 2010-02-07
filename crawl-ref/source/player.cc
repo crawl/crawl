@@ -4964,7 +4964,7 @@ bool slow_player(int turns)
     if (turns <= 0)
         return (false);
 
-    if (stasis_blocks_effect(true, "%s rumbles.", 20, "%s rumbles."))
+    if (stasis_blocks_effect(true, true, "%s rumbles.", 20, "%s rumbles."))
         return (false);
 
     // Doubling these values because moving while slowed takes twice the
@@ -5012,7 +5012,7 @@ bool haste_player(int turns)
     if (turns <= 0)
         return (false);
 
-    if (stasis_blocks_effect(true, "%s emits a piercing whistle.", 20,
+    if (stasis_blocks_effect(true, true, "%s emits a piercing whistle.", 20,
                              "%s makes your neck tingle."))
     {
         return (false);
@@ -6780,7 +6780,7 @@ void player::paralyse(actor *who, int str)
     ASSERT(!crawl_state.arena);
 
     // The shock is too mild to do damage.
-    if (stasis_blocks_effect(true, "%s gives you a mild electric shock."))
+    if (stasis_blocks_effect(true, true, "%s gives you a mild electric shock."))
         return;
 
     int &paralysis(duration[DUR_PARALYSIS]);
@@ -6800,7 +6800,7 @@ void player::petrify(actor *who, int str)
 {
     ASSERT(!crawl_state.arena);
 
-    if (stasis_blocks_effect(true, "%s gives you a mild electric shock."))
+    if (stasis_blocks_effect(true, true, "%s gives you a mild electric shock."))
         return;
 
     str *= BASELINE_DELAY;

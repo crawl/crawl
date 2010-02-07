@@ -28,6 +28,7 @@
 #include "env.h"
 #include "food.h"
 #include "godabil.h"
+#include "item_use.h"
 #include "it_use2.h"
 #include "macro.h"
 #include "message.h"
@@ -1091,7 +1092,7 @@ static bool _check_ability_possible(const ability_def& abil,
         return (true);
 
     case ABIL_EVOKE_BLINK:
-        if (scan_artefacts(ARTP_PREVENT_TELEPORTATION, false))
+        if (item_blocks_teleport(false, false))
         {
             return (yesno("You cannot teleport right now. Try anyway?",
                           true, 'n'));
