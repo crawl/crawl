@@ -1266,8 +1266,7 @@ void direction_chooser::draw_beam_if_needed()
 
 bool direction_chooser::in_range(const coord_def& p) const
 {
-    return (range < 0
-            || grid_distance(p, you.pos()) <= range);
+    return (range < 0 || grid_distance(p, you.pos()) <= range);
 }
 
 // Cycle to either the next (dir == 1) or previous (dir == -1) object
@@ -3783,8 +3782,6 @@ static void _describe_cell(const coord_def& where, bool in_range)
         item_described = true;
     }
 
-    const bool bloody = is_bloodcovered(where);
-
     std::string feature_desc = feature_description(where, true);
 #ifdef DEBUG_DIAGNOSTICS
     std::string marker;
@@ -3810,6 +3807,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
          traveldest.c_str(),
          height_desc.c_str());
 #else
+    const bool bloody = is_bloodcovered(where);
     if (Tutorial.tutorial_left && tutorial_pos_interesting(where.x, where.y))
     {
 #ifdef USE_TILE

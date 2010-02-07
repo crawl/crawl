@@ -551,4 +551,6 @@ protected:
 
 extern TravelCache travel_cache;
 
+void do_interlevel_travel();
+
 #endif // TRAVEL_H

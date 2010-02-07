@@ -578,6 +578,29 @@ void inspect_spells()
     list_spells(true, true);
 }
 
+void do_cast_spell_cmd(bool force)
+{
+    if (player_in_bat_form() || you.attribute[ATTR_TRANSFORMATION] == TRAN_PIG)
+    {
+        canned_msg(MSG_PRESENT_FORM);
+        return;
+    }
+
+    // Randart weapons.
+    if (scan_artefacts(ARTP_PREVENT_SPELLCASTING))
+    {
+        mpr("Something interferes with your magic!");
+        flush_input_buffer(FLUSH_ON_FAILURE);
+        return;
+    }
+
+    if (Tutorial.tutorial_left)
+        Tutorial.tut_spell_counter++;
+    if (!cast_a_spell(!force))
+        flush_input_buffer(FLUSH_ON_FAILURE);
+}
+
+
 static int _get_dist_to_nearest_monster()
 {
     int minRange = LOS_RADIUS + 1;
