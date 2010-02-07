@@ -184,16 +184,12 @@ bool monsters::swimming() const
 bool monsters::wants_submerge() const
 {
     // Trapdoor spiders only hide themselves under the floor when they
-    // can't see their prey, or are on low hp.
+    // can't see their prey, or are in a cloud.
     if (type == MONS_TRAPDOOR_SPIDER)
     {
         // If we're in distress, we usually want to submerge.
-        if (env.cgrid(pos()) != EMPTY_CLOUD
-            || (hit_points < max_hit_points / 2
-                && random2(max_hit_points + 1) >= hit_points))
-        {
+        if (env.cgrid(pos()) != EMPTY_CLOUD)
             return (true);
-        }
 
         const actor* _foe = get_foe();
         return (_foe == NULL || !can_see(_foe));
@@ -5060,15 +5056,6 @@ void monsters::apply_enchantment(const mon_enchant &me)
         // and are more likely to surface.  -- bwr
         if (!monster_can_submerge(this, grid))
             del_ench(ENCH_SUBMERGED); // forced to surface
-        else if (type == MONS_TRAPDOOR_SPIDER)
-        {
-            if (hit_points <= max_hit_points / 2)
-                break;
-            // This should probably never happen.
-            if (!mons_is_lurking(this))
-                del_ench(ENCH_SUBMERGED);
-            break;
-        }
         else if (mons_landlubbers_in_reach(this))
         {
             del_ench(ENCH_SUBMERGED);
