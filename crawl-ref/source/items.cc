@@ -729,7 +729,7 @@ void item_check(bool verbose)
     if (verbose || items.size() <= msgwin_lines() - 1)
     {
         if (!done_init_line)
-            strm << "Things that are here:" << std::endl;
+            mprnojoin("Things that are here:", MSGCH_FLOOR_ITEMS);
         for (unsigned int i = 0; i < items.size(); ++i)
         {
             item_def it(*items[i]);
