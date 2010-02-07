@@ -1323,8 +1323,8 @@
        {
         SPELL_PRIMAL_WAVE,
         SPELL_STEAM_BALL,
-        SPELL_THROW_ICICLE,
         SPELL_NO_SPELL,
+        SPELL_THROW_ICICLE,
         SPELL_NO_SPELL,
         SPELL_BLINK
        }
