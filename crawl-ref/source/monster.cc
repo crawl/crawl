@@ -4039,8 +4039,9 @@ void monsters::load_spells(mon_spellbook_type book)
 
 bool monsters::has_hydra_multi_attack() const
 {
-    return (mons_species() == MONS_HYDRA
-            || mons_is_zombified(this) && base_monster == MONS_HYDRA);
+    return (mons_genus(type) == MONS_HYDRA
+            || (mons_is_zombified(this)
+                && mons_genus(base_monster) == MONS_HYDRA));
 }
 
 bool monsters::has_multitargeting() const
