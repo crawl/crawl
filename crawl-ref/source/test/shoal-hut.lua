@@ -1,4 +1,4 @@
--- Generates lots of Shoal:$ maps and tests that a) all huts are
+-- Generates lots of Shoals:$ maps and tests that a) all huts are
 -- connected to the exterior b) the stairs are not completely surrounded by
 -- deep water.
 
@@ -24,7 +24,7 @@ end
 
 local function shoal_hut_doors()
   local maps = dgn.maps_used_here()
-  test.map_assert(#maps > 0, "No maps used on Shoal:$?")
+  test.map_assert(#maps > 0, "No maps used on Shoals:$?")
   local doors = { }
   for _, vault in ipairs(maps) do
     -- Sweep the vault looking for (secret) doors.
@@ -33,7 +33,7 @@ local function shoal_hut_doors()
       table.insert(doors, vault_doors)
     end
   end
-  test.map_assert(#doors > 0, "No hut doors found on Shoal:$")
+  test.map_assert(#doors > 0, "No hut doors found on Shoals:$")
   return doors
 end
 
@@ -64,15 +64,15 @@ local function verify_hut_connectivity()
       for _, door in ipairs(vault_doors) do
         dgn.grid(door.x, door.y, "floor_special")
       end
-      test.map_assert(false, "Shoal hut doors blocked")
+      test.map_assert(false, "Shoals hut doors blocked")
     end
   end
 end
 
 local function test_shoal_huts(nlevels)
-  debug.goto_place("Shoal:$")
+  debug.goto_place("Shoals:$")
   for i = 1, nlevels do
-    crawl.message("Shoal test " .. i .. " of " .. nlevels)
+    crawl.message("Shoals test " .. i .. " of " .. nlevels)
     test.regenerate_level()
     verify_stair_connectivity()
     verify_hut_connectivity()
