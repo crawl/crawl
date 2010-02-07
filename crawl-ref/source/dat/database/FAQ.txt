@@ -55,8 +55,8 @@ What are the biggest differences to other popular roguelike games?
 %%%%
 A:roguelike difference
 
-First, you might want to read the philosophy section in the manual ('?N') to
-read about general important principles in Stone Soup's game design.
+A: First, you might want to read the philosophy section in the manual ('?N')
+to read about general important principles in Stone Soup's game design.
 
 As for specific differences, the most important are probably the following:
 * Species is *much* more important than the character background (or "class").
@@ -70,12 +70,12 @@ Also, our aim is to give Crawl a really smooth interface, so you should really
 read through the command list ('??') some time. The most intriguing "newish"
 commands are probably the following:
 
-* o, for automatic exploration of an unknown level
-* G, for automatic travel to another level
-* 5, for waiting and searching 100 turns or until something happens
-* %, to access an overview screen for all your stats and resistances
-* X, to access the level map for easier travelling and more subcommands ('X?')
-* Ctrl-F, to find and travel to items or features you've seen before
+* 'o', for automatic exploration of an unknown level
+* 'G', for automatic travel to another level
+* '5', for waiting and searching 100 turns or until something happens
+* '%', to access an overview screen for all your stats and resistances
+* 'X', to access the level map for easier travelling and more subcommands ('X?')
+* 'Ctrl-F', to find and travel to items or features you've seen before
 %%%%
 Q:survival
 
@@ -130,6 +130,7 @@ A:stuck
 A: Hopefully not. Search all the walls with '5' in case there's a secret
 door. If you really can't find any, it could be a bug and need fixing, so
 please report it on our Mantis tracker: http://crawl.develz.org/mantis/
+
 Be sure to upload your save file! (If you're playing online, you'll need to
 ask the admin to upload your save file, and can continue playing once they
 did so.)
@@ -143,7 +144,7 @@ I'm in a labyrinth, and I can see a zombie minotaur but no exit. Help!
 %%%%
 A:labyrinth
 
-First, the exit and loot are guarded by a real non-undead minotaur. All
+A: First, the exit and loot are guarded by a real non-undead minotaur. All
 zombie versions you might meet are *additional* ones that have no relation at
 all to where the exit might be.
 
@@ -154,6 +155,28 @@ exit out of the labyrinth, you'll need to get to the centre of the metal area.
 Note that the exit itself might be found within a vault that has non-metal
 walls. Also, there might be secret doors and there might be traps, and of
 course there's a minotaur around, so do step carefully.
+
+And while already on the topic of labyrinths, teleportation is guaranteed to
+land you away from the exit.
+%%%%
+Q:starving
+
+My characters keep starving. What am I doing wrong?
+%%%%
+A:starving
+
+A: It's possible that you simply spend too much time on cleared levels
+where not enough monsters are generated to dine on. You might also be too
+choosy about what you eat: unless you are herbivorous you will have to
+occasionally eat monster chunks, even those that sometimes make you sick
+(coloured brown in the menu and the prompt). If you worship a god who
+enjoys sacrifices pay attention to your own hunger status instead of offering
+all corpses you come across.
+
+Also, casting (difficult) spells will make you hungry, but high
+Intelligence and Spellcasting will lessen this effect. If you press 'II',
+you can read about the hunger effects of your spells.
+Invocations likewise often have a Food cost.
 %%%%
 Q:cheating
 
@@ -202,34 +225,17 @@ Sif Muna (for spellcasters), Beogh (for orcs) and Xom (for general fun).
 When you reach the Temple for the first time be sure to read all gods'
 descriptions and take your time in deciding which way to go.
 %%%%
-Q:starving
-
-My characters keep starving. What am I doing wrong?
-%%%%
-A:starving
-
-A: It's possible that you simply spend too much time on cleared levels
-where not enough monsters are generated to dine on. You might also be too
-choosy about what you eat: unless you are herbivorous you will have to
-occasionally eat monster chunks, even those that sometimes make you sick
-(coloured brown in the menu and the prompt). If you worship a god who
-enjoys sacrifices pay attention to your own hunger status instead of offering
-all corpses you come across.
-
-Also, casting (difficult) spells will make you hungry, but high
-Intelligence and Spellcasting will lessen this effect. If you press 'II',
-you can read about the hunger effects of your spells.
-Invocations likewise often have a Food cost.
-%%%%
 Q:ghosts
 
 I keep getting murdered by my own ghosts. Can I deactivate them?
 %%%%
 A:ghosts
 
-A: No, you can't. On the plus side, once a ghost has been loaded onto a
-level, it won't be loaded again - unless you happen to die on that level,
-thus creating a bones file featuring more than one ghost.
+A: There isn't any such option, and we're not planning to add one, either.
+
+For a more constructive answer, once a ghost has been loaded onto a level, it
+won't be loaded again - unless you happen to die on that level, thus creating
+a bones file featuring more than one ghost.
 Keep in mind that you don't absolutely have to fight every monster you meet,
 and with ghosts it's even easier: they cannot leave the level they were
 created on.
@@ -290,9 +296,11 @@ Oklob plants suck! Are you planning to remove them at last?
 %%%%
 A:oklobs
 
-A: No. We think that Oklob plants provide an interesting challenge.
-Resist the urge to kill them at once. If you absolutely need to bypass them
-use your resources wisely. A hint: They cannot see invisible.
+A: No, we don't, because we feel that Oklob plants provide an interesting
+challenge. Resist the urge to kill them at once. If you absolutely need to
+bypass them use your resources wisely.
+
+A hint: They cannot see invisible.
 %%%%
 Q:randart
 
@@ -353,7 +361,7 @@ go ahead and play!
 
 Be sure to leave some feedback/suggestions/bug reports on the
 Mantis tracker: http://crawl.develz.org/mantis/, and
-Mantis wiki: http://crawl.develz.org/wiki/doku.php?id=start.
+Mantis wiki: http://crawl.develz.org/wiki/doku.php?id=start
 
 When doing so please mention the version (see '?v') you're currently playing,
 in case the bug's already been fixed or the feature already implemented.
@@ -386,7 +394,7 @@ I've got millions of ideas! Can I join the team?
 %%%%
 A:ideas
 
-A: No, you can't. At least not on ideas alone.
+A: Sorry, but no. At least not on ideas alone.
 
 All of the devteam members submitted a number of code intensive patches
 and/or took over responsibility over an important side project before
@@ -493,7 +501,7 @@ The tiles version is awfully slow on Windows! How can I improve that?
 %%%%
 A:tiles lag
 
-First, we're really sorry about that! Stone Soup 0.5 was tested on several
+A: First, we're really sorry about that! Stone Soup 0.5 was tested on several
 systems and the gigantic lag on some Windows systems was completely
 unexpected.
 Crawl 0.5 renders graphics using OpenGL and SDL. For most video cards, this
@@ -551,6 +559,7 @@ having to compile the game.
 If you've created some nice new tiles or variations of existing ones you'd
 like to share you might want to send it to one of the Tiles developers or
 submit them as a Mantis item: http://crawl.develz.org/mantis/
+
 It's easiest for us if they are already in 32x32 png format, and preferrably
 zipped if there are several.
 
