@@ -1178,7 +1178,7 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
 // Producing helpful potions would break game balance here...
 // and producing more than one potion from a corpse, or not
 // using up the corpse might also lead to game balance problems. - bwr
-void cast_fulsome_distillation(int /*pow*/)
+bool cast_fulsome_distillation(int /*pow*/)
 {
     int num_corpses = 0;
     int corpse = -1;
@@ -1193,12 +1193,13 @@ void cast_fulsome_distillation(int /*pow*/)
         }
     }
 
-    // If there is only one corpse, distill it; otherwise, ask the player which
-    // corpse to use.
-    switch (num_corpses) {
+    // If there is only one corpse, distill it; otherwise, ask the player
+    // which corpse to use.
+    switch (num_corpses)
+    {
         case 0:
-            canned_msg(MSG_SPELL_FIZZLES);
-            return;
+            mpr("There aren't any corpses here!");
+            return (false);
         case 1:
             // Use the only corpse available without prompting.
             break;
@@ -1224,8 +1225,8 @@ void cast_fulsome_distillation(int /*pow*/)
 
     if (corpse == -1)
     {
-        canned_msg(MSG_SPELL_FIZZLES);
-        return;
+        canned_msg(MSG_OK);
+        return (false);
     }
 
     potion_type pot_type = POT_WATER;
@@ -1311,6 +1312,8 @@ void cast_fulsome_distillation(int /*pow*/)
 
     if (was_orc)
         did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
+
+    return (true);
 }
 
 bool cast_fragmentation(int pow, const dist& spd)
