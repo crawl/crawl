@@ -4039,9 +4039,7 @@ void monsters::load_spells(mon_spellbook_type book)
 
 bool monsters::has_hydra_multi_attack() const
 {
-    return (mons_genus(type) == MONS_HYDRA
-            || (mons_is_zombified(this)
-                && mons_genus(base_monster) == MONS_HYDRA));
+    return (mons_genus(mons_base_type(this)) == MONS_HYDRA);
 }
 
 bool monsters::has_multitargeting() const
@@ -4050,7 +4048,7 @@ bool monsters::has_multitargeting() const
         return (true);
 
     // Hacky little list for now. evk
-    return (has_hydra_multi_attack()
+    return ((has_hydra_multi_attack() && !mons_is_zombified(this))
             || type == MONS_TENTACLED_MONSTROSITY
             || type == MONS_ELECTRIC_GOLEM);
 }
