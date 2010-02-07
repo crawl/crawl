@@ -1212,7 +1212,7 @@ bool cast_fulsome_distillation(int /*pow*/)
                 if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
                 {
                     snprintf(info, INFO_SIZE, "Distill a potion from %s?",
-                             si->name(DESC_NOCAP_THE).c_str());
+                             get_menu_colour_prefix_tags(*si, DESC_NOCAP_THE).c_str());
 
                     if (yesno(info, true, 0, false))
                     {
