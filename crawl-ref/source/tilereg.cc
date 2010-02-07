@@ -240,8 +240,10 @@ DungeonRegion::DungeonRegion(ImageManager* im, FTFont *tag_font,
     m_cx_to_gx(0),
     m_cy_to_gy(0),
     m_buf_dngn(&im->m_textures[TEX_DUNGEON]),
-    m_buf_doll(&im->m_textures[TEX_PLAYER], TILEP_MASK_SUBMERGED, 18, 16),
-    m_buf_main_trans(&im->m_textures[TEX_DEFAULT], TILE_MASK_SUBMERGED, 18, 16),
+    m_buf_doll(&im->m_textures[TEX_PLAYER], TILEP_MASK_SUBMERGED, 18, 16,
+               Options.tile_better_transparency),
+    m_buf_main_trans(&im->m_textures[TEX_DEFAULT], TILE_MASK_SUBMERGED, 18, 16,
+                     Options.tile_better_transparency),
     m_buf_main(&im->m_textures[TEX_DEFAULT])
 {
     for (int i = 0; i < CURSOR_MAX; i++)
@@ -4212,8 +4214,10 @@ void TitleRegion::update_message(std::string message)
 
 DollEditRegion::DollEditRegion(ImageManager *im, FTFont *font) :
     m_font_buf(font),
-    m_tile_buf(&im->m_textures[TEX_PLAYER], TILEP_MASK_SUBMERGED, 18, 16),
-    m_cur_buf(&im->m_textures[TEX_PLAYER], TILEP_MASK_SUBMERGED, 18, 16)
+    m_tile_buf(&im->m_textures[TEX_PLAYER], TILEP_MASK_SUBMERGED, 18, 16,
+               Options.tile_better_transparency),
+    m_cur_buf(&im->m_textures[TEX_PLAYER], TILEP_MASK_SUBMERGED, 18, 16,
+              Options.tile_better_transparency)
 {
     sx = sy = 0;
     dx = dy = 32;

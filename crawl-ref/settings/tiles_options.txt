@@ -59,3 +59,5 @@
 
 # tile_show_minihealthbar = true
 # tile_show_minimagicbar  = true
+
+# tile_better_transparency = true

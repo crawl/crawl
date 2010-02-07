@@ -167,7 +167,8 @@ public:
     //
     // All heights are from 0 (top of the tile) to TILE_Y-1 (bottom of the tile)
     SubmergedTileBuffer(const TilesTexture *tex,
-        int mask_idx, int above_max, int below_min);
+                        int mask_idx, int above_max, int below_min,
+                        bool better_transparency);
 
     void add(int idx, int x, int y, int z = 0, bool submerged = false,
              bool ghost = false, int ox = 0, int oy = 0, int ymax = -1);
@@ -181,6 +182,7 @@ protected:
     int m_below_min;
 
     int m_max_z;
+    bool m_better_trans;
 
     ColouredTileBuffer m_below_water;
     ColouredTileBuffer m_mask;
