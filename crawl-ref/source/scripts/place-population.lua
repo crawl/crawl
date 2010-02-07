@@ -1,4 +1,4 @@
--- Counts monsters in a specify level, or level range.
+-- Counts monsters in a specified level or level range.
 local niters = 150
 local output_file = "monster-report.out"
 
@@ -308,7 +308,7 @@ local function start_end_levels()
   if #args == 0 then
     script.usage([[
 Usage: place-population <start> [<end>]
-For instance: place-population Shoal:1 Shoal:5
+For instance: place-population Shoals:1 Shoals:5
               place-population Lair:3
 
 You may optionally force branches to have entrances at specific places
