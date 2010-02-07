@@ -3380,6 +3380,17 @@ static bool _make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
     return (true);
 }
 
+static bool _place_unique_map(const map_def *uniq_map)
+{
+    // If the map is guaranteed to not affect connectivity, allow it to
+    // overwrite existing vaults.
+    const bool clobber = uniq_map->has_tag("transparent");
+    for (int i = 0; i < 4; i++)
+        if (dgn_place_map(uniq_map, clobber, false))
+            return (true);
+    return (false);
+}
+
 // Place uniques on the level.
 // There is a hidden dependency on the player's actual
 // location (through your_branch()).
@@ -3401,8 +3412,8 @@ static int _place_uniques(int level_number, char level_type)
     int num_placed = 0;
 
     // Magic numbers for dpeg's unique system.
-    int A = 2;
-    int B = 5;
+    const int A = 2;
+    const int B = 5;
     while (one_chance_in(A))
     {
         // In dpeg's unique placement system, chances is always 1 in A of even
@@ -3410,14 +3421,13 @@ static int _place_uniques(int level_number, char level_type)
         // placed or available. Then there is a chance of uniques_available /
         // B; this only triggers on levels that have less than B uniques to be
         // placed.
-        std::vector<map_def> uniques_available =
-                                find_maps_for_tag("place_unique", true, true);
+        const std::vector<map_def> uniques_available =
+            find_maps_for_tag("place_unique", true, true);
 
         if (random2(B) >= std::min(B, int(uniques_available.size())))
             break;
 
         const map_def *uniq_map = random_map_for_tag("place_unique", true);
-
         if (!uniq_map)
         {
 #ifdef DEBUG_UNIQUE_PLACEMENT
@@ -3426,20 +3436,13 @@ static int _place_uniques(int level_number, char level_type)
             break;
         }
 
-        bool map_placed = false;
-
-        for (int i = 0; i < 4; i++)
-        {
-            if (map_placed)
-                continue;
-            map_placed = dgn_place_map(uniq_map, false, false);
-        }
-
+        const bool map_placed = _place_unique_map(uniq_map);
         if (map_placed)
         {
             num_placed++;
 #ifdef DEBUG_UNIQUE_PLACEMENT
-            fprintf(ostat, "Placed valid unique map: %s.\n", uniq_map->name.c_str());
+            fprintf(ostat, "Placed valid unique map: %s.\n",
+                    uniq_map->name.c_str());
 #endif
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Placed %s.",
@@ -3449,7 +3452,8 @@ static int _place_uniques(int level_number, char level_type)
 #ifdef DEBUG_UNIQUE_PLACEMENT
         else
         {
-            fprintf(ostat, "Didn't place valid map: %s\n", uniq_map->name.c_str());
+            fprintf(ostat, "Didn't place valid map: %s\n",
+                    uniq_map->name.c_str());
         }
 #endif
     }
