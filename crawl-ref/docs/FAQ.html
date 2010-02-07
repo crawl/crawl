@@ -92,7 +92,7 @@ In the meantime, you can try to escape with digging, disintegration or teleporta
 </br>
 First, the exit and loot are guarded by a real non-undead minotaur. All zombie versions you might meet are <i>additional</i> ones that have no relation at all to where the exit might be. </br></br>
 Each labyrinth consists of several layers of different wall types. The map border is always made of either metal or undiggable stone. From then, going inward, the wall types are first rock, then stone, then metal. To find the exit out of the labyrinth, you'll need to get to the centre of the metal area. Note that the exit itself might be found within a vault that has non-metal walls. Also, there might be secret doors and there might be traps, and of course there's a minotaur around, so do step carefully. </br></br>
-And while already on the topic of labyrinths, teleportation is guaranteed to land you away from the exit. 
+And while already on the topic of labyrinths, be warned that teleportation is guaranteed to land you away from the exit. 
 </br>
 <hr></br>
 <a name="starving"></a>
@@ -232,7 +232,7 @@ Please don't let this stop you from bringing up more suggestions. Already the ne
 </br>
 Please submit it as a new issue on our Mantis tracker: <a href=http://crawl.develz.org/mantis>http://crawl.develz.org/mantis</a>  </br></br>
 Keep in mind that without previous discussions, we may not be able to use the patch, or it might need heavy modification. In general, it is safer to first file your suggestions under Feature Requests and wait for people to become enthusiastic and give feedback before you submit a patch. If you want, you can also write a patch that implements an existing FR or fixes a bug. </br></br>
-If you'd like to write a patch but don't know how to go about it, patch_guide.txt in the docs/ folder is the file for you. </br></br>
+If you'd like to write a patch but don't know how to go about it, patch_guide.txt in the docs/develop/ folder is the file for you. </br></br>
 We really appreciate your help! 
 </br>
 <hr></br>
@@ -240,11 +240,11 @@ We really appreciate your help!
 <b>Q24. I cannot code, but I'd like to help improve the game. What can I do?</b></br>
 </br>
 There are several areas where you can get creative and outside help is much appreciated. These are: <ul><li> the maps/vaults (see dat/ folder, docs/develop/levels/introduction.txt)</li>
-<li> monster speech (see dat/database/, docs/monster_speech.txt)</li>
+<li> monster speech (see dat/database/, docs/develop/monster_speech.txt)</li>
 <li> monster/item/spell descriptions (see dat/descript/)</li>
-<li> tiles (see source/rltiles/, docs/tiles_creation.txt)</li></ul>
+<li> tiles (see source/rltiles/, docs/develop/tiles_creation.txt)</li></ul>
 
-Also, if you'd like to write a patch but don't know how to go about it, read patch_guide.txt in the docs/ folder. </br></br>
+Also, if you'd like to write a patch but don't know how to go about it, read patch_guide.txt in the docs/develop/ folder. </br></br>
 If you've got some cool addition, you can send it over the mailing list, or post it as a Mantis item. You can also help us by giving feedback on the most recent version or trunk (available via git, Windows binaries downloadable from <a href=http://crawl.develz.org/trunk>http://crawl.develz.org/trunk</a>).  </br></br>
 Thanks a lot for your support! 
 </br>
@@ -278,7 +278,7 @@ It depends. If all you want are minor modifications such as colour changes you c
 Otherwise, you'll need to be able to compile the game. In this case you can either directly replace the tiles in the rltiles/ subfolders, or change their paths in the dc-xxxx.txt files. For the compilation to be successful, you may also need to delete or rename the *.png files in rltiles/. Upon compilation, the newly rolled *.png files are copied into the dat/tiles/ folder which is where the game accesses the tiles it needs. You can then share these files with other players, so they can use your tileset without having to compile the game. </br></br>
 If you've created some nice new tiles or variations of existing ones you'd like to share you might want to send it to one of the Tiles developers or submit them as a Mantis item: <a href=http://crawl.develz.org/mantis>http://crawl.develz.org/mantis</a>  </br></br>
 It's easiest for us if they are already in 32x32 png format, and preferrably zipped if there are several. </br></br>
-See docs/tiles_creation.txt for a slightly more detailed explanation. </br></br>
+See docs/develop/tiles_creation.txt for a slightly more detailed explanation. </br></br>
 Thanks in advance! 
 </br>
 <hr></br>
