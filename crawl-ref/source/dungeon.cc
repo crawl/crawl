@@ -6960,7 +6960,7 @@ static void _labyrinth_level(int level_number)
                               34 * 34, DNGN_STONE_WALL,
                               0);
 
-    _change_labyrinth_border(lab, DNGN_METAL_WALL);
+    _change_labyrinth_border(lab, DNGN_PERMAROCK_WALL);
 
     _labyrinth_add_blood_trail(lab);
     _labyrinth_add_glass_walls(lab);
