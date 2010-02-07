@@ -913,7 +913,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Deliberate Mutation", "Cause Glowing", "Use Unclean",
                 "Use Chaos", "Desecrate Orcish Remains", "Destroy Orcish Idol",
                 "Create Life", "Kill Slime", "Kill Plant", "Ally Kill Plant",
-                "Was Hasty", "Gluttony"
+                "Was Hasty", "Gluttony", "Corpse Violation"
             };
 
             COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS, c1);
