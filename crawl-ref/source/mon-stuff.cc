@@ -3032,10 +3032,17 @@ void make_mons_leave_level(monsters *mon)
 // If it exists, such a path may be missed; on the other hand, it
 // is not guaranteed that p2 is visible from p1 according to LOS rules.
 // Not symmetric.
+// FIXME: This is used for monster movement. It should instead be
+//        something like exists_ray(p1, p2, opacity_monmove(mons)),
+//        where opacity_monmove() is fixed to include opacity_no_trans.
 bool can_go_straight(const coord_def& p1, const coord_def& p2,
                      dungeon_feature_type allowed)
 {
     if (distance(p1, p2) > get_los_radius_sq())
+        return (false);
+
+    // XXX: Hack to improve results for now. See FIXME above.
+    if (!exists_ray(p1, p2, opc_no_trans))
         return (false);
 
     dungeon_feature_type max_disallowed = DNGN_MAXOPAQUE;

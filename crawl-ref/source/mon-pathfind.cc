@@ -386,8 +386,15 @@ std::vector<coord_def> monster_pathfind::calc_waypoints()
 
 bool monster_pathfind::traversable(const coord_def p)
 {
-    if (traverse_unmapped && grd(p) == DNGN_UNSEEN)
-        return (true);
+    if (!traverse_unmapped && grd(p) == DNGN_UNSEEN)
+        return (false);
+
+    // XXX: Hack to be somewhat consistent with uses of
+    //      you.trans_wall_block elsewhere in pathfinding.
+    //      All of this should eventually be replaced by
+    //      giving the monster a proper pathfinding LOS.
+    if (opc_no_trans(p) == OPC_OPAQUE)
+        return (false);
 
     if (mons)
         return mons_traversable(p);
@@ -399,8 +406,9 @@ bool monster_pathfind::traversable(const coord_def p)
 // its preferred habit and capability of flight or opening doors.
 bool monster_pathfind::mons_traversable(const coord_def p)
 {
-    const monster_type montype = mons_is_zombified(mons) ? mons_zombie_base(mons)
-                                                         : mons->type;
+    const monster_type montype = mons_is_zombified(mons)
+                                 ? mons_zombie_base(mons)
+                                 : mons->type;
     const dungeon_feature_type feat = grd(p);
     // Monsters that can't open doors won't be able to pass them, and
     // only monsters of normal or greater intelligence can pathfind through
