@@ -749,22 +749,11 @@ static const char *targeting_help_1 =
     "<w>_</w> : cycle through altars\n"
     "<w><<</w>/<w>></w> : cycle through up/down stairs\n"
     "<w>Tab</w> : cycle through shops and portals\n"
-    "<w>Ctrl-F</w> : change monster targeting mode\n"
+    "<w>Ctrl-F</w> : monster targeting modes\n"
 #ifndef USE_TILE
-    "<w>Ctrl-L</w> : toggle targeting via monster list\n"
+    "<w>Ctrl-L</w> : targeting via monster list\n"
 #endif
     "<w>Ctrl-P</w> : repeat prompt\n"
-    " \n"
-    "<h>targeting (zapping wands, casting spells, etc.):\n"
-    "The keys from examine surroundings also work here.\n"
-    "In addition, you can use:\n"
-    "<w>Enter</w> : fire at target (<w>Space</w>, <w>Del</w>)\n"
-    "<w>.</w> : fire at target and stop there (may hit submerged creatures)\n"
-    "<w>!</w> : fire at target, ignoring range\n"
-    "<w>@</w> : fire at target and stop there, ignoring range\n"
-    "<w>p</w> : fire at Previous target (also <w>f</w>)\n"
-    "<w>:</w> : show/hide beam path\n"
-    "<w>Shift-Dir</w> : shoot straight-line beam\n"
 #ifdef WIZARD
     " \n"
     "<h>Wizard targeting commands:</h>\n"
@@ -783,10 +772,22 @@ static const char *targeting_help_1 =
 ;
 
 static const char *targeting_help_2 =
+    "<h>Targeting (zap wands, cast spells, etc.):\n"
+    "Most keys from examine surroundings work.\n"
+    "Some keys fire at the target. By default,\n"
+    "range is respected and beams don't stop.\n"
+    "<w>Enter</w> : fire (<w>Space</w>, <w>Del</w>)\n"
+    "<w>.</w> : fire, stop at target\n"
+    "<w>@</w> : fire, stop at target, ignore range\n"
+    "<w>!</w> : fire, don't stop, ignore range\n"
+    "<w>p</w> : fire at Previous target (also <w>f</w>)\n"
+    "<w>:</w> : show/hide beam path\n"
+    "<w>Shift-Dir.</w> : fire straight-line beam\n"
+    "\n"
     "<h>Firing or throwing a missile:\n"
     "<w>(</w> : cycle to next suitable missile.\n"
     "<w>)</w> : cycle to previous suitable missile.\n"
-    "<w>i</w> : choose from inventory.\n"
+    "<w>i</w> : choose from Inventory.\n"
 ;
 
 
@@ -2096,7 +2097,7 @@ void show_levelmap_help()
 
 void show_targeting_help()
 {
-    column_composer cols(2, 41);
+    column_composer cols(2, 40);
     // Page size is number of lines - one line for --more-- prompt.
     cols.set_pagesize(get_number_of_lines() - 1);
 
