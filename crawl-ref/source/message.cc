@@ -184,6 +184,12 @@ class circ_vec
         *index = _mod(*index + 1, SIZE);
     }
 
+    static void dec(int* index)
+    {
+        ASSERT(*index >= 0 && *index < SIZE);
+        *index = _mod(*index - 1, SIZE);
+    }
+
 public:
     circ_vec() : end(0) {}
 
@@ -208,6 +214,15 @@ public:
     {
         data[end] = item;
         inc(&end);
+    }
+
+    void roll_back(int n)
+    {
+        for (int i = 0; i < n; ++i)
+        {
+            dec(&end);
+            data[end] = T();
+        }
     }
 };
 
@@ -263,9 +278,12 @@ glyph prefix_glyph(prefix_type p)
 
 static bool _pre_more();
 
+static bool _temporary = false;
+
 class message_window
 {
     int next_line;
+    int temp_line;     // starting point of temporary messages
     int input_line;    // last line-after-input
     std::vector<formatted_string> lines;
     prefix_type prompt; // current prefix prompt
@@ -372,7 +390,7 @@ class message_window
 
 public:
     message_window()
-        : next_line(0), input_line(0), prompt(P_NONE)
+        : next_line(0), temp_line(0), input_line(0), prompt(P_NONE)
     {
         clear_lines(); // initialize this->lines
     }
@@ -413,6 +431,7 @@ public:
     {
         // TODO: start at end (sometimes?)
         next_line = 0;
+        temp_line = 0;
     }
 
     void clear()
@@ -424,12 +443,14 @@ public:
 
     void scroll(int n)
     {
+        ASSERT(next_line >= n);
         int i;
         for (i = 0; i < height() - n; ++i)
             lines[i] = lines[i + n];
         for (; i < height(); ++i)
             lines[i].clear();
         next_line -= n;
+        temp_line -= n;
         input_line -= n;
     }
 
@@ -455,20 +476,33 @@ public:
         linebreak_string2(text, out_width());
         formatted_string::parse_string_to_multiple(text, newlines);
 
-        // Save starting line if this is temporary.
-        int old = next_line;
         for (size_t i = 0; i < newlines.size(); ++i)
         {
-            old -= make_space(1);
+            temp_line -= make_space(1);
             formatted_string line;
             if (use_first_col())
                 line.add_glyph(prefix_glyph(first_col));
             line += newlines[i];
             add_line(line);
         }
-        if (temporary)
-            next_line = std::max(old, 0);
+
+        if (!temporary)
+            reset_temp();
+
         show();
+    }
+
+    void roll_back()
+    {
+        temp_line = std::max(temp_line, 0);
+        for (int i = temp_line; i < next_line; ++i)
+            lines[i].clear();
+        next_line = temp_line;
+    }
+
+    void reset_temp()
+    {
+        temp_line = next_line;
     }
 
     void got_input()
@@ -544,9 +578,10 @@ class message_store
     store_t msgs;
     message_item prev_msg;
     bool last_of_turn;
+    int temp; // number of temporary messages
 
 public:
-    message_store() : last_of_turn(false) {}
+    message_store() : last_of_turn(false), temp(0) {}
 
     void add(const message_item& msg)
     {
@@ -554,7 +589,7 @@ public:
             return;
         flush_prev();
         prev_msg = msg;
-        if (msg.channel == MSGCH_PROMPT)
+        if (msg.channel == MSGCH_PROMPT || _temporary)
             flush_prev();
     }
 
@@ -567,7 +602,22 @@ public:
     {
         prefix_type p = P_NONE;
         msgs.push_back(msg);
-        msgwin.add_item(msg.with_repeats(), p, false);
+        if (_temporary)
+            temp++;
+        else
+            reset_temp();
+        msgwin.add_item(msg.with_repeats(), p, _temporary);
+    }
+
+    void roll_back()
+    {
+        msgs.roll_back(temp);
+        temp = 0;
+    }
+
+    void reset_temp()
+    {
+        temp = 0;
     }
 
     void flush_prev()
@@ -885,6 +935,23 @@ static void debug_channel_arena(msg_channel_type channel)
     }
 }
 
+void msgwin_set_temporary(bool temp)
+{
+    flush_prev_message();
+    _temporary = temp;
+    if (!temp)
+    {
+        messages.reset_temp();
+        msgwin.reset_temp();
+    }
+}
+
+void msgwin_clear_temporary()
+{
+    messages.roll_back();
+    msgwin.roll_back();
+}
+
 static long _last_msg_turn = -1; // Turn of last message.
 
 void mpr(std::string text, msg_channel_type channel, int param, bool nojoin)
@@ -943,24 +1010,27 @@ void mpr(std::string text, msg_channel_type channel, int param, bool nojoin)
 
 static std::string show_prompt(std::string prompt)
 {
-    flush_prev_message();
+    mpr(prompt, MSGCH_PROMPT);
+
+    // FIXME: duplicating mpr code.
     msg_colour_type colour = prepare_message(prompt, MSGCH_PROMPT, 0);
     std::string col = colour_to_str(colour_msg(colour));
     std::string text = "<" + col + ">" + prompt + "</" + col + ">"; // XXX
-    msgwin.add_item(text, P_NONE, true);
-    msgwin.show();
     return text;
 }
 
 static std::string _prompt;
 void msgwin_prompt(std::string prompt)
 {
+    msgwin_set_temporary(true);
     _prompt = show_prompt(prompt);
 }
 
 void msgwin_reply(std::string reply)
 {
-    messages.add(message_item(_prompt + reply, MSGCH_PROMPT, 0, false));
+    msgwin_clear_temporary();
+    msgwin_set_temporary(false);
+    mpr(_prompt + "<lightgrey>" + reply + "</lightgrey>", MSGCH_PROMPT);
     msgwin.got_input();
 }
 
