@@ -480,11 +480,12 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl,
         {
             // Don't list a monster in the exclusion annotation if the
             // exclusion was triggered by e.g. the flamethrowers' lua check.
-            const monsters *m = monster_at(p);
-            if (m && (you.can_see(m) || mons_is_stationary(m)
-                                        && testbits(m->flags, MF_SEEN)))
+            const show_type& obj = get_map_knowledge_obj(p);
+            if (obj.cls == SH_MONSTER)
             {
-                desc = mons_type_name(m->type, DESC_PLAIN);
+                desc = mons_type_name(obj.mons, DESC_PLAIN);
+                if (is_map_knowledge_detected_mons(p))
+                    desc += " (detected)";
             }
             else
             {
