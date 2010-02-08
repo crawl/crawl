@@ -1569,7 +1569,8 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
             && ballisto_count ==0
             && monster->attitude == ATT_HOSTILE)
         {
-            mprf("You destroyed the fungal colony, you feel a bit more experienced.");
+            mprf("Having destroyed the fungal colony, you feel a bit more "
+                 "experienced.");
             gain_exp(500);
         }
         return;
