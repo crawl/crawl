@@ -50,19 +50,12 @@ static unsigned char _random_potion_description()
 // Determine starting depths of branches.
 void initialise_branch_depths()
 {
-    branches[BRANCH_ECUMENICAL_TEMPLE].startdepth = random_range(4, 7);
-    branches[BRANCH_ORCISH_MINES].startdepth      = random_range(6, 11);
-    branches[BRANCH_ELVEN_HALLS].startdepth       = random_range(3, 4);
-    branches[BRANCH_LAIR].startdepth              = random_range(8, 13);
-    branches[BRANCH_HIVE].startdepth              = random_range(11, 16);
-    branches[BRANCH_SLIME_PITS].startdepth        = random_range(6, 8);
-    branches[BRANCH_SWAMP].startdepth             = random_range(2, 5);
-    branches[BRANCH_SHOALS].startdepth            = random_range(3, 6);
-    branches[BRANCH_SNAKE_PIT].startdepth         = random_range(3, 6);
-    branches[BRANCH_VAULTS].startdepth            = random_range(14, 19);
-    branches[BRANCH_CRYPT].startdepth             = random_range(2, 4);
-    branches[BRANCH_HALL_OF_BLADES].startdepth    = random_range(4, 6);
-    branches[BRANCH_TOMB].startdepth              = random_range(2, 3);
+    for (int branch = BRANCH_ECUMENICAL_TEMPLE;
+         branch < BRANCH_VESTIBULE_OF_HELL;
+         ++branch) {
+        Branch *b = &branches[branch];
+        b->startdepth = random_range(b->mindepth, b->maxdepth);
+    }
 
     // Disable one of the Swamp/Shoals/Snake Pit.
     const branch_type disabled_branch =
