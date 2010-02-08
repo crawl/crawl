@@ -1715,7 +1715,7 @@ void direction_chooser::do_redraws()
 
     if (need_text_redraw)
     {
-        mesclr(true);
+        msgwin_clear_temporary();
         describe_cell();
         need_text_redraw = false;
         show_items_once = false;
@@ -1949,7 +1949,8 @@ bool direction_chooser::choose_direction()
     if (show_beam)
         need_beam_redraw = have_beam = find_ray(you.pos(), target(), beam);
 
-    mesclr(true);
+    mesclr();
+    msgwin_set_temporary(true);
     show_initial_prompt();
     need_text_redraw = false;
 
@@ -1957,6 +1958,8 @@ bool direction_chooser::choose_direction()
 
     while (!do_main_loop())
         ;
+
+    msgwin_set_temporary(false);
 
     finalize_moves();
     return moves.isValid;
