@@ -185,7 +185,8 @@ void TilesFramework::hide_title()
 
 void TilesFramework::draw_doll_edit()
 {
-    DollEditRegion* reg = new DollEditRegion(&m_image, m_fonts[m_msg_font].font);
+    DollEditRegion* reg = new DollEditRegion(&m_image,
+                                             m_fonts[m_msg_font].font);
     use_control_region(reg);
     delete reg;
 }
@@ -1720,7 +1721,8 @@ void TilesFramework::update_inventory()
             type = (object_class_type)(find - obj_syms);
         }
 
-        for (int i = you.visible_igrd(you.pos()); i != NON_ITEM; i = mitm[i].link)
+        for (int i = you.visible_igrd(you.pos());
+             i != NON_ITEM; i = mitm[i].link)
         {
             if ((int)inv.size() >= mx * my)
                 break;
