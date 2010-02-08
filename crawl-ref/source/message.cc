@@ -785,6 +785,8 @@ msg_colour_type channel_to_colour(msg_channel_type channel, int param)
 static void do_message_print(msg_channel_type channel, int param,
                              const char *format, va_list argp)
 {
+    va_list ap;
+    va_copy(ap, argp);
     char buff[200];
     size_t len = vsnprintf( buff, sizeof( buff ), format, argp );
     if (len < sizeof( buff )) {
@@ -792,10 +794,11 @@ static void do_message_print(msg_channel_type channel, int param,
     }
     else {
         char *heapbuf = (char*)malloc( len + 1 );
-        vsnprintf( heapbuf, len + 1, format, argp );
+        vsnprintf( heapbuf, len + 1, format, ap );
         mpr( heapbuf, channel, param );
         free( heapbuf );
     }
+    va_end(ap);
 }
 
 void mprf(msg_channel_type channel, int param, const char *format, ...)
