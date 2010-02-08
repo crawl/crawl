@@ -345,34 +345,59 @@ static std::string _get_branches()
     dungeon_lid = find_deepest_explored(dungeon_lid);
     snprintf(buffer, sizeof(buffer),
              dungeon_lid.depth < 10 ?
-                    "<yellow>Dungeon</yellow> <darkgrey>(%d/27)</darkgrey>         " :
-                    "<yellow>Dungeon</yellow> <darkgrey>(%d/27)</darkgrey>         ",
+                    "<yellow>Dungeon</yellow> <darkgrey>(%d/27)</darkgrey>            " :
+                    "<yellow>Dungeon</yellow> <darkgrey>(%d/27)</darkgrey>           ",
              dungeon_lid.depth);
     disp += buffer;
 
     for (int i = BRANCH_FIRST_NON_DUNGEON; i < NUM_BRANCHES; i++)
     {
         const branch_type branch = branches[i].id;
+        bool printed = false;
 
         if (stair_level.find(branch) != stair_level.end())
         {
-            level_id lid(branches[i].id, 0);
+            level_id lid(branch, 0);
             lid = find_deepest_explored(lid);
 
-            // Each branch entry takes up 21 spaces
+            // Each branch entry takes up 24 spaces
             snprintf(buffer, sizeof buffer,
-                branches[i].depth < 10 ? "<yellow>%-6s</yellow> <darkgrey>(%d/%d)</darkgrey>: %-7s" :
-                        lid.depth < 10 ? "<yellow>%-5s</yellow> <darkgrey>(%d/%d)</darkgrey>: %-7s" :
-                                         "<yellow>%-4s</yellow> <darkgrey>(%d/%d)</darkgrey>: %-7s",
+                "<yellow>%-7s</yellow> <darkgrey>(%d/%d)</darkgrey>: %-9s",
                      branches[branch].abbrevname,
                      lid.depth,
-                     branches[i].depth,
+                     branches[branch].depth,
                      stair_level[branch].describe(false, true).c_str());
 
             disp += buffer;
+            printed = true;
+        }
+        else {
+            const branch_type parent_branch = branches[i].parent_branch;
+            level_id lid(parent_branch, 0);
+            lid = find_deepest_explored(lid);
+            if (lid.depth >= branches[branch].mindepth) {
+                int width = (branches[branch].mindepth >= 10) +
+                            strlen(branches[parent_branch].abbrevname);
+
+                // Each branch entry takes up 24 spaces
+                snprintf(buffer, sizeof buffer,
+                    "<brown>%-7s</brown> <darkgrey>(0/%d): %s:%d-%-*d</darkgrey>",
+                        branches[branch].abbrevname,
+                        branches[branch].depth,
+                        branches[parent_branch].abbrevname,
+                        branches[branch].mindepth,
+                        6 - width,
+                        branches[branch].maxdepth);
+
+                disp += buffer;
+                printed = true;
+            }
+        }
+
+        if (printed) {
             num_printed_branches++;
 
-            disp += (num_printed_branches % 3) == 0 ? "\n" : "   ";
+            disp += (num_printed_branches % 3) == 0 ? "\n" : "  ";
         }
     }
 
