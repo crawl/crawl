@@ -735,7 +735,7 @@ static bool _cmdhelp_textfilter(const std::string &tag)
     return (false);
 }
 
-static const char *targetting_help_1 =
+static const char *targeting_help_1 =
     "<h>Examine surroundings ('<w>x</w><h>' in main):\n"
     "<w>Esc</w> : cancel (also <w>Space</w>, <w>x</w>)\n"
     "<w>Dir.</w>: move cursor in that direction\n"
@@ -749,13 +749,13 @@ static const char *targetting_help_1 =
     "<w>_</w> : cycle through altars\n"
     "<w><<</w>/<w>></w> : cycle through up/down stairs\n"
     "<w>Tab</w> : cycle through shops and portals\n"
-    "<w>Ctrl-F</w> : change monster targetting mode\n"
+    "<w>Ctrl-F</w> : change monster targeting mode\n"
 #ifndef USE_TILE
-    "<w>Ctrl-L</w> : toggle targetting via monster list\n"
+    "<w>Ctrl-L</w> : toggle targeting via monster list\n"
 #endif
     "<w>Ctrl-P</w> : repeat prompt\n"
     " \n"
-    "<h>targetting (zapping wands, casting spells, etc.):\n"
+    "<h>targeting (zapping wands, casting spells, etc.):\n"
     "The keys from examine surroundings also work here.\n"
     "In addition, you can use:\n"
     "<w>Enter</w> : fire at target (<w>Space</w>, <w>Del</w>)\n"
@@ -767,7 +767,7 @@ static const char *targetting_help_1 =
     "<w>Shift-Dir</w> : shoot straight-line beam\n"
 #ifdef WIZARD
     " \n"
-    "<h>Wizard targetting commands:</h>\n"
+    "<h>Wizard targeting commands:</h>\n"
     "<w>g</w>: give item to monster\n"
     "<w>s</w>: force monster to shout or speak\n"
     "<w>S</w>: make monster a summoned monster\n"
@@ -782,7 +782,7 @@ static const char *targetting_help_1 =
 #endif
 ;
 
-static const char *targetting_help_2 =
+static const char *targeting_help_2 =
     "<h>Firing or throwing a missile:\n"
     "<w>(</w> : cycle to next suitable missile.\n"
     "<w>)</w> : cycle to previous suitable missile.\n"
@@ -1996,7 +1996,7 @@ static int _show_keyhelp_menu(const std::vector<formatted_string> &lines,
             "<w>F</w>.      Monsters\n"
             "<w>G</w>.      Items\n"
             "<w>H</w>.      Spellcasting\n"
-            "<w>I</w>.      targetting\n"
+            "<w>I</w>.      Targeting\n"
             "<w>J</w>.      Religion\n"
             "<w>K</w>.      Mutations\n"
             "<w>L</w>.      Licence, Contact, History\n"
@@ -2094,14 +2094,14 @@ void show_levelmap_help()
     show_specific_help( getHelpString("level-map") );
 }
 
-void show_targetting_help()
+void show_targeting_help()
 {
     column_composer cols(2, 41);
     // Page size is number of lines - one line for --more-- prompt.
     cols.set_pagesize(get_number_of_lines() - 1);
 
-    cols.add_formatted(0, targetting_help_1, true, true);
-    cols.add_formatted(1, targetting_help_2, true, true);
+    cols.add_formatted(0, targeting_help_1, true, true);
+    cols.add_formatted(1, targeting_help_2, true, true);
     _show_keyhelp_menu(cols.formatted_lines(), false, true);
 }
 void show_interlevel_travel_branch_help()
@@ -2473,7 +2473,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
     std::string text =
             "Many commands have context sensitive "
             "help, among them <w>%</w>, <w>%</w>, <w>%</w> (or any "
-            "form of targetting), <w>%</w>, and <w>%</w>.\n"
+            "form of targeting), <w>%</w>, and <w>%</w>.\n"
             "You can read descriptions of your "
             "current spells (<w>%</w>), skills (<w>%?</w>) and "
             "abilities (<w>%!</w>).";
@@ -2579,7 +2579,7 @@ static void _add_formatted_tutorial_help(column_composer &cols)
 
     cols.add_formatted(
             1,
-            "<h>Targetting (for spells and missiles)\n"
+            "<h>Targeting (for spells and missiles)\n"
             "Use <w>+</w> (or <w>=</w>) and <w>-</w> to cycle between\n"
             "hostile monsters. <w>Enter</w> or <w>.</w> or <w>Del</w>\n"
             "all fire at the selected target.\n"
@@ -2696,8 +2696,8 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>O</w>      : measure exploration time\n"
                        "<w>Ctrl-t</w> : enter in-game Lua interpreter\n"
                        "\n"
-                       "<yellow>Wizard targetting commands</yellow>\n"
-                       "<w>x?</w>     : list targetted commands\n"
+                       "<yellow>Wizard targeting commands</yellow>\n"
+                       "<w>x?</w>     : list targeted commands\n"
                        "\n"
                        "<w>?</w>      : list wizard commands\n",
                        true, true);

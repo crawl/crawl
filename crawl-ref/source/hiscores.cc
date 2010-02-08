@@ -423,7 +423,7 @@ static const char *kill_method_names[] =
     "mon", "pois", "cloud", "beam", "lava", "water",
     "stupidity", "weakness", "clumsiness", "trap", "leaving", "winning",
     "quitting", "draining", "starvation", "freezing", "burning",
-    "wild_magic", "xom", "rotting", "targetting", "spore",
+    "wild_magic", "xom", "rotting", "targeting", "spore",
     "tso_smiting", "petrification", "something",
     "falling_down_stairs", "acid", "curare",
     "beogh_smiting", "divine_wrath", "bounce", "reflect", "self_aimed",
@@ -1712,8 +1712,8 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         desc += terse? "rotting" : "Rotted away";
         break;
 
-    case KILLED_BY_TARGETTING:
-        desc += terse? "shot self" : "Killed themselves with bad targetting";
+    case KILLED_BY_TARGETING:
+        desc += terse? "shot self" : "Killed themselves with bad targeting";
         needs_damage = true;
         break;
 
@@ -1756,7 +1756,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
 
     case KILLED_BY_SELF_AIMED:
         if (terse)
-            desc += "suicidal targetting";
+            desc += "suicidal targeting";
         else
         {
             desc += "Shot themselves with a ";
