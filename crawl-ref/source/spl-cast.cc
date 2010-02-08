@@ -1121,10 +1121,10 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     int potion = -1;
 
     // XXX: This handles only some of the cases where spells need
-    // targetting.  There are others that do their own that will be
+    // targeting.  There are others that do their own that will be
     // missed by this (and thus will not properly ESC without cost
     // because of it).  Hopefully, those will eventually be fixed. - bwr
-    if ((flags & SPFLAG_TARGETTING_MASK) && spell != SPELL_PORTAL_PROJECTILE)
+    if ((flags & SPFLAG_TARGETING_MASK) && spell != SPELL_PORTAL_PROJECTILE)
     {
         targ_mode_type targ =
               (testbits(flags, SPFLAG_HELPFUL) ? TARG_FRIEND : TARG_HOSTILE);
@@ -1132,7 +1132,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         if (testbits(flags, SPFLAG_NEUTRAL))
             targ = TARG_ANY;
 
-        targetting_type dir  =
+        targeting_type dir  =
             (testbits(flags, SPFLAG_TARG_OBJ) ? DIR_TARGET_OBJECT :
              testbits(flags, SPFLAG_TARGET)   ? DIR_TARGET        :
              testbits(flags, SPFLAG_GRID)     ? DIR_TARGET        :
@@ -1210,7 +1210,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
                           && god == GOD_NO_GOD;
 
     const int  loudness        = spell_noise(spell);
-    const bool sound_at_caster = !(flags & SPFLAG_TARGETTING_MASK);
+    const bool sound_at_caster = !(flags & SPFLAG_TARGETING_MASK);
 
     // Make some noise if it's actually the player casting.
     // NOTE: zappy() sets up noise for beams.

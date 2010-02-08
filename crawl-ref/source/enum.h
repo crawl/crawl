@@ -624,7 +624,7 @@ enum command_type
 
     CMD_MAX_OVERMAP = CMD_MAP_EXIT_MAP,
 
-    // targetting commands
+    // targeting commands
     CMD_TARGET_DOWN_LEFT,
     CMD_MIN_TARGET = CMD_TARGET_DOWN_LEFT,
     CMD_TARGET_DOWN,
@@ -1481,7 +1481,7 @@ enum KeymapContext
 {
     KMC_DEFAULT,         // For no-arg getchm(), must be zero.
     KMC_LEVELMAP,        // When in the 'X' level map
-    KMC_TARGETTING,      // Only during 'x' and other targetting modes
+    KMC_TARGETING,       // Only during 'x' and other targeting modes
     KMC_CONFIRM,         // When being asked y/n/q questions
     KMC_MENU,            // For menus
 #ifdef USE_TILE
@@ -1617,7 +1617,7 @@ enum targ_mode_type
     TARG_FRIEND,
     TARG_HOSTILE,
     TARG_HOSTILE_SUBMERGED, // Target hostiles including submerged ones
-    TARG_EVOLVABLE_PLANTS,  // Targetting mode for Fedhas' evolution
+    TARG_EVOLVABLE_PLANTS,  // Targeting mode for Fedhas' evolution
     TARG_NUM_MODES
 };
 
@@ -2960,12 +2960,12 @@ enum stat_type
   STAT_RANDOM = 255 // leave at 255, added for increase_stats() handling {dlb}
 };
 
-enum targetting_type
+enum targeting_type
 {
     DIR_NONE,
     DIR_TARGET,
     DIR_DIR,
-    DIR_TARGET_OBJECT // New as of 27-August-2009, for item-targetting spells
+    DIR_TARGET_OBJECT // New as of 27-August-2009, for item-targeting spells
 };
 
 enum torment_source_type

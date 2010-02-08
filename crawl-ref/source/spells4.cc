@@ -325,7 +325,7 @@ void cast_shatter(int pow)
     }
 
     if (damage > 0)
-        ouch(damage, NON_MONSTER, KILLED_BY_TARGETTING);
+        ouch(damage, NON_MONSTER, KILLED_BY_TARGETING);
 
     int rad = 3 + (you.skills[SK_EARTH_MAGIC] / 5);
 
@@ -725,7 +725,7 @@ void cast_ignite_poison(int pow)
             mpr("The poison in your system burns!");
         }
 
-        ouch(damage, NON_MONSTER, KILLED_BY_TARGETTING);
+        ouch(damage, NON_MONSTER, KILLED_BY_TARGETING);
 
         if (you.duration[DUR_POISONING] > 0)
         {
@@ -1490,7 +1490,7 @@ bool cast_fragmentation(int pow, const dist& spd)
                 }
             }
 
-            // Mark that a monster was targetted.
+            // Mark that a monster was targeted.
             beam.damage.num = 1;
 
             // Yes, this spell does lousy damage if the monster

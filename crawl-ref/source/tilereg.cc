@@ -1389,7 +1389,7 @@ static int _click_travel(const coord_def &gc, MouseEvent &event)
 // to the clicked cell, whatever).
 static void _add_targeting_commands(const coord_def& pos)
 {
-    // Force targetting cursor back onto center to start off on a clean
+    // Force targeting cursor back onto center to start off on a clean
     // slate.
     macro_buf_add_cmd(CMD_TARGET_CENTER);
 
@@ -1426,7 +1426,7 @@ static const bool _is_appropriate_spell(spell_type spell,
         return (false);
 
     const unsigned int flags    = get_spell_flags(spell);
-    const bool         targeted = flags & SPFLAG_TARGETTING_MASK;
+    const bool         targeted = flags & SPFLAG_TARGETING_MASK;
 
     // We don't handle grid targeted spells yet.
     if (flags & SPFLAG_GRID)
@@ -1581,7 +1581,7 @@ static bool _evoke_item_on_target(actor* target)
 
 static bool _spell_in_range(spell_type spell, actor* target)
 {
-    if (!(get_spell_flags(spell) & SPFLAG_TARGETTING_MASK))
+    if (!(get_spell_flags(spell) & SPFLAG_TARGETING_MASK))
         return (true);
 
     int range = calc_spell_range(spell);
@@ -1653,7 +1653,7 @@ static bool _cast_spell_on_target(actor* target)
     macro_buf_add_cmd(CMD_CAST_SPELL);
     macro_buf_add(letter);
 
-    if (get_spell_flags(spell) & SPFLAG_TARGETTING_MASK)
+    if (get_spell_flags(spell) & SPFLAG_TARGETING_MASK)
         _add_targeting_commands(target->pos());
     return (true);
 }

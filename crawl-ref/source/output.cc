@@ -1243,7 +1243,7 @@ static void _print_next_monster_desc(const std::vector<monster_info>& mons,
     {
         int printed = 0;
 
-        // for targetting
+        // for targeting
         if (idx >= 0)
         {
             textcolor(WHITE);
@@ -1389,7 +1389,7 @@ int update_monster_pane()
         if (i_print >= skip_lines && i_mons < (int) mons.size())
         {
              _print_next_monster_desc(mons, i_mons, full_info,
-                        crawl_state.mlist_targetting ? i_print : -1);
+                        crawl_state.mlist_targeting ? i_print : -1);
         }
         else
             cprintf("%s", blank.c_str());

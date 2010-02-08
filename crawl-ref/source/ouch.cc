@@ -773,7 +773,7 @@ static void _xom_checks_damage(kill_method_type death_type,
 {
     if (you.religion == GOD_XOM)
     {
-        if (death_type == KILLED_BY_TARGETTING
+        if (death_type == KILLED_BY_TARGETING
             || death_type == KILLED_BY_BOUNCE
             || death_type == KILLED_BY_REFLECTION
             || death_type == KILLED_BY_SELF_AIMED

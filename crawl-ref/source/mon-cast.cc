@@ -925,7 +925,7 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         {
             pbolt.target = targ->pos();
 #if DEBUG_DIAGNOSTICS
-            mprf("Porkalator: targetting %s instead",
+            mprf("Porkalator: targeting %s instead",
                  targ->name(DESC_PLAIN).c_str());
 #endif
             monster_polymorph(targ, hog_type);
@@ -1660,7 +1660,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     ASSERT(!(flags & (SPFLAG_TESTING | SPFLAG_MAPPING)));
 
     // Targeted spells need a valid target.
-    ASSERT(!(flags & SPFLAG_TARGETTING_MASK) || in_bounds(pbolt.target));
+    ASSERT(!(flags & SPFLAG_TARGETING_MASK) || in_bounds(pbolt.target));
 #endif
 
     if (do_noise)
@@ -2439,7 +2439,7 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast,
             // Noise for targeted spells happens at where the spell hits,
             // rather than where the spell is cast. zappy() sets up the
             // noise for beams.
-            noise = (flags & SPFLAG_TARGETTING_MASK)
+            noise = (flags & SPFLAG_TARGETING_MASK)
                 ? 1 : spell_noise(actual_spell);
         }
     }
@@ -2453,7 +2453,7 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast,
     const bool visible_beam = pbolt.type != 0 && pbolt.type != ' '
                               && pbolt.name[0] != '0'
                               && !pbolt.is_enchantment();
-    const bool targeted = (flags & SPFLAG_TARGETTING_MASK)
+    const bool targeted = (flags & SPFLAG_TARGETING_MASK)
                            && (pbolt.target != monster->pos() || visible_beam);
 
     std::vector<std::string> key_list;
@@ -2622,7 +2622,7 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast,
     else if (pbolt.target == monster->pos())
         target = monster->pronoun(PRONOUN_REFLEXIVE);
     // Monsters should only use targeted spells while foe == MHITNOT
-    // if they're targetting themselves.
+    // if they're targeting themselves.
     else if (monster->foe == MHITNOT && !monster->confused())
         target = "NONEXISTENT FOE";
     else if (!invalid_monster_index(monster->foe)
