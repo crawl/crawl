@@ -1490,7 +1490,7 @@ struct position_node
     }
 };
 
-// If 'monster' is a ballistomycete or spore activate some number of
+// If 'monster' is a ballistomycete or spore, activate some number of
 // ballistomycetes on the level.
 void activate_ballistomycetes(monsters * monster, const coord_def & origin,
                               bool player_kill)
@@ -1566,7 +1566,7 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
     {
         if (player_kill
             && spore_count == 0
-            && ballisto_count ==0
+            && ballisto_count == 0
             && monster->attitude == ATT_HOSTILE)
         {
             mprf("Having destroyed the fungal colony, you feel a bit more "
