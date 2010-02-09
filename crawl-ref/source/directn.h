@@ -22,11 +22,11 @@ public:
 };
 
 // An object that modifies the behaviour of the direction prompt.
-class targetting_behaviour
+class targeting_behaviour
 {
 public:
-    targetting_behaviour(bool just_looking = false);
-    virtual ~targetting_behaviour();
+    targeting_behaviour(bool just_looking = false);
+    virtual ~targeting_behaviour();
 
     // Returns a keystroke for the prompt.
     virtual int get_key();
@@ -68,7 +68,7 @@ public:
 
 struct direction_chooser_args
 {
-    targetting_type restricts;
+    targeting_type restricts;
     targ_mode_type mode;
     int range;
     bool just_looking;
@@ -77,7 +77,7 @@ struct direction_chooser_args
     bool may_target_self;
     const char *target_prefix;
     std::string top_prompt;
-    targetting_behaviour *behaviour;
+    targeting_behaviour *behaviour;
     bool cancel_at_self;
 
     direction_chooser_args() :
@@ -105,7 +105,7 @@ private:
 
     bool do_main_loop();
 
-    // Return the location where targetting should start.
+    // Return the location where targeting should start.
     coord_def find_default_target() const;
 
     void handle_mlist_cycle_command(command_type key_command);
@@ -135,7 +135,7 @@ private:
     bool select_compass_direction(const coord_def& delta);
     bool select_previous_target();
 
-    // Return true if we need to abort targetting due to a signal.
+    // Return true if we need to abort targeting due to a signal.
     bool handle_signals();
 
     void reinitialize_move_flags();
@@ -144,24 +144,24 @@ private:
     const coord_def& target() const;
     void set_target(const coord_def& new_target);
 
-    std::string build_targetting_hint_string() const;
+    std::string build_targeting_hint_string() const;
 
-    actor* targetted_actor() const;
-    monsters* targetted_monster() const;
+    actor* targeted_actor() const;
+    monsters* targeted_monster() const;
 
     // Functions which print things to the user.
     // Each one is commented with a sample output.
 
     // Whatever the caller defines. Typically something like:
     // Casting: Venom Bolt.
-    // Can be modified by the targetting_behaviour.
+    // Can be modified by the targeting_behaviour.
     void print_top_prompt() const;
 
     // Press: ? - help, Shift-Dir - straight line, t - giant bat
     void print_key_hints() const;
 
-    // Here: An almost dead orc wizard, wielding a glowing orcish
-    // dagger, and wearing an orcish robe.
+    // Here: An orc wizard, wielding a glowing orcish dagger, and wearing
+    // an orcish robe (miasma, silenced, almost dead)
     // OR:
     // Apport: A short sword.
     void print_target_description() const;
@@ -181,6 +181,12 @@ private:
     void print_floor_description(bool boring_too) const;
 
     std::string target_interesting_terrain_description() const;
+    std::string target_cloud_description() const;
+    std::string target_sanctuary_description() const;
+    std::string target_silence_description() const;
+    std::vector<std::string> target_cell_description_suffixes() const;
+    std::vector<std::string> monster_description_suffixes(
+        const monsters* mon) const;
 
     void describe_cell() const;
 
@@ -189,7 +195,7 @@ private:
     // pointer is in bounds.
     bool tiles_update_target();
 
-    // Display the prompt when beginning targetting.
+    // Display the prompt when beginning targeting.
     void show_initial_prompt();
 
     void toggle_beam();
@@ -205,14 +211,14 @@ private:
     // Whether the current target is valid.
     bool move_is_ok() const;
 
-    void cycle_targetting_mode();
+    void cycle_targeting_mode();
 
     void describe_target();
     void show_help();
 
     // Parameters.
     dist& moves;                // Output.
-    targetting_type restricts;  // What kind of target do we want?
+    targeting_type restricts;   // What kind of target do we want?
     targ_mode_type mode;        // Hostiles or friendlies?
     int range;                  // Max range to consider
     bool just_looking;
@@ -221,8 +227,8 @@ private:
     bool may_target_self;       // ?? XXX Used only for _init_mlist() currently
     const char *target_prefix;  // A string displayed before describing target
     std::string top_prompt;     // Shown at the top of the message window
-    targetting_behaviour *behaviour; // Can be NULL for default
-    bool cancel_at_self;        // Disallow self-targetting?
+    targeting_behaviour *behaviour; // Can be NULL for default
+    bool cancel_at_self;        // Disallow self-targeting?
 
     // Internal data.
     ray_def beam;               // The (possibly invalid) beam.
@@ -240,7 +246,7 @@ private:
     bool target_unshifted;      // Do unshifted direction keys fire?
 
     // Default behaviour, saved across instances.
-    static targetting_behaviour stock_behaviour;
+    static targeting_behaviour stock_behaviour;
     
 };
 
@@ -275,7 +281,7 @@ std::string get_monster_equipment_desc(const monsters *mon,
 
 int dos_direction_unmunge(int doskey);
 
-std::string feature_description(const coord_def& where, bool bloody = false,
+std::string feature_description(const coord_def& where, bool covering = false,
                                 description_level_type dtype = DESC_CAP_A,
                                 bool add_stop = true, bool base_desc = false);
 std::string raw_feature_description(dungeon_feature_type grid,
@@ -284,7 +290,7 @@ std::string raw_feature_description(dungeon_feature_type grid,
 std::string feature_description(dungeon_feature_type grid,
                                 trap_type trap = NUM_TRAPS, bool bloody = false,
                                 description_level_type dtype = DESC_CAP_A,
-                                bool add_stop = true, bool base_desc = false);
+                                bool add_stop = true, bool base_desc = false, bool mold = false);
 
 void set_feature_desc_short(dungeon_feature_type grid,
                             const std::string &desc);

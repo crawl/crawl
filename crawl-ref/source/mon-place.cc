@@ -74,7 +74,8 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                                           coord_def &pos,
                                           unsigned mmask,
                                           dungeon_char_type *stair_type,
-                                          int *lev_mons);
+                                          int *lev_mons,
+                                          bool *chose_ood_monster);
 
 static void _define_zombie(int mid, monster_type ztype, monster_type cs,
                            int power, coord_def pos);
@@ -199,9 +200,10 @@ bool monster_can_submerge(const monsters *mons, dungeon_feature_type grid)
     if (testbits(env.pgrid(mons->pos()), FPROP_NO_SUBMERGE))
         return (false);
     if (mons_class_flag(mons->type, M_SUBMERGES))
-        switch (mons_primary_habitat(mons))
+        switch (mons_habitat(mons))
         {
         case HT_WATER:
+        case HT_AMPHIBIOUS:
             return (feat_is_watery(grid));
         case HT_LAVA:
             return (grid == DNGN_LAVA);
@@ -398,14 +400,15 @@ void spawn_random_monsters()
     // No random monsters in the Labyrinth.
 }
 
-monster_type pick_random_monster(const level_id &place)
+monster_type pick_random_monster(const level_id &place,
+                                 bool *chose_ood_monster)
 {
     int level;
     if (place.level_type == LEVEL_PORTAL_VAULT)
         level = you.your_level;
     else
         level = place.absdepth();
-    return pick_random_monster(place, level, level);
+    return pick_random_monster(place, level, level, chose_ood_monster);
 }
 
 std::vector<monster_type> _find_valid_monster_types(const level_id &place)
@@ -425,8 +428,14 @@ std::vector<monster_type> _find_valid_monster_types(const level_id &place)
 }
 
 monster_type pick_random_monster(const level_id &place, int power,
-                                 int &lev_mons)
+                                 int &lev_mons,
+                                 bool *chose_ood_monster)
 {
+    bool ood_dummy = false;
+    bool *isood = chose_ood_monster? chose_ood_monster : &ood_dummy;
+
+    *isood = false;
+
     if (crawl_state.arena)
     {
         monster_type type = arena_pick_random_monster(place, power, lev_mons);
@@ -447,7 +456,8 @@ monster_type pick_random_monster(const level_id &place, int power,
         dungeon_char_type dummy2;
         monster_type type =
             _resolve_monster_type(RANDOM_MONSTER, PROX_ANYWHERE, base_type,
-                                  dummy1, 0, &dummy2, &lev_mons);
+                                  dummy1, 0, &dummy2, &lev_mons,
+                                  chose_ood_monster);
 
 #if DEBUG || DEBUG_DIAGNOSTICS
         if (base_type != 0 && base_type != MONS_PROGRAM_BUG)
@@ -467,9 +477,7 @@ monster_type pick_random_monster(const level_id &place, int power,
         lev_mons = random2(power);
     }
 
-#ifdef DEBUG_DIAGNOSTICS
     const int original_level = lev_mons;
-#endif
 
     // OODs do not apply to the Abyss, Pan, etc.
     if (you.level_type == LEVEL_DUNGEON && lev_mons <= 27)
@@ -558,14 +566,18 @@ monster_type pick_random_monster(const level_id &place, int power,
 
         if (monster_pick_tries <= 0)
             return (MONS_PROGRAM_BUG);
+
+        if (level > original_level + 5)
+            *isood = true;
     }
 
 #ifdef DEBUG_DIAGNOSTICS
     if (lev_mons > original_level)
-        dprf("Orginal level: %d, Final level: %d, Monster: %s",
+        dprf("Orginal level: %d, Final level: %d, Monster: %s, OOD: %s",
              original_level, lev_mons,
              mon_type == MONS_NO_MONSTER || mon_type == MONS_PROGRAM_BUG ?
-             "NONE" : get_monster_data(mon_type)->name);
+             "NONE" : get_monster_data(mon_type)->name,
+             *isood? "YES" : "no");
 #endif
 
     return (mon_type);
@@ -599,7 +611,8 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                                           coord_def &pos,
                                           unsigned mmask,
                                           dungeon_char_type *stair_type,
-                                          int *lev_mons)
+                                          int *lev_mons,
+                                          bool *chose_ood_monster)
 {
     if (mon_type == RANDOM_DRACONIAN)
     {
@@ -722,7 +735,8 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                         mon_type =
                             _resolve_monster_type(mon_type, proximity,
                                                   base_type, pos, mmask,
-                                                  stair_type, lev_mons);
+                                                  stair_type, lev_mons,
+                                                  chose_ood_monster);
                     }
                     return (mon_type);
                 }
@@ -740,7 +754,8 @@ static monster_type _resolve_monster_type(monster_type mon_type,
             {
                 const int original_level = *lev_mons;
                 // Now pick a monster of the given branch and level.
-                mon_type = pick_random_monster(place, *lev_mons, *lev_mons);
+                mon_type = pick_random_monster(place, *lev_mons, *lev_mons,
+                                               chose_ood_monster);
 
                 // Don't allow monsters too stupid to use stairs (e.g.
                 // non-spectral zombified undead) to be placed near
@@ -763,7 +778,8 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                 else if (*stair_type == DCHAR_STAIRS_UP)
                     ++*lev_mons;
 
-                mon_type = pick_random_monster(place, *lev_mons, *lev_mons);
+                mon_type = pick_random_monster(place, *lev_mons, *lev_mons,
+                                               chose_ood_monster);
             }
         }
     }
@@ -846,6 +862,13 @@ static bool _valid_monster_generation_location(mgen_data &mg)
     return _valid_monster_generation_location(mg, mg.pos);
 }
 
+// Returns true if the player is on a level that should be sheltered from
+// OOD packs, based on depth and time spent on-level.
+static bool _in_ood_pack_protected_place()
+{
+    return (env.turns_on_level < 1400 - you.your_level * 117);
+}
+
 int place_monster(mgen_data mg, bool force_pos)
 {
 #ifdef DEBUG_MON_CREATION
@@ -860,12 +883,27 @@ int place_monster(mgen_data mg, bool force_pos)
     if (mg.use_position() && monster_at(mg.pos))
         return (-1);
 
+    bool chose_ood_monster = false;
     mg.cls = _resolve_monster_type(mg.cls, mg.proximity, mg.base_type,
                                    mg.pos, mg.map_mask,
-                                   &stair_type, &mg.power);
+                                   &stair_type, &mg.power,
+                                   &chose_ood_monster);
 
     if (mg.cls == MONS_NO_MONSTER || mg.cls == MONS_PROGRAM_BUG)
         return (-1);
+
+    bool create_band = mg.permit_bands();
+    // If we drew an OOD monster and there hasn't been much time spent
+    // on level, disable band generation. This applies only to
+    // randomly picked monsters -- chose_ood_monster will never be set
+    // true for explicitly specified monsters in vaults and other
+    // places.
+    if (chose_ood_monster && _in_ood_pack_protected_place())
+    {
+        dprf("Chose monster with OOD roll: %s, disabling band generation",
+             get_monster_data(mg.cls)->name);
+        create_band = false;
+    }
 
     // (3) Decide on banding (good lord!)
     int band_size = 1;
@@ -877,7 +915,7 @@ int place_monster(mgen_data mg, bool force_pos)
     // The (very) ugly thing band colour.
     static unsigned char ugly_colour = BLACK;
 
-    if (mg.permit_bands())
+    if (create_band)
     {
 #ifdef DEBUG_MON_CREATION
         mpr("Choose band members...", MSGCH_DIAGNOSTICS);

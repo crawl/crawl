@@ -62,6 +62,8 @@ static bool _ends_in_punctuation(const std::string& text)
     }
 }
 
+static unsigned int msgwin_line_length();
+
 struct message_item
 {
     msg_channel_type    channel;        // message channel
@@ -69,24 +71,27 @@ struct message_item
     std::string         text;           // text of message (tagged string...)
     int                 repeats;
     long                turn;
-    bool                short_;         // short enough to merge?
+    bool                join;           // may this message be joined with
+                                        // others?
 
     message_item() : channel(NUM_MESSAGE_CHANNELS), param(0),
-                     text(""), repeats(0), turn(-1), short_(true)
+                     text(""), repeats(0), turn(-1), join(true)
     {
     }
 
-    message_item(std::string msg, msg_channel_type chan, int par)
+    message_item(std::string msg, msg_channel_type chan, int par, bool jn)
         : channel(chan), param(par), text(msg), repeats(1),
           turn(you.num_turns)
     {
-        short_ = pure_text().length() < 30;
+         // Don't join long messages.
+         join = jn && pure_text().length() < 40;
     }
 
+    // Constructor for restored messages.
     message_item(std::string msg, msg_channel_type chan, int par,
                  int rep, int trn)
         : channel(chan), param(par), text(msg), repeats(rep),
-          turn(trn), short_(false)
+          turn(trn), join(false)
     {
     }
 
@@ -130,15 +135,25 @@ struct message_item
                 return true;
             }
             else if (Options.msg_condense_short
+                     && turn == other.turn
                      && repeats == 1 && other.repeats == 1
-                     && short_ && other.short_)
+                     && join && other.join)
             {
-                // Note that short_ stays true.
+                // Note that join stays true.
 
                 std::string sep = "<lightgrey>";
+                int seplen = 1;
                 if (!_ends_in_punctuation(pure_text()))
+                {
                     sep += ";";
+                    seplen++;
+                }
                 sep += " </lightgrey>";
+                if (pure_text().length() + seplen + other.pure_text().length()
+                    > msgwin_line_length())
+                {
+                    return false;
+                }
 
                 text += sep;
                 text += other.text;
@@ -169,6 +184,12 @@ class circ_vec
         *index = _mod(*index + 1, SIZE);
     }
 
+    static void dec(int* index)
+    {
+        ASSERT(*index >= 0 && *index < SIZE);
+        *index = _mod(*index - 1, SIZE);
+    }
+
 public:
     circ_vec() : end(0) {}
 
@@ -193,6 +214,15 @@ public:
     {
         data[end] = item;
         inc(&end);
+    }
+
+    void roll_back(int n)
+    {
+        for (int i = 0; i < n; ++i)
+        {
+            dec(&end);
+            data[end] = T();
+        }
     }
 };
 
@@ -248,9 +278,12 @@ glyph prefix_glyph(prefix_type p)
 
 static bool _pre_more();
 
+static bool _temporary = false;
+
 class message_window
 {
     int next_line;
+    int temp_line;     // starting point of temporary messages
     int input_line;    // last line-after-input
     std::vector<formatted_string> lines;
     prefix_type prompt; // current prefix prompt
@@ -260,24 +293,14 @@ class message_window
         return crawl_view.msgsz.y;
     }
 
-    int out_height() const
-    {
-        return (height() - (use_last_line() ? 0 : 1));
-    }
-
     int use_last_line() const
     {
-        return (!more_enabled() || first_col_more());
+        return (first_col_more());
     }
 
     int width() const
     {
         return crawl_view.msgsz.x;
-    }
-
-    int out_width() const
-    {
-        return (width() - (use_first_col() ? 1 : 0));
     }
 
     void out_line(const formatted_string& line, int n) const
@@ -307,14 +330,7 @@ class message_window
 
     int make_space(int n)
     {
-        int space = height() - next_line;
-
-        // We could use the last line anyway if we know we're
-        // showing the last message, but that would require
-        // only calling message_window::show when reading
-        // input -- that's not currently the case.
-        if (!use_last_line())
-            space--;
+        int space = out_height() - next_line;
 
         if (space >= n)
             return 0;
@@ -330,23 +346,21 @@ class message_window
         if (space >= n)
             return s;
 
-        else if (more_enabled())
+        if (more_enabled())
+            more(true);
+
+        // We could consider just scrolling off after --more--;
+        // that would require marking the last message before
+        // the prompt.
+        if (!Options.clear_messages && !more_enabled())
         {
-            more(true); // this clears, also
-            return (height()); // XXX: unused; perhaps height()-1 ?
+            scroll(n - space);
+            return (s + n - space);
         }
         else
         {
-            if (Options.clear_messages)
-            {
-                scroll(n - space);
-                return (s + n - space);
-            }
-            else
-            {
-                clear();
-                return (height());
-            }
+            clear();
+            return (height());
         }
     }
 
@@ -376,7 +390,7 @@ class message_window
 
 public:
     message_window()
-        : next_line(0), input_line(0), prompt(P_NONE)
+        : next_line(0), temp_line(0), input_line(0), prompt(P_NONE)
     {
         clear_lines(); // initialize this->lines
     }
@@ -385,6 +399,16 @@ public:
     {
         // XXX: broken (why?)
         lines.resize(height());
+    }
+
+    unsigned int out_width() const
+    {
+        return (width() - (use_first_col() ? 1 : 0));
+    }
+
+    unsigned int out_height() const
+    {
+        return (height() - (use_last_line() ? 0 : 1));
     }
 
     void clear_lines()
@@ -407,6 +431,7 @@ public:
     {
         // TODO: start at end (sometimes?)
         next_line = 0;
+        temp_line = 0;
     }
 
     void clear()
@@ -418,12 +443,14 @@ public:
 
     void scroll(int n)
     {
+        ASSERT(next_line >= n);
         int i;
         for (i = 0; i < height() - n; ++i)
             lines[i] = lines[i + n];
         for (; i < height(); ++i)
             lines[i].clear();
         next_line -= n;
+        temp_line -= n;
         input_line -= n;
     }
 
@@ -449,20 +476,33 @@ public:
         linebreak_string2(text, out_width());
         formatted_string::parse_string_to_multiple(text, newlines);
 
-        // Save starting line if this is temporary.
-        int old = next_line;
         for (size_t i = 0; i < newlines.size(); ++i)
         {
-            old -= make_space(1);
+            temp_line -= make_space(1);
             formatted_string line;
             if (use_first_col())
                 line.add_glyph(prefix_glyph(first_col));
             line += newlines[i];
             add_line(line);
         }
-        if (temporary)
-            next_line = std::max(old, 0);
+
+        if (!temporary)
+            reset_temp();
+
         show();
+    }
+
+    void roll_back()
+    {
+        temp_line = std::max(temp_line, 0);
+        for (int i = temp_line; i < next_line; ++i)
+            lines[i].clear();
+        next_line = temp_line;
+    }
+
+    void reset_temp()
+    {
+        temp_line = next_line;
     }
 
     void got_input()
@@ -510,7 +550,6 @@ public:
             cprintf("--more--");
             readkey_more(user);
         }
-        clear(); // this could depend on options
     }
 };
 
@@ -539,9 +578,10 @@ class message_store
     store_t msgs;
     message_item prev_msg;
     bool last_of_turn;
+    int temp; // number of temporary messages
 
 public:
-    message_store() : last_of_turn(false) {}
+    message_store() : last_of_turn(false), temp(0) {}
 
     void add(const message_item& msg)
     {
@@ -549,7 +589,7 @@ public:
             return;
         flush_prev();
         prev_msg = msg;
-        if (msg.channel == MSGCH_PROMPT)
+        if (msg.channel == MSGCH_PROMPT || _temporary)
             flush_prev();
     }
 
@@ -562,7 +602,22 @@ public:
     {
         prefix_type p = P_NONE;
         msgs.push_back(msg);
-        msgwin.add_item(msg.with_repeats(), p, false);
+        if (_temporary)
+            temp++;
+        else
+            reset_temp();
+        msgwin.add_item(msg.with_repeats(), p, _temporary);
+    }
+
+    void roll_back()
+    {
+        msgs.roll_back(temp);
+        temp = 0;
+    }
+
+    void reset_temp()
+    {
+        temp = 0;
     }
 
     void flush_prev()
@@ -780,6 +835,8 @@ msg_colour_type channel_to_colour(msg_channel_type channel, int param)
 static void do_message_print(msg_channel_type channel, int param,
                              const char *format, va_list argp)
 {
+    va_list ap;
+    va_copy(ap, argp);
     char buff[200];
     size_t len = vsnprintf( buff, sizeof( buff ), format, argp );
     if (len < sizeof( buff )) {
@@ -787,10 +844,11 @@ static void do_message_print(msg_channel_type channel, int param,
     }
     else {
         char *heapbuf = (char*)malloc( len + 1 );
-        vsnprintf( heapbuf, len + 1, format, argp );
+        vsnprintf( heapbuf, len + 1, format, ap );
         mpr( heapbuf, channel, param );
         free( heapbuf );
     }
+    va_end(ap);
 }
 
 void mprf(msg_channel_type channel, int param, const char *format, ...)
@@ -830,12 +888,24 @@ void dprf( const char *format, ... )
 
 static bool _updating_view = false;
 
-static bool check_more(std::string line, msg_channel_type channel)
+static bool check_more(const std::string& line, msg_channel_type channel)
 {
     for (unsigned i = 0; i < Options.force_more_message.size(); ++i)
         if (Options.force_more_message[i].is_filtered(channel, line))
             return true;
     return false;
+}
+
+static bool check_join(const std::string& line, msg_channel_type channel)
+{
+    switch (channel)
+    {
+    case MSGCH_EQUIPMENT:
+        return false;
+    default:
+        break;
+    }
+    return true;
 }
 
 static void debug_channel_arena(msg_channel_type channel)
@@ -865,9 +935,26 @@ static void debug_channel_arena(msg_channel_type channel)
     }
 }
 
+void msgwin_set_temporary(bool temp)
+{
+    flush_prev_message();
+    _temporary = temp;
+    if (!temp)
+    {
+        messages.reset_temp();
+        msgwin.reset_temp();
+    }
+}
+
+void msgwin_clear_temporary()
+{
+    messages.roll_back();
+    msgwin.roll_back();
+}
+
 static long _last_msg_turn = -1; // Turn of last message.
 
-void mpr(std::string text, msg_channel_type channel, int param)
+void mpr(std::string text, msg_channel_type channel, int param, bool nojoin)
 {
     if (_msg_dump_file != NULL)
         fprintf(_msg_dump_file, "%s\n", text.c_str());
@@ -902,9 +989,12 @@ void mpr(std::string text, msg_channel_type channel, int param)
     if (colour == MSGCOL_MUTED)
         return;
 
+    bool domore = check_more(text, channel);
+    bool join = !domore && !nojoin && check_join(text, channel);
+
     std::string col = colour_to_str(colour_msg(colour));
     text = "<" + col + ">" + text + "</" + col + ">"; // XXX
-    message_item msg = message_item(text, channel, param);
+    message_item msg = message_item(text, channel, param, join);
     messages.add(msg);
     _last_msg_turn = msg.turn;
 
@@ -914,30 +1004,33 @@ void mpr(std::string text, msg_channel_type channel, int param)
     if (channel == MSGCH_PROMPT || channel == MSGCH_ERROR)
         set_more_autoclear(false);
 
-    if (check_more(msg.pure_text(), channel))
+    if (domore)
         more(true);
 }
 
 static std::string show_prompt(std::string prompt)
 {
-    flush_prev_message();
+    mpr(prompt, MSGCH_PROMPT);
+
+    // FIXME: duplicating mpr code.
     msg_colour_type colour = prepare_message(prompt, MSGCH_PROMPT, 0);
     std::string col = colour_to_str(colour_msg(colour));
     std::string text = "<" + col + ">" + prompt + "</" + col + ">"; // XXX
-    msgwin.add_item(text, P_NONE, true);
-    msgwin.show();
     return text;
 }
 
 static std::string _prompt;
 void msgwin_prompt(std::string prompt)
 {
+    msgwin_set_temporary(true);
     _prompt = show_prompt(prompt);
 }
 
 void msgwin_reply(std::string reply)
 {
-    messages.add(message_item(_prompt + reply, MSGCH_PROMPT, 0));
+    msgwin_clear_temporary();
+    msgwin_set_temporary(false);
+    mpr(_prompt + "<lightgrey>" + reply + "</lightgrey>", MSGCH_PROMPT);
     msgwin.got_input();
 }
 
@@ -965,6 +1058,16 @@ void msgwin_new_cmd()
     flush_prev_message();
     bool new_turn = (you.num_turns > _last_msg_turn);
     msgwin.new_cmdturn(new_turn);
+}
+
+static unsigned int msgwin_line_length()
+{
+    return msgwin.out_width();
+}
+
+unsigned int msgwin_lines()
+{
+    return msgwin.out_height();
 }
 
 // mpr() an arbitrarily long list of strings without truncation or risk
@@ -1157,38 +1260,25 @@ static bool _pre_more()
 
 #ifdef DEBUG_DIAGNOSTICS
     if (you.running)
-    {
-        mesclr();
         return true;
-    }
 #endif
 
     if (crawl_state.arena)
     {
         delay(Options.arena_delay);
-        mesclr();
         return true;
     }
 
     if (crawl_state.is_replaying_keys())
-    {
-        mesclr();
         return true;
-    }
 
 #ifdef WIZARD
     if(luaterp_running())
-    {
-        mesclr();
         return true;
-    }
 #endif
 
     if (!crawl_state.show_more_prompt || suppress_messages)
-    {
-        mesclr();
         return true;
-    }
 
     return false;
 }
@@ -1197,6 +1287,7 @@ void more(bool user_forced)
 {
     flush_prev_message();
     msgwin.more(false, user_forced);
+    mesclr();
 }
 
 static bool is_channel_dumpworthy(msg_channel_type channel)

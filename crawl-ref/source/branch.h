@@ -27,6 +27,10 @@ struct Branch
 {
     branch_type id;
     branch_type parent_branch;
+
+    int mindepth;               // min/max possible depth for this branch
+    int maxdepth;
+
     int depth;
     int startdepth;             // which level of the parent branch,
                                 // 1 for first level

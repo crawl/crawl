@@ -2302,7 +2302,7 @@ bool mons_should_fire(struct bolt &beam)
     if (_beneficial_beam_flavour(beam.flavour))
         return (_mons_should_fire_beneficial(beam));
 
-    // Friendly monsters shouldn't be targetting you: this will happen
+    // Friendly monsters shouldn't be targeting you: this will happen
     // often because the default behaviour for charmed monsters is to
     // have you as a target.  While foe_ratio will handle this, we
     // don't want a situation where a friendly dragon breathes through
@@ -3049,6 +3049,13 @@ bool mons_can_pass(const monsters *mon, dungeon_feature_type grid)
                                                : mon->type;
 
     return (mons_class_can_pass(montype, grid));
+}
+
+void mons_remove_from_grid(const monsters *mon)
+{
+    const coord_def pos = mon->pos();
+    if (map_bounds(pos) && mgrd(pos) == mon->mindex())
+        mgrd(pos) = NON_MONSTER;
 }
 
 mon_inv_type equip_slot_to_mslot(equipment_type eq)

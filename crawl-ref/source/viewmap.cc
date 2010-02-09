@@ -435,7 +435,9 @@ static bool _comp_glyphs(const glyph& g1, const glyph& g2)
     return (g1.ch < g2.ch || g1.ch == g2.ch && g1.col < g2.col);
 }
 
+#ifndef USE_TILE
 static glyph _get_feat_glyph(const coord_def& gc);
+#endif
 
 class feature_list
 {
@@ -1195,7 +1197,7 @@ static bool _travel_colour_override(const coord_def& p)
                                       obj.feat == DNGN_SHALLOW_WATER));
 }
 
-
+#ifndef USE_TILE
 // Get glyph for feature list; here because it's so similar
 // to get_map_col.
 static glyph _get_feat_glyph(const coord_def& gc)
@@ -1217,6 +1219,7 @@ static glyph _get_feat_glyph(const coord_def& gc)
     g.col = real_colour(col);
     return g;
 }
+#endif
 
 unsigned get_map_col(const coord_def& p, bool travel)
 {

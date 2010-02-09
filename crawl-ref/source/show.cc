@@ -117,6 +117,18 @@ static bool _show_bloodcovered(const coord_def& where)
     return (!is_critical_feature(feat) && !feat_is_trap(feat));
 }
 
+static bool _show_mold(const coord_def & where)
+{
+    if (!is_moldy(where))
+        return (false);
+
+    dungeon_feature_type feat = env.grid(where);
+
+    // Altars, stairs (of any kind) and traps should not be coloured red.
+    return (!is_critical_feature(feat) && !feat_is_trap(feat));
+
+}
+
 static unsigned short _tree_colour(const coord_def& where)
 {
     uint32_t h = where.x;
@@ -163,8 +175,8 @@ static unsigned short _feat_colour(const coord_def &where,
     }
     else if (_show_bloodcovered(where))
         colour = RED;
-    else if (env.grid_colours(where))
-        colour = env.grid_colours(where);
+    else if (_show_mold(where))
+        colour = you.mold_colour;
     else
     {
         colour = fdef.colour;

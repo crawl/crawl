@@ -1231,7 +1231,7 @@ int get_next_fire_item(int current, int direction)
     return fire_order[0];
 }
 
-class fire_target_behaviour : public targetting_behaviour
+class fire_target_behaviour : public targeting_behaviour
 {
 public:
     fire_target_behaviour()
@@ -1243,7 +1243,7 @@ public:
         set_prompt();
     }
 
-    // targetting_behaviour API
+    // targeting_behaviour API
     virtual command_type get_command(int key = -1);
     virtual bool should_redraw() const { return need_redraw; }
     virtual void clear_redraw()        { need_redraw = false; }
@@ -1371,7 +1371,7 @@ void fire_target_behaviour::pick_fire_item_from_inventory()
 
 void fire_target_behaviour::display_help()
 {
-    show_targetting_help();
+    show_targeting_help();
     redraw_screen();
     need_redraw = true;
     set_prompt();
@@ -1391,7 +1391,7 @@ command_type fire_target_behaviour::get_command(int key)
     case CMD_TARGET_CANCEL: chosen_ammo = false; break;
     }
 
-    return targetting_behaviour::get_command(key);
+    return targeting_behaviour::get_command(key);
 }
 
 static bool _fire_choose_item_and_target(int& slot, dist& target,
@@ -3254,6 +3254,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     {
         did_god_conduct(DID_NECROMANCY, 2,
                         bow_brand == SPWPN_REAPING || ammo_brand_known);
+        did_god_conduct(DID_CORPSE_VIOLATION, 2,
+                        bow_brand == SPWPN_REAPING || ammo_brand_known);
     }
 
     if (ammo_brand == SPMSL_RAGE)
@@ -4331,7 +4333,7 @@ void zap_wand(int slot)
     dist zap_wand;
     int item_slot;
 
-    // Unless the character knows the type of the wand, the targetting
+    // Unless the character knows the type of the wand, the targeting
     // system will default to enemies. -- [ds]
     targ_mode_type targ_mode = TARG_HOSTILE;
 
@@ -4441,7 +4443,7 @@ void zap_wand(int slot)
     if (alreadyknown && zap_wand.target == you.pos())
     {
         if (wand.sub_type == WAND_TELEPORTATION
-            && scan_artefacts(ARTP_PREVENT_TELEPORTATION, false))
+            && item_blocks_teleport(false, false))
         {
             mpr("You cannot teleport right now.");
             return;
@@ -5896,17 +5898,18 @@ bool wearing_slot(int inv_slot)
     return (false);
 }
 
-bool item_blocks_teleport(bool permit_id)
+bool item_blocks_teleport(bool calc_unid, bool permit_id)
 {
-    return (scan_artefacts(ARTP_PREVENT_TELEPORTATION)
-            || stasis_blocks_effect(permit_id, NULL));
+    return (scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid)
+            || stasis_blocks_effect(calc_unid, permit_id, NULL));
 }
 
-bool stasis_blocks_effect(bool identify,
+bool stasis_blocks_effect(bool calc_unid,
+                          bool identify,
                           const char *msg, int noise,
                           const char *silenced_msg)
 {
-    if (wearing_amulet(AMU_STASIS))
+    if (wearing_amulet(AMU_STASIS, calc_unid))
     {
         item_def *amulet = you.slot_item(EQ_AMULET, false);
 

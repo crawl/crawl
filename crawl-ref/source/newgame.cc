@@ -4556,8 +4556,10 @@ bool _give_items_skills()
         case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_CENTAUR:
-        case SP_OGRE:
             you.inv[0].sub_type = WPN_HAND_AXE;
+            break;
+        case SP_OGRE:
+            you.inv[0].sub_type = WPN_CLUB;
             break;
         case SP_GHOUL:
         case SP_TROLL:
@@ -4577,8 +4579,11 @@ bool _give_items_skills()
                                2);
             break;
 
-        case SP_TROLL:
         case SP_OGRE:
+            // Give ogres a knife for butchering, as they now start with
+            // a club in stead of an axe.
+            _newgame_make_item(4, EQ_NONE, OBJ_WEAPONS, WPN_KNIFE);
+        case SP_TROLL:
             _newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 5,
                                1);
             _newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1,

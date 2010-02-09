@@ -2703,6 +2703,7 @@ bool go_berserk(bool intentional, bool potion)
         return (false);
 
     if (stasis_blocks_effect(true,
+                             true,
                              "%s thrums violently and saps your rage.",
                              3,
                              "%s vibrates violently and saps your rage."))

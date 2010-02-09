@@ -1,4 +1,4 @@
--- Counts monsters in a specify level, or level range.
+-- Counts monsters in a specified level or level range.
 local niters = 150
 local output_file = "monster-report.out"
 
@@ -8,6 +8,42 @@ local multiple_levels = false
 local start_level = nil
 local end_level = nil
 local ignore_uniques = true
+local group_uniques = false
+local sort_type = "XP"
+
+local function canonical_name(mons)
+  local shapeshifter = mons.shapeshifter
+  if shapeshifter then
+    return shapeshifter
+  end
+
+  local mimic = mons.mimic
+  if mimic then
+    return mimic
+  end
+
+  local dancing_weapon = mons.dancing_weapon
+  if dancing_weapon then
+    return dancing_weapon
+  end
+
+  local mname = mons.name
+
+  if string.find(mname, 'very ugly thing$') then
+    return "very ugly thing"
+  end
+
+  if string.find(mname, 'ugly thing$') then
+    return "ugly thing"
+  end
+
+  local _, _, hydra_suffix = string.find(mname, '.*-headed (.*)')
+  if hydra_suffix then
+    mname = hydra_suffix
+  end
+
+  return mname
+end
 
 local function count_monsters_at(place, set)
   debug.goto_place(place)
@@ -15,8 +51,12 @@ local function count_monsters_at(place, set)
 
   local monsters_here = set or {  }
   for mons in test.level_monster_iterator() do
-    if not ignore_uniques or not mons.unique then
-      local mname = mons.name
+    local unique = mons.unique
+    if not ignore_uniques or not unique then
+      local mname = canonical_name(mons)
+      if unique and group_uniques then
+        mname = "[UNIQUE]"
+      end
       if not excluded_things[mname] then
         local mstat = monsters_here[mname] or { count = 0, exp = 0 }
         mstat.count = mstat.count + 1
@@ -46,9 +86,14 @@ local function report_monster_counts_at(place, mcount_map)
 
   local monster_counts = util.pairs(mcount_map)
   table.sort(monster_counts, function (a, b)
-                               return a[2].etotal > b[2].etotal
-                             end)
-
+-- Further sort options can be added later if desired.  Default is XP, -sort_count sorts by count/percentage instead.
+    if sort_type == 'count' then
+        return a[2].total > b[2].total
+    else
+        return a[2].etotal > b[2].etotal
+    end
+  end)
+                         
   local total = 0
   for _, monster_pop in ipairs(monster_counts) do
     if monster_pop[1] ~= 'TOTAL' then
@@ -261,6 +306,12 @@ local function branch_resets()
     if arg == '-uniques' then
       ignore_uniques = false
     end
+    if arg == '-groupuniques' then
+      group_uniques = true
+    end
+    if arg == '-sort_count' then
+      sort_type = "count"
+    end
     local _, _, optiters = string.find(arg, "^-n=(%d+)")
     if optiters then
       niters = tonumber(optiters)
@@ -280,7 +331,7 @@ local function start_end_levels()
   if #args == 0 then
     script.usage([[
 Usage: place-population <start> [<end>]
-For instance: place-population Shoal:1 Shoal:5
+For instance: place-population Shoals:1 Shoals:5
               place-population Lair:3
 
 You may optionally force branches to have entrances at specific places
@@ -300,6 +351,12 @@ You can also disable the use of random maps during level generation with:
 
 Uniques are ignored by default; you can enable counts for uniques with:
                -uniques
+
+You can group all uniques together with
+               -groupuniques
+
+And you can set the number of iterations (default 150) with:
+               -n=[newnumber]
 ]])
   end
   return args[1], args[2] or args[1]

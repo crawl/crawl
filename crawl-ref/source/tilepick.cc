@@ -2576,11 +2576,55 @@ static int _tileidx_shop(coord_def where)
     }
 }
 
+int _grid_secret_door_tile(const coord_def &where)
+{
+    std::set<coord_def>           doors;
+    std::set<coord_def>::iterator it;
+
+    find_connected_range(where, DNGN_CLOSED_DOOR, DNGN_SECRET_DOOR,
+                         doors);
+
+    int tile = TILE_WALL_NORMAL;
+
+    int orth[][2] = { {0, 1}, {1, 0,}, {-1, 0}, {0, -1} };
+
+    for (it = doors.begin(); it != doors.end(); ++it)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            const int x = it->x + orth[i][0];
+            const int y = it->y + orth[i][1];
+
+            if (!in_bounds(x, y))
+                continue;
+
+            coord_def tc = coord_def(x, y);
+
+            int ttarg = env.tile_flv(tc).wall;
+
+            if (env.tile_flv(tc).feat != 0)
+                ttarg = env.tile_flv(tc).feat;
+
+            const dungeon_feature_type targ = grd[x][y];
+            if (!feat_is_wall(targ) || feat_is_closed_door(targ))
+                continue;
+
+            if (tile == TILE_WALL_NORMAL)
+                return (tile_dngn_basetile(ttarg));
+        }
+    }
+
+    return (TILE_WALL_NORMAL);
+}
+
 int tileidx_feature(dungeon_feature_type feat, int gx, int gy)
 {
     int override = env.tile_flv[gx][gy].feat;
     if (override && !feat_is_door(grd[gx][gy]) && feat != DNGN_FLOOR)
         return override;
+
+    if (feat_is_secret_door(grd[gx][gy]))
+        feat = DNGN_SECRET_DOOR;
 
     switch (feat)
     {
@@ -2595,10 +2639,16 @@ int tileidx_feature(dungeon_feature_type feat, int gx, int gy)
     case DNGN_SECRET_DOOR:
     case DNGN_DETECTED_SECRET_DOOR:
     {
-        const dungeon_feature_type appear
-                = grid_secret_door_appearance(coord_def(gx, gy));
-        ASSERT(!feat_is_secret_door(appear));
-        return tileidx_feature(appear, gx, gy);
+        int dtile = _grid_secret_door_tile(coord_def(gx, gy));
+        int count = tile_dngn_count(dtile);
+        int offset = env.tile_flv[gx][gy].special;
+        if (offset != 0 && offset < count)
+            offset = env.tile_flv[gx][gy].special;
+        else
+            offset = random2(count);
+
+        env.tile_flv[gx][gy].special = offset;
+        return dtile + offset;
     }
     case DNGN_CLEAR_ROCK_WALL:
     case DNGN_CLEAR_STONE_WALL:
@@ -3291,7 +3341,7 @@ int _get_door_offset (int base_tile, bool opened = false,
         break;
     default:
         // Passed a non-door tile base, pig out now.
-        ASSERT(false);
+        return 0;
     }
 
     // If we've reached this point, we're dealing with a gate.
@@ -3371,7 +3421,7 @@ static inline void _finalise_tile(unsigned int *tile,
         else
             (*tile) = orig + std::min((int)special_flv, 3);
     }
-    else if (orig < TILE_DNGN_MAX)
+    else if (orig < TILE_DNGN_MAX && !feat_is_secret_door(grd(gc)))
     {
         // Some tiles may change from turn to turn, but only if in view.
         if (orig >= TILE_DNGN_LAVA && orig < TILE_BLOOD && you.see_cell(gc))

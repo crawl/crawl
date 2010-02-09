@@ -74,7 +74,10 @@ bool cast_iood(actor *caster, int pow, bolt *beam)
 
     // Move away from the caster's square.
     iood_act(mon, true);
-    mon.lose_energy(EUT_MOVE);
+    // We need to take at least one full move (for the above), but let's
+    // randomize it and take more so players won't get guaranteed instant
+    // damage.
+    mon.lose_energy(EUT_MOVE, 2, random2(3)+2);
     return (true);
 }
 
@@ -130,6 +133,7 @@ bool _iood_hit(monsters &mon, const coord_def &pos, bool big_boom = false)
     const int pow = mon.props["iood_pow"].get_short();
     beam.damage = dice_def(8, stepdown_value(pow, 30, 30, 200, -1) / 4);
     beam.ex_size = 1;
+    beam.loudness = 7;
 
     monster_die(&mon, KILL_DISMISSED, NON_MONSTER);
 

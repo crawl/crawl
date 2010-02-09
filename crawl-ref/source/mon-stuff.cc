@@ -1035,7 +1035,7 @@ static bool _spore_goes_pop(monsters *monster, killer_type killer,
     // FIXME: show_more == mons_near(monster)
     beam.explode();
 
-    activate_ballistomycetes(monster, beam.target);
+    activate_ballistomycetes(monster, beam.target, YOU_KILL(beam.killer()));
     // Monster died in explosion, so don't re-attach it to the grid.
     return (true);
 }
@@ -2145,7 +2145,7 @@ int monster_die(monsters *monster, killer_type killer,
     }
 
     if(monster->type == MONS_BALLISTOMYCETE)
-        activate_ballistomycetes(monster, monster->pos());
+        activate_ballistomycetes(monster, monster->pos(), YOU_KILL(killer));
 
     if (!wizard && !submerged)
         _monster_die_cloud(monster, !mons_reset, silent, summoned);
@@ -2188,6 +2188,7 @@ int monster_die(monsters *monster, killer_type killer,
         curr_PlaceInfo.assert_validity();
     }
 
+    mons_remove_from_grid(monster);
     _fire_monster_death_event(monster, killer, killer_index, false);
 
     if (crawl_state.arena)
@@ -2932,6 +2933,15 @@ void mons_get_damage_level(const monsters* monster, std::string& desc,
     desc += _wounded_damaged(monster->type) ? "damaged" : "wounded";
 }
 
+std::string get_wounds_description_sentence(const monsters *monster)
+{
+    const std::string wounds = get_wounds_description(monster);
+    if (wounds.empty())
+        return "";
+    else
+        return monster->pronoun(PRONOUN_CAP) + " is " + wounds + ".";
+}
+
 std::string get_wounds_description(const monsters *monster)
 {
     if (!monster->alive() || monster->hit_points == monster->max_hit_points)
@@ -2943,10 +2953,6 @@ std::string get_wounds_description(const monsters *monster)
     std::string desc;
     mon_dam_level_type dam_level;
     mons_get_damage_level(monster, desc, dam_level);
-
-    desc.insert(0, " is ");
-    desc += ".";
-
     return desc;
 }
 
@@ -3026,10 +3032,17 @@ void make_mons_leave_level(monsters *mon)
 // If it exists, such a path may be missed; on the other hand, it
 // is not guaranteed that p2 is visible from p1 according to LOS rules.
 // Not symmetric.
+// FIXME: This is used for monster movement. It should instead be
+//        something like exists_ray(p1, p2, opacity_monmove(mons)),
+//        where opacity_monmove() is fixed to include opacity_no_trans.
 bool can_go_straight(const coord_def& p1, const coord_def& p2,
                      dungeon_feature_type allowed)
 {
     if (distance(p1, p2) > get_los_radius_sq())
+        return (false);
+
+    // XXX: Hack to improve results for now. See FIXME above.
+    if (!exists_ray(p1, p2, opc_no_trans))
         return (false);
 
     dungeon_feature_type max_disallowed = DNGN_MAXOPAQUE;

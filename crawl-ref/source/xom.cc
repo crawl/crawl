@@ -474,7 +474,7 @@ static bool _teleportation_check(const spell_type spell = SPELL_TELEPORT_SELF)
     {
     case SPELL_BLINK:
     case SPELL_TELEPORT_SELF:
-        return (!item_blocks_teleport(false));
+        return (!item_blocks_teleport(false, false));
     default:
         return (true);
     }
@@ -1421,9 +1421,11 @@ static int _xom_polymorph_nearby_monster(bool helpful, bool debug = false)
 {
     if (there_are_monsters_nearby(false, false))
     {
-        monsters *mon = choose_random_nearby_monster(0,
-                                                     _choose_mutatable_monster);
-        if (mon)
+        monsters *mon =
+            choose_random_nearby_monster(0, _choose_mutatable_monster);
+        // [ds] Be less eager to polymorph plants, since there are now
+        // locations with lots of plants (Lair and Shoals).
+        if (mon && (!mons_is_plant(mon) || one_chance_in(6)))
         {
             if (debug)
                 return (helpful ? XOM_GOOD_POLYMORPH : XOM_BAD_POLYMORPH);
@@ -4129,7 +4131,7 @@ static int _death_is_worth_saving(const kill_method_type killed_by,
 
     // Don't protect the player from these.
     case KILLED_BY_SELF_AIMED:
-    case KILLED_BY_TARGETTING:
+    case KILLED_BY_TARGETING:
         return (false);
 
     // Only if not caused by equipment.

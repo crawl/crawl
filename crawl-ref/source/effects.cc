@@ -1283,8 +1283,8 @@ static bool _try_give_plain_armour(item_def &arm)
 
             // Two-handed weapons and ranged weapons conflict with shields.
             if (weapon
-                && (hands_reqd(*weapon, you.body_size()) == HANDS_TWO)
-                    || is_range_weapon(*weapon))
+                && (hands_reqd(*weapon, you.body_size()) == HANDS_TWO
+                    || is_range_weapon(*weapon)))
             {
                 continue;
             }
@@ -4100,6 +4100,10 @@ static void _catchup_monster_moves(monsters *mon, int turns)
     {
         return;
     }
+
+    // Don't shift giant spores since that would disrupt their trail.
+    if (mon->type == MONS_GIANT_SPORE)
+        return;
 
     // Let sleeping monsters lie.
     if (mon->asleep() || mon->paralysed())

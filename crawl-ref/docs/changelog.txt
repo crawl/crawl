@@ -24,6 +24,7 @@ Gods
 * New god: Cheibriados, god of slowness.
 * Ecumenical Temple may randomly contain 3 to 14 altars.
 * Dungeon gods not included in Ecumenical Temple get guaranteed altar on D:2-9.
+* Zin protects the player against disease, rotting and miasma.
 * Vehumet reduces mana cost and increases ranges of destructional spells.
 * Kikubaaqudgha gives torment resistance, hands out corpses and the Pain brand.
 * Xom is nicer about banishment and hostile monsters for low-xp followers.

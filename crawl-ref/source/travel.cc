@@ -4124,3 +4124,32 @@ bool explore_discoveries::prompt_stop() const
             || marker_stop
             || prompt_stop_explore(es_flags));
 }
+
+void do_interlevel_travel()
+{
+    if (Tutorial.tut_travel)
+        Tutorial.tut_travel = 0;
+
+    if (!can_travel_interlevel())
+    {
+        if (you.running.pos == you.pos())
+        {
+            mpr("You're already here.");
+            return;
+        }
+        else if (!you.running.pos.x || !you.running.pos.y)
+        {
+            mpr("Sorry, you can't auto-travel out of here.");
+            return;
+        }
+
+        // Don't ask for a destination if you can only travel
+        // within level anyway.
+        start_travel(you.running.pos);
+    }
+    else
+        start_translevel_travel_prompt();
+
+    if (you.running)
+        mesclr();
+}

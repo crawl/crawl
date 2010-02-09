@@ -1793,6 +1793,8 @@ void bolt::digging_wall_effect()
         // Blood does not transfer onto floor.
         if (is_bloodcovered(pos()))
             env.pgrid(pos()) &= ~(FPROP_BLOODY);
+        if (is_moldy(pos()))
+            env.pgrid(pos()) &= ~(FPROP_MOLD);
 
         if (!msg_generated)
         {
@@ -1901,6 +1903,8 @@ void bolt::nuke_wall_effect()
         // Blood does not transfer onto floor.
         if (is_bloodcovered(pos()))
             env.pgrid(pos()) &= ~(FPROP_BLOODY);
+        if (is_moldy(pos()))
+            env.pgrid(pos()) &= ~(FPROP_MOLD);
 
         grd(pos()) = DNGN_FLOOR;
         if (player_can_hear(pos()))
@@ -1916,6 +1920,8 @@ void bolt::nuke_wall_effect()
         // Blood does not transfer onto floor.
         if (is_bloodcovered(pos()))
             env.pgrid(pos()) &= ~(FPROP_BLOODY);
+        if (is_moldy(pos()))
+            env.pgrid(pos()) &= ~(FPROP_MOLD);
 
         if (player_can_hear(pos()))
         {
@@ -1942,6 +1948,7 @@ void bolt::nuke_wall_effect()
         // Blood does not transfer onto floor.
         if (is_bloodcovered(pos()))
             env.pgrid(pos()) &= ~(FPROP_BLOODY);
+        env.pgrid(pos()) &= ~(FPROP_BLOODY);
 
         if (you.see_cell(pos()))
             mpr("The tree breaks and falls down!");
@@ -2004,7 +2011,7 @@ bool bolt::hit_wall()
         && !feat_is_solid(grd(target)))
     {
         // Okay, with all those tests passed, this is probably an instance
-        // of the player manually targetting something whose line of fire
+        // of the player manually targeting something whose line of fire
         // is blocked, even though its line of sight isn't blocked.  Give
         // a warning about this fact.
         std::string prompt = "Your line of fire to ";
@@ -3264,47 +3271,63 @@ void bolt::affect_ground()
     // Spore explosions might spawn a fungus.  The spore explosion
     // covers 21 tiles in open space, so the expected number of spores
     // produced is the x in x_chance_in_y() in the conditional below.
-    if (is_explosion && flavour == BEAM_SPORE
-        && x_chance_in_y(2, 21)
-        && mons_class_can_pass(MONS_BALLISTOMYCETE, env.grid(pos()))
-        && !actor_at(pos()))
+    if (is_explosion && flavour == BEAM_SPORE)
     {
-        beh_type beh;
-        // Half the fungi in arena mode are friendly.
-        if (crawl_state.arena)
+        if (env.grid(pos()) >= DNGN_FLOOR_MIN
+            && env.grid(pos())<= DNGN_FLOOR_MAX)
         {
-            beh = coinflip() ? BEH_FRIENDLY : BEH_HOSTILE;
+            env.pgrid(pos()) |= FPROP_MOLD;
         }
-        else
+
+        if(x_chance_in_y(2, 21)
+           && mons_class_can_pass(MONS_BALLISTOMYCETE, env.grid(pos()))
+           && !actor_at(pos()))
         {
-            switch (this->attitude)
+            beh_type beh;
+            // Half the fungi in arena mode are friendly.
+            if (crawl_state.arena)
             {
-            case ATT_NEUTRAL:
-                beh = BEH_NEUTRAL;
-                break;
+                beh = coinflip() ? BEH_FRIENDLY : BEH_HOSTILE;
+            }
+            else
+            {
+                switch (this->attitude)
+                {
+                case ATT_NEUTRAL:
+                    beh = BEH_NEUTRAL;
+                    break;
 
-            case ATT_FRIENDLY:
-            case ATT_GOOD_NEUTRAL:
-                beh = BEH_GOOD_NEUTRAL;
-                break;
+                case ATT_FRIENDLY:
+                    beh = BEH_FRIENDLY;
+                    break;
 
-            default:
-                beh = BEH_HOSTILE;
-                break;
+                case ATT_GOOD_NEUTRAL:
+                    beh = BEH_GOOD_NEUTRAL;
+                    break;
+
+                default:
+                    beh = BEH_HOSTILE;
+                    break;
+                }
+            }
+
+            int rc = create_monster(mgen_data(MONS_BALLISTOMYCETE,
+                                              beh,
+                                              agent(),
+                                              0,
+                                              0,
+                                              pos(),
+                                              MHITNOT,
+                                              MG_FORCE_PLACE));
+
+            if (rc != -1)
+            {
+                env.pgrid(pos()) &= ~FPROP_MOLD;
+                if (you.see_cell(pos()))
+                    mpr("A fungus suddenly grows.");
+
             }
         }
-
-        int rc = create_monster(mgen_data(MONS_BALLISTOMYCETE,
-                                          beh,
-                                          agent(),
-                                          0,
-                                          0,
-                                          pos(),
-                                          MHITNOT,
-                                          MG_FORCE_PLACE));
-
-        if (rc != -1 && you.see_cell(pos()))
-            mpr("A fungus suddenly grows.");
     }
 
     if (affects_items)
@@ -3575,7 +3598,7 @@ void bolt::internal_ouch(int dam)
             if (aimed_at_feet && effect_known)
                 ouch(dam, NON_MONSTER, KILLED_BY_SELF_AIMED, name.c_str());
             else
-                ouch(dam, NON_MONSTER, KILLED_BY_TARGETTING);
+                ouch(dam, NON_MONSTER, KILLED_BY_TARGETING);
         }
     }
     else if (flavour == BEAM_DISINTEGRATION || flavour == BEAM_NUKE)

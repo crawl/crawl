@@ -611,11 +611,11 @@ void game_options::reset_options()
     view_max_width   = std::max(33, VIEW_MIN_WIDTH);
     view_max_height  = std::max(21, VIEW_MIN_HEIGHT);
     mlist_min_height = 4;
-    msg_min_height   = std::max(6, MSG_MIN_HEIGHT);
+    msg_min_height   = std::max(7, MSG_MIN_HEIGHT);
     msg_max_height   = std::max(10, MSG_MIN_HEIGHT);
     mlist_allow_alternate_layout = false;
     messages_at_top  = false;
-    mlist_targetting = false;
+    mlist_targeting = false;
     classic_hud = false;
     msg_condense_repeats = true;
     msg_condense_short = true;
@@ -893,6 +893,7 @@ void game_options::reset_options()
     tile_show_minihealthbar = true;
     tile_show_minimagicbar  = true;
     tile_show_demon_numbers = true;
+    tile_better_transparency = false;
 #endif
 
     // map each colour to itself as default
@@ -2433,7 +2434,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(mlist_allow_alternate_layout);
     else BOOL_OPTION(messages_at_top);
 #ifndef USE_TILE
-    else BOOL_OPTION(mlist_targetting);
+    else BOOL_OPTION(mlist_targeting);
 #endif
     else BOOL_OPTION(classic_hud);
     else BOOL_OPTION(msg_condense_repeats);
@@ -3227,6 +3228,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         tile_tag_pref = string2tag_pref(field.c_str());
     }
+    else BOOL_OPTION(tile_better_transparency);
 #endif // USE_TILE
 
     else if (key == "bindkey")

@@ -17,6 +17,7 @@ tile_page::~tile_page()
     m_tiles.clear();
     m_counts.clear();
     m_probs.clear();
+    m_base_tiles.clear();
 }
 
 bool tile_page::place_images()

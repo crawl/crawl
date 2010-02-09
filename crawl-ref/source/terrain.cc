@@ -720,7 +720,10 @@ static void _dgn_check_terrain_blood(const coord_def &pos,
         // Caller has already changed the grid, and old_feat is actually
         // the new feat.
         if (old_feat != DNGN_FLOOR && !feat_is_solid(old_feat))
+        {
             env.pgrid(pos) &= ~(FPROP_BLOODY);
+            env.pgrid(pos) &= ~(FPROP_MOLD);
+        }
     }
     else
     {
@@ -729,6 +732,7 @@ static void _dgn_check_terrain_blood(const coord_def &pos,
             || is_critical_feature(new_feat))
         {
             env.pgrid(pos) &= ~(FPROP_BLOODY);
+            env.pgrid(pos) &= ~(FPROP_MOLD);
         }
     }
 }
@@ -786,6 +790,11 @@ void dungeon_terrain_changed(const coord_def &pos,
         _dgn_check_terrain_player(pos);
 
     set_terrain_changed(pos);
+
+    // Deal with doors being created by changing features.
+#ifdef USE_TILE
+    tile_init_flavour(pos);
+#endif
 }
 
 static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)

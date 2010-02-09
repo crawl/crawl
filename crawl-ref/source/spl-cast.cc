@@ -578,6 +578,29 @@ void inspect_spells()
     list_spells(true, true);
 }
 
+void do_cast_spell_cmd(bool force)
+{
+    if (player_in_bat_form() || you.attribute[ATTR_TRANSFORMATION] == TRAN_PIG)
+    {
+        canned_msg(MSG_PRESENT_FORM);
+        return;
+    }
+
+    // Randart weapons.
+    if (scan_artefacts(ARTP_PREVENT_SPELLCASTING))
+    {
+        mpr("Something interferes with your magic!");
+        flush_input_buffer(FLUSH_ON_FAILURE);
+        return;
+    }
+
+    if (Tutorial.tutorial_left)
+        Tutorial.tut_spell_counter++;
+    if (!cast_a_spell(!force))
+        flush_input_buffer(FLUSH_ON_FAILURE);
+}
+
+
 static int _get_dist_to_nearest_monster()
 {
     int minRange = LOS_RADIUS + 1;
@@ -883,6 +906,9 @@ static void _spellcasting_side_effects(spell_type spell, bool idonly = false)
     if (is_chaotic_spell(spell) && !crawl_state.is_god_acting())
         did_god_conduct(DID_CHAOS, 10 + spell_difficulty(spell));
 
+    if (is_corpse_violating_spell(spell) && !crawl_state.is_god_acting())
+        did_god_conduct(DID_CORPSE_VIOLATION, 10 + spell_difficulty(spell));
+
     // Linley says: Condensation Shield needs some disadvantages to keep
     // it from being a no-brainer... this isn't much, but its a start. - bwr
     if (spell_typematch(spell, SPTYP_FIRE))
@@ -1095,10 +1121,10 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     int potion = -1;
 
     // XXX: This handles only some of the cases where spells need
-    // targetting.  There are others that do their own that will be
+    // targeting.  There are others that do their own that will be
     // missed by this (and thus will not properly ESC without cost
     // because of it).  Hopefully, those will eventually be fixed. - bwr
-    if ((flags & SPFLAG_TARGETTING_MASK) && spell != SPELL_PORTAL_PROJECTILE)
+    if ((flags & SPFLAG_TARGETING_MASK) && spell != SPELL_PORTAL_PROJECTILE)
     {
         targ_mode_type targ =
               (testbits(flags, SPFLAG_HELPFUL) ? TARG_FRIEND : TARG_HOSTILE);
@@ -1106,7 +1132,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         if (testbits(flags, SPFLAG_NEUTRAL))
             targ = TARG_ANY;
 
-        targetting_type dir  =
+        targeting_type dir  =
             (testbits(flags, SPFLAG_TARG_OBJ) ? DIR_TARGET_OBJECT :
              testbits(flags, SPFLAG_TARGET)   ? DIR_TARGET        :
              testbits(flags, SPFLAG_GRID)     ? DIR_TARGET        :
@@ -1184,7 +1210,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
                           && god == GOD_NO_GOD;
 
     const int  loudness        = spell_noise(spell);
-    const bool sound_at_caster = !(flags & SPFLAG_TARGETTING_MASK);
+    const bool sound_at_caster = !(flags & SPFLAG_TARGETING_MASK);
 
     // Make some noise if it's actually the player casting.
     // NOTE: zappy() sets up noise for beams.
@@ -2117,7 +2143,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_FULSOME_DISTILLATION:
-        cast_fulsome_distillation(powc);
+        if (!cast_fulsome_distillation(powc))
+            return (SPRET_ABORT);
         break;
 
     case SPELL_DEBUGGING_RAY:
@@ -2310,6 +2337,7 @@ int spell_power_bars( spell_type spell )
 
 std::string spell_power_string(spell_type spell)
 {
+#ifndef WIZARD
     const int numbars = spell_power_bars(spell);
     const int capbars = _power_to_barcount(spell_power_cap(spell));
     ASSERT(numbars <= capbars);
@@ -2317,6 +2345,13 @@ std::string spell_power_string(spell_type spell)
         return "N/A";
     else
         return std::string(numbars, '#') + std::string(capbars - numbars, '.');
+#else
+    const int cap = spell_power_cap(spell);
+    if (cap == 0)
+        return "N/A";
+    const int power = std::min(calc_spell_power(spell, true), cap);
+    return make_stringf("%d (%d)", power, cap);
+#endif
 }
 
 int calc_spell_range(spell_type spell, int power, bool real_cast)

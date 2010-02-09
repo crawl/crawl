@@ -45,8 +45,17 @@ void mpr_comma_separated_list(const std::string prefix,
 
 class input_history;
 
+// Sets whether messages that are printed through mpr are
+// considered temporary.
+void msgwin_set_temporary(bool temp);
+// Clear the last set of temporary messages from both
+// message window and history.
+void msgwin_clear_temporary();
+
 void msgwin_prompt(std::string prompt);
 void msgwin_reply(std::string reply);
+
+unsigned int msgwin_lines();
 
 // Tell the message window that previous messages may be considered
 // read, e.g. after reading input from the player.

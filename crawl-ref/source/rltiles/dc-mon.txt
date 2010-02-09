@@ -560,7 +560,9 @@ spectral_warrior MONS_SPECTRAL_WARRIOR
 spectral_thing MONS_SPECTRAL_THING
 
 %sdir dc-mon
+%rim 0
 orb_guardian MONS_ORB_GUARDIAN /*'X'*/
+%rim 1
 
 ## Large zombified monsters ('Z')
 %sdir dc-mon/undead
