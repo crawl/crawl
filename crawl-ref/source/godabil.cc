@@ -1416,14 +1416,19 @@ bool is_ponderousifiable(const item_def& item)
 
 bool ponderousify_armour()
 {
-    int item_slot = prompt_invent_item("Make which item ponderous?",
-                        MT_INVLIST, OSEL_PONDER_ARM, true, true, false);
+    const int item_slot = prompt_invent_item("Make which item ponderous?",
+                                             MT_INVLIST, OSEL_PONDER_ARM,
+                                             true, true, false);
 
     if (prompt_failed(item_slot))
         return (false);
 
     item_def& arm(you.inv[item_slot]);
-    ASSERT(is_ponderousifiable(arm));
+    if (!is_ponderousifiable(arm)) // player pressed '*' and made a bad choice
+    {
+        mpr("That item can't be made ponderous.");
+        return false;
+    }
 
     //make item desc runed if desc was vanilla?
     set_item_ego_type(arm, OBJ_ARMOUR, SPARM_PONDEROUSNESS);
