@@ -24,6 +24,7 @@ public:
     std::vector<int> m_texcoords;
     std::vector<int> m_offsets;
     std::vector<unsigned int> m_probs;
+    std::vector<unsigned int> m_base_tiles;
 
 protected:
     int m_width;
