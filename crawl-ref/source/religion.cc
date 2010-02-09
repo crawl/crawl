@@ -3524,7 +3524,8 @@ bool god_hates_spell(god_type god, spell_type spell)
         return (true);
     }
 
-    if (is_good_god(you.religion) && spell == SPELL_NECROMUTATION) // probably redundant with the necro check
+    // this is probably redundant with the necromancy check (above)
+    if (is_good_god(you.religion) && spell == SPELL_NECROMUTATION)
         return (true);
 
     switch(god)
