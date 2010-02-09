@@ -345,7 +345,7 @@ static bool _prepare_butchery(bool can_butcher, bool removed_gloves,
 }
 
 static bool _butcher_corpse(int corpse_id, bool first_corpse = true,
-                            bool force_butcher = false)
+                            bool bottle_blood = false)
 {
     ASSERT(corpse_id != -1);
 
@@ -358,7 +358,8 @@ static bool _butcher_corpse(int corpse_id, bool first_corpse = true,
     int work_req = std::max(0, 4 - mitm[corpse_id].plus2);
 
     delay_type dtype = DELAY_BUTCHER;
-    if (!force_butcher && !rotten
+    // Sanity checks.
+    if (bottle_blood && !rotten
         && can_bottle_blood_from_corpse(mitm[corpse_id].plus))
     {
         dtype = DELAY_BOTTLE_BLOOD;
@@ -385,14 +386,9 @@ static void _terminate_butchery(bool wpn_switch, bool removed_gloves,
         start_delay(DELAY_ARMOUR_ON, 1, old_gloves, 1);
 }
 
-static bool _have_corpses_in_pack(bool remind)
+int count_corpses_in_pack(bool blood_only)
 {
-    const bool can_bottle = (you.species == SP_VAMPIRE
-                             && you.experience_level > 5);
-
-    int num        = 0;
-    int num_bottle = 0;
-
+    int num = 0;
     for (int i = 0; i < ENDOFPACK; ++i)
     {
         item_def &obj(you.inv[i]);
@@ -405,22 +401,27 @@ static bool _have_corpses_in_pack(bool remind)
             continue;
 
         // Only saprovorous characters care about rotten food.
-        if (food_is_rotten(obj) && (!player_mutation_level(MUT_SAPROVOROUS)))
+        if (food_is_rotten(obj) && (blood_only
+                                    || !player_mutation_level(MUT_SAPROVOROUS)))
         {
             continue;
         }
 
-        num++;
-        if (can_bottle && mons_has_blood(obj.plus))
-            num_bottle++;
+        if (!blood_only || mons_has_blood(obj.plus))
+            num++;
     }
+
+    return num;
+}
+
+static bool _have_corpses_in_pack(bool remind, bool bottle_blood = false)
+{
+    const int num = count_corpses_in_pack(bottle_blood);
 
     if (num == 0)
         return (false);
 
-    std::string verb = (num_bottle ? (num == num_bottle ? "bottle"
-                                                        : "bottle or butcher")
-                                   : "butcher");
+    std::string verb = (bottle_blood ? "bottle" : "butcher");
 
     std::string noun, pronoun;
     if (num == 1)
@@ -448,7 +449,7 @@ static bool _have_corpses_in_pack(bool remind)
     return (true);
 }
 
-bool butchery(int which_corpse)
+bool butchery(int which_corpse, bool bottle_blood)
 {
     if (you.visible_igrd(you.pos()) == NON_ITEM)
     {
@@ -516,11 +517,10 @@ bool butchery(int which_corpse)
 
     if (num_corpses == 0)
     {
-        if (!_have_corpses_in_pack(false))
+        if (!_have_corpses_in_pack(false, bottle_blood))
         {
-            mprf("There isn't anything to %sbutcher here.",
-                 (you.species == SP_VAMPIRE
-                     && you.experience_level > 5) ? "bottle or " : "");
+            mprf("There isn't anything to %s here.",
+                 bottle_blood ? "bottle" : "butcher");
         }
         return (false);
     }
@@ -554,20 +554,18 @@ bool butchery(int which_corpse)
         {
             return (false);
         }
-        success = _butcher_corpse(corpse_id, true);
+        success = _butcher_corpse(corpse_id, true, bottle_blood);
         _terminate_butchery(wpn_switch, removed_gloves, old_weapon, old_gloves);
 
         // Remind player of corpses in pack that could be butchered or
         // bottled.
-        _have_corpses_in_pack(true);
+        _have_corpses_in_pack(true, bottle_blood);
         return (success);
     }
 
     // Now pick what you want to butcher. This is only a problem
     // if there are several corpses on the square.
     bool butcher_all   = false;
-    bool bottle_all    = false; // for Vampires
-    bool force_butcher = false;
     bool repeat_prompt = false;
     bool did_weap_swap = false;
     bool first_corpse  = true;
@@ -577,10 +575,10 @@ bool butchery(int which_corpse)
         if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
             continue;
 
-        if (bottle_all && !can_bottle_blood_from_corpse(si->plus))
+        if (bottle_blood && !can_bottle_blood_from_corpse(si->plus))
             continue;
 
-        if (butcher_all || bottle_all)
+        if (butcher_all)
             corpse_id = si->index();
         else
         {
@@ -602,17 +600,13 @@ bool butchery(int which_corpse)
             do
             {
                 mprf(MSGCH_PROMPT, "%s %s? (yc/n/a/q/?)",
-                     (!can_bottle_blood_from_corpse(si->plus)) ?
-                         "Butcher" : "Bottle",
+                     bottle_blood ? "Bottle" : "Butcher",
                      corpse_name.c_str());
                 repeat_prompt = false;
 
                 keyin = tolower(getchm(KMC_CONFIRM));
                 switch (keyin)
                 {
-                case 'b':
-                    force_butcher = true;
-                    // intentional fall-through
                 case 'y':
                 case 'c':
                 case 'd':
@@ -630,15 +624,7 @@ bool butchery(int which_corpse)
                     corpse_id = si->index();
 
                     if (keyin == 'a')
-                    {
-                        if (!force_butcher
-                            && can_bottle_blood_from_corpse(si->plus))
-                        {
-                            bottle_all = true;
-                        }
-                        else
-                            butcher_all = true;
-                    }
+                        butcher_all = true;
                     break;
 
                 case ESCAPE:
@@ -664,8 +650,7 @@ bool butchery(int which_corpse)
 
         if (corpse_id != -1)
         {
-            if (_butcher_corpse(corpse_id, first_corpse,
-                force_butcher || butcher_all))
+            if (_butcher_corpse(corpse_id, first_corpse, bottle_blood))
             {
                 success = true;
                 first_corpse = false;
@@ -673,11 +658,10 @@ bool butchery(int which_corpse)
         }
     }
 
-    if (!butcher_all && !bottle_all && corpse_id == -1)
+    if (!butcher_all && corpse_id == -1)
     {
         mprf("There isn't anything else to %s here.",
-             you.species == SP_VAMPIRE && you.experience_level >= 6 ?
-             "bottle" : "butcher");
+             bottle_blood ? "bottle" : "butcher");
     }
     _terminate_butchery(wpn_switch, removed_gloves, old_weapon, old_gloves);
 
@@ -685,7 +669,7 @@ bool butchery(int which_corpse)
     {
         // Remind player of corpses in pack that could be butchered or
         // bottled.
-        _have_corpses_in_pack(true);
+        _have_corpses_in_pack(true, bottle_blood);
     }
 
     return (success);

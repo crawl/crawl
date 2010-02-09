@@ -2797,8 +2797,8 @@ void level_change(bool skip_attribute_increase)
                 }
                 else if (you.experience_level == 6)
                 {
-                    mpr("You can now bottle potions of blood from chopped up "
-                        "corpses.", MSGCH_INTRINSIC_GAIN);
+                    mpr("You can now bottle potions of blood from corpses.",
+                        MSGCH_INTRINSIC_GAIN);
                 }
                 else if (you.experience_level == 10)
                 {
