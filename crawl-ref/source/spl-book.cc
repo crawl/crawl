@@ -784,21 +784,18 @@ int spellbook_contents( item_def &book, read_book_action_type action,
                     && you.magic_points >= level_diff
                 : book.plus >= level_diff * ROD_CHARGE_MULT)
             {
-                colour = LIGHTGREY;
+                colour = spell_highlight_by_utility(stype, COL_KNOWN);
             }
         }
         else
         {
-            if (you_cannot_memorise(stype))
-                colour = LIGHTRED;
-            else if (knows_spell)
-                colour = LIGHTGREY;
-            else if (you.experience_level >= level_diff
-                     && spell_levels >= levels_req
-                     && spell_skills)
-            {
-                colour = spell_highlight_by_utility(stype, colour);
-            }
+            if (you_cannot_memorise(stype)
+                || (you.experience_level < level_diff
+                     && spell_levels < levels_req
+                     && !spell_skills))
+                colour = COL_USELESS;
+            else
+                colour = spell_highlight_by_utility(stype);
         }
 
         out.textcolor( colour );
@@ -1580,12 +1577,12 @@ static spell_type _choose_mem_spell(spell_list &spells,
         int colour = LIGHTGRAY;
         if (grey)
             colour = DARKGRAY;
-            
+
         colour = spell_highlight_by_utility(spell);
-        
+
         if (red)
             colour = LIGHTRED;
-            
+
         desc << "<" << colour_to_str(colour) << ">";
 
         desc << std::left;
