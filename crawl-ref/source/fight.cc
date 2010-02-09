@@ -5690,6 +5690,13 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
 
     monsters *defender = &menv[monster_attacked];
 
+    // Can't damage orbs or boulders this way.
+    if (mons_is_projectile(defender->type) && !you.confused())
+    {
+        you.turn_is_over = false;
+        return (false);
+    }
+
     melee_attack attk(&you, defender, unarmed_attacks);
 
     // We're trying to hit a monster, break out of travel/explore now.

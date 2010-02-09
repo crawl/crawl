@@ -2051,6 +2051,8 @@ bool mons_aligned(const actor *m1, const actor *m2)
     else
     {
         mon1 = static_cast<const monsters*>(m1);
+        if (mons_is_projectile(mon1->type))
+            return (true);
         fr1 = mons_attitude(mon1);
     }
 
@@ -2059,6 +2061,8 @@ bool mons_aligned(const actor *m1, const actor *m2)
     else
     {
         mon2 = static_cast<const monsters*>(m2);
+        if (mons_is_projectile(mon2->type))
+            return (true);
         fr2 = mons_attitude(mon2);
     }
 
