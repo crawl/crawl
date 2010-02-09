@@ -4900,6 +4900,15 @@ void bolt::affect_monster(monsters* mon)
         return;
     }
 
+    // All kinds of beams go past orbs of destruction.
+    // We don't check mons_is_projectile() since that probably won't be the
+    // case for rolling boulders.
+    if (mon->type == MONS_ORB_OF_DESTRUCTION)
+    {
+        apply_hit_funcs(mon, 0);
+        return;
+    }
+
     // Missiles go past bushes.
     if (mon->type == MONS_BUSH && !is_beam && !is_explosion
         && (flavour == BEAM_MISSILE || flavour == BEAM_MMISSILE))
