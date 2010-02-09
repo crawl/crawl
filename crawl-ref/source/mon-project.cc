@@ -240,7 +240,7 @@ reflected:
     }
 
     if (mon.props["iood_kc"].get_byte() == KC_YOU
-        && (you.pos() - pos).rdist() >= LOS_RADIUS)
+        && (you.pos() - pos).rdist() > LOS_RADIUS)
     { 	// not actual vision, because of the smoke trail
         _iood_dissipate(mon);
         return (true);
