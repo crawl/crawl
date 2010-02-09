@@ -29,6 +29,8 @@
 #include "terrain.h"
 #include "viewchar.h"
 
+static void _fuzz_direction(monsters &mon, int pow);
+
 bool cast_iood(actor *caster, int pow, bolt *beam)
 {
     int mtarg = mgrd(beam->target);
@@ -72,6 +74,8 @@ bool cast_iood(actor *caster, int pow, bolt *beam)
     mon.props["iood_pow"].get_short() = pow;
     mon.flags &= ~MF_JUST_SUMMONED;
 
+    _fuzz_direction(mon, pow);
+
     // Move away from the caster's square.
     iood_act(mon, true);
     // We need to take at least one full move (for the above), but let's
@@ -101,6 +105,17 @@ void _iood_dissipate(monsters &mon)
     simple_monster_message(&mon, " dissipates.");
     dprf("iood: dissipating");
     monster_die(&mon, KILL_DISMISSED, NON_MONSTER);
+}
+
+static void _fuzz_direction(monsters &mon, int pow)
+{
+    float vx = mon.props["iood_vx"];
+    float vy = mon.props["iood_vy"];
+
+    const float tan = (random2(31) - 15) * 0.019; // approx from degrees
+
+    mon.props["iood_vx"] = vx + vy*tan;
+    mon.props["iood_vy"] = vy - vx*tan;
 }
 
 // Alas, too much differs to reuse beam shield blocks :(
