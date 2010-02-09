@@ -176,6 +176,7 @@ static const ability_def Ability_List[] =
       0, 0, 125, 0, ABFLAG_BREATH },
     { ABIL_BREATHE_STEAM, "Breathe Steam", 0, 0, 75, 0, ABFLAG_BREATH },
     { ABIL_TRAN_BAT, "Bat Form", 2, 0, 0, 0, ABFLAG_NONE },
+    { ABIL_BOTTLE_BLOOD, "Bottle Blood", 0, 0, 0, 0, ABFLAG_NONE }, // no costs
 
     { ABIL_SPIT_ACID, "Spit Acid", 0, 0, 125, 0, ABFLAG_NONE },
 
@@ -586,6 +587,11 @@ static talent _get_talent(ability_type ability, bool check_confused)
 
     case ABIL_TRAN_BAT:
         failure = 45 - (2 * you.experience_level);
+        break;
+
+    case ABIL_BOTTLE_BLOOD:
+        perfect = true;
+        failure = 0;
         break;
 
     case ABIL_RECHARGING:       // this is for deep dwarves {1KB}
@@ -1182,6 +1188,7 @@ static bool _activate_talent(const talent& tal)
         case ABIL_DELAYED_FIREBALL:
         case ABIL_MUMMY_RESTORATION:
         case ABIL_TRAN_BAT:
+        case ABIL_BOTTLE_BLOOD:
             hungerCheck = false;
             break;
         default:
@@ -1996,9 +2003,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_FEDHAS_EVOLUTION:
         if (!evolve_flora())
-        {
             return (false);
-        }
 
         exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
@@ -2009,6 +2014,12 @@ static bool _do_ability(const ability_def& abil)
             crawl_state.zero_turns_taken();
             return (false);
         }
+        break;
+
+    case ABIL_BOTTLE_BLOOD:
+        // There's at least one applicable corpse on the ground.
+        if (!butchery(-1, true))
+            return (false);
         break;
 
     case ABIL_JIYVA_CALL_JELLY:
@@ -2305,6 +2316,13 @@ std::vector<talent> your_talents(bool check_confused)
         && you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT)
     {
         _add_talent(talents, ABIL_TRAN_BAT, check_confused);
+    }
+
+    if (you.species == SP_VAMPIRE && you.experience_level >= 6
+        && you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT
+        && check_blood_corpses_on_ground())
+    {
+        _add_talent(talents, ABIL_BOTTLE_BLOOD, false);
     }
 
     if (!you.airborne() && !transform_changed_physiology())

@@ -112,7 +112,10 @@ enum ability_type
     ABIL_CHEIBRIADOS_TIME_BEND,
     ABIL_CHEIBRIADOS_SLOUCH,
 
+    // Vampire abilities
     ABIL_TRAN_BAT = 260,
+    ABIL_BOTTLE_BLOOD,
+
     ABIL_HARM_PROTECTION,
     ABIL_HARM_PROTECTION_II,                //  262
     ABIL_RENOUNCE_RELIGION = 270            //  270
