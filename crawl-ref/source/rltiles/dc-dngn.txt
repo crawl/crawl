@@ -1057,6 +1057,11 @@ wall/tree2_lightred
 wall/tree1_red DNGN_TREE_RED
 wall/tree2_red
 
+# this may need to change, but it should make things a bit simpler
+%variation DNGN_TREE darkgray
+wall/tree1_dead DNGN_TREE_DEAD
+wall/tree2_dead
+
 ## doors
 dngn_detected_secret_door DNGN_DETECTED_SECRET_DOOR
 dngn_closed_door DNGN_CLOSED_DOOR
