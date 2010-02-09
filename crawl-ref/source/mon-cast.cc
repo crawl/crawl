@@ -2371,57 +2371,13 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         pbolt.fire();
 }
 
-void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast,
-                     bool special_ability)
+static int _noise_level(const monsters* monster, spell_type spell,
+                                  bool silent, bool innate)
 {
-    bool force_silent = false;
-
-    spell_type actual_spell = spell_cast;
-
-    if (spell_cast == SPELL_DRACONIAN_BREATH)
-    {
-        int type = monster->type;
-        if (mons_genus(type) == MONS_DRACONIAN)
-            type = draco_subspecies(monster);
-
-        switch (type)
-        {
-        case MONS_MOTTLED_DRACONIAN:
-            actual_spell = SPELL_STICKY_FLAME_SPLASH;
-            break;
-
-        case MONS_YELLOW_DRACONIAN:
-            actual_spell = SPELL_ACID_SPLASH;
-            break;
-
-        case MONS_PLAYER_GHOST:
-            // Draining breath is silent.
-            force_silent = true;
-            break;
-
-        default:
-            break;
-        }
-    }
-    else if (monster->type == MONS_SHADOW_DRAGON)
-        // Draining breath is silent.
-        force_silent = true;
-
-    const bool unseen    = !you.can_see(monster);
-    const bool silent    = silenced(monster->pos()) || force_silent;
-    const bool no_silent = mons_class_flag(monster->type, M_SPELL_NO_SILENT);
-
-    if (unseen && silent)
-        return;
-
-    const unsigned int flags = get_spell_flags(actual_spell);
-
-    const bool priest = monster->is_priest();
-    const bool wizard = monster->is_actual_spellcaster();
-    const bool innate = !(priest || wizard || no_silent)
-                        || (flags & SPFLAG_INNATE) || special_ability;
+    const unsigned int flags = get_spell_flags(spell);
 
     int noise;
+
     if (silent
         || (innate
             && !mons_class_flag(monster->type, M_NOISY_SPELLS)
@@ -2440,23 +2396,22 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast,
             // rather than where the spell is cast. zappy() sets up the
             // noise for beams.
             noise = (flags & SPFLAG_TARGETING_MASK)
-                ? 1 : spell_noise(actual_spell);
+                ? 1 : spell_noise(spell);
         }
     }
+    return noise;
+}
 
+static unsigned int _noise_keys(std::vector<std::string>& key_list,
+                                const monsters* monster, const bolt& pbolt,
+                                spell_type spell, bool priest, bool wizard,
+                                bool innate, bool targeted, bool visible_beam)
+{
     const std::string cast_str = " cast";
 
-    const std::string    spell_name = spell_title(actual_spell);
     const mon_body_shape shape      = get_mon_shape(monster);
+    const std::string    spell_name = spell_title(spell);
     const bool           real_spell = !innate && (priest || wizard);
-
-    const bool visible_beam = pbolt.type != 0 && pbolt.type != ' '
-                              && pbolt.name[0] != '0'
-                              && !pbolt.is_enchantment();
-    const bool targeted = (flags & SPFLAG_TARGETING_MASK)
-                           && (pbolt.target != monster->pos() || visible_beam);
-
-    std::vector<std::string> key_list;
 
     // First try the spells name.
     if (shape <= MON_SHAPE_NAGA)
@@ -2530,6 +2485,13 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast,
         }
     }
 
+    return num_spell_keys;
+}
+
+std::string _noise_message(const std::vector<std::string>& key_list,
+                           unsigned int num_spell_keys,
+                           bool silent, bool unseen)
+{
     std::string prefix;
     if (silent)
         prefix = "silent ";
@@ -2561,7 +2523,7 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast,
 
         // If we got no message and we're using the silent prefix, then
         // try again without the prefix.
-        if (prefix != "silent")
+        if (prefix != "silent") // XXX: "silent "?
             continue;
 
         msg = getSpeakString(key);
@@ -2583,41 +2545,24 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast,
             break;
     }
 
-    if (msg.empty())
-    {
-        if (silent)
-            return;
+    return (msg);
+}
 
-        noisy(noise, monster->pos(), monster->mindex());
-        return;
-    }
-
-    /////////////////////
-    // We have a message.
-    /////////////////////
-
-    const bool gestured = msg.find("Gesture") != std::string::npos
-                          || msg.find(" gesture") != std::string::npos
-                          || msg.find("Point") != std::string::npos
-                          || msg.find(" point") != std::string::npos;
+void _noise_fill_target(std::string& targ_prep, std::string& target,
+                        const monsters* monster, const bolt& pbolt,
+                        bool visible_beam, bool gestured)
+{
+    targ_prep = "at";
+    target    = "nothing";
 
     bolt tracer = pbolt;
-    if (targeted)
-    {
-        // For a targeted but rangeless spell make the range positive so that
-        // fire_tracer() will fill out path_taken.
-        if (pbolt.range == 0 && pbolt.target != monster->pos())
-            tracer.range = ENV_SHOW_DIAMETER;
+    // For a targeted but rangeless spell make the range positive so that
+    // fire_tracer() will fill out path_taken.
+    if (pbolt.range == 0 && pbolt.target != monster->pos())
+        tracer.range = ENV_SHOW_DIAMETER;
+    fire_tracer(monster, tracer);
 
-        fire_tracer(monster, tracer);
-    }
-
-    std::string targ_prep = "at";
-    std::string target    = "nothing";
-
-    if (!targeted)
-        target = "NO TARGET";
-    else if (pbolt.target == you.pos())
+    if (pbolt.target == you.pos())
         target = "you";
     else if (pbolt.target == monster->pos())
         target = monster->pronoun(PRONOUN_REFLEXIVE);
@@ -2641,7 +2586,7 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast,
 
     // Monster might be aiming past the real target, or maybe some fuzz has
     // been applied because the target is invisible.
-    if (target == "nothing" && targeted)
+    if (target == "nothing")
     {
         if (pbolt.aimed_at_spot)
         {
@@ -2748,8 +2693,7 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast,
     // implied by gesturing).  But only if the beam didn't actually hit
     // anything (but if it did hit something, why didn't that monster
     // show up in the beam's path?)
-    if (targeted
-        && target == "nothing"
+    if (target == "nothing"
         && (tracer.foe_info.count + tracer.friend_info.count) == 0
         && foe != NULL
         && you.can_see(foe)
@@ -2767,6 +2711,94 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast,
     // rather than "past".
     if (gestured || target == "nothing")
         targ_prep = "at";
+}
+
+void mons_cast_noise(monsters *monster, const bolt &pbolt,
+                     spell_type spell_cast, bool special_ability)
+{
+    bool force_silent = false;
+
+    spell_type actual_spell = spell_cast;
+
+    if (spell_cast == SPELL_DRACONIAN_BREATH)
+    {
+        int type = monster->type;
+        if (mons_genus(type) == MONS_DRACONIAN)
+            type = draco_subspecies(monster);
+
+        switch (type)
+        {
+        case MONS_MOTTLED_DRACONIAN:
+            actual_spell = SPELL_STICKY_FLAME_SPLASH;
+            break;
+
+        case MONS_YELLOW_DRACONIAN:
+            actual_spell = SPELL_ACID_SPLASH;
+            break;
+
+        case MONS_PLAYER_GHOST:
+            // Draining breath is silent.
+            force_silent = true;
+            break;
+
+        default:
+            break;
+        }
+    }
+    else if (monster->type == MONS_SHADOW_DRAGON)
+        // Draining breath is silent.
+        force_silent = true;
+
+    const bool unseen    = !you.can_see(monster);
+    const bool silent    = silenced(monster->pos()) || force_silent;
+    const bool no_silent = mons_class_flag(monster->type, M_SPELL_NO_SILENT);
+
+    if (unseen && silent)
+        return;
+
+    const unsigned int flags = get_spell_flags(actual_spell);
+
+    const bool priest = monster->is_priest();
+    const bool wizard = monster->is_actual_spellcaster();
+    const bool innate = !(priest || wizard || no_silent)
+                        || (flags & SPFLAG_INNATE) || special_ability;
+
+    int noise = _noise_level(monster, actual_spell, silent, innate);
+
+    const bool visible_beam = pbolt.type != 0 && pbolt.type != ' '
+                              && pbolt.name[0] != '0'
+                              && !pbolt.is_enchantment();
+    const bool targeted = (flags & SPFLAG_TARGETING_MASK)
+                           && (pbolt.target != monster->pos() || visible_beam);
+
+    std::vector<std::string> key_list;
+    unsigned int num_spell_keys =
+        _noise_keys(key_list, monster, pbolt, actual_spell,
+                    priest, wizard, innate, targeted, visible_beam);
+
+    std::string msg = _noise_message(key_list, num_spell_keys,
+                                     silent, unseen);
+
+    if (msg.empty())
+    {
+        if (silent)
+            return;
+
+        noisy(noise, monster->pos(), monster->mindex());
+        return;
+    }
+
+    const bool gestured = msg.find("Gesture") != std::string::npos
+                          || msg.find(" gesture") != std::string::npos
+                          || msg.find("Point") != std::string::npos
+                          || msg.find(" point") != std::string::npos;
+
+    std::string targ_prep = "at";
+    std::string target    = "NO_TARGET";
+
+    if (targeted)
+        _noise_fill_target(targ_prep, target, monster, pbolt,
+                           visible_beam, gestured);
 
     msg = replace_all(msg, "@at@",     targ_prep);
     msg = replace_all(msg, "@target@", target);
@@ -2776,8 +2808,6 @@ void mons_cast_noise(monsters *monster, bolt &pbolt, spell_type spell_cast,
         beam_name = "NON TARGETED BEAM";
     else if (pbolt.name.empty())
         beam_name = "INVALID BEAM";
-    else if (!tracer.seen)
-        beam_name = "UNSEEN BEAM";
     else
         beam_name = pbolt.get_short_name();
 
