@@ -114,7 +114,23 @@ MDEF(mimic)
 {
     ASSERT_DLUA;
     if (mons_genus(mons->type) == MONS_GOLD_MIMIC)
-        lua_pushstring(ls, "mimic");
+    {
+        switch (mons->type)
+        {
+        case MONS_GOLD_MIMIC:
+            lua_pushstring(ls, "gold mimic"); break;
+        case MONS_WEAPON_MIMIC:
+            lua_pushstring(ls, "weapon mimic"); break;
+        case MONS_ARMOUR_MIMIC:
+            lua_pushstring(ls, "armour mimic"); break;
+        case MONS_POTION_MIMIC:
+            lua_pushstring(ls, "potion mimic"); break;
+        case MONS_SCROLL_MIMIC:
+            lua_pushstring(ls, "scroll mimic"); break;
+        default:
+            lua_pushstring(ls, "unknown mimic"); break;
+        }
+    }
     else
         lua_pushnil(ls);
 
