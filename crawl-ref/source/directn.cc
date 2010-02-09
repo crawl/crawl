@@ -1376,6 +1376,9 @@ void direction_chooser::print_target_description() const
         print_target_object_description();
     else
         print_target_monster_description();
+
+    if (!in_range(target()))
+        mpr("Out of range.", MSGCH_EXAMINE_FILTER);
 }
 
 std::string direction_chooser::target_interesting_terrain_description() const
