@@ -19,6 +19,7 @@
 #include "random.h"
 #include "random-weight.h"
 #include "state.h"
+#include "stuff.h"
 #include "terrain.h"
 
 bool player::blink_to(const coord_def& dest, bool quiet)
