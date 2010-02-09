@@ -189,24 +189,15 @@ bool iood_act(monsters &mon, bool no_trail)
         return (true);
     }
 
-    coord_def target(-1, -1);
-    if (mon.foe == MHITYOU)
-        target = you.pos();
-    else if (invalid_monster_index(mon.foe))
-        ;
-    else if (invalid_monster_type(menv[mon.foe].type))
-    {
-        // Our target is gone.  Since picking a new one would require
-        // intelligence, the orb continues on a ballistic course.
-        mon.foe = MHITNOT;
-    }
-    else
-        target = menv[mon.foe].pos();
-
     _normalize(vx, vy);
 
-    if (target != coord_def(-1, -1))
+    const actor *foe = mon.get_foe();
+    // If the target is gone, the orb continues on a ballistic course since
+    // picking a new one would require intelligence.
+
+    if (foe)
     {
+        const coord_def target = foe->pos();
         float dx = target.x - x;
         float dy = target.y - y;
         _normalize(dx, dy);
