@@ -391,7 +391,6 @@ end
 SUBST:      ? = .
 COLOUR:     =cA< = darkgrey
 TILE:       c = wall_stone_dark
-TILE:       = = wall_stone_dark last_tile
 TILE:       V = dngn_dry_fountain_white
 LFLOORTILE: floor_pebble_white
 COLOUR:     mMV = silver
@@ -483,7 +482,6 @@ KFEAT:      / = stone_arch
 KFEAT:      _ = altar_fedhas
 MARKER:     A = feat:stone_arch
 TILE:       c = wall_brick_vines
-TILE:       = = wall_brick_vines last_tile
 LROCKTILE:  wall_brick_vines
 LFLOORTILE: floor_grass
 ITEM:       any fixed theme book, any fixed level book, any staff
@@ -749,7 +747,6 @@ KITEM:      | = superb_item
 COLOUR:     ^ = darkgrey
 TILE:       ^ = wall_stone_black_marked / wall_stone_dark w:4 / wall_stone_black_marked
 COLOUR:     = = yellow
-TILE:       = = dngn_stone_wall_yellow last_tile
 KFEAT:      ^ = stone_wall
 COLOUR:     . = darkgrey / blue w:3 / cyan w:1
 MARKER:     ! = lua:portal_desc {wall_drop=1}
@@ -858,7 +855,6 @@ LFLOORCOL:  magenta
 LFLOORTILE: floor_pebble_magenta
 COLOUR:     =c = white
 TILE:       c = wall_stone_white
-TILE:       = = wall_stone_white last_tile
 COLOUR:     n = darkgrey
 TILE:       n = dngn_transparent_wall_darkgray
 COLOUR:     " = red
@@ -1238,6 +1234,7 @@ function killed_zombie (data, triggerable, triggerer, marker, ev)
     data.number_killed = data.number_killed + 1
     if #dgn.find_markers_by_prop("grave", 1) < data.number_killed then
         local x, y = marker:pos()
+        dgn.tile_feat_changed(x, y, nil)
         dgn.terrain_changed(x, y, "closed_door", false, false, false)
     end
 end
@@ -1367,7 +1364,6 @@ TILE:       t = dngn_tree_lightred / dngn_tree_red w:4 / dngn_tree_yellow w:4
 COLOUR:     AG = red
 COLOUR:     < = lightred
 TILE:       c = dngn_stone_dark
-TILE:       = = dngn_stone_dark last_tile
 LFLOORTILE: floor_pebble_white
 KFEAT:      ' = open_door
 KFEAT:      1234567 = .

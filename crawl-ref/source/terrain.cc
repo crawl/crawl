@@ -790,6 +790,11 @@ void dungeon_terrain_changed(const coord_def &pos,
         _dgn_check_terrain_player(pos);
 
     set_terrain_changed(pos);
+
+    // Deal with doors being created by changing features.
+#ifdef USE_TILE
+    tile_init_flavour(pos);
+#endif
 }
 
 static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
