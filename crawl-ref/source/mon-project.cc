@@ -221,7 +221,7 @@ bool iood_act(monsters &mon, bool no_trail)
         }
         mon.props["iood_tpos"].get_short() = 256 * target.x + target.y;
 
-        if (!_in_front(vx, vy, dx, dy, 0.5)) // ~29 degrees
+        if (!_in_front(vx, vy, dx, dy, 0.3)) // ~17 degrees
         {
             float ax, ay;
             if (dy*vx < dx*vy)
