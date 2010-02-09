@@ -271,6 +271,20 @@ wall/relief0 WALL_HALL
 wall/relief1
 wall/relief2
 wall/relief3
+
+%variation WALL_HALL white
+%lum 0 40
+%lum 28 40
+%lum 29 40
+%lum 30 40
+%repeat WALL_HALL WALL_HALL_WHITE
+%resetcol
+
+%variation WALL_HALL darkgray
+%lum 0 -25
+%repeat WALL_HALL WALL_HALL_DARKGRAY
+%resetcol
+
 floor/mesh0 FLOOR_HALL
 floor/mesh1
 floor/mesh2

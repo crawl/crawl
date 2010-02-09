@@ -1317,7 +1317,7 @@ TILE:       G = dngn_gravestone
 SUBST:      W = G
 SUBST:      L = .
 LFLOORTILE: floor_tomb
-LROCKTILE:  wall_hall
+LROCKTILE:  wall_hall_darkgray
 TILE:       c = wall_stone_gray
 MAP
 M   xxxxxxxxxxxxxxxxxxx
