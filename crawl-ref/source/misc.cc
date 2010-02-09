@@ -869,6 +869,20 @@ void merge_blood_potion_stacks(item_def &source, item_def &dest, int quant)
     _long_sort(timer2);
 }
 
+bool check_blood_corpses_on_ground()
+{
+    for (stack_iterator si(you.pos(), true); si; ++si)
+    {
+        if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY
+            && !food_is_rotten(*si)
+            && mons_has_blood(si->plus))
+        {
+            return (true);
+        }
+    }
+    return (false);
+}
+
 // Deliberately don't check for rottenness here, so this check
 // can also be used to verify whether you *could* have bottled
 // a now rotten corpse.

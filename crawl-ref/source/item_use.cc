@@ -4594,6 +4594,15 @@ void prompt_inscribe_item()
     inscribe_item(you.inv[item_slot], true);
 }
 
+static void _vampire_corpse_help()
+{
+    if (you.species != SP_VAMPIRE)
+        return;
+
+    if (check_blood_corpses_on_ground() || count_corpses_in_pack(true) > 0)
+        mpr("If it's blood you're after, try <w>e</w>.");
+}
+
 void drink(int slot)
 {
     if (you.is_undead == US_UNDEAD)
@@ -4613,6 +4622,7 @@ void drink(int slot)
     if (inv_count() == 0)
     {
         canned_msg(MSG_NOTHING_CARRIED);
+        _vampire_corpse_help();
         return;
     }
 
@@ -4625,6 +4635,7 @@ void drink(int slot)
     if (player_in_bat_form())
     {
        canned_msg(MSG_PRESENT_FORM);
+        _vampire_corpse_help();
        return;
     }
 
@@ -4635,14 +4646,20 @@ void drink(int slot)
                                   true, true, true, 0, -1, NULL,
                                   OPER_QUAFF);
         if (prompt_failed(slot))
+        {
+            _vampire_corpse_help();
             return;
+        }
     }
 
     item_def& potion = you.inv[slot];
 
     if (potion.base_type != OBJ_POTIONS)
     {
-        mpr("You can't drink that!");
+        if (you.species == SP_VAMPIRE && potion.base_type == OBJ_CORPSES)
+            eat_food(slot);
+        else
+            mpr("You can't drink that!");
         return;
     }
 
