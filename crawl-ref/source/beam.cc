@@ -3298,6 +3298,9 @@ void bolt::affect_ground()
                     break;
 
                 case ATT_FRIENDLY:
+                    beh = BEH_FRIENDLY;
+                    break;
+
                 case ATT_GOOD_NEUTRAL:
                     beh = BEH_GOOD_NEUTRAL;
                     break;

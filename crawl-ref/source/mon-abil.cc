@@ -1440,10 +1440,6 @@ void ballisto_on_move(monsters * monster, const coord_def & position)
             if (one_chance_in(4))
             {
                 beh_type attitude = SAME_ATTITUDE(monster);
-                if (!crawl_state.arena && attitude == BEH_FRIENDLY)
-                {
-                    attitude = BEH_GOOD_NEUTRAL;
-                }
                 int rc = create_monster(mgen_data(MONS_BALLISTOMYCETE,
                                                   attitude,
                                                   monster,
@@ -1526,7 +1522,7 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
     int spore_count = 0;
     int ballisto_count = 0;
 
-    bool any_friendly = false;
+    bool any_friendly = monster->attitude == ATT_FRIENDLY;
     bool fedhas_mode  = false;
     for (monster_iterator mi; mi; ++mi)
     {
@@ -1560,6 +1556,14 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
 
     if (you.religion == GOD_FEDHAS)
     {
+        if (spore_count == 0
+            && ballisto_count == 0
+            && any_friendly)
+        {
+            mprf("Your fungal colony was destroyed.");
+            dock_piety(1, 0);
+        }
+
         fedhas_mode = true;
         activation_count = 1;
         exhaustive = false;
