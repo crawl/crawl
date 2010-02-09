@@ -18,6 +18,7 @@
 #include "effects.h"
 #include "env.h"
 #include "files.h"
+#include "fprop.h"
 #include "godabil.h"
 #include "invent.h"
 #include "itemprop.h"
@@ -1271,19 +1272,32 @@ void _collect_adjacent_monsters(std::vector<monster_conversion> & available,
     }
 }
 
-void _cost_summary(int oklob_count, int wandering_count, int total_in_range)
+static bool _place_ballisto(const coord_def & pos)
 {
-    mesclr();
-    if (oklob_count)
+    const int ballisto = create_monster(mgen_data(MONS_BALLISTOMYCETE,
+                                                  BEH_FRIENDLY,
+                                                  &you,
+                                                  0,
+                                                  0,
+                                                  pos,
+                                                  MHITNOT,
+                                                  MG_FORCE_PLACE,
+                                                  GOD_FEDHAS));
+
+    if (ballisto != -1)
     {
-        std::string str = (oklob_count > 1 ? "ts" : "t");
-        mprf("Upgrading %d plan%s to oklob plan%s (%d fruit)",
-              oklob_count, str.c_str(), str.c_str(), oklob_count);
+        env.pgrid(pos) &= ~FPROP_MOLD;
+        mprf("The mold grows into a ballistomycete.");
+        mprf("Your piety has decreased.");
+        lose_piety(1);
+        return true;
     }
 
-    if (wandering_count)
-        mprf("Upgrading %d fungi to wandering mushroo%s (piety cost)",
-             wandering_count, (wandering_count > 1 ? "ms" : "m "));
+    // Monster placement failing should be quite unusual, but it could happen.
+    // Not entirely sure what to say about it, but a more informative message
+    // might be good. -cao
+    canned_msg(MSG_NOTHING_HAPPENS);
+    return false;
 }
 
 bool evolve_flora()
@@ -1296,7 +1310,9 @@ bool evolve_flora()
     for (radius_iterator rad(&you.get_los()); rad; ++rad)
     {
         monsters * temp = monster_at(*rad);
-        if (temp && mons_is_evolvable(temp))
+        if (is_moldy(*rad) && mons_class_can_pass(MONS_BALLISTOMYCETE,
+                                                  env.grid(*rad))
+            || temp && mons_is_evolvable(temp) )
         {
             in_range = true;
             break;
@@ -1333,8 +1349,15 @@ bool evolve_flora()
 
     if (!target)
     {
-        mprf("Must target a creature.");
-        return (false);
+        if (!is_moldy(spelld.target)
+            || !mons_class_can_pass(MONS_BALLISTOMYCETE,
+                                    env.grid(spelld.target)))
+        {
+            mprf("You must target a plant or fungus.");
+            return (false);
+        }
+        return _place_ballisto(spelld.target);
+
     }
 
     if (!_possible_evolution(target, upgrade))
