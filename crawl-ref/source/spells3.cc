@@ -1511,7 +1511,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
 
     if (item_blocks_teleport(true, true) && !wizard_tele)
     {
-        mpr("You feel a strange sense of stasis.");
+        mpr("You feel a weird sense of stasis.");
         return (false);
     }
 
