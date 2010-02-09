@@ -29,7 +29,9 @@
 #include "mon-speak.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
+#include "options.h"
 #include "random.h"
+#include "religion.h"
 #include "spl-mis.h"
 #include "spl-util.h"
 #include "state.h"
@@ -41,6 +43,8 @@
 #include "viewchar.h"
 
 #include <algorithm>
+#include <queue>
+#include <set>
 
 bool ugly_thing_mutate(monsters *ugly, bool proximity)
 {
@@ -1425,16 +1429,17 @@ void ballisto_on_move(monsters * monster, const coord_def & position)
 {
     if (monster->type == MONS_GIANT_SPORE)
     {
+        dungeon_feature_type ftype = env.grid(monster->pos());
+
+        if (ftype >= DNGN_FLOOR_MIN && ftype <= DNGN_FLOOR_MAX)
+            env.pgrid(monster->pos()) |= FPROP_MOLD;
+
         // The number field is used as a cooldown timer for this behavior.
         if (monster->number <= 0)
         {
             if (one_chance_in(4))
             {
                 beh_type attitude = SAME_ATTITUDE(monster);
-                if (!crawl_state.arena && attitude == BEH_FRIENDLY)
-                {
-                    attitude = BEH_GOOD_NEUTRAL;
-                }
                 int rc = create_monster(mgen_data(MONS_BALLISTOMYCETE,
                                                   attitude,
                                                   monster,
@@ -1444,8 +1449,13 @@ void ballisto_on_move(monsters * monster, const coord_def & position)
                                                   MHITNOT,
                                                   MG_FORCE_PLACE));
 
-                if (rc != -1 && you.can_see(&env.mons[rc]))
-                    mprf("A ballistomycete grows in the wake of the spore.");
+                if (rc != -1)
+                {
+                    // Don't leave mold on squares we place ballistos on
+                    env.pgrid(position) &= ~FPROP_MOLD;
+                    if  (you.can_see(&env.mons[rc]))
+                        mprf("A ballistomycete grows in the wake of the spore.");
+                }
 
                 monster->number = 40;
             }
@@ -1458,9 +1468,41 @@ void ballisto_on_move(monsters * monster, const coord_def & position)
     }
 }
 
-// If 'monster' is a ballistomycete or spore activate some number of
+struct position_node
+{
+    position_node()
+    {
+        pos.x=0;
+        pos.y=0;
+        last = NULL;
+    }
+
+    coord_def pos;
+    const position_node * last;
+    bool operator < (const position_node & right) const
+    {
+        unsigned idx = pos.x + pos.y * X_WIDTH;
+        unsigned other_idx = right.pos.x + right.pos.y * X_WIDTH;
+        return  idx < other_idx;
+    }
+};
+
+bool _ballisto_at(const coord_def & target)
+{
+    monsters * mons = monster_at(target);
+    return (mons && mons ->type == MONS_BALLISTOMYCETE
+            && mons->alive());
+}
+
+bool _player_at(const coord_def & target)
+{
+    return (you.pos() == target);
+}
+
+// If 'monster' is a ballistomycete or spore, activate some number of
 // ballistomycetes on the level.
-void activate_ballistomycetes( monsters * monster, const coord_def & origin)
+void activate_ballistomycetes(monsters * monster, const coord_def & origin,
+                              bool player_kill)
 {
     if (!monster || monster->type != MONS_BALLISTOMYCETE
                     && monster->type != MONS_GIANT_SPORE)
@@ -1468,55 +1510,170 @@ void activate_ballistomycetes( monsters * monster, const coord_def & origin)
         return;
     }
 
-    bool found_others = false;
-
-    std::vector<monsters *> candidates;
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (mi->mindex() != monster->mindex()
-            && mi->alive()
-            && mi->type == MONS_BALLISTOMYCETE)
-        {
-            candidates.push_back(*mi);
-
-        }
-    }
-
-    if (candidates.empty())
-        return;
-
     // If a spore or inactive ballisto died we will only activate one
     // other ballisto. If it was an active ballisto we will distribute
     // its count to others on the level.
     int activation_count = 1;
-    if (monster ->type == MONS_BALLISTOMYCETE)
+    if (monster->type == MONS_BALLISTOMYCETE)
     {
         activation_count += monster->number;
     }
 
+    int spore_count = 0;
+    int ballisto_count = 0;
+
+    bool any_friendly = monster->attitude == ATT_FRIENDLY;
+    bool fedhas_mode  = false;
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->mindex() != monster->mindex()
+            && mi->alive())
+
+        {
+            if (mi->type == MONS_BALLISTOMYCETE)
+                ballisto_count++;
+            else if (mi->type == MONS_GIANT_SPORE)
+                spore_count++;
+
+            if (mi->attitude == ATT_FRIENDLY)
+                any_friendly = true;
+        }
+
+    }
+
+    bool exhaustive = true;
+    bool (*valid_target)(const coord_def & ) = _ballisto_at;
+    position_node temp_node;
+    temp_node.pos = origin;
+    temp_node.last = NULL;
+
+    std::set<position_node> visited;
+    std::vector<std::set<position_node>::iterator > candidates;
+    std::queue<std::set<position_node>::iterator > fringe;
+
+    std::set<position_node>::iterator current = visited.insert(temp_node).first;
+    fringe.push(current);
+
+    if (you.religion == GOD_FEDHAS)
+    {
+        if (spore_count == 0
+            && ballisto_count == 0
+            && any_friendly)
+        {
+            mprf("Your fungal colony was destroyed.");
+            dock_piety(1, 0);
+        }
+
+        fedhas_mode = true;
+        activation_count = 1;
+        exhaustive = false;
+        valid_target = _player_at;
+    }
+
+    while (!fringe.empty())
+    {
+        current = fringe.front();
+        fringe.pop();
+
+        if (valid_target(current->pos))
+        {
+            candidates.push_back(current);
+            if (!exhaustive)
+                break;
+        }
+
+        for (adjacent_iterator adj_it(current->pos); adj_it; ++adj_it)
+        {
+            if (in_bounds(*adj_it)
+                && (is_moldy(*adj_it)
+                    || _ballisto_at(*adj_it)))
+            {
+                temp_node.pos = *adj_it;
+                temp_node.last = &(*current);
+
+                std::pair<std::set<position_node>::iterator, bool > res;
+                res = visited.insert(temp_node);
+                if (res.second)
+                    fringe.push(res.first);
+            }
+        }
+    }
+
+    if (candidates.empty())
+    {
+        if (player_kill
+            && !fedhas_mode
+            && spore_count == 0
+            && ballisto_count == 0
+            && monster->attitude == ATT_HOSTILE)
+        {
+            mprf("Having destroyed the fungal colony, you feel a bit more "
+                 "experienced.");
+            gain_exp(500);
+        }
+        return;
+    }
+
+    // A (very) soft cap on colony growth, no activations if there are
+    // already a lot of ballistos on level.
+    if (candidates.size() > 25)
+        return;
+
+
     std::random_shuffle(candidates.begin(), candidates.end());
 
     int index = 0;
+    you.mold_colour = LIGHTRED;
+
+    bool draw = false;
     for (int i=0; i<activation_count; ++i)
     {
         index = i % candidates.size();
 
-        monsters * spawner = candidates[index];
+        monsters * spawner = monster_at(candidates[index]->pos);
 
-        spawner->number++;
-        found_others = true;
-
-        // Change color and start the spore production timer if we
-        // are moving from 0 to 1.
-        if (spawner->number == 1)
+        // This may be the players position, in which case we don't
+        // have to mess with spore production on anything
+        if (spawner && !fedhas_mode)
         {
-            spawner->colour = LIGHTRED;
-            // Reset the spore production timer.
-            spawner->del_ench(ENCH_SPORE_PRODUCTION, false);
-            spawner->add_ench(ENCH_SPORE_PRODUCTION);
+            spawner->number++;
+
+            // Change color and start the spore production timer if we
+            // are moving from 0 to 1.
+            if (spawner->number == 1)
+            {
+                spawner->colour = LIGHTRED;
+                // Reset the spore production timer.
+                spawner->del_ench(ENCH_SPORE_PRODUCTION, false);
+                spawner->add_ench(ENCH_SPORE_PRODUCTION);
+            }
+        }
+
+        const position_node * thread = &(*candidates[index]);
+        while(thread)
+        {
+            if (you.see_cell(thread->pos))
+            {
+                view_update_at(thread->pos);
+                draw = true;
+            }
+
+            thread = thread->last;
         }
     }
 
-    if (you.see_cell(origin) && found_others)
-        mprf("You feel the ballistomycetes will spawn a replacement spore.");
+    if (draw)
+    {
+        viewwindow(false, false);
+        int sp_delay = 150;
+
+        // Scale delay to match change in arena_delay.
+        if (crawl_state.arena)
+        {
+            sp_delay *= Options.arena_delay;
+            sp_delay /= 600;
+        }
+
+        delay(sp_delay);
+    }
 }

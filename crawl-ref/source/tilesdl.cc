@@ -156,7 +156,8 @@ void TilesFramework::update_title_msg(std::string message)
 {
     assert (m_layers[LAYER_TILE_CONTROL].m_regions.size() == 1);
     assert (m_active_layer == LAYER_TILE_CONTROL);
-    TitleRegion* reg = reinterpret_cast<TitleRegion*> (m_layers[LAYER_TILE_CONTROL].m_regions.at(0));
+    TitleRegion* reg = dynamic_cast<TitleRegion*>(
+            m_layers[LAYER_TILE_CONTROL].m_regions.at(0));
     reg->update_message(message);
     redraw();
 }
@@ -174,7 +175,8 @@ void TilesFramework::hide_title()
 {
     assert (m_layers[LAYER_TILE_CONTROL].m_regions.size() == 1);
     assert (m_active_layer == LAYER_TILE_CONTROL);
-    TitleRegion* reg = reinterpret_cast<TitleRegion*> (m_layers[LAYER_TILE_CONTROL].m_regions.at(0));
+    TitleRegion* reg = dynamic_cast<TitleRegion*>(
+            m_layers[LAYER_TILE_CONTROL].m_regions.at(0));
     redraw();
     reg->run();
     delete reg;
@@ -183,7 +185,8 @@ void TilesFramework::hide_title()
 
 void TilesFramework::draw_doll_edit()
 {
-    DollEditRegion* reg = new DollEditRegion(&m_image, m_fonts[m_msg_font].font);
+    DollEditRegion* reg = new DollEditRegion(&m_image,
+                                             m_fonts[m_msg_font].font);
     use_control_region(reg);
     delete reg;
 }
@@ -768,14 +771,14 @@ int TilesFramework::getch_ck()
 
     int key = 0;
 
-    // Don't update tool tips etc. in targetting mode.
+    // Don't update tool tips etc. in targeting mode.
     const bool mouse_target_mode
                 = (mouse_control::current_mode() == MOUSE_MODE_TARGET_PATH
                    || mouse_control::current_mode() == MOUSE_MODE_TARGET_DIR);
 
-    // When moving the mouse via cursor when targetting update more often.
+    // When moving the mouse via cursor when targeting update more often.
     // For beams, the beam drawing already handles this, and when not
-    // targetting the normal drawing routines handle it.
+    // targeting the normal drawing routines handle it.
     const unsigned int ticks_per_cursor_redraw = (mouse_target_mode ? 100 : 30);
     const unsigned int ticks_per_screen_redraw = Options.tile_update_rate;
 
@@ -1718,7 +1721,8 @@ void TilesFramework::update_inventory()
             type = (object_class_type)(find - obj_syms);
         }
 
-        for (int i = you.visible_igrd(you.pos()); i != NON_ITEM; i = mitm[i].link)
+        for (int i = you.visible_igrd(you.pos());
+             i != NON_ITEM; i = mitm[i].link)
         {
             if ((int)inv.size() >= mx * my)
                 break;

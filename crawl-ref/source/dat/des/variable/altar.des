@@ -28,7 +28,7 @@
 #      Allows any of the overflow temple altars to be used.
 #      For this, use one B glyph in your map.
 #
-# If you want to check overlfow temple placement in wizard mode, use the &:
+# If you want to check overflow temple placement in wizard mode, use the &:
 # command.  The levels overflow temples are placed on, and which gods are
 # in them, are chosen at new-game time.
 #
@@ -882,6 +882,100 @@ ccccccccccc@ccccccccccc
 ENDMAP
 
 ### Kikubaaqudgha overflow altars #############################################
+
+# This vault contains a caged human who is killed with miasma once you see it 
+# and then is turned into a zombie.
+#
+# Much appreciated would be some voodoo to make sure it always makes a corpse 
+# after the human dies.
+NAME:   tgw_kikubaaqudgha
+TAGS:   uniq_altar_kikubaaqudgha temple_overflow_kikubaaqudgha
+DEPTH:  D:2-10
+KFEAT:  _ = altar_kikubaaqudgha
+
+{{
+function kill_human (data, triggerable, triggerer, marker, ev)
+  if data.turns ~= you.turns() then
+    data.tc = data.tc + 1
+    data.turns = you.turns()
+  end
+
+  if data.tc < 3 then
+    return
+  end
+
+  if data.triggered == true then
+    return
+  end
+
+  local m = dgn.find_marker_positions_by_prop("slave_name", "zombie")[1]
+  if m ~= nil then
+    local _x, _y = m:xy()
+
+    if not you.see_cell(_x, _y) then
+      return
+    end
+        dgn.place_cloud(_x, _y, "foul pestilence", 3)
+        crawl.god_speaks("Kikubaaqudgha", 
+                         "Miasma emanates from the human's flesh.")
+    data.triggered = true
+  end
+end
+
+local tm = TriggerableFunction:new{func=kill_human, repeated=true, 
+                                   data={turns=you.turns(), tc=0, triggered=false} }
+tm:add_triggerer(DgnTriggerer:new{type="player_los"})
+lua_marker('_', tm)
+}}
+
+{{
+function zombify (data, triggerable, triggerer, marker, ev)
+  if data.turns ~= you.turns() then
+    data.tc = data.tc + 1
+    data.turns = you.turns()
+  end
+
+  if data.tc < 9 then
+    return
+  end
+
+  if data.triggered == true then
+    return
+  end
+
+  local m = dgn.find_marker_positions_by_prop("slave_name", "zombie")[1]
+  if m ~= nil then
+    local _x, _y = m:xy()
+
+    if not you.see_cell(_x, _y) then
+      return
+    end
+
+    for carrion in iter.stash_iterator(_x, _y) do
+      if string.find(carrion.name(), 'human corpse') then
+        carrion.destroy()
+        dgn.create_monster(_x, _y, "generate_awake human zombie")
+        crawl.god_speaks("Kikubaaqudgha", "The human rises from the dead!")
+      end
+    end
+    data.triggered = true
+  end
+end
+local tm = TriggerableFunction:new{func=zombify, repeated=true, 
+                                   data={turns=you.turns(), tc=0, triggered=false} }
+tm:add_triggerer(DgnTriggerer:new{type="player_los"})
+lua_marker('_', tm)
+}}
+MARKER: h = lua:portal_desc {slave_name="zombie"}
+KFEAT:  h = .
+KMONS:  h = generate_awake Human hp:10 ; nothing
+MAP
+xxxxxxx
+@..mmmx
+@_.mhmx
+@..mmmx
+xxxxxxx
+ENDMAP
 
 ### Makhleb overflow altars ###################################################
 

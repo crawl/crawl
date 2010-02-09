@@ -127,10 +127,13 @@ static char _find_square(coord_def &mfp, int direction,
                          bool need_path, int mode, int range,
                          bool wrap, int los = LOS_ANY);
 
-static int  _targetting_cmd_to_compass( command_type command );
+static int  _targeting_cmd_to_compass( command_type command );
 static void _describe_oos_square(const coord_def& where);
 static void _extend_move_to_edge(dist &moves);
+static std::vector<std::string> _get_monster_desc_vector(const monsters *mon);
 static std::string _get_monster_desc(const monsters *mon);
+static std::vector<std::string> _mon_enchantments_vector_string(
+    const monsters* mon);
 
 #ifdef WIZARD
 static void _wizard_make_friendly(monsters* m)
@@ -240,7 +243,7 @@ bool direction_chooser::choose_compass()
             break;
         }
 
-        const int i = _targetting_cmd_to_compass(key_command);
+        const int i = _targeting_cmd_to_compass(key_command);
         if (i != -1)
         {
             moves.delta = Compass[i];
@@ -260,7 +263,7 @@ bool direction_chooser::choose_compass()
     return moves.isValid;
 }
 
-static int _targetting_cmd_to_compass( command_type command )
+static int _targeting_cmd_to_compass( command_type command )
 {
     switch ( command )
     {
@@ -301,15 +304,15 @@ static command_type shift_direction(command_type cmd)
     }
 }
 
-actor* direction_chooser::targetted_actor() const
+actor* direction_chooser::targeted_actor() const
 {
     if (target() == you.pos())
         return &you;
     else
-        return targetted_monster();
+        return targeted_monster();
 }
 
-monsters* direction_chooser::targetted_monster() const
+monsters* direction_chooser::targeted_monster() const
 {
     monsters* m = monster_at(target());
     if (m && you.can_see(m) && !mons_is_unknown_mimic(m))
@@ -318,13 +321,13 @@ monsters* direction_chooser::targetted_monster() const
         return NULL;
 }
 
-std::string direction_chooser::build_targetting_hint_string() const
+std::string direction_chooser::build_targeting_hint_string() const
 {
     std::string hint_string;
 
     // Hint for 'p' - previous target, and for 'f' - current cell, if
     // applicable.
-    const actor*    f_target = targetted_actor();
+    const actor*    f_target = targeted_actor();
     const monsters* p_target = get_current_target();
 
     if (f_target && f_target == p_target)
@@ -360,7 +363,7 @@ void direction_chooser::print_key_hints() const
     }
     else
     {
-        const std::string hint_string = build_targetting_hint_string();
+        const std::string hint_string = build_targeting_hint_string();
         switch (restricts)
         {
         case DIR_NONE:
@@ -399,7 +402,7 @@ void direction_chooser::describe_cell() const
         if (just_looking || (show_items_once && restricts != DIR_TARGET_OBJECT))
             print_items_description();
         if (just_looking)
-            print_floor_description(false);
+            print_floor_description(true);
     }
 
     flush_prev_message();
@@ -443,6 +446,7 @@ static bool _mon_exposed_in_cloud(const monsters *mon)
         return (false);
 
     return (!mon->visible_to(&you)
+            && you.see_cell(mon->pos())
             && is_opaque_cloud(env.cgrid(mon->pos()))
             && !mons_is_insubstantial(mon->type));
 }
@@ -458,7 +462,7 @@ static bool _is_target_in_range(const coord_def& where, int range)
     return (range == -1 || grid_distance(you.pos(), where) <= range);
 }
 
-targetting_behaviour direction_chooser::stock_behaviour;
+targeting_behaviour direction_chooser::stock_behaviour;
 
 void direction(dist &moves, const direction_chooser_args& args)
 {
@@ -502,7 +506,7 @@ direction_chooser::direction_chooser(dist& moves_,
     target_unshifted = Options.target_unshifted_dirs;
 }
 
-// We handle targetting for repeating commands and re-doing the
+// We handle targeting for repeating commands and re-doing the
 // previous command differently (i.e., not just letting the keys
 // stuffed into the macro buffer replay as-is) because if the player
 // targeted a monster using the movement keys and the monster then
@@ -978,7 +982,7 @@ void full_describe_view()
 //
 //           isValid        a valid target or direction was chosen
 //           isCancel       player hit 'escape'
-//           isTarget       targetting was used
+//           isTarget       targeting was used
 //           choseRay       player wants a specific ray
 //           ray            ...this one
 //           isEndpoint     player wants the ray to stop on the dime
@@ -1139,14 +1143,14 @@ void _init_mlist()
     if (full_info != -1)
     {
         _fill_monster_list(full_info);
-        crawl_state.mlist_targetting = true;
+        crawl_state.mlist_targeting = true;
     }
     else
-        crawl_state.mlist_targetting = false;
+        crawl_state.mlist_targeting = false;
 }
 #endif
 
-// Find a good square to start targetting from.
+// Find a good square to start targeting from.
 coord_def direction_chooser::find_default_target() const
 {
     coord_def result = you.pos();
@@ -1262,8 +1266,7 @@ void direction_chooser::draw_beam_if_needed()
 
 bool direction_chooser::in_range(const coord_def& p) const
 {
-    return (range < 0
-            || grid_distance(p, you.pos()) <= range);
+    return (range < 0 || grid_distance(p, you.pos()) <= range);
 }
 
 // Cycle to either the next (dir == 1) or previous (dir == -1) object
@@ -1351,14 +1354,14 @@ bool direction_chooser::handle_signals()
         moves.isValid  = false;
         moves.isCancel = true;
 
-        mpr("Targetting interrupted by HUP signal.", MSGCH_ERROR);
+        mpr("Targeting interrupted by HUP signal.", MSGCH_ERROR);
         return true;
     }
 #endif
     return false;
 }
 
-// Print out the initial prompt when targetting starts.
+// Print out the initial prompt when targeting starts.
 // Prompts might get scrolled off if you have too few lines available;
 // we'll live with that.
 void direction_chooser::show_initial_prompt()
@@ -1390,28 +1393,99 @@ std::string direction_chooser::target_interesting_terrain_description() const
     }
 }
 
+std::string direction_chooser::target_cloud_description() const {
+    const int cloud = env.cgrid(target());
+    if (cloud != EMPTY_CLOUD)
+        return cloud_name(cloud);
+    else
+        return "";
+}
+
+template<typename C1, typename C2>
+static void _append_container(C1& container_base, const C2& container_append)
+{
+    container_base.insert(container_base.end(),
+                          container_append.begin(), container_append.end());
+}
+
+std::string direction_chooser::target_sanctuary_description() const {
+    return is_sanctuary(target()) ? "sanctuary" : "";
+}
+
+std::string direction_chooser::target_silence_description() const {
+    return silenced(target()) ? "silenced" : "";
+}
+
+static void _push_back_if_nonempty(const std::string& str,
+                                   std::vector<std::string>* vec)
+{
+    if (!str.empty())
+        vec->push_back(str);
+}
+
 void direction_chooser::print_target_monster_description() const
 {
     // Do we see anything?
     const monsters* mon = monster_at(target());
-    if (mon == NULL || mons_is_unknown_mimic(mon) || !you.can_see(mon))
+    if (mon == NULL || mons_is_unknown_mimic(mon))
         return;
 
-    // FIXME: this duplicates code from _describe_monster.
+    const bool visible = you.can_see(mon);
+    const bool exposed = _mon_exposed(mon);
+    if (!visible && !exposed)
+        return;
 
-    // Describe the monster, its equipment, and the terrain it's
-    // on (if relevant.)
-    std::string text = get_monster_equipment_desc(mon)
-        + target_interesting_terrain_description() + ".";
+    // OK, now we know that we have something to describe.
+    std::vector<std::string> suffixes;
+    std::string text;
+    // Cell features go first.
+    _append_container(suffixes, target_cell_description_suffixes());
+    if (visible)
+    {
+        // Only describe the monster if you can actually see it.
+        _append_container(suffixes, monster_description_suffixes(mon));
+        text = get_monster_equipment_desc(mon);
+    }
+    else
+    {
+        text = "Disturbance";
+    }
 
-    // Describe its wounds.
-    const std::string wounds_desc = get_wounds_description(mon);
-    if (!wounds_desc.empty())
-        text += " " + mon->pronoun(PRONOUN_CAP) + wounds_desc;
+    // Build the final description string.
+    if (!suffixes.empty())
+        text += " ("
+            + comma_separated_line(suffixes.begin(), suffixes.end(), ", ")
+            + ")";
 
     mprf(MSGCH_PROMPT, "%s: <lightgrey>%s</lightgrey>",
          target_prefix ? target_prefix : "Aim",
          text.c_str());
+}
+
+// FIXME: this should really take a cell as argument.
+std::vector<std::string>
+direction_chooser::target_cell_description_suffixes() const
+{
+    std::vector<std::string> suffixes;
+    // Things which describe the cell.
+    _push_back_if_nonempty(target_cloud_description(), &suffixes);
+    _push_back_if_nonempty(target_sanctuary_description(), &suffixes);
+    _push_back_if_nonempty(target_silence_description(), &suffixes);
+    _push_back_if_nonempty(target_interesting_terrain_description(), &suffixes);
+
+    return suffixes;
+}
+
+std::vector<std::string> direction_chooser::monster_description_suffixes(
+    const monsters* mon) const
+{
+    std::vector<std::string> suffixes;
+
+    _push_back_if_nonempty(get_wounds_description(mon), &suffixes);
+    _append_container(suffixes, _mon_enchantments_vector_string(mon));
+    _append_container(suffixes, _get_monster_desc_vector(mon));
+
+    return suffixes;
 }
 
 void direction_chooser::print_target_object_description() const
@@ -1453,7 +1527,7 @@ void direction_chooser::print_floor_description(bool boring_too) const
         return;
 
     mprf(MSGCH_EXAMINE_FILTER, "%s",
-         feature_description(target(), is_bloodcovered(target())).c_str());
+         feature_description(target(), true).c_str());
 }
 
 void direction_chooser::reinitialize_move_flags()
@@ -1465,7 +1539,7 @@ void direction_chooser::reinitialize_move_flags()
     moves.choseRay   = false;
 }
 
-// Returns true if we've completed targetting.
+// Returns true if we've completed targeting.
 bool direction_chooser::select_compass_direction(const coord_def& delta)
 {
     if (restricts != DIR_TARGET)
@@ -1534,7 +1608,7 @@ bool direction_chooser::looking_at_you() const
 void direction_chooser::handle_movement_key(command_type key_command,
                                             bool* loop_done)
 {
-    const int compass_idx = _targetting_cmd_to_compass(key_command);
+    const int compass_idx = _targeting_cmd_to_compass(key_command);
     if (compass_idx != -1)
     {
         const coord_def& delta = Compass[compass_idx];
@@ -1622,7 +1696,7 @@ void direction_chooser::handle_wizard_command(command_type key_command,
 
 void direction_chooser::do_redraws()
 {
-    // Check if our targetting behaviour forces a redraw.
+    // Check if our targeting behaviour forces a redraw.
     if (behaviour->should_redraw())
     {
         need_all_redraw = true;
@@ -1641,7 +1715,7 @@ void direction_chooser::do_redraws()
 
     if (need_text_redraw)
     {
-        mesclr(true);
+        msgwin_clear_temporary();
         describe_cell();
         need_text_redraw = false;
         show_items_once = false;
@@ -1713,16 +1787,16 @@ void direction_chooser::describe_target()
 
 void direction_chooser::show_help()
 {
-    show_targetting_help();
+    show_targeting_help();
     redraw_screen();
     mesclr(true);
     need_all_redraw = true;
 }
 
-void direction_chooser::cycle_targetting_mode()
+void direction_chooser::cycle_targeting_mode()
 {
     mode = static_cast<targ_mode_type>((mode + 1) % TARG_NUM_MODES);
-    mprf("Targetting mode is now: %s", _targ_mode_name(mode).c_str());
+    mprf("Targeting mode is now: %s", _targ_mode_name(mode).c_str());
 }
 
 // Return false if we should continue looping, true if we're done.
@@ -1745,10 +1819,10 @@ bool direction_chooser::do_main_loop()
 
 #ifndef USE_TILE
     case CMD_TARGET_TOGGLE_MLIST:
-        if (!crawl_state.mlist_targetting)
+        if (!crawl_state.mlist_targeting)
             _init_mlist();
         else
-            crawl_state.mlist_targetting = false;
+            crawl_state.mlist_targeting = false;
         break;
 #endif
 
@@ -1761,7 +1835,7 @@ bool direction_chooser::do_main_loop()
     case CMD_TARGET_FIND_UPSTAIR:   feature_cycle_forward('<');  break;
     case CMD_TARGET_FIND_DOWNSTAIR: feature_cycle_forward('>');  break;
 
-    case CMD_TARGET_CYCLE_TARGET_MODE: cycle_targetting_mode(); break;
+    case CMD_TARGET_CYCLE_TARGET_MODE: cycle_targeting_mode(); break;
 
     case CMD_TARGET_MAYBE_PREV_TARGET:
         loop_done = looking_at_you() ? select_previous_target()
@@ -1844,8 +1918,8 @@ void direction_chooser::finalize_moves()
 bool direction_chooser::choose_direction()
 {
 #ifndef USE_TILE
-    crawl_state.mlist_targetting = false;
-    if (may_target_monster && restricts != DIR_DIR && Options.mlist_targetting)
+    crawl_state.mlist_targeting = false;
+    if (may_target_monster && restricts != DIR_DIR && Options.mlist_targeting)
         _init_mlist();
 #endif
 
@@ -1875,7 +1949,8 @@ bool direction_chooser::choose_direction()
     if (show_beam)
         need_beam_redraw = have_beam = find_ray(you.pos(), target(), beam);
 
-    mesclr(true);
+    mesclr();
+    msgwin_set_temporary(true);
     show_initial_prompt();
     need_text_redraw = false;
 
@@ -1883,6 +1958,8 @@ bool direction_chooser::choose_direction()
 
     while (!do_main_loop())
         ;
+
+    msgwin_set_temporary(false);
 
     finalize_moves();
     return moves.isValid;
@@ -1955,10 +2032,10 @@ void get_square_desc(const coord_def &c, describe_info &inf,
             // If examine_mons is true (currently only for the Tiles
             // mouse-over information), set monster's
             // equipment/woundedness/enchantment description as title.
-            std::string desc   = get_monster_equipment_desc(mons) + ".\n";
-            std::string wounds = get_wounds_description(mons);
+            std::string desc         = get_monster_equipment_desc(mons) + ".\n";
+            const std::string wounds = get_wounds_description_sentence(mons);
             if (!wounds.empty())
-                desc += mons->pronoun(PRONOUN_CAP) + wounds + "\n";
+                desc += wounds + "\n";
             desc += _get_monster_desc(mons);
 
             inf.title = desc;
@@ -2608,7 +2685,7 @@ void describe_floor()
         break;
     }
 
-    feat = feature_description(you.pos(), is_bloodcovered(you.pos()),
+    feat = feature_description(you.pos(), true,
                                DESC_NOCAP_A, false);
     if (feat.empty())
         return;
@@ -2662,11 +2739,13 @@ std::string thing_do_grammar(description_level_type dtype,
 std::string feature_description(dungeon_feature_type grid,
                                 trap_type trap, bool bloody,
                                 description_level_type dtype,
-                                bool add_stop, bool base_desc)
+                                bool add_stop, bool base_desc, bool mold)
 {
     std::string desc = raw_feature_description(grid, trap, base_desc);
     if (bloody)
         desc += ", spattered with blood";
+    else if (mold)
+        desc += ", covered with mold";
 
     return thing_do_grammar(dtype, add_stop, feat_is_trap(grid), desc);
 }
@@ -3002,17 +3081,22 @@ static bool _interesting_feature(dungeon_feature_type feat)
 }
 #endif
 
-std::string feature_description(const coord_def& where, bool bloody,
+std::string feature_description(const coord_def& where, bool covering,
                                 description_level_type dtype, bool add_stop,
                                 bool base_desc)
 {
     std::string marker_desc =
         env.markers.property_at(where, MAT_ANY, "feature_description");
 
+    bool bloody = covering && is_bloodcovered(where);
+    bool mold = covering && is_moldy(where);
+
     if (!marker_desc.empty())
     {
         if (bloody)
             marker_desc += ", spattered with blood";
+        else if (mold)
+            marker_desc += ", covered with mold";
 
         return thing_do_grammar(dtype, add_stop, false, marker_desc);
     }
@@ -3068,6 +3152,8 @@ std::string feature_description(const coord_def& where, bool bloody,
 
         if (bloody)
             desc += ", spattered with blood";
+        else if (mold)
+            desc += ", covered with mold";
 
         return thing_do_grammar(dtype, add_stop, false, desc);
     }
@@ -3088,7 +3174,7 @@ std::string feature_description(const coord_def& where, bool bloody,
     case DNGN_TRAP_MAGICAL:
     case DNGN_TRAP_NATURAL:
         return (feature_description(grid, get_trap_type(where), bloody,
-                                    dtype, add_stop, base_desc));
+                                    dtype, add_stop, base_desc, mold));
     case DNGN_ABANDONED_SHOP:
         return thing_do_grammar(dtype, add_stop, false, "An abandoned shop");
 
@@ -3102,7 +3188,7 @@ std::string feature_description(const coord_def& where, bool bloody,
                     "UNAMED PORTAL VAULT ENTRY"));
     default:
         return (feature_description(grid, NUM_TRAPS, bloody, dtype, add_stop,
-                                    base_desc));
+                                    base_desc, mold));
     }
 }
 
@@ -3221,7 +3307,8 @@ static std::string _stair_destination_description(const coord_def &pos)
 }
 #endif
 
-std::string _mon_enchantments_string(const monsters* mon)
+static std::vector<std::string> _mon_enchantments_vector_string(
+    const monsters* mon)
 {
     const bool paralysed = mon->paralysed();
     std::vector<std::string> enchant_descriptors;
@@ -3238,6 +3325,14 @@ std::string _mon_enchantments_string(const monsters* mon)
     if (paralysed)
         enchant_descriptors.push_back("paralysed");
 
+    return enchant_descriptors;
+}
+
+static std::string _mon_enchantments_string(const monsters* mon)
+{
+    const std::vector<std::string> enchant_descriptors =
+        _mon_enchantments_vector_string(mon);
+
     if (!enchant_descriptors.empty())
     {
         return
@@ -3249,6 +3344,87 @@ std::string _mon_enchantments_string(const monsters* mon)
     }
     else
         return "";
+}
+
+static std::vector<std::string> _get_monster_behaviour_vector(
+    const monsters* mon)
+{
+    std::vector<std::string> descs;
+
+    if (!mons_behaviour_perceptible(mon))
+        return descs;
+
+    if (mon->asleep())
+    {
+        descs.push_back(mons_is_confused(mon, true) ? "sleepwalking"
+                                                    : "resting");
+    }
+    // Applies to both friendlies and hostiles
+    else if (mons_is_fleeing(mon))
+    {
+        descs.push_back("retreating");
+    }
+    // hostile with target != you
+    else if (!mon->friendly()
+             && !mon->neutral()
+             && mon->foe != MHITYOU
+             && !crawl_state.arena_suspended
+             // Special case: batty monsters get set to BEH_WANDER as
+             // part of their special behaviour, so it doesn't mean they
+             // actually haven't noticed you.
+             && !mons_is_batty(mon))
+    {
+        descs.push_back("hasn't noticed you");
+    }
+
+    return descs;
+}
+
+// FIXME: this duplicates _get_monster_desc(). Unite them.
+static std::vector<std::string> _get_monster_desc_vector(const monsters *mon)
+{
+    std::vector<std::string> descs;
+
+    if (you.beheld_by(mon))
+        descs.push_back("mesmerising");
+
+    _append_container(descs, _get_monster_behaviour_vector(mon));
+
+    if (mon->attitude == ATT_FRIENDLY)
+        descs.push_back("friendly");
+    else if (mon->good_neutral())
+        descs.push_back("peaceful");
+    else if (mon->neutral()) // don't differentiate between permanent or not
+        descs.push_back("indifferent");
+
+    if (mon->is_summoned() && (mon->type != MONS_RAKSHASA_FAKE
+                               && mon->type != MONS_MARA_FAKE))
+    {
+        descs.push_back("summoned");
+    }
+
+    if (mon->haloed())
+        descs.push_back("haloed");
+
+    if (mons_intel(mon) <= I_PLANT && mon->type != MONS_RAKSHASA_FAKE)
+        descs.push_back("mindless");
+
+    if (mons_enslaved_body_and_soul(mon))
+        descs.push_back("possessable"); // FIXME: better adjective
+    else if (mons_enslaved_soul(mon))
+        descs.push_back("disembodied soul");
+
+    dungeon_feature_type blocking_feat;
+    if (!crawl_state.arena_suspended
+        && mon->pos() != you.pos()
+        && _blocked_ray(mon->pos(), &blocking_feat))
+    {
+        descs.push_back("fire blocked by "
+                        + feature_description(blocking_feat, NUM_TRAPS, false,
+                                              DESC_NOCAP_A, false));
+    }
+
+    return descs;
 }
 
 // Returns the description string for a given monster, including attitude
@@ -3333,9 +3509,9 @@ static void _describe_monster(const monsters *mon)
 {
     // First print type and equipment.
     std::string text = get_monster_equipment_desc(mon) + ".";
-    const std::string wounds_desc = get_wounds_description(mon);
+    const std::string wounds_desc = get_wounds_description_sentence(mon);
     if (!wounds_desc.empty())
-        text += " " + mon->pronoun(PRONOUN_CAP) + wounds_desc;
+        text += " " + wounds_desc;
 
     mpr(text, MSGCH_EXAMINE);
 
@@ -3609,9 +3785,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
         item_described = true;
     }
 
-    const bool bloody = is_bloodcovered(where);
-
-    std::string feature_desc = feature_description(where, bloody);
+    std::string feature_desc = feature_description(where, true);
 #ifdef DEBUG_DIAGNOSTICS
     std::string marker;
     if (map_marker *mark = env.markers.find(where, MAT_ANY))
@@ -3636,6 +3810,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
          traveldest.c_str(),
          height_desc.c_str());
 #else
+    const bool bloody = is_bloodcovered(where);
     if (Tutorial.tutorial_left && tutorial_pos_interesting(where.x, where.y))
     {
 #ifdef USE_TILE
@@ -3679,40 +3854,40 @@ static void _describe_cell(const coord_def& where, bool in_range)
 }
 
 ///////////////////////////////////////////////////////////////////////////
-// targetting_behaviour
+// targeting_behaviour
 
-targetting_behaviour::targetting_behaviour(bool look_around)
+targeting_behaviour::targeting_behaviour(bool look_around)
     : just_looking(look_around), compass(false)
 {
 }
 
-targetting_behaviour::~targetting_behaviour()
+targeting_behaviour::~targeting_behaviour()
 {
 }
 
-int targetting_behaviour::get_key()
+int targeting_behaviour::get_key()
 {
     if (!crawl_state.is_replaying_keys())
         flush_input_buffer(FLUSH_BEFORE_COMMAND);
 
+    flush_prev_message();
     msgwin_got_input();
-
-    return unmangle_direction_keys(getchm(KMC_TARGETTING), KMC_TARGETTING,
+    return unmangle_direction_keys(getchm(KMC_TARGETING), KMC_TARGETING,
                                    false, false);
 }
 
-command_type targetting_behaviour::get_command(int key)
+command_type targeting_behaviour::get_command(int key)
 {
     if (key == -1)
         key = get_key();
 
-    command_type cmd = key_to_command(key, KMC_TARGETTING);
+    command_type cmd = key_to_command(key, KMC_TARGETING);
     if (cmd >= CMD_MIN_TARGET && cmd < CMD_TARGET_CYCLE_TARGET_MODE)
         return (cmd);
 
 #ifndef USE_TILE
-    // Overrides the movement keys while mlist_targetting is active.
-    if (crawl_state.mlist_targetting && islower(key))
+    // Overrides the movement keys while mlist_targeting is active.
+    if (crawl_state.mlist_targeting && islower(key))
         return static_cast<command_type>(CMD_TARGET_CYCLE_MLIST + (key - 'a'));
 #endif
 

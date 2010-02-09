@@ -57,19 +57,6 @@ bool is_holy_item(const item_def& item)
 
 bool is_potentially_unholy_item(const item_def& item)
 {
-    switch (item.base_type)
-    {
-    case OBJ_WEAPONS:
-        {
-        const int item_brand = get_weapon_brand(item);
-        if (item_brand == SPWPN_DISTORTION)
-            return (true);
-        }
-        break;
-    default:
-        break;
-    }
-
     return (false);
 }
 
@@ -136,6 +123,46 @@ bool is_potentially_evil_item(const item_def& item)
     }
 
     return (false);
+}
+
+// This is a subset of is_evil_item
+bool is_corpse_violating_item(const item_def & item)
+{
+    bool retval = false;
+
+    if (is_unrandom_artefact(item))
+    {
+        unrandart_entry* entry = get_unrand_entry(item.special);
+
+        if (entry->flags & UNRAND_FLAG_CORPSE_VIOLATING)
+            return (true);
+    }
+
+    switch (item.base_type)
+    {
+    case OBJ_WEAPONS:
+    {
+        const int item_brand = get_weapon_brand(item);
+        retval = (item_brand == SPWPN_REAPING);
+    }
+        break;
+    case OBJ_MISSILES:
+    {
+        const int item_brand = get_ammo_brand(item);
+        retval = (item_brand == SPMSL_REAPING);
+        break;
+    }
+    case OBJ_BOOKS:
+        retval = (is_corpse_violating_spellbook(item));
+        break;
+    case OBJ_STAVES:
+        retval = (is_corpse_violating_rod(item));
+        break;
+    default:
+        break;
+    }
+
+    return (retval);
 }
 
 bool is_evil_item(const item_def& item)
@@ -235,8 +262,7 @@ bool is_chaotic_item(const item_def& item)
     case OBJ_WEAPONS:
         {
         const int item_brand = get_weapon_brand(item);
-        retval = (item_brand == SPWPN_DISTORTION
-                  || item_brand == SPWPN_CHAOS);
+        retval = (item_brand == SPWPN_CHAOS);
         }
         break;
     case OBJ_MISSILES:
@@ -383,6 +409,15 @@ bool is_hasty_spell(spell_type spell, god_type god)
     return (flags & SPFLAG_HASTY);
 }
 
+bool is_corpse_violating_spell(spell_type spell, god_type god)
+{
+    UNUSED(god);
+
+    unsigned int flags = get_spell_flags(spell);
+
+    return (flags & SPFLAG_CORPSE_VIOLATING);
+}
+
 // The default suitable() function for is_spellbook_type().
 bool is_any_spell(spell_type spell, god_type god)
 {
@@ -457,6 +492,11 @@ bool is_hasty_spellbook(const item_def& item)
     return (is_spellbook_type(item, false, is_hasty_spell));
 }
 
+bool is_corpse_violating_spellbook(const item_def & item)
+{
+    return (is_spellbook_type(item, false, is_corpse_violating_spell));
+}
+
 bool god_hates_spellbook(const item_def& item)
 {
     return (is_spellbook_type(item, false, god_hates_spell_type));
@@ -490,6 +530,11 @@ bool is_chaotic_rod(const item_def& item)
 bool is_hasty_rod(const item_def& item)
 {
     return (is_spellbook_type(item, true, is_hasty_spell));
+}
+
+bool is_corpse_violating_rod(const item_def & item)
+{
+    return (is_spellbook_type(item, true, is_corpse_violating_spell));
 }
 
 bool god_hates_rod(const item_def& item)
@@ -583,11 +628,8 @@ conduct_type god_hates_item_handling(const item_def &item)
         break;
 
     case GOD_FEDHAS:
-        if (item_type_known(item)
-            && (is_potentially_evil_item(item) || is_evil_item(item)))
-        {
-            return (DID_NECROMANCY);
-        }
+        if (item_type_known(item) && is_corpse_violating_item(item))
+            return (DID_CORPSE_VIOLATION);
         break;
 
     case GOD_CHEIBRIADOS:
@@ -649,7 +691,7 @@ bool god_hates_spell_type(spell_type spell, god_type god)
         break;
 
     case GOD_FEDHAS:
-        if (is_evil_spell(spell))
+        if (is_corpse_violating_spell(spell))
             return (true);
         break;
 
@@ -747,9 +789,6 @@ bool god_dislikes_spell_discipline(int discipline, god_type god)
 
     case GOD_ELYVILON:
         return (discipline & (SPTYP_CONJURATION | SPTYP_SUMMONING));
-
-    case GOD_FEDHAS:
-        return (is_evil_discipline(discipline));
 
     default:
         break;

@@ -470,6 +470,7 @@ static void _ZONGULDROK_world_reacts(item_def *item)
         animate_dead(&you, 1 + random2(3), BEH_HOSTILE, MHITYOU, 0,
                      "the Sword of Zonguldrok");
         did_god_conduct(DID_NECROMANCY, 1);
+        did_god_conduct(DID_CORPSE_VIOLATION, 1);
     }
 }
 
@@ -479,6 +480,7 @@ static void _ZONGULDROK_melee_effect(item_def* weapon, actor* attacker,
     if (attacker->atype() == ACT_PLAYER)
     {
         did_god_conduct(DID_NECROMANCY, 3);
+        did_god_conduct(DID_CORPSE_VIOLATION, 3);
     }
 }
 

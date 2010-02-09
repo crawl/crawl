@@ -349,7 +349,9 @@ void get_monster_info(std::vector<monster_info>& mons)
     for (unsigned int i = 0; i < visible.size(); i++)
     {
         if (!mons_class_flag( visible[i]->type, M_NO_EXP_GAIN )
-            || visible[i]->type == MONS_KRAKEN_TENTACLE)
+            || visible[i]->type == MONS_KRAKEN_TENTACLE
+            || visible[i]->type == MONS_BALLISTOMYCETE
+                && visible[i]->number > 0)
         {
             mons.push_back(monster_info(visible[i]));
         }

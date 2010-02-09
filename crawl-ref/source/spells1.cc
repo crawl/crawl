@@ -85,7 +85,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
     }
 
     // yes, there is a logic to this ordering {dlb}:
-    if (item_blocks_teleport(true) && !wizard_blink)
+    if (item_blocks_teleport(true, true) && !wizard_blink)
         mpr("You feel a weird sense of stasis.");
     else if (you.level_type == LEVEL_ABYSS
              && _abyss_blocks_teleport(high_level_controlled_blink)
@@ -205,7 +205,7 @@ void random_blink(bool allow_partial_control, bool override_abyss)
     bool success = false;
     coord_def target;
 
-    if (item_blocks_teleport(true))
+    if (item_blocks_teleport(true, true))
         mpr("You feel a weird sense of stasis.");
     else if (you.level_type == LEVEL_ABYSS
              && !override_abyss && !one_chance_in(3))
@@ -587,7 +587,7 @@ bool conjure_flame(int pow, const coord_def& where)
         return (false);
     }
 
-    // Note that self-targetting is handled by SPFLAG_NOT_SELF.
+    // Note that self-targeting is handled by SPFLAG_NOT_SELF.
     monsters *monster = monster_at(where);
     if (monster)
     {
@@ -638,7 +638,7 @@ bool stinking_cloud( int pow, bolt &beem )
     beem.is_explosion = true;
     beem.aux_source.clear();
 
-    // Don't bother tracing if you're targetting yourself.
+    // Don't bother tracing if you're targeting yourself.
     if (beem.target != you.pos())
     {
         // Fire tracer.

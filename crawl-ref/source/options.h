@@ -63,7 +63,7 @@ public:
     int         msg_max_height;
     bool        mlist_allow_alternate_layout;
     bool        messages_at_top;
-    bool        mlist_targetting;
+    bool        mlist_targeting;
     bool        classic_hud;
     bool        msg_condense_repeats;
     bool        msg_condense_short;
@@ -91,7 +91,7 @@ public:
     int         default_friendly_pickup;
 
     bool        show_gold_turns; // Show gold and turns in HUD.
-    bool        show_beam;       // Show targetting beam by default.
+    bool        show_beam;       // Show targeting beam by default.
 
     long        autopickups;     // items to autopickup
     bool        show_inventory_weights; // show weights in inventory listings
@@ -114,7 +114,7 @@ public:
                                    // chunks if no safe ones are present
     bool        easy_eat_contaminated; // like easy_eat_gourmand, but
                                        // always active.
-    bool        default_target;  // start targetting on a real target
+    bool        default_target;  // start targeting on a real target
     bool        autopickup_no_burden;   // don't autopickup if it changes burden
 
     bool        note_all_skill_levels;  // take note for all skill levels (1-27)
@@ -132,7 +132,7 @@ public:
     int         colour[16];      // macro fg colours to other colours
     int         background_colour; // select default background colour
     msg_colour_type channels[NUM_MESSAGE_CHANNELS];  // msg channel colouring
-    bool        darken_beyond_range; // for whether targetting is out of range
+    bool        darken_beyond_range; // for whether targeting is out of range
 
     bool        use_old_selection_order; // use old order of species/classes in
                                          // selection screen
@@ -378,6 +378,7 @@ public:
     bool        tile_show_minihealthbar;
     bool        tile_show_minimagicbar;
     bool        tile_show_demon_numbers;
+    bool        tile_better_transparency;
 #endif
 
     typedef std::map<std::string, std::string> opt_map;

@@ -1397,7 +1397,7 @@ bool allow_control_teleport(bool quiet)
 
 void you_teleport(void)
 {
-    if (item_blocks_teleport(true))
+    if (item_blocks_teleport(true, true))
     {
         mpr("You feel a weird sense of stasis.");
     }
@@ -1509,7 +1509,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
     if (wizard_tele)
         is_controlled = true;
 
-    if (item_blocks_teleport(true) && !wizard_tele)
+    if (item_blocks_teleport(true, true) && !wizard_tele)
     {
         mpr("You feel a strange sense of stasis.");
         return (false);

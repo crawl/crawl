@@ -102,7 +102,7 @@
        SPELL_BOLT_OF_COLD,
        SPELL_INVISIBILITY,
        SPELL_ANIMATE_DEAD,
-       SPELL_IRON_SHOT,
+       SPELL_IOOD,
        SPELL_INVISIBILITY
       }
     },
@@ -1323,8 +1323,8 @@
        {
         SPELL_PRIMAL_WAVE,
         SPELL_STEAM_BALL,
-        SPELL_THROW_ICICLE,
         SPELL_NO_SPELL,
+        SPELL_THROW_ICICLE,
         SPELL_NO_SPELL,
         SPELL_BLINK
        }

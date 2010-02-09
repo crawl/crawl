@@ -102,7 +102,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
-        case DID_NECROMANCY:
+        case DID_CORPSE_VIOLATION:
             if (you.religion == GOD_FEDHAS)
             {
                 if (known)
@@ -116,10 +116,10 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                     simple_god_message(" forgives your inadvertent necromancy, "
                                        "just this once.");
                 }
-                break;
             }
-            // else fall-through
+            break;
 
+        case DID_NECROMANCY:
         case DID_UNHOLY:
         case DID_ATTACK_HOLY:
             switch (you.religion)
@@ -269,7 +269,9 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             {
 
             case GOD_FEDHAS:
-                if (victim && fedhas_protects(victim))
+                // Ballistomycetes dying is penalized separately.
+                if (victim && fedhas_protects(victim)
+                    && victim->type != MONS_BALLISTOMYCETE)
                 {
                     // level is (1 + monsterHD/2) for this conduct,
                     // trying a fixed cost since plant HD aren't that
@@ -913,7 +915,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Deliberate Mutation", "Cause Glowing", "Use Unclean",
                 "Use Chaos", "Desecrate Orcish Remains", "Destroy Orcish Idol",
                 "Create Life", "Kill Slime", "Kill Plant", "Ally Kill Plant",
-                "Was Hasty", "Gluttony"
+                "Was Hasty", "Gluttony", "Corpse Violation"
             };
 
             COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS, c1);

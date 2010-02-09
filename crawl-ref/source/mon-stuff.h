@@ -129,6 +129,7 @@ bool swap_check(monsters *monster, coord_def &loc, bool quiet = false);
 
 
 std::string get_wounds_description(const monsters *monster);
+std::string get_wounds_description_sentence(const monsters *monster);
 void print_wounds(const monsters *monster);
 bool monster_descriptor(int which_class, mon_desc_type which_descriptor);
 

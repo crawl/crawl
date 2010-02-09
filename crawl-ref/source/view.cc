@@ -99,7 +99,8 @@ void handle_seen_interrupt(monsters* monster)
         aid.context = "newly seen";
 
     if (!mons_is_safe(monster)
-        && !mons_class_flag(monster->type, M_NO_EXP_GAIN))
+        && !mons_class_flag(monster->type, M_NO_EXP_GAIN)
+            || monster->type == MONS_BALLISTOMYCETE && monster->number > 0)
     {
         interrupt_activity(AI_SEE_MONSTER, aid);
     }
@@ -998,7 +999,7 @@ void viewwindow(bool monster_updates, bool show_updates)
     // Leaving it this way because short flashes can occur in long ones,
     // and this simply works without requiring a stack.
     you.flash_colour = BLACK;
-
+    you.mold_colour = LIGHTCYAN;
 #ifndef USE_TILE
     you.last_view_update = you.num_turns;
     puttext(crawl_view.viewp.x, crawl_view.viewp.y,

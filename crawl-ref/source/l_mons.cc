@@ -70,6 +70,19 @@ MDEF(type_name)
     PLUARET(string, mons_type_name(mons->type, DESC_PLAIN).c_str());
 }
 
+MDEF(entry_name)
+{
+    ASSERT_DLUA;
+
+    const monsterentry *me = get_monster_data(mons->type);
+    if (me)
+        lua_pushstring(ls, me->name);
+    else
+        lua_pushnil(ls);
+
+    return (1);
+}
+
 MDEF(x)
 {
     PLUARET(number, int(mons->pos().x) - int(you.pos().x));
@@ -83,6 +96,57 @@ MDEF(y)
 MDEF(hd)
 {
     PLUARET(number, mons->hit_dice);
+}
+
+MDEF(shapeshifter)
+{
+    ASSERT_DLUA;
+    if (mons->has_ench(ENCH_GLOWING_SHAPESHIFTER))
+        lua_pushstring(ls, "glowing shapeshifter");
+    else if (mons->has_ench(ENCH_SHAPESHIFTER))
+        lua_pushstring(ls, "shapeshifter");
+    else
+        lua_pushnil(ls);
+    return (1);
+}
+
+MDEF(mimic)
+{
+    ASSERT_DLUA;
+    if (mons_genus(mons->type) == MONS_GOLD_MIMIC)
+    {
+        switch (mons->type)
+        {
+        case MONS_GOLD_MIMIC:
+            lua_pushstring(ls, "gold mimic"); break;
+        case MONS_WEAPON_MIMIC:
+            lua_pushstring(ls, "weapon mimic"); break;
+        case MONS_ARMOUR_MIMIC:
+            lua_pushstring(ls, "armour mimic"); break;
+        case MONS_POTION_MIMIC:
+            lua_pushstring(ls, "potion mimic"); break;
+        case MONS_SCROLL_MIMIC:
+            lua_pushstring(ls, "scroll mimic"); break;
+        default:
+            lua_pushstring(ls, "unknown mimic"); break;
+        }
+    }
+    else
+        lua_pushnil(ls);
+
+    return (1);
+}
+
+MDEF(dancing_weapon)
+{
+    ASSERT_DLUA;
+
+    if (mons_genus(mons->type) == MONS_DANCING_WEAPON)
+        lua_pushstring(ls, "dancing weapon");
+    else
+        lua_pushnil(ls);
+
+    return (1);
 }
 
 static const char *_monuse_names[] =
@@ -281,12 +345,16 @@ struct MonsAccessor
 
 static MonsAccessor mons_attrs[] =
 {
-    { "name",      l_mons_name      },
-    { "base_name", l_mons_base_name },
-    { "full_name", l_mons_full_name },
-    { "db_name",   l_mons_db_name   },
-    { "type_name", l_mons_type_name },
-    { "unique"   , l_mons_unique },
+    { "name",           l_mons_name      },
+    { "base_name",      l_mons_base_name },
+    { "full_name",      l_mons_full_name },
+    { "db_name",        l_mons_db_name   },
+    { "type_name",      l_mons_type_name },
+    { "entry_name",     l_mons_entry_name },
+    { "unique"   ,      l_mons_unique },
+    { "shapeshifter",   l_mons_shapeshifter },
+    { "mimic",          l_mons_mimic },
+    { "dancing_weapon", l_mons_dancing_weapon },
 
     { "x"   , l_mons_x    },
     { "y"   , l_mons_y    },

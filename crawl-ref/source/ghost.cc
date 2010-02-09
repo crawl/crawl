@@ -393,8 +393,8 @@ void ghost_demon::init_player_ghost()
     species = you.species;
     job = you.char_class;
 
-    // Ghosts can't worship good gods or Fedhas.
-    if (!is_good_god(you.religion) && you.religion != GOD_FEDHAS)
+    // Ghosts can't worship good gods.
+    if (!is_good_god(you.religion))
         religion = you.religion;
 
     best_skill = ::best_skill(SK_FIGHTING, (NUM_SKILLS - 1), 99);

@@ -13,12 +13,12 @@
 enum spflag_type
 {
     SPFLAG_NONE                 = 0x000000,
-    SPFLAG_DIR_OR_TARGET        = 0x000001,      // use DIR_NONE targetting
-    SPFLAG_TARGET               = 0x000002,      // use DIR_TARGET targetting
-    SPFLAG_GRID                 = 0x000004,      // use DIR_GRID targetting
-    SPFLAG_DIR                  = 0x000008,      // use DIR_DIR targetting
+    SPFLAG_DIR_OR_TARGET        = 0x000001,      // use DIR_NONE targeting
+    SPFLAG_TARGET               = 0x000002,      // use DIR_TARGET targeting
+    SPFLAG_GRID                 = 0x000004,      // use DIR_GRID targeting
+    SPFLAG_DIR                  = 0x000008,      // use DIR_DIR targeting
     SPFLAG_TARG_OBJ             = 0x000010,      // use DIR_TARGET_OBJECT targ.
-    SPFLAG_TARGETTING_MASK      = 0x00001f,      // used to test for targetting
+    SPFLAG_TARGETING_MASK       = 0x00001f,      // used to test for targeting
     SPFLAG_HELPFUL              = 0x000020,      // TARG_FRIENDS used
     SPFLAG_NEUTRAL              = 0x000040,      // TARG_ANY used
     SPFLAG_NOT_SELF             = 0x000080,      // aborts on isMe
@@ -37,7 +37,9 @@ enum spflag_type
     SPFLAG_INNATE               = 0x080000,      // an innate spell, even if
                                                  // use by a priest/wizard
     SPFLAG_NOISY                = 0x100000,      // makes noise, even if innate
-    SPFLAG_TESTING              = 0x200000       // a testing/debugging spell
+    SPFLAG_TESTING              = 0x200000,      // a testing/debugging spell
+    SPFLAG_CORPSE_VIOLATING     = 0x400000       // Conduct violation for Fedhas
+
 };
 
 enum spret_type
@@ -65,6 +67,7 @@ bool cast_a_spell( bool check_range, spell_type spell = SPELL_NO_SPELL );
 bool maybe_identify_staff( item_def &item, spell_type spell = SPELL_NO_SPELL );
 
 void inspect_spells();
+void do_cast_spell_cmd(bool force);
 
 spret_type your_spells(spell_type spell, int powc = 0, bool allow_fail = true);
 

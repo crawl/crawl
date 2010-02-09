@@ -240,8 +240,10 @@ DungeonRegion::DungeonRegion(ImageManager* im, FTFont *tag_font,
     m_cx_to_gx(0),
     m_cy_to_gy(0),
     m_buf_dngn(&im->m_textures[TEX_DUNGEON]),
-    m_buf_doll(&im->m_textures[TEX_PLAYER], TILEP_MASK_SUBMERGED, 18, 16),
-    m_buf_main_trans(&im->m_textures[TEX_DEFAULT], TILE_MASK_SUBMERGED, 18, 16),
+    m_buf_doll(&im->m_textures[TEX_PLAYER], TILEP_MASK_SUBMERGED, 18, 16,
+               Options.tile_better_transparency),
+    m_buf_main_trans(&im->m_textures[TEX_DEFAULT], TILE_MASK_SUBMERGED, 18, 16,
+                     Options.tile_better_transparency),
     m_buf_main(&im->m_textures[TEX_DEFAULT])
 {
     for (int i = 0; i < CURSOR_MAX; i++)
@@ -1387,7 +1389,7 @@ static int _click_travel(const coord_def &gc, MouseEvent &event)
 // to the clicked cell, whatever).
 static void _add_targeting_commands(const coord_def& pos)
 {
-    // Force targetting cursor back onto center to start off on a clean
+    // Force targeting cursor back onto center to start off on a clean
     // slate.
     macro_buf_add_cmd(CMD_TARGET_CENTER);
 
@@ -1424,7 +1426,7 @@ static const bool _is_appropriate_spell(spell_type spell,
         return (false);
 
     const unsigned int flags    = get_spell_flags(spell);
-    const bool         targeted = flags & SPFLAG_TARGETTING_MASK;
+    const bool         targeted = flags & SPFLAG_TARGETING_MASK;
 
     // We don't handle grid targeted spells yet.
     if (flags & SPFLAG_GRID)
@@ -1579,7 +1581,7 @@ static bool _evoke_item_on_target(actor* target)
 
 static bool _spell_in_range(spell_type spell, actor* target)
 {
-    if (!(get_spell_flags(spell) & SPFLAG_TARGETTING_MASK))
+    if (!(get_spell_flags(spell) & SPFLAG_TARGETING_MASK))
         return (true);
 
     int range = calc_spell_range(spell);
@@ -1651,7 +1653,7 @@ static bool _cast_spell_on_target(actor* target)
     macro_buf_add_cmd(CMD_CAST_SPELL);
     macro_buf_add(letter);
 
-    if (get_spell_flags(spell) & SPFLAG_TARGETTING_MASK)
+    if (get_spell_flags(spell) & SPFLAG_TARGETING_MASK)
         _add_targeting_commands(target->pos());
     return (true);
 }
@@ -4212,8 +4214,10 @@ void TitleRegion::update_message(std::string message)
 
 DollEditRegion::DollEditRegion(ImageManager *im, FTFont *font) :
     m_font_buf(font),
-    m_tile_buf(&im->m_textures[TEX_PLAYER], TILEP_MASK_SUBMERGED, 18, 16),
-    m_cur_buf(&im->m_textures[TEX_PLAYER], TILEP_MASK_SUBMERGED, 18, 16)
+    m_tile_buf(&im->m_textures[TEX_PLAYER], TILEP_MASK_SUBMERGED, 18, 16,
+               Options.tile_better_transparency),
+    m_cur_buf(&im->m_textures[TEX_PLAYER], TILEP_MASK_SUBMERGED, 18, 16,
+              Options.tile_better_transparency)
 {
     sx = sy = 0;
     dx = dy = 32;
@@ -4478,13 +4482,15 @@ void DollEditRegion::render()
     // self-explanatory.)
     {
         const int height = m_font->char_height();
+        const int width  = m_font->char_width();
         const float start_y = doll_name_y + height * 3;
-        m_font_buf.add("Change parts       left/right              Confirm choice      Enter", VColour::white, 0.0f, start_y);
-        m_font_buf.add("Change category    up/down                 Copy doll           Ctrl-C", VColour::white, 0.0f, start_y + height * 1);
-        m_font_buf.add("Change doll        0-9, Shift + arrows     Paste copied doll   Ctrl-V", VColour::white, 0.0f, start_y + height * 2);
-        m_font_buf.add("Change doll mode   m                       Randomise doll      Ctrl-R", VColour::white, 0.0f, start_y + height * 3);
-        m_font_buf.add("Save menu          Escape, Ctrl-S          Toggle equipment    *", VColour::white, 0.0f, start_y + height * 4);
-        m_font_buf.add("Quit menu          q, Ctrl-Q", VColour::white, 0.0f, start_y + height * 5);
+        const float start_x = width * 6;
+        m_font_buf.add("Change parts       left/right              Confirm choice      Enter",  VColour::white, start_x, start_y);
+        m_font_buf.add("Change category    up/down                 Copy doll           Ctrl-C", VColour::white, start_x, start_y + height * 1);
+        m_font_buf.add("Change doll        0-9, Shift + arrows     Paste copied doll   Ctrl-V", VColour::white, start_x, start_y + height * 2);
+        m_font_buf.add("Change doll mode   m                       Randomise doll      Ctrl-R", VColour::white, start_x, start_y + height * 3);
+        m_font_buf.add("Save menu          Escape, Ctrl-S          Toggle equipment    *",      VColour::white, start_x, start_y + height * 4);
+        m_font_buf.add("Quit menu          q, Ctrl-Q",                                          VColour::white, start_x, start_y + height * 5);
     }
 
     m_font_buf.draw();

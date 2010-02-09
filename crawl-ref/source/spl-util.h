@@ -109,7 +109,7 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
                       std::string name = "", std::string tile = "");
 
 bool spell_direction( dist &spelld, bolt &pbolt,
-                      targetting_type restrict = DIR_NONE,
+                      targeting_type restrict = DIR_NONE,
                       targ_mode_type mode = TARG_HOSTILE,
                       // pbolt.range if applicable, otherwise LOS_RADIUS
                       int range = 0,

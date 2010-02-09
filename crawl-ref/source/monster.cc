@@ -114,9 +114,7 @@ void monsters::reset()
     foe             = MHITNOT;
     number          = 0;
 
-    if (in_bounds(pos()))
-        mgrd(pos()) = NON_MONSTER;
-
+    mons_remove_from_grid(this);
     position.reset();
     patrol_point.reset();
     travel_target = MTRAV_NONE;
@@ -183,32 +181,15 @@ bool monsters::swimming() const
     return (feat_is_watery(grid) && mons_primary_habitat(this) == HT_WATER);
 }
 
-static bool _player_near_water()
-{
-    for (adjacent_iterator ai(you.pos()); ai; ++ai)
-        if (feat_is_water(grd(*ai)))
-            return (true);
-
-    return (false);
-}
-
 bool monsters::wants_submerge() const
 {
-    // Krakens never retreat when food (the player) is in range.
-    if (mons_base_type(this) == MONS_KRAKEN && _player_near_water())
-        return (false);
-
     // Trapdoor spiders only hide themselves under the floor when they
-    // can't see their prey, or are on low hp.
+    // can't see their prey, or are in a cloud.
     if (type == MONS_TRAPDOOR_SPIDER)
     {
         // If we're in distress, we usually want to submerge.
-        if (env.cgrid(pos()) != EMPTY_CLOUD
-            || (hit_points < max_hit_points / 2
-                && random2(max_hit_points + 1) >= hit_points))
-        {
+        if (env.cgrid(pos()) != EMPTY_CLOUD)
             return (true);
-        }
 
         const actor* _foe = get_foe();
         return (_foe == NULL || !can_see(_foe));
@@ -637,7 +618,7 @@ bool monsters::could_wield(const item_def &item, bool ignore_brand,
         // that are gifts of good gods or Fedhas won't use potentially
         // evil weapons.
         if (((is_holy() && !is_chaotic_god(god))
-                || (is_good_god(god) || god == GOD_FEDHAS))
+                || is_good_god(god))
             && is_potentially_evil_item(item))
         {
             return (false);
@@ -645,11 +626,14 @@ bool monsters::could_wield(const item_def &item, bool ignore_brand,
 
         // Holy monsters and monsters that are gifts of good gods or
         // Fedhas won't use evil weapons.
-        if (((is_holy() || is_good_god(god)) || god == GOD_FEDHAS)
+        if (((is_holy() || is_good_god(god)))
             && is_evil_item(item))
         {
             return (false);
         }
+
+        if (god == GOD_FEDHAS && is_corpse_violating_item(item))
+            return (false);
 
         // Holy monsters that aren't gifts of chaotic gods and monsters
         // that are gifts of good gods won't use chaotic weapons.
@@ -4039,8 +4023,7 @@ void monsters::load_spells(mon_spellbook_type book)
 
 bool monsters::has_hydra_multi_attack() const
 {
-    return (mons_species() == MONS_HYDRA
-            || mons_is_zombified(this) && base_monster == MONS_HYDRA);
+    return (mons_genus(mons_base_type(this)) == MONS_HYDRA);
 }
 
 bool monsters::has_multitargeting() const
@@ -4049,7 +4032,7 @@ bool monsters::has_multitargeting() const
         return (true);
 
     // Hacky little list for now. evk
-    return (type == MONS_HYDRA
+    return ((has_hydra_multi_attack() && !mons_is_zombified(this))
             || type == MONS_TENTACLED_MONSTROSITY
             || type == MONS_ELECTRIC_GOLEM);
 }
@@ -5076,15 +5059,6 @@ void monsters::apply_enchantment(const mon_enchant &me)
         // and are more likely to surface.  -- bwr
         if (!monster_can_submerge(this, grid))
             del_ench(ENCH_SUBMERGED); // forced to surface
-        else if (type == MONS_TRAPDOOR_SPIDER)
-        {
-            if (hit_points <= max_hit_points / 2)
-                break;
-            // This should probably never happen.
-            if (!mons_is_lurking(this))
-                del_ench(ENCH_SUBMERGED);
-            break;
-        }
         else if (mons_landlubbers_in_reach(this))
         {
             del_ench(ENCH_SUBMERGED);

@@ -59,6 +59,7 @@
 function place_unique(e, monster)
    e.mons(monster)
    e.tags("place_unique")
+   e.tags("transparent")
    e.map("1")
 end
 }}

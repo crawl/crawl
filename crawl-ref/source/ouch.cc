@@ -773,7 +773,7 @@ static void _xom_checks_damage(kill_method_type death_type,
 {
     if (you.religion == GOD_XOM)
     {
-        if (death_type == KILLED_BY_TARGETTING
+        if (death_type == KILLED_BY_TARGETING
             || death_type == KILLED_BY_BOUNCE
             || death_type == KILLED_BY_REFLECTION
             || death_type == KILLED_BY_SELF_AIMED
@@ -1333,6 +1333,10 @@ void end_game(scorefile_entry &se)
     {
         mpr("You die...");      // insert player name here? {dlb}
         xom_death_message((kill_method_type) se.death_type);
+        if (you.religion == GOD_FEDHAS)
+            simple_god_message(" appreciates your contribution to the "
+                               "ecosystem.", GOD_FEDHAS);
+
         flush_prev_message();
         viewwindow(false); // don't do for leaving/winning characters
 

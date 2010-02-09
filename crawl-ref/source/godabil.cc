@@ -194,7 +194,7 @@ bool trog_burn_spellbooks()
     else
     {
          simple_god_message(" is delighted!", GOD_TROG);
-         gain_piety(totalpiety);
+         gain_piety(totalpiety, true); // Don't use piety pool.
     }
 
     return (true);
@@ -535,12 +535,14 @@ static int _create_plant(coord_def & target, int hp_adjust = 0)
         if (you.see_cell(target))
         {
             if (hp_adjust)
-                mpr("A plant grows up from the ground, it is strengthened by Fedhas.");
+            {
+                mprf("A plant, strengthened by %s, grows up from the ground.",
+                     god_name(GOD_FEDHAS).c_str());
+            }
             else
                 mpr("A plant grows up from the ground.");
         }
     }
-
 
     return (plant != -1);
 }
@@ -1316,7 +1318,7 @@ bool evolve_flora()
     args.needs_path = false;
     args.may_target_monster = false;
     args.top_prompt = "Select plant or fungus to evolve.";
-    
+
     direction(spelld, args);
 
     if (!spelld.isValid)

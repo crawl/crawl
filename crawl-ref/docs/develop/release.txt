@@ -107,13 +107,19 @@ for those the list begins with step 2.
     for some more detailed explanations.
 
 11. Update the homepage
-    ssh -t username,crawl-ref@web.sourceforge.net create
+    sftp username,crawl-ref@frs.sourceforge.net
+    >cd htdocs
+    >get index.html
 
-    Go to /home/groups/c/cr/crawl-ref/htdocs.
     Paste the changelog into a newly created 0.X.txt
     Modify index.html to update the version number (the link will always point
     to the most recent release) and add a new news item. For the latter, use
     <a href="0.X.txt">text</a> as a link to the change log.
+
+    >put index.html
+    >put 0.X.txt
+
+    Check http://crawl-ref.sourceforge.net/ to see whether everything looks ok.
 
 12. Announce the release
     Post a release announcement to rec.games.roguelike.misc and

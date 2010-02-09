@@ -2636,11 +2636,27 @@ void ShoppingList::display()
             start_translevel_travel(lp);
             break;
         }
-        else if (shopmenu.menu_action == Menu::ACT_EXAMINE && is_item)
+        else if (shopmenu.menu_action == Menu::ACT_EXAMINE)
         {
             clrscr();
-            const item_def &item = get_thing_item(*thing);
-            describe_item( const_cast<item_def&>(item) );
+            if (is_item)
+            {
+                const item_def &item = get_thing_item(*thing);
+                describe_item( const_cast<item_def&>(item) );
+            }
+            else // not an item, so we only stored a description.
+            {
+                // HACK: Assume it's some kind of portal vault.
+                snprintf(info, INFO_SIZE,
+                         "%s with an entry fee of %d gold pieces.",
+                         describe_thing(*thing, DESC_CAP_A).c_str(),
+                         (int) thing_cost(*thing));
+
+                print_description(info);
+
+                if (getch() == 0)
+                    getch();
+            }
         }
         else if (shopmenu.menu_action == Menu::ACT_MISC)
         {
