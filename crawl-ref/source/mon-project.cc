@@ -109,11 +109,20 @@ void _iood_dissipate(monsters &mon)
 
 static void _fuzz_direction(monsters &mon, int pow)
 {
+    const float x = mon.props["iood_x"];
+    const float y = mon.props["iood_y"];
     float vx = mon.props["iood_vx"];
     float vy = mon.props["iood_vy"];
 
+    _normalize(vx, vy);
+
+    const float off = (coinflip() ? -1 : 1) * 0.25;
     const float tan = (random2(31) - 15) * 0.019; // approx from degrees
 
+    // Cast either from left or right hand.
+    mon.props["iood_x"] = x + vy*off;
+    mon.props["iood_y"] = y - vx*off;
+    // And off the direction a bit.
     mon.props["iood_vx"] = vx + vy*tan;
     mon.props["iood_vy"] = vy - vx*tan;
 }
