@@ -1842,6 +1842,12 @@ static bool _randart_is_conflicting( const item_def &item,
     if (item.base_type != OBJ_JEWELLERY)
         return (false);
 
+    if (item.sub_type == AMU_STASIS
+       && (proprt[ARTP_BLINK] != 0 || proprt[ARTP_CAUSE_TELEPORTATION] != 0))
+    {
+        return (true);
+    }
+
     artefact_prop_type conflicts = ARTP_NUM_PROPERTIES;
 
     switch (item.sub_type)
@@ -1868,10 +1874,6 @@ static bool _randart_is_conflicting( const item_def &item,
 
     case AMU_RAGE:
         conflicts = ARTP_STEALTH;
-        break;
-
-    case AMU_STASIS:
-        conflicts = ARTP_CAUSE_TELEPORTATION;
         break;
     }
 
