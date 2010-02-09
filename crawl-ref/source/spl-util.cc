@@ -34,8 +34,10 @@
 #include "religion.h"
 #include "spells4.h"
 #include "spl-cast.h"
-#include "spl-book.h" 
+#include "spl-book.h"
 #include "terrain.h"
+#include "itemprop.h"
+#include "transform.h"
 
 
 struct spell_desc
@@ -1041,11 +1043,13 @@ spell_type zap_type_to_spell(zap_type zap)
     return SPELL_NO_SPELL;
 }
 
+// TODO: add statue form/stoneskin, ice form/ice armor.
+// TODO: check if swiftness increases *fly* speed.
 bool spell_is_useful(spell_type spell)
 {
-    if (you_cannot_memorise(spell) || god_hates_spell(you.religion, spell)) 
+    if (you_cannot_memorise(spell) || god_hates_spell(you.religion, spell))
         return (false);
-    if (you.duration[DUR_CONF] > 0) 
+    if (you.duration[DUR_CONF] > 0)
         return (false);
 
     // due to the way this function is used, you should generally try to be
@@ -1053,7 +1057,10 @@ bool spell_is_useful(spell_type spell)
     switch (spell)
     {
     case SPELL_SWIFTNESS:
-        if (you.duration[DUR_LEVITATION] > 0 && you.duration[DUR_SWIFTNESS]  < 1)
+        // looking at player_movement_speed, this should be correct ~DMB
+        if (player_movement_speed() > 6
+            && you.duration[DUR_LEVITATION] > 0
+            && you.duration[DUR_SWIFTNESS]  < 1)
             return (true);
         break;
     case SPELL_HASTE:
@@ -1062,13 +1069,25 @@ bool spell_is_useful(spell_type spell)
             return (true);
         break;
     case SPELL_CONTROL_TELEPORT:
-        if (you.duration[DUR_TELEPORT] > 0 && you.duration[DUR_CONTROL_TELEPORT] < 1)
+        if (you.duration[DUR_TELEPORT] > 0
+            && you.duration[DUR_CONTROL_TELEPORT] < 1)
             return (true);
         break;
     case SPELL_FLY:
-        if (you.duration[DUR_LEVITATION] > 0 && you.duration[DUR_CONTROLLED_FLIGHT] < 1)
+        if (you.duration[DUR_LEVITATION] > 0
+            && you.duration[DUR_CONTROLLED_FLIGHT] < 1)
             return (true);
         break;
+    case SPELL_STONESKIN:
+        if (you.duration[DUR_TRANSFORMATION] > 0
+            && you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE
+            && you.duration[DUR_STONESKIN] < 1)
+            return (true);
+    case SPELL_OZOCUBUS_ARMOUR:
+        if (you.duration[DUR_TRANSFORMATION] > 0
+            && you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST
+            && you.duration[DUR_ICY_ARMOUR] < 1)
+            return (true);
     default: // quash unhandled constants warnings
         break;
     }
@@ -1076,30 +1095,44 @@ bool spell_is_useful(spell_type spell)
     return (false);
 }
 
-bool spell_is_useless(spell_type spell)
+bool spell_is_useless(spell_type spell, bool transient)
 {
     if (you_cannot_memorise(spell))
         return (true);
-    if (you.duration[DUR_CONF] > 0) 
-        return (true);
+    if(transient)
+    {
+        if(you.duration[DUR_CONF] > 0
+          || (spell_mana(spell) > you.magic_points)
+          || spell_no_hostile_in_range(spell, get_dist_to_nearest_monster()))
+            return (true);
+    }
 
     switch(spell)
     {
+    case SPELL_BLINK:
+    case SPELL_CONTROLLED_BLINK:
+    case SPELL_TELEPORT_SELF:
+        // TODO: Its not very well behaved to do this manually, but...
+        if((player_wearing_slot(EQ_AMULET)
+           && item_ident(you.inv[EQ_AMULET], ISFLAG_KNOW_PROPERTIES)
+           && wearing_amulet(AMU_STASIS))
+           || scan_artefacts(ARTP_PREVENT_TELEPORTATION, false) > 0)
+            return true;
+        break;
     case SPELL_SWIFTNESS:
-        // I'm pretty sure this is the right number for speed,
-        // but I'm not certain ~DMB
+        // looking at player_movement_speed, this should be correct ~DMB
         if(player_movement_speed() <= 6)
             return (true);
         break;
     case SPELL_LEVITATION:
     case SPELL_FLY:
         // is it really level 2 that allows flight? (must test) ~DMB
-        if (you.mutation[MUT_BIG_WINGS] == 2
+        if (you.mutation[MUT_BIG_WINGS] >= 1
             || (you.species == SP_KENKU && you.experience_level >= 5))
         {
             return (true);
         }
-        if (you.duration[DUR_LEVITATION] > 0)
+        if (transient && you.duration[DUR_LEVITATION] > 0)
             return (true);
         break;
     case SPELL_REGENERATION:
@@ -1107,13 +1140,13 @@ bool spell_is_useless(spell_type spell)
             return (true);
         break;
     case SPELL_INVISIBILITY:
-        if (you.duration[DUR_INVIS] > 0)
-            return (true);
-        if (you.backlit())
+        if (transient
+           && (you.duration[DUR_INVIS] > 0
+              || you.backlit() ) )
             return (true);
         break;
     case SPELL_CONTROL_TELEPORT:
-        if (you.duration[DUR_CONTROL_TELEPORT] > 0)
+        if (transient && you.duration[DUR_CONTROL_TELEPORT] > 0)
             return (true);
         break;
     default:
@@ -1123,7 +1156,7 @@ bool spell_is_useless(spell_type spell)
     return (false);
 }
 
-int spell_highlight_by_utility(spell_type spell, int default_color)
+int spell_highlight_by_utility(spell_type spell, int default_color, bool transient)
 {
     // If your god hates the spell, that overrides all other concerns
     if (god_hates_spell(you.religion, spell))
@@ -1132,7 +1165,7 @@ int spell_highlight_by_utility(spell_type spell, int default_color)
     if (god_likes_spell(you.religion, spell))
         default_color = COL_FAVORED;
 
-    if (spell_is_useless(spell))
+    if (spell_is_useless(spell, transient))
         default_color = COL_USELESS;
 
     // Specific utility should override general uselessness
@@ -1144,3 +1177,54 @@ int spell_highlight_by_utility(spell_type spell, int default_color)
 
     return (default_color);
 }
+
+bool spell_no_hostile_in_range(spell_type spell, int minRange)
+{
+    if (minRange < 0)
+        return (false);
+
+    bool bonus = 0;
+    switch (spell)
+    {
+    // These don't target monsters.
+    case SPELL_APPORTATION:
+    case SPELL_PROJECTED_NOISE:
+    case SPELL_CONJURE_FLAME:
+    case SPELL_DIG:
+    case SPELL_PASSWALL:
+
+    // Airstrike has LOS_RANGE and can go through glass walls.
+    case SPELL_AIRSTRIKE:
+
+    // These bounce and may be aimed elsewhere to bounce at monsters
+    // outside range (I guess).
+    case SPELL_SHOCK:
+    case SPELL_LIGHTNING_BOLT:
+        return (false);
+
+    case SPELL_EVAPORATE:
+    case SPELL_MEPHITIC_CLOUD:
+    case SPELL_FIREBALL:
+    case SPELL_FREEZING_CLOUD:
+    case SPELL_POISONOUS_CLOUD:
+        // Increase range by one due to cloud radius.
+        bonus = 1;
+        break;
+    default:
+        break;
+    }
+
+    // The healing spells.
+    if (testbits(get_spell_flags(spell), SPFLAG_HELPFUL))
+        return (false);
+
+    const int range = calc_spell_range(spell);
+    if (range < 0)
+        return (false);
+
+    if (range + bonus < minRange)
+        return (true);
+
+    return (false);
+}
+

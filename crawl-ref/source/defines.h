@@ -213,20 +213,13 @@ enum COLORS
     LIGHTMAGENTA,
     YELLOW,
     WHITE,
-    MAX_TERM_COLOUR,
-    COL_USELESS = BROWN, 
-    COL_USEFUL = LIGHTGREEN,
-    COL_FORBIDDEN = MAGENTA,
-    COL_FAVORED = YELLOW
+    MAX_TERM_COLOUR
 };
 #else
 # include <conio.h>
 # define LIGHTGREY LIGHTGRAY
 # define DARKGREY DARKGRAY
 # define MAX_TERM_COLOUR 16
-# define COL_USELESS DARKGRAY
-# define COL_USEFUL LIGHTBLUE
-# define COL_FORBIDDEN MAGENTA
 #endif
 
 // Colour options... these are used as bit flags along with the colour

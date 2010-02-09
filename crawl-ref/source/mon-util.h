@@ -411,4 +411,6 @@ int scan_mon_inv_randarts(const monsters *mon,
 
 bool player_or_mon_in_sanct(const monsters* monster);
 
+int get_dist_to_nearest_monster();
+
 #endif

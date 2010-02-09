@@ -3795,3 +3795,29 @@ bool mons_landlubbers_in_reach(const monsters *monster)
 
     return (false);
 }
+
+int get_dist_to_nearest_monster()
+{
+    int minRange = LOS_RADIUS + 1;
+    for (radius_iterator ri(&you.get_los_no_trans(), true); ri; ++ri)
+    {
+        const monsters *mon = monster_at(*ri);
+        if (mon == NULL)
+            continue;
+
+        if (!mon->visible_to(&you) || mons_is_unknown_mimic(mon))
+            continue;
+
+        // Plants/fungi don't count.
+        if (mons_class_flag(mon->type, M_NO_EXP_GAIN))
+            continue;
+
+        if (mon->wont_attack())
+            continue;
+
+        int dist = grid_distance(you.pos(), *ri);
+        if (dist < minRange)
+            minRange = dist;
+    }
+    return (minRange);
+}
