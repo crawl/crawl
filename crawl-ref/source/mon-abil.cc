@@ -31,6 +31,7 @@
 #include "mon-util.h"
 #include "options.h"
 #include "random.h"
+#include "religion.h"
 #include "spl-mis.h"
 #include "spl-util.h"
 #include "state.h"
@@ -1490,6 +1491,18 @@ struct position_node
     }
 };
 
+bool _ballisto_at(const coord_def & target)
+{
+    monsters * mons = monster_at(target);
+    return (mons && mons ->type == MONS_BALLISTOMYCETE
+            && mons->alive());
+}
+
+bool _player_at(const coord_def & target)
+{
+    return (you.pos() == target);
+}
+
 // If 'monster' is a ballistomycete or spore, activate some number of
 // ballistomycetes on the level.
 void activate_ballistomycetes(monsters * monster, const coord_def & origin,
@@ -1501,9 +1514,20 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
         return;
     }
 
+    // If a spore or inactive ballisto died we will only activate one
+    // other ballisto. If it was an active ballisto we will distribute
+    // its count to others on the level.
+    int activation_count = 1;
+    if (monster->type == MONS_BALLISTOMYCETE)
+    {
+        activation_count += monster->number;
+    }
+
     int spore_count = 0;
     int ballisto_count = 0;
 
+    bool any_friendly = false;
+    bool fedhas_mode  = false;
     for (monster_iterator mi; mi; ++mi)
     {
         if (mi->mindex() != monster->mindex()
@@ -1515,10 +1539,14 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
             else if (mi->type == MONS_GIANT_SPORE)
                 spore_count++;
 
+            if (mi->attitude == ATT_FRIENDLY)
+                any_friendly = true;
         }
 
     }
 
+    bool exhaustive = true;
+    bool (*valid_target)(const coord_def & ) = _ballisto_at;
     position_node temp_node;
     temp_node.pos = origin;
     temp_node.last = NULL;
@@ -1530,26 +1558,31 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
     std::set<position_node>::iterator current = visited.insert(temp_node).first;
     fringe.push(current);
 
+    if (you.religion == GOD_FEDHAS)
+    {
+        fedhas_mode = true;
+        activation_count = 1;
+        exhaustive = false;
+        valid_target = _player_at;
+    }
+
     while (!fringe.empty())
     {
         current = fringe.front();
         fringe.pop();
 
-        monsters * mons = monster_at(current->pos);
-        if (mons
-            && mons ->type == MONS_BALLISTOMYCETE
-            && mons->mindex()!=monster->mindex())
+        if (valid_target(current->pos))
         {
             candidates.push_back(current);
+            if (!exhaustive)
+                break;
         }
 
         for (adjacent_iterator adj_it(current->pos); adj_it; ++adj_it)
         {
-            monsters * temp = monster_at(*adj_it);
-
             if (in_bounds(*adj_it)
                 && (is_moldy(*adj_it)
-                    || temp && temp->type == MONS_BALLISTOMYCETE))
+                    || _ballisto_at(*adj_it)))
             {
                 temp_node.pos = *adj_it;
                 temp_node.last = &(*current);
@@ -1565,6 +1598,7 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
     if (candidates.empty())
     {
         if (player_kill
+            && !fedhas_mode
             && spore_count == 0
             && ballisto_count == 0
             && monster->attitude == ATT_HOSTILE)
@@ -1581,14 +1615,6 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
     if (candidates.size() > 25)
         return;
 
-    // If a spore or inactive ballisto died we will only activate one
-    // other ballisto. If it was an active ballisto we will distribute
-    // its count to others on the level.
-    int activation_count = 1;
-    if (monster ->type == MONS_BALLISTOMYCETE)
-    {
-        activation_count += monster->number;
-    }
 
     std::random_shuffle(candidates.begin(), candidates.end());
 
@@ -1602,16 +1628,21 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
 
         monsters * spawner = monster_at(candidates[index]->pos);
 
-        spawner->number++;
-
-        // Change color and start the spore production timer if we
-        // are moving from 0 to 1.
-        if (spawner->number == 1)
+        // This may be the players position, in which case we don't
+        // have to mess with spore production on anything
+        if (spawner && !fedhas_mode)
         {
-            spawner->colour = LIGHTRED;
-            // Reset the spore production timer.
-            spawner->del_ench(ENCH_SPORE_PRODUCTION, false);
-            spawner->add_ench(ENCH_SPORE_PRODUCTION);
+            spawner->number++;
+
+            // Change color and start the spore production timer if we
+            // are moving from 0 to 1.
+            if (spawner->number == 1)
+            {
+                spawner->colour = LIGHTRED;
+                // Reset the spore production timer.
+                spawner->del_ench(ENCH_SPORE_PRODUCTION, false);
+                spawner->add_ench(ENCH_SPORE_PRODUCTION);
+            }
         }
 
         const position_node * thread = &(*candidates[index]);
@@ -1640,6 +1671,5 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
         }
 
         delay(sp_delay);
-
     }
 }
