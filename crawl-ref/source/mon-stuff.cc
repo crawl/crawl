@@ -544,7 +544,7 @@ static void _give_monster_experience(monsters *victim,
         return;
 
     if ((!victim_was_born_friendly || !mon->friendly())
-        && !mons_aligned(killer_index, victim->mindex()))
+        && !mons_aligned(mon, victim))
     {
         if (mon->gain_exp(experience))
         {

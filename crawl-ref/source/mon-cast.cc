@@ -164,7 +164,7 @@ static bool _set_allied_target(monsters * caster, bolt & pbolt)
     {
         if (*targ != caster
             && mons_genus(targ->type) == caster_genus
-            && mons_atts_aligned(targ->attitude, caster->attitude)
+            && mons_aligned(*targ, caster)
             && !targ->has_ench(ENCH_CHARM)
             && _flavour_benefits_monster(pbolt.flavour, **targ))
         {
@@ -912,7 +912,7 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                 continue;
 
             if (mi->type != hog_type
-                && mons_atts_aligned(monster->attitude, mi->attitude)
+                && mons_aligned(monster, *mi)
                 && mons_power(hog_type) + random2(4) >= mons_power(mi->type)
                 && (!mi->can_use_spells() || coinflip())
                 && one_chance_in(++count))
@@ -1264,9 +1264,9 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
                     spellOK = true;
 
                     if (ms_direct_nasty(spell_cast)
-                        && mons_aligned(monster->mindex(),
-                                        monster->foe))
-                    {
+                        && mons_aligned(monster, (monster->foe == MHITYOU) ?
+                           &you : foe)) // foe=get_foe() is NULL for friendlies
+                    {                   // targetting you, which is bad here.
                         spellOK = false;
                     }
                     else if (monster->foe == MHITYOU || monster->foe == MHITNOT)
@@ -2643,7 +2643,7 @@ void _noise_fill_target(std::string& targ_prep, std::string& target,
             }
             else if (visible_path && m && you.can_see(m))
             {
-                bool is_aligned  = mons_aligned(m->mindex(), monster->mindex());
+                bool is_aligned  = mons_aligned(m, monster);
                 std::string name = m->name(DESC_NOCAP_THE);
 
                 if (target == "nothing")

@@ -304,7 +304,7 @@ bool mons_has_ranged_ability(const monsters *mon);
 const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
                          bool visible = true);
 
-bool mons_aligned(int m1, int m2);
+bool mons_aligned(const actor *m1, const actor *m2);
 bool mons_atts_aligned(mon_attitude_type fr1, mon_attitude_type fr2);
 
 bool mons_att_wont_attack(mon_attitude_type fr);
