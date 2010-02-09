@@ -446,7 +446,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
         beam.is_tracer    = false;
         beam.hit          = 20;
         beam.damage       = mons_foe_is_mons(mons) ? dice_def(5, 7)
-                                                   : dice_def(3, 20);
+                                                   : dice_def(3, 15);
         break;
 
     case SPELL_MINOR_HEALING:
@@ -623,7 +623,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
         beam.name         = "blast of hellfire";
         beam.aux_source   = "blast of hellfire";
         beam.colour       = RED;
-        beam.damage       = dice_def( 3, 25 );
+        beam.damage       = dice_def( 3, 20 );
         beam.hit          = 24;
         beam.flavour      = BEAM_HELLFIRE;
         beam.is_beam      = true;
