@@ -99,7 +99,8 @@ void handle_seen_interrupt(monsters* monster)
         aid.context = "newly seen";
 
     if (!mons_is_safe(monster)
-        && !mons_class_flag(monster->type, M_NO_EXP_GAIN))
+        && !mons_class_flag(monster->type, M_NO_EXP_GAIN)
+            || monster->type == MONS_BALLISTOMYCETE && monster->number > 0)
     {
         interrupt_activity(AI_SEE_MONSTER, aid);
     }
