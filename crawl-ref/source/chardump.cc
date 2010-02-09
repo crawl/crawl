@@ -1313,7 +1313,7 @@ void dump_map(const char* fname, bool debug, bool dist)
     fclose(fp);
 }
 
-static bool write_dump( const std::string &fname, dump_params &par)
+static bool write_dump(const std::string &fname, dump_params &par)
 {
     bool succeeded = false;
 
