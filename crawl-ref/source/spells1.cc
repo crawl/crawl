@@ -86,7 +86,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
 
     // yes, there is a logic to this ordering {dlb}:
     if (item_blocks_teleport(true, true) && !wizard_blink)
-        mpr("You feel a weird sense of stasis.");
+        canned_msg(MSG_WEIRD_STASIS);
     else if (you.level_type == LEVEL_ABYSS
              && _abyss_blocks_teleport(high_level_controlled_blink)
              && !wizard_blink)
@@ -206,7 +206,7 @@ void random_blink(bool allow_partial_control, bool override_abyss)
     coord_def target;
 
     if (item_blocks_teleport(true, true))
-        mpr("You feel a weird sense of stasis.");
+        canned_msg(MSG_WEIRD_STASIS);
     else if (you.level_type == LEVEL_ABYSS
              && !override_abyss && !one_chance_in(3))
     {
@@ -238,7 +238,7 @@ void random_blink(bool allow_partial_control, bool override_abyss)
         // result in awkward messaging if it cancels for some reason,
         // but it's probably better than getting the blink message after
         // any Mf transform messages all the time. -cao
-        mpr("You blink.");
+        canned_msg(MSG_YOU_BLINK);
         coord_def origin = you.pos();
         success = move_player_to_grid(target, false, true, true);
         if (success)
