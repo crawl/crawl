@@ -322,6 +322,7 @@ reflected:
             // If you're next to the caster and both of you wear shields of
             // reflection, this can lead to a brief game of ping-pong, but
             // rapidly increasing shield penalties will make it short.
+            mon.lose_energy(EUT_MOVE);
             goto reflected;
         }
 
