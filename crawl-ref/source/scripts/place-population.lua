@@ -9,6 +9,7 @@ local start_level = nil
 local end_level = nil
 local ignore_uniques = true
 local group_uniques = false
+local sort_type = "XP"
 
 local function canonical_name(mons)
   local shapeshifter = mons.shapeshifter
@@ -16,7 +17,21 @@ local function canonical_name(mons)
     return shapeshifter
   end
 
+  local mimic = mons.mimic
+  if mimic then
+    return mimic
+  end
+
+  local dancing_weapon = mons.dancing_weapon
+  if dancing_weapon then
+    return dancing_weapon
+  end
+
   local mname = mons.name
+
+  if string.find(mname, 'very ugly thing$') then
+    return "very ugly thing"
+  end
 
   if string.find(mname, 'ugly thing$') then
     return "ugly thing"
@@ -71,9 +86,14 @@ local function report_monster_counts_at(place, mcount_map)
 
   local monster_counts = util.pairs(mcount_map)
   table.sort(monster_counts, function (a, b)
-                               return a[2].etotal > b[2].etotal
-                             end)
-
+-- Further sort options can be added later if desired.  Default is XP, -sort_count sorts by count/percentage instead.
+    if sort_type == 'count' then
+        return a[2].total > b[2].total
+    else
+        return a[2].etotal > b[2].etotal
+    end
+  end)
+                         
   local total = 0
   for _, monster_pop in ipairs(monster_counts) do
     if monster_pop[1] ~= 'TOTAL' then
@@ -288,6 +308,9 @@ local function branch_resets()
     end
     if arg == '-groupuniques' then
       group_uniques = true
+    end
+    if arg == '-sort_count' then
+      sort_type = "count"
     end
     local _, _, optiters = string.find(arg, "^-n=(%d+)")
     if optiters then
