@@ -2523,7 +2523,7 @@ std::string _noise_message(const std::vector<std::string>& key_list,
 
         // If we got no message and we're using the silent prefix, then
         // try again without the prefix.
-        if (prefix != "silent") // XXX: "silent "?
+        if (prefix != "silent ")
             continue;
 
         msg = getSpeakString(key);
