@@ -273,6 +273,13 @@ reflected:
     if (pos == mon.pos())
         return (false);
 
+    if (!no_trail)
+    {
+        place_cloud(CLOUD_MAGIC_TRAIL, mon.pos(),
+                    2 + random2(3), mon.kill_alignment(),
+                    KILL_MON_MISSILE);
+    }
+
     actor *victim = actor_at(pos);
     if (cell_is_solid(pos) || victim)
     {
@@ -352,13 +359,6 @@ reflected:
 
         if (_iood_hit(mon, pos))
             return (true);
-    }
-
-    if (!no_trail)
-    {
-        place_cloud(CLOUD_MAGIC_TRAIL, mon.pos(),
-                    2 + random2(3), mon.kill_alignment(),
-                    KILL_MON_MISSILE);
     }
 
     if (!mon.move_to_pos(pos))
