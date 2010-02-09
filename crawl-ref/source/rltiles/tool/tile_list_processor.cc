@@ -716,6 +716,9 @@ void tile_list_processor::add_image(tile &img, const char *enumname)
         m_page.m_counts[m_last_enum]++;
         weight += m_page.m_probs[m_page.m_probs.size() - 1];
     }
+
+    m_page.m_base_tiles.push_back(m_last_enum);
+
     m_page.m_probs.push_back(weight);
 
     if (m_categories.size() > 0)
@@ -869,6 +872,7 @@ bool tile_list_processor::write_data()
         fprintf(fp, "    %s_%s_MAX\n};\n\n", m_prefix.c_str(), ucname.c_str());
 
         fprintf(fp, "int tile_%s_count(unsigned int idx);\n", lcname.c_str());
+        fprintf(fp, "int tile_%s_basetile(unsigned int idx);\n", lcname.c_str());
         if (strcmp(m_name.c_str(), "dngn") == 0)
         {
             fprintf(fp, "int tile_%s_probs(unsigned int idx);\n",
@@ -936,6 +940,19 @@ bool tile_list_processor::write_data()
         fprintf(fp, "    assert(idx >= %s && idx < %s);\n",
                 m_start_value.c_str(), max.c_str());
         fprintf(fp, "    return _tile_%s_count[idx - %s];\n",
+                lcname.c_str(), m_start_value.c_str());
+        fprintf(fp, "}\n\n");
+
+        fprintf(fp, "int _tile_%s_basetiles[%s - %s] =\n{\n",
+                lcname.c_str(), max.c_str(), m_start_value.c_str());
+        for (unsigned int i = 0; i < m_page.m_base_tiles.size(); i++)
+            fprintf(fp, "    %d,\n", m_page.m_base_tiles[i]);
+        fprintf(fp, "};\n\n");
+
+        fprintf(fp, "int tile_%s_basetile(unsigned int idx)\n{\n", lcname.c_str());
+        fprintf(fp, "    assert(idx >= %s && idx < %s);\n",
+                m_start_value.c_str(), max.c_str());
+        fprintf(fp, "    return _tile_%s_basetiles[idx - %s];\n",
                 lcname.c_str(), m_start_value.c_str());
         fprintf(fp, "}\n\n");
 
