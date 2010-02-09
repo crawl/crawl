@@ -1300,8 +1300,6 @@ static void delete_files()
 
 void end_game(scorefile_entry &se)
 {
-    bool dead = true;
-
     for (int i = 0; i < ENDOFPACK; i++)
         set_ident_flags( you.inv[i], ISFLAG_IDENT_MASK );
 
@@ -1313,25 +1311,12 @@ void end_game(scorefile_entry &se)
 
     delete_files();
 
-    if (!dump_char( morgue_name(se.death_time), !dead, true, &se ))
-    {
-        mpr("Char dump unsuccessful! Sorry about that.");
-        if (!crawl_state.seen_hups)
-            more();
-        clrscr();
-    }
-
-    if (se.death_type == KILLED_BY_LEAVING
-        || se.death_type == KILLED_BY_QUITTING
-        || se.death_type == KILLED_BY_WINNING)
-    {
-        dead = false;
-    }
-
     // death message
-    if (dead)
+    if (se.death_type != KILLED_BY_LEAVING
+        && se.death_type != KILLED_BY_QUITTING
+        && se.death_type != KILLED_BY_WINNING)
     {
-        mpr("You die...");      // insert player name here? {dlb}
+        mprnojoin("You die...");      // insert player name here? {dlb}
         xom_death_message((kill_method_type) se.death_type);
         if (you.religion == GOD_FEDHAS)
             simple_god_message(" appreciates your contribution to the "
@@ -1342,6 +1327,14 @@ void end_game(scorefile_entry &se)
 
         if (Tutorial.tutorial_left)
             tutorial_death_screen();
+    }
+
+    if (!dump_char(morgue_name(se.death_time), false, true, &se))
+    {
+        mpr("Char dump unsuccessful! Sorry about that.");
+        if (!crawl_state.seen_hups)
+            more();
+        clrscr();
     }
 
 #ifdef DGL_WHEREIS
@@ -1356,7 +1349,6 @@ void end_game(scorefile_entry &se)
 
     browse_inventory(true);
     textcolor( LIGHTGREY );
-    clrscr();
 
     clrscr();
     cprintf("Goodbye, %s.", you.your_name.c_str());
