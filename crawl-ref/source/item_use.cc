@@ -1815,7 +1815,7 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
         place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), KC_YOU);
 
         victim->moveto(pos);
-        mpr("You blink!");
+        mpr("You blink.");
     }
     else
     {
