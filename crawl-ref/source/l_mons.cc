@@ -70,6 +70,19 @@ MDEF(type_name)
     PLUARET(string, mons_type_name(mons->type, DESC_PLAIN).c_str());
 }
 
+MDEF(entry_name)
+{
+    ASSERT_DLUA;
+
+    const monsterentry *me = get_monster_data(mons->type);
+    if (me)
+        lua_pushstring(ls, me->name);
+    else
+        lua_pushnil(ls);
+
+    return (1);
+}
+
 MDEF(x)
 {
     PLUARET(number, int(mons->pos().x) - int(you.pos().x));
@@ -100,7 +113,10 @@ MDEF(shapeshifter)
 MDEF(mimic)
 {
     ASSERT_DLUA;
-    lua_pushboolean(ls, mons_genus(mons->type) == MONS_GOLD_MIMIC);
+    if (mons_genus(mons->type) == MONS_GOLD_MIMIC)
+        lua_pushstring(ls, "mimic");
+    else
+        lua_pushnil(ls);
 
     return (1);
 }
@@ -109,7 +125,11 @@ MDEF(dancing_weapon)
 {
     ASSERT_DLUA;
 
-    lua_pushboolean(ls, mons_genus(mons->type) == MONS_DANCING_WEAPON);
+    if (mons_genus(mons->type) == MONS_DANCING_WEAPON)
+        lua_pushstring(ls, "dancing weapon");
+    else
+        lua_pushnil(ls);
+
     return (1);
 }
 
@@ -314,10 +334,11 @@ static MonsAccessor mons_attrs[] =
     { "full_name",      l_mons_full_name },
     { "db_name",        l_mons_db_name   },
     { "type_name",      l_mons_type_name },
+    { "entry_name",     l_mons_entry_name },
     { "unique"   ,      l_mons_unique },
     { "shapeshifter",   l_mons_shapeshifter },
     { "mimic",          l_mons_mimic },
-    { "dancing_wepaon", l_mons_dancing_weapon },
+    { "dancing_weapon", l_mons_dancing_weapon },
 
     { "x"   , l_mons_x    },
     { "y"   , l_mons_y    },
