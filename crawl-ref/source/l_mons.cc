@@ -97,6 +97,22 @@ MDEF(shapeshifter)
     return (1);
 }
 
+MDEF(mimic)
+{
+    ASSERT_DLUA;
+    lua_pushboolean(ls, mons_genus(mons->type) == MONS_GOLD_MIMIC);
+
+    return (1);
+}
+
+MDEF(dancing_weapon)
+{
+    ASSERT_DLUA;
+
+    lua_pushboolean(ls, mons_genus(mons->type) == MONS_DANCING_WEAPON);
+    return (1);
+}
+
 static const char *_monuse_names[] =
 {
     "nothing", "open_doors", "starting_equipment", "weapons_armour",
@@ -293,13 +309,15 @@ struct MonsAccessor
 
 static MonsAccessor mons_attrs[] =
 {
-    { "name",         l_mons_name      },
-    { "base_name",    l_mons_base_name },
-    { "full_name",    l_mons_full_name },
-    { "db_name",      l_mons_db_name   },
-    { "type_name",    l_mons_type_name },
-    { "unique"   ,    l_mons_unique },
-    { "shapeshifter", l_mons_shapeshifter },
+    { "name",           l_mons_name      },
+    { "base_name",      l_mons_base_name },
+    { "full_name",      l_mons_full_name },
+    { "db_name",        l_mons_db_name   },
+    { "type_name",      l_mons_type_name },
+    { "unique"   ,      l_mons_unique },
+    { "shapeshifter",   l_mons_shapeshifter },
+    { "mimic",          l_mons_mimic },
+    { "dancing_wepaon", l_mons_dancing_weapon },
 
     { "x"   , l_mons_x    },
     { "y"   , l_mons_y    },
