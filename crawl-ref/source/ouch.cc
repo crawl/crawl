@@ -1301,12 +1301,12 @@ static void delete_files()
 void end_game(scorefile_entry &se)
 {
     for (int i = 0; i < ENDOFPACK; i++)
-        set_ident_flags( you.inv[i], ISFLAG_IDENT_MASK );
+        set_ident_flags(you.inv[i], ISFLAG_IDENT_MASK);
 
     for (int i = 0; i < ENDOFPACK; i++)
     {
         if (you.inv[i].base_type != 0)
-            set_ident_type( you.inv[i], ID_KNOWN_TYPE );
+            set_ident_type(you.inv[i], ID_KNOWN_TYPE);
     }
 
     delete_files();
@@ -1338,32 +1338,32 @@ void end_game(scorefile_entry &se)
     }
 
 #ifdef DGL_WHEREIS
-    whereis_record( se.death_type == KILLED_BY_QUITTING? "quit" :
-                    se.death_type == KILLED_BY_WINNING ? "won"  :
-                    se.death_type == KILLED_BY_LEAVING ? "bailed out"
-                                                       : "dead" );
+    whereis_record(se.death_type == KILLED_BY_QUITTING? "quit" :
+                   se.death_type == KILLED_BY_WINNING ? "won"  :
+                   se.death_type == KILLED_BY_LEAVING ? "bailed out"
+                                                      : "dead");
 #endif
 
     if (!crawl_state.seen_hups)
         more();
 
     browse_inventory(true);
-    textcolor( LIGHTGREY );
+    textcolor(LIGHTGREY);
 
     clrscr();
     cprintf("Goodbye, %s.", you.your_name.c_str());
-    cprintf( EOL EOL "    " ); // Space padding where # would go in list format
+    cprintf(EOL EOL "    "); // Space padding where # would go in list format
 
-    std::string hiscore = hiscores_format_single_long( se, true );
+    std::string hiscore = hiscores_format_single_long(se, true);
 
     const int lines = count_occurrences(hiscore, EOL) + 1;
 
-    cprintf( "%s", hiscore.c_str() );
+    cprintf("%s", hiscore.c_str());
 
-    cprintf( EOL "Best Crawlers -" EOL );
+    cprintf(EOL "Best Crawlers -" EOL);
 
     // "- 5" gives us an extra line in case the description wraps on a line.
-    hiscores_print_list( get_number_of_lines() - lines - 5 );
+    hiscores_print_list(get_number_of_lines() - lines - 5);
 
     // just to pause, actual value returned does not matter {dlb}
     if (!crawl_state.seen_hups)
