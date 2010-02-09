@@ -1083,11 +1083,13 @@ bool spell_is_useful(spell_type spell)
             && you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE
             && you.duration[DUR_STONESKIN] < 1)
             return (true);
+        break;
     case SPELL_OZOCUBUS_ARMOUR:
         if (you.duration[DUR_TRANSFORMATION] > 0
             && you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST
             && you.duration[DUR_ICY_ARMOUR] < 1)
             return (true);
+        break;
     default: // quash unhandled constants warnings
         break;
     }
@@ -1095,6 +1097,11 @@ bool spell_is_useful(spell_type spell)
     return (false);
 }
 
+// This function attempts to determine if 'spell' is useless to
+// the player. if 'transient' is true, then it will include checks
+// for volitile or temporary states (such as status effects, mana, etc.)
+//
+// its notably used by 'spell_highlight_by_utility'
 bool spell_is_useless(spell_type spell, bool transient)
 {
     if (you_cannot_memorise(spell))
@@ -1112,12 +1119,15 @@ bool spell_is_useless(spell_type spell, bool transient)
     case SPELL_BLINK:
     case SPELL_CONTROLLED_BLINK:
     case SPELL_TELEPORT_SELF:
+        mprf(MSGCH_DIAGNOSTICS, "ident is: %i", wearing_amulet(AMU_STASIS) ? item_ident(you.inv[EQ_AMULET], ISFLAG_KNOW_PROPERTIES) : -7331);
         // TODO: Its not very well behaved to do this manually, but...
-        if((player_wearing_slot(EQ_AMULET)
-           && item_ident(you.inv[EQ_AMULET], ISFLAG_KNOW_PROPERTIES)
-           && wearing_amulet(AMU_STASIS))
-           || scan_artefacts(ARTP_PREVENT_TELEPORTATION, false) > 0)
+        if ((wearing_amulet(AMU_STASIS)
+            && item_ident(you.inv[EQ_AMULET], ISFLAG_IDENT_MASK) != 0 )
+            || scan_artefacts(ARTP_PREVENT_TELEPORTATION, false) > 0)
+           {
+//            mprf(MSGCH_DIAGNOSTICS, "-Tele!");
             return true;
+        }
         break;
     case SPELL_SWIFTNESS:
         // looking at player_movement_speed, this should be correct ~DMB
@@ -1126,7 +1136,6 @@ bool spell_is_useless(spell_type spell, bool transient)
         break;
     case SPELL_LEVITATION:
     case SPELL_FLY:
-        // is it really level 2 that allows flight? (must test) ~DMB
         if (you.mutation[MUT_BIG_WINGS] >= 1
             || (you.species == SP_KENKU && you.experience_level >= 5))
         {
@@ -1156,6 +1165,14 @@ bool spell_is_useless(spell_type spell, bool transient)
     return (false);
 }
 
+
+// This function takes a spell, and determines what color it should be highlighted with
+// You shouldn't have to touch this unless you want to add new highlighting options.
+// as you can see, the functions it uses to determine highlights are:
+//       spell_is_useful(spell)
+//       spell_is_useless(spell, transient)
+//       god_likes_spell(spell)
+//       god_hates_spell(spell)
 int spell_highlight_by_utility(spell_type spell, int default_color, bool transient)
 {
     // If your god hates the spell, that overrides all other concerns

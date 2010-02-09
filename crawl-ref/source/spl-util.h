@@ -41,7 +41,8 @@ enum spell_highlight_colours
     COL_USEFUL       = LIGHTBLUE, // the palyers status makes this ability notably more useful
     COL_EMPOWERED    = LIGHTBLUE, // The ability is made stronger by the player's status (unused)
     COL_FORBIDDEN    = LIGHTRED,  // The player's god hates this abilty
-    COL_FAVORED      = YELLOW     // the player's god likes this ability
+    COL_FAVORED      = YELLOW,    // the player's god likes this ability
+    COL_KNOWN        = LIGHTGRAY  // the spell is known (use for spellbook_contents)
 };
 
 bool is_valid_spell(spell_type spell);
@@ -136,7 +137,7 @@ spell_type zap_type_to_spell(zap_type zap);
 bool spell_is_useless(spell_type spell, bool transient = false);
 bool spell_is_useful(spell_type spell);
 
-int spell_highlight_by_utility(spell_type spell, int default_color = LIGHTGRAY, bool transient = false);
+int spell_highlight_by_utility(spell_type spell, int default_color = COL_KNOWN, bool transient = false);
 bool spell_no_hostile_in_range(spell_type spell, int minRange);
 
 #endif
