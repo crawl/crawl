@@ -1869,6 +1869,10 @@ static bool _randart_is_conflicting( const item_def &item,
     case AMU_RAGE:
         conflicts = ARTP_STEALTH;
         break;
+
+    case AMU_STASIS:
+        conflicts = ARTP_CAUSE_TELEPORTATION;
+        break;
     }
 
     if (conflicts == ARTP_NUM_PROPERTIES)
