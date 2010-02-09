@@ -3677,6 +3677,9 @@ bool monsters::rot(actor *agent, int amount, int immediate, bool quiet)
 int monsters::hurt(const actor *agent, int amount, beam_type flavour,
                    bool cleanup_dead)
 {
+    if (mons_is_projectile(type))
+        return (0);
+
     if (alive())
     {
         if (amount == INSTANT_DEATH)
