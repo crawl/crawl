@@ -5189,9 +5189,7 @@ void melee_attack::mons_perform_attack_rounds()
                 }
 
                 monsters *mons = monster_at(*i);
-                if (mons
-                    && !mons_aligned(attacker->as_monster()->mindex(),
-                                     mons->mindex()))
+                if (mons && !mons_aligned(attacker, mons))
                 {
                     defender = mons;
                     end = false;

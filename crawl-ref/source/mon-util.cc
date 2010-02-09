@@ -2038,27 +2038,27 @@ int mons_power(int mc)
     return (smc->hpdice[0]);
 }
 
-bool mons_aligned(int m1, int m2)
+bool mons_aligned(const actor *m1, const actor *m2)
 {
     mon_attitude_type fr1, fr2;
-    monsters *mon1, *mon2;
+    const monsters *mon1, *mon2;
 
-    if (m1 == MHITNOT || m2 == MHITNOT)
+    if (!m1 || !m2)
         return (true);
 
-    if (m1 == MHITYOU)
+    if (m1->atype() == ACT_PLAYER)
         fr1 = ATT_FRIENDLY;
     else
     {
-        mon1 = &menv[m1];
+        mon1 = static_cast<const monsters*>(m1);
         fr1 = mons_attitude(mon1);
     }
 
-    if (m2 == MHITYOU)
+    if (m2->atype() == ACT_PLAYER)
         fr2 = ATT_FRIENDLY;
     else
     {
-        mon2 = &menv[m2];
+        mon2 = static_cast<const monsters*>(m2);
         fr2 = mons_attitude(mon2);
     }
 
@@ -3773,7 +3773,7 @@ bool mons_landlubbers_in_reach(const monsters *monster)
                             NULL,
                             true);
                          ai; ++ai)
-        if ((act = actor_at(*ai)) && !mons_aligned(monster->mindex(), act->mindex()))
+        if ((act = actor_at(*ai)) && !mons_aligned(monster, act))
             return (true);
 
     return (false);

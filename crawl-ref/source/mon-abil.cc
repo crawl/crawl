@@ -621,14 +621,13 @@ static bool _orc_battle_cry(monsters *chief)
         && chief->can_see(foe)
         && coinflip())
     {
-        const int boss_index = chief->mindex();
         const int level = chief->hit_dice > 12? 2 : 1;
         std::vector<monsters*> seen_affected;
         for (monster_iterator mi(chief); mi; ++mi)
         {
             if (*mi != chief
                 && mons_species(mi->type) == MONS_ORC
-                && mons_aligned(boss_index, mi->mindex())
+                && mons_aligned(chief, *mi)
                 && mi->hit_dice < chief->hit_dice
                 && !mi->berserk()
                 && !mi->has_ench(ENCH_MIGHT)
@@ -867,7 +866,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
         c = circle_def(monster->pos(), 4, C_CIRCLE);
         for (monster_iterator targ(&c); targ; ++targ)
         {
-            if (mons_atts_aligned(monster->attitude, targ->attitude))
+            if (mons_aligned(monster, *targ))
                 continue;
 
             if (monster->can_see(*targ) && !feat_is_solid(grd(targ->pos())))
