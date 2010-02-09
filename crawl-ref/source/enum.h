@@ -392,7 +392,9 @@ enum canned_message_type
     MSG_UNTHINKING_ACT,
     MSG_SPELL_FIZZLES,
     MSG_HUH,
-    MSG_EMPTY_HANDED
+    MSG_EMPTY_HANDED,
+    MSG_YOU_BLINK,
+    MSG_WEIRD_STASIS
 };
 
 enum char_set_type
