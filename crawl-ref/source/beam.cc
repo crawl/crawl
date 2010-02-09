@@ -865,7 +865,7 @@ const zap_info zap_data[] = {
         ZAP_HELLFIRE,
         "hellfire",
         200,
-        new calcdice_calculator<3, 10, 3, 4>,
+        new calcdice_calculator<3, 8, 3, 5>,
         new tohit_calculator<20, 1, 10>,
         RED,
         false,
@@ -4341,6 +4341,8 @@ void bolt::affect_player()
     int armour_damage_reduction = random2( 1 + you.armour_class() );
     if (flavour == BEAM_ELECTRICITY)
         armour_damage_reduction /= 2;
+    else if (flavour == BEAM_HELLFIRE)
+        armour_damage_reduction = 0;
     hurted -= armour_damage_reduction;
 
     // shrapnel has triple AC reduction
