@@ -1191,6 +1191,7 @@ SUBST:      ! = t..
 SUBST:      G = G...
 MONS:       patrolling skeletal warrior
 COLOUR:     t = darkgrey / lightgrey
+TILE:       t = dngn_tree_dead
 LFLOORCOL:  darkgrey
 LROCKCOL:   darkgrey
 NSUBST:     d = 1:e / *:d
