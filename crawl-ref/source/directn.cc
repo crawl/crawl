@@ -3870,8 +3870,8 @@ int targeting_behaviour::get_key()
     if (!crawl_state.is_replaying_keys())
         flush_input_buffer(FLUSH_BEFORE_COMMAND);
 
+    flush_prev_message();
     msgwin_got_input();
-
     return unmangle_direction_keys(getchm(KMC_TARGETING), KMC_TARGETING,
                                    false, false);
 }
