@@ -117,7 +117,9 @@ static void _fuzz_direction(monsters &mon, int pow)
     _normalize(vx, vy);
 
     const float off = (coinflip() ? -1 : 1) * 0.25;
-    const float tan = (random2(31) - 15) * 0.019; // approx from degrees
+    float tan = (random2(31) - 15) * 0.019; // approx from degrees
+    if (wearing_amulet(AMU_INACCURACY))
+        tan *= 2;
 
     // Cast either from left or right hand.
     mon.props["iood_x"] = x + vy*off;
