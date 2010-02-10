@@ -87,6 +87,7 @@
 #include "travel.h"
 #include "tutorial.h"
 #include "view.h"
+#include "viewgeom.h"
 #include "shout.h"
 #include "viewchar.h"
 #include "xom.h"
@@ -2918,6 +2919,15 @@ std::vector<monsters*> get_nearby_monsters(bool want_move,
     return mons;
 }
 
+static bool _exposed_monsters_nearby(bool want_move)
+{
+    const int radius = want_move ? 2 : 1;
+    for (radius_iterator ri(you.pos(), radius); ri; ++ri)
+        if (env.show(grid2show(*ri)).cls == SH_INVIS_EXPOSED)
+            return (true);
+    return (false);
+}
+
 bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
 {
     if (!just_monsters)
@@ -2949,24 +2959,25 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
     std::vector<monsters*> visible =
         get_nearby_monsters(want_move, !announce, true, true, true, range);
 
-    // No monsters found.
-    if (visible.empty())
-        return (true);
-
     // Announce the presence of monsters (Eidolos).
+    std::string msg;
     if (visible.size() == 1)
     {
         const monsters &m = *visible[0];
-        if (announce)
-        {
-            std::string monname =
-                (mons_is_mimic(m.type)) ? "a mimic" : m.name(DESC_NOCAP_A);
-
-            mprf(MSGCH_WARN, "Not with %s in view!", monname.c_str());
-        }
+        const std::string monname = mons_is_mimic(m.type)
+                                  ? "a mimic"
+                                  : m.name(DESC_NOCAP_A);
+        msg = make_stringf("Not with %s in view!", monname.c_str());
     }
-    else if (announce && visible.size() > 1)
-        mprf(MSGCH_WARN, "Not with these monsters around!");
+    else if (visible.size() > 1)
+        msg = "Not with these monsters around!";
+    else if (_exposed_monsters_nearby(want_move))
+        msg = "Not with this strange disturbance nearby!";
+    else
+        return (true);
+
+    if (announce)
+        mpr(msg, MSGCH_WARN);
 
     return (false);
 }
