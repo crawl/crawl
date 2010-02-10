@@ -82,6 +82,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
+#include "transform.h"
 #include "tutorial.h"
 #include "view.h"
 #include "xom.h"
@@ -3202,6 +3203,9 @@ bool player_can_join_god(god_type which_god)
     if (which_god == GOD_FEDHAS && you.holiness() == MH_UNDEAD)
         return (false);
 
+    if (which_god == GOD_SIF_MUNA && !you.spell_no)
+        return (false);
+
     return (true);
 }
 
@@ -3235,8 +3239,15 @@ void god_pitch(god_type which_god)
     if (!player_can_join_god(which_god))
     {
         you.turn_is_over = false;
-        simple_god_message(" does not accept worship from those such as you!",
-                           which_god);
+        if (which_god == GOD_SIF_MUNA)
+            simple_god_message(" does not accept worship from the ignorant!",
+                               which_god);
+        else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH)
+            simple_god_message(" says: How you dare to come in such a most "
+                               "loathsome form!?!", which_god);
+        else
+            simple_god_message(" does not accept worship from those such as you!",
+                               which_god);
         return;
     }
 
