@@ -1044,11 +1044,9 @@ spell_type zap_type_to_spell(zap_type zap)
     return SPELL_NO_SPELL;
 }
 
-// TODO: add statue form/stoneskin, ice form/ice armor.
-// TODO: check if swiftness increases *fly* speed.
 bool spell_is_useful(spell_type spell)
 {
-    if (you_cannot_memorise(spell) || god_hates_spell(you.religion, spell))
+    if (you_cannot_memorise(spell) || god_hates_spell(spell, you.religion))
         return (false);
     if (you.duration[DUR_CONF] > 0)
         return (false);
@@ -1060,7 +1058,7 @@ bool spell_is_useful(spell_type spell)
     case SPELL_SWIFTNESS:
         // looking at player_movement_speed, this should be correct ~DMB
         if (player_movement_speed() > 6
-            && you.duration[DUR_LEVITATION] > 0
+            && you.duration[DUR_CONTROLLED_FLIGHT] > 0
             && you.duration[DUR_SWIFTNESS]  < 1)
             return (true);
         break;
@@ -1072,11 +1070,6 @@ bool spell_is_useful(spell_type spell)
     case SPELL_CONTROL_TELEPORT:
         if (you.duration[DUR_TELEPORT] > 0
             && you.duration[DUR_CONTROL_TELEPORT] < 1)
-            return (true);
-        break;
-    case SPELL_FLY:
-        if (you.duration[DUR_LEVITATION] > 0
-            && you.duration[DUR_CONTROLLED_FLIGHT] < 1)
             return (true);
         break;
     case SPELL_STONESKIN:
@@ -1168,15 +1161,15 @@ bool spell_is_useless(spell_type spell, bool transient)
 // as you can see, the functions it uses to determine highlights are:
 //       spell_is_useful(spell)
 //       spell_is_useless(spell, transient)
-//       god_likes_spell(spell)
-//       god_hates_spell(spell)
+//       god_likes_spell(spell, god)
+//       god_hates_spell(spell, god)
 int spell_highlight_by_utility(spell_type spell, int default_color, bool transient)
 {
     // If your god hates the spell, that overrides all other concerns
-    if (god_hates_spell(you.religion, spell))
+    if (god_hates_spell(spell, you.religion))
         return (COL_FORBIDDEN);
 
-    if (god_likes_spell(you.religion, spell))
+    if (god_likes_spell(spell, you.religion))
         default_color = COL_FAVORED;
 
     if (spell_is_useless(spell, transient))
