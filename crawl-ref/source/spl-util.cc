@@ -1119,15 +1119,13 @@ bool spell_is_useless(spell_type spell, bool transient)
     case SPELL_BLINK:
     case SPELL_CONTROLLED_BLINK:
     case SPELL_TELEPORT_SELF:
-        mprf(MSGCH_DIAGNOSTICS, "ident is: %i", wearing_amulet(AMU_STASIS) ? item_ident(you.inv[EQ_AMULET], ISFLAG_KNOW_PROPERTIES) : -7331);
         // TODO: Its not very well behaved to do this manually, but...
+        // FIXME: somehow its not reliably realising when an amulet is
+        // IDed, and thus fails to flag TP as useless...
         if ((wearing_amulet(AMU_STASIS)
             && item_ident(you.inv[EQ_AMULET], ISFLAG_IDENT_MASK) != 0 )
             || scan_artefacts(ARTP_PREVENT_TELEPORTATION, false) > 0)
-           {
-//            mprf(MSGCH_DIAGNOSTICS, "-Tele!");
             return true;
-        }
         break;
     case SPELL_SWIFTNESS:
         // looking at player_movement_speed, this should be correct ~DMB
