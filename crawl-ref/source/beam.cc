@@ -1559,14 +1559,9 @@ static void _munge_bounced_bolt(bolt &old_bolt, bolt &new_bolt,
     new_bolt.range += range_spent;
 }
 
-bool bolt::invisible() const
-{
-    return (glyph == 0 || is_enchantment());
-}
-
 bool bolt::visible() const
 {
-    return (!invisible());
+    return (glyph != 0 && !is_enchantment());
 }
 
 void bolt::initialise_fire()
@@ -1639,7 +1634,7 @@ void bolt::initialise_fire()
     message_cache.clear();
 
     // seen might be set by caller to supress this.
-    if (!seen && you.see_cell(source) && range > 0 && !invisible() )
+    if (!seen && you.see_cell(source) && range > 0 && visible() )
     {
         seen = true;
         const monsters* mon = monster_at(source);
@@ -1657,7 +1652,7 @@ void bolt::initialise_fire()
 
     // Visible self-targeted beams are always seen, even though they don't
     // leave a path.
-    if (you.see_cell(source) && target == source && !invisible())
+    if (you.see_cell(source) && target == source && visible())
         seen = true;
 
     // Scale draw_delay to match change in arena_delay.
@@ -2282,7 +2277,7 @@ void bolt::do_fire()
                || is_tracer && affects_wall(grd(pos())));
 
         const bool was_seen = seen;
-        if (!was_seen && range > 0 && !invisible() && you.see_cell(pos()))
+        if (!was_seen && range > 0 && visible() && you.see_cell(pos()))
             seen = true;
 
         if (flavour != BEAM_VISUAL && !was_seen && seen && !is_tracer)
