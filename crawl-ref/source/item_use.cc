@@ -2053,7 +2053,7 @@ static bool _rage_hit_victim (bolt &beam, actor* victim, int dmg,
 bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
                         std::string &ammo_name, bool &returning)
 {
-    dungeon_char_type zapsym = DCHAR_SPACE;
+    dungeon_char_type zapsym = NUM_DCHAR_TYPES;
     switch (item.base_type)
     {
     case OBJ_WEAPONS:    zapsym = DCHAR_FIRED_WEAPON;  break;
