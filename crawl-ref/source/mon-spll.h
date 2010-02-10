@@ -1326,7 +1326,7 @@
        SPELL_BOLT_OF_FIRE,
        SPELL_SUMMON_ILLUSION,
        SPELL_PAIN,
-       SPELL_TELEPORT_SELF,
+       SPELL_TELEPORT_SELF
       }
     },
 
@@ -1337,7 +1337,29 @@
        SPELL_BOLT_OF_FIRE,
        SPELL_NO_SPELL,
        SPELL_PAIN,
-       SPELL_TELEPORT_SELF,
+       SPELL_TELEPORT_SELF
+      }
+    },
+
+    {  MST_BORIS,
+      {
+       SPELL_IRON_SHOT,
+       SPELL_BOLT_OF_COLD,
+       SPELL_INVISIBILITY,
+       SPELL_ANIMATE_DEAD,
+       SPELL_IOOD,
+       SPELL_INVISIBILITY
+      }
+    },
+
+    {  MST_FREDERICK,
+      {
+       SPELL_ISKENDERUNS_MYSTIC_BLAST,
+       SPELL_BOLT_OF_COLD,
+       SPELL_INVISIBILITY,
+       SPELL_ANIMATE_DEAD,
+       SPELL_IRON_SHOT,
+       SPELL_INVISIBILITY
       }
     },
 
