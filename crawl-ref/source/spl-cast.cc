@@ -614,8 +614,11 @@ static int _get_dist_to_nearest_monster()
             continue;
 
         // Plants/fungi don't count.
-        if (mons_class_flag(mon->type, M_NO_EXP_GAIN))
+        if (mons_class_flag(mon->type, M_NO_EXP_GAIN)
+            && (mon->type != MONS_BALLISTOMYCETE || mon->number == 0))
+        {
             continue;
+        }
 
         if (mon->wont_attack())
             continue;
