@@ -236,7 +236,7 @@
 {
     "Sword of Zonguldrok", "bone long sword", 
     OBJ_WEAPONS, WPN_LONG_SWORD, +9, +9, ETC_BONE, 1250, 
-    UNRAND_FLAG_SPECIAL | UNRAND_FLAG_EVIL | UNRAND_FLAG_CORPSE_VIOLATING,
+    UNRAND_FLAG_SPECIAL | UNRAND_FLAG_EVIL | UNRAND_FLAG_CORPSE_VIOLATING, 
     {
         SPWPN_NORMAL, 0, 0, 0, 0, 0, 
         0, 0, 0, 0, 0, 0, 
@@ -816,7 +816,7 @@
         
     },
     "", 
-    "A double-ended whip made from the cured hides of the Lair of Beasts' deadly anacondas.", 
+    "A double-ended whip made from the cured hides of the Lair of Beasts' deadly black mambas.", 
     "", 
     NULL, NULL, NULL, { NULL }, NULL, 
 },
