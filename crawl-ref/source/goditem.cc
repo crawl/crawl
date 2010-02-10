@@ -500,7 +500,7 @@ bool is_corpse_violating_spellbook(const item_def & item)
 
 bool god_hates_spellbook(const item_def& item)
 {
-    return (is_spellbook_type(item, false, god_hates_spell_type));
+    return (is_spellbook_type(item, false, god_hates_spell));
 }
 
 bool is_holy_rod(const item_def& item)
@@ -540,7 +540,7 @@ bool is_corpse_violating_rod(const item_def & item)
 
 bool god_hates_rod(const item_def& item)
 {
-    return (is_spellbook_type(item, true, god_hates_spell_type));
+    return (is_spellbook_type(item, true, god_hates_spell));
 }
 
 conduct_type good_god_hates_item_handling(const item_def &item)
@@ -662,55 +662,15 @@ conduct_type god_hates_item_handling(const item_def &item)
 
     return (DID_NOTHING);
 }
-
+/*
 bool god_hates_spell_type(spell_type spell, god_type god)
 {
-    if (is_good_god(god) && (is_unholy_spell(spell) || is_evil_spell(spell)))
-        return (true);
-
-    unsigned int disciplines = get_spell_disciplines(spell);
-
-    switch (god)
-    {
-    case GOD_ZIN:
-        if (is_unclean_spell(spell) || is_chaotic_spell(spell))
-            return (true);
-        break;
-
-    case GOD_SHINING_ONE:
-        // TSO hates using poison, but is fine with curing it, resisting
-        // it, or destroying it.
-        if ((disciplines & SPTYP_POISON) && spell != SPELL_CURE_POISON
-            && spell != SPELL_RESIST_POISON && spell != SPELL_IGNITE_POISON)
-        {
-            return (true);
-        }
-
-    case GOD_YREDELEMNUL:
-        if (is_holy_spell(spell))
-            return (true);
-        break;
-
-    case GOD_FEDHAS:
-        if (is_corpse_violating_spell(spell))
-            return (true);
-        break;
-
-    case GOD_CHEIBRIADOS:
-        if (is_hasty_spell(spell))
-            return (true);
-        break;
-
-    default:
-        break;
-    }
-
-    return (false);
+    return god_hates_spell(spell, god)
 }
-
+*/
 bool god_dislikes_spell_type(spell_type spell, god_type god)
 {
-    if (god_hates_spell_type(spell, god))
+    if (god_hates_spell(spell, god))
         return (true);
 
     unsigned int flags       = get_spell_flags(spell);
