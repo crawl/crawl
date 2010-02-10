@@ -1744,7 +1744,7 @@ bool cast_apportation(int pow, const coord_def& where)
 {
     if (you.trans_wall_blocking(where))
     {
-        mpr("A translucent wall is in the way.");
+        mpr("Something is in the way.");
         return (false);
     }
 
