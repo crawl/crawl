@@ -1490,7 +1490,7 @@ formatted_string describe_mutations()
 
         if (you.experience_level >= 6)
         {
-            result += "You can bottle blood from corpses with 'c'." EOL;
+            result += "You can bottle blood from corpses." EOL;
             have_any = true;
         }
         break;
