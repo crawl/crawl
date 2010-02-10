@@ -48,6 +48,7 @@
 #include "mon-behv.h"
 #include "mon-util.h"
 #include "mon-place.h"
+#include "mutation.h"
 #include "terrain.h"
 #include "mgen_data.h"
 #include "coord.h"
@@ -1736,15 +1737,30 @@ static bool _item_penetrates_victim(const bolt &beam, const actor *victim,
 static bool _silver_damages_victim(bolt &beam, actor* victim, int &dmg,
                                    std::string &dmg_msg)
 {
+    const int mutated = how_mutated(true, true);
+
     if (victim->holiness() == MH_UNDEAD
         || victim->is_chaotic()
-        || (victim->atype() != ACT_MONSTER && player_is_shapechanged()))
+        || (victim == &you && player_is_shapechanged()))
     {
         dmg *= 2;
-
-        if (!beam.is_tracer && you.can_see(victim))
-           dmg_msg = "The silver sears " + victim->name(DESC_NOCAP_THE) + "!";
     }
+    else if (victim == &you && mutated > 0)
+    {
+        int multiplier = 100 + (mutated * 5);
+
+        if (multiplier > 200)
+            multiplier = 200;
+
+        dmg = (dmg * multiplier) / 100;
+    }
+    else
+    {
+        return (false);
+    }
+
+    if (!beam.is_tracer && you.can_see(victim))
+       dmg_msg = "The silver sears " + victim->name(DESC_NOCAP_THE) + "!";
 
     return (false);
 }
