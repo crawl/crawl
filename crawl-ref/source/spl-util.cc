@@ -37,6 +37,7 @@
 #include "spl-book.h"
 #include "terrain.h"
 #include "itemprop.h"
+#include "item_use.h"
 #include "transform.h"
 
 
@@ -1122,9 +1123,7 @@ bool spell_is_useless(spell_type spell, bool transient)
         // TODO: Its not very well behaved to do this manually, but...
         // FIXME: somehow its not reliably realising when an amulet is
         // IDed, and thus fails to flag TP as useless...
-        if ((wearing_amulet(AMU_STASIS)
-            && item_ident(you.inv[EQ_AMULET], ISFLAG_IDENT_MASK) != 0 )
-            || scan_artefacts(ARTP_PREVENT_TELEPORTATION, false) > 0)
+        if (item_blocks_teleport(false, false) )
             return true;
         break;
     case SPELL_SWIFTNESS:
