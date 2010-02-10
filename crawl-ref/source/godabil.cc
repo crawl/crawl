@@ -891,38 +891,6 @@ bool prioritise_adjacent(const coord_def &target, std::vector<coord_def> & candi
     return (true);
 }
 
-// Prompt the user to select a stack of fruit from their inventory.  The
-// user can optionally select only a partial stack of fruit (the count
-// variable will store the number of fruit the user wants).  Return the
-// index of the item selected in the user's inventory, or a negative
-// number if the prompt failed (user cancelled or had no fruit).
-static int _prompt_for_fruit(int& count, const char* prompt_string)
-{
-    int rc = prompt_invent_item(prompt_string,
-                                MT_INVLIST,
-                                OSEL_FRUIT,
-                                true,
-                                true,
-                                true,
-                                '\0',
-                                -1,
-                                &count);
-
-    if (prompt_failed(rc))
-        return (rc);
-
-    const item_def& item = you.inv[rc];
-    // Return PROMPT_INAPPROPRIATE if the object selected isn't
-    // actually fruit.
-    if (!is_fruit(item))
-        return (PROMPT_INAPPROPRIATE);
-
-    // Handle it if the user lies about the amount of fruit available.
-    count = std::min<int>(count, item.quantity);
-
-    return (rc);
-}
-
 static bool _prompt_amount(int max, int& selected, const std::string& prompt)
 {
     selected = max;
