@@ -2247,7 +2247,7 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
                 case CE_MUTAGEN_BAD:
                     food_value /= 2;
                     if (start_feeding)
-                        mpr("This blood tastes *really* weird.");
+                        mpr("This blood tastes *really* weird!");
                     give_bad_mutation();
                     did_god_conduct(DID_DELIBERATE_MUTATING, 10);
                     xom_is_stimulated(random2(200));
