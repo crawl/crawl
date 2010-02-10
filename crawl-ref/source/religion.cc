@@ -3488,7 +3488,7 @@ bool god_likes_fresh_corpses(god_type god)
             || (god == GOD_KIKUBAAQUDGHA && you.piety >= piety_breakpoint(4)));
 }
 
-bool god_likes_spell(god_type god, spell_type spell)
+bool god_likes_spell(spell_type spell, god_type god)
 {
     switch(god)
     {
@@ -3501,35 +3501,38 @@ bool god_likes_spell(god_type god, spell_type spell)
     }
 }
 
-bool god_hates_spell(god_type god, spell_type spell)
+bool god_hates_spell(spell_type spell, god_type god)
 {
-    if (is_good_god(you.religion)
-        && spell_typematch(spell, SPTYP_NECROMANCY))
+    if (is_good_god(god) && (is_unholy_spell(spell) || is_evil_spell(spell)))
         return (true);
 
-    // this is probably redundant with the necromancy check (above)
-    if (is_good_god(you.religion) && spell == SPELL_NECROMUTATION)
-        return (true);
+    unsigned int disciplines = get_spell_disciplines(spell);
 
-    switch(god)
+    switch (god)
     {
-    case GOD_FEDHAS:
-        return is_corpse_violating_spell(spell, god);
-    case GOD_TROG:
-        return (true); // trog hates magic, and thus all spells.
-    case GOD_CHEIBRIADOS:
-        if (spell == SPELL_HASTE
-            || spell == SPELL_SWIFTNESS
-            || spell == SPELL_BERSERKER_RAGE)
+    case GOD_ZIN:
+        if (is_unclean_spell(spell) || is_chaotic_spell(spell))
             return (true);
         break;
     case GOD_SHINING_ONE:
-        if (spell_typematch(spell, SPTYP_POISON))
+        // TSO hates using poison, but is fine with curing it, resisting
+        // it, or destroying it.
+        if ((disciplines & SPTYP_POISON) && spell != SPELL_CURE_POISON
+            && spell != SPELL_RESIST_POISON && spell != SPELL_IGNITE_POISON)
+            return (true);
+    case GOD_YREDELEMNUL:
+        if (is_holy_spell(spell))
             return (true);
         break;
-    case GOD_ZIN:
-        return is_chaotic_spell(spell, god);
-    default: // quash unhandled constants warnings
+    case GOD_FEDHAS:
+        if (is_corpse_violating_spell(spell))
+            return (true);
+        break;
+    case GOD_CHEIBRIADOS:
+        if (is_hasty_spell(spell))
+            return (true);
+        break;
+    default:
         break;
     }
     return (false);
