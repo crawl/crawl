@@ -411,7 +411,7 @@ const zap_info zap_data[] = {
 
     {
         ZAP_SLOWING,
-        "0",
+        "",
         100,
         NULL,
         NULL,
@@ -427,7 +427,7 @@ const zap_info zap_data[] = {
 
     {
         ZAP_HASTING,
-        "0",
+        "",
         100,
         NULL,
         NULL,
@@ -459,7 +459,7 @@ const zap_info zap_data[] = {
 
     {
         ZAP_HEALING,
-        "0",
+        "",
         100,
         new dicedef_calculator<1, 7, 1, 3>,
         NULL,
@@ -475,7 +475,7 @@ const zap_info zap_data[] = {
 
     {
         ZAP_PARALYSIS,
-        "0",
+        "",
         100,
         NULL,
         NULL,
@@ -539,7 +539,7 @@ const zap_info zap_data[] = {
 
     {
         ZAP_CONFUSION,
-        "0",
+        "",
         100,
         NULL,
         NULL,
@@ -555,7 +555,7 @@ const zap_info zap_data[] = {
 
     {
         ZAP_INVISIBILITY,
-        "0",
+        "",
         100,
         NULL,
         NULL,
@@ -571,7 +571,7 @@ const zap_info zap_data[] = {
 
     {
         ZAP_DIGGING,
-        "0",
+        "",
         100,
         NULL,
         NULL,
@@ -603,7 +603,7 @@ const zap_info zap_data[] = {
 
     {
         ZAP_TELEPORTATION,
-        "0",
+        "",
         100,
         NULL,
         NULL,
@@ -635,7 +635,7 @@ const zap_info zap_data[] = {
 
     {
         ZAP_POLYMORPH_OTHER,
-        "0",
+        "",
         100,
         NULL,
         NULL,
@@ -731,7 +731,7 @@ const zap_info zap_data[] = {
 
     {
         ZAP_ENSLAVEMENT,
-        "0",
+        "",
         100,
         NULL,
         NULL,
@@ -747,7 +747,7 @@ const zap_info zap_data[] = {
 
     {
         ZAP_PAIN,
-        "0",
+        "",
         100,
         new dicedef_calculator<1, 4, 1,5>,
         new tohit_calculator<0, 7, 2>,
@@ -779,7 +779,7 @@ const zap_info zap_data[] = {
 
     {
         ZAP_DISPEL_UNDEAD,
-        "0",
+        "",
         100,
         new calcdice_calculator<3, 20, 3, 4>,
         new tohit_calculator<0, 3, 2>,
@@ -815,7 +815,7 @@ const zap_info zap_data[] = {
 
     {
         ZAP_BANISHMENT,
-        "0",
+        "",
         100,
         NULL,
         NULL,
@@ -831,7 +831,7 @@ const zap_info zap_data[] = {
 
     {
         ZAP_DEGENERATION,
-        "0",
+        "",
         100,
         NULL,
         NULL,
@@ -1073,7 +1073,7 @@ const zap_info zap_data[] = {
 
     {
         ZAP_ENSLAVE_UNDEAD,
-        "0",
+        "",
         100,
         NULL,
         NULL,
@@ -1089,7 +1089,7 @@ const zap_info zap_data[] = {
 
     {
         ZAP_ENSLAVE_SOUL,
-        "0",
+        "",
         100,
         NULL,
         NULL,
@@ -1105,7 +1105,7 @@ const zap_info zap_data[] = {
 
     {
         ZAP_AGONY,
-        "0agony",
+        "agony",
         100,
         NULL,
         new tohit_calculator<0, 5, 1>,
@@ -1121,7 +1121,7 @@ const zap_info zap_data[] = {
 
     {
         ZAP_DISINTEGRATION,
-        "0",
+        "",
         100,
         new calcdice_calculator<3, 15, 3, 4>,
         new tohit_calculator<0, 5, 2>,
@@ -1153,7 +1153,7 @@ const zap_info zap_data[] = {
 
     {
         ZAP_CONTROL_DEMON,
-        "0",
+        "",
         100,
         NULL,
         new tohit_calculator<0, 3, 2>,
@@ -1217,7 +1217,7 @@ const zap_info zap_data[] = {
 
     {
         ZAP_CORONA,
-        "0",
+        "",
         100,
         NULL,
         NULL,
@@ -1233,7 +1233,7 @@ const zap_info zap_data[] = {
 
     {
         ZAP_HIBERNATION,
-        "0",
+        "",
         100,
         NULL,
         NULL,
@@ -1329,7 +1329,7 @@ const zap_info zap_data[] = {
 
     {
         ZAP_PETRIFY,
-        "0",
+        "",
         100,
         NULL,
         NULL,
@@ -1361,7 +1361,7 @@ const zap_info zap_data[] = {
 
     {
         ZAP_SLEEP,
-        "0",
+        "",
         100,
         NULL,
         NULL,
@@ -1377,7 +1377,7 @@ const zap_info zap_data[] = {
 
     {
         ZAP_IOOD,
-        "0",
+        "",
         200,
         NULL,
         new tohit_calculator<AUTOMATIC_HIT>,
