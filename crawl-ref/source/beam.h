@@ -204,7 +204,7 @@ private:
     bool is_blockable() const;
     bool is_superhot() const;
     bool is_fiery() const;
-    bool affects_wall(dungeon_feature_type wall) const;
+    maybe_bool affects_wall(dungeon_feature_type wall) const;
     bool is_bouncy(dungeon_feature_type feat) const;
     bool can_affect_wall_monster(const monsters* mon) const;
     bool stop_at_target() const;

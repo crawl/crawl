@@ -1968,7 +1968,11 @@ void bolt::finish_beam()
 void bolt::affect_wall()
 {
     if (is_tracer)
+    {
+        if (affects_wall(grd(pos())) != B_TRUE)
+            finish_beam();
         return;
+    }
 
     if (flavour == BEAM_DIGGING)
         digging_wall_effect();
@@ -3360,30 +3364,38 @@ bool bolt::is_superhot() const
                && in_explosion_phase);
 }
 
-bool bolt::affects_wall(dungeon_feature_type wall) const
+maybe_bool bolt::affects_wall(dungeon_feature_type wall) const
 {
     // digging
-    if (flavour == BEAM_DIGGING)
-        return (true);
-
-    if (flavour == BEAM_DISINTEGRATION && damage.num >= 3)
-        return (true);
+    if (flavour == BEAM_DIGGING
+        && (wall == DNGN_ROCK_WALL || wall == DNGN_CLEAR_ROCK_WALL))
+    {
+        return (B_TRUE);
+    }
 
     if (is_fiery() && (wall == DNGN_WAX_WALL || wall == DNGN_TREES))
-        return (true);
+        return (is_superhot() ? B_TRUE : B_MAYBE);
 
     if (flavour == BEAM_ELECTRICITY && wall == DNGN_TREES)
-        return (true);
+        return (is_superhot() ? B_TRUE : B_MAYBE);
 
-    // eye of devastation?
-    if (flavour == BEAM_NUKE)
-        return (true);
+    if (flavour == BEAM_DISINTEGRATION && damage.num >= 3
+        || flavour == BEAM_NUKE)
+    {
+        if (wall == DNGN_ROCK_WALL
+            || wall == DNGN_WAX_WALL
+            || wall == DNGN_CLEAR_ROCK_WALL
+            || wall == DNGN_GRANITE_STATUE
+            || wall == DNGN_ORCISH_IDOL
+            || wall == DNGN_TREES)
+        return (B_TRUE);
+    }
 
     // Lee's Rapid Deconstruction
     if (flavour == BEAM_FRAG)
-        return (true);
+        return (B_TRUE); // smite targetting, we don't care
 
-    return (false);
+    return (B_FALSE);
 }
 
 void bolt::affect_place_clouds()
