@@ -189,7 +189,6 @@ public:
     bool knockback_actor(actor *actor);
 
     bool visible() const;
-    bool invisible() const;
 
 private:
     void do_fire();
