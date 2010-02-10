@@ -716,7 +716,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
     if (beam.is_enchantment())
     {
         beam.type = dchar_glyph(DCHAR_SPACE);
-        beam.name = "0";
+        beam.name = "";
     }
 
     if (spell_cast == SPELL_DRACONIAN_BREATH)
