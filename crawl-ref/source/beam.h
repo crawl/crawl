@@ -15,14 +15,6 @@
 
 class monsters;
 
-enum demon_beam_type
-{
-    DMNBM_HELLFIRE,
-    DMNBM_SMITING,
-    DMNBM_BRAIN_FEED,
-    DMNBM_MUTATION
-};
-
 enum mon_resist_type
 {
     MON_RESIST,                 // monster resisted
