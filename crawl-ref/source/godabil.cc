@@ -217,7 +217,7 @@ static bool _yred_enslaved_souls_on_level_disappear()
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Undead soul disappearing: %s on level %d, branch %d",
                  mi->name(DESC_PLAIN).c_str(),
-                 static_cast<int>(you.your_level),
+                 static_cast<int>(you.absdepth0),
                  static_cast<int>(you.where_are_you));
 #endif
 

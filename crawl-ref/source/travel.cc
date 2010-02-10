@@ -2846,7 +2846,7 @@ void arrange_features(std::vector<coord_def> &features)
 level_id level_id::current()
 {
     const level_id id(you.where_are_you,
-                      subdungeon_depth(you.where_are_you, you.your_level),
+                      subdungeon_depth(you.where_are_you, you.absdepth0),
                       you.level_type);
     return id;
 }
@@ -2869,7 +2869,7 @@ int level_id::absdepth() const
         return 51;
     default:
         // No true notion of depth here.
-        return you.your_level;
+        return you.absdepth0;
     }
 }
 

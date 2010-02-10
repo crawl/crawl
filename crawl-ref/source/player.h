@@ -132,7 +132,7 @@ public:
 
   unsigned short pet_target;
 
-  int your_level; // offset by one (-1 == 0, 0 == 1, etc.) for display
+  int absdepth0; // offset by one (-1 == 0, 0 == 1, etc.) for display
 
   // durational things
   FixedVector<int, NUM_DURATIONS> duration;

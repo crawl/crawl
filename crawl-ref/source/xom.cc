@@ -3496,7 +3496,7 @@ static int _xom_maybe_reverts_banishment(bool debug = false)
         {
             more();
             god_speaks(GOD_XOM, _get_xom_speech("revert banishment").c_str());
-            down_stairs(you.your_level, DNGN_EXIT_ABYSS);
+            down_stairs(you.absdepth0, DNGN_EXIT_ABYSS);
             take_note(Note(NOTE_XOM_EFFECT, you.piety, -1,
                            "revert banishment"), true);
         }

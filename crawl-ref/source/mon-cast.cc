@@ -1838,7 +1838,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                 mgen_data(MONS_KRAKEN_TENTACLE, SAME_ATTITUDE(monster), monster,
                           3, spell_cast, monster->pos(), monster->foe, 0, god,
                           MONS_NO_MONSTER, kraken_index, monster->colour,
-                          you.your_level, PROX_CLOSE_TO_PLAYER,
+                          you.absdepth0, PROX_CLOSE_TO_PLAYER,
                           you.level_type));
 
             if (tentacle < 0)

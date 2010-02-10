@@ -665,7 +665,7 @@ static void _sdump_notes(dump_params &par)
  //---------------------------------------------------------------
 static void _sdump_location(dump_params &par)
 {
-    if (you.your_level == -1
+    if (you.absdepth0 == -1
         && you.where_are_you == BRANCH_MAIN_DUNGEON
         && you.level_type == LEVEL_DUNGEON)
     {

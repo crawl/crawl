@@ -5362,7 +5362,7 @@ void player::init()
 
     spell_no = 0;
 
-    your_level       = 0;
+    absdepth0        = 0;
     level_type       = LEVEL_DUNGEON;
     entry_cause      = EC_SELF_EXPLICIT;
     entry_cause_god  = GOD_NO_GOD;
@@ -7413,7 +7413,7 @@ bool player::do_shaft()
         force_stair = DNGN_TRAP_NATURAL;
     }
 
-    down_stairs(your_level, force_stair);
+    down_stairs(absdepth0, force_stair);
 
     return (true);
 }

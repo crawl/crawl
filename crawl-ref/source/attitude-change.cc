@@ -154,7 +154,7 @@ static bool _holy_beings_on_level_attitude_change()
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Holy attitude changing: %s on level %d, branch %d",
              mi->name(DESC_PLAIN).c_str(),
-             static_cast<int>(you.your_level),
+             static_cast<int>(you.absdepth0),
              static_cast<int>(you.where_are_you));
 #endif
 
@@ -205,7 +205,7 @@ static bool _unholy_and_evil_beings_on_level_attitude_change()
         mprf(MSGCH_DIAGNOSTICS, "Unholy/evil attitude changing: %s "
              "on level %d, branch %d",
              mi->name(DESC_PLAIN, true).c_str(),
-             static_cast<int>(you.your_level),
+             static_cast<int>(you.absdepth0),
              static_cast<int>(you.where_are_you));
 #endif
 
@@ -242,7 +242,7 @@ static bool _unclean_and_chaotic_beings_on_level_attitude_change()
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Unclean/chaotic attitude changing: %s on level %d, branch %d",
              mi->name(DESC_PLAIN).c_str(),
-             static_cast<int>(you.your_level),
+             static_cast<int>(you.absdepth0),
              static_cast<int>(you.where_are_you));
 #endif
 
@@ -278,7 +278,7 @@ static bool _spellcasters_on_level_attitude_change()
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Spellcaster attitude changing: %s on level %d, branch %d",
              mi->name(DESC_PLAIN).c_str(),
-             static_cast<int>(you.your_level),
+             static_cast<int>(you.absdepth0),
              static_cast<int>(you.where_are_you));
 #endif
 
@@ -452,7 +452,7 @@ static bool _yred_slaves_on_level_abandon_you()
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Undead soul abandoning: %s on level %d, branch %d",
                  mi->name(DESC_PLAIN).c_str(),
-                 static_cast<int>(you.your_level),
+                 static_cast<int>(you.absdepth0),
                  static_cast<int>(you.where_are_you));
 #endif
 
@@ -465,7 +465,7 @@ static bool _yred_slaves_on_level_abandon_you()
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Undead abandoning: %s on level %d, branch %d",
                  mi->name(DESC_PLAIN).c_str(),
-                 static_cast<int>(you.your_level),
+                 static_cast<int>(you.absdepth0),
                  static_cast<int>(you.where_are_you));
 #endif
 
@@ -493,7 +493,7 @@ static bool _beogh_followers_on_level_abandon_you()
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Orc abandoning: %s on level %d, branch %d",
                  mi->name(DESC_PLAIN).c_str(),
-                 static_cast<int>(you.your_level),
+                 static_cast<int>(you.absdepth0),
                  static_cast<int>(you.where_are_you));
 #endif
 
@@ -519,7 +519,7 @@ static bool _jiyva_slimes_on_level_abandon_you()
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Slime abandoning: %s on level %d, branch %d",
                  mi->name(DESC_PLAIN).c_str(),
-                 static_cast<int>(you.your_level),
+                 static_cast<int>(you.absdepth0),
                  static_cast<int>(you.where_are_you));
 #endif
 
@@ -617,7 +617,7 @@ static bool _fedhas_plants_on_level_hostile()
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Plant hostility: %s on level %d, branch %d",
                  mi->name(DESC_PLAIN).c_str(),
-                 static_cast<int>(you.your_level),
+                 static_cast<int>(you.absdepth0),
                  static_cast<int>(you.where_are_you));
 #endif
 

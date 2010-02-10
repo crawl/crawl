@@ -947,7 +947,7 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.opened_zot);
     marshallByte(th, you.royal_jelly_dead);
     marshallByte(th, you.transform_uncancellable);
-    marshallByte(th, you.your_level);
+    marshallByte(th, you.absdepth0);
     marshallByte(th, you.is_undead);
     marshallShort(th, you.unrand_reacts);
     marshallByte(th, you.berserk_penalty);
@@ -1376,7 +1376,7 @@ static void tag_read_you(reader &th, char minorVersion)
 
     you.transform_uncancellable = (bool) unmarshallByte(th);
 
-    you.your_level        = unmarshallByte(th);
+    you.absdepth0         = unmarshallByte(th);
     you.is_undead         = static_cast<undead_state_type>(unmarshallByte(th));
     you.unrand_reacts     = unmarshallShort(th);
     you.berserk_penalty   = unmarshallByte(th);
