@@ -1353,7 +1353,10 @@ bool evolve_flora()
             || !mons_class_can_pass(MONS_BALLISTOMYCETE,
                                     env.grid(spelld.target)))
         {
-            mprf("You must target a plant or fungus.");
+            if (env.grid(spelld.target) == DNGN_TREES)
+                mprf("The trees have already reached the pinnacle of evolution.");
+            else
+                mprf("You must target a plant or fungus.");
             return (false);
         }
         return _place_ballisto(spelld.target);
