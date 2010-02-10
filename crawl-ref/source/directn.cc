@@ -110,6 +110,9 @@ static bool _find_monster( const coord_def& where, int mode, bool need_path,
 static bool _find_feature( const coord_def& where, int mode, bool need_path,
                            int range );
 
+static bool _find_fprop_unoccupied(   const coord_def& where, int mode, bool need_path,
+                           int range );
+
 #ifndef USE_TILE
 static bool _find_mlist( const coord_def& where, int mode, bool need_path,
                          int range );
@@ -1203,6 +1206,14 @@ coord_def direction_chooser::find_default_target() const
             }
         }
     }
+    // Evolution can also auto-target mold squares (but shouldn't if
+    // there are any monsters to evolve), so try _find_square_wrapper
+    // again
+    if (mode == TARG_EVOLVABLE_PLANTS && !success)
+    {
+        success = _find_square_wrapper(result, 1, _find_fprop_unoccupied,
+                                       needs_path, FPROP_MOLD, range, true);
+    }
 
     if (!success)
         result = you.pos();
@@ -2247,6 +2258,27 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
     return (true);
 }
 #endif
+
+static bool _find_fprop_unoccupied(const coord_def & where, int mode, bool need_path,
+                          int range = -1)
+{
+    // Don't target out of range.
+    if (!_is_target_in_range(where, range))
+        return (false);
+
+    monsters * mon = monster_at(where);
+    if (mon || !in_los(where))
+        return (false);
+
+    // Monster in LOS but only via glass walls, so no direct path.
+    if (need_path && !you.see_cell_no_trans(where))
+        return (false);
+
+    if (need_path && _blocked_ray(where))
+        return (false);
+
+    return (env.pgrid(where) & mode);
+}
 
 static bool _find_monster( const coord_def& where, int mode, bool need_path,
                            int range = -1)
