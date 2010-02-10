@@ -1677,7 +1677,7 @@ brand_ok:
         {
             // Brand is set as for "good" items.
             set_item_ego_type(item, OBJ_WEAPONS,
-                              _determine_weapon_brand(item, 2+2*you.your_level));
+                              _determine_weapon_brand(item, 2+2*you.absdepth0));
         }
         item.plus  -= 1 + random2(3);
         item.plus2 -= 1 + random2(3);
@@ -2475,7 +2475,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         {
             // Brand is set as for "good" items.
             set_item_ego_type(item, OBJ_ARMOUR,
-                _determine_armour_ego(item, item.sub_type, 2+2*you.your_level));
+                _determine_armour_ego(item, item.sub_type, 2+2*you.absdepth0));
         }
 
         item.plus -= 1 + random2(3);

@@ -1273,7 +1273,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
 
 #ifdef DEBUG_LEVEL_LOAD
     mprf(MSGCH_DIAGNOSTICS, "Loading... level type: %d, branch: %d, level: %d",
-                            you.level_type, you.where_are_you, you.your_level);
+                            you.level_type, you.where_are_you, you.absdepth0);
 #endif
 
     // Going up/down stairs, going through a portal, or being banished
@@ -1288,7 +1288,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     bool just_created_level = false;
 
-    std::string cha_fil = make_filename( you.your_name, you.your_level,
+    std::string cha_fil = make_filename( you.your_name, you.absdepth0,
                                          you.where_are_you,
                                          you.level_type,
                                          false );
@@ -1363,7 +1363,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
             // Knight of Lugonu (who start out there), force a return
             // into the first dungeon level and enable normal monster
             // generation.
-            you.your_level = 0;
+            you.absdepth0 = 0;
             you.char_direction = GDT_DESCENDING;
             Generated_Levels.insert(level_id::current());
         }
@@ -1374,10 +1374,10 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
 #endif
 
         _clear_env_map();
-        builder(you.your_level, you.level_type);
+        builder(you.absdepth0, you.level_type);
         just_created_level = true;
 
-        if ((you.your_level > 1 || you.level_type != LEVEL_DUNGEON)
+        if ((you.absdepth0 > 1 || you.level_type != LEVEL_DUNGEON)
             && one_chance_in(3))
         {
             load_ghost(true);
@@ -1516,7 +1516,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     // Save the created/updated level out to disk:
     if (make_changes)
-        _save_level( you.your_level, you.level_type, you.where_are_you );
+        _save_level( you.absdepth0, you.level_type, you.where_are_you );
 
     setup_environment_effects();
 
@@ -1762,7 +1762,7 @@ static void _save_game_exit()
 {
     // Must be exiting -- save level & goodbye!
     if (!you.entering_level)
-        _save_level(you.your_level, you.level_type, you.where_are_you);
+        _save_level(you.absdepth0, you.level_type, you.where_are_you);
 
     clrscr();
 
@@ -1851,7 +1851,7 @@ static std::string _make_ghost_filename()
     }
     else
     {
-        return make_filename("bones", you.your_level, you.where_are_you,
+        return make_filename("bones", you.absdepth0, you.where_are_you,
                              you.level_type, true);
     }
 }
@@ -2118,11 +2118,11 @@ static void _restore_level(const level_id &original)
 {
     // Reload the original level.
     you.where_are_you = original.branch;
-    you.your_level = original.dungeon_absdepth();
+    you.absdepth0 = original.dungeon_absdepth();
     you.level_type = original.level_type;
 
     load( DNGN_STONE_STAIRS_DOWN_I, LOAD_VISITOR,
-          you.level_type, you.your_level, you.where_are_you );
+          you.level_type, you.absdepth0, you.where_are_you );
 
     // Rebuild the show grid, which was cleared out before.
     you.update_los();
@@ -2146,7 +2146,7 @@ void level_excursion::go_to(const level_id& next)
 {
     if (level_id::current() != next)
     {
-        _save_level(you.your_level, you.level_type, you.where_are_you);
+        _save_level(you.absdepth0, you.level_type, you.where_are_you);
         _restore_level(next);
 
         LevelInfo &li = travel_cache.get_level_info(next);
@@ -2341,7 +2341,7 @@ void save_ghost( bool force )
 #endif // BONES_DIAGNOSTICS
 
     // No ghosts on levels 1, 2, or the ET.
-    if (!force && (you.your_level < 2
+    if (!force && (you.absdepth0 < 2
                    || you.where_are_you == BRANCH_ECUMENICAL_TEMPLE))
     {
         return;

@@ -40,7 +40,7 @@ static dungeon_feature_type _find_appropriate_stairs(bool down)
 {
     if (you.level_type == LEVEL_DUNGEON)
     {
-        int depth = subdungeon_depth(you.where_are_you, you.your_level);
+        int depth = subdungeon_depth(you.where_are_you, you.absdepth0);
         if (down)
             depth++;
         else
@@ -154,7 +154,7 @@ bool _take_portal_vault_stairs( const bool down )
     you.set_position(stair_pos);
 
     if (down)
-        down_stairs(you.your_level);
+        down_stairs(you.absdepth0);
     else
         up_stairs();
 
@@ -182,7 +182,7 @@ void wizard_level_travel( bool down )
     }
 
     if (down)
-        down_stairs(you.your_level, stairs);
+        down_stairs(you.absdepth0, stairs);
     else
         up_stairs(stairs);
 }
@@ -191,22 +191,22 @@ static void _wizard_go_to_level(const level_pos &pos)
 {
     const int abs_depth = absdungeon_depth(pos.id.branch, pos.id.depth);
     dungeon_feature_type stair_taken =
-        abs_depth > you.your_level? DNGN_STONE_STAIRS_DOWN_I
+        abs_depth > you.absdepth0? DNGN_STONE_STAIRS_DOWN_I
                                   : DNGN_STONE_STAIRS_UP_I;
 
-    if (abs_depth > you.your_level && pos.id.depth == 1
+    if (abs_depth > you.absdepth0 && pos.id.depth == 1
         && pos.id.branch != BRANCH_MAIN_DUNGEON)
     {
         stair_taken = branches[pos.id.branch].entry_stairs;
     }
 
-    const int old_level = you.your_level;
+    const int old_level = you.absdepth0;
     const branch_type old_where = you.where_are_you;
     const level_area_type old_level_type = you.level_type;
 
     you.level_type    = LEVEL_DUNGEON;
     you.where_are_you = static_cast<branch_type>(pos.id.branch);
-    you.your_level    = abs_depth;
+    you.absdepth0    = abs_depth;
 
     const bool newlevel = load(stair_taken, LOAD_ENTER_LEVEL, old_level_type,
         old_level, old_where);
@@ -558,7 +558,7 @@ void debug_make_shop()
 
     representative = !!strchr(requested_shop, '*');
 
-    place_spec_shop(you.your_level, you.pos(),
+    place_spec_shop(you.absdepth0, you.pos(),
                     new_shop_type, representative);
     link_items();
     mprf("Done.");

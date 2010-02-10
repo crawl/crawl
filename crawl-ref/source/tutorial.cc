@@ -4498,7 +4498,7 @@ static void _tutorial_describe_feature(int x, int y)
        case DNGN_STONE_STAIRS_UP_I:
        case DNGN_STONE_STAIRS_UP_II:
        case DNGN_STONE_STAIRS_UP_III:
-            if (you.your_level < 1)
+            if (you.absdepth0 < 1)
             {
                 ostr << "These stairs lead out of the dungeon. Following them "
                         "will end the game. The only way to win is to "
@@ -4756,7 +4756,7 @@ bool tutorial_monster_interesting(const monsters *mons)
 
     // The monster is (seriously) out of depth.
     if (you.level_type == LEVEL_DUNGEON
-        && mons_level(mons->type) >= you.your_level + 8)
+        && mons_level(mons->type) >= you.absdepth0 + 8)
     {
         return (true);
     }
@@ -4789,7 +4789,7 @@ void tutorial_describe_monster(const monsters *mons)
         // 8 is the default value for the note-taking of OOD monsters.
         // Since I'm too lazy to come up with any measurement of my own
         // I'll simply reuse that one.
-        int level_diff = mons_level(mons->type) - (you.your_level + 8);
+        int level_diff = mons_level(mons->type) - (you.absdepth0 + 8);
 
         if (you.level_type == LEVEL_DUNGEON && level_diff >= 0)
         {

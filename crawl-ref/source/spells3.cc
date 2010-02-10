@@ -2037,14 +2037,14 @@ int portal()
         switch ( keyin )
         {
         case '<':
-            if (you.your_level == 0)
+            if (you.absdepth0 == 0)
                 mpr("You can't go any further upwards with this spell.");
             else
                 dir_sign = -1;
             break;
 
         case '>':
-            if (you.your_level + 1 == your_branch().depth)
+            if (you.absdepth0 + 1 == your_branch().depth)
                 mpr("You can't go any further downwards with this spell.");
             else
                 dir_sign = 1;
@@ -2078,8 +2078,8 @@ int portal()
         "foot of a staircase.");
     more();
 
-    const int old_level = you.your_level;
-    you.your_level = std::max(0, std::min(26, you.your_level + amount)) - 1;
+    const int old_level = you.absdepth0;
+    you.absdepth0 = std::max(0, std::min(26, you.absdepth0 + amount)) - 1;
     down_stairs(old_level, DNGN_STONE_STAIRS_DOWN_I);
 
     return (1);

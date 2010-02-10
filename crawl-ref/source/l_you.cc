@@ -101,8 +101,8 @@ LUARET1(you_branch, string, level_id::current().describe(false, false).c_str())
 LUARET1(you_subdepth, number, level_id::current().depth)
 // [ds] Absolute depth is 1-based for Lua to match things like DEPTH:
 // which are also 1-based. Yes, this is confusing. FIXME: eventually
-// change you.your_level to be 1-based as well.
-LUARET1(you_absdepth, number, you.your_level + 1)
+// change you.absdepth0 to be 1-based as well.
+LUARET1(you_absdepth, number, you.absdepth0 + 1)
 LUAWRAP(you_stop_activity, interrupt_activity(AI_FORCE_INTERRUPT))
 LUARET1(you_taking_stairs, boolean,
         current_delay_action() == DELAY_ASCENDING_STAIRS
