@@ -114,7 +114,7 @@ LUAFN(debug_bouncy_beam)
     bolt beam;
 
     beam.range      = range;
-    beam.type       = '*';
+    beam.glyph      = '*';
     beam.colour     = LIGHTCYAN;
     beam.flavour    = BEAM_ELECTRICITY;
     beam.source     = source;

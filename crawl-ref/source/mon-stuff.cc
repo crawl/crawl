@@ -958,7 +958,7 @@ static bool _spore_goes_pop(monsters *monster, killer_type killer,
     beam.is_tracer    = false;
     beam.is_explosion = true;
     beam.beam_source  = monster->mindex();
-    beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
     beam.source       = monster->pos();
     beam.target       = monster->pos();
     beam.thrower      = crawl_state.arena ? KILL_MON

@@ -2577,7 +2577,7 @@ void melee_attack::chaos_affects_defender()
 
     if (beam.flavour != BEAM_NONE)
     {
-        beam.type         = 0;
+        beam.glyph        = 0;
         beam.range        = 0;
         beam.colour       = BLACK;
         beam.effect_known = false;

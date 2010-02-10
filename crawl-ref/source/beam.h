@@ -57,7 +57,7 @@ struct bolt
     spell_type  origin_spell;          // may be SPELL_NO_SPELL for non-spell
                                        // beams.
     int         range;
-    unsigned    type;                  // missile gfx
+    unsigned    glyph;                 // missile gfx
     int         colour;
     beam_type   flavour;
     beam_type   real_flavour;          // for random and chaos beams this

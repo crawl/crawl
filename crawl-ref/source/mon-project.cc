@@ -149,7 +149,7 @@ bool _iood_hit(monsters &mon, const coord_def &pos, bool big_boom = false)
     beam.thrower = (mon.props["iood_kc"].get_byte() == KC_YOU)
                         ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
     beam.colour = WHITE;
-    beam.type = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.glyph = dchar_glyph(DCHAR_FIRED_BURST);
     beam.range = 1;
     beam.source = pos;
     beam.target = pos;
