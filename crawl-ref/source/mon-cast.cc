@@ -2786,6 +2786,7 @@ void mons_cast_noise(monsters *monster, const bolt &pbolt,
         return;
     }
 
+    // FIXME: we should not need to look at the message text.
     const bool gestured = msg.find("Gesture") != std::string::npos
                           || msg.find(" gesture") != std::string::npos
                           || msg.find("Point") != std::string::npos
