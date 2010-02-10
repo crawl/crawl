@@ -384,6 +384,9 @@ int fungal_bloom()
         if (target && target->is_summoned())
             continue;
 
+        if (!is_harmless_cloud(cloud_type_at(*i)))
+            continue;
+
         if (target && target->mons_species() != MONS_TOADSTOOL)
         {
             switch (mons_genus(target->mons_species()))
