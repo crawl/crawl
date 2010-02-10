@@ -5196,7 +5196,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
                     int rc = create_monster(mgen_data(MONS_GIANT_SPORE,
                                                       created_behavior,
-                                                      this,
+                                                      NULL,
                                                       0,
                                                       0,
                                                       adjacent,

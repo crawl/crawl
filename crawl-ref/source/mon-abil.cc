@@ -1441,7 +1441,7 @@ void ballisto_on_move(monsters * monster, const coord_def & position)
                 beh_type attitude = SAME_ATTITUDE(monster);
                 int rc = create_monster(mgen_data(MONS_BALLISTOMYCETE,
                                                   attitude,
-                                                  monster,
+                                                  NULL,
                                                   0,
                                                   0,
                                                   position,
