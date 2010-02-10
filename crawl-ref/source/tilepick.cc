@@ -5182,10 +5182,11 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
                 wall_flv    = env.tile_flv(gc).wall;
                 floor_flv   = env.tile_flv(gc).floor;
                 special_flv = env.tile_flv(gc).special;
-            }
 
-            _finalise_tile(&tileb[count+1], wall_flv, floor_flv, special_flv,
-                           gc);
+                _finalise_tile(&tileb[count+1],
+                               wall_flv, floor_flv, special_flv,
+                               gc);
+            }
 
             if (is_excluded(gc))
             {
