@@ -2403,7 +2403,7 @@ static int _noise_level(const monsters* monster, spell_type spell,
 static unsigned int _noise_keys(std::vector<std::string>& key_list,
                                 const monsters* monster, const bolt& pbolt,
                                 spell_type spell, bool priest, bool wizard,
-                                bool innate, bool targeted, bool visible_beam)
+                                bool innate, bool targeted)
 {
     const std::string cast_str = " cast";
 
@@ -2476,7 +2476,7 @@ static unsigned int _noise_keys(std::vector<std::string>& key_list,
         }
 
         // Generic beam messages.
-        if (visible_beam)
+        if (pbolt.visible())
         {
             key_list.push_back(pbolt.get_short_name() + " beam " + cast_str);
             key_list.push_back("beam catchall cast");
@@ -2548,7 +2548,7 @@ std::string _noise_message(const std::vector<std::string>& key_list,
 
 void _noise_fill_target(std::string& targ_prep, std::string& target,
                         const monsters* monster, const bolt& pbolt,
-                        bool visible_beam, bool gestured)
+                        bool gestured)
 {
     targ_prep = "at";
     target    = "nothing";
@@ -2582,6 +2582,8 @@ void _noise_fill_target(std::string& targ_prep, std::string& target,
         }
     }
 
+    const bool visible_path      = pbolt.visible() || gestured;
+
     // Monster might be aiming past the real target, or maybe some fuzz has
     // been applied because the target is invisible.
     if (target == "nothing")
@@ -2605,8 +2607,7 @@ void _noise_fill_target(std::string& targ_prep, std::string& target,
             }
         }
 
-        const bool visible_path      = visible_beam || gestured;
-              bool mons_targ_aligned = false;
+        bool mons_targ_aligned = false;
 
         const std::vector<coord_def> &path = tracer.path_taken;
         for (unsigned int i = 0; i < path.size(); i++)
@@ -2696,7 +2697,7 @@ void _noise_fill_target(std::string& targ_prep, std::string& target,
         && foe != NULL
         && you.can_see(foe)
         && !monster->confused()
-        && (visible_beam || gestured))
+        && visible_path)
     {
         target = foe->name(DESC_NOCAP_THE);
         targ_prep = (pbolt.aimed_at_spot ? "next to" : "past");
@@ -2763,16 +2764,14 @@ void mons_cast_noise(monsters *monster, const bolt &pbolt,
 
     int noise = _noise_level(monster, actual_spell, silent, innate);
 
-    const bool visible_beam = pbolt.type != 0 && pbolt.type != ' '
-                              && pbolt.name[0] != '0'
-                              && !pbolt.is_enchantment();
     const bool targeted = (flags & SPFLAG_TARGETING_MASK)
-                           && (pbolt.target != monster->pos() || visible_beam);
+                           && (pbolt.target != monster->pos()
+                               || pbolt.visible());
 
     std::vector<std::string> key_list;
     unsigned int num_spell_keys =
         _noise_keys(key_list, monster, pbolt, actual_spell,
-                    priest, wizard, innate, targeted, visible_beam);
+                    priest, wizard, innate, targeted);
 
     std::string msg = _noise_message(key_list, num_spell_keys,
                                      silent, unseen);
@@ -2796,8 +2795,7 @@ void mons_cast_noise(monsters *monster, const bolt &pbolt,
     std::string target    = "NO_TARGET";
 
     if (targeted)
-        _noise_fill_target(targ_prep, target, monster, pbolt,
-                           visible_beam, gestured);
+        _noise_fill_target(targ_prep, target, monster, pbolt, gestured);
 
     msg = replace_all(msg, "@at@",     targ_prep);
     msg = replace_all(msg, "@target@", target);
