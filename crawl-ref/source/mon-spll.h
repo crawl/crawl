@@ -967,6 +967,40 @@
       }
     },
 
+    // fake spell for monsters berserking when fleeing
+    {  MST_BERSERK_ESCAPE,
+      {
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_BERSERKER_RAGE
+      }
+    },
+
+    {  MST_MERFOLK_AQUAMANCER,
+       {
+        SPELL_PRIMAL_WAVE,
+        SPELL_STEAM_BALL,
+        SPELL_NO_SPELL,
+        SPELL_THROW_ICICLE,
+        SPELL_NO_SPELL,
+        SPELL_BLINK
+       }
+    },
+
+    {  MST_ALLIGATOR,
+      {
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_SWIFTNESS,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
+      }
+    },
+
     // ---------------------
     // uniques' "spellbooks"
     // ---------------------
@@ -1219,18 +1253,6 @@
       }
     },
 
-    // fake spell for monsters berserking when fleeing
-    {  MST_BERSERK_ESCAPE,
-      {
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_BERSERKER_RAGE
-      }
-    },
-
     {  MST_KHUFU,
       {
        SPELL_SUMMON_DEMON,
@@ -1316,28 +1338,6 @@
        SPELL_NO_SPELL,
        SPELL_PAIN,
        SPELL_TELEPORT_SELF,
-      }
-    },
-
-    {  MST_MERFOLK_AQUAMANCER,
-       {
-        SPELL_PRIMAL_WAVE,
-        SPELL_STEAM_BALL,
-        SPELL_NO_SPELL,
-        SPELL_THROW_ICICLE,
-        SPELL_NO_SPELL,
-        SPELL_BLINK
-       }
-    },
-
-    {  MST_ALLIGATOR,
-      {
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_SWIFTNESS,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL,
-       SPELL_NO_SPELL
       }
     },
 
