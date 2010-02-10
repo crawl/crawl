@@ -91,7 +91,10 @@ void init_char_table( char_set_type set )
 
 unsigned dchar_glyph(dungeon_char_type dchar)
 {
-    return (Options.char_table[dchar]);
+    if (dchar >= 0 && dchar < NUM_DCHAR_TYPES)
+        return (Options.char_table[dchar]);
+    else
+        return (0);
 }
 
 std::string stringize_glyph(unsigned glyph)
