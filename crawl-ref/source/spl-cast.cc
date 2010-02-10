@@ -538,36 +538,6 @@ void do_cast_spell_cmd(bool force)
         flush_input_buffer(FLUSH_ON_FAILURE);
 }
 
-
-static int _get_dist_to_nearest_monster()
-{
-    int minRange = LOS_RADIUS + 1;
-    for (radius_iterator ri(&you.get_los_no_trans(), true); ri; ++ri)
-    {
-        const monsters *mon = monster_at(*ri);
-        if (mon == NULL)
-            continue;
-
-        if (!mon->visible_to(&you) || mons_is_unknown_mimic(mon))
-            continue;
-
-        // Plants/fungi don't count.
-        if (mons_class_flag(mon->type, M_NO_EXP_GAIN)
-            && (mon->type != MONS_BALLISTOMYCETE || mon->number == 0))
-        {
-            continue;
-        }
-
-        if (mon->wont_attack())
-            continue;
-
-        int dist = grid_distance(you.pos(), *ri);
-        if (dist < minRange)
-            minRange = dist;
-    }
-    return (minRange);
-}
-
 // Returns false if spell failed, and true otherwise.
 bool cast_a_spell(bool check_range, spell_type spell)
 {
