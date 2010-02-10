@@ -188,6 +188,9 @@ public:
     bool explode(bool show_more = true, bool hole_in_the_middle = false);
     bool knockback_actor(actor *actor);
 
+    bool visible() const;
+    bool invisible() const;
+
 private:
     void do_fire();
     coord_def pos() const;
@@ -200,7 +203,6 @@ private:
     bool is_bouncy(dungeon_feature_type feat) const;
     bool can_affect_wall_monster(const monsters* mon) const;
     bool stop_at_target() const;
-    bool invisible() const;
     bool has_saving_throw() const;
     bool is_harmless(const monsters *mon) const;
     bool harmless_to_player() const;

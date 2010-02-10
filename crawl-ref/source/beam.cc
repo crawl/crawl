@@ -1563,6 +1563,11 @@ bool bolt::invisible() const
     return (type == 0 || is_enchantment());
 }
 
+bool bolt::visible() const
+{
+    return (!invisible());
+}
+
 void bolt::initialise_fire()
 {
     // Fix some things which the tracer might have set.
