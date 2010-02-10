@@ -12,8 +12,7 @@
 
 struct bolt;
 
-// NOTE: NO_UNRANDARTS is automatically set by util/art-data.pl
-#define NO_UNRANDARTS 82
+#include "art-enum.h"
 
 #define ART_PROPERTIES ARTP_NUM_PROPERTIES
 
@@ -30,96 +29,6 @@ enum unrand_special_type
     UNRANDSPEC_EITHER,
     UNRANDSPEC_NORMAL,
     UNRANDSPEC_SPECIAL
-};
-
-// NOTE: This enumeration is automatically generated from art-data.txt
-// via util/art-data.pl
-enum unrand_type
-{
-    UNRAND_START = 180,
-    UNRAND_DUMMY1 = UNRAND_START,
-    UNRAND_SINGING_SWORD,    // Singing Sword
-    UNRAND_TROG,             // Wrath of Trog
-    UNRAND_VARIABILITY,      // Mace of Variability
-    UNRAND_PRUNE,            // Glaive of Prune
-    UNRAND_POWER,            // Sword of Power
-    UNRAND_OLGREB,           // Staff of Olgreb
-    UNRAND_WUCAD_MU,         // Staff of Wucad Mu
-    UNRAND_VAMPIRES_TOOTH,   // Vampire's Tooth
-    UNRAND_CURSES,           // Scythe of Curses
-    UNRAND_TORMENT,          // Sceptre of Torment
-    UNRAND_ZONGULDROK,       // Sword of Zonguldrok
-    UNRAND_CEREBOV,          // Sword of Cerebov
-    UNRAND_DISPATER,         // Staff of Dispater
-    UNRAND_ASMODEUS,         // Sceptre of Asmodeus
-    UNRAND_BLOODBANE,        // long sword "Bloodbane"
-    UNRAND_FLAMING_DEATH,    // scimitar of Flaming Death
-    UNRAND_BRILLIANCE,       // mace of Brilliance
-    UNRAND_LEECH,            // demon blade "Leech"
-    UNRAND_CHILLY_DEATH,     // dagger of Chilly Death
-    UNRAND_MORG,             // dagger "Morg"
-    UNRAND_FINISHER,         // scythe "Finisher"
-    UNRAND_PUNK,             // sling "Punk"
-    UNRAND_KRISHNA,          // bow of Krishna "Sharnga"
-    UNRAND_SKULLCRUSHER,     // giant club "Skullcrusher"
-    UNRAND_GUARD,            // glaive of the Guard
-    UNRAND_JIHAD,            // sword of Jihad
-    UNRAND_HELLFIRE,         // crossbow "Hellfire"
-    UNRAND_DOOM_KNIGHT,      // sword of the Doom Knight
-    UNRAND_EOS,              // "Eos"
-    UNRAND_BOTONO,           // spear of the Botono
-    UNRAND_OCTOPUS_KING,     // trident of the Octopus King
-    UNRAND_ARGA,             // mithril axe "Arga"
-    UNRAND_ELEMENTAL_STAFF,  // Elemental Staff
-    UNRAND_SNIPER,           // hand crossbow "Sniper"
-    UNRAND_PIERCER,          // longbow "Piercer"
-    UNRAND_BLOWGUN_ASSASSIN, // blowgun of the Assassin
-    UNRAND_WYRMBANE,         // Wyrmbane
-    UNRAND_SPRIGGANS_KNIFE,  // Spriggan's Knife
-    UNRAND_PLUTONIUM_SWORD,  // plutonium sword
-    UNRAND_UNDEADHUNTER,     // great mace "Undeadhunter"
-    UNRAND_SERPENT_SCOURGE,  // whip "Serpent-Scourge"
-    UNRAND_ACCURACY,         // knife of Accuracy
-    UNRAND_CRYSTAL_SPEAR,    // Lehudib's crystal spear
-    UNRAND_CAPTAINS_CUTLASS, // captain's cutlass
-    UNRAND_STORM_BOW,        // storm bow
-    UNRAND_IGNORANCE,        // shield of Ignorance
-    UNRAND_AUGMENTATION,     // robe of Augmentation
-    UNRAND_THIEF,            // cloak of the Thief
-    UNRAND_BULLSEYE,         // shield "Bullseye"
-    UNRAND_DYROVEPREVA,      // crown of Dyrovepreva
-    UNRAND_BEAR_SPIRIT,      // hat of the Bear Spirit
-    UNRAND_MISFORTUNE,       // robe of Misfortune
-    UNRAND_FLASH,            // cloak of Flash
-    UNRAND_BOOTS_ASSASSIN,   // boots of the Assassin
-    UNRAND_LEAR,             // Lear's chain mail
-    UNRAND_ZHOR,             // skin of Zhor
-    UNRAND_SALAMANDER,       // salamander hide armour
-    UNRAND_WAR,              // gauntlets of War
-    UNRAND_RESISTANCE,       // shield of Resistance
-    UNRAND_FOLLY,            // robe of Folly
-    UNRAND_MAXWELL,          // Maxwell's patent armour
-    UNRAND_DRAGONMASK,       // mask of the Dragon
-    UNRAND_NIGHT,            // robe of Night
-    UNRAND_DRAGON_KING,      // armour of the Dragon King
-    UNRAND_ALCHEMIST,        // hat of the Alchemist
-    UNRAND_FENCERS_GLOVES,   // Fencer's gloves
-    UNRAND_STARLIGHT,        // cloak of Starlight
-    UNRAND_RATSKIN_CLOAK,    // ratskin cloak
-    UNRAND_GONG,             // shield of the gong
-    UNRAND_AIR,              // amulet of the Air
-    UNRAND_SHADOWS,          // ring of Shadows
-    UNRAND_CEKUGOB,          // amulet of Cekugob
-    UNRAND_FOUR_WINDS,       // amulet of the Four Winds
-    UNRAND_BLOODLUST,        // necklace of Bloodlust
-    UNRAND_SHAOLIN,          // ring of Shaolin
-    UNRAND_ROBUSTNESS,       // ring of Robustness
-    UNRAND_MAGE,             // ring of the Mage
-    UNRAND_SHIELDING,        // brooch of Shielding
-    UNRAND_RCLOUDS,          // robe of Clouds
-    UNRAND_PONDERING,        // hat of Pondering
-    UNRAND_DUMMY2,           // DUMMY UNRANDART 2
-    UNRAND_LAST = UNRAND_DUMMY2
 };
 
 enum unrand_flag_type

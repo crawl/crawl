@@ -708,9 +708,10 @@ EXTRA_OBJECTS += version.o
 
 LIBS += $(CONTRIB_LIBS) $(EXTRA_LIBS)
 
-DOC_BASE      := ../docs
-DOC_TEMPLATES := $(DOC_BASE)/template
-GENERATE_DOCS := $(DOC_BASE)/aptitudes.txt
+DOC_BASE        := ../docs
+DOC_TEMPLATES   := $(DOC_BASE)/template
+GENERATED_DOCS  := $(DOC_BASE)/aptitudes.txt
+GENERATED_FILES := art-data.h
 
 GAME_DEPENDS  := $(DESTTILEFILES) $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS)
 SRC_PKG_BASE  := stone_soup
@@ -721,7 +722,7 @@ SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
 
 .PHONY: all test install clean clean-contrib distclean debug profile wizard package-source source
 
-all: $(GAME) $(GENERATE_DOCS)
+all: $(GENERATED_FILES) $(GAME) $(GENERATED_DOCS)
 
 test:
 	./$(GAME) -test > /dev/null
@@ -926,7 +927,7 @@ $(foreach t,$(CONTRIB_LIBS),$(if $(wildcard $t),,$(shell rm -f .contrib-libs)))
 
 #############################################################################
 # Build unrandart data
-art-data.h: art-data.txt util/art-data.pl art-func.h
+$(GENERATED_FILES): art-data.txt util/art-data.pl art-func.h
 	util/art-data.pl
 
 #############################################################################
@@ -934,7 +935,7 @@ art-data.h: art-data.txt util/art-data.pl art-func.h
 #
 
 .PHONY: rltile-build
-rltile-build: .contrib-libs
+rltile-build: .contrib-libs $(GENERATED_FILES)
 	+$(MAKE) -C $(RLTILES) -f makefile.unix all
 
 $(TILEDEFSRCS): rltile-build
