@@ -2967,12 +2967,12 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
         const std::string monname = mons_is_mimic(m.type)
                                   ? "a mimic"
                                   : m.name(DESC_NOCAP_A);
-        msg = make_stringf("Not with %s in view!", monname.c_str());
+        msg = make_stringf("There is %s nearby!", monname.c_str());
     }
     else if (visible.size() > 1)
-        msg = "Not with these monsters around!";
+        msg = "There are monsters nearby!";
     else if (_exposed_monsters_nearby(want_move))
-        msg = "Not with this strange disturbance nearby!";
+        msg = "There is a strange disturbance nearby!";
     else
         return (true);
 
