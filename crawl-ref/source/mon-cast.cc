@@ -200,7 +200,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
     beam.hit          = -1;
     beam.damage       = dice_def( 1, 0 );
     beam.ench_power   = -1;
-    beam.type         = 0;
+    beam.glyph        = 0;
     beam.flavour      = BEAM_NONE;
     beam.thrower      = KILL_MISC;
     beam.is_beam      = false;
@@ -218,7 +218,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
     if (spell_cast == SPELL_DRACONIAN_BREATH)
         real_spell = _draco_type_to_breath(drac_type);
 
-    beam.type = dchar_glyph(DCHAR_FIRED_ZAP); // default
+    beam.glyph = dchar_glyph(DCHAR_FIRED_ZAP); // default
     beam.thrower = KILL_MON_MISSILE;
     beam.origin_spell = real_spell;
 
@@ -324,7 +324,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
         beam.name     = "poison arrow";
         beam.damage   = dice_def( 3, 7 + power / 12 );
         beam.colour   = LIGHTGREEN;
-        beam.type     = dchar_glyph(DCHAR_FIRED_MISSILE);
+        beam.glyph    = dchar_glyph(DCHAR_FIRED_MISSILE);
         beam.flavour  = BEAM_POISON_ARROW;
         beam.hit      = 20 + power / 25;
         break;
@@ -374,7 +374,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
         // Huge wave of water is hard to dodge.
         beam.hit      = 20 + power / 20;
         beam.is_beam  = false;
-        beam.type     = dchar_glyph(DCHAR_WAVY);
+        beam.glyph    = dchar_glyph(DCHAR_WAVY);
         break;
 
     case SPELL_FREEZING_CLOUD:
@@ -467,7 +467,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
         beam.name     = "crystal spear";
         beam.damage   = dice_def( 3, 16 + power / 10 );
         beam.colour   = WHITE;
-        beam.type     = dchar_glyph(DCHAR_FIRED_MISSILE);
+        beam.glyph    = dchar_glyph(DCHAR_FIRED_MISSILE);
         beam.flavour  = BEAM_MMISSILE;
         beam.hit      = 22 + power / 20;
         break;
@@ -552,7 +552,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
         beam.name     = "iron shot";
         beam.damage   = dice_def( 3, 8 + (power / 9) );
         beam.hit      = 20 + (power / 25);
-        beam.type     = dchar_glyph(DCHAR_FIRED_MISSILE);
+        beam.glyph    = dchar_glyph(DCHAR_FIRED_MISSILE);
         beam.flavour  = BEAM_MMISSILE;   // similarly unresisted thing
         break;
 
@@ -561,7 +561,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
         beam.name     = "stone arrow";
         beam.damage   = dice_def( 3, 5 + (power / 10) );
         beam.hit      = 14 + power / 35;
-        beam.type     = dchar_glyph(DCHAR_FIRED_MISSILE);
+        beam.glyph    = dchar_glyph(DCHAR_FIRED_MISSILE);
         beam.flavour  = BEAM_MMISSILE;   // similarly unresisted thing
         break;
 
@@ -684,7 +684,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
 
     case SPELL_PORKALATOR:
         beam.name     = "porkalator";
-        beam.type     = 0;
+        beam.glyph    = 0;
         beam.flavour  = BEAM_PORKALATOR;
         beam.thrower  = KILL_MON_MISSILE;
         beam.is_beam  = true;
@@ -715,7 +715,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
 
     if (beam.is_enchantment())
     {
-        beam.type = 0;
+        beam.glyph = 0;
         beam.name = "";
     }
 
@@ -784,7 +784,7 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     if (_los_free_spell(spell_cast))
     {
         pbolt.range = 0;
-        pbolt.type = 0;
+        pbolt.glyph = 0;
         switch (spell_cast)
         {
         case SPELL_BRAIN_FEED:
@@ -871,7 +871,7 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     if (theBeam.ench_power != -1)
         pbolt.ench_power = theBeam.ench_power;
 
-    pbolt.type           = theBeam.type;
+    pbolt.glyph          = theBeam.glyph;
     pbolt.flavour        = theBeam.flavour;
     pbolt.thrower        = theBeam.thrower;
     pbolt.name           = theBeam.name;

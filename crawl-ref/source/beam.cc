@@ -1384,7 +1384,7 @@ const zap_info zap_data[] = {
         WHITE,
         false,
         BEAM_NUKE,
-        NUM_DCHAR_TYPES, // no dchar, to get bolt.type == 0,
+        NUM_DCHAR_TYPES, // no dchar, to get bolt.glyph == 0,
                          // hence invisible
         true,
         true,
@@ -1421,7 +1421,7 @@ static void _zappy(zap_type z_type, int power, bolt &pbolt)
     pbolt.flavour        = zinfo->flavour;
     pbolt.real_flavour   = zinfo->flavour;
     pbolt.colour         = zinfo->colour;
-    pbolt.type           = dchar_glyph(zinfo->glyph);
+    pbolt.glyph          = dchar_glyph(zinfo->glyph);
     pbolt.obvious_effect = zinfo->always_obvious;
     pbolt.is_beam        = zinfo->can_beam;
     pbolt.is_explosion   = zinfo->is_explosion;
@@ -1561,7 +1561,7 @@ static void _munge_bounced_bolt(bolt &old_bolt, bolt &new_bolt,
 
 bool bolt::invisible() const
 {
-    return (type == 0 || is_enchantment());
+    return (glyph == 0 || is_enchantment());
 }
 
 bool bolt::visible() const
@@ -1669,7 +1669,7 @@ void bolt::initialise_fire()
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf( MSGCH_DIAGNOSTICS, "%s%s%s [%s] (%d,%d) to (%d,%d): "
-          "ty=%d col=%d flav=%d hit=%d dam=%dd%d range=%d",
+          "gl=%d col=%d flav=%d hit=%d dam=%dd%d range=%d",
           (is_beam) ? "beam" : "missile",
           (is_explosion) ? "*" :
           (is_big_cloud) ? "+" : "",
@@ -1677,7 +1677,7 @@ void bolt::initialise_fire()
           name.c_str(),
           source.x, source.y,
           target.x, target.y,
-          type, colour, flavour,
+          glyph, colour, flavour,
           hit, damage.num, damage.size,
           range);
 #endif
@@ -1744,7 +1744,7 @@ void bolt::draw(const coord_def& p)
             cgotoxy(drawpos.x, drawpos.y);
             put_colour_ch(colour == BLACK ? random_colour()
                                           : element_colour(colour),
-                          type);
+                          glyph);
 #endif
             // Get curses to update the screen so we can see the beam.
             update_screen();
@@ -5773,7 +5773,7 @@ void bolt::refine_for_explosion()
         seeMsg  = tmp.c_str();
         hearMsg = "You hear an explosion.";
 
-        type    = dchar_glyph(DCHAR_FIRED_BURST);
+        glyph   = dchar_glyph(DCHAR_FIRED_BURST);
     }
 
     if (name.find("hellfire") != std::string::npos)
@@ -5781,7 +5781,7 @@ void bolt::refine_for_explosion()
         seeMsg  = "The hellfire explodes!";
         hearMsg = "You hear a strangely unpleasant explosion.";
 
-        type    = dchar_glyph(DCHAR_FIRED_BURST);
+        glyph   = dchar_glyph(DCHAR_FIRED_BURST);
         flavour = BEAM_HELLFIRE;
     }
 
@@ -5790,7 +5790,7 @@ void bolt::refine_for_explosion()
         seeMsg  = "The fireball explodes!";
         hearMsg = "You hear an explosion.";
 
-        type    = dchar_glyph(DCHAR_FIRED_BURST);
+        glyph   = dchar_glyph(DCHAR_FIRED_BURST);
         flavour = BEAM_FIRE;
         ex_size = 1;
     }
@@ -5800,7 +5800,7 @@ void bolt::refine_for_explosion()
         seeMsg  = "The orb of electricity explodes!";
         hearMsg = "You hear a clap of thunder!";
 
-        type       = dchar_glyph(DCHAR_FIRED_BURST);
+        glyph      = dchar_glyph(DCHAR_FIRED_BURST);
         flavour    = BEAM_ELECTRICITY;
         colour     = LIGHTCYAN;
         damage.num = 1;
@@ -5819,7 +5819,7 @@ void bolt::refine_for_explosion()
         hearMsg = "You hear an explosion!";
 
         name    = "blast of shrapnel";
-        type    = dchar_glyph(DCHAR_FIRED_ZAP);
+        glyph   = dchar_glyph(DCHAR_FIRED_ZAP);
         flavour = BEAM_FRAG;     // Sets it from pure damage to shrapnel
                                  // (which is absorbed extra by armour).
     }
@@ -5830,7 +5830,7 @@ void bolt::refine_for_explosion()
         hearMsg = "You hear a raging storm!";
 
         name       = "ice storm";
-        type       = dchar_glyph(DCHAR_FIRED_ZAP);
+        glyph      = dchar_glyph(DCHAR_FIRED_ZAP);
         colour     = WHITE;
         ex_size    = is_tracer ? 3 : (2 + (random2(ench_power) > 75));
     }
@@ -5952,8 +5952,8 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
 
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
-         "explosion at (%d, %d) : t=%d c=%d f=%d hit=%d dam=%dd%d r=%d",
-         pos().x, pos().y, type, colour, flavour, hit, damage.num, damage.size, r);
+         "explosion at (%d, %d) : g=%d c=%d f=%d hit=%d dam=%dd%d r=%d",
+         pos().x, pos().y, glyph, colour, flavour, hit, damage.num, damage.size, r);
 #endif
 
     if (!is_tracer)
@@ -6258,7 +6258,7 @@ bool bolt::nice_to(const monsters *mon) const
 // TODO: Eventually it'd be nice to have a proper factory for these things
 // (extended from setup_mons_cast() and zapping() which act as limited ones).
 bolt::bolt() : origin_spell(SPELL_NO_SPELL),
-               range(-2), type('*'), colour(BLACK), flavour(BEAM_MAGIC),
+               range(-2), glyph('*'), colour(BLACK), flavour(BEAM_MAGIC),
                real_flavour(BEAM_MAGIC), drop_item(false), item(NULL),
                source(), target(), damage(0, 0), ench_power(0), hit(0),
                thrower(KILL_MISC), ex_size(0), beam_source(MHITNOT),

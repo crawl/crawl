@@ -927,7 +927,7 @@ static bool _handle_wand(monsters *monster, bolt &beem)
     beem.damage       = theBeam.damage;
     beem.ench_power   = theBeam.ench_power;
     beem.hit          = theBeam.hit;
-    beem.type         = theBeam.type;
+    beem.glyph        = theBeam.glyph;
     beem.flavour      = theBeam.flavour;
     beem.thrower      = theBeam.thrower;
     beem.is_beam      = theBeam.is_beam;
@@ -1062,7 +1062,7 @@ static void _setup_generic_throw(struct monsters *monster, struct bolt &pbolt)
     pbolt.range = LOS_RADIUS;
     pbolt.beam_source = monster->mindex();
 
-    pbolt.type    = dchar_glyph(DCHAR_FIRED_MISSILE);
+    pbolt.glyph   = dchar_glyph(DCHAR_FIRED_MISSILE);
     pbolt.flavour = BEAM_MISSILE;
     pbolt.thrower = KILL_MON_MISSILE;
     pbolt.aux_source.clear();

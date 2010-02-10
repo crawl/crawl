@@ -2071,7 +2071,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     default: break;
     }
 
-    beam.type = dchar_glyph(zapsym);
+    beam.glyph = dchar_glyph(zapsym);
     beam.was_missile = true;
 
     returning = get_weapon_brand(item) == SPWPN_RETURNING
@@ -2354,7 +2354,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     {
         returning = false;
 
-        beam.type = dchar_glyph(DCHAR_FIRED_BOLT);
+        beam.glyph = dchar_glyph(DCHAR_FIRED_BOLT);
     }
 
     if (!is_artefact(item))

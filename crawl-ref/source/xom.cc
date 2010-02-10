@@ -2058,7 +2058,7 @@ static int _xom_throw_divine_lightning(bool debug = false)
     bolt beam;
 
     beam.flavour      = BEAM_ELECTRICITY;
-    beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
     beam.damage       = dice_def(3, 30);
     beam.target       = you.pos();
     beam.name         = "blast of lightning";
@@ -3206,7 +3206,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
 
     beam.range   = INFINITE_DISTANCE;
     beam.flavour = BEAM_VISUAL;
-    beam.type    = feat_def.symbol;
+    beam.glyph   = feat_def.symbol;
     beam.colour  = feat_def.colour;
     beam.source  = stair_pos;
     beam.target  = ray.pos();

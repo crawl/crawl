@@ -392,7 +392,7 @@ void immolation(int pow, int caster, coord_def where, bool known,
     }
 
     beam.flavour       = BEAM_FIRE;
-    beam.type          = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.glyph         = dchar_glyph(DCHAR_FIRED_BURST);
     beam.damage        = dice_def(3, pow);
     beam.target        = where;
     beam.name          = "fiery explosion";
@@ -451,7 +451,7 @@ void conduct_electricity(coord_def where, actor *attacker)
     bolt beam;
 
     beam.flavour       = BEAM_ELECTRICITY;
-    beam.type          = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.glyph         = dchar_glyph(DCHAR_FIRED_BURST);
     beam.damage        = dice_def(1, 15);
     beam.target        = where;
     beam.name          = "electric current";
@@ -500,7 +500,7 @@ void cleansing_flame(int pow, int caster, coord_def where,
     }
 
     beam.flavour      = BEAM_HOLY;
-    beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
     beam.damage       = dice_def(2, pow);
     beam.target       = you.pos();
     beam.name         = "golden flame";
@@ -3893,7 +3893,7 @@ void handle_time()
                 bolt beam;
 
                 beam.flavour      = BEAM_RANDOM;
-                beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
+                beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
                 beam.damage       = dice_def(3, you.magic_contamination
                                              * (you.is_undead ? 4 : 2) / 4);
                 beam.target       = you.pos();

@@ -270,7 +270,7 @@ void setup_fire_storm(const actor *source, int pow, bolt &beam)
     beam.ex_size      = 2 + (random2(pow) > 75);
     beam.flavour      = BEAM_LAVA;
     beam.real_flavour = beam.flavour;
-    beam.type         = dchar_glyph(DCHAR_FIRED_ZAP);
+    beam.glyph        = dchar_glyph(DCHAR_FIRED_ZAP);
     beam.colour       = RED;
     beam.beam_source  = source->mindex();
     // XXX: Should this be KILL_MON_MISSILE?
@@ -306,7 +306,7 @@ bool cast_hellfire_burst(int pow, bolt &beam)
     beam.ex_size           = 1;
     beam.flavour           = BEAM_HELLFIRE;
     beam.real_flavour      = beam.flavour;
-    beam.type              = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.glyph             = dchar_glyph(DCHAR_FIRED_BURST);
     beam.colour            = RED;
     beam.beam_source       = MHITYOU;
     beam.thrower           = KILL_YOU;
@@ -358,7 +358,7 @@ void cast_chain_lightning(int pow, const actor *caster)
     beam.thrower        = (caster == &you) ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
     beam.range          = 8;
     beam.hit            = AUTOMATIC_HIT;
-    beam.type           = dchar_glyph(DCHAR_FIRED_ZAP);
+    beam.glyph          = dchar_glyph(DCHAR_FIRED_ZAP);
     beam.flavour        = BEAM_ELECTRICITY;
     beam.obvious_effect = true;
     beam.is_beam        = false;       // since we want to stop at our target
@@ -629,7 +629,7 @@ bool stinking_cloud( int pow, bolt &beem )
     beem.range       = 6;
     beem.damage      = dice_def( 1, 0 );
     beem.hit         = 20;
-    beem.type        = dchar_glyph(DCHAR_FIRED_ZAP);
+    beem.glyph       = dchar_glyph(DCHAR_FIRED_ZAP);
     beem.flavour     = BEAM_POTION_STINKING_CLOUD;
     beem.ench_power  = pow;
     beem.beam_source = MHITYOU;

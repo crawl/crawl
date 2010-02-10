@@ -895,7 +895,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
         beem.damage      = dice_def(3, 10);
         beem.hit         = 20;
         beem.colour      = RED;
-        beem.type        = dchar_glyph(DCHAR_FIRED_ZAP);
+        beem.glyph       = dchar_glyph(DCHAR_FIRED_ZAP);
         beem.flavour     = BEAM_LAVA;
         beem.beam_source = monster->mindex();
         beem.thrower     = KILL_MON;
@@ -930,7 +930,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
         beem.damage      = dice_def( 3, 6 );
         beem.hit         = 50;
         beem.colour      = LIGHTCYAN;
-        beem.type        = dchar_glyph(DCHAR_FIRED_ZAP);
+        beem.glyph       = dchar_glyph(DCHAR_FIRED_ZAP);
         beem.flavour     = BEAM_ELECTRICITY;
         beem.beam_source = monster->mindex();
         beem.thrower     = KILL_MON;
@@ -1094,7 +1094,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
         beem.hit         = 14;
         beem.damage      = dice_def( 2, 10 );
         beem.beam_source = monster->mindex();
-        beem.type        = dchar_glyph(DCHAR_FIRED_MISSILE);
+        beem.glyph       = dchar_glyph(DCHAR_FIRED_MISSILE);
         beem.colour      = LIGHTGREY;
         beem.flavour     = BEAM_MISSILE;
         beem.thrower     = KILL_MON;
