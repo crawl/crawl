@@ -506,6 +506,12 @@ bool butchery(int which_corpse, bool bottle_blood)
     {
         if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
         {
+            if (bottle_blood && (food_is_rotten(*si)
+                                 || !can_bottle_blood_from_corpse(si->plus)))
+            {
+                continue;
+            }
+
             corpse_id = si->index();
             num_corpses++;
 
@@ -575,8 +581,11 @@ bool butchery(int which_corpse, bool bottle_blood)
         if (si->base_type != OBJ_CORPSES || si->sub_type != CORPSE_BODY)
             continue;
 
-        if (bottle_blood && !can_bottle_blood_from_corpse(si->plus))
+        if (bottle_blood && (food_is_rotten(*si)
+                             || !can_bottle_blood_from_corpse(si->plus)))
+        {
             continue;
+        }
 
         if (butcher_all)
             corpse_id = si->index();

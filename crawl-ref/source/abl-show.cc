@@ -2017,7 +2017,6 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_BOTTLE_BLOOD:
-        // There's at least one applicable corpse on the ground.
         if (!butchery(-1, true))
             return (false);
         break;
@@ -2318,9 +2317,7 @@ std::vector<talent> your_talents(bool check_confused)
         _add_talent(talents, ABIL_TRAN_BAT, check_confused);
     }
 
-    if (you.species == SP_VAMPIRE && you.experience_level >= 6
-        && you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT
-        && check_blood_corpses_on_ground())
+    if (you.species == SP_VAMPIRE && you.experience_level >= 6)
     {
         _add_talent(talents, ABIL_BOTTLE_BLOOD, false);
     }
