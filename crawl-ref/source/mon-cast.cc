@@ -784,15 +784,13 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     if (_los_free_spell(spell_cast))
     {
         pbolt.range = 0;
+        pbolt.type = 0;
         switch (spell_cast)
         {
         case SPELL_BRAIN_FEED:
-            pbolt.type = DMNBM_BRAIN_FEED;
-            return (true);
         case SPELL_MISLEAD:
         case SPELL_SMITING:
         case SPELL_AIRSTRIKE:
-            pbolt.type = DMNBM_SMITING;
             return (true);
         default:
             // Other spells get normal setup:
