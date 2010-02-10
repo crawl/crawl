@@ -1622,7 +1622,6 @@ void bolt::initialise_fire()
         range = LOS_RADIUS;
     }
 
-    ASSERT(!name.empty() || is_tracer);
     ASSERT(in_bounds(source));
     ASSERT(flavour > BEAM_NONE && flavour < BEAM_FIRST_PSEUDO);
     ASSERT(!drop_item || item && item->is_valid());
