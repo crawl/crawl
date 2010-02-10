@@ -1736,7 +1736,9 @@ static bool _item_penetrates_victim(const bolt &beam, const actor *victim,
 static bool _silver_damages_victim(bolt &beam, actor* victim, int &dmg,
                                    std::string &dmg_msg)
 {
-    if (victim->holiness() == MH_UNDEAD || victim->is_chaotic())
+    if (victim->holiness() == MH_UNDEAD
+        || victim->is_chaotic()
+        || (victim->atype() != ACT_MONSTER && player_is_shapechanged()))
     {
         dmg *= 2;
 
