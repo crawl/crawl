@@ -4670,7 +4670,8 @@ int spawn_corpse_mushrooms(item_def &corpse,
 
         // Is this square occupied by a non mushroom?
         if (monster && monster->mons_species() != MONS_TOADSTOOL
-            || player_occupant && you.religion != GOD_FEDHAS)
+            || player_occupant && you.religion != GOD_FEDHAS
+            || !is_harmless_cloud(cloud_type_at(current)))
         {
             continue;
         }
