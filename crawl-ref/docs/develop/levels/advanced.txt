@@ -226,7 +226,6 @@ portal vaults in the following steps (no compilation is necessary):
   The "name" should be descriptive of the vault you're adding.
   The "name" should not exceed eight letters.
   The ending must be "des".
-* Add "name.des" to the list of local files in dat/clua/loadmaps.lua.
 * "name.des" should contain a comment at the top, explaining flavour and
   gameplay goals of the portal vault (and perhaps additional ideas etc.)
 * Define at least one vault containing the portal (see below).
