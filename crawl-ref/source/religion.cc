@@ -3243,8 +3243,8 @@ void god_pitch(god_type which_god)
             simple_god_message(" does not accept worship from the ignorant!",
                                which_god);
         else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH)
-            simple_god_message(" says: How you dare to come in such a most "
-                               "loathsome form!?!", which_god);
+            simple_god_message(" says: How dare you come in such a loathsome form!",
+                               which_god);
         else
             simple_god_message(" does not accept worship from those such as you!",
                                which_god);
