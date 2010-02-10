@@ -3493,36 +3493,19 @@ bool god_likes_spell(god_type god, spell_type spell)
     switch(god)
     {
     case GOD_VEHUMET:
-        if (spell_typematch(spell, SPTYP_CONJURATION) || spell_typematch(spell, SPTYP_SUMMONING))
-            return (true);
-
-        if (spell == SPELL_SHATTER
-            || spell == SPELL_SANDBLAST
-            || spell == SPELL_FRAGMENTATION)
-        {
-            return (true);
-        }
-        break;
-
+        return (vehumet_supports_spell(spell));
     case GOD_KIKUBAAQUDGHA:
-        if(spell_typematch(spell, SPTYP_NECROMANCY))
-            return (true);
-        break;
-
+        return (spell_typematch(spell, SPTYP_NECROMANCY));
     default: // quash unhandled constants warnings
-        break;
+        return (false);
     }
-
-    return (false);
 }
 
 bool god_hates_spell(god_type god, spell_type spell)
 {
-    if ((is_good_god(you.religion) || you.religion == GOD_FEDHAS)
+    if (is_good_god(you.religion)
         && spell_typematch(spell, SPTYP_NECROMANCY))
-    {
         return (true);
-    }
 
     // this is probably redundant with the necromancy check (above)
     if (is_good_god(you.religion) && spell == SPELL_NECROMUTATION)
@@ -3530,33 +3513,22 @@ bool god_hates_spell(god_type god, spell_type spell)
 
     switch(god)
     {
+    case GOD_FEDHAS:
+        return is_corpse_violating_spell(spell, god);
     case GOD_TROG:
         return (true); // trog hates magic, and thus all spells.
-
     case GOD_CHEIBRIADOS:
         if (spell == SPELL_HASTE
             || spell == SPELL_SWIFTNESS
             || spell == SPELL_BERSERKER_RAGE)
-        {
             return (true);
-        }
-
         break;
-
     case GOD_SHINING_ONE:
         if (spell_typematch(spell, SPTYP_POISON))
             return (true);
         break;
-
     case GOD_ZIN:
-        if (spell == SPELL_POLYMORPH_OTHER
-            || spell == SPELL_BANISHMENT
-            || spell == SPELL_SUMMON_UGLY_THING)
-        {
-            return (true);
-        }
-        break;
-
+        return is_chaotic_spell(spell, god);
     default: // quash unhandled constants warnings
         break;
     }
