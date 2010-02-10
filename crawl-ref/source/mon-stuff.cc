@@ -2145,7 +2145,10 @@ int monster_die(monsters *monster, killer_type killer,
     }
 
     if(monster->type == MONS_BALLISTOMYCETE)
-        activate_ballistomycetes(monster, monster->pos(), YOU_KILL(killer));
+    {
+        activate_ballistomycetes(monster, monster->pos(),
+                                 YOU_KILL(killer) || pet_kill);
+    }
 
     if (!wizard && !submerged)
         _monster_die_cloud(monster, !mons_reset, silent, summoned);
