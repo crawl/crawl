@@ -896,7 +896,7 @@ bool prioritise_adjacent(const coord_def &target, std::vector<coord_def> & candi
 // variable will store the number of fruit the user wants).  Return the
 // index of the item selected in the user's inventory, or a negative
 // number if the prompt failed (user cancelled or had no fruit).
-int _prompt_for_fruit(int & count, const char * prompt_string)
+static int _prompt_for_fruit(int& count, const char* prompt_string)
 {
     int rc = prompt_invent_item(prompt_string,
                                 MT_INVLIST,
@@ -911,31 +911,32 @@ int _prompt_for_fruit(int & count, const char * prompt_string)
     if (prompt_failed(rc))
         return (rc);
 
-    // Return PROMPT_INAPPROPRIATE if the 'object selected isn't
+    const item_def& item = you.inv[rc];
+    // Return PROMPT_INAPPROPRIATE if the object selected isn't
     // actually fruit.
-    if (!is_fruit(you.inv[rc]))
+    if (!is_fruit(item))
         return (PROMPT_INAPPROPRIATE);
 
     // Handle it if the user lies about the amount of fruit available.
-    if (count > you.inv[rc].quantity)
-        count = you.inv[rc].quantity;
+    count = std::min<int>(count, item.quantity);
 
     return (rc);
 }
 
-bool _prompt_amount(int max, int & selected, const std::string & prompt)
+static bool _prompt_amount(int max, int& selected, const std::string& prompt)
 {
     selected = max;
     while (true)
     {
-        msg::streams(MSGCH_PROMPT) << prompt <<" (" << max << " max)"<< std::endl;
+        msg::streams(MSGCH_PROMPT) << prompt << " (" << max << " max) "
+                                   << std::endl;
 
-        unsigned char keyin = get_ch();
+        const unsigned char keyin = get_ch();
 
         // Cancel
-        if (keyin == ESCAPE || keyin == ' ')
+        if (keyin == ESCAPE || keyin == ' ' || keyin == '0')
         {
-            canned_msg( MSG_OK );
+            canned_msg(MSG_OK);
             return (false);
         }
 
@@ -957,38 +958,29 @@ bool _prompt_amount(int max, int & selected, const std::string & prompt)
 }
 
 
-int _collect_fruit(std::vector<std::pair<int,int>  > & available_fruit)
+static int _collect_fruit(std::vector<std::pair<int,int> >& available_fruit)
 {
-    int total=0;
+    int total = 0;
 
     for (int i = 0; i < ENDOFPACK; i++)
     {
-        if (you.inv[i].is_valid()
-            && is_fruit(you.inv[i]) )
+        if (you.inv[i].is_valid() && is_fruit(you.inv[i]))
         {
             total += you.inv[i].quantity;
-            available_fruit.push_back(std::pair<int,int> (you.inv[i].quantity, i));
+            available_fruit.push_back(std::make_pair(you.inv[i].quantity, i));
         }
     }
 
     return (total);
 }
 
-bool _less_first(const std::pair<int, int> & left, const std::pair<int, int> & right)
+static void _decrease_amount(std::vector<std::pair<int, int> >& available,
+                             int amount)
 {
-    return (left.first < right.first);
-}
-void _decrease_amount(std::vector<std::pair<int, int> > & available, int amount)
-{
-    int total_decrease = amount;
-    for (unsigned i=0; i < available.size() && amount > 0; i++)
+    const int total_decrease = amount;
+    for (unsigned int i = 0; i < available.size() && amount > 0; i++)
     {
-
-        int decrease_amount = available[i].first;
-        if (decrease_amount > amount)
-        {
-            decrease_amount = amount;
-        }
+        const int decrease_amount = std::min(available[i].first, amount);
         amount -= decrease_amount;
         dec_inv_item_quantity(available[i].second, decrease_amount);
     }
@@ -996,7 +988,6 @@ void _decrease_amount(std::vector<std::pair<int, int> > & available, int amount)
         mprf("%d pieces of fruit are consumed!", total_decrease);
     else
         mpr("A piece of fruit is consumed!");
-
 }
 
 // Create a ring or partial ring around the caster.  The user is
@@ -1020,7 +1011,8 @@ bool plant_ring_from_fruit()
         }
     }
 
-    int max_use = std::min(total_fruit, int(adjacent.size()) );
+    const int max_use = std::min(total_fruit,
+                                 static_cast<int>(adjacent.size()));
 
     // Don't prompt if we can't do anything (due to having no fruit or
     // no squares to place plants on).
@@ -1029,7 +1021,8 @@ bool plant_ring_from_fruit()
 
     // And how many plants does the user want to create?
     int target_count;
-    if (!_prompt_amount(max_use, target_count, "How many plants will you create?"))
+    if (!_prompt_amount(max_use, target_count,
+                        "How many plants will you create?"))
     {
         return (false);
     }
@@ -1037,7 +1030,7 @@ bool plant_ring_from_fruit()
     if (static_cast<int>(adjacent.size()) > target_count)
         prioritise_adjacent(you.pos(), adjacent);
 
-    int hp_adjust = you.skills[SK_INVOCATIONS] * 10;
+    const int hp_adjust = you.skills[SK_INVOCATIONS] * 10;
 
     int created_count = 0;
     for (int i = 0; i < target_count; ++i)
@@ -1046,7 +1039,7 @@ bool plant_ring_from_fruit()
             created_count++;
     }
 
-    std::sort(collected_fruit.begin(), collected_fruit.end(), _less_first);
+    std::sort(collected_fruit.begin(), collected_fruit.end());
     _decrease_amount(collected_fruit, created_count);
 
     return (created_count);
@@ -1212,7 +1205,6 @@ struct monster_conversion
         base_monster = NULL;
         piety_cost = 0;
         fruit_cost = 0;
-
     }
     monsters * base_monster;
     int piety_cost;
@@ -1260,12 +1252,12 @@ bool mons_is_evolvable(const monsters * mon)
     return _possible_evolution(mon, temp);
 }
 
-void _collect_adjacent_monsters(std::vector<monster_conversion> & available,
-                                const coord_def &  center)
+void _collect_adjacent_monsters(std::vector<monster_conversion>& available,
+                                const coord_def& center)
 {
     for (adjacent_iterator adjacent(center, false); adjacent; ++adjacent)
     {
-        monsters * candidate = monster_at(*adjacent);
+        monsters* candidate = monster_at(*adjacent);
         monster_conversion monster_upgrade;
         if (candidate && _possible_evolution(candidate, monster_upgrade))
         {
@@ -1312,10 +1304,10 @@ bool evolve_flora()
     bool in_range = false;
     for (radius_iterator rad(&you.get_los()); rad; ++rad)
     {
-        monsters * temp = monster_at(*rad);
+        const monsters* temp = monster_at(*rad);
         if (is_moldy(*rad) && mons_class_can_pass(MONS_BALLISTOMYCETE,
                                                   env.grid(*rad))
-            || temp && mons_is_evolvable(temp) )
+            || temp && mons_is_evolvable(temp))
         {
             in_range = true;
             break;
@@ -1347,8 +1339,7 @@ bool evolve_flora()
         return (false);
     }
 
-
-    monsters* target = monster_at(spelld.target);
+    monsters* const target = monster_at(spelld.target);
 
     if (!target)
     {
@@ -1369,7 +1360,8 @@ bool evolve_flora()
     if (!_possible_evolution(target, upgrade))
     {
         if (mons_is_plant(target))
-            simple_monster_message(target, " has already reached the pinnacle of evolution.");
+            simple_monster_message(target, " has already reached "
+                                   "the pinnacle of evolution.");
         else
             mprf("Only plants or fungi may be upgraded.");
 
@@ -1379,7 +1371,7 @@ bool evolve_flora()
     std::vector<std::pair<int, int> > collected_fruit;
     if (upgrade.fruit_cost)
     {
-        int total_fruit = _collect_fruit(collected_fruit);
+        const int total_fruit = _collect_fruit(collected_fruit);
 
         if (total_fruit < upgrade.fruit_cost)
         {
@@ -1390,7 +1382,7 @@ bool evolve_flora()
 
     if (upgrade.piety_cost && upgrade.piety_cost > you.piety)
     {
-        mprf("Not enough piety");
+        mprf("Not enough piety.");
         return (false);
     }
 
@@ -1404,7 +1396,8 @@ bool evolve_flora()
     case MONS_FUNGUS:
     case MONS_BALLISTOMYCETE:
     case MONS_TOADSTOOL:
-        simple_monster_message(target, " can now pick up its mycelia and move.");
+        simple_monster_message(target,
+                               " can now pick up its mycelia and move.");
         break;
 
     default:
