@@ -891,8 +891,7 @@ ENDMAP
 # these shows still point out how Kikubaaqudgha enjoys suffering.
 NAME:   tgw_kikubaaqudgha
 TAGS:   uniq_altar_kikubaaqudgha temple_overflow_kikubaaqudgha
-PLACE: D:1
-#DEPTH:  D:2-10
+DEPTH:  D:2-10
 KFEAT:  _ = altar_kikubaaqudgha
 
 {{
