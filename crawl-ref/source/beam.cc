@@ -3317,7 +3317,7 @@ void bolt::affect_ground()
 
             int rc = create_monster(mgen_data(MONS_BALLISTOMYCETE,
                                               beh,
-                                              agent(),
+                                              NULL,
                                               0,
                                               0,
                                               pos(),
