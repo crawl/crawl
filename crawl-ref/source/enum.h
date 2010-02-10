@@ -2348,6 +2348,8 @@ enum mon_spellbook_type
     MST_MARA_FAKE,
     MST_MERFOLK_AQUAMANCER,
     MST_ALLIGATOR,
+    MST_BORIS,
+    MST_FREDERICK,
 
     MST_TEST_SPAWNER = 200,
     NUM_MSTYPES,
