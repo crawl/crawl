@@ -2485,19 +2485,36 @@ void ident_reflector(item_def *item)
 
 std::string item_base_name(const item_def &item)
 {
-    switch (item.base_type)
+    return item_base_name(item.base_type, item.sub_type);
+}
+
+std::string item_base_name (object_class_type type, int sub_type)
+{
+    switch (type)
     {
     case OBJ_WEAPONS:
-        return Weapon_prop[Weapon_index[item.sub_type]].name;
+        return Weapon_prop[Weapon_index[sub_type]].name;
     case OBJ_MISSILES:
-        return Missile_prop[Missile_index[item.sub_type]].name;
+        return Missile_prop[Missile_index[sub_type]].name;
     case OBJ_ARMOUR:
-        return Armour_prop[Armour_index[item.sub_type]].name;
+        return Armour_prop[Armour_index[sub_type]].name;
     case OBJ_JEWELLERY:
-        return (jewellery_is_amulet(item) ? "amulet" : "ring");
+        return (jewellery_is_amulet(sub_type) ? "amulet" : "ring");
     default:
         return "";
     }
+}
+
+std::string food_type_name (const item_def &item)
+{
+    ASSERT(item.base_type == OBJ_FOOD);
+
+    return food_type_name(item.sub_type);
+}
+
+std::string food_type_name (int sub_type)
+{
+    return (Food_prop[Food_index[sub_type]].name);
 }
 
 const char* weapon_base_name(unsigned char subtype)

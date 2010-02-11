@@ -294,6 +294,54 @@ std::string item_def::name(description_level_type descrip,
     return buff.str();
 }
 
+// XXX: Basically duplicates the code found in item_def::name_aux.
+// This is not nice. But changing the code there is not currently 
+// an option. {due}
+const char* missile_brand_name (const item_def& item)
+{
+    switch (get_ammo_brand(item))
+    {
+    case SPMSL_FLAME:
+        return "flame";
+    case SPMSL_FROST:
+        return "frost";
+    case SPMSL_POISONED:
+        return "poison";
+    case SPMSL_CURARE:
+        return "curare";
+    case SPMSL_EXPLODING:
+        return "exploding";
+    case SPMSL_STEEL:
+        return "steel";
+    case SPMSL_SILVER:
+        return "silver";
+    case SPMSL_PARALYSIS:
+        return "paralysis";
+    case SPMSL_SLOW:
+        return "slowing";
+    case SPMSL_SLEEP:
+        return "sleeping";
+    case SPMSL_CONFUSION:
+        return "confusion";
+    case SPMSL_SICKNESS:
+        return "sickness";
+    case SPMSL_RAGE:
+        return "frenzy";
+    case SPMSL_RETURNING:
+        return "returning";
+    case SPMSL_CHAOS:
+        return "chaos";
+    case SPMSL_PENETRATION:
+        return "penetration";
+    case SPMSL_REAPING:
+        return "reaping";
+    case SPMSL_DISPERSAL:
+        return "dispersal";
+    case SPMSL_NORMAL:
+    default:
+        return "";
+    }
+}
 
 const char* weapon_brand_name(const item_def& item, bool terse)
 {
@@ -619,6 +667,8 @@ static const char* ring_secondary_string(int s)
     default: return "";
     }
 }
+
+
 
 static const char* ring_primary_string(int p)
 {
@@ -967,6 +1017,82 @@ const char* racial_description_string(const item_def& item, bool terse)
     }
 }
 
+std::string base_type_string (const item_def &item, bool known)
+{
+    return base_type_string(item.base_type, known);
+}
+
+std::string base_type_string (object_class_type type, bool known)
+{
+    switch (type)
+    {
+    case OBJ_WEAPONS: return "weapon";
+    case OBJ_MISSILES: return "missile";
+    case OBJ_ARMOUR: return "armour";
+    case OBJ_WANDS: return "wand";
+    case OBJ_FOOD: return "food";
+    case OBJ_SCROLLS: return "scroll";
+    case OBJ_JEWELLERY: return "jewellery";
+    case OBJ_POTIONS: return "potion";
+    case OBJ_BOOKS: return "book";
+    case OBJ_STAVES: return "staff";
+    case OBJ_ORBS: return "orb";
+    case OBJ_MISCELLANY: return "miscellaneous";
+    case OBJ_CORPSES: return "corpse";
+    case OBJ_GOLD: return "gold";
+    default: return "";
+    }
+}
+
+std::string sub_type_string (const item_def &item, bool known)
+{
+    return sub_type_string(item.base_type, item.sub_type);
+}
+
+std::string sub_type_string (object_class_type type, int sub_type, bool known)
+{
+    switch (type)
+    {
+    case OBJ_WEAPONS:  // deliberate fall through, as XXX_prop is a local
+    case OBJ_MISSILES: // variable to itemprop.cc.
+    case OBJ_ARMOUR:
+        return item_base_name(type, sub_type);
+    case OBJ_WANDS: return wand_type_name(sub_type);
+    case OBJ_FOOD: return food_type_name(sub_type);
+    case OBJ_SCROLLS: return scroll_type_name(sub_type);
+    case OBJ_JEWELLERY: return jewellery_type_name(sub_type);
+    case OBJ_POTIONS: return potion_type_name(sub_type);
+    case OBJ_BOOKS: return book_type_name(sub_type);
+    case OBJ_STAVES: return staff_type_name(sub_type);
+    case OBJ_MISCELLANY:
+        if (sub_type == MISC_RUNE_OF_ZOT)
+            return "rune of Zot";
+        else
+            return misc_type_name(sub_type, known);
+    // these repeat as base_type_string
+    case OBJ_ORBS: return "orb of Zot"; break;
+    case OBJ_CORPSES: return "corpse"; break;
+    case OBJ_GOLD: return "gold"; break;
+    default: return "";
+    }
+}
+
+std::string ego_type_string (const item_def &item)
+{
+    switch (item.base_type)
+    {
+    case OBJ_ARMOUR: return armour_ego_name(item, false);
+    case OBJ_WEAPONS:
+        // this is specialcased out of weapon_brand_name ("vampiric hand axe", etc)
+        if (get_weapon_brand(item) == SPWPN_VAMPIRICISM)
+            return "vampiricism";
+        else
+            return replace_all_of(weapon_brand_name(item, false), " of", "");
+    case OBJ_MISSILES: return missile_brand_name(item);
+    default: return "";
+    }
+}
+
 // gcc (and maybe the C standard) says that if you output
 // 0, even with showpos set, you get 0, not +0. This is a workaround.
 static void output_with_sign(std::ostream& os, int val)
@@ -1112,6 +1238,8 @@ std::string item_def::name_aux(description_level_type desc,
             buff << " (curse)";
         break;
 
+    // XXX: If changing the names of missiles, please update missile_brand_name.
+    // better yet, please destroy this travesty of code and do it a better way!
     case OBJ_MISSILES:
         brand = get_ammo_brand(*this);
 
