@@ -125,6 +125,18 @@ bool cast_selective_amnesia(bool force)
     return (true);
 }
 
+static void _maybe_mark_was_cursed(item_def &item)
+{
+    if (Options.autoinscribe_cursed
+        && item.inscription.find("was cursed") == std::string::npos
+        && !item_ident(item, ISFLAG_SEEN_CURSED)
+        && !item_ident(item, ISFLAG_IDENT_MASK))
+    {
+        add_inscription(item, "was cursed");
+    }
+    do_uncurse_item(item);
+}
+
 bool remove_curse(bool suppress_msg)
 {
     bool success = false;
@@ -135,13 +147,7 @@ bool remove_curse(bool suppress_msg)
         && you.weapon()->cursed())
     {
         // Also sets wield_change.
-        do_uncurse_item(*you.weapon());
-        if (Options.autoinscribe_cursed)
-            if (you.weapon()->inscription.find("was cursed") == std::string::npos
-                && !item_ident(*you.weapon(), ISFLAG_IDENT_MASK))
-            {
-                add_inscription(*you.weapon(), "was cursed");
-            }
+        _maybe_mark_was_cursed(*you.weapon());
         success = true;
     }
 
@@ -152,13 +158,7 @@ bool remove_curse(bool suppress_msg)
         // Melded equipment can also get uncursed this way.
         if (you.equip[i] != -1 && you.inv[you.equip[i]].cursed())
         {
-            do_uncurse_item(you.inv[you.equip[i]]);
-            if (Options.autoinscribe_cursed)
-                if (you.inv[you.equip[i]].inscription.find("was cursed") == std::string::npos
-                    && !item_ident(you.inv[you.equip[i]], ISFLAG_IDENT_MASK))
-                {
-                    add_inscription(you.inv[you.equip[i]], "was cursed");
-                }
+            _maybe_mark_was_cursed(you.inv[you.equip[i]]);
             success = true;
         }
     }

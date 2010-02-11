@@ -490,6 +490,7 @@ void do_curse_item( item_def &item, bool quiet )
 
         // If we get the message, we know the item is cursed now.
         item.flags |= ISFLAG_KNOW_CURSE;
+        item.flags |= ISFLAG_SEEN_CURSED;
     }
 
     item.flags |= ISFLAG_CURSED;
@@ -530,6 +531,7 @@ void do_uncurse_item( item_def &item )
         you.wield_change = true;
     }
     item.flags &= (~ISFLAG_CURSED);
+    item.flags &= (~ISFLAG_SEEN_CURSED);
 }
 
 // Is item stationary (cannot be picked up)?
