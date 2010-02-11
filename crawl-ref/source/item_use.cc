@@ -2113,11 +2113,12 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         beam.thrower       = KILL_MON_MISSILE;
     }
 
-    beam.item     = &item;
-    beam.source   = agent->pos();
-    beam.colour   = item.colour;
-    beam.flavour  = BEAM_MISSILE;
-    beam.is_beam  = false;
+    beam.item         = &item;
+    beam.effect_known = item_ident(item, ISFLAG_KNOW_TYPE);
+    beam.source       = agent->pos();
+    beam.colour       = item.colour;
+    beam.flavour      = BEAM_MISSILE;
+    beam.is_beam      = false;
     beam.aux_source.clear();
 
     beam.can_see_invis = agent->can_see_invisible();
@@ -2638,6 +2639,12 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     // For the tracer, use max_range. For the actual shot, use range.
     pbolt.range = max_range;
 
+    // Save the special explosion (exploding missiles) for later.
+    // Need to clear this if unknown to avoid giving away the explosion.
+    bolt* expl = pbolt.special_explosion;
+    if (!pbolt.effect_known)
+        pbolt.special_explosion = NULL;
+
     // Don't do the tracing when using Portaled Projectile, or when confused.
     if (!teleport && !you.confused())
     {
@@ -2669,8 +2676,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     }
     pbolt.is_tracer = false;
 
-    // Use real range for firing.
+    // Reset values.
     pbolt.range = range;
+    pbolt.special_explosion = expl;
 
     bool unwielded = false;
     if (throw_2 == you.equip[EQ_WEAPON] && thrown.quantity == 1)
