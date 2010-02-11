@@ -1057,13 +1057,15 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
         spell_type spell_cast = SPELL_NO_SPELL;
         monster_spells hspell_pass(monster->spells);
 
-        // 1KB: the following code is never used for unfriendlies!
         if (!mon_enemies_around(monster))
         {
             // Force the casting of dig when the player is not visible -
             // this is EVIL!
+            // only do this for monsters that are actually seeking out a
+            // hostile target -doy
             if (monster->has_spell(SPELL_DIG)
-                && mons_is_seeking(monster))
+                && mons_is_seeking(monster)
+                && !(monster->wont_attack() && monster->foe == MHITYOU))
             {
                 spell_cast = SPELL_DIG;
                 finalAnswer = true;
