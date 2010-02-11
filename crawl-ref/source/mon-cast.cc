@@ -2577,7 +2577,7 @@ void _noise_fill_target(std::string& targ_prep, std::string& target,
         target = monster->pronoun(PRONOUN_REFLEXIVE);
     // Monsters should only use targeted spells while foe == MHITNOT
     // if they're targeting themselves.
-    else if (monster->foe == MHITNOT && !monster->confused())
+    else if (monster->foe == MHITNOT && !mons_is_confused(monster, true))
         target = "NONEXISTENT FOE";
     else if (!invalid_monster_index(monster->foe)
              && menv[monster->foe].type == MONS_NO_MONSTER)
