@@ -41,7 +41,7 @@ function ossuary_portal(e)
         entity = 'staircase',
         dst = "ossuary",
         dstorigin = "in a tomb",
-        overmap = "sand-covered staircase",
+        overview = "sand-covered staircase",
         turns = timeout_turns,
         floor = "floor",
         msg = messager })

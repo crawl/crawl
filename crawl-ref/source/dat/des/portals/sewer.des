@@ -45,7 +45,7 @@ function sewer_portal(e)
         entity = 'drain',
         dst = "sewer",
         dstorigin = "in the sewers",
-        overmap = "glowing drain",
+        overview = "glowing drain",
         turns = timeout_turns,
         floor = "floor",
         msg = messager })

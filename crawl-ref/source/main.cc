@@ -50,6 +50,7 @@
 #include "debug.h"
 #include "delay.h"
 #include "describe.h"
+#include "dgn-overview.h"
 #include "dgn-shoals.h"
 #include "dlua.h"
 #include "directn.h"
@@ -92,7 +93,6 @@
 #include "options.h"
 #include "ouch.h"
 #include "output.h"
-#include "overmap.h"
 #include "player.h"
 #include "quiver.h"
 #include "random.h"
@@ -1693,7 +1693,7 @@ void process_command(command_type cmd)
 
         // Map commands.
     case CMD_CLEAR_MAP:       _do_clear_map();   break;
-    case CMD_DISPLAY_OVERMAP: display_overmap(); break;
+    case CMD_DISPLAY_OVERMAP: display_overview(); break;
     case CMD_DISPLAY_MAP:     _do_display_map(); break;
 
         // Stash commands.

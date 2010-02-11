@@ -20,6 +20,7 @@
 #include "clua.h"
 #include "delay.h"
 #include "describe.h"
+#include "dgn-overview.h"
 #include "dgnevent.h"
 #include "directn.h"
 #include "map_knowledge.h"
@@ -39,7 +40,6 @@
 #ifdef USE_TILE
  #include "output.h"
 #endif
-#include "overmap.h"
 #include "place.h"
 #include "player.h"
 #include "stash.h"
@@ -1883,9 +1883,9 @@ static bool _is_known_branch_id(int branch)
     // The Vestibule is special: there are no stairs to it, just a
     // portal.
     if (branch == BRANCH_VESTIBULE_OF_HELL)
-        return overmap_knows_portal(DNGN_ENTER_HELL);
+        return overview_knows_portal(DNGN_ENTER_HELL);
 
-    // If the overmap knows the stairs to this branch, we know the branch.
+    // If the overview knows the stairs to this branch, we know the branch.
     return (stair_level.find(static_cast<branch_type>(branch))
             != stair_level.end());
 }
@@ -1896,7 +1896,7 @@ static bool _is_known_branch(const Branch &br)
 }
 
 // Returns a list of the branches that the player knows the location of the
-// stairs to, in the same order as overmap.cc lists them.
+// stairs to, in the same order as dgn-overview.cc lists them.
 static std::vector<branch_type> _get_branches(bool (*selector)(const Branch &))
 {
     std::vector<branch_type> result;

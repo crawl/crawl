@@ -4153,7 +4153,7 @@ static bool _cmp_god_by_name(god_type god1, god_type god2)
 }
 
 // Vector of temple gods.
-// Sorted by name for the benefit of the overmap.
+// Sorted by name for the benefit of the overview.
 std::vector<god_type> temple_god_list()
 {
     std::vector<god_type> god_list;
@@ -4168,7 +4168,7 @@ std::vector<god_type> temple_god_list()
 }
 
 // Vector of non-temple gods.
-// Sorted by name for the benefit of the overmap.
+// Sorted by name for the benefit of the overview.
 std::vector<god_type> nontemple_god_list()
 {
     std::vector<god_type> god_list;

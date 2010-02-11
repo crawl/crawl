@@ -88,7 +88,7 @@
 #include "coord.h"
 #endif
 
-// defined in overmap.cc
+// defined in dgn-overview.cc
 extern std::map<branch_type, level_id> stair_level;
 extern std::map<level_pos, shop_type> shops_present;
 extern std::map<level_pos, god_type> altars_present;
