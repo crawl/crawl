@@ -327,7 +327,7 @@ std::string overview_description_string()
 }
 
 // iterate through every dungeon branch, listing the ones which have been found
-static std::string _get_branches()
+static std::string _get_seen_branches()
 {
     int num_printed_branches = 1;
     char buffer[100];
@@ -353,14 +353,13 @@ static std::string _get_branches()
     for (int i = BRANCH_FIRST_NON_DUNGEON; i < NUM_BRANCHES; i++)
     {
         const branch_type branch = branches[i].id;
-        bool printed = false;
 
         if (stair_level.find(branch) != stair_level.end())
         {
             level_id lid(branch, 0);
             lid = find_deepest_explored(lid);
 
-            // Each branch entry takes up 24 spaces
+            // Each branch entry takes up 26 spaces
             snprintf(buffer, sizeof buffer,
                 "<yellow>%-7s</yellow> <darkgrey>(%d/%d)</darkgrey>: %-9s",
                      branches[branch].abbrevname,
@@ -369,32 +368,6 @@ static std::string _get_branches()
                      stair_level[branch].describe(false, true).c_str());
 
             disp += buffer;
-            printed = true;
-        }
-        else {
-            const branch_type parent_branch = branches[i].parent_branch;
-            level_id lid(parent_branch, 0);
-            lid = find_deepest_explored(lid);
-            if (lid.depth >= branches[branch].mindepth) {
-                int width = (branches[branch].mindepth >= 10) +
-                            strlen(branches[parent_branch].abbrevname);
-
-                // Each branch entry takes up 24 spaces
-                snprintf(buffer, sizeof buffer,
-                    "<brown>%-7s</brown> <darkgrey>(0/%d): %s:%d-%-*d</darkgrey>",
-                        branches[branch].abbrevname,
-                        branches[branch].depth,
-                        branches[parent_branch].abbrevname,
-                        branches[branch].mindepth,
-                        6 - width,
-                        branches[branch].maxdepth);
-
-                disp += buffer;
-                printed = true;
-            }
-        }
-
-        if (printed) {
             num_printed_branches++;
 
             disp += (num_printed_branches % 3) == 0 ? "\n" : "  ";
@@ -404,6 +377,65 @@ static std::string _get_branches()
     if (num_printed_branches % 3 != 0)
         disp += "\n";
     return disp;
+}
+
+static std::string _get_unseen_branches()
+{
+    int num_printed_branches = 0;
+    char buffer[100];
+    std::string disp;
+
+    for (int i = BRANCH_FIRST_NON_DUNGEON; i < NUM_BRANCHES; i++)
+    {
+        const branch_type branch = branches[i].id;
+
+        if (stair_level.find(branch) == stair_level.end())
+        {
+            const branch_type parent_branch = branches[i].parent_branch;
+            level_id lid(parent_branch, 0);
+            lid = find_deepest_explored(lid);
+            if (lid.depth >= branches[branch].mindepth) {
+                if (branches[branch].mindepth != branches[branch].maxdepth) {
+                    int len = strlen(branches[branch].abbrevname) -
+                              strlen(branches[parent_branch].abbrevname);
+                    // Each branch entry takes up 20 spaces
+                    snprintf(buffer, sizeof buffer,
+                        "<brown>%s</brown><darkgrey>: %*s:%d-%d</darkgrey>",
+                            branches[branch].abbrevname,
+                            6 - len,
+                            branches[parent_branch].abbrevname,
+                            branches[branch].mindepth,
+                            branches[branch].maxdepth);
+                }
+                else {
+                    int len = strlen(branches[branch].abbrevname) -
+                              strlen(branches[parent_branch].abbrevname);
+                    // Each branch entry takes up 20 spaces
+                    snprintf(buffer, sizeof buffer,
+                        "<brown>%s</brown><darkgrey>: %*s:%d</darkgrey>",
+                            branches[branch].abbrevname,
+                            6 - len,
+                            branches[parent_branch].abbrevname,
+                            branches[branch].mindepth);
+                }
+
+                disp += buffer;
+                num_printed_branches++;
+
+                disp += (num_printed_branches % 4) == 0
+                    ? "\n" : std::string(56 - strlen(buffer), ' ');
+            }
+        }
+    }
+
+    if (num_printed_branches % 4 != 0)
+        disp += "\n";
+    return disp;
+}
+
+static std::string _get_branches()
+{
+    return _get_seen_branches() + std::string("\n") + _get_unseen_branches();
 }
 
 // iterate through every god and display their altar's discovery state by color
