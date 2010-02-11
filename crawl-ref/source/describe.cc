@@ -3234,7 +3234,7 @@ static std::string _religion_help(god_type god)
         int halo_size = you.halo_radius();
         if (halo_size > 0)
         {
-            result += "You radiate a ";
+            result += " You radiate a ";
 
             if (halo_size > 6)
                 result += "large ";
