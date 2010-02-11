@@ -176,7 +176,8 @@ bool can_wield(item_def *weapon, bool say_reason,
         return (false);
     }
 
-    if (you.hunger_state < HS_FULL
+    if (!ignore_temporary_disability
+        && you.hunger_state < HS_FULL
         && you.hunger < you_max_hunger() - 500 // ghouls
         && get_weapon_brand(*weapon) == SPWPN_VAMPIRICISM
         && you.species != SP_VAMPIRE && you.species != SP_MUMMY)
