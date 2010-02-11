@@ -4,7 +4,6 @@
 #include "enum.h"
 #include "externs.h"
 
-#include "artefact.h"
 #include "player.h"
 
 bool is_holy_item(const item_def& item);

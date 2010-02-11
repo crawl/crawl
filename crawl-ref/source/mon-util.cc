@@ -11,6 +11,7 @@
 
 #include "mon-util.h"
 
+#include "artefact.h"
 #include "beam.h"
 #include "colour.h"
 #include "coordit.h"

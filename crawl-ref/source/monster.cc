@@ -7,6 +7,7 @@
 #include "AppHdr.h"
 
 #include "areas.h"
+#include "artefact.h"
 #include "beam.h"
 #include "cloud.h"
 #include "coord.h"
