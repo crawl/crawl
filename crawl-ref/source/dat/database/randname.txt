@@ -631,6 +631,19 @@ distressingly furry
 w:160
 @general appearance@
 %%%%
+Cheibriados ponderous
+
+w:2
+of Placidity
+
+w:2
+of Dawdling
+
+w:2
+of Indolence
+
+of Cheibriados
+%%%%
 ######################################################
 # Jewellery appearance
 ######################################################

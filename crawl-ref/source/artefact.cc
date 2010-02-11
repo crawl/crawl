@@ -1256,6 +1256,7 @@ static bool _init_artefact_book(item_def &book)
 static bool _init_artefact_properties(item_def &item)
 {
     ASSERT( is_artefact( item ) );
+
     CrawlHashTable &props = item.props;
     if (!props.exists( ARTEFACT_PROPS_KEY ))
         props[ARTEFACT_PROPS_KEY].new_vector(SV_SHORT).resize(ART_PROPERTIES);
@@ -1322,7 +1323,8 @@ void artefact_wpn_properties( const item_def &item,
 
     if (item.props.exists( ARTEFACT_PROPS_KEY ))
     {
-        const CrawlVector &rap_vec = item.props[ARTEFACT_PROPS_KEY].get_vector();
+        const CrawlVector &rap_vec =
+            item.props[ARTEFACT_PROPS_KEY].get_vector();
         ASSERT( rap_vec.get_type()     == SV_SHORT );
         ASSERT( rap_vec.size()         == ART_PROPERTIES);
         ASSERT( rap_vec.get_max_size() == ART_PROPERTIES);
@@ -1463,6 +1465,21 @@ static bool _pick_db_name( const item_def &item )
     }
 }
 
+std::string artefact_name_lookup(const item_def &item,
+                                 const std::string &lookup)
+{
+    const std::string name = getRandNameString(lookup);
+    return (!name.empty()? _replace_name_parts(name, item) : name);
+}
+
+bool artefact_name_lookup(std::string &result,
+                          const item_def &item,
+                          const std::string &lookup)
+{
+    result = artefact_name_lookup(item, lookup);
+    return (!result.empty());
+}
+
 std::string artefact_name(const item_def &item, bool appearance)
 {
     ASSERT(is_artefact(item));
@@ -1533,23 +1550,17 @@ std::string artefact_name(const item_def &item, bool appearance)
         std::string name;
         do
         {
-            name = getRandNameString(lookup);
+            (artefact_name_lookup(name, item, lookup)
 
-            if (name.empty() && god_gift)
-            {
-                // If nothing found, try god name alone.
-                name = getRandNameString(
-                           god_name(static_cast<god_type>(item_orig), false));
+             // If nothing found, try god name alone.
+             || (god_gift
+                 && artefact_name_lookup(name, item,
+                                         god_name(
+                                             static_cast<god_type>(item_orig),
+                                             false)))
 
-                if (name.empty())
-                {
-                    // If still nothing found, try base type alone.
-                    name = getRandNameString(
-                               _get_artefact_type(item).c_str());
-                }
-            }
-
-            name = _replace_name_parts(name, item);
+             // If still nothing found, try base type alone.
+             || artefact_name_lookup(name, item, _get_artefact_type(item)));
         }
         while (--tries > 0 && name.length() > 25);
 
@@ -1909,6 +1920,34 @@ bool randart_is_bad( const item_def &item )
     return randart_is_bad( item, proprt);
 }
 
+static void _artefact_setup_prop_vectors(item_def &item)
+{
+    CrawlHashTable &props = item.props;
+    if (!props.exists(ARTEFACT_PROPS_KEY))
+        props[ARTEFACT_PROPS_KEY].new_vector(SV_SHORT)
+            .resize(ART_PROPERTIES);
+
+    CrawlVector &rap = props[ARTEFACT_PROPS_KEY].get_vector();
+    rap.set_max_size(ART_PROPERTIES);
+
+    for (vec_size i = 0; i < ART_PROPERTIES; i++)
+        rap[i].get_short() = 0;
+
+    if (!item.props.exists( KNOWN_PROPS_KEY ))
+    {
+        props[KNOWN_PROPS_KEY].new_vector(SV_BOOL).resize(ART_PROPERTIES);
+        CrawlVector &known = item.props[KNOWN_PROPS_KEY].get_vector();
+        known.set_max_size(ART_PROPERTIES);
+        for (vec_size i = 0; i < ART_PROPERTIES; i++)
+            known[i] = static_cast<bool>(false);
+    }
+}
+
+void artefact_set_name(item_def &item, const std::string &name)
+{
+    item.props[ARTEFACT_NAME_KEY].get_string() = name;
+}
+
 bool make_item_randart( item_def &item, bool force_mundane )
 {
     if (item.base_type != OBJ_WEAPONS
@@ -1939,15 +1978,7 @@ bool make_item_randart( item_def &item, bool force_mundane )
     if (item.is_mundane() && !one_chance_in(5) && !force_mundane)
         return (false);
 
-    ASSERT(!item.props.exists(KNOWN_PROPS_KEY));
-    ASSERT(!item.props.exists(ARTEFACT_NAME_KEY));
-    ASSERT(!item.props.exists(ARTEFACT_APPEAR_KEY));
-    item.props[KNOWN_PROPS_KEY].new_vector(SV_BOOL).resize(ART_PROPERTIES);
-    CrawlVector &known = item.props[KNOWN_PROPS_KEY].get_vector();
-    known.set_max_size(ART_PROPERTIES);
-    for (vec_size i = 0; i < ART_PROPERTIES; ++i)
-        known[i] = static_cast<bool>(false);
-
+    _artefact_setup_prop_vectors(item);
     item.flags |= ISFLAG_RANDART;
 
     god_type god_gift;
@@ -1973,16 +2004,17 @@ bool make_item_randart( item_def &item, bool force_mundane )
            || god_gift != GOD_NO_GOD && !_god_fits_artefact(god_gift, item));
 
     // get true artefact name
-    if (item.props.exists( ARTEFACT_NAME_KEY ))
+    if (item.props.exists(ARTEFACT_NAME_KEY))
         ASSERT(item.props[ARTEFACT_NAME_KEY].get_type() == SV_STR);
     else
-        item.props[ARTEFACT_NAME_KEY].get_string() = artefact_name(item, false);
+        artefact_set_name(item, artefact_name(item, false));
 
     // get artefact appearance
     if (item.props.exists( ARTEFACT_APPEAR_KEY ))
         ASSERT(item.props[ARTEFACT_APPEAR_KEY].get_type() == SV_STR);
     else
-        item.props[ARTEFACT_APPEAR_KEY].get_string() = artefact_name(item, true);
+        item.props[ARTEFACT_APPEAR_KEY].get_string() =
+            artefact_name(item, true);
 
     return (true);
 }
@@ -1994,15 +2026,6 @@ bool make_item_unrandart( item_def &item, int unrand_index )
 
     item.special = unrand_index;
 
-    if (!item.props.exists( KNOWN_PROPS_KEY ))
-    {
-        item.props[KNOWN_PROPS_KEY].new_vector(SV_BOOL).resize(ART_PROPERTIES);
-        CrawlVector &known = item.props[KNOWN_PROPS_KEY].get_vector();
-        known.set_max_size(ART_PROPERTIES);
-        for (vec_size i = 0; i < ART_PROPERTIES; i++)
-            known[i] = static_cast<bool>(false);
-    }
-
     const unrandart_entry *unrand = &unranddata[unrand_index - UNRAND_START];
     item.base_type = unrand->base_type;
     item.sub_type  = unrand->sub_type;
@@ -2011,6 +2034,7 @@ bool make_item_unrandart( item_def &item, int unrand_index )
     item.colour    = unrand->colour;
 
     item.flags |= ISFLAG_UNRANDART;
+    _artefact_setup_prop_vectors(item);
     _init_artefact_properties(item);
 
     if (unrand->prpty[ARTP_CURSED] != 0)
@@ -2047,8 +2071,7 @@ const char *unrandart_descrip( int which_descrip, const item_def &item )
                                  : "Unknown.");
 }
 
-void artefact_set_properties( item_def              &item,
-                              artefact_properties_t &proprt )
+void artefact_clear_properties(item_def &item)
 {
     ASSERT( is_artefact( item ) );
     ASSERT( item.props.exists( ARTEFACT_PROPS_KEY ) );
@@ -2059,7 +2082,34 @@ void artefact_set_properties( item_def              &item,
     ASSERT( rap_vec.get_max_size() == ART_PROPERTIES);
 
     for (vec_size i = 0; i < ART_PROPERTIES; i++)
-        rap_vec[i].get_short() = proprt[i];
+        rap_vec[i].get_short() = 0;
+}
+
+// Set all non-zero properties in proprt on the randart supplied.
+void artefact_merge_properties(item_def &item,
+                               const artefact_properties_t &proprt)
+{
+    ASSERT( is_artefact( item ) );
+    ASSERT( item.props.exists( ARTEFACT_PROPS_KEY ) );
+
+    CrawlVector &rap_vec = item.props[ARTEFACT_PROPS_KEY].get_vector();
+    ASSERT( rap_vec.get_type()     == SV_SHORT );
+    ASSERT( rap_vec.size()         == ART_PROPERTIES);
+    ASSERT( rap_vec.get_max_size() == ART_PROPERTIES);
+
+    for (vec_size i = 0; i < ART_PROPERTIES; i++)
+    {
+        const short value = proprt[i];
+        if (value)
+            rap_vec[i].get_short() = value;
+    }
+}
+
+void artefact_set_properties(item_def &item,
+                             const artefact_properties_t &proprt)
+{
+    artefact_clear_properties(item);
+    artefact_merge_properties(item, proprt);
 }
 
 void artefact_set_property( item_def          &item,
@@ -2075,4 +2125,47 @@ void artefact_set_property( item_def          &item,
     ASSERT( rap_vec.get_max_size() == ART_PROPERTIES);
 
     rap_vec[prop].get_short() = val;
+}
+
+void cheibriados_make_item_ponderous(item_def &item)
+{
+    if (!is_artefact(item))
+    {
+        item.flags |= ISFLAG_RANDART;
+        _artefact_setup_prop_vectors(item);
+        const std::string suffix =
+            artefact_name_lookup(
+                item,
+                god_name(GOD_CHEIBRIADOS) + " ponderous");
+        artefact_set_name(item, item_base_name(item) + " " + suffix);
+    }
+    artefact_properties_t props;
+    props.init(0);
+    props[ARTP_PONDEROUS] = true;
+    artefact_merge_properties(item, props);
+}
+
+template<typename Z>
+static inline void artefact_pad_store_vector(CrawlVector &vector, Z value)
+{
+    if (vector.get_max_size() < ART_PROPERTIES)
+    {
+        // Authentic tribal dance to propitiate the asserts in store.cc:
+        const int old_size = vector.get_max_size();
+        vector.set_max_size(VEC_MAX_SIZE);
+        vector.resize(ART_PROPERTIES);
+        vector.set_max_size(ART_PROPERTIES);
+        for (int i = old_size; i < ART_PROPERTIES; ++i)
+            vector[i] = value;
+    }
+}
+
+void artefact_fixup_props(item_def &item)
+{
+    CrawlHashTable &props = item.props;
+    if (props.exists(ARTEFACT_PROPS_KEY))
+        artefact_pad_store_vector(props[ARTEFACT_PROPS_KEY], short(0));
+
+    if (props.exists(KNOWN_PROPS_KEY))
+        artefact_pad_store_vector(props[KNOWN_PROPS_KEY], false);
 }

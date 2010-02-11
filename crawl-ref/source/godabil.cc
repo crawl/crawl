@@ -7,6 +7,7 @@
 
 #include <queue>
 
+#include "artefact.h"
 #include "beam.h"
 #include "cloud.h"
 #include "colour.h"
@@ -20,6 +21,7 @@
 #include "files.h"
 #include "fprop.h"
 #include "godabil.h"
+#include "godpassive.h"
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
@@ -1399,9 +1401,12 @@ bool evolve_flora()
 
 bool is_ponderousifiable(const item_def& item)
 {
-    return (is_enchantable_armour(item, true, true)
-            && get_armour_ego_type(item) == SPARM_NORMAL
-            && !is_shield(item));
+    return (item.base_type == OBJ_ARMOUR
+            && you_tran_can_wear(item)
+            && !is_shield(item)
+            && !is_artefact(item)
+            && get_armour_ego_type(item) != SPARM_RUNNING
+            && get_armour_ego_type(item) != SPARM_PONDEROUSNESS);
 }
 
 bool ponderousify_armour()
@@ -1420,17 +1425,24 @@ bool ponderousify_armour()
         return false;
     }
 
-    //make item desc runed if desc was vanilla?
-    set_item_ego_type(arm, OBJ_ARMOUR, SPARM_PONDEROUSNESS);
+    const int old_ponder = player_ponderousness();
+    cheibriados_make_item_ponderous(arm);
 
     you.redraw_armour_class = true;
     you.redraw_evasion = true;
 
     simple_god_message(" says: Use this wisely!");
 
-    // XXX: if the armour can have other wear effects, need to undo first.
     if (item_is_equipped(arm))
-        armour_wear_effects(item_slot);
+    {
+        const int new_ponder = player_ponderousness();
+        if (new_ponder > old_ponder)
+        {
+            mprf("You feel %s ponderous.",
+                 old_ponder? "even more" : "rather");
+            che_handle_change(CB_PONDEROUS, new_ponder - old_ponder);
+        }
+    }
 
     return (true);
 }

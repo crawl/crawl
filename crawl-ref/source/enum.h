@@ -2597,6 +2597,7 @@ enum artefact_prop_type
     ARTP_CURSED,
     ARTP_STEALTH,
     ARTP_MAGICAL_POWER,
+    ARTP_PONDEROUS,
     ARTP_NUM_PROPERTIES
 };
 

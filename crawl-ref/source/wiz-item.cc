@@ -281,7 +281,8 @@ const char* _prop_name[ARTP_NUM_PROPERTIES] = {
     "Dam",
     "Curse",
     "Stlth",
-    "MP"
+    "MP",
+    "Slow"
 };
 
 #define ARTP_VAL_BOOL 0
@@ -317,7 +318,8 @@ char _prop_type[ARTP_NUM_PROPERTIES] = {
     ARTP_VAL_ANY,  //DAMAGE
     ARTP_VAL_POS,  //CURSED
     ARTP_VAL_ANY,  //STEALTH
-    ARTP_VAL_ANY   //MAGICAL_POWER
+    ARTP_VAL_ANY,  //MAGICAL_POWER
+    ARTP_VAL_BOOL  //PONDEROUS
 };
 
 static void _tweak_randart(item_def &item)
@@ -1312,7 +1314,8 @@ static void _debug_rap_stats(FILE *ostat)
          0, //ARTP_DAMAGE
         -1, //ARTP_CURSED
          0, //ARTP_STEALTH
-         0  //ARTP_MAGICAL_POWER
+         0, //ARTP_MAGICAL_POWER
+         -1
     };
 
     // No bounds checking to speed things up a bit.
@@ -1453,7 +1456,8 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_DAMAGE",
         "ARTP_CURSED",
         "ARTP_STEALTH",
-        "ARTP_MAGICAL_POWER"
+        "ARTP_MAGICAL_POWER",
+        "ARTP_PONDEROUS"
     };
 
     fprintf(ostat, "                            All    Good   Bad\n");
@@ -1529,5 +1533,3 @@ void wizard_draw_card()
         mpr("Unknown card.");
 }
 #endif
-
-
