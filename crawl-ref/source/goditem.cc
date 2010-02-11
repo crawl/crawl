@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <cmath>
 
+#include "artefact.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "religion.h"
