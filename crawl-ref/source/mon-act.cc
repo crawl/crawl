@@ -895,6 +895,8 @@ static bool _handle_scroll(monsters *monster)
 static bool _handle_wand(monsters *monster, bolt &beem)
 {
     // Yes, there is a logic to this ordering {dlb}:
+    // FIXME: monsters should be able to use wands
+    //        out of sight of the player [rob]
     if (!mons_near(monster)
         || monster->asleep()
         || monster->has_ench(ENCH_SUBMERGED)
@@ -1012,10 +1014,17 @@ static bool _handle_wand(monsters *monster, bolt &beem)
         return (false);
     }
 
-    // Fire tracer, if necessary.
-    if (!niceWand)
+    if (monster->confused())
     {
-        fire_tracer( monster, beem );
+        beem.target = dgn_random_point_from(monster->pos(), LOS_RADIUS);
+        if (beem.target.origin())
+            return (false);
+        zap = true;
+    }
+    else if (!niceWand)
+    {
+        // Fire tracer, if necessary.
+        fire_tracer(monster, beem);
 
         // Good idea?
         zap = mons_should_fire(beem);
