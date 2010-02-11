@@ -282,7 +282,7 @@ Branch branches[] = {
       NULL, NULL, NULL, NULL,
       0, 'G', false, true },
 
-    { BRANCH_VESTIBULE_OF_HELL, BRANCH_MAIN_DUNGEON, 20, 27, 1, -1, 0, 0,
+    { BRANCH_VESTIBULE_OF_HELL, BRANCH_MAIN_DUNGEON, 21, 27, 1, -1, 0, 0,
       DNGN_ENTER_HELL, DNGN_EXIT_HELL, // sentinel
       "Hell", "the Vestibule of Hell", "Hell",
       NULL,
