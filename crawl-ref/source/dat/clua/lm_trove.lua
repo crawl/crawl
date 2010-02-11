@@ -300,7 +300,7 @@ function TroveMarker:check_item(marker, pname, position)
 end
 
 function TroveMarker:plural ()
-  if self.item.quantity > 1 then
+  if self.toll_item.quantity > 1 then
     return "s"
   end
 end
@@ -333,7 +333,7 @@ function TroveMarker:check_veto(marker, pname)
             self:note_payed(self:item_name())
             return
           else
-            crawl.mpr("You don't have that to give!")
+            crawl.mpr("You don't have the item" .. self:plural() .. " to give!")
             return "veto"
           end
         end
