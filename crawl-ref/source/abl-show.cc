@@ -335,7 +335,7 @@ static const ability_def Ability_List[] =
 
 
     // Cheibriados
-    { ABIL_CHEIBRIADOS_PONDEROUSIFY, "Make Ponderous", 2, 0, 0, 0, ABFLAG_NONE },
+    { ABIL_CHEIBRIADOS_PONDEROUSIFY, "Make Ponderous", 0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_CHEIBRIADOS_TIME_BEND, "Bend Time", 3, 0, 50, 1, ABFLAG_NONE },
     { ABIL_CHEIBRIADOS_SLOUCH, "Slouch", 5, 0, 100, 5, ABFLAG_NONE },
     { ABIL_CHEIBRIADOS_TIME_STEP, "Step From Time", 10, 0, 200, 10, ABFLAG_NONE },
@@ -729,7 +729,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_YRED_ANIMATE_REMAINS:
-    case ABIL_CHEIBRIADOS_PONDEROUSIFY:
         invoc = true;
         failure = 40 - (you.piety / 20) - (3 * you.skills[SK_INVOCATIONS]);
         break;
@@ -823,6 +822,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
         failure = 50 - (you.piety / 20) - (5 * you.skills[SK_EVOCATIONS]);
         break;
 
+    case ABIL_CHEIBRIADOS_PONDEROUSIFY:
     case ABIL_RENOUNCE_RELIGION:
         invoc = true;
         perfect = true;
