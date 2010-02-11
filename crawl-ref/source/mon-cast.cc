@@ -1306,6 +1306,15 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
                 {
                     spell_cast = (coinflip() ? hspell_pass[2]
                                              : SPELL_NO_SPELL);
+
+                    // don't cast a targetted spell at the player if the
+                    // monster is friendly and targetting the player -doy
+                    if ((monster->wont_attack() && monster->foe == MHITYOU) &&
+                        spell_needs_tracer(spell_cast) &&
+                        spell_needs_foe(spell_cast) &&
+                        spell_harms_target(spell_cast)) {
+                        spell_cast = SPELL_NO_SPELL;
+                    }
                 }
 
                 if (spell_cast != SPELL_NO_SPELL)
