@@ -9,6 +9,7 @@
 
 #include "areas.h"
 #include "arena.h"
+#include "artefact.h"
 #include "attitude-change.h"
 #include "beam.h"
 #include "cloud.h"
