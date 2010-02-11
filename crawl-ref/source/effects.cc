@@ -4288,7 +4288,7 @@ void update_level(long elapsedTime)
 #endif
 
     update_corpses(elapsedTime);
-    shoals_apply_tides(turns);
+    shoals_apply_tides(turns, true);
     recharge_rods(turns, true);
 
     if (env.sanctuary_time)
