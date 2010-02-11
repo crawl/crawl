@@ -385,9 +385,31 @@ static std::string _get_unseen_branches()
     char buffer[100];
     std::string disp;
 
+    int possibly_missing_lair_branches = 0, missing_lair_branch = -1;
     for (int i = BRANCH_FIRST_NON_DUNGEON; i < NUM_BRANCHES; i++)
     {
         const branch_type branch = branches[i].id;
+
+        if (i != BRANCH_SWAMP && i != BRANCH_SNAKE_PIT && i != BRANCH_SHOALS) {
+            continue;
+        }
+
+        if (possibly_missing_lair_branches == 2) {
+            missing_lair_branch = i;
+        }
+
+        if (stair_level.find(branch) != stair_level.end()) {
+            possibly_missing_lair_branches++;
+        }
+    }
+
+    for (int i = BRANCH_FIRST_NON_DUNGEON; i < NUM_BRANCHES; i++)
+    {
+        const branch_type branch = branches[i].id;
+
+        if (i == missing_lair_branch) {
+            continue;
+        }
 
         if (stair_level.find(branch) == stair_level.end())
         {
