@@ -104,7 +104,7 @@ void set_unique_item_status(const item_def& item,
 void set_unique_item_status(int unrand_index,
                             unique_item_status_type status );
 
-std::string get_artefact_name( const item_def &item );
+std::string get_artefact_name( const item_def &item, bool force_known = false );
 
 void set_artefact_name( item_def &item, const std::string &name );
 void set_artefact_appearance( item_def &item, const std::string &appear );

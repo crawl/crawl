@@ -699,6 +699,14 @@ IDEF(ego_type)
     return (1);
 }
 
+IDEF(artefact_name)
+{
+    ASSERT_DLUA;
+
+    lua_pushstring(ls, get_artefact_name(*item, true).c_str());
+    return (1);
+}
+
 // Library functions below
 static int l_item_inventory(lua_State *ls)
 {
@@ -901,7 +909,8 @@ static ItemAccessor item_attrs[] =
     { "identified",        l_item_identified },
     { "base_type",         l_item_base_type },
     { "sub_type",          l_item_sub_type },
-    { "ego_type",          l_item_ego_type }
+    { "ego_type",          l_item_ego_type },
+    { "artefact_name",     l_item_artefact_name },
 };
 
 static int item_get(lua_State *ls)
