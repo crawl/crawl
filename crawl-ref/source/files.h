@@ -23,7 +23,7 @@ enum load_mode_type
     LOAD_VISITOR                // Visitor pattern to see all levels
 };
 
-// referenced in files - newgame - ouch - overmap:
+// referenced in files - newgame - ouch - dgn-overview:
 #define MAX_LEVELS 50
 
 // referenced in files - newgame - ouch:

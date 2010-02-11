@@ -42,7 +42,7 @@ function ice_cave_portal(e)
         dst = "ice_cave",
         dstname_abbrev = "IceCv",
         dstorigin = "in an ice cave",
-        overmap = "frozen archway",
+        overview = "frozen archway",
         turns = timeout_turns,
         floor = "floor",
         msg = messager })

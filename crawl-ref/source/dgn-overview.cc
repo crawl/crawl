@@ -1,12 +1,12 @@
 /*
- *  File:       overmap.cc
+ *  File:       dgn-overview.cc
  *  Summary:    Records location of stairs etc
  *  Written by: Linley Henzell
  */
 
 #include "AppHdr.h"
 
-#include "overmap.h"
+#include "dgn-overview.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -171,7 +171,7 @@ inline static std::string portal_description(portal_type portal)
     return feature_description( portal_to_feature(portal) );
 }
 
-bool overmap_knows_portal(dungeon_feature_type portal)
+bool overview_knows_portal(dungeon_feature_type portal)
 {
     for ( portal_map_type::const_iterator pl_iter = portals_present.begin();
           pl_iter != portals_present.end(); ++pl_iter )
@@ -182,7 +182,7 @@ bool overmap_knows_portal(dungeon_feature_type portal)
     return (false);
 }
 
-int overmap_knows_num_portals(dungeon_feature_type portal)
+int overview_knows_num_portals(dungeon_feature_type portal)
 {
     int num = 0;
     for ( portal_map_type::const_iterator pl_iter = portals_present.begin();
@@ -669,7 +669,7 @@ bool unnotice_feature(const level_pos &pos)
             || _unnotice_stair(pos));
 }
 
-void display_overmap()
+void display_overview()
 {
     std::string disp = overview_description_string();
     linebreak_string(disp, get_number_of_cols() - 5, get_number_of_cols() - 1);
@@ -745,7 +745,7 @@ void _seen_other_thing( dungeon_feature_type which_thing, const coord_def& pos )
     {
         std::string portal_name;
 
-        portal_name = env.markers.property_at(pos, MAT_ANY, "overmap");
+        portal_name = env.markers.property_at(pos, MAT_ANY, "overview");
         if (portal_name.empty())
             portal_name = env.markers.property_at(pos, MAT_ANY, "dstname");
         if (portal_name.empty())
@@ -764,7 +764,7 @@ void _seen_other_thing( dungeon_feature_type which_thing, const coord_def& pos )
         portal_vault_colours[where] = (char) element_colour(col, true);
 
         portal_vault_notes[where] =
-            env.markers.property_at(pos, MAT_ANY, "overmap_note");
+            env.markers.property_at(pos, MAT_ANY, "overview_note");
 
         break;
     }

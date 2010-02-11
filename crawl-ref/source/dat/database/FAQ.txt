@@ -118,7 +118,7 @@ try another set of stairs from the level above.
 
 Alternatively, if you are in one of the branches, you might also have
 reached its lowest level and have to turn around to explore another one.
-Check the overmap ('Ctrl-O') to see how deep you've delved into a given
+Check the overview ('Ctrl-O') to see how deep you've delved into a given
 branch, or the database ('?/b') for the number of levels for unseen branches.
 %%%%
 Q:stuck

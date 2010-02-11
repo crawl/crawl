@@ -116,7 +116,7 @@ function wizlab_portal (e)
         dst = 'wizlab',
         dstname_abbrev = "WizLab",
         dstorigin = "in a Wizard's Laboratory",
-        overmap = "magical portal",
+        overview = "magical portal",
         turns = timeout_turns,
         floor = "stone_arch",
         msg = messager })

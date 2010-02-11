@@ -35,6 +35,7 @@ directn.o \
 dlua.o \
 dungeon.o \
 dgn-height.o \
+dgn-overview.o \
 dgn-shoals.o \
 dgn-swamp.o \
 effects.o \
@@ -138,7 +139,6 @@ ng-restr.o \
 notes.o \
 ouch.o \
 output.o \
-overmap.o \
 pattern.o \
 place.o \
 player.o \
