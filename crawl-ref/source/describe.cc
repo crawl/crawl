@@ -3267,6 +3267,15 @@ static std::string _religion_help(god_type god)
         }
         break;
 
+    case GOD_KIKUBAAQUDGHA:
+        if (!player_under_penance() && you.piety > 160
+            && !you.num_gifts[god])
+        {
+            result += "You can pray at an altar to have your necromancy "
+                      "enhanced.";
+        }
+        break;
+
     case GOD_BEOGH:
         result += "You can pray to sacrifice all orcish remains on your "
                   "square. Inscribe orcish remains with !p, !* or =p to avoid "
