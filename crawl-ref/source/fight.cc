@@ -7,6 +7,7 @@
 #include "AppHdr.h"
 
 #include "fight.h"
+#include "melee_attack.h"
 
 #include <string.h>
 #include <stdlib.h>

@@ -80,7 +80,6 @@ const int kPathLen = 256;
 typedef FixedArray<dungeon_feature_type, GXM, GYM> feature_grid;
 
 struct item_def;
-class melee_attack;
 struct coord_def;
 class level_id;
 class player_quiver;
