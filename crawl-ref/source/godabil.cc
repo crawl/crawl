@@ -938,6 +938,7 @@ static int _collect_fruit(std::vector<std::pair<int,int> >& available_fruit)
             available_fruit.push_back(std::make_pair(you.inv[i].quantity, i));
         }
     }
+    std::sort(available_fruit.begin(), available_fruit.end());
 
     return (total);
 }
@@ -1007,7 +1008,6 @@ bool plant_ring_from_fruit()
             created_count++;
     }
 
-    std::sort(collected_fruit.begin(), collected_fruit.end());
     _decrease_amount(collected_fruit, created_count);
 
     return (created_count);
