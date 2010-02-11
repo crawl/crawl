@@ -2933,6 +2933,8 @@ bool monsters::has_damage_type(int dam_type)
     return (false);
 }
 
+// Whether the monster is temporarily confused.
+// False for butterflies, vapours etc.
 bool monsters::confused() const
 {
     return (mons_is_confused(this));
