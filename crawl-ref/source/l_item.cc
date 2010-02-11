@@ -703,7 +703,11 @@ IDEF(artefact_name)
 {
     ASSERT_DLUA;
 
-    lua_pushstring(ls, get_artefact_name(*item, true).c_str());
+    if (is_artefact(*item))
+        lua_pushstring(ls, get_artefact_name(*item, true).c_str());
+    else
+        lua_pushnil(ls);
+
     return (1);
 }
 
