@@ -2853,8 +2853,9 @@ bool is_useless_item(const item_def &item, bool temp)
 
         case AMU_THE_GOURMAND:
             return (player_likes_chunks(true)
-                       || (player_mutation_level(MUT_HERBIVOROUS) == 3)
-                       || you.species == SP_MUMMY);
+                      && player_mutation_level(MUT_SAPROVOROUS) == 3
+                    || player_mutation_level(MUT_HERBIVOROUS) == 3
+                    || you.species == SP_MUMMY);
 
         case AMU_FAITH:
             return (you.species == SP_DEMIGOD);
