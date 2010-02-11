@@ -1700,7 +1700,7 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
 
     do
     {
-        const bool divine = (agent == GOD_OKAWARU || agent == GOD_XOM);
+        const bool divine = (agent == GOD_OKAWARU || agent == GOD_XOM || agent == GOD_TROG);
         switch (class_wanted)
         {
         case OBJ_FOOD:
