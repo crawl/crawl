@@ -2384,8 +2384,9 @@ bool ms_useful_fleeing_out_of_sight( const monsters *mon, spell_type monspell )
 
 bool ms_low_hitpoint_cast( const monsters *mon, spell_type monspell )
 {
-    bool targ_adj   = false;
-    bool targ_sanct = false;
+    bool targ_adj      = false;
+    bool targ_sanct    = false;
+    bool targ_friendly = false;
 
     if (mon->foe == MHITYOU || mon->foe == MHITNOT)
     {
@@ -2402,10 +2403,17 @@ bool ms_low_hitpoint_cast( const monsters *mon, spell_type monspell )
             targ_sanct = true;
     }
 
+    if (mon->foe == MHITYOU) {
+        targ_friendly = mon->wont_attack();
+    }
+    else {
+        targ_friendly = mons_aligned(mon, &menv[mon->foe]);
+    }
+
     switch (monspell)
     {
     case SPELL_TELEPORT_OTHER:
-        return !targ_sanct;
+        return !targ_sanct && !targ_friendly;
     case SPELL_TELEPORT_SELF:
         // Don't cast again if already about to teleport.
         return !mon->has_ench(ENCH_TP);
@@ -2414,9 +2422,9 @@ bool ms_low_hitpoint_cast( const monsters *mon, spell_type monspell )
         return true;
     case SPELL_BLINK_AWAY:
     case SPELL_BLINK_RANGE:
-        return true;
+        return !targ_friendly;
     case SPELL_BLINK_OTHER:
-        return !targ_sanct && targ_adj;
+        return !targ_sanct && targ_adj && !targ_friendly;
     case SPELL_BLINK:
         return targ_adj;
     case SPELL_TOMB_OF_DOROKLOHE:
