@@ -25,6 +25,7 @@
 #include "mon-util.h"
 #include "mon-stuff.h"
 #include "notes.h"
+#include "options.h"
 #include "player.h"
 #include "quiver.h"
 #include "random.h"
@@ -574,17 +575,30 @@ void set_ident_flags( item_def &item, unsigned long flags )
             shopping_list.cull_identical_items(item);
     }
 
-    if (notes_are_active() && !(item.flags & ISFLAG_NOTED_ID)
-        && get_ident_type(item) != ID_KNOWN_TYPE
-        && fully_identified(item) && is_interesting_item(item))
+    if (fully_identified(item))
     {
-        // Make a note of it.
-        take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_NOCAP_A).c_str(),
-                       origin_desc(item).c_str()));
+        // Clear "was cursed" inscription once the item is identified.
+        if (Options.autoinscribe_cursed
+            && item.inscription.find("was cursed") != std::string::npos)
+        {
+            item.inscription = replace_all(item.inscription, ", was cursed", "");
+            item.inscription = replace_all(item.inscription, "was cursed, ", "");
+            item.inscription = replace_all(item.inscription, "was cursed", "");
+            trim_string(item.inscription);
+        }
 
-        // Sometimes (e.g. shops) you can ID an item before you get it;
-        // don't note twice in those cases.
-        item.flags |= (ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
+        if (notes_are_active() && !(item.flags & ISFLAG_NOTED_ID)
+            && get_ident_type(item) != ID_KNOWN_TYPE
+            && is_interesting_item(item))
+        {
+            // Make a note of it.
+            take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_NOCAP_A).c_str(),
+                           origin_desc(item).c_str()));
+
+            // Sometimes (e.g. shops) you can ID an item before you get it;
+            // don't note twice in those cases.
+            item.flags |= (ISFLAG_NOTED_ID | ISFLAG_NOTED_GET);
+        }
     }
 
     if (item.flags & ISFLAG_KNOW_TYPE && !is_artefact(item))
