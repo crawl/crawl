@@ -385,6 +385,7 @@ static std::string _get_unseen_branches()
     char buffer[100];
     std::string disp;
 
+    /* see if we need to hide a lair branch that doesn't exist */
     int possibly_missing_lair_branches = 0, missing_lair_branch = -1;
     for (int i = BRANCH_FIRST_NON_DUNGEON; i < NUM_BRANCHES; i++)
     {
@@ -403,11 +404,28 @@ static std::string _get_unseen_branches()
         }
     }
 
+    bool found_portals[NUM_PORTALS] = { 0 };
+    /* see if we've found portals to hell, pan, the abyss */
+    for (int cur_portal = PORTAL_NONE; cur_portal < NUM_PORTALS; ++cur_portal)
+    {
+        portal_map_type::const_iterator ci_portals;
+        for ( ci_portals = portals_present.begin();
+              ci_portals != portals_present.end();
+              ++ci_portals )
+        {
+            found_portals[ci_portals->second] = true;
+        }
+    }
+
     for (int i = BRANCH_FIRST_NON_DUNGEON; i < NUM_BRANCHES; i++)
     {
         const branch_type branch = branches[i].id;
 
         if (i == missing_lair_branch) {
+            continue;
+        }
+
+        if (i == BRANCH_VESTIBULE_OF_HELL && found_portals[PORTAL_HELL]) {
             continue;
         }
 
@@ -447,6 +465,22 @@ static std::string _get_unseen_branches()
                 disp += (num_printed_branches % 4) == 0
                     ? "\n" : std::string(56 - strlen(buffer), ' ');
             }
+        }
+    }
+
+    /* not actual branches, have to hardcode this stuff here */
+    if (find_deepest_explored(level_id(BRANCH_MAIN_DUNGEON, 0)).depth >= 21) {
+        if (!found_portals[PORTAL_PANDEMONIUM]) {
+            disp += "<brown>Pan</brown><darkgrey>:    D:21-27</darkgrey>";
+            num_printed_branches++;
+            disp += (num_printed_branches % 4) == 0
+                ? "\n" : "     ";
+        }
+        if (!found_portals[PORTAL_ABYSS]) {
+            disp += "<brown>Abyss</brown><darkgrey>:  D:21-27</darkgrey>";
+            num_printed_branches++;
+            disp += (num_printed_branches % 4) == 0
+                ? "\n" : "     ";
         }
     }
 
