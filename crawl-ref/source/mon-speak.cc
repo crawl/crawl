@@ -56,42 +56,42 @@ static std::string __try_exact_string(const std::vector<std::string> &prefixes,
     const int size = prefixes.size();
     for (int i = 0; i < size; i++)
     {
-         if (prefixes[i] == "hostile")
-         {
-             if (ignore_hostile)
-                 continue;
-             hostile = true;
-         }
-         else if (prefixes[i] == "related")
-         {
-             if (ignore_related)
-                 continue;
-             related = true;
-         }
-         else if (prefixes[i] == "silenced")
-         {
-             if (ignore_silenced)
-                 continue;
-             silenced = true;
-         }
-         else if (prefixes[i] == "beogh" || prefixes[i] == "good god"
-                  || prefixes[i] == "evil god"
-                  || prefixes[i] == "No God"
-                  || (str_to_god(prefixes[i]) != GOD_NO_GOD
-                     && prefixes[i] != "random"))
-         {
-             if (ignore_religion)
-                 continue;
-             religion = true;
-         }
-         else if (str_to_branch(prefixes[i]) != NUM_BRANCHES)
-         {
-            if (ignore_branch)
+        if (prefixes[i] == "hostile")
+        {
+            if (ignore_hostile)
                 continue;
-            branch = true;
-         }
-         prefix += prefixes[i];
-         prefix += " ";
+            hostile = true;
+        }
+        else if (prefixes[i] == "related")
+        {
+            if (ignore_related)
+                continue;
+            related = true;
+        }
+        else if (prefixes[i] == "silenced")
+        {
+            if (ignore_silenced)
+                continue;
+            silenced = true;
+        }
+        else if (prefixes[i] == "beogh" || prefixes[i] == "good god"
+                 || prefixes[i] == "evil god"
+                 || prefixes[i] == "No God"
+                 || (str_to_god(prefixes[i]) != GOD_NO_GOD
+                     && prefixes[i] != "random"))
+        {
+            if (ignore_religion)
+                continue;
+            religion = true;
+        }
+        else if (str_to_branch(prefixes[i]) != NUM_BRANCHES)
+        {
+           if (ignore_branch)
+               continue;
+           branch = true;
+        }
+        prefix += prefixes[i];
+        prefix += " ";
     }
     msg = getSpeakString(prefix + key);
 
@@ -490,10 +490,10 @@ bool mons_speaks(monsters *monster)
     const monsters* m_foe = (foe && foe->atype() == ACT_MONSTER) ?
                                 dynamic_cast<const monsters*>(foe) : NULL;
 
-    // animals only look at the current player form, smart monsters at the
-    // actual player genus
-    if (!foe || foe->atype() == ACT_PLAYER)
+    if (!foe || foe->atype() == ACT_PLAYER || monster->wont_attack())
     {
+        // Animals only look at the current player form, smart monsters at the
+        // actual player genus.
         if (is_player_same_species(monster->type,
                                    mons_intel(monster) <= I_ANIMAL))
         {
