@@ -2847,8 +2847,8 @@ bool is_useless_item(const item_def &item, bool temp)
         {
         case AMU_RAGE:
             return (you.is_undead
-                        && (you.species != SP_VAMPIRE || temp
-                                     && you.hunger_state <= HS_SATIATED)
+                        && (you.species != SP_VAMPIRE
+                            || temp && you.hunger_state <= HS_SATIATED)
                     || you.religion == GOD_TROG);
 
         case AMU_THE_GOURMAND:
