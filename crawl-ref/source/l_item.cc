@@ -544,8 +544,13 @@ IDEF(snakable)
     return (1);
 }
 
-IDEF(pluses)
+// DLUA-only functions
+static int l_item_do_pluses (lua_State *ls)
 {
+    ASSERT_DLUA;
+
+    UDATA_ITEM(item);
+
     if (!item || !item->is_valid() || !item_ident(*item, ISFLAG_KNOW_PLUSES))
     {
         lua_pushboolean(ls, false);
@@ -559,7 +564,8 @@ IDEF(pluses)
     return (2);
 }
 
-// DLUA-only functions
+IDEFN(pluses, do_pluses)
+
 static int l_item_do_destroy (lua_State *ls)
 {
     ASSERT_DLUA;
