@@ -349,7 +349,7 @@ int torment(int caster, const coord_def& where)
         attacker = &menv[caster];
     else if (caster < 0 && you.turn_is_over && where == you.pos()
              && !(crawl_state.is_god_acting()
-                  &&crawl_state.is_god_retribution()))
+                  && crawl_state.is_god_retribution()))
     {
         // Maybe monsters should still consider it your fault if it's
         // caused by divine retribution?
