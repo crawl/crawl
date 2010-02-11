@@ -2721,6 +2721,10 @@ void _noise_fill_target(std::string& targ_prep, std::string& target,
     // rather than "past".
     if (gestured || target == "nothing")
         targ_prep = "at";
+
+    // "throws whatever at something" is better than "at nothing"
+    if (target == "nothing")
+        target = "something";
 }
 
 void mons_cast_noise(monsters *monster, const bolt &pbolt,
