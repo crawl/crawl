@@ -674,6 +674,31 @@ static int l_item_do_identified (lua_State *ls)
 
 IDEFN(identified, do_identified)
 
+// Some dLua convenience functions.
+IDEF(base_type)
+{
+    ASSERT_DLUA;
+
+    lua_pushstring(ls, base_type_string(*item).c_str());
+    return (1);
+}
+
+IDEF(sub_type)
+{
+    ASSERT_DLUA;
+
+    lua_pushstring(ls, sub_type_string(*item).c_str());
+    return (1);
+}
+
+IDEF(ego_type)
+{
+    ASSERT_DLUA;
+
+    lua_pushstring(ls, ego_type_string(*item).c_str());
+    return (1);
+}
+
 // Library functions below
 static int l_item_inventory(lua_State *ls)
 {
@@ -873,7 +898,10 @@ static ItemAccessor item_attrs[] =
     { "destroy",           l_item_destroy },
     { "dec_quantity",      l_item_dec_quantity },
     { "inc_quantity",      l_item_inc_quantity },
-    { "identified",        l_item_identified }
+    { "identified",        l_item_identified },
+    { "base_type",         l_item_base_type },
+    { "sub_type",          l_item_sub_type },
+    { "ego_type",          l_item_ego_type }
 };
 
 static int item_get(lua_State *ls)
