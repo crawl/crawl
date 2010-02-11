@@ -316,7 +316,11 @@ bool mons_behaviour_perceptible(const monsters *mon);
 bool mons_is_native_in_branch(const monsters *monster,
                               const branch_type branch = you.where_are_you);
 bool mons_is_poisoner(const monsters *mon);
+
+// Whether the monster is temporarily confused (class_too = false)
+// or confused at all (class_too = true; temporarily or by class).
 bool mons_is_confused(const monsters *m, bool class_too = false);
+
 bool mons_is_wandering(const monsters *m);
 bool mons_is_seeking(const monsters *m);
 bool mons_is_fleeing(const monsters *m);
