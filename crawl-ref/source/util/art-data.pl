@@ -48,6 +48,7 @@ my %field_type = (
     NOTELEP  => "bool",
     POISON   => "bool",
     RND_TELE => "bool",
+    PONDEROUS => 'bool',
     SEEINV   => "bool",
     SPECIAL  => "bool",
     STEALTH  => "num",
@@ -479,6 +480,7 @@ my @art_order = (
     "SEEINV", "INV", "LEV", "BLINK", "BERSERK",  "NOISES", "\n",
     "NOSPELL", "RND_TELE", "NOTELEP", "ANGRY", "METAB", "\n",
     "MUTATE", "ACC", "DAM", "CURSED", "STEALTH", "MP", "\n",
+    "PONDEROUS", "\n",
     "}",
 
     "DESC", "\n",

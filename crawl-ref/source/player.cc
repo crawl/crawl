@@ -1892,8 +1892,8 @@ int player_movement_speed(void)
         if (player_equip_ego_type( EQ_BOOTS, SPARM_RUNNING ))
             mv -= 2;
 
-        // ponderous brand
-        mv += 2 * player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS);
+        // ponderous brand and artefact property
+        mv += 2 * player_ponderousness();
 
         // In the air, can fly fast (should be lightly burdened).
         if (you.light_flight())
@@ -1960,6 +1960,12 @@ int player_speed(void)
     }
 
     return ps;
+}
+
+int player_ponderousness()
+{
+    return (scan_artefacts(ARTP_PONDEROUS)
+            + player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS));
 }
 
 static int _player_armour_racial_bonus(const item_def& item)
@@ -2127,9 +2133,6 @@ int player_evasion_bonuses(ev_ignore_type evit)
         evbonus += 5;
 
     evbonus += scan_artefacts( ARTP_EVASION );
-
-    // ponderous ev mod
-    evbonus -= 2 * player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS);
 
     if (player_mutation_level(MUT_REPULSION_FIELD) > 0)
         evbonus += (player_mutation_level(MUT_REPULSION_FIELD) * 2) - 1;

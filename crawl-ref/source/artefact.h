@@ -97,6 +97,8 @@ bool is_random_artefact( const item_def &item );
 bool is_unrandom_artefact( const item_def &item );
 bool is_special_unrandom_artefact( const item_def &item );
 
+void artefact_fixup_props(item_def &item);
+
 unique_item_status_type get_unique_item_status(const item_def& item);
 unique_item_status_type get_unique_item_status(int unrand_index);
 void set_unique_item_status(const item_def& item,
@@ -157,10 +159,13 @@ unrand_special_type get_unrand_specialness(int unrand_index);
 unrand_special_type get_unrand_specialness(const item_def &item);
 
 void artefact_set_properties( item_def              &item,
-                              artefact_properties_t &proprt );
+                              const artefact_properties_t &proprt );
 void artefact_set_property( item_def           &item,
                             artefact_prop_type  prop,
                             int                 val );
 
 int get_unrandart_num( const char *name );
+
+void cheibriados_make_item_ponderous(item_def &item);
+
 #endif

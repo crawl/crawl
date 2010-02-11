@@ -1934,6 +1934,11 @@ void unmarshallItem(reader &th, item_def &item)
 
     item.props.clear();
     item.props.read(th);
+
+    // Fixup artefact props to handle reloading items when the new version
+    // of Crawl has more artefact props.
+    if (is_artefact(item))
+        artefact_fixup_props(item);
 }
 
 void marshallShowtype(writer &th, const show_type &obj)

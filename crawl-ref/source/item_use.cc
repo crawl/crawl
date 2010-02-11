@@ -35,6 +35,7 @@
 #include "food.h"
 #include "godabil.h"
 #include "goditem.h"
+#include "godpassive.h"
 #include "invent.h"
 #include "it_use2.h"
 #include "it_use3.h"
@@ -5859,6 +5860,12 @@ void use_artefact(item_def &item, bool *show_msgs, bool unmeld)
                  "nimbler" : "more awkward");
             artefact_wpn_learn_prop(item, ARTP_EVASION);
         }
+    }
+
+    if (proprt[ARTP_PONDEROUS])
+    {
+        mpr("You feel rather ponderous.");
+        che_handle_change(CB_PONDEROUS, 1);
     }
 
     if (proprt[ARTP_MAGICAL_POWER] && !known[ARTP_MAGICAL_POWER])

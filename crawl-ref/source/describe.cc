@@ -189,6 +189,7 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
         { "*TELE",  ARTP_CAUSE_TELEPORTATION,   2 },
         { "Hunger", ARTP_METABOLISM,            2 }, // handled specially
         { "Noisy",  ARTP_NOISES,                2 },
+        { "Slow",   ARTP_PONDEROUS,             2 },
 
         // Evokable abilities come second
         { "+Blink", ARTP_BLINK,                 2 },
@@ -408,7 +409,8 @@ static std::string _randart_descrip( const item_def &item )
         { ARTP_PREVENT_TELEPORTATION, "It prevents most forms of teleportation.",
           false},
         { ARTP_ANGRY,  "It makes you angry.", false},
-        { ARTP_CURSED, "It may recurse itself.", false}
+        { ARTP_CURSED, "It may recurse itself.", false},
+        { ARTP_PONDEROUS, "It slows your movement.", false},
     };
 
     for (unsigned i = 0; i < ARRAYSZ(propdescs); ++i)

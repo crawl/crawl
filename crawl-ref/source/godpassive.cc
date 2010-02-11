@@ -9,9 +9,7 @@ int che_boost_level()
 {
     if (you.religion != GOD_CHEIBRIADOS)
         return 0;
-    return std::min(
-        player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS),
-        piety_rank() - 1);
+    return std::min(player_ponderousness(), piety_rank() - 1);
 }
 
 int che_boost(che_boost_type bt, int level)
@@ -42,8 +40,7 @@ void che_handle_change(che_change_type ct, int diff)
     const std::string typestr = (ct == CB_PIETY ? "piety" : "ponderous");
 
     // Values after the change.
-    const int ponder = player_equip_ego_type(EQ_ALL_ARMOUR,
-                                             SPARM_PONDEROUSNESS);
+    const int ponder = player_ponderousness();
     const int prank = piety_rank() - 1;
     const int newlev = std::min(ponder, prank);
 
