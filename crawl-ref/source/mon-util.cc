@@ -3190,6 +3190,10 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     if (s_type < 0 || s_type >= NUM_LOUDNESS || s_type == NUM_SHOUTS)
         s_type = mons_shouts(monster->type);
 
+    // FIXME: Handle player_genus in case it was not generalized to foe_genus.
+    msg = replace_all(msg, "@player_genus@", species_name(you.species, 1, true));
+    msg = replace_all(msg, "@player_genus_plural@", _pluralise_player_genus());
+
     std::string foe_species;
 
     if (foe == NULL)

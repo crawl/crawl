@@ -5340,13 +5340,13 @@ _Rupert_rare_
 Saint Roka
 
 w:7
-@related Saint Roka@
+@Saint Roka generic@
 
 @The_monster@ says @to_foe@, "Down here, you're an orc or you're nobody."
 
 @The_monster@ says @to_foe@, "In the orcish mines, orcs kill the likes of you."
 %%%%
-related Saint Roka
+Saint Roka generic
 
 w:2
 @_generic_orc_speech_@
@@ -5357,12 +5357,17 @@ w:2
 
 @The_monster@ says @to_foe@, "I shall smite you and smash you."
 
-@The_monster@ lets out a mighty cry!
+@The_monster@ lets out a mighty war cry!
 
 @The_monster@ cries, "Beogh give me strength!"
 
 @The_monster@ cries, "In the name of Beogh, DIE!"
+%%%%
+related Saint Roka
 
+@Saint Roka generic@
+
+w:2
 @The_monster@ calls out, "Join me or die!"
 %%%%
 # need different speech if you also worship Beogh
