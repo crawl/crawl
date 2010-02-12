@@ -561,6 +561,170 @@ w:300
 @armour@
 %%%%
 ######################################################
+# CHEIBRIADOS armours, all ponderous
+######################################################
+Cheibriados ponderous
+
+w:50
+of Cheibriados
+
+w:200
+@slow_particle@ @slow_animal_or_thing@
+
+w:100
+@Cheibriados_common@
+
+w:10
+@Cheibriados_rare@
+%%%%
+slow_particle
+
+of the
+
+w:5
+from the
+
+w:3
+by the 
+%%%%
+slow_animal_or_thing
+
+@slow_animal@
+
+w:5
+@slow_animal@s
+
+w:3
+@slow_thing@
+
+w:1
+@slow_thing@s
+%%%%
+slow_animal
+
+Beetle
+
+Caterpillar
+
+Possum
+
+Sea Horse
+
+Skunk
+
+Sloth
+
+Slug
+
+Snail
+
+Turtle
+%%%%
+slow_thing
+
+Glacier
+
+Monolith
+
+Moon
+
+Mountain
+
+Tectonic Plate
+%%%%
+Cheibriados_common
+
+of Ambling
+
+of Belated Steps
+
+of Belatedness
+
+of Crawling
+
+of Deliberateness
+
+of Indolence
+
+of Leisure
+
+of Lessening
+
+of Lingering
+
+of Mellow Steps
+
+of Pondering
+
+of Sauntering
+
+of the Stroll
+
+of Strolling
+
+of Unhurriedness
+%%%%
+Cheibriados_rare
+
+of Creeping
+
+of Dawdling
+
+of Delays
+
+of Dilatoriness
+
+of Drowsing
+
+of Dwindling Hours
+
+of Hindrance
+
+of the Impeded
+
+of Inactivity
+
+of Idleness
+
+of the Inert
+
+of the Laggard
+
+of Lagging
+
+of Lethargy
+
+of Limitations
+
+of Loitering
+
+of the Motionless
+
+of Placidity
+
+of Prolongment
+
+of Prolonging
+
+of Slackening
+
+of Sluggishness
+
+of Stagnation
+
+of the Supine
+
+of Thoroughness
+
+of Time-consuming
+
+of Torpidity
+
+for the Unagitated
+
+of Unpunctuality
+%%%%
+######################################################
 # Library of randart APPEARANCE (un-identified).
 ######################################################
 # common to all three types of randarts
@@ -630,123 +794,6 @@ distressingly furry
 
 w:160
 @general appearance@
-%%%%
-Cheibriados ponderous
-
-w:2
-of Placidity
-
-w:2
-of Dawdling
-
-w:2
-of Indolence
-
-w:2
-of Idleness
-
-w:2
-of Sluggishness
-
-w:3
-of Pondering
-
-w:2
-of Drowsing
-
-w:2
-of Inactivity
-
-w:2
-of the Inert
-
-w:2
-of Torpidity
-
-w:2
-of Stagnation
-
-w:2
-of Lethargy
-
-w:2
-of Leisure
-
-w:2
-of Delays
-
-# may be a bit meta?
-w:1
-of Crawling
-
-w:2
-of Creeping
-
-w:2
-of the Supine
-
-w:2
-of Deliberateness
-
-w:2
-of Lingering
-
-w:1
-of Prolongment
-
-w:1
-of Prolonging
-
-w:2
-of Unpunctuality
-
-w:2
-of Time-consuming
-
-w:2
-of Belated Steps
-
-w:2
-of Dilatoriness
-
-w:2
-of Limitations
-
-w:2
-of Lessening
-
-w:2
-of Lagging
-
-w:2
-of Loitering
-
-w:2
-of Dwindling Hours
-
-w:2
-of Mellow Steps
-
-w:2
-of Belatedness
-
-w:2
-of the Laggard
-
-w:2
-of the Impeded
-
-w:2
-of Slackening
-
-w:2
-of Hindrance
-
-w:2
-of the Motionless
-
-of Cheibriados
-%%%%
 ######################################################
 # Jewellery appearance
 ######################################################
