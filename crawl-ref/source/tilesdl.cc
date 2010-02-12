@@ -1012,7 +1012,7 @@ void TilesFramework::do_layout()
     crawl_view.viewsz.y = Options.view_max_height;
     crawl_view.msgsz.x  = crt_width;
     // What *does* msgsz.y get set to? (jpeg)
-    crawl_view.msgsz.y  = std::max(5, crt_height - crawl_view.viewsz.y);
+    crawl_view.msgsz.y  = std::max(Options.msg_min_height, crt_height - crawl_view.viewsz.y);
 
     // Initial sizes.
     m_region_tile->dx = m_viewsc.x;
@@ -1078,7 +1078,7 @@ void TilesFramework::do_layout()
         }
 
         // Use overlaid message window if the normal one doesn't fit; or
-        // if tile_force_overlay is on.
+        // if tile_force_overlay is on:
         if (m_region_tile->wy + m_region_msg->wy > m_windowsz.y
             || Options.tile_force_overlay)
         {
@@ -1087,7 +1087,7 @@ void TilesFramework::do_layout()
             message_overlay = true;
         }
 
-   }
+    }
 
     if (message_overlay)
     {
