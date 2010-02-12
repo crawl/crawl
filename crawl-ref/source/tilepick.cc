@@ -1228,7 +1228,7 @@ int tileidx_monster(const monsters *mons, bool detected)
         break;
     }
 
-    if (Options.tile_show_demon_numbers)
+    if (Options.tile_show_demon_tier)
     {
         switch (mons_char(mons->type))
         {
