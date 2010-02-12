@@ -3,7 +3,7 @@ Stone Soup 0.6
 Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 Also, list and features are still a work in progress.
 
-Breaks saves compatibility.
+Breaks save compatibility with the 0.5 release.
 
 IMPORTANT: The bugtracker has moved to http://crawl.develz.org/mantis/.
            Please report all bugs and feedback there. Thank you!
@@ -27,7 +27,7 @@ Gods
 * Ecumenical Temple may randomly contain 6 to 14 altars.
 * Dungeon gods not included in Ecumenical Temple get guaranteed altar on D:2-9.
 * Zin protects the player against disease, rotting and miasma.
-* Vehumet reduces mana cost and increases ranges of destructional spells.
+* Vehumet reduces mana cost and increases ranges of destructive spells.
 * Kikubaaqudgha gives torment resistance, hands out corpses and the Pain brand.
 * Yredelemnul's gifts follow through stairways even if behind zombies.
 * Xom is nicer about banishment and hostile monsters for low-xp followers.
@@ -35,8 +35,9 @@ Gods
 * Elyvilon doesn't mind butchery during prayer anymore.
 * Greatly reduce damage dealt by TSO's wrath.
 * TSO's halo no longer makes the player easier to hit.
-* Sif Muna doesn't accept worship from players who don't know any spells.
-* Corruption is usable once-per-level and produces only neutral monsters.
+* Sif Muna doesn't accept worshippers who don't know any spells.
+* Lugonu's Corruption is usable only once per level and produces only
+  neutral monsters.
 * Sacrifice corpses with prayer ('p') rather than prayer and chop up ('pc').
 * Recite has no food cost and no longer causes monsters to go berserk.
 
@@ -46,7 +47,7 @@ Levels
 * Fix branch ends rarely being generated without a rune.
 * Shorten Lair to eight levels.
 * More interesting level layout for Lair and Swamp.
-* New portal vaults: Bailey, Trove, Volcanoes, Wizard Laboratory.
+* New portal vaults: Bailey, Trove, Volcanoes, Wizard Laboratories.
 * Most escape hatches are replaced by (single-use) shafts.
 * New wall type "tree"; two trees in a row block vision.
 * Seal hell portals rather than Vestibule when the player picks up the orb.
@@ -55,12 +56,12 @@ Levels
 * Limit alarm traps to 1-3 charges.
 * Trap disarming prompts if you have less hp than the trap's maximum damage.
 * Lua maps are much more customizable.
-* Alternate branch endings for Hells, Hive, Swamp, Vaults.
+* New alternative branch endings for Hells, Hive, Swamp, Vaults.
 * The pandemonium lords' levels get special announcements.
 
 Ranged combat
 -------------
-* Removed hand crossbows and Darts skill.
+* Removed hand crossbows and the Darts skill.
 * New background: Arcane Marksman, combining Crusader, Warper and Hunter.
 * Fixed wall-stopped item beams getting two chances to hit their target.
 * New missile materials: silver, steel.
@@ -89,9 +90,9 @@ Items
 * Added potions of brilliance and agility.
 * Added shields of reflection.
 * New amulets: guardian spirit, faith, stasis.
-* Amulet of clarity prevents unvoluntary berserk.
+* Amulet of clarity prevents involuntary berserk.
 * Lowered gold dragon armour's AC value.
-* All randart weapons get a brand.
+* All randart weapons are now guaranteed a brand.
 * The speed brand is only created randomly for artefacts.
 * Halved damage bonus of the vorpal brand to 12.5%.
 * Armour acquirement is more likely to fill secondary slots.
@@ -129,12 +130,12 @@ Monsters
 * Slime creatures can merge to become larger and more powerful.
 * All spectral things can use stairs again.
 * Several cool new uniques.
-* Don't make OOD (out-of-depth) monsters appear in a band until many
+* OOD (out-of-depth) monsters no longer appear in bands until many
   turns spent on the level.
 * Monster respawns on any level in the main dungeon branches outside
   Hell and Zot decline with time spent on the level and eventually
   no further monsters will be generated on the level.
-* Steeply increase OOD monster generation with time spent on a level.
+* OOD monster generation increases sharply with time spent on a level.
 * Display magic (or "hostile enchantments") resistance in monster descriptions.
 * Hydras pick new target for remaining attacks if their current foe dies.
 * Make monsters forget player position if the player teleports away.
@@ -145,7 +146,8 @@ Monsters
 * Bears go berserk, but mindless monsters can't.
 * Greatly reduce number of monsters capable of submerging.
 * Submerged monsters cannot be targeted or affected by beams anymore.
-* Sense invisible is more effective on invisible monsters, less on the player.
+* Monsters' sense invisible is more effective on invisible monsters,
+  and less effective on invisible players.
 * Hungry ghosts eat corpses.
 * Monsters get more sensible experience values matching their difficulty.
 * Confused monsters zap wands in random directions.
@@ -182,8 +184,8 @@ Interface
 ---------
 * Fix wands not prompting when fired at allies.
 * Add a shopping list ('$') to notify you when you can afford a listed item.
-* New memorisation interface listing all spells contained in carried books.
-* Turn autopickup back on when killing invisible backlit monsters.
+* New memorisation interface lists all spells contained in carried books.
+* Autopickup turns itself back on when killing invisible backlit monsters.
 * Autotravel doesn't cut corners and tries to avoid ambushes.
 * Greatly decreased message spam, especially when targeting.
 * Switched to line-of-sight exclusions.
@@ -197,7 +199,7 @@ Interface
 * Level features (e.g. stairs, gates, altars) are listed in the 'X' map.
 * Disallow autoexplore and resting when starving.
 * Add !a inscription to prompt when attacking with this wielded item.
-* New lua file autofight.lua which allows auto-attacking of the nearest enemy.
+* New Lua file autofight.lua which allows auto-attacking of the nearest enemy.
 * Abort some teleportation attempts with -TELE without losing the turn.
 * Food and potions are never autoassigned to slots 'e' and 'y', respectively.
 * Prefer swapping to a butchery tool to unequipping gloves.
@@ -224,8 +226,8 @@ Spells
 * Condensation Shield is more effective.
 * Improved Passwall interface.
 * Allow Mummies to cast Summon Horrible Things.
-* Controlled blink causes glowing.
-* Reduce Poison Arrow's irresistable part from 60% to 30%.
+* Controlled Blink causes glowing.
+* Reduced Poison Arrow's irresistible damage component from 60% to 30%.
 * Ice Form can swim in deep water; be careful you don't drown!
 * Disintegration is really messy.
 * Useless and forbidden spells are coloured in spell menus.
@@ -246,7 +248,7 @@ Tiles
 * Added icons for armour egos.
 * Reuse dancing weapon icon for known mimics.
 * Many new and/or improved tiles, mostly for monsters.
-* Add some "animations" whenever the screen is redrawn.
+* Add some animations when the screen is redrawn.
 * Vaults can specify custom tiles for features or monsters.
 * Tiles can be recoloured dynamically during compilation.
 * Variant tiles of a set can be assigned weights.
@@ -280,11 +282,12 @@ Code cleanup
 ------------
 * Overhauled and improved the line of sight and direction code.
 * Overhauled all code dealing with the message window/message history.
-* Added lots of test cases for semi-automated bug catching.
+* Added several automated test cases in Lua.
 * Tidy up and clarify makefile usage.
-* Distribute content of large .cc and .des files into smaller ones.
-* Many new lua wrappers to make lua much more powerful in e.g. map creation.
-* Unique placement code has been moved to lua and is directed via uniques.des.
+* Split up the contents of several large .cc and .des files into
+  smaller files.
+* Many new Lua wrappers to make Lua much more powerful in e.g. map creation.
+* Unique placement code has been moved to Lua and is directed via uniques.des.
 * Add property hash to monsters, and use it generously for various monsters.
 * The documentation file aptitudes.txt is autogenerated from the aptitudes code.
 * Cleanup of included header files, reducing compilation time.
