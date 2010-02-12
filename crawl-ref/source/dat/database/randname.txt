@@ -642,6 +642,109 @@ of Dawdling
 w:2
 of Indolence
 
+w:2
+of Idleness
+
+w:2
+of Sluggishness
+
+w:3
+of Pondering
+
+w:2
+of Drowsing
+
+w:2
+of Inactivity
+
+w:2
+of the Inert
+
+w:2
+of Torpidity
+
+w:2
+of Stagnation
+
+w:2
+of Lethargy
+
+w:2
+of Leisure
+
+w:2
+of Delays
+
+# may be a bit meta?
+w:1
+of Crawling
+
+w:2
+of Creeping
+
+w:2
+of the Supine
+
+w:2
+of Deliberateness
+
+w:2
+of Lingering
+
+w:1
+of Prolongment
+
+w:1
+of Prolonging
+
+w:2
+of Unpunctuality
+
+w:2
+of Time-consuming
+
+w:2
+of Belated Steps
+
+w:2
+of Dilatoriness
+
+w:2
+of Limitations
+
+w:2
+of Lessening
+
+w:2
+of Lagging
+
+w:2
+of Loitering
+
+w:2
+of Dwindling Hours
+
+w:2
+of Mellow Steps
+
+w:2
+of Belatedness
+
+w:2
+of the Laggard
+
+w:2
+of the Impeded
+
+w:2
+of Slackening
+
+w:2
+of Hindrance
+
+w:2
+of the Motionless
+
 of Cheibriados
 %%%%
 ######################################################
