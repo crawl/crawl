@@ -831,6 +831,11 @@ static bool _shoals_tide_sweep_clear(coord_def c)
         && _shoals_tide_sweep_actors_clear(c);
 }
 
+static void _shoals_tide_wash_blood_away_at(coord_def c)
+{
+    env.pgrid(c) &= ~FPROP_BLOODY;
+}
+
 static void _shoals_apply_tide_feature_at(coord_def c,
                                           dungeon_feature_type feat)
 {
@@ -959,6 +964,14 @@ static void _shoals_apply_tide(int tide)
                         {
                             npage.push_back(adj);
                             seen_points(adj) = true;
+                        }
+                        // Squares that the tide cannot directly
+                        // affect may still lose bloodspatter as the
+                        // tide goes past.
+                        else if (is_bloodcovered(adj)
+                                 && one_chance_in(15))
+                        {
+                            _shoals_tide_wash_blood_away_at(adj);
                         }
                     }
                 }
