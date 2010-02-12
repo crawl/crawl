@@ -3955,8 +3955,6 @@ VISUAL:@The_monster@ looks angry.
 %%%%
 _Erica_rare_
 
-VISUAL:@The_monster@ drinks a potion.
-
 @The_monster@ screams @at_foe@, "Hurry, death awaits!"
 
 @The_monster@ screams @at_foe@, "I'll never tell where it is!"
