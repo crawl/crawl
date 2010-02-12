@@ -8,6 +8,7 @@
 #define MONACT_H
 
 void handle_monsters(void);
+void handle_monster_move(monsters* mon);
 
 #define ENERGY_SUBMERGE(entry) (std::max(entry->energy_usage.swim / 2, 1))
 

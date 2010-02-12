@@ -1607,7 +1607,7 @@ static void _khufu_drop_tomb(monsters *monster)
 #    define DEBUG_ENERGY_USE(problem) ((void) 0)
 #endif
 
-static void _handle_monster_move(monsters *monster)
+void handle_monster_move(monsters *monster)
 {
     monster->hit_points = std::min(monster->max_hit_points,
                                    monster->hit_points);
@@ -1701,7 +1701,7 @@ static void _handle_monster_move(monsters *monster)
             && mgrd(monster->pos()) != monster->mindex())
         {
             mprf(MSGCH_ERROR, "Monster %s became detached from mgrd "
-                              "in _handle_monster_move() loop",
+                              "in handle_monster_move() loop",
                  monster->name(DESC_PLAIN, true).c_str());
             mpr("[[[[[[[[[[[[[[[[[[", MSGCH_WARN);
             debug_mons_scan();
@@ -1712,7 +1712,7 @@ static void _handle_monster_move(monsters *monster)
                  && mgrd(monster->pos()) == monster->mindex())
         {
             mprf(MSGCH_DIAGNOSTICS, "Monster %s re-attached itself to mgrd "
-                                    "in _handle_monster_move() loop",
+                                    "in handle_monster_move() loop",
                  monster->name(DESC_PLAIN, true).c_str());
             monster_was_floating = false;
         }
@@ -2104,7 +2104,7 @@ void handle_monsters()
         const coord_def oldpos = mi->pos();
 
         mi->update_los();
-        _handle_monster_move(*mi);
+        handle_monster_move(*mi);
 
         if (!invalid_monster(*mi) && mi->pos() != oldpos)
             immobile_monster[mi->mindex()] = true;
