@@ -9,6 +9,10 @@ menu = darkgrey:(melded)
 # Bad items
 menu = lightred:.*bad_item.*
 
+# Handle cursed items early to override other colour settings.
+menu = lightred:.*equipped.* cursed
+menu = red: (a|the) cursed
+
 # Useless items, comes here to override artefacts etc.
 menu = darkgrey:.*useless_item.*
 
@@ -56,7 +60,5 @@ menu = $dangerous:.*dangerous_item.*
 
 # Defaults for normal items
 #
-menu = lightred:.*equipped.* cursed
 menu = inventory:lightgreen:.*equipped.*
-menu = red: (a|the) cursed
 menu = green:uncursed
