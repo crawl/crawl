@@ -1316,21 +1316,26 @@ static int _place_monster_aux(const mgen_data &mg,
     // Not a god gift, give priestly monsters a god.
     else if (mons_class_flag(mg.cls, M_PRIEST))
     {
-        switch (mons_genus(mg.cls))
+        if (mg.cls == MONS_WAYNE)
+            mon->god = GOD_OKAWARU;
+        else
         {
-        case MONS_ORC:
-            mon->god = GOD_BEOGH;
-            break;
-        case MONS_JELLY:
-            mon->god = GOD_JIYVA;
-            break;
-        case MONS_MUMMY:
-        case MONS_DRACONIAN:
-        case MONS_ELF:
-            // [ds] Vault defs can request priest monsters of unusual types.
-        default:
-            mon->god = GOD_NAMELESS;
-            break;
+            switch (mons_genus(mg.cls))
+            {
+            case MONS_ORC:
+                mon->god = GOD_BEOGH;
+                break;
+            case MONS_JELLY:
+                mon->god = GOD_JIYVA;
+                break;
+            case MONS_MUMMY:
+            case MONS_DRACONIAN:
+            case MONS_ELF:
+                // [ds] Vault defs can request priest monsters of unusual types.
+            default:
+                mon->god = GOD_NAMELESS;
+                break;
+            }
         }
     }
     // 1 out of 7 non-priestly orcs are unbelievers.
