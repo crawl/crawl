@@ -408,3 +408,16 @@ Renounce Religion
 
 Renounce your faith. This will make your character leave your god (and usually anger said god).
 %%%%
+# Jiyva
+Request Jelly
+
+Create a neutral jelly that will wander the floor and digest items.
+#
+%%%%
+Slimify
+
+Coat a wielded weapon or your fists with slime, turning the next living or undead monster hit into a neutral slime.
+%%%%
+Cure Bad Mutation
+
+Remove a randomly selected bad mutation.
