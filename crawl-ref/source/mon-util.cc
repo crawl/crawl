@@ -484,9 +484,14 @@ bool mons_is_firewood(const monsters *mon)
             && mons_class_flag(mon->type, M_NO_EXP_GAIN));
 }
 
-int monster_player_speed_delta(const monsters *mon)
+// Difference in speed between monster and the player for Cheibriados'
+// purposes. This is the speed difference disregarding the player's
+// slow status.
+int cheibriados_monster_player_speed_delta(const monsters *mon)
 {
-    int pspeed = 1000/player_movement_speed()/player_speed();
+    // Ignore the Slow effect.
+    unwind_var<int> ignore_slow(you.duration[DUR_SLOW], 0);
+    const int pspeed = 1000 / (player_movement_speed(true) * player_speed());
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Your delay: %d, your speed: %d, mon speed: %d",
         player_movement_speed(), pspeed, mon->speed);
@@ -494,9 +499,9 @@ int monster_player_speed_delta(const monsters *mon)
     return (mon->speed - pspeed);
 }
 
-bool mons_is_fast(const monsters *mon)
+bool cheibriados_thinks_mons_is_fast(const monsters *mon)
 {
-    return (monster_player_speed_delta(mon) > 0);
+    return (cheibriados_monster_player_speed_delta(mon) > 0);
 }
 
 bool mons_is_projectile(int mc)
