@@ -1570,7 +1570,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
                        || player_spell_levels() < spell_levels_required(spell);
 
         spells_to_books::iterator it = book_hash.find(spell);
-        const bool red = is_dangerous_spellbook(it->second);
+        const bool dangerous = is_dangerous_spellbook(it->second);
 
         std::ostringstream desc;
 
@@ -1580,8 +1580,10 @@ static spell_type _choose_mem_spell(spell_list &spells,
 
         colour = spell_highlight_by_utility(spell);
 
-        if (red)
-            colour = LIGHTRED;
+        // Highlight dangerous books magenta, but don't bother if they are
+        // already highlighted as forbidden by the player's god.
+        if (dangerous && colour != COL_FORBIDDEN)
+            colour = MAGENTA;
 
         desc << "<" << colour_to_str(colour) << ">";
 
