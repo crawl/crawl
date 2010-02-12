@@ -1579,7 +1579,7 @@ TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 local wizname = crawl.make_name()
 
 kmons ("    1 = col:silver patrolling wizard name:" .. string.gsub(wizname, " ", "_")
-         .. " name_replace"
+         .. "_the_Cloud_Mage name_replace"
          .. " name_definite spells:mephitic_cloud;freezing_cloud;poisonous_cloud;"
          .. "airstrike;blink_range;blink_range hd:20 hp:150 ;"
          .. " robe unrand:robe_of_clouds . quick blade ego:electrocution |"
@@ -1601,9 +1601,9 @@ KITEM:      ? = randbook disc:air
 KITEM:      $ = wand of lightning / staff of air / ring of levitation /\
             gold / scroll of silence / ring of teleport control / \
             amulet of controlled flight / quick blade / ring of evasion /\
-            ring of see invisible
+            ring of see invisible / book of clouds
 KFEAT:      # = deep_water
-NSUBST:     $ = 1:? / *:$
+NSUBST:     $ = 2:? / *:$
 SUBST:      $ = $%
 COLOUR:     +<bo = white
 LFLOORCOL:  lightblue
@@ -1707,7 +1707,7 @@ KMONS:      5 = blue death / green death / cacodemon
 local wizname = crawl.make_name()
 
 kmons     ("1 = col:fire patrolling wizard name:" .. string.gsub(wizname, " ", "_")
-              .. " name_replace"
+              .. "_the_Hellbinder name_replace"
               .." spells:call_imp;summon_demon;haste;hellfire;blink_away;throw_flame"
               .." hd:20 hp:150 ; demon blade . robe")
 }}
