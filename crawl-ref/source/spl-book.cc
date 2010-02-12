@@ -19,6 +19,7 @@
 #include "database.h"
 #include "delay.h"
 #include "describe.h"
+#include "directn.h"
 #include "effects.h"
 #include "externs.h"
 #include "food.h"
@@ -33,6 +34,7 @@
 #include "libutil.h"
 #include "macro.h"
 #include "message.h"
+#include "options.h"
 #include "player.h"
 #include "religion.h"
 #include "species.h"
@@ -40,6 +42,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
+#include "target.h"
 #ifdef USE_TILE
  #include "tilepick.h"
 #endif
@@ -1294,7 +1297,7 @@ int count_rod_spells(const item_def &item, bool need_id)
     return nspel;
 }
 
-int rod_spell(int rod)
+int rod_spell(int rod, bool check_range)
 {
     item_def& irod(you.inv[rod]);
 
@@ -1387,6 +1390,23 @@ int rod_spell(int rod)
         crawl_state.zero_turns_taken();
         // Don't lose a turn for trying to evoke without enough MP - that's
         // needlessly cruel for an honest error.
+        return -1;
+    }
+
+    if (check_range && spell_no_hostile_in_range(spell))
+    {
+        // Abort if there are no hostiles within range, but flash the range
+        // markers for a short while.
+        mpr("You can't see any susceptible monsters within range! "
+            "(Use <w>V</w> to cast anyway.)");
+
+        if (Options.darken_beyond_range)
+        {
+            targetter_smite range(&you, calc_spell_range(spell), 0, 0, true);
+            range_view_annotator show_range(&range);
+            delay(50);
+        }
+        crawl_state.zero_turns_taken();
         return -1;
     }
 

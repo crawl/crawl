@@ -1493,7 +1493,7 @@ static void _expend_elemental_evoker(item_def &item)
     item.plus2 = 10;
 }
 
-bool evoke_item(int slot)
+bool evoke_item(int slot, bool check_range)
 {
     if (you.form == TRAN_WISP)
         return mpr("You cannot handle anything in this form."), false;
@@ -1582,7 +1582,7 @@ bool evoke_item(int slot)
             return false;
         }
 
-        pract = rod_spell(slot);
+        pract = rod_spell(slot, check_range);
         // [ds] Early exit, no turns are lost.
         if (pract == -1)
             return false;
