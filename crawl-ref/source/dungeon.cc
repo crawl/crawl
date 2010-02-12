@@ -3382,13 +3382,31 @@ static bool _make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
 
 static bool _place_unique_map(const map_def *uniq_map)
 {
-    // If the map is guaranteed to not affect connectivity, allow it to
-    // overwrite existing vaults.
-    const bool clobber = uniq_map->has_tag("transparent");
+    // If the unique map is guaranteed to not affect connectivity,
+    // allow it to overwrite existing vaults by temporarily
+    // suppressing dgn_Map_Mask.
+    const bool transparent = uniq_map->has_tag("transparent");
+    std::auto_ptr<map_mask> backup_mask;
+    if (transparent)
+    {
+        backup_mask.reset(new map_mask(dgn_Map_Mask));
+        dgn_Map_Mask.init(0);
+    }
+
+    bool placed = false;
     for (int i = 0; i < 4; i++)
-        if (dgn_place_map(uniq_map, clobber, false))
-            return (true);
-    return (false);
+    {
+        if (dgn_place_map(uniq_map, false, false))
+        {
+            placed = true;
+            break;
+        }
+    }
+
+    if (transparent)
+        dgn_Map_Mask = *backup_mask;
+
+    return (placed);
 }
 
 // Place uniques on the level.
