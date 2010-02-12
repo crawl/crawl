@@ -3889,7 +3889,46 @@ You hear a distant scream of rage.
 ############ EDMUND ### A mercenary guarding the dungeon
 Edmund
 
-@_mercenary_guard_@
+@_Edmund_common_@
+
+w:5
+@_Edmund_rare_@
+%%%%
+_Edmund_common_
+
+VISUAL:@The_monster@ gestures @at_foe@ with his flail.
+
+@The_monster@ clears his throat.
+
+@The_monster@ says, "You wouldn't believe how much I paid for this flail."
+
+@The_monster@ asks @foe@, "Have you met my brother?"
+
+@The_monster@ says @to_foe@, "I might not be good at magic, but I can still kill you!"
+
+@The_monster@ says, "People think my brother is the best. I think he's crazy."
+
+@The_monster@ says, "I'm quite good with sums, too."
+
+@The_monster@ says, "People accused me of being a cutpurse!"
+%%%%
+_Edmund_rare_
+
+VISUAL:@The_monster@ grinds his teeth, and then sighs.
+
+w:1
+VISUAL:@The_monster@ looks rather jealous.
+
+@The_monster@ says, "A flail is better than a scythe, any day of the week!"
+
+@The_monster@ says, "What use are spells, anyway?"
+
+@The_monster@ says, "Everyone always remembers my brother. 'Who's Edmund?' they ask!"
+
+@The_monster@ says, "People will remember me! They'll remember me and die!"
+
+w:1
+@The_monster@ says, "Maybe I'll buy a title. How does Count Edmund sound?"
 %%%%
 ############ ERICA ### A wild tempered adventuress
 Erica
