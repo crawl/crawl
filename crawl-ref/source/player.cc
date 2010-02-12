@@ -1865,7 +1865,7 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
 // this isn't as fast as it used to be (6 for having anything), but
 // even a slight speed advantage is very good... and we certainly don't
 // want to go past 6 (see below). -- bwr
-int player_movement_speed(void)
+int player_movement_speed(bool ignore_burden)
 {
     int mv = 10;
 
@@ -1896,7 +1896,7 @@ int player_movement_speed(void)
         mv += 2 * player_ponderousness();
 
         // In the air, can fly fast (should be lightly burdened).
-        if (you.light_flight())
+        if (!ignore_burden && you.light_flight())
             mv--;
 
         // Swiftness is an Air spell, it doesn't work in water, but
@@ -1912,10 +1912,13 @@ int player_movement_speed(void)
         }
 
         // Burden
-        if (you.burden_state == BS_ENCUMBERED)
-            mv += 1;
-        else if (you.burden_state == BS_OVERLOADED)
-            mv += 3;
+        if (!ignore_burden)
+        {
+            if (you.burden_state == BS_ENCUMBERED)
+                mv += 1;
+            else if (you.burden_state == BS_OVERLOADED)
+                mv += 3;
+        }
     }
 
     // We'll use the old value of six as a minimum, with haste this could
