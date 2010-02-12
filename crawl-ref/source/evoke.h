@@ -17,7 +17,7 @@ void wind_blast(actor* agent, int pow, coord_def target);
 
 void tome_of_power(int slot);
 
-bool evoke_item(int slot = -1);
+bool evoke_item(int slot = -1, bool check_range = false);
 
 void shadow_lantern_effect();
 bool disc_of_storms(bool drac_breath = false);
