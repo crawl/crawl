@@ -762,6 +762,8 @@ endif
 
 endif
 
+depend: $(OBJECTS:.o=.d)
+
 # This information is included in crash reports, and is printed with
 # "crawl -version"
 compflag.h: $(OBJECTS:.o=.cc)
@@ -898,13 +900,13 @@ endif
 
 $(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS) $(CONTRIB_LIBS)
 
-%.d: %.cc .cflags
+%.d: %.cc .cflags $(GENERATED_FILES)
 	$(QUIET_DEPEND)$(CXX) -MM $(ALL_CFLAGS) $< > $*.d
 
 %.o: %.m .cflags
 	$(QUIET_CC)$(CC) $(ALL_CFLAGS) -Wp,-MD,$*.d -c $< -o $*.o
 
-%.o: %.cc .cflags
+%.o: %.cc .cflags $(GENERATED_FILES)
 	$(QUIET_CXX)$(CXX) $(ALL_CFLAGS) -Wp,-MD,$*.d -c $< -o $*.o
 
 icon.o: util/crawl.rc util/crawl.ico
