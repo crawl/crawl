@@ -302,6 +302,8 @@ end
 function TroveMarker:plural ()
   if self.toll_item.quantity > 1 then
     return "s"
+  else
+    return ""
   end
 end
 
