@@ -1757,7 +1757,10 @@ tile_map_pixels = 4
 
 tile_force_overlay = false
         Setting this option to true will force the message window to appear as
-        an overlay on top of the screen.
+        an overlay on top of the screen. If you use this option, making your
+        tile_font_msg_size smaller will make the overlay smaller while retaining
+        the same number of lines. Increase the view_max_height option if you
+        find yourself with unused screen estate.
 
 tile_full_screen = false
         Setting this option to true will start Crawl in full screen mode.
