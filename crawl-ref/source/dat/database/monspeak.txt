@@ -5674,10 +5674,52 @@ VISUAL:@The_monster@ grins evilly.
 @The_monster@ screams @at_foe@, "I love blood!"
 ## END Urug ##
 %%%%
-############ WAYNE ### An adventurer hating competition
+############ WAYNE ### A dwarf.  Nuff said.
 Wayne
 
-@_hostile_adventurer_@
+@_Wayne_common_@
+
+w:5
+@_Wayne_rare_@
+
+@_Wayne_nondwarf_@
+%%%%
+related Wayne
+
+@_Wayne_common_@
+
+w:5
+@_Wayne_rare_@
+%%%%
+_Wayne_common_
+
+@The_monster@ says @to_foe@, "Me axe will split yer skull!"
+
+@The_monster@ says @to_foe@, "By tha beards o' me forefathars, ye will na live ta see tha day."
+
+@The_monster@ yells out a battle-cry.
+%%%%
+_Wayne_rare_
+
+@The_monster@ says, "'Tis be na beer, 'tis be yak urine.  I want me dwarv'n ale!"
+
+@The_monster@ says, "Good veins be in tha mountains or tha hills.  Na 'tis deep!"
+
+@The_monster@ says, "All tha talk aboot mithril ta mine, an' thar's none."
+
+@The_monster@ says, "Me liver be thirsty."
+
+@The_monster@ says, "Bah, an elf-lo'er or a halflin'-fancier?"
+%%%%
+_Wayne_nondwarf_
+
+w:5
+@The_monster@ says, "Orcs, orcs, elves an' a @player_genus@." @player_only@
+
+@The_monster@ says @to_foe@, "Tha axes o' dwarves be upon ye!"
+
+@The_monster@ says @to_foe@, "Ye cannae match a dwarf in combat."
+## END Wayne ##
 %%%%
 ############ XTAHUA ### An ancient dragon
 Xtahua
