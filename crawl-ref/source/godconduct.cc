@@ -453,15 +453,21 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 && !god_hates_attacking_friend(you.religion, victim))
             {
                 retval = true;
-                piety_change = 1;
-                const int speed_delta = monster_player_speed_delta(victim);
-                dprf("Che DID_KILL_FAST: %s speed delta: %d",
-                     victim->name(DESC_PLAIN, true).c_str(),
-                     speed_delta);
-                if (speed_delta > 0 && x_chance_in_y(speed_delta, 12))
-                    ++piety_change;
-
-                simple_god_message(" appreciates the change of pace.");
+                if (random2(level + 18 - you.experience_level / 2) > 5)
+                {
+                    piety_change = 1;
+                    const int speed_delta =
+                        cheibriados_monster_player_speed_delta(victim);
+                    dprf("Che DID_KILL_FAST: %s speed delta: %d",
+                         victim->name(DESC_PLAIN, true).c_str(),
+                         speed_delta);
+                    if (speed_delta > 0 && x_chance_in_y(speed_delta, 12))
+                        ++piety_change;
+                }
+                simple_god_message(
+                    piety_change == 2
+                    ? " thoroughly appreciates the change of pace."
+                    : " appreciates the change of pace.");
             }
             break;
 

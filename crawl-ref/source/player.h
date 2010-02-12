@@ -619,7 +619,7 @@ int player_adjusted_body_armour_evasion_penalty(int scale);
 int player_armour_shield_spell_penalty();
 int player_evasion(ev_ignore_type evit = EV_IGNORE_NONE);
 
-int player_movement_speed(void);
+int player_movement_speed(bool ignore_burden = false);
 
 int player_hunger_rate(void);
 
