@@ -2549,6 +2549,11 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
             ret = true;
         break;
 
+    case SPELL_MIGHT:
+        if (mon->has_ench(ENCH_MIGHT))
+            ret = true;
+        break;
+
     case SPELL_SWIFTNESS:
         if (mon->has_ench(ENCH_SWIFT))
             ret = true;
@@ -2721,6 +2726,7 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
     case SPELL_NO_SPELL:
     case SPELL_CANTRIP:
     case SPELL_HASTE:
+    case SPELL_MIGHT:
     case SPELL_MINOR_HEALING:
     case SPELL_MAJOR_HEALING:
     case SPELL_TELEPORT_SELF:

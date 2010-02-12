@@ -222,6 +222,22 @@ unseen Geryon cast
 
 You hear a weird and mournful sound.
 %%%%
+Wayne cast
+
+@The_monster@ raises a hand and says an invocation.
+
+@The_monster@'s eyes glow as he invokes the power of Okawaru.
+
+@The_monster@ prays in loud words.
+%%%%
+unseen Wayne cast
+
+You hear an invocation said in the dwarven tongue.
+
+You see a slight glow in a spot of thin air.
+
+Someone prays in loud words.
+%%%%
 ########################################################################
 # Individual monsters
 ########################################################################

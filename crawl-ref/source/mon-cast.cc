@@ -140,6 +140,9 @@ static bool _flavour_benefits_monster(beam_type flavour, monsters & monster)
     case BEAM_HASTE:
         return (!monster.has_ench(ENCH_HASTE));
 
+    case BEAM_MIGHT:
+        return (!monster.has_ench(ENCH_MIGHT));
+
     case BEAM_INVISIBILITY:
         return (!monster.has_ench(ENCH_INVIS));
 
@@ -281,6 +284,10 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
 
     case SPELL_HASTE:              // (self)
         beam.flavour  = BEAM_HASTE;
+        break;
+
+    case SPELL_MIGHT:
+        beam.flavour  = BEAM_MIGHT;
         break;
 
     case SPELL_CORONA:
@@ -890,6 +897,7 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         pbolt.aux_source.clear();
 
     if (spell_cast == SPELL_HASTE
+        || spell_cast == SPELL_MIGHT
         || spell_cast == SPELL_INVISIBILITY
         || spell_cast == SPELL_MINOR_HEALING
         || spell_cast == SPELL_TELEPORT_SELF)

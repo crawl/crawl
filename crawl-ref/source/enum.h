@@ -2350,6 +2350,7 @@ enum mon_spellbook_type
     MST_ALLIGATOR,
     MST_BORIS,
     MST_FREDERICK,
+    MST_WAYNE,
 
     MST_TEST_SPAWNER = 200,
     NUM_MSTYPES,
@@ -2948,6 +2949,7 @@ enum spell_type
     SPELL_CALL_TIDE,
     SPELL_IOOD,
     SPELL_INK_CLOUD,
+    SPELL_MIGHT,
 
     NUM_SPELLS
 };
