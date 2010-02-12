@@ -3,6 +3,7 @@
 #include "map_knowledge.h"
 
 #include "coordit.h"
+#include "dgn-overview.h"
 #include "dgnevent.h"
 #include "directn.h"
 #include "env.h"
@@ -10,7 +11,6 @@
 #include "mon-util.h"
 #include "notes.h"
 #include "options.h"
-#include "overmap.h"
 #include "show.h"
 #include "showsymb.h"
 #include "stuff.h"
@@ -279,7 +279,7 @@ void set_terrain_seen( int x, int y )
             // which is found.
             || ((feat == DNGN_ENTER_ABYSS || feat == DNGN_ENTER_PANDEMONIUM
                  || feat == DNGN_ENTER_HELL)
-                && overmap_knows_num_portals(feat) > 1)
+                && overview_knows_num_portals(feat) > 1)
             // There are at least three Zot entrances, and they're always
             // on D:27, so ignore them.
             || feat == DNGN_ENTER_ZOT;

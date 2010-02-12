@@ -57,9 +57,9 @@ static void _dump_level_info(FILE* file)
 
     fprintf(file, "Place info:" EOL);
 
-    fprintf(file, "your_level = %d, branch = %d, level_type = %d, "
+    fprintf(file, "absdepth0 = %d, branch = %d, level_type = %d, "
                   "type_name = %s" EOL EOL,
-            you.your_level, (int) you.where_are_you, (int) you.level_type,
+            you.absdepth0, (int) you.where_are_you, (int) you.level_type,
             you.level_type_name.c_str());
 
     std::string place = level_id::current().describe();

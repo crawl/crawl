@@ -116,7 +116,7 @@ struct mgen_data
               monster_type base = MONS_NO_MONSTER,
               int monnumber = 0,
               int moncolour = BLACK,
-              int monpower = you.your_level,
+              int monpower = you.absdepth0,
               proximity_type prox = PROX_ANYWHERE,
               level_area_type ltype = you.level_type,
               int mhd = 0, int mhp = 0,
@@ -165,7 +165,7 @@ struct mgen_data
     {
         return mgen_data(mt, BEH_HOSTILE, 0, abj, st, p,
                          alert ? MHITYOU : MHITNOT,
-                         monflags, god, base, 0, BLACK, you.your_level,
+                         monflags, god, base, 0, BLACK, you.absdepth0,
                          PROX_ANYWHERE, you.level_type, 0, 0, 0, "", summoner);
     }
 };

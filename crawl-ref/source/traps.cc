@@ -444,7 +444,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             else
             {
                 mpr("A huge blade swings out and slices into you!");
-                const int damage = (you.your_level * 2) + random2avg(29, 2)
+                const int damage = (you.absdepth0 * 2) + random2avg(29, 2)
                     - random2(1 + you.armour_class());
                 ouch(damage, NON_MONSTER, KILLED_BY_TRAP, "blade");
                 bleed_onto_floor(you.pos(), MONS_PLAYER, damage, true);
@@ -679,7 +679,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
 int trap_def::max_damage(const actor& act)
 {
-    int level = you.your_level;
+    int level = you.absdepth0;
 
     // Trap damage to monsters is not a function of level, because
     // they are fairly stupid and tend to have fewer hp than
@@ -808,11 +808,11 @@ void disarm_trap(const coord_def& where)
 
     // Make the actual attempt
     you.turn_is_over = true;
-    if (random2(you.skills[SK_TRAPS_DOORS] + 2) <= random2(you.your_level + 5))
+    if (random2(you.skills[SK_TRAPS_DOORS] + 2) <= random2(you.absdepth0 + 5))
     {
         mpr("You failed to disarm the trap.");
-        if (random2(you.dex) > 5 + random2(5 + you.your_level))
-            exercise(SK_TRAPS_DOORS, 1 + random2(you.your_level / 5));
+        if (random2(you.dex) > 5 + random2(5 + you.absdepth0))
+            exercise(SK_TRAPS_DOORS, 1 + random2(you.absdepth0 / 5));
         else
         {
             if (trap.type == TRAP_NET && trap.pos != you.pos())
@@ -834,7 +834,7 @@ void disarm_trap(const coord_def& where)
     {
         mpr("You have disarmed the trap.");
         trap.disarm();
-        exercise(SK_TRAPS_DOORS, 1 + random2(5) + (you.your_level/5));
+        exercise(SK_TRAPS_DOORS, 1 + random2(5) + (you.absdepth0/5));
     }
 }
 
@@ -1184,7 +1184,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
         int damage_taken =
             std::max(this->shot_damage(act) - random2(act.armour_class()+1),0);
 
-        int trap_hit = (20 + (you.your_level*2)) * random2(200) / 100;
+        int trap_hit = (20 + (you.absdepth0*2)) * random2(200) / 100;
 
         if (act.atype() == ACT_PLAYER)
         {
@@ -1321,7 +1321,7 @@ bool is_valid_shaft_level(const level_id &place)
 
     // Shafts are now allowed on the first two levels,
     // as they have a good chance of being detected.
-    /* if (place == BRANCH_MAIN_DUNGEON && you.your_level < 2)
+    /* if (place == BRANCH_MAIN_DUNGEON && you.absdepth0 < 2)
         return (false); */
 
     // Don't generate shafts in branches where teleport control

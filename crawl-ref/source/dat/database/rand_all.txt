@@ -348,6 +348,8 @@ the Jolly
 the Ancient
 
 the Exiled
+
+the Illusory
 %%%%
 thing_names
 

@@ -19,6 +19,7 @@
 #include "random.h"
 #include "random-weight.h"
 #include "state.h"
+#include "stuff.h"
 #include "terrain.h"
 
 bool player::blink_to(const coord_def& dest, bool quiet)
@@ -29,7 +30,7 @@ bool player::blink_to(const coord_def& dest, bool quiet)
     if (dest == pos())
         return (false);
     if (!quiet)
-        mpr("You blink.");
+        canned_msg(MSG_YOU_BLINK);
     const coord_def origin = pos();
     if (!move_player_to_grid(dest, false, true, true))
         return (false);

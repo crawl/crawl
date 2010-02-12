@@ -189,6 +189,7 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
         { "*TELE",  ARTP_CAUSE_TELEPORTATION,   2 },
         { "Hunger", ARTP_METABOLISM,            2 }, // handled specially
         { "Noisy",  ARTP_NOISES,                2 },
+        { "Slow",   ARTP_PONDEROUS,             2 },
 
         // Evokable abilities come second
         { "+Blink", ARTP_BLINK,                 2 },
@@ -408,7 +409,8 @@ static std::string _randart_descrip( const item_def &item )
         { ARTP_PREVENT_TELEPORTATION, "It prevents most forms of teleportation.",
           false},
         { ARTP_ANGRY,  "It makes you angry.", false},
-        { ARTP_CURSED, "It may recurse itself.", false}
+        { ARTP_CURSED, "It may recurse itself.", false},
+        { ARTP_PONDEROUS, "It slows your movement.", false},
     };
 
     for (unsigned i = 0; i < ARRAYSZ(propdescs); ++i)
@@ -3234,7 +3236,7 @@ static std::string _religion_help(god_type god)
         int halo_size = you.halo_radius();
         if (halo_size > 0)
         {
-            result += "You radiate a ";
+            result += " You radiate a ";
 
             if (halo_size > 6)
                 result += "large ";
@@ -3264,6 +3266,15 @@ static std::string _religion_help(god_type god)
         {
             result += "You can pray at an altar to have your weapon "
                       "corrupted.";
+        }
+        break;
+
+    case GOD_KIKUBAAQUDGHA:
+        if (!player_under_penance() && you.piety > 160
+            && !you.num_gifts[god])
+        {
+            result += "You can pray at an altar to have your necromancy "
+                      "enhanced.";
         }
         break;
 

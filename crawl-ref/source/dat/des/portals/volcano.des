@@ -94,7 +94,7 @@ function volcano_portal (e)
         dst = "volcano",
         dstname_abbrev = "Volcano",
         dstorigin = "in a volcano",
-        overmap = "dark tunnel",
+        overview = "dark tunnel",
         turns = timeout_turns,
         msg = messager })
     e.kfeat("O = enter_portal_vault")

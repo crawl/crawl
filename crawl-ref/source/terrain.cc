@@ -14,6 +14,7 @@
 
 #include "cloud.h"
 #include "coordit.h"
+#include "dgn-overview.h"
 #include "dgnevent.h"
 #include "directn.h"
 #include "map_knowledge.h"
@@ -29,7 +30,6 @@
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "ouch.h"
-#include "overmap.h"
 #include "player.h"
 #include "random.h"
 #include "religion.h"

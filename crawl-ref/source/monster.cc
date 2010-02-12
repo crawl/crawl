@@ -7,6 +7,7 @@
 #include "AppHdr.h"
 
 #include "areas.h"
+#include "artefact.h"
 #include "beam.h"
 #include "cloud.h"
 #include "coord.h"
@@ -2932,6 +2933,8 @@ bool monsters::has_damage_type(int dam_type)
     return (false);
 }
 
+// Whether the monster is temporarily confused.
+// False for butterflies, vapours etc.
 bool monsters::confused() const
 {
     return (mons_is_confused(this));
@@ -3677,6 +3680,9 @@ bool monsters::rot(actor *agent, int amount, int immediate, bool quiet)
 int monsters::hurt(const actor *agent, int amount, beam_type flavour,
                    bool cleanup_dead)
 {
+    if (mons_is_projectile(type))
+        return (0);
+
     if (alive())
     {
         if (amount == INSTANT_DEATH)
@@ -5193,7 +5199,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
                     int rc = create_monster(mgen_data(MONS_GIANT_SPORE,
                                                       created_behavior,
-                                                      this,
+                                                      NULL,
                                                       0,
                                                       0,
                                                       adjacent,

@@ -1299,12 +1299,21 @@ static bool is_channel_dumpworthy(msg_channel_type channel)
 
 std::string get_last_messages(int mcount)
 {
-    std::string text = EOL;
-    message_item msg;
-    // XXX: should be using iterators here
-    for (int i = 0; i < mcount && (msg = messages.get_store()[-i-1]); ++i)
+    flush_prev_message();
+
+    std::string text;
+    // XXX: should use some message_history iterator here
+    for (int i = -1; mcount > 0; --i)
+    {
+        const message_item msg = messages.get_store()[i];
+        if (!msg)
+            break;
         if (is_channel_dumpworthy(msg.channel))
+        {
             text = msg.pure_text() + EOL + text;
+            mcount--;
+        }
+    }
 
     // An extra line of clearance.
     if (!text.empty())

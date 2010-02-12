@@ -1023,7 +1023,7 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
 
     beem.name        = "potion";
     beem.colour      = potion.colour;
-    beem.type        = dchar_glyph(DCHAR_FIRED_FLASK);
+    beem.glyph       = dchar_glyph(DCHAR_FIRED_FLASK);
     beem.beam_source = MHITYOU;
     beem.thrower     = KILL_YOU_MISSILE;
     beem.is_beam     = false;
@@ -1334,7 +1334,7 @@ bool cast_fragmentation(int pow, const dist& spd)
     bolt beam;
 
     beam.flavour     = BEAM_FRAG;
-    beam.type        = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.glyph       = dchar_glyph(DCHAR_FIRED_BURST);
     beam.beam_source = MHITYOU;
     beam.thrower     = KILL_YOU;
     beam.ex_size     = 1;
@@ -1744,7 +1744,7 @@ bool cast_apportation(int pow, const coord_def& where)
 {
     if (you.trans_wall_blocking(where))
     {
-        mpr("A translucent wall is in the way.");
+        mpr("Something is in the way.");
         return (false);
     }
 

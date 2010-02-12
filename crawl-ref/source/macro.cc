@@ -483,13 +483,12 @@ static void macro_buf_add_long( keyseq actions,
 
         while (tmp.size() > 0)
         {
-            keyseq result = keymap[tmp];
-
+            macromap::const_iterator subst = keymap.find(tmp);
             // Found a macro. Add the expansion (action) of the
             // macro into the buffer.
-            if (result.size() > 0)
+            if (subst != keymap.end() && !subst->second.empty())
             {
-                macro_buf_add( result );
+                macro_buf_add(subst->second);
                 break;
             }
 
@@ -533,10 +532,12 @@ static void macro_buf_apply_command_macro( void )
     // find the longest match from the start of the buffer and replace it
     while (tmp.size() > 0)
     {
-        const keyseq &result = Macros[tmp];
+        macromap::const_iterator expansion = Macros.find(tmp);
 
-        if (result.size() > 0)
+        if (expansion != Macros.end() && !expansion->second.empty())
         {
+            const keyseq &result = expansion->second;
+
             // Found macro, remove match from front:
             for (unsigned int i = 0; i < tmp.size(); i++)
             {

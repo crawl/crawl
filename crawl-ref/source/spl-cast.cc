@@ -61,6 +61,7 @@
 #include "tutorial.h"
 #include "view.h"
 #include "shout.h"
+#include "colour.h"
 
 static bool _surge_identify_boosters(spell_type spell)
 {
@@ -133,13 +134,13 @@ static void _surge_power(spell_type spell)
     }
 }
 
-static std::string _spell_base_description(spell_type spell, bool grey = false)
+static std::string _spell_base_description(spell_type spell, bool unavail = false)
 {
     std::ostringstream desc;
 
-    if (grey)
-        desc << "<darkgrey>";
-    desc << std::left;
+    int highlight =  spell_highlight_by_utility(spell, LIGHTGRAY, true);
+
+    desc << "<" << colour_to_str(highlight) << ">" << std::left;
 
     // spell name
     desc << std::setw(30) << spell_title(spell);
@@ -147,26 +148,26 @@ static std::string _spell_base_description(spell_type spell, bool grey = false)
     // spell schools
     desc << spell_schools_string(spell);
 
-    const int so_far = desc.str().length() - (grey ? 10 : 0);
+    const int so_far = desc.str().length() - (name_length_by_colour(highlight)+2);
     if (so_far < 60)
         desc << std::string(60 - so_far, ' ');
 
     // spell fail rate, level
     desc << std::setw(12) << failure_rate_to_string(spell_fail(spell))
          << spell_difficulty(spell);
-    if (grey)
-        desc << "</darkgrey>";
+    desc << "</" << colour_to_str(highlight) <<">";
 
     return desc.str();
 }
 
-static std::string _spell_extra_description(spell_type spell, bool grey = false)
+static std::string _spell_extra_description(spell_type spell, bool unavail = false)
 {
     std::ostringstream desc;
 
-    if (grey)
-        desc << "<darkgrey>";
-    desc << std::left;
+//    int highlight =  unavail ? COL_INAPPLICABLE : spell_highlight_by_utility(spell);
+    int highlight =  spell_highlight_by_utility(spell, LIGHTGRAY, true);
+
+    desc << "<" << colour_to_str(highlight) << ">" << std::left;
 
     // spell name
     desc << std::setw(30) << spell_title(spell);
@@ -179,60 +180,9 @@ static std::string _spell_extra_description(spell_type spell, bool grey = false)
          << std::setw(12) << spell_hunger_string(spell)
          << spell_difficulty(spell);
 
-    if (grey)
-        desc << "</darkgrey>";
+    desc << "</" << colour_to_str(highlight) <<">";
 
     return desc.str();
-}
-
-static bool _spell_no_hostile_in_range(spell_type spell, int minRange)
-{
-    if (minRange < 0)
-        return (false);
-
-    bool bonus = 0;
-    switch (spell)
-    {
-    // These don't target monsters.
-    case SPELL_APPORTATION:
-    case SPELL_PROJECTED_NOISE:
-    case SPELL_CONJURE_FLAME:
-    case SPELL_DIG:
-    case SPELL_PASSWALL:
-
-    // Airstrike has LOS_RANGE and can go through glass walls.
-    case SPELL_AIRSTRIKE:
-
-    // These bounce and may be aimed elsewhere to bounce at monsters
-    // outside range (I guess).
-    case SPELL_SHOCK:
-    case SPELL_LIGHTNING_BOLT:
-        return (false);
-
-    case SPELL_EVAPORATE:
-    case SPELL_MEPHITIC_CLOUD:
-    case SPELL_FIREBALL:
-    case SPELL_FREEZING_CLOUD:
-    case SPELL_POISONOUS_CLOUD:
-        // Increase range by one due to cloud radius.
-        bonus = 1;
-        break;
-    default:
-        break;
-    }
-
-    // The healing spells.
-    if (testbits(get_spell_flags(spell), SPFLAG_HELPFUL))
-        return (false);
-
-    const int range = calc_spell_range(spell);
-    if (range < 0)
-        return (false);
-
-    if (range + bonus < minRange)
-        return (true);
-
-    return (false);
 }
 
 int list_spells(bool toggle_with_I, bool viewing, int minRange,
@@ -287,30 +237,19 @@ int list_spells(bool toggle_with_I, bool viewing, int minRange,
     more_str += "to toggle spell view.";
     spell_menu.set_more(formatted_string(more_str));
 
+    // XXX: This value has been made *completely* redundant
+    // ...except that selector wants to futz with it, below.
     bool grey = false; // Needs to be greyed out?
+
     for (int i = 0; i < 52; ++i)
     {
         const char letter = index_to_letter(i);
         const spell_type spell = get_spell_by_letter(letter);
 
-        // If an equipped artefact prevents teleportation, the following spells
-        // cannot be cast.
-        if ((spell == SPELL_BLINK || spell == SPELL_CONTROLLED_BLINK
-                 || spell == SPELL_TELEPORT_SELF)
-             && scan_artefacts(ARTP_PREVENT_TELEPORTATION, false))
-        {
-            grey = true;
-        }
-        else if (!viewing)
-        {
-            if (spell_mana(spell) > you.magic_points
-                || _spell_no_hostile_in_range(spell, minRange))
-            {
-                grey = true;
-            }
-            else
-                grey = false;
-        }
+//        unavailable = !viewing && spell_no_hostile_in_range(spell, minRange);
+
+        // TODO: identify wth 'selector' is, and what
+        // exactly this bit below does with it
         if (is_valid_spell(spell) && selector
             && !(*selector)(spell, grey))
             continue;
@@ -318,14 +257,13 @@ int list_spells(bool toggle_with_I, bool viewing, int minRange,
         if (spell != SPELL_NO_SPELL)
         {
             ToggleableMenuEntry* me =
-                new ToggleableMenuEntry(_spell_base_description(spell, grey),
-                                        _spell_extra_description(spell, grey),
+                new ToggleableMenuEntry(_spell_base_description(spell),
+                                        _spell_extra_description(spell),
                                         MEL_ITEM, 1, letter);
 
 #ifdef USE_TILE
             me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
 #endif
-
             spell_menu.add_entry(me);
         }
     }
@@ -600,33 +538,6 @@ void do_cast_spell_cmd(bool force)
         flush_input_buffer(FLUSH_ON_FAILURE);
 }
 
-
-static int _get_dist_to_nearest_monster()
-{
-    int minRange = LOS_RADIUS + 1;
-    for (radius_iterator ri(&you.get_los_no_trans(), true); ri; ++ri)
-    {
-        const monsters *mon = monster_at(*ri);
-        if (mon == NULL)
-            continue;
-
-        if (!mon->visible_to(&you) || mons_is_unknown_mimic(mon))
-            continue;
-
-        // Plants/fungi don't count.
-        if (mons_class_flag(mon->type, M_NO_EXP_GAIN))
-            continue;
-
-        if (mon->wont_attack())
-            continue;
-
-        int dist = grid_distance(you.pos(), *ri);
-        if (dist < minRange)
-            minRange = dist;
-    }
-    return (minRange);
-}
-
 // Returns false if spell failed, and true otherwise.
 bool cast_a_spell(bool check_range, spell_type spell)
 {
@@ -651,7 +562,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         return (false);
     }
 
-    const int minRange = _get_dist_to_nearest_monster();
+    const int minRange = get_dist_to_nearest_monster();
 
     if (spell == SPELL_NO_SPELL)
     {
@@ -715,7 +626,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         return (false);
     }
 
-    if (check_range && _spell_no_hostile_in_range(spell, minRange))
+    if (check_range && spell_no_hostile_in_range(spell, minRange))
     {
         // Abort if there are no hostiles within range, but flash the range
         // markers for about half a second.

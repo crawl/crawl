@@ -35,6 +35,7 @@
 #include "food.h"
 #include "godabil.h"
 #include "goditem.h"
+#include "godpassive.h"
 #include "invent.h"
 #include "it_use2.h"
 #include "it_use3.h"
@@ -48,6 +49,7 @@
 #include "mon-behv.h"
 #include "mon-util.h"
 #include "mon-place.h"
+#include "mutation.h"
 #include "terrain.h"
 #include "mgen_data.h"
 #include "coord.h"
@@ -175,7 +177,8 @@ bool can_wield(item_def *weapon, bool say_reason,
         return (false);
     }
 
-    if (you.hunger_state < HS_FULL
+    if (!ignore_temporary_disability
+        && you.hunger_state < HS_FULL
         && you.hunger < you_max_hunger() - 500 // ghouls
         && get_weapon_brand(*weapon) == SPWPN_VAMPIRICISM
         && you.species != SP_VAMPIRE && you.species != SP_MUMMY)
@@ -1736,13 +1739,30 @@ static bool _item_penetrates_victim(const bolt &beam, const actor *victim,
 static bool _silver_damages_victim(bolt &beam, actor* victim, int &dmg,
                                    std::string &dmg_msg)
 {
-    if (victim->holiness() == MH_UNDEAD || victim->is_chaotic())
+    const int mutated = how_mutated(true, true);
+
+    if (victim->holiness() == MH_UNDEAD
+        || victim->is_chaotic()
+        || (victim == &you && player_is_shapechanged()))
     {
         dmg *= 2;
-
-        if (!beam.is_tracer && you.can_see(victim))
-           dmg_msg = "The silver sears " + victim->name(DESC_NOCAP_THE) + "!";
     }
+    else if (victim == &you && mutated > 0)
+    {
+        int multiplier = 100 + (mutated * 5);
+
+        if (multiplier > 200)
+            multiplier = 200;
+
+        dmg = (dmg * multiplier) / 100;
+    }
+    else
+    {
+        return (false);
+    }
+
+    if (!beam.is_tracer && you.can_see(victim))
+       dmg_msg = "The silver sears " + victim->name(DESC_NOCAP_THE) + "!";
 
     return (false);
 }
@@ -1815,7 +1835,7 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
         place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), KC_YOU);
 
         victim->moveto(pos);
-        mpr("You blink!");
+        canned_msg(MSG_YOU_BLINK);
     }
     else
     {
@@ -2053,7 +2073,7 @@ static bool _rage_hit_victim (bolt &beam, actor* victim, int dmg,
 bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
                         std::string &ammo_name, bool &returning)
 {
-    dungeon_char_type zapsym = DCHAR_SPACE;
+    dungeon_char_type zapsym = NUM_DCHAR_TYPES;
     switch (item.base_type)
     {
     case OBJ_WEAPONS:    zapsym = DCHAR_FIRED_WEAPON;  break;
@@ -2071,7 +2091,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     default: break;
     }
 
-    beam.type = dchar_glyph(zapsym);
+    beam.glyph = dchar_glyph(zapsym);
     beam.was_missile = true;
 
     returning = get_weapon_brand(item) == SPWPN_RETURNING
@@ -2094,11 +2114,12 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         beam.thrower       = KILL_MON_MISSILE;
     }
 
-    beam.item     = &item;
-    beam.source   = agent->pos();
-    beam.colour   = item.colour;
-    beam.flavour  = BEAM_MISSILE;
-    beam.is_beam  = false;
+    beam.item         = &item;
+    beam.effect_known = item_ident(item, ISFLAG_KNOW_TYPE);
+    beam.source       = agent->pos();
+    beam.colour       = item.colour;
+    beam.flavour      = BEAM_MISSILE;
+    beam.is_beam      = false;
     beam.aux_source.clear();
 
     beam.can_see_invis = agent->can_see_invisible();
@@ -2354,7 +2375,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     {
         returning = false;
 
-        beam.type = dchar_glyph(DCHAR_FIRED_BOLT);
+        beam.glyph = dchar_glyph(DCHAR_FIRED_BOLT);
     }
 
     if (!is_artefact(item))
@@ -2619,6 +2640,12 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     // For the tracer, use max_range. For the actual shot, use range.
     pbolt.range = max_range;
 
+    // Save the special explosion (exploding missiles) for later.
+    // Need to clear this if unknown to avoid giving away the explosion.
+    bolt* expl = pbolt.special_explosion;
+    if (!pbolt.effect_known)
+        pbolt.special_explosion = NULL;
+
     // Don't do the tracing when using Portaled Projectile, or when confused.
     if (!teleport && !you.confused())
     {
@@ -2650,8 +2677,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     }
     pbolt.is_tracer = false;
 
-    // Use real range for firing.
+    // Reset values.
     pbolt.range = range;
+    pbolt.special_explosion = expl;
 
     bool unwielded = false;
     if (throw_2 == you.equip[EQ_WEAPON] && thrown.quantity == 1)
@@ -4594,6 +4622,15 @@ void prompt_inscribe_item()
     inscribe_item(you.inv[item_slot], true);
 }
 
+static void _vampire_corpse_help()
+{
+    if (you.species != SP_VAMPIRE)
+        return;
+
+    if (check_blood_corpses_on_ground() || count_corpses_in_pack(true) > 0)
+        mpr("If it's blood you're after, try <w>e</w>.");
+}
+
 void drink(int slot)
 {
     if (you.is_undead == US_UNDEAD)
@@ -4613,6 +4650,7 @@ void drink(int slot)
     if (inv_count() == 0)
     {
         canned_msg(MSG_NOTHING_CARRIED);
+        _vampire_corpse_help();
         return;
     }
 
@@ -4625,6 +4663,7 @@ void drink(int slot)
     if (player_in_bat_form())
     {
        canned_msg(MSG_PRESENT_FORM);
+        _vampire_corpse_help();
        return;
     }
 
@@ -4635,14 +4674,20 @@ void drink(int slot)
                                   true, true, true, 0, -1, NULL,
                                   OPER_QUAFF);
         if (prompt_failed(slot))
+        {
+            _vampire_corpse_help();
             return;
+        }
     }
 
     item_def& potion = you.inv[slot];
 
     if (potion.base_type != OBJ_POTIONS)
     {
-        mpr("You can't drink that!");
+        if (you.species == SP_VAMPIRE && potion.base_type == OBJ_CORPSES)
+            eat_food(slot);
+        else
+            mpr("You can't drink that!");
         return;
     }
 
@@ -5815,6 +5860,12 @@ void use_artefact(item_def &item, bool *show_msgs, bool unmeld)
                  "nimbler" : "more awkward");
             artefact_wpn_learn_prop(item, ARTP_EVASION);
         }
+    }
+
+    if (proprt[ARTP_PONDEROUS])
+    {
+        mpr("You feel rather ponderous.");
+        che_handle_change(CB_PONDEROUS, 1);
     }
 
     if (proprt[ARTP_MAGICAL_POWER] && !known[ARTP_MAGICAL_POWER])

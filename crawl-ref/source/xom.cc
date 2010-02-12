@@ -2058,7 +2058,7 @@ static int _xom_throw_divine_lightning(bool debug = false)
     bolt beam;
 
     beam.flavour      = BEAM_ELECTRICITY;
-    beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
     beam.damage       = dice_def(3, 30);
     beam.target       = you.pos();
     beam.name         = "blast of lightning";
@@ -2378,19 +2378,21 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
     else if (tension < random2(5) && x_chance_in_y(6, sever))
         done = _xom_change_scenery(debug);
     else if (x_chance_in_y(7, sever))
+        done = _xom_snakes_to_sticks(sever, debug);
+    else if (x_chance_in_y(8, sever))
         done = _xom_give_item(sever, debug);
     // It's pointless to send in help if there's no danger.
-    else if (tension > random2(10) && x_chance_in_y(8, sever))
+    else if (tension > random2(10) && x_chance_in_y(9, sever))
         done = _xom_send_allies(sever, debug);
-    else if (tension > random2(8) && x_chance_in_y(9, sever))
+    else if (tension > random2(8) && x_chance_in_y(10, sever))
         done = _xom_animate_monster_weapon(sever, debug);
-    else if (x_chance_in_y(10, sever))
+    else if (x_chance_in_y(11, sever))
         done = _xom_polymorph_nearby_monster(true, debug);
-    else if (tension > 0 && x_chance_in_y(11, sever))
+    else if (tension > 0 && x_chance_in_y(12, sever))
         done = _xom_rearrange_pieces(sever, debug);
-    else if (random2(tension) < 15 && x_chance_in_y(12, sever))
+    else if (random2(tension) < 15 && x_chance_in_y(13, sever))
         done = _xom_give_item(sever, debug);
-    else if (x_chance_in_y(13, sever) && you.level_type != LEVEL_ABYSS)
+    else if (you.level_type != LEVEL_ABYSS && x_chance_in_y(14, sever))
     {
         // Try something else if teleportation is impossible.
         if (!_teleportation_check())
@@ -2433,7 +2435,7 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
         take_note(Note(NOTE_XOM_EFFECT, you.piety, tension, tele_buf), true);
         done = XOM_GOOD_TELEPORT;
     }
-    else if (random2(tension) < 5 && x_chance_in_y(14, sever))
+    else if (random2(tension) < 5 && x_chance_in_y(15, sever))
     {
         if (debug)
             return (XOM_GOOD_VITRIFY);
@@ -2447,18 +2449,16 @@ static int _xom_is_good(int sever, int tension, bool debug = false)
             done = XOM_GOOD_VITRIFY;
         }
     }
-    else if (random2(tension) < 5 && x_chance_in_y(15, sever)
+    else if (random2(tension) < 5 && x_chance_in_y(16, sever)
              && x_chance_in_y(16, how_mutated()))
     {
         done = _xom_give_mutations(true, debug);
     }
     // It's pointless to send in help if there's no danger.
-    else if (tension > random2(15) && x_chance_in_y(16, sever))
+    else if (tension > random2(15) && x_chance_in_y(17, sever))
         done = _xom_send_major_ally(sever, debug);
-    else if (tension > 0 && x_chance_in_y(17, sever))
+    else if (tension > 0 && x_chance_in_y(18, sever))
         done = _xom_throw_divine_lightning(debug);
-    else if (x_chance_in_y(18, sever))
-        done = _xom_snakes_to_sticks(sever, debug);
 
     return (done);
 }
@@ -3206,7 +3206,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
 
     beam.range   = INFINITE_DISTANCE;
     beam.flavour = BEAM_VISUAL;
-    beam.type    = feat_def.symbol;
+    beam.glyph   = feat_def.symbol;
     beam.colour  = feat_def.colour;
     beam.source  = stair_pos;
     beam.target  = ray.pos();
@@ -3496,7 +3496,7 @@ static int _xom_maybe_reverts_banishment(bool debug = false)
         {
             more();
             god_speaks(GOD_XOM, _get_xom_speech("revert banishment").c_str());
-            down_stairs(you.your_level, DNGN_EXIT_ABYSS);
+            down_stairs(you.absdepth0, DNGN_EXIT_ABYSS);
             take_note(Note(NOTE_XOM_EFFECT, you.piety, -1,
                            "revert banishment"), true);
         }

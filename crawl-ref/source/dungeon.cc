@@ -2469,7 +2469,7 @@ static void _place_minivaults(const std::string &tag, int lo, int hi,
             if (!vault)
                 return;
 
-            _build_secondary_vault(you.your_level, vault);
+            _build_secondary_vault(you.absdepth0, vault);
         }
         return;
     }
@@ -2479,13 +2479,13 @@ static void _place_minivaults(const std::string &tag, int lo, int hi,
         const map_def *vault = NULL;
 
         if ((vault = random_map_for_place(level_id::current(), true)))
-            _build_secondary_vault(you.your_level, vault);
+            _build_secondary_vault(you.absdepth0, vault);
 
         do
         {
             vault = random_map_in_depth(level_id::current(), true);
             if (vault)
-                _build_secondary_vault(you.your_level, vault);
+                _build_secondary_vault(you.absdepth0, vault);
         }
         while (vault && vault->has_tag("extra"));
     }
@@ -3055,7 +3055,7 @@ static void _place_extra_vaults()
             if (!vault || vault->orient == MAP_ENCOMPASS)
                 break;
 
-            if (vault && _build_secondary_vault(you.your_level, vault, -1))
+            if (vault && _build_secondary_vault(you.absdepth0, vault, -1))
             {
                 const map_def &map(*vault);
                 if (map.has_tag("extra"))
@@ -3382,13 +3382,31 @@ static bool _make_room(int sx,int sy,int ex,int ey,int max_doors, int doorlevel)
 
 static bool _place_unique_map(const map_def *uniq_map)
 {
-    // If the map is guaranteed to not affect connectivity, allow it to
-    // overwrite existing vaults.
-    const bool clobber = uniq_map->has_tag("transparent");
+    // If the unique map is guaranteed to not affect connectivity,
+    // allow it to overwrite existing vaults by temporarily
+    // suppressing dgn_Map_Mask.
+    const bool transparent = uniq_map->has_tag("transparent");
+    std::auto_ptr<map_mask> backup_mask;
+    if (transparent)
+    {
+        backup_mask.reset(new map_mask(dgn_Map_Mask));
+        dgn_Map_Mask.init(0);
+    }
+
+    bool placed = false;
     for (int i = 0; i < 4; i++)
-        if (dgn_place_map(uniq_map, clobber, false))
-            return (true);
-    return (false);
+    {
+        if (dgn_place_map(uniq_map, false, false))
+        {
+            placed = true;
+            break;
+        }
+    }
+
+    if (transparent)
+        dgn_Map_Mask = *backup_mask;
+
+    return (placed);
 }
 
 // Place uniques on the level.
@@ -4285,7 +4303,7 @@ bool dgn_place_map(const map_def *mdef,
 
     if (rune_subst == -1 && mdef->has_tag_suffix("_entry"))
         rune_subst = _dgn_find_rune_subst_tags(mdef->tags);
-    did_map = _build_secondary_vault(you.your_level, mdef, rune_subst,
+    did_map = _build_secondary_vault(you.absdepth0, mdef, rune_subst,
                                      clobber, make_no_exits, where);
 
     // Activate any markers within the map.
@@ -5642,7 +5660,7 @@ static dungeon_feature_type _pick_an_altar()
 static void _place_altars()
 {
     // No altars before level 5.
-    if (you.your_level < 4)
+    if (you.absdepth0 < 4)
         return;
 
     if (you.level_type == LEVEL_DUNGEON)
@@ -6508,7 +6526,7 @@ static void _labyrinth_place_items(const coord_def &end)
 
         const int treasure_item =
             items( 1, glopop, OBJ_RANDOM, true,
-                   one_chance_in(3)? you.your_level * 3 : MAKE_GOOD_ITEM,
+                   one_chance_in(3)? you.absdepth0 * 3 : MAKE_GOOD_ITEM,
                    MAKE_ITEM_RANDOM_RACE );
 
         if (treasure_item != NON_ITEM)

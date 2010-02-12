@@ -250,6 +250,11 @@ function util.range(start, stop)
   return rt
 end
 
+-- From http://lua-users.org/wiki/CommonFunctions
+function util.trim(s)
+  return (s:gsub("^%s*(.-)%s*$", "%1"))
+end
+
 ----------------------------------------------------------
 
 util.Timer = { CLASS = "Timer" }

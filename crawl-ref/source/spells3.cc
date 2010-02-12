@@ -125,6 +125,18 @@ bool cast_selective_amnesia(bool force)
     return (true);
 }
 
+static void _maybe_mark_was_cursed(item_def &item)
+{
+    if (Options.autoinscribe_cursed
+        && item.inscription.find("was cursed") == std::string::npos
+        && !item_ident(item, ISFLAG_SEEN_CURSED)
+        && !item_ident(item, ISFLAG_IDENT_MASK))
+    {
+        add_inscription(item, "was cursed");
+    }
+    do_uncurse_item(item);
+}
+
 bool remove_curse(bool suppress_msg)
 {
     bool success = false;
@@ -135,13 +147,7 @@ bool remove_curse(bool suppress_msg)
         && you.weapon()->cursed())
     {
         // Also sets wield_change.
-        do_uncurse_item(*you.weapon());
-        if (Options.autoinscribe_cursed)
-            if (you.weapon()->inscription.find("was cursed") == std::string::npos
-                && !item_ident(*you.weapon(), ISFLAG_IDENT_MASK))
-            {
-                add_inscription(*you.weapon(), "was cursed");
-            }
+        _maybe_mark_was_cursed(*you.weapon());
         success = true;
     }
 
@@ -152,13 +158,7 @@ bool remove_curse(bool suppress_msg)
         // Melded equipment can also get uncursed this way.
         if (you.equip[i] != -1 && you.inv[you.equip[i]].cursed())
         {
-            do_uncurse_item(you.inv[you.equip[i]]);
-            if (Options.autoinscribe_cursed)
-                if (you.inv[you.equip[i]].inscription.find("was cursed") == std::string::npos
-                    && !item_ident(you.inv[you.equip[i]], ISFLAG_IDENT_MASK))
-                {
-                    add_inscription(you.inv[you.equip[i]], "was cursed");
-                }
+            _maybe_mark_was_cursed(you.inv[you.equip[i]]);
             success = true;
         }
     }
@@ -1398,9 +1398,7 @@ bool allow_control_teleport(bool quiet)
 void you_teleport(void)
 {
     if (item_blocks_teleport(true, true))
-    {
-        mpr("You feel a weird sense of stasis.");
-    }
+        canned_msg(MSG_WEIRD_STASIS);
     else if (you.duration[DUR_TELEPORT])
     {
         mpr("You feel strangely stable.");
@@ -1511,7 +1509,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
 
     if (item_blocks_teleport(true, true) && !wizard_tele)
     {
-        mpr("You feel a strange sense of stasis.");
+        canned_msg(MSG_WEIRD_STASIS);
         return (false);
     }
 
@@ -2039,14 +2037,14 @@ int portal()
         switch ( keyin )
         {
         case '<':
-            if (you.your_level == 0)
+            if (you.absdepth0 == 0)
                 mpr("You can't go any further upwards with this spell.");
             else
                 dir_sign = -1;
             break;
 
         case '>':
-            if (you.your_level + 1 == your_branch().depth)
+            if (you.absdepth0 + 1 == your_branch().depth)
                 mpr("You can't go any further downwards with this spell.");
             else
                 dir_sign = 1;
@@ -2080,8 +2078,8 @@ int portal()
         "foot of a staircase.");
     more();
 
-    const int old_level = you.your_level;
-    you.your_level = std::max(0, std::min(26, you.your_level + amount)) - 1;
+    const int old_level = you.absdepth0;
+    you.absdepth0 = std::max(0, std::min(26, you.absdepth0 + amount)) - 1;
     down_stairs(old_level, DNGN_STONE_STAIRS_DOWN_I);
 
     return (1);

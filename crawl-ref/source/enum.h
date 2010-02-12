@@ -112,7 +112,10 @@ enum ability_type
     ABIL_CHEIBRIADOS_TIME_BEND,
     ABIL_CHEIBRIADOS_SLOUCH,
 
+    // Vampire abilities
     ABIL_TRAN_BAT = 260,
+    ABIL_BOTTLE_BLOOD,
+
     ABIL_HARM_PROTECTION,
     ABIL_HARM_PROTECTION_II,                //  262
     ABIL_RENOUNCE_RELIGION = 270            //  270
@@ -389,7 +392,9 @@ enum canned_message_type
     MSG_UNTHINKING_ACT,
     MSG_SPELL_FIZZLES,
     MSG_HUH,
-    MSG_EMPTY_HANDED
+    MSG_EMPTY_HANDED,
+    MSG_YOU_BLINK,
+    MSG_WEIRD_STASIS
 };
 
 enum char_set_type
@@ -1401,7 +1406,7 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
 
     ISFLAG_CURSED            = 0x00000100,  // cursed
     ISFLAG_BLESSED_WEAPON    = 0x00000200,  // personalized TSO's gift
-    ISFLAG_RESERVED_2        = 0x00000400,  // reserved
+    ISFLAG_SEEN_CURSED       = 0x00000400,  // was seen being cursed
     ISFLAG_RESERVED_3        = 0x00000800,  // reserved
 
     ISFLAG_RANDART           = 0x00001000,  // special value is seed
@@ -2343,6 +2348,8 @@ enum mon_spellbook_type
     MST_MARA_FAKE,
     MST_MERFOLK_AQUAMANCER,
     MST_ALLIGATOR,
+    MST_BORIS,
+    MST_FREDERICK,
 
     MST_TEST_SPAWNER = 200,
     NUM_MSTYPES,
@@ -2590,6 +2597,7 @@ enum artefact_prop_type
     ARTP_CURSED,
     ARTP_STEALTH,
     ARTP_MAGICAL_POWER,
+    ARTP_PONDEROUS,
     ARTP_NUM_PROPERTIES
 };
 

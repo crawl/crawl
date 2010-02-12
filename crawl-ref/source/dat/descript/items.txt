@@ -26,8 +26,8 @@ wearer of the benefits of levitation.
 %%%%
 amulet of guardian spirit
 
-This amulet makes its wearer immune to damage, draining magical power
-instead.  Should the reserves of magic be depleted, the spirit will
+This amulet makes its wearer immune to external damage, draining magical
+power instead.  Should the reserves of magic be depleted, the spirit will
 fail to provide its protection until more power is available.
 %%%%
 amulet of inaccuracy

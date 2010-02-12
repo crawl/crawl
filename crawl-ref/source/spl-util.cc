@@ -34,7 +34,11 @@
 #include "religion.h"
 #include "spells4.h"
 #include "spl-cast.h"
+#include "spl-book.h"
 #include "terrain.h"
+#include "itemprop.h"
+#include "item_use.h"
+#include "transform.h"
 
 
 struct spell_desc
@@ -1039,3 +1043,190 @@ spell_type zap_type_to_spell(zap_type zap)
     }
     return SPELL_NO_SPELL;
 }
+
+bool spell_is_useful(spell_type spell)
+{
+    if (you_cannot_memorise(spell) || god_hates_spell(spell, you.religion))
+        return (false);
+    if (you.duration[DUR_CONF] > 0)
+        return (false);
+
+    // due to the way this function is used, you should generally try to be
+    // fairly specific about the circumstances in which a spell is "useful".
+    switch (spell)
+    {
+    case SPELL_SWIFTNESS:
+        // looking at player_movement_speed, this should be correct ~DMB
+        if (player_movement_speed() > 6
+            && you.duration[DUR_CONTROLLED_FLIGHT] > 0
+            && you.duration[DUR_SWIFTNESS]  < 1)
+            return (true);
+        break;
+    case SPELL_CONTROL_TELEPORT:
+        if (you.duration[DUR_TELEPORT] > 0
+            && you.duration[DUR_CONTROL_TELEPORT] < 1)
+            return (true);
+        break;
+    case SPELL_STONESKIN:
+        if (you.duration[DUR_TRANSFORMATION] > 0
+            && you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE
+            && you.duration[DUR_STONESKIN] < 1)
+            return (true);
+        break;
+    case SPELL_OZOCUBUS_ARMOUR:
+        if (you.duration[DUR_TRANSFORMATION] > 0
+            && you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST
+            && you.duration[DUR_ICY_ARMOUR] < 1)
+            return (true);
+        break;
+    default: // quash unhandled constants warnings
+        break;
+    }
+
+    return (false);
+}
+
+// This function attempts to determine if 'spell' is useless to
+// the player. if 'transient' is true, then it will include checks
+// for volitile or temporary states (such as status effects, mana, etc.)
+//
+// its notably used by 'spell_highlight_by_utility'
+bool spell_is_useless(spell_type spell, bool transient)
+{
+    if (you_cannot_memorise(spell))
+        return (true);
+    if(transient)
+    {
+        if(you.duration[DUR_CONF] > 0
+          || (spell_mana(spell) > you.magic_points)
+          || spell_no_hostile_in_range(spell, get_dist_to_nearest_monster()))
+            return (true);
+    }
+
+    switch(spell)
+    {
+    case SPELL_BLINK:
+    case SPELL_CONTROLLED_BLINK:
+    case SPELL_TELEPORT_SELF:
+        // TODO: Its not very well behaved to do this manually, but...
+        // FIXME: somehow its not reliably realising when an amulet is
+        // IDed, and thus fails to flag TP as useless...
+        if (item_blocks_teleport(false, false) )
+            return true;
+        break;
+    case SPELL_SWIFTNESS:
+        // looking at player_movement_speed, this should be correct ~DMB
+        if(player_movement_speed() <= 6)
+            return (true);
+        break;
+    case SPELL_LEVITATION:
+    case SPELL_FLY:
+        if (you.mutation[MUT_BIG_WINGS] >= 1
+            || (you.species == SP_KENKU && you.experience_level >= 5))
+        {
+            return (true);
+        }
+        if (transient && you.duration[DUR_LEVITATION] > 0)
+            return (true);
+        break;
+    case SPELL_REGENERATION:
+        if (you.species == SP_DEEP_DWARF)
+            return (true);
+        break;
+    case SPELL_INVISIBILITY:
+        if (transient
+           && (you.duration[DUR_INVIS] > 0
+              || you.backlit() ) )
+            return (true);
+        break;
+    case SPELL_CONTROL_TELEPORT:
+        if (transient && you.duration[DUR_CONTROL_TELEPORT] > 0)
+            return (true);
+        break;
+    default:
+        break; // quash unhandled constants warnings
+    }
+
+    return (false);
+}
+
+
+// This function takes a spell, and determines what color it should be highlighted with
+// You shouldn't have to touch this unless you want to add new highlighting options.
+// as you can see, the functions it uses to determine highlights are:
+//       spell_is_useful(spell)
+//       spell_is_useless(spell, transient)
+//       god_likes_spell(spell, god)
+//       god_hates_spell(spell, god)
+int spell_highlight_by_utility(spell_type spell, int default_color, bool transient)
+{
+    // If your god hates the spell, that overrides all other concerns
+    if (god_hates_spell(spell, you.religion))
+        return (COL_FORBIDDEN);
+
+    if (god_likes_spell(spell, you.religion))
+        default_color = COL_FAVORED;
+
+    if (spell_is_useless(spell, transient))
+        default_color = COL_USELESS;
+
+    // Specific utility should override general uselessness
+    // Note: its not an issue atm, but should undead-incompatible
+    // spells be added to 'spell_is_useful()' this will not play
+    // nicely. ~ DMB
+    if (spell_is_useful(spell))
+        default_color = COL_USEFUL;
+
+    return (default_color);
+}
+
+bool spell_no_hostile_in_range(spell_type spell, int minRange)
+{
+    if (minRange < 0)
+        return (false);
+
+    bool bonus = 0;
+    switch (spell)
+    {
+    // These don't target monsters.
+    case SPELL_APPORTATION:
+    case SPELL_PROJECTED_NOISE:
+    case SPELL_CONJURE_FLAME:
+    case SPELL_DIG:
+    case SPELL_PASSWALL:
+
+    // Airstrike has LOS_RANGE and can go through glass walls.
+    case SPELL_AIRSTRIKE:
+
+    // These bounce and may be aimed elsewhere to bounce at monsters
+    // outside range (I guess).
+    case SPELL_SHOCK:
+    case SPELL_LIGHTNING_BOLT:
+        return (false);
+
+    case SPELL_EVAPORATE:
+    case SPELL_MEPHITIC_CLOUD:
+    case SPELL_FIREBALL:
+    case SPELL_FREEZING_CLOUD:
+    case SPELL_POISONOUS_CLOUD:
+        // Increase range by one due to cloud radius.
+        bonus = 1;
+        break;
+    default:
+        break;
+    }
+
+    // The healing spells.
+    if (testbits(get_spell_flags(spell), SPFLAG_HELPFUL))
+        return (false);
+
+    const int range = calc_spell_range(spell);
+    if (range < 0)
+        return (false);
+
+    if (range + bonus < minRange)
+        return (true);
+
+    return (false);
+}
+

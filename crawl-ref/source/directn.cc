@@ -110,6 +110,9 @@ static bool _find_monster( const coord_def& where, int mode, bool need_path,
 static bool _find_feature( const coord_def& where, int mode, bool need_path,
                            int range );
 
+static bool _find_fprop_unoccupied(   const coord_def& where, int mode, bool need_path,
+                           int range );
+
 #ifndef USE_TILE
 static bool _find_mlist( const coord_def& where, int mode, bool need_path,
                          int range );
@@ -401,7 +404,7 @@ void direction_chooser::describe_cell() const
         print_target_description();
         if (just_looking || (show_items_once && restricts != DIR_TARGET_OBJECT))
             print_items_description();
-        if (just_looking)
+        if (just_looking || show_floor_desc)
             print_floor_description(true);
     }
 
@@ -483,7 +486,8 @@ direction_chooser::direction_chooser(dist& moves_,
     target_prefix(args.target_prefix),
     top_prompt(args.top_prompt),
     behaviour(args.behaviour),
-    cancel_at_self(args.cancel_at_self)
+    cancel_at_self(args.cancel_at_self),
+    show_floor_desc(args.show_floor_desc)
 {
     if (!behaviour)
         behaviour = &stock_behaviour;
@@ -1203,6 +1207,14 @@ coord_def direction_chooser::find_default_target() const
             }
         }
     }
+    // Evolution can also auto-target mold squares (but shouldn't if
+    // there are any monsters to evolve), so try _find_square_wrapper
+    // again
+    if (mode == TARG_EVOLVABLE_PLANTS && !success)
+    {
+        success = _find_square_wrapper(result, 1, _find_fprop_unoccupied,
+                                       needs_path, FPROP_MOLD, range, true);
+    }
 
     if (!success)
         result = you.pos();
@@ -1376,6 +1388,9 @@ void direction_chooser::print_target_description() const
         print_target_object_description();
     else
         print_target_monster_description();
+
+    if (!in_range(target()))
+        mpr("Out of range.", MSGCH_EXAMINE_FILTER);
 }
 
 std::string direction_chooser::target_interesting_terrain_description() const
@@ -2153,7 +2168,8 @@ static bool _mons_is_valid_target(const monsters *mon, int mode, int range)
     // Monster types that you can't gain experience from don't count as
     // monsters.
     if (mode != TARG_EVOLVABLE_PLANTS
-        && mons_class_flag(mon->type, M_NO_EXP_GAIN))
+        && mons_class_flag(mon->type, M_NO_EXP_GAIN)
+        && (mon->type != MONS_BALLISTOMYCETE || mon->number == 0))
     {
         return (false);
     }
@@ -2243,6 +2259,27 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
     return (true);
 }
 #endif
+
+static bool _find_fprop_unoccupied(const coord_def & where, int mode, bool need_path,
+                          int range = -1)
+{
+    // Don't target out of range.
+    if (!_is_target_in_range(where, range))
+        return (false);
+
+    monsters * mon = monster_at(where);
+    if (mon || !in_los(where))
+        return (false);
+
+    // Monster in LOS but only via glass walls, so no direct path.
+    if (need_path && !you.see_cell_no_trans(where))
+        return (false);
+
+    if (need_path && _blocked_ray(where))
+        return (false);
+
+    return (env.pgrid(where) & mode);
+}
 
 static bool _find_monster( const coord_def& where, int mode, bool need_path,
                            int range = -1)

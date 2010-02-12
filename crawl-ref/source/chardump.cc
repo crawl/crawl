@@ -25,6 +25,7 @@
 #include "artefact.h"
 #include "debug.h"
 #include "describe.h"
+#include "dgn-overview.h"
 #include "dungeon.h"
 #include "godprayer.h"
 #include "hiscores.h"
@@ -39,7 +40,6 @@
 #include "mutation.h"
 #include "notes.h"
 #include "output.h"
-#include "overmap.h"
 #include "place.h"
 #include "player.h"
 #include "religion.h"
@@ -665,7 +665,7 @@ static void _sdump_notes(dump_params &par)
  //---------------------------------------------------------------
 static void _sdump_location(dump_params &par)
 {
-    if (you.your_level == -1
+    if (you.absdepth0 == -1
         && you.where_are_you == BRANCH_MAIN_DUNGEON
         && you.level_type == LEVEL_DUNGEON)
     {
@@ -1313,7 +1313,7 @@ void dump_map(const char* fname, bool debug, bool dist)
     fclose(fp);
 }
 
-static bool write_dump( const std::string &fname, dump_params &par)
+static bool write_dump(const std::string &fname, dump_params &par)
 {
     bool succeeded = false;
 

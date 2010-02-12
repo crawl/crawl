@@ -2041,7 +2041,8 @@ cset_XXX = <dungeon_character_name : symbol>
            statue, invis_exposed, item_detected, item_orb, item_weapon,
            item_armour, item_wand, item_food, item_scroll, item_ring,
            item_potion, item_missile, item_book, item_stave,
-           item_miscellany, item_corpse, item_gold, item_amulet, cloud
+           item_miscellany, item_corpse, item_gold, item_amulet, cloud,
+           trees
         Most of these are self-explanatory. "arch" is used for shops and
         portals.  "floor_magic" and "wall_magic" are used to display
         magic-mapped squares on the level map. "invis_exposed" is the

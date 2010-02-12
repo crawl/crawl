@@ -47,7 +47,7 @@ LUAFN(debug_goto_place)
         if (id.level_type == LEVEL_DUNGEON)
         {
             you.where_are_you = static_cast<branch_type>(id.branch);
-            you.your_level = absdungeon_depth(id.branch, id.depth);
+            you.absdepth0 = absdungeon_depth(id.branch, id.depth);
 
             if (bind_entrance != -1)
                 branches[you.where_are_you].startdepth = bind_entrance;
@@ -76,7 +76,7 @@ LUAFN(debug_generate_level)
     tile_clear_flavour();
     TileNewLevel(true);
 #endif
-    builder(you.your_level, you.level_type,
+    builder(you.absdepth0, you.level_type,
             lua_isboolean(ls, 1)? lua_toboolean(ls, 1) : true);
     return (0);
 }
@@ -114,7 +114,7 @@ LUAFN(debug_bouncy_beam)
     bolt beam;
 
     beam.range      = range;
-    beam.type       = '*';
+    beam.glyph      = '*';
     beam.colour     = LIGHTCYAN;
     beam.flavour    = BEAM_ELECTRICITY;
     beam.source     = source;

@@ -86,7 +86,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
 
     // yes, there is a logic to this ordering {dlb}:
     if (item_blocks_teleport(true, true) && !wizard_blink)
-        mpr("You feel a weird sense of stasis.");
+        canned_msg(MSG_WEIRD_STASIS);
     else if (you.level_type == LEVEL_ABYSS
              && _abyss_blocks_teleport(high_level_controlled_blink)
              && !wizard_blink)
@@ -206,7 +206,7 @@ void random_blink(bool allow_partial_control, bool override_abyss)
     coord_def target;
 
     if (item_blocks_teleport(true, true))
-        mpr("You feel a weird sense of stasis.");
+        canned_msg(MSG_WEIRD_STASIS);
     else if (you.level_type == LEVEL_ABYSS
              && !override_abyss && !one_chance_in(3))
     {
@@ -238,7 +238,7 @@ void random_blink(bool allow_partial_control, bool override_abyss)
         // result in awkward messaging if it cancels for some reason,
         // but it's probably better than getting the blink message after
         // any Mf transform messages all the time. -cao
-        mpr("You blink.");
+        canned_msg(MSG_YOU_BLINK);
         coord_def origin = you.pos();
         success = move_player_to_grid(target, false, true, true);
         if (success)
@@ -270,7 +270,7 @@ void setup_fire_storm(const actor *source, int pow, bolt &beam)
     beam.ex_size      = 2 + (random2(pow) > 75);
     beam.flavour      = BEAM_LAVA;
     beam.real_flavour = beam.flavour;
-    beam.type         = dchar_glyph(DCHAR_FIRED_ZAP);
+    beam.glyph        = dchar_glyph(DCHAR_FIRED_ZAP);
     beam.colour       = RED;
     beam.beam_source  = source->mindex();
     // XXX: Should this be KILL_MON_MISSILE?
@@ -306,7 +306,7 @@ bool cast_hellfire_burst(int pow, bolt &beam)
     beam.ex_size           = 1;
     beam.flavour           = BEAM_HELLFIRE;
     beam.real_flavour      = beam.flavour;
-    beam.type              = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.glyph             = dchar_glyph(DCHAR_FIRED_BURST);
     beam.colour            = RED;
     beam.beam_source       = MHITYOU;
     beam.thrower           = KILL_YOU;
@@ -358,7 +358,7 @@ void cast_chain_lightning(int pow, const actor *caster)
     beam.thrower        = (caster == &you) ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
     beam.range          = 8;
     beam.hit            = AUTOMATIC_HIT;
-    beam.type           = dchar_glyph(DCHAR_FIRED_ZAP);
+    beam.glyph          = dchar_glyph(DCHAR_FIRED_ZAP);
     beam.flavour        = BEAM_ELECTRICITY;
     beam.obvious_effect = true;
     beam.is_beam        = false;       // since we want to stop at our target
@@ -629,7 +629,7 @@ bool stinking_cloud( int pow, bolt &beem )
     beem.range       = 6;
     beem.damage      = dice_def( 1, 0 );
     beem.hit         = 20;
-    beem.type        = dchar_glyph(DCHAR_FIRED_ZAP);
+    beem.glyph       = dchar_glyph(DCHAR_FIRED_ZAP);
     beem.flavour     = BEAM_POTION_STINKING_CLOUD;
     beem.ench_power  = pow;
     beem.beam_source = MHITYOU;

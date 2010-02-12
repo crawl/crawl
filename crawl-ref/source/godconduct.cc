@@ -455,7 +455,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 simple_god_message(" appreciates the change of pace.");
                 retval = true;
                 // Disallow returning to D:1 for free piety.
-                if (you.experience_level < you.your_level + 2 + level / 2 + random2(5))
+                if (you.experience_level < you.absdepth0 + 2 + level / 2 + random2(5))
                     piety_change = 1;
             }
             break;

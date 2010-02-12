@@ -29,6 +29,8 @@
 #include "terrain.h"
 #include "viewchar.h"
 
+static void _fuzz_direction(monsters &mon, int pow);
+
 bool cast_iood(actor *caster, int pow, bolt *beam)
 {
     int mtarg = mgrd(beam->target);
@@ -72,6 +74,8 @@ bool cast_iood(actor *caster, int pow, bolt *beam)
     mon.props["iood_pow"].get_short() = pow;
     mon.flags &= ~MF_JUST_SUMMONED;
 
+    _fuzz_direction(mon, pow);
+
     // Move away from the caster's square.
     iood_act(mon, true);
     // We need to take at least one full move (for the above), but let's
@@ -103,6 +107,28 @@ void _iood_dissipate(monsters &mon)
     monster_die(&mon, KILL_DISMISSED, NON_MONSTER);
 }
 
+static void _fuzz_direction(monsters &mon, int pow)
+{
+    const float x = mon.props["iood_x"];
+    const float y = mon.props["iood_y"];
+    float vx = mon.props["iood_vx"];
+    float vy = mon.props["iood_vy"];
+
+    _normalize(vx, vy);
+
+    const float off = (coinflip() ? -1 : 1) * 0.25;
+    float tan = (random2(31) - 15) * 0.019; // approx from degrees
+    if (wearing_amulet(AMU_INACCURACY))
+        tan *= 2;
+
+    // Cast either from left or right hand.
+    mon.props["iood_x"] = x + vy*off;
+    mon.props["iood_y"] = y - vx*off;
+    // And off the direction a bit.
+    mon.props["iood_vx"] = vx + vy*tan;
+    mon.props["iood_vy"] = vy - vx*tan;
+}
+
 // Alas, too much differs to reuse beam shield blocks :(
 bool _iood_shielded(monsters &mon, actor &victim)
 {
@@ -125,7 +151,7 @@ bool _iood_hit(monsters &mon, const coord_def &pos, bool big_boom = false)
     beam.thrower = (mon.props["iood_kc"].get_byte() == KC_YOU)
                         ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
     beam.colour = WHITE;
-    beam.type = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.glyph = dchar_glyph(DCHAR_FIRED_BURST);
     beam.range = 1;
     beam.source = pos;
     beam.target = pos;
@@ -165,24 +191,15 @@ bool iood_act(monsters &mon, bool no_trail)
         return (true);
     }
 
-    coord_def target(-1, -1);
-    if (mon.foe == MHITYOU)
-        target = you.pos();
-    else if (invalid_monster_index(mon.foe))
-        ;
-    else if (invalid_monster_type(menv[mon.foe].type))
-    {
-        // Our target is gone.  Since picking a new one would require
-        // intelligence, the orb continues on a ballistic course.
-        mon.foe = MHITNOT;
-    }
-    else
-        target = menv[mon.foe].pos();
-
     _normalize(vx, vy);
 
-    if (target != coord_def(-1, -1))
+    const actor *foe = mon.get_foe();
+    // If the target is gone, the orb continues on a ballistic course since
+    // picking a new one would require intelligence.
+
+    if (foe)
     {
+        const coord_def target = foe->pos();
         float dx = target.x - x;
         float dy = target.y - y;
         _normalize(dx, dy);
@@ -206,7 +223,7 @@ bool iood_act(monsters &mon, bool no_trail)
         }
         mon.props["iood_tpos"].get_short() = 256 * target.x + target.y;
 
-        if (!_in_front(vx, vy, dx, dy, 0.5)) // ~29 degrees
+        if (!_in_front(vx, vy, dx, dy, 0.3)) // ~17 degrees
         {
             float ax, ay;
             if (dy*vx < dx*vy)
@@ -240,7 +257,7 @@ reflected:
     }
 
     if (mon.props["iood_kc"].get_byte() == KC_YOU
-        && (you.pos() - pos).rdist() >= LOS_RADIUS)
+        && (you.pos() - pos).rdist() > LOS_RADIUS)
     { 	// not actual vision, because of the smoke trail
         _iood_dissipate(mon);
         return (true);
@@ -248,6 +265,13 @@ reflected:
 
     if (pos == mon.pos())
         return (false);
+
+    if (!no_trail)
+    {
+        place_cloud(CLOUD_MAGIC_TRAIL, mon.pos(),
+                    2 + random2(3), mon.kill_alignment(),
+                    KILL_MON_MISSILE);
+    }
 
     actor *victim = actor_at(pos);
     if (cell_is_solid(pos) || victim)
@@ -322,18 +346,12 @@ reflected:
             // If you're next to the caster and both of you wear shields of
             // reflection, this can lead to a brief game of ping-pong, but
             // rapidly increasing shield penalties will make it short.
+            mon.lose_energy(EUT_MOVE);
             goto reflected;
         }
 
         if (_iood_hit(mon, pos))
             return (true);
-    }
-
-    if (!no_trail)
-    {
-        place_cloud(CLOUD_MAGIC_TRAIL, mon.pos(),
-                    2 + random2(3), mon.kill_alignment(),
-                    KILL_MON_MISSILE);
     }
 
     if (!mon.move_to_pos(pos))

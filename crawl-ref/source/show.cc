@@ -8,6 +8,7 @@
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
+#include "dgn-overview.h"
 #include "env.h"
 #include "exclude.h"
 #include "fprop.h"
@@ -16,7 +17,6 @@
 #include "mon-util.h"
 #include "monster.h"
 #include "options.h"
-#include "overmap.h"
 #include "random.h"
 #include "showsymb.h"
 #include "state.h"
@@ -177,6 +177,8 @@ static unsigned short _feat_colour(const coord_def &where,
         colour = RED;
     else if (_show_mold(where))
         colour = you.mold_colour;
+    else if (env.grid_colours(where))
+        colour = env.grid_colours(where);
     else
     {
         colour = fdef.colour;

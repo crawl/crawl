@@ -18,6 +18,7 @@
 #include "artefact.h"
 #include "cio.h"
 #include "describe.h"
+#include "dgn-overview.h"
 #include "files.h"
 #include "food.h"
 #include "invent.h"
@@ -28,7 +29,6 @@
 #include "macro.h"
 #include "menu.h"
 #include "notes.h"
-#include "overmap.h"
 #include "place.h"
 #include "player.h"
 #include "spl-book.h"
@@ -791,6 +791,9 @@ int artefact_value( const item_def &item )
     if (prop[ ARTP_COLD ] > 0)
         ret += 5 + 5 * (prop[ ARTP_COLD ] * prop[ ARTP_COLD ]);
     else if (prop[ ARTP_COLD ] < 0)
+        ret -= 10;
+
+    if (prop[ARTP_PONDEROUS])
         ret -= 10;
 
     // These normally come alone or in resist/susceptible pairs...
@@ -1994,7 +1997,7 @@ void shop()
     const bool bought_something = _in_a_shop(i, num_in_list);
     const std::string shopname = shop_name(env.shop[i].pos);
 
-    // If the shop is now empty, erase it from the overmap.
+    // If the shop is now empty, erase it from the overview.
     if (_shop_get_stock(i).empty())
         _delete_shop(i);
 

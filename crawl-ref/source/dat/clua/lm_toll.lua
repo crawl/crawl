@@ -27,7 +27,7 @@ function TollStair:activate(marker)
 end
 
 function TollStair:check_shopping_list(marker, first_time)
-  local name = self.props.overmap
+  local name = self.props.overview
 
   if you.shopping_list_has(name, marker) then
     return
@@ -92,7 +92,7 @@ function TollStair:check_veto(marker, pname)
       return "veto"
     end
   elseif pname == "veto_level_change" then
-    local name = self.props.overmap
+    local name = self.props.overview
     if you.shopping_list_has(name, marker) then
       crawl.mpr("Removing " .. name .. " from shopping list")
       you.shopping_list_del(name, marker)

@@ -193,7 +193,7 @@ namespace arena
                 if (!in_bounds(loc))
                     break;
 
-                const int imon = dgn_place_monster(spec, you.your_level,
+                const int imon = dgn_place_monster(spec, you.absdepth0,
                                                    loc, false, true, false);
                 if (imon == -1)
                     end(1, false, "Failed to create monster at (%d,%d) grd: %s",
@@ -228,7 +228,7 @@ namespace arena
         {
             you.level_type    = place.level_type;
             you.where_are_you = place.branch;
-            you.your_level    = place.absdepth();
+            you.absdepth0     = place.absdepth();
         }
 
         dgn_reset_level();
@@ -754,7 +754,7 @@ namespace arena
             if (fac.friendly)
                 spec.attitude = ATT_FRIENDLY;
 
-            int idx = dgn_place_monster(spec, you.your_level, pos, false,
+            int idx = dgn_place_monster(spec, you.absdepth0, pos, false,
                                         true);
 
             if (idx == -1 && fac.active_members == 0
@@ -786,7 +786,7 @@ namespace arena
                     monster_teleport(other, true);
                 }
 
-                idx = dgn_place_monster(spec, you.your_level, pos, false,
+                idx = dgn_place_monster(spec, you.absdepth0, pos, false,
                                         true);
             }
 
