@@ -84,7 +84,8 @@ static std::string __try_exact_string(const std::vector<std::string> &prefixes,
                 continue;
             religion = true;
         }
-        else if (str_to_branch(prefixes[i]) != NUM_BRANCHES)
+        else if (str_to_branch(prefixes[i]) != NUM_BRANCHES
+                 || prefixes[i] == "Dungeon")
         {
            if (ignore_branch)
                continue;
