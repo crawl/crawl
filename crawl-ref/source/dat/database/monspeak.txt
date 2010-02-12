@@ -5693,7 +5693,7 @@ w:5
 %%%%
 _Wayne_common_
 
-@The_monster@ says @to_foe@, "Me axe will split yer skull!"
+#@The_monster@ says @to_foe@, "Me axe will split yer skull!"
 
 @The_monster@ says @to_foe@, "By tha beards o' me forefathars, ye will na live ta see tha day."
 
@@ -5716,7 +5716,7 @@ _Wayne_nondwarf_
 w:5
 @The_monster@ says, "Orcs, orcs, elves an' a @player_genus@." @player_only@
 
-@The_monster@ says @to_foe@, "Tha axes o' dwarves be upon ye!"
+#@The_monster@ says @to_foe@, "Tha axes o' dwarves be upon ye!"
 
 @The_monster@ says @to_foe@, "Ye cannae match a dwarf in combat."
 ## END Wayne ##
