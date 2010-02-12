@@ -145,7 +145,7 @@ void handle_monster_shouts(monsters* monster, bool force)
     // false for submerged monsters, but submerged monsters will be forced
     // to surface before they shout, thus removing that source of
     // non-visibility.
-    if (mons_near(monster) && (!monster->invisible() || you.can_see_invisible()))
+    if (you.can_see(monster))
         suffix = " seen";
     else
         suffix = " unseen";
