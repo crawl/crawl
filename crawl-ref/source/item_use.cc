@@ -3113,6 +3113,15 @@ static int _prompt_ring_to_remove(int new_ring)
         mprf("You're already wearing two cursed rings!");
         return (-1);
     }
+    else if (left->cursed() || right->cursed())
+    {
+        const int eqslot = left->cursed() ? EQ_RIGHT_RING : EQ_LEFT_RING;
+
+        if (!check_warning_inscriptions(you.inv[you.equip[eqslot]], OPER_REMOVE))
+            return (-1);
+
+        return (you.equip[eqslot]);
+    }
 
     mesclr();
     mprf("Wearing %s.", you.inv[new_ring].name(DESC_NOCAP_A).c_str());
