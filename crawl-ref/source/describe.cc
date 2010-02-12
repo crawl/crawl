@@ -1913,8 +1913,7 @@ std::string get_item_description( const item_def &item, bool verbose,
             {
                 description <<
                     "$It uses its own mana reservoir for casting spells, and "
-                    "recharges automatically by channeling mana from its "
-                    "wielder.";
+                    "recharges automatically.";
 
                 const int max_charges = MAX_ROD_CHARGE;
                 if (item_ident(item, ISFLAG_KNOW_PLUSES))
