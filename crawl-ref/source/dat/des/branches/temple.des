@@ -504,7 +504,7 @@ NAME:   minmay_temple_entry_metal_lava
 TAGS:   temple_entry
 WEIGHT: 1
 ORIENT: float
-KMASK:  l = no_monster_gen 
+KMASK:  l = no_monster_gen
 MAP
 vvvvvvv
 vlvlvlv
@@ -662,7 +662,7 @@ TAGS:   temple_entry
 WEIGHT: 1
 ORIENT: float
 MAP
- ....vvv.... 
+ ....vvv....
 ...vv...vv...
 ..v..vvv..v..
 .v..v...v..v.
@@ -727,7 +727,7 @@ ENDMAP
 # See altar.des.
 
 ##########################################################################
-# Circular temple (David Ploog). 12 = 1 x 12
+# Circular temple (David Ploog). 1 x 12 = 12 gods.
 
 NAME:   circular_temple
 PLACE:  Temple
@@ -766,7 +766,7 @@ ENDMAP
 
 
 ##############################################################################
-# Three leaves temple (David Ploog). 12 = 3 x 4
+# Three leaves temple (David Ploog). 3 x 4 = 12 gods.
 
 NAME:   three_leaves__temple
 PLACE:  Temple
@@ -800,7 +800,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-# Twelve chambers temple (David Ploog). 12 = 12 x 1
+# Twelve chambers temple (David Ploog). 12 x 1 = 12 gods.
 
 NAME:   twelve_chambers_temple
 PLACE:  Temple
@@ -838,7 +838,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-# Fourteen chambers temple (David Ploog). 14 = 14 x 1
+# Fourteen chambers temple (David Ploog). 14 x 1 = 14 gods.
 
 NAME:   fourteen_chambers_temple
 PLACE:  Temple
@@ -876,7 +876,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##########################################################################
-# Another temple (David Ploog). 12 + 3 = 1 + 2 + 3 + 4 + 5
+# Another temple (David Ploog). 12 + 3 = 1 + 2 + 3 + 4 + 5 => 12 gods.
 
 NAME:   triangle_temple
 PLACE:  Temple
@@ -928,7 +928,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##########################################################################
-# Watery temple (Darshan Shaligram)
+# Watery temple (Darshan Shaligram). 12 gods.
 NAME:   water_temple
 TAGS:   no_pool_fixup no_rotate
 WEIGHT: 20
@@ -957,7 +957,7 @@ xcccccccccccccccccccccccccccccccccccccccccccccccccccx
 ENDMAP
 
 ##########################################################################
-# Zaba's temple
+# Zaba's temple. 12 gods.
 NAME:    zaba_temple_1
 PLACE:   Temple
 TAGS:    no_rotate
@@ -981,7 +981,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##########################################################################
-# Loop temple (David Ploog). 16 = 12 + 4
+# Loop temple (David Ploog). 16 = 12 + 4. 12 gods.
 NAME:    loop_temple
 PLACE:   Temple
 TAGS:    no_rotate no_pool_fixup
@@ -1046,7 +1046,7 @@ ENDMAP
 
 
 ##########################################################################
-# Five rooms temple (David Ploog). 12 + 3 = 5 x 3
+# Five rooms temple (David Ploog). 12 + 3 = 5 x 3 => 12 gods.
 #
 # Todo: would be nice to have the altars in each room follow a theme.
 #       That's harder with the random temples but perhaps there is a way.
@@ -1091,7 +1091,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##########################################################################
-# Eino's temples
+# Eino's temples. 12 gods.
 NAME:    temple_eino_lava_a
 PLACE:   Temple
 TAGS:    no_rotate
@@ -1127,6 +1127,7 @@ cccccccclccccccclcccccccc
 ccccccccccccccccccccccccc
 ENDMAP
 
+# 8 gods.
 NAME:    temple_eino_lava_b
 PLACE:   Temple
 TAGS:    no_rotate
@@ -1156,6 +1157,7 @@ cccccccclccccccclcccccccc
 ccccccccccccccccccccccccc
 ENDMAP
 
+# 12 gods.
 NAME:    temple_eino_water
 PLACE:   Temple
 TAGS:    no_pool_fixup no_rotate
@@ -1219,6 +1221,7 @@ cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
 ccccccccccccccccccccccccccccccccc
 ENDMAP
 
+# 12 gods.
 NAME:    temple_eino_crystal_narrow_a
 PLACE:   Temple
 TAGS:    no_rotate
@@ -1261,6 +1264,7 @@ bbbbbbbbbbbbb...bbbbbbbbbbbbb
 bbbbbbbbbbbbbbbbbbbbbbbbbbbbb
 ENDMAP
 
+# 12 gods.
 NAME:    temple_eino_crystal_narrow_b
 PLACE:   Temple
 TAGS:    no_rotate
@@ -1303,6 +1307,7 @@ bbbbbbbbbbbbbbb...bbbbbbbbbbbbbbb
 bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
 ENDMAP
 
+# 10 gods.
 NAME:    temple_eino_crystal_wide_a
 PLACE:   Temple
 TAGS:    no_rotate
@@ -1328,6 +1333,7 @@ bbbbb.B....bb...bb....B.bbbbb
             bbbbb
 ENDMAP
 
+# 13 gods.
 NAME:    temple_eino_crystal_wide_b
 PLACE:   Temple
 TAGS:    no_rotate
@@ -1356,6 +1362,7 @@ bbbbb.B....bb...bb....B.bbbbb
             bbbbb
 ENDMAP
 
+# 12 gods.
 NAME:    temple_eino_006a
 PLACE:   Temple
 TAGS:    no_rotate
@@ -1384,6 +1391,7 @@ x..x...xxx....xxxxxxx....xxx...x..x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+# 10 gods
 NAME:    temple_eino_006b
 PLACE:   Temple
 TAGS:    no_rotate
@@ -1412,6 +1420,8 @@ x..x...xxx....xxxxxxx....xxx...x..x
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+
+# 8 gods.
 NAME:    temple_eino_rhombus_a
 PLACE:   Temple
 TAGS:    no_rotate
@@ -1450,6 +1460,7 @@ xx...x...x.x...x.x.x.x.x...x.x...x...xx
             xxxxx     xxxxx
 ENDMAP
 
+# 14 gods.
 NAME:    temple_eino_rhombus_b
 PLACE:   Temple
 TAGS:    no_rotate
@@ -1490,6 +1501,7 @@ xx..x.x..x.x..x.x..x..x.x..x.x..x.x..xx
             xxxxx     xxxxx
 ENDMAP
 
+# 12 gods.
 NAME:    temple_eino_rhombus_c
 PLACE:   Temple
 TAGS:    no_rotate
@@ -1530,6 +1542,7 @@ xx...x..x.x..x.x..x.x..x...xx
        xxxxx     xxxxx
 ENDMAP
 
+# 14 gods
 NAME:    mini_greek_temple
 PLACE:   Temple
 WEIGHT:  20
