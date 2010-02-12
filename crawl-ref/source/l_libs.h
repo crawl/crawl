@@ -35,6 +35,7 @@ void cluaopen_globals(lua_State *ls);
 #define MAPGRD_METATABLE "dgn.mapgrd"
 #define MAPGRD_COL_METATABLE "dgn.mapgrdcol"
 #define ITEM_METATABLE "item.itemaccess"
+#define MONS_METATABLE "monster.monsaccess"
 
 /*
  * Libraries and loaders for dlua, accessed from init_dungeon_lua().
