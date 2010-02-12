@@ -404,7 +404,7 @@ void direction_chooser::describe_cell() const
         print_target_description();
         if (just_looking || (show_items_once && restricts != DIR_TARGET_OBJECT))
             print_items_description();
-        if (just_looking)
+        if (just_looking || show_floor_desc)
             print_floor_description(true);
     }
 
@@ -486,7 +486,8 @@ direction_chooser::direction_chooser(dist& moves_,
     target_prefix(args.target_prefix),
     top_prompt(args.top_prompt),
     behaviour(args.behaviour),
-    cancel_at_self(args.cancel_at_self)
+    cancel_at_self(args.cancel_at_self),
+    show_floor_desc(args.show_floor_desc)
 {
     if (!behaviour)
         behaviour = &stock_behaviour;
