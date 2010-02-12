@@ -2129,6 +2129,8 @@ void artefact_set_property( item_def          &item,
 
 void cheibriados_make_item_ponderous(item_def &item)
 {
+    ASSERT(item.base_type == OBJ_ARMOUR);
+    const special_armour_type brand = get_armour_ego_type(item);
     if (!is_artefact(item))
     {
         item.flags |= ISFLAG_RANDART;
@@ -2142,7 +2144,11 @@ void cheibriados_make_item_ponderous(item_def &item)
     artefact_properties_t props;
     props.init(0);
     props[ARTP_PONDEROUS] = true;
+    props[ARTP_BRAND] = brand;
     artefact_merge_properties(item, props);
+
+    if (Options.autoinscribe_artefacts)
+        add_autoinscription(item, artefact_auto_inscription(item));
 }
 
 template<typename Z>
