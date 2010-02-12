@@ -5,54 +5,58 @@ Also, list and features are still a work in progress.
 
 Breaks saves compatibility.
 
+IMPORTANT: The bugtracker has moved to http://crawl.develz.org/mantis/.
+           Please report all bugs and feedback there. Thank you!
 
 0.6 Highlights
 --------------
 * Removed Divinations spell school.
-* Three new gods.
+* Three new gods: Jiyva, Fedhas, Cheibriados.
 * Altars for dungeon gods may now appear on levels 2 to 9 instead of the Temple.
-* New water based branch: the Shoals, sometimes replacing the Swamp.
+* New water based branch: the Shoals, sometimes replacing Swamp or Snake Pit.
+* Overhauled AC/EV system.
 * Strength has a much greater effect on carrying capacity.
-* Nerf Summon Small Mammals and gold dragon armour.
 * Slime creatures and ugly things are more interesting and dangerous.
 * Many cool new monsters, portal vaults and ammunition brands.
 
 Gods
 ----
 * New god: Jiyva, god of slime.
-* New god: Fedhas, god of plants.
+* New god: Fedhas, god of plants and fungi.
 * New god: Cheibriados, god of slowness.
-* Ecumenical Temple may randomly contain 3 to 14 altars.
+* Ecumenical Temple may randomly contain 6 to 14 altars.
 * Dungeon gods not included in Ecumenical Temple get guaranteed altar on D:2-9.
 * Zin protects the player against disease, rotting and miasma.
 * Vehumet reduces mana cost and increases ranges of destructional spells.
 * Kikubaaqudgha gives torment resistance, hands out corpses and the Pain brand.
+* Yredelemnul's gifts follow through stairways even if behind zombies.
 * Xom is nicer about banishment and hostile monsters for low-xp followers.
 * Xom has a small chance of reviving the player after death.
 * Elyvilon doesn't mind butchery during prayer anymore.
 * Greatly reduce damage dealt by TSO's wrath.
+* TSO's halo no longer makes the player easier to hit.
+* Sif Muna doesn't accept worship from players who don't know any spells.
 * Corruption is usable once-per-level and produces only neutral monsters.
 * Sacrifice corpses with prayer ('p') rather than prayer and chop up ('pc').
 * Recite has no food cost and no longer causes monsters to go berserk.
 
 Levels
 ------
-* New branch: the Shoals, with a 50% chance of replacing the Swamp.
+* New branch: the Shoals, with a 33% chance of replacing Swamp or Snake Pit.
 * Fix branch ends rarely being generated without a rune.
 * Shorten Lair to eight levels.
+* More interesting level layout for Lair and Swamp.
 * New portal vaults: Bailey, Trove, Volcanoes, Wizard Laboratory.
 * Most escape hatches are replaced by (single-use) shafts.
 * New wall type "tree"; two trees in a row block vision.
 * Seal hell portals rather than Vestibule when the player picks up the orb.
 * Loosen restrictions about which branches may contain uniques.
-* Added mutagenic fog.
 * Disallow mechanical traps in the Slime Pits.
 * Limit alarm traps to 1-3 charges.
 * Trap disarming prompts if you have less hp than the trap's maximum damage.
 * Lua maps are much more customizable.
 * Alternate branch endings for Hells, Hive, Swamp, Vaults.
 * The pandemonium lords' levels get special announcements.
-* Many new vaults.
 
 Ranged combat
 -------------
@@ -74,10 +78,12 @@ Ranged combat
 * Hunter starting ammunition starts out at +1; sling-based Hunters get bucklers.
 * Branding spells will also affect launchers.
 * Removed Poison Ammunition in favour of Poison Weapon and temporary brands.
+* Slings no longer crosstrain with Throwing.
 
 Items
 -----
 * Removed amulet of resist slowing.
+* Removed distinction between light and heavy armour.
 * Fixed occasional permanent stat loss/gain with stat-modifying equipment.
 * Added scroll of silence.
 * Added potions of brilliance and agility.
@@ -85,7 +91,6 @@ Items
 * New amulets: guardian spirit, faith, stasis.
 * Amulet of clarity prevents unvoluntary berserk.
 * Lowered gold dragon armour's AC value.
-* Removed several randart armour brands like mapping and levitation.
 * All randart weapons get a brand.
 * The speed brand is only created randomly for artefacts.
 * Halved damage bonus of the vorpal brand to 12.5%.
@@ -98,50 +103,61 @@ Items
 * Improvements to whips and demon whips; the latter can be blessed by TSO.
 * Reduce the chances for artefacts with only one stat property.
 * Weapons of electrocution discharge in water.
-* Remove evocable mapping/teleportation from artefacts.
+* Removed evocable properties (mapping/teleportation/levitation) from artefacts.
 * Removing +Lev items cancels levitation and is disallowed over water.
 * Clubs and spears get moderate stabbing bonus.
 * Clubs may stun target upon successful stabbing.
 * Vampiric weapons can only be wielded at full and cause hunger when wielded.
 * Mummies and ghouls get no healing effect from vampiric weapons.
-* Shields can be enchanted maximum to +3.
+* Shields can be enchanted up to +3.
 * Rods identify on wielding and use the Maces & Flails skill.
 * Rod recharging no longer depends on player MP or being in inventory.
 * Enchanting rods increases their recharge rate.
 * Let chunks stack, if their age is similar.
 * Deep water doesn't destroy items, lava only flammable ones.
+* Disallow sacrifice of runes, the orb of Zot, and the unused horn of Geryon.
+* Autoinscribe items found cursed with {was cursed}.
 
 Monsters
 --------
 * New monster: ballistomycete, spawned by and spawning giant spores.
 * New plant: bush, can be fired through, two or more block vision.
-* New monsters for the Shoals: merfolk, kraken, mermaid, siren, harpy, shark.
-* Other new monsters: toadstool, giant leech, golden eye, new demon sixfirhy.
+* Several new monsters for the Shoals: merfolk/mermaid/siren, kraken, ...
+* A few other new monsters: toadstool, sixfirhy, golden eye, giant leech.
 * Fixed mimics not using the correct item glyph if it was redefined.
 * (Very) ugly things get random resistances and attack flavours.
 * Slime creatures can merge to become larger and more powerful.
 * All spectral things can use stairs again.
 * Several cool new uniques.
-* Display magic resistance in monster descriptions.
+* Steeply increase OOD monster generation after a long time spent on one level.
+* Don't make OOD monsters appear in a band until many turns spent on the level.
+* Reduce chances of monsters respawning on cleared levels. [Is that correct?]
+* Reduce chances of meeting OOD monsters on early levels. [Is that correct?]
+* Display magic (or "hostile enchantments") resistance in monster descriptions.
 * Hydras pick new target for remaining attacks if their current foe dies.
 * Make monsters forget player position if the player teleports away.
 * Implement and use monster spells "blink away" and "blink closer".
 * Detected secret doors remain unknown to stupid monsters.
 * Monsters may quaff potions of might and berserk rage.
 * Demons spawned during the orb run will actively seek out the player.
-* Berserk monsters get doubled hit points, similar to the player.
 * Bears go berserk, but mindless monsters can't.
+* Greatly reduce number of monsters capable of submerging.
+* Submerged monsters cannot be targeted or affected by beams anymore.
+* Sense invisible is more effective on invisible monsters, less on the player.
 * Hungry ghosts eat corpses.
-* Monsters get saner experience values.
+* Monsters get more sensible experience values matching their difficulty.
+* Confused monsters zap wands in random directions.
 * Bashing plants or fungi will only train Fighting/Unarmed Combat up to level 1.
-* Glyph changes for minotaurs and some insects. See 052_monster_glyphs.txt.
+* Glyph changes for several monsters. See 052_monster_glyphs.txt.
 
 Characters
 ----------
+* Overhauled AC/EV system. Armour/Dodging/Stealth training depends on item mass.
 * Strength effect on carrying capacity greatly increased.
 * Base carrying capacity depends on weight of the player species.
 * Demonspawn have been overhauled, mutations no longer depend on skill sets.
 * Wanderers have been overhauled and are much stronger.
+* Increased Mummies' starting stats.
 * Starting stats and equipment are no longer assigned randomly.
 * Many status effects and durations use delay rather than turn count.
 * Gain of Health and Magic Points on level up is no longer random.
@@ -153,40 +169,48 @@ Characters
   rotting resistance implies both disease and miasma resistance.
 * Regeneration only increases hunger while regenerating.
 * Shield value SH transparently reflects blocking chance.
+* Hellfire ignores AC.
 * Changed Magic mapping mutation to work passively.
 * Sticky flame negates invisibility.
+* Vampires can bottle blood via an (a)bility rather than by (c)hopping.
+* When berserk, hit points are scaled to 150%, as was the case before 0.5.
+* Add a time limit of ~200M turns, to safeguard against time wraps.
 
 Interface
 ---------
 * Fix wands not prompting when fired at allies.
 * Add a shopping list ('$') to notify you when you can afford a listed item.
 * New memorisation interface listing all spells contained in carried books.
+* Turn autopickup back on when killing invisible backlit monsters.
 * Autotravel doesn't cut corners and tries to avoid ambushes.
+* Greatly decreased message spam, especially when targeting.
+* Switched to line-of-sight exclusions.
 * Exclusions are displayed on the overview screen ('Ctrl-O' command).
 * Show explored depth for all branches in the overview screen ('Ctrl-O').
 * Autoexclusions get removed again once the trigger monster is no longer there.
 * Dangerous clouds that are generated by the dungeon itself ("fog machines")
   generate autoexclusions when seen by player.
+* Treat non-adjacent mimics as safe for resting/travel.
 * Allow viewing off-level maps from the 'X' overmap with '[' and ']'.
 * Level features (e.g. stairs, gates, altars) are listed in the 'X' map.
-* delay_message_clear defaults to true.
 * Disallow autoexplore and resting when starving.
 * Add !a inscription to prompt when attacking with this wielded item.
 * New lua file autofight.lua which allows auto-attacking of the nearest enemy.
 * Abort some teleportation attempts with -TELE without losing the turn.
 * Food and potions are never autoassigned to slots 'e' and 'y', respectively.
-* Vampires' inactive mutations are coloured darkgrey and/or bracketed.
-* Added option explore_delay, which can be used to make the delay
-  between auto-explore moves different from the delay between other
-  types of travel moves.
+* Prefer swapping to a butchery tool to unequipping gloves.
 * Allow more than 8 colours in Mac builds if the terminal supports it.
+* Allow overriding vi keys with "Unknown command", see no_vi_command_key.txt.
 * Disable autoexplore in labyrinths.
+* Unidentified artefacts can now be found with "Ctrl-F artefact".
 * Colour experience pool according to fullness.
+* Added an html version of the FAQ in the docs/ directory.
 
 Spells
 ------
 * Removed Divinations spell school.
 * New spell: Iskenderun's Orb of Destruction, homing in on target.
+* Silence radius decreases with duration.
 * Limit Summon Small Mammals to a maximum of two mammals per casting.
 * Summon Small Mammals doesn't summon green or orange rats anymore.
 * Fulsome Distillation non-randomly depends on corpse type, but not rottenness.
@@ -199,7 +223,10 @@ Spells
 * Improved Passwall interface.
 * Allow Mummies to cast Summon Horrible Things.
 * Controlled blink causes glowing.
+* Reduce Poison Arrow's irresistable part from 60% to 30%.
+* Ice Form can swim in deep water; be careful you don't drown!
 * Disintegration is really messy.
+* Useless and forbidden spells are coloured in spell menus.
 
 Tiles
 -----
@@ -210,27 +237,56 @@ Tiles
   * Shift-Left-Click: fire quivered ammo at monster.
   * Ctrl-Left-Click: cast spell at target (monster or player)
   * Alt-Left-Click: zap wand at target (monster or player)
-* When applicable, left-clicking on a monster within reaching range attacks it.
+  * When applicable, L-clicking on a monster within reaching range attacks it.
+* Added a health and mana bar to the player tile.
 * Added an icon designating berserk monsters.
 * Added icons for chunk/corpse eating effects.
+* Added icons for armour egos.
+* Reuse dancing weapon icon for known mimics.
+* Many new and/or improved tiles, mostly for monsters.
 * Add some "animations" whenever the screen is redrawn.
 * Vaults can specify custom tiles for features or monsters.
-* Tiles can be recoloured dynamically.
+* Tiles can be recoloured dynamically during compilation.
+* Variant tiles of a set can be assigned weights.
+* Draw splash screen before loading maps and database, and output loading state.
 * The Shoals branch is our testing ground for a smoother level layout.
+
+Options
+-------
+* Changed: clear_messages = false. (Was: delay_message_clear = false.)
+* New: option explore_delay, for different delay than travel. Default: -1.
+* New: autoinscribe_cursed = true, for items found cursed.
+* New: show_more = true. With clear_messages, prints -More- for full messages.
+* New: small_more = true. If false, uses a full line for -More-.
+* New: msg_condense_short = true, joins short messages into one line.
+* New: msg_min_height = 7, sets minimum size of the message area.
+* New: messages_at_top = false, draws messages above the main map.
+* New: explore_stop_pickup_ignore, pick up regexed items and continue travel.
+* New, ASCII-only: use_fake_player_cursor = false, highlights player glyph.
+* New, Tiles-only: tile_show_minihealthbar = true, draws hp bar on player tile.
+* New, Tiles-only: tile_show_minimagicbar = true, draws mp bar on player tile.
+* New, Tiles-only: tile_show_demon_tier = true, displays demon tier icons.
+* New, Tiles-only: tile_better_transparency = false, better water masks.
+* New, Tiles-only: tile_peaceful_col = lightred, colour for peaceful monsters.
+* New, Tiles-only: tile_force_overlay = false, displays messages in an overlay.
+* New explore_stop options greedy_pickup_smart, greedy_pickup_thrown.
+* Renamed: unix 'background' option to 'background_colour'.
+* Renamed: character 'job' option to 'background'.
+* Removed: target_los_first, target_oos, target_wrap, target_zero_exp.
 
 Code cleanup
 ------------
-* Overhauled and improved the line of sight code.
-* Add lots of test cases for semi-automated bug catching.
+* Overhauled and improved the line of sight and direction code.
+* Overhauled all code dealing with the message window/message history.
+* Added lots of test cases for semi-automated bug catching.
 * Tidy up and clarify makefile usage.
-* Distribute code of large cc files into smaller ones.
+* Distribute content of large .cc and .des files into smaller ones.
 * Many new lua wrappers to make lua much more powerful in e.g. map creation.
 * Unique placement code has been moved to lua and is directed via uniques.des.
 * Add property hash to monsters, and use it generously for various monsters.
 * The documentation file aptitudes.txt is autogenerated from the aptitudes code.
 * Cleanup of included header files, reducing compilation time.
 * Unrandarts and fixedarts share the same, cleaner coding structure.
-* Consolidate similar functions.
 
 
 Stone Soup 0.5.2 (20091008)
