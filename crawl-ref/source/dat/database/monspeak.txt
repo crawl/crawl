@@ -3755,7 +3755,59 @@ You hear a distant wail of despair.
 ############ DUANE ### A mercenary guarding the dungeon
 Duane
 
-@_mercenary_guard_@
+@_Duane_common_@
+
+w:2
+
+@_Duane_rare_@
+%%%%
+confused Duane
+
+@The_monster@ screams, "I'll never tell! Never!"
+
+@The_monster@ says, "Torture me, I'll never tell!"
+
+@The_monster@ whispers, "Okay, okay--the keys are--no!"
+%%%%
+_Duane_common_
+
+VISUAL:@The_monster@ looks @at_foe@ suspiciously.
+
+VISUAL:@The_monster@ squints @at_foe@.
+
+@The_monster@ says, "People used to make fun of my ears. They're dead, now."
+
+@The_monster@ says, "Do you know why I'm the best guard in the world? I'm still alive."
+
+@The_monster@ says, "I think you've seen too much. Better that you die now."
+
+@The_monster@ says @to_foe@, "Are you looking at my ears?"
+
+@The_monster@ says, "Nobody's ever stolen something I've guarded."
+
+@The_monster@ says, "My employer pays me to say nothing."
+
+@The_monster@ says @to_foe@, "You won't find it. I'm very good at what I do."
+
+@The_monster@ says, "I'm not one to boast, but I'm very good."
+
+@The_monster@ hisses @at_foe@, "What do you want?"
+%%%%
+_Duane_rare_
+
+w:1
+VISUAL:@The_monster@'s ears look incredibly large.
+
+@The_monster@ says, "I could tell you some amazing stories... but then you'd have to die."
+
+@The_monster@ says, "Did you just laugh? Why did you laugh?" @player_only@
+
+@The_monster@ says @to_foe@, "I've still got bits of the last thief I caught. Want to see?"
+
+@The_monster@ says @to_foe@, "You look a bit like a thief."
+
+w:1
+@The_monster@ says, "The last guard my employer hired fell asleep on the job. Can you imagine that?"
 %%%%
 ############ DUVESSA ### An over-confident elf fighter, twin sister of Dowan
 twin_died Duvessa
