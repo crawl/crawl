@@ -466,7 +466,6 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     case MONS_NAGA_MAGE:
     case MONS_RUPERT:
     case MONS_SKELETAL_WARRIOR:
-    case MONS_WAYNE:
     case MONS_PALE_DRACONIAN:
     case MONS_RED_DRACONIAN:
     case MONS_WHITE_DRACONIAN:
@@ -476,9 +475,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     case MONS_YELLOW_DRACONIAN:
     case MONS_PURPLE_DRACONIAN:
     case MONS_TIAMAT:
-        if (mons_genus(mon->type) == MONS_DWARF)
-            item_race = MAKE_ITEM_DWARVEN;
-        else if (mons_genus(mon->type) == MONS_NAGA)
+        if (mons_genus(mon->type) == MONS_NAGA)
             item_race = MAKE_ITEM_NO_RACE;
 
         item.base_type = OBJ_WEAPONS;
@@ -491,6 +488,15 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
             9,  WPN_WAR_AXE,     9, WPN_FLAIL,
             1,  WPN_BROAD_AXE,   1, WPN_SPIKED_FLAIL,
             0);
+        break;
+
+    case MONS_WAYNE:
+        item_race = MAKE_ITEM_DWARVEN;
+
+        item.base_type = OBJ_WEAPONS;
+        // speech references an axe
+        item.sub_type  = random_choose(WPN_WAR_AXE, WPN_BROAD_AXE,
+                                       WPN_BATTLEAXE, -1);
         break;
 
     case MONS_ORC_WARLORD:
@@ -1297,6 +1303,10 @@ void give_shield(monsters *mon, int level)
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER,
                               level * 2 + 1, MAKE_ITEM_RANDOM_RACE, 1);
         break;
+    case MONS_WAYNE:
+        make_item_for_monster(mon, OBJ_ARMOUR, ARM_SHIELD,
+                              level * 2 + 1, MAKE_ITEM_DWARVEN, 1);
+        break;
     case MONS_NORBERT:
     case MONS_LOUISE:
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_LARGE_SHIELD,
@@ -1420,11 +1430,7 @@ void give_armour(monsters *mon, int level)
     case MONS_DUANE:
     case MONS_EDMUND:
     case MONS_RUPERT:
-    case MONS_WAYNE:
     {
-        if (mons_genus(mon->type) == MONS_DWARF)
-            item_race = MAKE_ITEM_DWARVEN;
-
         item.base_type = OBJ_ARMOUR;
 
         const int temp_rand = random2(4);
@@ -1434,6 +1440,18 @@ void give_armour(monsters *mon, int level)
                                           : ARM_CHAIN_MAIL);
         break;
     }
+
+    case MONS_WAYNE:
+        item_race = MAKE_ITEM_DWARVEN;
+        item.base_type = OBJ_ARMOUR;
+        if (one_chance_in(3))
+            level = MAKE_GOOD_ITEM;
+
+        item.sub_type = random_choose_weighted(3, ARM_CHAIN_MAIL,
+                            3, ARM_BANDED_MAIL, 3, ARM_SPLINT_MAIL,
+                            10, ARM_PLATE_MAIL, 1, ARM_CRYSTAL_PLATE_MAIL,
+                            0);
+        break;
 
     case MONS_ORC_WARLORD:
     case MONS_SAINT_ROKA:
