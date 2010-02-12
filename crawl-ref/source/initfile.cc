@@ -891,9 +891,9 @@ void game_options::reset_options()
     tile_tag_pref         = crawl_state.arena ? TAGPREF_NAMED : TAGPREF_ENEMY;
     tile_display          = TDSP_INVENT;
 
-    tile_show_minihealthbar = true;
-    tile_show_minimagicbar  = true;
-    tile_show_demon_numbers = true;
+    tile_show_minihealthbar  = true;
+    tile_show_minimagicbar   = true;
+    tile_show_demon_tier     = true;
     tile_better_transparency = false;
 #endif
 
@@ -3225,7 +3225,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else INT_OPTION(tile_update_rate, 50, INT_MAX);
     else BOOL_OPTION(tile_show_minihealthbar);
     else BOOL_OPTION(tile_show_minimagicbar);
-    else BOOL_OPTION(tile_show_demon_numbers);
+    else BOOL_OPTION(tile_show_demon_tier);
     else if (key == "tile_tag_pref")
     {
         tile_tag_pref = string2tag_pref(field.c_str());
