@@ -97,10 +97,10 @@ The contents of this text are:
                 tile_excl_centre_col, tile_update_rate, tile_key_repeat_delay,
                 tile_tooltip_ms, tile_tag_pref, tile_full_screen,
                 tile_window_width, tile_window_height, tile_map_pixels,
-                tile_font_crt_file, tile_font_stat_file, tile_font_msg_file,
-                tile_font_tip_file, tile_font_lbl_file, tile_font_crt_size,
-                tile_font_stat_size, tile_font_msg_size, tile_font_tip_size,
-                tile_font_lbl_size, tile_show_minihealthbar,
+                tile_force_overlay, tile_font_crt_file, tile_font_stat_file,
+                tile_font_msg_file, tile_font_tip_file, tile_font_lbl_file,
+                tile_font_crt_size, tile_font_stat_size, tile_font_msg_size,
+                tile_font_tip_size, tile_font_lbl_size, tile_show_minihealthbar,
                 tile_show_minimagicbar, tile_show_demon_tier,
                 tile_better_transparency
 5-  Character Dump.
@@ -1755,6 +1755,10 @@ tile_window_height = 0
 
 tile_map_pixels = 4
         The number of pixels each minimap square should take up.
+
+tile_force_overlay = false
+        Setting this option to true will force the message window to appear as
+        an overlay on top of the screen.
 
 tile_full_screen = false
         Setting this option to true will start Crawl in full screen mode.

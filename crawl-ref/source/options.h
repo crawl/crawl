@@ -368,6 +368,7 @@ public:
     int         tile_window_width;
     int         tile_window_height;
     int         tile_map_pixels;
+    bool        tile_force_overlay;
     // display settings
     int         tile_update_rate;
     int         tile_key_repeat_delay;

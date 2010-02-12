@@ -882,6 +882,7 @@ void game_options::reset_options()
     tile_window_width     = 0;
     tile_window_height    = 0;
     tile_map_pixels       = 0;
+    tile_force_overlay    = false;
 
     // delays
     tile_update_rate      = 1000;
@@ -3219,6 +3220,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else INT_OPTION(tile_window_width, 0, INT_MAX);
     else INT_OPTION(tile_window_height, 0, INT_MAX);
     else INT_OPTION(tile_map_pixels, 1, INT_MAX);
+    else BOOL_OPTION(tile_force_overlay);
     else INT_OPTION(tile_tooltip_ms, 0, INT_MAX);
     else INT_OPTION(tile_update_rate, 50, INT_MAX);
     else BOOL_OPTION(tile_show_minihealthbar);

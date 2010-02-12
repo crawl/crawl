@@ -1055,8 +1055,11 @@ void TilesFramework::do_layout()
             m_region_msg->place(0, m_region_tile->ey, margin);
         }
 
-        // Shrink viewsz if too tall:
-        while (m_region_tile->wy + m_region_msg->wy > m_windowsz.y
+        // Shrink viewsz if too tall (don't consider m_region_msg size
+        // if tile_force_overlay is on):
+        while (m_region_tile->wy +
+               (Options.tile_force_overlay ? 0 : m_region_msg->wy)
+               > m_windowsz.y
                && crawl_view.viewsz.y > VIEW_MIN_HEIGHT)
         {
             crawl_view.viewsz.y -= 2;
@@ -1065,20 +1068,26 @@ void TilesFramework::do_layout()
             m_region_msg->place(0, m_region_tile->ey, margin);
         }
 
-        // Shrink msgsz if too tall:
+        // Shrink msgsz if too tall (it is assumed that users of
+        // tile_force_overlay never want to shrink message window):
         while (m_region_tile->wy + m_region_msg->wy > m_windowsz.y
-               && crawl_view.msgsz.y > Options.msg_min_height)
+               && crawl_view.msgsz.y > Options.msg_min_height
+               && !Options.tile_force_overlay)
         {
             m_region_msg->resize(m_region_msg->mx, --crawl_view.msgsz.y);
         }
 
-        if (m_region_tile->wy + m_region_msg->wy > m_windowsz.y)
+        // Use overlaid message window if the normal one doesn't fit; or
+        // if tile_force_overlay is on.
+        if (m_region_tile->wy + m_region_msg->wy > m_windowsz.y
+            || Options.tile_force_overlay)
         {
             m_region_tile->place(0, 0, 0);
             m_region_msg->place(0, 0, 0);
             message_overlay = true;
         }
-    }
+
+   }
 
     if (message_overlay)
     {
