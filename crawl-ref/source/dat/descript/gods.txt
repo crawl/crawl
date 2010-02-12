@@ -70,10 +70,6 @@ Beogh
 
 Beogh is the deity worshipped by the cave orcs native to parts of the dungeon. Only orcs may devote their service to Beogh, and must prove their devotion by bloodshed and the blessing of dead orcs. Devout followers of Beogh can smite their foes, and especially fervent devotees of Beogh may even gain followers of their own, for the orcs still look for their Messiah.
 %%%%
-Jiyva
-
-Jiyva is the chaotic ancient deity of the slimes.
-%%%%
 Fedhas
 
 Fedhas Madash is the god of plant and fungal life. Fedhas demands that followers encourage the decomposition of corpses. Fedhas forbids followers from harming any species under Fedhas' protection, and from using any necromantic effects that interfere with corpses. In return Fedhas grants a number of abilities that promote the growth of plants and fungi. These abilities may incidentally prove useful to adventurers. 
@@ -81,6 +77,10 @@ Fedhas Madash is the god of plant and fungal life. Fedhas demands that followers
 Cheibriados
 
 Cheibriados is a god who meditates on the mystery of time. Those who choose to follow this god's path will learn to eschew unnecessary haste, slowing down both themselves and others, and hurt those who refuse to slow down. Especially devout followers may even temporarily abandon the flow of time and its needless disturbances.
+%%%%
+Jiyva
+
+Jiyva is the chaotic ancient deity of the slimes. Followers are expected to support the spread and satiation of their fellow slimes by allowing them to consume items and are forbidden from harming any slimes. Especially favoured followers will become as shapeless as their god, as their attributes and mutations shift around under Jiyva's influence.
 %%%%
 Zin powers
 
@@ -144,3 +144,6 @@ Cheibriados powers
 
 Followers are rewarded for moving slowly and killing creatures which are faster than they are.  Moving too quickly or using magically hastened weapons is frowned upon.  Cheibriados rewards the faithful with a slowed metabolism, the power to slow other creatures, the power to harm those who move more quickly than you do and, finally, the ability to step out of the flow of time.
 %%%%
+Jiyva powers
+
+Followers can request a jelly from Jiyva, turn monsters to slime, and eventually remove their harmful mutations. As their piety grows, Jiyva will, with increasing frequency, drop jellies into the dungeon, rearrange their attributes to favour the attribute last chosen when gaining an experience level, and grant mutation gifts. All slimes will never harm a follower of Jiyva, and Jiyva demands that worshippers do the same. Eventually, all visible slimes will join in on a prayer, preventing them from moving for a while.
