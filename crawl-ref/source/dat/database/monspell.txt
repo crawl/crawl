@@ -180,6 +180,16 @@ You hear a spitting sound.
 # Unique monsters
 ########################################################################
 %%%%
+Frances cast
+
+@The_monster@ mutters in a terrible tongue.
+
+@The_monster@ whispers indecipherable words.
+
+@The_monster@ chants phrases taken from a Devil's mouth.
+
+@The_monster@ screams a word of power!
+%%%%
 gastronok cast targeted
 
 @The_monster@ looks at @target@ while chanting.

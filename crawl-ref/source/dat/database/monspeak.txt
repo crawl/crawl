@@ -4041,10 +4041,52 @@ SPELL:@The_monster@ calls on the powers of Hell!
 @The_monster@ brags, "I can call spirits from the vast deeps."
 ## END Eustachio ##
 %%%%
-############ FRANCES ### A mercenary guarding the dungeon
+############ FRANCES ### A warrior who bested a Pandemonium Lord
 Frances
 
-@_mercenary_guard_@
+@_Frances_common_@
+
+w:5
+@_Frances_rare_@
+%%%%
+_Frances_common_
+
+VISUAL:@The_monster@ sneers @at_foe@.
+
+VISUAL:@The_monster@ runs a finger over her scar.
+
+ENCHANT:@The_monster@ speaks in an indecipherable language.
+
+ENCHANT:@The_monster@ mutters a nigh-unspeakable word.
+
+@The_monster@ says, "Show me proof of your conquests, and I will call you a great adventurer." @player_only@
+
+@The_monster@ says, "I command an army of devils. What do you command?" @player_only@
+
+@The_monster@ says, "I value strength and power. I see none of this in you." @player_only@
+
+@The_monster@ says, "I speak the language of demons!"
+
+@The_monster@ says, "I have seen worlds and universes beyond all imagining."
+%%%%
+_Frances_rare_
+
+VISUAL:@The_monster@ takes a defensive stance.
+
+ENCHANT:@The_monster@ growls a series of guttural syllables.
+
+@The_monster@ says, "There is a strange beauty in the demonic, don't you think?"
+
+@The_monster@ says, "Would you challenge me, knowing my power?"
+
+@The_monster@ says, "I am undefeated in single-handed combat."
+
+@The_monster@ says, "Warriors are made for war and combat. Do you call yourself a warrior?"
+
+w:1
+@The_monster@ says, "Even the Halls of Hell could not contain me."
+
+@The_monster@ says, "I will defeat you, of this I have no doubt!" @player_only@
 %%%%
 ############ FRANCIS ### A wizard looking for body-parts as spell components
 Francis
