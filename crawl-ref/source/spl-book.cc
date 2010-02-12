@@ -780,20 +780,24 @@ int spellbook_contents( item_def &book, read_book_action_type action,
         if (action == RBOOK_USE_STAFF)
         {
             if (book.base_type == OBJ_BOOKS ?
-                you.experience_level >= level_diff
+                    you.experience_level >= level_diff
                     && you.magic_points >= level_diff
                 : book.plus >= level_diff * ROD_CHARGE_MULT)
             {
                 colour = spell_highlight_by_utility(stype, COL_KNOWN);
             }
+            else
+                colour = COL_USELESS;
         }
         else
         {
             if (you_cannot_memorise(stype)
-                || (you.experience_level < level_diff
-                     && spell_levels < levels_req
-                     && !spell_skills))
+                || you.experience_level < level_diff
+                || spell_levels < levels_req
+                || !spell_skills)
+            {
                 colour = COL_USELESS;
+            }
             else
                 colour = spell_highlight_by_utility(stype);
         }
@@ -851,8 +855,10 @@ int spellbook_contents( item_def &book, read_book_action_type action,
 
     case RBOOK_READ_SPELL:
         if (book.base_type == OBJ_BOOKS && in_inventory(book))
+        {
             out.cprintf( "Select a spell to read its description or to "
                          "memorise it." EOL );
+        }
         else
             out.cprintf( "Select a spell to read its description." EOL );
         break;
@@ -1513,18 +1519,16 @@ static spell_type _choose_mem_spell(spell_list &spells,
     {
         // [enne] - Hack.  Make title an item so that it's aligned.
         MenuEntry* me =
-            new MenuEntry(
-                "    Spells                         Type          "
-                "                Success  Level",
+            new MenuEntry("    Spells                         Type          "
+                          "                Success  Level",
                 MEL_ITEM);
         me->colour = BLUE;
         spell_menu.add_entry(me);
     }
 #else
     spell_menu.set_title(
-        new MenuEntry(
-            "     Spells                        Type          "
-            "                Success  Level",
+        new MenuEntry("     Spells                        Type          "
+                      "                Success  Level",
             MEL_TITLE));
 #endif
 
@@ -1566,8 +1570,6 @@ static spell_type _choose_mem_spell(spell_list &spells,
     for (unsigned int i = 0; i < spells.size(); i++)
     {
         const spell_type spell = spells[i];
-        const bool grey = spell_difficulty(spell) > you.experience_level
-                       || player_spell_levels() < spell_levels_required(spell);
 
         spells_to_books::iterator it = book_hash.find(spell);
         const bool dangerous = is_dangerous_spellbook(it->second);
@@ -1575,10 +1577,14 @@ static spell_type _choose_mem_spell(spell_list &spells,
         std::ostringstream desc;
 
         int colour = LIGHTGRAY;
-        if (grey)
+        // Grey out spells for which you lack experience or spell levels.
+        if (spell_difficulty(spell) > you.experience_level
+            || player_spell_levels() < spell_levels_required(spell))
+        {
             colour = DARKGRAY;
-
-        colour = spell_highlight_by_utility(spell);
+        }
+        else
+            colour = spell_highlight_by_utility(spell);
 
         // Highlight dangerous books magenta, but don't bother if they are
         // already highlighted as forbidden by the player's god.
