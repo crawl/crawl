@@ -9,10 +9,6 @@ menu = darkgrey:(melded)
 # Bad items
 menu = lightred:.*bad_item.*
 
-# Handle cursed items early to override other colour settings.
-menu = lightred:.*equipped.* cursed
-menu = red: (a|the) cursed
-
 # Useless items, comes here to override artefacts etc.
 menu = darkgrey:.*useless_item.*
 
@@ -23,6 +19,10 @@ ae   = >ring.*(sustenance)
 
 # Evil items
 menu = $evil:.*evil_item.*
+
+# Handle cursed items early to override other colour settings.
+menu = lightred:.*equipped.* cursed
+menu = red: (a|the) cursed
 
 # Important game items
 #
