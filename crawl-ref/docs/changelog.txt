@@ -129,10 +129,12 @@ Monsters
 * Slime creatures can merge to become larger and more powerful.
 * All spectral things can use stairs again.
 * Several cool new uniques.
-* Steeply increase OOD monster generation after a long time spent on one level.
-* Don't make OOD monsters appear in a band until many turns spent on the level.
-* Reduce chances of monsters respawning on cleared levels. [Is that correct?]
-* Reduce chances of meeting OOD monsters on early levels. [Is that correct?]
+* Don't make OOD (out-of-depth) monsters appear in a band until many
+  turns spent on the level.
+* Monster respawns on any level in the main dungeon branches outside
+  Hell and Zot decline with time spent on the level and eventually
+  no further monsters will be generated on the level.
+* Steeply increase OOD monster generation with time spent on a level.
 * Display magic (or "hostile enchantments") resistance in monster descriptions.
 * Hydras pick new target for remaining attacks if their current foe dies.
 * Make monsters forget player position if the player teleports away.
