@@ -85,9 +85,41 @@ MDEF(y)
     PLUARET(number, int(mons->pos().y) - int(you.pos().y));
 }
 
+static const char* _behaviour_name(beh_type beh);
+MDEF(beh)
+{
+    PLUARET(string, _behaviour_name(mons->behaviour));
+}
+
+MDEF(energy)
+{
+    // XXX: fix this after speed_increment clean up
+    PLUARET(number, (mons->speed_increment - 79))
+}
+
+LUAFN(l_mons_add_energy)
+{
+    ASSERT_DLUA;
+    monsters *mons = clua_get_lightuserdata<monsters>(ls, lua_upvalueindex(1));
+    mons->speed_increment += luaL_checkint(ls, 1);
+    return (0);
+}
+
+MDEFN(add_energy, add_energy)
+
 MDEF(hd)
 {
     PLUARET(number, mons->hit_dice);
+}
+
+MDEF(targetx)
+{
+    PLUARET(number, mons->target.x);
+}
+
+MDEF(targety)
+{
+    PLUARET(number, mons->target.y);
 }
 
 MDEF(shapeshifter)
@@ -351,9 +383,15 @@ static MonsAccessor mons_attrs[] =
     { "x"   , l_mons_x    },
     { "y"   , l_mons_y    },
     { "hd"  , l_mons_hd   },
+    { "beh" , l_mons_beh  },
     { "muse", l_mons_muse },
     { "meat", l_mons_meat },
 
+    { "targetx", l_mons_targetx },
+    { "targety", l_mons_targety },
+
+    { "energy",          l_mons_energy          },
+    { "add_energy",      l_mons_add_energy      },
     { "dismiss",         l_mons_dismiss         },
     { "experience",      l_mons_experience      },
     { "random_teleport", l_mons_random_teleport },
@@ -366,8 +404,12 @@ static MonsAccessor mons_attrs[] =
 static int monster_get(lua_State *ls)
 {
     MonsterWrap *mw = clua_get_userdata< MonsterWrap >(ls, MONS_METATABLE);
-    if (!mw || mw->turn != you.num_turns || !mw->mons)
+    if (!mw
+        || !mw->mons
+        || CLua::get_vm(ls).managed_vm && mw->turn != you.num_turns)
+    {
         return (0);
+    }
 
     const char *attr = luaL_checkstring(ls, 2);
     if (!attr)
@@ -389,6 +431,14 @@ static const char *_monster_behaviour_names[] = {
     "panic",
     "lurk"
 };
+
+static const char* _behaviour_name(beh_type beh)
+{
+    if (0 <= beh && beh < ARRAYSZ(_monster_behaviour_names))
+        return (_monster_behaviour_names[beh]);
+    else
+        return ("invalid");
+}
 
 static beh_type behaviour_by_name(const std::string &name)
 {
@@ -425,6 +475,10 @@ static int monster_set(lua_State *ls)
         if (beh != NUM_BEHAVIOURS)
             mw->mons->behaviour = beh;
     }
+    else if (!strcmp(attr, "targetx"))
+        mw->mons->target.x = luaL_checkint(ls, 3);
+    else if (!strcmp(attr, "targety"))
+        mw->mons->target.y = luaL_checkint(ls, 3);
 
     return (0);
 }
