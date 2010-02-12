@@ -1016,6 +1016,122 @@ bool backlight_monsters(coord_def where, int pow, int garbage)
     return (true);
 }
 
+// Returns a vector of cloud types created by this potion type.
+// FIXME: Heavily duplicated code.
+static std::vector<int> _get_evaporate_result(int potion)
+{
+    std::vector <int> beams;
+    bool random_potion = false;
+    switch (potion)
+    {
+    case POT_STRONG_POISON:
+    case POT_POISON:
+        beams.push_back(BEAM_POTION_POISON);
+        break;
+
+    case POT_DEGENERATION:
+        beams.push_back(BEAM_POTION_POISON);
+        beams.push_back(BEAM_POTION_MIASMA);
+        break;
+
+    case POT_DECAY:
+        beams.push_back(BEAM_POTION_MIASMA);
+        break;
+
+    case POT_PARALYSIS:
+    case POT_CONFUSION:
+    case POT_SLOWING:
+        beams.push_back(BEAM_POTION_STINKING_CLOUD);
+        break;
+
+    case POT_WATER:
+    case POT_PORRIDGE:
+        beams.push_back(BEAM_POTION_STEAM);
+        break;
+
+    case POT_BLOOD:
+    case POT_BLOOD_COAGULATED:
+        beams.push_back(BEAM_POTION_STINKING_CLOUD);
+        // deliberate fall through
+    case POT_BERSERK_RAGE:
+        beams.push_back(BEAM_POTION_FIRE);
+        beams.push_back(BEAM_POTION_STEAM);
+        break;
+
+    case POT_MUTATION:
+        beams.push_back(BEAM_POTION_MUTAGENIC);
+        // deliberate fall-through
+    case POT_GAIN_STRENGTH:
+    case POT_GAIN_DEXTERITY:
+    case POT_GAIN_INTELLIGENCE:
+    case POT_EXPERIENCE:
+    case POT_MAGIC:
+        beams.push_back(BEAM_POTION_FIRE);
+        beams.push_back(BEAM_POTION_COLD);
+        beams.push_back(BEAM_POTION_POISON);
+        beams.push_back(BEAM_POTION_MIASMA);
+        random_potion = true;
+        break;
+
+    default:
+        beams.push_back(BEAM_POTION_FIRE);
+        beams.push_back(BEAM_POTION_STINKING_CLOUD);
+        beams.push_back(BEAM_POTION_COLD);
+        beams.push_back(BEAM_POTION_POISON);
+        beams.push_back(BEAM_POTION_BLUE_SMOKE);
+        beams.push_back(BEAM_POTION_STEAM);
+        random_potion = true;
+        break;
+    }
+
+    std::vector<int> clouds;
+    for (unsigned int k = 0; k < beams.size(); ++k)
+        clouds.push_back(beam2cloud((beam_type) beams[k]));
+
+    if (random_potion)
+    {
+        // handled in beam.cc
+        clouds.push_back(CLOUD_FIRE);
+        clouds.push_back(CLOUD_STINK);
+        clouds.push_back(CLOUD_COLD);
+        clouds.push_back(CLOUD_POISON);
+        clouds.push_back(CLOUD_BLUE_SMOKE);
+        clouds.push_back(CLOUD_STEAM);
+    }
+
+    return (clouds);
+}
+
+// Returns a comma-separated list of all cloud types potentially created
+// by this potion type. Doesn't respect the different probabilities.
+std::string get_evaporate_result_list(int potion)
+{
+    std::vector<int> clouds = _get_evaporate_result(potion);
+    std::sort(clouds.begin(), clouds.end());
+
+    std::vector<std::string> clouds_list;
+
+    int old_cloud = -1;
+    for (unsigned int k = 0; k < clouds.size(); ++k)
+    {
+        const int new_cloud = clouds[k];
+        if (new_cloud == old_cloud)
+            continue;
+
+        // This relies on all smoke types being handled as blue.
+        if (new_cloud == CLOUD_BLUE_SMOKE)
+            clouds_list.push_back("coloured smoke");
+        else
+            clouds_list.push_back(cloud_name((cloud_type) new_cloud));
+
+        old_cloud = new_cloud;
+    }
+
+    return comma_separated_line(clouds_list.begin(), clouds_list.end(),
+                                " or ", ", ");
+}
+
+
 bool cast_evaporate(int pow, bolt& beem, int pot_idx)
 {
     ASSERT(you.inv[pot_idx].base_type == OBJ_POTIONS);
@@ -1041,9 +1157,11 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
     switch (potion.sub_type)
     {
     case POT_STRONG_POISON:
+        beem.ench_power *= 2;
+        // deliberate fall-through
+    case POT_POISON:
         beem.flavour   = BEAM_POTION_POISON;
         tracer_flavour = BEAM_POISON;
-        beem.ench_power *= 2;
         break;
 
     case POT_DEGENERATION:
@@ -1051,11 +1169,6 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
         beem.flavour   = (coinflip() ? BEAM_POTION_POISON : BEAM_POTION_MIASMA);
         tracer_flavour = BEAM_MIASMA;
         beem.ench_power *= 2;
-        break;
-
-    case POT_POISON:
-        beem.flavour   = BEAM_POTION_POISON;
-        tracer_flavour = BEAM_POISON;
         break;
 
     case POT_DECAY:
@@ -1301,6 +1414,7 @@ bool cast_fulsome_distillation(int /*pow*/)
     mitm[corpse].inscription.clear();
     item_colour(mitm[corpse]); // sets special as well
 
+    // Always identify said potion.
     set_ident_type(mitm[corpse], ID_KNOWN_TYPE);
 
     mprf("You extract %s from the corpse.",
