@@ -75,9 +75,6 @@ Slings
 
 Being skilled in a particular type of ranged attack will let you deal
 more damage when using the appropriate launcher and ammunition.
-
-If you're already trained in Throwing, you'll pick up the Slings skill
-faster, and vice versa.
 %%%%
 Bows
 
@@ -99,9 +96,6 @@ Throwing
 Training Throwing will make thrown weapons (as opposed to ones fired
 from a launcher) more effective. In particular, it makes weapons of
 returning more likely to actually return to their thrower.
-
-If you're already trained in Slings, you'll pick up the Throwing skill
-faster, and vice versa.
 %%%%
 Armour
 
