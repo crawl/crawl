@@ -277,11 +277,21 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
             do_curse_item(item);
         break;
 
+    case MONS_EDMUND:
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type = random_choose_weighted (30, WPN_FLAIL, 10, WPN_SPIKED_FLAIL,
+                                                 5, WPN_DIRE_FLAIL, 0);
+        // "expensive" flail. {due}
+        if (item.sub_type == WPN_FLAIL)
+            level = MAKE_GOOD_ITEM;
+
+        break;
+
     case MONS_GNOLL:
     case MONS_OGRE_MAGE:
     case MONS_NAGA_WARRIOR:
     case MONS_GREATER_NAGA:
-    case MONS_EDMUND:
     case MONS_DUANE:
         item_race = MAKE_ITEM_NO_RACE;
         if (!one_chance_in(5))
