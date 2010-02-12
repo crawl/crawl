@@ -18,6 +18,7 @@
 #include "godwrath.h"
 #include "libutil.h"
 #include "message.h"
+#include "mon-act.h"
 #include "mon-iter.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
@@ -213,6 +214,16 @@ LUAFN(debug_god_wrath)
     return (0);
 }
 
+LUAFN(debug_handle_monster_move)
+{
+    MonsterWrap *mw = clua_get_userdata< MonsterWrap >(ls, MONS_METATABLE);
+    if (!mw || !mw->mons)
+        return (0);
+
+    handle_monster_move(mw->mons);
+    return (0);
+}
+
 const struct luaL_reg debug_dlib[] =
 {
 { "goto_place", debug_goto_place },
@@ -225,6 +236,7 @@ const struct luaL_reg debug_dlib[] =
 { "cull_monsters", debug_cull_monsters},
 { "dismiss_adjacent", debug_dismiss_adjacent},
 { "god_wrath", debug_god_wrath},
+{ "handle_monster_move", debug_handle_monster_move },
 
 { NULL, NULL }
 };
