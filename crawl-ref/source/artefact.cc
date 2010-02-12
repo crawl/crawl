@@ -1257,13 +1257,7 @@ static bool _init_artefact_properties(item_def &item)
 {
     ASSERT( is_artefact( item ) );
 
-    CrawlHashTable &props = item.props;
-    if (!props.exists( ARTEFACT_PROPS_KEY ))
-        props[ARTEFACT_PROPS_KEY].new_vector(SV_SHORT).resize(ART_PROPERTIES);
-
-    CrawlVector &rap = props[ARTEFACT_PROPS_KEY].get_vector();
-    rap.set_max_size(ART_PROPERTIES);
-
+    CrawlVector &rap = item.props[ARTEFACT_PROPS_KEY].get_vector();
     for (vec_size i = 0; i < ART_PROPERTIES; i++)
         rap[i] = static_cast<short>(0);
 
