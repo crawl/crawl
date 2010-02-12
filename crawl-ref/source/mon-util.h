@@ -362,6 +362,7 @@ bool mons_class_is_stationary(int mc);
 bool mons_is_stationary(const monsters *mon);
 bool mons_is_firewood(const monsters *mon);
 
+int monster_player_speed_delta(const monsters *mon);
 bool mons_is_fast( const monsters *mon );
 bool mons_is_projectile(int mc);
 bool mons_is_insubstantial(int mc);

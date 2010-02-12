@@ -484,14 +484,19 @@ bool mons_is_firewood(const monsters *mon)
             && mons_class_flag(mon->type, M_NO_EXP_GAIN));
 }
 
-bool mons_is_fast(const monsters *mon)
+int monster_player_speed_delta(const monsters *mon)
 {
     int pspeed = 1000/player_movement_speed()/player_speed();
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Your delay: %d, your speed: %d, mon speed: %d",
         player_movement_speed(), pspeed, mon->speed);
 #endif
-    return (mon->speed > pspeed);
+    return (mon->speed - pspeed);
+}
+
+bool mons_is_fast(const monsters *mon)
+{
+    return (monster_player_speed_delta(mon) > 0);
 }
 
 bool mons_is_projectile(int mc)
