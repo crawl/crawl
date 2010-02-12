@@ -254,7 +254,7 @@ Tiles
 Options
 -------
 * Changed: clear_messages = false. (Was: delay_message_clear = false.)
-* New: option explore_delay, for different delay than travel. Default: -1.
+* New: option explore_delay = -1, to differente explore delay from travel delay.
 * New: autoinscribe_cursed = true, for items found cursed.
 * New: show_more = true. With clear_messages, prints -More- for full messages.
 * New: small_more = true. If false, uses a full line for -More-.
