@@ -47,6 +47,7 @@
 #include "religion.h"
 #include "rng.h"
 #include "skills2.h"
+#include "spells4.h"
 #include "spl-book.h"
 #include "stuff.h"
 #include "env.h"
@@ -1980,6 +1981,12 @@ std::string get_item_description( const item_def &item, bool verbose,
                  description << (timer[i].get_long()) << "  ";
         }
 #endif
+        if (item_type_known(item) && you.has_spell(SPELL_EVAPORATE))
+        {
+            description << "$Evaporating this potion will create clouds of "
+                        << get_evaporate_result_list(item.sub_type)
+                        << ".";
+        }
         break;
 
     case OBJ_SCROLLS:

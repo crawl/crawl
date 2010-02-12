@@ -26,6 +26,7 @@ void remove_divine_shield();
 void cast_divine_shield();
 void cast_detect_secret_doors(int pow);
 void cast_discharge(int pow);
+std::string get_evaporate_result_list(int potion);
 bool cast_evaporate(int pow, bolt& beem, int potion);
 bool cast_fulsome_distillation(int pow);
 void cast_phase_shift(int pow);
