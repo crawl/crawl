@@ -967,8 +967,8 @@ trapwalk_safe_hp = <trap_name>:<minimum_hp>, ...
 trap_prompt = true
         If trap_prompt is set to true Crawl will use the trapwalk_safe_hp
         values to decide whether the player should be prompted before
-        stepping on or trying to disarm a mechanical trap. Note that you'll
-        always be prompted before stepping on non-mechanical traps.
+        stepping on a mechnical trap. Note that you'll always be prompted
+        before stepping on non-mechanical traps.
 
 rest_wait_both = false
         If rest_wait_both is set to true then resting will only stop
@@ -2153,7 +2153,7 @@ use_fake_player_cursor = false
         Makes the main view highlight the player without using the
         terminal cursor. This means it won't flicker when the cursor
         is turned off to move elsewhere for drawing, and allows
-        turning the cursor off by default.
+        turning the cursor off by default. Has no effect in the Tiles build.
 
 6-b     DOS and Windows.
 ------------------------
