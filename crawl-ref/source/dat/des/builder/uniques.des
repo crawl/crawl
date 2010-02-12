@@ -333,10 +333,6 @@ DEPTH:  Slime:2-6
 WEIGHT: 100
 : place_unique(_G, "Dissolution")
 
-NAME:   uniq_murray
-DEPTH:  Hell
-: place_unique(_G, "Murray")
-
 NAME:   uniq_polyphemus
 DEPTH:  Shoals
 : place_unique(_G, "Polyphemus band")
