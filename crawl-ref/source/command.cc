@@ -2686,6 +2686,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "         temples in the dungeon\n"
                        "<w>{</w>      : magic mapping\n"
                        "<w>}</w>      : detect all traps on level\n"
+                       "<w>)</w>      : change Shoals' tide speed\n"
                        "\n"
                        "<yellow>Debugging commands</yellow>\n"
                        "<w>f</w>      : player combat damage stats\n"
