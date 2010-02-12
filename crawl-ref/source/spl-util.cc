@@ -1052,7 +1052,7 @@ bool spell_is_useful(spell_type spell)
         return (false);
 
     // due to the way this function is used, you should generally try to be
-    // fairly specific about the curcimstances in which a spell is "useful".
+    // fairly specific about the circumstances in which a spell is "useful".
     switch (spell)
     {
     case SPELL_SWIFTNESS:
@@ -1060,11 +1060,6 @@ bool spell_is_useful(spell_type spell)
         if (player_movement_speed() > 6
             && you.duration[DUR_CONTROLLED_FLIGHT] > 0
             && you.duration[DUR_SWIFTNESS]  < 1)
-            return (true);
-        break;
-    case SPELL_HASTE:
-    case SPELL_BERSERKER_RAGE:
-        if (you.duration[DUR_SLOW] > 0)
             return (true);
         break;
     case SPELL_CONTROL_TELEPORT:
