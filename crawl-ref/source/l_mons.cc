@@ -13,14 +13,6 @@
 /////////////////////////////////////////////////////////////////////
 // Monster handling
 
-#define MONS_METATABLE "monster.monsaccess"
-
-struct MonsterWrap
-{
-    monsters *mons;
-    long      turn;
-};
-
 void push_monster(lua_State *ls, monsters *mons)
 {
     MonsterWrap *mw = clua_new_userdata< MonsterWrap >(ls, MONS_METATABLE);
