@@ -82,6 +82,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
+#include "transform.h"
 #include "tutorial.h"
 #include "view.h"
 #include "xom.h"
@@ -220,7 +221,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "summon a divine warrior" },
     // Kikubaaqudgha
     { "receive cadavers from Kikubaaqudgha",
-      "",
+      "Kikubaaqudgha is protecting you from some side-effects of death magic.",
       "",
       "Kikubaaqudgha is protecting you from unholy torment.",
       "invoke torment by praying over a corpse" },
@@ -328,7 +329,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "summon a divine warrior" },
     // Kikubaaqudgha
     { "receive cadavers from Kikubaaqudgha",
-      "",
+      "Kikubaaqudgha is no longer shielding you from miscast death magic.",
       "",
       "Kikubaaqudgha will no longer protect you from unholy torment.",
       "invoke torment by praying over a corpse" },
@@ -3202,6 +3203,9 @@ bool player_can_join_god(god_type which_god)
     if (which_god == GOD_FEDHAS && you.holiness() == MH_UNDEAD)
         return (false);
 
+    if (which_god == GOD_SIF_MUNA && !you.spell_no)
+        return (false);
+
     return (true);
 }
 
@@ -3235,8 +3239,15 @@ void god_pitch(god_type which_god)
     if (!player_can_join_god(which_god))
     {
         you.turn_is_over = false;
-        simple_god_message(" does not accept worship from those such as you!",
-                           which_god);
+        if (which_god == GOD_SIF_MUNA)
+            simple_god_message(" does not accept worship from the ignorant!",
+                               which_god);
+        else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH)
+            simple_god_message(" says: How dare you come in such a loathsome form!",
+                               which_god);
+        else
+            simple_god_message(" does not accept worship from those such as you!",
+                               which_god);
         return;
     }
 
@@ -3475,6 +3486,56 @@ bool god_likes_fresh_corpses(god_type god)
             || god == GOD_TROG
             || god == GOD_LUGONU
             || (god == GOD_KIKUBAAQUDGHA && you.piety >= piety_breakpoint(4)));
+}
+
+bool god_likes_spell(spell_type spell, god_type god)
+{
+    switch(god)
+    {
+    case GOD_VEHUMET:
+        return (vehumet_supports_spell(spell));
+    case GOD_KIKUBAAQUDGHA:
+        return (spell_typematch(spell, SPTYP_NECROMANCY));
+    default: // quash unhandled constants warnings
+        return (false);
+    }
+}
+
+bool god_hates_spell(spell_type spell, god_type god)
+{
+    if (is_good_god(god) && (is_unholy_spell(spell) || is_evil_spell(spell)))
+        return (true);
+
+    unsigned int disciplines = get_spell_disciplines(spell);
+
+    switch (god)
+    {
+    case GOD_ZIN:
+        if (is_unclean_spell(spell) || is_chaotic_spell(spell))
+            return (true);
+        break;
+    case GOD_SHINING_ONE:
+        // TSO hates using poison, but is fine with curing it, resisting
+        // it, or destroying it.
+        if ((disciplines & SPTYP_POISON) && spell != SPELL_CURE_POISON
+            && spell != SPELL_RESIST_POISON && spell != SPELL_IGNITE_POISON)
+            return (true);
+    case GOD_YREDELEMNUL:
+        if (is_holy_spell(spell))
+            return (true);
+        break;
+    case GOD_FEDHAS:
+        if (is_corpse_violating_spell(spell))
+            return (true);
+        break;
+    case GOD_CHEIBRIADOS:
+        if (is_hasty_spell(spell))
+            return (true);
+        break;
+    default:
+        break;
+    }
+    return (false);
 }
 
 harm_protection_type god_protects_from_harm(god_type god, bool actual)
@@ -4142,7 +4203,7 @@ static bool _cmp_god_by_name(god_type god1, god_type god2)
 }
 
 // Vector of temple gods.
-// Sorted by name for the benefit of the overmap.
+// Sorted by name for the benefit of the overview.
 std::vector<god_type> temple_god_list()
 {
     std::vector<god_type> god_list;
@@ -4157,7 +4218,7 @@ std::vector<god_type> temple_god_list()
 }
 
 // Vector of non-temple gods.
-// Sorted by name for the benefit of the overmap.
+// Sorted by name for the benefit of the overview.
 std::vector<god_type> nontemple_god_list()
 {
     std::vector<god_type> god_list;

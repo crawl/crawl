@@ -121,19 +121,14 @@ interlevel-travel.depth.prompt
 butchering
 
 <h>Butchering<h>
-<w>y, c</w>: Butcher the selected corpse.
-<w>a</w>   : Butcher this corpse and all the ones following in the stack.
-<w>q</w>   : Quit the prompt (don't butcher anything).
-<w>n</w>   : Don't butcher this corpse, skip to the next one.
-      (This is the default behaviour if you answer with anything not
-       listed here.)
-
-<h>Special information for Vampires</h>
-<w>y, c</w>: Butcher or bottle the selected corpse, as applicable.
-<w>b</w>   : Butcher this corpse even if you would normally bottle it.
-<w>a</w>   : Butcher this corpse and all the ones following in the stack.
+<w>y, c</w>: Butcher/bottle the selected corpse.
+<w>a</w>   : Butcher/bottle this corpse and all the ones following in the stack.
       If the prompt is about bottling the blood, all bloodless corpses
       will be skipped.
+<w>q</w>   : Quit the prompt (don't butcher/bottle anything).
+<w>n</w>   : Don't butcher/bottle this corpse, skip to the next one.
+      (This is the default behaviour if you answer with anything not
+       listed here.)
 
 <h>Notes for Tiles</h>
 If you are playing with Tiles you can butcher (or bottle) a single

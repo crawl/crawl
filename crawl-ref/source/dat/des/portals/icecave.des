@@ -42,13 +42,18 @@ function ice_cave_portal(e)
         dst = "ice_cave",
         dstname_abbrev = "IceCv",
         dstorigin = "in an ice cave",
-        overmap = "frozen archway",
+        overview = "frozen archway",
         turns = timeout_turns,
         floor = "floor",
         msg = messager })
   e.kfeat("O = enter_portal_vault")
   e.colour("O = white")
   e.tile("O = dngn_portal_ice_cave")
+  e.colour("X = white")
+  e.kfeat("X = x")
+  e.rtile("X = wall_ice")
+  e.colour(".123 = blue")
+  e.ftile(".123O+ = floor_ice")
 end
 }}
 
@@ -179,8 +184,6 @@ TAGS:   uniq_ice_cave patrolling no_monster_gen
 DEPTH:  D:16-20, Lair:6-
 ORIENT: float
 : ice_cave_portal(_G)
-COLOUR: X = white
-KFEAT:  X = x
 MONS:   wolf / yak w:5 / nothing w:1
 MONS:   yak / polar bear w:5 / nothing w:1
 MONS:   polar bear / nothing w:2
@@ -207,8 +210,6 @@ TAGS:   uniq_ice_cave patrolling no_monster_gen
 DEPTH:  D:14-20, Elf:2-6
 ORIENT: float
 : ice_cave_portal(_G)
-COLOUR: X = white
-KFEAT:  X = x
 MONS:   ice beast / freezing wraith w:2 / nothing w:2
 MONS:   freezing wraith / nothing w:3
 MONS:   azure jelly w:3 / freezing wraith w:7
@@ -229,19 +230,18 @@ TAGS:   uniq_ice_cave patrolling no_monster_gen
 DEPTH:  D:14-20, Elf:2-6
 ORIENT: float
 : ice_cave_portal(_G)
-COLOUR: x = white
 MONS:   ice devil
 MAP
-xxxxxxx
-x..O..x
-x.....x
-x.1.1.x
-x.....x
-xxx.xxx
-xxx.xxx
-xxx.xxx
-xxx.xxx
-xxx+xxx
+XXXXXXX
+X..O..X
+X.....X
+X.1.1.X
+X.....X
+XXX.XXX
+XXX.XXX
+XXX.XXX
+XXX.XXX
+XXX+XXX
 ENDMAP
 
 NAME:   portal_ice_cave_entry_ice_statue_001
@@ -249,17 +249,16 @@ TAGS:   uniq_ice_cave
 DEPTH:  D:14-20, Elf:2-6, Vault:1-7
 ORIENT: float
 : ice_cave_portal(_G)
-COLOUR: x = white
 MONS:   ice statue
 MAP
-xxxxxxx
-x.....x
-x..O..x
-x.....x
-x..1..x
-x.....x
-x.....x
-xxx+xxx
+XXXXXXX
+X.....X
+X..O..X
+X.....X
+X..1..X
+X.....X
+X.....X
+XXX+XXX
 ENDMAP
 
 NAME:   portal_ice_cave_entry_ice_statue_002

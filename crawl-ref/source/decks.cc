@@ -3124,7 +3124,7 @@ static bool _shuffle_all_decks_on_level()
 #ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "Shuffling: %s on level %d, branch %d",
                  item.name(DESC_PLAIN).c_str(),
-                 static_cast<int>(you.your_level),
+                 static_cast<int>(you.absdepth0),
                  static_cast<int>(you.where_are_you));
 #endif
             _unmark_and_shuffle_deck(item);

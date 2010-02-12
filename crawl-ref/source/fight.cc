@@ -7,6 +7,7 @@
 #include "AppHdr.h"
 
 #include "fight.h"
+#include "melee_attack.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -2577,7 +2578,7 @@ void melee_attack::chaos_affects_defender()
 
     if (beam.flavour != BEAM_NONE)
     {
-        beam.type         = 0;
+        beam.glyph        = 0;
         beam.range        = 0;
         beam.colour       = BLACK;
         beam.effect_known = false;
@@ -5189,9 +5190,7 @@ void melee_attack::mons_perform_attack_rounds()
                 }
 
                 monsters *mons = monster_at(*i);
-                if (mons
-                    && !mons_aligned(attacker->as_monster()->mindex(),
-                                     mons->mindex()))
+                if (mons && !mons_aligned(attacker, mons))
                 {
                     defender = mons;
                     end = false;
@@ -5691,6 +5690,13 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
     ASSERT(!crawl_state.arena);
 
     monsters *defender = &menv[monster_attacked];
+
+    // Can't damage orbs or boulders this way.
+    if (mons_is_projectile(defender->type) && !you.confused())
+    {
+        you.turn_is_over = false;
+        return (false);
+    }
 
     melee_attack attk(&you, defender, unarmed_attacks);
 

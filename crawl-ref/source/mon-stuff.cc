@@ -544,7 +544,7 @@ static void _give_monster_experience(monsters *victim,
         return;
 
     if ((!victim_was_born_friendly || !mon->friendly())
-        && !mons_aligned(killer_index, victim->mindex()))
+        && !mons_aligned(mon, victim))
     {
         if (mon->gain_exp(experience))
         {
@@ -958,7 +958,7 @@ static bool _spore_goes_pop(monsters *monster, killer_type killer,
     beam.is_tracer    = false;
     beam.is_explosion = true;
     beam.beam_source  = monster->mindex();
-    beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
     beam.source       = monster->pos();
     beam.target       = monster->pos();
     beam.thrower      = crawl_state.arena ? KILL_MON
@@ -2145,7 +2145,10 @@ int monster_die(monsters *monster, killer_type killer,
     }
 
     if(monster->type == MONS_BALLISTOMYCETE)
-        activate_ballistomycetes(monster, monster->pos(), YOU_KILL(killer));
+    {
+        activate_ballistomycetes(monster, monster->pos(),
+                                 YOU_KILL(killer) || pet_kill);
+    }
 
     if (!wizard && !submerged)
         _monster_die_cloud(monster, !mons_reset, silent, summoned);

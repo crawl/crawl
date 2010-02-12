@@ -9,6 +9,7 @@
 
 #include "areas.h"
 #include "arena.h"
+#include "artefact.h"
 #include "attitude-change.h"
 #include "beam.h"
 #include "cloud.h"
@@ -221,7 +222,7 @@ static bool _ranged_allied_monster_in_dir(monsters *mon, coord_def p)
         if (ally == NULL)
             continue;
 
-        if (mons_aligned(mon->mindex(), ally->mindex()))
+        if (mons_aligned(mon, ally))
         {
             // Hostile monsters of normal intelligence only move aside for
             // monsters of the same type.
@@ -273,7 +274,7 @@ static bool _allied_monster_at(monsters *mon, coord_def a, coord_def b,
             continue;
         }
 
-        if (mons_aligned(mon->mindex(), ally->mindex()))
+        if (mons_aligned(mon, ally))
             return (true);
     }
 
@@ -749,7 +750,7 @@ static bool _handle_reaching(monsters *monster)
     if (monster->submerged())
         return (false);
 
-    if (mons_aligned(monster->mindex(), monster->foe))
+    if (mons_aligned(monster, foe))
         return (false);
 
     const coord_def foepos(foe->pos());
@@ -894,6 +895,8 @@ static bool _handle_scroll(monsters *monster)
 static bool _handle_wand(monsters *monster, bolt &beem)
 {
     // Yes, there is a logic to this ordering {dlb}:
+    // FIXME: monsters should be able to use wands
+    //        out of sight of the player [rob]
     if (!mons_near(monster)
         || monster->asleep()
         || monster->has_ench(ENCH_SUBMERGED)
@@ -927,7 +930,7 @@ static bool _handle_wand(monsters *monster, bolt &beem)
     beem.damage       = theBeam.damage;
     beem.ench_power   = theBeam.ench_power;
     beem.hit          = theBeam.hit;
-    beem.type         = theBeam.type;
+    beem.glyph        = theBeam.glyph;
     beem.flavour      = theBeam.flavour;
     beem.thrower      = theBeam.thrower;
     beem.is_beam      = theBeam.is_beam;
@@ -1011,10 +1014,17 @@ static bool _handle_wand(monsters *monster, bolt &beem)
         return (false);
     }
 
-    // Fire tracer, if necessary.
-    if (!niceWand)
+    if (monster->confused())
     {
-        fire_tracer( monster, beem );
+        beem.target = dgn_random_point_from(monster->pos(), LOS_RADIUS);
+        if (beem.target.origin())
+            return (false);
+        zap = true;
+    }
+    else if (!niceWand)
+    {
+        // Fire tracer, if necessary.
+        fire_tracer(monster, beem);
 
         // Good idea?
         zap = mons_should_fire(beem);
@@ -1062,7 +1072,7 @@ static void _setup_generic_throw(struct monsters *monster, struct bolt &pbolt)
     pbolt.range = LOS_RADIUS;
     pbolt.beam_source = monster->mindex();
 
-    pbolt.type    = dchar_glyph(DCHAR_FIRED_MISSILE);
+    pbolt.glyph   = dchar_glyph(DCHAR_FIRED_MISSILE);
     pbolt.flavour = BEAM_MISSILE;
     pbolt.thrower = KILL_MON_MISSILE;
     pbolt.aux_source.clear();
@@ -2021,7 +2031,7 @@ static void _handle_monster_move(monsters *monster)
             monsters* targ = monster_at(monster->pos() + mmov);
             if (targ
                 && targ != monster
-                && !mons_aligned(monster->mindex(), targ->mindex())
+                && !mons_aligned(monster, targ)
                 && monster_can_hit_monster(monster, targ))
             {
                 // Maybe they can swap places?
@@ -2911,7 +2921,7 @@ static bool _mon_can_move_to_pos(const monsters *monster,
         if (mons_is_firewood(targmonster) && monster->target != targ)
             return (false);
 
-        if (mons_aligned(monster->mindex(), targmonster->mindex())
+        if (mons_aligned(monster, targmonster)
             && !_mons_can_displace(monster, targmonster))
         {
             return (false);
@@ -3488,7 +3498,7 @@ static bool _monster_move(monsters *monster)
         // Check for attacking another monster.
         if (monsters* targ = monster_at(monster->pos() + mmov))
         {
-            if (mons_aligned(monster->mindex(), targ->mindex()))
+            if (mons_aligned(monster, targ))
                 ret = _monster_swaps_places(monster, mmov);
             else
             {

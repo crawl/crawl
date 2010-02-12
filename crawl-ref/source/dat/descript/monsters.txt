@@ -115,7 +115,7 @@ A beautiful but vain elf with an aptitude for magic and little else. His skills 
 %%%%
 Duane
 
-A mercenary with unusually large ears. He has been hired by someone to guard something; exactly who and what are not exactly clear.
+A mercenary whose only significant trait is his unusually large ears. He was hired to guard something (or possibly someone), but who or what that is, he can't tell you. If he did, he'd have to kill you. In fact, he'd like to just kill you anyway.
 %%%%
 Duvessa
 
@@ -123,7 +123,7 @@ A plain-looking elven fighter who is technically brilliant in many forms of comb
 %%%%
 Edmund
 
-A lightly armoured warrior.
+A jealous sibling of Sigmund (indeed, the youngest of nine brothers). He has none of Sigmund's skills in magic, but makes up for it with his skills in fighting and a canny head for money. He is eager to prove his superiority by killing hapless adventurers with his expensive flail and quick wit.
 %%%%
 Ereshkigal
 
@@ -147,7 +147,7 @@ A horribly powerful demon.
 %%%%
 Frances
 
-A stout warrior, bearing a deep facial scar.
+A stout warrior who once bested a powerful Lord of Pandemonium in combat, gaining control over the demon's realm and thanes. The battle left her with a deep facial scar, one that she carries as a badge of honour rather than a symbol of shame.
 %%%%
 Francis
 

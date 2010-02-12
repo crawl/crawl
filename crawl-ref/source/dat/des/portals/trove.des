@@ -13,10 +13,104 @@
 ##############################################################################
 {{
 
+function get_trove_item(e, value)
+  -- This function should return a table with the following values:
+  --  quantity=0 (number of items, 1 unless consumables)
+  --  base_type="armour" (armour, weapon, potion, scroll, jewellery or book)
+  --  sub_type="robe" (short sword, etc)
+  --  ego_type="resistance" (or false)
+  --  plus1=4 (or false)
+  --  plus2=false
+  --  artefact_name=false (setting this will compare artefact names and status
+  --                       and will be used as the full title for artefact books
+  --                       and so-on. leave as false for non-artefacts.)
+  local item = {
+    quantity=1,
+    base_type="",
+    sub_type="",
+    ego_type=false,
+    plus1=false,
+    plus2=false,
+    artefact_name=false,
+  }
+
+  if you.skill("armour") > 10 and crawl.one_chance_in(4) then
+    return {
+      quantity=1,
+      base_type="armour",
+      sub_type="gold dragon armour",
+      ego_type=false,
+      plus1=3+crawl.random2(3),
+      plus2=false,
+      artefact_name=false
+    }
+  elseif you.skill("dodging") > 10 and crawl.one_chance_in(4) then
+    return {
+      quantity=1,
+      base_type="armour",
+      sub_type="robe",
+      ego_type="resistance",
+      plus1=3+crawl.random2(3),
+      plus2=false,
+      artefact_name=false
+    }
+  end
+
+  local floorlist, shoplist
+  floorlist, shoplist = dgn.stash_items(value, true)
+  if #shoplist ~= 0 then
+    shop_item = shoplist[crawl.random2(#shoplist)+1]
+    if not shop_item.identified() then
+      shop_item = shoplist[crawl.random2(#shoplist)+1]
+    end
+
+    local bt = shop_item.base_type
+    if bt == "armour" or bt == "weapon" or bt == "jewellery" or bt == "book" then
+      if shop_item.identified() then
+        item.quantity = shop_item.quantity
+        item.base_type = shop_item.base_type
+        item.sub_type = shop_item.sub_type
+        item.ego_type = shop_item.ego_type
+        if item.base_type == "armour" then
+          item.plus1 = shop_item.plus1
+          item.plus2 = false
+        elseif item.base_type == "weapon" then
+          item.plus1 = shop_item.plus1
+          item.plus2 = shop_item.plus2
+        else
+          item.plus1 = false
+          item.plus2 = false
+        end
+        return item
+      end
+    end
+  end
+
+  -- Default to consumables.
+  local potions = {"heal wounds","healing",
+                  "might","speed"}
+  local scrolls = {"identify","enchant weapon I",
+                   "enchant weapon II", "enchant armour",
+                   "enchant weapon III"}
+
+  item.quantity = 8 + crawl.random2(6)
+  if not crawl.one_chance_in(3) then
+    item.base_type = "potion"
+    item.sub_type = potions[1+crawl.random2(#potions)]
+  else
+    item.base_type = "scroll"
+    item.sub_type = scrolls[1+crawl.random2(#scrolls)]
+    item.quantity = 4 + crawl.random2(4)
+  end
+
+  return item
+end
+
 function trove_portal(e)
     local d = crawl.roll_dice
     local entry_fee = 5 * math.floor(200 + d(3,200) / 3 + d(10) * d(10) * d(10))
     local a = you.absdepth()
+    local lock_fee = 100 + 10 * d(a)
     local timeout_turns = crawl.random_range(1600, 3000) + 5 * (30 - a) * (30 - a)
     local dur = "n exceptionally long"
     if timeout_turns < 2000 then
@@ -43,15 +137,20 @@ The secrets of the gateways died with him when his fellow thieves, disgusted at 
                        "$F{The} flickers urgently, almost stroboscopically.")
     }
 
+    local item = get_trove_item(e, 1000)
+
     local function stair ()
-        return timed_marker  {
+        return trove_marker  {
             amount = entry_fee,
+            secondary_amount = lock_fee,
+            toll_item = item,
             entity = "portal",
-            toll_desc = "portal to enter a treasure trove",
+            toll_desc = "to enter a treasure trove",
+            lock_desc = "to a nasty imp",
             desc = "portal to a secret trove of treasure",
             desc_long = desc_long,
-            overmap = "Trove",
-            overmap_note = "" .. entry_fee .. " gp (slowly fading away)",
+            overview = "Trove",
+            overview_note = "" .. lock_fee .. "gp/" .. entry_fee .. "gp",
             dst = "trove",
             dstorigin = "in a treasure trove",
             turns = timeout_turns,

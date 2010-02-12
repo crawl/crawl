@@ -176,6 +176,7 @@ static const ability_def Ability_List[] =
       0, 0, 125, 0, ABFLAG_BREATH },
     { ABIL_BREATHE_STEAM, "Breathe Steam", 0, 0, 75, 0, ABFLAG_BREATH },
     { ABIL_TRAN_BAT, "Bat Form", 2, 0, 0, 0, ABFLAG_NONE },
+    { ABIL_BOTTLE_BLOOD, "Bottle Blood", 0, 0, 0, 0, ABFLAG_NONE }, // no costs
 
     { ABIL_SPIT_ACID, "Spit Acid", 0, 0, 125, 0, ABFLAG_NONE },
 
@@ -334,10 +335,12 @@ static const ability_def Ability_List[] =
 
 
     // Cheibriados
-    { ABIL_CHEIBRIADOS_PONDEROUSIFY, "Make Ponderous", 2, 0, 0, 0, ABFLAG_NONE },
+    { ABIL_CHEIBRIADOS_PONDEROUSIFY, "Make Ponderous",
+      0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_CHEIBRIADOS_TIME_BEND, "Bend Time", 3, 0, 50, 1, ABFLAG_NONE },
     { ABIL_CHEIBRIADOS_SLOUCH, "Slouch", 5, 0, 100, 5, ABFLAG_NONE },
-    { ABIL_CHEIBRIADOS_TIME_STEP, "Step From Time", 10, 0, 200, 10, ABFLAG_NONE },
+    { ABIL_CHEIBRIADOS_TIME_STEP, "Step From Time",
+      10, 0, 200, 10, ABFLAG_NONE },
 
     { ABIL_HARM_PROTECTION, "Protection From Harm", 0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_HARM_PROTECTION_II, "Reliable Protection From Harm",
@@ -588,6 +591,11 @@ static talent _get_talent(ability_type ability, bool check_confused)
         failure = 45 - (2 * you.experience_level);
         break;
 
+    case ABIL_BOTTLE_BLOOD:
+        perfect = true;
+        failure = 0;
+        break;
+
     case ABIL_RECHARGING:       // this is for deep dwarves {1KB}
         failure = 45 - (2 * you.experience_level);
         break;
@@ -723,7 +731,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_YRED_ANIMATE_REMAINS:
-    case ABIL_CHEIBRIADOS_PONDEROUSIFY:
         invoc = true;
         failure = 40 - (you.piety / 20) - (3 * you.skills[SK_INVOCATIONS]);
         break;
@@ -817,6 +824,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
         failure = 50 - (you.piety / 20) - (5 * you.skills[SK_EVOCATIONS]);
         break;
 
+    case ABIL_CHEIBRIADOS_PONDEROUSIFY:
     case ABIL_RENOUNCE_RELIGION:
         invoc = true;
         perfect = true;
@@ -1182,6 +1190,7 @@ static bool _activate_talent(const talent& tal)
         case ABIL_DELAYED_FIREBALL:
         case ABIL_MUMMY_RESTORATION:
         case ABIL_TRAN_BAT:
+        case ABIL_BOTTLE_BLOOD:
             hungerCheck = false;
             break;
         default:
@@ -1996,9 +2005,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_FEDHAS_EVOLUTION:
         if (!evolve_flora())
-        {
             return (false);
-        }
 
         exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
@@ -2009,6 +2016,11 @@ static bool _do_ability(const ability_def& abil)
             crawl_state.zero_turns_taken();
             return (false);
         }
+        break;
+
+    case ABIL_BOTTLE_BLOOD:
+        if (!butchery(-1, true))
+            return (false);
         break;
 
     case ABIL_JIYVA_CALL_JELLY:
@@ -2305,6 +2317,11 @@ std::vector<talent> your_talents(bool check_confused)
         && you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT)
     {
         _add_talent(talents, ABIL_TRAN_BAT, check_confused);
+    }
+
+    if (you.species == SP_VAMPIRE && you.experience_level >= 6)
+    {
+        _add_talent(talents, ABIL_BOTTLE_BLOOD, false);
     }
 
     if (!you.airborne() && !transform_changed_physiology())

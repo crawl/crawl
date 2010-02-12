@@ -3755,7 +3755,59 @@ You hear a distant wail of despair.
 ############ DUANE ### A mercenary guarding the dungeon
 Duane
 
-@_mercenary_guard_@
+@_Duane_common_@
+
+w:2
+
+@_Duane_rare_@
+%%%%
+confused Duane
+
+@The_monster@ screams, "I'll never tell! Never!"
+
+@The_monster@ says, "Torture me, I'll never tell!"
+
+@The_monster@ whispers, "Okay, okay--the keys are--no!"
+%%%%
+_Duane_common_
+
+VISUAL:@The_monster@ looks @at_foe@ suspiciously.
+
+VISUAL:@The_monster@ squints @at_foe@.
+
+@The_monster@ says, "People used to make fun of my ears. They're dead, now."
+
+@The_monster@ says, "Do you know why I'm the best guard in the world? I'm still alive."
+
+@The_monster@ says, "I think you've seen too much. Better that you die now."
+
+@The_monster@ says @to_foe@, "Are you looking at my ears?"
+
+@The_monster@ says, "Nobody's ever stolen something I've guarded."
+
+@The_monster@ says, "My employer pays me to say nothing."
+
+@The_monster@ says @to_foe@, "You won't find it. I'm very good at what I do."
+
+@The_monster@ says, "I'm not one to boast, but I'm very good."
+
+@The_monster@ hisses @at_foe@, "What do you want?"
+%%%%
+_Duane_rare_
+
+w:1
+VISUAL:@The_monster@'s ears look incredibly large.
+
+@The_monster@ says, "I could tell you some amazing stories... but then you'd have to die."
+
+@The_monster@ says, "Did you just laugh? Why did you laugh?" @player_only@
+
+@The_monster@ says @to_foe@, "I've still got bits of the last thief I caught. Want to see?"
+
+@The_monster@ says @to_foe@, "You look a bit like a thief."
+
+w:1
+@The_monster@ says, "The last guard my employer hired fell asleep on the job. Can you imagine that?"
 %%%%
 ############ DUVESSA ### An over-confident elf fighter, twin sister of Dowan
 twin_died Duvessa
@@ -3837,7 +3889,46 @@ You hear a distant scream of rage.
 ############ EDMUND ### A mercenary guarding the dungeon
 Edmund
 
-@_mercenary_guard_@
+@_Edmund_common_@
+
+w:5
+@_Edmund_rare_@
+%%%%
+_Edmund_common_
+
+VISUAL:@The_monster@ gestures @at_foe@ with his flail.
+
+@The_monster@ clears his throat.
+
+@The_monster@ says, "You wouldn't believe how much I paid for this flail."
+
+@The_monster@ asks @foe@, "Have you met my brother?"
+
+@The_monster@ says @to_foe@, "I might not be good at magic, but I can still kill you!"
+
+@The_monster@ says, "People think my brother is the best. I think he's crazy."
+
+@The_monster@ says, "I'm quite good with sums, too."
+
+@The_monster@ says, "People accused me of being a cutpurse!"
+%%%%
+_Edmund_rare_
+
+VISUAL:@The_monster@ grinds his teeth, and then sighs.
+
+w:1
+VISUAL:@The_monster@ looks rather jealous.
+
+@The_monster@ says, "A flail is better than a scythe, any day of the week!"
+
+@The_monster@ says, "What use are spells, anyway?"
+
+@The_monster@ says, "Everyone always remembers my brother. 'Who's Edmund?' they ask!"
+
+@The_monster@ says, "People will remember me! They'll remember me and die!"
+
+w:1
+@The_monster@ says, "Maybe I'll buy a title. How does Count Edmund sound?"
 %%%%
 ############ ERICA ### A wild tempered adventuress
 Erica
@@ -3863,8 +3954,6 @@ VISUAL:@The_monster@ looks angry.
 @The_monster@ screams @at_foe@, "Do you want it fast or slow?!"
 %%%%
 _Erica_rare_
-
-VISUAL:@The_monster@ drinks a potion.
 
 @The_monster@ screams @at_foe@, "Hurry, death awaits!"
 
@@ -3952,10 +4041,52 @@ SPELL:@The_monster@ calls on the powers of Hell!
 @The_monster@ brags, "I can call spirits from the vast deeps."
 ## END Eustachio ##
 %%%%
-############ FRANCES ### A mercenary guarding the dungeon
+############ FRANCES ### A warrior who bested a Pandemonium Lord
 Frances
 
-@_mercenary_guard_@
+@_Frances_common_@
+
+w:5
+@_Frances_rare_@
+%%%%
+_Frances_common_
+
+VISUAL:@The_monster@ sneers @at_foe@.
+
+VISUAL:@The_monster@ runs a finger over her scar.
+
+ENCHANT:@The_monster@ speaks in an indecipherable language.
+
+ENCHANT:@The_monster@ mutters a nigh-unspeakable word.
+
+@The_monster@ says, "Show me proof of your conquests, and I will call you a great adventurer." @player_only@
+
+@The_monster@ says, "I command an army of devils. What do you command?" @player_only@
+
+@The_monster@ says, "I value strength and power. I see none of this in you." @player_only@
+
+@The_monster@ says, "I speak the language of demons!"
+
+@The_monster@ says, "I have seen worlds and universes beyond all imagining."
+%%%%
+_Frances_rare_
+
+VISUAL:@The_monster@ takes a defensive stance.
+
+ENCHANT:@The_monster@ growls a series of guttural syllables.
+
+@The_monster@ says, "There is a strange beauty in the demonic, don't you think?"
+
+@The_monster@ says, "Would you challenge me, knowing my power?"
+
+@The_monster@ says, "I am undefeated in single-handed combat."
+
+@The_monster@ says, "Warriors are made for war and combat. Do you call yourself a warrior?"
+
+w:1
+@The_monster@ says, "Even the Halls of Hell could not contain me."
+
+@The_monster@ says, "I will defeat you, of this I have no doubt!" @player_only@
 %%%%
 ############ FRANCIS ### A wizard looking for body-parts as spell components
 Francis
@@ -5340,13 +5471,13 @@ _Rupert_rare_
 Saint Roka
 
 w:7
-@related Saint Roka@
+@Saint Roka generic@
 
 @The_monster@ says @to_foe@, "Down here, you're an orc or you're nobody."
 
 @The_monster@ says @to_foe@, "In the orcish mines, orcs kill the likes of you."
 %%%%
-related Saint Roka
+Saint Roka generic
 
 w:2
 @_generic_orc_speech_@
@@ -5357,12 +5488,17 @@ w:2
 
 @The_monster@ says @to_foe@, "I shall smite you and smash you."
 
-@The_monster@ lets out a mighty cry!
+@The_monster@ lets out a mighty war cry!
 
 @The_monster@ cries, "Beogh give me strength!"
 
 @The_monster@ cries, "In the name of Beogh, DIE!"
+%%%%
+related Saint Roka
 
+@Saint Roka generic@
+
+w:2
 @The_monster@ calls out, "Join me or die!"
 %%%%
 # need different speech if you also worship Beogh

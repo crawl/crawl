@@ -544,8 +544,13 @@ IDEF(snakable)
     return (1);
 }
 
-IDEF(pluses)
+// DLUA-only functions
+static int l_item_do_pluses (lua_State *ls)
 {
+    ASSERT_DLUA;
+
+    UDATA_ITEM(item);
+
     if (!item || !item->is_valid() || !item_ident(*item, ISFLAG_KNOW_PLUSES))
     {
         lua_pushboolean(ls, false);
@@ -559,7 +564,8 @@ IDEF(pluses)
     return (2);
 }
 
-// DLUA-only functions
+IDEFN(pluses, do_pluses)
+
 static int l_item_do_destroy (lua_State *ls)
 {
     ASSERT_DLUA;
@@ -673,6 +679,43 @@ static int l_item_do_identified (lua_State *ls)
 }
 
 IDEFN(identified, do_identified)
+
+// Some dLua convenience functions.
+IDEF(base_type)
+{
+    ASSERT_DLUA;
+
+    lua_pushstring(ls, base_type_string(*item).c_str());
+    return (1);
+}
+
+IDEF(sub_type)
+{
+    ASSERT_DLUA;
+
+    lua_pushstring(ls, sub_type_string(*item).c_str());
+    return (1);
+}
+
+IDEF(ego_type)
+{
+    ASSERT_DLUA;
+
+    lua_pushstring(ls, ego_type_string(*item).c_str());
+    return (1);
+}
+
+IDEF(artefact_name)
+{
+    ASSERT_DLUA;
+
+    if (is_artefact(*item))
+        lua_pushstring(ls, get_artefact_name(*item, true).c_str());
+    else
+        lua_pushnil(ls);
+
+    return (1);
+}
 
 // Library functions below
 static int l_item_inventory(lua_State *ls)
@@ -873,7 +916,11 @@ static ItemAccessor item_attrs[] =
     { "destroy",           l_item_destroy },
     { "dec_quantity",      l_item_dec_quantity },
     { "inc_quantity",      l_item_inc_quantity },
-    { "identified",        l_item_identified }
+    { "identified",        l_item_identified },
+    { "base_type",         l_item_base_type },
+    { "sub_type",          l_item_sub_type },
+    { "ego_type",          l_item_ego_type },
+    { "artefact_name",     l_item_artefact_name },
 };
 
 static int item_get(lua_State *ls)

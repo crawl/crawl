@@ -98,6 +98,7 @@ std::string make_name(unsigned long seed, bool all_caps, int maxlen = -1,
 
 const char* weapon_brand_name(const item_def& item, bool terse);
 const char* armour_ego_name(const item_def& item, bool terse);
+const char* missile_brand_name (const item_def& item);
 
 void init_properties();
 
@@ -130,5 +131,11 @@ const char* wand_type_name(int wandtype);
 bool        is_named_corpse(const item_def &corpse);
 std::string get_corpse_name(const item_def &corpse,
                             unsigned long *name_type = NULL);
+std::string base_type_string (object_class_type type, bool known = true);
+std::string base_type_string (const item_def &item, bool known = true);
 
+std::string sub_type_string (object_class_type type, int sub_type, bool known = true);
+std::string sub_type_string (const item_def &item, bool known = true);
+
+std::string ego_type_string (const item_def &item);
 #endif

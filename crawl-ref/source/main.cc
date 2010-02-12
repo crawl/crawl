@@ -50,6 +50,7 @@
 #include "debug.h"
 #include "delay.h"
 #include "describe.h"
+#include "dgn-overview.h"
 #include "dgn-shoals.h"
 #include "dlua.h"
 #include "directn.h"
@@ -92,7 +93,6 @@
 #include "options.h"
 #include "ouch.h"
 #include "output.h"
-#include "overmap.h"
 #include "player.h"
 #include "quiver.h"
 #include "random.h"
@@ -577,7 +577,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         if (you.level_type != LEVEL_ABYSS)
             banished(DNGN_ENTER_ABYSS, "wizard command");
         else
-            down_stairs(you.your_level, DNGN_EXIT_ABYSS);
+            down_stairs(you.absdepth0, DNGN_EXIT_ABYSS);
         break;
 
     case CONTROL('A'):
@@ -1327,7 +1327,7 @@ static void _go_downstairs()
 
     if (shaft)
     {
-        start_delay(DELAY_DESCENDING_STAIRS, 0, you.your_level);
+        start_delay(DELAY_DESCENDING_STAIRS, 0, you.absdepth0);
     }
     else
     {
@@ -1337,7 +1337,7 @@ static void _go_downstairs()
         tag_followers(); // Only those beside us right now can follow.
         start_delay(DELAY_DESCENDING_STAIRS,
                     1 + (you.burden_state > BS_UNENCUMBERED),
-                    you.your_level);
+                    you.absdepth0);
     }
 }
 
@@ -1693,7 +1693,7 @@ void process_command(command_type cmd)
 
         // Map commands.
     case CMD_CLEAR_MAP:       _do_clear_map();   break;
-    case CMD_DISPLAY_OVERMAP: display_overmap(); break;
+    case CMD_DISPLAY_OVERMAP: display_overview(); break;
     case CMD_DISPLAY_MAP:     _do_display_map(); break;
 
         // Stash commands.

@@ -2456,15 +2456,14 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 1, CMD_DROP, "Drop an item", 2);
     _add_insert_commands(cols, 1, "<w>%#</w>: Drop exact number of items",
                          CMD_DROP, 0);
+    _add_command(cols, 1, CMD_BUTCHER, "Chop up a corpse", 2);
 
     {
-        std::string interact = "Chop up a corpse";
-        if (you.species == SP_VAMPIRE && you.experience_level >= 6)
-            interact += " or bottle its blood";
-        _add_command(cols, 1, CMD_BUTCHER, interact, 2);
+        std::string interact = (you.species == SP_VAMPIRE ? "Drain corpses on"
+                                                          : "Eat food from");
+        interact += " floor\n";
+        _add_command(cols, 1, CMD_EAT, interact, 2);
     }
-
-    _add_command(cols, 1, CMD_EAT, "Eat food from floor", 2);
 
     cols.add_formatted(
             1,

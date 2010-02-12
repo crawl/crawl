@@ -411,14 +411,14 @@ const zap_info zap_data[] = {
 
     {
         ZAP_SLOWING,
-        "0",
+        "",
         100,
         NULL,
         NULL,
         BLACK,
         true,
         BEAM_SLOW,
-        DCHAR_SPACE,
+        NUM_DCHAR_TYPES,
         false,
         false,
         false,
@@ -427,14 +427,14 @@ const zap_info zap_data[] = {
 
     {
         ZAP_HASTING,
-        "0",
+        "",
         100,
         NULL,
         NULL,
         BLACK,
         true,
         BEAM_HASTE,
-        DCHAR_SPACE,
+        NUM_DCHAR_TYPES,
         false,
         false,
         false,
@@ -459,14 +459,14 @@ const zap_info zap_data[] = {
 
     {
         ZAP_HEALING,
-        "0",
+        "",
         100,
         new dicedef_calculator<1, 7, 1, 3>,
         NULL,
         BLACK,
         true,
         BEAM_HEALING,
-        DCHAR_SPACE,
+        NUM_DCHAR_TYPES,
         false,
         false,
         false,
@@ -475,14 +475,14 @@ const zap_info zap_data[] = {
 
     {
         ZAP_PARALYSIS,
-        "0",
+        "",
         100,
         NULL,
         NULL,
         BLACK,
         true,
         BEAM_PARALYSIS,
-        DCHAR_SPACE,
+        NUM_DCHAR_TYPES,
         false,
         false,
         false,
@@ -539,14 +539,14 @@ const zap_info zap_data[] = {
 
     {
         ZAP_CONFUSION,
-        "0",
+        "",
         100,
         NULL,
         NULL,
         BLACK,
         true,
         BEAM_CONFUSION,
-        DCHAR_SPACE,
+        NUM_DCHAR_TYPES,
         false,
         false,
         false,
@@ -555,14 +555,14 @@ const zap_info zap_data[] = {
 
     {
         ZAP_INVISIBILITY,
-        "0",
+        "",
         100,
         NULL,
         NULL,
         BLACK,
         true,
         BEAM_INVISIBILITY,
-        DCHAR_SPACE,
+        NUM_DCHAR_TYPES,
         false,
         false,
         false,
@@ -571,14 +571,14 @@ const zap_info zap_data[] = {
 
     {
         ZAP_DIGGING,
-        "0",
+        "",
         100,
         NULL,
         NULL,
         BLACK,
         true,
         BEAM_DIGGING,
-        DCHAR_SPACE,
+        NUM_DCHAR_TYPES,
         false,
         true,
         false,
@@ -603,14 +603,14 @@ const zap_info zap_data[] = {
 
     {
         ZAP_TELEPORTATION,
-        "0",
+        "",
         100,
         NULL,
         NULL,
         BLACK,
         true,
         BEAM_TELEPORT,
-        DCHAR_SPACE,
+        NUM_DCHAR_TYPES,
         false,
         false,
         false,
@@ -635,14 +635,14 @@ const zap_info zap_data[] = {
 
     {
         ZAP_POLYMORPH_OTHER,
-        "0",
+        "",
         100,
         NULL,
         NULL,
         BLACK,
         true,
         BEAM_POLYMORPH,
-        DCHAR_SPACE,
+        NUM_DCHAR_TYPES,
         false,
         false,
         false,
@@ -731,14 +731,14 @@ const zap_info zap_data[] = {
 
     {
         ZAP_ENSLAVEMENT,
-        "0",
+        "",
         100,
         NULL,
         NULL,
         BLACK,
         true,
         BEAM_CHARM,
-        DCHAR_SPACE,
+        NUM_DCHAR_TYPES,
         false,
         false,
         false,
@@ -747,14 +747,14 @@ const zap_info zap_data[] = {
 
     {
         ZAP_PAIN,
-        "0",
+        "",
         100,
         new dicedef_calculator<1, 4, 1,5>,
         new tohit_calculator<0, 7, 2>,
         BLACK,
         true,
         BEAM_PAIN,
-        DCHAR_SPACE,
+        NUM_DCHAR_TYPES,
         false,
         false,
         false,
@@ -779,14 +779,14 @@ const zap_info zap_data[] = {
 
     {
         ZAP_DISPEL_UNDEAD,
-        "0",
+        "",
         100,
         new calcdice_calculator<3, 20, 3, 4>,
         new tohit_calculator<0, 3, 2>,
         BLACK,
         true,
         BEAM_DISPEL_UNDEAD,
-        DCHAR_SPACE,
+        NUM_DCHAR_TYPES,
         false,
         false,
         false,
@@ -815,14 +815,14 @@ const zap_info zap_data[] = {
 
     {
         ZAP_BANISHMENT,
-        "0",
+        "",
         100,
         NULL,
         NULL,
         BLACK,
         true,
         BEAM_BANISH,
-        DCHAR_SPACE,
+        NUM_DCHAR_TYPES,
         false,
         false,
         false,
@@ -831,14 +831,14 @@ const zap_info zap_data[] = {
 
     {
         ZAP_DEGENERATION,
-        "0",
+        "",
         100,
         NULL,
         NULL,
         BLACK,
         true,
         BEAM_DEGENERATE,
-        DCHAR_SPACE,
+        NUM_DCHAR_TYPES,
         false,
         false,
         false,
@@ -865,7 +865,7 @@ const zap_info zap_data[] = {
         ZAP_HELLFIRE,
         "hellfire",
         200,
-        new calcdice_calculator<3, 10, 3, 4>,
+        new calcdice_calculator<3, 8, 3, 5>,
         new tohit_calculator<20, 1, 10>,
         RED,
         false,
@@ -902,7 +902,7 @@ const zap_info zap_data[] = {
         BLACK,
         false,
         BEAM_MMISSILE,
-        DCHAR_SPACE,
+        NUM_DCHAR_TYPES,
         true,
         false,
         false,
@@ -1073,14 +1073,14 @@ const zap_info zap_data[] = {
 
     {
         ZAP_ENSLAVE_UNDEAD,
-        "0",
+        "",
         100,
         NULL,
         NULL,
         BLACK,
         true,
         BEAM_ENSLAVE_UNDEAD,
-        DCHAR_SPACE,
+        NUM_DCHAR_TYPES,
         false,
         false,
         false,
@@ -1089,14 +1089,14 @@ const zap_info zap_data[] = {
 
     {
         ZAP_ENSLAVE_SOUL,
-        "0",
+        "",
         100,
         NULL,
         NULL,
         BLACK,
         true,
         BEAM_ENSLAVE_SOUL,
-        DCHAR_SPACE,
+        NUM_DCHAR_TYPES,
         false,
         false,
         false,
@@ -1105,14 +1105,14 @@ const zap_info zap_data[] = {
 
     {
         ZAP_AGONY,
-        "0agony",
+        "agony",
         100,
         NULL,
         new tohit_calculator<0, 5, 1>,
         BLACK,
         true,
         BEAM_PAIN,
-        DCHAR_SPACE,
+        NUM_DCHAR_TYPES,
         false,
         false,
         false,
@@ -1121,14 +1121,14 @@ const zap_info zap_data[] = {
 
     {
         ZAP_DISINTEGRATION,
-        "0",
+        "",
         100,
         new calcdice_calculator<3, 15, 3, 4>,
         new tohit_calculator<0, 5, 2>,
         BLACK,
         true,
         BEAM_DISINTEGRATION,
-        DCHAR_SPACE,
+        NUM_DCHAR_TYPES,
         false,
         true,
         false,
@@ -1153,14 +1153,14 @@ const zap_info zap_data[] = {
 
     {
         ZAP_CONTROL_DEMON,
-        "0",
+        "",
         100,
         NULL,
         new tohit_calculator<0, 3, 2>,
         BLACK,
         true,
         BEAM_ENSLAVE_DEMON,
-        DCHAR_SPACE,
+        NUM_DCHAR_TYPES,
         false,
         false,
         false,
@@ -1217,14 +1217,14 @@ const zap_info zap_data[] = {
 
     {
         ZAP_CORONA,
-        "0",
+        "",
         100,
         NULL,
         NULL,
         BLUE,
         true,
         BEAM_CORONA,
-        DCHAR_SPACE,
+        NUM_DCHAR_TYPES,
         false,
         false,
         false,
@@ -1233,14 +1233,14 @@ const zap_info zap_data[] = {
 
     {
         ZAP_HIBERNATION,
-        "0",
+        "",
         100,
         NULL,
         NULL,
         BLACK,
         true,
         BEAM_HIBERNATION,
-        DCHAR_SPACE,
+        NUM_DCHAR_TYPES,
         false,
         false,
         false,
@@ -1329,14 +1329,14 @@ const zap_info zap_data[] = {
 
     {
         ZAP_PETRIFY,
-        "0",
+        "",
         100,
         NULL,
         NULL,
         BLACK,
         true,
         BEAM_PETRIFY,
-        DCHAR_SPACE,
+        NUM_DCHAR_TYPES,
         false,
         false,
         false,
@@ -1352,7 +1352,7 @@ const zap_info zap_data[] = {
         RED,
         true,
         BEAM_PORKALATOR,
-        DCHAR_SPACE,
+        NUM_DCHAR_TYPES,
         false,
         false,
         false,
@@ -1361,14 +1361,14 @@ const zap_info zap_data[] = {
 
     {
         ZAP_SLEEP,
-        "0",
+        "",
         100,
         NULL,
         NULL,
         BLACK,
         true,
         BEAM_SLEEP,
-        DCHAR_SPACE,
+        NUM_DCHAR_TYPES,
         false,
         false,
         false,
@@ -1377,14 +1377,15 @@ const zap_info zap_data[] = {
 
     {
         ZAP_IOOD,
-        "0",
+        "",
         200,
         NULL,
         new tohit_calculator<AUTOMATIC_HIT>,
         WHITE,
         false,
         BEAM_NUKE,
-        DCHAR_FIRED_ZAP,
+        NUM_DCHAR_TYPES, // no dchar, to get bolt.glyph == 0,
+                         // hence invisible
         true,
         true,
         false,
@@ -1420,7 +1421,7 @@ static void _zappy(zap_type z_type, int power, bolt &pbolt)
     pbolt.flavour        = zinfo->flavour;
     pbolt.real_flavour   = zinfo->flavour;
     pbolt.colour         = zinfo->colour;
-    pbolt.type           = dchar_glyph(zinfo->glyph);
+    pbolt.glyph          = dchar_glyph(zinfo->glyph);
     pbolt.obvious_effect = zinfo->always_obvious;
     pbolt.is_beam        = zinfo->can_beam;
     pbolt.is_explosion   = zinfo->is_explosion;
@@ -1558,9 +1559,9 @@ static void _munge_bounced_bolt(bolt &old_bolt, bolt &new_bolt,
     new_bolt.range += range_spent;
 }
 
-bool bolt::invisible() const
+bool bolt::visible() const
 {
-    return (type == 0 || is_enchantment());
+    return (glyph != 0 && !is_enchantment());
 }
 
 void bolt::initialise_fire()
@@ -1621,7 +1622,6 @@ void bolt::initialise_fire()
         range = LOS_RADIUS;
     }
 
-    ASSERT(!name.empty() || is_tracer);
     ASSERT(in_bounds(source));
     ASSERT(flavour > BEAM_NONE && flavour < BEAM_FIRST_PSEUDO);
     ASSERT(!drop_item || item && item->is_valid());
@@ -1633,7 +1633,7 @@ void bolt::initialise_fire()
     message_cache.clear();
 
     // seen might be set by caller to supress this.
-    if (!seen && you.see_cell(source) && range > 0 && !invisible() )
+    if (!seen && you.see_cell(source) && range > 0 && visible() )
     {
         seen = true;
         const monsters* mon = monster_at(source);
@@ -1651,7 +1651,7 @@ void bolt::initialise_fire()
 
     // Visible self-targeted beams are always seen, even though they don't
     // leave a path.
-    if (you.see_cell(source) && target == source && !invisible())
+    if (you.see_cell(source) && target == source && visible())
         seen = true;
 
     // Scale draw_delay to match change in arena_delay.
@@ -1663,7 +1663,7 @@ void bolt::initialise_fire()
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf( MSGCH_DIAGNOSTICS, "%s%s%s [%s] (%d,%d) to (%d,%d): "
-          "ty=%d col=%d flav=%d hit=%d dam=%dd%d range=%d",
+          "gl=%d col=%d flav=%d hit=%d dam=%dd%d range=%d",
           (is_beam) ? "beam" : "missile",
           (is_explosion) ? "*" :
           (is_big_cloud) ? "+" : "",
@@ -1671,7 +1671,7 @@ void bolt::initialise_fire()
           name.c_str(),
           source.x, source.y,
           target.x, target.y,
-          type, colour, flavour,
+          glyph, colour, flavour,
           hit, damage.num, damage.size,
           range);
 #endif
@@ -1738,7 +1738,7 @@ void bolt::draw(const coord_def& p)
             cgotoxy(drawpos.x, drawpos.y);
             put_colour_ch(colour == BLACK ? random_colour()
                                           : element_colour(colour),
-                          type);
+                          glyph);
 #endif
             // Get curses to update the screen so we can see the beam.
             update_screen();
@@ -1968,7 +1968,11 @@ void bolt::finish_beam()
 void bolt::affect_wall()
 {
     if (is_tracer)
+    {
+        if (affects_wall(grd(pos())) != B_TRUE)
+            finish_beam();
         return;
+    }
 
     if (flavour == BEAM_DIGGING)
         digging_wall_effect();
@@ -2272,7 +2276,7 @@ void bolt::do_fire()
                || is_tracer && affects_wall(grd(pos())));
 
         const bool was_seen = seen;
-        if (!was_seen && range > 0 && !invisible() && you.see_cell(pos()))
+        if (!was_seen && range > 0 && visible() && you.see_cell(pos()))
             seen = true;
 
         if (flavour != BEAM_VISUAL && !was_seen && seen && !is_tracer)
@@ -3313,7 +3317,7 @@ void bolt::affect_ground()
 
             int rc = create_monster(mgen_data(MONS_BALLISTOMYCETE,
                                               beh,
-                                              agent(),
+                                              NULL,
                                               0,
                                               0,
                                               pos(),
@@ -3360,30 +3364,38 @@ bool bolt::is_superhot() const
                && in_explosion_phase);
 }
 
-bool bolt::affects_wall(dungeon_feature_type wall) const
+maybe_bool bolt::affects_wall(dungeon_feature_type wall) const
 {
     // digging
-    if (flavour == BEAM_DIGGING)
-        return (true);
-
-    if (flavour == BEAM_DISINTEGRATION && damage.num >= 3)
-        return (true);
+    if (flavour == BEAM_DIGGING
+        && (wall == DNGN_ROCK_WALL || wall == DNGN_CLEAR_ROCK_WALL))
+    {
+        return (B_TRUE);
+    }
 
     if (is_fiery() && (wall == DNGN_WAX_WALL || wall == DNGN_TREES))
-        return (true);
+        return (is_superhot() ? B_TRUE : B_MAYBE);
 
     if (flavour == BEAM_ELECTRICITY && wall == DNGN_TREES)
-        return (true);
+        return (is_superhot() ? B_TRUE : B_MAYBE);
 
-    // eye of devastation?
-    if (flavour == BEAM_NUKE)
-        return (true);
+    if (flavour == BEAM_DISINTEGRATION && damage.num >= 3
+        || flavour == BEAM_NUKE)
+    {
+        if (wall == DNGN_ROCK_WALL
+            || wall == DNGN_WAX_WALL
+            || wall == DNGN_CLEAR_ROCK_WALL
+            || wall == DNGN_GRANITE_STATUE
+            || wall == DNGN_ORCISH_IDOL
+            || wall == DNGN_TREES)
+        return (B_TRUE);
+    }
 
     // Lee's Rapid Deconstruction
     if (flavour == BEAM_FRAG)
-        return (true);
+        return (B_TRUE); // smite targetting, we don't care
 
-    return (false);
+    return (B_FALSE);
 }
 
 void bolt::affect_place_clouds()
@@ -4341,6 +4353,8 @@ void bolt::affect_player()
     int armour_damage_reduction = random2( 1 + you.armour_class() );
     if (flavour == BEAM_ELECTRICITY)
         armour_damage_reduction /= 2;
+    else if (flavour == BEAM_HELLFIRE)
+        armour_damage_reduction = 0;
     hurted -= armour_damage_reduction;
 
     // shrapnel has triple AC reduction
@@ -4895,6 +4909,15 @@ void bolt::affect_monster(monsters* mon)
 
     // Digging doesn't affect monsters (should it harm earth elementals?)
     if (flavour == BEAM_DIGGING)
+    {
+        apply_hit_funcs(mon, 0);
+        return;
+    }
+
+    // All kinds of beams go past orbs of destruction.
+    // We don't check mons_is_projectile() since that probably won't be the
+    // case for rolling boulders.
+    if (mon->type == MONS_ORB_OF_DESTRUCTION)
     {
         apply_hit_funcs(mon, 0);
         return;
@@ -5569,6 +5592,9 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
 
     case BEAM_INVISIBILITY:
     {
+        if (mons_is_mimic(mon->type))
+            return (MON_UNAFFECTED);
+
         // Store the monster name before it becomes an "it" -- bwr
         const std::string monster_name = mon->name(DESC_CAP_THE);
 
@@ -5744,7 +5770,7 @@ void bolt::refine_for_explosion()
         seeMsg  = tmp.c_str();
         hearMsg = "You hear an explosion.";
 
-        type    = dchar_glyph(DCHAR_FIRED_BURST);
+        glyph   = dchar_glyph(DCHAR_FIRED_BURST);
     }
 
     if (name.find("hellfire") != std::string::npos)
@@ -5752,7 +5778,7 @@ void bolt::refine_for_explosion()
         seeMsg  = "The hellfire explodes!";
         hearMsg = "You hear a strangely unpleasant explosion.";
 
-        type    = dchar_glyph(DCHAR_FIRED_BURST);
+        glyph   = dchar_glyph(DCHAR_FIRED_BURST);
         flavour = BEAM_HELLFIRE;
     }
 
@@ -5761,7 +5787,7 @@ void bolt::refine_for_explosion()
         seeMsg  = "The fireball explodes!";
         hearMsg = "You hear an explosion.";
 
-        type    = dchar_glyph(DCHAR_FIRED_BURST);
+        glyph   = dchar_glyph(DCHAR_FIRED_BURST);
         flavour = BEAM_FIRE;
         ex_size = 1;
     }
@@ -5771,7 +5797,7 @@ void bolt::refine_for_explosion()
         seeMsg  = "The orb of electricity explodes!";
         hearMsg = "You hear a clap of thunder!";
 
-        type       = dchar_glyph(DCHAR_FIRED_BURST);
+        glyph      = dchar_glyph(DCHAR_FIRED_BURST);
         flavour    = BEAM_ELECTRICITY;
         colour     = LIGHTCYAN;
         damage.num = 1;
@@ -5790,7 +5816,7 @@ void bolt::refine_for_explosion()
         hearMsg = "You hear an explosion!";
 
         name    = "blast of shrapnel";
-        type    = dchar_glyph(DCHAR_FIRED_ZAP);
+        glyph   = dchar_glyph(DCHAR_FIRED_ZAP);
         flavour = BEAM_FRAG;     // Sets it from pure damage to shrapnel
                                  // (which is absorbed extra by armour).
     }
@@ -5801,7 +5827,7 @@ void bolt::refine_for_explosion()
         hearMsg = "You hear a raging storm!";
 
         name       = "ice storm";
-        type       = dchar_glyph(DCHAR_FIRED_ZAP);
+        glyph      = dchar_glyph(DCHAR_FIRED_ZAP);
         colour     = WHITE;
         ex_size    = is_tracer ? 3 : (2 + (random2(ench_power) > 75));
     }
@@ -5923,8 +5949,8 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
 
 #if DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
-         "explosion at (%d, %d) : t=%d c=%d f=%d hit=%d dam=%dd%d r=%d",
-         pos().x, pos().y, type, colour, flavour, hit, damage.num, damage.size, r);
+         "explosion at (%d, %d) : g=%d c=%d f=%d hit=%d dam=%dd%d r=%d",
+         pos().x, pos().y, glyph, colour, flavour, hit, damage.num, damage.size, r);
 #endif
 
     if (!is_tracer)
@@ -6229,7 +6255,7 @@ bool bolt::nice_to(const monsters *mon) const
 // TODO: Eventually it'd be nice to have a proper factory for these things
 // (extended from setup_mons_cast() and zapping() which act as limited ones).
 bolt::bolt() : origin_spell(SPELL_NO_SPELL),
-               range(-2), type('*'), colour(BLACK), flavour(BEAM_MAGIC),
+               range(-2), glyph('*'), colour(BLACK), flavour(BEAM_MAGIC),
                real_flavour(BEAM_MAGIC), drop_item(false), item(NULL),
                source(), target(), damage(0, 0), ench_power(0), hit(0),
                thrower(KILL_MISC), ex_size(0), beam_source(MHITNOT),

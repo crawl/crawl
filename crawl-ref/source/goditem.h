@@ -4,7 +4,6 @@
 #include "enum.h"
 #include "externs.h"
 
-#include "artefact.h"
 #include "player.h"
 
 bool is_holy_item(const item_def& item);
@@ -48,7 +47,6 @@ bool is_corpse_violating_rod(const item_def & item);
 bool god_hates_rod(const item_def& item);
 conduct_type good_god_hates_item_handling(const item_def &item);
 conduct_type god_hates_item_handling(const item_def &item);
-bool god_hates_spell_type(spell_type spell, god_type god = you.religion);
 
 // NOTE: As of now, these two functions only say if a god won't give a
 // spell/school when giving a gift.

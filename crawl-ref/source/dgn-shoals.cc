@@ -30,8 +30,9 @@
 
 typedef FixedArray<short, GXM, GYM> grid_short;
 
-const char *ENVP_SHOALS_TIDE_KEY = "shoals-tide-height";
-const char *ENVP_SHOALS_TIDE_VEL = "shoals-tide-velocity";
+const char *PROPS_SHOALS_TIDE_KEY = "shoals-tide-height";
+const char *PROPS_SHOALS_TIDE_VEL = "shoals-tide-velocity";
+const char *PROPS_SHOALS_TIDE_UPDATE_TIME = "shoals-tide-update-time";
 
 static dgn_island_plan _shoals_islands;
 
@@ -686,6 +687,10 @@ void dgn_build_shoals_level(int level_number)
 
     // This has to happen after placing shoal rune vault!
     _shoals_generate_flora();
+
+    // Apply tide now, since the tide is likely to be nonzero unless
+    // this is Shoals:1
+    shoals_apply_tides(0, true);
 }
 
 // Search the map for vaults and set the terrain heights for features
@@ -836,7 +841,10 @@ static void _shoals_apply_tide_feature_at(coord_def c,
     if (feat == current_feat)
         return;
 
-    dungeon_terrain_changed(c, feat, true, false, true);
+    if (Generating_Level)
+        grd(c) = feat;
+    else
+        dungeon_terrain_changed(c, feat, true, false, true);
 }
 
 // Determines if the tide is rising or falling based on before and
@@ -964,10 +972,16 @@ static void _shoals_apply_tide(int tide)
 
 static void _shoals_init_tide()
 {
-    if (!env.properties.exists(ENVP_SHOALS_TIDE_KEY))
+    CrawlHashTable &props = you.props;
+    if (!props.exists(PROPS_SHOALS_TIDE_KEY))
     {
-        env.properties[ENVP_SHOALS_TIDE_KEY] = short(0);
-        env.properties[ENVP_SHOALS_TIDE_VEL] = short(PEAK_TIDE_VELOCITY);
+        props[PROPS_SHOALS_TIDE_KEY] = short(0);
+        props[PROPS_SHOALS_TIDE_VEL] = short(PEAK_TIDE_VELOCITY);
+        props[PROPS_SHOALS_TIDE_UPDATE_TIME] = 0L;
+    }
+    if (!env.properties.exists(PROPS_SHOALS_TIDE_KEY))
+    {
+        env.properties[PROPS_SHOALS_TIDE_KEY] = short(0);
     }
 }
 
@@ -979,7 +993,7 @@ static monsters *_shoals_find_tide_caller()
     return NULL;
 }
 
-void shoals_apply_tides(int turns_elapsed, bool force)
+void shoals_apply_tides(long turns_elapsed, bool force)
 {
     if (!player_in_branch(BRANCH_SHOALS)
         || (!turns_elapsed && !force)
@@ -988,12 +1002,23 @@ void shoals_apply_tides(int turns_elapsed, bool force)
         return;
     }
 
+    CrawlHashTable &props(you.props);
+    _shoals_init_tide();
+
+    // Make sure we don't do too much catch-up if another Shoals level
+    // has been updating the tide.
+    if (turns_elapsed > 1)
+    {
+        const long last_updated_time =
+            props[PROPS_SHOALS_TIDE_UPDATE_TIME].get_long();
+        const long turn_delta = (you.elapsed_time - last_updated_time) / 10;
+        turns_elapsed = std::min(turns_elapsed, turn_delta);
+    }
+
     const int TIDE_UNIT = HIGH_TIDE - LOW_TIDE;
     // If we've been gone a long time, eliminate some unnecessary math.
     if (turns_elapsed > TIDE_UNIT * 2)
         turns_elapsed = turns_elapsed % TIDE_UNIT + TIDE_UNIT;
-
-    _shoals_init_tide();
 
     unwind_var<monsters*> tide_caller_unwind(tide_caller,
                                              _shoals_find_tide_caller());
@@ -1008,13 +1033,17 @@ void shoals_apply_tides(int turns_elapsed, bool force)
         tide_caller_pos = tide_caller->pos();
     }
 
-    int tide = env.properties[ENVP_SHOALS_TIDE_KEY].get_short();
-    int acc = env.properties[ENVP_SHOALS_TIDE_VEL].get_short();
-    const int old_tide = tide;
+    int tide = props[PROPS_SHOALS_TIDE_KEY].get_short();
+    int acc = props[PROPS_SHOALS_TIDE_VEL].get_short();
+    const int old_tide = env.properties[PROPS_SHOALS_TIDE_KEY].get_short();
     while (turns_elapsed-- > 0)
         _shoals_run_tide(tide, acc);
-    env.properties[ENVP_SHOALS_TIDE_KEY] = short(tide);
-    env.properties[ENVP_SHOALS_TIDE_VEL] = short(acc);
+
+    props[PROPS_SHOALS_TIDE_KEY] = short(tide);
+    props[PROPS_SHOALS_TIDE_VEL] = short(acc);
+    props[PROPS_SHOALS_TIDE_UPDATE_TIME] = you.elapsed_time;
+    env.properties[PROPS_SHOALS_TIDE_KEY] = short(tide);
+
     if (force
         || tide_caller
         || old_tide / TIDE_MULTIPLIER != tide / TIDE_MULTIPLIER)
@@ -1053,12 +1082,12 @@ static int _tidemod_keyfilter(int &c)
     return (c == '+' || c == '-'? -1 : 1);
 }
 
-static void _shoals_force_tide(int increment)
+static void _shoals_force_tide(CrawlHashTable &props, int increment)
 {
-    int tide = env.properties[ENVP_SHOALS_TIDE_KEY].get_short();
+    int tide = props[PROPS_SHOALS_TIDE_KEY].get_short();
     tide += increment * TIDE_MULTIPLIER;
     tide = std::min(HIGH_TIDE, std::max(LOW_TIDE, tide));
-    env.properties[ENVP_SHOALS_TIDE_KEY] = short(tide);
+    props[PROPS_SHOALS_TIDE_KEY] = short(tide);
     _shoals_tide_direction = increment > 0 ? TIDE_RISING : TIDE_FALLING;
     _shoals_apply_tide(tide / TIDE_MULTIPLIER);
 }
@@ -1092,7 +1121,7 @@ void wizard_mod_tide()
         }
         if (res == '+' || res == '-')
         {
-            _shoals_force_tide(res == '+'? 2 : -2);
+            _shoals_force_tide(you.props, res == '+'? 2 : -2);
             viewwindow(false, true);
         }
     }

@@ -445,7 +445,7 @@ static bool _kikubaaqudgha_retribution()
     // Every act of retribution causes corpses in view to rise against
     // you.
     animate_dead(&you, 1 + random2(3), BEH_HOSTILE, MHITYOU, 0,
-                 "the malice of Kikubaaqudgha");
+                 "the malice of Kikubaaqudgha", GOD_KIKUBAAQUDGHA);
 
     return (true);
 }

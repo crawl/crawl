@@ -44,7 +44,7 @@ function bailey_portal(e, ptype)
         dst = "bailey_" .. ptype,
         dstname = "bailey",
         dstorigin = "in the bailey",
-        overmap = "flagged portal",
+        overview = "flagged portal",
         turns = timeout_turns,
         floor = "stone_arch",
         msg = messager })

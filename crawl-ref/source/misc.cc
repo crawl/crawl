@@ -36,6 +36,7 @@
 #include "coordit.h"
 #include "database.h"
 #include "delay.h"
+#include "dgn-overview.h"
 #include "dgn-shoals.h"
 #include "directn.h"
 #include "dgnevent.h"
@@ -64,7 +65,6 @@
 #include "mon-stuff.h"
 #include "ouch.h"
 #include "output.h"
-#include "overmap.h"
 #include "place.h"
 #include "player.h"
 #include "random.h"
@@ -87,6 +87,7 @@
 #include "travel.h"
 #include "tutorial.h"
 #include "view.h"
+#include "viewgeom.h"
 #include "shout.h"
 #include "viewchar.h"
 #include "xom.h"
@@ -869,6 +870,20 @@ void merge_blood_potion_stacks(item_def &source, item_def &dest, int quant)
     _long_sort(timer2);
 }
 
+bool check_blood_corpses_on_ground()
+{
+    for (stack_iterator si(you.pos(), true); si; ++si)
+    {
+        if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY
+            && !food_is_rotten(*si)
+            && mons_has_blood(si->plus))
+        {
+            return (true);
+        }
+    }
+    return (false);
+}
+
 // Deliberately don't check for rottenness here, so this check
 // can also be used to verify whether you *could* have bottled
 // a now rotten corpse.
@@ -1636,7 +1651,7 @@ static bool _stair_force_destination(const level_id &override)
         if (override.level_type == LEVEL_DUNGEON)
         {
             you.where_are_you = override.branch;
-            you.your_level    = override.absdepth();
+            you.absdepth0    = override.absdepth();
             you.level_type    = override.level_type;
         }
         else
@@ -1655,7 +1670,7 @@ static void _player_change_level_upstairs(dungeon_feature_type stair_find,
         return;
 
     if (you.level_type == LEVEL_DUNGEON)
-        you.your_level--;
+        you.absdepth0--;
 
     // Make sure we return to our main dungeon level... labyrinth entrances
     // in the abyss or pandemonium are a bit trouble (well the labyrinth does
@@ -1666,13 +1681,13 @@ static void _player_change_level_upstairs(dungeon_feature_type stair_find,
     if (player_in_branch( BRANCH_VESTIBULE_OF_HELL ))
     {
         you.where_are_you = BRANCH_MAIN_DUNGEON;
-        you.your_level = you.hell_exit;
+        you.absdepth0 = you.hell_exit;
     }
 
     if (player_in_hell())
     {
         you.where_are_you = BRANCH_VESTIBULE_OF_HELL;
-        you.your_level = 27;
+        you.absdepth0 = 27;
     }
 
     // Did we take a branch stair?
@@ -1688,7 +1703,7 @@ static void _player_change_level_upstairs(dungeon_feature_type stair_find,
             // its startdepth is set to -1; compensate for that,
             // so we don't end up on "level -1".
             if (branches[i].startdepth == -1)
-                you.your_level += 2;
+                you.absdepth0 += 2;
             break;
         }
     }
@@ -1785,7 +1800,7 @@ void up_stairs(dungeon_feature_type force_stair,
         && stair_find != DNGN_RETURN_FROM_ZOT
         && stair_find != DNGN_EXIT_HELL)
     {
-        down_stairs(you.your_level, force_stair, entry_cause);
+        down_stairs(you.absdepth0, force_stair, entry_cause);
         return;
     }
     // Probably still need this check here (teleportation) -- bwr
@@ -1866,7 +1881,7 @@ void up_stairs(dungeon_feature_type force_stair,
     // Checks are done, the character is committed to moving between levels.
     leaving_level_now();
 
-    const int old_level  = you.your_level;
+    const int old_level  = you.absdepth0;
 
     // Interlevel travel data.
     const bool collect_travel_data = can_travel_interlevel();
@@ -1880,7 +1895,7 @@ void up_stairs(dungeon_feature_type force_stair,
     _player_change_level_reset();
     _player_change_level_upstairs(stair_find, destination_override);
 
-    if (you.your_level < 0)
+    if (you.absdepth0 < 0)
     {
         mpr("You have escaped!");
 
@@ -2046,7 +2061,7 @@ static void _mark_portal_return_point(const coord_def &pos)
     }
 }
 
-// All changes to you.level_type, you.where_are_you and you.your_level
+// All changes to you.level_type, you.where_are_you and you.absdepth0
 // for descending stairs should happen here.
 static void _player_change_level_downstairs(dungeon_feature_type stair_find,
                                             const level_id &place_override,
@@ -2071,9 +2086,9 @@ static void _player_change_level_downstairs(dungeon_feature_type stair_find,
     if (stair_find == DNGN_ENTER_HELL)
     {
         you.where_are_you = BRANCH_VESTIBULE_OF_HELL;
-        you.hell_exit = you.your_level;
+        you.hell_exit = you.absdepth0;
 
-        you.your_level = 26;
+        you.absdepth0 = 26;
     }
 
     // Welcome message.
@@ -2098,13 +2113,13 @@ static void _player_change_level_downstairs(dungeon_feature_type stair_find,
 
     if (shaft)
     {
-        you.your_level    = shaft_level;
+        you.absdepth0    = shaft_level;
         you.where_are_you = shaft_dest.branch;
     }
     else if (original_level_type == LEVEL_DUNGEON
              && you.level_type == LEVEL_DUNGEON)
     {
-        you.your_level++;
+        you.absdepth0++;
     }
 }
 
@@ -2225,7 +2240,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         shaft_level = absdungeon_depth(shaft_dest.branch, shaft_dest.depth);
 
 #ifdef DGL_MILESTONES
-        if (!known_trap && shaft_level - you.your_level > 1)
+        if (!known_trap && shaft_level - you.absdepth0 > 1)
             mark_milestone("shaft", "fell down a shaft to " +
                                     short_place_name(shaft_dest) + ".");
 #endif
@@ -2341,7 +2356,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         _mark_portal_return_point(you.pos());
     }
 
-    const int shaft_depth = (shaft ? shaft_level - you.your_level : 1);
+    const int shaft_depth = (shaft ? shaft_level - you.absdepth0 : 1);
     _player_change_level_reset();
     _player_change_level_downstairs(stair_find, destination_override, shaft,
                                     shaft_level, shaft_dest);
@@ -2350,7 +2365,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     // instances of it.
     if (you.level_type != LEVEL_DUNGEON)
     {
-        std::string lname = make_filename(you.your_name, you.your_level,
+        std::string lname = make_filename(you.your_name, you.absdepth0,
                                           you.where_are_you,
                                           you.level_type, false);
 #if DEBUG_DIAGNOSTICS
@@ -2553,7 +2568,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         if (player_in_hell())
         {
             you.where_are_you = BRANCH_MAIN_DUNGEON;
-            you.your_level    = you.hell_exit - 1;
+            you.absdepth0    = you.hell_exit - 1;
         }
         break;
 
@@ -2576,7 +2591,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
             {
                 you.where_are_you = BRANCH_MAIN_DUNGEON;
                 you.hell_exit  = 26;
-                you.your_level = 26;
+                you.absdepth0 = 26;
             }
         }
         break;
@@ -2904,6 +2919,15 @@ std::vector<monsters*> get_nearby_monsters(bool want_move,
     return mons;
 }
 
+static bool _exposed_monsters_nearby(bool want_move)
+{
+    const int radius = want_move ? 2 : 1;
+    for (radius_iterator ri(you.pos(), radius); ri; ++ri)
+        if (env.show(grid2show(*ri)).cls == SH_INVIS_EXPOSED)
+            return (true);
+    return (false);
+}
+
 bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
 {
     if (!just_monsters)
@@ -2935,24 +2959,25 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
     std::vector<monsters*> visible =
         get_nearby_monsters(want_move, !announce, true, true, true, range);
 
-    // No monsters found.
-    if (visible.empty())
-        return (true);
-
     // Announce the presence of monsters (Eidolos).
+    std::string msg;
     if (visible.size() == 1)
     {
         const monsters &m = *visible[0];
-        if (announce)
-        {
-            std::string monname =
-                (mons_is_mimic(m.type)) ? "a mimic" : m.name(DESC_NOCAP_A);
-
-            mprf(MSGCH_WARN, "Not with %s in view!", monname.c_str());
-        }
+        const std::string monname = mons_is_mimic(m.type)
+                                  ? "a mimic"
+                                  : m.name(DESC_NOCAP_A);
+        msg = make_stringf("There is %s nearby!", monname.c_str());
     }
-    else if (announce && visible.size() > 1)
-        mprf(MSGCH_WARN, "Not with these monsters around!");
+    else if (visible.size() > 1)
+        msg = "There are monsters nearby!";
+    else if (_exposed_monsters_nearby(want_move))
+        msg = "There is a strange disturbance nearby!";
+    else
+        return (true);
+
+    if (announce)
+        mpr(msg, MSGCH_WARN);
 
     return (false);
 }

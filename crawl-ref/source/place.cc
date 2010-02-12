@@ -55,7 +55,7 @@ unsigned short get_packed_place( branch_type branch, int subdepth,
 unsigned short get_packed_place()
 {
     return get_packed_place(you.where_are_you,
-                            subdungeon_depth(you.where_are_you, you.your_level),
+                            subdungeon_depth(you.where_are_you, you.absdepth0),
                             you.level_type);
 }
 
@@ -179,7 +179,7 @@ int subdungeon_depth(branch_type branch, int depth)
 
 int player_branch_depth()
 {
-    return subdungeon_depth(you.where_are_you, you.your_level);
+    return subdungeon_depth(you.where_are_you, you.absdepth0);
 }
 
 // Returns true if exits from this type of level involve going upstairs.

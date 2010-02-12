@@ -228,7 +228,7 @@ static int dgn_create_monster(lua_State *ls)
     for (int i = 0, size = mlist.size(); i < size; ++i)
     {
         mons_spec mspec = mlist.get_monster(i);
-        const int mid = dgn_place_monster(mspec, you.your_level, c,
+        const int mid = dgn_place_monster(mspec, you.absdepth0, c,
                                           false, false, false);
         if (mid != -1)
         {

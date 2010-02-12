@@ -15,14 +15,6 @@
 
 class monsters;
 
-enum demon_beam_type
-{
-    DMNBM_HELLFIRE,
-    DMNBM_SMITING,
-    DMNBM_BRAIN_FEED,
-    DMNBM_MUTATION
-};
-
 enum mon_resist_type
 {
     MON_RESIST,                 // monster resisted
@@ -65,7 +57,7 @@ struct bolt
     spell_type  origin_spell;          // may be SPELL_NO_SPELL for non-spell
                                        // beams.
     int         range;
-    unsigned    type;                  // missile gfx
+    unsigned    glyph;                 // missile gfx
     int         colour;
     beam_type   flavour;
     beam_type   real_flavour;          // for random and chaos beams this
@@ -196,6 +188,8 @@ public:
     bool explode(bool show_more = true, bool hole_in_the_middle = false);
     bool knockback_actor(actor *actor);
 
+    bool visible() const;
+
 private:
     void do_fire();
     coord_def pos() const;
@@ -204,11 +198,10 @@ private:
     bool is_blockable() const;
     bool is_superhot() const;
     bool is_fiery() const;
-    bool affects_wall(dungeon_feature_type wall) const;
+    maybe_bool affects_wall(dungeon_feature_type wall) const;
     bool is_bouncy(dungeon_feature_type feat) const;
     bool can_affect_wall_monster(const monsters* mon) const;
     bool stop_at_target() const;
-    bool invisible() const;
     bool has_saving_throw() const;
     bool is_harmless(const monsters *mon) const;
     bool harmless_to_player() const;

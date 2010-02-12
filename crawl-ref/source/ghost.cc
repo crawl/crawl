@@ -869,8 +869,8 @@ void ghost_demon::find_extra_ghosts( std::vector<ghost_demon> &gs, int n )
 // Returns the number of extra ghosts allowed on the level.
 int ghost_demon::n_extra_ghosts()
 {
-    const int lev = you.your_level + 1;
-    const int subdepth = subdungeon_depth(you.where_are_you, you.your_level);
+    const int lev = you.absdepth0 + 1;
+    const int subdepth = subdungeon_depth(you.where_are_you, you.absdepth0);
 
     if (you.level_type == LEVEL_PANDEMONIUM
         || you.level_type == LEVEL_ABYSS

@@ -405,7 +405,7 @@ monster_type pick_random_monster(const level_id &place,
 {
     int level;
     if (place.level_type == LEVEL_PORTAL_VAULT)
-        level = you.your_level;
+        level = you.absdepth0;
     else
         level = place.absdepth();
     return pick_random_monster(place, level, level, chose_ood_monster);
@@ -715,12 +715,12 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                 if (type == -1)
                 {
                     place = level_id::from_packed_place(base);
-                    // If lev_mons is set to you.your_level, it was probably
+                    // If lev_mons is set to you.absdepth0, it was probably
                     // set as a default meaning "the current dungeon depth",
                     // which for a portal vault using its own definition
                     // of random monsters means "the depth of whatever place
                     // we're using for picking the random monster".
-                    if (*lev_mons == you.your_level)
+                    if (*lev_mons == you.absdepth0)
                         *lev_mons = place.absdepth();
                     // pick_random_monster() is called below
                 }
@@ -866,7 +866,7 @@ static bool _valid_monster_generation_location(mgen_data &mg)
 // OOD packs, based on depth and time spent on-level.
 static bool _in_ood_pack_protected_place()
 {
-    return (env.turns_on_level < 1400 - you.your_level * 117);
+    return (env.turns_on_level < 1400 - you.absdepth0 * 117);
 }
 
 int place_monster(mgen_data mg, bool force_pos)
@@ -2670,7 +2670,7 @@ void mark_interesting_monst(struct monsters* monster, beh_type behaviour)
         interesting = false;
     else if (you.where_are_you == BRANCH_MAIN_DUNGEON
              && you.level_type == LEVEL_DUNGEON
-             && mons_level(monster->type) >= you.your_level + _ood_limit()
+             && mons_level(monster->type) >= you.absdepth0 + _ood_limit()
              && mons_level(monster->type) < 99
              && !(monster->type >= MONS_EARTH_ELEMENTAL
                   && monster->type <= MONS_AIR_ELEMENTAL)
@@ -2777,7 +2777,7 @@ int mons_place(mgen_data mg)
         break;
     case LEVEL_DUNGEON:
     default:
-        mg.power = you.your_level;
+        mg.power = you.absdepth0;
         break;
     }
 

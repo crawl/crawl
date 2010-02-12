@@ -76,7 +76,7 @@ Jiyva is the chaotic ancient deity of the slimes.
 %%%%
 Fedhas
 
-Fedhas Madash is the god of plant and fungal life.
+Fedhas Madash is the god of plant and fungal life. Fedhas demands that followers encourage the decomposition of corpses. Fedhas forbids followers from harming any species under Fedhas' protection, and from using any necromantic effects that interfere with corpses. In return Fedhas grants a number of abilities that promote the growth of plants and fungi. These abilities may incidentally prove useful to adventurers. 
 %%%%
 Cheibriados
 
@@ -138,7 +138,7 @@ Beogh encourages followers to make use of orcish gear found in the dungeon. Foll
 %%%%
 Fedhas powers
 
-Fedhas encourages followers to promote the growth of plant life.
+Plants and fungi will not attack Fedhas worshipers without provocation. Fedhas worshipers may walk through plants or fungi, and even fire missiles or spells through them without causing harm. Fedhas grants the ability to promote plants and fungi into stronger species. Followers can eventually grow a wall of plants and create explosive spores from corpses. Followers are granted some control over the weather; they may call sunlight and eventually rainstorms.
 %%%%
 Cheibriados powers
 

@@ -33,6 +33,7 @@ long remove_oldest_blood_potion( item_def &stack );
 void remove_newest_blood_potion( item_def &stack, int quant = -1 );
 void merge_blood_potion_stacks(item_def &source, item_def &dest, int quant);
 
+bool check_blood_corpses_on_ground();
 bool can_bottle_blood_from_corpse(int mons_type);
 int num_blood_potions_from_corpse(int mons_class, int chunk_type = -1);
 void turn_corpse_into_blood_potions (item_def &item);

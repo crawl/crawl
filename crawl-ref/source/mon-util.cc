@@ -11,6 +11,7 @@
 
 #include "mon-util.h"
 
+#include "artefact.h"
 #include "beam.h"
 #include "colour.h"
 #include "coordit.h"
@@ -2038,27 +2039,31 @@ int mons_power(int mc)
     return (smc->hpdice[0]);
 }
 
-bool mons_aligned(int m1, int m2)
+bool mons_aligned(const actor *m1, const actor *m2)
 {
     mon_attitude_type fr1, fr2;
-    monsters *mon1, *mon2;
+    const monsters *mon1, *mon2;
 
-    if (m1 == MHITNOT || m2 == MHITNOT)
+    if (!m1 || !m2)
         return (true);
 
-    if (m1 == MHITYOU)
+    if (m1->atype() == ACT_PLAYER)
         fr1 = ATT_FRIENDLY;
     else
     {
-        mon1 = &menv[m1];
+        mon1 = static_cast<const monsters*>(m1);
+        if (mons_is_projectile(mon1->type))
+            return (true);
         fr1 = mons_attitude(mon1);
     }
 
-    if (m2 == MHITYOU)
+    if (m2->atype() == ACT_PLAYER)
         fr2 = ATT_FRIENDLY;
     else
     {
-        mon2 = &menv[m2];
+        mon2 = static_cast<const monsters*>(m2);
+        if (mons_is_projectile(mon2->type))
+            return (true);
         fr2 = mons_attitude(mon2);
     }
 
@@ -2380,8 +2385,9 @@ bool ms_useful_fleeing_out_of_sight( const monsters *mon, spell_type monspell )
 
 bool ms_low_hitpoint_cast( const monsters *mon, spell_type monspell )
 {
-    bool targ_adj   = false;
-    bool targ_sanct = false;
+    bool targ_adj      = false;
+    bool targ_sanct    = false;
+    bool targ_friendly = false;
 
     if (mon->foe == MHITYOU || mon->foe == MHITNOT)
     {
@@ -2398,10 +2404,17 @@ bool ms_low_hitpoint_cast( const monsters *mon, spell_type monspell )
             targ_sanct = true;
     }
 
+    if (mon->foe == MHITYOU) {
+        targ_friendly = mon->wont_attack();
+    }
+    else {
+        targ_friendly = mons_aligned(mon, &menv[mon->foe]);
+    }
+
     switch (monspell)
     {
     case SPELL_TELEPORT_OTHER:
-        return !targ_sanct;
+        return !targ_sanct && !targ_friendly;
     case SPELL_TELEPORT_SELF:
         // Don't cast again if already about to teleport.
         return !mon->has_ench(ENCH_TP);
@@ -2410,9 +2423,9 @@ bool ms_low_hitpoint_cast( const monsters *mon, spell_type monspell )
         return true;
     case SPELL_BLINK_AWAY:
     case SPELL_BLINK_RANGE:
-        return true;
+        return !targ_friendly;
     case SPELL_BLINK_OTHER:
-        return !targ_sanct && targ_adj;
+        return !targ_sanct && targ_adj && !targ_friendly;
     case SPELL_BLINK:
         return targ_adj;
     case SPELL_TOMB_OF_DOROKLOHE:
@@ -3177,6 +3190,10 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     if (s_type < 0 || s_type >= NUM_LOUDNESS || s_type == NUM_SHOUTS)
         s_type = mons_shouts(monster->type);
 
+    // FIXME: Handle player_genus in case it was not generalized to foe_genus.
+    msg = replace_all(msg, "@player_genus@", species_name(you.species, 1, true));
+    msg = replace_all(msg, "@player_genus_plural@", _pluralise_player_genus());
+
     std::string foe_species;
 
     if (foe == NULL)
@@ -3773,8 +3790,34 @@ bool mons_landlubbers_in_reach(const monsters *monster)
                             NULL,
                             true);
                          ai; ++ai)
-        if ((act = actor_at(*ai)) && !mons_aligned(monster->mindex(), act->mindex()))
+        if ((act = actor_at(*ai)) && !mons_aligned(monster, act))
             return (true);
 
     return (false);
+}
+
+int get_dist_to_nearest_monster()
+{
+    int minRange = LOS_RADIUS + 1;
+    for (radius_iterator ri(&you.get_los_no_trans(), true); ri; ++ri)
+    {
+        const monsters *mon = monster_at(*ri);
+        if (mon == NULL)
+            continue;
+
+        if (!mon->visible_to(&you) || mons_is_unknown_mimic(mon))
+            continue;
+
+        // Plants/fungi don't count.
+        if (mons_class_flag(mon->type, M_NO_EXP_GAIN))
+            continue;
+
+        if (mon->wont_attack())
+            continue;
+
+        int dist = grid_distance(you.pos(), *ri);
+        if (dist < minRange)
+            minRange = dist;
+    }
+    return (minRange);
 }

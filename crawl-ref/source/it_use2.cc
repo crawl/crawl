@@ -726,6 +726,12 @@ void unuse_artefact(const item_def &item, bool *show_msgs)
         }
     }
 
+    if (proprt[ARTP_PONDEROUS])
+    {
+        mpr("That put a bit of spring back into your step.");
+        che_handle_change(CB_PONDEROUS, -1);
+    }
+
     if (proprt[ARTP_MAGICAL_POWER] && !known[ARTP_MAGICAL_POWER])
     {
         mprf("You feel your mana capacity %s.",

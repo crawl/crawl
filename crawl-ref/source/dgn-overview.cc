@@ -1,12 +1,12 @@
 /*
- *  File:       overmap.cc
+ *  File:       dgn-overview.cc
  *  Summary:    Records location of stairs etc
  *  Written by: Linley Henzell
  */
 
 #include "AppHdr.h"
 
-#include "overmap.h"
+#include "dgn-overview.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -171,7 +171,7 @@ inline static std::string portal_description(portal_type portal)
     return feature_description( portal_to_feature(portal) );
 }
 
-bool overmap_knows_portal(dungeon_feature_type portal)
+bool overview_knows_portal(dungeon_feature_type portal)
 {
     for ( portal_map_type::const_iterator pl_iter = portals_present.begin();
           pl_iter != portals_present.end(); ++pl_iter )
@@ -182,7 +182,7 @@ bool overmap_knows_portal(dungeon_feature_type portal)
     return (false);
 }
 
-int overmap_knows_num_portals(dungeon_feature_type portal)
+int overview_knows_num_portals(dungeon_feature_type portal)
 {
     int num = 0;
     for ( portal_map_type::const_iterator pl_iter = portals_present.begin();
@@ -327,7 +327,7 @@ std::string overview_description_string()
 }
 
 // iterate through every dungeon branch, listing the ones which have been found
-static std::string _get_branches()
+static std::string _get_seen_branches()
 {
     int num_printed_branches = 1;
     char buffer[100];
@@ -353,14 +353,13 @@ static std::string _get_branches()
     for (int i = BRANCH_FIRST_NON_DUNGEON; i < NUM_BRANCHES; i++)
     {
         const branch_type branch = branches[i].id;
-        bool printed = false;
 
         if (stair_level.find(branch) != stair_level.end())
         {
             level_id lid(branch, 0);
             lid = find_deepest_explored(lid);
 
-            // Each branch entry takes up 24 spaces
+            // Each branch entry takes up 26 spaces
             snprintf(buffer, sizeof buffer,
                 "<yellow>%-7s</yellow> <darkgrey>(%d/%d)</darkgrey>: %-9s",
                      branches[branch].abbrevname,
@@ -369,32 +368,6 @@ static std::string _get_branches()
                      stair_level[branch].describe(false, true).c_str());
 
             disp += buffer;
-            printed = true;
-        }
-        else {
-            const branch_type parent_branch = branches[i].parent_branch;
-            level_id lid(parent_branch, 0);
-            lid = find_deepest_explored(lid);
-            if (lid.depth >= branches[branch].mindepth) {
-                int width = (branches[branch].mindepth >= 10) +
-                            strlen(branches[parent_branch].abbrevname);
-
-                // Each branch entry takes up 24 spaces
-                snprintf(buffer, sizeof buffer,
-                    "<brown>%-7s</brown> <darkgrey>(0/%d): %s:%d-%-*d</darkgrey>",
-                        branches[branch].abbrevname,
-                        branches[branch].depth,
-                        branches[parent_branch].abbrevname,
-                        branches[branch].mindepth,
-                        6 - width,
-                        branches[branch].maxdepth);
-
-                disp += buffer;
-                printed = true;
-            }
-        }
-
-        if (printed) {
             num_printed_branches++;
 
             disp += (num_printed_branches % 3) == 0 ? "\n" : "  ";
@@ -404,6 +377,121 @@ static std::string _get_branches()
     if (num_printed_branches % 3 != 0)
         disp += "\n";
     return disp;
+}
+
+static std::string _get_unseen_branches()
+{
+    int num_printed_branches = 0;
+    char buffer[100];
+    std::string disp;
+
+    /* see if we need to hide a lair branch that doesn't exist */
+    int possibly_missing_lair_branches = 0, missing_lair_branch = -1;
+    for (int i = BRANCH_FIRST_NON_DUNGEON; i < NUM_BRANCHES; i++)
+    {
+        const branch_type branch = branches[i].id;
+
+        if (i != BRANCH_SWAMP && i != BRANCH_SNAKE_PIT && i != BRANCH_SHOALS) {
+            continue;
+        }
+
+        if (possibly_missing_lair_branches == 2) {
+            missing_lair_branch = i;
+        }
+
+        if (stair_level.find(branch) != stair_level.end()) {
+            possibly_missing_lair_branches++;
+        }
+    }
+
+    bool found_portals[NUM_PORTALS] = { 0 };
+    /* see if we've found portals to hell, pan, the abyss */
+    for (int cur_portal = PORTAL_NONE; cur_portal < NUM_PORTALS; ++cur_portal)
+    {
+        portal_map_type::const_iterator ci_portals;
+        for ( ci_portals = portals_present.begin();
+              ci_portals != portals_present.end();
+              ++ci_portals )
+        {
+            found_portals[ci_portals->second] = true;
+        }
+    }
+
+    for (int i = BRANCH_FIRST_NON_DUNGEON; i < NUM_BRANCHES; i++)
+    {
+        const branch_type branch = branches[i].id;
+
+        if (i == missing_lair_branch) {
+            continue;
+        }
+
+        if (i == BRANCH_VESTIBULE_OF_HELL && found_portals[PORTAL_HELL]) {
+            continue;
+        }
+
+        if (stair_level.find(branch) == stair_level.end())
+        {
+            const branch_type parent_branch = branches[i].parent_branch;
+            level_id lid(parent_branch, 0);
+            lid = find_deepest_explored(lid);
+            if (lid.depth >= branches[branch].mindepth) {
+                if (branches[branch].mindepth != branches[branch].maxdepth) {
+                    int len = strlen(branches[branch].abbrevname) -
+                              strlen(branches[parent_branch].abbrevname);
+                    // Each branch entry takes up 20 spaces
+                    snprintf(buffer, sizeof buffer,
+                        "<brown>%s</brown><darkgrey>: %*s:%d-%d</darkgrey>",
+                            branches[branch].abbrevname,
+                            6 - len,
+                            branches[parent_branch].abbrevname,
+                            branches[branch].mindepth,
+                            branches[branch].maxdepth);
+                }
+                else {
+                    int len = strlen(branches[branch].abbrevname) -
+                              strlen(branches[parent_branch].abbrevname);
+                    // Each branch entry takes up 20 spaces
+                    snprintf(buffer, sizeof buffer,
+                        "<brown>%s</brown><darkgrey>: %*s:%d</darkgrey>",
+                            branches[branch].abbrevname,
+                            6 - len,
+                            branches[parent_branch].abbrevname,
+                            branches[branch].mindepth);
+                }
+
+                disp += buffer;
+                num_printed_branches++;
+
+                disp += (num_printed_branches % 4) == 0
+                    ? "\n" : std::string(56 - strlen(buffer), ' ');
+            }
+        }
+    }
+
+    /* not actual branches, have to hardcode this stuff here */
+    if (find_deepest_explored(level_id(BRANCH_MAIN_DUNGEON, 0)).depth >= 21) {
+        if (!found_portals[PORTAL_PANDEMONIUM]) {
+            disp += "<brown>Pan</brown><darkgrey>:    D:21-27</darkgrey>";
+            num_printed_branches++;
+            disp += (num_printed_branches % 4) == 0
+                ? "\n" : "     ";
+        }
+        if (!found_portals[PORTAL_ABYSS]) {
+            disp += "<brown>Abyss</brown><darkgrey>:  D:21-27</darkgrey>";
+            num_printed_branches++;
+            disp += (num_printed_branches % 4) == 0
+                ? "\n" : "     ";
+        }
+    }
+
+    if (num_printed_branches % 4 != 0)
+        disp += "\n";
+    return disp;
+}
+
+static std::string _get_branches()
+{
+    return _get_seen_branches() + std::string("\n") + _get_unseen_branches();
 }
 
 // iterate through every god and display their altar's discovery state by color
@@ -669,7 +757,7 @@ bool unnotice_feature(const level_pos &pos)
             || _unnotice_stair(pos));
 }
 
-void display_overmap()
+void display_overview()
 {
     std::string disp = overview_description_string();
     linebreak_string(disp, get_number_of_cols() - 5, get_number_of_cols() - 1);
@@ -745,7 +833,7 @@ void _seen_other_thing( dungeon_feature_type which_thing, const coord_def& pos )
     {
         std::string portal_name;
 
-        portal_name = env.markers.property_at(pos, MAT_ANY, "overmap");
+        portal_name = env.markers.property_at(pos, MAT_ANY, "overview");
         if (portal_name.empty())
             portal_name = env.markers.property_at(pos, MAT_ANY, "dstname");
         if (portal_name.empty())
@@ -764,7 +852,7 @@ void _seen_other_thing( dungeon_feature_type which_thing, const coord_def& pos )
         portal_vault_colours[where] = (char) element_colour(col, true);
 
         portal_vault_notes[where] =
-            env.markers.property_at(pos, MAT_ANY, "overmap_note");
+            env.markers.property_at(pos, MAT_ANY, "overview_note");
 
         break;
     }

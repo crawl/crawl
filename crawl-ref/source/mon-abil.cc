@@ -621,14 +621,13 @@ static bool _orc_battle_cry(monsters *chief)
         && chief->can_see(foe)
         && coinflip())
     {
-        const int boss_index = chief->mindex();
         const int level = chief->hit_dice > 12? 2 : 1;
         std::vector<monsters*> seen_affected;
         for (monster_iterator mi(chief); mi; ++mi)
         {
             if (*mi != chief
                 && mons_species(mi->type) == MONS_ORC
-                && mons_aligned(boss_index, mi->mindex())
+                && mons_aligned(chief, *mi)
                 && mi->hit_dice < chief->hit_dice
                 && !mi->berserk()
                 && !mi->has_ench(ENCH_MIGHT)
@@ -867,7 +866,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
         c = circle_def(monster->pos(), 4, C_CIRCLE);
         for (monster_iterator targ(&c); targ; ++targ)
         {
-            if (mons_atts_aligned(monster->attitude, targ->attitude))
+            if (mons_aligned(monster, *targ))
                 continue;
 
             if (monster->can_see(*targ) && !feat_is_solid(grd(targ->pos())))
@@ -896,7 +895,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
         beem.damage      = dice_def(3, 10);
         beem.hit         = 20;
         beem.colour      = RED;
-        beem.type        = dchar_glyph(DCHAR_FIRED_ZAP);
+        beem.glyph       = dchar_glyph(DCHAR_FIRED_ZAP);
         beem.flavour     = BEAM_LAVA;
         beem.beam_source = monster->mindex();
         beem.thrower     = KILL_MON;
@@ -931,7 +930,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
         beem.damage      = dice_def( 3, 6 );
         beem.hit         = 50;
         beem.colour      = LIGHTCYAN;
-        beem.type        = dchar_glyph(DCHAR_FIRED_ZAP);
+        beem.glyph       = dchar_glyph(DCHAR_FIRED_ZAP);
         beem.flavour     = BEAM_ELECTRICITY;
         beem.beam_source = monster->mindex();
         beem.thrower     = KILL_MON;
@@ -1095,7 +1094,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
         beem.hit         = 14;
         beem.damage      = dice_def( 2, 10 );
         beem.beam_source = monster->mindex();
-        beem.type        = dchar_glyph(DCHAR_FIRED_MISSILE);
+        beem.glyph       = dchar_glyph(DCHAR_FIRED_MISSILE);
         beem.colour      = LIGHTGREY;
         beem.flavour     = BEAM_MISSILE;
         beem.thrower     = KILL_MON;
@@ -1442,7 +1441,7 @@ void ballisto_on_move(monsters * monster, const coord_def & position)
                 beh_type attitude = SAME_ATTITUDE(monster);
                 int rc = create_monster(mgen_data(MONS_BALLISTOMYCETE,
                                                   attitude,
-                                                  monster,
+                                                  NULL,
                                                   0,
                                                   0,
                                                   position,

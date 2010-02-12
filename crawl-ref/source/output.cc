@@ -998,7 +998,7 @@ void print_stats_level()
 
     textcolor(HUD_VALUE_COLOUR);
 #if DEBUG_DIAGNOSTICS
-    cprintf( "(%d) ", you.your_level + 1 );
+    cprintf( "(%d) ", you.absdepth0 + 1 );
 #endif
     cprintf("%s", _level_description_string_hud().c_str());
     clear_to_end_of_line();

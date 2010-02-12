@@ -349,7 +349,7 @@ int torment(int caster, const coord_def& where)
         attacker = &menv[caster];
     else if (caster < 0 && you.turn_is_over && where == you.pos()
              && !(crawl_state.is_god_acting()
-                  &&crawl_state.is_god_retribution()))
+                  && crawl_state.is_god_retribution()))
     {
         // Maybe monsters should still consider it your fault if it's
         // caused by divine retribution?
@@ -392,7 +392,7 @@ void immolation(int pow, int caster, coord_def where, bool known,
     }
 
     beam.flavour       = BEAM_FIRE;
-    beam.type          = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.glyph         = dchar_glyph(DCHAR_FIRED_BURST);
     beam.damage        = dice_def(3, pow);
     beam.target        = where;
     beam.name          = "fiery explosion";
@@ -451,7 +451,7 @@ void conduct_electricity(coord_def where, actor *attacker)
     bolt beam;
 
     beam.flavour       = BEAM_ELECTRICITY;
-    beam.type          = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.glyph         = dchar_glyph(DCHAR_FIRED_BURST);
     beam.damage        = dice_def(1, 15);
     beam.target        = where;
     beam.name          = "electric current";
@@ -500,7 +500,7 @@ void cleansing_flame(int pow, int caster, coord_def where,
     }
 
     beam.flavour      = BEAM_HOLY;
-    beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
     beam.damage       = dice_def(2, pow);
     beam.target       = you.pos();
     beam.name         = "golden flame";
@@ -675,7 +675,7 @@ void banished(dungeon_feature_type gate_type, const std::string &who)
         take_note(Note(NOTE_MESSAGE, 0, 0, what.c_str()), true);
     }
 
-    down_stairs(you.your_level, gate_type, you.entry_cause);  // heh heh
+    down_stairs(you.absdepth0, gate_type, you.entry_cause);  // heh heh
 }
 
 bool forget_spell(void)
@@ -1426,6 +1426,11 @@ static int _acquirement_weapon_subtype(bool divine)
     {
         item_considered.sub_type = i;
 
+        // Can't get blessed blades through acquirement, only from TSO
+        if (is_blessed(item_considered)) {
+            continue;
+        }
+
         int acqweight = property(item_considered, PWPN_ACQ_WEIGHT);
 
         if (!acqweight)
@@ -1700,7 +1705,7 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
 
     do
     {
-        const bool divine = (agent == GOD_OKAWARU || agent == GOD_XOM);
+        const bool divine = (agent == GOD_OKAWARU || agent == GOD_XOM || agent == GOD_TROG);
         switch (class_wanted)
         {
         case OBJ_FOOD:
@@ -3893,7 +3898,7 @@ void handle_time()
                 bolt beam;
 
                 beam.flavour      = BEAM_RANDOM;
-                beam.type         = dchar_glyph(DCHAR_FIRED_BURST);
+                beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
                 beam.damage       = dice_def(3, you.magic_contamination
                                              * (you.is_undead ? 4 : 2) / 4);
                 beam.target       = you.pos();
@@ -4283,7 +4288,7 @@ void update_level(long elapsedTime)
 #endif
 
     update_corpses(elapsedTime);
-    shoals_apply_tides(turns);
+    shoals_apply_tides(turns, true);
     recharge_rods(turns, true);
 
     if (env.sanctuary_time)
@@ -4670,7 +4675,8 @@ int spawn_corpse_mushrooms(item_def &corpse,
 
         // Is this square occupied by a non mushroom?
         if (monster && monster->mons_species() != MONS_TOADSTOOL
-            || player_occupant && you.religion != GOD_FEDHAS)
+            || player_occupant && you.religion != GOD_FEDHAS
+            || !is_harmless_cloud(cloud_type_at(current)))
         {
             continue;
         }
