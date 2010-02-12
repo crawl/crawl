@@ -1298,6 +1298,7 @@ bool evolve_flora()
     args.range = LOS_RADIUS;
     args.needs_path = false;
     args.may_target_monster = false;
+    args.show_floor_desc = true;
     args.top_prompt = "Select plant or fungus to evolve.";
 
     direction(spelld, args);

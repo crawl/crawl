@@ -79,6 +79,7 @@ struct direction_chooser_args
     std::string top_prompt;
     targeting_behaviour *behaviour;
     bool cancel_at_self;
+    bool show_floor_desc;
 
     direction_chooser_args() :
         restricts(DIR_NONE),
@@ -90,7 +91,8 @@ struct direction_chooser_args
         may_target_self(false),
         target_prefix(NULL),
         behaviour(NULL),
-        cancel_at_self(false) {}
+        cancel_at_self(false),
+        show_floor_desc(false) {}
 };
 
 class direction_chooser
@@ -229,6 +231,7 @@ private:
     std::string top_prompt;     // Shown at the top of the message window
     targeting_behaviour *behaviour; // Can be NULL for default
     bool cancel_at_self;        // Disallow self-targeting?
+    bool show_floor_desc;       // Describe the floor of the current target
 
     // Internal data.
     ray_def beam;               // The (possibly invalid) beam.
