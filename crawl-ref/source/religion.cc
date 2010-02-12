@@ -221,7 +221,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "summon a divine warrior" },
     // Kikubaaqudgha
     { "receive cadavers from Kikubaaqudgha",
-      "",
+      "Kikubaaqudgha is protecting you from some side-effects of death magic.",
       "",
       "Kikubaaqudgha is protecting you from unholy torment.",
       "invoke torment by praying over a corpse" },
@@ -329,7 +329,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "summon a divine warrior" },
     // Kikubaaqudgha
     { "receive cadavers from Kikubaaqudgha",
-      "",
+      "Kikubaaqudgha is no longer shielding you from miscast death magic.",
       "",
       "Kikubaaqudgha will no longer protect you from unholy torment.",
       "invoke torment by praying over a corpse" },
