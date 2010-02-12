@@ -304,7 +304,7 @@ This spell throws forth a shard of ice. It is particularly effective against tho
 %%%%
 Ice Form
 
-This spell temporarily transforms the caster's body into a frozen ice-creature.
+This spell temporarily transforms the caster's body into a frozen ice-creature, light enough to float on water.
 %%%%
 Ice Storm
 
