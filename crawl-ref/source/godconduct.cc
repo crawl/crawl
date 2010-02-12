@@ -452,11 +452,16 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             if (you.religion == GOD_CHEIBRIADOS
                 && !god_hates_attacking_friend(you.religion, victim))
             {
-                simple_god_message(" appreciates the change of pace.");
                 retval = true;
-                // Disallow returning to D:1 for free piety.
-                if (you.experience_level < you.absdepth0 + 2 + level / 2 + random2(5))
-                    piety_change = 1;
+                piety_change = 1;
+                const int speed_delta = monster_player_speed_delta(victim);
+                dprf("Che DID_KILL_FAST: %s speed delta: %d",
+                     victim->name(DESC_PLAIN, true).c_str(),
+                     speed_delta);
+                if (speed_delta > 0 && x_chance_in_y(speed_delta, 12))
+                    ++piety_change;
+
+                simple_god_message(" appreciates the change of pace.");
             }
             break;
 
@@ -1007,5 +1012,3 @@ void disable_attack_conducts(god_conduct_trigger conduct[3])
     for (int i = 0; i < 3; ++i)
         conduct[i].enabled = false;
 }
-
-
