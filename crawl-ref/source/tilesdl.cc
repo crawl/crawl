@@ -30,6 +30,7 @@
 
 #include "tiledef-dngn.h"
 #include "tiledef-main.h"
+#include "tiledef-gui.h"
 #include "tilefont.h"
 
 #include <SDL.h>
@@ -103,7 +104,10 @@ void TilesFramework::shutdown()
     delete m_region_stat;
     delete m_region_msg;
     delete m_region_map;
+    delete m_region_tab;
     delete m_region_inv;
+    delete m_region_spl;
+    delete m_region_mem;
     delete m_region_crt;
     delete m_region_menu;
 
@@ -111,7 +115,10 @@ void TilesFramework::shutdown()
     m_region_stat  = NULL;
     m_region_msg   = NULL;
     m_region_map   = NULL;
+    m_region_tab   = NULL;
     m_region_inv   = NULL;
+    m_region_spl   = NULL;
+    m_region_mem   = NULL;
     m_region_crt   = NULL;
     m_region_menu  = NULL;
 
@@ -309,8 +316,8 @@ bool TilesFramework::initialise()
     }
     else
     {
-        m_windowsz.x = std::max(800, m_screen_width  - 100);
-        m_windowsz.y = std::max(480, m_screen_height - 100);
+        m_windowsz.x = std::max(800, m_screen_width  - 90);
+        m_windowsz.y = std::max(480, m_screen_height - 90);
     }
 
     m_context = SDL_SetVideoMode(m_windowsz.x, m_windowsz.y, 0, flags);
@@ -349,8 +356,38 @@ bool TilesFramework::initialise()
     m_region_tile = new DungeonRegion(&m_image, m_fonts[lbl_font].font,
                                       TILE_X, TILE_Y);
     m_region_map  = new MapRegion(Options.tile_map_pixels);
-    m_region_inv  = new InventoryRegion(&m_image, m_fonts[lbl_font].font,
-                                        TILE_X, TILE_Y);
+    m_region_tab  = new TabbedRegion(&m_image, m_fonts[lbl_font].font,
+                                     TILE_X, TILE_Y);
+    m_region_inv = new InventoryRegion(&m_image, m_fonts[lbl_font].font,
+                                       TILE_X, TILE_Y);
+    m_region_spl = new SpellRegion(&m_image, m_fonts[lbl_font].font,
+                                   TILE_X, TILE_Y);
+    m_region_mem = new MemoriseRegion(&m_image, m_fonts[lbl_font].font,
+                                      TILE_X, TILE_Y);
+
+    m_region_tab->set_tab_region(TAB_ITEM, m_region_inv,
+                                 TILEG_TAB_ITEM_SELECTED,
+                                 TILEG_TAB_ITEM_UNSELECTED);
+    m_region_tab->set_tab_region(TAB_SPELL, m_region_spl,
+                                 TILEG_TAB_SPELL_SELECTED,
+                                 TILEG_TAB_SPELL_UNSELECTED);
+    m_region_tab->set_tab_region(TAB_MEMORISE, m_region_mem,
+                                 TILEG_TAB_MEMORISE_SELECTED,
+                                 TILEG_TAB_MEMORISE_UNSELECTED);
+
+    switch (Options.tile_display)
+    {
+    default:
+    case TDSP_INVENT:
+        m_region_tab->activate_tab(TAB_ITEM);
+        break;
+    case TDSP_SPELLS:
+        m_region_tab->activate_tab(TAB_SPELL);
+        break;
+    case TDSP_MEMORISE:
+        m_region_tab->activate_tab(TAB_MEMORISE);
+        break;
+    }
 
     m_region_msg  = new MessageRegion(m_fonts[m_msg_font].font);
     m_region_stat = new StatRegion(m_fonts[stat_font].font);
@@ -359,7 +396,7 @@ bool TilesFramework::initialise()
 
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_map);
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_tile);
-    m_layers[LAYER_NORMAL].m_regions.push_back(m_region_inv);
+    m_layers[LAYER_NORMAL].m_regions.push_back(m_region_tab);
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_msg);
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_stat);
 
@@ -1180,22 +1217,22 @@ bool TilesFramework::layout_statcol(bool message_overlay, bool show_gold_turns)
     if (message_overlay)
         inv_col = m_region_stat->sx;
 
-    m_region_inv->place(inv_col, m_region_map->ey, 0);
-    m_region_inv->resize_to_fit(m_windowsz.x - m_region_inv->sx,
-                                m_windowsz.y - m_region_inv->sy);
-    m_region_inv->resize(std::min(13, (int)m_region_inv->mx),
-                         std::min( 6, (int)m_region_inv->my));
+    m_region_tab->place(inv_col, m_region_map->ey);
+    m_region_tab->resize_to_fit(m_windowsz.x - m_region_tab->sx,
+                                m_windowsz.y - m_region_tab->sy);
+    m_region_tab->resize(std::min(13, (int)m_region_tab->mx),
+                         std::min( 6, (int)m_region_tab->my));
 
-    int self_inv_y = m_windowsz.y - m_region_inv->wy - margin;
-    m_region_inv->place(inv_col, self_inv_y, 0);
+    int self_inv_y = m_windowsz.y - m_region_tab->wy - margin;
+    m_region_tab->place(inv_col, self_inv_y);
 
     // recenter map above inventory
-    int map_cen_x = (m_region_inv->sx + m_region_inv->ex) / 2;
+    int map_cen_x = (m_region_tab->sx + m_region_tab->ex) / 2;
     map_cen_x = std::min(map_cen_x, (int)(m_windowsz.x - m_region_map->wx/2));
     m_region_map->place(map_cen_x - m_region_map->wx/2, m_region_map->sy,
                         map_margin);
 
-    int num_items = m_region_inv->mx * (m_region_inv->my - 1);
+    int num_items = m_region_tab->mx * (m_region_tab->my - 1);
     return (num_items >= ENDOFPACK);
 }
 
@@ -1459,304 +1496,20 @@ int tile_corpse_brand(const item_def item)
     return 0;
 }
 
-static void _fill_item_info(InventoryTile &desc, const item_def &item)
-{
-    desc.tile = tileidx_item(item);
-
-    int type = item.base_type;
-    if (type == OBJ_FOOD || type == OBJ_SCROLLS
-        || type == OBJ_POTIONS || type == OBJ_MISSILES)
-    {
-        // -1 specifies don't display anything
-        desc.quantity = (item.quantity == 1) ? -1 : item.quantity;
-    }
-    else if (type == OBJ_WANDS
-             && ((item.flags & ISFLAG_KNOW_PLUSES)
-                 || item.plus2 == ZAPCOUNT_EMPTY))
-    {
-        desc.quantity = item.plus;
-    }
-    else if (item_is_rod(item) && item.flags & ISFLAG_KNOW_PLUSES)
-        desc.quantity = item.plus / ROD_CHARGE_MULT;
-    else
-        desc.quantity = -1;
-
-    if (type == OBJ_WEAPONS || type == OBJ_MISSILES || type == OBJ_ARMOUR)
-        desc.special = tile_known_brand(item);
-    else if (type == OBJ_CORPSES)
-        desc.special = tile_corpse_brand(item);
-
-    desc.flag = 0;
-    if (item.cursed() && item_ident(item, ISFLAG_KNOW_CURSE))
-        desc.flag |= TILEI_FLAG_CURSE;
-    if (item_type_tried(item))
-        desc.flag |= TILEI_FLAG_TRIED;
-    if (item.pos.x != -1)
-        desc.flag |= TILEI_FLAG_FLOOR;
-}
-
-void TilesFramework::update_spells()
-{
-    std::vector<InventoryTile> inv;
-
-    if (Options.tile_display == TDSP_MEMORISE)
-    {
-        const int mx = m_region_inv->mx;
-        const int my = m_region_inv->my;
-        const unsigned int max_spells = mx * my;
-
-        std::vector<int>  books;
-        std::vector<spell_type> spells = get_mem_spell_list(books);
-        for (unsigned int i = 0; inv.size() < max_spells && i < spells.size();
-             ++i)
-        {
-            const spell_type spell = spells[i];
-
-            InventoryTile desc;
-            desc.tile     = tileidx_spell(spell);
-            desc.idx      = (int) spell;
-            desc.special  = books[i];
-            desc.quantity = spell_difficulty(spell);
-
-            if (spell_difficulty(spell) > you.experience_level
-                || player_spell_levels() < spell_levels_required(spell))
-            {
-                desc.flag |= TILEI_FLAG_MELDED;
-            }
-            inv.push_back(desc);
-        }
-        m_region_inv->update(inv.size(), &inv[0]);
-        return;
-    }
-
-    for (int i = 0; i < 52; ++i)
-    {
-        const char letter = index_to_letter(i);
-        const spell_type spell = get_spell_by_letter(letter);
-        if (spell == SPELL_NO_SPELL)
-            continue;
-
-        InventoryTile desc;
-        desc.tile     = tileidx_spell(spell);
-        desc.idx      = (int) spell;
-        desc.quantity = spell_difficulty(spell);
-
-        // If an equipped artefact prevents teleportation, the following spells
-        // cannot be cast.
-        if ((spell == SPELL_BLINK || spell == SPELL_CONTROLLED_BLINK
-                 || spell == SPELL_TELEPORT_SELF)
-             && scan_artefacts(ARTP_PREVENT_TELEPORTATION, false))
-        {
-            desc.flag |= TILEI_FLAG_MELDED;
-        }
-        else if (spell_mana(spell) > you.magic_points)
-            desc.flag |= TILEI_FLAG_MELDED;
-
-        inv.push_back(desc);
-    }
-    const int mx = m_region_inv->mx;
-    const int my = m_region_inv->my;
-
-    const unsigned int max_spells = std::min(22, mx*my);
-    while (inv.size() < max_spells)
-    {
-        InventoryTile desc;
-        inv.push_back(desc);
-    }
-
-    // FIXME: Add NUM_SPELLS to list of spells as placeholder for
-    //        memorisation tile. (Hack!)
-    InventoryTile desc;
-    desc.tile = tileidx_spell(NUM_SPELLS);
-    desc.idx  = NUM_SPELLS;
-
-    if (!can_learn_spell(true) || !has_spells_to_memorise())
-        desc.flag |= TILEI_FLAG_MELDED;
-
-    inv.push_back(desc);
-
-    m_region_inv->update(inv.size(), &inv[0]);
-}
-
 void TilesFramework::update_inventory()
 {
     if (!Options.tile_show_items || crawl_state.arena)
         return;
 
-    if (Options.tile_display != TDSP_INVENT)
-    {
-        update_spells();
-        return;
-    }
-
-    std::vector<InventoryTile> inv;
-
-    // item.base_type <-> char conversion table
-    const static char *obj_syms = ")([/%#?=!#+\\0}x";
-
-    const int mx = m_region_inv->mx;
-    const int my = m_region_inv->my;
-
-    int max_pack_row = (ENDOFPACK-1) / mx + 1;
-    int max_pack_items = max_pack_row * mx;
-
-    bool inv_shown[ENDOFPACK];
-    memset(inv_shown, 0, sizeof(inv_shown));
-
-    int num_ground = 0;
-    for (int i = you.visible_igrd(you.pos()); i != NON_ITEM; i = mitm[i].link)
-        num_ground++;
-
-    // If the inventory is full, show at least one row of the ground.
-    int min_ground = std::min(num_ground, mx);
-    max_pack_items = std::min(max_pack_items, mx * my - min_ground);
-    max_pack_items = std::min(ENDOFPACK, max_pack_items);
-
-    const size_t show_types_len = strlen(Options.tile_show_items);
-    // Special case: show any type if (c == show_types_len).
-    for (unsigned int c = 0; c <= show_types_len; c++)
-    {
-        if ((int)inv.size() >= max_pack_items)
-            break;
-
-        bool show_any = (c == show_types_len);
-
-        object_class_type type = OBJ_UNASSIGNED;
-        if (!show_any)
-        {
-            const char *find = strchr(obj_syms, Options.tile_show_items[c]);
-            if (!find)
-                continue;
-            type = (object_class_type)(find - obj_syms);
-        }
-
-        // First, normal inventory
-        for (int i = 0; i < ENDOFPACK; ++i)
-        {
-            if ((int)inv.size() >= max_pack_items)
-                break;
-
-            if (inv_shown[i]
-                || !you.inv[i].is_valid()
-                || you.inv[i].quantity == 0
-                || (!show_any && you.inv[i].base_type != type))
-            {
-                continue;
-            }
-
-            InventoryTile desc;
-            _fill_item_info(desc, you.inv[i]);
-            desc.idx = i;
-
-            for (int eq = 0; eq < NUM_EQUIP; ++eq)
-            {
-                if (you.equip[eq] == i)
-                {
-                    desc.flag |= TILEI_FLAG_EQUIP;
-                    if (!you_tran_can_wear(you.inv[i]))
-                        desc.flag |= TILEI_FLAG_MELDED;
-                    break;
-                }
-            }
-
-            inv_shown[i] = true;
-            inv.push_back(desc);
-        }
-    }
-
-    int remaining = mx*my - inv.size();
-    int empty_on_this_row = mx - inv.size() % mx;
-
-    // If we're not on the last row...
-    if ((int)inv.size() < mx * (my-1))
-    {
-        if (num_ground > remaining - empty_on_this_row)
-        {
-            // Fill out part of this row.
-            int fill = remaining - num_ground;
-            for (int i = 0; i < fill; ++i)
-            {
-                InventoryTile desc;
-                if ((int)inv.size() >= max_pack_items)
-                    desc.flag |= TILEI_FLAG_INVALID;
-                inv.push_back(desc);
-            }
-        }
-        else
-        {
-            // Fill out the rest of this row.
-            while (inv.size() % mx != 0)
-            {
-                InventoryTile desc;
-                if ((int)inv.size() >= max_pack_items)
-                    desc.flag |= TILEI_FLAG_INVALID;
-                inv.push_back(desc);
-            }
-
-            // Add extra rows, if needed.
-            unsigned int ground_rows =
-                std::max((num_ground-1) / mx + 1, 1);
-
-            while ((int)(inv.size() / mx + ground_rows) < my
-                   && ((int)inv.size()) < max_pack_items)
-            {
-                for (int i = 0; i < mx; i++)
-                {
-                    InventoryTile desc;
-                    if ((int)inv.size() >= max_pack_items)
-                        desc.flag |= TILEI_FLAG_INVALID;
-                    inv.push_back(desc);
-                }
-            }
-        }
-    }
-
-    // Then, as many ground items as we can fit.
-    bool ground_shown[MAX_ITEMS];
-    memset(ground_shown, 0, sizeof(ground_shown));
-    for (unsigned int c = 0; c <= show_types_len; c++)
-    {
-        if ((int)inv.size() >= mx * my)
-            break;
-
-        bool show_any = (c == show_types_len);
-
-        object_class_type type = OBJ_UNASSIGNED;
-        if (!show_any)
-        {
-            const char *find = strchr(obj_syms, Options.tile_show_items[c]);
-            if (!find)
-                continue;
-            type = (object_class_type)(find - obj_syms);
-        }
-
-        for (int i = you.visible_igrd(you.pos());
-             i != NON_ITEM; i = mitm[i].link)
-        {
-            if ((int)inv.size() >= mx * my)
-                break;
-
-            if (ground_shown[i] || !show_any && mitm[i].base_type != type)
-                continue;
-
-            InventoryTile desc;
-            _fill_item_info(desc, mitm[i]);
-            desc.idx = i;
-            ground_shown[i] = true;
-
-            inv.push_back(desc);
-        }
-    }
-
-    while ((int)inv.size() < mx * my)
-    {
-        InventoryTile desc;
-        desc.flag = TILEI_FLAG_FLOOR;
-        inv.push_back(desc);
-    }
-
-    m_region_inv->update(inv.size(), &inv[0]);
+    m_region_tab->update();
 }
+
+void TilesFramework::toggle_inventory_display()
+{
+    int idx = m_region_tab->active_tab();
+    m_region_tab->activate_tab((idx + 1) % m_region_tab->num_tabs());
+}
+
 
 void TilesFramework::place_cursor(cursor_type type, const coord_def &gc)
 {
