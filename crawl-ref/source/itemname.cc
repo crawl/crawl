@@ -928,6 +928,10 @@ static const char* book_type_name(int booktype)
     case BOOK_PARTY_TRICKS:           return "Party Tricks";
     case BOOK_STALKING:               return "Stalking";
     case BOOK_BRANDS:                 return "Brands";
+    case BOOK_DRAGON:                 return "the Dragon";
+    case BOOK_BURGLARY:               return "Burglary";
+    case BOOK_DREAMS:                 return "Dreams";
+    case BOOK_CHEMISTRY:              return "Chemistry";
     case BOOK_RANDART_LEVEL:          return "Fixed Level";
     case BOOK_RANDART_THEME:          return "Fixed Theme";
     default:                          return "Bugginess";

@@ -362,6 +362,22 @@ book of brands
 This book contains magical spells related to the branding of weapons and
 launchers, as well as spells that are helpful in all forms of ranged combat.
 %%%%
+book of the dragon
+
+A book of magic spells; it is warm to the touch.
+%%%%
+book of burglary
+
+A worn-looking book, with a small key pressed between two pages.
+%%%%
+book of dreams
+
+A translucent book; light plays strangely on its surface.
+%%%%
+book of chemistry
+
+A slightly seared book, with a hole burnt through the cover.
+%%%%
 bottled efreet
 
 A mighty efreet, captured by some wizard and bound into a bronze

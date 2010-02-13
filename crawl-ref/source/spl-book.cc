@@ -495,6 +495,50 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
 
+    // Tome of the Dragon
+    {SPELL_FLY,
+     SPELL_CAUSE_FEAR,
+     SPELL_BOLT_OF_FIRE,
+     SPELL_DRAGON_FORM,
+     SPELL_NO_SPELL,
+     SPELL_NO_SPELL,
+     SPELL_NO_SPELL,
+     SPELL_NO_SPELL,
+     },
+     
+     // Book of Burglary
+    {SPELL_APPORTATION,
+     SPELL_SWIFTNESS,
+     SPELL_PASSWALL,
+     SPELL_CONTROL_TELEPORT,
+     SPELL_FRAGMENTATION,
+     SPELL_NO_SPELL,
+     SPELL_NO_SPELL,
+     SPELL_NO_SPELL,
+     },     
+
+     // Book of Dreams
+    {SPELL_HIBERNATION,
+     SPELL_INTOXICATE,
+     SPELL_FLY,
+     SPELL_PHASE_SHIFT,
+     SPELL_SHADOW_CREATURES,
+     SPELL_NO_SPELL,
+     SPELL_NO_SPELL,
+     SPELL_NO_SPELL,
+     },
+
+     // Book of Chemistry
+    {SPELL_FULSOME_DISTILLATION,
+     SPELL_LETHAL_INFUSION,
+     SPELL_SUBLIMATION_OF_BLOOD,
+     SPELL_EVAPORATE,
+     SPELL_CONDENSATION_SHIELD,
+     SPELL_NO_SPELL,
+     SPELL_NO_SPELL,
+     SPELL_NO_SPELL,
+     },
+
     // Book of Annihilations - Vehumet special
     {SPELL_POISON_ARROW,
      SPELL_IOOD,
@@ -947,10 +991,14 @@ int book_rarity(unsigned char which_book)
 
     case BOOK_MUTATIONS:
     case BOOK_BEASTS:           //jmf: added 23mar2000
+    case BOOK_BURGLARY:
+    case BOOK_CHEMISTRY:
+    case BOOK_DREAMS:
         return 12;
 
     case BOOK_ENVENOMATIONS:
     case BOOK_WARP:
+    case BOOK_DRAGON:
         return 15;
 
     case BOOK_TUKIMA:
