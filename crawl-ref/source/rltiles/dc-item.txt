@@ -182,8 +182,11 @@ i-sleep BRAND_SLEEP
 stone MI_STONE
 effect/stone0 MI_STONE0
 sling_bullet MI_SLING_BULLET
+sling_bullet_runed
 effect/sling_bullet0 MI_SLING_BULLET0
+effect/sling_bullet_runed0
 arrow MI_ARROW
+arrow_runed
 effect/arrow0 MI_ARROW0
 effect/arrow1 MI_ARROW1
 effect/arrow2 MI_ARROW2
@@ -194,6 +197,7 @@ effect/arrow6 MI_ARROW6
 effect/arrow7 MI_ARROW7
 
 crossbow_bolt MI_BOLT
+crossbow_bolt_runed
 effect/bolt0 MI_BOLT0
 effect/bolt1 MI_BOLT1
 effect/bolt2 MI_BOLT2
@@ -204,6 +208,7 @@ effect/bolt6 MI_BOLT6
 effect/bolt7 MI_BOLT7
 
 dart MI_DART
+dart_runed
 dart-p MI_DART_POISONED
 steel_dart MI_DART_STEEL
 silver_dart MI_DART_SILVER
@@ -228,6 +233,7 @@ effect/needle6 MI_NEEDLE6
 effect/needle7 MI_NEEDLE7
 
 javelin MI_JAVELIN
+javelin_runed
 effect/javelin0 MI_JAVELIN0
 effect/javelin1 MI_JAVELIN1
 effect/javelin2 MI_JAVELIN2

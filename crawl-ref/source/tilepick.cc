@@ -1491,7 +1491,7 @@ static int _tileidx_weapon(const item_def &item)
     return _apply_variations(item, tile);
 }
 
-static int _tileidx_missile(const item_def &item)
+static int _tileidx_missile_base(const item_def &item)
 {
     int brand = item.special;
     switch (item.sub_type)
@@ -1520,6 +1520,12 @@ static int _tileidx_missile(const item_def &item)
   }
 
   return TILE_ERROR;
+}
+
+static int _tileidx_missile(const item_def &item)
+{
+    int tile = _tileidx_missile_base(item);
+    return (_apply_variations(item, tile));
 }
 
 static int _tileidx_armour_base(const item_def &item)
@@ -2506,7 +2512,7 @@ int tileidx_item_throw(const item_def &item, int dx, int dy)
                 break;
         }
         if (ch != -1)
-            return ch;
+            return (_apply_variations(item, ch));
     }
 
     // If not a special case, just return the default tile.
