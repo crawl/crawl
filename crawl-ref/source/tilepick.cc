@@ -2630,7 +2630,7 @@ int tileidx_feature(dungeon_feature_type feat, int gx, int gy)
     if (override && can_override)
         return (override);
 
-    if (feat_is_secret_door(grd[gx][gy]))
+    if (feat_is_secret_door(grd[gx][gy]) && can_override)
         feat = DNGN_SECRET_DOOR;
 
     switch (feat)
