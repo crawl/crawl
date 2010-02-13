@@ -122,8 +122,7 @@ function trove_portal(e)
     end
     local desc_long = [[ Once upon a time, an enterprising thief and wizard, terrified of being caught committing an act of burglary, created a system of portals leading into the secret treasure troves and chambers of the rich. Too scared to loot them himself, he instead charged an extortionate fee for entry to anyone who wanted to rifle through them.
 
-The secrets of the gateways died with him when his fellow thieves, disgusted at his betrayal of their 'ideals', had him murdered. With his death, the now-uncontrolled portals began moving rapidly from one dimension to the next, stopping only long enough to absorb magical energy. This portal will stay open for a]] .. dur .. [[ time.
-]]
+The secrets of the gateways died with him when his fellow thieves, disgusted at his betrayal of their 'ideals', had him murdered. With his death, the now-uncontrolled portals began moving rapidly from one dimension to the next, stopping only long enough to absorb magical energy.]]
     local messager =
         timed_msg {
             visible = true,
@@ -144,13 +143,13 @@ The secrets of the gateways died with him when his fellow thieves, disgusted at 
             amount = entry_fee,
             secondary_amount = lock_fee,
             toll_item = item,
+            dur = dur,
             entity = "portal",
             toll_desc = "to enter a treasure trove",
             lock_desc = "to a nasty imp",
             desc = "portal to a secret trove of treasure",
             desc_long = desc_long,
             overview = "Trove",
-            overview_note = "" .. lock_fee .. "gp/" .. entry_fee .. "gp",
             dst = "trove",
             dstorigin = "in a treasure trove",
             turns = timeout_turns,
