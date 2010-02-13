@@ -40,6 +40,7 @@
 #include "itemname.h"
 #include "itemprop.h"
 #include "libutil.h"
+#include "makeitem.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-util.h"
@@ -3565,6 +3566,8 @@ bool get_item_by_name(item_def *item, char* specs,
     default:
         break;
     }
+
+    item_set_appearance(*item);
 
     return (true);
 }
