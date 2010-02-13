@@ -15,6 +15,7 @@
 
 #include "artefact.h"
 #include "delay.h"
+#include "env.h"
 #include "invent.h"
 #include "it_use2.h"
 #include "item_use.h"
@@ -26,6 +27,7 @@
 #include "skills2.h"
 #include "state.h"
 #include "stuff.h"
+#include "terrain.h"
 #include "traps.h"
 #include "xom.h"
 
@@ -940,7 +942,8 @@ void untransform(bool skip_wielding)
         hp_downscale = 12;
 
         // Re-enter the terrain, it might kill us.
-        move_player_to_grid(you.pos(), false, true, true);
+        if (feat_is_water(grd(you.pos())))
+            move_player_to_grid(you.pos(), false, true, true);
 
         break;
 
