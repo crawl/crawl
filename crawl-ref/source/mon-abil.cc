@@ -953,6 +953,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
     case MONS_ACID_BLOB:
     case MONS_OKLOB_PLANT:
     case MONS_YELLOW_DRACONIAN:
+    {
         if (monster->has_ench(ENCH_CONFUSION))
             break;
 
@@ -980,6 +981,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
             }
         }
         break;
+    }
 
     case MONS_MOTH_OF_WRATH:
         if (one_chance_in(3))
