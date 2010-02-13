@@ -87,20 +87,35 @@ function get_trove_item(e, value)
   end
 
   -- Default to consumables.
-  local potions = {"heal wounds","healing",
-                  "might","speed"}
-  local scrolls = {"identify","enchant weapon I",
-                   "enchant weapon II", "enchant armour",
-                   "enchant weapon III"}
+  local potions = { {weight=10, potion="heal wounds"},
+                    {weight=10, potion="healing"},
+                    {weight=10, potion="might"},
+                    {weight=10, potion="speed"} }
+  local scrolls = { {weight=10, scroll="identify", quantity=crawl.random2(10)},
+                    {weight=10, scroll="enchant weapon I"},
+                    {weight=10, scroll="enchant weapon II"},
+                    {weight=10, scroll="enchant armour"},
+                    {weight=10, scroll="enchant weapon III"} }
 
-  item.quantity = 8 + crawl.random2(6)
   if not crawl.one_chance_in(3) then
+    local chosen = util.random_weighted_from('weight', potions)
     item.base_type = "potion"
-    item.sub_type = potions[1+crawl.random2(#potions)]
+    item.sub_type = chosen.potion
+    if chosen.quantity == nil then
+      item.quantity = 8 + crawl.random2(6)
+    else
+      item.quantity = chosen.quantity
+    end
   else
+    local chosen = util.random_weighted_from('weight', scrolls)
     item.base_type = "scroll"
-    item.sub_type = scrolls[1+crawl.random2(#scrolls)]
-    item.quantity = 4 + crawl.random2(4)
+    item.sub_type = chosen.scroll
+    if chosen.quantity == nil then
+      item.quantity = 4 + crawl.random2(4)
+    else
+      item.quantity = chosen.quantity
+    end
+
   end
 
   return item
