@@ -560,3 +560,32 @@ X.......A.......X
 X...............X
 XXXXXXXXXXXXXXXXX
 ENDMAP
+
+
+NAME: arena_small_deep_pool
+TAGS: arena_small_deep_pool no_mons_gen
+MARKER: A = feat: stone_stairs_up_i
+MARKER: B = feat: stone_stairs_down_i
+MARKER: O = feat: escape_hatch_up
+SUBST: A = ., B = ., O = .
+SUBST: . = w
+ORIENT: encompass
+MAP
+XXXXXXXXXXXXXXXXX
+XvvvvvvvvvvvvvvvX
+XvvvvvvvvvvvvvvvX
+XvvvvvvvvvvvvvvvX
+Xvvvvvv.B.vvvvvvX
+Xvvvv.......vvvvX
+Xvvvv.......vvvvX
+Xvvv.........vvvX
+Xvvv....O....vvvX
+Xvvv.........vvvX
+Xvvvv.......vvvvX
+Xvvvv.......vvvvX
+Xvvvvvv.A.vvvvvvX
+XvvvvvvvvvvvvvvvX
+XvvvvvvvvvvvvvvvX
+XvvvvvvvvvvvvvvvX
+XXXXXXXXXXXXXXXXX
+ENDMAP
