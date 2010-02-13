@@ -3406,10 +3406,6 @@ static bool _missile_is_visibly_special(const item_def &item)
 {
     const int brand = item.special;
 
-    // Obviously branded missiles don't get any special stuff.
-    if (item_type_known(item))
-        return (false);
-
     // All ego missiles do.
     if (brand != SPMSL_NORMAL)
         return (true);
