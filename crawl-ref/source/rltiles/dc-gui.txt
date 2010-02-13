@@ -12,3 +12,33 @@ dc-dngn/dngn_unseen
 
 dc-misc/todo TODO
 dc-misc/error ERROR
+
+%rim 0
+%sdir gui
+
+%start
+%compose tab_selected
+%compose tab_label_item
+%finish TAB_ITEM_SELECTED
+%start
+%compose tab_unselected
+%compose tab_label_item
+%finish TAB_ITEM_UNSELECTED
+
+%start
+%compose tab_selected
+%compose tab_label_spell
+%finish TAB_SPELL_SELECTED
+%start
+%compose tab_unselected
+%compose tab_label_spell
+%finish TAB_SPELL_UNSELECTED
+
+%start
+%compose tab_selected
+%compose tab_label_memorise
+%finish TAB_MEMORISE_SELECTED
+%start
+%compose tab_unselected
+%compose tab_label_memorise
+%finish TAB_MEMORISE_UNSELECTED
