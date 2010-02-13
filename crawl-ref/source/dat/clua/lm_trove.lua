@@ -64,9 +64,31 @@ function TroveMarker:activate(marker, verbose)
                         marker, marker:pos())
 end
 
+function TroveMarker:fdesc_long (marker)
+  if self.no_timeout then
+    return self.props.desc_long .. " This portal is broken and requires " .. self:item_name() .. " to function.\n"
+  else
+    return self.props.desc_long .. " This portal will remain here for a" .. self.props.dur .. " time.\n"
+  end
+end
+
+function TroveMarker:overview_note (marker)
+  if self.no_timeout then
+    return self:item_name(false)
+  else
+    return "" .. self.props.secondary_amount .. " gold/" .. self.props.amount .. " gold"
+  end
+end
+
 function TroveMarker:property(marker, pname)
   if pname == 'veto_stair' or pname == 'veto_level_change' then
     return self:check_veto(marker, pname)
+  end
+
+  if pname == "feature_description_long" then
+    return self:fdesc_long (marker)
+  elseif pname == "overview_note" then
+    return self:overview_note (marker)
   end
 
   return self.super.property(self, marker, pname)
@@ -160,7 +182,7 @@ function TroveMarker:write(marker, th)
   self.msg:write(th)
 end
 
-function TroveMarker:item_name()
+function TroveMarker:item_name(do_grammar)
   local item = self.toll_item
   local s = ""
   if item.quantity > 1 then
@@ -168,7 +190,7 @@ function TroveMarker:item_name()
   end
 
   if item.artefact_name ~= false then
-    if string.find(item.artefact_name, "'s") then
+    if string.find(item.artefact_name, "'s") or do_grammar == false then
       return item.artefact_name
     else
       return "the " .. item.artefact_name
@@ -210,7 +232,7 @@ function TroveMarker:item_name()
 
   s = util.trim(s)
 
-  if string.find(s, "^%d+") then
+  if string.find(s, "^%d+") or do_grammar == false then
     return s
   else
     return crawl.grammar(s, "a")
