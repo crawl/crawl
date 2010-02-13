@@ -2620,8 +2620,11 @@ int _grid_secret_door_tile(const coord_def &where)
 int tileidx_feature(dungeon_feature_type feat, int gx, int gy)
 {
     int override = env.tile_flv[gx][gy].feat;
-    if (override && !feat_is_door(grd[gx][gy]) && feat != DNGN_FLOOR)
-        return override;
+    bool can_override = !feat_is_door(grd[gx][gy])
+                        && feat != DNGN_FLOOR
+                        && feat != DNGN_UNSEEN;
+    if (override && can_override)
+        return (override);
 
     if (feat_is_secret_door(grd[gx][gy]))
         feat = DNGN_SECRET_DOOR;
