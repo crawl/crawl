@@ -427,6 +427,8 @@ void DungeonRegion::pack_background(unsigned int bg, int x, int y)
         {
             if (bg & TILE_FLAG_SANCTUARY)
                 m_buf_dngn.add(TILE_SANCTUARY, x, y);
+            if (bg & TILE_FLAG_SILENCED)
+                m_buf_dngn.add(TILE_SILENCED, x, y);
 
             // Apply the travel exclusion under the foreground if the cell is
             // visible.  It will be applied later if the cell is unseen.

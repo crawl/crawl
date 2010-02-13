@@ -7,6 +7,7 @@
 
 #ifdef USE_TILE
 #include <stdio.h>
+#include "areas.h"
 #include "artefact.h"
 #include "decks.h"
 #include "cloud.h"
@@ -5241,6 +5242,9 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
 
                 if (is_sanctuary(gc))
                     tileb[count+1] |= TILE_FLAG_SANCTUARY;
+
+                if (silenced(gc))
+                    tileb[count+1] |= TILE_FLAG_SILENCED;
             }
 
             count += 2;
