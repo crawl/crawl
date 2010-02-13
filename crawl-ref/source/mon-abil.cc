@@ -959,7 +959,11 @@ bool mon_special_ability(monsters *monster, bolt & beem)
         if (player_or_mon_in_sanct(monster))
             break;
 
-        if (one_chance_in(3))
+        bool spit = one_chance_in(3);
+        if (monster->type == MONS_OKLOB_PLANT)
+            spit = x_chance_in_y(monster->hit_dice, 30);
+
+        if (spit)
         {
             spell = SPELL_ACID_SPLASH;
             setup_mons_cast(monster, beem, spell);
