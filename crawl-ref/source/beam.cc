@@ -5110,6 +5110,9 @@ void bolt::affect_monster(monsters* mon)
     if (!is_explosion)
         heard = noisy(loudness, pos(), beam_source) || heard;
 
+    if (!mon->alive())
+        return;
+
     // The beam hit.
     if (mons_near(mon))
     {
