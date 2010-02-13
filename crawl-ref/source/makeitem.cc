@@ -3578,7 +3578,7 @@ void item_set_appearance(item_def &item)
 
     case OBJ_MISSILES:
         if (_missile_is_visibly_special(item))
-            set_equip_desc(item, ISFLAG_GLOWING);
+            set_equip_desc(item, ISFLAG_RUNED);
         break;
 
     default:
