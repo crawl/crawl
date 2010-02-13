@@ -2414,12 +2414,9 @@ bool ms_low_hitpoint_cast( const monsters *mon, spell_type monspell )
             targ_sanct = true;
     }
 
-    if (mon->foe == MHITYOU) {
-        targ_friendly = mon->wont_attack();
-    }
-    else {
-        targ_friendly = mons_aligned(mon, &menv[mon->foe]);
-    }
+    targ_friendly = (mon->foe == MHITYOU
+                     ? mon->wont_attack()
+                     : mons_aligned(mon, mon->get_foe()));
 
     switch (monspell)
     {

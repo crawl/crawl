@@ -469,7 +469,7 @@ void handle_behaviour(monsters *mon)
                     int tcount = 0;
                     int headnum = mon->mindex();
                     for (monster_iterator mi; mi; ++mi)
-                        if (mi->type == MONS_KRAKEN_TENTACLE 
+                        if (mi->type == MONS_KRAKEN_TENTACLE
                             && (int)mi->number == headnum)
                         {
                             monster_die(*mi, KILL_MISC, NON_MONSTER, true);
@@ -477,7 +477,8 @@ void handle_behaviour(monsters *mon)
                         }
 
                     if (tcount > 0)
-                        mpr("The kraken's tentacles slip beneath the water.", MSGCH_WARN);
+                        mpr("The kraken's tentacles slip beneath the water.",
+                            MSGCH_WARN);
                 }
             }
             break;
@@ -709,6 +710,9 @@ void _set_nearest_monster_foe(monsters *mon)
 void behaviour_event(monsters *mon, mon_event_type event, int src,
                      coord_def src_pos, bool allow_shout)
 {
+    if (!mon->alive())
+        return;
+
     ASSERT(src >= 0 && src <= MHITYOU);
     ASSERT(!crawl_state.arena || src != MHITYOU);
     ASSERT(in_bounds(src_pos) || src_pos.origin());
@@ -909,7 +913,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
             int tcount = 0;
             int headnum = mon->mindex();
             for (monster_iterator mi; mi; ++mi)
-                if (mi->type == MONS_KRAKEN_TENTACLE 
+                if (mi->type == MONS_KRAKEN_TENTACLE
                     && (int)mi->number == headnum)
                 {
                     monster_die(*mi, KILL_MISC, NON_MONSTER, true);
