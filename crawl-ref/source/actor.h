@@ -287,4 +287,8 @@ protected:
     los_def los_no_trans; // only being updated for player
 };
 
+// Identical to actor->kill_alignment(), but returns KC_OTHER if the actor
+// is NULL.
+kill_category actor_kill_alignment(const actor *actor);
+
 #endif

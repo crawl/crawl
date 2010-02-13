@@ -850,6 +850,10 @@ bool melee_attack::player_attack()
         behaviour_event(defender->as_monster(), ME_WHACK, MHITYOU,
                         coord_def(), !stab_attempt);
 
+        // [ds] Monster may disappear after behaviour event.
+        if (!defender->alive())
+            return (true);
+
         if (damage_done > 0
             && defender->can_bleed()
             && !defender->is_summoned()
@@ -905,11 +909,13 @@ bool melee_attack::player_attack()
     else
         player_warn_miss();
 
-    if (did_hit && player_monattk_hit_effects(false))
+    if ((did_hit && player_monattk_hit_effects(false))
+        || !defender->alive())
+    {
         return (true);
+    }
 
     const bool did_primary_hit = did_hit;
-
     if (unarmed_ok && where == defender->pos() && player_aux_unarmed())
         return (true);
 
@@ -962,7 +968,7 @@ bool melee_attack::player_aux_unarmed()
             uattack = UNAT_BITE;
     }
 
-    for (int scount = 0; scount < 5; scount++)
+    for (int scount = 0; scount < 5 && defender->alive(); scount++)
     {
         noise_factor = 100;
 
@@ -1163,10 +1169,10 @@ bool melee_attack::player_aux_unarmed()
                 continue;
             }
             // no biting with visored helmet
-            if (you.equip[EQ_HELMET] != -1
-                && (get_helmet_desc((you.inv[you.equip[EQ_HELMET]])) == THELM_DESC_VISORED))
+            if (const item_def *helmet = you.slot_item(EQ_HELMET, false))
             {
-                continue;
+                if (get_helmet_desc(*helmet) == THELM_DESC_VISORED)
+                    continue;
             }
 
             unarmed_attack = "bite";
@@ -1210,6 +1216,16 @@ bool melee_attack::player_aux_unarmed()
         handle_noise(defender_pos);
         alert_nearby_monsters();
 
+        // [ds] kraken can flee when near death, causing the tentacle
+        // the player was beating up to "die" and no longer be
+        // available to answer questions beyond this point.
+        // handle_noise stirs up all nearby monsters with a stick, so
+        // the player may be beating up a tentacle, but the main body
+        // of the kraken still gets a chance to act and submerge
+        // tentacles before we get here.
+        if (!defender->alive())
+            return (true);
+
         // XXX We're clobbering did_hit
         did_hit = false;
 
@@ -1243,6 +1259,8 @@ bool melee_attack::player_aux_unarmed()
         {
             // Upset the monster.
             behaviour_event(defender->as_monster(), ME_WHACK, MHITYOU);
+            if (!defender->alive())
+                return (true);
 
             if (attack_shield_blocked(true))
                 continue;
@@ -5159,12 +5177,15 @@ void melee_attack::mons_perform_attack_rounds()
 
     monsters* def_copy = NULL;
     int effective_attack_number = 0;
-    for (attack_number = 0; attack_number < nrounds;
+    for (attack_number = 0; attack_number < nrounds && attacker->alive();
          ++attack_number, ++effective_attack_number)
     {
         // Handle noise from previous round.
         if (effective_attack_number > 0)
             handle_noise(pos);
+
+        if (!attacker->alive())
+            return;
 
         // Monster went away?
         if (!defender->alive() || defender->pos() != pos)
@@ -5373,7 +5394,8 @@ void melee_attack::mons_perform_attack_rounds()
             {
                 if (needs_message)
                 {
-                    mprf("%s momentarily %s out as %s attack passes through %s.",
+                    mprf("%s momentarily %s out as %s "
+                         "attack passes through %s.",
                          defender->name(DESC_CAP_THE).c_str(),
                          defender->conj_verb("phase").c_str(),
                          atk_name(DESC_NOCAP_ITS).c_str(),
@@ -5461,7 +5483,8 @@ void melee_attack::mons_perform_attack_rounds()
                 break;
             }
 
-            defender->hurt(attacker, damage_done + special_damage, special_damage_flavour);
+            defender->hurt(attacker, damage_done + special_damage,
+                           special_damage_flavour);
 
             if (!defender->alive())
             {
@@ -5582,7 +5605,7 @@ void melee_attack::mons_check_attack_perceived()
     if (!perceived_attack)
         return;
 
-    if (defender->atype() == ACT_PLAYER)
+    if (attacker->alive() && defender->atype() == ACT_PLAYER)
     {
         interrupt_activity(AI_MONSTER_ATTACKS, attacker->as_monster());
 
