@@ -485,9 +485,9 @@ std::string get_god_likes(god_type which_god, bool verbose)
         break;
 
     case GOD_FEDHAS:
-        snprintf(info, INFO_SIZE, "you promote decomposition of nearby "
+        snprintf(info, INFO_SIZE, "you promote the decay of nearby "
                                   "corpses%s",
-                 verbose ? " via the <w>a</w> command" : "");
+                 verbose ? " via the decomposition <w>a</w>bility" : "");
         likes.push_back(info);
         break;
 
