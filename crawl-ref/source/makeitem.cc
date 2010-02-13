@@ -2727,7 +2727,7 @@ static void _generate_potion_item(item_def& item, int force_type,
 
         if (stype == POT_GAIN_STRENGTH || stype == POT_GAIN_DEXTERITY
             || stype == POT_GAIN_INTELLIGENCE || stype == POT_EXPERIENCE
-            || stype == POT_MAGIC || stype == POT_RESTORE_ABILITIES)
+            || stype == POT_RESTORE_ABILITIES)
         {
             item.quantity = 1;
         }
