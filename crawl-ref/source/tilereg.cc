@@ -149,6 +149,14 @@ void Region::place(int _sx, int _sy, int margin)
     recalculate();
 }
 
+void Region::place(int _sx, int _sy)
+{
+    sx = _sx;
+    sy = _sy;
+
+    recalculate();
+}
+
 void Region::resize_to_fit(int _wx, int _wy)
 {
     if (_wx < 0 || _wy < 0)
@@ -2252,24 +2260,25 @@ bool InventoryTile::empty() const
     return (idx == -1);
 }
 
-InventoryRegion::InventoryRegion(ImageManager* im, FTFont *tag_font,
-                                 int tile_x, int tile_y) :
+GridRegion::GridRegion(ImageManager *im, FTFont *tag_font,
+                       int tile_x, int tile_y) :
     TileRegion(im, tag_font, tile_x, tile_y),
     m_flavour(NULL),
+    m_cursor(NO_CURSOR),
     m_buf_dngn(&im->m_textures[TEX_DUNGEON]),
-    m_buf_main(&im->m_textures[TEX_DEFAULT]),
     m_buf_spells(&im->m_textures[TEX_GUI]),
-    m_cursor(NO_CURSOR)
+    m_buf_main(&im->m_textures[TEX_DEFAULT])
+
 {
 }
 
-InventoryRegion::~InventoryRegion()
+GridRegion::~GridRegion()
 {
     delete[] m_flavour;
     m_flavour = NULL;
 }
 
-void InventoryRegion::clear()
+void GridRegion::clear()
 {
     m_items.clear();
     m_buf_dngn.clear();
@@ -2277,7 +2286,7 @@ void InventoryRegion::clear()
     m_buf_spells.clear();
 }
 
-void InventoryRegion::on_resize()
+void GridRegion::on_resize()
 {
     delete[] m_flavour;
     if (mx * my <= 0)
@@ -2288,111 +2297,74 @@ void InventoryRegion::on_resize()
         m_flavour[i] = random2((unsigned char)~0);
 }
 
-void InventoryRegion::update(int num, InventoryTile *items)
+unsigned int GridRegion::cursor_index() const
 {
-    m_items.clear();
-    for (int i = 0; i < num; i++)
-        m_items.push_back(items[i]);
-
-    m_dirty = true;
+    ASSERT(m_cursor != NO_CURSOR);
+    return (m_cursor.x + m_cursor.y * mx);
 }
 
-void InventoryRegion::update_slot(int slot, InventoryTile &desc)
+void GridRegion::place_cursor(const coord_def &cursor)
 {
-    while (m_items.size() <= (unsigned int)slot)
+    if (m_cursor != NO_CURSOR && cursor_index() < m_items.size())
     {
-        InventoryTile temp;
-        m_items.push_back(temp);
+        m_items[cursor_index()].flag &= ~TILEI_FLAG_CURSOR;
+        m_dirty = true;
     }
 
-    m_items[slot] = desc;
-#if 0
-    // Not needed? (jpeg)
-    m_dirty = true;
-#endif
-}
+    if (m_cursor != cursor)
+        you.last_clicked_item = -1;
 
-void InventoryRegion::render()
-{
-    if (m_dirty)
-    {
-        pack_buffers();
-        m_dirty = false;
-    }
+    m_cursor = cursor;
 
-    if (m_buf_dngn.empty() && m_buf_main.empty())
+    if (m_cursor == NO_CURSOR || cursor_index() >= m_items.size())
         return;
 
-#ifdef DEBUG_TILES_REDRAW
-    cprintf("rendering InventoryRegion\n");
-#endif
-    set_transform();
-    m_buf_dngn.draw();
-    m_buf_spells.draw();
-    m_buf_main.draw();
-
-    if (m_cursor != NO_CURSOR)
-    {
-        unsigned int curs_index = cursor_index();
-        if (curs_index >= m_items.size())
-            return;
-        int idx = m_items[curs_index].idx;
-        if (idx == -1)
-            return;
-
-        bool floor = m_items[curs_index].flag & TILEI_FLAG_FLOOR;
-
-        // Always draw the description in the inventory header. (jpeg)
-        int x = sx + ox + dx / 2;
-        int y = sy + oy;
-
-        const coord_def min_pos(sx, sy - dy);
-        const coord_def max_pos(ex, ey);
-
-        std::string desc = "";
-        if (Options.tile_display != TDSP_INVENT)
-        {
-            const spell_type spell = (spell_type) idx;
-            if (spell == NUM_SPELLS)
-            {
-                snprintf(info, INFO_SIZE, "Memorise spells (%d spell levels "
-                                          "available)",
-                         player_spell_levels());
-                desc = info;
-            }
-            else if (Options.tile_display == TDSP_SPELLS)
-            {
-                snprintf(info, INFO_SIZE, "%d MP    %s    (%s)",
-                         spell_difficulty(spell),
-                         spell_title(spell),
-                         failure_rate_to_string(spell_fail(spell)));
-                desc = info;
-            }
-            else // if (Options.tile_display == TDSP_MEMORISE)
-            {
-                snprintf(info, INFO_SIZE, "%s    (%s)    %d/%d spell slot%s",
-                         spell_title(spell),
-                         failure_rate_to_string(spell_fail(spell)),
-                         spell_levels_required(spell),
-                         player_spell_levels(),
-                         spell_levels_required(spell) > 1 ? "s" : "");
-                desc = info;
-            }
-        }
-        else if (floor && mitm[idx].is_valid())
-            desc = mitm[idx].name(DESC_PLAIN);
-        else if (!floor && you.inv[idx].is_valid())
-            desc = you.inv[idx].name(DESC_INVENTORY_EQUIP);
-
-        if (!desc.empty())
-        {
-            m_tag_font->render_string(x, y, desc.c_str(),
-                                      min_pos, max_pos, WHITE, false, 200);
-        }
-    }
+    // Add cursor to new location
+    m_items[cursor_index()].flag |= TILEI_FLAG_CURSOR;
+    m_dirty = true;
 }
 
-void InventoryRegion::add_quad_char(char c, int x, int y, int ofs_x, int ofs_y)
+void GridRegion::draw_desc(const char *desc)
+{
+    ASSERT(m_tag_font);
+    ASSERT(desc);
+
+    // Always draw the description in the inventory header. (jpeg)
+    int x = sx + ox + dx / 2;
+    int y = sy + oy;
+
+    const coord_def min_pos(sx, sy - dy);
+    const coord_def max_pos(ex, ey);
+
+    m_tag_font->render_string(x, y, desc, min_pos, max_pos, WHITE, false, 200);
+}
+
+bool GridRegion::place_cursor(MouseEvent &event, unsigned int &item_idx)
+{
+    int cx, cy;
+    if (!mouse_pos(event.px, event.py, cx, cy))
+    {
+        place_cursor(NO_CURSOR);
+        return (false);
+    }
+
+    const coord_def cursor(cx, cy);
+    place_cursor(cursor);
+
+    if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
+        return (false);
+
+    if (event.event != MouseEvent::PRESS)
+        return (false);
+
+    item_idx = cursor_index();
+    if (item_idx >= m_items.size() || m_items[item_idx].empty())
+        return (false);
+
+    return (true);
+}
+
+void GridRegion::add_quad_char(char c, int x, int y, int ofs_x, int ofs_y)
 {
     int num = c - '0';
     assert(num >= 0 && num <= 9);
@@ -2401,15 +2373,374 @@ void InventoryRegion::add_quad_char(char c, int x, int y, int ofs_x, int ofs_y)
     m_buf_main.add(idx, x, y, ofs_x, ofs_y, false);
 }
 
+void GridRegion::render()
+{
+    if (m_dirty)
+    {
+        m_buf_dngn.clear();
+        m_buf_main.clear();
+        m_buf_spells.clear();
+
+        // Ensure the cursor has been placed.
+        place_cursor(m_cursor);
+
+        pack_buffers();
+        m_dirty = false;
+    }
+
+    if (m_buf_dngn.empty() && m_buf_main.empty() && m_buf_spells.empty())
+        return;
+
+#ifdef DEBUG_TILES_REDRAW
+    cprintf("rendering GridRegion\n");
+#endif
+    set_transform();
+    m_buf_dngn.draw();
+    m_buf_spells.draw();
+    m_buf_main.draw();
+
+    if (m_cursor == NO_CURSOR)
+        return;
+
+    unsigned int curs_index = cursor_index();
+    if (curs_index >= m_items.size())
+        return;
+    int idx = m_items[curs_index].idx;
+    if (idx == -1)
+        return;
+
+    draw_tag(curs_index);
+}
+
+void GridRegion::draw_number(int x, int y, int num)
+{
+    // If you have that many, who cares.
+    if (num > 999)
+        num = 999;
+
+    const int offset_amount = TILE_X/4;
+    int offset_x = 3;
+    int offset_y = 1;
+
+    int help = num;
+    int c100 = help/100;
+    help -= c100*100;
+
+    if (c100)
+    {
+        add_quad_char('0' + c100, x, y, offset_x, offset_y);
+        offset_x += offset_amount;
+    }
+
+    int c10 = help/10;
+    if (c10 || c100)
+    {
+        add_quad_char('0' + c10, x, y, offset_x, offset_y);
+        offset_x += offset_amount;
+    }
+
+    int c1 = help % 10;
+    add_quad_char('0' + c1, x, y, offset_x, offset_y);
+}
+
+SpellRegion::SpellRegion(ImageManager* im, FTFont *tag_font,
+                         int tile_x, int tile_y) :
+    GridRegion(im, tag_font, tile_x, tile_y)
+{
+}
+
+void SpellRegion::draw_tag(int curs_index)
+{
+    ASSERT(curs_index != -1);
+    int idx = m_items[curs_index].idx;
+    ASSERT(idx != -1);
+
+    const spell_type spell = (spell_type) idx;
+    std::string desc = make_stringf("%d MP    %s    (%s)",
+                                    spell_difficulty(spell),
+                                    spell_title(spell),
+                                    failure_rate_to_string(spell_fail(spell)));
+    draw_desc(desc.c_str());
+}
+
+int SpellRegion::handle_mouse(MouseEvent &event)
+{
+    unsigned int item_idx;
+    if (!place_cursor(event, item_idx))
+        return (0);
+
+    const spell_type spell = (spell_type) m_items[item_idx].idx;
+    if (event.button == MouseEvent::LEFT)
+    {
+        you.last_clicked_item = item_idx;
+        tiles.set_need_redraw();
+        if (!cast_a_spell(false, spell))
+            flush_input_buffer( FLUSH_ON_FAILURE );
+        return CK_MOUSE_CMD;
+    }
+    else if (spell != NUM_SPELLS && event.button == MouseEvent::RIGHT)
+    {
+        describe_spell(spell);
+        redraw_screen();
+        return CK_MOUSE_CMD;
+    }
+    return (0);
+}
+
+bool SpellRegion::update_tip_text(std::string& tip)
+{
+    if (m_cursor == NO_CURSOR)
+        return (false);
+
+    unsigned int item_idx = cursor_index();
+    if (item_idx >= m_items.size() || m_items[item_idx].empty())
+        return (false);
+
+    int flag = m_items[item_idx].flag;
+    std::vector<command_type> cmd;
+    if (flag & TILEI_FLAG_MELDED)
+        tip = "You cannot cast this spell right now.";
+    else
+    {
+        tip = "[L-Click] Cast (%)";
+        cmd.push_back(CMD_CAST_SPELL);
+    }
+
+    tip += "\n[R-Click] Describe (%)";
+    cmd.push_back(CMD_DISPLAY_SPELLS);
+    insert_commands(tip, cmd);
+
+    return (true);
+}
+
+bool SpellRegion::update_alt_text(std::string &alt)
+{
+    if (m_cursor == NO_CURSOR)
+        return (false);
+
+    unsigned int item_idx = cursor_index();
+    if (item_idx >= m_items.size() || m_items[item_idx].empty())
+        return (false);
+
+    if (you.last_clicked_item >= 0
+        && item_idx == (unsigned int) you.last_clicked_item)
+    {
+        return (false);
+    }
+
+    int idx = m_items[item_idx].idx;
+
+    const spell_type spell = (spell_type) idx;
+
+    describe_info inf;
+    get_spell_desc(spell, inf);
+
+    alt_desc_proc proc(crawl_view.msgsz.x, crawl_view.msgsz.y);
+    process_description<alt_desc_proc>(proc, inf);
+
+    proc.get_string(alt);
+
+    return (true);
+}
+
+void SpellRegion::pack_buffers()
+{
+    // Pack base separately, as it comes from a different texture...
+    unsigned int i = 0;
+    for (int y = 0; y < my; y++)
+    {
+        if (i >= m_items.size())
+            break;
+
+        for (int x = 0; x < mx; x++)
+        {
+            if (i++ >= m_items.size())
+                break;
+
+            m_buf_dngn.add(TILE_ITEM_SLOT, x, y);
+        }
+    }
+
+    i = 0;
+    for (int y = 0; y < my; y++)
+    {
+        if (i >= m_items.size())
+            break;
+
+        for (int x = 0; x < mx; x++)
+        {
+            if (i >= m_items.size())
+                break;
+
+            InventoryTile &item = m_items[i++];
+            if (item.flag & TILEI_FLAG_INVALID)
+                m_buf_main.add(TILE_MESH, x, y);
+
+            if (item.flag & TILEI_FLAG_CURSOR)
+                m_buf_main.add(TILE_CURSOR, x, y);
+
+            if (item.quantity != -1)
+                draw_number(x, y, item.quantity);
+
+            if (item.tile)
+                m_buf_spells.add(item.tile, x, y);
+        }
+    }
+}
+
+void SpellRegion::update()
+{
+    m_items.clear();
+    m_dirty = true;
+
+    if (mx * my == 0)
+        return;
+
+    const unsigned int max_spells = std::min(22, mx*my);
+
+    for (int i = 0; i < 52; ++i)
+    {
+        const char letter = index_to_letter(i);
+        const spell_type spell = get_spell_by_letter(letter);
+        if (spell == SPELL_NO_SPELL)
+            continue;
+
+        InventoryTile desc;
+        desc.tile     = tileidx_spell(spell);
+        desc.idx      = (int) spell;
+        desc.quantity = spell_difficulty(spell);
+
+        // If an equipped artefact prevents teleportation, the following spells
+        // cannot be cast.
+        if ((spell == SPELL_BLINK || spell == SPELL_CONTROLLED_BLINK
+                 || spell == SPELL_TELEPORT_SELF)
+             && scan_artefacts(ARTP_PREVENT_TELEPORTATION, false))
+        {
+            desc.flag |= TILEI_FLAG_INVALID;
+        }
+        else if (spell_mana(spell) > you.magic_points)
+            desc.flag |= TILEI_FLAG_INVALID;
+
+        m_items.push_back(desc);
+
+        if (m_items.size() >= max_spells)
+            break;
+    }
+}
+
+MemoriseRegion::MemoriseRegion(ImageManager* im, FTFont *tag_font,
+                         int tile_x, int tile_y) :
+    SpellRegion(im, tag_font, tile_x, tile_y)
+{
+}
+
+void MemoriseRegion::draw_tag(int curs_index)
+{
+    ASSERT(curs_index != -1);
+    int idx = m_items[curs_index].idx;
+    ASSERT(idx != -1);
+
+    const spell_type spell = (spell_type) idx;
+    std::string desc = make_stringf("%s    (%s)    %d/%d spell slot%s",
+                                    spell_title(spell),
+                                    failure_rate_to_string(spell_fail(spell)),
+                                    spell_levels_required(spell),
+                                    player_spell_levels(),
+                                    spell_levels_required(spell) > 1 ? "s" : "");
+    draw_desc(desc.c_str());
+}
+
+int MemoriseRegion::handle_mouse(MouseEvent &event)
+{
+    unsigned int item_idx;
+    if (!place_cursor(event, item_idx))
+        return (0);
+
+    const spell_type spell = (spell_type) m_items[item_idx].idx;
+    if (event.button == MouseEvent::LEFT)
+    {
+        you.last_clicked_item = item_idx;
+        tiles.set_need_redraw();
+        if (learn_spell(spell, m_items[item_idx].special))
+            tiles.update_inventory();
+        else
+            flush_input_buffer(FLUSH_ON_FAILURE);
+        return CK_MOUSE_CMD;
+    }
+    else if (event.button == MouseEvent::RIGHT)
+    {
+        describe_spell(spell);
+        redraw_screen();
+        return CK_MOUSE_CMD;
+    }
+    return (0);
+}
+
+bool MemoriseRegion::update_tip_text(std::string& tip)
+{
+    if (m_cursor == NO_CURSOR)
+        return (false);
+
+    unsigned int item_idx = cursor_index();
+    if (item_idx >= m_items.size() || m_items[item_idx].empty())
+        return (false);
+
+    int flag = m_items[item_idx].flag;
+    std::vector<command_type> cmd;
+    if (flag & TILEI_FLAG_MELDED)
+        tip = "You don't have enough slots for this spell right now.";
+    else
+    {
+        tip = "[L-Click] Memorise (%)";
+        cmd.push_back(CMD_MEMORISE_SPELL);
+    }
+
+    tip += "\n[R-Click] Describe";
+
+    insert_commands(tip, cmd);
+    return (true);
+}
+
+void MemoriseRegion::update()
+{
+    m_items.clear();
+    m_dirty = true;
+
+    if (mx * my == 0)
+        return;
+
+    const unsigned int max_spells = mx * my;
+
+    std::vector<int>  books;
+    std::vector<spell_type> spells = get_mem_spell_list(books);
+    for (unsigned int i = 0; m_items.size() < max_spells && i < spells.size();
+         ++i)
+    {
+        const spell_type spell = spells[i];
+
+        InventoryTile desc;
+        desc.tile     = tileidx_spell(spell);
+        desc.idx      = (int) spell;
+        desc.special  = books[i];
+        desc.quantity = spell_difficulty(spell);
+
+        if (spell_difficulty(spell) > you.experience_level
+            || player_spell_levels() < spell_levels_required(spell))
+        {
+            desc.flag |= TILEI_FLAG_INVALID;
+        }
+        m_items.push_back(desc);
+    }
+}
+
+InventoryRegion::InventoryRegion(ImageManager* im, FTFont *tag_font,
+                                 int tile_x, int tile_y) :
+    GridRegion(im, tag_font, tile_x, tile_y)
+{
+}
+
 void InventoryRegion::pack_buffers()
 {
-    m_buf_dngn.clear();
-    m_buf_main.clear();
-    m_buf_spells.clear();
-
-    // Ensure the cursor has been placed.
-    place_cursor(m_cursor);
-
     // Pack base separately, as it comes from a different texture...
     unsigned int i = 0;
     for (int y = 0; y < my; y++)
@@ -2451,12 +2782,7 @@ void InventoryRegion::pack_buffers()
 
             InventoryTile &item = m_items[i++];
 
-            if (Options.tile_display != TDSP_INVENT)
-            {
-                if (item.flag & TILEI_FLAG_MELDED)
-                    m_buf_main.add(TILE_MESH, x, y);
-            }
-            else if (item.flag & TILEI_FLAG_EQUIP)
+            if (item.flag & TILEI_FLAG_EQUIP)
             {
                 if (item.flag & TILEI_FLAG_CURSE)
                     m_buf_main.add(TILE_ITEM_SLOT_EQUIP_CURSED, x, y);
@@ -2477,46 +2803,12 @@ void InventoryRegion::pack_buffers()
                 m_buf_main.add(TILE_CURSOR, x, y);
 
             if (item.tile)
-            {
-                if (Options.tile_display == TDSP_INVENT)
-                    m_buf_main.add(item.tile, x, y);
-                else
-                    m_buf_spells.add(item.tile, x, y);
-            }
+                m_buf_main.add(item.tile, x, y);
 
             if (item.quantity != -1)
-            {
-                int num = item.quantity;
-                // If you have that many, who cares.
-                if (num > 999)
-                    num = 999;
+                draw_number(x, y, item.quantity);
 
-                const int offset_amount = TILE_X/4;
-                int offset_x = 3;
-                int offset_y = 1;
-
-                int help = num;
-                int c100 = help/100;
-                help -= c100*100;
-
-                if (c100)
-                {
-                    add_quad_char('0' + c100, x, y, offset_x, offset_y);
-                    offset_x += offset_amount;
-                }
-
-                int c10 = help/10;
-                if (c10 || c100)
-                {
-                    add_quad_char('0' + c10, x, y, offset_x, offset_y);
-                    offset_x += offset_amount;
-                }
-
-                int c1 = help % 10;
-                add_quad_char('0' + c1, x, y, offset_x, offset_y);
-            }
-
-            if (Options.tile_display == TDSP_INVENT && item.special)
+            if (item.special)
                 m_buf_main.add(item.special, x, y, 0, 0, false);
 
             if (item.flag & TILEI_FLAG_TRIED)
@@ -2528,117 +2820,13 @@ void InventoryRegion::pack_buffers()
     }
 }
 
-unsigned int InventoryRegion::cursor_index() const
-{
-    ASSERT(m_cursor != NO_CURSOR);
-    return (m_cursor.x + m_cursor.y * mx);
-}
-
-void InventoryRegion::place_cursor(const coord_def &cursor)
-{
-    if (m_cursor != NO_CURSOR && cursor_index() < m_items.size())
-    {
-        m_items[cursor_index()].flag &= ~TILEI_FLAG_CURSOR;
-#if 0
-        // Not needed? (jpeg)
-        m_dirty = true;
-#endif
-    }
-
-    if (m_cursor != cursor)
-        you.last_clicked_item = -1;
-
-    m_cursor = cursor;
-
-    if (m_cursor == NO_CURSOR || cursor_index() >= m_items.size())
-        return;
-
-    // Add cursor to new location
-    m_items[cursor_index()].flag |= TILEI_FLAG_CURSOR;
-    m_dirty = true;
-}
-
-int InventoryRegion::handle_spells_mouse(MouseEvent &event, int item_idx)
-{
-    const spell_type spell = (spell_type) m_items[item_idx].idx;
-    if (event.button == MouseEvent::LEFT)
-    {
-        if (spell == NUM_SPELLS)
-        {
-            if (can_learn_spell() && has_spells_to_memorise(false))
-            {
-                Options.tile_display = TDSP_MEMORISE;
-                tiles.update_inventory();
-            }
-            else
-            {
-                // FIXME: Doesn't work. The message still disappears instantly!
-                you.last_clicked_item = item_idx;
-                tiles.set_need_redraw();
-            }
-            return CK_MOUSE_CMD;
-        }
-        if (Options.tile_display == TDSP_SPELLS)
-        {
-            you.last_clicked_item = item_idx;
-            tiles.set_need_redraw();
-            // Use Z rather than z, seeing how there are no mouseclick macros.
-            if (!cast_a_spell(false, spell))
-                flush_input_buffer( FLUSH_ON_FAILURE );
-        }
-        else if (Options.tile_display == TDSP_MEMORISE)
-        {
-            you.last_clicked_item = item_idx;
-            tiles.set_need_redraw();
-            if (!learn_spell(spell, m_items[item_idx].special))
-                flush_input_buffer( FLUSH_ON_FAILURE );
-            else if (!can_learn_spell(true)
-                     || !has_spells_to_memorise(true, spell))
-            {
-                // Jump back to spells list. (Really, this should only happen
-                // if there aren't any other spells to memorise, but this
-                // doesn't work for some reason.)
-                Options.tile_display = TDSP_SPELLS;
-                tiles.update_inventory();
-            }
-        }
-        return CK_MOUSE_CMD;
-    }
-    else if (spell != NUM_SPELLS && event.button == MouseEvent::RIGHT)
-    {
-        describe_spell(spell);
-        redraw_screen();
-        return CK_MOUSE_CMD;
-    }
-    return 0;
-}
-
 int InventoryRegion::handle_mouse(MouseEvent &event)
 {
-    int cx, cy;
-    if (!mouse_pos(event.px, event.py, cx, cy))
-    {
-        place_cursor(NO_CURSOR);
-        return 0;
-    }
-
-    const coord_def cursor(cx, cy);
-    place_cursor(cursor);
-
-    if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
-        return 0;
-
-    if (event.event != MouseEvent::PRESS)
-        return 0;
-
-    unsigned int item_idx = cursor_index();
-    if (item_idx >= m_items.size() || m_items[item_idx].empty())
-        return 0;
+    unsigned int item_idx;
+    if (!place_cursor(event, item_idx))
+        return (0);
 
     int idx = m_items[item_idx].idx;
-
-    if (m_items[item_idx].key == 0 && Options.tile_display != TDSP_INVENT)
-        return handle_spells_mouse(event, item_idx);
 
     bool on_floor = m_items[item_idx].flag & TILEI_FLAG_FLOOR;
 
@@ -2670,7 +2858,6 @@ int InventoryRegion::handle_mouse(MouseEvent &event)
             else
                 tile_item_use(idx);
         }
-        // TODO enne - need to redraw inventory here?
         return CK_MOUSE_CMD;
     }
     else if (event.button == MouseEvent::RIGHT)
@@ -2747,38 +2934,6 @@ static bool _can_use_item(const item_def &item, bool equipped)
     return (true);
 }
 
-void _update_spell_tip_text(std::string& tip, int flag)
-{
-    std::vector<command_type> cmd;
-    if (Options.tile_display == TDSP_SPELLS)
-    {
-        if (flag & TILEI_FLAG_MELDED)
-            tip = "You cannot cast this spell right now.";
-        else
-        {
-            tip = "[L-Click] Cast (%)";
-            cmd.push_back(CMD_CAST_SPELL);
-        }
-
-        tip += "\n[R-Click] Describe (%)";
-        cmd.push_back(CMD_DISPLAY_SPELLS);
-    }
-    else if (Options.tile_display == TDSP_MEMORISE)
-    {
-        if (flag & TILEI_FLAG_MELDED)
-            tip = "You don't have enough slots for this spell right now.";
-        else
-        {
-            tip = "[L-Click] Memorise (%)";
-            cmd.push_back(CMD_MEMORISE_SPELL);
-        }
-
-        tip += "\n[R-Click] Describe";
-    }
-
-    insert_commands(tip, cmd);
-}
-
 static void _handle_wield_tip(std::string &tip, std::vector<command_type> &cmd,
                               const std::string prefix = "",
                               bool unwield = false)
@@ -2807,22 +2962,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
     bool display_actions = (m_items[item_idx].key == 0
                     && mouse_control::current_mode() == MOUSE_MODE_COMMAND);
 
-    if (Options.tile_display != TDSP_INVENT)
-    {
-        if (m_items[item_idx].idx == NUM_SPELLS)
-        {
-            if (m_items[item_idx].flag & TILEI_FLAG_MELDED)
-                tip = "You cannot learn any spells right now.";
-            else
-                tip = "Memorise spells (M)";
-        }
-        else
-            _update_spell_tip_text(tip, m_items[item_idx].flag);
-        return (true);
-    }
-
     // TODO enne - should the command keys here respect keymaps?
-
     std::vector<command_type> cmd;
     if (m_items[item_idx].flag & TILEI_FLAG_FLOOR)
     {
@@ -3076,24 +3216,6 @@ bool InventoryRegion::update_tip_text(std::string& tip)
     return (true);
 }
 
-void _update_spell_alt_text(std::string &alt, int idx)
-{
-    const spell_type spell = (spell_type) idx;
-
-    if (spell == NUM_SPELLS)
-    {
-        alt.clear();
-        return;
-    }
-    describe_info inf;
-    get_spell_desc(spell, inf);
-
-    alt_desc_proc proc(crawl_view.msgsz.x, crawl_view.msgsz.y);
-    process_description<alt_desc_proc>(proc, inf);
-
-    proc.get_string(alt);
-}
-
 bool InventoryRegion::update_alt_text(std::string &alt)
 {
     if (m_cursor == NO_CURSOR)
@@ -3110,9 +3232,8 @@ bool InventoryRegion::update_alt_text(std::string &alt)
     }
 
     int idx = m_items[item_idx].idx;
-    if (m_items[item_idx].key == 0 && Options.tile_display != TDSP_INVENT)
+    if (m_items[item_idx].key == 0)
     {
-        _update_spell_alt_text(alt, idx);
         return (true);
     }
 
@@ -3134,6 +3255,443 @@ bool InventoryRegion::update_alt_text(std::string &alt)
     proc.get_string(alt);
 
     return (true);
+}
+
+void InventoryRegion::draw_tag(int curs_index)
+{
+    int idx = m_items[curs_index].idx;
+    ASSERT(idx != -1);
+
+    bool floor = m_items[curs_index].flag & TILEI_FLAG_FLOOR;
+
+    if (floor && mitm[idx].is_valid())
+        draw_desc(mitm[idx].name(DESC_PLAIN).c_str());
+    else if (!floor && you.inv[idx].is_valid())
+        draw_desc(you.inv[idx].name(DESC_INVENTORY_EQUIP).c_str());
+}
+
+static void _fill_item_info(InventoryTile &desc, const item_def &item)
+{
+    desc.tile = tileidx_item(item);
+
+    int type = item.base_type;
+    if (type == OBJ_FOOD || type == OBJ_SCROLLS
+        || type == OBJ_POTIONS || type == OBJ_MISSILES)
+    {
+        // -1 specifies don't display anything
+        desc.quantity = (item.quantity == 1) ? -1 : item.quantity;
+    }
+    else if (type == OBJ_WANDS
+             && ((item.flags & ISFLAG_KNOW_PLUSES)
+                 || item.plus2 == ZAPCOUNT_EMPTY))
+    {
+        desc.quantity = item.plus;
+    }
+    else if (item_is_rod(item) && item.flags & ISFLAG_KNOW_PLUSES)
+        desc.quantity = item.plus / ROD_CHARGE_MULT;
+    else
+        desc.quantity = -1;
+
+    if (type == OBJ_WEAPONS || type == OBJ_MISSILES || type == OBJ_ARMOUR)
+        desc.special = tile_known_brand(item);
+    else if (type == OBJ_CORPSES)
+        desc.special = tile_corpse_brand(item);
+
+    desc.flag = 0;
+    if (item.cursed() && item_ident(item, ISFLAG_KNOW_CURSE))
+        desc.flag |= TILEI_FLAG_CURSE;
+    if (item_type_tried(item))
+        desc.flag |= TILEI_FLAG_TRIED;
+    if (item.pos.x != -1)
+        desc.flag |= TILEI_FLAG_FLOOR;
+}
+
+void InventoryRegion::update()
+{
+    m_items.clear();
+    m_dirty = true;
+
+    if (mx * my == 0)
+        return;
+
+    // item.base_type <-> char conversion table
+    const static char *obj_syms = ")([/%#?=!#+\\0}x";
+
+    int max_pack_row = (ENDOFPACK-1) / mx + 1;
+    int max_pack_items = max_pack_row * mx;
+
+    bool inv_shown[ENDOFPACK];
+    memset(inv_shown, 0, sizeof(inv_shown));
+
+    int num_ground = 0;
+    for (int i = you.visible_igrd(you.pos()); i != NON_ITEM; i = mitm[i].link)
+        num_ground++;
+
+    // If the inventory is full, show at least one row of the ground.
+    int min_ground = std::min(num_ground, mx);
+    max_pack_items = std::min(max_pack_items, mx * my - min_ground);
+    max_pack_items = std::min(ENDOFPACK, max_pack_items);
+
+    const size_t show_types_len = strlen(Options.tile_show_items);
+    // Special case: show any type if (c == show_types_len).
+    for (unsigned int c = 0; c <= show_types_len; c++)
+    {
+        if ((int)m_items.size() >= max_pack_items)
+            break;
+
+        bool show_any = (c == show_types_len);
+
+        object_class_type type = OBJ_UNASSIGNED;
+        if (!show_any)
+        {
+            const char *find = strchr(obj_syms, Options.tile_show_items[c]);
+            if (!find)
+                continue;
+            type = (object_class_type)(find - obj_syms);
+        }
+
+        // First, normal inventory
+        for (int i = 0; i < ENDOFPACK; ++i)
+        {
+            if ((int)m_items.size() >= max_pack_items)
+                break;
+
+            if (inv_shown[i]
+                || !you.inv[i].is_valid()
+                || you.inv[i].quantity == 0
+                || (!show_any && you.inv[i].base_type != type))
+            {
+                continue;
+            }
+
+            InventoryTile desc;
+            _fill_item_info(desc, you.inv[i]);
+            desc.idx = i;
+
+            for (int eq = 0; eq < NUM_EQUIP; ++eq)
+            {
+                if (you.equip[eq] == i)
+                {
+                    desc.flag |= TILEI_FLAG_EQUIP;
+                    if (!you_tran_can_wear(you.inv[i]))
+                        desc.flag |= TILEI_FLAG_MELDED;
+                    break;
+                }
+            }
+
+            inv_shown[i] = true;
+            m_items.push_back(desc);
+        }
+    }
+
+    int remaining = mx*my - m_items.size();
+    int empty_on_this_row = mx - m_items.size() % mx;
+
+    // If we're not on the last row...
+    if ((int)m_items.size() < mx * (my-1))
+    {
+        if (num_ground > remaining - empty_on_this_row)
+        {
+            // Fill out part of this row.
+            int fill = remaining - num_ground;
+            for (int i = 0; i < fill; ++i)
+            {
+                InventoryTile desc;
+                if ((int)m_items.size() >= max_pack_items)
+                    desc.flag |= TILEI_FLAG_INVALID;
+                m_items.push_back(desc);
+            }
+        }
+        else
+        {
+            // Fill out the rest of this row.
+            while (m_items.size() % mx != 0)
+            {
+                InventoryTile desc;
+                if ((int)m_items.size() >= max_pack_items)
+                    desc.flag |= TILEI_FLAG_INVALID;
+                m_items.push_back(desc);
+            }
+
+            // Add extra rows, if needed.
+            unsigned int ground_rows =
+                std::max((num_ground-1) / mx + 1, 1);
+
+            while ((int)(m_items.size() / mx + ground_rows) < my
+                   && ((int)m_items.size()) < max_pack_items)
+            {
+                for (int i = 0; i < mx; i++)
+                {
+                    InventoryTile desc;
+                    if ((int)m_items.size() >= max_pack_items)
+                        desc.flag |= TILEI_FLAG_INVALID;
+                    m_items.push_back(desc);
+                }
+            }
+        }
+    }
+
+    // Then, as many ground items as we can fit.
+    bool ground_shown[MAX_ITEMS];
+    memset(ground_shown, 0, sizeof(ground_shown));
+    for (unsigned int c = 0; c <= show_types_len; c++)
+    {
+        if ((int)m_items.size() >= mx * my)
+            break;
+
+        bool show_any = (c == show_types_len);
+
+        object_class_type type = OBJ_UNASSIGNED;
+        if (!show_any)
+        {
+            const char *find = strchr(obj_syms, Options.tile_show_items[c]);
+            if (!find)
+                continue;
+            type = (object_class_type)(find - obj_syms);
+        }
+
+        for (int i = you.visible_igrd(you.pos()); i != NON_ITEM;
+             i = mitm[i].link)
+        {
+            if ((int)m_items.size() >= mx * my)
+                break;
+
+            if (ground_shown[i] || !show_any && mitm[i].base_type != type)
+                continue;
+
+            InventoryTile desc;
+            _fill_item_info(desc, mitm[i]);
+            desc.idx = i;
+            ground_shown[i] = true;
+
+            m_items.push_back(desc);
+        }
+    }
+
+    while ((int)m_items.size() < mx * my)
+    {
+        InventoryTile desc;
+        desc.flag = TILEI_FLAG_FLOOR;
+        m_items.push_back(desc);
+    }
+}
+
+TabbedRegion::TabbedRegion(ImageManager *im, FTFont *tag_font,
+                           int tile_x, int tile_y) :
+    TileRegion(im, tag_font, tile_x, tile_y),
+    m_active(0),
+    m_buf_gui(&im->m_textures[TEX_GUI])
+{
+
+}
+
+TabbedRegion::~TabbedRegion()
+{
+}
+
+void TabbedRegion::set_tab_region(int idx, GridRegion *reg, int tile_sel,
+                                  int tile_unsel)
+{
+    ASSERT(idx >= 0);
+    ASSERT(idx >= (int)m_tabs.size() || !m_tabs[idx].reg);
+
+    for (int i = (int)m_tabs.size(); i <= idx; ++i)
+    {
+        TabInfo inf;
+        inf.reg = NULL;
+        inf.tile_sel = 0;
+        inf.tile_unsel = 0;
+        inf.offset_sel = 0;
+        inf.offset_unsel = 0;
+        inf.min_y = 0;
+        inf.max_y = 0;
+        m_tabs.push_back(inf);
+    }
+
+    int start_y = 0;
+    for (int i = 0; i < (int)m_tabs.size(); ++i)
+    {
+        if (!m_tabs[i].reg)
+            continue;
+        start_y = std::max(m_tabs[i].max_y + 1, start_y);
+    }
+
+    const tile_info &inf_sel = tile_gui_info(tile_sel);
+    ox = std::max((int)inf_sel.width, ox);
+    const tile_info &inf_unsel = tile_gui_info(tile_unsel);
+    ox = std::max((int)inf_sel.width, ox);
+
+    int max_height = std::max(inf_sel.height, inf_unsel.height);
+
+    ASSERT((int)m_tabs.size() > idx);
+    m_tabs[idx].reg = reg;
+    m_tabs[idx].tile_sel = tile_sel;
+    m_tabs[idx].tile_unsel = tile_unsel;
+    m_tabs[idx].offset_sel = start_y + max_height - inf_sel.height;
+    m_tabs[idx].offset_unsel = start_y + max_height - inf_unsel.height;
+    m_tabs[idx].min_y = start_y;
+    m_tabs[idx].max_y = start_y + max_height;
+
+    recalculate();
+}
+
+GridRegion *TabbedRegion::get_tab_region(int idx)
+{
+    if (idx < 0 || (int)m_tabs.size() <= idx)
+        return (NULL);
+
+    return (m_tabs[idx].reg);
+}
+
+void TabbedRegion::activate_tab(int idx)
+{
+    if (idx < 0 || (int)m_tabs.size() <= idx)
+        return;
+
+    if (m_active == idx)
+        return;
+
+    m_active = idx;
+    m_dirty = true;
+    tiles.set_need_redraw();
+
+    if (m_tabs[m_active].reg)
+        m_tabs[m_active].reg->update();
+}
+
+int TabbedRegion::active_tab() const
+{
+    return (m_active);
+}
+
+int TabbedRegion::num_tabs() const
+{
+    return (m_tabs.size());
+}
+
+bool TabbedRegion::active_is_valid() const
+{
+    if (m_active < 0 || (int)m_tabs.size() <= m_active)
+        return (false);
+    if (!m_tabs[m_active].reg)
+        return (false);
+
+    return (true);
+}
+
+void TabbedRegion::update()
+{
+    if (!active_is_valid())
+        return;
+
+    m_tabs[m_active].reg->update();
+}
+
+void TabbedRegion::clear()
+{
+    for (size_t i = 0; i < m_tabs.size(); ++i)
+    {
+        if (m_tabs[i].reg)
+            m_tabs[i].reg->clear();
+    }
+}
+
+void TabbedRegion::render()
+{
+    if (!active_is_valid())
+        return;
+
+    if (m_dirty)
+    {
+        m_buf_gui.clear();
+
+        for (int i = 0; i < (int)m_tabs.size(); ++i)
+        {
+            int tileidx = (i == m_active) ? m_tabs[i].tile_sel
+                                          : m_tabs[i].tile_unsel;
+            int offset_y = (i == m_active) ? m_tabs[i].offset_sel
+                                           : m_tabs[i].offset_unsel;
+            if (!tileidx)
+                continue;
+
+            const tile_info &inf = tile_gui_info(tileidx);
+            m_buf_gui.add(tileidx, 0, 0, -inf.width, offset_y, false);
+        }
+
+        m_dirty = false;
+    }
+
+#ifdef DEBUG_TILES_REDRAW
+    cprintf("rendering TabbedRegion\n");
+#endif
+    if (!m_buf_gui.empty())
+    {
+        set_transform();
+        m_buf_gui.draw();
+    }
+
+    m_tabs[m_active].reg->render();
+}
+
+void TabbedRegion::on_resize()
+{
+    int reg_sx = sx + ox;
+    int reg_sy = sy;
+
+    for (size_t i = 0; i < m_tabs.size(); ++i)
+    {
+        if (!m_tabs[i].reg)
+            continue;
+
+        m_tabs[i].reg->place(reg_sx, reg_sy);
+        m_tabs[i].reg->resize(mx, my);
+    }
+}
+
+int TabbedRegion::handle_mouse(MouseEvent &event)
+{
+    int x = event.px - sx;
+    int y = event.py - sy;
+
+    if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
+        return (0);
+
+    // If left-clicked on the tabs...
+    if (event.event == MouseEvent::PRESS
+        && event.button == MouseEvent::LEFT
+        && x >= 0 && x <= ox && y >= 0 && y <= wy)
+    {
+        for (int i = 0; i < (int)m_tabs.size(); ++i)
+        {
+            if (y >= m_tabs[i].min_y && y <= m_tabs[i].max_y)
+            {
+                activate_tab(i);
+                return (0);
+            }
+        }
+    }
+
+    // Otherwise, pass input to the active tab.
+    if (!active_is_valid())
+        return (0);
+
+    return (get_tab_region(active_tab())->handle_mouse(event));
+}
+
+bool TabbedRegion::update_tip_text(std::string &tip)
+{
+    if (!active_is_valid())
+        return (false);
+
+    return (get_tab_region(active_tab())->update_tip_text(tip));
+}
+
+bool TabbedRegion::update_alt_text(std::string &alt)
+{
+    if (!active_is_valid())
+        return (false);
+
+    return (get_tab_region(active_tab())->update_alt_text(alt));
 }
 
 MapRegion::MapRegion(int pixsz) :

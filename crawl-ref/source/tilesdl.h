@@ -77,7 +77,7 @@ public:
     void update_minimap(int gx, int gy, map_feature f);
     void clear_minimap();
     void update_minimap_bounds();
-    void update_spells();
+    void toggle_inventory_display();
     void update_inventory();
 
     void set_need_redraw();
@@ -120,6 +120,14 @@ protected:
     bool m_fullscreen;
     bool m_need_redraw;
 
+    enum TabID
+    {
+        TAB_ITEM,
+        TAB_SPELL,
+        TAB_MEMORISE,
+        TAB_MAX
+    };
+
     enum LayerID
     {
         LAYER_NORMAL,
@@ -142,7 +150,10 @@ protected:
     StatRegion      *m_region_stat;
     MessageRegion   *m_region_msg;
     MapRegion       *m_region_map;
+    TabbedRegion    *m_region_tab;
     InventoryRegion *m_region_inv;
+    SpellRegion     *m_region_spl;
+    MemoriseRegion  *m_region_mem;
 
     // Full-screen CRT layer
     CRTRegion       *m_region_crt;

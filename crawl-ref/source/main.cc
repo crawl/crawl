@@ -1627,12 +1627,7 @@ void process_command(command_type cmd)
     case CMD_EDIT_PLAYER_TILE: tiles.draw_doll_edit(); break;
 
     case CMD_TOGGLE_SPELL_DISPLAY:
-        if (Options.tile_display == TDSP_SPELLS)
-            Options.tile_display = TDSP_INVENT;
-        else
-            Options.tile_display = TDSP_SPELLS;
-
-        tiles.update_inventory();
+        tiles.toggle_inventory_display();
         break;
 #endif
 
