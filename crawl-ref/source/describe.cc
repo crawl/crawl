@@ -3304,6 +3304,13 @@ static std::string _religion_help(god_type god)
         }
         break;
 
+    case GOD_FEDHAS:
+        if(you.piety >= piety_breakpoint(0))
+        {
+            result += "Evolving plants requires fruit, "
+                      "evolving fungi requires piety.";
+        }
+
     default:
         break;
     }
@@ -3764,10 +3771,8 @@ void describe_god( god_type which_god, bool give_title )
             _print_final_god_abil_desc(which_god, buf,
                                        ABIL_FEDHAS_FUNGAL_BLOOM);
             _print_final_god_abil_desc(which_god,
-                                       "You can walk through plants.",
-                                       ABIL_NON_ABILITY);
-            _print_final_god_abil_desc(which_god,
-                                       "You can fire through allied plants.",
+                                       "You can walk through plants, "
+                                       "and fire through allied plants.",
                                        ABIL_NON_ABILITY);
         }
 
