@@ -8,13 +8,16 @@ Breaks save compatibility with the 0.5 release.
 IMPORTANT: The bugtracker has moved to http://crawl.develz.org/mantis/.
            Please report all bugs and feedback there. Thank you!
 
+           The source code can be found at [...what's the best link...]
+           and version control is now git.
+
 0.6 Highlights
 --------------
 * Removed Divinations spell school.
 * Three new gods: Jiyva, Fedhas, Cheibriados.
 * Altars for dungeon gods may now appear on levels 2 to 9 instead of the Temple.
 * New water based branch: the Shoals, sometimes replacing Swamp or Snake Pit.
-* Overhauled AC/EV system.
+* Overhauled AC/EV system. In particular, effect of Dexterity on EV is uncapped.
 * Strength has a much greater effect on carrying capacity.
 * Slime creatures and ugly things are more interesting and dangerous.
 * Many cool new monsters, portal vaults and ammunition brands.
@@ -47,7 +50,7 @@ Levels
 * Fix branch ends rarely being generated without a rune.
 * Shorten Lair to eight levels.
 * More interesting level layout for Lair and Swamp.
-* New portal vaults: Bailey, Trove, Volcanoes, Wizard Laboratories.
+* New portal vaults: Bailey, Trove, Volcano, Wizard Laboratories.
 * Most escape hatches are replaced by (single-use) shafts.
 * New wall type "tree"; two trees in a row block vision.
 * Seal hell portals rather than Vestibule when the player picks up the orb.
@@ -100,6 +103,7 @@ Items
 * Book acquirement doesn't give manuals to spellcasting specialists anymore.
 * Added wands as an acquirement option.
 * Potions of resistance last longer.
+* Potions of magic are as common as potions of levitation and resistance.
 * Weapons of holy wrath cannot be cursed.
 * Improvements to whips and demon whips; the latter can be blessed by TSO.
 * Reduce the chances for artefacts with only one stat property.
@@ -123,7 +127,7 @@ Monsters
 --------
 * New monster: ballistomycete, spawned by and spawning giant spores.
 * New plant: bush, can be fired through, two or more block vision.
-* Several new monsters for the Shoals: merfolk/mermaid/siren, kraken, ...
+* New Shoals monsters: merfolk/maid, siren, kraken, snapping turtle, shark.
 * A few other new monsters: toadstool, sixfirhy, golden eye, giant leech.
 * Fixed mimics not using the correct item glyph if it was redefined.
 * (Very) ugly things get random resistances and attack flavours.
@@ -144,8 +148,11 @@ Monsters
 * Monsters may quaff potions of might and berserk rage.
 * Demons spawned during the orb run will actively seek out the player.
 * Bears go berserk, but mindless monsters can't.
+* Giant lizards are now called alligators and have a reaching attack.
 * Greatly reduce number of monsters capable of submerging.
 * Submerged monsters cannot be targeted or affected by beams anymore.
+* Submerged monsters always unsubmerge if they can attack.
+* Amphibious creatures don't get an attack bonus in water anymore.
 * Monsters' sense invisible is more effective on invisible monsters,
   and less effective on invisible players.
 * Hungry ghosts eat corpses.
@@ -173,7 +180,7 @@ Characters
   rotting resistance implies both disease and miasma resistance.
 * Regeneration only increases hunger while regenerating.
 * Shield value SH transparently reflects blocking chance.
-* Hellfire ignores AC.
+* Hellfire ignores AC. Hellfire damage is toned down.
 * Changed Magic mapping mutation to work passively.
 * Sticky flame negates invisibility.
 * Vampires can bottle blood via an (a)bility rather than by (c)hopping.
@@ -236,11 +243,11 @@ Tiles
 -----
 * Re-added doll editing screen ('-' command).
 * Added clickable spells display (toggle with '_' command).
-* Display tiles in many more menus, including the database search (?/)
+* Display tiles in many more menus, including the database search (?/).
 * New modifier keys for left-clicking on monsters or the player:
   * Shift-Left-Click: fire quivered ammo at monster.
-  * Ctrl-Left-Click: cast spell at target (monster or player)
-  * Alt-Left-Click: zap wand at target (monster or player)
+  * Ctrl-Left-Click: cast spell at target (monster or player).
+  * Alt-Left-Click: zap wand at target (monster or player).
   * When applicable, L-clicking on a monster within reaching range attacks it.
 * Added a health and mana bar to the player tile.
 * Added an icon designating berserk monsters.
