@@ -422,7 +422,8 @@ void immolation(int pow, int caster, coord_def where, bool known,
     beam.explode();
 }
 
-static bool _conduct_electricity_hit(bolt& beam, actor* victim, int dmg, int corpse)
+static bool _conduct_electricity_hit(bolt& beam, actor* victim,
+                                     int dmg, int corpse)
 {
     if (!victim->alive() || victim->res_elec() > 0 || victim->airborne())
         return (false);
