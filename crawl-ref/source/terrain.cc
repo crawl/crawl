@@ -705,15 +705,18 @@ static void _dgn_check_terrain_monsters(const coord_def &pos)
         m->apply_location_effects(pos);
 }
 
-// Clear blood off of terrain that shouldn't have it.  Also clear
+// Clear blood or mold off of terrain that shouldn't have it.  Also clear
 // of blood if a bloody wall has been dug out and replaced by a floor,
 // or if a bloody floor has been replaced by a wall.
-static void _dgn_check_terrain_blood(const coord_def &pos,
+static void _dgn_check_terrain_covering(const coord_def &pos,
                                      dungeon_feature_type old_feat,
                                      dungeon_feature_type new_feat)
 {
-    if (!testbits(env.pgrid(pos), FPROP_BLOODY))
+    if (!testbits(env.pgrid(pos), FPROP_BLOODY)
+        && !testbits(env.pgrid(pos), FPROP_MOLD))
+    {
         return;
+    }
 
     if (new_feat == DNGN_UNSEEN)
     {
@@ -765,7 +768,7 @@ void dungeon_terrain_changed(const coord_def &pos,
     if (grd(pos) == nfeat)
         return;
 
-    _dgn_check_terrain_blood(pos, grd(pos), nfeat);
+    _dgn_check_terrain_covering(pos, grd(pos), nfeat);
 
     if (nfeat != DNGN_UNSEEN)
     {
