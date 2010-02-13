@@ -2027,7 +2027,7 @@ int portal()
         return (1);
     }
 
-    mpr("Which direction ('<' for up, '>' for down, 'x' to quit)? ",
+    mpr("Which direction ('<<' for up, '>' for down, 'x' to quit)? ",
         MSGCH_PROMPT);
 
     int dir_sign = 0;
