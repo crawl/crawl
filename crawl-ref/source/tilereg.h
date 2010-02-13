@@ -40,6 +40,7 @@ public:
 
     void resize(int mx, int my);
     void place(int sx, int sy, int margin);
+    void place(int sx, int sy);
     void resize_to_fit(int wx, int wy);
 
     // Returns true if the mouse position is over the region
@@ -328,39 +329,128 @@ public:
     bool empty() const;
 };
 
-class InventoryRegion : public TileRegion
+class GridRegion : public TileRegion
 {
 public:
-    InventoryRegion(ImageManager *im, FTFont *tag_font,
-                    int tile_x, int tile_y);
-    virtual ~InventoryRegion();
+    GridRegion(ImageManager *im, FTFont *tag_font, int tile_x, int tile_y);
+    virtual ~GridRegion();
 
     virtual void clear();
     virtual void render();
     virtual void on_resize();
-    virtual int handle_spells_mouse(MouseEvent &event, int item_idx);
-    virtual int handle_mouse(MouseEvent &event);
 
-    void update(int num, InventoryTile *items);
-    void update_slot(int slot, InventoryTile &item);
+    virtual void update() = 0;
+    void place_cursor(const coord_def &cursor);
+
+protected:
+    virtual void pack_buffers() = 0;
+    virtual void draw_tag(int item_idx) = 0;
+
+    // Place the cursor and set idx with the index into m_items of the click.
+    // If click was invalid, return false.
+    bool place_cursor(MouseEvent &event, unsigned int &idx);
+    unsigned int cursor_index() const;
+    void add_quad_char(char c, int x, int y, int ox, int oy);
+    void draw_number(int x, int y, int number);
+    void draw_desc(const char *desc);
+
+    unsigned char *m_flavour;
+    coord_def m_cursor;
+
+    std::vector<InventoryTile> m_items;
+
+    TileBuffer m_buf_dngn;
+    TileBuffer m_buf_spells;
+    TileBuffer m_buf_main;
+};
+
+class InventoryRegion : public GridRegion
+{
+public:
+    InventoryRegion(ImageManager *im, FTFont *tag_font,
+                    int tile_x, int tile_y);
+
+    virtual void update();
+    virtual int handle_mouse(MouseEvent &event);
     virtual bool update_tip_text(std::string &tip);
     virtual bool update_alt_text(std::string &alt);
 
 protected:
-    void pack_tile(int x, int y, int idx);
-    void pack_buffers();
-    void add_quad_char(char c, int x, int y, int ox, int oy);
-    void place_cursor(const coord_def &cursor);
-    unsigned int cursor_index() const;
+    virtual void pack_buffers();
+    virtual void draw_tag(int item_idx);
+};
 
-    std::vector<InventoryTile> m_items;
-    unsigned char *m_flavour;
+class SpellRegion : public GridRegion
+{
+public:
+    SpellRegion(ImageManager *im, FTFont *tag_font,
+                int tile_x, int tile_y);
 
-    TileBuffer m_buf_dngn;
-    TileBuffer m_buf_main;
-    TileBuffer m_buf_spells;
+    virtual void update();
+    virtual int handle_mouse(MouseEvent &event);
+    virtual bool update_tip_text(std::string &tip);
+    virtual bool update_alt_text(std::string &alt);
 
-    coord_def m_cursor;
+protected:
+    virtual void pack_buffers();
+    virtual void draw_tag(int item_idx);
+};
+
+class MemoriseRegion : public SpellRegion
+{
+public:
+    MemoriseRegion(ImageManager *im, FTFont *tag_font,
+                int tile_x, int tile_y);
+
+    virtual void update();
+    virtual int handle_mouse(MouseEvent &event);
+    virtual bool update_tip_text(std::string &tip);
+
+protected:
+    virtual void draw_tag(int item_idx);
+};
+
+// A region that contains multiple region, selectable by tabs.
+class TabbedRegion : public TileRegion
+{
+public:
+    TabbedRegion(ImageManager *im, FTFont *tag_font,
+                 int tile_x, int tile_y);
+
+    virtual ~TabbedRegion();
+
+    void set_tab_region(int idx, GridRegion *reg, int tile_sel, int tile_unsel);
+    GridRegion *get_tab_region(int idx);
+    void activate_tab(int idx);
+    int active_tab() const;
+    int num_tabs() const;
+
+    void update();
+
+    virtual void clear();
+    virtual void render();
+    virtual void on_resize();
+    virtual int handle_mouse(MouseEvent &event);
+    virtual bool update_tip_text(std::string &tip);
+    virtual bool update_alt_text(std::string &alt);
+
+protected:
+    int m_active;
+    bool active_is_valid() const;
+
+    TileBuffer m_buf_gui;
+
+    struct TabInfo
+    {
+        GridRegion *reg;
+        int tile_sel;
+        int tile_unsel;
+        int offset_sel;
+        int offset_unsel;
+        int min_y;
+        int max_y;
+    };
+    std::vector<TabInfo> m_tabs;
 };
 
 enum map_colour
