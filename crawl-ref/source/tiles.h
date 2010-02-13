@@ -182,6 +182,7 @@ enum tile_flags
     TILE_FLAG_OOR        = 0x02000000,
     TILE_FLAG_WATER      = 0x04000000,
     TILE_FLAG_MOLD       = 0x08000000,
+    TILE_FLAG_SILENCED   = 0x10000000,
 
     // General
     TILE_FLAG_MASK       = 0x000007FF
