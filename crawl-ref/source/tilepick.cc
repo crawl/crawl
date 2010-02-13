@@ -1505,9 +1505,13 @@ static int _tileidx_missile(const item_def &item)
     case MI_THROWING_NET: return TILE_MI_THROWING_NET;
 
     case MI_DART:
-        if (brand == SPMSL_POISONED)
-            return TILE_MI_DART_P;
-        return TILE_MI_DART;
+        switch (brand)
+        {
+        default:             return TILE_MI_DART;
+        case SPMSL_POISONED: return TILE_MI_DART_POISONED;
+        case SPMSL_STEEL:    return TILE_MI_DART_STEEL;
+        case SPMSL_SILVER:   return TILE_MI_DART_SILVER;
+        }
 
     case MI_NEEDLE:
         if (brand == SPMSL_POISONED)

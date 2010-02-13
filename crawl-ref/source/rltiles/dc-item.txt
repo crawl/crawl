@@ -204,7 +204,9 @@ effect/bolt6 MI_BOLT6
 effect/bolt7 MI_BOLT7
 
 dart MI_DART
-dart-p MI_DART_P
+dart-p MI_DART_POISONED
+steel_dart MI_DART_STEEL
+silver_dart MI_DART_SILVER
 effect/dart0 MI_DART0
 effect/dart1 MI_DART1
 effect/dart2 MI_DART2
