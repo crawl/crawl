@@ -87,15 +87,42 @@ function get_trove_item(e, value)
   end
 
   -- Default to consumables.
-  local potions = { {weight=10, potion="heal wounds"},
-                    {weight=10, potion="healing"},
-                    {weight=10, potion="might"},
-                    {weight=10, potion="speed"} }
-  local scrolls = { {weight=10, scroll="identify", quantity=crawl.random2(10)},
-                    {weight=10, scroll="enchant weapon I"},
-                    {weight=10, scroll="enchant weapon II"},
-                    {weight=10, scroll="enchant armour"},
-                    {weight=10, scroll="enchant weapon III"} }
+  local d = crawl.roll_dice
+
+  -- Generation chances from makeitem.cc listed as comments; we don't
+  -- have to follow too closely, as we randomise quantities anyway.
+  -- Note that scrolls and potions can come in stacks of 2 or 3.
+
+  local potions = { 
+       {potion="healing",        quantity=12+d(4)+d(4)},        -- 23%
+       {potion="heal wounds",    quantity=8+d(3)+d(3)},         -- 11%
+       {potion="might",          quantity=6+d(3)+d(3)},         --  5%
+       {potion="agility",        quantity=6+d(3)+d(3)},         --  5%
+       {potion="brillance",      quantity=6+d(3)+d(3)},         --  5%
+       {potion="speed",          quantity=3+d(3)+d(2)},         --  5%
+       {potion="resistance",     quantity=3+d(3)+d(2)},         --  2%
+       {potion="levitation",     quantity=3+d(3)+d(2)},         --  2%
+       {potion="magic",          quantity=3+d(3)+d(2)},         --  2%
+       {potion="cure mutation",  quantity=d(2)},                --  1%
+       {potion="gain strength",  quantity=1, weight=1},         -- <1%, single
+       {potion="gain dexterity", quantity=1, weight=1},         -- <1%, single
+       {potion="gain strength",  quantity=1, weight=1},         -- <1%, single
+       {potion="experience",     quantity=1, weight=1} }        -- <1%, single
+
+  local scrolls = {
+       {scroll="identify",           quantity=12+d(4)+d(4)},    -- 18%
+       {scroll="remove curse",       quantity=9+d(3)+d(3)},     -- 13%
+       {scroll="fear",               quantity=6+d(3)},          --  3%
+       {scroll="fog",                quantity=6+d(3)},          --  3%
+       {scroll="blinking",           quantity=3+d(3)},          --  3%
+       {scroll="magic mapping",      quantity=3+d(3)},          --  3%
+       {scroll="recharging",         quantity=3+d(3)},          --  3%
+       {scroll="enchant weapon I",   quantity=3+d(3)+d(2)},     --  3%
+       {scroll="enchant weapon II",  quantity=3+d(3)+d(2)},     --  3%
+       {scroll="enchant armour",     quantity=3+d(3)+d(2)},     --  3%
+       {scroll="enchant weapon III", quantity=d(2), weight=1},  --  1%, single  
+       {scroll="vorpalize weapon",   quantity=d(2), weight=1},  --  1%, single 
+       {scroll="acquirement",        quantity=d(2), weight=1} } --  1%, single
 
   if not crawl.one_chance_in(3) then
     local chosen = util.random_weighted_from('weight', potions)
