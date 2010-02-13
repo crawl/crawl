@@ -215,3 +215,8 @@ bool actor::check_train_dodging(int amount)
     }
     return (false);
 }
+
+kill_category actor_kill_alignment(const actor *act)
+{
+    return (act? act->kill_alignment() : KC_OTHER);
+}
