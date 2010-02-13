@@ -5228,6 +5228,11 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
                 if (print_blood && is_bloodcovered(gc))
                     tileb[count+1] |= TILE_FLAG_BLOOD;
 
+                if (print_blood && is_moldy(gc))
+                {
+                    tileb[count+1] |= TILE_FLAG_MOLD;
+                }
+
                 if (is_sanctuary(gc))
                     tileb[count+1] |= TILE_FLAG_SANCTUARY;
             }

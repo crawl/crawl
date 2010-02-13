@@ -311,6 +311,10 @@ void DungeonRegion::pack_background(unsigned int bg, int x, int y)
             int offset = flv.special % tile_dngn_count(TILE_BLOOD);
             m_buf_dngn.add(TILE_BLOOD + offset, x, y);
         }
+        else if (bg & TILE_FLAG_MOLD)
+        {
+            m_buf_dngn.add(TILE_MOLD, x, y);
+        }
 
         if (player_in_branch(BRANCH_SHOALS))
         {
