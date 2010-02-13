@@ -1388,6 +1388,8 @@ bool evolve_flora()
     target->del_ench(ENCH_SLOWLY_DYING);
     target->del_ench(ENCH_SPORE_PRODUCTION);
 
+    target->hit_dice += you.skills[SK_INVOCATIONS];
+
     if (upgrade.fruit_cost)
         _decrease_amount(collected_fruit, upgrade.fruit_cost);
 
