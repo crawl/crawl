@@ -3701,6 +3701,46 @@ bool TabbedRegion::update_tip_text(std::string &tip)
     if (!active_is_valid())
         return (false);
 
+    const coord_def pos = tiles.tile_get_mouse_pos();
+    const int x = pos.x - sx;
+    const int y = pos.y - sy;
+    if (x >= 0 && x <= ox && y >= 0 && y <= wy)
+    {
+        for (int i = 0; i < (int)m_tabs.size(); ++i)
+        {
+            if (y >= m_tabs[i].min_y && y <= m_tabs[i].max_y)
+            {
+                std::string first  = "";
+                std::string second = "";
+                if (i != m_active)
+                {
+                    first  = "[L-Click] ";
+                    second = "          ";
+                }
+
+                switch (i)
+                {
+                case TAB_ITEM:
+                    first  += "Display inventory";
+                    second += "Use items";
+                    break;
+                case TAB_SPELL:
+                    first  += "Display memorised spells";
+                    second += "Cast spells";
+                    break;
+                case TAB_MEMORISE:
+                    first  += "Display spells in carried books";
+                    second += "Memorise spells";
+                    break;
+                default:
+                    return (false);
+                }
+                tip = first + "\n" + second;
+                return (true);
+            }
+        }
+    }
+
     return (get_tab_region(active_tab())->update_tip_text(tip));
 }
 
