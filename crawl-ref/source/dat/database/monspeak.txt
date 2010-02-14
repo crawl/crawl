@@ -4140,11 +4140,68 @@ _Francis_rare_
 ############ FREDERICK ### A mercenary guarding the dungeon
 Frederick
 
-@_mercenary_guard_@
+@_Frederick_common_@
 
-w:1
+w:5
+@_Frederick_rare_@
+%%%%
+Beogh Frederick
+
+w:2
+@The_monster@ says, "You didn't bring enough reinforcements. Come back later!"
+
+w:30
+@Frederick@
+%%%%
+Okawaru Frederick
+
+w:2
+@The_monster@ says, "Pah! Those who rely on gods for strength get nowhere in life."
+
+w:30
+@Frederick@
+%%%%
+_Frederick_common_
+
+VISUAL:@The_monster@ pines for a worthy opponent.
+
+VISUAL:@The_monster@ yawns in an exaggerated manner.
+
+@The_monster@ offers a few words of tactical advice. You understand none of them.
+
+@The_monster@ says, "Adventurers these days do not know how to walk, let alone fight."
+
+@The_monster@ says, "In my day, to be a hero meant something. Now, it just means you die quicker."
+
+@The_monster@ says, "You are rather slow, aren't you? Would you like a potion?"
+
+@The_monster@ says, "You call yourself an adventurer? Hah!"
+
+@The_monster@ says, "I've killed five 'adventurers' today. Will you be the sixth?"
+
+@The_monster@ says, "Challenge me? You, and whose army?" @player_only@
+
+@The_monster@ says @to_foe@, "Why should I even bother fighting the likes of you?"
+%%%%
+_Frederick_rare_
+
 VISUAL:@The_monster@ polishes @possessive@ monocle.
 
+VISUAL:@The_monster@ looks bored.
+
+VISUAL:@The_monster@ sighs.
+
+@The_monster@ rants about the fall of honour.
+
+@The_monster@ says, "All of you adventurers look the same to me! Bumbling weaklings, the lot!" @player_only@
+
+@The_monster@ says, "For you, today is the most challenging fight of your life. For me... well, I will have lunch shortly." @player_only@
+
+@The_monster@ says, "Perhaps I should have been a lumberjack. The trees might put up more of a fight."
+
+@The_monster@ says, "Killing you would be a chore, not a joy." @player_only@
+
+@The_monster@ eyes @foe@ carefully. "They told me only worthy opponents would get this far."
 %%%%
 ############ Gastronok ### A rather hungry wizard-slug
 # Cantrip messages:
