@@ -865,11 +865,19 @@ static bool _vampire_cannot_cast(spell_type spell)
     }
 }
 
-static bool _spell_is_uncastable(spell_type spell)
+static bool _is_prevented_teleport(spell_type spell)
+{
+    return ((spell == SPELL_BLINK
+           || spell == SPELL_CONTROLLED_BLINK
+           || spell == SPELL_TELEPORT_SELF)
+           && scan_artefacts(ARTP_PREVENT_TELEPORTATION, false));
+}
+
+bool spell_is_uncastable(spell_type spell, std::string &msg)
 {
     if (you.undead_or_demonic() && is_holy_spell(spell))
     {
-        mpr("You can't use this type of magic!");
+        msg = "You can't use this type of magic!";
         return (true);
     }
 
@@ -878,19 +886,25 @@ static bool _spell_is_uncastable(spell_type spell)
     // to be extended here. - bwr
     if (spell != SPELL_NECROMUTATION && you_cannot_memorise(spell))
     {
-        mpr( "You cannot cast that spell in your current form!" );
+        msg = "You cannot cast that spell in your current form!";
         return (true);
     }
 
     if (spell == SPELL_SYMBOL_OF_TORMENT && player_res_torment(true, false))
     {
-        mpr("To torment others, one must first know what torment means. ");
+        msg = "To torment others, one must first know what torment means.";
         return (true);
     }
 
     if (_vampire_cannot_cast(spell))
     {
-        mpr("Your current blood level is not sufficient to cast that spell.");
+        msg = "Your current blood level is not sufficient to cast that spell.";
+        return (true);
+    }
+
+    if (_is_prevented_teleport(spell))
+    {
+        msg = "You cannot teleport right now.";
         return (true);
     }
 
@@ -1007,14 +1021,17 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     // [dshaligram] Any action that depends on the spellcasting attempt to have
     // succeeded must be performed after the switch().
-    if (!wiz_cast && _spell_is_uncastable(spell))
-        return (SPRET_ABORT);
 
-    if ((spell == SPELL_BLINK || spell == SPELL_CONTROLLED_BLINK
-           || spell == SPELL_TELEPORT_SELF)
-        && scan_artefacts(ARTP_PREVENT_TELEPORTATION, false)
+    if (_is_prevented_teleport(spell)
         && !yesno("You cannot teleport right now. Cast anyway?", true, 'n'))
     {
+        return (SPRET_ABORT);
+    }
+
+    std::string msg;
+    if (!wiz_cast && spell_is_uncastable(spell, msg))
+    {
+        mpr(msg);
         return (SPRET_ABORT);
     }
 
