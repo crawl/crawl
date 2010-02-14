@@ -9,6 +9,17 @@ bolt05
 bolt06
 bolt07
 bolt08
+
+###### Priority indicators (for Fedhas' growth)
+indicator_1 INDICATOR
+indicator_2
+indicator_3
+indicator_4
+indicator_5
+indicator_6
+indicator_7
+indicator_8
+
 #########CLOUDS
 cloud_fire0 CLOUD_FIRE_0
 cloud_fire1 CLOUD_FIRE_1
