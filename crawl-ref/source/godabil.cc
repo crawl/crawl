@@ -990,16 +990,34 @@ bool plant_ring_from_fruit()
     if (max_use == 0)
         return (false);
 
+
+    prioritise_adjacent(you.pos(), adjacent);
+
+    // Screwing around with display code I don't really understand. -cao
+    crawl_state.darken_range = 1;
+    viewwindow(false, false);
+
+    for (int i=0; i < max_use; ++i)
+    {
+#ifndef USE_TILES
+        coord_def temp = grid2view(adjacent[i]);
+        cgotoxy(temp.x, temp.y, GOTO_DNGN);
+        put_colour_ch(GREEN, '1' + i);
+#endif
+    }
+
+
+
+
     // And how many plants does the user want to create?
     int target_count;
     if (!_prompt_amount(max_use, target_count,
                         "How many plants will you create?"))
     {
+        crawl_state.darken_range = -1;
+        viewwindow(false, false);
         return (false);
     }
-
-    if (static_cast<int>(adjacent.size()) > target_count)
-        prioritise_adjacent(you.pos(), adjacent);
 
     const int hp_adjust = you.skills[SK_INVOCATIONS] * 10;
 
@@ -1011,6 +1029,9 @@ bool plant_ring_from_fruit()
     }
 
     _decrease_amount(collected_fruit, created_count);
+
+    crawl_state.darken_range = -1;
+    viewwindow(false, false);
 
     return (created_count);
 }
