@@ -3616,6 +3616,24 @@ void TabbedRegion::render()
 
             const tile_info &inf = tile_gui_info(tileidx);
             m_buf_gui.add(tileidx, 0, 0, -inf.width, offset_y, false);
+            if (i == m_active)
+            {
+                const char* desc = (i == TAB_ITEM     ? "Inventory" :
+                                    i == TAB_SPELL    ? "Spells"    :
+                                    i == TAB_MEMORISE ? "Memorise spells"
+                                                      : "Buggy tab");
+                ASSERT(m_tag_font);
+
+                // Always draw the description in the inventory header. (jpeg)
+                int x = sx + ox + dx / 2;
+                int y = sy + oy;
+
+                const coord_def min_pos(sx, sy - dy);
+                const coord_def max_pos(ex, ey);
+
+                m_tag_font->render_string(x, y, desc, min_pos, max_pos, WHITE,
+                                          false, 200);
+            }
         }
 
         m_dirty = false;

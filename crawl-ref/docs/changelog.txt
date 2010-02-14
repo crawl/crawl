@@ -127,7 +127,7 @@ Monsters
 --------
 * New monster: ballistomycete, spawned by and spawning giant spores.
 * New plant: bush, can be fired through, two or more block vision.
-* New Shoals monsters: merfolk/maid, siren, kraken, snapping turtle, shark.
+* New Shoals monsters: merfolk/mermaid, siren, harpy, kraken, turtle, shark.
 * A few other new monsters: toadstool, sixfirhy, golden eye, giant leech.
 * Fixed mimics not using the correct item glyph if it was redefined.
 * (Very) ugly things get random resistances and attack flavours.
