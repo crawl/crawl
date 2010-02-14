@@ -51,6 +51,10 @@
 #include "view.h"
 #include "viewgeom.h"
 
+#ifdef USE_TILES
+#include "tiledef-main.h"
+#endif
+
 bool yred_injury_mirror(bool actual)
 {
     return (you.religion == GOD_YREDELEMNUL && !player_under_penance()
@@ -787,7 +791,6 @@ static void _point_point_distance(std::vector<coord_def> & origins,
                                   bool origin_to_target,
                                   std::vector<int> & distances)
 {
-
     distances.clear();
     // Consider a matrix where the points of origin form the rows and
     // the target points form the column, we want to take the minimum along
@@ -1003,11 +1006,11 @@ bool plant_ring_from_fruit()
         coord_def temp = grid2view(adjacent[i]);
         cgotoxy(temp.x, temp.y, GOTO_DNGN);
         put_colour_ch(GREEN, '1' + i);
+#else
+        tiles.add_overlay(adjacent[i], TILE_INDICATOR + i );
+
 #endif
     }
-
-
-
 
     // And how many plants does the user want to create?
     int target_count;
