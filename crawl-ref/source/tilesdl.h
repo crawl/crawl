@@ -120,14 +120,6 @@ protected:
     bool m_fullscreen;
     bool m_need_redraw;
 
-    enum TabID
-    {
-        TAB_ITEM,
-        TAB_SPELL,
-        TAB_MEMORISE,
-        TAB_MAX
-    };
-
     enum LayerID
     {
         LAYER_NORMAL,
