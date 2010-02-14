@@ -750,15 +750,13 @@ void static _get_randart_properties(const item_def &item,
                 int tmp = random2(20);
 
                 proprt[ARTP_BRAND] = (tmp >= 18) ? SPWPN_SPEED :
-                                     (tmp >= 16) ? SPWPN_PENETRATION :
-                                     (tmp >= 13) ? SPWPN_REAPING :
-                                     (tmp >= 10) ? SPWPN_EVASION :
-                                     (tmp >=  7) ? SPWPN_VENOM
+                                     (tmp >= 14) ? SPWPN_PENETRATION :
+                                     (tmp >= 12) ? SPWPN_REAPING :
+                                     (tmp >=  8) ? SPWPN_VENOM
                                                  : SPWPN_VORPAL + random2(3);
 
                 if (atype == WPN_BLOWGUN
-                    && proprt[ARTP_BRAND] != SPWPN_SPEED
-                    && proprt[ARTP_BRAND] != SPWPN_EVASION)
+                    && proprt[ARTP_BRAND] != SPWPN_SPEED)
                 {
                     proprt[ARTP_BRAND] = SPWPN_NORMAL;
                 }
