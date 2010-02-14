@@ -687,10 +687,6 @@ void dgn_build_shoals_level(int level_number)
 
     // This has to happen after placing shoal rune vault!
     _shoals_generate_flora();
-
-    // Apply tide now, since the tide is likely to be nonzero unless
-    // this is Shoals:1
-    shoals_apply_tides(0, true);
 }
 
 // Search the map for vaults and set the terrain heights for features
@@ -720,6 +716,10 @@ void shoals_postprocess_level()
         if (feat != expected_feat)
             dgn_height_at(c) = _shoals_feature_height(feat);
     }
+
+    // Apply tide now, since the tide is likely to be nonzero unless
+    // this is Shoals:1
+    shoals_apply_tides(0, true);
 }
 
 static void _shoals_run_tide(int &tide, int &acc)
