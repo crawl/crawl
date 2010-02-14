@@ -1079,7 +1079,7 @@ static bool _check_ability_possible(const ability_def& abil,
     case ABIL_SIF_MUNA_FORGET_SPELL:
         if (you.spell_no == 0)
         {
-            mpr("You don't know any spells.");
+            canned_msg(MSG_NO_SPELLS);
             return (false);
         }
         return (true);

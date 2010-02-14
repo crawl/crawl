@@ -642,6 +642,9 @@ void canned_msg(canned_message_type which_message)
     case MSG_WEIRD_STASIS:
         mpr("You feel a weird sense of stasis.");
         break;
+    case MSG_NO_SPELLS:
+        mpr("You don't know any spells.");
+        break;
     }
 }
 

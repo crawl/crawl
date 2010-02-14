@@ -66,7 +66,7 @@ bool cast_selective_amnesia(bool force)
 {
     if (you.spell_no == 0)
     {
-        mpr("You don't know any spells.");
+        canned_msg(MSG_NO_SPELLS);
         return (false);
     }
 
