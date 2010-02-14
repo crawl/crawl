@@ -228,13 +228,5 @@ enum
     NUM_MAX_DOLLS = 10
 };
 
-    enum TabID
-    {
-        TAB_ITEM,
-        TAB_SPELL,
-        TAB_MEMORISE,
-        TAB_MAX
-    };
-
 #endif
 #endif
