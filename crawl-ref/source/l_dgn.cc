@@ -967,6 +967,24 @@ static int dgn_fprop_at (lua_State *ls)
     return (1);
 }
 
+static int dgn_cloud_at (lua_State *ls)
+{
+    COORDS(c, 1, 2);
+
+    if (!in_bounds(c))
+        return (0);
+
+    int cloudno = env.cgrid(c);
+
+    if (cloudno == EMPTY_CLOUD)
+        lua_pushstring(ls, "none");
+    else
+        lua_pushstring(ls, cloud_name(cloudno).c_str());
+
+    return (1);
+}
+
+
 static int lua_dgn_set_lt_callback(lua_State *ls)
 {
     const char *level_type = luaL_checkstring(ls, 1);
@@ -1835,6 +1853,7 @@ const struct luaL_reg dgn_dlib[] =
 
 { "colour_at", dgn_colour_at },
 { "fprop_at", dgn_fprop_at },
+{ "cloud_at", dgn_cloud_at },
 
 { "terrain_changed", dgn_terrain_changed },
 { "fprop_changed", dgn_fprop_changed },
