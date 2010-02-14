@@ -75,7 +75,6 @@ static std::string __try_exact_string(const std::vector<std::string> &prefixes,
             silenced = true;
         }
         else if (prefixes[i] == "beogh" || prefixes[i] == "good god"
-                 || prefixes[i] == "evil god"
                  || prefixes[i] == "No God"
                  || (str_to_god(prefixes[i]) != GOD_NO_GOD
                      && prefixes[i] != "random"))
@@ -108,7 +107,12 @@ static std::string __try_exact_string(const std::vector<std::string> &prefixes,
                 msg = __try_exact_string(prefixes, key, true, true);
         }
         else if (religion) // skip hostile, related and religion
-            msg = __try_exact_string(prefixes, key, true, true, true);
+        {
+            if (branch) // skip hostile, related and branch
+                msg = __try_exact_string(prefixes, key, true, true, false, true);
+            else // skip hostile, related and religion
+                msg = __try_exact_string(prefixes, key, true, true, true);
+        }
         else if (branch) // skip hostile, related, religion and branch
             msg = __try_exact_string(prefixes, key, true, true, true, true);
         // 50% use non-verbal monster speech,
@@ -529,10 +533,6 @@ bool mons_speaks(monsters *monster)
     {
         if (is_good_god(god))
             prefixes.push_back("good god");
-        else if (is_evil_god(god))
-            prefixes.push_back("evil god");
-        else if (god == GOD_XOM)
-            prefixes.push_back("Xom");
     }
 
     // Include our god's current name, too. This means that uniques can have
