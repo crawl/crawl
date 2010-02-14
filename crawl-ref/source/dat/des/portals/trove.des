@@ -141,7 +141,7 @@ function get_trove_item(e, value)
   else
     if crawl.one_chance_in(5) then
       local chosen = util.random_weighted_from('weight', wands)
-      item.base_type = wand
+      item.base_type = "wand"
       item.sub_type = chosen.wand
       if chosen.charges == nil then
         item.plus1 = d(5)
