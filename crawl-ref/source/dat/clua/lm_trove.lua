@@ -81,7 +81,7 @@ function TroveMarker:overview_note (marker)
 end
 
 function TroveMarker:property(marker, pname)
-  if pname == 'veto_stair' or pname == 'veto_level_change' then
+  if pname == 'veto_stair' then
     return self:check_veto(marker, pname)
   end
 
@@ -437,8 +437,13 @@ function TroveMarker:check_veto(marker, pname)
       -- Ok, ask if the player wants to spend the $$$.
       if crawl.yesno("You can still enter the portal, but it charges " .. needed ..
                          "gp for entry. Pay?", true, "n") then
-        you.gold(you.gold() - needed)
-        self:note_payed(needed .. "gp")
+        if you.gold() < needed then
+          crawl.mpr("You don't have the money to pay for it!")
+          return "veto"
+        else
+          you.gold(you.gold() - needed)
+          self:note_payed(needed .. "gp")
+        end
       else
         return "veto"
       end
