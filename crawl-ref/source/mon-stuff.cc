@@ -2715,7 +2715,7 @@ bool mon_can_be_slimified(monsters *monster)
     const mon_holy_type holi = monster->holiness();
 
     return (!(monster->flags & MF_GOD_GIFT)
-            && !mons_is_insubstantial(monster->type)
+            && !monster->is_insubstantial()
             && (holi == MH_UNDEAD
                  || holi == MH_NATURAL && !mons_is_slime(monster))
             );

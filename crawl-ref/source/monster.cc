@@ -325,7 +325,7 @@ int monsters::body_weight(bool /*base*/) const
     // use CE_NOCORPSE, because the corpse-effect field is used for
     // corpseless monsters to indicate what happens if their blood
     // is sucked.  Grrrr.
-    if (weight == 0 && !mons_is_insubstantial(type))
+    if (weight == 0 && !is_insubstantial())
     {
         weight = actor::body_weight();
 
@@ -3235,6 +3235,11 @@ bool monsters::is_chaotic() const
     return (false);
 }
 
+bool monsters::is_insubstantial() const
+{
+    return (mons_class_flag(type, M_INSUBSTANTIAL));
+}
+
 int monsters::res_fire() const
 {
     const mon_resist_def res = get_mons_resists(this);
@@ -3431,7 +3436,7 @@ int monsters::res_poison() const
 int monsters::res_sticky_flame() const
 {
     int res = get_mons_resists(this).sticky_flame;
-    if (mons_is_insubstantial(type))
+    if (is_insubstantial())
         res += 1;
     if (has_equipped(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_ARMOUR))
         res += 1;
@@ -3740,7 +3745,7 @@ void monsters::paralyse(actor *atk, int strength)
 
 void monsters::petrify(actor *atk, int strength)
 {
-    if (mons_is_insubstantial(type))
+    if (is_insubstantial())
         return;
 
     enchant_monster_with_flavour(this, atk, BEAM_PETRIFY, strength);
@@ -5880,7 +5885,7 @@ bool monsters::can_drink_potion(potion_type ptype) const
         return (false);
 
     // These monsters cannot drink.
-    if (mons_is_skeletal(type) || mons_is_insubstantial(type)
+    if (mons_is_skeletal(type) || is_insubstantial()
         || mons_species() == MONS_LICH || mons_genus(type) == MONS_MUMMY
         || type == MONS_GASTRONOK)
     {
