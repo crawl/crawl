@@ -434,7 +434,7 @@ static const char *_monster_behaviour_names[] = {
 
 static const char* _behaviour_name(beh_type beh)
 {
-    if (0 <= beh && beh < ARRAYSZ(_monster_behaviour_names))
+    if (0 <= beh && beh < static_cast<int>(ARRAYSZ(_monster_behaviour_names)))
         return (_monster_behaviour_names[beh]);
     else
         return ("invalid");
