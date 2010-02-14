@@ -344,7 +344,7 @@ public:
 
 protected:
     virtual void pack_buffers() = 0;
-    virtual void draw_tag(int item_idx) = 0;
+    virtual void draw_tag() = 0;
 
     // Place the cursor and set idx with the index into m_items of the click.
     // If click was invalid, return false.
@@ -377,7 +377,7 @@ public:
 
 protected:
     virtual void pack_buffers();
-    virtual void draw_tag(int item_idx);
+    virtual void draw_tag();
 };
 
 class SpellRegion : public GridRegion
@@ -396,7 +396,7 @@ protected:
     bool memorise;
 
     virtual void pack_buffers();
-    virtual void draw_tag(int item_idx);
+    virtual void draw_tag();
 };
 
 class MemoriseRegion : public SpellRegion
@@ -410,7 +410,7 @@ public:
     virtual bool update_tip_text(std::string &tip);
 
 protected:
-    virtual void draw_tag(int item_idx);
+    virtual void draw_tag();
 };
 
 // A region that contains multiple region, selectable by tabs.
