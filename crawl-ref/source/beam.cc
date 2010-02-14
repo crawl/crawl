@@ -799,9 +799,9 @@ const zap_info zap_data[] = {
         // Incoming power is highly dependent on mass (see spells3.cc).
         // Basic function is power * 15 + mass...  with the largest
         // available mass (3000) we get a power of 4500 at a power
-        // level of 100 (for 3d20).
+        // level of 100 (for 3d29).
         10000,
-        new dicedef_calculator<3, 2, 1, 250>,
+        new dicedef_calculator<3, 4, 1, 180>,
         new tohit_calculator<8, 1, 100>,
         LIGHTGREY,
         false,
