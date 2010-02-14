@@ -102,6 +102,7 @@ public:
     void hide_title();
 
     void draw_doll_edit();
+    coord_def tile_get_mouse_pos() { return m_mouse; }
 
     MenuRegion *get_menu() { return m_region_menu; }
 protected:
