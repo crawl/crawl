@@ -4938,8 +4938,11 @@ void bolt::affect_monster(monsters* mon)
             // FIXME: Could use a better message, something about
             // dodging that doesn't sound excessively weird would be
             // nice.
-            mprf(MSGCH_GOD, "Fedhas protects %s plant from harm.",
-                 attitude == ATT_FRIENDLY ? "your" : "a");
+            if (you.see_cell(mon->pos()))
+            {
+                mprf(MSGCH_GOD, "Fedhas protects %s plant from harm.",
+                     attitude == ATT_FRIENDLY ? "your" : "a");
+            }
         }
         return;
     }
