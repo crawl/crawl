@@ -390,8 +390,11 @@ public:
     virtual int handle_mouse(MouseEvent &event);
     virtual bool update_tip_text(std::string &tip);
     virtual bool update_alt_text(std::string &alt);
+    virtual bool check_memorise();
 
 protected:
+    bool memorise;
+
     virtual void pack_buffers();
     virtual void draw_tag(int item_idx);
 };
@@ -400,7 +403,7 @@ class MemoriseRegion : public SpellRegion
 {
 public:
     MemoriseRegion(ImageManager *im, FTFont *tag_font,
-                int tile_x, int tile_y);
+                   int tile_x, int tile_y);
 
     virtual void update();
     virtual int handle_mouse(MouseEvent &event);
