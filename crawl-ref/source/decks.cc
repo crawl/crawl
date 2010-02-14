@@ -2742,6 +2742,12 @@ static void _summon_flying(int power, deck_rarity_type rarity)
                       std::min(power/50 + 1, 6), 0,
                       you.pos(), MHITYOU));
     }
+
+    if (mons_class_flag(result, M_INVIS) && !you.can_see_invisible()
+        && !friendly)
+    {
+        mpr("Whatever you just summoned cannot be friendly.");
+    }
 }
 
 static void _summon_skeleton(int power, deck_rarity_type rarity)
