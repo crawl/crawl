@@ -216,13 +216,29 @@ function TroveMarker:item_name(do_grammar)
     end
   end
 
-  if item.base_type == "potion" or item.base_type == "scroll" then
+  local jwith_pluses = {"ring of protection", "ring of evasion",
+                        "ring of strength", "ring of intelligence",
+                        "ring of dexterity", "ring of slaying"}
+  if item.base_type == "jewellery" and util.contains(jwith_pluses, item.sub_type) then
+    s = s .. " +" .. item.plus1
+    if item.sub_type == "ring of slaying" and item.plus2 ~= item.plus1 then
+      s = s .. ", +" .. item.plus2
+    end
+  end
+
+  if item.base_type == "potion" or item.base_type == "scroll"then
     s = s .. " " .. item.base_type .. "s of"
   elseif item.base_type == "book" then
     s = s .. " book of"
+  elseif item.base_type == "wand" then
+    s = s .. " wand of"
   end
 
   s = s .. " " .. item.sub_type
+
+  if item.base_type == "wand" then
+    s = s .. " (" .. item.plus1 .. ")"
+  end
 
   if item.base_type == "armour" or item.base_type == "weapon" then
     if item.ego_type then
@@ -243,6 +259,7 @@ end
 -- if we didn't find anything.
 function TroveMarker:check_item(marker, pname, position)
   local iter_table
+  local acceptable_items = {}
 
   if position == "inventory" then
     iter_table = items.inventory()
@@ -310,11 +327,56 @@ function TroveMarker:check_item(marker, pname, position)
 
     -- Now all we need to do is to make sure that the item is the one we're looking for
     if this_item and item.sub_type == it.sub_type and item.base_type == it.base_type then
-      crawl.mpr("The portal accepts the item" .. self:plural() .. " and buzzes to life!")
-      it.dec_quantity(item.quantity)
-      return true
+      table.insert(acceptable_items, it)
     end
   end
+
+  if #acceptable_items == 0 then
+    return false
+  end
+
+  --crawl.mpr("Total of " .. #acceptable_items .. " acceptable items.")
+
+  -- If there are no pluses but multiple acceptable items, or there is only one
+  -- acceptable item, take the first in the list.
+  if #acceptable_items == 1 or (item.plus1 == false and item.plus2 == false) then
+    local it = acceptable_items[1]
+    return self:accept_item(it)
+  else
+    -- Otherwise, take the one with the least pluses.
+    local titem = acceptable_items[1]
+    local titem_p1, titem_p2 = titem.pluses()
+    --crawl.mpr("Picking " .. titem.name() .. " to start with.")
+    --crawl.mpr("This item p1: " .. titem_p1 .. ", p2: " .. titem_p2)
+
+    if item.plus2 == false then
+      --crawl.mpr("Not looking at second plus.")
+    end
+
+    for _, it in ipairs(acceptable_items) do
+      local this_p1, this_p2 = it.pluses()
+      --crawl.mpr("Looking at " .. it.name())
+      if this_p1 < titem_p1 and (item.plus2 == false or this_p2 < titem_p2) then
+        titem = it
+        titem_p1, titem_p2 = titem.pluses()
+        --crawl.mpr("Picking " .. titem.name() .. " instead (lesser pluses instad)")
+        --crawl.mpr("This item p1: " .. titem_p1 .. ", p2: " .. titem_p2)
+      elseif this_p1 == item.plus1 and this_p2 == item.plus2 then
+        titem = it
+        titem_p1, titem_p2 = titem.pluses()
+        --crawl.mpr("Picking " .. titem.name() .. " instead (matches wanted pluses)")
+        --crawl.mpr("This item p1: " .. titem_p1 .. ", p2: " .. titem_p2)
+      end
+    end
+
+    return self:accept_item(titem)
+  end
+end
+
+function TroveMarker:accept_item (it)
+  crawl.mpr("The portal accepts the item" .. self:plural() .. " and buzzes to life!")
+  it.dec_quantity(self.props.toll_item.quantity)
+  return true
 end
 
 function TroveMarker:plural ()
