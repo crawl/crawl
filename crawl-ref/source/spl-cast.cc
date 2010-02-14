@@ -507,7 +507,7 @@ void inspect_spells()
 {
     if (!you.spell_no)
     {
-        mpr("You don't know any spells.");
+        canned_msg(MSG_NO_SPELLS);
         return;
     }
 
@@ -543,7 +543,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
 {
     if (!you.spell_no)
     {
-        mpr("You don't know any spells.");
+        canned_msg(MSG_NO_SPELLS);
         crawl_state.zero_turns_taken();
         return (false);
     }

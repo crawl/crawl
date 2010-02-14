@@ -3572,7 +3572,7 @@ void TabbedRegion::activate_tab(int idx)
 
     if (idx == TAB_SPELL && !you.spell_no)
     {
-        mpr("You don't know any spells.");
+        canned_msg(MSG_NO_SPELLS);
         flush_prev_message();
     }
     else if (idx == TAB_ITEM && inv_count() < 1)
