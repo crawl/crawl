@@ -3552,7 +3552,7 @@ void TabbedRegion::activate_tab(int idx)
         return;
 
     m_active = idx;
-    m_dirty = true;
+    m_dirty  = true;
     tiles.set_need_redraw();
 
     if (m_tabs[m_active].reg)
