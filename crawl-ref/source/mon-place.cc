@@ -274,7 +274,12 @@ static int _fuzz_mons_level(int level)
                       1000))
     {
         const int fuzzspan = 7;
-        const int fuzz = std::max(0, random_range(-fuzzspan, fuzzspan, 2));
+        int fuzz = std::max(0, random_range(-fuzzspan, fuzzspan, 2));
+
+        //OOD Chances are reduced slightly on D:2 - a little less than 1 in 9 instead of 1 in 7
+        if (you.absdepth0 == 1 && one_chance_in(4))
+            fuzz = 0;
+
 #ifdef DEBUG_DIAGNOSTICS
         if (fuzz)
             dprf("Monster level fuzz: %d (old: %d, new: %d)",

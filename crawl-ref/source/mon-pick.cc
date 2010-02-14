@@ -615,6 +615,7 @@ int mons_standard_level(int mcls)
     case MONS_ORC_WIZARD:
     case MONS_PHANTOM:
     case MONS_SCORPION:
+    case MONS_SKELETON_SMALL:
         return 8;
 
     case MONS_WATER_MOCCASIN:
@@ -714,6 +715,7 @@ int mons_standard_level(int mcls)
     case MONS_GARGOYLE:
     case MONS_GIANT_AMOEBA:
     case MONS_KOBOLD_DEMONOLOGIST:
+    case MONS_SKELETON_LARGE: // Higher than actual threat level so that they will still show up in The Vaults
         return 18;
 
     case MONS_GIANT_SLUG:
@@ -735,7 +737,6 @@ int mons_standard_level(int mcls)
     case MONS_GIANT_SNAIL:
     case MONS_GREAT_ORB_OF_EYES:
     case MONS_ICE_DRAGON:
-    case MONS_SKELETON_LARGE:
     case MONS_NAGA_MAGE:
     case MONS_NAGA_WARRIOR:
     case MONS_NECROMANCER:
@@ -743,7 +744,6 @@ int mons_standard_level(int mcls)
     case MONS_QUEEN_BEE:
     case MONS_RED_WASP:
     case MONS_SHADOW_WRAITH:
-    case MONS_SKELETON_SMALL:
     case MONS_SPINY_WORM:
     case MONS_VERY_UGLY_THING:
     case MONS_HARPY:
