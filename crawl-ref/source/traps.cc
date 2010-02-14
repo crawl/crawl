@@ -237,7 +237,7 @@ void monster_caught_in_net(monsters *mon, bolt &pbolt)
     if (mon->body_size(PSIZE_BODY) >= SIZE_GIANT)
         return;
 
-    if (mons_is_insubstantial(mon->type))
+    if (mon->is_insubstantial())
     {
         if (you.can_see(mon))
         {
@@ -325,7 +325,7 @@ void check_net_will_hold_monster(monsters *mons)
                 mpr("All of a sudden the net rips apart!");
         }
     }
-    else if (mons_is_insubstantial(mons->type)
+    else if (mons->is_insubstantial()
              || mons->type == MONS_OOZE
              || mons->type == MONS_PULSATING_LUMP)
     {
@@ -333,7 +333,7 @@ void check_net_will_hold_monster(monsters *mons)
         if (net != NON_ITEM)
             remove_item_stationary(mitm[net]);
 
-        if (mons_is_insubstantial(mons->type))
+        if (mons->is_insubstantial())
         {
             simple_monster_message(mons,
                                    " drifts right through the net!");

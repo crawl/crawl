@@ -451,7 +451,7 @@ static bool _mon_exposed_in_cloud(const monsters *mon)
     return (!mon->visible_to(&you)
             && you.see_cell(mon->pos())
             && is_opaque_cloud(env.cgrid(mon->pos()))
-            && !mons_is_insubstantial(mon->type));
+            && !mon->is_insubstantial());
 }
 
 static bool _mon_exposed(const monsters* mon)
