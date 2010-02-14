@@ -2447,6 +2447,12 @@ SpellRegion::SpellRegion(ImageManager* im, FTFont *tag_font,
                          int tile_x, int tile_y) :
     GridRegion(im, tag_font, tile_x, tile_y)
 {
+    memorise = false;
+}
+
+bool SpellRegion::check_memorise()
+{
+    return (memorise);
 }
 
 void SpellRegion::draw_tag(int curs_index)
@@ -2543,18 +2549,30 @@ bool SpellRegion::update_alt_text(std::string &alt)
     return (true);
 }
 
+static int _get_max_spells()
+{
+    int max_spells = 21;
+    if (you.has_spell(SPELL_SELECTIVE_AMNESIA))
+        max_spells++;
+
+    return (max_spells);
+}
+
 void SpellRegion::pack_buffers()
 {
+    const int max_spells = (check_memorise() ? m_items.size()
+                                             : _get_max_spells());
+
     // Pack base separately, as it comes from a different texture...
     unsigned int i = 0;
     for (int y = 0; y < my; y++)
     {
-        if (i >= m_items.size())
+        if (i >= max_spells)
             break;
 
         for (int x = 0; x < mx; x++)
         {
-            if (i++ >= m_items.size())
+            if (i++ >= max_spells)
                 break;
 
             m_buf_dngn.add(TILE_ITEM_SLOT, x, y);
@@ -2632,6 +2650,7 @@ MemoriseRegion::MemoriseRegion(ImageManager* im, FTFont *tag_font,
                          int tile_x, int tile_y) :
     SpellRegion(im, tag_font, tile_x, tile_y)
 {
+    memorise = true;
 }
 
 void MemoriseRegion::draw_tag(int curs_index)
@@ -3550,6 +3569,14 @@ void TabbedRegion::activate_tab(int idx)
 
     if (m_active == idx)
         return;
+
+    if (idx == TAB_SPELL && !you.spell_no)
+    {
+        mpr("You don't know any spells.");
+        flush_prev_message();
+    }
+    else if (idx == TAB_ITEM && inv_count() < 1)
+        canned_msg(MSG_NOTHING_CARRIED);
 
     m_active = idx;
     m_dirty  = true;
