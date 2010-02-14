@@ -104,7 +104,6 @@ Items
 * Book acquirement doesn't give manuals to spellcasting specialists anymore.
 * Added wands as an acquirement option.
 * Potions of resistance last longer.
-* Potions of magic are as common as potions of levitation and resistance.
 * Weapons of holy wrath cannot be cursed.
 * Improvements to whips and demon whips; the latter can be blessed by TSO.
 * Reduce the chances for artefacts with only one stat property.
@@ -242,7 +241,6 @@ Spells
 * Ice Form can swim in deep water; be careful you don't drown!
 * Disintegration is really messy.
 * Useless and forbidden spells are coloured in spell menus.
-* Bone Shards damage has been buffed.
 
 Tiles
 -----
