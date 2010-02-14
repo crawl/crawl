@@ -1108,7 +1108,7 @@ static void _give_ammo(monsters *mon, int level,
             default:
                 break;
         }
-                
+
         _give_monster_item(mon, thing_created);
     }
     else
