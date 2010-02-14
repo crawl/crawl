@@ -1220,18 +1220,6 @@ int player_hunger_rate(void)
     hunger += 4 * player_equip( EQ_RINGS, RING_HUNGER );
     hunger -= 2 * player_equip( EQ_RINGS, RING_SUSTENANCE );
 
-    // weapon ego types
-    if (you.species != SP_VAMPIRE)
-    {
-        if (player_equip_ego_type( EQ_WEAPON, SPWPN_VAMPIRICISM ))
-              hunger += 6;
-    }
-    else
-    {
-        if (player_equip_ego_type( EQ_WEAPON, SPWPN_VAMPIRICISM ))
-            hunger += 1;
-    }
-
     // troll leather armour
     if (you.species != SP_TROLL && you.hp < you.hp_max)
         if (player_equip( EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR ))
