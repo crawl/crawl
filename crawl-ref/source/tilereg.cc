@@ -2388,9 +2388,6 @@ void GridRegion::render()
         m_dirty = false;
     }
 
-    if (m_buf_dngn.empty() && m_buf_main.empty() && m_buf_spells.empty())
-        return;
-
 #ifdef DEBUG_TILES_REDRAW
     cprintf("rendering GridRegion\n");
 #endif
@@ -2399,17 +2396,7 @@ void GridRegion::render()
     m_buf_spells.draw();
     m_buf_main.draw();
 
-    if (m_cursor == NO_CURSOR)
-        return;
-
-    unsigned int curs_index = cursor_index();
-    if (curs_index >= m_items.size())
-        return;
-    int idx = m_items[curs_index].idx;
-    if (idx == -1)
-        return;
-
-    draw_tag(curs_index);
+    draw_tag();
 }
 
 void GridRegion::draw_number(int x, int y, int num)
@@ -2455,11 +2442,17 @@ bool SpellRegion::check_memorise()
     return (memorise);
 }
 
-void SpellRegion::draw_tag(int curs_index)
+void SpellRegion::draw_tag()
 {
-    ASSERT(curs_index != -1);
+    if (m_cursor == NO_CURSOR)
+        return;
+
+    int curs_index = cursor_index();
+    if (curs_index >= (int)m_items.size())
+        return;
     int idx = m_items[curs_index].idx;
-    ASSERT(idx != -1);
+    if (idx == -1)
+        return;
 
     const spell_type spell = (spell_type) idx;
     std::string desc = make_stringf("%d MP    %s    (%s)",
@@ -2504,7 +2497,7 @@ bool SpellRegion::update_tip_text(std::string& tip)
 
     int flag = m_items[item_idx].flag;
     std::vector<command_type> cmd;
-    if (flag & TILEI_FLAG_MELDED)
+    if (flag & TILEI_FLAG_INVALID)
         tip = "You cannot cast this spell right now.";
     else
     {
@@ -2653,11 +2646,16 @@ MemoriseRegion::MemoriseRegion(ImageManager* im, FTFont *tag_font,
     memorise = true;
 }
 
-void MemoriseRegion::draw_tag(int curs_index)
+void MemoriseRegion::draw_tag()
 {
-    ASSERT(curs_index != -1);
+    if (m_cursor == NO_CURSOR)
+        return;
+    int curs_index = cursor_index();
+    if (curs_index >= (int)m_items.size())
+        return;
     int idx = m_items[curs_index].idx;
-    ASSERT(idx != -1);
+    if (idx == -1)
+        return;
 
     const spell_type spell = (spell_type) idx;
     std::string desc = make_stringf("%s    (%s)    %d/%d spell slot%s",
@@ -2706,7 +2704,7 @@ bool MemoriseRegion::update_tip_text(std::string& tip)
 
     int flag = m_items[item_idx].flag;
     std::vector<command_type> cmd;
-    if (flag & TILEI_FLAG_MELDED)
+    if (flag & TILEI_FLAG_INVALID)
         tip = "You don't have enough slots for this spell right now.";
     else
     {
@@ -3276,10 +3274,16 @@ bool InventoryRegion::update_alt_text(std::string &alt)
     return (true);
 }
 
-void InventoryRegion::draw_tag(int curs_index)
+void InventoryRegion::draw_tag()
 {
+    if (m_cursor == NO_CURSOR)
+        return;
+    int curs_index = cursor_index();
+    if (curs_index >= (int)m_items.size())
+        return;
     int idx = m_items[curs_index].idx;
-    ASSERT(idx != -1);
+    if (idx == -1)
+        return;
 
     bool floor = m_items[curs_index].flag & TILEI_FLAG_FLOOR;
 
