@@ -440,7 +440,7 @@ static std::string _get_unseen_branches()
                               strlen(branches[parent_branch].abbrevname);
                     // Each branch entry takes up 20 spaces
                     snprintf(buffer, sizeof buffer,
-                        "<brown>%s</brown><darkgrey>: %*s:%d-%d</darkgrey>",
+                        "<darkgrey>%s: %*s:%d-%d</darkgrey>",
                             branches[branch].abbrevname,
                             6 - len,
                             branches[parent_branch].abbrevname,
@@ -452,7 +452,7 @@ static std::string _get_unseen_branches()
                               strlen(branches[parent_branch].abbrevname);
                     // Each branch entry takes up 20 spaces
                     snprintf(buffer, sizeof buffer,
-                        "<brown>%s</brown><darkgrey>: %*s:%d</darkgrey>",
+                        "<darkgrey>%s: %*s:%d</darkgrey>",
                             branches[branch].abbrevname,
                             6 - len,
                             branches[parent_branch].abbrevname,
@@ -463,7 +463,7 @@ static std::string _get_unseen_branches()
                 num_printed_branches++;
 
                 disp += (num_printed_branches % 4) == 0
-                    ? "\n" : std::string(56 - strlen(buffer), ' ');
+                    ? "\n" : std::string(41 - strlen(buffer), ' ');
             }
         }
     }
@@ -471,13 +471,13 @@ static std::string _get_unseen_branches()
     /* not actual branches, have to hardcode this stuff here */
     if (find_deepest_explored(level_id(BRANCH_MAIN_DUNGEON, 0)).depth >= 21) {
         if (!found_portals[PORTAL_PANDEMONIUM]) {
-            disp += "<brown>Pan</brown><darkgrey>:    D:21-27</darkgrey>";
+            disp += "<darkgrey>Pan:    D:21-27</darkgrey>";
             num_printed_branches++;
             disp += (num_printed_branches % 4) == 0
                 ? "\n" : "     ";
         }
         if (!found_portals[PORTAL_ABYSS]) {
-            disp += "<brown>Abyss</brown><darkgrey>:  D:21-27</darkgrey>";
+            disp += "<darkgrey>Abyss:  D:21-27</darkgrey>";
             num_printed_branches++;
             disp += (num_printed_branches % 4) == 0
                 ? "\n" : "     ";
