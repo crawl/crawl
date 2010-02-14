@@ -3198,6 +3198,16 @@ bool monsters::is_unclean() const
         return (true);
     }
 
+    // Assume that all unknown gods (GOD_NAMELESS) are not chaotic.
+    // Being a worshipper of a chaotic god doesn't yet make you
+    // physically/essentially chaotic (so you don't get hurt by silver),
+    // but Zin does mind.
+    if (is_priest() && is_chaotic_god(god))
+        return (true);
+
+    if (has_chaotic_spell() && is_actual_spellcaster())
+        return (true);
+
     return (false);
 }
 
@@ -3215,13 +3225,10 @@ bool monsters::is_chaotic() const
     if (is_shapeshifter())
         return (true);
 
-    // Assume that all unknown gods (GOD_NAMELESS) are not chaotic.
-    if (is_priest() && is_chaotic_god(god))
-        return (true);
-
     // Knowing chaotic spells is not enough to make you "essentially"
-    // chaotic (i.e. silver doesn't hurt you), although Zin will still
-    // enjoy your death elsewhere in the code.
+    // chaotic (i.e. silver doesn't hurt you), it's just unclean for
+    // Zin. Having chaotic abilities (not actual spells) does mean
+    // you're truly changed by chaos.
     if (has_chaotic_spell() && !is_actual_spellcaster())
         return (true);
 

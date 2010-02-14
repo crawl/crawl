@@ -6399,11 +6399,11 @@ bool player::is_evil() const
     return (false);
 }
 
+// This is a stub. Check is used only for silver damage. Worship of chaotic
+// gods should probably be checked in the non-existing player::is_unclean,
+// which could be used for something Zin-related (such as a priestly monster).
 bool player::is_chaotic() const
 {
-    if (is_chaotic_god(religion))
-        return (true);
-
     return (false);
 }
 
