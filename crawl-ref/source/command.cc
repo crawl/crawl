@@ -371,7 +371,7 @@ static void _adjust_spells(void)
 {
     if (!you.spell_no)
     {
-        mpr("You don't know any spells.");
+        canned_msg(MSG_NO_SPELLS);
         return;
     }
 
