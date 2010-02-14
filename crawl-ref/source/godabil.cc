@@ -51,7 +51,7 @@
 #include "view.h"
 #include "viewgeom.h"
 
-#ifdef USE_TILES
+#ifdef USE_TILE
 #include "tiledef-main.h"
 #endif
 
@@ -766,14 +766,12 @@ static void _path_distance(coord_def & origin,
             idx = adj_it->x + adj_it->y * X_WIDTH;
             if (you.see_cell(*adj_it)
                 && !feat_is_solid(env.grid(*adj_it))
+                && *adj_it != you.pos()
                 && exclusion.insert(idx).second)
             {
                 monsters * temp = monster_at(*adj_it);
                 if (!temp || (temp->attitude == ATT_HOSTILE
-                              && temp->mons_species() != MONS_PLANT
-                              && temp->mons_species() != MONS_TOADSTOOL
-                              && temp->mons_species() != MONS_FUNGUS
-                              && temp->mons_species() != MONS_BALLISTOMYCETE))
+                              && !mons_is_stationary(temp)))
                 {
                     fringe.push(point_distance(*adj_it, current.second+1));
                 }
@@ -1002,7 +1000,7 @@ bool plant_ring_from_fruit()
 
     for (int i=0; i < max_use; ++i)
     {
-#ifndef USE_TILES
+#ifndef USE_TILE
         coord_def temp = grid2view(adjacent[i]);
         cgotoxy(temp.x, temp.y, GOTO_DNGN);
         put_colour_ch(GREEN, '1' + i);
