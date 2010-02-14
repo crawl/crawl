@@ -6407,6 +6407,12 @@ bool player::is_chaotic() const
     return (false);
 }
 
+// This is a stub. Makes checking for silver damage a little cleaner.
+bool player::is_insubstantial() const
+{
+    return (false);
+}
+
 // Output active level of player mutation.
 // Might be lower than real mutation for non-"Alive" Vampires.
 int player_mutation_level(mutation_type mut)

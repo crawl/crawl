@@ -509,11 +509,6 @@ bool mons_is_projectile(int mc)
     return (mc == MONS_ORB_OF_DESTRUCTION);
 }
 
-bool mons_is_insubstantial(int mc)
-{
-    return (mons_class_flag(mc, M_INSUBSTANTIAL));
-}
-
 bool mons_has_blood(int mc)
 {
     return (mons_class_flag(mc, M_COLD_BLOOD)

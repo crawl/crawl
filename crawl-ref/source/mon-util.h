@@ -365,7 +365,6 @@ bool mons_is_firewood(const monsters *mon);
 int cheibriados_monster_player_speed_delta(const monsters *mon);
 bool cheibriados_thinks_mons_is_fast( const monsters *mon );
 bool mons_is_projectile(int mc);
-bool mons_is_insubstantial(int mc);
 bool mons_has_blood(int mc);
 
 bool invalid_monster(const monsters *mon);
