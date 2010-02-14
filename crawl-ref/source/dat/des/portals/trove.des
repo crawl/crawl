@@ -93,7 +93,12 @@ function get_trove_item(e, value)
   -- have to follow too closely, as we randomise quantities anyway.
   -- Note that scrolls and potions can come in stacks of 2 or 3.
 
-  local potions = { 
+  local wands = {
+       {wand="healing",          charges=1 + d(2), weight=1},
+       {wand="fire",             charges=3 + d(2)},
+       {wand="cold",             charges=3 + d(2)} }
+
+  local potions = {
        {potion="healing",        quantity=12+d(4)+d(4)},        -- 23%
        {potion="heal wounds",    quantity=8+d(3)+d(3)},         -- 11%
        {potion="might",          quantity=6+d(3)+d(3)},         --  5%
@@ -134,15 +139,25 @@ function get_trove_item(e, value)
       item.quantity = chosen.quantity
     end
   else
-    local chosen = util.random_weighted_from('weight', scrolls)
-    item.base_type = "scroll"
-    item.sub_type = chosen.scroll
-    if chosen.quantity == nil then
-      item.quantity = 4 + crawl.random2(4)
+    if crawl.one_chance_in(5) then
+      local chosen = util.random_weighted_from('weight', wands)
+      item.base_type = wand
+      item.sub_type = chosen.wand
+      if chosen.charges == nil then
+        item.plus1 = d(5)
+      else
+        item.plus1 = chosen.charges
+      end
     else
-      item.quantity = chosen.quantity
+      local chosen = util.random_weighted_from('weight', scrolls)
+      item.base_type = "scroll"
+      item.sub_type = chosen.scroll
+      if chosen.quantity == nil then
+        item.quantity = 4 + crawl.random2(4)
+      else
+        item.quantity = chosen.quantity
+      end
     end
-
   end
 
   return item
