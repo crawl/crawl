@@ -46,7 +46,8 @@ Gods
 
 Levels
 ------
-* New branch: the Shoals, with a 33% chance of replacing Swamp or Snake Pit.
+* New branch: the Shoals. Greek-inspired, featuring merfolk, tides, and turtles.
+  Games now select two branches from Shoals, Snake Pit, and Swamp to enable.
 * Fix branch ends rarely being generated without a rune.
 * Shorten Lair to eight levels.
 * More interesting level layout for Lair and Swamp.
@@ -64,14 +65,14 @@ Levels
 
 Ranged combat
 -------------
-* Removed hand crossbows and the Darts skill.
+* Removed hand crossbows and the Darts skill; moved blowguns to Throwing skill.
 * New background: Arcane Marksman, combining Crusader, Warper and Hunter.
 * Fixed wall-stopped item beams getting two chances to hit their target.
 * New missile materials: silver, steel.
 * New missile brands: dispersal, electricity, exploding, penetration, reaping.
-* New needle brands: sleep, slow, paralysis, confusion, frenzy and sickness
+* New needle brands: sleep, slow, paralysis, confusion, frenzy and sickness.
 * Slings are one-handed and no longer delayed by shields.
-* Reduced weight of large rocks; stones are a bit heavier.
+* Stones are three times heavier.
 * More generous stacking of ammunition.
 * Lowered mulch rate for branded ammunition.
 * Rings of slaying also apply to missile launchers.
@@ -134,6 +135,7 @@ Monsters
 * Slime creatures can merge to become larger and more powerful.
 * All spectral things can use stairs again.
 * Several cool new uniques.
+* Unique speech much more varied and interesting.
 * OOD (out-of-depth) monsters no longer appear in bands until many
   turns spent on the level.
 * Monster respawns on any level in the main dungeon branches outside
@@ -148,7 +150,7 @@ Monsters
 * Monsters may quaff potions of might and berserk rage.
 * Demons spawned during the orb run will actively seek out the player.
 * Bears go berserk, but mindless monsters can't.
-* Giant lizards are now called alligators and have a reaching attack.
+* Giant lizards are now called crocodiles and are amphibious.
 * Greatly reduce number of monsters capable of submerging.
 * Submerged monsters cannot be targeted or affected by beams anymore.
 * Submerged monsters always unsubmerge if they can attack.
@@ -208,7 +210,8 @@ Interface
 * Add !a inscription to prompt when attacking with this wielded item.
 * New Lua file autofight.lua which allows auto-attacking of the nearest enemy.
 * Abort some teleportation attempts with -TELE without losing the turn.
-* Food and potions are never autoassigned to slots 'e' and 'y', respectively.
+* Food is never autoassigned to slot 'e' and potions are never autoassigned
+  to slots 'q' or 'y'.
 * Prefer swapping to a butchery tool to unequipping gloves.
 * Allow more than 8 colours in Mac builds if the terminal supports it.
 * Allow overriding vi keys with "Unknown command", see no_vi_command_key.txt.
@@ -224,7 +227,8 @@ Spells
 * Silence radius decreases with duration.
 * Limit Summon Small Mammals to a maximum of two mammals per casting.
 * Summon Small Mammals doesn't summon green or orange rats anymore.
-* Fulsome Distillation non-randomly depends on corpse type, but not rottenness.
+* Fulsome Distillation depends only on corpse type - RNG and rotting influence
+  has been removed.  Also doesn't prompt when only one corpse present.
 * Tukima's Dance weapon strength depends on spell power and weapon weight.
 * Summon Wraiths is replaced by Haunt, a smite-targetted summoning spell.
 * Directed non-enchantment spells make noise when they hit something.
@@ -238,6 +242,7 @@ Spells
 * Ice Form can swim in deep water; be careful you don't drown!
 * Disintegration is really messy.
 * Useless and forbidden spells are coloured in spell menus.
+* Bone Shards damage has been buffed.
 
 Tiles
 -----
@@ -291,8 +296,7 @@ Code cleanup
 * Overhauled all code dealing with the message window/message history.
 * Added several automated test cases in Lua.
 * Tidy up and clarify makefile usage.
-* Split up the contents of several large .cc and .des files into
-  smaller files.
+* Split up the contents of several large .cc and .des files into smaller files.
 * Many new Lua wrappers to make Lua much more powerful in e.g. map creation.
 * Unique placement code has been moved to Lua and is directed via uniques.des.
 * Add property hash to monsters, and use it generously for various monsters.
