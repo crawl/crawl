@@ -1197,7 +1197,6 @@ static monsterentry mondata[] = {
 },
 
 // rotting monsters ('n')
-// this thing doesn't have nr. 13 for nothing, has it? ($pellbinder)
 {
     MONS_NECROPHAGE, 'n', LIGHTGREY, "necrophage",
     M_NO_FLAGS,
