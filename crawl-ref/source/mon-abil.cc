@@ -798,8 +798,8 @@ bool mon_special_ability(monsters *monster, bolt & beem)
                                   : static_cast<monster_type>( monster->type );
 
     // Slime creatures can split while out of sight.
-    if ((!mons_near(monster) || monster->asleep() || monster->submerged())
-        && monster->type != MONS_SLIME_CREATURE)
+    if ((!monster->near_foe() || monster->asleep() || monster->submerged())
+         && monster->type != MONS_SLIME_CREATURE)
     {
         return (false);
     }
