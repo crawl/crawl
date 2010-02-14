@@ -1741,7 +1741,7 @@ static bool _silver_damages_victim(bolt &beam, actor* victim, int &dmg,
 {
     const int mutated = how_mutated(true, true);
 
-    if (victim->holiness() == MH_UNDEAD
+    if ((victim->holiness() == MH_UNDEAD && !victim->is_insubstantial())
         || victim->is_chaotic()
         || (victim == &you && player_is_shapechanged()))
     {
