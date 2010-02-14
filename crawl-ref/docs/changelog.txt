@@ -244,8 +244,8 @@ Spells
 
 Tiles
 -----
+* Added tabs to switch between inventory and clickable spells display.
 * Re-added doll editing screen ('-' command).
-* Added clickable spells display (toggle with '_' command).
 * Display tiles in many more menus, including the database search (?/).
 * New modifier keys for left-clicking on monsters or the player:
   * Shift-Left-Click: fire quivered ammo at monster.

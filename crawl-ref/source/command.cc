@@ -2351,9 +2351,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
                          CMD_MAKE_NOTE, CMD_DISPLAY_COMMANDS, 0);
     _add_command(cols, 0, CMD_MACRO_ADD, "add macro (also <w>Ctrl-D</w>)", 2);
     _add_command(cols, 0, CMD_ADJUST_INVENTORY, "reassign inventory/spell letters", 2);
-// No online play for tiles, so this replacement is reasonable. (jpeg)
 #ifdef USE_TILE
-    _add_command(cols, 0, CMD_TOGGLE_SPELL_DISPLAY, "toggle inventory/spells", 2);
     _add_command(cols, 0, CMD_EDIT_PLAYER_TILE, "edit player doll", 2);
 #else
     _add_command(cols, 0, CMD_READ_MESSAGES, "read messages (online play only)", 2);
