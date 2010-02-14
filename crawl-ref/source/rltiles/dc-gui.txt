@@ -17,28 +17,28 @@ dc-misc/error ERROR
 %sdir gui
 
 %start
-%compose tab_selected
-%compose tab_label_item
+%compose tab_selected_rounded
+%compose tab_label_item_armour
 %finish TAB_ITEM_SELECTED
 %start
-%compose tab_unselected
-%compose tab_label_item
+%compose tab_unselected_rounded
+%compose tab_label_item_armour
 %finish TAB_ITEM_UNSELECTED
 
 %start
-%compose tab_selected
-%compose tab_label_spell
+%compose tab_selected_rounded
+%compose tab_label_spell_star
 %finish TAB_SPELL_SELECTED
 %start
-%compose tab_unselected
-%compose tab_label_spell
+%compose tab_unselected_rounded
+%compose tab_label_spell_star
 %finish TAB_SPELL_UNSELECTED
 
 %start
-%compose tab_selected
-%compose tab_label_memorise
+%compose tab_selected_rounded
+%compose tab_label_memorise_book
 %finish TAB_MEMORISE_SELECTED
 %start
-%compose tab_unselected
-%compose tab_label_memorise
+%compose tab_unselected_rounded
+%compose tab_label_memorise_book
 %finish TAB_MEMORISE_UNSELECTED
