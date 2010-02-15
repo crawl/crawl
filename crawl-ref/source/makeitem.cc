@@ -968,6 +968,10 @@ static item_status_flag_type _determine_weapon_race(const item_def& item,
                                                     int item_race)
 {
     item_status_flag_type rc = ISFLAG_NO_RACE;
+
+    if (item.sub_type > WPN_MAX_RACIAL)
+        return rc;
+
     switch (item_race)
     {
     case MAKE_ITEM_ELVEN:
@@ -1752,6 +1756,10 @@ static item_status_flag_type _determine_missile_race(const item_def& item,
                                                      int item_race)
 {
     item_status_flag_type rc = ISFLAG_NO_RACE;
+
+    if (item.sub_type > MI_MAX_RACIAL)
+        return rc;
+
     switch (item_race)
     {
     case MAKE_ITEM_ELVEN:
@@ -2117,6 +2125,10 @@ static item_status_flag_type _determine_armour_race(const item_def& item,
                                                     int item_race)
 {
     item_status_flag_type rc = ISFLAG_NO_RACE;
+
+    if (item.sub_type > ARM_MAX_RACIAL)
+        return rc;
+
     switch (item_race)
     {
     case MAKE_ITEM_ELVEN:
