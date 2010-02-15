@@ -962,7 +962,7 @@ static bool _jiyva_retribution()
 
             if (create_monster(
                     mgen_data::hostile_at(static_cast<monster_type>(slime),
-                        "the vengence of Jiyva",
+                        "the vengeance of Jiyva",
                         true, 0, 0, you.pos(), 0, god)) != -1)
             {
                 success = true;
