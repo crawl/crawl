@@ -894,7 +894,6 @@ NAME:   tgw_kikubaaqudgha
 TAGS:   uniq_altar_kikubaaqudgha temple_overflow_kikubaaqudgha
 DEPTH:  D:2-10
 KFEAT:  _ = altar_kikubaaqudgha
-
 {{
 function kill_human (data, triggerable, triggerer, marker, ev)
   if data.turns ~= you.turns() then
@@ -932,43 +931,29 @@ lua_marker('_', tm)
 
 {{
 function zombify (data, triggerable, triggerer, marker, ev)
-  if data.turns ~= you.turns() then
-    data.tc = data.tc + 1
-    data.turns = you.turns()
-  end
-
-  if data.tc < 9 then
+  local pt = dgn.find_marker_positions_by_prop("slave_name", "zombie")
+  if #pt == 0 then
     return
   end
 
-  if data.triggered == true then
-    return
+  for carrion in iter.stash_iterator(pt[1].x, pt[1].y) do
+    if string.find(carrion.name(), 'human corpse') then
+      carrion.destroy()
+    end
   end
 
-  local m = dgn.find_marker_positions_by_prop("slave_name", "zombie")[1]
-  if m ~= nil then
-    local _x, _y = m:xy()
+  -- Won't place the monster if there's a cloud there
+  dgn.delete_cloud(pt[1].x, pt[1].y)
 
-    if not you.see_cell(_x, _y) then
-      return
-    end
-
-    for carrion in iter.stash_iterator(_x, _y) do
-      if string.find(carrion.name(), 'human corpse') then
-        carrion.destroy()
-        dgn.create_monster(_x, _y, "generate_awake human zombie")
-        crawl.god_speaks("Kikubaaqudgha", "The human rises from the dead!")
-      end
-    end
-    data.triggered = true
-  end
+  dgn.create_monster(pt[1].x, pt[1].y, "generate_awake human zombie")
+  crawl.god_speaks("Kikubaaqudgha", "The human rises from the dead!")
 end
-local tm = TriggerableFunction:new{func=zombify, repeated=true, 
-                                   data={turns=you.turns(), tc=0, triggered=false} }
-tm:add_triggerer(DgnTriggerer:new{type="player_los"})
+local tm = TriggerableFunction:new{func=zombify, repeated=false}
+tm:add_triggerer(DgnTriggerer:new{type="monster_dies", target="dslave"})
 lua_marker('_', tm)
 }}
 MARKER: h = lua:portal_desc {slave_name="zombie"}
+MARKER: h = lua:MonPropsMarker:new{dslave="dslave"}
 KFEAT:  h = .
 KMONS:  h = generate_awake Human hp:12 ; nothing
 MAP
