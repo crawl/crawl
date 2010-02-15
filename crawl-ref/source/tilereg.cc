@@ -2442,6 +2442,15 @@ bool SpellRegion::check_memorise()
     return (memorise);
 }
 
+void SpellRegion::activate()
+{
+    if (!you.spell_no)
+    {
+        canned_msg(MSG_NO_SPELLS);
+        flush_prev_message();
+    }
+}
+
 void SpellRegion::draw_tag()
 {
     if (m_cursor == NO_CURSOR)
@@ -2484,6 +2493,18 @@ int SpellRegion::handle_mouse(MouseEvent &event)
         return CK_MOUSE_CMD;
     }
     return (0);
+}
+
+bool SpellRegion::update_tab_tip_text(std::string &tip, bool active)
+{
+    const char *prefix1 = active ? "" : "[L-Click] ";
+    const char *prefix2 = active ? "" : "          ";
+
+    tip = make_stringf("%s%s\n%s%s",
+                       prefix1, "Display memorised spells",
+                       prefix2, "Cast spells");
+
+    return (true);
 }
 
 bool SpellRegion::update_tip_text(std::string& tip)
@@ -2557,7 +2578,7 @@ void SpellRegion::pack_buffers()
                                              : _get_max_spells());
 
     // Pack base separately, as it comes from a different texture...
-    unsigned int i = 0;
+    int i = 0;
     for (int y = 0; y < my; y++)
     {
         if (i >= max_spells)
@@ -2575,12 +2596,12 @@ void SpellRegion::pack_buffers()
     i = 0;
     for (int y = 0; y < my; y++)
     {
-        if (i >= m_items.size())
+        if (i >= (int)m_items.size())
             break;
 
         for (int x = 0; x < mx; x++)
         {
-            if (i >= m_items.size())
+            if (i >= (int)m_items.size())
                 break;
 
             InventoryTile &item = m_items[i++];
@@ -2646,6 +2667,10 @@ MemoriseRegion::MemoriseRegion(ImageManager* im, FTFont *tag_font,
     memorise = true;
 }
 
+void MemoriseRegion::activate()
+{
+}
+
 void MemoriseRegion::draw_tag()
 {
     if (m_cursor == NO_CURSOR)
@@ -2691,6 +2716,18 @@ int MemoriseRegion::handle_mouse(MouseEvent &event)
         return CK_MOUSE_CMD;
     }
     return (0);
+}
+
+bool MemoriseRegion::update_tab_tip_text(std::string &tip, bool active)
+{
+    const char *prefix1 = active ? "" : "[L-Click] ";
+    const char *prefix2 = active ? "" : "          ";
+
+    tip = make_stringf("%s%s\n%s%s",
+                       prefix1, "Display spells in carried books",
+                       prefix2, "Memorise spells");
+
+    return (true);
 }
 
 bool MemoriseRegion::update_tip_text(std::string& tip)
@@ -2961,6 +2998,18 @@ static void _handle_wield_tip(std::string &tip, std::vector<command_type> &cmd,
     else
         tip += "Wield (%)";
     cmd.push_back(CMD_WIELD_WEAPON);
+}
+
+bool InventoryRegion::update_tab_tip_text(std::string &tip, bool active)
+{
+    const char *prefix1 = active ? "" : "[L-Click] ";
+    const char *prefix2 = active ? "" : "          ";
+
+    tip = make_stringf("%s%s\n%s%s",
+                       prefix1, "Display inventory",
+                       prefix2, "Use items");
+
+    return (true);
 }
 
 bool InventoryRegion::update_tip_text(std::string& tip)
@@ -3293,6 +3342,15 @@ void InventoryRegion::draw_tag()
         draw_desc(you.inv[idx].name(DESC_INVENTORY_EQUIP).c_str());
 }
 
+void InventoryRegion::activate()
+{
+    if (inv_count() < 1)
+    {
+        canned_msg(MSG_NOTHING_CARRIED);
+        flush_prev_message();
+    }
+}
+
 static void _fill_item_info(InventoryTile &desc, const item_def &item)
 {
     desc.tile = tileidx_item(item);
@@ -3574,20 +3632,15 @@ void TabbedRegion::activate_tab(int idx)
     if (m_active == idx)
         return;
 
-    if (idx == TAB_SPELL && !you.spell_no)
-    {
-        canned_msg(MSG_NO_SPELLS);
-        flush_prev_message();
-    }
-    else if (idx == TAB_ITEM && inv_count() < 1)
-        canned_msg(MSG_NOTHING_CARRIED);
-
     m_active = idx;
     m_dirty  = true;
     tiles.set_need_redraw();
 
     if (m_tabs[m_active].reg)
+    {
+        m_tabs[m_active].reg->activate();
         m_tabs[m_active].reg->update();
+    }
 }
 
 int TabbedRegion::active_tab() const
@@ -3730,7 +3783,7 @@ int TabbedRegion::handle_mouse(MouseEvent &event)
             return (0);
         }
     }
-    
+
     // Otherwise, pass input to the active tab.
     if (!active_is_valid())
         return (0);
@@ -3738,10 +3791,22 @@ int TabbedRegion::handle_mouse(MouseEvent &event)
     return (get_tab_region(active_tab())->handle_mouse(event));
 }
 
+bool TabbedRegion::update_tab_tip_text(std::string &tip, bool active)
+{
+    return (false);
+}
+
 bool TabbedRegion::update_tip_text(std::string &tip)
 {
     if (!active_is_valid())
         return (false);
+
+    if (m_mouse_tab != -1)
+    {
+        GridRegion *reg = m_tabs[m_mouse_tab].reg;
+        if (reg)
+            return (reg->update_tab_tip_text(tip, m_mouse_tab == m_active));
+    }
 
     return (get_tab_region(active_tab())->update_tip_text(tip));
 }
