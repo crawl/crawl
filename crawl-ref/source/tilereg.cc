@@ -43,6 +43,7 @@
 #include "stuff.h"
 #include "terrain.h"
 #include "transform.h"
+#include "traps.h"
 #include "travel.h"
 #include "viewgeom.h"
 
@@ -2053,7 +2054,6 @@ bool DungeonRegion::update_tip_text(std::string& tip)
                 cmd.push_back(CMD_FIRE);
             }
         }
-
     }
 
     const actor* target = actor_at(m_cursor[CURSOR_MOUSE]);
@@ -2084,6 +2084,16 @@ bool DungeonRegion::update_tip_text(std::string& tip)
 
     if (m_cursor[CURSOR_MOUSE] != you.pos())
         tip += "[R-Click] Describe";
+
+    if (!target && adjacent(m_cursor[CURSOR_MOUSE], you.pos()))
+    {
+        trap_def *trap = find_trap(m_cursor[CURSOR_MOUSE]);
+        if (trap && trap->is_known()
+            && trap->category() == DNGN_TRAP_MECHANICAL)
+        {
+            tip += "\n[Ctrl-L-Click] Disarm";
+        }
+    }
 
     insert_commands(tip, cmd, false);
 
