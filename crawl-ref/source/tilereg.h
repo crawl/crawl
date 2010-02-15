@@ -342,6 +342,8 @@ public:
     virtual void update() = 0;
     void place_cursor(const coord_def &cursor);
 
+    virtual const std::string name() const = 0;
+
 protected:
     virtual void pack_buffers() = 0;
     virtual void draw_tag() = 0;
@@ -375,6 +377,8 @@ public:
     virtual bool update_tip_text(std::string &tip);
     virtual bool update_alt_text(std::string &alt);
 
+    virtual const std::string name() const { return "Inventory"; }
+
 protected:
     virtual void pack_buffers();
     virtual void draw_tag();
@@ -391,6 +395,8 @@ public:
     virtual bool update_tip_text(std::string &tip);
     virtual bool update_alt_text(std::string &alt);
     virtual bool check_memorise();
+
+    virtual const std::string name() const { return "Spells"; }
 
 protected:
     bool memorise;
@@ -409,12 +415,14 @@ public:
     virtual int handle_mouse(MouseEvent &event);
     virtual bool update_tip_text(std::string &tip);
 
+    virtual const std::string name() const { return "Memorisation"; }
+
 protected:
     virtual void draw_tag();
 };
 
 // A region that contains multiple region, selectable by tabs.
-class TabbedRegion : public TileRegion
+class TabbedRegion : public GridRegion
 {
 public:
     TabbedRegion(ImageManager *im, FTFont *tag_font,
@@ -428,8 +436,7 @@ public:
     int active_tab() const;
     int num_tabs() const;
 
-    void update();
-
+    virtual void update();
     virtual void clear();
     virtual void render();
     virtual void on_resize();
@@ -437,10 +444,18 @@ public:
     virtual bool update_tip_text(std::string &tip);
     virtual bool update_alt_text(std::string &alt);
 
-protected:
-    int m_active;
-    bool active_is_valid() const;
+    virtual const std::string name() const { return ""; }
 
+protected:
+    virtual void pack_buffers();
+    virtual void draw_tag();
+
+    bool active_is_valid() const;
+    // Returns the tab the mouse is over, -1 if none.
+    int get_mouseover_tab(MouseEvent &event) const;
+
+    int m_active;
+    int m_mouse_tab;
     TileBuffer m_buf_gui;
 
     struct TabInfo
