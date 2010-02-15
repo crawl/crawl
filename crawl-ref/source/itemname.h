@@ -134,7 +134,7 @@ std::string get_corpse_name(const item_def &corpse,
 std::string base_type_string (object_class_type type, bool known = true);
 std::string base_type_string (const item_def &item, bool known = true);
 
-std::string sub_type_string (object_class_type type, int sub_type, bool known = true);
+std::string sub_type_string (object_class_type type, int sub_type, bool known = true, int plus = 0);
 std::string sub_type_string (const item_def &item, bool known = true);
 
 std::string ego_type_string (const item_def &item);
