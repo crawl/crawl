@@ -4144,7 +4144,8 @@ void tutorial_describe_item(const item_def &item)
                                 "player character to cast a spell on "
                                 "yourself) while pressing the <w>Control "
                                 "key</w>, and then select a spell from the "
-                                "menu. "
+                                "menu. Or you can switch to the spellcasting "
+                                "display by clicking on the corresponding tab."
                                 "\n\nAlternatively, ";
 #endif
                         ostr << "you can type <w>%</w> and choose a "
