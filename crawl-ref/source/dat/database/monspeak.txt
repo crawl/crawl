@@ -3752,6 +3752,18 @@ _Dowan_Duvessa_dies_distance_
 
 You hear a distant wail of despair.
 %%%%
+_Dowan_Duvessa_dies_bytwin_
+
+@The_monster@ screams in horror.
+%%%%
+_Dowan_Duvessa_dies_invisible_bytwin_
+
+@_Dowan_Duvessa_dies_bytwin_@
+%%%%
+_Dowan_Duvessa_dies_distance_bytwin_
+
+@_Dowan_Duvessa_dies_distance_@
+%%%%
 ############ DUANE ### A mercenary guarding the dungeon
 Duane
 
@@ -3826,6 +3838,16 @@ VISUAL:@The_monster@ grits her teeth and focuses.
 
 VISUAL:@The_monster@ weeps.
 %%%%
+twin_ikilled Duvessa
+
+VISUAL:@The_monster@ shakes in grief and horror.
+
+@The_monster@ says, "What have I done? What have I done?"
+
+@The_monster@ says, "How can I live after this?"
+
+@The_monster@ screams.
+%%%%
 twin_banished Duvessa
 
 VISUAL:@The_monster@ shakes in a combination of rage and grief.
@@ -3835,6 +3857,16 @@ VISUAL:@The_monster@ grits her teeth and focuses.
 @The_monster@ says, "I will journey into the Abyss to retrieve him!"
 
 @The_monster@ says, "I will get him back!"
+%%%%
+twin_ikilled Dowan
+
+VISUAL:@The_monster@ is wide-eyed with horror.
+
+@The_monster@ screams.
+
+@The_monster@ shakes his head, saying, "No, no, no!"
+
+@The_monster@ screams, "No! What have I done?"
 %%%%
 Duvessa
 
@@ -3885,6 +3917,21 @@ _Duvessa_Dowan_dies_invisible_
 _Duvessa_Dowan_dies_distance_
 
 You hear a distant scream of rage.
+%%%%
+_Duvessa_Dowan_dies_bytwin_
+
+@The_monster@ screams in horror.
+
+w:1
+@The_monster@ screams, "NO! What have I done?"
+%%%%
+_Duvessa_Dowan_dies_invisible_bytwin_
+
+@_Duvessa_Dowan_dies_bytwin_@
+%%%%
+_Duvessa_Dowan_dies_distance_bytwin_
+
+@_Duvessa_Dowan_dies_distance_@
 %%%%
 ############ EDMUND ### A mercenary guarding the dungeon
 Edmund
