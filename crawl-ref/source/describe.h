@@ -59,7 +59,7 @@ bool describe_item(item_def &item, bool allow_inscribe = false,
                    bool shopping = false);
 void get_item_desc(const item_def &item, describe_info &inf,
                    bool terse = false);
-void inscribe_item(item_def &item, bool proper_prompt);
+void inscribe_item(item_def &item, bool msgwin);
 
 void append_weapon_stats(std::string &description, const item_def &item);
 void append_armour_stats(std::string &description, const item_def &item);
