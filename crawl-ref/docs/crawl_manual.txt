@@ -987,11 +987,11 @@ There are many skills related to magic, the principal one being
 Spellcasting. This determines the number of Magic available and higher
 Spellcasting helps at several places when spells are involved. Next
 there are several general areas (Conjuration, Enchantment, Summoning,
-Necromancy, Translocation, Transmutation and Divination) as well as
-several elemental areas (Fire, Ice, Air and Earth) and, finally, Poison.
-A particular spell can belong to (and thus train) up to three areas.
-Being good in the areas of a spell will improve the casting chance and,
-in many cases, the effect as well.
+Necromancy, Translocation and Transmutation) as well as several elemental
+areas (Fire, Ice, Air and Earth) and, finally, Poison. A particular spell
+can belong to (and thus train) up to three areas. Being good in the areas
+of a spell will improve the casting chance and, in many cases, the effect
+as well.
 
 Spells are stored in books, which you will occasionally find in the
 dungeon. You can read books with 'r' to check what spells they contain;
@@ -1601,12 +1601,12 @@ They therefore prefer polearms and short swords above all other weapons,
 although they can also use longer swords quite well.
 
 As spellcasters, they tend to be quite good in specific areas. Their
-mystical relationship with water makes it easier for them to use
-divination, poison and ice magics... which use water occasionally as a
-material component. The legendary water magic of the Merfolk was lost
-in ancient times, but some of that affinity still remains. The
-instability of their own morphogenic matrix has made them very
-accomplished transmuters, but most other magics seem foreign to them.
+mystical relationship with water makes it easier for them to use poison
+and ice magics... which use water occasionally as a material component.
+The legendary water magic of the Merfolk was lost in ancient times, but
+some of that affinity still remains. The instability of their own
+morphogenic matrix has made them very accomplished transmuters, but most
+other magics seem foreign to them.
 
 Halflings
 ---------
@@ -2176,7 +2176,7 @@ Magic skills:
 Spellcasting is the basic skill for magic use. It affects your reserves
 of magical energy (Magic) in the same way that Fighting affects your hit
 points: every time you increase the Spellcasting skill you gain some
-magic points and spell levels. This skills greatly influences the amount
+magic points and spell levels. This skill greatly influences the amount
 by which casting causes hunger. Spellcasting also helps with the power
 of your spells, but to a lesser extent than the more specialised magical
 skills. This skill is very difficult to learn, and requires a large
