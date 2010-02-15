@@ -865,7 +865,7 @@ static bool _vampire_cannot_cast(spell_type spell)
     }
 }
 
-static bool _is_prevented_teleport(spell_type spell)
+bool is_prevented_teleport(spell_type spell)
 {
     return ((spell == SPELL_BLINK
            || spell == SPELL_CONTROLLED_BLINK
@@ -899,12 +899,6 @@ bool spell_is_uncastable(spell_type spell, std::string &msg)
     if (_vampire_cannot_cast(spell))
     {
         msg = "Your current blood level is not sufficient to cast that spell.";
-        return (true);
-    }
-
-    if (_is_prevented_teleport(spell))
-    {
-        msg = "You cannot teleport right now.";
         return (true);
     }
 
@@ -1022,16 +1016,16 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     // [dshaligram] Any action that depends on the spellcasting attempt to have
     // succeeded must be performed after the switch().
 
-    if (_is_prevented_teleport(spell)
-        && !yesno("You cannot teleport right now. Cast anyway?", true, 'n'))
-    {
-        return (SPRET_ABORT);
-    }
-
     std::string msg;
     if (!wiz_cast && spell_is_uncastable(spell, msg))
     {
         mpr(msg);
+        return (SPRET_ABORT);
+    }
+
+    if (is_prevented_teleport(spell)
+        && !yesno("You cannot teleport right now. Cast anyway?", true, 'n'))
+    {
         return (SPRET_ABORT);
     }
 
