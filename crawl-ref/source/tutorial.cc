@@ -2255,7 +2255,12 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 #endif
         text << ". They can do physical damage (with darts or needles, for "
                 "example) or have other, more magical effects, like "
-                "teleportation.";
+                "teleportation. The mechanical variant can be disarmed with "
+                "<w>Ctrl + direction</w> "
+#ifdef USE_TILE
+                "or with <w>Ctrl + leftclick</w> "
+#endif
+                "while standing next to it.";
         break;
 
     case TUT_SEEN_ALTAR:
