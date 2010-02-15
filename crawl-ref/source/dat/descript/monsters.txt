@@ -385,6 +385,13 @@ end
 Wayne
 
 A fat dwarf wearing a stupid-looking hat.
+{{
+if you.can_smell() then
+    return "\nHe reeks of alcohol."
+else
+    return ""
+end
+}}
 %%%%
 Xtahua
 
