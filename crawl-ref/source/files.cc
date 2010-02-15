@@ -56,6 +56,7 @@
 #include "message.h"
 #include "misc.h"
 #include "mon-act.h"
+#include "mon-death.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "mon-transit.h"
@@ -1137,21 +1138,11 @@ static void _grab_followers()
         if (fmenv == NULL)
             continue;
 
-        if ((fmenv->type == MONS_DUVESSA
-            || (fmenv->props.exists("original_name")
-                && fmenv->props["original_name"].get_string() == "Duvessa"))
-               && fmenv->alive())
-        {
+        if (mons_is_duvessa(fmenv) && fmenv->alive())
             duvessa = fmenv;
-        }
 
-        if ((fmenv->type == MONS_DOWAN
-            || (fmenv->props.exists("original_name")
-                && fmenv->props["original_name"].get_string() == "Dowan"))
-               && fmenv->alive())
-        {
+        if (mons_is_dowan(fmenv) && fmenv->alive())
             dowan = fmenv;
-        }
 
         if (fmenv->wont_attack() && !mons_can_use_stairs(fmenv))
             non_stair_using_allies++;
@@ -1165,12 +1156,8 @@ static void _grab_followers()
         }
 
         // From here, we can't fail, so check to see if we've got Pikel
-        if (fmenv->type == MONS_PIKEL
-            || (fmenv->props.exists("original_name")
-                && fmenv->props["original_name"].get_string() == "Pikel"))
-        {
+        if (mons_is_pikel(fmenv))
             pikel = fmenv;
-        }
     }
 
     // Deal with Dowan and Duvessa here.

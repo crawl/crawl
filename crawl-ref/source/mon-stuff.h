@@ -171,6 +171,5 @@ std::string summoned_poof_msg(const monsters* monster, bool plural = false);
 std::string summoned_poof_msg(const int midx, const item_def &item);
 std::string summoned_poof_msg(const monsters* monster, const item_def &item);
 
-void pikel_band_neutralise(bool check_tagged = false);
 bool mons_reaped(actor *killer, monsters *victim);
 #endif

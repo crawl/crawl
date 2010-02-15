@@ -14,6 +14,7 @@
 #include "env.h"
 #include "fprop.h"
 #include "exclude.h"
+#include "mon-death.h"
 #include "mon-iter.h"
 #include "mon-movetarget.h"
 #include "mon-pathfind.h"
@@ -807,6 +808,10 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
                 mon->attitude = ATT_HOSTILE;
                 breakCharm    = true;
             }
+
+            // XXX: Somewhat hacky, this being here.
+            if (mons_is_elven_twin(mon))
+                elven_twins_unpacify(mon);
         }
 
         // Now set target so that monster can whack back (once) at an
