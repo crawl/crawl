@@ -13,7 +13,9 @@
 ##############################################################################
 {{
 
-function get_trove_item(e, value)
+trove = {}
+
+function trove.get_trove_item(e, value)
   -- This function should return a table with the following values:
   --  quantity=0 (number of items, 1 unless consumables)
   --  base_type="armour" (armour, weapon, potion, scroll, jewellery or book)
@@ -163,7 +165,7 @@ function get_trove_item(e, value)
   return item
 end
 
-function trove_portal(e)
+function trove.portal(e)
     local d = crawl.roll_dice
     local entry_fee = 5 * math.floor(200 + d(3,200) / 3 + d(10) * d(10) * d(10))
     local a = you.absdepth()
@@ -193,7 +195,7 @@ The secrets of the gateways died with him when his fellow thieves, disgusted at 
                        "$F{The} flickers urgently, almost stroboscopically.")
     }
 
-    local item = get_trove_item(e, 1000)
+    local item = trove.get_trove_item(e, 1000)
 
     local function stair ()
         return trove_marker  {
@@ -223,7 +225,7 @@ end
 -- Use the following line in destination maps after all SUBSTs
 -- : trove_setup_features(_G)
 -- Note that the function also defines < to be the exit portal.
-function trove_setup_features(e)
+function trove.setup_features(e)
     e.kfeat("< = exit_portal_vault")
     e.colour("< = blue")
     e.lrockcol("blue")
@@ -236,7 +238,7 @@ end
 -- "any scroll good_item" still gets you 'scroll of noise', 'scroll of curse weapon', etc
 -- so let's limit it to the enchant/recharge scrolls, tloc scrolls, identify scrolls,
 -- mapping scrolls with a low chance of silence, vulnerability or acquirement (lowest)
-function good_scroll (e)
+function trove.good_scroll (e)
     e.item([[scroll of enchant weapon i / scroll of enchant weapon ii /
              scroll of enchant weapon iii w:5 / scroll of vorpalise weapon w:3 /
              scroll of enchant armour / scroll of identify w:20 /
@@ -245,10 +247,36 @@ function good_scroll (e)
              scroll of vulnerability w:2 / scroll of holy word w:8 / scroll of fog w:8]])
 end
 
-function place_fog(e, type, strength)
+function trove.place_fog(e, type, strength)
    e.lua_marker("m", fog_machine { pow_max = strength, cloud_type = type,
                      delay_min = 50, delay_max = 300, size = 12,
                      start_clouds = 1 } )
+end
+
+function trove.weapon_skills (e)
+  local weapon_skills = {"Short Blades", "Long Blades", "Axes", "Maces & Flails", "Polearms", "Staves"}
+  local skill_total = 0
+  local nonzero_skills = 0
+  for _, skill in ipairs(weapon_skills) do
+    skill_total = skill_total + you.skill(skill)
+    if you.skill(skill) > 0 then
+      nonzero_skills = nonzero_skills + 1
+    end
+  end
+  return skill_total / nonzero_skills
+end
+
+function trove.spell_skills (e)
+  local spell_skills = {"Spellcasting", "Conjurations", "Enchantments", "Summoning", "Necromancy", "Translocation", "Transmutation", "Fire Magic", "Ice Magic", "Air Magic", "Earth Magic", "Poison Magic"}
+  local skill_total = 0
+  local nonzero_skills = 0
+  for _, skill in ipairs(spell_skills) do
+    skill_total = skill_total + you.skill(skill)
+    if you.skill(skill) > 0 then
+      nonzero_skills = nonzero_skills + 1
+    end
+  end
+  return skill_total / nonzero_skills
 end
 }}
 
@@ -262,14 +290,14 @@ default-depth: D:10-, Elf:1-, Vault:1-
 
 NAME:   enter_trove_0
 TAGS:   uniq_trove no_monster_gen trowel_portal
-: trove_portal(_G)
+: trove.portal(_G)
 MAP
 O
 ENDMAP
 
 NAME:   enter_trove_1
 TAGS:   uniq_trove no_monster_gen
-: trove_portal(_G)
+: trove.portal(_G)
 COLOUR: . = blue
 MAP
 ...
@@ -279,7 +307,7 @@ ENDMAP
 
 NAME:   enter_trove_2
 TAGS:   uniq_trove no_monster_gen
-: trove_portal(_G)
+: trove.portal(_G)
 COLOUR: . = blue
 COLOUR: G = blue
 MAP
@@ -292,7 +320,7 @@ ENDMAP
 
 NAME:   enter_trove_3
 TAGS:   uniq_trove no_monster_gen no_wall_fixup
-: trove_portal(_G)
+: trove.portal(_G)
 COLOUR: . = blue
 COLOUR: c = blue
 COLOUR: x = blue
@@ -308,7 +336,7 @@ ENDMAP
 # Of course, not everyone is willing for you to take their treasure...
 NAME:   enter_trove_5
 TAGS:   uniq_trove no_monster_gen
-: trove_portal(_G)
+: trove.portal(_G)
 COLOUR: . = blue
 COLOUR: c = blue
 : if you.xl() <= 7 then
@@ -343,7 +371,7 @@ ENDMAP
 # Someone left some gold behind for you!
 NAME:   enter_trove_6
 TAGS:   uniq_trove no_monster_gen no_wall_fixup
-: trove_portal(_G)
+: trove.portal(_G)
 MARKER: X = lua: props_marker { connected_exclude="true" }
 SUBST:  X = =
 COLOUR: = = blue
@@ -379,7 +407,7 @@ TAGS:    trove no_item_gen no_monster_gen allow_dup
 ITEM:   any good_item
 ITEM:   acquire jewellery / any good_item
 ITEM:   acquire weapon / acquire armour / any good_item
-: trove_setup_features(_G)
+: trove.setup_features(_G)
 MAP
 xxxxxx
 xddddx
@@ -435,8 +463,8 @@ ITEM:    any good_item
 ITEM:    any jewellery good_item / any good_item
 ITEM:    any weapon good_item / any armour good_item / any good_item
 KFEAT:   w = W
-: trove_setup_features(_G)
-: place_fog(_G, "blue smoke", 30)
+: trove.setup_features(_G)
+: trove.place_fog(_G, "blue smoke", 30)
 KFEAT:  m = .
 MAP
 '"WwwW'"'1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.<
@@ -480,11 +508,15 @@ ENDMAP
 
 # A "library", geared towards scrolls and books (either spell or manual).
 NAME:   trove_library
+: if trove.spell_skills() >= trove.weapon_skills() then
 WEIGHT: 30
+: else
+WEIGHT: 5
+: end
 ORIENT: encompass
 TAGS:   trove no_item_gen no_monster_gen allow_dup
-: trove_setup_features(_G)
-: good_scroll(_G)
+: trove.setup_features(_G)
+: trove.good_scroll(_G)
 ITEM:   acquire book
 ITEM:   acquire:sif_muna book
 MAP
@@ -514,7 +546,7 @@ TAGS:   trove no_item_gen no_monster_gen allow_dup
 # Loot: once again, 16 items.
 ITEM:   acquire jewellery / any jewellery good_item / any jewellery
 COLOUR: o = blue
-: trove_setup_features(_G)
+: trove.setup_features(_G)
 MAP
 xxxxxxxx
 x......x
@@ -540,7 +572,7 @@ TAGS:   trove no_item_gen no_monster_gen allow_dup
 # Loot: once again, 16 items.
 ITEM:   acquire jewellery / any jewellery good_item / any jewellery w:2
 COLOUR: x = blue
-: trove_setup_features(_G)
+: trove.setup_features(_G)
 MAP
 xxxxxxxx
 xddd+<Ax
@@ -553,13 +585,17 @@ ENDMAP
 
 # A 'weapon shoppe', same template as the jewellery shop.
 NAME:   trove_weapon_1
+: if trove.weapon_skills() >= trove.spell_skills() and trove.weapon_skills() >= you.skill("Unarmed Combat") then
 WEIGHT: 15
+: else
+WEIGHT: 5
+: end
 ORIENT: encompass
 TAGS:   trove no_item_gen no_monster_gen allow_dup
 # Loot: once again, 16 items.
 COLOUR: o = blue
 ITEM:   acquire weapon / any weapon good_item / any weapon w:2
-: trove_setup_features(_G)
+: trove.setup_features(_G)
 MAP
 xxxxxxxx
 x......x
@@ -579,13 +615,17 @@ ENDMAP
 
 # A simple treasure chamber.
 NAME:   trove_weapon_2
+: if trove.weapon_skills() >= trove.spell_skills() and trove.weapon_skills() >= you.skill("Unarmed Combat") then
 WEIGHT: 15
+: else
+WEIGHT: 5
+: end
 ORIENT: encompass
 TAGS:   trove no_item_gen no_monster_gen allow_dup
 # Loot: once again, 16 items.
 COLOUR: x = blue
 ITEM:   acquire weapon / any weapon good_item / any weapon w:2
-: trove_setup_features(_G)
+: trove.setup_features(_G)
 MAP
 xxxxxxxx
 xddd+<Ax
@@ -604,7 +644,7 @@ TAGS:   trove no_item_gen no_monster_gen allow_dup
 # Loot: once again, 16 items.
 COLOUR: o = blue
 ITEM:   acquire armour / any armour good_item / any armour w:2
-: trove_setup_features(_G)
+: trove.setup_features(_G)
 MAP
 xxxxxxxx
 x......x
@@ -630,7 +670,7 @@ TAGS:   trove no_item_gen no_monster_gen allow_dup
 # Loot: once again, 16 items.
 COLOUR: x = blue
 ITEM:   acquire armour / any armour good_item / any armour w:2
-: trove_setup_features(_G)
+: trove.setup_features(_G)
 MAP
 xxxxxxxx
 xddd+<Ax
@@ -658,7 +698,7 @@ ITEM:    arrow good_item / dart good_item / bolt good_item / any missile good_it
 ITEM:    bow good_item / crossbow good_item / any weapon good_item
 SHUFFLE: 123
 SHUFFLE: defg
-: trove_setup_features(_G)
+: trove.setup_features(_G)
 MAP
 xxxxxxx
 x1x2x3x
@@ -687,7 +727,7 @@ MONS:   vampire
 ITEM:   any good_item w:10 / any
 ITEM:   any jewellery good_item / any good_item
 ITEM:   acquire weapon / acquire armour / any good_item
-: trove_setup_features(_G)
+: trove.setup_features(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxx
 x........................x
@@ -715,7 +755,7 @@ ITEM:   any good_item / any
 ITEM:   any jewellery good_item / any good_item
 ITEM:   acquire weapon / acquire armour / any good_item
 ITEM:   potion of cure mutation
-: trove_setup_features(_G)
+: trove.setup_features(_G)
 : set_border_fill_type("deep_water")
 MAP
 wwwwwwwwwwwwwwwwwwwwwwwwwwwww
