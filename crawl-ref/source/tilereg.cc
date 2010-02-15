@@ -2642,16 +2642,13 @@ void SpellRegion::update()
         desc.idx      = (int) spell;
         desc.quantity = spell_difficulty(spell);
 
-        // If an equipped artefact prevents teleportation, the following spells
-        // cannot be cast.
-        if ((spell == SPELL_BLINK || spell == SPELL_CONTROLLED_BLINK
-                 || spell == SPELL_TELEPORT_SELF)
-             && scan_artefacts(ARTP_PREVENT_TELEPORTATION, false))
+        std::string temp;
+        if (is_prevented_teleport(spell)
+            || spell_is_uncastable(spell, temp)
+            || spell_mana(spell) > you.magic_points)
         {
             desc.flag |= TILEI_FLAG_INVALID;
         }
-        else if (spell_mana(spell) > you.magic_points)
-            desc.flag |= TILEI_FLAG_INVALID;
 
         m_items.push_back(desc);
 
@@ -2742,7 +2739,7 @@ bool MemoriseRegion::update_tip_text(std::string& tip)
     int flag = m_items[item_idx].flag;
     std::vector<command_type> cmd;
     if (flag & TILEI_FLAG_INVALID)
-        tip = "You don't have enough slots for this spell right now.";
+        tip = "You cannot memorise this spell now.";
     else
     {
         tip = "[L-Click] Memorise (%)";
@@ -2778,7 +2775,8 @@ void MemoriseRegion::update()
         desc.special  = books[i];
         desc.quantity = spell_difficulty(spell);
 
-        if (spell_difficulty(spell) > you.experience_level
+        if (can_learn_spell(true)
+            || spell_difficulty(spell) > you.experience_level
             || player_spell_levels() < spell_levels_required(spell))
         {
             desc.flag |= TILEI_FLAG_INVALID;
