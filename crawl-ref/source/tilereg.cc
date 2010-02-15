@@ -2085,7 +2085,7 @@ bool DungeonRegion::update_tip_text(std::string& tip)
     if (m_cursor[CURSOR_MOUSE] != you.pos())
         tip += "[R-Click] Describe";
 
-    insert_commands(tip, cmd);
+    insert_commands(tip, cmd, false);
 
     return (true);
 }
