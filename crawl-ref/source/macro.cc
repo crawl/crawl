@@ -1300,7 +1300,8 @@ std::string command_to_string(command_type cmd)
     return (result);
 }
 
-void insert_commands(std::string &desc, std::vector<command_type> cmds)
+void insert_commands(std::string &desc, std::vector<command_type> cmds,
+                     bool formatted)
 {
     for (unsigned int i = 0; i < cmds.size(); ++i)
     {
@@ -1309,7 +1310,7 @@ void insert_commands(std::string &desc, std::vector<command_type> cmds)
             break;
 
         std::string command_name = command_to_string(cmds[i]);
-        if (strcmp(command_name.c_str(), "<") == 0)
+        if (formatted && strcmp(command_name.c_str(), "<") == 0)
             command_name += "<";
 
         desc.replace(found, 1, command_name);
