@@ -3114,14 +3114,12 @@ job_query:
         cprintf(EOL "Goodbye!");
         end(0);
         break;
-     case CK_BKSP:
-     case ESCAPE:
-     case ' ':
+    case CK_BKSP:
+    case ESCAPE:
+    case ' ':
         if (keyn != ' ' || you.species == SP_UNKNOWN)
-        {
             you.char_class = JOB_UNKNOWN;
-            return (false);
-        }
+        return (false);
     case 'T':
     case CONTROL('T'):
         return pick_tutorial();
