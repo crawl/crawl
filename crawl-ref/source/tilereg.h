@@ -343,6 +343,8 @@ public:
     void place_cursor(const coord_def &cursor);
 
     virtual const std::string name() const = 0;
+    virtual bool update_tab_tip_text(std::string &tip, bool active) = 0;
+    virtual void activate() = 0;
 
 protected:
     virtual void pack_buffers() = 0;
@@ -375,6 +377,7 @@ public:
     virtual void update();
     virtual int handle_mouse(MouseEvent &event);
     virtual bool update_tip_text(std::string &tip);
+    virtual bool update_tab_tip_text(std::string &tip, bool active);
     virtual bool update_alt_text(std::string &alt);
 
     virtual const std::string name() const { return "Inventory"; }
@@ -382,6 +385,7 @@ public:
 protected:
     virtual void pack_buffers();
     virtual void draw_tag();
+    virtual void activate();
 };
 
 class SpellRegion : public GridRegion
@@ -393,6 +397,7 @@ public:
     virtual void update();
     virtual int handle_mouse(MouseEvent &event);
     virtual bool update_tip_text(std::string &tip);
+    virtual bool update_tab_tip_text(std::string &tip, bool active);
     virtual bool update_alt_text(std::string &alt);
     virtual bool check_memorise();
 
@@ -403,6 +408,7 @@ protected:
 
     virtual void pack_buffers();
     virtual void draw_tag();
+    virtual void activate();
 };
 
 class MemoriseRegion : public SpellRegion
@@ -414,11 +420,13 @@ public:
     virtual void update();
     virtual int handle_mouse(MouseEvent &event);
     virtual bool update_tip_text(std::string &tip);
+    virtual bool update_tab_tip_text(std::string &tip, bool active);
 
     virtual const std::string name() const { return "Memorisation"; }
 
 protected:
     virtual void draw_tag();
+    virtual void activate();
 };
 
 // A region that contains multiple region, selectable by tabs.
@@ -442,6 +450,7 @@ public:
     virtual void on_resize();
     virtual int handle_mouse(MouseEvent &event);
     virtual bool update_tip_text(std::string &tip);
+    virtual bool update_tab_tip_text(std::string &tip, bool active);
     virtual bool update_alt_text(std::string &alt);
 
     virtual const std::string name() const { return ""; }
@@ -449,6 +458,7 @@ public:
 protected:
     virtual void pack_buffers();
     virtual void draw_tag();
+    virtual void activate() {}
 
     bool active_is_valid() const;
     // Returns the tab the mouse is over, -1 if none.
