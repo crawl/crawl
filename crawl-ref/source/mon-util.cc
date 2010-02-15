@@ -27,6 +27,7 @@
 #include "mislead.h"
 #include "mon-behv.h"
 #include "mon-clone.h"
+#include "mon-death.h"
 #include "mon-iter.h"
 #include "mon-place.h"
 #include "coord.h"
@@ -2253,9 +2254,10 @@ void mons_pacify(monsters *mon, mon_attitude_type att)
     // Make the monster begin leaving the level.
     behaviour_event(mon, ME_EVAL);
 
-    // XXX: Needs a better way to track Pikel's turning neutral.
-    if (mon->type == MONS_PIKEL)
+    if (mons_is_pikel(mon))
         pikel_band_neutralise();
+    if (mons_is_elven_twin(mon))
+        elven_twins_pacify(mon);
 }
 
 static bool _mons_should_fire_beneficial(bolt &beam)

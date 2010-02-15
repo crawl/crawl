@@ -45,11 +45,12 @@
 #include "libutil.h"
 #include "los.h"
 #include "message.h"
+#include "mgen_data.h"
 #include "misc.h"
 #include "mon-behv.h"
+#include "mon-death.h"
 #include "mon-iter.h"
 #include "mon-place.h"
-#include "mgen_data.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "mutation.h"
@@ -5637,7 +5638,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
         if (!mon->has_ench(ENCH_CHARM))
         {
             // XXX: Another hackish thing for Pikel's band neutrality.
-            if (mon->type == MONS_PIKEL)
+            if (mons_is_pikel(mon))
                 pikel_band_neutralise();
 
             if (simple_monster_message(mon, " is charmed."))
