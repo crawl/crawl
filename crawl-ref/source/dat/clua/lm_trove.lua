@@ -229,7 +229,10 @@ function TroveMarker:item_name(do_grammar)
   if item.base_type == "potion" or item.base_type == "scroll"then
     s = s .. " " .. item.base_type .. "s of"
   elseif item.base_type == "book" then
-    s = s .. " book of"
+    books = {"Necronomicon", "tome of Destruction", "Young Poisoner's Handbook", "Monster Manual"}
+    if not string.find(item.sub_type, "manual") and not util.contains(books, item.sub_type) then
+      s = s .. " book of"
+    end
   elseif item.base_type == "wand" then
     s = s .. " wand of"
   end
