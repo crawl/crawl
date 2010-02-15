@@ -1355,6 +1355,18 @@ static int dgn_apply_area_cloud(lua_State *ls)
     return (0);
 }
 
+static int dgn_delete_cloud(lua_State *ls)
+{
+    COORDS(c, 1, 2);
+
+    if (in_bounds(c) && env.cgrid(c) != EMPTY_CLOUD)
+    {
+        delete_cloud(env.cgrid(c));
+    }
+
+    return (0);
+}
+
 static int dgn_place_cloud(lua_State *ls)
 {
     const int x         = luaL_checkint(ls, 1);
@@ -1408,6 +1420,8 @@ static int dgn_place_cloud(lua_State *ls)
 
     return (0);
 }
+
+
 
 // XXX: Doesn't allow for messages or specifying the noise source.
 LUAFN(dgn_noisy)
@@ -1880,6 +1894,7 @@ const struct luaL_reg dgn_dlib[] =
 { "floor_halo", dgn_floor_halo },
 { "random_walk", dgn_random_walk },
 { "apply_area_cloud", dgn_apply_area_cloud },
+{ "delete_cloud", dgn_delete_cloud },
 { "place_cloud", dgn_place_cloud },
 { "noisy", dgn_noisy },
 
