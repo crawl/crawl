@@ -1046,10 +1046,10 @@ std::string base_type_string (object_class_type type, bool known)
 
 std::string sub_type_string (const item_def &item, bool known)
 {
-    return sub_type_string(item.base_type, item.sub_type);
+    return sub_type_string(item.base_type, item.sub_type, item.plus);
 }
 
-std::string sub_type_string (object_class_type type, int sub_type, bool known)
+std::string sub_type_string (object_class_type type, int sub_type, bool known, int plus)
 {
     switch (type)
     {
@@ -1062,7 +1062,25 @@ std::string sub_type_string (object_class_type type, int sub_type, bool known)
     case OBJ_SCROLLS: return scroll_type_name(sub_type);
     case OBJ_JEWELLERY: return jewellery_type_name(sub_type);
     case OBJ_POTIONS: return potion_type_name(sub_type);
-    case OBJ_BOOKS: return book_type_name(sub_type);
+    case OBJ_BOOKS:
+    {
+        if (sub_type == BOOK_MANUAL)
+        {
+            std::string bookname = "manual of ";
+            bookname += skill_name(plus);
+            return bookname;
+        }
+        else if (sub_type == BOOK_NECRONOMICON)
+            return "Necronomicon";
+        else if (sub_type == BOOK_DESTRUCTION)
+            return "tome of Destruction";
+        else if (sub_type == BOOK_YOUNG_POISONERS)
+            return "Young Poisoner's Handbook";
+        else if (sub_type == BOOK_BEASTS)
+            return "Monster Manual";
+
+        return book_type_name(sub_type);
+    }
     case OBJ_STAVES: return staff_type_name(sub_type);
     case OBJ_MISCELLANY:
         if (sub_type == MISC_RUNE_OF_ZOT)
