@@ -1342,6 +1342,16 @@ std::string item_def::name_aux(description_level_type desc,
                 buff << " (buggy)";
             }
         }
+
+        if (terse
+            && desc == DESC_INVENTORY
+            && get_equip_desc(*this) == ISFLAG_RUNED
+            && !testbits(ignore_flags, ISFLAG_RUNED)
+            && !__know_pluses)
+        {
+            buff << " (runed)";
+        }
+
         break;
 
     case OBJ_ARMOUR:
