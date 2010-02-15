@@ -2313,15 +2313,15 @@ bool describe_item( item_def &item, bool allow_inscribe, bool shopping )
 }
 
 // There are currently two ways to inscribe an item:
-// * using the inscribe command ('{') -> proper_prompt = true
-// * from the inventory when viewing an item -> proper_prompt = false
+// * using the inscribe command ('{') -> msgwin = true
+// * from the inventory when viewing an item -> msgwin = false
 //
-// Thus, proper_prompt also controls whether a tutorial explanation can be
+// msgwin also controls whether a tutorial explanation can be
 // shown, or whether the pre- and post-inscription item names need to be
 // printed.
-void inscribe_item(item_def &item, bool proper_prompt)
+void inscribe_item(item_def &item, bool msgwin)
 {
-    if (proper_prompt)
+    if (msgwin)
         mpr(item.name(DESC_INVENTORY).c_str(), MSGCH_EQUIPMENT);
 
     const bool is_inscribed = !item.inscription.empty();
@@ -2348,7 +2348,7 @@ void inscribe_item(item_def &item, bool proper_prompt)
     // Don't prompt for whether to inscribe in the first place if the
     // player is using '{' - unless autoinscribing or clearing an
     // existing inscription become an option.
-    if (!proper_prompt || need_autoinscribe || is_inscribed)
+    if (!msgwin || need_autoinscribe || is_inscribed)
     {
         if (!is_inscribed)
             prompt = "Press (i) to inscribe";
@@ -2373,7 +2373,7 @@ void inscribe_item(item_def &item, bool proper_prompt)
         }
         prompt += ".";
 
-        if (proper_prompt)
+        if (msgwin)
             mpr(prompt.c_str(), MSGCH_PROMPT);
         else
         {
@@ -2409,21 +2409,23 @@ void inscribe_item(item_def &item, bool proper_prompt)
         else
             prompt = "Replace inscription with what? ";
 
-        if (proper_prompt)
-            mpr(prompt.c_str(), MSGCH_PROMPT);
+        char buf[79];
+        int ret;
+        if (msgwin)
+            ret = msgwin_get_line(prompt, buf, sizeof buf);
         else
         {
             prompt = EOL "<cyan>" + prompt + "</cyan>";
             formatted_string::parse_string(prompt).display();
+            ret = cancelable_get_line(buf, sizeof buf);
         }
 
-        char buf[79];
-        if (!cancelable_get_line(buf, sizeof buf))
+        if (!ret)
         {
             // Strip spaces from the end.
             for (int i = strlen(buf) - 1; i >= 0; --i)
             {
-                if (isspace( buf[i] ))
+                if (isspace(buf[i]))
                     buf[i] = 0;
                 else
                     break;
@@ -2442,7 +2444,7 @@ void inscribe_item(item_def &item, bool proper_prompt)
                 }
             }
         }
-        else if (proper_prompt)
+        else if (msgwin)
         {
             canned_msg(MSG_OK);
             return;
@@ -2450,17 +2452,16 @@ void inscribe_item(item_def &item, bool proper_prompt)
         break;
     }
     default:
-        if (proper_prompt)
+        if (msgwin)
             canned_msg(MSG_OK);
         return;
     }
 
-    if (proper_prompt)
+    if (msgwin)
     {
         mpr(item.name(DESC_INVENTORY).c_str(), MSGCH_EQUIPMENT);
         you.wield_change  = true;
     }
-
 }
 
 // Returns true if you can memorise the spell.
