@@ -738,8 +738,8 @@ coord_def cgetsize(GotoRegion region)
 void cscroll(int n, GotoRegion region)
 {
     // only implemented for the message window right now
-    ASSERT(region == GOTO_MSG);
-    scroll_message_window(n);
+    if (region == GOTO_MSG)
+        scroll_message_window(n);
 }
 
 
