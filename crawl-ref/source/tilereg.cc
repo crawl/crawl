@@ -3501,9 +3501,9 @@ void InventoryRegion::update()
 
 TabbedRegion::TabbedRegion(ImageManager *im, FTFont *tag_font,
                            int tile_x, int tile_y) :
-    TileRegion(im, tag_font, tile_x, tile_y),
+    GridRegion(im, tag_font, tile_x, tile_y),
     m_active(0),
-    m_buf_gui(&im->m_textures[TEX_GUI])
+    m_mouse_tab(-1)
 {
 
 }
@@ -3627,6 +3627,24 @@ void TabbedRegion::clear()
     }
 }
 
+void TabbedRegion::pack_buffers()
+{
+    m_buf_spells.clear();
+
+    for (int i = 0; i < (int)m_tabs.size(); ++i)
+    {
+        int tileidx = (i == m_active) ? m_tabs[i].tile_sel
+                                      : m_tabs[i].tile_unsel;
+        int offset_y = (i == m_active) ? m_tabs[i].offset_sel
+                                       : m_tabs[i].offset_unsel;
+        if (!tileidx)
+            continue;
+
+        const tile_info &inf = tile_gui_info(tileidx);
+        m_buf_spells.add(tileidx, 0, 0, -inf.width, offset_y, false);
+    }
+}
+
 void TabbedRegion::render()
 {
     if (!active_is_valid())
@@ -3634,34 +3652,31 @@ void TabbedRegion::render()
 
     if (m_dirty)
     {
-        m_buf_gui.clear();
-
-        for (int i = 0; i < (int)m_tabs.size(); ++i)
-        {
-            int tileidx = (i == m_active) ? m_tabs[i].tile_sel
-                                          : m_tabs[i].tile_unsel;
-            int offset_y = (i == m_active) ? m_tabs[i].offset_sel
-                                           : m_tabs[i].offset_unsel;
-            if (!tileidx)
-                continue;
-
-            const tile_info &inf = tile_gui_info(tileidx);
-            m_buf_gui.add(tileidx, 0, 0, -inf.width, offset_y, false);
-        }
-
+        pack_buffers();
         m_dirty = false;
     }
 
 #ifdef DEBUG_TILES_REDRAW
     cprintf("rendering TabbedRegion\n");
 #endif
-    if (!m_buf_gui.empty())
-    {
-        set_transform();
-        m_buf_gui.draw();
-    }
+    set_transform();
+    m_buf_spells.draw();
 
     m_tabs[m_active].reg->render();
+
+    draw_tag();
+}
+
+void TabbedRegion::draw_tag()
+{
+    if (m_mouse_tab == -1)
+        return;
+
+    GridRegion *tab = m_tabs[m_mouse_tab].reg;
+    if (!tab)
+        return;
+
+    draw_desc(tab->name().c_str());
 }
 
 void TabbedRegion::on_resize()
@@ -3679,29 +3694,43 @@ void TabbedRegion::on_resize()
     }
 }
 
-int TabbedRegion::handle_mouse(MouseEvent &event)
+int TabbedRegion::get_mouseover_tab(MouseEvent &event) const
 {
     int x = event.px - sx;
     int y = event.py - sy;
 
+    if (x < 0 || x > ox || y < 0 || y > wy)
+        return (-1);
+
+    for (int i = 0; i < (int)m_tabs.size(); ++i)
+    {
+        if (y >= m_tabs[i].min_y && y <= m_tabs[i].max_y)
+            return (i);
+    }
+    return (-1);
+}
+
+int TabbedRegion::handle_mouse(MouseEvent &event)
+{
     if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
         return (0);
 
-    // If left-clicked on the tabs...
-    if (event.event == MouseEvent::PRESS
-        && event.button == MouseEvent::LEFT
-        && x >= 0 && x <= ox && y >= 0 && y <= wy)
+    int mouse_tab = get_mouseover_tab(event);
+    if (mouse_tab != m_mouse_tab)
     {
-        for (int i = 0; i < (int)m_tabs.size(); ++i)
-        {
-            if (y >= m_tabs[i].min_y && y <= m_tabs[i].max_y)
-            {
-                activate_tab(i);
-                return (0);
-            }
-        }
+        m_mouse_tab = mouse_tab;
+        tiles.set_need_redraw();
     }
 
+    if (m_mouse_tab != -1)
+    {
+        if (event.event == MouseEvent::PRESS)
+        {
+            activate_tab(m_mouse_tab);
+            return (0);
+        }
+    }
+    
     // Otherwise, pass input to the active tab.
     if (!active_is_valid())
         return (0);
