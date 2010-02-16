@@ -1060,24 +1060,32 @@ bool spell_is_useful(spell_type spell)
         if (player_movement_speed() > 6
             && you.duration[DUR_CONTROLLED_FLIGHT] > 0
             && you.duration[DUR_SWIFTNESS]  < 1)
+        {
             return (true);
+        }
         break;
     case SPELL_CONTROL_TELEPORT:
         if (you.duration[DUR_TELEPORT] > 0
             && you.duration[DUR_CONTROL_TELEPORT] < 1)
+        {
             return (true);
+        }
         break;
     case SPELL_STONESKIN:
         if (you.duration[DUR_TRANSFORMATION] > 0
             && you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE
             && you.duration[DUR_STONESKIN] < 1)
+        {
             return (true);
+        }
         break;
     case SPELL_OZOCUBUS_ARMOUR:
         if (you.duration[DUR_TRANSFORMATION] > 0
             && you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST
             && you.duration[DUR_ICY_ARMOUR] < 1)
+        {
             return (true);
+        }
         break;
     default: // quash unhandled constants warnings
         break;
@@ -1095,12 +1103,15 @@ bool spell_is_useless(spell_type spell, bool transient)
 {
     if (you_cannot_memorise(spell))
         return (true);
-    if(transient)
+
+    if (transient)
     {
-        if(you.duration[DUR_CONF] > 0
-          || (spell_mana(spell) > you.magic_points)
-          || spell_no_hostile_in_range(spell, get_dist_to_nearest_monster()))
+        if (you.duration[DUR_CONF] > 0
+            || spell_mana(spell) > you.magic_points
+            || spell_no_hostile_in_range(spell, get_dist_to_nearest_monster()))
+        {
             return (true);
+        }
     }
 
     switch(spell)
@@ -1116,13 +1127,13 @@ bool spell_is_useless(spell_type spell, bool transient)
         break;
     case SPELL_SWIFTNESS:
         // looking at player_movement_speed, this should be correct ~DMB
-        if(player_movement_speed() <= 6)
+        if (player_movement_speed() <= 6)
             return (true);
         break;
     case SPELL_LEVITATION:
     case SPELL_FLY:
         if (you.mutation[MUT_BIG_WINGS] >= 1
-            || (you.species == SP_KENKU && you.experience_level >= 5))
+            || you.species == SP_KENKU && you.experience_level >= 5)
         {
             return (true);
         }
@@ -1134,9 +1145,7 @@ bool spell_is_useless(spell_type spell, bool transient)
             return (true);
         break;
     case SPELL_INVISIBILITY:
-        if (transient
-           && (you.duration[DUR_INVIS] > 0
-              || you.backlit() ) )
+        if (transient && (you.duration[DUR_INVIS] > 0 || you.backlit()))
             return (true);
         break;
     case SPELL_CONTROL_TELEPORT:
