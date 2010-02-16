@@ -2421,7 +2421,8 @@ bool acquirement(object_class_type class_wanted, int agent,
         }
     }
 
-    acquirement_create_item(class_wanted, agent, quiet, you.pos(), debug);
+    *item_index = acquirement_create_item(class_wanted, agent, quiet,
+                                          you.pos(), debug);
 
     return (true);
 }
