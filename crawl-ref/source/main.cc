@@ -889,6 +889,7 @@ static void _input()
     crawl_state.clear_mon_acting();
 
     religion_turn_start();
+    god_conduct_turn_start();
     you.update_beholders();
 
     // Currently only set if Xom accidentally kills the player.
