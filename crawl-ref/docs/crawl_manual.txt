@@ -31,10 +31,10 @@ Appendices
 A.                      OVERVIEW
 ------------------------------------------------------------------------
 
-Crawl is a fun game in the grand tradition of games like Rogue, Hack
-and Moria. Your objective is to travel deep into a subterranean cave
-complex and retrieve the Orb of Zot, which is guarded by many horrible
-and hideous creatures.
+Crawl is a fun game in the grand tradition of games like Rogue, Hack and
+Moria. Your objective is to travel deep into a subterranean cave complex
+and retrieve the Orb of Zot, which is guarded by many horrible and hideous
+creatures.
 
 If you have never played Crawl (or a similar game) before, you may want
 to try out a tutorial. In order to do so, press 'Ctrl-T' in the species
@@ -47,11 +47,11 @@ different views on the latter). The tutorial has a special help screen
 (viewed by pressing '??') and ends when you reach the seventh experience
 level.
 
-Detailed instructions for playing Crawl follow. To simplify this
-manual, we assume that you use the standard distribution and that
-you've not changed the default options. If you don't want to read the
-whole manual and would prefer a short summary of the important points,
-look at the quick-start guide (quickstart.txt) and learn as you play.
+Detailed instructions for playing Crawl follow. To simplify this manual,
+we assume that you use the standard distribution and that you've not
+changed the default options. If you don't want to read the whole manual
+and would prefer a short summary of the important points, look at the
+quick-start guide (quickstart.txt) and learn as you play.
 
 You can also read these documents while playing Crawl, by hitting '?' at
 the help menu. There is also a list of frequently asked questions about
@@ -74,8 +74,10 @@ This has several interesting consequences. You can:
     * replay games from you or others
     * meet ghosts of other players
     * compete using a common score list
+    * take part in an annual tournament
+    * play the most recent development version on crawl.develz.org
 
-The server carries no guarantees, though it is pretty much always
+The servers carry no guarantees, though they are pretty much always
 running and no one has lost their save file yet. :) More information
 is available at the URLs above.
 
@@ -110,13 +112,13 @@ Major:
 *  Your rate of level advancement
 *  Your rate of skill advancement
 *  Your initial primary attributes (this also depends on background)
+*  Various special abilities, powers and limitations
 
 Minor:
 *  Occasional bonus points added to some primary attributes
 *  The amount of hit points you get each level
 *  The amount of magic points you get each level
 *  Your initial equipment (this also depends on background)
-*  Various special abilities, powers and limitations
 
 Note that Humans are the average to which all other species are compared.
 
@@ -149,13 +151,14 @@ You can choose a tutorial from the species and background selection
 screens by pressing 'Ctrl-T'. Three different tutorial combinations are
 available.
 
-When you start a new character and want to get a rough impression, you
-may examine it with the following commands:
+When you start a new character (or load an old one) and want to get a
+rough impression, you may examine it with the following commands:
  A - shows any peculiarities like unusual speed or eating behaviours
  m - shows your skills and lets you switch off some if wanted
  i - the equipment
  ^ - the text for your god, should you have started with a religion
  % - a general, if terse, overview over your gear and most attributes
+ Ctrl-O - an overview of the part of the dungeon you discovered so far
 
 
 ------------------------------------------------------------------------
@@ -188,9 +191,8 @@ Magic:        A measure of magic or other intrinsic power. This is used
               primarily for spellcasting, but is sometimes also used for
               the evoking and invoking of many other special abilities.
               They are displayed in the same way as hit points; nothing
-              bad happens if these drop to zero. (Except, of course,
-              that you can't cast any spells.) Resting restores these,
-              too.
+              bad happens if these drop to zero. Except, of course, that
+              you can't cast any spells. Resting restores these, too.
               It is uncommon to have more than 50 magic points (without
               using external devices).
 
@@ -208,8 +210,8 @@ Evasion:      Abbreviated to "EV". This helps you avoid being hit by
 
 Your hero's primary attributes are Strength, Dexterity, Intelligence:
 
-Strength:     Abbreviated to "Str". Affects the amount of damage you do
-              in combat, as well as how much stuff you can carry.
+Strength:     Abbreviated to "Str". Affects how much stuff you can carry
+              and also the amount of damage you do in combat.
 
 Intelligence: Abbreviated to "Int". Affects how well you can cast spells
               as well as how much nutrition spellcasting takes. Your
@@ -230,8 +232,8 @@ a nasty and deadly surprise. As a rule of thumb, you are safe from this
 type of death if all of your attributes are at least 7.
 
 Upon gaining Levels 3, 6, 9, etc., you get to choose an attribute to
-raise. Random increases can also occur; which levels give an increase
-is determined by species, as is the attribute to be increased.
+raise. Increases without choice can also occur; which levels give an
+increase is determined by species, as is the attribute to be increased.
 
 The next numbers shown are the Experience Pool and the (dungeon) Level:
 
@@ -355,15 +357,15 @@ The bottoms of several branches contain such runes.
 
 Occasionally you will find an archway (displayed as "\" or as an actual
 arch); these lead to special places like shops, magical labyrinths, or
-Hell. Depending on which type of archway it is, you can enter it by
-typing '<' or '>'.
+Hell. You can enter it by typing '<' or '>'. A few portals only accept
+one of '<' and '>'.
 
 Doors and Traps
 ---------------
 Doors can usually be opened by just walking into them (there is an
 option for disabling this); else this can also be done using the 'O'
-command. They can be closed with the 'C' command. Pressing Ctrl plus
-a direction, or '*' followed by a direction, will open/close doors, too.
+command. They can be closed with the 'C' command. Pressing Ctrl plus a
+direction, or '*' followed by a direction, will open/close doors, too.
 
 If there is no door in the indicated space, both Ctrl-direction and
 '*'-direction will attempt to attack any monster which may be standing
@@ -385,9 +387,9 @@ using non-guild labour to obtain stock, so you can't sell anything in
 a shop. (But then, what shopkeeper would buy stolen goods from a
 disreputable adventurer, anyway?)
 
-You can check your inventory and the items you've identified while
-you're shopping, which may help to decide if you really need that
-expensive item.
+You can check your inventory and the items you've identified while you
+are shopping, which may help to decide if you really need that expensive
+item.
 
 To purchase one or more items, select them by pressing the letters of
 the item in the shop menu and then press Enter to make the purchase; you
@@ -419,7 +421,7 @@ example, try '<' and '>' to quickly reach the staircases.
 When your autotravel gets interrupted, Crawl will remember the previous
 destination. Hitting 'Ctrl-G' or 'G' again and following with Enter puts
 the cursor on that square. See Appendix 4 for all commands and shortcuts
-in level-map mode, or press 'X?' within the game.
+in level-map mode, or press 'G?' or 'X?' within the game.
 
 Another use of autotravel is exploration: 'o' makes your character move
 to the nearest unexplored area. This can be dangerous - do not use it
@@ -524,10 +526,9 @@ It can happen that the pool grows rather large in this way; the maximum
 is 20000 experience points.
 
 Occasionally you may find a manual of a skill which allows to make quick
-progress in this area. Whenever you read it, all free experience is
-transferred into exercising this particular skill. This can be done
-until the manual crumbles, which will occur after a random number of
-uses.
+progress in this area. Whenever you read it, all your free experience is
+transferred into exercising this particular skill. This can be done till
+the manual crumbles, which will occur after a random number of uses.
 
 
 ------------------------------------------------------------------------
@@ -667,7 +668,9 @@ much information from examining unidentified items.
 Another useful command is the '{' key, which lets you inscribe items
 with a comment. This is often used to denote special properties of an
 item, making for easier navigation of large quantities of artefacts.
-For more details, and how to automatise this process, check Appendix 6.
+You can also inscribe items when looking at your inventory with 'i',
+simply by pressing the letter of an item. For more details, and how to
+automatise this process, check Appendix 6.
 
 ) Weapons
 ---------
@@ -735,9 +738,9 @@ correct launcher. At times it is sensible to throw weapons like
 daggers, clubs, spears or hand axes.
 
 Use the '(', ')' to cycle through your quiver without firing, and 'Q'
-to choose the quivered item. If you'd like to throw something without
-inserting it into the quiver use 'F' instead. Note that non-weapon,
-non-missile items will never be quivered.
+to choose the quivered item from a list. If you would like to throw
+something without inserting it into the quiver use 'F' instead. Note
+that non-weapon, non-missile items will never be quivered.
 
 The interface for shooting or throwing things is also used for evoking
 wands and casting certain spells, and is described in detail in
@@ -747,14 +750,11 @@ section I (Targeting).
 --------
 This is also rather important. Most worn armour improves your Armour
 Class, which decreases the amount of damage you take when something
-injures you. Body armour (robes, mails, etc.) come in two types: light
-armours (e.g. robes and leather armours, also all Elven armours) and
-heavy armours (ring mails, scale mails, etc.). Both help with damage
-reduction, but heavy armours do so more reliably. Unfortunately, the
-heavier types of armour also hamper your melee speed, making it easier
-for monsters to hit you (i.e. reducing the evasion score) and making
-it harder for you to hit monsters. These effects can be mitigated by a
-high Armour skill. Wearing heavy armour also increases your chances of
+injures you. The heavier an armour is, the more AC (armour class) it
+will provide, at the expensive of your EV (evasion) and stealth. Also,
+heavier types of armour also hamper your melee speed, making it harder
+for you to hit monsters. These effects can be mitigated by a high
+Armour skill. Wearing heavy armour also increases your chances of
 miscasting spells, an effect which is only slightly reduced by your
 Armour skill.
 
@@ -762,11 +762,11 @@ A Shield normally affects neither your AC or your evasion, but it lets
 you block some of the attacks aimed at you and absorbs some of the
 damage you would otherwise receive from things like dragon breath and
 lightning bolts. Wearing a shield (especially a large shield) makes you
-less effective in hand combat. Shields are more effective when you're
-fighting a small number of foes than when you're surrounded. There are
-three types: bucklers, shields, and large shields. While it is possible
-to use bows (or other launchers) and rods while wearing a shield, you
-will be less effective at doing so.
+less effective in hand combat and hampers your ability to cast spells.
+Shields are more effective when you're fighting a small number of foes
+than when you're surrounded. There are three types: bucklers, shields,
+and large shields. While it is possible to use bows or other launchers
+and rods while wearing a shield, you'll be less effective at doing so.
 
 Some magical armours have special powers. These powers are sometimes
 automatic, affecting you whenever you wear the armour, and sometimes
@@ -777,7 +777,8 @@ command. With '[' you can have a quick look at your current gear.
 
 Most armours can be improved by reading the appropriate scroll. Be aware
 that the bonus limit for all normal pieces of gear is +2, except for
-body armour and bardings.
+body armour and bardings, which can go to +8 and for shields, which can
+go to +3.
 
 % Food and Carrion
 ------------------
@@ -791,9 +792,9 @@ starving, you fight less effectively as well. You can eat food with the
 You may wish to dine on the corpses of your casualties (unless you are
 a Spriggan, and cannot eat meat, or you are a Mummy, who need not, and
 cannot, eat at all). Despite the fact that corpses are represented by
-the same '%' sign as food, you can't eat them without first cutting
-them into pieces with the 'c' command. Being extremely hungry helps
-you choke down the raw flesh. Even then, you should choose your
+the same '%' sign as food, you can't eat them without first cutting off
+the more edible pieces with the 'c' command. Being extremely hungry
+helps you choke down the raw flesh. Even then, you should choose your
 homemade food with great care. In order to chop up a corpse with the
 'c' command, you need to have a proper tool (like a knife or short
 sword), although claws will also do. Cutting off the best parts will
@@ -810,7 +811,9 @@ quality of the corpse. Kobolds, Trolls and Ghouls are happy to eat raw
 meat at any time.
 
 Vampires are a special case. Members of this species can try to drink
-blood from a fresh corpse (use the 'e' command).
+blood from a fresh corpse (use the 'e' command). Once they have reached
+experience level 6, they can also bottle potions of blood from corpses.
+This is done using the 'a'bilities menu.
 
 ? Magical Scrolls
 -----------------
@@ -939,15 +942,16 @@ Orcish (cross)bows do a bit more damage with Orcish arrows/bolts. In
 general, Orcs do better with gear from their own kin; this applies to
 weapons, as well as to armours.
 
-Elven armour is unusually light, and does not affect the dodging or
-stealth of its wearer to the extent that other armours do. It also is
-less restrictive for spellcasting than other armours. Elven cloaks and
-boots are particularly useful to those who wish to be stealthy. Elven
-bows are particularly effective in conjunction with Elven arrows. An Elf
-does even a bit better whenever using armour or weapons of his own kind.
+Elven body armour is does not hamper spellcasting as other armours of
+the same type would. Elven cloaks and boots are particularly useful to
+those who wish to be stealthy. Elven bows are more effective when used
+in conjunction with Elven arrows. An Elf does even a bit better when
+wearing armour or weapons of his own kind.
 
 Centaurs and Nagas have uniquely shaped bodies. With luck, however, a
-character of these species might find a Centaur or Naga barding.
+character of these species might find a Centaur or Naga barding. Note
+that these bardings can be enchanted to +8, like body armours and
+unlike all other gear.
 
 Artefacts
 ---------
@@ -1009,7 +1013,7 @@ expend some of your magical energy and become hungrier (although high
 intelligence and Spellcasting help against hunger from spells). Pressing
 'II' (or 'I!') displays the hunger costs of your spells in terms of food,
 on a scale of none, sultana, strawberry, choko, honeycomb and ration.
-Casting the spell five times will cost at most the displayed fruit.
+Casting the spell five times will cost at most the displayed food item.
 
 You activate a memorised spell by pressing 'z' (for Zap). Use 'I' to
 display a list of all memorised spells without actually casting one. The
@@ -1068,12 +1072,13 @@ screen. Else, you use the following commands:
    nearer to further away. Similarly, '-' cycles backwards.
  - Any direction key moves the cursor by one square. Occasionally, it
    can be useful to target non-inhabited squares.
- - When you are content with your choice of target, press one of '!',
-   Del, Enter or Space to fire at the target. If you press '.', you also
-   fire, but the spell/missile will stop at the target's square if it
-   misses. This can be useful to keep friendlies out of the fire, and is
-   also the only way to attack submerged creatures. You can press Escape
-   if you changed your mind - no turns are deducted.
+ - When you are content with your choice of target, press one key of
+     Enter, Del, or Space
+   to fire at the target. If you press '.', you also fire, but the
+   spell/missile will stop at the target's square if it misses. This can
+   be useful to keep friendlies out of the fire, or to make sure your 
+   precious missiles won't end up in deep water.
+ - You can press Escape if you changed your mind - no turns are deducted.
 
 There are some shortcuts while targeting:
  - Typing Shift-direction on your keypad fires straight away in that
@@ -1093,13 +1098,13 @@ harmful (which can be sensible at times), you will be asked for
 confirmation.
 
 Finally, there are some more targeting related commands:
-- Ctrl-F changes which monsters are cycled when using '+', '=' or '-':
-  hostiles, friends or all monsters.
 - '(' and ')' allow to change the ammunition. This is useful when you
   have several types of appropriate ammunition, say poisoned needles and
   curare needles. Your last usage will be remembered. Note that you can
   use '(' for changing the quiver ammunition even outside of targeting.
-- The ':' key allows you to display the path of your spell/wand/missile.
+- The ':' key allows you to hide the path of your spell/wand/missile.
+- Ctrl-F changes which monsters are cycled when using '+', '=' or '-':
+  hostiles, friends, plants or all monsters.
 
 
 ------------------------------------------------------------------------
@@ -1116,8 +1121,8 @@ page with additional details, press '^!' to access it.
 
 The 'p' command lets you pray to your god. Most gods take note of your
 actions throughout, but by praying you ask for attention. This is how
-you dedicate corpse-sacrifices to your god, for example: press 'pc' to
-pray first, and then chop up a corpse. Note that not all gods like this.
+you dedicate corpse-sacrifices to your god, for example: press 'p' over
+a corpse. Note that not all gods like this.
 Praying also gives you a sense of what your god thinks of you, and can
 be used to sacrifice things at altars.
 
@@ -1159,7 +1164,7 @@ permanent.
 You can also become mutated by overusing certain powerful enchantments,
 particularly Haste (not the kind you get from being berserk) and
 Invisibility, as your system absorbs too much magical energy - but you
-would have to spend almost all of your time hasted or invisible to be
+would have to spend quite a lot of your time hasted or invisible to be
 affected. However, some powerful items also radiate dangerous levels of
 magical energy. More often than not, the mutations caused by magical
 radiations express harmfully.
@@ -1235,8 +1240,7 @@ this manual describes. Stone Soup's release versions were restarted at
 0.1 to avoid confusion with the existing plethora of Crawl versions.
 
 It should be mentioned that there have been other Crawl variants over
-the years, among them Ax-Crawl, Tile Crawl and Dungeon Crawl
-Alternative.
+the years, among them Ax-Crawl, Tile Crawl, Dungeon Crawl Alternative.
 
 The object of your quest in Crawl (the Orb of Zot) was taken from
 Wizard's Castle, a text adventure written in BASIC.
@@ -1547,9 +1551,8 @@ Deep Dwarves
   regeneration), as well as all ability to recover from losses to their
   primary attributes over time. On the other hand, Deep Dwarves have
   developed the ability to instantly counteract small doses of damage.
-  They can also use their empathy with the earth to sense much of their
-  surroundings; this ability increases in power as they gain experience
-  levels.
+  Their empathy with the earth makes them sense their surroundings; this
+  ability increases in power as they gain experience levels.
 
   Given their lack of innate healing, few Deep Dwarves venture out for
   adventures or even combat. Those who do bring a wand of healing, or
@@ -2210,32 +2213,28 @@ Miscellaneous skills:
 
 Armour:
 -------
-Body armours come in two types: heavy and light. Heavy armours give
-some reliable protection from damage (in contrast to light armours),
-but have several disadvantages.
+Heavier body armours give more reliable protection from damage but have
+several disadvantages.
 
 Having a high Armour skill means that you are used to wearing heavy
 armour, allowing you to move more freely and gain more protection. When
 you look at an armour's description (from within the inventory), you can
 see in particular show you how cumbersome it is. This is measured by the
-Evasion modifier. Most armours with EV penalty of 0 or -1 are considered
-light, and all others are considered heavy - except for Elven armour
-(which is always light).
+Evasion modifier.
 
-Walking and fighting in heavy armour will train the Armour skill. If the
-Armour skill is high enough to offset the EV penalty, even a heavy
-armour will train Dodging. Also, Armour skill helps mitigate the bad
-effects of heavy armour on spellcasting. A really high Armour skill will
-also increase the AC provided by other types of armour (gloves, cloaks,
+Walking and fighting in heavy armour will train the Armour skill. This
+skill helps to overcome the evasion penalty of body armours, reduces the
+amount by which heavy armour hamper melee fighting and also mitigates
+the bad effects of heavy armour on spellcasting. A really high Armour
+skill increases the AC provided by other types of armour (gloves, cloaks,
 etc.).
 
 Dodging:
 --------
-Fighting in light armour trains Dodging. A high dodging skill helps you
-evade attacks. See the paragraph above on the Armour skill for which
-armours are light. You also train the Dodging skill when wearing a
-heavy armour, once your Armour skill is high enough to cancel the EV
-penalty.
+Not getting hit by weapons, missiles and spells trains Dodging. This
+is easier done in lighter armours. A high Dodging skill helps you to
+evade attacks better. You also train the Dodging skill when wearing a
+heavy armour, but more slowly.
 
 Stealth:
 --------
@@ -2359,8 +2358,7 @@ Dungeon interaction:
                         You may read their descriptions and travel to
                         an item or feature.
     Ctrl-O              Show dungeon overview (branches, shops, etc.).
-    !                   Annotate current level: you can enter any
-                        string.
+    !                   Annotate current level: you can enter any text.
                         This annotation is then listed in the dungeon
                         overview (Ctrl-O) and also shown whenever you
                         enter that level again. If you use this command
@@ -2579,11 +2577,10 @@ targets. All of the commands described for examination of surroundings
 work, with the exception of Space (which fires).
     Esc or x            Stop targeting.
     ?                   Special help screen.
-    . or Enter          Fire at cursor direction (also Del and Space).
-    !                   Fire at cursor position and stop there with
+    Enter               Fire at cursor direction (also Del and Space).
+    .                   Fire at cursor position and stop there with
                         slightly reduced impact. This can be useful to
-                        avoid damaging pets, or to attack submerged
-                        water creatures.
+                        avoid damaging pets, or to avoid losing arrows.
     p                   Fire at previous target (if still in sight).
     f                   Smart-firing: fire at previous target, if it is
                         still in sight; and else fire at the cursor
