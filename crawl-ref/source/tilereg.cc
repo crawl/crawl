@@ -4042,6 +4042,11 @@ int MapRegion::handle_mouse(MouseEvent &event)
         return 0;
     }
 
+    const int x = event.px - sx;
+    const int y = event.py - sy;
+    if (x < 0 || x > wx || y < 0 || y > wy)
+        return (0);
+
     const coord_def gc(m_min_gx + cx, m_min_gy + cy);
 
     tiles.place_cursor(CURSOR_MOUSE, gc);
