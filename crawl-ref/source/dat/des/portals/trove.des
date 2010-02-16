@@ -96,9 +96,10 @@ function trove.get_trove_item(e, value)
   -- Note that scrolls and potions can come in stacks of 2 or 3.
 
   local wands = {
-       {wand="healing",          charges=1 + d(2), weight=1},
-       {wand="fire",             charges=3 + d(2)},
-       {wand="cold",             charges=3 + d(2)} }
+       {wand="healing",          charges=2+d(2)},               -- max 8
+       {wand="hasting",          charges=2+d(2)},               -- max 8
+       {wand="cold",             charges=16},                   -- max 16
+       {wand="fire",             charges=16} }                  -- max 16
 
   local potions = {
        {potion="healing",        quantity=12+d(4)+d(4)},        -- 23%
