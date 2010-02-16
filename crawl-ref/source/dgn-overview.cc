@@ -62,6 +62,8 @@ static void _seen_staircase(dungeon_feature_type which_staircase,
 static void _seen_other_thing(dungeon_feature_type which_thing,
                               const coord_def& pos);
 
+static bool game_in_progress();
+
 static std::string _get_branches();
 static std::string _get_altars();
 static std::string _get_shops();
@@ -69,6 +71,11 @@ static std::string _get_portals();
 static std::string _get_notes();
 static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
                                           const bool print_unseen);
+
+static bool game_in_progress()
+{
+    return crawl_state.need_save || !crawl_state.updating_scores;
+}
 
 void seen_notable_thing(dungeon_feature_type which_thing, const coord_def& pos)
 {
@@ -320,7 +327,7 @@ std::string overview_description_string()
     disp += _get_branches();
     disp += _get_altars();
     disp += _get_shops();
-	disp += _get_portals();
+    disp += _get_portals();
     disp += _get_notes();
 
     return disp.substr(0, disp.find_last_not_of('\n')+1);
@@ -334,7 +341,7 @@ static std::string _get_seen_branches()
     std::string disp;
 
     disp += "\n<green>Branches:</green>";
-    if (crawl_state.need_save || !crawl_state.updating_scores)
+    if (game_in_progress())
     {
         disp += " (use <white>G</white> to reach them and "
                 "<white>?/B</white> for more information)";
@@ -500,7 +507,7 @@ static std::string _get_altars()
     std::string disp;
 
     disp += "\n<green>Altars:</green>";
-    if (crawl_state.need_save || !crawl_state.updating_scores)
+    if (game_in_progress())
     {
         disp += " (use <white>Ctrl-F \"altar\"</white> to reach them and "
                 "<white>?/G</white> for information about gods)";
@@ -537,6 +544,14 @@ static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
             }
         }
 
+        // If the game is over, only laundry list the seen gods
+        if(!game_in_progress())
+        {
+            if(has_altar_been_seen)
+                disp += god_name(god, false) + "\n";
+            continue;
+        }
+
         colour = "darkgrey";
         if (has_altar_been_seen)
             colour = "white";
@@ -571,7 +586,7 @@ static std::string _get_shops()
     if (!shops_present.empty())
     {
         disp +="\n<green>Shops:</green>";
-        if (crawl_state.need_save || !crawl_state.updating_scores)
+        if (game_in_progress())
             disp += " (use <white>Ctrl-F \"shop\"</white> to reach them - yellow denotes antique shop)";
         disp += EOL;
     }
