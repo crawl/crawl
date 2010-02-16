@@ -491,7 +491,7 @@ static std::string _get_unseen_branches()
 
 static std::string _get_branches()
 {
-    return _get_seen_branches() + std::string("\n") + _get_unseen_branches();
+    return _get_seen_branches() + _get_unseen_branches();
 }
 
 // iterate through every god and display their altar's discovery state by color
