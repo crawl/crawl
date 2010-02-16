@@ -2421,7 +2421,9 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                     "with <w>%b</w>.";
 #ifdef USE_TILE
             text << " Memorising is also possible by doing a <w>left "
-                    "click</w> on the book in your inventory.";
+                    "click</w> on the book in your inventory, or by clicking "
+                    "on the <w>spellbook tab</w> to the left of your "
+                    "inventory.";
 #endif
             cmd.push_back(CMD_MEMORISE_SPELL);
             cmd.push_back(CMD_CAST_SPELL);
@@ -4150,7 +4152,8 @@ void tutorial_describe_item(const item_def &item)
                                 "yourself) while pressing the <w>Control "
                                 "key</w>, and then select a spell from the "
                                 "menu. Or you can switch to the spellcasting "
-                                "display by clicking on the corresponding tab."
+                                "display by <w>clicking on the</w> "
+                                "corresponding <w>tab</w>."
                                 "\n\nAlternatively, ";
 #endif
                         ostr << "you can type <w>%</w> and choose a "
