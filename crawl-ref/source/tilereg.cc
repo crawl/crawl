@@ -2678,6 +2678,8 @@ MemoriseRegion::MemoriseRegion(ImageManager* im, FTFont *tag_font,
 
 void MemoriseRegion::activate()
 {
+    // Print a fitting message if we can't memorise anything.
+    has_spells_to_memorise(false);
 }
 
 void MemoriseRegion::draw_tag()
@@ -2770,6 +2772,9 @@ void MemoriseRegion::update()
     m_dirty = true;
 
     if (mx * my == 0)
+        return;
+
+    if (!has_spells_to_memorise())
         return;
 
     const unsigned int max_spells = mx * my;
