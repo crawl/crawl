@@ -5174,6 +5174,28 @@ void tile_draw_rays(bool reset_count)
         num_tile_rays = 0;
 }
 
+static bool _suppress_blood(const coord_def pos)
+{
+    const dungeon_feature_type feat = grd(pos);
+    if (feat == DNGN_TREES)
+        return (true);
+
+    if (feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_PERMADRY_FOUNTAIN)
+        return (true);
+
+    if (feat_is_altar(feat))
+        return (true);
+
+    if (feat_stair_direction(feat) != CMD_NO_CMD)
+        return (true);
+
+    const trap_def *trap = find_trap(pos);
+    if (trap && trap->type == TRAP_SHAFT && trap->is_known())
+        return (true);
+
+    return (false);
+}
+
 void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
 {
     int x, y;
@@ -5228,7 +5250,10 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
                     }
                 }
 
-                dungeon_feature_type feat = grd(gc);
+                if (print_blood && _suppress_blood(gc))
+                    print_blood = false;
+
+                const dungeon_feature_type feat = grd(gc);
                 if (feat_is_water(feat) || feat == DNGN_LAVA)
                     tileb[count+1] |= TILE_FLAG_WATER;
 
@@ -5236,9 +5261,7 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
                     tileb[count+1] |= TILE_FLAG_BLOOD;
 
                 if (print_blood && is_moldy(gc))
-                {
                     tileb[count+1] |= TILE_FLAG_MOLD;
-                }
 
                 if (is_sanctuary(gc))
                     tileb[count+1] |= TILE_FLAG_SANCTUARY;
