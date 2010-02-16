@@ -1280,8 +1280,8 @@ void DungeonRegion::draw_minibars()
 
         if (Options.tile_show_minimagicbar && you.max_magic_points > 0)
         {
-            static const VColour magic(0, 0, 255, 255);
-            static const VColour magic_spent(0, 0, 0, 255);
+            static const VColour magic(0, 0, 255, 255);      // blue
+            static const VColour magic_spent(0, 0, 0, 255);  // black
 
             const float magic_divider = (float) you.magic_points
                                         / (float) you.max_magic_points;
@@ -1312,10 +1312,10 @@ void DungeonRegion::draw_minibars()
                 if (hp_percent <= Options.hp_colour[i].first)
                     hp_colour = Options.hp_colour[i].second;
 
-            static const VColour healthy(0,   255, 0, 255);
-            static const VColour damaged(255, 255, 0, 255);
-            static const VColour wounded(0, 0, 0, 255);
-            static const VColour hp_spent(255,   0, 0, 255);
+            static const VColour healthy(   0, 255, 0, 255); // green
+            static const VColour damaged( 255, 255, 0, 255); // yellow
+            static const VColour wounded( 150,   0, 0, 255); // darkred
+            static const VColour hp_spent(255,   0, 0, 255); // red
 
             buff.add(player_on_screen.x,
                      player_on_screen.y + healthbar_offset,
