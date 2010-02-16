@@ -1409,7 +1409,7 @@ static void _print_friendly_pickup_setting(bool was_changed)
         mprf(MSGCH_ERROR, "Your allies%s are collecting bugs!", now.c_str());
 }
 
-static void _do_look_around() 
+static void _do_look_around()
 {
     dist lmove;   // Will be initialised by direction().
     direction_chooser_args args;
@@ -1486,16 +1486,6 @@ static void _do_rest()
     }
 
     _start_running(RDIR_REST, RMODE_REST_DURATION);
-}
-
-static void _do_explore_cmd()
-{
-    if (you.hunger_state == HS_STARVING && !you_min_hunger())
-        mpr("You need to eat something NOW!");
-    else if (you.level_type == LEVEL_LABYRINTH)
-        mpr("No exploration algorithm can help you here.");
-    else                        // Start exploring
-        start_explore(Options.explore_greedy);
 }
 
 static bool _do_repeated_cmd()
@@ -1804,7 +1794,7 @@ void process_command(command_type cmd)
     case CMD_FIX_WAYPOINT:      travel_cache.add_waypoint(); break;
     case CMD_INTERLEVEL_TRAVEL: do_interlevel_travel();      break;
     case CMD_ANNOTATE_LEVEL:    annotate_level();            break;
-    case CMD_EXPLORE:           _do_explore_cmd();           break;
+    case CMD_EXPLORE:           do_explore_cmd();            break;
 
         // Mouse commands.
     case CMD_MOUSE_MOVE:
