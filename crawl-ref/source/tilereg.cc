@@ -2792,7 +2792,7 @@ void MemoriseRegion::update()
         desc.special  = books[i];
         desc.quantity = spell_difficulty(spell);
 
-        if (can_learn_spell(true)
+        if (!can_learn_spell(true)
             || spell_difficulty(spell) > you.experience_level
             || player_spell_levels() < spell_levels_required(spell))
         {
