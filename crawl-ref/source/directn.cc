@@ -499,11 +499,7 @@ direction_chooser::direction_chooser(dist& moves_,
     have_beam = false;
 
     need_text_redraw = true;
-#ifdef USE_TILE
-    need_cursor_redraw = false;
-#else
     need_cursor_redraw = true;
-#endif
     need_all_redraw = false;
 
     show_items_once = false;
