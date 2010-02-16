@@ -927,6 +927,10 @@ void tutorial_finished()
         text =  "Walking around and exploring levels gets easier by using "
                 "auto-explore (<w>%</w>). Crawl will let you automatically "
                 "move to and pick up interesting items.";
+#ifdef USE_TILE
+        text += "\nAutoexploration can also be started by <w>left-clicking</w> "
+                "on the minimap while the <w>Control</w> key is pressed.";
+#endif
         insert_commands(text, CMD_EXPLORE, 0);
     }
     else if (Tutorial.tut_travel)
