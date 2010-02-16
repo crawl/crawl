@@ -1543,6 +1543,10 @@ tormentor
 
 This malign devil is covered in all manner of claws, spines and cruel hooks.
 %%%%
+trapdoor spider
+
+A sneaky arachnid that surprises its prey by hiding underneath the dungeon floor.
+%%%%
 troll
 
 A huge, nasty-looking creature. Its thick and knobbly hide seems to heal almost instantly from most wounds.
@@ -1625,7 +1629,7 @@ A large and strong grey canine.
 %%%%
 wolf spider
 
-A large hairy spider with vicious mandibles, roaming the dungeon in search of food.
+A huge hairy spider with vicious mandibles, roaming the dungeon in search of food.
 %%%%
 wood golem
 

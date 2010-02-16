@@ -88,6 +88,7 @@ giant_blowfly CORPSE_GIANT_BLOWFLY
 giant_mosquito CORPSE_GIANT_MOSQUITO
 yellow_wasp CORPSE_YELLOW_WASP
 red_wasp CORPSE_RED_WASP
+moth_of_wrath CORPSE_MOTH_OF_WRATH
 
 ## Aquatics (';')
 %back dc-misc/blood_red
@@ -164,6 +165,7 @@ siren_water CORPSE_SIREN
 %sdir dc-mon/undead
 necrophage CORPSE_NECROPHAGE
 ghoul CORPSE_GHOUL
+rotting_hulk CORPSE_ROTTING_HULK
 
 ## Orcs ('o')
 %back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
@@ -218,8 +220,10 @@ shadow_dragon CORPSE_SHADOW_DRAGON
 ## Eyes ('G')
 %back dc-misc/blood_green
 giant_eyeball CORPSE_GIANT_EYEBALL
+eye_of_devastation CORPSE_EYE_OF_DEVASTATION
 eye_of_draining CORPSE_EYE_OF_DRAINING
 great_orb_of_eyes CORPSE_GREAT_ORB_OF_EYES
+shining_eye CORPSE_SHINING_EYE
 %back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
 giant_orange_brain CORPSE_GIANT_ORANGE_BRAIN
 
@@ -229,6 +233,7 @@ griffon CORPSE_GRIFFON
 manticore CORPSE_MANTICORE
 harpy CORPSE_HARPY
 minotaur CORPSE_MINOTAUR
+sphinx CORPSE_SPHINX
 
 ## Jellies ('J')
 %back dc-misc/blood_green
