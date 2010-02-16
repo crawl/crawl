@@ -1739,7 +1739,15 @@ static bool _item_penetrates_victim(const bolt &beam, const actor *victim,
 static bool _silver_damages_victim(bolt &beam, actor* victim, int &dmg,
                                    std::string &dmg_msg)
 {
-    const int mutated = how_mutated(true, true);
+
+    int mutated = 0;
+
+    // For mutation damage, we want to count innate mutations for
+    // the demonspawn, but not for other species.
+    if (you.species == SP_DEMONSPAWN)
+        mutated = how_mutated(true, true);
+    else
+        mutated = how_mutated(false, true);
 
     if ((victim->holiness() == MH_UNDEAD && !victim->is_insubstantial())
         || victim->is_chaotic()
