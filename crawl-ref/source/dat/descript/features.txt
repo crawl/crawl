@@ -117,7 +117,7 @@ Despite the hardness of the stone, this statue's features have long withered awa
 %%%%
 A labyrinth entrance
 
-A gateway to an intricate maze designed by subtle and malicious minds, its exit guarded by a fearsome monster, where many a hapless adventurer has lost his way and starved to death.
+A gateway to an intricate maze designed by subtle and malicious minds, its exit guarded by a fearsome monster. Many a hapless adventurer has lost his way in the twisted, shifting passages, and starved to death.
 %%%%
 A magical trap
 

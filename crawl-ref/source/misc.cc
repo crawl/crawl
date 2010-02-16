@@ -2434,8 +2434,10 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
 
         mpr("To return, you must find a gate leading back.");
         if (you.religion == GOD_CHEIBRIADOS)
+        {
             mpr("You feel Cheibriados slowing down the madness of this place.",
                 MSGCH_GOD, GOD_CHEIBRIADOS);
+        }
         learned_something_new(TUT_ABYSS);
         break;
 
