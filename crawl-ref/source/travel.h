@@ -85,6 +85,7 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile = false);
  * unvisited) shops.
  */
 void start_explore(bool grab_items = false);
+void do_explore_cmd();
 
 struct level_pos;
 class level_id;

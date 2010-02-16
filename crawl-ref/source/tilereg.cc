@@ -4057,7 +4057,14 @@ int MapRegion::handle_mouse(MouseEvent &event)
     case MouseEvent::PRESS:
         if (event.button == MouseEvent::LEFT)
         {
-            return _click_travel(gc, event);
+            if (event.mod & MOD_SHIFT)
+            {
+                // Start autotravel, or give an appropriate message.
+                do_explore_cmd();
+                return (CK_MOUSE_CMD);
+            }
+            else
+                return _click_travel(gc, event);
         }
         else if (event.button == MouseEvent::RIGHT)
         {
@@ -4083,6 +4090,12 @@ bool MapRegion::update_tip_text(std::string& tip)
         return (false);
 
     tip = "[L-Click] Travel / [R-Click] View";
+    if (you.level_type != LEVEL_LABYRINTH
+        && (you.hunger_state > HS_STARVING || you_min_hunger())
+        && i_feel_safe())
+    {
+        tip += "\n[Shift-L-Click] Autoexplore";
+    }
     return (true);
 }
 
