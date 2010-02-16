@@ -2486,6 +2486,19 @@ bool _get_spell_description(const spell_type spell, std::string &description,
 #endif
     }
 
+    if (god_hates_spell(spell, you.religion))
+    {
+        description += god_name(you.religion)
+                       + " frowns upon the use of this spell.$";
+    }
+    else if (god_likes_spell(spell, you.religion))
+    {
+        description += god_name(you.religion)
+                       + " appreciates the use of this spell.$";
+    }
+    if (spell_is_useless(spell))
+        description += "This spell will have no effect right now.$";
+
     if (crawl_state.player_is_dead())
         return (false);
 
