@@ -1414,8 +1414,9 @@ static bool _get_mem_list(spell_list &mem_spells,
     if (num_memable)
         return (true);
 
+    // Return true even if there are only spells we can't memorise _yet_.
     if (just_check)
-        return (false);
+        return (num_low_levels > 0 || num_low_xl > 0);
 
     unsigned int total = num_known + num_race + num_low_xl + num_low_levels;
 
