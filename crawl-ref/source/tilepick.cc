@@ -1897,6 +1897,8 @@ static int _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_NECROPHAGE;
     case MONS_GHOUL:
         return TILE_CORPSE_GHOUL;
+    case MONS_ROTTING_HULK:
+        return TILE_CORPSE_ROTTING_HULK;
 
     // orcs ('o')
     case MONS_ORC:
@@ -1975,7 +1977,7 @@ static int _tileidx_corpse(const item_def &item)
     case MONS_SPINY_WORM:
         return TILE_CORPSE_SPINY_WORM;
 
-    // wasps ('y')
+    // flying insects ('y')
     case MONS_GIANT_MOSQUITO:
         return TILE_CORPSE_GIANT_MOSQUITO;
     case MONS_GIANT_BLOWFLY:
@@ -1984,6 +1986,8 @@ static int _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_YELLOW_WASP;
     case MONS_RED_WASP:
         return TILE_CORPSE_RED_WASP;
+    case MONS_MOTH_OF_WRATH:
+        return TILE_CORPSE_MOTH_OF_WRATH;
 
     // beetles ('B')
     case MONS_GIANT_BEETLE:
@@ -2048,12 +2052,16 @@ static int _tileidx_corpse(const item_def &item)
     // eyes ('G')
     case MONS_GIANT_EYEBALL:
         return TILE_CORPSE_GIANT_EYEBALL;
+    case MONS_EYE_OF_DEVASTATION:
+        return TILE_CORPSE_EYE_OF_DEVASTATION;
     case MONS_EYE_OF_DRAINING:
         return TILE_CORPSE_EYE_OF_DRAINING;
     case MONS_GIANT_ORANGE_BRAIN:
         return TILE_CORPSE_GIANT_ORANGE_BRAIN;
     case MONS_GREAT_ORB_OF_EYES:
         return TILE_CORPSE_GREAT_ORB_OF_EYES;
+    case MONS_SHINING_EYE:
+        return TILE_CORPSE_SHINING_EYE;
 
     // hybrids ('H')
     case MONS_HIPPOGRIFF:
@@ -2066,6 +2074,8 @@ static int _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_HARPY;
     case MONS_MINOTAUR:
         return TILE_CORPSE_MINOTAUR;
+    case MONS_SPHINX:
+        return TILE_CORPSE_SPHINX;
 
     // jellies ('J')
     case MONS_GIANT_AMOEBA:
