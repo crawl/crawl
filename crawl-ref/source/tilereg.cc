@@ -314,7 +314,9 @@ void DungeonRegion::pack_background(unsigned int bg, int x, int y)
         }
         else if (bg & TILE_FLAG_MOLD)
         {
-            m_buf_dngn.add(TILE_MOLD, x, y);
+            tile_flavour &flv = env.tile_flv[x + m_cx_to_gx][y + m_cy_to_gy];
+            int offset = flv.special % tile_dngn_count(TILE_MOLD);
+            m_buf_dngn.add(TILE_MOLD + offset, x, y);
         }
 
         if (player_in_branch(BRANCH_SHOALS))

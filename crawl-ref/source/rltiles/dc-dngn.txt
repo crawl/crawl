@@ -1325,7 +1325,10 @@ dc-misc/travel_exclusion TRAVEL_EXCLUSION_BG
 dc-misc/travel_exclusion_centre TRAVEL_EXCLUSION_CENTRE_BG
 dc-misc/slot ITEM_SLOT
 effect/sanctuary SANCTUARY
-dc-misc/todo MOLD
+dc-misc/mold_small1 MOLD
+dc-misc/mold_small2
+dc-misc/mold_small3
+dc-misc/mold_small4
 effect/silenced SILENCED
 
 dc-misc/error DNGN_ERROR

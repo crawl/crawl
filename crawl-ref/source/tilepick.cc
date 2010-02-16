@@ -5253,15 +5253,19 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
                 if (print_blood && _suppress_blood(gc))
                     print_blood = false;
 
+                // Mold has the same restrictions as blood
+                // but mold takes precendence over blood.
+                if (print_blood)
+                {
+                    if (is_moldy(gc))
+                        tileb[count+1] |= TILE_FLAG_MOLD;
+                    else if (is_bloodcovered(gc))
+                        tileb[count+1] |= TILE_FLAG_BLOOD;
+                }
+
                 const dungeon_feature_type feat = grd(gc);
                 if (feat_is_water(feat) || feat == DNGN_LAVA)
                     tileb[count+1] |= TILE_FLAG_WATER;
-
-                if (print_blood && is_bloodcovered(gc))
-                    tileb[count+1] |= TILE_FLAG_BLOOD;
-
-                if (print_blood && is_moldy(gc))
-                    tileb[count+1] |= TILE_FLAG_MOLD;
 
                 if (is_sanctuary(gc))
                     tileb[count+1] |= TILE_FLAG_SANCTUARY;
