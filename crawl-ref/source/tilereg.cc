@@ -3314,9 +3314,7 @@ bool InventoryRegion::update_alt_text(std::string &alt)
 
     int idx = m_items[item_idx].idx;
     if (m_items[item_idx].key == 0)
-    {
         return (true);
-    }
 
     const item_def *item;
     if (m_items[item_idx].flag & TILEI_FLAG_FLOOR)
