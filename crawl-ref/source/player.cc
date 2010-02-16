@@ -5304,7 +5304,7 @@ void player::init()
 
     your_name = "";
 
-    mold_colour = LIGHTCYAN;
+    mold_colour = LIGHTGREEN;
     banished = false;
     banished_by.clear();
 
