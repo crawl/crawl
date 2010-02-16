@@ -50,7 +50,7 @@ Levels
   Games now select two branches from Shoals, Snake Pit, and Swamp to enable.
 * Fix branch ends rarely being generated without a rune.
 * Shorten Lair to eight levels.
-* More interesting level layout for Lair and Swamp.
+* More interesting level layout for Lair, Swamp and Vaults.
 * New portal vaults: Bailey, Trove, Volcano, Wizard Laboratories.
 * Most escape hatches are replaced by (single-use) shafts.
 * New wall type "tree"; two trees in a row block vision.
@@ -245,6 +245,7 @@ Spells
 Tiles
 -----
 * Added tabs to switch between inventory and clickable spells display.
+* Autoexplore can be started by Shift-Left-clicking on the minimap.
 * Re-added doll editing screen ('-' command).
 * Display tiles in many more menus, including the database search (?/).
 * New modifier keys for left-clicking on monsters or the player:
