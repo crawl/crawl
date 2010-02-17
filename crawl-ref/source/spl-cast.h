@@ -49,7 +49,7 @@ enum spret_type
     SPRET_SUCCESS
 };
 
-typedef bool (*spell_selector)(spell_type spell, bool &grey);
+typedef bool (*spell_selector)(spell_type spell);
 
 int list_spells(bool toggle_with_I = true, bool viewing = false,
                 int minRange = -1, spell_selector selector = NULL);
