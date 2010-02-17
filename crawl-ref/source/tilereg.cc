@@ -1622,11 +1622,8 @@ static bool _spell_in_range(spell_type spell, actor* target)
 
 static actor* _spell_target = NULL;
 
-static bool _spell_selector(spell_type spell, bool &grey)
+static bool _spell_selector(spell_type spell)
 {
-    if (!_spell_in_range(spell, _spell_target))
-        grey = true;
-
     return (_is_appropriate_spell(spell, _spell_target));
 }
 
@@ -1667,7 +1664,7 @@ static bool _cast_spell_on_target(actor* target)
         return (true);
     }
 
-    macro_buf_add_cmd(CMD_CAST_SPELL);
+    macro_buf_add_cmd(CMD_FORCE_CAST_SPELL);
     macro_buf_add(letter);
 
     if (get_spell_flags(spell) & SPFLAG_TARGETING_MASK)
