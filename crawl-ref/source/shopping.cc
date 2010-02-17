@@ -125,6 +125,27 @@ static void _list_shop_keys(const std::string &purchasable, bool viewing,
     ASSERT(total_stock > 0);
 
     const int numlines = get_number_of_lines();
+    formatted_string fs;
+
+    std::string shop_list = "";
+    if (!viewing && you.level_type == LEVEL_DUNGEON)
+    {
+        shop_list = "[<w>@</w>] ";
+        if (num_selected > 0)
+            shop_list += "Selected -> shopping list";
+        else if (num_in_list > 0)
+            shop_list += "Shopping list -> selected";
+        else
+            shop_list = "";
+    }
+    if (!shop_list.empty())
+    {
+        cgotoxy(1, numlines - 2, GOTO_CRT);
+        fs = formatted_string::parse_string(shop_list);
+        fs.cprintf("%*s", get_number_of_cols() - fs.length() - 1, "");
+        fs.display();
+    }
+
     cgotoxy(1, numlines - 1, GOTO_CRT);
 
     std::string pkeys = "";
@@ -141,32 +162,19 @@ static void _list_shop_keys(const std::string &purchasable, bool viewing,
     else
         pkeys = _purchase_keys(purchasable);
 
-    std::string shop_list = "";
-    if (!viewing && you.level_type == LEVEL_DUNGEON)
-    {
-        shop_list = "[<w>@</w>] ";
-        if (num_selected > 0)
-            shop_list += "Selected -> shopping list";
-        else if (num_in_list > 0)
-            shop_list += "Shopping list -> selected";
-        else
-            shop_list = "";
-    }
-
     if (!pkeys.empty())
     {
         pkeys = "[" + pkeys + "] Select Item to "
                 + (viewing ? "Examine" : "Buy");
     }
-    formatted_string fs = formatted_string::parse_string(make_stringf(
+    fs = formatted_string::parse_string(make_stringf(
             "[<w>x</w>/<w>Esc</w>"
 #ifdef USE_TILE
             "/<w>R-Click</w>"
 #endif
-            "] exit            [<w>!</w>] %s   %s%s",
+            "] exit            [<w>!</w>] %s   %s",
             (viewing ? "to select items " : "to examine items"),
-            pkeys.c_str(),
-            shop_list.c_str()));
+            pkeys.c_str()));
 
     fs.cprintf("%*s", get_number_of_cols() - fs.length() - 1, "");
     fs.display();
