@@ -944,7 +944,7 @@ void DungeonRegion::pack_foreground(unsigned int bg, unsigned int fg, int x, int
     }
 
     if (fg & TILE_FLAG_NET)
-        m_buf_doll.add(TILEP_TRAP_NET, x, y, 0, in_water, false);
+        m_buf_main.add(TILE_TRAP_NET, x, y);
 
     if (fg & TILE_FLAG_S_UNDER)
         m_buf_main.add(TILE_SOMETHING_UNDER, x, y);
