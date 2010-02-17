@@ -387,8 +387,13 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     if (show_weff_messages)
         wield_warning();
 
-    if (Tutorial.tutorial_left && your_talents(false).size() > old_talents)
-        learned_something_new(TUT_NEW_ABILITY_ITEM);
+    if (Tutorial.tutorial_left)
+    {
+        if (new_wpn.cursed())
+            learned_something_new(TUT_YOU_CURSED);
+        else if (your_talents(false).size() > old_talents)
+            learned_something_new(TUT_NEW_ABILITY_ITEM);
+    }
 
     // Time calculations.
     you.time_taken /= 2;
