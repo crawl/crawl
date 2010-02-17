@@ -273,9 +273,7 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
         }
     }
 
-#ifdef USE_TILE
-    bool need_doll_update = false;
-#endif
+    int merfolk_change = 0;
     // Only consider terrain if player is not levitating.
     if (!you.airborne())
     {
@@ -299,25 +297,14 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
                     return (false);
                 }
 
-                if (stepped)
-                    mpr("Your legs become a tail as you enter the water.");
-                else
-                    mpr("Your legs become a tail as you dive into the water.");
-
-                merfolk_start_swimming();
-#ifdef USE_TILE
-                need_doll_update = true;
-#endif
+                merfolk_change = -1;
             }
             else if (you.species == SP_MERFOLK && !feat_is_water(new_grid)
                      && feat_is_water(old_grid)
                      && !is_feat_dangerous(new_grid))
             {
-                unmeld_one_equip(EQ_BOOTS);
-                you.redraw_evasion = true;
-#ifdef USE_TILE
-                need_doll_update = true;
-#endif
+                // FIXME: boots with -stat can be fatal too!
+                merfolk_change = 1;
             }
         }
 
@@ -369,10 +356,26 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
 
     // Move the player to new location.
     you.moveto(p);
+
+    if (merfolk_change)
+    {
+        if (merfolk_change == -1)
+        {
+            if (stepped)
+                mpr("Your legs become a tail as you enter the water.");
+            else
+                mpr("Your legs become a tail as you dive into the water.");
+            merfolk_start_swimming();
+        }
+        else
+        {
+            unmeld_one_equip(EQ_BOOTS);
+            you.redraw_evasion = true;
+        }
 #ifdef USE_TILE
-    if (need_doll_update)
         init_player_doll();
 #endif
+    }
 
     viewwindow(false);
 
