@@ -3802,54 +3802,64 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove,
         }
     }
 
-    if (you.species == SP_MERFOLK && feat_is_water(gridhere))
+    // If we are levitating and about to remove a levitation-granting item
+    // make sure this doesn't cause us to drown or die to stat loss.
+    if (prop_lev && remove && you.is_levitating())
     {
-        // Falling into water could lose boots and cause fatal stat loss.
-        // There is a complication here.  Suppose you are taking off a
-        // randart with +Lev and a stat modification, while wearing boots
-        // that modify the same stat.  We have to consider losing both at
-        // the same time.
-
-        // This only handles removal, which is OK, because levitating is
-        // never fatal.
-
-        you.strength -= prop_str;
-        you.intel -= prop_int;
-        you.dex -= prop_dex;
-
-        bool safe = merfolk_change_is_safe();
-
-        you.strength += prop_str;
-        you.intel += prop_int;
-        you.dex += prop_dex;
-
-        if (!safe)
-            fatal_liquid = true;
-    }
-
-    if (gridhere == DNGN_LAVA || (gridhere == DNGN_DEEP_WATER && !beogh_water_walk()))
-    {
-        // We'd fall into water!  See if we would drown.
-        coord_def empty;
-
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE
-               || (carrying_capacity() / 2) <= you.burden
-               || !empty_surrounds(you.pos(), DNGN_FLOOR, 1, false, empty))
-            fatal_liquid = true;
-
-        if (gridhere == DNGN_LAVA)
+        if (you.species == SP_MERFOLK && feat_is_water(gridhere))
         {
-            int res = player_res_fire(false);
+            // Falling into water could lose boots and cause fatal stat loss.
+            // There is a complication here.  Suppose you are taking off a
+            // randart with +Lev and a stat modification, while wearing boots
+            // that modify the same stat.  We have to consider losing both at
+            // the same time.
 
-            if (res <= 0 || (110 / res) >= you.hp)
+            // This only handles removal, which is OK, because levitating is
+            // never fatal.
+
+            you.strength -= prop_str;
+            you.intel    -= prop_int;
+            you.dex      -= prop_dex;
+
+            bool safe = merfolk_change_is_safe();
+
+            you.strength += prop_str;
+            you.intel    += prop_int;
+            you.dex      += prop_dex;
+
+            if (!safe)
                 fatal_liquid = true;
         }
-    }
 
-    if (you.permanent_levitation()
+        if (gridhere == DNGN_LAVA
+            || (gridhere == DNGN_DEEP_WATER && !beogh_water_walk()
+                && !you.swimming()))
+        {
+            // We'd fall into water!  See if we would drown.
+            coord_def empty;
+
+            // Check if we'd be able to scramble out.
+            if (you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE
+                || (carrying_capacity() / 2) <= you.burden
+                || !empty_surrounds(you.pos(), DNGN_FLOOR, 1, false, empty))
+            {
+                fatal_liquid = true;
+            }
+
+            if (gridhere == DNGN_LAVA)
+            {
+                int res = player_res_fire(false);
+
+                if (res <= 0 || (110 / res) >= you.hp)
+                    fatal_liquid = true;
+            }
+        }
+
+        if (you.permanent_levitation()
             && (item.base_type != OBJ_ARMOUR || item.sub_type != ARM_BOOTS))
-    {
-        fatal_liquid = false; // we won't fall!
+        {
+            fatal_liquid = false; // we won't fall!
+        }
     }
 
     if (remove)
