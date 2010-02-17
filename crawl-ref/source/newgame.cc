@@ -2765,7 +2765,7 @@ spec_query:
         else
         {
             textcolor( WHITE );
-            cprintf("You must be new here!");
+            cprintf("Pick your character's species!");
         }
         cprintf("  (Press Ctrl-T to enter a tutorial.)");
         cprintf(EOL EOL);
@@ -3005,7 +3005,7 @@ job_query:
         else
         {
             textcolor( WHITE );
-            cprintf("You must be new here!");
+            cprintf("Pick your character's background!");
         }
         cprintf("  (Press Ctrl-T to enter a tutorial.)");
 
