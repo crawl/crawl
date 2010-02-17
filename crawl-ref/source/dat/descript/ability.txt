@@ -385,7 +385,7 @@ Create giant spores from corpses in your line of sight. The spores will explode,
 %%%%
 Evolution
 
-Turn plants and fungi adjacent to you into stronger species. Upgrading fungi requires piety, upgrading plants requires fruit.
+Turn plants and fungi adjacent to you into stronger species. Upgrading fungi requires piety, upgrading plants requires fruit. Plants upgraded gain a bonus to attack accuracy proportional to the user's invocations skill, and oklob plants are more likely to spit acid at higher invocations.  
 %%%%
 # Cheibriados
 Make Ponderous
