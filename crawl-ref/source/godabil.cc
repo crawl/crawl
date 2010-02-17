@@ -1022,11 +1022,47 @@ bool plant_ring_from_fruit()
 
     const int hp_adjust = you.skills[SK_INVOCATIONS] * 10;
 
+
+    // The user entered a number, remove all number overlays which
+    // are higher than that number.
+#ifndef USE_TILE
+    unsigned not_used = adjacent.size() - unsigned(target_count);
+    for (unsigned i=adjacent.size() - not_used;
+         i < adjacent.size();
+         i++)
+    {
+        view_update_at(adjacent[i]);
+    }
+#else
+    // For tiles we have to clear all overlays and redraw the ones
+    // we want.
+    tiles.clear_overlays();
+    for (int i=0; i < target_count; ++i)
+    {
+        tiles.add_overlay(adjacent[i], TILE_INDICATOR + i );
+    }
+
+#endif
+
+
     int created_count = 0;
     for (int i = 0; i < target_count; ++i)
     {
         if (_create_plant(adjacent[i], hp_adjust))
             created_count++;
+
+        // Clear the overlay and draw the plant we just placed.
+        // This is somewhat more complicated in tiles.
+        view_update_at(adjacent[i]);
+#ifdef USE_TILE
+        tiles.clear_overlays();
+        for (int j = i + 1; j < target_count; ++j)
+        {
+            tiles.add_overlay(adjacent[j], TILE_INDICATOR + j);
+        }
+        viewwindow(false, false);
+#endif
+        delay(200);
     }
 
     _decrease_amount(collected_fruit, created_count);
