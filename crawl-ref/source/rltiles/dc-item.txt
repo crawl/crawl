@@ -478,6 +478,7 @@ chunk_brands/i-mutation FOOD_MUTAGENIC
 chunk_brands/i-decay FOOD_ROTTING
 chunk_brands/i-forbidden FOOD_FORBIDDEN
 chunk_brands/i-sickness FOOD_CONTAMINATED
+chunk_brands/i-rotten FOOD_INEDIBLE
 %shrink 1
 
 #################OBJ_UNKNOWN_I
