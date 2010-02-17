@@ -369,6 +369,11 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile)
     if (!is_terrain_known(c))
         return (false);
 
+    // In the Abyss, disallow travelling into unseen territory
+    // even if it's known, i.e. you've seen it before.
+    if (!player_in_mappable_area() && !you.see_cell(c))
+        return (false);
+
     const dungeon_feature_type grid = env.map_knowledge(c).feat();
 
     // Also make note of what's displayed on the level map for
