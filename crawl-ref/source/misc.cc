@@ -1318,6 +1318,8 @@ void search_around(bool only_adjacent)
     }
 }
 
+// Checks whether removing boots (due to growing a tail) would be safe,
+// or result in fatal stat loss (false, obviously).
 bool merfolk_change_is_safe(bool quiet)
 {
     // If already transformed, no subsequent transformation necessary.
