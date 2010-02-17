@@ -388,20 +388,14 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile)
     // If 'ignore_hostile' is true, we're ignoring hazards that can be
     // navigated over if the player is willing to take damage, or levitate.
     if (ignore_hostile && _is_reseedable(c))
-    {
         return (true);
-    }
 
     // Excluded squares are never safe.
     if (is_excluded(c))
-    {
         return (false);
-    }
 
     if (is_trap(c) && _is_safe_trap(c))
-    {
         return (true);
-    }
 
     return (feat_is_traversable(grid));
 }
