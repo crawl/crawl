@@ -1473,11 +1473,28 @@ int tile_corpse_brand(const item_def item)
     if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
         return (0);
 
+    const bool fulsome_dist = you.has_spell(SPELL_FULSOME_DISTILLATION);
+    const bool rotten       = food_is_rotten(item);
+    const bool saprovorous  = player_mutation_level(MUT_SAPROVOROUS);
+
     // Brands are mostly meaningless to herbivores.
     // Could still be interesting for Fulsome Distillation, though.
-    if (player_mutation_level(MUT_HERBIVOROUS) == 3)
+    if (fulsome_dist && player_mutation_level(MUT_HERBIVOROUS) == 3)
         return (0);
 
+    // Vampires are only interested in fresh blood.
+    if (you.species == SP_VAMPIRE
+        && (rotten || !mons_has_blood(item.plus)))
+    {
+        return TILE_FOOD_INEDIBLE;
+    }
+
+    // Rotten corpses' chunk effects are meaningless if we are neither
+    // saprovorous nor have the Fulsome Distillation spell.
+    if (rotten && !saprovorous && !fulsome_dist)
+        return TILE_FOOD_INEDIBLE;
+
+    // Harmful chunk effects > religious rules > chance of sickness.
     if (is_poisonous(item))
         return TILE_FOOD_POISONED;
 
@@ -1492,6 +1509,11 @@ int tile_corpse_brand(const item_def item)
 
     if (is_contaminated(item))
         return TILE_FOOD_CONTAMINATED;
+
+    // If no special chunk effects, mark corpse as inedible
+    // unless saprovorous.
+    if (rotten && !saprovorous)
+        return TILE_FOOD_INEDIBLE;
 
     return 0;
 }
