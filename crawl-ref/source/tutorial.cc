@@ -137,7 +137,7 @@ bool pick_tutorial()
         "<white>You must be new here indeed!</white>"
         EOL EOL
         "<cyan>You can be:</cyan>"
-        EOL EOL).display();
+        EOL).display();
 
     textcolor( LIGHTGREY );
 
