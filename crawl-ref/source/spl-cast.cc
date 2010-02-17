@@ -134,7 +134,7 @@ static void _surge_power(spell_type spell)
     }
 }
 
-static std::string _spell_base_description(spell_type spell, bool unavail = false)
+static std::string _spell_base_description(spell_type spell)
 {
     std::ostringstream desc;
 
@@ -160,11 +160,10 @@ static std::string _spell_base_description(spell_type spell, bool unavail = fals
     return desc.str();
 }
 
-static std::string _spell_extra_description(spell_type spell, bool unavail = false)
+static std::string _spell_extra_description(spell_type spell)
 {
     std::ostringstream desc;
 
-//    int highlight =  unavail ? COL_INAPPLICABLE : spell_highlight_by_utility(spell);
     int highlight =  spell_highlight_by_utility(spell, LIGHTGRAY, true);
 
     desc << "<" << colour_to_str(highlight) << ">" << std::left;
@@ -237,22 +236,20 @@ int list_spells(bool toggle_with_I, bool viewing, int minRange,
     more_str += "to toggle spell view.";
     spell_menu.set_more(formatted_string(more_str));
 
-    // XXX: This value has been made *completely* redundant
-    // ...except that selector wants to futz with it, below.
-    bool grey = false; // Needs to be greyed out?
-
     for (int i = 0; i < 52; ++i)
     {
         const char letter = index_to_letter(i);
         const spell_type spell = get_spell_by_letter(letter);
 
-//        unavailable = !viewing && spell_no_hostile_in_range(spell, minRange);
-
         // TODO: identify wth 'selector' is, and what
-        // exactly this bit below does with it
+        //       exactly this bit below does with it
+        // In tilereg.cc, _spell_selector() does some range checks,
+        // possibly duplicated. (jpeg)
         if (is_valid_spell(spell) && selector
-            && !(*selector)(spell, grey))
+            && !(*selector)(spell))
+        {
             continue;
+        }
 
         if (spell != SPELL_NO_SPELL)
         {
