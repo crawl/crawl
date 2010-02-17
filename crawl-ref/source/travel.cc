@@ -469,10 +469,18 @@ void init_travel_terrain_check(bool check_race_equip)
         // Shafts can also be levitated over.
         _set_pass_feature(DNGN_TRAP_NATURAL, trav);
 
+        // You can't open doors in bat form, but we need to make sure
+        // autotravel will go through doors once you're back in your
+        // normal form.
         if (!player_can_open_doors())
         {
             _set_pass_feature(DNGN_CLOSED_DOOR, IMPASSABLE);
             _set_pass_feature(DNGN_DETECTED_SECRET_DOOR, IMPASSABLE);
+        }
+        else
+        {
+            _set_pass_feature(DNGN_CLOSED_DOOR, TRAVERSABLE);
+            _set_pass_feature(DNGN_DETECTED_SECRET_DOOR, TRAVERSABLE);
         }
     }
     else
