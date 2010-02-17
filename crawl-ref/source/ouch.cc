@@ -447,6 +447,8 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
     if(flavour == BEAM_SPORE
        && you.religion == GOD_FEDHAS)
     {
+        simple_god_message(" protects your food from the spores.",
+                           GOD_FEDHAS);
         return false;
     }
 
