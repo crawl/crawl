@@ -52,6 +52,9 @@ void che_handle_change(che_change_type ct, int diff)
     else // ct == CB_PONDEROUS
         oldponder -= diff;
     const int oldlev = std::min(oldponder, oldprank);
+    dprf("Che %s %+d: %d/%d -> %d/%d", typestr.c_str(), diff,
+         oldponder, oldprank,
+         ponder, prank);
 
     for (int i = 0; i < NUM_BOOSTS; ++i)
     {
