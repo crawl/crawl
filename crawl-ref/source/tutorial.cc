@@ -1924,19 +1924,13 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         // NOTE: This is called when a corpse is first seen as well as when
         //       first picked up, since a new player might not think to pick
         //       up a corpse.
+        // TODO: Specialcase skeletons and rotten corpses!
 
         if (gc.x <= 0 || gc.y <= 0)
             text << "Ah, a corpse!";
         else
         {
             int i = you.visible_igrd(gc);
-            while (i != NON_ITEM)
-            {
-                if (mitm[i].base_type == OBJ_CORPSES)
-                    break;
-
-                i = mitm[i].link;
-            }
             if (i == NON_ITEM)
                 text << "Ah, a corpse!";
             else
@@ -3178,7 +3172,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         text << "That monster looks a bit unusual. You might wish to examine "
                 "it a bit more closely by "
 #ifdef USE_TILE
-                "hovering your mouse over its tile";
+                "hovering your mouse over its tile.";
 #else
                 "pressing <w>%</w> and moving the cursor onto its square.";
         cmd.push_back(CMD_LOOK_AROUND);
