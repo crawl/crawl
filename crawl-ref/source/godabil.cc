@@ -1419,8 +1419,21 @@ bool evolve_flora()
     {
     case MONS_PLANT:
     case MONS_BUSH:
-        simple_monster_message(target, " can now spit acid.");
+    {
+        std::string evolve_desc = " can now spit acid";
+        if (you.skills[SK_INVOCATIONS] >= 20)
+            evolve_desc += " continuously";
+        else if (you.skills[SK_INVOCATIONS] >= 15)
+            evolve_desc += " quickly";
+        else if (you.skills[SK_INVOCATIONS] >= 10)
+            evolve_desc += " rather quickly";
+        else if (you.skills[SK_INVOCATIONS] >= 5)
+            evolve_desc += " somewhat quickly";
+        evolve_desc += ".";
+
+        simple_monster_message(target, evolve_desc.c_str());
         break;
+    }
 
     case MONS_FUNGUS:
     case MONS_BALLISTOMYCETE:
