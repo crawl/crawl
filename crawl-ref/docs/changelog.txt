@@ -50,7 +50,7 @@ Levels
   Games now select two branches from Shoals, Snake Pit, and Swamp to enable.
 * Fix branch ends rarely being generated without a rune.
 * Shorten Lair to eight levels.
-* More interesting level layout for Lair, Swamp and Vaults.
+* More interesting level layout for Lair and Swamp.
 * New portal vaults: Bailey, Trove, Volcano, Wizard Laboratories.
 * Most escape hatches are replaced by (single-use) shafts.
 * New wall type "tree"; two trees in a row block vision.
