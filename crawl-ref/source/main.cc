@@ -1563,6 +1563,7 @@ static void _do_display_map()
     // exists, give a message to explain what's going on.
     mpr("Move the cursor to view the level map, or type <w>?</w> for "
         "a list of commands.");
+    flush_prev_message();
 #endif
 
     level_pos pos;
