@@ -180,9 +180,11 @@ static void _spread_fire(const cloud_struct &cloud)
 
         // burning trees produce flames all around
         if (!cell_is_solid(*ai) && make_flames)
+        {
             _place_new_cloud( CLOUD_FIRE, *ai, cloud.decay/2+1, cloud.whose,
                               cloud.killer, cloud.spread_rate, cloud.colour,
                               cloud.name, cloud.tile );
+        }
 
         // forest fire doesn't spread in all directions at once,
         // every neighbouring square gets a separate roll
