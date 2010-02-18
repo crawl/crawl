@@ -418,17 +418,10 @@ static void _VAMPIRES_TOOTH_equip(item_def *item, bool *show_msgs, bool unmeld)
     {
         _equip_mpr(show_msgs,
                    "You feel a strange hunger, and smell blood in the air...");
+        make_hungry(4500, false, false);
     }
     else
         _equip_mpr(show_msgs, "You feel strangely empty.");
-
-    // Vampire's Tooth imposes more hunger than a normal vampiric
-    // weapon.  Like other vampiric weapons, the hunger is less for
-    // vampires than for other species.
-    if (you.species != SP_VAMPIRE)
-        artefact_set_property(*item, ARTP_METABOLISM, 3);
-    else
-        artefact_set_property(*item, ARTP_METABOLISM, 1);
 }
 
 ///////////////////////////////////////////////////
