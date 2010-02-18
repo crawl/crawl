@@ -732,19 +732,18 @@ bool less_second(const T & left, const T & right)
 
 typedef std::pair<coord_def, int> point_distance;
 
-// dfs starting at origin, find the distance from the origin to the targets
-// (not leaving LOS, not crossing monsters or solid walls) and store that in
-// distances
-static void _path_distance(coord_def & origin,
-                           std::vector<coord_def> & targets,
+// Find the distance from origin to each of the targets, those results
+// are stored in distances (which is the same size as targets). Exclusion
+// is a set of points which are considered disconnected for the search.
+static void _path_distance(const coord_def & origin,
+                           const std::vector<coord_def> & targets,
+                           std::set<int> exclusion,
                            std::vector<int> & distances)
 {
-    std::set<unsigned> exclusion;
     std::queue<point_distance> fringe;
     fringe.push(point_distance(origin,0));
-
-    int idx = origin.x + origin.y * X_WIDTH;
-    exclusion.insert(idx);
+    distances.clear();
+    distances.resize(targets.size(), INT_MAX);
 
     while (!fringe.empty())
     {
@@ -763,7 +762,7 @@ static void _path_distance(coord_def & origin,
 
         for (adjacent_iterator adj_it(current.first); adj_it; ++adj_it)
         {
-            idx = adj_it->x + adj_it->y * X_WIDTH;
+            int idx = adj_it->x + adj_it->y * X_WIDTH;
             if (you.see_cell(*adj_it)
                 && !feat_is_solid(env.grid(*adj_it))
                 && *adj_it != you.pos()
@@ -780,63 +779,46 @@ static void _path_distance(coord_def & origin,
     }
 }
 
-// so we are basically going to compute point to point distance between
-// the points of origin and the end points (origins and targets respecitvely)
-// We will return a vector consisting of the minimum distances along one
-// dimension of the distance matrix.
-static void _point_point_distance(std::vector<coord_def> & origins,
-                                  std::vector<coord_def> & targets,
-                                  bool origin_to_target,
+
+// Find the minimum distance from each point of origin to one of the targets
+// The distance is stored in 'distances', which is the same size as origins.
+static void _point_point_distance(const std::vector<coord_def> & origins,
+                                  const std::vector<coord_def> & targets,
                                   std::vector<int> & distances)
 {
     distances.clear();
-    // Consider a matrix where the points of origin form the rows and
-    // the target points form the column, we want to take the minimum along
-    // one of those dimensions.
-    if (origin_to_target)
-        distances.resize(origins.size(), INT_MAX);
-    else
-        distances.resize(targets.size(), INT_MAX);
+    distances.resize(origins.size(), INT_MAX);
 
-    std::vector<int> current_distances(targets.size(), 0);
+    // Consider all points of origin as blocked (you can search outward
+    // from one, but you can't form a path across a different one).
+    std::set<int> base_exclusions;
+    for (unsigned i=0; i < origins.size(); ++i)
+    {
+        int idx = origins[i].x + origins[i].y * X_WIDTH;
+        base_exclusions.insert(idx);
+    }
+
+    std::vector<int> current_distances;
     for (unsigned i = 0; i < origins.size(); ++i)
     {
-        for (unsigned j = 0; j < current_distances.size(); ++j)
-            current_distances[j] = INT_MAX;
+        // Find the distance from the point of origin to each of the targets.
+        _path_distance(origins[i], targets, base_exclusions,
+                       current_distances);
 
-        _path_distance(origins[i], targets, current_distances);
+        // Find the smallest of those distances
+        int min_dist = current_distances[0];
+        for (unsigned j = 1; j < current_distances.size(); ++j)
+            if (current_distances[j] < min_dist)
+                min_dist = current_distances[j];
 
-        // So we got the distance from a point of origin to one of the
-        // targets. What should we do with it?
-        if (origin_to_target)
-        {
-            // The minimum of current_distances is points(i)
-            int min_dist = current_distances[0];
-            for (unsigned j = 1; j < current_distances.size(); ++j)
-                if (current_distances[j] < min_dist)
-                    min_dist = current_distances[j];
-
-            distances[i] = min_dist;
-        }
-        else
-        {
-            for (unsigned j = 0; j < targets.size(); ++j)
-            {
-                if (i == 0)
-                    distances[j] = current_distances[j];
-                else if (current_distances[j] < distances[j])
-                    distances[j] = current_distances[j];
-            }
-        }
+        distances[i] = min_dist;
     }
 }
 
 // So the idea is we want to decide which adjacent tiles are in the most 'danger'
 // We claim danger is proportional to the minimum distances from the point to a
-// (hostile) monster. This function carries out at most 8 depth-first searches
-// to calculate the distances in question. In practice it should be called for
-// at most 7 searches since 8 (all adjacent free, > 8 monsters in view) can be
-// special cased easily.
+// (hostile) monster. This function carries out at most 7 searches to calculate
+// the distances in question.
 bool prioritise_adjacent(const coord_def &target, std::vector<coord_def> & candidates)
 {
     radius_iterator los_it(target, LOS_RADIUS, true, true, true);
@@ -857,25 +839,9 @@ bool prioritise_adjacent(const coord_def &target, std::vector<coord_def> & candi
         return (true);
     }
 
-    bool squares_to_monsters = mons_positions.size() > candidates.size();
-
     std::vector<int> distances;
 
-    // So the idea is we will search from either possible plant locations to
-    // monsters or from monsters to possible plant locations, but honestly the
-    // implementation is unnecessarily tense and doing plants to monsters all
-    // the time would be fine. Yet I'm reluctant to change it because it does
-    // work.
-    if (squares_to_monsters)
-    {
-        _point_point_distance(candidates, mons_positions,
-                              squares_to_monsters, distances);
-    }
-    else
-    {
-        _point_point_distance(mons_positions, candidates,
-                              squares_to_monsters, distances);
-    }
+    _point_point_distance(candidates, mons_positions, distances);
 
     std::vector<point_distance> possible_moves(candidates.size());
 
