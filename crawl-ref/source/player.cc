@@ -303,7 +303,16 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
                      && feat_is_water(old_grid)
                      && !is_feat_dangerous(new_grid))
             {
-                // FIXME: boots with -stat can be fatal too!
+                // Check for wearing boots with -stat.
+                if (!merfolk_unchange_is_safe(true))
+                {
+                    mprf(MSGCH_WARN, "Stepping onto land would unmeld your "
+                         "boots, and that'd be fatal.");
+                    stop_running();
+                    you.turn_is_over = false;
+                    return (false);
+                }
+
                 merfolk_change = 1;
             }
         }
