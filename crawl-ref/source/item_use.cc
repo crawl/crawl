@@ -4738,7 +4738,8 @@ void drink(int slot)
     if (alreadyknown && potion.sub_type == POT_LEVITATION
         && !merfolk_unchange_is_safe(true))
     {
-        mprf(MSGCH_WARN, "Levitating now would unmeld your boots, and that's fatal.");
+        mprf(MSGCH_WARN, "Levitating now would unmeld your boots, which would "
+                         "be fatal.");
         return;
     }
 

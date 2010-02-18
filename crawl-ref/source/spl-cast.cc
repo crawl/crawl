@@ -1911,7 +1911,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     case SPELL_LEVITATION:
         if (!merfolk_unchange_is_safe(true))
         {
-            mprf(MSGCH_WARN, "Levitating would unmeld your boots, and that's fatal.");
+            mprf(MSGCH_WARN, "Levitating would unmeld your boots, which would "
+                             "be fatal.");
             return (SPRET_ABORT);
         }
         potion_effect(POT_LEVITATION, powc);
@@ -1920,7 +1921,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     case SPELL_FLY:
         if (!merfolk_unchange_is_safe())
         {
-            mprf(MSGCH_WARN, "Flying would unmeld your boots, and that's fatal.");
+            mprf(MSGCH_WARN, "Flying would unmeld your boots, which would be "
+                             "fatal.");
             return (SPRET_ABORT);
         }
         cast_fly(powc);
