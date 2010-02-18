@@ -829,8 +829,11 @@ bool prioritise_adjacent(const coord_def &target, std::vector<coord_def> & candi
     {
         monsters *hostile = monster_at(*los_it);
 
-        if (hostile && hostile->attitude == ATT_HOSTILE)
+        if (hostile && hostile->attitude == ATT_HOSTILE
+            && you.can_see(hostile))
+        {
             mons_positions.push_back(hostile->pos());
+        }
     }
 
     if (mons_positions.empty())
