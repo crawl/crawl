@@ -1361,7 +1361,7 @@ void TilesFramework::update_minimap(int gx, int gy, map_feature f)
 
     coord_def gc(gx, gy);
 
-    if (gc == you.pos() && you.on_current_level)
+    if (!crawl_state.arena && gc == you.pos() && you.on_current_level)
         f = MF_PLAYER;
     else if (monster_at(gc) && f == MF_MONS_HOSTILE)
     {
