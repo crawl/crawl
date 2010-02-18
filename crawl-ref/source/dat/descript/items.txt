@@ -1250,26 +1250,26 @@ It can also be used to enchant the hides of certain exotic creatures.
 %%%%
 scroll of enchant weapon i
 
-This scroll places an enchantment on a weapon, making it more accurate
-in combat. It may fail to affect weapons or ammunition already heavily
-enchanted, and will only enchant them up to +9.
+This scroll places an enchantment on the wielded weapon or stack of missiles,
+making it more accurate in combat. It may fail to affect weapons or ammunition
+already heavily enchanted, and will only enchant them up to +9.
 When used on ammunition this will also decrease the chances of missiles
 breaking upon impact.
 %%%%
 scroll of enchant weapon ii
 
-This scroll places an enchantment on a weapon, making it inflict
-greater damage in combat. It may fail to affect weapons or ammunition
-already heavily enchanted, and will only enchant them up to +9.
+This scroll places an enchantment on the wielded weapon or stack of missiles,
+making it inflict greater damage in combat. It may fail to affect weapons or
+ammunition already heavily enchanted, and will only enchant them up to +9.
 When used on ammunition this will also decrease the chances of missiles
 breaking upon impact.
 %%%%
 scroll of enchant weapon iii
 
-This scroll enchants a weapon or stack of missiles to be far more
-effective in combat. Although it can be used in the creation of
-especially enchanted weapons, it may fail to affect those already
-heavily enchanted, and only allows enchantment up to +9.
+This scroll enchants the wielded weapon or stack of missiles to be far more
+effective in combat. Although it can be used in the creation of especially
+enchanted weapons, it may fail to affect those already heavily enchanted, and
+only allows enchantment up to +9.
 When used on ammunition this will also decrease the chances of missiles
 breaking upon impact.
 %%%%
@@ -1345,8 +1345,8 @@ nearby creature - including you!
 %%%%
 scroll of vorpalise weapon
 
-This scroll enchants a weapon so as to make it far more effective at
-inflicting harm on its wielder's enemies. Using it on a weapon already
+This scroll enchants the wielded weapon so as to make it far more effective
+at inflicting harm on its wielder's enemies. Using it on a weapon already
 affected by some kind of permanent branding is not advised. On the
 other hand, the scroll can make permanent the temporary branding of
 weapons obtained from some spells.
