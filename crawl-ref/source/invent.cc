@@ -1249,7 +1249,10 @@ std::vector<SelItem> prompt_invent_items(
         }
 
         if (need_prompt)
-            mpr(prompt, MSGCH_PROMPT);
+        {
+            mprf(MSGCH_PROMPT, "%s (<w>?</w> for menu, <w>Esc</w> to quit)",
+                 prompt);
+        }
 
         if (need_getch)
             keyin = get_ch();
@@ -1622,7 +1625,10 @@ int prompt_invent_item( const char *prompt,
         }
 
         if (need_prompt)
-            mpr(prompt, MSGCH_PROMPT);
+        {
+            mprf(MSGCH_PROMPT, "%s (<w>?</w> for menu, <w>Esc</w> to quit)",
+                 prompt);
+        }
         else
             flush_prev_message();
 
