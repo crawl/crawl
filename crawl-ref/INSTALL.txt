@@ -23,7 +23,7 @@ If, however, you're having trouble getting a precompiled binary to run:
                                     or stone_soup-VERSION-osx-app.dmg
     DOS             no              stone_soup-VERSION-dos.zip
     Source code     yes             stone_soup-VERSION-src.zip
-                                    or stone_soup-VERSION-src.tbz2
+                                    or stone_soup-VERSION-src.tar.bz2
 
 2) Try removing/renaming your saves/ directory in case older saves aren't
    recognized anymore.

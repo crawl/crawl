@@ -866,15 +866,15 @@ void game_options::reset_options()
     tile_window_col      = MAP_YELLOW;
 
     // font selection
-    tile_font_crt_file   = "VeraMono.ttf";
+    tile_font_crt_file   = MONOSPACED_FONT;
     tile_font_crt_size   = 0;
-    tile_font_stat_file  = "VeraMono.ttf";
+    tile_font_stat_file  = MONOSPACED_FONT;
     tile_font_stat_size  = 0;
-    tile_font_msg_file   = "VeraMono.ttf";
+    tile_font_msg_file   = MONOSPACED_FONT;
     tile_font_msg_size   = 0;
-    tile_font_tip_file   = "VeraMono.ttf";
+    tile_font_tip_file   = MONOSPACED_FONT;
     tile_font_tip_size   = 0;
-    tile_font_lbl_file   = "Vera.ttf";
+    tile_font_lbl_file   = PROPORTIONAL_FONT;
     tile_font_lbl_size   = 0;
 
     // window layout
