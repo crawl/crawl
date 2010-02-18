@@ -955,7 +955,14 @@ bool plant_ring_from_fruit()
     // Don't prompt if we can't do anything (due to having no fruit or
     // no squares to place plants on).
     if (max_use == 0)
+    {
+        if (adjacent.size() == 0)
+            mprf("No empty adjacent squares.");
+        else
+            mprf("No fruit available.");
+
         return (false);
+    }
 
 
     prioritise_adjacent(you.pos(), adjacent);
@@ -981,6 +988,7 @@ bool plant_ring_from_fruit()
     if (!_prompt_amount(max_use, target_count,
                         "How many plants will you create?"))
     {
+        // User canceled at the prompt
         crawl_state.darken_range = -1;
         viewwindow(false, false);
         return (false);
