@@ -3768,6 +3768,7 @@ std::string item_list::set_item(int index, const std::string &spec)
     error.clear();
     if (index < 0)
         return (error = make_stringf("Index %d out of range", index));
+
     item_spec_slot sp = parse_item_spec(spec);
     if (error.empty())
     {
@@ -4160,7 +4161,7 @@ item_spec item_list::parse_single_spec(std::string s)
             error = "Can't set an ego for gold.";
 
         result.base_type = OBJ_GOLD;
-        result.sub_type = OBJ_RANDOM;
+        result.sub_type  = OBJ_RANDOM;
         return (result);
     }
 
@@ -4324,9 +4325,7 @@ item_list::item_spec_slot item_list::parse_item_spec(std::string spec)
     std::vector<std::string> specifiers = split_string( "/", spec );
 
     for (unsigned i = 0; i < specifiers.size() && error.empty(); ++i)
-    {
         list.ilist.push_back( parse_single_spec(specifiers[i]) );
-    }
 
     return (list);
 }
