@@ -1428,9 +1428,8 @@ static int _acquirement_weapon_subtype(bool divine)
         item_considered.sub_type = i;
 
         // Can't get blessed blades through acquirement, only from TSO
-        if (is_blessed(item_considered)) {
+        if (is_blessed(item_considered))
             continue;
-        }
 
         int acqweight = property(item_considered, PWPN_ACQ_WEIGHT);
 
