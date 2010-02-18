@@ -504,7 +504,7 @@
     #define PROPORTIONAL_FONT "Vera.ttf"
 #endif
 #ifndef MONOSPACED_FONT
-    #define PROPORTIONAL_FONT "VeraMono.ttf"
+    #define MONOSPACED_FONT "VeraMono.ttf"
 #endif
 
 #ifdef __cplusplus
