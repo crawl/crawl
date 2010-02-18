@@ -622,11 +622,11 @@ bool conjure_flame(int pow, const coord_def& where)
     return (true);
 }
 
+// Assumes beem.range has already been set. -cao
 bool stinking_cloud( int pow, bolt &beem )
 {
     beem.name        = "stinking cloud";
     beem.colour      = GREEN;
-    beem.range       = 6;
     beem.damage      = dice_def( 1, 0 );
     beem.hit         = 20;
     beem.glyph       = dchar_glyph(DCHAR_FIRED_ZAP);
