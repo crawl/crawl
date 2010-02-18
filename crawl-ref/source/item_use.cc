@@ -4735,6 +4735,13 @@ void drink(int slot)
         return;
     }
 
+    if (alreadyknown && potion.sub_type == POT_LEVITATION
+        && !merfolk_unchange_is_safe(true))
+    {
+        mprf(MSGCH_WARN, "Levitating now would unmeld your boots, and that's fatal.");
+        return;
+    }
+
     // The "> 1" part is to reduce the amount of times that Xom is
     // stimulated when you are a low-level 1 trying your first unknown
     // potions on monsters.

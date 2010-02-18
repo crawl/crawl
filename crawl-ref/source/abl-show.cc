@@ -1551,6 +1551,11 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_EVOKE_LEVITATE:           // ring, boots, randarts
+        if (!merfolk_unchange_is_safe(true))
+        {
+            mprf(MSGCH_WARN, "Levitating now would unmeld your boots, and that's fatal.");
+            return (false);
+        }
         potion_effect(POT_LEVITATION, 2 * you.skills[SK_EVOCATIONS] + 30);
         exercise(SK_EVOCATIONS, 1);
         break;
