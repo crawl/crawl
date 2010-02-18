@@ -3707,6 +3707,9 @@ void TabbedRegion::pack_buffers()
 
 void TabbedRegion::render()
 {
+    if (crawl_state.arena)
+        return;
+
     if (!active_is_valid())
         return;
 
