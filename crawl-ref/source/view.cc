@@ -715,17 +715,13 @@ static int player_view_update_at(const coord_def &gc)
             && cl.whose  == KC_OTHER
             && cl.killer == KILL_MISC)
         {
-            for (adjacent_iterator ai(gc, false); ai; ++ai)
-            {
-                // Optionally add exclude, deferring updates.
-                if (!cell_is_solid(*ai))
-                {
-                    bool was_exclusion = is_exclude_root(*ai);
-                    set_exclude(*ai, 0, false, false, true);
-                    if (!did_exclude && !was_exclusion)
-                        ret |= UF_ADDED_EXCLUDE;
-                }
-            }
+            // Steam clouds are less dangerous than the other ones,
+            // so don't exclude the neighbour cells.
+            const int size = (ctype == CLOUD_STEAM ? 0 : 1);
+            bool was_exclusion = is_exclude_root(gc);
+            set_exclude(gc, size, false, false, true);
+            if (!did_exclude && !was_exclusion)
+                ret |= UF_ADDED_EXCLUDE;
         }
     }
 
