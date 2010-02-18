@@ -108,7 +108,7 @@ Items
 * Improvements to whips and demon whips; the latter can be blessed by TSO.
 * Reduce the chances for artefacts with only one stat property.
 * Weapons of electrocution discharge in water.
-* Removed evocable properties (mapping/teleportation/levitation) from artefacts.
+* Removed evocable properties (mapping/teleportation) from artefacts.
 * Removing +Lev items cancels levitation and is disallowed over water.
 * Clubs and spears get moderate stabbing bonus.
 * Clubs may stun target upon successful stabbing.
