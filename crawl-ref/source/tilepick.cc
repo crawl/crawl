@@ -2861,14 +2861,16 @@ int tileidx_feature(dungeon_feature_type feat, int gx, int gy)
 
 static int _tileidx_cloud(cloud_struct cl)
 {
-    int type = cl.type;
+    int type  = cl.type;
     int decay = cl.decay;
     std::string override = cl.tile;
     int colour = cl.colour;
 
-    int ch = TILE_ERROR;
+    int ch  = TILE_ERROR;
     int dur = decay/20;
-    if (dur > 2)
+    if (dur < 0)
+        dur = 0;
+    else if (dur > 2)
         dur = 2;
 
     if (!override.empty())
