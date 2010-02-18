@@ -116,8 +116,11 @@ static void _fuzz_direction(monsters &mon, int pow)
 
     _normalize(vx, vy);
 
+    if (pow < 10)
+        pow = 10;
     const float off = (coinflip() ? -1 : 1) * 0.25;
     float tan = (random2(31) - 15) * 0.019; // approx from degrees
+    tan *= 75.0 / pow;
     if (wearing_amulet(AMU_INACCURACY))
         tan *= 2;
 
@@ -156,8 +159,15 @@ bool _iood_hit(monsters &mon, const coord_def &pos, bool big_boom = false)
     beam.source = pos;
     beam.target = pos;
     beam.hit = AUTOMATIC_HIT;
-    const int pow = mon.props["iood_pow"].get_short();
-    beam.damage = dice_def(8, stepdown_value(pow, 30, 30, 200, -1) / 4);
+
+    int pow = mon.props["iood_pow"].get_short();
+    pow = stepdown_value(pow, 30, 30, 200, -1);
+    const int dist = mon.props["iood_distance"].get_long();
+    ASSERT(dist >= 0);
+    if (dist < 4)
+        pow = pow * (dist*2+3) / 10;
+    beam.damage = dice_def(8, pow / 4);
+
     beam.ex_size = 1;
     beam.loudness = 7;
 
@@ -248,6 +258,7 @@ reflected:
 
     mon.props["iood_x"] = x;
     mon.props["iood_y"] = y;
+    mon.props["iood_distance"].get_long()++;
 
     const coord_def pos(static_cast<int>(round(x)), static_cast<int>(round(y)));
     if (!in_bounds(pos))
