@@ -361,6 +361,10 @@ reflected:
             goto reflected;
         }
 
+        // Yay for inconsistencies in beam-vs-player and beam-vs-monsters.
+        if (victim == &you)
+            mprf("%s hits you!", mon.name(DESC_CAP_THE, true).c_str());
+
         if (_iood_hit(mon, pos))
             return (true);
     }
