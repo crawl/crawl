@@ -440,6 +440,13 @@ endif
 DEFINES_L += $(PNG_CFLAGS) $(FREETYPE_CFLAGS) $(SDL_CFLAGS)
 INCLUDES_L += $(PNG_INCLUDE) $(FREETYPE_INCLUDE) $(SDL_INCLUDE)
 
+ifdef PROPORTIONAL_FONT
+DEFINES += -DPROPORTIONAL_FONT=\"$(PROPORTIONAL_FONT)\"
+endif
+ifdef MONOSPACED_FONT
+DEFINES += -DMONOSPACED_FONT=\"$(MONOSPACED_FONT)\"
+endif
+
 endif # TILES
 
 ifeq ($(GCC_GTE_4_3_0),1)
@@ -851,7 +858,13 @@ endif
 	$(COPY) ../settings/* $(datadir_fp)/settings/
 ifdef TILES
 	mkdir -p $(datadir_fp)/dat/tiles
-	$(COPY) dat/tiles/*.png dat/tiles/*.ttf $(datadir_fp)/dat/tiles/
+	$(COPY) dat/tiles/*.png $(datadir_fp)/dat/tiles/
+ifndef PROPORTIONAL_FONT
+	$(COPY) dat/tiles/Vera.ttf $(datadir_fp)/dat/tiles/
+endif
+ifndef MONOSPACED_FONT
+	$(COPY) dat/tiles/VeraMono.ttf $(datadir_fp)/dat/tiles/
+endif
 endif
 ifeq ($(USE_DGAMELAUNCH),)
 	$(CHOWN) -R $(INSTALL_UGRP) $(datadir_fp) || true

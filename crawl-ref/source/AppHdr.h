@@ -500,6 +500,13 @@
 // Uncomment these if you can't find these functions on your system
 // #define NEED_USLEEP
 
+#ifndef PROPORTIONAL_FONT
+    #define PROPORTIONAL_FONT "Vera.ttf"
+#endif
+#ifndef MONOSPACED_FONT
+    #define PROPORTIONAL_FONT "VeraMono.ttf"
+#endif
+
 #ifdef __cplusplus
 
 
