@@ -2602,9 +2602,7 @@ void world_reacts()
 
     _decrement_durations();
 
-    int food_use = player_hunger_rate();
-    food_use = div_rand_round(food_use * you.time_taken, BASELINE_DELAY);
-
+    const int food_use = player_hunger_rate();
     if (food_use > 0 && you.hunger >= 40)
         make_hungry(food_use, true);
 

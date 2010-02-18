@@ -1174,11 +1174,8 @@ int player_hunger_rate(void)
             hunger += 5;
 
         // Berserk has its own food penalty -- excluding berserk haste.
-        // Doubling the hunger cost for haste so that the per turn hunger
-        // is consistent now that a hasted turn causes 50% the normal hunger
-        // -cao
         if (you.duration[DUR_HASTE] > 0 && !you.berserk())
-            hunger += 10;
+            hunger += 5;
     }
 
     if (you.species == SP_VAMPIRE)
