@@ -1563,7 +1563,8 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
     {
         if (spore_count == 0
             && ballisto_count == 0
-            && any_friendly)
+            && any_friendly
+            && monster->type == MONS_BALLISTOMYCETE)
         {
             mprf("Your fungal colony was destroyed.");
             dock_piety(1, 0);
