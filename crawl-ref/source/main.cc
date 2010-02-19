@@ -875,6 +875,24 @@ static void _center_cursor()
 #endif
 }
 
+
+// We have to refresh the SH display if the player's incapacitated state
+// changes (getting confused/paralyzed/etc. sets SH to 0, recovering
+// from the condition sets SH back to normal).
+struct disable_check
+{
+    disable_check(bool current)
+    {
+        was_disabled = current;
+    }
+    ~disable_check()
+    {
+        if (you.incapacitated() != was_disabled)
+            you.redraw_armour_class = true;
+    }
+
+    bool was_disabled;
+};
 //
 //  This function handles the player's input. It's called from main(),
 //  from inside an endless loop.
@@ -888,6 +906,7 @@ static void _input()
 
     crawl_state.clear_mon_acting();
 
+    disable_check player_disabled(you.incapacitated());
     religion_turn_start();
     god_conduct_turn_start();
     you.update_beholders();
