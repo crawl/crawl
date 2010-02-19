@@ -479,8 +479,13 @@ static void _print_stats_ac(int x, int y)
 
     // SH: (two lines lower)
     cgotoxy(x+4, y+2, GOTO_STAT);
-    if (you.duration[DUR_CONDENSATION_SHIELD] || you.duration[DUR_DIVINE_SHIELD])
+    if (you.incapacitated())
+        textcolor(RED);
+    else if (you.duration[DUR_CONDENSATION_SHIELD]
+             || you.duration[DUR_DIVINE_SHIELD])
+    {
         textcolor( LIGHTBLUE );
+    }
     else
         textcolor( HUD_VALUE_COLOUR );
     cprintf( "%2d ", player_shield_class() );
