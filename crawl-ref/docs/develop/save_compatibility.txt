@@ -106,3 +106,25 @@ values of TAG_MINOR_ and restarting minor numbering from 1.
 Thank you for listening, I hope this was useful.
 
 Stefan
+
+
+A few comments on Tiles
+-----------------------
+Whenever an old tile is removed without replacement, a new tile is added,
+or the order of tiles changes, saved games can look wonky when loaded.
+This happens because the tiles for floor and wall tiles get rolled once on
+level creation and are subsequently stored in the level files, so they don't
+change every time you reload the game. Any time a tile's number is changed,
+the actually displayed tile gets shifted a bit which can lead to floor
+looking like walls, staircases like shops and similar odd occurences.
+Items and monsters that are cached out of sight may similarly be affected.
+
+This is not a big problem and in the development version, we don't even
+try to prevent this, but in the stable branches it should simply not happen.
+This means that we should never add new tiles for a minor release, unless
+said tiles replace the same amount of existing ones.
+If we expect that we might have to add new tiles in a stable branch later
+on, we should add placeholder tiles before the official release, that can
+later be replaced without affecting saved games.
+
+Johanna
