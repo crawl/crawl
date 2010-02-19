@@ -370,6 +370,7 @@ Last
 Lost
 %%%%
 # level 7-9, books in the form of "XYZ's <bookname>"
+# Prefixed articles will be filtered out.
 difficult level book owner
 
 A Thorough Guide to @the_book_magic@

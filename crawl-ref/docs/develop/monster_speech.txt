@@ -54,7 +54,7 @@ Contents:
 A.  Monster speech probabilities
 ================================
 
-Not all monsters are equally likely to speak. Rather there are
+Not all monsters are equally likely to speak. Rather, there are
 different chances involved, depending on several attributes, and most
 of the time the database lookup stage isn't even reached.
 
@@ -90,13 +90,13 @@ monsters, i.e. all intelligent humanoid monsters, but of course it is
 possible we've overlooked something, so if you find that your
 carefully constructed monster speech never gets printed, and this
 documentation also doesn't help you solve the problem, you might want
-to post a bug report on Dungeon Crawl's SourceForge site [1].
+to post a bug report on Stone Soup's Mantis site [1].
 
-The exception to the above is when the monster goes away due to dying, being
-banished, or a summoned monster being abjured or having it's time run out.  In
-that case the monster always speaks if the player can see the grid the monster
-is on (assuming that there's a speech entry defined for that occasion, of
-course).
+The exception to the above is when the monster goes away due to dying,
+being banished, or a summoned monster being abjured or having it's time
+run out. In that case the monster always speaks if the player can see
+the grid the monster is on (assuming that there's a speech entry defined
+for that occasion, of course).
 
 B.  A simple example
 ====================
@@ -188,7 +188,7 @@ attributes as prefixes.
 speech from "hostile" or "neutral". All prefixes are optional and
 tested in the following order:
 
-  default <attitude> fleeing silenced confused [related] <player god>
+  default <attitude> fleeing silenced confused [related] <player god> <branch>
 
 where <attitude> can be any of friendly, neutral or hostile. Note that
 the game generally treats neutral monsters like hostiles since they
@@ -207,19 +207,23 @@ really is a bat.
 
 The <player god> prefix is constructed according to the religious
 belief of the character. If the monster in question is a member of the
-orc species and the character worships Beogh, the prefix "beogh" gets
-added to the list, though not for charmed orcs who will simply use the
-generic friendly statements instead of the orcish followers' cheers.
+orc species and the character worships Beogh, depending on whether the
+monster orc believes in Beogh (rolled at creation, always true when
+converted) either the prefix "beogh" or "unbeliever" gets added to the
+list, though not for charmed orcs who will simply use the generic
+friendly statements instead of the orcish followers' cheers.
 If you worship one of the good gods instead (Zin, the Shining One, or
-Elyvilon), the prefix "good god" is used. Conversely, worshippers of
-one of the evil gods (Yredelemnul, Makhleb, Kikubaaqudgha, Lugonu, or
-Beogh) will use the prefix "evil god".
+Elyvilon), the prefix "good god" is used.
 
 This allows fine-grained handling of monsters depending on your
 character's religion status, e.g. orcs will use special speech for
 Beogh worshippers, and neutral holy beings (Angel and Daeva) may
 shout messages of encouragement to followers of the good gods, while
-demons will attempt to slander the good gods.
+demons might attempt to slander the good gods.
+
+Finally, the current branch is added to the list of prefixes, so
+monsters may react differently depending on where you encounter them.
+This is currently only used for the unique Donald.
 
 Once the entire set of prefixes has been determined, we only need
 to add the monster name and start the database search.
@@ -228,8 +232,8 @@ First we search for the complete prefix string in combination with the
 monster name. Then we try omitting some very specific prefixes that
 might not be so important, first skipping on "hostile", then also
 ignoring religion status, then hostile and "related", then all three
-of them, and then finally adding "silenced" to the list of ignored
-prefixes, where applicable.
+of them, then dungeon branch, and then finally adding "silenced" to
+the list of ignored prefixes, where applicable.
 
 If all of that didn't yield any results, next we'll take the complete
 prefix list again, then, reading from left to right, combinations are
@@ -264,7 +268,7 @@ following order:
 3. Then the monster glyph, with prefix "cap-" for capital letters.
    Examples: "default 'cap-J'", "default confused 'k'"
 4. A group description (such as 'insect' or 'humanoid') defined by the
-   monster's body shape (winged, tailed etc). The definition of the
+   monster's body shape (winged, tailed, etc.) The definition of the
    latter is entirely hardcoded, though.
    Examples: "default winged insect", "default confused humanoid"
 
@@ -272,13 +276,11 @@ If you are playing with tiles, you may not know the monster glyphs,
 but internally the monsters are still treated the same, and even under
 tiles, the glyph keys used for step 3 are entirely valid. In case you
 need to know the monster glyphs for your speech definitions you'll
-find a list of monster glyphs at the end of this file. Also, for many
-monsters you can find out their glyph in-game by searching the
-database ('?/') and entering a vague enough monster name. For example,
-entering "drac" will tell you that all draconians use the symbol 'd'.
+find a list of monster glyphs at the end of this file.
 
-Note that changing monster glyphs using the mon_glyph option may also
-affect speech of this kind.
+Note that changing monster glyphs using the mon_glyph option does not
+affect speech. Instead, the underlying glyph used in the monster
+definition is used.
 
 For the last round (shape comparison, e.g. "winged humanoid")
 occasionally an additional intelligence estimate ("stupid", "smart")
@@ -319,8 +321,7 @@ SOUND:@The_monster@ buzzes around in tight circles.
 %%%%
 
 Example 2:
-  This time, we're interested in "friendly fleeing related beogh orc
-  wizard".
+  This time, we're interested in "friendly fleeing related beogh orc wizard".
 
   This obviously made up example also has no direct equivalent in the
   database, so first we try to remove the less important prefixes, in
@@ -386,42 +387,51 @@ VISUAL:@The_monster@ tries to hide somewhere.
 
 Weapon speech
 -------------
+
 For obvious reasons, weapon noises get by without any such prefixes,
 and the only hardcoded keywords are "noisy weapon" for weapons with
 the noises property, and "singing sword" for (who'd have guessed?) the
 Singing Sword.
 
+
 Death speech
 ------------
-You can define messages for the monster to give for when it goes away in three
-different manners:
 
-* If it really died, then the game will look up a speech entry with the
-  same keys as usual, but with " killed" appended to all the keys.
+You can define messages for the monster to give for when it goes away
+in three different manners:
+
+* If it really died, then the game will look up a speech entry with
+  the same keys as usual, but with " killed" appended to all the keys.
 
 * If it was banished, then the game will append " banished" to all the
   lookup keys.
 
-* If the monster was summoned and rather than being killed was abjured or
-  ran out of time, then the game will append " unsummoned" to all of the
-  lookup keys.
+* If the monster was summoned and rather than being killed was abjured
+  or ran out of time, then the game will append " unsummoned" to all of
+  the lookup keys.
 
-The game will always do a lookup in these circumstances if the player can see
-the square the monster is on, so if you only want a death message to be given
-occasionally then make one of the messages "__NONE" and give it a high weight.
+The game will always do a lookup in these circumstances if the player
+can see the square the monster is on, so if you only want a death message
+to be given occasionally then make one of the messages "__NONE" and give
+it a high weight.
 
 Of course, if no keys with the given suffix are in the database then the
 monster will say nothing in that circumstance.
 
+
 Special monster speech
 ----------------------
-Rarely, monster speech will also rely on hard-coded keys.  If such a hard-coded
-key is changed or removed, the speech in question will simply not be printed.
+
+Rarely, monster speech will also rely on hard-coded keys.  If such a
+hard-coded key is changed or removed, the speech in question will simply
+not be printed.
 This may look odd in the game, but will have no other effect. Sometimes,
 default messages will be output instead.
 
+
 God speech
 ----------
+
 The keys used to search for god speech are entirely hard-coded, though
 some local synonyms have been defined as well. Hopefully, the comments
 will explain what the different speech messages are used for.
@@ -484,8 +494,6 @@ The following variables are hardcoded:
 @Player_god@    : Player's god name, or "You" if non-religious.
 @god_is@        : replaced with "<god name> is" or "you are", if
                   non-religious.
-@God_is@        : replaced with "<god name> is" or "You are", if
-                  non-religious.
 @surface@       : Whatever the monster is standing on.
 @feature@       : The monster's square's feature description.
 @pronoun@       : it, she, he, as appropriate
@@ -517,8 +525,8 @@ Weapon noises are handled differently in that most of the above
 replacements don't hold. Instead you can use @The_weapon@,
 @the_weapon@, @Your_weapon@, @your_weapon@ and @weapon@ which will get
 replaced by "The (weapon name)", "the (weapon name)", "Your (weapon
-name)", "your (weapon name)", and the plain weapon name,
-respectively.
+name)", "your (weapon name)", and the plain weapon name, respectively.
+
 @player_name@ is expanded as above, as is @player_god@, though for
 atheists it returns "atheism".
 
@@ -539,34 +547,38 @@ end of wpnnoise.txt.
 The best way to learn about how variables and other concepts can be
 used is probably to see how it has been done for existing messages.
 
+
 Speaking to the player vs to another monster
 --------------------------------------------
 
-If a message contains a variable starting with "@player", then that message
-will only be used by friendly/good-neutral monsters, or by hostile/neutral
-monsters which have the player as their foe (and it will never be used in the
-arena).  Additionally, any message containing a line starting with "You" or
-ending in a bare "you." (but not a quoted "you.") will also be considered
-player centric.  You can also make a message player-centric by appending
-"@player_only@" to the end of any of the lines in the message, which will be
-removed before displaying it to the player.
+If a message contains a variable starting with "@player", then that
+message will only be used by friendly/good-neutral monsters, or by
+hostile/neutral monsters which have the player as their foe (and it
+will never be used in the arena). Additionally, any message containing
+a line starting with "You" or ending in a bare "you." (but not a quoted
+"you.") will also be considered player centric. You can explicitly make
+a message player-centric by appending "@player_only@" to the end of any
+of the lines in the message, which will be removed before displaying it
+to the player.
 
-If you want a message to be able to apply to a foe which is another monster in
-*addition* to the player, you can replace "@player" with "@foe" to have the
-variable filled out with a string appropriate for the foe being either the
-player or another monster.  If "@foe_name@" is present then the message will
-only be used on monster foes which are named, and if "@foe_god@" or "@god_is@"
-is present then it will only be used on priestly monsters or god gift monsters.
-"@Foe@" or "@foe@" will be replaced with "You" or "you" if directed at the
-player, or if directed at another monster be the same as "@The_monster@" or
-"@the_monster@", but with the foe monster's name rather than the speaking
-monster's name.  "@foe_possessive@" will be replaced with "your" if directed
-at the player, or expanded like "@foe@'s" if directed at a monster.
+If you want a message to be able to apply to a foe which is another
+monster in *addition* to the player, you can replace "@player" with
+"@foe" to have the variable filled out with a string appropriate for
+the foe being either the player or another monster.  If "@foe_name@"
+is present then the message will only be used on monster foes which are
+named, and if "@foe_god@" or "@god_is@" is present then it will only be
+used on priestly monsters or god gift monsters.
+"@Foe@" or "@foe@" will be replaced with "You" or "you" if directed at
+the player, or if directed at another monster be the same as
+"@The_monster@" or "@the_monster@", but with the foe monster's name
+rather than the speaking monster's name. "@foe_possessive@" will be
+replaced with "your" if directed at the player, or expanded like
+"@foe@'s" if directed at a monster.
 
-If you want to indicate which monster a message is directed at, you can put in
-"@to_foe@" or "@at_foe@" to fill in the foe name when the message is directed
-at a monster; when directed at the player the variable will be removed.  For
-example, with the message:
+If you want to indicate which monster a message is directed at, you can
+put in "@to_foe@" or "@at_foe@" to fill in the foe name when the
+message is directed at a monster; when directed at the player the
+variable will be removed.  For example, with the message:
 
     @The_monster@ says @to_foe@, "Defend yourself!"
 
@@ -578,8 +590,8 @@ but if directed at the player will expand to:
 
     @The_monster@ says, "Defend yourself!"
 
-You can do something similar with "@foe,@" for asking questions and the like.
-For example:
+You can do something similar with "@foe,@" for asking questions and the
+like. For example:
 
     @The_monster@ asks @foe,@ "Who are you?"
 
@@ -590,6 +602,7 @@ when directed at an orc will expand to:
 and when directed at the player will expand to:
 
     @The_monster@ asks, "Who are you?"
+
 
 Channels
 --------
@@ -720,6 +733,7 @@ including VISUAL and the channel keys SPELL and ENCHANT is considered
 invalid and will trigger a default message instead. Again, the default
 channel is MSGCH_TALK.
 
+
 Special commands and variables
 ------------------------------
 
@@ -745,9 +759,8 @@ E.  Testing your changes
 
 Get a version of Stone Soup that contains WIZARD mode. You can check
 whether this is the case by reading the in-game version information
-('?v'). If Wizard mode is not listed among the included features
-(likely, since WIZARD builds are generally not distributed), you will
-have to compile the game for yourself.
+('?v'). If Wizard mode is not listed among the included features, you
+will have to compile the game for yourself.
 
 To build Crawl yourself, download the source code from the Crawl
 homepage [1] and read the "INSTALL" file in the main directory for
@@ -769,7 +782,7 @@ These last two are of particular interest to monster speech designers.
 
 Also, the Singing Sword and other hardcoded artefacts can be created
 with '&o'. To create all artefacts at the same time, use '&|'. The
-Elemental Staff and the spear of Voo-Doo are examples of noisy weapons.
+Elemental Staff and the spear of Botono are examples of noisy weapons.
 
 You can also temporarily increase the likelihood of a given message by
 adding a high weight value before it, e.g. w:5000, or equally
@@ -797,13 +810,17 @@ F.  Publishing your changes
 If you feel that your additions really add something to the game and
 would like to make them available to the general public, you can post
 them (in the form of a diff file, or in plain text) as a feature
-request on sourceforge.net [1] or in the newsgroup [2].
+request on our Mantis tracker [2] or in the newsgroup [3].
 
 
 .. [1] http://crawl-ref.sourceforge.net
-   http://sourceforge.net/projects/crawl-ref
+   The official Dungeon Crawl Stone Soup homepage, always linking
+   to the latest release.
 
-.. [2] rec.games.roguelike.misc
+.. [2] http://crawl.develz.org/mantis/main_page.php
+   The Mantis bug tracker.
+
+.. [3] rec.games.roguelike.misc
    Since this newsgroup is being shared with a number of other
    roguelike games, it is generally considered polite to flag
    subjects of posts pertaining only to Crawl with "-crawl-" or
@@ -815,29 +832,31 @@ APPENDIX: List of monster glyphs
 
 Lowercase letters:
 ------------------
-a   giant cockroach, giant ant, soldier ant
+a   giant ant, soldier ant, queen ant
 b   giant bat, butterfly
 c   centaur (warrior), yaktaur (captain)
 d   all draconians
 e   all elves
-f   fungus, wandering mushroom
+f   toadstool, fungus, ballistomycete, wandering mushroom
 g   goblin, hobgoblin, gnoll, boggart
-h   all hounds (jackal, hound, wolf, warg, war dog, hell hound)
-        and hogs (hog, hell hog)
+h   hounds (jackal, hound, wolf, warg, war dog, hell hound),
+    hogs (hog, hell hog)
 j   snails: elephant slug, giant slug, giant snail
-k   winged insects: killer bee, bumblebee
+k   winged insects: killer bee, bumblebee, queen bee
 l   lizards (giant newt/gecko/iguana/lizard, gila monster, komodo
              dragon),
-        and drakes (swamp drake, firedrake, death drake, lindwurm)
+    drakes (swamp drake, firedrake, death drake, lindwurm)
+m   all merfolk, mermaid, siren
 n   ghouls: necrophage, ghoul, rotting hulk
 o   all orcs
-p   all ghosts, phantom, and insubstantial wisp
+p   all ghosts, phantom, and shadow
 r   all rodents (rats of all colours, and quokka)
 s   arachnides (giant mite, giant centipede, scorpion, wolf spider,
-                redback)
-t   minotaur
+                redback, trapdoor spider)
+    also: giant cockroach
+t   (alligator) snapping turtle, crocodile, (baby) alligator
 u   (very) ugly thing
-v   all vortices, and air elemental
+v   all vortices, and insubstantial wisp
 w   all worms and larvae
 x   unseen horror, small abomination
 y   wasps, giant mosquito, giant blowfly, moth of wrath
@@ -850,10 +869,10 @@ A   Angel, Daeva
 B   all beetles
 C   all giants, ettin, cyclops, and titan
 D   all dragons, wyvern, and hydra
-E   efreet
+E   all elementals
 F   all frogs
 G   all eyes, giant spore, and giant orange brain
-H   hippogriff, manticore, griffon, and sphinx
+H   hippogriff, manticore, griffon, minotaur, and sphinx
 I   ice beast
 J   all jellies, oozes, and slime creature, pulsating lump,
     giant amoeba, jellyfish, and acid blob
@@ -863,24 +882,23 @@ M   all mummies
 N   all naga
 O   all ogres
 P   all plants
-Q   queen bee, and queen ant
-R   (fake) rakshasa
+R   (fake) rakshasa, efreet
 S   all snakes, and salamander
 T   all trolls
 U   all bears
 V   all vampires
 W   all wraiths, wight, and spectral warrior/thing
-X   abomination, tentacled monstrosity, and Orb Guardian
+X   kraken, abomination, tentacled monstrosity, and Orb Guardian
 Y   all yaks, and sheep
 Z   large zombie/skeleton/simulacrum
 
 Numbers:
 --------
 1   all Fiends, Executioner, Blue/Green Death, Balrug, Cacodemon
-2   sun demon, reaper, soul eater, ice devil, and Lorocyproca
-3   hellion, tormentor, blue/iron devil, neqoxec, orange/shadow demon,
-    hellwing, ynoxinul, and demonic crawler
-4   red/rotting/hairy devil, beast, and smoke demon
+2   sun demon, reaper, soul eater, ice devil, beast, and Lorocyproca
+3   hellion, tormentor, blue/iron devil, neqoxec, ynoxinul,
+    orange/shadow/smoke demon, chaos spawn, and demonic crawler
+4   red/rotting/hairy devil, sixfirhy, and hellwing
 5   all imps, and other minor demons (quasit, lemure, ufetubus, manes,
                                       midge)
 8   all golems, and living statues
@@ -888,13 +906,11 @@ Numbers:
 
 Other symbols:
 --------------
-#   earth elemental, fire elemental, and vapour
-{   water elemental
 ;   all fish, and electric eel
 @   all humans, (glowing) shapeshifter, and Killer Klown
 &   all pandemonium lords
-*   ball lightning, and orb of fire
+*   giant spore, ball lightning, and orb of fire
 %   death cob
-    shadow
+
 
 For uniques, see their monster description for their subtype.
