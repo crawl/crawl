@@ -383,7 +383,9 @@ i-ponderous BRAND_ARM_PONDEROUSNESS
 i-levitation BRAND_ARM_LEVITATION
 i-magic-res BRAND_ARM_MAGIC_RESISTANCE
 i-protection BRAND_ARM_PROTECTION
+%rim 0
 i-stealth BRAND_ARM_STEALTH
+%rim 1
 i-resistance BRAND_ARM_RESISTANCE
 i-positive-energy BRAND_ARM_POSITIVE_ENERGY
 i-archmagi BRAND_ARM_ARCHMAGI
