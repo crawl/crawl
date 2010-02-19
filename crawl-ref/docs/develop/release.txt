@@ -75,7 +75,8 @@ for those the list begins with step 2.
 8.  Checkout the release tag
     git checkout -b stone_soup-0.X release-0.X.y
 
-    You may want to make a new shallow clone into a new folder, to make sure you    don't get any compilation stuff into the distribution.
+    You may want to make a new shallow clone into a new folder, to make sure
+    you don't get any compilation stuff into the distribution.
 
     Package the source (as described in 6.) and build the binaries. If you want
     you can do some more sanity testing but it shouldn't be necessary anymore.
