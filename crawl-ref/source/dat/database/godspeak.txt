@@ -2,8 +2,8 @@
 # godspeak.txt contains the messages for divine speech.
 #
 # For an explanation of how to read godspeak.txt and how to
-# add new messages, see monster_speech.txt in the docs
-# directory.
+# add new messages, see monster_speech.txt in the
+# docs/develop/ directory.
 ############################################################
 %%%%
 # fall-back in case a keyword can't be found
