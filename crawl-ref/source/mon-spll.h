@@ -888,7 +888,7 @@
       }
     },
 
-    {  MST_MYSTIC,
+    {  MST_NORRIS,
       {
        SPELL_BRAIN_FEED,
        SPELL_SMITING,
