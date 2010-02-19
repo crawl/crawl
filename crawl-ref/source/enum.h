@@ -2312,7 +2312,7 @@ enum mon_spellbook_type
     MST_QUICKSILVER_DRAGON,
     MST_IRON_DRAGON,
     MST_SKELETAL_WARRIOR,              // 130
-    MST_MYSTIC,
+    MST_NORRIS,
     MST_DEATH_DRAKE,
     MST_DRAC_SCORCHER, // As Bioster would say.. pig*s
     MST_DRAC_CALLER,
