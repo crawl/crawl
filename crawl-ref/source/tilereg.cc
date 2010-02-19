@@ -1622,8 +1622,11 @@ static bool _spell_in_range(spell_type spell, actor* target)
 
 static actor* _spell_target = NULL;
 
-static bool _spell_selector(spell_type spell)
+static bool _spell_selector(spell_type spell, bool &grey)
 {
+    if (!_spell_in_range(spell, _spell_target))
+        grey = true;
+
     return (_is_appropriate_spell(spell, _spell_target));
 }
 
