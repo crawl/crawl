@@ -5463,7 +5463,7 @@ void read_scroll(int slot)
 
     if (alreadyknown
         && (which_scroll == SCR_BLINKING || which_scroll == SCR_TELEPORTATION)
-        && scan_artefacts(ARTP_PREVENT_TELEPORTATION, false))
+        && item_blocks_teleport(false, false))
     {
         mpr("You cannot teleport right now.");
         return;
