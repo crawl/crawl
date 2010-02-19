@@ -36,13 +36,17 @@ class dist;
 
 enum spell_highlight_colours
 {
-    COL_USELESS      = DARKGRAY,  // ability would have no useful effect
-    COL_INAPPLICABLE = DARKGRAY,  // ability cannot be meanifully applied (eg, no targets)
-    COL_USEFUL       = LIGHTBLUE, // the palyers status makes this ability notably more useful
-    COL_EMPOWERED    = LIGHTBLUE, // The ability is made stronger by the player's status (unused)
-    COL_FORBIDDEN    = LIGHTRED,  // The player's god hates this abilty
-    COL_FAVORED      = YELLOW,    // the player's god likes this ability
-    COL_KNOWN        = LIGHTGRAY  // the spell is known (use for spellbook_contents)
+    COL_UNKNOWN      = LIGHTGRAY,   // spells for which no known brand applies.
+    COL_KNOWN        = LIGHTBLUE,   // the spell is known (use for spellbook_contents)
+    COL_USELESS      = DARKGRAY,    // ability would have no useful effect
+    COL_INAPPLICABLE = COL_USELESS, // ability cannot be meanifully applied (eg, no targets)
+    COL_USEFUL       = YELLOW,      // the players status makes this ability notably more useful
+    COL_RISKY        = MAGENTA,     // The Ability is inherently risky
+    COL_FORBIDDEN    = LIGHTRED,    // The player's god hates this abilty
+
+    COL_EMPOWERED    = LIGHTGREEN,  // The ability is made stronger by the player's status
+    COL_FAVORED      = GREEN        // the player's god likes this ability
+
 };
 
 bool is_valid_spell(spell_type spell);
@@ -135,9 +139,15 @@ int spell_type2skill (unsigned int which_spelltype);
 spell_type zap_type_to_spell(zap_type zap);
 
 bool spell_is_useless(spell_type spell, bool transient = false);
+bool spell_is_empowered(spell_type spell);
 bool spell_is_useful(spell_type spell);
+bool spell_is_known(spell_type spell);
+bool spell_is_risky(spell_type spell);
 
-int spell_highlight_by_utility(spell_type spell, int default_color = COL_KNOWN, bool transient = false);
+int spell_highlight_by_utility( spell_type spell,
+                                int default_color = COL_UNKNOWN,
+                                bool transient = false,
+                                bool force_known_brand = false);
 bool spell_no_hostile_in_range(spell_type spell, int minRange);
 
 #endif

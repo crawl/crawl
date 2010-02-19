@@ -1044,15 +1044,13 @@ spell_type zap_type_to_spell(zap_type zap)
     return SPELL_NO_SPELL;
 }
 
-bool spell_is_useful(spell_type spell)
+bool spell_is_empowered(spell_type spell)
 {
-    if (you_cannot_memorise(spell) || god_hates_spell(spell, you.religion))
-        return (false);
-    if (you.duration[DUR_CONF] > 0)
-        return (false);
+    if( (you.religion == GOD_VEHUMET)
+        && god_likes_spell(spell, you.religion)
+        && piety_rank() > 2)
+        return (true);
 
-    // due to the way this function is used, you should generally try to be
-    // fairly specific about the circumstances in which a spell is "useful".
     switch (spell)
     {
     case SPELL_SWIFTNESS:
@@ -1060,13 +1058,6 @@ bool spell_is_useful(spell_type spell)
         if (player_movement_speed() > 6
             && you.duration[DUR_CONTROLLED_FLIGHT] > 0
             && you.duration[DUR_SWIFTNESS]  < 1)
-        {
-            return (true);
-        }
-        break;
-    case SPELL_CONTROL_TELEPORT:
-        if (you.duration[DUR_TELEPORT] > 0
-            && you.duration[DUR_CONTROL_TELEPORT] < 1)
         {
             return (true);
         }
@@ -1087,9 +1078,62 @@ bool spell_is_useful(spell_type spell)
             return (true);
         }
         break;
+    default:
+        break;
+    }
+
+    return (false);
+}
+
+bool spell_is_useful(spell_type spell)
+{
+    if (you_cannot_memorise(spell) || god_hates_spell(spell, you.religion))
+        return (false);
+    if (you.duration[DUR_CONF] > 0)
+        return (false);
+    if (spell_is_empowered(spell))
+        return (true);
+
+    // due to the way this function is used, you should generally try to be
+    // fairly specific about the circumstances in which a spell is "useful".
+    switch (spell)
+    {
+    case SPELL_CONTROL_TELEPORT:
+        if (you.duration[DUR_TELEPORT] > 0
+            && you.duration[DUR_CONTROL_TELEPORT] < 1)
+        {
+            return (true);
+        }
+        break;
+    case SPELL_HASTE:
+        if(you.duration[DUR_SLOW] > 0
+           && you.duration[DUR_HASTE] <= 0)
+        {
+            return (true);
+        }
+    case SPELL_BLINK:
+    case SPELL_CONTROLLED_BLINK:
+    case SPELL_TELEPORT_SELF:
+        return (true);
     default: // quash unhandled constants warnings
         break;
     }
+
+    return (false);
+}
+
+bool spell_is_risky(spell_type spell)
+{
+    if (god_hates_spell(spell, you.religion))
+        return (true);
+
+    switch(spell)
+    {
+    case SPELL_ALTER_SELF:
+        return (true);
+    default:
+        break;
+    };
 
     return (false);
 }
@@ -1119,9 +1163,6 @@ bool spell_is_useless(spell_type spell, bool transient)
     case SPELL_BLINK:
     case SPELL_CONTROLLED_BLINK:
     case SPELL_TELEPORT_SELF:
-        // TODO: Its not very well behaved to do this manually, but...
-        // FIXME: somehow its not reliably realising when an amulet is
-        // IDed, and thus fails to flag TP as useless...
         if (item_blocks_teleport(false, false) )
             return true;
         break;
@@ -1159,32 +1200,53 @@ bool spell_is_useless(spell_type spell, bool transient)
     return (false);
 }
 
+bool spell_is_known(spell_type spell)
+{
+    for (int i = 0; i < 25; i++)
+        if(you.spells[i] == spell) return (true);
+    return (false);
+}
 
-// This function takes a spell, and determines what color it should be highlighted with
-// You shouldn't have to touch this unless you want to add new highlighting options.
+// This function takes a spell, and determines what color it should be
+// highlighted with. You shouldn't have to touch this unless you want
+// to add new highlighting options.
+//
 // as you can see, the functions it uses to determine highlights are:
+//       god_hates_spell(spell, god)
+//       god_likes_spell(spell, god)
+//       spell_is_empowered(spell)
 //       spell_is_useful(spell)
 //       spell_is_useless(spell, transient)
-//       god_likes_spell(spell, god)
-//       god_hates_spell(spell, god)
-int spell_highlight_by_utility(spell_type spell, int default_color, bool transient)
+//       spell_is_risky(spell)
+//       spell_is_known(spell)
+int spell_highlight_by_utility( spell_type spell, int default_color,
+                                bool transient, bool force_known)
 {
-    // If your god hates the spell, that overrides all other concerns
+    // if Force_known is true, and the spell is
+    // known, thats all that matters.
+    if (force_known && spell_is_known(spell))
+        return COL_KNOWN;
+
+    // If your god hates the spell, that
+    // overrides all other concerns
     if (god_hates_spell(spell, you.religion))
         return (COL_FORBIDDEN);
 
+    // NOTE: if you only want the forbidden brand,
+    // comment out the rest of the function.
     if (god_likes_spell(spell, you.religion))
         default_color = COL_FAVORED;
 
+    if(spell_is_empowered(spell))
+        default_color = COL_EMPOWERED;
+    else if (spell_is_useful(spell))
+        default_color = COL_USEFUL;
+
+    if (spell_is_risky(spell))
+        default_color = COL_RISKY;
     if (spell_is_useless(spell, transient))
         default_color = COL_USELESS;
 
-    // Specific utility should override general uselessness
-    // Note: its not an issue atm, but should undead-incompatible
-    // spells be added to 'spell_is_useful()' this will not play
-    // nicely. ~ DMB
-    if (spell_is_useful(spell))
-        default_color = COL_USEFUL;
 
     return (default_color);
 }
