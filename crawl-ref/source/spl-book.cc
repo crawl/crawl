@@ -769,10 +769,6 @@ int spellbook_contents( item_def &book, read_book_action_type action,
 
         out.cprintf(" ");
 
-        bool knows_spell = false;
-        for (i = 0; i < 25 && !knows_spell; i++)
-            knows_spell = (you.spells[i] == stype);
-
         const int level_diff = spell_difficulty( stype );
         const int levels_req = spell_levels_required( stype );
 
@@ -799,7 +795,7 @@ int spellbook_contents( item_def &book, read_book_action_type action,
                 colour = COL_USELESS;
             }
             else
-                colour = spell_highlight_by_utility(stype);
+                colour = spell_highlight_by_utility(stype, COL_UNKNOWN, false, true);
         }
 
         out.textcolor( colour );
