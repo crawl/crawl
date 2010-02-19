@@ -28,9 +28,11 @@ Main steps
     text files.
 
 1.) Get the source code, either from the most recent release
-    (http://sourceforge.net/projects/crawl-ref/files/) or use SVN to get the
-    current trunk:
-    svn co https://crawl-ref.svn.sourceforge.net/svnroot/crawl-ref/trunk/crawl-ref trunk
+    (http://sourceforge.net/projects/crawl-ref/files/) or use git to get the
+    current development version ("trunk" or "master"):
+    git clone git://crawl-ref.git.sourceforge.net/gitroot/crawl-ref/crawl-ref
+
+    See develop/git/quickstart.txt for more information.
 
 2.) Compile the code. To do this you might have to install a compiler and/or
     additional libraries. See INSTALL.txt for details. If you have any
@@ -56,15 +58,16 @@ Main steps
     You may want to apply the patch against the unmodified folder to test
     whether everything worked correctly.
 
-7.) Upload the patch on the patch tracker of Sourceforge at
-    http://sourceforge.net/tracker/?group_id=143991&atid=757515.
+7.) Upload the patch on Mantis at
+    http://crawl.develz.org/mantis/main_page.php
 
     Here it is immensely helpful if you give a summary of what the patch is
     about. If you created it in response to a bug report or feature request,
     mention the id, and you might also want to post a reply in said item
     pointing out your new patch. Please also mention the revision/version you
-    used for patching, e.g. 0.5 or r10078, and anything you think may still
-    need to be improved or modified.
+    used for patching, e.g. 0.6 or 1d611744b (the first 7 or 8 characters
+    should suffice), and anything you think may still need to be improved or
+    modified.
 
     Thank you! :D
 
@@ -72,8 +75,8 @@ Main steps
 Tips
 ----
 Tip 1:  The code is rougly divided into files according to functionality that
-        is reflected in the file names, so monstuff.cc, mon-util.cc and
-        mstuff2.cc all handle code relating to monsters, while spl-data.h,
+        is reflected in the file names, so mon-gear.cc, mon-stuff.cc
+        and mon-util.cc all handle code relating to monsters, while spl-data.h,
         spl-cast.cc and spells2.cc deal with spells. Note that related code can
         still be found in other files, too, but these are a good starting point.
 
@@ -92,6 +95,10 @@ Tip 3:  Use grep to find all occurences of a similar instance of the same type
 
 Example
 -------
+In the following, file names and code distribution refer to Stone Soup 0.5,
+and may very well have changed in the meantime. Still, the mechanics of finding
+and copying code from similar concepts are unchanged.
+
 I want to add a spell that creates some kind of clouds. The first similar spell
 I can think of is Mephitic Cloud. I know that this spell is defined as
 SPELL_MEPHITIC_CLOUD (and if I didn't know I could find out by grepping for
@@ -99,12 +106,16 @@ SPELL_MEPHITIC_CLOUD (and if I didn't know I could find out by grepping for
     grep SPELL_MEPHITIC_CLOUD *.h   and
     grep SPELL_MEPHITIC_CLOUD *.cc
 
-... which tells me that code regarding this spell turns up in enum.h (its
-declaration), mon-spll.h (monsters "casting" the spell), spl-data.h (the
-definition), and ghost.cc (monster spell), it_use3.cc (some kind of misc.
-item, maybe), mstuff2.cc (helpfully with a comment mentioning swamp
-drakes), spl-book.cc (spellbooks that contain this spell), and spl-cast.cc
-(actually casting the spell).
+... which tells me that code regarding this spell turns up in the following
+header files:
+* enum.h (its declaration)
+* mon-spll.h (monsters "casting" the spell)
+* spl-data.h (the definition)
+
+... as well as in ghost.cc (monster spell), it_use3.cc (some kind of misc.
+item, maybe), mstuff2.cc (helpfully with a comment mentioning swamp drakes),
+spl-book.cc (spellbooks that contain this spell), and spl-cast.cc (actually
+casting the spell).
 
 That gives me some ideas on where to start looking at code to duplicate
 for my new spell. I'd start out with the basics, the declaration and
