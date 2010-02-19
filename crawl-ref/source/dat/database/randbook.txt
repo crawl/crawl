@@ -757,6 +757,12 @@ Gliding
 # potential previous owners of books
 # __NONE is parsed to the empty string
 # First, combinations.
+Air Conjuration owner
+
+Nikola
+
+__NONE
+%%%%
 highlevel Conjuration Earth owner
 
 Dispater
@@ -800,6 +806,13 @@ Nergalle
 
 __NONE
 %%%%
+Conjuration Poison owner
+
+w:5
+Aizul
+
+__NONE
+%%%%
 highlevel Conjuration Summoning owner
 
 Asmodeus
@@ -807,6 +820,13 @@ Asmodeus
 Dispater
 
 w:5
+__NONE
+%%%%
+Conjuration Translocation owner
+
+w:5
+Louise
+
 __NONE
 %%%%
 highlevel Conjuration Translocation owner
@@ -883,11 +903,14 @@ Frederick
 %%%%
 Enchantment owner
 
-Ilsuiw
-
 Rupert
 
 Norris
+
+Kirke
+
+w:2
+Sigmund
 
 __NONE
 %%%%
@@ -902,6 +925,9 @@ Mnoleg
 @Summoning owner@
 %%%%
 Summoning owner
+
+w:5
+Eustachio
 
 __NONE
 %%%%
@@ -961,6 +987,10 @@ Frances
 Murray
 
 Nergalle
+
+Menkaure
+
+Khufu
 %%%%
 highlevel Translocation owner
 
@@ -969,6 +999,9 @@ Lom Lobon
 @Translocation owner@
 %%%%
 Translocation owner
+
+w:5
+Maurice
 
 __NONE
 %%%%
@@ -1004,6 +1037,8 @@ Roxanne
 __NONE
 %%%%
 Air owner
+
+Nikola
 
 __NONE
 %%%%
