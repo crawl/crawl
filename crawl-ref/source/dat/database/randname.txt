@@ -12,16 +12,16 @@
 # unidentified randart appearances.
 #
 # The syntax for keywords is the same as that of monster speech (details are in
-# monster_speech.txt). Any phrase encased in '@' symbols is one the database
-# will recognise as a keyword that needs to be replaced. Definitions of such
-# keywords can be found in 4 different places:
+# docs/develop/monster_speech.txt). Any phrase encased in '@' symbols is one
+# the database will recognise as a keyword that needs to be replaced.
+# Definitions of such keywords can be found in 4 different places:
 #
 #  o  rand_wpn.txt  - keywords used mainly for weapons
 #  o  rand_arm.txt  - keywords used mainly for armour
 #  o  rand_all.txt  - keywords used for jewellery
 #                     as well as for all three types
 #  o  randbook.txt  - keywords used for randart books
-#  o  hardcoded (artefact.cc)
+#  o  hardcoded (e.g. artefact.cc)
 #
 # The latter allows the use of phrases elsewhere defined in Crawl. The list of
 # hardcoded keywords is as follows:
@@ -585,7 +585,7 @@ w:5
 from the
 
 w:3
-by the 
+by the
 %%%%
 slow_animal_or_thing
 
