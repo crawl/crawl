@@ -194,6 +194,7 @@ Interface
 * Add a shopping list ('$') to notify you when you can afford a listed item.
 * New memorisation interface lists all spells contained in carried books.
 * Autopickup turns itself back on when killing invisible backlit monsters.
+* In the Abyss, allow travel via 'x' or mouseclick to cells within LOS.
 * Autotravel doesn't cut corners and tries to avoid ambushes.
 * Greatly decreased message spam, especially when targeting.
 * Switched to line-of-sight exclusions.
