@@ -866,6 +866,12 @@ Cigotuvi
 __NONE
 %%%%
 # Single spell schools.
+Air owner
+
+Nikola
+
+__NONE
+%%%%
 highlevel Conjuration owner
 
 Asmodeus
@@ -901,6 +907,23 @@ Josephine
 
 Frederick
 %%%%
+highlevel Earth owner
+
+Dispater
+
+w:30
+@Earth owner@
+%%%%
+Earth owner
+
+Lehudib
+
+Lee
+
+Roxanne
+
+__NONE
+%%%%
 Enchantment owner
 
 Rupert
@@ -911,23 +934,6 @@ Kirke
 
 w:2
 Sigmund
-
-__NONE
-%%%%
-highlevel Summoning owner
-
-Asmodeus
-
-Dispater
-
-Mnoleg
-
-@Summoning owner@
-%%%%
-Summoning owner
-
-w:5
-Eustachio
 
 __NONE
 %%%%
@@ -952,14 +958,6 @@ Ice owner
 
 w:5
 Ozocubu
-
-__NONE
-%%%%
-Transmutation owner
-
-Cigotuvi
-
-Roxanne
 
 __NONE
 %%%%
@@ -992,19 +990,6 @@ Menkaure
 
 Khufu
 %%%%
-highlevel Translocation owner
-
-Lom Lobon
-
-@Translocation owner@
-%%%%
-Translocation owner
-
-w:5
-Maurice
-
-__NONE
-%%%%
 highlevel Poison owner
 
 Gloorx Vloq
@@ -1019,26 +1004,41 @@ Alistair
 
 __NONE
 %%%%
-highlevel Earth owner
+highlevel Summoning owner
+
+Asmodeus
 
 Dispater
 
-w:30
-@Earth owner@
+Mnoleg
+
+@Summoning owner@
 %%%%
-Earth owner
+Summoning owner
 
-Lehudib
-
-Lee
-
-Roxanne
+w:5
+Eustachio
 
 __NONE
 %%%%
-Air owner
+highlevel Translocation owner
 
-Nikola
+Lom Lobon
+
+@Translocation owner@
+%%%%
+Translocation owner
+
+w:5
+Maurice
+
+__NONE
+%%%%
+Transmutation owner
+
+Cigotuvi
+
+Roxanne
 
 __NONE
 %%%%
