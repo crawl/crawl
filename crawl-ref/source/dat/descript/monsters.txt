@@ -20,11 +20,11 @@ power.
 %%%%
 Aizul
 
-Once the primary guardian of a legendary treasure hoard, he was disgraced after thieves looted it while he slept. Left without a job and a purpose, he now slithers aimlessly from place to place.
+Once the primary guardian serpent of a legendary treasure hoard, he was disgraced after thieves looted it while he slept. He now slithers about the dungeon, seeking vengeance against all would-be looters. He is an accomplished spellcaster, but no more deadly in melee combat than others of his kind.
 %%%%%
 Agnes
 
-A lanky warrior, she moves at a great pace and carries an exotic weapon.
+A tall and beautiful warrior, as vain as she is quick.  You can't help but notice both her exotic weapon and graceful movements.  She searches the dungeon for aesthetically pleasing objects to surround herself with.
 %%%%
 alligator
 
@@ -32,11 +32,11 @@ A reptile that's quite happy to ignore you. If you don't, or you get too close, 
 %%%%
 Angel
 
-A divine agent of the Shining One, it is a towering winged figure of unnatural beauty with an aura of brilliant white light.
+A divine warrior of The Shining One, it is a towering winged figure of unnatural beauty surrounded by an aura of brilliant white light.  It appears to be weightless and quite agile while flying, despite wearing heavy armour.
 %%%%
 Antaeus
 
-A great titan who lives in the depths of Cocytus.
+Once a mighty and renowned Titan, his arrogance was his undoing.  Now he is corrupt and tainted, a powerful demon who lords over the frozen wastes of Cocytus.  His gigantic body seems as though it would be easily struck by your attacks; unfortunately, it also seems like it would remain unscathed by all but the strongest of them.
 %%%%
 Asmodeus
 
@@ -782,7 +782,7 @@ It probably didn't get this big by eating little insects.
 %%%%
 giant gecko
 
-A lizard with pads on its toes allowing it to cling to walls and ceilings.  It's much larger than a normal gecko... perhaps it's something in the water?
+A lizard with pads on its toes allowing it to cling to walls and ceilings, and huge, sharp teeth.  It is many times larger than a normal gecko, yet its size belies its agility.  It believes you will be no less tasty than its previous victims were.
 %%%%
 giant goldfish
 
@@ -910,7 +910,7 @@ A large creature with the hindquarters of a horse and the wings, head and talons
 %%%%
 hobgoblin
 
-A larger and stronger relative of the goblin.
+A larger and even uglier goblin, with an even worse temper to match.  Many foolish young adventurers have underestimated the danger of crossing a hobgolin and paid for it with their lives.
 %%%%
 hog
 
@@ -1006,7 +1006,7 @@ A small, powerless larva of a killer bee.
 %%%%
 kobold
 
-No one knows where kobolds originated.  Some say they were the creation of an ancient demon-god, while others think they are household spirits gone bad.  Kobolds look like small, greyish creatures with canine heads.  Whatever their origin, this one is not happy to see you.
+No one knows where kobolds originated.  Some say they were the creation of an ancient demon-god, while others think they are household spirits gone bad.  Yet another legend attributes their origin to cross breeding experiments, between dogs and humans, performed by wizards attempting to create an army with unwavering loyalty.  They retain a small amount of canine agility.  Kobolds look like small, greyish creatures with canine heads.  Whatever their origin, this one is not happy to see you.
 %%%%
 kobold demonologist
 
