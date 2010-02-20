@@ -393,14 +393,46 @@ static bool _efreet_flask(int slot)
     return (true);
 }
 
+static bool _is_crystal_ball(const item_def &item)
+{
+    return (item.base_type == OBJ_MISCELLANY
+            && (item.sub_type == MISC_CRYSTAL_BALL_OF_FIXATION
+                || item.sub_type == MISC_CRYSTAL_BALL_OF_ENERGY
+                || item.sub_type == MISC_CRYSTAL_BALL_OF_SEEING));
+}
+
+static bool _check_crystal_ball(int subtype, bool known)
+{
+    if (you.intel <= 1)
+    {
+        mpr( "You lack the intellegence to focus on the shapes in the ball." );
+        return (false);
+    }
+
+    if (you.confused())
+    {
+        mpr( "You are unable to concentrate on the shapes in the ball." );
+        return (false);
+    }
+
+    if (subtype == MISC_CRYSTAL_BALL_OF_ENERGY && known
+        && (you.magic_points == you.max_magic_points))
+    {
+        mpr( "With no energy to recover, the crystal ball of energy is "
+             "presently useless to you.");
+        return (false);
+    }
+
+    return (true);
+}
+
 static bool _ball_of_seeing(void)
 {
     bool ret = false;
 
     mpr("You gaze into the crystal ball.");
 
-    int use = (!you.confused() ? random2(you.skills[SK_EVOCATIONS] * 6)
-                               : random2(5));
+    int use = random2(you.skills[SK_EVOCATIONS] * 6);
 
     if (use < 2)
     {
@@ -410,6 +442,7 @@ static bool _ball_of_seeing(void)
     {
         mpr("You feel power drain from you!");
         set_mp(0, false);
+        // if you're out of mana, the switch chain falls through to confusion
     }
     else if (use < 10 || you.level_type == LEVEL_LABYRINTH)
     {
@@ -675,15 +708,13 @@ static bool _ball_of_energy(void)
 
     mpr("You gaze into the crystal ball.");
 
-    int use = ((!you.confused()) ? random2(you.skills[SK_EVOCATIONS] * 6)
-                                 : random2(6));
+    int use = random2(you.skills[SK_EVOCATIONS] * 6);
 
-    if (use < 2 || you.max_magic_points == 0)
+    if (use < 2)
     {
         lose_stat(STAT_INTELLIGENCE, 1, false, "using a ball of energy");
     }
-    else if (use < 4 && enough_mp(1, true)
-             || you.magic_points == you.max_magic_points)
+    else if (use < 4 && enough_mp(1, true))
     {
         mpr( "You feel your power drain away!" );
         set_mp( 0, false );
@@ -840,6 +871,13 @@ bool evoke_item(int slot)
             ASSERT(wielded);
             evoke_deck(item);
             pract = 1;
+            break;
+        }
+
+        if (_is_crystal_ball(item)
+            && !_check_crystal_ball(item.sub_type, item_type_known(item)))
+        {
+            unevokable = true;
             break;
         }
 
