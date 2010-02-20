@@ -156,7 +156,7 @@ static void setup_colour_pairs( void )
                 init_pair(i * 8 + j, j, i);
         }
 
-    init_pair(63, COLOR_BLACK, Options.background_colour);
+    init_pair(64, COLOR_BLACK, Options.background_colour);
 }
 
 #ifdef UNICODE_GLYPHS
@@ -865,7 +865,7 @@ static int curs_fg_attr(int col)
     bg &= 0x0007;
 
     // figure out which colour pair we want
-    const int pair = (fg == 0 && bg == 0) ? 63 : (bg * 8 + fg);
+    const int pair = (fg == 0 && bg == 0) ? 64 : (bg * 8 + fg);
 
     return ( COLOR_PAIR(pair) | flags );
 }
@@ -925,7 +925,7 @@ static int curs_bg_attr(int col)
     bg &= 0x0007;
 
     // figure out which colour pair we want
-    const int pair = (fg == 0 && bg == 0) ? 63 : (bg * 8 + fg);
+    const int pair = (fg == 0 && bg == 0) ? 64 : (bg * 8 + fg);
 
     return ( COLOR_PAIR(pair) | flags );
 }
@@ -970,7 +970,7 @@ static void flip_colour(cchar_t &ch)
     int fg     = pair & 7;
     int bg     = (pair >> 3) & 7;
 
-    if (pair == 63)
+    if (pair == 64)
     {
         fg    = COLOR_WHITE;
         bg    = COLOR_BLACK;
@@ -997,7 +997,7 @@ static void flip_colour(char_info &ch)
     int fg     = pair & 7;
     int bg     = (pair >> 3) & 7;
 
-    if (pair == 63)
+    if (pair == 64)
     {
         fg    = COLOR_WHITE;
         bg    = COLOR_BLACK;
