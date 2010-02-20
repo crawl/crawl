@@ -1842,6 +1842,7 @@ bool direction_chooser::do_main_loop()
 #endif
 
     case CMD_TARGET_TOGGLE_BEAM: toggle_beam(); break;
+
     case CMD_TARGET_EXCLUDE:
         if (you.level_type == LEVEL_LABYRINTH
             || !player_in_mappable_area())
@@ -1849,7 +1850,17 @@ bool direction_chooser::do_main_loop()
             mpr("You cannot set exclusions on this level.");
         }
         else
+        {
+            const bool was_excluded = is_exclude_root(target());
             cycle_exclude_radius(target());
+            const bool is_excluded = is_exclude_root(target());
+            if (!was_excluded && is_excluded)
+                mpr("Placed new exclusion.");
+            else if (was_excluded && !is_excluded)
+                mpr("Removed exclusion.");
+            else
+                mpr("Reduced exclusion size to a single square.");
+        }
 
         need_cursor_redraw = true;
         break;
