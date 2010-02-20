@@ -292,10 +292,11 @@ KFEAT:    ! = w
 COLOUR:   ! = green
 KMONS:    ! = giant frog / nothing w:2
 SHUFFLE:  edfgh$|
-ITEM:     any good_item, any good_item
+ITEM:     nothing, nothing
 ITEM:     scroll of teleportation w:2 / scroll of blinking / \
           scroll of random uselessness w:1
 ITEM:     nothing, nothing
+KITEM:    de = |
 : sewer_setup(_G)
 MAP
            ccccccccccccc
