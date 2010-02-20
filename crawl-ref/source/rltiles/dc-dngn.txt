@@ -1104,6 +1104,9 @@ gravestone_writing1
 gravestone_writing2
 gravestone_ornate DNGN_GRAVESTONE_ORNATE
 
+# strange machine for Tukima's Wizlab
+machine_tukima DNGN_MACHINE_TUKIMA
+
 ## traps
 dngn_trap_dart DNGN_TRAP_DART
 dngn_trap_arrow DNGN_TRAP_ARROW
@@ -1264,6 +1267,15 @@ dngn_transit_pandemonium DNGN_TRANSIT_PANDEMONIUM
 volcano_portal DNGN_PORTAL_VOLCANO
 sewer_portal DNGN_PORTAL_SEWER
 ice_cave_portal DNGN_PORTAL_ICE_CAVE
+wizlab_portal0 DNGN_PORTAL_WIZARD_LAB
+wizlab_portal1
+wizlab_portal2
+wizlab_portal3
+wizlab_portal4
+wizlab_portal5
+wizlab_portal6
+wizlab_portal7
+wizlab_portal8
 
 %sdir dc-dngn/altars
 dngn_altar DNGN_UNSEEN_ALTAR
