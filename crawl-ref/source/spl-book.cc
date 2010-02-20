@@ -824,7 +824,7 @@ int spellbook_contents( item_def &book, read_book_action_type action,
                     && you.magic_points >= level_diff
                 : book.plus >= level_diff * ROD_CHARGE_MULT)
             {
-                colour = spell_highlight_by_utility(stype, COL_KNOWN);
+                colour = spell_highlight_by_utility(stype, COL_UNKNOWN);
             }
             else
                 colour = COL_USELESS;
@@ -839,7 +839,8 @@ int spellbook_contents( item_def &book, read_book_action_type action,
                 colour = COL_USELESS;
             }
             else
-                colour = spell_highlight_by_utility(stype, COL_UNKNOWN, false, true);
+                colour = spell_highlight_by_utility(stype, COL_UNKNOWN,
+                                                    false, true);
         }
 
         out.textcolor( colour );
