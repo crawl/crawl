@@ -121,6 +121,7 @@ function wizlab_portal (e)
         floor = "stone_arch",
         msg = messager })
     e.kfeat("O = enter_portal_vault")
+    e.tile("O = no_random dngn_portal_wizard_lab")
 end
 
 function wizlab_feat_descs()
@@ -131,6 +132,7 @@ dgn.set_lt_callback("wizlab", "wizlab_feat_descs")
 -- Destinations:
 function wizlab_setup (e, wizlab_desc)
     e.kfeat("< = exit_portal_vault")
+    e.tile("< = no_random dngn_portal_wizard_lab")
     -- This is so that the note shows up properly.
     dgn.set_level_type_origin("in " .. wizlab_desc)
     crawl.mark_milestone("br.enter", "entered " .. wizlab_desc .. ".")
@@ -313,6 +315,7 @@ ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 MONS:       dancing weapon
 KFEAT:      M = granite_statue
+TILE:       M = dngn_machine_tukima
 MARKER:     M = lua:props_marker {veto_fragmentation="veto", veto_disintegrate="veto", \
                                   slaved_to="tukima"}
 {{
@@ -1486,7 +1489,7 @@ end
 local wucad_marker = TriggerableFunction:new ({ func=wucad_died,
     repeated=false })
 
-wucad_marker:add_triggerer(DgnTriggerer:new {type="monster_dies", 
+wucad_marker:add_triggerer(DgnTriggerer:new {type="monster_dies",
     target="Statue of Wucad Mu"})
 
 lua_marker('A', summon_marker)
