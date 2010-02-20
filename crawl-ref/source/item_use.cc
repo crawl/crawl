@@ -2107,8 +2107,44 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     beam.glyph = dchar_glyph(zapsym);
     beam.was_missile = true;
 
+    item_def *launcher  = const_cast<actor*>(agent)->weapon(0);
+    if (launcher && !item.launched_by(*launcher))
+        launcher = NULL;
+
+    int bow_brand = SPWPN_NORMAL;
+    if (launcher != NULL)
+        bow_brand = get_weapon_brand(*launcher);
+
+    int ammo_brand = get_ammo_brand(item);
+
+    // Launcher brand does not override ammunition.
+    if (ammo_brand != SPMSL_NORMAL && bow_brand != SPWPN_NORMAL)
+    {
+        // But not for Nessos.
+        if (agent->atype() == ACT_MONSTER)
+        {
+            const monsters* mon = static_cast<const monsters*>(agent);
+            if (mon->type != MONS_NESSOS)
+                bow_brand = SPWPN_NORMAL;
+        }
+        else
+            bow_brand = SPWPN_NORMAL;
+    }
+
+    if (is_launched(agent, launcher, item) == LRET_FUMBLED)
+    {
+        // We want players to actually carry blowguns and bows, not just rely
+        // on high to-hit modifiers.  Rationalization: The poison/magic/
+        // whatever is only applied to the tips.  -sorear
+
+        bow_brand = SPWPN_NORMAL;
+        ammo_brand = SPMSL_NORMAL;
+    }
+
+    // This is a bit of a special case because it applies even for melee
+    // weapons, for which brand is normally ignored.
     returning = get_weapon_brand(item) == SPWPN_RETURNING
-                || get_ammo_brand(item) == SPMSL_RETURNING;
+                || ammo_brand == SPMSL_RETURNING;
 
     if (agent->atype() == ACT_PLAYER)
     {
@@ -2137,10 +2173,6 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
 
     beam.can_see_invis = agent->can_see_invisible();
 
-    item_def *launcher  = const_cast<actor*>(agent)->weapon(0);
-    if (launcher && !item.launched_by(*launcher))
-        launcher = NULL;
-
     const unrandart_entry* entry = launcher && is_unrandom_artefact(*launcher)
         ? get_unrand_entry(launcher->special) : NULL;
 
@@ -2159,26 +2191,6 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         case SM_CANCEL:
             return (true);
         }
-    }
-
-    int bow_brand = SPWPN_NORMAL;
-    if (launcher != NULL)
-        bow_brand = get_weapon_brand(*launcher);
-
-    int ammo_brand = get_ammo_brand(item);
-
-    // Launcher brand does not affect ammunition.
-    if (ammo_brand != SPMSL_NORMAL && bow_brand != SPWPN_NORMAL)
-    {
-        // But not for Nessos.
-        if (agent->atype() == ACT_MONSTER)
-        {
-            const monsters* mon = static_cast<const monsters*>(agent);
-            if (mon->type != MONS_NESSOS)
-                bow_brand = SPWPN_NORMAL;
-        }
-        else
-            bow_brand = SPWPN_NORMAL;
     }
 
     bool poisoned   = (bow_brand == SPWPN_VENOM
@@ -2744,7 +2756,13 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     if (projected == LRET_LAUNCHED)
         bow_brand = get_weapon_brand(*you.weapon());
 
-    const int ammo_brand = get_ammo_brand( item );
+    int ammo_brand = get_ammo_brand( item );
+
+    if (projected == LRET_FUMBLED)
+    {
+        // See comment in setup_missile_beam.  Why is this duplicated?
+        ammo_brand = SPMSL_NORMAL;
+    }
 
     // CALCULATIONS FOR LAUNCHED WEAPONS
     if (projected == LRET_LAUNCHED)
@@ -3200,17 +3218,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             exercise(SK_THROWING, 1);
 
         exHitBonus = you.dex / 4;
-
-        if (wepClass == OBJ_MISSILES && wepType == MI_NEEDLE)
-        {
-            // Throwing needles is now seriously frowned upon; it's difficult
-            // to grip a fiddly little needle, and not penalising it cheapens
-            // blowguns.
-            exHitBonus -= (30 - you.skills[SK_THROWING]) / 3;
-            baseHit    -= (30 - you.skills[SK_THROWING]) / 3;
-            dprf("Needle base hit = %d, exHitBonus = %d",
-                    baseHit, exHitBonus);
-        }
     }
 
     // FINALISE tohit and damage
