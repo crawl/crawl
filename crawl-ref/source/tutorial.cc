@@ -2002,8 +2002,8 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 "it. You can view its properties from your <w>%</w>nventory"
 #else
              << ". You can click on it to put it on, and click a second time "
-                "remove it off again. By clicking on it with your <w>right "
-                "mouse button</w> you can view its properties"
+                "remove it again. By clicking on it with your <w>right mouse "
+                "button</w> you can view its properties"
 #endif
              << ", though often magic is necessary to reveal its true "
                 "nature.";
@@ -3750,10 +3750,10 @@ void tutorial_describe_item(const item_def &item)
 #ifdef USE_TILE
                     ostr << "if you have appropriate ammo quivered you can "
                             "<w>left mouse click</w> on the monster while "
-                            "prssing the <w>Shift key</w>.  Alternatively, "
+                            "prssing the <w>Shift key</w>. Alternatively, "
                             "you can <w>left mouse click</w> on the tile for "
                             "the ammo you wish to fire, and then <w>left "
-                            "mouse click </w> on the monster.\n\n";
+                            "mouse click</w> on the monster.\n\n";
                     ostr << "To launch ammunition using the keyboard, ";
 #endif
                     ostr << "you only need to "
