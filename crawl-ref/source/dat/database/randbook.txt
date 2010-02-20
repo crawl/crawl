@@ -908,9 +908,6 @@ Nergalle
 Josephine
 
 Frederick
-
-w:2
-Mara
 %%%%
 highlevel Earth owner
 
@@ -932,9 +929,6 @@ __NONE
 rare Enchantment owner
 
 Sigmund
-
-w:5
-Mara
 
 w:2
 Gastronok
