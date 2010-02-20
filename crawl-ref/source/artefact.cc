@@ -551,11 +551,6 @@ void artefact_desc_properties( const item_def &item,
         fake_rap2  = ARTP_FIRE;
         fake_plus2 = -1;
         break;
-
-    case AMU_INACCURACY:
-        fake_rap  = ARTP_ACCURACY;
-        fake_plus = -5;
-        break;
     }
 
     if (fake_rap != ARTP_NUM_PROPERTIES && fake_plus != 0)
