@@ -2268,9 +2268,24 @@ int spell_power_bars( spell_type spell )
     return _power_to_barcount(power);
 }
 
+#ifdef WIZARD
+static std::string _wizard_spell_power_numeric_string(spell_type spell)
+{
+    const int cap = spell_power_cap(spell);
+    if (cap == 0)
+        return "N/A";
+    const int power = std::min(calc_spell_power(spell, true), cap);
+    return make_stringf("%d (%d)", power, cap);
+}
+#endif
+
 std::string spell_power_string(spell_type spell)
 {
-#ifndef WIZARD
+#ifdef WIZARD
+    if (you.wizard)
+        return _wizard_spell_power_numeric_string(spell);
+#endif
+
     const int numbars = spell_power_bars(spell);
     const int capbars = _power_to_barcount(spell_power_cap(spell));
     ASSERT(numbars <= capbars);
@@ -2278,13 +2293,6 @@ std::string spell_power_string(spell_type spell)
         return "N/A";
     else
         return std::string(numbars, '#') + std::string(capbars - numbars, '.');
-#else
-    const int cap = spell_power_cap(spell);
-    if (cap == 0)
-        return "N/A";
-    const int power = std::min(calc_spell_power(spell, true), cap);
-    return make_stringf("%d (%d)", power, cap);
-#endif
 }
 
 int calc_spell_range(spell_type spell, int power, bool real_cast)
