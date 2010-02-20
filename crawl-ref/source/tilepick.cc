@@ -3437,6 +3437,13 @@ static inline void _finalise_tile(unsigned int *tile,
         else
             (*tile) = orig + std::min((int)special_flv, 3);
     }
+    else if (orig == TILE_DNGN_PORTAL_WIZARD_LAB)
+    {
+        if (++env.tile_flv(gc).special >= tile_dngn_count(orig))
+            env.tile_flv(gc).special = 0;
+
+        (*tile) = orig + env.tile_flv(gc).special;
+    }
     else if (orig < TILE_DNGN_MAX && !feat_is_secret_door(grd(gc)))
     {
         // Some tiles may change from turn to turn, but only if in view.
