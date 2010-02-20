@@ -109,8 +109,9 @@ enum mons_class_flags
     M_NO_FLAGS          = 0,
 
     M_SPELLCASTER       = (1<< 0),        // any non-physical-attack powers,
-    M_ACTUAL_SPELLS     = (1<< 1),        // monster is a wizard,
-    M_PRIEST            = (1<< 2),        // monster is a priest,
+    M_ACTUAL_SPELLS     = (1<< 1),        // monster is a wizard
+                                          // (hated by Trog, affected by silence)
+    M_PRIEST            = (1<< 2),        // monster is a priest
     M_FIGHTER           = (1<< 3),        // monster is skilled fighter
 
     M_NO_WAND           = (1<< 4),        // do not give (unique) a wand
