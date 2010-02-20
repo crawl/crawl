@@ -76,7 +76,7 @@ void unixcurses_shutdown();
 // Globals holding current text/backg. colors
 static short FG_COL = WHITE;
 static short BG_COL = BLACK;
-static int   Current_Colour = COLOR_PAIR(BG_COL * 8 + FG_COL);
+static int   Current_Colour = COLOR_PAIR(BG_COL * 8 + FG_COL + 1);
 
 static int curs_fg_attr(int col);
 static int curs_bg_attr(int col);
@@ -153,10 +153,8 @@ static void setup_colour_pairs( void )
         for (j = 0; j < 8; j++)
         {
             if (( i > 0 ) || ( j > 0 ))
-                init_pair(i * 8 + j, j, i);
+                init_pair(i * 8 + j + 1, j, i);
         }
-
-    init_pair(64, COLOR_BLACK, Options.background_colour);
 }
 
 #ifdef UNICODE_GLYPHS
@@ -865,7 +863,7 @@ static int curs_fg_attr(int col)
     bg &= 0x0007;
 
     // figure out which colour pair we want
-    const int pair = (fg == 0 && bg == 0) ? 64 : (bg * 8 + fg);
+    const int pair = bg * 8 + fg + 1;
 
     return ( COLOR_PAIR(pair) | flags );
 }
@@ -925,7 +923,7 @@ static int curs_bg_attr(int col)
     bg &= 0x0007;
 
     // figure out which colour pair we want
-    const int pair = (fg == 0 && bg == 0) ? 64 : (bg * 8 + fg);
+    const int pair = bg * 8 + fg + 1;
 
     return ( COLOR_PAIR(pair) | flags );
 }
@@ -965,18 +963,12 @@ inline void write_char_at(int y, int x, const cchar_t &ch)
 static void flip_colour(cchar_t &ch)
 {
     const unsigned colour = (ch.attr & A_COLOR);
-    const int pair        = PAIR_NUMBER(colour);
+    const int pair        = PAIR_NUMBER(colour) - 1;
 
     int fg     = pair & 7;
     int bg     = (pair >> 3) & 7;
 
-    if (pair == 64)
-    {
-        fg    = COLOR_WHITE;
-        bg    = COLOR_BLACK;
-    }
-
-    const int newpair = (fg * 8 + bg);
+    const int newpair = (fg * 8 + bg + 1);
     ch.attr = COLOR_PAIR(newpair) | (ch.attr & A_ALTCHARSET);
 }
 #else // ! UNICODE_GLYPHS
@@ -992,18 +984,12 @@ typedef unsigned long char_info;
 static void flip_colour(char_info &ch)
 {
     const unsigned colour = char_info_colour(ch);
-    const int pair        = PAIR_NUMBER(colour);
+    const int pair        = PAIR_NUMBER(colour) - 1;
 
     int fg     = pair & 7;
     int bg     = (pair >> 3) & 7;
 
-    if (pair == 64)
-    {
-        fg    = COLOR_WHITE;
-        bg    = COLOR_BLACK;
-    }
-
-    const int newpair = (fg * 8 + bg);
+    const int newpair = (fg * 8 + bg) + 1;
     ch = (char_info_character(ch) | COLOR_PAIR(newpair) |
           (char_info_attributes(ch) & A_ALTCHARSET));
 }
