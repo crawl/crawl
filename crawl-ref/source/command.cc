@@ -749,6 +749,7 @@ static const char *targeting_help_1 =
     "<w>_</w> : cycle through altars\n"
     "<w><<</w>/<w>></w> : cycle through up/down stairs\n"
     "<w>Tab</w> : cycle through shops and portals\n"
+    "<w>e</w> : Create a travel exclusion, change its radius, or remove it.\n"
     "<w>Ctrl-F</w> : monster targeting modes\n"
 #ifndef USE_TILE
     "<w>Ctrl-L</w> : targeting via monster list\n"
@@ -2631,7 +2632,6 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>]</w>      : get a mutation\n"
                        "<w>_</w>      : gain religion\n"
                        "<w>^</w>      : set piety to a value\n"
-                       "<w>-</w>      : get a god gift\n"
                        "<w>@</w>      : set Str Int Dex\n"
                        "\n"
                        "<yellow>Create level features</yellow>\n"
@@ -2682,6 +2682,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>o</w>/<w>%</w>    : create an object\n"
                        "<w>t</w>      : tweak object properties\n"
                        "<w>v</w>      : show gold value of an item\n"
+                       "<w>-</w>      : get a god gift\n"
                        "<w>|</w>      : create all predefined artefacts\n"
                        "<w>+</w>      : make randart from item\n"
                        "<w>'</w>      : list items\n"
