@@ -479,7 +479,7 @@ static void _print_stats_ac(int x, int y)
 
     // SH: (two lines lower)
     cgotoxy(x+4, y+2, GOTO_STAT);
-    if (you.incapacitated())
+    if (you.incapacitated() && player_wearing_slot(EQ_SHIELD))
         textcolor(RED);
     else if (you.duration[DUR_CONDENSATION_SHIELD]
              || you.duration[DUR_DIVINE_SHIELD])
