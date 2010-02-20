@@ -54,6 +54,10 @@
 static struct termios def_term;
 static struct termios game_term;
 
+// Give Crawl so many seconds after receiving a HUP signal to save and
+// get out of the way.
+const int HANGUP_KILL_DELAY_SECONDS = 10;
+
 #ifdef USE_UNIX_SIGNALS
 #include <signal.h>
 #endif
@@ -332,6 +336,10 @@ static void handle_hangup(int)
 {
     if (crawl_state.seen_hups++)
         return;
+
+    // Set up an alarm to force-kill Crawl if it rudely ignores the
+    // hangup signal.
+    alarm(HANGUP_KILL_DELAY_SECONDS);
 
     interrupt_activity( AI_FORCE_INTERRUPT );
 
