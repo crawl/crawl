@@ -2988,7 +2988,7 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
     case DNGN_ALTAR_XOM:
         return ("shimmering altar of Xom");
     case DNGN_ALTAR_VEHUMET:
-        return ("shining altar of Vehumet");
+        return ("radiant altar of Vehumet");
     case DNGN_ALTAR_OKAWARU:
         return ("iron altar of Okawaru");
     case DNGN_ALTAR_MAKHLEB:
