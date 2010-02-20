@@ -105,7 +105,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
     else
     {
         // query for location {dlb}:
-        while (true)
+        while (!crawl_state.seen_hups)
         {
             direction_chooser_args args;
             args.restricts = DIR_TARGET;
