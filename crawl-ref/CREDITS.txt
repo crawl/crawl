@@ -43,9 +43,9 @@ Brett Foster                 Paul Maloney              Jared 'Twinge' Tinney
 Ben Goetter                  Neil 'Mu' Middleton       Matt Titus
 Rob Grant                    Andrew Minton             Steven Wheeler
 John Greenberg               Shawn M Moore             Thomas Willem
-GreyKnight                   Eva Myers                 Jeremey Wilson
-Joshua Gross                 Wille Mäntylä             Yelve Yakut
-Brian Haase                  Erkki Nurmi               Zooko
-Shayne Halvorson             Mattias Nyberg
+GreyKnight                   Eva Myers                 Evan Williams
+Joshua Gross                 Wille Mäntylä             Jeremey Wilson
+Brian Haase                  Erkki Nurmi               Yelve Yakut
+Shayne Halvorson             Mattias Nyberg            Zooko
 Ciaran Hamilton              nyra
 
