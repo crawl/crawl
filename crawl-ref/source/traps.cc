@@ -605,9 +605,9 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             // Zot traps are out to get *the player*! Hostile monsters
             // benefit and friendly monsters suffer. Such is life.
 
-            // Preserving original functionality: don't reveal location.
-            if (!you_know)
-                this->hide();
+            // The old code rehid the trap, but that's pure interface screw
+            // in 99% of cases - a player can just watch who stepped where
+            // and mark the trap on an external paper map.  Not good.
 
             if (m->wont_attack() || crawl_state.arena)
             {
