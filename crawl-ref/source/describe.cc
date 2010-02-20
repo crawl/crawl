@@ -156,6 +156,7 @@ const char* jewellery_base_ability_string(int subtype)
     case AMU_GUARDIAN_SPIRIT:    return "Spirit";
     case AMU_FAITH:              return "Faith";
     case AMU_STASIS:             return "Stasis";
+    case AMU_INACCURACY:         return "Inacc";
     }
     return "";
 }
