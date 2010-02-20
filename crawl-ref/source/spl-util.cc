@@ -1047,9 +1047,18 @@ spell_type zap_type_to_spell(zap_type zap)
 bool spell_is_empowered(spell_type spell)
 {
     if( (you.religion == GOD_VEHUMET)
-        && god_likes_spell(spell, you.religion)
+        && vehumet_supports_spell(spell)
         && piety_rank() > 2)
+    {
         return (true);
+    }
+
+    if (you.religion == GOD_KIKUBAAQUDGHA
+        && spell_typematch(spell, SPTYP_NECROMANCY)
+        && piety_rank() > 2)
+    {
+        return (true);
+    }
 
     switch (spell)
     {
