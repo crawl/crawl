@@ -1019,9 +1019,13 @@ static void _fill_monster_list(bool full_info)
     }
 }
 
+// Skip all letters that have a special meaning in the targeting interface.
+// FIXME: Probably doesn't work well with redefined keys.
 static int _mlist_letter_to_index(char idx)
 {
     if (idx >= 'b')
+        idx--;
+    if (idx >= 'e')
         idx--;
     if (idx >= 'h')
         idx--;
@@ -1838,8 +1842,19 @@ bool direction_chooser::do_main_loop()
 #endif
 
     case CMD_TARGET_TOGGLE_BEAM: toggle_beam(); break;
+    case CMD_TARGET_EXCLUDE:
+        if (you.level_type == LEVEL_LABYRINTH
+            || !player_in_mappable_area())
+        {
+            mpr("You cannot set exclusions on this level.");
+        }
+        else
+            cycle_exclude_radius(target());
 
-    case CMD_TARGET_FIND_YOU: move_to_you(); break;
+        need_cursor_redraw = true;
+        break;
+
+    case CMD_TARGET_FIND_YOU:       move_to_you(); break;
     case CMD_TARGET_FIND_TRAP:      feature_cycle_forward('^');  break;
     case CMD_TARGET_FIND_PORTAL:    feature_cycle_forward('\\'); break;
     case CMD_TARGET_FIND_ALTAR:     feature_cycle_forward('_');  break;
@@ -1896,14 +1911,14 @@ bool direction_chooser::do_main_loop()
         set_target(old_target);
 
     if (loop_done && (just_looking || move_is_ok()))
-        return true;
+        return (true);
 
     // Redraw whatever is necessary.
     if (old_target != target())
     {
         have_beam = show_beam && find_ray(you.pos(), target(), beam);
-        need_text_redraw = true;
-        need_beam_redraw = true;
+        need_text_redraw   = true;
+        need_beam_redraw   = true;
         need_cursor_redraw = true;
     }
     do_redraws();
