@@ -248,12 +248,6 @@ static int _scale_spawn_parameter(int base_value,
              / dropoff_ramp_turns));
 }
 
-// This applies only to D:1
-static bool _need_moderate_ood(int lev_mons)
-{
-    return (env.turns_on_level > 700 - lev_mons * 117);
-}
-
 static bool _need_super_ood(int lev_mons)
 {
     return (env.turns_on_level > 1400 - lev_mons * 117
@@ -264,17 +258,29 @@ static bool _need_super_ood(int lev_mons)
 
 static int _fuzz_mons_level(int level)
 {
-    // [ds] Was 1 in 7 chance for level-generation monster creation,
-    // 50% for respawns, and the fuzz was limited to +4. The new rate
-    // is 1 in 7 for level-generation, scaling up to 80% for respawns
-    // as the player lingers on the level, but only after at least
-    // 1.8k turns spent on the level. Monster fuzz is now up to +7,
-    // YHBW.
-    if (x_chance_in_y(_scale_spawn_parameter(140, 1000, 1000, 3000, 4800),
-                      1000))
+    // Apply a fuzz to the monster level we're looking for. The fuzz
+    // is intended to mix up monster generation producing moderately
+    // OOD monsters, over and above the +5 OOD that's baked into the
+    // monster selection loop.
+    //
+    // The OOD fuzz roll is not applied at level generation time on
+    // D:1, and is applied slightly less often (0.75*0.14) on D:2. All
+    // other levels have a straight 14% chance of moderate OOD fuzz
+    // for each monster at level generation, and the chances of
+    // moderate OODs go up to 100% after a ramp-up period.
+    if ((level > 1
+         // Give 25% chance of not trying for moderate OOD on D:2
+         || (level == 1 && !one_chance_in(4))
+         // Try moderate OOD after 700 turns on level on D:1, or 583 turns
+         // spent on D:2.
+         || env.turns_on_level > 700 - level * 117)
+        && x_chance_in_y(
+            _scale_spawn_parameter(140, 1000, 1000, 3000, 4800),
+            1000))
     {
-        const int fuzzspan = 7;
+        const int fuzzspan = 5;
         const int fuzz = std::max(0, random_range(-fuzzspan, fuzzspan, 2));
+
 #ifdef DEBUG_DIAGNOSTICS
         if (fuzz)
             dprf("Monster level fuzz: %d (old: %d, new: %d)",
@@ -482,10 +488,8 @@ monster_type pick_random_monster(const level_id &place, int power,
     // OODs do not apply to the Abyss, Pan, etc.
     if (you.level_type == LEVEL_DUNGEON && lev_mons <= 27)
     {
-        // If on D:1, allow moderately out-of-depth monsters only after
-        // a certain elapsed turn count on the level (currently 700 turns).
-        if (lev_mons || _need_moderate_ood(lev_mons))
-            lev_mons = _fuzz_mons_level(lev_mons);
+        // Apply moderate OOD fuzz where appropriate.
+        lev_mons = _fuzz_mons_level(lev_mons);
 
         // Potentially nasty surprise, but very rare.
         if (_need_super_ood(lev_mons))
