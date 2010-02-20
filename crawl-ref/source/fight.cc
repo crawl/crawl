@@ -4502,6 +4502,7 @@ std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
         "constrict"
     };
 
+    ASSERT(attk.type < sizeof(attack_types) / sizeof(const char *));
     return (attack_types[attk.type]);
 }
 
@@ -5240,6 +5241,8 @@ void melee_attack::mons_perform_attack_rounds()
                 attk.type = AT_NONE;
             else if (is_range_weapon(mitm[weap]))
                 attk.type = AT_SHOOT;
+            else
+                attk.type = AT_HIT;
         }
 
         if (attk.type == AT_NONE)
