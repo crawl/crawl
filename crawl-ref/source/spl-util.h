@@ -37,7 +37,7 @@ class dist;
 enum spell_highlight_colours
 {
     COL_UNKNOWN      = LIGHTGRAY,   // spells for which no known brand applies.
-    COL_KNOWN        = LIGHTBLUE,   // the spell is known (use for spellbook_contents)
+    COL_UNMEMORIZED  = LIGHTBLUE,   // spell hasn't been memorized (used reading spellbooks)
     COL_USELESS      = DARKGRAY,    // ability would have no useful effect
     COL_INAPPLICABLE = COL_USELESS, // ability cannot be meanifully applied (eg, no targets)
     COL_USEFUL       = YELLOW,      // the players status makes this ability notably more useful

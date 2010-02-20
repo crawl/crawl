@@ -1233,8 +1233,8 @@ int spell_highlight_by_utility( spell_type spell, int default_color,
 {
     // if Force_known is true, and the spell is
     // known, thats all that matters.
-    if (force_known && spell_is_known(spell))
-        return COL_KNOWN;
+    if (force_known && !spell_is_known(spell))
+        return COL_UNMEMORIZED;
 
     // If your god hates the spell, that
     // overrides all other concerns
