@@ -2252,21 +2252,15 @@ static bool _monster_eat_item(monsters *monster, bool nearby)
             const int quantity = si->quantity;
             const int value = item_value(*si) / quantity;
             int pg = 0;
-            int timeout = 0;
 
             for (int m = 0; m < quantity; ++m)
             {
                 if (x_chance_in_y(value / 4 + 1, 30 + you.piety / 4))
                 {
-                    if (timeout <= 0)
-                    {
-                        if (value < 100)
-                            pg += random2(item_value(*si) / 5);
-                        else
-                            pg += random2(item_value(*si) / 30);
-                    }
+                    if (value < 100)
+                        pg += random2(item_value(*si) / 5);
                     else
-                        timeout -= value / 5;
+                        pg += random2(item_value(*si) / 30);
                 }
             }
 
@@ -2276,7 +2270,8 @@ static bool _monster_eat_item(monsters *monster, bool nearby)
                 gain_piety(pg);
             }
 
-            if (you.piety > 80 && random2(you.piety) > 50 && one_chance_in(4))
+            if (you.piety > 80 && random2(you.piety) > 50 && one_chance_in(4)
+                && you.gift_timeout <= 0)
             {
                 if (you.can_safely_mutate())
                 {
@@ -2300,7 +2295,7 @@ static bool _monster_eat_item(monsters *monster, bool nearby)
 
                     if (success)
                     {
-                        timeout = (700 + roll_dice(2, 4));
+                        you.gift_timeout += 30 + roll_dice(2, 4);
                         you.num_gifts[you.religion]++;
                         take_note(Note(NOTE_GOD_GIFT, you.religion));
                     }
