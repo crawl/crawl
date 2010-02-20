@@ -164,7 +164,6 @@ static std::string _spell_extra_description(spell_type spell, bool unavail = fal
 {
     std::ostringstream desc;
 
-//    int highlight =  unavail ? COL_INAPPLICABLE : spell_highlight_by_utility(spell);
     int highlight =  spell_highlight_by_utility(spell, COL_UNKNOWN, true);
 
     desc << "<" << colour_to_str(highlight) << ">" << std::left;
