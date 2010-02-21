@@ -18,16 +18,13 @@ for those the list begins with step 2.
 1.  Branch master into the new version
     git push origin origin:refs/heads/stone_soup.0.X
 
-2.  Update version information
-    version.h: Set VER_NUM = 0.X, VER_QUAL = empty.
-    Undefine DISPLAY_BUILD_REVISION (not needed for official distributions).
-
-3.  Modify branch as needed
+2.  Modify branch as needed
     Turn off all features that are not balanced or finished enough to make it
     into the release. This can be a bit of a hassle, so do try to avoid this in
     the first place. (See 0.)
+    Also make sure that the version is correctly set to 0.X.y.
 
-4.  Wait and fix some bugs
+3.  Wait and fix some bugs
     Wait at least a week for some last minute bug reports. When fixing bugs
     concentrate on the important ones (crashes and gamebreakers), but you
     might also want to handle the trivial ones for extra polishing.
@@ -38,7 +35,7 @@ for those the list begins with step 2.
     Reread the entire documentation to make sure it's up to date. Update the
     PDF versions as well. Also update the change log!
 
-5.  Sanity testing
+4.  Sanity testing
     Build the binaries (preferably on all platforms) to see if the code
     compiles correctly, then run some basic sanity tests including at least
     the following:
@@ -53,13 +50,13 @@ for those the list begins with step 2.
     and at the same time you can check that the information handed out during
     the tutorial is up to date.
 
-6.  Package the source tarball and zip
+5.  Package the source tarball and zip
     On Linux, run "make package-source" in the source tree to create the source
     tarball and zip. Extract the resulting packages into different folders,
     compile their source and run the basic sanity tests. Also check whether
     the doc, settings and dat subfolders contain all relevant files.
 
-7.  Tag the release
+6.  Tag the release
     In the branch you're about to tag:
     git tag -a release-0.X.y
 
@@ -72,7 +69,11 @@ for those the list begins with step 2.
     important bug fixes and happen before the release took place, have to be
     merged into trunk AND branch AND the corresponding tag.
 
-8.  Checkout the release tag
+    Tagging a branch with 0.X with alpha or beta qualifier will automatically
+    take care of updating the version type to FINAL and thus suppress the
+    revision output in the version information.
+
+7.  Checkout the release tag
     git checkout -b stone_soup-0.X release-0.X.y
 
     You may want to make a new shallow clone into a new folder, to make sure
