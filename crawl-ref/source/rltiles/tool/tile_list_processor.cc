@@ -52,7 +52,10 @@ bool tile_list_processor::load_image(tile &img, const char *filename)
         {
             sprintf(temp, "%s/%s%s", m_sdir.c_str(), filename, ext[e]);
             if (img.load(temp))
+            {
+                m_depends.push_back(temp);
                 return (true);
+            }
         }
     }
 
@@ -60,7 +63,10 @@ bool tile_list_processor::load_image(tile &img, const char *filename)
     {
         sprintf(temp, "%s%s", filename, ext[e]);
         if (img.load(temp))
+        {
+            m_depends.push_back(temp);
             return (true);
+        }
     }
 
     return (false);
@@ -68,6 +74,8 @@ bool tile_list_processor::load_image(tile &img, const char *filename)
 
 bool tile_list_processor::process_list(const char *list_file)
 {
+    m_depends.push_back(list_file);
+
     std::ifstream input(list_file);
     if (!input.is_open())
     {
@@ -1225,6 +1233,40 @@ bool tile_list_processor::write_data()
     }
 
     delete[] part_min;
+
+
+    // Write "%name.d"
+    {
+        char filename[1024];
+        sprintf(filename, "%s.d", lcname.c_str());
+        FILE *fp = fopen(filename, "w");
+
+        if (!fp)
+        {
+            fprintf(stderr, "Error: couldn't open '%s' for write.\n", filename);
+            return (false);
+        }
+
+        fprintf(fp, "%s.png: \\\n",
+                lcname.c_str(), lcname.c_str(), lcname.c_str());
+
+        for (size_t i = 0; i < m_depends.size(); ++i)
+        {
+             fprintf(fp, "  %s \\\n", m_depends[i].c_str());
+        }
+
+        // Also generate empty dependencies for each file.
+        // This way, if a file gets removed, the dependency file
+        // won't complain about not having a rule to make the non-existent file.
+        fprintf(fp, "%s", "\n\n");
+
+        for (size_t i = 0; i < m_depends.size(); ++i)
+        {
+             fprintf(fp, "%s:\n", m_depends[i].c_str());
+        }
+
+        fclose(fp);
+    }
 
     return (true);
 }
