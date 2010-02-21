@@ -47,7 +47,30 @@ function TroveMarker:new(props)
 
   tmarker.seen = false
   tmarker.no_timeout = false
-  tmarker.toll_item = props.toll_item
+  item = props.toll_item
+  if item.quantity == nil then
+    error("Item needs a quantity.")
+  end
+  if item.base_type == nil then
+    error("Item needs a base type.")
+  end
+  if item.sub_type == nil then
+    error("Item needs a sub type.")
+  end
+  if item.ego_type == nil then
+    item.ego_type = false
+  end
+  if item.plus1 == nil then
+    item.plus1 = false
+  end
+  if item.plus2 == nil then
+    item.plus2 = false
+  end
+  if item.artefact_name == nil then
+    item.artefact_name = false
+  end
+
+  tmarker.toll_item = item
 
   props.msg = nil
 
@@ -198,7 +221,7 @@ function TroveMarker:item_name(do_grammar)
   end
 
   if item.base_type == "weapon" or item.base_type == "armour" then
-    if item.plus1 ~= false then
+    if item.plus1 ~= false and item.plus1 ~= nil then
       s = s .. " "
       if item.plus1 > -1 then
         s = s .. "+"
@@ -206,7 +229,7 @@ function TroveMarker:item_name(do_grammar)
       s = s .. item.plus1
     end
 
-    if item.plus2 ~= false then
+    if item.plus2 ~= false and item.plus2 ~= nil then
       if item.plus1 ~= item.plus2 and item.base_type ~= "armour" then
         s = s .. ", +"
         if item.plus2 > -1 then
