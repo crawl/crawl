@@ -119,8 +119,10 @@ void init_tutorial_options()
     // Clear possible debug messages before messing
     // with messaging options.
     mesclr(true);
-    Options.clear_messages = true;
-    Options.auto_list = true;
+//     Options.clear_messages = true;
+    Options.auto_list  = true;
+    Options.show_more  = true;
+    Options.small_more = false;
 
 #ifdef USE_TILE
     Options.tile_tag_pref = TAGPREF_TUTORIAL;
