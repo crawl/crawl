@@ -547,7 +547,19 @@ public:
         {
             cgotoxy(use_first_col() ? 2 : 1, last_row, GOTO_MSG);
             textcolor(channel_to_colour(MSGCH_PROMPT));
-            cprintf("--more--");
+            if (Tutorial.tutorial_left)
+            {
+                std::string more_str = "--more-- Press Space ";
+#ifdef USE_TILE
+                more_str += "or click ";
+#endif
+                more_str += "to continue. Use Ctrl-P to read the message "
+                            "history.";
+                cprintf(more_str.c_str());
+            }
+            else
+                cprintf("--more--");
+
             readkey_more(user);
         }
     }
