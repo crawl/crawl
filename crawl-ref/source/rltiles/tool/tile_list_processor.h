@@ -56,6 +56,8 @@ protected:
 
     typedef std::vector<int_pair> lum_list;
     lum_list m_lum;
+
+    std::vector<std::string> m_depends;
 };
 
 #endif

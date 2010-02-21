@@ -71,11 +71,14 @@ all: $(TILEGEN) $(HEADERS) $(SOURCE) $(IMAGES)
 tiledef-%.h tiledef-%.cc %.png: dc-%.txt $(TILEGEN)
 	$(QUIET_GEN)$(TILEGEN) $<
 
-# dc-foo.txt files which are included by other dc-foo.txt files.
-include makefile.dc
+DEPS := $(shell ls $(INPUTS:%=%.d) 2> /dev/null)
+
+ifneq ($(DEPS),)
+-include $(DEPS)
+endif
 
 clean:
-	$(DELETE) $(HEADERS) $(OBJECTS) $(TILEGEN) $(SOURCE) $(IMAGES) $(HTML)
+	$(DELETE) $(HEADERS) $(OBJECTS) $(TILEGEN) $(SOURCE) $(IMAGES) $(HTML) $(DEPS)
 
 distclean: clean
 
