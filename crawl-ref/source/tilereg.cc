@@ -1406,7 +1406,31 @@ static int _click_travel(const coord_def &gc, MouseEvent &event)
 // to the clicked cell, whatever).
 static void _add_targeting_commands(const coord_def& pos)
 {
-    macro_buf_add_cmd(CMD_TARGET_MOUSE_MOVE);
+    // Force targeting cursor back onto center to start off on a clean
+    // slate.
+    macro_buf_add_cmd(CMD_TARGET_CENTER);
+
+    const coord_def delta = pos - you.pos();
+
+    command_type cmd;
+
+    if (delta.x < 0)
+        cmd = CMD_TARGET_LEFT;
+    else
+        cmd = CMD_TARGET_RIGHT;
+
+    for (int i = 0; i < std::abs(delta.x); i++)
+        macro_buf_add_cmd(cmd);
+
+    if (delta.y < 0)
+        cmd = CMD_TARGET_UP;
+    else
+        cmd = CMD_TARGET_DOWN;
+
+    for (int i = 0; i < std::abs(delta.y); i++)
+        macro_buf_add_cmd(cmd);
+
+    macro_buf_add_cmd(CMD_TARGET_MOUSE_SELECT);
 }
 
 static const bool _is_appropriate_spell(spell_type spell,
