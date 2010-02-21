@@ -21,7 +21,7 @@ extern "C" {
 #   include <db.h>
 }
 #elif defined(USE_SQLITE_DBM)
-#   include <sqldbm.h>
+#   include "sqldbm.h"
 #else
 #   error DBM interfaces unavailable!
 #endif
