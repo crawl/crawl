@@ -597,13 +597,13 @@ static void _tutorial_stats_intro()
             "displayed. The most basic one is Health, shown as "
             "<w>Health: " << you.hp << "/" << you.hp_max << "</w> "
             "and meaning current out of maximum health points. When Health "
-            "drops to zero, you die." EOL
+            "drops to zero, you die. "
             "<w>Magic: " << you.magic_points << "/" << you.max_magic_points
          << "</w> represents your energy for casting spells, although other "
-            "actions often draw from Magic, too. <w>Str</w>ength, "
-            "<w>Int</w>elligence, <w>Dex</w>terity below below provide an "
-            "all-around account of the character's attributes. Don't worry "
-            "about the rest for now.";
+            "actions often draw from Magic, too.\n"
+            "<w>Str</w>ength, <w>Int</w>elligence, <w>Dex</w>terity below "
+            "provide an all-around account of the character's attributes. "
+            "Don't worry about the rest for now.";
 
     mpr(istr.str(), MSGCH_TUTORIAL, 0);
 
@@ -647,9 +647,18 @@ static void _tutorial_message_intro()
               "left "
 #endif
               "part of the screen is reserved for messages. "
-              "Everything related to the tutorial is shown in this colour. If "
-              "you missed something, previous messages can be read again with "
-              "<w>%</w>"
+              "Everything related to the tutorial is shown in this colour. ";
+
+    if (!Options.clear_messages)
+    {
+        result += "Old messages will be displayed until new ones roll in, so "
+                  "you will often see messages from several turns ago. In the "
+                  "message window, the beginning of a new turn is marked with "
+                  "messages getting prefixed with <w>_</w>. ";
+    }
+
+    result += "If you missed something, previous messages can be read again "
+              "with <w>%</w>"
 #ifdef USE_TILE
               " or by <w>clicking into the message area</w>"
 #endif
@@ -794,7 +803,7 @@ void tutorial_death_screen()
                "spells more often! Remember to rest when your Magic is low.";
     }
     else if (you.religion == GOD_TROG && Tutorial.tut_berserk_counter <= 3
-             && !you.duration[DUR_BERSERKER] && !you.duration[DUR_EXHAUSTED])
+             && !you.berserk() && !you.duration[DUR_EXHAUSTED])
     {
         text = "Don't forget to go berserk when fighting particularly "
                "difficult foes. It is risky, but makes you faster and beefier.";
@@ -868,7 +877,7 @@ void tutorial_death_screen()
                    "<w>keypad-5</w>. Pressing <w>5</w> or "
                    "<w>shift-and-keypad-5</w>"
 #ifdef USE_TILE
-                   ", or clicking into the stat area"
+                   ", or <w>clicking into the stat area</w>"
 #endif
                    " will let you rest for a longer time (you will stop "
                    "resting after 100 turns, or when fully healed).";
@@ -1094,12 +1103,12 @@ void tutorial_healing_reminder()
                     "interrupted by wandering monsters. For resting, press "
                     "<w>5</w> or <w>Shift-numpad 5</w>"
 #ifdef USE_TILE
-                    ", or click on the stat area with your mouse"
+                    ", or <w>click on the stat area</w> with your mouse"
 #endif
                     ".";
 
-            if (you.religion == GOD_TROG && !you.berserk()
-                && !you.duration[DUR_EXHAUSTED]
+            if (you.hp < you.hp_max && you.religion == GOD_TROG
+                && !you.berserk() && !you.duration[DUR_EXHAUSTED]
                 && you.hunger_state >= HS_SATIATED)
             {
               text += "\nAlso, berserking might help you not to lose so many "
@@ -1732,7 +1741,11 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 ". Simply click on it with your <w>left mouse button</w>, or "
                 "press "
 #endif
-                "<w>%</w> to quaff it.";
+                "<w>%</w> to quaff it.\n"
+                "Note that potion effects might be good or bad. For the bad "
+                "ones, you might want to wait until you're a bit tougher, but "
+                "at the same time it would be nice to know the good ones when "
+                "you need them. Ah, decisions, decisions...";
         cmd.push_back(CMD_QUAFF);
         break;
 
@@ -1744,7 +1757,9 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 ". Simply click on it with your <w>left mouse button</w>, or "
                 "type "
 #endif
-                "<w>%</w> to read it.";
+                "<w>%</w> to read it, though you might want to wait until "
+                "there's a monster around or you have some items, so the "
+                "scroll can actually have an effect.";
         cmd.push_back(CMD_READ);
         break;
 
@@ -1826,7 +1841,8 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         if (Tutorial.tutorial_type == TUT_BERSERK_CHAR)
         {
             text << "\nAs you're already trained in Axes you should stick "
-                    "with these. Checking other axes can be worthwhile.";
+                    "with these. Checking other axes' enchantments and "
+                    "attributes can be worthwhile.";
         }
         else if (Tutorial.tutorial_type == TUT_MAGIC_CHAR)
         {
@@ -1981,10 +1997,11 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 
         if (god_likes_fresh_corpses(you.religion))
         {
-            text << " You can offer corpses to "
+            text << "\nYou can also offer corpses to "
                  << god_name(you.religion)
-                 << " by praying over them to offer them. Note that the gods will "
-                 << "not accept rotting flesh.";
+                 << " by <w>%</w>raying over them to offer them. Note that the "
+                    "gods will not accept rotting flesh.";
+            cmd.push_back(CMD_PRAY);
         }
         text << "\nDuring the tutorial you can reread this information at "
                 "any time by selecting the item in question in your "
@@ -2709,8 +2726,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         cmd.push_back(CMD_EAT);
 
 #ifdef USE_TILE
-        text << "clicking with your <w>right mouse button</w> onto the corpse "
-                "or chunk.";
+        text << "hovering your mouse over the corpse or chunk.";
 #else
         text << "<w>v</w>iewing a corpse or chunk on the floor or by having a "
                 "look at it in your <w>%</w>nventory.";
@@ -3167,9 +3183,8 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 "absolutely have to follow it. Rather, you can let it run "
                 "away. Sometimes, though, it can be useful to attack a "
                 "fleeing creature by throwing something after it. If you "
-                "have any daggers or hand axes in your <w>%</w>nventory, you "
-                "can look at one of them to read an explanation of how to do "
-                "this.";
+                "have any darts or stones in your <w>%</w>nventory, you can "
+                "look at one of them to read an explanation of how to do this.";
         cmd.push_back(CMD_DISPLAY_INVENTORY);
         break;
 
@@ -3985,22 +4000,41 @@ void tutorial_describe_item(const item_def &item)
             break;
 
        case OBJ_FOOD:
-            ostr << "Food can simply be <w>%</w>aten"
-#ifdef USE_TILE
-                    ", something you can also do by <w>left clicking</w> on it"
-#endif
-                    ". ";
-            cmd.push_back(CMD_EAT);
-
-            if (item.sub_type == FOOD_CHUNK)
+            if (food_is_rotten(item) && !player_mutation_level(MUT_SAPROVOROUS))
             {
-                ostr << "Note that most species refuse to eat raw meat unless "
-                        "really hungry. ";
-
-                if (food_is_rotten(item))
+                ostr << "You can't eat rotten chunks, so you might just as "
+                        "well ";
+                if (!in_inventory(item))
+                    ostr << "ignore them. ";
+                else
                 {
-                    ostr << "Even fewer can safely digest rotten meat, and "
-                            "you're probably not part of that group.";
+                    ostr << "<w>%</w>rop this. Use <w>%&</w> to select all "
+                            "skeletons, corpses and rotten chunks in your "
+                            "inventory. ";
+                    cmd.push_back(CMD_DROP);
+                    cmd.push_back(CMD_DROP);
+                }
+            }
+            else
+            {
+                ostr << "Food can simply be <w>%</w>aten"
+#ifdef USE_TILE
+                        ", something you can also do by <w>left clicking</w> "
+                        "on it"
+#endif
+                        ". ";
+                cmd.push_back(CMD_EAT);
+
+                if (item.sub_type == FOOD_CHUNK)
+                {
+                    ostr << "Note that most species refuse to eat raw meat "
+                            "unless really hungry. ";
+
+                    if (food_is_rotten(item))
+                    {
+                        ostr << "Even fewer can safely digest rotten meat, and "
+                             "you're probably not part of that group.";
+                    }
                 }
             }
             Tutorial.tutorial_events[TUT_SEEN_FOOD] = false;
@@ -4187,8 +4221,8 @@ void tutorial_describe_item(const item_def &item)
 
                 if (in_inventory(item))
                 {
-                    ostr << " In the drop menu you can select all skeletons "
-                            "and rotten chunks or corpses in your inventory "
+                    ostr << " In the drop menu you can select all skeletons, "
+                            "corpses, and rotten chunks in your inventory "
                             "at once with <w>%&</w>.";
                     cmd.push_back(CMD_DROP);
                 }
@@ -4202,7 +4236,7 @@ void tutorial_describe_item(const item_def &item)
 
             if (!food_is_rotten(item) && god_likes_fresh_corpses(you.religion))
             {
-                ostr << ", or offered as a sacrifice by "
+                ostr << ", or offered as a sacrifice to "
                      << god_name(you.religion)
                      << " <w>%</w>raying over them.";
                 cmd.push_back(CMD_PRAY);
@@ -4638,8 +4672,8 @@ static void _tutorial_describe_feature(int x, int y)
                          << god_name(you.religion)
                          << " press <w>^</w>"
 #ifdef USE_TILE
-                            ", or press <w>Shift</w> while clicking with "
-                            "your <w>right mouse button</w> on your avatar"
+                            ", or click with your <w>right mouse button</w> "
+                            "on your avatar while pressing <w>Shift</w>"
 #endif
                             ".";
                 }
