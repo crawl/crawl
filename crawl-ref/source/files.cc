@@ -1501,6 +1501,9 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         }
     }
 
+    if (load_mode == LOAD_ENTER_LEVEL && just_created_level)
+        run_map_epilogues();
+
     // Save the created/updated level out to disk:
     if (make_changes)
         _save_level( you.absdepth0, you.level_type, you.where_are_you );

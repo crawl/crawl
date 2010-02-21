@@ -53,7 +53,7 @@ level_range set_range(const char *s, int start, int end)
 
 %token <i>      DEFAULT_DEPTH SHUFFLE SUBST TAGS KFEAT KITEM KMONS KMASK KPROP
 %token <i>      NAME DEPTH ORIENT PLACE CHANCE WEIGHT MONS ITEM MARKER COLOUR
-%token <i>      PRELUDE MAIN VALIDATE VETO NSUBST WELCOME LFLAGS BFLAGS
+%token <i>      PRELUDE MAIN VALIDATE VETO EPILOGUE NSUBST WELCOME LFLAGS BFLAGS
 %token <i>      LFLOORCOL LROCKCOL LFLOORTILE LROCKTILE FTILE RTILE TILE
 %token <i>      SUBVAULT FHEIGHT
 
@@ -183,6 +183,7 @@ metaline        : place
                 | prelude_lua
                 | validate_lua
                 | veto_lua
+                | epilogue_lua
                 | error_seq {}
                 ;
 
@@ -239,6 +240,17 @@ prelude_lua_lines : /* empty */ { }
 prelude_lua_line : LUA_LINE
                 {
                     lc_map.prelude.add(yylineno, $1);
+                }
+
+epilogue_lua    : EPILOGUE epilogue_lua_lines { }
+
+epilogue_lua_lines : /* empty */ { }
+                | epilogue_lua_lines epilogue_lua_line { }
+                ;
+
+epilogue_lua_line : LUA_LINE
+                {
+                    lc_map.epilogue.add(yylineno, $1);
                 }
 
 kfeat           : KFEAT { }

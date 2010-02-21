@@ -228,7 +228,7 @@ SPACE [\ \t\r]
 ^[ \t]*\{\{         { BEGIN(LUA); return MAIN; }
 ^[ \t]*validate[ \t]*\{\{ { BEGIN(LUA); return VALIDATE; }
 ^[ \t]*veto[ \t]*\{\{     { BEGIN(LUA); return VETO; }
-
+^[ \t]*epilogue[ \t]*\{\{ { BEGIN(LUA); return EPILOGUE; }
 
 NAME:               { CBEGIN(ARGUMENT); return NAME; }
 default-depth:      { CBEGIN(ARGUMENT); return DEFAULT_DEPTH; }

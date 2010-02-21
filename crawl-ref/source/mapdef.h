@@ -858,7 +858,7 @@ public:
 
     map_flags       level_flags, branch_flags;
 
-    dlua_chunk      prelude, mapchunk, main, validate, veto;
+    dlua_chunk      prelude, mapchunk, main, validate, veto, epilogue;
 
     map_file_place  place_loaded_from;
 
@@ -909,6 +909,9 @@ public:
 
     // Returns true if *not* vetoed, i.e., the map is good to go.
     bool test_lua_veto();
+
+    // Executes post-generation lua code.
+    bool run_lua_epilogue(bool croak = false);
 
     std::string validate_map_def();
     std::string validate_temple_map();
