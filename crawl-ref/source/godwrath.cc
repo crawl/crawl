@@ -989,7 +989,7 @@ static bool _fedhas_retribution()
     case 0:
         // Try and spawn some hostile giant spores, if none are created
         // fall through to the elemental miscast effects.
-        if (corpse_spores(BEH_HOSTILE))
+        if (corpse_spores(BEH_HOSTILE, false))
         {
             simple_god_message(" produces spores.", GOD_FEDHAS);
             break;

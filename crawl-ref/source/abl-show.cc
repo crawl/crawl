@@ -1999,14 +1999,20 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_FEDHAS_SPAWN_SPORES:
-        if (!corpse_spores())
+    {
+        int rc = corpse_spores();
+        if (rc <= 0)
         {
-            mprf("No corpses are in range.");
+            if (rc == 0)
+                mprf("No corpses are in range.");
+            else
+                canned_msg(MSG_OK);
             return (false);
         }
 
         exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
+    }
 
     case ABIL_FEDHAS_EVOLUTION:
         if (!evolve_flora())
