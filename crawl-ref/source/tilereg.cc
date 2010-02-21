@@ -5396,6 +5396,14 @@ void DollEditRegion::run()
     }
 }
 
+const char *ImageManager::filenames[TEX_MAX] =
+{
+    "dngn.png",
+    "player.png",
+    "main.png",
+    "gui.png"
+};
+
 ImageManager::ImageManager()
 {
 }
@@ -5409,13 +5417,13 @@ bool ImageManager::load_textures(bool need_mips)
 {
     GenericTexture::MipMapOptions mip = need_mips ?
         GenericTexture::MIPMAP_CREATE : GenericTexture::MIPMAP_NONE;
-    if (!m_textures[TEX_DUNGEON].load_texture("dngn.png", mip))
+    if (!m_textures[TEX_DUNGEON].load_texture(filenames[TEX_DUNGEON], mip))
         return (false);
 
-    if (!m_textures[TEX_PLAYER].load_texture("player.png", mip))
+    if (!m_textures[TEX_PLAYER].load_texture(filenames[TEX_PLAYER], mip))
         return (false);
 
-    if (!m_textures[TEX_GUI].load_texture("gui.png", mip))
+    if (!m_textures[TEX_GUI].load_texture(filenames[TEX_GUI], mip))
         return (false);
 
     m_textures[TEX_DUNGEON].set_info(TILE_DNGN_MAX, &tile_dngn_info);
@@ -5601,7 +5609,8 @@ bool ImageManager::load_item_texture()
     // is modified.  So, it cannot be loaded until after the item
     // description table has been initialised.
     GenericTexture::MipMapOptions mip = GenericTexture::MIPMAP_CREATE;
-    bool success = m_textures[TEX_DEFAULT].load_texture("main.png", mip,
+    const char *fname = filenames[TEX_DEFAULT];
+    bool success = m_textures[TEX_DEFAULT].load_texture(fname, mip,
                                                         &_process_item_image);
     m_textures[TEX_DEFAULT].set_info(TILE_MAIN_MAX, tile_main_info);
 

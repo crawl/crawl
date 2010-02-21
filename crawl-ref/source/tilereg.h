@@ -26,6 +26,7 @@ public:
     bool load_item_texture();
     void unload_textures();
 
+    static const char *filenames[TEX_MAX];
     FixedVector<TilesTexture, TEX_MAX> m_textures;
 };
 
