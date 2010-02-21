@@ -3658,6 +3658,8 @@ bool parse_args( int argc, char **argv, bool rc_only )
     else
         set_crawl_base_dir(argv[0]);
 
+    SysEnv.crawl_exe = get_base_filename(argv[0]);
+
     SysEnv.rcdirs.clear();
 
     if (argc < 2)           // no args!
