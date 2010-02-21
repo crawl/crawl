@@ -723,3 +723,69 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx....<..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
+
+################################################################################
+# Corners have three hives and one stash of items guarded by oklobs; river can
+# be crossed by anyone with a wand of fire.
+#
+NAME:   minmay_beehive_corners
+PLACE:  Hive:2
+ORIENT: encompass
+MONS:   queen bee, killer bee larva, killer bee, plant, oklob plant
+KITEM:  R = w:2 honeycomb / w:1 royal jelly
+SUBST:  w = w:20 W:1
+SUBST:  Y = wW
+# Add one escape hatch, so that players using teleportation won't strand in
+# the Southern part. The hatch can be inconveniently placed, however.
+NSUBST: < = 1:< / *:x
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxaaaaaaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxaaRa3a2aaaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxaaaaaaaaaaxxxxxxx
+xxxxxxxxxaaa2aR.aaRaaaaaaxxxxxxxxxxxxxxxxxx{[(xxxxxxxxxxxxaaaaaa3aRa2Ra3aaaaxxxx
+xxxxxxxaaaaRaRaa3.a.a2a3aaxaaxxxxxxxxxxx4........xxxxxxaaaaRa2a.aRa.aaRa.a2aaxxx
+xxxxxxaa3aRaa2a.aRaaRa.a.aaa.4xxxxxxxxxx.........4xxxxx.a2Ra3a.a2aaRa3a.aRa.axxx
+xxxxxxa2aaa3aa3aaa..a3a.a.........xxxxx4............4..3..a.a.aRa3.a.a2a.a3aaxxx
+xxxxxxaaRa2a..a.aRa3aa.a3.................................3..a.aRa2aaRaRa.aRaaxx
+xxxxxxxaa3a.a2Ra3a.a.........................................3a.a.aR.a3a.aRaaxxx
+xxxxxxxxa2aa.aa.a.a.3..............................xx...........3a.a3.a2a3aaxxxx
+xxxxxxxxaaR2aa.a3...........4......................4xx............a.aa.aaaaxxxxx
+xxxxxxxxxaaa.3a.............xx....................................3a2.aaxxxxxxxx
+xxxxxxxxxxxaaa.3...........xxxx.............a3..a....................3axxxxxxxxx
+xxxxxxxxxxxxxaa...........xxxxxx4..........aRaa2...................3.aaxxxxxxxxx
+xxxxxxxxxxxxxxxx..........xxxx............3.2aRa3.........4.........xxxxxxxxxxxx
+xxxxxxxxxxxxxxxx........4xxx................3...........4x.........xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx.........xx.......4..........2a...................xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx.................................................axxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx4...............................................aaxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxx..................................4.......4x.aaaaaxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxwww.........4......................wwwwwwwxxaa..aaxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxwwwwww....wwww..................wwwwwwwwwwxxxaa.axxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxwwwwwwwwwwwwwwwwww......4wwwwwwwwwwwwwwwwwwxxa.aaxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwxaaWYaaxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwYWYwwwxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwYWYwwwxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwYWYwxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.....wxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.4..wwww.........4xxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxwwwwwwwwwwwwwwwwwwwwwww4...........................xxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxwww..4..wwwwwww...................a..3a...........xxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx...................................2a.3a..........xxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx.............a...................a3aRaa2.a.........xxxxxxxxxx
+xxxxxxxxxxxxxxxxxx................3a..........4....3.aRaR.a..........axxxxxxxxxx
+xxxxxxxxxxxxxxxxx4.............a3aa2.a.............a..2.a3.........a3aaxxxxxxxxx
+xxxxxxxxxxxxxxxxx...............aR.a.................3a........3....aRaaaaxxxxxx
+xxxxxxxxxxxxxxxx...............a...............................a.3a3.a.a3aaxxxxx
+xxxxxxxxxxxxxx4..................xxxx4...........4........a..a3.aR.a2a3Ra2aaaxxx
+xxxxxxxxxxx................xxxxxxxxxxxx.....4xxxxxx....aaa3a2R.a2.aRa.aa.a.3aaxx
+xxxxxxxxx<4..5........xxxxxxxxxxxxxxxxxxxxxxx<xxxxxxxxxxxaaaa3a3aa.a..a3.Raa2axx
+xxxxxxxx4...***....4xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxaa3a..a3aaR.a3a..aax
+xxxxxxxx...5|||5...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxaa2Ra2aR2aa.a3aaRax
+xxxxxxxx4...***...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxa3aa3a.aR1Ra.a.Raax
+xxxxxxxxx4...5.4xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxaaR3a.aR2R2Ra3.aaax
+xxxxxxxxxxxx4.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxaaaRa2aRaRaRaa3axx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxaa3a3a2a3aR2aaxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxaa3a3a2aaaaaxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxaaaaaaaxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
