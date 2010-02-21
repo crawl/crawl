@@ -82,7 +82,7 @@ for those the list begins with step 2.
     Package the source (as described in 6.) and build the binaries. If you want
     you can do some more sanity testing but it shouldn't be necessary anymore.
 
-9.  Upload the files to Sourceforge
+8.  Upload the files to Sourceforge
     Probably requires SF permissions for file releases.
 
     You could use for example rsync (on Linux) or FTP.
@@ -93,7 +93,7 @@ for those the list begins with step 2.
     If using rsync, the correct command is:
     rsync -avP -e ssh FILENAME USERNAME,crawl-ref@frs.sourceforge.net:/home/frs/project/c/cr/crawl-ref/
 
-10. Create a new release in Sourceforge's file release system
+9.  Create a new release in Sourceforge's file release system
     Requires SF permissions for file releases.
 
     * Click on Project Admin -> File Manager
@@ -108,7 +108,7 @@ for those the list begins with step 2.
     See https://sourceforge.net/apps/trac/sourceforge/wiki/Release%20files%20for%20download
     for some more detailed explanations.
 
-11. Update the homepage
+10. Update the homepage
     sftp username,crawl-ref@frs.sourceforge.net
     >cd htdocs
     >get index.html
@@ -123,10 +123,10 @@ for those the list begins with step 2.
 
     Check http://crawl-ref.sourceforge.net/ to see whether everything looks ok.
 
-12. Announce the release
+11. Announce the release
     Post a release announcement to rec.games.roguelike.misc and
     rec.games.roguelike.announce. Also send an email over crawl-ref-discuss.
     If you want you can also write a news item on Sourceforge.
 
-13. Lean back and enjoy the excitement
+12. Lean back and enjoy the excitement
     -- until the first bug reports roll in. ;)
