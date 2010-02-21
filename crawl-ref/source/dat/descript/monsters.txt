@@ -782,7 +782,7 @@ It probably didn't get this big by eating little insects.
 %%%%
 giant gecko
 
-A lizard with pads on its toes allowing it to cling to walls and ceilings, and huge, sharp teeth.  It is many times larger than a normal gecko, yet its size belies its agility.  It believes you will be no less tasty than its previous victims were.
+A lizard with pads on its toes allowing it to cling to walls and ceilings, and huge, sharp teeth.  It is many times larger than a normal gecko, yet its size belies its agility.  It probably expects you to be no less tasty than its previous victims have been.
 %%%%
 giant goldfish
 
@@ -910,7 +910,7 @@ A large creature with the hindquarters of a horse and the wings, head and talons
 %%%%
 hobgoblin
 
-A larger and even uglier goblin, with an even worse temper to match.  Many foolish young adventurers have underestimated the danger of crossing a hobgolin and paid for it with their lives.
+A larger and even uglier goblin, with an even worse temper to match.  Many foolish young adventurers have underestimated the danger of crossing a hobgoblin and paid for it with their lives.
 %%%%
 hog
 
