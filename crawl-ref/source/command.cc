@@ -184,11 +184,11 @@ static std::string _get_version_changes(void)
     {
         result += EOL;
         result += "For a more complete list of changes, see changelog.txt "
-                  "in the /docs folder.";
+                  "in the docs/ folder.";
     }
     else
     {
-        result += "For a list of changes, see changelog.txt in the /docs "
+        result += "For a list of changes, see changelog.txt in the docs/ "
                   "folder.";
     }
 

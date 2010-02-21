@@ -794,7 +794,7 @@ void tutorial_death_screen()
                "spells more often! Remember to rest when your Magic is low.";
     }
     else if (you.religion == GOD_TROG && Tutorial.tut_berserk_counter <= 3
-             && !you.duration[DUR_EXHAUSTED])
+             && !you.duration[DUR_BERSERKER] && !you.duration[DUR_EXHAUSTED])
     {
         text = "Don't forget to go berserk when fighting particularly "
                "difficult foes. It is risky, but makes you faster and beefier.";
