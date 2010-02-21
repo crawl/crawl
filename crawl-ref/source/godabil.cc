@@ -1158,7 +1158,7 @@ int rain(const coord_def &target)
 // and make 1 giant spore per corpse.  Spores are given the input as
 // their starting behavior; the function returns the number of corpses
 // processed.
-int corpse_spores(beh_type behavior)
+int corpse_spores(beh_type behavior, bool interactive)
 {
     int count = 0;
     std::vector<stack_iterator> positions;
@@ -1187,24 +1187,28 @@ int corpse_spores(beh_type behavior)
 #ifndef USE_TILE
     crawl_state.darken_range = 0;
     viewwindow(false, false);
-    for(int i=0; i<positions.size(); ++i)
+    for(unsigned i=0; i < positions.size(); ++i)
     {
         coord_def temp = grid2view(positions[i]->pos);
         cgotoxy(temp.x, temp.y, GOTO_DNGN);
+
         unsigned color = GREEN | COLFLAG_FRIENDLY_MONSTER;
         color = real_colour(color);
-        put_colour_ch(color, '*');
+
+        unsigned character = mons_char(MONS_GIANT_SPORE);
+        put_colour_ch(color, character);
     }
 
-    if (yesnoquit("Is this OK?", true, 'y') <= 0)
+    if (interactive && yesnoquit("Will you create these spores?",
+                                 true, 'y') <= 0)
     {
         crawl_state.darken_range = -1;
         viewwindow(false, false);
-        return 0;
+        return -1;
     }
 #endif
 
-    for (int i=0; i < positions.size(); ++i)
+    for (unsigned i=0; i < positions.size(); ++i)
     {
         count++;
         int rc = create_monster(mgen_data(MONS_GIANT_SPORE,
