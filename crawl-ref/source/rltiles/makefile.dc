@@ -1,6 +1,0 @@
-# dc-foo.txt files which are included by other dc-foo.txt files.
-tiledef-main.h: dc-corpse.txt dc-unrand.txt dc-item.txt dc-misc.txt
-
-tiledef-player.h: dc-demon.txt dc-mon.txt
-
-tiledef-gui.h: dc-spells.txt
