@@ -1935,7 +1935,7 @@ map_def::map_def()
       weight_depth_mult(), weight_depth_div(), welcome_messages(), map(),
       mons(), items(), random_mons(), prelude("dlprelude"),
       mapchunk("dlmapchunk"), main("dlmain"),
-      validate("dlvalidate"), veto("dlveto"),
+      validate("dlvalidate"), veto("dlveto"), epilogue("dlepilogue"),
       rock_colour(BLACK), floor_colour(BLACK), rock_tile(0), floor_tile(0),
       border_fill_type(DNGN_ROCK_WALL), index_only(false), cache_offset(0L),
       validating_map_flag(false)
@@ -1955,6 +1955,7 @@ void map_def::init()
     main.clear();
     validate.clear();
     veto.clear();
+    epilogue.clear();
     place_loaded_from.clear();
     reinit();
 
@@ -2055,6 +2056,7 @@ void map_def::write_full(writer& outf)
     main.write(outf);
     validate.write(outf);
     veto.write(outf);
+    epilogue.write(outf);
 }
 
 void map_def::read_full(reader& inf)
@@ -2083,6 +2085,7 @@ void map_def::read_full(reader& inf)
     main.read(inf);
     validate.read(inf);
     veto.read(inf);
+    epilogue.read(inf);
 }
 
 void map_def::load()
@@ -2183,6 +2186,7 @@ void map_def::set_file(const std::string &s)
     main.set_file(s);
     validate.set_file(s);
     veto.set_file(s);
+    epilogue.set_file(s);
     file = get_base_filename(s);
 }
 
@@ -2262,6 +2266,11 @@ bool map_def::test_lua_veto()
     return !veto.empty() && test_lua_boolchunk(veto, true);
 }
 
+bool map_def::run_lua_epilogue (bool croak)
+{
+    return !epilogue.empty() && test_lua_boolchunk(epilogue, false, croak);
+}
+
 std::string map_def::rewrite_chunk_errors(const std::string &s) const
 {
     std::string res = s;
@@ -2273,7 +2282,9 @@ std::string map_def::rewrite_chunk_errors(const std::string &s) const
         return (res);
     if (validate.rewrite_chunk_errors(res))
         return (res);
-    veto.rewrite_chunk_errors(res);
+    if (veto.rewrite_chunk_errors(res))
+        return (res);
+    epilogue.rewrite_chunk_errors(res);
     return (res);
 }
 
