@@ -1438,10 +1438,6 @@ static const bool _is_appropriate_spell(spell_type spell,
 {
     ASSERT(is_valid_spell(spell));
 
-    // TODO: Implement tiles Evaporate interface.
-    if (spell == SPELL_EVAPORATE)
-        return (false);
-
     const unsigned int flags    = get_spell_flags(spell);
     const bool         targeted = flags & SPFLAG_TARGETING_MASK;
 
@@ -1667,11 +1663,30 @@ static bool _cast_spell_on_target(actor* target)
         return (true);
     }
 
+    int item_slot = -1;
+    if (spell == SPELL_EVAPORATE)
+    {
+        const int pot = prompt_invent_item("Throw which potion?", MT_INVLIST,
+                                           OBJ_POTIONS);
+
+        if (prompt_failed(pot))
+            return (false);
+        else if (you.inv[pot].base_type != OBJ_POTIONS)
+        {
+            mpr("This spell works only on potions!");
+            return (false);
+        }
+        item_slot = you.inv[pot].slot;
+    }
+
     macro_buf_add_cmd(CMD_FORCE_CAST_SPELL);
     macro_buf_add(letter);
+    if (item_slot != -1)
+        macro_buf_add(item_slot);
 
     if (get_spell_flags(spell) & SPFLAG_TARGETING_MASK)
         _add_targeting_commands(target->pos());
+
     return (true);
 }
 
@@ -1687,7 +1702,6 @@ static const bool _have_appropriate_spell(const actor* target)
         if (_is_appropriate_spell(spell, target))
             return (true);
     }
-
     return (false);
 }
 
