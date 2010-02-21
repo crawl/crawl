@@ -1,15 +1,14 @@
-
-/* A Bison parser, made by GNU Bison 2.4.1.  */
+/* A Bison parser, made by GNU Bison 2.3.  */
 
 /* Skeleton interface for Bison's Yacc-like parsers in C
 
-      Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
+   Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
    Free Software Foundation, Inc.
 
-   This program is free software: you can redistribute it and/or modify
+   This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation, either version 3 of the License, or
-   (at your option) any later version.
+   the Free Software Foundation; either version 2, or (at your option)
+   any later version.
 
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -17,7 +16,9 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin Street, Fifth Floor,
+   Boston, MA 02110-1301, USA.  */
 
 /* As a special exception, you may create a larger work that contains
    part or all of the Bison parser skeleton and distribute that work
@@ -31,7 +32,6 @@
 
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
-
 
 /* Tokens.  */
 #ifndef YYTOKENTYPE
@@ -62,29 +62,30 @@
      MAIN = 278,
      VALIDATE = 279,
      VETO = 280,
-     NSUBST = 281,
-     WELCOME = 282,
-     LFLAGS = 283,
-     BFLAGS = 284,
-     LFLOORCOL = 285,
-     LROCKCOL = 286,
-     LFLOORTILE = 287,
-     LROCKTILE = 288,
-     FTILE = 289,
-     RTILE = 290,
-     TILE = 291,
-     SUBVAULT = 292,
-     FHEIGHT = 293,
-     COMMA = 294,
-     COLON = 295,
-     PERC = 296,
-     INTEGER = 297,
-     CHARACTER = 298,
-     STRING = 299,
-     MAP_LINE = 300,
-     MONSTER_NAME = 301,
-     ITEM_INFO = 302,
-     LUA_LINE = 303
+     EPILOGUE = 281,
+     NSUBST = 282,
+     WELCOME = 283,
+     LFLAGS = 284,
+     BFLAGS = 285,
+     LFLOORCOL = 286,
+     LROCKCOL = 287,
+     LFLOORTILE = 288,
+     LROCKTILE = 289,
+     FTILE = 290,
+     RTILE = 291,
+     TILE = 292,
+     SUBVAULT = 293,
+     FHEIGHT = 294,
+     COMMA = 295,
+     COLON = 296,
+     PERC = 297,
+     INTEGER = 298,
+     CHARACTER = 299,
+     STRING = 300,
+     MAP_LINE = 301,
+     MONSTER_NAME = 302,
+     ITEM_INFO = 303,
+     LUA_LINE = 304
    };
 #endif
 /* Tokens.  */
@@ -111,52 +112,48 @@
 #define MAIN 278
 #define VALIDATE 279
 #define VETO 280
-#define NSUBST 281
-#define WELCOME 282
-#define LFLAGS 283
-#define BFLAGS 284
-#define LFLOORCOL 285
-#define LROCKCOL 286
-#define LFLOORTILE 287
-#define LROCKTILE 288
-#define FTILE 289
-#define RTILE 290
-#define TILE 291
-#define SUBVAULT 292
-#define FHEIGHT 293
-#define COMMA 294
-#define COLON 295
-#define PERC 296
-#define INTEGER 297
-#define CHARACTER 298
-#define STRING 299
-#define MAP_LINE 300
-#define MONSTER_NAME 301
-#define ITEM_INFO 302
-#define LUA_LINE 303
+#define EPILOGUE 281
+#define NSUBST 282
+#define WELCOME 283
+#define LFLAGS 284
+#define BFLAGS 285
+#define LFLOORCOL 286
+#define LROCKCOL 287
+#define LFLOORTILE 288
+#define LROCKTILE 289
+#define FTILE 290
+#define RTILE 291
+#define TILE 292
+#define SUBVAULT 293
+#define FHEIGHT 294
+#define COMMA 295
+#define COLON 296
+#define PERC 297
+#define INTEGER 298
+#define CHARACTER 299
+#define STRING 300
+#define MAP_LINE 301
+#define MONSTER_NAME 302
+#define ITEM_INFO 303
+#define LUA_LINE 304
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-{
-
-/* Line 1676 of yacc.c  */
 #line 45 "levcomp.ypp"
-
+{
     int i;
     const char *text;
     raw_range range;
-
-
-
-/* Line 1676 of yacc.c  */
-#line 156 "levcomp.tab.h"
-} YYSTYPE;
-# define YYSTYPE_IS_TRIVIAL 1
+}
+/* Line 1489 of yacc.c.  */
+#line 153 "levcomp.tab.h"
+	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
+# define YYSTYPE_IS_TRIVIAL 1
 #endif
 
 extern YYSTYPE yylval;
