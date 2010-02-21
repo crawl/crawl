@@ -598,10 +598,10 @@ static void _tutorial_stats_intro()
             "drops to zero, you die." EOL
             "<w>Magic: " << you.magic_points << "/" << you.max_magic_points
          << "</w> represents your energy for casting spells, although other "
-            "actions often draw from Magic, too." EOL
-            "<w>Str</w>ength, <w>Int</w>elligence, <w>Dex</w>terity below "
-            "below provide an all-around account of the character's "
-            "attributes. Don't worry about the rest for now.";
+            "actions often draw from Magic, too. <w>Str</w>ength, "
+            "<w>Int</w>elligence, <w>Dex</w>terity below below provide an "
+            "all-around account of the character's attributes. Don't worry "
+            "about the rest for now.";
 
     mpr(istr.str(), MSGCH_TUTORIAL, 0);
 
@@ -2273,9 +2273,17 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
             tiles.add_text_tag(TAG_TUTORIAL, altar, gc);
         }
 #endif
-        text << "is an altar. You can get information about it by pressing "
-                "<w>%</w> while standing on the square. Before taking up "
-                "the corresponding faith you'll be asked for confirmation.";
+        text << "is an altar. "
+#ifdef USE_TILE
+                "By <w>rightclicking</w> on it with your mouse "
+#else
+                "If you target the altar with <w>x</w>, then press <w>v</w> "
+#endif
+                "you can get a short description.\n"
+                "Press <w>%</w> while standing on the square to join the faith "
+                "or read some information about the god in question. Before "
+                "taking up the corresponding faith you'll be asked for "
+                "confirmation.";
         cmd.push_back(CMD_PRAY);
 
         if (you.religion == GOD_NO_GOD
@@ -4568,18 +4576,32 @@ static void _tutorial_describe_feature(int x, int y)
             {
                 god_type altar_god = feat_altar_god(feat);
 
-                if (you.religion == GOD_NO_GOD)
+                // I think right now Sif Muna is the only god for whom
+                // you can find altars early and who may refuse to accept
+                // worship by one of the tutorial characters. (jpeg)
+                if (altar_god == GOD_SIF_MUNA
+                    && !player_can_join_god(altar_god))
                 {
-                ostr << "This is your chance to join a religion! In general, "
-                        "the gods will help their followers, bestowing powers "
-                        "of all sorts upon them, but many of them demand a "
-                        "life of dedication, constant tributes or "
-                        "entertainment in return. \nYou can get information "
-                        "about <w>"
-                     << god_name(altar_god)
-                     << "</w> by pressing <w>p</w> while standing on the "
-                        "altar. Before taking up the responding faith you'll "
-                        "be asked for confirmation.";
+                    ostr << "As <w>p</w>raying on the altar will tell you, "
+                         << god_name(altar_god) << " only accepts worship from "
+                            "those who have already dabbled in magic. You can "
+                            "find out more about this god by searching the "
+                            "database with <w>?/g</w>.\n"
+                            "For other gods, you'll be able to join the faith "
+                            "by <w>p</w>raying at their altar.";
+                }
+                else if (you.religion == GOD_NO_GOD)
+                {
+                    ostr << "This is your chance to join a religion! In "
+                            "general, the gods will help their followers, "
+                            "bestowing powers of all sorts upon them, but many "
+                            "of them demand a life of dedication, constant "
+                            "tributes or entertainment in return.\n"
+                            "You can get information about <w>"
+                         << god_name(altar_god)
+                         << "</w> by pressing <w>p</w> while standing on the "
+                            "altar. Before taking up the responding faith "
+                            "you'll be asked for confirmation.";
                 }
                 else if (you.religion == altar_god)
                 {
@@ -4596,6 +4618,8 @@ static void _tutorial_describe_feature(int x, int y)
                              << god_name(you.religion)
                              << ".";
                     }
+                    else // If we don't have anything to say, return early.
+                        return;
                 }
                 else
                 {
