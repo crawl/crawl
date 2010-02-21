@@ -739,6 +739,87 @@ void tile_list_processor::add_image(tile &img, const char *enumname)
     }
 }
 
+static bool _files_differ(FILE *newfile, FILE *oldfile)
+{
+    rewind(newfile);
+    rewind(oldfile);
+
+    const size_t blocksize = 1024;
+    char newblock[blocksize];
+    char oldblock[blocksize];
+
+    while (true)
+    {
+        size_t newread = fread(newblock, 1, blocksize, newfile);
+        size_t oldread = fread(oldblock, 1, blocksize, oldfile);
+
+        if (newread != oldread)
+            return (true);
+
+        if (memcmp(newblock, oldblock, blocksize))
+            return (true);
+
+        bool newdone = !!feof(newfile);
+        bool olddone = !!feof(oldfile);
+
+        if (newdone || olddone)
+            return (newdone != olddone);
+    }
+
+    // Silence warnings.
+    return (false);
+}
+
+static bool _copy_file(FILE *src, FILE *dst)
+{
+    rewind(src);
+    rewind(dst);
+
+    const size_t blocksize = 1024;
+    char srcblock[blocksize];
+
+    while (!feof(src))
+    {
+        size_t readcount = fread(srcblock, 1, blocksize, src);
+        if (readcount > 0)
+        {
+            size_t writecount = fwrite(srcblock, 1, readcount, dst);
+            if (readcount != writecount)
+                return (false);
+        }
+    }
+
+    return (true);
+}
+
+static bool _write_if_changed(const char *oldfilename, FILE *newfile)
+{
+    // Read in oldfile.  If newfile differs from oldfile, copy its
+    // contents into oldfile.  Return false if some error occurs.
+    // It assumes newfile is open for read.
+
+    assert(newfile);
+    assert(oldfilename);
+
+    FILE *oldfile = fopen(oldfilename, "r");
+    if (oldfile && !_files_differ(newfile, oldfile))
+    {
+        fclose(oldfile);
+        return (true);
+    }
+
+    fclose(oldfile);
+    oldfile = fopen(oldfilename, "w");
+    if (!oldfile)
+        return (false);
+
+    bool ret = _copy_file(newfile, oldfile);
+
+    fclose(oldfile);
+
+    return (ret);
+}
+
 bool tile_list_processor::write_data()
 {
     if (m_name == "")
@@ -779,7 +860,7 @@ bool tile_list_processor::write_data()
     {
         char filename[1024];
         sprintf(filename, "tiledef-%s.h", lcname.c_str());
-        FILE *fp = fopen(filename, "w");
+        FILE *fp = tmpfile();
 
         if (!fp)
         {
@@ -916,6 +997,10 @@ bool tile_list_processor::write_data()
 
         fprintf(fp, "\n#endif\n\n");
 
+        fflush(fp);
+        if (!_write_if_changed(filename, fp))
+            return (false);
+
         fclose(fp);
     }
 
@@ -923,7 +1008,7 @@ bool tile_list_processor::write_data()
     {
         char filename[1024];
         sprintf(filename, "tiledef-%s.cc", lcname.c_str());
-        FILE *fp = fopen(filename, "w");
+        FILE *fp = tmpfile();
 
         if (!fp)
         {
@@ -1148,6 +1233,10 @@ bool tile_list_processor::write_data()
             "    return (result ? found : idx);\n"
             "}\n\n",
             lcname.c_str(), lcname.c_str(), lcname.c_str(), lcname.c_str());
+
+        fflush(fp);
+        if (!_write_if_changed(filename, fp))
+            return (false);
 
         fclose(fp);
     }
