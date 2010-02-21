@@ -3819,6 +3819,10 @@ static bool _initialise(void)
 
     add_key_recorder(&repeat_again_rec);
 
+    // XXX: And run Lua map postludes for D:1. Kinda hacky, it shouldn't really
+    // be here.
+    run_map_epilogues();
+
     return (newc);
 }
 

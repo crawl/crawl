@@ -8594,6 +8594,17 @@ static bool _fixup_interlevel_connectivity()
     return (true);
 }
 
+void run_map_epilogues ()
+{
+    // Iterate over Level_Vaults and run each map's prelude.
+    for (unsigned i = 0, size = Level_Vaults.size(); i < size; ++i)
+    {
+        map_def map = Level_Vaults[i].map;
+        bool result = map.run_lua_epilogue();
+        dprf("ran lua epilogue for %s: result was %s.", map.name.c_str(), result ? "true" : false);
+    }
+}
+
 //////////////////////////////////////////////////////////////////////////
 // vault_placement
 

@@ -210,6 +210,8 @@ bool dgn_place_map(const map_def *map, bool clobber, bool make_no_exits,
 
 void level_clear_vault_memory();
 void level_welcome_messages();
+void run_map_epilogues ();
+
 
 bool place_specific_trap(const coord_def& where, trap_type spec_type);
 void place_spec_shop(int level_number, const coord_def& where,
