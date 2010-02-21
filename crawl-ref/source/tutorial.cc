@@ -2001,8 +2001,8 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         {
             text << "\nYou can also offer corpses to "
                  << god_name(you.religion)
-                 << " by <w>%</w>raying over them to offer them. Note that the "
-                    "gods will not accept rotting flesh.";
+                 << " by <w>%</w>raying over them. Note that the gods will not "
+                    "accept rotting flesh.";
             cmd.push_back(CMD_PRAY);
         }
         text << "\nDuring the tutorial you can reread this information at "
