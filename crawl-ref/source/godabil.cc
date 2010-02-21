@@ -1161,44 +1161,78 @@ int rain(const coord_def &target)
 int corpse_spores(beh_type behavior)
 {
     int count = 0;
+    std::vector<stack_iterator> positions;
+
     for (radius_iterator rad(you.pos(), LOS_RADIUS, true, true, true); rad;
          ++rad)
     {
+        if (actor_at(*rad))
+            continue;
+
         for (stack_iterator stack_it(*rad); stack_it; ++stack_it)
         {
             if (stack_it->base_type == OBJ_CORPSES
                 && stack_it->sub_type == CORPSE_BODY)
             {
+                positions.push_back(stack_it);
                 count++;
-
-                int rc = create_monster(mgen_data(MONS_GIANT_SPORE,
-                                                  behavior,
-                                                  &you,
-                                                  0,
-                                                  0,
-                                                  *rad,
-                                                  MHITNOT,
-                                                  MG_FORCE_PLACE));
-
-                if (rc != -1)
-                {
-                    env.mons[rc].flags |= MF_ATT_CHANGE_ATTEMPT;
-                    if (behavior == BEH_FRIENDLY)
-                    {
-                        env.mons[rc].behaviour = BEH_WANDER;
-                        env.mons[rc].foe = MHITNOT;
-                    }
-                }
-
-                if (mons_skeleton(stack_it->plus))
-                    turn_corpse_into_skeleton(*stack_it);
-                else
-                    destroy_item(stack_it->index());
-
                 break;
             }
         }
     }
+
+    if (count == 0)
+        return count;
+
+#ifndef USE_TILE
+    crawl_state.darken_range = 0;
+    viewwindow(false, false);
+    for(int i=0; i<positions.size(); ++i)
+    {
+        coord_def temp = grid2view(positions[i]->pos);
+        cgotoxy(temp.x, temp.y, GOTO_DNGN);
+        unsigned color = GREEN | COLFLAG_FRIENDLY_MONSTER;
+        color = real_colour(color);
+        put_colour_ch(color, '*');
+    }
+
+    if (yesnoquit("Is this OK?", true, 'y') <= 0)
+    {
+        crawl_state.darken_range = -1;
+        viewwindow(false, false);
+        return 0;
+    }
+#endif
+
+    for (int i=0; i < positions.size(); ++i)
+    {
+        count++;
+        int rc = create_monster(mgen_data(MONS_GIANT_SPORE,
+                                          behavior,
+                                          &you,
+                                          0,
+                                          0,
+                                          positions[i]->pos,
+                                          MHITNOT,
+                                          MG_FORCE_PLACE));
+
+        if (rc != -1)
+        {
+            env.mons[rc].flags |= MF_ATT_CHANGE_ATTEMPT;
+            if (behavior == BEH_FRIENDLY)
+            {
+                env.mons[rc].behaviour = BEH_WANDER;
+                env.mons[rc].foe = MHITNOT;
+            }
+        }
+
+        if (mons_skeleton(positions[i]->plus))
+            turn_corpse_into_skeleton(*positions[i]);
+        else
+            destroy_item(positions[i]->index());
+    }
+    crawl_state.darken_range = -1;
+    viewwindow(false, false);
 
     return (count);
 }
