@@ -300,9 +300,11 @@ static job_type _get_tutorial_job(unsigned int type)
 
 // Converts all secret doors in a fixed radius around the player's starting
 // position into normal closed doors.
+// FIXME: Ideally, we'd need to zap secret doors that block the way
+// between entrance and exit.
 void tutorial_zap_secret_doors()
 {
-    for (radius_iterator ri(you.pos(), 10, true, false); ri; ++ri)
+    for (radius_iterator ri(you.pos(), 25, true, false); ri; ++ri)
         if (grd(*ri) == DNGN_SECRET_DOOR)
             grd(*ri) = DNGN_CLOSED_DOOR;
 }
