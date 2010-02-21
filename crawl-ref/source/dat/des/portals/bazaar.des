@@ -545,7 +545,7 @@ ENDMAP
 NAME:      minmay_bazaar_generic_island
 TAGS:      bazaar no_rotate
 ORIENT:    encompass
-W:         20
+WEIGHT:    20
 SUBST:     w : wl
 SHUFFLE:   Aa/Bb/Cc/Dd, Cc/Ee, Dd/Ff
 COLOUR:    EeFf = yellow
