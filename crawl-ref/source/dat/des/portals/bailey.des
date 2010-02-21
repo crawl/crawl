@@ -609,6 +609,82 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+NAME:   minmay_bailey_axe_hex_keep
+WEIGHT: 10
+ORIENT: encompass
+TAGS:   bailey_axe no_item_gen no_monster_gen
+# Loot consists of 16 good potions and scrolls in the last outer room, with a
+# lot of gold and especially good items in the (very dangerous) center room.
+#
+# The secret door does not work well, it will always be open. I also believe 
+# that loot is a bit much, but other baileys suffer from that as well... added
+# the warlord in an attempt to make it more even. --dpeg
+ITEM:   potion of healing / potion of heal wounds / potion of resistance w:5 / \
+        potion of might w:5 / potion of brilliance w:5 / potion of agility w:5 / \
+        potion of magic w:5 / potion of speed w:5 / \
+        scroll of teleportation / scroll of blinking / scroll of identify / \
+        scroll of enchant weapon i w:2 / scroll of enchant weapon ii w:2 / \
+        scroll of enchant weapon iii w:1 / scroll of enchant armour w:5
+ITEM:   potion of gain strength / potion of gain intelligence / \
+        potion of gain dexterity / potion of cure mutation    / \
+        potion of experience / scroll of acquirement
+: easy_axe_fighter(_G)
+: hard_axe_fighter(_G)
+MONS:   orc warlord
+: bailey_setup(_G)
+SUBST:  I = t.
+MAP
+ttttttttttttttttttttttttttttttttttttt
+ttttttttttttttttttttttttttttttttttttt
+tttttttttttttttcccccccttttttttttttttt
+ttttttttttttttccde<edcctttttttttttttt
+ttttttttttttttcdddddddctttttttttttttt
+tttttttttttttcc.ddddd.ccttttttttttttt
+tttttttttttttc.........cttttttttttttt
+ttttttttttttcc.1.....1.cctttttttttttt
+ttttttccccccc2...1T1...2ccccccctttttt
+tttttcc1...1cc.1.....1.cc1...1ccttttt
+tttttc.......+....2....+.......cttttt
+ttttcc.......cc.1...1.cc.......cctttt
+ttttc.........c.......c.........ctttt
+tttcc...1.1...ccG...Gcc...1.1...ccttt
+tttc1....T....1ccc=ccc1....T....1cttt
+tttcc...1.1...ccc...ccc...1.1...ccttt
+ttttc.........c1.....1c.........ctttt
+ttttcc.......cc..1.1..cc.......cctttt
+tttttc.......c2.......2c.......cttttt
+tttttcc1...1cc..1...1..cc1...1ccttttt
+ttttttcc+cccc2....3....2cccc+cctttttt
+tttttcc.....cc..1...1..cc.....ccttttt
+tttttc1.....1c2..$$$..2c1.....1cttttt
+ttttcc.......cc$$$$$$$cc.......cctttt
+ttttc1.......1c|$e$e$|c1.......1ctttt
+tttcc.........cce|e|ecc.........ccttt
+tttc1....T....1ccccccc1....T....1cttt
+tttcc.........cc1.1.1cc.........ccttt
+ttttc1.......1c.......c1.......1ctttt
+ttttcc.......cc1.....1cc.......cctttt
+tttttc1......+.........+......1cttttt
+tttttcc.....cc.........cc.....ccttttt
+ttttttccccccc.....T.....ccccccctttttt
+ttttttttttttcc.........cctttttttttttt
+tttttttttttttc.........cttttttttttttt
+tttttttttttttcc.......ccttttttttttttt
+ttttttttttttttc.......ctttttttttttttt
+ttttttttttttttcc.....cctttttttttttttt
+tttttttttttttttcc+++ccttttttttttttttt
+ttttttttttttttI.......Itttttttttttttt
+ttttttttttttttI.......Itttttttttttttt
+tttttttttttttI....<....Ittttttttttttt
+tttttttttttttI.........Ittttttttttttt
+tttttttttttttI....A....Ittttttttttttt
+tttttttttttttI.........Ittttttttttttt
+ttttttttttttttII.....IItttttttttttttt
+ttttttttttttttttIIIIItttttttttttttttt
+ttttttttttttttttttttttttttttttttttttt
+ttttttttttttttttttttttttttttttttttttt
+ENDMAP
+
 ##############
 #            #
 #  POLEARMS  #
@@ -864,3 +940,4 @@ c..........12cccccc.....13c.....c.....14+....5......5c
 cc...<.....1cccccccc....1ccccccccc....1ccc..........cc
 cccccccccccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
+
