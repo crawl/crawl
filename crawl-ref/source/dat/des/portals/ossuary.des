@@ -167,7 +167,12 @@ ENDMAP
 #### The portal vaults ####################################
 
 # Reset default depth to prevent random generation of portal vaults.
+# Sort destination maps by WEIGHT.
 default-depth:
+
+###########################################################
+# Common: WEIGHT 40
+###########################################################
 
 NAME:    ossuary_tomb_1
 WEIGHT:  40
@@ -209,117 +214,6 @@ x.3.3.3..G..G..3.3.3.x
 x..3.3..........3.3..x
 x....................x
 xxxxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
-NAME:    ossuary_the_hunt_dpeg
-WEIGHT:  10
-ORIENT:  encompass
-TAGS:    ossuary no_item_gen no_monster_gen
-# loot: 8 items of which 6 should be good.
-# Most of the loot helps right here, if need be.
-ITEM:    potion of healing / potion of heal wounds / potion of speed / \
-         potion of confusion w:5 / potion of mutation w:5 / \
-         scroll of identify / scroll of teleportation w:5 / \
-         scroll of blinking w:5 / scroll of holy word / \
-         scroll of curse armour w:5 / scroll of curse weapon w:5
-# There are three setups than can occur:
-# 10% - part of the loot in the closets, secret doors, bit more loot
-# 45% - doors are secret, traps are nasty, monsters asleep
-# 45% - doors are obvious, traps are softer, monsters are awake
-: if crawl.one_chance_in(10) then
-SUBST:   3 = d
-NSUBST:  d = 6:3 / *:d
-SUBST:   M = 111.
-: elseif crawl.coinflip() then
-SUBST:   M = 111.
-: else
-SUBST:   = = +
-SUBST:   ~ = T
-SUBST:   3 = 2
-NSUBST:  M = 1:1 / *:.
-:end
-MONS:    mummy
-MONS:    generate_awake centaur zombie / generate_awake hobgoblin zombie / \
-         generate_awake big kobold zombie / nothing w:20
-MONS:    centaur zombie / hobgoblin zombie / big kobold zombie / nothing w:20
-KFEAT:   ~ = dart trap w:20 / axe trap w:2 / net trap / needle trap / \
-             alarm trap / floor w:40
-KFEAT:   T = alarm trap w:20 / net trap / floor w:70
-KFEAT:   ^ = net trap w:15 / needle trap w:4 / axe trap w:1 / floor w:20
-COLOUR:  ^ = red
-KFEAT:   W = dart trap / floor w:20
-: ossuary_setup_features(_G)
-: ossuary_milestone(_G)
-MAP
-           cccccccccccccccccccc
-   ccccccccc3c3c3c3c3c3c3cddddccc
- ccc.....WWc=c=c=c=c=c=c=c^.....c
-cc1.....WW~~~~~~~~~~~~~~~~^.....cc
-c......WWW~~~~~~~~~~~~~~~~^.....Mcc
-c1....AW<W~~~~~~~~~~~~~~~~^.....M<c
-c......WWW~~~~~~~~~~~~~~~~^.....Mcc
-cc1.....WW~~~~~~~~~~~~~~~~^.....cc
- ccc.....WWc=c=c=c=c=c=c=c^.....c
-   ccccccccc3c3c3c3c3c3c3cddddccc
-           cccccccccccccccccccc
-ENDMAP
-
-NAME:    ossuary_crypta
-WEIGHT:  20
-ORIENT:  encompass
-TAGS:    ossuary no_item_gen no_monster_gen no_rotate no_vmirror
-MONS:    mummy
-MONS:    gnoll zombie / hobgoblin zombie / orc zombie / \
-         human zombie / kobold zombie / goblin zombie / \
-         big kobold zombie / centaur zombie
-# mix of strictly good items with strictly useless ones
-ITEM:    scroll of curse armour / scroll of enchant armour w:5 / \
-         scroll of curse weapon / scroll of remove curse       / \
-         potion of mutation w:5 / potion of cure mutation w:5  / \
-         potion of confusion    / potion of healing w:15       / \
-         potion of degeneration / potion of restore abilities  / \
-         scroll of immolation   / scroll of identify
-# and sometimes strictly useless ones
-ITEM:    scroll of curse armour / scroll of curse weapon / \
-         scroll of paper        / scroll of random uselessness / \
-         potion of mutation w:5 / potion of confusion    / \
-         potion of degeneration / scroll of immolation   / \
-         potion of confusion    / potion of paralysis
-# occasionally just use this
-ITEM:    any potion / any scroll w:5 / nothing
-SHUFFLE: hjkl
-SUBST:   h:d, j:e, k:de, l:.de
-NSUBST:  f = 6:f / *:e
-NSUBST:  d = 2:M / *:d
-NSUBST:  e = 2:M / *:e
-SUBST:   M = 1f, d = dddf, e = eeef
-NSUBST:  . = 6:^ / *:.
-KFEAT:   ^ = alarm trap / floor w:20
-SUBST:   = : =+
-SUBST:   = = =+
-: ossuary_setup_features(_G)
-: ossuary_milestone(_G)
-MAP
-          vvv
-        vvv1vvv
- ccccc vvfffffvv ccccc
- clllc vfff1fffv chhhc
- clllc vvvv^vvvv chhhc
- cc^cc    c^c    cc^cc
-ccc.c   ccc+ccc   c.ccc
-c2+.cc cc.....cc cc.+2c
-ccc..ccc.......ccc..ccc
-c2+...c.........c...+2c
-ccc...=....U....=...ccc
-c2+...c.........c...+2c
-ccc..ccc.......ccc..ccc
-c2+.cc cc.....cc cc.+2c
-ccc.c   ccc+ccc   c.ccc
- cc^cc    c.c    cc^cc
- ckkkc   cc.cc   cjjjc
- ckkkc   c.A.c   cjjjc
- ccccc   c.<.c   ccccc
-         ccccc
 ENDMAP
 
 NAME:    ossuary_tomb_2
@@ -417,6 +311,217 @@ cc$$dd.cc....cc.dd$$cc
 ccc$dd.cc....cc.dd$ccc
 ccc$ddccc.<A.cccdd$ccc
 cccccccccccccccccccccc
+ENDMAP
+
+###########################################################
+# Rare: WEIGHT 20
+###########################################################
+
+NAME:    ossuary_crypta
+WEIGHT:  20
+ORIENT:  encompass
+TAGS:    ossuary no_item_gen no_monster_gen no_rotate no_vmirror
+MONS:    mummy
+MONS:    gnoll zombie / hobgoblin zombie / orc zombie / \
+         human zombie / kobold zombie / goblin zombie / \
+         big kobold zombie / centaur zombie
+# mix of strictly good items with strictly useless ones
+ITEM:    scroll of curse armour / scroll of enchant armour w:5 / \
+         scroll of curse weapon / scroll of remove curse       / \
+         potion of mutation w:5 / potion of cure mutation w:5  / \
+         potion of confusion    / potion of healing w:15       / \
+         potion of degeneration / potion of restore abilities  / \
+         scroll of immolation   / scroll of identify
+# and sometimes strictly useless ones
+ITEM:    scroll of curse armour / scroll of curse weapon / \
+         scroll of paper        / scroll of random uselessness / \
+         potion of mutation w:5 / potion of confusion    / \
+         potion of degeneration / scroll of immolation   / \
+         potion of confusion    / potion of paralysis
+# occasionally just use this
+ITEM:    any potion / any scroll w:5 / nothing
+SHUFFLE: hjkl
+SUBST:   h:d, j:e, k:de, l:.de
+NSUBST:  f = 6:f / *:e
+NSUBST:  d = 2:M / *:d
+NSUBST:  e = 2:M / *:e
+SUBST:   M = 1f, d = dddf, e = eeef
+NSUBST:  . = 6:^ / *:.
+KFEAT:   ^ = alarm trap / floor w:20
+SUBST:   = : =+
+SUBST:   = = =+
+: ossuary_setup_features(_G)
+: ossuary_milestone(_G)
+MAP
+          vvv
+        vvv1vvv
+ ccccc vvfffffvv ccccc
+ clllc vfff1fffv chhhc
+ clllc vvvv^vvvv chhhc
+ cc^cc    c^c    cc^cc
+ccc.c   ccc+ccc   c.ccc
+c2+.cc cc.....cc cc.+2c
+ccc..ccc.......ccc..ccc
+c2+...c.........c...+2c
+ccc...=....U....=...ccc
+c2+...c.........c...+2c
+ccc..ccc.......ccc..ccc
+c2+.cc cc.....cc cc.+2c
+ccc.c   ccc+ccc   c.ccc
+ cc^cc    c.c    cc^cc
+ ckkkc   cc.cc   cjjjc
+ ckkkc   c.A.c   cjjjc
+ ccccc   c.<.c   ccccc
+         ccccc
+ENDMAP
+
+# Scorpions, and lots of them.  Hope you weren't expecting to breeze through
+# the ossuary just because you found a mace of holy wrath!
+NAME:   minmay_ossuary_scorpions
+WEIGHT: 20
+ORIENT: encompass
+TAGS:   ossuary no_item_gen no_monster_gen
+MONS:   scorpion
+MONS:   mummy
+MONS:   gnoll zombie / hobgoblin zombie / orc zombie / \
+        human zombie / kobold zombie / goblin zombie / \
+        big kobold zombie / centaur zombie / scorpion zombie w:20
+ITEM:   any scroll / any potion / any jewellery w:1 / nothing
+KFEAT:  ~ = needle trap / arrow trap / spear trap w:5 / dart trap w:2 / floor w:50
+SUBST:  1 = 1.
+SUBST:  3 = 3.
+: ossuary_setup_features(_G)
+: ossuary_milestone(_G)
+MAP
+ccccccccccccccccccccccccc
+c...c..3c..1c~~~ndddc131c
+c.A.c...G...+~~~nd2d=313c
+c...c3......c~~~ndddc131c
+cc+cccG...Gccc+ccccccc+cc
+c...c......3c...c3.1c~~~c
+c.<.+...G...c...G...c~~~c
+c...c...c3..c......3c~~~c
+ccccccccccccccG...Gcc~~~c
+c1.1cdddn~~~c3.....3c~~~c
+c.3.=d2dn~~~+...G...c~~~c
+c3.3cdddn~~~c..3c3.1c~~~c
+cc+ccccccc+ccccccccccc+cc
+c1...3c.....c~~~c...c3.1c
+c.....c.....c~~~+...G...c
+c.....G.....c~~~c......3c
+c...........cc+cccG...Gcc
+c3..........c3.3c3.....3c
+cccG..3..Gccc...c...G...c
+c3.........3c3.3c1.3c3.1c
+c...........cc+ccccccc+cc
+c.....G.....c~~~ndddc3.3c
+c.....c.....+~~~nd2d=.3.c
+c3...3c3...1c~~~ndddc1.1c
+ccccccccccccccccccccccccc
+ENDMAP
+
+# Another ossuary (loosely) based on Tomb:2
+NAME:    minmay_ossuary_tomb_2a
+WEIGHT:  20
+ORIENT:  encompass
+TAGS:    ossuary no_item_gen no_monster_gen no_rotate
+MONS:    rat zombie / jackal zombie / goblin zombie / hobgoblin zombie / \
+         snake zombie / gnoll zombie / orc zombie / kobold zombie / \
+         big kobold zombie / hound zombie / human zombie / elf zombie
+MONS:    mummy
+ITEM:    any scroll / any scroll q:2, any potion / any potion q:2
+SHUFFLE: $de*
+NSUBST:  B = 1:= / *:n
+NSUBST:  C = 1:= / *:n
+NSUBST:  D = 1:= / *:n
+NSUBST:  E = 1:= / *:n
+KFEAT:   ~ = needle trap / arrow trap / spear trap / bolt trap / axe trap
+SUBST:   ~ = ~.
+NSUBST:  X = 1:< / *:.
+: ossuary_setup_features(_G)
+: ossuary_milestone(_G)
+MAP
+ccccccccccccccccccccccccccccccc
+c$$B~..........<..........~Cddc
+c$$B~.....................~Cddc
+cBBB~........ccccc........~CCCc
+c~~~~.....................~~~~c
+c....2.........1.........2....c
+c.....cc....1.....1....cc.....c
+c.....cc...............cc.....c
+c.........1.........1.........c
+c..c.......................c..c
+c..cc..........X..........cc..c
+c<.cc....1....XAX....1....cc.<c
+c..cc..........X..........cc..c
+c..c.......................c..c
+c.........1.........1.........c
+c.............................c
+c.....cc....1.....1....cc.....c
+c.....cc.......1.......cc.....c
+c....2...................2....c
+c~~~~.....................~~~~c
+cEEE~........ccccc........~DDDc
+c**E~.....................~Deec
+c**E~..........<..........~Deec
+ccccccccccccccccccccccccccccccc
+ENDMAP
+
+###########################################################
+# Very rare: WEIGHT 10
+###########################################################
+
+NAME:    ossuary_the_hunt_dpeg
+WEIGHT:  10
+ORIENT:  encompass
+TAGS:    ossuary no_item_gen no_monster_gen
+# loot: 8 items of which 6 should be good.
+# Most of the loot helps right here, if need be.
+ITEM:    potion of healing / potion of heal wounds / potion of speed / \
+         potion of confusion w:5 / potion of mutation w:5 / \
+         scroll of identify / scroll of teleportation w:5 / \
+         scroll of blinking w:5 / scroll of holy word / \
+         scroll of curse armour w:5 / scroll of curse weapon w:5
+# There are three setups than can occur:
+# 10% - part of the loot in the closets, secret doors, bit more loot
+# 45% - doors are secret, traps are nasty, monsters asleep
+# 45% - doors are obvious, traps are softer, monsters are awake
+: if crawl.one_chance_in(10) then
+SUBST:   3 = d
+NSUBST:  d = 6:3 / *:d
+SUBST:   M = 111.
+: elseif crawl.coinflip() then
+SUBST:   M = 111.
+: else
+SUBST:   = = +
+SUBST:   ~ = T
+SUBST:   3 = 2
+NSUBST:  M = 1:1 / *:.
+:end
+MONS:    mummy
+MONS:    generate_awake centaur zombie / generate_awake hobgoblin zombie / \
+         generate_awake big kobold zombie / nothing w:20
+MONS:    centaur zombie / hobgoblin zombie / big kobold zombie / nothing w:20
+KFEAT:   ~ = dart trap w:20 / axe trap w:2 / net trap / needle trap / \
+             alarm trap / floor w:40
+KFEAT:   T = alarm trap w:20 / net trap / floor w:70
+KFEAT:   ^ = net trap w:15 / needle trap w:4 / axe trap w:1 / floor w:20
+COLOUR:  ^ = red
+KFEAT:   W = dart trap / floor w:20
+: ossuary_setup_features(_G)
+: ossuary_milestone(_G)
+MAP
+           cccccccccccccccccccc
+   ccccccccc3c3c3c3c3c3c3cddddccc
+ ccc.....WWc=c=c=c=c=c=c=c^.....c
+cc1.....WW~~~~~~~~~~~~~~~~^.....cc
+c......WWW~~~~~~~~~~~~~~~~^.....Mcc
+c1....AW<W~~~~~~~~~~~~~~~~^.....M<c
+c......WWW~~~~~~~~~~~~~~~~^.....Mcc
+cc1.....WW~~~~~~~~~~~~~~~~^.....cc
+ ccc.....WWc=c=c=c=c=c=c=c^.....c
+   ccccccccc3c3c3c3c3c3c3cddddccc
+           cccccccccccccccccccc
 ENDMAP
 
 # Guardian mummies are a clue, and actually quite a scary threat.
@@ -546,6 +651,9 @@ KFEAT:   ^ = arrow trap / dart trap / alarm trap
 KFEAT:   m = bolt trap
 KFEAT:   ~ = alarm trap
 NSUBST:  ' = 2:m / 25:1 / 25:2 / 30:^ / .
+SUBST:   X : XYc
+NSUBST:  X = 6:= / *:c
+NSUBST:  Y = 3:= / *:c
 : ossuary_setup_features(_G)
 : ossuary_milestone(_G)
 MAP
@@ -555,26 +663,26 @@ MAP
                          cc''''cc
                         cc''cc''cc
                        cc''cccc''cc
-                      cc''cccccc''cc
-                     cc''cc''''cc''cc
-                    cc''cc''cc''cc''cc
-                   cc''cc''cc=c''cc''cc
-                  cc''cc''cc=ccc''cc''cc
-                 cc''cc''cc''''cc''cc''cc
-                cc''cc''cc''cc''cc''cc''cc
-               cc''cc''cc''cccc''cc''cc''cc
-              cc''cc''cc''ccddcc''cc''cc''cc
-             cc''cc''cc''ccddddcc''cc''cc''cc
-            cc''cc''cc''ccd3dd3dcc''cc''cc''cc
-           cc''cc''cc''cc.^d<<d..cc''cc''cc''cc
-          cc''cc''cc''cc.^.4dd3^.^cc''cc''cc''cc
-         cc''cc''cc''cc^..^.dd^.~.~cc''cc''cc''cc
-        cc''cc''cc''cccccccccccccc==cc''cc''cc''cc
-       cc''cc''cc''''''''''''''''''''cc''cc''cc''cc
-      cc''cc''cccccccccccccccccccccccccc''cc''cc''cc
-     cc''c=''''''''''''''''''''''''''''''''cc''cc''cc
-    cc''cccccccccccccccccccccccccccccccccccccc''cc''cc
-   cc''''''''''''''''''''''''''''''''''''''''''''=c<Acc
+                      cc''cXccXc''cc
+                     cc''cX''''Xc''cc
+                    cc''cX''cc''Xc''cc
+                   cc''cX''cccc''Xc''cc
+                  cc''cX''cXcccc''Xc''cc
+                 cc''cX''cX''''Xc''Xc''cc
+                cc''cX''cX''cc''Xc''Xc''cc
+               cc''cX''cX''cccc''Xc''Xc''cc
+              cc''cX''cX''ccddcc''Xc''Xc''cc
+             cc''cX''cX''ccddddcc''Xc''Xc''cc
+            cc''cX''cX''ccd3dd3dcc''Xc''Xc''cc
+           cc''cX''cX''cc.^d<<d..cc''Xc''Xc''cc
+          cc''cX''cX''cc.^.4dd3^.^cc''Xc''Xc''cc
+         cc''cX''cX''cc^..^.dd^.~.~cc''Xc''Xc''cc
+        cc''cX''cX''cccccccccccccc==cc''Xc''Xc''cc
+       cc''cX''cX''''''''''''''''''''cc''Xc''Xc''cc
+      cc''cX''cccXcXcXcXcXcXcXcXcXcXcXcc''Xc''Xc''cc
+     cc''cX''''''''''''''''''''''''''''''''Xc''Xc''cc
+    cc''cccXcXcXcXcXcXcXcXcXcXcXcXcXcXcXcXcXcc''Xc''cc
+   cc''''''''''''''''''''''''''''''''''''''''''''Xc<Acc
   cccccccccccccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
 
@@ -707,3 +815,91 @@ cc.cc....cccccccccccccccccccccccccc.ccc..yzy..ccc.c
    ccccc                          c...............c
                                   ccccccccccccccccc
 ENDMAP
+
+
+# Four chambers, one with loot and the exit, three with zombies and a mummy.
+# (The player won't know which is which because Crawl rotates the vault.)
+#
+# Stealthy players can close the doors without the mummy noticing. This is
+# probably okay, but may turn out to be too easy.... -- dpeg
+NAME:   minmay_ossuary_four_chambers
+WEIGHT: 10
+ORIENT: encompass
+TAGS:   ossuary no_item_gen no_monster_gen
+MONS:   human zombie / elf zombie / centaur zombie
+MONS:   mummy
+ITEM:   any scroll / any potion / any scroll q:2 w:2 / any potion q:2 w:2
+: ossuary_setup_features(_G)
+: ossuary_milestone(_G)
+MAP
+            ccc
+          cccdccc
+         ccdddddcc
+         c..ddd..c
+         c...d...c
+         c.......c
+         c......cc
+          ccc.ccc
+            c+c
+  ccccc   ccc.ccc   ccccc
+ cc1.1cc cc.....cc cc1.1cc
+ c.....c c.......c c.....c
+cc.....ccc...<...ccc.....cc
+c2......+...<A<...+......2c
+cc.....ccc...<...ccc.....cc
+ c.....c c.......c c.....c
+ cc1.1cc cc.....cc cc1.1cc
+  ccccc   ccc.ccc   ccccc
+            c+c
+          ccc.ccc
+         cc.....cc
+         c1.....1c
+         c.......c
+         c1.....1c
+         cc.....cc
+          ccc2ccc
+            ccc
+ENDMAP
+
+# The intent is that the mummies chase the player through the whole ossuary,
+# forcing the player to either move quickly or soak up some death curses.
+NAME:   minmay_ossuary_chase
+WEIGHT: 10
+ORIENT: encompass
+TAGS:   ossuary no_item_gen no_monster_gen
+MONS:   rat zombie / quokka zombie / snake zombie /\
+        goblin zombie / hobgoblin zombie / kobold zombie / gnoll zombie w:2 /\
+        big kobold zombie w:1 / human zombie w:1 / elf zombie w:1 / orc zombie w:1
+MONS:   generate_awake mummy
+ITEM:   any scroll / any potion / gold w:4
+KFEAT:  ~ = arrow trap / needle trap / floor w:40
+: ossuary_setup_features(_G)
+: ossuary_milestone(_G)
+MAP
+ccccc     ccc ccc ccc
+cdddccccccc1ccc1ccc1ccccccc
+cddd~~~~c.............c~~~c
+cd<d~~<~+.............+~<~c
+cddd~~~~c.............c~~~c
+cdddccccccc1ccc1ccc1cccc+cc
+ccccc     ccc ccc ccc c...c 
+                     cc...cc
+                     c1...1c
+                     cc...cc
+                      c...c 
+                     cc...cc
+                     c1...1c
+                     cc...cc
+                      c...c 
+                     cc...cc
+                     c1...1c
+                     cc...cc
+cccc      ccc ccc ccc c...c
+c2.cccccccc1ccc1ccc1cccc+cc
+cc......c.............c~~~c
+c2..A.<.+.............+~<~c
+cc......c.............c~~~c
+c2.cccccccc1ccc1ccc1ccccccc
+cccc      ccc ccc ccc
+ENDMAP
+
