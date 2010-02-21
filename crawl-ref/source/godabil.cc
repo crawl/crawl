@@ -1184,11 +1184,12 @@ int corpse_spores(beh_type behavior, bool interactive)
     if (count == 0)
         return count;
 
-#ifndef USE_TILE
     crawl_state.darken_range = 0;
     viewwindow(false, false);
     for(unsigned i=0; i < positions.size(); ++i)
     {
+#ifndef USE_TILE
+
         coord_def temp = grid2view(positions[i]->pos);
         cgotoxy(temp.x, temp.y, GOTO_DNGN);
 
@@ -1197,6 +1198,9 @@ int corpse_spores(beh_type behavior, bool interactive)
 
         unsigned character = mons_char(MONS_GIANT_SPORE);
         put_colour_ch(color, character);
+#else
+        tiles.add_overlay(positions[i]->pos, TILE_SPORE_OVERLAY);
+#endif
     }
 
     if (interactive && yesnoquit("Will you create these spores?",
@@ -1206,7 +1210,6 @@ int corpse_spores(beh_type behavior, bool interactive)
         viewwindow(false, false);
         return -1;
     }
-#endif
 
     for (unsigned i=0; i < positions.size(); ++i)
     {
@@ -1235,6 +1238,7 @@ int corpse_spores(beh_type behavior, bool interactive)
         else
             destroy_item(positions[i]->index());
     }
+
     crawl_state.darken_range = -1;
     viewwindow(false, false);
 

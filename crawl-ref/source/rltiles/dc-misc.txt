@@ -59,6 +59,9 @@ cloud_rain2
 cloud_grey_smoke CLOUD_MIST
 cloud_gloom CLOUD_GLOOM
 
+%sdir dc-mon
+fungi_plants/giant_spore SPORE_OVERLAY
+
 #########MAP
 %sdir dc-misc
 %corpse 0
