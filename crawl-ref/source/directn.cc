@@ -1854,6 +1854,7 @@ bool direction_chooser::do_main_loop()
             const bool was_excluded = is_exclude_root(target());
             cycle_exclude_radius(target());
 #ifdef USE_TILE
+            // XXX: abusing need_beam_redraw to force viewwindow call.
             need_beam_redraw   = true;
 #endif
             const bool is_excluded = is_exclude_root(target());
