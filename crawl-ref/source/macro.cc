@@ -1310,8 +1310,10 @@ void insert_commands(std::string &desc, std::vector<command_type> cmds,
             break;
 
         std::string command_name = command_to_string(cmds[i]);
-        if (formatted && strcmp(command_name.c_str(), "<") == 0)
+        if (formatted && command_name == "<")
             command_name += "<";
+        else if (command_name == "%")
+            command_name = "percent";
 
         desc.replace(found, 1, command_name);
     }
