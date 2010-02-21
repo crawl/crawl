@@ -6680,9 +6680,16 @@ VISUAL:@The_monster@ sobs.
 
 @The_monster@ screams, "The pain, the pain!"
 
+VISUAL:@The_monster@ begins coughing up blood.
+
 @The_monster@ yells, "Please, just kill me!"
 
-VISUAL:@The_monster@ stares vacantly at hideously deformed hands.
+w:1
+VISUAL:@The_monster@ begins hyperventilating.
+
+VISUAL:@The_monster@ twists in agony.
+
+VISUAL:@The_monster@ stares vacantly at @possessive@ hideously deformed hands.
 
 @The_monster@ asks, "What has happened to me?"
 
@@ -6690,4 +6697,38 @@ VISUAL:@The_monster@ stares vacantly at hideously deformed hands.
 
 VISUAL:@The_monster@ prays for aid.
 
-VISUAL:@The_monster@ begins coughing up blood.
+@The_monster@ says, "I think I died ... I think I'm dead ..."
+
+w:3
+@The_monster@ wails, "So itchy! Itchy, itchy, itchy! Always itchy!"
+
+VISUAL:@The_monster@ gurgles, unable to form words.
+
+w:1
+@The_monster@ yells, "I will have my revenge on the monster who did this!"
+
+@The_monster@ mumbles, "Took all my skin, all gone, all gone ..."
+
+@The_monster@ says, "I was beautiful once. Now look at me."
+
+VISUAL:@The_monster@ wriggles @possessive@ tentacles.
+
+VISUAL:A dozen eyes blink open in the @monster@'s chest.
+
+VISUAL:Strange apendages sprout from the @monster@'s back.
+
+VISUAL:@The_monster@ lashes @possessive@ tail.
+
+VISUAL:@The_monster@ suddenly sprouts two large horns!
+
+w:3
+VISUAL:@The_monster@'s flesh secretes a thick mucus.
+
+VISUAL:Hollow, blind eyes appear on @the_monster@'s head.
+
+@The_monster@ begs you to kill it.
+
+VISUAL:@The_monster@ looks at itself and cries without tears.
+
+# Pungent Stench
+@The_monster@ screams, "I am only a sick, bizarre, defaced creation."
