@@ -54,6 +54,10 @@ function bazaar_message(e)
   crawl.mpr("You enter an inter-dimensional bazaar!")
 end
 
+function bazaar_milestone(e)
+  crawl.mark_milestone("br.enter", "entered a Bazaar.")
+end
+
 function random_bazaar_colour()
   local colours = {"blue", "red", "lightblue", "magenta", "green"}
   local ret = colours[crawl.random2(#colours) + 1]
@@ -304,6 +308,7 @@ WEIGHT: 5
 KFEAT:  A = any shop
 epilogue{{
 bazaar_message(_G)
+bazaar_milestone(_G)
 }}
 MAP
 xxxxxxxxxxxxxxx
@@ -339,6 +344,7 @@ ITEM:    any weapon / w:2 good_item any weapon
 ITEM:    any armour / w:2 good_item any armour
 epilogue{{
 bazaar_message(_G)
+bazaar_milestone(_G)
 }}
 MAP
 xxxxxxxxx
@@ -363,6 +369,7 @@ SUBST:   A = TVBG
 KFEAT:   B = any shop
 epilogue{{
 bazaar_message(_G)
+bazaar_milestone(_G)
 }}
 MAP
 xxxxxxxxxxxxx
@@ -401,6 +408,7 @@ SUBST: w = l
 #
 epilogue{{
 bazaar_message(_G)
+bazaar_milestone(_G)
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxx
@@ -438,6 +446,7 @@ SUBST: w = l
 #
 epilogue{{
 bazaar_message(_G)
+bazaar_milestone(_G)
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -496,6 +505,7 @@ SUBST: w = l
 SUBST:   w:wWx, l:lx
 epilogue{{
 bazaar_message(_G)
+bazaar_milestone(_G)
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -540,6 +550,7 @@ SUBST: w = l
 SUBST:   w:wWx, l:lx
 epilogue{{
 bazaar_message(_G)
+bazaar_milestone(_G)
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -569,6 +580,7 @@ KFEAT:   F = any shop
 KFEAT:   G = any shop
 epilogue{{
 bazaar_message(_G)
+bazaar_milestone(_G)
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -611,6 +623,7 @@ KFEAT:   F = any shop
 KFEAT:   G = any shop
 epilogue{{
 bazaar_message(_G)
+bazaar_milestone(_G)
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -653,6 +666,7 @@ KFEAT:   F = any shop
 KFEAT:   G = any shop
 epilogue{{
 bazaar_message(_G)
+bazaar_milestone(_G)
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -694,6 +708,7 @@ KFEAT:   C = any shop
 KFEAT:   D = any shop
 epilogue{{
 bazaar_message(_G)
+bazaar_milestone(_G)
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -734,6 +749,7 @@ KFEAT:   F = any shop
 KFEAT:   G = any shop
 epilogue{{
 bazaar_message(_G)
+bazaar_milestone(_G)
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -773,6 +789,7 @@ KFEAT:   C = any shop / jewellery shop
 KFEAT:   D = any shop / book shop
 epilogue{{
 bazaar_message(_G)
+bazaar_milestone(_G)
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -819,6 +836,7 @@ KFEAT:   E = any shop / weapon shop / armour shop
 KFEAT:   F = any shop / book shop / scroll shop
 epilogue{{
 bazaar_message(_G)
+bazaar_milestone(_G)
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -870,6 +888,7 @@ SUBST:   w = W
 : end
 epilogue{{
 bazaar_message(_G)
+bazaar_milestone(_G)
 }}
 #
 MAP
@@ -925,6 +944,7 @@ KFEAT:   C = jewellery shop / wand shop
 KFEAT:   D = antique armour shop / book shop
 epilogue{{
 bazaar_message(_G)
+bazaar_milestone(_G)
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -959,6 +979,7 @@ KFEAT:   D = antique armour shop
 KFEAT:   E = general shop / distillery shop
 epilogue{{
 bazaar_message(_G)
+bazaar_milestone(_G)
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1009,6 +1030,7 @@ KFEAT:   C = any shop
 KFEAT:   D = weapon shop / book shop / jewellery shop
 epilogue{{
 bazaar_message(_G)
+bazaar_milestone(_G)
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1044,6 +1066,7 @@ NSUBST:  B = 1:< / >
 KFEAT:   C = any shop
 epilogue{{
 bazaar_message(_G)
+bazaar_milestone(_G)
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1083,6 +1106,7 @@ NSUBST:  B = 1:< / >
 KFEAT:   C = any shop
 epilogue{{
 bazaar_message(_G)
+bazaar_milestone(_G)
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1123,6 +1147,7 @@ NSUBST:  B = 1:> / 1=C>
 KFEAT:   C = any shop
 epilogue{{
 bazaar_message(_G)
+bazaar_milestone(_G)
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1163,6 +1188,7 @@ NSUBST:  B = 1:> / 1=C>
 KFEAT:   C = any shop
 epilogue{{
 bazaar_message(_G)
+bazaar_milestone(_G)
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1202,6 +1228,7 @@ SUBST:   B = > C:20
 KFEAT:   C = any shop
 epilogue{{
 bazaar_message(_G)
+bazaar_milestone(_G)
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1245,6 +1272,7 @@ SUBST:   C = >
 SUBST:   D = T
 epilogue{{
 bazaar_message(_G)
+bazaar_milestone(_G)
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1269,6 +1297,7 @@ KFEAT:   C = scroll shop / book shop / distillery shop
 SUBST:   D = >
 epilogue{{
 bazaar_message(_G)
+bazaar_milestone(_G)
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1300,6 +1329,7 @@ SUBST:   A = <, B = >
 KFEAT:   C = any shop
 epilogue{{
 bazaar_message(_G)
+bazaar_milestone(_G)
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1334,6 +1364,7 @@ SHUFFLE:  '"
 SUBST:    '=+, "==
 epilogue{{
 bazaar_message(_G)
+bazaar_milestone(_G)
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
