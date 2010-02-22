@@ -39,6 +39,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
+#include "transform.h"
 #include "colour.h"
 
 #define SPELL_LIST_KEY "spell_list"
@@ -1148,7 +1149,15 @@ int read_book( item_def &book, read_book_action_type action )
 
 bool you_cannot_memorise(spell_type spell)
 {
+    bool temp;
+    return you_cannot_memorise(spell, temp);
+}
+
+// undead is set to true if being undead prevents us from memorising the spell.
+bool you_cannot_memorise(spell_type spell, bool &undead)
+{
     bool rc = false;
+
     switch (you.is_undead)
     {
     case US_HUNGRY_DEAD: // Ghouls
@@ -1222,6 +1231,11 @@ bool you_cannot_memorise(spell_type spell)
     case US_ALIVE:
         break;
     }
+
+    // If rc has been set to true before now, that was because we
+    // are (possibly temporarily) undead.
+    if (rc == true)
+        undead = true;
 
     if (you.species == SP_DEEP_DWARF && spell == SPELL_REGENERATION)
         rc = true;
@@ -1421,10 +1435,12 @@ static bool _get_mem_list(spell_list &mem_spells,
         mpr("You already know all available spells.", MSGCH_PROMPT);
     else if (num_race == total || (num_known + num_race) == total)
     {
-        std::string species = species_name(you.species, 0);
+        const bool lichform = (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH);
+        const std::string species = "a " + species_name(you.species, 0);
         mprf(MSGCH_PROMPT,
              "You cannot memorise any of the available spells because you "
-             "are a %s.", lowercase_string(species).c_str());
+             "are %s %s.", lichform ? "in Lich form"
+                                    : lowercase_string(species).c_str());
     }
     else if (num_low_levels > 0 || num_low_xl > 0)
     {
@@ -1704,6 +1720,30 @@ bool learn_spell()
     return learn_spell(specspell, it->second, true);
 }
 
+// Returns a string about why an undead character can't memorise a spell.
+std::string desc_cannot_memorise_reason(bool undead)
+{
+    if (undead)
+        ASSERT(you.is_undead);
+
+    const bool lichform = (undead
+                           && you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH);
+
+    std::string desc = "You cannot ";
+    if (lichform)
+        desc += "currently ";
+    desc += "memorise or cast this spell because you are ";
+
+    if (lichform)
+        desc += "in Lich form";
+    else
+        desc += "a " + lowercase_string(species_name(you.species, 0));
+
+    desc += ".";
+
+    return (desc);
+}
+
 static bool _learn_spell_checks(spell_type specspell)
 {
     if (!can_learn_spell())
@@ -1712,10 +1752,10 @@ static bool _learn_spell_checks(spell_type specspell)
     if (already_learning_spell((int) specspell))
         return (false);
 
-    if (you_cannot_memorise(specspell))
+    bool undead = false;
+    if (you_cannot_memorise(specspell, undead))
     {
-        mprf("You cannot memorise that spell because you are a %s.",
-             lowercase_string(species_name(you.species, 0)).c_str());
+        mprf(desc_cannot_memorise_reason(undead).c_str());
         return (false);
     }
 
