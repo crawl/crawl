@@ -580,6 +580,7 @@ static void _give_adjusted_experience(monsters *monster, killer_type killer,
     const bool was_neutral = testbits(monster->flags, MF_WAS_NEUTRAL);
     const bool no_xp = monster->has_ench(ENCH_ABJ) || !experience;
     const bool already_got_half_xp = testbits(monster->flags, MF_GOT_HALF_XP);
+    const int half_xp = experience / 2 + 1;
 
     bool need_xp_msg = false;
     if (created_friendly || was_neutral || no_xp)
@@ -588,9 +589,12 @@ static void _give_adjusted_experience(monsters *monster, killer_type killer,
     {
         int old_lev = you.experience_level;
         if (already_got_half_xp)
-            gain_exp( experience / 2, exp_gain, avail_gain );
+            // Note: This doesn't happen currently since monsters with
+            //       MF_GOT_HALF_XP have always gone through pacification,
+            //       hence also have MF_WAS_NEUTRAL. [rob]
+            gain_exp(experience - half_xp, exp_gain, avail_gain);
         else
-            gain_exp( experience, exp_gain, avail_gain );
+            gain_exp(experience, exp_gain, avail_gain);
 
         if (old_lev == you.experience_level)
             need_xp_msg = true;
@@ -598,7 +602,7 @@ static void _give_adjusted_experience(monsters *monster, killer_type killer,
     else if (pet_kill && !already_got_half_xp)
     {
         int old_lev = you.experience_level;
-        gain_exp( experience / 2 + 1, exp_gain, avail_gain );
+        gain_exp(half_xp, exp_gain, avail_gain);
 
         if (old_lev == you.experience_level)
             need_xp_msg = true;
