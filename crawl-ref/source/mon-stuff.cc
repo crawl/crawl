@@ -2796,7 +2796,7 @@ void make_mons_leave_level(monsters *mon)
 // Not symmetric.
 // FIXME: This is used for monster movement. It should instead be
 //        something like exists_ray(p1, p2, opacity_monmove(mons)),
-//        where opacity_monmove() is fixed to include opacity_no_trans.
+//        where opacity_monmove() is fixed to include opacity_immob.
 bool can_go_straight(const coord_def& p1, const coord_def& p2,
                      dungeon_feature_type allowed)
 {
@@ -2804,7 +2804,7 @@ bool can_go_straight(const coord_def& p1, const coord_def& p2,
         return (false);
 
     // XXX: Hack to improve results for now. See FIXME above.
-    if (!exists_ray(p1, p2, opc_no_trans))
+    if (!exists_ray(p1, p2, opc_immob))
         return (false);
 
     dungeon_feature_type max_disallowed = DNGN_MAXOPAQUE;
