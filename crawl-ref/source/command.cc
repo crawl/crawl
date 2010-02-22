@@ -1239,12 +1239,11 @@ static bool _append_books(std::string &desc, item_def &item, std::string key)
     itoa( spell_difficulty( type ), sval, 10 );
     desc += sval;
 
-    if (you_cannot_memorise(type))
+    bool undead = false;
+    if (you_cannot_memorise(type, undead))
     {
-        desc += "$You cannot memorise or cast this spell because you "
-                "are a ";
-        desc += lowercase_string(species_name(you.species, 0));
-        desc += ".";
+        desc += "$";
+        desc += desc_cannot_memorise_reason(undead);
     }
 
     set_ident_flags(item, ISFLAG_IDENT_MASK);
