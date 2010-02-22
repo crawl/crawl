@@ -1754,6 +1754,7 @@ int mons_shoals_rare(int mcls)
     case MONS_HIPPOGRIFF:
     case MONS_GIANT_BAT:
     case MONS_BUTTERFLY:
+    case MONS_SHARK:
         return 35;
 
     case MONS_SIREN:
@@ -1764,7 +1765,7 @@ int mons_shoals_rare(int mcls)
     case MONS_CENTAUR:
         return 20;
 
-    case MONS_SHARK:
+    case MONS_KRAKEN:
         return 18;
 
     case MONS_MERFOLK_AQUAMANCER:
@@ -1772,7 +1773,6 @@ int mons_shoals_rare(int mcls)
         return 15;
 
     case MONS_OKLOB_PLANT:
-    case MONS_KRAKEN:
     case MONS_ALLIGATOR_SNAPPING_TURTLE:
     case MONS_MERFOLK_JAVELINEER:
         return 10;
