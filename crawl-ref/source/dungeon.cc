@@ -3534,6 +3534,12 @@ static void _place_aquatic_monsters(int level_number, char level_type)
     int lava_spaces = 0, water_spaces = 0;
     std::vector<monster_type> swimming_things(4u, MONS_NO_MONSTER);
 
+    // [ds] Shoals relies on normal monster generation to place its monsters.
+    // Given the amount of water area in the Shoals, placing water creatures
+    // explicitly explodes the Shoals' xp budget.
+    if (player_in_branch(BRANCH_SHOALS))
+        return;
+
     // Count the number of lava and water tiles {dlb}:
     for (int x = 0; x < GXM; x++)
         for (int y = 0; y < GYM; y++)
@@ -3572,15 +3578,6 @@ static void _place_aquatic_monsters(int level_number, char level_type)
 
             if (player_in_branch( BRANCH_SWAMP ) && !one_chance_in(3))
                 swimming_things[i] = MONS_SWAMP_WORM;
-            else if (player_in_branch( BRANCH_SHOALS ))
-            {
-                if (one_chance_in(3))
-                    swimming_things[i] = MONS_MERFOLK;
-                else if (one_chance_in(5))
-                    swimming_things[i] = MONS_MERMAID;
-                else if (one_chance_in(24))
-                    swimming_things[i] = MONS_KRAKEN;
-            }
             else if (player_in_branch( BRANCH_COCYTUS ))
             {
                 // Eels are useless when zombified
