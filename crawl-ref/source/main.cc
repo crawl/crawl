@@ -3778,10 +3778,6 @@ static bool _initialise(void)
     new_level();
     update_turn_count();
 
-    // Reset lava/water nearness check to unknown, so it'll be
-    // recalculated for the next monster that tries to reach us.
-    you.lava_in_sight = you.water_in_sight = -1;
-
     // Set vision radius to player's current vision.
     set_los_radius(you.current_vision);
     init_exclusion_los();
