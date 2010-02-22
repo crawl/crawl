@@ -431,6 +431,7 @@ public:
     {
         // TODO: start at end (sometimes?)
         next_line = 0;
+        input_line = 0;
         temp_line = 0;
     }
 
