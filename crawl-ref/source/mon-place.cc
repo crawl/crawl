@@ -2266,7 +2266,6 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
         break;
 
     case MONS_ILSUIW:
-        natural_leader = true;
         band = BAND_ILSUIW;
         band_size = 3 + random2(3);
         break;
@@ -2301,19 +2300,16 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
         break;
 
     case MONS_MERFOLK_AQUAMANCER:
-        natural_leader = true;
         band = BAND_MERFOLK_AQUAMANCER;
         band_size = random_range(3, 6);
         break;
 
     case MONS_MERFOLK_JAVELINEER:
-        natural_leader = true;
         band = BAND_MERFOLK_JAVELINEER;
         band_size = random_range(3, 5);
         break;
 
     case MONS_MERFOLK_IMPALER:
-        natural_leader = true;
         band = BAND_MERFOLK_IMPALER;
         band_size = random_range(3, 5);
         break;
