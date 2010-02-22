@@ -1380,8 +1380,8 @@ int _artefact_num_props( const artefact_properties_t &proprt )
     int num = 0;
 
     // Count all properties, but exclude self-cursing.
-    for (int i = 0; i < ARTP_NUM_PROPERTIES; i++)
-        if (proprt[i] != 0 && i != ARTP_CURSED)
+    for (int i = 0; i < ARTP_NUM_PROPERTIES; ++i)
+        if (i != ARTP_CURSED && proprt[i] != 0)
             num++;
 
     return num;
@@ -1892,8 +1892,13 @@ bool randart_is_bad( const item_def &item, artefact_properties_t &proprt )
     if (_artefact_num_props( proprt ) == 0)
         return (true);
 
-    if (item.base_type == OBJ_WEAPONS && proprt[ARTP_BRAND] == SPWPN_NORMAL)
+    // Weapons must have a brand and at least one other property.
+    if (item.base_type == OBJ_WEAPONS
+        && (proprt[ARTP_BRAND] == SPWPN_NORMAL
+            || _artefact_num_props( proprt ) < 2))
+    {
         return (true);
+    }
 
     return (_randart_is_redundant( item, proprt )
             || _randart_is_conflicting( item, proprt ));
