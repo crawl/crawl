@@ -390,10 +390,10 @@ bool monster_pathfind::traversable(const coord_def p)
         return (false);
 
     // XXX: Hack to be somewhat consistent with uses of
-    //      you.trans_wall_block elsewhere in pathfinding.
+    //      opc_immob elsewhere in pathfinding.
     //      All of this should eventually be replaced by
     //      giving the monster a proper pathfinding LOS.
-    if (opc_no_trans(p) == OPC_OPAQUE)
+    if (opc_immob(p) == OPC_OPAQUE)
         return (false);
 
     if (mons)
