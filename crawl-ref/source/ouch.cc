@@ -1033,7 +1033,8 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         you.check_awaken(500);
 
     if (you.duration[DUR_DEATHS_DOOR] && death_type != KILLED_BY_LAVA
-        && death_type != KILLED_BY_WATER)
+        && death_type != KILLED_BY_WATER && death_type != KILLED_BY_QUITTING
+        && death_type != KILLED_BY_WINNING && death_type != KILLED_BY_LEAVING)
     {
         return;
     }
