@@ -100,8 +100,6 @@ void handle_behaviour(monsters *mon)
     // or has guessed the player's location.
     bool proxPlayer = mons_near(mon) && !crawl_state.arena;
 
-    bool trans_wall_block = you.trans_wall_blocking(mon->pos());
-
 #ifdef WIZARD
     // If stealth is greater than actually possible (wizmode level)
     // pretend the player isn't there, but only for hostile monsters.
@@ -428,7 +426,7 @@ void handle_behaviour(monsters *mon)
                     break;
                 }
 
-                if (try_pathfind(mon, can_move, trans_wall_block))
+                if (try_pathfind(mon, can_move))
                     break;
 
                 // Whew. If we arrived here, path finding didn't yield anything
@@ -865,7 +863,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
                     (mons_amphibious(mon)) ? DNGN_DEEP_WATER
                                            : DNGN_SHALLOW_WATER;
 
-                try_pathfind(mon, can_move, true);
+                try_pathfind(mon, can_move);
             }
         }
         break;

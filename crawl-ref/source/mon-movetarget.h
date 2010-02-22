@@ -3,8 +3,7 @@
 
 struct level_exit;
 
-bool try_pathfind(monsters *mon, const dungeon_feature_type can_move,
-                          bool potentially_blocking);
+bool try_pathfind(monsters *mon, const dungeon_feature_type can_move);
 bool find_wall_target(monsters *mon);
 void check_wander_target(monsters *mon, bool isPacified = false,
                          dungeon_feature_type can_move = DNGN_UNSEEN);

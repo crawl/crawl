@@ -122,68 +122,39 @@ static bool _target_is_unreachable(monsters *mon)
 // Check whether there's an unobstructed path to the player (in sight!),
 // either by using an existing travel_path or calculating a new one.
 // Returns true if no further handling necessary, else false.
-bool try_pathfind(monsters *mon, const dungeon_feature_type can_move,
-                          bool potentially_blocking)
+bool try_pathfind(monsters *mon, const dungeon_feature_type can_move)
 {
     // Just because we can *see* the player, that doesn't mean
-    // we can actually get there. To find about that, we first
-    // check for transparent walls. If there are transparent
-    // walls in the way we'll need pathfinding, no matter what.
-    // (Though monsters with a los attack don't need to get any
-    // closer to hurt the player.)
-    // If no walls are detected, there could still be a river
-    // or a pool of lava in the way. So we check whether there
-    // is water or lava in LoS (boolean) and if so, try to find
-    // a way around it. It's possible that the player can see
-    // lava but it actually has no influence on the monster's
-    // movement (because it's lying in the opposite direction)
-    // but if so, we'll find that out during path finding.
-    // In another attempt of optimization, don't bother with
-    // path finding if the monster in question has no trouble
-    // travelling through water or flying across lava.
-    // Also, if no path is found (too far away, perhaps) set a
+    // we can actually get there.
+    // If no path is found (too far away, perhaps) set a
     // flag, so we don't directly calculate the whole thing again
     // next turn, and even extend that flag to neighbouring
     // monsters of similar movement restrictions.
 
-    // Smart monsters that can fire through walls won't use
-    // pathfinding, and it's also not necessary if the monster
-    // is already adjacent to you.
-    if (potentially_blocking && mons_intel(mon) >= I_NORMAL
-           && !mon->friendly() && mons_has_los_ability(mon->type)
-        || grid_distance(mon->pos(), you.pos()) == 1)
-    {
-        potentially_blocking = false;
-    }
-    else
-    {
-        // If we don't already know whether there's water or lava
-        // in LoS of the player, find out now.
-        if (you.lava_in_sight == -1 || you.water_in_sight == -1)
-            _check_lava_water_in_sight();
+    bool need_pathfind = !can_go_straight(mon->pos(), you.pos(), can_move);
 
-        // Flying monsters don't see water/lava as obstacle.
-        // Also don't use pathfinding if the monster can shoot
-        // across the blocking terrain, and is smart enough to
-        // realise that.
-        if (!potentially_blocking && !mons_flies(mon)
-            && (mons_intel(mon) < I_NORMAL
-                || mon->friendly()
-                || (!mons_has_ranged_spell(mon, true)
-                    && !mons_has_ranged_attack(mon))))
-        {
-            const habitat_type habit = mons_primary_habitat(mon);
-            if (you.lava_in_sight > 0 && habit != HT_LAVA
-                || you.water_in_sight > 0 && habit != HT_WATER
-                   && can_move != DNGN_DEEP_WATER)
-            {
-                potentially_blocking = true;
-            }
-        }
+    // Smart monsters that can fire through obstacles won't use
+    // pathfinding.
+    if (need_pathfind
+        && mons_intel(mon) >= I_NORMAL && !mon->friendly()
+        && mons_has_los_ability(mon->type))
+    {
+        need_pathfind = false;
     }
 
-    if (!potentially_blocking
-        || can_go_straight(mon->pos(), you.pos(), can_move))
+    // Also don't use pathfinding if the monster can shoot
+    // across the blocking terrain, and is smart enough to
+    // realise that.
+    if (need_pathfind
+        && mons_intel(mon) >= I_NORMAL && !mon->friendly()
+        && (mons_has_ranged_spell(mon, true)
+            || mons_has_ranged_attack(mon))
+        && exists_ray(mon->pos(), you.pos(), opc_solid))
+    {
+        need_pathfind = false;
+    }
+
+    if (!need_pathfind)
     {
         // The player is easily reachable.
         // Clear travel path and target, if necessary.
@@ -197,85 +168,85 @@ bool try_pathfind(monsters *mon, const dungeon_feature_type can_move,
         return (false);
     }
 
-    // Even if the target has been to "unreachable" (the monster already tried,
-    // and failed, to find a path) there's a chance of trying again.
-    if (!_target_is_unreachable(mon) || one_chance_in(12))
-    {
+    // If the target is "unreachable" (the monster already tried,
+    // and failed, to find a path), there's a chance of trying again.
+    if (_target_is_unreachable(mon) && !one_chance_in(12))
+        return (false);
+
 #ifdef DEBUG_PATHFIND
-        mprf("%s: Player out of reach! What now?",
-             mon->name(DESC_PLAIN).c_str());
+    mprf("%s: Player out of reach! What now?",
+         mon->name(DESC_PLAIN).c_str());
 #endif
-        // If we're already on our way, do nothing.
-        if (mon->is_travelling() && mon->travel_target == MTRAV_PLAYER)
+    // If we're already on our way, do nothing.
+    if (mon->is_travelling() && mon->travel_target == MTRAV_PLAYER)
+    {
+        const int len = mon->travel_path.size();
+        const coord_def targ = mon->travel_path[len - 1];
+
+        // Current target still valid?
+        if (can_go_straight(targ, you.pos(), can_move))
         {
-            const int len = mon->travel_path.size();
-            const coord_def targ = mon->travel_path[len - 1];
-
-            // Current target still valid?
-            if (can_go_straight(targ, you.pos(), can_move))
+            // Did we reach the target?
+            if (mon->pos() == mon->travel_path[0])
             {
-                // Did we reach the target?
-                if (mon->pos() == mon->travel_path[0])
-                {
-                    // Get next waypoint.
-                    mon->travel_path.erase( mon->travel_path.begin() );
+                // Get next waypoint.
+                mon->travel_path.erase( mon->travel_path.begin() );
 
-                    if (!mon->travel_path.empty())
-                    {
-                        mon->target = mon->travel_path[0];
-                        return (true);
-                    }
-                }
-                else if (can_go_straight(mon->pos(), mon->travel_path[0],
-                                       can_move))
+                if (!mon->travel_path.empty())
                 {
                     mon->target = mon->travel_path[0];
                     return (true);
                 }
             }
-        }
-
-        // Use pathfinding to find a (new) path to the player.
-        const int dist = grid_distance(mon->pos(), you.pos());
-
-#ifdef DEBUG_PATHFIND
-        mprf("Need to calculate a path... (dist = %d)", dist);
-#endif
-        const int range = mons_tracking_range(mon);
-        if (range > 0 && dist > range)
-        {
-            mon->travel_target = MTRAV_UNREACHABLE;
-#ifdef DEBUG_PATHFIND
-            mprf("Distance too great, don't attempt pathfinding! (%s)",
-                 mon->name(DESC_PLAIN).c_str());
-#endif
-            return (false);
-        }
-
-#ifdef DEBUG_PATHFIND
-        mprf("Need a path for %s from (%d, %d) to (%d, %d), max. dist = %d",
-             mon->name(DESC_PLAIN).c_str(), mon->pos(), you.pos(), range);
-#endif
-        monster_pathfind mp;
-        if (range > 0)
-            mp.set_range(range);
-
-        if (mp.init_pathfind(mon, you.pos()))
-        {
-            mon->travel_path = mp.calc_waypoints();
-            if (!mon->travel_path.empty())
+            else if (can_go_straight(mon->pos(), mon->travel_path[0],
+                                     can_move))
             {
-                // Okay then, we found a path.  Let's use it!
                 mon->target = mon->travel_path[0];
-                mon->travel_target = MTRAV_PLAYER;
                 return (true);
             }
-            else
-                _set_no_path_found(mon);
+        }
+    }
+
+    // Use pathfinding to find a (new) path to the player.
+    const int dist = grid_distance(mon->pos(), you.pos());
+
+#ifdef DEBUG_PATHFIND
+    mprf("Need to calculate a path... (dist = %d)", dist);
+#endif
+    const int range = mons_tracking_range(mon);
+    if (range > 0 && dist > range)
+    {
+        mon->travel_target = MTRAV_UNREACHABLE;
+#ifdef DEBUG_PATHFIND
+        mprf("Distance too great, don't attempt pathfinding! (%s)",
+             mon->name(DESC_PLAIN).c_str());
+#endif
+        return (false);
+    }
+
+#ifdef DEBUG_PATHFIND
+    mprf("Need a path for %s from (%d, %d) to (%d, %d), max. dist = %d",
+         mon->name(DESC_PLAIN).c_str(), mon->pos(), you.pos(), range);
+#endif
+    monster_pathfind mp;
+    if (range > 0)
+        mp.set_range(range);
+
+    if (mp.init_pathfind(mon, you.pos()))
+    {
+        mon->travel_path = mp.calc_waypoints();
+        if (!mon->travel_path.empty())
+        {
+            // Okay then, we found a path.  Let's use it!
+            mon->target = mon->travel_path[0];
+            mon->travel_target = MTRAV_PLAYER;
+            return (true);
         }
         else
             _set_no_path_found(mon);
     }
+    else
+        _set_no_path_found(mon);
 
     // We didn't find a path.
     return (false);
