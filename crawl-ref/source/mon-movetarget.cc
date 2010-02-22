@@ -18,33 +18,6 @@
 #include "terrain.h"
 #include "traps.h"
 
-// Check all grids in LoS and mark lava and/or water as seen if the
-// appropriate grids are encountered, so we later only need to do the
-// visibility check for monsters that can't pass a feature potentially in
-// the way. We don't care about shallow water as most monsters can safely
-// cross that, and fire elementals alone aren't really worth the extra
-// hassle. :)
-static void _check_lava_water_in_sight()
-{
-    you.lava_in_sight = you.water_in_sight = 0;
-    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
-    {
-        const dungeon_feature_type feat = grd(*ri);
-        if (feat == DNGN_LAVA)
-        {
-            you.lava_in_sight = 1;
-            if (you.water_in_sight > 0)
-                break;
-        }
-        else if (feat == DNGN_DEEP_WATER)
-        {
-            you.water_in_sight = 1;
-            if (you.lava_in_sight > 0)
-                break;
-        }
-    }
-}
-
 // If a monster can see but not directly reach the target, and then fails to
 // find a path to get there, mark all surrounding (in a radius of 2) monsters
 // of the same (or greater) movement restrictions as also being unable to
@@ -87,11 +60,8 @@ static void _mark_neighbours_target_unreachable(monsters *mon)
             continue;
 
         // A flying monster has an advantage over a non-flying one.
-        if (!flies && mons_flies(m))
-            continue;
-
-        // Same for a swimming one, around water.
-        if (you.water_in_sight > 0 && !amphibious && mons_amphibious(m))
+        // Same for a swimming one.
+        if (!flies && mons_flies(m) || !amphibious && mons_amphibious(m))
             continue;
 
         if (m->travel_target == MTRAV_NONE)

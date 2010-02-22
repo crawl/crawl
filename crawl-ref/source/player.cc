@@ -5321,8 +5321,6 @@ void player::init()
     banished_by.clear();
 
     entering_level = false;
-    lava_in_sight  = -1;
-    water_in_sight = -1;
     transit_stair  = DNGN_UNSEEN;
 
     berserk_penalty = 0;
@@ -7055,10 +7053,6 @@ void player::set_position(const coord_def &c)
     {
         this->reset_prev_move();
         dungeon_events.fire_position_event(DET_PLAYER_MOVED, c);
-
-        // Reset lava/water nearness check to unknown, so it'll be
-        // recalculated for the next monster that tries to reach us.
-        this->lava_in_sight = this->water_in_sight = -1;
     }
 }
 
