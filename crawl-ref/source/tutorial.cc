@@ -3993,8 +3993,14 @@ void tutorial_describe_item(const item_def &item)
 #ifdef USE_TILE
             ostr << " Alternatively, you can 1) <w>left mouse click</w> on "
                     "the monster you wish to target (or your player character "
-                    "to target yourself) while pressing the <w>Alt key</w> "
-                    "and pick the wand from the menu, or 2) "
+                    "to target yourself) while pressing the <w>";
+#ifdef UNIX
+                    if (!tiles.is_fullscreen())
+                        ostr << "Ctrl + Shift keys";
+                    else
+#endif
+                        ostr << "Alt key";
+            ostr << "</w> and pick the wand from the menu, or 2) "
                     "<w>left mouse click</w> on the wand tile and then "
                     "<w>left mouse click</w> on your target.";
 #endif
