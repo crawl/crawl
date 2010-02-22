@@ -60,6 +60,16 @@ struct opacity_no_trans : opacity_func
 };
 static opacity_no_trans opc_no_trans;
 
+// Make immobile monsters block in addition to no_trans.
+// This is used for monster movement.
+struct opacity_immob : opacity_func
+{
+    CLONE(opacity_immob)
+
+    opacity_type operator()(const coord_def& p) const;
+};
+static opacity_immob opc_immob;
+
 // Make anything solid block in addition to normal LOS.
 struct opacity_solid : opacity_func
 {

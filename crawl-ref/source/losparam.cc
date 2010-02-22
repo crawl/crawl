@@ -49,6 +49,33 @@ opacity_type opacity_no_trans::operator()(const coord_def& p) const
         return base;
 }
 
+static bool mons_block_immob(const monsters* mons)
+{
+    if (mons == NULL)
+        return false;
+
+    switch (mons->id())
+    {
+    case MONS_BUSH:
+    case MONS_PLANT:
+    case MONS_OKLOB_PLANT:
+    case MONS_FUNGUS:
+        return true;
+    default:
+        return false;
+    }
+}
+
+opacity_type opacity_immob::operator()(const coord_def& p) const
+{
+    opacity_type base = opc_no_trans(p);
+
+    if (mons_block_immob(monster_at(p)))
+        return OPC_OPAQUE;
+    else
+        return base;
+}
+
 // Make anything solid block in addition to normal LOS.
 // That's just granite statues in addition to opacity_no_trans.
 opacity_type opacity_solid::operator()(const coord_def& p) const
