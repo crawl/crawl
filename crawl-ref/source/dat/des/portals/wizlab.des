@@ -135,13 +135,16 @@ function wizlab_setup (e, wizlab_desc)
     e.tile("< = no_random dngn_portal_wizard_lab")
     -- This is so that the note shows up properly.
     dgn.set_level_type_origin("in " .. wizlab_desc)
-    crawl.mark_milestone("br.enter", "entered " .. wizlab_desc .. ".")
     dgn.set_feature_desc_short("gate leading back to the Dungeon",
                                "portal leading out of here")
     if wizlab_desc ~= "Eringya's Formal Garden" then
       dgn.set_feature_desc_short("empty arch of ancient stone",
                                "empty arch of stone")
     end
+end
+
+function wizlab_milestone (e, wizlab_desc)
+    crawl.mark_milestone("br.enter", "entered " .. wizlab_desc .. ".")
 end
 }}
 
@@ -431,6 +434,9 @@ MARKER:     9 = lua:MonPropsMarker:new {description="A glistening silver machine
 :                                     "a white and silver, with shades of pink here and there.\n")
 :           dgn.set_feature_quote("A granite statue", mquote)
 :           wizlab_setup(_G, "Tukima's Studio")
+epilogue{{
+            wizlab_milestone(_G, "Tukima's Studio")
+}}
 MAP
                 ccccccc
                 ccmmmcc
@@ -554,6 +560,9 @@ lua_marker("_", grow_marker)
 :           dgn.set_feature_desc_short("Floor", "grass-covered ground")
 :           dgn.set_feature_desc_long("Floor", "Strewn with leaves and twigs that" ..
 :                       "crunch loudly underfoot, the grass is crisp and fresh.\n")
+epilogue{{
+            wizlab_milestone(_G, "Eringya's Formal Garden")
+}}
 MAP
 ccccccccccccccccccccccccccccccccccccccccccccc
 ctttttttttttttttttttttttttttttttttttttttttttc
@@ -808,6 +817,9 @@ lua_marker("A", box_marker)
 :           dgn.set_feature_desc_short("Floor", "rough-hewn floor")
 :           dgn.set_feature_desc_long("Floor", "It is rough and uneven in places.\n")
 :           wizlab_setup(_G, "Doroklohe's Tomb")
+epilogue{{
+            wizlab_milestone(_G, "Doroklohe's Tomb")
+}}
 MAP
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ^________________...........________________^
@@ -901,6 +913,9 @@ MARKER:     + = lua:restrict_door()
 :                       .. " of many thousands of feet. There's also a strange tinge of red"
 :                       .. " to it, like the colour of old blood...\n")
 :           wizlab_setup(_G, "Borgnjor's Mortuary")
+epilogue{{
+            wizlab_milestone(_G, "Borgnjor's Mortuary")
+}}
 MAP
 cccccccccccccccccccccccccccccccccccccccccccccc
 ccc....LccccccccccccucM.cucccccccccccccccccccc
@@ -1073,6 +1088,9 @@ KITEM:      | = staff of death
 KITEM:      l = scroll of summoning
 NSUBST:     L = 1:| / *:l
 :           wizlab_setup(_G, "Cigotuvi's Fleshworks")
+epilogue{{
+            wizlab_milestone(_G, "Cigotuvi's Fleshworks")
+}}
 MAP
 ccccccccccccccccccccccccccccccccccccccccccccc
 ccLLLcccc.cccccccccccAccccccccccccWWWW.U:cccc
@@ -1149,6 +1167,9 @@ SUBST:      R = .
 KFEAT:      - = altar_sif_muna
 KFEAT:      _ = altar_vehumet
 SHUFFLE:    DEF
+epilogue{{
+            wizlab_milestone(_G, "Iskenderun's Mystic Tower")
+}}
 MAP
 ccccccccccccccccccccccccccccccccccccccccccc
 cAc..c.c.c.c.c.c.c.ccRcc.c.c.c.c.c.c.cc.cRc
@@ -1322,6 +1343,9 @@ SUBST:      L = .
 LFLOORTILE: floor_tomb
 LROCKTILE:  wall_hall_darkgray
 TILE:       c = wall_stone_gray
+epilogue{{
+            wizlab_milestone(_G, "Zonguldrok's Shrine")
+}}
 MAP
 M   xxxxxxxxxxxxxxxxxxx
    xx?????????????????xx
@@ -1528,7 +1552,9 @@ MARKER:     t = lua:props_marker {veto_fragmentation="veto", veto_disintegrate="
 :           dgn.set_feature_desc_short("Floor", "timeless floor")
 :           dgn.set_feature_desc_long("Floor", "Though a thousand feet may have trod these floors, "
 :               .. "they appear timeless and indestructible.\n")
-
+epilogue{{
+            wizlab_milestone(_G, "Wucad Mu's Monastery")
+}}
 MAP
 tttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttt
@@ -1616,6 +1642,9 @@ TILE:       b = dngn_crystal_white
 COLOUR:     wW# = silver
 :           set_border_fill_type('open_sea')
 :           wizlab_setup(_G, "The Chambers of " .. wizname .. " the Cloud Mage")
+epilogue{{
+            wizlab_milestone(_G, "The Chambers of " .. wizname .. " the Cloud Mage")
+}}
 #           Map is ugly because border_fill_type doesn't allow for (yet)
 #           recolouring.
 MAP
@@ -1724,6 +1753,9 @@ NSUBST:     | = 1:B / *:|
 :           set_random_mon_list([[imp / shadow imp / lemure / manes / quasit / white imp / ]]
 :                        .. [[ufetubus / midge / red devil / rotting devil / hairy devil / ]])
 :           wizlab_setup(_G, "The Hall of " .. wizname .. " the Hellbinder")
+epilogue{{
+            wizlab_milestone(_G, "The Hall of " .. wizname .. " the Hellbinder")
+}}
 MAP
 cccccccccccccccccccccccccccccccccccccccccccccc
 ccccccc.cccccc...................cccccc.cccccc
@@ -1833,6 +1865,9 @@ NAME:       wizlab_alistair
 ORIENT:     encompass
 #TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 :           wizlab_setup(_G, "Alistair's Brewery")
+epilogue{{
+            wizlab_milestone(_G, "Alistair's Brewery")
+}}
 MAP
 ENDMAP
 
@@ -1844,6 +1879,9 @@ NAME:       wizlab_lee
 ORIENT:     encompass
 #TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 :           wizlab_setup(_G, "Lee's Rapid Deconstructor")
+epilogue{{
+            wizlab_milestone(_G, "Lee's Rapid Deconstructor")
+}}
 MAP
 ENDMAP
 
@@ -1855,6 +1893,9 @@ NAME:       wizlab_lehudib
 ORIENT:     encompass
 #TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 :           wizlab_setup(_G, "Lehudib's Crystal Spire")
+epilogue{{
+            wizlab_milestone(_G, "Lehudib's Crystal Spire")
+}}
 MAP
 ENDMAP
 
@@ -1866,6 +1907,9 @@ NAME:       wizlab_maxwell
 ORIENT:     encompass
 #TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 :           wizlab_setup(_G, "Maxwell's Forge")
+epilogue{{
+            wizlab_milestone(_G, "Maxwell's Forge")
+}}
 MAP
 ENDMAP
 
@@ -1877,6 +1921,9 @@ NAME:       wizlab_olgreb
 ORIENT:     encompass
 #TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 :           wizlab_setup(_G, "Olgreb's Toxic Laboratory")
+epilogue{{
+            wizlab_milestone(_G, "Olgreb's Toxic Laboratory")
+}}
 MAP
 ENDMAP
 
@@ -1888,6 +1935,9 @@ NAME:       wizlab_ozocubu
 ORIENT:     encompass
 #TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 :           wizlab_setup(_G, "Ozocubu's Refrigerator")
+epilogue{{
+            wizlab_milestone(_G, "Ozocubu's Refrigerator")
+}}
 MAP
 ENDMAP
 
@@ -1899,6 +1949,9 @@ NAME:       wizlab_cekugob
 ORIENT:     encompass
 #TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 :           wizlab_setup(_G, "Cekugob's Oubliette")
+epilogue{{
+            wizlab_milestone(_G, "Cekugob's Oubliette")
+}}
 MAP
 ENDMAP
 
@@ -1910,6 +1963,9 @@ NAME:       wizlab_botono
 ORIENT:     encompass
 #TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 :           wizlab_setup(_G, "Botono's Bayou")
+epilogue{{
+            wizlab_milestone(_G, "Botono's Bayou")
+}}
 MAP
 ENDMAP
 
@@ -1921,6 +1977,9 @@ NAME:       wizlab_ukta
 ORIENT:     encompass
 #TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 :           wizlab_setup(_G, "Ukta's Hut")
+epilogue{{
+            wizlab_milestone(_G, "Ukta's Hut")
+}}
 MAP
 ENDMAP
 
@@ -1932,5 +1991,8 @@ NAME:       wizlab_alchemist
 ORIENT:     encompass
 #TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 :           wizlab_setup(_G, "The Alchemist's Tower")
+epilogue{{
+            wizlab_milestone(_G, "The Alchemist's Tower")
+}}
 MAP
 ENDMAP
