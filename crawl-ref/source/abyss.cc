@@ -863,7 +863,7 @@ static void _corrupt_square(const crawl_environment &oenv, const coord_def &c)
     if (feat == DNGN_EXIT_ABYSS)
         feat = DNGN_ENTER_ABYSS;
 
-    dungeon_terrain_changed(c, feat, preserve_feat, true, true);
+    dungeon_terrain_changed(c, feat, true, preserve_feat, true);
     if (feat == DNGN_ROCK_WALL)
         env.grid_colours(c) = oenv.rock_colour;
     else if (feat == DNGN_FLOOR)
