@@ -104,6 +104,8 @@ public:
     void draw_doll_edit();
 
     MenuRegion *get_menu() { return m_region_menu; }
+    bool is_fullscreen() { return m_fullscreen; }
+
 protected:
     int load_font(const char *font_file, int font_size,
                   bool default_on_fail, bool outline);
