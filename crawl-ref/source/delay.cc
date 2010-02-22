@@ -336,6 +336,8 @@ void start_delay( delay_type type, int turns, int parm1, int parm2 )
     _push_delay( delay );
 }
 
+static void _maybe_interrupt_swap();
+
 void stop_delay( bool stop_stair_travel )
 {
     _interrupts_blocked = 0; // Just to be safe
@@ -366,31 +368,14 @@ void stop_delay( bool stop_stair_travel )
     {
         // Corpse keeps track of work in plus2 field, see handle_delay(). - bwr
         bool multiple_corpses    = false;
-        bool butcher_swap_setup  = false;
-        int  butcher_swap_weapon = 0;
 
         for (unsigned int i = 1; i < you.delay_queue.size(); ++i)
-        {
             if (you.delay_queue[i].type == DELAY_BUTCHER
                 || you.delay_queue[i].type == DELAY_BOTTLE_BLOOD)
             {
                 multiple_corpses = true;
-            }
-            else if (you.delay_queue[i].type == DELAY_WEAPON_SWAP)
-            {
-                butcher_swap_weapon = you.delay_queue[i].parm1;
-                butcher_swap_setup  = true;
                 break;
             }
-            else
-                break;
-        }
-
-        if (!butcher_swap_setup && delays_cleared[DELAY_WEAPON_SWAP] > 0)
-        {
-            butcher_swap_setup  = true;
-            butcher_swap_weapon = cleared_delays_parm1[DELAY_WEAPON_SWAP];
-        }
 
         const std::string butcher_verb =
                 (delay.type == DELAY_BUTCHER      ? "butchering" :
@@ -402,21 +387,7 @@ void stop_delay( bool stop_stair_travel )
 
         _pop_delay();
 
-        if (butcher_swap_setup)
-        {
-            // Use weapon slot + 1, so weapon slot 'a' (== 0) doesn't
-            // return false when checking if
-            // you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED].
-            you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]
-                = (butcher_swap_weapon == -1 ? ENDOFPACK
-                                             : butcher_swap_weapon) + 1;
-
-            // Possibly prompt if user wants to switch back from
-            // butchering tool in order to use their normal weapon to
-            // fight the interrupting monster.
-            if (!i_feel_safe())
-                handle_interrupted_swap(false, true);
-        }
+        _maybe_interrupt_swap();
         break;
     }
     case DELAY_MEMORISE:
@@ -606,7 +577,8 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe,
     else if (you.turn_is_over && delay == DELAY_NOT_DELAYED)
     {
         // Turn is over, set up a delay to do swapping next turn.
-        if (prompt && yesno(prompt_str, true, 'n') || safe && swap_if_safe)
+        if (prompt && yesno(prompt_str, true, 'n', true, false)
+            || safe && swap_if_safe)
         {
             if (weap == -1 || check_warning_inscriptions(you.inv[weap], OPER_WIELD))
                 start_delay(DELAY_WEAPON_SWAP, 1, weap);
@@ -619,7 +591,7 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe,
         // If ATTR_WEAPON_SWAP_INTERRUPTED is set while a corpse is being
         // butchered/bottled/offered, then fake a weapon swap delay.
         if (_is_butcher_delay(delay)
-            && (safe || prompt && yesno(prompt_str, true, 'n')))
+            && (safe || prompt && yesno(prompt_str, true, 'n', true, false)))
         {
             if (weap == -1 || check_warning_inscriptions(you.inv[weap], OPER_WIELD))
                 start_delay(DELAY_WEAPON_SWAP, 1, weap);
@@ -633,7 +605,7 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe,
         if (!swap_if_safe)
             return;
     }
-    else if (!prompt || !yesno(prompt_str, true, 'n'))
+    else if (!prompt || !yesno(prompt_str, true, 'n', true, false))
     {
         return;
     }
@@ -644,6 +616,41 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe,
         print_stats();
     }
     you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
+}
+
+static void _maybe_interrupt_swap()
+{
+    bool butcher_swap_setup  = false;
+    int  butcher_swap_weapon = 0;
+
+    for (unsigned int i = 1; i < you.delay_queue.size(); ++i)
+        if (you.delay_queue[i].type == DELAY_WEAPON_SWAP)
+        {
+            butcher_swap_weapon = you.delay_queue[i].parm1;
+            butcher_swap_setup  = true;
+            break;
+        }
+
+    if (!butcher_swap_setup && delays_cleared[DELAY_WEAPON_SWAP] > 0)
+    {
+        butcher_swap_setup  = true;
+        butcher_swap_weapon = cleared_delays_parm1[DELAY_WEAPON_SWAP];
+    }
+
+    if (butcher_swap_setup)
+    {
+        // Use weapon slot + 1, so weapon slot 'a' (== 0) doesn't
+        // return false when checking if
+        // you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED].
+        you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]
+            = (butcher_swap_weapon == -1 ? ENDOFPACK
+                                         : butcher_swap_weapon) + 1;
+
+        // Possibly prompt if user wants to switch back from
+        // butchering tool in order to use their normal weapon to
+        // fight the interrupting monster.
+        handle_interrupted_swap(true);
+    }
 }
 
 bool you_are_delayed( void )
@@ -1309,16 +1316,7 @@ static void _finish_delay(const delay_queue_item &delay)
                     autopickup();
             }
 
-            // If we were interrupted while butchering (by poisoning, for
-            // example) then resumed butchering and finished, swap back from
-            // butchering tool if appropriate.
-            // Again, not if starving. (jpeg)
-            if (you.delay_queue.size() == 1
-                && (you.hunger_state > HS_STARVING
-                    || you.species == SP_VAMPIRE))
-            {
-                handle_interrupted_swap(true);
-            }
+            _maybe_interrupt_swap();
         }
         else
         {
@@ -1833,92 +1831,89 @@ static bool _should_stop_activity(const delay_queue_item &item,
             || Options.activity_interrupts[item.type][ai]);
 }
 
-inline static bool _monster_warning(activity_interrupt_type ai,
+inline static void _monster_warning(activity_interrupt_type ai,
                                     const activity_interrupt_data &at,
                                     int atype)
 {
-    if (ai == AI_SEE_MONSTER && (is_run_delay(atype)
-                                 || _is_butcher_delay(atype)))
-    {
-        const monsters* mon = static_cast<const monsters*>(at.data);
-        if (!you.can_see(mon))
-            return (false);
-        if (at.context == "already seen" || at.context == "uncharm")
-        {
-            // Only say "comes into view" if the monster wasn't in view
-            // during the previous turn.
-            if (testbits(mon->flags, MF_WAS_IN_VIEW))
-            {
-                mprf(MSGCH_WARN, "%s is too close now for your liking.",
-                     mon->name(DESC_CAP_THE).c_str());
-            }
-        }
-        else
-        {
-            ASSERT(mon->seen_context != "just seen");
-            std::string text = mon->full_name(DESC_CAP_A);
-            set_auto_exclude(mon);
+    if (ai != AI_SEE_MONSTER)
+        return;
+    if (!is_run_delay(atype) && !_is_butcher_delay(atype))
+        return;
 
-            if (starts_with(at.context, "open"))
-                text += " " + at.context;
-            else if (at.context == "thin air")
+    const monsters* mon = static_cast<const monsters*>(at.data);
+    if (!you.can_see(mon))
+        return;
+    if (at.context == "already seen" || at.context == "uncharm")
+    {
+        // Only say "comes into view" if the monster wasn't in view
+        // during the previous turn.
+        if (testbits(mon->flags, MF_WAS_IN_VIEW))
+        {
+            mprf(MSGCH_WARN, "%s is too close now for your liking.",
+                 mon->name(DESC_CAP_THE).c_str());
+        }
+    }
+    else
+    {
+        ASSERT(mon->seen_context != "just seen");
+        std::string text = mon->full_name(DESC_CAP_A);
+        set_auto_exclude(mon);
+
+        if (starts_with(at.context, "open"))
+            text += " " + at.context;
+        else if (at.context == "thin air")
+        {
+            if (mon->type == MONS_AIR_ELEMENTAL)
+                text += " forms itself from the air.";
+            else
+                text += " appears from thin air!";
+        }
+        // The monster surfaced and submerged in the same turn without
+        // doing anything else.
+        else if (at.context == "surfaced")
+            text += "surfaces briefly.";
+        else if (at.context == "surfaces")
+            text += " surfaces.";
+        else if (at.context.find("bursts forth") != std::string::npos)
+        {
+            text += " bursts forth from the ";
+            if (mons_primary_habitat(mon) == HT_LAVA)
+                text += "lava";
+            else if (mons_primary_habitat(mon) == HT_WATER)
+                text += "water";
+            else
+                text += "realm of bugdom";
+            text += ".";
+        }
+        else if (at.context.find("emerges") != std::string::npos)
+            text += " emerges from the water.";
+        else if (at.context.find("leaps out") != std::string::npos)
+        {
+            if (mon->type == MONS_TRAPDOOR_SPIDER)
             {
-                if (mon->type == MONS_AIR_ELEMENTAL)
-                    text += " forms itself from the air.";
-                else
-                    text += " appears from thin air!";
-            }
-            // The monster surfaced and submerged in the same turn without
-            // doing anything else.
-            else if (at.context == "surfaced")
-                text += "surfaces briefly.";
-            else if (at.context == "surfaces")
-                text += " surfaces.";
-            else if (at.context.find("bursts forth") != std::string::npos)
-            {
-                text += " bursts forth from the ";
-                if (mons_primary_habitat(mon) == HT_LAVA)
-                    text += "lava";
-                else if (mons_primary_habitat(mon) == HT_WATER)
-                    text += "water";
-                else
-                    text += "realm of bugdom";
-                text += ".";
-            }
-            else if (at.context.find("emerges") != std::string::npos)
-                text += " emerges from the water.";
-            else if (at.context.find("leaps out") != std::string::npos)
-            {
-                if (mon->type == MONS_TRAPDOOR_SPIDER)
-                {
-                    text += " leaps out from its hiding place under the "
-                            "floor!";
-                }
-                else
-                    text += " leaps out from hiding!";
+                text += " leaps out from its hiding place under the "
+                        "floor!";
             }
             else
-                text += " comes into view.";
-
-            const std::string mweap =
-                get_monster_equipment_desc(mon, false, DESC_NONE);
-
-            if (!mweap.empty())
-            {
-                text += " " + mon->pronoun(PRONOUN_CAP)
-                        + " is" + mweap + ".";
-            }
-            mpr(text, MSGCH_WARN);
-            const_cast<monsters*>(mon)->seen_context = "just seen";
+                text += " leaps out from hiding!";
         }
+        else
+            text += " comes into view.";
 
-        if (Tutorial.tutorial_left)
-            tutorial_monster_seen(*mon);
+        const std::string mweap =
+            get_monster_equipment_desc(mon, false, DESC_NONE);
 
-        return (true);
+        if (!mweap.empty())
+        {
+            text += " " + mon->pronoun(PRONOUN_CAP)
+                    + " is" + mweap + ".";
+        }
+        mpr(text, MSGCH_WARN);
+        const_cast<monsters*>(mon)->seen_context = "just seen";
     }
 
-    return (false);
+    if (Tutorial.tutorial_left)
+        tutorial_monster_seen(*mon);
 }
 
 // Turns autopickup off if we ran into an invisible monster or saw a monster
@@ -1949,19 +1944,6 @@ void autotoggle_autopickup(bool off)
     }
 }
 
-static bool _paranoid_option_disable( activity_interrupt_type ai,
-                                      const activity_interrupt_data &at )
-{
-    if (ai == AI_HIT_MONSTER || ai == AI_MONSTER_ATTACKS)
-    {
-        const monsters* mon = static_cast<const monsters*>(at.data);
-        if (mon && !mon->visible_to(&you) && !mon->submerged())
-            autotoggle_autopickup(true);
-        return (true);
-    }
-    return (false);
-}
-
 // Returns true if any activity was stopped.
 bool interrupt_activity( activity_interrupt_type ai,
                          const activity_interrupt_data &at )
@@ -1969,7 +1951,12 @@ bool interrupt_activity( activity_interrupt_type ai,
     if (_interrupts_blocked > 0)
         return (false);
 
-    bool was_monst = _paranoid_option_disable(ai, at);
+    if (ai == AI_HIT_MONSTER || ai == AI_MONSTER_ATTACKS)
+    {
+        const monsters* mon = static_cast<const monsters*>(at.data);
+        if (mon && !mon->visible_to(&you) && !mon->submerged())
+            autotoggle_autopickup(true);
+    }
 
     if (crawl_state.is_repeating_cmd())
         return interrupt_cmd_repeat(ai, at);
@@ -2002,11 +1989,9 @@ bool interrupt_activity( activity_interrupt_type ai,
         if (is_sanctuary(you.pos()))
             return (false);
 
-        was_monst = _monster_warning(ai, at, item.type) || was_monst;
+        _monster_warning(ai, at, item.type);
         // Teleport stops stair delays.
         stop_delay(ai == AI_TELEPORT);
-        if (was_monst)
-            handle_interrupted_swap(false, true);
 
         return (true);
     }
@@ -2026,13 +2011,8 @@ bool interrupt_activity( activity_interrupt_type ai,
             {
                 if (is_run_delay(you.delay_queue[j].type))
                 {
-                    was_monst = (was_monst
-                                 || _monster_warning(ai, at,
-                                                     you.delay_queue[j].type));
-
+                    _monster_warning(ai, at, you.delay_queue[j].type);
                     stop_delay(ai == AI_TELEPORT);
-                    if (was_monst)
-                        handle_interrupted_swap(false, true);
                     return (true);
                 }
             }
@@ -2040,9 +2020,6 @@ bool interrupt_activity( activity_interrupt_type ai,
             // Non-run queued delays can be discarded without any processing.
             you.delay_queue.erase(you.delay_queue.begin() + i,
                                   you.delay_queue.end());
-            if (was_monst)
-                handle_interrupted_swap(false, true);
-
             return (true);
         }
     }
