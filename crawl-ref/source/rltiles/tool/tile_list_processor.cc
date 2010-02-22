@@ -503,7 +503,10 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
 
             m_start_value = m_args[1];
             if (m_args.size() > 2)
+            {
                 m_include = m_args[2];
+                m_depends.push_back(m_include);
+            }
         }
         else if (strcmp(arg, "pal") == 0)
         {
