@@ -802,13 +802,15 @@ static bool _write_if_changed(const char *oldfilename, FILE *newfile)
     assert(oldfilename);
 
     FILE *oldfile = fopen(oldfilename, "r");
-    if (oldfile && !_files_differ(newfile, oldfile))
-    {
+    if (oldfile) {
+		if ( !_files_differ(newfile, oldfile))
+	    {
+	        fclose(oldfile);
+	        return (true);
+	    }
         fclose(oldfile);
-        return (true);
-    }
+	}
 
-    fclose(oldfile);
     oldfile = fopen(oldfilename, "w");
     if (!oldfile)
         return (false);
