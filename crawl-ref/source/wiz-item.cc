@@ -721,6 +721,8 @@ void wizard_identify_pack()
         {
             set_ident_type(item, ID_KNOWN_TYPE);
             set_ident_flags(item, ISFLAG_IDENT_MASK);
+            if (Options.autoinscribe_artefacts && is_artefact(item))
+                item.inscription = artefact_auto_inscription(item);
         }
     }
     you.wield_change  = true;
