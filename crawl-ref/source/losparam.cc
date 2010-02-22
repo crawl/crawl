@@ -38,20 +38,15 @@ opacity_type opacity_fullyopaque::operator()(const coord_def& p) const
         return OPC_CLEAR;
 }
 
-// Make transparent walls block in addition to normal LOS.
 opacity_type opacity_no_trans::operator()(const coord_def& p) const
 {
+    opacity_type base = opc_default(p);
+
     dungeon_feature_type f = env.grid(p);
-    if (feat_is_opaque(f) || feat_is_wall(f))
+    if (feat_is_opaque(f) || feat_is_wall(f) || f == DNGN_TREES)
         return OPC_OPAQUE;
-    else if (is_opaque_cloud(env.cgrid(p)))
-        return OPC_HALF;
-    else if (f == DNGN_TREES)
-        return OPC_HALF;
-    else if (monster_at(p) && monster_at(p)->type == MONS_BUSH)
-        return OPC_HALF;
     else
-        return OPC_CLEAR;
+        return base;
 }
 
 // Make anything solid block in addition to normal LOS.
