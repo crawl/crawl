@@ -580,7 +580,7 @@ static void _give_adjusted_experience(monsters *monster, killer_type killer,
     const bool was_neutral = testbits(monster->flags, MF_WAS_NEUTRAL);
     const bool no_xp = monster->has_ench(ENCH_ABJ) || !experience;
     const bool already_got_half_xp = testbits(monster->flags, MF_GOT_HALF_XP);
-    const int half_xp = experience / 2 + 1;
+    const int half_xp = (experience + 1) / 2;
 
     bool need_xp_msg = false;
     if (created_friendly || was_neutral || no_xp)

@@ -2246,7 +2246,7 @@ void mons_pacify(monsters *mon, mon_attitude_type att)
     {
         // Give the player half of the monster's XP.
         unsigned int exp_gain = 0, avail_gain = 0;
-        gain_exp(exper_value(mon) / 2 + 1, &exp_gain, &avail_gain);
+        gain_exp((exper_value(mon) + 1) / 2, &exp_gain, &avail_gain);
         mon->flags |= MF_GOT_HALF_XP;
     }
 
