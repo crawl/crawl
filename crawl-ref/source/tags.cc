@@ -1109,9 +1109,6 @@ static void tag_construct_you(writer &th)
     marshallShort(th, you.transit_stair);
     marshallByte(th, you.entering_level);
 
-    // lava_in_sight and water_in_sight don't need to be saved as they can
-    // be recalculated on game start.
-
     // List of currently beholding monsters (usually empty).
     marshallShort(th, you.beholders.size());
     for (unsigned int k = 0; k < you.beholders.size(); k++)
@@ -1548,10 +1545,6 @@ static void tag_read_you(reader &th, char minorVersion)
 
     you.transit_stair  = static_cast<dungeon_feature_type>(unmarshallShort(th));
     you.entering_level = unmarshallByte(th);
-
-    // These two need not be saved.
-    you.lava_in_sight  = -1;
-    you.water_in_sight = -1;
 
     // List of currently beholding monsters (usually empty).
     count_c = unmarshallShort(th);
