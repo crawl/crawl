@@ -1940,6 +1940,8 @@ void artefact_set_name(item_def &item, const std::string &name)
     item.props[ARTEFACT_NAME_KEY].get_string() = name;
 }
 
+// If force_mundane is true, normally mundane items are forced to
+// nevertheless become artefacts.
 bool make_item_randart( item_def &item, bool force_mundane )
 {
     if (item.base_type != OBJ_WEAPONS
@@ -1967,7 +1969,8 @@ bool make_item_randart( item_def &item, bool force_mundane )
     if (item.flags & ISFLAG_UNRANDART)
         return (false);
 
-    if (item.is_mundane() && !one_chance_in(5) && !force_mundane)
+    // Mundane items are much less likely to be artefacts.
+    if (!force_mundane && item.is_mundane() && !one_chance_in(5))
         return (false);
 
     _artefact_setup_prop_vectors(item);
