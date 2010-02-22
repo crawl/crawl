@@ -2507,13 +2507,11 @@ bool _get_spell_description(const spell_type spell, std::string &description,
     if (crawl_state.player_is_dead())
         return (false);
 
-    if (you_cannot_memorise(spell))
+    bool undead = false;
+    if (you_cannot_memorise(spell, undead))
     {
         description += "$$";
-        description += "You cannot memorise or cast this spell because you "
-                       "are a ";
-        description += lowercase_string(species_name(you.species, 0));
-        description += ".";
+        description += desc_cannot_memorise_reason(undead);
     }
     else if (item && item->base_type == OBJ_BOOKS && in_inventory(*item))
     {

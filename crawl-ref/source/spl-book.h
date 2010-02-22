@@ -38,6 +38,7 @@ bool learn_spell();
 bool learn_spell(spell_type spell, int book = NUM_BOOKS,
                  bool is_safest_book = true);
 
+std::string desc_cannot_memorise_reason(bool undead);
 bool player_can_read_spellbook( const item_def &book );
 
 spell_type which_spell_in_book(const item_def &book, int spl);
@@ -48,6 +49,7 @@ int staff_spell( int zap_device_2 );
 bool is_memorised(spell_type spell);
 
 bool you_cannot_memorise(spell_type spell);
+bool you_cannot_memorise(spell_type spell, bool &undead);
 bool has_spells_to_memorise(bool silent = true,
                             int current_spell = SPELL_NO_SPELL);
 std::vector<spell_type> get_mem_spell_list(std::vector<int> &books);
