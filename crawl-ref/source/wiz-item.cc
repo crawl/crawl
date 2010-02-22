@@ -672,7 +672,7 @@ void wizard_make_object_randart()
             return;
         }
     }
-    else if (!make_item_randart(item))
+    else if (!make_item_randart(item, true))
     {
         mpr("Failed to turn item into randart.");
         return;
