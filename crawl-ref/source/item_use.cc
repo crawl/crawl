@@ -5536,8 +5536,7 @@ void read_scroll(int slot)
         break;
 
     case SCR_DETECT_CURSE:
-        if (!detect_curse(false))
-            id_the_scroll = false;
+        detect_curse(false);
         break;
 
     case SCR_ACQUIREMENT:

@@ -177,8 +177,6 @@ bool remove_curse(bool suppress_msg)
 
 bool detect_curse(bool suppress_msg)
 {
-    bool success = false;       // whether or not any curses found {dlb}
-
     for (int i = 0; i < ENDOFPACK; i++)
     {
         item_def& item = you.inv[i];
@@ -187,24 +185,13 @@ bool detect_curse(bool suppress_msg)
             && (item.base_type == OBJ_WEAPONS
                 || item.base_type == OBJ_ARMOUR
                 || item.base_type == OBJ_JEWELLERY))
-        {
-            if (!item_ident(item, ISFLAG_KNOW_CURSE))
-                success = true;
-
             set_ident_flags(item, ISFLAG_KNOW_CURSE);
-        }
     }
 
-    // messaging output {dlb}:
     if (!suppress_msg)
-    {
-        if (success)
-            mpr("You sense the presence of curses on your possessions.");
-        else
-            canned_msg(MSG_NOTHING_HAPPENS);
-    }
+        mpr("Your items softly glow as they are inspected for curses.");
 
-    return (success);
+    return (true);
 }
 
 bool cast_smiting(int power, const coord_def& where)
