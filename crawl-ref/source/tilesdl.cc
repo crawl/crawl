@@ -301,6 +301,7 @@ bool TilesFramework::initialise()
         || too_small && Options.tile_full_screen == SCREENMODE_AUTO)
     {
         flags |= SDL_FULLSCREEN;
+        m_fullscreen = true;
     }
 
     if (Options.tile_window_width && Options.tile_window_height)
@@ -358,12 +359,12 @@ bool TilesFramework::initialise()
     m_region_map  = new MapRegion(Options.tile_map_pixels);
     m_region_tab  = new TabbedRegion(&m_image, m_fonts[lbl_font].font,
                                      TILE_X, TILE_Y);
-    m_region_inv = new InventoryRegion(&m_image, m_fonts[lbl_font].font,
+    m_region_inv  = new InventoryRegion(&m_image, m_fonts[lbl_font].font,
+                                        TILE_X, TILE_Y);
+    m_region_spl  = new SpellRegion(&m_image, m_fonts[lbl_font].font,
+                                    TILE_X, TILE_Y);
+    m_region_mem  = new MemoriseRegion(&m_image, m_fonts[lbl_font].font,
                                        TILE_X, TILE_Y);
-    m_region_spl = new SpellRegion(&m_image, m_fonts[lbl_font].font,
-                                   TILE_X, TILE_Y);
-    m_region_mem = new MemoriseRegion(&m_image, m_fonts[lbl_font].font,
-                                      TILE_X, TILE_Y);
 
     m_region_tab->set_tab_region(TAB_ITEM, m_region_inv,
                                  TILEG_TAB_ITEM_SELECTED,

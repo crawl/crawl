@@ -1705,21 +1705,24 @@ static const bool _have_appropriate_spell(const actor* target)
 static bool _handle_distant_monster(monsters* mon, MouseEvent &event)
 {
     const coord_def gc = mon->pos();
+    const bool shift = (event.mod & MOD_SHIFT);
+    const bool ctrl  = (event.mod & MOD_CTRL);
+    const bool alt   = (shift && ctrl || (event.mod & MOD_ALT));
+
+    // Handle evoking items at monster.
+    if (alt && _have_appropriate_evokable(mon))
+        return _evoke_item_on_target(mon);
 
     // Handle firing quivered items.
-    if ((event.mod & MOD_SHIFT) && you.m_quiver->get_fire_item() != -1)
+    if (shift && !ctrl && you.m_quiver->get_fire_item() != -1)
     {
         macro_buf_add_cmd(CMD_FIRE);
         _add_targeting_commands(mon->pos());
         return (true);
     }
 
-    // Handle evoking items at monster.
-    if ((event.mod & MOD_ALT) && _have_appropriate_evokable(mon))
-        return _evoke_item_on_target(mon);
-
     // Handle casting spells at monster.
-    if ((event.mod & MOD_CTRL) && _have_appropriate_spell(mon))
+    if (ctrl && !shift && _have_appropriate_spell(mon))
         return _cast_spell_on_target(mon);
 
     // Handle weapons of reaching.
@@ -1744,10 +1747,14 @@ static bool _handle_distant_monster(monsters* mon, MouseEvent &event)
 
 static bool _handle_zap_player(MouseEvent &event)
 {
-    if ((event.mod & MOD_ALT) && _have_appropriate_evokable(&you))
+    const bool shift = (event.mod & MOD_SHIFT);
+    const bool ctrl  = (event.mod & MOD_CTRL);
+    const bool alt   = (shift && ctrl || (event.mod & MOD_ALT));
+
+    if (alt && _have_appropriate_evokable(&you))
         return _evoke_item_on_target(&you);
 
-    if ((event.mod & MOD_CTRL) && _have_appropriate_spell(&you))
+    if (ctrl && _have_appropriate_spell(&you))
         return _cast_spell_on_target(&you);
 
     return (false);
@@ -2081,7 +2088,15 @@ bool DungeonRegion::update_tip_text(std::string& tip)
 
         if (_have_appropriate_evokable(target))
         {
-            str += "[Alt-L-Click] Zap wand (%)\n";
+            std::string key = "Alt";
+#ifdef UNIX
+            // On Unix systems the Alt key is already hogged by
+            // the application window, at least when we're not
+            // in fullscreen mode, so we use Ctrl-Shift instead.
+            if (!tiles.is_fullscreen())
+                key = "Ctrl-Shift";
+#endif
+            str += "[" + key + "-L-Click] Zap wand (%)\n";
             cmd.push_back(CMD_EVOKE);
         }
 
