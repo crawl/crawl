@@ -6724,7 +6724,7 @@ VISUAL:@The_monster@ suddenly sprouts two large horns!
 w:3
 VISUAL:@The_monster@'s flesh secretes a thick mucus.
 
-VISUAL:Hollow, blind eyes appear on @the_monster@'s head.
+VISUAL:Hollow, blind eyes appear on the @monster@'s head.
 
 @The_monster@ begs you to kill it.
 
