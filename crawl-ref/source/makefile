@@ -901,13 +901,13 @@ endif
 $(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS) $(CONTRIB_LIBS)
 
 %.d: %.cc .cflags $(GENERATED_FILES)
-	$(QUIET_DEPEND)$(CXX) -MM $(ALL_CFLAGS) $< > $*.d
+	$(QUIET_DEPEND)$(CXX) -MM $(ALL_CFLAGS) -MT $*.o $< > $*.d
 
 %.o: %.m .cflags
 	$(QUIET_CC)$(CC) $(ALL_CFLAGS) -Wp,-MD,$*.d -c $< -o $*.o
 
 %.o: %.cc .cflags $(GENERATED_FILES)
-	$(QUIET_CXX)$(CXX) $(ALL_CFLAGS) -Wp,-MD,$*.d -c $< -o $*.o
+	$(QUIET_CXX)$(CXX) $(ALL_CFLAGS) -Wp,-MD,$*.d,-MT,$@ -c $< -o $*.o
 
 icon.o: util/crawl.rc util/crawl.ico
 	$(QUIET_WINDRES)$(WINDRES) util/crawl.rc icon.o
