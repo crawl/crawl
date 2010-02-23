@@ -76,7 +76,6 @@ sub fix_draco_species {
 sub find_skill {
   my ($species, $skill) = @_;
   my $sk = $SPECIES_SKILLS{$species}{$skill};
-  die "Could not find skill $skill for $species\n" unless $sk;
   $sk
 }
 
@@ -187,7 +186,7 @@ sub load_aptitudes {
       $seen_skill_start = 1 if /species_skill_aptitudes\[/;
     }
     else {
-      if (/APT\(\s*SP_(\w+)\s*,\s*SK_(\w+)\s*,\s*(\d+)\s*\)/) {
+      if (/APT\(\s*SP_(\w+)\s*,\s*SK_(\w+)\s*,\s*(-?\d+)\s*\)/) {
         $species = propercase_string(fix_underscores($1));
         if (!$SEEN_SPECIES{$species}) {
           $SEEN_SPECIES{$species} = 1;
