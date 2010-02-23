@@ -1402,18 +1402,24 @@ static bool _do_description(std::string key, std::string type,
                 {
                     if (!_append_books(desc, mitm[thing_created], key))
                     {
+// These extra lines don't fit onto the console screen and may mean
+// that the *entire* descriptions, spells and all, doesn't get displayed.
+// I'm not sure why description is so fussy about that when the footer
+// and everything isn't even used.
+#ifdef USE_TILE
                         // FIXME: Duplicates messages from describe.cc.
                         if (!player_can_memorise_from_spellbook(mitm[thing_created]))
                         {
-                            desc += "$This book is beyond your current level "
+                            desc += "This book is beyond your current level "
                                     "of understanding.";
                         }
-                        else if (is_dangerous_spellbook(mitm[thing_created]))
+                        else if (is_dangerous_spellbook(mitm[thing_created].sub_type))
                         {
-                            desc += "$WARNING: If you fail in an attempt to "
+                            desc += "WARNING: If you fail in an attempt to "
                                     "memorise a spell from this book, the book "
                                     "will lash out at you.";
                         }
+#endif
                         append_spells(desc, mitm[thing_created]);
                     }
                 }
