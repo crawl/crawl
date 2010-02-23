@@ -1216,6 +1216,7 @@ dngn_shoals_shallow_water_disturbance1 SHOALS_SHALLOW_WATER_DISTURBANCE
 dngn_shoals_shallow_water_disturbance2
 dngn_shoals_shallow_water_disturbance3
 
+## deep water waves
 # corner waves (diagonals)
 deep_water_wave_corner_NE WAVE_DEEP_CORNER_NE
 deep_water_wave_corner_NW WAVE_DEEP_CORNER_NW
@@ -1228,6 +1229,7 @@ deep_water_wave_S WAVE_DEEP_S
 deep_water_wave_E WAVE_DEEP_E
 deep_water_wave_W WAVE_DEEP_W
 
+## shallow water waves
 # corner waves (diagonals)
 shallow_water_wave_corner_NE WAVE_CORNER_NE
 shallow_water_wave_corner_NW WAVE_CORNER_NW
@@ -1239,6 +1241,22 @@ shallow_water_wave_N WAVE_N
 shallow_water_wave_S WAVE_S
 shallow_water_wave_E WAVE_E
 shallow_water_wave_W WAVE_W
+
+## ink sheen
+# corner waves (diagonals)
+ink_wave_corner_NE WAVE_INK_CORNER_NE
+ink_wave_corner_NW WAVE_INK_CORNER_NW
+ink_wave_corner_SE WAVE_INK_CORNER_SE
+ink_wave_corner_SW WAVE_INK_CORNER_SW
+
+# orthogonal waves
+ink_wave_N WAVE_INK_N
+ink_wave_S WAVE_INK_S
+ink_wave_E WAVE_INK_E
+ink_wave_W WAVE_INK_W
+
+#full
+ink_full WAVE_INK_FULL
 
 %sdir dc-dngn/gateways
 dngn_entrance DNGN_UNSEEN_ENTRANCE
