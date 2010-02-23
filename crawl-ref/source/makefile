@@ -867,7 +867,7 @@ endif
 
 clean:
 	+$(MAKE) -C $(UTIL) clean
-	+$(MAKE) -C $(RLTILES) -f makefile.unix clean
+	+$(MAKE) -C $(RLTILES) clean
 	$(RM) $(GAME) $(GAME).exe $(EXTRA_OBJECTS) libw32c.o libunix.o $(OBJECTS) $(OBJECTS:.o=.d) *.ixx build.h compflag.h .contrib-libs .cflags
 
 clean-contrib:
@@ -938,7 +938,7 @@ $(GENERATED_FILES): art-data.txt util/art-data.pl art-func.h
 
 .PHONY: rltile-build
 rltile-build: .contrib-libs $(GENERATED_FILES)
-	+$(MAKE) -C $(RLTILES) -f makefile.unix all
+	+$(MAKE) -C $(RLTILES) all
 
 $(TILEDEFSRCS): rltile-build
 $(TILEDEFHDRS): rltile-build
@@ -949,7 +949,7 @@ dat/tiles/%.png: $(RLTILES)/%.png
 
 clean-rltiles:
 	$(RM) $(DESTTILEFILES)
-	+$(MAKE) -C $(RLTILES) -f makefile.unix distclean
+	+$(MAKE) -C $(RLTILES) distclean
 
 #############################################################################
 # Packaging a source tarball for release
