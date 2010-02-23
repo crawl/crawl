@@ -181,9 +181,6 @@ book. It is sought after by sorcerers, for it allows the gifted and
 resourceful to command destruction with the ease of a twinkle.  Feeble
 wizards, however, may well meet their doom when trying to read this
 opus.
-
-WARNING: If you fail in an attempt to memorise a spell from this book,
-the book will lash out at you.
 %%%%
 book of callings
 
@@ -229,9 +226,6 @@ to unleash them unto this unsuspecting world. Many wizards have proven
 too weak to stand the power of this tome. You are not sure whether you
 hear the screams of the countless victims, which have been eaten,
 maimed and raped by the demons. Or do you scream yet?
-
-WARNING: If you fail in an attempt to memorise a spell from this book,
-the book will lash out at you.
 %%%%
 book of divinations
 
@@ -834,9 +828,6 @@ An extremely rare book, powerful and sinister. Its binding is made from
 delicate skin of unknown provenance. Many foolhardy magicians have tried
 to study this tome, only to find themselves entangled within necromantic
 forces they could not hope to control.
-
-WARNING: If you fail in an attempt to memorise a spell from this book,
-the book will lash out at you.
 %%%%
 needle
 

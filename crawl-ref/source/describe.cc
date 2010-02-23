@@ -1813,6 +1813,12 @@ std::string get_item_description( const item_def &item, bool verbose,
             if (!item_type_known(item))
                 break;
         }
+        else if (is_dangerous_spellbook(item))
+        {
+            description << "$WARNING: If you fail in an attempt to memorise a "
+                           "spell from this book, the book will lash out at "
+                           "you.";
+        }
 
         if (!verbose
             && (Options.dump_book_spells || is_random_artefact(item)))

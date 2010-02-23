@@ -1401,7 +1401,21 @@ static bool _do_description(std::string key, std::string type,
                          || get_item_by_name(&mitm[thing_created], name, OBJ_STAVES))
                 {
                     if (!_append_books(desc, mitm[thing_created], key))
+                    {
+                        // FIXME: Duplicates messages from describe.cc.
+                        if (!player_can_memorise_from_spellbook(mitm[thing_created]))
+                        {
+                            desc += "$This book is beyond your current level "
+                                    "of understanding.";
+                        }
+                        else if (is_dangerous_spellbook(mitm[thing_created]))
+                        {
+                            desc += "$WARNING: If you fail in an attempt to "
+                                    "memorise a spell from this book, the book "
+                                    "will lash out at you.";
+                        }
                         append_spells(desc, mitm[thing_created]);
+                    }
                 }
                 else
                     _append_non_item(desc, key);
