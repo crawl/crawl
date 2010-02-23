@@ -50,6 +50,7 @@
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "stash.h"
+#include "state.h"
 #include "stuff.h"
 #include "env.h"
 #include "transform.h"
@@ -1404,3 +1405,147 @@ void whereis_record(const char *status)
     }
 }
 #endif
+
+
+///////////////////////////////////////////////////////////////////////////////
+// Turn timestamps
+//
+// For DGL installs, write a timestamp at regular intervals into a file in
+// the morgue directory. The timestamp file is named
+// "timestamp-<player>-<starttime>.ts". All timestamps are standard Unix
+// time_t, but currently only the low 4 bytes are saved even on systems
+// with 64-bit time_t.
+//
+// Timestamp files are append only, and Crawl will check and handle cases
+// where a previous Crawl process crashed at a higher turn count on the same
+// game.
+//
+// Having timestamps associated with the game allows for much easier seeking
+// within Crawl ttyrecs by external tools such as FooTV.
+
+#ifdef DGL_TURN_TIMESTAMPS
+
+// File-format version for timestamp files. Crawl will never append to a
+const uint32_t DGL_TIMESTAMP_VERSION = 1;
+const int VERSION_SIZE = sizeof(DGL_TIMESTAMP_VERSION);
+const int TIMESTAMP_SIZE = sizeof(uint32_t);
+
+// Returns the size of the opened file with the give FILE* handle.
+unsigned long _file_size(FILE *handle)
+{
+    struct stat fs;
+    const int err = fstat(fileno(handle), &fs);
+    return err? 0 : fs.st_size;
+}
+
+// Returns the name of the timestamp file based on the morgue_dir,
+// character name and the game start time.
+std::string dgl_timestamp_filename()
+{
+    const std::string filename =
+        ("timestamp-" + you.your_name + "-" + make_file_time(you.birth_time));
+    return morgue_directory() + strip_filename_unsafe_chars(filename) + ".ts";
+}
+
+// Returns true if the given file exists and is not a timestamp file
+// of a known version.
+bool dgl_unknown_timestamp_file(const std::string &filename)
+{
+    if (FILE *inh = fopen(filename.c_str(), "rb"))
+    {
+        reader r(inh);
+        const uint32_t file_version = unmarshallLong(r);
+        fclose(inh);
+        return (file_version != DGL_TIMESTAMP_VERSION);
+    }
+    return (false);
+}
+
+// Returns a filehandle to use to write turn timestamps, NULL if
+// timestamps should not be written.
+FILE *dgl_timestamp_filehandle()
+{
+    static FILE *timestamp_file;
+    static bool opened_file = false;
+    if (!opened_file)
+    {
+        opened_file = true;
+
+        const std::string filename = dgl_timestamp_filename();
+        // First check if there's already a timestamp file. If it exists
+        // but has a different version, we cannot safely modify it, so bail.
+        if (!dgl_unknown_timestamp_file(filename))
+            timestamp_file = fopen(filename.c_str(), "ab");
+    }
+    return timestamp_file;
+}
+
+// Records a timestamp in the .ts file at the given offset. If no timestamp
+// file exists, a new file will be created.
+void dgl_record_timestamp(unsigned long file_offset, time_t time)
+{
+    static bool timestamp_first_write = true;
+    if (FILE *ftimestamp = dgl_timestamp_filehandle())
+    {
+        writer w(ftimestamp);
+        if (timestamp_first_write)
+        {
+            unsigned long ts_size = _file_size(ftimestamp);
+            if (!ts_size)
+            {
+                marshallLong(w, DGL_TIMESTAMP_VERSION);
+                ts_size += sizeof(DGL_TIMESTAMP_VERSION);
+            }
+
+            // It's possible that the file we want to write is already
+            // larger than the offset we expect if the game previously
+            // crashed. When the game crashes, turn count is
+            // effectively rewound to the point of the last save. In
+            // such cases, we should not add timestamps until we reach
+            // the correct turn count again.
+            if (ts_size && ts_size > file_offset)
+                return;
+
+            if (file_offset > ts_size)
+            {
+                const int backlog =
+                    (file_offset - ts_size) / TIMESTAMP_SIZE;
+                for (int i = 0; i < backlog; ++i)
+                    marshallLong(w, 0);
+            }
+
+            timestamp_first_write = false;
+        }
+        fseek(ftimestamp, 0, SEEK_END);
+        // [ds] FIXME: Eventually switch to 8 byte timestamps.
+        marshallLong(w, static_cast<uint32_t>(time));
+        fflush(ftimestamp);
+    }
+}
+
+// Record timestamps every so many turns:
+const int TIMESTAMP_TURN_INTERVAL = 100;
+// Stop recording timestamps after this turncount.
+const long TIMESTAMP_TURN_MAX = 500000L;
+void dgl_record_timestamp(long turn)
+{
+    if (turn && turn < TIMESTAMP_TURN_MAX && !(turn % TIMESTAMP_TURN_INTERVAL))
+    {
+        const time_t now = time(NULL);
+        const unsigned long offset =
+            (VERSION_SIZE +
+             (turn / TIMESTAMP_TURN_INTERVAL - 1) * TIMESTAMP_SIZE);
+        dgl_record_timestamp(offset, now);
+    }
+}
+
+#endif
+
+// Records a timestamp for the current player turn if appropriate.
+void record_turn_timestamp()
+{
+#ifdef DGL_TURN_TIMESTAMPS
+    if (crawl_state.need_save)
+        dgl_record_timestamp(you.num_turns);
+#endif
+}

@@ -272,6 +272,10 @@
     // Record game milestones in an xlogfile.
     #define DGL_MILESTONES
 
+    // Save a timestamp every 100 turns so that external tools can seek in
+    // game recordings more easily.
+    #define DGL_TURN_TIMESTAMPS
+
     // Record where players are currently.
     #define DGL_WHEREIS
 
