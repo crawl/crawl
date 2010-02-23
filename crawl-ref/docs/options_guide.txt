@@ -1610,6 +1610,12 @@ autoinscribe = <regex>:<inscription>
         lose charges of important wands accidentally, as in
              autoinscribe = wand of healing:!z
 
+        The menu colour prefixes (evil_item etc.) can also be used here.
+        For example:
+             autoinscribe = bad_item.*potion:!q
+        will protect Transmuters against accidentally drinking their
+        distilled potions.
+
 autoinscribe_artefacts = true
         Automatically inscribes identified artefacts with their properties.
 
