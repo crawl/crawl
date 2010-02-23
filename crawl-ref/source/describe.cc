@@ -2467,6 +2467,26 @@ void inscribe_item(item_def &item, bool proper_prompt)
 
 }
 
+static void _append_spell_stats(const spell_type spell,
+                                std::string &description)
+{
+    const std::string schools = spell_schools_string(spell);
+    snprintf(info, INFO_SIZE,
+             "$Level: %d        School%s:  %s    (%s)",
+             spell_difficulty(spell),
+             schools.find("/") != std::string::npos ? "s" : "",
+             schools.c_str(),
+             failure_rate_to_string(spell_fail(spell)));
+    description += info;
+
+    description += "$$Power : ";
+    description += spell_power_string(spell);
+    description += "$Range : ";
+    description += spell_range_string(spell);
+    description += "$Hunger: ";
+    description += spell_hunger_string(spell);
+}
+
 // Returns true if you can memorise the spell.
 bool _get_spell_description(const spell_type spell, std::string &description,
                             const item_def* item = NULL)
@@ -2506,38 +2526,22 @@ bool _get_spell_description(const spell_type spell, std::string &description,
     if (crawl_state.player_is_dead())
         return (false);
 
+    _append_spell_stats(spell, description);
+
     bool undead = false;
     if (you_cannot_memorise(spell, undead))
     {
         description += "$$";
         description += desc_cannot_memorise_reason(undead);
     }
-    else if (item && item->base_type == OBJ_BOOKS && in_inventory(*item))
+    else if (item && item->base_type == OBJ_BOOKS && !you.has_spell(spell)
+             && in_inventory(*item))
     {
         description += "$$";
         description += "(M)emorise this spell.";
         return (true);
     }
-#ifdef USE_TILE
-    else
-    {
-        const std::string schools = spell_schools_string(spell);
-        snprintf(info, INFO_SIZE,
-                 "$Level: %d        School%s:  %s    (%s)",
-                 spell_difficulty(spell),
-                 schools.find("/") != std::string::npos ? "s" : "",
-                 schools.c_str(),
-                 failure_rate_to_string(spell_fail(spell)));
-        description += info;
 
-        description += "$$Power : ";
-        description += spell_power_string(spell);
-        description += "$Range : ";
-        description += spell_range_string(spell);
-        description += "$Hunger: ";
-        description += spell_hunger_string(spell);
-    }
-#endif
     return (false);
 }
 
