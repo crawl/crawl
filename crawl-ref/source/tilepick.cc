@@ -385,6 +385,10 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     // turtles and crocodiles ('t')
     case MONS_CROCODILE:
         return TILEP_MONS_CROCODILE;
+    case MONS_BABY_ALLIGATOR:
+        return TILEP_MONS_BABY_ALLIGATOR;
+    case MONS_ALLIGATOR:
+        return TILEP_MONS_ALLIGATOR;
     case MONS_SNAPPING_TURTLE:
         return TILEP_MONS_SNAPPING_TURTLE;
     case MONS_ALLIGATOR_SNAPPING_TURTLE:
@@ -1938,6 +1942,10 @@ static int _tileidx_corpse(const item_def &item)
     // turtles and crocodiles ('t')
     case MONS_CROCODILE:
         return TILE_CORPSE_CROCODILE;
+    case MONS_BABY_ALLIGATOR:
+        return TILE_CORPSE_BABY_ALLIGATOR;
+    case MONS_ALLIGATOR:
+        return TILE_CORPSE_ALLIGATOR;
     case MONS_SNAPPING_TURTLE:
         return TILE_CORPSE_SNAPPING_TURTLE;
     case MONS_ALLIGATOR_SNAPPING_TURTLE:

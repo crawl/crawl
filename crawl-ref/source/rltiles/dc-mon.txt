@@ -67,6 +67,8 @@ redback MONS_REDBACK
 
 ## Turtles and crocodiles ('t')
 crocodile MONS_CROCODILE
+alligator_baby MONS_BABY_ALLIGATOR
+alligator MONS_ALLIGATOR
 snapping_turtle MONS_SNAPPING_TURTLE
 alligator_snapping_turtle MONS_ALLIGATOR_SNAPPING_TURTLE
 

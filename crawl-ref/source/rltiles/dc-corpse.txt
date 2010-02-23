@@ -69,6 +69,8 @@ redback CORPSE_REDBACK
 ## Turtles and crocodiles ('t')
 %back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
 crocodile CORPSE_CROCODILE
+alligator_baby CORPSE_BABY_ALLIGATOR
+alligator CORPSE_ALLIGATOR
 snapping_turtle CORPSE_SNAPPING_TURTLE
 alligator_snapping_turtle CORPSE_ALLIGATOR_SNAPPING_TURTLE
 
