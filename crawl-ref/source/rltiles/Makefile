@@ -83,3 +83,5 @@ distclean: clean
 
 $(TILEGEN): $(OBJECTS)
 	$(QUIET_LINK)$(CXX) $(OBJECTS) -o $@ $(LDFLAGS)
+
+.PHONY: all clean distclean
