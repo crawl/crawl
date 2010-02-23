@@ -79,7 +79,7 @@ clean:
 distclean: clean
 
 %.o: %.cc
-	$(QUIET_CXX)$(CXX) $(CFLAGS) -Wp,-MD,$*.d -c $< -o $@
+	$(QUIET_CXX)$(CXX) $(CFLAGS) -Wp,-MD,$*.d,-MT,$@ -c $< -o $@
 
 $(TILEGEN): $(OBJECTS)
 	$(QUIET_LINK)$(CXX) $(OBJECTS) -o $@ $(LDFLAGS)
