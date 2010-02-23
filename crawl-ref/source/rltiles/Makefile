@@ -64,11 +64,8 @@ OBJECTS := $(BASE_OBJECTS:%=$(TOOLDIR)/%)
 
 all: $(TILEGEN) $(HEADERS) $(SOURCE) $(IMAGES)
 
-%.png: dc-%.txt $(TILEGEN)
+%.png tiledef-%.h tiledef-%.cc: dc-%.txt $(TILEGEN)
 	$(QUIET_GEN)$(TILEGEN) $<
-
-$(HEADERS) $(SOURCE): $(TILEGEN)
-	$(QUIET_GEN)$(TILEGEN) dc-$(lastword $(subst -, ,$*)).txt
 
 DEPS := $(shell ls $(INPUTS:%=%.d) 2> /dev/null)
 
