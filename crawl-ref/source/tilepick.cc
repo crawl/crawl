@@ -1175,6 +1175,10 @@ int tileidx_monster_base(const monsters *mon, bool detected)
 int tileidx_monster(const monsters *mons, bool detected)
 {
     int ch = tileidx_monster_base(mons, detected);
+    // XXX: Treat this tile specially, as monsters normally
+    //      don't use tile sets.
+    if (ch == TILEP_MONS_STATUE_GUARDIAN)
+        ch += + random2(tile_player_count(ch));
 
     if (mons_flies(mons))
         ch |= TILE_FLAG_FLYING;
