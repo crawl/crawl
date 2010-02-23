@@ -4502,7 +4502,8 @@ std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
         "constrict"
     };
 
-    ASSERT(attk.type < sizeof(attack_types) / sizeof(const char *));
+    ASSERT(attk.type <
+           static_cast<int>(sizeof(attack_types) / sizeof(const char *)));
     return (attack_types[attk.type]);
 }
 
