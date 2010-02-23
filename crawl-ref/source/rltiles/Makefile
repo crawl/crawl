@@ -67,7 +67,7 @@ all: $(TILEGEN) $(HEADERS) $(SOURCE) $(IMAGES)
 %.png tiledef-%.h tiledef-%.cc: dc-%.txt | $(TILEGEN)
 	$(QUIET_GEN)$(TILEGEN) $<
 
-DEPS := $(shell ls $(OBJECTS:%.o=%.d) 2> /dev/null)
+DEPS := $(shell ls $(OBJECTS:%.o=%.d) $(INPUTS:%=%.d) 2> /dev/null)
 
 ifneq ($(DEPS),)
 -include $(DEPS)
