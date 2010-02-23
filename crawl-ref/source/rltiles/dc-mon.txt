@@ -253,6 +253,7 @@ rakshasa MONS_RAKSHASA_FAKE
 
 
 ## Abominations ('X')
+cigotuvis_monster MONS_CIGOTUVIS_MONSTER
 abomination_large MONS_ABOMINATION_LARGE
 abomination_large1
 abomination_large2
