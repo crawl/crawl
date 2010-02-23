@@ -1043,11 +1043,9 @@ static bool _check_ability_possible(const ability_def& abil,
         if (you.strength == you.max_strength
             && you.intel == you.max_intel
             && you.dex == you.max_dex
-            && (abil.ability == ABIL_MUMMY_RESTORATION || !player_rotted()))
+            && !player_rotted())
         {
-            mprf("You don't need to restore your stats%s!",
-                 abil.ability == ABIL_ELYVILON_RESTORATION ? " or hit points"
-                                                           : "");
+            mprf("You don't need to restore your stats or hit points!");
             return (false);
         }
         return (true);
@@ -1281,7 +1279,7 @@ static bool _do_ability(const ability_def& abil)
         bool did_restore = restore_stat(STAT_ALL, 0, false);
 
         const int oldhpmax = you.hp_max;
-        unrot_hp( 100 );
+        unrot_hp(100);
         if (you.hp_max > oldhpmax)
             did_restore = true;
 
