@@ -711,7 +711,7 @@ LIBS += $(CONTRIB_LIBS) $(EXTRA_LIBS)
 DOC_BASE        := ../docs
 DOC_TEMPLATES   := $(DOC_BASE)/template
 GENERATED_DOCS  := $(DOC_BASE)/aptitudes.txt
-GENERATED_FILES := art-data.h
+GENERATED_FILES := art-data.h $(RLTILES)/dc-unrand.txt
 
 GAME_DEPENDS  := $(DESTTILEFILES) $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS)
 SRC_PKG_BASE  := stone_soup
