@@ -64,7 +64,7 @@ OBJECTS := $(BASE_OBJECTS:%=$(TOOLDIR)/%)
 
 all: $(TILEGEN) $(HEADERS) $(SOURCE) $(IMAGES)
 
-%.png tiledef-%.h tiledef-%.cc: dc-%.txt $(TILEGEN)
+%.png tiledef-%.h tiledef-%.cc: dc-%.txt | $(TILEGEN)
 	$(QUIET_GEN)$(TILEGEN) $<
 
 DEPS := $(shell ls $(INPUTS:%=%.d) 2> /dev/null)
