@@ -2700,6 +2700,7 @@ void world_reacts()
             you.num_turns++;
         if (env.turns_on_level < INT_MAX)
             env.turns_on_level++;
+        record_turn_timestamp();
         update_turn_count();
         msgwin_new_turn();
     }

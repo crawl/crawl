@@ -40,4 +40,6 @@ const char *hunger_level(void);
 void whereis_record(const char *status = "active");
 #endif
 
+void record_turn_timestamp();
+
 #endif
