@@ -1957,7 +1957,11 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
             {
                 text << "That ";
 #ifndef USE_TILE
-                text << _colourize_glyph(get_item_glyph(&mitm[i]));
+                std::string glyph = _colourize_glyph(get_item_glyph(&mitm[i]));
+                const std::string::size_type found = glyph.find("%");
+                if (found != std::string::npos)
+                    glyph.replace(found, 1, "percent");
+                text << glyph;
                 text << " ";
 #else
                 tiles.place_cursor(CURSOR_TUTORIAL, gc);
