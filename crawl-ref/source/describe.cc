@@ -2593,6 +2593,7 @@ void describe_spell(spell_type spelled, const item_def* item)
 
     if (can_mem && toupper(ch) == 'M')
     {
+        redraw_screen();
         if (!learn_spell(spelled, item->sub_type, false) || !you.turn_is_over)
             more();
         redraw_screen();
