@@ -1020,7 +1020,7 @@ SUBST:      " = J:1 / .:6
 KMONS:      8 = col:red clay golem name:flesh_golem name_replace \
             tile:mons_flesh_golem name_descriptor
 KMONS:      M = col:mutagenic tentacled monstrosity name:Cigotuvi's_Monster \
-            name_replace hp:250
+            name_replace hp:250 tile:mons_cigotuvis_monster
 MARKER:     M = lua:MonPropsMarker:new {description="This terrifying creation " \
             .. "looks to have been constructed from the bodyparts of every monstrous " \
             .. "creature imaginable.\n", quote="\"I beheld the wretch -- the "    \
