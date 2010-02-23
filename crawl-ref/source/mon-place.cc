@@ -1629,7 +1629,7 @@ monster_type pick_random_zombie()
                 continue;
 
             const monster_type mcls = static_cast<monster_type>(i);
-            if (!mons_zombie_size(mcls))
+            if (!mons_zombie_size(mcls) || mons_is_unique(mcls))
                 continue;
 
             zombifiable.push_back(mcls);
