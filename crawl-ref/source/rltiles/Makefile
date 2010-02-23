@@ -67,7 +67,7 @@ all: $(TILEGEN) $(HEADERS) $(SOURCE) $(IMAGES)
 %.png: dc-%.txt $(TILEGEN)
 	$(QUIET_GEN)$(TILEGEN) $<
 
-$(HEADERS) $(SOURCE):
+$(HEADERS) $(SOURCE): $(TILEGEN)
 	$(QUIET_GEN)$(TILEGEN) dc-$(lastword $(subst -, ,$*)).txt
 
 DEPS := $(shell ls $(INPUTS:%=%.d) 2> /dev/null)
