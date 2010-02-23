@@ -2840,11 +2840,10 @@ Int+3     intelligence modifier
 Dam+3     damage modifier
 Acc+3     accuracy modifier
 
-MR        boost to magical resistance
+MR        boost to magical resistance to hostile enchantments
 Stlth     stealth boost
 Stlth+    higher stealth boost
 
-rSlow     resist slowing
 rCorr     resist corrosion
 rMut      resist mutation
 
@@ -2862,6 +2861,7 @@ MUT+      highly mutagenic
 Noisy     makes noises
 Hunger    increased hunger
 Hunger+   highly increased hunger
+Curse     chance of self-cursing on equipment
 
 Fire      ring of Fire
 Ice       ring of Ice
@@ -2877,6 +2877,8 @@ Clar      clarity
 Cons      conservation
 Gourm     gourmand
 Ward      warding
+Spirit    guardian spirit
+Inacc     inaccuracy (Acc-5)
 
 Debugging inscriptions
 ----------------------
