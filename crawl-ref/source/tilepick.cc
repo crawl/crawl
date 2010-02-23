@@ -2963,6 +2963,10 @@ static int _tileidx_cloud(cloud_struct cl)
                 ch = TILE_CLOUD_MAGIC_TRAIL_0 + dur;
                 break;
 
+            case CLOUD_INK:
+                ch = TILE_CLOUD_INK;
+                break;
+
             case CLOUD_GLOOM:
                 ch = TILE_CLOUD_GLOOM;
                 break;
@@ -5169,7 +5173,10 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
 
 void tile_place_cloud(int x, int y, cloud_struct cl)
 {
-    env.tile_fg[x][y] = _tileidx_cloud(cl);
+    // In the Shoals, ink is handled differently. (jpeg)
+    // I'm not sure it is even possible anywhere else, but just to be safe...
+    if (cl.type != CLOUD_INK || !player_in_branch(BRANCH_SHOALS))
+        env.tile_fg[x][y] = _tileidx_cloud(cl);
 }
 
 unsigned int num_tile_rays = 0;
