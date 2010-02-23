@@ -1402,13 +1402,14 @@ std::string direction_chooser::target_interesting_terrain_description() const
     // feat_has_solid_floor().
     switch (feature)
     {
-    case DNGN_DEEP_WATER: return " (water)";
-    case DNGN_LAVA:       return " (lava)";
+    case DNGN_DEEP_WATER: return "water";
+    case DNGN_LAVA:       return "lava";
     default:              return "";
     }
 }
 
-std::string direction_chooser::target_cloud_description() const {
+std::string direction_chooser::target_cloud_description() const
+{
     const int cloud = env.cgrid(target());
     if (cloud != EMPTY_CLOUD)
         return cloud_name(cloud);
@@ -1468,9 +1469,11 @@ void direction_chooser::print_target_monster_description() const
 
     // Build the final description string.
     if (!suffixes.empty())
+    {
         text += " ("
             + comma_separated_line(suffixes.begin(), suffixes.end(), ", ")
             + ")";
+    }
 
     mprf(MSGCH_PROMPT, "%s: <lightgrey>%s</lightgrey>",
          target_prefix ? target_prefix : "Aim",
