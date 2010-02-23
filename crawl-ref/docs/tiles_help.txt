@@ -69,7 +69,7 @@ left mouseclick            Execute the most common action for this item type.
     jewellery:             Put on   ('P')
     spellbook:             Memorise ('M')
     missiles:              fire     ('f')
-    wand, misc. item:      evoke    ('V')
+    wand, misc. item:      evoke    ('V'), also 'v' if nothing wielded
     corpse:                eat      ('e'), for Vampires
 
   wielded items:
@@ -132,9 +132,12 @@ Ctrl + left mouseclick     Disarm adjacent trap ('Ctrl + Dir.')
                            Spell is chosen from menu after target is
                            clicked.
 
+Ctrl + Shift + left mouseclick
 Alt + left mouseclick      Evoke item at target (monster or player).
                            Item is chosen from menu after target is
                            clicked.
+                           Ctrl-Shift is a synonym to Alt for those systems 
+                           where the Alt key doesn't work in Crawl.
 
 
 MINIMAP INTERACTION
@@ -142,6 +145,8 @@ MINIMAP INTERACTION
 left mouseclick            Autotravel to any reachable position.
 
 holding right mouseclick   Zoom into distant area.
+
+Shift + left mouseclick    Start automatic level exploration ('o').
 
 
 MESSAGE AREA
