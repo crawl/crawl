@@ -39,7 +39,7 @@ bool learn_spell(spell_type spell, int book = NUM_BOOKS,
                  bool is_safest_book = true);
 
 std::string desc_cannot_memorise_reason(bool undead);
-bool player_can_read_spellbook( const item_def &book );
+bool player_can_memorise_from_spellbook( const item_def &book );
 
 spell_type which_spell_in_book(const item_def &book, int spl);
 spell_type which_spell_in_book(int sbook_type, int spl);

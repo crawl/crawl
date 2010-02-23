@@ -3238,10 +3238,14 @@ bool InventoryRegion::update_tip_text(std::string& tip)
                 if (item_type_known(item)
                     && item.sub_type != BOOK_MANUAL
                     && item.sub_type != BOOK_DESTRUCTION
-                    && you.skills[SK_SPELLCASTING] > 0)
+                    && can_learn_spell(true))
                 {
-                    tip += "Memorise (%)";
-                    cmd.push_back(CMD_MEMORISE_SPELL);
+                    if (player_can_memorise_from_spellbook(item)
+                        || has_spells_to_memorise(true))
+                    {
+                        tip += "Memorise (%)";
+                        cmd.push_back(CMD_MEMORISE_SPELL);
+                    }
                     if (wielded)
                         _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click]", true);
                     break;

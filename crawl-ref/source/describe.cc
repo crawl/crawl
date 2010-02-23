@@ -1805,13 +1805,17 @@ std::string get_item_description( const item_def &item, bool verbose,
         break;
 
     case OBJ_BOOKS:
-        if (!player_can_read_spellbook( item ))
+        if (!player_can_memorise_from_spellbook(item))
         {
             description << "$This book is beyond your current level of "
                            "understanding.";
+
+            if (!item_type_known(item))
+                break;
         }
-        else if (!verbose
-                 && (Options.dump_book_spells || is_random_artefact(item)))
+
+        if (!verbose
+            && (Options.dump_book_spells || is_random_artefact(item)))
         {
             append_spells( desc, item );
             if (desc.empty())
@@ -2228,8 +2232,11 @@ static bool _show_item_description(const item_def &item)
 
     if (item.has_spells())
     {
-        if (item.base_type == OBJ_BOOKS && !player_can_read_spellbook( item ))
+        if (item.base_type == OBJ_BOOKS && !item_type_known(item)
+            && !player_can_memorise_from_spellbook( item ))
+        {
             return (false);
+        }
 
         formatted_string fs;
         item_def dup = item;
@@ -2289,7 +2296,8 @@ bool describe_item( item_def &item, bool allow_inscribe, bool shopping )
             textcolor(LIGHTGREY);
 
             if (item.base_type == OBJ_BOOKS && in_inventory(item)
-                && !crawl_state.player_is_dead())
+                && !crawl_state.player_is_dead()
+                && player_can_memorise_from_spellbook(item))
             {
                 cprintf("Select a spell to read its description or to "
                         "memorise it.");
@@ -2501,6 +2509,11 @@ bool _get_spell_description(const spell_type spell, std::string &description,
         description += god_name(you.religion)
                        + " appreciates the use of this spell.$";
     }
+    if (item && !player_can_memorise_from_spellbook(*item))
+    {
+        description += "The spell is scrawled in ancient runes that are beyond "
+                       "your current level of understanding.$";
+    }
     if (spell_is_useless(spell))
         description += "This spell will have no effect right now.$";
 
@@ -2513,7 +2526,8 @@ bool _get_spell_description(const spell_type spell, std::string &description,
         description += "$$";
         description += desc_cannot_memorise_reason(undead);
     }
-    else if (item && item->base_type == OBJ_BOOKS && in_inventory(*item))
+    else if (item && item->base_type == OBJ_BOOKS && in_inventory(*item)
+             && player_can_memorise_from_spellbook(*item ))
     {
         description += "$$";
         description += "(M)emorise this spell.";
