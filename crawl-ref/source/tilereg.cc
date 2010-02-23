@@ -290,6 +290,11 @@ enum wave_type
     WV_DEEP
 };
 
+wave_type _get_wave_type(bool shallow)
+{
+    return (shallow ? WV_SHALLOW : WV_DEEP);
+}
+
 void DungeonRegion::pack_background(unsigned int bg, int x, int y)
 {
     unsigned int bg_idx = bg & TILE_FLAG_MASK;
@@ -324,25 +329,41 @@ void DungeonRegion::pack_background(unsigned int bg, int x, int y)
             // Add wave tiles on floor adjacent to shallow water.
             const coord_def pos = coord_def(x + m_cx_to_gx, y + m_cy_to_gy);
             const dungeon_feature_type feat = env.map_knowledge(pos).feat();
-            if (feat == DNGN_FLOOR || feat == DNGN_UNDISCOVERED_TRAP
-                || feat == DNGN_SHALLOW_WATER)
+            const bool feat_has_ink
+                            = (cloud_type_at(coord_def(pos)) == CLOUD_INK);
+
+            if (feat == DNGN_DEEP_WATER && feat_has_ink)
             {
+                m_buf_dngn.add(TILE_WAVE_INK_FULL, x, y);
+            }
+            else if (feat == DNGN_FLOOR || feat == DNGN_UNDISCOVERED_TRAP
+                     || feat == DNGN_SHALLOW_WATER
+                     || feat == DNGN_DEEP_WATER)
+            {
+                const bool ink_only = (feat == DNGN_DEEP_WATER);
+
                 wave_type north = WV_NONE, south = WV_NONE,
                           east = WV_NONE, west = WV_NONE,
                           ne = WV_NONE, nw = WV_NONE,
                           se = WV_NONE, sw = WV_NONE;
+
+                bool inkn = false, inks = false, inke = false, inkw = false,
+                     inkne = false, inknw = false, inkse = false, inksw = false;
 
                 for (radius_iterator ri(pos, 1, true, false, true); ri; ++ri)
                 {
                     if (!is_terrain_seen(*ri) && !is_terrain_mapped(*ri))
                         continue;
 
+                    const bool ink
+                        = (cloud_type_at(coord_def(*ri)) == CLOUD_INK);
+
                     bool shallow = false;
                     if (env.map_knowledge(*ri).feat() == DNGN_SHALLOW_WATER)
                     {
                         // Adjacent shallow water is only interesting for
                         // floor cells.
-                        if (feat == DNGN_SHALLOW_WATER)
+                        if (!ink && feat == DNGN_SHALLOW_WATER)
                             continue;
 
                         shallow = true;
@@ -350,76 +371,139 @@ void DungeonRegion::pack_background(unsigned int bg, int x, int y)
                     else if (env.map_knowledge(*ri).feat() != DNGN_DEEP_WATER)
                         continue;
 
-                    if (ri->x == pos.x) // orthogonals
+                    if (!ink_only)
                     {
-                        if (ri->y < pos.y)
-                            north = (shallow ? WV_SHALLOW : WV_DEEP);
-                        else
-                            south = (shallow ? WV_SHALLOW : WV_DEEP);
-                    }
-                    else if (ri->y == pos.y)
-                    {
-                        if (ri->x < pos.x)
-                            west = (shallow ? WV_SHALLOW : WV_DEEP);
-                        else
-                            east = (shallow ? WV_SHALLOW : WV_DEEP);
-                    }
-                    else // diagonals
-                    {
-                        if (ri->x < pos.x)
+                        if (ri->x == pos.x) // orthogonals
                         {
                             if (ri->y < pos.y)
-                                nw = (shallow ? WV_SHALLOW : WV_DEEP);
+                                north = _get_wave_type(shallow);
                             else
-                                sw = (shallow ? WV_SHALLOW : WV_DEEP);
+                                south = _get_wave_type(shallow);
                         }
-                        else
+                        else if (ri->y == pos.y)
+                        {
+                            if (ri->x < pos.x)
+                                west = _get_wave_type(shallow);
+                            else
+                                east = _get_wave_type(shallow);
+                        }
+                        else // diagonals
+                        {
+                            if (ri->x < pos.x)
+                            {
+                                if (ri->y < pos.y)
+                                    nw = _get_wave_type(shallow);
+                                else
+                                    sw = _get_wave_type(shallow);
+                            }
+                            else
+                            {
+                                if (ri->y < pos.y)
+                                    ne = _get_wave_type(shallow);
+                                else
+                                    se = _get_wave_type(shallow);
+                            }
+                        }
+                    }
+                    if (!feat_has_ink && ink)
+                    {
+                        if (ri->x == pos.x) // orthogonals
                         {
                             if (ri->y < pos.y)
-                                ne = (shallow ? WV_SHALLOW : WV_DEEP);
+                                inkn = true;
                             else
-                                se = (shallow ? WV_SHALLOW : WV_DEEP);
+                                inks = true;
+                        }
+                        else if (ri->y == pos.y)
+                        {
+                            if (ri->x < pos.x)
+                                inkw = true;
+                            else
+                                inke = true;
+                        }
+                        else // diagonals
+                        {
+                            if (ri->x < pos.x)
+                            {
+                                if (ri->y < pos.y)
+                                    inknw = true;
+                                else
+                                    inksw = true;
+                            }
+                            else
+                            {
+                                if (ri->y < pos.y)
+                                    inkne = true;
+                                else
+                                    inkse = true;
+                            }
                         }
                     }
                 }
 
-                // First check for shallow water.
-                if (north == WV_SHALLOW)
-                    m_buf_dngn.add(TILE_WAVE_N, x, y);
-                if (south == WV_SHALLOW)
-                    m_buf_dngn.add(TILE_WAVE_S, x, y);
-                if (east == WV_SHALLOW)
-                    m_buf_dngn.add(TILE_WAVE_E, x, y);
-                if (west == WV_SHALLOW)
-                    m_buf_dngn.add(TILE_WAVE_W, x, y);
+                if (!ink_only)
+                {
+                    // First check for shallow water.
+                    if (north == WV_SHALLOW)
+                        m_buf_dngn.add(TILE_WAVE_N, x, y);
+                    if (south == WV_SHALLOW)
+                        m_buf_dngn.add(TILE_WAVE_S, x, y);
+                    if (east == WV_SHALLOW)
+                        m_buf_dngn.add(TILE_WAVE_E, x, y);
+                    if (west == WV_SHALLOW)
+                        m_buf_dngn.add(TILE_WAVE_W, x, y);
 
-                // Then check for deep water, overwriting shallow
-                // corner waves, if necessary.
-                if (north == WV_DEEP)
-                    m_buf_dngn.add(TILE_WAVE_DEEP_N, x, y);
-                if (south == WV_DEEP)
-                    m_buf_dngn.add(TILE_WAVE_DEEP_S, x, y);
-                if (east == WV_DEEP)
-                    m_buf_dngn.add(TILE_WAVE_DEEP_E, x, y);
-                if (west == WV_DEEP)
-                    m_buf_dngn.add(TILE_WAVE_DEEP_W, x, y);
+                    // Then check for deep water, overwriting shallow
+                    // corner waves, if necessary.
+                    if (north == WV_DEEP)
+                        m_buf_dngn.add(TILE_WAVE_DEEP_N, x, y);
+                    if (south == WV_DEEP)
+                        m_buf_dngn.add(TILE_WAVE_DEEP_S, x, y);
+                    if (east == WV_DEEP)
+                        m_buf_dngn.add(TILE_WAVE_DEEP_E, x, y);
+                    if (west == WV_DEEP)
+                        m_buf_dngn.add(TILE_WAVE_DEEP_W, x, y);
 
-                if (ne == WV_SHALLOW && !north && !east)
-                    m_buf_dngn.add(TILE_WAVE_CORNER_NE, x, y);
-                else if (ne == WV_DEEP && north != WV_DEEP && east != WV_DEEP)
-                    m_buf_dngn.add(TILE_WAVE_DEEP_CORNER_NE, x, y);
-                if (nw == WV_SHALLOW && !north && !west)
-                    m_buf_dngn.add(TILE_WAVE_CORNER_NW, x, y);
-                else if (nw == WV_DEEP && north != WV_DEEP && west != WV_DEEP)
-                    m_buf_dngn.add(TILE_WAVE_DEEP_CORNER_NW, x, y);
-                if (se == WV_SHALLOW && !south && !east)
-                    m_buf_dngn.add(TILE_WAVE_CORNER_SE, x, y);
-                else if (se == WV_DEEP && south != WV_DEEP && east != WV_DEEP)
-                    m_buf_dngn.add(TILE_WAVE_DEEP_CORNER_SE, x, y);
-                if (sw == WV_SHALLOW && !south && !west)
-                    m_buf_dngn.add(TILE_WAVE_CORNER_SW, x, y);
-                else if (sw == WV_DEEP && south != WV_DEEP && west != WV_DEEP)
-                    m_buf_dngn.add(TILE_WAVE_DEEP_CORNER_SW, x, y);
+                    if (ne == WV_SHALLOW && !north && !east)
+                        m_buf_dngn.add(TILE_WAVE_CORNER_NE, x, y);
+                    else if (ne == WV_DEEP && north != WV_DEEP && east != WV_DEEP)
+                        m_buf_dngn.add(TILE_WAVE_DEEP_CORNER_NE, x, y);
+                    if (nw == WV_SHALLOW && !north && !west)
+                        m_buf_dngn.add(TILE_WAVE_CORNER_NW, x, y);
+                    else if (nw == WV_DEEP && north != WV_DEEP && west != WV_DEEP)
+                        m_buf_dngn.add(TILE_WAVE_DEEP_CORNER_NW, x, y);
+                    if (se == WV_SHALLOW && !south && !east)
+                        m_buf_dngn.add(TILE_WAVE_CORNER_SE, x, y);
+                    else if (se == WV_DEEP && south != WV_DEEP && east != WV_DEEP)
+                        m_buf_dngn.add(TILE_WAVE_DEEP_CORNER_SE, x, y);
+                    if (sw == WV_SHALLOW && !south && !west)
+                        m_buf_dngn.add(TILE_WAVE_CORNER_SW, x, y);
+                    else if (sw == WV_DEEP && south != WV_DEEP && west != WV_DEEP)
+                        m_buf_dngn.add(TILE_WAVE_DEEP_CORNER_SW, x, y);
+                }
+
+                // Overlay with ink sheen, if necessary.
+                if (feat_has_ink)
+                    m_buf_dngn.add(TILE_WAVE_INK_FULL, x, y);
+                else
+                {
+                    if (inkn)
+                        m_buf_dngn.add(TILE_WAVE_INK_N, x, y);
+                    if (inks)
+                        m_buf_dngn.add(TILE_WAVE_INK_S, x, y);
+                    if (inke)
+                        m_buf_dngn.add(TILE_WAVE_INK_E, x, y);
+                    if (inkw)
+                        m_buf_dngn.add(TILE_WAVE_INK_W, x, y);
+                    if (inkne || inkn || inke)
+                        m_buf_dngn.add(TILE_WAVE_INK_CORNER_NE, x, y);
+                    if (inknw || inkn || inkw)
+                        m_buf_dngn.add(TILE_WAVE_INK_CORNER_NW, x, y);
+                    if (inkse || inks || inke)
+                        m_buf_dngn.add(TILE_WAVE_INK_CORNER_SE, x, y);
+                    if (inksw || inks || inkw)
+                        m_buf_dngn.add(TILE_WAVE_INK_CORNER_SW, x, y);
+                }
             }
         }
 
