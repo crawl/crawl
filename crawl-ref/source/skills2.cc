@@ -9,6 +9,7 @@
 #include "skills2.h"
 
 #include <algorithm>
+#include <cmath>
 #include <string>
 #include <sstream>
 
@@ -133,14 +134,11 @@ const char *skills[50][6] =
 const char *martial_arts_titles[6] =
     {"Unarmed Combat", "Insei", "Martial Artist", "Black Belt", "Sensei", "Grand Master"};
 
-// The Human aptitude set of 100 for all skills allows to define all other
-// species relative to Humans.
-
 struct species_skill_aptitude
 {
     species_type species;
     skill_type   skill;
-    int aptitude;
+    int aptitude;          // -50..50, with 0 for humans
 
     species_skill_aptitude(species_type _species,
                            skill_type _skill,
@@ -1308,6 +1306,8 @@ static bool _player_knows_aptitudes()
 
 }
 
+static int species_apts(int skill, species_type species);
+
 static void _display_skill_table(bool show_aptitudes, bool show_description)
 {
     menu_letter lcount = 'a';
@@ -1413,7 +1413,7 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
                 else
                 {
                     textcolor(RED);
-                    cprintf(" %3d  ", spec_abil);
+                    cprintf(" %3d  ", species_apts(x, you.species));
                 }
             }
 
@@ -1856,7 +1856,31 @@ unsigned int skill_exp_needed(int lev)
     return 0;
 }
 
-int species_skills(int skill, species_type species)
+// Base skill cost, i.e. old-style human aptitudes.
+static int _base_cost(skill_type skill)
+{
+    switch (skill)
+    {
+    case SK_SPELLCASTING:
+        return 130;
+    case SK_INVOCATIONS:
+    case SK_EVOCATIONS:
+        return 80;
+    default:
+        return 100;
+    }
+}
+
+// What aptitude value corresponds to doubled skill learning
+// (i.e., old-style aptitude 50).
+#define APT_DOUBLE 40
+
+static int _apt_to_cost(skill_type skill, int apt)
+{
+    return (_base_cost(skill) / exp(log(2) * apt / APT_DOUBLE));
+}
+
+static int species_apts(int skill, species_type species)
 {
     static bool spec_skills_initialised = false;
     if (!spec_skills_initialised)
@@ -1875,6 +1899,12 @@ int species_skills(int skill, species_type species)
         spec_skills_initialised = true;
     }
     return _spec_skills[species][skill];
+}
+
+int species_skills(int skill, species_type species)
+{
+    return _apt_to_cost(static_cast<skill_type>(skill),
+                        species_apts(skill, species));
 }
 
 void wield_warning(bool newWeapon)
