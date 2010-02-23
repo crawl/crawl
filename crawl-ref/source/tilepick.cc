@@ -5087,7 +5087,7 @@ void tile_place_monster(int gx, int gy, int idx, bool foreground, bool detected)
             }
         }
     }
-    else if (menv[idx].holiness() == MH_PLANT)
+    else if (mons_is_stationary(&menv[idx]))
     {
         // If necessary add item brand.
         if (you.visible_igrd(gc) != NON_ITEM)
