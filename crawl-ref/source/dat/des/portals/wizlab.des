@@ -402,11 +402,13 @@ COLOUR:     mMV = silver
 TILE:       m = dngn_mirror_wall
 KMONS:      8 = ice statue col:silver spells:blink_other;blink_other;blink_other;\
                     blink_other;blink_other;major_healing name:strange_machine \
-                    name_replace name_descriptor hd:13 hp:120
+                    name_replace name_descriptor hd:13 hp:120 \
+                    tile:mons_statue_guardian
 KITEM:      8 = book of tukima
 KMONS:      9 = ice statue col:silver spells:blink_other;blink_other;blink_other;\
                     blink_other;blink_other;major_healing name:strange_machine \
-                    name_replace name_descriptor hd:13 hp:120
+                    name_replace name_descriptor hd:13 hp:120 \
+                    tile:mons_statue_guardian
 KITEM:      9 = scroll of acquirement
 :           local mquote = '"The machine had stood there a long time. It was several '
 :                  .. "hundred feet long and could run on a thimbleful of earth or"
