@@ -821,8 +821,9 @@ int spellbook_contents( item_def &book, read_book_action_type action,
         if (action == RBOOK_USE_STAFF)
         {
             if (book.base_type == OBJ_BOOKS ?
-                    you.experience_level >= level_diff
+                   (you.experience_level >= level_diff
                     && you.magic_points >= level_diff
+                    && player_can_memorise_from_spellbook(book))
                 : book.plus >= level_diff * ROD_CHARGE_MULT)
             {
                 colour = spell_highlight_by_utility(stype, COL_UNKNOWN);
@@ -835,7 +836,9 @@ int spellbook_contents( item_def &book, read_book_action_type action,
             if (you_cannot_memorise(stype)
                 || you.experience_level < level_diff
                 || spell_levels < levels_req
-                || !spell_skills)
+                || !spell_skills
+                || book.base_type == OBJ_BOOKS
+                   && !player_can_memorise_from_spellbook(book))
             {
                 colour = COL_USELESS;
             }
@@ -896,7 +899,9 @@ int spellbook_contents( item_def &book, read_book_action_type action,
         break;
 
     case RBOOK_READ_SPELL:
-        if (book.base_type == OBJ_BOOKS && in_inventory(book))
+        if (book.base_type == OBJ_BOOKS && in_inventory(book)
+            && item_type_known(book)
+            && player_can_memorise_from_spellbook(book))
         {
             out.cprintf( "Select a spell to read its description or to "
                          "memorise it." EOL );
@@ -1081,9 +1086,9 @@ bool is_valid_spell_in_book( int splbook, int spell )
     return which_spell_in_book(splbook, spell) != SPELL_NO_SPELL;
 }
 
-// Returns false if the player cannot read/memorise from the book,
+// Returns false if the player cannot memorise from the book,
 // and true otherwise. -- bwr
-bool player_can_read_spellbook( const item_def &book )
+bool player_can_memorise_from_spellbook( const item_def &book )
 {
     if (book.base_type != OBJ_BOOKS)
         return (true);
@@ -1170,7 +1175,8 @@ void mark_had_book(int booktype)
 
 int read_book( item_def &book, read_book_action_type action )
 {
-    if (book.base_type == OBJ_BOOKS && !player_can_read_spellbook( book ))
+    if (book.base_type == OBJ_BOOKS && !item_type_known(book)
+        && !player_can_memorise_from_spellbook(book))
     {
         mpr( "This book is beyond your current level of understanding." );
         more();
@@ -1354,7 +1360,7 @@ static bool _get_mem_list(spell_list &mem_spells,
 
         num_books++;
 
-        if (!player_can_read_spellbook(book))
+        if (!player_can_memorise_from_spellbook(book))
         {
             num_unreadable++;
             continue;
@@ -1605,8 +1611,8 @@ static spell_type _choose_mem_spell(spell_list &spells,
 
     if (num_unreadable > 0)
     {
-        more_str += make_stringf(", <lightmagenta>%u unreadable spellbook%s"
-                                   "</lightmagenta>",
+        more_str += make_stringf(", <lightmagenta>%u overly difficult "
+                                 "spellbook%s</lightmagenta>",
                                  num_unreadable,
                                  num_unreadable > 1 ? "s" : "");
     }
@@ -1614,7 +1620,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
     if (num_race > 0)
     {
         more_str += make_stringf(", <lightred>%u spell%s unmemorisable"
-                                   "</lightred>",
+                                 "</lightred>",
                                  num_race,
                                  num_race > 1 ? "s" : "");
     }
