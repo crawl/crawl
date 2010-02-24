@@ -3543,7 +3543,8 @@ harm_protection_type god_protects_from_harm(god_type god, bool actual)
     const int min_piety = piety_breakpoint(0);
     bool praying = (you.duration[DUR_PRAYER]
                     && random2(piety_scale(you.piety)) >= min_piety);
-    bool reliable = (you.piety > 130);
+    bool reliable = (!actual || you.duration[DUR_PRAYER])
+                    && you.piety > 130;
     bool anytime = (one_chance_in(10) ||
                     x_chance_in_y(piety_scale(you.piety), 1000));
     bool penance = (you.penance[god] > 0);
@@ -3562,7 +3563,7 @@ harm_protection_type god_protects_from_harm(god_type god, bool actual)
             return (HPT_ANYTIME);
         break;
     case GOD_ELYVILON:
-        if (!actual || praying || anytime)
+        if (!actual || praying || reliable || anytime)
         {
             if (you.piety >= min_piety)
             {
