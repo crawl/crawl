@@ -996,11 +996,17 @@ int TilesFramework::getch_ck()
 }
 
 static const int map_margin      = 2;
-static const int map_stat_buffer = 4;
+static const int map_stat_margin = 4;
 static const int crt_width       = 80;
 static const int crt_height      = 30;
-static const int margin          = 4;
 
+// Width of status area in characters.
+static const int stat_width      = 42;
+
+/**
+ * Calculates and sets the layout of the main game screen, based on the
+ * available screen estate (window or screensize) and options.
+ */
 void TilesFramework::do_layout()
 {
     // View size in pixels is (m_viewsc * crawl_view.viewsz)
@@ -1009,141 +1015,141 @@ void TilesFramework::do_layout()
 
     crawl_view.viewsz.x = Options.view_max_width;
     crawl_view.viewsz.y = Options.view_max_height;
-    crawl_view.msgsz.x  = crt_width;
-    // What *does* msgsz.y get set to? (jpeg)
-    crawl_view.msgsz.y  = std::max(Options.msg_min_height, crt_height - crawl_view.viewsz.y);
 
     // Initial sizes.
     m_region_tile->dx = m_viewsc.x;
     m_region_tile->dy = m_viewsc.y;
-    m_region_tile->resize(crawl_view.viewsz.x, crawl_view.viewsz.y);
-    m_region_crt->resize(crt_width, crt_height);
-    m_region_stat->resize(crawl_view.hudsz.x, crawl_view.hudsz.y);
-    m_region_msg->resize(crawl_view.msgsz.x, crawl_view.msgsz.y);
-    m_region_map->resize(GXM, GYM);
 
-    // Place regions for normal layer
+    // Locations in pixels. stat_x_divider is the dividing vertical line
+    // between dungeon view on the left and status area on the right.
+    // message_y_divider is the horizontal line between dungeon view on
+    // the top and message window at the bottom.
+    int stat_x_divider = 0;
+    int message_y_divider = 0;
 
-    m_region_tile->place(0, 0, margin);
-    m_region_msg->place(0, m_region_tile->ey - margin, margin);
+    bool message_overlay = Options.tile_force_overlay ? true : false;
 
-    bool message_overlay = false;
-
-    if (m_windowsz.y < m_region_tile->dy * VIEW_MIN_HEIGHT)
+    // Calculating stat_x_divider.
+    // First, the optimal situation: we have screen estate to satisfy
+    // Options.view_max_width, and room for status area with the specified
+    // stat font size.
+    if (std::max(Options.view_max_width, ENV_SHOW_DIAMETER) * m_region_tile->dx
+        + stat_width * m_region_stat->dx <= m_windowsz.x)
     {
-        crawl_view.viewsz.x = VIEW_MIN_WIDTH;
-        crawl_view.viewsz.y = VIEW_MIN_HEIGHT;
-        m_region_tile->place(0, 0, 0);
-        int factor = m_windowsz.y / crawl_view.viewsz.y;
-        m_viewsc.x = m_viewsc.y = std::min(32, factor);
-        m_region_tile->dx = m_viewsc.x;
-        m_region_tile->dy = m_viewsc.y;
-        m_region_tile->resize(crawl_view.viewsz.x, crawl_view.viewsz.y);
-        m_region_msg->place(0, 0, 0);
-        message_overlay = true;
+        stat_x_divider = (std::max(Options.view_max_width, ENV_SHOW_DIAMETER))
+                          * m_region_tile->dx;
     }
+    // If we don't have room for Options.view_max_width, use the maximum space
+    // available.
     else
     {
-        // Shrink viewsz if too wide:
-        while (m_region_tile->wx + m_region_stat->wx > m_windowsz.x
-               && crawl_view.viewsz.x > VIEW_MIN_WIDTH)
+        int available_width_in_tiles = 0;
+
+        available_width_in_tiles = (m_windowsz.x - stat_width
+                                    * m_region_stat->dx) / m_region_tile->dx;
+
+        // Scale the dungeon region tiles so we have enough space to
+        // display full LOS.
+        if (available_width_in_tiles < ENV_SHOW_DIAMETER)
         {
-            crawl_view.viewsz.x -= 2;
-            m_region_tile->mx = crawl_view.viewsz.x;
-            m_region_tile->place(0, 0, margin);
-            m_region_msg->place(0, m_region_tile->ey, margin);
+            m_region_tile->dx = (m_windowsz.x - stat_width * m_region_stat->dx)
+                                / ENV_SHOW_DIAMETER;
+            m_region_tile->dy = m_region_tile->dx;
+            available_width_in_tiles = ENV_SHOW_DIAMETER;
         }
 
-        // Shrink viewsz if too tall (don't consider m_region_msg size
-        // if tile_force_overlay is on):
-        while (m_region_tile->wy +
-               (Options.tile_force_overlay ? 0 : m_region_msg->wy)
-               > m_windowsz.y
-               && crawl_view.viewsz.y > VIEW_MIN_HEIGHT)
-        {
-            crawl_view.viewsz.y -= 2;
-            m_region_tile->my = crawl_view.viewsz.y;
-            m_region_tile->place(0, 0, margin);
-            m_region_msg->place(0, m_region_tile->ey, margin);
-        }
-
-        // Shrink msgsz if too tall (it is assumed that users of
-        // tile_force_overlay never want to shrink message window):
-        while (m_region_tile->wy + m_region_msg->wy > m_windowsz.y
-               && crawl_view.msgsz.y > Options.msg_min_height
-               && !Options.tile_force_overlay)
-        {
-            m_region_msg->resize(m_region_msg->mx, --crawl_view.msgsz.y);
-        }
-
-        // Use overlaid message window if the normal one doesn't fit; or
-        // if tile_force_overlay is on:
-        if (m_region_tile->wy + m_region_msg->wy > m_windowsz.y
-            || Options.tile_force_overlay)
-        {
-            m_region_tile->place(0, 0, 0);
-            m_region_msg->place(0, 0, 0);
-            message_overlay = true;
-        }
-
+        stat_x_divider = available_width_in_tiles * m_region_tile->dx;
     }
 
+    // Calculate message_y_divider. First off, if we have already decided to
+    // use the overlay, we can place the divider to the bottom of the screen.
     if (message_overlay)
     {
-        m_region_msg->resize_to_fit(m_region_tile->ex, m_region_msg->ey);
-        m_region_msg->ex = m_region_tile->ex;
+        message_y_divider = m_windowsz.y;
+    }
+
+    // Then, the optimal situation without the overlay - we can fit both
+    // Options.view_max_height and at least Options.msg_min_height in the space.
+    if (std::max(Options.view_max_height, ENV_SHOW_DIAMETER)
+        * m_region_tile->dy + Options.msg_min_height
+        * m_region_msg->dy
+        <= m_windowsz.y && !message_overlay)
+    {
+        message_y_divider = std::max(Options.view_max_height, ENV_SHOW_DIAMETER)
+                            * m_region_tile->dy;
+        //TODO: respect Options.msg_max_height
     }
     else
     {
-        m_region_msg->resize_to_fit(m_region_tile->wx,
-                                    m_windowsz.y - m_region_msg->sy);
-        int msg_y = std::min(Options.msg_max_height, (int) m_region_msg->my);
-        m_region_msg->resize(m_region_msg->mx, msg_y);
+        int available_height_in_tiles = 0;
+        available_height_in_tiles = (m_windowsz.y - (message_overlay
+                                     ? 0 : (Options.msg_min_height
+                                     * m_region_msg->dy)))
+                                     / m_region_tile->dy;
 
-        m_region_msg->ex = m_region_tile->ex;
-        m_region_msg->ey = m_windowsz.y;
+        // If we can't fit the full LOS to the available space, try using the
+        // message overlay.
+        if (available_height_in_tiles < ENV_SHOW_DIAMETER)
+        {
+            message_y_divider = m_windowsz.y;
+            message_overlay = true;
+
+            // If using message_overlay isn't enough, scale the dungeon region
+            // tiles to fit full LOS into the available space.
+            if (m_windowsz.y / m_region_tile->dy < ENV_SHOW_DIAMETER)
+            {
+                m_region_tile->dy = m_windowsz.y / ENV_SHOW_DIAMETER;
+                m_region_tile->dx = m_region_tile->dy;
+            }
+        }
+        else
+        {
+            message_y_divider = available_height_in_tiles * m_region_tile->dy;
+        }
     }
-    m_region_msg->set_overlay(message_overlay);
+
+    // Resize and place the dungeon region.
+    m_region_tile->resize_to_fit(stat_x_divider, message_y_divider);
+    m_region_tile->place(0, 0, 0);
+
+    crawl_view.viewsz.x = m_region_tile->mx;
+    crawl_view.viewsz.y = m_region_tile->my;
+
+    // Resize and place the message window.
+    if (message_overlay)
+    {
+       m_region_msg->place(0, 0, 0); // TODO: Maybe add an option to place
+                                     // overlay at the bottom.
+       m_region_msg->resize_to_fit(stat_x_divider, Options.msg_min_height
+                                   * m_region_msg->dy);
+       m_region_msg->set_overlay(message_overlay);
+    }
+    else
+    {
+        m_region_msg->resize_to_fit(stat_x_divider, m_windowsz.y
+                                    - message_y_divider);
+        m_region_msg->place(0, m_region_tile->ey, 0);
+    }
+
     crawl_view.msgsz.x = m_region_msg->mx;
     crawl_view.msgsz.y = m_region_msg->my;
 
-    // Shrink view width if stat window can't fit...
-    int stat_col;
-    crawl_view.viewsz.x += 2;
-    do
-    {
-        crawl_view.viewsz.x -= 2;
-        m_region_tile->mx = crawl_view.viewsz.x;
-        m_region_tile->place(0, 0, margin);
+    m_region_stat->resize_to_fit(m_windowsz.x - stat_x_divider, m_windowsz.y);
+    m_region_stat->place(stat_x_divider + map_stat_margin, 0, 0);
 
-        stat_col = m_region_tile->ex + map_stat_buffer;
-        m_region_stat->place(stat_col, 0, 0);
-        m_region_stat->resize_to_fit(m_windowsz.x - m_region_stat->sx,
-                                     m_region_stat->wy);
-    }
-    while (m_region_stat->ex > m_windowsz.x
-           && crawl_view.viewsz.x > VIEW_MIN_WIDTH);
-
-    // Determine the maximum width.
-    m_region_stat->resize_to_fit(m_windowsz.x - m_region_stat->sx,
-                                 m_region_stat->wy);
-
-    // Grow HUD horizontally if there's room.
-    const int max_hud_width = 50;
-    int hud_width = std::min(m_region_stat->mx, max_hud_width);
-    m_region_stat->resize(hud_width, m_region_stat->my);
-    crawl_view.hudsz.x = m_region_stat->mx;
-    crawl_view.hudsz.y = m_region_stat->my;
-
-    // Resize map to fit the screen
+    // Fit the minimap into place.
     m_region_map->dx = m_region_map->dy = Options.tile_map_pixels;
-    m_region_map->place(stat_col, m_region_stat->ey, map_margin);
-    while (m_region_map->ex > m_windowsz.x)
+
+    if (GXM * m_region_map->dx > m_windowsz.x - stat_x_divider)
     {
-        m_region_map->dx--;
-        m_region_map->dy--;
-        m_region_map->resize(GXM, GYM);
+        m_region_map->dx = (m_windowsz.x - stat_x_divider - map_margin * 2)
+                            / GXM;
+        m_region_map->dy = m_region_map->dx;
     }
+
+    m_region_map->resize(GXM, GYM);
+    m_region_map->place(stat_x_divider + map_stat_margin,
+                        m_region_stat->ey, map_margin);
 
     // If show_gold_turns isn't turned on, try turning it on if there's room.
     if (!Options.show_gold_turns)
@@ -1159,9 +1165,9 @@ void TilesFramework::do_layout()
     }
 
     // Place regions for crt layer
-    m_region_crt->place(0, 0, margin);
+    m_region_crt->place(0, 0, 0);
     m_region_crt->resize_to_fit(m_windowsz.x, m_windowsz.y);
-    m_region_menu->place(0, 0, margin);
+    m_region_menu->place(0, 0, 0);
     m_region_menu->resize_to_fit(m_windowsz.x, m_windowsz.y);
 
     crawl_view.init_view();
@@ -1185,7 +1191,7 @@ bool TilesFramework::layout_statcol(bool message_overlay, bool show_gold_turns)
     m_region_tab->resize(std::min(13, (int)m_region_tab->mx),
                          std::min( 6, (int)m_region_tab->my));
 
-    int self_inv_y = m_windowsz.y - m_region_tab->wy - margin;
+    int self_inv_y = m_windowsz.y - m_region_tab->wy;
     m_region_tab->place(inv_col, self_inv_y);
 
     // recenter map above inventory
