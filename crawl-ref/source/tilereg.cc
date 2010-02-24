@@ -1202,6 +1202,7 @@ void DungeonRegion::pack_buffers()
     pack_cursor(CURSOR_TUTORIAL, TILE_TUTORIAL_CURSOR);
     pack_cursor(CURSOR_MOUSE, you.see_cell(m_cursor[CURSOR_MOUSE]) ? TILE_CURSOR
                                                                    : TILE_CURSOR2);
+    pack_cursor(CURSOR_MAP, TILE_CURSOR);
 
     if (m_cursor[CURSOR_TUTORIAL] != NO_CURSOR
         && on_screen(m_cursor[CURSOR_TUTORIAL]))

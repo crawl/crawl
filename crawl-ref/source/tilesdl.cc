@@ -463,53 +463,14 @@ void TilesFramework::load_dungeon(unsigned int *tileb, const coord_def &gc)
 
 void TilesFramework::load_dungeon(const coord_def &cen)
 {
-    int wx = m_region_tile->mx;
-    int wy = m_region_tile->my;
-    unsigned int *tb = (unsigned int*)alloca(sizeof(unsigned int) *
-                                             wy * wx * 2);
+    unwind_var<coord_def> viewp(crawl_view.viewp, cen - crawl_view.viewhalfsz);
+    unwind_var<coord_def> vgrdc(crawl_view.vgrdc, cen);
+    unwind_var<coord_def> vlos1(crawl_view.vlos1);
+    unwind_var<coord_def> vlos2(crawl_view.vlos2);
 
-    bool draw_los = you.on_current_level;
-
-    int count = 0;
-    for (int y = 0; y < wy; y++)
-        for (int x = 0; x < wx; x++)
-        {
-            unsigned int fg;
-            unsigned int bg;
-
-            const coord_def gc(cen.x + x - wx/2,
-                               cen.y + y - wy/2);
-            const coord_def ep = view2show(grid2view(gc));
-
-            // mini "viewwindow" routine
-            if (!map_bounds(gc))
-            {
-                fg = 0;
-                bg = TILE_DNGN_UNSEEN;
-            }
-            else if (!crawl_view.in_grid_los(gc) || !env.show(ep) || !draw_los)
-            {
-                fg = env.tile_bk_fg(gc);
-                bg = env.tile_bk_bg(gc);
-                if (!fg && !bg)
-                    tileidx_unseen(fg, bg, get_map_knowledge_char(gc), gc);
-                bg |= tile_unseen_flag(gc);
-            }
-            else
-            {
-                fg = env.tile_fg[ep.x][ep.y];
-                bg = env.tile_bg[ep.x][ep.y];
-            }
-
-            if (gc == cen)
-                bg |= TILE_FLAG_CURSOR1;
-
-            tb[count++] = fg;
-            tb[count++] = bg;
-        }
-
-    load_dungeon(tb, cen);
-    tiles.redraw();
+    crawl_view.calc_vlos();
+    viewwindow(false, false);
+    tiles.place_cursor(CURSOR_MAP, cen);
 }
 
 void TilesFramework::resize()
