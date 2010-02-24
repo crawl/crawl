@@ -1269,9 +1269,59 @@ static bool _is_signature_weapon(monsters *monster, const item_def &weapon)
     if (monster->type == MONS_DAEVA)
         return (weapon.sub_type == WPN_HOLY_EUDEMON_BLADE);
 
-    // We might allow Sigmund to pick up a better scythe if he finds one...
-    if (monster->type == MONS_SIGMUND)
-        return (weapon.sub_type == WPN_SCYTHE);
+    // Some other uniques have a signature weapon, usually because they
+    // always spawn with it, or because it is referenced in their speech
+    // and/or descriptions.
+    // Upgrading to a similar type is pretty much always allowed, unless
+    // we are more interested in the brand, and the brand is *rare*.
+    if (mons_is_unique(monster->type))
+    {
+        // We might allow Sigmund to pick up a better scythe if he finds one...
+        if (monster->type == MONS_SIGMUND)
+            return (weapon.sub_type == WPN_SCYTHE);
+
+        // Crazy Yiuf's got MONUSE_STARTING_EQUIPMENT right now, but
+        // in case that ever changes we don't want him to swap away
+        // from his quarterstaff of chaos.
+        if (monster->type == MONS_CRAZY_YIUF)
+            return (false);
+
+        // Distortion/chaos is immensely flavourful, and we shouldn't
+        // allow her to switch away from it.
+        if (monster->type == MONS_PSYCHE)
+            return (false);
+
+        // Don't switch away from the customary scimitar of flaming.
+        if (monster->type == MONS_AZRAEL)
+            return (false);
+
+        if (monster->type == MONS_AGNES)
+            return (weapon.sub_type == WPN_LAJATANG);
+
+        if (monster->type == MONS_EDMUND)
+        {
+            return (weapon.sub_type == WPN_FLAIL
+                    || weapon.sub_type == WPN_SPIKED_FLAIL
+                    || weapon.sub_type == WPN_DIRE_FLAIL);
+        }
+
+        if (monster->type == MONS_PIKEL)
+            return (weapon.sub_type == WPN_WHIP);
+
+        if (monster->type == MONS_WAYNE)
+            return (weapon_skill(weapon) == SK_AXES);
+
+        if (monster->type == MONS_NIKOLA)
+            return (get_weapon_brand(weapon) == SPWPN_ELECTROCUTION);
+
+        // Technically, this includes knives, but it would have to be
+        // a superpowered knife to be an upgrade to a short sword.
+        if (monster->type == MONS_DUVESSA)
+        {
+            return (weapon_skill(weapon) == SK_SHORT_BLADES
+                    || weapon_skill(weapon) == SK_LONG_BLADES);
+        }
+    }
 
     if (is_unrandom_artefact(weapon))
     {
