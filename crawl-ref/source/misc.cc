@@ -2366,6 +2366,9 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     if (you.level_type == LEVEL_ABYSS)
         save_abyss_uniques();
 
+    // XXX: Obsolete, now that labyrinth entrances are only placed via Lua
+    //      with timed markes. Leaving in to reduce the chance of an
+    //      accidental permanent labyrinth entry. [rob]
     if (stair_find == DNGN_ENTER_LABYRINTH)
         dungeon_terrain_changed(you.pos(), DNGN_STONE_ARCH);
 
