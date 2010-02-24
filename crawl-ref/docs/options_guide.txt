@@ -1292,11 +1292,11 @@ show_more = true
         if more than a window-full of messages are output at once. This
         options has no effect if clear_messages is set.
 
-small_more = true
-        With small_more = false, the --more-- prompt is on a separate
-        line at the bottom of the message window. With small_more = true
-        (default), it is just the bottom left character if clear_messages
-        is not set.
+small_more = false
+        With small_more = false (default), the --more-- prompt is on a 
+        separate line at the bottom of the message window. With 
+        small_more = true, it is just the bottom left character if 
+        clear_messages is not set.
 
 show_inventory_weights = false
         When this is set to true, inventory listings will mention the
