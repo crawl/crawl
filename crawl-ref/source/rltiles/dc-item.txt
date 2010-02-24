@@ -181,13 +181,26 @@ i-sleep BRAND_SLEEP
 
 ######OBJ_MISSILES
 stone MI_STONE
+# flying stone
 effect/stone0 MI_STONE0
-sling_bullet MI_SLING_BULLET
-sling_bullet_runed
+
+sling_bullet1 MI_SLING_BULLET
+sling_bullet2
+steel_sling_bullet1 MI_SLING_BULLET_STEEL
+steel_sling_bullet2
+silver_sling_bullet1 MI_SLING_BULLET_SILVER
+silver_sling_bullet2
+# flying bullets
 effect/sling_bullet0 MI_SLING_BULLET0
 effect/sling_bullet_runed0
-arrow MI_ARROW
-arrow_runed
+
+arrow1 MI_ARROW
+arrow2
+steel_arrow1 MI_ARROW_STEEL
+steel_arrow2
+silver_arrow1 MI_ARROW_SILVER
+silver_arrow2
+# flying arrows
 effect/arrow0 MI_ARROW0
 effect/arrow1 MI_ARROW1
 effect/arrow2 MI_ARROW2
@@ -197,8 +210,13 @@ effect/arrow5 MI_ARROW5
 effect/arrow6 MI_ARROW6
 effect/arrow7 MI_ARROW7
 
-crossbow_bolt MI_BOLT
-crossbow_bolt_runed
+crossbow_bolt1 MI_BOLT
+crossbow_bolt2
+steel_crossbow_bolt1 MI_BOLT_STEEL
+steel_crossbow_bolt2
+silver_crossbow_bolt1 MI_BOLT_SILVER
+silver_crossbow_bolt2
+# flying bolts
 effect/bolt0 MI_BOLT0
 effect/bolt1 MI_BOLT1
 effect/bolt2 MI_BOLT2
@@ -208,11 +226,14 @@ effect/bolt5 MI_BOLT5
 effect/bolt6 MI_BOLT6
 effect/bolt7 MI_BOLT7
 
-dart MI_DART
-dart_runed
+dart1 MI_DART
+dart2
 dart-p MI_DART_POISONED
-steel_dart MI_DART_STEEL
-silver_dart MI_DART_SILVER
+steel_dart1 MI_DART_STEEL
+steel_dart2
+silver_dart1 MI_DART_SILVER
+silver_dart2
+# flying darts
 effect/dart0 MI_DART0
 effect/dart1 MI_DART1
 effect/dart2 MI_DART2
@@ -222,8 +243,10 @@ effect/dart5 MI_DART5
 effect/dart6 MI_DART6
 effect/dart7 MI_DART7
 
-needle MI_NEEDLE
+needle1 MI_NEEDLE
+needle2
 needle-p MI_NEEDLE_P
+# flying needles
 effect/needle0 MI_NEEDLE0
 effect/needle1 MI_NEEDLE1
 effect/needle2 MI_NEEDLE2
@@ -233,8 +256,13 @@ effect/needle5 MI_NEEDLE5
 effect/needle6 MI_NEEDLE6
 effect/needle7 MI_NEEDLE7
 
-javelin MI_JAVELIN
-javelin_runed
+javelin1 MI_JAVELIN
+javelin2
+steel_javelin1 MI_JAVELIN_STEEL
+steel_javelin2
+silver_javelin1 MI_JAVELIN_SILVER
+silver_javelin2
+# flying javelins
 effect/javelin0 MI_JAVELIN0
 effect/javelin1 MI_JAVELIN1
 effect/javelin2 MI_JAVELIN2
@@ -245,6 +273,7 @@ effect/javelin6 MI_JAVELIN6
 effect/javelin7 MI_JAVELIN7
 
 throwing_net MI_THROWING_NET
+# flying nets
 effect/throwing_net0 MI_THROWING_NET0
 effect/throwing_net1 MI_THROWING_NET1
 effect/throwing_net2 MI_THROWING_NET2
@@ -255,6 +284,7 @@ effect/throwing_net6 MI_THROWING_NET6
 effect/throwing_net7 MI_THROWING_NET7
 
 rock MI_LARGE_ROCK
+# flying rock
 effect/rock0 MI_LARGE_ROCK0
 
 ######OBJ_ARMOUR
