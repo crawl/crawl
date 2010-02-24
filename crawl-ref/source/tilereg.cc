@@ -1156,6 +1156,22 @@ void DungeonRegion::pack_cursor(cursor_type type, unsigned int tile)
     m_buf_main.add(tile, gc.x - m_cx_to_gx, gc.y - m_cy_to_gy);
 }
 
+static void _lichform_add_weapon(SubmergedTileBuffer &buf, int x, int y,
+                                 bool in_water)
+{
+    const int item = you.equip[EQ_WEAPON];
+    if (item == -1)
+        return;
+
+    const int wep = tilep_equ_weapon(you.inv[item]);
+    if (!wep)
+        return;
+
+//     const int offs_x = x - 1;
+//     const int offs_y = y;
+    buf.add(wep, x, y, 0, in_water, false, -1, 0);
+}
+
 void DungeonRegion::pack_buffers()
 {
     m_buf_dngn.clear();
@@ -1192,6 +1208,8 @@ void DungeonRegion::pack_buffers()
             else if (fg_idx >= TILE_MAIN_MAX)
             {
                 m_buf_doll.add(fg_idx, x, y, 0, in_water, false);
+                if (fg_idx == TILEP_TRAN_LICH)
+                    _lichform_add_weapon(m_buf_doll, x, y, in_water);
             }
 
             pack_foreground(bg, fg, x, y);
