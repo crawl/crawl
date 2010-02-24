@@ -911,7 +911,8 @@ void viewwindow(bool monster_updates, bool show_updates)
 
 #ifdef USE_TILE
     tiles.clear_text_tags(TAG_NAMED_MONSTER);
-    mcache.clear_nonref();
+    if (show_updates)
+        mcache.clear_nonref();
 #endif
 
     if (show_updates)
