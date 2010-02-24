@@ -5204,6 +5204,9 @@ void tile_draw_rays(bool reset_count)
 
 static bool _suppress_blood(const coord_def pos)
 {
+    if (!you.see_cell(pos))
+        return (true);
+
     const dungeon_feature_type feat = grd(pos);
     if (feat == DNGN_TREES)
         return (true);
