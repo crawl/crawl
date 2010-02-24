@@ -961,12 +961,12 @@ void viewwindow(bool monster_updates, bool show_updates)
         }
         else if (!crawl_view.in_grid_los(gc))
             draw_outside_los(&buffy[bufcount], gc);
-        else if (gc == you.pos()
+        else if (gc == you.pos() && you.on_current_level
                  && !crawl_state.arena && !crawl_state.arena_suspended)
         {
             draw_player(&buffy[bufcount], gc, ep);
         }
-        else if (you.see_cell(gc))
+        else if (you.see_cell(gc) && you.on_current_level)
             draw_los(&buffy[bufcount], gc, ep);
         else
             draw_los_backup(&buffy[bufcount], gc, ep);

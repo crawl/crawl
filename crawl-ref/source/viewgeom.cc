@@ -328,8 +328,7 @@ void crawl_view_geometry::set_player_at(const coord_def &c, bool centre)
     glos1 = c - coord_def(LOS_RADIUS, LOS_RADIUS);
     glos2 = c + coord_def(LOS_RADIUS, LOS_RADIUS);
 
-    vlos1 = glos1 - vgrdc + view_centre();
-    vlos2 = glos2 - vgrdc + view_centre();
+    calc_vlos();
 
     last_player_pos = c;
 }
@@ -383,4 +382,8 @@ void crawl_view_geometry::init_geometry()
     return;
 }
 
-
+void crawl_view_geometry::calc_vlos()
+{
+    vlos1 = glos1 - vgrdc + view_centre();
+    vlos2 = glos2 - vgrdc + view_centre();
+}
