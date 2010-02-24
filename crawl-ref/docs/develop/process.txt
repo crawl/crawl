@@ -7,12 +7,9 @@ Development communication channels
 ----------------------------------
 
 The official development channels of are the mailing lists crawl-ref-discuss
-and crawl-ref-devel. Additionally, an issue tracker is used at SourceForge,
-and there is an IRC channel, ##crawl-dev, on Freenode.
-
-We are currently in the process of migrating the issue tracker from
-SourceForge to self-managed Mantis on http://crawl.develz.org/mantis/. As the
-dust settles, this document will be adjusted accordingly.
+and crawl-ref-devel on SourceForge. Additionally, a Mantis issue tracker and
+a Dokuwiki wiki are used at http://crawl.develz.org/mantis/, and there is an
+IRC channel, ##crawl-dev, on Freenode.
 
 Mailing lists
 -------------
@@ -38,30 +35,31 @@ The replies to commit mails should be posted to crawl-ref-discuss.
 crawl-ref-builds generates automatic summary messages from Crawl BuildBot.
 Again, the replies should go to crawl-ref-discuss.
 
-The SourceForge tracker
------------------------
+The mailing lists archives can be browsed, and the lists themselves joined at
+http://sourceforge.net/mail/?group_id=143991
 
-The SourceForge page has issue trackers for bugs, feature requests, patches
-and support requests. Issues can be filed and comments on issues can be added
-by anybody without a need for SourceForge account, although signing your
-submissions with a name or nickname is preferred. Please search the tracker
-for similar items and duplicates before submitting a new item. Note that it
-is often better to use the filter bar (the Keyword field especially) than the
-tracker search for this (best to check with both though).
+The CDO tracker and wiki
+------------------------
+
+The Mantis issue tracker is used to track bug reports, feature requests,
+graphic, vault and code patches and support requests. Wiki is used to leave
+feedback, discuss new and overhauled features ("brainstorm") and otherwise
+store and edit content and documentation as necessary. The general workflow
+is to iterate ideas and feedback over in the wiki, and then post readily
+implementable proposals on the tracker. Small items can be posted to the
+tracker directly.
+
+To report issues or post comments to the tracker, or to edit the wiki, you
+need to register. The tracker and wiki can be browsed without logging in.
+Please search the tracker and wiki for similar items and duplicates before
+submitting a new item.
 
 Developers can assign issues to themselves or other developers. Self-assignment
 is used if the developer is working on the issue. Assigning to someone else is
 used if something's in their area of expertise or assigner wants their opinion.
 Either way, the reason for changing the assignment should be mentioned in the
-message.
-
-For feature requests, priority is used generally like this: 5 is the
-starting point, where there is not yet developer opinion if the suggested
-change/addition is supported. At priority 6 and above, the FR is seen as
-desirable. At priority 4 and below, the FR is considered ok but not
-essential. At priority 1, the FR is considered as turned down and to be
-closed soon. When closing, good ideas (often from comments) should be saved
-to other (possibly new) FRs.
+message. When closing, good ideas (often from comments) should be saved to
+other (possibly new) FRs, or to the wiki.
 
 IRC
 ---
