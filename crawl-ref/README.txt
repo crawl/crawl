@@ -52,6 +52,7 @@ The following files in the Crawl's main folder are essential:
 The docs/ folder contains the following helpful texts (all of which can be
 read in-game by bringing up the help menu with '?'):
 
+* quickstart.txt     A very short introduction into the game.
 * crawl_manual.txt   The complete manual; describing all aspects in detail.
                      Contains appendices on species, classes, etc.
 * options_guide.txt  Describes all options in detail. The structure of
@@ -71,7 +72,7 @@ The settings/ folder contains, among others, the following files:
 3. Contact and reporting bugs
 -----------------------------
 The official webpage is at
-      http://crawl-ref.sourceforge.net/
+      http://crawl.develz.org/
 and there you can find both trackers to add bug reports, feature requests, or
 upload patches, as well as sources and binaries. This is the best way to report
 bugs or mention new ideas.
@@ -119,14 +120,13 @@ of ways to do so:
 At any time, there will be bugs -- playing and reporting these is a great help.
 There is a beta server at http://crawl.develz.org. Besides pointing out bugs,
 new ideas on how to improve interface or gameplay are welcome. You can mention
-them at the homepage, http://crawl-ref.sourceforge.net.
+them again at the homepage, http://crawl.develz.org/mantis/.
 
 * Vault making.
 Crawl uses many hand-drawn (but often randomised) maps. Making them is fun and
-easy. It's best to start with simple entry vaults (glance through
-dat/entry.des for a first impression). Later, you may want to read
-docs/develop/levels/introduction.txt. If you're ambitious, new maps for branch
-ends are possible, as well.
+easy. It's best to start with simple entry vaults (look at dat/entry.des for a
+first impression). Later, you may read docs/develop/levels/introduction.txt.
+If you're ambitious, new maps for branch ends are possible, as well.
 If you've made some maps, you can test them on your system (no compiling
 needed) and then just mail them to the mailing list.
 
@@ -157,8 +157,7 @@ tell us via the list.
 If you like to, you can download the source code and apply patches. Both
 patches for bug fixes as well as implementation of new features are very much
 welcome. If you want to code a cool feature that is likely to be accepted but
-unlikely to be coded by the devteam, search the Feature Requests tracker on
-the Sourceforge site for Groups "Patches Welcome".
+unlikely to be coded by the devteam, please ask on the IRC channel ##crawl-dev.
 Please be sure to read docs/develop/coding_conventions.txt first.
 
 Thank you, and have fun crawling!
