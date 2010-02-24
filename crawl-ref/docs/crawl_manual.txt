@@ -1214,7 +1214,7 @@ players, especially those on crawl.akrasiac.org, also frequent ##crawl
 on IRC's freenode network.
 
 Stone Soup's homepage is at
-      http://crawl-ref.sourceforge.net
+      http://crawl.develz.org
 Use this page for direct links to downloads of the most recent version.
 You can also submit bug reports and feature requests there. Be sure to
 make sure that your bug/feature isn't already in the list. For more
