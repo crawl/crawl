@@ -127,7 +127,11 @@ sub aptitude_table {
 
       my $cwidth = length($abbr);
       $cwidth = 3 if $cwidth < 3;
-      $line .= sprintf("%*d", $cwidth, $skill);
+      my $fmt = "%+*d";
+      if ($skill == 0 || $abbr eq "Exp") {
+          $fmt = "%*d";
+      }
+      $line .= sprintf($fmt, $cwidth, $skill);
     }
     $text .= "$line\n";
   }
