@@ -810,13 +810,7 @@ static bool _player_has_enough_food()
         if (food_is_rotten(item) && !player_mutation_level(MUT_SAPROVOROUS))
             continue;
 
-        if (is_poisonous(item))
-            continue;
-
-        if (is_mutagenic(item))
-            continue;
-
-        if (causes_rot(item))
+        if (is_bad_food(item))
             continue;
 
         // Vampires can only drain corpses.
@@ -1103,12 +1097,6 @@ void eat_floor_item(int item_link)
     dec_mitm_item_quantity( item_link, 1 );
 }
 
-static bool _is_bad_food(item_def food)
-{
-    return (is_poisonous(food) || is_mutagenic(food)
-            || is_forbidden_food(food) || causes_rot(food));
-}
-
 // Returns which of two food items is older (true for first, else false).
 struct compare_by_freshness
 {
@@ -1138,9 +1126,9 @@ struct compare_by_freshness
             || food1->sub_type == FOOD_CHUNK && food2->sub_type == FOOD_CHUNK)
         {
             // Always offer poisonous/mutagenic chunks last.
-            if (_is_bad_food(*food1) && !_is_bad_food(*food2))
+            if (is_bad_food(*food1) && !is_bad_food(*food2))
                 return (false);
-            if (_is_bad_food(*food2) && !_is_bad_food(*food1))
+            if (is_bad_food(*food2) && !is_bad_food(*food1))
                 return (true);
 
             if (Options.prefer_safe_chunks)
@@ -1534,7 +1522,7 @@ int prompt_eat_chunks()
                                                             MSGCH_PROMPT);
 
             const bool contam = is_contaminated(*item);
-            const bool bad    = _is_bad_food(*item);
+            const bool bad    = is_bad_food(*item);
             // Exempt undead from auto-eating since:
             //  * Mummies don't eat.
             //  * Vampire feeding takes a lot more time than eating a chunk
@@ -2276,6 +2264,12 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
         lessen_hunger(food_value / duration, !start_feeding);
 }
 
+bool is_bad_food(const item_def &food)
+{
+    return (is_poisonous(food) || is_mutagenic(food)
+            || is_forbidden_food(food) || causes_rot(food));
+}
+
 // Returns true if a food item (also corpses) is poisonous AND the player
 // is not (known to be) poison resistant.
 bool is_poisonous(const item_def &food)
@@ -2424,7 +2418,7 @@ bool is_preferred_food(const item_def &food)
         return (false);
 
     // Poisoned, mutagenic, etc. food should never be marked as "preferred".
-    if (_is_bad_food(food))
+    if (is_bad_food(food))
         return (false);
 
     // Honeycombs are tasty for everyone.
