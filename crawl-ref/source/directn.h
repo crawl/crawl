@@ -166,10 +166,10 @@ private:
     // an orcish robe (miasma, silenced, almost dead)
     // OR:
     // Apport: A short sword.
-    void print_target_description() const;
+    void print_target_description(bool &did_cloud) const;
 
     // Helper functions for the above.
-    void print_target_monster_description() const;
+    void print_target_monster_description(bool &did_cloud) const;
     void print_target_object_description() const;
 
     // You see 2 +3 dwarven bolts here.
@@ -250,7 +250,7 @@ private:
 
     // Default behaviour, saved across instances.
     static targeting_behaviour stock_behaviour;
-    
+
 };
 
 void direction(dist &moves, const direction_chooser_args& args);

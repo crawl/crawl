@@ -368,7 +368,7 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
     los_def ld(where, opc_no_actor);
 
     if (monster_descriptor(corpse.plus, MDSC_LEAVES_HIDE)
-            && mons_genus(corpse.plus) == MONS_DRAGON)
+        && mons_genus(corpse.plus) == MONS_DRAGON)
     {
         // Uh... dragon hide is tough stuff and it keeps the monster in
         // one piece?  More importantly, it prevents a flavor feature
@@ -385,7 +385,7 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
     int ntries = 0;
 
     corpse.base_type = OBJ_FOOD;
-    corpse.sub_type = FOOD_CHUNK;
+    corpse.sub_type  = FOOD_CHUNK;
 
     int blood = nchunks * 3;
 
@@ -404,10 +404,10 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
 
         dprf("Trying to scatter chunk to %d, %d...", cp.x, cp.y);
 
-        if (! in_bounds(cp))
+        if (!in_bounds(cp))
             continue;
 
-        if (! ld.see_cell(cp))
+        if (!ld.see_cell(cp))
             continue;
 
         dprf("Cell is visible...");
