@@ -51,6 +51,8 @@ public:
     void set_player_at(const coord_def &c, bool force_centre = false);
     // Set new location, but preserve scrolling as if the player didn't move.
     void shift_player_to(const coord_def &c);
+    // Recalculate vlos1 and vlos2.
+    void calc_vlos();
 
     coord_def view_centre() const
     {
