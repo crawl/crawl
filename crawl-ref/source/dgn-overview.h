@@ -17,7 +17,7 @@ bool overview_knows_portal(dungeon_feature_type portal);
 int  overview_knows_num_portals(dungeon_feature_type portal);
 void display_overview();
 bool unnotice_feature(const level_pos &pos);
-std::string overview_description_string();
+std::string overview_description_string(bool display);
 
 ///////////////////////////////////////////////////////////
 void set_level_annotation(std::string str,
