@@ -1167,8 +1167,6 @@ static void _lichform_add_weapon(SubmergedTileBuffer &buf, int x, int y,
     if (!wep)
         return;
 
-//     const int offs_x = x - 1;
-//     const int offs_y = y;
     buf.add(wep, x, y, 0, in_water, false, -1, 0);
 }
 
