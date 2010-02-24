@@ -703,7 +703,7 @@ void game_options::reset_options()
 
     clear_messages         = false;
     show_more              = true;
-    small_more             = true;
+    small_more             = false;
 
     pickup_dropped         = false;
     pickup_thrown          = true;
