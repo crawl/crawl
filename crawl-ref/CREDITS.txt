@@ -20,32 +20,32 @@ contributed to Dungeon Crawl Stone Soup:
 Warwick Allison              Chris Hamons              Dylan O'Donnell
 Juha Arpiainen               R. Dan Henry              Yuuma Oohara
 Roy Axenov                   Brendan Hickey            Pedro
-Max Bane                     Benoit Hudson             Erik Piper
-Bill Beher                   Sylvia 'Onia' Hörnke      Lemuel Pitkin
-Alexander Beisig             Iainuki                   Derek Ray
-Stu Black                    Ilyak                     Remsleep
-Erik Inge Bolsø              Matthew Ince              Will Rogers
-Peter Borgmann               Mitsuhiro Itakura         David Rose
-Daniel Mark Brownrigg        Mikko Juola               Sebastian Salman
-Trent W. Buck                Jarmo Kielosto            Brett Scarborough
-Robert Burnham               Kornel Kisielewicz        Darshan Shaligram
-Joe Buzzelli                 Daniel Klein              Robert Shimmin
-Terje Bø                     Vambola Kotkas            Sigurd
-Henry Cipolla                Ryan Kusnery              Edgar Simo
-Aaron Curtis                 Jukka Kuusisto            Alex Smith
-Denzi                        Janne Lahdenperä          Solf
-Rachel Elizabeth Dillon      Maciej Lapinski           Michael Spang
-Mike Drinen                  Jordan Lewis              Johan Strandell
-Kieron Dunbar                Icy Lich                  Roman Sêk
-Micha Elsner                 Markus Maier              William Tanksley, Jr.
-Christopher Evenstar         Arien Malec               Marc H. Thoben
-Brett Foster                 Paul Maloney              Jared 'Twinge' Tinney
-Ben Goetter                  Neil 'Mu' Middleton       Matt Titus
-Rob Grant                    Andrew Minton             Steven Wheeler
-John Greenberg               Shawn M Moore             Thomas Willem
-GreyKnight                   Eva Myers                 Evan Williams
-Joshua Gross                 Wille Mäntylä             Jeremey Wilson
-Brian Haase                  Erkki Nurmi               Yelve Yakut
-Shayne Halvorson             Mattias Nyberg            Zooko
-Ciaran Hamilton              nyra
+Max Bane                     Benoit Hudson             Arlen Phillips
+Bill Beher                   Sylvia 'Onia' Hörnke      Erik Piper
+Alexander Beisig             Iainuki                   Lemuel Pitkin
+Stu Black                    Ilyak                     Derek Ray
+Erik Inge Bolsø              Matthew Ince              Remsleep
+Peter Borgmann               Mitsuhiro Itakura         Will Rogers
+Daniel Mark Brownrigg        Mikko Juola               David Rose
+Trent W. Buck                Jarmo Kielosto            Sebastian Salman
+Robert Burnham               Kornel Kisielewicz        Brett Scarborough
+Joe Buzzelli                 Daniel Klein              Darshan Shaligram
+Terje Bø                     Vambola Kotkas            Robert Shimmin
+Henry Cipolla                Ryan Kusnery              Sigurd
+Aaron Curtis                 Jukka Kuusisto            Edgar Simo
+Denzi                        Janne Lahdenperä          Alex Smith
+Rachel Elizabeth Dillon      Maciej Lapinski           Solf
+Mike Drinen                  Jordan Lewis              Michael Spang
+Kieron Dunbar                Icy Lich                  Johan Strandell
+Micha Elsner                 Markus Maier              Roman Sêk
+Christopher Evenstar         Arien Malec               William Tanksley, Jr.
+Brett Foster                 Paul Maloney              Marc H. Thoben
+Ben Goetter                  Neil 'Mu' Middleton       Jared 'Twinge' Tinney
+Rob Grant                    Andrew Minton             Matt Titus
+John Greenberg               Shawn M Moore             Steven Wheeler
+GreyKnight                   Eva Myers                 Thomas Willem
+Joshua Gross                 Wille Mäntylä             Evan Williams
+Brian Haase                  Erkki Nurmi               Jeremey Wilson
+Shayne Halvorson             Mattias Nyberg            Yelve Yakut
+Ciaran Hamilton              nyra                      Zooko
 
