@@ -65,17 +65,17 @@ As for specific differences, the most important are probably the following:
 * Resistances can be gained via mutations or items, never through eating.
 * For most gods in Crawl, prayer doesn't have any effect at all. Where it
   does, it has both benefits and drawbacks. Check '^' to find out more.
+* There are inevitable deaths, but new players can win without spoilers, if
+  they learn from their mistakes. Very good players win streaks.
 
 Also, our aim is to give Crawl a really smooth interface, so you should really
 read through the command list ('??') some time. The most intriguing "newish"
 commands are probably the following:
 
 * 'o', for automatic exploration of an unknown level
-* 'G', for automatic travel to another level
-* '5', for waiting and searching 100 turns or until something happens
-* '%', to access an overview screen for all your stats and resistances
-* 'X', to access the level map for easier travelling and more subcommands ('X?')
-* 'Ctrl-F', to find and travel to items or features you've seen before
+* 'G', for automatic travel to another level ('G?' for help)
+* 'X', to access the level map for travelling and other tasks ('X?')
+* 'Ctrl-F', to find and travel to items you've seen before ('Ctrl-F ?')
 %%%%
 Q:survival
 
