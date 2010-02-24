@@ -367,7 +367,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_HILL_ORC,        SK_LONG_BLADES,     10),
     APT(SP_HILL_ORC,        SK_AXES,            20),
     APT(SP_HILL_ORC,        SK_MACES_FLAILS,    10),
-    APT(SP_HILL_ORC,        SK_POLEARMS,        13),
+    APT(SP_HILL_ORC,        SK_POLEARMS,        10),
     APT(SP_HILL_ORC,        SK_STAVES,         -10),
     APT(SP_HILL_ORC,        SK_SLINGS,         -10),
     APT(SP_HILL_ORC,        SK_BOWS,           -10),
