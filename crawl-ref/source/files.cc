@@ -2105,18 +2105,25 @@ void restore_game(void)
     SavefileCallback::post_restore();
 }
 
-static void _restore_level(const level_id &original)
+static void _load_level(const level_id &level, bool orig)
 {
-    // Reload the original level.
-    you.where_are_you = original.branch;
-    you.absdepth0 = original.dungeon_absdepth();
-    you.level_type = original.level_type;
+    // Load the given level.
+    you.where_are_you = level.branch;
+    you.absdepth0 = level.dungeon_absdepth();
+    you.level_type = level.level_type;
 
-    load( DNGN_STONE_STAIRS_DOWN_I, LOAD_VISITOR,
-          you.level_type, you.absdepth0, you.where_are_you );
+    load(DNGN_STONE_STAIRS_DOWN_I, LOAD_VISITOR,
+         you.level_type, you.absdepth0, you.where_are_you);
 
-    // Rebuild the show grid, which was cleared out before.
-    you.update_los();
+    // Restore state when returning to original level.
+    if (orig)
+    {
+        // Rebuild the show grid, which was cleared out before.
+        you.update_los();
+
+        // Reactivate markers.
+        env.markers.activate_all();
+    }
 }
 
 // Given a level returns true if the level has been created already
@@ -2133,12 +2140,13 @@ level_excursion::level_excursion()
 {
 }
 
-void level_excursion::go_to(const level_id& next)
+// If orig is true, restore unsaved game state (LOS, markers).
+void level_excursion::go_to(const level_id& next, bool orig)
 {
     if (level_id::current() != next)
     {
         _save_level(you.absdepth0, you.level_type, you.where_are_you);
-        _restore_level(next);
+        _load_level(next, orig);
 
         LevelInfo &li = travel_cache.get_level_info(next);
         li.set_level_excludes();
@@ -2149,7 +2157,7 @@ void level_excursion::go_to(const level_id& next)
 
 level_excursion::~level_excursion()
 {
-    go_to(original);
+    go_to(original, true);
 }
 
 
