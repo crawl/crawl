@@ -2780,8 +2780,11 @@ std::string thing_do_grammar(description_level_type dtype,
                              bool force_article,
                              std::string desc)
 {
-    if (add_stop && (desc.empty() || desc[desc.length() - 1] != '.'))
+    if (add_stop && !ends_with(desc, ".") && !ends_with(desc, "!")
+        && !ends_with(desc, "?"))
+    {
         desc += ".";
+    }
     if (dtype == DESC_PLAIN || (!force_article && isupper(desc[0])))
     {
         if (dtype == DESC_PLAIN
