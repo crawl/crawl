@@ -62,20 +62,13 @@ static void _seen_staircase(dungeon_feature_type which_staircase,
 static void _seen_other_thing(dungeon_feature_type which_thing,
                               const coord_def& pos);
 
-static bool game_in_progress();
-
-static std::string _get_branches();
-static std::string _get_altars();
-static std::string _get_shops();
+static std::string _get_branches(bool display);
+static std::string _get_altars(bool display);
+static std::string _get_shops(bool display);
 static std::string _get_portals();
 static std::string _get_notes();
 static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
-                                          const bool print_unseen);
-
-static bool game_in_progress()
-{
-    return crawl_state.need_save || !crawl_state.updating_scores;
-}
+                                          bool print_unseen, bool display);
 
 void seen_notable_thing(dungeon_feature_type which_thing, const coord_def& pos)
 {
@@ -319,14 +312,15 @@ static std::string _portal_vaults_description_string()
     return disp;
 }
 
-std::string overview_description_string()
+// display: format for in-game display; !display: format for dump
+std::string overview_description_string(bool display)
 {
     std::string disp;
 
     disp += "                    <white>Dungeon Overview and Level Annotations</white>\n" ;
-    disp += _get_branches();
-    disp += _get_altars();
-    disp += _get_shops();
+    disp += _get_branches(display);
+    disp += _get_altars(display);
+    disp += _get_shops(display);
     disp += _get_portals();
     disp += _get_notes();
 
@@ -334,14 +328,14 @@ std::string overview_description_string()
 }
 
 // iterate through every dungeon branch, listing the ones which have been found
-static std::string _get_seen_branches()
+static std::string _get_seen_branches(bool display)
 {
     int num_printed_branches = 1;
     char buffer[100];
     std::string disp;
 
     disp += "\n<green>Branches:</green>";
-    if (game_in_progress())
+    if (display)
     {
         disp += " (use <white>G</white> to reach them and "
                 "<white>?/B</white> for more information)";
@@ -496,32 +490,32 @@ static std::string _get_unseen_branches()
     return disp;
 }
 
-static std::string _get_branches()
+static std::string _get_branches(bool display)
 {
-    return _get_seen_branches() + _get_unseen_branches();
+    return _get_seen_branches(display) + _get_unseen_branches();
 }
 
 // iterate through every god and display their altar's discovery state by color
-static std::string _get_altars()
+static std::string _get_altars(bool display)
 {
     std::string disp;
 
     disp += "\n<green>Altars:</green>";
-    if (game_in_progress())
+    if (display)
     {
         disp += " (use <white>Ctrl-F \"altar\"</white> to reach them and "
                 "<white>?/G</white> for information about gods)";
     }
     disp += EOL;
-    disp += _print_altars_for_gods(temple_god_list(), true);
-    disp += _print_altars_for_gods(nontemple_god_list(), false);
+    disp += _print_altars_for_gods(temple_god_list(), true, display);
+    disp += _print_altars_for_gods(nontemple_god_list(), false, display);
 
     return disp;
 }
 
 // Loops through gods, printing their altar status by color.
 static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
-                                          const bool print_unseen)
+                                          bool print_unseen, bool display)
 {   
     std::string disp;
     char buffer[100];
@@ -544,8 +538,8 @@ static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
             }
         }
 
-        // If the game is over, only laundry list the seen gods
-        if(!game_in_progress())
+        // If dumping, only laundry list the seen gods
+        if(!display)
         {
             if(has_altar_been_seen)
                 disp += god_name(god, false) + "\n";
@@ -578,7 +572,7 @@ static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
 }
 
 // iterate through all discovered shops, printing what level they are on.
-static std::string _get_shops()
+static std::string _get_shops(bool display)
 {
     std::string disp;
     level_id last_id;
@@ -586,7 +580,7 @@ static std::string _get_shops()
     if (!shops_present.empty())
     {
         disp +="\n<green>Shops:</green>";
-        if (game_in_progress())
+        if (display)
             disp += " (use <white>Ctrl-F \"shop\"</white> to reach them - yellow denotes antique shop)";
         disp += EOL;
     }
@@ -774,7 +768,7 @@ bool unnotice_feature(const level_pos &pos)
 
 void display_overview()
 {
-    std::string disp = overview_description_string();
+    std::string disp = overview_description_string(true);
     linebreak_string(disp, get_number_of_cols() - 5, get_number_of_cols() - 1);
     formatted_scroller(MF_EASY_EXIT | MF_ANYPRINTABLE | MF_NOSELECT,
                        disp).show();
