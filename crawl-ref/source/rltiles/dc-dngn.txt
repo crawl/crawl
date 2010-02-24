@@ -1327,7 +1327,17 @@ dngn_altar_nemelex_xobeh DNGN_ALTAR_NEMELEX_XOBEH
 dngn_altar_elyvilon DNGN_ALTAR_ELYVILON
 dngn_altar_lugonu DNGN_ALTAR_LUGONU
 dngn_altar_beogh DNGN_ALTAR_BEOGH
-dngn_altar_jiyva DNGN_ALTAR_JIYVA
+dngn_altar_jiyva01 DNGN_ALTAR_JIYVA
+dngn_altar_jiyva02
+dngn_altar_jiyva03
+dngn_altar_jiyva04
+dngn_altar_jiyva05
+dngn_altar_jiyva06
+dngn_altar_jiyva07
+dngn_altar_jiyva08
+dngn_altar_jiyva09
+dngn_altar_jiyva10
+dngn_altar_jiyva11
 %rim 1
 dngn_altar_fedhas DNGN_ALTAR_FEDHAS
 %rim 0
