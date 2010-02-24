@@ -1349,6 +1349,9 @@ scrolls, casting spells, praying or yelling in the reader's vicinity
 impossible. (Applies to reader too, of course.) This silence will not
 hide your presence, since its oppressive, unnatural effect will almost
 certainly alert any living creature that something is very wrong.
+Silence starts out with a radius covering half the normal vision range,
+which will then shrink, eventually covering only the reader, before 
+the effect times out.
 %%%%
 scythe
 
