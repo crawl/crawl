@@ -1890,7 +1890,7 @@ static int species_apts(int skill, species_type species)
     if (!spec_skills_initialised)
     {
         // Setup sentinel values to find errors more easily.
-        const int sentinel = 999;
+        const int sentinel = -20; // this gives cost 3200
         for (int sp = 0; sp < NUM_SPECIES; ++sp)
             for (int sk = 0; sk < NUM_SKILLS; ++sk)
                 _spec_skills[sp][sk] = sentinel;
