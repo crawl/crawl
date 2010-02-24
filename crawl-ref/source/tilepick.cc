@@ -1506,12 +1506,9 @@ static int _tileidx_missile_base(const item_def &item)
     switch (item.sub_type)
     {
     case MI_STONE:        return TILE_MI_STONE;
-    case MI_ARROW:        return TILE_MI_ARROW;
-    case MI_BOLT:         return TILE_MI_BOLT;
     case MI_LARGE_ROCK:   return TILE_MI_LARGE_ROCK;
-    case MI_SLING_BULLET: return TILE_MI_SLING_BULLET;
-    case MI_JAVELIN:      return TILE_MI_JAVELIN;
     case MI_THROWING_NET: return TILE_MI_THROWING_NET;
+
 
     case MI_DART:
         switch (brand)
@@ -1526,6 +1523,38 @@ static int _tileidx_missile_base(const item_def &item)
         if (brand == SPMSL_POISONED)
             return TILE_MI_NEEDLE_P;
         return TILE_MI_NEEDLE;
+
+    case MI_ARROW:
+        switch (brand)
+        {
+        default:             return TILE_MI_ARROW;
+        case SPMSL_STEEL:    return TILE_MI_ARROW_STEEL;
+        case SPMSL_SILVER:   return TILE_MI_ARROW_SILVER;
+        }
+
+    case MI_BOLT:
+        switch (brand)
+        {
+        default:             return TILE_MI_BOLT;
+        case SPMSL_STEEL:    return TILE_MI_BOLT_STEEL;
+        case SPMSL_SILVER:   return TILE_MI_BOLT_SILVER;
+        }
+
+    case MI_SLING_BULLET:
+        switch (brand)
+        {
+        default:             return TILE_MI_SLING_BULLET;
+        case SPMSL_STEEL:    return TILE_MI_SLING_BULLET_STEEL;
+        case SPMSL_SILVER:   return TILE_MI_SLING_BULLET_SILVER;
+        }
+
+    case MI_JAVELIN:
+        switch (brand)
+        {
+        default:             return TILE_MI_JAVELIN;
+        case SPMSL_STEEL:    return TILE_MI_JAVELIN_STEEL;
+        case SPMSL_SILVER:   return TILE_MI_JAVELIN_SILVER;
+        }
   }
 
   return TILE_ERROR;
