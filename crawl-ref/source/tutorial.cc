@@ -568,7 +568,7 @@ static formatted_string _tutorial_debug()
 #endif // debug
 
 #ifndef USE_TILE
-static formatted_string _tutorial_map_intro()
+static void _tutorial_map_intro()
 {
     std::string result;
 
@@ -582,11 +582,8 @@ static formatted_string _tutorial_map_intro()
     result += "</";
     result += colour_to_str(channel_to_colour(MSGCH_TUTORIAL));
     result += ">" EOL;
-    result += "<lightgrey> --more--                               "
-              "Press <white>Escape</white> to skip the basics.</lightgrey>";
 
-    linebreak_string2(result, _get_tutorial_cols());
-    return formatted_string::parse_block(result, false);
+    mpr(result);
 }
 #endif
 
@@ -608,7 +605,6 @@ static void _tutorial_stats_intro()
             "Don't worry about the rest for now.";
 
     mpr(istr.str(), MSGCH_TUTORIAL, 0);
-
 #else
     // Note: must fill up everything to override the map
     istr << "<"
@@ -674,9 +670,6 @@ static void _tutorial_message_intro()
               "the bottom two are items underneath you on the floor." EOL;
 #endif
 
-    result += "<lightgrey> --more--                               "
-              "Press <white>Escape</white> to skip the basics.</lightgrey>";
-
     mesclr();
     mpr(result, MSGCH_TUTORIAL, 0);
 }
@@ -705,14 +698,11 @@ static void _tutorial_movement_info()
 // copied from display_mutations and adapted
 void tut_starting_screen()
 {
-#ifndef USE_TILE
-    int y_pos;
-#endif
     int MAX_INFO = 4;
 #ifdef TUTORIAL_DEBUG
     MAX_INFO = 5; // add tutorial_debug
 #endif
-    char ch;
+    char ch = 0;
 
     int i;
     for (i = 0; i <= MAX_INFO; i++)
@@ -721,7 +711,7 @@ void tut_starting_screen()
         // Map window (starts at 1) or message window (starts at 18).
         // FIXME: This should be done more cleanly using the
         //        crawl_view settings!
-        y_pos = (i == 1 || i == 3) ? 18 : 1;
+        int y_pos = (i == 1 || i == 3) ? 18 : 1;
 
         cgotoxy(1, y_pos);
 #endif
@@ -739,12 +729,14 @@ void tut_starting_screen()
         if (i == 0)
             _tut_starting_info(width).display();
         else if (i == 1)
+        {
 #ifdef USE_TILE
-        // Skip map explanation for Tiles.
+            // Skip map explanation for Tiles.
             continue;
 #else
-            _tutorial_map_intro().display();
+            _tutorial_map_intro();
 #endif
+        }
         else if (i == 2)
             _tutorial_stats_intro();
         else if (i == 3)
@@ -766,21 +758,22 @@ void tut_starting_screen()
 
         if (i < MAX_INFO)
         {
+            if (i < 2)
+            {
 #ifndef USE_TILE
-            ch = c_getch();
+                ch = c_getch();
 #else
-            mouse_control mc(MOUSE_MODE_MORE);
-            ch = getch();
+                mouse_control mc(MOUSE_MODE_MORE);
+                ch = getch();
 #endif
+            }
             redraw_screen();
             if (ch == ESCAPE)
                 break;
         }
     }
-    if (i >= MAX_INFO)
-        more();
-
-    mesclr();
+    mpr("Introduction finished, you can start playing now.");
+    mpr("Again, press <w>?</w> for the help, and <w>Ctrl-P</w> to reread the message history.");
 }
 
 // Once a tutorial character dies, offer some playing hints.
@@ -2702,8 +2695,8 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         text << "One or more of the chunks or corpses you carry has started "
                 "to rot. Few species can digest these safely, so you might "
                 "just as well <w>%</w>rop them now. When selecting items from "
-                "a menu, there's a shortcut (<w>&</w>) to select all skeletons "
-                "and rotten chunks or corpses in the stash at once.";
+                "a menu, there's a shortcut (<w>&</w>) to select all corpses, "
+                "skeletons, and rotten chunks in your inventory at once.";
          cmd.push_back(CMD_DROP);
         break;
 
@@ -3272,7 +3265,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         else if (mons_shouts(m->type, false) == S_SILENT)
         {
             text << "Uh-oh, that monster noticed you! Fortunately, it "
-                    "didn't make any noise, but many monsters <w>do</w> make "
+                    "didn't make any noise, but many monsters do make "
                     "noise when they notice you, which alerts other monsters "
                     "in the area, who will come to check out what the "
                     "commotion was about.";
@@ -4533,7 +4526,9 @@ static void _tutorial_describe_feature(int x, int y)
             ostr << "The dungeon contains a number of natural obstacles such "
                     "as shafts, which lead one to three levels down. They "
                     "can't be disarmed, but you can safely pass over them "
-                    "if you're levitating or flying.";
+                    "if you're levitating or flying.\n"
+                    "If you want to jump down there, use <w>></w> to do so. "
+                    "Be warned that getting back here might be difficult.";
             Tutorial.tutorial_events[TUT_SEEN_TRAP] = false;
             break;
 
