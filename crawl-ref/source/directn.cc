@@ -102,6 +102,7 @@ static void _wizard_make_friendly(monsters* m);
 #endif
 static void _describe_feature(const coord_def& where, bool oos);
 static void _describe_cell(const coord_def& where, bool in_range = true);
+static void _print_cloud_desc(const coord_def where, bool &cloud_described);
 
 static bool _find_object(  const coord_def& where, int mode, bool need_path,
                            int range );
@@ -401,11 +402,15 @@ void direction_chooser::describe_cell() const
     {
         print_top_prompt();
         print_key_hints();
-        print_target_description();
+        bool did_cloud = false;
+        print_target_description(did_cloud);
         if (just_looking || (show_items_once && restricts != DIR_TARGET_OBJECT))
             print_items_description();
         if (just_looking || show_floor_desc)
+        {
             print_floor_description(true);
+            _print_cloud_desc(target(), did_cloud);
+        }
     }
 
     flush_prev_message();
@@ -1382,12 +1387,12 @@ void direction_chooser::show_initial_prompt()
     describe_cell();
 }
 
-void direction_chooser::print_target_description() const
+void direction_chooser::print_target_description(bool &did_cloud) const
 {
     if (restricts == DIR_TARGET_OBJECT)
         print_target_object_description();
     else
-        print_target_monster_description();
+        print_target_monster_description(did_cloud);
 
     if (!in_range(target()))
         mpr("Out of range.", MSGCH_EXAMINE_FILTER);
@@ -1439,7 +1444,7 @@ static void _push_back_if_nonempty(const std::string& str,
         vec->push_back(str);
 }
 
-void direction_chooser::print_target_monster_description() const
+void direction_chooser::print_target_monster_description(bool &did_cloud) const
 {
     // Do we see anything?
     const monsters* mon = monster_at(target());
@@ -1478,6 +1483,9 @@ void direction_chooser::print_target_monster_description() const
     mprf(MSGCH_PROMPT, "%s: <lightgrey>%s</lightgrey>",
          target_prefix ? target_prefix : "Aim",
          text.c_str());
+
+    // If there's a cloud here, it's been described.
+    did_cloud = true;
 }
 
 // FIXME: this should really take a cell as argument.
@@ -3733,6 +3741,27 @@ std::string get_monster_equipment_desc(const monsters *mon, bool full_desc,
     return desc;
 }
 
+static void _print_cloud_desc(const coord_def where, bool &cloud_described)
+{
+    if (is_sanctuary(where))
+    {
+        mprf("This square lies inside a sanctuary%s.",
+             silenced(where) ? ", and is shrouded in silence" : "");
+    }
+    else if (silenced(where))
+        mpr("This square is shrouded in silence.");
+
+    if (!cloud_described && env.cgrid(where) != EMPTY_CLOUD)
+    {
+        const int cloud_inspected = env.cgrid(where);
+
+        mprf(MSGCH_EXAMINE, "There is a cloud of %s here.",
+             cloud_name(cloud_inspected).c_str());
+
+        cloud_described = true;
+    }
+}
+
 // Describe a cell, guaranteed to be in view.
 static void _describe_cell(const coord_def& where, bool in_range)
 {
@@ -3811,23 +3840,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
   look_clouds:
 #endif
 
-    if (is_sanctuary(where))
-    {
-        mprf("This square lies inside a sanctuary%s.",
-             silenced(where) ? ", and is shrouded in silence" : "");
-    }
-    else if (silenced(where))
-        mpr("This square is shrouded in silence.");
-
-    if (env.cgrid(where) != EMPTY_CLOUD)
-    {
-        const int cloud_inspected = env.cgrid(where);
-
-        mprf(MSGCH_EXAMINE, "There is a cloud of %s here.",
-             cloud_name(cloud_inspected).c_str());
-
-        cloud_described = true;
-    }
+    _print_cloud_desc(where, cloud_described);
 
     int targ_item = you.visible_igrd(where);
 
