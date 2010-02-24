@@ -192,14 +192,14 @@ u         CMD_MAP_MOVE_UP_RIGHT
 y         CMD_MAP_MOVE_UP_LEFT
 
 Move cursor several steps in a given direction
-B         CMD_MAP_MOVE_DOWN_LEFT
-H         CMD_MAP_MOVE_LEFT
-J         CMD_MAP_MOVE_DOWN
-K         CMD_MAP_MOVE_UP
-L         CMD_MAP_MOVE_RIGHT
-N         CMD_MAP_MOVE_DOWN_RIGHT
-U         CMD_MAP_MOVE_UP_RIGHT
-Y         CMD_MAP_MOVE_UP_LEFT
+B         CMD_MAP_JUMP_DOWN_LEFT
+H         CMD_MAP_JUMP_LEFT
+J         CMD_MAP_JUMP_DOWN
+K         CMD_MAP_JUMP_UP
+L         CMD_MAP_JUMP_RIGHT
+N         CMD_MAP_JUMP_DOWN_RIGHT
+U         CMD_MAP_JUMP_UP_RIGHT
+Y         CMD_MAP_JUMP_UP_LEFT
 
 Find a particular feature
 <         CMD_MAP_FIND_UPSTAIR
