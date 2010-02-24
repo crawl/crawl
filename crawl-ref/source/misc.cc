@@ -2445,10 +2445,11 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     switch (you.level_type)
     {
     case LEVEL_LABYRINTH:
-        if (you.species == SP_MINOTAUR)
-            mpr("You feel right at home here.");
-        else
-            mpr("You enter a dark and forbidding labyrinth.");
+        // XXX: Ideally, we want to hint at the wall rule (rock > metal),
+        //      and that the walls can shift occasionally.
+        // Are these too long?
+        mpr("As you enter the labyrinth, previously moving walls settle noisily into place.");
+        mpr("You hear the metallic echo of a distant snort before it fades into the rock.");
         break;
 
     case LEVEL_ABYSS:
