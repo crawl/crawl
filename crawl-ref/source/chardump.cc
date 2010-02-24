@@ -1161,7 +1161,7 @@ static void _sdump_kills_by_place(dump_params &par)
 static void _sdump_overview(dump_params &par)
 {
     std::string overview =
-        formatted_string::parse_string(overview_description_string());
+        formatted_string::parse_string(overview_description_string(false));
     trim_string(overview);
     par.text += overview;
     par.text += "\n\n";
