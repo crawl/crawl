@@ -116,7 +116,7 @@ public:
     level_excursion();
     ~level_excursion();
 
-    void go_to(const level_id &level);
+    void go_to(const level_id &level, bool orig=false);
 };
 
 void save_ghost( bool force = false );
