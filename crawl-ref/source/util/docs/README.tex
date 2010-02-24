@@ -9,6 +9,7 @@
 \newcommand{\key}[1]{{{\texttt{\textbf{#1}}}}} % this does nasty things to underscores
 \newcommand{\sex}[1]{{{\textbf{#1}}}} % \sec already defined
 
+\newcommand{\slsl}{/\hspace{-0.2em}/} % for http pages
 
 \newcommand{\crawl}{\textsc{Crawl}}
 \newcommand{\dungeon}{\textsc{Dungeon}}
@@ -50,12 +51,12 @@ characters of diverse skills, worshipping deities of great power and
 caprice. To win, you'll need to be a master of tactics and strategy,
 and prevail against overwhelming odds.
 
-\para
-
-Players of versions 0.3.4 and older beware: please read the file 
-\key{key\_changes.pdf} in the \key{docs} directory for a list of
-interface changes, and how you could possibly retrieve the 0.3.4
-standards.
+%\para
+%
+%Players of versions 0.3.4 and older beware: please read the file 
+%\key{key\_changes.pdf} in the \key{docs} directory for a list of
+%interface changes, and how you could possibly retrieve the 0.3.4
+%standards.
 
 \subsection*{How to get started? (Information for new players)}
 
@@ -71,9 +72,9 @@ manual in-game; pressing \key{?} brings up a menu for that.
 \sex{Internet play}
 
 You can play \crawl\ online, both competing with other players and watching 
-them. Check the homepage \key{http://crawl.akrasiac.org} for details, including 
-information about additional servers. You just need a \texttt{ssh} or 
-\texttt{telnet} console; on Windows, the \key{PuTTY} program works very 
+them. Check the homepage \key{http:\slsl crawl.akrasiac.org} for details, 
+including information about additional servers. You just need a \texttt{ssh}
+or \texttt{telnet} console; on Windows, the \key{PuTTY} program works very 
 well. Read \key{ssh\_guide.txt} in the \key{docs} folder for a step by step 
 guide on how to set this up.
 
@@ -90,9 +91,9 @@ Unfortunately, it is not yet possible to combine tiles and Internet play.
 
 \begin{minipage}[t]{7cm}
 The file \key{crawl.exe} (just \key{./crawl} if on Unix) in \crawl's main 
-folder starts the game.
+directory starts the game.
 \\ \\
-The \key{settings} directory contains \key{init.txt}, the options file for
+The \key{settings} folder contains \key{init.txt}, the options file for
 \crawl\ (on Linux systems there may also be a \key{.crawlrc} in your home
 directory). Since the defaults are well-suited for playing, you can ignore
 these at first.
@@ -108,7 +109,7 @@ spent some time playing the game.
 \begin{minipage}[t]{7cm}
 The following files in the \key{docs} directory may be helpful, all of
 which can be read in-game (press \key{?}):
-\\
+\\ \\
 \key{crawl\_manual.txt} is the full manual. It explains all species, jobs, 
 item types etc. If you do not delight in manuals, you can put off the 
 reading this file until later.
@@ -129,7 +130,7 @@ If you have questions concerning the game, or think you have found a bug,
 there are several places to contact the developers. 
 
 First, you are encouraged to file bug reports and feature requests on the 
-\crawl\ homepage at \key{http://crawl-ref.sourceforge.net}. From there, you 
+\crawl\ homepage at \key{http:\slsl crawl.develz.org}. From there, you 
 can also download the most recent version (both binaries or source, for 
 Unix, Windows, OS X, and DOS).
 \\
@@ -177,10 +178,11 @@ of ways to do so:
 
 \textbf{Playtesting:}
 At any time, there will be bugs --- playing and reporting these is a great 
-help. There is a beta server at \key{http://crawl.develz.org} hosting the most 
-recent version of the code. Besides pointing out bugs, you are also welcome to
-bring up ideas on how to improve interface or gameplay. Bugs and new ideas can 
-be added and discussed on the homepage, \key{http://crawl-ref.sourceforge.net}.
+help. There is a beta server at \key{http:\slsl crawl.develz.org} hosting the
+most recent version of the code. Besides pointing out bugs, you are also 
+welcome to bring up ideas on how to improve interface or gameplay. Bugs and
+new ideas can be added and discussed on the homepage, 
+\key{http:\slsl crawl.develz.org/mantis}.
 
 \para
 
