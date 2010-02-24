@@ -554,9 +554,17 @@ bool unwield_item(bool showMsgs)
                 // It's far too powerful without a real risk, especially
                 // if it's to be allowed as a player spell. -- bwr
 
-                // int effect = 9 - random2avg( you.skills[SK_TRANSLOCATIONS] * 2, 2 );
-                MiscastEffect( &you, WIELD_MISCAST, SPTYP_TRANSLOCATION, 9, 90,
-                               "distortion unwield" );
+                // int effect = 9 -
+                //        random2avg(you.skills[SK_TRANSLOCATIONS] * 2, 2);
+
+                if (you.duration[DUR_WEAPON_BRAND] == 0)
+                {
+                    // Makes no sense to discourage unwielding a temporarily
+                    // branded weapon since you can wait it out. This also
+                    // fixes problems with unwield prompts (mantis #793).
+                    MiscastEffect(&you, WIELD_MISCAST, SPTYP_TRANSLOCATION,
+                                  9, 90, "distortion unwield");
+                }
                 break;
 
                 // NOTE: When more are added here, *must* duplicate unwielding
