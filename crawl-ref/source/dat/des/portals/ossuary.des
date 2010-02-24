@@ -46,7 +46,7 @@ function ossuary_portal(e)
         floor = "floor",
         msg = messager })
   e.kfeat("O = enter_portal_vault")
-  e.colour("O = yellow")
+  e.colour("O = brown")
 end
 
 -- Use the following line in destination maps after all SUBSTs
@@ -54,7 +54,7 @@ end
 -- Note that the function also defines < to be the exit portal.
 function ossuary_setup_features(e)
         e.kfeat("< = exit_portal_vault")
-        e.colour("< = yellow")
+        e.colour("< = brown")
         e.lrockcol("white")
         e.lfloorcol("yellow")
         e.lrocktile("wall_tomb")
