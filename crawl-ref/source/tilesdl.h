@@ -13,6 +13,7 @@
 
 enum key_mod
 {
+    MOD_NONE  = 0x0,
     MOD_SHIFT = 0x1,
     MOD_CTRL  = 0x2,
     MOD_ALT   = 0x4
