@@ -42,9 +42,9 @@
 ### Note: setting window, map or font sizes to '0' implies auto-sizing.
 
 # tile_full_screen    = true
-# tile_window_width   = 1024
-# tile_window_height  = 768
-# tile_map_pixels     = 4
+tile_window_width   = 800
+tile_window_height  = 480
+tile_map_pixels     = 1
 # tile_force_overlay  = true
 
 # tile_font_crt_file  = VeraMono.ttf
