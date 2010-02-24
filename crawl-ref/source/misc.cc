@@ -1872,21 +1872,25 @@ void up_stairs(dungeon_feature_type force_stair,
         level_id::current() == level_id(BRANCH_MAIN_DUNGEON, 1)
         && !destination_override.is_valid();
 
-    if (leaving_dungeon
-        && (!yesno("Are you sure you want to leave the Dungeon?", false, 'n')
-            || !_check_carrying_orb()))
+    if (leaving_dungeon)
     {
-        if (Tutorial.tutorial_left)
+        bool stay = (!yesno("Are you sure you want to leave the Dungeon?",
+                            false, 'n') || !_check_carrying_orb());
+
+        if (!stay && Tutorial.tutorial_left)
         {
             if (!yesno("Are you *sure*?  Doing so will end the game!", false,
                        'n'))
             {
-                mpr("Alright.");
-                return;
+                stay = true;
             }
         }
-        mpr("Alright, then stay!");
-        return;
+
+        if (stay)
+        {
+            mpr("Alright, then stay!");
+            return;
+        }
     }
 
     // Bail if any markers veto the move.
