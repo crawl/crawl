@@ -1149,6 +1149,9 @@ void show_map( level_pos &spec_place, bool travel_mode, bool allow_esc )
 
     travel_init_new_level();
     travel_cache.update();
+#ifdef USE_TILE
+    tiles.place_cursor(CURSOR_MAP, Region::NO_CURSOR);
+#endif
 }
 
 bool emphasise(const coord_def& where)
