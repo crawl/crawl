@@ -1412,8 +1412,12 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
                 }
                 else
                 {
+                    int apt = species_apts(x, you.species);
                     textcolor(RED);
-                    cprintf(" %3d  ", species_apts(x, you.species));
+                    if (apt != 0)
+                        cprintf(" %+3d  ", apt);
+                    else
+                        cprintf(" %3d  ", apt);
                 }
             }
 
