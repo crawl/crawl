@@ -7,6 +7,8 @@
 #ifndef WIZMON_H
 #define WIZMON_H
 
+#ifdef WIZARD
+
 void wizard_create_spec_monster(void);
 void wizard_create_spec_monster_name(void);
 void wizard_spawn_control();
@@ -28,5 +30,7 @@ void wizard_polymorph_monster(monsters* mon);
 void debug_make_monster_shout(monsters* mon);
 
 void debug_pathfind(int mid);
+
+#endif
 
 #endif
