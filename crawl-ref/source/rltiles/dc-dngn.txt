@@ -1341,7 +1341,14 @@ dngn_altar_jiyva11
 %rim 1
 dngn_altar_fedhas DNGN_ALTAR_FEDHAS
 %rim 0
-dngn_altar_cheibriados DNGN_ALTAR_CHEIBRIADOS
+dngn_altar_cheibriados_12 DNGN_ALTAR_CHEIBRIADOS
+dngn_altar_cheibriados_10
+dngn_altar_cheibriados_09
+dngn_altar_cheibriados_08
+dngn_altar_cheibriados_06
+dngn_altar_cheibriados_04
+dngn_altar_cheibriados_03
+dngn_altar_cheibriados_02
 
 %sdir dc-dngn
 dngn_blue_fountain DNGN_FOUNTAIN DNGN_BLUE_FOUNTAIN
