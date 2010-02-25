@@ -36,7 +36,7 @@
 // Try the exact key lookup along with the entire prefix list.
 // If that fails, start ignoring hostile/religion/branch/silence, in that order,
 // first skipping hostile, then hostile *and* religion, then hostile, religion
-// *and* branch, then finally all five..
+// *and* branch, then finally all five.
 static std::string __try_exact_string(const std::vector<std::string> &prefixes,
                                       const std::string &key,
                                       bool ignore_hostile  = false,
@@ -74,7 +74,7 @@ static std::string __try_exact_string(const std::vector<std::string> &prefixes,
                 continue;
             silenced = true;
         }
-        else if (prefixes[i] == "beogh" || prefixes[i] == "good god"
+        else if (prefixes[i] == "Beogh" || prefixes[i] == "good god"
                  || prefixes[i] == "No God"
                  || (str_to_god(prefixes[i]) != GOD_NO_GOD
                      && prefixes[i] != "random"))
@@ -101,8 +101,13 @@ static std::string __try_exact_string(const std::vector<std::string> &prefixes,
             msg = __try_exact_string(prefixes, key, true);
         else if (related)
         {
-            if (religion) // skip hostile and religion
-                msg = __try_exact_string(prefixes, key, true, false, true);
+            if (branch) // skip hostile and branch
+                msg = __try_exact_string(prefixes, key, true, false, false, true);
+            else if (religion) // skip hostile and religion
+            {
+                msg = __try_exact_string(prefixes, key, true, false, true,
+                                         ignore_branch);
+            }
             else // skip hostile and related
                 msg = __try_exact_string(prefixes, key, true, true);
         }
@@ -515,29 +520,31 @@ bool mons_speaks(monsters *monster)
     }
 
     const god_type god = foe               ? foe->deity() :
-                         crawl_state.arena ? GOD_NO_GOD :
-                                             you.religion;
+                         crawl_state.arena ? GOD_NO_GOD
+                                           : you.religion;
 
     // Add Beogh to list of prefixes for orcs (hostile and friendly) if you
     // worship Beogh. (This assumes your being a Hill Orc, so might have odd
     // results in wizard mode.) Don't count charmed or summoned orcs.
-    if (you.religion == GOD_BEOGH && mons_genus(monster->type) == MONS_ORC
-        && !monster->has_ench(ENCH_CHARM) && !monster->is_summoned())
+    if (you.religion == GOD_BEOGH && mons_genus(monster->type) == MONS_ORC)
     {
-        if (monster->god == GOD_BEOGH)
-            prefixes.push_back("beogh");
-        else
-            prefixes.push_back("unbeliever");
+        if (!monster->has_ench(ENCH_CHARM) && !monster->is_summoned())
+        {
+            if (monster->god == GOD_BEOGH)
+                prefixes.push_back("Beogh");
+            else
+                prefixes.push_back("unbeliever");
+        }
     }
     else
     {
-        if (is_good_god(god))
+        // Include our current god's name, too. This means that uniques
+        // can have speech that is tailored to your specific god.
+        if (is_good_god(god) && coinflip())
             prefixes.push_back("good god");
+        else
+            prefixes.push_back(god_name(you.religion));
     }
-
-    // Include our god's current name, too. This means that uniques can have
-    // speech that is tailored to your specific god.
-    prefixes.push_back(god_name(you.religion));
 
     // Include our current branch, too. It can make speech vary by branch for
     // uniques and other monsters! Specifically, Donald.
@@ -563,11 +570,10 @@ bool mons_speaks(monsters *monster)
                                  && (!foe || foe->atype() != ACT_PLAYER));
     const bool mon_foe     = (m_foe != NULL);
     const bool no_god      = no_foe || (mon_foe && foe->deity() == GOD_NO_GOD);
-    const bool named_foe   = !no_foe
-        && (!mon_foe || (m_foe->is_named()
-                         && m_foe->type != MONS_ROYAL_JELLY));
+    const bool named_foe   = !no_foe && (!mon_foe || (m_foe->is_named()
+                                && m_foe->type != MONS_ROYAL_JELLY));
     const bool no_foe_name = !named_foe
-                          || (mon_foe && (m_foe->flags & MF_NAME_MASK));
+                             || (mon_foe && (m_foe->flags & MF_NAME_MASK));
 
     std::string msg;
 
