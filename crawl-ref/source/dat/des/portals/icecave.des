@@ -980,8 +980,8 @@ lua_marker('M', m_marker)
 lua_marker('m', portal_desc { teleport_spot=1})
 }}
 COLOUR: M = yellow
-SUBST:  M = .
-SUBST:  m = .
+TILE:   M = dngn_the_teleporter_ice_cave
+SUBST:  Mm = .
 : dgn.set_random_mon_list("ice beast w:90 / nothing")
 : ice_cave_colours(_G)
 epilogue{{
