@@ -2092,7 +2092,8 @@ void get_square_desc(const coord_def &c, describe_info &inf,
 
             inf.title = desc;
         }
-        get_monster_db_desc(*mons, inf);
+        bool temp = false;
+        get_monster_db_desc(*mons, inf, temp);
     }
     else if (oid != NON_ITEM)
     {

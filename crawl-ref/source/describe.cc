@@ -2888,7 +2888,7 @@ static std::string _monster_stat_description(const monsters& mon)
 
 // Fetches the monster's database description and reads it into inf.
 void get_monster_db_desc(const monsters& mons, describe_info &inf,
-                         bool force_seen)
+                         bool &has_stat_desc, bool force_seen)
 {
     // For undetected mimics describe mimicked item instead.
     if (!force_seen && mons_is_unknown_mimic(&mons))
@@ -3015,7 +3015,11 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
     // Get information on resistances, speed, etc.
     std::string result = _monster_stat_description(mons);
     if (!result.empty())
+    {
         inf.body << "$" << result;
+        if (has_stat_desc)
+            has_stat_desc = true;
+    }
 
     if (!mons_can_use_stairs(&mons))
     {
@@ -3092,7 +3096,8 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
 void describe_monsters(const monsters& mons, bool force_seen)
 {
     describe_info inf;
-    get_monster_db_desc(mons, inf, force_seen);
+    bool has_stat_desc = false;
+    get_monster_db_desc(mons, inf, has_stat_desc, force_seen);
     print_description(inf);
 
     mouse_control mc(MOUSE_MODE_MORE);
@@ -3100,7 +3105,7 @@ void describe_monsters(const monsters& mons, bool force_seen)
     // TODO enne - this should really move into get_monster_db_desc
     // and an additional tutorial string added to describe_info.
     if (Tutorial.tutorial_left)
-        tutorial_describe_monster(&mons);
+        tutorial_describe_monster(&mons, has_stat_desc);
 
     if (getch() == 0)
         getch();
