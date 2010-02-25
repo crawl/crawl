@@ -89,9 +89,11 @@ end
 
 function TroveMarker:fdesc_long (marker)
   if self.no_timeout then
-    return self.props.desc_long .. " This portal is broken and requires " .. self:item_name() .. " to function.\n"
+    return self.props.desc_long .. " This portal is broken and requires " ..
+           self:item_name() .. " to function.\n"
   else
-    return self.props.desc_long .. " This portal will remain here for a" .. self.props.dur .. " time.\n"
+    return self.props.desc_long .. " This portal will remain here for a" ..
+           self.props.dur .. " time.\n"
   end
 end
 
@@ -99,7 +101,8 @@ function TroveMarker:overview_note (marker)
   if self.no_timeout then
     return self:item_name(false)
   else
-    return "" .. self.props.secondary_amount .. " gold/" .. self.props.amount .. " gold"
+    return "" .. self.props.secondary_amount .. " gold/" ..
+           self.props.amount .. " gold"
   end
 end
 
@@ -242,7 +245,8 @@ function TroveMarker:item_name(do_grammar)
   local jwith_pluses = {"ring of protection", "ring of evasion",
                         "ring of strength", "ring of intelligence",
                         "ring of dexterity", "ring of slaying"}
-  if item.base_type == "jewellery" and util.contains(jwith_pluses, item.sub_type) then
+  if item.base_type == "jewellery" and
+     util.contains(jwith_pluses, item.sub_type) then
     s = s .. " +" .. item.plus1
     if item.sub_type == "ring of slaying" and item.plus2 ~= item.plus1 then
       s = s .. ", +" .. item.plus2
@@ -252,8 +256,10 @@ function TroveMarker:item_name(do_grammar)
   if item.base_type == "potion" or item.base_type == "scroll"then
     s = s .. " " .. item.base_type .. "s of"
   elseif item.base_type == "book" then
-    books = {"Necronomicon", "tome of Destruction", "Young Poisoner's Handbook", "Monster Manual"}
-    if not string.find(item.sub_type, "manual") and not util.contains(books, item.sub_type) then
+    books = {"Necronomicon", "tome of Destruction",
+             "Young Poisoner's Handbook", "Monster Manual"}
+    if not string.find(item.sub_type, "manual")
+       and not util.contains(books, item.sub_type) then
       s = s .. " book of"
     end
   elseif item.base_type == "wand" then
@@ -351,8 +357,10 @@ function TroveMarker:check_item(marker, pname, position)
       end
     end
 
-    -- Now all we need to do is to make sure that the item is the one we're looking for
-    if this_item and item.sub_type == it.sub_type and item.base_type == it.base_type then
+    -- Now all we need to do is to make sure that the item
+    -- is the one we're looking for
+    if this_item and item.sub_type == it.sub_type
+       and item.base_type == it.base_type then
       table.insert(acceptable_items, it)
     end
   end
@@ -365,7 +373,8 @@ function TroveMarker:check_item(marker, pname, position)
 
   -- If there are no pluses but multiple acceptable items, or there is only one
   -- acceptable item, take the first in the list.
-  if #acceptable_items == 1 or (item.plus1 == false and item.plus2 == false) then
+  if #acceptable_items == 1
+     or (item.plus1 == false and item.plus2 == false) then
     local it = acceptable_items[1]
     return self:accept_item(it)
   else
@@ -385,12 +394,14 @@ function TroveMarker:check_item(marker, pname, position)
       if this_p1 < titem_p1 and (item.plus2 == false or this_p2 < titem_p2) then
         titem = it
         titem_p1, titem_p2 = titem.pluses()
-        --crawl.mpr("Picking " .. titem.name() .. " instead (lesser pluses instad)")
+        --crawl.mpr("Picking " .. titem.name() ..
+        --          " instead (lesser pluses instad)")
         --crawl.mpr("This item p1: " .. titem_p1 .. ", p2: " .. titem_p2)
       elseif this_p1 == item.plus1 and this_p2 == item.plus2 then
         titem = it
         titem_p1, titem_p2 = titem.pluses()
-        --crawl.mpr("Picking " .. titem.name() .. " instead (matches wanted pluses)")
+        --crawl.mpr("Picking " .. titem.name() ..
+        --          " instead (matches wanted pluses)")
         --crawl.mpr("This item p1: " .. titem_p1 .. ", p2: " .. titem_p2)
       end
     end
@@ -400,7 +411,8 @@ function TroveMarker:check_item(marker, pname, position)
 end
 
 function TroveMarker:accept_item (it)
-  crawl.mpr("The portal accepts the item" .. self:plural() .. " and buzzes to life!")
+  crawl.mpr("The portal accepts the item" .. self:plural() ..
+            " and buzzes to life!")
   it.dec_quantity(self.props.toll_item.quantity)
   return true
 end
@@ -422,8 +434,8 @@ function TroveMarker:check_veto(marker, pname)
   local plus = 0
 
   if gold < needed2 and self.no_timeout == false then
-    crawl.mpr("This portal charges a minimum of " .. needed2 .. " gold for entry; " ..
-              "you have only " .. gold .. " gold.")
+    crawl.mpr("This portal charges a minimum of " .. needed2 ..
+              " gold for entry; " .. "you have only " .. gold .. " gold.")
     return "veto"
   end
 
@@ -433,7 +445,9 @@ function TroveMarker:check_veto(marker, pname)
     -- Let's see if they want to pay the smaller amount
     if self.no_timeout == true then
       -- Let's check to see if there's an item at our current position
-      if crawl.yesno("This trove needs " .. self:item_name() .. " to function. Give it the item" .. self:plural() .. "?", true, "n") then
+      if crawl.yesno("This trove needs " .. self:item_name() ..
+                     " to function. Give it the item" ..
+                     self:plural() .. "?", true, "n") then
         if self:check_item(marker, pname, dgn.point(_x, _y)) == true then
           return
         else
@@ -441,28 +455,33 @@ function TroveMarker:check_veto(marker, pname)
             self:note_payed(self:item_name())
             return
           else
-            crawl.mpr("You don't have the item" .. self:plural() .. " to give!")
+            crawl.mpr("You don't have the item" .. self:plural() ..
+                      " to give!")
             return "veto"
           end
         end
       end
       return "veto"
     else
-      crawl.mpr("There is a foul-smelling imp just inside the portal. It says, " ..
-                "\"I can lock this portal here for " .. needed2 .."gp!\".")
-      if crawl.yesno("Pay? (you can refuse and instead pay the full fee to enter now)", true, "n") then
+      crawl.mpr("There is a foul-smelling imp just inside the portal. " ..
+                "It says, \"I can lock this portal here for " ..
+                needed2 .."gp!\".")
+      if crawl.yesno("Pay? (you can refuse and instead pay the full fee " ..
+                     "to enter now)", true, "n") then
         self.no_timeout = true
         you.gold(you.gold() - needed2)
         self:note_payed(needed2 .. "gp", true)
-        crawl.mpr("The imp fiddles with the portal, frowns, says, \"I think I broke it!\" and then disappears in a puff of smoke.")
+        crawl.mpr("The imp fiddles with the portal, frowns, says, " ..
+                  "\"I think I broke it!\" " ..
+                  "and then disappears in a puff of smoke.")
         return "veto"
       else
         crawl.mpr("The foul-smelling imp curses your mother!")
       end
 
       -- Ok, ask if the player wants to spend the $$$.
-      if crawl.yesno("You can still enter the portal, but it charges " .. needed ..
-                         "gp for entry. Pay?", true, "n") then
+      if crawl.yesno("You can still enter the portal, but it charges " ..
+                     needed .. "gp for entry. Pay?", true, "n") then
         if you.gold() < needed then
           crawl.mpr("You don't have the money to pay for it!")
           return "veto"
