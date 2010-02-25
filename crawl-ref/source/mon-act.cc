@@ -2118,6 +2118,14 @@ void handle_monsters()
         }
     }
 
+    // Clear one-turn deep sleep flag.
+    // XXX: With the current handling, it would be cleaner to
+    //      not treat this as an enchantment.
+    // XXX: ENCH_SLEEPY only really works for player-cast
+    //      hibernation.
+    for (monster_iterator mi; mi; ++mi)
+        mi->del_ench(ENCH_SLEEPY);
+
     // Clear any summoning flags so that lower indiced
     // monsters get their actions in the next round.
     for (int i = 0; i < MAX_MONSTERS; i++)
