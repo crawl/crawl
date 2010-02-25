@@ -30,20 +30,20 @@ Gods
 * New god: Cheibriados, god of slowness.
 * Ecumenical Temple may randomly contain 6 to 14 altars.
 * Dungeon gods not included in Ecumenical Temple get guaranteed altar on D:2-9.
-* Zin protects the player against disease, rotting and miasma.
-* Vehumet reduces mana cost and increases ranges of destructive spells.
+* Sacrifice corpses with prayer ('p') rather than prayer and chop up ('pc').
+* Elyvilon doesn't mind butchery during prayer anymore.
+* Lugonu's Corruption is usable only once per level.
 * Kikubaaqudgha gives torment resistance, hands out corpses and the Pain brand.
-* Yredelemnul's gifts follow through stairways even if behind zombies.
+* Lugonu's Corruption only produces neutral monsters.
+* Sif Muna doesn't accept worshippers who don't know any spells.
+* TSO's wrath does much less damage.
+* TSO's halo no longer makes the player easier to hit.
+* Vehumet reduces mana cost and increases ranges of destructive spells.
 * Xom is nicer about banishment and hostile monsters for low-xp followers.
 * Xom has a small chance of reviving the player after death.
-* Elyvilon doesn't mind butchery during prayer anymore.
-* Greatly reduce damage dealt by TSO's wrath.
-* TSO's halo no longer makes the player easier to hit.
-* Sif Muna doesn't accept worshippers who don't know any spells.
-* Lugonu's Corruption is usable only once per level and produces only
-  neutral monsters.
-* Sacrifice corpses with prayer ('p') rather than prayer and chop up ('pc').
-* Recite has no food cost and no longer causes monsters to go berserk.
+* Yredelemnul's gifts follow through stairways even if behind zombies.
+* Zin protects the player against disease, rotting and miasma.
+* Zin's Recite has no food cost and no longer causes monsters to go berserk.
 
 Levels
 ------
@@ -209,6 +209,8 @@ Interface: Dungeon exploration
 * Level features (e.g. stairs, gates, altars) are listed in the 'X' map.
 * Disallow autoexplore and resting when starving.
 * Disable autoexplore in labyrinths.
+* Ctrl-O lists ranges of branches not yet found.
+* Ctrl-O shows how far the player went into branches.
 
 Interface: Other
 ----------------
