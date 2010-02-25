@@ -1981,7 +1981,8 @@ bool load_ghost(bool creating_level)
 
         menv[imn].set_ghost(ghosts[0]);
         menv[imn].ghost_init();
-        menv[imn].bind_spell_flags();
+        if (menv[imn].has_spells())
+            menv[imn].bind_spell_flags();
 
         ghosts.erase(ghosts.begin());
 #if BONES_DIAGNOSTICS
