@@ -3482,7 +3482,8 @@ static inline void _finalise_tile(unsigned int *tile,
         else
             (*tile) = orig + std::min((int)special_flv, 3);
     }
-    else if (orig == TILE_DNGN_PORTAL_WIZARD_LAB)
+    else if (orig == TILE_DNGN_PORTAL_WIZARD_LAB
+             || orig == TILE_DNGN_ALTAR_CHEIBRIADOS)
     {
         if (++env.tile_flv(gc).special >= tile_dngn_count(orig))
             env.tile_flv(gc).special = 0;
