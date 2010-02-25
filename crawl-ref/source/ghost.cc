@@ -115,6 +115,7 @@ static spell_type search_order_misc[] = {
     SPELL_POLYMORPH_OTHER,
     SPELL_TELEPORT_OTHER,
 // 10
+    SPELL_EVAPORATE, // replaced with Mephitic Cloud, though at lower priority
     SPELL_DIG,
     SPELL_CORONA,
     SPELL_NO_SPELL,                        // end search
@@ -791,6 +792,8 @@ spell_type ghost_demon::translate_spell(spell_type spel) const
         return (SPELL_FIREBALL);
     case SPELL_PETRIFY:
         return (SPELL_PARALYSE);
+    case SPELL_EVAPORATE:
+        return (SPELL_MEPHITIC_CLOUD);
     default:
         break;
     }
