@@ -426,7 +426,6 @@ static bool _in_a_shop( int shopidx, int &num_in_list )
             {
                 // Some shopping list items have been moved to this store,
                 // so refresh the display.
-                mesclr();
                 continue;
             }
         }
@@ -2323,9 +2322,6 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
     // NOTE: Don't modify the shopping list while iterating over it.
     for (unsigned int i = 0; i < list->size(); i++)
     {
-        if (_in_shop_now)
-            mesclr();
-
         CrawlHashTable &thing = (*list)[i];
 
         if (!thing_is_item(thing))
