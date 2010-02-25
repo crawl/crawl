@@ -2328,7 +2328,7 @@ bool DungeonRegion::update_alt_text(std::string &alt)
                          + " here.$$";
         }
     }
-    else if (grd(gc) != DNGN_FLOOR)
+    else if (grid_appearance(gc) != DNGN_FLOOR)
         get_feature_desc(gc, inf);
     else
     {
