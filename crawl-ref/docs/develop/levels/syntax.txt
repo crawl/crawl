@@ -439,7 +439,9 @@ ITEM:     (list of items, separated by comma)
              if the item is not stackable.
           * "no_uniq" prevents the item from being turned into an artefact.
           * "good_item" makes the builder try to make the item a good one
-            (acquirement quality).
+            (acquirement quality). This is independent of the level's depth,
+            in contrast to placing items with * or | which just add a bonus
+            to depth for the item generation.
           * "acquire" requests the use of the acquirement code itself,
             ensuring that the player gets wearable armour, etc. You can
             also use acquire:<god> to request that the acquired item be
