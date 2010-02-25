@@ -73,19 +73,19 @@ Ranged combat
 * New missile materials: silver, steel.
 * New missile brands: dispersal, electricity, exploding, penetration, reaping.
 * New needle brands: sleep, slow, paralysis, confusion, frenzy and sickness.
-* Slings are one-handed and no longer delayed by shields.
-* Stones are three times heavier.
-* More generous stacking of ammunition.
-* Lowered mulch rate for branded ammunition.
-* Rings of slaying also apply to missile launchers.
-* Branded ammunition is described as "glowing".
-* Poisoned ammunition is more effective.
+* Branded ammunition is described as "runed".
+* Branding spells will also affect launchers.
 * On launchers, the protection brand is replaced with evasion, providing +5 EV.
 * Except for Nessos, launchers of flame can't be combined with poisoned ammo.
-* Hunter starting ammunition starts out at +1; sling-based Hunters get bucklers.
-* Branding spells will also affect launchers.
 * Removed Poison Ammunition in favour of Poison Weapon and temporary brands.
+* More generous stacking of ammunition.
+* Lowered mulch rate for branded ammunition.
+* Poisoned ammunition is more effective.
+* Rings of slaying also apply to missile launchers.
+* Hunter starting ammunition starts out at +1; sling-based Hunters get bucklers.
 * Slings no longer crosstrain with Throwing.
+* Slings are one-handed and no longer delayed by shields.
+* Stones are three times heavier.
 
 Items
 -----
@@ -110,7 +110,7 @@ Items
 * Improvements to whips and demon whips; the latter can be blessed by TSO.
 * Reduce the chances for artefacts with only one stat property.
 * Weapons of electrocution discharge in water.
-* Removed evocable properties (mapping/teleportation) from artefacts.
+* Removed some evokable properties (mapping/teleportation) from artefacts.
 * Removing +Lev items cancels levitation and is disallowed over water.
 * Clubs and spears get moderate stabbing bonus.
 * Clubs may stun target upon successful stabbing.
@@ -120,7 +120,7 @@ Items
 * Rods identify on wielding and use the Maces & Flails skill.
 * Rod recharging no longer depends on player MP or being in inventory.
 * Enchanting rods increases their recharge rate.
-* Let chunks stack, if their age is similar.
+* Let same-type chunks stack, if their age is similar.
 * Deep water doesn't destroy items, lava only flammable ones.
 * Weapons with temporary distortion brand don't damage or banish on unwielding.
 * Disallow sacrifice of runes, the orb of Zot, and the unused horn of Geryon.
@@ -133,26 +133,25 @@ Monsters
 * A few other new monsters: toadstool, sixfirhy, golden eye, giant leech.
 * New plant: bush, can be fired through, two or more block vision.
 * Fixed mimics not using the correct item glyph if it was redefined.
-* (Very) ugly things get random resistances and attack flavours.
-* Slime creatures can merge to become larger and more powerful.
+* (Very) ugly things get resistances and attack flavours depending on colour.
+* Slime creatures can merge in corridors to become larger and more powerful.
 * All spectral things can use stairs again.
-* Several cool new uniques.
-* Unique speech much more varied and interesting.
+* Display magic (or "hostile enchantments") resistance in monster descriptions.
+* Monsters get more sensible experience values matching their difficulty.
 * OOD (out-of-depth) monsters no longer appear in bands until many turns
   spent on the level.
-* Monster respawns on any level in the main dungeon branches outside
-  Hell and Zot decline with time spent on the level and eventually
-  no further monsters will be generated on the level.
 * OOD monster generation increases sharply with time spent on a level.
-* Display magic (or "hostile enchantments") resistance in monster descriptions.
+* Monster respawns on any level in the main dungeon branches outside
+  Hell and Zot decline with time spent on the level until eventually
+  no further monsters will be generated on the level.
+* Demons spawned during the orb run will actively seek out the player.
 * Hydras pick new target for remaining attacks if their current foe dies.
 * Make monsters forget player position if the player teleports away.
 * Implement and use monster spells "blink away" and "blink closer".
-* Detected secret doors remain unknown to stupid monsters.
+* Detected, unopened secret doors remain unknown to stupid monsters.
 * Monsters may quaff potions of might and berserk rage.
-* Confused monsters zap wands in random directions.
-* Demons spawned during the orb run will actively seek out the player.
 * Bears go berserk, but mindless monsters can't.
+* Confused monsters zap wands in random directions.
 * Giant lizards are now called crocodiles and are amphibious.
 * Greatly reduce number of monsters capable of submerging.
 * Submerged monsters cannot be targeted or affected by beams anymore.
@@ -161,22 +160,24 @@ Monsters
 * Monsters' sense invisible is more effective on invisible monsters,
   and less effective on invisible players.
 * Hungry ghosts eat corpses.
-* Monsters get more sensible experience values matching their difficulty.
 * Confused monsters zap wands in random directions.
 * Bashing plants or fungi will only train Fighting/Unarmed Combat up to level 1.
+* Several cool new uniques.
+* Unique speech much more varied and interesting.
 * Glyph changes for several monsters. See 052_monster_glyphs.txt.
 
 Characters
 ----------
-* Overhauled AC/EV system. Armour/Dodging/Stealth training depends on item mass.
+* Overhauled AC/EV system.
+* Armour/Dodging/Stealth training depends on item mass.
 * Strength effect on carrying capacity greatly increased.
 * Base carrying capacity depends on weight of the player species.
 * Demonspawn have been overhauled, mutations no longer depend on skill sets.
 * Wanderers have been overhauled and are much stronger.
 * Increased Mummies' starting stats.
 * Starting stats and equipment are no longer assigned randomly.
-* Many status effects and durations use delay rather than turn count.
 * Gain of Health and Magic Points on level up is no longer random.
+* Many status effects and durations use delay rather than turn count.
 * Round all aptitudes to multiples of 10.
 * Nerf damage reduction of the player's elemental resistances.
 * Distracted stabbing is more likely, but resulting damage bonus is lowered.
@@ -192,48 +193,52 @@ Characters
 * When berserk, hit points are scaled to 150%, as was the case before 0.5.
 * Add a time limit of ~200M turns, to safeguard against time wraps.
 
-Interface
----------
-* Fix wands not prompting when fired at allies.
-* Add a shopping list ('$') to notify you when you can afford a listed item.
-* New memorisation interface lists all spells contained in carried books.
-* Autopickup turns itself back on when killing invisible backlit monsters.
-* Display current power, range and food cost in spell descriptions.
+Interface: Dungeon exploration
+------------------------------
 * In the Abyss, allow travel via 'x' or mouseclick to cells within LOS.
 * Autotravel doesn't cut corners and tries to avoid ambushes.
-* Greatly decreased message spam, especially when targeting.
 * Switched to line-of-sight exclusions.
+* Exclusions within LOS can be set and removed with 'xe'.
 * Exclusions are displayed on the overview screen ('Ctrl-O' command).
 * Show explored depth for all branches in the overview screen ('Ctrl-O').
 * Autoexclusions get removed again once the trigger monster is no longer there.
 * Dangerous clouds that are generated by the dungeon itself ("fog machines")
   generate autoexclusions when seen by player.
-* Exclusions within LOS can be set and removed with 'xe'.
 * Treat non-adjacent mimics as safe for resting/travel.
 * Allow viewing off-level maps from the 'X' overmap with '[' and ']'.
 * Level features (e.g. stairs, gates, altars) are listed in the 'X' map.
 * Disallow autoexplore and resting when starving.
+* Disable autoexplore in labyrinths.
+
+Interface: Other
+----------------
+* Fix wands not prompting when fired at allies.
+* Add a shopping list ('$') to notify you when you can afford a listed item.
+* New memorisation interface lists all spells contained in carried books.
+* Autopickup turns itself back on when killing invisible backlit monsters.
+* Greatly decreased message spam, especially when targeting.
 * Add !a inscription to prompt when attacking with this wielded item.
 * New Lua file autofight.lua which allows auto-attacking of the nearest enemy.
 * Abort some teleportation attempts with -TELE without losing the turn.
 * Food is never autoassigned to slot 'e' and potions are never autoassigned
   to slots 'q' or 'y'.
 * If you know Evaporate, list possible clouds in potions' descriptions.
+* Unidentified artefacts can now be found with "Ctrl-F artefact".
 * Prefer swapping to a butchery tool to unequipping gloves.
 * Allow more than 8 colours in Mac builds if the terminal supports it.
 * Allow overriding vi keys with "Unknown command", see no_vi_command_key.txt.
-* Disable autoexplore in labyrinths.
-* Unidentified artefacts can now be found with "Ctrl-F artefact".
 * Colour experience pool according to fullness.
 * Added an html version of the FAQ in the docs/ directory.
 
 Spells
 ------
 * Removed Divinations spell school.
-* New spell: Iskenderun's Orb of Destruction, homing in on target.
+* New spell: Orb of Destruction, homes in on target and explodes.
 * Silence radius decreases with duration.
 * Limit Summon Small Mammals to a maximum of two mammals per casting.
 * Summon Small Mammals doesn't summon green or orange rats anymore.
+* Reduced Poison Arrow's irresistible damage component from 60% to 30%.
+* Controlled Blink causes glowing.
 * Fulsome Distillation depends only on corpse type - RNG and rotting influence
   has been removed.  Also doesn't prompt when only one corpse present.
 * Tukima's Dance weapon strength depends on spell power and weapon weight.
@@ -244,10 +249,9 @@ Spells
 * Condensation Shield is more effective.
 * Improved Passwall interface.
 * Allow Mummies to cast Summon Horrible Things.
-* Controlled Blink causes glowing.
-* Reduced Poison Arrow's irresistible damage component from 60% to 30%.
 * Ice Form can swim in deep water; be careful you don't drown!
 * Disintegration is really messy.
+* Display current power, range and food cost in spell descriptions.
 * Useless and forbidden spells are coloured in spell menus.
 
 Tiles
