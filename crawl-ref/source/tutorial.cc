@@ -1611,7 +1611,7 @@ static std::string _describe_portal(const coord_def &gc)
     {
         text << "is a portal to a set of special levels filled with very "
                 "tough monsters; you probably shouldn't even think of going "
-                "in here.  Additionally, entering a ziggurat takes a lot of "
+                "in here. Additionally, entering a ziggurat takes a lot of "
                 "gold, a lot more than you'd have right now; don't bother "
                 "saving gold up for it, since at this point your gold is "
                 "better spent at shops buying items which can help you "
@@ -1625,8 +1625,8 @@ static std::string _describe_portal(const coord_def &gc)
     else if (desc.find("bazaar") != std::string::npos)
     {
         text << "is a portal to an inter-dimensional bazaar filled with "
-                "shops.  It will disappear if you don't enter it soon, "
-                "so hurry.  To enter ";
+                "shops. It will disappear if you don't enter it soon, "
+                "so hurry. To enter ";
     }
     // The sewers can appear from DL 3 to DL 6.
     else
@@ -1635,12 +1635,12 @@ static std::string _describe_portal(const coord_def &gc)
                 "your way back to the exit through some tougher than average "
                 "monsters (the monsters around the portal should give a "
                 "good indication as to how tough), but with the reward of "
-                "some good loot.  There's no penalty for skipping it, but if "
+                "some good loot. There's no penalty for skipping it, but if "
                 "you do skip it the portal will disappear, so you have to "
-                "decide now if you want to risk it.  To enter ";
+                "decide now if you want to risk it. To enter ";
     }
 
-    text << "stand over the portal and press <w>></w>.  To return find "
+    text << "stand over the portal and press <w>></w>. To return find "
 #ifdef USE_TILE
         "a similar looking portal tile "
 #else
@@ -2333,7 +2333,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 
         text << "\n\nIf there's anything you want which you can't afford yet "
                 "you can select those items and press <w>@</w> to put them "
-                "on your shopping list.  The game will then remind you when "
+                "on your shopping list. The game will then remind you when "
                 "you gather enough gold to buy the items on your list.";
         break;
 
@@ -2679,7 +2679,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         {
             text << "\n\nYou can easily find items you've left on the floor "
                     "with the <w>%</w> command, which will let you "
-                    "seach for all known items in the dungeon.  For example, "
+                    "seach for all known items in the dungeon. For example, "
                     "<w>% \"knife\"</w> will list all knives. You can "
                     "can then travel to one of the spots.";
             Tutorial.tut_stashes = false;
@@ -3307,7 +3307,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
             DELAY_EVENT;
 
         text << "Sometimes toadstools will grow on decaying corpses, and "
-                "will wither away soon after appearing.  Worshippers of "
+                "will wither away soon after appearing. Worshippers of "
                 "Fedhas Madash, the plant god, can make use of them, "
                 "but to everyone else they're just ugly dungeon decoration.";
         break;
@@ -3841,7 +3841,7 @@ void tutorial_describe_item(const item_def &item)
                         "you can simply ";
 #ifdef USE_TILE
                 ostr << "<w>left mouse click</w> on the monster you want "
-                        "to hit while pressing the <w>Shift key</w>.  "
+                        "to hit while pressing the <w>Shift key</w>. "
                         "Alternatively, you can <w>left mouse click</w> on "
                         "this tile of the ammo you want to fire, and then "
                         "<w>left mouse click</w> on the monster you want "
@@ -4712,7 +4712,7 @@ static void _tutorial_describe_feature(int x, int y)
 
         ostr << "Many forms of combat and some forms of magical attack "
                 "will splatter the surrounings with blood (if the victim has "
-                "any blood, that is).  Some monsters can smell blood from "
+                "any blood, that is). Some monsters can smell blood from "
                 "a distance and will come looking for whatever the blood "
                 "was spilled from.";
     }
