@@ -3807,9 +3807,6 @@ VISUAL:@The_monster@ squints @at_foe@.
 %%%%
 _Duane_rare_
 
-w:1
-VISUAL:@The_monster@'s ears look incredibly large.
-
 @The_monster@ says, "I could tell you some amazing stories... but then you'd have to die."
 
 @The_monster@ says, "Did you just laugh? Why did you laugh?" @player_only@
@@ -3968,7 +3965,11 @@ VISUAL:@The_monster@ looks rather jealous.
 
 @The_monster@ says, "A flail is better than a scythe, any day of the week!"
 
+w:5
 @The_monster@ says, "What use are spells, anyway?"
+
+w:5
+@The_monster@ mutters, "Who needs spells, anyway?"
 
 @The_monster@ says, "Everyone always remembers my brother. 'Who's Edmund?' they ask!"
 
@@ -3976,6 +3977,9 @@ VISUAL:@The_monster@ looks rather jealous.
 
 w:1
 @The_monster@ says, "Maybe I'll buy a title. How does Count Edmund sound?"
+
+w:1
+@The_monster@ whines, "My parents never had time for me!"
 %%%%
 ############ ERICA ### A wild tempered adventuress
 Erica
