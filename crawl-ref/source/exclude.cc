@@ -101,7 +101,7 @@ opacity_type _feat_opacity(dungeon_feature_type feat)
 
 // A cell is considered clear unless the player knows it's
 // opaque.
-struct opacity_excl : opacity_func
+struct opacity_excl : public opacity_func
 {
     CLONE(opacity_excl)
 
