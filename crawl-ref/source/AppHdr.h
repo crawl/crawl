@@ -339,7 +339,7 @@
 #endif
 
 #ifdef DEBUG
-    #if __MWERKS__
+    #ifdef __MWERKS__
         #define MSIPL_DEBUG_MODE
     #endif
 #else
