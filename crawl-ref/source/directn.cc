@@ -1242,6 +1242,8 @@ void direction_chooser::draw_beam_if_needed()
     if (!need_beam_redraw)
         return;
 
+    need_beam_redraw = false;
+
     // Clear the old beam if necessary.
     viewwindow(false, false);
 
@@ -1277,8 +1279,6 @@ void direction_chooser::draw_beam_if_needed()
     // In tiles, we need to refresh the window to get the beam drawn.
     viewwindow(false, true);
 #endif
-
-    need_beam_redraw = false;
 }
 
 bool direction_chooser::in_range(const coord_def& p) const
