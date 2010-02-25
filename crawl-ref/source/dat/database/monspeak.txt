@@ -1760,7 +1760,7 @@ w:2
 %%%%
 ############ DONALD ### An adventurer hating competition
 #################################################################### BRANCHES #
-_Orcish_Mines_Donald_
+Orcish Mines Donald
 
 @The_monster@ says, "Orcs complain a lot, don't they? I hate it."
 
@@ -1794,7 +1794,7 @@ VISUAL:@The_monster@ kicks a rock and scowls.
 
 @The_monster@ says, "I hate complainers so much."
 %%%%
-_Elven_Halls_Donald_
+Elven Halls Donald
 
 @The_monster@ says, "They're so pretty, I think it must be a glamour."
 
@@ -1820,7 +1820,7 @@ _Elven_Halls_Donald_
 
 @The_monster@ says, "Some of those elves look a bit grey in the face."
 %%%%
-_Swamp_Donald_
+Swamp Donald
 
 @The_monster@ says, "What's that horrible smell? It's like... yuck."
 
@@ -1846,7 +1846,7 @@ _Swamp_Donald_
 
 @The_monster@ says, "Is there a plague of frogs happening, or something? At least it's not locusts."
 %%%%
-_Shoals_Donald_
+Shoals Donald
 
 @The_monster@ says, "Tides? What were they thinking? I hate tides!"
 
@@ -1888,7 +1888,7 @@ _Shoals_Donald_
 
 @The_monster@ says, "This tentacle just came out of nowhere and touched me. I hate tentacles!"
 %%%%
-_Slime_Pits_Donald_
+Slime Pits Donald
 
 @The_monster@ says, "I forgot my corrosion kit. Damn, I hate that!"
 
@@ -1930,7 +1930,7 @@ _Slime_Pits_Donald_
 
 @The_monster@ says, "I hope the rune isn't sticky."
 %%%%
-_Snake_Pit_Donald_
+Snake Pit Donald
 
 @The_monster@ says, "You know that hissing noise? I hate that."
 
@@ -1987,7 +1987,7 @@ _Snake_Pit_Donald_
 #
 #
 #%%%%
-_Hall_of_Blades_Donald_
+Hall of Blades Donald
 
 @The_monster@ says, "A great mace doesn't even have a blade."
 
@@ -2019,7 +2019,7 @@ _Hall_of_Blades_Donald_
 
 @The_monster@ says, "I've been waiting here for ages. Nothing new."
 %%%%
-_Crypt_Donald_
+Crypt Donald
 
 @The_monster@ says, "Zombies are pretty boring."
 
@@ -2087,7 +2087,7 @@ _Crypt_Donald_
 %%%%
 ######################################################################## GODS #
 %%%%
-_Zin_Donald_
+Zin Donald
 
 @The_monster@ says, "At least you won't get hungry."
 
@@ -2121,7 +2121,7 @@ _Zin_Donald_
 
 @The_monster@ says, "If I give you twenty gold pieces, can you get rid of this nasty case of scales I've got?"
 %%%%
-_The_Shining_One_Donald_
+The Shining One Donald
 
 @The_monster@ says, "What's the point of being chivalric if nobody's going to be chivalric back?"
 
@@ -2141,7 +2141,7 @@ _The_Shining_One_Donald_
 
 @The_monster@ says, "I hate haloes."
 %%%%
-_Kikubaaqudgha_Donald_
+Kikubaaqudgha Donald
 
 @The_monster@ says, "Kikubaa-what? How do you even say that?"
 
@@ -2161,7 +2161,7 @@ _Kikubaaqudgha_Donald_
 
 @The_monster@ says, "I'm hungry. Can you summon some snacks?"
 %%%%
-_Yredelemnul_Donald_
+Yredelemnul Donald
 
 @The_monster@ says, "How does a skeletal dragon fly, anyway?"
 
@@ -2185,7 +2185,7 @@ _Yredelemnul_Donald_
 
 @The_monster@ says, "Maybe you can tell me! What exactly is a 'death cob'?"
 %%%%
-_Okawaru_Donald_
+Okawaru Donald
 
 @The_monster@ says, "Okawaru always makes me think of chokos."
 
@@ -2207,7 +2207,7 @@ VISUAL:@The_monster@ yawns.
 
 @The_monster@ says, "You can only wear one cloak at a time, you know?"
 %%%%
-_Makhleb_Donald_
+Makhleb Donald
 
 @The_monster@ says, "At least you've got demons for company."
 
@@ -2223,7 +2223,7 @@ _Makhleb_Donald_
 
 @The_monster@ says, "I hate demons."
 %%%%
-_Sif_Muna_Donald_
+Sif Muna Donald
 
 @The_monster@ says, "Don't you wish for a portable bookcase?"
 
@@ -2257,7 +2257,7 @@ _Sif_Muna_Donald_
 
 @The_monster@ says, "You'll go blind if you keep casting by yourself."
 %%%%
-_Trog_Donald_
+Trog Donald
 
 @The_monster@ says, "So, are you allowed to read books?"
 
@@ -2283,7 +2283,7 @@ _Trog_Donald_
 
 @The_monster@ says, "I hate ogres."
 %%%%
-_Nemelex_Xobeh_Donald_
+Nemelex Xobeh Donald
 
 @The_monster@ says, "What's all in the cards? Your future?"
 
@@ -2307,7 +2307,7 @@ _Nemelex_Xobeh_Donald_
 
 @The_monster@ says, "You need to come to terms with your gambling problem, mate."
 %%%%
-_Elyvilon_Donald_
+Elyvilon Donald
 
 @The_monster@ says, "Whatever happened to, 'First, do no harm'?"
 
@@ -2321,7 +2321,7 @@ _Elyvilon_Donald_
 
 @The_monster@ says, "Come on. Make me an offer of peace that I can't refuse!"
 %%%%
-_Lugonu_Donald_
+Lugonu Donald
 
 @The_monster@ says, "I'd pick a mace for blessing, if I were you."
 
@@ -2339,7 +2339,7 @@ _Lugonu_Donald_
 
 @The_monster@ says, "What's the point of distortion, anyway? I don't want my food blinking away from me."
 %%%%
-_Beogh_Donald_
+Beogh Donald
 
 @The_monster@ says, "Beogh's pretty racist."
 
@@ -2351,7 +2351,7 @@ _Beogh_Donald_
 
 @The_monster@ says, "I'd get sick of organising so many troops."
 
-@The_monster@ says, "How do you feed them all? Five loaves and a few fishes?"
+@The_monster@ says, "How do you feed them all? Five loaves and a few fish?"
 
 @The_monster@ says, "You'll need more than orcs to take me on."
 
@@ -2365,7 +2365,7 @@ _Beogh_Donald_
 
 @The_monster@ says, "Messiah? I hate messiahs."
 %%%%
-_Jiyva_Donald_
+Jiyva Donald
 
 @The_monster@ says, "Come slime with me!"
 
@@ -2385,7 +2385,7 @@ _Jiyva_Donald_
 
 @The_monster@ says, "If I pretend to be a jelly, can I have your stuff?"
 %%%%
-_Fedhas_Donald_
+Fedhas Donald
 
 @The_monster@ says, "What's with all that fungus?"
 
@@ -2411,7 +2411,7 @@ _Fedhas_Donald_
 
 @The_monster@ says, "Damn. I left my rain coat at home."
 %%%%
-_Cheibriados_Donald_
+Cheibriados Donald
 
 @The_monster@ says, "Slow down, man!"
 
@@ -2433,7 +2433,7 @@ _Cheibriados_Donald_
 
 @The_monster@ says, "Tummy is such a puerile word."
 %%%%
-_Xom_Donald_
+Xom Donald
 
 @The_monster@ says, "Xom? Are you insane?"
 
@@ -2461,13 +2461,14 @@ _Xom_Donald_
 
 @The_monster@ says, "I had a teddy bear once. I hated it."
 %%%%
-_No_God_Donald_
+No God Donald
 
 @The_monster@ says, "Don't you get lonely without a god?"
 
 @The_monster@ says, "I hate the gods."
 
-@The_monster@ says, "And the gods hate me."
+w:5
+@The_monster@ says, "I hate the gods, and the gods hate me."
 
 @The_monster@ says, "So, what do you do with all of your corpses? Leave them to rot?"
 
@@ -2579,1103 +2580,6 @@ VISUAL:@The_monster@ sticks a finger up his nose.
 VISUAL:@The_monster@ tugs at his hair.
 
 VISUAL:@The_monster@ twirls gently on the spot.
-%%%%
-######################################################################## GLUE #
-# Orcish mines combos
-Zin Orcish Mines Donald
-
-@_generic_Donald_@
-
-@_Orcish_Mines_Donald_@
-
-@_Zin_Donald_@
-%%%%
-The Shining One Orcish Mines Donald
-
-@_generic_Donald_@
-
-@_Orcish_Mines_Donald_@
-
-@_The_Shining_One_Donald_@
-%%%%
-Kikubaaqudgha Orcish Mines Donald
-
-@_generic_Donald_@
-
-@_Orcish_Mines_Donald_@
-
-@_Kikubaaqudgha_Donald_@
-%%%%
-Yredelemnul Orcish Mines Donald
-
-@_generic_Donald_@
-
-@_Orcish_Mines_Donald_@
-
-@_Yredelemnul_Donald_@
-%%%%
-Okawaru Orcish Mines Donald
-
-@_generic_Donald_@
-
-@_Orcish_Mines_Donald_@
-
-@_Okawaru_Donald_@
-%%%%
-Makhleb Orcish Mines Donald
-
-@_generic_Donald_@
-
-@_Orcish_Mines_Donald_@
-
-@_Makhleb_Donald_@
-%%%%
-Sif Muna Orcish Mines Donald
-
-@_generic_Donald_@
-
-@_Orcish_Mines_Donald_@
-
-@_Sif_Muna_Donald_@
-%%%%
-Trog Orcish Mines Donald
-
-@_generic_Donald_@
-
-@_Orcish_Mines_Donald_@
-
-@_Trog_Donald_@
-%%%%
-Nemelex Xobeh Orcish Mines Donald
-
-@_generic_Donald_@
-
-@_Orcish_Mines_Donald_@
-
-@_Nemelex_Xobeh_Donald_@
-%%%%
-Elyvilon Orcish Mines Donald
-
-@_generic_Donald_@
-
-@_Orcish_Mines_Donald_@
-
-@_Elyvilon_Donald_@
-%%%%
-Lugonu Orcish Mines Donald
-
-@_generic_Donald_@
-
-@_Orcish_Mines_Donald_@
-
-@_Lugonu_Donald_@
-%%%%
-Beogh Orcish Mines Donald
-
-@_generic_Donald_@
-
-@_Orcish_Mines_Donald_@
-
-@_Beogh_Donald_@
-%%%%
-Jiyva Orcish Mines Donald
-
-@_generic_Donald_@
-
-@_Orcish_Mines_Donald_@
-
-@_Jiyva_Donald_@
-%%%%
-Fedhas Orcish Mines Donald
-
-@_generic_Donald_@
-
-@_Orcish_Mines_Donald_@
-
-@_Fedhas_Donald_@
-%%%%
-Cheibriados Orcish Mines Donald
-
-@_generic_Donald_@
-
-@_Orcish_Mines_Donald_@
-
-@_Cheibriados_Donald_@
-%%%%
-Xom Orcish Mines Donald
-
-@_generic_Donald_@
-
-@_Orcish_Mines_Donald_@
-
-@_Xom_Donald_@
-%%%%
-No God Orcish Mines Donald
-
-@_generic_Donald_@
-
-@_Orcish_Mines_Donald_@
-
-@_No_God_Donald_@
-%%%%
-# Elven Halls
-Zin Elven Halls Donald
-
-@_generic_Donald_@
-
-@_Elven_Halls_Donald_@
-
-@_Zin_Donald_@
-%%%%
-The Shining One Elven Halls Donald
-
-@_generic_Donald_@
-
-@_Elven_Halls_Donald_@
-
-@_The_Shining_One_Donald_@
-%%%%
-Kikubaaqudgha Elven Halls Donald
-
-@_generic_Donald_@
-
-@_Elven_Halls_Donald_@
-
-@_Kikubaaqudgha_Donald_@
-%%%%
-Yredelemnul Elven Halls Donald
-
-@_generic_Donald_@
-
-@_Elven_Halls_Donald_@
-
-@_Yredelemnul_Donald_@
-%%%%
-Okawaru Elven Halls Donald
-
-@_generic_Donald_@
-
-@_Elven_Halls_Donald_@
-
-@_Okawaru_Donald_@
-%%%%
-Makhleb Elven Halls Donald
-
-@_generic_Donald_@
-
-@_Elven_Halls_Donald_@
-
-@_Makhleb_Donald_@
-%%%%
-Sif Muna Elven Halls Donald
-
-@_generic_Donald_@
-
-@_Elven_Halls_Donald_@
-
-@_Sif_Muna_Donald_@
-%%%%
-Trog Elven Halls Donald
-
-@_generic_Donald_@
-
-@_Elven_Halls_Donald_@
-
-@_Trog_Donald_@
-%%%%
-Nemelex Xobeh Elven Halls Donald
-
-@_generic_Donald_@
-
-@_Elven_Halls_Donald_@
-
-@_Nemelex_Xobeh_Donald_@
-%%%%
-Elyvilon Elven Halls Donald
-
-@_generic_Donald_@
-
-@_Elven_Halls_Donald_@
-
-@_Elyvilon_Donald_@
-%%%%
-Lugonu Elven Halls Donald
-
-@_generic_Donald_@
-
-@_Elven_Halls_Donald_@
-
-@_Lugonu_Donald_@
-%%%%
-Beogh Elven Halls Donald
-
-@_generic_Donald_@
-
-@_Elven_Halls_Donald_@
-
-@_Beogh_Donald_@
-%%%%
-Jiyva Elven Halls Donald
-
-@_generic_Donald_@
-
-@_Elven_Halls_Donald_@
-
-@_Jiyva_Donald_@
-%%%%
-Fedhas Elven Halls Donald
-
-@_generic_Donald_@
-
-@_Elven_Halls_Donald_@
-
-@_Fedhas_Donald_@
-%%%%
-Cheibriados Elven Halls Donald
-
-@_generic_Donald_@
-
-@_Elven_Halls_Donald_@
-
-@_Cheibriados_Donald_@
-%%%%
-Xom Elven Halls Donald
-
-@_generic_Donald_@
-
-@_Elven_Halls_Donald_@
-
-@_Xom_Donald_@
-%%%%
-No God Elven Halls Donald
-
-@_generic_Donald_@
-
-@_Elven_Halls_Donald_@
-
-@_No_God_Donald_@
-%%%%
-# Swmap
-Zin Swamp Donald
-
-@_generic_Donald_@
-
-@_Swamp_Donald_@
-
-@_Zin_Donald_@
-%%%%
-The Shining One Swamp Donald
-
-@_generic_Donald_@
-
-@_Swamp_Donald_@
-
-@_The_Shining_One_Donald_@
-%%%%
-Kikubaaqudgha Swamp Donald
-
-@_generic_Donald_@
-
-@_Swamp_Donald_@
-
-@_Kikubaaqudgha_Donald_@
-%%%%
-Yredelemnul Swamp Donald
-
-@_generic_Donald_@
-
-@_Swamp_Donald_@
-
-@_Yredelemnul_Donald_@
-%%%%
-Okawaru Swamp Donald
-
-@_generic_Donald_@
-
-@_Swamp_Donald_@
-
-@_Okawaru_Donald_@
-%%%%
-Makhleb Swamp Donald
-
-@_generic_Donald_@
-
-@_Swamp_Donald_@
-
-@_Makhleb_Donald_@
-%%%%
-Sif Muna Swamp Donald
-
-@_generic_Donald_@
-
-@_Swamp_Donald_@
-
-@_Sif_Muna_Donald_@
-%%%%
-Trog Swamp Donald
-
-@_generic_Donald_@
-
-@_Swamp_Donald_@
-
-@_Trog_Donald_@
-%%%%
-Nemelex Xobeh Swamp Donald
-
-@_generic_Donald_@
-
-@_Swamp_Donald_@
-
-@_Nemelex_Xobeh_Donald_@
-%%%%
-Elyvilon Swamp Donald
-
-@_generic_Donald_@
-
-@_Swamp_Donald_@
-
-@_Elyvilon_Donald_@
-%%%%
-Lugonu Swamp Donald
-
-@_generic_Donald_@
-
-@_Swamp_Donald_@
-
-@_Lugonu_Donald_@
-%%%%
-Beogh Swamp Donald
-
-@_generic_Donald_@
-
-@_Swamp_Donald_@
-
-@_Beogh_Donald_@
-%%%%
-Jiyva Swamp Donald
-
-@_generic_Donald_@
-
-@_Swamp_Donald_@
-
-@_Jiyva_Donald_@
-%%%%
-Fedhas Swamp Donald
-
-@_generic_Donald_@
-
-@_Swamp_Donald_@
-
-@_Fedhas_Donald_@
-%%%%
-Cheibriados Swamp Donald
-
-@_generic_Donald_@
-
-@_Swamp_Donald_@
-
-@_Cheibriados_Donald_@
-%%%%
-Xom Swamp Donald
-
-@_generic_Donald_@
-
-@_Swamp_Donald_@
-
-@_Xom_Donald_@
-%%%%
-No God Swamp Donald
-
-@_generic_Donald_@
-
-@_Swamp_Donald_@
-
-@_No_God_Donald_@
-%%%%
-# Shoals
-Zin Shoals Donald
-
-@_generic_Donald_@
-
-@_Shoals_Donald_@
-
-@_Zin_Donald_@
-%%%%
-The Shining One Shoals Donald
-
-@_generic_Donald_@
-
-@_Shoals_Donald_@
-
-@_The_Shining_One_Donald_@
-%%%%
-Kikubaaqudgha Shoals Donald
-
-@_generic_Donald_@
-
-@_Shoals_Donald_@
-
-@_Kikubaaqudgha_Donald_@
-%%%%
-Yredelemnul Shoals Donald
-
-@_generic_Donald_@
-
-@_Shoals_Donald_@
-
-@_Yredelemnul_Donald_@
-%%%%
-Okawaru Shoals Donald
-
-@_generic_Donald_@
-
-@_Shoals_Donald_@
-
-@_Okawaru_Donald_@
-%%%%
-Makhleb Shoals Donald
-
-@_generic_Donald_@
-
-@_Shoals_Donald_@
-
-@_Makhleb_Donald_@
-%%%%
-Sif Muna Shoals Donald
-
-@_generic_Donald_@
-
-@_Shoals_Donald_@
-
-@_Sif_Muna_Donald_@
-%%%%
-Trog Shoals Donald
-
-@_generic_Donald_@
-
-@_Shoals_Donald_@
-
-@_Trog_Donald_@
-%%%%
-Nemelex Xobeh Shoals Donald
-
-@_generic_Donald_@
-
-@_Shoals_Donald_@
-
-@_Nemelex_Xobeh_Donald_@
-%%%%
-Elyvilon Shoals Donald
-
-@_generic_Donald_@
-
-@_Shoals_Donald_@
-
-@_Elyvilon_Donald_@
-%%%%
-Lugonu Shoals Donald
-
-@_generic_Donald_@
-
-@_Shoals_Donald_@
-
-@_Lugonu_Donald_@
-%%%%
-Beogh Shoals Donald
-
-@_generic_Donald_@
-
-@_Shoals_Donald_@
-
-@_Beogh_Donald_@
-%%%%
-Jiyva Shoals Donald
-
-@_generic_Donald_@
-
-@_Shoals_Donald_@
-
-@_Jiyva_Donald_@
-%%%%
-Fedhas Shoals Donald
-
-@_generic_Donald_@
-
-@_Shoals_Donald_@
-
-@_Fedhas_Donald_@
-%%%%
-Cheibriados Shoals Donald
-
-@_generic_Donald_@
-
-@_Shoals_Donald_@
-
-@_Cheibriados_Donald_@
-%%%%
-Xom Shoals Donald
-
-@_generic_Donald_@
-
-@_Shoals_Donald_@
-
-@_Xom_Donald_@
-%%%%
-No God Shoals Donald
-
-@_generic_Donald_@
-
-@_Shoals_Donald_@
-
-@_No_God_Donald_@
-%%%%
-# Slime Pits
-Zin Slime Pits Donald
-
-@_generic_Donald_@
-
-@_Slime_Pits_Donald_@
-
-@_Zin_Donald_@
-%%%%
-The Shining One Slime Pits Donald
-
-@_generic_Donald_@
-
-@_Slime_Pits_Donald_@
-
-@_The_Shining_One_Donald_@
-%%%%
-Kikubaaqudgha Slime Pits Donald
-
-@_generic_Donald_@
-
-@_Slime_Pits_Donald_@
-
-@_Kikubaaqudgha_Donald_@
-%%%%
-Yredelemnul Slime Pits Donald
-
-@_generic_Donald_@
-
-@_Slime_Pits_Donald_@
-
-@_Yredelemnul_Donald_@
-%%%%
-Okawaru Slime Pits Donald
-
-@_generic_Donald_@
-
-@_Slime_Pits_Donald_@
-
-@_Okawaru_Donald_@
-%%%%
-Makhleb Slime Pits Donald
-
-@_generic_Donald_@
-
-@_Slime_Pits_Donald_@
-
-@_Makhleb_Donald_@
-%%%%
-Sif Muna Slime Pits Donald
-
-@_generic_Donald_@
-
-@_Slime_Pits_Donald_@
-
-@_Sif_Muna_Donald_@
-%%%%
-Trog Slime Pits Donald
-
-@_generic_Donald_@
-
-@_Slime_Pits_Donald_@
-
-@_Trog_Donald_@
-%%%%
-Nemelex Xobeh Slime Pits Donald
-
-@_generic_Donald_@
-
-@_Slime_Pits_Donald_@
-
-@_Nemelex_Xobeh_Donald_@
-%%%%
-Elyvilon Slime Pits Donald
-
-@_generic_Donald_@
-
-@_Slime_Pits_Donald_@
-
-@_Elyvilon_Donald_@
-%%%%
-Lugonu Slime Pits Donald
-
-@_generic_Donald_@
-
-@_Slime_Pits_Donald_@
-
-@_Lugonu_Donald_@
-%%%%
-Beogh Slime Pits Donald
-
-@_generic_Donald_@
-
-@_Slime_Pits_Donald_@
-
-@_Beogh_Donald_@
-%%%%
-Jiyva Slime Pits Donald
-
-@_generic_Donald_@
-
-@_Slime_Pits_Donald_@
-
-@_Jiyva_Donald_@
-%%%%
-Fedhas Slime Pits Donald
-
-@_generic_Donald_@
-
-@_Slime_Pits_Donald_@
-
-@_Fedhas_Donald_@
-%%%%
-Cheibriados Slime Pits Donald
-
-@_generic_Donald_@
-
-@_Slime_Pits_Donald_@
-
-@_Cheibriados_Donald_@
-%%%%
-Xom Slime Pits Donald
-
-@_generic_Donald_@
-
-@_Slime_Pits_Donald_@
-
-@_Xom_Donald_@
-%%%%
-No God Slime Pits Donald
-
-@_generic_Donald_@
-
-@_Slime_Pits_Donald_@
-
-@_No_God_Donald_@
-%%%%
-# Snake Pit
-Zin Snake Pit Donald
-
-@_generic_Donald_@
-
-@_Snake_Pit_Donald_@
-
-@_Zin_Donald_@
-%%%%
-The Shining One Snake Pit Donald
-
-@_generic_Donald_@
-
-@_Snake_Pit_Donald_@
-
-@_The_Shining_One_Donald_@
-%%%%
-Kikubaaqudgha Snake Pit Donald
-
-@_generic_Donald_@
-
-@_Snake_Pit_Donald_@
-
-@_Kikubaaqudgha_Donald_@
-%%%%
-Yredelemnul Snake Pit Donald
-
-@_generic_Donald_@
-
-@_Snake_Pit_Donald_@
-
-@_Yredelemnul_Donald_@
-%%%%
-Okawaru Snake Pit Donald
-
-@_generic_Donald_@
-
-@_Snake_Pit_Donald_@
-
-@_Okawaru_Donald_@
-%%%%
-Makhleb Snake Pit Donald
-
-@_generic_Donald_@
-
-@_Snake_Pit_Donald_@
-
-@_Makhleb_Donald_@
-%%%%
-Sif Muna Snake Pit Donald
-
-@_generic_Donald_@
-
-@_Snake_Pit_Donald_@
-
-@_Sif_Muna_Donald_@
-%%%%
-Trog Snake Pit Donald
-
-@_generic_Donald_@
-
-@_Snake_Pit_Donald_@
-
-@_Trog_Donald_@
-%%%%
-Nemelex Xobeh Snake Pit Donald
-
-@_generic_Donald_@
-
-@_Snake_Pit_Donald_@
-
-@_Nemelex_Xobeh_Donald_@
-%%%%
-Elyvilon Snake Pit Donald
-
-@_generic_Donald_@
-
-@_Snake_Pit_Donald_@
-
-@_Elyvilon_Donald_@
-%%%%
-Lugonu Snake Pit Donald
-
-@_generic_Donald_@
-
-@_Snake_Pit_Donald_@
-
-@_Lugonu_Donald_@
-%%%%
-Beogh Snake Pit Donald
-
-@_generic_Donald_@
-
-@_Snake_Pit_Donald_@
-
-@_Beogh_Donald_@
-%%%%
-Jiyva Snake Pit Donald
-
-@_generic_Donald_@
-
-@_Snake_Pit_Donald_@
-
-@_Jiyva_Donald_@
-%%%%
-Fedhas Snake Pit Donald
-
-@_generic_Donald_@
-
-@_Snake_Pit_Donald_@
-
-@_Fedhas_Donald_@
-%%%%
-Cheibriados Snake Pit Donald
-
-@_generic_Donald_@
-
-@_Snake_Pit_Donald_@
-
-@_Cheibriados_Donald_@
-%%%%
-Xom Snake Pit Donald
-
-@_generic_Donald_@
-
-@_Snake_Pit_Donald_@
-
-@_Xom_Donald_@
-%%%%
-No God Snake Pit Donald
-
-@_generic_Donald_@
-
-@_Snake_Pit_Donald_@
-
-@_No_God_Donald_@
-%%%%
-# Hall of Blades
-Zin Hall of Blades Donald
-
-@_generic_Donald_@
-
-@_Hall_of_Blades_Donald_@
-
-@_Zin_Donald_@
-%%%%
-The Shining One Hall of Blades Donald
-
-@_generic_Donald_@
-
-@_Hall_of_Blades_Donald_@
-
-@_The_Shining_One_Donald_@
-%%%%
-Kikubaaqudgha Hall of Blades Donald
-
-@_generic_Donald_@
-
-@_Hall_of_Blades_Donald_@
-
-@_Kikubaaqudgha_Donald_@
-%%%%
-Yredelemnul Hall of Blades Donald
-
-@_generic_Donald_@
-
-@_Hall_of_Blades_Donald_@
-
-@_Yredelemnul_Donald_@
-%%%%
-Okawaru Hall of Blades Donald
-
-@_generic_Donald_@
-
-@_Hall_of_Blades_Donald_@
-
-@_Okawaru_Donald_@
-%%%%
-Makhleb Hall of Blades Donald
-
-@_generic_Donald_@
-
-@_Hall_of_Blades_Donald_@
-
-@_Makhleb_Donald_@
-%%%%
-Sif Muna Hall of Blades Donald
-
-@_generic_Donald_@
-
-@_Hall_of_Blades_Donald_@
-
-@_Sif_Muna_Donald_@
-%%%%
-Trog Hall of Blades Donald
-
-@_generic_Donald_@
-
-@_Hall_of_Blades_Donald_@
-
-@_Trog_Donald_@
-%%%%
-Nemelex Xobeh Hall of Blades Donald
-
-@_generic_Donald_@
-
-@_Hall_of_Blades_Donald_@
-
-@_Nemelex_Xobeh_Donald_@
-%%%%
-Elyvilon Hall of Blades Donald
-
-@_generic_Donald_@
-
-@_Hall_of_Blades_Donald_@
-
-@_Elyvilon_Donald_@
-%%%%
-Lugonu Hall of Blades Donald
-
-@_generic_Donald_@
-
-@_Hall_of_Blades_Donald_@
-
-@_Lugonu_Donald_@
-%%%%
-Beogh Hall of Blades Donald
-
-@_generic_Donald_@
-
-@_Hall_of_Blades_Donald_@
-
-@_Beogh_Donald_@
-%%%%
-Jiyva Hall of Blades Donald
-
-@_generic_Donald_@
-
-@_Hall_of_Blades_Donald_@
-
-@_Jiyva_Donald_@
-%%%%
-Fedhas Hall of Blades Donald
-
-@_generic_Donald_@
-
-@_Hall_of_Blades_Donald_@
-
-@_Fedhas_Donald_@
-%%%%
-Cheibriados Hall of Blades Donald
-
-@_generic_Donald_@
-
-@_Hall_of_Blades_Donald_@
-
-@_Cheibriados_Donald_@
-%%%%
-Xom Hall of Blades Donald
-
-@_generic_Donald_@
-
-@_Hall_of_Blades_Donald_@
-
-@_Xom_Donald_@
-%%%%
-No God Hall of Blades Donald
-
-@_generic_Donald_@
-
-@_Hall_of_Blades_Donald_@
-
-@_No_God_Donald_@
-%%%%
-# Crypt
-Zin Crypt Donald
-
-@_generic_Donald_@
-
-@_Crypt_Donald_@
-
-@_Zin_Donald_@
-%%%%
-The Shining One Crypt Donald
-
-@_generic_Donald_@
-
-@_Crypt_Donald_@
-
-@_The_Shining_One_Donald_@
-%%%%
-Kikubaaqudgha Crypt Donald
-
-@_generic_Donald_@
-
-@_Crypt_Donald_@
-
-@_Kikubaaqudgha_Donald_@
-%%%%
-Yredelemnul Crypt Donald
-
-@_generic_Donald_@
-
-@_Crypt_Donald_@
-
-@_Yredelemnul_Donald_@
-%%%%
-Okawaru Crypt Donald
-
-@_generic_Donald_@
-
-@_Crypt_Donald_@
-
-@_Okawaru_Donald_@
-%%%%
-Makhleb Crypt Donald
-
-@_generic_Donald_@
-
-@_Crypt_Donald_@
-
-@_Makhleb_Donald_@
-%%%%
-Sif Muna Crypt Donald
-
-@_generic_Donald_@
-
-@_Crypt_Donald_@
-
-@_Sif_Muna_Donald_@
-%%%%
-Trog Crypt Donald
-
-@_generic_Donald_@
-
-@_Crypt_Donald_@
-
-@_Trog_Donald_@
-%%%%
-Nemelex Xobeh Crypt Donald
-
-@_generic_Donald_@
-
-@_Crypt_Donald_@
-
-@_Nemelex_Xobeh_Donald_@
-%%%%
-Elyvilon Crypt Donald
-
-@_generic_Donald_@
-
-@_Crypt_Donald_@
-
-@_Elyvilon_Donald_@
-%%%%
-Lugonu Crypt Donald
-
-@_generic_Donald_@
-
-@_Crypt_Donald_@
-
-@_Lugonu_Donald_@
-%%%%
-Beogh Crypt Donald
-
-@_generic_Donald_@
-
-@_Crypt_Donald_@
-
-@_Beogh_Donald_@
-%%%%
-Jiyva Crypt Donald
-
-@_generic_Donald_@
-
-@_Crypt_Donald_@
-
-@_Jiyva_Donald_@
-%%%%
-Fedhas Crypt Donald
-
-@_generic_Donald_@
-
-@_Crypt_Donald_@
-
-@_Fedhas_Donald_@
-%%%%
-Cheibriados Crypt Donald
-
-@_generic_Donald_@
-
-@_Crypt_Donald_@
-
-@_Cheibriados_Donald_@
-%%%%
-Xom Crypt Donald
-
-@_generic_Donald_@
-
-@_Crypt_Donald_@
-
-@_Xom_Donald_@
-%%%%
-No God Crypt Donald
-
-@_generic_Donald_@
-
-@_Crypt_Donald_@
-
-@_No_God_Donald_@
 %%%%
 ############ DOWAN ### A vain elf caster, twin brother of Duvessa
 twin_died Dowan

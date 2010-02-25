@@ -113,7 +113,7 @@ static std::string __try_exact_string(const std::vector<std::string> &prefixes,
         }
         else if (religion) // skip hostile, related and religion
         {
-            if (branch) // skip hostile, related and branch
+            if (branch && coinflip()) // skip hostile, related and branch
                 msg = __try_exact_string(prefixes, key, true, true, false, true);
             else // skip hostile, related and religion
                 msg = __try_exact_string(prefixes, key, true, true, true);
