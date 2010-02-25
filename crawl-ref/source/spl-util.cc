@@ -1221,8 +1221,8 @@ bool spell_is_known(spell_type spell)
 //       spell_is_useless(spell, transient)
 //       spell_is_risky(spell)
 //       spell_is_known(spell)
-int spell_highlight_by_utility( spell_type spell, int default_color,
-                                bool transient, bool force_known)
+int spell_highlight_by_utility(spell_type spell, int default_color,
+                               bool transient, bool force_known)
 {
     // if Force_known is true, and the spell is
     // known, thats all that matters.
@@ -1239,7 +1239,7 @@ int spell_highlight_by_utility( spell_type spell, int default_color,
     if (god_likes_spell(spell, you.religion))
         default_color = COL_FAVORED;
 
-    if(spell_is_empowered(spell))
+    if (spell_is_empowered(spell))
         default_color = COL_EMPOWERED;
     else if (spell_is_useful(spell))
         default_color = COL_USEFUL;
