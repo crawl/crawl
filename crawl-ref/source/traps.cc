@@ -655,8 +655,13 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         // Fire away!
         triggerer.do_shaft();
 
-        // Shafts are destroyed
+        // Player-used shafts are destroyed
         // after one use in down_stairs(), misc.cc
+        if (!you_trigger)
+        {
+            mpr("The shaft crumbles and collapses.");
+            trap_destroyed = true;
+        }
         break;
 
     default:
