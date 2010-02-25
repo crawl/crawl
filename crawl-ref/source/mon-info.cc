@@ -166,53 +166,62 @@ bool monster_info::less_than(const monster_info& m1,
     return (false);
 }
 
-static std::string _verbose_info(const monsters* m)
+static std::string _verbose_info0(const monsters* m)
 {
     if (m->caught())
-        return (" (caught)");
+        return ("caught");
 
     if (mons_behaviour_perceptible(m))
     {
         if (m->petrified())
-            return (" (petrified)");
+            return ("petrified");
         if (m->paralysed())
-            return (" (paralysed)");
+            return ("paralysed");
         if (m->petrifying())
-            return (" (petrifying)");
+            return ("petrifying");
         if (mons_is_confused(m))
-            return (" (confused)");
+            return ("confused");
         if (mons_is_fleeing(m))
-            return (" (fleeing)");
+            return ("fleeing");
         if (m->asleep())
         {
             if (!m->can_hibernate(true))
-                return (" (dormant)");
+                return ("dormant");
             else
-                return (" (sleeping)");
+                return ("sleeping");
         }
         if (mons_is_wandering(m) && !mons_is_batty(m)
             && !(m->attitude == ATT_STRICT_NEUTRAL))
         {
-            // Labeling strictly neutral monsters as fellow slimes is more important.
-            return (" (wandering)");
+            // Labeling strictly neutral monsters as fellow slimes
+            // is more important.
+            return ("wandering");
         }
         if (m->foe == MHITNOT && !mons_is_batty(m) && !m->neutral()
             && !m->friendly())
         {
-            return (" (unaware)");
+            return ("unaware");
         }
     }
 
     if (m->has_ench(ENCH_STICKY_FLAME))
-        return (" (burning)");
+        return ("burning");
 
     if (m->has_ench(ENCH_ROT))
-        return (" (rotting)");
+        return ("rotting");
 
     if (m->has_ench(ENCH_INVIS))
-        return (" (invisible)");
+        return ("invisible");
 
     return ("");
+}
+
+static std::string _verbose_info(const monsters* m)
+{
+    std::string inf = _verbose_info0(m);
+    if (!inf.empty())
+        inf = " (" + inf + ")";
+    return inf;
 }
 
 void monster_info::to_string(int count, std::string& desc,
