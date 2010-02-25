@@ -106,7 +106,7 @@ function trove.get_trove_item(e, value)
        {potion="heal wounds",    quantity=8+d(3)+d(3)},         -- 11%
        {potion="might",          quantity=6+d(3)+d(3)},         --  5%
        {potion="agility",        quantity=6+d(3)+d(3)},         --  5%
-       {potion="brillance",      quantity=6+d(3)+d(3)},         --  5%
+       {potion="brilliance",     quantity=6+d(3)+d(3)},         --  5%
        {potion="speed",          quantity=3+d(3)+d(2)},         --  5%
        {potion="resistance",     quantity=3+d(3)+d(2)},         --  2%
        {potion="levitation",     quantity=3+d(3)+d(2)},         --  2%
