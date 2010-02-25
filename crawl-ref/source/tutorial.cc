@@ -4837,7 +4837,11 @@ bool tutorial_monster_interesting(const monsters *mons)
     return (false);
 }
 
-void tutorial_describe_monster(const monsters *mons)
+static void _tutorial_nostat_monster_desc(std::ostringstream &ostr)
+{
+}
+
+void tutorial_describe_monster(const monsters *mons, bool has_stat_desc)
 {
     std::ostringstream ostr;
     ostr << "\n\n<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
@@ -4903,16 +4907,12 @@ void tutorial_describe_monster(const monsters *mons)
         {
             ostr << "You can easily mark its square as dangerous to avoid "
                     "accidentally entering into its field of view when using "
-                    "auto-explore or auto-travel. To do so, enter the level "
-                    "map with <w>X</w> and then press <w>e</w> when your "
+                    "auto-explore or auto-travel. To do so, enter targeting "
+                    "mode with <w>x</w> and then press <w>e</w> when your "
                     "cursor is hovering over the monster's grid. Doing so will "
                     "mark this grid and all surrounding ones within a radius "
                     "of 8 as \"excluded\" ones that explore or travel modus "
-                    "won't enter.\n";
-#ifdef USE_TILE
-            ostr << "Upon returning to the main map, you'll even find all "
-                    "surrounding grids visibly highlighted.";
-#endif
+                    "won't enter.";
         }
         else
         {
@@ -4943,6 +4943,14 @@ void tutorial_describe_monster(const monsters *mons)
              << mons_pronoun((monster_type) mons->type, PRONOUN_NOCAP)
              << " has been distracted by something. You could use this "
                 "opportunity to sneak up on this monster - or to sneak away.";
+    }
+
+    if (!dangerous && !has_stat_desc)
+    {
+        ostr << "\nThis monster doesn't appear to have any resistances or "
+                "susceptibilities. It cannot fly and is of average speed.\n"
+                "Examining other, possibly more high-level monsters can give "
+                "important clues as to how to deal with them.";
     }
 
     ostr << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
