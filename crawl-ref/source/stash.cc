@@ -940,13 +940,26 @@ void ShopInfo::describe_shop_item(const shop_item &si) const
 
 class ShopItemEntry : public InvEntry
 {
+    bool on_list;
+
 public:
     ShopItemEntry(const ShopInfo::shop_item &it,
                   const std::string &item_name,
-                  menu_letter hotkey) : InvEntry(it.item)
+                  menu_letter hotkey, bool _on_list) : InvEntry(it.item)
     {
         text = item_name;
         hotkeys[0] = hotkey;
+        on_list = _on_list;
+        colour = on_list ? CYAN : LIGHTGREY;
+    }
+
+    std::string get_text() const
+    {
+        ASSERT(level == MEL_ITEM && hotkeys.size());
+        char buf[300];
+        snprintf(buf, sizeof buf, " %c %c %s",
+                 hotkeys[0], on_list ? '@' : '-', text.c_str());
+        return std::string(buf);
     }
 };
 
@@ -957,11 +970,10 @@ void ShopInfo::fill_out_menu(StashMenu &menu, const level_pos &place) const
     menu_letter hotkey;
     for (int i = 0, count = items.size(); i < count; ++i)
     {
+        bool on_list = shopping_list.is_on_list(items[i].item, &place);
         ShopItemEntry *me = new ShopItemEntry(items[i],
                                               shop_item_name(items[i]),
-                                              hotkey++);
-        if (shopping_list.is_on_list(items[i].item, &place))
-            me->colour = LIGHTCYAN;
+                                              hotkey++, on_list);
         menu.add_entry(me);
     }
 }
