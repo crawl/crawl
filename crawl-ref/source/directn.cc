@@ -3823,7 +3823,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
             monster_described = true;
         }
 
-#ifdef DEBUG_DIAGNOSTICS
+#if defined(DEBUG_DIAGNOSTICS) && defined(WIZARD)
         debug_stethoscope(mgrd(where));
 #endif
         if (Tutorial.tutorial_left && tutorial_monster_interesting(mon))
