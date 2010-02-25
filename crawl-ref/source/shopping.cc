@@ -375,7 +375,7 @@ static bool _in_a_shop( int shopidx, int &num_in_list )
             selected.resize(stock.size(), false);
         }
 
-            num_in_list  = 0;
+        num_in_list  = 0;
         int num_selected = 0;
         for (unsigned int i = 0; i < stock.size(); i++)
         {
