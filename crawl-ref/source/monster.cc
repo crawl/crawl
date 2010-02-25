@@ -4053,7 +4053,7 @@ void monsters::load_spells(mon_spellbook_type book)
     if (book == MST_NO_SPELLS || book == MST_GHOST && !ghost.get())
         return;
 
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
     mprf( MSGCH_DIAGNOSTICS, "%s: loading spellbook #%d",
           name(DESC_PLAIN).c_str(), static_cast<int>(book) );
 #endif
@@ -4072,7 +4072,7 @@ void monsters::load_spells(mon_spellbook_type book)
             }
         }
     }
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
     // Only for ghosts, too spammy to use for all monsters.
     if (book == MST_GHOST)
     {
@@ -5146,7 +5146,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
             // Don't clean up the monster in order to credit properly.
             hurt(NULL, dam, BEAM_POISON, false);
 
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
             // For debugging, we don't have this silent.
             simple_monster_message(this, " takes poison damage.",
                                    MSGCH_DIAGNOSTICS);

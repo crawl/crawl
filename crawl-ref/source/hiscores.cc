@@ -817,7 +817,7 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             // shouldn't.
             if (you.hp <= 0)
             {
-#if HISCORE_WEAPON_DETAIL
+#ifdef HISCORE_WEAPON_DETAIL
                 set_ident_flags( mitm[monster->inv[MSLOT_WEAPON]],
                                  ISFLAG_IDENT_MASK );
 #else

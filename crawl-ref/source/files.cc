@@ -1111,7 +1111,7 @@ static bool _grab_follower_at(const coord_def &pos)
     if (you.char_direction == GDT_GAME_START)
         dest.depth = 1;
 
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "%s is following to %s.",
          fmenv->name(DESC_CAP_THE, true).c_str(),
          dest.describe().c_str());
@@ -1846,7 +1846,7 @@ static std::string _make_ghost_filename()
     }
 }
 
-#define BONES_DIAGNOSTICS (WIZARD | DEBUG_BONES | DEBUG_DIAGNOSTICS)
+#define BONES_DIAGNOSTICS (defined(WIZARD) || defined(DEBUG_BONES) | defined(DEBUG_DIAGNOSTICS))
 
 bool load_ghost(bool creating_level)
 {
@@ -1860,17 +1860,17 @@ bool load_ghost(bool creating_level)
     // command.
     ASSERT(creating_level || wiz_cmd);
 
-#if !DEBUG && !WIZARD
+#if !defined(DEBUG) && !defined(WIZARD)
     UNUSED(creating_level);
 #endif
 
-#if BONES_DIAGNOSTICS
+#ifdef BONES_DIAGNOSTICS
 
     bool do_diagnostics = false;
-#if WIZARD
+#ifdef WIZARD
     do_diagnostics = !creating_level;
 #endif
-#if DEBUG_BONES | DEBUG_DIAGNOSTICS
+#if defined(DEBUG_BONES) || defined(DEBUG_DIAGNOSTICS)
     do_diagnostics = true;
 #endif
 
@@ -1892,7 +1892,7 @@ bool load_ghost(bool creating_level)
     if (!_determine_ghost_version(gfile, majorVersion, minorVersion))
     {
         fclose(gfile);
-#if BONES_DIAGNOSTICS
+#ifdef BONES_DIAGNOSTICS
         if (do_diagnostics)
         {
             mprf(MSGCH_DIAGNOSTICS,
@@ -1905,7 +1905,7 @@ bool load_ghost(bool creating_level)
 
     if (majorVersion != TAG_MAJOR_VERSION || minorVersion > TAG_MINOR_VERSION)
     {
-#if BONES_DIAGNOSTICS
+#ifdef BONES_DIAGNOSTICS
         if (do_diagnostics)
         {
             if (majorVersion != TAG_MAJOR_VERSION)
@@ -1929,7 +1929,7 @@ bool load_ghost(bool creating_level)
     if (!feof(gfile))
     {
         fclose(gfile);
-#if BONES_DIAGNOSTICS
+#ifdef BONES_DIAGNOSTICS
         if (do_diagnostics)
         {
             mprf(MSGCH_DIAGNOSTICS, "Incomplete read of \"%s\".",
@@ -1957,7 +1957,7 @@ bool load_ghost(bool creating_level)
         return (false);
     }
 
-#if BONES_DIAGNOSTICS
+#ifdef BONES_DIAGNOSTICS
     if (do_diagnostics)
     {
         mprf(MSGCH_DIAGNOSTICS, "Loaded ghost file with %lu ghost(s)",
@@ -1968,7 +1968,7 @@ bool load_ghost(bool creating_level)
     // Remove bones file - ghosts are hardly permanent.
     unlink(cha_fil.c_str());
 
-#if BONES_DIAGNOSTICS
+#ifdef BONES_DIAGNOSTICS
     unsigned long unplaced_ghosts = ghosts.size();
     bool          ghost_errors    = false;
 #endif
@@ -1985,7 +1985,7 @@ bool load_ghost(bool creating_level)
             menv[imn].bind_spell_flags();
 
         ghosts.erase(ghosts.begin());
-#if BONES_DIAGNOSTICS
+#ifdef BONES_DIAGNOSTICS
         if (do_diagnostics)
         {
             unplaced_ghosts--;
@@ -2005,7 +2005,7 @@ bool load_ghost(bool creating_level)
 #endif
     }
 
-#if BONES_DIAGNOSTICS
+#ifdef BONES_DIAGNOSTICS
     if (do_diagnostics && unplaced_ghosts > 0)
     {
         mprf(MSGCH_DIAGNOSTICS, "Unable to place %lu ghost(s)",
@@ -2339,13 +2339,13 @@ static void _restore_ghost_version( FILE *ghostFile,
 
 void save_ghost( bool force )
 {
-#if BONES_DIAGNOSTICS
+#ifdef BONES_DIAGNOSTICS
 
     bool do_diagnostics = false;
-#if WIZARD
+#ifdef WIZARD
     do_diagnostics = you.wizard;
 #endif
-#if DEBUG_BONES | DEBUG_DIAGNOSTICS
+#if defined(DEBUG_BONES) || defined(DEBUG_DIAGNOSTICS)
     do_diagnostics = true;
 #endif
 
@@ -2364,7 +2364,7 @@ void save_ghost( bool force )
     // Don't overwrite existing bones!
     if (gfile != NULL)
     {
-#if BONES_DIAGNOSTICS
+#ifdef BONES_DIAGNOSTICS
         if (do_diagnostics)
             mpr("Ghost file for this level already exists.",
                 MSGCH_DIAGNOSTICS);
@@ -2377,7 +2377,7 @@ void save_ghost( bool force )
 
     if (ghosts.empty())
     {
-#if BONES_DIAGNOSTICS
+#ifdef BONES_DIAGNOSTICS
         if (do_diagnostics)
             mpr("Could not find any ghosts for this level.",
                 MSGCH_DIAGNOSTICS);
@@ -2398,7 +2398,7 @@ void save_ghost( bool force )
 
     lk_close(gfile, "wb", cha_fil);
 
-#if BONES_DIAGNOSTICS
+#ifdef BONES_DIAGNOSTICS
     if (do_diagnostics)
         mprf(MSGCH_DIAGNOSTICS, "Saved ghost (%s).", cha_fil.c_str() );
 #endif

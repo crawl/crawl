@@ -20,8 +20,8 @@
 #include "mon-util.h"
 #include "state.h"
 
-#define DEBUG_ITEM_SCAN 1
-#if DEBUG_ITEM_SCAN
+#define DEBUG_ITEM_SCAN
+#ifdef DEBUG_ITEM_SCAN
 static void _dump_item( const char *name, int num, const item_def &item )
 {
     mpr(name, MSGCH_ERROR);
@@ -227,8 +227,8 @@ void debug_item_scan( void )
 }
 #endif
 
-#define DEBUG_MONS_SCAN 1
-#if DEBUG_MONS_SCAN
+#define DEBUG_MONS_SCAN
+#ifdef DEBUG_MONS_SCAN
 static void _announce_level_prob(bool warned)
 {
     if (!warned && Generating_Level)

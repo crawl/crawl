@@ -1677,7 +1677,7 @@ std::string get_item_description( const item_def &item, bool verbose,
     if (!dump)
         description << item.name(DESC_INVENTORY_EQUIP);
 
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
     if (!dump)
     {
         description << std::setfill('0');
@@ -3035,7 +3035,7 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
     if (!inf.quote.empty())
         inf.quote += "$";
 
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
     if (mons.can_use_spells())
     {
         const monster_spells &hspell_pass = mons.spells;

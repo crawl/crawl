@@ -120,7 +120,7 @@ bool test_melee_hit(int to_hit, int ev, defer_rand& r)
         margin = (roll - r[3].random2avg(ev, 2));
     }
 
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
     float miss;
 
     if (to_hit < ev)
@@ -3900,14 +3900,14 @@ int melee_attack::player_to_hit(bool random_factor)
     // armour penalty
     your_to_hit -= (player_armour_tohit_penalty + player_shield_tohit_penalty);
 
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
     int roll_hit = your_to_hit;
 #endif
 
     // hit roll
     your_to_hit = maybe_random2(your_to_hit, random_factor);
 
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
     dprf( "to hit die: %d; rolled value: %d; base: %d",
           roll_hit, your_to_hit, base_to_hit );
 #endif

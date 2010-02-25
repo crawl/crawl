@@ -591,10 +591,10 @@ void do_crash_dump()
 
     // Next item and monster scans.  Any messages will be sent straight to
     // the file because of set_msg_dump_file()
-#if DEBUG_ITEM_SCAN
+#ifdef DEBUG_ITEM_SCAN
     debug_item_scan();
 #endif
-#if DEBUG_MONS_SCAN
+#ifdef DEBUG_MONS_SCAN
     debug_mons_scan();
 #endif
 

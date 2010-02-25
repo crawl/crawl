@@ -76,6 +76,9 @@
 
 #include "tiles.h"
 
+//#define DEBUG_BEAM
+//#define DEBUG_CHAOS_BOUNCE
+
 #define BEAM_STOP       1000        // all beams stopped by subtracting this
                                     // from remaining range
 
@@ -1546,7 +1549,7 @@ static void _munge_bounced_bolt(bolt &old_bolt, bolt &new_bolt,
     }
 
     new_ray = temp_ray;
-#if DEBUG_DIAGNOSTICS || DEBUG_BEAM || DEBUG_CHAOS_BOUNCE
+#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_BEAM) || defined(DEBUG_CHAOS_BOUNCE)
     mprf(MSGCH_DIAGNOSTICS,
          "chaos beam: old_deg = %5.2f, new_deg = %5.2f, shift = %5.2f",
          static_cast<float>(old_deg), static_cast<float>(new_deg),
@@ -4344,7 +4347,7 @@ void bolt::affect_player()
     // Roll the damage.
     hurted += damage.roll();
 
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
     int roll = hurted;
 #endif
 
@@ -4365,7 +4368,7 @@ void bolt::affect_player()
         hurted -= random2( 1 + you.armour_class() );
     }
 
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
          "Player damage: rolled=%d; after AC=%d", roll, hurted );
 #endif
@@ -4999,7 +5002,7 @@ void bolt::affect_monster(monsters* mon)
     if (!determine_damage(mon, preac, postac, final, messages))
         return;
 
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
          "Monster: %s; Damage: pre-AC: %d; post-AC: %d; post-resist: %d",
          mon->name(DESC_PLAIN).c_str(), preac, postac, final);
@@ -5954,7 +5957,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
         return (false);
     }
 
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
          "explosion at (%d, %d) : g=%d c=%d f=%d hit=%d dam=%dd%d r=%d",
          pos().x, pos().y, glyph, colour, flavour, hit, damage.num, damage.size, r);

@@ -983,7 +983,7 @@ void handle_delay()
     // Handle delay:
     if (delay.duration > 0)
     {
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "Delay type: %d (%s), duration: %d",
              delay.type, delay_name(delay.type), delay.duration );
 #endif

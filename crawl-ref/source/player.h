@@ -291,7 +291,7 @@ public:
   // and restored.
   std::vector<int> beholders;
 
-#if WIZARD || DEBUG
+#if defined(WIZARD) || defined(DEBUG)
   // If set to true, then any call to ouch() which would cuase the player
   // to die automatically returns without ending the game.
   bool never_die;

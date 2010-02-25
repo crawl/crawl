@@ -1315,7 +1315,7 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
     cgotoxy(1, 1);
     textcolor(LIGHTGREY);
 
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
     cprintf("You have %d points of unallocated experience "
             " (cost lvl %d; total %d)." EOL EOL,
             you.exp_available, you.skill_cost_level,
@@ -1382,7 +1382,7 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
                      (you.practise_skill[x]) ? '+' : '-',
                      skill_name(x), you.skills[x] );
 
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
             cprintf( " %5d", you.skill_points[x] );
 #endif
 

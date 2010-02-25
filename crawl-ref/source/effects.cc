@@ -4121,7 +4121,7 @@ static void _catchup_monster_moves(monsters *mon, int turns)
     const bool ranged_attack = (mons_has_ranged_spell(mon, true)
                                 || mons_has_ranged_attack(mon));
 
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
     // probably too annoying even for DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
          "mon #%d: range %d; "
@@ -4219,7 +4219,7 @@ static void _catchup_monster_moves(monsters *mon, int turns)
         {
             shift_monster(mon, mon->pos());
 
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
             mprf(MSGCH_DIAGNOSTICS, "shifted to (%d, %d)",
                  mon->pos().x, mon->pos().y);
 #endif
@@ -4264,7 +4264,7 @@ static void _catchup_monster_moves(monsters *mon, int turns)
     if (!shift_monster(mon, pos))
         shift_monster(mon, mon->pos());
 
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "moved to (%d, %d)", mon->pos().x, mon->pos().y);
 #endif
 }
@@ -4282,7 +4282,7 @@ void update_level(long elapsedTime)
 
     const int turns = elapsedTime / 10;
 
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
     int mons_total = 0;
 
     mprf(MSGCH_DIAGNOSTICS, "turns: %d", turns );
@@ -4305,7 +4305,7 @@ void update_level(long elapsedTime)
 
     for (monster_iterator mi; mi; ++mi)
     {
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
         mons_total++;
 #endif
 
@@ -4351,7 +4351,7 @@ void update_level(long elapsedTime)
             mi->timeout_enchantments(turns / 10);
     }
 
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "total monsters on level = %d", mons_total );
 #endif
 

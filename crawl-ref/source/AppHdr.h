@@ -316,10 +316,12 @@
 // =========================================================================
 #ifdef FULLDEBUG
     // Bounds checking and asserts
-    #define DEBUG       1
+    #ifndef DEBUG
+    #define DEBUG
+    #endif
 
     // Outputs many "hidden" details, defaults to wizard on.
-    #define DEBUG_DIAGNOSTICS   1
+    #define DEBUG_DIAGNOSTICS
 
     // Scan for bad items before every input (may be slow)
     //
@@ -328,14 +330,14 @@
     // every item on the level and do string comparisons
     // against the name.  Still, it is nice to know the
     // turn in which "bad" items appear.
-    #define DEBUG_ITEM_SCAN     1
-    #define DEBUG_MONS_SCAN     1
+    #define DEBUG_ITEM_SCAN
+    #define DEBUG_MONS_SCAN
 #endif
 
 #ifdef _DEBUG       // this is how MSVC signals a debug build
-    #define DEBUG       1
-#else
-//  #define DEBUG   0 // leave this undefined for those lamers who use #ifdef
+    #ifndef DEBUG
+    #define DEBUG
+    #endif
 #endif
 
 #ifdef DEBUG
@@ -414,9 +416,9 @@
 // mv: (new 9 Aug 01) turns off missile trails, might be slow on some computers
 // #define MISSILE_TRAILS_OFF
 
-// bwr: set this to non-zero if you want to know the pluses, "runed" status
+// bwr: define this if you want to know the pluses, "runed" status
 // of the monster's weapons in the hiscore file.
-#define HISCORE_WEAPON_DETAIL   1
+#define HISCORE_WEAPON_DETAIL
 
 // ====================== -----------------------------------------------------
 //jmf: end of new defines

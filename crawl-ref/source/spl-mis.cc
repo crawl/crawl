@@ -331,7 +331,7 @@ void MiscastEffect::do_miscast()
     {
         severity = (pow * fail * (10 + pow) / 7 * WILD_MAGIC_NASTINESS) / 100;
 
-#if DEBUG_DIAGNOSTICS || DEBUG_MISCAST
+#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_MISCAST)
         mprf(MSGCH_DIAGNOSTICS, "'%s' miscast power: %d",
              spell != SPELL_NO_SPELL ? spell_title(spell)
                                      : spelltype_short_name(sp_type),
@@ -353,7 +353,7 @@ void MiscastEffect::do_miscast()
             severity = 0;
     }
 
-#if DEBUG_DIAGNOSTICS || DEBUG_MISCAST
+#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_MISCAST)
     mprf(MSGCH_DIAGNOSTICS, "Sptype: %s, severity: %d",
          spelltype_short_name(sp_type), severity );
 #endif
@@ -684,7 +684,7 @@ bool MiscastEffect::avoid_lethal(int dam)
 
     if (recursion_depth == MAX_RECURSE)
     {
-#if DEBUG_DIAGNOSTICS || DEBUG_MISCAST
+#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_MISCAST)
         mpr("Couldn't avoid lethal miscast: too much recursion.",
             MSGCH_ERROR);
 #endif
@@ -693,14 +693,14 @@ bool MiscastEffect::avoid_lethal(int dam)
 
     if (did_msg)
     {
-#if DEBUG_DIAGNOSTICS || DEBUG_MISCAST
+#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_MISCAST)
         mpr("Couldn't avoid lethal miscast: already printed message for this "
             "miscast.", MSGCH_ERROR);
 #endif
         return (false);
     }
 
-#if DEBUG_DIAGNOSTICS || DEBUG_MISCAST
+#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_MISCAST)
     mpr("Avoided lethal miscast.", MSGCH_DIAGNOSTICS);
 #endif
 

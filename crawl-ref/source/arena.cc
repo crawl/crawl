@@ -36,7 +36,7 @@
 #include "view.h"
 #include "viewgeom.h"
 
-#define DEBUG_DIAGNOSTICS 1
+#define DEBUG_DIAGNOSTICS
 
 extern void world_reacts();
 

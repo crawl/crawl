@@ -2394,7 +2394,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
         std::string lname = make_filename(you.your_name, you.absdepth0,
                                           you.where_are_you,
                                           you.level_type, false);
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
         mprf( MSGCH_DIAGNOSTICS, "Deleting: %s", lname.c_str() );
 #endif
         unlink(lname.c_str());

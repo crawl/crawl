@@ -3766,7 +3766,7 @@ void display_char_status()
           (move_cost <  13) ? "slow"
                             : "very slow" );
 
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
     const int to_hit = calc_your_to_hit( false ) * 2;
     mprf("To-hit: %d", to_hit);
 #endif
@@ -4624,7 +4624,7 @@ void contaminate_player(int change, bool controlled, bool status_only)
     int old_amount = you.magic_contamination;
     int old_level  = get_contamination_level();
     int new_level  = 0;
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
     if (change > 0 || (change < 0 && you.magic_contamination))
     {
         mprf(MSGCH_DIAGNOSTICS, "change: %d  radiation: %d",
@@ -5460,7 +5460,7 @@ void player::init()
 
     on_current_level = true;
 
-#if WIZARD || DEBUG
+#if defined(WIZARD) || defined(DEBUG)
     you.never_die = false;
 #endif
 }

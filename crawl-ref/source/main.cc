@@ -349,7 +349,7 @@ static void _show_commandline_options_help()
     puts("");
     puts("Arena options: (Stage a tournament between various monsters.)");
     puts("  -arena \"<monster list> v <monster list> arena:<arena map>\"");
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
     puts("");
     puts("  -test            run test cases in ./test");
     puts("  -script <name>   run script matching <name> in ./scripts");
@@ -1569,7 +1569,7 @@ static void _do_display_map()
     if (Tutorial.tutorial_events[TUT_MAP_VIEW])
         Tutorial.tutorial_events[TUT_MAP_VIEW] = false;
 
-#if (!DEBUG_DIAGNOSTICS)
+#ifndef DEBUG_DIAGNOSTICS
     if (!player_in_mappable_area())
     {
         mpr("It would help if you knew where you were, first.");
@@ -2372,7 +2372,7 @@ static void _decrement_durations()
         you.duration[DUR_PIETY_POOL]--;
         gain_piety(1);
 
-#if DEBUG_DIAGNOSTICS || DEBUG_SACRIFICE || DEBUG_PIETY
+#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_SACRIFICE) || defined(DEBUG_PIETY)
         mpr("Piety increases by 1 due to piety pool.", MSGCH_DIAGNOSTICS);
 
         if (you.duration[DUR_PIETY_POOL] == 0)
@@ -2858,16 +2858,16 @@ static command_type _get_next_cmd()
     _check_messages();
 #endif
 
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
     // Save hunger at start of round for use with hunger "delta-meter"
     // in output.cc.
     you.old_hunger = you.hunger;
 #endif
 
-#if DEBUG_ITEM_SCAN
+#ifdef DEBUG_ITEM_SCAN
     debug_item_scan();
 #endif
-#if DEBUG_MONS_SCAN
+#ifdef DEBUG_MONS_SCAN
     debug_mons_scan();
 #endif
 
@@ -3653,11 +3653,11 @@ static bool _initialise(void)
 
     if (crawl_state.test)
     {
-#if DEBUG_TESTS && !DEBUG
+#if defined(DEBUG_TESTS) && !defined(DEBUG)
 #error "DEBUG must be defined if DEBUG_TESTS is defined"
 #endif
 
-#if DEBUG_DIAGNOSTICS || DEBUG_TESTS
+#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_TESTS)
 #ifdef USE_TILE
         init_player_doll();
         tiles.initialise_items();
@@ -3729,7 +3729,7 @@ static bool _initialise(void)
         init_pandemonium();
     }
 
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
     // Debug compiles display a lot of "hidden" information, so we auto-wiz.
     you.wizard = true;
 #endif
@@ -4084,7 +4084,7 @@ static void _move_player(coord_def move)
         if (you.pet_target != MHITYOU)
             you.pet_target = MHITNOT;
 
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
         mpr("Shifting.", MSGCH_DIAGNOSTICS);
         int j = 0;
         for (int i = 0; i < MAX_ITEMS; ++i)

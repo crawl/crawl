@@ -75,7 +75,7 @@ void make_hungry(int hunger_amount, bool suppress_msg,
     if (hunger_amount == 0 && !suppress_msg)
         return;
 
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
     set_redraw_status( REDRAW_HUNGER );
 #endif
 

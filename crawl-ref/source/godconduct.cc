@@ -764,7 +764,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                     && you.attribute[ATTR_CARD_COUNTDOWN])
                 {
                     you.attribute[ATTR_CARD_COUNTDOWN]--;
-#if DEBUG_DIAGNOSTICS || DEBUG_CARDS || DEBUG_GIFTS
+#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_CARDS) || defined(DEBUG_GIFTS)
                     mprf(MSGCH_DIAGNOSTICS, "Countdown down to %d",
                          you.attribute[ATTR_CARD_COUNTDOWN]);
 #endif
@@ -904,7 +904,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         else
             dock_piety(-piety_change, penance);
 
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
         if (retval)
         {
             static const char *conducts[] =

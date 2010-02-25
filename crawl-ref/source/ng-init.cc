@@ -20,7 +20,7 @@
 #include "store.h"
 
 #ifdef DEBUG_DIAGNOSTICS
-#define DEBUG_TEMPLES 1
+#define DEBUG_TEMPLES
 #endif
 
 static unsigned char _random_potion_description()

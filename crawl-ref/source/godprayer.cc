@@ -533,7 +533,7 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item)
             if (you.attribute[ATTR_CARD_COUNTDOWN] && x_chance_in_y(value, 800))
             {
                 you.attribute[ATTR_CARD_COUNTDOWN]--;
-#if DEBUG_DIAGNOSTICS || DEBUG_CARDS || DEBUG_SACRIFICE
+#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_CARDS) || defined(DEBUG_SACRIFICE)
                 mprf(MSGCH_DIAGNOSTICS, "Countdown down to %d",
                      you.attribute[ATTR_CARD_COUNTDOWN]);
 #endif
@@ -564,7 +564,7 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item)
             }
             else if (item.base_type == OBJ_CORPSES)
             {
-#if DEBUG_GIFTS || DEBUG_CARDS || DEBUG_SACRIFICE
+#if defined(DEBUG_GIFTS) || defined(DEBUG_CARDS) || defined(DEBUG_SACRIFICE)
                 mprf(MSGCH_DIAGNOSTICS, "Corpse mass is %d",
                      item_mass(item));
 #endif
@@ -619,7 +619,7 @@ void offer_items()
         const int donation_cost = (you.gold / 2) + 1;
         const int donation = _gold_to_donation(donation_cost);
 
-#if DEBUG_DIAGNOSTICS || DEBUG_SACRIFICE || DEBUG_PIETY
+#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_SACRIFICE) || defined(DEBUG_PIETY)
         mprf(MSGCH_DIAGNOSTICS, "A donation of $%d amounts to an "
              "increase of piety by %d.", donation_cost, donation);
 #endif
@@ -719,7 +719,7 @@ void offer_items()
 
         piety_gain_t relative_gain = PIETY_NONE;
 
-#if DEBUG_DIAGNOSTICS || DEBUG_SACRIFICE
+#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_SACRIFICE)
         mprf(MSGCH_DIAGNOSTICS, "Sacrifice item value: %d",
              item_value(item));
 #endif
@@ -751,7 +751,7 @@ void offer_items()
         if (old_leading != new_leading || one_chance_in(50))
             _give_sac_group_feedback(new_leading);
 
-#if DEBUG_GIFTS || DEBUG_CARDS || DEBUG_SACRIFICE
+#if defined(DEBUG_GIFTS) || defined(DEBUG_CARDS) || defined(DEBUG_SACRIFICE)
         _show_pure_deck_chances();
 #endif
     }

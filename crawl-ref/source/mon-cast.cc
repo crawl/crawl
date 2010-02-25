@@ -930,7 +930,7 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         if (targ)
         {
             pbolt.target = targ->pos();
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
             mprf("Porkalator: targeting %s instead",
                  targ->name(DESC_PLAIN).c_str());
 #endif
@@ -1640,7 +1640,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     int sumcount2;
     int duration = 0;
 
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Mon #%d casts %s (#%d)",
          monster->mindex(), spell_title(spell_cast), spell_cast);
 #endif

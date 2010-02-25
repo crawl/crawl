@@ -465,7 +465,7 @@ monster_type pick_random_monster(const level_id &place, int power,
                                   dummy1, 0, &dummy2, &lev_mons,
                                   chose_ood_monster);
 
-#if DEBUG || DEBUG_DIAGNOSTICS
+#if defined(DEBUG) || defined(DEBUG_DIAGNOSTICS)
         if (base_type != 0 && base_type != MONS_PROGRAM_BUG)
             mpr("Random portal vault mon discarding base type.",
                 MSGCH_ERROR);

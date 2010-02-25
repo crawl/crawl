@@ -136,7 +136,7 @@ LUAFN(debug_bouncy_beam)
 
 LUAFN(debug_never_die)
 {
-#if WIZARD || DEBUG
+#if defined(WIZARD) || defined(DEBUG)
     if (lua_isnone(ls, 1))
     {
         luaL_argerror(ls, 1, "needs a boolean argument");

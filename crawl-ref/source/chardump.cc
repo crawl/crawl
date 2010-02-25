@@ -1335,7 +1335,7 @@ static bool write_dump(const std::string &fname, dump_params &par)
     file_name += ".txt";
     FILE *handle = fopen(file_name.c_str(), "w");
 
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "File name: %s", file_name.c_str());
 #endif
 
