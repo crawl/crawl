@@ -195,7 +195,7 @@ static std::string _verbose_info0(const monsters* m)
         {
             // Labeling strictly neutral monsters as fellow slimes
             // is more important.
-            return ("wandering");
+            return (mons_is_stationary(m) ? "unaware" : "wandering");
         }
         if (m->foe == MHITNOT && !mons_is_batty(m) && !m->neutral()
             && !m->friendly())
