@@ -362,7 +362,7 @@ public:
 
     const level_id  &place();
     const ShopInfo*  shop();
-    const unsigned   price();
+    unsigned         price();
 
 private:
           level_id  m_place;
