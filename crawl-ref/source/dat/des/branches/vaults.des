@@ -921,12 +921,12 @@ ENDMAP
 # about 21 |
 NAME:   vault8_flips
 TAGS:   vault8_quadrant_prize
-NSUBST: ; = 3:l / 3:z / 3:a / *:.
+NSUBST: ; = 3:l / 3:z / 3:A / *:.
 SUBST:  Q = 8 9
 SUBST:  $ = | * $
 KFEAT:  l = teleport trap
 KFEAT:  z = zot trap
-KFEAT:  a = alarm trap
+KFEAT:  A = alarm trap
 SUBST:  s = x:250 =:1
 SUBST:  a = x.
 : vault8_loot(_G)
