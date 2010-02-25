@@ -53,7 +53,7 @@ IMAGES := $(INPUTS:%=%.png)
 ifneq ($(findstring $(MAKEFLAGS),s),s)
 ifndef V
         QUIET_CXX      = @echo '   ' CXX $@;
-        QUIET_GEN      = @echo '   ' GEN $*;
+        QUIET_GEN      = @echo '   ' GEN $(lastword $(subst -, ,$*));
         QUIET_LINK     = @echo '   ' LINK $@;
         export V
 endif
@@ -64,8 +64,11 @@ OBJECTS := $(BASE_OBJECTS:%=$(TOOLDIR)/%)
 
 all: $(TILEGEN) $(HEADERS) $(SOURCE) $(IMAGES)
 
-tiledef-%.h tiledef-%.cc %.png: dc-%.txt $(TILEGEN)
+%.png: dc-%.txt $(TILEGEN)
 	$(QUIET_GEN)$(TILEGEN) $<
+
+$(HEADERS) $(SOURCE):
+	$(QUIET_GEN)$(TILEGEN) dc-$(lastword $(subst -, ,$*)).txt
 
 DEPS := $(shell ls $(INPUTS:%=%.d) 2> /dev/null)
 
