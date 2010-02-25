@@ -360,9 +360,8 @@ static std::string _get_seen_branches(bool display)
             level_id lid(branch, 0);
             lid = find_deepest_explored(lid);
 
-            // Each branch entry takes up 26 spaces
             snprintf(buffer, sizeof buffer,
-                "<yellow>%-7s</yellow> <darkgrey>(%d/%d)</darkgrey>: %-9s",
+                "<yellow>%7s</yellow> <darkgrey>(%d/%d)</darkgrey> %s",
                      branches[branch].abbrevname,
                      lid.depth,
                      branches[branch].depth,
@@ -371,7 +370,10 @@ static std::string _get_seen_branches(bool display)
             disp += buffer;
             num_printed_branches++;
 
-            disp += (num_printed_branches % 3) == 0 ? "\n" : "  ";
+            disp += (num_printed_branches % 3) == 0
+                    ? "\n"
+                    // Each branch entry takes up 26 spaces
+                    : std::string(26 + 38 - strlen(buffer), ' ');
         }
     }
 
@@ -437,25 +439,17 @@ static std::string _get_unseen_branches()
             lid = find_deepest_explored(lid);
             if (lid.depth >= branches[branch].mindepth) {
                 if (branches[branch].mindepth != branches[branch].maxdepth) {
-                    int len = strlen(branches[branch].abbrevname) -
-                              strlen(branches[parent_branch].abbrevname);
-                    // Each branch entry takes up 20 spaces
                     snprintf(buffer, sizeof buffer,
-                        "<darkgrey>%s: %*s:%d-%d</darkgrey>",
+                        "<darkgrey>%6s: %s:%d-%d</darkgrey>",
                             branches[branch].abbrevname,
-                            6 - len,
                             branches[parent_branch].abbrevname,
                             branches[branch].mindepth,
                             branches[branch].maxdepth);
                 }
                 else {
-                    int len = strlen(branches[branch].abbrevname) -
-                              strlen(branches[parent_branch].abbrevname);
-                    // Each branch entry takes up 20 spaces
                     snprintf(buffer, sizeof buffer,
-                        "<darkgrey>%s: %*s:%d</darkgrey>",
+                        "<darkgrey>%6s: %s:%d</darkgrey>",
                             branches[branch].abbrevname,
-                            6 - len,
                             branches[parent_branch].abbrevname,
                             branches[branch].mindepth);
                 }
@@ -464,7 +458,9 @@ static std::string _get_unseen_branches()
                 num_printed_branches++;
 
                 disp += (num_printed_branches % 4) == 0
-                    ? "\n" : std::string(41 - strlen(buffer), ' ');
+                        ? "\n"
+                        // Each branch entry takes up 20 spaces
+                        : std::string(20 + 21 - strlen(buffer), ' ');
             }
         }
     }
@@ -472,13 +468,13 @@ static std::string _get_unseen_branches()
     /* not actual branches, have to hardcode this stuff here */
     if (find_deepest_explored(level_id(BRANCH_MAIN_DUNGEON, 0)).depth >= 21) {
         if (!found_portals[PORTAL_PANDEMONIUM]) {
-            disp += "<darkgrey>Pan:    D:21-27</darkgrey>";
+            disp += "<darkgrey>   Pan: D:21-27</darkgrey>";
             num_printed_branches++;
             disp += (num_printed_branches % 4) == 0
                 ? "\n" : "     ";
         }
         if (!found_portals[PORTAL_ABYSS]) {
-            disp += "<darkgrey>Abyss:  D:21-27</darkgrey>";
+            disp += "<darkgrey> Abyss: D:21-27</darkgrey>";
             num_printed_branches++;
             disp += (num_printed_branches % 4) == 0
                 ? "\n" : "     ";
