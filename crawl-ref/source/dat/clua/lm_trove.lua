@@ -468,8 +468,8 @@ function TroveMarker:check_veto(marker, pname)
       crawl.mpr("There is a foul-smelling imp just inside the portal. " ..
                 "It says, \"I can lock this portal here for " ..
                 needed2 .."gp!\".")
-      if crawl.yesno("Pay? (you can refuse and instead pay the full fee " ..
-                     "to enter now)", true, "n") then
+      if crawl.yesno("Pay? (you can refuse and instead pay the full fee of " ..
+                     needed .. "gp to enter now)", true, "n") then
         self.no_timeout = true
         you.gold(you.gold() - needed2)
         self:note_payed(needed2 .. "gp", true)
