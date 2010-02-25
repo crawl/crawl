@@ -55,15 +55,15 @@ formatted_string tut_abilities_info(void);
 void print_tut_skills_info(void);
 void print_tut_skills_description_info(void);
 
-void tutorial_observe_cell(const coord_def& gc);
-
 // Additional information for tutorial players.
 void tutorial_describe_item(const item_def &item);
 void tutorial_inscription_info(bool autoinscribe, std::string prompt);
 bool tutorial_pos_interesting(int x, int y);
 void tutorial_describe_pos(int x, int y);
 bool tutorial_monster_interesting(const monsters *mons);
-void tutorial_describe_monster(const monsters *mons);
+void tutorial_describe_monster(const monsters *mons, bool has_stat_desc);
+
+void tutorial_observe_cell(const coord_def& gc);
 
 struct tutorial_state
 {

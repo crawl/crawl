@@ -67,7 +67,7 @@ void append_missile_info(std::string &description);
 
 void describe_monsters(const monsters &mons, bool force_seen = false);
 void get_monster_db_desc(const monsters &item, describe_info &inf,
-                         bool force_seen = false);
+                         bool &has_stat_desc, bool force_seen = false);
 
 void get_spell_desc(const spell_type spell, describe_info &inf);
 void describe_spell(spell_type spelled, const item_def* item = NULL);
