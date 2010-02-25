@@ -473,9 +473,11 @@ function TroveMarker:check_veto(marker, pname)
         self.no_timeout = true
         you.gold(you.gold() - needed2)
         self:note_payed(needed2 .. "gp", true)
-        crawl.mpr("The imp fiddles with the portal, frowns, says, " ..
-                  "\"I think I broke it!\" " ..
-                  "and then disappears in a puff of smoke.")
+        crawl.mpr("The imp fiddles with the portal and frowns. " ..
+                  "It says, " ..
+                  "\"I think I broke it! You might be able to fix it with " ..
+                  self:item_name() .. ".\" " ..
+                  "before disappearing in a puff of smoke.")
         return "veto"
       else
         crawl.mpr("The foul-smelling imp curses your mother!")
