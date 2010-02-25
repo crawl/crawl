@@ -2027,7 +2027,7 @@ const ShopInfo* ST_ItemIterator::shop()
     return (m_shop);
 }
 
-const unsigned  ST_ItemIterator::price()
+unsigned        ST_ItemIterator::price()
 {
     return (m_price);
 }
