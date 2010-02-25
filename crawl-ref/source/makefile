@@ -66,7 +66,11 @@ GAME = crawl
 # These are really good options for the Intel C++ compiler:
 #CFOPTIMIZE := -O2 -parallel
 
+# If you have a Core 2 processor, this _really_ makes things fly:
+#CFOPTIMIZE := -O2 -parallel -ipo -xT
+
 CFOPTIMIZE := -O2
+
 CFOTHERS := -fno-strict-aliasing -pipe $(EXTERNAL_FLAGS)
 CFOTHERS_L := -fsigned-char
 CFWARN := -Wall
@@ -309,6 +313,11 @@ endif
 
 CC = $(GCC) $(CF_ARCHS) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
 CXX = $(GXX) $(CF_ARCHS) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
+
+ifdef USE_ICC
+CC += -gcc-name=gcc-4.0 -gxx-name=g++-4.0
+CXX += -gcc-name=gcc-4.0 -gxx-name=g++-4.0
+endif
 
 endif # MacOS
 
@@ -607,9 +616,10 @@ LIBS += -lpcre
 endif
 
 ifdef USE_ICC
+NO_INLINE_DEPGEN := YesPlease
 GCC := icc
 GXX := icpc
-AR  := xiar rcu
+AR  := xiar
 LIBS += -lguide -lpthread
 CFWARN := -wd383,810,869,981,1418 -we14,193,304
 CFWARN_L :=
@@ -900,14 +910,26 @@ endif
 
 $(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS) $(CONTRIB_LIBS)
 
+ifdef NO_INLINE_DEPGEN
+$(OBJECTS): $(OBJECTS:%.o=%.d)
+endif
+
 %.d: %.cc .cflags $(GENERATED_FILES)
 	$(QUIET_DEPEND)$(CXX) -MM $(ALL_CFLAGS) -MT $*.o $< > $*.d
 
-%.o: %.m .cflags
-	$(QUIET_CC)$(CC) $(ALL_CFLAGS) -Wp,-MD,$*.d -c $< -o $*.o
+%.o: %.m .cflags $(GENERATED_FILES)
+ifdef NO_INLINE_DEPGEN
+	$(QUIET_CC)$(CC) $(ALL_CFLAGS) -c $< -o $@
+else
+	$(QUIET_CC)$(CC) $(ALL_CFLAGS) -Wp,-MD,$*.d,-MT,$@ -c $< -o $@
+endif
 
 %.o: %.cc .cflags $(GENERATED_FILES)
-	$(QUIET_CXX)$(CXX) $(ALL_CFLAGS) -Wp,-MD,$*.d,-MT,$@ -c $< -o $*.o
+ifdef NO_INLINE_DEPGEN
+	$(QUIET_CXX)$(CXX) $(ALL_CFLAGS) -c $< -o $@
+else
+	$(QUIET_CXX)$(CXX) $(ALL_CFLAGS) -Wp,-MD,$*.d,-MT,$@ -c $< -o $@
+endif
 
 icon.o: util/crawl.rc util/crawl.ico
 	$(QUIET_WINDRES)$(WINDRES) util/crawl.rc icon.o
