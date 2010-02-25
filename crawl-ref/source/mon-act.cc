@@ -2572,15 +2572,9 @@ static bool _is_trap_safe(const monsters *monster, const coord_def& where,
     if (intel == I_PLANT)
         return (true);
 
-    if (trap.type == TRAP_SHAFT && monster->will_trigger_shaft())
-    {
-        if (mons_is_fleeing(monster) && intel >= I_NORMAL
-            || monster->pacified())
-        {
-            return (true);
-        }
-        return (false);
-    }
+    // Known shafts are safe. Unknown ones are unknown.
+    if (trap.type == TRAP_SHAFT)
+        return (true);
 
     // Hostile monsters are not afraid of non-mechanical traps.
     // Allies will try to avoid teleportation and zot traps.
