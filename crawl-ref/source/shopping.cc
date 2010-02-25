@@ -614,14 +614,16 @@ static bool _in_a_shop( int shopidx, int &num_in_list )
                 for (unsigned int i = 0; i < stock.size(); i++)
                 {
                     const item_def &item = mitm[stock[i]];
-                    if (selected[i] && !shopping_list.is_on_list(item))
+                    if (selected[i])
                     {
-                        // Ignore Bargaining.
-                        const int cost = _shop_get_item_value(item, shop.greed,
-                                                              id_stock, false);
-
-                        shopping_list.add_thing(item, cost);
-                        in_list[i]  = false;
+                        if (!shopping_list.is_on_list(item))
+                        {
+                            // Ignore Bargaining.
+                            const int cost = _shop_get_item_value(item,
+                                        shop.greed, id_stock, false);
+                            shopping_list.add_thing(item, cost);
+                        }
+                        in_list[i]  = true;
                         selected[i] = false;
                     }
                 }
