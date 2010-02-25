@@ -894,7 +894,7 @@ endif
 clean:
 	+$(MAKE) -C $(UTIL) clean
 	+$(MAKE) -C $(RLTILES) clean
-	$(RM) $(GAME) $(GAME).exe $(EXTRA_OBJECTS) libw32c.o libunix.o $(OBJECTS) $(OBJECTS:.o=.d) *.ixx build.h compflag.h .contrib-libs .cflags
+	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o libunix.o $(OBJECTS) $(OBJECTS:.o=.d) *.ixx build.h compflag.h .contrib-libs .cflags
 
 clean-contrib:
 	+$(MAKE) -C contrib clean
