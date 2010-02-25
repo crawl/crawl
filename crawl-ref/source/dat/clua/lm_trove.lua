@@ -88,13 +88,15 @@ function TroveMarker:activate(marker, verbose)
 end
 
 function TroveMarker:fdesc_long (marker)
+  local state = ""
   if self.no_timeout then
-    return self.props.desc_long .. " This portal is broken and requires " ..
-           self:item_name() .. " to function.\n"
+    state = "This portal is broken and requires " ..
+            self:item_name() .. " to function.\n"
   else
-    return self.props.desc_long .. " This portal will remain here for a" ..
-           self.props.dur .. " time.\n"
+    state = "This portal will remain here for a" ..
+             self.props.dur .. " time.\n"
   end
+  return state .. "\n" .. self.props.desc_long
 end
 
 function TroveMarker:overview_note (marker)
