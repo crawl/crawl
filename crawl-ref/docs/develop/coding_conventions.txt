@@ -366,3 +366,42 @@ the issue.
 
   // FIXME: implement this for tiles
   void update_monster_pane() {}
+
+F) Macro Usage
+--------------------
+
+If you need to use a macro as a boolean flag, do this:
+
+  #define SOME_DEBUG_FLAG
+
+  #ifdef SOME_DEBUG_FLAG
+    do_something();
+  #endif
+
+Not this:
+
+  #define SOME_DEBUG_FLAG 1
+
+  #if SOME_DEBUG_FLAG
+    do_something();
+  #endif
+
+The reason for this is that it's common for such debug flags to be left
+undefined, leading to the #if statement having an undefined behavior. Most
+sane compilers will give undefined macros a value of '0' during such #if
+comparisons, but some compilers throw errors. So, play it safe. Use #ifdef.
+
+Another thing to watch for with such flags is this sort of thing:
+
+  #define SOME_FLAG
+  #define SOME_OTHER_FLAG
+
+  #ifdef SOME_FLAG
+    do_something();
+  #elif SOME_OTHER_FLAG
+    do_something_else();
+  #endif
+
+The #elif statement should read '#elif defined(SOME_OTHER_FLAG)'. If the
+macro was undefined, this would lead to the same undefined behavior noted
+above.
