@@ -2351,7 +2351,7 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
             return make_book_level_randart(book, level - 1, num_spells);
 
         num_spells = spell_list.size();
-#if DEBUG || DEBUG_DIAGNOSTICS
+#if defined(DEBUG) || defined(DEBUG_DIAGNOSTICS)
         // Not many level 8 or 9 spells
         if (level < 8)
         {

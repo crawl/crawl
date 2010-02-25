@@ -2306,7 +2306,7 @@ static void tag_read_level_items(reader &th, char minorVersion)
     for (int i = 0; i < item_count; ++i)
         unmarshallItem(th, mitm[i]);
 
-#if DEBUG_ITEM_SCAN
+#ifdef DEBUG_ITEM_SCAN
     // There's no way to fix this, even with wizard commands, so get
     // rid of it when restoring the game.
     for (int i = 0; i < MAX_ITEMS; i++)

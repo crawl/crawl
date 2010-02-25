@@ -68,13 +68,13 @@
 #include "xom.h"
 
 #ifdef DEBUG_XOM
-#    define DEBUG_RELIGION    1
-#    define NOTE_DEBUG_XOM    1
+#    define DEBUG_RELIGION
+#    define NOTE_DEBUG_XOM
 #endif
 
 #ifdef DEBUG_RELIGION
-#    define DEBUG_DIAGNOSTICS 1
-#    define DEBUG_GIFTS       1
+#    define DEBUG_DIAGNOSTICS
+#    define DEBUG_GIFTS
 #endif
 
 // Which spells?  First I copied all spells from your_spells(), and then

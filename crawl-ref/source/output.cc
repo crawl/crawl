@@ -593,7 +593,7 @@ struct status_light
 // we're not really exposing any new information). --bwr
 static void _get_status_lights(std::vector<status_light>& out)
 {
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
     {
         static char static_pos_buf[80];
         snprintf(static_pos_buf, sizeof(static_pos_buf),
@@ -907,7 +907,7 @@ void print_stats(void)
     {
         cgotoxy(1,8 + yhack, GOTO_STAT);
         textcolor(Options.status_caption_colour);
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
         cprintf("XP: ");
         textcolor(_get_exp_pool_colour(you.exp_available));
         cprintf("%d/%d (%d) ",
@@ -1002,7 +1002,7 @@ void print_stats_level()
     cprintf("Place: ");
 
     textcolor(HUD_VALUE_COLOUR);
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
     cprintf( "(%d) ", you.absdepth0 + 1 );
 #endif
     cprintf("%s", _level_description_string_hud().c_str());
@@ -1334,7 +1334,7 @@ static void _print_next_monster_desc(const std::vector<monster_info>& mons,
 #endif
 
 #ifndef USE_TILE
-#define BOTTOM_JUSTIFY_MONSTER_LIST 0
+#define BOTTOM_JUSTIFY_MONSTER_LIST
 // Returns -1 if the monster list is empty, 0 if there are so many monsters
 // they have to be consolidated, and 1 otherwise.
 int update_monster_pane()
@@ -1377,7 +1377,7 @@ int update_monster_pane()
                 --lines_needed;
     }
 
-#if BOTTOM_JUSTIFY_MONSTER_LIST
+#ifdef BOTTOM_JUSTIFY_MONSTER_LIST
     const int skip_lines = std::max<int>(0, crawl_view.mlistsz.y-lines_needed);
 #else
     const int skip_lines = 0;

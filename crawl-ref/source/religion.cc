@@ -87,11 +87,11 @@
 #include "view.h"
 #include "xom.h"
 
-#if DEBUG_RELIGION
-#    define DEBUG_DIAGNOSTICS 1
-#    define DEBUG_GIFTS       1
-#    define DEBUG_SACRIFICE   1
-#    define DEBUG_PIETY       1
+#ifdef DEBUG_RELIGION
+#    define DEBUG_DIAGNOSTICS
+#    define DEBUG_GIFTS
+#    define DEBUG_SACRIFICE
+#    define DEBUG_PIETY
 #endif
 
 #define PIETY_HYSTERESIS_LIMIT 1
@@ -846,7 +846,7 @@ void dec_penance(god_type god, int val)
 
     if (you.penance[god] > 0)
     {
-#if DEBUG_PIETY
+#ifdef DEBUG_PIETY
         mprf(MSGCH_DIAGNOSTICS, "Decreasing penance by %d", val);
 #endif
         if (you.penance[god] <= val)
@@ -1194,7 +1194,7 @@ static void _update_sacrifice_weights(int which)
     }
 }
 
-#if DEBUG_GIFTS || DEBUG_CARDS
+#if defined(DEBUG_GIFTS) || defined(DEBUG_CARDS)
 static void _show_pure_deck_chances()
 {
     int weights[5];
@@ -1243,7 +1243,7 @@ static bool _give_nemelex_gift(bool forced = false)
         get_pure_deck_weights(weights);
         const int choice = choose_random_weighted(weights, weights+5);
         gift_type = pure_decks[choice];
-#if DEBUG_GIFTS || DEBUG_CARDS
+#if defined(DEBUG_GIFTS) || defined(DEBUG_CARDS)
         _show_pure_deck_chances();
 #endif
         int thing_created = items( 1, OBJ_MISCELLANY, gift_type,
@@ -1972,7 +1972,7 @@ bool do_god_gift(bool prayed_for, bool forced)
 
     god_acting gdact;
 
-#if DEBUG_DIAGNOSTICS || DEBUG_GIFTS
+#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_GIFTS)
     int old_gifts = you.num_gifts[you.religion];
 #endif
 
@@ -2210,7 +2210,7 @@ bool do_god_gift(bool prayed_for, bool forced)
         }                       // switch (you.religion)
     }                           // End of gift giving.
 
-#if DEBUG_DIAGNOSTICS || DEBUG_GIFTS
+#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_GIFTS)
     if (old_gifts < you.num_gifts[you.religion])
     {
         mprf(MSGCH_DIAGNOSTICS, "Total number of gifts from this god: %d",
@@ -2479,7 +2479,7 @@ void gain_piety(int original_gain, bool all_at_once)
         // no longer have a piety cost for getting them
         if (!one_chance_in(4))
         {
-#if DEBUG_PIETY
+#ifdef DEBUG_PIETY
             mprf(MSGCH_DIAGNOSTICS, "Piety slowdown due to gift timeout.");
 #endif
             return;
@@ -2519,7 +2519,7 @@ void gain_piety(int original_gain, bool all_at_once)
         const int pgn_borrowed = (old_hysteresis - you.piety_hysteresis);
         pgn -= pgn_borrowed;
 
-#if DEBUG_PIETY
+#ifdef DEBUG_PIETY
         mprf(MSGCH_DIAGNOSTICS, "Piety increasing by %d (and %d taken from "
                                 "hysteresis, %d original)",
              pgn, pgn_borrowed, original_gain);
@@ -2730,7 +2730,7 @@ void lose_piety(int pgn)
         PIETY_HYSTERESIS_LIMIT, you.piety_hysteresis + pgn);
     const int pgn_borrowed = (you.piety_hysteresis - old_hysteresis);
     pgn -= pgn_borrowed;
-#if DEBUG_PIETY
+#ifdef DEBUG_PIETY
     mprf(MSGCH_DIAGNOSTICS,
          "Piety decreasing by %d (and %d added to hysteresis)",
          pgn, pgn_borrowed);

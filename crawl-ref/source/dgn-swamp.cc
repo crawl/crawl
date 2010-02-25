@@ -73,7 +73,7 @@ void dgn_build_swamp_level(int level)
 }
 
 
-#if OLD_SWAMP_LAYOUT
+#ifdef OLD_SWAMP_LAYOUT
 void dgn_prepare_swamp()
 {
     dgn_Build_Method += " swamp";

@@ -936,7 +936,7 @@ static bool _handle_wand(monsters *monster, bolt &beem)
     beem.is_beam      = theBeam.is_beam;
     beem.is_explosion = theBeam.is_explosion;
 
-#if HISCORE_WEAPON_DETAIL
+#ifdef HISCORE_WEAPON_DETAIL
     beem.aux_source =
         wand.name(DESC_QUALNAME, false, true, false, false);
 #else
@@ -1684,7 +1684,7 @@ void handle_monster_move(monsters *monster)
     int non_move_energy = std::min(entry->energy_usage.move,
                                    entry->energy_usage.swim);
 
-#if DEBUG_MONS_SCAN
+#ifdef DEBUG_MONS_SCAN
     bool monster_was_floating = mgrd(monster->pos()) != monster->mindex();
 #endif
 
@@ -1696,7 +1696,7 @@ void handle_monster_move(monsters *monster)
 
         const coord_def old_pos = monster->pos();
 
-#if DEBUG_MONS_SCAN
+#ifdef DEBUG_MONS_SCAN
         if (!monster_was_floating
             && mgrd(monster->pos()) != monster->mindex())
         {
@@ -2212,7 +2212,7 @@ static bool _monster_eat_item(monsters *monster, bool nearby)
         if (!is_item_jelly_edible(*si))
             continue;
 
-#if DEBUG_DIAGNOSTICS || DEBUG_EATERS
+#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_EATERS)
         mprf(MSGCH_DIAGNOSTICS,
              "%s eating %s", monster->name(DESC_PLAIN, true).c_str(),
              si->name(DESC_PLAIN).c_str());
@@ -3484,7 +3484,7 @@ static bool _monster_move(monsters *monster)
                 ret    = true;
                 mmov.reset();
 
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
                 mprf(MSGCH_DIAGNOSTICS,
                      "%s is skipping movement in order to follow.",
                      monster->name(DESC_CAP_THE).c_str(), true );

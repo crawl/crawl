@@ -1,7 +1,7 @@
 #ifndef CTEST_H
 #define CTEST_H
 
-#if DEBUG_DIAGNOSTICS || DEBUG_TESTS
+#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_TESTS)
 
 namespace crawl_tests
 {

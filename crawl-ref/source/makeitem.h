@@ -39,7 +39,7 @@ bool is_missile_brand_ok(int type, int brand);
 bool got_curare_roll(const int item_level);
 void reroll_brand(item_def &item, int item_level);
 
-#if DEBUG_DIAGNOSTICS || DEBUG_TESTS
+#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_TESTS)
 void makeitem_tests();
 #endif
 #endif

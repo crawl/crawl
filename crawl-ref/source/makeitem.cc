@@ -3600,7 +3600,7 @@ void item_set_appearance(item_def &item)
     }
 }
 
-#if DEBUG_DIAGNOSTICS || DEBUG_TESTS
+#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_TESTS)
 static int _test_item_level()
 {
     switch(random2(10))

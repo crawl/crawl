@@ -786,7 +786,7 @@ bool evoke_item(int slot)
 
     ASSERT(slot >= 0);
 
-#if DEBUG // Used only by an assert
+#ifdef DEBUG // Used only by an assert
     const bool wielded = (you.equip[EQ_WEAPON] == slot);
 #endif /* DEBUG */
 

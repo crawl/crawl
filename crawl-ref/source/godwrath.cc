@@ -1141,7 +1141,7 @@ bool divine_retribution(god_type god, bool no_bonus)
     case GOD_CHEIBRIADOS:   do_more = _cheibriados_retribution(); break;
 
     default:
-#if DEBUG_DIAGNOSTICS || DEBUG_RELIGION
+#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_RELIGION)
         mprf(MSGCH_DIAGNOSTICS, "No retribution defined for %s.",
              god_name(god).c_str());
 #endif

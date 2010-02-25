@@ -1151,7 +1151,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         return;
     }
 
-#if WIZARD || DEBUG
+#if defined(WIZARD) || defined(DEBUG)
     if (you.never_die)
     {
         if (you.hp <= 0)

@@ -69,7 +69,7 @@
 #include "tutorial.h"
 
 #ifdef DEBUG_DIAGNOSTICS
-#define DEBUG_TEMPLES 1
+#define DEBUG_TEMPLES
 #endif
 
 #ifdef WIZARD
@@ -340,7 +340,7 @@ bool builder(int level_number, int level_type, bool enable_random_maps)
 
         if (!dgn_level_vetoed && _valid_dungeon_level(level_number, level_type))
         {
-#if DEBUG_MONS_SCAN
+#ifdef DEBUG_MONS_SCAN
             // If debug_mons_scan() finds a problem while Generating_Level is
             // still true then it will announce that a problem was caused
             // during level generation.
@@ -1822,7 +1822,7 @@ static void _build_dungeon_level(int level_number, int level_type)
     // Stairs must exist by this point (except in Shoals where they are
     // yet to be placed). Some items and monsters already exist.
 
-#if OLD_SWAMP_LAYOUT
+#ifdef OLD_SWAMP_LAYOUT
     // Time to make the swamp or shoals {dlb}:
     if (player_in_branch(BRANCH_SWAMP))
         dgn_prepare_swamp();
@@ -5727,7 +5727,7 @@ static void _place_shops(int level_number, int nshops)
 
     if (!nshops)
     {
-#if DEBUG_SHOPS
+#ifdef DEBUG_SHOPS
         nshops = MAX_SHOPS;
 #else
         nshops = ((temp_rand > 28) ? 0 :                        // 76.8%

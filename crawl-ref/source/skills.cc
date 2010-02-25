@@ -88,7 +88,7 @@ void calc_total_skill_points( void )
 
     you.skill_cost_level = i - 1;
 
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
     you.redraw_experience = true;
 #endif
 }
@@ -372,7 +372,7 @@ static int _exercise2(int exsk)
     WIZARD feature.
 
 
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
     mprf( MSGCH_DIAGNOSTICS, "Exercised %s * %d for %d xp.",
           skill_name(exsk), skill_inc, skill_change );
 #endif

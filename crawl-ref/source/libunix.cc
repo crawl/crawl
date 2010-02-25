@@ -516,7 +516,7 @@ void unixcurses_startup( void )
 #ifdef CURSES_USE_KEYPAD
     keypad(stdscr, TRUE);
 
-#if CURSES_SET_ESCDELAY
+#ifdef CURSES_SET_ESCDELAY
     ESCDELAY = CURSES_SET_ESCDELAY;
 #endif
 #endif

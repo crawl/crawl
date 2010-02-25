@@ -72,7 +72,7 @@
 #include "tiledef-dngn.h"
 #endif
 
-#define DEBUG_PANE_BOUNDS 0
+//#define DEBUG_PANE_BOUNDS
 
 crawl_view_geometry crawl_view;
 
@@ -657,7 +657,7 @@ void flash_view_delay(int colour, long flash_delay)
 
 static void _debug_pane_bounds()
 {
-#if DEBUG_PANE_BOUNDS
+#ifdef DEBUG_PANE_BOUNDS
     // Doesn't work for HUD because print_stats() overwrites it.
 
     if (crawl_view.mlistsz.y > 0)

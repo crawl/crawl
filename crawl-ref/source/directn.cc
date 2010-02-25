@@ -3789,7 +3789,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
                 MSGCH_EXAMINE_FILTER);
         }
 
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
         if (!mon->visible_to(&you))
             mpr("There is a non-visible monster here.", MSGCH_DIAGNOSTICS);
 #else
@@ -3823,7 +3823,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
             monster_described = true;
         }
 
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
         debug_stethoscope(mgrd(where));
 #endif
         if (Tutorial.tutorial_left && tutorial_monster_interesting(mon))
@@ -3838,7 +3838,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
         }
     }
 
-#if (!DEBUG_DIAGNOSTICS)
+#ifndef DEBUG_DIAGNOSTICS
   // removing warning
   look_clouds:
 #endif

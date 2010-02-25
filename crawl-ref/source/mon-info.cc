@@ -282,7 +282,7 @@ void monster_info::to_string(int count, std::string& desc,
         }
     }
 
-#if DEBUG_DIAGNOSTICS
+#ifdef DEBUG_DIAGNOSTICS
     out << " av" << m_difficulty << " "
         << m_mon->hit_points << "/" << m_mon->max_hit_points;
 #endif

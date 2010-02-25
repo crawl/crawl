@@ -3532,7 +3532,7 @@ mons_spec mons_list::get_hydra_spec(const std::string &name) const
         nheads = MONS_PROGRAM_BUG;  // What can I say? :P
     else if (nheads > 20)
     {
-#if DEBUG || DEBUG_DIAGNOSTICS
+#if defined(DEBUG) || defined(DEBUG_DIAGNOSTICS)
         mprf(MSGCH_DIAGNOSTICS, "Hydra spec wants %d heads, clamping to 20.",
              nheads);
 #endif
@@ -3558,7 +3558,7 @@ mons_spec mons_list::get_slime_spec(const std::string &name) const
         slime_size = 5;
     else
     {
-#if DEBUG || DEBUG_DIAGNOSTICS
+#if defined(DEBUG) || defined(DEBUG_DIAGNOSTICS)
         mprf(MSGCH_DIAGNOSTICS, "Slime spec wants invalid size '%s'",
              prefix.c_str());
 #endif

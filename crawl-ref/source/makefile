@@ -74,6 +74,7 @@ CFOPTIMIZE := -O2
 CFOTHERS := -fno-strict-aliasing -pipe $(EXTERNAL_FLAGS)
 CFOTHERS_L := -fsigned-char
 CFWARN := -Wall
+CFWARN_L := -Wundef
 
 DEFINES := $(EXTERNAL_DEFINES)
 
