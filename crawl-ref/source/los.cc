@@ -608,7 +608,7 @@ bool _find_ray_se(const coord_def& target, ray_def& ray,
 }
 
 // Coordinate transformation so we can find_ray quadrant-by-quadrant.
-struct opacity_trans : opacity_func
+struct opacity_trans : public opacity_func
 {
     const coord_def& source;
     int signx, signy;
