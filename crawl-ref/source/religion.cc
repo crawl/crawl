@@ -1953,6 +1953,8 @@ static void _delayed_gift_callback(const mgen_data &mg, int &midx,
     if (placed <= 0)
         return;
 
+    // Make sure monsters are shown.
+    viewwindow(false);
     more();
     _inc_gift_timeout(4 + random2avg(7, 2));
     you.num_gifts[you.religion]++;
