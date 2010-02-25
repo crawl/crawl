@@ -420,6 +420,11 @@ bool noisy(int loudness, const coord_def& where, const char *msg, int who,
         if (!mi->alive())
             continue;
 
+        // Monsters put to sleep by ensorcelled hibernation will sleep
+        // at least one turn.
+        if (mi->has_ench(ENCH_SLEEPY))
+            return (false);
+
         // Monsters arent' affected by their own noise.  We don't check
         // where == mi->pos() since it might be caused by the
         // Projected Noise spell.
