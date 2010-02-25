@@ -1053,13 +1053,6 @@ bool spell_is_empowered(spell_type spell)
         return (true);
     }
 
-    if (you.religion == GOD_KIKUBAAQUDGHA
-        && spell_typematch(spell, SPTYP_NECROMANCY)
-        && piety_rank() > 2)
-    {
-        return (true);
-    }
-
     switch (spell)
     {
     case SPELL_SWIFTNESS:
