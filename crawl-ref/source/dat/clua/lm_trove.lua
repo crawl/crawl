@@ -255,8 +255,12 @@ function TroveMarker:item_name(do_grammar)
     end
   end
 
-  if item.base_type == "potion" or item.base_type == "scroll"then
-    s = s .. " " .. item.base_type .. "s of"
+  if item.base_type == "potion" or item.base_type == "scroll" then
+    if item.quantity > 1 then
+      s = s .. " " .. item.base_type .. "s of"
+    else
+      s = s .. " " .. item.base_type .. " of"
+    end
   elseif item.base_type == "book" then
     books = {"Necronomicon", "tome of Destruction",
              "Young Poisoner's Handbook", "Monster Manual"}
