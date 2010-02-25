@@ -5609,22 +5609,25 @@ related Saint Roka
 w:2
 @The_monster@ calls out, "Join me or die!"
 %%%%
+Saint Roka rival
+
+@The_monster@ shouts @at_foe@, "There can only be one messiah: ME!"
+
+@The_monster@ shouts, "Orcs, take notice: this deceiver is a mere Hill Orc!"
+%%%%
 # need different speech if you also worship Beogh
 related beogh Saint Roka
 
+w:20
 @related Saint Roka@
 
-w:20
 @_hostile_orc_beogh_believer_speech_common_@
 
 w:5
 @_hostile_orc_beogh_believer_speech_rare_@
 
-w:1
-@The_monster@ shouts @at_foe@, "There can only be one messiah: ME!"
-
-w:1
-@The_monster@ shouts, "Orcs, take notice: this deceiver is a mere Hill Orc!"
+w:5
+@Saint Roka rival@
 ## END Saint Roka ##
 %%%%
 ############ SIGMUND ### Mad old wizard
