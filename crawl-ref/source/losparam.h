@@ -31,7 +31,7 @@ struct opacity_func
     }
 
 // Default LOS rules.
-struct opacity_default : opacity_func
+struct opacity_default : public opacity_func
 {
     CLONE(opacity_default)
 
@@ -41,7 +41,7 @@ static opacity_default opc_default;
 
 // Default LOS rules, but only consider fully opaque features blocking.
 // In particular, clouds don't affect the result.
-struct opacity_fullyopaque : opacity_func
+struct opacity_fullyopaque : public opacity_func
 {
     CLONE(opacity_fullyopaque)
 
@@ -52,7 +52,7 @@ static opacity_fullyopaque opc_fullyopaque;
 // Make transparent features block in addition to normal LOS.
 // * Translocations opacity: blink, apportation, portal projectile.
 // * Various "I feel safe"-related stuff.
-struct opacity_no_trans : opacity_func
+struct opacity_no_trans : public opacity_func
 {
     CLONE(opacity_no_trans)
 
@@ -62,7 +62,7 @@ static opacity_no_trans opc_no_trans;
 
 // Make immobile monsters block in addition to no_trans.
 // This is used for monster movement.
-struct opacity_immob : opacity_func
+struct opacity_immob : public opacity_func
 {
     CLONE(opacity_immob)
 
@@ -71,7 +71,7 @@ struct opacity_immob : opacity_func
 static opacity_immob opc_immob;
 
 // Make anything solid block in addition to normal LOS.
-struct opacity_solid : opacity_func
+struct opacity_solid : public opacity_func
 {
     CLONE(opacity_solid)
 
@@ -80,7 +80,7 @@ struct opacity_solid : opacity_func
 static opacity_solid opc_solid;
 
 // Opacity for monster movement, based on the late monster_los.
-struct opacity_monmove : opacity_func
+struct opacity_monmove : public opacity_func
 {
     const monsters& mon;
 
@@ -96,7 +96,7 @@ struct opacity_monmove : opacity_func
 
 // Make any actor (as well as solid features) block.
 // Note that the blocking actors are still "visible".
-struct opacity_no_actor : opacity_func
+struct opacity_no_actor : public opacity_func
 {
     CLONE(opacity_no_actor)
 
