@@ -2649,7 +2649,7 @@ static builder_rc_type _builder_basic(int level_number)
     grd[xend][yend]     = DNGN_STONE_STAIRS_UP_III;
 
     // Generate a random dead-end that /may/ have a shaft.  Good luck!
-    if (!one_chance_in(4)) // 3/4 times
+    if (is_valid_shaft_level() && !one_chance_in(4)) // 3/4 times
     {
         // This is kinda hack-ish.  We're still early in the dungeon
         // generation process, and we know that there will be no other
