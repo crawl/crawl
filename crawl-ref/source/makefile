@@ -63,13 +63,24 @@ GAME = crawl
 # CFOTHERS(_L) - Anything else
 #
 
-# These are really good options for the Intel C++ compiler:
-#CFOPTIMIZE := -O2 -parallel
+
+ifdef USE_ICC
 
 # If you have a Core 2 processor, this _really_ makes things fly:
-#CFOPTIMIZE := -O2 -parallel -ipo -xT
+#CFOPTIMIZE := -O2 -parallel -xT
+
+# Optionally enable the 'ipo' feature, to facilitate inlining
+# across object file bounds.
+#CFOPTIMIZE_L := -ipo
+
+# Some very good optimization flags.
+CFOPTIMIZE := -O2 -parallel
+
+else
 
 CFOPTIMIZE := -O2
+
+endif # USE_ICC
 
 CFOTHERS := -fno-strict-aliasing -pipe $(EXTERNAL_FLAGS)
 CFOTHERS_L := -fsigned-char
@@ -182,6 +193,9 @@ ifeq ($(uname_S),Darwin)
 		BUILD_LIBPNG = YesPlease
 		BUILD_ZLIB = YesPlease
 	endif
+endif
+ifdef USE_ICC
+	NO_RDYNAMIC := YesPlease
 endif
 ifneq (,$(findstring CYGWIN,$(uname_S)))
 	GAME = crawl.exe
@@ -628,9 +642,11 @@ NO_INLINE_DEPGEN := YesPlease
 GCC := icc
 GXX := icpc
 AR  := xiar
+RANLIB := true
 LIBS += -lguide -lpthread
 CFWARN := -wd383,810,869,981,1418 -we14,193,304
 CFWARN_L :=
+LDFLAGS += $(CFOPTIMIZE) $(CFOPTIMIZE_L)
 endif
 
 ifdef REPORT
