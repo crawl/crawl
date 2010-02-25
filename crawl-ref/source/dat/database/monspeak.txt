@@ -1762,6 +1762,9 @@ w:2
 #################################################################### BRANCHES #
 Orcish Mines Donald
 
+w:50
+@_generic_Donald_@
+
 @The_monster@ says, "Orcs complain a lot, don't they? I hate it."
 
 @The_monster@ says, "Orcs smell really bad. Yuck."
@@ -1796,6 +1799,9 @@ VISUAL:@The_monster@ kicks a rock and scowls.
 %%%%
 Elven Halls Donald
 
+w:50
+@_generic_Donald_@
+
 @The_monster@ says, "They're so pretty, I think it must be a glamour."
 
 @The_monster@ says, "This place goes on forever. I hate that."
@@ -1822,6 +1828,9 @@ Elven Halls Donald
 %%%%
 Swamp Donald
 
+w:50
+@_generic_Donald_@
+
 @The_monster@ says, "What's that horrible smell? It's like... yuck."
 
 @The_monster@ says, "If there's anything I hate more than water, it's brackish swamp water."
@@ -1847,6 +1856,9 @@ Swamp Donald
 @The_monster@ says, "Is there a plague of frogs happening, or something? At least it's not locusts."
 %%%%
 Shoals Donald
+
+w:50
+@_generic_Donald_@
 
 @The_monster@ says, "Tides? What were they thinking? I hate tides!"
 
@@ -1890,6 +1902,9 @@ Shoals Donald
 %%%%
 Slime Pits Donald
 
+w:50
+@_generic_Donald_@
+
 @The_monster@ says, "I forgot my corrosion kit. Damn, I hate that!"
 
 @The_monster@ says, "Those eyeballs are creepy."
@@ -1931,6 +1946,9 @@ Slime Pits Donald
 @The_monster@ says, "I hope the rune isn't sticky."
 %%%%
 Snake Pit Donald
+
+w:50
+@_generic_Donald_@
 
 @The_monster@ says, "You know that hissing noise? I hate that."
 
@@ -1989,6 +2007,9 @@ Snake Pit Donald
 #%%%%
 Hall of Blades Donald
 
+w:50
+@_generic_Donald_@
+
 @The_monster@ says, "A great mace doesn't even have a blade."
 
 @The_monster@ says, "They may as well put a portal to the Abyss at the bottom of the stairs."
@@ -2020,6 +2041,9 @@ Hall of Blades Donald
 @The_monster@ says, "I've been waiting here for ages. Nothing new."
 %%%%
 Crypt Donald
+
+w:50
+@_generic_Donald_@
 
 @The_monster@ says, "Zombies are pretty boring."
 
@@ -2089,6 +2113,9 @@ Crypt Donald
 %%%%
 Zin Donald
 
+w:50
+@_generic_Donald_@
+
 @The_monster@ says, "At least you won't get hungry."
 
 @The_monster@ says, "Zin? Why would you even bother?"
@@ -2123,6 +2150,9 @@ Zin Donald
 %%%%
 The Shining One Donald
 
+w:50
+@_generic_Donald_@
+
 @The_monster@ says, "What's the point of being chivalric if nobody's going to be chivalric back?"
 
 @The_monster@ says, "I opened the door for a goblin, he punched me in the face. I hate chivalry."
@@ -2143,6 +2173,9 @@ The Shining One Donald
 %%%%
 Kikubaaqudgha Donald
 
+w:50
+@_generic_Donald_@
+
 @The_monster@ says, "Kikubaa-what? How do you even say that?"
 
 @The_monster@ says, "Sorry, didn't catch that. You worship who? How do you spell it?"
@@ -2162,6 +2195,9 @@ Kikubaaqudgha Donald
 @The_monster@ says, "I'm hungry. Can you summon some snacks?"
 %%%%
 Yredelemnul Donald
+
+w:50
+@_generic_Donald_@
 
 @The_monster@ says, "How does a skeletal dragon fly, anyway?"
 
@@ -2187,6 +2223,9 @@ Yredelemnul Donald
 %%%%
 Okawaru Donald
 
+w:50
+@_generic_Donald_@
+
 @The_monster@ says, "Okawaru always makes me think of chokos."
 
 @The_monster@ says, "Okawaru? Yawn."
@@ -2209,6 +2248,9 @@ VISUAL:@The_monster@ yawns.
 %%%%
 Makhleb Donald
 
+w:50
+@_generic_Donald_@
+
 @The_monster@ says, "At least you've got demons for company."
 
 @The_monster@ says, "Are you sure that summoning demons is a good idea?"
@@ -2224,6 +2266,9 @@ Makhleb Donald
 @The_monster@ says, "I hate demons."
 %%%%
 Sif Muna Donald
+
+w:50
+@_generic_Donald_@
 
 @The_monster@ says, "Don't you wish for a portable bookcase?"
 
@@ -2259,6 +2304,9 @@ Sif Muna Donald
 %%%%
 Trog Donald
 
+w:50
+@_generic_Donald_@
+
 @The_monster@ says, "So, are you allowed to read books?"
 
 @The_monster@ says, "You troglodyte!"
@@ -2285,6 +2333,9 @@ Trog Donald
 %%%%
 Nemelex Xobeh Donald
 
+w:50
+@_generic_Donald_@
+
 @The_monster@ says, "What's all in the cards? Your future?"
 
 @The_monster@ says, "You missed a spot upstairs."
@@ -2309,6 +2360,9 @@ Nemelex Xobeh Donald
 %%%%
 Elyvilon Donald
 
+w:50
+@_generic_Donald_@
+
 @The_monster@ says, "Whatever happened to, 'First, do no harm'?"
 
 @The_monster@ says, "Hungry yet?"
@@ -2322,6 +2376,9 @@ Elyvilon Donald
 @The_monster@ says, "Come on. Make me an offer of peace that I can't refuse!"
 %%%%
 Lugonu Donald
+
+w:50
+@_generic_Donald_@
 
 @The_monster@ says, "I'd pick a mace for blessing, if I were you."
 
@@ -2340,6 +2397,9 @@ Lugonu Donald
 @The_monster@ says, "What's the point of distortion, anyway? I don't want my food blinking away from me."
 %%%%
 Beogh Donald
+
+w:50
+@_generic_Donald_@
 
 @The_monster@ says, "Beogh's pretty racist."
 
@@ -2367,6 +2427,9 @@ Beogh Donald
 %%%%
 Jiyva Donald
 
+w:50
+@_generic_Donald_@
+
 @The_monster@ says, "Come slime with me!"
 
 @The_monster@ says, "You look a bit slimy."
@@ -2386,6 +2449,9 @@ Jiyva Donald
 @The_monster@ says, "If I pretend to be a jelly, can I have your stuff?"
 %%%%
 Fedhas Donald
+
+w:50
+@_generic_Donald_@
 
 @The_monster@ says, "What's with all that fungus?"
 
@@ -2413,6 +2479,9 @@ Fedhas Donald
 %%%%
 Cheibriados Donald
 
+w:50
+@_generic_Donald_@
+
 @The_monster@ says, "Slow down, man!"
 
 @The_monster@ says, "You're not very quick on the up-take, are you?"
@@ -2434,6 +2503,9 @@ Cheibriados Donald
 @The_monster@ says, "Tummy is such a puerile word."
 %%%%
 Xom Donald
+
+w:50
+@_generic_Donald_@
 
 @The_monster@ says, "Xom? Are you insane?"
 
@@ -2462,6 +2534,9 @@ Xom Donald
 @The_monster@ says, "I had a teddy bear once. I hated it."
 %%%%
 No God Donald
+
+w:50
+@_generic_Donald_@
 
 @The_monster@ says, "Don't you get lonely without a god?"
 
