@@ -5274,7 +5274,8 @@ void monsters::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_SLEEPY:
-        del_ench(ENCH_SLEEPY);
+        // deleted separately at end of monster turn; otherwise
+        // other monsters can wake up this one on their moves
         break;
 
     case ENCH_EAT_ITEMS:
