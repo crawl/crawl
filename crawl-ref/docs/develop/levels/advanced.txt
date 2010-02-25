@@ -422,15 +422,14 @@ end
 
 The function is called from each of the destination map definitions:
 
-: ice_cave_milestone(_G)
+epilogue{{
+ice_cave_milestone(_G)
+}}
 
-This marks down entering the portal vault in the milestones. When the portal
-is entered, the destination map is chosen and the call to crawl.mark_milestone
-is executed along with the rest of the map definition.
-
-Adding milestones in a .des does have the slight catch of creating multiple
-milestones if the map fails validation for some reason, so it's best used
-in maps that will never fail validation.
+This marks down entering the portal vault in the server milestones and causes
+it to be announced by the IRC bots. Notice the use of an epilogue block. The
+epilogues are only ran after the map is validated, that is, it ensures that
+the map was actually used.
 
 
 L.    Lua reference
