@@ -950,7 +950,6 @@ public:
         text = item_name;
         hotkeys[0] = hotkey;
         on_list = _on_list;
-        colour = on_list ? CYAN : LIGHTGREY;
     }
 
     std::string get_text() const
