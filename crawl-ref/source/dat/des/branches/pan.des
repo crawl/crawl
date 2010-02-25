@@ -32,6 +32,7 @@ MONS:      patrolling Mnoleg, neqoxec
 epilogue{{
   crawl.mpr("The air here is shimmering with an eerie glow.")
   pan_lord_warning(_G)
+  crawl.mark_milestone("br.enter", "entered the realm of Mnoleg.")
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -80,6 +81,7 @@ MONS:      patrolling Lom Lobon, giant orange brain, rakshasa, wizard
 epilogue{{
   crawl.mpr("You sense a powerful magical presence. It is not pleased.")
   pan_lord_warning(_G)
+  crawl.mark_milestone("br.enter", "entered the realm of Lom Lobon.")
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -130,6 +132,7 @@ MONS:      patrolling Cerebov, Balrug, Pit Fiend
 epilogue{{
   crawl.mpr("Searing heat pours from the floors and walls of this place.")
   pan_lord_warning(_G)
+  crawl.mark_milestone("br.enter", "entered the realm of Cerebov.")
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -177,6 +180,7 @@ MONS:      patrolling Gloorx Vloq, Executioner, demonic crawler, shadow demon
 epilogue{{
   crawl.mpr("Shadowy figures dance across your vision.")
   pan_lord_warning(_G)
+  crawl.mark_milestone("br.enter", "entered the realm of Gloorx Vloq.")
 }}
 MAP
 xxxxxxxxxxxxxxxxxx@.xxxxxxxxxxxxxxx
