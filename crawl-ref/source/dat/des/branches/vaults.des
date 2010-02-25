@@ -328,6 +328,7 @@ TAGS:       no_secret_doors no_monster_gen no_item_gen uniq_the_teleporter \
             patrolling
 COLOUR:     ME = yellow
 MONS:       iron golem / crystal golem / stone golem
+TILE:       EM = dngn_the_teleporter_vaults
 SUBST:      EM = .
 SUBST:      em = U
 MARKER:     v = lua:props_marker { veto_shatter="veto" }
