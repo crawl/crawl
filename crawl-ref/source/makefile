@@ -644,7 +644,7 @@ YACC_CFLAGS  := $(ALL_CFLAGS) -w -DYYENABLE_NLS=0 -DYYLTYPE_IS_TRIVIAL=0
 
 UTIL = util/
 
-OBJECTS := $(UTIL)levcomp.tab.o $(UTIL)levcomp.lex.o $(OBJECTS)
+EXTRA_OBJECTS += $(UTIL)levcomp.tab.o $(UTIL)levcomp.lex.o
 
 LEX := $(shell which flex 2> /dev/null)
 YACC := $(shell which bison 2> /dev/null)
