@@ -65,12 +65,13 @@ ENDMAP
 NAME:    hive_david_3
 TAGS:    hive_entry
 ORIENT:  float
-ITEM:    honeycomb, honeycomb, honeycomb / royal jelly, royal jelly
+ITEM:    honeycomb, royal jelly
 MONS:    killer bee larva / killer bee, queen bee
 MONS:    giant ant / soldier ant, queen ant
 MONS:    yellow wasp / nothing, red wasp / yellow wasp
 MONS:    bumblebee
-SHUFFLE: XY, VW, defgOR, 34/56
+SHUFFLE: XY, VW, 34/56
+NSUBST:  O = 1:O / *:de.
 SUBST:   V==, W=a, X==, Y=a
 SUBST:   ? = a .:20
 SUBST:   1 : 1 7:2
@@ -78,13 +79,13 @@ SUBST:   7 = 7 .
 MAP
    .......   ...............
    ..??...   ..??aaa?aaa???.
-...?aaa?..   .?aaOaaaadaa?..
-.?aaa.aa??.....?aa=.aa=eaa?.
+...?aaa?..   .?aaOaaaaOaa?..
+.?aaa.aa??.....?aa=.aa=Oaa?.
 .aa333.aaa.......a?a11aaa?..
-.aaR43..=...T...a.1aea1.a?..
+.aaO43..=...T...a.1aOa1.a?..
 .?a.33.aaa......aa.1a2a1aa?.
 .?aa.3aa??.....aaaVa1a1aYaa.
-..?aaaa?.......?aagW..aXfaa.
+..?aaaa?.......?aaOW..aXOaa.
    ????.........?aaaaaaaaa?.
    ......     ...??aaa?a??
    ......     ............
