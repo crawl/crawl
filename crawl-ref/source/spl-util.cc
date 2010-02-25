@@ -1265,18 +1265,9 @@ int spell_highlight_by_utility(spell_type spell, int default_color,
     if (god_hates_spell(spell, you.religion))
         return (COL_FORBIDDEN);
 
-    // NOTE: if you only want the forbidden brand,
-    // comment out the rest of the function.
-    if (god_likes_spell(spell, you.religion) && !rod_spell)
-        default_color = COL_FAVORED;
-
     if (spell_is_empowered(spell) && !rod_spell)
         default_color = COL_EMPOWERED;
-    else if (spell_is_useful(spell) && !rod_spell)
-        default_color = COL_USEFUL;
 
-    if (spell_is_risky(spell) && !rod_spell)
-        default_color = COL_RISKY;
     if (spell_is_useless(spell, transient))
         default_color = COL_USELESS;
 
