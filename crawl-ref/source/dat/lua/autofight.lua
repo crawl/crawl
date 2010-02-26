@@ -27,30 +27,41 @@ local function abs(a)
   return a * sign(a)
 end
 
+local function adjacent(dx, dy)
+  return abs(dx) <= 1 and abs(dy) <= 1
+end
+
+local function can_move(feat)
+  -- should check feat_is_traversable or similar
+  return feat == "floor"
+end
+
 local function try_move(dx, dy)
   if view.feature_at(dx, dy) == "floor" then
     return delta_to_vi(dx, dy)
   else
-    return ""
+    return nil
   end
 end
 
 local function move_towards(dx, dy)
-  local move = ""
-  if abs(dx) > abs(dy) then
+  local move = nil
+  if adjacent(dx, dy) then
+    move = delta_to_vi(dx, dy)
+  elseif abs(dx) > abs(dy) then
     move = try_move(sign(dx), 0)
-    if move == "" then move = try_move(sign(dx), sign(dy)) end
-    if move == "" then move = try_move(0, sign(dy)) end
+    if move == nil then move = try_move(sign(dx), sign(dy)) end
+    if move == nil then move = try_move(0, sign(dy)) end
   elseif abs(dx) == abs(dy) then
     move = try_move(sign(dx), sign(dy))
-    if move == "" then move = try_move(sign(dx), 0) end
-    if move == "" then move = try_move(0, sign(dy)) end
+    if move == nil then move = try_move(sign(dx), 0) end
+    if move == nil then move = try_move(0, sign(dy)) end
   else
     move = try_move(0, sign(dy))
-    if move == "" then move = try_move(sign(dx), sign(dy)) end
-    if move == "" then move = try_move(sign(dx), 0) end
+    if move == nil then move = try_move(sign(dx), sign(dy)) end
+    if move == nil then move = try_move(sign(dx), 0) end
   end
-  if move == "" then
+  if move == nil then
     crawl.mpr("failed to move towards target")
   else
     crawl.process_keys(move)
