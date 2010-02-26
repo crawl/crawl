@@ -335,31 +335,6 @@ static std::string _get_speak_string(const std::vector<std::string> &prefixes,
     return (msg);
 }
 
-// Player ghosts with different jobs can potentially speak different
-// things.
-static std::string _player_ghost_speak_str(const monsters *monster,
-                                     const std::vector<std::string> prefixes)
-{
-    const ghost_demon &ghost = *(monster->ghost);
-    std::string ghost_job    = get_job_name(ghost.job);
-
-    std::string prefix = "";
-    for (int i = 0, size = prefixes.size(); i < size; i++)
-    {
-        prefix += prefixes[i];
-        prefix += " ";
-    }
-
-    // first try together with job name
-    std::string msg = getSpeakString(prefix + ghost_job + " player ghost");
-
-    // else try without job name
-    if (msg.empty() || msg == "__NEXT")
-        msg = getSpeakString(prefix + "player ghost");
-
-    return msg;
-}
-
 // Returns true if the monster did speak, false otherwise.
 // Maybe monsters will speak!
 void maybe_mons_speaks (monsters *monster)
@@ -581,7 +556,9 @@ bool mons_speaks(monsters *monster)
     if (monster->type == MONS_PLAYER_GHOST)
     {
         // Player ghosts are treated differently.
-        msg = _player_ghost_speak_str(monster, prefixes);
+        msg = _get_speak_string(prefixes, "player ghost", monster,
+                                no_player, no_foe, no_foe_name, no_god,
+                                unseen);
     }
     else if (monster->type == MONS_PANDEMONIUM_DEMON)
     {
