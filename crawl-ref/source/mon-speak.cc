@@ -28,6 +28,7 @@
 #include "jobs.h"
 #include "player.h"
 #include "religion.h"
+#include "skills2.h"
 #include "state.h"
 #include "stuff.h"
 #include "areas.h"
@@ -555,10 +556,22 @@ bool mons_speaks(monsters *monster)
     // First, try its exact name.
     if (monster->type == MONS_PLAYER_GHOST)
     {
-        // Player ghosts are treated differently.
-        msg = _get_speak_string(prefixes, "player ghost", monster,
-                                no_player, no_foe, no_foe_name, no_god,
-                                unseen);
+        if (one_chance_in(5))
+        {
+            const ghost_demon &ghost = *(monster->ghost);
+            std::string ghost_skill  = skill_name(ghost.best_skill);
+            std::vector<std::string> with_skill = prefixes;
+            with_skill.push_back(ghost_skill);
+            msg = _get_speak_string(with_skill, "player ghost", monster,
+                                    no_player, no_foe, no_foe_name, no_god,
+                                    unseen);
+        }
+        if (msg.empty())
+        {
+            msg = _get_speak_string(prefixes, "player ghost", monster,
+                                    no_player, no_foe, no_foe_name, no_god,
+                                    unseen);
+        }
     }
     else if (monster->type == MONS_PANDEMONIUM_DEMON)
     {
