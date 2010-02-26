@@ -701,6 +701,10 @@ void wield_effects(int item_wield_2, bool showMsgs)
                 you.redraw_armour_class = true;
                 break;
 
+            case SPWPN_EVASION:
+                you.redraw_evasion = true;
+                break;
+
             case SPWPN_DISTORTION:
                 mpr("Space warps around you for a moment!");
 
