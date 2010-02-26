@@ -1073,7 +1073,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         const bool needs_path = (!testbits(flags, SPFLAG_GRID)
                                  && !testbits(flags, SPFLAG_TARGET));
 
-        const bool dont_cancel_me = testbits(flags, SPFLAG_AREA);
+        const bool dont_cancel_me = testbits(flags, SPFLAG_HELPFUL);
 
         const int range = calc_spell_range(spell, powc, false);
 
@@ -1087,14 +1087,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
                              testbits(flags, SPFLAG_NOT_SELF)))
         {
             return (SPRET_ABORT);
-        }
-
-        if (spell == SPELL_MEPHITIC_CLOUD
-            && spd.isMe()
-            && i_feel_safe(false, false, true, 1)
-            && !yesno("Really target yourself?", false, 'n'))
-        {
-                return (SPRET_ABORT);
         }
 
         beam.range = calc_spell_range(spell, powc, true);
