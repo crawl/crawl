@@ -109,8 +109,8 @@
     #define FILE_SEPARATOR '/'
 
     #define CHARACTER_SET           0
-#ifndef USE_TILE
     #define USE_ASCII_CHARACTERS
+#ifndef USE_TILE
     #define USE_CURSES
 #endif
     #define EOL "\n"
@@ -352,6 +352,8 @@
 
 
 #ifdef USE_TILE
+    #define USE_ASCII_CHARACTERS
+
     #ifdef __cplusplus
     #include "libgui.h"
     #include "tilesdl.h"
