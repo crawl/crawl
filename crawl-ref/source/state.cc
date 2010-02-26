@@ -38,7 +38,7 @@ game_state::game_state()
 #ifndef USE_TILE
       mlist_targeting(false),
 #endif
-      darken_range(-1)
+      darken_range(-1), unsaved_macros(false)
 {
     reset_cmd_repeat();
     reset_cmd_again();
