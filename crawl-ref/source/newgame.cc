@@ -833,9 +833,6 @@ game_start:
     _give_species_bonus_hp();
     _give_species_bonus_mp();
 
-    if (you.species == SP_DEMONSPAWN)
-        roll_demonspawn_mutations();
-
     // XXX: These need to be set above using functions!!! {dlb}
     you.max_dex      = you.dex;
     you.max_strength = you.strength;

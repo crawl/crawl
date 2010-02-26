@@ -2995,24 +2995,49 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_DEMONSPAWN:
+                if (you.attribute[ATTR_NUM_DEMONIC_POWERS] == 0
+                    && (you.experience_level == 4
+                        || (you.experience_level < 4 && one_chance_in(3))))
                 {
-                    bool gave_message = false;
+                    demonspawn();
+                }
 
-                    for (unsigned i = 0; i < you.demonic_traits.size(); ++i)
-                    {
-                        if (you.demonic_traits[i].level_gained
-                            == you.experience_level)
-                        {
-                            if (!gave_message)
-                            {
-                                mpr("Your demonic ancestry asserts itself...",
-                                    MSGCH_INTRINSIC_GAIN);
+                if (you.attribute[ATTR_NUM_DEMONIC_POWERS] == 1
+                    && you.experience_level > 4
+                    && (you.experience_level == 9
+                        || (you.experience_level < 9 && one_chance_in(3))))
+                {
+                    demonspawn();
+                }
 
-                                gave_message = true;
-                            }
-                            perma_mutate(you.demonic_traits[i].mutation, 1);
-                        }
-                    }
+                if (you.attribute[ATTR_NUM_DEMONIC_POWERS] == 2
+                    && you.experience_level > 9
+                    && (you.experience_level == 14
+                        || (you.experience_level < 14 && one_chance_in(3))))
+                {
+                    demonspawn();
+                }
+
+                if (you.attribute[ATTR_NUM_DEMONIC_POWERS] == 3
+                    && you.experience_level > 14
+                    && (you.experience_level == 19
+                        || (you.experience_level < 19 && one_chance_in(3))))
+                {
+                    demonspawn();
+                }
+
+                if (you.attribute[ATTR_NUM_DEMONIC_POWERS] == 4
+                    && you.experience_level > 19
+                    && (you.experience_level == 24
+                        || (you.experience_level < 24 && one_chance_in(3))))
+                {
+                    demonspawn();
+                }
+
+                if (you.attribute[ATTR_NUM_DEMONIC_POWERS] == 5
+                    && you.experience_level == 27)
+                {
+                    demonspawn();
                 }
 
                 if (!(you.experience_level % 4))
@@ -5397,8 +5422,6 @@ void player::init()
 
     mutation.init(0);
     demon_pow.init(0);
-
-    demonic_traits.clear();
 
     had_book.init(false);
 

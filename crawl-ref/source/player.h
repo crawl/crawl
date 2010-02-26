@@ -221,14 +221,6 @@ public:
   FixedVector<unsigned char, NUM_MUTATIONS> mutation;
   FixedVector<unsigned char, NUM_MUTATIONS> demon_pow;
 
-  struct demon_trait
-  {
-      int           level_gained;
-      mutation_type mutation;
-  };
-
-  std::vector<demon_trait> demonic_traits;
-
   unsigned char magic_contamination;
 
   FixedVector<bool, NUM_FIXED_BOOKS> had_book;
