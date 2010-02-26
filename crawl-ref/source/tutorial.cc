@@ -3389,7 +3389,11 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
     }
     case TUT_SPELL_HUNGER:
         text << "The spell you just cast made you hungrier; you can see how "
-                "hungry spells make you by entering <w>%\?!</w> or <w>%I</w>. "
+                "hungry spells make you by "
+#ifdef USE_TILE
+                "examining your spells in the spell display, or by "
+#endif
+                "entering <w>%\?!</w> or <w>%I</w>. "
                 "The amount of nutrition consumed increases with the level of "
                 "the spell and decreases depending on your intelligence stat "
                 "and your Spellcasting skill. If both of these are high "
@@ -4940,7 +4944,7 @@ void tutorial_describe_monster(const monsters *mons, bool has_stat_desc)
     if (!dangerous && !has_stat_desc)
     {
         ostr << "\nThis monster doesn't appear to have any resistances or "
-                "susceptibilities. It cannot fly and is of average speed.\n"
+                "susceptibilities. It cannot fly and is of average speed. "
                 "Examining other, possibly more high-level monsters can give "
                 "important clues as to how to deal with them.";
     }
