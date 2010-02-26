@@ -1239,22 +1239,12 @@ void tut_gained_new_skill(int skill)
 // As safely as possible, colourize the passed glyph.
 // Handles quoting "<", MBCS-ing unicode, and
 // making DEC characters safe if not properly printable.
-static std::string _colourize_glyph(int col, unsigned glyph)
+static std::string _colourize_glyph(int col, unsigned ch)
 {
-    std::string colour_str = colour_to_str(col);
-    std::ostringstream text;
-    text << "<" << colour_str << ">";
-
-    text << stringize_glyph(glyph);
-    if (glyph == '<') text << '<';
-
-    text << "</" << colour_str << ">";
-    return text.str();
-}
-
-static std::string _colourize_glyph(glyph g)
-{
-    return (_colourize_glyph(g.col, g.ch));
+    glyph g;
+    g.col = col;
+    g.ch = ch;
+    return glyph_to_tagstr(g);
 }
 #endif
 
@@ -1376,7 +1366,7 @@ void tutorial_monster_seen(const monsters &mon)
             "by hovering your mouse over its tile, and read the monster "
             "description by clicking on it with your <w>right mouse button</w>."
 #else
-    text += _colourize_glyph(get_mons_glyph(&mon));
+    text += glyph_to_tagstr(get_mons_glyph(&mon));
     text += " is a monster, usually depicted by a letter. Some typical "
             "early monsters look like <brown>r</brown>, <green>l</green>, "
             "<brown>K</brown> or <lightgrey>g</lightgrey>. ";
@@ -1477,7 +1467,7 @@ void tutorial_first_item(const item_def &item)
 
     std::string text = "That ";
 #ifndef USE_TILE
-    text += _colourize_glyph(get_item_glyph(&item));
+    text += glyph_to_tagstr(get_item_glyph(&item));
     text += " ";
 #else
     const coord_def gc = item.pos;
@@ -1950,7 +1940,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
             {
                 text << "That ";
 #ifndef USE_TILE
-                std::string glyph = _colourize_glyph(get_item_glyph(&mitm[i]));
+                std::string glyph = glyph_to_tagstr(get_item_glyph(&mitm[i]));
                 const std::string::size_type found = glyph.find("%");
                 if (found != std::string::npos)
                     glyph.replace(found, 1, "percent");
@@ -2107,7 +2097,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         if (monster_at(gc))
             DELAY_EVENT;
 
-        text << _colourize_glyph(get_show_glyph(env.show(e))) << " ";
+        text << glyph_to_tagstr(get_show_glyph(env.show(e))) << " ";
 #else
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, "Stairs", gc);
@@ -2136,7 +2126,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 
         text << "These ";
 #ifndef USE_TILE
-        text << _colourize_glyph(get_show_glyph(env.show(e)));
+        text << glyph_to_tagstr(get_show_glyph(env.show(e)));
         text << " ";
 #else
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
@@ -2162,7 +2152,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
             DELAY_EVENT;
 
         // FIXME: Branch entrance character is not being colored yellow.
-        text << _colourize_glyph(get_show_glyph(env.show(e))) << " ";
+        text << glyph_to_tagstr(get_show_glyph(env.show(e))) << " ";
 #else
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, "Branch stairs", gc);
@@ -2195,7 +2185,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         if (monster_at(gc))
             DELAY_EVENT;
 
-        text << _colourize_glyph(get_show_glyph(env.show(e))) << " ";
+        text << glyph_to_tagstr(get_show_glyph(env.show(e))) << " ";
 #else
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, "Portal", gc);
@@ -2282,7 +2272,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
     case TUT_SEEN_ALTAR:
         text << "That ";
 #ifndef USE_TILE
-        text << _colourize_glyph(get_show_glyph(env.show(e))) << " ";
+        text << glyph_to_tagstr(get_show_glyph(env.show(e))) << " ";
 #else
         {
             tiles.place_cursor(CURSOR_TUTORIAL, gc);
@@ -3334,7 +3324,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 
         text << "is a ";
 #else
-        text << _colourize_glyph(get_mons_glyph(m)) << " is a ";
+        text << glyph_to_tagstr(get_mons_glyph(m)) << " is a ";
 #endif
         text << m->name(DESC_PLAIN).c_str() << ". ";
 

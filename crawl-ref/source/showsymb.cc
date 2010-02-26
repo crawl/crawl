@@ -12,6 +12,7 @@
 
 #include "colour.h"
 #include "env.h"
+#include "libutil.h"
 #include "map_knowledge.h"
 #include "mon-util.h"
 #include "monster.h"
@@ -20,6 +21,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
+#include "viewchar.h"
 #include "viewgeom.h"
 
 glyph get_show_glyph(show_type object)
@@ -153,4 +155,13 @@ unsigned get_screen_glyph(const coord_def& p)
         return get_map_knowledge_char(p.x, p.y);
 
     return (get_show_glyph(object).ch);
+}
+
+std::string glyph_to_tagstr(const glyph& g)
+{
+    std::string col = colour_to_str(g.col);
+    std::string ch = stringize_glyph(g.ch);
+    if (g.ch == '<')
+        ch += "<";
+    return make_stringf("<%s>%s</%s>", col.c_str(), ch.c_str(), col.c_str());
 }
