@@ -51,7 +51,6 @@ struct MouseEvent
     unsigned int py;
 };
 
-class SDL_Surface;
 class FTFont;
 
 class TilesFramework
@@ -122,7 +121,6 @@ protected:
     // screen pixels per view cell
     coord_def m_viewsc;
 
-    SDL_Surface* m_context;
     bool m_fullscreen;
     bool m_need_redraw;
 
