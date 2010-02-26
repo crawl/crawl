@@ -1808,7 +1808,7 @@ void save_game(bool leave_game, const char *farewellmsg)
     // so Valgrind doesn't complain.
     _save_game_base();
 
-    // Prompt for saving macros
+    // Prompt for saving macros.
     if (crawl_state.unsaved_macros && yesno("Save macros?", true, 'n'))
         macro_save();
 
