@@ -9,6 +9,8 @@ struct glyph
     unsigned short col;
 };
 
+std::string glyph_to_tagstr(const glyph& g);
+
 unsigned get_feat_symbol(dungeon_feature_type feat);
 unsigned get_item_symbol(show_item_type it);
 glyph get_item_glyph(const item_def *item);
