@@ -329,8 +329,8 @@ CC = $(GCC) $(CF_ARCHS) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
 CXX = $(GXX) $(CF_ARCHS) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
 
 ifdef USE_ICC
-CC += -gcc-name=gcc-4.0 -gxx-name=g++-4.0
-CXX += -gcc-name=gcc-4.0 -gxx-name=g++-4.0
+CC += -gcc-name=gcc-$(GCC_VER) -gxx-name=g++-$(GCC_VER)
+CXX += -gcc-name=gcc-$(GCC_VER) -gxx-name=g++-$(GCC_VER)
 endif
 
 endif # MacOS
