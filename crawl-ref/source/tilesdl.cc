@@ -33,9 +33,11 @@
 #include "tiledef-gui.h"
 #include "tilefont.h"
 
-#include <SDL.h>
-#include <SDL_opengl.h>
-#include <SDL_image.h>
+#ifdef USE_SDL
+#include "uiwrapper-sdl.h"
+#endif
+
+#include <SDL/SDL_opengl.h>
 
 // Default Screen Settings
 // width, height, map, crt, stat, msg, tip, lbl
@@ -56,7 +58,6 @@ TilesFramework tiles;
 TilesFramework::TilesFramework() :
     m_windowsz(1024, 768),
     m_viewsc(0, 0),
-    m_context(NULL),
     m_fullscreen(false),
     m_need_redraw(false),
     m_active_layer(LAYER_CRT),
@@ -132,7 +133,7 @@ void TilesFramework::shutdown()
         m_fonts[i].font = NULL;
     }
 
-    SDL_Quit();
+	wrapper.shutdown();
 
     _shutdown_console();
 }
@@ -242,91 +243,29 @@ bool TilesFramework::initialise()
     putenv("SDL_VIDEO_WINDOW_POS=center");
     putenv("SDL_VIDEO_CENTERED=1");
 #endif
-
+	
     _init_consoles();
-
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0)
-    {
-        printf("Failed to initialise SDL: %s\n", SDL_GetError());
-        return (false);
-    }
-
-    {
-        const SDL_VideoInfo* video_info = SDL_GetVideoInfo();
-        m_screen_width  = video_info->current_w;
-        m_screen_height = video_info->current_h;
-    }
-
-    SDL_EnableUNICODE(true);
-
-    std::string title = CRAWL " " + Version::Long();
-    SDL_WM_SetCaption(title.c_str(), CRAWL);
-    const char *icon_name =
+	
+	const char *icon_name =
 #ifdef DATA_DIR_PATH
-            DATA_DIR_PATH
+	DATA_DIR_PATH
 #endif
 #ifdef TARGET_OS_WINDOWS
-            "dat/tiles/stone_soup_icon-win32.png";
+	"dat/tiles/stone_soup_icon-win32.png";
 #else
-            "dat/tiles/stone_soup_icon-32x32.png";
+	"dat/tiles/stone_soup_icon-32x32.png";
 #endif
-
-    SDL_Surface *icon = IMG_Load(datafile_path(icon_name, true, true).c_str());
-    if (!icon)
-    {
-        printf("Failed to load icon: %s\n", SDL_GetError());
-        return (false);
-    }
-    SDL_WM_SetIcon(icon, NULL);
-
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 8);
-    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
-    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
-    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
-    SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
-
-    if (Options.tile_key_repeat_delay > 0)
-    {
-        const int delay    = Options.tile_key_repeat_delay;
-        const int interval = SDL_DEFAULT_REPEAT_INTERVAL;
-        if (SDL_EnableKeyRepeat(delay, interval) != 0)
-            printf("Failed to set key repeat mode: %s\n", SDL_GetError());
-    }
-
-    unsigned int flags = SDL_OPENGL;
-
-    bool too_small = (m_screen_width < 1024 || m_screen_height < 800);
-    if (Options.tile_full_screen == SCREENMODE_FULL
-        || too_small && Options.tile_full_screen == SCREENMODE_AUTO)
-    {
-        flags |= SDL_FULLSCREEN;
-        m_fullscreen = true;
-    }
-
-    if (Options.tile_window_width && Options.tile_window_height)
-    {
-        m_windowsz.x = Options.tile_window_width;
-        m_windowsz.y = Options.tile_window_height;
-    }
-    else if (flags & SDL_FULLSCREEN)
-    {
-        // By default, fill the whole screen.
-        m_windowsz.x = m_screen_width;
-        m_windowsz.y = m_screen_height;
-    }
-    else
-    {
-        m_windowsz.x = std::max(800, m_screen_width  - 90);
-        m_windowsz.y = std::max(480, m_screen_height - 90);
-    }
-
-    m_context = SDL_SetVideoMode(m_windowsz.x, m_windowsz.y, 0, flags);
-    if (!m_context)
-    {
-        printf("Failed to set video mode: %s\n", SDL_GetError());
-        return (false);
-    }
+	
+	std::string title = CRAWL " " + Version::Long();
+	
+	if( !wrapper.init(&m_windowsz) ) return (false);
+	
+	wrapper.setWindowTitle(title.c_str());
+	wrapper.setWindowIcon(icon_name);
+	
+	// Copy over constants that need to have been set by the wrapper
+	m_screen_width = wrapper.screenWidth();
+	m_screen_height = wrapper.screenHeight();
 
     // If the window size is less than the view height, the textures will
     // have to be shrunk.  If this isn't the case, then don't create mipmaps,
@@ -473,160 +412,8 @@ void TilesFramework::resize()
     calculate_default_options();
     do_layout();
 
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-
-    // For ease, vertex positions are pixel positions.
-    glOrtho(0, m_windowsz.x, m_windowsz.y, 0, -1000, 1000);
+    wrapper.resize(m_windowsz);
 }
-
-static unsigned char _get_modifiers(SDL_keysym &keysym)
-{
-    // keysym.mod can't be used to keep track of the modifier state.
-    // If shift is hit by itself, this will not include KMOD_SHIFT.
-    // Instead, look for the key itself as a separate event.
-    switch (keysym.sym)
-    {
-    case SDLK_LSHIFT:
-    case SDLK_RSHIFT:
-        return MOD_SHIFT;
-    case SDLK_LCTRL:
-    case SDLK_RCTRL:
-        return MOD_CTRL;
-    case SDLK_LALT:
-    case SDLK_RALT:
-        return MOD_ALT;
-    default:
-        return 0;
-    }
-}
-
-static int _translate_keysym(SDL_keysym &keysym)
-{
-    // This function returns the key that was hit.  Returning zero implies that
-    // the keypress (e.g. hitting shift on its own) should be eaten and not
-    // handled.
-
-    const int shift_offset = CK_SHIFT_UP - CK_UP;
-    const int ctrl_offset  = CK_CTRL_UP - CK_UP;
-
-    int mod = 0;
-    if (keysym.mod & KMOD_SHIFT)
-        mod |= MOD_SHIFT;
-    if (keysym.mod & KMOD_CTRL)
-        mod |= MOD_CTRL;
-    if (keysym.mod & KMOD_LALT)
-        mod |= MOD_ALT;
-
-    // This is arbitrary, but here's the current mappings.
-    // 0-256: ASCII, Crawl arrow keys
-    // 0-1k : Other SDL keys (F1, Windows keys, etc...) and modifiers
-    // 1k-3k: Non-ASCII with modifiers other than just shift or just ctrl.
-    // 3k+  : ASCII with the left alt modifier.
-
-    int offset = mod ? 1000 + 256 * mod : 0;
-    int numpad_offset = 0;
-    if (mod == MOD_CTRL)
-        numpad_offset = ctrl_offset;
-    else if (mod == MOD_SHIFT)
-        numpad_offset = shift_offset;
-    else
-        numpad_offset = offset;
-
-    switch (keysym.sym)
-    {
-    case SDLK_RETURN:
-    case SDLK_KP_ENTER:
-        return CK_ENTER + offset;
-    case SDLK_BACKSPACE:
-        return CK_BKSP + offset;
-    case SDLK_ESCAPE:
-        return CK_ESCAPE + offset;
-    case SDLK_DELETE:
-        return CK_DELETE + offset;
-
-    case SDLK_NUMLOCK:
-    case SDLK_CAPSLOCK:
-    case SDLK_SCROLLOCK:
-    case SDLK_RMETA:
-    case SDLK_LMETA:
-    case SDLK_LSUPER:
-    case SDLK_RSUPER:
-    case SDLK_MODE:
-    case SDLK_COMPOSE:
-        // Don't handle these.
-        return 0;
-
-    case SDLK_F1:
-    case SDLK_F2:
-    case SDLK_F3:
-    case SDLK_F4:
-    case SDLK_F5:
-    case SDLK_F6:
-    case SDLK_F7:
-    case SDLK_F8:
-    case SDLK_F9:
-    case SDLK_F10:
-    case SDLK_F11:
-    case SDLK_F12:
-    case SDLK_F13:
-    case SDLK_F14:
-    case SDLK_F15:
-    case SDLK_HELP:
-    case SDLK_PRINT:
-    case SDLK_SYSREQ:
-    case SDLK_BREAK:
-    case SDLK_MENU:
-    case SDLK_POWER:
-    case SDLK_EURO:
-    case SDLK_UNDO:
-        ASSERT(keysym.sym >= SDLK_F1 && keysym.sym <= SDLK_UNDO);
-        return keysym.sym + (SDLK_UNDO - SDLK_F1 + 1) * mod;
-
-    // Hack.  libw32c overloads clear with '5' too.
-    case SDLK_KP5:
-        return CK_CLEAR + numpad_offset;
-
-    case SDLK_KP8:
-    case SDLK_UP:
-        return CK_UP + numpad_offset;
-    case SDLK_KP2:
-    case SDLK_DOWN:
-        return CK_DOWN + numpad_offset;
-    case SDLK_KP4:
-    case SDLK_LEFT:
-        return CK_LEFT + numpad_offset;
-    case SDLK_KP6:
-    case SDLK_RIGHT:
-        return CK_RIGHT + numpad_offset;
-    case SDLK_KP0:
-    case SDLK_INSERT:
-        return CK_INSERT + numpad_offset;
-    case SDLK_KP7:
-    case SDLK_HOME:
-        return CK_HOME + numpad_offset;
-    case SDLK_KP1:
-    case SDLK_END:
-        return CK_END + numpad_offset;
-    case SDLK_CLEAR:
-        return CK_CLEAR + numpad_offset;
-    case SDLK_KP9:
-    case SDLK_PAGEUP:
-        return CK_PGUP + numpad_offset;
-    case SDLK_KP3:
-    case SDLK_PAGEDOWN:
-        return CK_PGDN + numpad_offset;
-    default:
-        break;
-    }
-
-    // Alt does not get baked into keycodes like shift and ctrl, so handle it.
-    const int key_offset = (mod & MOD_ALT) ? 3000 : 0;
-
-    const bool is_ascii = ((keysym.unicode & 0xFF80) == 0);
-    return (is_ascii ? (keysym.unicode & 0x7F) + key_offset : 0);
-}
-
 
 int TilesFramework::handle_mouse(MouseEvent &event)
 {
@@ -681,56 +468,10 @@ int TilesFramework::handle_mouse(MouseEvent &event)
     return 0;
 }
 
-static void _translate_event(const SDL_MouseMotionEvent &sdl_event,
-                             MouseEvent &tile_event)
-{
-    tile_event.held   = MouseEvent::NONE;
-    tile_event.event  = MouseEvent::MOVE;
-    tile_event.button = MouseEvent::NONE;
-    tile_event.px     = sdl_event.x;
-    tile_event.py     = sdl_event.y;
-
-    // TODO enne - do we want the relative motion?
-}
-
-static void _translate_event(const SDL_MouseButtonEvent &sdl_event,
-                             MouseEvent &tile_event)
-{
-    tile_event.held  = MouseEvent::NONE;
-    tile_event.event = (sdl_event.type == SDL_MOUSEBUTTONDOWN) ?
-                            MouseEvent::PRESS : MouseEvent::RELEASE;
-    switch (sdl_event.button)
-    {
-    case SDL_BUTTON_LEFT:
-        tile_event.button = MouseEvent::LEFT;
-        break;
-    case SDL_BUTTON_RIGHT:
-        tile_event.button = MouseEvent::RIGHT;
-        break;
-    case SDL_BUTTON_MIDDLE:
-        tile_event.button = MouseEvent::MIDDLE;
-        break;
-    case SDL_BUTTON_WHEELUP:
-        tile_event.button = MouseEvent::SCROLL_UP;
-        break;
-    case SDL_BUTTON_WHEELDOWN:
-        tile_event.button = MouseEvent::SCROLL_DOWN;
-        break;
-    default:
-        // Unhandled button.
-        tile_event.button = MouseEvent::NONE;
-        break;
-    }
-    tile_event.px = sdl_event.x;
-    tile_event.py = sdl_event.y;
-}
-
 static unsigned int _timer_callback(unsigned int ticks)
 {
     // force the event loop to break
-    SDL_Event event;
-    event.type = SDL_USEREVENT;
-    SDL_PushEvent(&event);
+	wrapper.raiseCustomEvent();
 
     unsigned int res = Options.tile_tooltip_ms;
     return (res);
@@ -738,7 +479,8 @@ static unsigned int _timer_callback(unsigned int ticks)
 
 int TilesFramework::getch_ck()
 {
-    SDL_Event event;
+    ui_event event;
+    cursor_loc cur_loc;
     cursor_loc tip_loc;
     cursor_loc last_loc;
 
@@ -752,25 +494,26 @@ int TilesFramework::getch_ck()
     const unsigned int ticks_per_screen_redraw = Options.tile_update_rate;
 
     unsigned int res = Options.tile_tooltip_ms;
-    SDL_SetTimer(res, &_timer_callback);
+    wrapper.setTimer(res, &_timer_callback);
 
     m_tooltip.clear();
     m_region_msg->alt_text().clear();
 
     if (need_redraw())
         redraw();
+    }
 
     while (!key)
     {
         unsigned int ticks = 0;
         last_loc = m_cur_loc;
 
-        if (SDL_WaitEvent(&event))
+        if (wrapper.waitEvent(&event))
         {
-            ticks = SDL_GetTicks();
+            ticks = wrapper.getTicks();
             if (!mouse_target_mode)
             {
-                if (event.type != SDL_USEREVENT)
+                if (event.type != UI_CUSTOMEVENT)
                 {
                     tiles.clear_text_tags(TAG_CELL_DESC);
                     m_region_msg->alt_text().clear();
@@ -796,18 +539,18 @@ int TilesFramework::getch_ck()
 
             switch (event.type)
             {
-            case SDL_ACTIVEEVENT:
+            case UI_ACTIVEEVENT:
                 // When game gains focus back then set mod state clean
                 // to get rid of stupid Windows/SDL bug with Alt-Tab.
                 if (event.active.gain != 0)
                 {
-                    SDL_SetModState(KMOD_NONE);
+                    wrapper.setModState(MOD_NONE);
                     set_need_redraw();
                 }
                 break;
-            case SDL_KEYDOWN:
-                m_key_mod |= _get_modifiers(event.key.keysym);
-                key        = _translate_keysym(event.key.keysym);
+            case UI_KEYDOWN:
+				m_key_mod |= event.key.keysym.key_mod;
+				key        = event.key.keysym.sym;
                 m_region_tile->place_cursor(CURSOR_MOUSE, Region::NO_CURSOR);
 
                 // If you hit a key, disable tooltips until the mouse
@@ -815,27 +558,25 @@ int TilesFramework::getch_ck()
                 m_last_tick_moved = ~0;
                 break;
 
-            case SDL_KEYUP:
-                m_key_mod &= ~_get_modifiers(event.key.keysym);
+            case UI_KEYUP:
+                m_key_mod &= ~event.key.keysym.key_mod;
                 m_last_tick_moved = ~0;
                 break;
 
-            case SDL_MOUSEMOTION:
+            case UI_MOUSEMOTION:
                 {
                     // Record mouse pos for tooltip timer
-                    if (m_mouse.x != event.motion.x
-                        || m_mouse.y != event.motion.y)
+                    if (m_mouse.x != event.mouse_event.px
+                        || m_mouse.y != event.mouse_event.py)
                     {
                         m_last_tick_moved = ticks;
                     }
-                    m_mouse.x = event.motion.x;
-                    m_mouse.y = event.motion.y;
+                    m_mouse.x = event.mouse_event.px;
+                    m_mouse.y = event.mouse_event.py;
 
-                    MouseEvent mouse_event;
-                    _translate_event(event.motion, mouse_event);
-                    mouse_event.held = m_buttons_held;
-                    mouse_event.mod  = m_key_mod;
-                    int mouse_key = handle_mouse(mouse_event);
+                    event.mouse_event.held = m_buttons_held;
+                    event.mouse_event.mod  = m_key_mod;
+                    int mouse_key = handle_mouse(event.mouse_event);
 
                     // find mouse location
                     for (unsigned int i = 0;
@@ -875,37 +616,33 @@ int TilesFramework::getch_ck()
                }
                break;
 
-            case SDL_MOUSEBUTTONUP:
+            case UI_MOUSEBUTTONUP:
                 {
-                    MouseEvent mouse_event;
-                    _translate_event(event.button, mouse_event);
-                    m_buttons_held  &= ~(mouse_event.button);
-                    mouse_event.held = m_buttons_held;
-                    mouse_event.mod  = m_key_mod;
-                    key = handle_mouse(mouse_event);
+                    m_buttons_held  &= ~(event.mouse_event.button);
+                    event.mouse_event.held = m_buttons_held;
+                    event.mouse_event.mod  = m_key_mod;
+                    key = handle_mouse(event.mouse_event);
                     m_last_tick_moved = ticks;
                 }
                 break;
 
-            case SDL_MOUSEBUTTONDOWN:
+            case UI_MOUSEBUTTONDOWN:
                 {
-                    MouseEvent mouse_event;
-                    _translate_event(event.button, mouse_event);
-                    m_buttons_held  |= mouse_event.button;
-                    mouse_event.held = m_buttons_held;
-                    mouse_event.mod  = m_key_mod;
-                    key = handle_mouse(mouse_event);
+                    m_buttons_held  |= event.mouse_event.button;
+                    event.mouse_event.held = m_buttons_held;
+                    event.mouse_event.mod  = m_key_mod;
+                    key = handle_mouse(event.mouse_event);
                     m_last_tick_moved = ticks;
                 }
                 break;
 
-            case SDL_QUIT:
+            case UI_QUIT:
                 if (crawl_state.need_save)
                     save_game(true);
                 exit(0);
                 break;
 
-            case SDL_USEREVENT:
+            case UI_CUSTOMEVENT:
             default:
                 // This is only used to refresh the tooltip.
                 break;
@@ -959,7 +696,7 @@ int TilesFramework::getch_ck()
     // We got some input, so we'll probably have to redraw something.
     set_need_redraw();
 
-    SDL_SetTimer(0, NULL);
+    wrapper.setTimer(0, NULL);
 
     return key;
 }
@@ -1274,7 +1011,7 @@ void TilesFramework::redraw()
                             true);
     }
 
-    SDL_GL_SwapBuffers();
+    wrapper.swapBuffers();
 
     m_last_tick_redraw = SDL_GetTicks();
 }
