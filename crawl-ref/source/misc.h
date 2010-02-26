@@ -20,7 +20,8 @@ void down_stairs(int old_level,
                  entry_cause_type entry_cause = EC_UNKNOWN);
 bool merfolk_change_is_safe(bool quiet = false);
 bool merfolk_unchange_is_safe(bool quiet = false);
-void merfolk_start_swimming();
+void merfolk_start_swimming(bool step = false);
+void merfolk_stop_swimming();
 void new_level();
 void trackers_init_new_level(bool transit);
 void turn_corpse_into_skeleton(item_def &item);
