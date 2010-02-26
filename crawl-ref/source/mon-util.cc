@@ -3236,7 +3236,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     else
     {
         std::string foe_name;
-        const monsters* m_foe = dynamic_cast<const monsters*>(foe);
+        const monsters* m_foe = foe->as_monster();
         if (you.can_see(foe) || crawl_state.arena)
         {
             if (m_foe->attitude == ATT_FRIENDLY

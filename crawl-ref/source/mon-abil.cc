@@ -1371,7 +1371,7 @@ void mon_nearby_ability(monsters *monster)
                     canned_msg(MSG_YOU_RESIST);
                 else if (foe->atype() == ACT_MONSTER)
                 {
-                    const monsters *foe_mons = dynamic_cast<const monsters*>(foe);
+                    const monsters *foe_mons = foe->as_monster();
                     simple_monster_message(foe_mons, mons_resist_string(foe_mons));
                 }
                 break;

@@ -2230,8 +2230,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
             else
             {
                 // "Enchant" another monster.
-                const monsters* foe
-                    = dynamic_cast<const monsters*>(monster->get_foe());
+                const monsters* foe      = monster->get_foe()->as_monster();
                 slugform = getSpeakString("gastronok_other_buff");
                 if (!slugform.empty())
                 {

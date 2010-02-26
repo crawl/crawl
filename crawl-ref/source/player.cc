@@ -5943,7 +5943,7 @@ void player::attacking(actor *other)
 
     if (other && other->atype() == ACT_MONSTER)
     {
-        const monsters *mon = dynamic_cast<monsters*>(other);
+        const monsters *mon = other->as_monster();
         if (!mon->friendly() && !mon->neutral())
             pet_target = mon->mindex();
     }
@@ -6691,7 +6691,7 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
     // We ignore cleanup_dead here.
     if (agent->atype() == ACT_MONSTER)
     {
-        const monsters *mon = dynamic_cast<const monsters*>(agent);
+        const monsters *mon = agent->as_monster();
         ouch(amount, mon->mindex(),
              KILLED_BY_MONSTER, "", mon->visible_to(&you));
     }
@@ -6715,7 +6715,7 @@ void player::drain_stat(int stat, int amount, actor *attacker)
     if (attacker == NULL)
         lose_stat(stat, amount, false, "");
     else if (attacker->atype() == ACT_MONSTER)
-        lose_stat(stat, amount, dynamic_cast<monsters*>(attacker), false);
+        lose_stat(stat, amount, attacker->as_monster(), false);
     else if (attacker->atype() == ACT_PLAYER)
         lose_stat(stat, amount, false, "suicide");
     else

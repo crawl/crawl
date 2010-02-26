@@ -210,8 +210,7 @@ static bool player_fights_well_unarmed(int heavy_armour_penalty)
 unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
                                               const actor *defender)
 {
-    const monsters *def = (defender->atype() == ACT_PLAYER ? NULL :
-                           dynamic_cast<const monsters*>(defender));
+    const monsters *def = defender->as_monster();
     unchivalric_attack_type unchivalric = UCAT_NO_ATTACK;
 
     // No unchivalric attacks on monsters that cannot fight (e.g.
@@ -478,7 +477,7 @@ bool melee_attack::is_banished(const actor *a) const
     if (a->atype() == ACT_PLAYER)
         return (you.banished);
     else
-        return (dynamic_cast<const monsters*>(a)->flags & MF_BANISHED);
+        return (a->as_monster()->flags & MF_BANISHED);
 }
 
 void melee_attack::check_autoberserk()
@@ -514,7 +513,7 @@ void melee_attack::identify_mimic(actor *act)
         && mons_is_mimic(act->id())
         && you.can_see(act))
     {
-        monsters* mon = dynamic_cast<monsters*>(act);
+        monsters* mon = act->as_monster();
         mon->flags |= MF_KNOWN_MIMIC;
     }
 }
@@ -5786,7 +5785,7 @@ bool monster_attack_actor(monsters *attacker, actor *defender,
     ASSERT(defender == &you || defender->atype() == ACT_MONSTER);
     return (defender->atype() == ACT_PLAYER ?
               monster_attack(attacker, allow_unarmed)
-            : monsters_fight(attacker, dynamic_cast<monsters*>(defender),
+            : monsters_fight(attacker, defender->as_monster(),
                              allow_unarmed));
 }
 
