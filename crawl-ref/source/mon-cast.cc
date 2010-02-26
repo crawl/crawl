@@ -10,6 +10,7 @@
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
+#include "delay.h"
 #include "database.h"
 #include "effects.h"
 #include "env.h"
@@ -987,6 +988,27 @@ static bool _is_emergency_spell(const monster_spells &msp, int spell)
     return (msp[5] == spell);
 }
 
+// Function should return false if friendlies shouldn't animate any dead.
+// Currently, this only happens if the player is in the middle of butchering
+// a corpse (infurating), or if they are less than satiated. Only applies
+// to friendly corpse animators. {due}
+static bool _animate_dead_okay ()
+{
+    // It's always okay in the arena.
+    if (crawl_state.arena)
+        return (true);
+
+    if (is_butchering())
+        return (false);
+
+    // TODO: Could probably check herbivoriness here too, but this should be
+    // enough for the minute.
+    if (you.hunger_state < HS_SATIATED)
+        return (false);
+
+    return (true);
+}
+
 //---------------------------------------------------------------
 //
 // handle_spell
@@ -1349,11 +1371,16 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
             return (false);
 
         // Try to animate dead: if nothing rises, pretend we didn't cast it.
-        if (spell_cast == SPELL_ANIMATE_DEAD
-            && !animate_dead(monster, 100, SAME_ATTITUDE(monster),
-                             monster->foe, monster, "", god, false))
+        if (spell_cast == SPELL_ANIMATE_DEAD)
         {
-            return (false);
+            if (monster->friendly() && !_animate_dead_okay())
+                return (false);
+
+            if (!animate_dead(monster, 100, SAME_ATTITUDE(monster),
+                             monster->foe, monster, "", god, false))
+            {
+                return (false);
+            }
         }
 
         if (monster->type == MONS_BALL_LIGHTNING)
@@ -1984,6 +2011,9 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_ANIMATE_DEAD:
         // see special handling in mon-stuff::handle_spell() {dlb}
+        if (monster->friendly() && !_animate_dead_okay())
+            return;
+
         animate_dead(monster, 5 + random2(5), SAME_ATTITUDE(monster),
                      monster->foe, monster, "", god);
         return;
