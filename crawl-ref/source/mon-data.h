@@ -1327,13 +1327,27 @@ static monsterentry mondata[] = {
 },
 
 // phantoms and ghosts ('p')
+
+// Dummy monster, just for the genus.
+{
+    MONS_GHOST, 'p', LIGHTGREY, "ghost",
+    M_INSUBSTANTIAL,
+    MR_RES_POISON,
+    0, 0, MONS_GHOST, MONS_GHOST, MH_UNDEAD, 0,
+    { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 1, 1, 0, 0 },
+    0, 0, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
+    I_NORMAL, HT_LAND, FL_LEVITATE, 10, DEFAULT_ENERGY,
+    MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_MEDIUM
+},
+
 // XP modifier is 5 for these, because they really aren't all that
 // dangerous, but still come out at 200+ XP
 {
     MONS_PHANTOM, 'p', BLUE, "phantom",
     M_SPECIAL_ABILITY | M_INSUBSTANTIAL,
     MR_RES_POISON | mrd(MR_RES_COLD, 2),
-    0, 5, MONS_PLAYER_GHOST, MONS_PHANTOM, MH_UNDEAD, -4,
+    0, 5, MONS_GHOST, MONS_PHANTOM, MH_UNDEAD, -4,
     { {AT_HIT, AF_BLINK, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 7, 3, 5, 0 },
     3, 13, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
@@ -1345,7 +1359,7 @@ static monsterentry mondata[] = {
     MONS_HUNGRY_GHOST, 'p', GREEN, "hungry ghost",
     M_SENSE_INVIS | M_INSUBSTANTIAL | M_SPEAKS,
     MR_RES_POISON | mrd(MR_RES_COLD, 2),
-    0, 8, MONS_PLAYER_GHOST, MONS_HUNGRY_GHOST, MH_UNDEAD, -4,
+    0, 8, MONS_GHOST, MONS_HUNGRY_GHOST, MH_UNDEAD, -4,
     { {AT_HIT, AF_HUNGER, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 7, 3, 5, 0 },
     0, 17, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
@@ -1357,7 +1371,7 @@ static monsterentry mondata[] = {
     MONS_FLAYED_GHOST, 'p', RED, "flayed ghost",
     M_SPEAKS | M_INSUBSTANTIAL,
     MR_RES_POISON,
-    0, 10, MONS_PLAYER_GHOST, MONS_FLAYED_GHOST, MH_UNDEAD, -4,
+    0, 10, MONS_GHOST, MONS_FLAYED_GHOST, MH_UNDEAD, -4,
     { {AT_HIT, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 11, 3, 5, 0 },
     0, 14, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
@@ -1371,7 +1385,7 @@ static monsterentry mondata[] = {
     M_FIGHTER | M_SPEAKS | M_SPELLCASTER | M_ACTUAL_SPELLS | M_UNIQUE
         | M_INSUBSTANTIAL,
     MR_RES_POISON,
-    0, 15, MONS_PLAYER_GHOST, MONS_PLAYER_GHOST, MH_UNDEAD, -5,
+    0, 15, MONS_GHOST, MONS_PLAYER_GHOST, MH_UNDEAD, -5,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 4, 2, 3, 0 },
     1, 2, MST_GHOST, CE_NOCORPSE, Z_NOZOMBIE, S_SHOUT,
