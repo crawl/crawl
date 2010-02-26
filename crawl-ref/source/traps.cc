@@ -364,11 +364,6 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     if (triggerer.atype() == ACT_MONSTER)
         m = dynamic_cast<monsters*>(&triggerer);
 
-    // Anything stepping onto a trap almost always reveals it.
-    // (We can rehide it later for the exceptions.)
-    if (in_sight)
-        this->reveal();
-
     // Only magical traps affect flying critters.
     if (triggerer.airborne() && this->category() != DNGN_TRAP_MAGICAL)
     {
@@ -376,6 +371,11 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             simple_monster_message(m, " flies safely over a trap.");
         return;
     }
+
+    // Anything stepping onto a trap almost always reveals it.
+    // (We can rehide it later for the exceptions.)
+    if (in_sight)
+        this->reveal();
 
     // OK, something is going to happen.
     if (you_trigger)
