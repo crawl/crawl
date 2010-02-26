@@ -2300,7 +2300,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
                          CMD_EVOKE, 0);
 
     std::string item_types = "<lightcyan>";
-    item_types += static_cast<char>(get_item_symbol(SHOW_ITEM_BOOK));
+    item_types += stringize_glyph(get_item_symbol(SHOW_ITEM_BOOK));
     item_types +=
         "</lightcyan> : books (<w>%</w>ead, <w>%</w>emorise, <w>%</w>ap, <w>%</w>ap)";
     _add_insert_commands(cols, 0, item_types,
