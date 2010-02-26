@@ -193,6 +193,10 @@ silver_sling_bullet2
 # flying bullets
 effect/sling_bullet0 MI_SLING_BULLET0
 effect/sling_bullet_runed0
+effect/steel_sling_bullet0 MI_SLING_BULLET_STEEL0
+effect/steel_sling_bullet_runed0
+effect/silver_sling_bullet0 MI_SLING_BULLET_SILVER0
+effect/silver_sling_bullet_runed0
 
 arrow1 MI_ARROW
 arrow2
