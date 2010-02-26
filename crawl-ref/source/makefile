@@ -247,6 +247,10 @@ ifdef WIN32
 EXTRA_OBJECTS += icon.o
 endif
 
+ifdef SDL
+EXTRA_OBJECTS += uiwrapper-sdl.o
+endif
+
 ifdef TILES
 OBJECTS += libgui.o tile2.o tilereg.o tilepick.o tilesdl.o tilefont.o tiletex.o tilemcache.o tilebuf.o
 else
@@ -434,6 +438,10 @@ INCLUDES_L += -Icontrib/install/include/SDL
 endif
 ifdef BUILD_FREETYPE
 INCLUDES_L += -Icontrib/install/include/freetype2
+endif
+
+ifdef SDL
+DEFINES_L += -DUSE_SDL
 endif
 
 # Okay, we have to assume we're on something else that
