@@ -2889,7 +2889,9 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
     // Don't get description for player ghosts.
     else if (mons.type != MONS_PLAYER_GHOST
              && mons.type != MONS_PLAYER_ILLUSION)
+    {
         inf.body << getLongDescription(db_name);
+    }
 
     // And quotes {due}
     if (mons.props.exists("quote"))
@@ -2996,8 +2998,7 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
     if (!result.empty())
     {
         inf.body << "$" << result;
-        if (has_stat_desc)
-            has_stat_desc = true;
+        has_stat_desc = true;
     }
 
     if (!mons_can_use_stairs(&mons))
