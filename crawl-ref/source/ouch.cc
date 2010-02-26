@@ -1353,6 +1353,10 @@ void end_game(scorefile_entry &se)
     browse_inventory(true);
     textcolor(LIGHTGREY);
 
+    // Prompt for saving macros.
+    if (crawl_state.unsaved_macros && yesno("Save macros?", true, 'n'))
+        macro_save();
+
     clrscr();
     cprintf("Goodbye, %s.", you.your_name.c_str());
     cprintf(EOL EOL "    "); // Space padding where # would go in list format
