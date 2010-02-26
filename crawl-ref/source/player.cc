@@ -369,18 +369,9 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
     if (merfolk_change)
     {
         if (merfolk_change == -1)
-        {
-            if (stepped)
-                mpr("Your legs become a tail as you enter the water.");
-            else
-                mpr("Your legs become a tail as you dive into the water.");
             merfolk_start_swimming();
-        }
         else
-        {
-            unmeld_one_equip(EQ_BOOTS);
-            you.redraw_evasion = true;
-        }
+            merfolk_stop_swimming();
 #ifdef USE_TILE
         init_player_doll();
 #endif
