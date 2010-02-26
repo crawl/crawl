@@ -274,7 +274,7 @@ std::string get_terse_square_desc(const coord_def &gc);
 void terse_describe_square(const coord_def &c, bool in_range = true);
 void full_describe_square(const coord_def &c);
 void get_square_desc(const coord_def &c, describe_info &inf,
-                     bool examine_mons = false);
+                     bool examine_mons = false, bool show_floor = false);
 
 void describe_floor();
 std::string get_monster_equipment_desc(const monsters *mon,
