@@ -4837,10 +4837,6 @@ bool tutorial_monster_interesting(const monsters *mons)
     return (false);
 }
 
-static void _tutorial_nostat_monster_desc(std::ostringstream &ostr)
-{
-}
-
 void tutorial_describe_monster(const monsters *mons, bool has_stat_desc)
 {
     std::ostringstream ostr;
