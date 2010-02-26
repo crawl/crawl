@@ -1104,8 +1104,10 @@ std::string ego_type_string (const item_def &item)
         // this is specialcased out of weapon_brand_name ("vampiric hand axe", etc)
         if (get_weapon_brand(item) == SPWPN_VAMPIRICISM)
             return "vampiricism";
+        else if (get_weapon_brand(item) != SPWPN_NORMAL)
+            return std::string(weapon_brand_name(item, false)).substr(4);
         else
-            return replace_all_of(weapon_brand_name(item, false), " of", "");
+            return "";
     case OBJ_MISSILES: return missile_brand_name(item);
     default: return "";
     }
