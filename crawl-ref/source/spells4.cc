@@ -1132,6 +1132,7 @@ std::string get_evaporate_result_list(int potion)
 }
 
 
+// Assumes beem.range is already set -cao
 bool cast_evaporate(int pow, bolt& beem, int pot_idx)
 {
     ASSERT(you.inv[pot_idx].base_type == OBJ_POTIONS);
@@ -1149,7 +1150,6 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
     beem.damage     = dice_def( 1, 0 );  // no damage, just producing clouds
     beem.ench_power = pow;               // used for duration only?
     beem.is_explosion = true;
-    beem.range      = 8;
 
     beem.flavour    = BEAM_POTION_STINKING_CLOUD;
     beam_type tracer_flavour = BEAM_MMISSILE;
