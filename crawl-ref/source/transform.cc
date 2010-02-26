@@ -867,7 +867,7 @@ bool transform_can_butcher_barehanded(transformation_type tt)
     return (tt == TRAN_BLADE_HANDS || tt == TRAN_DRAGON || tt == TRAN_ICE_BEAST);
 }
 
-void untransform(bool skip_wielding)
+void untransform(bool skip_wielding, bool skip_move)
 {
     const flight_type old_flight = you.flight_mode();
 
@@ -942,7 +942,7 @@ void untransform(bool skip_wielding)
         hp_downscale = 12;
 
         // Re-enter the terrain, it might kill us.
-        if (feat_is_water(grd(you.pos())))
+        if (!skip_move && feat_is_water(grd(you.pos())))
             move_player_to_grid(you.pos(), false, true, true);
 
         break;
@@ -972,7 +972,7 @@ void untransform(bool skip_wielding)
     _unmeld_equipment(melded);
 
     // Re-check terrain now that be may no longer be flying.
-    if (old_flight && you.flight_mode() == FL_NONE)
+    if (!skip_move && old_flight && you.flight_mode() == FL_NONE)
         move_player_to_grid(you.pos(), false, true, true);
 
     if (transform_can_butcher_barehanded(old_form))

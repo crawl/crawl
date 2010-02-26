@@ -1352,12 +1352,23 @@ bool merfolk_unchange_is_safe(bool quiet)
     return (safe_to_remove_or_wear(*item, false, quiet));
 }
 
-void merfolk_start_swimming()
+void merfolk_start_swimming(bool stepped)
 {
     if (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
-        untransform();
+        untransform(false, true); // We're already entering the water.
+
+    if (stepped)
+        mpr("Your legs become a tail as you enter the water.");
+    else
+        mpr("Your legs become a tail as you dive into the water.");
 
     remove_one_equip(EQ_BOOTS);
+    you.redraw_evasion = true;
+}
+
+void merfolk_stop_swimming()
+{
+    unmeld_one_equip(EQ_BOOTS);
     you.redraw_evasion = true;
 }
 
