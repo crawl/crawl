@@ -2065,7 +2065,7 @@ void terse_describe_square(const coord_def &c, bool in_range)
 }
 
 void get_square_desc(const coord_def &c, describe_info &inf,
-                     bool examine_mons)
+                     bool examine_mons, bool show_floor)
 {
     // NOTE: Keep this function in sync with full_describe_square.
 
@@ -2102,7 +2102,8 @@ void get_square_desc(const coord_def &c, describe_info &inf,
         if (mitm[oid].is_valid())
             get_item_desc(mitm[oid], inf, examine_mons);
     }
-    else
+    else if (show_floor || grid_appearance(c) != DNGN_FLOOR
+                           && !feat_is_wall(grid_appearance(c)))
     {
         // Third priority: features.
         get_feature_desc(c, inf);

@@ -2320,7 +2320,7 @@ bool DungeonRegion::update_alt_text(std::string &alt)
     describe_info inf;
     if (you.see_cell(gc))
     {
-        get_square_desc(gc, inf, true);
+        get_square_desc(gc, inf, true, false);
         const int cloudidx = env.cgrid(gc);
         if (cloudidx != EMPTY_CLOUD)
         {
