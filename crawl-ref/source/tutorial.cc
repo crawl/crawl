@@ -2514,8 +2514,11 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         Tutorial.tut_just_triggered = false;
         learned_something_new(TUT_YOU_ENCHANTED);
         Tutorial.tut_just_triggered = true;
-        text << "Corpses can be spoiled or inedible, making you sick. "
-                "Also, some monsters' flesh is less palatable than others'. "
+        text << "Chunks and corpses that are described as "
+                "<brown>contaminated</brown> can make you sick when eating "
+                "them. However, there's only a chance of this happening and "
+                "food is sufficiently rare in the dungeon that you'll "
+                "sometimes have to dine on them anyway and hope for the best.\n"
                 "While sick, your hitpoints won't regenerate and sometimes "
                 "an attribute may decrease. It wears off with time (";
 
@@ -2526,7 +2529,10 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 #ifdef USE_TILE
                 " or by clicking into the stats area"
 #endif
-                "), or you could <w>%</w>uaff a potion of healing.";
+                "), or you could <w>%</w>uaff a potion of healing.\n"
+                "Note that if a chunk makes you sick, you won't get any "
+                "nutrition out of it.";
+
         cmd.push_back(CMD_REST);
         cmd.push_back(CMD_QUAFF);
         break;
