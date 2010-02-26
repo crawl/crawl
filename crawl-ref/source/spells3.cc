@@ -35,6 +35,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
+#include "libutil.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
@@ -948,10 +949,40 @@ void equip_undead(const coord_def &a, int corps, int monster, int monnum)
     }
 }
 
+//Displays message when raising dead with Animate Skeleton or Animate Dead
+void _display_undead_motions(int* motions)
+{
+    std::vector<std::string> motions_list;
+
+    //Check bitfield from _raise_remains for types of corpse(s) being animated
+    if (motions)
+    {
+        if (*motions & DEAD_ARE_WALKING)
+            motions_list.push_back("walking");
+        if (*motions & DEAD_ARE_HOPPING)
+            motions_list.push_back("hopping");
+        if (*motions & DEAD_ARE_FLOATING)
+            motions_list.push_back("floating");
+        if (*motions & DEAD_ARE_SWIMMING)
+            motions_list.push_back("swimming");
+        if (*motions & DEAD_ARE_FLYING)
+            motions_list.push_back("flying");
+        if (*motions & DEAD_ARE_SLITHERING)
+            motions_list.push_back("slithering");
+
+        //Prevents the message from getting too long and spammy
+        if (motions_list.size() > 3)
+            mpr("The dead have arisen!");
+        else
+            mpr("The dead are " + comma_separated_line(motions_list.begin(),
+                motions_list.end()) + "!");
+    }
+}
+
 static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
                            unsigned short hitting, actor *as, std::string nas,
                            god_type god, bool actual, bool force_beh,
-                           int* mon_index)
+                           int* mon_index, int* motions)
 {
     if (mon_index != NULL)
         *mon_index = -1;
@@ -1025,17 +1056,41 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     if (!force_beh)
         player_angers_monster(&menv[monster]);
 
+    //Bitfield for motions - determines text displayed when animating dead
+    if (motions)
+    {
+        if (mons_class_primary_habitat(zombie_type)    == HT_WATER
+            || mons_class_primary_habitat(zombie_type) == HT_LAVA)
+            *motions |= DEAD_ARE_SWIMMING;
+        else if (mons_class_flies(zombie_type) == FL_FLY)
+            *motions |= DEAD_ARE_FLYING;
+        else if (mons_class_flies(zombie_type) == FL_LEVITATE)
+            *motions |= DEAD_ARE_FLOATING;
+        else if (mons_genus(zombie_type)    == MONS_SNAKE
+                 || mons_genus(zombie_type) == MONS_NAGA
+                 || mons_genus(zombie_type) == MONS_GUARDIAN_SERPENT
+                 || mons_genus(zombie_type) == MONS_GIANT_SLUG
+                 || mons_genus(zombie_type) == MONS_WORM)
+            *motions |= DEAD_ARE_SLITHERING;
+        else if (mons_genus(zombie_type)    == MONS_GIANT_FROG
+                 || mons_genus(zombie_type) == MONS_BLINK_FROG)
+            *motions |= DEAD_ARE_HOPPING;
+        else
+            *motions |= DEAD_ARE_WALKING;
+    }
+
     return (true);
 }
 
 // Note that quiet will *not* suppress the message about a corpse
 // you are butchering being animated.
+// This is called for Animate Skeleton and from animate_dead.
 int animate_remains(const coord_def &a, corpse_type class_allowed,
                     beh_type beha, unsigned short hitting,
                     actor *as, std::string nas,
                     god_type god, bool actual,
                     bool quiet, bool force_beh,
-                    int* mon_index)
+                    int* mon_index, int* motions)
 {
     if (is_sanctuary(a))
         return (0);
@@ -1058,7 +1113,10 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
             const bool was_butchering = is_being_butchered(*si);
 
             success = _raise_remains(a, si.link(), beha, hitting, as, nas,
-                                     god, actual, force_beh, mon_index);
+                                     god, actual, force_beh, mon_index,
+                                     motions);
+
+ 
 
             if (actual && success)
             {
@@ -1071,7 +1129,7 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
                 }
 
                 if (!quiet && you.see_cell(a))
-                    mpr("The dead are walking!");
+                    _display_undead_motions(motions);
 
                 if (was_butchering)
                     xom_is_stimulated(255);
@@ -1097,16 +1155,16 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
 
     int number_raised = 0;
     int number_seen   = 0;
+    int motions       = 0;
 
     radius_iterator ri(caster->pos(), 6, C_SQUARE,
                        &caster->get_los_no_trans());
 
     for (; ri; ++ri)
     {
-        // This will produce a message if the corpse you are butchering
-        // is raised.
+        // Produces a message if the corpse you are butchering is raised.
         if (animate_remains(*ri, CORPSE_BODY, beha, hitting, as, nas, god,
-                            actual, true) > 0)
+                            actual, true, 0, 0, &motions) > 0)
         {
             number_raised++;
             if (you.see_cell(*ri))
@@ -1115,7 +1173,7 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
     }
 
     if (actual && number_seen > 0)
-        mpr("The dead are walking!");
+        _display_undead_motions(&motions);
 
     return (number_raised);
 }

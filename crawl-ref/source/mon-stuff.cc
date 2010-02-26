@@ -3709,8 +3709,9 @@ bool mons_reaped(actor *killer, monsters *victim)
     }
 
     int midx = NON_MONSTER;
+    int motions = 0; // For Animate Skeleton message
     if (animate_remains(victim->pos(), CORPSE_BODY, beh, hitting, killer, "",
-                        GOD_NO_GOD, true, true, true, &midx) <= 0)
+                        GOD_NO_GOD, true, true, true, &midx, &motions) <= 0)
     {
         return (false);
     }
