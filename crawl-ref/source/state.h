@@ -94,6 +94,9 @@ struct game_state
     // Range beyond which view should be darkend, -1 == disabled.
     int darken_range;
 
+    // Any changes to macros that need to be changed?
+    bool unsaved_macros;
+
 protected:
     void reset_cmd_repeat();
     void reset_cmd_again();

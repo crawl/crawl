@@ -24,6 +24,7 @@
 
 #define MACRO_CC
 #include "macro.h"
+#include "state.h"
 
 #include <iostream>
 #include <fstream>
@@ -628,6 +629,7 @@ void macro_save()
     f << "# Command Macros:" << std::endl;
     write_map(f, Macros, "M:");
 
+    crawl_state.unsaved_macros = false;
     f.close();
 }
 
@@ -836,6 +838,7 @@ void macro_add_query( void )
         {
             mpr( "Cleared." );
             macro_del( mapref, key );
+            crawl_state.unsaved_macros = true;
             return;
         }
     }
@@ -848,6 +851,7 @@ void macro_add_query( void )
     else
         macro_add( mapref, key, buff );
 
+    crawl_state.unsaved_macros = true;
     redraw_screen();
 }
 

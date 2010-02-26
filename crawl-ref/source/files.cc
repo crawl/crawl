@@ -1807,9 +1807,9 @@ void save_game(bool leave_game, const char *farewellmsg)
     // Stack allocated std::string's go in seperate function,
     // so Valgrind doesn't complain.
     _save_game_base();
-    
+
     // Prompt for saving macros
-    if(yesno("Save macros?", true, 'n'))
+    if (crawl_state.unsaved_macros && yesno("Save macros?", true, 'n'))
         macro_save();
 
     // If just save, early out.
