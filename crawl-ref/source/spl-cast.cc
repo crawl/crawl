@@ -1618,7 +1618,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     case SPELL_ANIMATE_DEAD:
-        mpr("You call on the dead to rise..."); 
+        mpr("You call on the dead to rise...");
 
         animate_dead(&you, powc + 1, BEH_FRIENDLY, MHITYOU, &you, "", god);
         break;
