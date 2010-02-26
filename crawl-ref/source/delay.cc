@@ -702,6 +702,15 @@ bool is_vampire_feeding()
     return (delay.type == DELAY_FEED_VAMPIRE);
 }
 
+bool is_butchering()
+{
+    if (!you_are_delayed())
+        return (false);
+
+    const delay_queue_item &delay = you.delay_queue.front();
+    return (delay.type == DELAY_BUTCHER || delay.type == DELAY_BOTTLE_BLOOD);
+}
+
 bool player_stair_delay()
 {
     if (!you_are_delayed())
