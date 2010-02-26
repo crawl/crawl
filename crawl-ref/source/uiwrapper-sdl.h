@@ -15,6 +15,7 @@
 
 #include "externs.h"
 #include "tilereg.h"
+#include "tilesdl.h"
 
 typedef enum {
 	UI_NOEVENT = 0,

@@ -7,6 +7,10 @@
  *
  */
 
+#include "AppHdr.h"
+
+#include "version.h"
+#include "initfile.h"
 #include "options.h"
 #include "files.h"
 #include "cio.h"
