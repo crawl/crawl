@@ -150,11 +150,10 @@ std::string trap_def::name(description_level_type desc) const
 
 bool trap_def::is_known(const actor* act) const
 {
-    bool rc = false;
     const bool player_knows = (grd(pos) != DNGN_UNDISCOVERED_TRAP);
 
     if (act == NULL || act->atype() == ACT_PLAYER)
-        rc = player_knows;
+        return (player_knows);
     else if (act->atype() == ACT_MONSTER)
     {
         const monsters* monster = dynamic_cast<const monsters*>(act);
@@ -168,12 +167,27 @@ bool trap_def::is_known(const actor* act) const
         // * very intelligent monsters can be assumed to have a high T&D
         //   skill (or have memorised part of the dungeon layout ;) )
 
-        rc = (intel >= I_NORMAL
-              && (mons_is_native_in_branch(monster)
-                  || monster->wont_attack() && player_knows
-                  || intel >= I_HIGH && one_chance_in(3)));
+        if (this->category() == DNGN_TRAP_NATURAL)
+        {
+            // Slightly different rules for shafts:
+            // * Lower intelligence requirement for native monsters.
+            // * Allied zombies won't fall through shafts. (No herding!)
+            // * Highly intelligent monsters never fall through shafts.
+            return (intel >= I_HIGH
+                    || intel > I_PLANT && mons_is_native_in_branch(monster)
+                    || player_knows && monster->wont_attack());
+        }
+        else
+        {
+            return (intel >= I_NORMAL
+                    && (mons_is_native_in_branch(monster)
+                        || player_knows && monster->wont_attack()
+                        || intel >= I_HIGH && one_chance_in(3)));
+        }
     }
-    return (rc);
+    ASSERT(false);
+
+    return (false);
 }
 
 
@@ -364,17 +378,13 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     if (triggerer.atype() == ACT_MONSTER)
         m = dynamic_cast<monsters*>(&triggerer);
 
-    // Very smart monsters and those native to the level will simply
+    // Smarter monsters and those native to the level will simply
     // side-step known shafts. Unless they are already looking for
     // an exit, of course.
     if (this->type == TRAP_SHAFT && m)
     {
-        const int intel = mons_intel(m);
         if (!m->will_trigger_shaft()
-            || !mons_is_fleeing(m) && !m->pacified()
-               && (intel >= I_HIGH
-                   || intel > I_PLANT && mons_is_native_in_branch(m)
-                   || you_know && m->wont_attack()))
+            || trig_knows && !mons_is_fleeing(m) && !m->pacified())
         {
             // No message for flying monsters to avoid message spam.
             if (you_know && !triggerer.airborne())
