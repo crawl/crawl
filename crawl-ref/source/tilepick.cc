@@ -2552,7 +2552,18 @@ int tileidx_item_throw(const item_def &item, int dx, int dy)
                 ch = TILE_MI_STONE0;
                 break;
             case MI_SLING_BULLET:
-                ch = TILE_MI_SLING_BULLET0;
+                switch (item.special)
+                {
+                default:
+                    ch = TILE_MI_SLING_BULLET0;
+                    break;
+                case SPMSL_STEEL:
+                    ch = TILE_MI_SLING_BULLET_STEEL0;
+                    break;
+                case SPMSL_SILVER:
+                    ch = TILE_MI_SLING_BULLET_SILVER0;
+                    break;
+                }
                 break;
             case MI_LARGE_ROCK:
                 ch = TILE_MI_LARGE_ROCK0;
