@@ -951,6 +951,404 @@ w:5
 VISUAL:@The_monster@ stares at @foe@ while slowly dragging a finger across @possessive@ throat.
 ## END silenced player ghost ##
 %%%%
+Fighting player ghost
+
+@The_monster@ boasts, "I have defeated monsters you have never seen."
+
+VISUAL:@The_monster@ takes a fighting stance.
+
+@The_monster@ says, "My insurmountable tactics guarantee your defeat."
+
+@The_monster@ says, "Are you willing to die fighting? I was!"
+
+@The_monster@ says @to_foe@, "I lost a battle, but kept my dignity. You look to have neither."
+
+@The_monster@ sneers, "Do you call that fighting?"
+
+%%%%
+Short Blades player ghost
+
+@The_monster@ says, "It's not the size of the blade that matters, it's how you use it."
+
+@The_monster@ says @to_foe@, "You sneer at my short blade, I will sneer at your cold corpse."
+
+VISUAL:@The_monster@ flicks its blade from hand to hand, faster than the eye can follow.
+
+%%%%
+Long Blades player ghost
+
+VISUAL:@The_monster@ holds its blade at the ready.
+
+@The_monster@ says, "Live by the sword, die by the sword."
+
+@The_monster@ says, "My hard blade and your soft body, they will meet soon."
+
+%%%%
+Axes player ghost
+
+@The_monster@ says, "I'll split you in two!"
+
+@The_monster@ mumbles, "They all look like pillowcases to me..."
+
+@The_monster@ says, "Try not to bleed too much."
+
+%%%%
+Maces & Flails player ghost
+
+@The_monster@ says @to_foe@, "They'll have to sweep you off the floor after I'm finished with you!"
+
+VISUAL:@The_monster@ crushes a nearby insect and laughs.
+
+@The_monster@ says @to_foe@, "Crushing you to a pulp will hurt a lot. After that? Painless! I promise!"
+
+%%%%
+Polearms player ghost
+
+@The_monster@ says, "One skewered @foe_genus@, coming right up."
+
+@The_monster@ says @to_foe@, "Your head on a pike would complement this floor nicely."
+
+@The_monster@ says @to_foe@, "Your head would complement my pike nicely."
+
+%%%%
+Staves player ghost
+
+@The_monster@ says, "I excel at staving off weak adventurers."
+
+VISUAL:@The_monster@ twirls its staff.
+
+@The_monster@ threatens to break your skull. @player_only@
+
+%%%%
+Slings player ghost
+
+@The_monster@ says, "The bigger they are, the harder they fall!"
+
+VISUAL:@The_monster@ whirls a spectral sling over its head.
+
+@_generic_ranged_@
+%%%%
+Bows player ghost
+
+@_generic_ranged_@
+
+@The_monster@ says, "Do you have an apple? I have a shot I want to try."
+
+%%%%
+Crossbows player ghost
+
+@_generic_ranged_@
+
+@The_monster@ @_reload_adj_@ reloads its weapon.
+
+%%%%
+Throwing player ghost
+
+VISUAL:@The_monster@ glances around for something to throw.
+
+@The_monster@ deftly throws insults at you. @player_only@
+
+@_generic_ranged_@
+%%%%
+Armour player ghost
+
+@The_monster@ says, "You cannot hurt me!"
+
+@The_monster@ says, "I am invincible!"
+
+@The_monster@ says, "I am made of steel!"
+
+%%%%
+Dodging player ghost
+
+@The_monster@ says, "Missed me!"
+
+@The_monster@ ducks and says, "Too high!"
+
+@The_monster@ dodges and says, "Too slow!"
+
+%%%%
+Stealth player ghost
+
+VISUAL:@The_monster@ tries to sneak away.
+
+VISUAL:@The_monster@ tries to blend into its surroundings.
+
+VISUAL:@The_monster@ whispers something so quietly that you cannot hear it.
+
+VISUAL:For a moment, you lose track of @the_monster@.
+
+@The_monster@ whispers, "Be very very quiet, I'm hunting @player_genus_plural@." @player_only@
+
+VISUAL:For a moment, @the_monster@ blends into the shadows.
+
+%%%%
+Stabbing player ghost
+
+@The_monster@ says @to_foe@, "Would you mind turning around for a second?"
+
+@The_monster@ points and says, "Look! Behind you!"
+
+@The_monster@ says, "They never saw it coming."
+
+@The_monster@ says @to_foe@, "This won't hurt a bit."
+
+@The_monster@ says, "I have assassinated emperors and kings... you are beneath me."
+
+@The_monster@ says @to_foe@, "You'd better not stain my armour with your blood."
+
+%%%%
+Shields player ghost
+
+@The_monster@ says, "What's that? Someone is blocking your path? And your attacks too?"
+
+@The_monster@ says, "You can hit me, but you can't hurt me."
+
+%%%%
+Traps & Doors player ghost
+
+@The_monster@ says @to_foe@, "I bet you don't even know how a teleportation trap works."
+
+@The_monster@ says @to_foe@, "You can't escape! I know where all the passages lead!"
+
+VISUAL:@The_monster@ quickly assembles and disassembles an arrow trap before your eyes, then grins. @player_only@
+
+@The_monster@ says @to_foe@, "With tracks like that, I knew you had to be a @foe_genus@."
+
+%%%%
+Unarmed Combat player ghost
+
+@The_monster@ sneers, "Only the weak need weapons."
+
+VISUAL:@The_monster@ feints to the @_direction_@.
+
+VISUAL:@The_monster@ assumes a wrestling stance.
+
+@The_monster@ says, "I break bones and crack skulls... with my bare hands."
+
+VISUAL:@The_monster@ swings its fists at you. @player_only@
+
+VISUAL:@The_monster@ flexes its fingers.
+
+%%%%
+Spellcasting player ghost
+
+@The_monster@ says, "I have spells for any situation."
+
+@The_monster@ says, "I am proof that knowledge is power."
+
+@The_monster@ says, "Watch and be amazed!"
+
+@The_monster@ says, "I practised a lot since I died."
+
+VISUAL SPELL:@The_monster@'s fingertips begin to glow.
+
+VISUAL:@The_monster@ frowns in concentration.
+
+@The_monster@ says, "I am smarter than you!"
+
+@The_monster@ says, "More power, less hunger, what more do I need?"
+
+%%%%
+Conjurations player ghost
+
+VISUAL:@The_monster@ takes aim.
+
+@The_monster@ says, "I will blast you to bits."
+
+@The_monster@ adeptly chants a nearly unspeakable phrase.
+
+@The_monster@ tries to chant a nearly unspeakable phrase, but fails.
+
+VISUAL ENCHANT:@The_monster@ is bathed in the radiant lights of Iskenderun.
+
+VISUAL SPELL:Energy condenses in front of @the_monster@, but quickly dissipates.
+
+%%%%
+Enchantments player ghost
+
+WARN:You feel a strange force tugging at your mind. @player_only@
+
+@The_monster@ says @to_foe@, "You will soon be helpless to avoid my power."
+
+@The_monster@ says, "If you think I look tough now, just wait!"
+
+@The_monster@ says @to_foe@, "When I snap my fingers, you will think you are a chicken."
+
+%%%%
+Summonings player ghost
+
+@The_monster@ says, "It's dangerous to adventure alone."
+
+VISUAL SPELL:@The_monster@ pulls a quokka out of its cap.
+
+@The_monster@ points @at_foe@ and yells, "Attack!"
+
+@The_monster@ says, "It's nice to have friends."
+
+@The_monster@ says, "You had a pet as a child? I had five."
+
+%%%%
+Necromancy player ghost
+
+@The_monster@ says @to_foe@, "Soon you will be my slave."
+
+@The_monster@ says, "Death will end your pain."
+
+@The_monster@ says @to_foe, "Don't worry, I won't let your corpse go to waste."
+
+@The_monster@ says @to_foe@, "After I kill you, I will kill you again."
+
+@The_monster@ says @to_foe@, "I need your bones for a spell of mine."
+
+%%%%
+Translocations player ghost
+
+VISUAL SPELL:@The_monster@ flickers in and out of reality.
+
+VISUAL ENCHANT:@The_monster@ is wreathed in a cloud of translocational energy.
+
+VISUAL SPELL:@The_monster@ struggles to pull you closer. @player_only@
+
+VISUAL:@The_monster@ blinks @at_foe@.
+
+%%%%
+Transmutations player ghost
+
+VISUAL:@The_monster@ briefly looks inexplicably like a @_form_@.
+
+VISUAL:@The_monster@ briefly turns into a @_form_@ and back.
+
+VISUAL:One of @the_monster@'s potions boils over and spills out.
+
+%%%%
+Fire Magic player ghost
+
+@The_monster@ says, "I love the smell of burning flesh."
+
+@The_monster@ chuckles, "I'd hate to see you lose all those scrolls..." @player_only@
+
+@The_monster@ says, "Would you like to be cremated?"
+
+@The_monster@ says, "Don't worry, you'll be warm in a moment."
+
+%%%%
+Ice Magic player ghost
+
+VISUAL WARN: A chill runs down your spine. @player_only@
+
+@The_monster@ says @to_foe@, "I hope the next monster to meet you likes frozen food!"
+
+@The_monster@ says @to_foe@, "An ice sculpture of you would look very nice here."
+
+%%%%
+Air Magic player ghost
+
+VISUAL:@The_monster@ is surrounded by a shower of sparks.
+
+@The_monster@ says, "I'm really charged up about this fight."
+
+@The_monster@ says, "Resistance is futile!"
+
+@The_monster@ says, "It's all a matter of fight versus flight."
+
+%%%%
+Earth Magic player ghost
+
+@The_monster@ says, "A rolling stone gathers plenty of @foe_name@."
+
+@The_monster@ says, "All of the earth is under my command."
+
+@The_monster@ says, "I can make a mountain out of a molehill and squeeze you to death."
+
+VISUAL:@The_monster@ gestures.
+SPELL:For a moment, the earth shakes beneath you.
+
+%%%%
+Poison Magic player ghost
+
+@The_monster@ says, "A minor scratch like that one is certainly harmless."
+
+@The_monster@ says @to_foe@, "Go ahead. Run away."
+
+@The_monster@ says @to_foe@, "It doesn't matter if you kill me. You'll still die."
+
+@The_monster@ says @to_foe@, "Don't move, or the poison will kill you faster."
+
+@The_monster@ says @to_foe@, "I don't need to breathe anymore, but you do!"
+
+@The_monster@ says, "I've got poisons running in my veins."
+
+%%%%
+Invocations player ghost
+
+@The_monster@ curses the gods.
+
+@The_monster@ says, "This is what relying on the gods got me."
+
+@The_monster@ sneers @at_foe@, "Where's your god now?"
+
+@The_monster@ says, "Bah, the gods are useless!"
+
+@The_monster@ mutters, "So much for the promised afterlife."
+
+VISUAL SPELL:@The_monster@ prays.
+
+%%%%
+Evocations player ghost
+
+@The_monster@ says @to_foe@, "How about a game of cards?"
+
+@The_monster@ says @to_foe@, "Sure you are pointing that wand in the right direction?"
+
+@The_monster@ taunts, "You'd probably drink from a bronze flask."
+
+@The_monster@ says, "I could kill you with a @_misc_item_@."
+
+%%%%
+_generic_ranged_
+
+@The_monster@ takes aim @at_foe@.
+
+You feel something passing dangerously close to your head. @player_only@
+
+%%%%
+_reload_adj_
+
+struggles to
+
+effortlessly
+
+%%%%
+_misc_item_
+
+stone
+
+fan
+
+lamp
+
+%%%%
+_direction_
+
+left
+
+right
+
+%%%%
+_form_
+
+spider
+
+stone statue
+
+w:5
+dragon
+
+w:2
+lich
+
+%%%%
 player ghost
 
 @_player_ghost_common_@
@@ -1042,6 +1440,8 @@ _player_ghost_rare_
 @The_monster@ whispers, "Soon you will have time, lots of time..."
 
 @The_monster@ @wails@, "You must not fail where I succeeded!"
+
+%%%%
 ## END player ghost ##
 #######################################
 # Unique monsters
