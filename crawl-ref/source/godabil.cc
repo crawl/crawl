@@ -358,7 +358,7 @@ bool fedhas_shoot_through(const bolt & beam, const monsters * victim)
     }
     else
     {
-        monsters * temp = dynamic_cast<monsters *> (originator);
+        monsters* temp = originator->as_monster();
         if (!temp)
             return (false);
         origin_worships_fedhas = temp->god == GOD_FEDHAS;

@@ -1580,7 +1580,7 @@ static const bool _is_appropriate_spell(spell_type spell,
     if (flags & SPFLAG_NEUTRAL)
         return (false);
 
-    bool friendly = dynamic_cast<const monsters*>(target)->wont_attack();
+    bool friendly = target->as_monster()->wont_attack();
 
     return (friendly == helpful);
 }

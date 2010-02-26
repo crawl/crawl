@@ -863,9 +863,7 @@ bool lose_stat(unsigned char which_stat, unsigned char stat_loss,
 void direct_effect(monsters *source, spell_type spell,
                    bolt &pbolt, actor *defender)
 {
-    monsters *def =
-        (defender->atype() == ACT_MONSTER) ? dynamic_cast<monsters*>(defender)
-                                           : NULL;
+    monsters *def = defender->as_monster();
 
     if (def)
     {

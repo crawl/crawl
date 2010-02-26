@@ -156,7 +156,7 @@ bool trap_def::is_known(const actor* act) const
         return (player_knows);
     else if (act->atype() == ACT_MONSTER)
     {
-        const monsters* monster = dynamic_cast<const monsters*>(act);
+        const monsters* monster = act->as_monster();
         const int intel = mons_intel(monster);
 
         // Smarter trap handling for intelligent monsters
@@ -374,9 +374,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     // triggering process.
     bool trap_destroyed = false;
 
-    monsters* m = NULL;
-    if (triggerer.atype() == ACT_MONSTER)
-        m = dynamic_cast<monsters*>(&triggerer);
+    monsters* m = triggerer.as_monster();
 
     // Smarter monsters and those native to the level will simply
     // side-step known shafts. Unless they are already looking for

@@ -803,7 +803,7 @@ static bool _shoals_tide_sweep_actors_clear(coord_def c)
 
     if (victim->atype() == ACT_MONSTER)
     {
-        monsters *mvictim = dynamic_cast<monsters *>(victim);
+        const monsters *mvictim = victim->as_monster();
         // Plants and statues cannot be moved away; the tide cannot
         // drown them.
         if (mons_class_is_stationary(mvictim->type))

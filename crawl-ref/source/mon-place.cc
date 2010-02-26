@@ -1567,7 +1567,7 @@ static int _place_monster_aux(const mgen_data &mg,
         }
         else
         {
-            monsters* sum = dynamic_cast<monsters*>(mg.summoner);
+            monsters* sum = mg.summoner->as_monster();
             mons_add_blame(mon, (blame_prefix
                                  + sum->full_name(DESC_NOCAP_A, true)));
             if (sum->props.exists("blame"))

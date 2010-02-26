@@ -1379,7 +1379,7 @@ int actor_to_death_source(const actor* agent)
     if (agent->atype() == ACT_PLAYER)
         return (NON_MONSTER);
     else if (agent->atype() == ACT_MONSTER)
-        return (dynamic_cast<const monsters*>(agent)->mindex());
+        return (agent->as_monster()->mindex());
     else
         return (NON_MONSTER);
 }

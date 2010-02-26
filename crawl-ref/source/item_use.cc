@@ -1792,7 +1792,7 @@ static bool _reaping_hit_victim(bolt& beam, actor* victim, int dmg, int corpse)
         return (false);
     }
 
-    return (mons_reaped(beam.agent(), dynamic_cast<monsters*>(victim)));
+    return (mons_reaped(beam.agent(), victim->as_monster()));
 }
 
 static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
@@ -1856,7 +1856,7 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
     }
     else
     {
-        monsters *mon = dynamic_cast<monsters*>(victim);
+        monsters *mon = victim->as_monster();
 
         if (!(mon->flags & MF_WAS_IN_VIEW))
             mon->seen_context = "thin air";
@@ -2159,7 +2159,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     }
     else
     {
-        const monsters *mon = dynamic_cast<const monsters*>(agent);
+        const monsters *mon = agent->as_monster();
 
         beam.attitude      = mons_attitude(mon);
         beam.beam_source   = mon->mindex();

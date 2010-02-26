@@ -3699,7 +3699,7 @@ bool mons_reaped(actor *killer, monsters *victim)
     }
     else
     {
-        monsters *mon = dynamic_cast<monsters*>(killer);
+        monsters *mon = killer->as_monster();
 
         beh = SAME_ATTITUDE(mon);
 

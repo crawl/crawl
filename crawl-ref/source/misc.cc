@@ -3379,7 +3379,7 @@ bool is_orckind(const actor *act)
 
     if (act->atype() == ACT_MONSTER)
     {
-        const monsters* mon = dynamic_cast<const monsters*>(act);
+        const monsters* mon = act->as_monster();
         if (mons_is_zombified(mon)
             && mons_genus(mon->base_monster) == MONS_ORC)
         {
@@ -3402,7 +3402,7 @@ bool is_dragonkind(const actor *act)
         return (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON);
 
     // Else the actor is a monster.
-    const monsters* mon = dynamic_cast<const monsters*>(act);
+    const monsters* mon = act->as_monster();
 
     if (mon->type == MONS_SERPENT_OF_HELL)
         return (true);
