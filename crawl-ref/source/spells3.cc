@@ -175,21 +175,59 @@ bool remove_curse(bool suppress_msg)
     return (success);
 }
 
-bool detect_curse(bool suppress_msg)
+bool detect_curse(int scroll, bool suppress_msg)
 {
+    int item_count = 0;
+    int found_item = NON_ITEM;
+
     for (int i = 0; i < ENDOFPACK; i++)
     {
         item_def& item = you.inv[i];
 
-        if (item.is_valid()
-            && (item.base_type == OBJ_WEAPONS
-                || item.base_type == OBJ_ARMOUR
-                || item.base_type == OBJ_JEWELLERY))
+        if (!item.is_valid())
+            continue;
+
+        if (item_count <= 1)
+        {
+            item_count += item.quantity;
+            if (i == scroll)
+                item_count--;
+            if (item_count > 0)
+                found_item = i;
+        }
+
+        if (item.base_type == OBJ_WEAPONS
+            || item.base_type == OBJ_ARMOUR
+            || item.base_type == OBJ_JEWELLERY)
+        {
             set_ident_flags(item, ISFLAG_KNOW_CURSE);
+        }
     }
 
+    // Not carrying any items -> don't id the scroll.
+    if (!item_count)
+        return (false);
+
+    ASSERT(found_item != NON_ITEM);
+
     if (!suppress_msg)
-        mpr("Your items softly glow as they are inspected for curses.");
+    {
+        if (item_count == 1)
+        {
+            // If you're carrying just one item, mention it explicitly.
+            item_def item = you.inv[found_item];
+
+            // If the carried item is just the stack of scrolls,
+            // decrease quantity by one to make up for the scroll just read.
+            if (found_item == scroll)
+                item.quantity--;
+
+            mprf("%s softly glows as it is inspected for curses.",
+                 item.name(DESC_CAP_YOUR).c_str());
+        }
+        else
+            mpr("Your items softly glow as they are inspected for curses.");
+    }
 
     return (true);
 }
