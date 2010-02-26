@@ -1005,7 +1005,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     ASSERT(!crawl_state.arena);
 
     const bool wiz_cast = (crawl_state.prev_cmd == CMD_WIZARD && !allow_fail);
-    int motions = 0; // For Animate Skeleton message
 
     dist spd;
     bolt beam;
@@ -1611,7 +1610,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         mpr("You attempt to give life to the dead...");
 
         if (animate_remains(you.pos(), CORPSE_SKELETON, BEH_FRIENDLY,
-                            MHITYOU, &you, "", god, 1, 0, 0, 0, &motions) < 0)
+                            MHITYOU, &you, "", god) < 0)
         {
             mpr("There is no skeleton here to animate!");
         }

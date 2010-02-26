@@ -1268,7 +1268,6 @@ static bool _do_ability(const ability_def& abil)
     dist abild;
     bolt beam;
     dist spd;
-    int motions = 0; // For Animate Skeleton message
 
     // Note: the costs will not be applied until after this switch
     // statement... it's assumed that only failures have returned! - bwr
@@ -1629,8 +1628,7 @@ static bool _do_ability(const ability_def& abil)
         mpr("You attempt to give life to the dead...");
 
         if (animate_remains(you.pos(), CORPSE_BODY, BEH_FRIENDLY,
-                            MHITYOU, &you, "", GOD_YREDELEMNUL,
-                            1, 0, 0, 0, &motions) < 0)
+                            MHITYOU, &you, "", GOD_YREDELEMNUL) < 0)
         {
             mpr("There are no remains here to animate!");
         }
