@@ -6355,10 +6355,20 @@ void bolt::set_agent(actor *actor)
 
 actor* bolt::agent() const
 {
-    if (YOU_KILL(thrower))
+    killer_type nominal_ktype = thrower;
+    int nominal_source = beam_source;
+
+    // If the beam was reflected report a different point of origin
+    if (reflections > 0)
+    {
+        if (reflector == NON_MONSTER)
+            nominal_ktype = KILL_YOU_MISSILE;
+        nominal_source = reflector;
+    }
+    if (YOU_KILL(nominal_ktype))
         return (&you);
-    else if (!invalid_monster_index(beam_source))
-        return (&menv[beam_source]);
+    else if (!invalid_monster_index(nominal_source))
+        return (&menv[nominal_source]);
     else
         return (NULL);
 }
