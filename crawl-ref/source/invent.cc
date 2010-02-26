@@ -196,15 +196,8 @@ std::string InvEntry::get_text() const
         tstr << '+';
 
     if (InvEntry::show_glyph)
-    {
-        glyph g = get_item_glyph(item);
+        tstr << " (" << glyph_to_tagstr(get_item_glyph(item)) << ")";
 
-        const std::string col_string = colour_to_str(g.col);
-        const std::string prefix = " (<" + col_string + ">"
-                                   + static_cast<char>(g.ch)
-                                   + "</" + col_string + ">)";
-        tstr << prefix;
-    }
     tstr << ' ' << text;
 
     if (InvEntry::show_prices)
