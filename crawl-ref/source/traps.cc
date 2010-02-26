@@ -364,6 +364,21 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     if (triggerer.atype() == ACT_MONSTER)
         m = dynamic_cast<monsters*>(&triggerer);
 
+    // Very smart monsters and those native to the level will simply
+    // side-step known shafts. Unless they are already looking for
+    // an exit, of course.
+    if (this->type == TRAP_SHAFT && m
+        && ((mons_intel(m) >= I_HIGH || mons_is_native_in_branch(m))
+               && !mons_is_fleeing(m) && !m->pacified()
+            || !m->will_trigger_shaft()))
+    {
+        // No message for flying monsters to avoid message spam.
+        if (you_know && !triggerer.airborne())
+            simple_monster_message(m, " carefully avoids the shaft.");
+        return;
+    }
+
+
     // Only magical traps affect flying critters.
     if (triggerer.airborne() && this->category() != DNGN_TRAP_MAGICAL)
     {
