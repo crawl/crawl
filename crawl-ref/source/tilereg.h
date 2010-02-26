@@ -180,6 +180,8 @@ public:
     CRTRegion(FTFont *font);
 
     virtual int handle_mouse(MouseEvent &event);
+
+    virtual void on_resize();
 };
 
 class MenuEntry;
