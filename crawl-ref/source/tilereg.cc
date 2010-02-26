@@ -4623,6 +4623,13 @@ int CRTRegion::handle_mouse(MouseEvent &event)
     return CK_MOUSE_CLICK;
 }
 
+void CRTRegion::on_resize()
+{
+    TextRegion::on_resize();
+    crawl_view.termsz.x = mx;
+    crawl_view.termsz.y = my;
+}
+
 MenuRegion::MenuRegion(ImageManager *im, FTFont *entry) :
     m_image(im), m_font_entry(entry), m_mouse_idx(-1),
     m_max_columns(1), m_dirty(false), m_font_buf(entry)
