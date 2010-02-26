@@ -2590,15 +2590,6 @@ static const mutation_type _all_scales[] = {
     MUT_IRIDESCENT_SCALES, MUT_PATTERNED_SCALES
 };
 
-static int _is_covering(mutation_type mut)
-{
-    for (unsigned i = 0; i < ARRAYSZ(_all_scales); ++i)
-        if (_all_scales[i] == mut)
-            return 1;
-
-    return 0;
-}
-
 static int _body_covered()
 {
     // Check how much of your body is covered by scales, etc.
@@ -2715,291 +2706,337 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
     return (result);
 }
 
-struct facet_def
+// Use an attribute counter for how many demonic mutations a demonspawn has.
+void demonspawn()
 {
-    mutation_type muts[3];
-    int tiers[3];
-};
+    mutation_type whichm = NUM_MUTATIONS;
+    int howm = 1;
+    int counter = 0;
 
-struct demon_mutation_info
-{
-    mutation_type mut;
-    int tier;
-    int facet;
+    const int covered = _body_covered();
 
-    demon_mutation_info(mutation_type m, int t, int f)
-        : mut(m), tier(t), facet(f) { }
-};
+    you.attribute[ATTR_NUM_DEMONIC_POWERS]++;
 
-static int ct_of_tier[] = { 0, 2, 3, 1 };
+    mpr("Your demonic ancestry asserts itself...", MSGCH_INTRINSIC_GAIN);
 
-static const facet_def _demon_facets[] =
-{
-    { { MUT_CLAWS, MUT_CLAWS, MUT_CLAWS },
-      { 2, 2, 2 } },
-    { { MUT_HORNS, MUT_HORNS, MUT_HORNS },
-      { 2, 2, 2 } },
-    { { MUT_THROW_FLAMES, MUT_HEAT_RESISTANCE, MUT_HURL_HELLFIRE },
-      { 3, 3, 3 } },
-    { { MUT_THROW_FLAMES, MUT_HEAT_RESISTANCE, MUT_CONSERVE_SCROLLS },
-      { 3, 3, 3 } },
-    { { MUT_FAST, MUT_FAST, MUT_FAST },
-      { 3, 3, 3 } },
-    { { MUT_TELEPORT_AT_WILL, MUT_TELEPORT_AT_WILL, MUT_TELEPORT_AT_WILL },
-      { 3, 3, 3 } },
-    { { MUT_ROBUST, MUT_ROBUST, MUT_ROBUST },
-      { 3, 3, 3 } },
-    { { MUT_NEGATIVE_ENERGY_RESISTANCE, MUT_NEGATIVE_ENERGY_RESISTANCE,
-          MUT_NEGATIVE_ENERGY_RESISTANCE },
-      { 3, 3, 3 } },
-    { { MUT_BLACK_SCALES, MUT_BLACK_SCALES, MUT_BLACK_SCALES },
-      { 3, 3, 3 } },
-    { { MUT_METALLIC_SCALES, MUT_METALLIC_SCALES, MUT_METALLIC_SCALES },
-      { 3, 3, 3 } },
-    { { MUT_RED2_SCALES, MUT_RED2_SCALES, MUT_RED2_SCALES },
-      { 3, 3, 3 } },
-    { { MUT_STOCHASTIC_TORMENT_RESISTANCE, MUT_STOCHASTIC_TORMENT_RESISTANCE,
-          MUT_STOCHASTIC_TORMENT_RESISTANCE },
-      { 3, 3, 3 } },
-    { { MUT_REGENERATION, MUT_REGENERATION, MUT_REGENERATION },
-      { 2, 2, 2 } },
-    { { MUT_GREEN_SCALES, MUT_GREEN_SCALES, MUT_GREEN_SCALES },
-      { 2, 2, 2 } },
-    { { MUT_BLACK_SCALES, MUT_BLACK_SCALES, MUT_BLACK_SCALES },
-      { 2, 2, 2 } },
-    { { MUT_REPULSION_FIELD, MUT_REPULSION_FIELD, MUT_REPULSION_FIELD },
-      { 2, 2, 2 } },
-    { { MUT_MAGIC_RESISTANCE, MUT_MAGIC_RESISTANCE, MUT_MAGIC_RESISTANCE },
-      { 2, 2, 2 } },
-    { { MUT_BREATHE_FLAMES, MUT_BREATHE_FLAMES, MUT_BREATHE_FLAMES },
-      { 2, 2, 2 } },
-    { { MUT_NACREOUS_SCALES, MUT_NACREOUS_SCALES, MUT_NACREOUS_SCALES },
-      { 2, 2, 2 } },
-    { { MUT_GREY2_SCALES, MUT_GREY2_SCALES, MUT_GREY2_SCALES },
-      { 2, 2, 2 } },
-    { { MUT_BLACK2_SCALES, MUT_BLACK2_SCALES, MUT_BLACK2_SCALES },
-      { 2, 2, 2 } },
-    { { MUT_WHITE_SCALES, MUT_WHITE_SCALES, MUT_WHITE_SCALES },
-      { 2, 2, 2 } },
-    { { MUT_YELLOW_SCALES, MUT_YELLOW_SCALES, MUT_YELLOW_SCALES },
-      { 2, 2, 2 } },
-    { { MUT_BROWN_SCALES, MUT_BROWN_SCALES, MUT_BROWN_SCALES },
-      { 2, 2, 2 } },
-    { { MUT_PURPLE_SCALES, MUT_PURPLE_SCALES, MUT_PURPLE_SCALES },
-      { 2, 2, 2 } },
-    { { MUT_INDIGO_SCALES, MUT_INDIGO_SCALES, MUT_INDIGO_SCALES },
-      { 2, 2, 2 } },
-    { { MUT_PASSIVE_MAPPING, MUT_PASSIVE_MAPPING, MUT_PASSIVE_MAPPING },
-      { 2, 2, 2 } },
-    { { MUT_COLD_RESISTANCE, MUT_CONSERVE_POTIONS, MUT_ICEMAIL },
-      { 2, 2, 2 } },
-    { { MUT_COLD_RESISTANCE, MUT_CONSERVE_POTIONS, MUT_PASSIVE_FREEZE },
-      { 2, 2, 2 } },
-    { { MUT_TOUGH_SKIN, MUT_TOUGH_SKIN, MUT_TOUGH_SKIN },
-      { 1, 1, 1 } },
-    { { MUT_GREY_SCALES, MUT_GREY_SCALES, MUT_GREY_SCALES },
-      { 1, 1, 1 } },
-    { { MUT_BONEY_PLATES, MUT_BONEY_PLATES, MUT_BONEY_PLATES },
-      { 1, 1, 1 } },
-    { { MUT_SLOW_METABOLISM, MUT_SLOW_METABOLISM, MUT_SLOW_METABOLISM },
-      { 1, 1, 1 } },
-    { { MUT_SPIT_POISON, MUT_SPIT_POISON, MUT_SPIT_POISON },
-      { 1, 1, 1 } },
-    { { MUT_BLINK, MUT_BLINK, MUT_BLINK },
-      { 1, 1, 1 } },
-    { { MUT_SHAGGY_FUR, MUT_SHAGGY_FUR, MUT_SHAGGY_FUR },
-      { 1, 1, 1 } },
-    { { MUT_HIGH_MAGIC, MUT_HIGH_MAGIC, MUT_HIGH_MAGIC },
-      { 1, 1, 1 } },
-    { { MUT_RED_SCALES, MUT_RED_SCALES, MUT_RED_SCALES },
-      { 1, 1, 1 } },
-    { { MUT_BLUE_SCALES, MUT_BLUE_SCALES, MUT_BLUE_SCALES },
-      { 1, 1, 1 } },
-    { { MUT_SPECKLED_SCALES, MUT_SPECKLED_SCALES, MUT_SPECKLED_SCALES },
-      { 1, 1, 1 } },
-    { { MUT_ORANGE_SCALES, MUT_ORANGE_SCALES, MUT_ORANGE_SCALES },
-      { 1, 1, 1 } },
-    { { MUT_IRIDESCENT_SCALES, MUT_IRIDESCENT_SCALES, MUT_IRIDESCENT_SCALES },
-      { 1, 1, 1 } },
-    { { MUT_PATTERNED_SCALES, MUT_PATTERNED_SCALES, MUT_PATTERNED_SCALES },
-      { 1, 1, 1 } },
-};
-
-static bool _works_at_tier(const facet_def& facet, int tier)
-{
-    return facet.tiers[0] == tier
-        || facet.tiers[1] == tier
-        || facet.tiers[2] == tier;
-}
-
-static int _rank_for_tier(const facet_def& facet, int tier)
-{
-    int k;
-
-    for (k = 0; k < 3 && facet.tiers[k] <= tier; ++k);
-
-    return (k);
-}
-
-static std::vector<demon_mutation_info> _select_ds_mutations()
-{
-try_again:
-    std::vector<demon_mutation_info> ret;
-
-    ret.clear();
-    int absfacet = 0;
-    int scales = 0;
-    int slow_dig = 0;
-    int regen = 0;
-    int slots_lost = 0;
-    int breath_weapons = 0;
-
-    std::set<const facet_def *> facets_used;
-
-    for (int tier = ARRAYSZ(ct_of_tier) - 1; tier >= 0; --tier)
+    // Merged the demonspawn lists into a single loop.  Now a high-level
+    // character can potentially get mutations from the low-level list
+    // if it's having trouble with the high level list.
+    do
     {
-        for (int nfacet = 0; nfacet < ct_of_tier[tier]; ++nfacet)
+        if (you.experience_level >= 10)
         {
-            const facet_def* next_facet;
-
-            do
-            {
-                next_facet = &RANDOM_ELEMENT(_demon_facets);
-            }
-            while (!_works_at_tier(*next_facet, tier)
-                   || facets_used.find(next_facet) != facets_used.end());
-
-            facets_used.insert(next_facet);
-
-            for (int i = 0; i < _rank_for_tier(*next_facet, tier); ++i)
-            {
-                mutation_type m = next_facet->muts[i];
-
-                ret.push_back(demon_mutation_info(m, next_facet->tiers[i],
-                                                  absfacet));
-
-                if (_is_covering(m))
-                    ++scales;
-
-                if (m == MUT_SLOW_METABOLISM)
-                    slow_dig = 1;
-
-                if (m == MUT_REGENERATION)
-                    regen = 1;
-
-                if (m == MUT_SPIT_POISON || m == MUT_BREATHE_POISON
-                        || m == MUT_BREATHE_FLAMES)
-                    breath_weapons++;
-
-                if (m == MUT_CLAWS && i == 2 || m == MUT_HORNS && i == 0)
-                    ++slots_lost;
+            if (you.skills[SK_CONJURATIONS] < 5)
+            {                       // good conjurers don't get bolt of draining
+                whichm = MUT_SMITE;
+                howm = 1;
             }
 
-            ++absfacet;
-        }
-    }
+            if (you.skills[SK_CONJURATIONS] < 10 && one_chance_in(4))
+            {                       // good conjurers don't get hellfire
+                whichm = MUT_HURL_HELLFIRE;
+                howm = 1;
+            }
 
-    if (scales > 3)
-        goto try_again;
+            // Makhlebites have the summonings invocation
+            if ((you.religion != GOD_MAKHLEB ||
+                you.piety < piety_breakpoint(3)) &&
+                you.skills[SK_SUMMONINGS] < 5 && one_chance_in(3))
+            {                       // good summoners don't get summon demon
+                whichm = MUT_SUMMON_DEMONS;
+                howm = 1;
+            }
 
-    if (slots_lost != 1)
-        goto try_again;
-
-    if (slow_dig && regen)
-        goto try_again;
-
-    if (breath_weapons > 1)
-        goto try_again;
-
-    return ret;
-}
-
-static std::vector<mutation_type>
-_order_ds_mutations(std::vector<demon_mutation_info> muts)
-{
-    std::vector<mutation_type> out;
-
-    while (! muts.empty())
-    {
-        int first_tier = 99;
-
-        for (unsigned i = 0; i < muts.size(); ++i)
-        {
-            first_tier = std::min(first_tier, muts[i].tier);
-        }
-
-        int ix;
-
-        do
-        {
-            ix = random2(muts.size());
-        }
-        // Don't consider mutations from more than two tiers at a time
-        while (muts[ix].tier >= first_tier + 2);
-
-        // Don't reorder mutations within a facet
-        for (int j = 0; j < ix; ++j)
-        {
-            if (muts[j].facet == muts[ix].facet)
+            if (one_chance_in(8))
             {
-                ix = j;
-                break;
+                whichm = MUT_MAGIC_RESISTANCE;
+                howm = (coinflip() ? 2 : 3);
+            }
+
+            if (one_chance_in(12))
+            {
+                whichm = MUT_FAST;
+                howm = 1;
+            }
+
+            if (one_chance_in(7))
+            {
+                whichm = MUT_TELEPORT_AT_WILL;
+                howm = 2;
+            }
+
+            if (one_chance_in(10))
+            {
+                whichm = MUT_REGENERATION;
+                howm = (coinflip() ? 2 : 3);
+            }
+
+            if (one_chance_in(12))
+            {
+                whichm = MUT_SHOCK_RESISTANCE;
+                howm = 1;
+            }
+
+            if (!you.mutation[MUT_CALL_TORMENT] && one_chance_in(15))
+            {
+                whichm = MUT_TORMENT_RESISTANCE;
+                howm = 1;
+            }
+
+            if (one_chance_in(12))
+            {
+                whichm = MUT_NEGATIVE_ENERGY_RESISTANCE;
+                howm = 1 + random2(3);
+            }
+
+            if (!you.mutation[MUT_TORMENT_RESISTANCE] && one_chance_in(20))
+            {
+                whichm = MUT_CALL_TORMENT;
+                howm = 1;
+            }
+
+            if (you.skills[SK_SUMMONINGS] < 5 && you.skills[SK_NECROMANCY] < 5
+                && one_chance_in(12))
+            {
+                whichm = MUT_CONTROL_DEMONS;
+                howm = 1;
+            }
+
+            if (you.religion != GOD_MAKHLEB && one_chance_in(11))
+            {
+                whichm = MUT_DEATH_STRENGTH;
+                howm = 1;
+            }
+
+            // Theoretically, you could use this with Trog (for rods and
+            // some misc. items), but in general it's going to be much more
+            // useful for someone capable of casting spells.
+            if (you.religion != GOD_TROG
+                && you.religion != GOD_SIF_MUNA && one_chance_in(11))
+            {
+                whichm = MUT_CHANNEL_HELL;
+                howm = 1;
+            }
+
+            // Yredelemnulites have the raise dead invocation
+            if (you.religion != GOD_YREDELEMNUL
+                && you.skills[SK_SUMMONINGS] < 3
+                && you.skills[SK_NECROMANCY] < 3 && one_chance_in(10))
+            {
+                whichm = MUT_RAISE_DEAD;
+                howm = 1;
+            }
+
+            if (you.skills[SK_UNARMED_COMBAT] > 5)
+            {
+                // Drain Life only works if you're unarmed, so only
+                // give it if unarmed is your best attacking skill.
+                skill_type wpn_skill = best_skill(SK_SHORT_BLADES, SK_STAVES);
+                if ((you.skills[SK_UNARMED_COMBAT] > you.skills[wpn_skill])
+                    && one_chance_in(14))
+                {
+                    whichm = MUT_DRAIN_LIFE;
+                    howm = 1;
+                }
             }
         }
 
-        out.push_back(muts[ix].mut);
-        muts.erase(muts.begin() + ix);
-    }
+        // check here so we can see if we need to extend our options
+        if (whichm != NUM_MUTATIONS && you.mutation[whichm] != 0)
+            whichm = NUM_MUTATIONS;
 
-    return out;
-}
-
-static std::vector<player::demon_trait>
-_schedule_ds_mutations(std::vector<mutation_type> muts)
-{
-    std::list<mutation_type> muts_left(muts.begin(), muts.end());
-
-    std::list<int> slots_left;
-
-    std::vector<player::demon_trait> out;
-
-    for (int level = 2; level <= 27; ++level)
-    {
-        int ct = coinflip() ? 2 : 1;
-
-        for (int i = 0; i < ct; ++i)
-            slots_left.push_back(level);
-    }
-
-    while (!muts_left.empty())
-    {
-        if (x_chance_in_y(muts_left.size(), slots_left.size()))
+        if (you.experience_level < 10
+            || (counter > 0 && whichm == NUM_MUTATIONS))
         {
-            player::demon_trait dt;
+            if ((!you.mutation[MUT_THROW_FROST]         // only one of these
+                    && !you.mutation[MUT_THROW_FLAMES]
+                    && !you.mutation[MUT_BREATHE_FLAMES])
+                && (!you.skills[SK_CONJURATIONS]        // conjurers seldomly
+                    || one_chance_in(5))
+                // Makhlebites seldom
+                && (you.religion != GOD_MAKHLEB || one_chance_in(4))
+                && (!you.skills[SK_ICE_MAGIC]           // already ice & fire?
+                    || !you.skills[SK_FIRE_MAGIC]))
+            {
+                // try to give the flavour the character doesn't have
 
-            dt.level_gained = slots_left.front();
-            dt.mutation     = muts_left.front();
+                // neither
+                if (!you.skills[SK_FIRE_MAGIC] && !you.skills[SK_ICE_MAGIC])
+                    whichm = (coinflip() ? MUT_THROW_FLAMES : MUT_THROW_FROST);
+                else if (!you.skills[SK_FIRE_MAGIC])
+                    whichm = MUT_THROW_FLAMES;
+                else if (!you.skills[SK_ICE_MAGIC])
+                    whichm = MUT_THROW_FROST;
+                // both
+                else
+                    whichm = (coinflip() ? MUT_THROW_FLAMES : MUT_THROW_FROST);
 
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Demonspawn will gain %s at level %d",
-                    get_mutation_def(dt.mutation).wizname, dt.level_gained);
-#endif
+                howm = 1;
+            }
 
-            out.push_back(dt);
+            // summoners and Makhlebites don't get summon imp
+            if (!you.skills[SK_SUMMONINGS] && you.religion != GOD_MAKHLEB
+                && one_chance_in(3))
+            {
+                whichm = (you.experience_level < 10) ? MUT_SUMMON_MINOR_DEMONS
+                                                     : MUT_SUMMON_DEMONS;
+                howm = 1;
+            }
 
-            muts_left.pop_front();
+            if (one_chance_in(4))
+            {
+                whichm = MUT_POISON_RESISTANCE;
+                howm = 1;
+            }
+
+            if (one_chance_in(4))
+            {
+                whichm = MUT_COLD_RESISTANCE;
+                howm = 1;
+            }
+
+            if (one_chance_in(4))
+            {
+                whichm = MUT_HEAT_RESISTANCE;
+                howm = 1;
+            }
+
+            if (one_chance_in(5))
+            {
+                whichm = MUT_ACUTE_VISION;
+                howm = 1;
+            }
+
+            if (!you.skills[SK_POISON_MAGIC] && one_chance_in(7))
+            {
+                whichm = MUT_SPIT_POISON;
+                howm = (you.experience_level < 10) ? 1 : 3;
+            }
+
+            if (one_chance_in(10))
+            {
+                whichm = MUT_PASSIVE_MAPPING;
+                howm = 3;
+            }
+
+            if (one_chance_in(12))
+            {
+                whichm = MUT_TELEPORT_CONTROL;
+                howm = 1;
+            }
+
+            if (!you.mutation[MUT_THROW_FROST]         // not with these
+                && !you.mutation[MUT_THROW_FLAMES]
+                && !you.mutation[MUT_BREATHE_FLAMES]
+                && !you.skills[SK_FIRE_MAGIC]          // or with fire already
+                && one_chance_in(5))
+            {
+                whichm = MUT_BREATHE_FLAMES;
+                howm = 2;
+            }
+
+            if (!you.skills[SK_TRANSLOCATIONS] && one_chance_in(12))
+            {
+                whichm = (you.experience_level < 10) ? MUT_BLINK
+                                                     : MUT_TELEPORT_AT_WILL;
+                howm = 2;
+            }
+
+            if (covered < 3 && one_chance_in( 1 + covered * 5 ))
+            {
+                const int bonus = (you.experience_level < 10) ? 0 : 1;
+                int levels = 0;
+
+                if (one_chance_in(10))
+                {
+                    whichm = MUT_TOUGH_SKIN;
+                    levels = (coinflip() ? 2 : 3);
+                }
+
+                if (one_chance_in(24))
+                {
+                    whichm = MUT_GREEN_SCALES;
+                    levels = (coinflip() ? 2 : 3);
+                }
+
+                if (one_chance_in(24))
+                {
+                    whichm = MUT_BLACK_SCALES;
+                    levels = (coinflip() ? 2 : 3);
+                }
+
+                if (one_chance_in(24))
+                {
+                    whichm = MUT_GREY_SCALES;
+                    levels = (coinflip() ? 2 : 3);
+                }
+
+                if (one_chance_in(12))
+                {
+                    whichm = static_cast<mutation_type>(MUT_RED_SCALES +
+                                                        random2(16));
+
+                    switch (whichm)
+                    {
+                    case MUT_RED_SCALES:
+                    case MUT_NACREOUS_SCALES:
+                    case MUT_BLACK2_SCALES:
+                    case MUT_WHITE_SCALES:
+                    case MUT_BLUE_SCALES:
+                    case MUT_SPECKLED_SCALES:
+                    case MUT_ORANGE_SCALES:
+                    case MUT_IRIDESCENT_SCALES:
+                    case MUT_PATTERNED_SCALES:
+                        levels = (coinflip() ? 2 : 3);
+                        break;
+
+                    default:
+                        levels = (coinflip() ? 1 : 2);
+                        break;
+                    }
+                }
+
+                if (one_chance_in(30))
+                {
+                    whichm = MUT_BONEY_PLATES;
+                    levels = (coinflip() ? 1 : 2);
+                }
+
+                if (levels)
+                    howm = std::min(3 - covered, levels + bonus);
+            }
+
+            if (one_chance_in(25))
+            {
+                whichm = MUT_REPULSION_FIELD;
+                howm = (coinflip() ? 2 : 3);
+            }
+
+            if (one_chance_in( (you.experience_level < 10) ? 5 : 20 ))
+            {
+                whichm = MUT_HORNS;
+                howm = (coinflip() ? 1 : 2);
+
+                if (you.experience_level > 4 || one_chance_in(5))
+                    howm++;
+            }
         }
-        slots_left.pop_front();
+
+        if (whichm != NUM_MUTATIONS && you.mutation[whichm] != 0)
+            whichm = NUM_MUTATIONS;
+
+        counter++;
     }
+    while (whichm == NUM_MUTATIONS && counter < 5000);
 
-    return out;
-}
-
-void roll_demonspawn_mutations()
-{
-    you.demonic_traits = _schedule_ds_mutations(
-                         _order_ds_mutations(
-                         _select_ds_mutations()));
+    if (whichm == NUM_MUTATIONS || !perma_mutate( whichm, howm ))
+    {
+        // Unlikely but remotely possible; I know this is a cop-out.
+        modify_stat(STAT_STRENGTH, 1, true, "demonspawn mutation");
+        modify_stat(STAT_INTELLIGENCE, 1, true, "demonspawn mutation");
+        modify_stat(STAT_DEXTERITY, 1, true, "demonspawn mutation");
+        mpr("You feel much better now.", MSGCH_INTRINSIC_GAIN);
+    }
 }
 
 bool perma_mutate(mutation_type which_mut, int how_much)

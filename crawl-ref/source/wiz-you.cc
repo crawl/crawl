@@ -128,17 +128,33 @@ void wizard_change_species( void )
 
     case SP_DEMONSPAWN:
     {
-        roll_demonspawn_mutations();
-        for (i = 0; i < int(you.demonic_traits.size()); ++i)
+        int powers = 0;
+
+        if (you.experience_level < 4)
+            powers = 0;
+        else if (you.experience_level < 9)
+            powers = 1;
+        else if (you.experience_level < 14)
+            powers = 2;
+        else if (you.experience_level < 19)
+            powers = 3;
+        else if (you.experience_level < 24)
+            powers = 4;
+        else if (you.experience_level == 27)
+            powers = 5;
+
+        int levels[] = {4, 9, 14, 19, 27};
+        int real_level = you.experience_level;
+
+        for (i = 0; i < powers; ++i)
         {
-            mutation_type m = you.demonic_traits[i].mutation;
-
-            if (you.demonic_traits[i].level_gained > you.experience_level)
-                continue;
-
-            ++you.mutation[m];
-            ++you.demon_pow[m];
+            // The types of demonspawn mutations you get depends on your
+            // experience level at the time of gaining it.
+            you.experience_level = levels[i];
+            demonspawn();
         }
+        you.experience_level = real_level;
+
         break;
     }
 
