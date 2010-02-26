@@ -8,6 +8,14 @@
 #ifndef SPELLS3_H
 #define SPELLS3_H
 
+//Bitfield for animate dead messages
+#define DEAD_ARE_WALKING 1
+#define DEAD_ARE_SWIMMING 2
+#define DEAD_ARE_FLYING 4
+#define DEAD_ARE_SLITHERING 8
+#define DEAD_ARE_HOPPING 16
+#define DEAD_ARE_FLOATING 32
+
 #include "itemprop-enum.h"
 
 class dist;
@@ -51,7 +59,7 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
                     actor *as = NULL, std::string nas = "",
                     god_type god = GOD_NO_GOD, bool actual = true,
                     bool quiet = false, bool force_beh = false,
-                    int* mon_index = NULL);
+                    int* mon_index = NULL, int* motions = NULL);
 
 int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
                  actor *as = NULL, std::string nas = "",

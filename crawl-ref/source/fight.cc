@@ -2834,9 +2834,10 @@ static bool _make_zombie(monsters* mon, int corpse_class, int corpse_index,
         mitm[idx].link       = mitm[last_item].link;
         mitm[last_item].link = idx;
 
+        int motions = 0; // For Animate Skeleton message
         animate_remains(mon->pos(), CORPSE_BODY, mon->behaviour,
                         mon->foe, 0, "a chaos effect", mon->god,
-                        true, true, true, &zombie_index);
+                        true, true, true, &zombie_index, &motions);
     }
 
     // No equipment to get, or couldn't get it for some reason.
