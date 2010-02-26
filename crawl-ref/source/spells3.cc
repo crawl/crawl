@@ -1116,7 +1116,7 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
                                      god, actual, force_beh, mon_index,
                                      motions);
 
- 
+
 
             if (actual && success)
             {

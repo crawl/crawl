@@ -1629,7 +1629,7 @@ static bool _do_ability(const ability_def& abil)
         mpr("You attempt to give life to the dead...");
 
         if (animate_remains(you.pos(), CORPSE_BODY, BEH_FRIENDLY,
-                            MHITYOU, &you, "", GOD_YREDELEMNUL, 
+                            MHITYOU, &you, "", GOD_YREDELEMNUL,
                             1, 0, 0, 0, &motions) < 0)
         {
             mpr("There are no remains here to animate!");
@@ -1643,7 +1643,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_YRED_ANIMATE_DEAD:
-        mpr("You call on the dead to rise..."); 
+        mpr("You call on the dead to rise...");
 
         animate_dead(&you, 1 + you.skills[SK_INVOCATIONS], BEH_FRIENDLY,
                      MHITYOU, &you, "", GOD_YREDELEMNUL);
