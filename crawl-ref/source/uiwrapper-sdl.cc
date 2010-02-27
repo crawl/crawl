@@ -525,4 +525,10 @@ void UIWrapper::shutdown()
     video_info = NULL;
 }
 
+int UIWrapper::byteOrder()
+{
+    if( SDL_BYTEORDER == SDL_BIG_ENDIAN ) return UI_BIG_ENDIAN;
+    return UI_LIL_ENDIAN;
+}
+
 #endif
