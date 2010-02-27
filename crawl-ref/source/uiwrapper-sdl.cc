@@ -454,6 +454,70 @@ void UIWrapper::swapBuffers()
     SDL_GL_SwapBuffers();
 }
 
+void UIWrapper::UIDelay(unsigned int ms)
+{
+    SDL_Delay(ms);
+}
+
+unsigned int UIWrapper::getEventCount(ui_event_type type)
+{
+        // Look for the presence of any keyboard events in the queue.
+        Uint32 eventmask;
+        switch( type )
+        {
+            case UI_ACTIVEEVENT:
+            eventmask = SDL_EVENTMASK( SDL_ACTIVEEVENT );
+            break;
+            
+            case UI_KEYDOWN:
+            eventmask = SDL_EVENTMASK( SDL_KEYDOWN );
+            break;
+            
+            case UI_KEYUP:
+            eventmask = SDL_EVENTMASK( SDL_KEYUP );
+            break;
+            
+            case UI_MOUSEMOTION:
+            eventmask = SDL_EVENTMASK( SDL_MOUSEMOTION );
+            break;
+            
+            case UI_MOUSEBUTTONUP:
+            eventmask = SDL_EVENTMASK( SDL_MOUSEBUTTONUP );
+            break;
+            
+            case UI_MOUSEBUTTONDOWN:
+            eventmask = SDL_EVENTMASK( SDL_MOUSEBUTTONDOWN );
+            break;
+            
+            case UI_QUIT:
+            eventmask = SDL_EVENTMASK( SDL_QUIT );
+            break;
+            
+            case UI_CUSTOMEVENT:
+            eventmask = SDL_EVENTMASK( SDL_USEREVENT );
+            break;
+            
+            case UI_RESIZE:
+            eventmask = SDL_EVENTMASK( SDL_VIDEORESIZE );
+            break;
+            
+            case UI_EXPOSE:
+            eventmask = SDL_EVENTMASK( SDL_VIDEOEXPOSE );
+            break;
+            
+            default:
+            return -1; // Error
+        }
+        
+        SDL_Event store;
+        SDL_PumpEvents();
+        
+        // Note: this returns -1 for error.
+        int count = SDL_PeepEvents(&store, 1, SDL_PEEKEVENT, eventmask);
+        
+        return count;
+}
+
 void UIWrapper::shutdown()
 {
     SDL_Quit();
