@@ -12,7 +12,6 @@
 #include "defines.h"
 #include "files.h"
 
-#include <SDL.h>
 #include <SDL_opengl.h>
 #include <ft2build.h>
 #include FT_FREETYPE_H
