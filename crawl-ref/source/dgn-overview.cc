@@ -398,13 +398,15 @@ static std::string _get_unseen_branches()
             continue;
         }
 
-        if (possibly_missing_lair_branches == 2) {
-            missing_lair_branch = i;
-        }
-
         if (stair_level.find(branch) != stair_level.end()) {
             possibly_missing_lair_branches++;
         }
+        else {
+            missing_lair_branch = i;
+        }
+    }
+    if (possibly_missing_lair_branches < 2) {
+        missing_lair_branch = -1;
     }
 
     bool found_portals[NUM_PORTALS] = { 0 };
