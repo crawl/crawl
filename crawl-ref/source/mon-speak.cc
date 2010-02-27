@@ -473,7 +473,7 @@ bool mons_speaks(monsters *monster)
     const actor*    foe   = (!crawl_state.arena && monster->wont_attack()
                                 && invalid_monster_index(monster->foe)) ?
                                     &you : monster->get_foe();
-    const monsters* m_foe = foe->as_monster();
+    const monsters* m_foe = foe ? foe->as_monster() : NULL;
 
     if (!foe || foe->atype() == ACT_PLAYER || monster->wont_attack())
     {
