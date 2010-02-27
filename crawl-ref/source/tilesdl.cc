@@ -133,7 +133,7 @@ void TilesFramework::shutdown()
         m_fonts[i].font = NULL;
     }
 
-	wrapper.shutdown();
+    wrapper.shutdown();
 
     _shutdown_console();
 }
@@ -243,29 +243,29 @@ bool TilesFramework::initialise()
     putenv("SDL_VIDEO_WINDOW_POS=center");
     putenv("SDL_VIDEO_CENTERED=1");
 #endif
-	
+    
     _init_consoles();
-	
-	const char *icon_name =
+    
+    const char *icon_name =
 #ifdef DATA_DIR_PATH
-	DATA_DIR_PATH
+    DATA_DIR_PATH
 #endif
 #ifdef TARGET_OS_WINDOWS
-	"dat/tiles/stone_soup_icon-win32.png";
+    "dat/tiles/stone_soup_icon-win32.png";
 #else
-	"dat/tiles/stone_soup_icon-32x32.png";
+    "dat/tiles/stone_soup_icon-32x32.png";
 #endif
-	
-	std::string title = CRAWL " " + Version::Long();
-	
-	if( !wrapper.init(&m_windowsz) ) return (false);
-	
-	wrapper.setWindowTitle(title.c_str());
-	wrapper.setWindowIcon(icon_name);
-	
-	// Copy over constants that need to have been set by the wrapper
-	m_screen_width = wrapper.screenWidth();
-	m_screen_height = wrapper.screenHeight();
+    
+    std::string title = CRAWL " " + Version::Long();
+    
+    if( !wrapper.init(&m_windowsz) ) return (false);
+    
+    wrapper.setWindowTitle(title.c_str());
+    wrapper.setWindowIcon(icon_name);
+    
+    // Copy over constants that need to have been set by the wrapper
+    m_screen_width = wrapper.screenWidth();
+    m_screen_height = wrapper.screenHeight();
 
     // If the window size is less than the view height, the textures will
     // have to be shrunk.  If this isn't the case, then don't create mipmaps,
@@ -471,7 +471,7 @@ int TilesFramework::handle_mouse(MouseEvent &event)
 static unsigned int _timer_callback(unsigned int ticks)
 {
     // force the event loop to break
-	wrapper.raiseCustomEvent();
+    wrapper.raiseCustomEvent();
 
     unsigned int res = Options.tile_tooltip_ms;
     return (res);
@@ -549,8 +549,8 @@ int TilesFramework::getch_ck()
                 }
                 break;
             case UI_KEYDOWN:
-				m_key_mod |= event.key.keysym.key_mod;
-				key        = event.key.keysym.sym;
+                m_key_mod |= event.key.keysym.key_mod;
+                key        = event.key.keysym.sym;
                 m_region_tile->place_cursor(CURSOR_MOUSE, Region::NO_CURSOR);
 
                 // If you hit a key, disable tooltips until the mouse
