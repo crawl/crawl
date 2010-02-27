@@ -2121,9 +2121,13 @@ level_id find_deepest_explored(level_id curr)
     for (int i = branches[curr.branch].depth; i > 0; --i)
     {
         const level_id lid(curr.branch, i);
-        const LevelInfo *linf = travel_cache.find_level_info(lid);
-        if (linf && !linf->empty())
-            return (lid);
+        LevelInfo *linf = travel_cache.find_level_info(lid);
+        if (linf) {
+            linf->update();
+            if (!linf->empty()) {
+                return (lid);
+            }
+        }
     }
     return (curr);
 }
