@@ -12,6 +12,7 @@
 #include "coord.h"
 #include "exclude.h"
 #include "player.h"
+#include "travel.h"
 
 LUAFN(l_set_exclude)
 {
@@ -40,10 +41,18 @@ LUAFN(l_del_exclude)
     return (0);
 }
 
+LUAFN(l_feature_is_traversable)
+{
+    const std::string &name = luaL_checkstring(ls, 1);
+    const dungeon_feature_type feat = dungeon_feature_by_name(name);
+    PLUARET(boolean, feat_is_traversable(feat));
+}
+
 static const struct luaL_reg travel_lib[] =
 {
     { "set_exclude", l_set_exclude },
     { "del_exclude", l_del_exclude },
+    { "feature_traversable", l_feature_is_traversable },
 
     { NULL, NULL }
 };
