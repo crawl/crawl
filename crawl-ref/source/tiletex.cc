@@ -5,9 +5,12 @@
 #include "files.h"
 #include "tiletex.h"
 
-#include <SDL.h>
+#ifdef USE_SDL
+#include "uiwrapper-sdl.h"
+#include "cgcontext-sdl.h"
+#endif
+
 #include <SDL_opengl.h>
-#include <SDL_image.h>
 
 GenericTexture::GenericTexture() :
     m_handle(0),
@@ -46,47 +49,42 @@ bool GenericTexture::load_texture(const char *filename,
         return (false);
     }
 
-    SDL_Surface *img = NULL;
-    FILE *imgfile = fopen(tex_path.c_str(), "rb");
-    if (imgfile)
+    GraphicsContext *img = new GraphicsContext();
+    if( !img )
     {
-        SDL_RWops *rw = SDL_RWFromFP(imgfile, 0);
-        if (rw)
-        {
-            img = IMG_Load_RW(rw, 0);
-            SDL_RWclose(rw);
-        }
-        fclose(imgfile);
+        fprintf(stderr, "Could not create context for texture '%s'.\n",
+            tex_path.c_str());
+        return (false);
     }
 
-    if (!img)
+    if ( img->loadImage(tex_path.c_str()) )
     {
         fprintf(stderr, "Couldn't load texture '%s'.\n", tex_path.c_str());
         return (false);
     }
 
-    unsigned int bpp = img->format->BytesPerPixel;
+    unsigned int bpp = img->bytesPerPixel();
     glPixelStorei(GL_UNPACK_ALIGNMENT, bpp);
 
     // Determine texture format
-    unsigned char *pixels = (unsigned char*)img->pixels;
+    unsigned char *pixels = (unsigned char*)img->pixels();
 
     int new_width;
     int new_height;
     if (force_power_of_two)
     {
         new_width = 1;
-        while (new_width < img->w)
+        while (new_width < img->width())
             new_width *= 2;
 
         new_height = 1;
-        while (new_height < img->h)
+        while (new_height < img->height())
             new_height *= 2;
     }
     else
     {
-        new_width = img->w;
-        new_height = img->h;
+        new_width = img->width();
+        new_height = img->height();
     }
 
     GLenum texture_format;
@@ -94,84 +92,82 @@ bool GenericTexture::load_texture(const char *filename,
     {
         // Even if the size is the same, still go through
         // SDL_GetRGBA to put the image in the right format.
-        SDL_LockSurface(img);
+        img->lock();
         pixels = new unsigned char[4 * new_width * new_height];
         memset(pixels, 0, 4 * new_width * new_height);
 
         int dest = 0;
-        for (int y = 0; y < img->h; y++)
+        for (int y = 0; y < img->height(); y++)
         {
-            for (int x = 0; x < img->w; x++)
+            for (int x = 0; x < img->width(); x++)
             {
-                unsigned char *p = ((unsigned char*)img->pixels
-                                  + y * img->pitch + x * bpp);
+                unsigned char *p = ((unsigned char*)img->pixels()
+                                  + y * img->pitch() + x * bpp);
                 unsigned int pixel = *(unsigned int*)p;
-                SDL_GetRGBA(pixel, img->format, &pixels[dest],
-                            &pixels[dest+1], &pixels[dest+2],
-                            &pixels[dest+3]);
+                img->getRGBA(pixel, &pixels[dest], &pixels[dest+1],
+                                    &pixels[dest+2], &pixels[dest+3]);
                 dest += 4;
             }
-            dest += 4 * (new_width - img->w);
+            dest += 4 * (new_width - img->width());
         }
 
-        SDL_UnlockSurface(img);
+        img->unlock();
         texture_format = GL_RGBA;
     }
     else if (bpp == 3)
     {
-        if (new_width != img->w || new_height != img->h)
+        if (new_width != img->width() || new_height != img->height())
         {
-            SDL_LockSurface(img);
+            img->lock();
             pixels = new unsigned char[4 * new_width * new_height];
             memset(pixels, 0, 4 * new_width * new_height);
 
             int dest = 0;
-            for (int y = 0; y < img->h; y++)
+            for (int y = 0; y < img->height(); y++)
             {
-                for (int x = 0; x < img->w; x++)
+                for (int x = 0; x < img->width(); x++)
                 {
-                    unsigned char *p = ((unsigned char*)img->pixels
-                                       + y * img->pitch + x * bpp);
+                    unsigned char *p = ((unsigned char*)img->pixels()
+                                       + y * img->pitch() + x * bpp);
                     unsigned int pixel;
-                    if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
+                    if (wrapper.byteOrder() == UI_BIG_ENDIAN)
                         pixel = p[0] << 16 | p[1] << 8 | p[2];
                     else
                         pixel = p[0] | p[1] << 8 | p[2];
-                    SDL_GetRGBA(pixel, img->format, &pixels[dest],
-                                &pixels[dest+1], &pixels[dest+2],
-                                &pixels[dest+3]);
+                    img->getRGBA(pixel, &pixels[dest], &pixels[dest+1],
+                                        &pixels[dest+2], &pixels[dest+3]);
                     dest += 4;
                 }
-                dest += 4 * (new_width - img->w);
+                dest += 4 * (new_width - img->width());
             }
 
-            SDL_UnlockSurface(img);
+            img->unlock();
         }
         texture_format = GL_RGBA;
     }
     else if (bpp == 1)
     {
         // need to depalettize
-        SDL_LockSurface(img);
+        img->lock();
 
         pixels = new unsigned char[4 * new_width * new_height];
 
-        SDL_Palette* pal = img->format->palette;
+        ui_palette* pal = img->palette;
         ASSERT(pal);
         ASSERT(pal->colors);
 
         int src = 0;
         int dest = 0;
-        for (int y = 0; y < img->h; y++)
+        for (int y = 0; y < img->height(); y++)
         {
             int x;
-            for (x = 0; x < img->w; x++)
+            for (x = 0; x < img->width(); x++)
             {
-                unsigned int index = ((unsigned char*)img->pixels)[src++];
+                unsigned int index = ((unsigned char*)img->pixels())[src++];
                 pixels[dest*4    ] = pal->colors[index].r;
                 pixels[dest*4 + 1] = pal->colors[index].g;
                 pixels[dest*4 + 2] = pal->colors[index].b;
-                pixels[dest*4 + 3] = (index != img->format->colorkey ? 255 : 0);
+                pixels[dest*4 + 3] = (index != img->colorKey() ? 255 : 0);
                 dest++;
             }
             while (x++ < new_width)
@@ -194,7 +190,7 @@ bool GenericTexture::load_texture(const char *filename,
             dest++;
         }
 
-        SDL_UnlockSurface(img);
+        img->unlock();
 
         bpp = 4;
         texture_format = GL_RGBA;
@@ -211,13 +207,13 @@ bool GenericTexture::load_texture(const char *filename,
         success |= load_texture(pixels, new_width, new_height, mip_opt);
 
     // If conversion has occurred, delete converted data.
-    if (pixels != img->pixels)
+    if (pixels != img->pixels())
         delete[] pixels;
 
-    m_orig_width  = img->w;
-    m_orig_height = img->h;
+    m_orig_width  = img->width();
+    m_orig_height = img->height();
 
-    SDL_FreeSurface(img);
+    delete img;
 
     return (success);
 }
