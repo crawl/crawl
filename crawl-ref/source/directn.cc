@@ -1654,6 +1654,7 @@ void direction_chooser::handle_wizard_command(command_type key_command,
         return;
 
     monsters* const m = monster_at(target());
+    std::string marker_result = "";
 
     // These commands do something even if there's no monster there.
     switch (key_command)
@@ -1678,6 +1679,17 @@ void direction_chooser::handle_wizard_command(command_type key_command,
         need_beam_redraw = true;
         return;
 
+    case CMD_TARGET_WIZARD_DEBUG_PORTAL:
+        mprf(MSGCH_DIAGNOSTICS, "Trying to run portal debug at %d/%d...",
+            target().x, target().y);
+
+        marker_result =
+            env.markers.property_at(target(), MAT_ANY, "portal_debug").c_str();
+
+        mprf(MSGCH_DIAGNOSTICS, "Got result: %s!",
+            marker_result.empty() ? "nothing" : marker_result.c_str());
+
+        return;
     default:
         break;
     }

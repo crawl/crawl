@@ -108,6 +108,11 @@ function TroveMarker:overview_note (marker)
   end
 end
 
+function TroveMarker:debug_portal (marker)
+  crawl.mpr("Debug info for this trove")
+  return "test"
+end
+
 function TroveMarker:property(marker, pname)
   if pname == 'veto_stair' then
     return self:check_veto(marker, pname)
@@ -117,6 +122,10 @@ function TroveMarker:property(marker, pname)
     return self:fdesc_long (marker)
   elseif pname == "overview_note" then
     return self:overview_note (marker)
+  end
+
+  if pname == "portal_debug" then
+    return self:debug_portal (marker)
   end
 
   return self.super.property(self, marker, pname)
