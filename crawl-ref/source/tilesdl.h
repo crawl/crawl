@@ -81,7 +81,7 @@ public:
     void toggle_inventory_display();
     void update_inventory();
 
-    void set_need_redraw();
+    void set_need_redraw(unsigned int min_tick_delay = 0);
     bool need_redraw() const;
     void redraw();
 
@@ -183,6 +183,7 @@ protected:
     unsigned char m_key_mod;
     coord_def m_mouse;
     unsigned int m_last_tick_moved;
+    unsigned int m_last_tick_redraw;
 
     std::string m_tooltip;
 

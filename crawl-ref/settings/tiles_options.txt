@@ -34,6 +34,9 @@
 # If Crawl's response rate is too slow, try increasing the update rate.
 # tile_update_rate      = 1000
 
+# If Crawl is lagging when running or resting, try increasing this number.
+# tile_runrest_redraw = 100
+
 # tile_key_repeat_delay = 200
 # tile_tooltip_ms       = 500
 
@@ -62,3 +65,4 @@
 # tile_show_minimagicbar  = false
 
 # tile_better_transparency = true
+

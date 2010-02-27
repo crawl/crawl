@@ -1741,6 +1741,11 @@ tile_update_rate = 1000
         number. If, on the other hand, response time is fine but it takes too
         long for redrawings to happen, set it to a lower value.
 
+tile_runrest_rate = 100
+        The number of milliseconds that tick by before the screen is redrawn
+        when running or resting.  If Crawl is slow while running or resting,
+        increase this number.
+
 tile_key_repeat_delay = 200
         If you hold down a key, there's a delay until the pressed key will
         take action. This option controls this delay, in milliseconds. If it

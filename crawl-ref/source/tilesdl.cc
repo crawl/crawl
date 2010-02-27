@@ -63,7 +63,8 @@ TilesFramework::TilesFramework() :
     m_buttons_held(0),
     m_key_mod(0),
     m_mouse(-1, -1),
-    m_last_tick_moved(0)
+    m_last_tick_moved(0),
+    m_last_tick_redraw(0)
 {
 }
 
@@ -1304,6 +1305,8 @@ void TilesFramework::redraw()
     }
 
     SDL_GL_SwapBuffers();
+
+    m_last_tick_redraw = SDL_GetTicks();
 }
 
 void TilesFramework::update_minimap(int gx, int gy)
@@ -1555,8 +1558,12 @@ void TilesFramework::clear_overlays()
     m_region_tile->clear_overlays();
 }
 
-void TilesFramework::set_need_redraw()
+void TilesFramework::set_need_redraw(unsigned int min_tick_delay)
 {
+    unsigned int ticks = (SDL_GetTicks() - m_last_tick_redraw);
+    if (min_tick_delay && ticks <= min_tick_delay)
+        return;
+
     m_need_redraw = true;
 }
 

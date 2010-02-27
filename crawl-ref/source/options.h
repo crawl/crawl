@@ -371,6 +371,7 @@ public:
     bool        tile_force_overlay;
     // display settings
     int         tile_update_rate;
+    int         tile_runrest_redraw;
     int         tile_key_repeat_delay;
     int         tile_tooltip_ms;
     tag_pref    tile_tag_pref;
