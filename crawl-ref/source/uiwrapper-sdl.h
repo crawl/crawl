@@ -18,6 +18,11 @@
 #include "tilesdl.h"
 
 typedef enum {
+    UI_BIG_ENDIAN,
+    UI_LIL_ENDIAN
+} ui_endianness;
+
+typedef enum {
     UI_NOEVENT = 0,
     UI_ACTIVEEVENT,
     UI_KEYDOWN,
@@ -103,6 +108,7 @@ public:
     bool setWindowIcon(const char* icon_name);
     key_mod getModState();
     void setModState(key_mod mod);
+    int byteOrder();
     
     // System time functions
     void setTimer(unsigned int interval, ui_timer_callback callback);
@@ -119,8 +125,6 @@ public:
     void swapBuffers();
     int screenWidth();
     int screenHeight();
-    
-
     
 protected:
     
