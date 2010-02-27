@@ -249,7 +249,7 @@ function trove.setup_features(e)
 end
 
 function trove.milestone(_G)
-    crawl.mark_milestone("br.enter", "entered a treasure trove.")
+    crawl.mark_milestone("br.enter", "entered a treasure trove.", true)
 end
 
 -- "any scroll good_item" still gets you 'scroll of noise', 'scroll of curse weapon', etc

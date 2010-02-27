@@ -23,13 +23,59 @@ bool at_branch_bottom()
     return your_branch().depth == player_branch_depth();
 }
 
+level_id branch_entry_level(branch_type branch)
+{
+    // Hell and its subbranches need obnoxious special-casing:
+    if (branch == BRANCH_VESTIBULE_OF_HELL)
+    {
+        return level_id(BRANCH_MAIN_DUNGEON, you.hell_exit + 1);
+    }
+    else if (is_hell_subbranch(branch))
+    {
+        return level_id(BRANCH_VESTIBULE_OF_HELL, 1);
+    }
+
+    const branch_type parent = branches[branch].parent_branch;
+    const int subdepth = branches[branch].startdepth;
+
+    // This may be invalid if the branch doesn't exist this game --
+    // it's the caller's job to check.
+    return level_id(parent, subdepth);
+}
+
+static level_id find_parent_dungeon_level(level_id level)
+{
+    ASSERT(level.level_type == LEVEL_DUNGEON);
+    if (!--level.depth)
+        return branch_entry_level(level.branch);
+    else
+        return (level);
+}
+
+static level_id find_parent_for_current_level_area()
+{
+    ASSERT(you.level_type != LEVEL_DUNGEON);
+
+    // Return the level_id saved in where_are_you and absdepth0:
+    unwind_var<level_area_type> player_level_type(
+        you.level_type, LEVEL_DUNGEON);
+    return level_id::current();
+}
+
+level_id current_level_parent()
+{
+    level_id current(level_id::current());
+    if (current.level_type == LEVEL_DUNGEON)
+        return find_parent_dungeon_level(current);
+
+    return find_parent_for_current_level_area();
+}
 
 bool is_hell_subbranch(branch_type branch)
 {
     return (branch >= BRANCH_FIRST_HELL
             && branch <= BRANCH_LAST_HELL
             && branch != BRANCH_VESTIBULE_OF_HELL);
-
 }
 
 branch_type str_to_branch(const std::string &branch, branch_type err)

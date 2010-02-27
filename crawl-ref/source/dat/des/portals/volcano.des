@@ -145,7 +145,7 @@ function volcano_setup (e, metal)
 end
 
 function volcano_milestone(e)
-    crawl.mark_milestone("br.enter", "entered a Volcano.")
+    crawl.mark_milestone("br.enter", "entered a Volcano.", true)
 end
 
 -- "Volcano" functions. While the sizes may appear extreme, they are carefully

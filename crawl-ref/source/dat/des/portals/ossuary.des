@@ -65,7 +65,7 @@ end
 # Add the milestone.
 {{
 function ossuary_milestone(e)
-  crawl.mark_milestone("br.enter", "entered an Ossuary.")
+  crawl.mark_milestone("br.enter", "entered an Ossuary.", true)
 end
 }}
 

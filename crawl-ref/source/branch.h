@@ -64,6 +64,8 @@ Branch& your_branch();
 
 bool at_branch_bottom();
 bool is_hell_subbranch(branch_type branch);
+level_id branch_entry_level(branch_type branch);
+level_id current_level_parent();
 
 branch_type str_to_branch(const std::string &branch,
                           branch_type err = NUM_BRANCHES);

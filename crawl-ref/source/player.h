@@ -532,6 +532,8 @@ public:
     PlaceInfo& get_place_info(branch_type branch) const;
     PlaceInfo& get_place_info(level_area_type level_type2) const;
 
+    void goto_place(const level_id &level);
+
     void set_place_info(PlaceInfo info);
     // Returns copies of the PlaceInfo; modifying the vector won't
     // modify the player object.

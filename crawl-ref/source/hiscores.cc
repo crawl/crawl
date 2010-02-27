@@ -2197,7 +2197,10 @@ std::string xlog_fields::xlog_line() const
 // Milestones
 
 #ifdef DGL_MILESTONES
-void mark_milestone(const std::string &type, const std::string &milestone)
+
+void mark_milestone(const std::string &type,
+                    const std::string &milestone,
+                    bool report_origin_level)
 {
     if (crawl_state.arena || !crawl_state.need_save)
         return;
@@ -2207,6 +2210,9 @@ void mark_milestone(const std::string &type, const std::string &milestone)
         const scorefile_entry se(0, 0, KILL_MISC, NULL);
         se.set_base_xlog_fields();
         xlog_fields xl = *se.fields;
+        if (report_origin_level)
+            xl.add_field("oplace", "%s",
+                         current_level_parent().describe().c_str());
         xl.add_field("time", "%s", make_date_string(se.death_time).c_str());
         xl.add_field("type", "%s", type.c_str());
         xl.add_field("milestone", "%s", milestone.c_str());
