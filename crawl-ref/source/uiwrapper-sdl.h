@@ -74,7 +74,7 @@ typedef struct{
 
 // Basically a generic SDL_Event
 typedef struct{
-    unsigned int type;
+    unsigned char type;
     ui_active_event active;
     ui_keyboard_event key;
     MouseEvent mouse_event;

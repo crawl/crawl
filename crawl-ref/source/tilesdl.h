@@ -37,7 +37,10 @@ struct MouseEvent
         SCROLL_UP   = 0x08,
         SCROLL_DOWN = 0x10
     };
-
+    
+    // Padding for ui_event
+    unsigned char type;
+    
     // kind of event
     mouse_event_type event;
     // if PRESS or RELEASE, the button pressed
