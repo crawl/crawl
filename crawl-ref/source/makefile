@@ -248,7 +248,7 @@ EXTRA_OBJECTS += icon.o
 endif
 
 ifdef SDL
-EXTRA_OBJECTS += uiwrapper-sdl.o
+EXTRA_OBJECTS += uiwrapper-sdl.o cgcontext-sdl.o
 endif
 
 ifdef TILES
