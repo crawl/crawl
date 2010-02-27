@@ -1012,7 +1012,7 @@ void viewwindow(bool monster_updates, bool show_updates)
             buffy);
     update_monster_pane();
 #else
-    tiles.set_need_redraw(you.running ? Options.tile_runrest_redraw : 0);
+    tiles.set_need_redraw(you.running ? Options.tile_runrest_rate : 0);
     tiles.load_dungeon(&buffy[0], crawl_view.vgrdc);
     tiles.update_inventory();
 #endif
