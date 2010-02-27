@@ -32,12 +32,12 @@ local function adjacent(dx, dy)
 end
 
 local function can_move(feat)
-  -- should check feat_is_traversable or similar
-  return feat == "floor"
+  return travel.feature_traversable(feat)
 end
 
 local function try_move(dx, dy)
-  if view.feature_at(dx, dy) == "floor" then
+  local feat = view.feature_at(dx, dy)
+  if can_move(feat) then
     return delta_to_vi(dx, dy)
   else
     return nil
@@ -62,7 +62,7 @@ local function move_towards(dx, dy)
     if move == nil then move = try_move(sign(dx), 0) end
   end
   if move == nil then
-    crawl.mpr("failed to move towards target")
+    crawl.mpr("Failed to move towards target.")
   else
     crawl.process_keys(move)
   end
@@ -85,7 +85,7 @@ end
 function hit_closest()
   local x, y = find_next_monster()
   if x == 0 and y == 0 then
-    crawl.mpr("couldn't find monster")
+    crawl.mpr("No monster in view!")
   else
     move_towards(x, y)
   end
