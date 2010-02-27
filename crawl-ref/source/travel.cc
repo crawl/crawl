@@ -2122,13 +2122,19 @@ level_id find_deepest_explored(level_id curr)
     {
         const level_id lid(curr.branch, i);
         LevelInfo *linf = travel_cache.find_level_info(lid);
-        if (linf) {
-            linf->update();
-            if (!linf->empty()) {
-                return (lid);
-            }
-        }
+        if (linf && !linf->empty())
+            return (lid);
     }
+
+    // If the player's currently in the same place, report their current
+    // level_id if the travel cache hasn't been updated.
+    const level_id player_level = level_id::current();
+    if (player_level.level_type == curr.level_type
+        && player_level.branch == curr.branch)
+    {
+        return (player_level);
+    }
+
     return (curr);
 }
 
