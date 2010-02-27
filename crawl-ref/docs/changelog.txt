@@ -226,7 +226,7 @@ Interface: Other
 * Unidentified artefacts can now be found with "Ctrl-F artefact".
 * Prefer swapping to a butchery tool to unequipping gloves.
 * Allow more than 8 colours in Mac builds if the terminal supports it.
-* Prove Dvorak vi key bindings, see dvorak_command_keys.txt.
+* Provide Dvorak vi key bindings, see dvorak_command_keys.txt.
 * Allow overriding vi keys with "Unknown command", see no_vi_command_keys.txt.
 * Colour experience pool according to fullness.
 * Added an html version of the FAQ in the docs/ directory.
