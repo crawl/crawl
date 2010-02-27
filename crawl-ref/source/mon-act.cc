@@ -3507,7 +3507,7 @@ static bool _monster_move(monsters *monster)
             mmov.reset();
         }
 
-        if (monster->type == MONS_EFREET
+        if (mons_genus(monster->type) == MONS_EFREET
             || monster->type == MONS_FIRE_ELEMENTAL)
         {
             place_cloud( CLOUD_FIRE, monster->pos(),
