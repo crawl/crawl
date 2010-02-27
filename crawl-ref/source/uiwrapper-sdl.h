@@ -93,28 +93,34 @@ class FTFont;
 
 class UIWrapper {
 public:
+    // Class functions
     UIWrapper();
-    
     int init(coord_def *m_windowsz);
+    void shutdown();
     
+    // Environment state functions
     void setWindowTitle(const char *title);
     bool setWindowIcon(const char* icon_name);
     key_mod getModState();
     void setModState(key_mod mod);
     
+    // System time functions
     void setTimer(unsigned int interval, ui_timer_callback callback);
     unsigned int getTicks();
+    void UIDelay(unsigned int ms);
     
+    // Event functions
     int raiseCustomEvent();
     int waitEvent(ui_event *event);
+    unsigned int getEventCount(ui_event_type type);
     
+    // Display functions
     void resize(coord_def &m_windowsz);
     void swapBuffers();
-    
     int screenWidth();
     int screenHeight();
     
-    void shutdown();
+
     
 protected:
     

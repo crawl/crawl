@@ -29,7 +29,9 @@
 #include "travel.h"
 #include "viewgeom.h"
 
-#include <SDL.h>
+#ifdef USE_SDL
+#include "uiwrapper-sdl.h"
+#endif
 #include "tilesdl.h"
 
 int tile_idx_unseen_terrain(int x, int y, int what)
@@ -333,7 +335,7 @@ GotoRegion get_cursor_region()
 void delay(int ms)
 {
     tiles.redraw();
-    SDL_Delay(ms);
+    wrapper.UIDelay(ms);
 }
 
 void update_screen()
@@ -344,14 +346,9 @@ void update_screen()
 int kbhit()
 {
     // Look for the presence of any keyboard events in the queue.
-    SDL_Event store;
-    SDL_PumpEvents();
-    int count = SDL_PeepEvents(&store, 1, SDL_PEEKEVENT,
-                               SDL_EVENTMASK(SDL_KEYDOWN));
+    int count = wrapper.getEventCount(UI_KEYDOWN);
 
-    // SDL Error?
     ASSERT(count != -1);
-
     return (count == 1 ? 1 : 0);
 }
 
