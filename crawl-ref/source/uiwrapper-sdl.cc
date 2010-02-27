@@ -9,11 +9,9 @@
 
 #include "AppHdr.h"
 
-#include "version.h"
-#include "initfile.h"
+#include "cio.h"
 #include "options.h"
 #include "files.h"
-#include "cio.h"
 
 #include "uiwrapper-sdl.h"
 
@@ -218,8 +216,8 @@ static void _translate_event(const SDL_MouseButtonEvent &sdl_event,
 
 UIWrapper wrapper;
 
-UIWrapper::UIWrapper() :
-m_context(NULL)
+UIWrapper::UIWrapper():
+	m_context(NULL)
 {
 }
 
