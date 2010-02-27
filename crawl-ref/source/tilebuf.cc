@@ -12,7 +12,11 @@
 #include "tilebuf.h"
 #include "tilefont.h"
 
-#include <SDL.h>
+#ifdef USE_SDL
+#include "uiwrapper-sdl.h"
+#include "cgcontext-sdl.h"
+#endif
+
 #include <SDL_opengl.h>
 
 /////////////////////////////////////////////////////////////////////////////
