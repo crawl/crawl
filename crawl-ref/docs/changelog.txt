@@ -1,4 +1,4 @@
-Stone Soup 0.6 (20100301)
+Stone Soup 0.6 (201003??)
 -------------------------
 Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 
@@ -172,7 +172,6 @@ Characters
 * Armour/Dodging/Stealth training depends on item mass.
 * Strength effect on carrying capacity greatly increased.
 * Base carrying capacity depends on weight of the player species.
-* Demonspawn have been overhauled, mutations no longer depend on skill sets.
 * Wanderers have been overhauled and are much stronger.
 * Increased Mummies' starting stats.
 * Starting stats and equipment are no longer assigned randomly.
@@ -227,7 +226,8 @@ Interface: Other
 * Unidentified artefacts can now be found with "Ctrl-F artefact".
 * Prefer swapping to a butchery tool to unequipping gloves.
 * Allow more than 8 colours in Mac builds if the terminal supports it.
-* Allow overriding vi keys with "Unknown command", see no_vi_command_key.txt.
+* Prove Dvorak vi key bindings, see dvorak_command_keys.txt.
+* Allow overriding vi keys with "Unknown command", see no_vi_command_keys.txt.
 * Colour experience pool according to fullness.
 * Added an html version of the FAQ in the docs/ directory.
 
