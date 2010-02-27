@@ -886,6 +886,7 @@ void game_options::reset_options()
 
     // delays
     tile_update_rate      = 1000;
+    tile_runrest_redraw   = 100;
     tile_key_repeat_delay = 200;
     tile_tooltip_ms       = 500;
     tile_tag_pref         = crawl_state.arena ? TAGPREF_NAMED : TAGPREF_ENEMY;
@@ -3223,6 +3224,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(tile_force_overlay);
     else INT_OPTION(tile_tooltip_ms, 0, INT_MAX);
     else INT_OPTION(tile_update_rate, 50, INT_MAX);
+    else INT_OPTION(tile_runrest_redraw, 0, INT_MAX);
     else BOOL_OPTION(tile_show_minihealthbar);
     else BOOL_OPTION(tile_show_minimagicbar);
     else BOOL_OPTION(tile_show_demon_tier);
