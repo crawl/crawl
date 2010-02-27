@@ -566,6 +566,7 @@ int TilesFramework::getch_ck()
             case UI_MOUSEMOTION:
                 {
                     // Record mouse pos for tooltip timer
+                    // FIXME: This compares signed and unsigned ints
                     if (m_mouse.x != event.mouse_event.px
                         || m_mouse.y != event.mouse_event.py)
                     {
