@@ -60,7 +60,7 @@ function bazaar_message(e)
 end
 
 function bazaar_milestone(e)
-  crawl.mark_milestone("br.enter", "entered a Bazaar.")
+  crawl.mark_milestone("br.enter", "entered a Bazaar.", true)
 end
 
 function random_bazaar_colour()

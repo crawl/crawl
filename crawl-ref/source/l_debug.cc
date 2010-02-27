@@ -44,15 +44,9 @@ LUAFN(debug_goto_place)
         const level_id id = level_id::parse_level_id(luaL_checkstring(ls, 1));
         const int bind_entrance =
             lua_isnumber(ls, 2)? luaL_checkint(ls, 2) : -1;
-        you.level_type = id.level_type;
-        if (id.level_type == LEVEL_DUNGEON)
-        {
-            you.where_are_you = static_cast<branch_type>(id.branch);
-            you.absdepth0 = absdungeon_depth(id.branch, id.depth);
-
-            if (bind_entrance != -1)
-                branches[you.where_are_you].startdepth = bind_entrance;
-        }
+        you.goto_place(id);
+        if (id.level_type == LEVEL_DUNGEON && bind_entrance != -1)
+            branches[you.where_are_you].startdepth = bind_entrance;
     }
     catch (const std::string &err)
     {

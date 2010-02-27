@@ -49,6 +49,7 @@
 #include "options.h"
 #include "ouch.h"
 #include "output.h"
+#include "place.h"
 #include "quiver.h"
 #include "random.h"
 #include "religion.h"
@@ -7462,4 +7463,14 @@ void player::set_duration(duration_type dur, int turns,
 {
     you.duration[dur] = 0;
     increase_duration(dur, turns, cap, msg);
+}
+
+void player::goto_place(const level_id &lid)
+{
+    level_type = lid.level_type;
+    if (level_type == LEVEL_DUNGEON)
+    {
+        where_are_you = static_cast<branch_type>(lid.branch);
+        absdepth0 = absdungeon_depth(lid.branch, lid.depth);
+    }
 }

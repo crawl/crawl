@@ -72,7 +72,7 @@ function sewer_setup(e)
 end
 
 function sewer_milestone(e)
-  crawl.mark_milestone("br.enter", "entered a Sewer.")
+  crawl.mark_milestone("br.enter", "entered a Sewer.", true)
 end
 }}
 

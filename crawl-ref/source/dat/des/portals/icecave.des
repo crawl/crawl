@@ -173,7 +173,7 @@ end
 # Add a milestone for entering the Ice Cave.
 {{
 function ice_cave_milestone(e)
-  crawl.mark_milestone("br.enter", "entered an Ice Cave.")
+  crawl.mark_milestone("br.enter", "entered an Ice Cave.", true)
 end
 }}
 

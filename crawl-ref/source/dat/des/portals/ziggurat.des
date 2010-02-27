@@ -388,10 +388,10 @@ NAME: ziggurat1
 : ziggurat_level(_G)
 epilogue {{
   local depth = zig().depth
-  crawl.mark_milestone(depth == 1 and "zig.enter" or "zig",
-                         (depth == 1 and "entered a Ziggurat" or
-                           ("reached level " .. depth .. " of a Ziggurat"))
-                           .. ".")
+  if depth > 1 then
+    crawl.mark_milestone("zig",
+                         "reached level " .. depth .. " of a Ziggurat.")
+  end
 }}
 MAP
 ENDMAP

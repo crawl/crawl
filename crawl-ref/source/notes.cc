@@ -445,7 +445,7 @@ void Note::check_milestone() const
                 branch[0] = tolower(branch[0]);
 
             if (dep == 1)
-                mark_milestone("enter", "entered " + branch + ".");
+                mark_milestone("br.enter", "entered " + branch + ".", true);
             else if (dep == _dungeon_branch_depth(br) && br != BRANCH_HIVE)
             {
                 std::string level = place_name(packed_place, true, true);
@@ -454,7 +454,7 @@ void Note::check_milestone() const
 
                 std::ostringstream branch_finale;
                 branch_finale << "reached " << level << ".";
-                mark_milestone("branch-finale", branch_finale.str());
+                mark_milestone("br.end", branch_finale.str());
             }
         }
     }

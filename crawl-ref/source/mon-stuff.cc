@@ -527,7 +527,7 @@ static void _check_kill_milestone(const monsters *mons,
     // Or summoned uniques, which a summoned ghost is treated as {due}
     else if (is_unique && !mons->is_summoned())
     {
-        mark_milestone("unique",
+        mark_milestone("uniq",
                        _milestone_kill_verb(killer)
                        + mons->name(DESC_NOCAP_THE, true)
                        + ".");

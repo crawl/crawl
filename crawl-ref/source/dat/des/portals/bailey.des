@@ -69,7 +69,7 @@ function bailey_setup(e)
 end
 
 function bailey_milestone(e)
-  crawl.mark_milestone("br.enter", "entered a Bailey.")
+  crawl.mark_milestone("br.enter", "entered a Bailey.", true)
 end
 
 -- In order to avoid repeating the lengthy monster definitions:
