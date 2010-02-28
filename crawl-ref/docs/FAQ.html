@@ -26,7 +26,7 @@
 <a href="#patch">Q23. I've written a patch for a cool new feature! Where should I send it?</a> </br>
 <a href="#help">Q24. I cannot code, but I'd like to help improve the game. What can I do?</a> </br>
 <a href="#changes">Q25. What did you change in the most recent version?</a> </br>
-<a href="#tiles_lag">Q26. The tiles version is awfully slow on Windows! How can I improve that?</a> </br>
+<a href="#tiles_lag">Q26. The Tiles version is awfully slow! How can I improve that?</a> </br>
 <a href="#tiles_online">Q27. Can I play Tiles online?</a> </br>
 <a href="#tiles_graphics">Q28. Is there a way for me to replace some of the tiles with different ones?</a> </br>
 <a href="#tiles_options">Q29. Is there a way to modify the size of the tiles screen, the font etc?</a> </br>
@@ -61,7 +61,7 @@ Also, our aim is to give Crawl a really smooth interface, so you should really r
 <ul><li> <b>o</b>, for automatic exploration of an unknown level</li>
 <li> <b>G</b>, for automatic travel to another level (<b>G?</b> for help)</li>
 <li> <b>X</b>, to access the level map for travelling and other tasks (<b>X?</b>)</li>
-<li> <b>Ctrl-F</b>, to find and travel to items you've seen before ('Ctrl-F ?')</li></ul>
+<li> <b>Ctrl-F</b>, to find and travel to items you've seen before (<b>Ctrl-F?</b>)</li></ul>
 
 <hr></br>
 <a name="survival"></a>
@@ -180,14 +180,14 @@ Neither of these types can be enchanted or branded, neither temporarily nor perm
 <a name="interact"></a>
 <b>Q18. Is there a way for me to interact with other players?</b></br>
 </br>
-If you play online on <a href=http://crawl.akrasiac.org>http://crawl.akrasiac.org</a> or <a href=http://crawl.develz.org>http://crawl.develz.org</a>   you can watch games in progress, other players can watch you while you play, and you can kill other players' ghosts. You can even send and receive messages. Check docs/ssh_guide.txt for an explanation about how to play online. </br></br>
+If you play online on <a href=http://crawl.akrasiac.org>http://crawl.akrasiac.org</a> or <a href=http://crawl.develz.org>http://crawl.develz.org</a>   you can watch games in progress, other players can watch you while you play, and you can kill other players' ghosts. You can even send and receive messages. Check <a href=http://crawl.develz.org/wordpress/howto>http://crawl.develz.org/wordpress/howto</a> or <i>docs/ssh_guide.txt</i> for an   explanation about how to play online. </br></br>
 You can also chat in the Crawl channel (irc.freenode.net, ##crawl), or discuss in the Something Awful forum or the rec.games.roguelike.misc newsgroup. 
 </br>
 <hr></br>
 <a name="beta"></a>
 <b>Q19. Is there a way for me to play the new version before it is released?</b></br>
 </br>
-There certainly is! You can play "trunk" (what will eventually become the next version) online on <a href=http://crawl.develz.org>http://crawl.develz.org</a>, or you can download  Windows binaries from the same site. Note that trunk may be buggy, and that many changes will invalidate your saved games. If that doesn't bother you, go ahead and play! </br></br>
+There certainly is! You can play "trunk" (what will eventually become the next version) online on <a href=http://crawl.develz.org>http://crawl.develz.org</a>, or you can download  Windows binaries from the same site. Note that trunk may be buggy, and that some changes may invalidate your saved games. If that doesn't bother you, go ahead and play! </br></br>
 Be sure to leave some feedback/suggestions/bug reports on the Mantis tracker: <a href=http://crawl.develz.org/mantis>http://crawl.develz.org/mantis</a>, and  Mantis wiki: <a href=http://crawl.develz.org/wiki/doku.php?id=start>http://crawl.develz.org/wiki/doku.php?id=start</a>  </br></br>
 When doing so please mention the version (see <b>?v</b>) you're currently playing, in case the bug's already been fixed or the feature already implemented. 
 </br>
@@ -232,19 +232,19 @@ Please don't let this stop you from bringing up more suggestions. Already the ne
 </br>
 Please submit it as a new issue on our Mantis tracker: <a href=http://crawl.develz.org/mantis>http://crawl.develz.org/mantis</a>  </br></br>
 Keep in mind that without previous discussions, we may not be able to use the patch, or it might need heavy modification. In general, it is safer to first file your suggestions under Feature Requests and wait for people to become enthusiastic and give feedback before you submit a patch. If you want, you can also write a patch that implements an existing FR or fixes a bug. </br></br>
-If you'd like to write a patch but don't know how to go about it, patch_guide.txt in the docs/develop/ folder is the file for you. </br></br>
+If you'd like to write a patch but don't know how to go about it, <i>patch_guide.txt</i> in the docs/develop/ folder is the file for you. </br></br>
 We really appreciate your help! 
 </br>
 <hr></br>
 <a name="help"></a>
 <b>Q24. I cannot code, but I'd like to help improve the game. What can I do?</b></br>
 </br>
-There are several areas where you can get creative and outside help is much appreciated. These are: <ul><li> the maps/vaults (see dat/ folder, docs/develop/levels/introduction.txt)</li>
-<li> monster speech (see dat/database/, docs/develop/monster_speech.txt)</li>
+There are several areas where you can get creative and outside help is much appreciated. These are: <ul><li> the maps/vaults (see dat/ folder, <i>docs/develop/levels/introduction.txt</i>)</li>
+<li> monster speech (see dat/database/, <i>docs/develop/monster_speech.txt</i>)</li>
 <li> monster/item/spell descriptions (see dat/descript/)</li>
-<li> tiles (see source/rltiles/, docs/develop/tiles_creation.txt)</li></ul>
+<li> tiles (see source/rltiles/, <i>docs/develop/tiles_creation.txt</i>)</li></ul>
 
-Also, if you'd like to write a patch but don't know how to go about it, read patch_guide.txt in the docs/develop/ folder. </br></br>
+Also, if you'd like to write a patch but don't know how to go about it, read <i>patch_guide.txt</i> in the docs/develop/ folder. </br></br>
 If you've got some cool addition, you can send it over the mailing list, or post it as a Mantis item. You can also help us by giving feedback on the most recent version or trunk (available via git, Windows binaries downloadable from <a href=http://crawl.develz.org/trunk>http://crawl.develz.org/trunk</a>).  </br></br>
 Thanks a lot for your support! 
 </br>
@@ -252,15 +252,15 @@ Thanks a lot for your support!
 <a name="changes"></a>
 <b>Q25. What did you change in the most recent version?</b></br>
 </br>
-The admittedly highly subjective highlights of the most recent major release are listed along with the version information under <b>?v</b>. For more details, check out changelog.txt in the docs/ folder. 
+The admittedly highly subjective highlights of the most recent major release are listed along with the version information under <b>?v</b>. For more details, check out <i>changelog.txt</i> in the docs/ folder. 
 </br>
 <hr></br>
 <a name="tiles_lag"></a>
-<b>Q26. The tiles version is awfully slow! How can I improve that?</b></br>
+<b>Q26. The Tiles version is awfully slow! How can I improve that?</b></br>
 </br>
-Crawl renders its graphics using OpenGL and SDL.  Because it uses OpenGL, it depends on a little bit of hardware acceleration to not run slowly.  If your system is not set up to enable this, then Crawl will run quite poorly.</br></br>
-On Windows, the default driver that ships with Windows is extremely slow.  Make sure to update your graphics card driver to the latest one available.  On Linux, you should be sure to enable DRI.</br></br>
-In addition to those suggestions, you can also try to see whether tweaking some options will improve performance. See docs/tiles_help.txt for details. If things are still too laggy after all of that, you could try the non-graphical console version or wait for a future version that does not depend on OpenGL. </br></br>
+Crawl renders its graphics using OpenGL and SDL. Because it uses OpenGL, it depends on a little bit of hardware acceleration to not run slowly. If your system is not set up to enable this, then Crawl will run quite poorly. </br></br>
+On Windows, the default driver that ships with Windows is extremely slow. Make sure to update your graphics card driver to the latest one available. On Linux, you should be sure to enable DRI. </br></br>
+In addition to these suggestions, you can also try to see whether tweaking some options will improve performance. See <i>docs/tiles_help.txt</i> for details. If things are still too laggy after all of that, you could try the  non-graphical console version or wait for a future version that does not  depend on OpenGL. 
 </br>
 <hr></br>
 <a name="tiles_online"></a>
@@ -273,18 +273,18 @@ If you can, do give the console version a try: playing online is certainly worth
 <a name="tiles_graphics"></a>
 <b>Q28. Is there a way for me to replace some of the tiles with different ones?</b></br>
 </br>
-It depends. If all you want are minor modifications such as colour changes you can directly modify the png files in the dat/tiles/ folder. </br></br>
-Otherwise, you'll need to be able to compile the game. In this case you can either directly replace the tiles in the rltiles/ subfolders, or change their paths in the dc-xxxx.txt files. For the compilation to be successful, you may also need to delete or rename the *.png files in rltiles/. Upon compilation, the newly rolled *.png files are copied into the dat/tiles/ folder which is where the game accesses the tiles it needs. You can then share these files with other players, so they can use your tileset without having to compile the game. </br></br>
+It depends. If all you want are minor modifications such as colour changes you can directly modify the <i>*.png</i> files in the dat/tiles/ folder. </br></br>
+Otherwise, you'll need to be able to compile the game. In this case you can either directly replace the tiles in the rltiles/ subfolders, or change their paths in the <i>dc-xxxx.txt</i> files. For the compilation to be successful, you may also need to delete or rename the <i>*.png</i> files in rltiles/. Upon compilation, the newly rolled <i>*.png</i> files are copied into the dat/tiles/ folder which is where the game accesses the tiles it needs. You can then share these files with other players, so they can use your tileset without having to compile the game. </br></br>
 If you've created some nice new tiles or variations of existing ones you'd like to share you might want to send it to one of the Tiles developers or submit them as a Mantis item: <a href=http://crawl.develz.org/mantis>http://crawl.develz.org/mantis</a>  </br></br>
-It's easiest for us if they are already in 32x32 png format, and preferrably zipped if there are several. </br></br>
-See docs/develop/tiles_creation.txt for a slightly more detailed explanation. </br></br>
+It's easiest for us if they are already in 32x32 png format, preferrably zipped if you're submitting a batch of them. </br></br>
+See <a href=http://crawl.develz.org/wiki/doku.php?id=dcss:help:tiles_creation>http://crawl.develz.org/wiki/doku.php?id=dcss:help:tiles_creation</a> or  <i>docs/develop/tiles_creation.txt</i> for a somewhat more detailed explanation. </br></br>
 Thanks in advance! 
 </br>
 <hr></br>
 <a name="tiles_options"></a>
 <b>Q29. Is there a way to modify the size of the tiles screen, the font etc?</b></br>
 </br>
-Yes. Play around with the options in settings/tiles_options.txt until you are satisfied. See docs/options_guide.txt for some explanations. 
+Yes. Play around with the options in <i>settings/tiles_options.txt</i> until you are satisfied. See <i>docs/options_guide.txt</i> for some explanations. 
 </br>
 <hr></br>
 

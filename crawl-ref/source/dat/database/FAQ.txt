@@ -353,7 +353,8 @@ A: If you play online on http://crawl.akrasiac.org or http://crawl.develz.org
 you can watch games in progress, other players can watch you while you play,
 and you can kill other players' ghosts. You can even send and receive
 messages.
-Check docs/ssh_guide.txt for an explanation about how to play online.
+Check http://crawl.develz.org/wordpress/howto or docs/ssh_guide.txt for an 
+explanation about how to play online.
 
 You can also chat in the Crawl channel (irc.freenode.net, ##crawl), or discuss
 in the Something Awful forum or the rec.games.roguelike.misc newsgroup.
@@ -370,7 +371,7 @@ A:beta
 A: There certainly is! You can play "trunk" (what will eventually become
 the next version) online on http://crawl.develz.org, or you can download
 Windows binaries from the same site. Note that trunk may be buggy, and that
-many changes will invalidate your saved games. If that doesn't bother you,
+some changes may invalidate your saved games. If that doesn't bother you,
 go ahead and play!
 
 Be sure to leave some feedback/suggestions/bug reports on the
@@ -549,7 +550,7 @@ Is there a way for me to replace some of the tiles with different ones?
 A:tiles graphics
 
 A: It depends. If all you want are minor modifications such as colour
-changes you can directly modify the png files in the dat/tiles/ folder.
+changes you can directly modify the *.png files in the dat/tiles/ folder.
 
 Otherwise, you'll need to be able to compile the game. In this case you can
 either directly replace the tiles in the rltiles/ subfolders, or change
@@ -564,10 +565,11 @@ If you've created some nice new tiles or variations of existing ones you'd
 like to share you might want to send it to one of the Tiles developers or
 submit them as a Mantis item: http://crawl.develz.org/mantis/
 
-It's easiest for us if they are already in 32x32 png format, and preferrably
-zipped if there are several.
+It's easiest for us if they are already in 32x32 png format, preferrably
+zipped if you're submitting a batch of them.
 
-See docs/develop/tiles_creation.txt for a somewhat more detailed explanation.
+See http://crawl.develz.org/wiki/doku.php?id=dcss:help:tiles_creation or
+docs/develop/tiles_creation.txt for a somewhat more detailed explanation.
 
 Thanks in advance!
 %%%%
