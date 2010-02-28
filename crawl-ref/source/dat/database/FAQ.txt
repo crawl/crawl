@@ -17,6 +17,20 @@
 # This file is not meant as an easy-access spoiler file, but rather
 # intended to answer general questions that crop up from time to time.
 #
+# #######################################################
+#
+# Translating txt -> html:
+#
+# * Use util/FAQ2html.pl to create the corresponding html file in the 
+#   docs/ directory. 
+# * All commands should be encased in single quotes, e.g. '?', which 
+#   means they will be displayed in bold in the html. This will only work
+#   for commands that don't contain spaces.
+# * Emphasis using asterisks will be replaced with italics.
+# * Hyperlinks should begin with http:// and should never be directly 
+#   followed by a dot (reorder the sentence, if need be), so they can be 
+#   turned into properly clickable links.
+#
 
 ##############################################
 # Beginners' questions about playing the game.
@@ -75,7 +89,7 @@ commands are probably the following:
 * 'o', for automatic exploration of an unknown level
 * 'G', for automatic travel to another level ('G?' for help)
 * 'X', to access the level map for travelling and other tasks ('X?')
-* 'Ctrl-F', to find and travel to items you've seen before ('Ctrl-F ?')
+* 'Ctrl-F', to find and travel to items you've seen before ('Ctrl-F?')
 %%%%
 Q:survival
 
@@ -497,33 +511,23 @@ details, check out changelog.txt in the docs/ folder.
 ##############################################
 Q:tiles lag
 
-The tiles version is awfully slow on Windows! How can I improve that?
+The Tiles version is awfully slow! How can I improve that?
 %%%%
 A:tiles lag
 
-A: First, we're really sorry about that! Stone Soup 0.5 was tested on several
-systems and the gigantic lag on some Windows systems was completely
-unexpected.
-Crawl 0.5 renders graphics using OpenGL and SDL. For most video cards, this
-should be faster than the 0.4 version. However, the default driver that ships
-with Windows is extremely slow. If you are having performance problems, be
-sure to update your video card driver as a first step.
+A: Crawl renders its graphics using OpenGL and SDL. Because it uses OpenGL,
+it depends on a little bit of hardware acceleration to not run slowly. If
+your system is not set up to enable this, then Crawl will run quite poorly.
 
-We're working on a solution for this problem, but in the meantime you can try
-to see whether tweaking some options will improve performance. See
-docs/tiles_help.txt for details. If things are still too laggy after all of
-that, you'll have to either continue playing 0.4.5 until the problem has been
-solved, or you could try the non-graphical console version.
+On Windows, the default driver that ships with Windows is extremely slow.
+Make sure to update your graphics card driver to the latest one available.
+On Linux, you should be sure to enable DRI.
 
-We'd like to apologize for the grief that this has caused some players, but we
-hope that it's understandable that making this change in 0.5 has allowed a lot
-of graphical improvements: Uniques get on-screen names. All monsters get
-health bars. Graphical menus. Full screen mode. Eee PC support. None of those
-things would have been possible in previous tiles versions. On top of that, if
-you have an adequate driver 0.5 can often be faster than 0.4, because the GPU
-can easily do the work that used to take the CPU a lot of time.
-
-At any rate, it'll be fixed.  Just be patient.  :)
+In addition to these suggestions, you can also try to see whether tweaking
+some options will improve performance. See docs/tiles_help.txt for details.
+If things are still too laggy after all of that, you could try the 
+non-graphical console version or wait for a future version that does not 
+depend on OpenGL.
 %%%%
 Q:tiles online
 
@@ -563,7 +567,7 @@ submit them as a Mantis item: http://crawl.develz.org/mantis/
 It's easiest for us if they are already in 32x32 png format, and preferrably
 zipped if there are several.
 
-See docs/develop/tiles_creation.txt for a slightly more detailed explanation.
+See docs/develop/tiles_creation.txt for a somewhat more detailed explanation.
 
 Thanks in advance!
 %%%%
