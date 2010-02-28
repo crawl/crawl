@@ -251,6 +251,10 @@ ifdef SDL
 EXTRA_OBJECTS += uiwrapper-sdl.o cgcontext-sdl.o
 endif
 
+ifdef GL
+EXTRA_OBJECTS += glwrapper.o
+endif
+
 ifdef TILES
 OBJECTS += libgui.o tile2.o tilereg.o tilepick.o tilesdl.o tilefont.o tiletex.o tilemcache.o tilebuf.o
 else
@@ -442,6 +446,10 @@ endif
 
 ifdef SDL
 DEFINES_L += -DUSE_SDL
+endif
+
+ifdef GL
+DEFINES_L += -DUSE_GL
 endif
 
 # Okay, we have to assume we're on something else that
