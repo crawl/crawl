@@ -297,6 +297,7 @@ Options
 * New, Tiles-only: tile_better_transparency = false, better water masks.
 * New, Tiles-only: tile_peaceful_col = lightred, colour for peaceful monsters.
 * New, Tiles-only: tile_force_overlay = false, displays messages in an overlay.
+* New, Tiles-only: tile_runrest_rate = 100, screen update rate while resting.
 * New explore_stop options greedy_pickup_smart, greedy_pickup_thrown.
 * Renamed: unix 'background' option to 'background_colour'.
 * Renamed: character 'job' option to 'background'.
