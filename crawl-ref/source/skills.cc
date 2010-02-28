@@ -162,63 +162,121 @@ int exercise(int exsk, int deg)
     return (ret);
 }                               // end exercise()
 
-static int _exercise2(int exsk)
+static int _weap_crosstrain_bonus(skill_type exsk)
 {
+    int bonus = 0;
+
+    // Short Blades and Long Blades.
+    if ((exsk == SK_SHORT_BLADES || exsk == SK_LONG_BLADES)
+        && (you.skills[SK_SHORT_BLADES] > you.skills[exsk]
+            || you.skills[SK_LONG_BLADES] > you.skills[exsk]))
+    {
+        bonus += random2(30);
+    }
+
+    // Axes and Polearms.
+    if ((exsk == SK_AXES || exsk == SK_POLEARMS)
+        && (you.skills[SK_AXES] > you.skills[exsk]
+            || you.skills[SK_POLEARMS] > you.skills[exsk]))
+    {
+        bonus += random2(30);
+    }
+
+    // Polearms and Staves.
+    if ((exsk == SK_POLEARMS || exsk == SK_STAVES)
+        && (you.skills[SK_POLEARMS] > you.skills[exsk]
+            || you.skills[SK_STAVES] > you.skills[exsk]))
+    {
+        bonus += random2(30);
+    }
+
+    // Axes and Maces.
+    if ((exsk == SK_AXES || exsk == SK_MACES_FLAILS)
+        && (you.skills[SK_AXES] > you.skills[exsk]
+            || you.skills[SK_MACES_FLAILS] > you.skills[exsk]))
+    {
+        bonus += random2(30);
+    }
+
+    // Maces and Staves.
+    if ((exsk == SK_MACES_FLAILS || exsk == SK_STAVES)
+        && (you.skills[SK_MACES_FLAILS] > you.skills[exsk]
+            || you.skills[SK_STAVES] > you.skills[exsk]))
+    {
+        bonus += random2(30);
+    }
+
+    // Slings and Throwing.
+    if ((exsk == SK_SLINGS || exsk == SK_THROWING)
+        && (you.skills[SK_SLINGS] > you.skills[exsk]
+            || you.skills[SK_THROWING] > you.skills[exsk]))
+    {
+        bonus += random2(30);
+    }
+
+    return (bonus);
+}
+
+static bool _skip_magic_exercise(skill_type exsk)
+{
+    // Being good at elemental magic makes other elements harder to
+    // learn.
+    if (exsk >= SK_FIRE_MAGIC && exsk <= SK_EARTH_MAGIC
+        && (you.skills[SK_FIRE_MAGIC] > you.skills[exsk]
+            || you.skills[SK_ICE_MAGIC] > you.skills[exsk]
+            || you.skills[SK_AIR_MAGIC] > you.skills[exsk]
+            || you.skills[SK_EARTH_MAGIC] > you.skills[exsk]))
+    {
+        if (one_chance_in(3))
+            return (true);
+    }
+
+    // Some are direct opposites.
+    if ((exsk == SK_FIRE_MAGIC || exsk == SK_ICE_MAGIC)
+        && (you.skills[SK_FIRE_MAGIC] > you.skills[exsk]
+            || you.skills[SK_ICE_MAGIC] > you.skills[exsk]))
+    {
+        // Of course, this is cumulative with the one above.
+        if (!one_chance_in(3))
+            return (true);
+    }
+
+    if ((exsk == SK_AIR_MAGIC || exsk == SK_EARTH_MAGIC)
+        && (you.skills[SK_AIR_MAGIC] > you.skills[exsk]
+           || you.skills[SK_EARTH_MAGIC] > you.skills[exsk]))
+    {
+        if (!one_chance_in(3))
+            return (true);
+    }
+
+    // Experimental restriction (too many spell schools). -- bwr
+    int skill_rank = 1;
+
+    for (int i = SK_CONJURATIONS; i < SK_FIRE_MAGIC; ++i)
+    {
+        if (you.skills[exsk] < you.skills[i])
+            skill_rank++;
+    }
+
+    // Things get progressively harder, but not harder than
+    // the Fire-Air or Ice-Earth level.
+    if (skill_rank > 3 && one_chance_in(10 - skill_rank))
+        return (true);
+
+    return (false);
+}
+
+static int _exercise2(int exski)
+{
+    skill_type exsk = static_cast<skill_type>(exski);
+
     int deg = 10;
     int bonus = 0;
     char old_best_skill = best_skill(SK_FIGHTING, (NUM_SKILLS - 1), 99);
 
     // Being good at some weapons makes others easier to learn.
     if (exsk < SK_ARMOUR)
-    {
-        // Short Blades and Long Blades.
-        if ((exsk == SK_SHORT_BLADES || exsk == SK_LONG_BLADES)
-            && (you.skills[SK_SHORT_BLADES] > you.skills[exsk]
-                || you.skills[SK_LONG_BLADES] > you.skills[exsk]))
-        {
-            bonus += random2(30);
-        }
-
-        // Axes and Polearms.
-        if ((exsk == SK_AXES || exsk == SK_POLEARMS)
-            && (you.skills[SK_AXES] > you.skills[exsk]
-                || you.skills[SK_POLEARMS] > you.skills[exsk]))
-        {
-            bonus += random2(30);
-        }
-
-        // Polearms and Staves.
-        if ((exsk == SK_POLEARMS || exsk == SK_STAVES)
-            && (you.skills[SK_POLEARMS] > you.skills[exsk]
-                || you.skills[SK_STAVES] > you.skills[exsk]))
-        {
-            bonus += random2(30);
-        }
-
-        // Axes and Maces.
-        if ((exsk == SK_AXES || exsk == SK_MACES_FLAILS)
-            && (you.skills[SK_AXES] > you.skills[exsk]
-                || you.skills[SK_MACES_FLAILS] > you.skills[exsk]))
-        {
-            bonus += random2(30);
-        }
-
-        // Maces and Staves.
-        if ((exsk == SK_MACES_FLAILS || exsk == SK_STAVES)
-            && (you.skills[SK_MACES_FLAILS] > you.skills[exsk]
-                || you.skills[SK_STAVES] > you.skills[exsk]))
-        {
-            bonus += random2(30);
-        }
-
-        // Slings and Throwing.
-        if ((exsk == SK_SLINGS || exsk == SK_THROWING)
-            && (you.skills[SK_SLINGS] > you.skills[exsk]
-                || you.skills[SK_THROWING] > you.skills[exsk]))
-        {
-            bonus += random2(30);
-        }
-    }
+        bonus += _weap_crosstrain_bonus(exsk);
 
     // Quick fix for the fact that stealth can't be gained fast enough
     // to keep up with the monster levels.  This should speed its
@@ -228,10 +286,10 @@ static int _exercise2(int exsk)
 
     int skill_change = _calc_skill_cost(you.skill_cost_level, you.skills[exsk]);
 
-    // Spellcasting is cheaper early on, and elementals hinder each
-    // other.
     if (exsk >= SK_SPELLCASTING)
     {
+        // Spellcasting is cheaper early on, and elementals hinder each
+        // other.
         if (you.skill_cost_level < 5)
             skill_change /= 2;
         else if (you.skill_cost_level < 15)
@@ -240,48 +298,9 @@ static int _exercise2(int exsk)
             skill_change /= 20;
         }
 
-        // Being good at elemental magic makes other elements harder to
-        // learn.
-        if (exsk >= SK_FIRE_MAGIC && exsk <= SK_EARTH_MAGIC
-            && (you.skills[SK_FIRE_MAGIC] > you.skills[exsk]
-                || you.skills[SK_ICE_MAGIC] > you.skills[exsk]
-                || you.skills[SK_AIR_MAGIC] > you.skills[exsk]
-                || you.skills[SK_EARTH_MAGIC] > you.skills[exsk]))
-        {
-            if (one_chance_in(3))
-                return (0);
-        }
-
-        // Some are direct opposites.
-        if ((exsk == SK_FIRE_MAGIC || exsk == SK_ICE_MAGIC)
-            && (you.skills[SK_FIRE_MAGIC] > you.skills[exsk]
-                || you.skills[SK_ICE_MAGIC] > you.skills[exsk]))
-        {
-            // Of course, this is cumulative with the one above.
-            if (!one_chance_in(3))
-                return (0);
-        }
-
-        if ((exsk == SK_AIR_MAGIC || exsk == SK_EARTH_MAGIC)
-            && (you.skills[SK_AIR_MAGIC] > you.skills[exsk]
-                || you.skills[SK_EARTH_MAGIC] > you.skills[exsk]))
-        {
-            if (!one_chance_in(3))
-                return (0);
-        }
-
-        // Experimental restriction (too many spell schools). -- bwr
-        int skill_rank = 1;
-
-        for (int i = SK_CONJURATIONS; i < SK_FIRE_MAGIC; ++i)
-        {
-            if (you.skills[exsk] < you.skills[i])
-                skill_rank++;
-        }
-
-        // Things get progressively harder, but not harder than
-        // the Fire-Air or Ice-Earth level.
-        if (skill_rank > 3 && one_chance_in(10 - skill_rank))
+        // Being better at some magic skills makes others less likely
+        // to train.
+        if (_skip_magic_exercise(exsk))
             return (0);
     }
 
