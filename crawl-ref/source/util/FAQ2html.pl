@@ -146,6 +146,15 @@ while (my $line = <FILE>)
             $line = "$a<i>$b</i>$c";
         }
 
+        # Also use italics for mentioned txt/png files.
+        if ($line =~ /^(.*\s)?([^\s]+\.(txt|png))(.*)$/)
+        {
+            my $a = $1 || "";
+            my $b = $2;
+            my $c = $4;
+            $line = "$a<i>$b</i>$c";
+        }
+
         # Specialcase the '&' symbol.
         if ($line =~ /^(.*)&(.*)$/)
         {
