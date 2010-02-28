@@ -183,7 +183,7 @@ Xom briefly touches your surroundings.
 
 Xom adds some personal touches to your environment.
 
-Xom complains about the scenery!
+Xom complains about the scenery.
 
 Xom alters the dungeon around you.
 
