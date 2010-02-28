@@ -1501,9 +1501,10 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         break;
 
     case BEAM_ACID:
+    {
+        const int res = monster->res_acid();
         hurted = resist_adjust_damage(monster, pbolt.flavour,
-                                      monster->res_acid(),
-                                      hurted, true);
+                                      res, hurted, true);
         if (!hurted)
         {
             if (doFlavouredEffects)
@@ -1513,7 +1514,12 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
                                                       : " appears unharmed.");
             }
         }
+        else if (res <= 0 && doFlavouredEffects)
+        {
+            corrode_monster(monster);
+        } 
         break;
+    }    
 
     case BEAM_POISON:
     {
