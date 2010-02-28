@@ -88,6 +88,10 @@ public:
                         // items nor dump itself. Disabled stashes are
                         // also never removed from the level's map of
                         // stashes.
+
+public:
+    static bool is_filtered(const item_def &item);
+
 private:
     void _update_corpses(long rot_time);
     void add_item(const item_def &item, bool add_to_front = false);
@@ -111,7 +115,6 @@ private:
     static std::vector<item_def> filters;
 
     static bool are_items_same(const item_def &, const item_def &);
-    static bool is_filtered(const item_def &item);
 
     friend class LevelStashes;
     friend class ST_ItemIterator;
