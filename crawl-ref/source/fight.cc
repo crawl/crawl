@@ -4674,6 +4674,7 @@ void melee_attack::splash_monster_with_acid(int strength)
     special_damage += roll_dice(2, 4);
     if (defender_visible)
         mprf("%s is splashed with acid.", defender->name(DESC_CAP_THE).c_str());
+    corrode_monster(defender->as_monster());
 }
 
 void melee_attack::splash_defender_with_acid(int strength)
