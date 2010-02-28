@@ -189,8 +189,11 @@ static int _weap_crosstrain_bonus(skill_type exsk)
     return (bonus);
 }
 
-static bool _skip_magic_exercise(skill_type exsk)
+static bool _skip_exercise(skill_type exsk)
 {
+    if (exsk < SK_SPELLCASTING || exsk > SK_EVOCATIONS)
+        return (false);
+
     // Being good at elemental magic makes other elements harder to
     // learn.
     if (exsk >= SK_FIRE_MAGIC && exsk <= SK_EARTH_MAGIC
@@ -222,8 +225,10 @@ static bool _skip_magic_exercise(skill_type exsk)
     }
 
     // Experimental restriction (too many spell schools). -- bwr
-    int skill_rank = 1;
+    // XXX: This also hinders Spellcasting and Inv/Evo.
 
+    // Count better non-elemental spell skills (up to 6)
+    int skill_rank = 1;
     for (int i = SK_CONJURATIONS; i < SK_FIRE_MAGIC; ++i)
     {
         if (you.skills[exsk] < you.skills[i])
@@ -232,6 +237,7 @@ static bool _skip_magic_exercise(skill_type exsk)
 
     // Things get progressively harder, but not harder than
     // the Fire-Air or Ice-Earth level.
+    // Note: 1 <= skill_rank <= 7, so (1 in 6) to (1 in 3).
     if (skill_rank > 3 && one_chance_in(10 - skill_rank))
         return (true);
 
@@ -258,10 +264,9 @@ static int _exercise2(int exski)
 
     int skill_change = _calc_skill_cost(you.skill_cost_level, you.skills[exsk]);
 
-    if (exsk >= SK_SPELLCASTING)
+    // Spellcasting and Inv/Evo is cheaper early on.
+    if (exsk >= SK_SPELLCASTING && exsk <= SK_EVOCATIONS)
     {
-        // Spellcasting is cheaper early on, and elementals hinder each
-        // other.
         if (you.skill_cost_level < 5)
             skill_change /= 2;
         else if (you.skill_cost_level < 15)
@@ -269,12 +274,13 @@ static int _exercise2(int exski)
             skill_change *= (10 + (you.skill_cost_level - 5));
             skill_change /= 20;
         }
-
-        // Being better at some magic skills makes others less likely
-        // to train.
-        if (_skip_magic_exercise(exsk))
-            return (0);
     }
+
+    // Being better at some magic skills makes others less likely
+    // to train.
+    // Note: applies to Invocations and Evocations, too! [rob]
+    if (_skip_exercise(exsk))
+        return (0);
 
     int spending_limit = std::min(MAX_SPENDING_LIMIT, you.exp_available);
 
