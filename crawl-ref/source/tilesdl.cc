@@ -741,31 +741,9 @@ static unsigned int _timer_callback(unsigned int ticks)
     return (res);
 }
 
-// Convenience struct for holding mouse location on screen.
-struct cursor_loc
-{
-    cursor_loc() { reset(); }
-    void reset() { reg = NULL; cx = cy = -1; }
-    bool operator==(const cursor_loc &rhs) const
-    {
-        return (rhs.reg == reg
-                && rhs.cx == cx
-                && rhs.cy == cy
-                && reg);
-    }
-    bool operator!=(const cursor_loc &rhs) const
-    {
-        return !(*this == rhs);
-    }
-
-    Region *reg;
-    int cx, cy;
-};
-
 int TilesFramework::getch_ck()
 {
     SDL_Event event;
-    cursor_loc cur_loc;
     cursor_loc tip_loc;
     cursor_loc last_loc;
 
@@ -776,13 +754,7 @@ int TilesFramework::getch_ck()
                 = (mouse_control::current_mode() == MOUSE_MODE_TARGET_PATH
                    || mouse_control::current_mode() == MOUSE_MODE_TARGET_DIR);
 
-    // When moving the mouse via cursor when targeting update more often.
-    // For beams, the beam drawing already handles this, and when not
-    // targeting the normal drawing routines handle it.
-    const unsigned int ticks_per_cursor_redraw = (mouse_target_mode ? 100 : 30);
     const unsigned int ticks_per_screen_redraw = Options.tile_update_rate;
-
-    unsigned int last_redraw_tick = 0;
 
     unsigned int res = Options.tile_tooltip_ms;
     SDL_SetTimer(res, &_timer_callback);
@@ -791,15 +763,12 @@ int TilesFramework::getch_ck()
     m_region_msg->alt_text().clear();
 
     if (need_redraw())
-    {
         redraw();
-        last_redraw_tick = SDL_GetTicks();
-    }
 
     while (!key)
     {
         unsigned int ticks = 0;
-        last_loc = cur_loc;
+        last_loc = m_cur_loc;
 
         if (SDL_WaitEvent(&event))
         {
@@ -812,10 +781,7 @@ int TilesFramework::getch_ck()
                     m_region_msg->alt_text().clear();
                 }
 
-                // TODO enne - need to find a better time to decide when
-                // to generate a tip or some way to say "yes, but unchanged".
-                if (tip_loc != cur_loc && ticks > m_last_tick_moved
-                    && ticks - last_redraw_tick > ticks_per_cursor_redraw)
+                if (tip_loc != m_cur_loc)
                 {
                     m_region_msg->alt_text().clear();
                     for (unsigned int i = 0;
@@ -874,7 +840,7 @@ int TilesFramework::getch_ck()
                     _translate_event(event.motion, mouse_event);
                     mouse_event.held = m_buttons_held;
                     mouse_event.mod  = m_key_mod;
-                    key = handle_mouse(mouse_event);
+                    int mouse_key = handle_mouse(mouse_event);
 
                     // find mouse location
                     for (unsigned int i = 0;
@@ -882,14 +848,37 @@ int TilesFramework::getch_ck()
                     {
                         Region *reg = m_layers[m_active_layer].m_regions[i];
                         if (reg->mouse_pos(m_mouse.x, m_mouse.y,
-                                           cur_loc.cx, cur_loc.cy))
+                                           m_cur_loc.cx, m_cur_loc.cy))
                         {
-                            cur_loc.reg = reg;
+                            m_cur_loc.reg = reg;
+                            m_cur_loc.mode = mouse_control::current_mode();
                             break;
                         }
                     }
-                }
-                break;
+
+                    // Don't break back to Crawl and redraw for every mouse
+                    // event, because there's a lot of them.
+                    //
+                    // If there are other mouse events in the queue
+                    // (possibly because redrawing is slow or the user
+                    // is moving the mouse really quickly), process those
+                    // first, before bothering to redraw the screen.
+                    SDL_Event store;
+                    int count = SDL_PeepEvents(&store, 1, SDL_PEEKEVENT,
+                                               SDL_EVENTMASK(SDL_MOUSEMOTION));
+                    ASSERT(count >= 0);
+                    if (count > 0)
+                        continue;
+
+                    // Stay within this input loop until the mouse moves
+                    // to a semantically different location.  Crawl doesn't
+                    // care about small mouse movements.
+                    if (last_loc == m_cur_loc)
+                        continue;
+
+                    key = mouse_key;
+               }
+               break;
 
             case SDL_MOUSEBUTTONUP:
                 {
@@ -928,17 +917,7 @@ int TilesFramework::getch_ck()
             }
         }
 
-        if (mouse_target_mode
-            || mouse_control::current_mode() == MOUSE_MODE_TARGET)
-        {
-            // For some reason not handled in direction().
-            if (get_cursor() == you.pos())
-            {
-                redraw();
-                last_redraw_tick = ticks;
-            }
-        }
-        else
+        if (!mouse_target_mode)
         {
             const bool timeout = (ticks > m_last_tick_moved
                                   && (ticks - m_last_tick_moved
@@ -946,7 +925,7 @@ int TilesFramework::getch_ck()
 
             if (timeout)
             {
-                tip_loc = cur_loc;
+                tip_loc = m_cur_loc;
                 tiles.clear_text_tags(TAG_CELL_DESC);
                 if (Options.tile_tooltip_ms > 0 && m_tooltip.empty())
                 {
@@ -966,24 +945,18 @@ int TilesFramework::getch_ck()
             }
             else
             {
-                // Don't redraw the cursor if we're just zooming by.
-                if (last_loc != cur_loc
-                    && ticks > last_redraw_tick
-                    && ticks - last_redraw_tick > ticks_per_cursor_redraw)
-                {
+                if (last_loc != m_cur_loc)
                     set_need_redraw();
-                }
 
                 m_tooltip.clear();
                 tip_loc.reset();
             }
 
             if (need_redraw()
-                || ticks > last_redraw_tick
-                   && ticks - last_redraw_tick > ticks_per_screen_redraw)
+                || ticks > m_last_tick_redraw
+                   && ticks - m_last_tick_redraw > ticks_per_screen_redraw)
             {
                 redraw();
-                last_redraw_tick = ticks;
             }
         }
     }
