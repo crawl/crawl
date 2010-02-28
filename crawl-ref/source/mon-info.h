@@ -14,13 +14,16 @@ class monster_info
     static bool less_than_wrapper(const monster_info& m1,
                                   const monster_info& m2);
 
-    monster_info(const monsters* m);
+    // skip_safe: skip mons_is_safe call to avoid stack overflow
+    //            when mons_is_safe creates a monster_info
+    monster_info(const monsters* m, bool skip_safe=false);
 
     void to_string(int count, std::string& desc, int& desc_color) const;
 
     const monsters* m_mon;
     mon_attitude_type m_attitude;
     int m_difficulty;
+    bool m_is_safe;
     int m_brands;
     bool m_fullname;
     unsigned int m_glyph;
