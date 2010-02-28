@@ -2280,16 +2280,63 @@ static bool _monster_eat_item(monsters *monster, bool nearby)
             const int quantity = si->quantity;
             const int value = item_value(*si) / quantity;
             int pg = 0;
+            const int rand_value = random2(value);
+            
+            /*
+               Item values for comparison:
+               
+               orc corpse              1
+               knife                   10
+               potion of healing       20
+               +0 hand axe             28
+               scroll of blinking      30
+               meat ration             40
+               +0 hand axe of flaming  90
+               +0 executioner's axe    100
+               +0 chain mail           115
+               royal jelly             120
+               wand of fire (2)        188
+               book of minor magic     200
+               wand of fire (24)       276
+               +8 hand axe             561
+               +2 chain mail of rF+    731
+               book of annihilations   1150
+               +0 gold dragon armour   1605
+               disc of storms          2000 
+             */
+               
 
             for (int m = 0; m < quantity; ++m)
             {
-                if (x_chance_in_y(value / 4 + 1, 30 + you.piety / 4))
+                if(rand_value < 20 && one_chance_in(10))
                 {
-                    if (value < 100)
-                        pg += random2(item_value(*si) / 5);
-                    else
-                        pg += random2(item_value(*si) / 30);
-                }
+                  pg = 1;
+			    }
+			    else if(rand_value < 50 && one_chance_in(3))
+			    {
+					pg = 1;
+				}
+				else if(rand_value < 100)
+				{
+					pg = 1;
+				}
+				else if(rand_value < 200)
+				{
+					pg = coinflip() ? 2 : 1;
+				}
+				else if(rand_value < 700)
+				{
+					pg = coinflip() ? 3 : 2;
+				}
+				else if(rand_value < 1500)
+				{
+					pg = coinflip() ? 4 : 3;
+				}
+				else
+				{
+					pg = coinflip() ? 5 : 4;
+				}
+                
             }
 
             if (pg > 0)
@@ -2323,7 +2370,7 @@ static bool _monster_eat_item(monsters *monster, bool nearby)
 
                     if (success)
                     {
-                        you.gift_timeout += 30 + roll_dice(2, 4);
+                        you.gift_timeout += 15 + roll_dice(2, 4);
                         you.num_gifts[you.religion]++;
                         take_note(Note(NOTE_GOD_GIFT, you.religion));
                     }
