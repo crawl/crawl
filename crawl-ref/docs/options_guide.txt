@@ -383,12 +383,17 @@ The available stock Lua scripts are
   trapwalk.lua  -- allows travel to cross certain traps if you have
                    enough HP.
   autofight.lua -- provides a command for moving to and attacking the
-                   nearest monster. If there are several monsters of 
-                   equal distance, e.g. adjacent, prefers those to the 
-                   upper left, then continues in anti-clockwise manner.
-                   Requires vi keys.
+                   nearest monster. Attempts to move in a straight line
+                   into the direction of the closest hostile monster.
+                   If there are several monsters of equal distance,
+                   e.g. adjacent, prefers those to the upper left, then
+                   continues in anti-clockwise manner.
+                   Requires non-rebound vi keys.
                    New macroable function: hit_closest
 
+
+The above mentioned Lua functions can be macroed in-game by setting the 
+macro action to "===", followed by the function name.
 
 Also see section 7 on inline Lua fragments.
 
