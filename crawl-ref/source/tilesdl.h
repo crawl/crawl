@@ -189,6 +189,29 @@ protected:
 
     int m_screen_width;
     int m_screen_height;
+
+    struct cursor_loc
+    {
+        cursor_loc() { reset(); }
+        void reset() { reg = NULL; cx = cy = -1; mode = MOUSE_MODE_MAX; }
+        bool operator==(const cursor_loc &rhs) const
+        {
+            return (rhs.reg == reg
+                    && rhs.cx == cx
+                    && rhs.cy == cy
+                    && reg
+                    && rhs.mode == mode);
+        }
+        bool operator!=(const cursor_loc &rhs) const
+        {
+            return !(*this == rhs);
+        }
+
+        Region *reg;
+        int cx, cy;
+        mouse_mode mode;
+    };
+    cursor_loc m_cur_loc;
 };
 
 // Main interface for tiles functions
