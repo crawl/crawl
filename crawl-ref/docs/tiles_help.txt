@@ -1,9 +1,8 @@
                   Tiles suggestions
 
-Crawl 0.5 renders graphics using OpenGL and SDL.  For most video cards,
-this should be faster than the 0.4 version.  However, the default driver
-that ships with Windows is extremely slow.  If you are having performance
-problems, be sure to update your video card driver as a first step.
+Crawl renders its graphics using OpenGL and SDL.  However, it needs hardware
+acceleration to not run slowly.  If you are on Windows, make sure to update
+your graphics card driver.  If you are on Linux, be sure that you are using DRI.
 
 It has been tested successfully with cards as old as the i865.  Unfortunately,
 it has been known to be slow on the i810 and there is little to be done in that
