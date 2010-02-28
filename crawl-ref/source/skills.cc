@@ -162,57 +162,29 @@ int exercise(int exsk, int deg)
     return (ret);
 }                               // end exercise()
 
+static bool _check_crosstrain(skill_type exsk, skill_type sk1, skill_type sk2)
+{
+    return ((exsk == sk1 || exsk == sk2)
+            && (you.skills[sk1] > you.skills[exsk]
+                || you.skills[sk2] > you.skills[exsk]));
+}
+
 static int _weap_crosstrain_bonus(skill_type exsk)
 {
     int bonus = 0;
 
-    // Short Blades and Long Blades.
-    if ((exsk == SK_SHORT_BLADES || exsk == SK_LONG_BLADES)
-        && (you.skills[SK_SHORT_BLADES] > you.skills[exsk]
-            || you.skills[SK_LONG_BLADES] > you.skills[exsk]))
-    {
+    if (_check_crosstrain(exsk, SK_SHORT_BLADES, SK_LONG_BLADES))
         bonus += random2(30);
-    }
-
-    // Axes and Polearms.
-    if ((exsk == SK_AXES || exsk == SK_POLEARMS)
-        && (you.skills[SK_AXES] > you.skills[exsk]
-            || you.skills[SK_POLEARMS] > you.skills[exsk]))
-    {
+    if (_check_crosstrain(exsk, SK_AXES,         SK_POLEARMS))
         bonus += random2(30);
-    }
-
-    // Polearms and Staves.
-    if ((exsk == SK_POLEARMS || exsk == SK_STAVES)
-        && (you.skills[SK_POLEARMS] > you.skills[exsk]
-            || you.skills[SK_STAVES] > you.skills[exsk]))
-    {
+    if (_check_crosstrain(exsk, SK_POLEARMS,     SK_STAVES))
         bonus += random2(30);
-    }
-
-    // Axes and Maces.
-    if ((exsk == SK_AXES || exsk == SK_MACES_FLAILS)
-        && (you.skills[SK_AXES] > you.skills[exsk]
-            || you.skills[SK_MACES_FLAILS] > you.skills[exsk]))
-    {
+    if (_check_crosstrain(exsk, SK_AXES,         SK_MACES_FLAILS))
         bonus += random2(30);
-    }
-
-    // Maces and Staves.
-    if ((exsk == SK_MACES_FLAILS || exsk == SK_STAVES)
-        && (you.skills[SK_MACES_FLAILS] > you.skills[exsk]
-            || you.skills[SK_STAVES] > you.skills[exsk]))
-    {
+    if (_check_crosstrain(exsk, SK_MACES_FLAILS, SK_STAVES))
         bonus += random2(30);
-    }
-
-    // Slings and Throwing.
-    if ((exsk == SK_SLINGS || exsk == SK_THROWING)
-        && (you.skills[SK_SLINGS] > you.skills[exsk]
-            || you.skills[SK_THROWING] > you.skills[exsk]))
-    {
+    if (_check_crosstrain(exsk, SK_SLINGS,       SK_THROWING))
         bonus += random2(30);
-    }
 
     return (bonus);
 }
