@@ -171,10 +171,6 @@ bool monster_habitable_grid(monster_type montype,
     if (montype == MONS_FIRE_ELEMENTAL && feat_is_watery(actual_grid))
         return (false);
 
-    // Krakens are too large for shallow water.
-    if (montype == MONS_KRAKEN && actual_grid == DNGN_SHALLOW_WATER)
-        return (false);
-
     if (feat_compatible(feat_preferred, actual_grid)
         || (feat_nonpreferred != feat_preferred
             && feat_compatible(feat_nonpreferred, actual_grid)))
