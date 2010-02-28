@@ -30,8 +30,17 @@ void dgn_island_centred_at(const coord_def &c,
                            int border_margin,
                            bool make_atoll)
 {
+    if (make_atoll)
+    {
+        dgn_island_centred_at(c, n_points, radius,
+                              int_range(-height_delta_range.second,
+                                        -height_delta_range.first),
+                              border_margin,
+                              false);
+        radius += 3;
+    }
     for (int i = 0; i < n_points; ++i) {
-        const int thisrad = make_atoll? radius : random2(1 + radius);
+        const int thisrad = random2(1 + radius);
         const coord_def p = dgn_random_point_from(c, thisrad, border_margin);
         if (!p.origin())
             dgn_height_at(p) += resolve_range(height_delta_range);
