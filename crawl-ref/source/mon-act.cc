@@ -2281,10 +2281,10 @@ static bool _monster_eat_item(monsters *monster, bool nearby)
             const int value = item_value(*si) / quantity;
             int pg = 0;
             const int rand_value = random2(value);
-            
+
             /*
                Item values for comparison:
-               
+
                orc corpse              1
                knife                   10
                potion of healing       20
@@ -2302,41 +2302,27 @@ static bool _monster_eat_item(monsters *monster, bool nearby)
                +2 chain mail of rF+    731
                book of annihilations   1150
                +0 gold dragon armour   1605
-               disc of storms          2000 
+               disc of storms          2000
              */
-               
+
 
             for (int m = 0; m < quantity; ++m)
             {
-                if(rand_value < 20 && one_chance_in(10))
+                if (rand_value < 20 && !one_chance_in(10)
+                    || rand_value >= 20 && rand_value < 50 && !one_chance_in(3))
                 {
-                  pg = 1;
-			    }
-			    else if(rand_value < 50 && one_chance_in(3))
-			    {
-					pg = 1;
-				}
-				else if(rand_value < 100)
-				{
-					pg = 1;
-				}
-				else if(rand_value < 200)
-				{
-					pg = coinflip() ? 2 : 1;
-				}
-				else if(rand_value < 700)
-				{
-					pg = coinflip() ? 3 : 2;
-				}
-				else if(rand_value < 1500)
-				{
-					pg = coinflip() ? 4 : 3;
-				}
-				else
-				{
-					pg = coinflip() ? 5 : 4;
-				}
-                
+                    pg = 0;
+                }
+                else if (rand_value < 100 || rand_value < 200 && coinflip())
+                    pg = 1;
+                else if (rand_value < 200 || rand_value < 700 && coinflip())
+                    pg = 2;
+                else if (rand_value < 700 || rand_value < 1500 && coinflip())
+                    pg = 3;
+                else if (rand_value < 1500 || coinflip())
+                    pg = 4;
+                else
+                    pg = 5;
             }
 
             if (pg > 0)
