@@ -106,8 +106,62 @@ function TroveMarker:overview_note (marker)
 end
 
 function TroveMarker:debug_portal (marker)
-  crawl.mpr("Debug info for this trove")
-  return "test"
+  local item = self.toll_item
+  if item == nil then
+    return "Failed to get item???"
+  end
+
+  if item.quantity == nil then item.quantity = false end
+  if item.base_type == nil then item.base_type = false end
+  if item.sub_type == nil then item.sub_type = false end
+  if item.ego_type == nil then item.ego_type = false end
+  if item.plus1 == nil then item.plus1 = false end
+  if item.plus2 == nil then item.plus2 = false end
+  if item.artefact_name == nil then item.artefact_name = false end
+
+  if item.quantity ~= false then
+    crawl.mpr("Wanted quantity: " .. item.quantity)
+  else
+    crawl.mpr("Wanted quantity: nil.")
+  end
+
+  if item.base_type ~= false then
+    crawl.mpr("Wanted base type: " .. item.base_type)
+  else
+    crawl.mpr("Wanted base type: nil")
+  end
+
+  if item.sub_type ~= false then
+    crawl.mpr("Wanted sub type: " .. item.sub_type)
+  else
+    crawl.mpr("Wanted sub type: nil")
+  end
+
+  if item.ego_type ~= false then
+    crawl.mpr("Wanted ego type: " .. item.ego_type)
+  else
+    crawl.mpr("Wanted ego type: nil")
+  end
+
+  if item.plus1 ~= false then
+    crawl.mpr("Wanted plus1: " .. item.plus1)
+  else
+    crawl.mpr("Unwanted plus1.")
+  end
+
+  if item.plus2 ~= false then
+    crawl.mpr("Wanted plus2: " .. item.plus2)
+  else
+    crawl.mpr("Unwanted plus2.")
+  end
+
+  if item.artefact_name ~= false then
+    crawl.mpr("Wanted artefact name: " .. item.artefact_name)
+  else
+    crawl.mpr("Unwanted artefact.")
+  end
+
+  return "Done!"
 end
 
 function TroveMarker:property(marker, pname)
