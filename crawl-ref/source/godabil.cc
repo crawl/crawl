@@ -1502,8 +1502,11 @@ static int _slouch_monsters(coord_def where, int pow, int, actor* agent)
 {
     monsters* mon = monster_at(where);
     if (mon == NULL || mons_is_stationary(mon) || mon->cannot_move()
-        || mons_is_projectile(mon->type))
+        || mons_is_projectile(mon->type)
+        || mon->asleep() && !mons_is_confused(mon))
+    {
         return (0);
+    }
 
     int dmg = (mon->speed - 1000/player_movement_speed()/player_speed());
     dmg = (dmg > 0 ? roll_dice(dmg*4, 3)/2 : 0);
