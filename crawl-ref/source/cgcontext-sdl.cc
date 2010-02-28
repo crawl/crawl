@@ -9,7 +9,7 @@
  * This file should only call functions that operate specifically
  * on Graphics Contexts.  If it needs to do something else, like
  * get an SDL-specific environment variable, call a UIWrapper
- * member function of increased modularity.
+ * member function for increased modularity.
 */
 
 GraphicsContext::GraphicsContext():
