@@ -1246,6 +1246,14 @@ GotoRegion TilesFramework::get_cursor_region() const
 // #define DEBUG_TILES_REDRAW
 void TilesFramework::redraw()
 {
+    // Rate limit to 30 FPS.
+    const float min_fps = 30;
+    const unsigned int min_ticks = static_cast<unsigned int>(1000.0f / min_fps);
+
+    unsigned int ticks = SDL_GetTicks();
+    if (ticks - m_last_tick_redraw < min_ticks)
+        return;
+
 #ifdef DEBUG_TILES_REDRAW
     cprintf("\nredrawing tiles");
 #endif
