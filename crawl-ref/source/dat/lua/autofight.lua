@@ -73,7 +73,8 @@ local function find_next_monster()
   for r = 1,8 do
     for x = -r,r do
       for y = -r,r do
-        if monster.get_monster_at(x, y) then
+        m = monster.get_monster_at(x, y)
+        if m and not m:is_safe() then
           return x, y
         end
       end
