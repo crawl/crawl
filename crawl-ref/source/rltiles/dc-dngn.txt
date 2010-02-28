@@ -1315,6 +1315,17 @@ wizlab_portal5
 wizlab_portal6
 wizlab_portal7
 wizlab_portal8
+# More placeholders for portal vault entries
+dc-misc/error PLACEHOLDER9
+dc-misc/error PLACEHOLDER10
+dc-misc/error PLACEHOLDER11
+dc-misc/error PLACEHOLDER12
+dc-misc/error PLACEHOLDER13
+dc-misc/error PLACEHOLDER14
+dc-misc/error PLACEHOLDER15
+dc-misc/error PLACEHOLDER16
+dc-misc/error PLACEHOLDER17
+dc-misc/error PLACEHOLDER18
 
 %sdir dc-dngn/altars
 dngn_altar DNGN_UNSEEN_ALTAR
