@@ -106,6 +106,17 @@ function TroveMarker:overview_note (marker)
 end
 
 function TroveMarker:debug_portal (marker)
+  local _x, _y = marker:pos()
+  if #dgn.items_at(_x, _y) ~= 0 then
+    new_item = dgn.items_at(_x, _y)[1]
+    if crawl.yesno("Switch Trove to " .. new_item.name() .. " instead?", true, "n") then
+      self.toll_item = trove.get_trove_item(nil, 0, new_item)
+      crawl.mpr("Switched to a new item.")
+    else
+      crawl.mpr("Ignoring " .. new_item.name())
+    end
+  end
+
   local item = self.toll_item
   if item == nil then
     return "Failed to get item???"
@@ -161,7 +172,7 @@ function TroveMarker:debug_portal (marker)
     crawl.mpr("Unwanted artefact.")
   end
 
-  return "Done!"
+  return "Done. Item name is " .. self:item_name() .. "!"
 end
 
 function TroveMarker:property(marker, pname)
