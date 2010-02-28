@@ -244,6 +244,12 @@ static bool _skip_exercise(skill_type exsk)
     return (false);
 }
 
+// These get a discount in the late game -- still required?
+static bool _discounted_throwing_skill(skill_type exsk)
+{
+    return (exsk == SK_THROWING || exsk == SK_BOWS || exsk == SK_CROSSBOWS);
+}
+
 static int _stat_mult(skill_type exsk, int skill_inc)
 {
     int stat = 10;
@@ -335,7 +341,6 @@ static int _exercise2(int exski)
 {
     skill_type exsk = static_cast<skill_type>(exski);
 
-    int deg = 10;
     int bonus = 0;
     skill_type old_best_skill = best_skill(SK_FIGHTING, (NUM_SKILLS - 1), 99);
 
@@ -369,9 +374,10 @@ static int _exercise2(int exski)
     if (_skip_exercise(exsk))
         return (0);
 
-    int spending_limit = std::min(MAX_SPENDING_LIMIT, you.exp_available);
+    const int spending_limit = std::min(MAX_SPENDING_LIMIT, you.exp_available);
 
     // Handle fractional learning.
+    int deg = 10;
     if (skill_change > spending_limit)
     {
         // This system is a bit hard on missile weapons in the late
@@ -379,7 +385,7 @@ static int _exercise2(int exski)
         // practise.  Increasing the "deg"ree of exercise would make
         // missile weapons too easy earlier on, so, instead, we're
         // giving them a special case here.
-        if (exsk != SK_THROWING && exsk != SK_BOWS && exsk != SK_CROSSBOWS
+        if (!_discounted_throwing_skill(exsk)
             || skill_change > you.exp_available)
         {
             int fraction = (spending_limit * 10) / skill_change;
