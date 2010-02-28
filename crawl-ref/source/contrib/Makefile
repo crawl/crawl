@@ -1,6 +1,12 @@
 PREFIX := install
 
-SUBDIRS = lua/src sqlite sdl sdl-image freetype libpng pcre zlib
+SUBDIRS = sqlite sdl sdl-image freetype libpng pcre zlib
+
+ifdef USE_LUAJIT
+SUBDIRS += luajit/src
+else
+SUBDIRS += lua/src
+endif
 
 all:
 	@$(MAKE) $(SUBDIRS)

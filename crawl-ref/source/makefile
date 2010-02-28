@@ -120,7 +120,11 @@ LIBPNG := contrib/install/lib/libpng.a
 LIBSDLIMAGE := contrib/install/lib/libSDL_image.a
 LIBFREETYPE := contrib/install/lib/libfreetype.a
 LIBSQLITE := contrib/install/lib/libsqlite3.a
+ifdef USE_LUAJIT
+LIBLUA := contrib/install/lib/libluajit.a
+else
 LIBLUA := contrib/install/lib/liblua.a
+endif
 LIBZ := contrib/install/lib/libz.a
 
 #
@@ -193,6 +197,9 @@ ifeq ($(uname_S),Darwin)
 		BUILD_LIBPNG = YesPlease
 		BUILD_ZLIB = YesPlease
 	endif
+endif
+ifdef USE_LUAJIT
+	BUILD_LUA := YesPlease
 endif
 ifdef USE_ICC
 	NO_RDYNAMIC := YesPlease
@@ -730,7 +737,12 @@ CONTRIBS += zlib
 CONTRIB_LIBS += $(LIBZ)
 endif
 ifdef BUILD_LUA
+ifdef USE_LUAJIT
+CONTRIBS += luajit/src
+CFOTHER_L += -DUSE_LUAJIT
+else
 CONTRIBS += lua/src
+endif
 CONTRIB_LIBS += $(LIBLUA)
 endif
 ifdef BUILD_SQLITE
