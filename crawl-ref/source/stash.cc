@@ -360,8 +360,7 @@ void Stash::update()
 
         // Now, grab all items on that square and fill our vector
         for (stack_iterator si(p, true); si; ++si)
-            if (!is_filtered(*si))
-                add_item(*si);
+            add_item(*si);
 
         verified = true;
     }
@@ -396,21 +395,15 @@ void Stash::update()
         // under the item.
         if (items.size() == 0)
         {
-            if (!is_filtered(item))
-                add_item(item);
+            add_item(item);
             // Note that we could be lying here, since we can have
             // a verified falsehood (if there's a mimic.)
             verified = !_grid_has_perceived_multiple_items(p);
             return;
         }
 
-        // There's more than one item in this pile. As long as the top item is
-        // not filtered, we can check to see if it matches what we think the
-        // top item is.
-
-        if (is_filtered(item))
-            return;
-
+        // There's more than one item in this pile. Check to see if
+        // the top item matches what we remember.
         const item_def &first = items[0];
         // Compare these items
         if (!are_items_same(first, item))
@@ -647,6 +640,9 @@ bool Stash::matches_search(const std::string &prefix,
     for (unsigned i = 0; i < items.size(); ++i)
     {
         const item_def &item = items[i];
+        if (Stash::is_filtered(item))
+            continue;
+
         std::string s   = stash_item_name(item);
         std::string ann = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
         if (search.matches(prefix + " " + ann + s))
@@ -1053,6 +1049,9 @@ bool ShopInfo::matches_search(const std::string &prefix,
 
     for (unsigned i = 0; i < items.size(); ++i)
     {
+        if (Stash::is_filtered(items[i].item))
+            continue;
+
         std::string sname = shop_item_name(items[i]);
         std::string ann   = stash_annotate_item( STASH_LUA_SEARCH_ANNOTATE,
                                                   &items[i].item, true );
