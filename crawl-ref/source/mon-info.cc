@@ -136,19 +136,23 @@ bool monster_info::less_than(const monster_info& m1,
 
     if (zombified)
     {
-        // Because of the type checks above, if one of the two is zombified, so
-        // is the other, and of the same type.
-        if (mons_is_zombified(m1.m_mon)
-            && m1.m_mon->base_monster < m2.m_mon->base_monster)
+        if (mons_is_zombified(m1.m_mon))
         {
-            return (true);
+            // Because of the type checks above, if one of the two is zombified, so
+            // is the other, and of the same type.
+            if (m1.m_mon->base_monster < m2.m_mon->base_monster)
+                return (true);
+            else if (m1.m_mon->base_monster > m2.m_mon->base_monster)
+                return (false);
         }
 
         // Both monsters are hydras or hydra zombies, sort by number of heads.
-        if (m1.m_mon->has_hydra_multi_attack()
-            && m1.m_mon->number > m2.m_mon->number)
+        if (m1.m_mon->has_hydra_multi_attack())
         {
-            return (true);
+            if (m1.m_mon->number > m2.m_mon->number)
+                return (true);
+            else if (m1.m_mon->number < m2.m_mon->number)
+                return (false);
         }
     }
 
