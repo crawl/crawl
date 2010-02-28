@@ -2732,6 +2732,8 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
     case SPELL_TELEPORT_SELF:
     case SPELL_INVISIBILITY:
     case SPELL_BLINK:
+    case SPELL_BLINK_CLOSE:
+    case SPELL_BLINK_RANGE:
     case SPELL_BERSERKER_RAGE:
     case SPELL_SWIFTNESS:
         return (false);
@@ -2747,6 +2749,9 @@ static bool _ms_ranged_spell(spell_type monspell, bool attack_only = false,
     case SPELL_PARALYSE:
     case SPELL_SLEEP:
     case SPELL_TELEPORT_OTHER:
+    case SPELL_BLINK_OTHER_CLOSE:
+    case SPELL_BLINK_AWAY:
+    case SPELL_BLINK_OTHER:
         return (ench_too);
 
     default:
