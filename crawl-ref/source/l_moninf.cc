@@ -39,6 +39,7 @@ void lua_push_moninf(lua_State *ls, monster_info *mi)
 #define MIREG(field) { #field, moninf_get_##field }
 
 MIRET1(number, damage_level)
+MIRET1(boolean, is_safe)
 
 LUAFN(moninf_get_damage_desc)
 {
@@ -63,6 +64,7 @@ LUAFN(moninf_get_desc)
 
 static const struct luaL_reg moninf_lib[] =
 {
+    MIREG(is_safe),
     MIREG(damage_level),
     MIREG(damage_desc),
     MIREG(desc),
