@@ -11,7 +11,6 @@
 #include "coord.h"
 #include "env.h"
 #include "libutil.h"
-#include "misc.h"
 #include "mon-info.h"
 #include "player.h"
 
@@ -79,7 +78,7 @@ bool in_show_bounds(const coord_def &s)
     return (s.rdist() <= ENV_SHOW_OFFSET);
 }
 
-LUAFN(mi_get_harmful_monster_at)
+LUAFN(mi_get_monster_at)
 {
     COORDSHOW(s, 1, 2)
     coord_def p = player2grid(s);
@@ -90,8 +89,6 @@ LUAFN(mi_get_harmful_monster_at)
     monsters* m = &env.mons[env.mgrid(p)];
     if (!m->visible_to(&you))
         return (0);
-    if (mons_is_safe(m, false, false))
-        return (0);
     monster_info *mi = new monster_info(m);
     lua_push_moninf(ls, mi);
     return (1);
@@ -99,7 +96,7 @@ LUAFN(mi_get_harmful_monster_at)
 
 static const struct luaL_reg mon_lib[] =
 {
-    { "get_harmful_monster_at", mi_get_harmful_monster_at },
+    { "get_monster_at", mi_get_monster_at },
 
     { NULL, NULL }
 };
