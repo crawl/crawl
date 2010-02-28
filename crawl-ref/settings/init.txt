@@ -240,7 +240,7 @@ sort_menus = inv: true : equipped, freshness, charged
 
 ##### 4-j	Messages and Display Enhancements #####
 #
-# hp_warning = 10
+# hp_warning = 30
 # mp_warning = 0
 # hp_colour = 50:yellow, 25:red
 # mp_colour = 50:yellow, 25:red
