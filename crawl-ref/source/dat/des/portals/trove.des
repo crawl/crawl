@@ -46,6 +46,7 @@ function trove.get_trove_item(e, value, base_item)
     item.base_type = base_item.base_type
     item.sub_type = base_item.sub_type
     item.artefact_name = base_item.artefact_name
+    return item
   end
 
   if you.skill("armour") > 10 and crawl.one_chance_in(4) then
