@@ -767,7 +767,7 @@ static const char *targeting_help_1 =
     "<w>M</w>: cause spell miscast for monster or player\n"
     "<w>w</w>: calculate shortest path to any point on the map\n"
     "<w>D</w>: get debugging information about the monster\n"
-    "<w>d</w>: get debugging information about a portal\n"
+    "<w>\"</w>: get debugging information about a portal\n"
     "<w>~</w>: polymorph monster to specific type\n"
     "<w>,</w>: bring down the monster to 1 hp\n"
 #endif
