@@ -86,7 +86,7 @@ end
 function hit_closest()
   local x, y = find_next_monster()
   if x == 0 and y == 0 then
-    crawl.mpr("No monster in view!")
+    crawl.mpr("No unsafe monster in view!")
   else
     move_towards(x, y)
   end
