@@ -1451,6 +1451,19 @@ static bool _mons_throw(struct monsters *monster, struct bolt &pbolt,
     return (true);
 }
 
+static bool _mons_has_launcher(const monsters *mons)
+{
+    for (int i = MSLOT_WEAPON; i <= MSLOT_ALT_WEAPON; ++i)
+    {
+        if (item_def *item = mons->mslot_item(static_cast<mon_inv_type>(i)))
+        {
+            if (is_range_weapon(*item))
+                return (true);
+        }
+    }
+    return (false);
+}
+
 //---------------------------------------------------------------
 //
 // handle_throw
@@ -1487,8 +1500,15 @@ static bool _handle_throw(monsters *monster, bolt & beem)
         return (false);
 
     // If the monster is a spellcaster, don't bother throwing stuff.
-    if (mons_has_ranged_spell(monster, true, false))
+    // Exception: Spellcasters that already start out with some kind
+    // ranged weapon. Seeing how monsters are disallowed from picking
+    // up launchers if they have ranged spells, this will only apply
+    // to very few monsters.
+    if (mons_has_ranged_spell(monster, true, false)
+        && !_mons_has_launcher(monster))
+    {
         return (false);
+    }
 
     // Greatly lowered chances if the monster is fleeing or pacified and
     // leaving the level.

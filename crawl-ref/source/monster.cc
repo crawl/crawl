@@ -1220,11 +1220,11 @@ static bool _compatible_launcher_ammo_brands(item_def *launcher,
     }
 }
 
-bool monsters::pickup_launcher(item_def &launch, int near)
+bool monsters::pickup_launcher(item_def &launch, int near, bool force)
 {
     // Don't allow monsters to pick up launchers that would also
     // refuse to pick up the matching ammo.
-    if (!_needs_ranged_attack(this))
+    if (!force && !_needs_ranged_attack(this))
         return (false);
 
     // Don't allow monsters to switch to another type of launcher
@@ -1631,7 +1631,7 @@ bool monsters::pickup_weapon(item_def &item, int near, bool force)
     //   missiles are the same type), pick it up.
 
     if (is_range_weapon(item))
-        return (pickup_launcher(item, near));
+        return (pickup_launcher(item, near, force));
 
     if (pickup_melee_weapon(item, near))
         return (true);
@@ -1656,7 +1656,7 @@ bool monsters::pickup_missile(item_def &item, int near, bool force)
             // Spellcasters should not waste time with ammunition.
             // Neither summons nor hostile enchantments are counted for
             // this purpose.
-            if (mons_has_ranged_spell(this, true, false))
+            if (!force && mons_has_ranged_spell(this, true, false))
                 return (false);
 
             // Monsters in a fight will only pick up missiles if doing so
