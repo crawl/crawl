@@ -8,33 +8,14 @@
 
 #include "tiles.h"
 
+#ifdef USE_GL
+#include "glwrapper.h"
+#endif
+
 // This struct defines all of the state that any particular rendering needs.
 // If other rendering states are needed, they should be added here so that
 // they do not introduce unneeded side effects for other parts of the code
 // that have not thought about turning that new state off.
-struct GLState
-{
-    GLState();
-
-    // vertex arrays
-    bool array_vertex;
-    bool array_texcoord;
-    bool array_colour;
-
-    // render state
-    bool blend;
-    bool texture;
-    bool depthtest;
-    bool alphatest;
-    unsigned char alpharef;
-};
-
-class GLStateManager
-{
-public:
-    static void init();
-    static void set(const GLState& state);
-};
 
 class FTFont;
 class formatted_string;
