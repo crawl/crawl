@@ -30,8 +30,8 @@ enum monster_info_brands
     MB_BERSERK
 };
 
-monster_info::monster_info(const monsters *m)
-    : m_mon(m), m_attitude(ATT_HOSTILE), m_difficulty(0),
+monster_info::monster_info(const monsters *m, bool skip_safe)
+    : m_mon(m), m_attitude(ATT_HOSTILE), m_difficulty(0), m_is_safe(false),
       m_brands(0), m_fullname(true)
 {
     // XXX: this doesn't take into account ENCH_TEMP_PACIF, but that's probably
@@ -48,6 +48,9 @@ monster_info::monster_info(const monsters *m)
 
     // Currently, difficulty is defined as "average hp".
     m_difficulty = mons_difficulty(mtype);
+
+    if (!skip_safe)
+        m_is_safe = mons_is_safe(m);
 
     if (mons_looks_stabbable(m))   m_brands |= (1 << MB_STABBABLE);
     if (mons_looks_distracted(m))  m_brands |= (1 << MB_DISTRACTED);
