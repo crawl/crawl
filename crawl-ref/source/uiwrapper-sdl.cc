@@ -302,6 +302,8 @@ void UIWrapper::setWindowTitle(const char *title)
 
 bool UIWrapper::setWindowIcon(const char* icon_name)
 {
+    // TODO: Figure out how to move this IMG_Load command to cgcontext
+    // so that we're not dependant on SDL_image here
     SDL_Surface *icon = IMG_Load(datafile_path(icon_name, true, true).c_str());
     if (!icon)
     {

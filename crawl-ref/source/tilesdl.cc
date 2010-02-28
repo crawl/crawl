@@ -1271,7 +1271,7 @@ void TilesFramework::clear_overlays()
 
 void TilesFramework::set_need_redraw(unsigned int min_tick_delay)
 {
-    unsigned int ticks = (SDL_GetTicks() - m_last_tick_redraw);
+    unsigned int ticks = (wrapper.getTicks() - m_last_tick_redraw);
     if (min_tick_delay && ticks <= min_tick_delay)
         return;
 
