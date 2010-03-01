@@ -341,9 +341,13 @@ static int _exercise2(int exski)
 {
     skill_type exsk = static_cast<skill_type>(exski);
 
-    // The sum of these will be added to you.skill_points[exsk];
-    int deg = 10;
-    int bonus = 0;
+    // Being better at some magic skills makes others less likely to train.
+    // Note: applies to Invocations and Evocations, too! [rob]
+    if (_skip_exercise(exsk))
+        return (0);
+
+    // This will be added to you.skill_points[exsk];
+    int skill_inc = 10;
 
     // This will be deducted from you.exp_available.
     int cost = _calc_skill_cost(you.skill_cost_level, you.skills[exsk]);
@@ -352,13 +356,17 @@ static int _exercise2(int exski)
 
     // Being good at some weapons makes others easier to learn.
     if (exsk < SK_ARMOUR)
-        bonus += _weap_crosstrain_bonus(exsk);
+        skill_inc += _weap_crosstrain_bonus(exsk);
 
     // Quick fix for the fact that stealth can't be gained fast enough
     // to keep up with the monster levels.  This should speed its
     // advancement.
     if (exsk == SK_STEALTH)
-        bonus += 10*random2(3);
+        skill_inc += 10*random2(3);
+
+    // Starting to learn skills is easier if the appropriate stat is high.
+    if (you.skills[exsk] == 0)
+        skill_inc = _stat_mult(exsk, skill_inc);
 
     // Spellcasting and Inv/Evo is cheaper early on.
     if (exsk >= SK_SPELLCASTING && exsk <= SK_EVOCATIONS)
@@ -372,48 +380,32 @@ static int _exercise2(int exski)
         }
     }
 
-    // Being better at some magic skills makes others less likely
-    // to train.
-    // Note: applies to Invocations and Evocations, too! [rob]
-    if (_skip_exercise(exsk))
-        return (0);
-
+    // Scale cost and skill_inc to available experience.
     const int spending_limit = std::min(MAX_SPENDING_LIMIT, you.exp_available);
-
-    // Handle fractional learning.
     if (cost > spending_limit)
     {
+        int frac = (spending_limit * 10) / cost;
+
         // This system is a bit hard on missile weapons in the late
         // game, since they require expendable ammo in order to
-        // practise.  Increasing the "deg"ree of exercise would make
+        // practise.  Increasing skill_inc would make
         // missile weapons too easy earlier on, so, instead, we're
         // giving them a special case here.
         if (_discounted_throwing_skill(exsk)
             && cost <= you.exp_available)
         {
             // MAX_SPENDING_LIMIT < cost <= you.exp_available
-            deg = ((cost / 2) > MAX_SPENDING_LIMIT) ? 5 : 10;
+            frac = ((cost / 2) > MAX_SPENDING_LIMIT) ? 5 : 10;
         }
-        else
-        {
-            deg = (spending_limit * 10) / cost;
-        }
-
-        bonus = (bonus * deg) / 10;
 
         cost = spending_limit;
+        skill_inc = (skill_inc * frac) / 10;
     }
-
-    int skill_inc = deg + bonus;
-
-    // Starting to learn skills is easier if the appropriate stat is high.
-    if (you.skills[exsk] == 0)
-        skill_inc = _stat_mult(exsk, skill_inc);
 
     if (skill_inc <= 0)
         return (0);
 
-    cost -= random2(5);
+    cost -= random2(5);            // XXX: what's this for?
     cost = std::max<int>(cost, 1); // No free lunch.
 
     you.skill_points[exsk] += skill_inc;
