@@ -17,9 +17,9 @@ If, however, you're having trouble getting a precompiled binary to run:
     --------        ------          ----------------
     Windows         yes             stone_soup-VERSION-tiles-win32.zip
     Windows         no              stone_soup-VERSION-win32.zip
-    Mac/OSX         yes             stone_soup-VERSION-tiles-osx.zip
+    Mac OS X        yes             stone_soup-VERSION-tiles-osx.zip
                                     or stone_soup-VERSION-tiles-osx-app.dmg
-    Mac/OSX         no              stone_soup-VERSION-osx.zip
+    Mac OS X        no              stone_soup-VERSION-osx.zip
                                     or stone_soup-VERSION-osx-app.dmg
     DOS             no              stone_soup-VERSION-dos.zip
     Source code     yes             stone_soup-VERSION-src.zip
