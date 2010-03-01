@@ -88,6 +88,8 @@ static void _species_stat_init(species_type which_species)
     case SP_MOTTLED_DRACONIAN:
     case SP_PALE_DRACONIAN:
     case SP_BASE_DRACONIAN:     sb =  9; ib =  6; db =  2;      break;  // 17
+
+    case SP_CAT:                sb =  2; ib =  7; db =  9;      break;  // 18
     }
 
     you.base_stats[STAT_STR] = sb + 2;

@@ -3160,6 +3160,22 @@ void level_change(bool skip_attribute_increase)
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
                 break;
 
+            case SP_CAT:
+                hp_adjust--;
+                hp_adjust--;
+
+                if (you.experience_level % 2)
+                    mp_adjust++;
+
+                if (!(you.experience_level % 5))
+                {
+                    modify_stat((coinflip() ? STAT_INT
+                                            : STAT_DEX), 1, false,
+                                "level gain");
+                }
+                break;
+
+
             default:
                 break;
             }
@@ -3256,6 +3272,7 @@ int check_stealth(void)
             case SP_KOBOLD:
             case SP_SPRIGGAN:
             case SP_NAGA:       // not small but very good at stealth
+            case SP_CAT:
                 stealth += (you.skills[SK_STEALTH] * 18);
                 break;
             default:
@@ -3316,6 +3333,8 @@ int check_stealth(void)
         else if ( !you.can_swim() && !you.extra_balanced() )
             stealth /= 2;       // splashy-splashy
     }
+    else if (you.species == SP_CAT && !you.attribute[ATTR_TRANSFORMATION])
+        stealth += 20;  // paws
 
     // Radiating silence is the negative complement of shouting all the
     // time... a sudden change from background noise to no noise is going
@@ -3919,6 +3938,7 @@ static int _species_exp_mod(species_type species)
         case SP_CENTAUR:
         case SP_MINOTAUR:
         case SP_MUMMY:
+        case SP_CAT:
             return 14;
         case SP_HIGH_ELF:
         case SP_VAMPIRE:
