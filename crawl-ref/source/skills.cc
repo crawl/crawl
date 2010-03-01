@@ -345,6 +345,9 @@ static int _exercise2(int exski)
     int deg = 10;
     int bonus = 0;
 
+    // This will be deducted from you.exp_available.
+    int cost = _calc_skill_cost(you.skill_cost_level, you.skills[exsk]);
+
     skill_type old_best_skill = best_skill(SK_FIGHTING, (NUM_SKILLS - 1), 99);
 
     // Being good at some weapons makes others easier to learn.
@@ -357,17 +360,15 @@ static int _exercise2(int exski)
     if (exsk == SK_STEALTH)
         bonus += random2(30);
 
-    int skill_change = _calc_skill_cost(you.skill_cost_level, you.skills[exsk]);
-
     // Spellcasting and Inv/Evo is cheaper early on.
     if (exsk >= SK_SPELLCASTING && exsk <= SK_EVOCATIONS)
     {
         if (you.skill_cost_level < 5)
-            skill_change /= 2;
+            cost /= 2;
         else if (you.skill_cost_level < 15)
         {
-            skill_change *= (10 + (you.skill_cost_level - 5));
-            skill_change /= 20;
+            cost *= (10 + (you.skill_cost_level - 5));
+            cost /= 20;
         }
     }
 
@@ -380,7 +381,7 @@ static int _exercise2(int exski)
     const int spending_limit = std::min(MAX_SPENDING_LIMIT, you.exp_available);
 
     // Handle fractional learning.
-    if (skill_change > spending_limit)
+    if (cost > spending_limit)
     {
         // This system is a bit hard on missile weapons in the late
         // game, since they require expendable ammo in order to
@@ -388,19 +389,19 @@ static int _exercise2(int exski)
         // missile weapons too easy earlier on, so, instead, we're
         // giving them a special case here.
         if (_discounted_throwing_skill(exsk)
-            && skill_change <= you.exp_available)
+            && cost <= you.exp_available)
         {
-            // MAX_SPENDING_LIMIT < skill_change <= you.exp_available
-            deg = ((skill_change / 2) > MAX_SPENDING_LIMIT) ? 5 : 10;
+            // MAX_SPENDING_LIMIT < cost <= you.exp_available
+            deg = ((cost / 2) > MAX_SPENDING_LIMIT) ? 5 : 10;
         }
         else
         {
-            deg = (spending_limit * 10) / skill_change;
+            deg = (spending_limit * 10) / cost;
         }
 
         bonus = (bonus * deg) / 10;
 
-        skill_change = spending_limit;
+        cost = spending_limit;
     }
 
     int skill_inc = deg + bonus;
@@ -412,11 +413,11 @@ static int _exercise2(int exski)
     if (skill_inc <= 0)
         return (0);
 
-    skill_change -= random2(5);
-    skill_change = std::max<int>(skill_change, 1); // No free lunch.
+    cost -= random2(5);
+    cost = std::max<int>(cost, 1); // No free lunch.
 
     you.skill_points[exsk] += skill_inc;
-    you.exp_available -= skill_change;
+    you.exp_available -= cost;
 
     you.total_skill_points += skill_inc;
     if (you.skill_cost_level < 27
