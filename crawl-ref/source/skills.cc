@@ -174,19 +174,19 @@ static int _weap_crosstrain_bonus(skill_type exsk)
     int bonus = 0;
 
     if (_check_crosstrain(exsk, SK_SHORT_BLADES, SK_LONG_BLADES))
-        bonus += random2(30);
+        bonus += random2(3);
     if (_check_crosstrain(exsk, SK_AXES,         SK_POLEARMS))
-        bonus += random2(30);
+        bonus += random2(3);
     if (_check_crosstrain(exsk, SK_POLEARMS,     SK_STAVES))
-        bonus += random2(30);
+        bonus += random2(3);
     if (_check_crosstrain(exsk, SK_AXES,         SK_MACES_FLAILS))
-        bonus += random2(30);
+        bonus += random2(3);
     if (_check_crosstrain(exsk, SK_MACES_FLAILS, SK_STAVES))
-        bonus += random2(30);
+        bonus += random2(3);
     if (_check_crosstrain(exsk, SK_SLINGS,       SK_THROWING))
-        bonus += random2(30);
+        bonus += random2(3);
 
-    return (bonus);
+    return (10*bonus);
 }
 
 static bool _skip_exercise(skill_type exsk)
@@ -358,7 +358,7 @@ static int _exercise2(int exski)
     // to keep up with the monster levels.  This should speed its
     // advancement.
     if (exsk == SK_STEALTH)
-        bonus += random2(30);
+        bonus += 10*random2(3);
 
     // Spellcasting and Inv/Evo is cheaper early on.
     if (exsk >= SK_SPELLCASTING && exsk <= SK_EVOCATIONS)
