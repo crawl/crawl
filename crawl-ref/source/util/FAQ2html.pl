@@ -20,6 +20,8 @@ my $key     = "";
 my $current = "";
 my $text    = "";
 my $list    = 0;
+my $bullet  = 0;
+my $listct  = 0;
 while (my $line = <FILE>)
 {
     next if ($line =~ /^#/);
@@ -52,26 +54,46 @@ while (my $line = <FILE>)
         {
             # Properly close list tags.
             chomp $text;
-            $text .= "</li></ul>\n";
+            $text .= "</li>";
+            if ($bullet)
+            {
+                $text .= "</ul>";
+                $bullet = 0;
+            }
+            else
+            {
+                $text .= "</ol>";
+                $listct = 0;
+            }
+            $text .= "\n";
             $list = 0;
         }
         $questions{$key} = $text if ($current eq "q");
         $answers{$key}   = $text if ($current eq "a");
         $text = "";
         $key  = "";
+        $listct = 0;
     }
     elsif ($line !~ /^\s+$/ || $text ne "")
     {
         $line =~ s/^A:\s*//;
 
         # Transform * lists into proper lists.
-        if ($line =~ /^\*/)
+        if ($line =~ /^[\*\d]/)
         {
-            $line =~ s/^\*/<li>/;
+            $bullet = 1 if ($line =~ /^\*/);
+
+            $line =~ s/^(\*|\d\.)/<li>/;
             if (not $list)
             {
                 $text =~ s/<\/br>\n$/\n/;
-                $line =~ s/^<li>/<ul><li>/;
+                my $replace = "<ul>";
+                if (not $bullet)
+                {
+                   $listct++;
+                   $replace = "<ol start=\"$listct\">";
+                }
+                $line =~ s/^<li>/$replace<li>/;
                 $list = 1;
             }
             else
@@ -84,8 +106,11 @@ while (my $line = <FILE>)
         {
             # An empty line, end list section.
             chomp $text;
-            $text .= "</li></ul>\n";
+            my $replace = "</ol>";
+               $replace = "</ul>" if ($bullet);
+            $text .= "</li>$replace\n";
             $list = 0;
+            $bullet = 0;
         }
         elsif ($current eq "a")
         {
