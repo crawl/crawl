@@ -2107,12 +2107,6 @@ void exercise_spell(spell_type spell, bool spc, bool success)
     int exer = 0;
     int workout = 0;
 
-    // This is used as a reference level to normalise spell skill training
-    // (for Sif Muna piety). Normalised skill training is worked out as:
-    // norm = actual_amount_trained * species_aptitude / ref_skill. This was
-    // set at 50 in stone_soup 0.1.1 (which is bad).
-    const int ref_skill = 80;
-
     unsigned int disciplines = get_spell_disciplines(spell);
 
     //jmf: evil evil evil -- exclude HOLY bit
