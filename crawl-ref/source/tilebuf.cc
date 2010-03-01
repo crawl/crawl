@@ -12,11 +12,6 @@
 #include "tilebuf.h"
 #include "tilefont.h"
 
-#ifdef USE_SDL
-#include "uiwrapper-sdl.h"
-#include "cgcontext-sdl.h"
-#endif
-
 /////////////////////////////////////////////////////////////////////////////
 // VColour
 
@@ -26,25 +21,6 @@ VColour VColour::transparent(0, 0, 0, 0);
 
 /////////////////////////////////////////////////////////////////////////////
 // VertBuffer
-
-#ifdef ASSERTS
-static bool _valid(int num_verts, int prim)
-{
-    switch (prim)
-    {
-    case GL_QUADS:
-        return (num_verts % 4 == 0);
-    case GL_TRIANGLES:
-        return (num_verts % 3 == 0);
-    case GL_LINES:
-        return (num_verts % 2 == 0);
-    case GL_POINTS:
-        return (true);
-    default:
-        return (false);
-    }
-}
-#endif
 
 template<>
 void VertBuffer<PTVert>::init_state()
@@ -60,15 +36,17 @@ void VertBuffer<PTVert>::draw() const
 {
     if (size() == 0)
         return;
-
-    ASSERT(_valid(size(), m_prim));
+    
+    ASSERT(m_prim == GLW_QUADS);
+    
+    // Handle texture
     ASSERT(m_tex);
-
     GLStateManager::set(m_state);
-
     m_tex->bind();
-    GLStateManager::drawPTVert(sizeof(Vert), &(*this)[0].pos_x),
-        &(*this)[0].tex_x), m_prim, size());
+    
+    GLStateManager::drawQuadPTVert(sizeof(Vert), size(),
+        &(*this)[0].pos_x, &(*this)[0].tex_x);
+
 }
 
 template<>
@@ -85,13 +63,18 @@ void VertBuffer<PCVert>::draw() const
 {
     if (size() == 0)
         return;
-
-    ASSERT(_valid(size(), m_prim));
+    
+    ASSERT(m_prim == GLW_QUADS || m_prim == GLW_LINES);
     ASSERT(!m_tex);
-
     GLStateManager::set(m_state);
-    GLStateManager::drawPCVert(sizeof(Vert), &(*this)[0].pos_x,
-        &(*this)[0].col, m_prim, size());
+    
+    // Differentiate between lines and quads
+    if( m_prim == GLW_LINES )
+        GLStateManager::drawLinePCVert(sizeof(Vert), size(),
+            &(*this)[0].pos_x, &(*this)[0].col);
+    else
+        GLStateManager::drawQuadPCVert(sizeof(Vert), size(),
+            &(*this)[0].pos_x, &(*this)[0].col);
 }
 
 template<>
@@ -109,15 +92,16 @@ void VertBuffer<PTCVert>::draw() const
 {
     if (size() == 0)
         return;
-
-    ASSERT(_valid(size(), m_prim));
+    
+    ASSERT(m_prim == GLW_QUADS);
+    
+    // Handle texture
     ASSERT(m_tex);
-
     GLStateManager::set(m_state);
-
     m_tex->bind();
-    GLStateManager::drawPTCVert(sizeof(Vert) &(*this)[0].pos_x,
-        &(*this)[0].tex_x, &(*this)[0].col, m_prim, size());
+    
+    GLStateManager::drawQuadPTCVert(sizeof(Vert), size(),
+        &(*this)[0].pos_x, &(*this)[0].tex_x, &(*this)[0].col);
 }
 
 template<>
@@ -138,23 +122,23 @@ void VertBuffer<P3TCVert>::draw() const
 {
     if (size() == 0)
         return;
-
-    ASSERT(_valid(size(), m_prim));
+    
+    ASSERT(m_prim == GLW_QUADS);
+    
+    // Handle texture
     ASSERT(m_tex);
-
     GLStateManager::set(m_state);
-
     m_tex->bind();
 
-    GLStateManager::drawP3TCVert(sizeof(Vert) &(*this)[0].pos_x,
-        &(*this)[0].tex_x, &(*this)[0].col, m_prim, size());
+    GLStateManager::drawQuadP3TCVert(sizeof(Vert), size(),
+        &(*this)[0].pos_x, &(*this)[0].tex_x, &(*this)[0].col );
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // FontBuffer
 
 FontBuffer::FontBuffer(FTFont *font) :
-    VertBuffer<PTCVert>(font->font_tex(), GL_QUADS), m_font(font)
+    VertBuffer<PTCVert>(font->font_tex(), GLW_QUADS), m_font(font)
 {
     ASSERT(m_font);
     ASSERT(m_tex);
@@ -163,19 +147,19 @@ FontBuffer::FontBuffer(FTFont *font) :
 void FontBuffer::add(const formatted_string &fs, float x, float y)
 {
     m_font->store(*this, x, y, fs);
-    ASSERT(_valid(size(), m_prim));
+    ASSERT(GLStateManager::_valid(size(), m_prim));
 }
 
 void FontBuffer::add(const std::string &s, const VColour &col, float x, float y)
 {
     m_font->store(*this, x, y, s, col);
-    ASSERT(_valid(size(), m_prim));
+    ASSERT(GLStateManager::_valid(size(), m_prim));
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // TileBuffer
 
-TileBuffer::TileBuffer(const TilesTexture *t) : VertBuffer<PTVert>(t, GL_QUADS)
+TileBuffer::TileBuffer(const TilesTexture *t) : VertBuffer<PTVert>(t, GLW_QUADS)
 {
 }
 
@@ -225,7 +209,7 @@ void TileBuffer::add_unscaled(int idx, float x, float y, int ymax)
         v.tex_y = tex_sy;
     }
 
-    ASSERT(_valid(size(), m_prim));
+    ASSERT(GLStateManager::_valid(size(), m_prim));
 }
 
 void TileBuffer::add(int idx, int x, int y, int ox, int oy, bool centre, int ymax)
@@ -288,7 +272,7 @@ void TileBuffer::set_tex(const TilesTexture *new_tex)
 // ColouredTileBuffer
 
 ColouredTileBuffer::ColouredTileBuffer(const TilesTexture *t) :
-    VertBuffer<P3TCVert>(t, GL_QUADS)
+    VertBuffer<P3TCVert>(t, GLW_QUADS)
 {
 }
 
@@ -500,7 +484,7 @@ void SubmergedTileBuffer::clear()
 // glPointSize unless GL_SMOOTH_POINTS is on.  GL_SMOOTH_POINTS is
 // *terrible* for performance if it has to fall back on software rendering,
 // so instead we'll just make quads.
-ShapeBuffer::ShapeBuffer() : VertBuffer<PCVert>(NULL, GL_QUADS)
+ShapeBuffer::ShapeBuffer() : VertBuffer<PCVert>(NULL, GLW_QUADS)
 {
 }
 
@@ -532,13 +516,13 @@ void ShapeBuffer::add(float pos_sx, float pos_sy, float pos_ex, float pos_ey,
         v.col = col;
     }
 
-    ASSERT(_valid(size(), m_prim));
+    ASSERT(GLStateManager::_valid(size(), m_prim));
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // LineBuffer
 
-LineBuffer::LineBuffer() : VertBuffer<PCVert>(NULL, GL_LINES)
+LineBuffer::LineBuffer() : VertBuffer<PCVert>(NULL, GLW_LINES)
 {
 }
 
@@ -558,7 +542,7 @@ void LineBuffer::add(float pos_sx, float pos_sy, float pos_ex, float pos_ey,
         v.col = col;
     }
 
-    ASSERT(_valid(size(), m_prim));
+    ASSERT(GLStateManager::_valid(size(), m_prim));
 }
 
 void LineBuffer::add_square(float sx, float sy, float ex, float ey,
