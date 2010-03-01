@@ -341,7 +341,10 @@ static int _exercise2(int exski)
 {
     skill_type exsk = static_cast<skill_type>(exski);
 
+    // The sum of these will be added to you.skill_points[exsk];
+    int deg = 10;
     int bonus = 0;
+
     skill_type old_best_skill = best_skill(SK_FIGHTING, (NUM_SKILLS - 1), 99);
 
     // Being good at some weapons makes others easier to learn.
@@ -377,7 +380,6 @@ static int _exercise2(int exski)
     const int spending_limit = std::min(MAX_SPENDING_LIMIT, you.exp_available);
 
     // Handle fractional learning.
-    int deg = 10;
     if (skill_change > spending_limit)
     {
         // This system is a bit hard on missile weapons in the late
@@ -394,21 +396,11 @@ static int _exercise2(int exski)
         else
         {
             deg = (spending_limit * 10) / skill_change;
-
-            if (deg == 0)
-                bonus = 0;
         }
 
+        bonus = (bonus * deg) / 10;
+
         skill_change = spending_limit;
-    }
-
-    skill_change -= random2(5);
-
-    if (skill_change <= 0)
-    {
-        // No free lunch.  This is a problem now that we don't have
-        // overspending.
-        skill_change = (deg > 0 || bonus > 0) ? 1 : 0;
     }
 
     int skill_inc = deg + bonus;
@@ -419,6 +411,9 @@ static int _exercise2(int exski)
 
     if (skill_inc <= 0)
         return (0);
+
+    skill_change -= random2(5);
+    skill_change = std::max<int>(skill_change, 1); // No free lunch.
 
     you.skill_points[exsk] += skill_inc;
     you.exp_available -= skill_change;
