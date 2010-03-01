@@ -14,38 +14,46 @@ Walker) would like to thank:
   Brian Robinson, Mark Mackey, Gordon Lipford, Daniel Ligon, Jesse Jones, Josh
   Fishman, Don Brodale.
 
+* Marc H. Thoben, for setting up and maintaining our current Mantis tracker,
+  Wiki, development blog and Windows trunk builds, as well as providing public
+  telnet access to development builds, all on crawl.develz.org.
+
+* Rachel Elizabeth Dillon, for all the work done in running the public telnet
+  server crawl.akrasiac.org, its associated August tourney, and other great
+  contributions.
+
 We'd also like to thank members of the Dungeon Crawl community who have
 contributed to Dungeon Crawl Stone Soup:
 
-Warwick Allison              Chris Hamons              Dylan O'Donnell
-Juha Arpiainen               R. Dan Henry              Yuuma Oohara
-Roy Axenov                   Brendan Hickey            Pedro
-Max Bane                     Benoit Hudson             Arlen Phillips
-Bill Beher                   Sylvia 'Onia' Hörnke      Erik Piper
-Alexander Beisig             Iainuki                   Lemuel Pitkin
-Stu Black                    Ilyak                     Derek Ray
-Erik Inge Bolsø              Matthew Ince              Remsleep
-Peter Borgmann               Mitsuhiro Itakura         Will Rogers
-Daniel Mark Brownrigg        Mikko Juola               David Rose
-Trent W. Buck                Jarmo Kielosto            Sebastian Salman
-Robert Burnham               Kornel Kisielewicz        Brett Scarborough
-Joe Buzzelli                 Daniel Klein              Darshan Shaligram
-Terje Bø                     Vambola Kotkas            Robert Shimmin
-Henry Cipolla                Ryan Kusnery              Sigurd
-Aaron Curtis                 Jukka Kuusisto            Edgar Simo
-Denzi                        Janne Lahdenperä          Alex Smith
-Rachel Elizabeth Dillon      Maciej Lapinski           Solf
-Mike Drinen                  Jordan Lewis              Michael Spang
-Kieron Dunbar                Icy Lich                  Johan Strandell
-Micha Elsner                 Markus Maier              Roman Sêk
-Christopher Evenstar         Arien Malec               William Tanksley, Jr.
-Brett Foster                 Paul Maloney              Marc H. Thoben
-Ben Goetter                  Neil 'Mu' Middleton       Jared 'Twinge' Tinney
-Rob Grant                    Andrew Minton             Matt Titus
-John Greenberg               Shawn M Moore             Steven Wheeler
-GreyKnight                   Eva Myers                 Thomas Willem
-Joshua Gross                 Wille Mäntylä             Evan Williams
-Brian Haase                  Erkki Nurmi               Jeremey Wilson
-Shayne Halvorson             Mattias Nyberg            Yelve Yakut
-Ciaran Hamilton              nyra                      Zooko
+Warwick Allison            R. Dan Henry              Yuuma Oohara
+Juha Arpiainen             Brendan Hickey            Pedro
+Roy Axenov                 Benoit Hudson             Arlen Phillips
+Max Bane                   Sylvia 'Onia' Hörnke      Erik Piper
+Bill Beher                 Iainuki                   Lemuel Pitkin
+Alexander Beisig           Ilyak                     Derek Ray
+Stu Black                  Matthew Ince              Remsleep
+Erik Inge Bolsø            Mitsuhiro Itakura         Will Rogers
+Peter Borgmann             Mikko Juola               David Rose
+Daniel Mark Brownrigg      Jarmo Kielosto            Sebastian Salman
+Trent W. Buck              Kornel Kisielewicz        Brett Scarborough
+Robert Burnham             Daniel Klein              Darshan Shaligram
+Joe Buzzelli               Vambola Kotkas            Robert Shimmin
+Terje Bø                   Ryan Kusnery              Sigurd
+Henry Cipolla              Jukka Kuusisto            Edgar Simo
+Aaron Curtis               Janne Lahdenperä          Alex Smith
+Denzi                      Maciej Lapinski           Solf
+Mike Drinen                Jordan Lewis              Michael Spang
+Kieron Dunbar              Icy Lich                  Johan Strandell
+Micha Elsner               Markus Maier              Roman Sêk
+Christopher Evenstar       Arien Malec               William Tanksley, Jr.
+Brett Foster               Paul Maloney              Jared 'Twinge' Tinney
+Ben Goetter                Neil 'Mu' Middleton       Matt Titus
+Rob Grant                  Andrew Minton             Steven Wheeler
+John Greenberg             Shawn M Moore             Thomas Willem
+GreyKnight                 Eva Myers                 Evan Williams
+Joshua Gross               Wille Mäntylä             Jeremey Wilson
+Brian Haase                Erkki Nurmi               Yelve Yakut
+Shayne Halvorson           Mattias Nyberg            Zooko
+Ciaran Hamilton            nyra
+Chris Hamons               Dylan O'Donnell
 
