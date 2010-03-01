@@ -22,7 +22,17 @@ int GraphicsContext::loadImage( const char *file )
 {
     if(surf) SDL_FreeSurface(surf);
     
-    surf = IMG_Load(file);
+    FILE *imgfile = fopen(file, "rb");
+    if (imgfile)
+    {
+        SDL_RWops *rw = SDL_RWFromFP(imgfile, 0);
+        if (rw)
+        {
+            surf = IMG_Load_RW(rw, 0);
+            SDL_RWclose(rw);
+        }
+        fclose(imgfile);
+    }
     
     if(!surf) return -1;
     
