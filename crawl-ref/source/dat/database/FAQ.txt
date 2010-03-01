@@ -237,7 +237,7 @@ Which gods would you recommend to a beginning player?
 A:religion
 
 A: The easiest gods to play are probably Trog (for pure fighters), Vehumet or
-Sif Muna (for spellcasters), Beogh (for orcs) and Xom (for general fun).
+Sif Muna (for spellcasters), Beogh (for orcs), and Xom (for general fun).
 
 Whenever you encounter an altar, be sure to read the corresponding god's
 description and take your time in deciding whether to pick this deity or not.
