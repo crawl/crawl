@@ -554,8 +554,8 @@ public:
 #ifdef USE_TILE
                 more_str += "or click ";
 #endif
-                more_str += "to continue. Use Ctrl-P to read the message "
-                            "history.";
+                more_str += "to continue. You can later reread messages with "
+                            "Ctrl-P.";
                 cprintf(more_str.c_str());
             }
             else
