@@ -2105,7 +2105,6 @@ void exercise_spell(spell_type spell, bool spc, bool success)
     // (!success) reduces skill increase for miscast spells
     int skill;
     int exer = 0;
-    int exer_norm = 0;
     int workout = 0;
 
     // This is used as a reference level to normalise spell skill training
@@ -2150,8 +2149,6 @@ void exercise_spell(spell_type spell, bool spc, bool success)
 
         const int exercise_amount = exercise( skill, workout );
         exer      += exercise_amount;
-        exer_norm +=
-            exercise_amount * species_skills(skill, you.species) / ref_skill;
     }
 
     /* ******************************************************************
@@ -2172,12 +2169,10 @@ void exercise_spell(spell_type spell, bool spc, bool success)
             exercise(SK_SPELLCASTING, one_chance_in(3) ? 1
                             : random2(1 + random2(diff)));
         exer      += exercise_amount;
-        exer_norm += exercise_amount *
-            species_skills(SK_SPELLCASTING, you.species) / ref_skill;
     }
 
-    if (exer_norm)
-        did_god_conduct( DID_SPELL_PRACTISE, exer_norm );
+    if (exer)
+        did_god_conduct(DID_SPELL_PRACTISE, exer);
 }
 
 const char* failure_rate_to_string( int fail )
