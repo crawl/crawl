@@ -5068,7 +5068,7 @@ void MenuRegion::set_more(const formatted_string &more)
 }
 
 TitleRegion::TitleRegion(int width, int height, FTFont* font) :
-  m_buf(&m_img, GL_QUADS), m_font_buf(font)
+  m_buf(&m_img, GLW_QUADS), m_font_buf(font)
 {
     sx = sy = 0;
     dx = dy = 1;

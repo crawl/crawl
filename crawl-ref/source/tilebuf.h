@@ -82,7 +82,7 @@ class VertBuffer : public std::vector<V>
 public:
     typedef V Vert;
 
-    VertBuffer(const GenericTexture *tex, int prim);
+    VertBuffer(const GenericTexture *tex, drawing_modes prim);
 
     // Vertices are fat, so to avoid an extra copy of all the data members,
     // pre-construct the vertex and return a reference to it.
@@ -95,7 +95,7 @@ protected:
     void init_state();
 
     const GenericTexture *m_tex;
-    int m_prim;
+    drawing_modes m_prim;
     GLState m_state;
 };
 
@@ -189,7 +189,7 @@ public:
 // template implementation
 
 template<class V>
-inline VertBuffer<V>::VertBuffer(const GenericTexture *tex, int prim) :
+inline VertBuffer<V>::VertBuffer(const GenericTexture *tex, drawing_modes prim) :
     m_tex(tex), m_prim(prim)
 {
     init_state();
