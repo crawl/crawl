@@ -1,3 +1,5 @@
+#include "debug.h"
+
 #include "glwrapper.h"
 
 #ifdef USE_TILE
@@ -82,56 +84,92 @@ void GLStateManager::set(const GLState& state)
         glDisable(GL_ALPHA_TEST);
 }
 
-void GLStateManager::drawPTVert(long int size, int mode, int count
-    void *vert_pointer, void *tex_pointer)
+void GLStateManager::drawQuadPTVert( long unsigned int size, size_t count,
+    const void *vert_pointer, const void *tex_pointer)
 {
-    glVertexPointer(2, GL_FLOAT, size, vert_pointer;
-    glTexCoordPointer(2, GL_FLOAT, size, tex_pointer;
-    glDrawArrays(mode, 0, count);
+    ASSERT(_valid(count, GLW_QUADS));
+    glVertexPointer(2, GL_FLOAT, size, vert_pointer);
+    glTexCoordPointer(2, GL_FLOAT, size, tex_pointer);
+    glDrawArrays(GL_QUADS, 0, count);
 }
 
-void GLStateManager::drawPCVert(long int size, int mode, int count
-    void *vert_pointer, void *color_pointer)
+void GLStateManager::drawQuadPCVert( long unsigned int size, size_t count,
+    const void *vert_pointer, const void *color_pointer)
 {
+    ASSERT(_valid(count, GLW_QUADS));
     glVertexPointer(2, GL_FLOAT, size, vert_pointer);
     glColorPointer(4, GL_UNSIGNED_BYTE, size, color_pointer);
-    glDrawArrays(mode, 0, count);
+    glDrawArrays(GL_QUADS, 0, count);
 }
 
-static void drawPTCVert(long int size, int mode, int count
-    void *vert_pointer, void *tex_pointer, void *color_pointer)
+void GLStateManager::drawLinePCVert( long unsigned int size, size_t count,
+    const void *vert_pointer, const void *color_pointer)
 {
+    ASSERT(_valid(count, GLW_LINES));
+    glVertexPointer(2, GL_FLOAT, size, vert_pointer);
+    glColorPointer(4, GL_UNSIGNED_BYTE, size, color_pointer);
+    glDrawArrays(GL_LINES, 0, count);
+}
+
+void GLStateManager::drawQuadPTCVert( long unsigned int size, size_t count,
+    const void *vert_pointer, const void *tex_pointer,
+    const void *color_pointer)
+{
+    ASSERT(_valid(count, GLW_QUADS));
     glVertexPointer(2, GL_FLOAT, size, vert_pointer);
     glTexCoordPointer(2, GL_FLOAT, size, tex_pointer);
     glColorPointer(4, GL_UNSIGNED_BYTE, size, color_pointer);
-    glDrawArrays(mode, 0, count);
+    glDrawArrays(GL_QUADS, 0, count);
 }
 
-static void drawP3TCVert(long int size, int mode, int count
-    void *vert_pointer, void *tex_pointer, void *color_pointer)
+void GLStateManager::drawQuadP3TCVert( long unsigned int size, size_t count,
+    const void *vert_pointer, const void *tex_pointer,
+    const void *color_pointer)
 {
+    ASSERT(_valid(count, GLW_QUADS));
     glVertexPointer(3, GL_FLOAT, size, vert_pointer);
     glTexCoordPointer(2, GL_FLOAT, size, tex_pointer);
     glColorPointer(4, GL_UNSIGNED_BYTE, size, color_pointer);
-    glDrawArrays(mode, 0, count);
+    glDrawArrays(GL_QUADS, 0, count);
 }
 
-static void pushMatrix()
+void GLStateManager::pushMatrix()
 {
     glPushMatrix();
 }
 
-static void popMatrix()
+void GLStateManager::popMatrix()
 {
     glPopMatrix();
 }
 
-static void translatef(float x, float y, float z)
+void GLStateManager::translatef(float x, float y, float z)
 {
     glTranslatef(x, y ,z);
 }
 
+#ifdef DEBUG
+bool GLStateManager::_valid(int num_verts, drawing_modes mode)
+{
+    switch( mode )
+    {
+        case GLW_QUADS:
+        case GLW_TRIANGLE_STRIP:
+        return (num_verts % 4 == 0);
+        case GLW_TRIANGLES:
+        return (num_verts % 3 == 0);
+        case GLW_LINES:
+        return (num_verts % 2 == 0);
+        case GLW_POINTS:
+        return (true);
+        default:
+        return (false);
+    }
+    
+}
+#endif
+
 /////////////////////////////////////////////////////////////////////////////
 // Static Methods
 
-#endif 
+#endif
