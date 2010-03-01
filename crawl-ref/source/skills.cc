@@ -385,18 +385,19 @@ static int _exercise2(int exski)
         // practise.  Increasing the "deg"ree of exercise would make
         // missile weapons too easy earlier on, so, instead, we're
         // giving them a special case here.
-        if (!_discounted_throwing_skill(exsk)
-            || skill_change > you.exp_available)
+        if (_discounted_throwing_skill(exsk)
+            && skill_change <= you.exp_available)
         {
-            int fraction = (spending_limit * 10) / skill_change;
-
-            deg = (deg * fraction) / 10;
-
-            if (deg == 0)
-                bonus = (bonus * fraction) / 10;
+            // MAX_SPENDING_LIMIT < skill_change <= you.exp_available
+            deg = ((skill_change / 2) > MAX_SPENDING_LIMIT) ? 5 : 10;
         }
         else
-            deg = ((skill_change / 2) > MAX_SPENDING_LIMIT) ? 5 : 10;
+        {
+            deg = (spending_limit * 10) / skill_change;
+
+            if (deg == 0)
+                bonus = 0;
+        }
 
         skill_change = spending_limit;
     }
