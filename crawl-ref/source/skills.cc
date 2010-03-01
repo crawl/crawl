@@ -274,8 +274,10 @@ static int _stat_mult(skill_type exsk, int skill_inc)
     return (skill_inc * std::max<int>(5, stat) / 10);
 }
 
-void _gain_skill_level(skill_type exsk, skill_type old_best_skill)
+void _gain_skill_level(skill_type exsk)
 {
+    skill_type old_best_skill = best_skill(SK_FIGHTING, (NUM_SKILLS - 1), 99);
+
     you.skills[exsk]++;
 
     take_note(Note(NOTE_GAIN_SKILL, exsk, you.skills[exsk]));
@@ -352,8 +354,6 @@ static int _exercise2(int exski)
     // This will be deducted from you.exp_available.
     int cost = _calc_skill_cost(you.skill_cost_level, you.skills[exsk]);
 
-    skill_type old_best_skill = best_skill(SK_FIGHTING, (NUM_SKILLS - 1), 99);
-
     // Being good at some weapons makes others easier to learn.
     if (exsk < SK_ARMOUR)
         skill_inc += _weap_crosstrain_bonus(exsk);
@@ -425,7 +425,7 @@ static int _exercise2(int exski)
     const unsigned int next = skill_exp_needed(you.skills[exsk] + 1)
                               * species_skills(exsk, you.species) / 100;
     if (you.skill_points[exsk] > next)
-        _gain_skill_level(exsk, old_best_skill);
+        _gain_skill_level(exsk);
 
     return (skill_inc);
 }
