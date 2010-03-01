@@ -3282,8 +3282,9 @@ bool monsters::is_chaotic() const
     if (has_chaotic_spell() && !is_actual_spellcaster())
         return (true);
 
+    // Checking for AF_KLOWN doesn't work, as it gets switched to another AF.
     if (has_attack_flavour(AF_MUTATE)
-        || has_attack_flavour(AF_KLOWN)
+        || type == MONS_KILLER_KLOWN
         || has_attack_flavour(AF_CHAOS))
     {
         return (true);
