@@ -729,13 +729,6 @@ static int player_view_update_at(const coord_def &gc)
     if (Tutorial.tutorial_left)
         tutorial_observe_cell(gc);
 
-    if (!player_in_mappable_area())
-    {
-        set_terrain_seen(gc);
-        set_map_knowledge_obj(gc, to_knowledge(env.show(ep)));
-        return (ret);
-    }
-
     if (is_terrain_changed(gc) || !is_terrain_seen(gc))
         ret |= UF_AFFECT_EXCLUDES;
 
@@ -745,6 +738,9 @@ static int player_view_update_at(const coord_def &gc)
     set_map_knowledge_detected_item(gc, false);
 
 #ifdef USE_TILE
+    if (!player_in_mappable_area())
+        return (ret); // XXX: is this necessary?
+
     // We remove any references to mcache when
     // writing to the background.
     if (Options.clean_map)
@@ -917,6 +913,9 @@ void viewwindow(bool monster_updates, bool show_updates)
 
     if (show_updates)
     {
+        if (!player_in_mappable_area())
+            env.map_knowledge.init(map_cell());
+
         you.update_los();
 
 #ifdef USE_TILE
@@ -955,11 +954,8 @@ void viewwindow(bool monster_updates, bool show_updates)
         const coord_def gc = view2grid(*ri);
         const coord_def ep = view2show(grid2view(gc));
 
-        if (!map_bounds(gc)
-            || !player_in_mappable_area() && !you.see_cell(gc))
-        {
+        if (!map_bounds(gc))
             draw_unseen(&buffy[bufcount], gc);
-        }
         else if (!crawl_view.in_grid_los(gc))
             draw_outside_los(&buffy[bufcount], gc);
         else if (gc == you.pos() && you.on_current_level
