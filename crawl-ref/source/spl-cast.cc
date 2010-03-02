@@ -996,7 +996,7 @@ static bool _can_cast_detect()
 
 static spret_type _do_cast(spell_type spell, int powc,
                            const dist& spd, bolt& beam,
-                           god_type god, bool normal_cast, int potion);
+                           god_type god, int potion);
 
 // Returns SPRET_SUCCESS if spell is successfully cast for purposes of
 // exercising, SPRET_FAIL otherwise, or SPRET_ABORT if the player canceled
@@ -1121,9 +1121,6 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
                                       : GOD_NO_GOD;
 
-    const bool normal_cast = crawl_state.prev_cmd == CMD_CAST_SPELL
-                          && god == GOD_NO_GOD;
-
     const int  loudness        = spell_noise(spell);
     const bool sound_at_caster = !(flags & SPFLAG_TARGETING_MASK);
 
@@ -1213,7 +1210,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     dprf("Spell #%d, power=%d", spell, powc);
 
-    switch (_do_cast(spell, powc, spd, beam, god, normal_cast, potion))
+    switch (_do_cast(spell, powc, spd, beam, god, potion))
     {
     case SPRET_SUCCESS:
         _spellcasting_side_effects(spell);
@@ -1252,8 +1249,11 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 // Returns SPRET_SUCCESS, SPRET_ABORT or SPRET_NONE (not a player spell).
 static spret_type _do_cast(spell_type spell, int powc,
                            const dist& spd, bolt& beam,
-                           god_type god, bool normal_cast, int potion)
+                           god_type god, int potion)
 {
+    const bool want_repeat = crawl_state.prev_cmd == CMD_CAST_SPELL
+                             && god == GOD_NO_GOD;
+
     switch (spell)
     {
     // spells using burn_freeze()
@@ -1477,7 +1477,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_DELAYED_FIREBALL:
-        if (normal_cast)
+        if (want_repeat)
             crawl_state.cant_cmd_repeat("You can't repeat delayed fireball.");
         // This spell has two main advantages over Fireball:
         //
@@ -1610,7 +1610,7 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_TUKIMAS_DANCE:
         // Temporarily turns a wielded weapon into a dancing weapon.
-        if (normal_cast)
+        if (want_repeat)
             crawl_state.cant_cmd_repeat("You can't repeat Tukima's Dance.");
         cast_tukimas_dance(powc, god);
         break;
@@ -1898,7 +1898,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_ALTER_SELF:
-        if (normal_cast)
+        if (want_repeat)
             crawl_state.cant_cmd_repeat("You can't repeat Alter Self.");
 
         if (!enough_hp(you.hp_max / 2, true))
@@ -2100,7 +2100,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_PORTAL:
-        if (normal_cast)
+        if (want_repeat)
             crawl_state.cant_cmd_repeat("You can't repeat create portal.");
         if (portal() == -1)
             return (SPRET_ABORT);
