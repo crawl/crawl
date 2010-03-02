@@ -1354,6 +1354,9 @@ dungeon_feature_type trap_category(trap_type type)
 
 bool is_valid_shaft_level(const level_id &place)
 {
+    if (crawl_state.game_is_sprint())
+        return (false);
+
     if (place.level_type != LEVEL_DUNGEON)
         return (false);
 
@@ -1541,7 +1544,7 @@ trap_type random_trap_slime(int level_number)
 
     if (one_chance_in(5) && is_valid_shaft_level(level_id::current()))
         type = TRAP_SHAFT;
-    if (one_chance_in(5))
+    if (one_chance_in(5) && !crawl_state.game_is_sprint())
         type = TRAP_TELEPORT;
     if (one_chance_in(10))
         type = TRAP_ALARM;
@@ -1584,7 +1587,7 @@ static trap_type random_trap_default(int level_number, const level_id &place)
 
     if (one_chance_in(20) && is_valid_shaft_level(place))
         type = TRAP_SHAFT;
-    if (one_chance_in(20))
+    if (one_chance_in(20) && !crawl_state.game_is_sprint())
         type = TRAP_TELEPORT;
     if (one_chance_in(40))
         type = TRAP_ALARM;

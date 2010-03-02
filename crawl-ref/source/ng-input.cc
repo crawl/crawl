@@ -210,12 +210,14 @@ void enter_player_name(newgame_def &ng, bool blankOK)
         existing_chars = find_saved_characters();
         if (existing_chars.empty())
         {
-            cgotoxy(1,12);
-            formatted_string::parse_string(
-                                           "  If you've never been here before, you might want to try out" EOL
-                                           "  the Dungeon Crawl tutorial. To do this, press "
-                                           "<white>Ctrl-T</white> on the next" EOL
-                                           "  screen.").display();
+            if (!crawl_state.game_is_sprint()) {
+                cgotoxy(1,12);
+                formatted_string::parse_string(
+                                            "  If you've never been here before, you might want to try out" EOL
+                                            "  the Dungeon Crawl tutorial. To do this, press "
+                                            "<white>Ctrl-T</white> on the next" EOL
+                                            "  screen.").display();
+            }
         }
         else
         {

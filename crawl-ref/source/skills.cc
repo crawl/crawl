@@ -21,6 +21,8 @@
 #include "random.h"
 #include "skills2.h"
 #include "spl-cast.h"
+#include "sprint.h"
+#include "state.h"
 #include "tutorial.h"
 
 
@@ -144,6 +146,10 @@ static int _calc_skill_cost( int skill_cost_level, int skill_level )
 int exercise(int exsk, int deg)
 {
     int ret = 0;
+
+    if (crawl_state.game_is_sprint()) {
+        deg = sprint_modify_skills(deg);
+    }
 
     while (deg > 0)
     {

@@ -53,6 +53,7 @@
 #include "skills2.h"
 #include "spl-book.h"
 #include "spl-util.h"
+#include "sprint.h"
 #include "state.h"
 #include "stuff.h"
 #include "tutorial.h"
@@ -842,6 +843,9 @@ game_start:
     you.max_intel    = you.intel;
 
     _give_starting_food();
+    if (crawl_state.game_is_sprint()) {
+        sprint_give_items();
+    }
     _mark_starting_books();
     _racialise_starting_equipment();
 
@@ -2767,7 +2771,9 @@ spec_query:
             textcolor( WHITE );
             cprintf("Pick your character's species!");
         }
-        cprintf("  (Press Ctrl-T to enter a tutorial.)");
+        if (!crawl_state.game_is_sprint()) {
+            cprintf("  (Press Ctrl-T to enter a tutorial.)");
+        }
         cprintf(EOL EOL);
         textcolor( CYAN );
         cprintf("You can be:  "
@@ -2921,7 +2927,8 @@ spec_query:
 
     // These are handled specially as they _could_ be set
     // using Options.race or prev_race.
-    if (keyn == CONTROL('T') || keyn == 'T') // easy to set in init.txt
+    // this is easy to set in init.txt
+    if ((keyn == CONTROL('T') || keyn == 'T') && !crawl_state.game_is_sprint())
         return !pick_tutorial();
 
     bool good_randspecies = (keyn == '+');
@@ -3007,7 +3014,9 @@ job_query:
             textcolor( WHITE );
             cprintf("Pick your character's background!");
         }
-        cprintf("  (Press Ctrl-T to enter a tutorial.)");
+        if (!crawl_state.game_is_sprint()) {
+            cprintf("  (Press Ctrl-T to enter a tutorial.)");
+        }
 
         cprintf(EOL EOL);
         textcolor( CYAN );
@@ -3122,7 +3131,12 @@ job_query:
         return (false);
     case 'T':
     case CONTROL('T'):
-        return pick_tutorial();
+        if (crawl_state.game_is_sprint()) {
+            goto job_query;
+        }
+        else {
+            return pick_tutorial();
+        }
     case '#':
         good_random = true;
         // intentional fall-through
