@@ -52,9 +52,9 @@ const int MAX_GHOSTS = 10;
 #define MAX_SUBTYPES    50
 
 // max size of item list {dlb}:
-#define MAX_ITEMS 500
+#define MAX_ITEMS 600
 // non-item -- (ITEMS + 1) {dlb}
-#define NON_ITEM 501
+#define NON_ITEM 601
 
 // max size of cloud array {dlb}:
 #define MAX_CLOUDS 180
@@ -126,7 +126,7 @@ const int LABYRINTH_BORDER = 4;
 #define MAX_TRAPS 100
 
 // max shops per level
-#define MAX_SHOPS         15
+#define MAX_SHOPS         25
 
 // max shops randomly generated in a level.
 #define MAX_RANDOM_SHOPS  5
