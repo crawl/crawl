@@ -82,10 +82,16 @@ static time_t _parse_time(const std::string &st);
 
 std::string score_file_name()
 {
+    std::string ret;
     if (!SysEnv.scorefile.empty())
-        return (SysEnv.scorefile);
+        ret = SysEnv.scorefile;
+    else
+        ret = Options.save_dir + "scores";
 
-    return (Options.save_dir + "scores");
+    if (crawl_state.game_is_sprint())
+        ret += "-sprint";
+
+    return (ret);
 }
 
 std::string log_file_name()
