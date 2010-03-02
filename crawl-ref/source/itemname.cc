@@ -2804,10 +2804,13 @@ bool is_useless_item(const item_def &item, bool temp)
         case SCR_RANDOM_USELESSNESS:
         case SCR_NOISE:
             return (true);
+        case SCR_RECHARGING:
+            return (you.species == SP_CAT);
         default:
             return (false);
         }
     case OBJ_WANDS:
+        // Cats can't use wands, but they're dangerous when on the floor.
         return (item.plus2 == ZAPCOUNT_EMPTY)
                || item_ident(item, ISFLAG_KNOW_PLUSES) && !item.plus;
 
