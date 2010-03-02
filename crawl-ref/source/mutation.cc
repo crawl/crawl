@@ -3009,14 +3009,9 @@ bool perma_mutate(mutation_type which_mut, int how_much)
     how_much = std::min(static_cast<short>(how_much),
                         mutation_defs[which_mut].levels);
 
-    if (mutate(which_mut, false, true, false, false, true))
-        levels++;
-
-    if (how_much >= 2 && mutate(which_mut, false, true, false, false, true))
-        levels++;
-
-    if (how_much >= 3 && mutate(which_mut, false, true, false, false, true))
-        levels++;
+    while (how_much-- > 0)
+        if (mutate(which_mut, false, true, false, false, true))
+            levels++;
 
     you.demon_pow[which_mut] += levels;
 
