@@ -385,19 +385,30 @@ const zap_info zap_data[] = {
 
 };
 
+#define ZAPDATASIZE (sizeof(zap_data)/sizeof(zap_info))
+
+static int zap_index[NUM_ZAPS];
+
+void init_zap_index()
+{
+    for (int i = 0; i < NUM_ZAPS; ++i)
+        zap_index[i] = -1;
+
+    for (unsigned int i = 0; i < ZAPDATASIZE; ++i)
+        zap_index[zap_data[i].ztype] = i;
+}
+
+const zap_info* _seek_zap(zap_type z_type)
+{
+    if (zap_index[z_type] == -1)
+        return (NULL);
+    else
+        return (&zap_data[zap_index[z_type]]);
+}
+
 static void _zappy(zap_type z_type, int power, bolt &pbolt)
 {
-    const zap_info* zinfo = NULL;
-
-    // Find the appropriate zap info.
-    for (unsigned int i = 0; i < ARRAYSZ(zap_data); ++i)
-    {
-        if (zap_data[i].ztype == z_type)
-        {
-            zinfo = &zap_data[i];
-            break;
-        }
-    }
+    const zap_info* zinfo = _seek_zap(z_type);
 
     // None found?
     if (zinfo == NULL)
