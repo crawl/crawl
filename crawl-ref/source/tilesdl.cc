@@ -599,9 +599,7 @@ int TilesFramework::getch_ck()
                     // (possibly because redrawing is slow or the user
                     // is moving the mouse really quickly), process those
                     // first, before bothering to redraw the screen.
-                    SDL_Event store;
-                    int count = SDL_PeepEvents(&store, 1, SDL_PEEKEVENT,
-                                               SDL_EVENTMASK(SDL_MOUSEMOTION));
+                    unsigned int count = wrapper.getEventCount(UI_MOUSEMOTION);
                     ASSERT(count >= 0);
                     if (count > 0)
                         continue;
