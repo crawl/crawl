@@ -612,7 +612,8 @@ bool you_can_wear(int eq, bool special_armour)
 bool player_has_feet()
 {
     if (you.species == SP_NAGA
-        || player_genus(GENPC_DRACONIAN))
+        || player_genus(GENPC_DRACONIAN)
+        || you.species == SP_CAT)
     {
         return (false);
     }
@@ -3176,6 +3177,9 @@ void level_change(bool skip_attribute_increase)
                                             : STAT_DEX), 1, false,
                                 "level gain");
                 }
+
+                if (you.experience_level == 6 || you.experience_level == 12)
+                    perma_mutate(MUT_SHAGGY_FUR, 1);
                 break;
 
 
