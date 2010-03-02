@@ -84,6 +84,11 @@ void GLStateManager::set(const GLState& state)
         glDisable(GL_ALPHA_TEST);
 }
 
+void GLStateManager::pixelStoreUnpackAlignment(unsigned int bpp)
+{
+    glPixelStorei(GL_UNPACK_ALIGNMENT, bpp);
+}
+
 void GLStateManager::drawQuadPTVert( long unsigned int size, size_t count,
     const void *vert_pointer, const void *tex_pointer)
 {
@@ -131,6 +136,48 @@ void GLStateManager::drawQuadP3TCVert( long unsigned int size, size_t count,
     glTexCoordPointer(2, GL_FLOAT, size, tex_pointer);
     glColorPointer(4, GL_UNSIGNED_BYTE, size, color_pointer);
     glDrawArrays(GL_QUADS, 0, count);
+}
+
+void GLStateManager::deleteTextures(size_t count, unsigned int *textures)
+{
+    glDeleteTextures(count, (GLuint*)textures);
+}
+
+void GLStateManager::generateTextures( size_t count, unsigned int *textures)
+{
+    glGenTextures(count, (GLuint*)textures);
+}
+
+void GLStateManager::bindTexture(unsigned int texture)
+{
+    glBindTexture(GL_TEXTURE_2D, texture);
+}
+
+void GLStateManager::loadTexture(unsigned char *pixels, unsigned int width,
+    unsigned int height, GenericTexture::MipMapOptions mip_opt)
+{
+    // Assumptions...
+    const unsigned int bpp = 4;
+    const GLenum texture_format = GL_RGBA;
+    const GLenum format = GL_UNSIGNED_BYTE;
+
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+
+    if (mip_opt == GenericTexture::MIPMAP_CREATE)
+    {
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+                        GL_LINEAR_MIPMAP_NEAREST);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        gluBuild2DMipmaps(GL_TEXTURE_2D, bpp, width, height,
+                          texture_format, format, pixels);
+    } else {
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexImage2D(GL_TEXTURE_2D, 0, bpp, width, height, 0,
+                     texture_format, format, pixels);
+    }
 }
 
 void GLStateManager::clearBuffers()
