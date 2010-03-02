@@ -133,6 +133,23 @@ void GLStateManager::drawQuadP3TCVert( long unsigned int size, size_t count,
     glDrawArrays(GL_QUADS, 0, count);
 }
 
+void GLStateManager::clearBuffers()
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void GLStateManager::setProjectionMatrixMode()
+{
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+}
+
+void GLStateManager::setModelviewMatrixMode()
+{
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+}
+
 void GLStateManager::pushMatrix()
 {
     glPushMatrix();
@@ -146,6 +163,11 @@ void GLStateManager::popMatrix()
 void GLStateManager::translatef(float x, float y, float z)
 {
     glTranslatef(x, y ,z);
+}
+
+void GLStateManager::scalef(float x, float y, float z)
+{
+    glScalef(x, y, z);
 }
 
 #ifdef DEBUG

@@ -43,7 +43,11 @@ public:
     static void set(const GLState& state);
     static void pushMatrix();
     static void popMatrix();
+    static void setProjectionMatrixMode();
+    static void setModelviewMatrixMode();
     static void translatef(float x, float y, float z);
+    static void scalef(float x, float y, float z);
+    static void clearBuffers();
     
     // Drawing Quads
     static void drawQuadPTVert( long unsigned int size, size_t count,
