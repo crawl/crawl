@@ -389,7 +389,7 @@ function TroveMarker:check_item(marker, pname, position)
     local iplus1, iplus2 = it.pluses()
     local this_item = true
 
-    if not it.identified() then
+    if not it.identified("type properties pluses") then
       this_item = false
     end
 
