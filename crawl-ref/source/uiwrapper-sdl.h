@@ -34,7 +34,7 @@ typedef enum {
     UI_CUSTOMEVENT,
     UI_RESIZE,
     UI_EXPOSE,
-    UI_NUMEVENTS = 16
+    UI_NUMEVENTS = 15
 } ui_event_type;
 
 typedef struct{
