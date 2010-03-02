@@ -2,6 +2,7 @@
 #define GLWRAPPER_H
 
 #include <stdlib.h> // For size_t
+#include <vector> // for std::vector
 
 #ifdef USE_TILE
 #ifdef USE_GL
@@ -47,6 +48,7 @@ public:
     static void setModelviewMatrixMode();
     static void translatef(float x, float y, float z);
     static void scalef(float x, float y, float z);
+    static void loadIdentity();
     static void clearBuffers();
     
     // Drawing Quads
@@ -64,6 +66,13 @@ public:
     // Drawing Lines
     static void drawLinePCVert( long unsigned int size, size_t count,
         const void *vert_pointer, const void *color_pointer);
+    
+    // Drawing tiles-specific objects
+    static void drawTextBlock(unsigned int x_pos, unsigned int y_pos,
+        long unsigned int stride, bool drop_shadow, size_t count,
+        const void *pos_verts, const void *tex_verts, const void *color_verts);
+    static void drawColorBox(long unsigned int stride, size_t count,
+        const void *pos_verts, const void *color_verts);
     
     // Debug
 #ifdef DEBUG

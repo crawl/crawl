@@ -12,7 +12,10 @@
 #include "defines.h"
 #include "files.h"
 
-#include <SDL_opengl.h>
+#ifdef USE_GL
+#include "glwrapper.h"
+#endif
+
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
@@ -381,27 +384,9 @@ void FTFont::render_textblock(unsigned int x_pos, unsigned int y_pos,
     GLStateManager::set(state);
 
     m_tex.bind();
-    glVertexPointer(2, GL_FLOAT, sizeof(FontVertLayout), &verts[0].pos_x);
-    glTexCoordPointer(2, GL_FLOAT, sizeof(FontVertLayout), &verts[0].tex_x);
-
-    if (drop_shadow)
-    {
-        glColor3f(0.0f, 0.0f, 0.0f);
-
-        glLoadIdentity();
-        glTranslatef(x_pos + 1, y_pos + 1, 0.0f);
-        glDrawArrays(GL_QUADS, 0, verts.size());
-
-        glColor3f(1.0f, 1.0f, 1.0f);
-    }
-
-    glLoadIdentity();
-    glTranslatef(x_pos, y_pos, 0.0f);
-
-    glEnableClientState(GL_COLOR_ARRAY);
-    glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(FontVertLayout), &verts[0].r);
-    glDrawArrays(GL_QUADS, 0, verts.size());
-    glDisableClientState(GL_COLOR_ARRAY);
+    GLStateManager::drawTextBlock(x_pos, y_pos, sizeof(FontVertLayout),
+        drop_shadow, verts.size(),
+        &verts[0].pos_x, &verts[0].tex_x, &verts[0].r);
 }
 
 struct box_vert
@@ -435,17 +420,16 @@ static void _draw_box(int x_pos, int y_pos, float width, float height,
     verts[3].x = verts[2].x;
     verts[3].y = verts[0].y;
 
-    glLoadIdentity();
+    GLStateManager::loadIdentity();
 
     GLState state;
     state.array_vertex = true;
     state.array_colour = true;
     state.blend = true;
     GLStateManager::set(state);
-
-    glVertexPointer(2, GL_FLOAT, sizeof(box_vert), &verts[0].x);
-    glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(box_vert), &verts[0].r);
-    glDrawArrays(GL_QUADS, 0, sizeof(verts) / sizeof(box_vert));
+    
+    GLStateManager::drawColorBox( sizeof(box_vert), 
+        sizeof(verts) / sizeof(box_vert), &verts[0].x, &verts[0].r);
 }
 
 unsigned int FTFont::string_height(const formatted_string &str)

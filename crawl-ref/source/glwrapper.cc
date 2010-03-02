@@ -170,6 +170,48 @@ void GLStateManager::scalef(float x, float y, float z)
     glScalef(x, y, z);
 }
 
+void GLStateManager::loadIdentity()
+{
+    glLoadIdentity();
+}
+
+void GLStateManager::drawTextBlock(unsigned int x_pos, unsigned int y_pos,
+    long unsigned int stride, bool drop_shadow, size_t count,
+    const void *pos_verts, const void *tex_verts, const void *color_verts)
+{
+    // Assume the texture is pre-bound (m_tex.bind();)
+    glVertexPointer(2, GL_FLOAT, stride, pos_verts);
+    glTexCoordPointer(2, GL_FLOAT, stride, tex_verts);
+
+    if (drop_shadow)
+    {
+        glColor3f(0.0f, 0.0f, 0.0f);
+
+        glLoadIdentity();
+        glTranslatef(x_pos + 1, y_pos + 1, 0.0f);
+        glDrawArrays(GL_QUADS, 0, count);
+
+        glColor3f(1.0f, 1.0f, 1.0f);
+    }
+
+    glLoadIdentity();
+    glTranslatef(x_pos, y_pos, 0.0f);
+
+    glEnableClientState(GL_COLOR_ARRAY);
+    glColorPointer(4, GL_UNSIGNED_BYTE, stride, color_verts);
+    glDrawArrays(GL_QUADS, 0, count);
+    glDisableClientState(GL_COLOR_ARRAY);
+    
+}
+
+void GLStateManager::drawColorBox(long unsigned int stride, size_t count,
+    const void *pos_verts, const void *color_verts)
+{
+    glVertexPointer(2, GL_FLOAT, stride, pos_verts);
+    glColorPointer(4, GL_UNSIGNED_BYTE, stride, color_verts);
+    glDrawArrays(GL_QUADS, 0, count);
+}
+
 #ifdef DEBUG
 bool GLStateManager::_valid(int num_verts, drawing_modes mode)
 {
