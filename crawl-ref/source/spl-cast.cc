@@ -1860,7 +1860,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         {
             mpr("Your body is in too poor a condition for this spell "
                  "to function.");
-            return (SPRET_FAIL);
+            return (SPRET_ABORT);
         }
 
         mpr("Your body is suffused with transfigurative energy!");
