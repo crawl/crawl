@@ -454,6 +454,8 @@ show_type to_knowledge(show_type obj)
         obj.colour = DARKGREY;
         return (obj);
     }
+    if (obj.cls == SH_CLOUD)
+        obj.cls = SH_FEATURE;
     const feature_def& fdef = get_feature_def(obj);
     obj.colour = fdef.seen_colour;
     return (obj);
