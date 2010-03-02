@@ -124,7 +124,7 @@ void hogs_to_humans()
 
         // A monster changing factions while in the arena messes up
         // arena book-keeping.
-        if (!crawl_state.arena)
+        if (!crawl_state.game_is_arena())
         {
             // * A monster's attitude shouldn't downgrade from friendly
             //   or good-neutral because you helped it.  It'd suck to

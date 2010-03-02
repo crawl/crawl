@@ -4256,7 +4256,7 @@ bool melee_attack::mons_attack_mons()
     // set explicitly by the player during sanctuary).
     if (perceived_attack && attacker->alive()
         && defender->as_monster()->friendly()
-        && !crawl_state.arena
+        && !crawl_state.game_is_arena()
         && !attacker->as_monster()->wont_attack()
         && you.pet_target == MHITNOT
         && env.sanctuary_time <= 0)
@@ -5713,7 +5713,7 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
 // Returns true if you hit the monster.
 bool you_attack(int monster_attacked, bool unarmed_attacks)
 {
-    ASSERT(!crawl_state.arena);
+    ASSERT(!crawl_state.game_is_arena());
 
     monsters *defender = &menv[monster_attacked];
 
@@ -5792,7 +5792,7 @@ bool monster_attack_actor(monsters *attacker, actor *defender,
 // A monster attacking the player.
 bool monster_attack(monsters* attacker, bool allow_unarmed)
 {
-    ASSERT(!crawl_state.arena);
+    ASSERT(!crawl_state.game_is_arena());
 
     // Friendly and good neutral monsters won't attack unless confused.
     if (attacker->wont_attack() && !mons_is_confused(attacker))

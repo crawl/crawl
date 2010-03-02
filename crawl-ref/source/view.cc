@@ -447,7 +447,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 // Is the given monster near (in LOS of) the player?
 bool mons_near(const monsters *monster)
 {
-    if (crawl_state.arena || crawl_state.arena_suspended)
+    if (crawl_state.game_is_arena() || crawl_state.arena_suspended)
         return (true);
     return (you.see_cell(monster->pos()));
 }
@@ -458,7 +458,7 @@ bool mon_enemies_around(const monsters *monster)
     if (monster->foe != MHITNOT && monster->foe != MHITYOU)
         return (true);
 
-    if (crawl_state.arena)
+    if (crawl_state.game_is_arena())
     {
         // If the arena-mode code in _handle_behaviour() hasn't set a foe then
         // we don't have one.
@@ -646,7 +646,7 @@ void flash_view_delay(int colour, long flash_delay)
 {
     flash_view(colour);
     // Scale delay to match change in arena_delay.
-    if (crawl_state.arena)
+    if (crawl_state.game_is_arena())
     {
         flash_delay *= Options.arena_delay;
         flash_delay /= 600;
@@ -705,7 +705,7 @@ static int player_view_update_at(const coord_def &gc)
     // Set excludes in a radius of 1 around harmful clouds genereated
     // by neither monsters nor the player.
     const int cloudidx = env.cgrid(gc);
-    if (cloudidx != EMPTY_CLOUD && !crawl_state.arena)
+    if (cloudidx != EMPTY_CLOUD && !crawl_state.game_is_arena())
     {
         cloud_struct &cl   = env.cloud[cloudidx];
         cloud_type   ctype = cl.type;
@@ -929,7 +929,7 @@ void viewwindow(bool monster_updates, bool show_updates)
         env.show.init(_show_terrain);
     }
 
-    if (monster_updates && !crawl_state.arena)
+    if (monster_updates && !crawl_state.game_is_arena())
         monster_grid_updates();
 
     if (show_updates)
@@ -966,7 +966,8 @@ void viewwindow(bool monster_updates, bool show_updates)
         else if (!crawl_view.in_grid_los(gc))
             draw_outside_los(&buffy[bufcount], gc);
         else if (gc == you.pos() && you.on_current_level && !_show_terrain
-                 && !crawl_state.arena && !crawl_state.arena_suspended)
+                 && !crawl_state.game_is_arena()
+                 && !crawl_state.arena_suspended)
         {
             draw_player(&buffy[bufcount], gc, ep);
         }

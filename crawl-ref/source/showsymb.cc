@@ -54,7 +54,7 @@ static int _get_mons_colour(const monsters *mons)
     if (mons->type == MONS_SLIME_CREATURE && mons->number > 1)
         col = mons_class_colour(MONS_MERGED_SLIME_CREATURE);
 
-    if (!crawl_state.arena && you.misled())
+    if (!crawl_state.game_is_arena() && you.misled())
     {
         const monsterentry* mdat = get_monster_data(mons->get_mislead_type());
         col = mdat->colour;
@@ -99,7 +99,7 @@ static int _get_mons_colour(const monsters *mons)
         }
         else if (Options.heap_brand != CHATTR_NORMAL
                  && you.visible_igrd(mons->pos()) != NON_ITEM
-                 && !crawl_state.arena)
+                 && !crawl_state.game_is_arena())
         {
             col |= COLFLAG_ITEM_HEAP;
         }
@@ -137,7 +137,7 @@ glyph get_mons_glyph(const monsters *mons)
 {
     glyph g;
 
-    if (!crawl_state.arena && you.misled())
+    if (!crawl_state.game_is_arena() && you.misled())
         g.ch = mons_char(mons->get_mislead_type());
     else if (mons->type == MONS_SLIME_CREATURE && mons->number > 1)
         g.ch = mons_char(MONS_MERGED_SLIME_CREATURE);

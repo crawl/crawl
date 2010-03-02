@@ -634,7 +634,7 @@ static void _handle_movement(monsters *monster)
     // view.
 
     // Doesn't matter for arena mode.
-    if (crawl_state.arena)
+    if (crawl_state.game_is_arena())
         return;
 
     // Did we just come into view?
@@ -1820,7 +1820,7 @@ void handle_monster_move(monsters *monster)
         if (!monster->alive())
             break;
 
-        ASSERT(!crawl_state.arena || monster->foe != MHITYOU);
+        ASSERT(!crawl_state.game_is_arena() || monster->foe != MHITYOU);
         ASSERT(in_bounds(monster->target) || monster->target.origin());
 
         // Submerging monsters will hide from clouds.
@@ -2026,7 +2026,7 @@ void handle_monster_move(monsters *monster)
         {
             if (monster->pos() + mmov == you.pos())
             {
-                ASSERT(!crawl_state.arena);
+                ASSERT(!crawl_state.game_is_arena());
 
                 if (!monster->friendly())
                 {
@@ -2202,7 +2202,7 @@ static bool _jelly_divide(monsters *parent)
         if (player_can_hear(parent->pos()) || player_can_hear(child->pos()))
             mpr("You hear a squelching noise.", MSGCH_SOUND);
 
-    if (crawl_state.arena)
+    if (crawl_state.game_is_arena())
         arena_placed_monster(child);
 
     return (true);
@@ -2697,7 +2697,7 @@ static bool _is_trap_safe(const monsters *monster, const coord_def& where,
 
     // Friendly and good neutral monsters don't enjoy Zot trap perks;
     // handle accordingly.  In the arena Zot traps affect all monsters.
-    if (monster->wont_attack() || crawl_state.arena)
+    if (monster->wont_attack() || crawl_state.game_is_arena())
     {
         return (mechanical ? mons_flies(monster)
                            : !trap.is_known(monster) || trap.type != TRAP_ZOT);

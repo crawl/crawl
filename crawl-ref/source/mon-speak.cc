@@ -448,7 +448,7 @@ bool mons_speaks(monsters *monster)
 
         prefixes.push_back("neutral");
     }
-    else if (monster->friendly() && !crawl_state.arena)
+    else if (monster->friendly() && !crawl_state.game_is_arena())
         prefixes.push_back("friendly");
     else
         prefixes.push_back("hostile");
@@ -470,7 +470,7 @@ bool mons_speaks(monsters *monster)
     if (monster->props.exists("speech_prefix"))
         prefixes.push_back(monster->props["speech_prefix"].get_string());
 
-    const actor*    foe   = (!crawl_state.arena && monster->wont_attack()
+    const actor*    foe   = (!crawl_state.game_is_arena() && monster->wont_attack()
                                 && invalid_monster_index(monster->foe)) ?
                                     &you : monster->get_foe();
     const monsters* m_foe = foe ? foe->as_monster() : NULL;
@@ -495,7 +495,7 @@ bool mons_speaks(monsters *monster)
     }
 
     const god_type god = foe               ? foe->deity() :
-                         crawl_state.arena ? GOD_NO_GOD
+                         crawl_state.game_is_arena() ? GOD_NO_GOD
                                            : you.religion;
 
     // Add Beogh to list of prefixes for orcs (hostile and friendly) if you
@@ -540,7 +540,7 @@ bool mons_speaks(monsters *monster)
 #endif
 
     const bool no_foe      = (foe == NULL);
-    const bool no_player   = crawl_state.arena
+    const bool no_player   = crawl_state.game_is_arena()
                              || (!monster->wont_attack()
                                  && (!foe || foe->atype() != ACT_PLAYER));
     const bool mon_foe     = (m_foe != NULL);

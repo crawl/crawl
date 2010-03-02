@@ -305,7 +305,7 @@ static void _clear_pending_delays()
 
 void start_delay( delay_type type, int turns, int parm1, int parm2 )
 {
-    ASSERT(!crawl_state.arena);
+    ASSERT(!crawl_state.game_is_arena());
 
     if (type == DELAY_MEMORISE && already_learning_spell(parm1))
         return;
@@ -347,7 +347,7 @@ void stop_delay( bool stop_stair_travel )
 
     set_more_autoclear(false);
 
-    ASSERT(!crawl_state.arena);
+    ASSERT(!crawl_state.game_is_arena());
 
     delay_queue_item delay = you.delay_queue.front();
 

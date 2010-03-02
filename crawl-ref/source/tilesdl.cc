@@ -1313,7 +1313,7 @@ void TilesFramework::update_minimap(int gx, int gy, map_feature f)
 
     coord_def gc(gx, gy);
 
-    if (!crawl_state.arena && gc == you.pos() && you.on_current_level)
+    if (!crawl_state.game_is_arena() && gc == you.pos() && you.on_current_level)
         f = MF_PLAYER;
     else if (monster_at(gc) && f == MF_MONS_HOSTILE)
     {
@@ -1477,7 +1477,7 @@ int tile_corpse_brand(const item_def item)
 
 void TilesFramework::update_inventory()
 {
-    if (!Options.tile_show_items || crawl_state.arena)
+    if (!Options.tile_show_items || crawl_state.game_is_arena())
         return;
 
     m_region_tab->update();

@@ -4768,7 +4768,7 @@ int dgn_place_monster(mons_spec &mspec,
             // Don't place a unique monster a second time.
             // (Boris is handled specially.)
             if (mons_is_unique(mid) && you.unique_creatures[mid]
-                && !crawl_state.arena)
+                && !crawl_state.game_is_arena())
             {
                 return (-1);
             }

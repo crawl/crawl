@@ -184,7 +184,7 @@ static void _zap_animation(int colour, const monsters *mon = NULL,
 
         int zap_delay = 50;
         // Scale delay to match change in arena_delay.
-        if (crawl_state.arena)
+        if (crawl_state.game_is_arena())
         {
             zap_delay *= Options.arena_delay;
             zap_delay /= 600;
@@ -665,7 +665,7 @@ void bolt::initialise_fire()
         seen = true;
 
     // Scale draw_delay to match change in arena_delay.
-    if (crawl_state.arena && !is_tracer)
+    if (crawl_state.game_is_arena() && !is_tracer)
     {
         draw_delay *= Options.arena_delay;
         draw_delay /= 600;
@@ -1350,7 +1350,7 @@ void bolt::do_fire()
         // sanctuary when pet_target can only be explicitly changed by
         // the player.
         const monsters *mon = &menv[beam_source];
-        if (foe_info.hurt > 0 && !mon->wont_attack() && !crawl_state.arena
+        if (foe_info.hurt > 0 && !mon->wont_attack() && !crawl_state.game_is_arena()
             && you.pet_target == MHITNOT && env.sanctuary_time <= 0)
         {
             you.pet_target = beam_source;
@@ -2299,7 +2299,7 @@ void bolt::affect_ground()
         {
             beh_type beh;
             // Half the fungi in arena mode are friendly.
-            if (crawl_state.arena)
+            if (crawl_state.game_is_arena())
             {
                 beh = coinflip() ? BEH_FRIENDLY : BEH_HOSTILE;
             }
@@ -5019,7 +5019,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
 
             int explode_delay = 50;
             // Scale delay to match change in arena_delay.
-            if (crawl_state.arena)
+            if (crawl_state.game_is_arena())
             {
                 explode_delay *= Options.arena_delay;
                 explode_delay /= 600;
@@ -5060,7 +5060,7 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     {
         int explode_delay = 150;
         // Scale delay to match change in arena_delay.
-        if (crawl_state.arena)
+        if (crawl_state.game_is_arena())
         {
             explode_delay *= Options.arena_delay;
             explode_delay /= 600;

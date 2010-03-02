@@ -1209,7 +1209,7 @@ static bool _prompt_dangerous_portal(dungeon_feature_type ftype)
 static void _go_downstairs();
 static void _go_upstairs()
 {
-    ASSERT(!crawl_state.arena && !crawl_state.arena_suspended);
+    ASSERT(!crawl_state.game_is_arena() && !crawl_state.arena_suspended);
 
     const dungeon_feature_type ygrd = grd(you.pos());
 
@@ -1277,7 +1277,7 @@ static void _go_upstairs()
 
 static void _go_downstairs()
 {
-    ASSERT(!crawl_state.arena && !crawl_state.arena_suspended);
+    ASSERT(!crawl_state.game_is_arena() && !crawl_state.arena_suspended);
 
     const dungeon_feature_type ygrd = grd(you.pos());
 
@@ -2564,7 +2564,7 @@ void world_reacts()
 
     crawl_state.clear_mon_acting();
 
-    if (!crawl_state.arena)
+    if (!crawl_state.game_is_arena())
     {
         you.turn_is_over = true;
         religion_turn_end();
@@ -2591,7 +2591,7 @@ void world_reacts()
         search_around(false); // Check nonadjacent squares too.
     }
 
-    if (!crawl_state.arena)
+    if (!crawl_state.game_is_arena())
         stealth = check_stealth();
 
 #ifdef DEBUG_STEALTH
@@ -2608,7 +2608,7 @@ void world_reacts()
     if (you.unrand_reacts != 0)
         unrand_reacts();
 
-    if (!crawl_state.arena && one_chance_in(10))
+    if (!crawl_state.game_is_arena() && one_chance_in(10))
     {
         // this is instantaneous
         if (player_teleport() > 0 && one_chance_in(100 / player_teleport()))
@@ -2617,7 +2617,7 @@ void world_reacts()
             you_teleport_now(false, true); // to new area of the Abyss
     }
 
-    if (!crawl_state.arena && env.cgrid(you.pos()) != EMPTY_CLOUD)
+    if (!crawl_state.game_is_arena() && env.cgrid(you.pos()) != EMPTY_CLOUD)
         in_a_cloud();
 
     if (you.level_type == LEVEL_DUNGEON && you.duration[DUR_TELEPATHY])
@@ -3047,7 +3047,7 @@ static bool _untrap_target(const coord_def move, bool check_confused)
 // direction for the door to be opened (eg if you type ctrl + dir).
 static void _open_door(coord_def move, bool check_confused)
 {
-    ASSERT(!crawl_state.arena && !crawl_state.arena_suspended);
+    ASSERT(!crawl_state.game_is_arena() && !crawl_state.arena_suspended);
 
     if (you.attribute[ATTR_HELD])
     {
@@ -3681,7 +3681,7 @@ static bool _initialise(void)
     }
 
 
-    if (crawl_state.arena)
+    if (crawl_state.game_is_arena())
     {
         run_map_preludes();
         initialise_item_descriptions();
@@ -3892,7 +3892,7 @@ static void _move_player(int move_x, int move_y)
 
 static void _move_player(coord_def move)
 {
-    ASSERT(!crawl_state.arena && !crawl_state.arena_suspended);
+    ASSERT(!crawl_state.game_is_arena() && !crawl_state.arena_suspended);
 
     bool attacking = false;
     bool moving = true;         // used to prevent eventual movement (swap)

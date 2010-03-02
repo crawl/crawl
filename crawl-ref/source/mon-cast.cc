@@ -995,7 +995,7 @@ static bool _is_emergency_spell(const monster_spells &msp, int spell)
 static bool _animate_dead_okay ()
 {
     // It's always okay in the arena.
-    if (crawl_state.arena)
+    if (crawl_state.game_is_arena())
         return (true);
 
     if (is_butchering())
@@ -2203,7 +2203,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         {
             bool has_mon_foe = !invalid_monster_index(monster->foe);
             std::string slugform = "";
-            if (buff_only || crawl_state.arena && !has_mon_foe
+            if (buff_only || crawl_state.game_is_arena() && !has_mon_foe
                 || friendly && !has_mon_foe || coinflip())
             {
                 slugform = getSpeakString("gastronok_self_buff");
@@ -2254,7 +2254,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                 "You feel a wave of unholy energy pass over you."
             };
 
-            if (buff_only || crawl_state.arena || x_chance_in_y(2,3))
+            if (buff_only || crawl_state.game_is_arena() || x_chance_in_y(2,3))
             {
                 simple_monster_message(monster, RANDOM_ELEMENT(buff_msgs),
                                        channel);

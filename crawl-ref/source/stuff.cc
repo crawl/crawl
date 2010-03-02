@@ -408,7 +408,7 @@ void end(int exit_code, bool print_error, const char *format, ...)
 #if (defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)) || \
      defined(TARGET_OS_DOS) || \
      defined(DGL_PAUSE_AFTER_ERROR)
-    if (exit_code && !crawl_state.arena
+    if (exit_code && !crawl_state.game_is_arena()
         && !crawl_state.seen_hups && !crawl_state.test)
     {
         fprintf(stderr, "Hit Enter to continue...\n");

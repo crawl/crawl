@@ -2320,7 +2320,7 @@ god_type string_to_god(const char *_name, bool exact)
 
 void god_speaks(god_type god, const char *mesg)
 {
-    ASSERT(!crawl_state.arena);
+    ASSERT(!crawl_state.game_is_arena());
 
     int orig_mon = mgrd(you.pos());
 

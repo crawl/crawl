@@ -13,6 +13,15 @@
 class monsters;
 class mon_acting;
 
+enum game_type
+{
+    GAME_TYPE_NORMAL,
+    GAME_TYPE_TUTORIAL,
+    GAME_TYPE_ARENA,
+    GAME_TYPE_SPRINT,
+    NUM_GAME_TYPE
+};
+
 struct god_act_state
 {
 public:
@@ -45,7 +54,7 @@ struct game_state
 
     bool map_stat_gen;      // Set if we're generating stats on maps.
 
-    bool arena;             // Set if we're in arena mode.
+    game_type type;
     bool arena_suspended;   // Set if the arena has been temporarily
                             // suspended.
 
@@ -153,6 +162,11 @@ public:
 
     void dump();
     bool player_is_dead();
+
+    bool game_is_normal();
+    bool game_is_tutorial();
+    bool game_is_arena();
+    bool game_is_sprint();
 
     friend class mon_acting;
 };

@@ -100,7 +100,7 @@ std::string stash_annotate_item(const char *s,
 
 void maybe_update_stashes()
 {
-    if (Options.stash_tracking && !crawl_state.arena)
+    if (Options.stash_tracking && !crawl_state.game_is_arena())
     {
         StashTrack.update_visible_stashes(
             Options.stash_tracking == STM_ALL ? StashTracker::ST_AGGRESSIVE

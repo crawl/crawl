@@ -238,7 +238,7 @@ static bool _do_split(monsters *thing, coord_def & target)
     _stats_from_blob_count(thing, max_per_blob, current_per_blob);
     _stats_from_blob_count(new_slime, max_per_blob, current_per_blob);
 
-    if (crawl_state.arena)
+    if (crawl_state.game_is_arena())
         arena_split_monster(thing, new_slime);
 
     return (true);
@@ -1183,7 +1183,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
     case MONS_SIREN:
     {
         // Don't behold observer in the arena.
-        if (crawl_state.arena)
+        if (crawl_state.game_is_arena())
             break;
 
         // Don't behold player already half down or up the stairs.
@@ -1674,7 +1674,7 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
         int sp_delay = 150;
 
         // Scale delay to match change in arena_delay.
-        if (crawl_state.arena)
+        if (crawl_state.game_is_arena())
         {
             sp_delay *= Options.arena_delay;
             sp_delay /= 600;

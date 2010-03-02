@@ -1006,7 +1006,7 @@ void MiscastEffect::_enchantment(int severity)
         break;
 
     case 1:         // slightly annoying
-        switch (random2(crawl_state.arena ? 1 : 2))
+        switch (random2(crawl_state.game_is_arena() ? 1 : 2))
         {
         case 0:
             _potion_effect(POT_LEVITATION, 20);
@@ -1877,7 +1877,7 @@ void MiscastEffect::_transmutation(int severity)
         break;
 
     case 1:         // slightly annoying
-        switch (random2(crawl_state.arena ? 1 : 2))
+        switch (random2(crawl_state.game_is_arena() ? 1 : 2))
         {
         case 0:
             you_msg      = "Your body is twisted painfully.";

@@ -975,7 +975,7 @@ void mpr(std::string text, msg_channel_type channel, int param, bool nojoin)
     if (crawl_state.game_crashed)
         return;
 
-    if (crawl_state.arena)
+    if (crawl_state.game_is_arena())
         debug_channel_arena(channel);
 
     if (!crawl_state.io_inited)
@@ -1276,7 +1276,7 @@ static bool _pre_more()
         return true;
 #endif
 
-    if (crawl_state.arena)
+    if (crawl_state.game_is_arena())
     {
         delay(Options.arena_delay);
         return true;
