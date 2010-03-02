@@ -994,6 +994,23 @@ static bool _can_cast_detect()
     return false;
 }
 
+static void _maybe_cancel_repeat(spell_type spell)
+{
+    switch (spell)
+    {
+    case SPELL_DELAYED_FIREBALL:
+    case SPELL_TUKIMAS_DANCE:
+    case SPELL_ALTER_SELF:
+    case SPELL_PORTAL:
+        crawl_state.cant_cmd_repeat(make_stringf("You can't repeat %s.",
+                                                 spell_title(spell)));
+        break;
+
+    default:
+        break;
+    }
+}
+
 static spret_type _do_cast(spell_type spell, int powc,
                            const dist& spd, bolt& beam,
                            god_type god, int potion);
@@ -1210,6 +1227,9 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     dprf("Spell #%d, power=%d", spell, powc);
 
+    if (crawl_state.prev_cmd == CMD_CAST_SPELL && god == GOD_NO_GOD)
+        _maybe_cancel_repeat(spell);
+
     switch (_do_cast(spell, powc, spd, beam, god, potion))
     {
     case SPRET_SUCCESS:
@@ -1251,9 +1271,6 @@ static spret_type _do_cast(spell_type spell, int powc,
                            const dist& spd, bolt& beam,
                            god_type god, int potion)
 {
-    const bool want_repeat = crawl_state.prev_cmd == CMD_CAST_SPELL
-                             && god == GOD_NO_GOD;
-
     switch (spell)
     {
     // spells using burn_freeze()
@@ -1477,8 +1494,6 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_DELAYED_FIREBALL:
-        if (want_repeat)
-            crawl_state.cant_cmd_repeat("You can't repeat delayed fireball.");
         // This spell has two main advantages over Fireball:
         //
         // (1) The release is instantaneous, so monsters will not
@@ -1610,8 +1625,6 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_TUKIMAS_DANCE:
         // Temporarily turns a wielded weapon into a dancing weapon.
-        if (want_repeat)
-            crawl_state.cant_cmd_repeat("You can't repeat Tukima's Dance.");
         cast_tukimas_dance(powc, god);
         break;
 
@@ -1898,9 +1911,6 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_ALTER_SELF:
-        if (want_repeat)
-            crawl_state.cant_cmd_repeat("You can't repeat Alter Self.");
-
         if (!enough_hp(you.hp_max / 2, true))
         {
             mpr("Your body is in too poor a condition for this spell "
@@ -2100,8 +2110,6 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_PORTAL:
-        if (want_repeat)
-            crawl_state.cant_cmd_repeat("You can't repeat create portal.");
         if (portal() == -1)
             return (SPRET_ABORT);
         break;
