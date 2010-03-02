@@ -4,6 +4,8 @@
 #include <stdlib.h> // For size_t
 #include <vector> // for std::vector
 
+#include "tiletex.h" // for generic mipmap enums
+
 #ifdef USE_TILE
 #ifdef USE_GL
 
@@ -42,6 +44,7 @@ public:
     
     // State Manipulation
     static void set(const GLState& state);
+    static void pixelStoreUnpackAlignment(unsigned int bpp);
     static void pushMatrix();
     static void popMatrix();
     static void setProjectionMatrixMode();
@@ -73,6 +76,13 @@ public:
         const void *pos_verts, const void *tex_verts, const void *color_verts);
     static void drawColorBox(long unsigned int stride, size_t count,
         const void *pos_verts, const void *color_verts);
+    
+    // Texture-specific functinos
+    static void deleteTextures(size_t count, unsigned int *textures);
+    static void generateTextures(size_t count, unsigned int *textures);
+    static void bindTexture(unsigned int texture);
+    static void loadTexture(unsigned char *pixels, unsigned int width,
+        unsigned int height, GenericTexture::MipMapOptions mip_opt);
     
     // Debug
 #ifdef DEBUG

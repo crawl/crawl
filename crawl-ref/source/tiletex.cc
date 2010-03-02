@@ -10,7 +10,9 @@
 #include "cgcontext-sdl.h"
 #endif
 
-#include <SDL_opengl.h>
+#ifdef USE_GL
+#include "glwrapper.h"
+#endif
 
 GenericTexture::GenericTexture() :
     m_handle(0),
@@ -31,7 +33,7 @@ void GenericTexture::unload_texture()
     if (!m_handle)
         return;
 
-    glDeleteTextures(1, (GLuint*)&m_handle);
+    GLStateManager::deleteTextures(1, &m_handle);
 }
 
 bool GenericTexture::load_texture(const char *filename,
@@ -64,7 +66,7 @@ bool GenericTexture::load_texture(const char *filename,
     }
 
     unsigned int bpp = img->bytesPerPixel();
-    glPixelStorei(GL_UNPACK_ALIGNMENT, bpp);
+    GLStateManager::pixelStoreUnpackAlignment(bpp);
 
     // Determine texture format
     unsigned char *pixels = (unsigned char*)img->pixels();
@@ -87,7 +89,6 @@ bool GenericTexture::load_texture(const char *filename,
         new_height = img->height();
     }
 
-    GLenum texture_format;
     if (bpp == 4)
     {
         // Even if the size is the same, still go through
@@ -112,7 +113,6 @@ bool GenericTexture::load_texture(const char *filename,
         }
 
         img->unlock();
-        texture_format = GL_RGBA;
     }
     else if (bpp == 3)
     {
@@ -143,7 +143,6 @@ bool GenericTexture::load_texture(const char *filename,
 
             img->unlock();
         }
-        texture_format = GL_RGBA;
     }
     else if (bpp == 1)
     {
@@ -193,7 +192,6 @@ bool GenericTexture::load_texture(const char *filename,
         img->unlock();
 
         bpp = 4;
-        texture_format = GL_RGBA;
     }
     else
     {
@@ -225,36 +223,12 @@ bool GenericTexture::load_texture(unsigned char *pixels, unsigned int new_width,
     if (!pixels || !new_width || !new_height)
         return (false);
 
-    // Assumptions...
-    const unsigned int bpp = 4;
-    const GLenum texture_format = GL_RGBA;
-    const GLenum format = GL_UNSIGNED_BYTE;
-
     m_width = new_width;
     m_height = new_height;
 
-    glGenTextures(1, (GLuint*)&m_handle);
-    glBindTexture(GL_TEXTURE_2D, m_handle);
-
-    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-
-    if (mip_opt == MIPMAP_CREATE)
-    {
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                        GL_LINEAR_MIPMAP_NEAREST);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        gluBuild2DMipmaps(GL_TEXTURE_2D, bpp, m_width, m_height,
-                          texture_format, format, pixels);
-    }
-    else
-    {
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexImage2D(GL_TEXTURE_2D, 0, bpp, m_width, m_height, 0,
-                     texture_format, format, pixels);
-    }
+    GLStateManager::generateTextures(1, &m_handle);
+    GLStateManager::bindTexture(m_handle);
+    GLStateManager::loadTexture(pixels, m_width, m_height, mip_opt);
 
     return (true);
 }
@@ -262,13 +236,13 @@ bool GenericTexture::load_texture(unsigned char *pixels, unsigned int new_width,
 void GenericTexture::bind() const
 {
     ASSERT(m_handle);
-    glBindTexture(GL_TEXTURE_2D, m_handle);
+    GLStateManager::bindTexture(m_handle);
 }
 
 TilesTexture::TilesTexture() :
     GenericTexture(), m_tile_max(0), m_info_func(NULL)
 {
-
+    
 }
 
 void TilesTexture::set_info(int tile_max, tile_info_func *info_func)
