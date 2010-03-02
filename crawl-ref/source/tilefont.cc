@@ -252,7 +252,7 @@ bool FTFont::load_font(const char *font_name, unsigned int font_size, bool outl)
     }
 
     bool success = m_tex.load_texture(pixels, width, height,
-                                      GenericTexture::MIPMAP_NONE);
+                                      MIPMAP_NONE);
 
     delete[] pixels;
 

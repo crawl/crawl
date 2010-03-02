@@ -35,13 +35,6 @@ public:
     GenericTexture();
     virtual ~GenericTexture();
 
-    enum MipMapOptions
-    {
-        MIPMAP_CREATE,
-        MIPMAP_NONE,
-        MIPMAP_MAX
-    };
-
     // Arbitrary post-load texture processing
     typedef bool(*tex_proc_func)(unsigned char *pixels, unsigned int w,
         unsigned int h);

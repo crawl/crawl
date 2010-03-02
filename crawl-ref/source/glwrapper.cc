@@ -154,7 +154,7 @@ void GLStateManager::bindTexture(unsigned int texture)
 }
 
 void GLStateManager::loadTexture(unsigned char *pixels, unsigned int width,
-    unsigned int height, GenericTexture::MipMapOptions mip_opt)
+    unsigned int height, MipMapOptions mip_opt)
 {
     // Assumptions...
     const unsigned int bpp = 4;
@@ -165,7 +165,7 @@ void GLStateManager::loadTexture(unsigned char *pixels, unsigned int width,
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
-    if (mip_opt == GenericTexture::MIPMAP_CREATE)
+    if (mip_opt == MIPMAP_CREATE)
     {
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
                         GL_LINEAR_MIPMAP_NEAREST);

@@ -37,7 +37,7 @@ void GenericTexture::unload_texture()
 }
 
 bool GenericTexture::load_texture(const char *filename,
-                                  GenericTexture::MipMapOptions mip_opt,
+                                  MipMapOptions mip_opt,
                                   tex_proc_func proc,
                                   bool force_power_of_two)
 {
@@ -218,14 +218,14 @@ bool GenericTexture::load_texture(const char *filename,
 
 bool GenericTexture::load_texture(unsigned char *pixels, unsigned int new_width,
                                   unsigned int new_height,
-                                  GenericTexture::MipMapOptions mip_opt)
+                                  MipMapOptions mip_opt)
 {
     if (!pixels || !new_width || !new_height)
         return (false);
 
     m_width = new_width;
     m_height = new_height;
-
+    
     GLStateManager::generateTextures(1, &m_handle);
     GLStateManager::bindTexture(m_handle);
     GLStateManager::loadTexture(pixels, m_width, m_height, mip_opt);
