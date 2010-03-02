@@ -1414,6 +1414,13 @@ const char* itosym1(int stat)
     return ( (stat >= 1) ? "+  " : ".  " );
 }
 
+const char* itosym2(int stat)
+{
+    return ( (stat >= 2) ? "+ +" :
+             (stat == 1) ? "+ ." :
+                           ". .");
+}
+
 const char* itosym3(int stat)
 {
     return ( (stat >=  3) ? "+ + +" :
@@ -1865,7 +1872,7 @@ static std::vector<formatted_string> _get_overview_resistances(
              _determine_colour_string(rpois, 1), itosym1(rpois),
              _determine_colour_string(relec, 1), itosym1(relec),
              _determine_colour_string(rspir, 1), itosym1(rspir),
-             _determine_colour_string(rsust, 1), itosym1(rsust),
+             _determine_colour_string(rsust, 2), itosym2(rsust),
              _determine_colour_string(rmuta, 1), itosym1(rmuta),
              _determine_colour_string(rrott, 1), itosym1(rrott));
     cols.add_formatted(0, buf, false);
