@@ -34,6 +34,7 @@
 #include "areas.h"
 #include "artefact.h"
 #include "arena.h"
+#include "beam.h"
 #include "branch.h"
 #include "chardump.h"
 #include "cio.h"
@@ -3565,6 +3566,7 @@ static bool _initialise(void)
     init_show_table();
     init_monster_symbols();
     init_spell_descs();        // This needs to be way up top. {dlb}
+    init_zap_index();
     init_mon_name_cache();
     init_mons_spells();
 

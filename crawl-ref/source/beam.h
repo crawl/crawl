@@ -311,6 +311,8 @@ bool zapping(zap_type ztype, int power, bolt &pbolt,
 bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range = 0);
 
 std::string beam_type_name(beam_type type);
+
+void init_zap_index();
 void clear_zap_info_on_exit();
 
 #endif
