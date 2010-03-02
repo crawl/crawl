@@ -98,6 +98,7 @@
 {':', CMD_MAKE_NOTE},
 #ifndef USE_TILE
 {'_', CMD_READ_MESSAGES},
+{'|', CMD_SHOW_TERRAIN},
 #endif
 {';', CMD_INSPECT_FLOOR},
 {'^', CMD_DISPLAY_RELIGION},

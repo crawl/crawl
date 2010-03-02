@@ -734,6 +734,7 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     // Informational commands
     case CMD_LOOK_AROUND:
     case CMD_INSPECT_FLOOR:
+    case CMD_SHOW_TERRAIN:
     case CMD_EXAMINE_OBJECT:
     case CMD_LIST_WEAPONS:
     case CMD_LIST_ARMOUR:
@@ -1716,6 +1717,7 @@ void process_command(command_type cmd)
         break;
 
     case CMD_INSPECT_FLOOR: request_autopickup(); break;
+    case CMD_SHOW_TERRAIN: toggle_show_terrain(); break;
     case CMD_ADJUST_INVENTORY: adjust(); break;
 
     case CMD_MOVE_NOWHERE:
@@ -2558,6 +2560,8 @@ static void _regenerate_hp_and_mp(int delay)
 
 void world_reacts()
 {
+    reset_show_terrain();
+
     crawl_state.clear_mon_acting();
 
     if (!crawl_state.arena)

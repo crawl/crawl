@@ -399,12 +399,16 @@ void show_def::_update_monster(const monsters* mons)
 #endif
 }
 
-void show_def::update_at(const coord_def &gp, const coord_def &ep)
+void show_def::update_at(const coord_def &gp, const coord_def &ep,
+                         bool terrain_only)
 {
     grid(ep).cls = SH_NOTHING;
 
     // The sequence is grid, items, clouds, monsters.
     _update_feat_at(gp, ep);
+
+    if (terrain_only)
+        return;
 
     // If there's items on the boundary (shop inventory),
     // we don't show them.
@@ -425,12 +429,12 @@ void show_def::update_at(const coord_def &gp, const coord_def &ep)
         _update_monster(mons);
 }
 
-void show_def::init()
+void show_def::init(bool terrain_only)
 {
     grid.init(show_type());
 
     for (radius_iterator ri(&you.get_los()); ri; ++ri)
-        update_at(*ri, grid2show(*ri));
+        update_at(*ri, grid2show(*ri), terrain_only);
 }
 
 show_type to_knowledge(show_type obj)
