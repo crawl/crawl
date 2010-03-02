@@ -1113,6 +1113,19 @@ static void _give_items_skills(const newgame_def& ng)
             you.skills[weapon_skill(*you.weapon())] = weap_skill;
     }
 
+    if (you.species == SP_CAT)
+    {
+        for (int i = SK_SHORT_BLADES; i <= SK_CROSSBOWS; i++)
+        {
+            you.skills[SK_UNARMED_COMBAT] += you.skills[i];
+            you.skills[i] = 0;
+        }
+        you.skills[SK_DODGING] += you.skills[SK_ARMOUR];
+        you.skills[SK_ARMOUR] = 0;
+        you.skills[SK_THROWING] = 0;
+        you.skills[SK_SHIELDS] = 0;
+    }
+
     init_skill_order();
 
     if (you.religion != GOD_NO_GOD)
@@ -1208,7 +1221,8 @@ static void _give_starting_food()
     {
         item.base_type = OBJ_FOOD;
         if (you.species == SP_HILL_ORC || you.species == SP_KOBOLD
-            || player_genus(GENPC_OGREISH) || you.species == SP_TROLL)
+            || player_genus(GENPC_OGREISH) || you.species == SP_TROLL
+            || you.species == SP_CAT)
         {
             item.sub_type = FOOD_MEAT_RATION;
         }
@@ -1258,8 +1272,10 @@ static void _racialise_starting_equipment()
     {
         if (you.inv[i].defined())
         {
+            if (is_useless_item(you.inv[i]))
+                _newgame_clear_item(i);
             // Don't change object type modifier unless it starts plain.
-            if ((you.inv[i].base_type == OBJ_ARMOUR
+            else if ((you.inv[i].base_type == OBJ_ARMOUR
                     || you.inv[i].base_type == OBJ_WEAPONS
                     || you.inv[i].base_type == OBJ_MISSILES)
                 && get_equip_race(you.inv[i]) == ISFLAG_NO_RACE)
