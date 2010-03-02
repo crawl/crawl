@@ -101,11 +101,6 @@ bool show_type::is_cleanable_monster() const
     return (cls == SH_MONSTER && !mons_class_is_stationary(mons));
 }
 
-void show_def::_set_backup(const coord_def &ep)
-{
-    backup(ep) = grid(ep);
-}
-
 static bool _show_bloodcovered(const coord_def& where)
 {
     if (!is_bloodcovered(where))
@@ -296,7 +291,6 @@ void show_def::_update_cloud(int cloudno)
 {
     const coord_def e = grid2show(env.cloud[cloudno].pos);
     int which_colour = get_cloud_colour(cloudno);
-    _set_backup(e);
     cloud_type cloud = env.cloud[cloudno].type;
     if (cloud != CLOUD_GLOOM)
         grid(e).cls = SH_CLOUD;
@@ -352,7 +346,6 @@ void show_def::_update_monster(const monsters* mons)
             && !mons_flies(mons)
             && env.cgrid(pos) == EMPTY_CLOUD)
         {
-            _set_backup(e);
             grid(e).cls = SH_INVIS_EXPOSED;
 
             // Translates between colours used for shallow and deep water,
@@ -389,10 +382,6 @@ void show_def::_update_monster(const monsters* mons)
         }
         return;
     }
-
-    // Mimics are always left on map.
-    if (!mons_is_mimic(mons->type))
-        _set_backup(e);
 
     grid(e).cls = SH_MONSTER;
     if (!crawl_state.arena && you.misled())
@@ -439,7 +428,6 @@ void show_def::update_at(const coord_def &gp, const coord_def &ep)
 void show_def::init()
 {
     grid.init(show_type());
-    backup.init(show_type());
 
     for (radius_iterator ri(&you.get_los()); ri; ++ri)
         update_at(*ri, grid2show(*ri));

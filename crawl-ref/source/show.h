@@ -67,17 +67,14 @@ class monsters;
 class show_def
 {
     FixedArray<show_type, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> grid;
-    FixedArray<show_type, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> backup;
 
     void _update_feat_at(const coord_def &gp, const coord_def &ep);
     void _update_item_at(const coord_def &gp, const coord_def &ep);
     void _update_cloud(int cloudno);
     void _update_monster(const monsters *monster);
-    void _set_backup(const coord_def &e);
 
 public:
     show_type operator()(const coord_def &ep) const { return grid(ep); }
-    show_type get_backup(const coord_def &ep) const { return backup(ep); }
 
     void init();
     void update_at(const coord_def &gp, const coord_def &ep);
