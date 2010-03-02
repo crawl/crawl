@@ -120,6 +120,13 @@ function TroveMarker:debug_portal (marker)
     end
   end
 
+  if crawl.yesno("Run diagnostic on inventory?", true, "n") then
+    self:check_item(marker, nil, "inventory", true)
+  elseif crawl.yesno("Run diagnostic on floor?", true, "n") then
+    local _x, _y = marker:pos()
+    self:check_item(marker, nil, dgn.point(_x, _y), true)
+  end
+
   local item = self.toll_item
   if item == nil then
     return "Failed to get item???"
@@ -369,17 +376,20 @@ end
 
 -- Returns true if the item was found and "used", false
 -- if we didn't find anything.
-function TroveMarker:check_item(marker, pname, position)
+function TroveMarker:check_item(marker, pname, position, dry_run)
   local iter_table
   local acceptable_items = {}
 
   if position == "inventory" then
+    if dry_run ~= nil then crawl.mpr("Checking inventory.") end
     iter_table = items.inventory()
   else
+    if dry_run ~= nil then crawl.mpr("Checking " .. position.x .. "/" .. position.y) end
     iter_table = dgn.items_at(position.x, position.y)
   end
 
   if #iter_table == 0 then
+    if dry_run ~= nil then crawl.mpr("No items.") end
     return false
   end
 
@@ -388,12 +398,15 @@ function TroveMarker:check_item(marker, pname, position)
   for it in iter.invent_iterator:new(iter_table) do
     local iplus1, iplus2 = it.pluses()
     local this_item = true
+    if dry_run ~= nil then crawl.mpr("Checking item: " .. it.name()) end
 
     if not it.identified("type properties pluses") then
+      if dry_run ~= nil then crawl.mpr("Item not identified.") end
       this_item = false
     end
 
     if it.artefact == true and item.artefact_name == false then
+      if dry_run ~= nil then crawl.mpr("Item artefact doesn't match.") end
       this_item = false
     end
 
@@ -407,6 +420,7 @@ function TroveMarker:check_item(marker, pname, position)
 
     if iplus1 == nil or iplus2 == nil then
       if item.plus1 ~= false or item.plus2 ~= false then
+        if dry_run ~= nil then crawl.mpr("Nil pluses when we want pluses.") end
         this_item = false
       end
     end
@@ -414,25 +428,31 @@ function TroveMarker:check_item(marker, pname, position)
     -- And don't do anything if the pluses aren't correct, either.
     -- but accept items that are plus'd higher than spec'd.
     if iplus1 ~= nil and item.plus1 ~= false and iplus1 < item.plus1 then
+      if dry_run ~= nil then crawl.mpr("Pluses do not match: " .. item.plus1 .. " versus " .. iplus1) end
       this_item = false
     elseif iplus2 ~= nil and item.plus2 ~= false and iplus2 < item.plus2 then
+      if dry_run ~= nil then crawl.mpr("Pluses do not match: " .. item.plus2 .. " versus " .. iplus2) end
       this_item = false
     end
 
     if it.quantity == nil then
+      if dry_run ~= nil then crawl.mpr("Quantity is nil.") end
       this_item = false
     elseif item.quantity > 1 and it.quantity < item.quantity then
+      if dry_run ~= nil then crawl.mpr("Quantity does not match, want " .. item.quantity .. ", got " .. it.quantity) end
       this_item = false
     end
 
     if item.artefact_name then
       if item.artefact_name ~= it.artefact_name then
+        if dry_run ~= nil then crawl.mpr("Artefact name does not match, want " .. item.artefact_name .. ", got " .. it.artefact_name) end
         this_item = false
       end
     end
 
     if item.ego_type then
       if item.ego_type ~= it.ego_type then
+        if dry_run ~= nil then crawl.mpr("Ego type does not match, want " .. item.ego_type .. ", got " .. it.ego_type) end
         this_item = false
       end
     end
@@ -441,11 +461,17 @@ function TroveMarker:check_item(marker, pname, position)
     -- is the one we're looking for
     if this_item and item.sub_type == it.sub_type
        and item.base_type == it.base_type then
+       if dry_run ~= nil then crawl.mpr("Accepting " .. it.name() .. " and added to queue.") end
       table.insert(acceptable_items, it)
+    elseif this_item then
+      if dry_run ~= nil then crawl.mpr("Sub and base types do not match.") end
+      if dry_run ~= nil then crawl.mpr("Wanted base type " .. item.base_type .. ", got " .. it.base_type) end
+      if dry_run ~= nil then crawl.mpr("Wanted sub type " .. item.sub_type .. ", got " .. it.sub_type) end
     end
   end
 
   if #acceptable_items == 0 then
+    if dry_run ~= nil then crawl.mpr("No acceptable items.") end
     return false
   end
 
@@ -456,7 +482,9 @@ function TroveMarker:check_item(marker, pname, position)
   if #acceptable_items == 1
      or (item.plus1 == false and item.plus2 == false) then
     local it = acceptable_items[1]
-    return self:accept_item(it)
+    if dry_run == nil then
+      return self:accept_item(it)
+    end
   else
     -- Otherwise, take the one with the least pluses.
     local titem = acceptable_items[1]
@@ -486,7 +514,9 @@ function TroveMarker:check_item(marker, pname, position)
       end
     end
 
-    return self:accept_item(titem)
+    if dry_run == nil then
+      return self:accept_item(titem)
+    end
   end
 end
 
