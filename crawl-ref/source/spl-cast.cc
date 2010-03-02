@@ -54,6 +54,7 @@
 #include "spl-book.h"
 #include "spl-mis.h"
 #include "spl-util.h"
+#include "spl-zap.h"
 #include "state.h"
 #include "stuff.h"
 #include "areas.h"
@@ -1265,12 +1266,45 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     return (SPRET_SUCCESS);
 }
 
+// Special-cased preconditions.
+static bool _spell_zap_abort(spell_type spell, const bolt& beam)
+{
+    if (spell == SPELL_BANISHMENT && beam.target == you.pos())
+    {
+        mpr("You cannot banish yourself!");
+        return (true);
+    }
+    return (false);
+}
+
+// Special-cased after-effects.
+static void _spell_zap_effect(spell_type spell)
+{
+    // Casting pain costs 1 hp.
+    // Deep Dwarves' damage reduction always blocks at least 1 hp.
+    if (spell == SPELL_PAIN && you.species != SP_DEEP_DWARF)
+        dec_hp(1, false);
+}
+
 // Spell failure check has been passed successfully.
 // Returns SPRET_SUCCESS, SPRET_ABORT or SPRET_NONE (not a player spell).
 static spret_type _do_cast(spell_type spell, int powc,
                            const dist& spd, bolt& beam,
                            god_type god, int potion)
 {
+    // First handle the zaps.
+    zap_type zap = spell_to_zap(spell);
+    if (zap != NUM_ZAPS)
+    {
+        if (_spell_zap_abort(spell, beam))
+            return (SPRET_ABORT);
+        if (!zapping(zap, spell_zap_power(spell, powc), beam, true))
+            return (SPRET_ABORT);
+
+        _spell_zap_effect(spell);
+        return (SPRET_SUCCESS);
+    }
+
     switch (spell)
     {
     // spells using burn_freeze()
@@ -1280,40 +1314,6 @@ static spret_type _do_cast(spell_type spell, int powc,
         {
             return (SPRET_ABORT);
         }
-        break;
-
-    // direct beams/bolts
-    case SPELL_MAGIC_DART:
-        if (!zapping(ZAP_MAGIC_DARTS, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_STRIKING:
-        if (!zapping(ZAP_STRIKING, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_THROW_FLAME:
-        if (!zapping(ZAP_FLAME, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_THROW_FROST:
-        if (!zapping(ZAP_FROST, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_PAIN:
-        if (!zapping(ZAP_PAIN, powc, beam, true))
-            return (SPRET_ABORT);
-        // Deep Dwarves' damage reduction always blocks at least 1 hp.
-        if (you.species != SP_DEEP_DWARF)
-            dec_hp(1, false);
-        break;
-
-    case SPELL_FLAME_TONGUE:
-        if (!zapping(ZAP_FLAME_TONGUE, powc, beam, true))
-            return (SPRET_ABORT);
         break;
 
     case SPELL_SANDBLAST:
@@ -1326,126 +1326,8 @@ static spret_type _do_cast(spell_type spell, int powc,
             return (SPRET_ABORT);
         break;
 
-    case SPELL_SHOCK:
-        if (!zapping(ZAP_ELECTRICITY, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_STING:
-        if (!zapping(ZAP_STING, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
     case SPELL_VAMPIRIC_DRAINING:
         vampiric_drain(powc, spd);
-        break;
-
-    case SPELL_BOLT_OF_FIRE:
-        if (!zapping(ZAP_FIRE, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_BOLT_OF_COLD:
-        if (!zapping(ZAP_COLD, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_PRIMAL_WAVE:
-        if (!zapping(ZAP_PRIMAL_WAVE, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_STONE_ARROW:
-        if (!zapping(ZAP_STONE_ARROW, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_POISON_ARROW:
-        if (!zapping(ZAP_POISON_ARROW, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_IRON_SHOT:
-        if (!zapping(ZAP_IRON_SHOT, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_LIGHTNING_BOLT:
-        if (!zapping(ZAP_LIGHTNING, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_BOLT_OF_MAGMA:
-        if (!zapping(ZAP_MAGMA, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_VENOM_BOLT:
-        if (!zapping(ZAP_VENOM_BOLT, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_BOLT_OF_DRAINING:
-        if (!zapping(ZAP_NEGATIVE_ENERGY, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_LEHUDIBS_CRYSTAL_SPEAR:
-        if (!zapping(ZAP_CRYSTAL_SPEAR, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_BOLT_OF_INACCURACY:
-        if (!zapping(ZAP_BEAM_OF_ENERGY, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_STICKY_FLAME:
-        if (!zapping(ZAP_STICKY_FLAME, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_DISPEL_UNDEAD:
-        if (!zapping(ZAP_DISPEL_UNDEAD, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_ISKENDERUNS_MYSTIC_BLAST:
-        if (!zapping(ZAP_MYSTIC_BLAST, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_AGONY:
-        if (!zapping(ZAP_AGONY, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_DISINTEGRATE:
-        if (!zapping(ZAP_DISINTEGRATION, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_THROW_ICICLE:
-        if (!zapping(ZAP_THROW_ICICLE, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_CIGOTUVIS_DEGENERATION:
-        if (!zapping(ZAP_DEGENERATION, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_PORKALATOR:
-        // Wizard mode only.
-        if (!zapping(ZAP_PORKALATOR, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_HELLFIRE:
-        // Should only be available from Staff of Dispater and Sceptre
-        // of Asmodeus.
-        if (!zapping(ZAP_HELLFIRE, powc, beam, true))
-            return (SPRET_ABORT);
         break;
 
     case SPELL_IOOD:
@@ -1480,11 +1362,6 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_HELLFIRE_BURST:
         if (!cast_hellfire_burst(powc, beam))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_ICE_STORM:
-        if (!zapping(ZAP_ICE_STORM, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
@@ -1693,67 +1570,12 @@ static spret_type _do_cast(spell_type spell, int powc,
         cast_confusing_touch(powc);
         break;
 
-    case SPELL_CORONA:
-        if (!zapping(ZAP_CORONA, powc + 10, beam, true))
-            return (SPRET_ABORT);
-        break;
-
     case SPELL_CAUSE_FEAR:
         mass_enchantment(ENCH_FEAR, powc, MHITYOU);
         break;
 
-    case SPELL_SLOW:
-        if (!zapping(ZAP_SLOWING, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_CONFUSE:
-        if (!zapping(ZAP_CONFUSION, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_ENSLAVEMENT:
-        if (!zapping(ZAP_ENSLAVEMENT, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
     case SPELL_TAME_BEASTS:
         cast_tame_beasts(powc);
-        break;
-
-    case SPELL_HIBERNATION:
-    {
-        const int sleep_power =
-            stepdown_value(powc * 9 / 10, 5, 35, 45, 50);
-        dprf("Sleep power stepdown: %d -> %d", powc, sleep_power);
-        if (!zapping(ZAP_HIBERNATION, sleep_power, beam, true))
-            return (SPRET_ABORT);
-        break;
-    }
-
-    case SPELL_SLEEP:
-        if (!zapping(ZAP_SLEEP, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_PARALYSE:
-        if (!zapping(ZAP_PARALYSIS, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_PETRIFY:
-        if (!zapping(ZAP_PETRIFY, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_POLYMORPH_OTHER:
-        if (!zapping(ZAP_POLYMORPH_OTHER, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_TELEPORT_OTHER:
-        if (!zapping(ZAP_TELEPORTATION, powc, beam, true))
-            return (SPRET_ABORT);
         break;
 
     case SPELL_INTOXICATE:
@@ -1776,29 +1598,8 @@ static spret_type _do_cast(spell_type spell, int powc,
         abjuration(powc);
         break;
 
-    case SPELL_BANISHMENT:
-        if (beam.target == you.pos())
-        {
-            mpr("You cannot banish yourself!");
-            break;
-        }
-        if (!zapping(ZAP_BANISHMENT, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
     case SPELL_OLGREBS_TOXIC_RADIANCE:
         cast_toxic_radiance();
-        break;
-
-    // beneficial enchantments
-    case SPELL_HASTE:
-        if (!zapping(ZAP_HASTING, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_INVISIBILITY:
-        if (!zapping(ZAP_INVISIBILITY, powc, beam, true))
-            return (SPRET_ABORT);
         break;
 
     case SPELL_MINOR_HEALING:
@@ -2090,11 +1891,6 @@ static spret_type _do_cast(spell_type spell, int powc,
             return (SPRET_ABORT);
         break;
 
-    case SPELL_DIG:
-        if (!zapping(ZAP_DIGGING, powc, beam, true))
-            return (SPRET_ABORT);
-        break;
-
     case SPELL_PASSWALL:
         if (!cast_passwall(spd.delta, powc))
             return (SPRET_ABORT);
@@ -2120,11 +1916,6 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     case SPELL_FULSOME_DISTILLATION:
         if (!cast_fulsome_distillation(powc))
-            return (SPRET_ABORT);
-        break;
-
-    case SPELL_DEBUGGING_RAY:
-        if (!zapping(ZAP_DEBUGGING_RAY, powc, beam, true))
             return (SPRET_ABORT);
         break;
 
