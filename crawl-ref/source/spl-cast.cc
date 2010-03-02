@@ -994,6 +994,10 @@ static bool _can_cast_detect()
     return false;
 }
 
+static spret_type _do_cast(spell_type spell, int powc,
+                           const dist& spd, bolt& beam,
+                           god_type god, bool normal_cast, int potion);
+
 // Returns SPRET_SUCCESS if spell is successfully cast for purposes of
 // exercising, SPRET_FAIL otherwise, or SPRET_ABORT if the player canceled
 // the casting.
@@ -1209,6 +1213,47 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
     dprf("Spell #%d, power=%d", spell, powc);
 
+    switch (_do_cast(spell, powc, spd, beam, god, normal_cast, potion))
+    {
+    case SPRET_SUCCESS:
+        _spellcasting_side_effects(spell);
+        return (SPRET_SUCCESS);
+
+    case SPRET_FAIL:
+        ASSERT(false);
+        return (SPRET_FAIL);
+
+    case SPRET_ABORT:
+        return (SPRET_ABORT);
+
+    case SPRET_NONE:
+#ifdef WIZARD
+        if (you.wizard && !allow_fail && is_valid_spell(spell)
+            && (flags & SPFLAG_MONSTER))
+        {
+            _try_monster_cast(spell, powc, spd, beam);
+            return (SPRET_SUCCESS);
+        }
+#endif
+
+        if (is_valid_spell(spell))
+            mprf(MSGCH_ERROR, "Spell '%s' is not a player castable spell.",
+                spell_title(spell));
+        else
+            mpr("Invalid spell!", MSGCH_ERROR);
+
+        return (SPRET_ABORT);
+    }
+
+    return (SPRET_SUCCESS);
+}
+
+// Spell failure check has been passed successfully.
+// Returns SPRET_SUCCESS, SPRET_ABORT or SPRET_NONE (not a player spell).
+static spret_type _do_cast(spell_type spell, int powc,
+                           const dist& spd, bolt& beam,
+                           god_type god, bool normal_cast, int potion)
+{
     switch (spell)
     {
     // spells using burn_freeze()
@@ -2076,26 +2121,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
         break;
 
     default:
-#ifdef WIZARD
-        if (you.wizard && !allow_fail && is_valid_spell(spell)
-            && (flags & SPFLAG_MONSTER))
-        {
-            _try_monster_cast(spell, powc, spd, beam);
-            return (SPRET_SUCCESS);
-        }
-#endif
-
-        if (is_valid_spell(spell))
-            mprf(MSGCH_ERROR, "Spell '%s' is not a player castable spell.",
-                 spell_title(spell));
-        else
-            mpr("Invalid spell!", MSGCH_ERROR);
-
-        return (SPRET_ABORT);
-        break;
-    }                           // end switch
-
-    _spellcasting_side_effects(spell);
+        return (SPRET_NONE);
+    }
 
     return (SPRET_SUCCESS);
 }

@@ -275,7 +275,7 @@ bool cast_smiting(int power, const coord_def& where)
     return (success);
 }
 
-int airstrike(int power, dist &beam)
+int airstrike(int power, const dist &beam)
 {
     bool success = false;
 

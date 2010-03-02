@@ -46,7 +46,8 @@ enum spret_type
 {
     SPRET_ABORT = 0,            // should be left as 0
     SPRET_FAIL,
-    SPRET_SUCCESS
+    SPRET_SUCCESS,
+    SPRET_NONE                  // spell was not handled
 };
 
 typedef bool (*spell_selector)(spell_type spell);
