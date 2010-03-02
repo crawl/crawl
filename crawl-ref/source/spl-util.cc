@@ -49,6 +49,10 @@ struct spell_desc
     unsigned int disciplines; // bitfield
     unsigned int flags;       // bitfield
     unsigned int level;
+
+    // Usually in the range 0..200 (0 means uncapped).
+    // Note that some spells are also capped through zap_type.
+    // See spell_power_cap below.
     int power_cap;
 
     // At power 0, you get min_range. At power power_cap, you get max_range.
