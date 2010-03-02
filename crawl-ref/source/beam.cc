@@ -406,6 +406,13 @@ const zap_info* _seek_zap(zap_type z_type)
         return (&zap_data[zap_index[z_type]]);
 }
 
+int zap_power_cap(zap_type z_type)
+{
+    const zap_info* zinfo = _seek_zap(z_type);
+
+    return (zinfo ? zinfo->power_cap : 0);
+}
+
 static void _zappy(zap_type z_type, int power, bolt &pbolt)
 {
     const zap_info* zinfo = _seek_zap(z_type);
