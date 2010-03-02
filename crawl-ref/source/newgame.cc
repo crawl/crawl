@@ -1671,6 +1671,10 @@ static void _resolve_weapon(newgame_def* ng, newgame_def* ng_choice,
 static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice,
                            const newgame_def& defaults)
 {
+    // No weapon use at all.  The actual item will be removed later.
+    if (ng->species == SP_CAT)
+        return (true);
+
     switch (ng->job)
     {
     case JOB_FIGHTER:
