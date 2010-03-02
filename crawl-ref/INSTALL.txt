@@ -261,7 +261,7 @@ NT/2k/XP system (the binary will run on 9x), or build a DOS binary.
   add 'TILES=y' on the 'make' command line.
 
 * When the process finishes, you should be able to run crawl right from the
-  sources directory by typing './crawl'
+  source directory by typing './crawl'
 
 
 Building on Windows (cygwin)
