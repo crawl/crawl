@@ -887,6 +887,8 @@ static void draw_los_backup(screen_buffer_t* buffy,
 #endif
 }
 
+static bool _show_terrain = false;
+
 //---------------------------------------------------------------
 //
 // Draws the main window using the character set returned
@@ -911,7 +913,7 @@ void viewwindow(bool monster_updates, bool show_updates)
         mcache.clear_nonref();
 #endif
 
-    if (show_updates)
+    if (show_updates || _show_terrain)
     {
         if (!player_in_mappable_area())
             env.map_knowledge.init(map_cell());
@@ -924,7 +926,7 @@ void viewwindow(bool monster_updates, bool show_updates)
         tiles.clear_overlays();
 #endif
 
-        env.show.init();
+        env.show.init(_show_terrain);
     }
 
     if (monster_updates && !crawl_state.arena)
@@ -937,7 +939,12 @@ void viewwindow(bool monster_updates, bool show_updates)
                 && (!you.running.is_explore() || Options.explore_delay < 0);
 
     if (run_dont_draw || you.asleep())
+    {
+        // Reset env.show if we munged it.
+        if (_show_terrain)
+            env.show.init();
         return;
+    }
 
     cursor_control cs(false);
 
@@ -958,7 +965,7 @@ void viewwindow(bool monster_updates, bool show_updates)
             draw_unseen(&buffy[bufcount], gc);
         else if (!crawl_view.in_grid_los(gc))
             draw_outside_los(&buffy[bufcount], gc);
-        else if (gc == you.pos() && you.on_current_level
+        else if (gc == you.pos() && you.on_current_level && !_show_terrain
                  && !crawl_state.arena && !crawl_state.arena_suspended)
         {
             draw_player(&buffy[bufcount], gc, ep);
@@ -1013,7 +1020,25 @@ void viewwindow(bool monster_updates, bool show_updates)
     tiles.update_inventory();
 #endif
 
+    // Reset env.show if we munged it.
+    if (_show_terrain)
+        env.show.init();
+
     _debug_pane_bounds();
+}
+
+void toggle_show_terrain()
+{
+    _show_terrain = !_show_terrain;
+    if (_show_terrain)
+        mpr("Showing terrain only.");
+    else
+        mpr("Returning to normal view.");
+}
+
+void reset_show_terrain()
+{
+    _show_terrain = false;
 }
 
 ////////////////////////////////////////////////////////////////////////////

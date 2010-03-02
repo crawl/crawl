@@ -76,8 +76,9 @@ class show_def
 public:
     show_type operator()(const coord_def &ep) const { return grid(ep); }
 
-    void init();
-    void update_at(const coord_def &gp, const coord_def &ep);
+    void init(bool terrain_only = false);
+    void update_at(const coord_def &gp, const coord_def &ep,
+                   bool terrain_only = false);
 };
 
 // Convert a show object as in env.show to one to be stored in

@@ -48,6 +48,9 @@ void update_monsters_in_view();
 void handle_seen_interrupt(monsters* monster);
 void flush_comes_into_view();
 
+void toggle_show_terrain();
+void reset_show_terrain();
+
 void handle_terminal_resize(bool redraw = true);
 
 #endif
