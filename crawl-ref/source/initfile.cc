@@ -3488,6 +3488,7 @@ enum commandline_option_type {
     CLO_HELP,
     CLO_VERSION,
     CLO_SAVE_VERSION,
+    CLO_SPRINT,
     CLO_EXTRA_OPT_FIRST,
     CLO_EXTRA_OPT_LAST,
 
@@ -3498,7 +3499,7 @@ static const char *cmd_ops[] = {
     "scores", "name", "species", "background", "plain", "dir", "rc",
     "rcdir", "tscores", "vscores", "scorefile", "morgue", "macro",
     "mapstat", "arena", "test", "script", "builddb", "help", "version",
-    "save-version", "extra-opt-first", "extra-opt-last"
+    "save-version", "sprint", "extra-opt-first", "extra-opt-last"
 };
 
 const int num_cmd_ops = CLO_NOPS;
@@ -3928,6 +3929,10 @@ bool parse_args( int argc, char **argv, bool rc_only )
 
             _print_save_version(next_arg);
             end(0);
+
+        case CLO_SPRINT:
+            crawl_state.type = GAME_TYPE_SPRINT;
+            break;
 
         case CLO_EXTRA_OPT_FIRST:
             if (!next_is_param)

@@ -344,11 +344,17 @@ static std::string _get_seen_branches(bool display)
 
     level_id dungeon_lid(branches[0].id, 0);
     dungeon_lid = find_deepest_explored(dungeon_lid);
-    snprintf(buffer, sizeof(buffer),
-             dungeon_lid.depth < 10 ?
-                    "<yellow>Dungeon</yellow> <darkgrey>(%d/27)</darkgrey>            " :
-                    "<yellow>Dungeon</yellow> <darkgrey>(%d/27)</darkgrey>           ",
-             dungeon_lid.depth);
+    if (crawl_state.game_is_sprint()) {
+        snprintf(buffer, sizeof(buffer),
+                        "<yellow>Dungeon</yellow> <darkgrey>(1/1)</darkgrey>");
+    }
+    else {
+        snprintf(buffer, sizeof(buffer),
+                dungeon_lid.depth < 10 ?
+                        "<yellow>Dungeon</yellow> <darkgrey>(%d/27)</darkgrey>            " :
+                        "<yellow>Dungeon</yellow> <darkgrey>(%d/27)</darkgrey>           ",
+                dungeon_lid.depth);
+    }
     disp += buffer;
 
     for (int i = BRANCH_FIRST_NON_DUNGEON; i < NUM_BRANCHES; i++)

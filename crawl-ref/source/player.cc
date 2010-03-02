@@ -62,6 +62,7 @@
 #include "spells3.h"
 #include "spells4.h"
 #include "spl-util.h"
+#include "sprint.h"
 #include "state.h"
 #include "stuff.h"
 #include "areas.h"
@@ -2500,6 +2501,10 @@ void gain_exp( unsigned int exp_gained, unsigned int* actual_gain,
         exercise(you.sage_bonus_skill, 20);
         you.exp_available = old_avail;
         exp_gained /= 2;
+    }
+
+    if (crawl_state.game_is_sprint()) {
+        exp_gained = sprint_modify_exp(exp_gained);
     }
 
     if (you.exp_available + exp_gained > (unsigned int)MAX_EXP_POOL)

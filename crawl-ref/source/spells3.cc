@@ -1478,7 +1478,9 @@ bool allow_control_teleport(bool quiet)
 
 void you_teleport(void)
 {
-    if (item_blocks_teleport(true, true))
+    // [Cha] here we block teleportation, which will save the player from
+    // death from read-id'ing scrolls (in sprint)
+    if (crawl_state.game_is_sprint() || item_blocks_teleport(true, true))
         canned_msg(MSG_WEIRD_STASIS);
     else if (you.duration[DUR_TELEPORT])
     {

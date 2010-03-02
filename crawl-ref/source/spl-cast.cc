@@ -1906,7 +1906,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_PORTAL:
-        if (portal() == -1)
+        if (crawl_state.game_is_sprint() || (portal() == -1))
             return (SPRET_ABORT);
         break;
 

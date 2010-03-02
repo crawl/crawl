@@ -639,8 +639,13 @@ void scorefile_entry::set_base_xlog_fields() const
     if (!fields.get())
         fields.reset(new xlog_fields);
 
+    std::string score_version = SCORE_VERSION;
+    if (crawl_state.game_is_sprint()) {
+        /* XXX: hmmm, something better here? */
+        score_version += "-sprint.1";
+    }
     fields->add_field("v", "%s", Version::Short().c_str());
-    fields->add_field("lv", SCORE_VERSION);
+    fields->add_field("lv", score_version);
     fields->add_field("name", "%s", name.c_str());
     fields->add_field("uid",  "%d", uid);
     fields->add_field("race", "%s",

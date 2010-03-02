@@ -78,6 +78,7 @@
 #include "spells4.h"
 #include "spl-book.h"
 #include "spl-mis.h"
+#include "sprint.h"
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
@@ -2527,6 +2528,10 @@ void gain_piety(int original_gain, bool all_at_once)
     }
 
     int old_piety = you.piety;
+
+    if (crawl_state.game_is_sprint()) {
+        pgn = sprint_modify_piety(pgn);
+    }
 
     you.piety += pgn;
     you.piety = std::min<int>(MAX_PIETY, you.piety);
