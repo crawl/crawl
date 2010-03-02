@@ -637,7 +637,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             // in 99% of cases - a player can just watch who stepped where
             // and mark the trap on an external paper map.  Not good.
 
-            if (m->wont_attack() || crawl_state.arena)
+            if (m->wont_attack() || crawl_state.game_is_arena())
             {
                 MiscastEffect( m, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
                                3, "the power of Zot" );

@@ -2207,7 +2207,7 @@ void mark_milestone(const std::string &type,
                     const std::string &milestone,
                     bool report_origin_level)
 {
-    if (crawl_state.arena || !crawl_state.need_save)
+    if (crawl_state.game_is_arena() || !crawl_state.need_save)
         return;
     const std::string milestone_file = Options.save_dir + "milestones.txt";
     if (FILE *fp = lk_open("a", milestone_file))

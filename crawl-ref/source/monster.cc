@@ -72,7 +72,7 @@ monsters::monsters()
 
 {
     travel_path.clear();
-    if (crawl_state.arena)
+    if (crawl_state.game_is_arena())
         foe = MHITNOT;
 }
 
@@ -578,7 +578,7 @@ bool monsters::could_wield(const item_def &item, bool ignore_brand,
         return (false);
 
     // Monsters can't use unrandarts with special effects.
-    if (is_special_unrandom_artefact(item) && !crawl_state.arena)
+    if (is_special_unrandom_artefact(item) && !crawl_state.game_is_arena())
         return (false);
 
     // Wimpy monsters (e.g. kobolds, goblins) can't use halberds, etc.
@@ -2098,7 +2098,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
                               bool force_seen)
 {
     monster_type type = mon.type;
-    if (!crawl_state.arena && you.misled())
+    if (!crawl_state.game_is_arena() && you.misled())
         type = mon.get_mislead_type();
 
     if (type == MONS_NO_MONSTER)
@@ -2106,7 +2106,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     else if (invalid_monster_type(type) && type != MONS_PROGRAM_BUG)
         return _invalid_monster_str(type);
 
-    const bool arena_submerged = crawl_state.arena && !force_seen
+    const bool arena_submerged = crawl_state.game_is_arena() && !force_seen
                                      && mon.submerged();
 
     // Handle non-visible case first.
@@ -2361,7 +2361,7 @@ std::string monsters::name(description_level_type desc, bool force_vis) const
 
     std::string monnam;
     if ((flags & MF_NAME_MASK) && (force_vis || observable())
-        || crawl_state.arena && mons_class_is_zombified(type))
+        || crawl_state.game_is_arena() && mons_class_is_zombified(type))
     {
         monnam = full_name(desc);
     }
@@ -2413,7 +2413,7 @@ std::string monsters::full_name(description_level_type desc,
     }
 
     int _type = mons_is_zombified(this) ? base_monster : type;
-    if (!crawl_state.arena && you.misled())
+    if (!crawl_state.game_is_arena() && you.misled())
         _type = get_mislead_type();
 
     if (mons_genus(_type) == MONS_HYDRA && flag == 0)
@@ -4278,7 +4278,7 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
                                    activity_interrupt_data(this,
                                                            "surfaced"));
             }
-            else if (crawl_state.arena)
+            else if (crawl_state.game_is_arena())
                 mprf("%s submerges.", name(DESC_CAP_A, true).c_str());
         }
 
@@ -4671,7 +4671,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                     mprf("%s leaps out from its hiding place under the floor!",
                          name(DESC_CAP_A, true).c_str() );
                 }
-                else if (crawl_state.arena)
+                else if (crawl_state.game_is_arena())
                     mprf("%s surfaces.", name(DESC_CAP_A, true).c_str() );
             }
         }

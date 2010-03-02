@@ -510,10 +510,10 @@ namespace arena
         setup_others();
     }
 
-    // Temporarily unset crawl_state.arena to force a --more-- to happen.
+    // Temporarily reset crawl_state.type to force a --more-- to happen.
     void more()
     {
-        unwind_bool state(crawl_state.arena, false);
+        unwind_var<game_type> type(crawl_state.type, GAME_TYPE_NORMAL);
 
         ::more();
     }
@@ -732,8 +732,8 @@ namespace arena
 
         cursor_control coff(true);
 
-        unwind_bool  ar     (crawl_state.arena,           false);
-        unwind_bool  ar_susp(crawl_state.arena_suspended, true);
+        unwind_var<game_type> type(crawl_state.type, GAME_TYPE_NORMAL);
+        unwind_bool ar_susp(crawl_state.arena_suspended, true);
         coord_def yplace(dgn_find_feature_marker(DNGN_ESCAPE_HATCH_UP));
         unwind_var<coord_def> pos(you.position);
         you.position = yplace;
@@ -822,7 +822,7 @@ namespace arena
                 {
                     const int ch = getch();
                     handle_keypress(ch);
-                    ASSERT(crawl_state.arena && !crawl_state.arena_suspended);
+                    ASSERT(crawl_state.game_is_arena() && !crawl_state.arena_suspended);
                     if (contest_canceled)
                         return;
                 }

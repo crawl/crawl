@@ -27,7 +27,7 @@ game_state::game_state()
     : game_crashed(false), mouse_enabled(false), waiting_for_command(false),
       terminal_resized(false), io_inited(false), need_save(false),
       saving_game(false), updating_scores(false), seen_hups(0),
-      map_stat_gen(false), arena(false), arena_suspended(false), build_db(false),
+      map_stat_gen(false), type(GAME_TYPE_NORMAL), arena_suspended(false), build_db(false),
       unicode_ok(false), show_more_prompt(true),
       glyph2strfn(NULL), multibyte_strlen(NULL),
       terminal_resize_handler(NULL), terminal_resize_check(NULL),
@@ -464,15 +464,15 @@ void game_state::dump()
     fprintf(stderr, "io_inited: %d, need_save: %d, saving_game: %d, "
                   "updating_scores: %d:" EOL,
             io_inited, need_save, saving_game, updating_scores);
-    fprintf(stderr, "seen_hups: %d, map_stat_gen: %d, arena: %d, "
+    fprintf(stderr, "seen_hups: %d, map_stat_gen: %d, type: %d, "
                   "arena_suspended: %d, unicode_ok: %d" EOL,
-            seen_hups, map_stat_gen, arena, arena_suspended, unicode_ok);
+            seen_hups, map_stat_gen, type, arena_suspended, unicode_ok);
 
     fprintf(stderr, EOL);
 
     // Arena mode can change behavior of the rest of the code and/or lead
     // to asserts.
-    unwind_bool _arena(arena, false);
+    unwind_var<game_type> _type(type, GAME_TYPE_NORMAL);
     unwind_bool _arena_suspended(arena_suspended, false);
 
     if (!startup_errors.empty())
@@ -553,4 +553,28 @@ void game_state::dump()
 bool game_state::player_is_dead()
 {
     return (updating_scores && !need_save);
+}
+
+bool game_state::game_is_normal()
+{
+    ASSERT(type < NUM_GAME_TYPE);
+    return type == GAME_TYPE_NORMAL;
+}
+
+bool game_state::game_is_tutorial()
+{
+    ASSERT(type < NUM_GAME_TYPE);
+    return type == GAME_TYPE_TUTORIAL;
+}
+
+bool game_state::game_is_arena()
+{
+    ASSERT(type < NUM_GAME_TYPE);
+    return type == GAME_TYPE_ARENA;
+}
+
+bool game_state::game_is_sprint()
+{
+    ASSERT(type < NUM_GAME_TYPE);
+    return type == GAME_TYPE_SPRINT;
 }

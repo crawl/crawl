@@ -889,7 +889,7 @@ void game_options::reset_options()
     tile_runrest_rate     = 100;
     tile_key_repeat_delay = 200;
     tile_tooltip_ms       = 500;
-    tile_tag_pref         = crawl_state.arena ? TAGPREF_NAMED : TAGPREF_ENEMY;
+    tile_tag_pref         = crawl_state.game_is_arena() ? TAGPREF_NAMED : TAGPREF_ENEMY;
     tile_display          = TDSP_INVENT;
 
     tile_show_minihealthbar  = true;
@@ -3789,7 +3789,7 @@ bool parse_args( int argc, char **argv, bool rc_only )
             break;
 
         case CLO_ARENA:
-            crawl_state.arena = true;
+            crawl_state.type = GAME_TYPE_ARENA;
             if (next_is_param)
             {
                 SysEnv.arena_teams = next_arg;

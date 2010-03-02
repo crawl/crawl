@@ -1024,7 +1024,7 @@ static spret_type _do_cast(spell_type spell, int powc,
 // Others are currently unused or unimplemented.
 spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 {
-    ASSERT(!crawl_state.arena);
+    ASSERT(!crawl_state.game_is_arena());
 
     const bool wiz_cast = (crawl_state.prev_cmd == CMD_WIZARD && !allow_fail);
 

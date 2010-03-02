@@ -317,7 +317,7 @@ static void _hell_spawn_random_monsters()
 // one_chance_in(value) checks with the new x_chance_in_y(5, value). (jpeg)
 void spawn_random_monsters()
 {
-    if (crawl_state.arena)
+    if (crawl_state.game_is_arena())
         return;
 
 #ifdef DEBUG_MON_CREATION
@@ -438,7 +438,7 @@ monster_type pick_random_monster(const level_id &place, int power,
 
     *isood = false;
 
-    if (crawl_state.arena)
+    if (crawl_state.game_is_arena())
     {
         monster_type type = arena_pick_random_monster(place, power, lev_mons);
         if (type != RANDOM_MONSTER)
@@ -518,7 +518,7 @@ monster_type pick_random_monster(const level_id &place, int power,
 
             if (count == 2000)
                 return (MONS_PROGRAM_BUG);
-            if (crawl_state.arena && arena_veto_random_monster(mon_type))
+            if (crawl_state.game_is_arena() && arena_veto_random_monster(mon_type))
                 continue;
         }
         while (random2avg(100, 2) > mons_rare_abyss(mon_type)
@@ -543,7 +543,7 @@ monster_type pick_random_monster(const level_id &place, int power,
         {
             mon_type = valid_monster_types[random2(valid_monster_types.size())];
 
-            if (crawl_state.arena && arena_veto_random_monster(mon_type))
+            if (crawl_state.game_is_arena() && arena_veto_random_monster(mon_type))
                 continue;
 
             level  = mons_level(mon_type, place);
@@ -1267,7 +1267,7 @@ static int _place_monster_aux(const mgen_data &mg,
 
     ASSERT(!monster_at(fpos));
 
-    if (crawl_state.arena
+    if (crawl_state.game_is_arena()
         && arena_veto_place_monster(mg, first_band_member, fpos))
     {
         return (-1);
@@ -1421,7 +1421,7 @@ static int _place_monster_aux(const mgen_data &mg,
         mon->add_ench(ENCH_SLOWLY_DYING);
     }
 
-    if (!crawl_state.arena && you.misled())
+    if (!crawl_state.game_is_arena() && you.misled())
         update_mislead_monster(mon);
 
     if (monster_can_submerge(mon, grd(fpos)) && !one_chance_in(5))
@@ -1608,7 +1608,7 @@ static int _place_monster_aux(const mgen_data &mg,
     if (!Generating_Level && you.can_see(mon))
         handle_seen_interrupt(mon);
 
-    if (crawl_state.arena)
+    if (crawl_state.game_is_arena())
         arena_placed_monster(mon);
 
     return (id);
@@ -2658,7 +2658,7 @@ static int _ood_limit()
 
 void mark_interesting_monst(struct monsters* monster, beh_type behaviour)
 {
-    if (crawl_state.arena)
+    if (crawl_state.game_is_arena())
         return;
 
     bool interesting = false;
@@ -2816,7 +2816,7 @@ int mons_place(mgen_data mg)
         if (creation->type == MONS_RAKSHASA_FAKE && !one_chance_in(3))
             creation->add_ench(ENCH_INVIS);
 
-        if (!(mg.flags & MG_FORCE_BEH) && !crawl_state.arena)
+        if (!(mg.flags & MG_FORCE_BEH) && !crawl_state.game_is_arena())
             player_angers_monster(creation);
 
         behaviour_event(creation, ME_EVAL);
@@ -3086,7 +3086,7 @@ int create_monster(mgen_data mg, bool fail_msg)
     {
         summd = mons_place(mg);
         // If the arena vetoed the placement then give no fail message.
-        if (crawl_state.arena)
+        if (crawl_state.game_is_arena())
             fail_msg = false;
     }
 

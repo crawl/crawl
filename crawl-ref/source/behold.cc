@@ -209,7 +209,7 @@ void player::_removed_beholder()
 // beholder.
 bool player::_possible_beholder(const monsters *mon) const
 {
-    if (crawl_state.arena)
+    if (crawl_state.game_is_arena())
         return (false);
 
     return (!silenced(pos()) && !silenced(mon->pos())

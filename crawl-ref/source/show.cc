@@ -269,7 +269,7 @@ void show_def::_update_item_at(const coord_def &gp, const coord_def &ep)
         // monster(mimic)-owned items have link = NON_ITEM+1+midx
         if (eitem->link > NON_ITEM && you.visible_igrd(gp) != NON_ITEM)
             ecol |= COLFLAG_ITEM_HEAP;
-        else if (eitem->link < NON_ITEM && !crawl_state.arena)
+        else if (eitem->link < NON_ITEM && !crawl_state.game_is_arena())
             ecol |= COLFLAG_ITEM_HEAP;
         grid(ep).cls = SH_ITEM;
         grid(ep).item = _item_to_show_code(*eitem);
@@ -384,7 +384,7 @@ void show_def::_update_monster(const monsters* mons)
     }
 
     grid(e).cls = SH_MONSTER;
-    if (!crawl_state.arena && you.misled())
+    if (!crawl_state.game_is_arena() && you.misled())
         grid(e).mons = mons->get_mislead_type();
 #ifndef USE_TILE
     else if (mons->type == MONS_SLIME_CREATURE && mons->number > 1)

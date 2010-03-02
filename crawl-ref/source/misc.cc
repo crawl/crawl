@@ -1263,7 +1263,7 @@ void generate_random_blood_spatter_on_level()
 
 void search_around(bool only_adjacent)
 {
-    ASSERT(!crawl_state.arena);
+    ASSERT(!crawl_state.game_is_arena());
 
     // Traps and doors stepdown skill:
     // skill/(2x-1) for squares at distance x
@@ -2354,7 +2354,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     leaving_level_now();
 
 #ifdef DGL_MILESTONES
-    if (!force_stair && !crawl_state.arena)
+    if (!force_stair && !crawl_state.game_is_arena())
     {
         // Not entirely accurate - the player could die before
         // reaching the Abyss.
@@ -2738,7 +2738,7 @@ std::string weird_sound()
 
 bool scramble(void)
 {
-    ASSERT(!crawl_state.arena);
+    ASSERT(!crawl_state.game_is_arena());
 
     // Statues are too stiff and heavy to scramble out of the water.
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE)
@@ -2755,7 +2755,7 @@ bool scramble(void)
 
 bool go_berserk(bool intentional, bool potion)
 {
-    ASSERT(!crawl_state.arena);
+    ASSERT(!crawl_state.game_is_arena());
 
     if (!you.can_go_berserk(intentional, potion))
         return (false);
@@ -2934,7 +2934,7 @@ std::vector<monsters*> get_nearby_monsters(bool want_move,
                                            bool require_visible,
                                            int range)
 {
-    ASSERT(!crawl_state.arena);
+    ASSERT(!crawl_state.game_is_arena());
 
     if (range == -1)
         range = LOS_RADIUS;
@@ -3292,7 +3292,7 @@ std::string your_hand(bool plural)
 bool stop_attack_prompt(const monsters *mon, bool beam_attack,
                         coord_def beam_target)
 {
-    ASSERT(!crawl_state.arena);
+    ASSERT(!crawl_state.game_is_arena());
 
     if (you.confused() || !you.can_see(mon))
         return (false);

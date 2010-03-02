@@ -85,7 +85,7 @@ bool monster_info::less_than(const monster_info& m1,
 
     int m1type = m1.m_mon->type;
     int m2type = m2.m_mon->type;
-    if (!crawl_state.arena && you.misled())
+    if (!crawl_state.game_is_arena() && you.misled())
     {
         m1type = m1.m_mon->get_mislead_type();
         m2type = m2.m_mon->get_mislead_type();
@@ -236,7 +236,7 @@ void monster_info::to_string(int count, std::string& desc,
 {
     std::ostringstream out;
     monster_type type = m_mon->type;
-    if (!crawl_state.arena && you.misled())
+    if (!crawl_state.game_is_arena() && you.misled())
         type = m_mon->get_mislead_type();
 
     if (count == 1)
@@ -354,7 +354,7 @@ void monster_info::to_string(int count, std::string& desc,
 void get_monster_info(std::vector<monster_info>& mons)
 {
     std::vector<monsters*> visible;
-    if (crawl_state.arena)
+    if (crawl_state.game_is_arena())
     {
         for (monster_iterator mi; mi; ++mi)
             visible.push_back(*mi);

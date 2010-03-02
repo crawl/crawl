@@ -3242,11 +3242,11 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     {
         std::string foe_name;
         const monsters* m_foe = foe->as_monster();
-        if (you.can_see(foe) || crawl_state.arena)
+        if (you.can_see(foe) || crawl_state.game_is_arena())
         {
             if (m_foe->attitude == ATT_FRIENDLY
                 && !mons_is_unique(m_foe->type)
-                && !crawl_state.arena)
+                && !crawl_state.game_is_arena())
             {
                 foe_name = foe->name(DESC_NOCAP_YOUR);
                 const std::string::size_type pos = foe_name.find("'");
@@ -3301,7 +3301,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     }
     else if (monster->attitude == ATT_FRIENDLY
              && !mons_is_unique(monster->type)
-             && !crawl_state.arena
+             && !crawl_state.game_is_arena()
              && you.can_see(monster))
     {
         nocap = DESC_PLAIN;

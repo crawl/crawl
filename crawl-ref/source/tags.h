@@ -25,6 +25,7 @@ enum tag_type   // used during save/load process to identify data blocks
     TAG_LEVEL_ATTITUDE,                 // monster attitudes
     TAG_LOST_MONSTERS,                  // monsters in transit
     TAG_LEVEL_TILES,
+    TAG_GAME_STATE,
     NUM_TAGS
 };
 
@@ -50,7 +51,8 @@ enum tag_minor_version
     TAG_MINOR_NOCHEPONDER = 3, // Reverted the previous change.
     TAG_MINOR_INTTIME   = 4, // Elapsed time stored as longs (ints really).
     TAG_MINOR_STASHVER  = 5, // Stashes using global save version, ints instead of floats.
-    TAG_MINOR_VERSION   = 5 // Current version.  (Keep equal to max.)
+    TAG_MINOR_GAMESTATE = 6, // Adding serialization of game state stuff.
+    TAG_MINOR_VERSION   = 6 // Current version.  (Keep equal to max.)
 };
 
 struct enum_info

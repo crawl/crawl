@@ -302,7 +302,7 @@ int get_item_slot( int reserve )
 {
     ASSERT( reserve >= 0 );
 
-    if (crawl_state.arena)
+    if (crawl_state.game_is_arena())
         reserve = 0;
 
     int item = NON_ITEM;
@@ -313,7 +313,7 @@ int get_item_slot( int reserve )
 
     if (item >= MAX_ITEMS - reserve)
     {
-        if (crawl_state.arena)
+        if (crawl_state.game_is_arena())
         {
             item = arena_cull_items();
             // If arena_cull_items() can't free up any space then

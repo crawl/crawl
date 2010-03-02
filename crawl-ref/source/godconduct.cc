@@ -51,7 +51,7 @@ god_conduct_trigger::~god_conduct_trigger()
 bool did_god_conduct(conduct_type thing_done, int level, bool known,
                      const monsters *victim)
 {
-    ASSERT(!crawl_state.arena);
+    ASSERT(!crawl_state.game_is_arena());
 
     bool retval = false;
 

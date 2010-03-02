@@ -77,6 +77,7 @@
 #include "quiver.h"
 #include "skills.h"
 #include "skills2.h"
+#include "state.h"
 #include "stuff.h"
 #include "env.h"
 #include "tags.h"
@@ -171,11 +172,13 @@ static void tag_construct_you_items(writer &th);
 static void tag_construct_you_dungeon(writer &th);
 static void tag_construct_lost_monsters(writer &th);
 static void tag_construct_lost_items(writer &th);
+static void tag_construct_game_state(writer &th);
 static void tag_read_you(reader &th, char minorVersion);
 static void tag_read_you_items(reader &th, char minorVersion);
 static void tag_read_you_dungeon(reader &th, char minorVersion);
 static void tag_read_lost_monsters(reader &th);
 static void tag_read_lost_items(reader &th);
+static void tag_read_game_state(reader &th);
 
 static void tag_construct_level(writer &th);
 static void tag_construct_level_items(writer &th);
@@ -775,6 +778,7 @@ void tag_write(tag_type tagID, FILE* outf)
         tag_construct_lost_monsters(th);
         tag_construct_lost_items(th);
         break;
+    case TAG_GAME_STATE:     tag_construct_game_state(th);     break;
     default:
         // I don't know how to make that!
         break;
@@ -840,6 +844,7 @@ tag_type tag_read(FILE *fp, char minorVersion)
         tag_read_lost_monsters(th);
         tag_read_lost_items(th);
         break;
+    case TAG_GAME_STATE:     tag_read_game_state(th);                   break;
     default:
         // I don't know how to read that!
         ASSERT(false);
@@ -862,8 +867,6 @@ tag_type tag_read(FILE *fp, char minorVersion)
 // (currently none).
 void tag_missing(int tag, char minorVersion)
 {
-    UNUSED(minorVersion);
-
     switch (tag)
     {
         case TAG_LEVEL_ATTITUDE:
@@ -872,6 +875,12 @@ void tag_missing(int tag, char minorVersion)
         case TAG_LEVEL_TILES:
             tag_missing_level_tiles();
             break;
+        case TAG_GAME_STATE:
+            if (minorVersion < TAG_MINOR_GAMESTATE)
+            {
+                break;
+            }
+            // fallthrough
         default:
             perror("Tag is missing; file is likely corrupt.");
             end(-1);
@@ -890,7 +899,7 @@ void tag_set_expected(char tags[], int fileType)
         {
             case TAGTYPE_PLAYER:
                 if (i >= TAG_YOU && i <= TAG_YOU_DUNGEON
-                    || i == TAG_LOST_MONSTERS)
+                    || i == TAG_LOST_MONSTERS || i == TAG_GAME_STATE)
                 {
                     tags[i] = 1;
                 }
@@ -1344,6 +1353,11 @@ static void tag_construct_lost_items(writer &th)
                  marshall_item_list );
 }
 
+static void tag_construct_game_state(writer &th)
+{
+    marshallByte( th, crawl_state.type );
+}
+
 static void tag_read_you(reader &th, char minorVersion)
 {
     char buff[20];      // For birth date.
@@ -1791,6 +1805,11 @@ static void tag_read_lost_items(reader &th)
 
     unmarshallMap(th, transiting_items,
                   unmarshall_level_id, unmarshall_item_list);
+}
+
+static void tag_read_game_state(reader &th)
+{
+    crawl_state.type = (game_type) unmarshallByte(th);
 }
 
 // ------------------------------- level tags ---------------------------- //

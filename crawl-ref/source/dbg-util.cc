@@ -65,7 +65,7 @@ monster_type debug_prompt_for_monster(void)
 
 void debug_dump_levgen()
 {
-    if (crawl_state.arena)
+    if (crawl_state.game_is_arena())
         return;
 
     CrawlHashTable &props = env.properties;

@@ -206,7 +206,7 @@ int holy_word(int pow, int caster, const coord_def& where, bool silent,
 
 int torment_player(int pow, int caster)
 {
-    ASSERT(!crawl_state.arena);
+    ASSERT(!crawl_state.game_is_arena());
 
     UNUSED(pow);
 
@@ -367,7 +367,7 @@ int torment(int caster, const coord_def& where)
 void immolation(int pow, int caster, coord_def where, bool known,
                 actor *attacker)
 {
-    ASSERT(!crawl_state.arena);
+    ASSERT(!crawl_state.game_is_arena());
 
     const char *aux = "immolation";
 
@@ -484,7 +484,7 @@ void conduct_electricity(coord_def where, actor *attacker)
 void cleansing_flame(int pow, int caster, coord_def where,
                      actor *attacker)
 {
-    ASSERT(!crawl_state.arena);
+    ASSERT(!crawl_state.game_is_arena());
 
     const char *aux = "cleansing flame";
 
@@ -536,7 +536,7 @@ static std::string _who_banished(const std::string &who)
 
 void banished(dungeon_feature_type gate_type, const std::string &who)
 {
-    ASSERT(!crawl_state.arena);
+    ASSERT(!crawl_state.game_is_arena());
 
 #ifdef DGL_MILESTONES
     if (gate_type == DNGN_ENTER_ABYSS)
@@ -681,7 +681,7 @@ void banished(dungeon_feature_type gate_type, const std::string &who)
 
 bool forget_spell(void)
 {
-    ASSERT(!crawl_state.arena);
+    ASSERT(!crawl_state.game_is_arena());
 
     if (!you.spell_no)
         return (false);
@@ -961,7 +961,7 @@ void direct_effect(monsters *source, spell_type spell,
 
 void random_uselessness(int scroll_slot)
 {
-    ASSERT(!crawl_state.arena);
+    ASSERT(!crawl_state.game_is_arena());
 
     int temp_rand = random2(8);
 
@@ -2366,7 +2366,7 @@ int acquirement_create_item(object_class_type class_wanted,
 bool acquirement(object_class_type class_wanted, int agent,
                  bool quiet, int* item_index, bool debug)
 {
-    ASSERT(!crawl_state.arena);
+    ASSERT(!crawl_state.game_is_arena());
 
     int thing_created = NON_ITEM;
 
@@ -2584,7 +2584,7 @@ static void _set_allies_patrol_point(bool clear = false)
 
 void yell(bool force)
 {
-    ASSERT(!crawl_state.arena);
+    ASSERT(!crawl_state.game_is_arena());
 
     bool targ_prev = false;
     int mons_targd = MHITNOT;
@@ -2780,7 +2780,7 @@ void yell(bool force)
 
 bool forget_inventory(bool quiet)
 {
-    ASSERT(!crawl_state.arena);
+    ASSERT(!crawl_state.game_is_arena());
 
     int items_forgotten = 0;
 
@@ -3766,7 +3766,7 @@ void handle_time()
     // the floor.
     update_corpses(time_delta);
 
-    if (crawl_state.arena)
+    if (crawl_state.game_is_arena())
         return;
 
     // Nasty things happen to people who spend too long in Hell.
@@ -4276,7 +4276,7 @@ static void _catchup_monster_moves(monsters *mon, int turns)
 //---------------------------------------------------------------
 void update_level(long elapsedTime)
 {
-    ASSERT(!crawl_state.arena);
+    ASSERT(!crawl_state.game_is_arena());
 
     const int turns = elapsedTime / 10;
 

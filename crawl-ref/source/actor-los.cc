@@ -7,7 +7,7 @@
 
 bool actor::observable() const
 {
-    return (crawl_state.arena && this != &you
+    return (crawl_state.game_is_arena() && this != &you
             || this == &you || you.can_see(this));
 }
 
@@ -58,7 +58,7 @@ const los_def& monsters::get_los_no_trans()
 
 void player::update_los()
 {
-    if (!crawl_state.arena || !crawl_state.arena_suspended)
+    if (!crawl_state.game_is_arena() || !crawl_state.arena_suspended)
     {
         los_no_trans.update();
         actor::update_los();
@@ -74,7 +74,7 @@ void player::set_arena_los(const coord_def& c)
 
 bool player::can_see(const actor* a) const
 {
-    if (crawl_state.arena || crawl_state.arena_suspended)
+    if (crawl_state.game_is_arena() || crawl_state.arena_suspended)
         return (see_cell(a->pos()));
     else
         return (actor::can_see(a));

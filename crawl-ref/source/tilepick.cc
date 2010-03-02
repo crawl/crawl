@@ -133,7 +133,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     bool in_water = feat_is_water(grd(mon->pos()));
 
     int type = mon->type;
-    if (!crawl_state.arena && you.misled())
+    if (!crawl_state.game_is_arena() && you.misled())
         type = mon->get_mislead_type();
 
     // Show only base class for detected monsters.

@@ -82,20 +82,20 @@ static void _dump_player(FILE *file)
 {
     // Only dump player info during arena mode if the player is likely
     // the cause of the crash.
-    if ((crawl_state.arena || crawl_state.arena_suspended)
+    if ((crawl_state.game_is_arena() || crawl_state.arena_suspended)
         && !in_bounds(you.pos()) && you.hp > 0 && you.hp_max > 0
         && you.strength > 0 && you.intel > 0 && you.dex > 0)
     {
         // Arena mode can change behavior of the rest of the code and/or lead
         // to asserts.
-        crawl_state.arena          = false;
+        crawl_state.type            = GAME_TYPE_NORMAL;
         crawl_state.arena_suspended = false;
         return;
     }
 
     // Arena mode can change behavior of the rest of the code and/or lead
     // to asserts.
-    crawl_state.arena          = false;
+    crawl_state.type            = GAME_TYPE_NORMAL;
     crawl_state.arena_suspended = false;
 
     fprintf(file, "Player:" EOL);

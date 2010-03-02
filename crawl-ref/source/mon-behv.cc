@@ -98,7 +98,7 @@ void handle_behaviour(monsters *mon)
 
     // Whether the player is in LOS of the monster and can see
     // or has guessed the player's location.
-    bool proxPlayer = mons_near(mon) && !crawl_state.arena;
+    bool proxPlayer = mons_near(mon) && !crawl_state.game_is_arena();
 
 #ifdef WIZARD
     // If stealth is greater than actually possible (wizmode level)
@@ -132,7 +132,7 @@ void handle_behaviour(monsters *mon)
     }
 
     // Make sure monsters are not targeting the player in arena mode.
-    ASSERT(!(crawl_state.arena && mon->foe == MHITYOU));
+    ASSERT(!(crawl_state.game_is_arena() && mon->foe == MHITYOU));
 
     if (mons_wall_shielded(mon) && cell_is_solid(mon->pos()))
     {
@@ -291,7 +291,7 @@ void handle_behaviour(monsters *mon)
             // No foe?  Then wander or seek the player.
             if (mon->foe == MHITNOT)
             {
-                if (crawl_state.arena || !proxPlayer || isNeutral || patrolling
+                if (crawl_state.game_is_arena() || !proxPlayer || isNeutral || patrolling
                     || mon->type == MONS_GIANT_SPORE)
                 {
                     new_beh = BEH_WANDER;
@@ -342,7 +342,7 @@ void handle_behaviour(monsters *mon)
 
                 if (isFriendly)
                 {
-                    if (patrolling || crawl_state.arena)
+                    if (patrolling || crawl_state.game_is_arena())
                     {
                         new_foe = MHITNOT;
                         new_beh = BEH_WANDER;
@@ -603,7 +603,7 @@ void handle_behaviour(monsters *mon)
             if (!proxFoe)
             {
                 if ((isFriendly || proxPlayer) && !isNeutral && !patrolling
-                    && !crawl_state.arena)
+                    && !crawl_state.game_is_arena())
                 {
                     new_foe = MHITYOU;
                 }
@@ -713,7 +713,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
         return;
 
     ASSERT(src >= 0 && src <= MHITYOU);
-    ASSERT(!crawl_state.arena || src != MHITYOU);
+    ASSERT(!crawl_state.game_is_arena() || src != MHITYOU);
     ASSERT(in_bounds(src_pos) || src_pos.origin());
     if (mons_is_projectile(mon->type))
         return; // projectiles have no AI
@@ -905,7 +905,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
             else
                 setTarget = true;
         }
-        else if (mon->friendly() && !crawl_state.arena)
+        else if (mon->friendly() && !crawl_state.game_is_arena())
             mon->foe = MHITYOU;
 
         if (you.see_cell(mon->pos()))
@@ -941,7 +941,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
         // Just set behaviour... foe doesn't change.
         if (!mons_is_cornered(mon))
         {
-            if (mon->friendly() && !crawl_state.arena)
+            if (mon->friendly() && !crawl_state.game_is_arena())
             {
                 mon->foe = MHITYOU;
                 simple_monster_message(mon, " returns to your side!");
@@ -1002,7 +1002,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
         mon->behaviour = BEH_LURK;
     }
 
-    ASSERT(!crawl_state.arena
+    ASSERT(!crawl_state.game_is_arena()
            || mon->foe != MHITYOU && mon->target != you.pos());
 }
 

@@ -30,7 +30,7 @@
 
 void good_god_follower_attitude_change(monsters *monster)
 {
-    if (you.undead_or_demonic() || crawl_state.arena)
+    if (you.undead_or_demonic() || crawl_state.game_is_arena())
         return;
 
     // For followers of good gods, decide whether holy beings will be
@@ -70,7 +70,7 @@ void good_god_follower_attitude_change(monsters *monster)
 
 void beogh_follower_convert(monsters *monster, bool orc_hit)
 {
-    if (you.species != SP_HILL_ORC || crawl_state.arena)
+    if (you.species != SP_HILL_ORC || crawl_state.game_is_arena())
         return;
 
     // For followers of Beogh, decide whether orcs will join you.

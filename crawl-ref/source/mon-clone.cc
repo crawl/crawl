@@ -344,7 +344,7 @@ int clone_mons(const monsters* orig, bool quiet, bool* obvious,
         viewwindow(false);
     }
 
-    if (crawl_state.arena)
+    if (crawl_state.game_is_arena())
         arena_placed_monster(mons);
 
     return (mons->mindex());

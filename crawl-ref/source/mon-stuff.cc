@@ -624,7 +624,7 @@ static void _give_adjusted_experience(monsters *monster, killer_type killer,
     if (need_xp_msg
         && exp_gain > 0
         && !you.can_see(monster)
-        && !crawl_state.arena)
+        && !crawl_state.game_is_arena())
     {
         mpr("You feel a bit more experienced.");
     }
@@ -968,7 +968,7 @@ static bool _spore_goes_pop(monsters *monster, killer_type killer,
     beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
     beam.source       = monster->pos();
     beam.target       = monster->pos();
-    beam.thrower      = crawl_state.arena ? KILL_MON
+    beam.thrower      = crawl_state.game_is_arena() ? KILL_MON
       : monster->attitude == ATT_FRIENDLY ? KILL_YOU : KILL_MON;
     beam.aux_source.clear();
     beam.attitude = monster->attitude;
@@ -1200,7 +1200,7 @@ int monster_die(monsters *monster, killer_type killer,
 
     crawl_state.inc_mon_acting(monster);
 
-    ASSERT(!( YOU_KILL(killer) && crawl_state.arena ));
+    ASSERT(!( YOU_KILL(killer) && crawl_state.game_is_arena() ));
 
     if (monster->props.exists("monster_dies_lua_key"))
     {
@@ -1251,7 +1251,7 @@ int monster_die(monsters *monster, killer_type killer,
     bool in_transit          = false;
 
 #ifdef DGL_MILESTONES
-    if (!crawl_state.arena)
+    if (!crawl_state.game_is_arena())
         _check_kill_milestone(monster, killer, killer_index);
 #endif
 
@@ -1261,18 +1261,18 @@ int monster_die(monsters *monster, killer_type killer,
     {
         if (monster->confused_by_you())
         {
-            ASSERT(!crawl_state.arena);
+            ASSERT(!crawl_state.game_is_arena());
             killer = KILL_YOU_CONF;
         }
     }
     else if (MON_KILL(killer) && monster->has_ench(ENCH_CHARM))
     {
-        ASSERT(!crawl_state.arena);
+        ASSERT(!crawl_state.game_is_arena());
         killer = KILL_YOU_CONF; // Well, it was confused in a sense... (jpeg)
     }
 
     // Take note!
-    if (!mons_reset && !crawl_state.arena && MONST_INTERESTING(monster))
+    if (!mons_reset && !crawl_state.game_is_arena() && MONST_INTERESTING(monster))
     {
         take_note(Note(NOTE_KILL_MONSTER,
                        monster->type, monster->friendly(),
@@ -1609,7 +1609,7 @@ int monster_die(monsters *monster, killer_type killer,
                                        MDAM_DEAD);
             }
 
-            if (crawl_state.arena)
+            if (crawl_state.game_is_arena())
                 break;
 
             // No piety loss if god gifts killed by other monsters.
@@ -1855,7 +1855,7 @@ int monster_die(monsters *monster, killer_type killer,
     // Make sure Boris has a foe to address.
     if (monster->foe == MHITNOT)
     {
-        if (!monster->wont_attack() && !crawl_state.arena)
+        if (!monster->wont_attack() && !crawl_state.game_is_arena())
             monster->foe = MHITYOU;
         else if (!invalid_monster_index(killer_index))
             monster->foe = killer_index;
@@ -1933,7 +1933,7 @@ int monster_die(monsters *monster, killer_type killer,
                                   &exp_gain, &avail_gain);
     }
 
-    if (!mons_reset && !crawl_state.arena)
+    if (!mons_reset && !crawl_state.game_is_arena())
     {
         you.kills->record_kill(monster, killer, pet_kill);
 
@@ -1959,7 +1959,7 @@ int monster_die(monsters *monster, killer_type killer,
     mons_remove_from_grid(monster);
     _fire_monster_death_event(monster, killer, killer_index, false);
 
-    if (crawl_state.arena)
+    if (crawl_state.game_is_arena())
         arena_monster_died(monster, killer, killer_index, silent, corpse);
 
     const coord_def mwhere = monster->pos();

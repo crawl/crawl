@@ -84,7 +84,7 @@ bool map_bounds(int x, int y)
 
 coord_def random_in_bounds()
 {
-    if (crawl_state.arena)
+    if (crawl_state.game_is_arena())
     {
         const coord_def &ul = crawl_view.glos1; // Upper left
         const coord_def &lr = crawl_view.glos2; // Lower right
