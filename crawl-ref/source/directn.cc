@@ -2741,7 +2741,7 @@ std::vector<dungeon_feature_type> features_by_desc(const base_pattern &pattern)
 
 void describe_floor()
 {
-    dungeon_feature_type grid = grd(you.pos());
+    dungeon_feature_type grid = env.map_knowledge(you.pos()).feat();
 
     std::string prefix = "There is ";
     std::string feat;
