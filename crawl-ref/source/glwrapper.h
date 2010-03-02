@@ -4,10 +4,17 @@
 #include <stdlib.h> // For size_t
 #include <vector> // for std::vector
 
-#include "tiletex.h" // for generic mipmap enums
+//#include "tiletex.h" // for generic mipmap enums
 
 #ifdef USE_TILE
 #ifdef USE_GL
+
+enum MipMapOptions
+{
+    MIPMAP_CREATE,
+    MIPMAP_NONE,
+    MIPMAP_MAX
+};
 
 // TODO: Ixtli - Remove QUADS entirely.  Then,
 // TODO: Ixtli - Remove drawing_modes entirely
@@ -82,7 +89,7 @@ public:
     static void generateTextures(size_t count, unsigned int *textures);
     static void bindTexture(unsigned int texture);
     static void loadTexture(unsigned char *pixels, unsigned int width,
-        unsigned int height, GenericTexture::MipMapOptions mip_opt);
+        unsigned int height, MipMapOptions mip_opt);
     
     // Debug
 #ifdef DEBUG

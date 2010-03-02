@@ -5076,7 +5076,7 @@ TitleRegion::TitleRegion(int width, int height, FTFont* font) :
     sx = sy = 0;
     dx = dy = 1;
 
-    if (!m_img.load_texture("title.png", GenericTexture::MIPMAP_NONE))
+    if (!m_img.load_texture("title.png", MIPMAP_NONE))
         return;
 
     // Center
@@ -5610,8 +5610,8 @@ ImageManager::~ImageManager()
 
 bool ImageManager::load_textures(bool need_mips)
 {
-    GenericTexture::MipMapOptions mip = need_mips ?
-        GenericTexture::MIPMAP_CREATE : GenericTexture::MIPMAP_NONE;
+    MipMapOptions mip = need_mips ?
+        MIPMAP_CREATE : MIPMAP_NONE;
     if (!m_textures[TEX_DUNGEON].load_texture(filenames[TEX_DUNGEON], mip))
         return (false);
 
@@ -5803,7 +5803,7 @@ bool ImageManager::load_item_texture()
     // for the items.  To handle identifiable items, the texture itself
     // is modified.  So, it cannot be loaded until after the item
     // description table has been initialised.
-    GenericTexture::MipMapOptions mip = GenericTexture::MIPMAP_CREATE;
+    MipMapOptions mip = MIPMAP_CREATE;
     const char *fname = filenames[TEX_DEFAULT];
     bool success = m_textures[TEX_DEFAULT].load_texture(fname, mip,
                                                         &_process_item_image);
