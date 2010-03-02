@@ -35,6 +35,7 @@
 #include "spells4.h"
 #include "spl-cast.h"
 #include "spl-book.h"
+#include "spl-zap.h"
 #include "terrain.h"
 #include "itemprop.h"
 #include "item_use.h"
@@ -928,9 +929,32 @@ static bool _cloud_helper(cloud_func func, const coord_def& where,
     return (false);
 }
 
+bool _spell_range_varies(spell_type spell)
+{
+    int minrange = _seekspell(spell)->min_range;
+    int maxrange = _seekspell(spell)->max_range;
+
+    return (minrange < maxrange);
+}
+
 int spell_power_cap(spell_type spell)
 {
-    return (_seekspell(spell)->power_cap);
+    const int scap = _seekspell(spell)->power_cap;
+    const int zcap = spell_zap_power_cap(spell);
+
+    if (scap == 0)
+        return (zcap);
+    else if (zcap == 0)
+        return (scap);
+    else
+    {
+        // Two separate power caps; pre-zapping spell power
+        // goes into range.
+        if (scap <= zcap || _spell_range_varies(spell))
+            return (scap);
+        else
+            return (zcap);
+    }
 }
 
 int spell_range(spell_type spell, int pow, bool real_cast, bool player_spell)
