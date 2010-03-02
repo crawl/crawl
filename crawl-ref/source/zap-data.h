@@ -863,7 +863,7 @@
 {
     ZAP_HIBERNATION,
     "",
-    100,
+    100, // power is capped to 50 in spl-zap.cc:spell_zap_power.
     NULL,
     NULL,
     BLACK,
