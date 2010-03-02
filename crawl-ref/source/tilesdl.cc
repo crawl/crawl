@@ -501,7 +501,6 @@ int TilesFramework::getch_ck()
 
     if (need_redraw())
         redraw();
-    }
 
     while (!key)
     {
