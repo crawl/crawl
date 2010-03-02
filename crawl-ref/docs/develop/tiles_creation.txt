@@ -3,7 +3,7 @@ A short guide to Tiles creation
 
 This document aims to give a simultaneously short and detailed explanation
 about everything you need to know if you want to design tiles for Dungeon Crawl
-Stonesoup. You can also find this text, and potentially a more up-to-date
+Stone Soup. You can also find this text, and potentially a more up-to-date
 version of it, at:
 http://crawl.develz.org/wiki/doku.php?id=dcss:help:tiles_creation
 
@@ -40,9 +40,10 @@ Table of Contents
 1. The Tools
 ============
 
-First, you'll need some image editing software such as Photoshop or
-the GIMP (http://www.gimp.org/downloads/) as well as some basic knowledge of
-how to use it.
+First, you'll need some image editing software such as Photoshop,
+Paint.net (http://www.getpaint.net/download.html), Photoshop or the GIMP
+(http://www.gimp.org/downloads/) as well as some basic knowledge of how to
+use it.
 
 While the fancier functions and filters can occasionally come in useful, the
 simpler tools for drawing and selection will usually suffice. Before starting,
@@ -83,9 +84,10 @@ create a patch. See docs/patch_guide.txt for help with that.
 3.1 Format and size
 -------------------
 
-Stonesoup's tiles are png files in a format of 32x32 pixels. Larger tiles such
-as for the pandemonium demons are possible, but require additional coding and
-should be used sparingly.
+Stone Soup's tiles are basically png files in a format of 32x32 pixels. Larger
+tiles such as for the pandemonium demons are possible, but require additional
+coding and should be used sparingly. Also, the tab tiles are deliberately
+smaller and have a size of 20x20 px.
 
 Background tiles (walls and floor) should cover the entire square, whereas
 foreground images can use the whole area but are usually smaller. Also keep
@@ -105,10 +107,10 @@ Subtype icons for potions need to fit inside the label, so may be at most
 other subtype or brand icons.
 
 For status effect icons, you need to take into account that we might need to
-display several of them at the same time, so these icons should have a customary
-size of up to 8x8 or 10x10 pixels, though they don't need to be square, of
-course. Larger icons are of course possible, but should be used sparingly as
-there's always the danger that they might not fit.
+display several of them at the same time, so these icons should have a
+customary size of up to 8x8 or 10x10 pixels, though they don't need to be
+square, of course. Larger icons are of course possible, but should be used
+sparingly as there's always the danger that they might not fit.
 
 Icon tiles are always placed on top of the base tile, beginning at its top left
 corner for icons smaller than 32x32 pixels, and then moved by an offset that
@@ -117,19 +119,19 @@ is hardcoded for the status effects, numbers etc.
 3.3 Proportions
 ---------------
 
-Humans and other creatures are proportioned more or less realistically, with the
-entire body usually equaling about five times the height of its head. The less
-humanoid the creature, the less important this becomes, but really //cartoonish//
-monster tiles would stand out against the others.
+Humans and other creatures are proportioned more or less realistically, with
+the entire body usually equaling about five times the height of its head. The
+less humanoid the creature, the less important this becomes, but really
+cartoonish monster tiles would stand out against the others.
 
-The height of monsters is independent of monster size, i.e. a dragon, goblin and
-curse toe may all fill their respective tiles. Similarly, the greater size of
-pandemonium lords does not reflect their body size, but rather is supposed to
-underline their being special monsters.
+The height of monsters is independent of monster size, i.e. a dragon, goblin
+and curse toe may all fill their respective tiles. Similarly, the greater size
+of pandemonium lords does not reflect their body size, but rather is supposed
+to underline their being special monsters.
 
-The same holds for items, which is why armour and weapon tiles usually come in two
-varieties: a large version for the inventory display and a smaller one for the
-player doll (and, in the case of weapons, monsters).
+The same holds for items, which is why armour and weapon tiles usually come in
+two varieties: a large version for the inventory display and a smaller one for
+the player doll (and, in the case of weapons, monsters).
 
 3.4 Perspective
 ---------------
@@ -146,15 +148,15 @@ front or side, so you can see both its face and profile.
 -------------
 
 In theory, tiles can use any colour within the spectrum of visible colours.
-However, very small gradients are almost unnoticeable, so try to pick sensible
-colours that are easy to see even on dark background. It is generally
-recommended to pick two or, rarely, three base colours and use gradients for
-further differentiation.
+However, very small gradients are almost unnoticeable and often end up making
+the tile look blurry instead. It is thus generally recommended to pick two or,
+rarely, three base colours and use large step shading between for further
+differentiation.
 
-Avoid really dark colours as they tend to blend into the background for most
-level types. Also, for monsters take into account on which textures you'll
-usually be encountering the tile, and try to choose colours that are easy to
-make out against such background.
+Try to pick sensible colours that are easy to see even on dark background.
+Also, for monsters take into account on which textures you'll usually be
+encountering the tile (e.g. water for amphibious monsters), and try to choose
+colours that are easy to make out against such background.
 
 At the same time, try to avoid garish colours or contrasts, as they can be
 quite distracting in a game.
@@ -164,8 +166,9 @@ quite distracting in a game.
 
 All tiles that don't fill the entire square should get a black outline. You can
 add it manually or tell Crawl to do it later when creating the tile maps. In
-particular, this means that for non-outlined tiles there should be a border of
-at least 1 pixel around the entire tile.
+particular, this means that for non-outlined tiles there should be a border
+of at least 1 pixel around the entire tile. Some of the larger tiles currently
+don't have this and they look a bit chopped because of this.
 
 3.7 Shading
 -----------
@@ -175,12 +178,15 @@ can draw using standard black.
 
 The imaginary light source is always above and in front of the depicted object,
 so that most of it is properly lighted and the shadow falls (for animals) in
-direction of its tail or backside.
-
-For creatures directly facing the player as well as inanimate items and
-features the default light source origin is in front of it and to the upper
-left, so that the resulting shadow falls slightly behind the tile and to its
-lower right.
+direction of its tail or backside. For creatures directly facing the player as
+well as inanimate items and features the default light source origin is in
+front of it and to the upper left, so that the resulting shadow falls slightly
+behind the tile and to its lower right. Similarly, parts to the lower right are
+usually shaded darker than those on the upper left. Try to think of the
+depicted feature or monster as a three-dimensional object and use shading to
+add depth to the tile. As a general rule, the further back something is, the
+darker it should be coloured. You can use contrast to make things in front
+stand out a bit more.
 
 Icons may use shading to make them look more 3dimensional, but they don't have
 to, and they don't get a shadow of their own.
@@ -228,8 +234,8 @@ design:
   * http://gas13.ru/v3/tutorials/sywtbapa_almighty_grass_tile.php
     A detailed explanation of how to create the perfect pixels. Several
     chapters dealing with scenery and sprite design. Also covers the elusive
-    difference between art and _good_ art. Makes me want to go back and redo
-    all my tiles designs. (jpeg)
+    difference between art and _good_ art. Made me go back and redo all my
+    tiles designs. (jpeg)
 
 4.3 Wielded weapons
 -------------------
@@ -250,8 +256,7 @@ used whenever possible.
 ---------------------
 
 For some features or monsters you might need part or the entirety of the tile
-to be see-though semi-transparent. Examples include ghosts, the water/lava
-masks, or clouds.
+to be see-though semi-transparent. Examples include clouds and some monsters.
 
 I usually do this by means of the eraser, set the size to the maximum possible
 and the opacity to around 34%, and then "erase" the entire area I want to be
@@ -271,21 +276,24 @@ Tiles are assumed to have been placed within the rltiles/ directory structure.
 You can use a relative path for the tile definition, or you can use the %sdir
 command to change the current default relative path.
 
+More information about rltiles (including syntax reference) can be found here:
+http://crawl.develz.org/wiki/doku.php?id=dcss:help:rltiles
+
 The definition files are as follows:
   * dc-corpse.txt: Define corpse tiles that are created automatically based on
-                    the corresponding monster tiles.
+                   the corresponding monster tiles.
   * dc-demon.txt:  Define tiles used for the pandemonium lords.
   * dc-dngn.txt:   Define wall, floor and dungeon feature tiles. All tiles
-                    defined herein are collapsed into dngn.png and dngn.html.
+                   defined herein are collapsed into dngn.png and dngn.html.
   * dc-gui.txt:    Includes some other files, whose tiles are included in
-                    gui.png and gui.html.
+                   gui.png and gui.html.
   * dc-item.txt:   Define mundane item tiles.
   * dc-main.txt:   Includes some other files, whose tiles are included in
-                    main.png and main.html.
+                   main.png and main.html.
   * dc-misc.txt:   Define tiles for clouds, special effects and status icons.
   * dc-mon.txt:    Define monster tiles excepting pandemonium lords.
   * dc-player.txt: Define player doll and equipment tiles. All tiles defined
-                    here and in included files form player.png and player.html.
+                   here and in included files form player.png and player.html.
   * dc-spells.txt: Define spell tiles.
   * dc-unrand.txt: Auto-generated file defining artefact tiles.
 
@@ -384,27 +392,46 @@ get it right.
 5.5 Variant tiles
 -----------------
 
+Tileset variants can be used in three different ways:
+  1. Once chosen, they are fixed.
+     - This is the case for all wall and floor tiles.
+  2. Every time the screen is redrawn, one variant is chosen at random.
+     - This applies to pretty much all features that don't fit the above
+       requirement.
+  3. Variants are picked in order, every time the screen is redrawn.
+     - This is currently only used in very specific, hardcoded circumstances.
+
 If your tile is one more variant of a tile that already has several versions,
 you shouldn't need to take any further steps, and the tile should already be
 picked randomly from time to time. The same applies to animated feature tiles.
+For either of these, you might want to add %weight tags to make your new tiles
+appear more or less commonly than the already existing ones.
 
 If you are animating something other than a feature that used to be static,
 more code will be necessary, but this is something that is probably better left
-to the devteam.
+to the devteam. Monster variants, in particular, are entirely hardcoded.
+By default, only the first tile out of set of monster tiles will be chosen.
+Special cases have been added to pick an appropriate one according by colour
+or other properties.
 
 
 6. Compiling the game
 =====================
 
-When compiling the game you may need to delete or rename the relevant tile
-section's png file, i.e. main.png (for items), player.png (for player, doll
-equipment, and monsters), dngn.png (for dungeon features) or gui.png (for
-spells), to make the changes take effect. The first step during the compilation
-will be to rebuild this file, so you can check right away whether your new tile
-was added correctly.
+When compiling the game after adding tiles not yet in the repository, you may
+need to delete or rename the relevant tile section's png file, i.e. main.png
+(for items), player.png (for player, doll equipment, and monsters), dngn.png
+(for dungeon features) or gui.png (for spells), for the changes to take
+effect. The first step during the compilation will be to rebuild this file,
+so you can check right away whether your new tile was added correctly.
+
+If you've changed the number of tiles included in main.png, you'll need to also
+update player.png (by deleting it and recompiling) because otherwise all
+monster and player tiles will be misdisplayed, and drawing some tiles could
+even cause a crash.
 
 Changes in dc-xxxx.txt automatically cause the relevant image files to be
-recreated.
+recreated, as will changes to tiles included in the git repository.
 
 See INSTALL.txt for compilation instructions. It is recommended that you first
 try to get the game compiled without any changes. If you face any problems,
