@@ -2743,6 +2743,9 @@ bool is_useless_item(const item_def &item, bool temp)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
+        if (you.species == SP_CAT)
+            return (true);
+
         if (!you.could_wield(item, true)
             && !is_throwable(&you, item))
         {
@@ -2767,6 +2770,9 @@ bool is_useless_item(const item_def &item, bool temp)
         return (false);
 
     case OBJ_MISSILES:
+        if (you.species == SP_CAT)
+            return (true);
+
         // These are the same checks as in is_throwable(), except that
         // we don't take launchers into account.
         switch (item.sub_type)
@@ -2925,6 +2931,8 @@ bool is_useless_item(const item_def &item, bool temp)
         }
 
     case OBJ_STAVES:
+        if (you.species == SP_CAT)
+            return (true);
         if (you.religion == GOD_TROG && !item_is_rod(item))
             return (true);
         break;

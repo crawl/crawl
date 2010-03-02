@@ -529,6 +529,9 @@ bool is_player_same_species(const int mon, bool transform)
 // ---------------------------------------------------
 bool you_can_wear(int eq, bool special_armour)
 {
+    if (you.species == SP_CAT)
+        return (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET);
+
     switch (eq)
     {
     case EQ_LEFT_RING:

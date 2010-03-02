@@ -1479,6 +1479,12 @@ static void _do_look_around()
 
 static void _do_remove_armour()
 {
+    if (you.species == SP_CAT)
+    {
+        mpr("You can't remove your fur, sorry.");
+        return;
+    }
+
     if (!player_can_handle_equipment())
     {
         mpr("You can't wear or remove anything in your present form.");
