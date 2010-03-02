@@ -645,7 +645,7 @@ void scorefile_entry::set_base_xlog_fields() const
         score_version += "-sprint.1";
     }
     fields->add_field("v", "%s", Version::Short().c_str());
-    fields->add_field("lv", score_version);
+    fields->add_field("lv", score_version.c_str());
     fields->add_field("name", "%s", name.c_str());
     fields->add_field("uid",  "%d", uid);
     fields->add_field("race", "%s",
