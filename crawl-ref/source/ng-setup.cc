@@ -305,6 +305,14 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_FANGS]        = 3;
         you.mutation[MUT_ACUTE_VISION] = 1;
         break;
+    case SP_CAT:
+        you.mutation[MUT_FANGS]           = 3;
+        you.mutation[MUT_SHAGGY_FUR]      = 1;
+        you.mutation[MUT_ACUTE_VISION]    = 1;
+        you.mutation[MUT_FAST]            = 1;
+        you.mutation[MUT_CARNIVOROUS]     = 3;
+        you.mutation[MUT_SLOW_METABOLISM] = 2;
+        break;
     default:
         break;
     }
