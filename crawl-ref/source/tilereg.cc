@@ -58,7 +58,10 @@
 #include "tiledef-player.h"
 
 #include <sys/stat.h>
-#include <SDL_opengl.h>
+
+#ifdef USE_GL
+#include "glwrapper.h"
+#endif
 
 /* These aren't defined on Win32 */
 #ifndef S_IWUSR
@@ -220,9 +223,9 @@ bool Region::mouse_pos(int mouse_x, int mouse_y, int &cx, int &cy)
 
 void Region::set_transform()
 {
-    glLoadIdentity();
-    glTranslatef(sx + ox, sy + oy, 0);
-    glScalef(dx, dy, 1);
+    GLStateManager::loadIdentity();
+    GLStateManager::translatef(sx + ox, sy + oy, 0);
+    GLStateManager::scalef(dx, dy, 1);
 }
 
 TileRegion::TileRegion(ImageManager* im, FTFont *tag_font, int tile_x, int tile_y)
@@ -4606,7 +4609,7 @@ void MessageRegion::render()
         {
             height *= m_font->char_height();
 
-            glLoadIdentity();
+            GLStateManager::loadIdentity();
 
             ShapeBuffer buff;
             VColour col(100, 100, 100, 100);
@@ -5298,9 +5301,9 @@ void DollEditRegion::render()
     m_shape_buf.draw();
     m_tile_buf.draw();
 
-    glLoadIdentity();
-    glTranslatef(32 * left_gutter, 32 * edit_doll_line, 0);
-    glScalef(64, 64, 1);
+    GLStateManager::loadIdentity();
+    GLStateManager::translatef(32 * left_gutter, 32 * edit_doll_line, 0);
+    GLStateManager::scalef(64, 64, 1);
     m_cur_buf.draw();
 
     {
@@ -5321,9 +5324,9 @@ void DollEditRegion::render()
         else if (m_mode == TILEP_MODE_EQUIP)
             m_cur_buf.add(TILEP_CURSOR, 4, 0);
     }
-    glLoadIdentity();
-    glTranslatef(32 * (left_gutter + 3), 32 * edit_doll_line, 0);
-    glScalef(32, 32, 1);
+    GLStateManager::loadIdentity();
+    GLStateManager::translatef(32 * (left_gutter + 3), 32 * edit_doll_line, 0);
+    GLStateManager::scalef(32, 32, 1);
     m_cur_buf.draw();
 
     // Add text.
@@ -5333,9 +5336,9 @@ void DollEditRegion::render()
     else if (m_part_idx)
         part_name = tile_player_name(m_part_idx);
 
-    glLoadIdentity();
-    glTranslatef(0, 0, 0);
-    glScalef(1, 1, 1);
+    GLStateManager::loadIdentity();
+    GLStateManager::translatef(0, 0, 0);
+    GLStateManager::scalef(1, 1, 1);
 
     std::string item_str = part_name;
     float item_name_x = left_gutter * 32.0f;
