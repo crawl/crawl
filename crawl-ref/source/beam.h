@@ -315,4 +315,6 @@ std::string beam_type_name(beam_type type);
 void init_zap_index();
 void clear_zap_info_on_exit();
 
+int zap_power_cap(zap_type ztype);
+
 #endif
