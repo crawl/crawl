@@ -645,8 +645,9 @@ unsigned long str_to_item_status_flags (std::string flag)
     unsigned long flags = 0;
     if (flag.find("curse") != std::string::npos)
         flags &= ISFLAG_KNOW_CURSE;
-    if (flag.find("type") != std::string::npos)
-        flags &= ISFLAG_KNOW_TYPE;
+    // type is dealt with using item_type_known.
+    //if (flag.find("type") != std::string::npos)
+    //    flags &= ISFLAG_KNOW_TYPE;
     if (flag.find("pluses") != std::string::npos)
         flags &= ISFLAG_KNOW_PLUSES;
     if (flag.find("properties") != std::string::npos)
@@ -669,12 +670,32 @@ static int l_item_do_identified (lua_State *ls)
         return (1);
     }
 
-    unsigned long flags = ISFLAG_IDENT_MASK;
+    bool known_status = false;
+    bool check_type = false;
 
     if (lua_isstring(ls, 1))
-        flags = str_to_item_status_flags (luaL_checkstring(ls, 1));
+    {
+        std::string flags = luaL_checkstring(ls, 1);
+        if (trimmed_string(flags).empty())
+            known_status = item_ident(*item, ISFLAG_IDENT_MASK);
+        else
+        {
+            if (strip_tag(flags, "type"))
+                check_type = true;
 
-    lua_pushboolean(ls, item_ident(*item, flags));
+            unsigned long item_flags = str_to_item_status_flags(flags);
+            known_status = item_ident(*item, item_flags);
+
+            if (check_type)
+                known_status = item_type_known(*item);
+        }
+    }
+    else
+    {
+        known_status = item_ident(*item, ISFLAG_IDENT_MASK);
+    }
+
+    lua_pushboolean(ls, known_status);
     return (1);
 }
 
