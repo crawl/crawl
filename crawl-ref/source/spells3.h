@@ -22,7 +22,7 @@ class dist;
 struct bolt;
 
 bool allow_control_teleport(bool quiet = false);
-int airstrike(int power, dist &beam);
+int airstrike(int power, const dist &beam);
 bool cast_bone_shards(int power, bolt &);
 
 bool cast_selective_amnesia(bool force);
