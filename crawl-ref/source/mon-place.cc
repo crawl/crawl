@@ -2662,7 +2662,7 @@ static int _ood_limit()
     return Options.ood_interesting;
 }
 
-void mark_interesting_monst(struct monsters* monster, beh_type behaviour)
+void mark_interesting_monst(monsters* monster, beh_type behaviour)
 {
     if (crawl_state.game_is_arena())
         return;
