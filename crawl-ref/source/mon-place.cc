@@ -2792,6 +2792,8 @@ int mons_place(mgen_data mg)
     if (mid == -1)
         return (-1);
 
+    dprf("Created a %s.", menv[mid].base_name(DESC_PLAIN, true).c_str());
+
     monsters *creation = &menv[mid];
 
     // Look at special cases: CHARMED, FRIENDLY, NEUTRAL, GOOD_NEUTRAL,
