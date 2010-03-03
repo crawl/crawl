@@ -786,7 +786,7 @@ void tile_draw_floor()
             if (you.see_cell(gc))
             {
                 dungeon_feature_type feat = grid_appearance(gc);
-                bg = tileidx_feature(feat, gc.x, gc.y);
+                bg = tileidx_feature(grd(gc), gc.x, gc.y);
 
                 if (feat == DNGN_DETECTED_SECRET_DOOR)
                      bg |= TILE_FLAG_WAS_SECRET;

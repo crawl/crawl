@@ -508,7 +508,9 @@ dungeon_feature_type grid_appearance(const coord_def &gc)
     }
 }
 
-dungeon_feature_type grid_secret_door_appearance(const coord_def &where)
+bool find_secret_door_info(const coord_def &where,
+                           dungeon_feature_type *appearance,
+                           coord_def *gc)
 {
     std::set<coord_def>           doors;
     std::set<coord_def>::iterator it;
@@ -516,7 +518,8 @@ dungeon_feature_type grid_secret_door_appearance(const coord_def &where)
     find_connected_range(where, DNGN_CLOSED_DOOR, DNGN_SECRET_DOOR,
                          doors);
 
-    dungeon_feature_type ret = DNGN_FLOOR;
+    dungeon_feature_type feat = DNGN_FLOOR;
+    coord_def loc = where;
 
     int orth[][2] = { {0, 1}, {1, 0,}, {-1, 0}, {0, -1} };
 
@@ -534,15 +537,35 @@ dungeon_feature_type grid_secret_door_appearance(const coord_def &where)
             if (!feat_is_wall(targ) || feat_is_closed_door(targ))
                 continue;
 
-            if (ret == DNGN_FLOOR)
-                ret = targ;
-            else if (ret != targ)
-                ret = ((ret < targ) ? ret : targ);
+            if (feat == DNGN_FLOOR || targ < feat)
+            {
+                feat = targ;
+                loc = coord_def(x, y);
+            }
         }
     }
 
-    return ((ret == DNGN_FLOOR) ? DNGN_ROCK_WALL
-                                : ret);
+    if (feat == DNGN_FLOOR)
+    {
+        if (appearance)
+            *appearance = DNGN_ROCK_WALL;
+        return (false);
+    }
+    else
+    {
+        if (appearance)
+            *appearance = feat;
+        if (gc)
+            *gc = loc;
+        return (true);
+    }
+}
+
+dungeon_feature_type grid_secret_door_appearance(const coord_def &where)
+{
+    dungeon_feature_type feat;
+    find_secret_door_info(where, &feat, NULL);
+    return (feat);
 }
 
 bool feat_destroys_item(dungeon_feature_type feat, const item_def &item,
