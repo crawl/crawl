@@ -23,6 +23,7 @@
 #include "food.h"
 #include "fprop.h"
 #include "fight.h"
+#include "godgift.h"
 #include "godprayer.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -2278,44 +2279,11 @@ static bool _monster_eat_item(monsters *monster, bool nearby)
 
         if (you.religion == GOD_JIYVA)
         {
-            const piety_gain_t gain =  sacrifice_item_stack(*si);
-
+            const piety_gain_t gain = sacrifice_item_stack(*si);
             if (gain > PIETY_NONE)
                 simple_god_message(" appreciates your sacrifice.");
 
-            if (you.piety > 80 && random2(you.piety) > 50 && one_chance_in(4)
-                && you.gift_timeout <= 0)
-            {
-                if (you.can_safely_mutate())
-                {
-                    simple_god_message(" alters your body.");
-
-                    bool success = false;
-                    const int rand = random2(100);
-
-                    if (rand < 40)
-                        success = mutate(RANDOM_MUTATION, true, false, true);
-                    else if (rand < 60)
-                    {
-                        success = delete_mutation(RANDOM_MUTATION, true, false,
-                                                  true);
-                    }
-                    else
-                    {
-                        success = mutate(RANDOM_GOOD_MUTATION, true, false,
-                                         true);
-                    }
-
-                    if (success)
-                    {
-                        you.gift_timeout += 15 + roll_dice(2, 4);
-                        you.num_gifts[you.religion]++;
-                        take_note(Note(NOTE_GOD_GIFT, you.religion));
-                    }
-                    else
-                        mpr("You feel as though nothing has changed.");
-                }
-            }
+            jiyva_maybe_give_mutation();
         }
 
         if (quant >= si->quantity)
