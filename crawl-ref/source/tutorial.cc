@@ -51,6 +51,7 @@
 #include "skills2.h"
 #include "species.h"
 #include "spl-book.h"
+#include "state.h"
 #include "stuff.h"
 #include "env.h"
 #include "tags.h"
@@ -199,6 +200,9 @@ bool pick_tutorial()
             if (!Options.book || Options.book == SBT_SUMM)
                 Options.book = SBT_RANDOM;
             Options.weapon = WPN_HAND_AXE; // easiest choice for fighters
+
+            crawl_state.type = GAME_TYPE_TUTORIAL;
+
             return (true);
         }
 
