@@ -290,10 +290,22 @@ floor/mesh1
 floor/mesh2
 floor/mesh3
 
-wall/hive0 WALL_HIVE
-wall/hive1
-wall/hive2
-wall/hive3
+# Maybe move these down to the "pebble" section?
+#wall/hive0 WALL_HIVE_OLD
+#wall/hive1
+#wall/hive2
+#wall/hive3
+
+wall/beehives0 WALL_HIVE
+wall/beehives1
+wall/beehives2
+wall/beehives3
+wall/beehives4
+wall/beehives5
+wall/beehives6
+wall/beehives7
+wall/beehives8
+wall/beehives9
 
 floor/hive0 FLOOR_HIVE FLOOR_ORC
 floor/hive1
