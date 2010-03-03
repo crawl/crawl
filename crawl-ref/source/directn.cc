@@ -1249,7 +1249,13 @@ void direction_chooser::draw_beam_if_needed()
 
     // If we don't have a new beam to show, we're done.
     if (!show_beam || !have_beam)
+    {
+#ifdef USE_TILE
+        // Clear the old beam if we're not drawing anything else.
+        viewwindow(false, true);
+#endif
         return;
+    }
 
     // Work with a copy in order not to mangle anything.
     ray_def ray = beam;
