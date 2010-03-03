@@ -62,6 +62,12 @@ void find_connected_range(coord_def d, dungeon_feature_type ft_min,
                           dungeon_feature_type ft_max,
                           std::set<coord_def>& out);
 void get_door_description(int door_size, const char** adjective, const char** noun);
+// Returns info about the grid a secret door is mimicing.  Returns true
+// if it finds a grid position to mimic, which will be stored in gc.
+// feat will always be set, even if no square to mimic is found.
+bool find_secret_door_info(const coord_def &where,
+                           dungeon_feature_type *feat,
+                           coord_def *gc);
 dungeon_feature_type grid_secret_door_appearance(const coord_def &where);
 dungeon_feature_type grid_appearance(const coord_def &gc);
 bool feat_destroys_item(dungeon_feature_type feat, const item_def &item, bool noisy = false);
