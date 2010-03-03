@@ -4438,6 +4438,11 @@ void tutorial_inscription_info(bool autoinscribe, std::string prompt)
         formatted_string::parse_string(prompt).display();
 }
 
+// FIXME: With the new targeting system, the hints for interesting monsters
+//        and features ("right-click/press v for more information") are no
+//        longer getting displayed.
+//        Players might still end up e'x'aming and particularly clicking on
+//        but it's a lot more hit'n'miss now.
 bool tutorial_pos_interesting(int x, int y)
 {
     return (cloud_type_at(coord_def(x, y)) != CLOUD_NONE
