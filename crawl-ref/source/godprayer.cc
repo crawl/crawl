@@ -645,6 +645,18 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item)
             break;
         }
 
+        case GOD_JIYVA:
+        {
+            // item_value() multiplies by quantity.
+            const int value = item_value(item) / item.quantity;
+
+            if (x_chance_in_y(value/2 + 1, 30 + you.piety/2))
+            {
+                gain_piety(1);
+                relative_piety_gain = PIETY_SOME;
+            }
+        }
+
         default:
             break;
         }
@@ -653,7 +665,7 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item)
     return (relative_piety_gain);
 }
 
-static piety_gain_t _sacrifice_item_stack(const item_def& item)
+piety_gain_t sacrifice_item_stack(const item_def& item)
 {
     piety_gain_t relative_gain = PIETY_NONE;
     for (int j = 0; j < item.quantity; ++j)
@@ -749,7 +761,7 @@ void offer_items()
              item_value(item));
 #endif
 
-        piety_gain_t relative_gain = _sacrifice_item_stack(item);
+        piety_gain_t relative_gain = sacrifice_item_stack(item);
         print_sacrifice_message(you.religion, mitm[i], relative_gain);
         item_was_destroyed(mitm[i]);
         destroy_item(i);

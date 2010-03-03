@@ -13,26 +13,12 @@
 #include "ouch.h"
 #include "player.h"
 
+#include "religion-enum.h"
+
 #define MAX_PIETY      200
 #define HALF_MAX_PIETY (MAX_PIETY / 2)
 
 #define MAX_PENANCE    200
-
-enum piety_gain_t
-{
-    PIETY_NONE, PIETY_SOME, PIETY_LOTS,
-    NUM_PIETY_GAIN
-};
-
-enum harm_protection_type
-{
-    HPT_NONE = 0,
-    HPT_PRAYING,
-    HPT_ANYTIME,
-    HPT_PRAYING_PLUS_ANYTIME,
-    HPT_RELIABLE_PRAYING_PLUS_ANYTIME,
-    NUM_HPTS
-};
 
 bool is_evil_god(god_type god);
 bool is_good_god(god_type god);
