@@ -23,6 +23,7 @@
 #include "food.h"
 #include "fprop.h"
 #include "fight.h"
+#include "godprayer.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -2277,59 +2278,10 @@ static bool _monster_eat_item(monsters *monster, bool nearby)
 
         if (you.religion == GOD_JIYVA)
         {
-            const int quantity = si->quantity;
-            const int value = item_value(*si) / quantity;
-            int pg = 0;
-            const int rand_value = random2(value);
+            const piety_gain_t gain =  sacrifice_item_stack(*si);
 
-            /*
-               Item values for comparison:
-
-               orc corpse              1
-               knife                   10
-               potion of healing       20
-               +0 hand axe             28
-               scroll of blinking      30
-               meat ration             40
-               +0 hand axe of flaming  90
-               +0 executioner's axe    100
-               +0 chain mail           115
-               royal jelly             120
-               wand of fire (2)        188
-               book of minor magic     200
-               wand of fire (24)       276
-               +8 hand axe             561
-               +2 chain mail of rF+    731
-               book of annihilations   1150
-               +0 gold dragon armour   1605
-               disc of storms          2000
-             */
-
-
-            for (int m = 0; m < quantity; ++m)
-            {
-                if (rand_value < 20 && !one_chance_in(10)
-                    || rand_value >= 20 && rand_value < 50 && !one_chance_in(3))
-                {
-                    pg = 0;
-                }
-                else if (rand_value < 100 || rand_value < 200 && coinflip())
-                    pg = 1;
-                else if (rand_value < 200 || rand_value < 700 && coinflip())
-                    pg = 2;
-                else if (rand_value < 700 || rand_value < 1500 && coinflip())
-                    pg = 3;
-                else if (rand_value < 1500 || coinflip())
-                    pg = 4;
-                else
-                    pg = 5;
-            }
-
-            if (pg > 0)
-            {
+            if (gain > PIETY_NONE)
                 simple_god_message(" appreciates your sacrifice.");
-                gain_piety(pg);
-            }
 
             if (you.piety > 80 && random2(you.piety) > 50 && one_chance_in(4)
                 && you.gift_timeout <= 0)
