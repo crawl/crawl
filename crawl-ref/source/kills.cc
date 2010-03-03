@@ -278,7 +278,7 @@ void Kills::merge(const Kills &k)
     }
 }
 
-void Kills::record_kill(const struct monsters *mon)
+void Kills::record_kill(const monsters *mon)
 {
     // Handle player ghosts separately, but don't handle summoned
     // ghosts at all. {due}
@@ -365,7 +365,7 @@ void Kills::load(reader& inf)
     }
 }
 
-void Kills::record_ghost_kill(const struct monsters *mon)
+void Kills::record_ghost_kill(const monsters *mon)
 {
     // We should never get to this point, but just in case... {due}
     if (mon->is_summoned())
@@ -390,7 +390,7 @@ int Kills::num_kills(const monsters *mon) const
     return total;
 }
 
-kill_def::kill_def(const struct monsters *mon) : kills(0), exp(0)
+kill_def::kill_def(const monsters *mon) : kills(0), exp(0)
 {
     exp = exper_value(mon);
     add_kill(mon, get_packed_place());
@@ -484,7 +484,7 @@ void kill_def::merge(const kill_def &k, bool uniq)
     }
 }
 
-void kill_def::add_kill(const struct monsters *mon, unsigned short place)
+void kill_def::add_kill(const monsters *mon, unsigned short place)
 {
     kills++;
     // They're only unique if they aren't summoned.

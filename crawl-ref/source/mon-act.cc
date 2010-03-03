@@ -1068,7 +1068,7 @@ static bool _handle_wand(monsters *monster, bolt &beem)
     return (false);
 }
 
-static void _setup_generic_throw(struct monsters *monster, struct bolt &pbolt)
+static void _setup_generic_throw(monsters *monster, struct bolt &pbolt)
 {
     // FIXME we should use a sensible range here
     pbolt.range = LOS_RADIUS;
@@ -1081,7 +1081,7 @@ static void _setup_generic_throw(struct monsters *monster, struct bolt &pbolt)
     pbolt.is_beam = false;
 }
 
-static bool _mons_throw(struct monsters *monster, struct bolt &pbolt,
+static bool _mons_throw(monsters *monster, struct bolt &pbolt,
                         int hand_used)
 {
     std::string ammo_name;
