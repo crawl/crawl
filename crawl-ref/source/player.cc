@@ -2479,6 +2479,8 @@ void gain_exp( unsigned int exp_gained, unsigned int* actual_gain,
 {
     if (crawl_state.game_is_arena())
         return;
+    if (crawl_state.game_is_sprint() && you.level_type == LEVEL_ABYSS)
+        return;
 
     if (player_equip_ego_type( EQ_BODY_ARMOUR, SPARM_ARCHMAGI ))
         exp_gained = div_rand_round( exp_gained, 4 );
