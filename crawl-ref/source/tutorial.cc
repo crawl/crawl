@@ -602,7 +602,7 @@ static void _tutorial_stats_intro()
             "actions often draw from Magic, too.\n"
             "<w>Str</w>ength, <w>Int</w>elligence, <w>Dex</w>terity below "
             "provide an all-around account of the character's attributes. "
-            "Don't worry about the rest for now.";
+            "Don't worry about the rest for now." EOL;
 
     mpr(istr.str(), MSGCH_TUTORIAL, 0);
 #else
@@ -664,13 +664,18 @@ static void _tutorial_message_intro()
     insert_commands(result, CMD_REPLAY_MESSAGES, 0);
 
 #ifdef USE_TILE
-    result += EOL;
-    result += "To the bottom right of the screen is a set of items.  "
-              "The top four lines are the items in your inventory, and "
-              "the bottom two are items underneath you on the floor." EOL;
+    mpr(result, MSGCH_TUTORIAL, 0);
+
+    result = "To the bottom right of the screen is a display of items. The "
+             "top part is reserved for your inventory, the remaining slots "
+             "may be filled with items beneath you on the floor.\n"
+             "If you click on the tabs to the left of this display you can "
+             "switch to a spell display for currently memorised spells to "
+             "cast them, or to a display of not yet memorised spells "
+             "included in books you are carrying, so as to commit them to "
+             "memory." EOL;
 #endif
 
-    mesclr();
     mpr(result, MSGCH_TUTORIAL, 0);
 }
 
@@ -687,8 +692,9 @@ static void _tutorial_movement_info()
 #endif
         EOL
         "A basic command list can be found under <w>?\?</w>, and the most "
-        "important commands will be explained to you as it becomes necessary.";
-    mesclr();
+        "important commands will be explained to you as it becomes necessary."
+        EOL;
+
     insert_commands(text, CMD_MOVE_LEFT, CMD_MOVE_DOWN, CMD_MOVE_UP,
                     CMD_MOVE_RIGHT, CMD_MOVE_UP_LEFT, CMD_MOVE_UP_RIGHT,
                     CMD_MOVE_DOWN_LEFT, CMD_MOVE_DOWN_RIGHT, 0);
@@ -1743,7 +1749,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
                 "type "
 #endif
                 "<w>%</w> to read it, though you might want to wait until "
-                "there's a monster around or you have some items, so the "
+                "there's a monster around or you have some more items, so the "
                 "scroll can actually have an effect.";
         cmd.push_back(CMD_READ);
         break;
@@ -4857,22 +4863,38 @@ void tutorial_describe_monster(const monsters *mons, bool has_stat_desc)
                 "better than to send you the same way.\n\n";
         dangerous = true;
     }
-    // Don't call friendly horrible things dangerous.
-    else if (!mons_att_wont_attack(mons->attitude))
+    else
     {
-        // 8 is the default value for the note-taking of OOD monsters.
-        // Since I'm too lazy to come up with any measurement of my own
-        // I'll simply reuse that one.
-        int level_diff = mons_level(mons->type) - (you.absdepth0 + 8);
-
-        if (you.level_type == LEVEL_DUNGEON && level_diff >= 0)
+        const char ch = mons_char(mons->type);
+        if (ch >= '1' && ch <= '5')
         {
-            ostr << "This kind of monster is usually only encountered "
-                 << (level_diff > 5 ? "much " : "")
-                 << "deeper in the dungeon, so it's probably "
-                 << (level_diff > 5 ? "extremely" : "very")
-                 << " dangerous!\n\n";
-            dangerous = true;
+            ostr << "This monster is a demon of the "
+                 << (ch == '1' ? "highest" :
+                     ch == '2' ? "second-highest" :
+                     ch == '3' ? "middle" :
+                     ch == '4' ? "second-lowest" :
+                     ch == '5' ? "lowest"
+                               : "buggy")
+                 << " tier.\n\n";
+        }
+
+        // Don't call friendly monsters dangerous.
+        if (!mons_att_wont_attack(mons->attitude))
+        {
+            // 8 is the default value for the note-taking of OOD monsters.
+            // Since I'm too lazy to come up with any measurement of my own
+            // I'll simply reuse that one.
+            const int level_diff = mons_level(mons->type) - (you.absdepth0 + 8);
+
+            if (you.level_type == LEVEL_DUNGEON && level_diff >= 0)
+            {
+                ostr << "This kind of monster is usually only encountered "
+                     << (level_diff > 5 ? "much " : "")
+                     << "deeper in the dungeon, so it's probably "
+                     << (level_diff > 5 ? "extremely" : "very")
+                     << " dangerous!\n\n";
+                dangerous = true;
+            }
         }
     }
 
