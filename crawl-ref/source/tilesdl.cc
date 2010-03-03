@@ -1405,8 +1405,6 @@ int tile_known_brand(const item_def item)
             return TILE_BRAND_DISPERSAL;
         case SPMSL_EXPLODING:
             return TILE_BRAND_EXPLOSION;
-        case SPMSL_ELECTRIC:
-            return TILE_BRAND_ELECTRIC;
         case SPMSL_CONFUSION:
             return TILE_BRAND_CONFUSION;
         case SPMSL_PARALYSIS:

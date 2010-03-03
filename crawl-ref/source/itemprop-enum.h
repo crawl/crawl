@@ -357,9 +357,6 @@ enum special_missile_type // to separate from weapons in general {dlb}
     SPMSL_EXPLODING,                   //   10
     SPMSL_STEEL,
     SPMSL_SILVER,
-#if TAG_MAJOR_VERSION == 16
-    SPMSL_ELECTRIC, // removed
-#endif
     SPMSL_PARALYSIS,                   // paralysis, needle only from here in
     SPMSL_SLOW,                        // makes slow
     SPMSL_SLEEP,                       // sleep
