@@ -2588,7 +2588,7 @@ void yell(bool force)
 
     bool targ_prev = false;
     int mons_targd = MHITNOT;
-    struct dist targ;
+    dist targ;
 
     const std::string shout_verb = you.shout_verb();
     std::string cap_shout = shout_verb;
