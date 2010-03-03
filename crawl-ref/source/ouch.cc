@@ -1020,6 +1020,9 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     if (you.duration[DUR_TIME_STEP])
         return;
 
+    if (you.dead) // ... but eligible for revival
+        return;
+
     if (dam != INSTANT_DEATH && you.species == SP_DEEP_DWARF)
     {
         // Deep Dwarves get to shave _any_ hp loss.
@@ -1036,9 +1039,12 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     if (dam > 0)
         you.check_awaken(500);
 
+    const bool non_death = death_type == KILLED_BY_QUITTING
+        || death_type == KILLED_BY_WINNING
+        || death_type == KILLED_BY_LEAVING;
+
     if (you.duration[DUR_DEATHS_DOOR] && death_type != KILLED_BY_LAVA
-        && death_type != KILLED_BY_WATER && death_type != KILLED_BY_QUITTING
-        && death_type != KILLED_BY_WINNING && death_type != KILLED_BY_LEAVING)
+        && death_type != KILLED_BY_WATER && !non_death)
     {
         return;
     }
@@ -1170,9 +1176,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
                        death_source_name);
 
 #ifdef WIZARD
-    if (death_type != KILLED_BY_QUITTING
-        && death_type != KILLED_BY_WINNING
-        && death_type != KILLED_BY_LEAVING)
+    if (!non_death)
     {
         if (crawl_state.test || you.wizard)
         {
@@ -1203,12 +1207,20 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 #endif  // WIZARD
 
     // Okay, so you're dead.
-    crawl_state.need_save       = false;
-    crawl_state.updating_scores = true;
-
     take_note(Note( NOTE_DEATH, you.hp, you.hp_max,
                     se.death_description(scorefile_entry::DDV_NORMAL).c_str()),
               true);
+    if (you.lives && !non_death)
+    {
+        you.deaths++;
+        you.lives--;
+        you.dead = true;
+        return;
+    }
+
+    // The game's over.
+    crawl_state.need_save       = false;
+    crawl_state.updating_scores = true;
 
     // Prevent bogus notes.
     activate_notes(false);
@@ -1226,13 +1238,8 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         hiscores_new_entry(se);
         logfile_new_entry(se);
 
-        if (!crawl_state.game_is_tutorial()
-            && death_type != KILLED_BY_LEAVING
-            && death_type != KILLED_BY_WINNING
-            && death_type != KILLED_BY_QUITTING)
-        {
+        if (!non_death && !crawl_state.game_is_tutorial())
             save_ghost();
-        }
     }
 #endif
 

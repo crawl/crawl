@@ -313,9 +313,9 @@ formatted_string describe_mutations()
         break;
 
     case SP_CAT:
-        result += "You cannot wear armour." EOL;
-        result += "You are incapable of any advanced item manipulation." EOL;
-        result += "Your paws have sharp claws." EOL;
+        result += "You cannot wear armour.\n";
+        result += "You are incapable of any advanced item manipulation.\n";
+        result += "Your paws have sharp claws.\n";
         have_any = true;
         break;
 
