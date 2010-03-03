@@ -450,6 +450,74 @@ void end_prayer(void)
     you.duration[DUR_PRAYER] = 0;
 }
 
+static int _gold_to_donation(int gold)
+{
+    return static_cast<int>((gold * log((float)gold)) / MAX_PIETY);
+}
+
+void _zin_donate_gold()
+{
+    if (you.gold == 0)
+    {
+        mpr("You don't have anything to sacrifice.");
+        return;
+    }
+
+    if (!yesno("Do you wish to donate half of your money?", true, 'n'))
+        return;
+
+    const int donation_cost = (you.gold / 2) + 1;
+    const int donation = _gold_to_donation(donation_cost);
+
+#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_SACRIFICE) || defined(DEBUG_PIETY)
+    mprf(MSGCH_DIAGNOSTICS, "A donation of $%d amounts to an "
+         "increase of piety by %d.", donation_cost, donation);
+#endif
+    // Take a note of the donation.
+    take_note(Note(NOTE_DONATE_MONEY, donation_cost));
+
+    you.attribute[ATTR_DONATIONS] += donation_cost;
+
+    you.del_gold(donation_cost);
+
+    if (donation < 1)
+    {
+        simple_god_message(" finds your generosity lacking.");
+        return;
+    }
+
+    you.duration[DUR_PIETY_POOL] += donation;
+    if (you.duration[DUR_PIETY_POOL] > 30000)
+        you.duration[DUR_PIETY_POOL] = 30000;
+
+    const int estimated_piety =
+        std::min(MAX_PENANCE + MAX_PIETY,
+                 you.piety + you.duration[DUR_PIETY_POOL]);
+
+    if (player_under_penance())
+    {
+        if (estimated_piety >= you.penance[GOD_ZIN])
+            mpr("You feel that you will soon be absolved of all your sins.");
+        else
+            mpr("You feel that your burden of sins will soon be lighter.");
+        return;
+    }
+
+    std::string result = "You feel that " + god_name(GOD_ZIN)
+                       + " will soon be ";
+    result +=
+        (estimated_piety > 130) ? "exalted by your worship" :
+        (estimated_piety > 100) ? "extremely pleased with you" :
+        (estimated_piety >  70) ? "greatly pleased with you" :
+        (estimated_piety >  40) ? "most pleased with you" :
+        (estimated_piety >  20) ? "pleased with you" :
+        (estimated_piety >   5) ? "noncommittal"
+                                : "displeased";
+    result += (donation >= 30 && you.piety <= 170) ? "!" : ".";
+
+    mpr(result.c_str());
+}
+
 static int _leading_sacrifice_group()
 {
     int weights[5];
@@ -482,6 +550,8 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item)
 {
     piety_gain_t relative_piety_gain = PIETY_NONE;
 
+    // XXX: this assumes that there's no overlap between
+    //      item-accepting gods and corpse-accepting gods.
     if (god_likes_fresh_corpses(you.religion))
     {
         if (x_chance_in_y(13, 19))
@@ -583,9 +653,23 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item)
     return (relative_piety_gain);
 }
 
-static int _gold_to_donation(int gold)
+static piety_gain_t _sacrifice_item_stack(const item_def& item)
 {
-    return static_cast<int>((gold * log((float)gold)) / MAX_PIETY);
+    piety_gain_t relative_gain = PIETY_NONE;
+    for (int j = 0; j < item.quantity; ++j)
+    {
+        const piety_gain_t gain = _sacrifice_one_item_noncount(item);
+
+        // Update piety gain if necessary.
+        if (gain != PIETY_NONE)
+        {
+            if (relative_gain == PIETY_NONE)
+                relative_gain = gain;
+            else            // some + some = lots
+                relative_gain = PIETY_LOTS;
+        }
+    }
+    return (relative_gain);
 }
 
 void offer_items()
@@ -607,65 +691,7 @@ void offer_items()
     // donate gold to gain piety distributed over time
     if (you.religion == GOD_ZIN)
     {
-        if (you.gold == 0)
-        {
-            mpr("You don't have anything to sacrifice.");
-            return;
-        }
-
-        if (!yesno("Do you wish to donate half of your money?", true, 'n'))
-            return;
-
-        const int donation_cost = (you.gold / 2) + 1;
-        const int donation = _gold_to_donation(donation_cost);
-
-#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_SACRIFICE) || defined(DEBUG_PIETY)
-        mprf(MSGCH_DIAGNOSTICS, "A donation of $%d amounts to an "
-             "increase of piety by %d.", donation_cost, donation);
-#endif
-        // Take a note of the donation.
-        take_note(Note(NOTE_DONATE_MONEY, donation_cost));
-
-        you.attribute[ATTR_DONATIONS] += donation_cost;
-
-        you.del_gold(donation_cost);
-
-        if (donation < 1)
-        {
-            simple_god_message(" finds your generosity lacking.");
-            return;
-        }
-
-        you.duration[DUR_PIETY_POOL] += donation;
-        if (you.duration[DUR_PIETY_POOL] > 30000)
-            you.duration[DUR_PIETY_POOL] = 30000;
-
-        const int estimated_piety =
-            std::min(MAX_PENANCE + MAX_PIETY,
-                     you.piety + you.duration[DUR_PIETY_POOL]);
-
-        if (player_under_penance())
-        {
-            if (estimated_piety >= you.penance[GOD_ZIN])
-                mpr("You feel that you will soon be absolved of all your sins.");
-            else
-                mpr("You feel that your burden of sins will soon be lighter.");
-            return;
-        }
-
-        std::string result = "You feel that " + god_name(GOD_ZIN)
-                           + " will soon be ";
-        result +=
-            (estimated_piety > 130) ? "exalted by your worship" :
-            (estimated_piety > 100) ? "extremely pleased with you" :
-            (estimated_piety >  70) ? "greatly pleased with you" :
-            (estimated_piety >  40) ? "most pleased with you" :
-            (estimated_piety >  20) ? "pleased with you" :
-            (estimated_piety >   5) ? "noncommittal"
-                                    : "displeased";
-        result += (donation >= 30 && you.piety <= 170) ? "!" : ".";
-
-        mpr(result.c_str());
+        _zin_donate_gold();
 
         return; // doesn't accept anything else for sacrifice
     }
@@ -717,27 +743,13 @@ void offer_items()
             }
         }
 
-        piety_gain_t relative_gain = PIETY_NONE;
 
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_SACRIFICE)
         mprf(MSGCH_DIAGNOSTICS, "Sacrifice item value: %d",
              item_value(item));
 #endif
 
-        for (int j = 0; j < item.quantity; ++j)
-        {
-            const piety_gain_t gain = _sacrifice_one_item_noncount(item);
-
-            // Update piety gain if necessary.
-            if (gain != PIETY_NONE)
-            {
-                if (relative_gain == PIETY_NONE)
-                    relative_gain = gain;
-                else            // some + some = lots
-                    relative_gain = PIETY_LOTS;
-            }
-        }
-
+        piety_gain_t relative_gain = _sacrifice_item_stack(item);
         print_sacrifice_message(you.religion, mitm[i], relative_gain);
         item_was_destroyed(mitm[i]);
         destroy_item(i);
