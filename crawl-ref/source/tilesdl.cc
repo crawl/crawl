@@ -1257,8 +1257,9 @@ void TilesFramework::redraw()
     const unsigned int min_ticks = static_cast<unsigned int>(1000.0f / min_fps);
 
     unsigned int ticks = SDL_GetTicks();
-    if (ticks - m_last_tick_redraw < min_ticks)
-        return;
+    unsigned int ticks_passed = ticks - m_last_tick_redraw;
+    if (ticks_passed < min_ticks)
+        SDL_Delay(min_ticks - ticks_passed);
 
 #ifdef DEBUG_TILES_REDRAW
     cprintf("\nredrawing tiles");
