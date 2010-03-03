@@ -1886,6 +1886,62 @@ void bolt::elec_wall_effect()
     finish_beam();
 }
 
+static bool _nuke_wall_msg(dungeon_feature_type feat, const coord_def& p)
+{
+    std::string msg;
+    msg_channel_type chan = MSGCH_PLAIN;
+    bool hear = player_can_hear(p);
+    bool see = you.see_cell(p);
+
+    switch (feat)
+    {
+    case DNGN_ROCK_WALL:
+    case DNGN_WAX_WALL:
+    case DNGN_CLEAR_ROCK_WALL:
+    case DNGN_GRANITE_STATUE:
+        if (hear)
+        {
+            msg = "You hear a grinding noise.";
+            chan = MSGCH_SOUND;
+        }
+        break;
+
+    case DNGN_ORCISH_IDOL:
+        if (hear)
+        {
+            chan = MSGCH_SOUND;
+            if (see)
+                msg = "You hear a hideous screaming!";
+            else
+                msg = "The idol screams as its substance crumbles away!";
+        }
+        else if (see)
+            msg = "The idol twists and shakes as its substance crumbles away!";
+        break;
+
+    case DNGN_TREES:
+        if (see)
+            msg = "The tree breaks and falls down!";
+        else if (hear)
+        {
+            msg = "You hear timber falling.";
+            chan = MSGCH_SOUND;
+        }
+        break;
+
+    default:
+        break;
+    }
+
+    if (!msg.empty())
+    {
+        mpr(msg, chan);
+        return (true);
+    }
+    else
+        return (false);
+}
+
 void bolt::nuke_wall_effect()
 {
     if (env.markers.property_at(pos(), MAT_ANY, "veto_disintegrate") == "veto")
@@ -1896,68 +1952,32 @@ void bolt::nuke_wall_effect()
 
     const dungeon_feature_type feat = grd(pos());
 
-    if (feat == DNGN_ROCK_WALL
-        || feat == DNGN_WAX_WALL
-        || feat == DNGN_CLEAR_ROCK_WALL
-        || feat == DNGN_GRANITE_STATUE)
+    switch (feat)
     {
+    case DNGN_ROCK_WALL:
+    case DNGN_WAX_WALL:
+    case DNGN_CLEAR_ROCK_WALL:
+    case DNGN_GRANITE_STATUE:
+    case DNGN_ORCISH_IDOL:
+    case DNGN_TREES:
         // Blood does not transfer onto floor.
         if (is_bloodcovered(pos()))
             env.pgrid(pos()) &= ~(FPROP_BLOODY);
         if (is_moldy(pos()))
             env.pgrid(pos()) &= ~(FPROP_MOLD);
-
         grd(pos()) = DNGN_FLOOR;
-        if (player_can_hear(pos()))
-        {
-            mpr("You hear a grinding noise.", MSGCH_SOUND);
-            obvious_effect = true;
-        }
+        break;
+
+    default:
+        finish_beam();
+        return;
     }
-    else if (feat == DNGN_ORCISH_IDOL)
-    {
-        grd(pos()) = DNGN_FLOOR;
 
-        // Blood does not transfer onto floor.
-        if (is_bloodcovered(pos()))
-            env.pgrid(pos()) &= ~(FPROP_BLOODY);
-        if (is_moldy(pos()))
-            env.pgrid(pos()) &= ~(FPROP_MOLD);
+    obvious_effect = _nuke_wall_msg(feat, pos());
 
-        if (player_can_hear(pos()))
-        {
-            if (!you.see_cell(pos()))
-                mpr("You hear a hideous screaming!", MSGCH_SOUND);
-            else
-            {
-                mpr("The idol screams as its substance crumbles away!",
-                    MSGCH_SOUND);
-            }
-        }
-        else if (you.see_cell(pos()))
-            mpr("The idol twists and shakes as its substance crumbles away!");
+    if (feat == DNGN_ORCISH_IDOL && beam_source == NON_MONSTER)
+        did_god_conduct(DID_DESTROY_ORCISH_IDOL, 8);
 
-        if (beam_source == NON_MONSTER)
-            did_god_conduct(DID_DESTROY_ORCISH_IDOL, 8);
-
-        obvious_effect = true;
-    }
-    else if (feat == DNGN_TREES)
-    {
-        grd(pos()) = DNGN_FLOOR;
-
-        // Blood does not transfer onto floor.
-        if (is_bloodcovered(pos()))
-            env.pgrid(pos()) &= ~(FPROP_BLOODY);
-        env.pgrid(pos()) &= ~(FPROP_BLOODY);
-
-        if (you.see_cell(pos()))
-            mpr("The tree breaks and falls down!");
-        else if (player_can_hear(pos()))
-            mpr("You hear timber falling.", MSGCH_SOUND);
-
-        obvious_effect = true;
-    }
     finish_beam();
 }
 
