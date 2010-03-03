@@ -3180,6 +3180,12 @@ void level_change(bool skip_attribute_increase)
 
                 if (you.experience_level == 6 || you.experience_level == 12)
                     perma_mutate(MUT_SHAGGY_FUR, 1);
+
+                if (you.lives + you.deaths < you.experience_level/3 && you.lives < 3)
+                {
+                    you.lives++;
+                    mpr("Extra life!", MSGCH_INTRINSIC_GAIN);
+                }
                 break;
 
 
@@ -5271,6 +5277,9 @@ void player::init()
 #if defined(WIZARD) || defined(DEBUG)
     you.never_die = false;
 #endif
+    dead = false;
+    lives = 0;
+    deaths = 0;
 }
 
 void player::reset()

@@ -293,6 +293,9 @@ public:
   // to die automatically returns without ending the game.
   bool never_die;
 #endif
+  bool dead;
+  int lives;
+  int deaths;
 
 protected:
     FixedVector<PlaceInfo, NUM_BRANCHES>             branch_info;

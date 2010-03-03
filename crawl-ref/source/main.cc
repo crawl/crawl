@@ -1061,6 +1061,13 @@ static void _input()
     // Currently only set if Xom accidentally kills the player.
     you.reset_escaped_death();
 
+    if (you.dead)
+    {
+        revive();
+        bring_to_safety();
+        redraw_screen();
+    }
+
     if (crawl_state.is_replaying_keys() && crawl_state.is_repeating_cmd()
         && kbhit())
     {
