@@ -35,6 +35,7 @@
 #include "player.h"
 #include "random.h"
 #include "religion.h"
+#include "sprint.h"
 #include "state.h"
 #include "stuff.h"
 #include "env.h"
@@ -518,8 +519,10 @@ monster_type pick_random_monster(const level_id &place, int power,
                     count++;
                 }
                 while (mons_abyss(mon_type) == 0 && count < 2000);
-            } while (crawl_state.game_is_arena() &&
-                     arena_veto_random_monster(mon_type));
+            } while ((crawl_state.game_is_arena() &&
+                      arena_veto_random_monster(mon_type)) ||
+                     (crawl_state.game_is_sprint() &&
+                      sprint_veto_random_abyss_monster(mon_type)));
 
             if (count == 2000)
                 return (MONS_PROGRAM_BUG);

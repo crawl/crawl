@@ -2444,9 +2444,12 @@ int piety_scale(int piety)
     return (piety);
 }
 
-void gain_piety(int original_gain, bool all_at_once)
+void gain_piety(int original_gain, bool all_at_once, bool force)
 {
     if (original_gain <= 0)
+        return;
+
+    if (crawl_state.game_is_sprint() && you.level_type == LEVEL_ABYSS && !force)
         return;
 
     // Xom uses piety differently...

@@ -35,6 +35,8 @@
 #include "random.h"
 #include "religion.h"
 #include "showsymb.h"
+#include "sprint.h"
+#include "state.h"
 #include "stuff.h"
 #include "env.h"
 #include "spells3.h"
@@ -235,9 +237,14 @@ static void _generate_area(const coord_def& topleft,
     }
 
     // During game start, number and level of items mustn't be higher than
-    // that on level 1.
+    // that on level 1. Abyss in sprint games has no items.
     int num_items = 150, items_level = 51;
-    if (you.char_direction == GDT_GAME_START)
+    if (crawl_state.game_is_sprint())
+    {
+        num_items   = 0;
+        items_level = 0;
+    }
+    else if (you.char_direction == GDT_GAME_START)
     {
         num_items   = 3 + roll_dice( 3, 11 );
         items_level = 0;
@@ -279,12 +286,17 @@ static void _generate_area(const coord_def& topleft,
     int exits_wanted  = 0;
     int altars_wanted = 0;
 
+    int exit_chance = 7500;
+    if (crawl_state.game_is_sprint()) {
+        exit_chance = sprint_modify_abyss_exit_chance(exit_chance);
+    }
+
     for (rectangle_iterator ri(topleft, bottomright); ri; ++ri)
     {
         if (grd(*ri) == DNGN_UNSEEN)
             grd(*ri) = replaced[random2(5)];
 
-        if (one_chance_in(7500)) // place an exit
+        if (one_chance_in(exit_chance)) // place an exit
             exits_wanted++;
 
         // Don't place exit under items.
