@@ -671,8 +671,6 @@ static int l_item_do_identified (lua_State *ls)
     }
 
     bool known_status = false;
-    bool check_type = false;
-
     if (lua_isstring(ls, 1))
     {
         std::string flags = luaL_checkstring(ls, 1);
@@ -680,14 +678,11 @@ static int l_item_do_identified (lua_State *ls)
             known_status = item_ident(*item, ISFLAG_IDENT_MASK);
         else
         {
-            if (strip_tag(flags, "type"))
-                check_type = true;
-
-            unsigned long item_flags = str_to_item_status_flags(flags);
-            known_status = item_ident(*item, item_flags);
-
-            if (check_type)
-                known_status = item_type_known(*item);
+            const bool check_type = strip_tag(flags, "type");
+            const unsigned long item_flags = str_to_item_status_flags(flags);
+            known_status = ((item_flags || check_type)
+                            && (!item_flags || item_ident(*item, item_flags))
+                            && (!check_type || item_type_known(*item)));
         }
     }
     else
