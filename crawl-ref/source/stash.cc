@@ -1555,16 +1555,8 @@ void StashTracker::save(writer& outf) const
 
 void StashTracker::load(reader& inf)
 {
-    if (inf.getMinorVersion() < TAG_MINOR_STASHVER)
-    {
-        // Stash version is now a part of the global save.
-        unmarshallByte(inf),
-        unmarshallByte(inf);
-        last_corpse_update = (long)unmarshallFloat(inf);
-    }
-    else
-        // Time of last corpse update.
-        last_corpse_update = unmarshallLong(inf);
+    // Time of last corpse update.
+    last_corpse_update = unmarshallLong(inf);
 
     int count = unmarshallShort(inf);
 
