@@ -190,7 +190,7 @@ static void tag_read_level_items(reader &th, char minorVersion);
 static void tag_read_level_monsters(reader &th, char minorVersion);
 static void tag_read_level_attitude(reader &th);
 static void tag_missing_level_attitude();
-static void tag_read_level_tiles(struct reader &th);
+static void tag_read_level_tiles(reader &th);
 static void tag_missing_level_tiles();
 
 static void tag_construct_ghost(writer &th);
@@ -2491,7 +2491,7 @@ void tag_missing_level_attitude()
     }
 }
 
-void tag_read_level_tiles(struct reader &th)
+void tag_read_level_tiles(reader &th)
 {
 #ifdef USE_TILE
     for (int i = 0; i < GXM; i++)
