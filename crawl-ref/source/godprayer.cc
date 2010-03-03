@@ -649,11 +649,13 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item)
         {
             // item_value() multiplies by quantity.
             const int value = item_value(item) / item.quantity;
-
-            if (x_chance_in_y(value/2 + 1, 30 + you.piety/2))
+            // compress into range 0..250
+            const int stepped = stepdown_value(value, 50, 50, 200, 250);
+            const int gain = div_rand_round(stepped, 60 + you.piety);
+            if (gain > 0)
             {
-                gain_piety(1);
-                relative_piety_gain = PIETY_SOME;
+                gain_piety(gain);
+                relative_piety_gain = (gain > 1) ? PIETY_LOTS : PIETY_SOME;
             }
         }
 
