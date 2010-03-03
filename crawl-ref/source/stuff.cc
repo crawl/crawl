@@ -682,6 +682,7 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
 
     std::string prompt = make_stringf("%s ", str ? str : "Buggy prompt?");
 
+    mouse_control mc(MOUSE_MODE_MORE);
     while (true)
     {
         if (!noprompt)
@@ -799,6 +800,8 @@ int yesnoquit( const char* str, bool safe, int safeanswer, bool allow_all,
 {
     if (!crawl_state.is_repeating_cmd())
         interrupt_activity( AI_FORCE_INTERRUPT );
+
+    mouse_control mc(MOUSE_MODE_MORE);
 
     std::string prompt =
         make_stringf("%s%s ", str ? str : "Buggy prompt?",
