@@ -875,12 +875,6 @@ void tag_missing(int tag, char minorVersion)
         case TAG_LEVEL_TILES:
             tag_missing_level_tiles();
             break;
-        case TAG_GAME_STATE:
-            if (minorVersion < TAG_MINOR_GAMESTATE)
-            {
-                break;
-            }
-            // fallthrough
         default:
             perror("Tag is missing; file is likely corrupt.");
             end(-1);
@@ -1532,18 +1526,12 @@ static void tag_read_you(reader &th, char minorVersion)
 
     you.gift_timeout   = unmarshallByte(th);
 
-    if (minorVersion == TAG_MINOR_CHEPONDER)
-        unmarshallByte(th);
-
     you.normal_vision  = unmarshallByte(th);
     you.current_vision = unmarshallByte(th);
     you.hell_exit      = unmarshallByte(th);
 
     // elapsed time
-    if (minorVersion >= TAG_MINOR_INTTIME)
-        you.elapsed_time   = unmarshallLong(th);
-    else
-        you.elapsed_time   = (double)unmarshallFloat(th);
+    you.elapsed_time   = unmarshallLong(th);
 
     // wizard mode
     you.wizard         = (bool) unmarshallByte(th);
@@ -1696,24 +1684,12 @@ static PlaceInfo unmarshallPlaceInfo(reader &th, char minorVersion)
     place_info.turns_resting    = unmarshallLong(th);
     place_info.turns_other      = unmarshallLong(th);
 
-    if (minorVersion >= TAG_MINOR_INTTIME)
-    {
-        place_info.elapsed_total      = unmarshallLong(th);
-        place_info.elapsed_explore    = unmarshallLong(th);
-        place_info.elapsed_travel     = unmarshallLong(th);
-        place_info.elapsed_interlevel = unmarshallLong(th);
-        place_info.elapsed_resting    = unmarshallLong(th);
-        place_info.elapsed_other      = unmarshallLong(th);
-    }
-    else
-    {
-        place_info.elapsed_total      = (long) unmarshallFloat(th);
-        place_info.elapsed_explore    = (long) unmarshallFloat(th);
-        place_info.elapsed_travel     = (long) unmarshallFloat(th);
-        place_info.elapsed_interlevel = (long) unmarshallFloat(th);
-        place_info.elapsed_resting    = (long) unmarshallFloat(th);
-        place_info.elapsed_other      = (long) unmarshallFloat(th);
-    }
+    place_info.elapsed_total      = unmarshallLong(th);
+    place_info.elapsed_explore    = unmarshallLong(th);
+    place_info.elapsed_travel     = unmarshallLong(th);
+    place_info.elapsed_interlevel = unmarshallLong(th);
+    place_info.elapsed_resting    = unmarshallLong(th);
+    place_info.elapsed_other      = unmarshallLong(th);
 
     return place_info;
 }
@@ -2221,10 +2197,7 @@ static void tag_read_level( reader &th, char minorVersion )
 
     env.level_flags  = (unsigned long) unmarshallLong(th);
 
-    if (minorVersion >= TAG_MINOR_INTTIME)
-        env.elapsed_time = unmarshallLong(th);
-    else
-        env.elapsed_time = (long)unmarshallFloat(th);
+    env.elapsed_time = unmarshallLong(th);
 
     // Map grids.
     // how many X?
