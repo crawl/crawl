@@ -30,7 +30,7 @@ key set, do so by adding this line to the init.txt file:
   additional_macro_file = 034_command_keys.txt
 
 The command for examining items (was v) is gone. Bring up the inventory and
-press the key matching an item’s slot in order to examine it.
+press the key matching an item's slot in order to examine it.
 When chopping up a single corpse on the ground, there is no longer any prompt.
 You will only be prompted if there are two or more corpses. When answering this
 prompt, you can use the following shortcuts: c means yes, so you can press
