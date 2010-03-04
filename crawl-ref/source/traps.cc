@@ -692,7 +692,8 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         // after one use in down_stairs(), misc.cc
         if (!you_trigger)
         {
-            mpr("The shaft crumbles and collapses.");
+            if (in_sight)
+                mpr("The shaft crumbles and collapses.");
             trap_destroyed = true;
         }
         break;
