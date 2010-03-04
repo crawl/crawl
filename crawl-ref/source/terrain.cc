@@ -423,7 +423,7 @@ bool feat_is_branch_stairs(dungeon_feature_type feat)
 }
 
 // Find all connected cells containing ft, starting at d.
-void find_connected_identical(coord_def d, dungeon_feature_type ft,
+void find_connected_identical(const coord_def &d, dungeon_feature_type ft,
                               std::set<coord_def>& out)
 {
     if (grd(d) != ft)
@@ -450,7 +450,7 @@ void find_connected_identical(coord_def d, dungeon_feature_type ft,
 }
 
 // Find all connected cells containing ft_min to ft_max, starting at d.
-void find_connected_range(coord_def d, dungeon_feature_type ft_min,
+void find_connected_range(const coord_def& d, dungeon_feature_type ft_min,
                           dungeon_feature_type ft_max,
                           std::set<coord_def>& out)
 {
@@ -475,6 +475,13 @@ void find_connected_range(coord_def d, dungeon_feature_type ft_min,
         find_connected_range(coord_def(d.x, d.y+1), ft_min, ft_max, out);
         find_connected_range(coord_def(d.x, d.y-1), ft_min, ft_max, out);
     }
+}
+
+std::set<coord_def> connected_doors(const coord_def& d)
+{
+    std::set<coord_def> doors;
+    find_connected_range(d, DNGN_CLOSED_DOOR, DNGN_SECRET_DOOR, doors);
+    return (doors);
 }
 
 void get_door_description(int door_size, const char** adjective, const char** noun)
