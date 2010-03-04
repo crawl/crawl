@@ -382,6 +382,9 @@ void end(int exit_code, bool print_error, const char *format, ...)
 {
     std::string error = print_error? strerror(errno) : "";
 
+    cio_cleanup();
+    databaseSystemShutdown();
+
     if (format)
     {
         va_list arg;
@@ -415,9 +418,6 @@ void end(int exit_code, bool print_error, const char *format, ...)
         getchar();
     }
 #endif
-
-    cio_cleanup();
-    databaseSystemShutdown();
 
     CrawlIsExiting = true;
     exit(exit_code);
