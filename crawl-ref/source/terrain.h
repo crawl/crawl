@@ -56,11 +56,13 @@ bool feat_is_altar(dungeon_feature_type feat);
 bool feat_is_player_altar(dungeon_feature_type grid);
 
 bool feat_is_branch_stairs(dungeon_feature_type feat);
-void find_connected_identical(coord_def d, dungeon_feature_type ft,
+void find_connected_identical(const coord_def& d, dungeon_feature_type ft,
                               std::set<coord_def>& out);
-void find_connected_range(coord_def d, dungeon_feature_type ft_min,
+void find_connected_range(const coord_def& d, dungeon_feature_type ft_min,
                           dungeon_feature_type ft_max,
                           std::set<coord_def>& out);
+std::set<coord_def> connected_doors(const coord_def& d);
+
 void get_door_description(int door_size, const char** adjective, const char** noun);
 // Returns info about the grid a secret door is mimicing.  Returns true
 // if it finds a grid position to mimic, which will be stored in gc.
