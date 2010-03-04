@@ -173,6 +173,7 @@ state.o \
 store.o \
 stuff.o \
 tags.o \
+tagstring.o \
 teleport.o \
 terrain.o \
 transform.o \
