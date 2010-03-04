@@ -33,6 +33,7 @@
 #include "stuff.h"
 #include "areas.h"
 #include "tags.h"
+#include "tagstring.h"
 #include "travel.h"
 #include "tutorial.h"
 #include "view.h"
@@ -690,15 +691,18 @@ msg_colour_type msg_colour(int col)
     return static_cast<msg_colour_type>(col);
 }
 
-int colour_msg(msg_colour_type col)
+static int colour_msg(msg_colour_type col)
 {
-    return static_cast<int>(col);
+    if (col == MSGCOL_MUTED)
+        return (DARKGREY);
+    else
+        return static_cast<int>(col);
 }
 
 #ifdef USE_COLOUR_MESSAGES
 
 // Returns a colour or MSGCOL_MUTED.
-msg_colour_type channel_to_colour(msg_channel_type channel, int param)
+static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
 {
     if (you.asleep())
         return (MSGCOL_DARKGREY);
@@ -838,12 +842,17 @@ msg_colour_type channel_to_colour(msg_channel_type channel, int param)
 
 #else // don't use colour messages
 
-msg_colour_type channel_to_colour(msg_channel_type channel, int param)
+static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
 {
     return (MSGCOL_LIGHTGREY);
 }
 
 #endif
+
+int channel_to_colour(msg_channel_type channel, int param)
+{
+    return colour_msg(channel_to_msgcol(channel, param));
+}
 
 static void do_message_print(msg_channel_type channel, int param,
                              const char *format, va_list argp)
@@ -1027,9 +1036,7 @@ static std::string show_prompt(std::string prompt)
 
     // FIXME: duplicating mpr code.
     msg_colour_type colour = prepare_message(prompt, MSGCH_PROMPT, 0);
-    std::string col = colour_to_str(colour_msg(colour));
-    std::string text = "<" + col + ">" + prompt + "</" + col + ">"; // XXX
-    return text;
+    return colour_string(prompt, colour_msg(colour));
 }
 
 static std::string _prompt;
@@ -1195,7 +1202,7 @@ static msg_colour_type prepare_message(const std::string& imsg,
         return MSGCOL_MUTED;
     }
 
-    msg_colour_type colour = channel_to_colour(channel, param);
+    msg_colour_type colour = channel_to_msgcol(channel, param);
 
     if (colour != MSGCOL_MUTED)
         mpr_check_patterns(imsg, channel, param);
