@@ -18,6 +18,7 @@
 #include "env.h"
 #include "libutil.h"
 #include "los.h"
+#include "menu.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-place.h"
@@ -400,21 +401,6 @@ void end(int exit_code, bool print_error, const char *format, ...)
         if (error[error.length() - 1] != '\n')
             error += "\n";
 
-        // Print error message on the screen.
-        // Ugly, but better than not showing anything at all. (jpeg)
-        if (exit_code)
-        {
-            clrscr();
-            cgotoxy(1, 1);
-            textcolor(WHITE);
-            cprintf(error.c_str());
-            cgotoxy(1, 20);
-            textcolor(LIGHTGREY);
-            cprintf("Hit Enter to continue...\n");
-            getch();
-        }
-
-        // Print a conventional console error message, anyway.
         fprintf(stderr, "%s", error.c_str());
         error.clear();
     }
@@ -435,6 +421,19 @@ void end(int exit_code, bool print_error, const char *format, ...)
 
     CrawlIsExiting = true;
     exit(exit_code);
+}
+
+// Print error message on the screen.
+// Ugly, but better than not showing anything at all. (jpeg)
+// FIXME: For some reason, doesn't break lines as it should!
+void print_error_screen(const std::string msg)
+{
+    clrscr();
+    std::string error_msg = msg;
+    error_msg += EOL EOL EOL "Hit any key to exit..." EOL;
+    linebreak_string2(error_msg, 60);
+    formatted_string::parse_string(error_msg, false).display();
+    getch();
 }
 
 void redraw_screen(void)
