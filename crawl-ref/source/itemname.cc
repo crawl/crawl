@@ -294,23 +294,47 @@ std::string item_def::name(description_level_type descrip,
     return buff.str();
 }
 
-// XXX: Basically duplicates the code found in item_def::name_aux.
-// This is not nice. But changing the code there is not currently 
-// an option. {due}
-const char* missile_brand_name (const item_def& item)
+bool _missile_brand_is_prefix(special_missile_type brand)
 {
-    switch (get_ammo_brand(item))
+    switch (brand)
+    {
+    case SPMSL_POISONED:
+    case SPMSL_CURARE:
+    case SPMSL_EXPLODING:
+    case SPMSL_STEEL:
+    case SPMSL_SILVER:
+        return (true);
+    default:
+        return (false);
+    }
+}
+
+bool _missile_brand_is_postfix(special_missile_type brand)
+{
+    return (brand != SPMSL_NORMAL && !_missile_brand_is_prefix(brand));
+}
+
+enum mbn_type
+{
+    MBN_TERSE, // terse brand name
+    MBN_NAME,  // brand name for item naming (adj for prefix, noun for postfix)
+    MBN_BRAND  // plain brand name
+};
+
+const char* missile_brand_name(special_missile_type brand, mbn_type t)
+{
+    switch (brand)
     {
     case SPMSL_FLAME:
         return "flame";
     case SPMSL_FROST:
         return "frost";
     case SPMSL_POISONED:
-        return "poison";
+        return (t == MBN_NAME ? "poisoned" : "poison");
     case SPMSL_CURARE:
-        return "curare";
+        return (t == MBN_NAME ? "curare-tipped" : "curare");
     case SPMSL_EXPLODING:
-        return "exploding";
+        return (t == MBN_TERSE ? "explode" : "exploding");
     case SPMSL_STEEL:
         return "steel";
     case SPMSL_SILVER:
@@ -318,25 +342,25 @@ const char* missile_brand_name (const item_def& item)
     case SPMSL_PARALYSIS:
         return "paralysis";
     case SPMSL_SLOW:
-        return "slowing";
+        return (t == MBN_TERSE ? "slow" : "slowing");
     case SPMSL_SLEEP:
-        return "sleeping";
+        return (t == MBN_TERSE ? "sleep" : "sleeping");
     case SPMSL_CONFUSION:
-        return "confusion";
+        return (t == MBN_TERSE ? "conf" : "confusion");
     case SPMSL_SICKNESS:
-        return "sickness";
+        return (t == MBN_TERSE ? "sick" : "sickness");
     case SPMSL_RAGE:
         return "frenzy";
     case SPMSL_RETURNING:
-        return "returning";
+        return (t == MBN_TERSE ? "return" : "returning");
     case SPMSL_CHAOS:
         return "chaos";
     case SPMSL_PENETRATION:
-        return "penetration";
+        return (t == MBN_TERSE ? "penet" : "penetration");
     case SPMSL_REAPING:
-        return "reaping";
+        return (t == MBN_TERSE ? "reap" : "reaping");
     case SPMSL_DISPERSAL:
-        return "dispersal";
+        return (t == MBN_TERSE ? "disperse" : "dispersal");
     case SPMSL_NORMAL:
     default:
         return "";
@@ -1103,17 +1127,21 @@ std::string ego_type_string (const item_def &item)
 {
     switch (item.base_type)
     {
-    case OBJ_ARMOUR: return armour_ego_name(item, false);
+    case OBJ_ARMOUR:
+        return armour_ego_name(item, false);
     case OBJ_WEAPONS:
-        // this is specialcased out of weapon_brand_name ("vampiric hand axe", etc)
+        // this is specialcased out of weapon_brand_name
+        // ("vampiric hand axe", etc)
         if (get_weapon_brand(item) == SPWPN_VAMPIRICISM)
             return "vampiricism";
         else if (get_weapon_brand(item) != SPWPN_NORMAL)
             return std::string(weapon_brand_name(item, false)).substr(4);
         else
             return "";
-    case OBJ_MISSILES: return missile_brand_name(item);
-    default: return "";
+    case OBJ_MISSILES:
+        return missile_brand_name(get_ammo_brand(item), MBN_BRAND);
+    default:
+        return "";
     }
 }
 
@@ -1171,7 +1199,6 @@ std::string item_def::name_aux(description_level_type desc,
     const bool know_racial = !(ignore_flags & ISFLAG_RACIAL_MASK);
 
     const bool need_plural = !basename && !dbname;
-    int brand;
 
     std::ostringstream buff;
 
@@ -1262,36 +1289,9 @@ std::string item_def::name_aux(description_level_type desc,
             buff << " (curse)";
         break;
 
-    // XXX: If changing the names of missiles, please update missile_brand_name.
-    // better yet, please destroy this travesty of code and do it a better way!
     case OBJ_MISSILES:
-        brand = get_ammo_brand(*this);
-
-        if (know_brand)
-        {
-            switch (brand)
-            {
-            case SPMSL_POISONED:
-                buff << ((terse) ? "poison " : "poisoned ");
-                break;
-            case SPMSL_CURARE:
-                buff << ((terse) ? "curare " : "curare-tipped ");
-                break;
-           case SPMSL_EXPLODING:
-                buff << ((terse) ? "explode " : "exploding ");
-                break;
-            case SPMSL_STEEL:
-                buff << "steel ";
-                break;
-            case SPMSL_SILVER:
-                buff << "silver ";
-                break;
-
-            default:
-                break;
-            }
-
-        }
+    {
+        special_missile_type brand  = get_ammo_brand(*this);
 
         if (know_cosmetic
             && get_equip_desc(*this) == ISFLAG_RUNED
@@ -1299,6 +1299,9 @@ std::string item_def::name_aux(description_level_type desc,
         {
             buff << "runed ";
         }
+
+        if (know_brand && !terse && _missile_brand_is_prefix(brand))
+            buff << missile_brand_name(brand, MBN_NAME) << ' ';
 
         if (know_pluses)
         {
@@ -1311,73 +1314,30 @@ std::string item_def::name_aux(description_level_type desc,
 
         buff << ammo_name(static_cast<missile_type>(item_typ));
 
-        if (know_brand)
+        if (terse)
         {
-            switch (brand)
+            std::string prop;
+            if (know_brand)
+                prop += missile_brand_name(brand, MBN_TERSE);
+
+            if (desc == DESC_INVENTORY
+                && get_equip_desc(*this) == ISFLAG_RUNED
+                && !testbits(ignore_flags, ISFLAG_RUNED)
+                && !__know_pluses)
             {
-            case SPMSL_FLAME:
-                buff << ((terse) ? " (flame)" : " of flame");
-                break;
-            case SPMSL_FROST:
-                buff << ((terse) ? " (frost)" : " of frost");
-                break;
-            case SPMSL_NORMAL:
-            case SPMSL_POISONED:
-            case SPMSL_CURARE:
-            case SPMSL_EXPLODING:
-            case SPMSL_STEEL:
-            case SPMSL_SILVER:
-                break;
-            case SPMSL_PARALYSIS:
-                buff << ((terse) ? " (paralysis)" : " of paralysis");
-                break;
-            case SPMSL_SLOW:
-                buff << ((terse) ? " (slow)" : " of slowing");
-                break;
-            case SPMSL_SLEEP:
-                buff << ((terse) ? " (sleep)" : " of sleeping");
-                break;
-            case SPMSL_CONFUSION:
-                buff << ((terse) ? " (conf)" : " of confusion");
-                break;
-            case SPMSL_SICKNESS:
-                buff << ((terse) ? " (sick)" : " of sickening");
-                break;
-            case SPMSL_RAGE:
-                buff << ((terse) ? " (frenzy)" : " of frenzy");
-                break;
-            case SPMSL_RETURNING:
-                buff << ((terse) ? " (return)" : " of returning");
-                break;
-            case SPMSL_CHAOS:
-                buff << ((terse) ? " (chaos)" : " of chaos");
-                break;
-            case SPMSL_PENETRATION:
-                buff << ((terse) ? " (penet)" : " of penetration");
-                break;
-            case SPMSL_REAPING:
-                buff << ((terse) ? " (reap)" : " of reaping");
-                break;
-            case SPMSL_DISPERSAL:
-                buff << ((terse) ? " (disperse)" : " of dispersal");
-                break;
-
-            default:
-                buff << " (buggy)";
+                if (!prop.empty())
+                    prop += ", ";
+                prop += "runed";
             }
-        }
 
-        if (terse
-            && desc == DESC_INVENTORY
-            && get_equip_desc(*this) == ISFLAG_RUNED
-            && !testbits(ignore_flags, ISFLAG_RUNED)
-            && !__know_pluses)
-        {
-            buff << " (runed)";
+            if (!prop.empty())
+                buff << " (" << prop << ")";
         }
+        else if (know_brand && _missile_brand_is_postfix(brand))
+            buff << " of " << missile_brand_name(brand, MBN_NAME);
 
         break;
-
+    }
     case OBJ_ARMOUR:
         if (know_curse && !terse)
         {

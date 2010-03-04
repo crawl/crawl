@@ -908,13 +908,13 @@ int get_weapon_brand( const item_def &item )
     return (item.special);
 }
 
-int get_ammo_brand( const item_def &item )
+special_missile_type get_ammo_brand(const item_def &item)
 {
     // No artefact arrows yet. -- bwr
     if (item.base_type != OBJ_MISSILES || is_artefact( item ))
         return (SPMSL_NORMAL);
 
-    return (item.special);
+    return (static_cast<special_missile_type>(item.special));
 }
 
 special_armour_type get_armour_ego_type( const item_def &item )
