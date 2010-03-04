@@ -7,17 +7,20 @@
 #include "AppHdr.h"
 #include "mon-stuff.h"
 
+#include "areas.h"
 #include "arena.h"
 #include "artefact.h"
 #include "attitude-change.h"
 #include "cloud.h"
 #include "cluautil.h"
+#include "colour.h"
 #include "coordit.h"
 #include "database.h"
 #include "delay.h"
 #include "dgnevent.h"
 #include "directn.h"
 #include "dlua.h"
+#include "env.h"
 #include "exclude.h"
 #include "fprop.h"
 #include "files.h"
@@ -51,8 +54,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
-#include "env.h"
-#include "areas.h"
+#include "tagstring.h"
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"
@@ -2710,7 +2712,7 @@ std::string get_wounds_description_sentence(const monsters *monster)
         return monster->pronoun(PRONOUN_CAP) + " is " + wounds + ".";
 }
 
-std::string get_wounds_description(const monsters *monster)
+std::string get_wounds_description(const monsters *monster, bool colour)
 {
     if (!monster->alive() || monster->hit_points == monster->max_hit_points)
         return "";
@@ -2721,6 +2723,11 @@ std::string get_wounds_description(const monsters *monster)
     std::string desc;
     mon_dam_level_type dam_level;
     mons_get_damage_level(monster, desc, dam_level);
+    if (colour)
+    {
+        const int col = channel_to_colour(MSGCH_MONSTER_DAMAGE, dam_level);
+        desc = colour_string(desc, col);
+    }
     return desc;
 }
 
