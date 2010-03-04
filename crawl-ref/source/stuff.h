@@ -54,6 +54,7 @@ void end(int exit_code, bool print_err = false,
 
 void modify_all_stats(int STmod, int IQmod, int DXmod);
 
+void print_error_screen(const std::string msg);
 void redraw_screen();
 
 void canned_msg(canned_message_type which_message);

@@ -1389,6 +1389,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         if (!_get_and_validate_version( levelFile, majorVersion, minorVersion,
                                         &reason ))
         {
+            print_error_screen(reason);
             end(-1, false, "\nLevel file is invalid.  %s\n",
                 reason.c_str());
         }
@@ -2030,7 +2031,10 @@ void restore_game(void)
     char minorVersion;
     std::string reason;
     if (!_get_and_validate_version(charf, majorVersion, minorVersion, &reason))
+    {
+        print_error_screen(reason);
         end(-1, false, "\nSave file %s is invalid.  %s\n", charFile.c_str(), reason.c_str());
+    }
 
     _restore_tagged_file(charf, TAGTYPE_PLAYER, minorVersion);
 
@@ -2245,7 +2249,9 @@ static bool _get_and_validate_version(FILE *restoreFile, char &major,
             //        dynamically, but I think <major>.<minor> also
             //        covers 0.6.2. If not, it's not a problem. (jpeg)
             *reason = CRAWL " " + Version::Short() + " is not compatible with "
-                      "save files older than 0.6";
+                      "save files older than 0.6. You can continue your game "
+                      "with the appropriate older version, or you can delete "
+                      "it and start a new game.";
         }
         else
         {
