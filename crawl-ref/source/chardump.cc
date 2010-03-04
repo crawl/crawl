@@ -27,6 +27,7 @@
 #include "describe.h"
 #include "dgn-overview.h"
 #include "dungeon.h"
+#include "files.h"
 #include "godprayer.h"
 #include "hiscores.h"
 #include "initfile.h"
@@ -1305,7 +1306,7 @@ void dump_map(FILE *fp, bool debug, bool dist)
 
 void dump_map(const char* fname, bool debug, bool dist)
 {
-    FILE* fp = fopen(fname, "w");
+    FILE* fp = fopen_replace(fname);
     if (!fp)
         return;
 
@@ -1333,7 +1334,7 @@ static bool write_dump(const std::string &fname, dump_params &par)
     dump_map(map_file_name.c_str());
 
     file_name += ".txt";
-    FILE *handle = fopen(file_name.c_str(), "w");
+    FILE *handle = fopen_replace(file_name.c_str());
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "File name: %s", file_name.c_str());
@@ -1396,7 +1397,7 @@ void whereis_record(const char *status)
         + strip_filename_unsafe_chars(you.your_name)
         + std::string(".where");
 
-    if (FILE *handle = fopen(file_name.c_str(), "w"))
+    if (FILE *handle = fopen_replace(file_name.c_str()))
     {
         fprintf(handle, "%s:status=%s\n",
                 xlog_status_line().c_str(),

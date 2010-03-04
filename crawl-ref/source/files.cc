@@ -21,8 +21,8 @@
 #include <algorithm>
 #include <functional>
 
-#ifdef UNIX
 #include <fcntl.h>
+#ifdef UNIX
 #include <unistd.h>
 #endif
 
@@ -2607,4 +2607,16 @@ void SavefileCallback::post_restore()
         callback func = (*_callback_list)[i];
         (*func)(false);
     }
+}
+
+FILE *fopen_replace(const char *name)
+{
+    int fd;
+
+    // Stave off symlink attacks.  Races will be handled with O_EXCL.
+    unlink(name);
+    fd = open(name, O_CREAT|O_EXCL|O_WRONLY, 0666);
+    if (fd == -1)
+        return 0;
+    return fdopen(fd, "w");
 }
