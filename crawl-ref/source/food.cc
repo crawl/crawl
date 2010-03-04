@@ -1373,8 +1373,8 @@ bool eat_from_inventory()
         for (unsigned int i = 0; i < food_items.size(); ++i)
         {
             item_def *item = food_items[i];
-            std::string item_name = get_message_colour_tags(*item, DESC_NOCAP_A,
-                                                            MSGCH_PROMPT);
+            std::string item_name = get_menu_colour_prefix_tags(*item,
+                                                                DESC_NOCAP_A);
 
             mprf(MSGCH_PROMPT, "%s %s%s? (ye/n/q)",
                  (you.species == SP_VAMPIRE ? "Drink blood from" : "Eat"),
@@ -1517,9 +1517,8 @@ int prompt_eat_chunks()
         {
             bool autoeat = false;
             item_def *item = chunks[i];
-            std::string item_name = get_message_colour_tags(*item,
-                                                            DESC_NOCAP_A,
-                                                            MSGCH_PROMPT);
+            std::string item_name = get_menu_colour_prefix_tags(*item,
+                                                                DESC_NOCAP_A);
 
             const bool contam = is_contaminated(*item);
             const bool bad    = is_bad_food(*item);
