@@ -1,0 +1,152 @@
+###############################################################################
+#
+# Spider's Nest
+#
+# This is a portal vault adaptation of an upcoming branch for Lair rotation.
+# Original branch concept by Lemuel Pitkin.
+#
+# Spiders, bugs, webs.
+#
+###############################################################################
+
+{{
+function spiders_nest_portal(e)
+  local desc_long = "An entrance to the Spider's Nest. It is crumbling away."
+
+  local timeout_turns = crawl.random_range(1200, 1700)
+
+  local messager =
+    timed_msg {
+      visible = true,
+      -- $F{xxx} will be substituted with the 'entity' property of the timed
+      -- marker, or with the desc property (if entity is not set).
+      messages = time_messages(timeout_turns,
+                               "$F{The} is slowly crumbling away.",
+                               "$F{The} is crumbling away.",
+                               "$F{The} is quickly crumbling away.",
+                               "$F{The} is almost completely crumbled.")
+    }
+
+  e.lua_marker('O',
+      timed_marker {
+        disappear = "The entrance crumbles away.",
+        desc = "A crumbling entrance",
+        desc_long = desc_long,
+        entity = 'archway',
+        dst = "spiders_nest",
+        dstname_abbrev = "Spider",
+        dstorigin = "in a spider's nest",
+        overview = "crumbling entrance",
+        turns = timeout_turns,
+        floor = "floor",
+        msg = messager })
+  e.kfeat("O = enter_portal_vault")
+  e.colour("O = white")
+  e.tile("O = dngn_portal")
+end
+}}
+
+# For destination (not entry) vaults, use the following line after all
+# substitutions have been performed:
+# : spiders_nest_colours(_G)
+{{
+function spiders_nest_colours(e)
+  e.kfeat("< = exit_portal_vault")
+  e.colour("< = white")
+  e.tile("< = dngn_portal")
+  e.lrockcol("yellow")
+  e.lfloorcol("brown")
+--e.lrocktile("wall_ice")
+--e.lfloortile("floor_ice")
+end
+}}
+
+# Monster set function
+# : spiders_nest_random_monster_set(_G)
+{{
+function spiders_nest_random_monster_set(e)
+  e.set_random_mon_list("giant cockroach / giant mite / scorpion / redback / \
+                         wolf spider / trapdoor spider / giant mosquito / \
+                         giant blowfly / yellow wasp / red wasp / \
+                         moth of wrath / giant beetle / boring beetle / \
+                         boulder beetle / giant centipede")
+end
+}}
+
+# Add a milestone for entering the Spider's Nest.
+{{
+function spiders_nest_milestone(e)
+  crawl.mark_milestone("br.enter", "entered a Spider's Nest", true)
+end
+}}
+
+# Entries ##########################################
+
+NAME:   portal_spiders_nest_entry_a
+TAGS:   uniq_spiders_nest patrolling no_monster_gen
+DEPTH:  Lair
+: spiders_nest_portal(_G)
+MAP
+.WWW.WWW.
+W.WW.WW.W
+WW.W.W.WW
+WWW...WWW
+....O....
+WWW...WWW
+WW.W.W.WW
+W.WW.WW.W
+.WWW.WWW.
+ENDMAP
+
+# The destination vaults ############
+
+###############################################################################
+# Layout: A quick mockup of diagonal corridors that are always at least two
+#         squares wide, so that the player cannot camp at a bottleneck. Also
+#         a bit of water as a pointer towards the future wall-clinging ability.
+# Foes:   A wave of centipedes, a wave of scorpions, a few scattered trapdoor
+#         spiders, and a good bunch of the more threatening spiders, plus a
+#         moth of wrath as the boss.
+# Loot:   Just some goodish items.
+NAME:    spiders_nest_a
+TAGS:    spiders_nest no_item_gen no_monster_gen no_pool_fixup
+ORIENT:  encompass
+: spiders_nest_colours(_G)
+: spiders_nest_random_monster_set(_G)
+epilogue{{
+spiders_nest_milestone(_G)
+}}
+MONS:    giant centipede
+MONS:    scorpion
+MONS:    trapdoor spider generate_awake / nothing w:20
+MONS:    redback / wolf spider
+MONS:    moth of wrath
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x.<.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x....xxxxxxxxxxWWWWxxxxxxxxxxxxxxxxxxxxxx
+xxx...xxxxxxxxxWW.Wxxxxxxxxxxxxxxxxxxxxxx
+xxxx...xxxxxxxxW.3.xxxxxxxxxxxxxxxxxxxxxx
+xxxxx....xxxxx......xxxxxxxxxxxxxxxxxxxxx
+xxxxxx.A.xxxx...xx...xxxxxxxxxxxxxxxxxxxx
+xxxxxx....xx...xxxx...xxxxxW4||xxxxxxxxxx
+xxxxxxxx.1111.xxxxxx..WWWxxWW4|xxxxxxxxxx
+xxxxxxxxx1111xxxxxxxx..WWxxWWW4xxxxxxxxxx
+xxxxxxxxx1111xxxxxxxx...WxxWWWWxxxxxxxxxx
+xxxxxxxx.1111.xxxxxx..3.WxxxWWxxxxxxxxxxx
+xxxxxxx...xx...xxxx.....xxxxWWxxxxxxxxxxx
+xxxxxx...xxxx...xx...x..xxxxWWxxxxxxxxxxx
+xxxW....xxxxxx.2222.xx..xxxWWWWxxxxxxxxxx
+xxx....xxxxxxxx2222xxx..xxxWWWWxxxxxxxxxx
+xxx..3.xxxxxxxx2222xxx..xxxW..Wxxxxxx.**x
+xxxW....xxxxxx.2222.xx..xx.....Wxxxxx.<*x
+xxxxxx...xxxx...xx...x..x...xx..Wxxx....x
+xxxxxxx...xx...xxxx........xxxx..Wx...xxx
+xxxxxxxx......xxxxxx..44..xxxxxx.....xxxx
+xxxxxxxxx............4..4...........xxxxx
+xxxxxxxxxW..3........4..4........5..xxxxx
+xxxxxxxxxWW..xxxxxxxW.44.Wxxxxxx....xxxxx
+xxxxxxxxxxxxxxxxxxxxWW..WWxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
