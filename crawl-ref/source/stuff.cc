@@ -425,13 +425,40 @@ void end(int exit_code, bool print_error, const char *format, ...)
 
 // Print error message on the screen.
 // Ugly, but better than not showing anything at all. (jpeg)
-// FIXME: For some reason, doesn't break lines as it should!
-void print_error_screen(const std::string msg)
+void print_error_screen(const char *message, ...)
 {
-    clrscr();
-    std::string error_msg = msg;
+    // Get complete error message.
+    std::string error_msg;
+    {
+        va_list arg;
+        va_start(arg, message);
+        char buffer[1024];
+        vsnprintf(buffer, sizeof buffer, message, arg);
+        va_end(arg);
+
+        error_msg = std::string(buffer);
+    }
+    if (error_msg.empty())
+        return;
+
+    // Escape '<'.
+    // NOTE: This assumes that the error message doesn't contain
+    //       any formatting!
+    error_msg = replace_all(error_msg, "<", "<<");
+
     error_msg += EOL EOL EOL "Hit any key to exit..." EOL;
-    linebreak_string2(error_msg, 60);
+
+    // Break message into correctly sized lines.
+    int width = 80;
+#ifdef USE_TILE
+    width = crawl_view.msgsz.x;
+#else
+    width = std::min(80, get_number_of_cols());
+#endif
+    linebreak_string2(error_msg, width);
+
+    // And finally output the message.
+    clrscr();
     formatted_string::parse_string(error_msg, false).display();
     getch();
 }
