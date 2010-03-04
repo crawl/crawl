@@ -1,6 +1,7 @@
 #include "AppHdr.h"
 
 #include "actor.h"
+#include "coord.h"
 #include "player.h"
 #include "monster.h"
 #include "state.h"
@@ -18,7 +19,13 @@ bool actor::see_cell(const coord_def &p) const
 
 void actor::update_los()
 {
-    if (changed_los_center || observable())
+    // Optimization to prevent updating every monster's LOS
+    // every turn. Monsters may have incorrect LOS if opacities
+    // change without the monster moving (e.g. digging, doors
+    // opening/closing, smoke appearing/disappearing).
+    if (changed_los_center
+        || distance(you.pos(), pos()) <= LOS_MAX_RADIUS_SQ
+        || observable())   // arena
     {
         los.update();
         changed_los_center = false;
