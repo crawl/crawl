@@ -519,11 +519,8 @@ bool find_secret_door_info(const coord_def &where,
                            dungeon_feature_type *appearance,
                            coord_def *gc)
 {
-    std::set<coord_def>           doors;
+    std::set<coord_def> doors = connected_doors(where);
     std::set<coord_def>::iterator it;
-
-    find_connected_range(where, DNGN_CLOSED_DOOR, DNGN_SECRET_DOOR,
-                         doors);
 
     dungeon_feature_type feat = DNGN_FLOOR;
     coord_def loc = where;

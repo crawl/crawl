@@ -2634,8 +2634,7 @@ static void _mons_open_door(monsters* monster, const coord_def &pos)
     bool was_secret = false;
     bool was_seen   = false;
 
-    std::set<coord_def> all_door;
-    find_connected_range(pos, DNGN_CLOSED_DOOR, DNGN_SECRET_DOOR, all_door);
+    std::set<coord_def> all_door = connected_doors(pos);
     get_door_description(all_door.size(), &adj, &noun);
 
     for (std::set<coord_def>::iterator i = all_door.begin();
