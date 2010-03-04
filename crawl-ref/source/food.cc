@@ -1183,6 +1183,9 @@ int eat_from_floor(bool skip_chunks)
             // Chunks should have been handled before.
             if (skip_chunks && si->sub_type == FOOD_CHUNK)
                 continue;
+
+            if (is_bad_food(*si))
+                continue;
         }
 
         if (!skip_chunks && food_is_rotten(*si)
@@ -1339,6 +1342,9 @@ bool eat_from_inventory()
                 continue;
         }
 
+        if (is_bad_food(*item))
+            continue;
+
         if (food_is_rotten(*item) && !_player_can_eat_rotten_meat())
         {
             unusable_corpse++;
@@ -1475,6 +1481,10 @@ int prompt_eat_chunks()
             if (food_is_rotten(*si) && !_player_can_eat_rotten_meat())
                 continue;
 
+            // Don't prompt for bad food types.
+            if (is_bad_food(*si))
+                continue;
+
             found_valid = true;
             chunks.push_back(&(*si));
         }
@@ -1499,6 +1509,10 @@ int prompt_eat_chunks()
             continue;
 
         if (food_is_rotten(*item) && !_player_can_eat_rotten_meat())
+            continue;
+
+        // Don't prompt for bad food types.
+        if (is_bad_food(*item))
             continue;
 
         found_valid = true;
