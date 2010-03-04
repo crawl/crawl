@@ -910,10 +910,19 @@ ifeq ($(USE_DGAMELAUNCH),)
 endif
 ifneq ($(SAVEDIR),)
 	mkdir -p $(savedir_fp)/saves
+ifneq ($(patsubst /var/%,%,$(savedir_fp)),$(savedir_fp))
+# Only if we're being installed for real.  Installations to a staging dir
+# which are then packaged would trample existing files; these need to be
+# handled by packagers themselves.
+	touch $(savedir_fp)/saves/logfile
+	touch $(savedir_fp)/saves/scores
+endif
 	mkdir -p $(savedir_fp)/morgue
 ifeq ($(USE_DGAMELAUNCH),)
 	$(CHOWN) -R $(INSTALL_UGRP) $(savedir_fp) || true
-	$(CHMOD) -R $(MCHMOD_SAVEDIR) $(savedir_fp) || true
+	$(CHMOD) $(MCHMOD_SAVEDIR) $(savedir_fp) || true
+	$(CHMOD) $(MCHMOD_SAVEDIR) $(savedir_fp)/saves || true
+	$(CHMOD) $(MCHMOD_SAVEDIR) $(savedir_fp)/morgue || true
 endif
 endif
 
