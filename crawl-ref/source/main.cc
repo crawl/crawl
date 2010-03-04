@@ -3153,8 +3153,7 @@ static void _open_door(coord_def move, bool check_confused)
     }
 
     // Finally, open the closed door!
-    std::set<coord_def> all_door;
-    find_connected_range(doorpos, DNGN_CLOSED_DOOR, DNGN_SECRET_DOOR, all_door);
+    std::set<coord_def> all_door = connected_doors(doorpos);
     const char *adj, *noun;
     get_door_description(all_door.size(), &adj, &noun);
 
