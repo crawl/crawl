@@ -1404,7 +1404,10 @@ static spret_type _do_cast(spell_type spell, int powc,
             you.attribute[ATTR_DELAYED_FIREBALL] = 1;
         }
         else
-            canned_msg(MSG_NOTHING_HAPPENS);
+        {
+            mpr("You are already charged.");
+            return (SPRET_ABORT);
+        }
         break;
 
     // LOS spells
