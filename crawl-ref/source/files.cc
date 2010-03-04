@@ -1389,9 +1389,8 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         if (!_get_and_validate_version( levelFile, majorVersion, minorVersion,
                                         &reason ))
         {
-            print_error_screen(reason);
-            end(-1, false, "\nLevel file is invalid.  %s\n",
-                reason.c_str());
+            print_error_screen("\nLevel file is invalid. %s\n", reason.c_str());
+            end(-1, false, "\nLevel file is invalid.  %s\n", reason.c_str());
         }
 
         _restore_tagged_file(levelFile, TAGTYPE_LEVEL, minorVersion);
@@ -2032,8 +2031,10 @@ void restore_game(void)
     std::string reason;
     if (!_get_and_validate_version(charf, majorVersion, minorVersion, &reason))
     {
-        print_error_screen(reason);
-        end(-1, false, "\nSave file %s is invalid.  %s\n", charFile.c_str(), reason.c_str());
+        print_error_screen("\nSave file %s is invalid. %s\n", charFile.c_str(),
+                           reason.c_str());
+        end(-1, false, "\nSave file %s is invalid.  %s\n", charFile.c_str(),
+            reason.c_str());
     }
 
     _restore_tagged_file(charf, TAGTYPE_PLAYER, minorVersion);
