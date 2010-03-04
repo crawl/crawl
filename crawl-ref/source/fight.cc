@@ -2201,7 +2201,7 @@ void melee_attack::calc_elemental_brand_damage( beam_type flavour,
     special_damage = resist_adjust_damage(defender, flavour, res,
                                           random2(damage_done) / 2 + 1);
 
-    if (special_damage > 0 && verb && needs_message)
+    if (needs_message && special_damage > 0 && verb)
     {
         special_damage_message = make_stringf(
             "%s %s %s%s",
@@ -5471,7 +5471,7 @@ void melee_attack::mons_perform_attack_rounds()
             if (attacker != defender && attk.flavour != AF_STEAL)
                 mons_apply_attack_flavour(attk);
 
-            if (!special_damage_message.empty())
+            if (needs_message && !special_damage_message.empty())
                 mprf("%s", special_damage_message.c_str());
 
             // Defender banished.  Bail before chaos_killed_defender()
@@ -5517,7 +5517,7 @@ void melee_attack::mons_perform_attack_rounds()
             special_damage_flavour = BEAM_NONE;
             apply_damage_brand();
 
-            if (!special_damage_message.empty())
+            if (needs_message && !special_damage_message.empty())
             {
                 mprf("%s", special_damage_message.c_str());
                 // Don't do message-only miscasts along with a special
