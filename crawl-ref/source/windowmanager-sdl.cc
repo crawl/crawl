@@ -271,9 +271,9 @@ int SDLWrapper::init(coord_def *m_windowsz)
     }
 
 #ifdef USE_GLES
-    unsigned int flags = SDL_SWSURFACE;
+    unsigned int flags = SDL_SWSURFACE | SDL_RESIZABLE;
 #else
-    unsigned int flags = SDL_OPENGL;
+    unsigned int flags = SDL_OPENGL | SDL_RESIZABLE;
 #endif
 
     bool too_small = (video_info->current_w < 1024 || video_info->current_h < 800);

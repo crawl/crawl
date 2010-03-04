@@ -436,10 +436,24 @@ void TilesFramework::load_dungeon(const coord_def &cen)
 
 void TilesFramework::resize()
 {
+//    // FIXME: A lot of duplication of initialise() here for SDL_VIDEORESIZE.
+//    m_context = SDL_SetVideoMode(m_windowsz.x, m_windowsz.y, 0,
+//                                 SDL_OPENGL | SDL_RESIZABLE);
+    GLStateManager::init();
+    // mipmaps
+    m_image->load_textures(false);
+
     calculate_default_options();
+
+    // TODO: For SDL_VIDEORESIZE: Reload fonts with scaled sizes here.
+    // Problem is, calculate_default_options will only change the font sizes
+    // once per crawl run.
+
     do_layout();
 
     wm->resize(m_windowsz);
+
+    redraw();
 }
 
 int TilesFramework::handle_mouse(MouseEvent &event)
@@ -670,6 +684,12 @@ int TilesFramework::getch_ck()
                     key = handle_mouse(event.mouse_event);
                     m_last_tick_moved = UINT_MAX;
                 }
+                break;
+
+            case WM_RESIZE:
+                m_windowsz.x = event.resize.w;
+                m_windowsz.y = event.resize.h;
+                resize();
                 break;
 
             case WM_QUIT:

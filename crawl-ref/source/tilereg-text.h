@@ -52,6 +52,8 @@ public:
     void adjust_region(int *x1, int *x2, int y);
     void scroll();
 
+    void set_font(FontWrapper *new_font);
+
 protected:
     virtual void on_resize();
     FontWrapper *m_font;

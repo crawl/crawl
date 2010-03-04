@@ -260,4 +260,9 @@ void TextRegion::scroll()
         cursor_y -= 1;
 }
 
+void TextRegion::set_font(FontWrapper *new_font)
+{
+    m_font = new_font;
+}
+
 #endif
