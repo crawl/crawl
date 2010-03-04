@@ -644,7 +644,7 @@ static void _try_brand_switch(const int item_index)
     else
     {
         // Only switch already branded items.
-        if (get_ammo_brand(item) == SPWPN_NORMAL)
+        if (get_ammo_brand(item) == SPMSL_NORMAL)
             return;
 
         brand = (int) SPMSL_CHAOS;
