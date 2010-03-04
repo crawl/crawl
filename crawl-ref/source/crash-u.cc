@@ -55,6 +55,7 @@ template <typename TO, typename FROM> TO nasty_cast(FROM f) {
 #include "dbg-crsh.h"
 
 #include "externs.h"
+#include "files.h"
 #include "options.h"
 #include "state.h"
 #include "stuff.h"
@@ -89,7 +90,7 @@ static void _crash_signal_handler(int sig_num)
         sprintf(name, "%scrash-recursive-%s-%s.txt", dir.c_str(),
                 you.your_name.c_str(), make_file_time(time(NULL)).c_str());
 
-        FILE* file = fopen(name, "w");
+        FILE* file = fopen_replace(name);
 
         if (file == NULL)
             file = stderr;
