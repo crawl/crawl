@@ -1899,6 +1899,14 @@ static bool _nuke_wall_msg(dungeon_feature_type feat, const coord_def& p)
     case DNGN_WAX_WALL:
     case DNGN_CLEAR_ROCK_WALL:
     case DNGN_GRANITE_STATUE:
+    case DNGN_CLOSED_DOOR:
+    case DNGN_DETECTED_SECRET_DOOR:
+    case DNGN_SECRET_DOOR:
+        // XXX: When silenced, features disappear without message.
+        // XXX: For doors, we only issue a sound where the beam hit.
+        //      If someone wants to improve on the door messaging,
+        //      probably best to merge _nuke_wall_msg back into
+        //      nuke_wall_effect. [rob]
         if (hear)
         {
             msg = "You hear a grinding noise.";
@@ -1942,6 +1950,16 @@ static bool _nuke_wall_msg(dungeon_feature_type feat, const coord_def& p)
         return (false);
 }
 
+static void _nuke_wall(const coord_def& p)
+{
+    // Blood does not transfer onto floor.
+    if (is_bloodcovered(p))
+        env.pgrid(p) &= ~(FPROP_BLOODY);
+    if (is_moldy(p))
+        env.pgrid(p) &= ~(FPROP_MOLD);
+    grd(p) = DNGN_FLOOR;
+}
+
 void bolt::nuke_wall_effect()
 {
     if (env.markers.property_at(pos(), MAT_ANY, "veto_disintegrate") == "veto")
@@ -1960,13 +1978,19 @@ void bolt::nuke_wall_effect()
     case DNGN_GRANITE_STATUE:
     case DNGN_ORCISH_IDOL:
     case DNGN_TREES:
-        // Blood does not transfer onto floor.
-        if (is_bloodcovered(pos()))
-            env.pgrid(pos()) &= ~(FPROP_BLOODY);
-        if (is_moldy(pos()))
-            env.pgrid(pos()) &= ~(FPROP_MOLD);
-        grd(pos()) = DNGN_FLOOR;
+        _nuke_wall(pos());
         break;
+
+    case DNGN_CLOSED_DOOR:
+    case DNGN_DETECTED_SECRET_DOOR:
+    case DNGN_SECRET_DOOR:
+    {
+         std::set<coord_def> doors = connected_doors(pos());
+         std::set<coord_def>::iterator it;
+         for (it = doors.begin(); it != doors.end(); ++it)
+             _nuke_wall(*it);
+         break;
+    }
 
     default:
         finish_beam();
@@ -3408,7 +3432,10 @@ maybe_bool bolt::affects_wall(dungeon_feature_type wall) const
             || wall == DNGN_CLEAR_ROCK_WALL
             || wall == DNGN_GRANITE_STATUE
             || wall == DNGN_ORCISH_IDOL
-            || wall == DNGN_TREES)
+            || wall == DNGN_TREES
+            || wall == DNGN_CLOSED_DOOR
+            || wall == DNGN_DETECTED_SECRET_DOOR
+            || wall == DNGN_SECRET_DOOR)
         return (B_TRUE);
     }
 
