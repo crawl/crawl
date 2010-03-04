@@ -163,4 +163,5 @@ public:
     static void post_restore();
 };
 
+FILE *fopen_replace(const char *name);
 #endif

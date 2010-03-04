@@ -193,7 +193,7 @@ LUAFN(_file_datadir_files)
 LUAFN(_file_writefile)
 {
     const std::string fname(luaL_checkstring(ls, 1));
-    FILE *f = fopen(fname.c_str(), "w");
+    FILE *f = fopen_replace(fname.c_str());
     if (f)
     {
         fprintf(f, "%s", luaL_checkstring(ls, 2));
