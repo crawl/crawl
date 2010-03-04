@@ -6069,10 +6069,27 @@ static bool _prompt_eat_bad_food(const item_def food)
     if (!is_bad_food(food))
         return (true);
 
-    const std::string qualifier = (is_poisonous(food)      ? "poisoned" :
-                                   is_mutagenic(food)      ? "mutagenic" :
-                                   causes_rot(food)        ? "rot-inducing" :
-                                   is_forbidden_food(food) ? "forbidden" : "");
+    const std::string food_colour = menu_colour_item_prefix(food);
+    std::string colour            = "";
+    std::string colour_off        = "";
+
+    const int col = menu_colour(food.name(DESC_NOCAP_A), food_colour, "pickup");
+    if (col != -1)
+        colour = colour_to_str( col );
+
+    if (!colour.empty())
+    {
+        // Order is important here.
+        colour_off  = "</" + colour + ">";
+        colour      = "<" + colour + ">";
+    }
+
+    const std::string qualifier = colour
+                                  + (is_poisonous(food)      ? "poisoned" :
+                                     is_mutagenic(food)      ? "mutagenic" :
+                                     causes_rot(food)        ? "rot-inducing" :
+                                     is_forbidden_food(food) ? "forbidden" : "")
+                                  + colour_off;
 
     std::string prompt  = "Really ";
                 prompt += (you.species == SP_VAMPIRE ? "drink" : "eat");
