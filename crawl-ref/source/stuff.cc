@@ -381,8 +381,6 @@ void end(int exit_code, bool print_error, const char *format, ...)
 {
     std::string error = print_error? strerror(errno) : "";
 
-    cio_cleanup();
-    databaseSystemShutdown();
     if (format)
     {
         va_list arg;
@@ -401,13 +399,29 @@ void end(int exit_code, bool print_error, const char *format, ...)
     {
         if (error[error.length() - 1] != '\n')
             error += "\n";
+
+        // Print error message on the screen.
+        // Ugly, but better than not showing anything at all. (jpeg)
+        if (exit_code)
+        {
+            clrscr();
+            cgotoxy(1, 1);
+            textcolor(WHITE);
+            cprintf(error.c_str());
+            cgotoxy(1, 20);
+            textcolor(LIGHTGREY);
+            cprintf("Hit Enter to continue...\n");
+            getch();
+        }
+
+        // Print a conventional console error message, anyway.
         fprintf(stderr, "%s", error.c_str());
         error.clear();
     }
 
-#if (defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)) || \
-     defined(TARGET_OS_DOS) || \
-     defined(DGL_PAUSE_AFTER_ERROR)
+#if (defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)) \
+     || defined(TARGET_OS_DOS) \
+     || defined(DGL_PAUSE_AFTER_ERROR)
     if (exit_code && !crawl_state.game_is_arena()
         && !crawl_state.seen_hups && !crawl_state.test)
     {
@@ -415,6 +429,9 @@ void end(int exit_code, bool print_error, const char *format, ...)
         getchar();
     }
 #endif
+
+    cio_cleanup();
+    databaseSystemShutdown();
 
     CrawlIsExiting = true;
     exit(exit_code);
