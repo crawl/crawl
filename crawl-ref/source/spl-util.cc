@@ -1303,6 +1303,8 @@ bool spell_no_hostile_in_range(spell_type spell, int minRange)
     // outside range (I guess).
     case SPELL_SHOCK:
     case SPELL_LIGHTNING_BOLT:
+
+    case SPELL_FIRE_STORM:
         return (false);
 
     case SPELL_EVAPORATE:
@@ -1313,6 +1315,7 @@ bool spell_no_hostile_in_range(spell_type spell, int minRange)
         // Increase range by one due to cloud radius.
         bonus = 1;
         break;
+
     default:
         break;
     }
