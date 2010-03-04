@@ -1513,7 +1513,7 @@ std::vector<std::string> direction_chooser::monster_description_suffixes(
 {
     std::vector<std::string> suffixes;
 
-    _push_back_if_nonempty(get_wounds_description(mon), &suffixes);
+    _push_back_if_nonempty(get_wounds_description(mon, true), &suffixes);
     _append_container(suffixes, _mon_enchantments_vector_string(mon));
     _append_container(suffixes, _get_monster_desc_vector(mon));
 
