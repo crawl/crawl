@@ -1235,6 +1235,7 @@ bool melee_attack::player_aux_unarmed()
         // No monster Phase Shift yet
         if (you.religion != GOD_ELYVILON
             && you.penance[GOD_ELYVILON]
+            && god_hates_your_god(GOD_ELYVILON, you.religion)
             && to_hit >= evasion
             && one_chance_in(20))
         {
