@@ -3,6 +3,15 @@
 -- Custom (temporarily) timed, and tolled (gold or item) map marker.
 --  Basically just a combination of TimedMarker and TollStair, with added veto
 --  checks against items.
+--
+-- Current only accepts the following:
+--  any armour
+--  any jewellery
+--  any weapon
+--  any book
+--  any scroll
+--  any potion
+--  any wand
 ------------------------------------------------------------------------------
 
 require('clua/lm_tmsg.lua')
@@ -57,7 +66,7 @@ function TroveMarker:new(props)
   if item.sub_type == nil then
     error("Item needs a sub type.")
   end
-  if item.ego_type == nil then
+  if item.ego_type == nil or item.ego_type == "" then
     item.ego_type = false
   end
   if item.plus1 == nil then
