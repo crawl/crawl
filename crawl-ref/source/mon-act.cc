@@ -2662,7 +2662,7 @@ static void _mons_open_door(monsters* monster, const coord_def &pos)
             mprf("%s was actually a secret door!",
                  feature_description(grid, NUM_TRAPS, false,
                                      DESC_CAP_THE, false).c_str());
-            learned_something_new(TUT_SEEN_SECRET_DOOR, pos);
+            learned_something_new(TUT_FOUND_SECRET_DOOR, pos);
         }
 
         std::string open_str = "opens the ";
