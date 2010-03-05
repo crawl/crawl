@@ -52,7 +52,7 @@ Levels
 * Shorten Lair to eight levels.
 * More interesting level layout for Lair and Swamp.
 * New portal vaults: Bailey, Trove, Volcano, Wizard's Laboratory.
-* Most escape hatches are replaced by (single-use) shafts.
+* Some escape hatches are replaced by (single-use) shafts.
 * New wall type "tree"; two trees in a row block vision.
 * Seal hell portals rather than Vestibule when the player picks up the orb.
 * Loosen restrictions about which branches may contain uniques.
@@ -71,7 +71,7 @@ Ranged combat
 * New missile materials: silver, steel.
 * New missile brands: dispersal, electricity, exploding, penetration, reaping.
 * New needle brands: sleep, slow, paralysis, confusion, frenzy and sickness.
-* Branded ammunition is described as "runed".
+* Branded and enchanted ammunition is described as "runed".
 * Branding spells will also affect launchers.
 * On launchers, the protection brand is replaced with evasion, providing +5 EV.
 * Except for Nessos, launchers of flame can't be combined with poisoned ammo.
@@ -81,7 +81,6 @@ Ranged combat
 * Poisoned ammunition is more effective.
 * Rings of slaying also apply to missile launchers.
 * Hunter starting ammunition starts out at +1; sling-based Hunters get bucklers.
-* Slings no longer crosstrain with Throwing.
 * Slings are one-handed and no longer delayed by shields.
 * Stones are three times heavier.
 
@@ -96,7 +95,8 @@ Items
 * Amulet of clarity prevents involuntary berserk.
 * Lowered gold dragon armour's AC value.
 * All randart weapons are now guaranteed a brand.
-* The speed brand is only created randomly for artefacts.
+* The speed brand is only created randomly for artefacts, short blades
+  and staves.
 * Halved damage bonus of the vorpal brand to 12.5%.
 * Armour acquirement is more likely to fill secondary slots.
 * Non-divine acquirement tries to avoid handing out armour/weapons already seen.
