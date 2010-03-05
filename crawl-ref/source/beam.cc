@@ -3651,6 +3651,12 @@ bool bolt::determine_damage(monsters* mon, int& preac, int& postac, int& final,
     // Don't do side effects (beam might miss or be a tracer).
     final = mons_adjust_flavoured(mon, *this, postac, false);
 
+    // Sanity check. Importantly for
+    // tracer_nonenchantment_affect_monster, final > 0
+    // implies preac > 0.
+    ASSERT(0 <= postac && postac <= preac && 0 <= final
+           && (preac > 0 || final == 0));
+
     return (true);
 }
 
@@ -3688,6 +3694,8 @@ void bolt::tracer_nonenchantment_affect_monster(monsters* mon)
     // Check only if actual damage.
     if (final > 0)
     {
+        ASSERT(preac > 0);
+
         // Monster could be hurt somewhat, but only apply the
         // monster's power based on how badly it is affected.
         // For example, if a fire giant (power 16) threw a
