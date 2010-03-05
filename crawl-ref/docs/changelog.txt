@@ -238,12 +238,13 @@ Spells
 * Limit Summon Small Mammals to a maximum of two mammals per casting.
 * Summon Small Mammals doesn't summon green or orange rats anymore.
 * Reduced Poison Arrow's irresistible damage component from 60% to 30%.
-* Controlled Blink causes glowing.
+* Semi-controlled blink causes glowing.
 * Fulsome Distillation depends only on corpse type - RNG and rotting influence
   has been removed.  Also doesn't prompt when only one corpse present.
 * Tukima's Dance weapon strength depends on spell power and weapon weight.
 * Summon Wraiths is replaced by Haunt, a smite-targetted summoning spell.
 * Directed non-enchantment spells make noise when they hit something.
+* Casting spells is noisy.
 * Spell miscasts and hell effects are noisy.
 * Call Canine Familiar only calls friendly canines.
 * Condensation Shield is more effective.
@@ -314,10 +315,12 @@ Major bug fixes
 
 Technical improvements
 ----------------------
-* Overhauled and improved the line of sight and direction code.
-* Overhauled all code dealing with the message window/message history.
+* Overhauled and improved the line of sight code, including a new,
+  slightly more permissive LOS model.
+* Overhauled and improved the targeting code.
+* Rewrote the message window/message history code.
 * Added several automated test cases in Lua.
-* Tidy up and clarify makefile usage.
+* New and improved makefiles and updated xcode and msvc projects.
 * Split up the contents of several large .cc and .des files into smaller files.
 * Many new Lua wrappers to make Lua much more powerful in e.g. map creation.
 * Unique placement code has been moved to Lua and is directed via uniques.des.
