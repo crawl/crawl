@@ -75,6 +75,30 @@ bool jiyva_grant_jelly(bool actual)
             && (!actual || you.duration[DUR_PRAYER]));
 }
 
+void jiyva_paralyse_jellies()
+{
+    int jelly_count = 0;
+    for (radius_iterator ri(you.pos(), 9); ri; ++ri)
+    {
+        monsters *mon = monster_at(*ri);
+
+        if (mon != NULL && mons_is_slime(mon))
+        {
+            mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0,
+                                      KC_OTHER, 200));
+            jelly_count++;
+        }
+    }
+
+    if (jelly_count > 0)
+    {
+        mprf(MSGCH_PRAY, "%s.",
+             jelly_count > 1 ? "The nearby slimes join your prayer"
+                             : "A nearby slime joins your prayer");
+        lose_piety(5);
+    }
+}
+
 bool jiyva_remove_bad_mutation()
 {
     if (!how_mutated())
