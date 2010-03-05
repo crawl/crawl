@@ -1967,9 +1967,12 @@ bool do_god_gift(bool prayed_for, bool forced)
     ASSERT(you.religion != GOD_NO_GOD);
 
     // Zin and Jiyva worshippers are the only ones who can pray to ask their
-    // god for stuff.
-    if (prayed_for != (you.religion == GOD_ZIN || you.religion == GOD_JIYVA))
+    // god for stuff. Jiyva also gives regular gifts.
+    if (prayed_for && you.religion != GOD_ZIN && you.religion != GOD_JIYVA
+        || !prayed_for && you.religion == GOD_ZIN)
+    {
         return (false);
+    }
 
     god_acting gdact;
 

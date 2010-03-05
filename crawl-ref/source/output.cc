@@ -1640,6 +1640,16 @@ static std::string _overview_screen_title()
     return text;
 }
 
+#ifdef WIZARD
+static std::string _wiz_god_powers()
+{
+    std::string godpowers = god_name(you.religion);
+    return (make_stringf("%s %d (%d)", god_name(you.religion).c_str(),
+                                       you.piety,
+                                       you.duration[DUR_PIETY_POOL]));
+}
+#endif
+
 static std::string _god_powers()
 {
     std::string godpowers = god_name(you.religion);
@@ -1807,6 +1817,12 @@ static std::vector<formatted_string> _get_overview_stats()
     }
     cols1.add_formatted(2, buf, false);
 
+    std::string godpowers = _god_powers();
+#ifdef WIZARD
+    if (you.wizard)
+        godpowers = _wiz_god_powers();
+#endif
+
     int xp_needed = (exp_needed(you.experience_level + 2) - you.experience) + 1;
     snprintf(buf, sizeof buf,
              "Exp: %d/%lu (%d)%s\n"
@@ -1815,7 +1831,7 @@ static std::vector<formatted_string> _get_overview_stats()
              you.experience_level, you.experience, you.exp_available,
              (you.experience_level < 27?
               make_stringf(", need: %d", xp_needed).c_str() : ""),
-             _god_powers().c_str(),
+             godpowers.c_str(),
              you.spell_no, player_spell_levels(),
              (player_spell_levels() == 1) ? "" : "s");
     cols1.add_formatted(3, buf, false);
