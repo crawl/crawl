@@ -2328,8 +2328,11 @@ bool DungeonRegion::update_alt_text(std::string &alt)
                          + " here.$$";
         }
     }
-    else if (grid_appearance(gc) != DNGN_FLOOR)
+    else if (grid_appearance(gc) != DNGN_FLOOR
+             && !feat_is_wall(grid_appearance(gc)))
+    {
         get_feature_desc(gc, inf);
+    }
     else
     {
         // For plain floor, output the stash description.
