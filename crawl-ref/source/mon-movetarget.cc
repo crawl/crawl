@@ -888,23 +888,22 @@ int mons_find_nearest_level_exit(const monsters *mon,
 void set_random_slime_target(monsters* mon)
 {
     // Strictly neutral slimes will go for the nearest item.
-    int item_idx;
-    coord_def orig_target = mon->target;
-
-    for (radius_iterator ri(mon->pos(), LOS_RADIUS, true, false); ri; ++ri)
+    const coord_def pos = mon->pos();
+    int mindist = LOS_MAX_RADIUS_SQ + 1;
+    for (radius_iterator ri(&mon->get_los()); ri; ++ri)
     {
-        item_idx = igrd(*ri);
-        if (item_idx != NON_ITEM)
+        // XXX: an iterator that spirals out would be nice.
+        if (distance(pos, *ri) >= mindist)
+            continue;
+        for (stack_iterator si(*ri); si; ++si)
         {
-            for (stack_iterator si(*ri); si; ++si)
-            {
-                item_def& item(*si);
+            item_def& item(*si);
 
-                if (is_item_jelly_edible(item))
-                {
-                    mon->target = *ri;
-                    break;
-                }
+            if (is_item_jelly_edible(item))
+            {
+                mon->target = *ri;
+                mindist = distance(pos, *ri);
+                break;
             }
         }
     }
