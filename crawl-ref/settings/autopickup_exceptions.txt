@@ -30,4 +30,4 @@ ae = dangerous_item
 ae = amulet of (inaccuracy|the gourmand|controlled flight|warding)
 ae = amulet of (resist .*|clarity|rage|conservation|guardian spirit|faith|stasis)
 ae = ring of (see invisible|levitation|poison resistance|hunger)
-ae = ring of (invisibility)
+ae = ring of (invisibility|teleport control)
