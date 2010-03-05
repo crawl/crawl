@@ -2503,8 +2503,10 @@ void gain_piety(int original_gain, bool all_at_once)
             you.gift_timeout = 0;
 
         // Slow down piety gain to account for the fact that gifts
-        // no longer have a piety cost for getting them
-        if (!one_chance_in(4))
+        // no longer have a piety cost for getting them.
+        // Jiyva is an exception because there's usually a time-out and
+        // the gifts aren't that precious.
+        if (!one_chance_in(4) && you.religion != GOD_JIYVA)
         {
 #if DEBUG_PIETY
             mprf(MSGCH_DIAGNOSTICS, "Piety slowdown due to gift timeout.");
