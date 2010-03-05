@@ -17,7 +17,7 @@ bool ponderousify_armour();
 bool zin_sustenance(bool actual = true);
 bool zin_remove_all_mutations();
 bool yred_injury_mirror(bool actual = true);
-bool jiyva_grant_jelly(bool actual = true);
+bool jiyva_accepts_prayer();
 void jiyva_paralyse_jellies();
 bool jiyva_remove_bad_mutation();
 bool beogh_water_walk();
