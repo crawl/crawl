@@ -567,8 +567,7 @@ enum command_type
 #ifdef USE_TILE
     CMD_EDIT_PLAYER_TILE,
     CMD_MIN_TILE = CMD_EDIT_PLAYER_TILE,
-    CMD_TOGGLE_SPELL_DISPLAY,
-    CMD_MAX_TILE = CMD_TOGGLE_SPELL_DISPLAY,
+    CMD_MAX_TILE = CMD_EDIT_PLAYER_TILE,
 #endif
 
     // Repeat previous command

@@ -6,7 +6,6 @@
 // via keybindings will take precedence. (jpeg)
 #ifdef USE_TILE
 {'-', CMD_EDIT_PLAYER_TILE},
-{'_', CMD_TOGGLE_SPELL_DISPLAY},
 #endif
 // movement keys
 {CK_CLEAR, CMD_MOVE_NOWHERE},
