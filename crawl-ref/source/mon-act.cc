@@ -1081,8 +1081,8 @@ static void _setup_generic_throw(monsters *monster, struct bolt &pbolt)
     pbolt.is_beam = false;
 }
 
-static bool _mons_throw(monsters *monster, struct bolt &pbolt,
-                        int hand_used)
+// msl is the item index of the thrown missile (or weapon).
+static bool _mons_throw(monsters *monster, struct bolt &pbolt, int msl)
 {
     std::string ammo_name;
 
@@ -1094,18 +1094,18 @@ static bool _mons_throw(monsters *monster, struct bolt &pbolt,
     int exHitBonus   = 0, exDamBonus = 0; // 'extra' bonus from skill/dex/str
     int lnchBaseDam  = 0;
 
-    int hitMult  = 0;
+    int hitMult = 0;
     int damMult  = 0;
     int diceMult = 100;
 
     // Some initial convenience & initializations.
-    int wepClass  = mitm[hand_used].base_type;
-    int wepType   = mitm[hand_used].sub_type;
+    const int wepClass  = mitm[msl].base_type;
+    const int wepType   = mitm[msl].sub_type;
 
-    int weapon    = monster->inv[MSLOT_WEAPON];
-    int lnchType  = (weapon != NON_ITEM) ? mitm[weapon].sub_type : 0;
+    const int weapon    = monster->inv[MSLOT_WEAPON];
+    const int lnchType  = (weapon != NON_ITEM) ? mitm[weapon].sub_type : 0;
 
-    mon_inv_type slot = get_mon_equip_slot(monster, mitm[hand_used]);
+    mon_inv_type slot = get_mon_equip_slot(monster, mitm[msl]);
     ASSERT(slot != NUM_MONSTER_SLOTS);
 
     const bool skilled = mons_class_flag(monster->type, M_FIGHTER);
@@ -1114,7 +1114,7 @@ static bool _mons_throw(monsters *monster, struct bolt &pbolt,
     const int throw_energy = monster->action_energy(EUT_MISSILE);
 
     // Dropping item copy, since the launched item might be different.
-    item_def item = mitm[hand_used];
+    item_def item = mitm[msl];
     item.quantity = 1;
     if (monster->friendly())
         item.flags |= ISFLAG_DROPPED_BY_ALLY;
@@ -1129,7 +1129,7 @@ static bool _mons_throw(monsters *monster, struct bolt &pbolt,
 
     const launch_retval projected =
         is_launched(monster, monster->mslot_item(MSLOT_WEAPON),
-                    mitm[hand_used]);
+                    mitm[msl]);
 
     // extract launcher bonuses due to magic
     if (projected == LRET_LAUNCHED)
@@ -1203,7 +1203,7 @@ static bool _mons_throw(monsters *monster, struct bolt &pbolt,
 
     if (projected == LRET_LAUNCHED)
     {
-        bow_brand = get_weapon_brand(mitm[monster->inv[MSLOT_WEAPON]]);
+        bow_brand = get_weapon_brand(mitm[weapon]);
 
         switch (lnchType)
         {
@@ -1257,13 +1257,13 @@ static bool _mons_throw(monsters *monster, struct bolt &pbolt,
             pbolt.ench_power = AUTOMATIC_HIT;
 
         // elven bow w/ elven arrow, also orcish
-        if (get_equip_race(mitm[monster->inv[MSLOT_WEAPON]])
-                == get_equip_race(mitm[monster->inv[MSLOT_MISSILE]]))
+        if (get_equip_race(mitm[weapon])
+                == get_equip_race(mitm[msl]))
         {
             baseHit++;
             baseDam++;
 
-            if (get_equip_race(mitm[monster->inv[MSLOT_WEAPON]]) == ISFLAG_ELVEN)
+            if (get_equip_race(mitm[weapon]) == ISFLAG_ELVEN)
                 pbolt.hit++;
         }
 
@@ -1318,11 +1318,11 @@ static bool _mons_throw(monsters *monster, struct bolt &pbolt,
     if (monster->observable())
     {
         if (projected == LRET_LAUNCHED
-               && item_type_known(mitm[monster->inv[MSLOT_WEAPON]])
+               && item_type_known(mitm[weapon])
             || projected == LRET_THROWN
-               && mitm[hand_used].base_type == OBJ_MISSILES)
+               && mitm[msl].base_type == OBJ_MISSILES)
         {
-            set_ident_flags(mitm[hand_used], ISFLAG_KNOW_TYPE);
+            set_ident_flags(mitm[msl], ISFLAG_KNOW_TYPE);
             set_ident_flags(item, ISFLAG_KNOW_TYPE);
         }
     }
@@ -1440,11 +1440,11 @@ static bool _mons_throw(monsters *monster, struct bolt &pbolt,
         {
             // Since this only happens for non-artefacts, also mark properties
             // as known.
-            set_ident_flags(mitm[hand_used],
+            set_ident_flags(mitm[msl],
                             ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PROPERTIES);
         }
     }
-    else if (dec_mitm_item_quantity(hand_used, 1))
+    else if (dec_mitm_item_quantity(msl, 1))
         monster->inv[returning ? slot : MSLOT_MISSILE] = NON_ITEM;
 
     if (pbolt.special_explosion != NULL)
