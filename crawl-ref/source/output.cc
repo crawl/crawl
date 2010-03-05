@@ -40,6 +40,7 @@
 #include "religion.h"
 #include "skills2.h"
 #include "stuff.h"
+#include "tagstring.h"
 #include "transform.h"
 #include "travel.h"
 #include "viewchar.h"
@@ -1639,6 +1640,38 @@ static std::string _overview_screen_title()
     return text;
 }
 
+static std::string _god_powers()
+{
+    std::string godpowers = god_name(you.religion);
+    if (you.religion == GOD_XOM)
+    {
+        if (you.gift_timeout == 0)
+            godpowers += " - BORED";
+        else if (you.gift_timeout == 1)
+            godpowers += " - getting BORED";
+        return (colour_string(godpowers, god_colour(you.religion)));
+    }
+    else if (you.religion != GOD_NO_GOD)
+    {
+        if (player_under_penance())
+            return (colour_string("*" + godpowers, RED));
+        else
+        {
+            // piety rankings
+            int prank = piety_rank() - 1;
+            if (prank < 0 || you.religion == GOD_XOM)
+                prank = 0;
+
+            // Careful about overflow. We erase some of the god's name
+            // if necessary.
+            godpowers = godpowers.substr(0, 20)
+                         + " [" + std::string(prank, '*') + std::string(6 - prank, '.') + "]";
+            return (colour_string(godpowers, god_colour(you.religion)));
+        }
+    }
+    return "";
+}
+
 static std::vector<formatted_string> _get_overview_stats()
 {
     char buf[1000];
@@ -1774,48 +1807,15 @@ static std::vector<formatted_string> _get_overview_stats()
     }
     cols1.add_formatted(2, buf, false);
 
-    char god_colour_tag[20];
-    god_colour_tag[0] = 0;
-    std::string godpowers(god_name(you.religion));
-    if (you.religion == GOD_XOM)
-    {
-        snprintf(god_colour_tag, sizeof god_colour_tag, "<%s>",
-                 colour_to_str(god_colour(you.religion)).c_str());
-
-        if (you.gift_timeout == 0)
-            godpowers += " - BORED";
-        else if (you.gift_timeout == 1)
-            godpowers += " - getting BORED";
-    }
-    else if (you.religion != GOD_NO_GOD)
-    {
-        if (player_under_penance())
-            strcpy(god_colour_tag, "<red>*");
-        else
-        {
-            snprintf(god_colour_tag, sizeof god_colour_tag, "<%s>",
-                     colour_to_str(god_colour(you.religion)).c_str());
-            // piety rankings
-            int prank = piety_rank() - 1;
-            if (prank < 0 || you.religion == GOD_XOM)
-                prank = 0;
-
-            // Careful about overflow. We erase some of the god's name
-            // if necessary.
-            godpowers = godpowers.substr(0, 20)
-                         + " [" + std::string(prank, '*') + std::string(6 - prank, '.') + "]";
-        }
-    }
-
     int xp_needed = (exp_needed(you.experience_level + 2) - you.experience) + 1;
     snprintf(buf, sizeof buf,
              "Exp: %d/%lu (%d)%s\n"
-             "God: %s%s<lightgrey>\n"
+             "God: %s\n"
              "Spells: %2d memorised, %2d level%s left\n",
              you.experience_level, you.experience, you.exp_available,
              (you.experience_level < 27?
               make_stringf(", need: %d", xp_needed).c_str() : ""),
-             god_colour_tag, godpowers.c_str(),
+             _god_powers().c_str(),
              you.spell_no, player_spell_levels(),
              (player_spell_levels() == 1) ? "" : "s");
     cols1.add_formatted(3, buf, false);
