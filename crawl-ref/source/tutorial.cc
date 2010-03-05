@@ -73,7 +73,7 @@ static void         _tutorial_describe_feature(int x, int y);
 static bool         _water_is_disturbed(int x, int y);
 
 //#define TUTORIAL_DEBUG
-#define TUTORIAL_VERSION 10
+#define TUTORIAL_VERSION 11
 
 static int _get_tutorial_cols()
 {
@@ -410,7 +410,7 @@ static std::string _tut_debug_list(int event)
         return "seen a shop";
     case TUT_SEEN_DOOR:
         return "seen a closed door";
-    case TUT_SEEN_SECRET_DOOR:
+    case TUT_FOUND_SECRET_DOOR:
         return "found a secret door";
     case TUT_KILLED_MONSTER:
         return "killed first monster";
@@ -516,6 +516,8 @@ static std::string _tut_debug_list(int event)
         return "could choose a stat";
     case TUT_CAN_BERSERK:
         return "were told to Berserk";
+    case TUT_YOU_SILENCE:
+        return "experienced silence";
     default:
         return "faced a bug";
     }
@@ -1667,11 +1669,13 @@ static std::string _describe_portal(const coord_def &gc)
 
 // Really rare or important events should get a comment even if
 // learned_something_new() was already triggered this turn.
+// NOTE: If put off, the SEEN_<feature> variant will be triggered the
+//       next turn, so they may be rare but aren't urgent.
 static bool _rare_tutorial_event(tutorial_event_type event)
 {
     switch (event)
     {
-    case TUT_SEEN_SECRET_DOOR:
+    case TUT_FOUND_SECRET_DOOR:
     case TUT_KILLED_MONSTER:
     case TUT_NEW_LEVEL:
     case TUT_YOU_ENCHANTED:
@@ -1681,6 +1685,9 @@ static bool _rare_tutorial_event(tutorial_event_type event)
     case TUT_YOU_CURSED:
     case TUT_YOU_HUNGRY:
     case TUT_YOU_STARVING:
+    case TUT_GLOWING:
+    case TUT_CAUGHT_IN_NET:
+    case TUT_YOU_SILENCE:
     case TUT_NEED_POISON_HEALING:
     case TUT_INVISIBLE_DANGER:
     case TUT_NEED_HEALING_INVIS:
@@ -1694,10 +1701,11 @@ static bool _rare_tutorial_event(tutorial_event_type event)
     case TUT_CONVERT:
     case TUT_GOD_DISPLEASED:
     case TUT_EXCOMMUNICATE:
-    case TUT_GLOWING:
-    case TUT_CAUGHT_IN_NET:
     case TUT_GAINED_MAGICAL_SKILL:
+    case TUT_GAINED_MELEE_SKILL:
+    case TUT_GAINED_RANGED_SKILL:
     case TUT_CHOOSE_STAT:
+    case TUT_AUTO_EXCLUSION:
         return (true);
     default:
         return (false);
@@ -2375,17 +2383,22 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         }
         break;
 
-    case TUT_SEEN_SECRET_DOOR:
+    case TUT_FOUND_SECRET_DOOR:
 #ifdef USE_TILE
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
         tiles.add_text_tag(TAG_TUTORIAL, "Secret door", gc);
 #endif
-        text << "That "
+        text << "That ";
 #ifndef USE_TILE
-             << _colourize_glyph(WHITE, get_screen_glyph(gc)) << " "
+        text << _colourize_glyph(WHITE, get_screen_glyph(gc)) << " ";
 #endif
-                "was a secret door. You can actively try to find secret "
-                "doors by searching. To search for one turn, press <w>s</w>, "
+        if (grd(gc) == DNGN_SECRET_DOOR)
+            text << "is";
+        else
+            text << "was";
+
+        text << " a secret door. You can actively try to find secret doors "
+                "by searching. To search for one turn, press <w>s</w>, "
                 "<w>.</w>, <w>delete</w> or <w>keypad-5</w>. Pressing "
                 "<w>5</w> or <w>shift-and-keypad-5</w> "
 #ifdef USE_TILE
@@ -3480,6 +3493,22 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
             text << " Note that using wands, scrolls and potions is still "
                     "very much possible.";
         }
+        break;
+
+    case TUT_YOU_SILENCE:
+        redraw_screen();
+        text << "While you are silenced, you cannot cast spells, read scrolls "
+                "or use divine invocations. The same is true for any monster "
+                "within the effect radius. The field of silence (recognizable "
+                "by "
+#ifdef USE_TILE
+                "the special-looking frame tiles"
+#else
+                "different-coloured floor squares"
+#endif
+                ") is always centered on you and will move along with you. "
+                "The radius will gradually shrink, eventually making you the "
+                "only one affected, before the effect fades entirely.";
         break;
 
     case TUT_LOAD_SAVED_GAME:

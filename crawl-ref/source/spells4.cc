@@ -55,6 +55,7 @@
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"
+#include "tutorial.h"
 #include "view.h"
 #include "shout.h"
 #include "viewchar.h"
@@ -755,6 +756,8 @@ void cast_silence(int pow)
 
     if (you.beheld())
         you.update_beholders();
+
+    learned_something_new(TUT_YOU_SILENCE);
 }
 
 static int _discharge_monsters(coord_def where, int pow, int, actor *)
