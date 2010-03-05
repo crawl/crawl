@@ -2535,7 +2535,8 @@ void gain_piety(int original_gain, bool all_at_once, bool force)
 
     int old_piety = you.piety;
 
-    if (crawl_state.game_is_sprint()) {
+    if (crawl_state.game_is_sprint())
+    {
         pgn = sprint_modify_piety(pgn);
     }
 
