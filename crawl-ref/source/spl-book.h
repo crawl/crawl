@@ -29,6 +29,7 @@ bool is_valid_spell_in_book( int splbook, int spell );
 
 void mark_had_book(const item_def &book);
 void mark_had_book(int booktype);
+void inscribe_book_highlevel(item_def &book);
 
 int read_book( item_def &item, read_book_action_type action );
 

@@ -2301,15 +2301,22 @@ bool describe_item( item_def &item, bool allow_inscribe, bool shopping )
             return (false);
 
         const bool spells_shown = _show_item_description(item);
+        const bool real_book    = (item.base_type == OBJ_BOOKS
+                                   && in_inventory(item));
+
+        bool can_memorise = false;
+        if (real_book)
+            can_memorise = player_can_memorise_from_spellbook(item);
+
+        if (real_book && !can_memorise)
+            inscribe_book_highlevel(item);
 
         if (spells_shown)
         {
             cgotoxy(1, wherey());
             textcolor(LIGHTGREY);
 
-            if (item.base_type == OBJ_BOOKS && in_inventory(item)
-                && !crawl_state.player_is_dead()
-                && player_can_memorise_from_spellbook(item))
+            if (can_memorise && !crawl_state.player_is_dead())
             {
                 cprintf("Select a spell to read its description or to "
                         "memorise it.");

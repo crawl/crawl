@@ -1173,6 +1173,15 @@ void mark_had_book(int booktype)
     }
 }
 
+void inscribe_book_highlevel(item_def &book)
+{
+    if (!item_type_known(book)
+        && book.inscription.find("highlevel") == std::string::npos)
+    {
+        add_inscription(book, "highlevel");
+    }
+}
+
 int read_book( item_def &book, read_book_action_type action )
 {
     if (book.base_type == OBJ_BOOKS && !item_type_known(book)
@@ -1180,6 +1189,8 @@ int read_book( item_def &book, read_book_action_type action )
     {
         mpr( "This book is beyond your current level of understanding." );
         more();
+
+        inscribe_book_highlevel(book);
         return (0);
     }
 
@@ -1362,6 +1373,7 @@ static bool _get_mem_list(spell_list &mem_spells,
 
         if (!player_can_memorise_from_spellbook(book))
         {
+            inscribe_book_highlevel(book);
             num_unreadable++;
             continue;
         }
