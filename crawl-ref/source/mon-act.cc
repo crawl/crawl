@@ -1444,7 +1444,7 @@ static bool _mons_throw(struct monsters *monster, struct bolt &pbolt,
         }
     }
     else if (dec_mitm_item_quantity(hand_used, 1))
-        monster->inv[returning ? slot : MSLOT_MISSILE] = NON_ITEM;
+        monster->inv[slot] = NON_ITEM;
 
     if (pbolt.special_explosion != NULL)
         delete pbolt.special_explosion;
