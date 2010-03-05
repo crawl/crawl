@@ -1607,7 +1607,7 @@ NAME:       wizlab_cloud
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 {{
-local wizname = crawl.make_name()
+wizname = crawl.make_name()
 
 kmons ("    1 = col:silver patrolling wizard name:" .. string.gsub(wizname, " ", "_")
          .. "_the_Cloud_Mage name_replace"
@@ -1738,7 +1738,7 @@ KMONS:      3 = blue devil / iron devil / shadow demon / neqoxec /\
 KMONS:      4 = kobold demonologist / deep elf demonologist
 KMONS:      5 = blue death / green death / cacodemon
 {{
-local wizname = crawl.make_name()
+wizname = crawl.make_name()
 
 kmons     ("1 = col:fire patrolling wizard name:" .. string.gsub(wizname, " ", "_")
               .. "_the_Hellbinder name_replace"
