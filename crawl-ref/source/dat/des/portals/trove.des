@@ -210,7 +210,7 @@ The secrets of the gateways died with him when his fellow thieves, disgusted at 
                        "$F{The} flickers urgently, almost stroboscopically.")
     }
 
-    local item = trove.get_trove_item(e, 1000)
+    local item = trove.get_trove_item(e, 800)
 
     local function stair ()
         return trove_marker  {
