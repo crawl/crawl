@@ -3047,7 +3047,7 @@ enum tutorial_event_type
     TUT_SEEN_ALTAR,
     TUT_SEEN_SHOP,
     TUT_SEEN_DOOR,
-    TUT_SEEN_SECRET_DOOR,
+    TUT_FOUND_SECRET_DOOR,
     // other 'first events'
     TUT_SEEN_MONSTER,
     TUT_SEEN_ZERO_EXP_MON,
@@ -3089,6 +3089,7 @@ enum tutorial_event_type
     TUT_CAN_BERSERK,
     TUT_POSTBERSERK,
     TUT_CAUGHT_IN_NET,
+    TUT_YOU_SILENCE,
     // warning
     TUT_RUN_AWAY,
     TUT_RETREAT_CASTER,
