@@ -597,6 +597,8 @@ bool coinflip(void)
 // Returns random2(x) if random_factor is true, otherwise the mean.
 int maybe_random2(int x, bool random_factor)
 {
+    if (x <= 1)
+        return (0);
     if (random_factor)
         return (random2(x));
     else
