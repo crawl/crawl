@@ -1,4 +1,4 @@
-Stone Soup 0.6 (201003??)
+Stone Soup 0.6 (20100315)
 -------------------------
 Disclaimer: These are merely the highlights, not an exhaustive list of changes.
 
@@ -63,6 +63,7 @@ Levels
 * Lua maps are much more customizable.
 * New alternative branch endings for Hells, Hive, Swamp, Vaults.
 * The pandemonium lords' levels get special announcements.
+* Added milestones for all portal vaults and the pandemonium lords' levels.
 * Many new vaults.
 
 Ranged combat
@@ -236,6 +237,7 @@ Spells
 * Removed Divinations spell school.
 * New spell: Orb of Destruction, homes in on target and explodes.
 * Silence radius decreases with duration.
+* Always prompt when attempting to cast non-helpful spells at yourself.
 * Limit Summon Small Mammals to a maximum of two mammals per casting.
 * Summon Small Mammals doesn't summon green or orange rats anymore.
 * Reduced Poison Arrow's irresistible damage component from 60% to 30%.
@@ -276,7 +278,9 @@ Tiles
 * Vaults can specify custom tiles for features or monsters.
 * Tiles can be recoloured dynamically during compilation.
 * Variant tiles of a set can be assigned weights.
+* When waiting for input, suppress mouseover descriptions in the message area.
 * Draw splash screen before loading maps and database, and output loading state.
+* Tile dependencies are handled correctly, and tile sheets recompiled as needed.
 * The Shoals branch is our testing ground for a smoother level layout.
 
 Options
