@@ -410,6 +410,18 @@ function TroveMarker:check_item(marker, pname, position, dry_run)
       this_item = false
     end
 
+    local jwith_pluses = {"ring of protection", "ring of evasion",
+                        "ring of strength", "ring of intelligence",
+                        "ring of dexterity", "ring of slaying"}
+    if it.base_type == "jewellery" then
+      if not util.contains(jwith_pluses, it.sub_type) then
+         iplus1 = false
+         iplus2 = false
+      elseif it.sub_type ~= "ring of slaying" then
+         iplus2 = false
+      end
+    end
+
     if iplus1 == false then
       iplus1 = nil
     end
