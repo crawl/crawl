@@ -143,6 +143,8 @@ Monsters
 * Demons spawned during the orb run will actively seek out the player.
 * Hydras pick new target for remaining attacks if their current foe dies.
 * Make monsters forget player position if the player teleports away.
+* Monsters go to sleep more readily when the player is off-level for
+  a while.
 * Implement and use monster spells "blink away" and "blink closer".
 * Detected, unopened secret doors remain unknown to stupid monsters.
 * Monsters may quaff potions of might and berserk rage.
