@@ -1257,9 +1257,6 @@ void bolt::fire()
     {
         seen           = seen  || special_explosion->seen;
         heard          = heard || special_explosion->heard;
-        beam_cancelled = beam_cancelled || special_explosion->beam_cancelled;
-        foe_info      += special_explosion->foe_info;
-        friend_info   += special_explosion->friend_info;
     }
 }
 
@@ -2178,6 +2175,11 @@ void bolt::affect_endpoint()
         special_explosion->refine_for_explosion();
         special_explosion->target = pos();
         special_explosion->explode();
+
+        // XXX: we're significantly overcounting here.
+        foe_info      += special_explosion->foe_info;
+        friend_info   += special_explosion->friend_info;
+        beam_cancelled = beam_cancelled || special_explosion->beam_cancelled;
     }
 
     // Leave an object, if applicable.
@@ -3737,6 +3739,16 @@ void bolt::tracer_affect_monster(monsters* mon)
     {
         finish_beam();
         return;
+    }
+
+    // Special explosions (current exploding missiles) aren't
+    // auto-hit, so we need to explode them at every possible
+    // end-point?
+    if (special_explosion)
+    {
+        bolt orig = *special_explosion;
+        affect_endpoint();
+        *special_explosion = orig;
     }
 
     if (is_enchantment())
