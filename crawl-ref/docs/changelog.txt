@@ -49,7 +49,6 @@ Levels
 ------
 * New branch: the Shoals. Greek-inspired, featuring merfolk, tides, and turtles.
   Games now select two branches from Shoals, Snake Pit, and Swamp to enable.
-* Fix branch ends rarely being generated without a rune.
 * Shorten Lair to eight levels.
 * More interesting level layout for Lair and Swamp.
 * New portal vaults: Bailey, Trove, Volcano, Wizard's Laboratory.
@@ -60,7 +59,6 @@ Levels
 * Disallow mechanical traps in the Slime Pits.
 * Limit alarm traps to 1-3 charges.
 * Trap disarming prompts if you have less hp than the trap's maximum damage.
-* Lua maps are much more customizable.
 * New alternative branch endings for Hells, Hive, Swamp, Vaults.
 * The pandemonium lords' levels get special announcements.
 * Added milestones for all portal vaults and the pandemonium lords' levels.
@@ -70,7 +68,6 @@ Ranged combat
 -------------
 * Removed hand crossbows and the Darts skill; moved blowguns to Throwing skill.
 * New background: Arcane Marksman, combining Crusader, Warper and Hunter.
-* Fixed wall-stopped item beams getting two chances to hit their target.
 * New missile materials: silver, steel.
 * New missile brands: dispersal, electricity, exploding, penetration, reaping.
 * New needle brands: sleep, slow, paralysis, confusion, frenzy and sickness.
@@ -92,7 +89,6 @@ Items
 -----
 * Removed amulet of resist slowing.
 * Removed distinction between light and heavy armour.
-* Fixed occasional permanent stat loss/gain with stat-modifying equipment.
 * Added scroll of silence.
 * Added potions of brilliance and agility.
 * Added shields of reflection.
@@ -133,7 +129,6 @@ Monsters
 * New monster: ballistomycete, spawned by and spawning giant spores.
 * A few other new monsters: toadstool, sixfirhy, golden eye, giant leech.
 * New plant: bush, can be fired through, two or more block vision.
-* Fixed mimics not using the correct item glyph if it was redefined.
 * (Very) ugly things get resistances and attack flavours depending on colour.
 * Slime creatures can merge in corridors to become larger and more powerful.
 * All spectral things can use stairs again.
@@ -307,8 +302,16 @@ Options
 * Renamed: character 'job' option to 'background'.
 * Removed: target_los_first, target_oos, target_wrap, target_zero_exp.
 
-Code cleanup
-------------
+Major bug fixes
+---------------
+* Fix branch ends rarely being generated without a rune.
+* Fixed occasional permanent stat loss/gain with stat-modifying equipment.
+* LOS is now symmetrical, fixing a variety of bugs.
+* Fix teleport control occasionally not being enabled after picking up runes
+  or the orb.
+
+Technical improvements
+----------------------
 * Overhauled and improved the line of sight and direction code.
 * Overhauled all code dealing with the message window/message history.
 * Added several automated test cases in Lua.
