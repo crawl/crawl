@@ -1636,10 +1636,6 @@ void process_command(command_type cmd)
 #ifdef USE_TILE
         // Tiles-specific commands.
     case CMD_EDIT_PLAYER_TILE: tiles.draw_doll_edit(); break;
-
-    case CMD_TOGGLE_SPELL_DISPLAY:
-        tiles.toggle_inventory_display();
-        break;
 #endif
 
         // Movement and running commands.
