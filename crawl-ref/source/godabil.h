@@ -18,6 +18,7 @@ bool zin_sustenance(bool actual = true);
 bool zin_remove_all_mutations();
 bool yred_injury_mirror(bool actual = true);
 bool jiyva_grant_jelly(bool actual = true);
+void jiyva_paralyse_jellies();
 bool jiyva_remove_bad_mutation();
 bool beogh_water_walk();
 void yred_make_enslaved_soul(monsters *mon, bool force_hostile = false,

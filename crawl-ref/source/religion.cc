@@ -2080,28 +2080,7 @@ bool do_god_gift(bool prayed_for, bool forced)
 
         case GOD_JIYVA:
             if (forced || prayed_for && jiyva_grant_jelly())
-            {
-                int jelly_count = 0;
-                for (radius_iterator ri(you.pos(), 9); ri; ++ri)
-                {
-                    monsters *mon = monster_at(*ri);
-
-                    if (mon != NULL && mons_is_slime(mon))
-                    {
-                        mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0,
-                                      KC_OTHER, 200));
-                        jelly_count++;
-                    }
-                }
-
-                if (jelly_count > 0)
-                {
-                    mprf(MSGCH_PRAY, "%s.",
-                             jelly_count > 1 ? "The nearby slimes join your prayer"
-                                             : "A nearby slime joins your prayer");
-                    lose_piety(5);
-                }
-            }
+                jiyva_paralyse_jellies();
             break;
 
         case GOD_KIKUBAAQUDGHA:
