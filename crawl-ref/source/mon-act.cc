@@ -23,7 +23,6 @@
 #include "food.h"
 #include "fprop.h"
 #include "fight.h"
-#include "godgift.h"
 #include "godprayer.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -2282,8 +2281,6 @@ static bool _monster_eat_item(monsters *monster, bool nearby)
             const piety_gain_t gain = sacrifice_item_stack(*si);
             if (gain > PIETY_NONE)
                 simple_god_message(" appreciates your sacrifice.");
-
-            jiyva_maybe_give_mutation();
         }
 
         if (quant >= si->quantity)

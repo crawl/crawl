@@ -1961,6 +1961,20 @@ static void _delayed_gift_callback(const mgen_data &mg, int &midx,
     take_note(Note(NOTE_GOD_GIFT, you.religion));
 }
 
+static bool _jiyva_mutate()
+{
+    simple_god_message(" alters your body.");
+
+    const int rand = random2(100);
+
+    if (rand < 40)
+        return (mutate(RANDOM_MUTATION, true, false, true));
+    else if (rand < 60)
+        return (delete_mutation(RANDOM_MUTATION, true, false, true));
+    else
+        return (mutate(RANDOM_GOOD_MUTATION, true, false, true));
+}
+
 bool do_god_gift(bool prayed_for, bool forced)
 {
     ASSERT(you.religion != GOD_NO_GOD);
@@ -2075,7 +2089,7 @@ bool do_god_gift(bool prayed_for, bool forced)
             break;
 
         case GOD_JIYVA:
-            if (forced || prayed_for && jiyva_grant_jelly())
+            if (prayed_for && jiyva_grant_jelly())
             {
                 int jelly_count = 0;
                 for (radius_iterator ri(you.pos(), 9); ri; ++ri)
@@ -2097,6 +2111,19 @@ bool do_god_gift(bool prayed_for, bool forced)
                                              : "A nearby slime joins your prayer");
                     lose_piety(5);
                 }
+            }
+            else if (forced ||
+                     you.piety > 80 && random2(you.piety) > 50 && one_chance_in(4)
+                     && you.gift_timeout == 0 && you.can_safely_mutate())
+            {
+                if (_jiyva_mutate())
+                {
+                    _inc_gift_timeout(15 + roll_dice(2, 4));
+                    you.num_gifts[you.religion]++;
+                    take_note(Note(NOTE_GOD_GIFT, you.religion));
+                }
+                else
+                    mpr("You feel as though nothing has changed.");
             }
             break;
 
