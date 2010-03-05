@@ -651,7 +651,7 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item)
             const int value = item_value(item) / item.quantity;
             // compress into range 0..250
             const int stepped = stepdown_value(value, 50, 50, 200, 250);
-            const int gain = div_rand_round(stepped, 60 + you.piety);
+            const int gain = div_rand_round(stepped, 50);
             if (gain > 0)
             {
                 gain_piety(gain);
