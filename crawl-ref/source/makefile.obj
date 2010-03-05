@@ -50,7 +50,6 @@ geom2d.o \
 ghost.o \
 godabil.o \
 godconduct.o \
-godgift.o \
 goditem.o \
 godpassive.o \
 godprayer.o \
