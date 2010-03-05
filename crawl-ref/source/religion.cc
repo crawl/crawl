@@ -1986,7 +1986,7 @@ bool do_god_gift(bool prayed_for, bool forced)
     // praying when we prayed.
     if (forced
         || !player_under_penance() && !you.gift_timeout
-        || prayed_for && you.religion == GOD_ZIN || you.religion == GOD_JIYVA)
+        || prayed_for && (you.religion == GOD_ZIN || you.religion == GOD_JIYVA))
     {
         // Remember to check for water/lava.
         switch (you.religion)
@@ -2079,7 +2079,7 @@ bool do_god_gift(bool prayed_for, bool forced)
             break;
 
         case GOD_JIYVA:
-            if (forced || prayed_for && jiyva_grant_jelly())
+            if (forced || prayed_for && jiyva_accepts_prayer())
                 jiyva_paralyse_jellies();
             break;
 
