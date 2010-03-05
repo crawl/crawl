@@ -600,10 +600,7 @@ bool butchery(int which_corpse, bool bottle_blood)
             // * Ghouls relish the bad things.
             // * Vampires won't bottle bad corpses.
             if (!you.is_undead)
-            {
-                corpse_name = get_message_colour_tags(*si, DESC_NOCAP_A,
-                                                      MSGCH_PROMPT);
-            }
+                corpse_name = get_menu_colour_prefix_tags(*si, DESC_NOCAP_A);
 
             // Shall we butcher this corpse?
             do
@@ -1224,8 +1221,8 @@ int eat_from_floor(bool skip_chunks)
         for (unsigned int i = 0; i < food_items.size(); ++i)
         {
             item_def *item = food_items[i];
-            std::string item_name = get_message_colour_tags(*item, DESC_NOCAP_A,
-                                                            MSGCH_PROMPT);
+            std::string item_name = get_menu_colour_prefix_tags(*item,
+                                                                DESC_NOCAP_A);
 
             mprf(MSGCH_PROMPT, "%s %s%s? (ye/n/q/i?)",
                  (you.species == SP_VAMPIRE ? "Drink blood from" : "Eat"),

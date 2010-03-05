@@ -6085,14 +6085,14 @@ static bool _prompt_eat_bad_food(const item_def food)
     }
 
     const std::string qualifier = colour
-                                  + (is_poisonous(food)      ? "poisoned" :
+                                  + (is_poisonous(food)      ? "poisonous" :
                                      is_mutagenic(food)      ? "mutagenic" :
                                      causes_rot(food)        ? "rot-inducing" :
                                      is_forbidden_food(food) ? "forbidden" : "")
                                   + colour_off;
 
     std::string prompt  = "Really ";
-                prompt += (you.species == SP_VAMPIRE ? "drink" : "eat");
+                prompt += (you.species == SP_VAMPIRE ? "drink from" : "eat");
                 prompt += " this " + qualifier;
                 prompt += (food.base_type == OBJ_CORPSES ? " corpse"
                                                          : " chunk of meat");
