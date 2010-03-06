@@ -3478,15 +3478,16 @@ static bool _monster_move(monsters *monster)
             {
                 monsters_fight(monster, targ);
                 ret = true;
-                // Calling monsters_fight could kill the attacker if it
-                // is hit by a mummy death curse or something.
-                if (!monster->alive())
-                    return (true);
             }
 
             // If the monster swapped places, the work's already done.
             mmov.reset();
         }
+
+        // The monster could die after a melee attack due to a mummy
+        // death curse or something.
+        if (!monster->alive())
+            return (true);
 
         if (mons_genus(monster->type) == MONS_EFREET
             || monster->type == MONS_FIRE_ELEMENTAL)
