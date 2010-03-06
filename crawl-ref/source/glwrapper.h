@@ -4,10 +4,10 @@
 #include <stdlib.h> // For size_t
 #include <vector> // for std::vector
 
-//#include "tiletex.h" // for generic mipmap enums
-
 #ifdef USE_TILE
 #ifdef USE_GL
+
+struct coord_def;
 
 struct GLW_3VF
 {
@@ -84,6 +84,7 @@ public:
     static void set(const GLState& state);
     static void pixelStoreUnpackAlignment(unsigned int bpp);
     static void resetViewForRedraw(float x, float y);
+    static void resetViewForResize(coord_def &m_windowsz);
     static void setTransform(GLW_3VF *translate, GLW_3VF *scale);
     static void resetTransform();
     

@@ -16,8 +16,11 @@
 #include "uiwrapper-sdl.h"
 
 #include <SDL/SDL.h>
-#include <SDL/SDL_opengl.h>
 #include <SDL/SDL_image.h>
+
+#ifdef USE_GL
+#include "glwrapper.h"
+#endif
 
 #ifdef USE_TILE
 
@@ -316,11 +319,7 @@ bool UIWrapper::setWindowIcon(const char* icon_name)
 
 void UIWrapper::resize(coord_def &m_windowsz)
 {
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    
-    // For ease, vertex positions are pixel positions.
-    glOrtho(0, m_windowsz.x, m_windowsz.y, 0, -1000, 1000);
+    GLStateManager::resetViewForResize(m_windowsz);
 }
 
 unsigned int UIWrapper::getTicks()
@@ -463,61 +462,61 @@ void UIWrapper::UIDelay(unsigned int ms)
 
 unsigned int UIWrapper::getEventCount(ui_event_type type)
 {
-        // Look for the presence of any keyboard events in the queue.
-        Uint32 eventmask;
-        switch( type )
-        {
-            case UI_ACTIVEEVENT:
-            eventmask = SDL_EVENTMASK( SDL_ACTIVEEVENT );
-            break;
-            
-            case UI_KEYDOWN:
-            eventmask = SDL_EVENTMASK( SDL_KEYDOWN );
-            break;
-            
-            case UI_KEYUP:
-            eventmask = SDL_EVENTMASK( SDL_KEYUP );
-            break;
-            
-            case UI_MOUSEMOTION:
-            eventmask = SDL_EVENTMASK( SDL_MOUSEMOTION );
-            break;
-            
-            case UI_MOUSEBUTTONUP:
-            eventmask = SDL_EVENTMASK( SDL_MOUSEBUTTONUP );
-            break;
-            
-            case UI_MOUSEBUTTONDOWN:
-            eventmask = SDL_EVENTMASK( SDL_MOUSEBUTTONDOWN );
-            break;
-            
-            case UI_QUIT:
-            eventmask = SDL_EVENTMASK( SDL_QUIT );
-            break;
-            
-            case UI_CUSTOMEVENT:
-            eventmask = SDL_EVENTMASK( SDL_USEREVENT );
-            break;
-            
-            case UI_RESIZE:
-            eventmask = SDL_EVENTMASK( SDL_VIDEORESIZE );
-            break;
-            
-            case UI_EXPOSE:
-            eventmask = SDL_EVENTMASK( SDL_VIDEOEXPOSE );
-            break;
-            
-            default:
-            return -1; // Error
-        }
+    // Look for the presence of any keyboard events in the queue.
+    Uint32 eventmask;
+    switch( type )
+    {
+        case UI_ACTIVEEVENT:
+        eventmask = SDL_EVENTMASK( SDL_ACTIVEEVENT );
+        break;
         
-        SDL_Event store;
-        SDL_PumpEvents();
+        case UI_KEYDOWN:
+        eventmask = SDL_EVENTMASK( SDL_KEYDOWN );
+        break;
         
-        // Note: this returns -1 for error.
-        int count = SDL_PeepEvents(&store, 1, SDL_PEEKEVENT, eventmask);
+        case UI_KEYUP:
+        eventmask = SDL_EVENTMASK( SDL_KEYUP );
+        break;
         
-        return count;
+        case UI_MOUSEMOTION:
+        eventmask = SDL_EVENTMASK( SDL_MOUSEMOTION );
+        break;
+        
+        case UI_MOUSEBUTTONUP:
+        eventmask = SDL_EVENTMASK( SDL_MOUSEBUTTONUP );
+        break;
+        
+        case UI_MOUSEBUTTONDOWN:
+        eventmask = SDL_EVENTMASK( SDL_MOUSEBUTTONDOWN );
+        break;
+        
+        case UI_QUIT:
+        eventmask = SDL_EVENTMASK( SDL_QUIT );
+        break;
+        
+        case UI_CUSTOMEVENT:
+        eventmask = SDL_EVENTMASK( SDL_USEREVENT );
+        break;
+        
+        case UI_RESIZE:
+        eventmask = SDL_EVENTMASK( SDL_VIDEORESIZE );
+        break;
+        
+        case UI_EXPOSE:
+        eventmask = SDL_EVENTMASK( SDL_VIDEOEXPOSE );
+        break;
+        
+        default:
+        return -1; // Error
+    }
+    
+    SDL_Event store;
+    SDL_PumpEvents();
+    
+    // Note: this returns -1 for error.
+    int count = SDL_PeepEvents(&store, 1, SDL_PEEKEVENT, eventmask);
+    
+    return count;
 }
 
 void UIWrapper::shutdown()
