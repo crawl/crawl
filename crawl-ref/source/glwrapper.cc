@@ -1,6 +1,7 @@
 #include "debug.h"
 
 #include "glwrapper.h"
+#include "AppHdr.h"
 
 #ifdef USE_TILE
 
@@ -105,6 +106,15 @@ void GLStateManager::setTransform(GLW_3VF *translate, GLW_3VF *scale)
     glLoadIdentity();
     if(translate) glTranslatef(translate->x, translate->y, translate->z);
     if(scale) glScalef(scale->x, scale->y, scale->z);
+}
+
+void GLStateManager::resetViewForResize(coord_def &m_windowsz)
+{
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    
+    // For ease, vertex positions are pixel positions.
+    glOrtho(0, m_windowsz.x, m_windowsz.y, 0, -1000, 1000);
 }
 
 void GLStateManager::resetTransform()
