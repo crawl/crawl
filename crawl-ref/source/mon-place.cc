@@ -207,7 +207,7 @@ bool monster_can_submerge(const monsters *mons, dungeon_feature_type grid)
             return (grid == DNGN_LAVA);
         case HT_LAND:
             // Currently, trapdoor spider only.
-            return (!find_trap(mons->pos()));
+            return (feat_is_floor(grid));
         default:
             return (false);
         }
