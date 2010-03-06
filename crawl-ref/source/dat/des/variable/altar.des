@@ -946,7 +946,9 @@ function zombify (data, triggerable, triggerer, marker, ev)
   dgn.delete_cloud(pt[1].x, pt[1].y)
 
   dgn.create_monster(pt[1].x, pt[1].y, "generate_awake human zombie")
-  crawl.god_speaks("Kikubaaqudgha", "The human rises from the dead!")
+  if you.see_cell(pt[1].x, pt[1].y) then
+    crawl.god_speaks("Kikubaaqudgha", "The human rises from the dead!")
+  end
 end
 local tm = TriggerableFunction:new{func=zombify, repeated=false}
 tm:add_triggerer(DgnTriggerer:new{type="monster_dies", target="dslave"})
@@ -956,6 +958,7 @@ MARKER: h = lua:portal_desc {slave_name="zombie"}
 MARKER: h = lua:MonPropsMarker:new{dslave="dslave"}
 KFEAT:  h = .
 KMONS:  h = generate_awake Human hp:12 ; nothing
+TILE:   m = dngn_transparent_wall_darkgray
 MAP
 xxxxxxx
 @..mmmx
