@@ -3506,7 +3506,9 @@ static std::vector<std::string> _get_monster_desc_vector(const monsters *mon)
     if (mons_intel(mon) <= I_PLANT && mon->type != MONS_RAKSHASA_FAKE)
         descs.push_back("mindless");
 
-    if (mon->is_chaotic())
+    // Unknown shapeshifters shouldn't leak "chaotic".
+    if (mon->is_chaotic() && (!mon->is_shapeshifter()
+                              || mon->flags & MF_KNOWN_MIMIC))
         descs.push_back("chaotic");
 
     if (mons_enslaved_body_and_soul(mon))
@@ -3579,7 +3581,9 @@ static std::string _get_monster_desc(const monsters *mon)
     if (mons_intel(mon) <= I_PLANT && mon->type != MONS_RAKSHASA_FAKE)
         text += pronoun + " is mindless.\n";
 
-    if (mon->is_chaotic())
+    // Unknown shapeshifters shouldn't leak "chaotic".
+    if (mon->is_chaotic() && (!mon->is_shapeshifter()
+                              || mon->flags & MF_KNOWN_MIMIC))
         text += pronoun + " is chaotic.\n";
 
     if (mons_enslaved_body_and_soul(mon))
