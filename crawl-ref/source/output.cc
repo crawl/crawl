@@ -476,7 +476,12 @@ static void _print_stats_ac(int x, int y)
         textcolor( RED );
     else
         textcolor( HUD_VALUE_COLOUR );
-    cprintf( "%2d ", you.armour_class() );
+    std::string ac = make_stringf("%2d ", you.armour_class());
+#ifdef WIZARD
+    if (you.wizard)
+        ac += make_stringf("(%d%%) ", you.gdr_perc());
+#endif WIZARD
+    cprintf("%s", ac.c_str());
 
     // SH: (two lines lower)
     cgotoxy(x+4, y+2, GOTO_STAT);
