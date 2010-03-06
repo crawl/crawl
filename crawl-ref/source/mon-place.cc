@@ -192,7 +192,7 @@ bool monster_habitable_grid(monster_type montype,
 }
 
 // Returns true if the monster can submerge in the given grid.
-bool monster_can_submerge(const monsters *mons, dungeon_feature_type grid)
+bool monster_can_submerge(const monsters *mons, dungeon_feature_type feat)
 {
     if (testbits(env.pgrid(mons->pos()), FPROP_NO_SUBMERGE))
         return (false);
@@ -201,9 +201,9 @@ bool monster_can_submerge(const monsters *mons, dungeon_feature_type grid)
         {
         case HT_WATER:
         case HT_AMPHIBIOUS:
-            return (feat_is_watery(grid));
+            return (feat_is_watery(feat));
         case HT_LAVA:
-            return (grid == DNGN_LAVA);
+            return (feat == DNGN_LAVA);
         case HT_LAND:
             // Currently, trapdoor spider only.
             return (!find_trap(mons->pos()));
