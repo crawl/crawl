@@ -1,4 +1,5 @@
 %%%%
+# Glyph-specific suffixes
 # Only for non-uniques nagas.
 __cap-N_suffix
 {{
@@ -22,17 +23,10 @@ Aizul
 
 Once the primary guardian serpent of a legendary treasure hoard, he was disgraced after thieves looted it while he slept. He now slithers about the dungeon, seeking vengeance against all would-be looters. He is an accomplished spellcaster, but no more deadly in melee combat than others of his kind.
 %%%%%
+# Uniques
 Agnes
 
 A tall and beautiful warrior, as vain as she is quick.  You can't help but notice both her exotic weapon and graceful movements.  She searches the dungeon for aesthetically pleasing objects to surround herself with.
-%%%%
-alligator
-
-A reptile that's quite happy to ignore you. If you don't, or you get too close, it'll put on a great burst of speed and crush you in its massive jaws!
-%%%%
-Angel
-
-A divine warrior of The Shining One, it is a towering winged figure of unnatural beauty surrounded by an aura of brilliant white light.  It appears to be weightless and quite agile while flying, despite wearing heavy armour.
 %%%%
 Antaeus
 
@@ -46,45 +40,21 @@ Azrael
 
 A powerful, belligerent Efreet.  (Is there any other kind?)
 %%%%
-baby alligator
-
-While this juvenile form of the alligator does not have crushing jaws, nor does it have the strength to put on massive bursts of speed, it is more limber than the adult form, and its milk-tooth is still very sharp.
-%%%%
-Balrug
-
-A huge and very powerful demon, wreathed in fire and shadows.
-%%%%
 Blork the Orc
 
 A particularly fat and ugly orc.  He seems to have scavenged a pair of rainbow-coloured suspenders from somewhere.  They're not helping.
-%%%%
-Blue Death
-
-A blue greater demon.
 %%%%
 Boris
 
 An ancient lich. The air around his shrouded form crackles with evil energy.
 %%%%
-Cacodemon
-
-A hideously ugly demon of rage and legendary power.
-%%%%
 Cerebov
 
 A violent and wrathful demon, Cerebov appears as a giant human covered in shining golden armour and wielding a huge twisted sword.
 %%%%
-Chaos spawn
-
-A being of pure chaos, its form is constantly shifting, growing and then losing eyes, mouths, claws and tentacles.
-%%%%
 Crazy Yiuf
 
 A withered old gnoll with a long silver beard, wielding a quarterstaff and wearing a cloak. He looks like a figure from mythology! Wait, is his beard held on to his ears with hooks?
-%%%%
-Daeva
-
-A divine agent of the Shining One, it is a towering winged figure with an aura of brilliant golden light.
 %%%%
 Dispater
 
@@ -141,10 +111,6 @@ Eustachio
 
 An apprentice summoner with a flowing moustache.  He has funny ideas about honour.
 %%%%
-Executioner
-
-A horribly powerful demon.
-%%%%
 Frances
 
 A stout warrior who once bested a powerful Lord of Pandemonium in combat, gaining control over the demon's realm and thanes. The battle left her with a deep facial scar, one that she carries as a badge of honour rather than a symbol of shame.
@@ -169,35 +135,13 @@ Gloorx Vloq
 
 A shadowy figure clothed in profound darkness.
 %%%%
-golden eye
-
-Tiny and shimmering, glistening like gold. It is eager to get inside your head.
-%%%%
-greater naga
-
-A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake.
-
-It looks strong and aggressive.
-%%%%
-Green Death
-
-A bloated form covered in oozing sores and exhaling clouds of lethal poison.
-%%%%
 Grum
 
 A tough-looking gnoll, wearing the pelt of one of his former war dogs.
 %%%%
-guardian serpent
-
-Serpents are distinct and rare members of scaly society. They are light and swift like snakes, yet also intelligent like nagas. Their lack of hands, together with an extreme sense of duty, makes them renowned guardians. It is said that a guardian serpent would rather die in battle than leave anything to an intruder.
-%%%%
 Harold
 
 A middle aged bounty hunter, hired to kill you. He is in a hurry.
-%%%%
-harpy
-
-Harpies have roamed these coasts as long as seafarers can remember. They strike fear in the hearts of all sentient beings, but not for their claws. It is their way to steal food from the unwary, causing many a man to starve to death.
 %%%%
 Ijyb
 
@@ -223,10 +167,6 @@ Jozef
 
 A tall bounty hunter.
 %%%%
-Killer Klown
-
-A comical figure full of life and laughter.  It looks very happy to see you... but is there a slightly malicious cast to its features?  Is that red face paint or something altogether less pleasant?
-%%%%
 Khufu
 
 An incredibly powerful emperor on the way to godhood.
@@ -234,6 +174,10 @@ An incredibly powerful emperor on the way to godhood.
 Kirke
 
 A beautiful enchantress.
+%%%%
+the Lernaean hydra
+
+An ancient, outsized serpent-like water beast that possesses numerous heads.  The poets mention more heads than vase-painters can paint, poisonous venom coming out of its eyes, and that this hydra is a guardian of an entrance to the Underworld.  What of this is true, you do not know.
 %%%%
 Lom Lobon
 
@@ -247,9 +191,9 @@ Louise
 
 An unusually heavily armoured spellcaster.
 %%%%
-the Lernaean hydra
+Mara
 
-An ancient, outsized serpent-like water beast that possesses numerous heads.  The poets mention more heads than vase-painters can paint, poisonous venom coming out of its eyes, and that this hydra is a guardian of an entrance to the Underworld.  What of this is true, you do not know.
+This tall and powerful demon is Mara, Lord of Illusions, mighty among dreamers. He is capable of creating intricately detailed illusions, able to mislead even the minds of the mightiest and most brilliant spell-casters.
 %%%%
 Margery
 
@@ -262,6 +206,10 @@ A mysterious warrior princess from a far-off kingdom, on a quest to retrieve the
 Maurice
 
 A sly, conniving thief
+%%%%
+Menkaure
+
+A fair and noble ruler of an ancient and mighty kingdom, mummified after an early death. His faithful priests subsequently infused him with great and powerful magic, seeking to grant him eternal life. Now he is forgotten and reduced to mouldering bandages and dry, brittle bones.
 %%%%
 Mnoleg
 
@@ -291,21 +239,9 @@ Norris
 
 A relaxed peace-in-death cultist with a healthy tan and a soothing voice. He doesn't really care if it is you or him who dies - "both" would probably be the best option.
 %%%%
-Orb Guardian
-
-A huge and glowing purple creature, created by the Orb to defend itself.
-%%%%
-pandemonium lord
-
-Powerful demons inhabiting the endless halls of Pandemonium, each is different, with its own set of strengths and weaknesses.
-%%%%
 Pikel
 
 While kobolds are normally slaves, Pikel's rough life, selfish ambition and large stature have caused him to rise up and become a slaver himself. He is on his way to the Orcish Mines to sell his wares, a selection of timid humans that cower with every crack of his whip.
-%%%%
-Pit Fiend
-
-A huge winged fiend with incredibly tough skin.
 %%%%
 Polyphemus
 
@@ -341,17 +277,9 @@ Serpent of Hell
 
 A huge red glowing dragon, burning with hellfire.
 %%%%
-Shadow Fiend
-
-One of the most terrible denizens of the many Hells, this horrible being appears as a great mass of writhing shadows which occasionally reveal a huge, horned skeleton.
-%%%%
 Sigmund
 
 The bane of all young adventurers, Sigmund combines delusions of greatness with nasty tactics.
-%%%%
-slave
-
-A once proud human that has been magically enslaved, and is now a timid, simpering creature, ready to perform any deed at its master's command.
 %%%%
 Snorg
 
@@ -397,6 +325,7 @@ Xtahua
 
 An ancient and mighty dragon.
 %%%%
+# Non-unique monsters
 acid blob
 
 A lump of sickly green flesh, dripping with lethal acid.
@@ -405,9 +334,21 @@ air elemental
 
 A spirit drawn from the elemental plane of air.  It exists in this world as a swirling vortex of air, often dissipating and reforming.
 %%%%
+alligator
+
+A reptile that's quite happy to ignore you. If you don't, or you get too close, it'll put on a great burst of speed and crush you in its massive jaws!
+%%%%
+alligator snapping turtle
+
+A huge snapping turtle of unpleasant disposition. It can reach out and bite from afar.
+%%%%
 ancient lich
 
 A lich who has grown mighty over countless years.
+%%%%
+Angel
+
+A divine warrior of The Shining One, it is a towering winged figure of unnatural beauty surrounded by an aura of brilliant white light.  It appears to be weightless and quite agile while flying, despite wearing heavy armour.
 %%%%
 ant larva
 
@@ -417,6 +358,10 @@ azure jelly
 
 A frosty blob of bright blue cytoplasm.
 %%%%
+baby alligator
+
+While this juvenile form of the alligator does not have crushing jaws, nor does it have the strength to put on massive bursts of speed, it is more limber than the adult form, and its milk-tooth is still very sharp.
+%%%%
 ball lightning
 
 An oddity of nature, ball lightning bounces around behaving almost, but not quite, entirely unlike regular lightning.
@@ -424,6 +369,10 @@ An oddity of nature, ball lightning bounces around behaving almost, but not quit
 ballistomycete
 
 A lumpy reddish fungus covered in knobbly rhizome growths, growing well in the dank underground dungeon.
+%%%%
+Balrug
+
+A huge and very powerful demon, wreathed in fire and shadows.
 %%%%
 bear
 
@@ -457,6 +406,10 @@ blink frog
 
 A weird-looking frog, constantly blinking in and out of reality.
 %%%%
+Blue Death
+
+A blue greater demon.
+%%%%
 blue devil
 
 A strange and nasty blue thing.  It looks cold.
@@ -485,10 +438,6 @@ bush
 
 A woody plant that, unlike trees, can be removed even with bare hands.  It looks dry enough to be easily set on fire, and it isn't very dense so arrows are likely to go past it.
 %%%%
-water moccasin
-
-A largish venomous brown snake. It usually lives near water, and is an able swimmer.
-%%%%
 bumblebee
 
 A very large and fat hairy bee.
@@ -497,6 +446,10 @@ butterfly
 
 A large multicoloured butterfly with beautifully patterned wings, fluttering incongruously through the darkness of the cave.
 %%%%
+Cacodemon
+
+A hideously ugly demon of rage and legendary power.
+%%%%
 centaur
 
 A hybrid with the torso of a human atop the body of a large horse.
@@ -504,6 +457,10 @@ A hybrid with the torso of a human atop the body of a large horse.
 centaur warrior
 
 A hybrid with the torso of a human atop the body of a large horse.  It looks strong and aggressive.
+%%%%
+Chaos spawn
+
+A being of pure chaos, its form is constantly shifting, growing and then losing eyes, mouths, claws and tentacles.
 %%%%
 clay golem
 
@@ -528,6 +485,10 @@ A disembodied toe, hanging in the air and radiating an intense field of negative
 cyclops
 
 A giant with one eye in the centre of its forehead.  Despite their lack of binocular vision, cyclopi throw boulders with fearsome accuracy.
+%%%%
+Daeva
+
+A divine agent of the Shining One, it is a towering winged figure with an aura of brilliant golden light.
 %%%%
 # Only used in lookup mode, not when examining an actual monster.
 dancing weapon
@@ -679,6 +640,10 @@ This one is remarkably plain looking.
 ettin
 
 A two-headed giant.
+%%%%
+Executioner
+
+A horribly powerful demon.
 %%%%
 eye of devastation
 
@@ -840,6 +805,10 @@ golden dragon
 
 A great dragon covered in shining golden scales.
 %%%%
+golden eye
+
+Tiny and shimmering, glistening like gold. It is eager to get inside your head.
+%%%%
 great orb of eyes
 
 A levitating ball, covered in malignant eyes.
@@ -847,6 +816,16 @@ A levitating ball, covered in malignant eyes.
 greater mummy
 
 The embalmed and undead corpse of an ancient ruler.
+%%%%
+greater naga
+
+A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake.
+
+It looks strong and aggressive.
+%%%%
+Green Death
+
+A bloated form covered in oozing sores and exhaling clouds of lethal poison.
 %%%%
 green draconian
 
@@ -876,9 +855,17 @@ guardian mummy
 
 An ancient warrior, embalmed and cursed to walk in undeath for eternity.
 %%%%
+guardian serpent
+
+Serpents are distinct and rare members of scaly society. They are light and swift like snakes, yet also intelligent like nagas. Their lack of hands, together with an extreme sense of duty, makes them renowned guardians. It is said that a guardian serpent would rather die in battle than leave anything to an intruder.
+%%%%
 hairy devil
 
 A small humanoid demon covered in brown hair.  Watch out - it may have fleas!
+%%%%
+harpy
+
+Harpies have roamed these coasts as long as seafarers can remember. They strike fear in the hearts of all sentient beings, but not for their claws. It is their way to steal food from the unwary, causing many a man to starve to death.
 %%%%
 hell hound
 
@@ -992,10 +979,6 @@ jellyfish
 
 A pulsating glob of transparent flesh, waiting just below the surface to sting you with its many tentacles.
 %%%%
-Menkaure
-
-A fair and noble ruler of an ancient and mighty kingdom, mummified after an early death. His faithful priests subsequently infused him with great and powerful magic, seeking to grant him eternal life. Now he is forgotten and reduced to mouldering bandages and dry, brittle bones.
-%%%%
 killer bee
 
 A giant bee, bearing a deadly barb which can sting repeatedly.
@@ -1003,6 +986,10 @@ A giant bee, bearing a deadly barb which can sting repeatedly.
 killer bee larva
 
 A small, powerless larva of a killer bee.
+%%%%
+Killer Klown
+
+A comical figure full of life and laughter.  It looks very happy to see you... but is there a slightly malicious cast to its features?  Is that red face paint or something altogether less pleasant?
 %%%%
 kobold
 
@@ -1068,22 +1055,6 @@ manticore
 
 A hideous cross-breed, bearing the features of a human and a lion, with great bat-like wings. Its tail bristles with spikes that can be loosed at potential prey.
 %%%%
-Mara
-
-This tall and powerful demon is Mara, Lord of Illusions, mighty among dreamers. He is capable of creating intricately detailed illusions, able to mislead even the minds of the mightiest and most brilliant spell-casters.
-%%%%
-snapping turtle
-
-A large belligerent reptile, armoured in a carapace. Its neck is surprisingly extensible and can reach out and bite from afar.
-%%%%
-alligator snapping turtle
-
-A huge snapping turtle of unpleasant disposition. It can reach out and bite from afar.
-%%%%
-sea snake
-
-A brightly coloured snake with an highly potent venomous bite.
-%%%%
 merfolk
 
 Half fish, half man, the merfolk are citizens of both water and land, and fierce protectors of their chosen territory.
@@ -1103,10 +1074,6 @@ A fearsome merfolk champion with a piercing gaze and a large bundle of javelins.
 mermaid
 
 A young woman with a fish tail in place of legs.  Mermaids love to sing and charm their audience.
-%%%%
-siren
-
-A young woman with a fish tail in place of legs.  Sirens are capable of casting a powerful spell over their audience.
 %%%%
 metal gargoyle
 
@@ -1206,6 +1173,10 @@ orange rat
 
 A huge rat, with weird knobbly orange skin.  It glows with unholy energies.
 %%%%
+Orb Guardian
+
+A huge and glowing purple creature, created by the Orb to defend itself.
+%%%%
 orb of fire
 
 A globe of raw primordial fire, capable of impressive pyrotechnics.
@@ -1246,6 +1217,10 @@ pale draconian
 
 Before you stands a draconian.
 %%%%
+pandemonium lord
+
+Powerful demons inhabiting the endless halls of Pandemonium, each is different, with its own set of strengths and weaknesses.
+%%%%
 phantom
 
 A transparent man-like undead spirit.
@@ -1253,6 +1228,10 @@ A transparent man-like undead spirit.
 pile of gold coins
 
 An apparently harmless pile of gold coins hides a nasty venomous shapechanging predator.
+%%%%
+Pit Fiend
+
+A huge winged fiend with incredibly tough skin.
 %%%%
 plant
 
@@ -1326,13 +1305,13 @@ redback
 
 A vicious black spider with a splash of red on its swollen abdomen.  Its mandibles drip with lethal poison.
 %%%%
-rock worm
-
-A large worm which moves through rock as if it were air.
-%%%%
 rock troll
 
 An enormous and very nasty-looking humanoid creature.  Its rocky hide seems to heal almost instantaneously from most wounds.
+%%%%
+rock worm
+
+A large worm which moves through rock as if it were air.
 %%%%
 rotting devil
 
@@ -1365,6 +1344,10 @@ scorpion
 
 A giant black scorpion, its body covered in thick armour plating, and its tail tipped by a nasty venomous sting.
 %%%%
+sea snake
+
+A brightly coloured snake with an highly potent venomous bite.
+%%%%
 shadow
 
 A wisp of unliving shadow, drifting on the edge of vision.
@@ -1376,6 +1359,10 @@ A mysterious demonic figure, constantly blurring into multiple shadows of itself
 shadow dragon
 
 A great shadowy shape, radiating evil and death.
+%%%%
+Shadow Fiend
+
+One of the most terrible denizens of the many Hells, this horrible being appears as a great mass of writhing shadows which occasionally reveal a huge, horned skeleton.
 %%%%
 shadow imp
 
@@ -1403,6 +1390,10 @@ A beautiful statue of silvery hue. Its eyes glow with an otherworldly radiance.
 
 It looks brittle.
 %%%%
+siren
+
+A young woman with a fish tail in place of legs.  Sirens are capable of casting a powerful spell over their audience.
+%%%%
 sixfirhy
 
 A small vile creature that moves in bursts, stopping then darting with lightning speed. It seems to throw sparks all around.
@@ -1414,6 +1405,10 @@ A huge undead abomination, pieced together from the broken bones of many dragons
 skeletal warrior
 
 The vicious and heavily armed skeleton of a humanoid creature, animated by unholy power.
+%%%%
+slave
+
+A once proud human that has been magically enslaved, and is now a timid, simpering creature, ready to perform any deed at its master's command.
 %%%%
 slime creature
 
@@ -1446,6 +1441,10 @@ A writhing cloud of smoke hanging in the air.
 snake
 
 The common dungeon snake.
+%%%%
+snapping turtle
+
+A large belligerent reptile, armoured in a carapace. Its neck is surprisingly extensible and can reach out and bite from afar.
 %%%%
 soldier ant
 
@@ -1591,6 +1590,10 @@ very ugly thing
 
 A very ugly thing. According to legend, this hideously mutated creature is the otherworldly spawn of a wizard's breeding experiment. Double yuck.
 %%%%
+viper
+
+A snake with a painful venom. It's not as fast as some other snakes, but still fairly quick.
+%%%%
 wandering mushroom
 
 A large, fat mushroom.
@@ -1606,6 +1609,10 @@ A particularly large and evil looking wolf, usually found in the company of orcs
 water elemental
 
 A spirit drawn from the elemental plane of water. It exists on this world as part of a body of water.
+%%%%
+water moccasin
+
+A largish venomous brown snake. It usually lives near water, and is an able swimmer.
 %%%%
 white draconian
 
@@ -1662,10 +1669,6 @@ Like a centaur, but half yak. It looks very strong and aggressive.
 yellow draconian
 
 Before you stands a draconian.
-%%%%
-viper
-
-A snake with a painful venom. It's not as fast as some other snakes, but still fairly quick.
 %%%%
 yellow wasp
 
