@@ -6358,6 +6358,17 @@ int player::armour_class() const
     return (AC / 100);
 }
 
+int player::gdr_perc() const
+{
+    const item_def *body_armour = slot_item(EQ_BODY_ARMOUR, false);
+
+    if (!body_armour)
+        return (0);
+
+    const int body_base_AC = property(*body_armour, PARM_AC);
+    return (body_base_AC * (13 + skill(SK_ARMOUR)) / 17);
+}
+
 int player::melee_evasion(const actor *act, ev_ignore_type evit) const
 {
     return (player_evasion(evit)

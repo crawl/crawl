@@ -4418,21 +4418,13 @@ int melee_attack::mons_apply_defender_ac(int damage, int damage_max)
         int damage_reduction = random2(ac + 1);
         int guaranteed_damage_reduction = 0;
 
-        if (const item_def *body_armour =
-            defender->slot_item(EQ_BODY_ARMOUR, false))
+        if (defender->atype() == ACT_PLAYER)
         {
-            if (defender->atype() == ACT_PLAYER)
-            {
-                const int body_base_AC = property(*body_armour, PARM_AC);
-                const int gdr_perc =
-                    body_base_AC * (13 + defender->skill(SK_ARMOUR)) / 17;
-                // [ds] ac / 2 cap is nearly redundant now.
-                guaranteed_damage_reduction =
-                    std::min(damage_max * gdr_perc / 100, ac / 2);
-
-                damage_reduction =
-                    std::max(guaranteed_damage_reduction, damage_reduction);
-            }
+            const int gdr_perc = defender->as_player()->gdr_perc();
+            guaranteed_damage_reduction =
+                std::min(damage_max * gdr_perc / 100, ac / 2);
+            damage_reduction =
+                std::max(guaranteed_damage_reduction, damage_reduction);
         }
 
         dprf("AC: at: %s, df: %s, dam: %d (max %d), DR: %d (GDR %d), "

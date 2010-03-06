@@ -503,6 +503,7 @@ public:
     bool can_smell() const;
 
     int armour_class() const;
+    int gdr_perc() const;
     int melee_evasion(const actor *attacker,
                       ev_ignore_type evit = EV_IGNORE_NONE) const;
 
