@@ -1520,9 +1520,7 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
     // its count to others on the level.
     int activation_count = 1;
     if (monster->type == MONS_BALLISTOMYCETE)
-    {
         activation_count += monster->number;
-    }
 
     int spore_count = 0;
     int ballisto_count = 0;
@@ -1531,9 +1529,7 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
     bool fedhas_mode  = false;
     for (monster_iterator mi; mi; ++mi)
     {
-        if (mi->mindex() != monster->mindex()
-            && mi->alive())
-
+        if (mi->mindex() != monster->mindex() && mi->alive())
         {
             if (mi->type == MONS_BALLISTOMYCETE)
                 ballisto_count++;
@@ -1543,7 +1539,6 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
             if (mi->attitude == ATT_FRIENDLY)
                 any_friendly = true;
         }
-
     }
 
     bool exhaustive = true;
@@ -1616,7 +1611,16 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
             mprf("Having destroyed the fungal colony, you feel a bit more "
                  "experienced.");
             gain_exp(500);
+
+            // Get rid of the mold, so it'll be more useful when new fungi
+            // spawn.
+            // NOTE: Not triggered if eradication happens by hostile monster,
+            //       so we don't give anything away. (jpeg)
+            for (rectangle_iterator ri(1); ri; ++ri)
+                if (is_moldy(*ri))
+                    env.pgrid(*ri) &= ~(FPROP_MOLD);
         }
+
         return;
     }
 
