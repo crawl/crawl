@@ -991,9 +991,7 @@ void TilesFramework::redraw()
 #endif
     m_need_redraw = false;
 
-    GLStateManager::clearBuffers();
-    GLStateManager::setModelviewMatrixMode();
-    GLStateManager::scalef(m_viewsc.x, m_viewsc.y, 1.0f);
+    GLStateManager::resetViewForRedraw(m_viewsc.x, m_viewsc.y);
 
     for (unsigned int i = 0; i < m_layers[m_active_layer].m_regions.size(); ++i)
         m_layers[m_active_layer].m_regions[i]->render();

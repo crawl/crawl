@@ -9,6 +9,16 @@
 #ifdef USE_TILE
 #ifdef USE_GL
 
+struct GLW_3VF
+{
+    GLW_3VF() {};
+    GLW_3VF(float l, float m, float n) : x(l), y(m), z(n) {}
+    
+    float x;
+    float y;
+    float z;
+};
+
 enum MipMapOptions
 {
     MIPMAP_CREATE,
@@ -26,6 +36,27 @@ typedef enum
     GLW_TRIANGLE_STRIP,
     GLW_QUADS
 } drawing_modes;
+
+struct GLPrimitive
+{
+    GLPrimitive(long unsigned int sz, size_t ct, unsigned int vs,
+        const void* v_pt, const void *c_pt, const void *t_pt);
+    
+    // Primitive Metadata
+    drawing_modes mode;
+    unsigned int vertSize;  // Coords per vertex
+    long unsigned int size;
+    size_t count;
+    
+    // Primitive Data
+    const void *vert_pointer;
+    const void *colour_pointer;
+    const void *texture_pointer;
+    
+    // Primitive render manipulations
+    GLW_3VF *pretranslate;
+    GLW_3VF *prescale;
+};
 
 struct GLState
 {
@@ -52,30 +83,12 @@ public:
     // State Manipulation
     static void set(const GLState& state);
     static void pixelStoreUnpackAlignment(unsigned int bpp);
-    static void pushMatrix();
-    static void popMatrix();
-    static void setProjectionMatrixMode();
-    static void setModelviewMatrixMode();
-    static void translatef(float x, float y, float z);
-    static void scalef(float x, float y, float z);
-    static void loadIdentity();
-    static void clearBuffers();
+    static void resetViewForRedraw(float x, float y);
+    static void setTransform(GLW_3VF *translate, GLW_3VF *scale);
+    static void resetTransform();
     
-    // Drawing Quads
-    static void drawQuadPTVert( long unsigned int size, size_t count,
-        const void *vert_pointer, const void *tex_pointer);
-    static void drawQuadPCVert( long unsigned int size, size_t count,
-        const void *vert_pointer, const void *color_pointer);
-    static void drawQuadPTCVert( long unsigned int size, size_t count,
-        const void *vert_pointer, const void *tex_pointer,
-        const void *color_pointer);
-    static void drawQuadP3TCVert( long unsigned int size, size_t count,
-        const void *vert_pointer, const void *tex_pointer,
-        const void *color_pointer);
-    
-    // Drawing Lines
-    static void drawLinePCVert( long unsigned int size, size_t count,
-        const void *vert_pointer, const void *color_pointer);
+    // Drawing GLPrimitives
+    static void drawGLPrimitive(const GLPrimitive &prim);
     
     // Drawing tiles-specific objects
     static void drawTextBlock(unsigned int x_pos, unsigned int y_pos,

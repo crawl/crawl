@@ -32,7 +32,7 @@ void VertBuffer<PTVert>::init_state()
 }
 
 template<>
-void VertBuffer<PTVert>::draw() const
+void VertBuffer<PTVert>::draw(GLW_3VF *pt, GLW_3VF *ps) const
 {
     if (size() == 0)
         return;
@@ -44,9 +44,19 @@ void VertBuffer<PTVert>::draw() const
     GLStateManager::set(m_state);
     m_tex->bind();
     
-    GLStateManager::drawQuadPTVert(sizeof(Vert), size(),
-        &(*this)[0].pos_x, &(*this)[0].tex_x);
-
+    GLPrimitive prim(   sizeof(Vert), size(), 2,
+                        &(*this)[0].pos_x,
+                        NULL,
+                        &(*this)[0].tex_x);
+    
+    prim.mode = m_prim;
+    
+    // Set prerender matrix manipulations
+    if( pt ) prim.pretranslate = pt;
+    if( ps ) prim.prescale = ps;
+    
+    // Draw
+    GLStateManager::drawGLPrimitive(prim);
 }
 
 template<>
@@ -59,7 +69,7 @@ void VertBuffer<PCVert>::init_state()
 }
 
 template<>
-void VertBuffer<PCVert>::draw() const
+void VertBuffer<PCVert>::draw(GLW_3VF *pt, GLW_3VF *ps) const
 {
     if (size() == 0)
         return;
@@ -68,13 +78,20 @@ void VertBuffer<PCVert>::draw() const
     ASSERT(!m_tex);
     GLStateManager::set(m_state);
     
-    // Differentiate between lines and quads
-    if( m_prim == GLW_LINES )
-        GLStateManager::drawLinePCVert(sizeof(Vert), size(),
-            &(*this)[0].pos_x, &(*this)[0].col);
-    else
-        GLStateManager::drawQuadPCVert(sizeof(Vert), size(),
-            &(*this)[0].pos_x, &(*this)[0].col);
+    // Create the primitive we wish to draw
+    GLPrimitive prim(   sizeof(Vert), size(), 2,
+                        &(*this)[0].pos_x,
+                        &(*this)[0].col,
+                        NULL);
+    
+    prim.mode = m_prim;
+    
+    // Set prerender matrix manipulations
+    if( pt ) prim.pretranslate = pt;
+    if( ps ) prim.prescale = ps;
+    
+    // Draw
+    GLStateManager::drawGLPrimitive(prim);
 }
 
 template<>
@@ -88,7 +105,7 @@ void VertBuffer<PTCVert>::init_state()
 }
 
 template<>
-void VertBuffer<PTCVert>::draw() const
+void VertBuffer<PTCVert>::draw(GLW_3VF *pt, GLW_3VF *ps) const
 {
     if (size() == 0)
         return;
@@ -100,8 +117,20 @@ void VertBuffer<PTCVert>::draw() const
     GLStateManager::set(m_state);
     m_tex->bind();
     
-    GLStateManager::drawQuadPTCVert(sizeof(Vert), size(),
-        &(*this)[0].pos_x, &(*this)[0].tex_x, &(*this)[0].col);
+    // Create the primitive we wish to draw
+    GLPrimitive prim(   sizeof(Vert), size(), 2,
+                        &(*this)[0].pos_x,
+                        &(*this)[0].col,
+                        &(*this)[0].tex_x);
+    
+    prim.mode = m_prim;
+    
+    // Set prerender matrix manipulations
+    if( pt ) prim.pretranslate = pt;
+    if( ps ) prim.prescale = ps;
+    
+    // Draw
+    GLStateManager::drawGLPrimitive(prim);
 }
 
 template<>
@@ -118,7 +147,7 @@ void VertBuffer<P3TCVert>::init_state()
 }
 
 template<>
-void VertBuffer<P3TCVert>::draw() const
+void VertBuffer<P3TCVert>::draw(GLW_3VF *pt, GLW_3VF *ps) const
 {
     if (size() == 0)
         return;
@@ -129,9 +158,21 @@ void VertBuffer<P3TCVert>::draw() const
     ASSERT(m_tex);
     GLStateManager::set(m_state);
     m_tex->bind();
-
-    GLStateManager::drawQuadP3TCVert(sizeof(Vert), size(),
-        &(*this)[0].pos_x, &(*this)[0].tex_x, &(*this)[0].col );
+    
+    // Create the primitive we wish to draw
+    GLPrimitive prim(   sizeof(Vert), size(), 3,
+                        &(*this)[0].pos_x,
+                        &(*this)[0].col,
+                        &(*this)[0].tex_x);
+    
+    prim.mode = m_prim;
+    
+    // Set prerender matrix manipulations
+    if( pt ) prim.pretranslate = pt;
+    if( ps ) prim.prescale = ps;
+    
+    // Draw
+    GLStateManager::drawGLPrimitive(prim);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -435,7 +476,7 @@ void SubmergedTileBuffer::draw() const
     {
         // First, draw anything below water.  Alpha blending is turned on,
         // so these tiles will blend with anything previously drawn.
-        m_below_water.draw();
+        m_below_water.draw(NULL, NULL);
 
         // Second, draw all of the mask tiles.  The mask is white
         // (255,255,255,255) above water and transparent (0,0,0,0) below water.
@@ -450,20 +491,18 @@ void SubmergedTileBuffer::draw() const
         // z-values than this maximum, they will not draw over these
         // transparent pixels, effectively masking them out. (My kingdom for a
         // shader.)
-        GLStateManager::pushMatrix();
-        GLStateManager::translatef(0, 0, m_max_z + 1);
-        m_mask.draw();
-        GLStateManager::popMatrix();
+        GLW_3VF trans(0, 0, m_max_z + 1);
+        m_mask.draw(&trans, NULL);
 
         // Now, draw all the above water tiles.  Some of these may draw over
         // top of part of the below water tiles, but that's fine as the mask
         // will take care of only drawing the correct parts.
-        m_above_water.draw();
+        m_above_water.draw(NULL, NULL);
     }
     else
     {
-        m_below_water.draw();
-        m_above_water.draw();
+        m_below_water.draw(NULL, NULL);
+        m_above_water.draw(NULL, NULL);
 
         ASSERT(m_mask.size() == 0);
     }
