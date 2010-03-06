@@ -1348,6 +1348,11 @@ static bool _mons_throw(struct monsters *monster, struct bolt &pbolt,
 
     throw_noise(monster, pbolt, item);
 
+    // Store misled values here, as the setting up of the aux source
+    // will use the wrong monster name.
+    int misled = you.duration[DUR_MISLED];
+    you.duration[DUR_MISLED] = 0;
+
     // [dshaligram] When changing bolt names here, you must edit
     // hiscores.cc (scorefile_entry::terse_missile_cause()) to match.
     if (projected == LRET_LAUNCHED)
@@ -1362,6 +1367,9 @@ static bool _mons_throw(struct monsters *monster, struct bolt &pbolt,
                  (is_vowel(pbolt.name[0]) ? "n" : ""), pbolt.name.c_str(),
                  monster->name(DESC_NOCAP_A).c_str());
     }
+
+    // And restore it here.
+    you.duration[DUR_MISLED] = misled;
 
     // Add everything up.
     pbolt.hit = baseHit + random2avg(exHitBonus, 2) + ammoHitBonus;
