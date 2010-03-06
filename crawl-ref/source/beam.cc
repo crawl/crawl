@@ -3925,11 +3925,10 @@ bool bolt::attempt_block(monsters* mon)
 
                 reflect();
             }
-            else
+            else if (you.see_cell(pos()))
             {
                 mprf("%s blocks the %s.",
-                     mon->name(DESC_CAP_THE).c_str(),
-                     name.c_str());
+                     mon->name(DESC_CAP_THE).c_str(), name.c_str());
                 finish_beam();
             }
 
