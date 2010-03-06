@@ -1206,8 +1206,6 @@ ENDMAP
 
 ###############################################################################
 # Zonguldrok's Shrine
-#
-# TODO: Tiles (dead trees), extend redescriptions.
 NAME:       wizlab_zonguldrok
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
@@ -1227,7 +1225,7 @@ ITEM:       long sword unrand:sword_of_zonguldrok
 lua_marker("G", portal_desc { grave = 1 })
 lua_marker("W", portal_desc { wizard_grave = 1,
         desc="Zonguldrok's gravestone",
-        desc_long="A gravestone. The name 'Zonguldrok' is engrave on it in golden letters.\n"})
+        desc_long="A gravestone. The name 'Zonguldrok' is engraved on it in golden letters.\n"})
 
 function spawn_zombies (data, triggerable, triggerer, marker, ev)
     function spawn_zombie (x, y, spec)
