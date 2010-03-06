@@ -88,6 +88,9 @@ function trove.get_trove_item(e, value, base_item)
         item.base_type = shop_item.base_type
         item.sub_type = shop_item.sub_type
         item.ego_type = shop_item.ego_type
+        if shop_item.artefact then
+          item.artefact_name = shop_item.artefact_name
+        end
         local shop_plus1, shop_plus2 = shop_item.pluses()
         if item.base_type == "armour" then
           item.plus1 = shop_plus1
