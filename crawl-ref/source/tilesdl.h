@@ -199,7 +199,6 @@ protected:
             return (rhs.reg == reg
                     && rhs.cx == cx
                     && rhs.cy == cy
-                    && reg
                     && rhs.mode == mode);
         }
         bool operator!=(const cursor_loc &rhs) const
