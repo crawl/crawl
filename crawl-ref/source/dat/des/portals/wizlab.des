@@ -51,13 +51,6 @@
 #    layout: graveyard
 #    colour: darkgrey, lightgrey
 #
-# Borgnjor's Mortuary
-#    threat: miasma, vampires, liches
-#    loot:   necromancy book, potions, gold
-#    xp:     20000+
-#    layout: concentric circles
-#    colour: magenta, white
-#
 ## Random maps
 #
 # Cloud Mage's Chambers
@@ -856,111 +849,6 @@ MAP
                 ^__.......__^
                 ^____...____^
                 ^^^^^^^^^^^^^
-ENDMAP
-
-###############################################################################
-# Borgnjor's Mortuary
-#
-# TODO:
-#       * rebrand features and make pretty
-#       * tiles
-#       * screaming slaves being drained of life force!
-NAME:       wizlab_borgnjor
-ORIENT:     encompass
-TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
-LFLOORCOL:  magenta
-LFLOORTILE: floor_pebble_magenta
-COLOUR:     =c = white
-TILE:       c = wall_stone_white
-COLOUR:     n = darkgrey
-TILE:       n = dngn_transparent_wall_darkgray
-COLOUR:     " = red
-KMONS:      a = human
-KMONS:      b = slave att:neutral
-KMONS:      p = vampire knight spells:bolt_of_draining;paralyse;haste;invisibility\
-                ;miasma;minor_healing / w:15 vampire spells:bolt_of_draining;confuse;\
-                invisibility
-KMONS:      V = vampire mage
-KMONS:      L = patrolling lich / w:1 patrolling ancient lich
-KMONS:      u = patrolling mummy / w:1 patrolling guardian mummy
-KMONS:      M = patrolling mummy priest / w:1 patrolling greater mummy
-MARKER:     u = lua:fog_machine { \
-                 pow_max = 10, delay_min = 10, delay_max = 40, \
-                 size = 1, size_buildup_amnt = 5, \
-                 size_buildup_time = 25, cloud_type = "foul pestilence" \
-             }
-MARKER:     M = lua:fog_machine { \
-                 pow_max = 10, delay_min = 10, delay_max = 40, \
-                 size = 1, size_buildup_amnt = 5, \
-                 size_buildup_time = 25, cloud_type = "foul pestilence" \
-             }
-KITEM:      $ = potion of healing / potion of heal wounds / potion of decay / \
-            scroll of torment / potion of blood / w:20 gold
-KITEM:      | = ring of regeneration / ring of life protection / amulet of warding / \
-            wand of draining / wand of healing / any book / acquire book / \
-            staff of death / potion of healing / potion of heal wounds / \
-            potion of decay / potion of blood
-KITEM:      : = randbook disc:necromancy owner:Borgnjor
-SUBST:      | = |$:
-MARKER:     + = lua:restrict_door()
-:           dgn.set_feature_desc_short("stone wall", "oddly bright stone wall")
-:           dgn.set_feature_desc_long("stone wall", "It actually seems to glow and shimmer,"
-:                       .. " as though it were filled with life force.\n")
-:           dgn.set_feature_desc_short("translucent stone wall", "black glass")
-:           dgn.set_feature_desc_long("translucent stone wall", "Opaque rather than transparent,"
-:                  .. " though still clear enough to see through. It pulsates omniously, darkly,"
-:                       .. " as though it were a warm, beating black heart.\n")
-:           dgn.set_feature_desc_short("Floor", "worn and marked floor")
-:           dgn.set_feature_desc_long("Floor", "It seems to have been worn with the passage"
-:                       .. " of many thousands of feet. There's also a strange tinge of red"
-:                       .. " to it, like the colour of old blood...\n")
-:           wizlab_setup(_G, "Borgnjor's Mortuary")
-epilogue{{
-            wizlab_milestone(_G, "Borgnjor's Mortuary")
-}}
-MAP
-cccccccccccccccccccccccccccccccccccccccccccccc
-ccc....LccccccccccccucM.cucccccccccccccccccccc
-ccc.....c...c$$$cccc.c..c.cccccccccccccc.....c
-ccc.....+.<..$$$cccc.c..c.c..................c
-ccc.....c...c$$$cccc+c++c+c.cccccccccccc.....c
-ccc.....cccccccccccc......c+cccccccccccc.....c
-cccc.ccccccccccc...c......c....ccccccccc....Lc
-cccc.ccccccc.......+......+........ccccccc+ccc
-cccc.ccccc.........c......c......p...cccc...cc
-cccc.cccc....nnnnnncccccccc...........ccc.<.cc
-cccc.ccc.p..nnb.bbccc|||||ccc..........cc...cc
-cccc.ccc....n..cccc...nnn...ccccnnnn...ccc.ccc
-cccc.cc....nnbcc......nbn......ccbbnn...c$$$cc
-cccc.cc....n..c..nnn..nnn..nnn..c..bn...c$$$cc
-cccc.cc....nbcc..nbn..."...nbn..ccbbn...c$$$cc
-cccc..+....n.c...nnn..."...nnn...cccc+cccccccc
-ccccccccc+cccc......"..".."......cc......+..uc
-ccu..+......c|......."V"V".......|c......ccccc
-cccccc......c|.nnn...V"""V...nnn.|c......+..Mc
-ccM..+......c|.nbn"""""Y"""""nbn.|c......+...c
-cc...+......c|.nnn...V"""V...nnn.|c......ccccc
-cccccc......c|.......".".".......|c......+..uc
-ccu..+......cc......"..".."......cccc+cccccccc
-ccccccccc+cccc...nnn..."...nnn...c.n....+...cc
-cc...cc...n.bcc..nbn..."...nbn..cc.n....ccc.cc
-cc.A.cc...n.b.c..nnn..nnn..nnn..c.bn....ccc.cc
-cc...cc...nn.bcc......nbn......cc.nn....ccc.cc
-ccc.cccc...nnnncccc...nnn...cccc.bn....cccc.cc
-cc...ccc..........ccc.....cccb...nn....cccc.cc
-cc.<.cccc...........ccc+ccccnnnnnn..p.ccccc.cc
-cc...ccccc....p.....c......c.........cccccc.cc
-ccc+cccccccc........c......+.......cccccccc.cc
-c.....cccccccccc....c......c...cccccccccccc.cc
-c.aaa.ccccccccccccc+c......ccccccccccccc.....c
-c..p..ccccccccccccc.c+c++c+ccccc$$$c...c.....c
-c..p................c.c..c.ccccc$$$..<.+.....c
-c.....ccccccccccccccc.c..c.ccccc$$$c...c.....c
-cccccccccccccccccccccuc.McucccccccccccccL....c
-cccccccccccccccccccccccccccccccccccccccccccccc
-ENDMAP
-
-MAP
 ENDMAP
 
 ##############################################################################
