@@ -322,6 +322,11 @@ bool cell_is_solid(const coord_def &c)
     return (feat_is_solid(grd(c)));
 }
 
+bool feat_is_floor(dungeon_feature_type feat)
+{
+    return (feat >= DNGN_FLOOR_MIN && feat <= DNGN_FLOOR_MAX);
+}
+
 bool feat_has_solid_floor(dungeon_feature_type feat)
 {
     return (!feat_is_solid(feat) && feat != DNGN_DEEP_WATER &&
