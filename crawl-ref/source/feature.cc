@@ -762,3 +762,28 @@ void init_show_table(void)
             f.em_colour = f.colour;
     }
 }
+
+dungeon_feature_type magic_map_base_feat(dungeon_feature_type feat)
+{
+    const feature_def& fdef = get_feature_def(feat);
+    switch (fdef.dchar)
+    {
+    case DCHAR_STATUE:
+        return DNGN_GRANITE_STATUE;
+    case DCHAR_FLOOR:
+    case DCHAR_TRAP:
+        return DNGN_FLOOR;
+    case DCHAR_WAVY:
+        return DNGN_SHALLOW_WATER;
+    case DCHAR_ARCH:
+        return DNGN_ABANDONED_SHOP;
+    case DCHAR_FOUNTAIN:
+        return DNGN_FOUNTAIN_BLUE;
+    case DCHAR_WALL:
+        return DNGN_ROCK_WALL;
+    case DCHAR_ALTAR:
+        return DNGN_ALTAR_FIRST_GOD;
+    default:
+        return DNGN_UNSEEN;
+    }
+}
