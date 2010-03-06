@@ -3517,7 +3517,7 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
         cmd.push_back(CMD_DISPLAY_INVENTORY);
 
         std::vector<std::string> listed;
-        if (Tutorial.tutorial_type == TUT_MAGIC_CHAR)
+        if (you.spell_no > 0)
         {
             listed.push_back("your spells (<w>%?</w>)");
             cmd.push_back(CMD_CAST_SPELL);
@@ -3540,9 +3540,11 @@ void learned_something_new(tutorial_event_type seen_what, coord_def gc)
 
         listed.push_back("the message history (<w>%</w>)");
         listed.push_back("the character overview screen (<w>%</w>)");
+        listed.push_back("the dungeon overview screen (<w>%</w>)");
         text << comma_separated_line(listed.begin(), listed.end()) << ".";
         cmd.push_back(CMD_REPLAY_MESSAGES);
         cmd.push_back(CMD_RESISTS_SCREEN);
+        cmd.push_back(CMD_DISPLAY_OVERMAP);
 
         text << "\nAlternatively, you can dump all information pertaining to "
                 "your character into a text file with the <w>%</w> command. "
