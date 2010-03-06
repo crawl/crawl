@@ -87,7 +87,7 @@ public:
     // Vertices are fat, so to avoid an extra copy of all the data members,
     // pre-construct the vertex and return a reference to it.
     V& get_next();
-    void draw() const;
+    void draw(GLW_3VF *pt, GLW_3VF *ps) const;
 
     GLState &state() { return m_state; }
 

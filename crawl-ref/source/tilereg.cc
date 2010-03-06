@@ -223,9 +223,10 @@ bool Region::mouse_pos(int mouse_x, int mouse_y, int &cx, int &cy)
 
 void Region::set_transform()
 {
-    GLStateManager::loadIdentity();
-    GLStateManager::translatef(sx + ox, sy + oy, 0);
-    GLStateManager::scalef(dx, dy, 1);
+    GLW_3VF trans(sx + ox, sy + oy, 0);
+    GLW_3VF scale(dx, dy, 1);
+    
+    GLStateManager::setTransform(&trans, &scale);
 }
 
 TileRegion::TileRegion(ImageManager* im, FTFont *tag_font, int tile_x, int tile_y)
@@ -1268,10 +1269,10 @@ void DungeonRegion::render()
     }
 
     set_transform();
-    m_buf_dngn.draw();
+    m_buf_dngn.draw(NULL, NULL);
     m_buf_doll.draw();
     m_buf_main_trans.draw();
-    m_buf_main.draw();
+    m_buf_main.draw(NULL, NULL);
 
     draw_minibars();
 
@@ -1280,7 +1281,7 @@ void DungeonRegion::render()
         ShapeBuffer buff;
         VColour red_film(130, 0, 0, 100);
         buff.add(0, 0, mx, my, red_film);
-        buff.draw();
+        buff.draw(NULL, NULL);
     }
 
     FixedArray<tag_def, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tag_show;
@@ -1436,7 +1437,7 @@ void DungeonRegion::draw_minibars()
                      hp_spent);
         }
 
-        buff.draw();
+        buff.draw(NULL, NULL);
     }
 }
 
@@ -2540,9 +2541,9 @@ void GridRegion::render()
     cprintf("rendering GridRegion\n");
 #endif
     set_transform();
-    m_buf_dngn.draw();
-    m_buf_spells.draw();
-    m_buf_main.draw();
+    m_buf_dngn.draw(NULL, NULL);
+    m_buf_spells.draw(NULL, NULL);
+    m_buf_main.draw(NULL, NULL);
 
     draw_tag();
 }
@@ -3871,8 +3872,7 @@ void TabbedRegion::render()
     cprintf("rendering TabbedRegion\n");
 #endif
     set_transform();
-    m_buf_gui.draw();
-
+    m_buf_gui.draw(NULL, NULL);
     m_tabs[m_active].reg->render();
 
     draw_tag();
@@ -4077,8 +4077,8 @@ void MapRegion::render()
     }
 
     set_transform();
-    m_buf_map.draw();
-    m_buf_lines.draw();
+    m_buf_map.draw(NULL, NULL);
+    m_buf_lines.draw(NULL, NULL);
 }
 
 void MapRegion::recenter()
@@ -4609,12 +4609,12 @@ void MessageRegion::render()
         {
             height *= m_font->char_height();
 
-            GLStateManager::loadIdentity();
+            GLStateManager::setTransform(NULL, NULL);
 
             ShapeBuffer buff;
             VColour col(100, 100, 100, 100);
             buff.add(sx, sy, ex, sy + height, col);
-            buff.draw();
+            buff.draw(NULL, NULL);
         }
     }
 
@@ -4968,11 +4968,11 @@ void MenuRegion::render()
         place_entries();
 
     set_transform();
-    m_shape_buf.draw();
-    m_line_buf.draw();
+    m_shape_buf.draw(NULL, NULL);
+    m_line_buf.draw(NULL, NULL);
     for (int i = 0; i < TEX_MAX; i++)
-        m_tile_buf[i].draw();
-    m_font_buf.draw();
+        m_tile_buf[i].draw(NULL, NULL);
+    m_font_buf.draw(NULL, NULL);
 }
 
 void MenuRegion::clear()
@@ -5121,8 +5121,8 @@ void TitleRegion::render()
     cprintf("rendering TitleRegion\n");
 #endif
     set_transform();
-    m_buf.draw();
-    m_font_buf.draw();
+    m_buf.draw(NULL, NULL);
+    m_font_buf.draw(NULL, NULL);
 }
 
 void TitleRegion::run()
@@ -5298,12 +5298,15 @@ void DollEditRegion::render()
 
 
     set_transform();
-    m_shape_buf.draw();
+    m_shape_buf.draw(NULL, NULL);
     m_tile_buf.draw();
 
-    GLStateManager::loadIdentity();
-    GLStateManager::translatef(32 * left_gutter, 32 * edit_doll_line, 0);
-    GLStateManager::scalef(64, 64, 1);
+    {
+        GLW_3VF trans(32 * left_gutter, 32 * edit_doll_line, 0);
+        GLW_3VF scale(64, 64, 1);
+        GLStateManager::setTransform(&trans, &scale);
+    }
+
     m_cur_buf.draw();
 
     {
@@ -5324,9 +5327,13 @@ void DollEditRegion::render()
         else if (m_mode == TILEP_MODE_EQUIP)
             m_cur_buf.add(TILEP_CURSOR, 4, 0);
     }
-    GLStateManager::loadIdentity();
-    GLStateManager::translatef(32 * (left_gutter + 3), 32 * edit_doll_line, 0);
-    GLStateManager::scalef(32, 32, 1);
+
+    {
+        GLW_3VF trans(32 * (left_gutter + 3), 32 * edit_doll_line, 0);
+        GLW_3VF scale(32, 32, 1);
+        GLStateManager::setTransform(&trans, &scale);
+    }
+
     m_cur_buf.draw();
 
     // Add text.
@@ -5336,9 +5343,7 @@ void DollEditRegion::render()
     else if (m_part_idx)
         part_name = tile_player_name(m_part_idx);
 
-    GLStateManager::loadIdentity();
-    GLStateManager::translatef(0, 0, 0);
-    GLStateManager::scalef(1, 1, 1);
+    GLStateManager::resetTransform();
 
     std::string item_str = part_name;
     float item_name_x = left_gutter * 32.0f;
@@ -5422,7 +5427,7 @@ void DollEditRegion::render()
         m_font_buf.add("Quit menu          q, Ctrl-Q",                                          VColour::white, start_x, start_y + height * 5);
     }
 
-    m_font_buf.draw();
+    m_font_buf.draw(NULL, NULL);
 }
 
 int DollEditRegion::handle_mouse(MouseEvent &event)

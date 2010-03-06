@@ -9,6 +9,22 @@
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
+// GLPrimitive
+GLPrimitive::GLPrimitive(long unsigned int sz, size_t ct, unsigned int vs,
+        const void* v_pt, const void *c_pt, const void *t_pt) :
+    mode(GLW_QUADS),
+    vertSize(vs),
+    size(sz),
+    count(ct),
+    vert_pointer(v_pt),
+    colour_pointer(c_pt),
+    texture_pointer(t_pt),
+    pretranslate(NULL),
+    prescale(NULL)
+{
+}
+
+/////////////////////////////////////////////////////////////////////////////
 // GLState
 
 // Note: these defaults should match the OpenGL defaults
@@ -84,58 +100,75 @@ void GLStateManager::set(const GLState& state)
         glDisable(GL_ALPHA_TEST);
 }
 
+void GLStateManager::setTransform(GLW_3VF *translate, GLW_3VF *scale)
+{
+    glLoadIdentity();
+    if(translate) glTranslatef(translate->x, translate->y, translate->z);
+    if(scale) glScalef(scale->x, scale->y, scale->z);
+}
+
+void GLStateManager::resetTransform()
+{
+    glLoadIdentity();
+    glTranslatef(0,0,0);
+    glScalef(1,1,1);
+}
+
 void GLStateManager::pixelStoreUnpackAlignment(unsigned int bpp)
 {
     glPixelStorei(GL_UNPACK_ALIGNMENT, bpp);
 }
 
-void GLStateManager::drawQuadPTVert( long unsigned int size, size_t count,
-    const void *vert_pointer, const void *tex_pointer)
+void GLStateManager::drawGLPrimitive(const GLPrimitive &prim)
 {
-    ASSERT(_valid(count, GLW_QUADS));
-    glVertexPointer(2, GL_FLOAT, size, vert_pointer);
-    glTexCoordPointer(2, GL_FLOAT, size, tex_pointer);
-    glDrawArrays(GL_QUADS, 0, count);
-}
+    // Handle errors
+    if( !prim.vert_pointer || prim.count < 1 || prim.size < 1 ) return;
+    ASSERT(_valid(prim.count, prim.mode));
+    
+    // Set pointers
+    glVertexPointer(prim.vertSize, GL_FLOAT, prim.size, prim.vert_pointer);
+    if( prim.texture_pointer && prim.mode != GLW_LINES )
+        glTexCoordPointer(2, GL_FLOAT, prim.size, prim.texture_pointer);
+    if( prim.colour_pointer )
+        glColorPointer(4, GL_UNSIGNED_BYTE, prim.size, prim.colour_pointer);
+    
+    // Handle pre-render matrix manipulations
+    if( prim.pretranslate || prim.prescale )
+    {
+        glPushMatrix();
 
-void GLStateManager::drawQuadPCVert( long unsigned int size, size_t count,
-    const void *vert_pointer, const void *color_pointer)
-{
-    ASSERT(_valid(count, GLW_QUADS));
-    glVertexPointer(2, GL_FLOAT, size, vert_pointer);
-    glColorPointer(4, GL_UNSIGNED_BYTE, size, color_pointer);
-    glDrawArrays(GL_QUADS, 0, count);
-}
+        if( prim.pretranslate )
+        {
+            glTranslatef(   prim.pretranslate->x,
+                            prim.pretranslate->y,
+                            prim.pretranslate->z);
+        }
 
-void GLStateManager::drawLinePCVert( long unsigned int size, size_t count,
-    const void *vert_pointer, const void *color_pointer)
-{
-    ASSERT(_valid(count, GLW_LINES));
-    glVertexPointer(2, GL_FLOAT, size, vert_pointer);
-    glColorPointer(4, GL_UNSIGNED_BYTE, size, color_pointer);
-    glDrawArrays(GL_LINES, 0, count);
-}
+        if( prim.prescale )
+            glScalef(prim.prescale->x, prim.prescale->y, prim.prescale->z);
 
-void GLStateManager::drawQuadPTCVert( long unsigned int size, size_t count,
-    const void *vert_pointer, const void *tex_pointer,
-    const void *color_pointer)
-{
-    ASSERT(_valid(count, GLW_QUADS));
-    glVertexPointer(2, GL_FLOAT, size, vert_pointer);
-    glTexCoordPointer(2, GL_FLOAT, size, tex_pointer);
-    glColorPointer(4, GL_UNSIGNED_BYTE, size, color_pointer);
-    glDrawArrays(GL_QUADS, 0, count);
-}
-
-void GLStateManager::drawQuadP3TCVert( long unsigned int size, size_t count,
-    const void *vert_pointer, const void *tex_pointer,
-    const void *color_pointer)
-{
-    ASSERT(_valid(count, GLW_QUADS));
-    glVertexPointer(3, GL_FLOAT, size, vert_pointer);
-    glTexCoordPointer(2, GL_FLOAT, size, tex_pointer);
-    glColorPointer(4, GL_UNSIGNED_BYTE, size, color_pointer);
-    glDrawArrays(GL_QUADS, 0, count);
+    }
+    
+    // Draw!
+    switch( prim.mode )
+    {
+        case GLW_QUADS:
+            glDrawArrays(GL_QUADS, 0, prim.count);
+            break;
+        
+        case GLW_LINES:
+            glDrawArrays(GL_LINES, 0, prim.count);
+            break;
+            
+        default:
+            break;
+    }
+    
+    // Clean up
+    if( prim.pretranslate || prim.prescale )
+    {
+        glPopMatrix();
+    }
 }
 
 void GLStateManager::deleteTextures(size_t count, unsigned int *textures)
@@ -180,46 +213,12 @@ void GLStateManager::loadTexture(unsigned char *pixels, unsigned int width,
     }
 }
 
-void GLStateManager::clearBuffers()
+void GLStateManager::resetViewForRedraw(float x, float y)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
-
-void GLStateManager::setProjectionMatrixMode()
-{
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-}
-
-void GLStateManager::setModelviewMatrixMode()
-{
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-}
-
-void GLStateManager::pushMatrix()
-{
-    glPushMatrix();
-}
-
-void GLStateManager::popMatrix()
-{
-    glPopMatrix();
-}
-
-void GLStateManager::translatef(float x, float y, float z)
-{
-    glTranslatef(x, y ,z);
-}
-
-void GLStateManager::scalef(float x, float y, float z)
-{
-    glScalef(x, y, z);
-}
-
-void GLStateManager::loadIdentity()
-{
-    glLoadIdentity();
+    glTranslatef(x, y , 1.0f);
 }
 
 void GLStateManager::drawTextBlock(unsigned int x_pos, unsigned int y_pos,
