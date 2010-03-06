@@ -366,6 +366,7 @@ public:
     std::string shout_verb() const;
 
     item_def *slot_item(equipment_type eq, bool include_melded);
+    const item_def *slot_item(equipment_type eq, bool include_melded) const;
 
     // actor
     monster_type id() const;

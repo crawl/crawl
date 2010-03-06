@@ -5724,6 +5724,17 @@ item_def *player::slot_item(equipment_type eq, bool include_melded)
             NULL);
 }
 
+// const variant of the above...
+const item_def *player::slot_item(equipment_type eq, bool include_melded) const
+{
+    ASSERT(eq >= EQ_WEAPON && eq <= EQ_AMULET);
+
+    const int item = equip[eq];
+    return (item == -1 ? NULL :
+            include_melded || you_tran_can_wear(eq) ? &inv[item] :
+            NULL);
+}
+
 // Returns the item in the player's weapon slot.
 item_def *player::weapon(int /* which_attack */)
 {
