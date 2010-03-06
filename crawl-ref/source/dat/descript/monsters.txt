@@ -451,7 +451,7 @@ Before you stands a draconian.
 %%%%
 black mamba
 
-A large black tropical snake with the deadliest of all venoms.
+A large tropical snake with the deadliest of all venoms.
 %%%%
 blink frog
 
@@ -862,7 +862,7 @@ A very large grey rat.
 %%%%
 anaconda
 
-A very large grey constrictor snake.
+A very large constrictor snake.
 %%%%
 griffon
 
@@ -1082,7 +1082,7 @@ A huge snapping turtle of unpleasant disposition. It can reach out and bite from
 %%%%
 sea snake
 
-A brightly coloured snake with a potent venomous bite.
+A brightly coloured snake with an highly potent venomous bite.
 %%%%
 merfolk
 
@@ -1665,7 +1665,7 @@ Before you stands a draconian.
 %%%%
 viper
 
-A yellow-scaled snake with a painful venom. It's not as fast as some other snakes, but still fairly quick.
+A snake with a painful venom. It's not as fast as some other snakes, but still fairly quick.
 %%%%
 yellow wasp
 
