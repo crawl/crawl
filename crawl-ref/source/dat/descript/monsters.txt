@@ -1082,7 +1082,7 @@ A huge snapping turtle of unpleasant disposition. It can reach out and bite from
 %%%%
 sea snake
 
-A brightly coloured snake with an highly potent venomous bite.
+A brightly coloured snake with a highly potent venomous bite.
 %%%%
 merfolk
 
