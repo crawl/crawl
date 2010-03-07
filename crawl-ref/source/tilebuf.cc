@@ -52,8 +52,8 @@ void VertBuffer<PTVert>::draw(GLW_3VF *pt, GLW_3VF *ps) const
     prim.mode = m_prim;
     
     // Set prerender matrix manipulations
-    if( pt ) prim.pretranslate = pt;
-    if( ps ) prim.prescale = ps;
+    if ( pt ) prim.pretranslate = pt;
+    if ( ps ) prim.prescale = ps;
     
     // Draw
     GLStateManager::drawGLPrimitive(prim);
@@ -87,8 +87,8 @@ void VertBuffer<PCVert>::draw(GLW_3VF *pt, GLW_3VF *ps) const
     prim.mode = m_prim;
     
     // Set prerender matrix manipulations
-    if( pt ) prim.pretranslate = pt;
-    if( ps ) prim.prescale = ps;
+    if ( pt ) prim.pretranslate = pt;
+    if ( ps ) prim.prescale = ps;
     
     // Draw
     GLStateManager::drawGLPrimitive(prim);
@@ -126,8 +126,8 @@ void VertBuffer<PTCVert>::draw(GLW_3VF *pt, GLW_3VF *ps) const
     prim.mode = m_prim;
     
     // Set prerender matrix manipulations
-    if( pt ) prim.pretranslate = pt;
-    if( ps ) prim.prescale = ps;
+    if ( pt ) prim.pretranslate = pt;
+    if ( ps ) prim.prescale = ps;
     
     // Draw
     GLStateManager::drawGLPrimitive(prim);
@@ -168,8 +168,8 @@ void VertBuffer<P3TCVert>::draw(GLW_3VF *pt, GLW_3VF *ps) const
     prim.mode = m_prim;
     
     // Set prerender matrix manipulations
-    if( pt ) prim.pretranslate = pt;
-    if( ps ) prim.prescale = ps;
+    if ( pt ) prim.pretranslate = pt;
+    if ( ps ) prim.prescale = ps;
     
     // Draw
     GLStateManager::drawGLPrimitive(prim);

@@ -260,7 +260,7 @@ bool TilesFramework::initialise()
     
     std::string title = CRAWL " " + Version::Long();
     
-    if( !wrapper.init(&m_windowsz) ) return (false);
+    if ( !wrapper.init(&m_windowsz) ) return (false);
     
     wrapper.setWindowTitle(title.c_str());
     wrapper.setWindowIcon(icon_name);

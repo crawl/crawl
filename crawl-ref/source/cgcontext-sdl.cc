@@ -20,7 +20,7 @@ GraphicsContext::GraphicsContext():
 
 int GraphicsContext::loadImage( const char *file )
 {
-    if(surf) SDL_FreeSurface(surf);
+    if (surf) SDL_FreeSurface(surf);
 
     FILE *imgfile = fopen(file, "rb");
     if (imgfile)
@@ -34,7 +34,7 @@ int GraphicsContext::loadImage( const char *file )
         fclose(imgfile);
     }
 
-    if(!surf)
+    if (!surf)
         return (-1);
 
     createPalette();
@@ -54,28 +54,28 @@ void GraphicsContext::unlock()
 
 int GraphicsContext::height()
 {
-    if( !surf )
+    if ( !surf )
         return -1;
     return (surf->h);
 }
 
 int GraphicsContext::width()
 {
-    if( !surf )
+    if ( !surf )
         return -1;
     return (surf->w);
 }
 
 short int GraphicsContext::pitch()
 {
-    if( !surf )
+    if ( !surf )
         return (-1);
     return (surf->pitch);
 }
 
 unsigned char GraphicsContext::bytesPerPixel()
 {
-    if( !surf )
+    if ( !surf )
         return (-1);
     return (surf->format->BytesPerPixel);
 }
@@ -87,7 +87,7 @@ void *GraphicsContext::pixels()
 
 unsigned int GraphicsContext::colorKey()
 {
-    if( !surf )
+    if ( !surf )
         return (-1);
     return (surf->format->colorkey);
 }
@@ -95,7 +95,7 @@ unsigned int GraphicsContext::colorKey()
 void GraphicsContext::getRGBA(unsigned int pixel, unsigned char *r,
         unsigned char *g, unsigned char *b, unsigned char *a)
 {
-    if( !surf )
+    if ( !surf )
         return;
     SDL_GetRGBA(pixel, surf->format, r, g, b, a);
 }
@@ -104,7 +104,7 @@ void GraphicsContext::getRGB(unsigned int pixel,     unsigned char *r,
                                     unsigned char *g,
                                     unsigned char *b)
 {
-    if( !surf )
+    if ( !surf )
         return;
     SDL_GetRGB(pixel, surf->format, r, g, b);
 }
@@ -114,11 +114,11 @@ void GraphicsContext::createPalette()
     // TODO: Figure out if this is really safe
     // ui_palette and ui_color are defined in the same way as
     // their SDL counterparts, so we just cast pointers here
-    if( !surf )
+    if ( !surf )
         return;
 
     // Per SDL spec, if bitsPerPixel>8 palette is NULL
-    if( surf->format->BitsPerPixel > 8 )
+    if ( surf->format->BitsPerPixel > 8 )
         return;
 
     // Otherwise do some magic to get access
@@ -130,7 +130,7 @@ void GraphicsContext::createPalette()
 
 void GraphicsContext::destroyPalette()
 {
-    if(palette)
+    if (palette)
         palette->colors = NULL;
     palette = NULL;
 }
@@ -138,7 +138,7 @@ void GraphicsContext::destroyPalette()
 GraphicsContext::~GraphicsContext()
 {
     destroyPalette();
-    if( surf )
+    if ( surf )
         SDL_FreeSurface(surf);
 }
 
