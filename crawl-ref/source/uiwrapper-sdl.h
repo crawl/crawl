@@ -104,27 +104,27 @@ public:
     void shutdown();
 
     // Environment state functions
-    void setWindowTitle(const char *title);
-    bool setWindowIcon(const char* icon_name);
-    key_mod getModState();
-    void setModState(key_mod mod);
-    int byteOrder();
+    void set_window_title(const char *title);
+    bool set_window_icon(const char* icon_name);
+    key_mod get_mod_state();
+    void set_mod_state(key_mod mod);
+    int byte_order();
 
     // System time functions
-    void setTimer(unsigned int interval, ui_timer_callback callback);
-    unsigned int getTicks();
-    void UIDelay(unsigned int ms);
+    void set_timer(unsigned int interval, ui_timer_callback callback);
+    unsigned int get_ticks();
+    void delay(unsigned int ms);
 
     // Event functions
-    int raiseCustomEvent();
-    int waitEvent(ui_event *event);
-    unsigned int getEventCount(ui_event_type type);
+    int raise_custom_event();
+    int wait_event(ui_event *event);
+    unsigned int get_event_count(ui_event_type type);
 
     // Display functions
     void resize(coord_def &m_windowsz);
-    void swapBuffers();
-    int screenWidth();
-    int screenHeight();
+    void swap_buffers();
+    int screen_width();
+    int screen_height();
 
 protected:
 

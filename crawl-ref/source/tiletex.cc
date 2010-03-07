@@ -130,7 +130,7 @@ bool GenericTexture::load_texture(const char *filename,
                     unsigned char *p = ((unsigned char*)img->pixels()
                                        + y * img->pitch() + x * bpp);
                     unsigned int pixel;
-                    if (wrapper.byteOrder() == UI_BIG_ENDIAN)
+                    if (wrapper.byte_order() == UI_BIG_ENDIAN)
                         pixel = p[0] << 16 | p[1] << 8 | p[2];
                     else
                         pixel = p[0] | p[1] << 8 | p[2];
