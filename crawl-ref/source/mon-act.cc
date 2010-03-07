@@ -2037,7 +2037,7 @@ static void _handle_monster_move(monsters *monster)
             {
                 ASSERT(!crawl_state.arena);
 
-                if (!monster->friendly())
+                if (!mons_att_wont_attack(monster->attitude))
                 {
                     // If it steps into you, cancel other targets.
                     monster->foe = MHITYOU;
