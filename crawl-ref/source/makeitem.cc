@@ -3420,11 +3420,11 @@ static bool _armour_is_visibly_special(const item_def &item)
 
 static bool _missile_is_visibly_special(const item_def &item)
 {
-    const int brand = item.special;
+    const special_missile_type brand = get_ammo_brand(item);
 
-    // All ego missiles do, but not needles, as all needles are
-    // ego missiles. Only enchanted needles get runed.
-    if (brand != SPMSL_NORMAL && item.sub_type != MI_NEEDLE)
+    // Ego missiles are runed if their egos aren't obvious.
+    // This applies to all needles.
+    if (brand != SPMSL_NORMAL && !missile_brand_obvious(brand))
         return (true);
 
     // And positively enchanted do, too.
