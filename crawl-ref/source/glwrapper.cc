@@ -100,7 +100,7 @@ void GLStateManager::set(const GLState& state)
         glDisable(GL_ALPHA_TEST);
 }
 
-void GLStateManager::setTransform(GLW_3VF *translate, GLW_3VF *scale)
+void GLStateManager::set_transform(GLW_3VF *translate, GLW_3VF *scale)
 {
     glLoadIdentity();
 
@@ -112,7 +112,7 @@ void GLStateManager::setTransform(GLW_3VF *translate, GLW_3VF *scale)
 
 }
 
-void GLStateManager::resetViewForResize(coord_def &m_windowsz)
+void GLStateManager::reset_view_for_resize(coord_def &m_windowsz)
 {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -121,19 +121,19 @@ void GLStateManager::resetViewForResize(coord_def &m_windowsz)
     glOrtho(0, m_windowsz.x, m_windowsz.y, 0, -1000, 1000);
 }
 
-void GLStateManager::resetTransform()
+void GLStateManager::reset_transform()
 {
     glLoadIdentity();
     glTranslatef(0,0,0);
     glScalef(1,1,1);
 }
 
-void GLStateManager::pixelStoreUnpackAlignment(unsigned int bpp)
+void GLStateManager::pixelstore_unpack_alignment(unsigned int bpp)
 {
     glPixelStorei(GL_UNPACK_ALIGNMENT, bpp);
 }
 
-void GLStateManager::drawGLPrimitive(const GLPrimitive &prim)
+void GLStateManager::draw_primitive(const GLPrimitive &prim)
 {
     // Handle errors
     if ( !prim.vert_pointer || prim.count < 1 || prim.size < 1 )
@@ -181,22 +181,22 @@ void GLStateManager::drawGLPrimitive(const GLPrimitive &prim)
     }
 }
 
-void GLStateManager::deleteTextures(size_t count, unsigned int *textures)
+void GLStateManager::delete_textures(size_t count, unsigned int *textures)
 {
     glDeleteTextures(count, (GLuint*)textures);
 }
 
-void GLStateManager::generateTextures( size_t count, unsigned int *textures)
+void GLStateManager::generate_textures( size_t count, unsigned int *textures)
 {
     glGenTextures(count, (GLuint*)textures);
 }
 
-void GLStateManager::bindTexture(unsigned int texture)
+void GLStateManager::bind_texture(unsigned int texture)
 {
     glBindTexture(GL_TEXTURE_2D, texture);
 }
 
-void GLStateManager::loadTexture(unsigned char *pixels, unsigned int width,
+void GLStateManager::load_texture(unsigned char *pixels, unsigned int width,
     unsigned int height, MipMapOptions mip_opt)
 {
     // Assumptions...
@@ -225,7 +225,7 @@ void GLStateManager::loadTexture(unsigned char *pixels, unsigned int width,
     }
 }
 
-void GLStateManager::resetViewForRedraw(float x, float y)
+void GLStateManager::reset_view_for_redraw(float x, float y)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);

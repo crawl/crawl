@@ -420,7 +420,7 @@ static void _draw_box(int x_pos, int y_pos, float width, float height,
     verts[3].x = verts[2].x;
     verts[3].y = verts[0].y;
 
-    GLStateManager::setTransform(NULL, NULL);
+    GLStateManager::set_transform(NULL, NULL);
 
     GLState state;
     state.array_vertex = true;

@@ -56,7 +56,7 @@ void VertBuffer<PTVert>::draw(GLW_3VF *pt, GLW_3VF *ps) const
     if ( ps ) prim.prescale = ps;
     
     // Draw
-    GLStateManager::drawGLPrimitive(prim);
+    GLStateManager::draw_primitive(prim);
 }
 
 template<>
@@ -91,7 +91,7 @@ void VertBuffer<PCVert>::draw(GLW_3VF *pt, GLW_3VF *ps) const
     if ( ps ) prim.prescale = ps;
     
     // Draw
-    GLStateManager::drawGLPrimitive(prim);
+    GLStateManager::draw_primitive(prim);
 }
 
 template<>
@@ -130,7 +130,7 @@ void VertBuffer<PTCVert>::draw(GLW_3VF *pt, GLW_3VF *ps) const
     if ( ps ) prim.prescale = ps;
     
     // Draw
-    GLStateManager::drawGLPrimitive(prim);
+    GLStateManager::draw_primitive(prim);
 }
 
 template<>
@@ -172,7 +172,7 @@ void VertBuffer<P3TCVert>::draw(GLW_3VF *pt, GLW_3VF *ps) const
     if ( ps ) prim.prescale = ps;
     
     // Draw
-    GLStateManager::drawGLPrimitive(prim);
+    GLStateManager::draw_primitive(prim);
 }
 
 /////////////////////////////////////////////////////////////////////////////

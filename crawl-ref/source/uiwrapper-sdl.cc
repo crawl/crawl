@@ -319,7 +319,7 @@ bool UIWrapper::setWindowIcon(const char* icon_name)
 
 void UIWrapper::resize(coord_def &m_windowsz)
 {
-    GLStateManager::resetViewForResize(m_windowsz);
+    GLStateManager::reset_view_for_resize(m_windowsz);
 }
 
 unsigned int UIWrapper::getTicks()
