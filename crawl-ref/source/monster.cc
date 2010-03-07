@@ -189,7 +189,7 @@ bool monsters::wants_submerge() const
     if (type == MONS_TRAPDOOR_SPIDER)
     {
         // If we're in distress, we usually want to submerge.
-        if (env.cgrid(pos()) != EMPTY_CLOUD)
+        if (!is_harmless_cloud(cloud_type_at(pos())))
             return (true);
 
         const actor* _foe = get_foe();
@@ -5100,8 +5100,8 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
     case ENCH_SUBMERGED:
     {
-        // Not even air elementals unsubmerge into clouds.
-        if (env.cgrid(pos()) != EMPTY_CLOUD)
+        // Don't unsubmerge into a harmful cloud
+        if (!is_harmless_cloud(cloud_type_at(pos())))
             break;
 
         // Air elementals are a special case, as their submerging in air
