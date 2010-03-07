@@ -651,6 +651,8 @@ void game_options::reset_options()
 #ifdef USE_ASCII_CHARACTERS
     char_set      = CSET_ASCII;
 #else
+    // NOTE: Tiles relies on the IBM character set for evaluating glyphs
+    //       of magic mapped dungeon cells.
     char_set      = CSET_IBM;
 #endif
 
