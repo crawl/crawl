@@ -142,7 +142,7 @@ void GLStateManager::draw_primitive(const GLPrimitive &prim)
 
     // Set pointers
     glVertexPointer(prim.vertSize, GL_FLOAT, prim.size, prim.vert_pointer);
-    if ( prim.texture_pointer && prim.mode != GLW_LINES )
+    if ( prim.texture_pointer )
         glTexCoordPointer(2, GL_FLOAT, prim.size, prim.texture_pointer);
     if ( prim.colour_pointer )
         glColorPointer(4, GL_UNSIGNED_BYTE, prim.size, prim.colour_pointer);
