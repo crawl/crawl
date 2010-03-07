@@ -1156,11 +1156,14 @@ std::string item_def::name_aux(description_level_type desc,
 
     const bool know_ego = know_brand;
 
-    const bool know_cosmetic = !__know_pluses && !terse & !basename
+    // Display runed/glowing/embroidered etc?
+    // Only display this if brand is unknown or item is unbranded.
+    const bool show_cosmetic = !__know_pluses && !terse && !basename
         && !qualname && !dbname
+        && (!know_brand || !special)
         && !(ignore_flags & ISFLAG_COSMETIC_MASK);
 
-    // So that know_cosmetic won't be affected by ignore_flags.
+    // So that show_cosmetic won't be affected by ignore_flags.
     const bool know_pluses = __know_pluses
         && !testbits(ignore_flags, ISFLAG_KNOW_PLUSES);
 
@@ -1220,10 +1223,7 @@ std::string item_def::name_aux(description_level_type desc,
             break;
         }
 
-        // Now that we can have "glowing elven" weapons, it's
-        // probably a good idea to cut out the descriptive
-        // term once it's become obsolete. - bwr
-        if (know_cosmetic)
+        if (show_cosmetic)
         {
             switch (get_equip_desc(*this))
             {
@@ -1289,7 +1289,7 @@ std::string item_def::name_aux(description_level_type desc,
 
         }
 
-        if (know_cosmetic
+        if (show_cosmetic
             && get_equip_desc(*this) == ISFLAG_RUNED
             && !testbits(ignore_flags, ISFLAG_RUNED))
         {
@@ -1399,10 +1399,7 @@ std::string item_def::name_aux(description_level_type desc,
             break;
         }
 
-        // Now that we can have "glowing elven" armour, it's
-        // probably a good idea to cut out the descriptive
-        // term once it's become obsolete. - bwr
-        if (know_cosmetic)
+        if (show_cosmetic)
         {
             switch (get_equip_desc(*this))
             {
