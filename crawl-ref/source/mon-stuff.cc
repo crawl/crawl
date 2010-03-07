@@ -3585,8 +3585,13 @@ void monster_teleport(monsters *monster, bool instan, bool silent)
         handle_seen_interrupt(monster);
 
     // Leave a purple cloud.
-    place_cloud(CLOUD_TLOC_ENERGY, oldplace, 1 + random2(3),
-                monster->kill_alignment(), KILL_MON_MISSILE);
+    // XXX: If silent is true, this is not an actual teleport, but
+    //      the game moving a monster out of the way.
+    if (!silent)
+    {
+        place_cloud(CLOUD_TLOC_ENERGY, oldplace, 1 + random2(3),
+                    monster->kill_alignment(), KILL_MON_MISSILE);
+    }
 
     monster->check_redraw(oldplace);
     monster->apply_location_effects(oldplace);
