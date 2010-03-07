@@ -2198,8 +2198,11 @@ int player_evasion(ev_ignore_type evit)
     const int adjusted_evasion_penalty =
         player_adjusted_evasion_penalty(scale);
 
+    // The last two parameters are not important.
+    const int ev_dex = stepdown_value(you.dex, 16, 4, 72, 72);
+
     const int dodge_bonus =
-        (7 + you.skills[SK_DODGING] * you.dex) * scale * scale
+        (7 + you.skills[SK_DODGING] * ev_dex) * scale * scale
         / (20 * scale + adjusted_evasion_penalty - size_factor * scale);
 
     const int adjusted_shield_penalty =
