@@ -2305,8 +2305,11 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     monster->mname = name;
     monster->props["original_name"] = name;
     monster->props["original_was_unique"] = old_mon_unique;
-    monster->flags = flags;
     monster->god   = god;
+
+    monster->flags = flags;
+    // Line above might clear spell flags; restore.
+    monster->bind_spell_flags();
 
     // Forget various speech/shout Lua functions.
     monster->props.erase("speech_key");
