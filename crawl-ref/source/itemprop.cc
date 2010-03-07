@@ -908,6 +908,18 @@ int get_weapon_brand( const item_def &item )
     return (item.special);
 }
 
+bool missile_brand_obvious(special_missile_type brand)
+{
+    // Missiles that are poisoned or made of obvious materials (steel,
+    // silver) are always identified.
+    // Same for needle brands.
+    return (brand == SPMSL_POISONED
+            || brand == SPMSL_CURARE
+            || (brand >= SPMSL_PARALYSIS && brand <= SPMSL_RAGE)
+            || brand == SPMSL_STEEL
+            || brand == SPMSL_SILVER);
+}
+
 special_missile_type get_ammo_brand(const item_def &item)
 {
     // No artefact arrows yet. -- bwr
