@@ -288,22 +288,22 @@ int UIWrapper::init(coord_def *m_windowsz)
     return (true);
 }
 
-int UIWrapper::screenWidth()
+int UIWrapper::screen_width()
 {
     return (video_info->current_w);
 }
 
-int UIWrapper::screenHeight()
+int UIWrapper::screen_height()
 {
     return (video_info->current_h);
 }
 
-void UIWrapper::setWindowTitle(const char *title)
+void UIWrapper::set_window_title(const char *title)
 {
     SDL_WM_SetCaption(title, CRAWL);
 }
 
-bool UIWrapper::setWindowIcon(const char* icon_name)
+bool UIWrapper::set_window_icon(const char* icon_name)
 {
     // TODO: Figure out how to move this IMG_Load command to cgcontext
     // so that we're not dependant on SDL_image here
@@ -322,12 +322,12 @@ void UIWrapper::resize(coord_def &m_windowsz)
     GLStateManager::reset_view_for_resize(m_windowsz);
 }
 
-unsigned int UIWrapper::getTicks()
+unsigned int UIWrapper::get_ticks()
 {
     return (SDL_GetTicks());
 }
 
-key_mod UIWrapper::getModState()
+key_mod UIWrapper::get_mod_state()
 {
     SDLMod mod = SDL_GetModState();
     
@@ -350,7 +350,7 @@ key_mod UIWrapper::getModState()
     }
 }
 
-void UIWrapper::setModState(key_mod mod)
+void UIWrapper::set_mod_state(key_mod mod)
 {
     SDLMod set_to;
     switch (mod) {
@@ -374,7 +374,7 @@ void UIWrapper::setModState(key_mod mod)
     SDL_SetModState(set_to);
 }
 
-int UIWrapper::waitEvent(ui_event *event)
+int UIWrapper::wait_event(ui_event *event)
 {
     SDL_Event sdlevent;
     if (!SDL_WaitEvent(&sdlevent))
@@ -438,29 +438,29 @@ int UIWrapper::waitEvent(ui_event *event)
     return (1);
 }
 
-void UIWrapper::setTimer(unsigned int interval, ui_timer_callback callback)
+void UIWrapper::set_timer(unsigned int interval, ui_timer_callback callback)
 {
     SDL_SetTimer(interval, callback);
 }
 
-int UIWrapper::raiseCustomEvent()
+int UIWrapper::raise_custom_event()
 {   
     SDL_Event send_event;
     send_event.type = SDL_USEREVENT;
     return (SDL_PushEvent(&send_event));
 }
 
-void UIWrapper::swapBuffers()
+void UIWrapper::swap_buffers()
 {
     SDL_GL_SwapBuffers();
 }
 
-void UIWrapper::UIDelay(unsigned int ms)
+void UIWrapper::delay(unsigned int ms)
 {
     SDL_Delay(ms);
 }
 
-unsigned int UIWrapper::getEventCount(ui_event_type type)
+unsigned int UIWrapper::get_event_count(ui_event_type type)
 {
     // Look for the presence of any keyboard events in the queue.
     Uint32 eventmask;
@@ -526,7 +526,7 @@ void UIWrapper::shutdown()
     video_info = NULL;
 }
 
-int UIWrapper::byteOrder()
+int UIWrapper::byte_order()
 {
     if ( SDL_BYTEORDER == SDL_BIG_ENDIAN )
         return (UI_BIG_ENDIAN);
