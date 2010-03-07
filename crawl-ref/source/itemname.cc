@@ -1969,19 +1969,10 @@ bool item_type_known( const item_def& item )
     if (is_artefact(item))
         return (false);
 
-    // Missiles that are poisoned or made of obvious materials (steel,
-    // silver) are always identified.
-    if (item.base_type == OBJ_MISSILES)
+    if (item.base_type == OBJ_MISSILES
+        && missile_brand_obvious(get_ammo_brand(item)))
     {
-        int ammo_brand = get_ammo_brand(item);
-        if (ammo_brand == SPMSL_POISONED
-            || ammo_brand == SPMSL_CURARE
-            || (ammo_brand >= SPMSL_PARALYSIS && ammo_brand <= SPMSL_RAGE)
-            || ammo_brand == SPMSL_STEEL
-            || ammo_brand == SPMSL_SILVER)
-        {
             return (true);
-        }
     }
 
     const item_type_id_type idt = objtype_to_idtype(item.base_type);
