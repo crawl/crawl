@@ -59,13 +59,13 @@ bool GenericTexture::load_texture(const char *filename,
         return (false);
     }
 
-    if ( img->loadImage(tex_path.c_str()) )
+    if ( img->load_image(tex_path.c_str()) )
     {
         fprintf(stderr, "Couldn't load texture '%s'.\n", tex_path.c_str());
         return (false);
     }
 
-    unsigned int bpp = img->bytesPerPixel();
+    unsigned int bpp = img->bytes_per_pixel();
     GLStateManager::pixelStoreUnpackAlignment(bpp);
 
     // Determine texture format
@@ -92,7 +92,7 @@ bool GenericTexture::load_texture(const char *filename,
     if (bpp == 4)
     {
         // Even if the size is the same, still go through
-        // SDL_GetRGBA to put the image in the right format.
+        // SDL_get_rgba to put the image in the right format.
         img->lock();
         pixels = new unsigned char[4 * new_width * new_height];
         memset(pixels, 0, 4 * new_width * new_height);
@@ -105,7 +105,7 @@ bool GenericTexture::load_texture(const char *filename,
                 unsigned char *p = ((unsigned char*)img->pixels()
                                   + y * img->pitch() + x * bpp);
                 unsigned int pixel = *(unsigned int*)p;
-                img->getRGBA(pixel, &pixels[dest], &pixels[dest+1],
+                img->get_rgba(pixel, &pixels[dest], &pixels[dest+1],
                                     &pixels[dest+2], &pixels[dest+3]);
                 dest += 4;
             }
@@ -134,7 +134,7 @@ bool GenericTexture::load_texture(const char *filename,
                         pixel = p[0] << 16 | p[1] << 8 | p[2];
                     else
                         pixel = p[0] | p[1] << 8 | p[2];
-                    img->getRGBA(pixel, &pixels[dest], &pixels[dest+1],
+                    img->get_rgba(pixel, &pixels[dest], &pixels[dest+1],
                                         &pixels[dest+2], &pixels[dest+3]);
                     dest += 4;
                 }
@@ -166,7 +166,7 @@ bool GenericTexture::load_texture(const char *filename,
                 pixels[dest*4    ] = pal->colors[index].r;
                 pixels[dest*4 + 1] = pal->colors[index].g;
                 pixels[dest*4 + 2] = pal->colors[index].b;
-                pixels[dest*4 + 3] = (index != img->colorKey() ? 255 : 0);
+                pixels[dest*4 + 3] = (index != img->color_key() ? 255 : 0);
                 dest++;
             }
             while (x++ < new_width)

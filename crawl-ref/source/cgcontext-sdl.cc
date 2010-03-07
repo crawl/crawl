@@ -18,7 +18,7 @@ GraphicsContext::GraphicsContext():
 {
 }
 
-int GraphicsContext::loadImage( const char *file )
+int GraphicsContext::load_image( const char *file )
 {
     if (surf) SDL_FreeSurface(surf);
 
@@ -37,7 +37,7 @@ int GraphicsContext::loadImage( const char *file )
     if (!surf)
         return (-1);
 
-    createPalette();
+    create_palette();
 
     return (0);
 }
@@ -73,7 +73,7 @@ short int GraphicsContext::pitch()
     return (surf->pitch);
 }
 
-unsigned char GraphicsContext::bytesPerPixel()
+unsigned char GraphicsContext::bytes_per_pixel()
 {
     if ( !surf )
         return (-1);
@@ -85,14 +85,14 @@ void *GraphicsContext::pixels()
     return (surf->pixels);
 }
 
-unsigned int GraphicsContext::colorKey()
+unsigned int GraphicsContext::color_key()
 {
     if ( !surf )
         return (-1);
     return (surf->format->colorkey);
 }
 
-void GraphicsContext::getRGBA(unsigned int pixel, unsigned char *r,
+void GraphicsContext::get_rgba(unsigned int pixel, unsigned char *r,
         unsigned char *g, unsigned char *b, unsigned char *a)
 {
     if ( !surf )
@@ -100,7 +100,7 @@ void GraphicsContext::getRGBA(unsigned int pixel, unsigned char *r,
     SDL_GetRGBA(pixel, surf->format, r, g, b, a);
 }
 
-void GraphicsContext::getRGB(unsigned int pixel,     unsigned char *r,
+void GraphicsContext::get_rgb(unsigned int pixel,     unsigned char *r,
                                     unsigned char *g,
                                     unsigned char *b)
 {
@@ -109,7 +109,7 @@ void GraphicsContext::getRGB(unsigned int pixel,     unsigned char *r,
     SDL_GetRGB(pixel, surf->format, r, g, b);
 }
 
-void GraphicsContext::createPalette()
+void GraphicsContext::create_palette()
 {
     // TODO: Figure out if this is really safe
     // ui_palette and ui_color are defined in the same way as
@@ -128,7 +128,7 @@ void GraphicsContext::createPalette()
     palette->colors = (ui_color*)surf->format->palette->colors;
 }
 
-void GraphicsContext::destroyPalette()
+void GraphicsContext::destroy_palette()
 {
     if (palette)
         palette->colors = NULL;
@@ -137,7 +137,7 @@ void GraphicsContext::destroyPalette()
 
 GraphicsContext::~GraphicsContext()
 {
-    destroyPalette();
+    destroy_palette();
     if ( surf )
         SDL_FreeSurface(surf);
 }
