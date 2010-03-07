@@ -25,7 +25,7 @@ public:
     ~GraphicsContext();
 
     // Loading
-    int loadImage( const char *file );
+    int load_image( const char *file );
 
     // Locking
     int lock();
@@ -35,16 +35,16 @@ public:
     int height();
     int width();
     short int pitch();
-    unsigned char bytesPerPixel();
+    unsigned char bytes_per_pixel();
 
     // Context Accessors
     void *pixels();
-    unsigned int colorKey();
-    void getRGBA(unsigned int pixel,    unsigned char *r,
+    unsigned int color_key();
+    void get_rgba(unsigned int pixel,   unsigned char *r,
                                         unsigned char *g,
                                         unsigned char *b,
                                         unsigned char *a);
-    void getRGB(unsigned int pixel,     unsigned char *r,
+    void get_rgb(unsigned int pixel,    unsigned char *r,
                                         unsigned char *g,
                                         unsigned char *b);
 
@@ -52,8 +52,8 @@ public:
 
 protected:
     // Palette functions
-    void createPalette();
-    void destroyPalette();
+    void create_palette();
+    void destroy_palette();
 
     SDL_Surface *surf;
 };
