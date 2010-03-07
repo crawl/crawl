@@ -21,7 +21,7 @@ GraphicsContext::GraphicsContext():
 int GraphicsContext::loadImage( const char *file )
 {
     if(surf) SDL_FreeSurface(surf);
-    
+
     FILE *imgfile = fopen(file, "rb");
     if (imgfile)
     {
@@ -33,17 +33,18 @@ int GraphicsContext::loadImage( const char *file )
         }
         fclose(imgfile);
     }
-    
-    if(!surf) return -1;
-    
+
+    if(!surf)
+        return (-1);
+
     createPalette();
-    
-    return 0;
+
+    return (0);
 }
 
 int GraphicsContext::lock()
 {
-    return SDL_LockSurface(surf);
+    return (SDL_LockSurface(surf));
 }
 
 void GraphicsContext::unlock()
@@ -53,43 +54,49 @@ void GraphicsContext::unlock()
 
 int GraphicsContext::height()
 {
-    if( !surf ) return -1;
-    return surf->h;
+    if( !surf )
+        return -1;
+    return (surf->h);
 }
 
 int GraphicsContext::width()
 {
-    if( !surf ) return -1;
-    return surf->w;
+    if( !surf )
+        return -1;
+    return (surf->w);
 }
 
 short int GraphicsContext::pitch()
 {
-    if( !surf ) return -1;
-    return surf->pitch;
+    if( !surf )
+        return (-1);
+    return (surf->pitch);
 }
 
 unsigned char GraphicsContext::bytesPerPixel()
 {
-    if( !surf ) return -1;
-    return surf->format->BytesPerPixel;
+    if( !surf )
+        return (-1);
+    return (surf->format->BytesPerPixel);
 }
 
 void *GraphicsContext::pixels()
 {
-    return surf->pixels;
+    return (surf->pixels);
 }
 
 unsigned int GraphicsContext::colorKey()
 {
-    if( !surf ) return -1;
-    return surf->format->colorkey;
+    if( !surf )
+        return (-1);
+    return (surf->format->colorkey);
 }
 
 void GraphicsContext::getRGBA(unsigned int pixel, unsigned char *r,
         unsigned char *g, unsigned char *b, unsigned char *a)
 {
-    if( !surf ) return;
+    if( !surf )
+        return;
     SDL_GetRGBA(pixel, surf->format, r, g, b, a);
 }
 
@@ -97,7 +104,8 @@ void GraphicsContext::getRGB(unsigned int pixel,     unsigned char *r,
                                     unsigned char *g,
                                     unsigned char *b)
 {
-    if( !surf ) return;
+    if( !surf )
+        return;
     SDL_GetRGB(pixel, surf->format, r, g, b);
 }
 
@@ -106,11 +114,13 @@ void GraphicsContext::createPalette()
     // TODO: Figure out if this is really safe
     // ui_palette and ui_color are defined in the same way as
     // their SDL counterparts, so we just cast pointers here
-    if( !surf ) return;
-    
+    if( !surf )
+        return;
+
     // Per SDL spec, if bitsPerPixel>8 palette is NULL
-    if( surf->format->BitsPerPixel > 8 ) return;
-    
+    if( surf->format->BitsPerPixel > 8 )
+        return;
+
     // Otherwise do some magic to get access
     // TODO: Figure some way to do this elegantly that still allows
     // quick access to color pixels and doesn't use pointer casting
@@ -120,14 +130,16 @@ void GraphicsContext::createPalette()
 
 void GraphicsContext::destroyPalette()
 {
-    if(palette) palette->colors = NULL;
+    if(palette)
+        palette->colors = NULL;
     palette = NULL;
 }
 
 GraphicsContext::~GraphicsContext()
 {
     destroyPalette();
-    if( surf ) SDL_FreeSurface(surf);
+    if( surf )
+        SDL_FreeSurface(surf);
 }
 
 #endif

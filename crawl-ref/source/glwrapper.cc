@@ -103,15 +103,20 @@ void GLStateManager::set(const GLState& state)
 void GLStateManager::setTransform(GLW_3VF *translate, GLW_3VF *scale)
 {
     glLoadIdentity();
-    if(translate) glTranslatef(translate->x, translate->y, translate->z);
-    if(scale) glScalef(scale->x, scale->y, scale->z);
+
+    if(translate)
+        glTranslatef(translate->x, translate->y, translate->z);
+
+    if(scale)
+        glScalef(scale->x, scale->y, scale->z);
+
 }
 
 void GLStateManager::resetViewForResize(coord_def &m_windowsz)
 {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    
+
     // For ease, vertex positions are pixel positions.
     glOrtho(0, m_windowsz.x, m_windowsz.y, 0, -1000, 1000);
 }
@@ -131,48 +136,44 @@ void GLStateManager::pixelStoreUnpackAlignment(unsigned int bpp)
 void GLStateManager::drawGLPrimitive(const GLPrimitive &prim)
 {
     // Handle errors
-    if( !prim.vert_pointer || prim.count < 1 || prim.size < 1 ) return;
+    if( !prim.vert_pointer || prim.count < 1 || prim.size < 1 )
+        return;
     ASSERT(_valid(prim.count, prim.mode));
-    
+
     // Set pointers
     glVertexPointer(prim.vertSize, GL_FLOAT, prim.size, prim.vert_pointer);
     if( prim.texture_pointer && prim.mode != GLW_LINES )
         glTexCoordPointer(2, GL_FLOAT, prim.size, prim.texture_pointer);
     if( prim.colour_pointer )
         glColorPointer(4, GL_UNSIGNED_BYTE, prim.size, prim.colour_pointer);
-    
+
     // Handle pre-render matrix manipulations
     if( prim.pretranslate || prim.prescale )
     {
         glPushMatrix();
-
         if( prim.pretranslate )
         {
             glTranslatef(   prim.pretranslate->x,
                             prim.pretranslate->y,
                             prim.pretranslate->z);
         }
-
         if( prim.prescale )
             glScalef(prim.prescale->x, prim.prescale->y, prim.prescale->z);
-
     }
-    
+
     // Draw!
     switch( prim.mode )
     {
-        case GLW_QUADS:
-            glDrawArrays(GL_QUADS, 0, prim.count);
-            break;
-        
-        case GLW_LINES:
-            glDrawArrays(GL_LINES, 0, prim.count);
-            break;
-            
-        default:
-            break;
+    case GLW_QUADS:
+        glDrawArrays(GL_QUADS, 0, prim.count);
+        break;
+    case GLW_LINES:
+        glDrawArrays(GL_LINES, 0, prim.count);
+        break;
+    default:
+        break;
     }
-    
+
     // Clean up
     if( prim.pretranslate || prim.prescale )
     {
@@ -214,7 +215,9 @@ void GLStateManager::loadTexture(unsigned char *pixels, unsigned int width,
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         gluBuild2DMipmaps(GL_TEXTURE_2D, bpp, width, height,
                           texture_format, format, pixels);
-    } else {
+    }
+    else
+    {
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexImage2D(GL_TEXTURE_2D, 0, bpp, width, height, 0,
@@ -256,7 +259,6 @@ void GLStateManager::drawTextBlock(unsigned int x_pos, unsigned int y_pos,
     glColorPointer(4, GL_UNSIGNED_BYTE, stride, color_verts);
     glDrawArrays(GL_QUADS, 0, count);
     glDisableClientState(GL_COLOR_ARRAY);
-    
 }
 
 void GLStateManager::drawColorBox(long unsigned int stride, size_t count,
@@ -272,19 +274,18 @@ bool GLStateManager::_valid(int num_verts, drawing_modes mode)
 {
     switch( mode )
     {
-        case GLW_QUADS:
-        case GLW_TRIANGLE_STRIP:
+    case GLW_QUADS:
+    case GLW_TRIANGLE_STRIP:
         return (num_verts % 4 == 0);
-        case GLW_TRIANGLES:
+    case GLW_TRIANGLES:
         return (num_verts % 3 == 0);
-        case GLW_LINES:
+    case GLW_LINES:
         return (num_verts % 2 == 0);
-        case GLW_POINTS:
+    case GLW_POINTS:
         return (true);
-        default:
+    default:
         return (false);
     }
-    
 }
 #endif
 
