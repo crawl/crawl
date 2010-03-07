@@ -1357,7 +1357,8 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_FIRE_STORM:
-        cast_fire_storm(powc, beam);
+        if (!cast_fire_storm(powc, beam))
+            return (SPRET_ABORT);
         break;
 
     case SPELL_HELLFIRE_BURST:
