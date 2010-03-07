@@ -1314,27 +1314,13 @@ std::string item_def::name_aux(description_level_type desc,
 
         buff << ammo_name(static_cast<missile_type>(item_typ));
 
-        if (terse)
+        if (know_brand && brand != SPMSL_NORMAL)
         {
-            std::string prop;
-            if (know_brand)
-                prop += missile_brand_name(brand, MBN_TERSE);
-
-            if (desc == DESC_INVENTORY
-                && get_equip_desc(*this) == ISFLAG_RUNED
-                && !testbits(ignore_flags, ISFLAG_RUNED)
-                && !__know_pluses)
-            {
-                if (!prop.empty())
-                    prop += ", ";
-                prop += "runed";
-            }
-
-            if (!prop.empty())
-                buff << " (" << prop << ")";
+            if (terse)
+                buff << " (" <<  missile_brand_name(brand, MBN_TERSE) << ")";
+            else if (_missile_brand_is_postfix(brand))
+                buff << " of " << missile_brand_name(brand, MBN_NAME);
         }
-        else if (know_brand && _missile_brand_is_postfix(brand))
-            buff << " of " << missile_brand_name(brand, MBN_NAME);
 
         break;
     }
