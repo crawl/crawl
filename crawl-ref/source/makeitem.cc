@@ -3427,8 +3427,9 @@ static bool _missile_is_visibly_special(const item_def &item)
     if (brand != SPMSL_NORMAL && !missile_brand_obvious(brand))
         return (true);
 
-    // And positively enchanted do, too.
-    if (item.plus && !one_chance_in(3))
+    // And enchanted do, too. Non-random so we don't
+    // get weird stacking behaviour.
+    if (item.plus)
         return (true);
 
     return (false);
