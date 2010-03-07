@@ -1,13 +1,12 @@
+#include "AppHdr.h"
+
 #include "debug.h"
 
 #include "glwrapper.h"
-#include "AppHdr.h"
 
 #ifdef USE_TILE
-
 #ifdef USE_SDL
 #include <SDL_opengl.h>
-#endif
 
 /////////////////////////////////////////////////////////////////////////////
 // GLPrimitive
@@ -292,4 +291,5 @@ bool GLStateManager::_valid(int num_verts, drawing_modes mode)
 /////////////////////////////////////////////////////////////////////////////
 // Static Methods
 
-#endif
+#endif // USE_SDL
+#endif // USE_TILE
