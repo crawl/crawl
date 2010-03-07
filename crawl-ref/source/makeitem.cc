@@ -3428,7 +3428,7 @@ static bool _missile_is_visibly_special(const item_def &item)
         return (true);
 
     // And positively enchanted do, too.
-    if (item.plus)
+    if (item.plus && !one_chance_in(3))
         return (true);
 
     return (false);
