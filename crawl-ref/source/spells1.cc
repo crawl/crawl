@@ -286,14 +286,18 @@ void setup_fire_storm(const actor *source, int pow, bolt &beam)
     beam.damage       = calc_dice(8, 5 + pow);
 }
 
-void cast_fire_storm(int pow, bolt &beam)
+bool cast_fire_storm(int pow, bolt &beam)
 {
+    if (grid_distance(beam.target, beam.source) > beam.range)
+        return false;
+
     setup_fire_storm(&you, pow, beam);
 
     if (beam.explode(false))
         mpr("A raging storm of fire appears!");
 
     viewwindow(false);
+    return true;
 }
 
 // No setup/cast split here as monster hellfire is completely different.
