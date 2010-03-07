@@ -4710,16 +4710,16 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
             return (MON_OTHER);
         }
 
-        if (!mon->has_ench(ENCH_CHARM))
-        {
-            // XXX: Another hackish thing for Pikel's band neutrality.
-            if (mons_is_pikel(mon))
-                pikel_band_neutralise();
+        if (mon->friendly())
+            return (MON_UNAFFECTED);
 
-            if (simple_monster_message(mon, " is charmed."))
-                obvious_effect = true;
-            mon->add_ench(ENCH_CHARM);
-        }
+        // XXX: Another hackish thing for Pikel's band neutrality.
+        if (mons_is_pikel(mon))
+            pikel_band_neutralise();
+
+        if (simple_monster_message(mon, " is charmed."))
+            obvious_effect = true;
+        mon->add_ench(ENCH_CHARM);
         return (MON_AFFECTED);
 
     case BEAM_PORKALATOR:
