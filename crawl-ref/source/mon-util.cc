@@ -1201,7 +1201,9 @@ flight_type mons_flies(const monsters *mon, bool randarts)
     if (mons_enslaved_twisted_soul(mon))
         return (FL_LEVITATE);
 
-    if (mons_is_ghost_demon(mon->type))
+    // For dancing weapons, this function can get called before their
+    // ghost_demon is created, so check for a NULL ghost. -cao
+    if (mons_is_ghost_demon(mon->type) && mon->ghost.get())
         return (mon->ghost->fly);
 
     const int montype = mons_is_zombified(mon) ? mons_zombie_base(mon)
@@ -1765,7 +1767,6 @@ void define_monster(monsters &mons)
         mons.uglything_init();
         break;
     }
-
     default:
         break;
     }
