@@ -104,10 +104,10 @@ void GLStateManager::setTransform(GLW_3VF *translate, GLW_3VF *scale)
 {
     glLoadIdentity();
 
-    if(translate)
+    if (translate)
         glTranslatef(translate->x, translate->y, translate->z);
 
-    if(scale)
+    if (scale)
         glScalef(scale->x, scale->y, scale->z);
 
 }
@@ -136,28 +136,28 @@ void GLStateManager::pixelStoreUnpackAlignment(unsigned int bpp)
 void GLStateManager::drawGLPrimitive(const GLPrimitive &prim)
 {
     // Handle errors
-    if( !prim.vert_pointer || prim.count < 1 || prim.size < 1 )
+    if ( !prim.vert_pointer || prim.count < 1 || prim.size < 1 )
         return;
     ASSERT(_valid(prim.count, prim.mode));
 
     // Set pointers
     glVertexPointer(prim.vertSize, GL_FLOAT, prim.size, prim.vert_pointer);
-    if( prim.texture_pointer && prim.mode != GLW_LINES )
+    if ( prim.texture_pointer && prim.mode != GLW_LINES )
         glTexCoordPointer(2, GL_FLOAT, prim.size, prim.texture_pointer);
-    if( prim.colour_pointer )
+    if ( prim.colour_pointer )
         glColorPointer(4, GL_UNSIGNED_BYTE, prim.size, prim.colour_pointer);
 
     // Handle pre-render matrix manipulations
-    if( prim.pretranslate || prim.prescale )
+    if ( prim.pretranslate || prim.prescale )
     {
         glPushMatrix();
-        if( prim.pretranslate )
+        if ( prim.pretranslate )
         {
             glTranslatef(   prim.pretranslate->x,
                             prim.pretranslate->y,
                             prim.pretranslate->z);
         }
-        if( prim.prescale )
+        if ( prim.prescale )
             glScalef(prim.prescale->x, prim.prescale->y, prim.prescale->z);
     }
 
@@ -175,7 +175,7 @@ void GLStateManager::drawGLPrimitive(const GLPrimitive &prim)
     }
 
     // Clean up
-    if( prim.pretranslate || prim.prescale )
+    if ( prim.pretranslate || prim.prescale )
     {
         glPopMatrix();
     }

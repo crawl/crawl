@@ -377,7 +377,7 @@ void UIWrapper::setModState(key_mod mod)
 int UIWrapper::waitEvent(ui_event *event)
 {
     SDL_Event sdlevent;
-    if(!SDL_WaitEvent(&sdlevent))
+    if (!SDL_WaitEvent(&sdlevent))
         return (0);
 
     // translate the SDL_Event into the almost-analogous ui_event
@@ -528,7 +528,7 @@ void UIWrapper::shutdown()
 
 int UIWrapper::byteOrder()
 {
-    if( SDL_BYTEORDER == SDL_BIG_ENDIAN )
+    if ( SDL_BYTEORDER == SDL_BIG_ENDIAN )
         return (UI_BIG_ENDIAN);
     return (UI_LIL_ENDIAN);
 }
