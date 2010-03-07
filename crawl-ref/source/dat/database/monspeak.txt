@@ -5718,7 +5718,7 @@ VISUAL:@The_monster@ wriggles @possessive@ tentacles.
 
 VISUAL:A dozen eyes blink open in the @monster@'s chest.
 
-VISUAL:Strange apendages sprout from the @monster@'s back.
+VISUAL:Strange appendages sprout from the @monster@'s back.
 
 VISUAL:@The_monster@ lashes @possessive@ tail.
 
