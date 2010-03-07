@@ -2037,7 +2037,8 @@ void handle_monster_move(monsters *monster)
             {
                 ASSERT(!crawl_state.game_is_arena());
 
-                if (!mons_att_wont_attack(monster->attitude))
+                if (!mons_att_wont_attack(monster->attitude)
+                    && !monster->has_ench(ENCH_CHARM) )
                 {
                     // If it steps into you, cancel other targets.
                     monster->foe = MHITYOU;
