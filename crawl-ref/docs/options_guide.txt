@@ -392,7 +392,7 @@ The available stock Lua scripts are
                    New macroable function: hit_closest
 
 
-The above mentioned Lua functions can be macroed in-game by setting the 
+The above mentioned Lua functions can be macroed in-game by setting the
 macro action to "===", followed by the function name.
 
 Also see section 7 on inline Lua fragments.
@@ -1305,9 +1305,9 @@ show_more = true
         options has no effect if clear_messages is set.
 
 small_more = false
-        With small_more = false (default), the --more-- prompt is on a 
-        separate line at the bottom of the message window. With 
-        small_more = true, it is just the bottom left character if 
+        With small_more = false (default), the --more-- prompt is on a
+        separate line at the bottom of the message window. With
+        small_more = true, it is just the bottom left character if
         clear_messages is not set.
 
 show_inventory_weights = false
@@ -2037,6 +2037,8 @@ char_set = (ascii | ibm | dec | unicode)
         On Unix, Crawl may be built with Unicode support, in which case
         you can use char_set = unicode to use unicode characters in the
         map display.
+
+        Has no effect in the Tiles build.
 
 classic_item_colours = false
         Crawl uses 4.0 b26/0.1.x-like item colours if
