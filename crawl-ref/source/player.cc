@@ -2204,14 +2204,19 @@ int player_evasion(ev_ignore_type evit)
     const int adjusted_shield_penalty =
         player_adjusted_shield_evasion_penalty(scale);
 
+    const int prestepdown_evasion =
+        size_base_ev
+        + dodge_bonus
+        - adjusted_evasion_penalty
+        - adjusted_shield_penalty;
+
+    const int poststepdown_evasion =
+        stepdown_value(prestepdown_evasion, 20*scale, 10*scale, 60*scale, -1);
+
     const int evasion_bonuses = player_evasion_bonuses(evit) * scale;
 
     const int prescaled_evasion =
-        size_base_ev
-        + dodge_bonus
-        + evasion_bonuses
-        - adjusted_evasion_penalty
-        - adjusted_shield_penalty;
+        poststepdown_evasion + evasion_bonuses;
 
     const int final_evasion =
         player_scale_evasion(prescaled_evasion, scale);
