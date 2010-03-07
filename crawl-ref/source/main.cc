@@ -2359,8 +2359,8 @@ static void _decrement_durations()
 
     // Leak piety from the piety pool into actual piety.
     // Note that changes of religious status without corresponding actions
-    // (killing monsters, offering items, ...) might be confusing for
-    // characters of some religions.
+    // (killing monsters, offering items, ...) might be confusing for characters
+    // of other religions.
     // For now, though, keep information about what happened hidden.
     if (you.piety < MAX_PIETY && you.duration[DUR_PIETY_POOL] > 0
         && one_chance_in(5))
