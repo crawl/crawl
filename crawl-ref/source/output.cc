@@ -480,7 +480,7 @@ static void _print_stats_ac(int x, int y)
 #ifdef WIZARD
     if (you.wizard)
         ac += make_stringf("(%d%%) ", you.gdr_perc());
-#endif WIZARD
+#endif
     cprintf("%s", ac.c_str());
 
     // SH: (two lines lower)
