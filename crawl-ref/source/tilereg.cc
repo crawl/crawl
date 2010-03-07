@@ -226,7 +226,7 @@ void Region::set_transform()
     GLW_3VF trans(sx + ox, sy + oy, 0);
     GLW_3VF scale(dx, dy, 1);
     
-    GLStateManager::setTransform(&trans, &scale);
+    GLStateManager::set_transform(&trans, &scale);
 }
 
 TileRegion::TileRegion(ImageManager* im, FTFont *tag_font, int tile_x, int tile_y)
@@ -4609,7 +4609,7 @@ void MessageRegion::render()
         {
             height *= m_font->char_height();
 
-            GLStateManager::setTransform(NULL, NULL);
+            GLStateManager::set_transform(NULL, NULL);
 
             ShapeBuffer buff;
             VColour col(100, 100, 100, 100);
@@ -5304,7 +5304,7 @@ void DollEditRegion::render()
     {
         GLW_3VF trans(32 * left_gutter, 32 * edit_doll_line, 0);
         GLW_3VF scale(64, 64, 1);
-        GLStateManager::setTransform(&trans, &scale);
+        GLStateManager::set_transform(&trans, &scale);
     }
 
     m_cur_buf.draw();
@@ -5331,7 +5331,7 @@ void DollEditRegion::render()
     {
         GLW_3VF trans(32 * (left_gutter + 3), 32 * edit_doll_line, 0);
         GLW_3VF scale(32, 32, 1);
-        GLStateManager::setTransform(&trans, &scale);
+        GLStateManager::set_transform(&trans, &scale);
     }
 
     m_cur_buf.draw();
@@ -5343,7 +5343,7 @@ void DollEditRegion::render()
     else if (m_part_idx)
         part_name = tile_player_name(m_part_idx);
 
-    GLStateManager::resetTransform();
+    GLStateManager::reset_transform();
 
     std::string item_str = part_name;
     float item_name_x = left_gutter * 32.0f;

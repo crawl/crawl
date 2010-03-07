@@ -81,14 +81,14 @@ public:
 
     // State Manipulation
     static void set(const GLState& state);
-    static void pixelStoreUnpackAlignment(unsigned int bpp);
-    static void resetViewForRedraw(float x, float y);
-    static void resetViewForResize(coord_def &m_windowsz);
-    static void setTransform(GLW_3VF *translate, GLW_3VF *scale);
-    static void resetTransform();
+    static void pixelstore_unpack_alignment(unsigned int bpp);
+    static void reset_view_for_redraw(float x, float y);
+    static void reset_view_for_resize(coord_def &m_windowsz);
+    static void set_transform(GLW_3VF *translate, GLW_3VF *scale);
+    static void reset_transform();
 
     // Drawing GLPrimitives
-    static void drawGLPrimitive(const GLPrimitive &prim);
+    static void draw_primitive(const GLPrimitive &prim);
 
     // Drawing tiles-specific objects
     static void drawTextBlock(unsigned int x_pos, unsigned int y_pos,
@@ -98,10 +98,10 @@ public:
         const void *pos_verts, const void *color_verts);
 
     // Texture-specific functinos
-    static void deleteTextures(size_t count, unsigned int *textures);
-    static void generateTextures(size_t count, unsigned int *textures);
-    static void bindTexture(unsigned int texture);
-    static void loadTexture(unsigned char *pixels, unsigned int width,
+    static void delete_textures(size_t count, unsigned int *textures);
+    static void generate_textures(size_t count, unsigned int *textures);
+    static void bind_texture(unsigned int texture);
+    static void load_texture(unsigned char *pixels, unsigned int width,
         unsigned int height, MipMapOptions mip_opt);
 
     // Debug
