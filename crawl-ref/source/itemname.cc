@@ -1322,6 +1322,17 @@ std::string item_def::name_aux(description_level_type desc,
                 buff << " of " << missile_brand_name(brand, MBN_NAME);
         }
 
+        // Show "runed" in the quiver (== terse) so you know if
+        // you're quivering possibly branded ammo.
+        // Ammo in quiver differs from weapon wielded since the latter
+        // necessarily has a known brand.
+        if (terse && !know_brand
+            && get_equip_desc(*this) == ISFLAG_RUNED
+            && !testbits(ignore_flags, ISFLAG_RUNED))
+        {
+            buff << " (runed)";
+        }
+
         break;
     }
     case OBJ_ARMOUR:
