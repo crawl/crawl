@@ -85,7 +85,7 @@ int element_colour( int element, bool no_random )
         break;
 
     case ETC_EARTH:
-        ret = (tmp_rand < 60) ? BROWN : LIGHTRED;
+        ret = (tmp_rand < 70) ? BROWN : GREEN;
         break;
 
     case ETC_AIR:
