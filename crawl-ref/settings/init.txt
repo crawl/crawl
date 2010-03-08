@@ -345,6 +345,7 @@ autoinscribe = distortion:!w
 # autoinscribe = royal jell:=g
 # autoinscribe_artefacts = false
 # autoinscribe_cursed = false
+# autoinscribe = fruit:!e
 
 ##### 4-n	Macro related Options #################
 #
