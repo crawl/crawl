@@ -1392,6 +1392,7 @@ static int _acquirement_weapon_subtype(bool divine)
     // First pick a skill, weighting towards those you have.
     int count = 0;
     int skill = SK_FIGHTING;
+    int best_sk = 0;
 
     for (int i = SK_SHORT_BLADES; i <= SK_CROSSBOWS; i++)
     {
@@ -1404,23 +1405,29 @@ static int _acquirement_weapon_subtype(bool divine)
         const int weight = you.skills[i] + 1;
         count += weight;
 
+        if (you.skills[i] > best_sk)
+            best_sk = you.skills[i];
+
         if (x_chance_in_y(weight, count))
             skill = i;
     }
-
+    if (you.skills[SK_UNARMED_COMBAT] > best_sk)
+        best_sk = you.skills[SK_UNARMED_COMBAT];
 
     // Now choose a subtype which uses that skill.
     int result = OBJ_RANDOM;
     count = 0;
     item_def item_considered;
     item_considered.base_type = OBJ_WEAPONS;
-    int want_shield = you.skills[SK_SHIELDS] + 10;
-    int dont_shield = you.experience_level - want_shield + 20;
-    if (dont_shield < 5)
-        dont_shield = 5;
+    // Let's guess the percentage of shield use the player did, this is
+    // based on empirical data where pure-shield MDs get skills like 17 sh 25 m&f
+    // and pure-shield Spriggans 7 sh 18 m&f.
+    int shield_sk = you.skills[SK_SHIELDS] * species_skills(SK_SHIELDS, you.species) / 100;
+    int want_shield = std::min(2 * shield_sk, best_sk) + 10;
+    int dont_shield = std::max(best_sk - shield_sk, 0) + 10;
     // At XL 10, weapons of the handedness you want get weight *2, those of
-    // opposite handedness 1/2, assuming your shields skill is respectively
-    // 0 or equal to the experience level.  At XL 25 that's *3.5 .
+    // opposite handedness 1/2, assuming your shields usage is respectively
+    // 0% or 100% in the above formula.  At skill 25 that's *3.5 .
     for (int i = 0; i < NUM_WEAPONS; ++i)
     {
         item_considered.sub_type = i;
