@@ -13,7 +13,7 @@
 GLPrimitive::GLPrimitive(long unsigned int sz, size_t ct, unsigned int vs,
         const void* v_pt, const void *c_pt, const void *t_pt) :
     mode(GLW_QUADS),
-    vertSize(vs),
+    vert_size(vs),
     size(sz),
     count(ct),
     vert_pointer(v_pt),
@@ -141,7 +141,7 @@ void GLStateManager::draw_primitive(const GLPrimitive &prim)
     ASSERT(_valid(prim.count, prim.mode));
 
     // Set pointers
-    glVertexPointer(prim.vertSize, GL_FLOAT, prim.size, prim.vert_pointer);
+    glVertexPointer(prim.vert_size, GL_FLOAT, prim.size, prim.vert_pointer);
     if ( prim.texture_pointer )
         glTexCoordPointer(2, GL_FLOAT, prim.size, prim.texture_pointer);
     if ( prim.colour_pointer )
@@ -233,40 +233,14 @@ void GLStateManager::reset_view_for_redraw(float x, float y)
     glTranslatef(x, y , 1.0f);
 }
 
-void GLStateManager::drawTextBlock(unsigned int x_pos, unsigned int y_pos,
-    long unsigned int stride, bool drop_shadow, size_t count,
-    const void *pos_verts, const void *tex_verts, const void *color_verts)
+void GLStateManager::set_current_color(GLW_3VF &color)
 {
-    // Assume the texture is pre-bound (m_tex.bind();)
-    glVertexPointer(2, GL_FLOAT, stride, pos_verts);
-    glTexCoordPointer(2, GL_FLOAT, stride, tex_verts);
-
-    if (drop_shadow)
-    {
-        glColor3f(0.0f, 0.0f, 0.0f);
-
-        glLoadIdentity();
-        glTranslatef(x_pos + 1, y_pos + 1, 0.0f);
-        glDrawArrays(GL_QUADS, 0, count);
-
-        glColor3f(1.0f, 1.0f, 1.0f);
-    }
-
-    glLoadIdentity();
-    glTranslatef(x_pos, y_pos, 0.0f);
-
-    glEnableClientState(GL_COLOR_ARRAY);
-    glColorPointer(4, GL_UNSIGNED_BYTE, stride, color_verts);
-    glDrawArrays(GL_QUADS, 0, count);
-    glDisableClientState(GL_COLOR_ARRAY);
+    glColor3f(color.x, color.y, color.z);
 }
 
-void GLStateManager::drawColorBox(long unsigned int stride, size_t count,
-    const void *pos_verts, const void *color_verts)
+void GLStateManager::set_current_color(GLW_4VF &color)
 {
-    glVertexPointer(2, GL_FLOAT, stride, pos_verts);
-    glColorPointer(4, GL_UNSIGNED_BYTE, stride, color_verts);
-    glDrawArrays(GL_QUADS, 0, count);
+    glColor4f(color.x, color.y, color.z, color.t);
 }
 
 #ifdef DEBUG
