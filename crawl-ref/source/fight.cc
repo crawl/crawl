@@ -4557,7 +4557,7 @@ void melee_attack::mons_announce_dud_hit(const mon_attack_def &attk)
 {
     if (needs_message)
     {
-        mprf("%s %s %s but doesn't do any damage.",
+        mprf("%s %s %s but does no damage.",
              atk_name(DESC_CAP_THE).c_str(),
              attacker->conj_verb( mons_attack_verb(attk) ).c_str(),
              mons_defender_name().c_str());
