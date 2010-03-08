@@ -13,10 +13,10 @@
 #include "options.h"
 #include "files.h"
 
-#include "uiwrapper-sdl.h"
-
 #include <SDL/SDL.h>
-#include <SDL/SDL_image.h>
+
+#include "uiwrapper-sdl.h"
+#include "cgcontext-sdl.h"
 
 #ifdef USE_GL
 #include "glwrapper.h"
@@ -246,9 +246,9 @@ int UIWrapper::init(coord_def *m_windowsz)
 
     if (Options.tile_key_repeat_delay > 0)
     {
-        const int delay    = Options.tile_key_repeat_delay;
+        const int repdelay    = Options.tile_key_repeat_delay;
         const int interval = SDL_DEFAULT_REPEAT_INTERVAL;
-        if (SDL_EnableKeyRepeat(delay, interval) != 0)
+        if (SDL_EnableKeyRepeat(repdelay, interval) != 0)
             printf("Failed to set key repeat mode: %s\n", SDL_GetError());
     }
 
@@ -307,13 +307,14 @@ bool UIWrapper::set_window_icon(const char* icon_name)
 {
     // TODO: Figure out how to move this IMG_Load command to cgcontext
     // so that we're not dependant on SDL_image here
-    SDL_Surface *icon = IMG_Load(datafile_path(icon_name, true, true).c_str());
-    if (!icon)
+    GraphicsContext con;
+    int ret = con.load_image(datafile_path(icon_name, true, true).c_str());
+    if (ret)
     {
         printf("Failed to load icon: %s\n", SDL_GetError());
         return (false);
     }
-    SDL_WM_SetIcon(icon, NULL);
+    SDL_WM_SetIcon((SDL_Surface *)con.native_surface(), NULL);
     return (true);
 }
 

@@ -39,6 +39,7 @@ public:
 
     // Context Accessors
     void *pixels();
+    void *native_surface();
     unsigned int color_key();
     void get_rgba(unsigned int pixel,   unsigned char *r,
                                         unsigned char *g,

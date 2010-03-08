@@ -85,6 +85,11 @@ void *GraphicsContext::pixels()
     return (surf->pixels);
 }
 
+void *GraphicsContext::native_surface()
+{
+    return ((void *)surf);
+}
+
 unsigned int GraphicsContext::color_key()
 {
     if ( !surf )
