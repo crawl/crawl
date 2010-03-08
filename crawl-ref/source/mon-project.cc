@@ -251,7 +251,7 @@ bool iood_act(monsters &mon, bool no_trail)
         mon.props["iood_vy"] = vy;
     }
 
-reflected:
+move_again:
 
     x += vx;
     y += vy;
@@ -293,15 +293,40 @@ reflected:
                 mprf("%s hits %s", mon.name(DESC_CAP_THE, true).c_str(),
                      feature_description(pos, false, DESC_NOCAP_A).c_str());
         }
-        if (victim && mons_is_projectile(victim->id()))
+
+        monsters* monster = (victim && victim->atype() == ACT_MONSTER) ?
+            (monsters*) victim : 0;
+
+        if (monster && mons_is_projectile(victim->id()))
         {
             if (mon.observable())
                 mpr("The orbs collide in a blinding explosion!");
             else
                 noisy(40, pos, "You hear a loud magical explosion!");
-            monster_die((monsters*)victim, KILL_DISMISSED, NON_MONSTER);
+            monster_die(monster, KILL_DISMISSED, NON_MONSTER);
             _iood_hit(mon, pos, true);
             return (true);
+        }
+
+        if (monster && monster->submerged())
+        {
+            // Try to swap with the submerged creature.
+            if (monster->is_habitable(mon.pos()))
+            {
+                dprf("iood: Swapping with a submerged monster.");
+                monster->set_position(mon.pos());
+                mon.set_position(pos);
+                mgrd(monster->pos()) = monster->mindex();
+                mgrd(pos) = mon.mindex();
+
+                return (false);
+            }
+            else // if swap fails, move ahead
+            {
+                dprf("iood: Boosting above a submerged monster (can't swap).");
+                mon.lose_energy(EUT_MOVE);
+                goto move_again;
+            }
         }
 
         if (victim && _iood_shielded(mon, *victim))
@@ -315,7 +340,7 @@ reflected:
                 }
                 else
                 {
-                    simple_monster_message((monsters*)victim, (" blocks "
+                    simple_monster_message(monster, (" blocks "
                         + mon.name(DESC_NOCAP_THE, true) + ".").c_str());
                 }
                 victim->shield_block_succeeded(&mon);
@@ -358,7 +383,7 @@ reflected:
             // reflection, this can lead to a brief game of ping-pong, but
             // rapidly increasing shield penalties will make it short.
             mon.lose_energy(EUT_MOVE);
-            goto reflected;
+            goto move_again;
         }
 
         // Yay for inconsistencies in beam-vs-player and beam-vs-monsters.
