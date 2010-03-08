@@ -137,7 +137,9 @@ struct message_item
             else if (Options.msg_condense_short
                      && turn == other.turn
                      && repeats == 1 && other.repeats == 1
-                     && join && other.join)
+                     && join && other.join
+                     && _ends_in_punctuation(pure_text())
+                        == _ends_in_punctuation(other.pure_text()))
             {
                 // Note that join stays true.
 
