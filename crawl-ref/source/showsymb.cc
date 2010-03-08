@@ -133,7 +133,7 @@ glyph get_item_glyph(const item_def *item)
     return (g);
 }
 
-glyph get_mons_glyph(const monsters *mons)
+glyph get_mons_glyph(const monsters *mons, bool realcol)
 {
     glyph g;
 
@@ -144,6 +144,8 @@ glyph get_mons_glyph(const monsters *mons)
     else
         g.ch = mons_char(mons->type);
     g.col = _get_mons_colour(mons);
+    if (realcol)
+        g.col = real_colour(g.col);
     return (g);
 }
 
