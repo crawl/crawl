@@ -154,6 +154,13 @@ static int food_ischunk(lua_State *ls)
     return (1);
 }
 
+static int food_isfruit(lua_State *ls)
+{
+    LUA_ITEM(ls, item, 1);
+    lua_pushboolean(ls, is_fruit(*item));
+    return (1);
+}
+
 static const struct luaL_reg food_lib[] =
 {
     { "do_eat",            food_do_eat },
@@ -166,6 +173,7 @@ static const struct luaL_reg food_lib[] =
     { "rotting",           food_rotting },
     { "dangerous",         food_dangerous },
     { "ischunk",           food_ischunk },
+    { "isfruit",           food_isfruit },
     { NULL, NULL },
 };
 
