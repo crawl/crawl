@@ -14,9 +14,35 @@ struct GLW_3VF
     GLW_3VF() {};
     GLW_3VF(float l, float m, float n) : x(l), y(m), z(n) {}
     
+    inline void set(float l, float m, float n)
+    {
+        x = l;
+        y = m;
+        z = n;
+    }
+    
     float x;
     float y;
     float z;
+};
+
+struct GLW_4VF
+{
+    GLW_4VF() {};
+    GLW_4VF(float l, float m, float n, float p) : x(l), y(m), z(n), t(p) {}
+    
+    inline void set(float l, float m, float n, float p)
+    {
+        x = l;
+        y = m;
+        z = n;
+        t = p;
+    }
+    
+    float x;
+    float y;
+    float z;
+    float t;
 };
 
 enum MipMapOptions
@@ -43,7 +69,7 @@ struct GLPrimitive
 
     // Primitive Metadata
     drawing_modes mode;
-    unsigned int vertSize;  // Coords per vertex
+    unsigned int vert_size;  // Coords per vertex
     long unsigned int size;
     size_t count;
 
@@ -55,6 +81,9 @@ struct GLPrimitive
     // Primitive render manipulations
     GLW_3VF *pretranslate;
     GLW_3VF *prescale;
+    
+    // State manipulations
+    GLW_3VF *color;
 };
 
 struct GLState
@@ -86,16 +115,11 @@ public:
     static void reset_view_for_resize(coord_def &m_windowsz);
     static void set_transform(GLW_3VF *translate, GLW_3VF *scale);
     static void reset_transform();
+    static void set_current_color(GLW_3VF &color);
+    static void set_current_color(GLW_4VF &color);
 
     // Drawing GLPrimitives
     static void draw_primitive(const GLPrimitive &prim);
-
-    // Drawing tiles-specific objects
-    static void drawTextBlock(unsigned int x_pos, unsigned int y_pos,
-        long unsigned int stride, bool drop_shadow, size_t count,
-        const void *pos_verts, const void *tex_verts, const void *color_verts);
-    static void drawColorBox(long unsigned int stride, size_t count,
-        const void *pos_verts, const void *color_verts);
 
     // Texture-specific functinos
     static void delete_textures(size_t count, unsigned int *textures);
