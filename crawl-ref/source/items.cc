@@ -2272,6 +2272,10 @@ static void _autoinscribe_item( item_def& item )
 
     std::string iname = _autopickup_item_name(item);
 
+    // probably a hack -cao
+    if (is_fruit(item))
+        iname += " fruit";
+
     for (unsigned i = 0; i < Options.autoinscriptions.size(); ++i)
     {
         if (Options.autoinscriptions[i].first.matches(iname))
