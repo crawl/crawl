@@ -403,7 +403,7 @@ void show_def::_update_monster(const monsters* mons)
 #endif
     else
         grid(e).mons = mons->type;
-    grid(e).colour = get_mons_glyph(mons).col;
+    grid(e).colour = get_mons_glyph(mons, false).col;
 
 #ifdef USE_TILE
     tile_place_monster(mons->pos().x, mons->pos().y, mons->mindex(), true);
