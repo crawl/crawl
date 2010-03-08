@@ -95,6 +95,11 @@ std::string stash_annotate_item(const char *s,
         text += EOL;
         text += fs.tostring(2, -2);
     }
+    if (item && is_fruit(*item))
+    {
+        text += EOL;
+        text += "fruit";
+    }
     return text;
 }
 
