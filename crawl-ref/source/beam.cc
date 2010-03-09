@@ -825,7 +825,7 @@ void bolt::fire_wall_effect()
 {
     dungeon_feature_type feat;
     // Fire only affects wax walls and trees.
-    if ((feat = grd(pos())) != DNGN_WAX_WALL && feat != DNGN_TREES
+    if ((feat = grd(pos())) != DNGN_WAX_WALL && feat != DNGN_TREE
         || env.markers.property_at(pos(), MAT_ANY, "veto_fire") == "veto")
     {
         finish_beam();
@@ -886,7 +886,7 @@ void bolt::fire_wall_effect()
 void bolt::elec_wall_effect()
 {
     const dungeon_feature_type feat = grd(pos());
-    if (feat == DNGN_TREES
+    if (feat == DNGN_TREE
         && env.markers.property_at(pos(), MAT_ANY, "veto_fire") != "veto")
     {
         fire_wall_effect();
@@ -936,7 +936,7 @@ static bool _nuke_wall_msg(dungeon_feature_type feat, const coord_def& p)
             msg = "The idol twists and shakes as its substance crumbles away!";
         break;
 
-    case DNGN_TREES:
+    case DNGN_TREE:
         if (see)
             msg = "The tree breaks and falls down!";
         else if (hear)
@@ -986,7 +986,7 @@ void bolt::nuke_wall_effect()
     case DNGN_CLEAR_ROCK_WALL:
     case DNGN_GRANITE_STATUE:
     case DNGN_ORCISH_IDOL:
-    case DNGN_TREES:
+    case DNGN_TREE:
         _nuke_wall(pos());
         break;
 
@@ -2115,7 +2115,7 @@ bool bolt::is_bouncy(dungeon_feature_type feat) const
         return (false);
 
     if (flavour == BEAM_ELECTRICITY && feat != DNGN_METAL_WALL
-        && feat != DNGN_TREES)
+        && feat != DNGN_TREE)
     {
         return (true);
     }
@@ -2429,10 +2429,10 @@ maybe_bool bolt::affects_wall(dungeon_feature_type wall) const
         return (B_TRUE);
     }
 
-    if (is_fiery() && (wall == DNGN_WAX_WALL || wall == DNGN_TREES))
+    if (is_fiery() && (wall == DNGN_WAX_WALL || wall == DNGN_TREE))
         return (is_superhot() ? B_TRUE : B_MAYBE);
 
-    if (flavour == BEAM_ELECTRICITY && wall == DNGN_TREES)
+    if (flavour == BEAM_ELECTRICITY && wall == DNGN_TREE)
         return (is_superhot() ? B_TRUE : B_MAYBE);
 
     if (flavour == BEAM_DISINTEGRATION && damage.num >= 3
@@ -2443,7 +2443,7 @@ maybe_bool bolt::affects_wall(dungeon_feature_type wall) const
             || wall == DNGN_CLEAR_ROCK_WALL
             || wall == DNGN_GRANITE_STATUE
             || wall == DNGN_ORCISH_IDOL
-            || wall == DNGN_TREES
+            || wall == DNGN_TREE
             || wall == DNGN_CLOSED_DOOR
             || wall == DNGN_DETECTED_SECRET_DOOR
             || wall == DNGN_SECRET_DOOR)

@@ -2773,7 +2773,7 @@ static void _builder_extras( int level_number, int level_type )
                                           || coinflip()) ? DNGN_DEEP_WATER
                                                          : DNGN_LAVA;
         if (one_chance_in(15))
-            pool_type = DNGN_TREES;
+            pool_type = DNGN_TREE;
 
         _many_pools(pool_type);
         return;
@@ -4982,7 +4982,7 @@ dungeon_feature_type map_feature_at(map_def *map, const coord_def &c,
             (rawfeat == 'm') ? DNGN_CLEAR_ROCK_WALL :
             (rawfeat == 'n') ? DNGN_CLEAR_STONE_WALL :
             (rawfeat == 'o') ? DNGN_CLEAR_PERMAROCK_WALL :
-            (rawfeat == 't') ? DNGN_TREES :
+            (rawfeat == 't') ? DNGN_TREE :
             (rawfeat == '+') ? DNGN_CLOSED_DOOR :
             (rawfeat == '=') ? DNGN_SECRET_DOOR :
             (rawfeat == 'w') ? DNGN_DEEP_WATER :
@@ -5071,7 +5071,7 @@ static void _vault_grid(vault_placement &place,
                    (vgrid == 'm') ? DNGN_CLEAR_ROCK_WALL :
                    (vgrid == 'n') ? DNGN_CLEAR_STONE_WALL :
                    (vgrid == 'o') ? DNGN_CLEAR_PERMAROCK_WALL :
-                   (vgrid == 't') ? DNGN_TREES :
+                   (vgrid == 't') ? DNGN_TREE :
                    (vgrid == '+') ? DNGN_CLOSED_DOOR :
                    (vgrid == '=') ? DNGN_SECRET_DOOR :
                    (vgrid == 'w') ? DNGN_DEEP_WATER :
@@ -6140,7 +6140,7 @@ static void _bigger_room()
     dungeon_feature_type pool_type = DNGN_DEEP_WATER;
 
     if (one_chance_in(15))
-        pool_type = DNGN_TREES;
+        pool_type = DNGN_TREE;
 
     _many_pools(pool_type);
 

@@ -177,7 +177,7 @@ static unsigned short _feat_colour(const coord_def &where,
     else
     {
         colour = fdef.colour;
-        if (colour == BLACK && feat == DNGN_TREES)
+        if (colour == BLACK && feat == DNGN_TREE)
             colour = _tree_colour(where);
 
         if (fdef.em_colour && fdef.em_colour != fdef.colour

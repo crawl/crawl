@@ -1418,7 +1418,7 @@ bool evolve_flora()
             || !mons_class_can_pass(MONS_BALLISTOMYCETE,
                                     env.grid(spelld.target)))
         {
-            if (env.grid(spelld.target) == DNGN_TREES)
+            if (env.grid(spelld.target) == DNGN_TREE)
                 mprf("The tree has already reached the pinnacle of evolution.");
             else
                 mprf("You must target a plant or fungus.");

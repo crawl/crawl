@@ -85,8 +85,8 @@ void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap      = MF_WALL;
             break;
 
-        case DNGN_TREES:
-            f.dchar        = DCHAR_TREES;
+        case DNGN_TREE:
+            f.dchar        = DCHAR_TREE;
             f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
             f.colour       = BLACK; // overridden later
             f.minimap      = MF_WALL;

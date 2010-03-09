@@ -2803,7 +2803,7 @@ static bool _mon_can_move_to_pos(const monsters *monster,
     const bool flattens_trees = mons_flattens_trees(monster);
     if ((burrows && (target_grid == DNGN_ROCK_WALL
                      || target_grid == DNGN_CLEAR_ROCK_WALL))
-        || (flattens_trees && target_grid == DNGN_TREES))
+        || (flattens_trees && target_grid == DNGN_TREE))
     {
         // Don't burrow out of bounds.
         if (!in_bounds(targ))
@@ -3391,13 +3391,13 @@ static bool _monster_move(monsters *monster)
 
         if ((((feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL)
               && burrows)
-             || (feat == DNGN_TREES && flattens_trees))
+             || (feat == DNGN_TREE && flattens_trees))
             && good_move[mmov.x + 1][mmov.y + 1] == true)
         {
             const coord_def target(monster->pos() + mmov);
 
             const dungeon_feature_type newfeat =
-                (feat == DNGN_TREES? dgn_tree_base_feature_at(target)
+                (feat == DNGN_TREE? dgn_tree_base_feature_at(target)
                  : DNGN_FLOOR);
             grd(target) = newfeat;
             set_terrain_changed(target);
