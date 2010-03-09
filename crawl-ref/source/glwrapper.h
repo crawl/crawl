@@ -21,9 +21,9 @@ struct GLW_3VF
         z = n;
     }
     
-    float x;
-    float y;
-    float z;
+    union {float x; float r;};
+    union {float y; float g;};
+    union {float z; float b;};
 };
 
 struct GLW_4VF
@@ -39,10 +39,10 @@ struct GLW_4VF
         t = p;
     }
     
-    float x;
-    float y;
-    float z;
-    float t;
+    union {float x; float r;};
+    union {float y; float g;};
+    union {float z; float b;};
+    union {float t; float a;};
 };
 
 enum MipMapOptions
@@ -113,7 +113,7 @@ public:
     static void pixelstore_unpack_alignment(unsigned int bpp);
     static void reset_view_for_redraw(float x, float y);
     static void reset_view_for_resize(coord_def &m_windowsz);
-    static void set_transform(GLW_3VF *translate, GLW_3VF *scale);
+    static void set_transform(const GLW_3VF *trans, const GLW_3VF *scale);
     static void reset_transform();
     static void set_current_color(GLW_3VF &color);
     static void set_current_color(GLW_4VF &color);
