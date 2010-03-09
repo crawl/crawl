@@ -100,16 +100,13 @@ void GLStateManager::set(const GLState& state)
         glDisable(GL_ALPHA_TEST);
 }
 
-void GLStateManager::set_transform(GLW_3VF *translate, GLW_3VF *scale)
+void GLStateManager::set_transform(const GLW_3VF *trans, const GLW_3VF *scale)
 {
     glLoadIdentity();
-
-    if (translate)
-        glTranslatef(translate->x, translate->y, translate->z);
-
+    if (trans)
+        glTranslatef(trans->x, trans->y, trans->z);
     if (scale)
         glScalef(scale->x, scale->y, scale->z);
-
 }
 
 void GLStateManager::reset_view_for_resize(coord_def &m_windowsz)
@@ -235,12 +232,12 @@ void GLStateManager::reset_view_for_redraw(float x, float y)
 
 void GLStateManager::set_current_color(GLW_3VF &color)
 {
-    glColor3f(color.x, color.y, color.z);
+    glColor3f(color.r, color.g, color.b);
 }
 
 void GLStateManager::set_current_color(GLW_4VF &color)
 {
-    glColor4f(color.x, color.y, color.z, color.t);
+    glColor4f(color.r, color.g, color.b, color.a);
 }
 
 #ifdef DEBUG
