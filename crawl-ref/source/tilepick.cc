@@ -2694,7 +2694,7 @@ int tileidx_feature(dungeon_feature_type feat, int gx, int gy)
         return TILE_DNGN_ORCISH_IDOL;
     case DNGN_WAX_WALL:
         return TILE_DNGN_WAX_WALL;
-    case DNGN_TREES:
+    case DNGN_TREE:
         return TILE_DNGN_TREE;
     case DNGN_GRANITE_STATUE:
         return TILE_DNGN_GRANITE_STATUE;
@@ -5211,7 +5211,7 @@ static bool _suppress_blood(const coord_def pos)
         return (true);
 
     const dungeon_feature_type feat = grd(pos);
-    if (feat == DNGN_TREES)
+    if (feat == DNGN_TREE)
         return (true);
 
     if (feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_PERMADRY_FOUNTAIN)

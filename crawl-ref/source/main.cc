@@ -4058,7 +4058,7 @@ static void _move_player(coord_def move)
         if (grd(targ) == DNGN_OPEN_SEA)
             mpr("You can't go out to sea!");
 
-        if (grd(targ) == DNGN_TREES && you.religion == GOD_FEDHAS)
+        if (grd(targ) == DNGN_TREE && you.religion == GOD_FEDHAS)
             mpr("You cannot walk through the dense trees.");
 
         stop_running();

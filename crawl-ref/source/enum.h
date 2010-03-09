@@ -931,7 +931,7 @@ enum dungeon_char_type
     DCHAR_ITEM_GOLD,
     DCHAR_ITEM_AMULET,
     DCHAR_CLOUD,
-    DCHAR_TREES,
+    DCHAR_TREE,
 
     DCHAR_SPACE,
     DCHAR_FIRED_FLASK,
@@ -1006,7 +1006,7 @@ enum dungeon_feature_type
     DNGN_OPEN_SEA,                     // Shoals equivalent for permarock
 
     // Can be seen through and reached past.
-    DNGN_TREES,
+    DNGN_TREE,
     DNGN_ORCISH_IDOL = 15,
     DNGN_GRANITE_STATUE = 21,
     DNGN_STATUE_RESERVED,
