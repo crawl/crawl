@@ -2392,6 +2392,7 @@ void melee_attack::chaos_affects_defender()
     const bool can_poly   = is_shifter || (defender->can_safely_mutate()
                                            && !immune);
     const bool can_rage   = defender->can_go_berserk();
+    const bool can_slow   = !mon || !mons_is_firewood(defender->as_monster());
 
     int clone_chance   = can_clone                      ?  1 : 0;
     int poly_chance    = can_poly                       ?  1 : 0;
@@ -2399,6 +2400,7 @@ void melee_attack::chaos_affects_defender()
     int shifter_chance = can_poly  && is_natural && mon ?  1 : 0;
     int rage_chance    = can_rage                       ? 10 : 0;
     int miscast_chance = 10;
+    int slowpara_chance= can_slow                       ? 10 : 0;
 
     // Already a shifter?
     if (is_shifter)
@@ -2441,12 +2443,12 @@ void melee_attack::chaos_affects_defender()
         rage_chance,    // CHAOS_RAGE
 
         10, // CHAOS_HEAL
-        10, // CHAOS_HASTE
+        slowpara_chance,// CHAOS_HASTE
         10, // CHAOS_INVIS
 
-        10, // CHAOS_SLOW
-        10, // CHAOS_PARALYSIS
-        10, // CHAOS_PETRIFY
+        slowpara_chance,// CHAOS_SLOW
+        slowpara_chance,// CHAOS_PARALYSIS
+        slowpara_chance,// CHAOS_PETRIFY
     };
 
     bolt beam;
