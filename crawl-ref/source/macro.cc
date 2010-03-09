@@ -13,7 +13,7 @@
  *   - _getch_mul() reads at least one character, but will read more
  *     if available (determined using kbhit(), which should be defined
  *     in the platform specific libraries).
- *   - Before adding the characters read into the buffer, any macros
+ *   - Before adding the characters read into the buffer, any keybindings
  *     in the sequence are replaced (see macro_add_buf_long for the
  *     details).
  *
@@ -414,7 +414,7 @@ static void macro_del( macromap &mapref, keyseq key )
  * Adds keypresses from a sequence into the internal keybuffer. Ignores
  * macros.
  */
-void macro_buf_add( const keyseq &actions, bool reverse)
+void macro_buf_add(const keyseq &actions, bool reverse)
 {
     keyseq act;
     bool need_more_reset = false;
@@ -432,19 +432,19 @@ void macro_buf_add( const keyseq &actions, bool reverse)
     if (need_more_reset)
         act.push_back(KEY_MACRO_ENABLE_MORE);
 
-    Buffer.insert( reverse? Buffer.begin() : Buffer.end(),
-                   act.begin(), act.end() );
+    Buffer.insert(reverse? Buffer.begin() : Buffer.end(),
+                   act.begin(), act.end());
 }
 
 /*
  * Adds a single keypress into the internal keybuffer.
  */
-void macro_buf_add( int key, bool reverse )
+void macro_buf_add(int key, bool reverse)
 {
     if (reverse)
-        Buffer.push_front( key );
+        Buffer.push_front(key);
     else
-        Buffer.push_back( key );
+        Buffer.push_back(key);
 }
 
 /*
@@ -457,15 +457,15 @@ void macro_buf_add_cmd(command_type cmd, bool reverse)
     // There should be plenty of room between the synthetic keys
     // (KEY_MACRO_MORE_PROTECT == -10) and USERFUNCBASE (-10000) for
     // command_type to fit (currently 1000 through 2069).
-    macro_buf_add( -((int) cmd), reverse);
+    macro_buf_add(-((int) cmd), reverse);
 }
 
 /*
  * Adds keypresses from a sequence into the internal keybuffer. Does some
- * O(N^2) analysis to the sequence to replace macros.
+ * O(N^2) analysis to the sequence to apply keymaps.
  */
-static void macro_buf_add_long( keyseq actions,
-                                macromap &keymap = Keymaps[KMC_DEFAULT] )
+static void macro_buf_add_long(keyseq actions,
+                               macromap &keymap = Keymaps[KMC_DEFAULT])
 {
     keyseq tmp;
 
@@ -502,7 +502,7 @@ static void macro_buf_add_long( keyseq actions,
         {
             // Didn't find a macro. Add the first keypress of the sequence
             // into the buffer, remove it from the sequence, and try again.
-            macro_buf_add( actions.front() );
+            macro_buf_add(actions.front());
             actions.pop_front();
         }
         else
@@ -526,9 +526,9 @@ bool is_processing_macro()
  * Command macros are only applied from the immediate front of the
  * buffer, and only when the game is expecting a command.
  */
-static void macro_buf_apply_command_macro( void )
+static void macro_buf_apply_command_macro()
 {
-    keyseq  tmp = Buffer;
+    keyseq tmp = Buffer;
 
     // find the longest match from the start of the buffer and replace it
     while (tmp.size() > 0)
@@ -564,7 +564,7 @@ static void macro_buf_apply_command_macro( void )
  * Removes the earliest keypress from the keybuffer, and returns its
  * value. If buffer was empty, returns -1;
  */
-static int macro_buf_get( void )
+static int macro_buf_get()
 {
     if (Buffer.size() == 0)
     {
@@ -637,7 +637,7 @@ void macro_save()
  * Reads as many keypresses as are available (waiting for at least one),
  * and returns them as a single keyseq.
  */
-static keyseq _getch_mul( int (*rgetch)() = NULL )
+static keyseq _getch_mul(int (*rgetch)() = NULL)
 {
     keyseq keys;
     int    a;
@@ -654,12 +654,12 @@ static keyseq _getch_mul( int (*rgetch)() = NULL )
     if (!rgetch)
         rgetch = m_getch;
 
-    keys.push_back( a = rgetch() );
+    keys.push_back(a = rgetch());
 
     // The a == 0 test is legacy code that I don't dare to remove. I
     // have a vague recollection of it being a kludge for conio support.
     while (kbhit() || a == 0)
-        keys.push_back( a = rgetch() );
+        keys.push_back(a = rgetch());
 
     return (keys);
 }
@@ -668,9 +668,9 @@ static keyseq _getch_mul( int (*rgetch)() = NULL )
  * Replacement for getch(). Returns keys from the key buffer if available.
  * If not, adds some content to the buffer, and returns some of it.
  */
-int getchm( int (*rgetch)() )
+int getchm(int (*rgetch)())
 {
-    return getchm( KMC_DEFAULT, rgetch );
+    return getchm(KMC_DEFAULT, rgetch);
 }
 
 int getchm(KeymapContext mc, int (*rgetch)())
@@ -695,7 +695,7 @@ int getchm(KeymapContext mc, int (*rgetch)())
  * Replacement for getch(). Returns keys from the key buffer if available.
  * If not, adds some content to the buffer, and returns some of it.
  */
-int getch_with_command_macros( void )
+int getch_with_command_macros()
 {
     if (Buffer.size() == 0)
     {
