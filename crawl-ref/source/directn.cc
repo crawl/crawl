@@ -2913,7 +2913,7 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
     case DNGN_CLEAR_PERMAROCK_WALL:
         return ("translucent unnaturally hard rock wall");
     case DNGN_TREES:
-        return ("Trees");
+        return ("tree");
     case DNGN_ORCISH_IDOL:
         if (you.species == SP_HILL_ORC)
            return ("idol of Beogh");

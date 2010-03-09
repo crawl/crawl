@@ -14,7 +14,7 @@ static const unsigned dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         '#', '*', '.', ',', '\'', '+', '^', '>', '<',  // wall .. stairs up
         '_', '\\', '}', '{', '8', '~', '~',            // altar .. item detect
         '0', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
-        ':', '|', '}', '%', '$', '"', '#', '7',        // book .. trees
+        ':', '|', '}', '%', '$', '"', '#', '7',        // book .. tree
         ' ', '!', '#', '%', ':', ')', '*', '+',        // space .. fired_burst
         '/', '=', '?', 'X', '[', '`', '#'              // fi_stick .. explosion
     },
@@ -24,7 +24,7 @@ static const unsigned dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         177, 176, 249, 250, '\'', 254, '^', '>', '<',  // wall .. stairs up
         220, 239, 244, 247, '8', '~', '~',             // altar .. item detect
         '0', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
-        236, '\\', '}', '%', '$', '"', '#', 234,       // book .. trees
+        236, '\\', '}', '%', '$', '"', '#', 234,       // book .. tree
         ' ', '!', '#', '%', '+', ')', '*', '+',        // space .. fired_burst
         '/', '=', '?', 'X', '[', '`', '#'              // fi_stick .. explosion
     },
@@ -35,7 +35,7 @@ static const unsigned dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
         225, 224, 254, ':', '\'', 238, '^', '>', '<',  // wall .. stairs up
         251, 182, 167, 187, '8', 171, 168,             // altar .. item detect
         '0', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
-        ':', '\\', '}', '%', '$', '"', '#', '7',       // book .. trees
+        ':', '\\', '}', '%', '$', '"', '#', '7',       // book .. tree
         ' ', '!', '#', '%', '+', ')', '*', '+',        // space .. fired_burst
         '/', '=', '?', 'X', '[', '`', '#'              // fi_stick .. explosion
     },
@@ -68,7 +68,7 @@ dungeon_char_type dchar_by_name(const std::string &name)
         "item_orb", "item_weapon", "item_armour", "item_wand", "item_food",
         "item_scroll", "item_ring", "item_potion", "item_missile", "item_book",
         "item_stave", "item_miscellany", "item_corpse", "item_gold",
-        "item_amulet", "cloud", "trees",
+        "item_amulet", "cloud", "tree",
     };
 
     for (unsigned i = 0; i < sizeof(dchar_names) / sizeof(*dchar_names); ++i)
