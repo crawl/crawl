@@ -279,7 +279,6 @@ A tree
 
 While the dungeon is filled with dim magic light, in most places it is not bright enough to sustain any larger plants.  It is uneven, though, and there are spots where, with the grace of Fedhas, trees as big as those on the surface can grow underground.
 %%%%
-%%%%
 A wall of green crystal
 
 For some reason, some dungeon walls, like this one, have been made of this polished crystal, imbued with arcane magics. They prevent its destruction, and make it reflect heat and cold.
