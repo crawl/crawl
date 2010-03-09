@@ -702,11 +702,11 @@ int getch_with_command_macros()
         // Read some keys...
         keyseq keys = _getch_mul();
         // ... and add them into the buffer (apply keymaps)
-        macro_buf_add_long( keys );
-
-        // Apply longest matching macro at front of buffer:
-        macro_buf_apply_command_macro();
+        macro_buf_add_long(keys);
     }
+
+    // Apply longest matching macro at front of buffer:
+    macro_buf_apply_command_macro();
 
     return (macro_buf_get());
 }
