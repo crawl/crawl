@@ -1338,6 +1338,8 @@ enum flush_reason_type
     FLUSH_ABORT_MACRO,                 // something wrong with macro being
                                        // processed, so stop it
     FLUSH_REPLAY_SETUP_FAILURE,        // setup for key replay failed
+    FLUSH_REPEAT_SETUP_DONE,           // command repeat done manipulating
+                                       // the macro buffer
     NUM_FLUSH_REASONS
 };
 

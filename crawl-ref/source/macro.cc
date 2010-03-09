@@ -564,7 +564,7 @@ static void macro_buf_apply_command_macro()
  * Removes the earliest keypress from the keybuffer, and returns its
  * value. If buffer was empty, returns -1;
  */
-static int macro_buf_get()
+int macro_buf_get()
 {
     if (Buffer.size() == 0)
     {
@@ -736,7 +736,8 @@ void flush_input_buffer( int reason )
 
     if (Options.flush_input[ reason ] || reason == FLUSH_ABORT_MACRO
         || reason == FLUSH_KEY_REPLAY_CANCEL
-        || reason == FLUSH_REPLAY_SETUP_FAILURE)
+        || reason == FLUSH_REPLAY_SETUP_FAILURE
+        || reason == FLUSH_REPEAT_SETUP_DONE)
     {
         while (!Buffer.empty())
         {

@@ -1027,8 +1027,7 @@ static void _input()
     if (crawl_state.terminal_resized)
         handle_terminal_resize();
 
-    repeat_again_rec.paused = (crawl_state.is_replaying_keys()
-                               && !crawl_state.cmd_repeat_start);
+    repeat_again_rec.paused = crawl_state.is_replaying_keys();
 
     crawl_state.input_line_curr = 0;
 
@@ -1054,8 +1053,7 @@ static void _input()
 
         crawl_state.waiting_for_command = false;
 
-        if (cmd != CMD_PREV_CMD_AGAIN && cmd != CMD_REPEAT_CMD
-            && cmd != CMD_NO_CMD
+        if (cmd != CMD_PREV_CMD_AGAIN && cmd != CMD_NO_CMD
             && !crawl_state.is_replaying_keys())
         {
             crawl_state.prev_cmd = cmd;
@@ -1513,7 +1511,8 @@ static bool _do_repeated_cmd()
 {
     ASSERT(crawl_state.is_repeating_cmd());
 
-    if (crawl_state.prev_repetition_turn == you.num_turns
+    if (!crawl_state.cmd_repeat_start
+        && crawl_state.prev_repetition_turn == you.num_turns
         && crawl_state.repeat_cmd != CMD_WIZARD
         && (crawl_state.repeat_cmd != CMD_PREV_CMD_AGAIN
             || crawl_state.prev_cmd != CMD_WIZARD))
@@ -1539,12 +1538,14 @@ static bool _do_repeated_cmd()
         return false;
     }
 
-    crawl_state.cmd_repeat_count++;
     if (crawl_state.cmd_repeat_count >= crawl_state.cmd_repeat_goal)
     {
         crawl_state.cancel_cmd_repeat();
         return false;
     }
+
+    crawl_state.cmd_repeat_start = false;
+    crawl_state.cmd_repeat_count++;
 
     ASSERT(crawl_state.repeat_cmd_keys.size() > 0);
     repeat_again_rec.paused = true;
@@ -4140,6 +4141,36 @@ static void _cancel_cmd_repeat()
     flush_input_buffer(FLUSH_REPLAY_SETUP_FAILURE);
 }
 
+// Setup crawl_state fields for command repeat.
+static void _init_cmd_repeat(command_type cmd, const keyseq& keys, int count)
+{
+    crawl_state.cmd_repeat_start     = true;
+    crawl_state.cmd_repeat_count     = 0;
+    crawl_state.repeat_cmd           = cmd;
+    crawl_state.repeat_cmd_keys      = keys;
+    crawl_state.cmd_repeat_goal      = count;
+    crawl_state.prev_repetition_turn = you.num_turns;
+
+    crawl_state.prev_repeat_cmd      = cmd;
+    crawl_state.prev_cmd_repeat_goal = count;
+
+    crawl_state.cmd_repeat_started_unsafe = !i_feel_safe();
+
+    crawl_state.input_line_strs.clear();
+
+    macro_buf_add(KEY_REPEAT_KEYS);
+}
+
+static command_type _find_command(const keyseq& keys)
+{
+    // Add it back in to find out the command.
+    macro_buf_add(keys, true);
+    keycode_type keyin = unmangle_direction_keys(getch_with_command_macros());
+    command_type cmd = _keycode_to_command(keyin);
+    flush_input_buffer(FLUSH_REPEAT_SETUP_DONE);
+    return (cmd);
+}
+
 static void _setup_cmd_repeat()
 {
     if (is_processing_macro())
@@ -4151,6 +4182,17 @@ static void _setup_cmd_repeat()
     }
 
     ASSERT(!crawl_state.is_repeating_cmd());
+    ASSERT(crawl_state.repeat_cmd_keys.empty());
+
+    if (crawl_state.doing_prev_cmd_again)
+    {
+        // prev_cmd_keys stores just the old repeat_cmd_keys, not
+        // the whole repeat command input including number
+        _init_cmd_repeat(crawl_state.prev_repeat_cmd,
+                         crawl_state.prev_cmd_keys,
+                         crawl_state.prev_cmd_repeat_goal);
+        return;
+    }
 
     char buf[80];
 
@@ -4158,56 +4200,13 @@ static void _setup_cmd_repeat()
     int ch = _get_num_and_char("Number of times to repeat, then command key: ",
                                buf, 80);
 
-    if (ch == ESCAPE)
-    {
-        // This *might* be part of the trigger for a macro.
-        keyseq trigger;
-        trigger.push_back(ch);
-
-        if (get_macro_buf_size() == 0)
-        {
-            // Was just a single ESCAPE key, so not a macro trigger.
-            canned_msg(MSG_OK);
-            _cancel_cmd_repeat();
-            return;
-        }
-        ch = getchm();
-        trigger.push_back(ch);
-
-        // Now that we have the entirety of the (possible) macro trigger,
-        // clear out the keypress recorder so that we won't have recorded
-        // the trigger twice.
-        repeat_again_rec.clear();
-
-        insert_macro_into_buff(trigger);
-
-        ch = getchm();
-        if (ch == ESCAPE)
-        {
-            if (get_macro_buf_size() > 0)
-                // User pressed an Alt key which isn't bound to a macro.
-                mpr("That key isn't bound to a macro.");
-            else
-                // Wasn't a macro trigger, just an ordinary escape.
-                canned_msg(MSG_OK);
-
-            _cancel_cmd_repeat();
-            return;
-        }
-        // *WAS* a macro trigger, keep going.
-    }
-
     if (strlen(buf) == 0)
     {
         mpr("You must enter the number of times for the command to repeat.");
         _cancel_cmd_repeat();
         return;
     }
-
     int count = atoi(buf);
-
-    if (crawl_state.doing_prev_cmd_again)
-        count = crawl_state.prev_cmd_repeat_goal;
 
     if (count <= 0)
     {
@@ -4216,104 +4215,44 @@ static void _setup_cmd_repeat()
         return;
     }
 
-    if (crawl_state.doing_prev_cmd_again)
-    {
-        // If a "do previous command again" caused a command
-        // repetition to be redone, the keys to be repeated are
-        // already in the key recording buffer, so we just need to
-        // discard all the keys saying how many times the command
-        // should be repeated.
-        do
-        {
-            repeat_again_rec.keys.pop_front();
-        }
-        while (repeat_again_rec.keys.size() > 0
-               && repeat_again_rec.keys[0] != ch);
-
-        repeat_again_rec.keys.pop_front();
-    }
-
     // User can type space or enter and then the command key, in case
     // they want to repeat a command bound to a number key.
     c_input_reset(true);
     if (ch == ' ' || ch == CK_ENTER)
     {
-        if (!crawl_state.doing_prev_cmd_again)
-            repeat_again_rec.keys.pop_back();
-
         mpr("Enter command to be repeated: ", MSGCH_PROMPT);
         // Enable the cursor to read input.
         cursor_control con(true);
 
-        crawl_state.waiting_for_command = true;
-
-        ch = _get_next_keycode();
-
-        crawl_state.waiting_for_command = false;
+        ch = getchm();
     }
 
-    command_type cmd = _keycode_to_command((keycode_type) ch);
+    // Read out key sequence.
+    keyseq keys;
+    do
+    {
+        keys.push_back(ch);
+        ch = macro_buf_get();
+    } while (ch != -1);
+
+    command_type cmd = _find_command(keys);
+    if (cmd == CMD_PREV_CMD_AGAIN)
+    {
+        keys = crawl_state.prev_cmd_keys;
+        cmd = _find_command(keys);
+    }
 
     if (cmd != CMD_MOUSE_MOVE)
         c_input_reset(false);
 
-    if (!is_processing_macro() && !_cmd_is_repeatable(cmd))
+    if (!_cmd_is_repeatable(cmd))
     {
         _cancel_cmd_repeat();
         return;
     }
 
-    if (!crawl_state.doing_prev_cmd_again && cmd != CMD_PREV_CMD_AGAIN)
-        crawl_state.prev_cmd_keys = repeat_again_rec.keys;
-
-    if (is_processing_macro())
-    {
-        // Put back in first key of the expanded macro, which
-        // get_next_keycode() fetched
-        repeat_again_rec.paused = true;
-        macro_buf_add(ch, true);
-
-        // If we're repeating a macro, get rid the keys saying how
-        // many times to repeat, because the way that macros are
-        // repeated means that the number keys will be repeated if
-        // they aren't discarded.
-        keyseq &keys = repeat_again_rec.keys;
-        ch = keys[keys.size() - 1];
-        while (isdigit(ch) || ch == ' ' || ch == CK_ENTER)
-        {
-            keys.pop_back();
-            // Handle the case where the user has macroed enter to itself.
-            if (keys.empty())
-            {
-                _cancel_cmd_repeat();
-                return;
-            }
-            ch = keys[keys.size() - 1];
-        }
-    }
-
-    repeat_again_rec.paused = false;
-    // Discard the setup for the command repetition, since what's
-    // going to be repeated is yet to be typed, except for the fist
-    // key typed which has to be put back in (unless we're repeating a
-    // macro, in which case everything to be repeated is already in
-    // the macro buffer).
-    if (!is_processing_macro())
-    {
-        repeat_again_rec.clear();
-        macro_buf_add(ch, crawl_state.doing_prev_cmd_again);
-    }
-
-    crawl_state.cmd_repeat_start     = true;
-    crawl_state.cmd_repeat_count     = 0;
-    crawl_state.repeat_cmd           = cmd;
-    crawl_state.cmd_repeat_goal      = count;
-    crawl_state.prev_cmd_repeat_goal = count;
-    crawl_state.prev_repetition_turn = you.num_turns;
-
-    crawl_state.cmd_repeat_started_unsafe = !i_feel_safe();
-
-    crawl_state.input_line_strs.clear();
+    crawl_state.prev_cmd_keys = keys;
+    _init_cmd_repeat(cmd, keys, count);
 }
 
 static void _do_prev_cmd_again()
@@ -4341,42 +4280,20 @@ static void _do_prev_cmd_again()
                && crawl_state.repeat_cmd == CMD_PREV_CMD_AGAIN));
 
     crawl_state.doing_prev_cmd_again = true;
-    repeat_again_rec.paused          = false;
+
+    ASSERT(crawl_state.prev_cmd_keys.size() > 0);
 
     if (crawl_state.prev_cmd == CMD_REPEAT_CMD)
-    {
-        crawl_state.cmd_repeat_start     = true;
-        crawl_state.cmd_repeat_count     = 0;
-        crawl_state.cmd_repeat_goal      = crawl_state.prev_cmd_repeat_goal;
-        crawl_state.prev_repetition_turn = you.num_turns;
-    }
-
-    const keyseq &keys = crawl_state.prev_cmd_keys;
-    ASSERT(keys.size() > 0);
-
-    // Insert keys at front of input buffer, rather than at the end,
-    // since if the player holds down the "`" key, then the buffer
-    // might get two "`" in a row, and if the keys to be replayed go after
-    // the second "`" then we get an assertion.
-    macro_buf_add(keys, true);
-
-    bool was_doing_repeats = crawl_state.is_repeating_cmd();
-
-    _input();
+        macro_buf_add_cmd(CMD_REPEAT_CMD, true);
+    else
+        macro_buf_add(crawl_state.prev_cmd_keys, true);
 
     // crawl_state.doing_prev_cmd_again can be set to false
     // while input() does its stuff if something causes
     // crawl_state.cancel_cmd_again() to be called.
-    while (!was_doing_repeats && crawl_state.is_repeating_cmd()
-           && crawl_state.doing_prev_cmd_again)
+    while (get_macro_buf_size() > 0 && crawl_state.doing_prev_cmd_again)
     {
         _input();
-    }
-
-    if (!was_doing_repeats && crawl_state.is_repeating_cmd()
-        && !crawl_state.doing_prev_cmd_again)
-    {
-        crawl_state.cancel_cmd_repeat();
     }
 
     crawl_state.doing_prev_cmd_again = false;
@@ -4384,49 +4301,7 @@ static void _do_prev_cmd_again()
 
 static void _update_replay_state()
 {
-    if (crawl_state.is_repeating_cmd())
-    {
-        // First repeat is to copy down the keys the user enters,
-        // grab them so we can go on autopilot for the remaining
-        // iterations.
-        if (crawl_state.cmd_repeat_start)
-        {
-            ASSERT(repeat_again_rec.keys.size() > 0);
-
-            crawl_state.cmd_repeat_start = false;
-            crawl_state.repeat_cmd_keys  = repeat_again_rec.keys;
-
-            // Setting up the "previous command key sequence"
-            // for a repeated command is different from normal,
-            // since in addition to all of the keystrokes for
-            // the command, it needs the repeat command plus the
-            // number of repeats at the very beginning of the
-            // sequence.
-            if (!crawl_state.doing_prev_cmd_again)
-            {
-                keyseq &prev = crawl_state.prev_cmd_keys;
-                keyseq &curr = repeat_again_rec.keys;
-
-                if (is_processing_macro())
-                    prev = curr;
-                else
-                {
-                    // Skip first key, because that's command key that's
-                    // being repeated, which crawl_state.prev_cmd_keys
-                    // aleardy contains.
-                    keyseq::iterator begin = curr.begin();
-                    begin++;
-
-                    prev.insert(prev.end(), begin, curr.end());
-                }
-            }
-
-            repeat_again_rec.paused = true;
-            macro_buf_add(KEY_REPEAT_KEYS);
-        }
-    }
-
-    if (!crawl_state.is_replaying_keys() && !crawl_state.cmd_repeat_start
+    if (!crawl_state.is_replaying_keys()
         && crawl_state.prev_cmd != CMD_NO_CMD
         && crawl_state.prev_cmd != CMD_NEXT_CMD)
     {
