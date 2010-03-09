@@ -1421,10 +1421,10 @@ MARKER:     c = lua:props_marker {veto_fragmentation="veto", veto_disintegrate="
 MARKER:     t = lua:props_marker {veto_fragmentation="veto", veto_disintegrate="veto", \
                                   veto_shatter="veto", veto_fire="veto" }
 :           wizlab_setup(_G, "Wucad Mu's Monastery")
-:           set_border_fill_type("trees")
+:           set_border_fill_type("tree")
 :           set_random_mon_list("shadow / phantom w:1 / flayed ghost w:1 / hungry ghost w:1")
-:           dgn.set_feature_desc_short("Trees", "autumnal tree")
-:           dgn.set_feature_desc_long("Trees", "These trees, large as they are, appear to be "
+:           dgn.set_feature_desc_short("tree", "autumnal tree")
+:           dgn.set_feature_desc_long("tree", "These trees, large as they are, appear to be "
 :               .. "permanently locked in an autumnal moment: leaves, coloured red and gold, "
 :               .. "fall from branches and float gracefully to the floor. Before they even "
 :               .. "reach the ground, however, a shadow passes, and when the shimmer is gone, "

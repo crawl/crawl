@@ -1419,7 +1419,7 @@ bool evolve_flora()
                                     env.grid(spelld.target)))
         {
             if (env.grid(spelld.target) == DNGN_TREES)
-                mprf("The trees have already reached the pinnacle of evolution.");
+                mprf("The tree has already reached the pinnacle of evolution.");
             else
                 mprf("You must target a plant or fungus.");
             return (false);
