@@ -7,6 +7,9 @@ Breaks save compatibility with the 0.5 release.
 IMPORTANT: The bugtracker has moved to http://crawl.develz.org/mantis/.
            Please report all bugs and feedback there. Thank you!
 
+           The official website has moved to http://crawl.develz.org/wordpress/.
+           Announcements and development changes will be posted there.
+
            The source code is still hosted on SourceForge, but we now use git
            for version control. See docs/develop/git/quickstart.txt for more
            information.
