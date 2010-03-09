@@ -1494,7 +1494,8 @@ stone of earth elementals
 A magical device for summoning earth elementals. It is rather
 unreliable, and usually requires several attempts to function
 correctly. Using it carries an element of risk, which is reduced if
-one is skilled in the appropriate elemental magic.
+one is skilled in the appropriate elemental magic, especially when
+trying to control multiple elementals at the same time.
 %%%%
 storm dragon armour
 

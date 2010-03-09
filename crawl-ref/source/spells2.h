@@ -42,7 +42,7 @@ bool cast_summon_swarm(int pow, god_type god = GOD_NO_GOD);
 bool cast_call_canine_familiar(int pow, god_type god = GOD_NO_GOD);
 bool cast_summon_elemental(int pow, god_type god = GOD_NO_GOD,
                            monster_type restricted_type = MONS_NO_MONSTER,
-                           int unfriendly = 2);
+                           int unfriendly = 2, int horde_penalty = 0);
 bool cast_summon_ice_beast(int pow, god_type god = GOD_NO_GOD);
 bool cast_summon_ugly_thing(int pow, god_type god = GOD_NO_GOD);
 bool cast_summon_dragon(int pow, god_type god = GOD_NO_GOD);

@@ -1284,13 +1284,28 @@ bool cast_call_canine_familiar(int pow, god_type god)
     return (success);
 }
 
+int _count_summons(monster_type type)
+{
+    int cnt = 0;
+
+    for (monster_iterator mi; mi; ++mi)
+        if (mi->type == type
+            && mi->attitude == ATT_FRIENDLY // friendly() would count charmed
+            && mi->is_summoned())
+        {
+            cnt++;
+        }
+
+    return (cnt);
+}
+
 // 'unfriendly' is percentage chance summoned elemental goes
 //              postal on the caster (after taking into account
 //              chance of that happening to unskilled casters
 //              anyway).
 bool cast_summon_elemental(int pow, god_type god,
                            monster_type restricted_type,
-                           int unfriendly)
+                           int unfriendly, int horde_penalty)
 {
     monster_type mon = MONS_PROGRAM_BUG;
 
@@ -1382,6 +1397,9 @@ bool cast_summon_elemental(int pow, god_type god,
         return (false);
     }
 
+    if (horde_penalty)
+        horde_penalty *= _count_summons(mon);
+
     // silly - ice for water? 15jan2000 {dlb}
     // little change here to help with the above... and differentiate
     // elements a bit... {bwr}
@@ -1390,18 +1408,22 @@ bool cast_summon_elemental(int pow, god_type god,
     // - Earth elementals are more static and easy to tame (as before).
     // - Fire elementals fall in between the two (10 is still fairly easy).
     const bool friendly = ((mon != MONS_FIRE_ELEMENTAL
-                            || x_chance_in_y(you.skills[SK_FIRE_MAGIC], 10))
+                            || x_chance_in_y(you.skills[SK_FIRE_MAGIC]
+                                             - horde_penalty, 10))
 
                         && (mon != MONS_WATER_ELEMENTAL
-                            || x_chance_in_y(you.skills[SK_ICE_MAGIC],
+                            || x_chance_in_y(you.skills[SK_ICE_MAGIC]
+                                             - horde_penalty,
                                              (you.species == SP_MERFOLK) ? 5
                                                                          : 15))
 
                         && (mon != MONS_AIR_ELEMENTAL
-                            || x_chance_in_y(you.skills[SK_AIR_MAGIC], 15))
+                            || x_chance_in_y(you.skills[SK_AIR_MAGIC]
+                                             - horde_penalty, 15))
 
                         && (mon != MONS_EARTH_ELEMENTAL
-                            || x_chance_in_y(you.skills[SK_EARTH_MAGIC], 5))
+                            || x_chance_in_y(you.skills[SK_EARTH_MAGIC]
+                                             - horde_penalty, 5))
 
                         && random2(100) >= unfriendly);
 
