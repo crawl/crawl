@@ -72,8 +72,7 @@ void game_state::show_startup_errors()
 bool game_state::is_replaying_keys() const
 {
     return (crawl_state.doing_prev_cmd_again
-            || (crawl_state.is_repeating_cmd()
-                && !crawl_state.cmd_repeat_start));
+            || crawl_state.is_repeating_cmd());
 }
 
 bool game_state::is_repeating_cmd() const
@@ -291,6 +290,8 @@ void game_state::reset_cmd_again()
 {
     doing_prev_cmd_again = false;
     prev_cmd             = CMD_NO_CMD;
+    prev_cmd_repeat_goal = 0;
+    prev_repeat_cmd      = CMD_NO_CMD;
 
     prev_cmd_keys.clear();
 }
