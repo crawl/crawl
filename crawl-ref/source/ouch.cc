@@ -75,12 +75,20 @@ static void _item_corrode(int slot);
 
 
 // NOTE: DOES NOT check for hellfire!!!
-int check_your_resists(int hurted, beam_type flavour)
+int check_your_resists(int hurted, beam_type flavour, std::string source,
+                       bolt *beam)
 {
     int resist;
     int original = hurted;
 
     dprf("checking resistance: flavour=%d", flavour );
+
+    std::string kaux = "";
+    if (beam)
+    {
+        source = beam->get_source_name();
+        kaux = beam->name;
+    }
 
     if (flavour == BEAM_FIRE || flavour == BEAM_LAVA
         || flavour == BEAM_HELLFIRE || flavour == BEAM_FRAG)
@@ -147,7 +155,7 @@ int check_your_resists(int hurted, beam_type flavour)
         resist = player_res_poison();
 
         if (resist <= 0)
-            poison_player( coinflip() ? 2 : 1 );
+            poison_player( coinflip() ? 2 : 1, source, kaux );
 
         hurted = resist_adjust_damage(&you, flavour, resist,
                                       hurted, true);
@@ -162,9 +170,9 @@ int check_your_resists(int hurted, beam_type flavour)
         resist = player_res_poison();
 
         if (!resist)
-            poison_player( 4 + random2(3), true );
+            poison_player( 4 + random2(3), source, kaux, true );
         else if (!you.is_undead)
-            poison_player( 2 + random2(3), true );
+            poison_player( 2 + random2(3), source, kaux, true );
 
         hurted = resist_adjust_damage(&you, flavour, resist, hurted);
         if (hurted < original)

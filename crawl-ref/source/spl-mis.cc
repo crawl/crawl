@@ -509,7 +509,7 @@ bool MiscastEffect::_ouch(int dam, beam_type flavour)
     }
     else
     {
-        dam = check_your_resists(dam, flavour);
+        dam = check_your_resists(dam, flavour, cause);
 
         if (avoid_lethal(dam))
             return (false);
@@ -550,7 +550,7 @@ bool MiscastEffect::_explosion()
     ASSERT(beam.flavour != BEAM_NONE);
 
     int max_dam = beam.damage.num * beam.damage.size;
-    max_dam = check_your_resists(max_dam, beam.flavour);
+    max_dam = check_your_resists(max_dam, beam.flavour, cause);
     if (avoid_lethal(max_dam))
         return (false);
 

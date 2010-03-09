@@ -4758,11 +4758,11 @@ bool confuse_player(int amount, bool resistable)
     return (true);
 }
 
-bool curare_hits_player(int death_source, int amount)
+bool curare_hits_player(int death_source, int amount, const bolt &beam)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    poison_player(amount);
+    poison_player(amount, beam.get_source_name(), beam.name);
 
     const bool res_poison = player_res_poison() > 0;
 
@@ -4770,7 +4770,7 @@ bool curare_hits_player(int death_source, int amount)
 
     if (you.res_asphyx() <= 0)
     {
-      hurted = roll_dice(2, 6);
+        hurted = roll_dice(2, 6);
 
         // Note that the hurtage is halved by poison resistance.
         if (res_poison)
@@ -4789,7 +4789,8 @@ bool curare_hits_player(int death_source, int amount)
     return (hurted > 0);
 }
 
-bool poison_player(int amount, bool force)
+bool poison_player(int amount, std::string source, std::string source_aux,
+                   bool force)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -4809,6 +4810,9 @@ bool poison_player(int amount, bool force)
 
         learned_something_new(TUT_YOU_POISON);
     }
+
+    you.props["poisoner"] = source;
+    you.props["poison_aux"] = source_aux;
 
     return (true);
 }
@@ -4864,8 +4868,12 @@ void reduce_poison_player(int amount)
     const int old_value = you.duration[DUR_POISONING];
     you.duration[DUR_POISONING] -= amount;
 
-    if (you.duration[DUR_POISONING] < 0)
+    if (you.duration[DUR_POISONING] <= 0)
+    {
         you.duration[DUR_POISONING] = 0;
+        you.props.erase("poisoner");
+        you.props.erase("poison_aux");
+    }
 
     if (you.duration[DUR_POISONING] < old_value)
     {
@@ -4874,7 +4882,7 @@ void reduce_poison_player(int amount)
     }
 }
 
-bool miasma_player()
+bool miasma_player(std::string source, std::string source_aux)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -4888,7 +4896,7 @@ bool miasma_player()
         return (false);
     }
 
-    bool success = poison_player(1);
+    bool success = poison_player(1, source, source_aux);
 
     if (you.hp_max > 4 && coinflip())
     {
@@ -6699,7 +6707,7 @@ int player::mons_species() const
 
 void player::poison(actor *agent, int amount)
 {
-    ::poison_player(amount);
+    ::poison_player(amount, agent? agent->name(DESC_NOCAP_A, true) : "");
 }
 
 void player::expose_to_element(beam_type element, int st)
