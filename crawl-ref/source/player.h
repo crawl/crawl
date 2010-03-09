@@ -9,6 +9,7 @@
 #define PLAYER_H
 
 #include "actor.h"
+#include "beam.h"
 #include "quiver.h"
 #include "itemprop-enum.h"
 #include "species.h"
@@ -767,11 +768,12 @@ void contaminate_player(int change, bool controlled = false,
 
 bool confuse_player(int amount, bool resistable = true);
 
-bool curare_hits_player(int death_source, int amount);
-bool poison_player(int amount, bool force = false);
+bool curare_hits_player(int death_source, int amount, const bolt &beam);
+bool poison_player(int amount, std::string source,
+                   std::string source_aux = "", bool force = false);
 void dec_poison_player();
 void reduce_poison_player(int amount);
-bool miasma_player();
+bool miasma_player(std::string source, std::string source_aux = "");
 
 bool napalm_player(int amount);
 void dec_napalm_player(int delay);

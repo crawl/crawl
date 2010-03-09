@@ -263,8 +263,10 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
                  "That liquid tasted %s nasty...",
                  (pot_eff == POT_POISON) ? "very" : "extremely" );
 
-            poison_player( ((pot_eff == POT_POISON) ? 1 + random2avg(5, 2)
-                                                    : 3 + random2avg(13, 2)) );
+            if (pot_eff == POT_POISON)
+                poison_player(1 + random2avg(5, 2), "a potion of poison");
+            else
+                poison_player(3 + random2avg(13, 2), "a potion of strong poison");
             xom_is_stimulated(128 / xom_factor);
         }
         break;

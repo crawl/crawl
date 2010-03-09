@@ -911,6 +911,12 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             auxkilldata = "unknown source";
     }
 
+    if (death_type == KILLED_BY_POISON)
+    {
+        death_source_name = you.props["poisoner"].get_string();
+        auxkilldata = you.props["poison_aux"].get_string();
+    }
+
     // And restore it here.
     you.duration[DUR_MISLED] = misled;
 }
@@ -1534,7 +1540,27 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         break;
 
     case KILLED_BY_POISON:
-        desc += terse? "poison" : "Succumbed to poison";
+        if (death_source_name.empty() || terse)
+        {
+            if (!terse)
+                desc += "Succumbed to poison";
+            else if (death_source_name.empty())
+                desc += "poisoned by " + death_source_name;
+            else
+                desc += "poison";
+            if (!auxkilldata.empty())
+                desc += " (" + auxkilldata + ")";
+        }
+        else if (auxkilldata.empty()
+                 && death_source_name.find("poison") != std::string::npos)
+        {
+            desc += "Succumbed to " + death_source_name;
+        }
+        else
+        {
+            desc += "Succumbed to " + apostrophise(death_source_name) + " "
+                    + (auxkilldata.empty()? "poison" : auxkilldata);
+        }
         break;
 
     case KILLED_BY_CLOUD:

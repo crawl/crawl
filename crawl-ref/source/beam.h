@@ -179,6 +179,7 @@ public:
     // Returns member short_name if set, otherwise some reasonable string
     // for a short name, most likely the name of the beam's flavour.
     std::string get_short_name() const;
+    std::string get_source_name() const;
 
     // Assume that all saving throws are failed, actually apply
     // the enchantment.

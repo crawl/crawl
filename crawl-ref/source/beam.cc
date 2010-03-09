@@ -3446,10 +3446,10 @@ void bolt::affect_player()
         bleed_onto_floor(you.pos(), MONS_PLAYER, blood, true);
     }
 
-    hurted = check_your_resists(hurted, flavour);
+    hurted = check_your_resists(hurted, flavour, "", this);
 
     if (flavour == BEAM_MIASMA && hurted > 0)
-        was_affected = miasma_player();
+        was_affected = miasma_player(get_source_name(), name);
 
     if (flavour == BEAM_NUKE) // DISINTEGRATION already handled
         blood_spray(you.pos(), MONS_PLAYER, hurted / 5);
@@ -3477,7 +3477,7 @@ void bolt::affect_player()
             if (x_chance_in_y(90 - 3 * you.armour_class(), 100))
             {
                 curare_hits_player(actor_to_death_source(agent()),
-                                   1 + random2(3));
+                                   1 + random2(3), *this);
                 was_affected = true;
             }
         }
@@ -5568,6 +5568,16 @@ std::string beam_type_name(beam_type type)
     }
     DEBUGSTR("unknown beam type");
     return("UNKNOWN");
+}
+
+std::string bolt::get_source_name() const
+{
+    if (!source_name.empty())
+        return source_name;
+    const actor *a = agent();
+    if (a)
+        return a->name(DESC_NOCAP_A, true);
+    return "";
 }
 
 void clear_zap_info_on_exit()

@@ -12,6 +12,7 @@
 #define DEATH_NAME_LENGTH 10
 
 #include "enum.h"
+#include "beam.h"
 
 // Keep in sync with names in hiscores.cc.
 enum kill_method_type
@@ -55,7 +56,8 @@ enum kill_method_type
     NUM_KILLBY
 };
 
-int check_your_resists(int hurted, beam_type flavour);
+int check_your_resists(int hurted, beam_type flavour, std::string source,
+                       bolt *beam = 0);
 void splash_with_acid(int acid_strength, bool corrode_items = true);
 void weapon_acid(int acid_strength);
 

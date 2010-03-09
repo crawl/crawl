@@ -819,7 +819,8 @@ void in_a_cloud()
         {
             ouch((random2(10) * you.time_taken) / 10, cl, KILLED_BY_CLOUD,
                  "poison gas");
-            poison_player(1);
+            // We don't track the source of the cloud so we can't assign blame.
+            poison_player(1, "", name.empty() ? "poison gas" : name);
         }
         break;
 
@@ -864,7 +865,8 @@ void in_a_cloud()
         if (you.res_rotting())
             return;
 
-        miasma_player();
+        // We'd want to blame it to a specific monster...
+        miasma_player(!name.empty() ? name.c_str() : "a cloud of dark miasma");
 
         hurted += (random2avg(12, 3) * you.time_taken) / 10;    // 3
 

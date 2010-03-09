@@ -590,7 +590,7 @@ void cast_toxic_radiance(bool non_player)
     else if (!player_res_poison())
     {
         mpr("You feel rather sick.");
-        poison_player(2);
+        poison_player(2, "toxic radiance");
     }
 
     counted_monster_list affected_monsters;
@@ -658,7 +658,8 @@ void cast_refrigeration(int pow, bool non_player)
 
     // Handle the player.
     const dice_def dam_dice(3, 5 + pow / 10);
-    const int hurted = check_your_resists(dam_dice.roll(), BEAM_COLD);
+    const int hurted = check_your_resists(dam_dice.roll(), BEAM_COLD,
+            "refrigeration");
 
     if (hurted > 0)
     {
