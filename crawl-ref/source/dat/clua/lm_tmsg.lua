@@ -68,7 +68,6 @@ function TimedMessaging:init(tmarker, cm, verbose)
       if string.find(mes, "$F") then
         mes = util.expand_entity(self.entity, mes)
       end
-      crawl.add_travel_stopper(mes)
     end
   end
 

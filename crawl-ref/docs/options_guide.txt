@@ -48,7 +48,7 @@ The contents of this text are:
                 travel_delay, explore_delay, travel_avoid_terrain,
                 explore_greedy, explore_stop, explore_stop_pickup_ignore,
                 explore_improved, tc_reachable, tc_dangerous, tc_disconnected,
-                tc_excluded, tc_exclude_circle, travel_stop_message,
+                tc_excluded, tc_exclude_circle,
                 runrest_ignore_message, runrest_stop_message,
                 runrest_ignore_poison, runrest_ignore_monster,
                 trapwalk_safe_hp, trap_prompt, rest_wait_both, auto_exclude
@@ -903,31 +903,6 @@ tc_exclude_circle = red
           excluded_circle: the colour for travel exclusions apart from
                            centre
 
-travel_stop_message = <list of regexes>
-        Travel will always stop upon hitpoint loss, confusion, stat
-        drain, getting encumbered, catching sight of a non-friendly
-        monster, and teleporting. In addition, a message containing one
-        of the expressions in travel_stop_message will stop travel. For
-        example,
-             travel_stop_message = Something appears
-        stops travel if Xom grants us a gift suddenly. To limit a
-        substring match to a message channel, prefix the substring with
-        the channel name and a colon (see section 4-k below on Message
-        Channels). For instance, if you want travel to stop when you're
-        hit by divine retribution, you could use:
-             travel_stop_message = god:wrath finds you
-        If you'd like to stop travel for any message sent to a
-        particular channel, use a travel_stop_message line with that
-        message channel name and a colon alone. For example, if you're
-        playing a ghoul:
-             travel_stop_message = rotten_meat:
-        Stop travel for any god messages (including prayer)
-             travel_stop_message = god:
-        Multiple travel_stop_message lines can be used.
-        Check the file travel_stoppers.txt in the settings folder for a
-        list of such options. It can be included by
-        include = travel_stoppers.txt
-
 runrest_ignore_message = <list of regexes>
 runrest_stop_message = <list of regexes>
         Use these to force messages to interrupt travel and resting, or
@@ -1508,7 +1483,7 @@ force_more_message = <list of regexes>
         Any message that contains a regex specified here, will enforce a
         -More- prompt, so it can be used to highlight really important
         events.
-        The syntax is identical to that of travel_stop_message (4-g).
+        The syntax is identical to that of runrest_ignore_message (4-g).
 
 msg_condense_repeats = true
         If the same message is repeated multiple times during the same
