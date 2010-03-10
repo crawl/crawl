@@ -91,6 +91,14 @@ static int crawl_formatted_mpr(lua_State *ls)
     return (0);
 }
 
+// Print to stderr for debugging hooks.
+LUAFN(crawl_stderr)
+{
+    const char *text = luaL_checkstring(ls, 1);
+    fprintf(stderr, "%s\n", text);
+    return (0);
+}
+
 LUAWRAP(crawl_delay, delay(luaL_checkint(ls, 1)))
 LUAWRAP(crawl_more, more())
 LUAWRAP(crawl_flush_prev_message, flush_prev_message())
@@ -623,6 +631,7 @@ static const struct luaL_reg crawl_clib[] =
 {
     { "mpr",            crawl_mpr },
     { "formatted_mpr",  crawl_formatted_mpr },
+    { "stderr",  crawl_stderr },
     { "more",           crawl_more },
     { "more_autoclear", crawl_set_more_autoclear },
     { "flush_prev_message", crawl_flush_prev_message },
