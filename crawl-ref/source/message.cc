@@ -1148,20 +1148,11 @@ static void mpr_check_patterns(const std::string& message,
     if (channel == MSGCH_SOUND)
         you.check_awaken(5);
 
-    // Check messages for all forms of running now.
-    if (you.running)
-        for (unsigned i = 0; i < Options.travel_stop_message.size(); ++i)
-            if (Options.travel_stop_message[i].is_filtered( channel, message ))
-            {
-                stop_running();
-                break;
-            }
-
     if (!Options.sound_mappings.empty())
         for (unsigned i = 0; i < Options.sound_mappings.size(); i++)
         {
             // Maybe we should allow message channel matching as for
-            // travel_stop_message?
+            // force_more_message?
             if (Options.sound_mappings[i].pattern.matches(message))
             {
                 play_sound(Options.sound_mappings[i].soundfile.c_str());

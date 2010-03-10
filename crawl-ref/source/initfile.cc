@@ -949,7 +949,6 @@ void game_options::reset_options()
     autoinscribe_cursed = true;
     note_items.clear();
     note_skill_levels.clear();
-    travel_stop_message.clear();
     force_more_message.clear();
     sound_mappings.clear();
     menu_colour_mappings.clear();
@@ -2017,7 +2016,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         && key != "autopickup_exceptions"
         && key != "explore_stop_pickup_ignore"
         && key != "stop_travel" && key != "sound"
-        && key != "travel_stop_message" && key != "force_more_message"
+        && key != "force_more_message"
         && key != "drop_filter" && key != "lua_file" && key != "terp_file"
         && key != "note_items" && key != "autoinscribe"
         && key != "note_monsters" && key != "note_messages"
@@ -2780,33 +2779,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(use_fake_cursor);
     else BOOL_OPTION(use_fake_player_cursor);
     else BOOL_OPTION(macro_meta_entry);
-    else if (key == "stop_travel" || key == "travel_stop_message")
-    {
-        std::vector<std::string> fragments = split_string(",", field);
-        for (int i = 0, count = fragments.size(); i < count; ++i)
-        {
-            if (fragments[i].length() == 0)
-                continue;
-
-            std::string::size_type pos = fragments[i].find(":");
-            if (pos && pos != std::string::npos)
-            {
-                std::string prefix = fragments[i].substr(0, pos);
-                int channel = str_to_channel( prefix );
-                if (channel != -1 || prefix == "any")
-                {
-                    std::string s = fragments[i].substr( pos + 1 );
-                    trim_string( s );
-                    travel_stop_message.push_back(
-                        message_filter( channel, s ) );
-                    continue;
-                }
-            }
-
-            travel_stop_message.push_back(
-                    message_filter( fragments[i] ) );
-        }
-    }
     else if (key == "force_more_message")
     {
         std::vector<std::string> fragments = split_string(",", field);
