@@ -49,9 +49,9 @@ The contents of this text are:
                 explore_greedy, explore_stop, explore_stop_pickup_ignore,
                 explore_improved, tc_reachable, tc_dangerous, tc_disconnected,
                 tc_excluded, tc_exclude_circle, travel_stop_message,
-                runrest_ignore_message, runrest_ignore_poison,
-                runrest_ignore_monster, trapwalk_safe_hp,
-                trap_prompt, rest_wait_both, auto_exclude
+                runrest_ignore_message, runrest_stop_message,
+                runrest_ignore_poison, runrest_ignore_monster,
+                trapwalk_safe_hp, trap_prompt, rest_wait_both, auto_exclude
 4-h     Stashes.
                 stash_filter, annotate_item_class,
                 annotate_item_dropped
@@ -373,7 +373,7 @@ The available stock Lua scripts are
                    Others).
   runrest.lua   -- allows overriding certain stop conditions when
                    running.
-                   New options: runrest_ignore_poison,
+                   New options: runrest_ignore_poison, runrest_stop_message
                    runrest_ignore_message, runrest_ignore_monster
   gearset.lua   -- provides commands for switching of complete sets via
                    macro.
@@ -928,17 +928,27 @@ travel_stop_message = <list of regexes>
         list of such options. It can be included by
         include = travel_stoppers.txt
 
-runrest_ignore_message = <string>
-        This only works if runrest.lua has already been sourced in
-        init.txt. Any message containing the string will *not* stop your
-        run. E.g.
+runrest_ignore_message = <list of regexes>
+runrest_stop_message = <list of regexes>
+        Use these to force messages to interrupt travel and resting, or
+        not. These are matched against full message text. To limit a
+        substring match to a message channel, prefix the substring with
+        the channel name and a colon (see section 4-k below on Message
+        Channels). For instance, if you want travel to stop when you're
+        hit by divine retribution, you could use:
+             runrest_stop_message = god:wrath finds you
+        Or you can explicitly ignore some messages:
              runrest_ignore_message = offer a prayer,prayer is over
              runrest_ignore_message = pleased with you,exalted
 
         Note that monster talk and dungeon noises already do not
         interrupt running or resting, by default.
 
-        Also note that runrest_ignore_message has no effect on what
+        Multiple lines can be used. The earliest match among both
+        ignore and stop messages overrides later lines. The file
+        runrest_messages.txt contains a number of default settings.
+
+        Note also that runrest_ignore_message has no effect on what
         explore_stop stops for.
 
 runrest_ignore_poison = <poison damage>:<minimum hp>
