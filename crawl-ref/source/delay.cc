@@ -1806,6 +1806,11 @@ static bool _should_stop_activity(const delay_queue_item &item,
         break;
     }
 
+    // No monster will attack you inside a sanctuary,
+    // so presence of monsters won't matter.
+    if (ai == AI_SEE_MONSTER && is_sanctuary(you.pos()))
+        return (false);
+
     delay_type curr = current_delay_action();
 
     if (ai == AI_SEE_MONSTER && player_stair_delay())
@@ -1975,11 +1980,6 @@ bool interrupt_activity( activity_interrupt_type ai,
 
     if (_should_stop_activity(item, ai, at))
     {
-        // No monster will attack you inside a sanctuary,
-        // so presence of monsters won't matter.
-        if (is_sanctuary(you.pos()))
-            return (false);
-
         _monster_warning(ai, at, item.type);
         // Teleport stops stair delays.
         stop_delay(ai == AI_TELEPORT);
