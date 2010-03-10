@@ -4167,6 +4167,8 @@ static command_type _find_command(const keyseq& keys)
     macro_buf_add(keys, true);
     keycode_type keyin = unmangle_direction_keys(getch_with_command_macros());
     command_type cmd = _keycode_to_command(keyin);
+    if (is_userfunction(keyin))
+        cmd = CMD_NEXT_CMD;
     flush_input_buffer(FLUSH_REPEAT_SETUP_DONE);
     return (cmd);
 }
