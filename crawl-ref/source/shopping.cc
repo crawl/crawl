@@ -18,6 +18,7 @@
 #include "artefact.h"
 #include "cio.h"
 #include "describe.h"
+#include "decks.h"
 #include "dgn-overview.h"
 #include "files.h"
 #include "food.h"
@@ -1866,7 +1867,10 @@ unsigned int item_value( item_def item, bool ident )
                 valued += 20;
                 break;
             default:
-                valued += 500;
+                if (is_deck(item))
+                    valued += 200 + item.special * 150;
+                else
+                    valued += 500;
             }
         }
         else
