@@ -41,9 +41,9 @@ chk_interrupt_activity.travel = chk_interrupt_activity.run
 
 function rr_handle_message(cause, extra)
     local ch, mess = rr_split_channel(cause)
-    for _, m in ipairs(g_rr_ignored) do
-        if m:matches(mess, ch) then
-            return nil
+    for _, x in ipairs(g_rr_ignored) do
+        if x.filter:matches(mess, ch) then
+            return x.value
         end
     end
     return false
@@ -81,11 +81,6 @@ function rr_handle_hploss(hplost, source)
 end
 
 function rr_check_params()
-    if g_rrim ~= options.runrest_ignore_message then
-        g_rrim = options.runrest_ignore_message
-        rr_add_messages(nil, g_rrim)
-    end
-
     if ( not g_rr_hplmax or not g_rr_yhpmin ) 
             and options.runrest_ignore_poison
     then
@@ -100,20 +95,26 @@ function rr_check_params()
     return true
 end
 
-function rr_add_message(s)
+function rr_add_message(s, v)
+    local typ = v == nil and "nil" or v and "true" or "false"
     local channel, str = rr_split_channel(s)
-    table.insert( g_rr_ignored, crawl.message_filter( str, channel ) )
+    table.insert(g_rr_ignored,
+                 { filter = crawl.message_filter(str, channel),
+                   value = v })
 end
 
-function rr_add_messages(key, value)
-    local segs = crawl.split(value, ',')
-    for _, s in ipairs(segs) do
-        rr_add_message(s)
+function rr_message_adder(v)
+    local function rr_add_messages(key, value)
+        local segs = crawl.split(value, ',')
+        for _, s in ipairs(segs) do
+            rr_add_message(s, v)
+        end
     end
+    return rr_add_messages
 end
 
-chk_lua_option.runrest_ignore_message = rr_add_messages
-
+chk_lua_option.runrest_ignore_message = rr_message_adder(nil)
+chk_lua_option.runrest_stop_message = rr_message_adder(true)
 -----------------------------------------------------------------------
 
 g_rr_monsters        = { {}, {} }
