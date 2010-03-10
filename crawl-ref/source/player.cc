@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <math.h>
 
 #include <sstream>
 #include <algorithm>
@@ -1318,6 +1319,7 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
 
     // mutations:
     rf += player_mutation_level(MUT_HEAT_RESISTANCE);
+    rf += player_mutation_level(MUT_MOLTEN_SCALES) == 3 ? 1 : 0;
 
     // spells:
     if (temp)
@@ -1427,9 +1429,8 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
 
     // mutations:
     rc += player_mutation_level(MUT_COLD_RESISTANCE);
-
-    if (player_mutation_level(MUT_SHAGGY_FUR) == 3)
-        rc++;
+    rc += player_mutation_level(MUT_ICY_BLUE_SCALES) == 3 ? 1 : 0;
+    rc += player_mutation_level(MUT_SHAGGY_FUR) == 3 ? 1 : 0;
 
     if (rc < -3)
         rc = -3;
@@ -1446,8 +1447,6 @@ int player_res_acid(bool calc_unid, bool items)
     {
         if (you.species == SP_YELLOW_DRACONIAN && you.experience_level > 6)
             res += 2;
-
-        res += player_mutation_level(MUT_YELLOW_SCALES) * 2 / 3;
     }
 
     if (items)
@@ -1461,6 +1460,9 @@ int player_res_acid(bool calc_unid, bool items)
 
     if (you.religion == GOD_JIYVA && x_chance_in_y(you.piety, MAX_PIETY))
         res++;
+
+    // mutations:
+    res += floor(player_mutation_level(MUT_YELLOW_SCALES) / 3);
 
     return (res);
 }
@@ -1523,8 +1525,8 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
         re++;
 
     // mutations:
-    if (player_mutation_level(MUT_SHOCK_RESISTANCE))
-        re++;
+    re += player_mutation_level(MUT_THIN_METALLIC_SCALES) == 3 ? 1 : 0;
+    re += player_mutation_level(MUT_SHOCK_RESISTANCE) == 3 ? 1 : 0;
 
     return (re);
 }
@@ -1574,6 +1576,7 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
 
     // mutations:
     rp += player_mutation_level(MUT_POISON_RESISTANCE);
+    rp += player_mutation_level(MUT_SLIMY_GREEN_SCALES) == 3 ? 1 : 0;
 
     // Only thirsty vampires are naturally poison resistant.
     if (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED)
@@ -2127,8 +2130,12 @@ int player_evasion_bonuses(ev_ignore_type evit)
 
     evbonus += scan_artefacts( ARTP_EVASION );
 
-    if (player_mutation_level(MUT_REPULSION_FIELD) > 0)
-        evbonus += (player_mutation_level(MUT_REPULSION_FIELD) * 2) - 1;
+    // mutations
+    if (player_mutation_level(MUT_DISTORTION_FIELD) > 0)
+        evbonus += player_mutation_level(MUT_DISTORTION_FIELD) + 1;
+    if (player_mutation_level(MUT_MOLTEN_SCALES) > 1)
+        evbonus -= 1;
+    evbonus -= std::max(0, player_mutation_level(MUT_SLIMY_GREEN_SCALES) - 1);
 
     // transformation penalties/bonuses not covered by size alone:
     switch (you.attribute[ATTR_TRANSFORMATION])
@@ -2187,7 +2194,7 @@ int player_evasion(ev_ignore_type evit)
     {
         const int paralysed_base_ev = 2 + size_factor / 2;
         const int repulsion_ev =
-            std::max(0, player_mutation_level(MUT_REPULSION_FIELD) * 2 - 1);
+            std::max(0, player_mutation_level(MUT_DISTORTION_FIELD) + 1);
         return std::max(1, paralysed_base_ev + repulsion_ev);
     }
 
@@ -2348,6 +2355,9 @@ int player_shield_class(void)   //jmf: changes for new spell
 
     if (shield + stat > 0)
         shield += skill_bump(SK_SHIELDS) * 38;
+
+    // mutations
+    shield += player_mutation_level(MUT_LARGE_BONE_PLATES) > 0 ? 100 + player_mutation_level(MUT_LARGE_BONE_PLATES) * 100 : 0;      // +2, +3, +4
 
     return (shield + stat + 50) / 100;
 }
@@ -3240,6 +3250,9 @@ int check_stealth(void)
     // which pretty much gives away the stealth game.
     if (you.duration[DUR_SILENCE])
         stealth -= 50;
+
+    // mutations:
+    stealth += player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE) ? player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE) * 15 : 0;     // +15, +30, +45
 
     stealth = std::max(0, stealth);
 
@@ -4552,11 +4565,12 @@ int get_real_hp(bool trans, bool rotted)
     if (rotted)
         hitp += player_rotted();
 
-    // Frail and robust mutations, and divine vigour.
-    hitp *= 10 + player_mutation_level(MUT_ROBUST)
-               + you.attribute[ATTR_DIVINE_VIGOUR]
-               - player_mutation_level(MUT_FRAIL);
-    hitp /= 10;
+    // Frail and robust mutations, divine vigour, and rugged scale mut.
+    hitp *= 100 + (player_mutation_level(MUT_ROBUST) * 10)
+                + (you.attribute[ATTR_DIVINE_VIGOUR] * 10)
+                + (player_mutation_level(MUT_RUGGED_BROWN_SCALES) ? player_mutation_level(MUT_RUGGED_BROWN_SCALES) * 2 + 1 : 0)
+                - (player_mutation_level(MUT_FRAIL) * 10);
+    hitp /= 100;
 
     return (hitp);
 }
@@ -5153,6 +5167,7 @@ static int _strength_modifier()
               - player_mutation_level(MUT_WEAK);
     result += player_mutation_level(MUT_STRONG_STIFF)
               - player_mutation_level(MUT_FLEXIBLE_WEAK);
+    result -= player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
 
     // transformations
     switch (you.attribute[ATTR_TRANSFORMATION])
@@ -5217,18 +5232,9 @@ static int _dex_modifier()
               - player_mutation_level(MUT_CLUMSY);
     result += player_mutation_level(MUT_FLEXIBLE_WEAK)
               - player_mutation_level(MUT_STRONG_STIFF);
-    result -= player_mutation_level(MUT_BLACK_SCALES);
-    result -= player_mutation_level(MUT_BONEY_PLATES);
 
-    const int grey2_modifier[]    = { 0, -1, -1, -2 };
-    const int metallic_modifier[] = { 0, -2, -3, -4 };
-    const int yellow_modifier[]   = { 0,  0, -1, -2 };
-    const int red2_modifier[]     = { 0,  0, -1, -2 };
-
-    result += grey2_modifier[player_mutation_level(MUT_GREY2_SCALES)];
-    result += metallic_modifier[player_mutation_level(MUT_METALLIC_SCALES)];
-    result += yellow_modifier[player_mutation_level(MUT_YELLOW_SCALES)];
-    result += red2_modifier[player_mutation_level(MUT_RED2_SCALES)];
+    result += player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
+    result -= player_mutation_level(MUT_ROUGH_BLACK_SCALES);
 
     // transformations
     switch (you.attribute[ATTR_TRANSFORMATION])
@@ -6271,67 +6277,16 @@ int player::armour_class() const
             }
         }
 
-        // Scales -- some evil uses of the fact that boolean "true" == 1...
-        // I'll spell things out with some comments -- bwr
-
-        // mutations:
-        // these give: +1, +2, +3
-        AC += 100 * player_mutation_level(MUT_TOUGH_SKIN);
-        AC += 100 * player_mutation_level(MUT_GREY_SCALES);
-        AC += 100 * player_mutation_level(MUT_SHAGGY_FUR);
-        AC += 100 * player_mutation_level(MUT_BLUE_SCALES);
-        AC += 100 * player_mutation_level(MUT_SPECKLED_SCALES);
-        AC += 100 * player_mutation_level(MUT_IRIDESCENT_SCALES);
-        AC += 100 * player_mutation_level(MUT_PATTERNED_SCALES);
-
-        // these give: +1, +3, +5
-        if (player_mutation_level(MUT_GREEN_SCALES) > 0)
-            AC += (player_mutation_level(MUT_GREEN_SCALES) * 200) - 100;
-        if (player_mutation_level(MUT_NACREOUS_SCALES) > 0)
-            AC += (player_mutation_level(MUT_NACREOUS_SCALES) * 200) - 100;
-        if (player_mutation_level(MUT_BLACK2_SCALES) > 0)
-            AC += (player_mutation_level(MUT_BLACK2_SCALES) * 200) - 100;
-        if (player_mutation_level(MUT_WHITE_SCALES) > 0)
-            AC += (player_mutation_level(MUT_WHITE_SCALES) * 200) - 100;
-
-        // these give: +2, +4, +6
-        AC += player_mutation_level(MUT_GREY2_SCALES) * 200;
-        AC += player_mutation_level(MUT_YELLOW_SCALES) * 200;
-        AC += player_mutation_level(MUT_PURPLE_SCALES) * 200;
-
-        // black gives: +3, +6, +9
-        AC += player_mutation_level(MUT_BLACK_SCALES) * 300;
-
-        // boney plates give: +2, +3, +4
-        if (player_mutation_level(MUT_BONEY_PLATES) > 0)
-            AC += 100 * (player_mutation_level(MUT_BONEY_PLATES) + 1);
-
-        // red gives +1, +2, +4
-        AC += 100 * (player_mutation_level(MUT_RED_SCALES)
-                     + (player_mutation_level(MUT_RED_SCALES) == 3));
-
-        // indigo gives: +2, +3, +5
-        if (player_mutation_level(MUT_INDIGO_SCALES) > 0)
-        {
-            AC += 100 * (1 + player_mutation_level(MUT_INDIGO_SCALES)
-                         + (player_mutation_level(MUT_INDIGO_SCALES) == 3));
-        }
-
-        // brown gives: +2, +4, +5
-        AC += 100 * ((player_mutation_level(MUT_BROWN_SCALES) * 2)
-                     - (player_mutation_level(MUT_BROWN_SCALES) == 3));
-
-        // orange gives: +1, +3, +4
-        AC += 100 * (player_mutation_level(MUT_ORANGE_SCALES)
-                     + (player_mutation_level(MUT_ORANGE_SCALES) > 1));
-
-        // knobbly red gives: +2, +5, +7
-        AC += 100 * ((player_mutation_level(MUT_RED2_SCALES) * 2)
-                     + (player_mutation_level(MUT_RED2_SCALES) > 1));
-
-        // metallic gives +3, +7, +10
-        AC += 100 * (player_mutation_level(MUT_METALLIC_SCALES) * 3
-                     + (player_mutation_level(MUT_METALLIC_SCALES) > 1));
+        // Scale mutations:
+        AC += player_mutation_level(MUT_IRIDESCENT_SCALES) ? player_mutation_level(MUT_IRIDESCENT_SCALES) * 300 : 0;            // +3, +6, +9
+        AC += player_mutation_level(MUT_LARGE_BONE_PLATES) ? 100 + player_mutation_level(MUT_LARGE_BONE_PLATES) * 100 : 0;      // +2, +3, +4
+        AC += player_mutation_level(MUT_ROUGH_BLACK_SCALES) ? 100 + player_mutation_level(MUT_ROUGH_BLACK_SCALES) * 300 : 0;    // +4, +7, +10
+        AC += player_mutation_level(MUT_RUGGED_BROWN_SCALES) ? 2 : 0;                                                           // +2, +2, +2
+        AC += player_mutation_level(MUT_ICY_BLUE_SCALES) ? player_mutation_level(MUT_ICY_BLUE_SCALES) * 100 : 0;                // +1, +2, +3
+        AC += player_mutation_level(MUT_MOLTEN_SCALES) ? player_mutation_level(MUT_MOLTEN_SCALES) * 100 : 0;                    // +1, +2, +3
+        AC += player_mutation_level(MUT_SLIMY_GREEN_SCALES) ? player_mutation_level(MUT_SLIMY_GREEN_SCALES) * 100 : 0;          // +1, +2, +3
+        AC += player_mutation_level(MUT_THIN_METALLIC_SCALES) ? player_mutation_level(MUT_THIN_METALLIC_SCALES) * 100 : 0;      // +1, +2, +3
+        AC += player_mutation_level(MUT_YELLOW_SCALES) ? player_mutation_level(MUT_YELLOW_SCALES) * 100 : 0;                    // +1, +2, +3
     }
     else
     {

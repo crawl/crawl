@@ -3735,17 +3735,14 @@ static void _handle_accidental_death(const int orig_hp,
     if (you.hp <= 0)
         you.hp = std::min(orig_hp, you.hp_max);
 
-    mutation_type dex_muts[5] = {MUT_GREY2_SCALES, MUT_METALLIC_SCALES,
-                                 MUT_YELLOW_SCALES, MUT_RED2_SCALES,
-                                 MUT_STRONG_STIFF};
+    // MUT_THIN_SKELETON can statkill you by str, undo it if necessary
+    /*while (you.strength <= 0 && you.mutation[MUT_THIN_SKELETON] > orig_mutation[MUT_THIN_SKELETON])
+        delete_mutation(MUT_THIN_SKELETON, true, true, true);*/
 
-    for (int i = 0; i < 5; ++i)
-    {
-        mutation_type bad = dex_muts[i];
+    // MUT_ROUGH_BLACK_SCALES can statkill you by dex, undo it if necessary
+    while (you.dex <= 0 && you.mutation[MUT_ROUGH_BLACK_SCALES] > orig_mutation[MUT_ROUGH_BLACK_SCALES])
+        delete_mutation(MUT_ROUGH_BLACK_SCALES, true, true, true);
 
-        while (you.dex <= 0 && you.mutation[bad] > orig_mutation[bad])
-            delete_mutation(bad, true, true, true);
-    }
     while (you.dex <= 0
            && you.mutation[MUT_FLEXIBLE_WEAK] <
                   orig_mutation[MUT_FLEXIBLE_WEAK])

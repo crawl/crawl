@@ -327,6 +327,13 @@ void _item_corrode(int slot)
         return;
     }
 
+    // mutations:
+    if (player_mutation_level(MUT_YELLOW_SCALES) == 3 && !one_chance_in(10))
+    {
+        dprf("Yellow scales protect.");
+        return;
+    }
+
     if (you.religion == GOD_JIYVA && x_chance_in_y(you.piety, MAX_PIETY))
         return;
 
