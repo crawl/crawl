@@ -1978,10 +1978,7 @@ bool interrupt_activity( activity_interrupt_type ai,
     if (delay == DELAY_NOT_DELAYED)
         return (false);
 
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Activity interrupt: %s",
-         activity_interrupt_name(ai));
-#endif
+    dprf("Activity interrupt: %s", activity_interrupt_name(ai));
 
     // First try to stop the current delay.
     const delay_queue_item &item = you.delay_queue.front();
