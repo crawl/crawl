@@ -1141,14 +1141,8 @@ static void mpr_check_patterns(const std::string& message,
         }
     }
 
-    if (channel != MSGCH_DIAGNOSTICS && channel != MSGCH_EQUIPMENT
-        && channel != MSGCH_TALK && channel != MSGCH_TALK_VISUAL
-        && channel != MSGCH_FRIEND_SPELL && channel != MSGCH_FRIEND_ENCHANT
-        && channel != MSGCH_FRIEND_ACTION && channel != MSGCH_SOUND)
-    {
-        interrupt_activity(AI_MESSAGE,
-                           channel_to_str(channel) + ":" + message);
-    }
+    if (channel != MSGCH_DIAGNOSTICS && channel != MSGCH_EQUIPMENT)
+        interrupt_activity(AI_MESSAGE, channel_to_str(channel) + ":" + message);
 
     // Any sound has a chance of waking the PC if the PC is asleep.
     if (channel == MSGCH_SOUND)
