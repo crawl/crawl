@@ -485,6 +485,31 @@ bool mons_is_firewood(const monsters *mon)
             && mons_class_flag(mon->type, M_NO_EXP_GAIN));
 }
 
+// "body" in a purely grammatical sense.
+bool mons_has_body(const monsters *mon)
+{
+    if (mon->type == MONS_FLYING_SKULL
+        || mon->type == MONS_CURSE_SKULL
+        || mon->type == MONS_CURSE_TOE
+        || mon->type == MONS_DANCING_WEAPON)
+    {
+        return false;
+    }
+
+    switch(mons_base_char(mon->type))
+    {
+    case 'P':
+    case 'v':
+    case 'G':
+    case '*':
+    case '%':
+    case 'J':
+        return false;
+    }
+
+    return true;
+}
+
 // Difference in speed between monster and the player for Cheibriados'
 // purposes. This is the speed difference disregarding the player's
 // slow status.
@@ -678,7 +703,7 @@ bool mons_is_mimic(int mc)
 
 bool mons_is_demon(int mc)
 {
-    const int show_char = mons_char(mc);
+    const int show_char = mons_base_char(mc);
 
     // Not every demonic monster is a demon (hell hog, hell hound, etc.)
     if (mons_class_holiness(mc) == MH_DEMONIC
@@ -893,6 +918,14 @@ bool mons_sense_invis(const monsters *mon)
 unsigned mons_char(int mc)
 {
     return monster_symbols[mc].glyph;
+}
+
+char mons_base_char(int mc)
+{
+    const monsterentry *me = get_monster_data(mc);
+    if (!me)
+        return 0;
+    return me->showchar;
 }
 
 mon_itemuse_type mons_class_itemuse(int mc)

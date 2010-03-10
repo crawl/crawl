@@ -271,6 +271,7 @@ bool name_zombie(monsters *mon, const monsters* orig);
 int mons_power(int mclass);
 
 unsigned mons_char(int mc);
+char mons_base_char(int mc);
 
 int mons_class_colour(int mc);
 int mons_colour(const monsters *mon);
@@ -361,6 +362,7 @@ bool mons_class_is_slowable(int mc);
 bool mons_class_is_stationary(int mc);
 bool mons_is_stationary(const monsters *mon);
 bool mons_is_firewood(const monsters *mon);
+bool mons_has_body(const monsters *mon);
 
 int cheibriados_monster_player_speed_delta(const monsters *mon);
 bool cheibriados_thinks_mons_is_fast( const monsters *mon );
