@@ -474,7 +474,11 @@ void MiscastEffect::do_msg(bool suppress_nothing_happens)
         msg = replace_all(msg, "@hand_conj@", "s");
 
     if (target->atype() == ACT_MONSTER)
+    {
         msg = do_mon_str_replacements(msg, target_as_monster(), S_SILENT);
+        if (!mons_has_body(target_as_monster()))
+            msg = replace_all(msg, "'s body", "");
+    }
 
     mpr(msg.c_str(), msg_ch);
 
@@ -1531,6 +1535,10 @@ void MiscastEffect::_divination_you(int severity)
 // XXX: Monster divination miscasts.
 void MiscastEffect::_divination_mon(int severity)
 {
+    // Nothing is appropiate for unmoving plants.
+    if (mons_is_firewood(target_as_monster()))
+        return;
+
     switch (severity)
     {
     case 0:         // just a harmless message
