@@ -1753,24 +1753,6 @@ static maybe_bool _userdef_interrupt_activity(const delay_queue_item &idelay,
     if (!ls || ai == AI_FORCE_INTERRUPT)
         return (B_TRUE);
 
-    // Kludge: We have to continue to support ch_stop_run. :-(
-    if (is_run_delay(delay) && you.running && ai == AI_SEE_MONSTER)
-    {
-        bool stop_run = false;
-        if (clua.callfn("ch_stop_run", "M>b",
-                        static_cast<const monsters *>(at.data), &stop_run))
-        {
-            if (stop_run)
-                return (MB_TRUE);
-
-            // No further processing.
-            return (MB_FALSE);
-        }
-
-        // If we get here, ch_stop_run wasn't defined, fall through to the
-        // other handlers.
-    }
-
     const char *interrupt_name = activity_interrupt_name(ai);
     const char *act_name = delay_name(delay);
 
