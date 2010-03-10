@@ -54,7 +54,7 @@ read in-game by bringing up the help menu with '?'):
 
 * quickstart.txt     A very short introduction into the game.
 * crawl_manual.txt   The complete manual; describing all aspects in detail.
-                     Contains appendices on species, classes, etc.
+                     Contains appendices on species, backgrounds, etc.
 * options_guide.txt  Describes all options in detail. The structure of
                      init.txt follows this text.
 * macros_guide.txt   A how-to on using macros and keymappings, with examples.
