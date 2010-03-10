@@ -185,13 +185,9 @@ bool monsters::swimming() const
 bool monsters::wants_submerge() const
 {
     // Trapdoor spiders only hide themselves under the floor when they
-    // can't see their prey, or are in a cloud.
+    // can't see their prey.
     if (type == MONS_TRAPDOOR_SPIDER)
     {
-        // If we're in distress, we usually want to submerge.
-        if (!is_harmless_cloud(cloud_type_at(pos())))
-            return (true);
-
         const actor* _foe = get_foe();
         return (_foe == NULL || !can_see(_foe));
     }
@@ -5119,15 +5115,10 @@ void monsters::apply_enchantment(const mon_enchant &me)
         // Now we handle the others:
         const dungeon_feature_type grid = grd(pos());
 
-        // Badly injured monsters prefer to stay submerged...
-        // electric eels and lava snakes have ranged attacks
-        // and are more likely to surface.  -- bwr
         if (!monster_can_submerge(this, grid))
             del_ench(ENCH_SUBMERGED); // forced to surface
         else if (mons_landlubbers_in_reach(this))
-        {
             del_ench(ENCH_SUBMERGED);
-        }
         break;
     }
     case ENCH_POISON:
