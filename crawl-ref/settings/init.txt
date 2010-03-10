@@ -177,31 +177,22 @@ auto_exclude = oklob plant,statue,curse skull,roxanne
 # tc_excluded       = lightmagenta
 # tc_exclude_circle = red
 
-# The following options are not default.
-#
-runrest_ignore_message = pray:
-runrest_ignore_message = You feel.*sick
-runrest_ignore_message = disappears in a puff of smoke
-runrest_ignore_message = engulfed in a cloud of smoke
-runrest_ignore_message = standing in the rain
-runrest_ignore_message = engulfed in white fluffiness
-runrest_ignore_message = safely over a trap
-runrest_ignore_message = You feel.*sick
-runrest_ignore_message = A.*toadstool withers and dies
-runrest_ignore_message = toadstools? grows
-runrest_ignore_message = You walk carefully through the
+# runrest options (require runrest.lua to be included above)
 runrest_ignore_poison  = 2:30
 runrest_ignore_monster = butterfly:1
 # runrest_ignore_monster = swamp worm:3
+
+# The file runrest_messages.txt contains a list of default
+# runrest message settings. Add your own before this to override
+# later settings.
+# runrest_stop_message = You hear a.* slurping noise
+# runrest_ignore_message = Jiyva's power touches on your attributes
+include = runrest_messages.txt
 
 # trap_prompt = false
 trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 
 #rest_wait_both = true
-
-# The file (travel_stoppers.txt) contains a list of travel_stop_message
-# settings, with brief descriptions of what they do.
-include = travel_stoppers.txt
 
 ##### 4-h	Stashes ###############################
 #
