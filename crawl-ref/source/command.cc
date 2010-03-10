@@ -2025,7 +2025,7 @@ static int _show_keyhelp_menu(const std::vector<formatted_string> &lines,
             "<w>M</w>.      Keymaps, Macros, Options\n"
             "<w>N</w>.      Philosophy\n"
             "<w>1</w>.      List of Species\n"
-            "<w>2</w>.      List of Classes\n"
+            "<w>2</w>.      List of Backgrounds\n"
             "<w>3</w>.      List of Skills\n"
             "<w>4</w>.      Keys and Commands\n"
             "<w>5</w>.      List of Enchantments\n"
