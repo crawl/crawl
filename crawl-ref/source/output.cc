@@ -10,6 +10,7 @@
 
 #include <stdlib.h>
 #include <sstream>
+#include <math.h>
 
 #include "externs.h"
 #include "options.h"
@@ -1892,7 +1893,7 @@ static std::vector<formatted_string> _get_overview_resistances(
     const int rinvi = you.can_see_invisible(calc_unid);
     const int rward = wearing_amulet(AMU_WARDING, calc_unid);
     const int rcons = player_item_conserve(calc_unid);
-    const int rcorr = wearing_amulet(AMU_RESIST_CORROSION, calc_unid);
+    const int rcorr = wearing_amulet(AMU_RESIST_CORROSION, calc_unid) + floor(player_mutation_level(MUT_YELLOW_SCALES) / 3);
     const int rclar = player_mental_clarity(calc_unid);
     snprintf(buf, sizeof buf,
              "%sSee Invis. : %s\n"
@@ -2510,6 +2511,11 @@ std::string _status_mut_abilities()
         bool lowered = (level < you.mutation[i]);
         switch (i)
         {
+            case MUT_SHAGGY_FUR:
+                AC_change += level;
+                if (level == 3)
+                    current = "shaggy fur";
+                break;
             case MUT_TOUGH_SKIN:
                 AC_change += level;
                 break;
@@ -2521,25 +2527,6 @@ std::string _status_mut_abilities()
                 break;
             case MUT_AGILE:
                 Dex_change += level;
-                break;
-            case MUT_GREEN_SCALES:
-                AC_change += 2*level-1;
-                break;
-            case MUT_BLACK_SCALES:
-                AC_change += 3*level;
-                Dex_change -= level;
-                break;
-            case MUT_GREY_SCALES:
-                AC_change += level;
-                break;
-            case MUT_BONEY_PLATES:
-                AC_change += level+1;
-                Dex_change -= level;
-                break;
-            case MUT_REPULSION_FIELD:
-                EV_change += 2*level-1;
-                if (level == 3)
-                    current = "repel missiles";
                 break;
             case MUT_POISON_RESISTANCE:
                 current = "poison resistance";
@@ -2766,79 +2753,11 @@ std::string _status_mut_abilities()
                 current = "large and strong wings";
                 break;
 
-            // scales etc. -> calculate sum of AC bonus
-            case MUT_RED_SCALES:
-                AC_change += level;
+            // scales -> calculate sum of AC bonus
+            case MUT_DISTORTION_FIELD:
+                EV_change += level+1;
                 if (level == 3)
-                    AC_change++;
-                break;
-            case MUT_NACREOUS_SCALES:
-                AC_change += 2*level-1;
-                break;
-            case MUT_GREY2_SCALES:
-                AC_change += 2*level;
-                Dex_change -= 1;
-                if (level == 3)
-                    Dex_change--;
-                break;
-            case MUT_METALLIC_SCALES:
-                AC_change += 3*level+1;
-                if (level == 1)
-                    AC_change--;
-                Dex_change -= level + 1;
-                break;
-            case MUT_BLACK2_SCALES:
-                AC_change += 2*level-1;
-                break;
-            case MUT_WHITE_SCALES:
-                AC_change += 2*level-1;
-                break;
-            case MUT_YELLOW_SCALES:
-                AC_change += 2*level;
-                Dex_change -= level-1;
-                break;
-            case MUT_BROWN_SCALES:
-                AC_change += 2*level;
-                if (level == 3)
-                    AC_change--;
-                break;
-            case MUT_BLUE_SCALES:
-                AC_change += level;
-                break;
-            case MUT_PURPLE_SCALES:
-                AC_change += 2*level;
-                break;
-            case MUT_SPECKLED_SCALES:
-                AC_change += level;
-                break;
-            case MUT_ORANGE_SCALES:
-                AC_change += level;
-                if (level > 1)
-                    AC_change++;
-                break;
-            case MUT_INDIGO_SCALES:
-                AC_change += 2*level-1;
-                if (level == 1)
-                    AC_change++;
-                break;
-            case MUT_RED2_SCALES:
-                AC_change += 2*level;
-                if (level > 1)
-                    AC_change++;
-                Dex_change -= level - 1;
-                break;
-            case MUT_IRIDESCENT_SCALES:
-                AC_change += level;
-                break;
-            case MUT_PATTERNED_SCALES:
-                AC_change += level;
-                break;
-            case MUT_SHAGGY_FUR:
-                AC_change += level;
-                if (level == 3)
-                    current = "shaggy fur";
-                break;
-            default:
+                    current = "repel missiles";
                 break;
         }
 

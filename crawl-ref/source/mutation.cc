@@ -127,82 +127,6 @@ mutation_def mutation_defs[] = {
       {"", "", ""},
       "agile"
     },
-    { MUT_GREEN_SCALES,               2,  3, false,  true,
-      {"You are partially covered in green scales (AC +1).",
-       "You are mostly covered in green scales (AC +3).",
-       "You are covered in green scales (AC +5)."},
-
-      {"Green scales grow over part of your body.",
-       "Green scales spread over more of your body.",
-       "Green scales cover you completely."},
-
-      {"Your green scales disappear.",
-       "Your green scales recede somewhat.",
-       "Your green scales recede somewhat."},
-
-      "green scales"
-    },
-    { MUT_BLACK_SCALES,               1,  3, false,  true,
-      {"You are partially covered in thick black scales (AC +3, Dex -1).",
-       "You are mostly covered in thick black scales (AC +6, Dex -2).",
-       "You are completely covered in thick black scales (AC +9, Dex -3)."},
-
-      {"Thick black scales grow over part of your body.",
-       "Thick black scales spread over more of your body.",
-       "Thick black scales cover you completely."},
-
-      {"Your black scales disappear.",
-       "Your black scales recede somewhat.",
-       "Your black scales recede somewhat."},
-
-      "black scales"
-    },
-    { MUT_GREY_SCALES,                2,  3, false,  true,
-      {"You are partially covered in supple grey scales (AC +1).",
-       "You are mostly covered in supple grey scales (AC +2).",
-       "You are completely covered in supple grey scales (AC +3)."},
-
-      {"Supple grey scales grow over part of your body.",
-       "Supple grey scales spread over more of your body.",
-       "Supple grey scales cover you completely."},
-
-      {"Your grey scales disappear.",
-       "Your grey scales recede somewhat.",
-       "Your grey scales recede somewhat."},
-
-      "grey scales"
-    },
-    { MUT_BONEY_PLATES,               1,  3, false,  true,
-      {"You are protected by plates of bone (AC +2, Dex -1).",
-       "You are protected by plates of bone (AC +3, Dex -2).",
-       "You are protected by plates of bone (AC +4, Dex -3)."},
-
-      {"You grow protective plates of bone.",
-       "You grow more protective plates of bone.",
-       "You grow more protective plates of bone."},
-
-      {"Your bony plates shrink away.",
-       "Your bony plates shrink.",
-       "Your bony plates shrink."},
-
-      "boney plates"
-    },
-    { MUT_REPULSION_FIELD,            1,  3, false, false,
-      {"You are surrounded by a mild repulsion field (EV +1).",
-       "You are surrounded by a moderate repulsion field (EV +3).",
-       "You are surrounded by a strong repulsion field "
-       "(EV +5; repel missiles)."},
-
-      {"You begin to radiate repulsive energy.",
-       "Your repulsive radiation grows stronger.",
-       "Your repulsive radiation grows stronger."},
-
-      {"You feel attractive.",
-       "You feel attractive.",
-       "You feel attractive."},
-
-      "repulsion field"
-    },
 
     { MUT_POISON_RESISTANCE,          4,  1, false, false,
       {"Your system is resistant to poisons.", "", ""},
@@ -925,221 +849,41 @@ mutation_def mutation_defs[] = {
       ""
     },
 
-// Scales of various colours and effects
-    { MUT_RED_SCALES,                 2,  3, false,  true,
-      {"You are partially covered in red scales (AC +1).",
-       "You are mostly covered in red scales (AC +2).",
-       "You are covered in red scales (AC +4)."},
+    // Scale mutations
+    { MUT_DISTORTION_FIELD,                 2,  3, false, false,
+      {"You are surrounded by a mild repulsion field (EV +2).",
+       "You are surrounded by a moderate repulsion field (EV +3).",
+       "You are surrounded by a strong repulsion field (EV +4; repel missiles)."},
 
-      {"Red scales grow over part of your body.",
-       "Red scales spread over more of your body.",
-       "Red scales cover you completely."},
+      {"You begin to radiate repulsive energy.",
+       "Your repulsive radiation grows stronger.",
+       "Your repulsive radiation grows stronger."},
 
-      {"Your red scales disappear.",
-       "Your red scales recede somewhat.",
-       "Your red scales recede somewhat."},
+      {"You feel attractive.",
+       "You feel attractive.",
+       "You feel attractive."},
 
-      "red scales"
+      "repulsion field"
     },
-    { MUT_NACREOUS_SCALES,            1,  3, false,  true,
-      {"You are partially covered in smooth nacreous scales (AC +1).",
-       "You are mostly covered in smooth nacreous scales (AC +3).",
-       "You are completely covered in smooth nacreous scales (AC +5)."},
+    { MUT_ICY_BLUE_SCALES,                  2,  3, false, true,
+      {"You are partially covered in colorless scales (AC +1).",
+       "You are mostly covered in icy blue scales (AC +2).",
+       "You are completely covered in icy blue scales (AC +3, rC+)."},
 
-      {"Smooth nacreous scales grow over part of your body.",
-       "Smooth nacreous scales spread over more of your body.",
-       "Smooth nacreous scales cover you completely."},
+      {"Colorless scales grow over part of your body.",
+       "Your colorless scales turn icy blue and spread over more of your body.",
+       "Icy blue scales cover your body completely."},
 
-      {"Your smooth nacreous scales disappear.",
-       "Your smooth nacreous scales recede somewhat.",
-       "Your smooth nacreous scales recede somewhat."},
+      {"Your colorless scales disappear.",
+       "Your icy blue scales recede somewhat.",
+       "Your icy blue scales recede somewhat."},
 
-      "nacreous scales"
+      "icy blue scales"
     },
-    { MUT_GREY2_SCALES,               2,  3, false,  true,
-      {"You are partially covered in ridged grey scales (AC +2, Dex -1).",
-       "You are mostly covered in ridged grey scales (AC +4, Dex -1).",
-       "You are completely covered in ridged grey scales (AC +6, Dex -2)."},
-
-      {"Ridged grey scales grow over part of your body.",
-       "Ridged grey scales spread over more of your body.",
-       "Ridged grey scales cover you completely."},
-
-      {"Your ridged grey scales disappear.",
-       "Your ridged grey scales recede somewhat.",
-       "Your ridged grey scales recede somewhat."},
-
-      "grey2 scales"
-    },
-    { MUT_METALLIC_SCALES,            1,  3, false,  true,
-      {"You are partially covered in metallic scales (AC +3, Dex -2).",
-       "You are mostly covered in metallic scales (AC +7, Dex -3).",
-       "You are completely covered in metallic scales (AC +10, Dex -4)."},
-
-      {"Metallic scales grow over part of your body.",
-       "Metallic scales spread over more of your body.",
-       "Metallic scales cover you completely."},
-
-      {"Your metallic scales disappear.",
-       "Your metallic scales recede somewhat.",
-       "Your metallic scales recede somewhat."},
-
-      "metallic scales"
-    },
-    { MUT_BLACK2_SCALES,              2,  3, false,  true,
-      {"You are partially covered in black scales (AC +1).",
-       "You are mostly covered in black scales (AC +3).",
-       "You are completely covered in black scales (AC +5)."},
-
-      {"Black scales grow over part of your body.",
-       "Black scales spread over more of your body.",
-       "Black scales cover you completely."},
-
-      {"Your black scales disappear.",
-       "Your black scales recede somewhat.",
-       "Your black scales recede somewhat."},
-
-      "black2 scales"
-    },
-    { MUT_WHITE_SCALES,               2,  3, false,  true,
-      {"You are partially covered in white scales (AC +1).",
-       "You are mostly covered in white scales (AC +3).",
-       "You are completely covered in white scales (AC +5)."},
-
-      {"White scales grow over part of your body.",
-       "White scales spread over more of your body.",
-       "White scales cover you completely."},
-
-      {"Your white scales disappear.",
-       "Your white scales recede somewhat.",
-       "Your white scales recede somewhat."},
-
-      "white scales"
-    },
-    { MUT_YELLOW_SCALES,              2,  3, false,  true,
-      {"You are partially covered in yellow scales (AC +2).",
-       "You are mostly covered in yellow scales (AC +4, Dex -1).",
-       "You are completely covered in yellow scales (AC +6, Dex -2)."},
-
-      {"Yellow scales grow over part of your body.",
-       "Yellow scales spread over more of your body.",
-       "Yellow scales cover you completely."},
-
-      {"Your yellow scales disappear.",
-       "Your yellow scales recede somewhat.",
-       "Your yellow scales recede somewhat."},
-
-      "yellow scales"
-    },
-    { MUT_BROWN_SCALES,               2,  3, false,  true,
-      {"You are partially covered in brown scales (AC +2).",
-       "You are mostly covered in brown scales (AC +4).",
-       "You are completely covered in brown scales (AC +5)."},
-
-      {"Brown scales grow over part of your body.",
-       "Brown scales spread over more of your body.",
-       "Brown scales cover you completely."},
-
-      {"Your brown scales disappear.",
-       "Your brown scales recede somewhat.",
-       "Your brown scales recede somewhat."},
-
-      "brown scales"
-    },
-    { MUT_BLUE_SCALES,                2,  3, false,  true,
-      {"You are partially covered in blue scales (AC +1).",
-       "You are mostly covered in blue scales (AC +2).",
-       "You are completely covered in blue scales (AC +3)."},
-
-      {"Blue scales grow over part of your body.",
-       "Blue scales spread over more of your body.",
-       "Blue scales cover you completely."},
-
-      {"Your blue scales disappear.",
-       "Your blue scales recede somewhat.",
-       "Your blue scales recede somewhat."},
-
-      "blue scales"
-    },
-    { MUT_PURPLE_SCALES,              2,  3, false,  true,
-      {"You are partially covered in purple scales (AC +2).",
-       "You are mostly covered in purple scales (AC +4).",
-       "You are completely covered in purple scales (AC +6)."},
-
-      {"Purple scales grow over part of your body.",
-       "Purple scales spread over more of your body.",
-       "Purple scales cover you completely."},
-
-      {"Your purple scales disappear.",
-       "Your purple scales recede somewhat.",
-       "Your purple scales recede somewhat."},
-
-      "purple scales"
-    },
-    { MUT_SPECKLED_SCALES,            2,  3, false,  true,
-      {"You are partially covered in speckled scales (AC +1).",
-       "You are mostly covered in speckled scales (AC +2).",
-       "You are covered in speckled scales (AC +3)."},
-
-      {"Speckled scales grow over part of your body.",
-       "Speckled scales spread over more of your body.",
-       "Speckled scales cover you completely."},
-
-      {"Your speckled scales disappear.",
-       "Your speckled scales recede somewhat.",
-       "Your speckled scales recede somewhat."},
-
-      "speckled scales"
-    },
-    { MUT_ORANGE_SCALES,              2,  3, false,  true,
-      {"You are partially covered in orange scales (AC +1).",
-       "You are mostly covered in orange scales (AC +3).",
-       "You are completely covered in orange scales (AC +4)."},
-
-      {"Orange scales grow over part of your body.",
-       "Orange scales spread over more of your body.",
-       "Orange scales cover you completely."},
-
-      {"Your orange scales disappear.",
-       "Your orange scales recede somewhat.",
-       "Your orange scales recede somewhat."},
-
-      "orange scales"
-    },
-    { MUT_INDIGO_SCALES,              2,  3, false,  true,
-      {"You are partially covered in indigo scales (AC +2).",
-       "You are mostly covered in indigo scales (AC +3).",
-       "You are completely covered in indigo scales (AC +5)."},
-
-      {"Indigo scales grow over part of your body.",
-       "Indigo scales spread over more of your body.",
-       "Indigo scales cover you completely."},
-
-      {"Your indigo scales disappear.",
-       "Your indigo scales recede somewhat.",
-       "Your indigo scales recede somewhat."},
-
-      "indigo scales"
-    },
-    { MUT_RED2_SCALES,                1,  3, false,  true,
-      {"You are partially covered in knobbly red scales (AC +2).",
-       "You are mostly covered in knobbly red scales (AC +5, Dex -1).",
-       "You are completely covered in knobbly red scales (AC +7, Dex -2)."},
-
-      {"Knobbly red scales grow over part of your body.",
-       "Knobbly red scales spread over more of your body.",
-       "Knobbly red scales cover you completely."},
-
-      {"Your knobbly red scales disappear.",
-       "Your knobbly red scales recede somewhat.",
-       "Your knobbly red scales recede somewhat."},
-
-      "red2 scales"
-    },
-    { MUT_IRIDESCENT_SCALES,          1,  3, false,  true,
-      {"You are partially covered in iridescent scales (AC +1).",
-       "You are mostly covered in iridescent scales (AC +2).",
-       "You are completely covered in iridescent scales (AC +3)."},
+    { MUT_IRIDESCENT_SCALES,                2,  3, false,  true,
+      {"You are partially covered in iridescent scales (AC +3).",
+       "You are mostly covered in iridescent scales (AC +6).",
+       "You are completely covered in iridescent scales (AC +9)."},
 
       {"Iridescent scales grow over part of your body.",
        "Iridescent scales spread over more of your body.",
@@ -1151,6 +895,127 @@ mutation_def mutation_defs[] = {
 
       "iridescent scales"
     },
+    { MUT_LARGE_BONE_PLATES,                2,  3, false,  true,
+      {"You are partially covered in large bone plates (AC +2, SH +2).",
+       "You are mostly covered in large bone plates (AC +3, SH +3).",
+       "You are completely covered in large bone plates (AC +4, SH +4)."},
+
+      {"Large bone plates grow over parts of your arms.",
+       "Large bone plates spread over more of your arms.",
+       "Large bone plates cover your arms completely."},
+
+      {"Your large bone plates disappear.",
+       "Your large bone plates recede somewhat.",
+       "Your large bone plates recede somewhat."},
+
+      "large bone plates"
+    },
+    { MUT_MOLTEN_SCALES,                    2,  3, false, true,
+      {"You are partially covered in colorless scales (AC +1).",
+       "You are mostly covered in molten scales (AC +2, -1 EV).",
+       "You are completely covered in molten scales (AC +3, -1 EV, rF+)."},
+
+      {"Colorless scales grow over part of your body.",
+       "Your colorless scales turn molten and spread over more of your body.",
+       "Molten scales cover your body completely."},
+
+      {"Your colorless scales disappear.",
+       "Your molten scales recede somewhat.",
+       "Your molten scales recede somewhat."},
+
+      "molten scales"
+    },
+    { MUT_ROUGH_BLACK_SCALES,              2,  3, false,  true,
+      {"You are partially covered in rough black scales (AC +4, Dex -1).",
+       "You are mostly covered in rough black scales (AC +7, Dex -2).",
+       "You are completely covered in rough black scales (AC +10, Dex -3)."},
+
+      {"Rough black scales grow over part of your body.",
+       "Rough black scales spread over more of your body.",
+       "Rough black scales cover you completely."},
+
+      {"Your rough black scales disappear.",
+       "Your rough black scales recede somewhat.",
+       "Your rough black scales recede somewhat."},
+
+      "rough black scales"
+    },
+    { MUT_RUGGED_BROWN_SCALES,              2,  3, false,  true,
+      {"You are partially covered in rugged brown scales (AC +2, +3% HP).",
+       "You are mostly covered in rugged brown scales (AC +2, +5% HP).",
+       "You are completely covered in rugged brown scales (AC +2, +7% HP)."},
+
+      {"Rugged brown scales grow over part of your body.",
+       "Rugged brown scales spread over more of your body.",
+       "Rugged brown scales cover you completely."},
+
+      {"Your rugged brown scales disappear.",
+       "Your rugged brown scales recede somewhat.",
+       "Your rugged brown scales recede somewhat."},
+
+      "rugged brown scales"
+    },
+    { MUT_SLIMY_GREEN_SCALES,            2,  3, false, true,
+      {"You are partially covered in colorless scales (AC +1).",
+       "You are mostly covered in slimy green scales (AC +2, -1 EV).",
+       "You are completely covered in slimy green scales (AC +3, -2 EV, rP)."},
+
+      {"Colorless scales grow over part of your body.",
+       "Your colorless scales turn slimy, green and spread over more of your body.",
+       "Slimy green scales cover your body completely."},
+
+      {"Your colorless scales disappear.",
+       "Your slimy green scales recede somewhat.",
+       "Your slimy green scales recede somewhat."},
+
+      "slimy green scales"
+    },
+    { MUT_THIN_METALLIC_SCALES,            2,  3, false, true,
+      {"You are partially covered in colorless scales (AC +1).",
+       "You are mostly covered in thin metallic scales (AC +2).",
+       "You are completely covered in thin metallic scales (AC +3, rElec)."},
+
+      {"Colorless scales grow over part of your body.",
+       "Your colorless scales turn metallic and spread over more of your body.",
+       "Thin metallic scales cover your body completely."},
+
+      {"Your colorless scales disappear.",
+       "Your thin metallic scales recede somewhat.",
+       "Your thin metallic scales recede somewhat."},
+
+      "thin metallic scales"
+    },
+    { MUT_THIN_SKELETAL_STRUCTURE,          2,  3, false,  true,
+      {"You have a somewhat thin skeletal structure (+1 Dex, -1 Str, Stealth).",
+       "You have a moderately thin skeletal structure (+2 Dex, -2 Str, Stealth+).",
+       "You have anunnaturally thin skeletal structure (+3 Dex, -3 Str, Stealth++)."},
+
+      {"Your bones become slightly less dense.",
+       "Your bones become somewhat less dense.",
+       "Your bones become less dense."},
+
+      {"Your skeletal structure returns to normal.",
+       "Your skeletal structure densifies.",
+       "Your skeletal structure densifies."},
+
+      "thin skeletal structure"
+    },
+    { MUT_YELLOW_SCALES,                    2,  3, false,  true,
+      {"You are partially covered in colorless scales (+1 AC).",
+       "You are mostly covered in yellow scales (+2 AC).",
+       "You are completely covered in yellow scales(+3 AC, rCorr)."},
+
+      {"Colorless scales grow over part of your body",
+       "Your colorless scales turn yellow and spread over more of your body.",
+       "Yellow scales cover you completely"},
+
+      {"Your colorless scales disappear.",
+       "Your yellow scales recede somewhat.",
+       "Your yellow scales recede somewhat."},
+
+      "yellow scales"
+    },
+
     { MUT_STOCHASTIC_TORMENT_RESISTANCE, 0, 3, false, false,
       {"You are somewhat able to resist unholy torments (1 in 5 success).",
        "You are decently able to resist unholy torments (2 in 5 success).",
@@ -1205,22 +1070,6 @@ mutation_def mutation_defs[] = {
       {"Your skin feels very cold...", "", ""},
       {"", "", ""},
       "passive freeze",
-    },
-    // Anything after PATTERNED SCALES will be ignored by the debug code
-    { MUT_PATTERNED_SCALES,           1,  3, false,  true,
-      {"You are partially covered in patterned scales (AC +1).",
-       "You are mostly covered in patterned scales (AC +2).",
-       "You are completely covered in patterned scales (AC +3)."},
-
-      {"Patterned scales grow over part of your body.",
-       "Patterned scales spread over more of your body.",
-       "Patterned scales cover you completely."},
-
-      {"Your patterned scales disappear.",
-       "Your patterned scales recede somewhat.",
-       "Your patterned scales recede somewhat."},
-
-      "patterned scales"
     },
 };
 
@@ -1789,10 +1638,6 @@ static bool _is_deadly(mutation_type mutat, bool delete_mut)
         // is never a problem.
         switch (mutat)
         {
-        case MUT_GREY2_SCALES:
-        case MUT_METALLIC_SCALES:
-        case MUT_YELLOW_SCALES:
-        case MUT_RED2_SCALES:
         case MUT_WEAK:
         case MUT_DOPEY:
         case MUT_CLUMSY:
@@ -1823,36 +1668,12 @@ static bool _is_deadly(mutation_type mutat, bool delete_mut)
         }
     }
 
-    unsigned char cur_level = you.mutation[mutat];
-
     char *stat_ptr = &you.dex; // Default for the scales.
     char  amnt     = 1;
     char  mod      = 0;
 
     switch (mutat)
     {
-    case MUT_GREY2_SCALES:
-        if (cur_level == 0 || cur_level == 2)
-            amnt = 1;
-        else
-            amnt = 0;
-        break;
-
-    case MUT_METALLIC_SCALES:
-        if (cur_level == 0)
-            amnt = 2;
-        else
-            amnt = 1;
-        break;
-
-    case MUT_YELLOW_SCALES:
-    case MUT_RED2_SCALES:
-        if (cur_level == 0)
-            amnt = 0;
-        else
-            amnt = 1;
-        break;
-
     case MUT_FLEXIBLE_WEAK:
     case MUT_WEAK:
         stat_ptr = &you.strength;
@@ -2248,8 +2069,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
     // These can be forced by demonspawn or god gifts.
     if ((mutat == MUT_SHAGGY_FUR
-            || mutat >= MUT_GREEN_SCALES && mutat <= MUT_BONEY_PLATES
-            || mutat >= MUT_RED_SCALES && mutat <= MUT_PATTERNED_SCALES)
+            || mutat >= MUT_DISTORTION_FIELD && mutat <= MUT_LARGE_BONE_PLATES)
         && _body_covered() >= 3 && !god_gift && !force_mutation)
     {
         return (false);
@@ -2579,15 +2399,10 @@ bool delete_all_mutations()
 }
 
 static const mutation_type _all_scales[] = {
-    MUT_SHAGGY_FUR,
-
-    MUT_BONEY_PLATES,      MUT_GREEN_SCALES,    MUT_BLACK_SCALES,
-    MUT_GREY_SCALES,       MUT_RED_SCALES,      MUT_NACREOUS_SCALES,
-    MUT_GREY2_SCALES,      MUT_METALLIC_SCALES, MUT_BLACK2_SCALES,
-    MUT_WHITE_SCALES,      MUT_YELLOW_SCALES,   MUT_BROWN_SCALES,
-    MUT_BLUE_SCALES,       MUT_PURPLE_SCALES,   MUT_SPECKLED_SCALES,
-    MUT_ORANGE_SCALES,     MUT_INDIGO_SCALES,   MUT_RED2_SCALES,
-    MUT_IRIDESCENT_SCALES, MUT_PATTERNED_SCALES
+    MUT_DISTORTION_FIELD,           MUT_ICY_BLUE_SCALES,        MUT_IRIDESCENT_SCALES,
+    MUT_LARGE_BONE_PLATES,          MUT_MOLTEN_SCALES,          MUT_ROUGH_BLACK_SCALES,
+    MUT_RUGGED_BROWN_SCALES,        MUT_SLIMY_GREEN_SCALES,     MUT_THIN_METALLIC_SCALES,
+    MUT_THIN_SKELETAL_STRUCTURE,    MUT_YELLOW_SCALES,
 };
 
 static int _is_covering(mutation_type mut)
@@ -2752,42 +2567,14 @@ static const facet_def _demon_facets[] =
     { { MUT_NEGATIVE_ENERGY_RESISTANCE, MUT_NEGATIVE_ENERGY_RESISTANCE,
           MUT_NEGATIVE_ENERGY_RESISTANCE },
       { 3, 3, 3 } },
-    { { MUT_BLACK_SCALES, MUT_BLACK_SCALES, MUT_BLACK_SCALES },
-      { 3, 3, 3 } },
-    { { MUT_METALLIC_SCALES, MUT_METALLIC_SCALES, MUT_METALLIC_SCALES },
-      { 3, 3, 3 } },
-    { { MUT_RED2_SCALES, MUT_RED2_SCALES, MUT_RED2_SCALES },
-      { 3, 3, 3 } },
     { { MUT_STOCHASTIC_TORMENT_RESISTANCE, MUT_STOCHASTIC_TORMENT_RESISTANCE,
           MUT_STOCHASTIC_TORMENT_RESISTANCE },
       { 3, 3, 3 } },
     { { MUT_REGENERATION, MUT_REGENERATION, MUT_REGENERATION },
       { 2, 2, 2 } },
-    { { MUT_GREEN_SCALES, MUT_GREEN_SCALES, MUT_GREEN_SCALES },
-      { 2, 2, 2 } },
-    { { MUT_BLACK_SCALES, MUT_BLACK_SCALES, MUT_BLACK_SCALES },
-      { 2, 2, 2 } },
-    { { MUT_REPULSION_FIELD, MUT_REPULSION_FIELD, MUT_REPULSION_FIELD },
-      { 2, 2, 2 } },
     { { MUT_MAGIC_RESISTANCE, MUT_MAGIC_RESISTANCE, MUT_MAGIC_RESISTANCE },
       { 2, 2, 2 } },
     { { MUT_BREATHE_FLAMES, MUT_BREATHE_FLAMES, MUT_BREATHE_FLAMES },
-      { 2, 2, 2 } },
-    { { MUT_NACREOUS_SCALES, MUT_NACREOUS_SCALES, MUT_NACREOUS_SCALES },
-      { 2, 2, 2 } },
-    { { MUT_GREY2_SCALES, MUT_GREY2_SCALES, MUT_GREY2_SCALES },
-      { 2, 2, 2 } },
-    { { MUT_BLACK2_SCALES, MUT_BLACK2_SCALES, MUT_BLACK2_SCALES },
-      { 2, 2, 2 } },
-    { { MUT_WHITE_SCALES, MUT_WHITE_SCALES, MUT_WHITE_SCALES },
-      { 2, 2, 2 } },
-    { { MUT_YELLOW_SCALES, MUT_YELLOW_SCALES, MUT_YELLOW_SCALES },
-      { 2, 2, 2 } },
-    { { MUT_BROWN_SCALES, MUT_BROWN_SCALES, MUT_BROWN_SCALES },
-      { 2, 2, 2 } },
-    { { MUT_PURPLE_SCALES, MUT_PURPLE_SCALES, MUT_PURPLE_SCALES },
-      { 2, 2, 2 } },
-    { { MUT_INDIGO_SCALES, MUT_INDIGO_SCALES, MUT_INDIGO_SCALES },
       { 2, 2, 2 } },
     { { MUT_PASSIVE_MAPPING, MUT_PASSIVE_MAPPING, MUT_PASSIVE_MAPPING },
       { 2, 2, 2 } },
@@ -2797,32 +2584,37 @@ static const facet_def _demon_facets[] =
       { 2, 2, 2 } },
     { { MUT_TOUGH_SKIN, MUT_TOUGH_SKIN, MUT_TOUGH_SKIN },
       { 1, 1, 1 } },
-    { { MUT_GREY_SCALES, MUT_GREY_SCALES, MUT_GREY_SCALES },
-      { 1, 1, 1 } },
-    { { MUT_BONEY_PLATES, MUT_BONEY_PLATES, MUT_BONEY_PLATES },
-      { 1, 1, 1 } },
     { { MUT_SLOW_METABOLISM, MUT_SLOW_METABOLISM, MUT_SLOW_METABOLISM },
       { 1, 1, 1 } },
     { { MUT_SPIT_POISON, MUT_SPIT_POISON, MUT_SPIT_POISON },
       { 1, 1, 1 } },
     { { MUT_BLINK, MUT_BLINK, MUT_BLINK },
       { 1, 1, 1 } },
-    { { MUT_SHAGGY_FUR, MUT_SHAGGY_FUR, MUT_SHAGGY_FUR },
-      { 1, 1, 1 } },
     { { MUT_HIGH_MAGIC, MUT_HIGH_MAGIC, MUT_HIGH_MAGIC },
       { 1, 1, 1 } },
-    { { MUT_RED_SCALES, MUT_RED_SCALES, MUT_RED_SCALES },
+    // Scale mutations
+    { { MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD },
       { 1, 1, 1 } },
-    { { MUT_BLUE_SCALES, MUT_BLUE_SCALES, MUT_BLUE_SCALES },
-      { 1, 1, 1 } },
-    { { MUT_SPECKLED_SCALES, MUT_SPECKLED_SCALES, MUT_SPECKLED_SCALES },
-      { 1, 1, 1 } },
-    { { MUT_ORANGE_SCALES, MUT_ORANGE_SCALES, MUT_ORANGE_SCALES },
+    { { MUT_ICY_BLUE_SCALES, MUT_ICY_BLUE_SCALES, MUT_ICY_BLUE_SCALES },
       { 1, 1, 1 } },
     { { MUT_IRIDESCENT_SCALES, MUT_IRIDESCENT_SCALES, MUT_IRIDESCENT_SCALES },
       { 1, 1, 1 } },
-    { { MUT_PATTERNED_SCALES, MUT_PATTERNED_SCALES, MUT_PATTERNED_SCALES },
+    { { MUT_LARGE_BONE_PLATES, MUT_LARGE_BONE_PLATES, MUT_LARGE_BONE_PLATES },
       { 1, 1, 1 } },
+    { { MUT_MOLTEN_SCALES, MUT_MOLTEN_SCALES, MUT_MOLTEN_SCALES },
+      { 1, 1, 1 } },
+    { { MUT_ROUGH_BLACK_SCALES, MUT_ROUGH_BLACK_SCALES, MUT_ROUGH_BLACK_SCALES },
+      { 1, 1, 1 } },
+    { { MUT_RUGGED_BROWN_SCALES, MUT_RUGGED_BROWN_SCALES, MUT_RUGGED_BROWN_SCALES },
+      { 1, 1, 1 } },
+    { { MUT_SLIMY_GREEN_SCALES, MUT_SLIMY_GREEN_SCALES, MUT_SLIMY_GREEN_SCALES },
+      { 1, 1, 1 } },
+    { { MUT_THIN_METALLIC_SCALES, MUT_THIN_METALLIC_SCALES, MUT_THIN_METALLIC_SCALES },
+      { 1, 1, 1 } },
+    { { MUT_THIN_SKELETAL_STRUCTURE, MUT_THIN_SKELETAL_STRUCTURE, MUT_THIN_SKELETAL_STRUCTURE },
+      { 1, 1, 1 } },
+    { { MUT_YELLOW_SCALES, MUT_YELLOW_SCALES, MUT_YELLOW_SCALES },
+      { 1, 1, 1 } }
 };
 
 static bool _works_at_tier(const facet_def& facet, int tier)

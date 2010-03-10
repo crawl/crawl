@@ -2950,7 +2950,7 @@ bool bolt::misses_player()
     bool train_shields_more = false;
 
     if (is_blockable()
-        && you.shield()
+        && (you.shield() || player_mutation_level(MUT_LARGE_BONE_PLATES) > 0)
         && !aimed_at_feet
         && player_shield_class() > 0)
     {
@@ -2992,7 +2992,7 @@ bool bolt::misses_player()
 
     bool dmsl = you.duration[DUR_DEFLECT_MISSILES];
     bool rmsl = dmsl || you.duration[DUR_REPEL_MISSILES]
-                || player_mutation_level(MUT_REPULSION_FIELD) == 3;
+                || player_mutation_level(MUT_DISTORTION_FIELD) == 3;
 
     if (!_test_beam_hit(real_tohit, dodge_less, is_beam, false, false, r))
     {
