@@ -1741,17 +1741,17 @@ void run_macro(const char *macroname)
 #endif
 }
 
-// Returns 1 if the delay should be interrupted, 0 if the user function
-// had no opinion on the matter, -1 if the delay should not be interrupted.
-static int _userdef_interrupt_activity( const delay_queue_item &idelay,
-                                        activity_interrupt_type ai,
-                                        const activity_interrupt_data &at )
+// Returns TRUE if the delay should be interrupted, MAYBE if the user function
+// had no opinion on the matter, FALSE if the delay should not be interrupted.
+static maybe_bool _userdef_interrupt_activity(const delay_queue_item &idelay,
+                                              activity_interrupt_type ai,
+                                              const activity_interrupt_data &at)
 {
 #ifdef CLUA_BINDINGS
     const int delay = idelay.type;
     lua_State *ls = clua.state();
     if (!ls || ai == AI_FORCE_INTERRUPT)
-        return (true);
+        return (B_TRUE);
 
     // Kludge: We have to continue to support ch_stop_run. :-(
     if (is_run_delay(delay) && you.running && ai == AI_SEE_MONSTER)
@@ -1761,10 +1761,10 @@ static int _userdef_interrupt_activity( const delay_queue_item &idelay,
                         static_cast<const monsters *>(at.data), &stop_run))
         {
             if (stop_run)
-                return (true);
+                return (MB_TRUE);
 
             // No further processing.
-            return (-1);
+            return (MB_FALSE);
         }
 
         // If we get here, ch_stop_run wasn't defined, fall through to the
@@ -1775,30 +1775,30 @@ static int _userdef_interrupt_activity( const delay_queue_item &idelay,
     const char *act_name = delay_name(delay);
 
     bool ran = clua.callfn("c_interrupt_activity", "1:ssA",
-                    act_name, interrupt_name, &at);
+                           act_name, interrupt_name, &at);
     if (ran)
     {
         // If the function returned nil, we want to cease processing.
         if (lua_isnil(ls, -1))
         {
             lua_pop(ls, 1);
-            return (-1);
+            return (B_FALSE);
         }
 
         bool stopact = lua_toboolean(ls, -1);
         lua_pop(ls, 1);
         if (stopact)
-            return (true);
+            return (B_TRUE);
     }
 
     if (delay == DELAY_MACRO && clua.callbooleanfn(true, "c_interrupt_macro",
                                                    "sA", interrupt_name, &at))
     {
-        return (true);
+        return (B_TRUE);
     }
 
 #endif
-    return (false);
+    return (B_MAYBE);
 }
 
 static void _block_interruptions(bool block)
@@ -1814,12 +1814,15 @@ static bool _should_stop_activity(const delay_queue_item &item,
                                   activity_interrupt_type ai,
                                   const activity_interrupt_data &at)
 {
-    int userd = _userdef_interrupt_activity(item, ai, at);
-
-    // If the user script wanted to stop the activity or cease processing,
-    // do so.
-    if (userd)
-        return (userd == 1);
+    switch (_userdef_interrupt_activity(item, ai, at))
+    {
+    case B_TRUE:
+        return (true);
+    case B_FALSE:
+        return (false);
+    case B_MAYBE:
+        break;
+    }
 
     delay_type curr = current_delay_action();
 
