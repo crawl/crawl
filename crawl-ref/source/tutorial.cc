@@ -4905,7 +4905,7 @@ void tutorial_describe_monster(const monsters *mons, bool has_stat_desc)
     }
     else
     {
-        const char ch = mons_char(mons->type);
+        const char ch = mons_base_char(mons->type);
         if (ch >= '1' && ch <= '5')
         {
             ostr << "This monster is a demon of the "

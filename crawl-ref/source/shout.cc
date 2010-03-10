@@ -186,10 +186,7 @@ void handle_monster_shouts(monsters* monster, bool force)
         msg = getShoutString(default_msg_key, suffix);
     else if (msg.empty())
     {
-        // NOTE: Use the hardcoded glyph rather than that returned
-        // by mons_char(), since the result of mons_char() can be
-        // changed by user settings.
-        char mchar = get_monster_data(monster->type)->showchar;
+        char mchar = mons_base_char(monster->type);
 
         // See if there's a shout for all monsters using the
         // same glyph/symbol

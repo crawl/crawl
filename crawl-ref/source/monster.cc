@@ -371,7 +371,7 @@ int monsters::body_weight(bool /*base*/) const
             break;
         }
 
-        switch (mons_char(mclass))
+        switch (mons_base_char(mclass))
         {
         case 'L':
             weight /= 2;
@@ -2480,7 +2480,7 @@ std::string monsters::hand_name(bool plural, bool *can_plural) const
     *can_plural = true;
 
     std::string str;
-    char        ch = mons_char(type);
+    char        ch = mons_base_char(type);
 
     const bool rand = (type == MONS_CHAOS_SPAWN);
 
@@ -2600,7 +2600,7 @@ std::string monsters::foot_name(bool plural, bool *can_plural) const
     *can_plural = true;
 
     std::string str;
-    char        ch = mons_char(type);
+    char        ch = mons_base_char(type);
 
     const bool rand = (type == MONS_CHAOS_SPAWN);
 

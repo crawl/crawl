@@ -3595,7 +3595,7 @@ mon_body_shape get_mon_shape(const int type)
 
     const bool flies = (mons_class_flies(type) == FL_FLY);
 
-    switch (mons_char(type))
+    switch (mons_base_char(type))
     {
     case 'a': // ants and cockroaches
         return (MON_SHAPE_INSECT);
