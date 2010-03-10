@@ -51,7 +51,7 @@ struct global_level_info
 
 static int _mons_misc_level(int mcls)
 {
-    switch (mons_char(mcls))
+    switch (mons_base_char(mcls))
     {
     case '&':
         return 35;

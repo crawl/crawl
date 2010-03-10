@@ -114,7 +114,7 @@ namespace arena
 
     int item_drop_times[MAX_ITEMS];
 
-    bool banned_glyphs[256];
+    bool banned_glyphs[128];
 
     std::string arena_type = "";
     faction faction_a(true);
@@ -368,7 +368,8 @@ namespace arena
 
         const std::string glyphs = strip_tag_prefix(spec, "ban_glyphs:");
         for (unsigned int i = 0; i < glyphs.size(); i++)
-            banned_glyphs[static_cast<int>(glyphs[i])] = true;
+            if (!(glyphs[i] & !127))
+                banned_glyphs[static_cast<int>(glyphs[i])] = true;
 
         std::vector<std::string> factions = split_string(" v ", spec);
 
@@ -1083,7 +1084,7 @@ bool arena_veto_random_monster(monster_type type)
         return (true);
     if (!arena::allow_zero_xp && mons_class_flag(type, M_NO_EXP_GAIN))
         return (true);
-    if (arena::banned_glyphs[mons_char(type)])
+    if (!(mons_char(type) & !127) && arena::banned_glyphs[mons_char(type)])
         return (true);
 
     return (false);
@@ -1110,7 +1111,8 @@ bool arena_veto_place_monster(const mgen_data &mg, bool first_band_member,
 
     }
     return (!arena::allow_bands && !first_band_member
-            || arena::banned_glyphs[mons_char(mg.cls)]);
+            || !(mons_char(mg.cls) & !127)
+               && arena::banned_glyphs[mons_char(mg.cls)]);
 }
 
 // XXX: Still having some trouble with book-keeping if a slime creature

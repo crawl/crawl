@@ -678,10 +678,10 @@ bool mons_speaks(monsters *monster)
         std::string key = "'";
 
         // Database keys are case-insensitve.
-        if (isupper(mons_char(monster->type)))
+        if (isupper(mons_base_char(monster->type)))
             key += "cap-";
 
-        key += mons_char(monster->type);
+        key += mons_base_char(monster->type);
         key += "'";
         msg = _get_speak_string(prefixes, key, monster, no_player, no_foe,
                                 no_foe_name, no_god, unseen);
@@ -708,7 +708,7 @@ bool mons_speaks(monsters *monster)
     }
     else if (shape >= MON_SHAPE_QUADRUPED && shape <= MON_SHAPE_FISH)
     {
-        if (mons_char(monster->type) == 'w')
+        if (mons_base_char(monster->type) == 'w')
         {
             if (intel > I_INSECT)
                 prefixes.insert(prefixes.begin(), "smart");

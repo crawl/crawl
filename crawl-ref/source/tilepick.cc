@@ -1239,7 +1239,7 @@ int tileidx_monster(const monsters *mons, bool detected)
 
     if (Options.tile_show_demon_tier)
     {
-        switch (mons_char(mons->type))
+        switch (mons_base_char(mons->type))
         {
         case '1':
             ch |= TILE_FLAG_DEMON_1;
