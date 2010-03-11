@@ -113,7 +113,8 @@ public:
     static void pixelstore_unpack_alignment(unsigned int bpp);
     static void reset_view_for_redraw(float x, float y);
     static void reset_view_for_resize(coord_def &m_windowsz);
-    static void set_transform(const GLW_3VF *trans, const GLW_3VF *scale);
+    static void set_transform(  const GLW_3VF *trans = NULL,
+                                const GLW_3VF *scale = NULL);
     static void reset_transform();
     static void set_current_color(GLW_3VF &color);
     static void set_current_color(GLW_4VF &color);

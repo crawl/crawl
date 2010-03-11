@@ -4609,7 +4609,7 @@ void MessageRegion::render()
         {
             height *= m_font->char_height();
 
-            GLStateManager::set_transform(NULL, NULL);
+            GLStateManager::set_transform();
 
             ShapeBuffer buff;
             VColour col(100, 100, 100, 100);
