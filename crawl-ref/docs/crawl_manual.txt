@@ -2158,8 +2158,7 @@ Ranged combat skills:
 ---------------------
 There are a number of individual weapon skills for missile weapons:
 
-     *  Throwing
-     *  Darts (including blowguns)
+     *  Throwing (includes blowguns)
      *  Bows
      *  Crossbows
      *  Slings
