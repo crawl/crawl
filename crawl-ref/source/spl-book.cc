@@ -804,7 +804,7 @@ int spellbook_contents( item_def &book, read_book_action_type action,
 
     out.cprintf( "%s", book.name(DESC_CAP_THE).c_str() );
 
-    out.cprintf( EOL EOL " Spells                             Type                      Level" EOL );
+    out.cprintf( "\n\n Spells                             Type                      Level\n" );
 
     for (j = 0; j < SPELLBOOK_SIZE; j++)
     {
@@ -880,17 +880,17 @@ int spellbook_contents( item_def &book, read_book_action_type action,
         char sval[3];
         itoa(level_diff, sval, 10);
         out.cprintf(sval);
-        out.cprintf(EOL);
+        out.cprintf("\n");
         spelcount++;
     }
 
     out.textcolor(LIGHTGREY);
-    out.cprintf(EOL);
+    out.cprintf("\n");
 
     switch (action)
     {
     case RBOOK_USE_STAFF:
-        out.cprintf( "Select a spell to cast." EOL );
+        out.cprintf( "Select a spell to cast.\n" );
         break;
 
     case RBOOK_READ_SPELL:
@@ -899,10 +899,10 @@ int spellbook_contents( item_def &book, read_book_action_type action,
             && player_can_memorise_from_spellbook(book))
         {
             out.cprintf( "Select a spell to read its description or to "
-                         "memorise it." EOL );
+                         "memorise it.\n" );
         }
         else
-            out.cprintf( "Select a spell to read its description." EOL );
+            out.cprintf( "Select a spell to read its description.\n" );
         break;
 
     default:

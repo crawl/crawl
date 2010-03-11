@@ -76,7 +76,7 @@ static void _crash_signal_handler(int sig_num)
             return;
         _recursion_depth++;
 
-        fprintf(stderr, "Recursive crash." EOL);
+        fprintf(stderr, "Recursive crash.\n");
 
         std::string dir = (!Options.morgue_dir.empty() ? Options.morgue_dir :
                            !SysEnv.crawl_dir.empty()   ? SysEnv.crawl_dir
@@ -181,7 +181,7 @@ void dump_crash_info(FILE* file)
     if (name == NULL)
         name = "INVALID";
 
-    fprintf(file, "Crash caused by signal #%d: %s" EOL EOL, _crash_signal,
+    fprintf(file, "Crash caused by signal #%d: %s\n\n", _crash_signal,
             name);
 #endif
 }
@@ -198,8 +198,8 @@ void write_stack_trace(FILE* file, int ignore_count)
     backtrace_symbols = nasty_cast<backtrace_symbols_t, void*>(dlsym(RTLD_DEFAULT, "backtrace_symbols"));
     if (!backtrace || !backtrace_symbols)
     {
-        fprintf(stderr, "Couldn't get a stack trace." EOL);
-        fprintf(file, "Couldn't get a stack trace." EOL);
+        fprintf(stderr, "Couldn't get a stack trace.\n");
+        fprintf(file, "Couldn't get a stack trace.\n");
         return;
     }
 #endif
@@ -210,8 +210,8 @@ void write_stack_trace(FILE* file, int ignore_count)
 #if !defined(TARGET_OS_MACOSX)
     if (symbols == NULL)
     {
-        fprintf(stderr, "Out of memory." EOL);
-        fprintf(file,   "Out of memory." EOL);
+        fprintf(stderr, "Out of memory.\n");
+        fprintf(file,   "Out of memory.\n");
 
         // backtrace_symbols_fd() can print out the stack trace even if
         // malloc() can't find any free memory.
@@ -220,7 +220,7 @@ void write_stack_trace(FILE* file, int ignore_count)
     }
 #endif
 
-    fprintf(file, "Obtained %d stack frames." EOL, num_frames);
+    fprintf(file, "Obtained %d stack frames.\n", num_frames);
 
     // Now we prettify the printout to even show demangled C++ function names.
     std::string bt = "";
@@ -265,7 +265,7 @@ void write_stack_trace(FILE* file, int ignore_count)
             free(realname);
         }
 #endif
-        bt += EOL;
+        bt += "\n";
     }
 
     fprintf(file, "%s", bt.c_str());
@@ -275,7 +275,7 @@ void write_stack_trace(FILE* file, int ignore_count)
 #else // defined(UNIX)
 void write_stack_trace(FILE* file, int ignore_count)
 {
-    const char* msg = "Unable to get stack trace on this platform." EOL;
+    const char* msg = "Unable to get stack trace on this platform.\n";
     fprintf(stderr, "%s", msg);
     fprintf(file, "%s", msg);
 }

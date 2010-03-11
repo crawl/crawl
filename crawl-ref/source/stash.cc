@@ -92,7 +92,7 @@ std::string stash_annotate_item(const char *s,
         spellbook_contents(dup, item->base_type == OBJ_BOOKS ? RBOOK_READ_SPELL
                                                              : RBOOK_USE_STAFF,
                            &fs);
-        text += EOL;
+        text += "\n";
         text += fs.tostring(2, -2);
     }
     return text;

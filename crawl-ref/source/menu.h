@@ -285,7 +285,7 @@ public:
 
     // Initialises a Menu from a formatted_string as follows:
     //
-    // 1) Splits the formatted_string on EOL (this is not necessarily \n).
+    // 1) Splits the formatted_string on EOL.
     // 2) Picks the most recently used non-whitespace colour as the colour
     //    for the next line (so it can't do multiple colours on one line).
     // 3) Ignores all cursor movement ops in the formatted_string.

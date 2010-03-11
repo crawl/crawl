@@ -115,7 +115,6 @@
     #define USE_ASCII_CHARACTERS
     #define USE_CURSES
 #endif
-    #define EOL "\n"
 
     // Unix builds use curses/ncurses, which supports colour.
     //
@@ -173,7 +172,6 @@
 
 #elif defined(TARGET_OS_DOS)
     #define SHORT_FILE_NAMES
-    #define EOL "\r\n"
     #define CHARACTER_SET           A_ALTCHARSET
 
     #define FILE_SEPARATOR '\\'
@@ -196,7 +194,6 @@
     #if !defined(USE_TILE)
         #include "libw32c.h"
     #endif
-    #define EOL "\n"
     #define CHARACTER_SET           A_ALTCHARSET
     #define getstr(X,Y)         get_console_string(X,Y)
 

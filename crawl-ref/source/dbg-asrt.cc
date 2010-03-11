@@ -44,10 +44,10 @@ static void _dump_compilation_info(FILE* file)
     std::string comp_info = compilation_info();
     if (!comp_info.empty())
     {
-        fprintf(file, "Compilation info:" EOL);
-        fprintf(file, "<<<<<<<<<<<" EOL);
+        fprintf(file, "Compilation info:\n");
+        fprintf(file, "<<<<<<<<<<<\n");
         fprintf(file, "%s", comp_info.c_str());
-        fprintf(file, ">>>>>>>>>>>" EOL EOL);
+        fprintf(file, ">>>>>>>>>>>\n\n");
     }
 }
 
@@ -55,10 +55,10 @@ static void _dump_level_info(FILE* file)
 {
     CrawlHashTable &props = env.properties;
 
-    fprintf(file, "Place info:" EOL);
+    fprintf(file, "Place info:\n");
 
     fprintf(file, "absdepth0 = %d, branch = %d, level_type = %d, "
-                  "type_name = %s" EOL EOL,
+                  "type_name = %s\n\n",
             you.absdepth0, (int) you.where_are_you, (int) you.level_type,
             you.level_type_name.c_str());
 
@@ -70,9 +70,9 @@ static void _dump_level_info(FILE* file)
     else
         orig_place = props[LEVEL_ID_KEY].get_string();
 
-    fprintf(file, "Level id: %s" EOL, place.c_str());
+    fprintf(file, "Level id: %s\n", place.c_str());
     if (place != orig_place)
-        fprintf(file, "Level id when level was generated: %s" EOL,
+        fprintf(file, "Level id when level was generated: %s\n",
                 orig_place.c_str());
 
     debug_dump_levgen();
@@ -98,8 +98,8 @@ static void _dump_player(FILE *file)
     crawl_state.type            = GAME_TYPE_NORMAL;
     crawl_state.arena_suspended = false;
 
-    fprintf(file, "Player:" EOL);
-    fprintf(file, "{{{{{{{{{{{" EOL);
+    fprintf(file, "Player:\n");
+    fprintf(file, "{{{{{{{{{{{\n");
 
     bool name_overrun = true;
     for (int i = 0; i < 30; ++i)
@@ -113,25 +113,25 @@ static void _dump_player(FILE *file)
 
     if (name_overrun)
     {
-        fprintf(file, "job_name runs past end of buffer." EOL);
+        fprintf(file, "job_name runs past end of buffer.\n");
         you.class_name[29] = '\0';
     }
 
-    fprintf(file, "Name:       [%s]" EOL, you.your_name.c_str());
-    fprintf(file, "Species:    %s" EOL, species_name(you.species, 27).c_str());
-    fprintf(file, "Job:        %s" EOL EOL, get_job_name(you.char_class));
-    fprintf(file, "class_name: %s" EOL EOL, you.class_name);
+    fprintf(file, "Name:       [%s]\n", you.your_name.c_str());
+    fprintf(file, "Species:    %s\n", species_name(you.species, 27).c_str());
+    fprintf(file, "Job:        %s\n\n", get_job_name(you.char_class));
+    fprintf(file, "class_name: %s\n\n", you.class_name);
 
-    fprintf(file, "HP: %d/%d; base: %d/%d" EOL, you.hp, you.hp_max,
+    fprintf(file, "HP: %d/%d; base: %d/%d\n", you.hp, you.hp_max,
             you.base_hp, you.base_hp2);
-    fprintf(file, "MP: %d/%d; base: %d/%d" EOL,
+    fprintf(file, "MP: %d/%d; base: %d/%d\n",
             you.magic_points, you.max_magic_points,
             you.base_magic_points, you.base_magic_points2);
-    fprintf(file, "Stats: %d (%d) %d (%d) %d (%d)" EOL,
+    fprintf(file, "Stats: %d (%d) %d (%d) %d (%d)\n",
             you.strength, you.max_strength, you.intel, you.max_intel,
             you.dex, you.max_dex);
     fprintf(file, "Position: %s, god:%s (%d), turn_is_over: %d, "
-                  "banished: %d" EOL,
+                  "banished: %d\n",
             debug_coord_str(you.pos()).c_str(),
             god_name(you.religion).c_str(), (int) you.religion,
             (int) you.turn_is_over, (int) you.banished);
@@ -139,24 +139,24 @@ static void _dump_player(FILE *file)
     if (in_bounds(you.pos()))
     {
         const dungeon_feature_type feat = grd(you.pos());
-        fprintf(file, "Standing on/in/over feature: %s" EOL,
+        fprintf(file, "Standing on/in/over feature: %s\n",
                 raw_feature_description(feat, NUM_TRAPS, true).c_str());
     }
-    fprintf(file, EOL);
+    fprintf(file, "\n");
 
     if (you.running.runmode != RMODE_NOT_RUNNING)
     {
-        fprintf(file, "Runrest:" EOL);
-        fprintf(file, "    mode: %d" EOL, you.running.runmode);
-        fprintf(file, "      mp: %d" EOL, you.running.mp);
-        fprintf(file, "      hp: %d" EOL, you.running.hp);
-        fprintf(file, "     pos: %s" EOL EOL,
+        fprintf(file, "Runrest:\n");
+        fprintf(file, "    mode: %d\n", you.running.runmode);
+        fprintf(file, "      mp: %d\n", you.running.mp);
+        fprintf(file, "      hp: %d\n", you.running.hp);
+        fprintf(file, "     pos: %s\n\n",
                 debug_coord_str(you.running.pos).c_str());
     }
 
     if (you.delay_queue.size() > 0)
     {
-        fprintf(file, "Delayed (%lu):" EOL,
+        fprintf(file, "Delayed (%lu):\n",
                 (unsigned long) you.delay_queue.size());
         for (unsigned int i = 0; i < you.delay_queue.size(); ++i)
         {
@@ -168,16 +168,16 @@ static void _dump_player(FILE *file)
             {
                 fprintf(file, " <invalid>");
             }
-            fprintf(file, EOL);
-            fprintf(file, "    duration: %d" EOL, item.duration);
-            fprintf(file, "    parm1:    %d" EOL, item.parm1);
-            fprintf(file, "    parm2:    %d" EOL, item.parm2);
-            fprintf(file, "    started:  %d" EOL EOL, (int) item.started);
+            fprintf(file, "\n");
+            fprintf(file, "    duration: %d\n", item.duration);
+            fprintf(file, "    parm1:    %d\n", item.parm1);
+            fprintf(file, "    parm2:    %d\n", item.parm2);
+            fprintf(file, "    started:  %d\n\n", (int) item.started);
         }
-        fprintf(file, EOL);
+        fprintf(file, "\n");
     }
 
-    fprintf(file, "Spell bugs:" EOL);
+    fprintf(file, "Spell bugs:\n");
     for (size_t i = 0; i < you.spells.size(); ++i)
     {
         const spell_type spell = you.spells[i];
@@ -187,7 +187,7 @@ static void _dump_player(FILE *file)
 
         if (!is_valid_spell(spell))
         {
-            fprintf(file, "    spell slot #%d: invalid spell #%d" EOL,
+            fprintf(file, "    spell slot #%d: invalid spell #%d\n",
                     (int)i, (int)spell);
             continue;
         }
@@ -195,53 +195,53 @@ static void _dump_player(FILE *file)
         const unsigned int flags = get_spell_flags(spell);
 
         if (flags & SPFLAG_MONSTER)
-            fprintf(file, "    spell slot #%d: monster only spell %s" EOL,
+            fprintf(file, "    spell slot #%d: monster only spell %s\n",
                     (int)i, spell_title(spell));
         else if (flags & SPFLAG_TESTING)
-            fprintf(file, "    spell slot #%d: testing spell %s" EOL,
+            fprintf(file, "    spell slot #%d: testing spell %s\n",
                     (int)i, spell_title(spell));
         else if (count_bits(get_spell_disciplines(spell)) == 0)
-            fprintf(file, "    spell slot #%d: school-less spell %s" EOL,
+            fprintf(file, "    spell slot #%d: school-less spell %s\n",
                     (int)i, spell_title(spell));
     }
-    fprintf(file, EOL);
+    fprintf(file, "\n");
 
-    fprintf(file, "Durations:" EOL);
+    fprintf(file, "Durations:\n");
     for (int i = 0; i < NUM_DURATIONS; ++i)
         if (you.duration[i] != 0)
-            fprintf(file, "    #%d: %d" EOL, i, you.duration[i]);
+            fprintf(file, "    #%d: %d\n", i, you.duration[i]);
 
-    fprintf(file, EOL);
+    fprintf(file, "\n");
 
-    fprintf(file, "Attributes:" EOL);
+    fprintf(file, "Attributes:\n");
     for (int i = 0; i < NUM_ATTRIBUTES; ++i)
         if (you.attribute[i] != 0)
-            fprintf(file, "    #%d: %lu" EOL, i, you.attribute[i]);
+            fprintf(file, "    #%d: %lu\n", i, you.attribute[i]);
 
-    fprintf(file, EOL);
+    fprintf(file, "\n");
 
-    fprintf(file, "Mutations:" EOL);
+    fprintf(file, "Mutations:\n");
     for (int i = 0; i < NUM_MUTATIONS; ++i)
         if (you.mutation[i] > 0)
-            fprintf(file, "    #%d: %d" EOL, i, you.mutation[i]);
+            fprintf(file, "    #%d: %d\n", i, you.mutation[i]);
 
-    fprintf(file, EOL);
+    fprintf(file, "\n");
 
-    fprintf(file, "Demon mutations:" EOL);
+    fprintf(file, "Demon mutations:\n");
     for (int i = 0; i < NUM_MUTATIONS; ++i)
         if (you.demon_pow[i] > 0)
-            fprintf(file, "    #%d: %d" EOL, i, you.demon_pow[i]);
+            fprintf(file, "    #%d: %d\n", i, you.demon_pow[i]);
 
-    fprintf(file, EOL);
+    fprintf(file, "\n");
 
-    fprintf(file, "Inventory bugs:" EOL);
+    fprintf(file, "Inventory bugs:\n");
     for (int i = 0; i < ENDOFPACK; ++i)
     {
         item_def &item(you.inv[i]);
 
         if (item.base_type == OBJ_UNASSIGNED && item.quantity != 0)
         {
-            fprintf(file, "    slot #%d: unassigned item has quant %d" EOL,
+            fprintf(file, "    slot #%d: unassigned item has quant %d\n",
                     i, item.quantity);
             continue;
         }
@@ -251,7 +251,7 @@ static void _dump_player(FILE *file)
             item.quantity = 1;
 
             fprintf(file, "    slot #%d: otherwise valid item '%s' has "
-                          "invalid quantity %d" EOL,
+                          "invalid quantity %d\n",
                     i, item.name(DESC_PLAIN, false, true).c_str(),
                     orig_quant);
             item.quantity = orig_quant;
@@ -264,25 +264,25 @@ static void _dump_player(FILE *file)
 
         if (item.link != i)
         {
-            fprintf(file, "    slot #%d: item '%s' has invalid link %d" EOL,
+            fprintf(file, "    slot #%d: item '%s' has invalid link %d\n",
                     i, name.c_str(), item.link);
         }
 
         if (item.slot < 0 || item.slot > 127)
         {
-            fprintf(file, "    slot #%d: item '%s' has invalid slot %d" EOL,
+            fprintf(file, "    slot #%d: item '%s' has invalid slot %d\n",
                     i, name.c_str(), item.slot);
         }
 
         if (!item.pos.equals(-1, -1))
         {
-            fprintf(file, "    slot #%d: item '%s' has invalid pos %s" EOL,
+            fprintf(file, "    slot #%d: item '%s' has invalid pos %s\n",
                     i, name.c_str(), debug_coord_str(item.pos).c_str());
         }
     }
-    fprintf(file, EOL);
+    fprintf(file, "\n");
 
-    fprintf(file, "Equipment:" EOL);
+    fprintf(file, "Equipment:\n");
     for (int i = 0; i < NUM_EQUIP; ++i)
     {
         char eq = you.equip[i];
@@ -293,13 +293,13 @@ static void _dump_player(FILE *file)
         fprintf(file, "    eq slot #%d, inv slot #%d", i, (int) eq);
         if (eq < 0 || eq >= ENDOFPACK)
         {
-            fprintf(file, " <invalid>" EOL);
+            fprintf(file, " <invalid>\n");
             continue;
         }
-        fprintf(file, ": %s" EOL,
+        fprintf(file, ": %s\n",
                 you.inv[eq].name(DESC_PLAIN, false, true).c_str());
     }
-    fprintf(file, EOL);
+    fprintf(file, "\n");
 
     if (in_bounds(you.pos()) && monster_at(you.pos()))
     {
@@ -307,17 +307,17 @@ static void _dump_player(FILE *file)
         const unsigned short midx = mgrd(you.pos());
 
         if (invalid_monster_index(midx))
-            fprintf(file, "invalid monster index %d" EOL, (int) midx);
+            fprintf(file, "invalid monster index %d\n", (int) midx);
         else
         {
             const monsters *mon = &menv[midx];
-            fprintf(file, "%s:" EOL, debug_mon_str(mon).c_str());
+            fprintf(file, "%s:\n", debug_mon_str(mon).c_str());
             debug_dump_mon(mon, true);
         }
-        fprintf(file, EOL);
+        fprintf(file, "\n");
     }
 
-    fprintf(file, "}}}}}}}}}}}" EOL EOL);
+    fprintf(file, "}}}}}}}}}}}\n\n");
 }
 
 static void _debug_marker_scan()
@@ -465,29 +465,29 @@ static void _debug_dump_lua_persist(FILE* file)
 
 static void _dump_ver_stuff(FILE* file)
 {
-    fprintf(file, "Version: %s %s" EOL, CRAWL, Version::Long().c_str());
+    fprintf(file, "Version: %s %s\n", CRAWL, Version::Long().c_str());
 #if defined(UNIX)
     fprintf(file, "Platform: unix");
 #   if defined(TARGET_OS_MACOSX)
     fprintf(file, " (OS X)");
 #   endif
-    fprintf(file, EOL);
+    fprintf(file, "\n");
 #elif defined(TARGET_OS_WINDOWS)
-    fprintf(file, "Platform: Windows" EOL);
+    fprintf(file, "Platform: Windows\n");
 #elif defined(TARGET_OS_DOS)
-    fprintf(file, "Platform: DOS" EOL);
+    fprintf(file, "Platform: DOS\n");
 #endif // UNIX
 
 #if TARGET_CPU_BITS == 64
-    fprintf(file, "Bits: 64" EOL);
+    fprintf(file, "Bits: 64\n");
 #else
-    fprintf(file, "Bits: 32" EOL);
+    fprintf(file, "Bits: 32\n");
 #endif
 
 #ifdef USE_TILE
-    fprintf(file, "Tiles: yes" EOL EOL);
+    fprintf(file, "Tiles: yes\n\n");
 #else
-    fprintf(file, "Tiles: no" EOL EOL);
+    fprintf(file, "Tiles: no\n\n");
 #endif
 }
 
@@ -505,7 +505,7 @@ void do_crash_dump()
         // free'd and invalid, plus their content likely wouldn't help
         // tracking it down anyway.  Thus, just do the bare bones
         // info to stderr and quit.
-        fprintf(stderr, "Crashed while calling exit()!!!!" EOL);
+        fprintf(stderr, "Crashed while calling exit()!!!!\n");
 
         _dump_ver_stuff(stderr);
 
@@ -527,13 +527,13 @@ void do_crash_dump()
     sprintf(name, "%scrash-%s-%s.txt", dir.c_str(),
             you.your_name.c_str(), make_file_time(time(NULL)).c_str());
 
-    fprintf(stderr, EOL "Writing crash info to %s" EOL, name);
+    fprintf(stderr, "\nWriting crash info to %s\n", name);
     errno = 0;
     FILE* file = crawl_state.test ? stderr : freopen(name, "w+", stderr);
 
     if (file == NULL || errno != 0)
     {
-        fprintf(stdout, EOL "Unable to open file '%s' for writing: %s" EOL,
+        fprintf(stdout, "\nUnable to open file '%s' for writing: %s\n",
                 name, strerror(errno));
         file = stdout;
     }
@@ -546,7 +546,7 @@ void do_crash_dump()
 
 #ifdef DEBUG
     if (!_assert_msg.empty())
-        fprintf(file, "%s" EOL EOL, _assert_msg.c_str());
+        fprintf(file, "%s\n\n", _assert_msg.c_str());
 #endif
 
     _dump_ver_stuff(file);
@@ -557,7 +557,7 @@ void do_crash_dump()
     dump_crash_info(file);
     write_stack_trace(file, 0);
 
-    fprintf(file, EOL);
+    fprintf(file, "\n");
 
     // Next information on how the binary was compiled
     _dump_compilation_info(file);
@@ -568,20 +568,20 @@ void do_crash_dump()
 
     // Dumping information on marker inconsistancy is unlikely to crash,
     // as is dumping the descriptions of non-Lua markers.
-    fprintf(file, "Markers:" EOL);
-    fprintf(file, "<<<<<<<<<<<<<<<<<<<<<<" EOL);
+    fprintf(file, "Markers:\n");
+    fprintf(file, "<<<<<<<<<<<<<<<<<<<<<<\n");
     _debug_marker_scan();
     _debug_dump_markers();
-    fprintf(file, ">>>>>>>>>>>>>>>>>>>>>>" EOL);
+    fprintf(file, ">>>>>>>>>>>>>>>>>>>>>>\n");
 
     // Dumping current messages is unlikely to crash.
     if (file != stdout)
     {
-        fprintf(file, EOL "Messages:" EOL);
-        fprintf(file, "<<<<<<<<<<<<<<<<<<<<<<" EOL);
+        fprintf(file, "\nMessages:\n");
+        fprintf(file, "<<<<<<<<<<<<<<<<<<<<<<\n");
         std::string messages = get_last_messages(NUM_STORED_MESSAGES);
         fprintf(file, "%s", messages.c_str());
-        fprintf(file, ">>>>>>>>>>>>>>>>>>>>>>" EOL);
+        fprintf(file, ">>>>>>>>>>>>>>>>>>>>>>\n");
     }
 
     // Dumping the player state and crawl state is next least likely to cause
@@ -600,23 +600,23 @@ void do_crash_dump()
 
     // If anything has screwed up the Lua runtime stacks then trying to
     // print those stacks will likely crash, so do this after the others.
-    fprintf(file, "clua stack:" EOL);
+    fprintf(file, "clua stack:\n");
     clua.print_stack();
 
-    fprintf(file, "dlua stack:" EOL);
+    fprintf(file, "dlua stack:\n");
     dlua.print_stack();
 
     // Lastly try to dump the Lua persistent data and the contents of the Lua
     // markers, since actually running Lua code has the greatest chance of
     // crashing.
-    fprintf(file, "Lua persistent data:" EOL);
-    fprintf(file, "<<<<<<<<<<<<<<<<<<<<<<" EOL);
+    fprintf(file, "Lua persistent data:\n");
+    fprintf(file, "<<<<<<<<<<<<<<<<<<<<<<\n");
     _debug_dump_lua_persist(file);
-    fprintf(file, ">>>>>>>>>>>>>>>>>>>>>>" EOL EOL);
-    fprintf(file, "Lua marker contents:" EOL);
-    fprintf(file, "<<<<<<<<<<<<<<<<<<<<<<" EOL);
+    fprintf(file, ">>>>>>>>>>>>>>>>>>>>>>\n\n");
+    fprintf(file, "Lua marker contents:\n");
+    fprintf(file, "<<<<<<<<<<<<<<<<<<<<<<\n");
     _debug_dump_lua_markers(file);
-    fprintf(file, ">>>>>>>>>>>>>>>>>>>>>>" EOL);
+    fprintf(file, ">>>>>>>>>>>>>>>>>>>>>>\n");
 
     set_msg_dump_file(NULL);
 

@@ -340,7 +340,7 @@ static std::string _get_seen_branches(bool display)
         disp += " (use <white>G</white> to reach them and "
                 "<white>?/B</white> for more information)";
     }
-    disp += EOL;
+    disp += "\n";
 
     level_id dungeon_lid(branches[0].id, 0);
     dungeon_lid = find_deepest_explored(dungeon_lid);
@@ -510,7 +510,7 @@ static std::string _get_altars(bool display)
         disp += " (use <white>Ctrl-F \"altar\"</white> to reach them and "
                 "<white>?/G</white> for information about gods)";
     }
-    disp += EOL;
+    disp += "\n";
     disp += _print_altars_for_gods(temple_god_list(), true, display);
     disp += _print_altars_for_gods(nontemple_god_list(), false, display);
 
@@ -565,13 +565,13 @@ static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
         num_printed++;
 
         if (num_printed % 5 == 0)
-            disp += EOL;
+            disp += "\n";
         else
             disp += std::string(17 - god_name(god, false).length(), ' ');
     }
 
     if (num_printed > 0 && num_printed % 5 != 0)
-        disp += EOL;
+        disp += "\n";
     return disp;
 }
 
@@ -586,7 +586,7 @@ static std::string _get_shops(bool display)
         disp +="\n<green>Shops:</green>";
         if (display)
             disp += " (use <white>Ctrl-F \"shop\"</white> to reach them - yellow denotes antique shop)";
-        disp += EOL;
+        disp += "\n";
     }
     last_id.depth = 10000;
     std::map<level_pos, shop_type>::const_iterator ci_shops;

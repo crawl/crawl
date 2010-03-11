@@ -176,19 +176,19 @@ void debug_dump_mon(const monsters* mon, bool recurse)
     if (invalid_monster_index(midx) || invalid_monster_type(mon->type))
         return;
 
-    fprintf(stderr, "<<<<<<<<<" EOL);
+    fprintf(stderr, "<<<<<<<<<\n");
 
-    fprintf(stderr, "Name: %s" EOL, mon->name(DESC_PLAIN, true).c_str());
-    fprintf(stderr, "Base name: %s" EOL,
+    fprintf(stderr, "Name: %s\n", mon->name(DESC_PLAIN, true).c_str());
+    fprintf(stderr, "Base name: %s\n",
             mon->base_name(DESC_PLAIN, true).c_str());
-    fprintf(stderr, "Full name: %s" EOL EOL,
+    fprintf(stderr, "Full name: %s\n\n",
             mon->full_name(DESC_PLAIN, true).c_str());
 
     if (in_bounds(mon->pos()))
     {
         std::string feat =
             raw_feature_description(grd(mon->pos()), NUM_TRAPS, true);
-        fprintf(stderr, "On/in/over feature: %s" EOL EOL, feat.c_str());
+        fprintf(stderr, "On/in/over feature: %s\n\n", feat.c_str());
     }
 
     fprintf(stderr, "Foe: ");
@@ -203,13 +203,13 @@ void debug_dump_mon(const monsters* mon, bool recurse)
     else
         fprintf(stderr, "%s", debug_mon_str(&menv[mon->foe]).c_str());
 
-    fprintf(stderr, EOL);
+    fprintf(stderr, "\n");
 
     fprintf(stderr, "Target: ");
     if (mon->target.origin())
-        fprintf(stderr, "none" EOL);
+        fprintf(stderr, "none\n");
     else
-        fprintf(stderr, "%s" EOL, debug_coord_str(mon->target).c_str());
+        fprintf(stderr, "%s\n", debug_coord_str(mon->target).c_str());
 
     int target = MHITNOT;
     fprintf(stderr, "At target: ");
@@ -243,32 +243,32 @@ void debug_dump_mon(const monsters* mon, bool recurse)
     else
         fprintf(stderr, "<OoB>");
 
-    fprintf(stderr, EOL);
+    fprintf(stderr, "\n");
 
     if (mon->is_patrolling())
     {
-        fprintf(stderr, "Patrolling: %s" EOL EOL,
+        fprintf(stderr, "Patrolling: %s\n\n",
                 debug_coord_str(mon->patrol_point).c_str());
     }
 
     if (mon->travel_target != MTRAV_NONE)
     {
-        fprintf(stderr, EOL "Travelling:" EOL);
-        fprintf(stderr, "    travel_target      = %d" EOL, mon->travel_target);
-        fprintf(stderr, "    travel_path.size() = %lu" EOL,
+        fprintf(stderr, "\nTravelling:\n");
+        fprintf(stderr, "    travel_target      = %d\n", mon->travel_target);
+        fprintf(stderr, "    travel_path.size() = %lu\n",
                 (unsigned long) mon->travel_path.size());
 
         if (mon->travel_path.size() > 0)
         {
-            fprintf(stderr, "    next travel step: %s" EOL,
+            fprintf(stderr, "    next travel step: %s\n",
                     debug_coord_str(mon->travel_path.back()).c_str());
-            fprintf(stderr, "    last travel step: %s" EOL,
+            fprintf(stderr, "    last travel step: %s\n",
                     debug_coord_str(mon->travel_path.front()).c_str());
         }
     }
-    fprintf(stderr, EOL);
+    fprintf(stderr, "\n");
 
-    fprintf(stderr, "Inventory:" EOL);
+    fprintf(stderr, "Inventory:\n");
     for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
     {
         const int idx = mon->inv[i];
@@ -280,14 +280,14 @@ void debug_dump_mon(const monsters* mon, bool recurse)
 
         if (idx < 0 || idx > MAX_ITEMS)
         {
-            fprintf(stderr, "invalid item index %d" EOL, idx);
+            fprintf(stderr, "invalid item index %d\n", idx);
             continue;
         }
         const item_def &item(mitm[idx]);
 
         if (!item.is_valid())
         {
-            fprintf(stderr, "invalid item" EOL);
+            fprintf(stderr, "invalid item\n");
             continue;
         }
 
@@ -304,13 +304,13 @@ void debug_dump_mon(const monsters* mon, bool recurse)
                     debug_mon_str(item.holding_monster()).c_str());
         }
 
-        fprintf(stderr, EOL);
+        fprintf(stderr, "\n");
     }
-    fprintf(stderr, EOL);
+    fprintf(stderr, "\n");
 
     if (mon->can_use_spells())
     {
-        fprintf(stderr, "Spells:" EOL);
+        fprintf(stderr, "Spells:\n");
 
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
         {
@@ -321,25 +321,25 @@ void debug_dump_mon(const monsters* mon, bool recurse)
 
             fprintf(stderr, "    slot #%d: ", i);
             if (!is_valid_spell(spell))
-                fprintf(stderr, "Invalid spell #%d" EOL, (int) spell);
+                fprintf(stderr, "Invalid spell #%d\n", (int) spell);
             else
-                fprintf(stderr, "%s" EOL, spell_title(spell));
+                fprintf(stderr, "%s\n", spell_title(spell));
         }
-        fprintf(stderr, EOL);
+        fprintf(stderr, "\n");
     }
 
-    fprintf(stderr, "attitude: %d, behaviour: %d, number: %d, flags: 0x%lx" EOL,
+    fprintf(stderr, "attitude: %d, behaviour: %d, number: %d, flags: 0x%lx\n",
             mon->attitude, mon->behaviour, mon->number, mon->flags);
 
     fprintf(stderr, "colour: %d, foe_memory: %d, shield_blocks:%d, "
-                  "experience: %lu" EOL,
+                  "experience: %lu\n",
             mon->colour, mon->foe_memory, mon->shield_blocks,
             mon->experience);
 
-    fprintf(stderr, "god: %s, seen_context: %s" EOL,
+    fprintf(stderr, "god: %s, seen_context: %s\n",
             god_name(mon->god).c_str(), mon->seen_context.c_str());
 
-    fprintf(stderr, ">>>>>>>>>" EOL EOL);
+    fprintf(stderr, ">>>>>>>>>\n\n");
 
     if (!recurse)
         return;
@@ -347,7 +347,7 @@ void debug_dump_mon(const monsters* mon, bool recurse)
     if (!invalid_monster_index(mon->foe) && mon->foe != midx
         && !invalid_monster_type(menv[mon->foe].type))
     {
-        fprintf(stderr, "Foe:" EOL);
+        fprintf(stderr, "Foe:\n");
         debug_dump_mon(&menv[mon->foe], false);
     }
 
@@ -355,7 +355,7 @@ void debug_dump_mon(const monsters* mon, bool recurse)
         && target != mon->foe
         && !invalid_monster_type(menv[target].type))
     {
-        fprintf(stderr, "Target:" EOL);
+        fprintf(stderr, "Target:\n");
         debug_dump_mon(&menv[target], false);
     }
 }

@@ -446,7 +446,7 @@ void print_error_screen(const char *message, ...)
     //       any formatting!
     error_msg = replace_all(error_msg, "<", "<<");
 
-    error_msg += EOL EOL EOL "Hit any key to exit..." EOL;
+    error_msg += "\n\n\nHit any key to exit...\n";
 
     // Break message into correctly sized lines.
     int width = 80;
@@ -777,7 +777,7 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
             if (message)
                 mpr(pr);
             else
-                cprintf((EOL + pr + EOL).c_str());
+                cprintf(("\n" + pr + "\n").c_str());
         }
     }
 }

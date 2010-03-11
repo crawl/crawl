@@ -152,7 +152,7 @@ Menu::Menu( const formatted_string &fs )
             const std::string::size_type nonblankp =
                 op.text.find_first_not_of(" \t\r\n");
             const bool nonblank = nonblankp != std::string::npos;
-            const std::string::size_type eolp = op.text.find(EOL);
+            const std::string::size_type eolp = op.text.find("\n");
             const bool starts_with_eol =
                 nonblank && eolp != std::string::npos
                 && eolp < nonblankp;
@@ -179,16 +179,16 @@ void Menu::check_add_formatted_line(int firstcol, int nextcol,
     if (line.empty())
         return;
 
-    if (check_eol && line.find(EOL) == std::string::npos)
+    if (check_eol && line.find("\n") == std::string::npos)
         return;
 
-    std::vector<std::string> lines = split_string(EOL, line, false, true);
+    std::vector<std::string> lines = split_string("\n", line, false, true);
     int size = lines.size();
 
     // If we have stuff after EOL, leave that in the line variable and
     // don't add an entry for it, unless the caller told us not to
     // check EOL sanity.
-    if (check_eol && !ends_with(line, EOL))
+    if (check_eol && !ends_with(line, "\n"))
         line = lines[--size];
     else
         line.clear();
@@ -1730,7 +1730,7 @@ void formatted_scroller::add_text(const std::string& s, bool new_line)
         add_item_formatted_string(parts[i]);
 
     if (new_line)
-        add_item_formatted_string(formatted_string::parse_string(EOL));
+        add_item_formatted_string(formatted_string::parse_string("\n"));
 }
 
 void formatted_scroller::add_item_formatted_string(const formatted_string& fs,

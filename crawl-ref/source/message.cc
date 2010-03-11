@@ -1317,14 +1317,14 @@ std::string get_last_messages(int mcount)
             break;
         if (is_channel_dumpworthy(msg.channel))
         {
-            text = msg.pure_text() + EOL + text;
+            text = msg.pure_text() + "\n" + text;
             mcount--;
         }
     }
 
     // An extra line of clearance.
     if (!text.empty())
-        text += EOL;
+        text += "\n";
     return text;
 }
 

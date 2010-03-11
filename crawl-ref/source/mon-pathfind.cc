@@ -359,7 +359,7 @@ std::vector<coord_def> monster_pathfind::calc_waypoints()
     pos = path[0];
 
 #ifdef DEBUG_PATHFIND
-    mpr(EOL "Waypoints:");
+    mpr("\nWaypoints:");
 #endif
     for (unsigned int i = 1; i < path.size(); i++)
     {

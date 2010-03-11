@@ -15,11 +15,11 @@ extern std::string init_file_error; // defined in main.cc
 void opening_screen(void)
 {
     std::string msg =
-    "<yellow>Hello, welcome to " CRAWL " " + Version::Long() + "!</yellow>" EOL
+    "<yellow>Hello, welcome to " CRAWL " " + Version::Long() + "!</yellow>\n"
     "<brown>(c) Copyright 1997-2002 Linley Henzell, "
-    "2002-2010 Crawl DevTeam" EOL
+    "2002-2010 Crawl DevTeam\n"
     "Please consult crawl_manual.txt for instructions and legal details."
-    "</brown>" EOL;
+    "</brown>\n";
 
     const bool init_found = init_file_error.empty();
 
@@ -46,7 +46,7 @@ void opening_screen(void)
         msg += ", using defaults.";
     }
 
-    msg += EOL;
+    msg += "\n";
 
     formatted_string::parse_string(msg).display();
     textcolor( LIGHTGREY );
@@ -62,20 +62,20 @@ static void _show_name_prompt(int where, bool blankOK,
     {
         if (Options.prev_name.length() && Options.remember_name)
         {
-            cprintf(EOL
+            cprintf("\n"
                     "Press <Enter> for \"%s\", or . to be prompted later."
-                    EOL,
+                    "\n",
                     Options.prev_name.c_str());
         }
         else
         {
-            cprintf(EOL
+            cprintf("\n"
                     "Press <Enter> to answer this after species and "
-                    "background are chosen." EOL);
+                    "background are chosen.\n");
         }
     }
 
-    cprintf(EOL "What is your name today? ");
+    cprintf("\nWhat is your name today? ");
 
     if (!existing_chars.empty())
     {
@@ -115,7 +115,7 @@ static bool _is_good_name(std::string &name, bool blankOK, bool verbose)
             return (true);
 
         if (verbose)
-            cprintf(EOL "That's a silly name!" EOL);
+            cprintf("\nThat's a silly name!\n");
         return (false);
     }
 
@@ -130,7 +130,7 @@ static bool _is_good_name(std::string &name, bool blankOK, bool verbose)
     if (stricmp(name.c_str(), "bones") == 0)
     {
         if (verbose)
-            cprintf(EOL "That's a silly name!" EOL);
+            cprintf("\nThat's a silly name!\n");
         return (false);
     }
 #endif
@@ -213,9 +213,9 @@ void enter_player_name(newgame_def &ng, bool blankOK)
             if (!crawl_state.game_is_sprint()) {
                 cgotoxy(1,12);
                 formatted_string::parse_string(
-                                            "  If you've never been here before, you might want to try out" EOL
+                                            "  If you've never been here before, you might want to try out\n"
                                             "  the Dungeon Crawl tutorial. To do this, press "
-                                            "<white>Ctrl-T</white> on the next" EOL
+                                            "<white>Ctrl-T</white> on the next\n"
                                             "  screen.").display();
             }
         }
@@ -267,7 +267,7 @@ bool validate_player_name(const std::string &name, bool verbose)
         || strnicmp(name.c_str(), "LPT", 3) == 0)
     {
         if (verbose)
-            cprintf(EOL "Sorry, that name gives your OS a headache." EOL);
+            cprintf("\nSorry, that name gives your OS a headache.\n");
         return (false);
     }
 #endif
@@ -284,10 +284,10 @@ bool validate_player_name(const std::string &name, bool verbose)
         {
             if (verbose)
             {
-                cprintf( EOL
+                cprintf( "\n"
                         "Alpha-numerics, spaces, dashes, periods "
                         "and underscores only, please."
-                        EOL );
+                        "\n" );
             }
             return (false);
         }

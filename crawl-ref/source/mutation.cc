@@ -1326,39 +1326,39 @@ formatted_string describe_mutations()
 
     result += "<white>";
     result += mut_title;
-    result += "</white>" EOL EOL;
+    result += "</white>\n\n";
 
     // Innate abilities which don't fit as mutations.
     result += "<lightblue>";
     switch (you.species)
     {
     case SP_MERFOLK:
-        result += "You revert to your normal form in water." EOL;
+        result += "You revert to your normal form in water.\n";
         have_any = true;
         break;
 
     case SP_NAGA:
-        result += "You cannot wear boots." EOL;
+        result += "You cannot wear boots.\n";
         if (!you.mutation[MUT_FAST])
         {
             result += mutation_name(MUT_FAST, -1, true);
-            result += EOL;
+            result += "\n";
         }
         // Breathe poison replaces spit poison.
         if (!you.mutation[MUT_BREATHE_POISON])
-            result += "You can spit poison." EOL;
+            result += "You can spit poison.\n";
         if (you.experience_level > 2)
         {
             std::ostringstream num;
             num << you.experience_level/3;
-            result += "Your serpentine skin is tough (AC +" + num.str() + ")." EOL;
+            result += "Your serpentine skin is tough (AC +" + num.str() + ").\n";
         }
         have_any = true;
         break;
 
     case SP_GHOUL:
-        result += "Your body is rotting away." EOL;
-        result += "You have sharp claws for hands." EOL;
+        result += "Your body is rotting away.\n";
+        result += "You have sharp claws for hands.\n";
         have_any = true;
         break;
 
@@ -1366,7 +1366,7 @@ formatted_string describe_mutations()
         if (!you.mutation[MUT_CLAWS])
         {
             result += mutation_name(MUT_CLAWS, -1, true);
-            result += EOL;
+            result += "\n";
         }
         have_any = true;
         break;
@@ -1377,22 +1377,22 @@ formatted_string describe_mutations()
             result += "You can fly";
             if (you.experience_level > 14)
                 result += " continuously";
-            result += "." EOL;
+            result += ".\n";
             have_any = true;
         }
         break;
 
     case SP_MUMMY:
-        result += "Your flesh is vulnerable to fire." EOL;
+        result += "Your flesh is vulnerable to fire.\n";
         if (you.experience_level > 12)
         {
             result += "You are";
             if (you.experience_level > 25)
                 result += " strongly";
 
-            result += " in touch with the powers of death." EOL;
+            result += " in touch with the powers of death.\n";
             result +=
-                "You can restore your body by infusing magical energy." EOL;
+                "You can restore your body by infusing magical energy.\n";
         }
         have_any = true;
         break;
@@ -1400,7 +1400,7 @@ formatted_string describe_mutations()
     case SP_GREY_DRACONIAN:
         if (you.experience_level > 6)
         {
-            result += "Your tail is studded with spikes." EOL;
+            result += "Your tail is studded with spikes.\n";
             have_any = true;
         }
         break;
@@ -1408,7 +1408,7 @@ formatted_string describe_mutations()
     case SP_GREEN_DRACONIAN:
         if (you.experience_level > 6)
         {
-            result += "You can breathe poison." EOL;
+            result += "You can breathe poison.\n";
             have_any = true;
         }
         break;
@@ -1416,7 +1416,7 @@ formatted_string describe_mutations()
     case SP_RED_DRACONIAN:
         if (you.experience_level > 6)
         {
-            result += "You can breathe fire." EOL;
+            result += "You can breathe fire.\n";
             have_any = true;
         }
         break;
@@ -1424,7 +1424,7 @@ formatted_string describe_mutations()
     case SP_WHITE_DRACONIAN:
         if (you.experience_level > 6)
         {
-            result += "You can breathe cold." EOL;
+            result += "You can breathe cold.\n";
             have_any = true;
         }
         break;
@@ -1432,7 +1432,7 @@ formatted_string describe_mutations()
     case SP_BLACK_DRACONIAN:
         if (you.experience_level > 6)
         {
-            result += "You can breathe lightning." EOL;
+            result += "You can breathe lightning.\n";
             have_any = true;
         }
         break;
@@ -1440,8 +1440,8 @@ formatted_string describe_mutations()
     case SP_YELLOW_DRACONIAN:
         if (you.experience_level > 6)
         {
-            result += "You can spit acid." EOL;
-            result += "You are resistant to acid." EOL;
+            result += "You can spit acid.\n";
+            result += "You are resistant to acid.\n";
             have_any = true;
         }
         break;
@@ -1449,7 +1449,7 @@ formatted_string describe_mutations()
     case SP_PURPLE_DRACONIAN:
         if (you.experience_level > 6)
         {
-            result += "You can breathe power." EOL;
+            result += "You can breathe power.\n";
             have_any = true;
         }
         break;
@@ -1457,7 +1457,7 @@ formatted_string describe_mutations()
     case SP_MOTTLED_DRACONIAN:
         if (you.experience_level > 6)
         {
-            result += "You can breathe sticky flames." EOL;
+            result += "You can breathe sticky flames.\n";
             have_any = true;
         }
         break;
@@ -1465,39 +1465,39 @@ formatted_string describe_mutations()
     case SP_PALE_DRACONIAN:
         if (you.experience_level > 6)
         {
-            result += "You can breathe steam." EOL;
+            result += "You can breathe steam.\n";
             have_any = true;
         }
         break;
 
     case SP_KOBOLD:
-        result += "You recuperate from illness quickly." EOL;
+        result += "You recuperate from illness quickly.\n";
         have_any = true;
         break;
 
     case SP_VAMPIRE:
         have_any = true;
         if (you.hunger_state == HS_STARVING)
-            result += "<green>You do not heal naturally.</green>" EOL;
+            result += "<green>You do not heal naturally.</green>\n";
         else if (you.hunger_state == HS_ENGORGED)
-            result += "<green>Your natural rate of healing is extremely fast.</green>" EOL;
+            result += "<green>Your natural rate of healing is extremely fast.</green>\n";
         else if (you.hunger_state < HS_SATIATED)
-            result += "<green>You heal slowly.</green>" EOL;
+            result += "<green>You heal slowly.</green>\n";
         else if (you.hunger_state >= HS_FULL)
-            result += "<green>Your natural rate of healing is unusually fast.</green>" EOL;
+            result += "<green>Your natural rate of healing is unusually fast.</green>\n";
         else
             have_any = false;
 
         if (you.experience_level >= 6)
         {
-            result += "You can bottle blood from corpses." EOL;
+            result += "You can bottle blood from corpses.\n";
             have_any = true;
         }
         break;
 
     case SP_DEEP_DWARF:
-        result += "You are resistant to damage." EOL;
-        result += "You can recharge devices by infusing magical energy." EOL;
+        result += "You are resistant to damage.\n";
+        result += "You can recharge devices by infusing magical energy.\n";
         have_any = true;
         break;
 
@@ -1509,7 +1509,7 @@ formatted_string describe_mutations()
     if (player_genus(GENPC_OGRE) || you.species == SP_TROLL
         || player_genus(GENPC_DRACONIAN) || you.species == SP_SPRIGGAN)
     {
-        result += "Your body does not fit into most forms of armour." EOL;
+        result += "Your body does not fit into most forms of armour.\n";
         have_any = true;
     }
 
@@ -1521,20 +1521,20 @@ formatted_string describe_mutations()
                        you.experience_level / 4 + 1;
         std::ostringstream num;
         num << ac;
-        result += "Your scales are hard (AC +" + num.str() + ")." EOL;
+        result += "Your scales are hard (AC +" + num.str() + ").\n";
     }
 
     result += "</lightblue>";
 
     if (beogh_water_walk())
     {
-        result += "<green>You can walk on water.</green>" EOL;
+        result += "<green>You can walk on water.</green>\n";
         have_any = true;
     }
 
     if (you.duration[DUR_FIRE_SHIELD])
     {
-        result += "<green>You are immune to clouds of flame.</green>" EOL;
+        result += "<green>You are immune to clouds of flame.</green>\n";
         have_any = true;
     }
 
@@ -1547,7 +1547,7 @@ formatted_string describe_mutations()
         {
             mutation_type mut_type = static_cast<mutation_type>(i);
             result += mutation_name(mut_type, -1, true);
-            result += EOL;
+            result += "\n";
             have_any = true;
         }
     }
@@ -1559,26 +1559,26 @@ formatted_string describe_mutations()
         {
             mutation_type mut_type = static_cast<mutation_type>(i);
             result += mutation_name(mut_type, -1, true);
-            result += EOL;
+            result += "\n";
             have_any = true;
         }
     }
 
     if (!have_any)
-        result +=  "You are rather mundane." EOL;
+        result +=  "You are rather mundane.\n";
 
     if (you.species == SP_VAMPIRE)
     {
-        result += EOL EOL;
-        result += EOL EOL;
+        result += "\n\n";
+        result += "\n\n";
         result +=
 #ifndef USE_TILE
             "Press '<w>!</w>'"
 #else
             "<w>Right-click</w>"
 #endif
-            " to toggle between mutations and properties depending on your" EOL
-            "hunger status." EOL;
+            " to toggle between mutations and properties depending on your\n"
+            "hunger status.\n";
     }
 
     return formatted_string::parse_string(result);
@@ -1608,7 +1608,7 @@ static void _display_vampire_attributes()
 
        {"Spell hunger         ", "full       ", "full    ", "full      ", "halved   ", "none     ", "none  "},
 
-       {EOL "<w>Resistances</w>" EOL
+       {"\n<w>Resistances</w>\n"
         "Poison resistance    ", "           ", "        ", "          ", " +       ", " +       ", " +    "},
 
        {"Cold resistance      ", "           ", "        ", "          ", " +       ", " ++      ", " ++   "},
@@ -1619,17 +1619,17 @@ static void _display_vampire_attributes()
 
        {"Torment resistance   ", "           ", "        ", "          ", "         ", "         ", " +    "},
 
-       {EOL "<w>Other effects</w>" EOL
+       {"\n<w>Other effects</w>\n"
         "Mutation chance      ", "always     ", "often   ", "sometimes ", "never    ", "never    ", "never "},
 
-       {"Non-physical " EOL
+       {"Non-physical \n"
         "mutation effects     ", "full       ", "capped  ", "capped    ", "none     ", "none     ", "none  "},
 
        {"Potion effects       ", "full       ", "full    ", "full      ", "halved   ", "halved   ", "halved"},
 
        {"Bat Form             ", "no         ", "no      ", "yes       ", "yes      ", "yes      ", "yes   "},
 
-       {"Other transformation " EOL
+       {"Other transformation \n"
         "or going berserk     ", "yes        ", "yes     ", "no        ", "no       ", "no       ", "no    "}
     };
 
@@ -1667,18 +1667,18 @@ static void _display_vampire_attributes()
              if (y > 0 && x == current)
                  result += "</w>";
         }
-        result += EOL;
+        result += "\n";
     }
 
-    result += EOL;
+    result += "\n";
     result +=
 #ifndef USE_TILE
         "Press '<w>!</w>'"
 #else
         "<w>Right-click</w>"
 #endif
-        " to toggle between mutations and properties depending on your" EOL
-        "hunger status." EOL;
+        " to toggle between mutations and properties depending on your\n"
+        "hunger status.\n";
 
     const formatted_string vp_props = formatted_string::parse_string(result);
     vp_props.display();

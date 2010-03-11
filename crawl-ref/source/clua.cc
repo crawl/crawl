@@ -728,7 +728,7 @@ void CLua::print_stack()
     int              i = 0;
     lua_State       *L = state();
 
-    fprintf(stderr, EOL);
+    fprintf(stderr, "\n");
     while (lua_getstack(L, i++, &dbg) == 1)
     {
         lua_getinfo(L, "lnuS", &dbg);
@@ -739,11 +739,11 @@ void CLua::print_stack()
         else
             file++;
 
-        fprintf(stderr, "%s, function %s, line %d" EOL, file,
+        fprintf(stderr, "%s, function %s, line %d\n", file,
                 dbg.name, dbg.currentline);
     }
 
-    fprintf(stderr, EOL);
+    fprintf(stderr, "\n");
 }
 
 ////////////////////////////////////////////////////////////////////////

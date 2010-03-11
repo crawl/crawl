@@ -1317,11 +1317,11 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
 
 #ifdef DEBUG_DIAGNOSTICS
     cprintf("You have %d points of unallocated experience "
-            " (cost lvl %d; total %d)." EOL EOL,
+            " (cost lvl %d; total %d).\n\n",
             you.exp_available, you.skill_cost_level,
             you.total_skill_points);
 #else
-    cprintf(" You have %s unallocated experience." EOL EOL,
+    cprintf(" You have %s unallocated experience.\n\n",
             you.exp_available == 0? "no" :
             make_stringf("%d point%s of",
                          you.exp_available,
@@ -1455,7 +1455,7 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
         else
         {
             cprintf("Press the letter of a skill to choose whether you want to "
-                    "practise it." EOL "Skills marked with '+' will train more "
+                    "practise it.\n" "Skills marked with '+' will train more "
                     "quickly than those with '-'.");
         }
 

@@ -40,7 +40,7 @@ int formatted_string::get_colour(const std::string &tag)
     return (colour != -1? colour : LIGHTGREY);
 }
 
-// Display a formatted string without printing literal EOL.
+// Display a formatted string without printing literal \n.
 // This is important if the text is not supposed
 // to clobber existing text to the right of the lines being displayed
 // (some of the tutorial messages need this).
@@ -80,7 +80,7 @@ formatted_string formatted_string::parse_string(
 }
 
 // Parses a formatted string in much the same way as parse_string, but
-// handles EOL by creating a new formatted_string.
+// handles \n by creating a new formatted_string.
 void formatted_string::parse_string_to_multiple(
     const std::string &s,
     std::vector<formatted_string> &out)
@@ -126,9 +126,9 @@ void formatted_string::parse_string1(
         {
             // Break the string at the end of a line, if possible, so
             // that none of the broken string ends up overwritten.
-            std::string::size_type bound = currs.rfind(EOL, 999);
+            std::string::size_type bound = currs.rfind("\n", 999);
             if (bound != endpos)
-                bound += strlen(EOL);
+                bound++;
             else
                 bound = 999;
 
@@ -514,7 +514,7 @@ int count_linebreaks(const formatted_string& fs)
     int count = 0;
     while ( 1 )
     {
-        where = s.find(EOL, where);
+        where = s.find("\n", where);
         if ( where == std::string::npos )
             break;
         else

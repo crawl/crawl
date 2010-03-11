@@ -559,7 +559,7 @@ std::string screenshot(bool fullscreen)
             const std::string &ref = lines[i - 1];
             if (firstnonspace < (int) ref.length())
                 ss << ref.substr(firstnonspace);
-            ss << EOL;
+            ss << "\n";
         }
     }
 
