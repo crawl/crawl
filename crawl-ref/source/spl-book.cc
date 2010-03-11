@@ -856,36 +856,31 @@ int spellbook_contents( item_def &book, read_book_action_type action,
         out.cprintf(strng);
         out.cprintf(" - ");
 
-        out.cprintf( "%s", spell_title(stype) );
-        out.cgotoxy( 35, -1 );
+        out.cprintf("%-29s", spell_title(stype));
 
-
+        std::string schools;
         if (action == RBOOK_USE_STAFF)
-            out.cprintf( "Evocations" );
+            schools = "Evocations";
         else
         {
-            bool already = false;
-
+            bool first = true;
             for (i = 0; i <= SPTYP_LAST_EXPONENT; i++)
             {
-                if (spell_typematch( stype, 1 << i ))
+                if (spell_typematch(stype, 1 << i))
                 {
-                    if (already)
-                        out.cprintf( "/" );
-
-                    out.cprintf( "%s", spelltype_long_name( 1 << i ) );
-                    already = true;
+                    if (!first)
+                        schools += "/";
+                    schools += spelltype_long_name(1 << i);
+                    first = false;
                 }
             }
         }
-
-        out.cgotoxy( 65, -1 );
+        out.cprintf("%-30s", schools.c_str());
 
         char sval[3];
-
-        itoa( level_diff, sval, 10 );
-        out.cprintf( sval );
-        out.cprintf( EOL );
+        itoa(level_diff, sval, 10);
+        out.cprintf(sval);
+        out.cprintf(EOL);
         spelcount++;
     }
 
