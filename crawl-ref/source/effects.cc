@@ -1474,12 +1474,13 @@ static int _acquirement_weapon_subtype(bool divine)
         // For non-Trog/Okawaru acquirements, give a boost to high-end items.
         if (!divine && !is_range_weapon(item_considered))
         {
+            if (acqweight < 5)
+                acqweight = 5;
             int damage = property(item_considered, PWPN_DAMAGE);
             if (!two_handed)
                 damage = damage * 3 / 2;
             damage *= damage * damage;
-            // Only gods suffer from acquirement weight.
-            acqweight = 10 * damage / property(item_considered, PWPN_SPEED);
+            acqweight *= damage / property(item_considered, PWPN_SPEED);
         }
 
         if (two_handed)
