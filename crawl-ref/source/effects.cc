@@ -1188,6 +1188,21 @@ static armour_type _acquirement_armour_subtype(bool divine)
                                            1, ARM_DRAGON_ARMOUR,
                                            0));
             }
+
+            // Non-god acquirement not only has a much better chance, but
+            // can give high-end ones as well.
+            if (!divine && one_chance_in(5))
+            {
+                static_cast<armour_type>(random_choose(
+                        ARM_DRAGON_ARMOUR,
+                        ARM_ICE_DRAGON_ARMOUR,
+                        ARM_STEAM_DRAGON_ARMOUR,
+                        ARM_MOTTLED_DRAGON_ARMOUR,
+                        ARM_STORM_DRAGON_ARMOUR,
+                        ARM_GOLD_DRAGON_ARMOUR,
+                        ARM_SWAMP_DRAGON_ARMOUR,
+                        -1));
+            }
         }
         else
         {
@@ -1221,14 +1236,26 @@ static armour_type _acquirement_armour_subtype(bool divine)
                 // might also want to take into account Dodging/Stealth
                 // and Strength, but this is definitely better than the
                 // random chance above.
+
+                // This formula makes sense only for casters.
                 const int skill = std::min(27, you.skills[SK_ARMOUR] + 3);
                 int total = 0;
                 for (int i = 0; i < num_arms; ++i)
                 {
-                    const int weight = std::max(1, 27 - abs(skill - i*3));
+                    int weight = std::max(1, 27 - abs(skill - i*3));
+                    weight = weight * weight * weight;
                     total += weight;
                     if (x_chance_in_y(weight, total))
                         result = armours[i];
+                }
+                // ... so we override it for heavy meleers, who get 50% plates.
+                // (Should it be more?  A scale mail is wasted acquirement, even
+                // if it's any but most über randart).
+                if (random2(you.skills[SK_SPELLCASTING] + you.skills[SK_DODGING])
+                    < random2(you.skills[SK_ARMOUR]) && coinflip())
+                {
+                    result = one_chance_in(4) ? ARM_CRYSTAL_PLATE_MAIL :
+                                                ARM_PLATE_MAIL;
                 }
             }
         }
