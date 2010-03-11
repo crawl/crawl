@@ -17,6 +17,7 @@
 #include "coordit.h"
 #include "database.h"
 #include "directn.h"
+#include "env.h"
 #include "fprop.h"
 #include "fight.h"
 #include "ghost.h"
@@ -24,6 +25,7 @@
 #include "itemname.h"
 #include "kills.h"
 #include "libutil.h"
+#include "mapmark.h"
 #include "mislead.h"
 #include "mon-behv.h"
 #include "mon-clone.h"
@@ -38,8 +40,8 @@
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
-#include "env.h"
 #include "terrain.h"
+#include "traps.h"
 #include "viewchar.h"
 
 //jmf: moved from inside function
@@ -3113,6 +3115,104 @@ bool mons_can_pass(const monsters *mon, dungeon_feature_type grid)
                                                : mon->type;
 
     return (mons_class_can_pass(montype, grid));
+}
+
+static bool _mons_can_open_doors(const monsters *mon)
+{
+    // Zombies inherit base monster's open doors capability, but not
+    // other item use.
+    if (mons_is_zombified(mon))
+        return (mons_class_itemuse(mon->base_monster) >= MONUSE_OPEN_DOORS);
+    else
+        return (mons_itemuse(mon) >= MONUSE_OPEN_DOORS);
+}
+
+// Some functions that check whether a monster can open/eat/pass a
+// given door. These all return false if there's no closed door there.
+
+// Normal/smart monsters know about secret doors, since they live in
+// the dungeon, unless they're marked specifically not to be opened unless
+// already opened by the player {bookofjude}.
+bool mons_can_open_door(const monsters* mon, const coord_def& pos)
+{
+    if (env.markers.property_at(pos, MAT_ANY, "door_restrict") == "veto")
+        return (false);
+
+    if (!_mons_can_open_doors(mon))
+        return (false);
+
+    dungeon_feature_type feat = env.grid(pos);
+    return (feat == DNGN_CLOSED_DOOR
+            || feat_is_secret_door(feat) && mons_intel(mon) >= I_NORMAL);
+}
+
+// Monsters that eat items (currently only jellies) also eat doors.
+// However, they don't realise that secret doors make good eating.
+bool mons_can_eat_door(const monsters* mon, const coord_def& pos)
+{
+    if (mons_itemeat(mon) != MONEAT_ITEMS)
+        return (false);
+
+    dungeon_feature_type feat = env.grid(pos);
+    if (feat == DNGN_OPEN_DOOR)
+        return (true);
+
+    if (env.markers.property_at(pos, MAT_ANY, "door_restrict") == "veto"
+         // Doors with permarock marker cannot be eaten.
+        || feature_marker_at(pos, DNGN_PERMAROCK_WALL))
+    {
+        return (false);
+    }
+
+    return (feat == DNGN_CLOSED_DOOR);
+}
+
+static bool _mons_can_pass_door(const monsters* mon, const coord_def& pos)
+{
+    return (mons_can_pass(mon, DNGN_FLOOR)
+            && (mons_can_open_door(mon, pos)
+                || mons_can_eat_door(mon, pos)));
+}
+
+bool mons_can_traverse(const monsters* mons, const coord_def& p,
+                       bool checktraps)
+{
+    if (_mons_can_pass_door(mons, p))
+        return (true);
+
+    if (!mons->is_habitable_feat(env.grid(p)))
+        return (false);
+
+    // Your friends only know about doors you know about, unless they feel
+    // at home in this branch.
+    if (grd(p) == DNGN_SECRET_DOOR && mons->friendly()
+        && (mons_intel(mons) < I_NORMAL || !mons_is_native_in_branch(mons)))
+    {
+        return (false);
+    }
+
+    const trap_def* ptrap = find_trap(p);
+    if (checktraps && ptrap)
+    {
+        const trap_type tt = ptrap->type;
+
+        // Don't allow allies to pass over known (to them) Zot traps.
+        if (tt == TRAP_ZOT
+            && ptrap->is_known(mons)
+            && mons->friendly())
+        {
+            return (false);
+        }
+
+        // Monsters cannot travel over teleport traps.
+        const monster_type montype = mons_is_zombified(mons)
+                                   ? mons_zombie_base(mons)
+                                   : mons->type;
+        if (!can_place_on_trap(montype, tt))
+            return (false);
+    }
+
+    return (true);
 }
 
 void mons_remove_from_grid(const monsters *mon)

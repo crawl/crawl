@@ -2813,12 +2813,12 @@ static bool _mon_can_move_to_pos(const monsters *monster,
         if (delta.x != 0 && delta.y != 0)
             return (false);
     }
-    else if (!monster->can_pass_through_feat(target_grid)
-             || no_water && feat_is_water(target_grid))
+    else if (no_water && feat_is_water(target_grid))
     {
         return (false);
     }
-    else if (!_habitat_okay(monster, target_grid))
+    else if (!mons_can_traverse(monster, targ, false)
+             && !_habitat_okay(monster, target_grid))
     {
         // If the monster somehow ended up in this habitat (and is
         // not dead by now), give it a chance to get out again.
@@ -3098,6 +3098,31 @@ static bool _do_move_monster(monsters *monster, const coord_def& delta)
         return (true);
     }
 
+    if (mons_can_open_door(monster, f))
+    {
+        _mons_open_door(monster, f);
+        return (true);
+    }
+    else if (mons_can_eat_door(monster, f))
+    {
+        grd(f) = DNGN_FLOOR;
+
+        _jelly_grows(monster);
+
+        if (you.see_cell(f))
+        {
+            viewwindow(false);
+
+            if (!you.can_see(monster))
+            {
+                mpr("The door mysteriously vanishes.");
+                interrupt_activity( AI_FORCE_INTERRUPT );
+            }
+            else
+                simple_monster_message(monster, " eats the door!");
+        }
+    } // done door-eating jellies
+
     // The monster gave a "comes into view" message and then immediately
     // moved back out of view, leaing the player nothing to see, so give
     // this message to avoid confusion.
@@ -3291,57 +3316,6 @@ static bool _monster_move(monsters *monster)
     // Now we know where we _can_ move.
 
     const coord_def newpos = monster->pos() + mmov;
-    bool restricted = (env.markers.property_at(newpos,
-                        MAT_ANY, "door_restrict") == "veto");
-    // Normal/smart monsters know about secret doors, since they live in
-    // the dungeon, unless they're marked specifically not to be opened unless
-    // already opened by the player {bookofjude}.
-    if ((grd(newpos) == DNGN_CLOSED_DOOR
-        || feat_is_secret_door(grd(newpos)) && mons_intel(monster) >= I_NORMAL)
-        && !restricted)
-    {
-        if (mons_is_zombified(monster))
-        {
-            // For zombies, monster type is kept in mon->base_monster.
-            if (mons_class_itemuse(monster->base_monster) >= MONUSE_OPEN_DOORS)
-            {
-                _mons_open_door(monster, newpos);
-                return (true);
-            }
-        }
-        else if (mons_itemuse(monster) >= MONUSE_OPEN_DOORS)
-        {
-            _mons_open_door(monster, newpos);
-            return (true);
-        }
-    } // endif - secret/closed doors
-
-    // Monsters that eat items (currently only jellies) also eat doors.
-    // However, they don't realise that secret doors make good eating.
-    if ((grd(newpos) == DNGN_CLOSED_DOOR || grd(newpos) == DNGN_OPEN_DOOR)
-         && mons_itemeat(monster) == MONEAT_ITEMS
-         // Doors with permarock marker cannot be eaten.
-         && !feature_marker_at(newpos, DNGN_PERMAROCK_WALL)
-         && !restricted)
-    {
-        grd(newpos) = DNGN_FLOOR;
-
-        _jelly_grows(monster);
-
-        if (you.see_cell(newpos))
-        {
-            viewwindow(false);
-
-            if (!you.can_see(monster))
-            {
-                mpr("The door mysteriously vanishes.");
-                interrupt_activity( AI_FORCE_INTERRUPT );
-            }
-            else
-                simple_monster_message(monster, " eats the door!");
-        }
-    } // done door-eating jellies
-
     // Water creatures have a preference for water they can hide in -- bwr
     // [ds] Weakened the powerful attraction to deep water if the monster
     // is in good health.
