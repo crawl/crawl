@@ -124,13 +124,13 @@ inline void process_description(T &proc, const describe_info &inf)
     }
     else if(body_lines + num_lines + 2 <= height)
     {
-        desc = inf.title + "$$";
+        desc = inf.title + "\n\n";
         desc += inf.body.str();
-        // Got 2 lines from the two $s that weren't counted yet.
+        // Got 2 lines from the two \ns that weren't counted yet.
         num_lines += body_lines + 2;
     }
     else
-        desc = inf.title + "$";
+        desc = inf.title + "\n";
 
     // Prefer the footer over the suffix.
     if (num_lines + suffix_lines + footer_lines <= height)
@@ -151,7 +151,7 @@ inline void process_description(T &proc, const describe_info &inf)
     {
         if (!desc.empty())
         {
-            desc += "$";
+            desc += "\n";
             num_lines++;
         }
         desc = desc + inf.quote;
@@ -179,8 +179,8 @@ inline void process_description(T &proc, const describe_info &inf)
         if (currentPos != 0)
             proc.nextline();
 
-        // See if $ sign is within one line_width.
-        nextLine = desc.find('$', currentPos);
+        // See if '\n' is within one line_width.
+        nextLine = desc.find('\n', currentPos);
 
         if (nextLine >= currentPos && nextLine < currentPos + line_width)
         {
