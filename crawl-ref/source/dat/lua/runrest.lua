@@ -115,7 +115,7 @@ end
 
 chk_lua_option.runrest_ignore_message = rr_message_adder(nil)
 chk_lua_option.runrest_stop_message = rr_message_adder(true)
-# alias for compatibility with obsolete travel_stop_message
+-- alias for compatibility with obsolete travel_stop_message
 chk_lua_option.travel_stop_message = rr_message_adder(true)
 -----------------------------------------------------------------------
 
