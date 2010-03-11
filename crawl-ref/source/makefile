@@ -252,7 +252,7 @@ EXTRA_OBJECTS += uiwrapper-sdl.o cgcontext-sdl.o
 endif
 
 ifdef GL
-EXTRA_OBJECTS += glwrapper.o
+EXTRA_OBJECTS += glwrapper-ogl.o
 endif
 
 ifdef TILES

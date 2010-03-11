@@ -30,8 +30,9 @@
 #include "viewgeom.h"
 
 #ifdef USE_SDL
-#include "uiwrapper-sdl.h"
+#include "uiwrapper.h"
 #endif
+
 #include "tilesdl.h"
 
 int tile_idx_unseen_terrain(int x, int y, int what)

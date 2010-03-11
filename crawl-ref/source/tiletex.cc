@@ -5,14 +5,9 @@
 #include "files.h"
 #include "tiletex.h"
 
-#ifdef USE_SDL
-#include "uiwrapper-sdl.h"
-#include "cgcontext-sdl.h"
-#endif
-
-#ifdef USE_GL
+#include "uiwrapper.h"
+#include "cgcontext.h"
 #include "glwrapper.h"
-#endif
 
 GenericTexture::GenericTexture() :
     m_handle(0),
