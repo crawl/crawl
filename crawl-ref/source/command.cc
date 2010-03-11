@@ -1176,22 +1176,22 @@ static void _append_non_item(std::string &desc, std::string key)
 
     if (flags & SPFLAG_TESTING)
     {
-        desc += "$This is a testing spell, only available via the "
+        desc += "\nThis is a testing spell, only available via the "
                 "&Z wizard command.";
     }
     else if (flags & SPFLAG_MONSTER)
     {
-        desc += "$This is a monster-only spell, only available via the "
+        desc += "\nThis is a monster-only spell, only available via the "
                 "&Z wizard command.";
     }
     else if (flags & SPFLAG_CARD)
     {
-        desc += "$This is a card-effect spell, unavailable in ordinary "
+        desc += "\nThis is a card-effect spell, unavailable in ordinary "
                 "spellbooks.";
     }
     else
     {
-        desc += "$Odd, this spell can't be found anywhere.  Please "
+        desc += "\nOdd, this spell can't be found anywhere.  Please "
                 "file a bug report.";
     }
 
@@ -1203,7 +1203,7 @@ static void _append_non_item(std::string &desc, std::string key)
     {
         if (flags & (SPFLAG_TESTING | SPFLAG_MONSTER))
         {
-            desc += "$$You aren't in wizard mode, so you shouldn't be "
+            desc += "\n\nYou aren't in wizard mode, so you shouldn't be "
                     "seeing this entry.  Please file a bug report.";
         }
     }
@@ -1218,7 +1218,7 @@ static bool _append_books(std::string &desc, item_def &item, std::string key)
     if (type == SPELL_NO_SPELL)
         return (false);
 
-    desc += "$Type:       ";
+    desc += "\nType:       ";
     bool already = false;
 
     for (int i = 0; i <= SPTYP_LAST_EXPONENT; i++)
@@ -1235,7 +1235,7 @@ static bool _append_books(std::string &desc, item_def &item, std::string key)
     if (!already)
         desc += "None";
 
-    desc += "$Level:      ";
+    desc += "\nLevel:      ";
     char sval[3];
     itoa( spell_difficulty( type ), sval, 10 );
     desc += sval;
@@ -1243,7 +1243,7 @@ static bool _append_books(std::string &desc, item_def &item, std::string key)
     bool undead = false;
     if (you_cannot_memorise(type, undead))
     {
-        desc += "$";
+        desc += "\n";
         desc += desc_cannot_memorise_reason(undead);
     }
 
@@ -1274,28 +1274,28 @@ static bool _append_books(std::string &desc, item_def &item, std::string key)
 
     if (!books.empty())
     {
-        desc += "$$This spell can be found in the following book";
+        desc += "\n\nThis spell can be found in the following book";
         if (books.size() > 1)
             desc += "s";
-        desc += ":$";
-        desc += comma_separated_line(books.begin(), books.end(), "$", "$");
+        desc += ":\n";
+        desc += comma_separated_line(books.begin(), books.end(), "\n", "\n");
 
         if (!rods.empty())
         {
-            desc += "$$... and the following rod";
+            desc += "\n\n... and the following rod";
             if (rods.size() > 1)
                 desc += "s";
-            desc += ":$";
-            desc += comma_separated_line(rods.begin(), rods.end(), "$", "$");
+            desc += ":\n";
+            desc += comma_separated_line(rods.begin(), rods.end(), "\n", "\n");
         }
     }
     else // rods-only
     {
-        desc += "$$This spell can be found in the following rod";
+        desc += "\n\nThis spell can be found in the following rod";
         if (rods.size() > 1)
             desc += "s";
-        desc += ":$";
-        desc += comma_separated_line(rods.begin(), rods.end(), "$", "$");
+        desc += ":\n";
+        desc += comma_separated_line(rods.begin(), rods.end(), "\n", "\n");
     }
 
     return (true);
@@ -1316,7 +1316,7 @@ static bool _do_description(std::string key, std::string type,
     {
         if (is_good_god(which_god))
         {
-            inf.suffix = "$$" + god_name(which_god) +
+            inf.suffix = "\n\n" + god_name(which_god) +
                          " won't accept worship from undead or evil beings.";
         }
         std::string help = get_god_powers(which_god);
@@ -1384,18 +1384,18 @@ static bool _do_description(std::string key, std::string type,
                 if (get_item_by_name(&mitm[thing_created], name, OBJ_WEAPONS))
                 {
                     append_weapon_stats(desc, mitm[thing_created]);
-                    desc += "$";
+                    desc += "\n";
                 }
                 else if (get_item_by_name(&mitm[thing_created], name, OBJ_ARMOUR))
                 {
                     append_armour_stats(desc, mitm[thing_created]);
-                    desc += "$";
+                    desc += "\n";
                 }
                 else if (get_item_by_name(&mitm[thing_created], name, OBJ_MISSILES)
                          && mitm[thing_created].sub_type != MI_THROWING_NET)
                 {
                     append_missile_info(desc);
-                    desc += "$";
+                    desc += "\n";
                 }
                 else if (type == "spell"
                          || get_item_by_name(&mitm[thing_created], name, OBJ_BOOKS)

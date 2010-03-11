@@ -880,7 +880,7 @@ static void _print_talent_description(const talent& tal)
     else
     {
         std::ostringstream data;
-        data << name << "$$" << lookup;
+        data << name << "\n\n" << lookup;
         print_description(data.str());
     }
     if (getch() == 0)
