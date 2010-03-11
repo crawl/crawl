@@ -1,11 +1,10 @@
-#ifndef GLWRAPPER_H
-#define GLWRAPPER_H
+#ifndef GL_WRAPPER_H
+#define GL_WRAPPER_H
 
 #include <stdlib.h> // For size_t
 #include <vector> // for std::vector
 
 #ifdef USE_TILE
-#ifdef USE_GL
 
 struct coord_def;
 
@@ -137,6 +136,5 @@ public:
 protected:
 };
 
-#endif // use_gl
 #endif // use_tile
 #endif // include guard

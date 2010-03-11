@@ -269,5 +269,5 @@ bool GLStateManager::_valid(int num_verts, drawing_modes mode)
 /////////////////////////////////////////////////////////////////////////////
 // Static Methods
 
-#endif // USE_SDL
+#endif // USE_GL
 #endif // USE_TILE

@@ -4,13 +4,13 @@
 #include "options.h"
 #include "files.h"
 
-#include <SDL/SDL.h>
-
+#ifdef USE_TILE
 #include "uiwrapper.h"
 #include "cgcontext.h"
 #include "glwrapper.h"
 
-#ifdef USE_TILE
+#ifdef USE_SDL
+#include <SDL/SDL.h>
 
 static unsigned char _get_modifiers(SDL_keysym &keysym)
 {
@@ -522,4 +522,5 @@ int UIWrapper::byte_order()
     return (UI_LIL_ENDIAN);
 }
 
-#endif
+#endif // USE_SDL
+#endif // USE_TILE
