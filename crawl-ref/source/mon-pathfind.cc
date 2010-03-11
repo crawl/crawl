@@ -384,7 +384,7 @@ std::vector<coord_def> monster_pathfind::calc_waypoints()
     return (waypoints);
 }
 
-bool monster_pathfind::traversable(const coord_def p)
+bool monster_pathfind::traversable(const coord_def& p)
 {
     if (!traverse_unmapped && grd(p) == DNGN_UNSEEN)
         return (false);
@@ -404,65 +404,9 @@ bool monster_pathfind::traversable(const coord_def p)
 
 // Checks whether a given monster can pass over a certain position, respecting
 // its preferred habit and capability of flight or opening doors.
-bool monster_pathfind::mons_traversable(const coord_def p)
+bool monster_pathfind::mons_traversable(const coord_def& p)
 {
-    const monster_type montype = mons_is_zombified(mons)
-                                 ? mons_zombie_base(mons)
-                                 : mons->type;
-    const dungeon_feature_type feat = grd(p);
-    // Monsters that can't open doors won't be able to pass them, and
-    // only monsters of normal or greater intelligence can pathfind through
-    // secret doors.
-    if (feat == DNGN_CLOSED_DOOR ||
-        (mons_intel(mons) >= I_NORMAL &&
-         (feat == DNGN_DETECTED_SECRET_DOOR || feat == DNGN_SECRET_DOOR)))
-    {
-        if (mons->is_habitable_feat(DNGN_FLOOR))
-        {
-            if (env.markers.property_at(p, MAT_ANY, "door_restrict") == "veto")
-                return (false);
-            if (mons_eats_items(mons))
-                return (true);
-            else if (mons_is_zombified(mons))
-            {
-                if (mons_class_itemuse(montype) >= MONUSE_OPEN_DOORS)
-                    return (true);
-            }
-            else if (mons_itemuse(mons) >= MONUSE_OPEN_DOORS)
-                return (true);
-        }
-    }
-
-    if (!mons->is_habitable_feat(grd(p)))
-        return (false);
-
-    // Your friends only know about doors you know about, unless they feel
-    // at home in this branch.
-    if (grd(p) == DNGN_SECRET_DOOR && mons->friendly()
-        && (mons_intel(mons) < I_NORMAL || !mons_is_native_in_branch(mons)))
-    {
-        return (false);
-    }
-
-    const trap_def* ptrap = find_trap(p);
-    if (ptrap)
-    {
-        const trap_type tt = ptrap->type;
-
-        // Don't allow allies to pass over known (to them) Zot traps.
-        if (tt == TRAP_ZOT
-            && ptrap->is_known(mons)
-            && mons->friendly())
-        {
-            return (false);
-        }
-
-        // Monsters cannot travel over teleport traps.
-        if (!can_place_on_trap(montype, tt))
-            return (false);
-    }
-
-    return (true);
+    return (mons_can_traverse(mons, p));
 }
 
 int monster_pathfind::travel_cost(coord_def npos)
