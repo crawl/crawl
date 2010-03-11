@@ -130,6 +130,8 @@ void TilesFramework::shutdown()
         m_fonts[i].font = NULL;
     }
 
+    delete m_image;
+
     GLStateManager::shutdown();
     wrapper->shutdown();
     destroy_ui_wrapper();
@@ -193,7 +195,7 @@ void TilesFramework::hide_title()
 
 void TilesFramework::draw_doll_edit()
 {
-    DollEditRegion* reg = new DollEditRegion(&m_image,
+    DollEditRegion* reg = new DollEditRegion(m_image,
                                              m_fonts[m_msg_font].font);
     use_control_region(reg);
     delete reg;
@@ -275,11 +277,13 @@ bool TilesFramework::initialise()
 
     GLStateManager::init();
 
+    m_image = new ImageManager();
+
     // If the window size is less than the view height, the textures will
     // have to be shrunk.  If this isn't the case, then don't create mipmaps,
     // as this appears to make things blurry on some users machines.
     bool need_mips = (m_windowsz.y < 32 * VIEW_MIN_HEIGHT);
-    if (!m_image.load_textures(need_mips))
+    if (!m_image->load_textures(need_mips))
         return (false);
 
     calculate_default_options();
@@ -301,16 +305,16 @@ bool TilesFramework::initialise()
         return (false);
     }
 
-    m_region_tile = new DungeonRegion(&m_image, m_fonts[lbl_font].font,
+    m_region_tile = new DungeonRegion(m_image, m_fonts[lbl_font].font,
                                       TILE_X, TILE_Y);
     m_region_map  = new MapRegion(Options.tile_map_pixels);
-    m_region_tab  = new TabbedRegion(&m_image, m_fonts[lbl_font].font,
+    m_region_tab  = new TabbedRegion(m_image, m_fonts[lbl_font].font,
                                      TILE_X, TILE_Y);
-    m_region_inv  = new InventoryRegion(&m_image, m_fonts[lbl_font].font,
+    m_region_inv  = new InventoryRegion(m_image, m_fonts[lbl_font].font,
                                         TILE_X, TILE_Y);
-    m_region_spl  = new SpellRegion(&m_image, m_fonts[lbl_font].font,
+    m_region_spl  = new SpellRegion(m_image, m_fonts[lbl_font].font,
                                     TILE_X, TILE_Y);
-    m_region_mem  = new MemoriseRegion(&m_image, m_fonts[lbl_font].font,
+    m_region_mem  = new MemoriseRegion(m_image, m_fonts[lbl_font].font,
                                        TILE_X, TILE_Y);
 
     m_region_tab->set_tab_region(TAB_ITEM, m_region_inv, TILEG_TAB_ITEM);
@@ -1254,7 +1258,7 @@ void TilesFramework::add_text_tag(text_tag_type type, const monsters* mon)
 
 bool TilesFramework::initialise_items()
 {
-    return (m_image.load_item_texture());
+    return (m_image->load_item_texture());
 }
 
 const coord_def &TilesFramework::get_cursor() const
