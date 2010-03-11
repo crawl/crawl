@@ -394,11 +394,6 @@ void formatted_string::cgotoxy(int x, int y)
     ops.push_back( fs_op(x, y) );
 }
 
-void formatted_string::movexy(int x, int y)
-{
-    ops.push_back( fs_op(x, y, true) );
-}
-
 int formatted_string::find_last_colour() const
 {
     if (!ops.empty())
