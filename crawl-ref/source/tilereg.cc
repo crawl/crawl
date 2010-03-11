@@ -2325,7 +2325,7 @@ bool DungeonRegion::update_alt_text(std::string &alt)
         if (cloudidx != EMPTY_CLOUD)
         {
             inf.prefix = "There is a cloud of " + cloud_name(cloudidx)
-                         + " here.$$";
+                         + " here.\n\n";
         }
     }
     else if (grid_appearance(gc) != DNGN_FLOOR
@@ -2338,7 +2338,7 @@ bool DungeonRegion::update_alt_text(std::string &alt)
         // For plain floor, output the stash description.
         const std::string stash = get_stash_desc(gc);
         if (!stash.empty())
-            inf.body << "$" << stash;
+            inf.body << "\n" << stash;
     }
 
     alt_desc_proc proc(crawl_view.msgsz.x, crawl_view.msgsz.y);

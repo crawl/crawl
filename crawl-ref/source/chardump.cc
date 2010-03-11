@@ -549,17 +549,13 @@ static void _sdump_lua(dump_params &par)
  //
  // munge_description
  //
- // Convert dollar signs to EOL and word wrap to 80 characters.
- // (for some obscure reason get_item_description uses dollar
- // signs instead of EOL).
- //  - It uses $ signs because they're easier to manipulate than the EOL
- //  macro, which is of uncertain length (well, that and I didn't know how
- //  to do it any better at the time) (LH)
+ // word wrap to 80 characters.
+ // XXX: should be replaced by some other linewrapping function
+ //      now EOL munging is gone
  //---------------------------------------------------------------
 std::string munge_description(const std::string & inStr)
 {
     std::string outStr;
-    std::string eol = "\n";
 
     outStr.reserve(inStr.length() + 32);
 
@@ -574,21 +570,21 @@ std::string munge_description(const std::string & inStr)
     {
         const char ch = inStr[i];
 
-        if (ch == '$')
+        if (ch == '\n')
         {
-            outStr += eol;
+            outStr += "\n";
 
             outStr += std::string(kIndent, ' ');
             lineLen = kIndent;
 
-            while (inStr[++i] == '$')
+            while (inStr[++i] == '\n')
                 ;
         }
         else if (isspace(ch))
         {
             if (lineLen >= 79)
             {
-                outStr += eol;
+                outStr += "\n";
                 outStr += std::string(kIndent, ' ');
                 lineLen = kIndent;
 
@@ -606,14 +602,14 @@ std::string munge_description(const std::string & inStr)
 
             while (i < inStr.length()
                    && lineLen + word.length() < 79
-                   && !isspace(inStr[i]) && inStr[i] != '$')
+                   && !isspace(inStr[i]) && inStr[i] != '\n')
             {
                 word += inStr[i++];
             }
 
             if (lineLen + word.length() >= 79)
             {
-                outStr += eol;
+                outStr += "\n";
                 outStr += std::string(kIndent, ' ');
                 lineLen = kIndent;
             }
@@ -623,7 +619,7 @@ std::string munge_description(const std::string & inStr)
         }
     }
 
-    outStr += eol;
+    outStr += "\n";
 
     return (outStr);
 }                               // end munge_description()

@@ -93,7 +93,7 @@ int count_desc_lines(const std::string _desc, const int width)
     {
         const char ch = desc[i];
 
-        if (ch == '\n' || ch == '$')
+        if (ch == '\n')
             count++;
     }
 
@@ -106,7 +106,7 @@ int count_desc_lines(const std::string _desc, const int width)
 //
 // Takes a descrip string filled up with stuff from other functions,
 // and displays it with minor formatting to avoid cut-offs in mid
-// word and such. The character $ is interpreted as a CR.
+// word and such.
 //
 //---------------------------------------------------------------
 
@@ -451,7 +451,7 @@ static std::string _randart_descrip( const item_def &item )
                 sdesc = prefixes[idx] + sdesc + '.';
             }
 
-            description += '$';
+            description += '\n';
             description += sdesc;
         }
     }
@@ -460,16 +460,16 @@ static std::string _randart_descrip( const item_def &item )
     if (known_proprt( ARTP_METABOLISM ))
     {
         if (proprt[ ARTP_METABOLISM ] >= 3)
-            description += "$It greatly speeds your metabolism.";
+            description += "\nIt greatly speeds your metabolism.";
         else if (proprt[ ARTP_METABOLISM ])
-            description += "$It speeds your metabolism. ";
+            description += "\nIt speeds your metabolism. ";
     }
 
     if (known_proprt( ARTP_STEALTH ))
     {
         const int stval = proprt[ARTP_STEALTH];
         char buf[80];
-        snprintf(buf, sizeof buf, "$It makes you %s%s stealthy.",
+        snprintf(buf, sizeof buf, "\nIt makes you %s%s stealthy.",
                  (stval < -20 || stval > 20) ? "much " : "",
                  (stval < 0) ? "less" : "more");
         description += buf;
@@ -478,9 +478,9 @@ static std::string _randart_descrip( const item_def &item )
     if (known_proprt( ARTP_MUTAGENIC ))
     {
         if (proprt[ ARTP_MUTAGENIC ] > 3)
-            description += "$It glows with mutagenic radiation.";
+            description += "\nIt glows with mutagenic radiation.";
         else
-            description += "$It emits mutagenic radiation.";
+            description += "\nIt emits mutagenic radiation.";
     }
 
     return description;
@@ -700,7 +700,7 @@ static std::string _describe_demon(const monsters &mons)
 
 void append_weapon_stats(std::string &description, const item_def &item)
 {
-    description += "$Accuracy rating: ";
+    description += "\nAccuracy rating: ";
     _append_value(description, property( item, PWPN_HIT ), true);
     description += "    ";
 
@@ -737,7 +737,7 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
     // special weapon descrip
     if (spec_ench != SPWPN_NORMAL && item_type_known(item))
     {
-        description += "$$";
+        description += "\n\n";
 
         switch (spec_ench)
         {
@@ -878,7 +878,7 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
         std::string rand_desc = _randart_descrip(item);
         if (!rand_desc.empty())
         {
-            description += "$$";
+            description += "\n\n";
             description += rand_desc;
         }
 
@@ -886,14 +886,14 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
         if (!item_ident(item, ISFLAG_KNOW_PROPERTIES)
             && item_type_known(item))
         {
-            description += "$This weapon may have some hidden properties.";
+            description += "\nThis weapon may have some hidden properties.";
         }
     }
 
     const bool launcher = is_range_weapon(item);
     if (verbose)
     {
-        description += "$$This weapon falls into the";
+        description += "\n\nThis weapon falls into the";
 
         const skill_type skill =
             is_range_weapon(item)? range_skill(item) : weapon_skill(item);
@@ -936,21 +936,21 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
             description += ".";
         }
         if (!you.could_wield(item, true))
-            description += "$It is too large for you to wield.";
+            description += "\nIt is too large for you to wield.";
     }
 
     if (verbose)
     {
         if (is_demonic(item) && !launcher)
-            description += "$Demonspawn are more deadly with it.";
+            description += "\nDemonspawn are more deadly with it.";
         else if (get_equip_race(item) != ISFLAG_NO_RACE)
         {
             unsigned long race = get_equip_race(item);
 
             if (race == ISFLAG_DWARVEN)
-                description += "$It is well-crafted and very durable.";
+                description += "\nIt is well-crafted and very durable.";
 
-            description += "$";
+            description += "\n";
             description += (race == ISFLAG_DWARVEN) ? "Dwarves" :
                            (race == ISFLAG_ELVEN)   ? "Elves"
                                                     : "Orcs";
@@ -972,11 +972,11 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
         if (item_ident(item, ISFLAG_KNOW_PLUSES)
             && item.plus >= MAX_WPN_ENCHANT && item.plus2 >= MAX_WPN_ENCHANT)
         {
-            description += "$It is maximally enchanted.";
+            description += "\nIt is maximally enchanted.";
         }
         else
         {
-            description += "$It can be maximally enchanted to +";
+            description += "\nIt can be maximally enchanted to +";
             _append_value(description, MAX_WPN_ENCHANT, false);
             description += ", +";
             _append_value(description, MAX_WPN_ENCHANT, false);
@@ -1032,7 +1032,7 @@ static std::string _describe_ammo(const item_def &item)
 
     if (item.special && item_type_known(item))
     {
-        description += "$$";
+        description += "\n\n";
         std::string bolt_name;
 
         std::string threw_or_fired;
@@ -1146,10 +1146,10 @@ static std::string _describe_ammo(const item_def &item)
 
     if (get_equip_race(item) != ISFLAG_NO_RACE)
     {
-        description += "$";
+        description += "\n";
 
         if (need_new_line)
-            description += "$";
+            description += "\n";
 
         if (can_throw)
         {
@@ -1175,15 +1175,15 @@ static std::string _describe_ammo(const item_def &item)
     }
 
     if (always_destroyed)
-        description += "$It will always be destroyed upon impact.";
+        description += "\nIt will always be destroyed upon impact.";
     else if (item.sub_type != MI_THROWING_NET)
         append_missile_info(description);
 
     if (item_ident(item, ISFLAG_KNOW_PLUSES) && item.plus >= MAX_WPN_ENCHANT)
-        description += "$It is maximally enchanted.";
+        description += "\nIt is maximally enchanted.";
     else
     {
-        description += "$It can be maximally enchanted to +";
+        description += "\nIt can be maximally enchanted to +";
         _append_value(description, MAX_WPN_ENCHANT, false);
         description += ".";
     }
@@ -1193,7 +1193,7 @@ static std::string _describe_ammo(const item_def &item)
 
 void append_armour_stats(std::string &description, const item_def &item)
 {
-    description += "$Armour rating: ";
+    description += "\nArmour rating: ";
     _append_value(description, property( item, PARM_AC ), false);
     description += "       ";
 
@@ -1203,7 +1203,7 @@ void append_armour_stats(std::string &description, const item_def &item)
 
 void append_missile_info(std::string &description)
 {
-    description += "$All pieces of ammunition may get destroyed upon impact. "
+    description += "\nAll pieces of ammunition may get destroyed upon impact. "
                    "Enchantment reduces the chances of such loss.";
 }
 
@@ -1229,7 +1229,7 @@ static std::string _describe_armour( const item_def &item, bool verbose )
     const int ego = get_armour_ego_type( item );
     if (ego != SPARM_NORMAL && item_type_known(item) && verbose)
     {
-        description += "$$";
+        description += "\n\n";
 
         switch (ego)
         {
@@ -1326,32 +1326,32 @@ static std::string _describe_armour( const item_def &item, bool verbose )
         std::string rand_desc = _randart_descrip( item );
         if (!rand_desc.empty())
         {
-            description += "$$";
+            description += "\n\n";
             description += rand_desc;
         }
 
         // Can't happen, right? (XXX)
         if (!item_ident(item, ISFLAG_KNOW_PROPERTIES) && item_type_known(item))
-            description += "$This armour may have some hidden properties.";
+            description += "\nThis armour may have some hidden properties.";
     }
     else if (get_equip_race( item ) != ISFLAG_NO_RACE)
     {
         // Randart armour can't be racial.
-        description += "$";
+        description += "\n";
 
         unsigned long race = get_equip_race(item);
 
         if (race == ISFLAG_DWARVEN)
-            description += "$It is well-crafted and very durable.";
+            description += "\nIt is well-crafted and very durable.";
         else if (race == ISFLAG_ELVEN)
         {
-            description += "$It is well-crafted and unobstructive";
+            description += "\nIt is well-crafted and unobstructive";
             if (item.sub_type == ARM_CLOAK || item.sub_type == ARM_BOOTS)
                 description += ", and helps its wearer avoid being noticed";
             description += ".";
         }
 
-        description += "$It fits ";
+        description += "\nIt fits ";
         description += (race == ISFLAG_DWARVEN) ? "dwarves" :
                        (race == ISFLAG_ELVEN)   ? "elves"
                                                 : "orcs";
@@ -1360,7 +1360,7 @@ static std::string _describe_armour( const item_def &item, bool verbose )
 
     if (verbose && get_armour_slot(item) == EQ_BODY_ARMOUR)
     {
-        description += "$$";
+        description += "\n\n";
     }
 
     if (!is_artefact(item))
@@ -1368,17 +1368,17 @@ static std::string _describe_armour( const item_def &item, bool verbose )
         const int max_ench = armour_max_enchant(item);
         if (armour_is_hide(item))
         {
-            description += "$Enchanting it will turn it into a suit of "
+            description += "\nEnchanting it will turn it into a suit of "
                            "magical armour.";
         }
         else if (item.plus < max_ench || !item_ident(item, ISFLAG_KNOW_PLUSES))
         {
-            description += "$It can be maximally enchanted to +";
+            description += "\nIt can be maximally enchanted to +";
             _append_value(description, max_ench, false);
             description += ".";
         }
         else
-            description += "$It is maximally enchanted.";
+            description += "\nIt is maximally enchanted.";
     }
 
     return description;
@@ -1408,31 +1408,31 @@ static std::string _describe_jewellery( const item_def &item, bool verbose)
             switch (item.sub_type)
             {
             case RING_PROTECTION:
-                description += "$It affects your AC (";
+                description += "\nIt affects your AC (";
                 _append_value( description, item.plus, true );
                 description += ").";
                 break;
 
             case RING_EVASION:
-                description += "$It affects your evasion (";
+                description += "\nIt affects your evasion (";
                 _append_value( description, item.plus, true );
                 description += ").";
                 break;
 
             case RING_STRENGTH:
-                description += "$It affects your strength (";
+                description += "\nIt affects your strength (";
                 _append_value( description, item.plus, true );
                 description += ").";
                 break;
 
             case RING_INTELLIGENCE:
-                description += "$It affects your intelligence (";
+                description += "\nIt affects your intelligence (";
                 _append_value( description, item.plus, true );
                 description += ").";
                 break;
 
             case RING_DEXTERITY:
-                description += "$It affects your dexterity (";
+                description += "\nIt affects your dexterity (";
                 _append_value( description, item.plus, true );
                 description += ").";
                 break;
@@ -1440,14 +1440,14 @@ static std::string _describe_jewellery( const item_def &item, bool verbose)
             case RING_SLAYING:
                 if (item.plus != 0)
                 {
-                    description += "$It affects your accuracy (";
+                    description += "\nIt affects your accuracy (";
                     _append_value( description, item.plus, true );
                     description += ").";
                 }
 
                 if (item.plus2 != 0)
                 {
-                    description += "$It affects your damage-dealing abilities (";
+                    description += "\nIt affects your damage-dealing abilities (";
                     _append_value( description, item.plus2, true );
                     description += ").";
                 }
@@ -1472,12 +1472,12 @@ static std::string _describe_jewellery( const item_def &item, bool verbose)
         std::string rand_desc = _randart_descrip( item );
         if (!rand_desc.empty())
         {
-            description += "$";
+            description += "\n";
             description += rand_desc;
         }
         if (!item_ident(item, ISFLAG_KNOW_PROPERTIES))
         {
-            description += "$This ";
+            description += "\nThis ";
             description += (jewellery_is_amulet(item) ? "amulet" : "ring");
             description += " may have hidden properties.";
         }
@@ -1502,7 +1502,7 @@ static std::string _describe_deck( const item_def &item )
 
     description.reserve(100);
 
-    description += "$";
+    description += "\n";
 
     const std::vector<card_type> drawn_cards = get_drawn_cards(item);
     if (!drawn_cards.empty())
@@ -1514,7 +1514,7 @@ static std::string _describe_deck( const item_def &item )
                 description += ", ";
             description += card_name(drawn_cards[i]);
         }
-        description += "$";
+        description += "\n";
     }
 
     const int num_cards = cards_in_deck(item);
@@ -1536,7 +1536,7 @@ static std::string _describe_deck( const item_def &item )
             else
                 break;
         }
-        description += "$";
+        description += "\n";
     }
 
     // Marked cards which we don't know straight off.
@@ -1560,7 +1560,7 @@ static std::string _describe_deck( const item_def &item )
                 description += ", ";
             description += card_name(marked_cards[i]);
         }
-        description += "$";
+        description += "\n";
     }
 
     // Seen cards in the deck.
@@ -1586,7 +1586,7 @@ static std::string _describe_deck( const item_def &item )
                 description += ", ";
             description += card_name(seen_cards[i]);
         }
-        description += "$";
+        description += "\n";
     }
 
     return (description);
@@ -1599,7 +1599,7 @@ void append_spells(std::string &desc, const item_def &item)
     if (!item.has_spells())
         return;
 
-    desc += "$$Spells                             Type                      Level$";
+    desc += "\n\nSpells                             Type                      Level\n";
 
     for (int j = 0; j < SPELLBOOK_SIZE; ++j)
     {
@@ -1626,7 +1626,7 @@ void append_spells(std::string &desc, const item_def &item)
         char sval[3];
         itoa( spell_difficulty( stype ), sval, 10 );
         desc += sval;
-        desc += "$";
+        desc += "\n";
     }
 }
 
@@ -1681,16 +1681,16 @@ std::string get_item_description( const item_def &item, bool verbose,
     if (!dump)
     {
         description << std::setfill('0');
-        description << "$$"
+        description << "\n\n"
                     << "base: " << static_cast<int>(item.base_type)
                     << " sub: " << static_cast<int>(item.sub_type)
                     << " plus: " << item.plus << " plus2: " << item.plus2
                     << " special: " << item.special
-                    << "$"
+                    << "\n"
                     << "quant: " << item.quantity
                     << " colour: " << static_cast<int>(item.colour)
                     << " flags: " << std::hex << std::setw(8) << item.flags
-                    << std::dec << "$"
+                    << std::dec << "\n"
                     << "x: " << item.pos.x << " y: " << item.pos.y
                     << " link: " << item.link
                     << " slot: " << item.slot
@@ -1704,7 +1704,7 @@ std::string get_item_description( const item_def &item, bool verbose,
                     && item.base_type != OBJ_ARMOUR
                     && item.base_type != OBJ_BOOKS))
     {
-        description << "$$";
+        description << "\n\n";
 
         if (dump)
         {
@@ -1720,9 +1720,9 @@ std::string get_item_description( const item_def &item, bool verbose,
             const char *desc_id = unrandart_descrip( 1, item );
 
             if (item_type_known(item) && desc_id[0] != '\0')
-                description << desc_id << "$";
+                description << desc_id << "\n";
             else if (desc[0] != '\0')
-                description << desc << "$";
+                description << desc << "\n";
         }
         else
         {
@@ -1739,7 +1739,7 @@ std::string get_item_description( const item_def &item, bool verbose,
                     + count_desc_lines(quote, lineWidth) <= height)
                 {
                     if (!db_desc.empty())
-                        db_desc += "$";
+                        db_desc += "\n";
                     db_desc += quote;
                 }
             }
@@ -1749,13 +1749,13 @@ std::string get_item_description( const item_def &item, bool verbose,
                 if (item_type_known(item))
                 {
                     description << "[ERROR: no desc for item name '" << db_name
-                                << "']$";
+                                << "']\n";
                 }
                 else
                 {
                     description << article_a(item.name(DESC_CAP_A, true,
                                                        false, false), false);
-                    description << ".$";
+                    description << ".\n";
                 }
             }
             else
@@ -1807,7 +1807,7 @@ std::string get_item_description( const item_def &item, bool verbose,
     case OBJ_BOOKS:
         if (!player_can_memorise_from_spellbook(item))
         {
-            description << "$This book is beyond your current level of "
+            description << "\nThis book is beyond your current level of "
                            "understanding.";
 
             if (!item_type_known(item))
@@ -1815,7 +1815,7 @@ std::string get_item_description( const item_def &item, bool verbose,
         }
         else if (is_dangerous_spellbook(item))
         {
-            description << "$WARNING: If you fail in an attempt to memorise a "
+            description << "\nWARNING: If you fail in an attempt to memorise a "
                            "spell from this book, the book will lash out at "
                            "you.";
         }
@@ -1842,19 +1842,19 @@ std::string get_item_description( const item_def &item, bool verbose,
             if (item.plus < max_charges
                 || !item_ident(item, ISFLAG_KNOW_PLUSES))
             {
-                description << "$It can have at most " << max_charges
+                description << "\nIt can have at most " << max_charges
                             << " charges.";
             }
             else
-                description << "$It is fully charged.";
+                description << "\nIt is fully charged.";
         }
 
         if (item_ident( item, ISFLAG_KNOW_PLUSES ) && item.plus == 0
             || item.plus2 == ZAPCOUNT_EMPTY)
         {
-            description << "$Unfortunately, it has no charges left.";
+            description << "\nUnfortunately, it has no charges left.";
         }
-        description << "$";
+        description << "\n";
         break;
 
     case OBJ_CORPSES:
@@ -1887,23 +1887,23 @@ std::string get_item_description( const item_def &item, bool verbose,
             switch (mons_corpse_effect(item.plus))
             {
             case CE_POISONOUS:
-                description << "$$This meat is poisonous.";
+                description << "\n\nThis meat is poisonous.";
                 break;
             case CE_MUTAGEN_RANDOM:
                 if (you.species != SP_GHOUL)
                 {
-                    description << "$$Eating this meat will cause random "
+                    description << "\n\nEating this meat will cause random "
                                    "mutations.";
                 }
                 break;
             case CE_HCL:
                 if (you.species != SP_GHOUL)
-                    description << "$$Eating this meat will cause rotting.";
+                    description << "\n\nEating this meat will cause rotting.";
                 break;
             case CE_CONTAMINATED:
                 if (player_mutation_level(MUT_SAPROVOROUS) < 3)
                 {
-                    description << "$$Meat like this may occasionally cause "
+                    description << "\n\nMeat like this may occasionally cause "
                                    "sickness.";
                 }
                 break;
@@ -1916,10 +1916,10 @@ std::string get_item_description( const item_def &item, bool verbose,
                 || you.religion == GOD_ZIN
                    && mons_class_intel(item.plus) >= I_NORMAL)
             {
-                description << "$$" << god_name(you.religion) << " disapproves "
+                description << "\n\n" << god_name(you.religion) << " disapproves "
                                "of eating such meat.";
             }
-            description << "$";
+            description << "\n";
         }
         break;
 
@@ -1929,7 +1929,7 @@ std::string get_item_description( const item_def &item, bool verbose,
             if (verbose)
             {
                 description <<
-                    "$It uses its own mana reservoir for casting spells, and "
+                    "\nIt uses its own mana reservoir for casting spells, and "
                     "recharges automatically.";
 
                 const int max_charges = MAX_ROD_CHARGE;
@@ -1938,17 +1938,17 @@ std::string get_item_description( const item_def &item, bool verbose,
                     const int num_charges = item.plus2 / ROD_CHARGE_MULT;
                     if (max_charges > num_charges)
                     {
-                        description << "$It can currently hold " << num_charges
+                        description << "\nIt can currently hold " << num_charges
                                     << " charges. It can be magically recharged "
                                     << "to contain up to " << max_charges
                                     << " charges.";
                     }
                     else
-                        description << "$It is fully charged.";
+                        description << "\nIt is fully charged.";
                 }
                 else
                 {
-                    description << "$It can have at most " << max_charges
+                    description << "\nIt can have at most " << max_charges
                                 << " charges.";
                 }
             }
@@ -1963,14 +1963,14 @@ std::string get_item_description( const item_def &item, bool verbose,
             std::string stats = "";
             append_weapon_stats(stats, item);
             description << stats;
-            description << "$$It falls into the 'Maces & Flails' category.";
+            description << "\n\nIt falls into the 'Maces & Flails' category.";
         }
         else
         {
             std::string stats = "";
             append_weapon_stats(stats, item);
             description << stats;
-            description << "$$It falls into the 'Staves' category.";
+            description << "\n\nIt falls into the 'Staves' category.";
         }
         break;
 
@@ -1990,16 +1990,16 @@ std::string get_item_description( const item_def &item, bool verbose,
             CrawlVector &timer = props["timer"].get_vector();
             ASSERT(!timer.empty());
 
-            description << "$Quantity: " << stack.quantity
+            description << "\nQuantity: " << stack.quantity
                         << "        Timer size: " << (int) timer.size();
-            description << "$Timers:$";
+            description << "\nTimers:\n";
             for (int i = 0; i < timer.size(); ++i)
                  description << (timer[i].get_long()) << "  ";
         }
 #endif
         if (item_type_known(item) && you.has_spell(SPELL_EVAPORATE))
         {
-            description << "$Evaporating this potion will create clouds of "
+            description << "\nEvaporating this potion will create clouds of "
                         << get_evaporate_result_list(item.sub_type)
                         << ".";
         }
@@ -2013,25 +2013,25 @@ std::string get_item_description( const item_def &item, bool verbose,
 
     default:
         DEBUGSTR("Bad item class");
-        description << "$This item should not exist. Mayday! Mayday!";
+        description << "\nThis item should not exist. Mayday! Mayday!";
     }
 
     if (is_unrandom_artefact( item )
         && strlen(unrandart_descrip(2, item)) != 0)
     {
-        description << "$$";
+        description << "\n\n";
         description << unrandart_descrip(2, item);
     }
 
     if (!verbose && item_known_cursed( item ))
-        description << "$It has a curse placed upon it.";
+        description << "\nIt has a curse placed upon it.";
     else
     {
         if (verbose)
         {
             if (need_extra_line)
-                description << "$";
-            description << "$It";
+                description << "\n";
+            description << "\nIt";
             if (item_known_cursed( item ))
                 description << " has a curse placed upon it, and it";
 
@@ -2045,18 +2045,18 @@ std::string get_item_description( const item_def &item, bool verbose,
                 if (item.base_type == OBJ_ARMOUR
                     || item.base_type == OBJ_WEAPONS)
                 {
-                    description << "$$This ancient artefact cannot be changed "
+                    description << "\n\nThis ancient artefact cannot be changed "
                         "by magic or mundane means.";
                 }
                 else
-                    description << "$$It is an ancient artefact.";
+                    description << "\n\nIt is an ancient artefact.";
             }
         }
     }
 
     if (conduct_type ct = good_god_hates_item_handling(item))
     {
-        description << "$$" << god_name(you.religion) << " opposes the use of "
+        description << "\n\n" << god_name(you.religion) << " opposes the use of "
                     << "such an ";
 
         if (ct == DID_NECROMANCY)
@@ -2068,7 +2068,7 @@ std::string get_item_description( const item_def &item, bool verbose,
     }
     else if (god_hates_item_handling(item))
     {
-        description << "$$" << god_name(you.religion) << " disapproves of the "
+        description << "\n\n" << god_name(you.religion) << " disapproves of the "
                     << "use of such an item.";
     }
 
@@ -2093,7 +2093,7 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
     {
         inf.body << ".";
     }
-    inf.body << "$$";
+    inf.body << "\n\n";
 
     // If we couldn't find a description in the database then see if
     // the feature's base name is different.
@@ -2500,18 +2500,18 @@ static void _append_spell_stats(const spell_type spell,
 {
     const std::string schools = spell_schools_string(spell);
     snprintf(info, INFO_SIZE,
-             "$Level: %d        School%s:  %s    (%s)",
+             "\nLevel: %d        School%s:  %s    (%s)",
              spell_difficulty(spell),
              schools.find("/") != std::string::npos ? "s" : "",
              schools.c_str(),
              failure_rate_to_string(spell_fail(spell)));
     description += info;
 
-    description += "$$Power : ";
+    description += "\n\nPower : ";
     description += spell_power_string(spell);
-    description += "$Range : ";
+    description += "\nRange : ";
     description += spell_range_string(spell);
-    description += "$Hunger: ";
+    description += "\nHunger: ";
     description += spell_hunger_string(spell);
 }
 
@@ -2522,7 +2522,7 @@ bool _get_spell_description(const spell_type spell, std::string &description,
     description.reserve(500);
 
     description  = spell_title( spell );
-    description += "$$";
+    description += "\n\n";
     const std::string long_descrip = getLongDescription(spell_title(spell));
 
     if (!long_descrip.empty())
@@ -2541,20 +2541,20 @@ bool _get_spell_description(const spell_type spell, std::string &description,
     if (god_hates_spell(spell, you.religion))
     {
         description += god_name(you.religion)
-                       + " frowns upon the use of this spell.$";
+                       + " frowns upon the use of this spell.\n";
     }
     else if (god_likes_spell(spell, you.religion))
     {
         description += god_name(you.religion)
-                       + " appreciates the use of this spell.$";
+                       + " appreciates the use of this spell.\n";
     }
     if (item && !player_can_memorise_from_spellbook(*item))
     {
         description += "The spell is scrawled in ancient runes that are beyond "
-                       "your current level of understanding.$";
+                       "your current level of understanding.\n";
     }
     if (spell_is_useless(spell))
-        description += "This spell will have no effect right now.$";
+        description += "This spell will have no effect right now.\n";
 
     if (crawl_state.player_is_dead())
         return (false);
@@ -2564,13 +2564,13 @@ bool _get_spell_description(const spell_type spell, std::string &description,
     bool undead = false;
     if (you_cannot_memorise(spell, undead))
     {
-        description += "$$";
+        description += "\n\n";
         description += desc_cannot_memorise_reason(undead);
     }
     else if (item && item->base_type == OBJ_BOOKS && !you.has_spell(spell)
              && in_inventory(*item) && player_can_memorise_from_spellbook(*item))
     {
-        description += "$$";
+        description += "\n\n";
         description += "(M)emorise this spell.";
         return (true);
     }
@@ -2813,7 +2813,7 @@ static std::string _monster_stat_description(const monsters& mon)
                << comma_separated_line(resist_descriptions.begin(),
                                        resist_descriptions.end(),
                                        "; and ", "; ")
-               << ".$";
+               << ".\n";
     }
 
     // Is monster susceptible to anything? (On a new line.)
@@ -2821,7 +2821,7 @@ static std::string _monster_stat_description(const monsters& mon)
     {
         result << pronoun << " is susceptible to "
                << comma_separated_line(suscept.begin(), suscept.end())
-               << ".$";
+               << ".\n";
     }
 
     // Magic resistance at MAG_IMMUNE, but not for Rs, as there is then
@@ -2829,29 +2829,29 @@ static std::string _monster_stat_description(const monsters& mon)
     if (mon.type != MONS_RAKSHASA && mon.type != MONS_RAKSHASA_FAKE)
     {
         if (mons_immune_magic(&mon))
-            result << pronoun << " is immune to hostile enchantments.$";
+            result << pronoun << " is immune to hostile enchantments.\n";
         else // How resistant is it? Same scale as the player.
         {
             const int mr = mon.res_magic();
             if (mr >= 10)
             {
-                result << pronoun << make_stringf(" is %s resistant to hostile enchantments.$",
+                result << pronoun << make_stringf(" is %s resistant to hostile enchantments.\n",
                                                   magic_res_adjective(mr).c_str());
             }
         }
     }
 
     if (mons_class_flag(mon.type, M_STATIONARY))
-        result << pronoun << " cannot move.$";
+        result << pronoun << " cannot move.\n";
 
     // These differ between ghost demon monsters, so would be spoily.
     if (!mons_is_ghost_demon(mon.type))
     {
         // Seeing/sensing invisible.
         if (mons_class_flag(mon.type, M_SEE_INVIS))
-            result << pronoun << " can see invisible.$";
+            result << pronoun << " can see invisible.\n";
         else if (mons_class_flag(mon.type, M_SENSE_INVIS))
-            result << pronoun << " can sense the presence of invisible creatures.$";
+            result << pronoun << " can sense the presence of invisible creatures.\n";
 
         // Unusual monster speed.
         const int speed = mons_base_speed(&mon);
@@ -2868,7 +2868,7 @@ static std::string _monster_stat_description(const monsters& mon)
                 result << "very fast";
             else if (speed > 10)
                 result << "fast";
-            result << ".$";
+            result << ".\n";
         }
     }
 
@@ -2881,14 +2881,14 @@ static std::string _monster_stat_description(const monsters& mon)
     if (fly != FL_NONE)
     {
         result << pronoun << " can "
-               << (fly == FL_FLY ? "fly" : "levitate") << ".$";
+               << (fly == FL_FLY ? "fly" : "levitate") << ".\n";
     }
 
     // Unusual regeneration rates.
     if (!mons_can_regenerate(&mon))
-        result << pronoun << " cannot regenerate.$";
+        result << pronoun << " cannot regenerate.\n";
     else if (monster_descriptor(mon.type, MDSC_REGENERATES))
-        result << pronoun << " regenerates quickly.$";
+        result << pronoun << " regenerates quickly.\n";
 
     return (result.str());
 }
@@ -2943,7 +2943,7 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
     }
 
     if (!inf.quote.empty() && !quote2.empty())
-        inf.quote += "$";
+        inf.quote += "\n";
     inf.quote += quote2;
 
     // Except for draconians and player ghosts, I have to admit I find the
@@ -2956,12 +2956,12 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
     case MONS_VAMPIRE_KNIGHT:
     case MONS_VAMPIRE_MAGE:
         if (you.is_undead == US_ALIVE && !mons.wont_attack())
-            inf.body << "$It wants to drink your blood!$";
+            inf.body << "\nIt wants to drink your blood!\n";
         break;
 
     case MONS_REAPER:
         if (you.is_undead == US_ALIVE && !mons.wont_attack())
-            inf.body <<  "$It has come for your soul!$";
+            inf.body <<  "\nIt has come for your soul!\n";
         break;
 
     case MONS_DRACONIAN:
@@ -2981,27 +2981,27 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
     case MONS_DRACONIAN_MONK:
     case MONS_DRACONIAN_KNIGHT:
     {
-        inf.body << "$" << _describe_draconian( &mons );
+        inf.body << "\n" << _describe_draconian( &mons );
         break;
     }
 
     case MONS_PLAYER_GHOST:
-        inf.body << "The apparition of " << get_ghost_description(mons) << ".$";
+        inf.body << "The apparition of " << get_ghost_description(mons) << ".\n";
         break;
 
     case MONS_PLAYER_ILLUSION:
-        inf.body << "An illusion of " << get_ghost_description(mons) << ".$";
+        inf.body << "An illusion of " << get_ghost_description(mons) << ".\n";
         break;
 
     case MONS_PANDEMONIUM_DEMON:
-        inf.body << _describe_demon(mons) << "$";
+        inf.body << _describe_demon(mons) << "\n";
         break;
 
     case MONS_PROGRAM_BUG:
         inf.body << "If this monster is a \"program bug\", then it's "
                 "recommended that you save your game and reload.  Please report "
                 "monsters who masquerade as program bugs or run around the "
-                "dungeon without a proper description to the authorities.$";
+                "dungeon without a proper description to the authorities.\n";
         break;
 
     default:
@@ -3018,34 +3018,34 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
                     suffix += getLongDescription(symbol_suffix + "_examine");
 
         if (!suffix.empty())
-            inf.body << "$" << suffix;
+            inf.body << "\n" << suffix;
     }
 
     // Get information on resistances, speed, etc.
     std::string result = _monster_stat_description(mons);
     if (!result.empty())
     {
-        inf.body << "$" << result;
+        inf.body << "\n" << result;
         has_stat_desc = true;
     }
 
     if (!mons_can_use_stairs(&mons))
     {
-        inf.body << "$" << mons_pronoun(static_cast<monster_type>(mons.type),
+        inf.body << "\n" << mons_pronoun(static_cast<monster_type>(mons.type),
                                     PRONOUN_CAP, true)
-                 << " is incapable of using stairs.$";
+                 << " is incapable of using stairs.\n";
     }
 
     if (mons.is_summoned() && (mons.type != MONS_RAKSHASA_FAKE
                                && mons.type != MONS_MARA_FAKE))
     {
-        inf.body << "$" << "This monster has been summoned, and is thus only "
+        inf.body << "\n" << "This monster has been summoned, and is thus only "
                        "temporary. Killing it yields no experience, nutrition "
-                       "or items.$";
+                       "or items.\n";
     }
 
     if (!inf.quote.empty())
-        inf.quote += "$";
+        inf.quote += "\n";
 
 #ifdef DEBUG_DIAGNOSTICS
     if (mons.can_use_spells())
@@ -3059,14 +3059,14 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
             {
                 if (!found_spell)
                 {
-                    inf.body << "$$Monster Spells:$";
+                    inf.body << "\n\nMonster Spells:\n";
                     found_spell = true;
                 }
 
                 inf.body << "    " << i << ": "
                          << spell_title(hspell_pass[i])
                          << " (" << static_cast<int>(hspell_pass[i])
-                         << ")$";
+                         << ")\n";
             }
         }
     }
@@ -3078,7 +3078,7 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
         {
             if (!has_item)
             {
-                inf.body << "$Monster Inventory:$";
+                inf.body << "\nMonster Inventory:\n";
                 has_item = true;
             }
             inf.body << "    " << i << ") "
@@ -3088,14 +3088,14 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
 
     if (mons.props.exists("blame"))
     {
-        inf.body << "$$Monster blame chain:$";
+        inf.body << "\n\nMonster blame chain:\n";
 
         const CrawlVector& blame = mons.props["blame"].get_vector();
 
         for (CrawlVector::const_iterator it = blame.begin();
              it != blame.end(); ++it)
         {
-            inf.body << "    " << it->get_string() << "$";
+            inf.body << "    " << it->get_string() << "\n";
         }
     }
 #endif
