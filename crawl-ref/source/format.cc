@@ -40,48 +40,22 @@ int formatted_string::get_colour(const std::string &tag)
     return (colour != -1? colour : LIGHTGREY);
 }
 
-// Parses a formatted string in much the same way as parse_string, but
-// handles EOL by moving the cursor down to the next line instead of
-// using a literal EOL. This is important if the text is not supposed
+// Display a formatted string without printing literal EOL.
+// This is important if the text is not supposed
 // to clobber existing text to the right of the lines being displayed
 // (some of the tutorial messages need this).
-//
-// If eot_ends_format, the end of text will reset the color to default
-// (pop all elements on the color stack) -- this is only useful if the
-// string doesn't have balanced <color></color> tags.
-//
-formatted_string formatted_string::parse_block(
-        const std::string &s,
-        bool eot_ends_format,
-        bool (*process)(const std::string &tag))
+void display_tagged_block(const std::string &s)
 {
-    // Safe assumption, that incoming color is LIGHTGREY
-    std::vector<int> colour_stack;
-    colour_stack.push_back(LIGHTGREY);
-
-    std::vector<std::string> lines = split_string("\n", s, false, true);
-
-    formatted_string fs;
+    std::vector<formatted_string> lines;
+    formatted_string::parse_string_to_multiple(s, lines);
 
     for (int i = 0, size = lines.size(); i < size; ++i)
     {
-        if (i)
-        {
-            // Artificial newline - some terms erase to eol when printing a
-            // newline.
-            fs.cgotoxy(1, -1); // CR
-            fs.movexy(0, 1);  // LF
-        }
-        parse_string1(lines[i], fs, colour_stack, process);
+        int x = wherex();
+        int y = wherey();
+        lines[i].display();
+        cgotoxy(x, y+1);
     }
-
-    if (eot_ends_format)
-    {
-        if (colour_stack.back() != colour_stack.front())
-            fs.textcolor(colour_stack.front());
-    }
-
-    return (fs);
 }
 
 formatted_string formatted_string::parse_string(

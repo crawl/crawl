@@ -314,7 +314,7 @@ void tutorial_zap_secret_doors()
 }
 
 // Prints the tutorial welcome screen.
-static formatted_string _tut_starting_info(unsigned int width)
+static void _tut_print_starting_info(unsigned int width)
 {
     std::string text;
 
@@ -352,7 +352,7 @@ static formatted_string _tut_starting_info(unsigned int width)
 
     insert_commands(text, CMD_DISPLAY_COMMANDS, CMD_SAVE_GAME, CMD_LOOK_AROUND, 0);
     linebreak_string2(text, width);
-    return formatted_string::parse_block(text);
+    display_tagged_block(text);
 }
 
 #ifdef TUTORIAL_DEBUG
@@ -638,7 +638,7 @@ static void _tutorial_stats_intro()
             "                                      \n"
             "                                      \n";
 
-    formatted_string::parse_block(istr.str(), false).display();
+    display_tagged_block(istr.str());
 #endif
 }
 
@@ -739,7 +739,7 @@ void tut_starting_screen()
             width = 80;
 #endif
         if (i == 0)
-            _tut_starting_info(width).display();
+            _tut_print_starting_info(width);
         else if (i == 1)
         {
 #ifdef USE_TILE
@@ -4430,7 +4430,7 @@ void tutorial_describe_item(const item_def &item)
         insert_commands(broken, cmd);
     linebreak_string2(broken, _get_tutorial_cols());
     cgotoxy(1, wherey() + 2);
-    formatted_string::parse_block(broken, false).display();
+    display_tagged_block(broken);
 }        // tutorial_describe_item()
 
 void tutorial_inscription_info(bool autoinscribe, std::string prompt)
@@ -4767,7 +4767,7 @@ static void _tutorial_describe_feature(int x, int y)
 
     std::string broken = ostr.str();
     linebreak_string2(broken, _get_tutorial_cols());
-    formatted_string::parse_block(broken, false).display();
+    display_tagged_block(broken);
 }
 
 static void _tutorial_describe_cloud(int x, int y)
@@ -4829,7 +4829,7 @@ static void _tutorial_describe_cloud(int x, int y)
 
     std::string broken = ostr.str();
     linebreak_string2(broken, _get_tutorial_cols());
-    formatted_string::parse_block(broken, false).display();
+    display_tagged_block(broken);
 }
 
 static void _tutorial_describe_disturbance(int x, int y)
@@ -4851,7 +4851,7 @@ static void _tutorial_describe_disturbance(int x, int y)
 
     std::string broken = ostr.str();
     linebreak_string2(broken, _get_tutorial_cols());
-    formatted_string::parse_block(broken, false).display();
+    display_tagged_block(broken);
 }
 
 static bool _water_is_disturbed(int x, int y)
@@ -5015,7 +5015,7 @@ void tutorial_describe_monster(const monsters *mons, bool has_stat_desc)
 
     std::string broken = ostr.str();
     linebreak_string2(broken, _get_tutorial_cols());
-    formatted_string::parse_block(broken, false).display();
+    display_tagged_block(broken);
 }
 
 void tutorial_observe_cell(const coord_def& gc)
