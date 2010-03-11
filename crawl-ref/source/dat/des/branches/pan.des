@@ -134,6 +134,13 @@ epilogue{{
   pan_lord_warning(_G)
   crawl.mark_milestone("br.enter", "entered the realm of Cerebov.")
 }}
+COLOUR:     n = blue
+:           dgn.set_feature_desc_short("translucent stone wall",
+:                                      "cracked metal wall")
+:           dgn.set_feature_desc_long("translucent stone wall",
+:                                     "This metal wall has suffered some " ..
+:                                     "damage.  Alas, the hole is not big " ..
+:                                     "enough to crawl though.\n")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -159,7 +166,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 .vvvvv.vvvvvvv...vvvvvvv.vvvvv.xxxx
 ....v..vvvvvvv...vvvvvvv..v....xxxx
 ....vv...................vv....xxxx
-.....vv.vvvvv..2..vvvvv.vv.....xxxx
+.....vv.vvvnv..2..vvvvv.vv.....xxxx
 ......vvv|||v.....v$$$vvv......xxxx
 ........v|$|vv...vv$|$v........xxxx
 ........v|||v.....v$$$v........xxxx
