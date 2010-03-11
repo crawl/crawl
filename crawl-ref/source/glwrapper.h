@@ -12,14 +12,14 @@ struct GLW_3VF
 {
     GLW_3VF() {};
     GLW_3VF(float l, float m, float n) : x(l), y(m), z(n) {}
-    
+
     inline void set(float l, float m, float n)
     {
         x = l;
         y = m;
         z = n;
     }
-    
+
     union {float x; float r;};
     union {float y; float g;};
     union {float z; float b;};
@@ -29,7 +29,7 @@ struct GLW_4VF
 {
     GLW_4VF() {};
     GLW_4VF(float l, float m, float n, float p) : x(l), y(m), z(n), t(p) {}
-    
+
     inline void set(float l, float m, float n, float p)
     {
         x = l;
@@ -37,7 +37,7 @@ struct GLW_4VF
         z = n;
         t = p;
     }
-    
+
     union {float x; float r;};
     union {float y; float g;};
     union {float z; float b;};
@@ -80,7 +80,7 @@ struct GLPrimitive
     // Primitive render manipulations
     GLW_3VF *pretranslate;
     GLW_3VF *prescale;
-    
+
     // State manipulations
     GLW_3VF *color;
 };
@@ -105,36 +105,41 @@ struct GLState
 class GLStateManager
 {
 public:
+    // To silence pre 4.3 g++ compiler warnings
+    virtual ~GLStateManager() {};
+
     static void init();
+    static void shutdown();
 
     // State Manipulation
-    static void set(const GLState& state);
-    static void pixelstore_unpack_alignment(unsigned int bpp);
-    static void reset_view_for_redraw(float x, float y);
-    static void reset_view_for_resize(coord_def &m_windowsz);
-    static void set_transform(  const GLW_3VF *trans = NULL,
-                                const GLW_3VF *scale = NULL);
-    static void reset_transform();
-    static void set_current_color(GLW_3VF &color);
-    static void set_current_color(GLW_4VF &color);
+    virtual void set(const GLState& state) = 0;
+    virtual void pixelstore_unpack_alignment(unsigned int bpp) = 0;
+    virtual void reset_view_for_redraw(float x, float y) = 0;
+    virtual void reset_view_for_resize(coord_def &m_windowsz) = 0;
+    virtual void set_transform(  const GLW_3VF *trans = NULL,
+                                const GLW_3VF *scale = NULL) = 0;
+    virtual void reset_transform() = 0;
+    virtual void set_current_color(GLW_3VF &color) = 0;
+    virtual void set_current_color(GLW_4VF &color) = 0;
 
     // Drawing GLPrimitives
-    static void draw_primitive(const GLPrimitive &prim);
+    virtual void draw_primitive(const GLPrimitive &prim) = 0;
 
     // Texture-specific functinos
-    static void delete_textures(size_t count, unsigned int *textures);
-    static void generate_textures(size_t count, unsigned int *textures);
-    static void bind_texture(unsigned int texture);
-    static void load_texture(unsigned char *pixels, unsigned int width,
-        unsigned int height, MipMapOptions mip_opt);
+    virtual void delete_textures(size_t count, unsigned int *textures) = 0;
+    virtual void generate_textures(size_t count, unsigned int *textures) = 0;
+    virtual void bind_texture(unsigned int texture) = 0;
+    virtual void load_texture(unsigned char *pixels, unsigned int width,
+        unsigned int height, MipMapOptions mip_opt) = 0;
 
     // Debug
 #ifdef DEBUG
     static bool _valid(int num_verts, drawing_modes mode);
 #endif
-
-protected:
 };
+
+// Main interface for GL functions
+extern GLStateManager *glmanager;
 
 #endif // use_tile
 #endif // include guard

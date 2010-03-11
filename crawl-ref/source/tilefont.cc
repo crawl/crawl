@@ -381,7 +381,7 @@ void FTFont::render_textblock(unsigned int x_pos, unsigned int y_pos,
     state.array_texcoord = true;
     state.blend = true;
     state.texture = true;
-    GLStateManager::set(state);
+    glmanager->set(state);
     m_tex.bind();
 
     GLPrimitive prim(   sizeof(FontVertLayout), verts.size(), 2,
@@ -395,28 +395,28 @@ void FTFont::render_textblock(unsigned int x_pos, unsigned int y_pos,
     if (drop_shadow)
     {
         GLW_3VF color(0.0f, 0.0f, 0.0f);
-        GLStateManager::set_current_color(color);
+        glmanager->set_current_color(color);
 
         trans.x++;
         trans.y++;
-        GLStateManager::set_transform(&trans);
-        GLStateManager::draw_primitive(prim);
+        glmanager->set_transform(&trans);
+        glmanager->draw_primitive(prim);
         trans.x--;
         trans.y--;
 
         color.set(1.0f, 1.0f, 1.0f);
-        GLStateManager::set_current_color(color);
+        glmanager->set_current_color(color);
     }
 
     // TODO: Review this to see if turning array color on and off
     // here is really necessary ...
     state.array_colour = true;
-    GLStateManager::set(state);
+    glmanager->set(state);
     prim.colour_pointer = &verts[0].r;
-    GLStateManager::set_transform(&trans);
-    GLStateManager::draw_primitive(prim);
+    glmanager->set_transform(&trans);
+    glmanager->draw_primitive(prim);
     state.array_colour = false;
-    GLStateManager::set(state);
+    glmanager->set(state);
 }
 
 struct box_vert
@@ -451,20 +451,20 @@ static void _draw_box(int x_pos, int y_pos, float width, float height,
     verts[3].y = verts[0].y;
 
     // Load identity matrix
-    GLStateManager::set_transform();
+    glmanager->set_transform();
 
     GLState state;
     state.array_vertex = true;
     state.array_colour = true;
     state.blend = true;
-    GLStateManager::set(state);
+    glmanager->set(state);
 
     GLPrimitive prim(   sizeof(box_vert), sizeof(verts) / sizeof(box_vert), 2,
                         &verts[0].x,
                         &verts[0].r,
                         NULL);
     
-    GLStateManager::draw_primitive(prim);
+    glmanager->draw_primitive(prim);
 }
 
 unsigned int FTFont::string_height(const formatted_string &str)

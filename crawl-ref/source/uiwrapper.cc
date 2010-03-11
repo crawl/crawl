@@ -15,7 +15,6 @@ void create_ui_wrapper()
 #ifdef USE_SDL
     wrapper = (UIWrapper *) new SDLWrapper();
 #endif
-
 }
 
 void destroy_ui_wrapper()

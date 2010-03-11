@@ -307,7 +307,7 @@ bool SDLWrapper::set_window_icon(const char* icon_name)
 
 void SDLWrapper::resize(coord_def &m_windowsz)
 {
-    GLStateManager::reset_view_for_resize(m_windowsz);
+    glmanager->reset_view_for_resize(m_windowsz);
 }
 
 unsigned int SDLWrapper::get_ticks()
