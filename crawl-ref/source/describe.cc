@@ -3515,7 +3515,7 @@ static void _detailed_god_description(god_type which_god)
         if (!broken.empty())
         {
             linebreak_string2(broken, width);
-            formatted_string::parse_block(broken, false).display();
+            display_tagged_block(broken);
             cprintf(EOL);
             cprintf(EOL);
         }
@@ -3525,7 +3525,7 @@ static void _detailed_god_description(god_type which_god)
     {
         broken = get_god_likes(which_god, true);
         linebreak_string2(broken, width);
-        formatted_string::parse_block(broken, false).display();
+        display_tagged_block(broken);
 
         broken = get_god_dislikes(which_god, true);
         if (!broken.empty())
@@ -3533,7 +3533,7 @@ static void _detailed_god_description(god_type which_god)
             cprintf(EOL);
             cprintf(EOL);
             linebreak_string2(broken, width);
-            formatted_string::parse_block(broken, false).display();
+            display_tagged_block(broken);
         }
         // Some special handling.
         broken = "";
@@ -3598,7 +3598,7 @@ static void _detailed_god_description(god_type which_god)
             cprintf(EOL);
             cprintf(EOL);
             linebreak_string2(broken, width);
-            formatted_string::parse_block(broken, false).display();
+            display_tagged_block(broken);
         }
     }
 

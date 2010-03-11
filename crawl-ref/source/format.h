@@ -62,11 +62,6 @@ public:
             const std::string &s,
             std::vector<formatted_string> &out);
 
-    static formatted_string parse_block(
-            const std::string &s,
-            bool  eot_ends_format = true,
-            bool (*process_tag)(const std::string &tag) = NULL );
-
     static int get_colour(const std::string &tag);
 
 private:
@@ -117,5 +112,6 @@ int count_linebreaks(const formatted_string& fs);
 int tagged_string_tag_length(const std::string& s);
 int tagged_string_printable_length(const std::string& s);
 std::string tagged_string_substr(const std::string& s, int start, int end);
+void display_tagged_block(const std::string& s);
 
 #endif
