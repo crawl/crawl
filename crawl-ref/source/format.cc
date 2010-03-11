@@ -266,9 +266,6 @@ std::string formatted_string::html_dump() const
             s += colour_to_str(ops[i].x);
             s += ">";
             break;
-        case FSOP_CURSOR:
-            // FIXME error handling?
-            break;
         }
     }
     return s;
@@ -389,11 +386,6 @@ void formatted_string::display(int s, int e) const
         ops[i].display();
 }
 
-void formatted_string::cgotoxy(int x, int y)
-{
-    ops.push_back( fs_op(x, y) );
-}
-
 int formatted_string::find_last_colour() const
 {
     if (!ops.empty())
@@ -409,7 +401,6 @@ formatted_string formatted_string::substr(size_t start, size_t substr_length) co
 {
     const unsigned int NONE = UINT_MAX; // from limits.h
     unsigned int last_FSOP_COLOUR = NONE;
-    unsigned int last_FSOP_CURSOR = NONE;
 
     // Find the first string to copy
     unsigned int i;
@@ -417,9 +408,7 @@ formatted_string formatted_string::substr(size_t start, size_t substr_length) co
     {
         const fs_op& op = ops[i];
         if (op.type == FSOP_COLOUR)
-            last_FSOP_CURSOR = i;
-        else if (op.type == FSOP_CURSOR)
-            last_FSOP_CURSOR = i;
+            last_FSOP_COLOUR = i;
         else if (op.type == FSOP_TEXT)
         {
             if (op.text.length() > start)
@@ -436,8 +425,6 @@ formatted_string formatted_string::substr(size_t start, size_t substr_length) co
     // set up the state
     if (last_FSOP_COLOUR != NONE)
         result.ops.push_back(ops[last_FSOP_COLOUR]);
-    if (last_FSOP_CURSOR != NONE)
-        result.ops.push_back(ops[last_FSOP_CURSOR]);
 
     // Copy the text
     for ( ; i<ops.size(); i++)
@@ -506,24 +493,6 @@ void formatted_string::fs_op::display() const
 {
     switch (type)
     {
-    case FSOP_CURSOR:
-    {
-        int cx = x, cy = y;
-        if (relative)
-        {
-            cx += wherex();
-            cy += wherey();
-        }
-        else
-        {
-            if (cx == -1)
-                cx = wherex();
-            if (cy == -1)
-                cy = wherey();
-        }
-        ::cgotoxy(cx, cy);
-        break;
-    }
     case FSOP_COLOUR:
         ::textattr(x);
         break;

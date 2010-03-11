@@ -708,7 +708,6 @@ void FTFont::store(FontBuffer &buf, float &x, float &y,
                 store(buf, x, y, fs.ops[i].text, term_colours[colour], orig_x);
                 break;
             default:
-            case FSOP_CURSOR:
                 break;
         }
     }
