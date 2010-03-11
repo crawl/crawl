@@ -4,7 +4,6 @@
 #include "externs.h"
 
 #ifdef USE_TILE
-
 #include "tilereg.h"
 #include "tilesdl.h"
 
@@ -67,7 +66,6 @@ typedef struct{
     void *data2;
 } ui_custom_event;
 
-
 // Basically a generic SDL_Event
 typedef struct{
     unsigned char type;
@@ -83,54 +81,44 @@ typedef struct{
 // custom timer callback function
 typedef unsigned int (*ui_timer_callback)(unsigned int interval);
 
-#ifdef USE_SDL
-struct SDL_Surface;
-struct SDL_VideoInfo;
-#endif
-
 class FTFont;
 
 class UIWrapper {
 public:
+    // To silence pre 4.3 g++ compiler warnings
+    virtual ~UIWrapper() {};
+
     // Class functions
-    UIWrapper();
-    int init(coord_def *m_windowsz);
-    void shutdown();
+    virtual int init(coord_def *m_windowsz) = 0;
+    virtual void shutdown() = 0;
 
     // Environment state functions
-    void set_window_title(const char *title);
-    bool set_window_icon(const char* icon_name);
-    key_mod get_mod_state();
-    void set_mod_state(key_mod mod);
-    int byte_order();
+    virtual void set_window_title(const char *title) = 0;
+    virtual bool set_window_icon(const char* icon_name) = 0;
+    virtual key_mod get_mod_state() = 0;
+    virtual void set_mod_state(key_mod mod) = 0;
+    virtual int byte_order() = 0;
 
     // System time functions
-    void set_timer(unsigned int interval, ui_timer_callback callback);
-    unsigned int get_ticks();
-    void delay(unsigned int ms);
+    virtual void set_timer( unsigned int interval,
+                            ui_timer_callback callback) = 0;
+    virtual unsigned int get_ticks() = 0;
+    virtual void delay(unsigned int ms) = 0;
 
     // Event functions
-    int raise_custom_event();
-    int wait_event(ui_event *event);
-    unsigned int get_event_count(ui_event_type type);
+    virtual int raise_custom_event() = 0;
+    virtual int wait_event(ui_event *event) = 0;
+    virtual unsigned int get_event_count(ui_event_type type) = 0;
 
     // Display functions
-    void resize(coord_def &m_windowsz);
-    void swap_buffers();
-    int screen_width();
-    int screen_height();
-
-protected:
-
-#ifdef USE_SDL
-    SDL_Surface *m_context;
-    const SDL_VideoInfo* video_info;
-#endif
-
+    virtual void resize(coord_def &m_windowsz) = 0;
+    virtual void swap_buffers() = 0;
+    virtual int screen_width() = 0;
+    virtual int screen_height() = 0;
 };
 
 // Main interface for UI functions
-extern UIWrapper wrapper;
+extern UIWrapper *wrapper;
 
 #endif //USE_TILE
 #endif //include guard

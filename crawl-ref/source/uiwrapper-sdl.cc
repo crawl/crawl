@@ -10,6 +10,7 @@
 #include "glwrapper.h"
 
 #ifdef USE_SDL
+#include "uiwrapper-sdl.h"
 #include <SDL/SDL.h>
 
 static unsigned char _get_modifiers(SDL_keysym &keysym)
@@ -205,14 +206,12 @@ static void _translate_event(const SDL_MouseButtonEvent &sdl_event,
     tile_event.py = sdl_event.y;
 }
 
-UIWrapper wrapper;
-
-UIWrapper::UIWrapper():
+SDLWrapper::SDLWrapper():
     m_context(NULL)
 {
 }
 
-int UIWrapper::init(coord_def *m_windowsz)
+int SDLWrapper::init(coord_def *m_windowsz)
 {
     // Do SDL initialization
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0)
@@ -276,22 +275,22 @@ int UIWrapper::init(coord_def *m_windowsz)
     return (true);
 }
 
-int UIWrapper::screen_width()
+int SDLWrapper::screen_width()
 {
     return (video_info->current_w);
 }
 
-int UIWrapper::screen_height()
+int SDLWrapper::screen_height()
 {
     return (video_info->current_h);
 }
 
-void UIWrapper::set_window_title(const char *title)
+void SDLWrapper::set_window_title(const char *title)
 {
     SDL_WM_SetCaption(title, CRAWL);
 }
 
-bool UIWrapper::set_window_icon(const char* icon_name)
+bool SDLWrapper::set_window_icon(const char* icon_name)
 {
     // TODO: Figure out how to move this IMG_Load command to cgcontext
     // so that we're not dependant on SDL_image here
@@ -306,17 +305,17 @@ bool UIWrapper::set_window_icon(const char* icon_name)
     return (true);
 }
 
-void UIWrapper::resize(coord_def &m_windowsz)
+void SDLWrapper::resize(coord_def &m_windowsz)
 {
     GLStateManager::reset_view_for_resize(m_windowsz);
 }
 
-unsigned int UIWrapper::get_ticks()
+unsigned int SDLWrapper::get_ticks()
 {
     return (SDL_GetTicks());
 }
 
-key_mod UIWrapper::get_mod_state()
+key_mod SDLWrapper::get_mod_state()
 {
     SDLMod mod = SDL_GetModState();
     
@@ -339,7 +338,7 @@ key_mod UIWrapper::get_mod_state()
     }
 }
 
-void UIWrapper::set_mod_state(key_mod mod)
+void SDLWrapper::set_mod_state(key_mod mod)
 {
     SDLMod set_to;
     switch (mod) {
@@ -363,7 +362,7 @@ void UIWrapper::set_mod_state(key_mod mod)
     SDL_SetModState(set_to);
 }
 
-int UIWrapper::wait_event(ui_event *event)
+int SDLWrapper::wait_event(ui_event *event)
 {
     SDL_Event sdlevent;
     if (!SDL_WaitEvent(&sdlevent))
@@ -427,29 +426,29 @@ int UIWrapper::wait_event(ui_event *event)
     return (1);
 }
 
-void UIWrapper::set_timer(unsigned int interval, ui_timer_callback callback)
+void SDLWrapper::set_timer(unsigned int interval, ui_timer_callback callback)
 {
     SDL_SetTimer(interval, callback);
 }
 
-int UIWrapper::raise_custom_event()
+int SDLWrapper::raise_custom_event()
 {   
     SDL_Event send_event;
     send_event.type = SDL_USEREVENT;
     return (SDL_PushEvent(&send_event));
 }
 
-void UIWrapper::swap_buffers()
+void SDLWrapper::swap_buffers()
 {
     SDL_GL_SwapBuffers();
 }
 
-void UIWrapper::delay(unsigned int ms)
+void SDLWrapper::delay(unsigned int ms)
 {
     SDL_Delay(ms);
 }
 
-unsigned int UIWrapper::get_event_count(ui_event_type type)
+unsigned int SDLWrapper::get_event_count(ui_event_type type)
 {
     // Look for the presence of any keyboard events in the queue.
     Uint32 eventmask;
@@ -508,14 +507,14 @@ unsigned int UIWrapper::get_event_count(ui_event_type type)
     return (count);
 }
 
-void UIWrapper::shutdown()
+void SDLWrapper::shutdown()
 {
     SDL_Quit();
     m_context = NULL;
     video_info = NULL;
 }
 
-int UIWrapper::byte_order()
+int SDLWrapper::byte_order()
 {
     if ( SDL_BYTEORDER == SDL_BIG_ENDIAN )
         return (UI_BIG_ENDIAN);
