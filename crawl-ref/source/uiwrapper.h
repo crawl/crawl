@@ -84,8 +84,8 @@ typedef struct{
 typedef unsigned int (*ui_timer_callback)(unsigned int interval);
 
 #ifdef USE_SDL
-class SDL_Surface;
-class SDL_VideoInfo;
+struct SDL_Surface;
+struct SDL_VideoInfo;
 #endif
 
 class FTFont;
