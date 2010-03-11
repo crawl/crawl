@@ -1,19 +1,10 @@
-/*
- *  wrapper-sdl.h
- *  Roguelike
- *
- *  Created by Ixtli on 2/23/10.
- *  Copyright 2010 Apple Inc. All rights reserved.
- *
- */
-
-#ifndef WRAPPER_SDL_H
-#define WRAPPER_SDL_H
-
-#ifdef USE_TILE
-#ifdef USE_SDL
+#ifndef UI_WRAPPER_H
+#define UI_WRAPPER_H
 
 #include "externs.h"
+
+#ifdef USE_TILE
+
 #include "tilereg.h"
 #include "tilesdl.h"
 
@@ -92,8 +83,11 @@ typedef struct{
 // custom timer callback function
 typedef unsigned int (*ui_timer_callback)(unsigned int interval);
 
+#ifdef USE_SDL
 class SDL_Surface;
 class SDL_VideoInfo;
+#endif
+
 class FTFont;
 
 class UIWrapper {
@@ -128,13 +122,15 @@ public:
 
 protected:
 
+#ifdef USE_SDL
     SDL_Surface *m_context;
     const SDL_VideoInfo* video_info;
+#endif
+
 };
 
 // Main interface for UI functions
 extern UIWrapper wrapper;
 
-#endif //USE_SDL
 #endif //USE_TILE
 #endif //include guard

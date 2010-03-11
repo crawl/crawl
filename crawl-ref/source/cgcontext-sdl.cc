@@ -1,9 +1,9 @@
+#ifdef USE_TILE
 #include "cgcontext.h"
 
+#ifdef USE_SDL
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
-
-#ifdef USE_TILE
 
 /*
  * This file should only call functions that operate specifically
@@ -147,5 +147,5 @@ GraphicsContext::~GraphicsContext()
         SDL_FreeSurface(surf);
 }
 
-#endif
-
+#endif // USE_SDL
+#endif // USE_TILE

@@ -1,10 +1,11 @@
-#ifndef CGCONTEXT_SDL_H
-#define CGCONTEXT_SDL_H
+#ifndef CG_CONTEXT_H
+#define CG_CONTEXT_H
 
 #ifdef USE_TILE
-#ifdef USE_SDL
 
+#ifdef USE_SDL
 class SDL_Surface;
+#endif
 
 typedef struct{
     unsigned char r;
@@ -56,9 +57,11 @@ protected:
     void create_palette();
     void destroy_palette();
 
+#ifdef USE_SDL
     SDL_Surface *surf;
+#endif
+
 };
 
-#endif //USE_SDL
 #endif //USE_TILE
 #endif //include guard
