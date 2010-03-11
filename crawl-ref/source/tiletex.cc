@@ -28,7 +28,7 @@ void GenericTexture::unload_texture()
     if (!m_handle)
         return;
 
-    GLStateManager::delete_textures(1, &m_handle);
+    glmanager->delete_textures(1, &m_handle);
 }
 
 bool GenericTexture::load_texture(const char *filename,
@@ -61,7 +61,7 @@ bool GenericTexture::load_texture(const char *filename,
     }
 
     unsigned int bpp = img->bytes_per_pixel();
-    GLStateManager::pixelstore_unpack_alignment(bpp);
+    glmanager->pixelstore_unpack_alignment(bpp);
 
     // Determine texture format
     unsigned char *pixels = (unsigned char*)img->pixels();
@@ -221,9 +221,9 @@ bool GenericTexture::load_texture(unsigned char *pixels, unsigned int new_width,
     m_width = new_width;
     m_height = new_height;
     
-    GLStateManager::generate_textures(1, &m_handle);
-    GLStateManager::bind_texture(m_handle);
-    GLStateManager::load_texture(pixels, m_width, m_height, mip_opt);
+    glmanager->generate_textures(1, &m_handle);
+    glmanager->bind_texture(m_handle);
+    glmanager->load_texture(pixels, m_width, m_height, mip_opt);
 
     return (true);
 }
@@ -231,7 +231,7 @@ bool GenericTexture::load_texture(unsigned char *pixels, unsigned int new_width,
 void GenericTexture::bind() const
 {
     ASSERT(m_handle);
-    GLStateManager::bind_texture(m_handle);
+    glmanager->bind_texture(m_handle);
 }
 
 TilesTexture::TilesTexture() :

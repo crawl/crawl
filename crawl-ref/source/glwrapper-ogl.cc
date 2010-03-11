@@ -12,51 +12,19 @@
 #endif
 
 #ifdef USE_GL
-#include "glwrapper.h"
+#include "glwrapper-ogl.h"
 
 /////////////////////////////////////////////////////////////////////////////
-// GLPrimitive
-GLPrimitive::GLPrimitive(long unsigned int sz, size_t ct, unsigned int vs,
-        const void* v_pt, const void *c_pt, const void *t_pt) :
-    mode(GLW_QUADS),
-    vert_size(vs),
-    size(sz),
-    count(ct),
-    vert_pointer(v_pt),
-    colour_pointer(c_pt),
-    texture_pointer(t_pt),
-    pretranslate(NULL),
-    prescale(NULL)
-{
-}
+// OGLStateManager
 
-/////////////////////////////////////////////////////////////////////////////
-// GLState
-
-// Note: these defaults should match the OpenGL defaults
-GLState::GLState() :
-    array_vertex(false),
-    array_texcoord(false),
-    array_colour(false),
-    blend(false),
-    texture(false),
-    depthtest(false),
-    alphatest(false),
-    alpharef(0)
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// GLStateManager
-
-void GLStateManager::init()
+OGLStateManager::OGLStateManager()
 {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glClearColor(0.0, 0.0, 0.0, 1.0f);
     glDepthFunc(GL_LEQUAL);
 }
 
-void GLStateManager::set(const GLState& state)
+void OGLStateManager::set(const GLState& state)
 {
     if (state.array_vertex)
         glEnableClientState(GL_VERTEX_ARRAY);
@@ -106,7 +74,7 @@ void GLStateManager::set(const GLState& state)
         glDisable(GL_ALPHA_TEST);
 }
 
-void GLStateManager::set_transform(const GLW_3VF *trans, const GLW_3VF *scale)
+void OGLStateManager::set_transform(const GLW_3VF *trans, const GLW_3VF *scale)
 {
     glLoadIdentity();
     if (trans)
@@ -115,7 +83,7 @@ void GLStateManager::set_transform(const GLW_3VF *trans, const GLW_3VF *scale)
         glScalef(scale->x, scale->y, scale->z);
 }
 
-void GLStateManager::reset_view_for_resize(coord_def &m_windowsz)
+void OGLStateManager::reset_view_for_resize(coord_def &m_windowsz)
 {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -124,24 +92,24 @@ void GLStateManager::reset_view_for_resize(coord_def &m_windowsz)
     glOrtho(0, m_windowsz.x, m_windowsz.y, 0, -1000, 1000);
 }
 
-void GLStateManager::reset_transform()
+void OGLStateManager::reset_transform()
 {
     glLoadIdentity();
     glTranslatef(0,0,0);
     glScalef(1,1,1);
 }
 
-void GLStateManager::pixelstore_unpack_alignment(unsigned int bpp)
+void OGLStateManager::pixelstore_unpack_alignment(unsigned int bpp)
 {
     glPixelStorei(GL_UNPACK_ALIGNMENT, bpp);
 }
 
-void GLStateManager::draw_primitive(const GLPrimitive &prim)
+void OGLStateManager::draw_primitive(const GLPrimitive &prim)
 {
     // Handle errors
     if ( !prim.vert_pointer || prim.count < 1 || prim.size < 1 )
         return;
-    ASSERT(_valid(prim.count, prim.mode));
+    //ASSERT(GLStateManager::_valid(prim.count, prim.mode));
 
     // Set pointers
     glVertexPointer(prim.vert_size, GL_FLOAT, prim.size, prim.vert_pointer);
@@ -184,22 +152,22 @@ void GLStateManager::draw_primitive(const GLPrimitive &prim)
     }
 }
 
-void GLStateManager::delete_textures(size_t count, unsigned int *textures)
+void OGLStateManager::delete_textures(size_t count, unsigned int *textures)
 {
     glDeleteTextures(count, (GLuint*)textures);
 }
 
-void GLStateManager::generate_textures( size_t count, unsigned int *textures)
+void OGLStateManager::generate_textures( size_t count, unsigned int *textures)
 {
     glGenTextures(count, (GLuint*)textures);
 }
 
-void GLStateManager::bind_texture(unsigned int texture)
+void OGLStateManager::bind_texture(unsigned int texture)
 {
     glBindTexture(GL_TEXTURE_2D, texture);
 }
 
-void GLStateManager::load_texture(unsigned char *pixels, unsigned int width,
+void OGLStateManager::load_texture(unsigned char *pixels, unsigned int width,
     unsigned int height, MipMapOptions mip_opt)
 {
     // Assumptions...
@@ -228,7 +196,7 @@ void GLStateManager::load_texture(unsigned char *pixels, unsigned int width,
     }
 }
 
-void GLStateManager::reset_view_for_redraw(float x, float y)
+void OGLStateManager::reset_view_for_redraw(float x, float y)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
@@ -236,38 +204,15 @@ void GLStateManager::reset_view_for_redraw(float x, float y)
     glTranslatef(x, y , 1.0f);
 }
 
-void GLStateManager::set_current_color(GLW_3VF &color)
+void OGLStateManager::set_current_color(GLW_3VF &color)
 {
     glColor3f(color.r, color.g, color.b);
 }
 
-void GLStateManager::set_current_color(GLW_4VF &color)
+void OGLStateManager::set_current_color(GLW_4VF &color)
 {
     glColor4f(color.r, color.g, color.b, color.a);
 }
-
-#ifdef DEBUG
-bool GLStateManager::_valid(int num_verts, drawing_modes mode)
-{
-    switch( mode )
-    {
-    case GLW_QUADS:
-    case GLW_TRIANGLE_STRIP:
-        return (num_verts % 4 == 0);
-    case GLW_TRIANGLES:
-        return (num_verts % 3 == 0);
-    case GLW_LINES:
-        return (num_verts % 2 == 0);
-    case GLW_POINTS:
-        return (true);
-    default:
-        return (false);
-    }
-}
-#endif
-
-/////////////////////////////////////////////////////////////////////////////
-// Static Methods
 
 #endif // USE_GL
 #endif // USE_TILE

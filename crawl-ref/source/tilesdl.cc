@@ -130,6 +130,7 @@ void TilesFramework::shutdown()
         m_fonts[i].font = NULL;
     }
 
+    GLStateManager::shutdown();
     wrapper->shutdown();
     destroy_ui_wrapper();
 
@@ -253,24 +254,26 @@ bool TilesFramework::initialise()
 #else
     "dat/tiles/stone_soup_icon-32x32.png";
 #endif
-    
+
     std::string title = CRAWL " " + Version::Long();
-    
+
     // Do our initialization here.
-    
+
     // Create an instance of UIWrapper for the library we were compiled for
     create_ui_wrapper();
     if ( !wrapper ) return (false);
-    
+
     // Initialize the wrapper
     if ( !wrapper->init(&m_windowsz) ) return (false);
-    
+
     wrapper->set_window_title(title.c_str());
     wrapper->set_window_icon(icon_name);
-    
+
     // Copy over constants that need to have been set by the wrapper
     m_screen_width = wrapper->screen_width();
     m_screen_height = wrapper->screen_height();
+
+    GLStateManager::init();
 
     // If the window size is less than the view height, the textures will
     // have to be shrunk.  If this isn't the case, then don't create mipmaps,
@@ -344,8 +347,6 @@ bool TilesFramework::initialise()
     m_layers[LAYER_CRT].m_regions.push_back(m_region_menu);
 
     cgotoxy(1, 1, GOTO_CRT);
-
-    GLStateManager::init();
 
     resize();
 
@@ -994,7 +995,7 @@ void TilesFramework::redraw()
 #endif
     m_need_redraw = false;
 
-    GLStateManager::reset_view_for_redraw(m_viewsc.x, m_viewsc.y);
+    glmanager->reset_view_for_redraw(m_viewsc.x, m_viewsc.y);
 
     for (unsigned int i = 0; i < m_layers[m_active_layer].m_regions.size(); ++i)
         m_layers[m_active_layer].m_regions[i]->render();

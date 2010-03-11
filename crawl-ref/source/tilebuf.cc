@@ -41,7 +41,7 @@ void VertBuffer<PTVert>::draw(GLW_3VF *pt, GLW_3VF *ps) const
     
     // Handle texture
     ASSERT(m_tex);
-    GLStateManager::set(m_state);
+    glmanager->set(m_state);
     m_tex->bind();
     
     GLPrimitive prim(   sizeof(Vert), size(), 2,
@@ -56,7 +56,7 @@ void VertBuffer<PTVert>::draw(GLW_3VF *pt, GLW_3VF *ps) const
     if ( ps ) prim.prescale = ps;
     
     // Draw
-    GLStateManager::draw_primitive(prim);
+    glmanager->draw_primitive(prim);
 }
 
 template<>
@@ -76,7 +76,7 @@ void VertBuffer<PCVert>::draw(GLW_3VF *pt, GLW_3VF *ps) const
     
     ASSERT(m_prim == GLW_QUADS || m_prim == GLW_LINES);
     ASSERT(!m_tex);
-    GLStateManager::set(m_state);
+    glmanager->set(m_state);
     
     // Create the primitive we wish to draw
     GLPrimitive prim(   sizeof(Vert), size(), 2,
@@ -91,7 +91,7 @@ void VertBuffer<PCVert>::draw(GLW_3VF *pt, GLW_3VF *ps) const
     if ( ps ) prim.prescale = ps;
     
     // Draw
-    GLStateManager::draw_primitive(prim);
+    glmanager->draw_primitive(prim);
 }
 
 template<>
@@ -114,7 +114,7 @@ void VertBuffer<PTCVert>::draw(GLW_3VF *pt, GLW_3VF *ps) const
     
     // Handle texture
     ASSERT(m_tex);
-    GLStateManager::set(m_state);
+    glmanager->set(m_state);
     m_tex->bind();
     
     // Create the primitive we wish to draw
@@ -130,7 +130,7 @@ void VertBuffer<PTCVert>::draw(GLW_3VF *pt, GLW_3VF *ps) const
     if ( ps ) prim.prescale = ps;
     
     // Draw
-    GLStateManager::draw_primitive(prim);
+    glmanager->draw_primitive(prim);
 }
 
 template<>
@@ -156,7 +156,7 @@ void VertBuffer<P3TCVert>::draw(GLW_3VF *pt, GLW_3VF *ps) const
     
     // Handle texture
     ASSERT(m_tex);
-    GLStateManager::set(m_state);
+    glmanager->set(m_state);
     m_tex->bind();
     
     // Create the primitive we wish to draw
@@ -172,7 +172,7 @@ void VertBuffer<P3TCVert>::draw(GLW_3VF *pt, GLW_3VF *ps) const
     if ( ps ) prim.prescale = ps;
     
     // Draw
-    GLStateManager::draw_primitive(prim);
+    glmanager->draw_primitive(prim);
 }
 
 /////////////////////////////////////////////////////////////////////////////
