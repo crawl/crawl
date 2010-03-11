@@ -130,7 +130,7 @@ void TilesFramework::shutdown()
         m_fonts[i].font = NULL;
     }
 
-    wrapper.shutdown();
+    wrapper->shutdown();
 
     _shutdown_console();
 }
@@ -255,14 +255,14 @@ bool TilesFramework::initialise()
     
     std::string title = CRAWL " " + Version::Long();
     
-    if ( !wrapper.init(&m_windowsz) ) return (false);
+    if ( !wrapper->init(&m_windowsz) ) return (false);
     
-    wrapper.set_window_title(title.c_str());
-    wrapper.set_window_icon(icon_name);
+    wrapper->set_window_title(title.c_str());
+    wrapper->set_window_icon(icon_name);
     
     // Copy over constants that need to have been set by the wrapper
-    m_screen_width = wrapper.screen_width();
-    m_screen_height = wrapper.screen_height();
+    m_screen_width = wrapper->screen_width();
+    m_screen_height = wrapper->screen_height();
 
     // If the window size is less than the view height, the textures will
     // have to be shrunk.  If this isn't the case, then don't create mipmaps,
@@ -409,7 +409,7 @@ void TilesFramework::resize()
     calculate_default_options();
     do_layout();
 
-    wrapper.resize(m_windowsz);
+    wrapper->resize(m_windowsz);
 }
 
 int TilesFramework::handle_mouse(MouseEvent &event)
@@ -468,7 +468,7 @@ int TilesFramework::handle_mouse(MouseEvent &event)
 static unsigned int _timer_callback(unsigned int ticks)
 {
     // force the event loop to break
-    wrapper.raise_custom_event();
+    wrapper->raise_custom_event();
 
     unsigned int res = Options.tile_tooltip_ms;
     return (res);
@@ -491,7 +491,7 @@ int TilesFramework::getch_ck()
     const unsigned int ticks_per_screen_redraw = Options.tile_update_rate;
 
     unsigned int res = Options.tile_tooltip_ms;
-    wrapper.set_timer(res, &_timer_callback);
+    wrapper->set_timer(res, &_timer_callback);
 
     m_tooltip.clear();
     m_region_msg->alt_text().clear();
@@ -504,9 +504,9 @@ int TilesFramework::getch_ck()
         unsigned int ticks = 0;
         last_loc = m_cur_loc;
 
-        if (wrapper.wait_event(&event))
+        if (wrapper->wait_event(&event))
         {
-            ticks = wrapper.get_ticks();
+            ticks = wrapper->get_ticks();
             if (!mouse_target_mode)
             {
                 if (event.type != UI_CUSTOMEVENT)
@@ -540,7 +540,7 @@ int TilesFramework::getch_ck()
                 // to get rid of stupid Windows/SDL bug with Alt-Tab.
                 if (event.active.gain != 0)
                 {
-                    wrapper.set_mod_state(MOD_NONE);
+                    wrapper->set_mod_state(MOD_NONE);
                     set_need_redraw();
                 }
                 break;
@@ -596,7 +596,7 @@ int TilesFramework::getch_ck()
                     // (possibly because redrawing is slow or the user
                     // is moving the mouse really quickly), process those
                     // first, before bothering to redraw the screen.
-                    unsigned int count = wrapper.get_event_count(UI_MOUSEMOTION);
+                    unsigned int count = wrapper->get_event_count(UI_MOUSEMOTION);
                     ASSERT(count >= 0);
                     if (count > 0)
                         continue;
@@ -691,7 +691,7 @@ int TilesFramework::getch_ck()
     // We got some input, so we'll probably have to redraw something.
     set_need_redraw();
 
-    wrapper.set_timer(0, NULL);
+    wrapper->set_timer(0, NULL);
 
     return key;
 }
@@ -1001,9 +1001,14 @@ void TilesFramework::redraw()
                             min_pos, m_windowsz, WHITE, false, 220, BLUE, 5,
                             true);
     }
+<<<<<<< HEAD
     wrapper.swapBuffers();
 
     m_last_tick_redraw = wrapper.get_ticks();
+=======
+    wrapper->swap_buffers();
+    m_last_tick_redraw = wrapper->get_ticks();
+>>>>>>> Modified uiwrapper to be an abstract base class.
 }
 
 void TilesFramework::update_minimap(int gx, int gy)
@@ -1260,7 +1265,7 @@ void TilesFramework::clear_overlays()
 
 void TilesFramework::set_need_redraw(unsigned int min_tick_delay)
 {
-    unsigned int ticks = (wrapper.get_ticks() - m_last_tick_redraw);
+    unsigned int ticks = (wrapper->get_ticks() - m_last_tick_redraw);
     if (min_tick_delay && ticks <= min_tick_delay)
         return;
 
