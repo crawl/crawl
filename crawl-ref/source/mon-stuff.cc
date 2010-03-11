@@ -3741,3 +3741,28 @@ bool mons_reaped(actor *killer, monsters *victim)
 
     return (true);
 }
+
+beh_type attitude_creation_behavior(mon_attitude_type att)
+{
+    switch (att)
+    {
+    case ATT_NEUTRAL:
+        return (BEH_NEUTRAL);
+    case ATT_GOOD_NEUTRAL:
+        return (BEH_GOOD_NEUTRAL);
+    case ATT_STRICT_NEUTRAL:
+        return (BEH_STRICT_NEUTRAL);
+    case ATT_FRIENDLY:
+        return (BEH_FRIENDLY);
+    default:
+        return (BEH_HOSTILE);
+    }
+
+}
+
+// Return the creation behavior type corresponding to the input
+// monsters actual attitude (i.e. ignoring monster enchantments).
+beh_type actual_same_attitude(const monsters & base)
+{
+    return attitude_creation_behavior(base.attitude);
+}
