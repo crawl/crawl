@@ -2343,32 +2343,11 @@ void bolt::affect_ground()
            && mons_class_can_pass(MONS_BALLISTOMYCETE, env.grid(pos()))
            && !actor_at(pos()))
         {
-            beh_type beh;
-            // Half the fungi in arena mode are friendly.
+            beh_type beh = attitude_creation_behavior(this->attitude);
+
             if (crawl_state.game_is_arena())
             {
                 beh = coinflip() ? BEH_FRIENDLY : BEH_HOSTILE;
-            }
-            else
-            {
-                switch (this->attitude)
-                {
-                case ATT_NEUTRAL:
-                    beh = BEH_NEUTRAL;
-                    break;
-
-                case ATT_FRIENDLY:
-                    beh = BEH_FRIENDLY;
-                    break;
-
-                case ATT_GOOD_NEUTRAL:
-                    beh = BEH_GOOD_NEUTRAL;
-                    break;
-
-                default:
-                    beh = BEH_HOSTILE;
-                    break;
-                }
             }
 
             int rc = create_monster(mgen_data(MONS_BALLISTOMYCETE,
