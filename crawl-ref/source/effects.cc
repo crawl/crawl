@@ -1478,7 +1478,8 @@ static int _acquirement_weapon_subtype(bool divine)
             if (!two_handed)
                 damage = damage * 3 / 2;
             damage *= damage * damage;
-            acqweight *= damage / property(item_considered, PWPN_SPEED);
+            // Only gods suffer from acquirement weight.
+            acqweight = 10 * damage / property(item_considered, PWPN_SPEED);
         }
 
         if (two_handed)
@@ -1712,7 +1713,8 @@ static int _acquirement_wand_subtype()
 }
 
 static int _find_acquirement_subtype(object_class_type class_wanted,
-                                     int &quantity, int agent = -1)
+                                     int &quantity, bool divine,
+                                     int agent = -1)
 {
     ASSERT(class_wanted != OBJ_RANDOM);
 
@@ -1737,7 +1739,6 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
 
     do
     {
-        const bool divine = (agent == GOD_OKAWARU || agent == GOD_XOM || agent == GOD_TROG);
         switch (class_wanted)
         {
         case OBJ_FOOD:
@@ -2048,17 +2049,44 @@ static int _failed_acquirement(bool quiet)
     return (NON_ITEM);
 }
 
+int _weapon_brand_quality(int brand, bool range)
+{
+    switch(brand)
+    {
+    case SPWPN_SPEED:
+        return range ? 3 : 5;
+    case SPWPN_PENETRATION:
+        return 4;
+    case SPWPN_ELECTROCUTION:
+    case SPWPN_DISTORTION:
+    case SPWPN_HOLY_WRATH:
+    case SPWPN_REAPING:
+        return 3;
+    case SPWPN_CHAOS:
+        return 2;
+    default:
+        return 1;
+    case SPWPN_NORMAL:
+        return 0;
+    case SPWPN_PAIN:
+        return you.skills[SK_NECROMANCY] / 2;
+    case SPWPN_VORPAL:
+        return range ? 5 : 1;
+    }
+}
+
 int acquirement_create_item(object_class_type class_wanted,
                             int agent, bool quiet,
                             const coord_def &pos, bool debug)
 {
     ASSERT(class_wanted != OBJ_RANDOM);
 
+    const bool divine = (agent == GOD_OKAWARU || agent == GOD_XOM || agent == GOD_TROG);
     int thing_created = NON_ITEM;
     int quant = 1;
     for (int item_tries = 0; item_tries < 40; item_tries++)
     {
-        int type_wanted = _find_acquirement_subtype(class_wanted, quant, agent);
+        int type_wanted = _find_acquirement_subtype(class_wanted, quant, divine, agent);
 
         // Clobber class_wanted for vampires.
         if (you.species == SP_VAMPIRE && class_wanted == OBJ_FOOD)
@@ -2076,6 +2104,16 @@ int acquirement_create_item(object_class_type class_wanted,
             continue;
 
         item_def &doodad(mitm[thing_created]);
+
+        // Not a god, prefer better brands.
+        if (!divine && !is_artefact(doodad) && doodad.base_type == OBJ_WEAPONS)
+        {
+            while(_weapon_brand_quality(get_weapon_brand(doodad),
+                                        is_range_weapon(doodad)) < random2(6))
+            {
+                reroll_brand(doodad, MAKE_GOOD_ITEM);
+            }
+        }
 
         // Try to not generate brands that were already seen, although unlike
         // jewelry and books, this is not absolute.
