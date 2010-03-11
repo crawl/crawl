@@ -399,7 +399,7 @@ void FTFont::render_textblock(unsigned int x_pos, unsigned int y_pos,
 
         trans.x++;
         trans.y++;
-        GLStateManager::set_transform(&trans, NULL);
+        GLStateManager::set_transform(&trans);
         GLStateManager::draw_primitive(prim);
         trans.x--;
         trans.y--;
@@ -413,7 +413,7 @@ void FTFont::render_textblock(unsigned int x_pos, unsigned int y_pos,
     state.array_colour = true;
     GLStateManager::set(state);
     prim.colour_pointer = &verts[0].r;
-    GLStateManager::set_transform(&trans, NULL);
+    GLStateManager::set_transform(&trans);
     GLStateManager::draw_primitive(prim);
     state.array_colour = false;
     GLStateManager::set(state);
@@ -451,7 +451,7 @@ static void _draw_box(int x_pos, int y_pos, float width, float height,
     verts[3].y = verts[0].y;
 
     // Load identity matrix
-    GLStateManager::set_transform(NULL, NULL);
+    GLStateManager::set_transform();
 
     GLState state;
     state.array_vertex = true;
