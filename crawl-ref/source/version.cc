@@ -106,18 +106,18 @@ std::string compilation_info()
 {
     std::string out = "";
 
-    out += make_stringf("Compiled with %s on %s at %s" EOL,
+    out += make_stringf("Compiled with %s on %s at %s\n",
                         Version::Compiler().c_str(), __DATE__, __TIME__);
-    out += make_stringf("Compiled on OS: %s %s" EOL,
+    out += make_stringf("Compiled on OS: %s %s\n",
                         Version::BuildOS().c_str(),
                         Version::BuildOSVersion().c_str());
-    out += make_stringf("Compiled on machine type: %s" EOL,
+    out += make_stringf("Compiled on machine type: %s\n",
                         Version::BuildMachine().c_str());
-    out += make_stringf("Compiled on processor type: %s" EOL,
+    out += make_stringf("Compiled on processor type: %s\n",
                         Version::BuildProcessor().c_str());
 
-    out += make_stringf("CLFAGS: %s" EOL, Version::CFLAGS().c_str());
-    out += make_stringf("LDFLAGS: %s" EOL, Version::LDFLAGS().c_str());
+    out += make_stringf("CLFAGS: %s\n", Version::CFLAGS().c_str());
+    out += make_stringf("LDFLAGS: %s\n", Version::LDFLAGS().c_str());
 
     return (out);
 }

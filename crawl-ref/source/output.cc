@@ -2003,27 +2003,27 @@ char _get_overview_screen_results()
 std::string dump_overview_screen(bool full_id)
 {
     std::string text = formatted_string::parse_string(_overview_screen_title());
-    text += EOL;
+    text += "\n";
 
     std::vector<formatted_string> blines = _get_overview_stats();
     for (unsigned int i = 0; i < blines.size(); ++i)
     {
         text += blines[i];
-        text += EOL;
+        text += "\n";
     }
-    text += EOL;
+    text += "\n";
 
     std::vector<char> equip_chars;
     blines = _get_overview_resistances(equip_chars, full_id);
     for (unsigned int i = 0; i < blines.size(); ++i)
     {
         text += blines[i];
-        text += EOL;
+        text += "\n";
     }
-    text += EOL;
+    text += "\n";
 
     text += formatted_string::parse_string(_status_mut_abilities());
-    text += EOL;
+    text += "\n";
 
     return text;
 }

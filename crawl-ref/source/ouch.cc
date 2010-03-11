@@ -1367,15 +1367,15 @@ void end_game(scorefile_entry &se)
 
     clrscr();
     cprintf("Goodbye, %s.", you.your_name.c_str());
-    cprintf(EOL EOL "    "); // Space padding where # would go in list format
+    cprintf("\n\n    "); // Space padding where # would go in list format
 
     std::string hiscore = hiscores_format_single_long(se, true);
 
-    const int lines = count_occurrences(hiscore, EOL) + 1;
+    const int lines = count_occurrences(hiscore, "\n") + 1;
 
     cprintf("%s", hiscore.c_str());
 
-    cprintf(EOL "Best Crawlers -" EOL);
+    cprintf("\nBest Crawlers -\n");
 
     // "- 5" gives us an extra line in case the description wraps on a line.
     hiscores_print_list(get_number_of_lines() - lines - 5);

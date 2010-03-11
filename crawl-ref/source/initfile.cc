@@ -3514,8 +3514,8 @@ std::string find_executable_path()
 
 static void _print_version()
 {
-    printf("Crawl version %s%s", Version::Long().c_str(), EOL);
-    printf("Save file version %d.%d%s", TAG_MAJOR_VERSION, TAG_MINOR_VERSION, EOL);
+    printf("Crawl version %s%s", Version::Long().c_str(), "\n");
+    printf("Save file version %d.%d%s", TAG_MAJOR_VERSION, TAG_MINOR_VERSION, "\n");
     printf("%s", compilation_info().c_str());
 }
 
@@ -3563,7 +3563,7 @@ static void _print_save_version(char *name)
             {
                 fprintf(stderr, "Warning: Zip command "
                                 "(UNPACK_SPECIFIC_FILE_CMD) "
-                                "returned non-zero value!" EOL );
+                                "returned non-zero value!\n" );
             }
             need_unlink = true;
         }

@@ -108,14 +108,14 @@ static std::string _get_version_information(void)
 
 static std::string _get_version_features(void)
 {
-    std::string result  = "<w>Features</w>" EOL;
-                result += "--------" EOL;
+    std::string result  = "<w>Features</w>\n";
+                result += "--------\n";
 
     for (unsigned int i = 0; i < ARRAYSZ(features); i++)
     {
         result += " * ";
         result += features[i];
-        result += EOL;
+        result += "\n";
     }
 
     return (result);
@@ -158,7 +158,7 @@ static std::string _get_version_changes(void)
             std::string text  = "<w>";
                         text += buf;
                         text += "</w>";
-                        text += EOL;
+                        text += "\n";
             result += text;
             // And start printing from now on.
             start = true;
@@ -174,7 +174,7 @@ static std::string _get_version_changes(void)
         else
         {
             result += buf;
-            result += EOL;
+            result += "\n";
         }
     }
     fclose(fp);
@@ -182,7 +182,7 @@ static std::string _get_version_changes(void)
     // Did we ever get to print the Highlights?
     if (start)
     {
-        result += EOL;
+        result += "\n";
         result += "For a more complete list of changes, see changelog.txt "
                   "in the docs/ folder.";
     }
@@ -270,7 +270,7 @@ static void _print_version(void)
             else
                 text = buf;
 
-            text += EOL;
+            text += "\n";
             cmd_version.add_text(text);
         }
         fclose(fp);
@@ -1322,16 +1322,16 @@ static bool _do_description(std::string key, std::string type,
         std::string help = get_god_powers(which_god);
         if (!help.empty())
         {
-            desc += EOL;
+            desc += "\n";
             desc += help;
         }
-        desc += EOL;
+        desc += "\n";
         desc += get_god_likes(which_god);
 
         help = get_god_dislikes(which_god);
         if (!help.empty())
         {
-            desc += EOL EOL;
+            desc += "\n\n";
             desc += help;
         }
     }
@@ -1510,7 +1510,7 @@ static bool _handle_FAQ()
                 answer = "No answer found in the FAQ! Please submit a "
                          "bug report!";
             }
-            answer = "Q: " + getFAQ_Question(key) + EOL + answer;
+            answer = "Q: " + getFAQ_Question(key) + "\n" + answer;
             linebreak_string2(answer, width - 1);
             print_description(answer);
             if (getch() == 0)

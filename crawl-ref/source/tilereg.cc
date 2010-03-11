@@ -3396,7 +3396,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
                 if (wielded)
                 {
                     if (you.species == SP_VAMPIRE)
-                        tip += EOL;
+                        tip += "\n";
                     _handle_wield_tip(tip, cmd, "\n[Ctrl-L-Click]", true);
                 }
                 break;

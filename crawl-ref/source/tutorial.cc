@@ -138,9 +138,9 @@ bool pick_tutorial()
     cgotoxy(1,1);
     formatted_string::parse_string(
         "<white>You must be new here indeed!</white>"
-        EOL EOL
+        "\n\n"
         "<cyan>You can be:</cyan>"
-        EOL).display();
+        "\n").display();
 
     textcolor( LIGHTGREY );
 
@@ -148,11 +148,11 @@ bool pick_tutorial()
         print_tutorial_menu(i);
 
     formatted_string::parse_string(
-        EOL
+        "\n"
         "<brown>SPACE - Back to background selection; "
         "Bksp - Back to species selection; X - Quit"
-        EOL "* - Random tutorial"
-        "</brown>" EOL).display();
+        "\n* - Random tutorial"
+        "</brown>\n").display();
 
     while (true)
     {
@@ -223,7 +223,7 @@ bool pick_tutorial()
         case ' ':
             return (false);
         case 'X':
-            cprintf(EOL "Goodbye!");
+            cprintf("\nGoodbye!");
             end(0);
             return (false);
         }
@@ -265,7 +265,7 @@ void print_tutorial_menu(unsigned int type)
           break;
     }
 
-    cprintf("%c - %s %s %s" EOL,
+    cprintf("%c - %s %s %s\n",
             letter, species_name(_get_tutorial_species(type), 1).c_str(),
                     get_job_name(_get_tutorial_job(type)), desc);
 }
@@ -318,7 +318,7 @@ static void _tut_print_starting_info(unsigned int width)
 {
     std::string text;
 
-    text  = "<white>Welcome to Dungeon Crawl!</white>" EOL EOL;
+    text  = "<white>Welcome to Dungeon Crawl!</white>\n\n";
     text += "Your object is to lead a <w>"
          + species_name(you.species, 1) + " " + you.class_name
          +
@@ -326,28 +326,28 @@ static void _tut_print_starting_info(unsigned int width)
         "fabled Orb of Zot and returning it to the surface. "
         "In the beginning, however, let discovery be your "
         "main goal. Try to delve as deeply as possible but beware; "
-        "death lurks around every corner." EOL EOL
+        "death lurks around every corner.\n\n"
         "For the moment, just remember the following keys "
-        "and their functions:" EOL
-        "  <white>%?</white> - shows the items and the commands" EOL
+        "and their functions:\n"
+        "  <white>%?</white> - shows the items and the commands\n"
         "  <white>%</white>  - saves the game, to be resumed later "
-        "(but note that death is permanent)" EOL
-        "  <white>%</white>  - examines something in your vicinity" EOL EOL
+        "(but note that death is permanent)\n"
+        "  <white>%</white>  - examines something in your vicinity\n\n"
         "This tutorial will help you play Crawl without reading any "
         "documentation. If you feel intrigued, there is more information "
         "available in the following files from the docs/ folder (all of "
         "which can also be read in-game):"
-        EOL
+        "\n"
         "  <lightblue>quickstart.txt</lightblue>     - "
-        "A very short guide to Crawl." EOL
+        "A very short guide to Crawl.\n"
         "  <lightblue>crawl_manual.txt</lightblue>   - "
-        "This contains all details on species, magic, skills, etc." EOL
+        "This contains all details on species, magic, skills, etc.\n"
         "  <lightblue>options_guide.txt</lightblue>  - "
-        "Crawl's interface is highly configurable. This document " EOL
-        "                       explains all the options." EOL
-        EOL
+        "Crawl's interface is highly configurable. This document \n"
+        "                       explains all the options.\n"
+        "\n"
         "Press <white>Space</white> to proceed to the basics "
-        "(the screen division and movement)." EOL
+        "(the screen division and movement).\n"
         "Press <white>Esc</white> to fast forward to the game start.";
 
     insert_commands(text, CMD_DISPLAY_COMMANDS, CMD_SAVE_GAME, CMD_LOOK_AROUND, 0);
@@ -535,7 +535,7 @@ static formatted_string _tutorial_debug()
     result += std::string(i, ' ');
     result += "<white>";
     result += info;
-    result += "</white>" EOL EOL;
+    result += "</white>\n\n";
 
     result += "<lightblue>";
     for (i = 0; i < TUT_EVENTS_NUM; i++)
@@ -549,7 +549,7 @@ static formatted_string _tutorial_debug()
         // Break text into 2 columns where possible.
         if (strlen(info) >= _get_tutorial_cols()/2 || lbreak)
         {
-            result += EOL;
+            result += "\n";
             lbreak = false;
         }
         else
@@ -558,11 +558,11 @@ static formatted_string _tutorial_debug()
             lbreak = true;
         }
     }
-    result += "</lightblue>" EOL EOL;
+    result += "</lightblue>\n\n";
 
     snprintf(info, INFO_SIZE, "tutorial_left: %d\n", Tutorial.tutorial_left);
     result += info;
-    result += EOL;
+    result += "\n";
 
     snprintf(info, INFO_SIZE, "You are a %s %s, and the tutorial will reflect "
              "that.", species_name(you.species, 1), you.class_name);
@@ -587,7 +587,7 @@ static void _tutorial_map_intro()
               "out.";
     result += "</";
     result += colour_to_str(channel_to_colour(MSGCH_TUTORIAL));
-    result += ">" EOL;
+    result += ">\n";
 
     mpr(result);
 }
@@ -608,7 +608,7 @@ static void _tutorial_stats_intro()
             "actions often draw from Magic, too.\n"
             "<w>Str</w>ength, <w>Int</w>elligence, <w>Dex</w>terity below "
             "provide an all-around account of the character's attributes. "
-            "Don't worry about the rest for now." EOL;
+            "Don't worry about the rest for now.\n";
 
     mpr(istr.str(), MSGCH_TUTORIAL, 0);
 #else
@@ -666,7 +666,7 @@ static void _tutorial_message_intro()
 #ifdef USE_TILE
               " or by <w>clicking into the message area</w>"
 #endif
-              "." EOL;
+              ".\n";
     insert_commands(result, CMD_REPLAY_MESSAGES, 0);
 
 #ifdef USE_TILE
@@ -679,7 +679,7 @@ static void _tutorial_message_intro()
              "switch to a spell display for currently memorised spells to "
              "cast them, or to a display of not yet memorised spells "
              "included in books you are carrying, so as to commit them to "
-             "memory." EOL;
+             "memory.\n";
 #endif
 
     mpr(result, MSGCH_TUTORIAL, 0);
@@ -696,10 +696,10 @@ static void _tutorial_movement_info()
         "considered safe, i.e. there are no monsters around, you'll move "
         "towards the chosen square."
 #endif
-        EOL
+        "\n"
         "A basic command list can be found under <w>?\?</w>, and the most "
         "important commands will be explained to you as it becomes necessary."
-        EOL;
+        "\n";
 
     insert_commands(text, CMD_MOVE_LEFT, CMD_MOVE_DOWN, CMD_MOVE_UP,
                     CMD_MOVE_RIGHT, CMD_MOVE_UP_LEFT, CMD_MOVE_UP_RIGHT,
@@ -1386,7 +1386,7 @@ void tutorial_monster_seen(const monsters &mon)
     if (crawl_view.mlistsz.y > 0)
     {
         text += "Your console settings allowing, you'll always see a "
-                "list of monsters somewhere on the screen." EOL;
+                "list of monsters somewhere on the screen.\n";
     }
     text += "You can gain information about it by pressing <w>x</w> and "
             "moving the cursor on the monster, and read the monster "
@@ -1417,7 +1417,7 @@ void tutorial_monster_seen(const monsters &mon)
             text += "First <w>w</w>ield it, then follow the instructions.";
 
 #ifdef USE_TILE
-        text += EOL "As a short-cut you can also <w>right-click</w> on your "
+        text += "\nAs a short-cut you can also <w>right-click</w> on your "
                 "bow to read its description, and <w>left-click</w> to wield "
                 "it.";
 #endif
@@ -1442,7 +1442,7 @@ void tutorial_monster_seen(const monsters &mon)
                 "this.";
 
 #ifdef USE_TILE
-        text += EOL "As a short-cut you can also <w>right-click</w> on your "
+        text += "\nAs a short-cut you can also <w>right-click</w> on your "
                 "book in your inventory to read its description.";
 #endif
         mpr(text, MSGCH_TUTORIAL, 0);
@@ -1501,7 +1501,7 @@ void tutorial_first_item(const item_def &item)
 #ifdef USE_TILE
             "(In Tiles, these will be marked with a green frame around them.)"
 #endif
-            EOL "Once it is in your inventory, you can drop it again with "
+            "\nOnce it is in your inventory, you can drop it again with "
 #ifdef USE_TILE
             "a <w>left mouse click</w> while pressing the <w>Shift key</w>. "
             "Whenever you <w>right-click</w> on an item"
@@ -4445,10 +4445,10 @@ void tutorial_inscription_info(bool autoinscribe, std::string prompt)
     bool longtext = false;
     if (wherey() <= get_number_of_lines() - (autoinscribe ? 10 : 8))
     {
-        text << EOL
-         "Inscriptions are a powerful concept of Dungeon Crawl." EOL
-         "You can inscribe items to differentiate them, or to comment on them, " EOL
-         "but also to set rules for item interaction. If you are new to Crawl, " EOL
+        text << "\n"
+         "Inscriptions are a powerful concept of Dungeon Crawl.\n"
+         "You can inscribe items to differentiate them, or to comment on them, \n"
+         "but also to set rules for item interaction. If you are new to Crawl, \n"
          "you can safely ignore this feature, though.";
 
         longtext = true;
@@ -4456,14 +4456,14 @@ void tutorial_inscription_info(bool autoinscribe, std::string prompt)
 
     if (autoinscribe && wherey() <= get_number_of_lines() - 6)
     {
-        text << EOL
-         "Artefacts can be autoinscribed to give a brief overview of their " EOL
+        text << "\n"
+         "Artefacts can be autoinscribed to give a brief overview of their \n"
          "known properties.";
 
         longtext = true;
     }
-    text << EOL
-       "(In the main screen, press <w>?6</w> for more information.)" EOL;
+    text << "\n"
+       "(In the main screen, press <w>?6</w> for more information.)\n";
     text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
     formatted_string::parse_string(text.str()).display();

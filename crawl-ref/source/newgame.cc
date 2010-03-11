@@ -188,7 +188,7 @@ static void _print_character_info()
     {
         cprintf("Welcome, ");
         textcolor( YELLOW );
-        cprintf("%s the %s %s." EOL, you.your_name.c_str(),
+        cprintf("%s the %s %s.\n", you.your_name.c_str(),
                 species_name(you.species, 1).c_str(),
                 get_job_name(you.char_class));
     }
@@ -301,7 +301,7 @@ static bool _check_saved_game(void)
     if (handle != NULL)
     {
         fclose(handle);
-        cprintf(EOL "Loading game..." EOL);
+        cprintf("\nLoading game...\n");
 
         // Create command.
         char cmd_buff[1024];
@@ -315,8 +315,8 @@ static bool _check_saved_game(void)
 
         if (system( cmd_buff ) != 0)
         {
-            cprintf( EOL "Warning: Zip command (LOAD_UNPACKAGE_CMD) "
-                         "returned non-zero value!" EOL );
+            cprintf( "\nWarning: Zip command (LOAD_UNPACKAGE_CMD) "
+                         "returned non-zero value!\n" );
         }
 
         // Remove save game package.
@@ -741,11 +741,11 @@ game_start:
         if (specs.length() > 79)
             specs = specs.substr(0, 79);
 
-        cprintf( "You are a%s %s %s." EOL,
+        cprintf( "You are a%s %s %s.\n",
                  (is_vowel( specs[0] )) ? "n" : "", specs.c_str(),
                  you.class_name );
 
-        cprintf(EOL "Do you want to play this combination? (ynq) [y]");
+        cprintf("\nDo you want to play this combination? (ynq) [y]");
         char c = getch();
         if (c == ESCAPE || tolower(c) == 'q')
             end(0);
@@ -762,7 +762,7 @@ game_start:
         if (specs.length() > 79)
             specs = specs.substr(0, 79);
 
-        cprintf( "You are a%s %s %s." EOL,
+        cprintf( "You are a%s %s %s.\n",
                  (is_vowel( specs[0] )) ? "n" : "", specs.c_str(),
                  you.class_name );
 
@@ -772,12 +772,12 @@ game_start:
 
         if (_check_saved_game())
         {
-            cprintf(EOL "Do you really want to overwrite your old game? ");
+            cprintf("\nDo you really want to overwrite your old game? ");
             char c = getch();
             if (c != 'Y' && c != 'y')
             {
                 textcolor( BROWN );
-                cprintf(EOL EOL "Welcome back, ");
+                cprintf("\n\nWelcome back, ");
                 textcolor( YELLOW );
                 cprintf("%s!", you.your_name.c_str());
                 textcolor( LIGHTGREY );
@@ -1018,8 +1018,8 @@ static bool _choose_book( int slot, int firstbook, int numbooks )
         _print_character_info();
 
         textcolor( CYAN );
-        cprintf(EOL "You have a choice of books:  "
-                    "(Press %% for a list of aptitudes)" EOL);
+        cprintf("\nYou have a choice of books:  "
+                    "(Press %% for a list of aptitudes)\n");
 
         for (int i = 0; i < numbooks; ++i)
         {
@@ -1030,14 +1030,14 @@ static bool _choose_book( int slot, int firstbook, int numbooks )
             else
                 textcolor(DARKGREY);
 
-            cprintf("%c - %s" EOL, 'a' + i,
+            cprintf("%c - %s\n", 'a' + i,
                     book.name(DESC_PLAIN, false, true).c_str());
         }
 
         textcolor(BROWN);
-        cprintf(EOL "* - Random choice; + - Good random choice; "
+        cprintf("\n* - Random choice; + - Good random choice; "
                     "Bksp - Back to species and background selection; "
-                    "X - Quit" EOL);
+                    "X - Quit\n");
 
         if (Options.prev_book != SBT_NO_SELECTION)
         {
@@ -1048,12 +1048,12 @@ static bool _choose_book( int slot, int firstbook, int numbooks )
                     Options.prev_book == SBT_RANDOM ? "Random"
                                                     : "Buggy Book");
         }
-        cprintf(EOL);
+        cprintf("\n");
 
         do
         {
             textcolor( CYAN );
-            cprintf(EOL "Which book? ");
+            cprintf("\nWhich book? ");
             textcolor( LIGHTGREY );
 
             keyin = c_getch();
@@ -1061,7 +1061,7 @@ static bool _choose_book( int slot, int firstbook, int numbooks )
             switch (keyin)
             {
             case 'X':
-                cprintf(EOL "Goodbye!");
+                cprintf("\nGoodbye!");
                 end(0);
                 break;
             case CK_BKSP:
@@ -1201,8 +1201,8 @@ static bool _choose_weapon()
         _print_character_info();
 
         textcolor( CYAN );
-        cprintf(EOL "You have a choice of weapons:  "
-                    "(Press %% for a list of aptitudes)" EOL);
+        cprintf("\nYou have a choice of weapons:  "
+                    "(Press %% for a list of aptitudes)\n");
 
         bool prevmatch = false;
         for (int i = 0; i < num_choices; i++)
@@ -1218,7 +1218,7 @@ static bool _choose_weapon()
                 textcolor(DARKGREY);
 
             const char letter = 'a' + i;
-            cprintf("%c - %s" EOL, letter,
+            cprintf("%c - %s\n", letter,
                     startwep[i] == WPN_UNARMED ? "claws"
                                                : weapon_base_name(startwep[i]));
 
@@ -1230,9 +1230,9 @@ static bool _choose_weapon()
             Options.prev_weapon = WPN_UNKNOWN;
 
         textcolor(BROWN);
-        cprintf(EOL "* - Random choice; + - Good random choice; "
+        cprintf("\n* - Random choice; + - Good random choice; "
                     "Bksp - Back to species and background selection; "
-                    "X - Quit" EOL);
+                    "X - Quit\n");
 
         if (prevmatch || Options.prev_weapon == WPN_RANDOM)
         {
@@ -1241,12 +1241,12 @@ static bool _choose_weapon()
                     Options.prev_weapon == WPN_UNARMED ? "claws"  :
                     weapon_base_name(Options.prev_weapon));
         }
-        cprintf(EOL);
+        cprintf("\n");
 
         do
         {
             textcolor( CYAN );
-            cprintf(EOL "Which weapon? ");
+            cprintf("\nWhich weapon? ");
             textcolor( LIGHTGREY );
 
             keyin = c_getch();
@@ -1254,7 +1254,7 @@ static bool _choose_weapon()
             switch (keyin)
             {
             case 'X':
-                cprintf(EOL "Goodbye!");
+                cprintf("\nGoodbye!");
                 end(0);
                 break;
             case CK_BKSP:
@@ -2774,11 +2774,11 @@ spec_query:
         if (!crawl_state.game_is_sprint()) {
             cprintf("  (Press Ctrl-T to enter a tutorial.)");
         }
-        cprintf(EOL EOL);
+        cprintf("\n\n");
         textcolor( CYAN );
         cprintf("You can be:  "
                 "(Press ? for more information, %% for a list of aptitudes)");
-        cprintf(EOL);
+        cprintf("\n");
 
         textcolor( LIGHTGREY );
 
@@ -2816,7 +2816,7 @@ spec_query:
             }
 
             if (i % 2)
-                cprintf(EOL);
+                cprintf("\n");
             else
                 cgotoxy(31, wherey());
 
@@ -2824,21 +2824,21 @@ spec_query:
         }
 
         if (i % 2)
-            cprintf(EOL);
+            cprintf("\n");
 
         textcolor( BROWN );
-        cprintf(EOL EOL);
+        cprintf("\n\n");
         if (you.char_class == JOB_UNKNOWN)
         {
-            cprintf("Space - Choose background first; * - Random species" EOL
+            cprintf("Space - Choose background first; * - Random species\n"
                     "! - Random character; # - Good random character; X - Quit"
-                    EOL);
+                    "\n");
         }
         else
         {
             cprintf("* - Random; + - Good random; "
                     "Bksp - Back to background selection; X - Quit"
-                    EOL);
+                    "\n");
         }
 
         if (Options.prev_race)
@@ -2854,11 +2854,11 @@ spec_query:
                         prevspeciesok? "; " : "",
                         _prev_startup_description().c_str());
             }
-            cprintf(EOL);
+            cprintf("\n");
         }
 
         textcolor( CYAN );
-        cprintf(EOL "Which one? ");
+        cprintf("\nWhich one? ");
         textcolor( LIGHTGREY );
 
         printed = true;
@@ -2874,7 +2874,7 @@ spec_query:
     {
     case 'X':
     case ESCAPE:
-        cprintf(EOL "Goodbye!");
+        cprintf("\nGoodbye!");
         end(0);
         break;
     case CK_BKSP:
@@ -3018,10 +3018,10 @@ job_query:
             cprintf("  (Press Ctrl-T to enter a tutorial.)");
         }
 
-        cprintf(EOL EOL);
+        cprintf("\n\n");
         textcolor( CYAN );
         cprintf("You can be:  "
-                "(Press ? for more information, %% for a list of aptitudes)" EOL);
+                "(Press ? for more information, %% for a list of aptitudes)\n");
         textcolor( LIGHTGREY );
 
         int j = 0;
@@ -3059,7 +3059,7 @@ job_query:
             }
 
             if (j % 2)
-                cprintf(EOL);
+                cprintf("\n");
             else
                 cgotoxy(31, wherey());
 
@@ -3069,23 +3069,23 @@ job_query:
         }
 
         if (j % 2)
-            cprintf(EOL);
+            cprintf("\n");
 
         textcolor( BROWN );
         if (you.species == SP_UNKNOWN)
         {
-            cprintf(EOL
+            cprintf("\n"
                     "Space - Choose species first; * - Random background; "
-                    "+ - Good random background" EOL
+                    "+ - Good random background\n"
                     "! - Random character; # - Good random character; X - Quit"
-                    EOL);
+                    "\n");
         }
         else
         {
-            cprintf(EOL
+            cprintf("\n"
                     "* - Random; + - Good random; "
                     "Bksp - Back to species selection; X - Quit"
-                    EOL);
+                    "\n");
         }
 
         if (Options.prev_cls)
@@ -3101,11 +3101,11 @@ job_query:
                         prevjobok? "; " : "",
                         _prev_startup_description().c_str());
             }
-            cprintf(EOL);
+            cprintf("\n");
         }
 
         textcolor( CYAN );
-        cprintf(EOL "Which one? ");
+        cprintf("\nWhich one? ");
         textcolor( LIGHTGREY );
 
         printed = true;
@@ -3120,7 +3120,7 @@ job_query:
     switch (keyn)
     {
     case 'X':
-        cprintf(EOL "Goodbye!");
+        cprintf("\nGoodbye!");
         end(0);
         break;
     case CK_BKSP:
@@ -3360,8 +3360,8 @@ static bool _choose_wand()
         _print_character_info();
 
         textcolor( CYAN );
-        cprintf(EOL "You have a choice of tools:" EOL
-                    "(Press %% for a list of aptitudes)" EOL);
+        cprintf("\nYou have a choice of tools:\n"
+                    "(Press %% for a list of aptitudes)\n");
 
         bool prevmatch = false;
         for (int i = 0; i < num_choices; i++)
@@ -3371,14 +3371,14 @@ static bool _choose_wand()
             const char letter = 'a' + i;
             if (i == num_choices - 1)
             {
-                cprintf("%c - %s" EOL, letter,
+                cprintf("%c - %s\n", letter,
                         you.inv[2].name(DESC_QUALNAME, false, true).c_str());
                 wandtype = you.inv[2].sub_type;
                 is_rod = true;
             }
             else
             {
-                cprintf("%c - %s" EOL, letter, wand_type_name(startwand[i]));
+                cprintf("%c - %s\n", letter, wand_type_name(startwand[i]));
                 wandtype = startwand[i];
                 is_rod = false;
             }
@@ -3391,9 +3391,9 @@ static bool _choose_wand()
             Options.prev_wand = SWT_NO_SELECTION;
 
         textcolor(BROWN);
-        cprintf(EOL "* - Random choice; "
+        cprintf("\n* - Random choice; "
                     "Bksp - Back to species and background selection; "
-                    "X - Quit" EOL);
+                    "X - Quit\n");
 
         if (prevmatch || Options.prev_wand == SWT_RANDOM)
         {
@@ -3407,12 +3407,12 @@ static bool _choose_wand()
                     Options.prev_wand == SWT_RANDOM      ? "Random"
                                                          : "Buggy Tool");
         }
-        cprintf(EOL);
+        cprintf("\n");
 
         do
         {
             textcolor( CYAN );
-            cprintf(EOL "Which tool? ");
+            cprintf("\nWhich tool? ");
             textcolor( LIGHTGREY );
 
             keyin = c_getch();
@@ -3420,7 +3420,7 @@ static bool _choose_wand()
             switch (keyin)
             {
             case 'X':
-                cprintf(EOL "Goodbye!");
+                cprintf("\nGoodbye!");
                 end(0);
                 break;
             case CK_BKSP:
@@ -3693,7 +3693,7 @@ bool _give_items_skills()
                 _print_character_info();
 
                 textcolor( CYAN );
-                cprintf(EOL "Which god do you wish to serve?" EOL);
+                cprintf("\nWhich god do you wish to serve?\n");
 
                 const char* god_name[3] = {"Zin (for traditional priests)",
                                            "Yredelemnul (for priests of death)",
@@ -3710,13 +3710,13 @@ bool _give_items_skills()
                         textcolor(DARKGREY);
 
                     const char letter = 'a' + i;
-                    cprintf("%c - %s" EOL, letter, god_name[i]);
+                    cprintf("%c - %s\n", letter, god_name[i]);
                 }
 
                 textcolor( BROWN );
-                cprintf(EOL "* - Random choice; + - Good random choice" EOL
+                cprintf("\n* - Random choice; + - Good random choice\n"
                             "Bksp - Back to species and background selection; "
-                            "X - Quit" EOL);
+                            "X - Quit\n");
 
                 if (religion_restriction(Options.prev_pr, ng) == CC_BANNED)
                     Options.prev_pr = GOD_NO_GOD;
@@ -3724,7 +3724,7 @@ bool _give_items_skills()
                 if (Options.prev_pr != GOD_NO_GOD)
                 {
                     textcolor(BROWN);
-                    cprintf(EOL "Enter - %s" EOL,
+                    cprintf("\nEnter - %s\n",
                             Options.prev_pr == GOD_ZIN         ? "Zin" :
                             Options.prev_pr == GOD_YREDELEMNUL ? "Yredelemnul" :
                             Options.prev_pr == GOD_BEOGH       ? "Beogh"
@@ -3738,7 +3738,7 @@ bool _give_items_skills()
                     switch (keyn)
                     {
                     case 'X':
-                        cprintf(EOL "Goodbye!");
+                        cprintf("\nGoodbye!");
                         end(0);
                         break;
                     case CK_BKSP:
@@ -3874,7 +3874,7 @@ bool _give_items_skills()
             _print_character_info();
 
             textcolor( CYAN );
-            cprintf(EOL "Which god of chaos do you wish to serve?" EOL);
+            cprintf("\nWhich god of chaos do you wish to serve?\n");
 
             const char* god_name[3] = {"Xom of Chaos",
                                        "Makhleb the Destroyer",
@@ -3891,18 +3891,18 @@ bool _give_items_skills()
                     textcolor(DARKGREY);
 
                 const char letter = 'a' + i;
-                cprintf("%c - %s" EOL, letter, god_name[i]);
+                cprintf("%c - %s\n", letter, god_name[i]);
             }
 
             textcolor( BROWN );
-            cprintf(EOL "* - Random choice; + - Good random choice" EOL
+            cprintf("\n* - Random choice; + - Good random choice\n"
                         "Bksp - Back to species and background selection; "
-                        "X - Quit" EOL);
+                        "X - Quit\n");
 
             if (Options.prev_ck != GOD_NO_GOD)
             {
                 textcolor(BROWN);
-                cprintf(EOL "Enter - %s" EOL,
+                cprintf("\nEnter - %s\n",
                         Options.prev_ck == GOD_XOM     ? "Xom" :
                         Options.prev_ck == GOD_MAKHLEB ? "Makhleb" :
                         Options.prev_ck == GOD_LUGONU  ? "Lugonu"
@@ -3917,7 +3917,7 @@ bool _give_items_skills()
                 switch (keyn)
                 {
                 case 'X':
-                    cprintf(EOL "Goodbye!");
+                    cprintf("\nGoodbye!");
                     end(0);
                     break;
                 case CK_BKSP:
@@ -4073,9 +4073,9 @@ bool _give_items_skills()
             _print_character_info();
 
             textcolor(CYAN);
-            cprintf(EOL "From where do you draw your power?" EOL);
+            cprintf("\nFrom where do you draw your power?\n");
             textcolor(_necromancy_okay() ? LIGHTGREY : DARKGREY);
-            cprintf("a - Necromantic magic" EOL);
+            cprintf("a - Necromantic magic\n");
 
             // Yredelemnul is an okay choice for everyone.
             if (religion_restriction(GOD_YREDELEMNUL, ng) == CC_UNRESTRICTED)
@@ -4083,17 +4083,17 @@ bool _give_items_skills()
             else
                 textcolor(DARKGREY);
 
-            cprintf("b - the god Yredelemnul" EOL);
+            cprintf("b - the god Yredelemnul\n");
 
             textcolor( BROWN );
-            cprintf(EOL "* - Random choice; + - Good random choice " EOL
+            cprintf("\n* - Random choice; + - Good random choice \n"
                         "Bksp - Back to species and background selection; "
-                        "X - Quit" EOL);
+                        "X - Quit\n");
 
             if (Options.prev_dk != DK_NO_SELECTION)
             {
                 textcolor(BROWN);
-                cprintf(EOL "Enter - %s" EOL,
+                cprintf("\nEnter - %s\n",
                         Options.prev_dk == DK_NECROMANCY  ? "Necromancy" :
                         Options.prev_dk == DK_YREDELEMNUL ? "Yredelemnul"
                                                           : "Random");
@@ -4106,7 +4106,7 @@ bool _give_items_skills()
                 switch (keyn)
                 {
                 case 'X':
-                    cprintf(EOL "Goodbye!");
+                    cprintf("\nGoodbye!");
                     end(0);
                     break;
                 case CK_BKSP:
@@ -4150,7 +4150,7 @@ bool _give_items_skills()
                     choice = coinflip()? DK_NECROMANCY : DK_YREDELEMNUL;
                     break;
                 case 'a':
-                    cprintf(EOL "Very well.");
+                    cprintf("\nVery well.");
                     choice = DK_NECROMANCY;
                     break;
                 case 'b':

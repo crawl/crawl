@@ -1781,8 +1781,8 @@ static void _save_game_exit()
 
     if (system( cmd_buff ) != 0)
     {
-        cprintf( EOL "Warning: Zip command (SAVE_PACKAGE_CMD) returned "
-                     "non-zero value!" EOL );
+        cprintf( "\nWarning: Zip command (SAVE_PACKAGE_CMD) returned "
+                     "non-zero value!\n" );
     }
     DO_CHMOD_PRIVATE ( (dirname + basename + PACKAGE_SUFFIX).c_str() );
 #endif

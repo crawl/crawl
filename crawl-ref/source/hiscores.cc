@@ -220,7 +220,7 @@ static void _hiscores_print_entry(const scorefile_entry &se,
     else
         entry = hiscores_format_single_long( se, (format == SCORE_VERBOSE) );
 
-    entry += EOL;
+    entry += "\n";
     pf("%s", entry.c_str());
 }
 
@@ -351,7 +351,7 @@ static void _hiscore_date_string( time_t time, char buff[INFO_SIZE] )
 
 static std::string _hiscore_newline_string()
 {
-    return (EOL "             ");
+    return ("\n             ");
 }
 
 std::string hiscores_format_single_long( const scorefile_entry &se,
@@ -750,7 +750,7 @@ void scorefile_entry::set_score_fields() const
 
 std::string scorefile_entry::make_oneline(const std::string &ml) const
 {
-    std::vector<std::string> lines = split_string(EOL, ml);
+    std::vector<std::string> lines = split_string("\n", ml);
     for (int i = 0, size = lines.size(); i < size; ++i)
     {
         std::string &s = lines[i];

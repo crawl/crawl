@@ -2446,7 +2446,7 @@ void inscribe_item(item_def &item, bool msgwin)
             ret = msgwin_get_line(prompt, buf, sizeof buf);
         else
         {
-            prompt = EOL "<cyan>" + prompt + "</cyan>";
+            prompt = "\n<cyan>" + prompt + "</cyan>";
             formatted_string::parse_string(prompt).display();
             ret = cancelable_get_line(buf, sizeof buf);
         }
@@ -3504,9 +3504,9 @@ static void _detailed_god_description(god_type which_god)
     std::string godname = god_name(which_god, true);
     int len = get_number_of_cols() - godname.length();
     textcolor(god_colour(which_god));
-    cprintf("%s%s" EOL, std::string(len / 2, ' ').c_str(), godname.c_str());
+    cprintf("%s%s\n", std::string(len / 2, ' ').c_str(), godname.c_str());
     textcolor(LIGHTGREY);
-    cprintf(EOL);
+    cprintf("\n");
 
     std::string broken;
     if (which_god != GOD_NEMELEX_XOBEH)
@@ -3516,8 +3516,8 @@ static void _detailed_god_description(god_type which_god)
         {
             linebreak_string2(broken, width);
             display_tagged_block(broken);
-            cprintf(EOL);
-            cprintf(EOL);
+            cprintf("\n");
+            cprintf("\n");
         }
     }
 
@@ -3530,8 +3530,8 @@ static void _detailed_god_description(god_type which_god)
         broken = get_god_dislikes(which_god, true);
         if (!broken.empty())
         {
-            cprintf(EOL);
-            cprintf(EOL);
+            cprintf("\n");
+            cprintf("\n");
             linebreak_string2(broken, width);
             display_tagged_block(broken);
         }
@@ -3572,7 +3572,7 @@ static void _detailed_god_description(god_type which_god)
                          "whole stack), with <w>=p</w> (protects only the "
                          "item), or with <w>!D</w> (causes item to be ignored "
                          "in sacrifices)."
-                         EOL EOL
+                         "\n\n"
                          "Nemelex Xobeh gifts various types of decks of cards. "
                          "Each deck type comes in three power levels: plain, "
                          "ornate, legendary. The latter contain very powerful "
@@ -3580,14 +3580,14 @@ static void _detailed_god_description(god_type which_god)
                          "Evocations skill help here, as the power of Nemelex' "
                          "abilities is governed by Evocations instead of "
                          "Invocations. The type of the deck gifts strongly "
-                         "depends on the dominating item class sacrificed:" EOL
-                         "  decks of Escape      -- armour" EOL
-                         "  decks of Destruction -- weapons and ammunition" EOL
+                         "depends on the dominating item class sacrificed:\n"
+                         "  decks of Escape      -- armour\n"
+                         "  decks of Destruction -- weapons and ammunition\n"
                          "  decks of Dungeons    -- jewellery, books, "
-                                                    "miscellaneous items" EOL
-                         "  decks of Summoning   -- corpses, chunks, blood" EOL
+                                                    "miscellaneous items\n"
+                         "  decks of Summoning   -- corpses, chunks, blood\n"
                          "  decks of Wonders     -- consumables: food, potions, "
-                                                    "scrolls, wands" EOL;
+                                                    "scrolls, wands\n";
             }
         default:
             break;
@@ -3595,8 +3595,8 @@ static void _detailed_god_description(god_type which_god)
 
         if (!broken.empty())
         {
-            cprintf(EOL);
-            cprintf(EOL);
+            cprintf("\n");
+            cprintf("\n");
             linebreak_string2(broken, width);
             display_tagged_block(broken);
         }
@@ -3630,13 +3630,13 @@ void describe_god( god_type which_god, bool give_title )
     if (give_title)
     {
         textcolor( WHITE );
-        cprintf( "                                  Religion" EOL );
+        cprintf( "                                  Religion\n" );
         textcolor( LIGHTGREY );
     }
 
     if (which_god == GOD_NO_GOD) //mv: No god -> say it and go away.
     {
-        cprintf( EOL "You are not religious." );
+        cprintf( "\nYou are not religious." );
         get_ch();
         return;
     }
@@ -3646,7 +3646,7 @@ void describe_god( god_type which_god, bool give_title )
     // Print long god's name.
     textcolor(colour);
     cprintf( "%s", god_name(which_god, true).c_str());
-    cprintf(EOL EOL);
+    cprintf("\n\n");
 
     // Print god's description.
     textcolor(LIGHTGREY);
@@ -3659,7 +3659,7 @@ void describe_god( god_type which_god, bool give_title )
     if (you.religion == which_god)
     {
         // Print title based on piety.
-        cprintf(EOL "Title - ");
+        cprintf("\nTitle - ");
         textcolor(colour);
 
         std::string title = god_title(which_god);
@@ -3671,7 +3671,7 @@ void describe_god( god_type which_god, bool give_title )
     // something better, do it.
 
     textcolor(LIGHTGREY);
-    cprintf(EOL EOL "Favour - ");
+    cprintf("\n\nFavour - ");
     textcolor(colour);
 
     //mv: Player is praying at altar without appropriate religion.
@@ -3709,7 +3709,7 @@ void describe_god( god_type which_god, bool give_title )
         //mv: The following code shows abilities given by your god (if any).
 
         textcolor(LIGHTGREY);
-        cprintf(EOL EOL "Granted powers:                                                          (Cost)" EOL);
+        cprintf("\n\nGranted powers:                                                          (Cost)\n");
         textcolor(colour);
 
         // mv: Some gods can protect you from harm.
@@ -3771,7 +3771,7 @@ void describe_god( god_type which_god, bool give_title )
                               (you.piety >=  50) ? "sometimes" :
                                                    "occasionally";
 
-            cprintf("%s %s shields you from unclean and chaotic effects." EOL,
+            cprintf("%s %s shields you from unclean and chaotic effects.\n",
                     god_name(which_god).c_str(), how);
         }
         else if (which_god == GOD_SHINING_ONE)
@@ -3782,7 +3782,7 @@ void describe_god( god_type which_god, bool give_title )
                               (you.piety >=  50) ? "sometimes" :
                                                    "occasionally";
 
-            cprintf("%s %s shields you from negative energy." EOL,
+            cprintf("%s %s shields you from negative energy.\n",
                     god_name(which_god).c_str(), how);
         }
         else if (which_god == GOD_TROG)
@@ -3849,7 +3849,7 @@ void describe_god( god_type which_god, bool give_title )
                 }
         }
         if (!have_any)
-            cprintf( "None." EOL );
+            cprintf( "None.\n" );
     }
 
     int bottom_line = get_number_of_lines();
@@ -3892,7 +3892,7 @@ std::string get_skill_description(int skill, bool need_title)
     if (need_title)
     {
         result = lookup;
-        result += EOL EOL;
+        result += "\n\n";
     }
 
     result += getLongDescription(lookup);
@@ -3954,7 +3954,7 @@ std::string get_skill_description(int skill, bool need_title)
                         broken += ".";
             linebreak_string2(broken, 72);
 
-            result += EOL;
+            result += "\n";
             result += broken;
         }
         break;
@@ -3963,18 +3963,18 @@ std::string get_skill_description(int skill, bool need_title)
     case SK_INVOCATIONS:
         if (you.species == SP_DEMIGOD)
         {
-            result += EOL;
+            result += "\n";
             result += "How on earth did you manage to pick this up?";
         }
         else if (you.religion == GOD_TROG)
         {
-            result += EOL;
+            result += "\n";
             result += "Note that Trog doesn't use Invocations, its being too "
                       "closely connected to magic.";
         }
         else if (you.religion == GOD_NEMELEX_XOBEH)
         {
-            result += EOL;
+            result += "\n";
             result += "Note that Nemelex uses Evocations rather than "
                       "Invocations.";
         }
@@ -3983,7 +3983,7 @@ std::string get_skill_description(int skill, bool need_title)
     case SK_EVOCATIONS:
         if (you.religion == GOD_NEMELEX_XOBEH)
         {
-            result += EOL;
+            result += "\n";
             result += "This is the skill all of Nemelex' abilities rely on.";
         }
         break;
@@ -3991,7 +3991,7 @@ std::string get_skill_description(int skill, bool need_title)
     case SK_SPELLCASTING:
         if (you.religion == GOD_TROG)
         {
-            result += EOL;
+            result += "\n";
             result += "Keep in mind, though, that Trog will greatly disapprove "
                       "of this.";
         }
