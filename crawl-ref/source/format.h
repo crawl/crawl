@@ -16,7 +16,6 @@
 enum fs_op_type
 {
     FSOP_COLOUR,
-    FSOP_CURSOR,
     FSOP_TEXT
 };
 
@@ -33,7 +32,6 @@ public:
 
     void cprintf(const char *s, ...);
     void cprintf(const std::string &s);
-    void cgotoxy(int x, int y);
     void add_glyph(glyph g);
     void textcolor(int color);
     formatted_string substr(size_t index, size_t length=std::string::npos) const;
@@ -82,11 +80,6 @@ public:
 
         fs_op(int color)
             : type(FSOP_COLOUR), x(color), y(-1), relative(false), text()
-        {
-        }
-
-        fs_op(int cx, int cy, bool rel = false)
-            : type(FSOP_CURSOR), x(cx), y(cy), relative(rel), text()
         {
         }
 
