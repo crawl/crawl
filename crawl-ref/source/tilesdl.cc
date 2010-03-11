@@ -131,6 +131,7 @@ void TilesFramework::shutdown()
     }
 
     wrapper->shutdown();
+    destroy_ui_wrapper();
 
     _shutdown_console();
 }
@@ -255,6 +256,13 @@ bool TilesFramework::initialise()
     
     std::string title = CRAWL " " + Version::Long();
     
+    // Do our initialization here.
+    
+    // Create an instance of UIWrapper for the library we were compiled for
+    create_ui_wrapper();
+    if ( !wrapper ) return (false);
+    
+    // Initialize the wrapper
     if ( !wrapper->init(&m_windowsz) ) return (false);
     
     wrapper->set_window_title(title.c_str());
