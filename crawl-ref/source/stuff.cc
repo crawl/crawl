@@ -733,7 +733,7 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
             if (message)
                 mpr(prompt.c_str(), MSGCH_PROMPT);
             else
-                cprintf(prompt.c_str());
+                cprintf("%s", prompt.c_str());
         }
 
         int tmp = getchm(KMC_CONFIRM);

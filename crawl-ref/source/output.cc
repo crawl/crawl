@@ -1268,11 +1268,7 @@ static void _print_next_monster_desc(const std::vector<monster_info>& mons,
         {
             monster_info mi = mons[i_mon];
             textcolor(mi.m_glyph_colour);
-            // XXX: Hack to make the death cob (%) show up correctly.
-            if (mi.m_glyph == '%')
-                cprintf("%%");
-            else
-                cprintf(stringize_glyph(mi.m_glyph).c_str());
+            cprintf("%s", stringize_glyph(mi.m_glyph).c_str());
             ++printed;
 
             // Printing too many looks pretty bad, though.
