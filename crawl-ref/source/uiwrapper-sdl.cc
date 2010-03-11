@@ -1,12 +1,3 @@
-/*
- *  wrapper-sdl.cc
- *  Roguelike
- *
- *  Created by Ixtli on 2/23/10.
- *  Copyright 2010 Apple Inc. All rights reserved.
- *
- */
-
 #include "AppHdr.h"
 
 #include "cio.h"
@@ -15,12 +6,9 @@
 
 #include <SDL/SDL.h>
 
-#include "uiwrapper-sdl.h"
-#include "cgcontext-sdl.h"
-
-#ifdef USE_GL
+#include "uiwrapper.h"
+#include "cgcontext.h"
 #include "glwrapper.h"
-#endif
 
 #ifdef USE_TILE
 

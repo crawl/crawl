@@ -33,13 +33,8 @@
 #include "tiledef-gui.h"
 #include "tilefont.h"
 
-#ifdef USE_SDL
-#include "uiwrapper-sdl.h"
-#endif
-
-#ifdef USE_GL
+#include "uiwrapper.h"
 #include "glwrapper.h"
-#endif
 
 // Default Screen Settings
 // width, height, map, crt, stat, msg, tip, lbl

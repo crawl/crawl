@@ -2,11 +2,17 @@
 
 #include "debug.h"
 
-#include "glwrapper.h"
-
 #ifdef USE_TILE
+
+// How do we get access to the GL calls?
+// If other UI types use the -ogl wrapper they should
+// include more conditional includes here.
 #ifdef USE_SDL
 #include <SDL_opengl.h>
+#endif
+
+#ifdef USE_GL
+#include "glwrapper.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // GLPrimitive
