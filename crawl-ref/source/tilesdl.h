@@ -181,7 +181,7 @@ protected:
     void do_layout();
     bool layout_statcol(bool message_overlay, bool show_gold_turns);
 
-    ImageManager m_image;
+    ImageManager *m_image;
 
     // Mouse state.
     unsigned short m_buttons_held;
