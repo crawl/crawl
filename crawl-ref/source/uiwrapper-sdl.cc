@@ -294,14 +294,15 @@ bool SDLWrapper::set_window_icon(const char* icon_name)
 {
     // TODO: Figure out how to move this IMG_Load command to cgcontext
     // so that we're not dependant on SDL_image here
-    GraphicsContext con;
-    int ret = con.load_image(datafile_path(icon_name, true, true).c_str());
+    GraphicsContext *con = GraphicsContext::create();
+    int ret = con->load_image(datafile_path(icon_name, true, true).c_str());
     if (ret)
     {
         printf("Failed to load icon: %s\n", SDL_GetError());
         return (false);
     }
-    SDL_WM_SetIcon((SDL_Surface *)con.native_surface(), NULL);
+    SDL_WM_SetIcon((SDL_Surface *)con->native_surface(), NULL);
+    delete con;
     return (true);
 }
 

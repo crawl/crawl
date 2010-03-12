@@ -256,7 +256,7 @@ EXTRA_OBJECTS += glwrapper-ogl.o
 endif
 
 ifdef TILES
-OBJECTS += libgui.o tile2.o tilereg.o tilepick.o tilesdl.o tilefont.o tiletex.o tilemcache.o tilebuf.o uiwrapper.o glwrapper.o
+OBJECTS += libgui.o tile2.o tilereg.o tilepick.o tilesdl.o tilefont.o tiletex.o tilemcache.o tilebuf.o uiwrapper.o glwrapper.o cgcontext.o
 else
 ifdef NEED_LIBW32C
 OBJECTS += libw32c.o
