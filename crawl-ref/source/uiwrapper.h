@@ -88,6 +88,9 @@ public:
     // To silence pre 4.3 g++ compiler warnings
     virtual ~UIWrapper() {};
 
+    // Static Alloc/deallocators
+    static void create();
+
     // Class functions
     virtual int init(coord_def *m_windowsz) = 0;
     virtual void shutdown() = 0;
@@ -118,8 +121,6 @@ public:
 };
 
 // Main interface for UI functions
-void create_ui_wrapper();
-void destroy_ui_wrapper();
 extern UIWrapper *wrapper;
 
 #endif //USE_TILE
