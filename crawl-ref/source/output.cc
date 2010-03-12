@@ -1322,7 +1322,7 @@ static void _print_next_monster_desc(const std::vector<monster_info>& mons,
 #endif
 
 #ifndef USE_TILE
-#define BOTTOM_JUSTIFY_MONSTER_LIST
+// #define BOTTOM_JUSTIFY_MONSTER_LIST
 // Returns -1 if the monster list is empty, 0 if there are so many monsters
 // they have to be consolidated, and 1 otherwise.
 int update_monster_pane()
