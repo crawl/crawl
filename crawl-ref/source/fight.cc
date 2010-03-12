@@ -278,7 +278,7 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     perceived_attack(false), obvious_effect(false), needs_message(false),
     attacker_visible(false), defender_visible(false),
     attacker_invisible(false), defender_invisible(false),
-    defender_starting_attitude(ATT_HOSTILE), unarmed_ok(allow_unarmed),
+    unarmed_ok(allow_unarmed),
     attack_number(which_attack), to_hit(0), damage_done(0), special_damage(0),
     aux_damage(0), stab_attempt(false), stab_bonus(0), min_delay(0),
     final_attack_delay(0), noise_factor(0), extra_noise(0), weapon(NULL),
@@ -356,15 +356,6 @@ void melee_attack::init_attack()
             player_adjusted_shield_evasion_penalty(1);
         dprf("Player body armour penalty: %d, shield penalty: %d",
              player_body_armour_penalty, player_shield_penalty);
-    }
-
-    if (defender && defender->atype() == ACT_MONSTER)
-        defender_starting_attitude = defender->as_monster()->temp_attitude();
-    else
-    {
-        // Not really, but this is used for god conducts, so hostile is
-        // fine.
-        defender_starting_attitude = ATT_HOSTILE;
     }
 
     if (defender && defender->submerged())
@@ -844,14 +835,6 @@ bool melee_attack::player_attack()
             hit_woke_orc = true;
         }
 
-        // Always upset monster regardless of damage.
-        // However, successful stabs inhibit shouting.
-        behaviour_event(defender->as_monster(), ME_WHACK, MHITYOU,
-                        coord_def(), !stab_attempt);
-
-        // [ds] Monster may disappear after behaviour event.
-        if (!defender->alive())
-            return (true);
 
         if (damage_done > 0
             && defender->can_bleed()
@@ -881,6 +864,15 @@ bool melee_attack::player_attack()
             player_exercise_combat_skills();
 
         if (player_check_monster_died())
+            return (true);
+
+        // Always upset monster regardless of damage.
+        // However, successful stabs inhibit shouting.
+        behaviour_event(defender->as_monster(), ME_WHACK, MHITYOU,
+                        coord_def(), !stab_attempt);
+
+        // [ds] Monster may disappear after behaviour event.
+        if (!defender->alive())
             return (true);
 
         player_sustain_passive_damage();
@@ -2083,14 +2075,6 @@ void melee_attack::_monster_die(monsters* monster, killer_type killer,
     monsters* def_copy = NULL;
     if (chaos || reaping)
         def_copy = new monsters(*monster);
-
-    // The monster is about to die, so restore its original attitude
-    // for the cleanup effects (god reactions). This could be a
-    // problem if the "killing" is actually an Abyss banishment - we
-    // don't want to create permafriendlies this way - so don't do it
-    // then.
-    if (monster == defender && killer != KILL_RESET)
-        monster->attitude = defender_starting_attitude;
 
     int corpse = monster_die(monster, killer, killer_index);
 
