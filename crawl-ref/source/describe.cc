@@ -3460,8 +3460,8 @@ const char *divine_title[NUM_GODS][8] =
      "Putrid Slime",       "Consuming %s",          "Archjelly",                "Royal Jelly"},
 
     // Fedhas Madash -- nature theme.  Titles could use some work
-    {"Walking Fertiliser", "Green %s",           "Inducer",                  "Photosynthesist",
-     "Planter",            "Sporadic Warrior",   "Nimbus",                   "Force of Nature"},
+    {"Walking Fertiliser", "Green %s",              "Inciter",                  "Photosynthesist",
+     "Cultivator",         "Green Death",           "Nimbus",                   "Force of Nature"},
 
     // Cheibriados -- slow theme
     {"Unwound %s",         "Timekeeper",            "Righteous Timekeeper",     "Chronographer",
