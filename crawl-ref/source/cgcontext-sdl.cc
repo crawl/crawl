@@ -1,7 +1,7 @@
 #ifdef USE_TILE
-#include "cgcontext.h"
 
 #ifdef USE_SDL
+#include "cgcontext-sdl.h"
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 
@@ -12,13 +12,13 @@
  * member function for increased modularity.
 */
 
-GraphicsContext::GraphicsContext():
+SDLGraphicsContext::SDLGraphicsContext():
     palette(NULL),
     surf(NULL)
 {
 }
 
-int GraphicsContext::load_image( const char *file )
+int SDLGraphicsContext::load_image( const char *file )
 {
     if (surf) SDL_FreeSurface(surf);
 
@@ -42,62 +42,62 @@ int GraphicsContext::load_image( const char *file )
     return (0);
 }
 
-int GraphicsContext::lock()
+int SDLGraphicsContext::lock()
 {
     return (SDL_LockSurface(surf));
 }
 
-void GraphicsContext::unlock()
+void SDLGraphicsContext::unlock()
 {
     SDL_UnlockSurface(surf);
 }
 
-int GraphicsContext::height()
+int SDLGraphicsContext::height()
 {
     if ( !surf )
         return -1;
     return (surf->h);
 }
 
-int GraphicsContext::width()
+int SDLGraphicsContext::width()
 {
     if ( !surf )
         return -1;
     return (surf->w);
 }
 
-short int GraphicsContext::pitch()
+short int SDLGraphicsContext::pitch()
 {
     if ( !surf )
         return (-1);
     return (surf->pitch);
 }
 
-unsigned char GraphicsContext::bytes_per_pixel()
+unsigned char SDLGraphicsContext::bytes_per_pixel()
 {
     if ( !surf )
         return (-1);
     return (surf->format->BytesPerPixel);
 }
 
-void *GraphicsContext::pixels()
+void *SDLGraphicsContext::pixels()
 {
     return (surf->pixels);
 }
 
-void *GraphicsContext::native_surface()
+void *SDLGraphicsContext::native_surface()
 {
     return ((void *)surf);
 }
 
-unsigned int GraphicsContext::color_key()
+unsigned int SDLGraphicsContext::color_key()
 {
     if ( !surf )
         return (-1);
     return (surf->format->colorkey);
 }
 
-void GraphicsContext::get_rgba(unsigned int pixel, unsigned char *r,
+void SDLGraphicsContext::get_rgba(unsigned int pixel, unsigned char *r,
         unsigned char *g, unsigned char *b, unsigned char *a)
 {
     if ( !surf )
@@ -105,7 +105,7 @@ void GraphicsContext::get_rgba(unsigned int pixel, unsigned char *r,
     SDL_GetRGBA(pixel, surf->format, r, g, b, a);
 }
 
-void GraphicsContext::get_rgb(unsigned int pixel,     unsigned char *r,
+void SDLGraphicsContext::get_rgb(unsigned int pixel,     unsigned char *r,
                                     unsigned char *g,
                                     unsigned char *b)
 {
@@ -114,7 +114,7 @@ void GraphicsContext::get_rgb(unsigned int pixel,     unsigned char *r,
     SDL_GetRGB(pixel, surf->format, r, g, b);
 }
 
-void GraphicsContext::create_palette()
+void SDLGraphicsContext::create_palette()
 {
     // TODO: Figure out if this is really safe
     // ui_palette and ui_color are defined in the same way as
@@ -133,14 +133,14 @@ void GraphicsContext::create_palette()
     palette->colors = (ui_color*)surf->format->palette->colors;
 }
 
-void GraphicsContext::destroy_palette()
+void SDLGraphicsContext::destroy_palette()
 {
     if (palette)
         palette->colors = NULL;
     palette = NULL;
 }
 
-GraphicsContext::~GraphicsContext()
+SDLGraphicsContext::~SDLGraphicsContext()
 {
     destroy_palette();
     if ( surf )

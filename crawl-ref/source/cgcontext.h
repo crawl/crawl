@@ -3,10 +3,6 @@
 
 #ifdef USE_TILE
 
-#ifdef USE_SDL
-class SDL_Surface;
-#endif
-
 typedef struct{
     unsigned char r;
     unsigned char g;
@@ -22,45 +18,38 @@ typedef struct{
 class GraphicsContext {
 public:
     // Class
-    GraphicsContext();
-    ~GraphicsContext();
+    virtual ~GraphicsContext() {};
+
+    // Static Alloc/deallocators
+    static GraphicsContext *create();
 
     // Loading
-    int load_image( const char *file );
+    virtual int load_image( const char *file ) = 0;
 
     // Locking
-    int lock();
-    void unlock();
+    virtual int lock() = 0;
+    virtual void unlock() = 0;
 
     // Dimentions
-    int height();
-    int width();
-    short int pitch();
-    unsigned char bytes_per_pixel();
+    virtual int height() = 0;
+    virtual int width() = 0;
+    virtual short int pitch() = 0;
+    virtual unsigned char bytes_per_pixel() = 0;
 
     // Context Accessors
-    void *pixels();
-    void *native_surface();
-    unsigned int color_key();
-    void get_rgba(unsigned int pixel,   unsigned char *r,
-                                        unsigned char *g,
-                                        unsigned char *b,
-                                        unsigned char *a);
-    void get_rgb(unsigned int pixel,    unsigned char *r,
-                                        unsigned char *g,
-                                        unsigned char *b);
+    virtual void *pixels() = 0;
+    virtual void *native_surface() = 0;
+    virtual unsigned int color_key() = 0;
+    virtual void get_rgba(unsigned int pixel,   unsigned char *r,
+                                                unsigned char *g,
+                                                unsigned char *b,
+                                                unsigned char *a) = 0;
+    virtual void get_rgb(unsigned int pixel,    unsigned char *r,
+                                                unsigned char *g,
+                                                unsigned char *b) = 0;
 
+    // TODO: Maybe this should have mandator accessors?
     ui_palette *palette;
-
-protected:
-    // Palette functions
-    void create_palette();
-    void destroy_palette();
-
-#ifdef USE_SDL
-    SDL_Surface *surf;
-#endif
-
 };
 
 #endif //USE_TILE

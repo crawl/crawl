@@ -46,7 +46,7 @@ bool GenericTexture::load_texture(const char *filename,
         return (false);
     }
 
-    GraphicsContext *img = new GraphicsContext();
+    GraphicsContext *img = GraphicsContext::create();
     if ( !img )
     {
         fprintf(stderr, "Could not create context for texture '%s'.\n",
