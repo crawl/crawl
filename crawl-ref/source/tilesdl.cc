@@ -134,7 +134,7 @@ void TilesFramework::shutdown()
 
     GLStateManager::shutdown();
     wrapper->shutdown();
-    destroy_ui_wrapper();
+    delete wrapper;
 
     _shutdown_console();
 }
@@ -262,7 +262,7 @@ bool TilesFramework::initialise()
     // Do our initialization here.
 
     // Create an instance of UIWrapper for the library we were compiled for
-    create_ui_wrapper();
+    UIWrapper::create();
     if ( !wrapper ) return (false);
 
     // Initialize the wrapper
