@@ -1026,22 +1026,43 @@ static void _fill_monster_list(bool full_info)
 
 // Skip all letters that have a special meaning in the targeting interface.
 // FIXME: Probably doesn't work well with redefined keys.
-static int _mlist_letter_to_index(char idx)
+// XXX: make sure to add exceptions to this and mlist_index_to_letter.
+static int _mlist_letter_to_index(char ltr)
 {
-    if (idx >= 'b')
-        idx--;
-    if (idx >= 'e')
-        idx--;
-    if (idx >= 'h')
-        idx--;
-    if (idx >= 'j')
-        idx--;
-    if (idx >= 'k')
-        idx--;
-    if (idx >= 'l')
-        idx--;
+    if (ltr >= 'b')
+        ltr--;
+    if (ltr >= 'e')
+        ltr--;
+    if (ltr >= 'h')
+        ltr--;
+    if (ltr >= 'j')
+        ltr--;
+    if (ltr >= 'k')
+        ltr--;
+    if (ltr >= 'l')
+        ltr--;
 
-    return (idx - 'a');
+    return (ltr - 'a');
+}
+
+char mlist_index_to_letter(int index)
+{
+    index += 'a';
+
+    if (index >= 'b')
+        index++;
+    if (index >= 'e')
+        index++;
+    if (index >= 'h')
+        index++;
+    if (index >= 'j')
+        index++;
+    if (index >= 'k')
+        index++;
+    if (index >= 'l')
+        index++;
+
+    return (index);
 }
 #endif
 
