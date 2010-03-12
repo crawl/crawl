@@ -454,9 +454,9 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
     return (effect);
 }
 
-bool unwield_item(bool showMsgs)
+bool unwield_item(bool showMsgs, int slot)
 {
-    if (!you.weapon())
+    if (slot == -1 && !you.weapon())
         return (false);
 
     if (you.berserk())
@@ -466,7 +466,7 @@ bool unwield_item(bool showMsgs)
         return (false);
     }
 
-    item_def& item = *you.weapon();
+    item_def& item = (slot == -1 ? *you.weapon() : you.inv[slot]);
 
     const bool is_weapon = get_item_slot(item) == EQ_WEAPON;
 
