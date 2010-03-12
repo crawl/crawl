@@ -45,6 +45,10 @@
 #include "viewchar.h"
 #include "viewgeom.h"
 
+#ifndef USE_TILE
+#include "directn.h"
+#endif
+
 // Color for captions like 'Health:', 'Str:', etc.
 #define HUD_CAPTION_COLOUR Options.status_caption_colour
 
@@ -1212,24 +1216,6 @@ std::string mpr_monster_list(bool past)
 }
 
 #ifndef USE_TILE
-static char _mlist_index_to_letter(int index)
-{
-    index += 'a';
-
-    if (index >= 'b')
-        index++;
-    if (index >= 'h')
-        index++;
-    if (index >= 'j')
-        index++;
-    if (index >= 'k')
-        index++;
-    if (index >= 'l')
-        index++;
-
-    return (index);
-}
-
 static void _print_next_monster_desc(const std::vector<monster_info>& mons,
                                      int& start, bool zombified = false,
                                      int idx = -1)
@@ -1252,7 +1238,7 @@ static void _print_next_monster_desc(const std::vector<monster_info>& mons,
         if (idx >= 0)
         {
             textcolor(WHITE);
-            cprintf(stringize_glyph(_mlist_index_to_letter(idx)).c_str());
+            cprintf(stringize_glyph(mlist_index_to_letter(idx)).c_str());
             cprintf(" - ");
             printed += 4;
         }
