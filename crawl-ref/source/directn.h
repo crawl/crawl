@@ -253,6 +253,10 @@ private:
 
 };
 
+#ifndef USE_TILE
+char mlist_index_to_letter(int index);
+#endif
+
 void direction(dist &moves, const direction_chooser_args& args);
 
 bool in_los_bounds(const coord_def& p);
