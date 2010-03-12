@@ -1167,13 +1167,13 @@ std::string _targ_mode_name(targ_mode_type mode)
 }
 
 #ifndef USE_TILE
-void _init_mlist()
+void _update_mlist(bool enable)
 {
+    crawl_state.mlist_targeting = enable;
     const int full_info = update_monster_pane();
-    if (full_info != -1)
+    if (enable && full_info != -1)
     {
         _fill_monster_list(full_info);
-        crawl_state.mlist_targeting = true;
     }
     else
         crawl_state.mlist_targeting = false;
@@ -1884,10 +1884,8 @@ bool direction_chooser::do_main_loop()
 
 #ifndef USE_TILE
     case CMD_TARGET_TOGGLE_MLIST:
-        if (!crawl_state.mlist_targeting)
-            _init_mlist();
-        else
-            crawl_state.mlist_targeting = false;
+        Options.mlist_targeting = !Options.mlist_targeting;
+        _update_mlist(Options.mlist_targeting);
         break;
 #endif
 
@@ -2009,9 +2007,8 @@ void direction_chooser::finalize_moves()
 bool direction_chooser::choose_direction()
 {
 #ifndef USE_TILE
-    crawl_state.mlist_targeting = false;
     if (may_target_monster && restricts != DIR_DIR && Options.mlist_targeting)
-        _init_mlist();
+        _update_mlist(true);
 #endif
 
     if (crawl_state.is_replaying_keys() && restricts != DIR_DIR)
@@ -2051,7 +2048,9 @@ bool direction_chooser::choose_direction()
         ;
 
     msgwin_set_temporary(false);
-
+#ifndef USE_TILE
+    _update_mlist(false);
+#endif
     finalize_moves();
     return moves.isValid;
 }
