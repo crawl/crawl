@@ -31,9 +31,6 @@
 #include "traps.h"
 #include "xom.h"
 
-typedef std::set<equipment_type> equipment_type_set;
-typedef std::map<equipment_type, int> equipment_type_slot_map;
-
 static void _extra_hp(int amount_extra);
 
 bool transformation_can_wield(transformation_type trans)
@@ -115,9 +112,10 @@ bool transform_allows_wearing_item(const item_def& item,
     return (rc);
 }
 
-static equipment_type_set _init_equipment_removal(transformation_type trans)
+static std::set<equipment_type>
+_init_equipment_removal(transformation_type trans)
 {
-    equipment_type_set result;
+    std::set<equipment_type> result;
     if (!transformation_can_wield(trans) && you.weapon())
         result.insert(EQ_WEAPON);
 
@@ -139,9 +137,10 @@ static equipment_type_set _init_equipment_removal(transformation_type trans)
     return (result);
 }
 
-static void _unwear_equipment_slot(item_def *item, equipment_type eqslot,
-                                   int item_slot)
+static void _unwear_equipment_slot(equipment_type eqslot)
 {
+    const int slot = you.equip[eqslot];
+    item_def *item = you.slot_item(eqslot, true);
     if (item == NULL)
         return;
 
@@ -149,20 +148,19 @@ static void _unwear_equipment_slot(item_def *item, equipment_type eqslot,
     {
         unwield_item(!you.berserk());
         canned_msg(MSG_EMPTY_HANDED);
-        you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = item_slot + 1;
+        you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = slot + 1;
     }
     else if (item->base_type == OBJ_JEWELLERY)
         jewellery_remove_effects(*item, false);
     else
-        unwear_armour(item_slot);
+        unwear_armour(slot);
 }
 
-static void _remove_equipment(equipment_type_set& removed,
+static void _remove_equipment(const std::set<equipment_type>& removed,
                               bool meld = true, bool mutation = false)
 {
     // Meld items into you in (reverse) order. (std::set is a sorted container)
-    equipment_type_set::const_iterator iter;
-    equipment_type_slot_map wired_slots;
+    std::set<equipment_type>::const_iterator iter;
     for (iter = removed.begin(); iter != removed.end(); ++iter)
     {
         const equipment_type e = *iter;
@@ -177,30 +175,19 @@ static void _remove_equipment(equipment_type_set& removed,
              equip->quantity > 1 ? "" : "s",
              unequip ? "away!" : "into your body.");
 
-        // [ds] Cheibriados ponderousness math requires that the item
-        // be actually removed from its slot at this point, otherwise
-        // the stat gain code thinks the player is still wearing it
-        // and messes up stat changes.
-        const int item_slot = you.equip[e];
-        you.equip[e] = -1;
-        if (!unequip)
-            wired_slots[e] = item_slot;
+        _unwear_equipment_slot(e);
 
-        _unwear_equipment_slot(equip, e, item_slot);
-
-        if (unequip && mutation)
+        if (unequip)
         {
-            // A mutation made us not only lose an equipment slot
-            // but actually removed a worn item: Funny!
-            xom_is_stimulated(is_artefact(*equip) ? 255 : 128);
-        }
-    }
+            you.equip[e] = -1;
 
-    // Restore slots for melded gear.
-    for (equipment_type_slot_map::const_iterator slot = wired_slots.begin();
-         slot != wired_slots.end(); ++slot)
-    {
-        you.equip[slot->first] = slot->second;
+            if (mutation)
+            {
+                // A mutation made us not only lose an equipment slot
+                // but actually removed a worn item: Funny!
+                xom_is_stimulated(is_artefact(*equip) ? 255 : 128);
+            }
+        }
     }
 }
 
@@ -268,45 +255,30 @@ static void _rewear_equipment_slot(equipment_type e)
     }
 }
 
-static void _unmeld_equipment(const equipment_type_set &melded)
+static void _unmeld_equipment(const std::set<equipment_type>& melded)
 {
-    equipment_type_slot_map slot_map;
-
-    // [ds] First remove all melded items from their slots. It's
-    // important that each item is reworn one at a time, or
-    // Cheibriados' ponderousness stat gains are borked.
-    for (equipment_type_set::const_iterator i = melded.begin();
-         i != melded.end(); ++i)
-    {
-        const equipment_type eq(*i);
-        if (eq != EQ_WEAPON && you.equip[eq] != -1)
-        {
-            slot_map[eq] = you.equip[eq];
-            you.equip[eq] = -1;
-        }
-    }
-
     // Unmeld items in order.
-    for (equipment_type_slot_map::const_iterator i = slot_map.begin();
-         i != slot_map.end(); ++i)
+    std::set<equipment_type>::const_iterator iter;
+    for (iter = melded.begin(); iter != melded.end(); ++iter)
     {
-        const equipment_type eq(i->first);
-        const int slot(i->second);
-        you.equip[eq] = slot;
-        _rewear_equipment_slot(eq);
+        const equipment_type e = *iter;
+        if (e == EQ_WEAPON || you.equip[e] == -1)
+            continue;
+
+        _rewear_equipment_slot(e);
     }
 }
 
 void unmeld_one_equip(equipment_type eq)
 {
-    equipment_type_set e;
+    std::set<equipment_type> e;
     e.insert(eq);
     _unmeld_equipment(e);
 }
 
 void remove_one_equip(equipment_type eq, bool meld, bool mutation)
 {
-    equipment_type_set r;
+    std::set<equipment_type> r;
     r.insert(eq);
     _remove_equipment(r, meld, mutation);
 }
@@ -330,10 +302,10 @@ static bool _tran_may_meld_cursed(int transformation)
 
 // Returns true if any piece of equipment that has to be removed is cursed.
 // Useful for keeping low level transformations from being too useful.
-static bool _check_for_cursed_equipment(const equipment_type_set &remove,
+static bool _check_for_cursed_equipment(const std::set<equipment_type> &remove,
                                         const int trans, bool quiet = false)
 {
-    equipment_type_set::const_iterator iter;
+    std::set<equipment_type>::const_iterator iter;
     for (iter = remove.begin(); iter != remove.end(); ++iter)
     {
         const equipment_type e = *iter;
@@ -370,7 +342,7 @@ static bool _check_for_cursed_equipment(const equipment_type_set &remove,
 // future losses (caused by the transformation) like a current stat boost,
 // as well. If the sum of all boosts of a stat is equal to or greater than
 // the current stat, give a message and return true.
-bool check_transformation_stat_loss(const equipment_type_set &remove,
+bool check_transformation_stat_loss(const std::set<equipment_type> &remove,
                                     bool quiet, int str_loss, int dex_loss,
                                     int int_loss)
 {
@@ -403,7 +375,7 @@ bool check_transformation_stat_loss(const equipment_type_set &remove,
     }
 
     // Check over all items to be removed or melded.
-    equipment_type_set::const_iterator iter;
+    std::set<equipment_type>::const_iterator iter;
     for (iter = remove.begin(); iter != remove.end(); ++iter)
     {
         equipment_type e = *iter;
@@ -475,10 +447,10 @@ bool check_transformation_stat_loss(const equipment_type_set &remove,
 // Returns true if the player got prompted by an inscription warning and
 // chose to opt out.
 bool _check_transformation_inscription_warning(
-            const equipment_type_set &remove)
+            const std::set<equipment_type> &remove)
 {
     // Check over all items to be removed or melded.
-    equipment_type_set::const_iterator iter;
+    std::set<equipment_type>::const_iterator iter;
     for (iter = remove.begin(); iter != remove.end(); ++iter)
     {
         equipment_type e = *iter;
@@ -641,7 +613,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         return (_abort_or_fizzle(just_check));
     }
 
-    equipment_type_set rem_stuff = _init_equipment_removal(which_trans);
+    std::set<equipment_type> rem_stuff = _init_equipment_removal(which_trans);
 
     if (which_trans != TRAN_PIG
         && _check_for_cursed_equipment(rem_stuff, which_trans, force))
@@ -744,9 +716,8 @@ bool transform(int pow, transformation_type which_trans, bool force,
         break;
     }
 
-    if (check_transformation_stat_loss(
-            rem_stuff, force || which_trans == TRAN_PIG,
-            std::max(-str, 0), std::max(-dex,0)))
+    if (check_transformation_stat_loss(rem_stuff, force || which_trans == TRAN_PIG,
+                                       std::max(-str, 0), std::max(-dex,0)))
     {   // would have died to stat loss
         if (which_trans == TRAN_PIG)
         {   // no easy way around this!
@@ -883,7 +854,7 @@ void untransform(bool skip_wielding, bool skip_move)
         static_cast<transformation_type>(you.attribute[ ATTR_TRANSFORMATION ]);
 
     // We may have to unmeld a couple of equipment types.
-    equipment_type_set melded = _init_equipment_removal(old_form);
+    std::set<equipment_type> melded = _init_equipment_removal(old_form);
 
     you.attribute[ATTR_TRANSFORMATION] = TRAN_NONE;
     you.duration[DUR_TRANSFORMATION]   = 0;
