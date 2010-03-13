@@ -1549,15 +1549,12 @@ bool ponderousify_armour()
 
     simple_god_message(" says: Use this wisely!");
 
-    if (item_is_equipped(arm))
+    const int new_ponder = player_ponderousness();
+    if (new_ponder > old_ponder)
     {
-        const int new_ponder = player_ponderousness();
-        if (new_ponder > old_ponder)
-        {
-            mprf("You feel %s ponderous.",
-                 old_ponder? "even more" : "rather");
-            che_handle_change(CB_PONDEROUS, new_ponder - old_ponder);
-        }
+        mprf("You feel %s ponderous.",
+             old_ponder? "even more" : "rather");
+        che_handle_change(CB_PONDEROUS, new_ponder - old_ponder);
     }
 
     return (true);

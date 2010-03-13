@@ -381,11 +381,16 @@ void InvMenu::set_title(const std::string &s)
     set_title(new InvTitle(this, stitle, title_annotate));
 }
 
-static bool _has_tran_unwearable_armour(bool &melded)
+static bool _has_melded_armour()
 {
-    bool unwearable = false;
-         melded     = false;
+    for (int e = EQ_CLOAK; e <= EQ_BODY_ARMOUR; e++)
+        if (you.melded[e])
+            return (true);
+    return (false);
+}
 
+static bool _has_tran_unwearable_armour()
+{
     for (int i = 0; i < ENDOFPACK; i++)
     {
         item_def &item(you.inv[i]);
@@ -393,15 +398,10 @@ static bool _has_tran_unwearable_armour(bool &melded)
         if (item.is_valid() && item.base_type == OBJ_ARMOUR
             && !you_tran_can_wear(item))
         {
-            unwearable = true;
-            if (item_is_equipped(item))
-            {
-                melded = true;
-                return (true);
-            }
+            return (true);
         }
     }
-    return (unwearable);
+    return (false);
 }
 
 static std::string _no_selectables_message(int item_selector)
@@ -415,15 +415,11 @@ static std::string _no_selectables_message(int item_selector)
         return("You aren't carrying any weapons.");
     case OBJ_ARMOUR:
     {
-        bool melded = false;
-        if (_has_tran_unwearable_armour(melded))
-        {
-            if (melded)
-                return ("Your armour is currently melded into you.");
-            else
-                return("You aren't carrying any armour you can wear in your "
-                       "current form.");
-        }
+        if (_has_melded_armour())
+            return ("Your armour is currently melded into you.");
+        else if (_has_tran_unwearable_armour())
+            return("You aren't carrying any armour you can wear in your "
+                   "current form.");
         else
             return("You aren't carrying any armour.");
     }
