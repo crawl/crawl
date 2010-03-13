@@ -2858,19 +2858,34 @@ item_def find_item_type(object_class_type base_type, std::string name)
     return (item);
 }
 
-bool item_is_equipped(const item_def &item, bool quiver_too)
+equipment_type item_equip_slot(const item_def& item)
 {
     if (!in_inventory(item))
-        return (false);
+        return (EQ_NONE);
 
     for (int i = 0; i < NUM_EQUIP; i++)
         if (item.link == you.equip[i])
-            return (true);
+            return (static_cast<equipment_type>(i));
+
+    return (EQ_NONE);
+}
+
+// Includes melded items.
+bool item_is_equipped(const item_def &item, bool quiver_too)
+{
+    if (item_equip_slot(item) != EQ_NONE)
+        return (true);
 
     if (quiver_too && item.link == you.m_quiver->get_fire_item())
         return (true);
 
     return (false);
+}
+
+bool item_is_melded(const item_def& item)
+{
+    equipment_type eq = item_equip_slot(item);
+    return (eq != EQ_NONE && you.melded[eq]);
 }
 
 ////////////////////////////////////////////////////////////////////////
