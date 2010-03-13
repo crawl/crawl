@@ -80,7 +80,9 @@ static void _equip_effect(equipment_type slot, int item_slot, bool unmeld, bool 
     if (slot == EQ_WEAPON && eq != EQ_WEAPON)
         return;
 
-    ASSERT(slot == eq);
+    ASSERT(slot == eq
+           || eq == EQ_RINGS
+              && (slot == EQ_LEFT_RING || slot == EQ_RIGHT_RING));
 
     if (slot == EQ_WEAPON)
         equip_weapon_effect(item, msg);
@@ -98,7 +100,9 @@ static void _unequip_effect(equipment_type slot, int item_slot, bool msg)
     if (slot == EQ_WEAPON && eq != EQ_WEAPON)
         return;
 
-    ASSERT(slot == eq);
+    ASSERT(slot == eq
+           || eq == EQ_RINGS
+              && (slot == EQ_LEFT_RING || slot == EQ_RIGHT_RING));
 
     if (slot == EQ_WEAPON)
         unequip_weapon_effect(item, msg);
