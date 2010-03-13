@@ -59,9 +59,7 @@
 
 #include <sys/stat.h>
 
-#ifdef USE_GL
 #include "glwrapper.h"
-#endif
 
 /* These aren't defined on Win32 */
 #ifndef S_IWUSR

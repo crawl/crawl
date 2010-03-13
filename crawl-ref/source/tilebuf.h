@@ -7,10 +7,7 @@
 #define TILEBUF_H
 
 #include "tiles.h"
-
-#ifdef USE_GL
 #include "glwrapper.h"
-#endif
 
 // This struct defines all of the state that any particular rendering needs.
 // If other rendering states are needed, they should be added here so that
