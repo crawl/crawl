@@ -23,6 +23,7 @@
 #include "items.h"
 #include "output.h"
 #include "player.h"
+#include "player-equip.h"
 #include "random.h"
 #include "skills2.h"
 #include "state.h"
@@ -137,25 +138,6 @@ _init_equipment_removal(transformation_type trans)
     return (result);
 }
 
-static void _unwear_equipment_slot(equipment_type eqslot)
-{
-    const int slot = you.equip[eqslot];
-    item_def *item = you.slot_item(eqslot, true);
-    if (item == NULL)
-        return;
-
-    if (eqslot == EQ_WEAPON)
-    {
-        unwield_item(!you.berserk());
-        canned_msg(MSG_EMPTY_HANDED);
-        you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = slot + 1;
-    }
-    else if (item->base_type == OBJ_JEWELLERY)
-        jewellery_remove_effects(*item, false);
-    else
-        unwear_armour(slot);
-}
-
 static void _remove_equipment(const std::set<equipment_type>& removed,
                               bool meld = true, bool mutation = false)
 {
@@ -175,11 +157,17 @@ static void _remove_equipment(const std::set<equipment_type>& removed,
              equip->quantity > 1 ? "" : "s",
              unequip ? "away!" : "into your body.");
 
-        _unwear_equipment_slot(e);
-
         if (unequip)
         {
-            you.equip[e] = -1;
+            if (e == EQ_WEAPON)
+            {
+                const int slot = you.equip[EQ_WEAPON];
+                unwield_item(!you.berserk());
+                canned_msg(MSG_EMPTY_HANDED);
+                you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = slot + 1;
+            }
+            else
+                unequip_item(e);
 
             if (mutation)
             {
@@ -188,6 +176,8 @@ static void _remove_equipment(const std::set<equipment_type>& removed,
                 xom_is_stimulated(is_artefact(*equip) ? 255 : 128);
             }
         }
+        else
+            meld_slot(e);
     }
 }
 
@@ -217,18 +207,12 @@ bool _mutations_prevent_wearing(const item_def& item)
     return (false);
 }
 
-static void _rewear_equipment_slot(equipment_type e)
+static void _unmeld_equipment_slot(equipment_type e)
 {
-    if (e == EQ_WEAPON)         // shouldn't happen
-        return;
-
-    if (you.equip[e] == -1)
-        return;
-
     item_def& item = you.inv[you.equip[e]];
 
     if (item.base_type == OBJ_JEWELLERY)
-        jewellery_wear_effects(item);
+        unmeld_slot(e);
     else
     {
         // In case the player was mutated during the transformation,
@@ -248,10 +232,10 @@ static void _rewear_equipment_slot(equipment_type e)
         {
             mprf("%s is pushed off your body!",
                  item.name(DESC_CAP_YOUR).c_str());
-            you.equip[e] = -1;
+            unequip_item(e);
         }
         else
-            armour_wear_effects(you.equip[e]);
+            unmeld_slot(e);
     }
 }
 
@@ -265,7 +249,7 @@ static void _unmeld_equipment(const std::set<equipment_type>& melded)
         if (e == EQ_WEAPON || you.equip[e] == -1)
             continue;
 
-        _rewear_equipment_slot(e);
+        _unmeld_equipment_slot(e);
     }
 }
 

@@ -38,6 +38,7 @@
 #include "mutation.h"
 #include "output.h"
 #include "player.h"
+#include "player-equip.h"
 #include "random.h"
 #include "religion.h"
 #include "godconduct.h"
@@ -162,11 +163,8 @@ void weapon_switch(int targ)
     if (you.weapon())
         unwield_item(false);
 
-    you.equip[EQ_WEAPON] = targ;
-
-    // Special checks: staves of power, etc.
     if (targ != -1)
-        wield_effects(targ, false);
+        equip_item(EQ_WEAPON, targ);
 
     if (Options.chunks_autopickup || you.species == SP_VAMPIRE)
         autopickup();
