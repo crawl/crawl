@@ -219,46 +219,49 @@ std::string item_def::name(description_level_type descrip,
     buff << auxname;
 
     bool equipped = false;
-    if (descrip == DESC_INVENTORY_EQUIP && item_is_equipped(*this, true))
+    if (descrip == DESC_INVENTORY_EQUIP)
     {
-        ASSERT( this->link != -1 );
-        equipped = true;
-
-        if (!you_tran_can_wear(*this) && you.equip[EQ_WEAPON] != this->link
-            && this->link != you.m_quiver->get_fire_item())
+        equipment_type eq = item_equip_slot(*this);
+        if (eq != EQ_NONE)
         {
-            buff << " (melded)";
-        }
-        else if (this->link == you.equip[EQ_WEAPON])
-        {
-            if (this->base_type == OBJ_WEAPONS || item_is_staff(*this))
-                buff << " (weapon)";
+            if (you.melded[eq])
+                buff << " (melded)";
             else
-                buff << " (in hand)";
+            {
+                switch (eq)
+                {
+                case EQ_WEAPON:
+                    if (this->base_type == OBJ_WEAPONS || item_is_staff(*this))
+                        buff << " (weapon)";
+                    else
+                        buff << " (in hand)";
+                    break;
+                case EQ_CLOAK:
+                case EQ_HELMET:
+                case EQ_GLOVES:
+                case EQ_BOOTS:
+                case EQ_SHIELD:
+                case EQ_BODY_ARMOUR:
+                    buff << " (worn)";
+                    break;
+                case EQ_LEFT_RING:
+                    buff << " (left hand)";
+                    break;
+                case EQ_RIGHT_RING:
+                    buff << " (right hand)";
+                    break;
+                case EQ_AMULET:
+                    buff << " (around neck)";
+                    break;
+                default:
+                    ASSERT(false);
+                    break;
+                }
+            }
         }
-        else if (this->link == you.equip[EQ_CLOAK]
-                 || this->link == you.equip[EQ_HELMET]
-                 || this->link == you.equip[EQ_GLOVES]
-                 || this->link == you.equip[EQ_BOOTS]
-                 || this->link == you.equip[EQ_SHIELD]
-                 || this->link == you.equip[EQ_BODY_ARMOUR])
+        else if (item_is_quivered(*this))
         {
-            buff << " (worn)";
-        }
-        else if (this->link == you.equip[EQ_LEFT_RING])
-        {
-            buff << " (left hand)";
-        }
-        else if (this->link == you.equip[EQ_RIGHT_RING])
-        {
-            buff << " (right hand)";
-        }
-        else if (this->link == you.equip[EQ_AMULET])
-        {
-            buff << " (around neck)";
-        }
-        else if (this->link == you.m_quiver->get_fire_item())
-        {
+            equipped = true;
             buff << " (quivered)";
         }
     }

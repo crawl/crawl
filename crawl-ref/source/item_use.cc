@@ -1132,7 +1132,7 @@ bool takeoff_armour(int item)
     }
 
     const equipment_type slot = get_armour_slot(invitem);
-    if (!you_tran_can_wear(invitem) && invitem.link == you.equip[slot])
+    if (item == you.equip[slot] && you.melded[slot])
     {
         mprf("%s is melded into your body!",
              invitem.name(DESC_CAP_YOUR).c_str());
