@@ -318,6 +318,9 @@ ENDMAP
 # Vestibule of Hell and Geryon
 ##############################################################################
 
+#########################################################################
+# The ancient map.
+#
 NAME:   vestibule_of_hell
 PLACE:  Hell
 ORIENT: encompass
@@ -393,6 +396,228 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxwwwwwwwwwwwxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+######################################################################
+# The main vault for Vestibule w/subvaults (by Mu.)
+#
+NAME:     vestibule_of_hell_mu
+PLACE:    Hell
+ORIENT:   encompass
+TAGS:     no_rotate no_dump
+SUBVAULT: A : vestibule_dis
+SUBVAULT: B : vestibule_tar
+SUBVAULT: C : vestibule_coc
+SUBVAULT: D : vestibule_geh
+SUBVAULT: E : vestibule_geryon
+SHUFFLE:  ABCD
+SUBST:    ABCDE = .
+: if crawl.coinflip() then
+  : if crawl.one_chance_in(8) then
+MONS:   Murray
+NSUBST: : = 1:1 / *:.
+  : else
+SUBST: : = .
+  : end
+: else
+SUBST: : = x
+: end
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAxxxxxxxxxxxx
+xxxxxxxxxxx::AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA::xxxxxxxxxxx
+xxxxxxxxxx::::AAAAAAAAAAAAAAAAAAAAAAAAAAAAA::::xxxxxxxxxx
+xxxxxxxxx::::::AAAAAAAAAAAAAAAAAAAAAAAAAAA::::::xxxxxxxxx
+xxxxxxxx::::::::AAAAAAAAAAAAAAAAAAAAAAAAA::::::::xxxxxxxx
+xxxxxxx::::::::::AAAAAAAAAAAAAAAAAAAAAAA::::::::::xxxxxxx
+xxxxxx::::::::::::AAAAAAAAAAAAAAAAAAAAA::::::::::::xxxxxx
+xxxxx::::::::::::::AAAAAAAAAAAAAAAAAAA::::::::::::::xxxxx
+xxxxC:::::::::::::::AAAAAAAAAAAAAAAAA:::::::::::::::Dxxxx
+xxxxCC:::::::::::::::AAAAAAAAAAAAAAA:::::::::::::::DDxxxx
+xxxxCCC:::::::::::::::AAAAAAAAAAAAA:::::::::::::::DDDxxxx
+xxxxCCCC:::::::::::::::AAAAAAAAAAA:::::::::::::::DDDDxxxx
+xxxxCCCCC:::::::::::::::AAAAAAAAA:::::::::::::::DDDDDxxxx
+xxxxCCCCCC:::::::::::::::AAAAAAA:::::::::::::::DDDDDDxxxx
+xxxxCCCCCCC:::::::::::::::AAAAA:::::::::::::::DDDDDDDxxxx
+xxxxCCCCCCCC:::::::::::::::AAA:::::::::::::::DDDDDDDDxxxx
+xxxxCCCCCCCCC::::::::::::::EEE::::::::::::::DDDDDDDDDxxxx
+xxxxCCCCCCCCCC::::::::::::EEEEE::::::::::::DDDDDDDDDDxxxx
+xxxxCCCCCCCCCCC::::::::::EEEEEEE::::::::::DDDDDDDDDDDxxxx
+xxxxCCCCCCCCCCCC::::::::EEEEEEEEE::::::::DDDDDDDDDDDDxxxx
+xxxxCCCCCCCCCCCCC::::::EEEEEEEEEEE::::::DDDDDDDDDDDDDxxxx
+xxxxCCCCCCCCCCCCCC::::EEEEEEEEEEEEE::::DDDDDDDDDDDDDDxxxx
+xxxxCCCCCCCCCCCCCCC::EEEEEEEEEEEEEEE::DDDDDDDDDDDDDDDxxxx
+xxxxCCCCCCCCCCCCCCCCEEEEEEEEEEEEEEEEEDDDDDDDDDDDDDDDDxxxx
+xxxxCCCCCCCCCCCCCCCCEEEEEEEEEEEEEEEEEDDDDDDDDDDDDDDDDxxxx
+xxxxCCCCCCCCCCCCCCCCEEEEEEEEEEEEEEEEEDDDDDDDDDDDDDDDDxxxx
+xxxxCCCCCCCCCCCCCCC::EEEEEEEEEEEEEEE::DDDDDDDDDDDDDDDxxxx
+xxxxCCCCCCCCCCCCCC::::EEEEEEEEEEEEE::::DDDDDDDDDDDDDDxxxx
+xxxxCCCCCCCCCCCCC::::::EEEEEEEEEEE::::::DDDDDDDDDDDDDxxxx
+xxxxCCCCCCCCCCCC::::::::EEEEEEEEE::::::::DDDDDDDDDDDDxxxx
+xxxxCCCCCCCCCCC::::::::::EEEEEEE::::::::::DDDDDDDDDDDxxxx
+xxxxCCCCCCCCCC::::::::::::EEEEE::::::::::::DDDDDDDDDDxxxx
+xxxxCCCCCCCCC::::::::::::::EEE::::::::::::::DDDDDDDDDxxxx
+xxxxCCCCCCCC:::::::::::::::BBB:::::::::::::::DDDDDDDDxxxx
+xxxxCCCCCCC:::::::::::::::BBBBB:::::::::::::::DDDDDDDxxxx
+xxxxCCCCCC:::::::::::::::BBBBBBB:::::::::::::::DDDDDDxxxx
+xxxxCCCCC:::::::::::::::BBBBBBBBB:::::::::::::::DDDDDxxxx
+xxxxCCCC:::::::::::::::BBBBBBBBBBB:::::::::::::::DDDDxxxx
+xxxxCCC:::::::::::::::BBBBBBBBBBBBB:::::::::::::::DDDxxxx
+xxxxCC:::::::::::::::BBBBBBBBBBBBBBB:::::::::::::::DDxxxx
+xxxxC:::::::::::::::BBBBBBBBBBBBBBBBB:::::::::::::::Dxxxx
+xxxxx::::::::::::::BBBBBBBBBBBBBBBBBBB::::::::::::::xxxxx
+xxxxxx::::::::::::BBBBBBBBBBBBBBBBBBBBB::::::::::::xxxxxx
+xxxxxxx::::::::::BBBBBBBBBBBBBBBBBBBBBBB::::::::::xxxxxxx
+xxxxxxxx::::::::BBBBBBBBBBBBBBBBBBBBBBBBB::::::::xxxxxxxx
+xxxxxxxxx::::::BBBBBBBBBBBBBBBBBBBBBBBBBBB::::::xxxxxxxxx
+xxxxxxxxxx::::BBBBBBBBBBBBBBBBBBBBBBBBBBBBB::::xxxxxxxxxx
+xxxxxxxxxxx::BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB::xxxxxxxxxxx
+xxxxxxxxxxxxBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+######################### Vestibule Tartarus
+NAME: vestibule_tar_mu
+TAGS: vestibule_tar
+MARKER: T=feat:enter_tartarus
+SUBST:  T=A
+SUBST:  . = ~.........
+SUBST:  ; = ~...
+KMONS:  3 = shadow demon
+KMONS:  z = skeletal warrior / small zombie / nothing
+KMONS:  D = shadow dragon
+KMONS:  2 = reaper / soul eater
+MAP
+ccccccccccccccccccccccccccccccccc
+ ccczz+......;;;;;;;......+zzccc
+  cczzc..3..c.;;T;;.c..3..czzcc
+   c=ccc......c;;;c......ccc=c
+    .cccc.......D.......cccc.
+     ..ccc.............ccc..
+      .cccc...cc+cc...cccc.
+       ..cccc.c...c.cccc..
+        .cccc.cz.zc.cccc.
+         ..cccczzzcccc..
+          .cccc...cccc.
+           ..ccc.ccc..
+            .c2c.c2c.
+             ..c+c..
+              .c.c.
+               ...
+ENDMAP
+
+######################### Vestibule Gehenna
+NAME: vestibule_geh_mu
+TAGS: vestibule_geh
+MARKER: G=feat:enter_gehenna
+SUBST:  G=A
+SUBST:  L = l.
+KMONS:  5 = imp
+KMONS:  2 = hellion
+KMONS:  3 = red devil
+KMONS:  2 = reaper / soul eater
+MAP
+lllllllllllllllllllllllllllllllll
+ Lllllllllllllllllllllllllllllll
+  LllxxxxxxxxxxxxxxxxxxxxxxxllL
+   Lllxx.................xxllL
+    Lllxx..5....G....5..xxllL
+     Lllxx.............xxllL
+      Lllxx..V..2..V..xxllL
+       Lllxx.........xxllL
+        Lllxx.......xxllL
+         Lllxxx+++xxxllL
+          Lllxx...xxllL
+           Lll..3..llL
+            Lll...llL
+             Lll.llL
+              ll.ll
+               l.l
+ENDMAP
+
+######################### Vestibule Cocytus
+NAME: vestibule_coc_mu
+TAGS: vestibule_coc
+MARKER: C=feat:enter_cocytus
+SUBST:  C=A
+SUBST:  8 = 8 .:59
+KMONS:  8 = ice statue
+KMONS:  3 = blue devil
+KMONS:  2 = ice devil
+MAP
+...........wwwwwwwwwww...........
+ ....33...wwwwwwwwwwwww...33....
+  ....3...wwwwww8wwwwww...3....
+   ......wwwww.....wwwww......
+    .....wwww...C...wwww.....
+     ....wwww.......wwww....
+      ...www8..T.T..8www...
+       ..wwww.......wwww..
+        ..www..T.T..www..
+         ..www.....www..
+          ...ww...ww...
+           .....2.....
+            .........
+             .......
+              .....
+               ...
+ENDMAP
+
+######################### Vestibule Dis
+NAME: vestibule_dis_mu
+TAGS: vestibule_dis
+MARKER: D=feat:enter_dis
+SUBST:  D=A
+KMONS:  8 = iron golem
+KMONS:  3 = iron devil
+KMONS:  6 = metal gargoyle
+MAP
+.............v.vvv.v.............
+ ...vv....v...vv.vv...v....vv...
+  ..6v.....vv.v.D.v.vv.....v6..
+   .......v...vv.vv...v.......
+    ...vv....v.v+v.v....vv...
+     ..6v..3...8.8...3..v6..
+      .....................
+       ...vv...v.v...vv...
+        ..6v.........v6..
+         ...............
+          ...vv...vv...
+           ..6v...v6..
+            .........
+             .......
+              .....
+               ...
+ENDMAP
+
+######################### Vestibule Geryon
+NAME: vestibule_geryon_mu
+TAGS: vestibule_geryon
+MONS: Geryon
+MAP
+       ...
+      ..<..
+     ...1...
+    .........
+   ...........
+  .............
+ ...............
+........(........
+.<.............<.
+.......{.[.......
+ ...............
+  .............
+   ...........
+    .........
+     .......
+      ..<..
+       ...
 ENDMAP
 
 
