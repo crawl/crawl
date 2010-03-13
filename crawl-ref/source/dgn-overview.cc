@@ -22,15 +22,17 @@
 #include "dgnevent.h"
 #include "directn.h"
 #include "dungeon.h"
-#include "map_knowledge.h"
+#include "env.h"
 #include "feature.h"
 #include "files.h"
+#include "map_knowledge.h"
 #include "menu.h"
+#include "message.h"
 #include "religion.h"
 #include "shopping.h"
 #include "state.h"
 #include "stuff.h"
-#include "env.h"
+#include "tagstring.h"
 #include "terrain.h"
 #include "travel.h"
 
@@ -973,15 +975,16 @@ void annotate_level()
 
     if (!get_level_annotation(li).empty())
     {
-        mpr("Current level annotation is:", MSGCH_PROMPT);
-        mpr(get_level_annotation(li, true).c_str() );
+        mpr("Current level annotation: " +
+            colour_string(get_level_annotation(li, true), LIGHTGREY),
+            MSGCH_PROMPT);
     }
 
-    mpr("Set level annotation to what (using ! forces prompt)? ",
-        MSGCH_PROMPT);
+    const std::string prompt = "New level annotation "
+                               "(include '!' for warning): ";
 
     char buf[77];
-    if (cancelable_get_line( buf, sizeof(buf) ))
+    if (msgwin_get_line_autohist(prompt, buf, sizeof(buf)))
         return;
 
     if (buf[0] == 0)
