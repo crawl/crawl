@@ -206,8 +206,7 @@ bool curse_an_item( bool decay_potions, bool quiet )
                 continue;
 
             if (you.inv[i].base_type != OBJ_POTIONS
-                && !you_tran_can_wear(you.inv[i])
-                && item_is_equipped(you.inv[i]))
+                && item_is_melded(you.inv[i]))
             {
                 // Melded items cannot be cursed.
                 continue;

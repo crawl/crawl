@@ -1217,7 +1217,7 @@ bool is_enchantable_armour(const item_def &arm, bool uncurse, bool unknown)
         return (false);
 
     // Melded armour cannot be enchanted.
-    if (!you_tran_can_wear(arm) && item_is_equipped(arm))
+    if (item_is_melded(arm))
         return (false);
 
     // If we don't know the plusses, assume enchanting is possible.
