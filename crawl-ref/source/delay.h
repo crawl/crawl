@@ -96,5 +96,5 @@ bool interrupt_activity( activity_interrupt_type ai,
                          const activity_interrupt_data &a
                             = activity_interrupt_data() );
 
-void armour_wear_effects(const int item_slot);
+void equip_armour_effect(item_def& item, bool unmeld);
 #endif

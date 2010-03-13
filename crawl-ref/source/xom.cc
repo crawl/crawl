@@ -46,6 +46,7 @@
 #include "item_use.h" // for safe_to_remove_or_wear()
 #include "output.h"   // for the monster list
 #include "player.h"
+#include "player-equip.h"
 #include "religion.h"
 #include "shout.h"
 #include "spells2.h"
@@ -1674,8 +1675,7 @@ static int _xom_swap_weapons(bool debug = false)
          mon->name(DESC_NOCAP_ITS).c_str(),
          you.inv[freeslot].name(DESC_PLAIN).c_str());
 
-    you.equip[EQ_WEAPON] = freeslot;
-    wield_effects(freeslot, true);
+    equip_item(EQ_WEAPON, freeslot);
 
     you.wield_change = true;
     you.m_quiver->on_weapon_changed();
