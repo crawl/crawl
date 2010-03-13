@@ -84,9 +84,11 @@ public:
         return const_cast<actor*>(this)->weapon(0);
     }
     virtual item_def *shield() = 0;
-    virtual item_def *slot_item(equipment_type eq, bool include_melded) = 0;
+    virtual item_def *slot_item(equipment_type eq,
+                                bool include_melded=false) = 0;
     // Just a wrapper; not to be overridden
-    const item_def *slot_item(equipment_type eq, bool include_melded) const
+    const item_def *slot_item(equipment_type eq,
+                              bool include_melded=false) const
     {
         return const_cast<actor*>(this)->slot_item(eq, include_melded);
     }
