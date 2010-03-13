@@ -29,10 +29,12 @@
 #include "misc.h"
 
 #include "abyss.h"
+#include "areas.h"
 #include "branch.h"
 #include "chardump.h"
 #include "clua.h"
 #include "cloud.h"
+#include "coord.h"
 #include "coordit.h"
 #include "database.h"
 #include "delay.h"
@@ -41,6 +43,7 @@
 #include "directn.h"
 #include "dgnevent.h"
 #include "directn.h"
+#include "env.h"
 #include "fprop.h"
 #include "fight.h"
 #include "files.h"
@@ -57,7 +60,6 @@
 #include "mapmark.h"
 #include "message.h"
 #include "mon-place.h"
-#include "coord.h"
 #include "mon-pathfind.h"
 #include "mon-info.h"
 #include "mon-iter.h"
@@ -78,10 +80,9 @@
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
-#include "env.h"
-#include "areas.h"
-#include "tiles.h"
+#include "tagstring.h"
 #include "terrain.h"
+#include "tiles.h"
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
@@ -1621,8 +1622,9 @@ bool check_annotation_exclusion_warning()
         && next_level_id != level_id::current()
         && next_level_id.level_type == LEVEL_DUNGEON)
     {
-        mpr("Warning: level annotation for next level is:", MSGCH_PROMPT);
-        mpr(get_level_annotation(next_level_id).c_str(), MSGCH_PLAIN, YELLOW);
+        mpr("Warning, next level annotated: " +
+            colour_string(get_level_annotation(next_level_id), YELLOW),
+            MSGCH_PROMPT);
         might_be_dangerous = true;
         crawl_state.level_annotation_shown = true;
     }
