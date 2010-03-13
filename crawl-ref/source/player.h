@@ -358,7 +358,7 @@ public:
     size_type transform_size(int psize = PSIZE_TORSO) const;
     std::string shout_verb() const;
 
-    item_def *slot_item(equipment_type eq, bool include_melded);
+    item_def *slot_item(equipment_type eq, bool include_melded=false);
 
     // actor
     monster_type id() const;
