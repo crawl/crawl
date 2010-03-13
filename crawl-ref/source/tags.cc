@@ -975,7 +975,9 @@ static void tag_construct_you(writer &th)
     // how many you.equip?
     marshallByte(th, NUM_EQUIP);
     for (i = 0; i < NUM_EQUIP; ++i)
-        marshallByte(th,you.equip[i]);
+        marshallByte(th, you.equip[i]);
+    for (i = 0; i < NUM_EQUIP; ++i)
+        marshallBoolean(th, you.melded[i]);
 
     marshallByte(th, you.magic_points);
     marshallByte(th, you.max_magic_points);
@@ -1407,6 +1409,8 @@ static void tag_read_you(reader &th, char minorVersion)
     count_c = unmarshallByte(th);
     for (i = 0; i < count_c; ++i)
         you.equip[i] = unmarshallByte(th);
+    for (i = 0; i < count_c; ++i)
+        you.melded[i] = unmarshallBoolean(th);
 
     you.magic_points              = unmarshallByte(th);
     you.max_magic_points          = unmarshallByte(th);

@@ -5415,6 +5415,7 @@ void player::init()
     num_gifts.init(0);
 
     equip.init(-1);
+    melded.init(false);
 
     spells.init(SPELL_NO_SPELL);
 
