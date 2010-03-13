@@ -43,6 +43,7 @@
 #include "ouch.h"
 #include "output.h"
 #include "player.h"
+#include "player-equip.h"
 #include "random.h"
 #include "religion.h"
 #include "godconduct.h"
@@ -1083,6 +1084,8 @@ void handle_delay()
         _finish_delay(delay);
 }
 
+static void _armour_wear_effects(const int item_slot);
+
 static void _finish_delay(const delay_queue_item &delay)
 {
     switch (delay.type)
@@ -1096,7 +1099,7 @@ static void _finish_delay(const delay_queue_item &delay)
         break;
 
     case DELAY_ARMOUR_ON:
-        armour_wear_effects(delay.parm1);
+        _armour_wear_effects(delay.parm1);
         // If butchery (parm2), autopickup chunks.
         if (Options.chunks_autopickup && delay.parm2)
             autopickup();
@@ -1104,35 +1107,13 @@ static void _finish_delay(const delay_queue_item &delay)
 
     case DELAY_ARMOUR_OFF:
     {
+        const equipment_type slot = get_armour_slot(you.inv[delay.parm1]);
+        ASSERT(you.equip[slot] == delay.parm1);
+
         mprf("You finish taking off %s.",
              you.inv[delay.parm1].name(DESC_NOCAP_YOUR).c_str());
+        unequip_item(slot);
 
-        const equipment_type slot = get_armour_slot(you.inv[delay.parm1]);
-
-        if (slot == EQ_BODY_ARMOUR)
-            you.equip[EQ_BODY_ARMOUR] = -1;
-        else
-        {
-            switch (slot)
-            {
-            case EQ_SHIELD:
-            case EQ_CLOAK:
-            case EQ_HELMET:
-            case EQ_GLOVES:
-            case EQ_BOOTS:
-                if (delay.parm1 == you.equip[slot])
-                    you.equip[slot] = -1;
-                break;
-
-            default:
-                break;
-            }
-        }
-
-        unwear_armour(delay.parm1);
-
-        you.redraw_armour_class = true;
-        you.redraw_evasion = true;
         break;
     }
 
@@ -1406,7 +1387,7 @@ void finish_last_delay()
     _finish_delay(delay);
 }
 
-void armour_wear_effects(const int item_slot)
+static void _armour_wear_effects(const int item_slot)
 {
     const unsigned int old_talents = your_talents(false).size();
 
@@ -1419,21 +1400,16 @@ void armour_wear_effects(const int item_slot)
         arm.flags |= ISFLAG_NOTED_ID;
 
     const equipment_type eq_slot = get_armour_slot(arm);
-    const bool melded = (arm.link == you.equip[eq_slot]);
-    const bool known_cursed = item_known_cursed(arm);
 
     if (!was_known)
     {
         if (Options.autoinscribe_artefacts && is_artefact(arm))
             add_autoinscription( arm, artefact_auto_inscription(arm));
     }
-    if (!melded)
-        mprf("You finish putting on %s.", arm.name(DESC_NOCAP_YOUR).c_str());
+    mprf("You finish putting on %s.", arm.name(DESC_NOCAP_YOUR).c_str());
 
     if (eq_slot == EQ_BODY_ARMOUR)
     {
-        you.equip[EQ_BODY_ARMOUR] = item_slot;
-
         if (you.duration[DUR_ICY_ARMOUR] != 0)
         {
             mpr("Your icy armour melts away.", MSGCH_DURATION);
@@ -1445,32 +1421,17 @@ void armour_wear_effects(const int item_slot)
     {
         if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
             remove_condensation_shield();
-
-        you.equip[EQ_SHIELD] = item_slot;
-    }
-    else if (!melded)
-    {
-        switch (eq_slot)
-        {
-        case EQ_SHIELD:
-            break;
-        case EQ_CLOAK:
-            you.equip[EQ_CLOAK] = item_slot;
-            break;
-        case EQ_HELMET:
-            you.equip[EQ_HELMET] = item_slot;
-            break;
-        case EQ_GLOVES:
-            you.equip[EQ_GLOVES] = item_slot;
-            break;
-        case EQ_BOOTS:
-            you.equip[EQ_BOOTS] = item_slot;
-            break;
-        default:
-            break;
-        }
     }
 
+    equip_item(eq_slot, item_slot);
+
+    if (Tutorial.tutorial_left && your_talents(false).size() > old_talents)
+        learned_something_new(TUT_NEW_ABILITY_ITEM);
+}
+
+void equip_armour_effect(item_def& arm, bool unmeld)
+{
+    const bool known_cursed = item_known_cursed(arm);
     int ego = get_armour_ego_type( arm );
     if (ego != SPARM_NORMAL)
     {
@@ -1571,10 +1532,10 @@ void armour_wear_effects(const int item_slot)
     if (is_artefact(arm))
     {
         bool show_msgs = true;
-        use_artefact(arm, &show_msgs, melded);
+        use_artefact(arm, &show_msgs, unmeld);
     }
 
-    if (arm.cursed() && !melded)
+    if (arm.cursed() && !unmeld)
     {
         mpr("Oops, that feels deathly cold.");
         learned_something_new(TUT_YOU_CURSED);
@@ -1599,11 +1560,8 @@ void armour_wear_effects(const int item_slot)
         }
     }
 
-    if (eq_slot == EQ_SHIELD)
+    if (get_item_slot(arm) == EQ_SHIELD)
         warn_shield_penalties();
-
-    if (Tutorial.tutorial_left && your_talents(false).size() > old_talents)
-        learned_something_new(TUT_NEW_ABILITY_ITEM);
 
     you.redraw_armour_class = true;
     you.redraw_evasion = true;

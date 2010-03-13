@@ -58,6 +58,7 @@
 #include "options.h"
 #include "ouch.h"
 #include "player.h"
+#include "player-equip.h"
 #include "quiver.h"
 #include "religion.h"
 #include "godconduct.h"
@@ -376,10 +377,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     const unsigned int old_talents = your_talents(false).size();
 
     // Go ahead and wield the weapon.
-    you.equip[EQ_WEAPON] = item_slot;
-
-    // Any oddness on wielding taken care of here.
-    wield_effects(item_slot, show_weff_messages);
+    equip_item(EQ_WEAPON, item_slot, show_weff_messages);
 
     mpr(new_wpn.name(DESC_INVENTORY_EQUIP).c_str());
 
@@ -466,11 +464,11 @@ void warn_shield_penalties()
 // Provide a function for handling initial wielding of 'special'
 // weapons, or those whose function is annoying to reproduce in
 // other places *cough* auto-butchering *cough*.    {gdl}
-void wield_effects(int item_wield_2, bool showMsgs)
+// TODO: move this to player-equip.cc and hide.
+void equip_weapon_effect(item_def& item, bool showMsgs)
 {
     unsigned char special = 0;
 
-    item_def &item = you.inv[item_wield_2];
     const bool artefact     = is_artefact(item);
     const bool known_cursed = item_known_cursed(item);
 
@@ -542,7 +540,7 @@ void wield_effects(int item_wield_2, bool showMsgs)
 
         // Call unrandrt equip func before item is identified.
         if (artefact)
-            use_artefact(item_wield_2, &showMsgs);
+            use_artefact(item, &showMsgs);
 
         const bool was_known      = item_type_known(item);
               bool known_recurser = false;
@@ -3433,7 +3431,7 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where)
     return destroyed;
 }
 
-void jewellery_wear_effects(item_def &item)
+void equip_jewellery_effect(item_def &item)
 {
     item_type_id_state_type ident        = ID_TRIED_TYPE;
     artefact_prop_type      fake_rap     = ARTP_NUM_PROPERTIES;
@@ -4058,10 +4056,7 @@ bool puton_item(int item_slot)
     const unsigned int old_talents = your_talents(false).size();
 
     // Actually equip the item.
-    you.equip[hand_used] = item_slot;
-
-    // And calculate the effects.
-    jewellery_wear_effects(item);
+    equip_item(hand_used, item_slot);
 
     if (Tutorial.tutorial_left && your_talents(false).size() > old_talents)
         learned_something_new(TUT_NEW_ABILITY_ITEM);
@@ -4131,7 +4126,7 @@ void remove_amulet_of_faith(item_def &item)
     }
 }
 
-void jewellery_remove_effects(item_def &item, bool mesg)
+void unequip_jewellery_effect(item_def &item, bool mesg)
 {
     // The ring/amulet must already be removed from you.equip at this point.
 
@@ -4342,9 +4337,7 @@ bool remove_ring(int slot, bool announce)
     if (!safe_to_remove_or_wear(you.inv[ring_wear_2], true))
         return (false);
 
-    you.equip[hand_used] = -1;
-
-    jewellery_remove_effects(you.inv[ring_wear_2]);
+    unequip_item(hand_used, ring_wear_2);
 
     you.time_taken /= 2;
     you.turn_is_over = true;
@@ -5846,11 +5839,6 @@ void examine_object(void)
     redraw_screen();
     mesclr();
 }                               // end original_name()
-
-void use_artefact(unsigned char item_wield_2, bool *show_msgs)
-{
-    use_artefact( you.inv[ item_wield_2 ], show_msgs );
-}
 
 void use_artefact(item_def &item, bool *show_msgs, bool unmeld)
 {
