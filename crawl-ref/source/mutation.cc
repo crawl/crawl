@@ -2139,7 +2139,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         gain_msg = false;
 
         // Hooves and talons force boots off.
-        if (you_tran_can_wear(EQ_BOOTS))
+        if (!you.melded[EQ_BOOTS])
         {
             remove_one_equip(EQ_BOOTS, false, true);
             modified_eq = true;
@@ -2153,7 +2153,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         // Gloves aren't prevented until level 3.  We don't have the
         // mutation yet, so we have to check for level 2 or higher claws
         // here.
-        if (you.mutation[mutat] >= 2 && you_tran_can_wear(EQ_GLOVES))
+        if (you.mutation[mutat] >= 2 && !you.melded[EQ_GLOVES])
         {
             remove_one_equip(EQ_GLOVES, false, true);
             modified_eq = true;
@@ -2168,7 +2168,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         // Horns and beaks force hard helmets off.
         if (you.equip[EQ_HELMET] != -1
             && is_hard_helmet(you.inv[you.equip[EQ_HELMET]])
-            && you_tran_can_wear(EQ_HELMET))
+            && !you.melded[EQ_HELMET])
         {
             remove_one_equip(EQ_HELMET, false, true);
             modified_eq = true;
