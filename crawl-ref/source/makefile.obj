@@ -143,6 +143,7 @@ output.o \
 pattern.o \
 place.o \
 player.o \
+player-equip.o \
 quiver.o \
 random.o \
 ray.o \

@@ -55,9 +55,8 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove,
 void examine_object(void);
 
 bool puton_ring(int slot = -1);
-void jewellery_remove_effects(item_def &item, bool mesg = true);
-
-void jewellery_wear_effects(item_def &item);
+void unequip_jewellery_effect(item_def &item, bool mesg);
+void equip_jewellery_effect(item_def &item);
 
 void read_scroll(int slot = -1);
 
@@ -86,9 +85,8 @@ bool wield_weapon(bool auto_wield, int slot = -1,
 
 void zap_wand(int slot = -1);
 
-void wield_effects(int item_wield_2, bool showMsgs);
+void equip_weapon_effect(item_def& item, bool showMsgs);
 
-void use_artefact( unsigned char item_wield_2, bool *show_msgs = NULL);
 void use_artefact(item_def &item, bool *show_msgs = NULL, bool unmeld = false);
 
 bool puton_item(int slot);

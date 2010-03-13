@@ -26,6 +26,7 @@
 #include "misc.h"
 #include "mutation.h"
 #include "player.h"
+#include "player-equip.h"
 #include "religion.h"
 #include "godconduct.h"
 #include "skills2.h"
@@ -471,13 +472,22 @@ bool unwield_item(bool showMsgs)
     if (is_weapon && !safe_to_remove_or_wear(item, true))
         return (false);
 
-    you.equip[EQ_WEAPON] = -1;
+    unequip_item(EQ_WEAPON, showMsgs);
+
+    you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
+
+    return (true);
+}
+
+// TODO: move this to player-equip.cc.
+void unequip_weapon_effect(item_def& item, bool showMsgs)
+{
     you.wield_change     = true;
     you.m_quiver->on_weapon_changed();
 
     // Call this first, so that the unrandart func can set showMsgs to
     // false if it does its own message handling.
-    if (is_weapon && is_artefact( item ))
+    if (is_artefact(item))
         unuse_artefact(item, &showMsgs);
 
     if (item.base_type == OBJ_MISCELLANY
@@ -586,21 +596,15 @@ bool unwield_item(bool showMsgs)
         calc_mp();
         mpr("You feel your mana capacity decrease.");
     }
-
-    you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
-
-    return (true);
 }
 
-// This does *not* call ev_mod!
-void unwear_armour(int slot)
+// TODO: move to player-equip.cc
+void unequip_armour_effect(item_def& item)
 {
     you.redraw_armour_class = true;
     you.redraw_evasion = true;
 
-    item_def &item(you.inv[slot]);
-
-    switch (get_armour_ego_type( item ))
+    switch (get_armour_ego_type(item))
     {
     case SPARM_RUNNING:
         mpr("You feel rather sluggish.");
