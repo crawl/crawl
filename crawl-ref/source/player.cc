@@ -816,12 +816,11 @@ bool berserk_check_wielded_weapon()
 
 // Looks in equipment "slot" to see if there is an equipped "sub_type".
 // Returns number of matches (in the case of rings, both are checked)
-int player_equip( equipment_type slot, int sub_type, bool calc_unid )
+int player_equip(equipment_type slot, int sub_type, bool calc_unid)
 {
-    if (!you_tran_can_wear(slot))
-        return (0);
-
     int ret = 0;
+
+    item_def* item;
 
     switch (slot)
     {
@@ -847,59 +846,74 @@ int player_equip( equipment_type slot, int sub_type, bool calc_unid )
         break;
 
     case EQ_RINGS:
-        if (you.equip[EQ_LEFT_RING] != -1
-            && you.inv[you.equip[EQ_LEFT_RING]].sub_type == sub_type
+        if ((item = you.slot_item(EQ_LEFT_RING))
+            && item->sub_type == sub_type
             && (calc_unid
-                || item_type_known( you.inv[you.equip[EQ_LEFT_RING]] )))
+                || item_type_known(*item)))
         {
             ret++;
         }
 
-        if (you.equip[EQ_RIGHT_RING] != -1
-            && you.inv[you.equip[EQ_RIGHT_RING]].sub_type == sub_type
+        if ((item = you.slot_item(EQ_RIGHT_RING))
+            && item->sub_type == sub_type
             && (calc_unid
-                || item_type_known( you.inv[you.equip[EQ_RIGHT_RING]] )))
+                || item_type_known(*item)))
         {
             ret++;
         }
         break;
 
     case EQ_RINGS_PLUS:
-        if (you.equip[EQ_LEFT_RING] != -1
-            && you.inv[you.equip[EQ_LEFT_RING]].sub_type == sub_type)
+        if ((item = you.slot_item(EQ_LEFT_RING))
+            && item->sub_type == sub_type
+            && (calc_unid
+                || item_type_known(*item)))
         {
-            ret += you.inv[you.equip[EQ_LEFT_RING]].plus;
+            ret += item->plus;
         }
 
-        if (you.equip[EQ_RIGHT_RING] != -1
-            && you.inv[you.equip[EQ_RIGHT_RING]].sub_type == sub_type)
+        if ((item = you.slot_item(EQ_RIGHT_RING))
+            && item->sub_type == sub_type
+            && (calc_unid
+                || item_type_known(*item)))
         {
-            ret += you.inv[you.equip[EQ_RIGHT_RING]].plus;
+            ret += item->plus;
         }
         break;
 
     case EQ_RINGS_PLUS2:
-        if (you.equip[EQ_LEFT_RING] != -1
-            && you.inv[you.equip[EQ_LEFT_RING]].sub_type == sub_type)
+        if ((item = you.slot_item(EQ_LEFT_RING))
+            && item->sub_type == sub_type
+            && (calc_unid
+                || item_type_known(*item)))
         {
-            ret += you.inv[you.equip[EQ_LEFT_RING]].plus2;
+            ret += item->plus2;
         }
 
-        if (you.equip[EQ_RIGHT_RING] != -1
-            && you.inv[you.equip[EQ_RIGHT_RING]].sub_type == sub_type)
+        if ((item = you.slot_item(EQ_RIGHT_RING))
+            && item->sub_type == sub_type
+            && (calc_unid
+                || item_type_known(*item)))
         {
-            ret += you.inv[you.equip[EQ_RIGHT_RING]].plus2;
+            ret += item->plus2;
         }
         break;
 
     case EQ_ALL_ARMOUR:
         // Doesn't make much sense here... be specific. -- bwr
+        ASSERT(false);
         break;
 
     default:
-        if (you.equip[slot] != -1
-            && you.inv[you.equip[slot]].sub_type == sub_type
-            && (calc_unid || item_type_known(you.inv[you.equip[slot]])))
+        if (! (slot > EQ_NONE && slot < NUM_EQUIP))
+        {
+            ASSERT(false);
+
+            return (0);
+        }
+        if ((item = you.slot_item(slot))
+            && item->sub_type == sub_type
+            && (calc_unid || item_type_known(*item)))
         {
             ret++;
         }
@@ -909,27 +923,22 @@ int player_equip( equipment_type slot, int sub_type, bool calc_unid )
     return (ret);
 }
 
-
 // Looks in equipment "slot" to see if equipped item has "special" ego-type
 // Returns number of matches (jewellery returns zero -- no ego type).
 // [ds] There's no equivalent of calc_unid or req_id because as of now, weapons
 // and armour type-id on wield/wear.
-int player_equip_ego_type( int slot, int special )
+int player_equip_ego_type(int slot, int special)
 {
-    if (!you_tran_can_wear(slot))
-        return (0);
-
     int ret = 0;
-    int wpn;
 
+    item_def* item;
     switch (slot)
     {
     case EQ_WEAPON:
         // Hands can have more than just weapons.
-        wpn = you.equip[EQ_WEAPON];
-        if (wpn != -1
-            && you.inv[wpn].base_type == OBJ_WEAPONS
-            && get_weapon_brand( you.inv[wpn] ) == special)
+        if ((item = you.slot_item(EQ_WEAPON))
+            && item->base_type == OBJ_WEAPONS
+            && get_weapon_brand(*item) == special)
         {
             ret++;
         }
@@ -949,12 +958,8 @@ int player_equip_ego_type( int slot, int special )
         // Check all armour slots:
         for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
         {
-            // ... but skip ones you can't currently use!
-            if (!you_tran_can_wear(i))
-                continue;
-
-            if (you.equip[i] != -1
-                && get_armour_ego_type( you.inv[you.equip[i]] ) == special)
+            if ((item = you.slot_item(static_cast<equipment_type>(i)))
+                && get_armour_ego_type(*item) == special)
             {
                 ret++;
             }
@@ -962,9 +967,14 @@ int player_equip_ego_type( int slot, int special )
         break;
 
     default:
+        if (slot < EQ_MIN_ARMOUR || slot > EQ_MAX_ARMOUR)
+        {
+            ASSERT(false);
+            return (0);
+        }
         // Check a specific armour slot for an ego type:
-        if (you.equip[slot] != -1
-            && get_armour_ego_type( you.inv[you.equip[slot]] ) == special)
+        if ((item = you.slot_item(static_cast<equipment_type>(slot)))
+            && get_armour_ego_type(*item) == special)
         {
             ret++;
         }
@@ -983,38 +993,32 @@ bool player_equip_unrand(int unrand_index)
     equipment_type   slot  = get_item_slot(entry->base_type,
                                            entry->sub_type);
 
-    if (!you_tran_can_wear(slot))
-        return (false);
-
-    int it;
+    item_def* item;
 
     switch (slot)
     {
     case EQ_WEAPON:
         // Hands can have more than just weapons.
-        it = you.equip[EQ_WEAPON];
-        if (it != -1
-            && you.inv[it].base_type == OBJ_WEAPONS
-            && is_unrandom_artefact(you.inv[it])
-            && you.inv[it].special == unrand_index)
+        if ((item = you.slot_item(slot))
+            && item->base_type == OBJ_WEAPONS
+            && is_unrandom_artefact(*item)
+            && item->special == unrand_index)
         {
             return (true);
         }
         break;
 
     case EQ_RINGS:
-        it = you.equip[EQ_LEFT_RING];
-        if (it != -1
-            && is_unrandom_artefact(you.inv[it])
-            && you.inv[it].special == unrand_index)
+        if ((item = you.slot_item(EQ_LEFT_RING))
+            && is_unrandom_artefact(*item)
+            && item->special == unrand_index)
         {
             return (true);
         }
 
-        it = you.equip[EQ_RIGHT_RING];
-        if (it != -1
-            && is_unrandom_artefact(you.inv[it])
-            && you.inv[it].special == unrand_index)
+        if ((item = you.slot_item(EQ_RIGHT_RING))
+            && is_unrandom_artefact(*item)
+            && item->special == unrand_index)
         {
             return (true);
         }
@@ -1031,11 +1035,15 @@ bool player_equip_unrand(int unrand_index)
         break;
 
     default:
+        if (slot <= EQ_NONE || slot >= NUM_EQUIP)
+        {
+            ASSERT(false);
+            return (false);
+        }
         // Check a specific slot.
-        it = you.equip[slot];
-        if (it != -1
-            && is_unrandom_artefact(you.inv[it])
-            && you.inv[it].special == unrand_index)
+        if ((item = you.slot_item(slot))
+            && is_unrandom_artefact(*item)
+            && item->special == unrand_index)
         {
             return (true);
         }

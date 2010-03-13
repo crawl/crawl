@@ -488,8 +488,8 @@ bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
 
     if (in_inventory(*item))
     {
-        const bool equipped = item_is_equipped(*item);
-        if (equipped)
+        const equipment_type eq = item_equip_slot(*item);
+        if (eq != EQ_NONE)
         {
             if (item_known_cursed(*item))
                 tileset.push_back(tile_def(TILE_ITEM_SLOT_EQUIP_CURSED, TEX_DEFAULT));
@@ -502,8 +502,7 @@ bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
         tileset.push_back(tile_def(TILE_ITEM_SLOT, TEX_DUNGEON));
         tileset.push_back(tile_def(idx, TEX_DEFAULT));
 
-        // Is item melded?
-        if (equipped && !you_tran_can_wear(*item))
+        if (eq != EQ_NONE && you.melded[eq])
             tileset.push_back(tile_def(TILE_MESH, TEX_DEFAULT));
     }
     else
