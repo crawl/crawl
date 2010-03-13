@@ -3598,7 +3598,7 @@ void InventoryRegion::update()
                 if (you.equip[eq] == i)
                 {
                     desc.flag |= TILEI_FLAG_EQUIP;
-                    if (!you_tran_can_wear(you.inv[i]))
+                    if (you.melded[eq])
                         desc.flag |= TILEI_FLAG_MELDED;
                     break;
                 }

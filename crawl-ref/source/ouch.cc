@@ -298,7 +298,7 @@ void weapon_acid(int acid_strength)
 {
     int hand_thing = you.equip[EQ_WEAPON];
 
-    if (hand_thing == -1 && you_tran_can_wear(EQ_GLOVES, true))
+    if (hand_thing == -1 && !you.melded[EQ_GLOVES])
         hand_thing = you.equip[EQ_GLOVES];
 
     if (hand_thing == -1)
