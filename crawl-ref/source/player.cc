@@ -665,10 +665,8 @@ bool player_has_feet()
 
 bool player_wearing_slot(int eq)
 {
-    if (you.equip[eq] == -1)
-        return (false);
-
-    return (you_tran_can_wear(you.inv[you.equip[eq]]));
+    ASSERT(you.equip[eq] != -1 || !you.melded[eq]);
+    return (you.equip[eq] != -1 && !you.melded[eq]);
 }
 
 bool you_tran_can_wear(const item_def &item)
@@ -5741,9 +5739,9 @@ item_def *player::slot_item(equipment_type eq, bool include_melded)
     ASSERT(eq >= EQ_WEAPON && eq <= EQ_AMULET);
 
     const int item = equip[eq];
-    return (item == -1 ? NULL :
-            include_melded || you_tran_can_wear(eq) ? &inv[item] :
-            NULL);
+    if (item == -1 || !include_melded && melded[eq])
+        return (NULL);
+    return (&inv[item]);
 }
 
 // const variant of the above...
@@ -5752,9 +5750,9 @@ const item_def *player::slot_item(equipment_type eq, bool include_melded) const
     ASSERT(eq >= EQ_WEAPON && eq <= EQ_AMULET);
 
     const int item = equip[eq];
-    return (item == -1 ? NULL :
-            include_melded || you_tran_can_wear(eq) ? &inv[item] :
-            NULL);
+    if (item == -1 || !include_melded && melded[eq])
+        return (NULL);
+    return (&inv[item]);
 }
 
 // Returns the item in the player's weapon slot.
