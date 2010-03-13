@@ -2906,7 +2906,7 @@ ENDMAP
 # The pits are prepared
 NAME:    david_entry_069
 TAGS:    entry no_monster_gen no_rotate no_pool_fixup
-WEIGHT:  200000
+WEIGHT:  20
 ORIENT:  float
 : if crawl.one_chance_in(4) then
 SUBST:   Yy=w, Zz=l, Xx"'=b
@@ -3134,7 +3134,7 @@ ENDMAP
 NAME:    cave_to_temple
 # Intentionally higher chances for the non-Temple gods.
 TAGS:    cave_to_temple_subvault no_rotate
-SUBST:   X : n G:4 l:1
+SUBST:   X : nnG
 NSUBST:  ' = 12:1 / 4:2 / 1:3 / *:.
 : local rnd = crawl.random2(9)
 : if rnd == 0 then
