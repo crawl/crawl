@@ -66,6 +66,7 @@ public:
 
   int hunger;
   FixedVector<signed char, NUM_EQUIP> equip;
+  FixedVector<bool, NUM_EQUIP> melded;
 
   int hp;
   int hp_max;
