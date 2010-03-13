@@ -11,10 +11,7 @@
 #include "tilefont.h"
 #include "defines.h"
 #include "files.h"
-
-#ifdef USE_GL
 #include "glwrapper.h"
-#endif
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
