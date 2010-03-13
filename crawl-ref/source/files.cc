@@ -1751,6 +1751,10 @@ static void _save_game_base()
 // complain.
 static void _save_game_exit()
 {
+    // Prompt for saving macros.
+    if (crawl_state.unsaved_macros && yesno("Save macros?", true, 'n'))
+        macro_save();
+
     // Must be exiting -- save level & goodbye!
     if (!you.entering_level)
         _save_level(you.absdepth0, you.level_type, you.where_are_you);
@@ -1808,10 +1812,6 @@ void save_game(bool leave_game, const char *farewellmsg)
     // so Valgrind doesn't complain.
     _save_game_base();
 
-    // Prompt for saving macros.
-    if (crawl_state.unsaved_macros && yesno("Save macros?", true, 'n'))
-        macro_save();
-
     // If just save, early out.
     if (!leave_game)
         return;
@@ -1822,7 +1822,7 @@ void save_game(bool leave_game, const char *farewellmsg)
 
     end(0, false, farewellmsg? "%s" : "See you soon, %s!",
         farewellmsg? farewellmsg : you.your_name.c_str());
-}                               // end save_game()
+}
 
 // Saves the game without exiting.
 void save_game_state()
