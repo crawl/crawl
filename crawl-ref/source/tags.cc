@@ -972,7 +972,9 @@ static void tag_construct_you(writer &th)
     // how many you.equip?
     marshallByte(th, NUM_EQUIP);
     for (i = 0; i < NUM_EQUIP; ++i)
-        marshallByte(th,you.equip[i]);
+        marshallByte(th, you.equip[i]);
+    for (i = 0; i < NUM_EQUIP; ++i)
+        marshallBoolean(th, you.melded[i]);
 
     marshallByte(th, you.magic_points);
     marshallByte(th, you.max_magic_points);
@@ -1393,6 +1395,11 @@ static void tag_read_you(reader &th, char minorVersion)
     for (i = 0; i < count_c; ++i)
         you.equip[i] = unmarshallByte(th);
 
+    if (minorVersion >= TAG_MINOR_MELDED)
+        for (i = 0; i < count_c; ++i)
+            you.melded[i] = unmarshallBoolean(th);
+    // else will fixup after we know the transformation
+
     you.magic_points              = unmarshallByte(th);
     you.max_magic_points          = unmarshallByte(th);
     you.strength                  = unmarshallByte(th);
@@ -1474,6 +1481,11 @@ static void tag_read_you(reader &th, char minorVersion)
     count_c = unmarshallByte(th);
     for (j = 0; j < count_c; ++j)
         you.attribute[j] = unmarshallLong(th);
+
+    // Calculate you.melded from ATTR_TRANSFORMATION
+    if (minorVersion < TAG_MINOR_MELDED)
+        for (i = 0; i < count_c; ++i)
+            you.melded[i] = (you.equip[i] != -1 && !you_tran_can_wear(i));
 
     count_c = unmarshallByte(th);
     for (j = 0; j < count_c; ++j)

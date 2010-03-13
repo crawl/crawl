@@ -51,7 +51,8 @@ enum tag_minor_version
     TAG_MINOR_INTTIME   = 4, // Elapsed time stored as longs (ints really).
     TAG_MINOR_STASHVER  = 5, // Stashes using global save version, ints instead of floats.
     TAG_MINOR_REVERTDS  = 6, // Demonspawn reverted to the 0.5 system, don't preroll
-    TAG_MINOR_VERSION   = 6 // Current version.  (Keep equal to max.)
+    TAG_MINOR_MELDED    = 7, // New field player::melded.
+    TAG_MINOR_VERSION   = 7 // Current version.  (Keep equal to max.)
 };
 
 struct enum_info
