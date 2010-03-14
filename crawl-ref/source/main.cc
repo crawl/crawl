@@ -2623,25 +2623,7 @@ void world_reacts()
     if (you.duration[DUR_FIRE_SHIELD] > 0)
         manage_fire_shield(you.time_taken);
 
-    // Food death check.
-    if (you.is_undead != US_UNDEAD && you.hunger <= 500)
-    {
-        if (!you.cannot_act() && one_chance_in(40))
-        {
-            mpr("You lose consciousness!", MSGCH_FOOD);
-            stop_running();
-
-            you.increase_duration(DUR_PARALYSIS, 5 + random2(8), 13);
-            if (you.religion == GOD_XOM)
-                xom_is_stimulated(get_tension() > 0 ? 255 : 128);
-        }
-
-        if (you.hunger <= 100)
-        {
-            mpr("You have starved to death.", MSGCH_FOOD);
-            ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_STARVATION);
-        }
-    }
+    handle_starvation();
 
     viewwindow(false);
 
