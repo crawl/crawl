@@ -178,7 +178,7 @@ void VertBuffer<P3TCVert>::draw(GLW_3VF *pt, GLW_3VF *ps) const
 /////////////////////////////////////////////////////////////////////////////
 // FontBuffer
 
-FontBuffer::FontBuffer(FTFont *font) :
+FontBuffer::FontBuffer(FontWrapper *font) :
     VertBuffer<PTCVert>(font->font_tex(), GLW_QUADS), m_font(font)
 {
     ASSERT(m_font);

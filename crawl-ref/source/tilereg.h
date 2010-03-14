@@ -95,12 +95,12 @@ protected:
     void set_transform();
 };
 
-class FTFont;
+class FontWrapper;
 
 class TextRegion : public Region
 {
 public:
-    TextRegion(FTFont *font);
+    TextRegion(FontWrapper *font);
     virtual ~TextRegion();
 
     virtual void render();
@@ -148,13 +148,13 @@ public:
 
 protected:
     virtual void on_resize();
-    FTFont *m_font;
+    FontWrapper *m_font;
 };
 
 class StatRegion : public TextRegion
 {
 public:
-    StatRegion(FTFont *font);
+    StatRegion(FontWrapper *font);
 
     virtual int handle_mouse(MouseEvent &event);
     virtual bool update_tip_text(std::string &tip);
@@ -163,7 +163,7 @@ public:
 class MessageRegion : public TextRegion
 {
 public:
-    MessageRegion(FTFont *font);
+    MessageRegion(FontWrapper *font);
 
     void set_overlay(bool is_overlay);
 
@@ -192,7 +192,7 @@ class CRTRegion : public TextRegion
 {
 public:
 
-    CRTRegion(FTFont *font);
+    CRTRegion(FontWrapper *font);
     virtual ~CRTRegion();
 
     virtual void render();
@@ -213,7 +213,7 @@ class MenuEntry;
 class MenuRegion : public Region
 {
 public:
-    MenuRegion(ImageManager *im, FTFont *entry);
+    MenuRegion(ImageManager *im, FontWrapper *entry);
 
     virtual int handle_mouse(MouseEvent &event);
     virtual void render();
@@ -241,7 +241,7 @@ protected:
     };
 
     ImageManager *m_image;
-    FTFont *m_font_entry;
+    FontWrapper *m_font_entry;
     formatted_string m_more;
     int m_mouse_idx;
     int m_max_columns;
@@ -258,13 +258,13 @@ protected:
 class TileRegion : public Region
 {
 public:
-    TileRegion(ImageManager *im, FTFont *tag_font,
+    TileRegion(ImageManager *im, FontWrapper *tag_font,
                int tile_x, int tile_y);
     ~TileRegion();
 
 protected:
     ImageManager *m_image;
-    FTFont *m_tag_font;
+    FontWrapper *m_tag_font;
     bool m_dirty;
 };
 
@@ -277,7 +277,7 @@ struct TextTag
 class DungeonRegion : public TileRegion
 {
 public:
-    DungeonRegion(ImageManager *im, FTFont *tag_font,
+    DungeonRegion(ImageManager *im, FontWrapper *tag_font,
                   int tile_x, int tile_y);
     virtual ~DungeonRegion();
 
@@ -358,7 +358,7 @@ public:
 class GridRegion : public TileRegion
 {
 public:
-    GridRegion(ImageManager *im, FTFont *tag_font, int tile_x, int tile_y);
+    GridRegion(ImageManager *im, FontWrapper *tag_font, int tile_x, int tile_y);
     virtual ~GridRegion();
 
     virtual void clear();
@@ -397,7 +397,7 @@ protected:
 class InventoryRegion : public GridRegion
 {
 public:
-    InventoryRegion(ImageManager *im, FTFont *tag_font,
+    InventoryRegion(ImageManager *im, FontWrapper *tag_font,
                     int tile_x, int tile_y);
 
     virtual void update();
@@ -417,7 +417,7 @@ protected:
 class SpellRegion : public GridRegion
 {
 public:
-    SpellRegion(ImageManager *im, FTFont *tag_font,
+    SpellRegion(ImageManager *im, FontWrapper *tag_font,
                 int tile_x, int tile_y);
 
     virtual void update();
@@ -440,7 +440,7 @@ protected:
 class MemoriseRegion : public SpellRegion
 {
 public:
-    MemoriseRegion(ImageManager *im, FTFont *tag_font,
+    MemoriseRegion(ImageManager *im, FontWrapper *tag_font,
                    int tile_x, int tile_y);
 
     virtual void update();
@@ -459,7 +459,7 @@ protected:
 class TabbedRegion : public GridRegion
 {
 public:
-    TabbedRegion(ImageManager *im, FTFont *tag_font,
+    TabbedRegion(ImageManager *im, FontWrapper *tag_font,
                  int tile_x, int tile_y);
 
     virtual ~TabbedRegion();
@@ -585,7 +585,7 @@ public:
 class TitleRegion : public ControlRegion
 {
 public:
-    TitleRegion(int width, int height, FTFont* font);
+    TitleRegion(int width, int height, FontWrapper* font);
 
     virtual void render();
     virtual void clear() {};
@@ -614,7 +614,7 @@ enum tile_doll_mode
 class DollEditRegion : public ControlRegion
 {
 public:
-    DollEditRegion(ImageManager *im, FTFont *font);
+    DollEditRegion(ImageManager *im, FontWrapper *font);
 
     virtual void render();
     virtual void clear();
@@ -641,7 +641,7 @@ protected:
 
     tile_doll_mode m_mode;
 
-    FTFont *m_font;
+    FontWrapper *m_font;
 
     ShapeBuffer m_shape_buf;
     FontBuffer m_font_buf;

@@ -370,7 +370,7 @@ int TilesFramework::load_font(const char *font_file, int font_size,
         }
     }
 
-    FTFont *font = new FTFont();
+    FontWrapper *font = FontWrapper::create();
 
     if (!font->load_font(font_file, font_size, outline))
     {
@@ -1008,7 +1008,7 @@ void TilesFramework::redraw()
     if (Options.tile_tooltip_ms > 0 && !m_tooltip.empty())
     {
         const coord_def min_pos(0, 0);
-        FTFont *font = m_fonts[m_tip_font].font;
+        FontWrapper *font = m_fonts[m_tip_font].font;
 
         font->render_string(m_mouse.x, m_mouse.y - 2, m_tooltip.c_str(),
                             min_pos, m_windowsz, WHITE, false, 220, BLUE, 5,
