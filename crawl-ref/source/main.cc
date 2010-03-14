@@ -895,6 +895,74 @@ struct disable_check
 
     bool was_disabled;
 };
+
+static void _update_place_info()
+{
+    if (you.num_turns == -1)
+        return;
+
+    PlaceInfo  delta;
+
+    delta.turns_total++;
+    delta.elapsed_total += you.time_taken;
+
+    switch (you.running)
+    {
+    case RMODE_INTERLEVEL:
+        delta.turns_interlevel++;
+        delta.elapsed_interlevel += you.time_taken;
+        break;
+
+    case RMODE_EXPLORE_GREEDY:
+    case RMODE_EXPLORE:
+        delta.turns_explore++;
+        delta.elapsed_explore += you.time_taken;
+        break;
+
+    case RMODE_TRAVEL:
+        delta.turns_travel++;
+        delta.elapsed_travel += you.time_taken;
+        break;
+
+    default:
+        // prev_was_rest is needed so that the turn in which
+        // a player is interrupted from resting is counted
+        // as a resting turn, rather than "other".
+        static bool prev_was_rest = false;
+
+        if (!you.delay_queue.empty()
+            && you.delay_queue.front().type == DELAY_REST)
+        {
+            prev_was_rest = true;
+        }
+
+        if (prev_was_rest)
+        {
+            delta.turns_resting++;
+            delta.elapsed_resting += you.time_taken;
+        }
+        else
+        {
+           delta.turns_other++;
+           delta.elapsed_other += you.time_taken;
+        }
+
+        if (you.delay_queue.empty()
+            || you.delay_queue.front().type != DELAY_REST)
+        {
+            prev_was_rest = false;
+        }
+        break;
+    }
+
+    you.global_info += delta;
+    you.global_info.assert_validity();
+
+    PlaceInfo& curr_PlaceInfo = you.get_place_info();
+    curr_PlaceInfo += delta;
+    curr_PlaceInfo.assert_validity();
+}
+
 //
 //  This function handles the player's input. It's called from main(),
 //  from inside an endless loop.
@@ -1052,69 +1120,7 @@ static void _input()
 
     _update_replay_state();
 
-    if (you.num_turns != -1)
-    {
-        PlaceInfo& curr_PlaceInfo = you.get_place_info();
-        PlaceInfo  delta;
-
-        delta.turns_total++;
-        delta.elapsed_total += you.time_taken;
-
-        switch (you.running)
-        {
-        case RMODE_INTERLEVEL:
-            delta.turns_interlevel++;
-            delta.elapsed_interlevel += you.time_taken;
-            break;
-
-        case RMODE_EXPLORE_GREEDY:
-        case RMODE_EXPLORE:
-            delta.turns_explore++;
-            delta.elapsed_explore += you.time_taken;
-            break;
-
-        case RMODE_TRAVEL:
-            delta.turns_travel++;
-            delta.elapsed_travel += you.time_taken;
-            break;
-
-        default:
-            // prev_was_rest is needed so that the turn in which
-            // a player is interrupted from resting is counted
-            // as a resting turn, rather than "other".
-            static bool prev_was_rest = false;
-
-            if (!you.delay_queue.empty()
-                && you.delay_queue.front().type == DELAY_REST)
-            {
-                prev_was_rest = true;
-            }
-
-            if (prev_was_rest)
-            {
-                delta.turns_resting++;
-                delta.elapsed_resting += you.time_taken;
-            }
-            else
-            {
-                delta.turns_other++;
-                delta.elapsed_other += you.time_taken;
-            }
-
-            if (you.delay_queue.empty()
-                || you.delay_queue.front().type != DELAY_REST)
-            {
-                prev_was_rest = false;
-            }
-            break;
-        }
-
-        you.global_info += delta;
-        you.global_info.assert_validity();
-
-        curr_PlaceInfo += delta;
-        curr_PlaceInfo.assert_validity();
-    }
+    _update_place_info();
 
     crawl_state.clear_god_acting();
 }
