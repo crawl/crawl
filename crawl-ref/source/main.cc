@@ -273,9 +273,7 @@ int main(int argc, char *argv[])
     // Activate markers only after the welcome message, so the
     // player can see any resulting messages.
     env.markers.activate_all();
-    // Call again to make Ctrl-X work correctly for items
-    // in los on turn 0.
-    maybe_update_stashes();
+
 #ifdef USE_TILE
     viewwindow(false);
 #endif
@@ -1049,8 +1047,16 @@ static void _input()
     crawl_state.input_line_curr = 0;
 
     {
+        // Flush messages and display message window.
         msgwin_new_cmd();
+
+        // Make sure view is up-to-date before reading command.
+        // Required for example to catch see-invis changes in
+        // handle_delay above.
         viewwindow(false, true);
+
+        // Update stashes in view.
+        maybe_update_stashes();
 
         clear_macro_process_key_delay();
 
@@ -1116,8 +1122,6 @@ static void _input()
 
         world_reacts();
     }
-    else
-        viewwindow(false);
 
     _update_replay_state();
 
@@ -2588,9 +2592,9 @@ void world_reacts()
     // If you're wielding a rod, it'll gradually recharge.
     recharge_rods(you.time_taken, false);
 
+    // Player stealth check.
     viewwindow(true);
 
-    maybe_update_stashes();
     handle_monsters();
 
     _check_banished();
@@ -3762,8 +3766,6 @@ static bool _initialise(void)
     // Must re-run as the feature table wasn't initialised yet.
     TileNewLevel(newc);
 #endif
-
-    maybe_update_stashes();
 
     // This just puts the view up for the first turn.
     viewwindow(false);
