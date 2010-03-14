@@ -1250,7 +1250,7 @@ bool spell_is_known(spell_type spell)
 //       spell_is_risky(spell)
 //       spell_is_known(spell)
 int spell_highlight_by_utility(spell_type spell, int default_color,
-                               bool transient, bool force_known)
+                               bool transient, bool force_known, bool rod_spell)
 {
     // if Force_known is true, and the spell is
     // known, thats all that matters.
@@ -1264,19 +1264,18 @@ int spell_highlight_by_utility(spell_type spell, int default_color,
 
     // NOTE: if you only want the forbidden brand,
     // comment out the rest of the function.
-    if (god_likes_spell(spell, you.religion))
+    if (god_likes_spell(spell, you.religion) && !rod_spell)
         default_color = COL_FAVORED;
 
-    if (spell_is_empowered(spell))
+    if (spell_is_empowered(spell) && !rod_spell)
         default_color = COL_EMPOWERED;
-    else if (spell_is_useful(spell))
+    else if (spell_is_useful(spell) && !rod_spell)
         default_color = COL_USEFUL;
 
-    if (spell_is_risky(spell))
+    if (spell_is_risky(spell) && !rod_spell)
         default_color = COL_RISKY;
     if (spell_is_useless(spell, transient))
         default_color = COL_USELESS;
-
 
     return (default_color);
 }
