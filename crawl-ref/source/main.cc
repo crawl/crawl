@@ -136,6 +136,10 @@
 #include "tiledef-dngn.h"
 #endif
 
+#ifdef DGL_SIMPLE_MESSAGING
+#include "dgl-message.h"
+#endif
+
 // ----------------------------------------------------------------------
 // Globals whose construction/destruction order needs to be managed
 // ----------------------------------------------------------------------
@@ -194,10 +198,6 @@ static void _wanderer_startup_message();
 static void _god_greeting_message(bool game_start);
 static void _take_starting_note();
 static void _startup_tutorial();
-
-#ifdef DGL_SIMPLE_MESSAGING
-static void _read_messages();
-#endif
 
 static void _compile_time_asserts();
 
@@ -1063,8 +1063,6 @@ static void _input()
         crawl_state.waiting_for_command = true;
         c_input_reset(true);
 
-        _center_cursor();
-
 #ifdef USE_TILE
         cursor_control con(false);
 #endif
@@ -1759,7 +1757,7 @@ void process_command(command_type cmd)
     case CMD_READ_MESSAGES:
 #ifdef DGL_SIMPLE_MESSAGING
         if (SysEnv.have_messages)
-            _read_messages();
+            read_messages();
 #endif
         break;
 
@@ -2650,156 +2648,10 @@ void world_reacts()
     }
 }
 
-#ifdef DGL_SIMPLE_MESSAGING
-
-static struct stat mfilestat;
-
-static void _show_message_line(std::string line)
-{
-    const std::string::size_type sender_pos = line.find(":");
-    if (sender_pos == std::string::npos)
-        mpr(line.c_str());
-    else
-    {
-        std::string sender = line.substr(0, sender_pos);
-        line = line.substr(sender_pos + 1);
-        trim_string(line);
-        formatted_string fs;
-        fs.textcolor(WHITE);
-        fs.cprintf("%s: ", sender.c_str());
-        fs.textcolor(LIGHTGREY);
-        fs.cprintf("%s", line.c_str());
-        formatted_mpr(fs, MSGCH_PLAIN, 0);
-        take_note(Note(NOTE_MESSAGE, MSGCH_PLAIN, 0,
-                       (sender + ": " + line).c_str()));
-    }
-}
-
-static void _kill_messaging(FILE *mf)
-{
-    if (mf)
-        fclose(mf);
-    SysEnv.have_messages = false;
-    Options.messaging = false;
-}
-
-static void _read_each_message()
-{
-    bool say_got_msg = true;
-    FILE *mf = fopen(SysEnv.messagefile.c_str(), "r+");
-    if (!mf)
-    {
-        mprf(MSGCH_ERROR, "Couldn't read %s: %s", SysEnv.messagefile.c_str(),
-             strerror(errno));
-        _kill_messaging(mf);
-        return;
-    }
-
-    // Read messages, code borrowed from the SIMPLEMAIL patch.
-    char line[120];
-
-    if (!lock_file_handle(mf, F_RDLCK))
-    {
-        mprf(MSGCH_ERROR, "Failed to lock %s: %s", SysEnv.messagefile.c_str(),
-             strerror(errno));
-        _kill_messaging(mf);
-        return;
-    }
-
-    while (fgets(line, sizeof line, mf))
-    {
-        unlock_file_handle(mf);
-
-        const int len = strlen(line);
-        if (len)
-        {
-            if (line[len - 1] == '\n')
-                line[len - 1] = 0;
-
-            if (say_got_msg)
-            {
-                mprf(MSGCH_PROMPT, "Your messages:");
-                say_got_msg = false;
-            }
-
-            _show_message_line(line);
-        }
-
-        if (!lock_file_handle(mf, F_RDLCK))
-        {
-            mprf(MSGCH_ERROR, "Failed to lock %s: %s",
-                 SysEnv.messagefile.c_str(),
-                 strerror(errno));
-            _kill_messaging(mf);
-            return;
-        }
-    }
-    if (!lock_file_handle(mf, F_WRLCK))
-    {
-        mprf(MSGCH_ERROR, "Unable to write lock %s: %s",
-             SysEnv.messagefile.c_str(),
-             strerror(errno));
-    }
-    if (!ftruncate(fileno(mf), 0))
-        mfilestat.st_mtime = 0;
-    unlock_file_handle(mf);
-    fclose(mf);
-
-    SysEnv.have_messages = false;
-}
-
-static void _read_messages()
-{
-    _read_each_message();
-    update_message_status();
-}
-
-static void _announce_messages()
-{
-    // XXX: We could do a NetHack-like mail daemon here at some point.
-    mprf("Beep! Your pager goes off! Use _ to check your messages.");
-}
-
-static void _check_messages()
-{
-    if (!Options.messaging
-        || SysEnv.have_messages
-        || SysEnv.messagefile.empty()
-        || kbhit()
-        || (SysEnv.message_check_tick++ % DGL_MESSAGE_CHECK_INTERVAL))
-    {
-        return;
-    }
-
-    const bool had_messages = SysEnv.have_messages;
-    struct stat st;
-    if (stat(SysEnv.messagefile.c_str(), &st))
-    {
-        mfilestat.st_mtime = 0;
-        return;
-    }
-
-    if (st.st_mtime > mfilestat.st_mtime)
-    {
-        if (st.st_size)
-            SysEnv.have_messages = true;
-        mfilestat.st_mtime = st.st_mtime;
-    }
-
-    if (SysEnv.have_messages && !had_messages)
-    {
-        _announce_messages();
-        update_message_status();
-        // Recenter the cursor on the player.
-        _center_cursor();
-    }
-}
-#endif
-
 static command_type _get_next_cmd()
 {
 #ifdef DGL_SIMPLE_MESSAGING
-    _check_messages();
+    check_messages();
 #endif
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -2814,6 +2666,8 @@ static command_type _get_next_cmd()
 #ifdef DEBUG_MONS_SCAN
     debug_mons_scan();
 #endif
+
+    _center_cursor();
 
     const time_t before = time(NULL);
     keycode_type keyin = _get_next_keycode();
