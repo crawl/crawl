@@ -115,7 +115,7 @@ void hogs_to_humans()
         // Restore original monster.
         **mi = orig;
 
-        mi->set_position(pos);
+        mi->move_to_pos(pos);
         mi->enchantments = enchantments;
         mi->hit_points   = std::max(1, (int) (mi->max_hit_points * hp));
         mi->flags        = mi->flags | preserve_flags;
