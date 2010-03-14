@@ -150,15 +150,17 @@ default-depth: Vault:2-7, Crypt, D:22-27, Elf:5-7
 NAME:       enter_wizlab_1
 TAGS:       uniq_wizlab
 ORIENT:     float
+TILE:       m = dngn_transparent_wall_green
+COLOUR:     m = lightgreen
 :           wizlab_portal(_G)
 MAP
     wwwww
    wwwwwww
-  wwxmxmxww
- wwxx...xxww
-wwxm..O..mxww
- wwxx...xxww
-  wwxx+xxww
+  wwbmbmbww
+ wwbb...bbww
+wwbm..O..mbww
+ wwbb...bbww
+  wwbb+bbww
    www.www
     w.@.w
 ENDMAP
@@ -169,20 +171,22 @@ ENDMAP
 NAME:       enter_wizlab_2
 TAGS:       uniq_wizlab no_item_gen no_monster_gen
 ORIENT:     float
-SUBST:      x = b
 SHUFFLE:    tU
+TILE:       mn = dngn_transparent_wall_green
+COLOUR:     mn = lightgreen
+TILE:       c = wall_stone_gray
 :           wizlab_portal(_G)
 MAP
 .................
-.xxxxxxxmxxxxxxx.
-.xx...x...x...xx.
+.bbbbbbbmbbbbbbb.
+.bb...b...b...bb.
 .n..U...O...U..n.
-.xx...x...x...xx.
-.xxxxxxx+xxxxxxx.
-..xx...x.x...xx..
+.bb...b...b...bb.
+.bbbbbbb+bbbbbbb.
+..bb...b.b...bb..
 ..n..t.....t..n..
-..xx...x.x...xx..
-..xxxxxx+xxxxxx..
+..bb...b.b...bb..
+..bbbbbb+bbbbbb..
 .................
 ......c...c......
 .....ccc.ccc.....
@@ -207,9 +211,11 @@ MARKER:     ? = lua:fog_machine { \
                  size = 1, size_buildup_amnt = 5, \
                  size_buildup_time = 25, cloud_type = "freezing vapour" \
              }
-SUBST:      n = cn
 COLOUR:     . = red / blue
 KPROP:      .?! = no_rtele_into
+TILE:       n = dngn_transparent_wall_magenta
+COLOUR:     n = lightmagenta
+TILE:       c = wall_stone_gray
 MAP
  ccccccccc
 cc..!.?..cc
@@ -234,11 +240,14 @@ NAME:       enter_wizlab_4
 TAGS:       uniq_wizlab no_item_gen no_monster_gen
 ORIENT:     float
 :           wizlab_portal(_G)
+KFEAT:      ! = floor
+COLOUR:     ! = magenta
+FTILE:      !O = floor_rough_magenta
 MAP
     xxxxx
-    w...x
-   ww.O.x
-  www...x
+    w!!!x
+   ww!O!x
+  www!!!x
  www..www
 www..www
 ww..www
@@ -253,23 +262,24 @@ ENDMAP
 NAME:       enter_wizlab_5
 TAGS:       uniq_wizlab no_item_gen no_monster_gen
 ORIENT:     float
-SUBST:      x = b
 COLOUR:     U = random
 COLOUR:     W = mutagenic
 KFEAT:      o = granite_statue
+FTILE:      WU.Oo = floor_rough_magenta
+TILE:       b = dngn_crystal_magenta
 :           wizlab_portal(_G)
 MAP
-xxxxxxxxxxx
-xxxx...xxxx
-xWWU.O.UWWx
-xWxx...xxWx
-xWWWW.WWWWx
-xxxxW.Wxxxx
-xxxxW.Wxxxx
-xxxxW.Wxxxx
-xxxxW.Wxxxx
-xxxxo.oxxxx
-xxxx...xxxx
+bbbbbbbbbbb
+bbbb...bbbb
+bWWU.O.UWWb
+bWbb...bbWb
+bWWWW.WWWWb
+bbbbW.Wbbbb
+bbbbW.Wbbbb
+bbbbW.Wbbbb
+bbbbW.Wbbbb
+bbbbo.obbbb
+bbbb...bbbb
      @
 ENDMAP
 
@@ -280,6 +290,9 @@ NAME:       enter_wizlab_6
 TAGS:       uniq_wizlab no_item_gen no_monster_gen
 ORIENT:     float
 SUBST:      x = mc.
+TILE:       c = wall_stone_white
+TILE:       m = dngn_transparent_wall_magenta
+FTILE:      mcx.O = floor_rough_magenta
 :           wizlab_portal(_G)
 MAP
 c.c.ccccccc
@@ -428,6 +441,7 @@ MARKER:     9 = lua:MonPropsMarker:new {description="A glistening silver machine
 :           dgn.set_feature_desc_long("Floor", "Where the walls are black marble, the floor is " ..
 :                                     "a white and silver, with shades of pink here and there.\n")
 :           dgn.set_feature_quote("A granite statue", mquote)
+:           set_random_mon_list("dancing weapon")
 :           wizlab_setup(_G, "Tukima's Studio")
 epilogue{{
             wizlab_milestone(_G, "Tukima's Studio")
@@ -479,7 +493,7 @@ MONS:       centaur col:green, centaur warrior col:lightgreen
 MONS:       oklob plant
 MONS:       stone golem name:vine_covered name_adjective col:lightgreen \
             tile:mons_vine_golem
-MONS:       toadstool col:any name:flowers n_rpl n_des n_the
+MONS:       toadstool
 SUBST:      y = ct
 COLOUR:     G = lightgrey
 KFEAT:      / = stone_arch
@@ -497,17 +511,12 @@ function grow (data, triggerable, triggerer, marker, ev)
   end
 
   local count = 0
-  local flowdesc = "A rather pretty cluster of flowers."
-  if you.can_smell then
-    flowdesc = flowdesc .. " They smell sweet."
-  end
 
-  if crawl.one_chance_in(10) then
+  if crawl.one_chance_in(5) then
     -- Fruit!
     for spot in iter.adjacent_iterator() do
-      if not feat.is_solid(spot:xy()) and not feat.has_solid_floor(spot:xy())
+      if not feat.is_solid(spot:xy()) and feat.has_solid_floor(spot:xy())
          and crawl.one_chance_in(3) then
-        -- Do nothing.
         dgn.create_item(spot.x, spot.y, "pear / apple / choko / apricot / orange"
                           .. "/ banana / strawberry q:4 / lemon / rambutan "
                           .. "/ grape q:7 / sultana q:9 / lychee")
@@ -518,18 +527,15 @@ function grow (data, triggerable, triggerer, marker, ev)
       crawl.mpr("Fruit sprouts up around you!")
     end
   else
-    -- Flowers!
     for spot in iter.adjacent_iterator() do
-      if not feat.is_solid(spot:xy()) and not feat.has_solid_floor(spot:xy())
+      if not feat.is_solid(spot:xy()) and feat.has_solid_floor(spot:xy())
          and not crawl.one_chance_in(3) then
-        dgn.create_monster(spot.x, spot.y, "toadstool col:any name:flowers " ..
-                                 "name_replace name_descriptor name_definite")
-        dgn.mons_at(spot.x, spot.y).set_prop("description", flowdesc .. "\n")
+        dgn.create_monster(spot.x, spot.y, "toadstool")
         count = count + 1
       end
     end
     if count > 0 then
-      crawl.mpr("Flowers sprout up around you!")
+      crawl.mpr("Toadstools sprout up around you!")
     end
   end
 end
@@ -554,7 +560,8 @@ lua_marker("_", grow_marker)
 :           dgn.set_feature_desc_long("stone wall", "It looks ancient.\n")
 :           dgn.set_feature_desc_short("Floor", "grass-covered ground")
 :           dgn.set_feature_desc_long("Floor", "Strewn with leaves and twigs that" ..
-:                       "crunch loudly underfoot, the grass is crisp and fresh.\n")
+:                       " crunch loudly underfoot, the grass is crisp and fresh.\n")
+:           set_random_mon_list ("oklob plant / centaur / centaur warrior")
 epilogue{{
             wizlab_milestone(_G, "Eringya's Formal Garden")
 }}
@@ -812,6 +819,7 @@ lua_marker("A", box_marker)
 :           dgn.set_feature_desc_short("Floor", "rough-hewn floor")
 :           dgn.set_feature_desc_long("Floor", "It is rough and uneven in places.\n")
 :           wizlab_setup(_G, "Doroklohe's Tomb")
+:           set_random_mon_list("mummy")
 epilogue{{
             wizlab_milestone(_G, "Doroklohe's Tomb")
 }}
@@ -978,6 +986,7 @@ KITEM:      | = staff of death
 KITEM:      l = scroll of summoning
 NSUBST:     L = 1:| / *:l
 :           wizlab_setup(_G, "Cigotuvi's Fleshworks")
+:           set_random_mon_list("pulsating lump / small abomination / ugly thing / very ugly thing")
 epilogue{{
             wizlab_milestone(_G, "Cigotuvi's Fleshworks")
 }}
@@ -1057,6 +1066,7 @@ SUBST:      R = .
 KFEAT:      - = altar_sif_muna
 KFEAT:      _ = altar_vehumet
 SHUFFLE:    DEF
+:           set_random_mon_list("purple draconian / deep elf mage")
 epilogue{{
             wizlab_milestone(_G, "Iskenderun's Mystic Tower")
 }}
@@ -1107,7 +1117,7 @@ TILE:       t = dngn_tree_dead
 LFLOORCOL:  darkgrey
 LROCKCOL:   darkgrey
 NSUBST:     d = 1:e / *:d
-ITEM:       any scroll / any potion
+ITEM:       any scroll / any potion / any book w:2
 ITEM:       long sword unrand:sword_of_zonguldrok
 {{
 lua_marker("G", portal_desc { grave = 1 })
@@ -1219,8 +1229,8 @@ lua_marker("L", Triggerable.synchronized_markers(wizard_appear_marker))
 :           dgn.set_feature_desc_long("granite statue", "A nameless grave. The question "
 :               .. "remains: is it the grave that is nameless, or the person who lies "
 :               .. "in that grave?\n")
-:           dgn.set_feature_desc_short("floor", "ground")
-:           dgn.set_feature_desc_long("floor", "No life grows here. It is completely dead.\n")
+:           dgn.set_feature_desc_short("Floor", "ground")
+:           dgn.set_feature_desc_long("Floor", "No life grows here. It is completely dead.\n")
 SUBST:      M = x
 SUBST:      D = c
 COLOUR:     W = yellow
@@ -1231,6 +1241,7 @@ SUBST:      L = .
 LFLOORTILE: floor_tomb
 LROCKTILE:  wall_hall_darkgray
 TILE:       c = wall_stone_gray
+:           set_random_mon_list("human zombie / skeletal warrior")
 epilogue{{
             wizlab_milestone(_G, "Zonguldrok's Shrine")
 }}
@@ -1242,12 +1253,12 @@ M   xxxxxxxxxxxxxxxxxxx
 xx?!!.G.G.G.G.G.G.G.G.!!?xx
 x?!!.G.G.G.G.G.G.G.G.G.!!?x
 x?!.G.G.GcccccccccG.G.G.!?x
-x?!G.G.G.cdddcdddc.G.G.G!?x
-x?!.G.G.ccdddcdddcc.G.G.!?x
+x?!G.G.G.c.ddcdd.c.G.G.G!?x
+x?!.G.G.ccdd.c.ddcc.G.G.!?x
 x?!G.Gcccddcc+ccddcccG.G!?x
-x?!.G.cddddcLLLcddddc.G.!?x
-x?!G.Gcddccc...cccddcG.G!?x
-x?!.G.cddc.......cddc.G.!?x
+x?!.G.c.dd.cLLLc.dd.c.G.!?x
+x?!G.Gc$.ccc...ccc.$cG.G!?x
+x?!.G.c$$c.......c$$c.G.!?x
 x?!G.Gcccc...W...ccccG.G!?x
 x?!.G.c..+.......+..c.G.!?x
 x?!G.Gc.1ccc...ccc1.cG.G!?x
@@ -1518,7 +1529,8 @@ KITEM:      ? = randbook disc:air
 KITEM:      $ = wand of lightning / staff of air / ring of levitation /\
             gold / scroll of silence / ring of teleport control / \
             amulet of controlled flight / quick blade / ring of evasion /\
-            ring of see invisible / book of clouds
+            ring of see invisible / book of clouds / any book w:15 /\
+            any good_item / any w:20
 KFEAT:      # = deep_water
 NSUBST:     $ = 2:? / *:$
 SUBST:      $ = $%
@@ -1529,7 +1541,14 @@ TILE:       o = dngn_transparent_wall_white
 TILE:       b = dngn_crystal_white
 COLOUR:     wW# = silver
 :           set_border_fill_type('open_sea')
+:           set_random_mon_list("vapour / air elemental")
 :           wizlab_setup(_G, "The Chambers of " .. wizname .. " the Cloud Mage")
+:           dgn.set_feature_desc_short("Floor", "damp floor")
+:           dgn.set_feature_desc_long("Floor", "Perhaps it is the humidity, or the constant flow of clouds, but the floor here remains forever damp.\n")
+:           dgn.set_feature_desc_short("wall of green crystal", "wall of white crystal")
+:           dgn.set_feature_desc_short("translucent unnaturally hard rock wall", "wall of transparent white crystal")
+MARKER:     " = lua:portal_desc { desc="sigil-covered floor", desc_long="This area of floor is marked with strange sigils and symbols. You cannot understand them, but for some reason the sight of them makes you tremble.\n" }
+
 epilogue{{
             wizlab_milestone(_G, "The Chambers of " .. wizname .. " the Cloud Mage")
 }}
@@ -1601,8 +1620,6 @@ ENDMAP
 
 ###############################################################################
 # Halls of the Hellbinder (by Mu.)
-#
-# TODO: Essential redescriptions, retiling, making it more "hellish".
 NAME:       wizlab_demon
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
@@ -1613,6 +1630,10 @@ COLOUR:     " = yellow
 KPROP:      ' = bloody / nothing
 KFEAT:      _ = altar_makhleb
 KPROP:      _ = bloody
+TILE:       c = wall_stone_dark
+FTILE:      " = floor_snake
+LFLOORTILE: floor_pebble_lightred
+RTILE:      x = wall_undead
 MARKER:     ! = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
                 size = 1, size_buildup_amnt = 5, \
@@ -1634,13 +1655,20 @@ kmons     ("1 = col:fire patrolling wizard name:" .. string.gsub(wizname, " ", "
 KITEM:      $ = gold / w:1 scroll of torment / w:1 scroll of summoning
 KITEM:      | = rod of demonology / ring of fire / ring of protection from fire /\
             amulet of conservation / scroll of torment / scroll of summoning /\
-            demon blade w:2 / demon whip w:2 / demon trident w:3 / gold / wand of fire /\
-            wand of draining / staff of summoning / any book / any good_item
+            demon blade w:1 / demon whip w:1 / demon trident w:1 / gold / wand of fire /\
+            wand of draining / staff of summoning / any book w:30 / any good_item w:15
 KITEM:      B = randbook disc:summoning
-NSUBST:     | = 1:B / *:|
+NSUBST:     | = 2:B / *:|
 :           set_random_mon_list([[imp / shadow imp / lemure / manes / quasit / white imp / ]]
 :                        .. [[ufetubus / midge / red devil / rotting devil / hairy devil / ]])
 :           wizlab_setup(_G, "The Hall of " .. wizname .. " the Hellbinder")
+:           dgn.set_feature_desc_short("Floor", "hot floor")
+:           dgn.set_feature_desc_long("Floor", "Deep below the floor burns a fire hotter than any other fire: the fire of hell. The floor is hot to the touch.\n")
+:           dgn.set_feature_desc_short("stone wall", "black wall")
+:           dgn.set_feature_desc_long("stone wall", "Perhaps stone, or solid charcoal, or a substance found only in the deepest hells.\n")
+:           dgn.set_feature_desc_short("rock wall", "carved rock wall")
+:           dgn.set_feature_desc_long("rock wall", "It is decorated with images of death and destruction.\n")
+MARKER:     " = lua:portal_desc { desc="sigil-covered floor", desc_long="This area of floor is marked with strange sigils and symbols. You cannot understand them, but for some reason the sight of them makes you tremble.\n" }
 epilogue{{
             wizlab_milestone(_G, "The Hall of " .. wizname .. " the Hellbinder")
 }}
