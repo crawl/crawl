@@ -788,6 +788,63 @@ void tut_starting_screen()
     mpr("Again, press <w>?</w> for the help, and <w>Ctrl-P</w> to reread the message history.");
 }
 
+// Called each turn from _input. Better name welcome.
+void tutorial_new_turn()
+{
+    if (Tutorial.tutorial_left)
+    {
+        Tutorial.tut_just_triggered = false;
+
+        if (you.attribute[ATTR_HELD])
+            learned_something_new(TUT_CAUGHT_IN_NET);
+        else if (i_feel_safe() && you.level_type != LEVEL_ABYSS)
+        {
+            // We don't want those "Whew, it's safe to rest now" messages
+            // if you were just cast into the Abyss. Right?
+
+            if (2 * you.hp < you.hp_max
+                || 2 * you.magic_points < you.max_magic_points)
+            {
+                tutorial_healing_reminder();
+            }
+            else if (!you.running
+                     && Tutorial.tutorial_events[TUT_SHIFT_RUN]
+                     && you.num_turns >= 200
+                     && you.hp == you.hp_max
+                     && you.magic_points == you.max_magic_points)
+            {
+                learned_something_new(TUT_SHIFT_RUN);
+            }
+            else if (!you.running
+                     && Tutorial.tutorial_events[TUT_MAP_VIEW]
+                     && you.num_turns >= 500
+                     && you.hp == you.hp_max
+                     && you.magic_points == you.max_magic_points)
+            {
+                learned_something_new(TUT_MAP_VIEW);
+
+                learned_something_new(TUT_MAP_VIEW);
+            }
+            else if (!you.running
+                     && Tutorial.tutorial_events[TUT_AUTO_EXPLORE]
+                     && you.num_turns >= 700
+                     && you.hp == you.hp_max
+                     && you.magic_points == you.max_magic_points)
+            {
+                learned_something_new(TUT_AUTO_EXPLORE);
+            }
+        }
+        else
+        {
+            if (2*you.hp < you.hp_max)
+                learned_something_new(TUT_RUN_AWAY);
+
+            if (Tutorial.tutorial_type == TUT_MAGIC_CHAR && you.magic_points < 1)
+                learned_something_new(TUT_RETREAT_CASTER);
+        }
+    }
+}
+
 // Once a tutorial character dies, offer some playing hints.
 void tutorial_death_screen()
 {
