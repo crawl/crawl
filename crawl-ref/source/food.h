@@ -82,4 +82,6 @@ void finished_eating_message(int food_type);
 int you_max_hunger();
 int you_min_hunger();
 
+void handle_starvation();
+
 #endif
