@@ -744,11 +744,10 @@ static bool _player_vampire_draws_blood(const monsters* mon, const int damage,
     if (you.hp < you.hp_max)
     {
         int heal = 1 + random2(damage);
-        if (heal > you.experience_level)
-            heal = you.experience_level;
-
         if (chunk_type == CE_CLEAN)
             heal += 1 + random2(damage);
+        if (heal > you.experience_level)
+            heal = you.experience_level;
 
         // Decrease healing when done in bat form.
         if (player_in_bat_form())
