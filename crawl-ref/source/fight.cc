@@ -858,7 +858,8 @@ bool melee_attack::player_attack()
                              defender->name(DESC_NOCAP_THE).c_str());
         }
 
-        defender->hurt(&you, damage_done, special_damage_flavour, false);
+        damage_done = defender->hurt(&you, damage_done,
+                                     special_damage_flavour, false);
 
         if (damage_done)
             player_exercise_combat_skills();
