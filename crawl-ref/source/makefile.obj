@@ -30,6 +30,7 @@ dbg-util.o \
 decks.o \
 delay.o \
 describe.o \
+dgl-message.o \
 dgnevent.o \
 directn.o \
 dlua.o \
