@@ -1032,6 +1032,7 @@ static void _input()
 
     {
         msgwin_new_cmd();
+        viewwindow(false, true);
 
         clear_macro_process_key_delay();
 
