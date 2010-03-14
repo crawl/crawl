@@ -147,7 +147,8 @@ bool spell_is_risky(spell_type spell);
 int spell_highlight_by_utility( spell_type spell,
                                 int default_color = COL_UNKNOWN,
                                 bool transient = false,
-                                bool force_known_brand = false);
+                                bool force_known_brand = false,
+                                bool rod_spell = false);
 bool spell_no_hostile_in_range(spell_type spell, int minRange);
 
 #endif
