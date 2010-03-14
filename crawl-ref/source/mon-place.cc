@@ -1448,6 +1448,10 @@ static int _place_monster_aux(const mgen_data &mg,
         // simultaneous die-offs of mushroom rings.
         mon->add_ench(ENCH_SLOWLY_DYING);
     }
+    else if (mg.cls == MONS_HYPERACTIVE_BALLISTOMYCETE)
+    {
+        mon->add_ench(ENCH_EXPLODING);
+    }
 
     if (!crawl_state.game_is_arena() && you.misled())
         update_mislead_monster(mon);

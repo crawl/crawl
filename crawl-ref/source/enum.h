@@ -1283,6 +1283,7 @@ enum enchant_type
     ENCH_SILENCE,
     ENCH_ENTOMBED,
     ENCH_AWAKEN_FOREST,
+    ENCH_EXPLODING,
 
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
@@ -1871,8 +1872,10 @@ enum monster_type                      // (int) menv[].type
     MONS_MERFOLK_JAVELINEER,
 
     MONS_SNAPPING_TURTLE,
-    MONS_ALLIGATOR_SNAPPING_TURTLE,
+    MONS_ALLIGATOR_SNAPPING_TURTLE,    //  205
     MONS_SEA_SNAKE,
+
+    MONS_HYPERACTIVE_BALLISTOMYCETE,
 
     //jmf: end new monsters
     MONS_WHITE_IMP = 220,              //  220
