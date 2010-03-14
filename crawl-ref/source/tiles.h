@@ -12,6 +12,7 @@
 
 #include "beam.h"
 #include "enum.h"
+#include "player.h"
 #include "show.h"
 
 enum tag_version
