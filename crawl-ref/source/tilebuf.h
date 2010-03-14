@@ -14,7 +14,7 @@
 // they do not introduce unneeded side effects for other parts of the code
 // that have not thought about turning that new state off.
 
-class FTFont;
+class FontWrapper;
 class formatted_string;
 class GenericTexture;
 class TilesTexture;
@@ -99,11 +99,11 @@ protected:
 class FontBuffer : public VertBuffer<PTCVert>
 {
 public:
-    FontBuffer(FTFont *font);
+    FontBuffer(FontWrapper *font);
     void add(const formatted_string &fs, float x, float y);
     void add(const std::string &s, const VColour &col, float x, float y);
 protected:
-    FTFont *m_font;
+    FontWrapper *m_font;
 };
 
 class TileBuffer : public VertBuffer<PTVert>

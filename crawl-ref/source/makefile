@@ -247,16 +247,21 @@ ifdef WIN32
 EXTRA_OBJECTS += icon.o
 endif
 
+ifdef TILES
+OBJECTS += libgui.o tile2.o tilereg.o tilepick.o tilesdl.o tilefont.o tiletex.o tilemcache.o tilebuf.o uiwrapper.o glwrapper.o cgcontext.o
+
 ifdef SDL
-EXTRA_OBJECTS += uiwrapper-sdl.o cgcontext-sdl.o
+OBJECTS += uiwrapper-sdl.o cgcontext-sdl.o
 endif
 
 ifdef GL
-EXTRA_OBJECTS += glwrapper-ogl.o
+OBJECTS += glwrapper-ogl.o
 endif
 
-ifdef TILES
-OBJECTS += libgui.o tile2.o tilereg.o tilepick.o tilesdl.o tilefont.o tiletex.o tilemcache.o tilebuf.o uiwrapper.o glwrapper.o cgcontext.o
+ifdef FT
+OBJECTS += fontwrapper-ft.o
+endif
+
 else
 ifdef NEED_LIBW32C
 OBJECTS += libw32c.o
@@ -450,6 +455,10 @@ endif
 
 ifdef GL
 DEFINES_L += -DUSE_GL
+endif
+
+ifdef FT
+DEFINES_L += -DUSE_FT
 endif
 
 # Okay, we have to assume we're on something else that

@@ -54,7 +54,7 @@ struct MouseEvent
     unsigned int py;
 };
 
-class FTFont;
+class FontWrapper;
 
 class TilesFramework
 {
@@ -171,7 +171,7 @@ protected:
         std::string name;
         int size;
         bool outline;
-        FTFont *font;
+        FontWrapper *font;
     };
     std::vector<font_info> m_fonts;
     int m_crt_font;

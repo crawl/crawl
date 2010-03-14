@@ -227,7 +227,7 @@ void Region::set_transform()
     glmanager->set_transform(&trans, &scale);
 }
 
-TileRegion::TileRegion(ImageManager* im, FTFont *tag_font, int tile_x, int tile_y)
+TileRegion::TileRegion(ImageManager* im, FontWrapper *tag_font, int tile_x, int tile_y)
 {
     ASSERT(im);
     ASSERT(tag_font);
@@ -245,7 +245,7 @@ TileRegion::~TileRegion()
 {
 }
 
-DungeonRegion::DungeonRegion(ImageManager* im, FTFont *tag_font,
+DungeonRegion::DungeonRegion(ImageManager* im, FontWrapper *tag_font,
                              int tile_x, int tile_y) :
     TileRegion(im, tag_font, tile_x, tile_y),
     m_cx_to_gx(0),
@@ -2407,7 +2407,7 @@ bool InventoryTile::empty() const
     return (idx == -1);
 }
 
-GridRegion::GridRegion(ImageManager *im, FTFont *tag_font,
+GridRegion::GridRegion(ImageManager *im, FontWrapper *tag_font,
                        int tile_x, int tile_y) :
     TileRegion(im, tag_font, tile_x, tile_y),
     m_flavour(NULL),
@@ -2577,7 +2577,7 @@ void GridRegion::draw_number(int x, int y, int num)
     add_quad_char('0' + c1, x, y, offset_x, offset_y);
 }
 
-SpellRegion::SpellRegion(ImageManager* im, FTFont *tag_font,
+SpellRegion::SpellRegion(ImageManager* im, FontWrapper *tag_font,
                          int tile_x, int tile_y) :
     GridRegion(im, tag_font, tile_x, tile_y)
 {
@@ -2804,7 +2804,7 @@ void SpellRegion::update()
     }
 }
 
-MemoriseRegion::MemoriseRegion(ImageManager* im, FTFont *tag_font,
+MemoriseRegion::MemoriseRegion(ImageManager* im, FontWrapper *tag_font,
                          int tile_x, int tile_y) :
     SpellRegion(im, tag_font, tile_x, tile_y)
 {
@@ -2937,7 +2937,7 @@ void MemoriseRegion::update()
     }
 }
 
-InventoryRegion::InventoryRegion(ImageManager* im, FTFont *tag_font,
+InventoryRegion::InventoryRegion(ImageManager* im, FontWrapper *tag_font,
                                  int tile_x, int tile_y) :
     GridRegion(im, tag_font, tile_x, tile_y)
 {
@@ -3707,7 +3707,7 @@ void InventoryRegion::update()
     }
 }
 
-TabbedRegion::TabbedRegion(ImageManager *im, FTFont *tag_font,
+TabbedRegion::TabbedRegion(ImageManager *im, FontWrapper *tag_font,
                            int tile_x, int tile_y) :
     GridRegion(im, tag_font, tile_x, tile_y),
     m_active(0),
@@ -4269,7 +4269,7 @@ void TextRegion::scroll()
         cursor_y -= 1;
 }
 
-TextRegion::TextRegion(FTFont *font) :
+TextRegion::TextRegion(FontWrapper *font) :
     cbuf(NULL),
     abuf(NULL),
     cx_ofs(0),
@@ -4492,7 +4492,7 @@ void TextRegion::clear()
     }
 }
 
-StatRegion::StatRegion(FTFont *font) : TextRegion(font)
+StatRegion::StatRegion(FontWrapper *font) : TextRegion(font)
 {
 }
 
@@ -4520,7 +4520,7 @@ bool StatRegion::update_tip_text(std::string& tip)
     return (true);
 }
 
-MessageRegion::MessageRegion(FTFont *font) : TextRegion(font), m_overlay(false)
+MessageRegion::MessageRegion(FontWrapper *font) : TextRegion(font), m_overlay(false)
 {
 }
 
@@ -4625,7 +4625,7 @@ void MessageRegion::render()
     }
 }
 
-CRTRegion::CRTRegion(FTFont *font) : TextRegion(font), m_attached_menu(NULL)
+CRTRegion::CRTRegion(FontWrapper *font) : TextRegion(font), m_attached_menu(NULL)
 {
 
 }
@@ -4697,7 +4697,8 @@ void CRTRegion::detach_menu()
     m_attached_menu = NULL;
 }
 
-MenuRegion::MenuRegion(ImageManager *im, FTFont *entry) :
+<<<<<<< HEAD
+MenuRegion::MenuRegion(ImageManager *im, FontWrapper *entry) :
     m_image(im), m_font_entry(entry), m_mouse_idx(-1),
     m_max_columns(1), m_dirty(false), m_font_buf(entry)
 {
@@ -5068,7 +5069,7 @@ void MenuRegion::set_more(const formatted_string &more)
 #endif
 }
 
-TitleRegion::TitleRegion(int width, int height, FTFont* font) :
+TitleRegion::TitleRegion(int width, int height, FontWrapper* font) :
   m_buf(&m_img, GLW_QUADS), m_font_buf(font)
 {
     sx = sy = 0;
@@ -5139,7 +5140,7 @@ void TitleRegion::update_message(std::string message)
     m_font_buf.add(message, VColour::white, 0, 0);
 }
 
-DollEditRegion::DollEditRegion(ImageManager *im, FTFont *font) :
+DollEditRegion::DollEditRegion(ImageManager *im, FontWrapper *font) :
     m_font_buf(font),
     m_tile_buf(&im->m_textures[TEX_PLAYER], TILEP_MASK_SUBMERGED, 18, 16,
                Options.tile_better_transparency),
