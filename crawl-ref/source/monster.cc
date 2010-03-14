@@ -5734,14 +5734,17 @@ bool monsters::move_to_pos(const coord_def &newpos)
     if (actor_at(newpos))
         return (false);
 
+    const int index = mindex();
+
     // Clear old cell pointer.
-    mgrd(pos()) = NON_MONSTER;
+    if (in_bounds(pos()) && mgrd(pos()) == index)
+        mgrd(pos()) = NON_MONSTER;
 
     // Set monster x,y to new value.
     moveto(newpos);
 
     // Set new monster grid pointer to this monster.
-    mgrd(newpos) = mindex();
+    mgrd(newpos) = index;
 
     return (true);
 }
