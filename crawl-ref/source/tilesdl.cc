@@ -1014,14 +1014,9 @@ void TilesFramework::redraw()
                             min_pos, m_windowsz, WHITE, false, 220, BLUE, 5,
                             true);
     }
-<<<<<<< HEAD
-    wrapper.swapBuffers();
-
-    m_last_tick_redraw = wrapper.get_ticks();
-=======
     wrapper->swap_buffers();
+
     m_last_tick_redraw = wrapper->get_ticks();
->>>>>>> Modified uiwrapper to be an abstract base class.
 }
 
 void TilesFramework::update_minimap(int gx, int gy)
