@@ -602,6 +602,7 @@ void game_options::reset_options()
 
     player_name.clear();
 
+    seed = 0;
 #ifdef DGL_SIMPLE_MESSAGING
     messaging = true;
 #endif
@@ -3467,6 +3468,7 @@ enum commandline_option_type {
     CLO_BUILDDB,
     CLO_HELP,
     CLO_VERSION,
+    CLO_SEED,
     CLO_SAVE_VERSION,
     CLO_SPRINT,
     CLO_EXTRA_OPT_FIRST,
@@ -3479,7 +3481,7 @@ static const char *cmd_ops[] = {
     "scores", "name", "species", "background", "plain", "dir", "rc",
     "rcdir", "tscores", "vscores", "scorefile", "morgue", "macro",
     "mapstat", "arena", "test", "script", "builddb", "help", "version",
-    "save-version", "sprint", "extra-opt-first", "extra-opt-last"
+    "seed", "save-version", "sprint", "extra-opt-first", "extra-opt-last"
 };
 
 const int num_cmd_ops = CLO_NOPS;
@@ -3909,6 +3911,15 @@ bool parse_args( int argc, char **argv, bool rc_only )
 
             _print_save_version(next_arg);
             end(0);
+
+        case CLO_SEED:
+            if (!next_is_param)
+                return (false);
+
+            if (!sscanf(next_arg, "%lx", &Options.seed))
+                return (false);
+            nextUsed = true;
+            break;
 
         case CLO_SPRINT:
             crawl_state.type = GAME_TYPE_SPRINT;
