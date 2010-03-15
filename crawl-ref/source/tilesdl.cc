@@ -576,8 +576,8 @@ int TilesFramework::getch_ck()
                 {
                     // Record mouse pos for tooltip timer
                     // FIXME: This compares signed and unsigned ints
-                    if (m_mouse.x != event.mouse_event.px
-                        || m_mouse.y != event.mouse_event.py)
+                    if (m_mouse.x != abs(event.mouse_event.px)
+                        || m_mouse.y != abs(event.mouse_event.py) )
                     {
                         m_last_tick_moved = ticks;
                     }
