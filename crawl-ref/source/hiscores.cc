@@ -244,7 +244,7 @@ void hiscores_print_all(int display_count, int format)
             break;
 
         if (format == -1)
-            printf("%s\n", se.raw_string().c_str());
+            printf("%s", se.raw_string().c_str());
         else
             _hiscores_print_entry(se, entry, format, printf);
     }
@@ -421,7 +421,7 @@ static time_t _parse_time(const std::string &st)
 
 static void _hs_write( FILE *scores, scorefile_entry &se )
 {
-    fprintf(scores, "%s\n", se.raw_string().c_str());
+    fprintf(scores, "%s", se.raw_string().c_str());
 }
 
 static const char *kill_method_names[] =
@@ -533,6 +533,7 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     gold              = se.gold;
     gold_spent        = se.gold_spent;
     gold_found        = se.gold_found;
+    fixup_char_name();
 }
 
 bool scorefile_entry::parse(const std::string &line)
@@ -557,18 +558,22 @@ bool scorefile_entry::parse(const std::string &line)
         // Keep gcc happy:
         return (false);
     }
-    else
-        return (parse_scoreline(line));
+
+    raw_line = line;
+    return (parse_scoreline(line));
 }
 
 std::string scorefile_entry::raw_string() const
 {
+    if (!raw_line.empty())
+        return raw_line;
+
     set_score_fields();
 
     if (!fields.get())
         return ("");
 
-    return fields->xlog_line();
+    return fields->xlog_line() + "\n";
 }
 
 bool scorefile_entry::parse_scoreline(const std::string &line)
@@ -596,6 +601,7 @@ void scorefile_entry::init_with_fields()
     race    = str_to_species(fields->str_field("race"));
     cls     = get_job_by_name(fields->str_field("cls").c_str());
     lvl     = fields->int_field("xl");
+    race_class_name = fields->str_field("char");
 
     best_skill     = str_to_skill(fields->str_field("sk"));
     best_skill_lvl = fields->int_field("sklev");
@@ -638,6 +644,8 @@ void scorefile_entry::init_with_fields()
     gold       = fields->int_field("gold");
     gold_found = fields->int_field("goldfound");
     gold_spent = fields->int_field("goldspent");
+
+    fixup_char_name();
 }
 
 void scorefile_entry::set_base_xlog_fields() const
@@ -657,8 +665,7 @@ void scorefile_entry::set_base_xlog_fields() const
     fields->add_field("race", "%s",
                       species_name(race, lvl).c_str());
     fields->add_field("cls",  "%s", get_job_name(cls));
-    fields->add_field("char", "%s%s",
-                      get_species_abbrev(race), get_job_abbrev(cls));
+    fields->add_field("char", "%s", race_class_name.c_str());
     fields->add_field("xl",    "%d", lvl);
     fields->add_field("sk",    "%s", skill_name(best_skill));
     fields->add_field("sklev", "%d", best_skill_lvl);
@@ -1110,6 +1117,7 @@ void scorefile_entry::init()
     cls  = you.char_class;
 
     race_class_name.clear();
+    fixup_char_name();
 
     lvl            = you.experience_level;
     best_skill     = ::best_skill( SK_FIGHTING, NUM_SKILLS - 1, 99 );
@@ -1329,24 +1337,26 @@ std::string scorefile_entry::terse_trap() const
     return (trap);
 }
 
-std::string scorefile_entry::single_cdesc() const
+void scorefile_entry::fixup_char_name()
 {
-    std::string char_desc;
-
     if (race_class_name.empty())
     {
-        char_desc = make_stringf("%s%s", get_species_abbrev( race ),
-                                         get_job_abbrev( cls ) );
+        race_class_name = make_stringf("%s%s",
+                                       is_valid_species(race) ?
+                                           get_species_abbrev( race ) : "??",
+                                       is_valid_job(cls) ?
+                                           get_job_abbrev( cls ) : "??");
     }
-    else
-        char_desc = race_class_name;
+}
 
+std::string scorefile_entry::single_cdesc() const
+{
     std::string scname = name;
     if (scname.length() > 10)
         scname = scname.substr(0, 10);
 
     return make_stringf( "%8ld %-10s %s-%02d%s", points, scname.c_str(),
-                         char_desc.c_str(), lvl, (wiz_mode == 1) ? "W" : "" );
+                         race_class_name.c_str(), lvl, (wiz_mode == 1) ? "W" : "" );
 }
 
 std::string

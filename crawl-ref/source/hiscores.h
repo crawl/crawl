@@ -65,6 +65,8 @@ private:
 struct scorefile_entry
 {
 public:
+    std::string raw_line;
+
     std::string version;
     long        points;
     std::string name;
@@ -162,6 +164,7 @@ private:
     void init_with_fields();
     void add_auxkill_field() const;
     void set_score_fields() const;
+    void fixup_char_name();
 
     std::string short_kill_message() const;
     std::string long_kill_message() const;
