@@ -321,6 +321,7 @@ static void _show_commandline_options_help()
     puts("  -species <arg>        preselect character species (by letter, abbreviation, or name)");
     puts("  -background <arg>     preselect character background (by letter, abbreviation, or name)");
     puts("  -plain                don't use IBM extended characters");
+    puts("  -seed <num>           init the rng to a given sequence (a hex number > 0)");
     puts("  -dir <path>           crawl directory");
     puts("  -rc <file>            init file name");
     puts("  -rcdir <dir>          directory that contains (included) rc files");
@@ -3356,7 +3357,10 @@ static bool _initialise(void)
     you.symbol = '@';
     you.colour = LIGHTGREY;
 
-    seed_rng();
+    if (Options.seed)
+        seed_rng(Options.seed);
+    else
+        seed_rng();
     get_typeid_array().init(ID_UNKNOWN_TYPE);
     init_char_table(Options.char_set);
     init_show_table();

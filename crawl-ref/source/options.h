@@ -48,6 +48,8 @@ public:
 
     std::string player_name;
 
+    unsigned long       seed;   // Non-random games.
+
 #ifdef DGL_SIMPLE_MESSAGING
     bool        messaging;      // Check for messages.
 #endif
