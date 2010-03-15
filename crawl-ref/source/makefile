@@ -638,8 +638,9 @@ RANLIB := true
 LIBS += -lguide -lpthread
 CFWARN := -wd383,810,869,981,1418 -we14,193,304
 CFWARN_L :=
-LDFLAGS += $(CFOPTIMIZE) $(CFOPTIMIZE_L)
 endif
+
+LDFLAGS += $(CFOPTIMIZE) $(CFOPTIMIZE_L)
 
 ifdef REPORT
 CFOTHERS += -ftime-report
