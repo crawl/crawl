@@ -995,10 +995,9 @@ static void _input()
         return;
     }
 
-    update_monsters_in_view();
-
-    you.turn_is_over = false;
     _prep_input();
+
+    update_monsters_in_view();
 
     tutorial_new_turn();
 
@@ -1018,25 +1017,30 @@ static void _input()
         set_more_autoclear(false);
 
     if (need_to_autopickup())
+    {
         autopickup();
+        if (you.turn_is_over)
+        {
+            world_reacts();
+            return;
+        }
+    }
 
     if (need_to_autoinscribe())
         autoinscribe();
 
-    handle_delay();
-
     if (you_are_delayed() && current_delay_action() != DELAY_MACRO_PROCESS_KEY)
     {
-        if (you.time_taken)
+        handle_delay();
+
+        // Some delays reset you.time_taken.
+        if (you.time_taken || you.turn_is_over)
             world_reacts();
+
         return;
     }
 
-    if (you.turn_is_over)
-    {
-        world_reacts();
-        return;
-    }
+    ASSERT(!you.turn_is_over);
 
     crawl_state.check_term_size();
     if (crawl_state.terminal_resized)
@@ -1049,14 +1053,6 @@ static void _input()
     {
         // Flush messages and display message window.
         msgwin_new_cmd();
-
-        // Make sure view is up-to-date before reading command.
-        // Required for example to catch see-invis changes in
-        // handle_delay above.
-        viewwindow(false, true);
-
-        // Update stashes in view.
-        maybe_update_stashes();
 
         clear_macro_process_key_delay();
 
@@ -1869,6 +1865,7 @@ void process_command(command_type cmd)
 
 static void _prep_input()
 {
+    you.turn_is_over = false;
     you.time_taken = player_speed();
     you.shield_blocks = 0;              // no blocks this round
 
@@ -1876,6 +1873,9 @@ static void _prep_input()
 
     set_redraw_status(REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK);
     print_stats();
+
+    viewwindow(false, true);
+    maybe_update_stashes();
 }
 
 // Decrement a single duration. Print the message if the duration runs out.
