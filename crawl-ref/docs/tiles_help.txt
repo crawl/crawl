@@ -27,6 +27,10 @@ tile_runrest_rate = 100
     While running and resting the screen is redraw every 100 milliseconds.
     If Crawl is slow while running or resting, increase this number.
 
+tile_max_fps = 30
+    Crawl limits the screen redraw rate to 60 FPS by default. You may
+    want to experiment with this setting if you experience lag.
+
 tile_tooltip_ms = 0
     Deactivating the tooltips means there's less stuff to draw every time.
 
