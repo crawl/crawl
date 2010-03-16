@@ -1259,7 +1259,7 @@ void TilesFramework::redraw()
     unsigned int ticks = SDL_GetTicks();
     unsigned int ticks_passed = ticks - m_last_tick_redraw;
     if (ticks_passed < min_ticks)
-        SDL_Delay(min_ticks - ticks_passed);
+        return;
 
 #ifdef DEBUG_TILES_REDRAW
     cprintf("\nredrawing tiles");
