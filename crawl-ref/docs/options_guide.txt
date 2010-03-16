@@ -1736,6 +1736,10 @@ tile_runrest_rate = 100
         when running or resting.  If Crawl is slow while running or resting,
         increase this number.
 
+tile_max_fps = 60
+        Crawl limits the screen redraw rate to 60 FPS by default. To disable
+        the limit, set to 0.
+
 tile_key_repeat_delay = 200
         If you hold down a key, there's a delay until the pressed key will
         take action. This option controls this delay, in milliseconds. If it
