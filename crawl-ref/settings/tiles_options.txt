@@ -37,6 +37,8 @@
 # If Crawl is lagging when running or resting, try increasing this number.
 # tile_runrest_rate = 100
 
+# tile_max_fps          = 60
+
 # tile_key_repeat_delay = 200
 # tile_tooltip_ms       = 500
 

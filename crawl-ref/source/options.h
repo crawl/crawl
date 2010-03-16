@@ -374,6 +374,7 @@ public:
     int         tile_runrest_rate;
     int         tile_key_repeat_delay;
     int         tile_tooltip_ms;
+    int         tile_max_fps;
     tag_pref    tile_tag_pref;
     tile_display_type  tile_display;
 
