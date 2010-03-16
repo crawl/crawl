@@ -218,6 +218,74 @@ LUAFN(debug_handle_monster_move)
     return (0);
 }
 
+static FixedVector<bool, NUM_MONSTERS> saved_uniques;
+
+LUAFN(debug_save_uniques)
+{
+    saved_uniques = you.unique_creatures;
+    return (0);
+}
+
+LUAFN(debug_reset_uniques)
+{
+    you.unique_creatures.init(false);
+    return (0);
+}
+
+LUAFN(debug_randomize_uniques)
+{
+    you.unique_creatures.init(false);
+    for (int i = 0; i < NUM_MONSTERS; ++i)
+    {
+        const monster_type mt = static_cast<monster_type>(i);
+        if (!mons_is_unique(mt))
+            continue;
+        you.unique_creatures[mt] = coinflip();
+    }
+    return (0);
+}
+
+// Compare list of uniques on current level with
+// you.unique_creatures.
+static bool _check_uniques()
+{
+    bool ret = true;
+
+    FixedVector<bool, NUM_MONSTERS> uniques_on_level;
+    uniques_on_level.init(false);
+    for (monster_iterator mi; mi; ++mi)
+        if (mons_is_unique(mi->type))
+            uniques_on_level[mi->type] = true;
+
+    for (int i = 0; i < NUM_MONSTERS; ++i)
+    {
+        const monster_type mt = static_cast<monster_type>(i);
+        if (!mons_is_unique(mt))
+            continue;
+        bool was_set = saved_uniques[mt];
+        bool is_set = you.unique_creatures[mt];
+        bool placed = uniques_on_level[mt];
+        if (placed && was_set
+            || placed && !is_set
+            || was_set && !is_set
+            || !was_set && is_set && !placed)
+        {
+            mprf(MSGCH_ERROR,
+                 "Bad unique tracking: %s placed=%d was_set=%d is_set=%d",
+                 mons_type_name(mt, DESC_PLAIN).c_str(),
+                 uniques_on_level[mt], you.unique_creatures[mt]);
+            ret = false;
+        }
+    }
+    return (ret);
+}
+
+LUAFN(debug_check_uniques)
+{
+    lua_pushboolean(ls, _check_uniques());
+    return (1);
+}
+
 const struct luaL_reg debug_dlib[] =
 {
 { "goto_place", debug_goto_place },
@@ -231,6 +299,9 @@ const struct luaL_reg debug_dlib[] =
 { "dismiss_adjacent", debug_dismiss_adjacent},
 { "god_wrath", debug_god_wrath},
 { "handle_monster_move", debug_handle_monster_move },
-
+{ "save_uniques", debug_save_uniques },
+{ "randomize_uniques", debug_randomize_uniques },
+{ "reset_uniques", debug_reset_uniques },
+{ "check_uniques", debug_check_uniques },
 { NULL, NULL }
 };
