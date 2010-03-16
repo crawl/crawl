@@ -135,6 +135,7 @@ epilogue{{
   crawl.mark_milestone("br.enter", "entered the realm of Cerebov.")
 }}
 COLOUR:     n = blue
+TILE:       n = dngn_metal_wall_cracked
 :           dgn.set_feature_desc_short("translucent stone wall",
 :                                      "cracked metal wall")
 :           dgn.set_feature_desc_long("translucent stone wall",
