@@ -1399,6 +1399,7 @@ static void tag_read_you(reader &th, char minorVersion)
         for (i = 0; i < count_c; ++i)
             you.melded[i] = unmarshallBoolean(th);
     // else will fixup after we know the transformation
+    char count_equip = count_c;
 
     you.magic_points              = unmarshallByte(th);
     you.max_magic_points          = unmarshallByte(th);
@@ -1484,7 +1485,7 @@ static void tag_read_you(reader &th, char minorVersion)
 
     // Calculate you.melded from ATTR_TRANSFORMATION
     if (minorVersion < TAG_MINOR_MELDED)
-        for (i = 0; i < count_c; ++i)
+        for (i = 0; i < count_equip; ++i)
             you.melded[i] = (you.equip[i] != -1 && !you_tran_can_wear(i));
 
     count_c = unmarshallByte(th);
