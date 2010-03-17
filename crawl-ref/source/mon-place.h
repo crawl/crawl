@@ -18,6 +18,7 @@ struct mgen_data;
  * a "puff of smoke" message if the monster cannot be placed. This is usually
  * used for summons and other monsters that want to appear near a given
  * position like a summon.
+ * Returns -1 on failure, index into env.mons otherwise.
  * *********************************************************************** */
 int create_monster(mgen_data mg, bool fail_msg = true);
 
