@@ -1,23 +1,23 @@
-# The release of Dungeon Crawl 0.4 brought with it an 
-# overhaul of monster colours and monster glyphs. 
+# The release of Dungeon Crawl 0.4 brought with it an
+# overhaul of monster colours and monster glyphs.
 #
-# The goal of this change was to put monsters into more 
+# The goal of this change was to put monsters into more
 # consistent groups (e.g. group jackals with hounds, move
-# slugs into a group of their own) and to follow a more 
-# consistent colour scheme where similar monsters would 
-# have similar colours (e.g. orc priest and elf priest 
-# are both coloured green now) and the higher level (and 
-# thus more dangerous) version of an early monster would 
-# get the brighter colour. 
+# slugs into a group of their own) and to follow a more
+# consistent colour scheme where similar monsters would
+# have similar colours (e.g. orc priest and elf priest
+# are both coloured green now) and the higher level (and
+# thus more dangerous) version of an early monster would
+# get the brighter colour.
 # As an example of the latter, the orc sorcerer has been
-# recoloured to light magenta because the orc wizard (the 
-# easier orc mage version) glyph is coloured magenta. 
-# Also, the colours of some pairings including small 
-# snake/snake and yaktaur/yaktaur captain have been 
+# recoloured to light magenta because the orc wizard (the
+# easier orc mage version) glyph is coloured magenta.
+# Also, the colours of some pairings including small
+# snake/snake and yaktaur/yaktaur captain have been
 # switched, following the same rule.
 # Another important point of the change was to avoid the
 # use of dark grey, which can be unreadable on some
-# systems, and use light grey, white, or blue, or another 
+# systems, and use light grey, white, or blue, or another
 # colour in its stead, as appropriate.
 #
 # We think that as a result of these changes monsters are
@@ -26,9 +26,9 @@
 # At the same time we realize that this change might be
 # hard on experienced players. Of course we hope that you
 # will be able to adapt, but in case there are changes you
-# really cannot accept, here are the options necessary to 
-# make the glyphs of all affected monsters show up as they 
-# did in version 0.3.4. 
+# really cannot accept, here are the options necessary to
+# make the glyphs of all affected monsters show up as they
+# did in version 0.3.4.
 #
 # You'll find a table comparing old and new settings at
 # the end of this file.
@@ -68,7 +68,7 @@ mon_glyph = deep elf master archer : lightmagenta
 
 # lizards
 mon_glyph = giant newt : lightgreen
-mon_glyph = giant lizard : green
+mon_glyph = crocodile : green
 # black means randomly coloured
 mon_glyph = gila monster : black
 
@@ -197,7 +197,7 @@ mon_glyph = Frederick : darkgrey
 # -------                 ----------     ----------
 # lizards
 # giant newt              lightgreen     green
-# giant lizard            green          lightgreen
+# crocodile               green          lightgreen  (was: giant lizard)
 # gila monster            random (black) magenta
 #
 # monster                 old colour     new colour
@@ -205,7 +205,7 @@ mon_glyph = Frederick : darkgrey
 # snakes and naga
 # small snake             lightgreen     green
 # snake                   green          lightgreen
-# black mamba             darkgrey       blue
+# black mamba             darkgrey       blue        (was: black snake)
 # greater naga            red            lightred
 # naga mage               lightred       red
 #
