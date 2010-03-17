@@ -2221,6 +2221,10 @@ bool DungeonRegion::update_tip_text(std::string& tip)
         {
             tip += "\n[Ctrl-L-Click] Disarm";
         }
+        else if (grd(m_cursor[CURSOR_MOUSE]) == DNGN_OPEN_DOOR)
+            tip += "\n[Ctrl-L-Click] Close door (C)";
+        else if (feat_is_closed_door(grd(m_cursor[CURSOR_MOUSE])))
+            tip += "\n[Ctrl-L-Click] Open door (O)";
     }
 
     insert_commands(tip, cmd, false);

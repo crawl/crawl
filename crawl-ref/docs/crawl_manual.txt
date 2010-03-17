@@ -1076,7 +1076,7 @@ screen. Else, you use the following commands:
      Enter, Del, or Space
    to fire at the target. If you press '.', you also fire, but the
    spell/missile will stop at the target's square if it misses. This can
-   be useful to keep friendlies out of the fire, or to make sure your 
+   be useful to keep friendlies out of the fire, or to make sure your
    precious missiles won't end up in deep water.
  - You can press Escape if you changed your mind - no turns are deducted.
 
@@ -2487,6 +2487,7 @@ Non-game playing commands:
     =                   Reassign inventory/spell/abilities letters.
     _                   Read messages (when playing online; not for
                         local games).
+    -                   Edit player doll (Tiles only).
 
 Stashes:
     Ctrl-F              Find. This searches in stashes and shops, you
