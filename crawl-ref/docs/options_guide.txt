@@ -1618,7 +1618,7 @@ autoinscribe_artefacts = true
 
 autoinscribe_cursed = true
         Automatically inscribes items with "was cursed" when using a scroll of
-        remove curse, or when using the remove curse spell.
+        remove curse.
 
 4-n     Macro related Options.
 ------------------------------
