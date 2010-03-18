@@ -283,7 +283,7 @@ void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.dchar          = DCHAR_STAIRS_DOWN;
             f.colour         = LIGHTGREY;
             f.em_colour      = WHITE;
-            f.map_colour     = LIGHTGREY;
+            f.map_colour     = RED;
             f.seen_em_colour = WHITE;
             f.minimap        = MF_STAIR_DOWN;
             break;
@@ -300,7 +300,7 @@ void _init_feat(feature_def &f, dungeon_feature_type feat)
         case DNGN_STONE_STAIRS_UP_III:
             f.dchar          = DCHAR_STAIRS_UP;
             f.colour         = LIGHTGREY;
-            f.map_colour     = LIGHTGREY;
+            f.map_colour     = GREEN;
             f.em_colour      = WHITE;
             f.seen_em_colour = WHITE;
             f.minimap        = MF_STAIR_UP;
