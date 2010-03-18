@@ -336,6 +336,69 @@ static bool _check_moveto(const coord_def& p)
             && _check_moveto_terrain(p));
 }
 
+static void _moveto_location_effects(dungeon_feature_type old_feat,
+                                     bool stepped=false, bool allow_shift=true,
+                                     const coord_def& old_pos=coord_def())
+{
+    const dungeon_feature_type new_grid = env.grid(you.pos());
+
+    // Terrain effects.
+    if (!you.airborne() && is_feat_dangerous(new_grid))
+    {
+        // Lava and dangerous deep water (ie not merfolk).
+        const coord_def& entry = (stepped) ? old_pos : you.pos();
+
+        // If true, we were shifted and so we're done.
+        if (fall_into_a_pool(entry, allow_shift, new_grid))
+            return;
+    }
+
+    if (!you.airborne())
+    {
+        if (you.species == SP_MERFOLK)
+        {
+            if (feat_is_water(new_grid) && !feat_is_water(old_feat))
+            {
+                merfolk_start_swimming();
+            }
+            else if (!feat_is_water(new_grid) && feat_is_water(old_feat)
+                     && !is_feat_dangerous(new_grid))
+            {
+                merfolk_stop_swimming();
+            }
+        }
+
+        if (new_grid == DNGN_SHALLOW_WATER && !player_likes_water())
+        {
+            if (!stepped)
+                noisy(8, you.pos(), "Splash!");
+
+            you.time_taken *= 13 + random2(8);
+            you.time_taken /= 10;
+
+            if (old_feat != DNGN_SHALLOW_WATER)
+            {
+                mprf("You %s the shallow water.",
+                     (stepped ? "enter" : "fall into"));
+                mpr("Moving in this stuff is going to be slow.");
+                if (you.invisible())
+                    mpr("... and don't expect to remain undetected.");
+            }
+        }
+    }
+
+    // Icy shield goes down over lava.
+    if (new_grid == DNGN_LAVA)
+        expose_player_to_element(BEAM_LAVA);
+
+    // Traps go off.
+    if (trap_def* ptrap = find_trap(you.pos()))
+        ptrap->trigger(you, !stepped); // blinking makes it hard to evade
+
+    if (stepped)
+        _moveto_maybe_repel_stairs();
+}
+
 // Use this function whenever the player enters (or lands and thus re-enters)
 // a grid.
 //
@@ -377,61 +440,7 @@ bool move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift,
     you.moveto(p);
     viewwindow(false);
 
-    // Terrain effects.
-    if (!you.airborne() && is_feat_dangerous(new_grid))
-    {
-        // Lava and dangerous deep water (ie not merfolk).
-        const coord_def entry = (stepped) ? old_pos : p;
-
-        // If true, we were shifted and so we're done.
-        if (fall_into_a_pool(entry, allow_shift, new_grid))
-            return (true);
-    }
-
-    if (!you.airborne())
-    {
-        if (you.species == SP_MERFOLK)
-        {
-            if (feat_is_water(new_grid) && !feat_is_water(old_grid))
-            {
-                merfolk_start_swimming();
-            }
-            else if (!feat_is_water(new_grid) && feat_is_water(old_grid)
-                     && !is_feat_dangerous(new_grid))
-            {
-                merfolk_stop_swimming();
-            }
-        }
-
-        if (new_grid == DNGN_SHALLOW_WATER && !player_likes_water())
-        {
-            if (!stepped)
-                noisy(8, you.pos(), "Splash!");
-
-            you.time_taken *= 13 + random2(8);
-            you.time_taken /= 10;
-
-            if (old_grid != DNGN_SHALLOW_WATER)
-            {
-                mprf("You %s the shallow water.",
-                     (stepped ? "enter" : "fall into"));
-                mpr("Moving in this stuff is going to be slow.");
-                if (you.invisible())
-                    mpr("... and don't expect to remain undetected.");
-            }
-        }
-    }
-
-    // Icy shield goes down over lava.
-    if (new_grid == DNGN_LAVA)
-        expose_player_to_element(BEAM_LAVA);
-
-    // Traps go off.
-    if (trap_def* ptrap = find_trap(you.pos()))
-        ptrap->trigger(you, !stepped); // blinking makes it hard to evade
-
-    if (stepped)
-        _moveto_maybe_repel_stairs();
+    _moveto_location_effects(old_grid, stepped, allow_shift, old_pos);
 
     return (true);
 }
@@ -7078,7 +7087,7 @@ void player::apply_location_effects(const coord_def &oldpos,
                                     killer_type killer,
                                     int killernum)
 {
-    move_player_to_grid(pos(), false, true, true, false);
+    _moveto_location_effects(env.grid(oldpos));
 }
 
 void player::shiftto(const coord_def &c)
