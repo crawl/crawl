@@ -130,6 +130,43 @@ std::string pronoun_you(description_level_type desc)
 
 static void _attribute_increase();
 
+static void _moveto_maybe_repel_stairs()
+{
+    const dungeon_feature_type new_grid = env.grid(you.pos());
+    const command_type stair_dir = feat_stair_direction(new_grid);
+
+    if (stair_dir == CMD_NO_CMD
+        || new_grid == DNGN_ENTER_SHOP
+        ||  !you.duration[DUR_REPEL_STAIRS_MOVE])
+    {
+        return;
+    }
+
+    int pct = you.duration[DUR_REPEL_STAIRS_CLIMB] ? 29 : 50;
+
+    // When the effect is still strong, the chance to actually catch
+    // a stair is smaller. (Assuming the duration starts out at 1000.)
+    const int dur = std::max(0, you.duration[DUR_REPEL_STAIRS_MOVE] - 700);
+    pct += dur/10;
+
+    if (x_chance_in_y(pct, 100))
+    {
+        if (slide_feature_over(you.pos(), coord_def(-1, -1), false))
+        {
+            std::string stair_str =
+                feature_description(new_grid, NUM_TRAPS, false,
+                                    DESC_CAP_THE, false);
+            std::string prep = feat_preposition(new_grid, true, &you);
+
+            mprf("%s slides away as you move %s it!", stair_str.c_str(),
+                 prep.c_str());
+
+            if (player_in_a_dangerous_place() && one_chance_in(5))
+                xom_is_stimulated(32);
+        }
+    }
+}
+
 // Use this function whenever the player enters (or lands and thus re-enters)
 // a grid.
 //
@@ -395,40 +432,8 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
     if (trap_def* ptrap = find_trap(you.pos()))
         ptrap->trigger(you, !stepped); // blinking makes it hard to evade
 
-    command_type stair_dir = feat_stair_direction(new_grid);
-
-    if (stepped && stair_dir != CMD_NO_CMD
-        && new_grid != DNGN_ENTER_SHOP
-        && you.duration[DUR_REPEL_STAIRS_MOVE])
-    {
-        int pct;
-        if (you.duration[DUR_REPEL_STAIRS_CLIMB])
-            pct = 29;
-        else
-            pct = 50;
-
-        // When the effect is still strong, the chance to actually catch
-        // a stair is smaller. (Assuming the duration starts out at 1000.)
-        const int dur = std::max(0, you.duration[DUR_REPEL_STAIRS_MOVE] - 700);
-        pct += dur/10;
-
-        if (x_chance_in_y(pct, 100))
-        {
-            if (slide_feature_over(you.pos(), coord_def(-1, -1), false))
-            {
-                std::string stair_str =
-                    feature_description(new_grid, NUM_TRAPS, false,
-                                        DESC_CAP_THE, false);
-                std::string prep = feat_preposition(new_grid, true, &you);
-
-                mprf("%s slides away as you move %s it!", stair_str.c_str(),
-                     prep.c_str());
-
-                if (player_in_a_dangerous_place() && one_chance_in(5))
-                    xom_is_stimulated(32);
-            }
-        }
-    }
+    if (stepped)
+        _moveto_maybe_repel_stairs();
 
     return (true);
 }
