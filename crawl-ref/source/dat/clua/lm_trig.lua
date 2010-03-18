@@ -189,10 +189,12 @@ function Triggerable:activate(marker)
     error("Triggerable already activating")
   end
 
-  if self.activated then
-    -- _loadlev_populate_stair_distances may reactive markers
-    return
-  end
+  -- We're not aborting if already activated, since we may
+  -- need to reregister listeners after other code has
+  -- reset dungeon events. Lugonu's corruption does this,
+  -- for example. If any triggerable code wants to avoid
+  -- being activated twice, that specific code could
+  -- check against self.activated.
 
   self.activating = true
 
