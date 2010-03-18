@@ -476,6 +476,7 @@ bool unwield_item(bool showMsgs)
 
     unequip_item(EQ_WEAPON, showMsgs);
 
+    you.wield_change     = true;
     you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
 
     return (true);
@@ -484,7 +485,6 @@ bool unwield_item(bool showMsgs)
 // TODO: move this to player-equip.cc.
 void unequip_weapon_effect(item_def& item, bool showMsgs)
 {
-    you.wield_change     = true;
     you.m_quiver->on_weapon_changed();
 
     // Call this first, so that the unrandart func can set showMsgs to
