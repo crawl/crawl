@@ -1365,12 +1365,20 @@ void merfolk_start_swimming(bool stepped)
 
     remove_one_equip(EQ_BOOTS);
     you.redraw_evasion = true;
+
+#ifdef USE_TILE
+    init_player_doll();
+#endif
 }
 
 void merfolk_stop_swimming()
 {
     unmeld_one_equip(EQ_BOOTS);
     you.redraw_evasion = true;
+
+#ifdef USE_TILE
+    init_player_doll();
+#endif
 }
 
 static void exit_stair_message(dungeon_feature_type stair, bool /* going_up */)
