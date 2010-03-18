@@ -167,6 +167,175 @@ static void _moveto_maybe_repel_stairs()
     }
 }
 
+static bool _check_moveto_cloud(const coord_def& p)
+{
+    const int cloud = env.cgrid(p);
+    if (cloud != EMPTY_CLOUD && !you.confused())
+    {
+        const cloud_type ctype = env.cloud[ cloud ].type;
+        // Don't prompt if already in a cloud of the same type.
+        if (is_damaging_cloud(ctype, true)
+            && (env.cgrid(you.pos()) == EMPTY_CLOUD
+                || ctype != env.cloud[ env.cgrid(you.pos()) ].type))
+        {
+            std::string prompt = make_stringf(
+                                    "Really step into that cloud of %s?",
+                                    cloud_name(cloud).c_str());
+
+            if (!yesno(prompt.c_str(), false, 'n'))
+            {
+                canned_msg(MSG_OK);
+                return (false);
+            }
+        }
+    }
+    return (true);
+}
+
+static bool _check_moveto_trap(const coord_def& p)
+{
+    // If we're walking along, give a chance to avoid traps.
+    const dungeon_feature_type new_grid = env.grid(p);
+    if (new_grid == DNGN_UNDISCOVERED_TRAP)
+    {
+        const int skill =
+            (4 + you.skills[SK_TRAPS_DOORS]
+             + player_mutation_level(MUT_ACUTE_VISION)
+             - 2 * player_mutation_level(MUT_BLURRY_VISION));
+
+        if (random2(skill) > 6)
+        {
+            if (trap_def* ptrap = find_trap(p))
+                ptrap->reveal();
+
+            viewwindow(false);
+
+            mprf(MSGCH_WARN,
+                 "Wait a moment, %s! Do you really want to step there?",
+                 you.your_name.c_str());
+
+            if (!you.running.is_any_travel())
+                more();
+
+            exercise(SK_TRAPS_DOORS, 3);
+            print_stats();
+            return (false);
+        }
+    }
+    else if (new_grid == DNGN_TRAP_MAGICAL
+#ifdef CLUA_BINDINGS
+             || new_grid == DNGN_TRAP_MECHANICAL
+                && Options.trap_prompt
+#endif
+             || new_grid == DNGN_TRAP_NATURAL)
+    {
+        const trap_type type = get_trap_type(p);
+        if (type == TRAP_ZOT)
+        {
+            if (!yes_or_no("Do you really want to step into the Zot trap"))
+            {
+                canned_msg(MSG_OK);
+                return (false);
+            }
+        }
+        else if (new_grid != DNGN_TRAP_MAGICAL && you.airborne())
+        {
+            // No prompt (shaft and mechanical traps
+            // ineffective, if flying)
+        }
+        else if (type == TRAP_TELEPORT
+                 && (player_equip(EQ_AMULET, AMU_STASIS, true)
+                     || scan_artefacts(ARTP_PREVENT_TELEPORTATION,
+                                       false)))
+        {
+            // No prompt (teleport traps are ineffective if
+            // wearing an amulet of stasis)
+        }
+        else
+#ifdef CLUA_BINDINGS
+             // Prompt for any trap where you might not have enough hp
+             // as defined in init.txt (see trapwalk.lua)
+             if (type != TRAP_SHAFT // Known shafts aren't traps
+                 && (new_grid != DNGN_TRAP_MECHANICAL
+                 || !clua.callbooleanfn(false, "ch_cross_trap",
+                                        "s", trap_name(p))))
+#endif
+        {
+            std::string prompt = make_stringf(
+                "Really step %s that %s?",
+                (type == TRAP_ALARM) ? "onto" : "into",
+                feature_description(new_grid, type,
+                                    false, DESC_BASENAME,
+                                    false).c_str());
+
+            if (!yesno(prompt.c_str(), true, 'n'))
+            {
+                canned_msg(MSG_OK);
+                return (false);
+            }
+        }
+    }
+    return (true);
+}
+
+static bool _check_moveto_merfolk(const coord_def& p)
+{
+    const dungeon_feature_type old_feat = env.grid(you.pos());
+    const dungeon_feature_type new_feat = env.grid(p);
+
+    // Safer water effects for merfolk.
+    if (feat_is_water(new_feat) && !feat_is_water(old_feat))
+    {
+        // Check for fatal stat loss due to transforming.
+        // Also handles the warning message.
+        if (!merfolk_change_is_safe())
+            return (false);
+    }
+    else if (!feat_is_water(new_feat) && feat_is_water(old_feat)
+             && !is_feat_dangerous(new_feat))
+    {
+        // Check for wearing boots with -stat.
+        if (!merfolk_unchange_is_safe(true))
+        {
+            mprf(MSGCH_WARN, "Stepping onto land would unmeld your "
+                 "boots, and that'd be fatal.");
+            return (false);
+        }
+    }
+    return (true);
+}
+
+static bool _check_moveto_dangerous(const coord_def& p)
+{
+    if (you.can_swim() && feat_is_water(env.grid(p))
+        || !is_feat_dangerous(env.grid(p)))
+    {
+        return (true);
+    }
+
+    canned_msg(MSG_UNTHINKING_ACT);
+    return (false);
+}
+
+static bool _check_moveto_terrain(const coord_def& p)
+{
+    // Only consider terrain if player is not levitating.
+    if (you.airborne())
+        return (true);
+
+    if (you.species == SP_MERFOLK && !_check_moveto_merfolk(p))
+        return (false);
+
+    return (_check_moveto_dangerous(p));
+}
+
+static bool _check_moveto(const coord_def& p)
+{
+    return (_check_moveto_cloud(p)
+            && _check_moveto_trap(p)
+            && _check_moveto_terrain(p));
+}
+
 // Use this function whenever the player enters (or lands and thus re-enters)
 // a grid.
 //
@@ -174,11 +343,11 @@ static void _moveto_maybe_repel_stairs()
 // allow_shift - allowed to scramble in any direction out of lava/water
 // force       - ignore safety checks, move must happen (traps, lava/water).
 // swapping    - player is swapping with a monster at (x,y)
-bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
-                          bool force, bool swapping )
+bool move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift,
+                         bool force, bool swapping)
 {
     ASSERT(!crawl_state.game_is_arena());
-    ASSERT( in_bounds( p ) );
+    ASSERT(in_bounds(p));
 
     // assuming that entering the same square means coming from above (levitate)
     const bool from_above = (you.pos() == p);
@@ -187,7 +356,7 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
     const dungeon_feature_type new_grid = grd(p);
 
     // Really must be clear.
-    ASSERT( you.can_pass_through_feat( new_grid ) );
+    ASSERT(you.can_pass_through_feat(new_grid));
 
     // Better not be an unsubmerged monster either.
     ASSERT(swapping && monster_at(p)
@@ -195,238 +364,70 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
                             || monster_at(p)->submerged()
                             || fedhas_passthrough(monster_at(p))));
 
-    // Don't prompt if force is true.
-    if (!force)
+    // Don't prompt if force is true or not stepping.
+    if (!force && stepped && !_check_moveto(p))
     {
-        const int cloud = env.cgrid(p);
-        if (cloud != EMPTY_CLOUD && !you.confused())
-        {
-            const cloud_type ctype = env.cloud[ cloud ].type;
-            // Don't prompt if already in a cloud of the same type.
-            if (is_damaging_cloud(ctype, true)
-                && (env.cgrid(you.pos()) == EMPTY_CLOUD
-                    || ctype != env.cloud[ env.cgrid(you.pos()) ].type))
-            {
-                std::string prompt = make_stringf(
-                                        "Really step into that cloud of %s?",
-                                        cloud_name(cloud).c_str());
-
-                if (!yesno(prompt.c_str(), false, 'n'))
-                {
-                    canned_msg(MSG_OK);
-                    you.turn_is_over = false;
-                    return (false);
-                }
-            }
-        }
-
-        // If we're walking along, give a chance to avoid traps.
-        if (stepped && !you.confused())
-        {
-            if (new_grid == DNGN_UNDISCOVERED_TRAP)
-            {
-                const int skill =
-                    (4 + you.skills[SK_TRAPS_DOORS]
-                     + player_mutation_level(MUT_ACUTE_VISION)
-                     - 2 * player_mutation_level(MUT_BLURRY_VISION));
-
-                if (random2(skill) > 6)
-                {
-                    if (trap_def* ptrap = find_trap(p))
-                        ptrap->reveal();
-
-                    viewwindow(false);
-
-                    mprf(MSGCH_WARN,
-                         "Wait a moment, %s! Do you really want to step there?",
-                         you.your_name.c_str());
-
-                    if (!you.running.is_any_travel())
-                        more();
-
-                    exercise(SK_TRAPS_DOORS, 3);
-                    print_stats();
-
-                    you.turn_is_over = false;
-
-                    return (false);
-                }
-            }
-            else if (new_grid == DNGN_TRAP_MAGICAL
-#ifdef CLUA_BINDINGS
-                     || new_grid == DNGN_TRAP_MECHANICAL
-                        && Options.trap_prompt
-#endif
-                     || new_grid == DNGN_TRAP_NATURAL)
-            {
-                const trap_type type = get_trap_type(p);
-                if (type == TRAP_ZOT)
-                {
-                    if (!yes_or_no(
-                            "Do you really want to step into the Zot trap"))
-                    {
-                        canned_msg(MSG_OK);
-                        stop_running();
-                        you.turn_is_over = false;
-                        return (false);
-                    }
-                }
-                else if (new_grid != DNGN_TRAP_MAGICAL && you.airborne())
-                {
-                    // No prompt (shaft and mechanical traps
-                    // ineffective, if flying)
-                }
-                else if (type == TRAP_TELEPORT
-                         && (player_equip(EQ_AMULET, AMU_STASIS, true)
-                             || scan_artefacts(ARTP_PREVENT_TELEPORTATION,
-                                               false)))
-                {
-                    // No prompt (teleport traps are ineffective if
-                    // wearing an amulet of stasis)
-                }
-                else
-#ifdef CLUA_BINDINGS
-                     // Prompt for any trap where you might not have enough hp
-                     // as defined in init.txt (see trapwalk.lua)
-                     if (type != TRAP_SHAFT // Known shafts aren't traps
-                         && (new_grid != DNGN_TRAP_MECHANICAL
-                         || !clua.callbooleanfn(false, "ch_cross_trap",
-                                                "s", trap_name(p))))
-#endif
-                {
-                    std::string prompt = make_stringf(
-                        "Really step %s that %s?",
-                        (type == TRAP_ALARM) ? "onto" : "into",
-                        feature_description(new_grid, type,
-                                            false, DESC_BASENAME,
-                                            false).c_str());
-
-                    if (!yesno(prompt.c_str(), true, 'n'))
-                    {
-                        canned_msg(MSG_OK);
-                        stop_running();
-                        you.turn_is_over = false;
-                        return (false);
-                    }
-                }
-            }
-        }
+        stop_running();
+        you.turn_is_over = false;
+        return false;
     }
 
-    int merfolk_change = 0;
-    // Only consider terrain if player is not levitating.
+    if (!you.airborne() && is_feat_dangerous(new_grid))
+    {
+        // Lava and dangerous deep water (ie not merfolk).
+        const coord_def entry = (stepped) ? you.pos() : p;
+
+        // Have to move now so fall_into_a_pool will work.
+        you.moveto(p);
+
+        viewwindow(false);
+
+        // If true, we were shifted and so we're done.
+        if (fall_into_a_pool(entry, allow_shift, new_grid))
+            return (true);
+    }
+
     if (!you.airborne())
     {
-        bool swimming_check = false;
-        if (you.can_swim())
+        if (you.species == SP_MERFOLK)
         {
-            if (feat_is_water(new_grid))
-                swimming_check = true;
-
-            // Safer water effects for merfolk.
-            if (you.species == SP_MERFOLK
-                && feat_is_water(new_grid)
-                && !feat_is_water(old_grid))
+            if (feat_is_water(new_grid) && !feat_is_water(old_grid))
             {
-                // Check for fatal stat loss due to transforming.
-                // Also handles the warning message.
-                if (!merfolk_change_is_safe())
-                {
-                    stop_running();
-                    you.turn_is_over = false;
-                    return (false);
-                }
-
-                merfolk_change = -1;
+                merfolk_start_swimming();
             }
-            else if (you.species == SP_MERFOLK && !feat_is_water(new_grid)
-                     && feat_is_water(old_grid)
+            else if (!feat_is_water(new_grid) && feat_is_water(old_grid)
                      && !is_feat_dangerous(new_grid))
             {
-                // Check for wearing boots with -stat.
-                if (!merfolk_unchange_is_safe(true))
-                {
-                    mprf(MSGCH_WARN, "Stepping onto land would unmeld your "
-                         "boots, and that'd be fatal.");
-                    stop_running();
-                    you.turn_is_over = false;
-                    return (false);
-                }
-
-                merfolk_change = 1;
+                merfolk_stop_swimming();
             }
         }
 
-        if (!swimming_check)
+        if (new_grid == DNGN_SHALLOW_WATER && !player_likes_water())
         {
-            // XXX: at some point we're going to need to fix the swimming
-            // code to handle burden states.
-            if (is_feat_dangerous(new_grid))
+            if (!stepped)
+                noisy(8, you.pos(), "Splash!");
+
+            you.time_taken *= 13 + random2(8);
+            you.time_taken /= 10;
+
+            if (old_grid != DNGN_SHALLOW_WATER)
             {
-                // Lava and dangerous deep water (ie not merfolk).
-                const coord_def entry = (stepped) ? you.pos() : p;
-
-                if (stepped && !force && !you.confused())
-                {
-                    canned_msg(MSG_UNTHINKING_ACT);
-                    return (false);
-                }
-
-                // Have to move now so fall_into_a_pool will work.
-                you.moveto(p);
-
-                viewwindow(false);
-
-                // If true, we were shifted and so we're done.
-                if (fall_into_a_pool( entry, allow_shift, new_grid ))
-                    return (true);
-            }
-            else if (new_grid == DNGN_SHALLOW_WATER && !player_likes_water())
-            {
-                if (!stepped)
-                    noisy(8, you.pos(), "Splash!");
-
-                you.time_taken *= 13 + random2(8);
-                you.time_taken /= 10;
-
-                if (old_grid != DNGN_SHALLOW_WATER)
-                {
-                    mprf( "You %s the shallow water.",
-                          (stepped ? "enter" : "fall into") );
-
-                    mpr("Moving in this stuff is going to be slow.");
-
-                    if (you.invisible())
-                        mpr( "... and don't expect to remain undetected." );
-                }
+                mprf("You %s the shallow water.",
+                     (stepped ? "enter" : "fall into"));
+                mpr("Moving in this stuff is going to be slow.");
+                if (you.invisible())
+                    mpr("... and don't expect to remain undetected.");
             }
         }
     }
 
     // Move the player to new location.
     you.moveto(p);
-
-    if (merfolk_change)
-    {
-        if (merfolk_change == -1)
-            merfolk_start_swimming();
-        else
-            merfolk_stop_swimming();
-#ifdef USE_TILE
-        init_player_doll();
-#endif
-    }
-
     viewwindow(false);
-
-    // Other Effects:
-    // Clouds -- do we need this? (always seems to double up with main.cc call)
-    // if (is_cloud( you.x_pos, you.y_pos ))
-    //     in_a_cloud();
 
     // Icy shield goes down over lava.
     if (new_grid == DNGN_LAVA)
-        expose_player_to_element( BEAM_LAVA );
+        expose_player_to_element(BEAM_LAVA);
 
     // Traps go off.
     if (trap_def* ptrap = find_trap(you.pos()))
