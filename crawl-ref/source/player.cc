@@ -350,9 +350,10 @@ bool move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift,
     ASSERT(in_bounds(p));
 
     // assuming that entering the same square means coming from above (levitate)
-    const bool from_above = (you.pos() == p);
+    const coord_def old_pos = you.pos();
+    const bool from_above = (old_pos == p);
     const dungeon_feature_type old_grid =
-        (from_above) ? DNGN_FLOOR : grd(you.pos());
+        (from_above) ? DNGN_FLOOR : grd(old_pos);
     const dungeon_feature_type new_grid = grd(p);
 
     // Really must be clear.
@@ -369,18 +370,18 @@ bool move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift,
     {
         stop_running();
         you.turn_is_over = false;
-        return false;
+        return (false);
     }
 
+    // Move the player to new location.
+    you.moveto(p);
+    viewwindow(false);
+
+    // Terrain effects.
     if (!you.airborne() && is_feat_dangerous(new_grid))
     {
         // Lava and dangerous deep water (ie not merfolk).
-        const coord_def entry = (stepped) ? you.pos() : p;
-
-        // Have to move now so fall_into_a_pool will work.
-        you.moveto(p);
-
-        viewwindow(false);
+        const coord_def entry = (stepped) ? old_pos : p;
 
         // If true, we were shifted and so we're done.
         if (fall_into_a_pool(entry, allow_shift, new_grid))
@@ -420,10 +421,6 @@ bool move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift,
             }
         }
     }
-
-    // Move the player to new location.
-    you.moveto(p);
-    viewwindow(false);
 
     // Icy shield goes down over lava.
     if (new_grid == DNGN_LAVA)
