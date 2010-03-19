@@ -64,6 +64,7 @@
 #include "spells4.h"
 #include "spl-util.h"
 #include "sprint.h"
+#include "stairs.h"
 #include "state.h"
 #include "stuff.h"
 #include "areas.h"

@@ -110,6 +110,7 @@
 #include "spl-book.h"
 #include "spl-cast.h"
 #include "spl-util.h"
+#include "stairs.h"
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"

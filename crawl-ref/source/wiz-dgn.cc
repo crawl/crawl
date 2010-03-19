@@ -28,6 +28,7 @@
 #include "place.h"
 #include "player.h"
 #include "religion.h"
+#include "stairs.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "travel.h"

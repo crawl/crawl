@@ -49,6 +49,7 @@
 #include "godconduct.h"
 #include "spells4.h"
 #include "spl-util.h"
+#include "stairs.h"
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"

@@ -169,6 +169,7 @@ spl-util.o \
 spl-zap.o \
 sprint.o \
 sqldbm.o \
+stairs.o \
 stash.o \
 state.o \
 store.o \

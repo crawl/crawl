@@ -66,6 +66,7 @@
 #include "spl-book.h"
 #include "spl-mis.h"
 #include "spl-util.h"
+#include "stairs.h"
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"

@@ -16,14 +16,10 @@ struct activity_interrupt_data;
 bool go_berserk(bool intentional, bool potion = false);
 void search_around(bool only_adjacent = false);
 
-void down_stairs(int old_level,
-                 dungeon_feature_type force_stair = DNGN_UNSEEN,
-                 entry_cause_type entry_cause = EC_UNKNOWN);
 bool merfolk_change_is_safe(bool quiet = false);
 bool merfolk_unchange_is_safe(bool quiet = false);
 void merfolk_start_swimming(bool step = false);
 void merfolk_stop_swimming();
-void new_level();
 void trackers_init_new_level(bool transit);
 void turn_corpse_into_skeleton(item_def &item);
 void turn_corpse_into_chunks(item_def &item);
@@ -50,10 +46,6 @@ void generate_random_blood_spatter_on_level();
 
 // Set FPROP_BLOODY after checking bleedability.
 bool maybe_bloodify_square(const coord_def& where);
-
-bool check_annotation_exclusion_warning();
-void up_stairs(dungeon_feature_type force_stair = DNGN_UNSEEN,
-               entry_cause_type entry_cause = EC_UNKNOWN);
 
 std::string weird_glowing_colour();
 
