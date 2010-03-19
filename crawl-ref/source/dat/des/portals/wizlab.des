@@ -948,10 +948,10 @@ TILE:       + = no_random dngn_fleshy_orifice
 COLOUR:     m = yellow
 COLOUR:     c+ = lightred
 COLOUR:     W = green
-:           dgn.set_feature_desc_short("Some shallow water", "Viscous spinal fluid")
+:           dgn.set_feature_desc_short("Some shallow water", "Viscous fluid")
 :           dgn.set_feature_desc_long("Some shallow water", "This sticky "
 :            .. "fluid seems to be secreted by the nearby walls. It looks "
-:            .. "disgustingly like spinal fluid.\n")
+:            .. "disgusting.\n")
 :           dgn.set_feature_desc_short("stone wall", "sinewy wall")
 :           dgn.set_feature_desc_long("stone wall", "These walls look"
 :            .. " strangely organic, but incredibly tough and durable.\n")
