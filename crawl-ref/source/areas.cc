@@ -333,7 +333,13 @@ int player::silence_radius2() const
 
 int monsters::silence_radius2() const
 {
-    return (-1);
+    if (!has_ench(ENCH_SILENCE))
+        return (-1);
+    const int dur = get_ench(ENCH_SILENCE).duration;
+    // The below is arbitrarily chosen to make monster decay look reasonable.
+    const int moddur = BASELINE_DELAY *
+        std::max(7, stepdown_value(dur * 10 - 60, 10, 5, 45, 100));
+    return (_silence_range(moddur));
 }
 
 bool silenced(const coord_def& p)

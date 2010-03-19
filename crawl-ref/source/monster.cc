@@ -4461,6 +4461,11 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                 simple_monster_message(this, " is no longer moving somewhat quickly.");
         break;
 
+    case ENCH_SILENCE:
+        if (!quiet && !silenced(this->pos()))
+            simple_monster_message(this, " becomes audible again.");
+        break;
+
     case ENCH_MIGHT:
         if (!quiet)
             simple_monster_message(this, " no longer looks unusually strong.");
@@ -4776,7 +4781,7 @@ void monsters::timeout_enchantments(int levels)
         case ENCH_INVIS: case ENCH_CHARM:  case ENCH_SLEEP_WARY:
         case ENCH_SICK:  case ENCH_SLEEPY: case ENCH_PARALYSIS:
         case ENCH_PETRIFYING: case ENCH_PETRIFIED: case ENCH_SWIFT:
-        case ENCH_BATTLE_FRENZY: case ENCH_TEMP_PACIF:
+        case ENCH_BATTLE_FRENZY: case ENCH_TEMP_PACIF: case ENCH_SILENCE:
         case ENCH_LOWERED_MR: case ENCH_SOUL_RIPE:
             lose_ench_levels(i->second, levels);
             break;
@@ -4923,6 +4928,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
     case ENCH_SLOW:
     case ENCH_HASTE:
     case ENCH_SWIFT:
+    case ENCH_SILENCE:
     case ENCH_MIGHT:
     case ENCH_FEAR:
     case ENCH_PARALYSIS:
@@ -6198,7 +6204,7 @@ static const char *enchant_names[] =
     "sleepy", "held", "battle_frenzy", "temp_pacif", "petrifying",
     "petrified", "lowered_mr", "soul_ripe", "slowly_dying", "eat_items",
     "aquatic_land", "spore_production", "slouch", "swift", "tide",
-    "insane", "buggy"
+    "insane", "silenced", "buggy"
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -6307,6 +6313,9 @@ int mon_enchant::calc_duration(const monsters *mons,
     case ENCH_MIGHT:
     case ENCH_INVIS:
         cturn = 1000 / _mod_speed(25, mons->speed);
+        break;
+    case ENCH_SILENCE:
+        cturn = 300 / _mod_speed(25, mons->speed);
         break;
     case ENCH_SLOW:
         cturn = 250 / (1 + modded_speed(mons, 10));
