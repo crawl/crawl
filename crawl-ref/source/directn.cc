@@ -3344,7 +3344,7 @@ static std::string _describe_mons_enchantment(const monsters &mons,
     case ENCH_POISON:        return "poisoned";
     case ENCH_SICK:          return "sick";
     case ENCH_ROT:           return "rotting away"; //jmf: "covered in sores"?
-    case ENCH_CORONA:     return "softly glowing";
+    case ENCH_CORONA:        return "softly glowing";
     case ENCH_SLOW:          return "moving slowly";
     case ENCH_INSANE:        return "frenzied and insane";
     case ENCH_BERSERK:       return "berserk";
@@ -3360,6 +3360,7 @@ static std::string _describe_mons_enchantment(const monsters &mons,
     case ENCH_PETRIFYING:    return "slowly petrifying";
     case ENCH_LOWERED_MR:    return "susceptible to magic";
     case ENCH_SWIFT:         return "moving somewhat quickly";
+    case ENCH_SILENCE:       return "radiating silence";
     default:                 return "";
     }
 }

@@ -854,6 +854,7 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     case SPELL_MISLEAD:
     case SPELL_CALL_TIDE:
     case SPELL_INK_CLOUD:
+    case SPELL_SILENCE:
         return (true);
     default:
         if (check_validity)
@@ -901,7 +902,8 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         || spell_cast == SPELL_MIGHT
         || spell_cast == SPELL_INVISIBILITY
         || spell_cast == SPELL_MINOR_HEALING
-        || spell_cast == SPELL_TELEPORT_SELF)
+        || spell_cast == SPELL_TELEPORT_SELF
+        || spell_cast == SPELL_SILENCE)
     {
         pbolt.target = monster->pos();
     }
@@ -1744,6 +1746,11 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         }
         else
             simple_monster_message(monster, " seems to move somewhat quicker.");
+        return;
+
+    case SPELL_SILENCE:
+        monster->add_ench(ENCH_SILENCE);
+        mpr("Everything around you gets eerily quiet.");
         return;
 
     case SPELL_CALL_TIDE:
