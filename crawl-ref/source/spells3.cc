@@ -54,6 +54,7 @@
 #include "spells4.h"
 #include "spl-cast.h"
 #include "spl-util.h"
+#include "stairs.h"
 #include "stash.h"
 #include "stuff.h"
 #include "areas.h"
