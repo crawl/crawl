@@ -524,7 +524,7 @@ void do_crash_dump()
 
     char name[180];
 
-    sprintf(name, "%scrash-%s-%s.txt", dir.c_str(),
+    snprintf(name, sizeof(name), "%scrash-%s-%s.txt", dir.c_str(),
             you.your_name.c_str(), make_file_time(time(NULL)).c_str());
 
     fprintf(stderr, "\nWriting crash info to %s\n", name);
@@ -661,8 +661,8 @@ void AssertFailed(const char *expr, const char *file, int line)
     while (fileName > file && fileName[-1] != '\\')
         --fileName;
 
-    sprintf(mesg, "ASSERT(%s) in '%s' at line %d failed.", expr, fileName,
-            line);
+    snprintf(mesg, sizeof(mesg), "ASSERT(%s) in '%s' at line %d failed.",
+             expr, fileName, line);
 
     _assert_msg = mesg;
 
@@ -681,7 +681,7 @@ void DEBUGSTR(const char *format, ...)
     va_list args;
 
     va_start(args, format);
-    vsprintf(mesg, format, args);
+    vsnprintf(mesg, sizeof(mesg), format, args);
     va_end(args);
 
     _BreakStrToDebugger(mesg);

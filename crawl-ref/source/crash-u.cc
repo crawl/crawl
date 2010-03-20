@@ -87,7 +87,7 @@ static void _crash_signal_handler(int sig_num)
 
         char name[180];
 
-        sprintf(name, "%scrash-recursive-%s-%s.txt", dir.c_str(),
+        snprintf(name, sizeof(name), "%scrash-recursive-%s-%s.txt", dir.c_str(),
                 you.your_name.c_str(), make_file_time(time(NULL)).c_str());
 
         FILE* file = fopen_replace(name);

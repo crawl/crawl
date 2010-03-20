@@ -2329,14 +2329,15 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
 
         if (god_discard > 0 && uncastable_discard == 0)
         {
-            sprintf(buf, "%s disliked all level %d spells",
+            snprintf(buf, sizeof(buf), "%s disliked all level %d spells",
                     god_name(god).c_str(), level);
         }
         else if (god_discard == 0 && uncastable_discard > 0)
             sprintf(buf, "No level %d spells can be cast by you", level);
         else if (god_discard > 0 && uncastable_discard > 0)
         {
-            sprintf(buf, "All level %d spells are either disliked by %s "
+            snprintf(buf, sizeof(buf),
+                         "All level %d spells are either disliked by %s "
                          "or cannot be cast by you.",
                     level, god_name(god).c_str());
         }

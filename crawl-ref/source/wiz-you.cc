@@ -838,7 +838,7 @@ void wizard_edit_durations( void )
         }
     }
 
-    sprintf(buf, "Set '%s' to: ", dur_names[choice]);
+    snprintf(buf, sizeof(buf), "Set '%s' to: ", dur_names[choice]);
     int num = debug_prompt_for_int(buf, false);
 
     if (num == 0)

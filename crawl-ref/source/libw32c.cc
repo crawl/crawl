@@ -587,7 +587,7 @@ void cprintf(const char *format, ...)
 
     va_start( argp, format );
 
-    vsprintf(buffer, format, argp);
+    vsnprintf(buffer, sizeof(buffer), format, argp);
     cprintf_aux(buffer);
 
     va_end(argp);
