@@ -204,7 +204,7 @@ void wizard_create_spec_object()
         std::string temp = specs;
         trim_string(temp);
         lowercase(temp);
-        strcpy(specs, temp.c_str());
+        strlcpy(specs, temp.c_str(), sizeof(specs));
 
         if (class_wanted == OBJ_BOOKS && temp == "all")
         {

@@ -3056,9 +3056,10 @@ static void _rune_from_specs(const char* _specs, item_def &item)
     item.sub_type = MISC_RUNE_OF_ZOT;
 
     if (strstr(_specs, "rune of zot"))
-        strncpy(specs, _specs, strlen(_specs) - strlen(" of zot"));
+        strlcpy(specs, _specs, std::min(strlen(_specs) - strlen(" of zot") + 1,
+                                        sizeof(specs)));
     else
-        strcpy(specs, _specs);
+        strlcpy(specs, _specs, sizeof(specs));
 
     if (strlen(specs) > 4)
     {
@@ -3066,7 +3067,7 @@ static void _rune_from_specs(const char* _specs, item_def &item)
         {
             item.plus = i;
 
-            strcpy(obj_name, item.name(DESC_PLAIN).c_str());
+            strlcpy(obj_name, item.name(DESC_PLAIN).c_str(), sizeof(obj_name));
 
             if (strstr(strlwr(obj_name), specs))
                 return;
@@ -3362,7 +3363,7 @@ bool get_item_by_name(item_def *item, char* specs,
         for (int i = 0; i < max_subtype[ item->base_type ]; ++i)
         {
             item->sub_type = i;
-            strcpy(obj_name, item->name(DESC_PLAIN).c_str());
+            strlcpy(obj_name, item->name(DESC_PLAIN).c_str(), sizeof(obj_name));
 
             ptr = strstr( strlwr(obj_name), specs );
             if (ptr != NULL)
@@ -3404,7 +3405,7 @@ bool get_item_by_name(item_def *item, char* specs,
                     int index = unrand + UNRAND_START;
                     unrandart_entry* entry = get_unrand_entry(index);
 
-                    strcpy(obj_name, entry->name);
+                    strlcpy(obj_name, entry->name, sizeof(obj_name));
 
                     ptr = strstr( strlwr(obj_name), specs );
                     if (ptr != NULL && entry->base_type == class_wanted)
@@ -3466,7 +3467,7 @@ bool get_item_by_name(item_def *item, char* specs,
             for (int i = SPWPN_NORMAL + 1; i < SPWPN_DEBUG_RANDART; ++i)
             {
                 item->special = i;
-                strcpy(obj_name, item->name(DESC_PLAIN).c_str());
+                strlcpy(obj_name, item->name(DESC_PLAIN).c_str(), sizeof(obj_name));
 
                 ptr = strstr( strlwr(obj_name), strlwr(buf) );
                 if (ptr != NULL)

@@ -729,7 +729,7 @@ game_start:
     if (you.species == SP_RED_DRACONIAN)
         you.species = random_draconian_player_species();
 
-    strcpy( you.class_name, get_job_name(you.char_class) );
+    strlcpy(you.class_name, get_job_name(you.char_class), sizeof(you.class_name));
 
     if (Options.random_pick)
     {
