@@ -210,7 +210,16 @@ std::string InvEntry::get_text() const
     if (Options.show_inventory_weights)
     {
         const int mass = item_mass(*item) * item->quantity;
-        tstr << std::setw(get_number_of_cols() - tstr.str().length() - 2)
+        int colour_tag_adjustment = 0;
+        if (InvEntry::show_glyph)
+        {
+            // colour tags have to be taken into account for terminal width
+            // calculations on the ^x screen (monsters/items/features in LOS)
+            std::string colour_tag = colour_to_str(item->colour);
+            colour_tag_adjustment = colour_tag.size() * 2 + 5;
+        }
+        tstr << std::setw(get_number_of_cols() - tstr.str().length() - 2
+                          + colour_tag_adjustment)
              << std::right
              << make_stringf("(%.1f aum)", BURDEN_TO_AUM * mass);
     }
