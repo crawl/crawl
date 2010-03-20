@@ -2499,8 +2499,10 @@ bool unlock_file_handle( FILE *handle )
 FILE *lk_open(const char *mode, const std::string &file)
 {
     FILE *handle = fopen(file.c_str(), mode);
+    if (!handle)
+        return NULL;
 #ifdef SHARED_FILES_CHMOD_PUBLIC
-    chmod(file.c_str(), SHARED_FILES_CHMOD_PUBLIC);
+    fchmod(fileno(handle), SHARED_FILES_CHMOD_PUBLIC);
 #endif
 
 #ifdef USE_FILE_LOCKING
@@ -2529,13 +2531,13 @@ void lk_close(FILE *handle, const char *mode, const std::string &file)
     unlock_file_handle( handle );
 #endif
 
-    // actually close
-    fclose(handle);
-
 #ifdef SHARED_FILES_CHMOD_PUBLIC
     if (mode && mode[0] == 'w')
-        chmod(file.c_str(), SHARED_FILES_CHMOD_PUBLIC);
+        fchmod(fileno(handle), SHARED_FILES_CHMOD_PUBLIC);
 #endif
+
+    // actually close
+    fclose(handle);
 }
 
 /////////////////////////////////////////////////////////////////////////////

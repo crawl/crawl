@@ -1200,9 +1200,10 @@ std::string scorefile_entry::game_time(death_desc_verbosity verbosity) const
                 struct passwd *pw_entry = getpwuid(uid);
                 if (pw_entry)
                 {
-                    strncpy(username, pw_entry->pw_name, sizeof(username));
+                    strncpy(username, pw_entry->pw_name, sizeof(username)-3);
+                    username[sizeof(username)-3] = 0;
                     username[0] = toupper(username[0]);
-                    strncat(username, "'s", sizeof(username));
+                    strcat(username, "'s");
                 }
             }
 #endif
