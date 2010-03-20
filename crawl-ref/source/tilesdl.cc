@@ -1186,6 +1186,8 @@ void TilesFramework::clrscr()
         m_region_menu->clear();
 
     cgotoxy(1,1);
+
+    set_need_redraw();
 }
 
 int TilesFramework::get_number_of_lines()
