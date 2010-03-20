@@ -43,6 +43,7 @@ bool ends_with(const std::string &s, const std::string &suffix);
 #ifdef UNIX
 extern "C" int stricmp(const char *str1, const char *str2);
 #endif
+size_t strlcpy(char *dst, const char *src, size_t n);
 
 // String "tags"
 #define TAG_UNFOUND -20404

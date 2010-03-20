@@ -774,9 +774,7 @@ void wizard_edit_durations( void )
         return;
     }
 
-    strcpy(buf, lowercase_string(trimmed_string(buf)).c_str());
-
-    if (strlen(buf) == 0)
+    if (!strlcpy(buf, lowercase_string(trimmed_string(buf)).c_str(), sizeof(buf)))
     {
         canned_msg( MSG_OK );
         return;

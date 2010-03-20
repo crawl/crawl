@@ -115,7 +115,7 @@ void debug_item_scan( void )
         if (!mitm[i].is_valid())
             continue;
 
-        strcpy(name, mitm[i].name(DESC_PLAIN).c_str());
+        strlcpy(name, mitm[i].name(DESC_PLAIN).c_str(), sizeof(name));
 
         const monsters* mon = mitm[i].holding_monster();
 

@@ -145,7 +145,7 @@ void get_input_line( char *const buff, int len )
         unsigned int curr = crawl_state.input_line_curr++;
         std::string &line = crawl_state.input_line_strs[curr];
 
-        strcpy(buff, line.c_str());
+        strlcpy(buff, line.c_str(), len);
         return;
     }
 
