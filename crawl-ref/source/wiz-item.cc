@@ -356,9 +356,9 @@ static void _tweak_randart(item_def &item)
             choice = '1' + choice_num - 26;
 
         if (props[i])
-            sprintf(buf, "%c) <w>%-5s</w> ", choice, _prop_name[i]);
+            snprintf(buf, sizeof(buf), "%c) <w>%-5s</w> ", choice, _prop_name[i]);
         else
-            sprintf(buf, "%c) %-5s ", choice, _prop_name[i]);
+            snprintf(buf, sizeof(buf), "%c) %-5s ", choice, _prop_name[i]);
 
         prompt += buf;
 

@@ -234,7 +234,7 @@ int cprintf(const char *format,...)
     char buffer[2048];          // One full screen if no control seq...
     va_list argp;
     va_start(argp, format);
-    vsprintf(buffer, format, argp);
+    vsnprintf(buffer, sizeof(buffer), format, argp);
     va_end(argp);
     // object's method
     TextRegion::text_mode->addstr(buffer);

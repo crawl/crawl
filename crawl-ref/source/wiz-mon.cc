@@ -284,9 +284,10 @@ void debug_list_monsters()
         {
             char buf[80];
             if (count > 1)
-                sprintf(buf, "%d %s", count, pluralise(prev_name).c_str());
+                snprintf(buf, sizeof(buf), "%d %s", count,
+                         pluralise(prev_name).c_str());
             else
-                sprintf(buf, "%s", prev_name.c_str());
+                snprintf(buf, sizeof(buf), "%s", prev_name.c_str());
             mons.push_back(buf);
 
             count = 0;
@@ -313,9 +314,9 @@ void debug_list_monsters()
 
     char buf[80];
     if (count > 1)
-        sprintf(buf, "%d %s", count, pluralise(prev_name).c_str());
+        snprintf(buf, sizeof(buf), "%d %s", count, pluralise(prev_name).c_str());
     else
-        sprintf(buf, "%s", prev_name.c_str());
+        snprintf(buf, sizeof(buf), "%s", prev_name.c_str());
     mons.push_back(buf);
 
     mpr_comma_separated_list("Monsters: ", mons);

@@ -610,7 +610,7 @@ int cprintf(const char *format,...)
     va_list argp;
 
     va_start(argp, format);
-    vsprintf(buffer, format, argp);
+    vsnprintf(buffer, sizeof(buffer), format, argp);
     va_end(argp);
     i = waddstr_with_altcharset(stdscr, buffer);
     return (i);

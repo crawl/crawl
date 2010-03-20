@@ -683,7 +683,7 @@ static void _fill_player_doll(player_save_info &p, const std::string &dollfile)
     {
         char fbuf[1024];
         memset(fbuf, 0, sizeof(fbuf));
-        if (fscanf(fdoll, "%s", fbuf) != EOF)
+        if (fscanf(fdoll, "%1023s", fbuf) != EOF)
         {
             tilep_scan_parts(fbuf, equip_doll, p.species, p.experience_level);
             tilep_race_default(p.species,
@@ -692,7 +692,7 @@ static void _fill_player_doll(player_save_info &p, const std::string &dollfile)
                                equip_doll.parts);
             success = true;
 
-            while (fscanf(fdoll, "%s", fbuf) != EOF)
+            while (fscanf(fdoll, "%1023s", fbuf) != EOF)
             {
                 if (strcmp(fbuf, "net") == 0)
                     p.held_in_net = true;

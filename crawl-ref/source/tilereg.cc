@@ -609,7 +609,7 @@ static bool _load_doll_data(const char *fn, dolls_data *dolls, int max,
     {
         memset(fbuf, 0, sizeof(fbuf));
         // Read mode from file.
-        if (fscanf(fp, "%s", fbuf) != EOF)
+        if (fscanf(fp, "%1023s", fbuf) != EOF)
         {
             if (strcmp(fbuf, "MODE=DEFAULT") == 0)
                 *mode = TILEP_MODE_DEFAULT;
@@ -617,7 +617,7 @@ static bool _load_doll_data(const char *fn, dolls_data *dolls, int max,
                 *mode = TILEP_MODE_EQUIP; // Nothing else to be done.
         }
         // Read current doll from file.
-        if (fscanf(fp, "%s", fbuf) != EOF)
+        if (fscanf(fp, "%1023s", fbuf) != EOF)
         {
             if (strncmp(fbuf, "NUM=", 4) == 0)
             {
@@ -645,7 +645,7 @@ static bool _load_doll_data(const char *fn, dolls_data *dolls, int max,
             }
 
             int count = 0;
-            while (fscanf(fp, "%s", fbuf) != EOF)
+            while (fscanf(fp, "%1023s", fbuf) != EOF)
             {
                 if (fbuf[0] == '#') // Skip comment lines.
                     continue;
@@ -660,7 +660,7 @@ static bool _load_doll_data(const char *fn, dolls_data *dolls, int max,
         }
         else // Load up to max dolls from file.
         {
-            for (int count = 0; count < max && fscanf(fp, "%s", fbuf) != EOF; )
+            for (int count = 0; count < max && fscanf(fp, "%1023s", fbuf) != EOF; )
             {
                 if (fbuf[0] == '#') // Skip comment lines.
                     continue;

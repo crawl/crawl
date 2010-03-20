@@ -1217,7 +1217,7 @@ void place_fog_machine(fog_machine_type fm_type, cloud_type cl_type,
     try
     {
         char buf [160];
-        sprintf(buf, "lua_mapless:fog_machine_%s(\"%s\", %d, %d)",
+        snprintf(buf, sizeof(buf), "lua_mapless:fog_machine_%s(\"%s\", %d, %d)",
                 fog_types[fm_type], cloud_name(cl_type).c_str(),
                 size, power);
 
