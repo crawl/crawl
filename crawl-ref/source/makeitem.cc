@@ -1206,6 +1206,9 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
 
             if (one_chance_in(4))
                 rc = coinflip() ? SPWPN_FLAMING : SPWPN_FREEZING;
+
+            if (one_chance_in(20))
+                rc = SPWPN_VAMPIRICISM;
             // **** intentional fall through here ****
         case WPN_MACE:
         case WPN_GREAT_MACE:
@@ -1389,6 +1392,9 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             if (one_chance_in(25))
                 rc = SPWPN_PAIN;
 
+            if (one_chance_in(10))
+                rc = SPWPN_VAMPIRICISM;
+
             if (item.sub_type == WPN_SPEAR && one_chance_in(6))
                 rc = SPWPN_RETURNING;
 
@@ -1474,26 +1480,29 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
         case WPN_DEMON_WHIP:
         case WPN_DEMON_BLADE:
         case WPN_DEMON_TRIDENT:
-            if (one_chance_in(10))
+            if (one_chance_in(5))	// 4.9%, 7.3% blades
+                rc = SPWPN_VAMPIRICISM;
+
+            if (one_chance_in(10))	// 2.7%, 4.0% blades
                 rc = SPWPN_PAIN;
 
-            if (one_chance_in(3)
+            if (one_chance_in(3)	// 13.6%, 0% blades
                 && (item.sub_type == WPN_DEMON_WHIP
                     || item.sub_type == WPN_DEMON_TRIDENT))
             {
                 rc = SPWPN_REACHING;
             }
 
-            if (one_chance_in(5))
+            if (one_chance_in(5))	// 10.2%
                 rc = SPWPN_DRAINING;
 
-            if (one_chance_in(5))
+            if (one_chance_in(5))	// 12.8%
                 rc = coinflip() ? SPWPN_FLAMING : SPWPN_FREEZING;
 
-            if (one_chance_in(5))
+            if (one_chance_in(5))	// 16%
                 rc = SPWPN_ELECTROCUTION;
 
-            if (one_chance_in(5))
+            if (one_chance_in(5))	// 20%
                 rc = SPWPN_VENOM;
             break;
 
