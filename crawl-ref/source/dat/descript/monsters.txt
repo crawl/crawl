@@ -418,6 +418,10 @@ boggart
 
 A twisted little sprite-goblin. Beware of its magical tricks!
 %%%%
+bone dragon
+
+A huge undead abomination, pieced together from the broken bones of many dragons.
+%%%%
 boring beetle
 
 A large brown beetle with huge, rock-crushing mandibles.
@@ -1397,10 +1401,6 @@ A young woman with a fish tail in place of legs.  Sirens are capable of casting 
 sixfirhy
 
 A small vile creature that moves in bursts, stopping then darting with lightning speed. It seems to throw sparks all around.
-%%%%
-skeletal dragon
-
-A huge undead abomination, pieced together from the broken bones of many dragons.
 %%%%
 skeletal warrior
 

@@ -2599,7 +2599,7 @@ Yredelemnul Donald
 w:50
 @_generic_Donald_@
 
-@The_monster@ says, "How does a skeletal dragon fly, anyway?"
+@The_monster@ says, "How does a bone dragon fly, anyway?"
 
 @The_monster@ says, "How do you flay a ghost, anyway?"
 

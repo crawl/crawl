@@ -2260,10 +2260,10 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_SKELETAL_DRAGON, 'D', LIGHTGREY, "skeletal dragon",
+    MONS_BONE_DRAGON, 'D', LIGHTGREY, "bone dragon",
     M_SENSE_INVIS,
     MR_RES_POISON | MR_RES_FIRE | MR_RES_COLD | MR_RES_ELEC,
-    0, 12, MONS_DRAGON, MONS_SKELETAL_DRAGON, MH_UNDEAD, -4,
+    0, 12, MONS_DRAGON, MONS_BONE_DRAGON, MH_UNDEAD, -4,
     { {AT_BITE, AF_PLAIN, 30}, {AT_CLAW, AF_PLAIN, 20},
       {AT_CLAW, AF_PLAIN, 20}, AT_NO_ATK },
     { 20, 8, 8, 0 },

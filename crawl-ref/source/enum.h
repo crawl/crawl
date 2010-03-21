@@ -1999,7 +1999,7 @@ enum monster_type                      // (int) menv[].type
     MONS_DAEVA,
     MONS_SPECTRAL_THING,
     MONS_GREATER_NAGA,
-    MONS_SKELETAL_DRAGON,
+    MONS_BONE_DRAGON,
     MONS_TENTACLED_MONSTROSITY,        //  370
     MONS_SPHINX,
     MONS_ROTTING_HULK,

@@ -101,7 +101,7 @@ TAGS:  no_monster_gen no_item_gen
 ITEM:  gold
 KFEAT: Z = blade trap / needle trap / bolt trap / w:8 zot trap / w:25 floor
 KMONS: Y = Boris / ancient lich
-MONS:  w:3 large zombie / lich / w:3 large skeleton / w:3 skeletal dragon
+MONS:  w:3 large zombie / lich / w:3 large skeleton / w:3 bone dragon
 MONS:  small skeleton / small zombie
 KFEAT: v = w:5 ~ / .
 KITEM: v = $ / %
@@ -241,7 +241,7 @@ PLACE:  Crypt:5
 : local brnd = crawl.random2(13)
 : if brnd > 8 then
 MONS:   ancient lich
-MONS:   skeletal dragon
+MONS:   bone dragon
 MONS:   lich
 MONS:   necromancer
 MONS:   skeletal warrior
@@ -341,7 +341,7 @@ KMONS:  A = flying skull
 KFEAT:  B = .
 KMONS:  B = ancient lich
 KFEAT:  D = .
-KMONS:  D = skeletal dragon
+KMONS:  D = bone dragon
 KFEAT:  V = .
 KMONS:  V = vampire knight
 KFEAT:  X = .
@@ -450,7 +450,7 @@ PLACE:  Crypt:5
 MARKER: m = lua:portal_desc {wall_phase = 1}
 SUBST:  m : mnn
 MONS:   lich / ancient lich
-MONS:   skeletal dragon / curse skull / curse toe
+MONS:   bone dragon / curse skull / curse toe
 MONS:   flying skull / skeletal warrior / w:40 nothing
 WEIGHT: 10
 KFEAT:  ^ = alarm trap
@@ -559,7 +559,7 @@ KMONS:  P = large skeleton / mummy
 ####### SE monsters (catacombs). Either corporeal or incorporeal undead.
 : if crawl.coinflip() then
 KMONS:  Z = curse skull
-KMONS:  Q = skeletal dragon
+KMONS:  Q = bone dragon
 KMONS:  R = skeletal warrior
 KMONS:  S = large zombie / small zombie / large skeleton / small skeleton
 : else
