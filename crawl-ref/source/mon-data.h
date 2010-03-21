@@ -724,7 +724,7 @@ static monsterentry mondata[] = {
 
 // fungi ('f')
 {
-    MONS_TOADSTOOL, 'f', BROWN, "toadstool",
+    MONS_TOADSTOOL, 'f', BLACK, "toadstool",
     M_NO_EXP_GAIN | M_STATIONARY,
     MR_RES_POISON,
     0, 10, MONS_FUNGUS, MONS_TOADSTOOL, MH_PLANT, MAG_IMMUNE,
@@ -748,7 +748,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_BALLISTOMYCETE, 'f', LIGHTRED, "ballistomycete",
+    MONS_BALLISTOMYCETE, 'f', MAGENTA, "ballistomycete",
     M_NO_EXP_GAIN | M_STATIONARY,
     MR_RES_POISON,
     0, 10, MONS_FUNGUS, MONS_FUNGUS, MH_PLANT, MAG_IMMUNE,
@@ -760,7 +760,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_HYPERACTIVE_BALLISTOMYCETE, 'f', MAGENTA, "hyperactive ballistomycete",
+    MONS_HYPERACTIVE_BALLISTOMYCETE, 'f', LIGHTRED, "hyperactive ballistomycete",
     M_STATIONARY,
     MR_RES_POISON,
     0, 10, MONS_FUNGUS, MONS_FUNGUS, MH_PLANT, MAG_IMMUNE,
@@ -773,7 +773,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_WANDERING_MUSHROOM, 'f', RED, "wandering mushroom",
+    MONS_WANDERING_MUSHROOM, 'f', BROWN, "wandering mushroom",
     M_NO_FLAGS,
     MR_RES_POISON,
     0, 10, MONS_FUNGUS, MONS_WANDERING_MUSHROOM, MH_PLANT, -3,
