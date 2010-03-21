@@ -289,39 +289,43 @@ void manage_clouds()
     }
 }
 
+static void _maybe_leave_water(const cloud_struct& c)
+{
+    // Rain clouds can occasionally leave shallow water or deepen it:
+    // If we're near lava, chance of leaving water is lower;
+    // if we're near deep water already, chance of leaving water
+    // is slightly higher.
+    if (one_chance_in((5 + count_neighbours(c.pos, DNGN_LAVA)) -
+                           count_neighbours(c.pos, DNGN_DEEP_WATER)))
+    {
+        dungeon_feature_type feat;
+
+       if (grd(c.pos) == DNGN_FLOOR)
+           feat = DNGN_SHALLOW_WATER;
+       else if (grd(c.pos) == DNGN_SHALLOW_WATER && you.pos() != c.pos
+                && one_chance_in(3))
+           // Don't drown the player!
+           feat = DNGN_DEEP_WATER;
+       else
+           feat = grd(c.pos);
+
+        if (grd(c.pos) != feat)
+        {
+            if (you.pos() == c.pos)
+                mpr("The rain has left you waist-deep in water!");
+            dungeon_terrain_changed(c.pos, feat);
+        }
+    }
+}
+
 void delete_cloud( int cloud )
 {
     cloud_struct& c = env.cloud[cloud];
     if (c.type != CLOUD_NONE)
     {
         if (c.type == CLOUD_RAIN)
-        {
-            // Rain clouds can occasionally leave shallow water or deepen it:
-            // If we're near lava, chance of leaving water is lower;
-            // if we're near deep water already, chance of leaving water
-            // is slightly higher.
-            if (one_chance_in((5 + count_neighbours(c.pos, DNGN_LAVA)) -
-                                   count_neighbours(c.pos, DNGN_DEEP_WATER)))
-            {
-                dungeon_feature_type feat;
+            _maybe_leave_water(c);
 
-                if (grd(c.pos) == DNGN_FLOOR)
-                    feat = DNGN_SHALLOW_WATER;
-                else if (grd(c.pos) == DNGN_SHALLOW_WATER && you.pos() != c.pos
-                        && one_chance_in(3))
-                    // Don't drown the player!
-                    feat = DNGN_DEEP_WATER;
-                else
-                    feat = grd(c.pos);
-
-                if (grd(c.pos) != feat)
-                {
-                    if (you.pos() == c.pos)
-                        mpr("The rain has left you waist-deep in water!");
-                    dungeon_terrain_changed(c.pos, feat);
-                }
-            }
-        }
         c.type        = CLOUD_NONE;
         c.decay       = 0;
         c.whose       = KC_OTHER;
