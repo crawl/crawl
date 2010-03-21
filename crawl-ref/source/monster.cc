@@ -5342,6 +5342,25 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
     case ENCH_EXPLODING:
     {
+        // Reduce the timer, if that means we lose the enchantment then
+        // spawn a spore and re-add the enchantment
+        if(decay_enchantment(me))
+        {
+            monster_type mtype = type;
+            bolt beam;
+
+            setup_spore_explosion(beam, *this);
+
+            beam.explode();
+
+            // The ballisto dying, then a spore being created in its slot
+            // env.mons means we can appear to be alive, but in fact be
+            // an entirely different monster.
+            if (alive() && type == mtype)
+            {
+                add_ench(ENCH_EXPLODING);
+            }
+        }
 
     }
 
@@ -6436,7 +6455,7 @@ int mon_enchant::calc_duration(const monsters *mons,
         return (random_range(475, 525) * 10);
 
     case ENCH_EXPLODING:
-        return (random_range(3,7));
+        return (random_range(3,7) * 10);
 
     case ENCH_ABJ:
         if (deg >= 6)
