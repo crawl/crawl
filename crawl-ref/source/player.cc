@@ -3462,12 +3462,12 @@ void display_char_status()
     else
         mpr("You are alive.");
 
-    const int halo_size = you.halo_radius();
-    if (halo_size > 0)
+    const int halo_size = you.halo_radius2();
+    if (halo_size >= 0)
     {
-        if (halo_size > 6)
+        if (halo_size > 37)
             mpr("You are illuminated by a large divine halo.");
-        else if (halo_size > 3)
+        else if (halo_size > 10)
             mpr("You are illuminated by a divine halo.");
         else
             mpr("You are illuminated by a small divine halo.");

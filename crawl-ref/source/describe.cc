@@ -3301,14 +3301,14 @@ static std::string _religion_help(god_type god)
     case GOD_SHINING_ONE:
     {
         result += "You can pray at an altar to sacrifice evil items.";
-        int halo_size = you.halo_radius();
-        if (halo_size > 0)
+        int halo_size = you.halo_radius2();
+        if (halo_size >= 0)
         {
             result += " You radiate a ";
 
-            if (halo_size > 6)
+            if (halo_size > 37)
                 result += "large ";
-            else if (halo_size > 3)
+            else if (halo_size > 10)
                 result += "";
             else
                 result += "small ";
