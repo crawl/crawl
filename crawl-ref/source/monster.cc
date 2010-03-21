@@ -3016,10 +3016,13 @@ bool monsters::asleep() const
     return (behaviour == BEH_SLEEP);
 }
 
-bool monsters::backlit(bool check_haloed) const
+bool monsters::backlit(bool check_haloed, bool self_halo) const
 {
-    return (has_ench(ENCH_CORONA) || has_ench(ENCH_STICKY_FLAME)
-        || ((check_haloed) ? haloed() : false));
+    if (has_ench(ENCH_CORONA) || has_ench(ENCH_STICKY_FLAME))
+        return (true);
+    if (check_haloed)
+        return (haloed() && (self_halo || halo_radius2() == -1));
+    return (false);
 }
 
 bool monsters::caught() const
