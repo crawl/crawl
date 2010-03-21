@@ -252,7 +252,13 @@ public:
     virtual bool caught() const = 0;
     virtual bool asleep() const { return (false); }
 
-    virtual bool backlit(bool check_haloed = true) const = 0;
+    // check_haloed: include halo
+    // self_halo: include own halo (actually if self_halo = false
+    //            and has a halo, returns false; so if you have a
+    //            halo you're not affected by others' halos for this
+    //            purpose)
+    virtual bool backlit(bool check_haloed = true,
+                         bool self_halo = true) const = 0;
     // Within any actor's halo?
     virtual bool haloed() const;
     // Squared halo radius.

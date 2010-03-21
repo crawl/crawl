@@ -6961,11 +6961,16 @@ bool player::visible_to(const actor *looker) const
                && circle_def(pos(), 4, C_ROUND).contains(mon->pos()));
 }
 
-bool player::backlit(bool check_haloed) const
+bool player::backlit(bool check_haloed, bool self_halo) const
 {
-    return (get_contamination_level() > 0 || duration[DUR_CORONA]
-            || (check_haloed ? haloed() : false)
-            || duration[DUR_LIQUID_FLAMES]);
+    if (get_contamination_level() > 0 || duration[DUR_CORONA]
+        || duration[DUR_LIQUID_FLAMES])
+    {
+        return (true);
+    }
+    if (check_haloed)
+        return (haloed() && (self_halo || halo_radius2() == -1));
+    return (false);
 }
 
 // This is the imperative version.
