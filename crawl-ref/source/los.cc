@@ -47,6 +47,7 @@
 #include <cmath>
 #include <algorithm>
 
+#include "areas.h"
 #include "bitary.h"
 #include "coord.h"
 #include "coord-circle.h"
@@ -897,4 +898,35 @@ void losight(los_grid& sh, const coord_def& center,
              const opacity_func& opc, const circle_def& bounds)
 {
     losight(sh, los_param_funcs(center, opc, bounds));
+}
+
+/////////////////////////////////////
+// A start at tracking LOS changes.
+
+// Something that affects LOS (with default parameters)
+// has changed somewhere.
+static void _handle_los_change()
+{
+}
+
+// Might want to pass old position.
+void los_actor_moved(const actor* act)
+{
+    if (act->atype() == ACT_MONSTER
+        && act->as_monster()->type == MONS_BUSH)
+    {
+        _handle_los_change();
+    }
+}
+
+// Might want to pass new/old terrain.
+void los_terrain_changed(const coord_def& p)
+{
+    _handle_los_change();
+}
+
+// Might want to pass new/old cloud type.
+void los_cloud_changed(const coord_def& p)
+{
+    _handle_los_change();
 }

@@ -20,6 +20,7 @@
 #include "coordit.h"
 #include "dungeon.h"
 #include "fprop.h"
+#include "los.h"
 #include "mapmark.h"
 #include "ouch.h"
 #include "player.h"
@@ -109,6 +110,8 @@ static void _new_cloud( int cloud, cloud_type type, const coord_def& p,
     c.tile        = tile;
     env.cgrid(p)  = cloud;
     env.cloud_no++;
+
+    los_cloud_changed(p);
 }
 
 static void _place_new_cloud(cloud_type cltype, const coord_def& p, int decay,
@@ -336,6 +339,7 @@ void delete_cloud( int cloud )
         c.tile        = "";
 
         env.cgrid(c.pos) = EMPTY_CLOUD;
+        los_cloud_changed(c.pos);
         c.pos.reset();
         env.cloud_no--;
     }
@@ -351,6 +355,8 @@ void move_cloud( int cloud, const coord_def& newpos )
         env.cgrid(oldpos) = EMPTY_CLOUD;
         env.cgrid(newpos) = cloud;
         env.cloud[cloud].pos = newpos;
+        los_cloud_changed(oldpos);
+        los_cloud_changed(newpos);
     }
 }
 

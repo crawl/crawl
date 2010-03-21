@@ -7066,6 +7066,7 @@ void player::set_position(const coord_def &c)
     {
         this->reset_prev_move();
         dungeon_events.fire_position_event(DET_PLAYER_MOVED, c);
+        los_actor_moved(this);
     }
 }
 

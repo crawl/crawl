@@ -8,6 +8,7 @@
 #include "directn.h"
 #include "env.h"
 #include "feature.h"
+#include "los.h"
 #include "mon-util.h"
 #include "notes.h"
 #include "options.h"
@@ -156,6 +157,8 @@ void set_terrain_changed( int x, int y )
     env.map_knowledge[x][y].flags |= MAP_CHANGED_FLAG;
 
     dungeon_events.fire_position_event(DET_FEAT_CHANGE, coord_def(x, y));
+
+    los_terrain_changed(coord_def(x,y));
 }
 
 void set_terrain_mapped( int x, int y )
