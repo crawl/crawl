@@ -739,7 +739,7 @@ static monsterentry mondata[] = {
     MONS_FUNGUS, 'f', LIGHTGREY, "fungus",
     M_NO_EXP_GAIN | M_STATIONARY,
     MR_RES_POISON,
-    0, 10, MONS_FUNGUS, MONS_BALLISTOMYCETE, MH_PLANT, MAG_IMMUNE,
+    0, 10, MONS_FUNGUS, MONS_FUNGUS, MH_PLANT, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 8, 3, 5, 0 },
     1, 0, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
@@ -751,7 +751,7 @@ static monsterentry mondata[] = {
     MONS_BALLISTOMYCETE, 'f', MAGENTA, "ballistomycete",
     M_NO_EXP_GAIN | M_STATIONARY,
     MR_RES_POISON,
-    0, 10, MONS_FUNGUS, MONS_FUNGUS, MH_PLANT, MAG_IMMUNE,
+    0, 10, MONS_FUNGUS, MONS_BALLISTOMYCETE, MH_PLANT, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 4, 5, 3, 0 },
     1, 0, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
@@ -763,10 +763,10 @@ static monsterentry mondata[] = {
     MONS_HYPERACTIVE_BALLISTOMYCETE, 'f', LIGHTRED, "hyperactive ballistomycete",
     M_STATIONARY,
     MR_RES_POISON,
-    0, 10, MONS_FUNGUS, MONS_FUNGUS, MH_PLANT, MAG_IMMUNE,
+    0, 10, MONS_FUNGUS, MONS_BALLISTOMYCETE, MH_PLANT, MAG_IMMUNE,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    // expected explosion damage: 25, expected HP: 80
-    { 4, 5, 35, 0 },
+    // expected explosion damage: 25, expected HP: 60
+    { 6, 5, 10, 0 },
     1, 0, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
     I_PLANT, HT_LAND, FL_NONE, 0, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_TINY
