@@ -532,8 +532,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_GOLDEN_DRAGON;
     case MONS_SHADOW_DRAGON:
         return TILEP_MONS_SHADOW_DRAGON;
-    case MONS_SKELETAL_DRAGON:
-        return TILEP_MONS_SKELETAL_DRAGON;
+    case MONS_BONE_DRAGON:
+        return TILEP_MONS_BONE_DRAGON;
     case MONS_SERPENT_OF_HELL:
         return TILEP_MONS_SERPENT_OF_HELL;
 

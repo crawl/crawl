@@ -2755,7 +2755,7 @@ static void _summon_skeleton(int power, deck_rarity_type rarity)
     const int power_level = get_power_level(power, rarity);
     const bool friendly = (power_level > 0 || !one_chance_in(4));
     const monster_type skeltypes[] = {
-        MONS_SKELETON_LARGE, MONS_SKELETAL_WARRIOR, MONS_SKELETAL_DRAGON
+        MONS_SKELETON_LARGE, MONS_SKELETAL_WARRIOR, MONS_BONE_DRAGON
     };
 
     if (create_monster(mgen_data(skeltypes[power_level],

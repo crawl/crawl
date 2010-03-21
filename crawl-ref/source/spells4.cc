@@ -126,7 +126,7 @@ static int _shatter_monsters(coord_def where, int pow, int, actor *)
     case MONS_STATUE:
     case MONS_EARTH_ELEMENTAL:
     case MONS_GARGOYLE:
-    case MONS_SKELETAL_DRAGON:
+    case MONS_BONE_DRAGON:
     case MONS_SKELETAL_WARRIOR:
         dam_dice.num = 6;
         break;

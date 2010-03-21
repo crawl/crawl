@@ -667,7 +667,7 @@ bool mons_is_skeletal(int mc)
 {
     return (mc == MONS_SKELETON_SMALL
             || mc == MONS_SKELETON_LARGE
-            || mc == MONS_SKELETAL_DRAGON
+            || mc == MONS_BONE_DRAGON
             || mc == MONS_SKELETAL_WARRIOR);
 }
 
