@@ -2593,6 +2593,12 @@ void gain_piety(int original_gain, bool all_at_once, bool force)
         che_handle_change(CB_PIETY, diffrank);
     }
 
+    if (you.religion == GOD_SHINING_ONE)
+    {
+        // Piety change affects halo radius.
+        invalidate_agrid();
+    }
+
     if (you.piety > 160 && old_piety <= 160)
     {
         // In case the best skill is Invocations, redraw the god title.

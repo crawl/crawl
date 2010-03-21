@@ -57,6 +57,12 @@ void invalidate_agrid()
     _agrid_valid = false;
 }
 
+void areas_actor_moved(const actor* act)
+{
+    if (act->halo_radius2() > -1 || act->silence_radius2() > -1)
+        invalidate_agrid();
+}
+
 static void _update_agrid()
 {
     if (_agrid_valid)
