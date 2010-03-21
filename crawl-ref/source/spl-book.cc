@@ -344,8 +344,8 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
 
     // Book of Envenomations
     {SPELL_SPIDER_FORM,
-     SPELL_SUMMON_SCORPIONS,
      SPELL_POISON_WEAPON,
+     SPELL_SUMMON_SCORPIONS,
      SPELL_RESIST_POISON,
      SPELL_OLGREBS_TOXIC_RADIANCE,
      SPELL_POISONOUS_CLOUD,

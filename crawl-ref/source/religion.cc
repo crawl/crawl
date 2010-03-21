@@ -1077,7 +1077,7 @@ int yred_random_servants(int threshold, bool force_hostile)
                 (temp_rand < 90) ? MONS_VAMPIRE :          //  4%
                 (temp_rand < 94) ? MONS_HUNGRY_GHOST :     //  4%
                 (temp_rand < 97) ? MONS_FLAYED_GHOST :     //  3%
-                (temp_rand < 99) ? MONS_BONE_DRAGON    //  2%
+                (temp_rand < 99) ? MONS_BONE_DRAGON        //  2%
                                  : MONS_DEATH_COB);        //  1%
 
     if (mon_type == MONS_FLYING_SKULL)
