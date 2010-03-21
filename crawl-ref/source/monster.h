@@ -353,7 +353,8 @@ public:
     bool caught() const;
     bool asleep() const;
     bool backlit(bool check_haloed = true) const;
-    int halo_radius() const;
+    int halo_radius2() const;
+    int silence_radius2() const;
     bool petrified() const;
     bool petrifying() const;
 
