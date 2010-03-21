@@ -8,6 +8,7 @@
 
 #include "areas.h"
 
+#include "act-iter.h"
 #include "beam.h"
 #include "cloud.h"
 #include "coord.h"
@@ -27,6 +28,62 @@
 #include "terrain.h"
 #include "traps.h"
 #include "travel.h"
+
+enum areaprop_flag
+{
+    APROP_SANCTUARY_1 = (1 << 0),
+    APROP_SANCTUARY_2 = (1 << 1),
+    APROP_SILENCE     = (1 << 2),
+    APROP_HALO        = (1 << 3)
+};
+
+typedef FixedArray<unsigned long, GXM, GYM> propgrid_t;
+
+static propgrid_t _agrid;
+static bool _agrid_valid = false;
+
+static void _set_agrid_flag(const coord_def& p, areaprop_flag f)
+{
+    _agrid(p) |= f;
+}
+
+static bool _check_agrid_flag(const coord_def& p, areaprop_flag f)
+{
+    return (_agrid(p) & f);
+}
+
+void invalidate_agrid()
+{
+    _agrid_valid = false;
+}
+
+static void _update_agrid()
+{
+    if (_agrid_valid)
+        return;
+
+    _agrid.init(0);
+
+    for (actor_iterator ai; ai; ++ai)
+    {
+        int r;
+
+        if ((r = ai->silence_radius2()) >= 0)
+            for (radius_iterator ri(ai->pos(), r, C_CIRCLE); ri; ++ri)
+                _set_agrid_flag(*ri, APROP_SILENCE);
+
+        if ((r = ai->halo_radius2()) >= 0)
+            for (radius_iterator ri(ai->pos(), r, C_CIRCLE, &ai->get_los());
+                 ri; ++ri)
+            {
+                _set_agrid_flag(*ri, APROP_HALO);
+            }
+    }
+
+    // TODO: update sanctuary here.
+
+    _agrid_valid = true;
+}
 
 ///////////////
 // Sanctuary
@@ -257,15 +314,26 @@ void create_sanctuary(const coord_def& center, int time)
 // last 6 turns: range 0, hence only the player silenced
 static int _silence_range(int dur)
 {
+    if (dur <= 0)
+        return (-1);
     dur /= BASELINE_DELAY; // now roughly number of turns
     return std::max(0, std::min(dur - 6, 37));
 }
 
+int player::silence_radius2() const
+{
+    return (_silence_range(you.duration[DUR_SILENCE]));
+}
+
+int monsters::silence_radius2() const
+{
+    return (-1);
+}
+
 bool silenced(const coord_def& p)
 {
-    // FIXME: implement for monsters
-    return (you.duration[DUR_SILENCE]
-            && distance(p, you.pos()) <= _silence_range(you.duration[DUR_SILENCE]));
+    _update_agrid();
+    return (_check_agrid_flag(p, APROP_SILENCE));
 }
 
 /////////////
@@ -273,47 +341,28 @@ bool silenced(const coord_def& p)
 
 bool haloed(const coord_def& p)
 {
-    return (you.halo_contains(p));
+    _update_agrid();
+    return (_check_agrid_flag(p, APROP_HALO));
 }
 
 bool actor::haloed() const
 {
-    return (you.halo_contains(pos()));
+    return (::haloed(pos()));
 }
 
-bool actor::halo_contains(const coord_def &c) const
-{
-    int r = halo_radius();
-    return (r > 0 && (c - pos()).abs() <= r * r && see_cell(c));
-}
-
-int player::halo_radius() const
+int player::halo_radius2() const
 {
     if (you.religion == GOD_SHINING_ONE && you.piety >= piety_breakpoint(0)
         && !you.penance[GOD_SHINING_ONE])
     {
-        return (std::min(LOS_RADIUS, you.piety / 20));
+        const int r = std::min(LOS_RADIUS, you.piety / 20);
+        return (r*r);
     }
 
-    return (0);
+    return (-1);
 }
 
-int monsters::halo_radius() const
+int monsters::halo_radius2() const
 {
-    return (0);
-}
-
-// XXX: This might become too expensive; possibly, keep
-//      a mapping of cell -> list of monsters in view of cell
-//      and just iterate through that.
-std::list<actor*> haloers(const coord_def &c)
-{
-    std::list<actor*> ret;
-    for (radius_iterator ri(c, LOS_RADIUS, false); ri; ++ri)
-    {
-        actor* a = actor_at(*ri);
-        if (a && a->halo_contains(c))
-            ret.push_back(a);
-    }
-    return (ret);
+    return (-1);
 }

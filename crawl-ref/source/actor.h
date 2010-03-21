@@ -255,10 +255,10 @@ public:
     virtual bool backlit(bool check_haloed = true) const = 0;
     // Within any actor's halo?
     virtual bool haloed() const;
-    // Halo radius.
-    virtual int halo_radius() const = 0;
-    // Is the given point within this actor's halo?
-    virtual bool halo_contains(const coord_def &c) const;
+    // Squared halo radius.
+    virtual int halo_radius2() const = 0;
+    // Squared silence radius.
+    virtual int silence_radius2() const = 0;
 
     virtual bool petrified() const = 0;
 
