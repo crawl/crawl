@@ -1,6 +1,7 @@
 OBJECTS = \
 abl-show.o \
 abyss.o \
+act-iter.o \
 actor.o \
 actor-los.o \
 areas.o \
