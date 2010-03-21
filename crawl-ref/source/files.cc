@@ -6,10 +6,7 @@
 
 #include "AppHdr.h"
 
-#include "delay.h"
 #include "files.h"
-#include "mon-place.h"
-#include "coord.h"
 
 #include <errno.h>
 #include <string.h>
@@ -39,8 +36,10 @@
 #include "chardump.h"
 #include "cloud.h"
 #include "clua.h"
+#include "coord.h"
 #include "coordit.h"
 #include "debug.h"
+#include "delay.h"
 #include "dgn-overview.h"
 #include "directn.h"
 #include "dungeon.h"
@@ -58,6 +57,7 @@
 #include "misc.h"
 #include "mon-act.h"
 #include "mon-death.h"
+#include "mon-place.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "mon-transit.h"
