@@ -370,5 +370,9 @@ int player::halo_radius2() const
 
 int monsters::halo_radius2() const
 {
-    return (-1);
+    // Angels and Daevas are haloed.
+    if (holiness() == MH_HOLY)
+        return (2*2);
+    else
+        return (-1);
 }
