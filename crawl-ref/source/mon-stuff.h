@@ -180,4 +180,10 @@ actor* forest_near_enemy(const actor *mon);
 void forest_message(const coord_def pos, const std::string msg,
                     msg_channel_type ch = MSGCH_PLAIN);
 void forest_damage(const actor *mon);
+
+struct bolt;
+
+void setup_spore_explosion(bolt & beam, const monsters & origin);
+void setup_lightning_explosion(bolt & beam, const monsters & origin);
+
 #endif
