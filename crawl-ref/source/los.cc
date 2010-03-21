@@ -907,6 +907,7 @@ void losight(los_grid& sh, const coord_def& center,
 // has changed somewhere.
 static void _handle_los_change()
 {
+    invalidate_agrid();
 }
 
 // Might want to pass old position.

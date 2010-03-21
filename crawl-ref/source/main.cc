@@ -1968,6 +1968,9 @@ static void _decrement_durations()
         you.redraw_armour_class = true;
     }
 
+    // Possible reduction of silence radius.
+    if (you.duration[DUR_SILENCE])
+        invalidate_agrid();
     if (_decrement_a_duration(DUR_SILENCE, delay, "Your hearing returns."))
         you.attribute[ATTR_WAS_SILENCED] = 0;
 

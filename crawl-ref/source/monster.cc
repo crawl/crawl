@@ -5715,6 +5715,7 @@ void monsters::apply_location_effects(const coord_def &oldpos,
     {
         dungeon_events.fire_position_event(DET_MONSTER_MOVED, pos());
         los_actor_moved(this);
+        areas_actor_moved(this);
     }
 
     if (alive() && mons_habitat(this) == HT_WATER
