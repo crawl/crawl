@@ -1300,9 +1300,9 @@ static const skill_type skill_display_order[] =
 static const int ndisplayed_skills =
             sizeof(skill_display_order) / sizeof(*skill_display_order);
 
-static bool _player_knows_aptitudes()
+static bool _immature_draconian()
 {
-    return !player_genus(GENPC_DRACONIAN) || you.max_level >= 7;
+    return player_genus(GENPC_DRACONIAN) && you.max_level < 7;
 
 }
 
@@ -1471,18 +1471,15 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
                                            "skills' descriptions.").display();
         }
 
-        if (_player_knows_aptitudes())
-        {
-            cgotoxy(1, bottom_line);
-            formatted_string::parse_string(
+        cgotoxy(1, bottom_line);
+        formatted_string::parse_string(
 #ifndef USE_TILE
-                "Press '<w>!</w>'"
+            "Press '<w>!</w>'"
 #else
-                "<w>Right-click</w>"
+            "<w>Right-click</w>"
 #endif
-                " to toggle between <cyan>progress</cyan> and "
-                "<red>aptitude</red> display.").display();
-        }
+            " to toggle between <cyan>progress</cyan> and "
+            "<red>aptitude</red> display.").display();
     }
 }
 
@@ -1497,8 +1494,7 @@ void show_skills()
 
         mouse_control mc(MOUSE_MODE_MORE);
         const int keyin = getch();
-        if ((keyin == '!' || keyin == CK_MOUSE_CMD)
-            && _player_knows_aptitudes())
+        if ((keyin == '!' || keyin == CK_MOUSE_CMD))
         {
             show_aptitudes = !show_aptitudes;
             continue;
@@ -1902,6 +1898,10 @@ static int species_apts(int skill, species_type species)
         }
         spec_skills_initialised = true;
     }
+
+    if (_immature_draconian())
+        species = SP_BASE_DRACONIAN;
+
     return _spec_skills[species][skill];
 }
 
