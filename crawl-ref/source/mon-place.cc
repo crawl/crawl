@@ -1286,11 +1286,8 @@ static int _place_monster_aux(const mgen_data &mg,
     mon->base_monster = mg.base_type;
     mon->number       = mg.number;
 
-    mon->moveto(fpos);
-
-    // Link monster into monster grid.
-    int id = mon->mindex();
-    env.mgrid(fpos) = id;
+    // Set pos and link monster into monster grid.
+    mon->move_to_pos(fpos);
 
     if (mons_is_mimic(mg.cls))
     {
@@ -1309,6 +1306,7 @@ static int _place_monster_aux(const mgen_data &mg,
         _maybe_init_tilenum_props(mon);
 #endif
 
+    const int id = mon->mindex();
     // Generate a brand shiny new monster, or zombie.
     if (mons_class_is_zombified(mg.cls))
         _define_zombie(id, mg.base_type, mg.cls, mg.power, fpos);

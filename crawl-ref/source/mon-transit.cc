@@ -264,10 +264,7 @@ bool follower::place(bool near_player)
             if (where_to_go == you.pos())
                 near_player = true;
             else if (m.find_home_near_place(where_to_go))
-            {
-                mgrd(m.pos()) = m.mindex();
                 placed = true;
-            }
         }
 
         if (!placed)
