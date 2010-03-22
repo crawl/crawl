@@ -478,7 +478,6 @@ namespace arena
 
         you.position.y = -1;
         coord_def yplace(dgn_find_feature_marker(DNGN_ESCAPE_HATCH_UP));
-        you.set_arena_los(yplace);
         crawl_view.set_player_at(yplace);
 
         you.mutation[MUT_ACUTE_VISION] = 3;
