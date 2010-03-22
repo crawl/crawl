@@ -5269,7 +5269,7 @@ void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
             if (in_bounds)
             {
                 bool print_blood = true;
-                if (you.halo_contains(gc))
+                if (haloed(gc))
                 {
                     monsters *mon = monster_at(gc);
                     if (you.see_cell(gc) && mon)
