@@ -6,7 +6,6 @@ local checks = 0
 local function test_cellseecell_symmetry()
   -- Send the player to a random spot on the level.
   you.random_teleport()
-  you.losight()
   crawl.redraw_view()
 
   checks = checks + 1

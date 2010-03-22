@@ -20,7 +20,6 @@ local function test_los_map(map)
   end
   dgn.with_map_anchors(30, 30, place_map)
   you.moveto(30, 30)
-  you.losight()
   crawl.redraw_view()
   for x = 0, 9 do
     for y = 0, 9 do
