@@ -1841,7 +1841,10 @@ static bool _randart_is_conflicting( const item_def &item,
         return (false);
 
     if (item.sub_type == AMU_STASIS
-       && (proprt[ARTP_BLINK] != 0 || proprt[ARTP_CAUSE_TELEPORTATION] != 0))
+       && (proprt[ARTP_BLINK] != 0
+           || proprt[ARTP_CAUSE_TELEPORTATION] != 0
+           || proprt[ARTP_ANGRY] != 0
+           || proprt[ARTP_BERSERK] != 0))
     {
         return (true);
     }
