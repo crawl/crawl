@@ -42,7 +42,7 @@ public:
  * be restricted to lie within some LOS field (need not be
  * centered at the same point), and to exclude the center.
  */
-class los_def;
+class los_base;
 class radius_iterator : public std::iterator<std::forward_iterator_tag,
                         coord_def>
 {
@@ -50,16 +50,16 @@ public:
     // General constructor.
     radius_iterator(const coord_def& center, int param,
                     circle_type ctype,
-                    const los_def* los = NULL,
+                    const los_base* los = NULL,
                     bool exclude_center = false);
     // Legacy constructor -- use above instead.
     radius_iterator(const coord_def& center, int radius,
                     bool roguelike_metric = true,
                     bool require_los = true,
                     bool exclude_center = false,
-                    const los_def* los = NULL);
+                    const los_base* los = NULL);
     // Just iterate over a LOS field.
-    radius_iterator(const los_def* los,
+    radius_iterator(const los_base* los,
                     bool exclude_center = false);
 
     operator bool() const;
@@ -76,7 +76,7 @@ private:
     circle_def circle;
     circle_iterator iter;
     bool exclude_center;
-    const los_def* los;   // restrict to the los if not NULL
+    const los_base* los;  // restrict to the los if not NULL
     coord_def current;    // storage for operater->
 };
 

@@ -18,7 +18,7 @@ enum restr_type
 };
 
 class circle_def;
-class los_def;
+class los_base;
 class actor;
 
 class monster_iterator
@@ -26,7 +26,7 @@ class monster_iterator
 public:
     monster_iterator();
     monster_iterator(const circle_def* circle_);
-    monster_iterator(const los_def* los_);
+    monster_iterator(const los_base* los_);
     monster_iterator(const actor* act_);
 
     operator bool() const;
@@ -39,7 +39,7 @@ protected:
     restr_type restr;
     int curr_mid;
     const circle_def* circle;
-    const los_def* los;
+    const los_base* los;
     const actor* act;
 
     bool valid(int mid) const;

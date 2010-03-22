@@ -1466,11 +1466,6 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (load_mode != LOAD_VISITOR)
     {
         dungeon_events.fire_event(DET_ENTERING_LEVEL);
-
-        // Update LOS, so the next area update will have
-        // proper LOS setup.
-        for (actor_iterator ai; ai; ++ai)
-            ai->update_los();
         invalidate_los();
         invalidate_agrid();
     }
@@ -2142,7 +2137,7 @@ static void _load_level(const level_id &level, bool orig)
     if (orig)
     {
         // Rebuild the show grid, which was cleared out before.
-        you.update_los();
+        viewwindow(false, true);
 
         // Reactivate markers.
         env.markers.activate_all();

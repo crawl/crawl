@@ -2512,7 +2512,7 @@ static void _crusade_card(int power, deck_rarity_type rarity)
     if (power_level >= 1)
     {
         // A chance to convert opponents.
-        for (monster_iterator mi(&you.get_los()); mi; ++mi)
+        for (monster_iterator mi(you.get_los()); mi; ++mi)
         {
              if (mi->friendly()
                 || mi->holiness() != MH_NATURAL

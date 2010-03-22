@@ -707,7 +707,7 @@ bool receive_corpses(int pow, coord_def where)
     // in a hallway as in an open room.
     int spaces_for_corpses = 0;
     for (radius_iterator ri(where, corpse_delivery_radius, C_ROUND,
-                            &you.get_los(), true);
+                            you.get_los(), true);
          ri; ++ri)
     {
         if (mons_class_can_pass(MONS_HUMAN, grd(*ri)))
@@ -720,7 +720,7 @@ bool receive_corpses(int pow, coord_def where)
     int corpses_created = 0;
 
     for (radius_iterator ri(where, corpse_delivery_radius, C_ROUND,
-                            &you.get_los());
+                            you.get_los());
          ri; ++ri)
     {
         bool square_is_walkable = mons_class_can_pass(MONS_HUMAN, grd(*ri));
@@ -1182,7 +1182,7 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
     int motions       = 0;
 
     radius_iterator ri(caster->pos(), 6, C_SQUARE,
-                       &caster->get_los_no_trans());
+                       caster->get_los_no_trans());
 
     for (; ri; ++ri)
     {

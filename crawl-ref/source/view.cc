@@ -128,7 +128,7 @@ void flush_comes_into_view()
 
 void monster_grid_updates()
 {
-    for (monster_iterator mi(&you.get_los()); mi; ++mi)
+    for (monster_iterator mi(you.get_los()); mi; ++mi)
     {
         if ((mi->asleep() || mons_is_wandering(*mi))
             && check_awaken(*mi))
@@ -759,7 +759,7 @@ static void player_view_update()
 {
     std::vector<coord_def> update_excludes;
     bool need_update = false;
-    for (radius_iterator ri(&you.get_los()); ri; ++ri)
+    for (radius_iterator ri(you.get_los()); ri; ++ri)
     {
         int flags = player_view_update_at(*ri);
         if (flags & UF_AFFECT_EXCLUDES)
@@ -919,8 +919,6 @@ void viewwindow(bool monster_updates, bool show_updates)
     {
         if (!player_in_mappable_area())
             env.map_knowledge.init(map_cell());
-
-        you.update_los();
 
 #ifdef USE_TILE
         tile_draw_floor();

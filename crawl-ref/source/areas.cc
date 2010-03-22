@@ -83,7 +83,7 @@ static void _update_agrid()
                 _set_agrid_flag(*ri, APROP_SILENCE);
 
         if ((r = ai->halo_radius2()) >= 0)
-            for (radius_iterator ri(ai->pos(), r, C_CIRCLE, &ai->get_los());
+            for (radius_iterator ri(ai->pos(), r, C_CIRCLE, ai->get_los());
                  ri; ++ri)
             {
                 _set_agrid_flag(*ri, APROP_HALO);

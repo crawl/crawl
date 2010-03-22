@@ -1214,7 +1214,7 @@ static int _xom_do_potion(bool debug = false)
 static int _xom_confuse_monsters(int sever, bool debug = false)
 {
     bool rc = false;
-    for (monster_iterator mi(&you.get_los()); mi; ++mi)
+    for (monster_iterator mi(you.get_los()); mi; ++mi)
     {
         if (mi->wont_attack()
             || !mons_class_is_confusable(mi->type)
@@ -1772,7 +1772,7 @@ static int _xom_random_stickable(const int HD)
 static int _xom_snakes_to_sticks(int sever, bool debug = false)
 {
     bool action = false;
-    for (monster_iterator mi(&you.get_los()); mi; ++mi)
+    for (monster_iterator mi(you.get_los()); mi; ++mi)
     {
         if (mi->attitude != ATT_HOSTILE)
             continue;
@@ -2101,7 +2101,7 @@ static int _xom_change_scenery(bool debug = false)
     std::vector<coord_def> candidates;
     std::vector<coord_def> closed_doors;
     std::vector<coord_def> open_doors;
-    for (radius_iterator ri(&you.get_los()); ri; ++ri)
+    for (radius_iterator ri(you.get_los()); ri; ++ri)
     {
         if (!you.see_cell(*ri))
             continue;
@@ -2487,7 +2487,7 @@ static void _get_in_view(FixedVector<bool, NUM_FEATURES>& in_view)
 {
     in_view.init(false);
 
-    for (radius_iterator ri(&you.get_los()); ri; ++ri)
+    for (radius_iterator ri(you.get_los()); ri; ++ri)
         in_view[grd(*ri)] = true;
 }
 
@@ -3036,7 +3036,7 @@ static int _xom_player_confusion_effect(int sever, bool debug = false)
         bool mons_too = false;
         if (coinflip())
         {
-            for (monster_iterator mi(&you.get_los()); mi; ++mi)
+            for (monster_iterator mi(you.get_los()); mi; ++mi)
             {
                 if (!mons_class_is_confusable(mi->type)
                     || one_chance_in(20))
@@ -3242,7 +3242,7 @@ static int _xom_repel_stairs(bool debug = false)
 
     std::vector<coord_def> stairs_avail;
     bool real_stairs = false;
-    for (radius_iterator ri(&you.get_los()); ri; ++ri)
+    for (radius_iterator ri(you.get_los()); ri; ++ri)
     {
         dungeon_feature_type feat = grd(*ri);
         if (feat_stair_direction(feat) != CMD_NO_CMD

@@ -1143,7 +1143,7 @@ void abjuration(int pow)
     // Scale power into something comparable to summon lifetime.
     const int abjdur = pow * 12;
 
-    for (monster_iterator mon(&you.get_los()); mon; ++mon)
+    for (monster_iterator mon(you.get_los()); mon; ++mon)
     {
         if (mon->wont_attack())
             continue;

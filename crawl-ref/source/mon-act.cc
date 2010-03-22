@@ -1616,7 +1616,6 @@ static void _khufu_drop_tomb(monsters *monster)
     }
     if (count)
     {
-        you.update_los();
         if (monster->observable())
             mpr("The walls disappear!");
         else
@@ -2133,7 +2132,6 @@ void handle_monsters()
 
         const coord_def oldpos = mi->pos();
 
-        mi->update_los();
         handle_monster_move(*mi);
 
         if (!invalid_monster(*mi) && mi->pos() != oldpos)

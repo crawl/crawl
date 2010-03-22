@@ -747,7 +747,7 @@ void wizard_unidentify_pack()
     // Forget things that nearby monsters are carrying, as well.
     // (For use with the "give monster an item" wizard targeting
     // command.)
-    for (monster_iterator mon(&you.get_los()); mon; ++mon)
+    for (monster_iterator mon(you.get_los()); mon; ++mon)
     {
         for (int j = 0; j < NUM_MONSTER_SLOTS; ++j)
         {

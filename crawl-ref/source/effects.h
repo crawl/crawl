@@ -46,11 +46,11 @@ int place_ring(std::vector<coord_def>& ring_points,
                int arc_occupancy,
                int& seen_count);
 
-class los_def;
+class los_base;
 // Collect lists of points that are within LOS (under the given losgrid),
 // unoccupied, and not solid (walls/statues).
 void collect_radius_points(std::vector<std::vector<coord_def> > &radius_points,
-                           const coord_def &origin, const los_def &los);
+                           const coord_def &origin, const los_base* los);
 
 void random_uselessness(int scroll_slot = -1);
 

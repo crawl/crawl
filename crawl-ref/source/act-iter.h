@@ -13,7 +13,7 @@ class actor_iterator
 public:
     actor_iterator();
     actor_iterator(const circle_def* circle_);
-    actor_iterator(const los_def* los_);
+    actor_iterator(const los_base* los_);
     actor_iterator(const actor* act_);
 
     operator bool() const;
@@ -25,7 +25,7 @@ public:
 protected:
     restr_type restr;
     const circle_def* circle;
-    const los_def* los;
+    const los_base* los;
     const actor* act;
     bool did_you;
     monster_iterator mi;

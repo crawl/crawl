@@ -258,12 +258,6 @@ LUAFN(you_random_teleport)
     return (0);
 }
 
-LUAFN(you_losight)
-{
-    you.update_los();
-    return (0);
-}
-
 static int _you_uniques(lua_State *ls)
 {
     bool unique_found = false;
@@ -370,7 +364,6 @@ static const struct luaL_reg you_dlib[] =
 { "see_cell_no_trans",  you_see_cell_no_trans },
 { "random_teleport",    you_random_teleport },
 { "teleport_to",        you_teleport_to },
-{ "losight",            you_losight },
 { "gold",               _you_gold },
 { "uniques",            _you_uniques },
 { "die",                _you_die },
