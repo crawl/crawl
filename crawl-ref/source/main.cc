@@ -3110,6 +3110,7 @@ static void _open_door(coord_def move, bool check_confused)
             }
         }
         grd(dc) = DNGN_OPEN_DOOR;
+        set_terrain_changed(dc);
         dungeon_events.fire_position_event(DET_DOOR_OPENED, dc);
         if (is_excluded(dc))
             excludes.push_back(dc);
@@ -3311,7 +3312,7 @@ static void _close_door(coord_def move)
             const coord_def& dc = *i;
             // Once opened, formerly secret doors become normal doors.
             grd(dc) = DNGN_CLOSED_DOOR;
-
+            set_terrain_changed(dc);
             dungeon_events.fire_position_event(DET_DOOR_CLOSED, dc);
 
             // Even if some of the door is out of LOS once it's closed

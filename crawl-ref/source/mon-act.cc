@@ -2654,9 +2654,9 @@ static void _mons_open_door(monsters* monster, const coord_def &pos)
         if (you.see_cell(dc))
             was_seen = true;
         else
-            set_terrain_changed(dc);
 
         grd(dc) = DNGN_OPEN_DOOR;
+        set_terrain_changed(dc);
     }
 
     if (was_seen)
