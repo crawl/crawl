@@ -5045,8 +5045,8 @@ void dec_slow_player(int delay)
 
     if (you.duration[DUR_SLOW] > BASELINE_DELAY)
     {
-        // BCR - Amulet of resist slow affects slow counter.
-        you.duration[DUR_SLOW] -= delay;
+        // Make slowing and hasting effects last as long.
+        you.duration[DUR_SLOW] -= you.duration[DUR_HASTE] ? 2 * delay : delay;
     }
     if (you.duration[DUR_SLOW] <= BASELINE_DELAY)
     {
