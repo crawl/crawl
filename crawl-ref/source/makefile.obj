@@ -97,6 +97,7 @@ lev-pand.o \
 libutil.o \
 los.o \
 los_def.o \
+losglobal.o \
 losparam.o \
 luaterp.o \
 macro.o \
