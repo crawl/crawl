@@ -2,6 +2,7 @@
 
 #include "actor.h"
 #include "coord.h"
+#include "losglobal.h"
 #include "player.h"
 #include "monster.h"
 #include "state.h"
@@ -14,7 +15,7 @@ bool actor::observable() const
 
 bool actor::see_cell(const coord_def &p) const
 {
-    return (los.see_cell(p));
+    return (cell_see_cell(pos(), p, LOS_DEFAULT));
 }
 
 void actor::update_los()
@@ -39,7 +40,7 @@ bool actor::can_see(const actor *target) const
 
 bool player::see_cell_no_trans(const coord_def &p) const
 {
-    return (los_no_trans.see_cell(p));
+    return (cell_see_cell(pos(), p, LOS_NO_TRANS));
 }
 
 bool player::trans_wall_blocking(const coord_def &p) const
