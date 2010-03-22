@@ -7,9 +7,6 @@ local function test_losight_symmetry()
   -- Send the player to a random spot on the level.
   you.random_teleport()
 
-  -- Forcibly redo LOS.
-  you.losight()
-
   checks = checks + 1
   local you_x, you_y = you.pos()
 
@@ -30,7 +27,6 @@ local function test_losight_symmetry()
   for _, spot in ipairs(visible_spots) do
     local x, y = unpack(spot)
     you.moveto(x, y)
-    you.losight()
     if not you.see_cell(you_x, you_y) then
       -- Draw the view to show the problem.
       crawl.redraw_view()

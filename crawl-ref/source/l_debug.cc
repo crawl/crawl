@@ -17,6 +17,7 @@
 #include "initfile.h"
 #include "godwrath.h"
 #include "libutil.h"
+#include "losglobal.h"
 #include "message.h"
 #include "mon-act.h"
 #include "mon-iter.h"
@@ -66,6 +67,7 @@ LUAFN(debug_generate_level)
 {
     no_messages mx;
     env.map_knowledge.init(map_cell());
+    invalidate_los();
 #ifdef USE_TILE
     tile_init_default_flavour();
     tile_clear_flavour();

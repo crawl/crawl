@@ -7,9 +7,6 @@ local function test_findray()
   -- Send the player to a random spot on the level.
   you.random_teleport()
 
-  -- Forcibly redo LOS.
-  you.losight()
-
   local you_x, you_y = you.pos()
   local you_p = dgn.point(you_x, you_y)
 
