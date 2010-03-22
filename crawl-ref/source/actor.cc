@@ -1,9 +1,11 @@
 #include "AppHdr.h"
 
 #include "actor.h"
+#include "areas.h"
 #include "artefact.h"
 #include "env.h"
 #include "itemprop.h"
+#include "los.h"
 #include "player.h"
 #include "random.h"
 #include "state.h"
@@ -112,10 +114,13 @@ bool actor::check_res_magic(int power)
 
 void actor::set_position(const coord_def &c)
 {
+    const coord_def oldpos = position;
     position = c;
     changed_los_center = changed_los_center || c != los.get_center();
     los.set_center(c);
     los_no_trans.set_center(c);
+    los_actor_moved(this, oldpos);
+    areas_actor_moved(this, oldpos);
 }
 
 bool actor::can_hibernate(bool holi_only) const

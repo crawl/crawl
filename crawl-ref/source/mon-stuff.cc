@@ -867,6 +867,7 @@ static void _fire_monster_death_event(monsters *monster,
     dungeon_events.fire_event(
         dgn_event(DET_MONSTER_DIED, monster->pos(), 0,
                   monster->mindex(), killer));
+    los_monster_died(monster);
 
     if (type == MONS_ROYAL_JELLY && !polymorph)
     {

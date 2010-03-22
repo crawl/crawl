@@ -5705,11 +5705,7 @@ void monsters::apply_location_effects(const coord_def &oldpos,
                                       int killernum)
 {
     if (oldpos != pos())
-    {
         dungeon_events.fire_position_event(DET_MONSTER_MOVED, pos());
-        los_actor_moved(this);
-        areas_actor_moved(this);
-    }
 
     if (alive() && mons_habitat(this) == HT_WATER
         && !feat_is_watery( grd(pos()) ) && !has_ench(ENCH_AQUATIC_LAND))
