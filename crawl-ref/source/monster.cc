@@ -4464,6 +4464,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     case ENCH_SILENCE:
         if (!quiet && !silenced(this->pos()))
             simple_monster_message(this, " becomes audible again.");
+        invalidate_agrid();
         break;
 
     case ENCH_MIGHT:
@@ -4928,7 +4929,6 @@ void monsters::apply_enchantment(const mon_enchant &me)
     case ENCH_SLOW:
     case ENCH_HASTE:
     case ENCH_SWIFT:
-    case ENCH_SILENCE:
     case ENCH_MIGHT:
     case ENCH_FEAR:
     case ENCH_PARALYSIS:
@@ -4943,6 +4943,11 @@ void monsters::apply_enchantment(const mon_enchant &me)
     case ENCH_LOWERED_MR:
     case ENCH_SOUL_RIPE:
     case ENCH_TIDE:
+        decay_enchantment(me);
+        break;
+
+    case ENCH_SILENCE:
+        invalidate_agrid();
         decay_enchantment(me);
         break;
 
