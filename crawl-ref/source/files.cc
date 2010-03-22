@@ -1509,6 +1509,9 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         }
     }
 
+    if (load_mode == LOAD_RETURN)
+        env.markers.activate_all();
+
     if (load_mode == LOAD_ENTER_LEVEL && just_created_level)
         run_map_epilogues();
 
@@ -2130,18 +2133,8 @@ static void _load_level(const level_id &level, bool orig)
     you.absdepth0 = level.dungeon_absdepth();
     you.level_type = level.level_type;
 
-    load(DNGN_STONE_STAIRS_DOWN_I, LOAD_VISITOR,
+    load(DNGN_STONE_STAIRS_DOWN_I, orig ? LOAD_RETURN : LOAD_VISITOR,
          you.level_type, you.absdepth0, you.where_are_you);
-
-    // Restore state when returning to original level.
-    if (orig)
-    {
-        // Rebuild the show grid, which was cleared out before.
-        viewwindow(false, true);
-
-        // Reactivate markers.
-        env.markers.activate_all();
-    }
 }
 
 // Given a level returns true if the level has been created already
