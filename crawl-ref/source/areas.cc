@@ -57,10 +57,14 @@ void invalidate_agrid()
     _agrid_valid = false;
 }
 
-void areas_actor_moved(const actor* act)
+void areas_actor_moved(const actor* act, const coord_def& oldpos)
 {
-    if (act->halo_radius2() > -1 || act->silence_radius2() > -1)
+    if (act->alive() &&
+        (you.entering_level
+         ||act->halo_radius2() > -1 || act->silence_radius2() > -1))
+    {
         invalidate_agrid();
+    }
 }
 
 static void _update_agrid()

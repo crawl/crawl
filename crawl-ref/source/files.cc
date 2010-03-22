@@ -53,6 +53,7 @@
 #include "jobs.h"
 #include "kills.h"
 #include "libutil.h"
+#include "losglobal.h"
 #include "macro.h"
 #include "mapmark.h"
 #include "message.h"
@@ -1470,7 +1471,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         // proper LOS setup.
         for (actor_iterator ai; ai; ++ai)
             ai->update_los();
-
+        invalidate_los();
         invalidate_agrid();
     }
 

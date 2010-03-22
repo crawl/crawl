@@ -55,6 +55,7 @@
 #include "debug.h"
 #include "externs.h"
 #include "geom2d.h"
+#include "losglobal.h"
 #include "losparam.h"
 #include "player.h"
 #include "ray.h"
@@ -910,12 +911,22 @@ static void _handle_los_change()
     invalidate_agrid();
 }
 
-// Might want to pass old position.
-void los_actor_moved(const actor* act)
+void los_actor_moved(const actor* act, const coord_def& oldpos)
 {
     if (act->atype() == ACT_MONSTER
         && act->as_monster()->type == MONS_BUSH)
     {
+        invalidate_los_around(oldpos);
+        invalidate_los_around(act->pos());
+        _handle_los_change();
+    }
+}
+
+void los_monster_died(const monsters* mon)
+{
+    if (mon->type == MONS_BUSH)
+    {
+        invalidate_los_around(mon->pos());
         _handle_los_change();
     }
 }
@@ -923,11 +934,13 @@ void los_actor_moved(const actor* act)
 // Might want to pass new/old terrain.
 void los_terrain_changed(const coord_def& p)
 {
+    invalidate_los_around(p);
     _handle_los_change();
 }
 
 // Might want to pass new/old cloud type.
 void los_cloud_changed(const coord_def& p)
 {
+    invalidate_los_around(p);
     _handle_los_change();
 }
