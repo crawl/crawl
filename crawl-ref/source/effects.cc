@@ -2635,7 +2635,7 @@ static bool _follows_orders(monsters* mon)
 // If allow_patrol is true, patrolling monsters get MHITNOT instead.
 static void _set_friendly_foes(bool allow_patrol = false)
 {
-    for (monster_iterator mi(&you.get_los()); mi; ++mi)
+    for (monster_iterator mi(you.get_los()); mi; ++mi)
     {
         if (!_follows_orders(*mi))
             continue;
@@ -2646,7 +2646,7 @@ static void _set_friendly_foes(bool allow_patrol = false)
 
 static void _set_allies_patrol_point(bool clear = false)
 {
-    for (monster_iterator mi(&you.get_los()); mi; ++mi)
+    for (monster_iterator mi(you.get_los()); mi; ++mi)
     {
         if (!_follows_orders(*mi))
             continue;
@@ -4545,7 +4545,7 @@ int place_ring(std::vector<coord_def> &ring_points,
 // Collect lists of points that are within LOS (under the given env map),
 // unoccupied, and not solid (walls/statues).
 void collect_radius_points(std::vector<std::vector<coord_def> > &radius_points,
-                           const coord_def &origin, const los_def &los)
+                           const coord_def &origin, const los_base* los)
 {
 
     radius_points.clear();
@@ -4602,7 +4602,7 @@ void collect_radius_points(std::vector<std::vector<coord_def> > &radius_points,
             coord_dist temp(*i, current.second);
 
             // If the grid is out of LOS, skip it.
-            if (!los.see_cell(temp.first))
+            if (!los->see_cell(temp.first))
                 continue;
 
             coord_def local = temp.first - origin;
@@ -4637,7 +4637,7 @@ static int _mushroom_ring(item_def &corpse, int & seen_count,
 
     los_def los(corpse.pos, opc_solid);
 
-    collect_radius_points(radius_points, corpse.pos, los);
+    collect_radius_points(radius_points, corpse.pos, &los);
 
     // So what we have done so far is collect the set of points at each radius
     // reachable from the origin with (somewhat constrained) 8 connectivity,

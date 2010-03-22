@@ -341,8 +341,6 @@ public:
     bool near_foe() const;
     reach_type reach_range() const;
 
-    const los_def& get_los_no_trans();
-
     bool is_icy() const;
     bool is_fiery() const;
     bool paralysed() const;

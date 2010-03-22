@@ -209,7 +209,7 @@ int detect_creatures(int pow, bool telepathic)
 
 void corpse_rot()
 {
-    for (radius_iterator ri(you.pos(), 6, C_ROUND, &you.get_los_no_trans());
+    for (radius_iterator ri(you.pos(), 6, C_ROUND, you.get_los_no_trans());
          ri; ++ri)
     {
         if (!is_sanctuary(*ri) && env.cgrid(*ri) == EMPTY_CLOUD)
@@ -595,7 +595,7 @@ void cast_toxic_radiance(bool non_player)
 
     counted_monster_list affected_monsters;
     // determine which monsters are hit by the radiance: {dlb}
-    for (monster_iterator mi(&you.get_los()); mi; ++mi)
+    for (monster_iterator mi(you.get_los()); mi; ++mi)
     {
         if (!mi->submerged())
         {
@@ -703,7 +703,7 @@ void cast_refrigeration(int pow, bool non_player)
     beam.flavour = BEAM_COLD;
     beam.thrower = KILL_YOU;
 
-    for (monster_iterator mi(&you.get_los()); mi; ++mi)
+    for (monster_iterator mi(you.get_los()); mi; ++mi)
     {
         // Note that we *do* hurt monsters which you can't see
         // (submerged, invisible) even though you get no information
@@ -741,7 +741,7 @@ void drain_life(int pow)
 
     int hp_gain = 0;
 
-    for (monster_iterator mi(&you.get_los()); mi; ++mi)
+    for (monster_iterator mi(you.get_los()); mi; ++mi)
     {
         if (mi->holiness() != MH_NATURAL
             || mi->res_negative_energy())

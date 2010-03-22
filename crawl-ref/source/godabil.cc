@@ -1372,7 +1372,7 @@ bool evolve_flora()
     // This is a little sloppy, but cancel early if nothing useful is in
     // range.
     bool in_range = false;
-    for (radius_iterator rad(&you.get_los()); rad; ++rad)
+    for (radius_iterator rad(you.get_los()); rad; ++rad)
     {
         const monsters* temp = monster_at(*rad);
         if (is_moldy(*rad) && mons_class_can_pass(MONS_BALLISTOMYCETE,

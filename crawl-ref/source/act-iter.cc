@@ -20,7 +20,7 @@ actor_iterator::actor_iterator(const circle_def* circle_)
     advance(true);
 }
 
-actor_iterator::actor_iterator(const los_def* los_)
+actor_iterator::actor_iterator(const los_base* los_)
     : restr(R_LOS), los(los_), did_you(false), mi(los_)
 {
     advance(true);

@@ -66,7 +66,7 @@ void los_def::set_center(const coord_def& c)
     center = c;
 }
 
-coord_def los_def::get_center()
+coord_def los_def::get_center() const
 {
     return center;
 }
@@ -98,4 +98,32 @@ bool los_def::see_cell(const coord_def& p) const
         return (in_bounds(p));
     const coord_def sp = p - center;
     return (sp.rdist() <= LOS_MAX_RANGE && show(sp));
+}
+
+coord_def los_glob::get_center() const
+{
+    return (center);
+}
+
+circle_def los_glob::get_bounds() const
+{
+    return (circle_def(center, bds));
+}
+
+bool los_glob::in_bounds(const coord_def& p) const
+{
+    return (bds.contains(p - center));
+}
+
+bool los_glob::see_cell(const coord_def& p) const
+{
+    return (in_bounds(p) && cell_see_cell(center, p, lt));
+}
+
+los_glob& los_glob::operator=(const los_glob& los)
+{
+    lt = los.lt;
+    center = los.center;
+    bds = los.bds;
+    return (*this);
 }

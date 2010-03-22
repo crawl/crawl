@@ -2027,7 +2027,7 @@ void alert_nearby_monsters(void)
     // alert monsters that aren't sleeping.  For cases where an
     // event should wake up monsters and alert them, I'd suggest
     // calling noisy() before calling this function. -- bwr
-    for (monster_iterator mi(&you.get_los()); mi; ++mi)
+    for (monster_iterator mi(you.get_los()); mi; ++mi)
         if (!mi->asleep())
              behaviour_event(*mi, ME_ALERT, MHITYOU);
 }

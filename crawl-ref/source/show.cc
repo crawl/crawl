@@ -433,7 +433,7 @@ void show_def::init(bool terrain_only)
 {
     grid.init(show_type());
 
-    for (radius_iterator ri(&you.get_los()); ri; ++ri)
+    for (radius_iterator ri(you.get_los()); ri; ++ri)
         update_at(*ri, grid2show(*ri), terrain_only);
 }
 

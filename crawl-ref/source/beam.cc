@@ -1788,7 +1788,7 @@ bool mass_enchantment( enchant_type wh_enchant, int pow, int origin,
 
     const kill_category kc = (origin == MHITYOU ? KC_YOU : KC_OTHER);
 
-    for (monster_iterator mi(&you.get_los()); mi; ++mi)
+    for (monster_iterator mi(you.get_los()); mi; ++mi)
     {
         if (mi->has_ench(wh_enchant))
             continue;

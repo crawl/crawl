@@ -13,7 +13,6 @@ enum ev_ignore_type
 class actor
 {
 public:
-    actor();
     virtual ~actor();
 
     virtual monster_type  id() const = 0;
@@ -147,12 +146,10 @@ public:
 
     // Is the given cell within LOS of the actor?
     virtual bool see_cell(const coord_def &c) const;
+    virtual bool see_cell_no_trans(const coord_def &c) const;
 
-    virtual void update_los();
-
-    virtual const los_def& get_los() const;
-    // Could be const for player, but monsters updates it on the fly.
-    virtual const los_def& get_los_no_trans();
+    virtual const los_base* get_los();
+    virtual const los_base* get_los_no_trans();
 
     // Can the actor actually see the target?
     virtual bool can_see(const actor *target) const;
@@ -291,9 +288,9 @@ public:
     coord_def position;
 
 protected:
-    los_def los;
-    bool changed_los_center; // hack to reduce monster los recalculations
-    los_def los_no_trans; // only being updated for player
+    // These are here for memory management reasons...
+    los_glob los;
+    los_glob los_no_trans;
 };
 
 // Identical to actor->kill_alignment(), but returns KC_OTHER if the actor

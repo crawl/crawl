@@ -18,27 +18,12 @@ bool actor::see_cell(const coord_def &p) const
     return (cell_see_cell(pos(), p, LOS_DEFAULT));
 }
 
-void actor::update_los()
-{
-    // Optimization to prevent updating every monster's LOS
-    // every turn. Monsters may have incorrect LOS if opacities
-    // change without the monster moving (e.g. digging, doors
-    // opening/closing, smoke appearing/disappearing).
-    if (changed_los_center
-        || distance(you.pos(), pos()) <= LOS_MAX_RADIUS_SQ
-        || observable())   // arena
-    {
-        los.update();
-        changed_los_center = false;
-    }
-}
-
 bool actor::can_see(const actor *target) const
 {
     return (target->visible_to(this) && see_cell(target->pos()));
 }
 
-bool player::see_cell_no_trans(const coord_def &p) const
+bool actor::see_cell_no_trans(const coord_def &p) const
 {
     return (cell_see_cell(pos(), p, LOS_NO_TRANS));
 }
@@ -48,36 +33,23 @@ bool player::trans_wall_blocking(const coord_def &p) const
     return (see_cell(p) && !see_cell_no_trans(p));
 }
 
-const los_def& actor::get_los() const
+const los_base* actor::get_los()
 {
-    return (los);
+    los = los_glob(pos(), LOS_DEFAULT);
+    return (&los);
 }
 
-const los_def& actor::get_los_no_trans()
+const los_base* actor::get_los_no_trans()
 {
-    return (los_no_trans);
-}
-
-const los_def& monsters::get_los_no_trans()
-{
-    los_no_trans.update();
-    return (los_no_trans);
-}
-
-void player::update_los()
-{
-    if (!crawl_state.game_is_arena() || !crawl_state.arena_suspended)
-    {
-        los_no_trans.update();
-        actor::update_los();
-    }
+    los_no_trans = los_glob(pos(), LOS_NO_TRANS);
+    return (&los_no_trans);
 }
 
 // Player LOS overrides for arena.
 
 void player::set_arena_los(const coord_def& c)
 {
-    los.init_arena(c);
+    // XXX: update
 }
 
 bool player::can_see(const actor* a) const

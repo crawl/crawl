@@ -376,7 +376,7 @@ void cast_detect_secret_doors(int pow)
 {
     int found = 0;
 
-    for (radius_iterator ri(&you.get_los()); ri; ++ri )
+    for (radius_iterator ri(you.get_los()); ri; ++ri )
         if (grd(*ri) == DNGN_SECRET_DOOR && random2(pow) > random2(15))
         {
             reveal_secret_door(*ri);

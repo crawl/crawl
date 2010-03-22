@@ -71,7 +71,7 @@ typedef std::pair<coord_def, int> coord_weight;
 // keep_los indicates that the destination should be in view of the target.
 //
 // XXX: Check the result against in_bounds(), not coord_def::origin(),
-// beceause of a memory problem described below.
+// beceause of a memory problem described below. (isn't this fixed now? -rob)
 static coord_def random_space_weighted(actor* moved, actor* target,
                                        bool close, bool keep_los = true,
                                        bool allow_sanct = true)
@@ -79,12 +79,10 @@ static coord_def random_space_weighted(actor* moved, actor* target,
     std::vector<coord_weight> dests;
     const coord_def tpos = target->pos();
 
-    const los_def* mlos = &moved->get_los_no_trans();
-    const los_def* tlos = &target->get_los_no_trans();
-    for (radius_iterator ri(mlos); ri; ++ri)
+    for (radius_iterator ri(moved->get_los_no_trans()); ri; ++ri)
     {
         if (!moved->is_habitable(*ri) || actor_at(*ri)
-            || keep_los && !tlos->see_cell(*ri)
+            || keep_los && !target->see_cell_no_trans(*ri)
             || !allow_sanct && is_sanctuary(*ri))
         {
             continue;

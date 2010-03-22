@@ -12,12 +12,6 @@
 #include "stuff.h"
 #include "traps.h"
 
-actor::actor()
-    : changed_los_center(true),
-      los_no_trans(los_def(coord_def(0,0), opacity_no_trans()))
-{
-}
-
 actor::~actor()
 {
 }
@@ -116,9 +110,6 @@ void actor::set_position(const coord_def &c)
 {
     const coord_def oldpos = position;
     position = c;
-    changed_los_center = changed_los_center || c != los.get_center();
-    los.set_center(c);
-    los_no_trans.set_center(c);
     los_actor_moved(this, oldpos);
     areas_actor_moved(this, oldpos);
 }

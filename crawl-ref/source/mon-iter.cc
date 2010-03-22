@@ -19,7 +19,7 @@ monster_iterator::monster_iterator(const circle_def* circle_)
     advance(true);
 }
 
-monster_iterator::monster_iterator(const los_def* los_)
+monster_iterator::monster_iterator(const los_base* los_)
     : restr(R_LOS), curr_mid(0), los(los_)
 {
     advance(true);

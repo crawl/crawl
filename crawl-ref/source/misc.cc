@@ -1743,7 +1743,7 @@ static void monster_threat_values(double *general, double *highest,
     double sum = 0;
     int highest_xp = -1;
 
-    for (monster_iterator mi(&you.get_los()); mi; ++mi)
+    for (monster_iterator mi(you.get_los()); mi; ++mi)
     {
         if (!mi->friendly())
         {
