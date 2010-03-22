@@ -61,7 +61,7 @@ void areas_actor_moved(const actor* act, const coord_def& oldpos)
 {
     if (act->alive() &&
         (you.entering_level
-         ||act->halo_radius2() > -1 || act->silence_radius2() > -1))
+         || act->halo_radius2() > -1 || act->silence_radius2() > -1))
     {
         invalidate_agrid();
     }
@@ -348,6 +348,8 @@ int monsters::silence_radius2() const
 
 bool silenced(const coord_def& p)
 {
+    if (!map_bounds(p))
+        return (false);
     _update_agrid();
     return (_check_agrid_flag(p, APROP_SILENCE));
 }
@@ -357,6 +359,8 @@ bool silenced(const coord_def& p)
 
 bool haloed(const coord_def& p)
 {
+    if (!map_bounds(p))
+        return (false);
     _update_agrid();
     return (_check_agrid_flag(p, APROP_HALO));
 }

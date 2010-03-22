@@ -65,6 +65,8 @@ actor_iterator actor_iterator::operator++(int)
 
 bool actor_iterator::valid(const actor* a) const
 {
+    if (!a->alive())
+        return (false);
     switch (restr)
     {
     case R_CIRC:

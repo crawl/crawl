@@ -5,20 +5,23 @@
 
 #include "AppHdr.h"
 
-#include "externs.h"
-#include "options.h"
 #include "arena.h"
+
+#include "areas.h"
 #include "artefact.h"
 #include "cio.h"
 #include "colour.h"
 #include "command.h"
+#include "coord.h"
 #include "dungeon.h"
 #include "env.h"
+#include "externs.h"
 #include "initfile.h"
 #include "items.h"
 #include "itemname.h" // for make_name()
 #include "l_defs.h"
 #include "libutil.h"
+#include "los.h"
 #include "macro.h"
 #include "maps.h"
 #include "message.h"
@@ -28,8 +31,8 @@
 #include "mon-util.h"
 #include "mon-place.h"
 #include "mgen_data.h"
-#include "coord.h"
 #include "mon-stuff.h"
+#include "options.h"
 #include "spl-mis.h"
 #include "spl-util.h"
 #include "state.h"
@@ -270,6 +273,8 @@ namespace arena
 #ifdef USE_TILE
         TileNewLevel(true);
 #endif
+        invalidate_los();
+        invalidate_agrid();
         env.markers.activate_all();
     }
 

@@ -5941,7 +5941,7 @@ bool player::alive() const
 {
     // Simplistic, but if the player dies the game is over anyway, so
     // nobody can ask further questions.
-    return (true);
+    return (!crawl_state.game_is_arena());
 }
 
 bool player::is_summoned(int* _duration, int* summon_type) const
