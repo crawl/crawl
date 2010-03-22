@@ -3960,10 +3960,7 @@ bool monsters::find_home_around(const coord_def &c, int radius)
     }
 
     if (nvalid)
-    {
-        moveto(place);
-        return (true);
-    }
+        return (move_to_pos(place));
 
     return (false);
 }
@@ -3987,27 +3984,15 @@ bool monsters::find_home_anywhere()
     coord_def place(-1, -1);
     int nvalid = 0;
     for (int tries = 0; tries < 600; ++tries)
-    {
         if (check_set_valid_home(random_in_bounds(), place, nvalid))
-        {
-            moveto(place);
-            return (true);
-        }
-    }
-
+            return (move_to_pos(place));
     return (false);
 }
 
 bool monsters::find_place_to_live(bool near_player)
 {
-    if (near_player && find_home_near_player()
-        || find_home_anywhere())
-    {
-        mgrd(pos()) = mindex();
-        return (true);
-    }
-
-    return (false);
+    return (near_player && find_home_near_player()
+            || find_home_anywhere());
 }
 
 void monsters::destroy_inventory()
@@ -4381,10 +4366,7 @@ static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
         }
 
     if (okay_squares > 0)
-    {
-        mon->move_to_pos(target_square);
-        return (true);
-    }
+        return (mon->move_to_pos(target_square));
 
     // No available adjacent squares from which the monster could also
     // have unsubmerged.  Can it just stay submerged where it is?
@@ -4405,7 +4387,7 @@ static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
     }
 
     if (okay_squares > 0)
-        mon->move_to_pos(target_square);
+        return (mon->move_to_pos(target_square));
 
     return (true);
 }
