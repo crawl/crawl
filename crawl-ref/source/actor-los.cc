@@ -6,6 +6,7 @@
 #include "player.h"
 #include "monster.h"
 #include "state.h"
+#include "viewgeom.h"
 
 bool actor::observable() const
 {
@@ -38,8 +39,14 @@ bool player::trans_wall_blocking(const coord_def &p) const
 
 const los_base* actor::get_los()
 {
-    los = los_glob(pos(), crawl_state.game_is_arena()
-                          ? LOS_ARENA : LOS_DEFAULT);
+    if (crawl_state.game_is_arena())
+    {
+        // env.show.init iterates over these bounds for arena
+        los = los_glob(crawl_view.vgrdc, LOS_ARENA,
+                       circle_def(LOS_MAX_RANGE, C_SQUARE));
+    }
+    else
+        los = los_glob(pos(), LOS_DEFAULT);
     return (&los);
 }
 
