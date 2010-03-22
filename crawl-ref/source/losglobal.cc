@@ -75,6 +75,9 @@ static void _update_globallos_at(const coord_def& p)
 
 bool cell_see_cell(const coord_def& p, const coord_def& q, los_type l)
 {
+    if (l == LOS_ARENA)
+        return (true);
+
     losfield_t* flags = _lookup_globallos(p, q);
 
     if (!flags)

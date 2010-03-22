@@ -15,7 +15,10 @@ bool actor::observable() const
 
 bool actor::see_cell(const coord_def &p) const
 {
-    return (cell_see_cell(pos(), p, LOS_DEFAULT));
+    los_type lt = LOS_DEFAULT;
+    if (crawl_state.game_is_arena() && this == &you)
+        lt = LOS_ARENA;
+    return (cell_see_cell(pos(), p, lt));
 }
 
 bool actor::can_see(const actor *target) const
@@ -35,7 +38,8 @@ bool player::trans_wall_blocking(const coord_def &p) const
 
 const los_base* actor::get_los()
 {
-    los = los_glob(pos(), LOS_DEFAULT);
+    los = los_glob(pos(), crawl_state.game_is_arena()
+                          ? LOS_ARENA : LOS_DEFAULT);
     return (&los);
 }
 
@@ -46,12 +50,6 @@ const los_base* actor::get_los_no_trans()
 }
 
 // Player LOS overrides for arena.
-
-void player::set_arena_los(const coord_def& c)
-{
-    // XXX: update
-}
-
 bool player::can_see(const actor* a) const
 {
     if (crawl_state.game_is_arena() || crawl_state.arena_suspended)
