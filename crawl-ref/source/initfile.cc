@@ -2343,7 +2343,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else BOOL_OPTION(random_pick);
     else BOOL_OPTION(good_random);
+#if !defined(DGAMELAUNCH) || defined(DGL_REMEMBER_NAME)
     else BOOL_OPTION(remember_name);
+#endif
+#ifndef DGAMELAUNCH
 #ifndef SAVE_DIR_PATH
     else if (key == "save_dir")
     {
@@ -2352,15 +2355,16 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         save_dir = field;
     }
 #endif
-    else BOOL_OPTION(show_gold_turns);
-#ifndef USE_TILE
-    else BOOL_OPTION(show_beam);
-#endif
 #ifndef SAVE_DIR_PATH
     else if (key == "morgue_dir")
     {
         morgue_dir = field;
     }
+#endif
+#endif
+    else BOOL_OPTION(show_gold_turns);
+#ifndef USE_TILE
+    else BOOL_OPTION(show_beam);
 #endif
     else if (key == "hp_warning")
     {
@@ -2402,6 +2406,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                      field.c_str() );
         }
     }
+#ifndef DGAMELAUNCH
     // If DATA_DIR_PATH is set, don't set crawl_dir from .crawlrc.
 #ifndef DATA_DIR_PATH
     else if (key == "crawl_dir")
@@ -2414,6 +2419,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         macro_dir = field;
     }
+#endif
 #endif
     else if (key == "species" || key == "race")
     {
@@ -2611,10 +2617,12 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else BOOL_OPTION(autoinscribe_artefacts);
     else BOOL_OPTION(autoinscribe_cursed);
+#ifndef DGAMELAUNCH
     else if (key == "map_file_name")
     {
         map_file_name = field;
     }
+#endif
     else if (key == "hp_colour" || key == "hp_color")
     {
         hp_colour.clear();
