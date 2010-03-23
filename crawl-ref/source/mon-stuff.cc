@@ -1994,7 +1994,7 @@ int monster_die(monsters *monster, killer_type killer,
     monster_cleanup(monster);
 
     // Force redraw for monsters that die.
-    if (you.see_cell(mwhere))
+    if (in_bounds(mwhere) && you.see_cell(mwhere))
     {
         view_update_at(mwhere);
         update_screen();
