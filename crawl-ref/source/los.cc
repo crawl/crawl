@@ -126,10 +126,14 @@ void clear_rays_on_exit()
 // Pre-squared LOS radius.
 int _los_radius_sq = LOS_RADIUS_SQ;
 
+static void _handle_los_change();
+
 void set_los_radius(int r)
 {
     ASSERT(r <= LOS_MAX_RADIUS);
     _los_radius_sq = r * r + 1;
+    invalidate_los();
+    _handle_los_change();
 }
 
 // XXX: just for monster_los
