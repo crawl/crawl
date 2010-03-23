@@ -467,6 +467,9 @@ public:
         for (size_t i = 0; i < lines.size(); ++i)
             out_line(lines[i], i);
         place_cursor();
+#ifdef USE_TILE
+        tiles.set_need_redraw();
+#endif
     }
 
     // temporary: to be overwritten with next item, e.g. new turn
