@@ -2901,9 +2901,9 @@ bool mons_is_safe(const monsters *mon, const bool want_move,
 
         bool result = is_safe;
 
-        monster_info *mi = new monster_info(mon, true);
+        monster_info mi(mon, true);
         if (clua.callfn("ch_mon_is_safe", "Ibbd>b",
-                        mi, is_safe, moving, dist,
+                        &mi, is_safe, moving, dist,
                         &result))
         {
             is_safe = result;
