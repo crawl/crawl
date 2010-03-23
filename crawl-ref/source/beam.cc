@@ -724,6 +724,9 @@ void bolt::draw(const coord_def& p)
 
     const coord_def drawpos = grid2view(p);
 
+    if (!in_los_bounds(drawpos))
+        return;
+
 #ifdef USE_TILE
     if (tile_beam == -1)
     {
@@ -733,28 +736,18 @@ void bolt::draw(const coord_def& p)
             tile_beam = tileidx_zap(ETC_MAGIC);
     }
 
-    if (tile_beam != -1 && in_los_bounds(drawpos))
-    {
+    if (tile_beam != -1)
         tiles.add_overlay(p, tile_beam);
-        delay(draw_delay);
-    }
-    else
+#else
+    cgotoxy(drawpos.x, drawpos.y);
+    put_colour_ch(colour == BLACK ? random_colour()
+                                  : element_colour(colour),
+                  glyph);
+
+    // Get curses to update the screen so we can see the beam.
+    update_screen();
 #endif
-    {
-        // bounds check
-        if (in_los_bounds(drawpos))
-        {
-#ifndef USE_TILE
-            cgotoxy(drawpos.x, drawpos.y);
-            put_colour_ch(colour == BLACK ? random_colour()
-                                          : element_colour(colour),
-                          glyph);
-#endif
-            // Get curses to update the screen so we can see the beam.
-            update_screen();
-            delay(draw_delay);
-        }
-    }
+    delay(draw_delay);
 }
 
 // Bounce a bolt off a solid feature.
