@@ -89,8 +89,8 @@ LUAFN(mi_get_monster_at)
     monsters* m = &env.mons[env.mgrid(p)];
     if (!m->visible_to(&you))
         return (0);
-    monster_info *mi = new monster_info(m);
-    lua_push_moninf(ls, mi);
+    monster_info mi(m);
+    lua_push_moninf(ls, &mi);
     return (1);
 }
 
