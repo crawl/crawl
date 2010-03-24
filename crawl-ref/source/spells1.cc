@@ -931,7 +931,7 @@ bool cast_divine_vigour()
         const int old_mp_max = you.max_magic_points;
         you.attribute[ATTR_DIVINE_VIGOUR] = vigour_amt;
         you.set_duration(DUR_DIVINE_VIGOUR,
-                         40 + (you.skills[SK_INVOCATIONS*5])/2);
+                         40 + (you.skills[SK_INVOCATIONS]*5)/2);
 
         calc_hp();
         inc_hp(you.hp_max - old_hp_max, false);
