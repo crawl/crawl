@@ -367,15 +367,9 @@ bool TilesFramework::initialise()
     m_region_mem  = new MemoriseRegion(&m_image, m_fonts[lbl_font].font,
                                        TILE_X, TILE_Y);
 
-    m_region_tab->set_tab_region(TAB_ITEM, m_region_inv,
-                                 TILEG_TAB_ITEM_SELECTED,
-                                 TILEG_TAB_ITEM_UNSELECTED);
-    m_region_tab->set_tab_region(TAB_SPELL, m_region_spl,
-                                 TILEG_TAB_SPELL_SELECTED,
-                                 TILEG_TAB_SPELL_UNSELECTED);
-    m_region_tab->set_tab_region(TAB_MEMORISE, m_region_mem,
-                                 TILEG_TAB_MEMORISE_SELECTED,
-                                 TILEG_TAB_MEMORISE_UNSELECTED);
+    m_region_tab->set_tab_region(TAB_ITEM, m_region_inv, TILEG_TAB_ITEM);
+    m_region_tab->set_tab_region(TAB_SPELL, m_region_spl, TILEG_TAB_SPELL);
+    m_region_tab->set_tab_region(TAB_MEMORISE, m_region_mem, TILEG_TAB_MEMORISE);
 
     switch (Options.tile_display)
     {
