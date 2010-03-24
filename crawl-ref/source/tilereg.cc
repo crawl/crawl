@@ -3709,7 +3709,8 @@ TabbedRegion::TabbedRegion(ImageManager *im, FTFont *tag_font,
                            int tile_x, int tile_y) :
     GridRegion(im, tag_font, tile_x, tile_y),
     m_active(0),
-    m_mouse_tab(-1)
+    m_mouse_tab(-1),
+    m_buf_gui(&im->m_textures[TEX_GUI])
 {
 
 }
@@ -3718,20 +3719,18 @@ TabbedRegion::~TabbedRegion()
 {
 }
 
-void TabbedRegion::set_tab_region(int idx, GridRegion *reg, int tile_sel,
-                                  int tile_unsel)
+void TabbedRegion::set_tab_region(int idx, GridRegion *reg, int tile_tab)
 {
     ASSERT(idx >= 0);
     ASSERT(idx >= (int)m_tabs.size() || !m_tabs[idx].reg);
+    ASSERT(tile_tab);
 
     for (int i = (int)m_tabs.size(); i <= idx; ++i)
     {
         TabInfo inf;
         inf.reg = NULL;
-        inf.tile_sel = 0;
-        inf.tile_unsel = 0;
-        inf.offset_sel = 0;
-        inf.offset_unsel = 0;
+        inf.tile_tab = 0;
+        inf.ofs_y = 0;
         inf.min_y = 0;
         inf.max_y = 0;
         m_tabs.push_back(inf);
@@ -3745,19 +3744,21 @@ void TabbedRegion::set_tab_region(int idx, GridRegion *reg, int tile_sel,
         start_y = std::max(m_tabs[i].max_y + 1, start_y);
     }
 
-    const tile_info &inf_sel = tile_gui_info(tile_sel);
-    ox = std::max((int)inf_sel.width, ox);
-    const tile_info &inf_unsel = tile_gui_info(tile_unsel);
-    ox = std::max((int)inf_sel.width, ox);
+    const tile_info &inf = tile_gui_info(tile_tab);
+    int max_height = inf.height;
+    ox = std::max((int)inf.width, ox);
 
-    int max_height = std::max(inf_sel.height, inf_unsel.height);
+    // All tabs should be the same size.
+    for (int i = 1; i < TAB_OFS_MAX; ++i)
+    {
+        const tile_info &inf_other = tile_gui_info(tile_tab + i);
+        assert(inf_other.height == inf.height);
+        assert(inf_other.width == inf.width);
+    }
 
     ASSERT((int)m_tabs.size() > idx);
     m_tabs[idx].reg = reg;
-    m_tabs[idx].tile_sel = tile_sel;
-    m_tabs[idx].tile_unsel = tile_unsel;
-    m_tabs[idx].offset_sel = start_y + max_height - inf_sel.height;
-    m_tabs[idx].offset_unsel = start_y + max_height - inf_unsel.height;
+    m_tabs[idx].tile_tab = tile_tab;
     m_tabs[idx].min_y = start_y;
     m_tabs[idx].max_y = start_y + max_height;
 
@@ -3830,19 +3831,22 @@ void TabbedRegion::clear()
 
 void TabbedRegion::pack_buffers()
 {
-    m_buf_spells.clear();
+    m_buf_gui.clear();
 
     for (int i = 0; i < (int)m_tabs.size(); ++i)
     {
-        int tileidx = (i == m_active) ? m_tabs[i].tile_sel
-                                      : m_tabs[i].tile_unsel;
-        int offset_y = (i == m_active) ? m_tabs[i].offset_sel
-                                       : m_tabs[i].offset_unsel;
-        if (!tileidx)
-            continue;
+        int ofs;
+        if (m_active == i)
+            ofs = TAB_OFS_SELECTED;
+        else if (m_mouse_tab == i)
+            ofs = TAB_OFS_MOUSEOVER;
+        else
+            ofs = TAB_OFS_UNSELECTED;
 
+        int tileidx = m_tabs[i].tile_tab + ofs;
         const tile_info &inf = tile_gui_info(tileidx);
-        m_buf_spells.add(tileidx, 0, 0, -inf.width, offset_y, false);
+        int offset_y = m_tabs[i].min_y;
+        m_buf_gui.add(tileidx, 0, 0, -inf.width, offset_y, false);
     }
 }
 
@@ -3864,7 +3868,7 @@ void TabbedRegion::render()
     cprintf("rendering TabbedRegion\n");
 #endif
     set_transform();
-    m_buf_spells.draw();
+    m_buf_gui.draw();
 
     m_tabs[m_active].reg->render();
 
@@ -3923,6 +3927,7 @@ int TabbedRegion::handle_mouse(MouseEvent &event)
     if (mouse_tab != m_mouse_tab)
     {
         m_mouse_tab = mouse_tab;
+        m_dirty = true;
         tiles.set_need_redraw();
     }
 

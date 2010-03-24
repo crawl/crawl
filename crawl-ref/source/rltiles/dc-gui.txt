@@ -16,29 +16,44 @@ dc-misc/error ERROR
 %rim 0
 %sdir gui
 
+# Each tab needs to have an unselected, mouseover, and selected image, in that
+# order.  All three of those images must be the same size.
+
+%start
+%compose tab_unselected
+%compose tab_label_item
+%finish TAB_ITEM
+%start
+%compose tab_mouseover
+%compose tab_label_item
+%finish
 %start
 %compose tab_selected
 %compose tab_label_item
-%finish TAB_ITEM_SELECTED
-%start
-%compose tab_unselected
-%compose tab_label_item
-%finish TAB_ITEM_UNSELECTED
+%finish
 
-%start
-%compose tab_selected
-%compose tab_label_spell
-%finish TAB_SPELL_SELECTED
 %start
 %compose tab_unselected
 %compose tab_label_spell
-%finish TAB_SPELL_UNSELECTED
-
+%finish TAB_SPELL
+%start
+%compose tab_mouseover
+%compose tab_label_spell
+%finish
 %start
 %compose tab_selected
-%compose tab_label_memorise
-%finish TAB_MEMORISE_SELECTED
+%compose tab_label_spell
+%finish
+
 %start
 %compose tab_unselected
 %compose tab_label_memorise
-%finish TAB_MEMORISE_UNSELECTED
+%finish TAB_MEMORISE
+%start
+%compose tab_mouseover
+%compose tab_label_memorise
+%finish
+%start
+%compose tab_selected
+%compose tab_label_memorise
+%finish

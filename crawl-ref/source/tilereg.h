@@ -441,7 +441,15 @@ public:
 
     virtual ~TabbedRegion();
 
-    void set_tab_region(int idx, GridRegion *reg, int tile_sel, int tile_unsel);
+    enum
+    {
+        TAB_OFS_UNSELECTED,
+        TAB_OFS_MOUSEOVER,
+        TAB_OFS_SELECTED,
+        TAB_OFS_MAX
+    };
+
+    void set_tab_region(int idx, GridRegion *reg, int tile_tab);
     GridRegion *get_tab_region(int idx);
     void activate_tab(int idx);
     int active_tab() const;
@@ -474,10 +482,8 @@ protected:
     struct TabInfo
     {
         GridRegion *reg;
-        int tile_sel;
-        int tile_unsel;
-        int offset_sel;
-        int offset_unsel;
+        int tile_tab;
+        int ofs_y;
         int min_y;
         int max_y;
     };
