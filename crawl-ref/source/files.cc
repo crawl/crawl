@@ -1275,7 +1275,8 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
 #endif
 
     const bool make_changes =
-        (load_mode != LOAD_RESTART_GAME && load_mode != LOAD_VISITOR);
+        (load_mode != LOAD_RESTART_GAME && load_mode != LOAD_VISITOR
+         && load_mode != LOAD_RETURN);
 
     bool just_created_level = false;
 
