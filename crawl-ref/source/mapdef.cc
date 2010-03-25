@@ -2307,7 +2307,7 @@ std::string map_def::validate_temple_map()
         }
 
         if (temple_tag.empty())
-            return make_stringf("Unkown temple tag.");
+            return make_stringf("Unknown temple tag.");
 
         temple_tag = strip_tag_prefix(temple_tag, "temple_overflow_");
 
