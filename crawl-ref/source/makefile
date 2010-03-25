@@ -850,6 +850,9 @@ $(UTIL)levcomp.tab.h: $(UTIL)levcomp.tab.cc
 
 else
 
+prebuildyacc:
+		@echo "**** yacc is not installed, aborting."; false
+
 # Pull the level-compiler stuff up from prebuilt/
 
 $(UTIL)levcomp.tab.cc: prebuilt/levcomp.tab.cc
