@@ -2059,6 +2059,13 @@ cset_ascii, cset_ibm, cset_dec, cset_unicode, cset_any
         by the char_set option). The syntax is the same for all of
         these; cset_any changes characters in all character sets.
 
+        * cset_ascii is limited to 7-bit characters only; these always work.
+        * cset_ibm stands for legacy CP437.  Unlikely to work unless you
+          manually select this encoding.
+        * cset_dec uses VT100 line-drawing characters.
+        * cset_unicode means UTF-8.  Ubiquitous on modern systems save for
+          Windows.
+
 cset_XXX = <dungeon_character_name : symbol>
         a list of these is allowed, as well.
 
