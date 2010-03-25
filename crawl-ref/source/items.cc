@@ -2873,13 +2873,9 @@ equipment_type item_equip_slot(const item_def& item)
 // Includes melded items.
 bool item_is_equipped(const item_def &item, bool quiver_too)
 {
-    if (item_equip_slot(item) != EQ_NONE)
-        return (true);
-
-    if (quiver_too && item.link == you.m_quiver->get_fire_item())
-        return (true);
-
-    return (false);
+    return (item_equip_slot(item) != EQ_NONE
+            || quiver_too && in_inventory(item)
+               && item.link == you.m_quiver->get_fire_item());
 }
 
 bool item_is_melded(const item_def& item)
