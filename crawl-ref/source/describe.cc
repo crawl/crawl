@@ -744,8 +744,10 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
         case SPWPN_FLAMING:
             description += "It emits flame when wielded, causing extra "
                 "injury to most foes and up to double damage against "
-                "particularly susceptible opponents. Big, fiery blades "
-                "are also staple armaments of hydra-hunters.";
+                "particularly susceptible opponents.";
+            if (get_vorpal_type(item) & (DVORP_SLICING | DVORP_CHOPPING))
+                description += " Big, fiery blades are also staple armaments "
+                    "of hydra-hunters.";
             break;
         case SPWPN_FREEZING:
             description += "It has been specially enchanted to freeze "
