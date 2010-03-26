@@ -765,6 +765,7 @@ SRC_PKG_BASE  := stone_soup
 SRC_VERSION   := $(shell git describe --tags --long 2>/dev/null || cat util/release_ver)
 PKG_SRC_DIR   := $(SRC_PKG_BASE)-$(SRC_VERSION)
 SRC_PKG_TAR   := $(PKG_SRC_DIR).tar.bz2
+SRC_PKG_TAR_NODEPS := $(PKG_SRC_DIR)-nodeps.tar.bz2
 SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
 
 .PHONY: all test install clean clean-contrib distclean debug profile wizard package-source source
@@ -1062,6 +1063,8 @@ source: removeold
 	else \
 	  echo "**** No ZIP installed -- not creating the zipball."; \
 	fi
+	cd build && rm -rf $(PKG_SRC_DIR)/source/contrib \
+		 && tar cjf ../../../$(SRC_PKG_TAR_NODEPS) $(PKG_SRC_DIR)
 	rm -rf build
 
 removeold:
