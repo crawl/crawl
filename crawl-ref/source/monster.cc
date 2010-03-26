@@ -4794,6 +4794,13 @@ void monsters::timeout_enchantments(int levels)
             del_ench(i->first);
             break;
 
+        case ENCH_TIDE:
+        {
+            const int actdur = speed_to_duration(speed) * levels;
+            lose_ench_duration(i->first, actdur);
+            break;
+        }
+
         case ENCH_SLOWLY_DYING:
         {
             const int actdur = speed_to_duration(speed) * levels;
