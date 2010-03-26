@@ -395,11 +395,15 @@ endif
 endif
 
 ifndef BUILD_LUA
-  ifeq (,$(wildcard /usr/include/lua5.1))
-    BUILD_LUA = yes
-  else
+  ifneq (,$(wildcard /usr/include/lua5.1))
     INCLUDES_L += -I/usr/include/lua5.1
     LIBS += -llua5.1
+  else
+    ifneq (,$(wildcard /usr/include/lua.h))
+      LIBS += -llua
+    else
+      BUILD_LUA = yes
+    endif
   endif
 endif
 
