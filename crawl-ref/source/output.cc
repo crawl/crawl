@@ -505,7 +505,8 @@ static void _print_stats_ac(int x, int y)
 static void _print_stats_ev(int x, int y)
 {
     cgotoxy(x+4, y, GOTO_STAT);
-    textcolor(you.duration[DUR_PHASE_SHIFT] ? LIGHTBLUE : HUD_VALUE_COLOUR);
+    textcolor(you.duration[DUR_PHASE_SHIFT] || you.duration[DUR_AGILITY]
+              ? LIGHTBLUE : HUD_VALUE_COLOUR);
     cprintf( "%2d ", player_evasion() );
 }
 
@@ -1737,7 +1738,13 @@ static std::vector<formatted_string> _get_overview_stats()
     snprintf(buf, sizeof buf, "AC %2d" , you.armour_class());
     cols1.add_formatted(1, buf, false);
 
-    snprintf(buf, sizeof buf, "EV %2d" , player_evasion());
+    if (you.duration[DUR_AGILITY])
+    {
+        snprintf(buf, sizeof buf, "EV <lightblue>%2d</lightblue>",
+                 player_evasion());
+    }
+    else
+        snprintf(buf, sizeof buf, "EV %2d", player_evasion());
     cols1.add_formatted(1, buf, false);
 
     snprintf(buf, sizeof buf, "SH %2d", player_shield_class());
