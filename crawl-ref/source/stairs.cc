@@ -5,11 +5,13 @@
 #include "abyss.h"
 #include "areas.h"
 #include "branch.h"
+#include "chardump.h"
 #include "delay.h"
 #include "dgn-overview.h"
 #include "directn.h"
 #include "env.h"
 #include "files.h"
+#include "hiscores.h"
 #include "itemname.h"
 #include "items.h"
 #include "lev-pand.h"
@@ -1374,4 +1376,3 @@ void new_level(void)
     whereis_record();
 #endif
 }
-
