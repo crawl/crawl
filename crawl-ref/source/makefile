@@ -824,8 +824,8 @@ $(DOC_BASE)/aptitudes.txt: $(DOC_TEMPLATES)/apt-tmpl.txt player.cc skills2.cc \
 # The level compiler
 #
 
-$(UTIL)levcomp.tab.cc: $(CONTRIB_LIBS)
-$(UTIL)levcomp.lex.cc: $(CONTRIB_LIBS)
+$(UTIL)levcomp.tab.o: $(CONTRIB_LIBS)
+$(UTIL)levcomp.lex.o: $(CONTRIB_LIBS)
 
 ifndef NO_YACC
 
@@ -1026,15 +1026,14 @@ BSRC = build/crawl-ref/source/
 package-source: prebuildyacc
 	+@$(MAKE) source
 
-source: depend removeold
+source: removeold
 	@git branch >/dev/null 2>/dev/null || (echo You can package source only from git. && false)
 	rm -rf build
 	mkdir build
 	(cd ../..;git ls-files| \
 		grep -v -f crawl-ref/source/misc/src-pkg-excludes.lst| \
 		tar cf - -T -)|tar xf - -C build
-	cp -p *.d $(BSRC)
-	for x in lua pcre sqlite; \
+	for x in lua pcre sqlite libpng freetype sdl sdl-image zlib; \
 	  do \
 	   mkdir -p $(BSRC)contrib/$$x; \
 	   (cd contrib/$$x;git ls-files|tar cf - -T -)| \
@@ -1047,7 +1046,7 @@ source: depend removeold
 	cd build && mv crawl-ref $(PKG_SRC_DIR)
 	cd build && tar cfj ../../../$(SRC_PKG_TAR) $(PKG_SRC_DIR)
 	@if which zip >/dev/null; then \
-	  @echo "cd build && zip -rq ../../../$(SRC_PKG_ZIP) $(PKG_SRC_DIR)"; \
+	  echo "cd build && zip -rq ../../../$(SRC_PKG_ZIP) $(PKG_SRC_DIR)"; \
 	  cd build && zip -rq ../../../$(SRC_PKG_ZIP) $(PKG_SRC_DIR); \
 	else \
 	  echo "**** No ZIP installed -- not creating the zipball."; \
