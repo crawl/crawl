@@ -57,5 +57,5 @@ GreyKnight                 Shawn M Moore             Evan Williams
 Joshua Gross               Eva Myers                 Jeremey Wilson
 Brian Haase                Wille Mäntylä             Yelve Yakut
 Shayne Halvorson           Erkki Nurmi               Zooko
-Ciaran Hamilton            Mattias Nyberg
+Sophie Hamilton            Mattias Nyberg
 
