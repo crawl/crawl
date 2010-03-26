@@ -754,6 +754,15 @@ GENERATED_FILES := art-data.h $(RLTILES)/dc-unrand.txt
 GAME_DEPENDS  := $(DESTTILEFILES) $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS)
 SRC_PKG_BASE  := stone_soup
 SRC_VERSION   := $(shell git describe --tags --long 2>/dev/null || cat util/release_ver)
+
+# when making release builds, use just the bare tag
+SRC_VERSION_SHORT := $(shell git describe --tags 2>/dev/null)
+ifneq (,$(SRC_VERSION_SHORT))
+  ifeq (,$(findstring -,$(SRC_VERSION_SHORT)))
+    SRC_VERSION := $(SRC_VERSION_SHORT)
+  endif
+endif
+
 PKG_SRC_DIR   := $(SRC_PKG_BASE)-$(SRC_VERSION)
 SRC_PKG_TAR   := $(PKG_SRC_DIR).tar.bz2
 SRC_PKG_TAR_NODEPS := $(PKG_SRC_DIR)-nodeps.tar.bz2
