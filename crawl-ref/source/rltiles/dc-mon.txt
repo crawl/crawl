@@ -149,6 +149,7 @@ polar_bear MONS_POLAR_BEAR
 
 ## Cattle ('Y')
 sheep MONS_SHEEP
+black_sheep MONS_BLACK_SHEEP
 yak MONS_YAK
 death_yak MONS_DEATH_YAK
 

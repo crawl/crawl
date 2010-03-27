@@ -164,6 +164,16 @@ MAP
 .......
 ENDMAP
 
+NAME:   african_american_sheep
+DEPTH:  Shoals
+MONS:   sheep, sheep name:black name_adjective col:darkgrey tile:mons_black_sheep
+MAP
+  ....
+ ..11..
+.12.1..
+......
+ENDMAP
+
 ##############################################################################
 # Branch ends.
 # Note that the Shoals usually have a randomised end map; predrawn maps
