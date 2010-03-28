@@ -184,17 +184,6 @@ void get_input_line( char *const buff, int len )
     crawl_state.input_line_strs.push_back(buff);
 }
 
-// Hacky wrapper around getch() that returns CK_ codes for keys
-// we want to use in cancelable_get_line() and menus.
-int c_getch()
-{
-#if defined(TARGET_OS_DOS) || defined(UNIX) || (defined(TARGET_OS_WINDOWS) && !defined(USE_TILE))
-    return getch_ck();
-#else
-    return m_getch();
-#endif
-}
-
 // Wrapper around cgotoxy that can draw a fake cursor for Unix terms where
 // cursoring over darkgrey or black causes problems.
 void cursorxy(int x, int y)
@@ -453,7 +442,7 @@ int line_reader::read_line(bool clear_previous)
 
     while (true)
     {
-        int ch = getchm(c_getch);
+        int ch = getchm(getch_ck);
 
 #if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE) && defined(USE_CURSES)
         // Don't return a partial string if a HUP signal interrupted things

@@ -1249,7 +1249,7 @@ static void readkey_more(bool user_forced)
     int keypress;
     mouse_control mc(MOUSE_MODE_MORE);
     do
-        keypress = c_getch();
+        keypress = getch_ck();
     while (keypress != ' ' && keypress != '\r' && keypress != '\n'
            && keypress != ESCAPE && keypress != -1
            && (user_forced || keypress != CK_MOUSE_CLICK));

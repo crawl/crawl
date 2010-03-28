@@ -2419,7 +2419,7 @@ void inscribe_item(item_def &item, bool msgwin)
         did_prompt = true;
     }
 
-    keyin = (did_prompt ? tolower(c_getch()) : 'i');
+    keyin = (did_prompt ? tolower(getch_ck()) : 'i');
     switch (keyin)
     {
     case 'c':

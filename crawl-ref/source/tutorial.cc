@@ -156,7 +156,7 @@ bool pick_tutorial()
 
     while (true)
     {
-        char keyn = c_getch();
+        char keyn = getch_ck();
 
         // Random choice.
         if (keyn == '*' || keyn == '+' || keyn == '!' || keyn == '#')
@@ -773,7 +773,7 @@ void tut_starting_screen()
             if (i < 2)
             {
 #ifndef USE_TILE
-                ch = c_getch();
+                ch = getch_ck();
 #else
                 mouse_control mc(MOUSE_MODE_MORE);
                 ch = getchm();

@@ -1056,7 +1056,7 @@ static bool _choose_book( int slot, int firstbook, int numbooks )
             cprintf("\nWhich book? ");
             textcolor( LIGHTGREY );
 
-            keyin = c_getch();
+            keyin = getch_ck();
 
             switch (keyin)
             {
@@ -1249,7 +1249,7 @@ static bool _choose_weapon()
             cprintf("\nWhich weapon? ");
             textcolor( LIGHTGREY );
 
-            keyin = c_getch();
+            keyin = getch_ck();
 
             switch (keyin)
             {
@@ -2867,7 +2867,7 @@ spec_query:
     if (Options.race != 0)
         keyn = Options.race;
     else
-        keyn = c_getch();
+        keyn = getch_ck();
 
     bool good_random = false;
     switch (keyn)
@@ -3114,7 +3114,7 @@ job_query:
     if (Options.cls != 0)
         keyn = Options.cls;
     else
-        keyn = c_getch();
+        keyn = getch_ck();
 
     bool good_random = false;
     switch (keyn)
@@ -3415,7 +3415,7 @@ static bool _choose_wand()
             cprintf("\nWhich tool? ");
             textcolor( LIGHTGREY );
 
-            keyin = c_getch();
+            keyin = getch_ck();
 
             switch (keyin)
             {
@@ -3733,7 +3733,7 @@ bool _give_items_skills()
 
                 do
                 {
-                    keyn = c_getch();
+                    keyn = getch_ck();
 
                     switch (keyn)
                     {
@@ -3912,7 +3912,7 @@ bool _give_items_skills()
 
             do
             {
-                keyn = c_getch();
+                keyn = getch_ck();
 
                 switch (keyn)
                 {
@@ -4101,7 +4101,7 @@ bool _give_items_skills()
 
             do
             {
-                keyn = c_getch();
+                keyn = getch_ck();
 
                 switch (keyn)
                 {
