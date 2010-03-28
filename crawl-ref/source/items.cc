@@ -2507,9 +2507,8 @@ static bool _interesting_explore_pickup(const item_def& item)
     if (!(Options.explore_stop & ES_GREEDY_PICKUP_MASK))
         return (false);
 
-    // Gold is boring.
     if (item.base_type == OBJ_GOLD)
-        return (false);
+        return (Options.explore_stop & ES_GREEDY_PICKUP_GOLD);
 
     if ((Options.explore_stop & ES_GREEDY_PICKUP_THROWN)
         && (item.flags & ISFLAG_THROWN))

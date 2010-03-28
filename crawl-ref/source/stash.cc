@@ -1232,6 +1232,12 @@ bool LevelStashes::needs_visit(const coord_def& c) const
     return (shop_needs_visit(c));
 }
 
+bool LevelStashes::unverified_stash(const coord_def &c) const
+{
+    const Stash *s = find_stash(c);
+    return (s && s->unverified());
+}
+
 ShopInfo &LevelStashes::get_shop(const coord_def& c)
 {
     for (unsigned i = 0; i < m_shops.size(); ++i)

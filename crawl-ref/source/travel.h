@@ -155,21 +155,48 @@ extern travel_distance_grid_t travel_point_distance;
 
 enum explore_stop_type
 {
-    ES_NONE                 = 0x000,
-    ES_ITEM                 = 0x001,
-    ES_GREEDY_PICKUP        = 0x002,
-    ES_GREEDY_PICKUP_SMART  = 0x004,
-    ES_GREEDY_PICKUP_THROWN = 0x008,
-    ES_GREEDY_PICKUP_MASK   = (ES_GREEDY_PICKUP | ES_GREEDY_PICKUP_SMART
-                               | ES_GREEDY_PICKUP_THROWN),
-    ES_GREEDY_ITEM          = 0x010,
-    ES_STAIR                = 0x020,
-    ES_SHOP                 = 0x040,
-    ES_ALTAR                = 0x080,
-    ES_PORTAL               = 0x100,
-    ES_GLOWING_ITEM         = 0x200,
-    ES_ARTEFACT             = 0x400,
-    ES_RUNE                 = 0x800
+    ES_NONE                      = 0x0000,
+
+    // Explored into view of an item that is NOT eligible for autopickup.
+    ES_ITEM                      = 0x0001,
+
+    // Picked up an item during greedy explore; will stop for anything
+    // that's not explicitly ignored and that is not gold.
+    ES_GREEDY_PICKUP             = 0x0002,
+
+    // Stop when picking up gold with greedy explore.
+    ES_GREEDY_PICKUP_GOLD        = 0x0004,
+
+    // Picked up an item during greedy explore, ignoring items that were
+    // thrown by the PC, and items that the player already has one of in
+    // inventory, or a bunch of other conditions (see
+    // _interesting_explore_pickup in items.cc)
+    ES_GREEDY_PICKUP_SMART       = 0x0008,
+
+    // Greedy-picked up an item previously thrown by the PC.
+    ES_GREEDY_PICKUP_THROWN      = 0x0010,
+    ES_GREEDY_PICKUP_MASK        = (ES_GREEDY_PICKUP
+                                    | ES_GREEDY_PICKUP_GOLD
+                                    | ES_GREEDY_PICKUP_SMART
+                                    | ES_GREEDY_PICKUP_THROWN),
+
+    // Explored into view of an item eligible for autopickup.
+    ES_GREEDY_ITEM               = 0x0020,
+
+    // Stepped onto a stack of items that was previously unknown to
+    // the player (for instance, when stepping onto the heap of items
+    // of a freshly killed monster).
+    ES_GREEDY_VISITED_ITEM_STACK = 0x0040,
+
+    // Explored into view of a stair, shop, altar, portal, glowing
+    // item, or artefact.
+    ES_STAIR                     = 0x0080,
+    ES_SHOP                      = 0x0100,
+    ES_ALTAR                     = 0x0200,
+    ES_PORTAL                    = 0x0400,
+    ES_GLOWING_ITEM              = 0x0800,
+    ES_ARTEFACT                  = 0x1000,
+    ES_RUNE                      = 0x2000
 };
 
 ////////////////////////////////////////////////////////////////////////////

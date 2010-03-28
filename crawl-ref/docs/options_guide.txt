@@ -823,7 +823,8 @@ explore_greedy = true
         you're temporarily unable to pick up items (from uncontrolled
         levitation, for instance).
 
-explore_stop = items,greedy_pickup,stairs,shops,altars,gates
+explore_stop  = items,greedy_pickup,stairs,shops,altars,gates,
+explore_stop += greedy_visited_item_stack
         Explore will stop for one of these conditions. Whatever you
         set this option to, anything that stops travel will also stop
         explore. Multiple explore_stop lines are cumulative if you use
@@ -848,6 +849,9 @@ explore_stop = items,greedy_pickup,stairs,shops,altars,gates
             items thrown/fired by the player.  You can make certain items
             *not* trigger this with the option explore_stop_pickup_ignore
 
+        greedy_pickup_gold: stop when automatically picking up gold during
+            greedy explore.
+
         greedy_pickup_smart: Similar to greedy_pickup, but tries to be
             smart about it, meaning only stopping for items which aren't
             similar to any you already have in your inventory.  It
@@ -859,6 +863,10 @@ explore_stop = items,greedy_pickup,stairs,shops,altars,gates
             thrown/fired.   greedy_pickup automatically does this, but
             greedy_pickup_smart does not.  explore_stop_pickup_ignore
             does not affect this condition.
+
+        greedy_visited_item_stack: Stop when visiting a stack of items
+            previously unknown to the player, even if the stack contains
+            nothing eligible for autopickup.
 
         glowing_items: like items, but only for items which are
             glowing/runed/embroidered/etc.

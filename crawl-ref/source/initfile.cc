@@ -768,8 +768,9 @@ void game_options::reset_options()
 
     stash_tracking         = STM_ALL;
 
-    explore_stop           = ES_ITEM | ES_STAIR | ES_PORTAL | ES_SHOP
-                                     | ES_ALTAR | ES_GREEDY_PICKUP;
+    explore_stop           = (ES_ITEM | ES_STAIR | ES_PORTAL | ES_SHOP
+                              | ES_ALTAR | ES_GREEDY_PICKUP
+                              | ES_GREEDY_VISITED_ITEM_STACK);
 
     // The prompt conditions will be combined into explore_stop after
     // reading options.
@@ -1628,14 +1629,16 @@ int game_options::read_explore_stop_conditions(const std::string &field) const
     std::vector<std::string> stops = split_string(",", field);
     for (int i = 0, count = stops.size(); i < count; ++i)
     {
-        const std::string &c = stops[i];
+        const std::string c = replace_all_of(stops[i], " ", "_");
         if (c == "item" || c == "items")
             conditions |= ES_ITEM;
-        else if (c == "greedy_pickup" || c == "greedy pickup")
+        else if (c == "greedy_pickup")
             conditions |= ES_GREEDY_PICKUP;
-        else if (c == "greedy_pickup_smart" || c == "greedy pickup smart")
+        else if (c == "greedy_pickup_gold")
+            conditions |= ES_GREEDY_PICKUP_GOLD;
+        else if (c == "greedy_pickup_smart")
             conditions |= ES_GREEDY_PICKUP_SMART;
-        else if (c == "greedy_pickup_thrown" || c == "greedy pickup thrown")
+        else if (c == "greedy_pickup_thrown")
             conditions |= ES_GREEDY_PICKUP_THROWN;
         else if (c == "shop" || c == "shops")
             conditions |= ES_SHOP;
@@ -1645,6 +1648,8 @@ int game_options::read_explore_stop_conditions(const std::string &field) const
             conditions |= ES_ALTAR;
         else if (c == "greedy_item" || c == "greedy_items")
             conditions |= ES_GREEDY_ITEM;
+        else if (c == "greedy_visited_item_stack")
+            conditions |= ES_GREEDY_VISITED_ITEM_STACK;
         else if (c == "glowing" || c == "glowing_item"
                  || c == "glowing_items")
             conditions |= ES_GLOWING_ITEM;
