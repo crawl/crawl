@@ -528,6 +528,9 @@ bool is_processing_macro()
  */
 static void macro_buf_apply_command_macro()
 {
+    if (macro_keys_left > 0)
+        return;
+
     keyseq tmp = Buffer;
 
     // find the longest match from the start of the buffer and replace it
@@ -541,15 +544,9 @@ static void macro_buf_apply_command_macro()
 
             // Found macro, remove match from front:
             for (unsigned int i = 0; i < tmp.size(); i++)
-            {
                 Buffer.pop_front();
-                if (macro_keys_left >= 0)
-                    macro_keys_left--;
-            }
 
-            if (macro_keys_left == -1)
-                macro_keys_left = 0;
-            macro_keys_left += result.size();
+            macro_keys_left = result.size();
 
             macro_buf_add(result, true);
 
