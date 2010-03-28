@@ -41,11 +41,7 @@ class circle_iterator;
 /*
  * Circles of different shapes; see circle_type for these.
  *
- * Warnings: 1. Distinguishes between circles within map bounds
- * depending on whether origin is set:
- *        origin == (0,0): map_bounds not checked
- *        origin != (0,0): map_bounds checked
- * 2. radius/radius_sq don't have meaning when los_radius is set.
+ * radius/radius_sq don't have meaning when los_radius is set.
  */
 class circle_def
 {
@@ -55,16 +51,22 @@ class circle_def
     shape_type shape;
 
     coord_def origin;
+
+    // Check against map bounds for containment?
+    bool check_bounds;
+
     int radius;
     int radius_sq;
     rect_def bbox;
 
 public:
     // Circle around (0,0) with radius that tracks global LOS radius.
+    // No bounds checking.
     circle_def();
     // Circle around origin with shape of given circle.
     circle_def(const coord_def &origin_, const circle_def &bds);
     // Circle around (0,0) of specified shape and size.
+    // No bounds checking.
     explicit circle_def(int param, circle_type ctype = C_SQUARE);
     // Circle around given origin of specified shape and size.
     circle_def(const coord_def &origin_, int param, circle_type ctype = C_SQUARE);
