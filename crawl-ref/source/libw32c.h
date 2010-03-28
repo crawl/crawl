@@ -37,7 +37,6 @@ void putch(char c);
 void putwch(unsigned c);
 int getch(void);
 int getch_ck(void);
-int getche(void);
 int kbhit(void);
 void delay(int ms);
 void textbackground(int c);

@@ -839,23 +839,6 @@ int getch(void)
     return key_to_command( c );
 }
 
-int getche(void)
-{
-    // turn buffering off temporarily
-    const bool oldValue = buffering;
-    set_buffering(false);
-
-    int val = getch();
-
-    if (val != 0)
-        putch(val);
-
-    // restore buffering value
-    set_buffering(oldValue);
-
-    return val;
-}
-
 int kbhit()
 {
     INPUT_RECORD ir[10];
