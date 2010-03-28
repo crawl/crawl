@@ -236,6 +236,10 @@ public:
     bool  needs_visit(const coord_def& c) const;
     bool  shop_needs_visit(const coord_def& c) const;
 
+    // Returns true if the items at c are not fully known to the stash-tracker
+    // and can be updated if the character steps on the square.
+    bool  unverified_stash(const coord_def &c) const;
+
     // Add stash at (x,y), or player's current location if no parameters are
     // supplied
     void  add_stash(int x = -1, int y = -1);

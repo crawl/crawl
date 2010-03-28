@@ -949,6 +949,27 @@ command_type travel()
             prev_travel_index = !prev_travel_index;
         }
 
+        // Stop greedy explore when visiting an unverified stash.
+        if ((*move_x || *move_y)
+            && you.running == RMODE_EXPLORE_GREEDY
+            && (Options.explore_stop & ES_GREEDY_VISITED_ITEM_STACK))
+        {
+            const coord_def newpos = you.pos() + coord_def(*move_x, *move_y);
+            if (newpos == you.running.pos)
+            {
+                const LevelStashes *lev = StashTrack.find_current_level();
+                if (lev && lev->unverified_stash(newpos))
+                {
+                    if (prompt_stop_explore(ES_GREEDY_VISITED_ITEM_STACK))
+                    {
+                        explore_stopped_pos = newpos;
+                        stop_running();
+                    }
+                    return direction_to_command( *move_x, *move_y );
+                }
+            }
+        }
+
         if (!*move_x && !*move_y)
         {
             // If we've reached the square we were traveling towards, travel
