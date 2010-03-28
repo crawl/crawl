@@ -678,16 +678,6 @@ int putwch(unsigned chr)
 #endif
 }
 
-char getche()
-{
-    char chr;
-
-    chr = getch();
-    addch(chr);
-    return (chr);
-}
-
-
 int window(int x1, int y1, int x2, int y2)
 {
     x1 = y1 = x2 = y2 = 0;      /* Do something to them.. makes gcc happy :) */

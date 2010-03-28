@@ -21,8 +21,6 @@ typedef unsigned short screen_buffer_t;
 
 #include <stdio.h>
 
-char getche(void);
-
 int get_number_of_lines();
 int get_number_of_cols();
 
