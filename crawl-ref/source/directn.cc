@@ -927,8 +927,8 @@ void full_describe_view()
             {
                 _describe_monster(m);
 
-                if (getch() == 0)
-                    getch();
+                if (getchm() == 0)
+                    getchm();
             }
         }
         else if (quant == 2)

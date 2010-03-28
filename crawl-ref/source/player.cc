@@ -3287,7 +3287,7 @@ static void _attribute_increase()
 
     while (true)
     {
-        const int keyin = getch();
+        const int keyin = getchm();
 
         switch (keyin)
         {

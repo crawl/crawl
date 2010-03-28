@@ -305,10 +305,10 @@ void untag_followers()
 unsigned char get_ch()
 {
     mouse_control mc(MOUSE_MODE_MORE);
-    unsigned char gotched = getch();
+    unsigned char gotched = getchm();
 
     if (gotched == 0)
-        gotched = getch();
+        gotched = getchm();
 
     return gotched;
 }
@@ -460,7 +460,7 @@ void print_error_screen(const char *message, ...)
     // And finally output the message.
     clrscr();
     formatted_string::parse_string(error_msg, false).display();
-    getch();
+    getchm();
 }
 
 void redraw_screen(void)

@@ -478,7 +478,7 @@ static bool _in_a_shop( int shopidx, int &num_in_list )
         textcolor(LIGHTGREY);
 
         mouse_control mc(MOUSE_MODE_MORE);
-        int key = getch();
+        int key = getchm();
 
         if (key == '\\')
         {
@@ -2667,8 +2667,8 @@ void ShoppingList::display()
 
                 print_description(info);
 
-                if (getch() == 0)
-                    getch();
+                if (getchm() == 0)
+                    getchm();
             }
         }
         else if (shopmenu.menu_action == Menu::ACT_MISC)

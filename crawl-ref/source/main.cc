@@ -679,7 +679,7 @@ static void _handle_wizard_command(void)
     {
         mpr("Enter Wizard Command (? - help): ", MSGCH_PROMPT);
         cursor_control con(true);
-        wiz_command = getch();
+        wiz_command = getchm();
     }
 
     if (crawl_state.cmd_repeat_start)

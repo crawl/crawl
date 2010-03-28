@@ -1533,7 +1533,7 @@ static void _display_vampire_attributes()
     vp_props.display();
 
     mouse_control mc(MOUSE_MODE_MORE);
-    const int keyin = getch();
+    const int keyin = getchm();
     if (keyin == '!' || keyin == CK_MOUSE_CMD)
         display_mutations();
 }
@@ -1549,7 +1549,7 @@ void display_mutations()
     {
         mutation_fs.display();
         mouse_control mc(MOUSE_MODE_MORE);
-        const int keyin = getch();
+        const int keyin = getchm();
         if (keyin == '!' || keyin == CK_MOUSE_CMD)
             _display_vampire_attributes();
     }

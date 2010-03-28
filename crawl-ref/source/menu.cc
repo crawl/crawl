@@ -325,7 +325,7 @@ void Menu::do_menu()
         int keyin = getchm(KMC_MENU, c_getch);
 #else
         mouse_control mc(MOUSE_MODE_MORE);
-        int keyin = getch();
+        int keyin = getchm();
 #endif
 
         if (!process_key( keyin ))

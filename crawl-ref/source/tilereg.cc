@@ -5072,7 +5072,7 @@ void TitleRegion::render()
 void TitleRegion::run()
 {
     mouse_control mc(MOUSE_MODE_MORE);
-    getch();
+    getchm();
 }
 
 /**

@@ -3717,7 +3717,7 @@ static int _prompt_ring_to_remove(int new_ring)
     mouse_control mc(MOUSE_MODE_MORE);
     int c;
     do
-        c = getch();
+        c = getchm();
     while (c != lslot && c != rslot && c != '<' && c != '>'
            && c != ESCAPE && c != ' ');
 

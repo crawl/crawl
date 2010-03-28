@@ -825,7 +825,7 @@ namespace arena
             {
                 if (kbhit())
                 {
-                    const int ch = getch();
+                    const int ch = getchm();
                     handle_keypress(ch);
                     ASSERT(crawl_state.game_is_arena() && !crawl_state.arena_suspended);
                     if (contest_canceled)
