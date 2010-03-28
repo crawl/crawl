@@ -529,6 +529,7 @@ bool direction_chooser::choose_again()
     {
         moves.isCancel = true;
         crawl_state.cancel_cmd_repeat();
+        crawl_state.cancel_cmd_again();
         return false;
     }
 
