@@ -1036,16 +1036,6 @@ void remove_key_recorder(key_recorder* recorder)
     end(1, true, "remove_key_recorder(): recorder not found\n");
 }
 
-// Add macro trigger keys to beginning of the buffer, then expand
-// them.
-void insert_macro_into_buff(const keyseq& keys)
-{
-    for (int i = (int) keys.size() - 1; i >= 0; i--)
-        macro_buf_add(keys[i], true);
-
-    macro_buf_apply_command_macro();
-}
-
 int get_macro_buf_size()
 {
     return (Buffer.size());
