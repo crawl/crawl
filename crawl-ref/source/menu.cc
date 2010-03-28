@@ -322,7 +322,7 @@ void Menu::do_menu()
     while (alive)
     {
 #ifndef USE_TILE
-        int keyin = getchm(KMC_MENU, c_getch);
+        int keyin = getchm(KMC_MENU, getch_ck);
 #else
         mouse_control mc(MOUSE_MODE_MORE);
         int keyin = getchm();

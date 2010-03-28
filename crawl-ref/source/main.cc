@@ -478,7 +478,7 @@ static void _startup_tutorial()
         << std::endl;
 
     flush_prev_message();
-    const int ch = c_getch();
+    const int ch = getch_ck();
     if (ch != ESCAPE)
         tut_starting_screen();
 }

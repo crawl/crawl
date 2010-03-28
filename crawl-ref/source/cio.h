@@ -43,10 +43,6 @@ inline void cursorxy(const coord_def& p) { cursorxy(p.x, p.y); }
 // other conversions. Defined in lib$OS.cc, not in cio.cc.
 int m_getch();
 
-// A getch() that flags mouse events and returns a consistent set of key codes
-// for all platforms for a small subset of the keys Crawl is interested in.
-int c_getch();
-
 // Converts a key to a direction key, converting keypad and other sequences
 // to vi key sequences (shifted/control key directions are also handled). Non
 // direction keys (hopefully) pass through unmangled.
