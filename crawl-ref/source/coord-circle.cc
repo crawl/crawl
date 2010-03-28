@@ -28,7 +28,7 @@ rectangle_iterator rect_def::iter() const
 }
 
 circle_def::circle_def()
-    : los_radius(true), origin(coord_def(0,0))
+    : los_radius(true), origin(coord_def(0,0)), check_bounds(false)
 {
     // Set up bounding box and shape.
     init(LOS_MAX_RADIUS, C_ROUND);
@@ -36,21 +36,22 @@ circle_def::circle_def()
 
 circle_def::circle_def(const coord_def& origin_, const circle_def& bds)
     : los_radius(bds.los_radius), shape(bds.shape),
-      origin(origin_), radius(bds.radius), radius_sq(bds.radius_sq)
+      origin(origin_), check_bounds(true),
+      radius(bds.radius), radius_sq(bds.radius_sq)
 {
     // Set up bounding box.
     init_bbox();
 }
 
 circle_def::circle_def(int param, circle_type ctype)
-    : los_radius(false), origin(coord_def(0,0))
+    : los_radius(false), origin(coord_def(0,0)), check_bounds(false)
 {
     init(param, ctype);
 }
 
 circle_def::circle_def(const coord_def &origin_, int param,
                        circle_type ctype)
-    : los_radius(false), origin(origin_)
+    : los_radius(false), origin(origin_), check_bounds(true)
 {
     init(param, ctype);
 }
@@ -85,7 +86,7 @@ void circle_def::init_bbox()
 {
     bbox = rect_def(origin - coord_def(radius, radius),
                     origin + coord_def(radius, radius));
-    if (!origin.origin())
+    if (check_bounds)
         bbox = bbox.intersect(RECT_MAP_BOUNDS);
 }
 
