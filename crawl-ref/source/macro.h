@@ -11,13 +11,6 @@
 
 #include "enum.h"
 
-#ifndef MACRO_CC
-
-#undef getch
-#define getch() getchm()
-
-#endif
-
 class key_recorder;
 typedef std::deque<int> keyseq;
 

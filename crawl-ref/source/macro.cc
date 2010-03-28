@@ -6,7 +6,6 @@
 
 /*
  * The macro-implementation works like this:
- *   - For generic game code, #define getch() getchm().
  *   - getchm() works by reading characters from an internal
  *     buffer. If none are available, new characters are read into
  *     the buffer with _getch_mul().
@@ -22,7 +21,6 @@
 
 #include "AppHdr.h"
 
-#define MACRO_CC
 #include "macro.h"
 #include "state.h"
 
