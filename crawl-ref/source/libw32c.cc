@@ -647,7 +647,7 @@ static int ck_tr[] =
     // 2, 10, 14, 8, 0, 12, 25, 11, 21 ,
 };
 
-int key_to_command( int keyin )
+static int key_to_command( int keyin )
 {
     if (keyin >= CK_UP && keyin <= CK_CTRL_PGDN)
         return ck_tr[ keyin - CK_UP ];
