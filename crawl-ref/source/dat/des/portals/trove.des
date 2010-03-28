@@ -125,8 +125,8 @@ function trove.get_trove_item(e, value, base_item)
   local wands = {
        {wand="healing",          charges=2+d(2)},               -- max 8
        {wand="hasting",          charges=2+d(2)},               -- max 8
-       {wand="cold",             charges=16},                   -- max 16
-       {wand="fire",             charges=16} }                  -- max 16
+       {wand="cold",             charges=15},                   -- max 15
+       {wand="fire",             charges=15} }                  -- max 15
 
   local potions = {
        {potion="healing",        quantity=12+d(4)+d(4)},        -- 23%
