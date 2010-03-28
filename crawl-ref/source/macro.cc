@@ -579,9 +579,6 @@ int macro_buf_get()
     if (macro_keys_left >= 0)
         macro_keys_left--;
 
-    for (int i = 0, size_i = recorders.size(); i < size_i; i++)
-        recorders[i]->add_key(key);
-
     return (key);
 }
 
@@ -657,6 +654,9 @@ static keyseq _getch_mul(int (*rgetch)() = NULL)
     // have a vague recollection of it being a kludge for conio support.
     while (kbhit() || a == 0)
         keys.push_back(a = rgetch());
+
+    for (int i = 0, size_i = recorders.size(); i < size_i; i++)
+        recorders[i]->add_keys(keys);
 
     return (keys);
 }
@@ -945,16 +945,12 @@ key_recorder::key_recorder()
     keys.clear();
 }
 
-void key_recorder::add_key(int key, bool reverse)
+void key_recorder::add_keys(const keyseq& ks, bool reverse)
 {
     if (paused)
         return;
 
-
-    if (reverse)
-        keys.push_front(key);
-    else
-        keys.push_back(key);
+    keys.insert(reverse ? keys.begin() : keys.end(), ks.begin(), ks.end());
 }
 
 void key_recorder::clear()
