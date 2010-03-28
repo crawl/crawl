@@ -9,6 +9,7 @@
 #include "wiz-you.h"
 
 #include "cio.h"
+#include "debug.h"
 #include "dbg-util.h"
 #include "food.h"
 #include "godprayer.h"
@@ -677,7 +678,7 @@ void wizard_set_stats()
     you.redraw_evasion      = true;
 }
 
-static const char* dur_names[NUM_DURATIONS] =
+static const char* dur_names[] =
 {
     "invis",
     "conf",
@@ -686,12 +687,14 @@ static const char* dur_names[NUM_DURATIONS] =
     "mesmerised",
     "haste",
     "might",
+    "brilliance",
+    "agility",
     "levitation",
     "berserker",
     "poisoning",
     "confusing touch",
     "sure blade",
-    "backlight",
+    "corona",
     "deaths door",
     "fire shield",
     "building rage",
@@ -735,11 +738,16 @@ static const char* dur_names[NUM_DURATIONS] =
     "petrified",
     "lowered mr",
     "repel stairs move",
-    "repel stairs climb"
+    "repel stairs climb",
+    "slimify",
+    "time step",
+    "icemail depleted",
+    "misled"
 };
 
 void wizard_edit_durations( void )
 {
+    COMPILE_CHECK(ARRAYSZ(dur_names) == NUM_DURATIONS, dur_names_size);
     std::vector<int> durs;
     size_t max_len = 0;
 
