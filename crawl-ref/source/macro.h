@@ -78,8 +78,6 @@ void remove_key_recorder(key_recorder* recorder);
 
 bool is_processing_macro();
 
-void insert_macro_into_buff(const keyseq& keys);
-
 int get_macro_buf_size();
 
 ///////////////////////////////////////////////////////////////
