@@ -19,24 +19,17 @@
 #endif
 
 class key_recorder;
-typedef bool (*key_recorder_callback)(key_recorder *recorder,
-                                      int &ch, bool reverse);
 typedef std::deque<int> keyseq;
 
 class key_recorder {
 public:
     bool                  paused;
     keyseq                keys;
-    keyseq                macro_trigger_keys;
-    key_recorder_callback call_back;
-    void*                 call_back_data;
 
 public:
-    key_recorder(key_recorder_callback cb      = NULL,
-                 void*                 cb_data = NULL);
+    key_recorder();
 
     void add_key(int key, bool reverse = false);
-    void remove_trigger_keys(int num_keys);
     void clear();
 };
 

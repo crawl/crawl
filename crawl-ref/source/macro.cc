@@ -939,11 +939,10 @@ bool is_synthetic_key(int key)
     }
 }
 
-key_recorder::key_recorder(key_recorder_callback cb, void* cb_data)
-    : paused(false), call_back(cb), call_back_data(cb_data)
+key_recorder::key_recorder()
+    : paused(false)
 {
     keys.clear();
-    macro_trigger_keys.clear();
 }
 
 void key_recorder::add_key(int key, bool reverse)
@@ -951,12 +950,6 @@ void key_recorder::add_key(int key, bool reverse)
     if (paused)
         return;
 
-    if (call_back)
-    {
-        // Don't record key if true
-        if ((*call_back)(this, key, reverse))
-            return;
-    }
 
     if (reverse)
         keys.push_front(key);
@@ -964,36 +957,9 @@ void key_recorder::add_key(int key, bool reverse)
         keys.push_back(key);
 }
 
-void key_recorder::remove_trigger_keys(int num_keys)
-{
-    ASSERT(num_keys >= 1);
-
-    if (paused)
-        return;
-
-    for (int i = 0; i < num_keys; i++)
-    {
-        ASSERT(keys.size() >= 1);
-
-        int key = keys[keys.size() - 1];
-
-        if (call_back)
-        {
-            // Key wasn't recorded in the first place, so no need to remove
-            // it
-            if ((*call_back)(this, key, true))
-                continue;
-        }
-
-        macro_trigger_keys.push_front(key);
-        keys.pop_back();
-    }
-}
-
 void key_recorder::clear()
 {
     keys.clear();
-    macro_trigger_keys.clear();
 }
 
 pause_all_key_recorders::pause_all_key_recorders()
