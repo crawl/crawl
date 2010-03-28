@@ -3534,7 +3534,7 @@ void TravelCache::delete_waypoint()
         mpr("Delete which waypoint? (* - delete all, Esc - exit) ",
             MSGCH_PROMPT);
 
-        int key = getch();
+        int key = getchm();
         if (key >= '0' && key <= '9')
         {
             key -= '0';

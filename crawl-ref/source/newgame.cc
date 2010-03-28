@@ -746,7 +746,7 @@ game_start:
                  you.class_name );
 
         cprintf("\nDo you want to play this combination? (ynq) [y]");
-        char c = getch();
+        char c = getchm();
         if (c == ESCAPE || tolower(c) == 'q')
             end(0);
         if (tolower(c) == 'n')
@@ -773,7 +773,7 @@ game_start:
         if (_check_saved_game())
         {
             cprintf("\nDo you really want to overwrite your old game? ");
-            char c = getch();
+            char c = getchm();
             if (c != 'Y' && c != 'y')
             {
                 textcolor( BROWN );

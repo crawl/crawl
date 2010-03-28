@@ -139,7 +139,7 @@ static int crawl_c_input_line(lua_State *ls)
     return (1);
 }
 
-LUARET1(crawl_getch, number, getch())
+LUARET1(crawl_getch, number, getchm())
 LUARET1(crawl_kbhit, number, kbhit())
 LUAWRAP(crawl_flush_input, flush_input_buffer(FLUSH_LUA))
 

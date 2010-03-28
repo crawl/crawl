@@ -336,7 +336,7 @@ void debug_list_monsters()
 void wizard_spawn_control()
 {
     mpr("(c)hange spawn rate or (s)pawn monsters? ", MSGCH_PROMPT);
-    const int c = tolower(getch());
+    const int c = tolower(getchm());
 
     char specs[256];
     bool done = false;
@@ -979,7 +979,7 @@ void wizard_make_monster_summoned(monsters* mon)
 
     mpr("Which summon type? ", MSGCH_PROMPT);
 
-    char choice = tolower(getch());
+    char choice = tolower(getchm());
 
     if (!(choice >= 'a' && choice <= 'g') && choice != 'm' && choice != 's')
     {
@@ -1327,7 +1327,7 @@ void debug_miscast( int target_index )
 void debug_ghosts()
 {
     mpr("(C)reate or (L)oad bones file?", MSGCH_PROMPT);
-    const char c = tolower(getch());
+    const char c = tolower(getchm());
 
     if (c == 'c')
         save_ghost(true);

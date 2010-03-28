@@ -776,7 +776,7 @@ void tut_starting_screen()
                 ch = c_getch();
 #else
                 mouse_control mc(MOUSE_MODE_MORE);
-                ch = getch();
+                ch = getchm();
 #endif
             }
             redraw_screen();

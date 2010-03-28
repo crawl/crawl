@@ -1513,8 +1513,8 @@ static bool _handle_FAQ()
             answer = "Q: " + getFAQ_Question(key) + "\n" + answer;
             linebreak_string2(answer, width - 1);
             print_description(answer);
-            if (getch() == 0)
-                getch();
+            if (getchm() == 0)
+                getchm();
         }
     }
 
@@ -1535,7 +1535,7 @@ static bool _find_description(bool &again, std::string& error_inout)
     int ch;
     {
         cursor_control con(true);
-        ch = toupper(getch());
+        ch = toupper(getchm());
     }
     std::string    type;
     std::string    extra;
@@ -1723,7 +1723,7 @@ static bool _find_description(bool &again, std::string& error_inout)
 
         _do_description(regex, type, footer);
 
-        if (getch() != ' ')
+        if (getchm() != ' ')
             return (false);
     }
 
@@ -1845,8 +1845,8 @@ static bool _find_description(bool &again, std::string& error_inout)
 
             if (_do_description(key, type))
             {
-                if (getch() == 0)
-                    getch();
+                if (getchm() == 0)
+                    getchm();
             }
         }
     }
@@ -1874,8 +1874,8 @@ static int _keyhelp_keyfilter(int ch)
         do
         {
             // resets 'again'
-            if (_find_description(again, error) && getch() == 0)
-                getch();
+            if (_find_description(again, error) && getchm() == 0)
+                getchm();
 
             if (again)
                 mesclr();

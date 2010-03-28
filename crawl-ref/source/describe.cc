@@ -2172,8 +2172,8 @@ void describe_feature_wide(const coord_def& pos)
     if (Tutorial.tutorial_left)
         tutorial_describe_pos(pos.x, pos.y);
 
-    if (getch() == 0)
-        getch();
+    if (getchm() == 0)
+        getchm();
 }
 
 void set_feature_desc_long(const std::string &raw_name,
@@ -2266,7 +2266,7 @@ static bool _show_item_description(const item_def &item)
 
 static bool _describe_spells(const item_def &item)
 {
-    int c = getch();
+    int c = getchm();
     if (c < 'a' || c > 'h')     //jmf: was 'g', but 8=h
     {
         mesclr();
@@ -2339,8 +2339,8 @@ bool describe_item( item_def &item, bool allow_inscribe, bool shopping )
         cgotoxy(1, wherey() + 2);
         inscribe_item(item, false);
     }
-    else if (getch() == 0)
-        getch();
+    else if (getchm() == 0)
+        getchm();
 
     return (true);
 }
@@ -2603,8 +2603,8 @@ void describe_spell(spell_type spelled, const item_def* item)
     mouse_control mc(MOUSE_MODE_MORE);
 
     char ch;
-    if ((ch = getch()) == 0)
-        ch = getch();
+    if ((ch = getchm()) == 0)
+        ch = getchm();
 
     if (can_mem && toupper(ch) == 'M')
     {
@@ -3117,8 +3117,8 @@ void describe_monsters(const monsters& mons, bool force_seen)
     if (Tutorial.tutorial_left)
         tutorial_describe_monster(&mons, has_stat_desc);
 
-    if (getch() == 0)
-        getch();
+    if (getchm() == 0)
+        getchm();
 }
 
 // Describes the current ghost's previous owner. The caller must
@@ -3618,7 +3618,7 @@ static void _detailed_god_description(god_type which_god)
 
     mouse_control mc(MOUSE_MODE_MORE);
 
-    const int keyin = getch();
+    const int keyin = getchm();
     if (keyin == '!' || keyin == CK_MOUSE_CMD)
         describe_god(which_god, true);
 }
@@ -3881,7 +3881,7 @@ void describe_god( god_type which_god, bool give_title )
         "description.").display();
 
     mouse_control mc(MOUSE_MODE_MORE);
-    const int keyin = getch();
+    const int keyin = getchm();
     if (keyin == '!' || keyin == CK_MOUSE_CMD)
         _detailed_god_description(which_god);
 }
@@ -4013,6 +4013,6 @@ void describe_skill(int skill)
     data << get_skill_description(skill, true);
 
     print_description(data.str());
-    if (getch() == 0)
-        getch();
+    if (getchm() == 0)
+        getchm();
 }
