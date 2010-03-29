@@ -504,6 +504,10 @@ static std::string _get_branches(bool display)
 // iterate through every god and display their altar's discovery state by color
 static std::string _get_altars(bool display)
 {
+    // Just wastes space for demigods.
+    if (you.species == SP_DEMIGOD)
+        return "";
+
     std::string disp;
 
     disp += "\n<green>Altars:</green>";
