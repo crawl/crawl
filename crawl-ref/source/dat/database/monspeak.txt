@@ -1195,7 +1195,7 @@ Necromancy player ghost
 
 @The_monster@ says, "Death will end your pain."
 
-@The_monster@ says @to_foe, "Don't worry, I won't let your corpse go to waste."
+@The_monster@ says @to_foe@, "Don't worry, I won't let your corpse go to waste."
 
 @The_monster@ says @to_foe@, "After I kill you, I will kill you again."
 
