@@ -549,6 +549,133 @@ protected:
     bool jump_to( int linenum );
 };
 
+/**
+ * New menu entry, perhaps merge the functionality directly to MenuEntry
+ */
+class CRTMenuEntry : public MenuEntry
+{
+public:
+    CRTMenuEntry();
+    CRTMenuEntry(const std::string& text, unsigned int x, unsigned int y, COLORS c);
+
+    virtual void select(bool flag);
+    virtual bool selected() const;
+
+    void set_highlight_colour(COLORS highlight);
+    virtual int highlight_colour() const;
+
+    std::string get_description_text();
+    void set_description_text(const std::string& desc);
+
+    // Given in unit sizes
+    void set_start_x(int x);
+    void set_start_y(int y);
+    void set_end_x(int x);
+    void set_end_y(int y);
+
+    int start_x() const;
+    int start_y() const;
+    int end_x() const;
+    int end_y() const;
+
+private:
+    // These are all in unit sizes to work properly in both console and tiles
+    int m_start_x;
+    int m_start_y;
+    int m_end_x;
+    int m_end_y;
+
+    int m_highlight_colour;
+    std::string m_description_text;
+    bool m_selected;
+};
+
+/**
+ * A menu that gives the user full control over where the entries are placed
+ * Uses and sets up the correct CRTRegion for you to use if using tiles
+ * To not lose any lines of text, before calling cprinf, please
+ * call init().
+ *
+ * Responsibilities for this menu are:
+ * processing keyboard input to move the highligth, select entries etc
+ * tiles handles mouse input part via CRTRegion
+ * redrawing (or calling tiles to redraw)
+ * returning the selected entries via a call
+ *
+ * Usage
+ * First initialize the menu with init()
+ * then feed input data to process_key() until it return true. This signifies a
+ * clear selection was made and you should call get_selected_entries() to find
+ * out if the user has made valid choices
+ *
+ * Written by Janne "felirx" Lahdenpera
+*/
+class PrecisionMenu
+{
+public:
+    // These should correspond to the available CRT types
+    enum SelectType
+    {
+        PRECISION_NOMOUSESELECT,
+        PRECISION_SINGLESELECT,
+        PRECISION_MULTISELECT,
+        PRECISION_TYPE_MAX
+    };
+
+    PrecisionMenu();
+    ~PrecisionMenu();
+
+    void init(SelectType flag, int start_x, int start_y, int end_x, int end_y);
+    void clear();
+
+    void draw_menu();
+    bool process_key(int ch);
+
+    void set_start_x(int start_x);
+    void set_start_y(int start_y);
+    void set_end_x(int end_x);
+    void set_end_y(int end_y);
+
+    void highlight_item(int index);
+    void set_description_coordinates(int x, int y);
+
+    // not const on purpose
+    std::vector<CRTMenuEntry*> get_selected_items();
+
+    bool add_item(CRTMenuEntry* item);
+
+private:
+    enum Direction{
+        UP,
+        DOWN,
+        LEFT,
+        RIGHT
+    };
+
+    bool _select_item_by_hotkey(int key);
+    bool _select_item(unsigned int index);
+    void _clear_selections();
+    int _find_item_by_direction(int begin_index, Direction dir);
+    bool _AABB_intersection(int entry_index, coord_def aabb_start,
+                             coord_def aabb_end);
+
+    void _draw_console_item(unsigned int index) const;
+
+    std::vector<CRTMenuEntry*> m_entries;
+
+    SelectType m_select_type;
+    int m_highlighted_index;
+
+    // These values are mainly used to check if new entries are in bounds
+    // they are in unit sizes
+    int m_start_x;
+    int m_start_y;
+    int m_end_x;
+    int m_end_y;
+
+    coord_def m_desc_location;
+};
+
 int linebreak_string( std::string& s, int wrapcol, int maxcol );
 int linebreak_string2( std::string& s, int maxcol );
 std::string get_linebreak_string(const std::string& s, int maxcol);

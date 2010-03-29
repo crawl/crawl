@@ -99,7 +99,7 @@ class TextRegion : public Region
 {
 public:
     TextRegion(FTFont *font);
-    ~TextRegion();
+    virtual ~TextRegion();
 
     virtual void render();
     virtual void clear();
@@ -175,14 +175,77 @@ protected:
     bool m_overlay;
 };
 
+class CRTMenuEntry;
+class FTFont;
+/**
+ * Expanded CRTRegion to support highlightable and clickable entries - felirx
+ * The user of this region will have total control over the positioning of
+ * objects at all times
+ * The base class behaves like the current CRTRegion used commonly
+ * It's identity is mapped to the CRT_NOMOUSESELECT value in TilesFramework
+ *
+ * Menu Entries are handled via pointers and are shared with whatever MenuClass
+ * is using them. This is done to keep the keyboard selections in sync with mouse
+ */
 class CRTRegion : public TextRegion
 {
 public:
-    CRTRegion(FTFont *font);
+    enum HighlightStyle
+    {
+        CRT_NOHIGHLIGHT,
+        CRT_LINEHIGHLIGHT,
+        CRT_FILLHIGHLIGHT
+    };
 
-    virtual int handle_mouse(MouseEvent &event);
+    CRTRegion(FTFont *font);
+    virtual ~CRTRegion();
+
+    virtual void render();
+    virtual void clear();
+
+    virtual int handle_mouse(MouseEvent& event);
 
     virtual void on_resize();
+
+    virtual bool add_entry(CRTMenuEntry* entry);
+    // not const on purpose
+    virtual std::vector<CRTMenuEntry*> get_selected_entries();
+    void set_highlight_entry(int index);
+    int highlight_entry() const;
+    void set_highlight_style(HighlightStyle style);
+    bool select_entry(int index);
+    bool set_description_coordinates(int x, int y);
+    void use_tooltip(bool flag);
+protected:
+    void _place_entries();
+    int _find_entry_by_mouse_coords(const coord_def& pos);
+    void _clear_selections();
+
+    bool m_allow_tooltip;
+    bool m_dirty;
+
+    coord_def m_description_coord;
+    int m_description_index;
+    int m_highlight_index;
+    HighlightStyle m_highlight_style;
+
+    std::vector<CRTMenuEntry*> m_entries;
+    ShapeBuffer m_shape_buf;
+    LineBuffer m_line_buf;
+    FontBuffer m_font_buf;
+    FixedVector<TileBuffer, TEX_MAX> m_tile_buf;
+};
+
+/**
+ * Enhanced Mouse handling for CRTRegion
+ * The behaviour is CRT_SINGESELECT
+ */
+class CRTSingleSelect : public CRTRegion
+{
+public:
+    CRTSingleSelect(FTFont* font);
+
+    virtual int handle_mouse(MouseEvent& event);
 };
 
 class MenuEntry;

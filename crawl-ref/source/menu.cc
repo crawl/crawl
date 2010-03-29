@@ -2072,3 +2072,615 @@ int ToggleableMenu::pre_process(int key)
     }
     return key;
 }
+
+CRTMenuEntry::CRTMenuEntry() : MenuEntry("", MEL_ITEM, 0, 0), m_highlight_colour(-1),
+                 m_selected(false)
+{
+}
+
+CRTMenuEntry::CRTMenuEntry(const std::string& txt, unsigned int x,
+                           unsigned int y, COLORS c) : MenuEntry(txt, MEL_ITEM, 0, 0),
+                           m_start_x(x), m_start_y(y)
+{
+    this->colour = c;
+}
+
+
+void CRTMenuEntry::select(bool flag)
+{
+    m_selected = flag;
+}
+
+bool CRTMenuEntry::selected() const
+{
+    return m_selected;
+}
+
+void CRTMenuEntry::set_highlight_colour(COLORS highlight)
+{
+    m_highlight_colour = highlight << 4;
+}
+
+int CRTMenuEntry::highlight_colour() const
+{
+    return m_highlight_colour;
+}
+
+std::string CRTMenuEntry::get_description_text()
+{
+    return m_description_text;
+}
+
+void CRTMenuEntry::set_description_text(const std::string& desc)
+{
+    m_description_text = desc;
+}
+
+void CRTMenuEntry::set_start_x(int x)
+{
+    m_start_x = x;
+}
+
+void CRTMenuEntry::set_start_y(int y)
+{
+    m_start_y = y;
+}
+
+void CRTMenuEntry::set_end_x(int x)
+{
+    m_end_x = x;
+}
+
+void CRTMenuEntry::set_end_y(int y)
+{
+    m_end_y = y;
+}
+
+int CRTMenuEntry::start_x() const
+{
+    return m_start_x;
+}
+
+int CRTMenuEntry::start_y() const
+{
+    return m_start_y;
+}
+
+int CRTMenuEntry::end_x() const
+{
+    return m_end_x;
+}
+
+int CRTMenuEntry::end_y() const
+{
+    return m_end_y;
+}
+
+PrecisionMenu::PrecisionMenu() : m_select_type(PRECISION_NOMOUSESELECT),
+                                 m_highlighted_index(0),
+                                 m_start_x(0), m_start_y(0),
+                                 m_end_x(get_number_of_cols() - 1),
+                                 m_end_y(get_number_of_lines()),
+                                 m_desc_location(-1, -1)
+{
+}
+
+PrecisionMenu::~PrecisionMenu()
+{
+    clear();
+}
+
+/**
+ * Initializes the menu
+ * @params
+ * start_x if set to >0, uses the default
+ * start_y if set to >0, uses the default
+ * end_x if set to >0, uses the value, otherwise uses default
+ * end_y if set to >0, uses default
+ * items_in_column if set to >0, uses maximum space
+ * column_width if set to >0, uses default
+ */
+void PrecisionMenu::init(SelectType flag, int start_x, int start_y, int end_x,
+                         int end_y)
+{
+    m_select_type = flag;
+#ifdef USE_TILE
+    switch (flag)
+    {
+    case PRECISION_NOMOUSESELECT:
+        tiles.set_active_crt(TilesFramework::CRT_NOMOUSESELECT);
+        break;
+    case PRECISION_SINGLESELECT:
+        tiles.set_active_crt(TilesFramework::CRT_SINGLESELECT);
+        break;
+    case PRECISION_MULTISELECT:
+        //tiles.set_active_crt(TilesFramework::CRT_NOMOUSESELECT);
+        break;
+    default:
+        tiles.set_active_crt(TilesFramework::CRT_NOMOUSESELECT);
+        break;
+    }
+    cgotoxy(1,1);
+
+    // console / tile mismatch
+    if (start_x > 0)
+        m_start_x = start_x - 1;
+    if (start_y > 0)
+        m_start_y = start_y - 1;
+    if (end_x > 0)
+        m_end_x = end_x - 1;
+    if (end_y > 0)
+        m_end_y = end_y - 1;
+#else
+    if (start_x > 0)
+        m_start_x = start_x;
+    if (start_y > 0)
+        m_start_y = start_y;
+    if (end_x > 0)
+        m_end_x = end_x;
+    if (end_y > 0)
+        m_end_y = end_y;
+#endif
+    m_entries.clear();
+}
+
+/**
+ * Frees all used memory
+ */
+void PrecisionMenu::clear()
+{
+#ifdef USE_TILE
+    // reset the CRTregion to default
+    // this also releases all the data reserved by the menus
+    tiles.set_active_crt(TilesFramework::CRT_NOMOUSESELECT);
+#else
+    // release all the data reserved
+    if (m_entries.size() == 0) {
+        return;
+    }
+    std::vector<CRTMenuEntry*>::iterator it;
+    for (it = m_entries.begin() ; it != m_entries.end(); ++it)
+    {
+        if (*it != NULL)
+        {
+            delete *it;
+            *it = NULL;
+        }
+    }
+#endif
+    m_entries.clear();
+}
+
+/**
+ * Processes user input
+ *
+ * Returns:
+ * true when we have reached a valid selection and the menu has served it's
+ * purpose. This happens when a user presses Enter, any of the shortcuts
+ * or Mouse Button1 over any valid Entry
+ * false otherwise
+ */
+bool PrecisionMenu::process_key(int key)
+{
+    coord_def pos;
+    int find_entry = - 1;
+    // for tiles / console mouse - arrows desync
+#ifdef USE_TILE
+    if (tiles.get_crt()->highlight_entry() != m_highlighted_index)
+      m_highlighted_index =  tiles.get_crt()->highlight_entry();
+#endif
+
+    switch (key)
+    {
+    case CK_ENTER:
+        if (m_select_type == PRECISION_SINGLESELECT)
+        {
+            _clear_selections();
+            _select_item(m_highlighted_index);
+            return true;
+        }
+        else
+        {
+            _select_item(m_highlighted_index);
+            return false;
+        }
+        break;
+    case CK_UP:
+        find_entry = _find_item_by_direction(m_highlighted_index, UP);
+        if (find_entry != -1)
+        {
+            highlight_item(find_entry);
+        }
+        break;
+    case CK_DOWN:
+        find_entry = _find_item_by_direction(m_highlighted_index, DOWN);
+        if (find_entry != -1)
+        {
+            highlight_item(find_entry);
+        }
+        break;
+    case CK_LEFT:
+        find_entry = _find_item_by_direction(m_highlighted_index, LEFT);
+        if (find_entry != -1)
+        {
+            highlight_item(find_entry);
+        }
+        break;
+    case CK_RIGHT:
+        find_entry = _find_item_by_direction(m_highlighted_index, RIGHT);
+        if (find_entry != -1)
+        {
+            highlight_item(find_entry);
+        }
+        break;
+    case CK_MOUSE_CLICK:
+        // Tiles signifies the user has made an important click
+        // either we're in singleselect mode and he has selected an entry
+        // or we are in multiselect mode and he has finished selecting
+        return true;
+    default:
+        if (_select_item_by_hotkey(key))
+        {
+            if (m_select_type == PRECISION_SINGLESELECT)
+                return true;
+        }
+        break;
+    }
+    return false;
+}
+
+void PrecisionMenu::set_start_x(int start_x)
+{
+    ASSERT(start_x > 0 && start_x < m_end_x);
+    m_start_x = start_x;
+}
+
+void PrecisionMenu::set_start_y(int start_y)
+{
+    ASSERT(start_y > 0 && start_y < m_end_y);
+    m_start_y = start_y;
+}
+
+void PrecisionMenu::set_end_x(int end_x)
+{
+    ASSERT(end_x < get_number_of_cols());
+    m_end_x = end_x;
+}
+
+void PrecisionMenu::set_end_y(int end_y)
+{
+    ASSERT(end_y < get_number_of_lines());
+    m_end_y = end_y;
+}
+
+void PrecisionMenu::highlight_item(int index)
+{
+    if (index < 0)
+        return;
+#ifdef USE_TILE
+    tiles.get_crt()->set_highlight_entry(index);
+#endif
+    if (index < static_cast<int> (m_entries.size()))
+    {
+        m_highlighted_index = index;
+    }
+    draw_menu();
+}
+
+void PrecisionMenu::set_description_coordinates(int x, int y)
+{
+#ifdef USE_TILE
+    tiles.get_crt()->set_description_coordinates(x - 1, y - 1);
+#endif
+    if (x == -1 && y == -1)
+    {
+        m_desc_location.x = -1;
+        m_desc_location.y = -1;
+        return;
+    }
+    if (x < m_start_x || x > m_end_x || y < m_start_y || y > m_end_y)
+    {
+        return;
+    }
+    m_desc_location.x = x;
+    m_desc_location.y = y;
+}
+
+/**
+ * toggles the selection status of the item
+ * Returns:
+ * true if success
+ * false when item not found
+ */
+bool PrecisionMenu::_select_item(unsigned int index)
+{
+    if (index < m_entries.size())
+    {
+        m_entries.at(index)->select(!m_entries.at(index)->selected());
+        draw_menu();
+        return m_entries.at(index)->selected();
+    }
+    return false;
+}
+
+bool PrecisionMenu::_select_item_by_hotkey(int key)
+{
+    // browse through all the Entries
+    // Not using iterator on purpose, to get a usable index for select
+    for (unsigned int i = 0; i < m_entries.size(); ++i)
+    {
+        std::vector<int>::iterator hot_iterator;
+        for (hot_iterator = m_entries.at(i)->hotkeys.begin();
+            hot_iterator != m_entries.at(i)->hotkeys.end();
+            ++hot_iterator)
+        {
+            if (key == *hot_iterator)
+            {
+                if (m_select_type == PRECISION_SINGLESELECT)
+                {
+                    _clear_selections();
+                }
+                _select_item(i);
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+/**
+ * Finds the closest rectangle to given entry begin_index on a caardinal
+ * direction from it.
+ * if no entries are found, -1 is returned
+ */
+int PrecisionMenu::_find_item_by_direction(int begin_index, Direction dir)
+{
+    ASSERT(begin_index >= 0);
+    ASSERT(begin_index < static_cast<int> (m_entries.size()));
+    ASSERT(m_entries.size() > 0);
+
+    coord_def aabb_start(0,0);
+    coord_def aabb_end(0,0);
+
+    // construct the aabb
+    switch (dir)
+    {
+    case UP:
+        aabb_start.x = m_entries.at(begin_index)->start_x();
+        aabb_end.x = m_entries.at(begin_index)->end_x();
+        aabb_start.y = 0; // top of screen
+        aabb_end.y = m_entries.at(begin_index)->start_y();
+        break;
+    case DOWN:
+        aabb_start.x = m_entries.at(begin_index)->start_x();
+        aabb_end.x = m_entries.at(begin_index)->end_x();
+        aabb_start.y = m_entries.at(begin_index)->end_y();
+        // we choose an arbitarily large number here, because
+        // tiles saves entry coordinates in pixels, yet console saves them
+        // in characters
+        // basicly, we want the AABB to be large enough to extend to the bottom
+        // of the screen in every possible resolution
+        aabb_end.y = 32767;
+        break;
+    case LEFT:
+        aabb_start.x = 0; // left of screen
+        aabb_end.x = m_entries.at(begin_index)->start_x();
+        aabb_start.y = m_entries.at(begin_index)->start_y();
+        aabb_end.y = m_entries.at(begin_index)->end_y();
+        break;
+    case RIGHT:
+        aabb_start.x = m_entries.at(begin_index)->end_x();
+        // we again want a value that is always larger then the width of screen
+        aabb_end.x = 32767;
+        aabb_start.y = m_entries.at(begin_index)->start_y();
+        aabb_end.y = m_entries.at(begin_index)->end_y();
+        break;
+    default:
+        ASSERT(!"Bad direction given");
+    }
+
+    // loop through the entries
+    // save the currently closest to the index in a variable
+    int closest = -1;
+    for (unsigned int i = 0; i < m_entries.size(); ++i)
+    {
+        if (!_AABB_intersection(i, aabb_start, aabb_end))
+        {
+            continue; // does not intersect, continue loop
+        }
+
+        // intersects
+        // check if it's closer than current
+        if (closest == -1)
+        {
+            closest = i;
+        }
+
+        switch (dir)
+        {
+        case UP:
+            if (m_entries.at(i)->start_y() > m_entries.at(closest)->start_y())
+            {
+                closest = i;
+            }
+            break;
+        case DOWN:
+            if (m_entries.at(i)->start_y() < m_entries.at(closest)->start_y())
+            {
+                closest = i;
+            }
+            break;
+        case LEFT:
+            if (m_entries.at(i)->start_x() > m_entries.at(closest)->start_x())
+            {
+                closest = i;
+            }
+        case RIGHT:
+            if (m_entries.at(i)->start_x() < m_entries.at(closest)->start_x())
+            {
+                closest = i;
+            }
+        }
+    }
+    // TODO handle special cases here, like pressing down on the last entry
+    // to go the the first item in that line
+    return closest;
+}
+
+/**
+ * Performs regular rectangular AABB intersection between the given AABB
+ * rectangle and a item in the menu_entries
+ * start(x,y)------------
+ *           |          |
+ *           ------------end(x,y)
+ */
+bool PrecisionMenu::_AABB_intersection(int entry_index,
+                                                   coord_def aabb_start,
+                                                   coord_def aabb_end)
+{
+    ASSERT(entry_index >= 0);
+    ASSERT(entry_index < static_cast<int> (m_entries.size()));
+
+    const coord_def entry_start(m_entries.at(entry_index)->start_x(),
+                                m_entries.at(entry_index)->start_y());
+    const coord_def entry_end(m_entries.at(entry_index)->end_x(),
+                              m_entries.at(entry_index)->end_y());
+
+    // Check for no overlap using equals on purpose to rule out entities
+    // that only brush the bounding box
+    if (aabb_start.x >= entry_end.x)
+        return false;
+    if (aabb_end.x <= entry_start.x)
+        return false;
+    if (aabb_start.y >= entry_end.y)
+        return false;
+    if (aabb_end.y <= entry_start.y)
+        return false;
+    // We have overlap
+    return true;
+}
+
+void PrecisionMenu::_clear_selections()
+{
+    std::vector<CRTMenuEntry*>::iterator it;
+    for (it = m_entries.begin(); it != m_entries.end(); ++it)
+    {
+        (*it)->select(false);
+    }
+}
+
+std::vector<CRTMenuEntry*> PrecisionMenu::get_selected_items()
+{
+    std::vector<CRTMenuEntry*> ret_val;
+    for (std::vector<CRTMenuEntry*>::iterator it = m_entries.begin();
+         it != m_entries.end(); ++it)
+    {
+        if ((*it)->selected())
+        {
+            ret_val.push_back(*it);
+        }
+    }
+    return ret_val;
+}
+
+bool PrecisionMenu::add_item(CRTMenuEntry* item)
+{
+    // is the item in bounds? At the moment we only care about start_x and start_y
+    if (item->start_x() < m_start_x || item->start_x() > m_end_x
+        || item->start_y() < m_start_y || item->start_y() > m_end_y)
+    {
+        // out of bounds
+        return false;
+    }
+
+    m_entries.push_back(item);
+    // the menu handles all the keyboard events, however Tiles handles the mouse
+#ifdef USE_TILE
+    tiles.get_crt()->add_entry(item);
+#else
+    // calculate item width for console
+    // for now, We only support single line entries
+    if (item->start_x() + item->text.size() > m_end_x)
+    {
+        item->set_end_x(m_end_x);
+    }
+    else
+    {
+        item->set_end_x(item->start_x() + item->text.size());
+    }
+    item->set_end_y(item->start_y() + 1);
+#endif
+    return true;
+}
+
+void PrecisionMenu::draw_menu()
+{
+    // TODO: maybe handle drawing only the changed entries
+#ifdef USE_TILE
+    tiles.get_crt()->render();
+#else
+    std::vector<CRTMenuEntry*>::iterator it;
+    for (unsigned int i = 0; i < m_entries.size(); ++i)
+    {
+        _draw_console_item(i);
+    }
+
+    if (m_desc_location.x != -1 && m_desc_location.y != -1
+        && m_highlighted_index >= 0)
+    {
+        std::string desc_text = m_entries.at(m_highlighted_index)->get_description_text();
+
+        if (static_cast<int> (desc_text.size()) + m_desc_location.x >= m_end_x)
+        {
+            // trim the line (line broken weirdly)
+            desc_text = desc_text.substr(0, m_end_x - m_desc_location.x - m_start_x);
+        }
+        else
+        {
+            // fill the line with empty space
+            desc_text.append(m_end_x - m_desc_location.x - desc_text.size(), ' ');
+        }
+        // for now, desc text is always white
+        textcolor(WHITE);
+        cgotoxy(m_desc_location.x, m_desc_location.y);
+        cprintf("%s\n", desc_text.c_str());
+    }
+#endif
+}
+
+void PrecisionMenu::_draw_console_item(unsigned int index) const
+{
+    if (crawl_state.doing_prev_cmd_again)
+        return;
+
+    CRTMenuEntry* item;
+
+    if (index < m_entries.size())
+    {
+         item = m_entries.at(index);
+    }
+    else
+    {
+        return;
+    }
+
+    cgotoxy(item->start_x(), item->start_y());
+    if (m_highlighted_index >= 0
+        && index == static_cast<unsigned int> (m_highlighted_index))
+    {
+        textcolor(item->colour | item->highlight_colour());
+    }
+    else
+    {
+        textcolor(item->colour);
+    }
+    // Can our text fit inside our bounds?
+    if (static_cast<int> (item->start_x() + item->text.size()) <= m_end_x)
+    {
+        cprintf("%s", item->text.c_str());
+    }
+    else
+    {
+        cprintf("%s", item->text.substr(0, m_end_x - item->start_x()).c_str());
+    }
+}

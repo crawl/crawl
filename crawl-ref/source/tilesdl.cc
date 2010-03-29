@@ -60,6 +60,7 @@ TilesFramework::TilesFramework() :
     m_fullscreen(false),
     m_need_redraw(false),
     m_active_layer(LAYER_CRT),
+    m_active_crt(CRT_NOMOUSESELECT),
     m_buttons_held(0),
     m_key_mod(0),
     m_mouse(-1, -1),
@@ -109,7 +110,8 @@ void TilesFramework::shutdown()
     delete m_region_inv;
     delete m_region_spl;
     delete m_region_mem;
-    delete m_region_crt;
+    delete m_region_crt[CRT_NOMOUSESELECT];
+    delete m_region_crt[CRT_SINGLESELECT];
     delete m_region_menu;
 
     m_region_tile  = NULL;
@@ -120,7 +122,7 @@ void TilesFramework::shutdown()
     m_region_inv   = NULL;
     m_region_spl   = NULL;
     m_region_mem   = NULL;
-    m_region_crt   = NULL;
+    m_region_crt[CRT_NOMOUSESELECT] = NULL;
     m_region_menu  = NULL;
 
     for (unsigned int i = 0; i < LAYER_MAX; i++)
@@ -199,6 +201,24 @@ void TilesFramework::draw_doll_edit()
     delete reg;
 }
 
+/**
+ * After calling this, remember to set it back to CRT_NOMOUSESELECT
+ * for backwards compatibility reasons
+ */
+void TilesFramework::set_active_crt(CRTRegionType type)
+{
+    ASSERT(type < CRT_MAX);
+    // TODO do we want to clear the current crt?
+    m_region_crt[m_active_crt]->clear();
+    m_active_crt = type;
+    m_layers[LAYER_CRT].m_regions.clear();
+    m_layers[LAYER_CRT].m_regions.push_back(m_region_crt[m_active_crt]);
+    // also push back menu region for backwards compatibility
+    m_layers[LAYER_CRT].m_regions.push_back(m_region_menu);
+    // reset highlight style
+    m_region_crt[m_active_crt]->set_highlight_style(CRTRegion::CRT_LINEHIGHLIGHT);
+    // TODO do we want to clear screen here?
+}
 
 void TilesFramework::use_control_region(ControlRegion *reg)
 {
@@ -387,7 +407,9 @@ bool TilesFramework::initialise()
 
     m_region_msg  = new MessageRegion(m_fonts[m_msg_font].font);
     m_region_stat = new StatRegion(m_fonts[stat_font].font);
-    m_region_crt  = new CRTRegion(m_fonts[crt_font].font);
+    m_region_crt[CRT_NOMOUSESELECT]  = new CRTRegion(m_fonts[crt_font].font);
+    m_region_crt[CRT_SINGLESELECT] = new CRTSingleSelect(m_fonts[crt_font].font);
+
     m_region_menu = new MenuRegion(&m_image, m_fonts[crt_font].font);
 
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_map);
@@ -396,7 +418,7 @@ bool TilesFramework::initialise()
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_msg);
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_stat);
 
-    m_layers[LAYER_CRT].m_regions.push_back(m_region_crt);
+    m_layers[LAYER_CRT].m_regions.push_back(m_region_crt[m_active_crt]);
     m_layers[LAYER_CRT].m_regions.push_back(m_region_menu);
 
     cgotoxy(1, 1, GOTO_CRT);
@@ -1133,9 +1155,12 @@ void TilesFramework::do_layout()
         layout_statcol(message_overlay, true);
     }
 
-    // Place regions for crt layer
-    m_region_crt->place(0, 0, 0);
-    m_region_crt->resize_to_fit(m_windowsz.x, m_windowsz.y);
+    // Place regions for crt layers
+    for (int i = 0; i < CRT_MAX; ++i)
+    {
+        m_region_crt[i]->place(0, 0, 0);
+        m_region_crt[i]->resize_to_fit(m_windowsz.x, m_windowsz.y);
+    }
     m_region_menu->place(0, 0, 0);
     m_region_menu->resize_to_fit(m_windowsz.x, m_windowsz.y);
 
@@ -1181,8 +1206,8 @@ void TilesFramework::clrscr()
         m_region_stat->clear();
     if (m_region_msg)
         m_region_msg->clear();
-    if (m_region_crt)
-        m_region_crt->clear();
+    if (m_region_crt[m_active_crt])
+        m_region_crt[m_active_crt]->clear();
     if (m_region_menu)
         m_region_menu->clear();
 
@@ -1193,7 +1218,7 @@ void TilesFramework::clrscr()
 
 int TilesFramework::get_number_of_lines()
 {
-    return m_region_crt->my;
+    return m_region_crt[m_active_crt]->my;
 }
 
 int TilesFramework::get_number_of_cols()
@@ -1205,7 +1230,7 @@ int TilesFramework::get_number_of_cols()
     case LAYER_NORMAL:
         return m_region_msg->mx;
     case LAYER_CRT:
-        return m_region_crt->mx;
+        return m_region_crt[m_active_crt]->mx;
     }
 }
 
@@ -1215,7 +1240,7 @@ void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
     {
     case GOTO_CRT:
         m_active_layer = LAYER_CRT;
-        TextRegion::text_mode = m_region_crt;
+        TextRegion::text_mode = m_region_crt[m_active_crt];
         break;
     case GOTO_MSG:
         m_active_layer = LAYER_NORMAL;
@@ -1235,7 +1260,7 @@ void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
 
 GotoRegion TilesFramework::get_cursor_region() const
 {
-    if (TextRegion::text_mode == m_region_crt)
+    if (TextRegion::text_mode == m_region_crt[m_active_crt])
         return (GOTO_CRT);
     if (TextRegion::text_mode == m_region_msg)
         return (GOTO_MSG);
