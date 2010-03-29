@@ -72,6 +72,7 @@ static int _translate_keysym(SDL_keysym &keysym)
     switch (keysym.sym)
     {
     case SDLK_RETURN:
+    case SDLK_KP_ENTER:
         return (CK_ENTER + offset);
     case SDLK_BACKSPACE:
         return (CK_BKSP + offset);
