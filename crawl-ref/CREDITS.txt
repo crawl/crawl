@@ -1,9 +1,9 @@
 
 The Dungeon Crawl Stone Soup team (Peter Berger, Adam Borowski, Jude Brown,
 Matthew Cline, Paul Du Bois, Eino Keskitalo, Vsevolod Kozlov, Nat Lanza,
-Jesse Luehrs, Steven Noonan, Haran Pilpel, David Ploog, Johanna Ploog,
-Stefan O'Rear, Charles Otto, David Lawrence Ramsey, Robert Vollmert, Enne
-Walker) would like to thank:
+Jesse Luehrs, Neil Middleton, Steven Noonan, Haran Pilpel, David Ploog, 
+Johanna Ploog, Stefan O'Rear, Charles Otto, David Lawrence Ramsey, Robert
+Vollmert, Enne Walker) would like to thank:
 
 * Linley Henzell, the author of Dungeon Crawl, for writing this great game.
 
@@ -28,34 +28,34 @@ Walker) would like to thank:
 We'd also like to thank members of the Dungeon Crawl community who have
 contributed to Dungeon Crawl Stone Soup:
 
-Warwick Allison            Chris Hamons              nyra
-Juha Arpiainen             R. Dan Henry              Dylan O'Donnell
-Roy Axenov                 Brendan Hickey            Yuuma Oohara
-Max Bane                   Benoit Hudson             Pedro
-Bill Beher                 Sylvia 'Onia' Hörnke      Arlen Phillips
-Alexander Beisig           Iainuki                   Lemuel Pitkin
-Stu Black                  Ilyak                     Derek Ray
-Erik Inge Bolsø            Matthew Ince              Remsleep
-Peter Borgmann             Mitsuhiro Itakura         Will Rogers
-Daniel Mark Brownrigg      Mikko Juola               David Rose
-Trent W. Buck              Jarmo Kielosto            Sebastian Salman
-Robert Burnham             Kornel Kisielewicz        Brett Scarborough
-Joe Buzzelli               Daniel Klein              Robert Shimmin
-Terje Bø                   Vambola Kotkas            Sigurd
-Henry Cipolla              Ryan Kusnery              Edgar Simo
-Aaron Curtis               Jukka Kuusisto            Alex Smith
-Denzi                      Janne Lahdenperä          Solf
-Mike Drinen                Maciej Lapinski           Michael Spang
-Kieron Dunbar              Jordan Lewis              Johan Strandell
-Micha Elsner               Icy Lich                  Roman Sêk
-Christopher Evenstar       Markus Maier              William Tanksley, Jr.
-Brett Foster               Arien Malec               Jared 'Twinge' Tinney
-Ben Goetter                Paul Maloney              Matt Titus
-Rob Grant                  Neil 'Mu' Middleton       Steven Wheeler
-John Greenberg             Andrew Minton             Thomas Willem
-GreyKnight                 Shawn M Moore             Evan Williams
-Joshua Gross               Eva Myers                 Jeremey Wilson
-Brian Haase                Wille Mäntylä             Yelve Yakut
-Shayne Halvorson           Erkki Nurmi               Zooko
-Sophie Hamilton            Mattias Nyberg
+Warwick Allison            Chris Hamons              Dylan O'Donnell
+Juha Arpiainen             R. Dan Henry              Yuuma Oohara
+Roy Axenov                 Brendan Hickey            Pedro
+Max Bane                   Benoit Hudson             Arlen Phillips
+Bill Beher                 Sylvia 'Onia' Hörnke      Lemuel Pitkin
+Alexander Beisig           Iainuki                   Derek Ray
+Stu Black                  Ilyak                     Remsleep
+Erik Inge Bolsø            Matthew Ince              Will Rogers
+Peter Borgmann             Mitsuhiro Itakura         David Rose
+Daniel Mark Brownrigg      Mikko Juola               Sebastian Salman
+Trent W. Buck              Jarmo Kielosto            Brett Scarborough
+Robert Burnham             Kornel Kisielewicz        Robert Shimmin
+Joe Buzzelli               Daniel Klein              Sigurd
+Terje Bø                   Vambola Kotkas            Edgar Simo
+Henry Cipolla              Ryan Kusnery              Alex Smith
+Aaron Curtis               Jukka Kuusisto            Solf
+Denzi                      Janne Lahdenperä          Michael Spang
+Mike Drinen                Maciej Lapinski           Johan Strandell
+Kieron Dunbar              Jordan Lewis              Roman Sêk
+Micha Elsner               Icy Lich                  William Tanksley, Jr.
+Christopher Evenstar       Markus Maier              Jared 'Twinge' Tinney
+Brett Foster               Arien Malec               Matt Titus
+Ben Goetter                Paul Maloney              Steven Wheeler
+Rob Grant                  Andrew Minton             Thomas Willem
+John Greenberg             Shawn M Moore             Evan Williams
+GreyKnight                 Eva Myers                 Jeremey Wilson
+Joshua Gross               Wille Mäntylä             Yelve Yakut
+Brian Haase                Erkki Nurmi               Zooko
+Shayne Halvorson           Mattias Nyberg
+Sophie Hamilton            nyra
 
