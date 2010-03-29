@@ -19,6 +19,8 @@
 //   have to link against FreeType2 or be forced do as much processing at
 //   load time.
 
+extern const VColour term_colours[MAX_TERM_COLOUR];
+
 class FontBuffer;
 class VColour;
 class formatted_string;

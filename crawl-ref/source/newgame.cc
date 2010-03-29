@@ -722,7 +722,7 @@ game_start:
                 "Incompatible species and background specified in options file.");
         }
         // Repeat until valid species/background combination found.
-        while (_choose_species() && !_choose_job());
+        while (_choose_species() && _choose_job());
     }
 
     // Pick random draconian type.
@@ -2715,14 +2715,164 @@ static void _create_wanderer(void)
     _wanderer_cover_equip_holes(equip_slot);
 }
 
+/**
+ * Helper function for _choose_species
+ * Constructs the menu screen
+ */
+static const int COLUMN_WIDTH = 26;
+static const int X_MARGIN = 4;
+static const int SPEC_DESC_START_Y = 12;
+static const int SPECIAL_KEYS_START_Y = 16;
+void _construct_species_menu(PrecisionMenu* menu)
+{
+    static const int ITEMS_IN_COLUMN = 8;
+    species_type prev_specie = get_species(letter_to_index(Options.prev_race));
+    int prev_specie_index = -1;
+    // Construct the menu, 3 columns
+    for (int i = 0; i < NUM_SPECIES; ++i) {
+        const species_type species = get_species(i);
+        if (!_is_species_valid_choice(species))
+            continue;
+
+        CRTMenuEntry* tmp = new CRTMenuEntry();
+
+        if (you.char_class == JOB_UNKNOWN
+            || job_allowed(species, you.char_class) == CC_UNRESTRICTED)
+          {
+            tmp->colour = LIGHTGRAY;
+            tmp->set_highlight_colour(GREEN);
+        }
+        else
+        {
+            tmp->colour = DARKGRAY;
+            tmp->set_highlight_colour(YELLOW);
+        }
+        if (you.char_class != JOB_UNKNOWN
+            && job_allowed(species, you.char_class) == CC_BANNED)
+        {
+            tmp->text = "    ";
+            tmp->text += species_name(species, 1);
+            tmp->text += " N/A";
+            tmp->colour = DARKGRAY;
+            tmp->set_highlight_colour(RED);
+        }
+        else
+        {
+            tmp->text = index_to_letter(i);
+            tmp->text += " - ";
+            tmp->text += species_name(species, 1);
+        }
+        // Save the hotkey
+        tmp->add_hotkey(index_to_letter(i));
+        // set start x and start y
+        tmp->set_start_x(X_MARGIN + (i / ITEMS_IN_COLUMN) * COLUMN_WIDTH);
+        tmp->set_start_y(3 + i % ITEMS_IN_COLUMN);
+        // TODO read the description text from somewhere
+        tmp->set_description_text(species_name(species, 1));
+        menu->add_item(tmp);
+        // Fill to column width - 1
+        tmp->text.append(COLUMN_WIDTH - tmp->text.size() - 1 , ' ');
+        if (prev_specie == species)
+        {
+            prev_specie_index = i;
+        }
+    }
+
+    menu->set_description_coordinates(X_MARGIN, SPEC_DESC_START_Y);
+
+    // Add all the special button entries
+    CRTMenuEntry* tmp;
+
+    if (you.char_class != JOB_UNKNOWN)
+    {
+        tmp = new CRTMenuEntry("+ - Viable Species", X_MARGIN,
+                               SPECIAL_KEYS_START_Y, BROWN);
+        tmp->add_hotkey('+');
+        tmp->set_highlight_colour(LIGHTGRAY);
+        menu->add_item(tmp);
+    }
+
+    tmp = new CRTMenuEntry("# - Viable character", X_MARGIN,
+                           SPECIAL_KEYS_START_Y + 1, BROWN);
+    tmp->add_hotkey('#');
+    tmp->set_highlight_colour(LIGHTGRAY);
+    menu->add_item(tmp);
+
+    tmp = new CRTMenuEntry("% - List aptitudes", X_MARGIN,
+                           SPECIAL_KEYS_START_Y + 2, BROWN);
+    tmp->add_hotkey('%');
+    tmp->set_highlight_colour(LIGHTGRAY);
+    menu->add_item(tmp);
+
+    tmp = new CRTMenuEntry("? - Help", X_MARGIN,
+                           SPECIAL_KEYS_START_Y + 3, BROWN);
+    tmp->add_hotkey('?');
+    tmp->set_highlight_colour(LIGHTGRAY);
+    menu->add_item(tmp);
+
+    tmp = new CRTMenuEntry("* - Random species", X_MARGIN + COLUMN_WIDTH,
+                           SPECIAL_KEYS_START_Y, BROWN);
+    tmp->add_hotkey('*');
+    tmp->set_highlight_colour(LIGHTGRAY);
+    menu->add_item(tmp);
+    tmp = new CRTMenuEntry("! - Random character", X_MARGIN + COLUMN_WIDTH,
+                           SPECIAL_KEYS_START_Y + 1, BROWN);
+    tmp->add_hotkey('!');
+    tmp->set_highlight_colour(LIGHTGRAY);
+    menu->add_item(tmp);
+
+    // Adjust the end marker to align the - because Space text is longer by 4
+    if (you.char_class != JOB_UNKNOWN) {
+            tmp = new CRTMenuEntry("Space - change background",
+                                    X_MARGIN + COLUMN_WIDTH - 4,
+                                    SPECIAL_KEYS_START_Y + 2, BROWN);
+    }
+    else {
+        tmp = new CRTMenuEntry("Space - Pick background first",
+                               X_MARGIN + COLUMN_WIDTH - 4,
+                               SPECIAL_KEYS_START_Y + 2, BROWN);
+    }
+    tmp->set_highlight_colour(LIGHTGRAY);
+    tmp->add_hotkey(' ');
+    menu->add_item(tmp);
+
+    if (Options.prev_race)
+    {
+        if (_prev_startup_options_set())
+        {
+            std::string tmp_string = "Tab - ";
+            tmp_string += _prev_startup_description().c_str();
+            // Adjust the end marker to aling the - because
+            // Tab text is longer by 2
+            tmp = new CRTMenuEntry(tmp_string, X_MARGIN + COLUMN_WIDTH - 2,
+                                   SPECIAL_KEYS_START_Y + 3, BROWN);
+            tmp->add_hotkey('\t');
+            tmp->set_highlight_colour(LIGHTGRAY);
+            menu->add_item(tmp);
+        }
+    }
+
+    if (prev_specie_index != -1)
+    {
+        menu->highlight_item(prev_specie_index);
+    }
+}
+
 // choose_species returns true if the player should also pick a background.
 // This is done because of the '!' option which will pick a random
 // character, obviating the necessity of choosing a class.
 bool _choose_species()
 {
-    char keyn;
+    PrecisionMenu menu;
+    // Magical numbers alert menu starts from 3rd line and has 8 items per
+    // column. It ends at terminal end on x-dim and at 3+8 on y-dim
+    menu.init(PrecisionMenu::PRECISION_SINGLESELECT, X_MARGIN, 3,
+              get_number_of_cols() - 1, get_number_of_lines());
+#ifdef USE_TILE
+    tiles.get_crt()->set_highlight_style(CRTRegion::CRT_FILLHIGHLIGHT);
+#endif
 
-    bool printed = false;
+    int keyn;
 
     if (Options.cls)
     {
@@ -2730,512 +2880,568 @@ bool _choose_species()
         ng_cls = Options.cls;
     }
 
-    if (Options.race != 0)
-        printed = true;
+    clrscr();
 
-spec_query:
-    bool prevspeciesok = (Options.prev_race == '*');
-    if (!printed)
+    textcolor( BROWN );
+    if (you.your_name.empty() && you.char_class == JOB_UNKNOWN)
     {
-        clrscr();
-
-        if (you.char_class != JOB_UNKNOWN)
-        {
-            textcolor( BROWN );
-            bool shortgreet = false;
-            if (!you.your_name.empty() || you.char_class != JOB_UNKNOWN)
-                cprintf("Welcome, ");
-            else
-            {
-                cprintf("Welcome.");
-                shortgreet = true;
-            }
-
-            textcolor( YELLOW );
-            if (!you.your_name.empty())
-            {
-                cprintf("%s", you.your_name.c_str());
-                if (you.char_class != JOB_UNKNOWN)
-                    cprintf(" the ");
-            }
-            if (you.char_class != JOB_UNKNOWN)
-                cprintf("%s", get_job_name(you.char_class));
-
-            if (!shortgreet)
-                cprintf(".");
-
-            textcolor( WHITE ); // for the tutorial
-        }
-        else
-        {
-            textcolor( WHITE );
-            cprintf("Pick your character's species!");
-        }
-        if (!crawl_state.game_is_sprint()) {
-            cprintf("  (Press Ctrl-T to enter a tutorial.)");
-        }
-        cprintf("\n\n");
-        textcolor( CYAN );
-        cprintf("You can be:  "
-                "(Press ? for more information, %% for a list of aptitudes)");
-        cprintf("\n");
-
-        textcolor( LIGHTGREY );
-
-        int i = -1;
-        for (i = 0; i < ng_num_species(); ++i)
-        {
-            const species_type si = get_species(i);
-
-            if (!_is_species_valid_choice(si))
-                continue;
-
-            // Dim text for restricted species
-            if (you.char_class == JOB_UNKNOWN
-                || job_allowed(si, you.char_class) == CC_UNRESTRICTED)
-            {
-                textcolor(LIGHTGREY);
-            }
-            else
-                textcolor(DARKGREY);
-
-            // Show banned species as "unavailable".
-            if (you.char_class != JOB_UNKNOWN
-                && job_allowed(si, you.char_class) == CC_BANNED)
-            {
-                cprintf("    %s N/A", species_name(si, 1).c_str());
-            }
-            else
-            {
-                char sletter = index_to_letter(i);
-
-                if (sletter == Options.prev_race)
-                    prevspeciesok = true;
-
-                cprintf("%c - %s", sletter, species_name(si, 1).c_str());
-            }
-
-            if (i % 2)
-                cprintf("\n");
-            else
-                cgotoxy(31, wherey());
-
-            textcolor(LIGHTGREY); // Reset text colour.
-        }
-
-        if (i % 2)
-            cprintf("\n");
-
-        textcolor( BROWN );
-        cprintf("\n\n");
-        if (you.char_class == JOB_UNKNOWN)
-        {
-            cprintf("Space - Choose background first; * - Random species\n"
-                    "! - Random character; # - Good random character; X - Quit"
-                    "\n");
-        }
-        else
-        {
-            cprintf("* - Random; + - Good random; "
-                    "Bksp - Back to background selection; X - Quit"
-                    "\n");
-        }
-
-        if (Options.prev_race)
-        {
-            if (prevspeciesok)
-            {
-                cprintf("Enter - %s",
-                        _get_opt_species_name(Options.prev_race).c_str());
-            }
-            if (_prev_startup_options_set())
-            {
-                cprintf("%sTab - %s",
-                        prevspeciesok? "; " : "",
-                        _prev_startup_description().c_str());
-            }
-            cprintf("\n");
-        }
-
-        textcolor( CYAN );
-        cprintf("\nWhich one? ");
-        textcolor( LIGHTGREY );
-
-        printed = true;
+        cprintf("Welcome. ");
     }
-
-    if (Options.race != 0)
-        keyn = Options.race;
+    else if (you.your_name.empty() && you.char_class != JOB_UNKNOWN)
+    {
+        cprintf("Welcome, the %s. ", get_job_name(you.char_class));
+    }
+    else if (you.char_class != JOB_UNKNOWN)
+    {
+        cprintf("Welcome, %s the %s. ", you.your_name.c_str(),
+                get_job_name(you.char_class));
+    }
     else
-        keyn = getch_ck();
-
-    bool good_random = false;
-    switch (keyn)
     {
-    case 'X':
-    case ESCAPE:
-        cprintf("\nGoodbye!");
-        end(0);
-        break;
-    case CK_BKSP:
-    case ' ':
-        you.species  = SP_UNKNOWN;
-        Options.race = 0;
-        return (true);
-    case '#':
-        good_random = true;
-        // intentional fall-through
-    case '!':
-        _pick_random_species_and_job(good_random);
-        Options.random_pick = true; // used to give random weapon/god as well
-        ng_random = true;
-        if (good_random)
-            Options.good_random = true;
-        return (false);
-    case '\r':
-    case '\n':
-        if (Options.prev_race && prevspeciesok)
-            keyn = Options.prev_race;
-        break;
-    case '\t':
-        if (_prev_startup_options_set())
-        {
-            if (Options.prev_randpick
-                || Options.prev_race == '*' && Options.prev_cls == '*')
-            {
-                Options.random_pick = true;
-                ng_random = true;
-                _pick_random_species_and_job(Options.good_random);
-                return (false);
-            }
-            _set_startup_options();
-            you.species = SP_UNKNOWN;
-            you.char_class = JOB_UNKNOWN;
-            return (true);
-        }
-        break;
-    // access to the help files
-    case '?':
-        list_commands('1');
-        return _choose_species();
-    case '%':
-        list_commands('%');
-        return _choose_species();
-    default:
-        break;
+        cprintf("Welcome, %s. ", you.your_name.c_str());
     }
 
-    // These are handled specially as they _could_ be set
-    // using Options.race or prev_race.
-    // this is easy to set in init.txt
-    if ((keyn == CONTROL('T') || keyn == 'T') && !crawl_state.game_is_sprint())
-        return !pick_tutorial();
+    textcolor( YELLOW );
+    cprintf("Please select your species");
 
-    bool good_randspecies = (keyn == '+');
-    bool randspecies = (good_randspecies || keyn == '*');
-    if (randspecies)
-    {
-        if (you.char_class == JOB_THIEF || you.char_class == JOB_WANDERER)
-            good_randspecies = false;
+    _construct_species_menu(&menu);
 
-        int index;
-        do
-        {
-            index = random2(ng_num_species());
-        }
-        while (!_is_species_valid_choice(get_species(index), false)
-               || you.char_class != JOB_UNKNOWN
-                  && !is_good_combination(get_species(index), you.char_class,
-                                          good_randspecies));
+    menu.draw_menu();
 
-        keyn = index_to_letter(index);
-    }
+    textcolor( LIGHTGREY );
 
-    if (keyn >= 'a' && keyn <= 'z' || keyn >= 'A' && keyn <= 'Z')
-        you.species = get_species(letter_to_index(keyn));
 
-    if (!_is_species_valid_choice( you.species ))
+    // Poll input until we have a conclusive escape or pick
+    bool loop_flag = true;
+    while (loop_flag)
     {
         if (Options.race != 0)
         {
-            Options.race = 0;
-            printed = false;
+            keyn = Options.race;
         }
-        goto spec_query;
+        else
+        {
+            keyn = getch_ck();
+        }
+
+        bool good_random = false;
+        int random_index = -1;
+
+        // First process all the menu entries available
+        if (!menu.process_key(keyn))
+        {
+            // Process all the other keys that are not assigned to the menu
+            switch (keyn)
+            {
+            case 'X':
+            case ESCAPE:
+                cprintf("\nGoodbye!");
+                end(0);
+                loop_flag = false;
+                break;
+            case CK_BKSP:
+                you.species  = SP_UNKNOWN;
+                Options.race = 0;
+                return true;
+            default:
+                // if we get this far, we did not get a significant selection
+                // from the menu, nor did we get an escape character
+                // continue the while loop from the beginning and poll a new key
+                continue;
+            }
+        }
+        // We have had a significant input key event
+        // construct the return vector
+        std::vector<CRTMenuEntry*> selection = menu.get_selected_items();
+        if (selection.size() > 0)
+        {
+            // we have a selection!
+            // we only care about the first selection (there should be only one)
+            // we only add one hotkey per entry, if at any point we want to add
+            // multiples, you would need to process them all
+            if (selection.at(0)->hotkeys.size() == 0)
+            {
+                // the selection is uninteresting
+                continue;
+            }
+
+            switch (selection.at(0)->hotkeys.at(0))
+            {
+            case '#':
+                good_random = true;
+                // intentional fall-through
+            case '!':
+                _pick_random_species_and_job(good_random);
+                Options.random_pick = true; // used to give random weapon/god as well
+                ng_random = true;
+                if (good_random)
+                    Options.good_random = true;
+                return false;
+            case '\t':
+                if (_prev_startup_options_set())
+                {
+                    if (Options.prev_randpick
+                        || Options.prev_race == '*' && Options.prev_cls == '*')
+                    {
+                        Options.random_pick = true;
+                        ng_random = true;
+                        _pick_random_species_and_job(Options.good_random);
+                        return (false);
+                    }
+                    _set_startup_options();
+                    you.species = SP_UNKNOWN;
+                    you.char_class = JOB_UNKNOWN;
+                    return true;
+                }
+                // ignore Tab because we don't have previous start options set
+                continue;
+            case ' ':
+                you.species  = SP_UNKNOWN;
+                Options.race = 0;
+                return true;
+            case '?':
+                 // access to the help files
+                list_commands('1');
+                return _choose_species();
+            case '%':
+                list_commands('%');
+                return _choose_species();
+            case CONTROL('t'):
+                // intentional fallthrough
+                // TODO: remove these when we have a new start menu
+            case 'T':
+                if (!crawl_state.game_is_sprint())
+                {
+                    return !pick_tutorial();
+                }
+                break;
+            case '+':
+                good_random = true;
+                // intentional fallthrough
+            case '*':
+                // pick a random allowed specie
+                if (you.char_class == JOB_UNKNOWN)
+                {
+                    // pick any specie
+                    random_index = random2(ng_num_species());
+                    you.species = get_species(random_index);
+                    ng_race = index_to_letter(random_index);
+                    return true;
+                }
+                else
+                {
+                    // depending on good_random flag, pick either a
+                    // viable combo or a random combo
+                    do
+                    {
+                        random_index = random2(ng_num_species());
+                    }
+                    while (!is_good_combination(get_species(random_index),
+                                                you.char_class, good_random));
+                    you.species = get_species(random_index);
+                    ng_race = index_to_letter(random_index);
+                    return true;
+                }
+            default:
+                // we have a species selection
+                if (you.char_class == JOB_UNKNOWN)
+                {
+                    // we have no restrictions!
+                    you.species = get_species(letter_to_index(selection.at(0)->hotkeys.at(0)));
+                    // this is probably used for... something
+                    ng_race = selection.at(0)->hotkeys.at(0);
+                    return true; // pick also background
+                }
+                else
+                {
+                    // Can we allow this selection?
+                    if (job_allowed(get_species(letter_to_index(selection.at(0)->hotkeys.at(0))),
+                                    you.char_class) == CC_BANNED)
+                    {
+                        // we cannot, repoll for key
+                        continue;
+                    }
+                    else
+                    {
+                        // we have a valid choice!
+                        you.species = get_species(letter_to_index(selection.at(0)->hotkeys.at(0)));
+                        // this is probably used for... something
+                        ng_race = selection.at(0)->hotkeys.at(0);
+                        return false; // no need to pick background
+                    }
+                }
+                break;
+            }
+        }
     }
-
-    if (you.species != SP_UNKNOWN && you.char_class != JOB_UNKNOWN
-        && !job_allowed(you.species, you.char_class))
-    {
-        goto spec_query;
-    }
-
-    // Set to 0 in case we come back from choose_job().
-    Options.race = 0;
-    ng_race = (randspecies ? (good_randspecies? '+' : '*')
-                           : keyn);
-
-    return (true);
+    // we will never reach here
+    return true;
 }
 
-// Returns true if a job was chosen, false if we should go back to
-// species selection.
-bool _choose_job(void)
+/**
+ * Helper for _choose_job
+ * constructs the menu used and highlights the previous job if there is one
+ */
+static const int JOB_DESC_START_Y = 14;
+void _construct_backgrounds_menu(PrecisionMenu* menu)
 {
-    char keyn;
+    static const int ITEMS_IN_COLUMN = 10;
+    job_type prev_job = get_job(letter_to_index(Options.prev_cls));
+    int prev_job_index = -1;
+    // Construct the menu, 3 columns
+    for (int i = 0; i < NUM_JOBS; ++i) {
+        const job_type job = get_job(i);
 
-    bool printed = false;
-    if (Options.cls != 0)
-        printed = true;
+        CRTMenuEntry* tmp = new CRTMenuEntry();
 
-    if (you.species != SP_UNKNOWN && you.char_class != JOB_UNKNOWN)
-        return (true);
-
-    ng_cls = 0;
-
-job_query:
-    bool prevjobok = (Options.prev_cls == '*');
-    if (!printed)
-    {
-        clrscr();
-
-        if (you.species != SP_UNKNOWN)
+        if (you.species == SP_UNKNOWN
+            || job_allowed(you.species, job) == CC_UNRESTRICTED)
         {
-            textcolor( BROWN );
-            cprintf("Welcome, ");
-            textcolor( YELLOW );
-            if (!you.your_name.empty())
-                cprintf("%s the ", you.your_name.c_str());
-            cprintf("%s.", species_name(you.species, 1).c_str());
-            textcolor( WHITE );
+            tmp->colour = LIGHTGRAY;
+            tmp->set_highlight_colour(GREEN);
         }
         else
         {
-            textcolor( WHITE );
-            cprintf("Pick your character's background!");
+            tmp->colour = DARKGRAY;
+            tmp->set_highlight_colour(YELLOW);
         }
-        if (!crawl_state.game_is_sprint()) {
-            cprintf("  (Press Ctrl-T to enter a tutorial.)");
-        }
-
-        cprintf("\n\n");
-        textcolor( CYAN );
-        cprintf("You can be:  "
-                "(Press ? for more information, %% for a list of aptitudes)\n");
-        textcolor( LIGHTGREY );
-
-        int j = 0;
-        job_type which_job;
-        for (int i = 0; i < ng_num_jobs(); i++)
+        if (you.species != SP_UNKNOWN
+            && job_allowed(you.species, job) == CC_BANNED)
         {
-            which_job = get_job(i);
-
-            // Dim text for restricted backgrounds.
-            // Thief and wanderer are general challenge backgrounds in that
-            // there's no species that's unrestricted in combination with them.
-            if (you.species == SP_UNKNOWN
-                   && which_job != JOB_THIEF && which_job != JOB_WANDERER
-                || you.species != SP_UNKNOWN
-                   && job_allowed(you.species, which_job) == CC_UNRESTRICTED)
-            {
-                textcolor(LIGHTGREY);
-            }
-            else
-                textcolor(DARKGREY);
-
-            // Show banned species as "unavailable".
-            if (job_allowed(you.species, which_job) == CC_BANNED)
-            {
-                cprintf("    %s N/A", get_job_name(which_job));
-            }
-            else
-            {
-                char sletter = index_to_letter(i);
-
-                if (sletter == Options.prev_cls)
-                    prevjobok = true;
-
-                cprintf("%c - %s", sletter, get_job_name(which_job));
-            }
-
-            if (j % 2)
-                cprintf("\n");
-            else
-                cgotoxy(31, wherey());
-
-            textcolor(LIGHTGREY); // Reset text colour.
-
-            j++;
-        }
-
-        if (j % 2)
-            cprintf("\n");
-
-        textcolor( BROWN );
-        if (you.species == SP_UNKNOWN)
-        {
-            cprintf("\n"
-                    "Space - Choose species first; * - Random background; "
-                    "+ - Good random background\n"
-                    "! - Random character; # - Good random character; X - Quit"
-                    "\n");
+            tmp->text = "    ";
+            tmp->text += get_job_name(job);
+            tmp->text += " N/A";
+            tmp->colour = DARKGRAY;
+            tmp->set_highlight_colour(RED);
         }
         else
         {
-            cprintf("\n"
-                    "* - Random; + - Good random; "
-                    "Bksp - Back to species selection; X - Quit"
-                    "\n");
+            tmp->text = index_to_letter(i);
+            tmp->text += " - ";
+            tmp->text += get_job_name(job);
         }
+        // Save the hotkey
+        tmp->add_hotkey(index_to_letter(i));
+        // set start x and start y
+        tmp->set_start_x(X_MARGIN + (i / ITEMS_IN_COLUMN) * COLUMN_WIDTH);
+        tmp->set_start_y(3 + i % ITEMS_IN_COLUMN);
+        // TODO read the description text from somewhere
+        tmp->set_description_text(get_job_name(job));
 
-        if (Options.prev_cls)
+        // fill the text entry to end of column - 1
+        tmp->text.append(COLUMN_WIDTH - tmp->text.size() - 1 , ' ');
+
+        menu->add_item(tmp);
+        if (prev_job == job)
         {
-            if (prevjobok)
-            {
-                cprintf("Enter - %s",
-                        _get_opt_job_name(Options.prev_cls).c_str());
-            }
-            if (_prev_startup_options_set())
-            {
-                cprintf("%sTab - %s",
-                        prevjobok? "; " : "",
-                        _prev_startup_description().c_str());
-            }
-            cprintf("\n");
+            prev_job_index = i;
         }
-
-        textcolor( CYAN );
-        cprintf("\nWhich one? ");
-        textcolor( LIGHTGREY );
-
-        printed = true;
     }
 
-    if (Options.cls != 0)
-        keyn = Options.cls;
-    else
-        keyn = getch_ck();
+    menu->set_description_coordinates(X_MARGIN, JOB_DESC_START_Y);
 
-    bool good_random = false;
-    switch (keyn)
+    // Add all the special button entries
+    CRTMenuEntry* tmp;
+
+    if (you.species != SP_UNKNOWN)
     {
-    case 'X':
-        cprintf("\nGoodbye!");
-        end(0);
-        break;
-    case CK_BKSP:
-    case ESCAPE:
-    case ' ':
-        if (keyn != ' ' || you.species == SP_UNKNOWN)
-            you.char_class = JOB_UNKNOWN;
-        return (false);
-    case 'T':
-    case CONTROL('T'):
-        if (crawl_state.game_is_sprint()) {
-            goto job_query;
-        }
-        else {
-            return pick_tutorial();
-        }
-    case '#':
-        good_random = true;
-        // intentional fall-through
-    case '!':
-        _pick_random_species_and_job(good_random);
-        // used to give random weapon/god as well
-        Options.random_pick = true;
-        ng_random = true;
-        if (good_random)
-            Options.good_random = true;
-        return (true);
-    case '\r':
-    case '\n':
-        if (Options.prev_cls && prevjobok)
-            keyn = Options.prev_cls;
-        break;
-    case '\t':
+        tmp = new CRTMenuEntry("+ - Viable background", X_MARGIN,
+                               SPECIAL_KEYS_START_Y, BROWN);
+        tmp->add_hotkey('+');
+        tmp->set_highlight_colour(LIGHTGRAY);
+        menu->add_item(tmp);
+    }
+
+    tmp = new CRTMenuEntry("# - Viable character", X_MARGIN,
+                           SPECIAL_KEYS_START_Y + 1, BROWN);
+    tmp->add_hotkey('#');
+    tmp->set_highlight_colour(LIGHTGRAY);
+    menu->add_item(tmp);
+
+    tmp = new CRTMenuEntry("% - List aptitudes", X_MARGIN,
+                           SPECIAL_KEYS_START_Y + 2, BROWN);
+    tmp->add_hotkey('%');
+    tmp->set_highlight_colour(LIGHTGRAY);
+    menu->add_item(tmp);
+
+    tmp = new CRTMenuEntry("? - Help", X_MARGIN,
+                           SPECIAL_KEYS_START_Y + 3, BROWN);
+    tmp->add_hotkey('?');
+    tmp->set_highlight_colour(LIGHTGRAY);
+    menu->add_item(tmp);
+
+    tmp = new CRTMenuEntry("* - Random background", X_MARGIN + COLUMN_WIDTH,
+                           SPECIAL_KEYS_START_Y, BROWN);
+    tmp->add_hotkey('*');
+    tmp->set_highlight_colour(LIGHTGRAY);
+    menu->add_item(tmp);
+    tmp = new CRTMenuEntry("! - Random character", X_MARGIN + COLUMN_WIDTH,
+                           SPECIAL_KEYS_START_Y + 1, BROWN);
+    tmp->add_hotkey('!');
+    tmp->set_highlight_colour(LIGHTGRAY);
+    menu->add_item(tmp);
+
+    // Adjust the end marker to align the - because Space text is longer by 4
+    if (you.species != SP_UNKNOWN) {
+            tmp = new CRTMenuEntry("Space - change species",
+                                    X_MARGIN + COLUMN_WIDTH - 4,
+                                    SPECIAL_KEYS_START_Y + 2, BROWN);
+    }
+    else {
+        tmp = new CRTMenuEntry("Space - Pick species first",
+                               X_MARGIN + COLUMN_WIDTH - 4,
+                               SPECIAL_KEYS_START_Y + 2, BROWN);
+    }
+    tmp->set_highlight_colour(LIGHTGRAY);
+    tmp->add_hotkey(' ');
+    menu->add_item(tmp);
+
+    if (Options.prev_race)
+    {
         if (_prev_startup_options_set())
         {
-            if (Options.prev_randpick
-                || Options.prev_race == '*' && Options.prev_cls == '*')
-            {
-                Options.random_pick = true;
-                ng_random = true;
-                _pick_random_species_and_job(Options.good_random);
-                return (true);
-            }
-            _set_startup_options();
-
-            // Toss out old species selection, if any.
-            you.species = SP_UNKNOWN;
-            you.char_class = JOB_UNKNOWN;
-            return (false);
+            std::string tmp_string = "Tab - ";
+            tmp_string += _prev_startup_description().c_str();
+            // Adjust the end marker to aling the - because
+            // Tab text is longer by 2
+            tmp = new CRTMenuEntry(tmp_string, X_MARGIN + COLUMN_WIDTH - 2,
+                                   SPECIAL_KEYS_START_Y + 3, BROWN);
+            tmp->add_hotkey('\t');
+            tmp->set_highlight_colour(LIGHTGRAY);
+            menu->add_item(tmp);
         }
-        break;
-    // help files
-    case '?':
-        list_commands('2');
-        return _choose_job();
-    case '%':
-        list_commands('%');
-        return _choose_job();
-    default:
-        break;
     }
 
-    job_type chosen_job = JOB_UNKNOWN;
-    good_random = (keyn == '+');
-    if (good_random || keyn == '*')
+    if (prev_job_index != -1)
     {
-        // Pick a job at random... see god retribution for proof this
-        // is uniform. -- bwr
-        int job_count = 0;
+        menu->highlight_item(prev_job_index);
+    }
+}
 
-        job_type job;
-        for (int i = 0; i < NUM_JOBS; i++)
+/**
+ * _choose_job menu
+ * returns true if we should also pick a species
+ * false if we already have the specie selected
+ */
+bool _choose_job(void)
+{
+    PrecisionMenu menu;
+    // Magical numbers alert menu starts from 3rd line and has 8 items per
+    // column. It ends at terminal end on x-dim and at 3+8 on y-dim
+    menu.init(PrecisionMenu::PRECISION_SINGLESELECT, X_MARGIN, 3,
+              get_number_of_cols() - 1, get_number_of_lines());
+#ifdef USE_TILE
+    tiles.get_crt()->set_highlight_style(CRTRegion::CRT_FILLHIGHLIGHT);
+#endif
+
+    int keyn;
+    ng_cls = 0;
+
+    if (you.species != SP_UNKNOWN && you.char_class != JOB_UNKNOWN)
+        return false;
+
+    if (Options.cls)
+    {
+        you.char_class = get_job(letter_to_index(Options.cls));
+        ng_cls = Options.cls;
+    }
+
+    clrscr();
+
+    textcolor( BROWN );
+    if (you.your_name.empty() && you.species == SP_UNKNOWN)
+    {
+        cprintf("Welcome. ");
+    }
+    else if (you.your_name.empty() && you.species != SP_UNKNOWN)
+    {
+        cprintf("Welcome, the %s. ", species_name(you.species, 1).c_str());
+    }
+    else if (you.species != SP_UNKNOWN)
+    {
+        cprintf("Welcome, %s the %s. ", you.your_name.c_str(),
+                species_name(you.species, 1).c_str());
+    }
+    else
+    {
+        cprintf("Welcome, %s. ", you.your_name.c_str());
+    }
+
+    textcolor( YELLOW );
+    cprintf("Please select your background");
+
+    _construct_backgrounds_menu(&menu);
+
+    menu.draw_menu();
+
+    textcolor( LIGHTGREY );
+
+    // Poll input until we have a conclusive escape or pick
+    bool loop_flag = true;
+    while (loop_flag)
+    {
+        if (Options.cls != 0)
         {
-            job = static_cast<job_type>(i);
-            if (good_random && (job == JOB_THIEF || job == JOB_WANDERER))
+            keyn = Options.cls;
+        }
+        else
+        {
+            keyn = getch_ck();
+        }
+
+        bool good_random = false;
+        int random_index = -1;
+
+        // First process all the menu entries available
+        if (!menu.process_key(keyn))
+        {
+            // Process all the other keys that are not assigned to the menu
+            switch (keyn)
+            {
+            case 'X':
+            case ESCAPE:
+                cprintf("\nGoodbye!");
+                end(0);
+                loop_flag = false;
+                break;
+            case CK_BKSP:
+                you.char_class  = JOB_UNKNOWN;
+                Options.cls = 0;
+                return true;
+            default:
+                // if we get this far, we did not get a significant selection
+                // from the menu, nor did we get an escape character
+                // continue the while loop from the beginning and poll a new key
                 continue;
-
-            if (you.species == SP_UNKNOWN
-                || is_good_combination(you.species, job, good_random))
-            {
-                job_count++;
-                if (one_chance_in( job_count ))
-                    chosen_job = job;
             }
         }
-        ASSERT( chosen_job != JOB_UNKNOWN );
-    }
-    else if (keyn >= 'a' && keyn <= 'z' || keyn >= 'A' && keyn <= 'Z')
-        chosen_job = get_job(letter_to_index(keyn));
-
-    if (chosen_job == JOB_UNKNOWN)
-    {
-        if (Options.cls != 0)
+        // We have had a significant input key event
+        // construct the return vector
+        std::vector<CRTMenuEntry*> selection = menu.get_selected_items();
+        if (selection.size() > 0)
         {
-            Options.cls = 0;
-            printed = false;
+            // we have a selection!
+            // we only care about the first selection (there should be only one)
+            // we only add one hotkey per entry, if at any point we want to add
+            // multiples, you would need to process them all
+            if (selection.at(0)->hotkeys.size() == 0)
+            {
+                // the selection is uninteresting
+                continue;
+            }
+
+            switch (selection.at(0)->hotkeys.at(0))
+            {
+            case '#':
+                good_random = true;
+                // intentional fall-through
+            case '!':
+                _pick_random_species_and_job(good_random);
+                Options.random_pick = true; // used to give random weapon/god as well
+                ng_random = true;
+                if (good_random)
+                    Options.good_random = true;
+                return false;
+            case '\t':
+                if (_prev_startup_options_set())
+                {
+                    if (Options.prev_randpick
+                        || Options.prev_race == '*' && Options.prev_cls == '*')
+                    {
+                        Options.random_pick = true;
+                        ng_random = true;
+                        _pick_random_species_and_job(Options.good_random);
+                        return false;
+                    }
+                    _set_startup_options();
+                    you.species = SP_UNKNOWN;
+                    you.char_class = JOB_UNKNOWN;
+                    return true;
+                }
+                // ignore Tab because we don't have previous start options set
+                continue;
+            case ' ':
+                you.char_class  = JOB_UNKNOWN;
+                Options.cls = 0;
+                return true;
+            case '?':
+                 // access to the help files
+                list_commands('1');
+                return _choose_job();
+            case '%':
+                list_commands('%');
+                return _choose_job();
+            case CONTROL('t'):
+                // intentional fallthrough
+                // TODO: remove these when we have a new start menu
+            case 'T':
+                if (!crawl_state.game_is_sprint())
+                {
+                    return !pick_tutorial();
+                }
+                break;
+            case '+':
+                good_random = true;
+                // intentional fallthrough
+            case '*':
+                // pick a random allowed background
+                if (you.species == SP_UNKNOWN)
+                {
+                    // pick any specie
+                    random_index = random2(ng_num_jobs());
+                    you.char_class = get_job(random_index);
+                    ng_cls = index_to_letter(random_index);
+                    return true;
+                }
+                else
+                {
+                    // depending on good_random flag, pick either a
+                    // viable combo or a random combo
+                    do
+                    {
+                        random_index = random2(ng_num_species());
+                    }
+                    while (!is_good_combination(you.species, get_job(random_index),
+                                                good_random));
+                    you.char_class = get_job(random_index);
+                    ng_cls = index_to_letter(random_index);
+                    return true;
+                }
+            default:
+                // we have a background selection
+                if (you.species == SP_UNKNOWN)
+                {
+                    // we have no restrictions!
+                    you.char_class = get_job(letter_to_index(selection.at(0)->hotkeys.at(0)));
+                    // this is probably used for... something
+                    ng_cls = selection.at(0)->hotkeys.at(0);
+                    return true; // pick also specie
+                }
+                else
+                {
+                    // Can we allow this selection?
+                    if (job_allowed(you.species,
+                        get_job(letter_to_index(selection.at(0)->hotkeys.at(0))))
+                        == CC_BANNED)
+                    {
+                        // we cannot, repoll for key
+                        continue;
+                    }
+                    else
+                    {
+                        // we have a valid choice!
+                        you.char_class = get_job(letter_to_index(selection.at(0)->hotkeys.at(0)));
+                        // this is probably used for... something
+                        ng_cls = selection.at(0)->hotkeys.at(0);
+                        return false; // no need to pick specie
+                    }
+                }
+                break;
+            }
         }
-        goto job_query;
     }
-
-    if (you.species != SP_UNKNOWN
-        && !job_allowed(you.species, chosen_job))
-    {
-        if (Options.cls != 0)
-        {
-            Options.cls = 0;
-            printed = false;
-        }
-        goto job_query;
-    }
-
-    ng_cls = keyn;
-
-    you.char_class = chosen_job;
-    return (you.char_class != JOB_UNKNOWN && you.species != SP_UNKNOWN);
+    // we will never reach here
+    return true;
 }
 
 bool _needs_butchering_tool()
