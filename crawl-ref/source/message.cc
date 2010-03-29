@@ -1313,9 +1313,12 @@ std::string get_last_messages(int mcount)
 
     std::string text;
     // XXX: should use some message_history iterator here
+    const store_t& msgs = messages.get_store();
+    // XXX: loop wraps around otherwise. This could be done better.
+    mcount = std::min(mcount, NUM_STORED_MESSAGES);
     for (int i = -1; mcount > 0; --i)
     {
-        const message_item msg = messages.get_store()[i];
+        const message_item msg = msgs[i];
         if (!msg)
             break;
         if (is_channel_dumpworthy(msg.channel))
