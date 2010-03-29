@@ -3697,7 +3697,7 @@ mon_body_shape get_mon_shape(const int type)
 
     switch (mons_base_char(type))
     {
-    case 'a': // ants and cockroaches
+    case 'a': // ants
         return (MON_SHAPE_INSECT);
     case 'b':  // bats and butterflys
         if (type == MONS_BUTTERFLY)
@@ -3748,20 +3748,20 @@ mon_body_shape get_mon_shape(const int type)
             return (MON_SHAPE_HUMANOID);
         }
         break;
-    case 'q': // quasits
-        return (MON_SHAPE_HUMANOID_TAILED);
     case 'r': // rodents
         return (MON_SHAPE_QUADRUPED);
-    case 's': // arachnids and centipedes
+    case 's': // arachnids and centipedes/cockroaches
         if (type == MONS_GIANT_CENTIPEDE)
             return (MON_SHAPE_CENTIPEDE);
+        else if (type == MONS_GIANT_COCKROACH)
+            return (MON_SHAPE_INSECT);
         else
             return (MON_SHAPE_ARACHNID);
     case 'u': // mutated type, not enough info to determine shape
         return (MON_SHAPE_MISC);
-    case 't': // minotaurs
-        return (MON_SHAPE_HUMANOID);
-    case 'v': // vortices and elementals
+    case 't': // turtles
+        return (MON_SHAPE_QUADRUPED);
+    case 'v': // vortices
         return (MON_SHAPE_MISC);
     case 'w': // worms
         return (MON_SHAPE_SNAKE);
@@ -3788,14 +3788,16 @@ mon_body_shape get_mon_shape(const int type)
             return (MON_SHAPE_QUADRUPED_WINGED);
         else
             return (MON_SHAPE_QUADRUPED);
-    case 'E': // efreeti
-        return (MON_SHAPE_HUMANOID);
+    case 'E': // elementals
+        return (MON_SHAPE_MISC);
     case 'F': // frogs
         return (MON_SHAPE_QUADRUPED_TAILLESS);
     case 'G': // floating eyeballs and orbs
         return (MON_SHAPE_ORB);
-    case 'H': // manticores, hippogriffs and griffins
-        if (type == MONS_MANTICORE)
+    case 'H': // minotaurs, manticores, hippogriffs and griffins
+        if (type == MONS_MINOTAUR)
+            return (MON_SHAPE_HUMANOID);
+        else if (type == MONS_MANTICORE)
             return (MON_SHAPE_QUADRUPED);
         else
             return (MON_SHAPE_QUADRUPED_WINGED);
@@ -3818,12 +3820,7 @@ mon_body_shape get_mon_shape(const int type)
         return (MON_SHAPE_HUMANOID);
     case 'P': // plants
         return (MON_SHAPE_PLANT);
-    case 'Q': // queen insects
-        if (type == MONS_QUEEN_BEE)
-            return (MON_SHAPE_INSECT_WINGED);
-        else
-            return (MON_SHAPE_INSECT);
-    case 'R': // rakshasa; humanoid?
+    case 'R': // rakshasa and efreeti; humanoid?
         return (MON_SHAPE_HUMANOID);
     case 'S': // snakes
         return (MON_SHAPE_SNAKE);

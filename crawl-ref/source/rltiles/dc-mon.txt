@@ -572,18 +572,11 @@ wraith MONS_WRAITH
 shadow_wraith MONS_SHADOW_WRAITH
 freezing_wraith MONS_FREEZING_WRAITH
 spectral_warrior MONS_SPECTRAL_WARRIOR
-spectral_thing MONS_SPECTRAL_THING
 
 %sdir dc-mon
 %rim 0
 orb_guardian MONS_ORB_GUARDIAN /*'X'*/
 %rim 1
-
-## Large zombified monsters ('Z')
-%sdir dc-mon/undead
-zombie_large MONS_ZOMBIE_LARGE
-skeleton_large MONS_SKELETON_LARGE
-simulacrum_large MONS_SIMULACRUM_LARGE
 
 ## Centaurs ('c')
 %sdir dc-mon/unique
@@ -698,11 +691,6 @@ minotaur MONS_MINOTAUR /*'t'*/
 
 ## Small zombified monsters ('z')
 %sdir dc-mon/undead
-zombie_small MONS_ZOMBIE_SMALL
-%rim 0
-skeleton_small MONS_SKELETON_SMALL
-%rim 1
-simulacrum_small MONS_SIMULACRUM_SMALL
 skeletal_warrior MONS_SKELETAL_WARRIOR
 %rim 0
 flaming_corpse MONS_FLAMING_CORPSE
@@ -713,6 +701,8 @@ murray MONS_MURRAY
 curse_skull MONS_CURSE_SKULL
 curse_toe MONS_CURSE_TOE
 flying_skull MONS_FLYING_SKULL
+
+%include dc-zombie.txt
 
 ## Draconians ('d')
 %sdir dc-mon/unique
