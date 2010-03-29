@@ -1,0 +1,31 @@
+## Zombies
+%sdir dc-mon/undead/zombies
+zombie_small MONS_ZOMBIE_SMALL
+zombie_large MONS_ZOMBIE_LARGE
+zombie_bat MONS_ZOMBIE_BAT
+zombie_bee MONS_ZOMBIE_BEE
+zombie_bug MONS_ZOMBIE_BEETLE
+zombie_fish MONS_ZOMBIE_FISH
+zombie_centaur MONS_ZOMBIE_CENTAUR
+zombie_naga MONS_ZOMBIE_NAGA
+zombie_snake MONS_ZOMBIE_SNAKE
+zombie_spider MONS_ZOMBIE_SPIDER
+zombie_quadruped MONS_ZOMBIE_QUADRUPED
+zombie_dragon MONS_ZOMBIE_DRAGON
+zombie_hydra1 MONS_ZOMBIE_HYDRA
+zombie_hydra2
+zombie_hydra3
+zombie_hydra4
+zombie_hydra5
+
+%sdir dc-mon/undead
+## Skeletons
+skeleton_small MONS_SKELETON_SMALL
+skeleton_large MONS_SKELETON_LARGE
+
+## Simulacra
+simulacrum_small MONS_SIMULACRUM_SMALL
+simulacrum_large MONS_SIMULACRUM_LARGE
+
+## Spectral things
+spectral_thing MONS_SPECTRAL_THING

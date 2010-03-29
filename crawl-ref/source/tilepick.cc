@@ -127,18 +127,79 @@ static int _get_random_monster_tile(const monsters *mon, const int base_tile)
     return base_tile + (mon->props["tile_num"].get_short() % variants);
 }
 
+static int _tileidx_monster_zombified(const monsters *mon)
+{
+    const int z_type = mon->type;
+    const int z_size = mons_zombie_size(z_type);
+
+    // TODO: Add tiles and code for these as well.
+    switch (z_type)
+    {
+    case MONS_SKELETON_SMALL:   return TILEP_MONS_SKELETON_SMALL;
+    case MONS_SKELETON_LARGE:   return TILEP_MONS_SKELETON_LARGE;
+    case MONS_SIMULACRUM_SMALL: return TILEP_MONS_SIMULACRUM_SMALL;
+    case MONS_SIMULACRUM_LARGE: return TILEP_MONS_SIMULACRUM_LARGE;
+    case MONS_SPECTRAL_THING:   return TILEP_MONS_SPECTRAL_THING;
+    }
+
+    const int subtype = (int) mons_zombie_base(mon);
+
+    switch (get_mon_shape(mon))
+    {
+    case MON_SHAPE_HUMANOID:
+    case MON_SHAPE_HUMANOID_WINGED:
+    case MON_SHAPE_HUMANOID_TAILED:
+    case MON_SHAPE_HUMANOID_WINGED_TAILED:
+        return (z_size == Z_SMALL ? TILEP_MONS_ZOMBIE_SMALL
+                                  : TILEP_MONS_ZOMBIE_LARGE);
+    case MON_SHAPE_CENTAUR:
+        return TILEP_MONS_ZOMBIE_CENTAUR;
+    case MON_SHAPE_NAGA:
+        return TILEP_MONS_ZOMBIE_NAGA;
+    case MON_SHAPE_QUADRUPED_WINGED:
+        if (mons_genus(subtype) == MONS_DRAGON)
+            return TILEP_MONS_ZOMBIE_DRAGON;
+        // else fall-through
+    case MON_SHAPE_QUADRUPED:
+        if (mons_genus(subtype) == MONS_HYDRA)
+        {
+            return TILEP_MONS_ZOMBIE_HYDRA
+                   + std::min((int)mon->number, 7) - 1;
+        }
+        // else fall-through
+    case MON_SHAPE_QUADRUPED_TAILLESS:
+        return TILEP_MONS_ZOMBIE_QUADRUPED;
+    case MON_SHAPE_BAT:
+        return TILEP_MONS_ZOMBIE_BAT;
+    case MON_SHAPE_SNAKE:
+        return TILEP_MONS_ZOMBIE_SNAKE;
+    case MON_SHAPE_FISH:
+        return TILEP_MONS_ZOMBIE_FISH;
+    case MON_SHAPE_INSECT:
+        return TILEP_MONS_ZOMBIE_BEETLE;
+    case MON_SHAPE_INSECT_WINGED:
+        return TILEP_MONS_ZOMBIE_BEE;
+    case MON_SHAPE_ARACHNID:
+        return TILEP_MONS_ZOMBIE_SPIDER;
+    default:
+        return (TILEP_ERROR);
+    }
+}
 
 int tileidx_monster_base(const monsters *mon, bool detected)
 {
     bool in_water = feat_is_water(grd(mon->pos()));
+    const bool misled = (!crawl_state.game_is_arena() && you.misled());
 
     int type = mon->type;
-    if (!crawl_state.game_is_arena() && you.misled())
+    if (misled)
         type = mon->get_mislead_type();
 
     // Show only base class for detected monsters.
     if (detected)
         type = mons_detected_base(mon->type);
+    else if (!misled && mons_is_zombified(mon))
+        return _tileidx_monster_zombified(mon);
 
     if (mon->props.exists("monster_tile"))
         return int(mon->props["monster_tile"].get_short());
