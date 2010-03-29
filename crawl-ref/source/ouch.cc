@@ -1181,6 +1181,8 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     }
 #endif
 
+    crawl_state.cancel_cmd_all();
+
     // Construct scorefile entry.
     scorefile_entry se(dam, death_source, death_type, aux);
 
