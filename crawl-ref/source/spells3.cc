@@ -1650,7 +1650,8 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
             {
                 mpr("Controlled teleport interrupted by HUP signal, "
                     "cancelling teleport.", MSGCH_ERROR);
-                you.turn_is_over = false;
+                if (!wizard_tele)
+                    contaminate_player(1, true);
                 return (false);
             }
 #endif
@@ -1667,7 +1668,8 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
                         continue;
                     }
                 }
-                you.turn_is_over = false;
+                if (!wizard_tele)
+                    contaminate_player(1, true);
                 return (false);
             }
 
