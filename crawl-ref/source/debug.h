@@ -37,7 +37,7 @@
 #define COMPILE_CHECK(expr, tag)
 #endif
 
-#ifdef DEBUG
+#if defined(DEBUG) && !defined(ASSERTS)
 #define ASSERTS
 #endif
 
