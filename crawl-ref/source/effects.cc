@@ -1738,9 +1738,11 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
     bool try_again = (class_wanted == OBJ_JEWELLERY
                       || class_wanted == OBJ_STAVES
                       || class_wanted == OBJ_MISCELLANY);
+    int useless_count = 0;
 
     do
     {
+        again:
         switch (class_wanted)
         {
         case OBJ_FOOD:
@@ -1759,6 +1761,15 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
             break;
         default: break;         // gold, books
         }
+
+        item_def dummy;
+        dummy.base_type = class_wanted;
+        dummy.sub_type = type_wanted;
+        dummy.plus = 1; // empty wands would be useless
+        dummy.flags |= ISFLAG_IDENT_MASK;
+
+        if (is_useless_item(dummy, false) && useless_count++ < 200)
+            goto again;
 
         if (try_again)
         {
