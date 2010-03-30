@@ -4625,7 +4625,7 @@ void MessageRegion::render()
 }
 
 CRTRegion::CRTRegion(FTFont *font) : TextRegion(font), m_allow_tooltip(false),
-    m_dirty(false), m_description_index(-1), m_highlight_index(-1),
+    m_dirty(false), m_description_index(-1), m_highlight_index(0),
     m_highlight_style(CRT_LINEHIGHLIGHT),
     m_font_buf(font)
 {
@@ -4746,25 +4746,22 @@ void CRTRegion::_place_entries()
     }
 
     // add the highlight
-    if (m_highlight_index != -1)
+    if (m_highlight_style == CRT_LINEHIGHLIGHT)
     {
-        if (m_highlight_style == CRT_LINEHIGHLIGHT)
-        {
-            m_line_buf.add(m_entries.at(m_highlight_index)->start_x(),
-                m_entries.at(m_highlight_index)->start_y(),
-                m_entries.at(m_highlight_index)->end_x(),
-                m_entries.at(m_highlight_index)->end_y(),
-                term_colours[m_entries.at(m_highlight_index)->highlight_colour() >> 4]);
-        }
-        else if (m_highlight_style == CRT_FILLHIGHLIGHT)
-        {
-          // adds 3 pxels to end and remonve one from start
-            m_shape_buf.add(m_entries.at(m_highlight_index)->start_x() - 1,
-                m_entries.at(m_highlight_index)->start_y(),
-                m_entries.at(m_highlight_index)->end_x() + 3,
-                m_entries.at(m_highlight_index)->end_y(),
-                term_colours[m_entries.at(m_highlight_index)->highlight_colour() >> 4]);
-        }
+        m_line_buf.add(m_entries.at(m_highlight_index)->start_x(),
+                       m_entries.at(m_highlight_index)->start_y(),
+                       m_entries.at(m_highlight_index)->end_x(),
+                       m_entries.at(m_highlight_index)->end_y(),
+                       term_colours[m_entries.at(m_highlight_index)->highlight_colour() >> 4]);
+    }
+    else if (m_highlight_style == CRT_FILLHIGHLIGHT)
+    {
+        // adds 3 pxels to end and remonve one from start
+        m_shape_buf.add(m_entries.at(m_highlight_index)->start_x() - 1,
+                        m_entries.at(m_highlight_index)->start_y(),
+                        m_entries.at(m_highlight_index)->end_x() + 3,
+                        m_entries.at(m_highlight_index)->end_y(),
+                        term_colours[m_entries.at(m_highlight_index)->highlight_colour() >> 4]);
     }
 }
 
@@ -4836,11 +4833,13 @@ std::vector<CRTMenuEntry*> CRTRegion::get_selected_entries()
  * Sets the entry the description text should use
  * For the correct behaviour, whatever menu you are using should have the
  * same indexes (added in same order) as the CRTRegion entries
- * -1 clears description text
  * TODO: Possibly match by MenuEntry* instead?
  */
 void CRTRegion::set_highlight_entry(int index)
 {
+    if (index < 0)
+        return;
+
     if (index >= static_cast<int> (m_entries.size()))
     {
         // out of bounds
@@ -4927,6 +4926,9 @@ int CRTRegion::_find_entry_by_mouse_coords(const coord_def& pos)
 
 bool CRTRegion::select_entry(int index)
 {
+    if (index < 0)
+        return false;
+
     if (index < static_cast<int> (m_entries.size()))
     {
         m_entries.at(index)->select(!m_entries.at(index)->selected());
