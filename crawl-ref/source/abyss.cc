@@ -545,6 +545,8 @@ void area_shift(void)
     _generate_area(coord_def(MAPGEN_BORDER, MAPGEN_BORDER),
                    coord_def(GXM - MAPGEN_BORDER, GYM - MAPGEN_BORDER), true);
 
+    los_changed();
+
     _xom_check_nearness();
 
     for (radius_iterator ri(you.get_los()); ri; ++ri)
@@ -560,8 +562,6 @@ void area_shift(void)
 
     for (unsigned int mcount = 0; mcount < 15; mcount++)
         mons_place(mons);
-
-    los_changed();
 
     // And allow monsters in transit another chance to return.
     place_transiting_monsters();
