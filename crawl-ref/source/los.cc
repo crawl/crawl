@@ -948,3 +948,10 @@ void los_cloud_changed(const coord_def& p)
     invalidate_los_around(p);
     _handle_los_change();
 }
+
+void los_changed()
+{
+    invalidate_los();
+    _handle_los_change();
+}
+
