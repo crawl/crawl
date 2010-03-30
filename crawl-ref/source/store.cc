@@ -1424,7 +1424,7 @@ void CrawlHashTable::erase(const std::string key)
 
     if (i != hash_map->end())
     {
-#ifdef DEBUG
+#ifdef ASSERTS
         CrawlStoreValue &val = i->second;
         ASSERT(!(val.flags & SFLAG_NO_ERASE));
 #endif
@@ -1601,7 +1601,7 @@ store_val_type CrawlVector::get_type() const
 
 void CrawlVector::assert_validity() const
 {
-#ifdef DEBUG
+#ifdef ASSERTS
     ASSERT(!(default_flags & SFLAG_UNSET));
     ASSERT(max_size > 0);
     ASSERT(max_size >= size());
@@ -1729,7 +1729,7 @@ CrawlStoreValue& CrawlVector::pop_back()
 
 void CrawlVector::push_back(CrawlStoreValue val)
 {
-#ifdef DEBUG
+#ifdef ASSERTS
     if (type != SV_NONE)
         ASSERT(type == val.type);
 

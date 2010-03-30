@@ -533,7 +533,7 @@ bool direction_chooser::choose_again()
         return false;
     }
 
-#ifdef DEBUG
+#ifdef ASSERTS
     {
         int targ_types = 0;
         if (you.prev_targ != MHITNOT && you.prev_targ != MHITYOU)
