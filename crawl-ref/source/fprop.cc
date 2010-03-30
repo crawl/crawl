@@ -15,8 +15,11 @@ bool is_sanctuary(const coord_def& p)
 {
     if (!map_bounds(p))
         return (false);
-    return (testbits(env.pgrid(p), FPROP_SANCTUARY_1)
-            || testbits(env.pgrid(p), FPROP_SANCTUARY_2));
+    const bool sanct = (testbits(env.pgrid(p), FPROP_SANCTUARY_1)
+                        || testbits(env.pgrid(p), FPROP_SANCTUARY_2));
+    if (sanct)
+        ASSERT(in_bounds(env.sanctuary_pos));
+    return (sanct);
 }
 
 bool is_bloodcovered(const coord_def& p)
