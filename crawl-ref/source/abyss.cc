@@ -16,6 +16,7 @@
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
+#include "los.h"
 #include "makeitem.h"
 #include "mapmark.h"
 #include "message.h"
@@ -560,6 +561,8 @@ void area_shift(void)
     for (unsigned int mcount = 0; mcount < 15; mcount++)
         mons_place(mons);
 
+    los_changed();
+
     // And allow monsters in transit another chance to return.
     place_transiting_monsters();
     place_transiting_items();
@@ -660,6 +663,7 @@ void abyss_teleport( bool new_area )
                              DNGN_FLOOR, DNGN_ALTAR_LUGONU, 50 );
     }
 
+    los_changed();
     place_transiting_monsters();
     place_transiting_items();
 }
@@ -977,6 +981,7 @@ bool lugonu_corrupt_level(int power)
     generate_abyss();
     _generate_area(coord_def(MAPGEN_BORDER, MAPGEN_BORDER),
                    coord_def(GXM - MAPGEN_BORDER, GYM - MAPGEN_BORDER), false);
+    los_changed();
 
     _corrupt_choose_colours();
 
