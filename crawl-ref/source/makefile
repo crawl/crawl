@@ -47,6 +47,8 @@
 
 GAME = crawl
 
+ASSERTS = yes
+
 #
 # Compiler Flags
 #
