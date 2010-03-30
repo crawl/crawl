@@ -38,6 +38,10 @@
 #endif
 
 #ifdef DEBUG
+#define ASSERTS
+#endif
+
+#ifdef ASSERTS
 
 void AssertFailed(const char *expr, const char *file, int line);
 

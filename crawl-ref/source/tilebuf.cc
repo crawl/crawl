@@ -101,7 +101,7 @@ VColour VColour::transparent(0, 0, 0, 0);
 /////////////////////////////////////////////////////////////////////////////
 // VertBuffer
 
-#ifdef DEBUG
+#ifdef ASSERTS
 static bool _valid(int num_verts, int prim)
 {
     switch (prim)

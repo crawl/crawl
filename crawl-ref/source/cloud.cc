@@ -56,7 +56,7 @@ static int _actual_spread_rate(cloud_type type, int spread_rate)
     }
 }
 
-#ifdef DEBUG
+#ifdef ASSERTS
 static bool _killer_whose_match(kill_category whose, killer_type killer)
 {
     switch (whose)

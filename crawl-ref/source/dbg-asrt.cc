@@ -35,7 +35,7 @@
 #include "state.h"
 #include "travel.h"
 
-#ifdef DEBUG
+#ifdef ASSERTS
 static std::string _assert_msg;
 #endif
 
@@ -544,7 +544,7 @@ void do_crash_dump()
 
     set_msg_dump_file(file);
 
-#ifdef DEBUG
+#ifdef ASSERTS
     if (!_assert_msg.empty())
         fprintf(file, "%s\n\n", _assert_msg.c_str());
 #endif
@@ -629,7 +629,7 @@ void do_crash_dump()
 
 // Assertions and such
 
-#ifdef DEBUG
+#ifdef ASSERTS
 //---------------------------------------------------------------
 // BreakStrToDebugger
 //---------------------------------------------------------------

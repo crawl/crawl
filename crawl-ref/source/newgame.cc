@@ -595,7 +595,7 @@ static void _give_species_bonus_mp()
     }
 }
 
-#ifdef DEBUG
+#ifdef ASSERTS
 static bool _species_is_undead( const species_type speci )
 {
     return (speci == SP_MUMMY || speci == SP_GHOUL || speci == SP_VAMPIRE);

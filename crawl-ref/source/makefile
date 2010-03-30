@@ -35,6 +35,7 @@
 #    V             -- set to anything to enable verbose build
 #
 #    USE_ICC       -- set to use Intel's compiler
+#    ASSERTS       -- set to enable assertion checks (implied in debug mode)
 #
 #
 # Requirements:
@@ -542,6 +543,10 @@ CFOPTIMIZE  := -O0
 endif
 ifdef PCH
 CFWARN_L += -Winvalid-pch
+endif
+
+ifdef ASSERTS
+DEFINES += -DASSERTS
 endif
 
 # Cygwin has a panic attack if we do this...

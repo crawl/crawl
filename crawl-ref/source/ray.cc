@@ -474,7 +474,7 @@ void ray_def::bounce(const reflect_grid &rg)
 {
     ASSERT(_valid());
     ASSERT(!rg(coord_def(0,0))); // The cell we bounce from is not solid.
-#ifdef DEBUG
+#ifdef ASSERTS
     const coord_def old_pos = pos();
 #endif
 
