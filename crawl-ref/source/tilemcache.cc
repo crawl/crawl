@@ -162,7 +162,7 @@ mcache_manager::~mcache_manager()
 
 unsigned int mcache_manager::register_monster(const monsters *mon)
 {
-    assert(mon);
+    ASSERT(mon);
     if (!mon)
         return 0;
 
@@ -319,7 +319,7 @@ void mcache_entry::construct(writer &th)
 
 mcache_monster::mcache_monster(const monsters *mon)
 {
-    assert(mcache_monster::valid(mon));
+    ASSERT(mcache_monster::valid(mon));
 
     m_mon_tile = tileidx_monster(mon, false) & TILE_FLAG_MASK;
 
@@ -580,7 +580,7 @@ void mcache_monster::construct(writer &th)
 
 mcache_draco::mcache_draco(const monsters *mon)
 {
-    assert(mcache_draco::valid(mon));
+    ASSERT(mcache_draco::valid(mon));
 
     int draco = draco_subspecies(mon);
     int colour;
@@ -671,7 +671,7 @@ void mcache_draco::construct(writer &th)
 
 mcache_ghost::mcache_ghost(const monsters *mon)
 {
-    assert(mcache_ghost::valid(mon));
+    ASSERT(mcache_ghost::valid(mon));
 
     const struct ghost_demon &ghost = *mon->ghost;
 
@@ -833,7 +833,7 @@ bool mcache_ghost::transparent() const
 
 mcache_demon::mcache_demon(const monsters *mon)
 {
-    assert(mcache_demon::valid(mon));
+    ASSERT(mcache_demon::valid(mon));
 
     const struct ghost_demon &ghost = *mon->ghost;
 

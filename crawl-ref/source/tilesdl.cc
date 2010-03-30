@@ -164,8 +164,8 @@ void TilesFramework::draw_title()
  */
 void TilesFramework::update_title_msg(std::string message)
 {
-    assert (m_layers[LAYER_TILE_CONTROL].m_regions.size() == 1);
-    assert (m_active_layer == LAYER_TILE_CONTROL);
+    ASSERT(m_layers[LAYER_TILE_CONTROL].m_regions.size() == 1);
+    ASSERT(m_active_layer == LAYER_TILE_CONTROL);
     TitleRegion* reg = dynamic_cast<TitleRegion*>(
             m_layers[LAYER_TILE_CONTROL].m_regions.at(0));
     reg->update_message(message);
@@ -183,8 +183,8 @@ void TilesFramework::update_title_msg(std::string message)
  */
 void TilesFramework::hide_title()
 {
-    assert (m_layers[LAYER_TILE_CONTROL].m_regions.size() == 1);
-    assert (m_active_layer == LAYER_TILE_CONTROL);
+    ASSERT(m_layers[LAYER_TILE_CONTROL].m_regions.size() == 1);
+    ASSERT(m_active_layer == LAYER_TILE_CONTROL);
     TitleRegion* reg = dynamic_cast<TitleRegion*>(
             m_layers[LAYER_TILE_CONTROL].m_regions.at(0));
     redraw();
