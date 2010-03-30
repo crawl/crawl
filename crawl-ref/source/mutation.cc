@@ -1782,7 +1782,7 @@ static mutation_type _get_random_mutation(bool prefer_good,
     return (chosen);
 }
 
-#ifdef DEBUG
+#ifdef ASSERTS
 static bool _is_random(mutation_type which_mutation)
 {
     return (which_mutation == RANDOM_MUTATION
