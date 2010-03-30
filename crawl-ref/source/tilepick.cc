@@ -130,7 +130,6 @@ static int _get_random_monster_tile(const monsters *mon, const int base_tile)
 static int _tileidx_monster_zombified(const monsters *mon)
 {
     const int z_type = mon->type;
-    const int z_size = mons_zombie_size(z_type);
 
     // TODO: Add tiles and code for these as well.
     switch (z_type)
@@ -143,6 +142,7 @@ static int _tileidx_monster_zombified(const monsters *mon)
     }
 
     const int subtype = (int) mons_zombie_base(mon);
+    const int z_size = mons_zombie_size(subtype);
 
     switch (get_mon_shape(mon))
     {
@@ -168,7 +168,8 @@ static int _tileidx_monster_zombified(const monsters *mon)
         }
         // else fall-through
     case MON_SHAPE_QUADRUPED_TAILLESS:
-        return TILEP_MONS_ZOMBIE_QUADRUPED;
+        return (z_size == Z_SMALL ? TILEP_MONS_ZOMBIE_QUADRUPED_SMALL
+                                  : TILEP_MONS_ZOMBIE_QUADRUPED_LARGE);
     case MON_SHAPE_BAT:
         return TILEP_MONS_ZOMBIE_BAT;
     case MON_SHAPE_SNAKE:

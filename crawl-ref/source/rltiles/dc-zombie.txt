@@ -2,6 +2,8 @@
 %sdir dc-mon/undead/zombies
 zombie_small MONS_ZOMBIE_SMALL
 zombie_large MONS_ZOMBIE_LARGE
+zombie_quadruped_small MONS_ZOMBIE_QUADRUPED_SMALL
+zombie_quadruped_large MONS_ZOMBIE_QUADRUPED_LARGE
 zombie_bat MONS_ZOMBIE_BAT
 zombie_bee MONS_ZOMBIE_BEE
 zombie_bug MONS_ZOMBIE_BEETLE
@@ -10,7 +12,6 @@ zombie_centaur MONS_ZOMBIE_CENTAUR
 zombie_naga MONS_ZOMBIE_NAGA
 zombie_snake MONS_ZOMBIE_SNAKE
 zombie_spider MONS_ZOMBIE_SPIDER
-zombie_quadruped MONS_ZOMBIE_QUADRUPED
 zombie_dragon MONS_ZOMBIE_DRAGON
 zombie_hydra1 MONS_ZOMBIE_HYDRA
 zombie_hydra2
