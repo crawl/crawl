@@ -60,7 +60,7 @@ void GLStateManager::shutdown()
     delete glmanager;
 }
 
-#ifdef DEBUG
+#ifdef ASSERTS
 bool GLStateManager::_valid(int num_verts, drawing_modes mode)
 {
     switch( mode )
@@ -78,6 +78,6 @@ bool GLStateManager::_valid(int num_verts, drawing_modes mode)
         return (false);
     }
 }
-#endif // DEBUG
+#endif // ASSERTS
 
 #endif // USE_TILE
