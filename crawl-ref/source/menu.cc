@@ -2600,7 +2600,7 @@ bool PrecisionMenu::add_item(CRTMenuEntry* item)
 #else
     // calculate item width for console
     // for now, We only support single line entries
-    if (item->start_x() + item->text.size() > m_end_x)
+    if (item->start_x() + (int)item->text.size() > m_end_x)
     {
         item->set_end_x(m_end_x);
     }
