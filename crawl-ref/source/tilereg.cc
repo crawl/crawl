@@ -2512,7 +2512,7 @@ bool GridRegion::place_cursor(MouseEvent &event, unsigned int &item_idx)
 void GridRegion::add_quad_char(char c, int x, int y, int ofs_x, int ofs_y)
 {
     int num = c - '0';
-    assert(num >= 0 && num <= 9);
+    ASSERT(num >= 0 && num <= 9);
     int idx = TILE_NUM0 + num;
 
     m_buf_main.add(idx, x, y, ofs_x, ofs_y, false);
@@ -3752,8 +3752,8 @@ void TabbedRegion::set_tab_region(int idx, GridRegion *reg, int tile_tab)
     for (int i = 1; i < TAB_OFS_MAX; ++i)
     {
         const tile_info &inf_other = tile_gui_info(tile_tab + i);
-        assert(inf_other.height == inf.height);
-        assert(inf_other.width == inf.width);
+        ASSERT(inf_other.height == inf.height);
+        ASSERT(inf_other.width == inf.width);
     }
 
     ASSERT((int)m_tabs.size() > idx);
