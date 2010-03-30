@@ -51,4 +51,5 @@ void los_actor_moved(const actor* act, const coord_def& oldpos);
 void los_monster_died(const monsters* mon);
 void los_terrain_changed(const coord_def& p);
 void los_cloud_changed(const coord_def& p);
+void los_changed();
 #endif

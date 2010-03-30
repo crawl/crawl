@@ -1467,8 +1467,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (load_mode != LOAD_VISITOR)
     {
         dungeon_events.fire_event(DET_ENTERING_LEVEL);
-        invalidate_los();
-        invalidate_agrid();
+        los_changed();
     }
 
     // Things to update for player entering level

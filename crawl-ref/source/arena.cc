@@ -273,8 +273,7 @@ namespace arena
 #ifdef USE_TILE
         TileNewLevel(true);
 #endif
-        invalidate_los();
-        invalidate_agrid();
+        los_changed();
         env.markers.activate_all();
     }
 
