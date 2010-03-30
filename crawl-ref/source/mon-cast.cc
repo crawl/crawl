@@ -1697,7 +1697,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         return;
     }
 
-#ifdef DEBUG
+#ifdef ASSERTS
     const unsigned int flags = get_spell_flags(spell_cast);
 
     ASSERT(!(flags & (SPFLAG_TESTING | SPFLAG_MAPPING)));
