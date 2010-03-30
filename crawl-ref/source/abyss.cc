@@ -452,7 +452,7 @@ void area_shift(void)
     FixedArray<unsigned short, LOS_DIAMETER, LOS_DIAMETER> fprops;
     const coord_def los_delta(LOS_RADIUS, LOS_RADIUS);
 
-    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
+    for (radius_iterator ri(you.get_los()); ri; ++ri)
     {
         fprops(you.pos() - *ri + los_delta) = env.pgrid(*ri);
         if (env.sanctuary_pos == *ri && env.sanctuary_time > 0)
@@ -500,7 +500,7 @@ void area_shift(void)
     }
 
     // Shift all monsters and items to new area.
-    for (radius_iterator ri(you.pos(), 10, true, false); ri; ++ri)
+    for (radius_iterator ri(you.pos(), 10, C_SQUARE); ri; ++ri)
     {
         const coord_def newpos = abyss_center + *ri - you.pos();
 
@@ -547,7 +547,7 @@ void area_shift(void)
 
     _xom_check_nearness();
 
-    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
+    for (radius_iterator ri(you.get_los()); ri; ++ri)
         env.pgrid(*ri) = fprops(you.pos() - *ri + los_delta);
 
     if (sanct_shifted)
