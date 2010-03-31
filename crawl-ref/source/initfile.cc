@@ -637,7 +637,6 @@ void game_options::reset_options()
     show_gold_turns = false;
     show_beam       = true;
 
-    use_old_selection_order = false;
     prev_race     = 0;
     prev_cls      = 0;
     prev_ck       = GOD_NO_GOD;
@@ -2132,7 +2131,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         }
     }
 #endif
-    else BOOL_OPTION(use_old_selection_order);
     else if (key == "default_autopickup")
     {
         if (_read_bool(field, true))

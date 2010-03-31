@@ -13,7 +13,6 @@
 # include                 = 034_command_keys.txt
 # classic_item_colours    = true
 # classic_hud             = true
-# use_old_selection_order = true
 # always_confirm_butcher  = true
 # target_unshifted_dirs   = true
 # clear_messages          = true

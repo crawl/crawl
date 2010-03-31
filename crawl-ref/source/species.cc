@@ -14,27 +14,10 @@
 // Take care to list all valid species here, or they cannot be directly
 // chosen.
 //
-// The red draconian is later replaced by a random variant.
-// The old and new lists are expected to have the same length.
-static species_type old_species_order[] = {
-    SP_HUMAN,          SP_HIGH_ELF,
-    SP_DEEP_ELF,       SP_SLUDGE_ELF,
-    SP_MOUNTAIN_DWARF, SP_HALFLING,
-    SP_HILL_ORC,       SP_KOBOLD,
-    SP_MUMMY,          SP_NAGA,
-    SP_OGRE,           SP_TROLL,
-    SP_RED_DRACONIAN,  SP_CENTAUR,
-    SP_DEMIGOD,        SP_SPRIGGAN,
-    SP_MINOTAUR,       SP_DEMONSPAWN,
-    SP_GHOUL,          SP_KENKU,
-    SP_MERFOLK,        SP_VAMPIRE,
-    SP_DEEP_DWARF
-};
-
 // Fantasy staples and humanoid creatures come first, then diminutive and
 // stealthy creatures, then monstrous creatures, then planetouched and after
 // all living creatures finally the undead. (MM)
-static species_type new_species_order[] = {
+static species_type species_order[] = {
     // comparatively human-like looks
     SP_HUMAN,          SP_HIGH_ELF,
     SP_DEEP_ELF,       SP_SLUDGE_ELF,
@@ -66,8 +49,7 @@ species_type get_species(const int index)
     if(index < 0 || index >= ng_num_species())
         return (SP_UNKNOWN);
 
-    return (Options.use_old_selection_order ? old_species_order[index]
-                                            : new_species_order[index]);
+    return (species_order[index]);
 }
 
 static const char * Species_Abbrev_List[NUM_SPECIES] =
@@ -83,10 +65,9 @@ int get_species_index_by_abbrev(const char *abbrev)
 {
     COMPILE_CHECK(ARRAYSZ(Species_Abbrev_List) == NUM_SPECIES, c1);
 
-    for (unsigned i = 0; i < ARRAYSZ(old_species_order); i++)
+    for (unsigned i = 0; i < ARRAYSZ(species_order); i++)
     {
-        const int sp = (Options.use_old_selection_order ? old_species_order[i]
-                                                        : new_species_order[i]);
+        const int sp = species_order[i];
 
         if (tolower( abbrev[0] ) == tolower( Species_Abbrev_List[sp][0] )
             && tolower( abbrev[1] ) == tolower( Species_Abbrev_List[sp][1] ))
@@ -109,11 +90,9 @@ int get_species_index_by_name(const char *name)
     strncpy(lowered_buff, name, sizeof(lowered_buff));
     strlwr(lowered_buff);
 
-    for (i = 0; i < ARRAYSZ(old_species_order); i++)
+    for (i = 0; i < ARRAYSZ(species_order); i++)
     {
-        const species_type real_sp
-                   = (Options.use_old_selection_order ? old_species_order[i]
-                                                      : new_species_order[i]);
+        const species_type real_sp = species_order[i];
 
         const std::string lowered_species =
             lowercase_string(species_name(real_sp,1));
@@ -156,10 +135,8 @@ species_type get_species_by_abbrev(const char *abbrev)
 int ng_num_species()
 {
     // The list musn't be longer than the number of actual species.
-    COMPILE_CHECK(ARRAYSZ(old_species_order) <= NUM_SPECIES, c1);
-    // Check whether the two lists have the same size.
-    COMPILE_CHECK(ARRAYSZ(old_species_order) == ARRAYSZ(new_species_order), c2);
-    return (ARRAYSZ(old_species_order));
+    COMPILE_CHECK(ARRAYSZ(species_order) <= NUM_SPECIES, c1);
+    return (ARRAYSZ(species_order));
 }
 
 // Does a case-sensitive lookup of the species name supplied.

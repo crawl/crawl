@@ -136,8 +136,6 @@ public:
     msg_colour_type channels[NUM_MESSAGE_CHANNELS];  // msg channel colouring
     bool        darken_beyond_range; // for whether targeting is out of range
 
-    bool        use_old_selection_order; // use old order of species/classes in
-                                         // selection screen
     int         weapon;          // auto-choose weapon for character
     int         book;            // auto-choose book for character
     int         wand;            // auto-choose wand for character
