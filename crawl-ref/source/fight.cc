@@ -5149,7 +5149,9 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
 
 void melee_attack::mons_do_spines()
 {
-    if (you.mutation[MUT_SPINY])
+    if (you.mutation[MUT_SPINY] && 
+        one_chance_in(-property(*you.slot_item(EQ_BODY_ARMOUR, false)
+                               , PARM_EVASION) + 1))
     {
         int dmg = roll_dice(player_mutation_level(MUT_SPINY), 6);
         int ac = random2(1+attacker->as_monster()->armour_class());

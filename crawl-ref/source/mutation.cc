@@ -185,7 +185,7 @@ mutation_def mutation_defs[] = {
 
       "heat resistance"
     },
-    { MUT_COLD_RESISTANCE,            4,  3, false, false,
+    { MUT_COLD_RESISTANCE,            50,  3, false, false,
       {"Your flesh is cold resistant.",
        "Your flesh is very cold resistant.",
        "Your flesh is almost immune to the effects of cold."},
@@ -2724,7 +2724,7 @@ try_again:
                         || m == MUT_BREATHE_FLAMES)
                     breath_weapons++;
 
-                if (m == MUT_COLD_RESISTANCE || m == MUT_THROW_FLAMES)
+                if (m == MUT_COLD_RESISTANCE || m == MUT_BREATHE_FLAMES)
                     elemental++;
 
                 if (m == MUT_CLAWS && i == 2 || m == MUT_HORNS && i == 0 ||
