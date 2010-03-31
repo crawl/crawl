@@ -4,30 +4,9 @@
 
 #include "options.h"
 
-// Listed in two columns to match the selection screen output.
-// Take care to list all valid classes here, or they cannot be directly chosen.
-// The old and new lists are expected to have the same length.
-static job_type old_jobs_order[] = {
-    JOB_FIGHTER,            JOB_WIZARD,
-    JOB_PRIEST,             JOB_THIEF,
-    JOB_GLADIATOR,          JOB_NECROMANCER,
-    JOB_PALADIN,            JOB_ASSASSIN,
-    JOB_BERSERKER,          JOB_HUNTER,
-    JOB_CONJURER,           JOB_ENCHANTER,
-    JOB_FIRE_ELEMENTALIST,  JOB_ICE_ELEMENTALIST,
-    JOB_SUMMONER,           JOB_AIR_ELEMENTALIST,
-    JOB_EARTH_ELEMENTALIST, JOB_CRUSADER,
-    JOB_DEATH_KNIGHT,       JOB_VENOM_MAGE,
-    JOB_CHAOS_KNIGHT,       JOB_TRANSMUTER,
-    JOB_HEALER,             JOB_REAVER,
-    JOB_STALKER,            JOB_MONK,
-    JOB_WARPER,             JOB_WANDERER,
-    JOB_ARTIFICER,          JOB_ARCANE_MARKSMAN
-};
-
 // First plain fighters, then religious fighters, then spell-casting
 // fighters, then primary spell-casters, then stabbers and shooters. (MM)
-static job_type new_jobs_order[] = {
+static job_type jobs_order[] = {
     // fighters
     JOB_FIGHTER,            JOB_GLADIATOR,
     JOB_MONK,               JOB_BERSERKER,
@@ -54,8 +33,7 @@ job_type get_job(const int index)
     if (index < 0 || index >= ng_num_jobs())
         return (JOB_UNKNOWN);
 
-    return (Options.use_old_selection_order? old_jobs_order[index]
-                                           : new_jobs_order[index]);
+    return (jobs_order[index]);
 }
 
 static const char * Job_Abbrev_List[ NUM_JOBS ] =
@@ -76,10 +54,9 @@ int get_job_index_by_abbrev(const char *abbrev)
     COMPILE_CHECK(ARRAYSZ(Job_Abbrev_List) == NUM_JOBS, c1);
 
     unsigned int job;
-    for (unsigned int i = 0; i < ARRAYSZ(old_jobs_order); i++)
+    for (unsigned int i = 0; i < ARRAYSZ(jobs_order); i++)
     {
-        job = (Options.use_old_selection_order ? old_jobs_order[i]
-                                               : new_jobs_order[i]);
+        job = jobs_order[i];
 
         if (tolower( abbrev[0] ) == tolower( Job_Abbrev_List[job][0] )
             && tolower( abbrev[1] ) == tolower( Job_Abbrev_List[job][1] ))
@@ -127,10 +104,9 @@ int get_job_index_by_name(const char *name)
 
     int cl = -1;
     unsigned int job;
-    for (unsigned int i = 0; i < ARRAYSZ(old_jobs_order); i++)
+    for (unsigned int i = 0; i < ARRAYSZ(jobs_order); i++)
     {
-        job = (Options.use_old_selection_order ? old_jobs_order[i]
-                                               : new_jobs_order[i]);
+        job = jobs_order[i];
 
         strncpy( lowered_job, Job_Name_List[job], sizeof( lowered_job ) );
         strlwr( lowered_job );
@@ -186,10 +162,8 @@ job_type get_job_by_name(const char *name)
 int ng_num_jobs()
 {
     // The list musn't be longer than the number of actual jobs.
-    COMPILE_CHECK(ARRAYSZ(old_jobs_order) <= NUM_JOBS, c1);
-    // Check whether the two lists have the same size.
-    COMPILE_CHECK(ARRAYSZ(old_jobs_order) == ARRAYSZ(new_jobs_order), c2);
-    return ARRAYSZ(old_jobs_order);
+    COMPILE_CHECK(ARRAYSZ(jobs_order) <= NUM_JOBS, c1);
+    return ARRAYSZ(jobs_order);
 }
 
 bool is_valid_job(job_type job)

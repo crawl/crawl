@@ -14,8 +14,8 @@ The contents of this text are:
 0-c     Options and how to set them.
 0-d     Aliases and variables.
 1-  Starting Screen.
-                name, remember_name, use_old_selection_order,
-                weapon, book, wand, chaos_knight, death_knight, priest,
+                name, remember_name, weapon, book, wand,
+                chaos_knight, death_knight, priest,
                 species, background, random_pick, good_random
 2-  File System and Sound.
                 crawl_dir, morgue_dir, save_dir, macro_dir, sound
@@ -269,13 +269,6 @@ remember_name = true
         choosing your species and background, you must enter . at the
         initial name prompt - hitting Enter at the name prompt will
         simply reuse your old name if remember_name is set.
-
-use_old_selection_order = false
-        If set to true, the character selection screen will offer
-        species and backgrounds in the order of version 0.3 and earlier.
-        Note that this needs to be set before the "species" or
-        "background" options (see below), or they won't be interpreted
-        correctly.
 
 weapon = (random | short sword | hand axe | spear | mace | trident)
         Specifying the weapon option allows you to bypass the weapon
