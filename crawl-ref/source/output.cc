@@ -2691,8 +2691,6 @@ std::string _status_mut_abilities()
                 snprintf(info, INFO_SIZE, "+%d%% mp", level*10);
                 current = info;
                 break;
-
-            // demonspawn mutations
             case MUT_TORMENT_RESISTANCE:
                 current = "torment resistance";
                 break;
@@ -2704,32 +2702,8 @@ std::string _status_mut_abilities()
                 snprintf(info, INFO_SIZE, "life protection %d", level);
                 current = info;
                 break;
-            case MUT_SUMMON_MINOR_DEMONS:
-                current = "summon minor demons";
-                break;
-            case MUT_SUMMON_DEMONS:
-                current = "summon demons";
-                break;
             case MUT_HURL_HELLFIRE:
                 current = "hurl hellfire";
-                break;
-            case MUT_CALL_TORMENT:
-                current = "call torment";
-                break;
-            case MUT_RAISE_DEAD:
-                current = "raise dead";
-                break;
-            case MUT_CONTROL_DEMONS:
-                current = "control demons";
-                break;
-            case MUT_DEATH_STRENGTH:
-                current = "draw strength from death and destruction";
-                break;
-            case MUT_CHANNEL_HELL:
-                current = "channel magical energy from Hell";
-                break;
-            case MUT_DRAIN_LIFE:
-                current = "drain life";
                 break;
             case MUT_THROW_FLAMES:
                 current = "throw flames of Gehenna";
@@ -2737,10 +2711,18 @@ std::string _status_mut_abilities()
             case MUT_THROW_FROST:
                 current = "throw frost of Cocytus";
                 break;
-            case MUT_SMITE:
-                current = "invoke powers of Tartarus";
+            case MUT_DEMONIC_GUARDIAN:
+                snprintf(info, INFO_SIZE, "demonic guardian %d", level);
+                current = info;
                 break;
-            // end of demonspawn mutations
+            case MUT_SPINY:
+                snprintf(info, INFO_SIZE, "spiny %d", level);
+                current = info;
+                break;
+            case MUT_NIGHTSTALKER:
+                snprintf(info, INFO_SIZE, "nightstalker %d", level);
+                current = info;
+                break;
 
             case MUT_CLAWS:
                 snprintf(info, INFO_SIZE, "claws %d", level);
@@ -2751,10 +2733,12 @@ std::string _status_mut_abilities()
                 current = info;
                 break;
             case MUT_HOOVES:
-                current = "hooves";
+                snprintf(info, INFO_SIZE, "hooves %d", level);
+                current = info;
                 break;
             case MUT_TALONS:
-                current = "talons";
+                snprintf(info, INFO_SIZE, "talons %d", level);
+                current = info;
                 break;
             case MUT_BREATHE_POISON:
                 current = "breathe poison";

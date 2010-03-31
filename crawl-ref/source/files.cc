@@ -61,6 +61,7 @@
 #include "mon-act.h"
 #include "mon-death.h"
 #include "mon-place.h"
+#include "mon-iter.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "mon-transit.h"
@@ -1162,6 +1163,17 @@ static void _grab_followers()
         // From here, we can't fail, so check to see if we've got Pikel
         if (mons_is_pikel(fmenv))
             pikel = fmenv;
+    }
+
+    // Handle interlevel followers
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (testbits(mi->flags, MF_INTERLEVEL_FOLLOWER)
+            || testbits(mi->flags, MF_DEMONIC_GUARDIAN))
+        {
+            mi->flags |= MF_TAKING_STAIRS;
+            _grab_follower_at(mi->pos());
+        }
     }
 
     // Deal with Dowan and Duvessa here.

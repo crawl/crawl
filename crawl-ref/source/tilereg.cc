@@ -829,7 +829,7 @@ static void _fill_doll_equipment(dolls_data &result)
         const int item = you.equip[EQ_BOOTS];
         if (item != -1)
             result.parts[TILEP_PART_BOOTS] = tilep_equ_boots(you.inv[item]);
-        else if (player_mutation_level(MUT_HOOVES))
+        else if (player_mutation_level(MUT_HOOVES) >= 3)
             result.parts[TILEP_PART_BOOTS] = TILEP_BOOTS_HOOVES;
         else
             result.parts[TILEP_PART_BOOTS] = 0;

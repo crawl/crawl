@@ -992,9 +992,10 @@ bool melee_attack::player_aux_unarmed()
             }
 
             // Kenku have large taloned feet that do good damage.
-            const bool clawed_kick = player_mutation_level(MUT_TALONS);
+            const bool clawed_kick = player_mutation_level(MUT_TALONS) ?
+                            player_mutation_level(MUT_TALONS)*2 + 2 : 5;
 
-            if (clawed_kick)
+            if (player_mutation_level(MUT_TALONS))
             {
                 unarmed_attack = "claw";
                 miss_verb      = "kick";
@@ -1002,8 +1003,9 @@ bool melee_attack::player_aux_unarmed()
             else
                 unarmed_attack = "kick";
 
-            aux_damage = (player_mutation_level(MUT_HOOVES) ? 10
-                          : clawed_kick                     ?  8 : 5);
+            aux_damage = (player_mutation_level(MUT_HOOVES) ?
+                          player_mutation_level(MUT_HOOVES)*3 + 1
+                          : clawed_kick);
             break;
         }
 
@@ -5145,6 +5147,36 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
     }
 }
 
+void melee_attack::mons_do_spines()
+{
+    if (you.mutation[MUT_SPINY])
+    {
+        int dmg = roll_dice(player_mutation_level(MUT_SPINY), 6);
+        int ac = random2(1+attacker->as_monster()->armour_class());
+        const int evp = -property(*you.slot_item(EQ_BODY_ARMOUR, false)
+                                  , PARM_EVASION);
+
+        int hurt = dmg - ac - evp;
+
+#ifdef DEBUG_DIAGNOSTICS
+        mprf( MSGCH_DIAGNOSTICS,
+              "dmg: %d; ac: %d; evp: %d; hurt: %d",
+              dmg, ac, evp, hurt );
+#endif
+
+        if (hurt <= 0)
+            return;
+
+        if (!defender_invisible)
+        {
+            simple_monster_message(attacker->as_monster(),
+                                   " is struck by your spines.");
+        }
+
+        attacker->as_monster()->hurt(&you, hurt);
+    }
+}
+
 void melee_attack::mons_perform_attack_rounds()
 {
     const int nrounds = attacker->as_monster()->has_hydra_multi_attack() ?
@@ -5546,6 +5578,11 @@ void melee_attack::mons_perform_attack_rounds()
             && is_range_weapon(*weap))
         {
             set_ident_flags(*weap, ISFLAG_KNOW_CURSE);
+        }
+
+        if(!shield_blocked) {
+            // Check for spiny mutation
+            mons_do_spines();
         }
     }
 

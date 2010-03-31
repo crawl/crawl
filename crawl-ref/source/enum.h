@@ -24,23 +24,18 @@ enum ability_type
     ABIL_BREATHE_STICKY_FLAME,
     ABIL_BREATHE_STEAM,
     ABIL_FLY,
-    ABIL_SUMMON_MINOR_DEMON,
-    ABIL_SUMMON_DEMON,                 //   15
     ABIL_HELLFIRE,
-    ABIL_TORMENT,
-    ABIL_RAISE_DEAD,
-    ABIL_CONTROL_DEMON,
-    ABIL_CHANNELING,                   //   20
-    ABIL_THROW_FLAME,
+    ABIL_THROW_FLAME,                  //   15
     ABIL_THROW_FROST,
-    ABIL_BOLT_OF_DRAINING,
     ABIL_FLY_II,
-    ABIL_DELAYED_FIREBALL,             //   25
+    ABIL_DELAYED_FIREBALL,
     ABIL_MUMMY_RESTORATION,
     ABIL_EVOKE_TELEPORTATION,
     ABIL_EVOKE_BLINK,
-    ABIL_RECHARGING,
-    // 30 - 50 unused
+    ABIL_RECHARGING,                   //   20
+    ABIL_ENABLE_DEMONIC_GUARDIAN,
+    ABIL_DISABLE_DEMONIC_GUARDIAN,
+    // 23 - 50 unused
     ABIL_EVOKE_TURN_INVISIBLE = 51,    //   51
     ABIL_EVOKE_TURN_VISIBLE,
     ABIL_EVOKE_LEVITATE,
@@ -1191,6 +1186,7 @@ enum duration_type
     DUR_PHASE_SHIFT,
     DUR_SEE_INVISIBLE,
     DUR_WEAPON_BRAND,                  // general "branding" spell counter
+    DUR_DEMONIC_GUARDIAN,              // demonic guardian timeout
     DUR_SILENCE,
     DUR_CONDENSATION_SHIELD,
     DUR_STONESKIN,
@@ -2211,9 +2207,12 @@ enum monster_flag_type
     MF_NAME_DESCRIPTOR    = 0x2000000,// mname should be treated with normal
                                       // grammar, ie, prevent "You hit red rat"
                                       // and other such constructs.
-    MF_NAME_DEFINITE      = 0x4000000 // give this monster the definite "the"
+    MF_NAME_DEFINITE      = 0x4000000,// give this monster the definite "the"
                                       // article, instead of the indefinite "a"
                                       // article.
+    MF_INTERLEVEL_FOLLOWER = 0x8000000,// will travel with the player regardless
+                                       // of where the monster is at on the level
+    MF_DEMONIC_GUARDIAN   = 0x10000000 // monster is a demonic guardian
 };
 
 // Adding slots breaks saves. YHBW.
@@ -2369,81 +2368,77 @@ enum mon_spellbook_type
 
 enum mutation_type
 {
-    MUT_TOUGH_SKIN,
-    MUT_STRONG,
-    MUT_CLEVER,
+    MUT_ACUTE_VISION,
     MUT_AGILE,
+    MUT_BERSERK,
+    MUT_BLINK,
+    MUT_BLURRY_VISION,
+    MUT_BREATHE_FLAMES,
+    MUT_BREATHE_POISON,
+    MUT_CARNIVOROUS,
+    MUT_CLARITY,
+    MUT_CLEVER,
+    MUT_CLUMSY,
+    MUT_COLD_RESISTANCE,
+    MUT_CONSERVE_POTIONS,
+    MUT_CONSERVE_SCROLLS,
+    MUT_DEFORMED,
+    MUT_DEMONIC_GUARDIAN,
+    MUT_DETERIORATION,
+    MUT_DOPEY,
+    MUT_HEAT_RESISTANCE,
+    MUT_HERBIVOROUS,
+    MUT_HURL_HELLFIRE,
+    MUT_FAST,
+    MUT_FAST_METABOLISM,
+    MUT_FEAST,
+    MUT_FLEXIBLE_WEAK,
+    MUT_FRAIL,
+    MUT_GOURMAND,
+    MUT_HIGH_MAGIC,
+    MUT_ICEMAIL,
+    MUT_LOW_MAGIC,
+    MUT_MAGIC_RESISTANCE,
+    MUT_MUTATION_RESISTANCE,
+    MUT_NEGATIVE_ENERGY_RESISTANCE,
+    MUT_NIGHTSTALKER,
+    MUT_PASSIVE_FREEZE,
     MUT_PASSIVE_MAPPING,
     MUT_POISON_RESISTANCE,
-    MUT_CARNIVOROUS,
-    MUT_HERBIVOROUS,
-    MUT_HEAT_RESISTANCE,
-    MUT_COLD_RESISTANCE,
-    MUT_SHOCK_RESISTANCE,
     MUT_REGENERATION,
-    MUT_SLOW_HEALING,
-    MUT_FAST_METABOLISM,
-    MUT_SLOW_METABOLISM,
-    MUT_WEAK,
-    MUT_DOPEY,
-    MUT_CLUMSY,
-    MUT_TELEPORT_CONTROL,
-    MUT_TELEPORT,
-    MUT_MAGIC_RESISTANCE,
-    MUT_FAST,
-    MUT_ACUTE_VISION,
-    MUT_DEFORMED,
-    MUT_TELEPORT_AT_WILL,
-    MUT_SPIT_POISON,
-    MUT_BREATHE_FLAMES,
-    MUT_BLINK,
-    MUT_HORNS,
-    MUT_BEAK,
-    MUT_STRONG_STIFF,
-    MUT_FLEXIBLE_WEAK,
-    MUT_SCREAM,
-    MUT_CLARITY,
-    MUT_BERSERK,
-    MUT_DETERIORATION,
-    MUT_BLURRY_VISION,
-    MUT_MUTATION_RESISTANCE,
-    MUT_FRAIL,
     MUT_ROBUST,
-    MUT_TORMENT_RESISTANCE,
-    MUT_NEGATIVE_ENERGY_RESISTANCE,
+    MUT_SAPROVOROUS,
+    MUT_SCREAM,
+    MUT_SHAGGY_FUR,
+    MUT_SHOCK_RESISTANCE,
+    MUT_SLOW_HEALING,
+    MUT_SLOW_METABOLISM,
+    MUT_SPINY,
+    MUT_SPIT_POISON,
     MUT_STOCHASTIC_TORMENT_RESISTANCE,
-    MUT_ICEMAIL,
-    MUT_CONSERVE_SCROLLS,
-    MUT_CONSERVE_POTIONS,
-    MUT_PASSIVE_FREEZE,
-    MUT_SUMMON_MINOR_DEMONS,
-    MUT_SUMMON_DEMONS,
-    MUT_HURL_HELLFIRE,
-    MUT_CALL_TORMENT,
-    MUT_RAISE_DEAD,
-    MUT_CONTROL_DEMONS,
-    MUT_DEATH_STRENGTH,
-    MUT_CHANNEL_HELL,
-    MUT_DRAIN_LIFE,
+    MUT_STRONG,
+    MUT_STRONG_STIFF,
+    MUT_TELEPORT,
+    MUT_TELEPORT_AT_WILL,
+    MUT_TELEPORT_CONTROL,
     MUT_THROW_FLAMES,
     MUT_THROW_FROST,
-    MUT_SMITE,
-    // claws replace hands
-    MUT_CLAWS,
-    MUT_FANGS,
-    // hooves and talons can replace feet
-    MUT_HOOVES,
-    MUT_TALONS,
-    MUT_BREATHE_POISON,
-    MUT_STINGER,
-    MUT_BIG_WINGS,
-    MUT_SAPROVOROUS,
-    MUT_GOURMAND,
-    MUT_SHAGGY_FUR,
-    MUT_HIGH_MAGIC,
-    MUT_LOW_MAGIC,
+    MUT_TORMENT_RESISTANCE,
+    MUT_TOUGH_SKIN,
+    MUT_WEAK,
 
-    // several types of scales
+    // body slot facets
+    MUT_ANTENNAE,       // head
+    MUT_BIG_WINGS,
+    MUT_BEAK,           // head
+    MUT_CLAWS,          // hands
+    MUT_FANGS,
+    MUT_HOOVES,         // feet
+    MUT_HORNS,          // head
+    MUT_STINGER,
+    MUT_TALONS,         // feet
+
+    // sacles
     MUT_DISTORTION_FIELD,
     MUT_ICY_BLUE_SCALES,
     MUT_IRIDESCENT_SCALES,

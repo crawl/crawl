@@ -21,6 +21,7 @@
 
 #include "abl-show.h"
 #include "cio.h"
+#include "coordit.h"
 #include "delay.h"
 #include "defines.h"
 #include "effects.h"
@@ -31,6 +32,9 @@
 #include "itemprop.h"
 #include "macro.h"
 #include "menu.h"
+#include "mgen_data.h"
+#include "mon-place.h"
+#include "mon-util.h"
 #include "notes.h"
 #include "ouch.h"
 #include "player.h"
@@ -194,6 +198,21 @@ mutation_def mutation_defs[] = {
        "You feel a sudden chill."},
 
       "cold resistance"
+    },
+    { MUT_DEMONIC_GUARDIAN,            2,  3, false, false,
+      {"You are protected by a weak demonic guardian.",
+       "You are protected by a demonic guardian.",
+       "You are protected by a powerful demonic guardian."},
+
+      {"You feel the presence of a demonic guardian.",
+       "Your guardian grows in power.",
+       "Your guardian grows in power."},
+
+      {"Your demonic guardian is gone.",
+       "Your demonic guardian is weakened.",
+       "Your demonic guardian is weakened."},
+
+      "demonic guardian"
     },
     { MUT_SHOCK_RESISTANCE,           2,  1, false, false,
       {"You are resistant to electric shocks.", "", ""},
@@ -424,28 +443,6 @@ mutation_def mutation_defs[] = {
 
       "blink"
     },
-    { MUT_HORNS,                      7,  3, false,  true,
-      {"You have a pair of small horns on your head.",
-       "You have a pair of horns on your head.",
-       "You have a pair of large horns on your head."},
-
-      {"A pair of horns grows on your head!",
-       "The horns on your head grow some more.",
-       "The horns on your head grow some more."},
-
-      {"The horns on your head shrink away.",
-       "The horns on your head shrink a bit.",
-       "The horns on your head shrink a bit."},
-
-      "horns"
-    },
-    { MUT_BEAK,                       1,  1, false,  true,
-      {"You have a beak for a mouth.", "", ""},
-      {"Your mouth lengthens and hardens into a beak!", "", ""},
-      {"Your beak shortens and softens into a mouth.", "", ""},
-
-      "beak"
-    },
     { MUT_STRONG_STIFF,              10,  3, false,  true,
       {"Your muscles are strong (Str +1), but stiff (Dex -1).",
        "Your muscles are very strong (Str +2), but stiff (Dex -2).",
@@ -590,8 +587,6 @@ mutation_def mutation_defs[] = {
 
       "robust"
     },
-
-// Some demonic powers start here:
     { MUT_TORMENT_RESISTANCE,         0,  1, false, false,
       {"You are immune to unholy pain and torment.", "", ""},
       {"You feel a strange anaesthesia.", "", ""},
@@ -612,68 +607,12 @@ mutation_def mutation_defs[] = {
 
       "negative energy resistance"
     },
-    { MUT_SUMMON_MINOR_DEMONS,        0,  1, false, false,
-      {"You can summon minor demons to your aid.", "", ""},
-      {"A thousand chattering voices call out to you.", "", ""},
-      {"", "", ""},
-
-      "summon minor demons"
-    },
-    { MUT_SUMMON_DEMONS,              0,  1, false, false,
-      {"You can summon demons to your aid.", "", ""},
-      {"Help is not far away!", "", ""},
-      {"", "", ""},
-
-      "summon demons"
-    },
     { MUT_HURL_HELLFIRE,              0,  1, false, false,
       {"You can hurl blasts of hellfire.", "", ""},
       {"You smell fire and brimstone.", "", ""},
       {"", "", ""},
 
       "hurl hellfire"
-    },
-    { MUT_CALL_TORMENT,               0,  1, false, false,
-      {"You can call on the torments of Hell.", "", ""},
-      {"You feel a terrifying power at your call.", "", ""},
-      {"", "", ""},
-
-      "call torment"
-    },
-    { MUT_RAISE_DEAD,                 0,  1, false, false,
-      {"You can raise the dead to walk for you.", "", ""},
-      {"You feel an affinity for the dead.", "", ""},
-      {"", "", ""},
-
-      "raise dead"
-    },
-    { MUT_CONTROL_DEMONS,             0,  1, false, false,
-      {"You can control demons.", "", ""},
-      {"You feel an affinity for all demonkind.", "", ""},
-      {"", "", ""},
-
-      "control demons"
-    },
-    { MUT_DEATH_STRENGTH,             0,  1, false, false,
-      {"You can draw strength from death and destruction.", "", ""},
-      {"You feel hungry for death.", "", ""},
-      {"", "", ""},
-
-      "death strength"
-    },
-    { MUT_CHANNEL_HELL,               0,  1, false, false,
-      {"You can channel magical energy from Hell.", "", ""},
-      {"You feel a flux of magical energy.", "", ""},
-      {"", "", ""},
-
-      "channel hell"
-    },
-    { MUT_DRAIN_LIFE,                 0,  1, false, false,
-      {"You can drain life in unarmed combat.", "", ""},
-      {"Your skin tingles in a strangely unpleasant way.", "", ""},
-      {"", "", ""},
-
-      "drain life"
     },
     { MUT_THROW_FLAMES,               0,  1, false, false,
       {"You can throw forth the flames of Gehenna.", "", ""},
@@ -689,16 +628,29 @@ mutation_def mutation_defs[] = {
 
       "throw frost"
     },
-    { MUT_SMITE,                      0,  1, false, false,
-      {"You can invoke the powers of Tartarus to smite your living foes.",
-       "", ""},
-      {"A shadow passes over the world around you.", "", ""},
-      {"", "", ""},
+    // body-slot facets
+    { MUT_HORNS,                      7,  3, false,  true,
+      {"You have a pair of small horns on your head.",
+       "You have a pair of horns on your head.",
+       "You have a pair of large horns on your head."},
 
-      "smite"
+      {"A pair of horns grows on your head!",
+       "The horns on your head grow some more.",
+       "The horns on your head grow some more."},
+
+      {"The horns on your head shrink away.",
+       "The horns on your head shrink a bit.",
+       "The horns on your head shrink a bit."},
+
+      "horns"
     },
-// end of demonic powers
+    { MUT_BEAK,                       1,  1, false,  true,
+      {"You have a beak for a mouth.", "", ""},
+      {"Your mouth lengthens and hardens into a beak!", "", ""},
+      {"Your beak shortens and softens into a mouth.", "", ""},
 
+      "beak"
+    },
     { MUT_CLAWS,                      2,  3, false,  true,
       {"You have sharp fingernails.",
        "You have very sharp fingernails.",
@@ -729,17 +681,48 @@ mutation_def mutation_defs[] = {
 
       "fangs"
     },
-    { MUT_HOOVES,                     1,  1, false,  true,
-      {"You have hooves in place of feet.", "", ""},
-      {"Your feet shrivel into cloven hooves.", "", ""},
-      {"Your hooves expand and flesh out into feet!", "", ""},
+    { MUT_HOOVES,                     5,  3, false,  true,
+      {"You have large cloven feet.",
+       "You have hoof-like feet.",
+       "You have hooves in place of feet."},
+
+      {"Your feet thicken and deform.",
+       "Your feet thicken and deform.",
+       "Your feet have mutated into hooves."},
+
+      {"Your hooves expand and flesh out into feet!",
+       "Your hooves look more like feet.",
+       "Your hooves look more like feet."},
 
       "hooves"
     },
-    { MUT_TALONS,                     1,  1, false,  true,
-      {"You have talons in place of feet.", "", ""},
-      {"Your feet stretch and sharpen into talons.", "", ""},
-      {"Your talons dull and shrink into feet!", "", ""},
+    { MUT_ANTENNAE, 5, 3, false, true,
+      {"You have a pair of small antennae on your head.",
+       "You have a pair of antennae on your head.",
+       "You have a pair of large antennae on your head."},
+
+      {"A pair of antennae grows on your head!",
+       "The antennae on your head grow some more.",
+       "The antennae on your head grow some more."},
+
+      {"The antennae on your head shrink away.",
+       "The antennae on your head shrink a bit.",
+       "The antennae on your head shrink a bit."},
+
+      "antennae"
+    },
+    { MUT_TALONS,                     5,  3, false,  true,
+      {"You have sharp toenails.",
+       "You have razor-sharp toenails.",
+       "You have claws for feet."},
+
+      {"Your toenails lengthen and sharpen.",
+       "Your toenails lengthen and sharpen.",
+       "Your feet stretch into talons."},
+
+      {"Your talons dull and shrink into feet.",
+       "Your talons look more like feet.",
+       "Your talons look more like feet."},
 
       "talons"
     },
@@ -848,174 +831,6 @@ mutation_def mutation_defs[] = {
 
       ""
     },
-
-    // Scale mutations
-    { MUT_DISTORTION_FIELD,                 2,  3, false, false,
-      {"You are surrounded by a mild repulsion field (EV +2).",
-       "You are surrounded by a moderate repulsion field (EV +3).",
-       "You are surrounded by a strong repulsion field (EV +4; repel missiles)."},
-
-      {"You begin to radiate repulsive energy.",
-       "Your repulsive radiation grows stronger.",
-       "Your repulsive radiation grows stronger."},
-
-      {"You feel attractive.",
-       "You feel attractive.",
-       "You feel attractive."},
-
-      "repulsion field"
-    },
-    { MUT_ICY_BLUE_SCALES,                  2,  3, false, true,
-      {"You are partially covered in colorless scales (AC +1).",
-       "You are mostly covered in icy blue scales (AC +2).",
-       "You are completely covered in icy blue scales (AC +3, rC+)."},
-
-      {"Colorless scales grow over part of your body.",
-       "Your colorless scales turn icy blue and spread over more of your body.",
-       "Icy blue scales cover your body completely."},
-
-      {"Your colorless scales disappear.",
-       "Your icy blue scales recede somewhat.",
-       "Your icy blue scales recede somewhat."},
-
-      "icy blue scales"
-    },
-    { MUT_IRIDESCENT_SCALES,                2,  3, false,  true,
-      {"You are partially covered in iridescent scales (AC +3).",
-       "You are mostly covered in iridescent scales (AC +6).",
-       "You are completely covered in iridescent scales (AC +9)."},
-
-      {"Iridescent scales grow over part of your body.",
-       "Iridescent scales spread over more of your body.",
-       "Iridescent scales cover you completely."},
-
-      {"Your iridescent scales disappear.",
-       "Your iridescent scales recede somewhat.",
-       "Your iridescent scales recede somewhat."},
-
-      "iridescent scales"
-    },
-    { MUT_LARGE_BONE_PLATES,                2,  3, false,  true,
-      {"You are partially covered in large bone plates (AC +2, SH +2).",
-       "You are mostly covered in large bone plates (AC +3, SH +3).",
-       "You are completely covered in large bone plates (AC +4, SH +4)."},
-
-      {"Large bone plates grow over parts of your arms.",
-       "Large bone plates spread over more of your arms.",
-       "Large bone plates cover your arms completely."},
-
-      {"Your large bone plates disappear.",
-       "Your large bone plates recede somewhat.",
-       "Your large bone plates recede somewhat."},
-
-      "large bone plates"
-    },
-    { MUT_MOLTEN_SCALES,                    2,  3, false, true,
-      {"You are partially covered in colorless scales (AC +1).",
-       "You are mostly covered in molten scales (AC +2, -1 EV).",
-       "You are completely covered in molten scales (AC +3, -1 EV, rF+)."},
-
-      {"Colorless scales grow over part of your body.",
-       "Your colorless scales turn molten and spread over more of your body.",
-       "Molten scales cover your body completely."},
-
-      {"Your colorless scales disappear.",
-       "Your molten scales recede somewhat.",
-       "Your molten scales recede somewhat."},
-
-      "molten scales"
-    },
-    { MUT_ROUGH_BLACK_SCALES,              2,  3, false,  true,
-      {"You are partially covered in rough black scales (AC +4, Dex -1).",
-       "You are mostly covered in rough black scales (AC +7, Dex -2).",
-       "You are completely covered in rough black scales (AC +10, Dex -3)."},
-
-      {"Rough black scales grow over part of your body.",
-       "Rough black scales spread over more of your body.",
-       "Rough black scales cover you completely."},
-
-      {"Your rough black scales disappear.",
-       "Your rough black scales recede somewhat.",
-       "Your rough black scales recede somewhat."},
-
-      "rough black scales"
-    },
-    { MUT_RUGGED_BROWN_SCALES,              2,  3, false,  true,
-      {"You are partially covered in rugged brown scales (AC +2, +3% HP).",
-       "You are mostly covered in rugged brown scales (AC +2, +5% HP).",
-       "You are completely covered in rugged brown scales (AC +2, +7% HP)."},
-
-      {"Rugged brown scales grow over part of your body.",
-       "Rugged brown scales spread over more of your body.",
-       "Rugged brown scales cover you completely."},
-
-      {"Your rugged brown scales disappear.",
-       "Your rugged brown scales recede somewhat.",
-       "Your rugged brown scales recede somewhat."},
-
-      "rugged brown scales"
-    },
-    { MUT_SLIMY_GREEN_SCALES,            2,  3, false, true,
-      {"You are partially covered in colorless scales (AC +1).",
-       "You are mostly covered in slimy green scales (AC +2, -1 EV).",
-       "You are completely covered in slimy green scales (AC +3, -2 EV, rP)."},
-
-      {"Colorless scales grow over part of your body.",
-       "Your colorless scales turn slimy, green and spread over more of your body.",
-       "Slimy green scales cover your body completely."},
-
-      {"Your colorless scales disappear.",
-       "Your slimy green scales recede somewhat.",
-       "Your slimy green scales recede somewhat."},
-
-      "slimy green scales"
-    },
-    { MUT_THIN_METALLIC_SCALES,            2,  3, false, true,
-      {"You are partially covered in colorless scales (AC +1).",
-       "You are mostly covered in thin metallic scales (AC +2).",
-       "You are completely covered in thin metallic scales (AC +3, rElec)."},
-
-      {"Colorless scales grow over part of your body.",
-       "Your colorless scales turn metallic and spread over more of your body.",
-       "Thin metallic scales cover your body completely."},
-
-      {"Your colorless scales disappear.",
-       "Your thin metallic scales recede somewhat.",
-       "Your thin metallic scales recede somewhat."},
-
-      "thin metallic scales"
-    },
-    { MUT_THIN_SKELETAL_STRUCTURE,          2,  3, false,  true,
-      {"You have a somewhat thin skeletal structure (+1 Dex, -1 Str, Stealth).",
-       "You have a moderately thin skeletal structure (+2 Dex, -2 Str, Stealth+).",
-       "You have anunnaturally thin skeletal structure (+3 Dex, -3 Str, Stealth++)."},
-
-      {"Your bones become slightly less dense.",
-       "Your bones become somewhat less dense.",
-       "Your bones become less dense."},
-
-      {"Your skeletal structure returns to normal.",
-       "Your skeletal structure densifies.",
-       "Your skeletal structure densifies."},
-
-      "thin skeletal structure"
-    },
-    { MUT_YELLOW_SCALES,                    2,  3, false,  true,
-      {"You are partially covered in colorless scales (+1 AC).",
-       "You are mostly covered in yellow scales (+2 AC).",
-       "You are completely covered in yellow scales(+3 AC, rCorr)."},
-
-      {"Colorless scales grow over part of your body",
-       "Your colorless scales turn yellow and spread over more of your body.",
-       "Yellow scales cover you completely"},
-
-      {"Your colorless scales disappear.",
-       "Your yellow scales recede somewhat.",
-       "Your yellow scales recede somewhat."},
-
-      "yellow scales"
-    },
-
     { MUT_STOCHASTIC_TORMENT_RESISTANCE, 0, 3, false, false,
       {"You are somewhat able to resist unholy torments (1 in 5 success).",
        "You are decently able to resist unholy torments (2 in 5 success).",
@@ -1071,6 +886,205 @@ mutation_def mutation_defs[] = {
       {"", "", ""},
       "passive freeze",
     },
+
+    { MUT_NIGHTSTALKER,                     3,  3, false, true,
+      {"You are slightly more attuned to the shadows.",
+       "You are significantly more attuned to the shadows.",
+       "You are completely attuned in the shadows."},
+
+      {"You slip into the darkness of the dungeon.",
+       "You slip further into the darkness.",
+       "You are surrounded by darkness."},
+
+      {"The dungeon appears normal, the darkness is gone.",
+       "The dungeon becomes less dark.",
+       "Your afinity for the darknes."},
+
+      "nightstalker"
+    },
+
+    { MUT_SPINY,                            2,  3, false, true,
+      {"You are partially covered in sharp spines.",
+       "You are mostly covered in sharp spines.",
+       "You are completely covered in sharp spines."},
+
+      {"Sharp spines emerge from parts of your body.",
+       "Sharp spines emerge from more of your body.",
+       "Sharp spines emerge from your entire body."},
+
+      {"Your sharp spines disappear entirely.",
+       "Your sharp spines retract somewhat.",
+       "Your sharp spines retract somewhat."},
+
+      "spiny"
+    },
+
+    // Scale mutations
+    { MUT_DISTORTION_FIELD,                 2,  3, false, false,
+      {"You are surrounded by a mild repulsion field (EV +2).",
+       "You are surrounded by a moderate repulsion field (EV +3).",
+       "You are surrounded by a strong repulsion field (EV +4; rMsl)."},
+
+      {"You begin to radiate repulsive energy.",
+       "Your repulsive radiation grows stronger.",
+       "Your repulsive radiation grows stronger."},
+
+      {"You feel attractive.",
+       "You feel attractive.",
+       "You feel attractive."},
+
+      "repulsion field"
+    },
+    { MUT_ICY_BLUE_SCALES,                  2,  3, false, true,
+      {"You are partially covered in colorless scales (AC +1).",
+       "You are mostly covered in icy blue scales (AC +2).",
+       "You are completely covered in icy blue scales (AC +3, rC+)."},
+
+      {"Colorless scales grow over part of your body.",
+       "Your colorless scales turn blue and spread over more of your body.",
+       "Icy blue scales cover your body completely."},
+
+      {"Your colorless scales disappear.",
+       "Your icy blue scales recede somewhat.",
+       "Your icy blue scales recede somewhat."},
+
+      "icy blue scales"
+    },
+    { MUT_IRIDESCENT_SCALES,                2,  3, false,  true,
+      {"You are partially covered in iridescent scales (AC +3).",
+       "You are mostly covered in iridescent scales (AC +6).",
+       "You are completely covered in iridescent scales (AC +9)."},
+
+      {"Iridescent scales grow over part of your body.",
+       "Iridescent scales spread over more of your body.",
+       "Iridescent scales cover you completely."},
+
+      {"Your iridescent scales disappear.",
+       "Your iridescent scales recede somewhat.",
+       "Your iridescent scales recede somewhat."},
+
+      "iridescent scales"
+    },
+    { MUT_LARGE_BONE_PLATES,                2,  3, false,  true,
+      {"You are partially covered in large bone plates (AC +2, SH +2).",
+       "You are mostly covered in large bone plates (AC +3, SH +3).",
+       "You are completely covered in large bone plates (AC +4, SH +4)."},
+
+      {"Large bone plates grow over parts of your arms.",
+       "Large bone plates spread over more of your arms.",
+       "Large bone plates cover your arms completely."},
+
+      {"Your large bone plates disappear.",
+       "Your large bone plates recede somewhat.",
+       "Your large bone plates recede somewhat."},
+
+      "large bone plates"
+    },
+    { MUT_MOLTEN_SCALES,                    2,  3, false, true,
+      {"You are partially covered in colorless scales (AC +1).",
+       "You are mostly covered in molten scales (AC +2, EV -1).",
+       "You are completely covered in molten scales (AC +3, EV -1, rF+)."},
+
+      {"Colorless scales grow over part of your body.",
+       "Your colorless scales turn molten and spread over more of your body.",
+       "Molten scales cover your body completely."},
+
+      {"Your colorless scales disappear.",
+       "Your molten scales recede somewhat.",
+       "Your molten scales recede somewhat."},
+
+      "molten scales"
+    },
+    { MUT_ROUGH_BLACK_SCALES,              2,  3, false,  true,
+      {"You are partially covered in rough black scales (AC +4, Dex -1).",
+       "You are mostly covered in rough black scales (AC +7, Dex -2).",
+       "You are completely covered in rough black scales (AC +10, Dex -3)."},
+
+      {"Rough black scales grow over part of your body.",
+       "Rough black scales spread over more of your body.",
+       "Rough black scales cover you completely."},
+
+      {"Your rough black scales disappear.",
+       "Your rough black scales recede somewhat.",
+       "Your rough black scales recede somewhat."},
+
+      "rough black scales"
+    },
+    { MUT_RUGGED_BROWN_SCALES,              2,  3, false,  true,
+      {"You are partially covered in rugged brown scales (AC +2, +3% HP).",
+       "You are mostly covered in rugged brown scales (AC +2, +5% HP).",
+       "You are completely covered in rugged brown scales (AC +2, +7% HP)."},
+
+      {"Rugged brown scales grow over part of your body.",
+       "Rugged brown scales spread over more of your body.",
+       "Rugged brown scales cover you completely."},
+
+      {"Your rugged brown scales disappear.",
+       "Your rugged brown scales recede somewhat.",
+       "Your rugged brown scales recede somewhat."},
+
+      "rugged brown scales"
+    },
+    { MUT_SLIMY_GREEN_SCALES,            2,  3, false, true,
+      {"You are partially covered in colorless scales (AC +1).",
+       "You are mostly covered in slimy green scales (AC +2, EV -1).",
+       "You are completely covered in slimy green scales (AC +3, EV -2, rP)."},
+
+      {"Colorless scales grow over part of your body.",
+       "Your colorless scales turn green and spread over more of your body.",
+       "Slimy green scales cover your body completely."},
+
+      {"Your colorless scales disappear.",
+       "Your slimy green scales recede somewhat.",
+       "Your slimy green scales recede somewhat."},
+
+      "slimy green scales"
+    },
+    { MUT_THIN_METALLIC_SCALES,            2,  3, false, true,
+      {"You are partially covered in colorless scales (AC +1).",
+       "You are mostly covered in thin metallic scales (AC +2).",
+       "You are completely covered in thin metallic scales (AC +3, rElec)."},
+
+      {"Colorless scales grow over part of your body.",
+       "Your colorless scales are metallic and spread over more of your body.",
+       "Thin metallic scales cover your body completely."},
+
+      {"Your colorless scales disappear.",
+       "Your thin metallic scales recede somewhat.",
+       "Your thin metallic scales recede somewhat."},
+
+      "thin metallic scales"
+    },
+    { MUT_THIN_SKELETAL_STRUCTURE,          2,  3, false,  true,
+      {"You have a somewhat thin skeletal structure (Dex +1, Str -1).",
+       "You have a moderately thin skeletal structure (Dex +2, Str -2).",
+       "You have an unnaturally thin skeletal structure (Dex +3, Str -3)."},
+
+      {"Your bones become slightly less dense.",
+       "Your bones become somewhat less dense.",
+       "Your bones become less dense."},
+
+      {"Your skeletal structure returns to normal.",
+       "Your skeletal structure densifies.",
+       "Your skeletal structure densifies."},
+
+      "thin skeletal structure"
+    },
+    { MUT_YELLOW_SCALES,                    2,  3, false,  true,
+      {"You are partially covered in colorless scales (AC +1).",
+       "You are mostly covered in yellow scales (AC +2).",
+       "You are completely covered in yellow scales(AC +3, rCorr)."},
+
+      {"Colorless scales grow over part of your body",
+       "Your colorless scales turn yellow and spread over more of your body.",
+       "Yellow scales cover you completely"},
+
+      {"Your colorless scales disappear.",
+       "Your yellow scales recede somewhat.",
+       "Your yellow scales recede somewhat."},
+
+      "yellow scales"
+    }
 };
 
 const mutation_def& get_mutation_def(mutation_type mut)
@@ -2138,8 +2152,9 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         mpr(mdef.gain[you.mutation[mutat]], MSGCH_MUTATION);
         gain_msg = false;
 
-        // Hooves and talons force boots off.
-        if (!you.melded[EQ_BOOTS])
+        // Hooves and talons force boots off at 3,
+        // check for level 2 or higher here.
+        if (you.mutation[mutat] >= 3 && !you.melded[EQ_BOOTS])
         {
             remove_one_equip(EQ_BOOTS, false, true);
             modified_eq = true;
@@ -2399,10 +2414,12 @@ bool delete_all_mutations()
 }
 
 static const mutation_type _all_scales[] = {
-    MUT_DISTORTION_FIELD,           MUT_ICY_BLUE_SCALES,        MUT_IRIDESCENT_SCALES,
-    MUT_LARGE_BONE_PLATES,          MUT_MOLTEN_SCALES,          MUT_ROUGH_BLACK_SCALES,
-    MUT_RUGGED_BROWN_SCALES,        MUT_SLIMY_GREEN_SCALES,     MUT_THIN_METALLIC_SCALES,
-    MUT_THIN_SKELETAL_STRUCTURE,    MUT_YELLOW_SCALES,
+    MUT_DISTORTION_FIELD,           MUT_ICY_BLUE_SCALES,
+    MUT_IRIDESCENT_SCALES,          MUT_LARGE_BONE_PLATES,
+    MUT_MOLTEN_SCALES,              MUT_ROUGH_BLACK_SCALES,
+    MUT_RUGGED_BROWN_SCALES,        MUT_SLIMY_GREEN_SCALES,
+    MUT_THIN_METALLIC_SCALES,       MUT_THIN_SKELETAL_STRUCTURE,
+    MUT_YELLOW_SCALES,
 };
 
 static int _is_covering(mutation_type mut)
@@ -2550,17 +2567,23 @@ static int ct_of_tier[] = { 0, 2, 3, 1 };
 
 static const facet_def _demon_facets[] =
 {
+    // Body Slot facets
     { { MUT_CLAWS, MUT_CLAWS, MUT_CLAWS },
       { 2, 2, 2 } },
     { { MUT_HORNS, MUT_HORNS, MUT_HORNS },
       { 2, 2, 2 } },
+    { { MUT_ANTENNAE, MUT_ANTENNAE, MUT_ANTENNAE },
+      { 2, 2, 2 } },
+    { { MUT_HOOVES, MUT_HOOVES, MUT_HOOVES },
+      { 2, 2, 2 } },
+    { { MUT_TALONS, MUT_TALONS, MUT_TALONS },
+      { 2, 2, 2 } },
+    // Regular facets
     { { MUT_THROW_FLAMES, MUT_HEAT_RESISTANCE, MUT_HURL_HELLFIRE },
       { 3, 3, 3 } },
     { { MUT_THROW_FLAMES, MUT_HEAT_RESISTANCE, MUT_CONSERVE_SCROLLS },
       { 3, 3, 3 } },
     { { MUT_FAST, MUT_FAST, MUT_FAST },
-      { 3, 3, 3 } },
-    { { MUT_TELEPORT_AT_WILL, MUT_TELEPORT_AT_WILL, MUT_TELEPORT_AT_WILL },
       { 3, 3, 3 } },
     { { MUT_ROBUST, MUT_ROBUST, MUT_ROBUST },
       { 3, 3, 3 } },
@@ -2582,13 +2605,17 @@ static const facet_def _demon_facets[] =
       { 2, 2, 2 } },
     { { MUT_COLD_RESISTANCE, MUT_CONSERVE_POTIONS, MUT_PASSIVE_FREEZE },
       { 2, 2, 2 } },
+    { { MUT_DEMONIC_GUARDIAN, MUT_DEMONIC_GUARDIAN, MUT_DEMONIC_GUARDIAN },
+      { 2, 2, 2 } },
+    { { MUT_NIGHTSTALKER, MUT_NIGHTSTALKER, MUT_NIGHTSTALKER },
+      { 2, 2, 2 } },
+    { { MUT_SPINY, MUT_SPINY, MUT_SPINY },
+      { 2, 2, 2 } },
     { { MUT_TOUGH_SKIN, MUT_TOUGH_SKIN, MUT_TOUGH_SKIN },
       { 1, 1, 1 } },
     { { MUT_SLOW_METABOLISM, MUT_SLOW_METABOLISM, MUT_SLOW_METABOLISM },
       { 1, 1, 1 } },
     { { MUT_SPIT_POISON, MUT_SPIT_POISON, MUT_SPIT_POISON },
-      { 1, 1, 1 } },
-    { { MUT_BLINK, MUT_BLINK, MUT_BLINK },
       { 1, 1, 1 } },
     { { MUT_HIGH_MAGIC, MUT_HIGH_MAGIC, MUT_HIGH_MAGIC },
       { 1, 1, 1 } },
@@ -2603,15 +2630,18 @@ static const facet_def _demon_facets[] =
       { 1, 1, 1 } },
     { { MUT_MOLTEN_SCALES, MUT_MOLTEN_SCALES, MUT_MOLTEN_SCALES },
       { 1, 1, 1 } },
-    { { MUT_ROUGH_BLACK_SCALES, MUT_ROUGH_BLACK_SCALES, MUT_ROUGH_BLACK_SCALES },
+    { { MUT_ROUGH_BLACK_SCALES, MUT_ROUGH_BLACK_SCALES, MUT_ROUGH_BLACK_SCALES},
       { 1, 1, 1 } },
-    { { MUT_RUGGED_BROWN_SCALES, MUT_RUGGED_BROWN_SCALES, MUT_RUGGED_BROWN_SCALES },
+    { { MUT_RUGGED_BROWN_SCALES, MUT_RUGGED_BROWN_SCALES,
+        MUT_RUGGED_BROWN_SCALES },
       { 1, 1, 1 } },
-    { { MUT_SLIMY_GREEN_SCALES, MUT_SLIMY_GREEN_SCALES, MUT_SLIMY_GREEN_SCALES },
+    { { MUT_SLIMY_GREEN_SCALES, MUT_SLIMY_GREEN_SCALES, MUT_SLIMY_GREEN_SCALES},
       { 1, 1, 1 } },
-    { { MUT_THIN_METALLIC_SCALES, MUT_THIN_METALLIC_SCALES, MUT_THIN_METALLIC_SCALES },
+    { { MUT_THIN_METALLIC_SCALES, MUT_THIN_METALLIC_SCALES,
+        MUT_THIN_METALLIC_SCALES },
       { 1, 1, 1 } },
-    { { MUT_THIN_SKELETAL_STRUCTURE, MUT_THIN_SKELETAL_STRUCTURE, MUT_THIN_SKELETAL_STRUCTURE },
+    { { MUT_THIN_SKELETAL_STRUCTURE, MUT_THIN_SKELETAL_STRUCTURE,
+        MUT_THIN_SKELETAL_STRUCTURE },
       { 1, 1, 1 } },
     { { MUT_YELLOW_SCALES, MUT_YELLOW_SCALES, MUT_YELLOW_SCALES },
       { 1, 1, 1 } }
@@ -2645,6 +2675,7 @@ try_again:
     int regen = 0;
     int slots_lost = 0;
     int breath_weapons = 0;
+    int elemental = 0;
 
     std::set<const facet_def *> facets_used;
 
@@ -2683,7 +2714,12 @@ try_again:
                         || m == MUT_BREATHE_FLAMES)
                     breath_weapons++;
 
-                if (m == MUT_CLAWS && i == 2 || m == MUT_HORNS && i == 0)
+                if (m == MUT_COLD_RESISTANCE || m == MUT_THROW_FLAMES)
+                    elemental++;
+
+                if (m == MUT_CLAWS && i == 2 || m == MUT_HORNS && i == 0 ||
+                    m == MUT_BEAK && i == 0 || m == MUT_ANTENNAE && i == 0 ||
+                    m == MUT_TALONS && i == 2 || m == MUT_HOOVES && i == 2)
                     ++slots_lost;
             }
 
@@ -2701,6 +2737,9 @@ try_again:
         goto try_again;
 
     if (breath_weapons > 1)
+        goto try_again;
+
+    if (elemental > 1)
         goto try_again;
 
     return ret;
@@ -2863,4 +2902,41 @@ bool give_bad_mutation(bool failMsg, bool force_mutation, bool non_fatal)
         learned_something_new(TUT_YOU_MUTATED);
 
     return (result);
+}
+
+void check_demonic_guardian()
+{
+    const int mutlevel = player_mutation_level(MUT_DEMONIC_GUARDIAN);
+    if(!you.active_demonic_guardian && you.duration[DUR_DEMONIC_GUARDIAN] == 0
+       && !you.disable_demonic_guardian && one_chance_in(mutlevel*100))
+    {
+        const monster_type mt = static_cast<monster_type>(
+                            MONS_WHITE_IMP + (mutlevel-1)*5 + random2(5));
+        const int guardian = create_monster(mgen_data(mt, BEH_FRIENDLY, &you,
+                                                      0, 0, you.pos(),
+                                                      MHITYOU, MG_FORCE_BEH));
+
+        menv[guardian].flags |= MF_NO_REWARD;
+        menv[guardian].flags |= MF_DEMONIC_GUARDIAN;
+
+        you.active_demonic_guardian = true;
+    }
+}
+
+void check_antennae_detect() {
+    // we're already here, so the player has at least 1 level of Antennae
+    const int radius = player_mutation_level(MUT_ANTENNAE) == 1 ? 3 : 5;
+
+    for(radius_iterator ri(you.pos(), radius, C_SQUARE);ri; ++ri)
+    {
+        if (monster_at(*ri))
+        {
+            show_type st;
+            st.cls = SH_INVIS_EXPOSED;
+            st.colour = RED;
+
+            set_map_knowledge_obj(*ri, st);
+            set_map_knowledge_detected_mons(*ri);
+        }
+    }
 }

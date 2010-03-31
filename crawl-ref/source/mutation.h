@@ -58,4 +58,7 @@ void roll_demonspawn_mutations();
 bool perma_mutate(mutation_type which_mut, int how_much);
 int how_mutated(bool all = false, bool levels = false);
 
+
+void check_demonic_guardian();
+void check_antennae_detect();
 #endif

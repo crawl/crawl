@@ -1533,7 +1533,7 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_FAST]            = 2;
         you.mutation[MUT_DEFORMED]        = 1;
         you.mutation[MUT_FAST_METABOLISM] = 2;
-        you.mutation[MUT_HOOVES]          = 1;
+        you.mutation[MUT_HOOVES]          = 3;
         break;
     case SP_NAGA:
         you.mutation[MUT_ACUTE_VISION]      = 1;
@@ -1561,7 +1561,7 @@ void give_basic_mutations(species_type speci)
         break;
     case SP_KENKU:
         you.mutation[MUT_BEAK]   = 1;
-        you.mutation[MUT_TALONS] = 1;
+        you.mutation[MUT_TALONS] = 3;
         break;
     case SP_TROLL:
         you.mutation[MUT_TOUGH_SKIN]      = 2;
