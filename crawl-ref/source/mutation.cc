@@ -898,7 +898,7 @@ mutation_def mutation_defs[] = {
 
       {"The dungeon appears normal; the darkness is gone.",
        "The dungeon becomes less dark.",
-       "Your affinity for the darkness vanishes."},
+       "Your affinity for the darkness weakens."},
 
       "nightstalker"
     },
