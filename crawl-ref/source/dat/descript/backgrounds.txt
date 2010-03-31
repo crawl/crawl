@@ -117,5 +117,5 @@ Choose a weapon and get a Blinking scroll and the Spatial Translocations book.
 %%%%
 Wizard
 
-Get to choose with book of Minor Magic they start with.
+Get to choose which book of Minor Magic they start with.
 %%%%
