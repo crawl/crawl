@@ -2573,9 +2573,6 @@ void world_reacts()
     if (you.attribute[ATTR_SHADOWS])
         shadow_lantern_effect();
 
-    if (player_mutation_level(MUT_ANTENNAE))
-        check_antennae_detect();
-
     if (player_mutation_level(MUT_DEMONIC_GUARDIAN))
         check_demonic_guardian();
 
@@ -2639,6 +2636,9 @@ void world_reacts()
 
     if (you.duration[DUR_FIRE_SHIELD] > 0)
         manage_fire_shield(you.time_taken);
+
+    if (player_mutation_level(MUT_ANTENNAE))
+        check_antennae_detect();
 
     handle_starvation();
 
