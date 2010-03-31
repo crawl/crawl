@@ -33,6 +33,7 @@
 #include "artefact.h"
 #include "cio.h"
 #include "command.h"
+#include "database.h"
 #include "describe.h"
 #include "dungeon.h"
 #include "files.h"
@@ -2767,8 +2768,7 @@ void _construct_species_menu(PrecisionMenu* menu)
         // set start x and start y
         tmp->set_start_x(X_MARGIN + (i / ITEMS_IN_COLUMN) * COLUMN_WIDTH);
         tmp->set_start_y(3 + i % ITEMS_IN_COLUMN);
-        // TODO read the description text from somewhere
-        tmp->set_description_text(species_name(species, 1));
+        tmp->set_description_text(getGameStartDescription(species_name(species, 1)));
         menu->add_item(tmp);
         // Fill to column width - 1
         tmp->text.append(COLUMN_WIDTH - tmp->text.size() - 1 , ' ');
@@ -2822,12 +2822,14 @@ void _construct_species_menu(PrecisionMenu* menu)
     menu->add_item(tmp);
 
     // Adjust the end marker to align the - because Space text is longer by 4
-    if (you.char_class != JOB_UNKNOWN) {
-            tmp = new CRTMenuEntry("Space - change background",
-                                    X_MARGIN + COLUMN_WIDTH - 4,
-                                    SPECIAL_KEYS_START_Y + 2, BROWN);
+    if (you.char_class != JOB_UNKNOWN)
+    {
+        tmp = new CRTMenuEntry("Space - change background",
+                               X_MARGIN + COLUMN_WIDTH - 4,
+                               SPECIAL_KEYS_START_Y + 2, BROWN);
     }
-    else {
+    else
+    {
         tmp = new CRTMenuEntry("Space - Pick background first",
                                X_MARGIN + COLUMN_WIDTH - 4,
                                SPECIAL_KEYS_START_Y + 2, BROWN);
@@ -3125,8 +3127,7 @@ void _construct_backgrounds_menu(PrecisionMenu* menu)
         // set start x and start y
         tmp->set_start_x(X_MARGIN + (i / ITEMS_IN_COLUMN) * COLUMN_WIDTH);
         tmp->set_start_y(3 + i % ITEMS_IN_COLUMN);
-        // TODO read the description text from somewhere
-        tmp->set_description_text(get_job_name(job));
+        tmp->set_description_text(getGameStartDescription(get_job_name(job)));
 
         // fill the text entry to end of column - 1
         tmp->text.append(COLUMN_WIDTH - tmp->text.size() - 1 , ' ');

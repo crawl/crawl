@@ -1,0 +1,93 @@
+%%%%
+Centaur
+
+No description available.
+%%%%
+Deep Dwarf
+
+No description available.
+%%%%
+Deep Elf
+
+No description available.
+%%%%
+Demigod
+
+No description available.
+%%%%
+Demonspawn
+
+No description available.
+%%%%
+Draconian
+
+No description available.
+%%%%
+Ghoul
+
+No description available.
+%%%%
+Halfling
+
+No description available.
+%%%%
+High Elf
+
+No description available.
+%%%%
+Hill Orc
+
+No description available.
+%%%%
+Human
+
+No description available.
+%%%%
+Kenku
+
+No description available.
+%%%%
+Kobold
+
+No description available.
+%%%%
+Merfolk
+
+Half fish, half man, the merfolk are citizens of both water and land.
+%%%%
+Minotaur
+
+A large muscular human with the head of a bull.
+%%%%
+Mountain Dwarf
+
+No description available.
+%%%%
+Mummy
+
+An undead figure covered in bandages and embalming fluids, compelled to walk by an ancient curse.
+%%%%
+Naga
+
+A hybrid; human from the chest up, with a scaly, muscular torso trailing off like that of a snake.
+%%%%
+Ogre
+
+No description available.
+%%%%
+Sludge Elf
+
+No description available.
+%%%%
+Spriggan
+
+No description available.
+%%%%
+Troll
+
+No description available.
+%%%%
+Vampire
+
+No description available.
+%%%%

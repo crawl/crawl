@@ -70,6 +70,11 @@ static TextDB AllDBs[] =
             "descript/cards.txt",
             NULL),
 
+    TextDB( "db/gamestart",
+            "descript/species.txt",
+            "descript/backgrounds.txt",
+            NULL),
+
     TextDB( "db/randart",
             "database/randname.txt",
             "database/rand_wpn.txt", // mostly weapons
@@ -111,13 +116,14 @@ static TextDB AllDBs[] =
 };
 
 static TextDB& DescriptionDB = AllDBs[0];
-static TextDB& RandartDB     = AllDBs[1];
-static TextDB& SpeakDB       = AllDBs[2];
-static TextDB& ShoutDB       = AllDBs[3];
-static TextDB& MiscDB        = AllDBs[4];
-static TextDB& QuotesDB      = AllDBs[5];
-static TextDB& HelpDB        = AllDBs[6];
-static TextDB& FAQDB         = AllDBs[7];
+static TextDB& GameStartDB   = AllDBs[1];
+static TextDB& RandartDB     = AllDBs[2];
+static TextDB& SpeakDB       = AllDBs[3];
+static TextDB& ShoutDB       = AllDBs[4];
+static TextDB& MiscDB        = AllDBs[5];
+static TextDB& QuotesDB      = AllDBs[6];
+static TextDB& HelpDB        = AllDBs[7];
+static TextDB& FAQDB         = AllDBs[8];
 
 // ----------------------------------------------------------------------
 // TextDB
@@ -657,6 +663,17 @@ std::vector<std::string> getLongDescBodiesByRegex(const std::string &regex,
 
     return database_find_bodies(DescriptionDB.get(), regex, true, filter);
 }
+
+/////////////////////////////////////////////////////////////////////////////
+// GameStart DB specific functions.
+std::string getGameStartDescription(const std::string &key)
+{
+    if (!GameStartDB.get())
+        return ("");
+
+    return _query_database(GameStartDB.get(), key, true, true);
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 // Shout DB specific functions.

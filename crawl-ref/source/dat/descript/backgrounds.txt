@@ -1,0 +1,121 @@
+%%%%
+Air Elementalist
+
+No description available.
+%%%%
+Arcane Marksman
+
+No description available.
+%%%%
+Artificer
+
+No description available.
+%%%%
+Assassin
+
+No description available.
+%%%%
+Berserker
+
+No description available.
+%%%%
+Chaos Knight
+
+A follower of one of the three chaos gods: Xom, Makhleb, or Lugonu.
+%%%%
+Conjurer
+
+No description available.
+%%%%
+Crusader
+
+No description available.
+%%%%
+Death Knight
+
+Either proficient in Necromancy or a follower of Yredelemnul.
+%%%%
+Earth Elementalist
+
+No description available.
+%%%%
+Enchanter
+
+No description available.
+%%%%
+Fighter
+
+No description available.
+%%%%
+Fire Elementalist
+
+No description available.
+%%%%
+Gladiator
+
+No description available.
+%%%%
+Healer
+
+A follower of Elyvilon.
+%%%%
+Hunter
+
+No description available.
+%%%%
+Ice Elementalist
+
+No description available.
+%%%%
+Monk
+
+No description available.
+%%%%
+Necromancer
+
+A wizard specializing in the practice of death magic.
+%%%%
+Paladin
+
+A follower of the Shining One.
+%%%%
+Priest
+
+A follower of Zin, Yredelemnul, or Beogh.
+%%%%
+Reaver
+
+No description available.
+%%%%
+Stalker
+
+No description available.
+%%%%
+Summoner
+
+No description available.
+%%%%
+Thief
+
+No description available.
+%%%%
+Transmuter
+
+No description available.
+%%%%
+Venom Mage
+
+No description available.
+%%%%
+Wanderer
+
+No description available.
+%%%%
+Warper
+
+No description available.
+%%%%
+Wizard
+
+No description available.
+%%%%
