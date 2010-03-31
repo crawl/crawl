@@ -7,10 +7,6 @@ Spit Poison
 
 Spit poison at a targeted monster.
 %%%%
-Sense Surroundings
-
-Map your vicinity.
-%%%%
 Teleportation
 
 Teleport yourself to a random location on the level.

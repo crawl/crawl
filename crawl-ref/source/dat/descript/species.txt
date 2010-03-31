@@ -1,55 +1,55 @@
 %%%%
 Centaur
 
-No description available.
+Swift, strong and bulky, they need more food than other species.
 %%%%
 Deep Dwarf
 
-No description available.
+They live deep down and are cannot regenerate, but they are resilient and have tools to heal.
 %%%%
 Deep Elf
 
-No description available.
+The most magic-affine elf, but also the most fragile.
 %%%%
 Demigod
 
-No description available.
+They will never follow a god, but Demigods make up for this with divine attributes and health.
 %%%%
 Demonspawn
 
-No description available.
+Demonspawn are half human, half demon. These undead acquire demonic and strong mutations as they grow.
 %%%%
 Draconian
 
-No description available.
+Draconians are versatile hybrids. They mature when reaching level 7 and develop a colour.
 %%%%
 Ghoul
 
-No description available.
+An undead, damned to rot eternally. They are always looking for rotten food to eat, hacking away with their claws.
 %%%%
 Halfling
 
-No description available.
+Small and somewhat fragile, their perks are slings and stealth.
 %%%%
 High Elf
 
-No description available.
+Proud elves, who can cast spells as well as they can fight with the sword.
 %%%%
 Hill Orc
 
-No description available.
+Orcs are good at all professions. Hated by most, orcs are very proud and many of them feel superior.
 %%%%
 Human
 
-No description available.
+Mundane and average.
 %%%%
 Kenku
 
-No description available.
+Bird-men who love to fight, both with weapons and spells; can fly later on.
 %%%%
 Kobold
 
-No description available.
+Small, mischievous but very competent. They can and will eat anything.
 %%%%
 Merfolk
 
@@ -61,7 +61,7 @@ A large muscular human with the head of a bull.
 %%%%
 Mountain Dwarf
 
-No description available.
+Sturdy, strong and not too intelligent, they love heavy weapons and armours.
 %%%%
 Mummy
 
@@ -73,21 +73,21 @@ A hybrid; human from the chest up, with a scaly, muscular torso trailing off lik
 %%%%
 Ogre
 
-No description available.
+Large and strong, they're mostly seen as brutes. Casting ogres have been spotted, however.
 %%%%
 Sludge Elf
 
-No description available.
+A depraved type of elf, who prefers cunning to fair fighting, and dark magic to other wizardry.
 %%%%
 Spriggan
 
-No description available.
+Very small, very frail and very fast. Spriggans make highly competent stabbers and spellcasters.
 %%%%
 Troll
 
-No description available.
+Large brutes, ready to maim anything with their claws, neverthinking twice. They're always hungry.
 %%%%
 Vampire
 
-No description available.
+Shifting between the states of life and undeath, they're accomplished thieves, stabbers and casters.
 %%%%
