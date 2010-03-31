@@ -2916,6 +2916,9 @@ void check_demonic_guardian()
                                                       0, 0, you.pos(),
                                                       MHITYOU, MG_FORCE_BEH));
 
+        if (guardian == -1)
+            return;
+
         menv[guardian].flags |= MF_NO_REWARD;
         menv[guardian].flags |= MF_DEMONIC_GUARDIAN;
 
