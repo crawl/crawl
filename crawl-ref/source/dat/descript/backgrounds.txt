@@ -1,23 +1,23 @@
 %%%%
 Air Elementalist
 
-No description available.
+Start with book of Air and the Shock spell.
 %%%%
 Arcane Marksman
 
-No description available.
+Have some missiles with them and the spells to brand them later on.
 %%%%
 Artificer
 
-No description available.
+Start with two wands and are competent at using such devices.
 %%%%
 Assassin
 
-No description available.
+Are ready to sneak and stab; complete with dagger, cloak and curare.
 %%%%
 Berserker
 
-No description available.
+Have an axe and trust in Trog, the magic-hating battle god.
 %%%%
 Chaos Knight
 
@@ -25,11 +25,11 @@ A follower of one of the three chaos gods: Xom, Makhleb, or Lugonu.
 %%%%
 Conjurer
 
-No description available.
+Start with one of two spellbooks centered around damaging spells.
 %%%%
 Crusader
 
-No description available.
+Start with a short sword and the book of War Chants.
 %%%%
 Death Knight
 
@@ -37,39 +37,39 @@ Either proficient in Necromancy or a follower of Yredelemnul.
 %%%%
 Earth Elementalist
 
-No description available.
+Start with the book of Geomancy and some stones for the Sandblast spell.
 %%%%
 Enchanter
 
-No description available.
+Get a sword, good darts and the book of Charms.
 %%%%
 Fighter
 
-No description available.
+Chooses a weapon and gets scale mail and shield.
 %%%%
 Fire Elementalist
 
-No description available.
+Start with the book of Flames and know the Flame Tongue spell.
 %%%%
 Gladiator
 
-No description available.
+Have leather armour, shield, helmet, nets and a weapon of their choice.
 %%%%
 Healer
 
-A follower of Elyvilon.
+A follower of Elyvilon, ready to pacify the beasts and brutes.
 %%%%
 Hunter
 
-No description available.
+Are able to attack at range, the tool depending on species.
 %%%%
 Ice Elementalist
 
-No description available.
+Start with the book of Frost and the Freeze spell.
 %%%%
 Monk
 
-No description available.
+Start with nothing but a robe and the ability to fight unarmed.
 %%%%
 Necromancer
 
@@ -85,37 +85,37 @@ A follower of Zin, Yredelemnul, or Beogh.
 %%%%
 Reaver
 
-No description available.
+Get to choose their weapon and a book of Conjurations.
 %%%%
 Stalker
 
-No description available.
+Have robe, cloak, a good dagger, the book of Stalking and the Sting spell.
 %%%%
 Summoner
 
-No description available.
+Start with the book of Callings and are able to Summon Small Mammals.
 %%%%
 Thief
 
-No description available.
+Have a short sword, robe, cloak and trained a multitude of skills.
 %%%%
 Transmuter
 
-No description available.
+Have arrows and potions, to be used for spells from the book of Changes.
 %%%%
 Venom Mage
 
-No description available.
+Start with the Young Poisoner's Handbook and the Sting spell.
 %%%%
 Wanderer
 
-No description available.
+Start with random equipment and skills.
 %%%%
 Warper
 
-No description available.
+Choose a weapon and get a Blinking scroll and the Spatial Translocations book.
 %%%%
 Wizard
 
-No description available.
+Get to choose with book of Minor Magic they start with.
 %%%%
