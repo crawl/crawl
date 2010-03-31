@@ -888,7 +888,7 @@ compflag.h: $(OBJECTS:.o=.cc)
 build.h: $(OBJECTS:.o=.cc)
 	$(QUIET_GEN)util/gen_ver.pl $@ $(MERGE_BASE)
 
-version.cc: build.h compflag.h
+version.o: build.h compflag.h
 
 ##########################################################################
 # Documentation
