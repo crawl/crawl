@@ -4778,6 +4778,8 @@ bool bolt::knockback_actor(actor *act)
     const coord_def newpos(ray.pos());
     if (newpos == oldpos
         || actor_at(newpos)
+        || (act->atype() == ACT_MONSTER
+            && mons_is_stationary(act->as_monster()))
         || feat_is_solid(grd(newpos))
         || !act->can_pass_through(newpos)
         || !act->is_habitable(newpos)
