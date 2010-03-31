@@ -195,8 +195,8 @@ bool _mutations_prevent_wearing(const item_def& item)
 
     // Barding is excepted here.
     if (item.sub_type == ARM_BOOTS
-        && (player_mutation_level(MUT_HOOVES)
-            || player_mutation_level(MUT_TALONS)))
+        && (player_mutation_level(MUT_HOOVES) >= 3
+            || player_mutation_level(MUT_TALONS) >= 3))
     {
         return (true);
     }

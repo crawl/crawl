@@ -231,6 +231,9 @@ public:
 
   std::vector<demon_trait> demonic_traits;
 
+  bool active_demonic_guardian;
+  bool disable_demonic_guardian;
+
   unsigned char magic_contamination;
 
   FixedVector<bool, NUM_FIXED_BOOKS> had_book;

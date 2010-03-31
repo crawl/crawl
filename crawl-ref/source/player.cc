@@ -656,7 +656,8 @@ bool you_can_wear(int eq, bool special_armour)
         return (false);
 
     if (eq == EQ_HELMET && (player_mutation_level(MUT_HORNS)
-                            || player_mutation_level(MUT_BEAK)))
+                            || player_mutation_level(MUT_BEAK)
+                            || player_mutation_level(MUT_ANTENNAE)))
     {
         return (special_armour);
     }
@@ -670,7 +671,7 @@ bool player_has_feet()
    if (you.species == SP_NAGA || player_genus(GENPC_DRACONIAN))
        return (false);
 
-   if (player_mutation_level(MUT_HOOVES) || player_mutation_level(MUT_TALONS))
+   if (player_mutation_level(MUT_HOOVES) >= 3 || player_mutation_level(MUT_TALONS) >= 3)
        return (false);
 
    return (true);
@@ -738,8 +739,8 @@ bool you_tran_can_wear(int eq, bool check_mutation)
 
         if (eq == EQ_BOOTS
             && (you.swimming() && you.species == SP_MERFOLK
-                || player_mutation_level(MUT_HOOVES)
-                || player_mutation_level(MUT_TALONS)))
+                || player_mutation_level(MUT_HOOVES) >= 3
+                || player_mutation_level(MUT_TALONS) >= 3))
         {
             return (false);
         }
@@ -3258,7 +3259,7 @@ int check_stealth(void)
         else if ( !you.can_swim() && !you.extra_balanced() )
             stealth /= 2;       // splashy-splashy
     }
-    else if (player_mutation_level(MUT_HOOVES))
+    else if (player_mutation_level(MUT_HOOVES) >= 3)
         stealth -= 10;  // clippety-clop
 
     // Radiating silence is the negative complement of shouting all the
@@ -3270,8 +3271,9 @@ int check_stealth(void)
     if (you.duration[DUR_SILENCE])
         stealth -= 50;
 
-    // mutations:
-    stealth += player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE) ? player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE) * 15 : 0;     // +15, +30, +45
+    // Mutations.
+    stealth += 15 * player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
+    stealth += 40 * player_mutation_level(MUT_NIGHTSTALKER);
 
     stealth = std::max(0, stealth);
 
@@ -5722,8 +5724,6 @@ int player::damage_brand(int)
     }
     else if (duration[DUR_CONFUSING_TOUCH])
         ret = SPWPN_CONFUSE;
-    else if (mutation[MUT_DRAIN_LIFE])
-        ret = SPWPN_DRAINING;
     else
     {
         switch (attribute[ATTR_TRANSFORMATION])
@@ -5874,9 +5874,9 @@ std::string player::foot_name(bool plural, bool *can_plural) const
         str = "hind leg";
     else if (!transform_changed_physiology())
     {
-        if (player_mutation_level(MUT_HOOVES))
+        if (player_mutation_level(MUT_HOOVES) >= 3)
             str = "hoof";
-        else if (player_mutation_level(MUT_TALONS))
+        else if (player_mutation_level(MUT_TALONS) >= 3)
             str = "talon";
         else if (this->species == SP_NAGA)
         {
@@ -6913,6 +6913,10 @@ bool player::can_see_invisible(bool calc_unid) const
 
     if (player_mutation_level(MUT_ACUTE_VISION) > 0)
         si += player_mutation_level(MUT_ACUTE_VISION);
+
+    // antennae give sInvis at 3
+    if (player_mutation_level(MUT_ANTENNAE) == 3)
+        si++;
 
     //jmf: added see_invisible spell
     if (this->duration[DUR_SEE_INVISIBLE] > 0)

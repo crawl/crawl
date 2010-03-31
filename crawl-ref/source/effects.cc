@@ -1112,7 +1112,8 @@ static armour_type _pick_wearable_armour(const armour_type arm)
     // We check for the mutation directly to avoid acquirement fiddles
     // with vampires.
     if (arm == ARM_HELMET
-        && (!you_can_wear(EQ_HELMET) || you.mutation[MUT_HORNS]))
+        && (!you_can_wear(EQ_HELMET) || you.mutation[MUT_HORNS] ||
+            you.mutation[MUT_ANTENNAE]))
     {
         result = coinflip()? ARM_CAP : ARM_WIZARD_HAT;
     }

@@ -181,16 +181,13 @@ static const ability_def Ability_List[] =
     { ABIL_SPIT_ACID, "Spit Acid", 0, 0, 125, 0, ABFLAG_NONE },
 
     { ABIL_FLY, "Fly", 3, 0, 100, 0, ABFLAG_NONE },
-    { ABIL_SUMMON_MINOR_DEMON, "Summon Minor Demon", 0, 50, 75, 0, ABFLAG_NONE },
-    { ABIL_SUMMON_DEMON, "Summon Demon", 0, 150, 150, 0, ABFLAG_NONE },
     { ABIL_HELLFIRE, "Hellfire", 0, 350, 200, 0, ABFLAG_NONE },
-    { ABIL_TORMENT, "Torment", 0, 100, 250, 0, ABFLAG_PAIN },
-    { ABIL_RAISE_DEAD, "Raise Dead", 0, 75, 150, 0, ABFLAG_NONE },
-    { ABIL_CONTROL_DEMON, "Control Demon", 0, 275, 100, 0, ABFLAG_NONE },
-    { ABIL_CHANNELING, "Channeling", 0, 15, 30, 0, ABFLAG_NONE },
     { ABIL_THROW_FLAME, "Throw Flame", 0, 20, 50, 0, ABFLAG_NONE },
     { ABIL_THROW_FROST, "Throw Frost", 0, 20, 50, 0, ABFLAG_NONE },
-    { ABIL_BOLT_OF_DRAINING, "Bolt of Draining", 0, 175, 100, 0, ABFLAG_NONE },
+    { ABIL_ENABLE_DEMONIC_GUARDIAN, "Enable Demonic Guardian",
+      0, 0, 0, 0, ABFLAG_NONE },
+    { ABIL_DISABLE_DEMONIC_GUARDIAN, "Disable Demonic Guardian",
+      0, 0, 0, 0, ABFLAG_NONE },
 
     // FLY_II used to have ABFLAG_EXHAUSTION, but that's somewhat meaningless
     // as exhaustion's only (and designed) effect is preventing Berserk. - bwr
@@ -607,30 +604,8 @@ static talent _get_talent(ability_type ability, bool check_confused)
         failure = 10 - you.experience_level;
         break;
 
-    case ABIL_SUMMON_MINOR_DEMON:
-        failure = 27 - you.experience_level;
-        break;
-
-    case ABIL_CHANNELING:
-    case ABIL_BOLT_OF_DRAINING:
-        failure = 30 - you.experience_level;
-        break;
-
-    case ABIL_CONTROL_DEMON:
-        failure = 35 - you.experience_level;
-        break;
-
-    case ABIL_SUMMON_DEMON:
-        failure = 40 - you.experience_level;
-        break;
-
     case ABIL_HELLFIRE:
-    case ABIL_RAISE_DEAD:
         failure = 50 - you.experience_level;
-        break;
-
-    case ABIL_TORMENT:
-        failure = 60 - you.experience_level;
         break;
 
     case ABIL_BLINK:
@@ -1127,14 +1102,6 @@ static bool _check_ability_possible(const ability_def& abil,
         }
         return (true);
 
-    case ABIL_TORMENT:
-        if (you.is_undead)
-        {
-            mpr("The unliving cannot use this ability.");
-            return (false);
-        }
-        return (true);
-
     case ABIL_EVOKE_TURN_INVISIBLE:     // ring, randarts, darkness items
         if (you.hunger_state < HS_SATIATED)
         {
@@ -1475,42 +1442,18 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     // DEMONIC POWERS:
-    case ABIL_SUMMON_MINOR_DEMON:
-        summon_lesser_demon(you.experience_level * 4);
+    case ABIL_ENABLE_DEMONIC_GUARDIAN:
+        you.disable_demonic_guardian = false;
         break;
 
-    case ABIL_SUMMON_DEMON:
-        summon_common_demon(you.experience_level * 4);
+    case ABIL_DISABLE_DEMONIC_GUARDIAN:
+        you.disable_demonic_guardian = true;
         break;
 
     case ABIL_HELLFIRE:
         if (your_spells(SPELL_HELLFIRE_BURST,
                         you.experience_level * 5, false) == SPRET_ABORT)
             return (false);
-        break;
-
-    case ABIL_TORMENT:
-        torment(TORMENT_GENERIC, you.pos());
-        break;
-
-    case ABIL_RAISE_DEAD:
-        animate_dead(&you, you.experience_level * 5, BEH_FRIENDLY,
-                     MHITYOU, &you);
-        break;
-
-    case ABIL_CONTROL_DEMON:
-        beam.range = LOS_RADIUS;
-        if (!spell_direction(abild, beam)
-            || !zapping(ZAP_CONTROL_DEMON, you.experience_level * 5, beam,
-                        true))
-        {
-            return (false);
-        }
-        break;
-
-    case ABIL_CHANNELING:
-        mpr("You channel some magical energy.");
-        inc_mp(1 + random2(5), false);
         break;
 
     case ABIL_THROW_FLAME:
@@ -1525,16 +1468,6 @@ static bool _do_ability(const ability_def& abil)
         {
             return (false);
         }
-        break;
-
-    case ABIL_BOLT_OF_DRAINING:
-        // Taking range from Bolt of Draining.
-        beam.range = 6;
-        if (!spell_direction(abild, beam))
-            return (false);
-
-        if (!zapping(ZAP_NEGATIVE_ENERGY, you.experience_level * 6, beam, true))
-            return (false);
         break;
 
     case ABIL_EVOKE_TURN_INVISIBLE:     // ring, randarts, darkness items
@@ -2348,35 +2281,20 @@ std::vector<talent> your_talents(bool check_confused)
     }
 
     // Mutations.
-    if (player_mutation_level(MUT_SUMMON_MINOR_DEMONS))
-        _add_talent(talents, ABIL_SUMMON_MINOR_DEMON, check_confused);
-
-    if (player_mutation_level(MUT_SUMMON_DEMONS))
-        _add_talent(talents, ABIL_SUMMON_DEMON, check_confused);
+    if (player_mutation_level(MUT_DEMONIC_GUARDIAN))
+        if(!you.disable_demonic_guardian)
+            _add_talent(talents, ABIL_DISABLE_DEMONIC_GUARDIAN, check_confused);
+        else
+            _add_talent(talents, ABIL_ENABLE_DEMONIC_GUARDIAN, check_confused);
 
     if (player_mutation_level(MUT_HURL_HELLFIRE))
         _add_talent(talents, ABIL_HELLFIRE, check_confused);
-
-    if (player_mutation_level(MUT_CALL_TORMENT))
-        _add_talent(talents, ABIL_TORMENT, check_confused);
-
-    if (player_mutation_level(MUT_RAISE_DEAD))
-        _add_talent(talents, ABIL_RAISE_DEAD, check_confused);
-
-    if (player_mutation_level(MUT_CONTROL_DEMONS))
-        _add_talent(talents, ABIL_CONTROL_DEMON, check_confused);
-
-    if (player_mutation_level(MUT_CHANNEL_HELL))
-        _add_talent(talents, ABIL_CHANNELING, check_confused);
 
     if (player_mutation_level(MUT_THROW_FLAMES))
         _add_talent(talents, ABIL_THROW_FLAME, check_confused);
 
     if (player_mutation_level(MUT_THROW_FROST))
         _add_talent(talents, ABIL_THROW_FROST, check_confused);
-
-    if (player_mutation_level(MUT_SMITE))
-        _add_talent(talents, ABIL_BOLT_OF_DRAINING, check_confused);
 
     if (you.duration[DUR_TRANSFORMATION]
         && !you.transform_uncancellable)

@@ -1952,6 +1952,14 @@ static void _decrement_durations()
         you.redraw_armour_class = true;
     }
 
+    if (you.duration[DUR_DEMONIC_GUARDIAN] > 0)
+    {
+        if(delay > you.duration[DUR_DEMONIC_GUARDIAN])
+            you.duration[DUR_DEMONIC_GUARDIAN] = 0;
+        else
+            you.duration[DUR_DEMONIC_GUARDIAN] -= delay;
+    }
+
     // Must come before might/haste/berserk.
     if (_decrement_a_duration(DUR_BUILDING_RAGE, delay))
         go_berserk(false);
@@ -2564,6 +2572,12 @@ void world_reacts()
 
     if (you.attribute[ATTR_SHADOWS])
         shadow_lantern_effect();
+
+    if (player_mutation_level(MUT_ANTENNAE))
+        check_antennae_detect();
+
+    if (player_mutation_level(MUT_DEMONIC_GUARDIAN))
+        check_demonic_guardian();
 
     if (you.unrand_reacts != 0)
         unrand_reacts();

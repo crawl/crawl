@@ -1300,7 +1300,6 @@ int monster_die(monsters *monster, killer_type killer,
         {
             const int bonus = (2 + random2(4)) / 2;;
 
-
             you.increase_duration(DUR_BERSERKER, bonus);
             you.increase_duration(DUR_MIGHT, bonus);
             haste_player(bonus * 2);
@@ -1387,6 +1386,15 @@ int monster_die(monsters *monster, killer_type killer,
             else
                 killer = KILL_RESET;
         }
+    }
+
+    // Death of a Demonic Guardian resets flag and duration
+    if (testbits(monster->flags, MF_DEMONIC_GUARDIAN))
+    {
+        you.active_demonic_guardian = false;
+        const int dur = player_mutation_level(MUT_DEMONIC_GUARDIAN) * 200
+                        + roll_dice(10, 10);
+        you.set_duration(DUR_DEMONIC_GUARDIAN, dur);
     }
 
     const bool death_message = !silent && !did_death_message
@@ -1523,25 +1531,6 @@ int monster_die(monsters *monster, killer_type killer,
                 {
                     did_god_conduct(DID_KILL_HOLY, monster->hit_dice,
                                     true, monster);
-                }
-            }
-
-            // Divine health and mana restoration doesn't happen when
-            // killing born-friendly monsters.  The mutation still
-            // applies, however.
-            if (player_mutation_level(MUT_DEATH_STRENGTH)
-                || (good_kill
-                    && (you.religion == GOD_MAKHLEB
-                        || you.religion == GOD_SHINING_ONE
-                           && (monster->is_evil() || monster->is_unholy()))
-                    && !player_under_penance()
-                    && random2(you.piety) >= piety_breakpoint(0)))
-            {
-                if (you.hp < you.hp_max)
-                {
-                    mpr("You feel a little better.");
-                    inc_hp(monster->hit_dice + random2(monster->hit_dice),
-                           false);
                 }
             }
 
