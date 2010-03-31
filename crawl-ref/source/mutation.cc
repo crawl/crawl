@@ -860,7 +860,7 @@ mutation_def mutation_defs[] = {
     },
 
     { MUT_ICEMAIL,                    0,  1, false, false,
-      {"A meltable icy envelope protects you from harm (AC+", "", ""},
+      {"A meltable icy envelope protects you from harm (AC +", "", ""},
       {"An icy envelope takes form around you.", "", ""},
       {"", "", ""},
       "icemail"
@@ -896,9 +896,9 @@ mutation_def mutation_defs[] = {
        "You slip further into the darkness.",
        "You are surrounded by darkness."},
 
-      {"The dungeon appears normal, the darkness is gone.",
+      {"The dungeon appears normal; the darkness is gone.",
        "The dungeon becomes less dark.",
-       "Your afinity for the darknes."},
+       "Your affinity for the darkness vanishes."},
 
       "nightstalker"
     },

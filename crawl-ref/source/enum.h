@@ -2438,7 +2438,7 @@ enum mutation_type
     MUT_STINGER,
     MUT_TALONS,         // feet
 
-    // sacles
+    // scales
     MUT_DISTORTION_FIELD,
     MUT_ICY_BLUE_SCALES,
     MUT_IRIDESCENT_SCALES,
