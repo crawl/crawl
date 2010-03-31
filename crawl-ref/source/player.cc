@@ -2106,7 +2106,7 @@ int player_adjusted_body_armour_evasion_penalty(int scale)
 // The total EV penalty to the player for all their worn armour items
 // with a base EV penalty (i.e. EV penalty as a base armour property,
 // not as a randart property).
-int player_adjusted_evasion_penalty(const int scale)
+static int player_adjusted_evasion_penalty(const int scale)
 {
     int piece_armour_evasion_penalty = 0;
 
