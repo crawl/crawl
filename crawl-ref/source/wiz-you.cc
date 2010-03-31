@@ -720,6 +720,7 @@ static const char* dur_names[] =
     "phase shift",
     "see invisible",
     "weapon brand",
+    "demonic guardian",
     "silence",
     "condensation shield",
     "stoneskin",
