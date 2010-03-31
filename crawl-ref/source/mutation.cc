@@ -2176,12 +2176,13 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         }
         break;
 
+    case MUT_ANTENNAE:
     case MUT_HORNS:
     case MUT_BEAK:
         mpr(mdef.gain[you.mutation[mutat]], MSGCH_MUTATION);
         gain_msg = false;
 
-        // Horns and beaks force hard helmets off.
+        // Horns, beaks, and antennae force hard helmets off.
         if (you.equip[EQ_HELMET] != -1
             && is_hard_helmet(you.inv[you.equip[EQ_HELMET]])
             && !you.melded[EQ_HELMET])
@@ -2196,6 +2197,14 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         mpr(mdef.gain[you.mutation[mutat]], MSGCH_MUTATION);
         gain_msg = false;
         autotoggle_autopickup(false);
+        break;
+
+    case MUT_NIGHTSTALKER:
+        if(player_mutation_level(mutat) > 1)
+        {
+            you.current_vision -= 2;
+            set_los_radius(you.current_vision);
+        }
         break;
 
     default:
