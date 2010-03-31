@@ -56,6 +56,8 @@ std::vector<std::string> getLongDescKeysByRegex(const std::string &regex,
 std::vector<std::string> getLongDescBodiesByRegex(const std::string &regex,
                                                   db_find_filter filter = NULL);
 
+std::string getGameStartDescription(const std::string &key);
+
 std::string getShoutString(const std::string &monst,
                            const std::string &suffix = "");
 std::string getSpeakString(const std::string &key);

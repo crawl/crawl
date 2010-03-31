@@ -342,6 +342,10 @@ alligator snapping turtle
 
 A huge snapping turtle of unpleasant disposition. It can reach out and bite from afar.
 %%%%
+anaconda
+
+A very large constrictor snake.
+%%%%
 ancient lich
 
 A lich who has grown mighty over countless years.
@@ -842,10 +846,6 @@ A very large rat, with hair and skin of a most peculiar green colour.
 grey rat
 
 A very large grey rat.
-%%%%
-anaconda
-
-A very large constrictor snake.
 %%%%
 griffon
 
