@@ -2155,7 +2155,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
         // Hooves and talons force boots off at 3,
         // check for level 2 or higher here.
-        if (you.mutation[mutat] >= 3 && !you.melded[EQ_BOOTS])
+        if (you.mutation[mutat] >= 2 && !you.melded[EQ_BOOTS])
         {
             remove_one_equip(EQ_BOOTS, false, true);
             modified_eq = true;
