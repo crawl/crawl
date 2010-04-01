@@ -36,7 +36,7 @@ bool GenericTexture::load_texture(const char *filename,
                                   bool force_power_of_two)
 {
     bool success = false;
-    success = wrapper->load_texture(this, filename, mip_opt, m_orig_width,
+    success = wm->load_texture(this, filename, mip_opt, m_orig_width,
         m_orig_height, proc, force_power_of_two);
 
     return (success);

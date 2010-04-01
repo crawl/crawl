@@ -336,7 +336,7 @@ GotoRegion get_cursor_region()
 void delay(int ms)
 {
     tiles.redraw();
-    wrapper->delay(ms);
+    wm->delay(ms);
 }
 
 void update_screen()
@@ -347,7 +347,7 @@ void update_screen()
 int kbhit()
 {
     // Look for the presence of any keyboard events in the queue.
-    int count = wrapper->get_event_count(UI_KEYDOWN);
+    int count = wm->get_event_count(UI_KEYDOWN);
 
     ASSERT(count != -1);
     return (count == 1 ? 1 : 0);
