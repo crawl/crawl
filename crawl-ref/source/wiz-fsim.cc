@@ -447,7 +447,7 @@ static bool debug_fight_sim(int mindex, int missile_slot,
 
     bool success = true;
     unwind_var<FixedVector<unsigned char, 50> > skills(you.skills);
-    unwind_var<FixedVector<char, NUM_STATS> > stats(you.stats);
+    unwind_var<FixedVector<char, NUM_STATS> > stats(you.max_stats);
     unwind_var<int> xp(you.experience_level);
 
     for (int i = SK_FIGHTING; i < NUM_SKILLS; ++i)
@@ -459,9 +459,9 @@ static bool debug_fight_sim(int mindex, int missile_slot,
     if (you.experience_level > 27)
         you.experience_level = 27;
 
-    you.stats[STAT_STR] = debug_cap_stat(Options.fsim_str);
-    you.stats[STAT_INT] = debug_cap_stat(Options.fsim_int);
-    you.stats[STAT_DEX] = debug_cap_stat(Options.fsim_dex);
+    you.max_stats[STAT_STR] = debug_cap_stat(Options.fsim_str);
+    you.max_stats[STAT_INT] = debug_cap_stat(Options.fsim_int);
+    you.max_stats[STAT_DEX] = debug_cap_stat(Options.fsim_dex);
 
     combat(ostat, mindex, missile_slot);
 

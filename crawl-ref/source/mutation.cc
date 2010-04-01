@@ -1715,7 +1715,7 @@ static bool _is_deadly(mutation_type mutat, bool delete_mut)
         return (false);
     }
 
-    return (amnt >= (you.stats[stat] + mod));
+    return (amnt >= (you.stat(stat) + mod));
 }
 
 static bool _accept_mutation(mutation_type mutat, bool ignore_rarity = false,

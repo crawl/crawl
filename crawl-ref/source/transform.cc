@@ -347,7 +347,7 @@ bool check_transformation_stat_loss(const std::set<equipment_type> &remove,
 
     for (int i = 0; i < NUM_STATS; ++i)
     {
-        if (prop[i] >= you.stats[i])
+        if (prop[i] >= you.stat(static_cast<stat_type>(i)))
         {
             if (!quiet)
             {
@@ -414,7 +414,7 @@ bool check_transformation_stat_loss(const std::set<equipment_type> &remove,
         // would reach 0, return true.
         for (int i = 0; i < NUM_STATS; ++i)
         {
-            if (prop[i] < you.stats[i])
+            if (prop[i] < you.stat(static_cast<stat_type>(i)))
                 continue;
             if (!quiet)
             {

@@ -15,7 +15,7 @@
 
 char player::stat(stat_type s) const
 {
-    return (stats[s]);
+    return (max_stats[s] - stat_loss[s]);
 }
 
 char player::strength() const
@@ -121,8 +121,6 @@ void jiyva_stat_action()
 
         you.max_stats[stat_up_choice]++;
         you.max_stats[stat_down_choice]--;
-        you.stats[stat_up_choice]++;
-        you.stats[stat_down_choice]--;
 
         simple_god_message("'s power touches on your attributes.");
 
@@ -174,10 +172,9 @@ void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
     if (!suppress_msg && amount != 0)
         mpr( msg.c_str(), (amount > 0) ? MSGCH_INTRINSIC_GAIN : MSGCH_WARN );
 
-    you.stats[which_stat] += amount;
     you.max_stats[which_stat] += amount;
 
-    if (amount < 0 && you.stats[which_stat] < 1)
+    if (amount < 0 && you.stat(which_stat) < 1)
     {
         if (cause == NULL)
             ouch(INSTANT_DEATH, NON_MONSTER, kill_type);
@@ -413,7 +410,7 @@ bool lose_stat(stat_type which_stat, unsigned char stat_loss, bool force,
 
     if (stat_loss > 0)
     {
-        you.stats[which_stat] -= stat_loss;
+        you.stat_loss[which_stat] += stat_loss;
         _handle_stat_change(which_stat);
     }
     else
@@ -422,7 +419,7 @@ bool lose_stat(stat_type which_stat, unsigned char stat_loss, bool force,
     msg += ".";
     mpr(msg, statLowered ? MSGCH_WARN : MSGCH_PLAIN);
 
-    if (you.stats[which_stat] < 1)
+    if (you.stat(which_stat) < 1)
     {
         if (cause == NULL)
             ouch(INSTANT_DEATH, NON_MONSTER, kill_type);
@@ -531,18 +528,18 @@ bool restore_stat(stat_type which_stat, unsigned char stat_gain,
         ASSERT(false);
     }
 
-    if (you.stats[which_stat] < you.max_stats[which_stat])
+    if (you.stat_loss[which_stat] > 0)
     {
         msg += " returning.";
         if (!suppress_msg)
             mpr(msg.c_str(), (recovery) ? MSGCH_RECOVERY : MSGCH_PLAIN);
 
-        if (stat_gain == 0 || you.stats[which_stat] + stat_gain > you.max_stats[which_stat])
-            stat_gain = you.max_stats[which_stat] - you.stats[which_stat];
+        if (stat_gain == 0 || stat_gain > you.stat_loss[which_stat])
+            stat_gain = you.stat_loss[which_stat];
 
         if (stat_gain != 0)
         {
-            you.stats[which_stat] += stat_gain;
+            you.stat_loss[which_stat] -= stat_gain;
             stat_restored = true;
 
             _handle_stat_change(which_stat);
@@ -552,27 +549,10 @@ bool restore_stat(stat_type which_stat, unsigned char stat_gain,
     return (stat_restored);
 }
 
-static void _mod_stat(stat_type stat, int mod)
-{
-    if (mod)
-    {
-        you.stats[stat] += mod;
-        you.max_stats[stat] += mod;
-        _handle_stat_change(stat);
-    }
-}
-
-void modify_all_stats(int STmod, int IQmod, int DXmod)
-{
-    _mod_stat(STAT_STR, STmod);
-    _mod_stat(STAT_INT, IQmod);
-    _mod_stat(STAT_DEX, DXmod);
-}
-
 static void _normalize_stat(stat_type stat)
 {
-    you.stats[stat] = std::max<char>(you.stats[stat], 0);
-    you.stats[stat] = std::min<char>(you.stats[stat], 72);
+    you.stat_loss[stat] = std::max<char>(you.stat_loss[stat], 0);
+    you.stat_loss[stat] = std::min<char>(you.stat_loss[stat], you.max_stats[stat]);
     you.max_stats[stat] = std::min<char>(you.max_stats[stat], 72);
 }
 

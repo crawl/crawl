@@ -475,13 +475,13 @@ static void _unfocus_stats()
     {
         int j = (i + 1) % NUM_STATS;
         int k = (i + 2) % NUM_STATS;
-        if ((needed = MIN_START_STAT - you.stats[i]) > 0)
+        if ((needed = MIN_START_STAT - you.max_stats[i]) > 0)
         {
-            if (you.stats[j] > you.stats[k])
-                you.stats[j] -= needed;
+            if (you.max_stats[j] > you.max_stats[k])
+                you.max_stats[j] -= needed;
             else
-                you.stats[k] -= needed;
-            you.stats[i] = MIN_START_STAT;
+                you.max_stats[k] -= needed;
+            you.max_stats[i] = MIN_START_STAT;
         }
     }
 }
@@ -493,10 +493,10 @@ static void _wanderer_assign_remaining_stats(int points_left)
     {
         // Stats that are already high will be chosen half as often.
         stat_type stat = static_cast<stat_type>(random2(NUM_STATS));
-        if (you.stats[stat]> 17 && coinflip())
+        if (you.max_stats[stat]> 17 && coinflip())
             continue;
 
-        you.stats[stat]++;
+        you.max_stats[stat]++;
         points_left--;
     }
 }
@@ -805,9 +805,6 @@ game_start:
 
     if (you.species == SP_DEMONSPAWN)
         roll_demonspawn_mutations();
-
-    // XXX: These need to be set above using functions!!! {dlb}
-    you.max_stats = you.stats;
 
     _give_starting_food();
     if (crawl_state.game_is_sprint()) {
@@ -1341,9 +1338,7 @@ static void _give_last_paycheck(job_type which_job)
     }
 }
 
-// Requires stuff::modify_all_stats() and works because
-// stats zeroed out by newgame::init_player()... Recall
-// that demonspawn & demigods get more later on. {dlb}
+// Recall that demonspawn & demigods get more later on. {dlb}
 static void _species_stat_init(species_type which_species)
 {
     int sb = 0; // strength base
@@ -1399,7 +1394,9 @@ static void _species_stat_init(species_type which_species)
     case SP_BASE_DRACONIAN:     sb =  9; ib =  6; db =  2;      break;  // 17
     }
 
-    modify_all_stats( sb+2, ib+2, db+2 );
+    you.max_stats[STAT_STR] = sb + 2;
+    you.max_stats[STAT_INT] = ib + 2;
+    you.max_stats[STAT_DEX] = db + 2;
 }
 
 static void _jobs_stat_init(job_type which_job)
@@ -1459,7 +1456,9 @@ static void _jobs_stat_init(job_type which_job)
     default:                    s =  0; i =  0; d =  0; hp = 10; mp = 0; break;
     }
 
-    modify_all_stats( s, i, d );
+    you.max_stats[STAT_STR] += s;
+    you.max_stats[STAT_INT] += i;
+    you.max_stats[STAT_DEX] += d;
 
     // Used for Jiyva's stat swapping if the player has not reached
     // experience level 3.
@@ -1810,7 +1809,7 @@ static stat_type _wanderer_choose_role()
 {
     int total_stats = 0;
     for (int i = 0; i < NUM_STATS; ++i)
-        total_stats += you.stats[i];
+        total_stats += you.stat(static_cast<stat_type>(i));
 
     int target = random2(total_stats);
 

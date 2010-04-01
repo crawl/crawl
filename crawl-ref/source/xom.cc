@@ -2961,7 +2961,7 @@ static int _xom_lose_stats(bool debug = false)
     const char* sstr[3] = { "Str", "Int", "Dex" };
     static char stat_buf[80];
     snprintf(stat_buf, sizeof(stat_buf), "stat loss: -%d %s (%d/%d)",
-             loss, sstr[stat], you.stats[stat], you.max_stats[stat]);
+             loss, sstr[stat], you.stat(stat), you.max_stats[stat]);
 
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, stat_buf), true);
 
@@ -3668,7 +3668,7 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
 }
 
 static void _handle_accidental_death(const int orig_hp,
-    const FixedVector<char, NUM_STATS> orig_stats,
+    const FixedVector<char, NUM_STATS> orig_max_stats,
     const FixedVector<unsigned char, NUM_MUTATIONS> &orig_mutation)
 {
     // Did ouch() return early because the player died from the Xom
@@ -3764,7 +3764,7 @@ static void _handle_accidental_death(const int orig_hp,
 
     for (int i = 0; i < 3; ++i)
     {
-        while (you.stats[i] <= 0)
+        while (you.stat(static_cast<stat_type>(i)) <= 0)
         {
             mutation_type good = good_muts[i];
             mutation_type bad  = bad_muts[i];
@@ -3775,11 +3775,10 @@ static void _handle_accidental_death(const int orig_hp,
             }
             else
             {
-                you.stats[i] = orig_stats[i];
+                you.max_stats[i] = orig_max_stats[i];
                 break;
             }
         }
-        you.max_stats[i] = std::max(you.max_stats[i], you.stats[i]);
     }
 
     if (_feat_is_deadly(feat))
@@ -3858,7 +3857,7 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
 #endif
 
     const int  orig_hp       = you.hp;
-    const FixedVector<char, NUM_STATS> orig_stats = you.stats;
+    const FixedVector<char, NUM_STATS> orig_max_stats = you.max_stats;
 
     const FixedVector<unsigned char, NUM_MUTATIONS> orig_mutation
         = you.mutation;
@@ -3926,7 +3925,7 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
             return (result);
     }
 
-    _handle_accidental_death(orig_hp, orig_stats, orig_mutation);
+    _handle_accidental_death(orig_hp, orig_max_stats, orig_mutation);
 
     // Drawing the Xom card from Nemelex's decks of oddities or punishment.
     if (crawl_state.is_god_acting()
@@ -4201,7 +4200,11 @@ bool xom_saves_your_life(const int dam, const int death_source,
 
     // Make sure all stats are at least 1.
     for (int i = 0; i < NUM_STATS; ++i)
-        you.stats[i] = std::max<char>(you.stats[i], 1);
+    {
+        you.max_stats[i] = std::max<char>(you.max_stats[i], 1);
+        you.stat_loss[i] = std::min<char>(you.stat_loss[i],
+                                          you.max_stats[i] - 1);
+    }
 
     god_speaks(GOD_XOM, "Xom revives you!");
 

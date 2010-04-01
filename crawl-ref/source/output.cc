@@ -366,7 +366,7 @@ short _get_stat_colour(stat_type stat)
 {
     // Check the stat_colour option for warning thresholds.
     for (unsigned int i = 0; i < Options.stat_colour.size(); ++i)
-        if (you.stats[stat] <= Options.stat_colour[i].first)
+        if (you.stat(stat) <= Options.stat_colour[i].first)
             return (Options.stat_colour[i].second);
 
     // Stat is magically increased.
@@ -379,7 +379,7 @@ short _get_stat_colour(stat_type stat)
     }
 
     // Stat is degenerated.
-    if (you.stats[stat] < you.max_stats[stat])
+    if (you.stat(stat) < you.max_stats[stat])
         return (YELLOW);
 
     return (HUD_VALUE_COLOUR);
@@ -387,15 +387,12 @@ short _get_stat_colour(stat_type stat)
 
 static void _print_stat(stat_type stat, int x, int y)
 {
-    ASSERT(you.stats[stat] >= 0 && you.stats[stat] <= 72
-           && you.max_stats[stat] <= 72);
-
     cgotoxy(x+5, y, GOTO_STAT);
 
     textcolor(_get_stat_colour(stat));
-    cprintf("%d", you.stats[stat]);
+    cprintf("%d", you.stat(stat));
 
-    if (you.stats[stat] != you.max_stats[stat])
+    if (you.stat(stat) != you.max_stats[stat])
         cprintf(" (%d)  ", you.max_stats[stat]);
     else
         cprintf("       ");

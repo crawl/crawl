@@ -4992,7 +4992,6 @@ void player::init()
     max_magic_points   = 0;
 
     magic_points_regeneration = 0;
-    stats.init(0);
     max_stats.init(0);
     experience       = 0;
     experience_level = 1;

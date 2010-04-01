@@ -984,7 +984,7 @@ static void tag_construct_you(writer &th)
 
     COMPILE_CHECK(NUM_STATS == 3, c2);
     for (i = 0; i < NUM_STATS; ++i)
-        marshallByte(th, you.stats[i]);
+        marshallByte(th, you.stat_loss[i]);
 
     marshallByte(th, you.last_chosen);
     marshallByte(th, you.hit_points_regeneration);
@@ -1419,7 +1419,7 @@ static void tag_read_you(reader &th, char minorVersion)
     you.max_magic_points          = unmarshallByte(th);
 
     for (i = 0; i < NUM_STATS; ++i)
-        you.stats[i] = unmarshallByte(th);
+        you.stat_loss[i] = unmarshallByte(th);
 
     you.last_chosen = (stat_type) unmarshallByte(th);
 
@@ -1436,6 +1436,14 @@ static void tag_read_you(reader &th, char minorVersion)
 
     for (i = 0; i < NUM_STATS; ++i)
         you.max_stats[i] = unmarshallByte(th);
+
+    if (minorVersion < TAG_MINOR_STATLOSS)
+    {
+        // The values read into you.stat_loss are actually
+        // the old you.stat.
+        for (i = 0; i < NUM_STATS; ++i)
+            you.stat_loss[i] = you.max_stats[i] - you.stat_loss[i];
+    }
 
     you.base_hp                   = unmarshallShort(th);
     you.base_hp2                  = unmarshallShort(th);

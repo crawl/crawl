@@ -608,7 +608,7 @@ bool MiscastEffect::_lose_stat(stat_type which_stat,
         which_stat = stat_types[random2(stat_types.size())];
     }
 
-    if ((you.stats[which_stat] - stat_loss) <= 0 && avoid_lethal(you.hp))
+    if ((you.stat(which_stat) - stat_loss) <= 0 && avoid_lethal(you.hp))
         return (false);
 
     return lose_stat(which_stat, stat_loss, false, cause);
