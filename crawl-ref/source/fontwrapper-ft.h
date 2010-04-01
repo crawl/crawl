@@ -48,20 +48,20 @@ public:
     virtual void store(FontBuffer &buf, float &x, float &y, unsigned char c,
                 const VColour &col);
 
-    virtual unsigned int char_width();
-    virtual unsigned int char_height();
+    virtual unsigned int char_width() const;
+    virtual unsigned int char_height() const;
 
-    virtual unsigned int string_width(const char *text);
-    virtual unsigned int string_width(const formatted_string &str);
-    virtual unsigned int string_height(const char *text);
-    virtual unsigned int string_height(const formatted_string &str);
+    virtual unsigned int string_width(const char *text) const;
+    virtual unsigned int string_width(const formatted_string &str) const;
+    virtual unsigned int string_height(const char *text) const;
+    virtual unsigned int string_height(const formatted_string &str) const;
 
     // Try to split this string to fit in w x h pixel area.
     virtual formatted_string split( const formatted_string &str,
                                     unsigned int max_width,
                                     unsigned int max_height);
 
-    virtual const GenericTexture *font_tex();
+    virtual const GenericTexture *font_tex() const;
 
 protected:
     void store(FontBuffer &buf, float &x, float &y,
