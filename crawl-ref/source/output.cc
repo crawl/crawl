@@ -2344,6 +2344,7 @@ std::string _status_mut_abilities()
 
     int AC_change  = 0;
     int EV_change  = 0;
+    int SH_change  = 0;
     int Str_change = 0;
     int Int_change = 0;
     int Dex_change = 0;
@@ -2687,6 +2688,37 @@ std::string _status_mut_abilities()
                 if (level == 3)
                     current = "repel missiles";
                 break;
+            case MUT_ICY_BLUE_SCALES:
+                AC_change += level;
+                break;
+            case MUT_IRIDESCENT_SCALES:
+                AC_change += 3*level;
+                break;
+            case MUT_LARGE_BONE_PLATES:
+                AC_change += level + 1;
+                SH_change += level + 1;
+                break;
+            case MUT_MOLTEN_SCALES:
+                AC_change += level;
+                EV_change -= level > 1 ? 1 : 0;
+                break;
+            case MUT_RUGGED_BROWN_SCALES:
+                AC_change += 2;
+                break;
+            case MUT_SLIMY_GREEN_SCALES:
+                AC_change += level;
+                EV_change -= level-1;
+                break;
+            case MUT_THIN_METALLIC_SCALES:
+                AC_change += level;
+                break;
+            case MUT_THIN_SKELETAL_STRUCTURE:
+                Dex_change += level;
+                Str_change -= level;
+                break;
+            case MUT_YELLOW_SCALES:
+                AC_change += level;
+                break;
         }
 
         if (!current.empty())
@@ -2705,6 +2737,11 @@ std::string _status_mut_abilities()
     if (EV_change)
     {
         snprintf(info, INFO_SIZE, "EV +%d", EV_change);
+        mutations.push_back(info);
+    }
+    if (SH_change)
+    {
+        snprintf(info, INFO_SIZE, "SH +%d", SH_change);
         mutations.push_back(info);
     }
     if (Str_change)
