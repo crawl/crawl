@@ -125,6 +125,8 @@ void init_crash_handler()
 
     for (int i = 1; i <= 64; i++)
     {
+        if (i == SIGALRM)
+            continue;
 #ifdef SIGHUP_SAVE
         if (i == SIGHUP)
             continue;
