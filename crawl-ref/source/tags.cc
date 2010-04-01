@@ -983,7 +983,7 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.max_magic_points);
 
     COMPILE_CHECK(NUM_STATS == 3, c2);
-    for (int i = 0; i < NUM_STATS; ++i)
+    for (i = 0; i < NUM_STATS; ++i)
         marshallByte(th, you.stats[i]);
 
     marshallByte(th, you.last_chosen);
@@ -998,7 +998,7 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.experience_level);
     marshallLong(th, you.exp_available);
 
-    for (int i = 0; i < NUM_STATS; ++i)
+    for (i = 0; i < NUM_STATS; ++i)
         marshallByte(th, you.max_stats[i]);
 
     marshallShort(th, you.base_hp);
@@ -1418,7 +1418,7 @@ static void tag_read_you(reader &th, char minorVersion)
     you.magic_points              = unmarshallByte(th);
     you.max_magic_points          = unmarshallByte(th);
 
-    for (int i = 0; i < NUM_STATS; ++i)
+    for (i = 0; i < NUM_STATS; ++i)
         you.stats[i] = unmarshallByte(th);
 
     you.last_chosen = (stat_type) unmarshallByte(th);
@@ -1434,7 +1434,7 @@ static void tag_read_you(reader &th, char minorVersion)
     you.experience_level          = unmarshallByte(th);
     you.exp_available             = unmarshallLong(th);
 
-    for (int i = 0; i < NUM_STATS; ++i)
+    for (i = 0; i < NUM_STATS; ++i)
         you.max_stats[i] = unmarshallByte(th);
 
     you.base_hp                   = unmarshallShort(th);
