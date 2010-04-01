@@ -41,7 +41,17 @@ public:
     virtual int screen_width();
     virtual int screen_height();
 
+    // Texture loading
+    virtual bool load_texture(  GenericTexture *tex, const char *filename,
+                                MipMapOptions mip_opt, unsigned int &orig_width,
+                                unsigned int &orig_height,
+                                tex_proc_func proc = NULL,
+                                bool force_power_of_two = true);
+
 protected:
+    // Helper functions
+    SDL_Surface *load_image( const char *file ) const;
+    
     SDL_Surface *m_context;
     const SDL_VideoInfo* video_info;
 };
