@@ -1007,9 +1007,9 @@ static void _wizard_restore_life()
         set_hp(you.hp_max, false);
     for (int i = 0; i < NUM_STATS; ++i)
     {
-        if (you.stats[i] <= 0)
+        if (you.stat(static_cast<stat_type>(i)) <= 0)
         {
-            you.stats[i] = you.max_stats[i];
+            you.stat_loss[i] = 0;
             you.redraw_stats[i] = true;
         }
     }

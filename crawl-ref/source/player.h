@@ -80,7 +80,7 @@ public:
   int base_magic_points;      // temporary max MP loss? (currently unused)
   int base_magic_points2;     // base MPs from levels and potions of magic
 
-  FixedVector<char, NUM_STATS> stats;
+  FixedVector<char, NUM_STATS> stat_loss;
   FixedVector<char, NUM_STATS> max_stats;
   stat_type last_chosen;
 

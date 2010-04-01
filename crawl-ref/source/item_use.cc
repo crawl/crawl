@@ -3832,10 +3832,10 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove,
             // This only handles removal, which is OK, because levitating is
             // never fatal.
 
-            unwind_var<FixedVector<char, NUM_STATS> > save_stats(you.stats);
-            you.stats[STAT_STR] -= prop_str;
-            you.stats[STAT_INT] -= prop_int;
-            you.stats[STAT_DEX] -= prop_dex;
+            unwind_var<FixedVector<char, NUM_STATS> > save_stats(you.max_stats);
+            you.max_stats[STAT_STR] -= prop_str;
+            you.max_stats[STAT_INT] -= prop_int;
+            you.max_stats[STAT_DEX] -= prop_dex;
 
             fatal_liquid = !merfolk_change_is_safe();
         }

@@ -668,11 +668,12 @@ void wizard_set_stats()
 
     sscanf(buf, "%d %d %d", &sstr, &sint, &sdex);
 
-    you.max_stats[STAT_STR] = you.stats[STAT_STR] = debug_cap_stat(sstr);
-    you.max_stats[STAT_INT] = you.stats[STAT_INT] = debug_cap_stat(sint);
-    you.max_stats[STAT_DEX] = you.stats[STAT_DEX] = debug_cap_stat(sdex);
+    you.max_stats[STAT_STR] = debug_cap_stat(sstr);
+    you.max_stats[STAT_INT] = debug_cap_stat(sint);
+    you.max_stats[STAT_DEX] = debug_cap_stat(sdex);
+    you.stat_loss.init(0);
     you.redraw_stats.init(true);
-    you.redraw_evasion      = true;
+    you.redraw_evasion = true;
 }
 
 static const char* dur_names[] =
