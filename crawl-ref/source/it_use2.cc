@@ -27,6 +27,7 @@
 #include "mutation.h"
 #include "player.h"
 #include "player-equip.h"
+#include "player-stats.h"
 #include "religion.h"
 #include "godconduct.h"
 #include "skills2.h"

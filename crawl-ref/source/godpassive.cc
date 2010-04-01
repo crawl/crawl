@@ -3,6 +3,7 @@
 #include "godpassive.h"
 
 #include "player.h"
+#include "player-stats.h"
 #include "religion.h"
 
 int che_boost_level()

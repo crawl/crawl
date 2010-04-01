@@ -701,7 +701,6 @@ int player_ponderousness();
 int player_spell_levels(void);
 
 int player_sust_abil(bool calc_unid = true);
-void jiyva_stat_action();
 
 int player_teleport(bool calc_unid = true);
 
@@ -720,15 +719,6 @@ void forget_map(unsigned char chance_forgotten = 100, bool force = false);
 
 void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = NULL,
               unsigned int* actual_avail_gain = NULL);
-
-void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
-                 const std::string& cause, bool see_source = true);
-void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
-                 const char* cause, bool see_source = true);
-void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
-                 const monsters* cause);
-void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
-                 const item_def &cause, bool removed = false);
 
 bool player_in_bat_form();
 bool player_can_open_doors();
@@ -806,6 +796,5 @@ bool is_feat_dangerous(dungeon_feature_type feat);
 void run_macro(const char *macroname = NULL);
 
 int count_worn_ego(int which_ego);
-int stat_modifier(stat_type stat);
 
 #endif

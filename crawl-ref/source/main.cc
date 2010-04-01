@@ -95,6 +95,7 @@
 #include "ouch.h"
 #include "output.h"
 #include "player.h"
+#include "player-stats.h"
 #include "quiver.h"
 #include "random.h"
 #include "religion.h"

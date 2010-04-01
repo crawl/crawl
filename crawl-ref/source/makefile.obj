@@ -149,6 +149,7 @@ place-info.o \
 player.o \
 player-act.o \
 player-equip.o \
+player-stats.o \
 quiver.o \
 random.o \
 ray.o \

@@ -49,6 +49,7 @@
 #include "ouch.h"
 #include "place.h"
 #include "player.h"
+#include "player-stats.h"
 #include "religion.h"
 #include "shopping.h"
 #include "species.h"
