@@ -577,7 +577,7 @@ bool MiscastEffect::_big_cloud(cloud_type cl_type, int power, int size,
     return (true);
 }
 
-bool MiscastEffect::_lose_stat(unsigned char which_stat,
+bool MiscastEffect::_lose_stat(stat_type which_stat,
                                unsigned char stat_loss)
 {
     if (lethality_margin <= 0)
@@ -589,7 +589,7 @@ bool MiscastEffect::_lose_stat(unsigned char which_stat,
         const int brilliant = you.duration[DUR_BRILLIANCE] ? 5 : 0;
         const int agile = you.duration[DUR_AGILITY] ? 5 : 0;
 
-        std::vector<unsigned char> stat_types;
+        std::vector<stat_type> stat_types;
         if ((you.strength() - might - stat_loss) > 0)
             stat_types.push_back(STAT_STR);
         if ((you.intel() - brilliant - stat_loss) > 0)
@@ -608,22 +608,8 @@ bool MiscastEffect::_lose_stat(unsigned char which_stat,
         which_stat = stat_types[random2(stat_types.size())];
     }
 
-    int val;
-
-    switch (which_stat)
-    {
-        case STAT_STR:     val = you.strength(); break;
-        case STAT_INT: val = you.intel();    break;
-        case STAT_DEX:    val = you.dex();      break;
-
-        default: DEBUGSTR("Invalid stat type."); return (false);
-    }
-
-    if ((val - stat_loss) <= 0)
-    {
-        if (avoid_lethal(you.hp))
-            return (false);
-    }
+    if ((you.stats[which_stat] - stat_loss) <= 0 && avoid_lethal(you.hp))
+        return (false);
 
     return lose_stat(which_stat, stat_loss, false, cause);
 }

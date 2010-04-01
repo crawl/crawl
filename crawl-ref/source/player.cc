@@ -5861,7 +5861,7 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
     return (amount);
 }
 
-void player::drain_stat(int stat, int amount, actor *attacker)
+void player::drain_stat(stat_type stat, int amount, actor *attacker)
 {
     if (attacker == NULL)
         lose_stat(stat, amount, false, "");

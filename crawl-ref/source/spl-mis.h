@@ -119,7 +119,7 @@ private:
     bool _explosion();
     bool _big_cloud(cloud_type cl_type, int pow, int size,
                     int spread_rate = -1);
-    bool _lose_stat(unsigned char which_stat, unsigned char stat_loss);
+    bool _lose_stat(stat_type which_stat, unsigned char stat_loss);
     void _potion_effect(int pot_eff, int pow);
     bool _create_monster(monster_type what, int abj_deg, bool alert = false);
     void send_abyss();
