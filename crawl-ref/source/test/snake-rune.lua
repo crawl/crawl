@@ -2,7 +2,7 @@
 -- This is a more exhaustive test than rune-gen.lua since it generates all
 -- intermediate levels and activates the dungeon connectivity code.
 
-local niters = 500
+local niters = 10
 local current_iter = 0
 
 local branch_entrance_feats = {
