@@ -13,19 +13,24 @@
 #include "transform.h"
 #include "tutorial.h"
 
+char player::stat(stat_type s) const
+{
+    return (stats[s]);
+}
+
 char player::strength() const
 {
-    return (stats[STAT_STR]);
+    return (stat(STAT_STR));
 }
 
 char player::intel() const
 {
-    return (stats[STAT_INT]);
+    return (stat(STAT_INT));
 }
 
 char player::dex() const
 {
-    return (stats[STAT_DEX]);
+    return (stat(STAT_DEX));
 }
 
 char player::max_strength() const

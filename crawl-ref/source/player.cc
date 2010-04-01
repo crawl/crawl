@@ -5861,16 +5861,16 @@ int player::hurt(const actor *agent, int amount, beam_type flavour,
     return (amount);
 }
 
-void player::drain_stat(stat_type stat, int amount, actor *attacker)
+void player::drain_stat(stat_type s, int amount, actor *attacker)
 {
     if (attacker == NULL)
-        lose_stat(stat, amount, false, "");
+        lose_stat(s, amount, false, "");
     else if (attacker->atype() == ACT_MONSTER)
-        lose_stat(stat, amount, attacker->as_monster(), false);
+        lose_stat(s, amount, attacker->as_monster(), false);
     else if (attacker->atype() == ACT_PLAYER)
-        lose_stat(stat, amount, false, "suicide");
+        lose_stat(s, amount, false, "suicide");
     else
-        lose_stat(stat, amount, false, "");
+        lose_stat(s, amount, false, "");
 }
 
 bool player::rot(actor *who, int amount, int immediate, bool quiet)
