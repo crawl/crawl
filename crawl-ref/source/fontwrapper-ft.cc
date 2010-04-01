@@ -468,13 +468,13 @@ static void _draw_box(int x_pos, int y_pos, float width, float height,
     glmanager->draw_primitive(prim);
 }
 
-unsigned int FTFontWrapper::string_height(const formatted_string &str)
+unsigned int FTFontWrapper::string_height(const formatted_string &str) const
 {
     std::string temp = str.tostring();
     return string_height(temp.c_str());
 }
 
-unsigned int FTFontWrapper::string_height(const char *text)
+unsigned int FTFontWrapper::string_height(const char *text) const
 {
     int height = 1;
     for (const char *itr = text; (*itr); itr++)
@@ -484,13 +484,13 @@ unsigned int FTFontWrapper::string_height(const char *text)
     return char_height() * height;
 }
 
-unsigned int FTFontWrapper::string_width(const formatted_string &str)
+unsigned int FTFontWrapper::string_width(const formatted_string &str) const
 {
     std::string temp = str.tostring();
     return string_width(temp.c_str());
 }
 
-unsigned int FTFontWrapper::string_width(const char *text)
+unsigned int FTFontWrapper::string_width(const char *text) const
 {
     unsigned int base_width = std::max(-m_min_offset, 0);
     unsigned int max_width = 0;
@@ -789,17 +789,17 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
     x += m_glyphs[c].advance;
 }
 
-unsigned int FTFontWrapper::char_width()
+unsigned int FTFontWrapper::char_width() const
 {
     return (m_max_advance.x);
 }
 
-unsigned int FTFontWrapper::char_height()
+unsigned int FTFontWrapper::char_height() const
 {
     return (m_max_advance.y);
 }
 
-const GenericTexture *FTFontWrapper::font_tex()
+const GenericTexture *FTFontWrapper::font_tex() const
 {
     return (&m_tex);
 }

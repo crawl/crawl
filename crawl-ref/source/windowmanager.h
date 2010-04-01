@@ -98,14 +98,14 @@ public:
     // Environment state functions
     virtual void set_window_title(const char *title) = 0;
     virtual bool set_window_icon(const char* icon_name) = 0;
-    virtual key_mod get_mod_state() = 0;
+    virtual key_mod get_mod_state() const = 0;
     virtual void set_mod_state(key_mod mod) = 0;
     virtual int byte_order() = 0;
 
     // System time functions
     virtual void set_timer( unsigned int interval,
                             wm_timer_callback callback) = 0;
-    virtual unsigned int get_ticks() = 0;
+    virtual unsigned int get_ticks() const = 0;
     virtual void delay(unsigned int ms) = 0;
 
     // Event functions
@@ -116,8 +116,8 @@ public:
     // Display functions
     virtual void resize(coord_def &m_windowsz) = 0;
     virtual void swap_buffers() = 0;
-    virtual int screen_width() = 0;
-    virtual int screen_height() = 0;
+    virtual int screen_width() const = 0;
+    virtual int screen_height() const = 0;
 
     // Texture loading
     virtual bool load_texture(  GenericTexture *tex, const char *filename,

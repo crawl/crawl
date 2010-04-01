@@ -276,12 +276,12 @@ int SDLWrapper::init(coord_def *m_windowsz)
     return (true);
 }
 
-int SDLWrapper::screen_width()
+int SDLWrapper::screen_width() const
 {
     return (video_info->current_w);
 }
 
-int SDLWrapper::screen_height()
+int SDLWrapper::screen_height() const
 {
     return (video_info->current_h);
 }
@@ -309,12 +309,12 @@ void SDLWrapper::resize(coord_def &m_windowsz)
     glmanager->reset_view_for_resize(m_windowsz);
 }
 
-unsigned int SDLWrapper::get_ticks()
+unsigned int SDLWrapper::get_ticks() const
 {
     return (SDL_GetTicks());
 }
 
-key_mod SDLWrapper::get_mod_state()
+key_mod SDLWrapper::get_mod_state() const
 {
     SDLMod mod = SDL_GetModState();
     
