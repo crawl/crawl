@@ -33,7 +33,7 @@
 #include "tiledef-gui.h"
 #include "tilefont.h"
 
-#include "uiwrapper.h"
+#include "windowmanager.h"
 #include "glwrapper.h"
 
 // Default Screen Settings

@@ -5,11 +5,11 @@
 #include "files.h"
 
 #ifdef USE_TILE
-#include "uiwrapper.h"
+#include "windowmanager.h"
 #include "glwrapper.h"
 
 #ifdef USE_SDL
-#include "uiwrapper-sdl.h"
+#include "windowmanager-sdl.h"
 #include <SDL/SDL.h>
 #include <SDL_image.h>
 

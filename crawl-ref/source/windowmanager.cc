@@ -1,8 +1,8 @@
 #ifdef USE_TILE
-#include "uiwrapper.h"
+#include "windowmanager.h"
 
 #ifdef USE_SDL
-#include "uiwrapper-sdl.h"
+#include "windowmanager-sdl.h"
 #endif
 
 WindowManager *wm = NULL;

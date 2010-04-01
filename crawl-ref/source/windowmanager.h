@@ -1,5 +1,5 @@
-#ifndef UI_WRAPPER_H
-#define UI_WRAPPER_H
+#ifndef WINDOWMANAGER_H
+#define WINDOWMANAGER_H
 
 #include "externs.h"
 
