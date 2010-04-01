@@ -137,6 +137,7 @@ public:
     virtual bool cannot_fight() const = 0;
     virtual void attacking(actor *other) = 0;
     virtual bool can_go_berserk() const = 0;
+    virtual void go_berserk(bool intentional, bool potion = false) = 0;
     virtual bool berserk() const = 0;
     virtual bool can_see_invisible() const = 0;
     virtual bool invisible() const = 0;
@@ -160,7 +161,6 @@ public:
 
     virtual bool is_icy() const = 0;
     virtual bool is_fiery() const = 0;
-    virtual void go_berserk(bool intentional, bool potion = false) = 0;
     virtual bool can_mutate() const = 0;
     virtual bool can_safely_mutate() const = 0;
     virtual bool can_bleed() const = 0;

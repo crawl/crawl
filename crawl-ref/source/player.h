@@ -592,6 +592,11 @@ struct player_save_info
 class monsters;
 struct item_def;
 
+// Helper. Use move_player_to_grid or player::apply_location_effects instead.
+void moveto_location_effects(dungeon_feature_type old_feat,
+                             bool stepped=false, bool allow_shift=true,
+                             const coord_def& old_pos=coord_def());
+
 bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
                           bool force, bool swapping = false );
 
