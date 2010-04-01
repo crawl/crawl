@@ -950,11 +950,11 @@ bool cast_divine_vigour()
 void remove_divine_stamina()
 {
     mpr("Your divine stamina fades away.", MSGCH_DURATION);
-    modify_stat(STAT_STRENGTH, -you.attribute[ATTR_DIVINE_STAMINA],
+    modify_stat(STAT_STR, -you.attribute[ATTR_DIVINE_STAMINA],
                 true, "Zin's divine stamina running out");
-    modify_stat(STAT_INTELLIGENCE, -you.attribute[ATTR_DIVINE_STAMINA],
+    modify_stat(STAT_INT, -you.attribute[ATTR_DIVINE_STAMINA],
                 true, "Zin's divine stamina running out");
-    modify_stat(STAT_DEXTERITY, -you.attribute[ATTR_DIVINE_STAMINA],
+    modify_stat(STAT_DEX, -you.attribute[ATTR_DIVINE_STAMINA],
                 true, "Zin's divine stamina running out");
     you.duration[DUR_DIVINE_STAMINA] = 0;
     you.attribute[ATTR_DIVINE_STAMINA] = 0;
@@ -1037,9 +1037,9 @@ bool cast_vitalisation()
             you.set_duration(DUR_DIVINE_STAMINA,
                              40 + (you.skills[SK_INVOCATIONS]*5)/2);
 
-            modify_stat(STAT_STRENGTH, stamina_amt, true, "");
-            modify_stat(STAT_INTELLIGENCE, stamina_amt, true, "");
-            modify_stat(STAT_DEXTERITY, stamina_amt, true, "");
+            modify_stat(STAT_STR, stamina_amt, true, "");
+            modify_stat(STAT_INT, stamina_amt, true, "");
+            modify_stat(STAT_DEX, stamina_amt, true, "");
         }
     }
 

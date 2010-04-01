@@ -2958,9 +2958,9 @@ enum slot_select_mode
 
 enum stat_type
 {
-  STAT_STRENGTH,                     //    0
-  STAT_INTELLIGENCE,
-  STAT_DEXTERITY,
+  STAT_STR,                     //    0
+  STAT_INT,
+  STAT_DEX,
   NUM_STATS, // added for increase_stats() {dlb}
   STAT_ALL, // must remain after NUM_STATS -- added to handle royal jelly, etc. {dlb}
   STAT_RANDOM = 255 // leave at 255, added for increase_stats() handling {dlb}

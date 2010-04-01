@@ -2817,7 +2817,7 @@ static void _heal_from_food(int hp_amt, int mp_amt, bool unrot,
     }
 
     if (restore_str && you.strength < you.max_strength)
-        restore_stat(STAT_STRENGTH, 1, false);
+        restore_stat(STAT_STR, 1, false);
 
     calc_hp();
     calc_mp();

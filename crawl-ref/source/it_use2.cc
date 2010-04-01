@@ -154,7 +154,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         if (were_mighty)
             contaminate_player(1, was_known);
         else
-            modify_stat(STAT_STRENGTH, 5, true, "");
+            modify_stat(STAT_STR, 5, true, "");
 
         // conceivable max gain of +184 {dlb}
         you.increase_duration(DUR_MIGHT, (35 + random2(pow)) / factor, 80);
@@ -173,7 +173,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         if (were_brilliant)
             contaminate_player(1, was_known);
         else
-            modify_stat(STAT_INTELLIGENCE, 5, true, "");
+            modify_stat(STAT_INT, 5, true, "");
 
         you.increase_duration(DUR_BRILLIANCE,
                               (35 + random2(pow)) / factor, 80);
@@ -192,7 +192,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         if (were_agile)
             contaminate_player(1, was_known);
         else
-            modify_stat(STAT_DEXTERITY, 5, true, "");
+            modify_stat(STAT_DEX, 5, true, "");
 
         you.increase_duration(DUR_AGILITY, (35 + random2(pow)) / factor, 80);
         you.redraw_evasion = true;
@@ -637,15 +637,15 @@ void unequip_armour_effect(item_def& item)
         break;
 
     case SPARM_STRENGTH:
-        modify_stat(STAT_STRENGTH, -3, false, item, true);
+        modify_stat(STAT_STR, -3, false, item, true);
         break;
 
     case SPARM_DEXTERITY:
-        modify_stat(STAT_DEXTERITY, -3, false, item, true);
+        modify_stat(STAT_DEX, -3, false, item, true);
         break;
 
     case SPARM_INTELLIGENCE:
-        modify_stat(STAT_INTELLIGENCE, -3, false, item, true);
+        modify_stat(STAT_INT, -3, false, item, true);
         break;
 
     case SPARM_PONDEROUSNESS:
@@ -755,11 +755,11 @@ void unuse_artefact(const item_def &item, bool *show_msgs)
     }
 
     // Modify ability scores; always output messages.
-    modify_stat(STAT_STRENGTH,     -proprt[ARTP_STRENGTH],     false, item,
+    modify_stat(STAT_STR,     -proprt[ARTP_STRENGTH],     false, item,
                 true);
-    modify_stat(STAT_INTELLIGENCE, -proprt[ARTP_INTELLIGENCE], false, item,
+    modify_stat(STAT_INT, -proprt[ARTP_INTELLIGENCE], false, item,
                 true);
-    modify_stat(STAT_DEXTERITY,    -proprt[ARTP_DEXTERITY],    false, item,
+    modify_stat(STAT_DEX,    -proprt[ARTP_DEXTERITY],    false, item,
                 true);
 
     if (proprt[ARTP_NOISES] != 0)

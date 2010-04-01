@@ -2228,19 +2228,19 @@ static void _decrement_durations()
     if (_decrement_a_duration(DUR_MIGHT, delay,
                               "You feel a little less mighty now."))
     {
-        modify_stat(STAT_STRENGTH, -5, true, "might running out");
+        modify_stat(STAT_STR, -5, true, "might running out");
     }
 
     if (_decrement_a_duration(DUR_AGILITY, delay,
                               "You feel a little less agile now."))
     {
-        modify_stat(STAT_DEXTERITY, -5, true, "agility running out");
+        modify_stat(STAT_DEX, -5, true, "agility running out");
     }
 
     if (_decrement_a_duration(DUR_BRILLIANCE, delay,
                               "You feel a little less clever now."))
     {
-        modify_stat(STAT_INTELLIGENCE, -5, true, "brilliance running out");
+        modify_stat(STAT_INT, -5, true, "brilliance running out");
     }
 
     if (_decrement_a_duration(DUR_BERSERKER, delay,

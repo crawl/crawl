@@ -1664,10 +1664,10 @@ std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
         species = you.species;
 
     if (str == -1)
-        str = std::max(you.strength - stat_modifier(STAT_STRENGTH), 1);
+        str = std::max(you.strength - stat_modifier(STAT_STR), 1);
 
     if (dex == -1)
-        dex = std::max(you.dex - stat_modifier(STAT_DEXTERITY), 1);
+        dex = std::max(you.dex - stat_modifier(STAT_DEX), 1);
 
     if (god == -1)
         god = you.religion;

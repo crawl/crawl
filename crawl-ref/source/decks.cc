@@ -1979,7 +1979,7 @@ static void _focus_card(int power, deck_rarity_type rarity)
 
 static void _shuffle_card(int power, deck_rarity_type rarity)
 {
-    stat_type stats[3] = {STAT_STRENGTH, STAT_DEXTERITY, STAT_INTELLIGENCE};
+    stat_type stats[3] = {STAT_STR, STAT_DEX, STAT_INT};
     int old_base[3]    = {you.strength, you.dex, you.intel};
     int old_max[3]     = {you.max_strength, you.max_dex, you.max_intel};
     int modifiers[3];

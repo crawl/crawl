@@ -437,7 +437,7 @@ static bool _ball_of_seeing(void)
 
     if (use < 2)
     {
-        lose_stat( STAT_INTELLIGENCE, 1, false, "using a ball of seeing");
+        lose_stat( STAT_INT, 1, false, "using a ball of seeing");
     }
     else if (use < 5 && enough_mp(1, true))
     {
@@ -713,7 +713,7 @@ static bool _ball_of_energy(void)
 
     if (use < 2)
     {
-        lose_stat(STAT_INTELLIGENCE, 1, false, "using a ball of energy");
+        lose_stat(STAT_INT, 1, false, "using a ball of energy");
     }
     else if (use < 4 && enough_mp(1, true))
     {

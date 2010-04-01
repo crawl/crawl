@@ -39,20 +39,20 @@ void attribute_increase()
 
         case 's':
         case 'S':
-            modify_stat(STAT_STRENGTH, 1, false, "level gain");
-            you.last_chosen = STAT_STRENGTH;
+            modify_stat(STAT_STR, 1, false, "level gain");
+            you.last_chosen = STAT_STR;
             return;
 
         case 'i':
         case 'I':
-            modify_stat(STAT_INTELLIGENCE, 1, false, "level gain");
-            you.last_chosen = STAT_INTELLIGENCE;
+            modify_stat(STAT_INT, 1, false, "level gain");
+            you.last_chosen = STAT_INT;
             return;
 
         case 'd':
         case 'D':
-            modify_stat(STAT_DEXTERITY, 1, false, "level gain");
-            you.last_chosen = STAT_DEXTERITY;
+            modify_stat(STAT_DEX, 1, false, "level gain");
+            you.last_chosen = STAT_DEX;
             return;
         }
     }
@@ -126,7 +126,7 @@ void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
 
     switch (which_stat)
     {
-    case STAT_STRENGTH:
+    case STAT_STR:
         ptr_stat     = &you.strength;
         ptr_stat_max = &you.max_strength;
         ptr_redraw   = &you.redraw_strength;
@@ -134,7 +134,7 @@ void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
         msg += ((amount > 0) ? "stronger." : "weaker.");
         break;
 
-    case STAT_INTELLIGENCE:
+    case STAT_INT:
         ptr_stat     = &you.intel;
         ptr_stat_max = &you.max_intel;
         ptr_redraw   = &you.redraw_intelligence;
@@ -142,7 +142,7 @@ void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
         msg += ((amount > 0) ? "clever." : "stupid.");
         break;
 
-    case STAT_DEXTERITY:
+    case STAT_DEX:
         ptr_stat     = &you.dex;
         ptr_stat_max = &you.max_dex;
         ptr_redraw   = &you.redraw_dexterity;
@@ -349,9 +349,9 @@ int stat_modifier(stat_type stat)
 {
     switch (stat)
     {
-    case STAT_STRENGTH:     return _strength_modifier();
-    case STAT_INTELLIGENCE: return _int_modifier();
-    case STAT_DEXTERITY:    return _dex_modifier();
+    case STAT_STR:     return _strength_modifier();
+    case STAT_INT: return _int_modifier();
+    case STAT_DEX:    return _dex_modifier();
     default:
         mprf(MSGCH_ERROR, "Bad stat: %d", stat);
         return 0;
@@ -380,21 +380,21 @@ bool lose_stat(unsigned char which_stat, unsigned char stat_loss, bool force,
 
     switch (which_stat)
     {
-    case STAT_STRENGTH:
+    case STAT_STR:
         msg       += "weakened";
         ptr_stat   = &you.strength;
         ptr_redraw = &you.redraw_strength;
         kill_type  = KILLED_BY_WEAKNESS;
         break;
 
-    case STAT_DEXTERITY:
+    case STAT_DEX:
         msg       += "clumsy";
         ptr_stat   = &you.dex;
         ptr_redraw = &you.redraw_dexterity;
         kill_type  = KILLED_BY_CLUMSINESS;
         break;
 
-    case STAT_INTELLIGENCE:
+    case STAT_INT:
         msg       += "dopey";
         ptr_stat   = &you.intel;
         ptr_redraw = &you.redraw_intelligence;
@@ -521,7 +521,7 @@ bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
     // Besides, a little recursion never hurt anyone {dlb}:
     if (which_stat == STAT_ALL)
     {
-        for (unsigned char loopy = STAT_STRENGTH; loopy < NUM_STATS; ++loopy)
+        for (unsigned char loopy = STAT_STR; loopy < NUM_STATS; ++loopy)
             if (restore_stat(loopy, stat_gain, suppress_msg))
                 stat_restored = true;
 
@@ -540,7 +540,7 @@ bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
 
     switch (which_stat)
     {
-    case STAT_STRENGTH:
+    case STAT_STR:
         msg += "strength";
 
         ptr_stat = &you.strength;
@@ -548,7 +548,7 @@ bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
         ptr_redraw = &you.redraw_strength;
         break;
 
-    case STAT_INTELLIGENCE:
+    case STAT_INT:
         msg += "intelligence";
 
         ptr_stat = &you.intel;
@@ -556,7 +556,7 @@ bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
         ptr_redraw = &you.redraw_intelligence;
         break;
 
-    case STAT_DEXTERITY:
+    case STAT_DEX:
         msg += "dexterity";
 
         ptr_stat = &you.dex;
