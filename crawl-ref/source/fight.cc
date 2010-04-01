@@ -152,7 +152,7 @@ int effective_stat_bonus( int wepType )
     else
         str_weight = weapon_str_weight( OBJ_WEAPONS, wepType );
 
-    return ((you.strength - you.dex) * (str_weight - 5) / 10);
+    return ((you.strength() - you.dex()) * (str_weight - 5) / 10);
 #else
     return (0);
 #endif
@@ -165,7 +165,7 @@ static int calc_your_to_hit_unarmed(int uattack = UNAT_NO_ATTACK,
 {
     int your_to_hit;
 
-    your_to_hit = 13 + you.dex / 2 + you.skills[SK_UNARMED_COMBAT] / 2
+    your_to_hit = 13 + you.dex() / 2 + you.skills[SK_UNARMED_COMBAT] / 2
                   + you.skills[SK_FIGHTING] / 5;
 
     if (wearing_amulet(AMU_INACCURACY))
@@ -1609,7 +1609,7 @@ int melee_attack::player_stab_weapon_bonus(int damage)
     {
     case SK_SHORT_BLADES:
     {
-        int bonus = (you.dex * (you.skills[SK_STABBING] + 1)) / 5;
+        int bonus = (you.dex() * (you.skills[SK_STABBING] + 1)) / 5;
 
         if (weapon->sub_type != WPN_DAGGER)
             bonus /= 2;
@@ -1660,9 +1660,9 @@ int melee_attack::player_stab(int damage)
         if (defender->asleep())
         {
             // Sleeping moster wakes up when stabbed but may be groggy.
-            if (x_chance_in_y(you.skills[SK_STABBING] + you.dex + 1, 200))
+            if (x_chance_in_y(you.skills[SK_STABBING] + you.dex() + 1, 200))
             {
-                int stun = random2(you.dex + 1);
+                int stun = random2(you.dex() + 1);
 
                 if (defender->as_monster()->speed_increment > stun)
                     defender->as_monster()->speed_increment -= stun;
@@ -3914,7 +3914,7 @@ int melee_attack::player_to_hit(bool random_factor)
         if (you.duration[DUR_CONFUSING_TOUCH])
         {
             // Just trying to touch is easier that trying to damage.
-            your_to_hit += maybe_random2(you.dex, random_factor);
+            your_to_hit += maybe_random2(you.dex(), random_factor);
         }
 
         switch (you.attribute[ATTR_TRANSFORMATION])
@@ -4005,7 +4005,7 @@ void melee_attack::player_stab_check()
     // See if we need to roll against dexterity / stabbing.
     if (stab_attempt && roll_needed)
     {
-        stab_attempt = x_chance_in_y(you.skills[SK_STABBING] + you.dex + 1,
+        stab_attempt = x_chance_in_y(you.skills[SK_STABBING] + you.dex() + 1,
                                      roll);
     }
 }
@@ -4131,13 +4131,13 @@ int melee_attack::player_calc_base_unarmed_damage()
             damage = 12;
             break;
         case TRAN_BLADE_HANDS:
-            damage = 12 + (you.strength / 4) + (you.dex / 4);
+            damage = 12 + (you.strength() / 4) + (you.dex() / 4);
             break;
         case TRAN_STATUE:
-            damage = 12 + you.strength;
+            damage = 12 + you.strength();
             break;
         case TRAN_DRAGON:
-            damage = 20 + you.strength;
+            damage = 20 + you.strength();
             break;
         case TRAN_LICH:
             damage = 5;
@@ -5937,15 +5937,15 @@ static inline int calc_stat_to_hit_base( void )
 
     // towards_str_avg is a variable, whose sign points towards strength,
     // and the magnitude is half the difference (thus, when added directly
-    // to you.dex it gives the average of the two.
-    const signed int towards_str_avg = (you.strength - you.dex) / 2;
+    // to you.dex() it gives the average of the two.
+    const signed int towards_str_avg = (you.strength() - you.dex()) / 2;
 
     // dex is modified by strength towards the average, by the
     // weighted amount weapon_str_weight() / 10.
-    return (you.dex + towards_str_avg * player_weapon_str_weight() / 10);
+    return (you.dex() + towards_str_avg * player_weapon_str_weight() / 10);
 
 #else
-    return (you.dex);
+    return (you.dex());
 #endif
 }
 
@@ -5954,11 +5954,11 @@ static inline int calc_stat_to_dam_base( void )
 {
 #ifdef USE_NEW_COMBAT_STATS
 
-    const signed int towards_dex_avg = (you.dex - you.strength) / 2;
-    return (you.strength + towards_dex_avg * player_weapon_dex_weight() / 10);
+    const signed int towards_dex_avg = (you.dex() - you.strength()) / 2;
+    return (you.strength() + towards_dex_avg * player_weapon_dex_weight() / 10);
 
 #else
-    return (you.strength);
+    return (you.strength());
 #endif
 }
 

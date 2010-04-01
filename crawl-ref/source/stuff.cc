@@ -476,9 +476,7 @@ void redraw_screen(void)
 
     you.redraw_hit_points   = true;
     you.redraw_magic_points = true;
-    you.redraw_strength     = true;
-    you.redraw_intelligence = true;
-    you.redraw_dexterity    = true;
+    you.redraw_stats.init(true);
     you.redraw_armour_class = true;
     you.redraw_evasion      = true;
     you.redraw_experience   = true;
@@ -595,35 +593,6 @@ int stat_div( int stat_level, int value, int mult, int shift )
 int div_round_up(int num, int den)
 {
     return (num / den + (num % den != 0));
-}
-
-// Simple little function to quickly modify all three stats
-// at once - does check for '0' modifiers to prevent needless
-// adding .. could use checking for sums less than zero, I guess.
-// Used in conjunction with newgame::species_stat_init() and
-// newgame::job_stat_init() routines 24jan2000. {dlb}
-void modify_all_stats(int STmod, int IQmod, int DXmod)
-{
-    if (STmod)
-    {
-        you.strength     += STmod;
-        you.max_strength += STmod;
-        you.redraw_strength = true;
-    }
-
-    if (IQmod)
-    {
-        you.intel     += IQmod;
-        you.max_intel += IQmod;
-        you.redraw_intelligence = true;
-    }
-
-    if (DXmod)
-    {
-        you.dex     += DXmod;
-        you.max_dex += DXmod;
-        you.redraw_dexterity = true;
-    }
 }
 
 void canned_msg(canned_message_type which_message)

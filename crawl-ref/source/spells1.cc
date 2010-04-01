@@ -1012,9 +1012,9 @@ bool cast_vitalisation()
         while (!success);
     }
     // Restore stats.
-    else if (you.strength < you.max_strength
-             || you.intel < you.max_intel
-             || you.dex < you.max_dex)
+    else if (you.strength() < you.max_strength()
+             || you.intel() < you.max_intel()
+             || you.dex() < you.max_dex())
     {
         type = 1;
         while (!restore_stat(STAT_RANDOM, 0, true))

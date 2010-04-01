@@ -443,7 +443,7 @@ bool player::fumbles_attack(bool verbose)
     // Fumbling in shallow water.
     if (floundering())
     {
-        if (x_chance_in_y(4, dex) || one_chance_in(5))
+        if (x_chance_in_y(4, dex()) || one_chance_in(5))
         {
             if (verbose)
                 mpr("Unstable footing causes you to fumble your attack.");

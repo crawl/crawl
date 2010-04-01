@@ -80,12 +80,8 @@ public:
   int base_magic_points;      // temporary max MP loss? (currently unused)
   int base_magic_points2;     // base MPs from levels and potions of magic
 
-  char strength;
-  char intel;
-  char dex;
-  char max_strength;
-  char max_intel;
-  char max_dex;
+  FixedVector<char, NUM_STATS> stats;
+  FixedVector<char, NUM_STATS> max_stats;
   stat_type last_chosen;
 
   char hunger_state;
@@ -102,9 +98,7 @@ public:
 
   bool redraw_hit_points;
   bool redraw_magic_points;
-  bool redraw_strength;
-  bool redraw_intelligence;
-  bool redraw_dexterity;
+  FixedVector<bool, NUM_STATS> redraw_stats;
   bool redraw_experience;
   bool redraw_armour_class;
   bool redraw_evasion;
@@ -327,6 +321,13 @@ public:
     bool blink_to(const coord_def& c, bool quiet = false);
 
     void reset_prev_move();
+
+    char strength() const;
+    char intel() const;
+    char dex() const;
+    char max_strength() const;
+    char max_intel() const;
+    char max_dex() const;
 
     bool in_water() const;
     bool can_swim(bool permanently = false) const;

@@ -662,19 +662,16 @@ void wizard_set_stats()
     if (cancelable_get_line_autohist(buf, sizeof buf))
         return;
 
-    int sstr = you.strength,
-        sdex = you.dex,
-        sint = you.intel;
+    int sstr = you.strength(),
+        sdex = you.dex(),
+        sint = you.intel();
 
     sscanf(buf, "%d %d %d", &sstr, &sint, &sdex);
 
-    you.max_strength = you.strength = debug_cap_stat(sstr);
-    you.max_dex      = you.dex      = debug_cap_stat(sdex);
-    you.max_intel    = you.intel    = debug_cap_stat(sint);
-
-    you.redraw_strength     = true;
-    you.redraw_dexterity    = true;
-    you.redraw_intelligence = true;
+    you.max_stats[STAT_STR] = you.stats[STAT_STR] = debug_cap_stat(sstr);
+    you.max_stats[STAT_INT] = you.stats[STAT_INT] = debug_cap_stat(sint);
+    you.max_stats[STAT_DEX] = you.stats[STAT_DEX] = debug_cap_stat(sdex);
+    you.redraw_stats.init(true);
     you.redraw_evasion      = true;
 }
 

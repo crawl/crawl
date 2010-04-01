@@ -84,7 +84,7 @@ static void _dump_player(FILE *file)
     // the cause of the crash.
     if ((crawl_state.game_is_arena() || crawl_state.arena_suspended)
         && !in_bounds(you.pos()) && you.hp > 0 && you.hp_max > 0
-        && you.strength > 0 && you.intel > 0 && you.dex > 0)
+        && you.strength() > 0 && you.intel() > 0 && you.dex() > 0)
     {
         // Arena mode can change behavior of the rest of the code and/or lead
         // to asserts.
@@ -128,8 +128,8 @@ static void _dump_player(FILE *file)
             you.magic_points, you.max_magic_points,
             you.base_magic_points, you.base_magic_points2);
     fprintf(file, "Stats: %d (%d) %d (%d) %d (%d)\n",
-            you.strength, you.max_strength, you.intel, you.max_intel,
-            you.dex, you.max_dex);
+            you.strength(), you.max_strength(), you.intel(), you.max_intel(),
+            you.dex(), you.max_dex());
     fprintf(file, "Position: %s, god:%s (%d), turn_is_over: %d, "
                   "banished: %d\n",
             debug_coord_str(you.pos()).c_str(),

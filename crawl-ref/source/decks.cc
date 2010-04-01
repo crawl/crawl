@@ -1912,18 +1912,16 @@ static void _potion_card(int power, deck_rarity_type rarity)
 
 static void _focus_card(int power, deck_rarity_type rarity)
 {
-    char* max_statp[]  = { &you.max_strength, &you.max_intel, &you.max_dex };
-    char* base_statp[] = { &you.strength, &you.intel, &you.dex };
     int best_stat = 0;
     int worst_stat = 0;
 
     for (int i = 1; i < 3; ++i)
     {
-        const int best_diff = *max_statp[i] - *max_statp[best_stat];
+        const int best_diff = you.max_stats[i] - you.max_stats[best_stat];
         if (best_diff > 0 || best_diff == 0 && coinflip())
             best_stat = i;
 
-        const int worst_diff = *max_statp[i] - *max_statp[worst_stat];
+        const int worst_diff = you.max_stats[i] - you.max_stats[worst_stat];
         if (worst_diff < 0 || worst_diff == 0 && coinflip())
             worst_stat = i;
     }
@@ -1934,16 +1932,16 @@ static void _focus_card(int power, deck_rarity_type rarity)
         worst_stat = random2(3);
     }
 
-    (*max_statp[best_stat])++;
-    (*max_statp[worst_stat])--;
-    (*base_statp[best_stat])++;
-    (*base_statp[worst_stat])--;
+    you.max_stats[best_stat]++;
+    you.max_stats[worst_stat]--;
+    you.stats[best_stat]++;
+    you.stats[worst_stat]--;
 
     // Did focusing kill the player?
     const kill_method_type kill_types[3] = {
         KILLED_BY_WEAKNESS,
-        KILLED_BY_CLUMSINESS,
-        KILLED_BY_STUPIDITY
+        KILLED_BY_STUPIDITY,
+        KILLED_BY_CLUMSINESS
     };
 
     std::string cause = "the Focus card";
@@ -1963,47 +1961,41 @@ static void _focus_card(int power, deck_rarity_type rarity)
     }
 
     for (int i = 0; i < 3; ++i)
-        if (*max_statp[i] < 1 || *base_statp[i] < 1)
+        if (you.max_stats[i] < 1 || you.stats[i] < 1)
         {
             ouch(INSTANT_DEATH, NON_MONSTER, kill_types[i], cause.c_str(),
                  true);
         }
 
     // The player survived! Yay!
-    you.redraw_strength     = true;
-    you.redraw_intelligence = true;
-    you.redraw_dexterity    = true;
+    you.redraw_stats.init(true);
 
     burden_change();
 }
 
 static void _shuffle_card(int power, deck_rarity_type rarity)
 {
-    stat_type stats[3] = {STAT_STR, STAT_DEX, STAT_INT};
-    int old_base[3]    = {you.strength, you.dex, you.intel};
-    int old_max[3]     = {you.max_strength, you.max_dex, you.max_intel};
-    int modifiers[3];
+    FixedVector<char, NUM_STATS> modifiers;
+    int perm[NUM_STATS] = { 0, 1, 2 };
 
-    int perm[3] = { 0, 1, 2 };
+    for (int i = 0; i < NUM_STATS; ++i)
+        modifiers[i] = stat_modifier(static_cast<stat_type>(i));
 
-    for (int i = 0; i < 3; ++i)
-        modifiers[i] = stat_modifier(stats[i]);
+    std::random_shuffle(perm, perm + 3);
 
-    std::random_shuffle( perm, perm + 3 );
-
-    int new_base[3];
-    int new_max[3];
-    for (int i = 0; i < 3; ++i)
+    FixedVector<char, NUM_STATS> new_base;
+    FixedVector<char, NUM_STATS> new_max;
+    for (int i = 0; i < NUM_STATS; ++i)
     {
-        new_base[perm[i]] = old_base[i] - modifiers[i] + modifiers[perm[i]];
-        new_max[perm[i]]  = old_max[i] - modifiers[i] + modifiers[perm[i]];
+        new_base[perm[i]] = you.stats[i] - modifiers[i] + modifiers[perm[i]];
+        new_max[perm[i]]  = you.max_stats[i] - modifiers[i] + modifiers[perm[i]];
     }
 
     // Did the shuffling kill the player?
-    kill_method_type kill_types[3] = {
+    kill_method_type kill_types[NUM_STATS] = {
         KILLED_BY_WEAKNESS,
-        KILLED_BY_CLUMSINESS,
-        KILLED_BY_STUPIDITY
+        KILLED_BY_STUPIDITY,
+        KILLED_BY_CLUMSINESS
     };
 
     std::string cause = "the Shuffle card";
@@ -2022,7 +2014,7 @@ static void _shuffle_card(int power, deck_rarity_type rarity)
         }
     }
 
-    for (int i = 0; i < 3; ++i)
+    for (int i = 0; i < NUM_STATS; ++i)
         if (new_base[i] < 1 || new_max[i] < 1)
         {
             ouch(INSTANT_DEATH, NON_MONSTER, kill_types[i], cause.c_str(),
@@ -2031,18 +2023,9 @@ static void _shuffle_card(int power, deck_rarity_type rarity)
 
     // The player survived!
 
-    // Sometimes you just long for Python.
-    you.strength = new_base[0];
-    you.dex      = new_base[1];
-    you.intel    = new_base[2];
-
-    you.max_strength = new_max[0];
-    you.max_dex      = new_max[1];
-    you.max_intel    = new_max[2];
-
-    you.redraw_strength     = true;
-    you.redraw_intelligence = true;
-    you.redraw_dexterity    = true;
+    you.stats = new_base;
+    you.max_stats = new_max;
+    you.redraw_stats.init(true);
     you.redraw_evasion      = true;
 
     burden_change();

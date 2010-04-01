@@ -263,18 +263,18 @@ static int _stat_mult(skill_type exsk, int skill_inc)
     if ((exsk >= SK_FIGHTING && exsk <= SK_STAVES) || exsk == SK_ARMOUR)
     {
         // These skills are Easier for the strong.
-        stat = you.strength;
+        stat = you.strength();
     }
     else if (exsk >= SK_SLINGS && exsk <= SK_UNARMED_COMBAT)
     {
         // These skills are easier for the dexterous.
         // Note: Armour is handled above.
-        stat = you.dex;
+        stat = you.dex();
     }
     else if (exsk >= SK_SPELLCASTING && exsk <= SK_POISON_MAGIC)
     {
         // These skills are easier for the smart.
-        stat = you.intel;
+        stat = you.intel();
     }
 
     return (skill_inc * std::max<int>(5, stat) / 10);

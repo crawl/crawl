@@ -48,6 +48,7 @@
 #include "mutation.h"
 #include "misc.h"
 #include "player.h"
+#include "player-stats.h"
 #include "random.h"
 #include "religion.h"
 #include "skills.h"
@@ -470,32 +471,18 @@ static void _unfocus_stats()
 {
     int needed;
 
-    if ((needed = MIN_START_STAT - you.strength) > 0)
+    for (int i = 0; i < NUM_STATS; ++i)
     {
-        if (you.intel > you.dex)
-            you.intel -= needed;
-        else
-            you.dex -= needed;
-
-        you.strength = MIN_START_STAT;
-    }
-    if ((needed = MIN_START_STAT - you.intel) > 0)
-    {
-        if (you.strength > you.dex)
-            you.strength -= needed;
-        else
-            you.dex -= needed;
-
-        you.intel = MIN_START_STAT;
-    }
-    if ((needed = MIN_START_STAT - you.dex) > 0)
-    {
-        if (you.strength > you.intel)
-            you.strength -= needed;
-        else
-            you.intel -= needed;
-
-        you.dex = MIN_START_STAT;
+        int j = (i + 1) % NUM_STATS;
+        int k = (i + 2) % NUM_STATS;
+        if ((needed = MIN_START_STAT - you.stats[i]) > 0)
+        {
+            if (you.stats[j] > you.stats[k])
+                you.stats[j] -= needed;
+            else
+                you.stats[k] -= needed;
+            you.stats[i] = MIN_START_STAT;
+        }
     }
 }
 
@@ -505,30 +492,11 @@ static void _wanderer_assign_remaining_stats(int points_left)
     while (points_left > 0)
     {
         // Stats that are already high will be chosen half as often.
-        switch (random2(NUM_STATS))
-        {
-        case STAT_STR:
-            if (you.strength > 17 && coinflip())
-                continue;
+        stat_type stat = static_cast<stat_type>(random2(NUM_STATS));
+        if (you.stats[stat]> 17 && coinflip())
+            continue;
 
-            you.strength++;
-            break;
-
-        case STAT_DEX:
-            if (you.dex > 17 && coinflip())
-                continue;
-
-            you.dex++;
-            break;
-
-        case STAT_INT:
-            if (you.intel > 17 && coinflip())
-                continue;
-
-            you.intel++;
-            break;
-        }
-
+        you.stats[stat]++;
         points_left--;
     }
 }
@@ -839,9 +807,7 @@ game_start:
         roll_demonspawn_mutations();
 
     // XXX: These need to be set above using functions!!! {dlb}
-    you.max_dex      = you.dex;
-    you.max_strength = you.strength;
-    you.max_intel    = you.intel;
+    you.max_stats = you.stats;
 
     _give_starting_food();
     if (crawl_state.game_is_sprint()) {
@@ -1843,18 +1809,16 @@ static void _newgame_clear_item(int slot)
 static stat_type _wanderer_choose_role()
 {
     int total_stats = 0;
-
-    total_stats += you.strength;
-    total_stats += you.dex;
-    total_stats += you.intel;
+    for (int i = 0; i < NUM_STATS; ++i)
+        total_stats += you.stats[i];
 
     int target = random2(total_stats);
 
     stat_type role;
 
-    if (target < you.strength)
+    if (target < you.strength())
         role = STAT_STR;
-    else if (target < (you.dex + you.strength))
+    else if (target < (you.dex() + you.strength()))
         role = STAT_DEX;
     else
         role = STAT_INT;
@@ -2564,7 +2528,7 @@ static void _wanderer_cover_equip_holes(int & slot)
     if (you.equip[EQ_WEAPON] == -1)
     {
         weapon_type weapon = WPN_CLUB;
-        if (you.dex > you.strength || you.skills[SK_STABBING])
+        if (you.dex() > you.strength() || you.skills[SK_STABBING])
             weapon = WPN_DAGGER;
 
         _newgame_make_item(slot, EQ_WEAPON, OBJ_WEAPONS, weapon);

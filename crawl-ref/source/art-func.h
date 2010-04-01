@@ -357,8 +357,8 @@ static void _wucad_miscast(actor* victim, int power,int fail)
 
 static void _wucad_pluses(item_def *item)
 {
-    item->plus  = std::min(you.intel - 3, 22);
-    item->plus2 = std::min(you.intel / 2, 13);
+    item->plus  = std::min(you.intel() - 3, 22);
+    item->plus2 = std::min(you.intel() / 2, 13);
 }
 
 static void _WUCAD_MU_equip(item_def *item, bool *show_msgs, bool unmeld)

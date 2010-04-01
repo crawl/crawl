@@ -2075,7 +2075,7 @@ int player_adjusted_body_armour_evasion_penalty(int scale)
     if (!base_ev_penalty)
         return (0);
 
-    return ((base_ev_penalty + std::max(0, 3 * base_ev_penalty - you.strength))
+    return ((base_ev_penalty + std::max(0, 3 * base_ev_penalty - you.strength()))
             * (45 - you.skills[SK_ARMOUR])
             * scale
             / 45);
@@ -2202,7 +2202,7 @@ int player_evasion(ev_ignore_type evit)
         player_adjusted_evasion_penalty(scale);
 
     // The last two parameters are not important.
-    const int ev_dex = stepdown_value(you.dex, 10, 24, 72, 72);
+    const int ev_dex = stepdown_value(you.dex(), 10, 24, 72, 72);
 
     const int dodge_bonus =
         (7 + you.skills[SK_DODGING] * ev_dex) * scale * scale
@@ -2296,7 +2296,7 @@ int player_mag_abil(bool is_weighted)
     // armour of the Archmagi (checks body armour only)
     ma += 2 * player_equip_ego_type(EQ_BODY_ARMOUR, SPARM_ARCHMAGI);
 
-    return ((is_weighted) ? ((ma * you.intel) / 10) : ma);
+    return ((is_weighted) ? ((ma * you.intel()) / 10) : ma);
 }
 
 int player_shield_class(void)   //jmf: changes for new spell
@@ -2322,11 +2322,11 @@ int player_shield_class(void)   //jmf: changes for new spell
         shield += item.plus * 100;
 
         if (item.sub_type == ARM_BUCKLER)
-            stat = you.dex * 38;
+            stat = you.dex() * 38;
         else if (item.sub_type == ARM_LARGE_SHIELD)
-            stat = you.dex * 12 + you.strength * 26;
+            stat = you.dex() * 12 + you.strength() * 26;
         else
-            stat = you.dex * 19 + you.strength * 19;
+            stat = you.dex() * 19 + you.strength() * 19;
     }
     else
     {
@@ -2340,7 +2340,7 @@ int player_shield_class(void)   //jmf: changes for new spell
             && you.duration[DUR_CONDENSATION_SHIELD])
         {
             shield += 300 + (you.skills[SK_ICE_MAGIC] * 25);
-            stat    = std::max(stat, you.intel * 38);
+            stat    = std::max(stat, you.intel() * 38);
         }
     }
 
@@ -2374,7 +2374,7 @@ int carrying_capacity(burden_state_type bs)
     // otherwise - but there's no good way to rationalize here...  --sorear
     int used_weight = std::max(you.body_weight(), you.body_weight(true));
 
-    int cap = (2 * used_weight) + (you.strength * 300)
+    int cap = (2 * used_weight) + (you.strength() * 300)
               + (you.airborne() ? 1000 : 0);
     // We are nice to the lighter species in that strength adds absolutely
     // instead of relatively to body weight. --dpeg
@@ -3140,7 +3140,7 @@ int check_stealth(void)
     if (you.attribute[ATTR_SHADOWS] || you.berserk())
         return (0);
 
-    int stealth = you.dex * 3;
+    int stealth = you.dex() * 3;
 
     if (you.skills[SK_STEALTH])
     {
@@ -4992,12 +4992,8 @@ void player::init()
     max_magic_points   = 0;
 
     magic_points_regeneration = 0;
-    strength         = 0;
-    max_strength     = 0;
-    intel            = 0;
-    max_intel        = 0;
-    dex              = 0;
-    max_dex          = 0;
+    stats.init(0);
+    max_stats.init(0);
     experience       = 0;
     experience_level = 1;
     max_level        = 1;

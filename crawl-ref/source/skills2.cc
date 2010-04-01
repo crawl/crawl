@@ -1664,10 +1664,10 @@ std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
         species = you.species;
 
     if (str == -1)
-        str = std::max(you.strength - stat_modifier(STAT_STR), 1);
+        str = std::max(you.strength() - stat_modifier(STAT_STR), 1);
 
     if (dex == -1)
-        dex = std::max(you.dex - stat_modifier(STAT_DEX), 1);
+        dex = std::max(you.dex() - stat_modifier(STAT_DEX), 1);
 
     if (god == -1)
         god = you.religion;
@@ -1941,12 +1941,12 @@ void wield_warning(bool newWeapon)
     msg += " " + wep.name(DESC_BASENAME);
     const char* mstr = msg.c_str();
 
-    if (you.strength < you.dex)
+    if (you.strength() < you.dex())
     {
-        if (you.strength < 11)
+        if (you.strength() < 11)
         {
             mprf(MSGCH_WARN, "You have %strouble swinging %s.",
-                 (you.strength < 7) ? "" : "a little ", mstr);
+                 (you.strength() < 7) ? "" : "a little ", mstr);
         }
         else
         {
@@ -1956,10 +1956,10 @@ void wield_warning(bool newWeapon)
     }
     else
     {
-        if (you.dex < 11)
+        if (you.dex() < 11)
         {
             mprf(MSGCH_WARN, "Wielding %s is %s awkward.",
-                 mstr, (you.dex < 7) ? "fairly" : "a little" );
+                 mstr, (you.dex() < 7) ? "fairly" : "a little" );
         }
         else
         {

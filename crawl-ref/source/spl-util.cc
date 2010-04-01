@@ -327,7 +327,7 @@ int spell_hunger(spell_type which_spell)
     else
         hunger = (basehunger[0] * level * level) / 4;
 
-    hunger -= you.intel * you.skills[SK_SPELLCASTING];
+    hunger -= you.intel() * you.skills[SK_SPELLCASTING];
 
     if (hunger < 0)
         hunger = 0;

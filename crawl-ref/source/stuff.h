@@ -52,8 +52,6 @@ void clear_globals_on_exit();
 void end(int exit_code, bool print_err = false,
          const char *format = NULL, ...);
 
-void modify_all_stats(int STmod, int IQmod, int DXmod);
-
 void print_error_screen(const char *message, ...);
 void redraw_screen();
 

@@ -37,6 +37,7 @@
 #include "jobs.h"
 #include "ouch.h"
 #include "player.h"
+#include "player-stats.h"
 #include "place.h"
 #include "religion.h"
 #include "skills2.h"
@@ -363,28 +364,9 @@ static void _print_stats_hp(int x, int y)
 
 short _get_stat_colour(stat_type stat)
 {
-    int val = 0, max_val = 0;
-    switch (stat)
-    {
-    case STAT_STR:
-        val     = you.strength;
-        max_val = you.max_strength;
-        break;
-    case STAT_INT:
-        val     = you.intel;
-        max_val = you.max_intel;
-        break;
-    case STAT_DEX:
-        val     = you.dex;
-        max_val = you.max_dex;
-        break;
-    default:
-        ASSERT(false);
-    }
-
     // Check the stat_colour option for warning thresholds.
     for (unsigned int i = 0; i < Options.stat_colour.size(); ++i)
-        if (val <= Options.stat_colour[i].first)
+        if (you.stats[stat] <= Options.stat_colour[i].first)
             return (Options.stat_colour[i].second);
 
     // Stat is magically increased.
@@ -397,76 +379,29 @@ short _get_stat_colour(stat_type stat)
     }
 
     // Stat is degenerated.
-    if (val < max_val)
+    if (you.stats[stat] < you.max_stats[stat])
         return (YELLOW);
 
     return (HUD_VALUE_COLOUR);
 }
 
 // XXX: alters state!  Does more than just print!
-static void _print_stats_str(int x, int y)
+static void _print_stat(stat_type stat, int x, int y)
 {
-    if (you.strength < 0)
-        you.strength = 0;
-    else if (you.strength > 72)
-        you.strength = 72;
-
-    if (you.max_strength > 72)
-        you.max_strength = 72;
+    normalize_stat(stat);
 
     cgotoxy(x+5, y, GOTO_STAT);
 
-    textcolor(_get_stat_colour(STAT_STR));
-    cprintf( "%d", you.strength );
+    textcolor(_get_stat_colour(stat));
+    cprintf("%d", you.stats[stat]);
 
-    if (you.strength != you.max_strength)
-        cprintf( " (%d)  ", you.max_strength );
+    if (you.stats[stat] != you.max_stats[stat])
+        cprintf(" (%d)  ", you.max_stats[stat]);
     else
-        cprintf( "       " );
+        cprintf("       ");
 
-    burden_change();
-}
-
-static void _print_stats_int(int x, int y)
-{
-    if (you.intel < 0)
-        you.intel = 0;
-    else if (you.intel > 72)
-        you.intel = 72;
-
-    if (you.max_intel > 72)
-        you.max_intel = 72;
-
-    cgotoxy(x+5, y, GOTO_STAT);
-
-    textcolor(_get_stat_colour(STAT_INT));
-    cprintf( "%d", you.intel );
-
-    if (you.intel != you.max_intel)
-        cprintf( " (%d)  ", you.max_intel );
-    else
-        cprintf( "       " );
-}
-
-static void _print_stats_dex(int x, int y)
-{
-    if (you.dex < 0)
-        you.dex = 0;
-    else if (you.dex > 72)
-        you.dex = 72;
-
-    if (you.max_dex > 72)
-        you.max_dex = 72;
-
-    cgotoxy(x+5, y, GOTO_STAT);
-
-    textcolor(_get_stat_colour(STAT_DEX));
-    cprintf( "%d", you.dex );
-
-    if (you.dex != you.max_dex)
-        cprintf( " (%d)  ", you.max_dex );
-    else
-        cprintf( "       " );
+    if (stat == STAT_STR)
+        burden_change();
 }
 
 static void _print_stats_ac(int x, int y)
@@ -857,9 +792,9 @@ static bool _need_stats_printed()
            || you.redraw_magic_points
            || you.redraw_armour_class
            || you.redraw_evasion
-           || you.redraw_strength
-           || you.redraw_intelligence
-           || you.redraw_dexterity
+           || you.redraw_stats[STAT_STR]
+           || you.redraw_stats[STAT_INT]
+           || you.redraw_stats[STAT_DEX]
            || you.redraw_experience
            || you.wield_change
            || you.redraw_quiver;
@@ -882,7 +817,7 @@ void print_stats(void)
     textcolor(LIGHTGREY);
 
     // Displayed evasion is now tied to dex.
-    if (you.redraw_dexterity)
+    if (you.redraw_stats[STAT_DEX])
         you.redraw_evasion = true;
 
     if (HP_Bar.wants_redraw())
@@ -899,9 +834,10 @@ void print_stats(void)
     if (you.redraw_armour_class) { you.redraw_armour_class = false; _print_stats_ac ( 1, 5); }
     if (you.redraw_evasion)      { you.redraw_evasion = false;      _print_stats_ev ( 1, 6); }
 
-    if (you.redraw_strength)     { you.redraw_strength = false;     _print_stats_str(19, 5); }
-    if (you.redraw_intelligence) { you.redraw_intelligence = false; _print_stats_int(19, 6); }
-    if (you.redraw_dexterity)    { you.redraw_dexterity = false;    _print_stats_dex(19, 7); }
+    for (int i = 0; i < NUM_STATS; ++i)
+        if (you.redraw_stats[i])
+            _print_stat(static_cast<stat_type>(i), 19, 5 + i);
+    you.redraw_stats.init(false);
 
     int yhack = 0;
 
@@ -1750,72 +1686,72 @@ static std::vector<formatted_string> _get_overview_stats()
     snprintf(buf, sizeof buf, "SH %2d", player_shield_class());
     cols1.add_formatted(1, buf, false);
 
-    if (you.strength == you.max_strength)
+    if (you.strength() == you.max_strength())
     {
         if (boosted_str)
         {
             snprintf(buf, sizeof buf, "Str <lightblue>%2d</lightblue>",
-                     you.strength);
+                     you.strength());
         }
         else
-            snprintf(buf, sizeof buf, "Str %2d", you.strength);
+            snprintf(buf, sizeof buf, "Str %2d", you.strength());
     }
     else
     {
         if (boosted_str)
         {
             snprintf(buf, sizeof buf, "Str <lightblue>%2d (%d)</lightblue>",
-                     you.strength, you.max_strength);
+                     you.strength(), you.max_strength());
         }
         else
             snprintf(buf, sizeof buf, "Str <yellow>%2d</yellow> (%d)",
-                     you.strength, you.max_strength);
+                     you.strength(), you.max_strength());
     }
     cols1.add_formatted(2, buf, false);
 
-    if (you.intel == you.max_intel)
+    if (you.intel() == you.max_intel())
     {
         if (boosted_int)
         {
             snprintf(buf, sizeof buf, "Int <lightblue>%2d</lightblue>",
-                     you.intel);
+                     you.intel());
         }
         else
-            snprintf(buf, sizeof buf, "Int %2d", you.intel);
+            snprintf(buf, sizeof buf, "Int %2d", you.intel());
     }
     else
     {
         if (boosted_int)
         {
             snprintf(buf, sizeof buf, "Int <lightblue>%2d (%d)</lightblue>",
-                     you.intel, you.max_intel);
+                     you.intel(), you.max_intel());
         }
         else
             snprintf(buf, sizeof buf, "Int <yellow>%2d</yellow> (%d)",
-                     you.intel, you.max_intel);
+                     you.intel(), you.max_intel());
     }
     cols1.add_formatted(2, buf, false);
 
-    if (you.dex == you.max_dex)
+    if (you.dex() == you.max_dex())
     {
         if (boosted_dex)
         {
             snprintf(buf, sizeof buf, "Dex <lightblue>%2d</lightblue>",
-                     you.dex);
+                     you.dex());
         }
         else
-            snprintf(buf, sizeof buf, "Dex %2d", you.dex);
+            snprintf(buf, sizeof buf, "Dex %2d", you.dex());
     }
     else
     {
         if (boosted_dex)
         {
             snprintf(buf, sizeof buf, "Dex <lightblue>%2d (%d)</lightblue>",
-                     you.dex, you.max_dex);
+                     you.dex(), you.max_dex());
         }
         else
             snprintf(buf, sizeof buf, "Dex <yellow>%2d</yellow> (%d)",
-                     you.dex, you.max_dex);
+                     you.dex(), you.max_dex());
     }
     cols1.add_formatted(2, buf, false);
 

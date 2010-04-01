@@ -1649,7 +1649,7 @@ int launcher_final_speed(const item_def &launcher, const item_def *shield)
 
     int speed_base = 10 * property( launcher, PWPN_SPEED );
     int speed_min = 70;
-    int speed_stat = str_weight * you.strength + dex_weight * you.dex;
+    int speed_stat = str_weight * you.strength() + dex_weight * you.dex();
 
     // Reduce runaway bow overpoweredness.
     if (launcher_skill == SK_BOWS)
@@ -2454,12 +2454,12 @@ static int stat_adjust(int value, int stat, int statbase,
 
 static int str_adjust_thrown_damage(int dam)
 {
-    return stat_adjust(dam, you.strength, 15, 160, 90);
+    return stat_adjust(dam, you.strength(), 15, 160, 90);
 }
 
 static int dex_adjust_thrown_tohit(int hit)
 {
-    return stat_adjust(hit, you.dex, 13, 160, 90);
+    return stat_adjust(hit, you.dex(), 13, 160, 90);
 }
 
 static void identify_floor_missiles_matching(item_def mitem, int idflags)
@@ -2639,8 +2639,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     {
         if (wepType == MI_LARGE_ROCK)
         {
-            range     = 1 + random2( you.strength / 5 );
-            max_range = you.strength / 5;
+            range     = 1 + random2( you.strength() / 5 );
+            max_range = you.strength() / 5;
             if (you.can_throw_large_rocks())
             {
                 range     += random_range(4, 7);
@@ -2659,7 +2659,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     else
     {
         // Range based on mass & strength, between 1 and 9.
-        max_range = range = std::max(you.strength-item_mass(thrown)/10 + 3, 1);
+        max_range = range = std::max(you.strength()-item_mass(thrown)/10 + 3, 1);
     }
 
     range = std::min(range, LOS_RADIUS);
@@ -2742,7 +2742,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         lnchType = static_cast<weapon_type>(you.weapon()->sub_type);
 
     // baseHit and damage for generic objects
-    baseHit = std::min(0, you.strength - item_mass(item) / 10);
+    baseHit = std::min(0, you.strength() - item_mass(item) / 10);
     baseDam = item_mass(item) / 100;
 
     // special: might be throwing generic weapon;
@@ -2890,7 +2890,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             exHitBonus += (effSkill * 3) / 2;
 
             // Strength is good if you're using a nice sling.
-            int strbonus = (10 * (you.strength - 10)) / 9;
+            int strbonus = (10 * (you.strength() - 10)) / 9;
             strbonus = (strbonus * (2 * baseDam + ammoDamBonus)) / 20;
 
             // cap
@@ -2910,7 +2910,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         case SK_THROWING:
             baseHit -= 2;
             exercise(SK_THROWING, (coinflip()? 2 : 1));
-            exHitBonus += (effSkill * 3) / 2 + you.dex / 2;
+            exHitBonus += (effSkill * 3) / 2 + you.dex() / 2;
 
             // No extra damage for blowguns.
             // exDamBonus = 0;
@@ -2927,7 +2927,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             exHitBonus += (effSkill * 2);
 
             // Strength is good if you're using a nice bow.
-            int strbonus = (10 * (you.strength - 10)) / 4;
+            int strbonus = (10 * (you.strength() - 10)) / 4;
             strbonus = (strbonus * (2 * baseDam + ammoDamBonus)) / 20;
 
             // Cap; reduced this cap, because we don't want to allow
@@ -3102,7 +3102,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             }
 
             exDamBonus =
-                (10 * (you.skills[SK_THROWING] / 2 + you.strength - 10)) / 12;
+                (10 * (you.skills[SK_THROWING] / 2 + you.strength() - 10)) / 12;
 
             // Now, exDamBonus is a multiplier.  The full multiplier
             // is applied to base damage, but only a third is applied
@@ -3142,7 +3142,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 exHitBonus = dex_adjust_thrown_tohit(exHitBonus);
 
                 // High dex helps damage a bit, too (aim for weak spots).
-                exDamBonus = stat_adjust(exDamBonus, you.dex, 20, 150, 100);
+                exDamBonus = stat_adjust(exDamBonus, you.dex(), 20, 150, 100);
 
                 // Javelins train throwing quickly.
                 exercise(SK_THROWING, 1 + coinflip());
@@ -3202,7 +3202,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     {
         if (wepType != MI_LARGE_ROCK && wepType != MI_THROWING_NET)
         {
-            exHitBonus += you.dex / 2;
+            exHitBonus += you.dex() / 2;
 
             // slaying bonuses
             if (wepType != MI_NEEDLE)
@@ -3220,7 +3220,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         if (one_chance_in(20))
             exercise(SK_THROWING, 1);
 
-        exHitBonus = you.dex / 4;
+        exHitBonus = you.dex() / 4;
     }
 
     // FINALISE tohit and damage
@@ -3832,18 +3832,12 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove,
             // This only handles removal, which is OK, because levitating is
             // never fatal.
 
-            you.strength -= prop_str;
-            you.intel    -= prop_int;
-            you.dex      -= prop_dex;
+            unwind_var<FixedVector<char, NUM_STATS> > save_stats(you.stats);
+            you.stats[STAT_STR] -= prop_str;
+            you.stats[STAT_INT] -= prop_int;
+            you.stats[STAT_DEX] -= prop_dex;
 
-            bool safe = merfolk_change_is_safe();
-
-            you.strength += prop_str;
-            you.intel    += prop_int;
-            you.dex      += prop_dex;
-
-            if (!safe)
-                fatal_liquid = true;
+            fatal_liquid = !merfolk_change_is_safe();
         }
 
         if (gridhere == DNGN_LAVA
@@ -3879,8 +3873,8 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove,
 
     if (remove)
     {
-        if (prop_str >= you.strength || prop_int >= you.intel
-            || prop_dex >= you.dex || prop_lev && fatal_liquid)
+        if (prop_str >= you.strength() || prop_int >= you.intel()
+            || prop_dex >= you.dex() || prop_lev && fatal_liquid)
         {
             if (!quiet)
             {
@@ -3894,8 +3888,8 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove,
     }
     else // put on
     {
-        if (-prop_str >= you.strength || -prop_int >= you.intel
-            || -prop_dex >= you.dex)
+        if (-prop_str >= you.strength() || -prop_int >= you.intel()
+            || -prop_dex >= you.dex())
         {
             if (!quiet)
             {

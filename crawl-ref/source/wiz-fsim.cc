@@ -325,9 +325,9 @@ static void _fsim_title(FILE *o, int mon, int ms)
             _fsim_time_string().c_str());
 
     fprintf(o, "Experience: %d\n", you.experience_level);
-    fprintf(o, "Strength  : %d\n", you.strength);
-    fprintf(o, "Intel.    : %d\n", you.intel);
-    fprintf(o, "Dexterity : %d\n", you.dex);
+    fprintf(o, "Strength  : %d\n", you.strength());
+    fprintf(o, "Intel.    : %d\n", you.intel());
+    fprintf(o, "Dexterity : %d\n", you.dex());
     fprintf(o, "Base speed: %d\n", player_speed());
     fprintf(o, "\n");
 
@@ -350,9 +350,9 @@ static void _fsim_defence_title(FILE *o, int mon)
             Options.fsim_rounds,
             _fsim_time_string().c_str());
     fprintf(o, "Experience: %d\n", you.experience_level);
-    fprintf(o, "Strength  : %d\n", you.strength);
-    fprintf(o, "Intel.    : %d\n", you.intel);
-    fprintf(o, "Dexterity : %d\n", you.dex);
+    fprintf(o, "Strength  : %d\n", you.strength());
+    fprintf(o, "Intel.    : %d\n", you.intel());
+    fprintf(o, "Dexterity : %d\n", you.dex());
     fprintf(o, "Base speed: %d\n", player_speed());
     fprintf(o, "\n");
     _fsim_mon_stats(o, menv[mon]);
@@ -446,11 +446,9 @@ static bool debug_fight_sim(int mindex, int missile_slot,
     }
 
     bool success = true;
-    FixedVector<unsigned char, 50> skill_backup = you.skills;
-    int ystr = you.strength,
-        yint = you.intel,
-        ydex = you.dex;
-    int yxp  = you.experience_level;
+    unwind_var<FixedVector<unsigned char, 50> > skills(you.skills);
+    unwind_var<FixedVector<char, NUM_STATS> > stats(you.stats);
+    unwind_var<int> xp(you.experience_level);
 
     for (int i = SK_FIGHTING; i < NUM_SKILLS; ++i)
         you.skills[i] = 0;
@@ -461,17 +459,11 @@ static bool debug_fight_sim(int mindex, int missile_slot,
     if (you.experience_level > 27)
         you.experience_level = 27;
 
-    you.strength = debug_cap_stat(Options.fsim_str);
-    you.intel    = debug_cap_stat(Options.fsim_int);
-    you.dex      = debug_cap_stat(Options.fsim_dex);
+    you.stats[STAT_STR] = debug_cap_stat(Options.fsim_str);
+    you.stats[STAT_INT] = debug_cap_stat(Options.fsim_int);
+    you.stats[STAT_DEX] = debug_cap_stat(Options.fsim_dex);
 
     combat(ostat, mindex, missile_slot);
-
-    you.skills = skill_backup;
-    you.strength = ystr;
-    you.intel    = yint;
-    you.dex      = ydex;
-    you.experience_level = yxp;
 
     fprintf(ostat, "-----------------------------------\n\n");
     fclose(ostat);

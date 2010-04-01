@@ -1005,21 +1005,13 @@ static void _wizard_restore_life()
 {
     if (you.hp <= 0)
         set_hp(you.hp_max, false);
-    if (you.strength <= 0)
+    for (int i = 0; i < NUM_STATS; ++i)
     {
-        you.strength        = you.max_strength;
-        you.redraw_strength = true;
-    }
-    if (you.dex <= 0)
-    {
-        you.dex              = you.max_dex;
-        you.redraw_dexterity = true;
-        you.redraw_evasion   = true;
-    }
-    if (you.intel <= 0)
-    {
-        you.intel               = you.max_intel;
-        you.redraw_intelligence = true;
+        if (you.stats[i] <= 0)
+        {
+            you.stats[i] = you.max_stats[i];
+            you.redraw_stats[i] = true;
+        }
     }
 }
 #endif
@@ -1170,14 +1162,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 #if defined(WIZARD) || defined(DEBUG)
     if (you.never_die)
     {
-        if (you.hp <= 0)
-            you.hp = you.hp_max;
-        if (you.strength <= 0)
-            you.strength = you.max_strength;
-        if (you.dex <= 0)
-            you.dex = you.max_dex;
-        if (you.intel <= 0)
-            you.intel = you.max_intel;
+        _wizard_restore_life();
         return;
     }
 #endif

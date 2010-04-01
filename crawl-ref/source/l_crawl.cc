@@ -704,9 +704,7 @@ LUAFN(_crawl_redraw_stats)
     you.redraw_quiver       = true;
     you.redraw_hit_points   = true;
     you.redraw_magic_points = true;
-    you.redraw_strength     = true;
-    you.redraw_intelligence = true;
-    you.redraw_dexterity    = true;
+    you.redraw_stats.init(true);
     you.redraw_experience   = true;
     you.redraw_armour_class = true;
     you.redraw_evasion      = true;
