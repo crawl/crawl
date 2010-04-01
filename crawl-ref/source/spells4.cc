@@ -973,7 +973,7 @@ void cast_intoxicate(int pow)
     potion_effect( POT_CONFUSION, 10 + (100 - pow) / 10);
 
     if (one_chance_in(20)
-        && lose_stat( STAT_INTELLIGENCE, 1 + random2(3), false,
+        && lose_stat( STAT_INT, 1 + random2(3), false,
                       "casting intoxication"))
     {
         mpr("Your head spins!");

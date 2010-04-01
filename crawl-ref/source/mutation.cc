@@ -2130,8 +2130,8 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     bool stat_msg = false;
 
     // Save original stats.
-    const stat_type stats[] = {STAT_STRENGTH, STAT_DEXTERITY,
-                               STAT_INTELLIGENCE};
+    const stat_type stats[] = {STAT_STR, STAT_DEX,
+                               STAT_INT};
     int modifiers[3];
 
     for (int i = 0; i < 3; ++i)
@@ -2261,8 +2261,8 @@ static bool _delete_single_mutation_level(mutation_type mutat)
     bool stat_msg = false;
 
     // Save original stats.
-    const stat_type stats[] = {STAT_STRENGTH, STAT_DEXTERITY,
-                               STAT_INTELLIGENCE};
+    const stat_type stats[] = {STAT_STR, STAT_DEX,
+                               STAT_INT};
     int modifiers[3];
 
     for (int i = 0; i < 3; ++i)

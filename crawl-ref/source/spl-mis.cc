@@ -591,11 +591,11 @@ bool MiscastEffect::_lose_stat(unsigned char which_stat,
 
         std::vector<unsigned char> stat_types;
         if ((you.strength - might - stat_loss) > 0)
-            stat_types.push_back(STAT_STRENGTH);
+            stat_types.push_back(STAT_STR);
         if ((you.intel - brilliant - stat_loss) > 0)
-            stat_types.push_back(STAT_INTELLIGENCE);
+            stat_types.push_back(STAT_INT);
         if ((you.dex - agile - stat_loss) > 0)
-            stat_types.push_back(STAT_DEXTERITY);
+            stat_types.push_back(STAT_DEX);
 
         if (stat_types.size() == 0)
         {
@@ -612,9 +612,9 @@ bool MiscastEffect::_lose_stat(unsigned char which_stat,
 
     switch (which_stat)
     {
-        case STAT_STRENGTH:     val = you.strength; break;
-        case STAT_INTELLIGENCE: val = you.intel;    break;
-        case STAT_DEXTERITY:    val = you.dex;      break;
+        case STAT_STR:     val = you.strength; break;
+        case STAT_INT: val = you.intel;    break;
+        case STAT_DEX:    val = you.dex;      break;
 
         default: DEBUGSTR("Invalid stat type."); return (false);
     }
@@ -1489,7 +1489,7 @@ void MiscastEffect::_divination_you(int severity)
         case 0:
             if (you.is_undead)
                 mpr("You suddenly recall your previous life!");
-            else if (_lose_stat(STAT_INTELLIGENCE, 1 + random2(3)))
+            else if (_lose_stat(STAT_INT, 1 + random2(3)))
             {
                 mpr("You have damaged your brain!");
             }
@@ -1519,7 +1519,7 @@ void MiscastEffect::_divination_you(int severity)
         case 2:
             if (you.is_undead)
                 mpr("You suddenly recall your previous life.");
-            else if (_lose_stat(STAT_INTELLIGENCE, 3 + random2(3)))
+            else if (_lose_stat(STAT_INT, 3 + random2(3)))
             {
                 mpr("You have damaged your brain!");
             }

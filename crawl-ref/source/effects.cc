@@ -771,7 +771,7 @@ void direct_effect(monsters *source, spell_type spell,
         {
             // lose_stat() must come last {dlb}
             if (one_chance_in(3)
-                && lose_stat(STAT_INTELLIGENCE, 1, source))
+                && lose_stat(STAT_INT, 1, source))
             {
                 mpr("Something feeds on your intellect!");
                 xom_is_stimulated(50);
@@ -3737,13 +3737,13 @@ void handle_time()
         if (recovery)
         {
             if (you.strength < you.max_strength && one_chance_in(100))
-                restore_stat(STAT_STRENGTH, 0, false, true);
+                restore_stat(STAT_STR, 0, false, true);
 
             if (you.intel < you.max_intel && one_chance_in(100))
-                restore_stat(STAT_INTELLIGENCE, 0, false, true);
+                restore_stat(STAT_INT, 0, false, true);
 
             if (you.dex < you.max_dex && one_chance_in(100))
-                restore_stat(STAT_DEXTERITY, 0, false, true);
+                restore_stat(STAT_DEX, 0, false, true);
         }
     }
     else

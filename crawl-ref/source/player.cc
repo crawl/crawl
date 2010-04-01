@@ -2676,8 +2676,8 @@ void level_change(bool skip_attribute_increase)
 
                 if (!(you.experience_level % 3))
                 {
-                    modify_stat((coinflip() ? STAT_INTELLIGENCE
-                                            : STAT_DEXTERITY), 1, false,
+                    modify_stat((coinflip() ? STAT_INT
+                                            : STAT_DEX), 1, false,
                                 "level gain");
                 }
                 break;
@@ -2692,7 +2692,7 @@ void level_change(bool skip_attribute_increase)
                 mp_adjust++;
 
                 if (!(you.experience_level % 4))
-                    modify_stat(STAT_INTELLIGENCE, 1, false, "level gain");
+                    modify_stat(STAT_INT, 1, false, "level gain");
                 break;
 
             case SP_SLUDGE_ELF:
@@ -2703,8 +2703,8 @@ void level_change(bool skip_attribute_increase)
 
                 if (!(you.experience_level % 4))
                 {
-                    modify_stat((coinflip() ? STAT_INTELLIGENCE
-                                            : STAT_DEXTERITY), 1, false,
+                    modify_stat((coinflip() ? STAT_INT
+                                            : STAT_DEX), 1, false,
                                 "level gain");
                 }
                 break;
@@ -2717,7 +2717,7 @@ void level_change(bool skip_attribute_increase)
                     mp_adjust--;
 
                 if (!(you.experience_level % 4))
-                    modify_stat(STAT_STRENGTH, 1, false, "level gain");
+                    modify_stat(STAT_STR, 1, false, "level gain");
                 break;
 
             case SP_DEEP_DWARF:
@@ -2738,15 +2738,15 @@ void level_change(bool skip_attribute_increase)
 
                 if (!(you.experience_level % 4))
                 {
-                    modify_stat(coinflip() ? STAT_STRENGTH
-                                           : STAT_INTELLIGENCE, 1, false,
+                    modify_stat(coinflip() ? STAT_STR
+                                           : STAT_INT, 1, false,
                                 "level gain");
                 }
                 break;
 
             case SP_HALFLING:
                 if (!(you.experience_level % 5))
-                    modify_stat(STAT_DEXTERITY, 1, false, "level gain");
+                    modify_stat(STAT_DEX, 1, false, "level gain");
 
                 if (you.experience_level % 3)
                     hp_adjust--;
@@ -2756,8 +2756,8 @@ void level_change(bool skip_attribute_increase)
             case SP_KOBOLD:
                 if (!(you.experience_level % 5))
                 {
-                    modify_stat((coinflip() ? STAT_STRENGTH
-                                            : STAT_DEXTERITY), 1, false,
+                    modify_stat((coinflip() ? STAT_STR
+                                            : STAT_DEX), 1, false,
                                 "level gain");
                 }
 
@@ -2780,7 +2780,7 @@ void level_change(bool skip_attribute_increase)
                     mp_adjust--;
 
                 if (!(you.experience_level % 5))
-                    modify_stat(STAT_STRENGTH, 1, false, "level gain");
+                    modify_stat(STAT_STR, 1, false, "level gain");
                 break;
 
             case SP_MUMMY:
@@ -2847,14 +2847,14 @@ void level_change(bool skip_attribute_increase)
                     mp_adjust--;
 
                 if (!(you.experience_level % 3))
-                    modify_stat(STAT_STRENGTH, 1, false, "level gain");
+                    modify_stat(STAT_STR, 1, false, "level gain");
                 break;
 
             case SP_OGRE:
                 hp_adjust++;
 
                 if (!(you.experience_level % 3))
-                    modify_stat(STAT_STRENGTH, 1, false, "level gain");
+                    modify_stat(STAT_STR, 1, false, "level gain");
                 break;
 
             case SP_RED_DRACONIAN:
@@ -2946,8 +2946,8 @@ void level_change(bool skip_attribute_increase)
             case SP_CENTAUR:
                 if (!(you.experience_level % 4))
                 {
-                    modify_stat((coinflip() ? STAT_STRENGTH
-                                            : STAT_DEXTERITY), 1, false,
+                    modify_stat((coinflip() ? STAT_STR
+                                            : STAT_DEX), 1, false,
                                 "level gain");
                 }
 
@@ -2988,8 +2988,8 @@ void level_change(bool skip_attribute_increase)
 
                 if (!(you.experience_level % 5))
                 {
-                    modify_stat((coinflip() ? STAT_INTELLIGENCE
-                                            : STAT_DEXTERITY), 1, false,
+                    modify_stat((coinflip() ? STAT_INT
+                                            : STAT_DEX), 1, false,
                                 "level gain");
                 }
                 break;
@@ -3007,8 +3007,8 @@ void level_change(bool skip_attribute_increase)
 
                 if (!(you.experience_level % 4))
                 {
-                    modify_stat((coinflip() ? STAT_STRENGTH
-                                            : STAT_DEXTERITY), 1, false,
+                    modify_stat((coinflip() ? STAT_STR
+                                            : STAT_DEX), 1, false,
                                 "level gain");
                 }
                 break;
@@ -3050,7 +3050,7 @@ void level_change(bool skip_attribute_increase)
                     mp_adjust--;
 
                 if (!(you.experience_level % 5))
-                    modify_stat(STAT_STRENGTH, 1, false, "level gain");
+                    modify_stat(STAT_STR, 1, false, "level gain");
                 break;
 
             case SP_KENKU:

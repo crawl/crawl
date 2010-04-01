@@ -507,21 +507,21 @@ static void _wanderer_assign_remaining_stats(int points_left)
         // Stats that are already high will be chosen half as often.
         switch (random2(NUM_STATS))
         {
-        case STAT_STRENGTH:
+        case STAT_STR:
             if (you.strength > 17 && coinflip())
                 continue;
 
             you.strength++;
             break;
 
-        case STAT_DEXTERITY:
+        case STAT_DEX:
             if (you.dex > 17 && coinflip())
                 continue;
 
             you.dex++;
             break;
 
-        case STAT_INTELLIGENCE:
+        case STAT_INT:
             if (you.intel > 17 && coinflip())
                 continue;
 
@@ -1853,11 +1853,11 @@ static stat_type _wanderer_choose_role()
     stat_type role;
 
     if (target < you.strength)
-        role = STAT_STRENGTH;
+        role = STAT_STR;
     else if (target < (you.dex + you.strength))
-        role = STAT_DEXTERITY;
+        role = STAT_DEX;
     else
-        role = STAT_INTELLIGENCE;
+        role = STAT_INT;
 
     return (role);
 }
@@ -1898,7 +1898,7 @@ static skill_type _wanderer_role_skill_select(stat_type selected_role,
 
     switch((int)selected_role)
     {
-    case STAT_DEXTERITY:
+    case STAT_DEX:
         switch (random2(6))
         {
         case 0:
@@ -1918,7 +1918,7 @@ static skill_type _wanderer_role_skill_select(stat_type selected_role,
         }
         break;
 
-    case STAT_STRENGTH:
+    case STAT_STR:
     {
         int options = 3;
         if (!you_can_wear(EQ_BODY_ARMOUR))
@@ -1939,7 +1939,7 @@ static skill_type _wanderer_role_skill_select(stat_type selected_role,
         break;
     }
 
-    case STAT_INTELLIGENCE:
+    case STAT_INT:
         switch (random2(3))
         {
         case 0:
@@ -1981,15 +1981,15 @@ static skill_type _wanderer_role_weapon_select(stat_type role)
 
     switch ((int)role)
     {
-    case STAT_STRENGTH:
+    case STAT_STR:
         skill = _apt_weighted_choice(str_weapons, str_size);
         break;
 
-    case STAT_DEXTERITY:
+    case STAT_DEX:
         skill = _apt_weighted_choice(dex_weapons, dex_size);
         break;
 
-    case STAT_INTELLIGENCE:
+    case STAT_INT:
         skill = _apt_weighted_choice(casting_schools, casting_size);
         break;
     }
@@ -2003,7 +2003,7 @@ static void _wanderer_role_skill(stat_type role, int levels)
     skill_type spell2 = NUM_SKILLS;
 
     weapon_type = _wanderer_role_weapon_select(role);
-    if (role == STAT_INTELLIGENCE)
+    if (role == STAT_INT)
        spell2 = _wanderer_role_weapon_select(role);
 
     skill_type selected_skill = NUM_SKILLS;
@@ -2672,9 +2672,9 @@ static void _create_wanderer(void)
 
     // Caster types maybe need more MP?
     int mp_adjust = 0;
-    if (primary_role == STAT_INTELLIGENCE)
+    if (primary_role == STAT_INT)
         mp_adjust++;
-    if (secondary_role == STAT_INTELLIGENCE)
+    if (secondary_role == STAT_INT)
         mp_adjust++;
     set_mp(you.magic_points + mp_adjust, true);
 
@@ -2695,7 +2695,7 @@ static void _create_wanderer(void)
     skill_type sk_2 = SK_NONE;
 
     sk_1 = _wanderer_role_weapon_select(selected_role);
-    if (selected_role == STAT_INTELLIGENCE)
+    if (selected_role == STAT_INT)
         sk_2 = _wanderer_role_weapon_select(selected_role);
 
     skill_type decent_1 = _wanderer_role_skill_select(selected_role,

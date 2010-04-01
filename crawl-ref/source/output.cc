@@ -366,15 +366,15 @@ short _get_stat_colour(stat_type stat)
     int val = 0, max_val = 0;
     switch (stat)
     {
-    case STAT_STRENGTH:
+    case STAT_STR:
         val     = you.strength;
         max_val = you.max_strength;
         break;
-    case STAT_INTELLIGENCE:
+    case STAT_INT:
         val     = you.intel;
         max_val = you.max_intel;
         break;
-    case STAT_DEXTERITY:
+    case STAT_DEX:
         val     = you.dex;
         max_val = you.max_dex;
         break;
@@ -389,9 +389,9 @@ short _get_stat_colour(stat_type stat)
 
     // Stat is magically increased.
     if (you.duration[DUR_DIVINE_STAMINA]
-        || stat == STAT_STRENGTH && you.duration[DUR_MIGHT]
-        || stat == STAT_INTELLIGENCE && you.duration[DUR_BRILLIANCE]
-        || stat == STAT_DEXTERITY && you.duration[DUR_AGILITY])
+        || stat == STAT_STR && you.duration[DUR_MIGHT]
+        || stat == STAT_INT && you.duration[DUR_BRILLIANCE]
+        || stat == STAT_DEX && you.duration[DUR_AGILITY])
     {
         return (LIGHTBLUE);  // no end of effect warning
     }
@@ -416,7 +416,7 @@ static void _print_stats_str(int x, int y)
 
     cgotoxy(x+5, y, GOTO_STAT);
 
-    textcolor(_get_stat_colour(STAT_STRENGTH));
+    textcolor(_get_stat_colour(STAT_STR));
     cprintf( "%d", you.strength );
 
     if (you.strength != you.max_strength)
@@ -439,7 +439,7 @@ static void _print_stats_int(int x, int y)
 
     cgotoxy(x+5, y, GOTO_STAT);
 
-    textcolor(_get_stat_colour(STAT_INTELLIGENCE));
+    textcolor(_get_stat_colour(STAT_INT));
     cprintf( "%d", you.intel );
 
     if (you.intel != you.max_intel)
@@ -460,7 +460,7 @@ static void _print_stats_dex(int x, int y)
 
     cgotoxy(x+5, y, GOTO_STAT);
 
-    textcolor(_get_stat_colour(STAT_DEXTERITY));
+    textcolor(_get_stat_colour(STAT_DEX));
     cprintf( "%d", you.dex );
 
     if (you.dex != you.max_dex)

@@ -635,7 +635,7 @@ bool cast_summon_horrible_things(int pow, god_type god)
     {
         // if someone deletes the db, no message is ok
         mpr(getMiscString("SHT_int_loss").c_str());
-        lose_stat(STAT_INTELLIGENCE, 1, true, "summoning horrible things");
+        lose_stat(STAT_INT, 1, true, "summoning horrible things");
         // Since sustAbil no longer helps here, this can't fail anymore -- 1KB
     }
 

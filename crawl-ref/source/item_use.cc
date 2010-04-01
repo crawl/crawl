@@ -3514,7 +3514,7 @@ void equip_jewellery_effect(item_def &item)
     case RING_STRENGTH:
         if (item.plus)
         {
-            modify_stat(STAT_STRENGTH, item.plus, false, item);
+            modify_stat(STAT_STR, item.plus, false, item);
 
             if (artefact)
                 fake_rap = ARTP_STRENGTH;
@@ -3528,7 +3528,7 @@ void equip_jewellery_effect(item_def &item)
     case RING_DEXTERITY:
         if (item.plus)
         {
-            modify_stat(STAT_DEXTERITY, item.plus, false, item);
+            modify_stat(STAT_DEX, item.plus, false, item);
 
             if (artefact)
                 fake_rap = ARTP_DEXTERITY;
@@ -3542,7 +3542,7 @@ void equip_jewellery_effect(item_def &item)
     case RING_INTELLIGENCE:
         if (item.plus)
         {
-            modify_stat(STAT_INTELLIGENCE, item.plus, false, item);
+            modify_stat(STAT_INT, item.plus, false, item);
 
             if (artefact)
                 fake_rap = ARTP_INTELLIGENCE;
@@ -4170,15 +4170,15 @@ void unequip_jewellery_effect(item_def &item, bool mesg)
         break;
 
     case RING_STRENGTH:
-        modify_stat(STAT_STRENGTH, -item.plus, false, item, true);
+        modify_stat(STAT_STR, -item.plus, false, item, true);
         break;
 
     case RING_DEXTERITY:
-        modify_stat(STAT_DEXTERITY, -item.plus, false, item, true);
+        modify_stat(STAT_DEX, -item.plus, false, item, true);
         break;
 
     case RING_INTELLIGENCE:
-        modify_stat(STAT_INTELLIGENCE, -item.plus, false, item, true);
+        modify_stat(STAT_INT, -item.plus, false, item, true);
         break;
 
     case RING_LEVITATION:
@@ -5908,9 +5908,9 @@ void use_artefact(item_def &item, bool *show_msgs, bool unmeld)
 
     // Modify ability scores.
     // Output result even when identified (because of potential fatality).
-    modify_stat( STAT_STRENGTH,     proprt[ARTP_STRENGTH],     false, item );
-    modify_stat( STAT_INTELLIGENCE, proprt[ARTP_INTELLIGENCE], false, item );
-    modify_stat( STAT_DEXTERITY,    proprt[ARTP_DEXTERITY],    false, item );
+    modify_stat( STAT_STR,     proprt[ARTP_STRENGTH],     false, item );
+    modify_stat( STAT_INT, proprt[ARTP_INTELLIGENCE], false, item );
+    modify_stat( STAT_DEX,    proprt[ARTP_DEXTERITY],    false, item );
 
     const artefact_prop_type stat_props[3] =
         {ARTP_STRENGTH, ARTP_INTELLIGENCE, ARTP_DEXTERITY};

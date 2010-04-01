@@ -1467,15 +1467,15 @@ void equip_armour_effect(item_def& arm, bool unmeld)
             break;
 
         case SPARM_STRENGTH:
-            modify_stat(STAT_STRENGTH, 3, false, arm);
+            modify_stat(STAT_STR, 3, false, arm);
             break;
 
         case SPARM_DEXTERITY:
-            modify_stat(STAT_DEXTERITY, 3, false, arm);
+            modify_stat(STAT_DEX, 3, false, arm);
             break;
 
         case SPARM_INTELLIGENCE:
-            modify_stat(STAT_INTELLIGENCE, 3, false, arm);
+            modify_stat(STAT_INT, 3, false, arm);
             break;
 
         case SPARM_PONDEROUSNESS:

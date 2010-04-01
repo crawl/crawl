@@ -2938,8 +2938,8 @@ static int _xom_lose_stats(bool debug = false)
              you.dex - (you.duration[DUR_AGILITY] ? 5 : 0),
              you.intel - (you.duration[DUR_BRILLIANCE] ? 5 : 0)};
 
-        stat_type types[3] = {STAT_STRENGTH, STAT_DEXTERITY,
-                              STAT_INTELLIGENCE};
+        stat_type types[3] = {STAT_STR, STAT_DEX,
+                              STAT_INT};
         int tries = 0;
         do
         {
@@ -2960,12 +2960,12 @@ static int _xom_lose_stats(bool debug = false)
     // Take a note.
     static char stat_buf[80];
     snprintf(stat_buf, sizeof(stat_buf), "stat loss: -%d %s (%d/%d)",
-             loss, (stat == STAT_STRENGTH  ? "Str" :
-                    stat == STAT_DEXTERITY ? "Dex" : "Int"),
-             (stat == STAT_STRENGTH  ? you.strength :
-              stat == STAT_DEXTERITY ? you.dex : you.intel),
-             (stat == STAT_STRENGTH  ? you.max_strength :
-              stat == STAT_DEXTERITY ? you.max_dex : you.max_intel));
+             loss, (stat == STAT_STR  ? "Str" :
+                    stat == STAT_DEX ? "Dex" : "Int"),
+             (stat == STAT_STR  ? you.strength :
+              stat == STAT_DEX ? you.dex : you.intel),
+             (stat == STAT_STR  ? you.max_strength :
+              stat == STAT_DEX ? you.max_dex : you.max_intel));
 
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, stat_buf), true);
 

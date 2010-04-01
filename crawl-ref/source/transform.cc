@@ -748,14 +748,14 @@ bool transform(int pow, transformation_type which_trans, bool force,
 
     if (str)
     {
-        modify_stat(STAT_STRENGTH, str, true,
+        modify_stat(STAT_STR, str, true,
                     make_stringf("gaining the %s transformation",
                                  tran_name).c_str());
     }
 
     if (dex)
     {
-        modify_stat(STAT_DEXTERITY, dex, true,
+        modify_stat(STAT_DEX, dex, true,
                     make_stringf("gaining the %s transformation",
                                  tran_name).c_str());
     }
@@ -852,15 +852,15 @@ void untransform(bool skip_wielding, bool skip_move)
     {
     case TRAN_SPIDER:
         mpr("Your transformation has ended.", MSGCH_DURATION);
-        modify_stat( STAT_DEXTERITY, -5, true,
+        modify_stat( STAT_DEX, -5, true,
                      "losing the spider transformation" );
         break;
 
     case TRAN_BAT:
         mpr("Your transformation has ended.", MSGCH_DURATION);
-        modify_stat( STAT_DEXTERITY, -5, true,
+        modify_stat( STAT_DEX, -5, true,
                      "losing the bat transformation" );
-        modify_stat( STAT_STRENGTH, 5, true,
+        modify_stat( STAT_STR, 5, true,
                      "losing the bat transformation" );
         break;
 
@@ -871,9 +871,9 @@ void untransform(bool skip_wielding, bool skip_move)
 
     case TRAN_STATUE:
         mpr( "You revert to your normal fleshy form.", MSGCH_DURATION );
-        modify_stat( STAT_DEXTERITY, 2, true,
+        modify_stat( STAT_DEX, 2, true,
                      "losing the statue transformation" );
-        modify_stat( STAT_STRENGTH, -2, true,
+        modify_stat( STAT_STR, -2, true,
                      "losing the statue transformation");
 
         // Note: if the core goes down, the combined effect soon disappears,
@@ -905,14 +905,14 @@ void untransform(bool skip_wielding, bool skip_move)
 
     case TRAN_DRAGON:
         mpr( "Your transformation has ended.", MSGCH_DURATION );
-        modify_stat(STAT_STRENGTH, -10, true,
+        modify_stat(STAT_STR, -10, true,
                     "losing the dragon transformation" );
         hp_downscale = 16;
         break;
 
     case TRAN_LICH:
         mpr( "You feel yourself come back to life.", MSGCH_DURATION );
-        modify_stat(STAT_STRENGTH, -3, true,
+        modify_stat(STAT_STR, -3, true,
                     "losing the lich transformation" );
         you.is_undead = US_ALIVE;
         break;
