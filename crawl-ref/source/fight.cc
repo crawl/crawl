@@ -5151,7 +5151,8 @@ void melee_attack::mons_do_spines()
 {
     if (you.mutation[MUT_SPINY] && 
         one_chance_in(-property(*you.slot_item(EQ_BODY_ARMOUR, false)
-                               , PARM_EVASION) + 1))
+                               , PARM_EVASION) + 1) &&
+        grid_distance(you.pos(), attacker->as_monster()->pos()) == 1)
     {
         int dmg = roll_dice(player_mutation_level(MUT_SPINY), 6);
         int ac = random2(1+attacker->as_monster()->armour_class());
@@ -5582,7 +5583,9 @@ void melee_attack::mons_perform_attack_rounds()
             set_ident_flags(*weap, ISFLAG_KNOW_CURSE);
         }
 
-        if(!shield_blocked) {
+        if(!shield_blocked && attacker != defender &&
+            defender->atype() == ACT_PLAYER)
+        {
             // Check for spiny mutation
             mons_do_spines();
         }
