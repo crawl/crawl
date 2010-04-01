@@ -1,8 +1,8 @@
-#ifndef SDL_UI_WRAPPER_H
-#define SDL_UI_WRAPPER_H
+#ifndef SDL_WINDOWMANAGER_H
+#define SDL_WINDOWMANAGER_H
 
 #ifdef USE_TILE
-#include "uiwrapper.h"
+#include "windowmanager.h"
 
 #ifdef USE_SDL
 struct SDL_Surface;
@@ -59,4 +59,4 @@ protected:
 #endif // USE_SDL
 #endif // USE_TILE
 
-#endif // SDL_UI_WRAPPER_H
+#endif // SDL_WINDOWMANAGER_H

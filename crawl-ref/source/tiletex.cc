@@ -5,7 +5,7 @@
 #include "files.h"
 #include "tiletex.h"
 
-#include "uiwrapper.h"
+#include "windowmanager.h"
 #include "glwrapper.h"
 
 GenericTexture::GenericTexture() :
