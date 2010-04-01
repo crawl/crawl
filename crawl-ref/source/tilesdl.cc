@@ -339,7 +339,7 @@ bool TilesFramework::initialise()
     m_region_stat = new StatRegion(m_fonts[stat_font].font);
     m_region_crt  = new CRTRegion(m_fonts[m_crt_font].font);
 
-    m_region_menu = new MenuRegion(&m_image, m_fonts[m_crt_font].font);
+    m_region_menu = new MenuRegion(m_image, m_fonts[crt_font].font);
 
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_map);
     m_layers[LAYER_NORMAL].m_regions.push_back(m_region_tile);

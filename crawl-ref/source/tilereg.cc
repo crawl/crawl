@@ -4697,7 +4697,6 @@ void CRTRegion::detach_menu()
     m_attached_menu = NULL;
 }
 
-<<<<<<< HEAD
 MenuRegion::MenuRegion(ImageManager *im, FontWrapper *entry) :
     m_image(im), m_font_entry(entry), m_mouse_idx(-1),
     m_max_columns(1), m_dirty(false), m_font_buf(entry)
