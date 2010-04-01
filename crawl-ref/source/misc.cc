@@ -69,6 +69,7 @@
 #include "output.h"
 #include "place.h"
 #include "player.h"
+#include "player-stats.h"
 #include "random.h"
 #include "religion.h"
 #include "godconduct.h"

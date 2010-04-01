@@ -38,6 +38,7 @@
 #include "notes.h"
 #include "ouch.h"
 #include "player.h"
+#include "player-stats.h"
 #include "religion.h"
 #include "random.h"
 #include "skills2.h"
