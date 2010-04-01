@@ -57,6 +57,7 @@
 #include "notes.h"
 #include "output.h"
 #include "player.h"
+#include "player-stats.h"
 #include "random.h"
 #include "religion.h"
 #include "shopping.h"

@@ -27,9 +27,6 @@ void cast_refrigeration(int pow, bool non_player = false);
 void cast_toxic_radiance(bool non_player = false);
 void drain_life(int pow);
 
-bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
-                  bool suppress_msg, bool recovery = false);
-
 bool summon_animals(int pow);
 bool cast_summon_butterflies(int pow, god_type god = GOD_NO_GOD);
 bool cast_summon_small_mammals(int pow, god_type god = GOD_NO_GOD);

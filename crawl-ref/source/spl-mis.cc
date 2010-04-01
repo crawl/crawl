@@ -27,6 +27,7 @@
 #include "mon-util.h"
 #include "mutation.h"
 #include "player.h"
+#include "player-stats.h"
 #include "religion.h"
 #include "spells1.h"
 #include "state.h"

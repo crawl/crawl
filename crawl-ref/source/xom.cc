@@ -47,6 +47,7 @@
 #include "output.h"   // for the monster list
 #include "player.h"
 #include "player-equip.h"
+#include "player-stats.h"
 #include "religion.h"
 #include "shout.h"
 #include "spells2.h"
