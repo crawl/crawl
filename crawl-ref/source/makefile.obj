@@ -146,6 +146,7 @@ output.o \
 pattern.o \
 place.o \
 player.o \
+player-act.o \
 player-equip.o \
 quiver.o \
 random.o \
