@@ -322,6 +322,7 @@ public:
 
     void reset_prev_move();
 
+    char stat(stat_type stat) const;
     char strength() const;
     char intel() const;
     char dex() const;
