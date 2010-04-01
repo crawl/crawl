@@ -1,4 +1,4 @@
-local niters = 100
+local niters = 20
 
 local function test_item_level(place, item, nlevels)
   debug.goto_place(place)
