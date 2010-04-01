@@ -17,17 +17,6 @@ void banished(dungeon_feature_type gate_type, const std::string &who = "");
 
 bool forget_spell(void);
 
-bool lose_stat(unsigned char which_stat, unsigned char stat_loss,
-               bool force = false, const std::string cause = "",
-               bool see_source = true);
-bool lose_stat(unsigned char which_stat, unsigned char stat_loss,
-               bool force = false, const char* cause = NULL,
-               bool see_source = true);
-bool lose_stat(unsigned char which_stat, unsigned char stat_loss,
-               const monsters* cause, bool force = false);
-bool lose_stat(unsigned char which_stat, unsigned char stat_loss,
-               const item_def &cause, bool removed, bool force = false);
-
 int mushroom_prob(item_def & corpse);
 
 bool mushroom_spawn_message(int seen_targets, int seen_corpses);

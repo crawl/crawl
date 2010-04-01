@@ -41,6 +41,7 @@
 #include "mon-util.h"
 #include "ouch.h"
 #include "player.h"
+#include "player-stats.h"
 #include "quiver.h"
 #include "religion.h"
 #include "godconduct.h"

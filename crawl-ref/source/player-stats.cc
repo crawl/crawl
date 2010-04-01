@@ -357,3 +357,233 @@ int stat_modifier(stat_type stat)
         return 0;
     }
 }
+
+// use player::decrease_stats() instead iff:
+// (a) player_sust_abil() should not factor in; and
+// (b) there is no floor to the final stat values {dlb}
+bool lose_stat(unsigned char which_stat, unsigned char stat_loss, bool force,
+               const char *cause, bool see_source)
+{
+    bool statLowered = false;   // must initialise to false {dlb}
+    char *ptr_stat   = NULL;
+    bool *ptr_redraw = NULL;
+    char newValue = 0;          // holds new value, for comparison to old {dlb}
+
+    kill_method_type kill_type = NUM_KILLBY;
+
+    // begin outputing message: {dlb}
+    std::string msg = "You feel ";
+
+    // set pointers to appropriate variables: {dlb}
+    if (which_stat == STAT_RANDOM)
+        which_stat = random2(NUM_STATS);
+
+    switch (which_stat)
+    {
+    case STAT_STRENGTH:
+        msg       += "weakened";
+        ptr_stat   = &you.strength;
+        ptr_redraw = &you.redraw_strength;
+        kill_type  = KILLED_BY_WEAKNESS;
+        break;
+
+    case STAT_DEXTERITY:
+        msg       += "clumsy";
+        ptr_stat   = &you.dex;
+        ptr_redraw = &you.redraw_dexterity;
+        kill_type  = KILLED_BY_CLUMSINESS;
+        break;
+
+    case STAT_INTELLIGENCE:
+        msg       += "dopey";
+        ptr_stat   = &you.intel;
+        ptr_redraw = &you.redraw_intelligence;
+        kill_type  = KILLED_BY_STUPIDITY;
+        break;
+    }
+
+    // scale modifier by player_sust_abil() - right-shift
+    // permissible because stat_loss is unsigned: {dlb}
+    if (!force)
+        stat_loss >>= player_sust_abil();
+
+    // newValue is current value less modifier: {dlb}
+    newValue = *ptr_stat - stat_loss;
+
+    // conceivable that stat was already *at* three
+    // or stat_loss zeroed by player_sust_abil(): {dlb}
+    //
+    // Actually, that code was somewhat flawed.  Several race-class combos
+    // can start with a stat lower than three, and this block (which
+    // used to say '!=' would actually cause stat gain with the '< 3'
+    // check that used to be above.  Crawl has stat-death code and I
+    // don't see why we shouldn't be using it here.  -- bwr
+    if (newValue < *ptr_stat)
+    {
+        *ptr_stat = newValue;
+        *ptr_redraw = 1;
+
+        // handle burden change, where appropriate: {dlb}
+        if (ptr_stat == &you.strength)
+            burden_change();
+
+        statLowered = true;  // that is, stat was lowered (not just changed)
+    }
+
+    // a warning to player that s/he cut it close: {dlb}
+    if (!statLowered)
+        msg += " for a moment";
+
+    // finish outputting message: {dlb}
+    msg += ".";
+    mpr(msg.c_str(), statLowered ? MSGCH_WARN : MSGCH_PLAIN);
+
+    if (newValue < 1)
+    {
+        if (cause == NULL)
+            ouch(INSTANT_DEATH, NON_MONSTER, kill_type);
+        else
+            ouch(INSTANT_DEATH, NON_MONSTER, kill_type, cause, see_source);
+    }
+
+
+    return (statLowered);
+}                               // end lose_stat()
+
+bool lose_stat(unsigned char which_stat, unsigned char stat_loss, bool force,
+               const std::string cause, bool see_source)
+{
+    return lose_stat(which_stat, stat_loss, force, cause.c_str(), see_source);
+}
+
+bool lose_stat(unsigned char which_stat, unsigned char stat_loss,
+               const monsters* cause, bool force)
+{
+    if (cause == NULL || invalid_monster(cause))
+        return lose_stat(which_stat, stat_loss, force, NULL, true);
+
+    bool        vis  = you.can_see(cause);
+    std::string name = cause->name(DESC_NOCAP_A, true);
+
+    if (cause->has_ench(ENCH_SHAPESHIFTER))
+        name += " (shapeshifter)";
+    else if (cause->has_ench(ENCH_GLOWING_SHAPESHIFTER))
+        name += " (glowing shapeshifter)";
+
+    return lose_stat(which_stat, stat_loss, force, name, vis);
+}
+
+bool lose_stat(unsigned char which_stat, unsigned char stat_loss,
+               const item_def &cause, bool removed, bool force)
+{
+    std::string name = cause.name(DESC_NOCAP_THE, false, true, false, false,
+                                  ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES);
+    std::string verb;
+
+    switch (cause.base_type)
+    {
+    case OBJ_ARMOUR:
+    case OBJ_JEWELLERY:
+        if (removed)
+            verb = "removing";
+        else
+            verb = "wearing";
+        break;
+
+    case OBJ_WEAPONS:
+    case OBJ_STAVES:
+        if (removed)
+            verb = "unwielding";
+        else
+            verb = "wielding";
+        break;
+
+    case OBJ_WANDS:   verb = "zapping";  break;
+    case OBJ_FOOD:    verb = "eating";   break;
+    case OBJ_SCROLLS: verb = "reading";  break;
+    case OBJ_POTIONS: verb = "drinking"; break;
+    default:          verb = "using";
+    }
+
+    return lose_stat(which_stat, stat_loss, force, verb + " " + name, true);
+}
+
+// Restore the stat in which_stat by the amount in stat_gain, displaying
+// a message if suppress_msg is false, and doing so in the recovery
+// channel if recovery is true.  If stat_gain is 0, restore the stat
+// completely.
+bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
+                  bool suppress_msg, bool recovery)
+{
+    bool stat_restored = false;
+
+    // A bit hackish, but cut me some slack, man! --
+    // Besides, a little recursion never hurt anyone {dlb}:
+    if (which_stat == STAT_ALL)
+    {
+        for (unsigned char loopy = STAT_STRENGTH; loopy < NUM_STATS; ++loopy)
+            if (restore_stat(loopy, stat_gain, suppress_msg))
+                stat_restored = true;
+
+        return (stat_restored);                // early return {dlb}
+    }
+
+    // The real function begins here. {dlb}
+    char *ptr_stat = NULL;
+    char *ptr_stat_max = NULL;
+    bool *ptr_redraw = NULL;
+
+    std::string msg = "You feel your ";
+
+    if (which_stat == STAT_RANDOM)
+        which_stat = random2(NUM_STATS);
+
+    switch (which_stat)
+    {
+    case STAT_STRENGTH:
+        msg += "strength";
+
+        ptr_stat = &you.strength;
+        ptr_stat_max = &you.max_strength;
+        ptr_redraw = &you.redraw_strength;
+        break;
+
+    case STAT_INTELLIGENCE:
+        msg += "intelligence";
+
+        ptr_stat = &you.intel;
+        ptr_stat_max = &you.max_intel;
+        ptr_redraw = &you.redraw_intelligence;
+        break;
+
+    case STAT_DEXTERITY:
+        msg += "dexterity";
+
+        ptr_stat = &you.dex;
+        ptr_stat_max = &you.max_dex;
+        ptr_redraw = &you.redraw_dexterity;
+        break;
+    }
+
+    if (*ptr_stat < *ptr_stat_max)
+    {
+        msg += " returning.";
+        if (!suppress_msg)
+            mpr(msg.c_str(), (recovery) ? MSGCH_RECOVERY : MSGCH_PLAIN);
+
+        if (stat_gain == 0 || *ptr_stat + stat_gain > *ptr_stat_max)
+            stat_gain = *ptr_stat_max - *ptr_stat;
+
+        if (stat_gain != 0)
+        {
+            *ptr_stat += stat_gain;
+            *ptr_redraw = true;
+            stat_restored = true;
+
+            if (ptr_stat == &you.strength)
+                burden_change();
+        }
+    }
+
+    return (stat_restored);
+}

@@ -38,6 +38,7 @@
 #include "coord.h"
 #include "misc.h"
 #include "player.h"
+#include "player-stats.h"
 #include "religion.h"
 #include "godconduct.h"
 #include "skills.h"

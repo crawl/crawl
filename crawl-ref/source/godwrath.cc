@@ -32,6 +32,7 @@
 #include "mon-stuff.h"
 #include "mutation.h"
 #include "ouch.h"
+#include "player-stats.h"
 #include "religion.h"
 #include "spells1.h"
 #include "spells2.h"
