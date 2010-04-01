@@ -26,14 +26,14 @@ public:
 
     // System time functions
     virtual void set_timer( unsigned int interval,
-                            ui_timer_callback callback);
+                            wm_timer_callback callback);
     virtual unsigned int get_ticks();
     virtual void delay(unsigned int ms);
 
     // Event functions
     virtual int raise_custom_event();
-    virtual int wait_event(ui_event *event);
-    virtual unsigned int get_event_count(ui_event_type type);
+    virtual int wait_event(wm_event *event);
+    virtual unsigned int get_event_count(wm_event_type type);
 
     // Display functions
     virtual void resize(coord_def &m_windowsz);

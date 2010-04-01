@@ -361,22 +361,22 @@ void SDLWrapper::set_mod_state(key_mod mod)
     SDL_SetModState(set_to);
 }
 
-int SDLWrapper::wait_event(ui_event *event)
+int SDLWrapper::wait_event(wm_event *event)
 {
     SDL_Event sdlevent;
     if (!SDL_WaitEvent(&sdlevent))
         return (0);
 
-    // translate the SDL_Event into the almost-analogous ui_event
+    // translate the SDL_Event into the almost-analogous wm_event
     switch (sdlevent.type) {
     case SDL_ACTIVEEVENT:
         SDL_SetModState(KMOD_NONE);
-        event->type = UI_ACTIVEEVENT;
+        event->type = WM_ACTIVEEVENT;
         event->active.gain = sdlevent.active.gain;
         event->active.state = sdlevent.active.state;
         break;
     case SDL_KEYDOWN:
-        event->type = UI_KEYDOWN;
+        event->type = WM_KEYDOWN;
         event->key.state = sdlevent.key.state;
         event->key.keysym.scancode = sdlevent.key.keysym.scancode;
         event->key.keysym.key_mod = _get_modifiers(sdlevent.key.keysym);
@@ -384,7 +384,7 @@ int SDLWrapper::wait_event(ui_event *event)
         event->key.keysym.sym = _translate_keysym(sdlevent.key.keysym);
         break;
     case SDL_KEYUP:
-        event->type = UI_KEYUP;
+        event->type = WM_KEYUP;
         event->key.state = sdlevent.key.state;
         event->key.keysym.scancode = sdlevent.key.keysym.scancode;
         event->key.keysym.key_mod = _get_modifiers(sdlevent.key.keysym);
@@ -392,30 +392,30 @@ int SDLWrapper::wait_event(ui_event *event)
         event->key.keysym.sym = _translate_keysym(sdlevent.key.keysym);
         break;
     case SDL_MOUSEMOTION:
-        event->type = UI_MOUSEMOTION;
+        event->type = WM_MOUSEMOTION;
         _translate_event(sdlevent.motion, event->mouse_event);
         break;
     case SDL_MOUSEBUTTONUP:
     case SDL_MOUSEBUTTONDOWN:
-        event->type = UI_MOUSEBUTTONDOWN;
+        event->type = WM_MOUSEBUTTONDOWN;
         _translate_event(sdlevent.button, event->mouse_event);
         break;
     case SDL_VIDEORESIZE:
-        event->type = UI_RESIZE;
+        event->type = WM_RESIZE;
         event->resize.w = sdlevent.resize.w;
         event->resize.h = sdlevent.resize.h;
         break;
     case SDL_VIDEOEXPOSE:
-        event->type = UI_EXPOSE;
+        event->type = WM_EXPOSE;
         break;
     case SDL_QUIT:
-        event->type = UI_QUIT;
+        event->type = WM_QUIT;
         break;
 
         // I leave these as the same, because the original tilesdl does, too
     case SDL_USEREVENT:
     default:
-        event->type = UI_CUSTOMEVENT;
+        event->type = WM_CUSTOMEVENT;
         event->custom.code = sdlevent.user.code;
         event->custom.data1 = sdlevent.user.data1;
         event->custom.data2 = sdlevent.user.data2;
@@ -425,7 +425,7 @@ int SDLWrapper::wait_event(ui_event *event)
     return (1);
 }
 
-void SDLWrapper::set_timer(unsigned int interval, ui_timer_callback callback)
+void SDLWrapper::set_timer(unsigned int interval, wm_timer_callback callback)
 {
     SDL_SetTimer(interval, callback);
 }
@@ -447,49 +447,49 @@ void SDLWrapper::delay(unsigned int ms)
     SDL_Delay(ms);
 }
 
-unsigned int SDLWrapper::get_event_count(ui_event_type type)
+unsigned int SDLWrapper::get_event_count(wm_event_type type)
 {
     // Look for the presence of any keyboard events in the queue.
     Uint32 eventmask;
     switch( type )
     {
-    case UI_ACTIVEEVENT:
+    case WM_ACTIVEEVENT:
         eventmask = SDL_EVENTMASK( SDL_ACTIVEEVENT );
         break;
 
-    case UI_KEYDOWN:
+    case WM_KEYDOWN:
         eventmask = SDL_EVENTMASK( SDL_KEYDOWN );
         break;
 
-    case UI_KEYUP:
+    case WM_KEYUP:
         eventmask = SDL_EVENTMASK( SDL_KEYUP );
         break;
 
-    case UI_MOUSEMOTION:
+    case WM_MOUSEMOTION:
         eventmask = SDL_EVENTMASK( SDL_MOUSEMOTION );
         break;
 
-    case UI_MOUSEBUTTONUP:
+    case WM_MOUSEBUTTONUP:
         eventmask = SDL_EVENTMASK( SDL_MOUSEBUTTONUP );
         break;
 
-    case UI_MOUSEBUTTONDOWN:
+    case WM_MOUSEBUTTONDOWN:
         eventmask = SDL_EVENTMASK( SDL_MOUSEBUTTONDOWN );
         break;
 
-    case UI_QUIT:
+    case WM_QUIT:
         eventmask = SDL_EVENTMASK( SDL_QUIT );
         break;
 
-    case UI_CUSTOMEVENT:
+    case WM_CUSTOMEVENT:
         eventmask = SDL_EVENTMASK( SDL_USEREVENT );
         break;
 
-    case UI_RESIZE:
+    case WM_RESIZE:
         eventmask = SDL_EVENTMASK( SDL_VIDEORESIZE );
         break;
 
-    case UI_EXPOSE:
+    case WM_EXPOSE:
         eventmask = SDL_EVENTMASK( SDL_VIDEOEXPOSE );
         break;
 
@@ -696,8 +696,8 @@ void SDLWrapper::shutdown()
 int SDLWrapper::byte_order()
 {
     if ( SDL_BYTEORDER == SDL_BIG_ENDIAN )
-        return (UI_BIG_ENDIAN);
-    return (UI_LIL_ENDIAN);
+        return (WM_BIG_ENDIAN);
+    return (WM_LIL_ENDIAN);
 }
 
 SDL_Surface *SDLWrapper::load_image( const char *file ) const

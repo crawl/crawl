@@ -489,7 +489,7 @@ static unsigned int _timer_callback(unsigned int ticks)
 
 int TilesFramework::getch_ck()
 {
-    ui_event event;
+    wm_event event;
     cursor_loc cur_loc;
     cursor_loc tip_loc;
     cursor_loc last_loc;
@@ -522,7 +522,7 @@ int TilesFramework::getch_ck()
             ticks = wm->get_ticks();
             if (!mouse_target_mode)
             {
-                if (event.type != UI_CUSTOMEVENT)
+                if (event.type != WM_CUSTOMEVENT)
                 {
                     tiles.clear_text_tags(TAG_CELL_DESC);
                     m_region_msg->alt_text().clear();
@@ -548,7 +548,7 @@ int TilesFramework::getch_ck()
 
             switch (event.type)
             {
-            case UI_ACTIVEEVENT:
+            case WM_ACTIVEEVENT:
                 // When game gains focus back then set mod state clean
                 // to get rid of stupid Windows/SDL bug with Alt-Tab.
                 if (event.active.gain != 0)
@@ -557,7 +557,7 @@ int TilesFramework::getch_ck()
                     set_need_redraw();
                 }
                 break;
-            case UI_KEYDOWN:
+            case WM_KEYDOWN:
                 m_key_mod |= event.key.keysym.key_mod;
                 key        = event.key.keysym.sym;
                 m_region_tile->place_cursor(CURSOR_MOUSE, Region::NO_CURSOR);
@@ -567,12 +567,12 @@ int TilesFramework::getch_ck()
                 m_last_tick_moved = ~0;
                 break;
 
-            case UI_KEYUP:
+            case WM_KEYUP:
                 m_key_mod &= ~event.key.keysym.key_mod;
                 m_last_tick_moved = ~0;
                 break;
 
-            case UI_MOUSEMOTION:
+            case WM_MOUSEMOTION:
                 {
                     // Record mouse pos for tooltip timer
                     // FIXME: This compares signed and unsigned ints
@@ -609,7 +609,7 @@ int TilesFramework::getch_ck()
                     // (possibly because redrawing is slow or the user
                     // is moving the mouse really quickly), process those
                     // first, before bothering to redraw the screen.
-                    unsigned int count = wm->get_event_count(UI_MOUSEMOTION);
+                    unsigned int count = wm->get_event_count(WM_MOUSEMOTION);
                     ASSERT(count >= 0);
                     if (count > 0)
                         continue;
@@ -624,7 +624,7 @@ int TilesFramework::getch_ck()
                }
                break;
 
-            case UI_MOUSEBUTTONUP:
+            case WM_MOUSEBUTTONUP:
                 {
                     m_buttons_held  &= ~(event.mouse_event.button);
                     event.mouse_event.held = m_buttons_held;
@@ -634,7 +634,7 @@ int TilesFramework::getch_ck()
                 }
                 break;
 
-            case UI_MOUSEBUTTONDOWN:
+            case WM_MOUSEBUTTONDOWN:
                 {
                     m_buttons_held  |= event.mouse_event.button;
                     event.mouse_event.held = m_buttons_held;
@@ -644,13 +644,13 @@ int TilesFramework::getch_ck()
                 }
                 break;
 
-            case UI_QUIT:
+            case WM_QUIT:
                 if (crawl_state.need_save)
                     save_game(true);
                 exit(0);
                 break;
 
-            case UI_CUSTOMEVENT:
+            case WM_CUSTOMEVENT:
             default:
                 // This is only used to refresh the tooltip.
                 break;

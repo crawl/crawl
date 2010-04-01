@@ -10,78 +10,78 @@
 #include "glwrapper.h"  // for MipMapOptions enum
 
 typedef enum {
-    UI_BIG_ENDIAN,
-    UI_LIL_ENDIAN
-} ui_endianness;
+    WM_BIG_ENDIAN,
+    WM_LIL_ENDIAN
+} wm_endianness;
 
 typedef enum {
-    UI_NOEVENT = 0,
-    UI_ACTIVEEVENT,
-    UI_KEYDOWN,
-    UI_KEYUP,
-    UI_MOUSEMOTION,
-    UI_MOUSEBUTTONUP,
-    UI_MOUSEBUTTONDOWN,
-    UI_QUIT,
-    UI_CUSTOMEVENT,
-    UI_RESIZE,
-    UI_EXPOSE,
-    UI_NUMEVENTS = 15
-} ui_event_type;
+    WM_NOEVENT = 0,
+    WM_ACTIVEEVENT,
+    WM_KEYDOWN,
+    WM_KEYUP,
+    WM_MOUSEMOTION,
+    WM_MOUSEBUTTONUP,
+    WM_MOUSEBUTTONDOWN,
+    WM_QUIT,
+    WM_CUSTOMEVENT,
+    WM_RESIZE,
+    WM_EXPOSE,
+    WM_NUMEVENTS = 15
+} wm_event_type;
 
 typedef struct{
     unsigned char scancode;
     int sym;
     unsigned char key_mod;
     unsigned int unicode;
-} ui_keysym;
+} wm_keysym;
 
 typedef struct{
     unsigned char type;
     unsigned char gain;
     unsigned char state;
-} ui_active_event;
+} wm_active_event;
 
 typedef struct{
     unsigned char type;
     unsigned char state;
-    ui_keysym keysym;
-} ui_keyboard_event;
+    wm_keysym keysym;
+} wm_keyboard_event;
 
 typedef struct{
     unsigned char type;
     int w, h;
-} ui_resize_event;
+} wm_resize_event;
 
 typedef struct{
     unsigned char type;
-} ui_expose_event;
+} wm_expose_event;
 
 typedef struct{
     unsigned char type;
-} ui_quit_event;
+} wm_quit_event;
 
 typedef struct{
     unsigned char type;
     int code;
     void *data1;
     void *data2;
-} ui_custom_event;
+} wm_custom_event;
 
 // Basically a generic SDL_Event
 typedef struct{
     unsigned char type;
-    ui_active_event active;
-    ui_keyboard_event key;
+    wm_active_event active;
+    wm_keyboard_event key;
     MouseEvent mouse_event;
-    ui_resize_event resize;
-    ui_expose_event expose;
-    ui_quit_event quit;
-    ui_custom_event custom;
-} ui_event;
+    wm_resize_event resize;
+    wm_expose_event expose;
+    wm_quit_event quit;
+    wm_custom_event custom;
+} wm_event;
 
 // custom timer callback function
-typedef unsigned int (*ui_timer_callback)(unsigned int interval);
+typedef unsigned int (*wm_timer_callback)(unsigned int interval);
 
 class FTFont;
 
@@ -106,14 +106,14 @@ public:
 
     // System time functions
     virtual void set_timer( unsigned int interval,
-                            ui_timer_callback callback) = 0;
+                            wm_timer_callback callback) = 0;
     virtual unsigned int get_ticks() = 0;
     virtual void delay(unsigned int ms) = 0;
 
     // Event functions
     virtual int raise_custom_event() = 0;
-    virtual int wait_event(ui_event *event) = 0;
-    virtual unsigned int get_event_count(ui_event_type type) = 0;
+    virtual int wait_event(wm_event *event) = 0;
+    virtual unsigned int get_event_count(wm_event_type type) = 0;
 
     // Display functions
     virtual void resize(coord_def &m_windowsz) = 0;
