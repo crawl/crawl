@@ -43,6 +43,9 @@ char player::max_dex() const
     return (max_stats[STAT_DEX]);
 }
 
+static void _handle_stat_change(stat_type stat);
+static void _handle_stat_change();
+
 void attribute_increase()
 {
     mpr("Your experience leads to an increase in your attributes!",
@@ -118,9 +121,7 @@ void jiyva_stat_action()
 
         simple_god_message("'s power touches on your attributes.");
 
-        you.redraw_stats.init(true);
-
-        burden_change();
+        _handle_stat_change();
     }
 }
 
@@ -170,7 +171,6 @@ void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
 
     you.stats[which_stat] += amount;
     you.max_stats[which_stat] += amount;
-    you.redraw_stats[which_stat] = true;
 
     if (amount < 0 && you.stats[which_stat] < 1)
     {
@@ -180,13 +180,7 @@ void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
             ouch(INSTANT_DEATH, NON_MONSTER, kill_type, cause, see_source);
     }
 
-    if (which_stat == STAT_STR)
-    {
-        burden_change();
-        you.redraw_armour_class = true; // This includes shields.
-    }
-    if (which_stat == STAT_DEX)
-        you.redraw_evasion = true;
+    _handle_stat_change(which_stat);
 }
 
 void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
@@ -372,11 +366,10 @@ int stat_modifier(stat_type stat)
 // use player::decrease_stats() instead iff:
 // (a) player_sust_abil() should not factor in; and
 // (b) there is no floor to the final stat values {dlb}
-bool lose_stat(unsigned char which_stat, unsigned char stat_loss, bool force,
+bool lose_stat(stat_type which_stat, unsigned char stat_loss, bool force,
                const char *cause, bool see_source)
 {
     bool statLowered = false;   // must initialise to false {dlb}
-    char newValue = 0;          // holds new value, for comparison to old {dlb}
 
     kill_method_type kill_type = NUM_KILLBY;
 
@@ -385,7 +378,7 @@ bool lose_stat(unsigned char which_stat, unsigned char stat_loss, bool force,
 
     // set pointers to appropriate variables: {dlb}
     if (which_stat == STAT_RANDOM)
-        which_stat = random2(NUM_STATS);
+        which_stat = static_cast<stat_type>(random2(NUM_STATS));
 
     switch (which_stat)
     {
@@ -403,6 +396,9 @@ bool lose_stat(unsigned char which_stat, unsigned char stat_loss, bool force,
         msg       += "dopey";
         kill_type  = KILLED_BY_STUPIDITY;
         break;
+
+    default:
+        ASSERT(false);
     }
 
     // scale modifier by player_sust_abil() - right-shift
@@ -410,38 +406,18 @@ bool lose_stat(unsigned char which_stat, unsigned char stat_loss, bool force,
     if (!force)
         stat_loss >>= player_sust_abil();
 
-    // newValue is current value less modifier: {dlb}
-    newValue = you.stats[which_stat] - stat_loss;
-
-    // conceivable that stat was already *at* three
-    // or stat_loss zeroed by player_sust_abil(): {dlb}
-    //
-    // Actually, that code was somewhat flawed.  Several race-class combos
-    // can start with a stat lower than three, and this block (which
-    // used to say '!=' would actually cause stat gain with the '< 3'
-    // check that used to be above.  Crawl has stat-death code and I
-    // don't see why we shouldn't be using it here.  -- bwr
-    if (newValue < you.stats[which_stat])
+    if (stat_loss > 0)
     {
-        you.stats[which_stat] = newValue;
-        you.redraw_stats[which_stat] = true;
-
-        // handle burden change, where appropriate: {dlb}
-        if (which_stat == STAT_STR)
-            burden_change();
-
-        statLowered = true;  // that is, stat was lowered (not just changed)
+        you.stats[which_stat] -= stat_loss;
+        _handle_stat_change(which_stat);
     }
-
-    // a warning to player that s/he cut it close: {dlb}
-    if (!statLowered)
+    else
         msg += " for a moment";
 
-    // finish outputting message: {dlb}
     msg += ".";
-    mpr(msg.c_str(), statLowered ? MSGCH_WARN : MSGCH_PLAIN);
+    mpr(msg, statLowered ? MSGCH_WARN : MSGCH_PLAIN);
 
-    if (newValue < 1)
+    if (you.stats[which_stat] < 1)
     {
         if (cause == NULL)
             ouch(INSTANT_DEATH, NON_MONSTER, kill_type);
@@ -449,17 +425,16 @@ bool lose_stat(unsigned char which_stat, unsigned char stat_loss, bool force,
             ouch(INSTANT_DEATH, NON_MONSTER, kill_type, cause, see_source);
     }
 
+    return (stat_loss > 0);
+}
 
-    return (statLowered);
-}                               // end lose_stat()
-
-bool lose_stat(unsigned char which_stat, unsigned char stat_loss, bool force,
+bool lose_stat(stat_type which_stat, unsigned char stat_loss, bool force,
                const std::string cause, bool see_source)
 {
     return lose_stat(which_stat, stat_loss, force, cause.c_str(), see_source);
 }
 
-bool lose_stat(unsigned char which_stat, unsigned char stat_loss,
+bool lose_stat(stat_type which_stat, unsigned char stat_loss,
                const monsters* cause, bool force)
 {
     if (cause == NULL || invalid_monster(cause))
@@ -476,7 +451,7 @@ bool lose_stat(unsigned char which_stat, unsigned char stat_loss,
     return lose_stat(which_stat, stat_loss, force, name, vis);
 }
 
-bool lose_stat(unsigned char which_stat, unsigned char stat_loss,
+bool lose_stat(stat_type which_stat, unsigned char stat_loss,
                const item_def &cause, bool removed, bool force)
 {
     std::string name = cause.name(DESC_NOCAP_THE, false, true, false, false,
@@ -515,7 +490,7 @@ bool lose_stat(unsigned char which_stat, unsigned char stat_loss,
 // a message if suppress_msg is false, and doing so in the recovery
 // channel if recovery is true.  If stat_gain is 0, restore the stat
 // completely.
-bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
+bool restore_stat(stat_type which_stat, unsigned char stat_gain,
                   bool suppress_msg, bool recovery)
 {
     bool stat_restored = false;
@@ -524,8 +499,8 @@ bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
     // Besides, a little recursion never hurt anyone {dlb}:
     if (which_stat == STAT_ALL)
     {
-        for (unsigned char loopy = STAT_STR; loopy < NUM_STATS; ++loopy)
-            if (restore_stat(loopy, stat_gain, suppress_msg))
+        for (int i = 0; i < NUM_STATS; ++i)
+            if (restore_stat(static_cast<stat_type>(i), stat_gain, suppress_msg))
                 stat_restored = true;
 
         return (stat_restored);
@@ -534,7 +509,7 @@ bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
     std::string msg = "You feel your ";
 
     if (which_stat == STAT_RANDOM)
-        which_stat = random2(NUM_STATS);
+        which_stat = static_cast<stat_type>(random2(NUM_STATS));
 
     switch (which_stat)
     {
@@ -547,6 +522,8 @@ bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
     case STAT_DEX:
         msg += "dexterity";
         break;
+    default:
+        ASSERT(false);
     }
 
     if (you.stats[which_stat] < you.max_stats[which_stat])
@@ -561,22 +538,13 @@ bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
         if (stat_gain != 0)
         {
             you.stats[which_stat] += stat_gain;
-            you.redraw_stats[which_stat] = true;
             stat_restored = true;
 
-            if (which_stat == STAT_STR)
-                burden_change();
+            _handle_stat_change(which_stat);
         }
     }
 
     return (stat_restored);
-}
-
-void normalize_stat(stat_type stat)
-{
-    you.stats[stat] = std::max<char>(you.stats[stat], 0);
-    you.stats[stat] = std::min<char>(you.stats[stat], 72);
-    you.max_stats[stat] = std::min<char>(you.max_stats[stat], 72);
 }
 
 static void _mod_stat(stat_type stat, int mod)
@@ -585,7 +553,7 @@ static void _mod_stat(stat_type stat, int mod)
     {
         you.stats[stat] += mod;
         you.max_stats[stat] += mod;
-        you.redraw_stats[stat] = true;
+        _handle_stat_change(stat);
     }
 }
 
@@ -594,4 +562,43 @@ void modify_all_stats(int STmod, int IQmod, int DXmod)
     _mod_stat(STAT_STR, STmod);
     _mod_stat(STAT_INT, IQmod);
     _mod_stat(STAT_DEX, DXmod);
+}
+
+static void _normalize_stat(stat_type stat)
+{
+    you.stats[stat] = std::max<char>(you.stats[stat], 0);
+    you.stats[stat] = std::min<char>(you.stats[stat], 72);
+    you.max_stats[stat] = std::min<char>(you.max_stats[stat], 72);
+}
+
+static void _handle_stat_change(stat_type stat)
+{
+    ASSERT(stat >= 0 && stat < NUM_STATS);
+
+    you.redraw_stats[stat] = true;
+    _normalize_stat(stat);
+
+    switch (stat)
+    {
+    case STAT_STR:
+        burden_change();
+        you.redraw_armour_class = true;
+        break;
+
+    case STAT_INT:
+        break;
+
+    case STAT_DEX:
+        you.redraw_evasion = true;
+        break;
+
+    default:
+        break;
+    }
+}
+
+static void _handle_stat_change()
+{
+    for (int i = 0; i < NUM_STATS; ++i)
+        _handle_stat_change(static_cast<stat_type>(i));
 }

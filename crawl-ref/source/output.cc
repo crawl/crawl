@@ -385,10 +385,10 @@ short _get_stat_colour(stat_type stat)
     return (HUD_VALUE_COLOUR);
 }
 
-// XXX: alters state!  Does more than just print!
 static void _print_stat(stat_type stat, int x, int y)
 {
-    normalize_stat(stat);
+    ASSERT(you.stats[stat] >= 0 && you.stats[stat] <= 72
+           && you.max_stats[stat] <= 72);
 
     cgotoxy(x+5, y, GOTO_STAT);
 
@@ -399,9 +399,6 @@ static void _print_stat(stat_type stat, int x, int y)
         cprintf(" (%d)  ", you.max_stats[stat]);
     else
         cprintf("       ");
-
-    if (stat == STAT_STR)
-        burden_change();
 }
 
 static void _print_stats_ac(int x, int y)
