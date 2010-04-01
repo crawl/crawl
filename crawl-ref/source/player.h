@@ -12,6 +12,8 @@
 #include "beam.h"
 #include "quiver.h"
 #include "itemprop-enum.h"
+#include "place-info.h"
+
 #include "species.h"
 
 #include <vector>

@@ -145,6 +145,7 @@ ouch.o \
 output.o \
 pattern.o \
 place.o \
+place-info.o \
 player.o \
 player-act.o \
 player-equip.o \
