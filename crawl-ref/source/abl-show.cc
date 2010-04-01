@@ -582,7 +582,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_FLY_II:           // this is for draconians {dlb}
-        failure = 45 - (you.experience_level + you.strength);
+        failure = 45 - (you.experience_level + you.strength());
         break;
 
     case ABIL_TRAN_BAT:
@@ -730,7 +730,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
 
     case ABIL_SIF_MUNA_CHANNEL_ENERGY:
         invoc = true;
-        failure = 40 - you.intel - you.skills[SK_INVOCATIONS];
+        failure = 40 - you.intel() - you.skills[SK_INVOCATIONS];
         break;
 
     case ABIL_YRED_RECALL_UNDEAD_SLAVES:
@@ -1016,9 +1016,9 @@ static bool _check_ability_possible(const ability_def& abil,
 
     case ABIL_ELYVILON_RESTORATION:
     case ABIL_MUMMY_RESTORATION:
-        if (you.strength == you.max_strength
-            && you.intel == you.max_intel
-            && you.dex == you.max_dex
+        if (you.strength() == you.max_strength()
+            && you.intel() == you.max_intel()
+            && you.dex() == you.max_dex()
             && !player_rotted())
         {
             mprf("You don't need to restore your stats or hit points!");
@@ -1121,7 +1121,7 @@ static bool _activate_talent(const talent& tal)
     // Doing these would outright kill the player due to stat drain.
     if (tal.which == ABIL_TRAN_BAT)
     {
-        if (you.strength <= 5)
+        if (you.strength() <= 5)
         {
             mpr("You lack the strength for this transformation.", MSGCH_WARN);
             crawl_state.zero_turns_taken();
@@ -1130,7 +1130,7 @@ static bool _activate_talent(const talent& tal)
     }
     else if (tal.which == ABIL_END_TRANSFORMATION
              && player_in_bat_form()
-             && you.dex <= 5)
+             && you.dex() <= 5)
     {
         mpr("Turning back with such low dexterity would be fatal!", MSGCH_WARN);
         more();

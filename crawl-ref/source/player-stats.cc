@@ -13,6 +13,36 @@
 #include "transform.h"
 #include "tutorial.h"
 
+char player::strength() const
+{
+    return (stats[STAT_STR]);
+}
+
+char player::intel() const
+{
+    return (stats[STAT_INT]);
+}
+
+char player::dex() const
+{
+    return (stats[STAT_DEX]);
+}
+
+char player::max_strength() const
+{
+    return (max_stats[STAT_STR]);
+}
+
+char player::max_intel() const
+{
+    return (max_stats[STAT_INT]);
+}
+
+char player::max_dex() const
+{
+    return (max_stats[STAT_DEX]);
+}
+
 void attribute_increase()
 {
     mpr("Your experience leads to an increase in your attributes!",
@@ -61,22 +91,18 @@ void attribute_increase()
 // Rearrange stats, biased towards the stat chosen last at level up.
 void jiyva_stat_action()
 {
-    char* max_statp[]  = { &you.max_strength, &you.max_intel, &you.max_dex };
-    char* base_statp[] = { &you.strength, &you.intel, &you.dex };
-    int incremented_weight[] = {1, 1, 1};
-    int decremented_weight[3];
+    int inc_weight[] = {1, 1, 1};
+    int dec_weight[3];
     int stat_up_choice;
     int stat_down_choice;
 
-    incremented_weight[you.last_chosen] = 2;
+    inc_weight[you.last_chosen] = 2;
 
     for (int x = 0; x < 3; ++x)
-         decremented_weight[x] = std::min(10, std::max(0, *max_statp[x] - 7));
+         dec_weight[x] = std::min(10, std::max(0, you.max_stats[x] - 7));
 
-    stat_up_choice = choose_random_weighted(incremented_weight,
-                                            incremented_weight + 3);
-    stat_down_choice = choose_random_weighted(decremented_weight,
-                                              decremented_weight + 3);
+    stat_up_choice = choose_random_weighted(inc_weight, inc_weight + 3);
+    stat_down_choice = choose_random_weighted(dec_weight, dec_weight + 3);
 
     if (stat_up_choice != stat_down_choice)
     {
@@ -85,16 +111,14 @@ void jiyva_stat_action()
         // but has a max stat of something higher -- perhaps we should
         // check for that?
 
-        (*max_statp[stat_up_choice])++;
-        (*max_statp[stat_down_choice])--;
-        (*base_statp[stat_up_choice])++;
-        (*base_statp[stat_down_choice])--;
+        you.max_stats[stat_up_choice]++;
+        you.max_stats[stat_down_choice]--;
+        you.stats[stat_up_choice]++;
+        you.stats[stat_down_choice]--;
 
         simple_god_message("'s power touches on your attributes.");
 
-        you.redraw_strength     = true;
-        you.redraw_intelligence = true;
-        you.redraw_dexterity    = true;
+        you.redraw_stats.init(true);
 
         burden_change();
     }
@@ -104,10 +128,6 @@ void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
                  const char *cause, bool see_source)
 {
     ASSERT(!crawl_state.game_is_arena());
-
-    char *ptr_stat = NULL;
-    char *ptr_stat_max = NULL;
-    bool *ptr_redraw = NULL;
 
     kill_method_type kill_type = NUM_KILLBY;
 
@@ -127,25 +147,16 @@ void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
     switch (which_stat)
     {
     case STAT_STR:
-        ptr_stat     = &you.strength;
-        ptr_stat_max = &you.max_strength;
-        ptr_redraw   = &you.redraw_strength;
         kill_type    = KILLED_BY_WEAKNESS;
         msg += ((amount > 0) ? "stronger." : "weaker.");
         break;
 
     case STAT_INT:
-        ptr_stat     = &you.intel;
-        ptr_stat_max = &you.max_intel;
-        ptr_redraw   = &you.redraw_intelligence;
         kill_type    = KILLED_BY_STUPIDITY;
         msg += ((amount > 0) ? "clever." : "stupid.");
         break;
 
     case STAT_DEX:
-        ptr_stat     = &you.dex;
-        ptr_stat_max = &you.max_dex;
-        ptr_redraw   = &you.redraw_dexterity;
         kill_type    = KILLED_BY_CLUMSINESS;
         msg += ((amount > 0) ? "agile." : "clumsy.");
         break;
@@ -157,11 +168,11 @@ void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
     if (!suppress_msg && amount != 0)
         mpr( msg.c_str(), (amount > 0) ? MSGCH_INTRINSIC_GAIN : MSGCH_WARN );
 
-    *ptr_stat     += amount;
-    *ptr_stat_max += amount;
-    *ptr_redraw    = 1;
+    you.stats[which_stat] += amount;
+    you.max_stats[which_stat] += amount;
+    you.redraw_stats[which_stat] = true;
 
-    if (amount < 0 && *ptr_stat < 1)
+    if (amount < 0 && you.stats[which_stat] < 1)
     {
         if (cause == NULL)
             ouch(INSTANT_DEATH, NON_MONSTER, kill_type);
@@ -169,12 +180,12 @@ void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
             ouch(INSTANT_DEATH, NON_MONSTER, kill_type, cause, see_source);
     }
 
-    if (ptr_stat == &you.strength)
+    if (which_stat == STAT_STR)
     {
         burden_change();
         you.redraw_armour_class = true; // This includes shields.
     }
-    if (ptr_stat == &you.dex)
+    if (which_stat == STAT_DEX)
         you.redraw_evasion = true;
 }
 
@@ -349,9 +360,9 @@ int stat_modifier(stat_type stat)
 {
     switch (stat)
     {
-    case STAT_STR:     return _strength_modifier();
+    case STAT_STR: return _strength_modifier();
     case STAT_INT: return _int_modifier();
-    case STAT_DEX:    return _dex_modifier();
+    case STAT_DEX: return _dex_modifier();
     default:
         mprf(MSGCH_ERROR, "Bad stat: %d", stat);
         return 0;
@@ -365,8 +376,6 @@ bool lose_stat(unsigned char which_stat, unsigned char stat_loss, bool force,
                const char *cause, bool see_source)
 {
     bool statLowered = false;   // must initialise to false {dlb}
-    char *ptr_stat   = NULL;
-    bool *ptr_redraw = NULL;
     char newValue = 0;          // holds new value, for comparison to old {dlb}
 
     kill_method_type kill_type = NUM_KILLBY;
@@ -382,22 +391,16 @@ bool lose_stat(unsigned char which_stat, unsigned char stat_loss, bool force,
     {
     case STAT_STR:
         msg       += "weakened";
-        ptr_stat   = &you.strength;
-        ptr_redraw = &you.redraw_strength;
         kill_type  = KILLED_BY_WEAKNESS;
         break;
 
     case STAT_DEX:
         msg       += "clumsy";
-        ptr_stat   = &you.dex;
-        ptr_redraw = &you.redraw_dexterity;
         kill_type  = KILLED_BY_CLUMSINESS;
         break;
 
     case STAT_INT:
         msg       += "dopey";
-        ptr_stat   = &you.intel;
-        ptr_redraw = &you.redraw_intelligence;
         kill_type  = KILLED_BY_STUPIDITY;
         break;
     }
@@ -408,7 +411,7 @@ bool lose_stat(unsigned char which_stat, unsigned char stat_loss, bool force,
         stat_loss >>= player_sust_abil();
 
     // newValue is current value less modifier: {dlb}
-    newValue = *ptr_stat - stat_loss;
+    newValue = you.stats[which_stat] - stat_loss;
 
     // conceivable that stat was already *at* three
     // or stat_loss zeroed by player_sust_abil(): {dlb}
@@ -418,13 +421,13 @@ bool lose_stat(unsigned char which_stat, unsigned char stat_loss, bool force,
     // used to say '!=' would actually cause stat gain with the '< 3'
     // check that used to be above.  Crawl has stat-death code and I
     // don't see why we shouldn't be using it here.  -- bwr
-    if (newValue < *ptr_stat)
+    if (newValue < you.stats[which_stat])
     {
-        *ptr_stat = newValue;
-        *ptr_redraw = 1;
+        you.stats[which_stat] = newValue;
+        you.redraw_stats[which_stat] = true;
 
         // handle burden change, where appropriate: {dlb}
-        if (ptr_stat == &you.strength)
+        if (which_stat == STAT_STR)
             burden_change();
 
         statLowered = true;  // that is, stat was lowered (not just changed)
@@ -525,13 +528,8 @@ bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
             if (restore_stat(loopy, stat_gain, suppress_msg))
                 stat_restored = true;
 
-        return (stat_restored);                // early return {dlb}
+        return (stat_restored);
     }
-
-    // The real function begins here. {dlb}
-    char *ptr_stat = NULL;
-    char *ptr_stat_max = NULL;
-    bool *ptr_redraw = NULL;
 
     std::string msg = "You feel your ";
 
@@ -542,48 +540,58 @@ bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
     {
     case STAT_STR:
         msg += "strength";
-
-        ptr_stat = &you.strength;
-        ptr_stat_max = &you.max_strength;
-        ptr_redraw = &you.redraw_strength;
         break;
-
     case STAT_INT:
         msg += "intelligence";
-
-        ptr_stat = &you.intel;
-        ptr_stat_max = &you.max_intel;
-        ptr_redraw = &you.redraw_intelligence;
         break;
-
     case STAT_DEX:
         msg += "dexterity";
-
-        ptr_stat = &you.dex;
-        ptr_stat_max = &you.max_dex;
-        ptr_redraw = &you.redraw_dexterity;
         break;
     }
 
-    if (*ptr_stat < *ptr_stat_max)
+    if (you.stats[which_stat] < you.max_stats[which_stat])
     {
         msg += " returning.";
         if (!suppress_msg)
             mpr(msg.c_str(), (recovery) ? MSGCH_RECOVERY : MSGCH_PLAIN);
 
-        if (stat_gain == 0 || *ptr_stat + stat_gain > *ptr_stat_max)
-            stat_gain = *ptr_stat_max - *ptr_stat;
+        if (stat_gain == 0 || you.stats[which_stat] + stat_gain > you.max_stats[which_stat])
+            stat_gain = you.max_stats[which_stat] - you.stats[which_stat];
 
         if (stat_gain != 0)
         {
-            *ptr_stat += stat_gain;
-            *ptr_redraw = true;
+            you.stats[which_stat] += stat_gain;
+            you.redraw_stats[which_stat] = true;
             stat_restored = true;
 
-            if (ptr_stat == &you.strength)
+            if (which_stat == STAT_STR)
                 burden_change();
         }
     }
 
     return (stat_restored);
+}
+
+void normalize_stat(stat_type stat)
+{
+    you.stats[stat] = std::max<char>(you.stats[stat], 0);
+    you.stats[stat] = std::min<char>(you.stats[stat], 72);
+    you.max_stats[stat] = std::min<char>(you.max_stats[stat], 72);
+}
+
+static void _mod_stat(stat_type stat, int mod)
+{
+    if (mod)
+    {
+        you.stats[stat] += mod;
+        you.max_stats[stat] += mod;
+        you.redraw_stats[stat] = true;
+    }
+}
+
+void modify_all_stats(int STmod, int IQmod, int DXmod)
+{
+    _mod_stat(STAT_STR, STmod);
+    _mod_stat(STAT_INT, IQmod);
+    _mod_stat(STAT_DEX, DXmod);
 }

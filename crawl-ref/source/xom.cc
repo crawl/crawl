@@ -1127,7 +1127,7 @@ static bool _feat_is_deadly(dungeon_feature_type feat)
 
 static bool _player_is_dead()
 {
-    return (you.hp <= 0 || you.strength <= 0 || you.dex <= 0 || you.intel <= 0
+    return (you.hp <= 0 || you.strength() <= 0 || you.dex() <= 0 || you.intel() <= 0
             || _feat_is_deadly(grd(you.pos()))
             || you.did_escape_death());
 }
@@ -2934,9 +2934,9 @@ static int _xom_lose_stats(bool debug = false)
         // Make sure not to lower strength so much that the player
         // will die once might wears off.
         char      vals[3] =
-            {you.strength - (you.duration[DUR_MIGHT] ? 5 : 0),
-             you.dex - (you.duration[DUR_AGILITY] ? 5 : 0),
-             you.intel - (you.duration[DUR_BRILLIANCE] ? 5 : 0)};
+            {you.strength() - (you.duration[DUR_MIGHT] ? 5 : 0),
+             you.dex() - (you.duration[DUR_AGILITY] ? 5 : 0),
+             you.intel() - (you.duration[DUR_BRILLIANCE] ? 5 : 0)};
 
         stat_type types[3] = {STAT_STR, STAT_DEX,
                               STAT_INT};
@@ -2958,14 +2958,10 @@ static int _xom_lose_stats(bool debug = false)
     lose_stat(stat, loss, true, "the vengeance of Xom" );
 
     // Take a note.
+    const char* sstr[3] = { "Str", "Int", "Dex" };
     static char stat_buf[80];
     snprintf(stat_buf, sizeof(stat_buf), "stat loss: -%d %s (%d/%d)",
-             loss, (stat == STAT_STR  ? "Str" :
-                    stat == STAT_DEX ? "Dex" : "Int"),
-             (stat == STAT_STR  ? you.strength :
-              stat == STAT_DEX ? you.dex : you.intel),
-             (stat == STAT_STR  ? you.max_strength :
-              stat == STAT_DEX ? you.max_dex : you.max_intel));
+             loss, sstr[stat], you.stats[stat], you.max_stats[stat]);
 
     take_note(Note(NOTE_XOM_EFFECT, you.piety, -1, stat_buf), true);
 
@@ -3671,10 +3667,8 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
     return (done);
 }
 
-static char* _stat_ptrs[3] = {&you.strength, &you.intel, &you.dex};
-
 static void _handle_accidental_death(const int orig_hp,
-    const char orig_stats[],
+    const FixedVector<char, NUM_STATS> orig_stats,
     const FixedVector<unsigned char, NUM_MUTATIONS> &orig_mutation)
 {
     // Did ouch() return early because the player died from the Xom
@@ -3708,24 +3702,24 @@ static void _handle_accidental_death(const int orig_hp,
             break;
 
         case KILLED_BY_STUPIDITY:
-            if (you.intel > 0)
+            if (you.intel() > 0)
                 speech_type = "weird death";
             break;
 
         case KILLED_BY_WEAKNESS:
-            if (you.strength > 0)
+            if (you.strength() > 0)
                 speech_type = "weird death";
             break;
 
         case KILLED_BY_CLUMSINESS:
-            if (you.dex > 0)
+            if (you.dex() > 0)
                 speech_type = "weird death";
             break;
 
         default:
             if (_feat_is_deadly(feat))
                 speech_type = "weird death";
-            if (you.strength <= 0 || you.intel <= 0 || you.dex <= 0)
+            if (you.strength() <= 0 || you.intel() <= 0 || you.dex() <= 0)
                 speech_type = "weird death";
         break;
     }
@@ -3738,27 +3732,27 @@ static void _handle_accidental_death(const int orig_hp,
         you.hp = std::min(orig_hp, you.hp_max);
 
     // MUT_THIN_SKELETON can statkill you by str, undo it if necessary
-    /*while (you.strength <= 0 && you.mutation[MUT_THIN_SKELETON] > orig_mutation[MUT_THIN_SKELETON])
+    /*while (you.strength() <= 0 && you.mutation[MUT_THIN_SKELETON] > orig_mutation[MUT_THIN_SKELETON])
         delete_mutation(MUT_THIN_SKELETON, true, true, true);*/
 
     // MUT_ROUGH_BLACK_SCALES can statkill you by dex, undo it if necessary
-    while (you.dex <= 0 && you.mutation[MUT_ROUGH_BLACK_SCALES] > orig_mutation[MUT_ROUGH_BLACK_SCALES])
+    while (you.dex() <= 0 && you.mutation[MUT_ROUGH_BLACK_SCALES] > orig_mutation[MUT_ROUGH_BLACK_SCALES])
         delete_mutation(MUT_ROUGH_BLACK_SCALES, true, true, true);
 
-    while (you.dex <= 0
+    while (you.dex() <= 0
            && you.mutation[MUT_FLEXIBLE_WEAK] <
                   orig_mutation[MUT_FLEXIBLE_WEAK])
     {
         mutate(MUT_FLEXIBLE_WEAK, true, true, true);
     }
 
-    while (you.strength <= 0
+    while (you.strength() <= 0
            && you.mutation[MUT_FLEXIBLE_WEAK] >
                   orig_mutation[MUT_FLEXIBLE_WEAK])
     {
         delete_mutation(MUT_FLEXIBLE_WEAK, true, true, true);
     }
-    while (you.strength <= 0
+    while (you.strength() <= 0
            && you.mutation[MUT_STRONG_STIFF] <
                   orig_mutation[MUT_STRONG_STIFF])
     {
@@ -3770,7 +3764,7 @@ static void _handle_accidental_death(const int orig_hp,
 
     for (int i = 0; i < 3; ++i)
     {
-        while (*(_stat_ptrs[i]) <= 0)
+        while (you.stats[i] <= 0)
         {
             mutation_type good = good_muts[i];
             mutation_type bad  = bad_muts[i];
@@ -3781,15 +3775,12 @@ static void _handle_accidental_death(const int orig_hp,
             }
             else
             {
-                *(_stat_ptrs[i]) = orig_stats[i];
+                you.stats[i] = orig_stats[i];
                 break;
             }
         }
+        you.max_stats[i] = std::max(you.max_stats[i], you.stats[i]);
     }
-
-    you.max_strength = std::max(you.max_strength, you.strength);
-    you.max_intel    = std::max(you.max_intel, you.intel);
-    you.max_dex      = std::max(you.max_dex, you.dex);
 
     if (_feat_is_deadly(feat))
         you_teleport_now(false);
@@ -3867,8 +3858,7 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
 #endif
 
     const int  orig_hp       = you.hp;
-    const char orig_stats[3] = {*(_stat_ptrs[0]), *(_stat_ptrs[1]),
-                                *(_stat_ptrs[2])};
+    const FixedVector<char, NUM_STATS> orig_stats = you.stats;
 
     const FixedVector<unsigned char, NUM_MUTATIONS> orig_mutation
         = you.mutation;
@@ -4210,12 +4200,8 @@ bool xom_saves_your_life(const int dam, const int death_source,
         you.hp = 1 + random2(you.hp_max/4);
 
     // Make sure all stats are at least 1.
-    if (you.strength < 1)
-        you.strength = 1;
-    if (you.dex < 1)
-        you.dex = 1;
-    if (you.intel < 1)
-        you.intel = 1;
+    for (int i = 0; i < NUM_STATS; ++i)
+        you.stats[i] = std::max<char>(you.stats[i], 1);
 
     god_speaks(GOD_XOM, "Xom revives you!");
 

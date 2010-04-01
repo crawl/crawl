@@ -2095,9 +2095,9 @@ int acquirement_create_item(object_class_type class_wanted,
 
             // Check vs. stats. positive stats will automatically fall
             // through.  As will negative stats that won't kill you.
-            if (-proprt[ARTP_STRENGTH] >= you.strength
-                || -proprt[ARTP_INTELLIGENCE] >= you.intel
-                || -proprt[ARTP_DEXTERITY] >= you.dex)
+            if (-proprt[ARTP_STRENGTH] >= you.strength()
+                || -proprt[ARTP_INTELLIGENCE] >= you.intel()
+                || -proprt[ARTP_DEXTERITY] >= you.dex())
             {
                 // Try again.
                 destroy_item(thing_created);
@@ -3736,13 +3736,13 @@ void handle_time()
 
         if (recovery)
         {
-            if (you.strength < you.max_strength && one_chance_in(100))
+            if (you.strength() < you.max_strength() && one_chance_in(100))
                 restore_stat(STAT_STR, 0, false, true);
 
-            if (you.intel < you.max_intel && one_chance_in(100))
+            if (you.intel() < you.max_intel() && one_chance_in(100))
                 restore_stat(STAT_INT, 0, false, true);
 
-            if (you.dex < you.max_dex && one_chance_in(100))
+            if (you.dex() < you.max_dex() && one_chance_in(100))
                 restore_stat(STAT_DEX, 0, false, true);
         }
     }

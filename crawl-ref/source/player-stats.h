@@ -30,4 +30,7 @@ bool lose_stat(unsigned char which_stat, unsigned char stat_loss,
 bool restore_stat(unsigned char which_stat, unsigned char stat_gain,
                   bool suppress_msg, bool recovery = false);
 
+void normalize_stat(stat_type stat);
+void modify_all_stats(int strmod, int intmod, int dexmod);
+
 #endif

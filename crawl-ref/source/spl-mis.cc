@@ -590,11 +590,11 @@ bool MiscastEffect::_lose_stat(unsigned char which_stat,
         const int agile = you.duration[DUR_AGILITY] ? 5 : 0;
 
         std::vector<unsigned char> stat_types;
-        if ((you.strength - might - stat_loss) > 0)
+        if ((you.strength() - might - stat_loss) > 0)
             stat_types.push_back(STAT_STR);
-        if ((you.intel - brilliant - stat_loss) > 0)
+        if ((you.intel() - brilliant - stat_loss) > 0)
             stat_types.push_back(STAT_INT);
-        if ((you.dex - agile - stat_loss) > 0)
+        if ((you.dex() - agile - stat_loss) > 0)
             stat_types.push_back(STAT_DEX);
 
         if (stat_types.size() == 0)
@@ -612,9 +612,9 @@ bool MiscastEffect::_lose_stat(unsigned char which_stat,
 
     switch (which_stat)
     {
-        case STAT_STR:     val = you.strength; break;
-        case STAT_INT: val = you.intel;    break;
-        case STAT_DEX:    val = you.dex;      break;
+        case STAT_STR:     val = you.strength(); break;
+        case STAT_INT: val = you.intel();    break;
+        case STAT_DEX:    val = you.dex();      break;
 
         default: DEBUGSTR("Invalid stat type."); return (false);
     }

@@ -3025,7 +3025,7 @@ static void _open_door(coord_def move, bool check_confused)
         }
     }
 
-    int skill = you.dex
+    int skill = you.dex()
                 + (you.skills[SK_TRAPS_DOORS] + you.skills[SK_STEALTH]) / 2;
 
     std::string berserk_open = env.markers.property_at(doorpos, MAT_ANY,
@@ -3260,7 +3260,7 @@ static void _close_door(coord_def move)
             }
         }
 
-        int skill = you.dex
+        int skill = you.dex()
                     + (you.skills[SK_TRAPS_DOORS] + you.skills[SK_STEALTH]) / 2;
 
         if (you.berserk())
@@ -3554,9 +3554,7 @@ static bool _initialise(void)
     burden_change();
     make_hungry(0, true);
 
-    you.redraw_strength     = true;
-    you.redraw_intelligence = true;
-    you.redraw_dexterity    = true;
+    you.redraw_stats.init(true);
     you.redraw_armour_class = true;
     you.redraw_evasion      = true;
     you.redraw_experience   = true;

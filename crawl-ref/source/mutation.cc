@@ -1683,7 +1683,7 @@ static bool _is_deadly(mutation_type mutat, bool delete_mut)
         }
     }
 
-    char *stat_ptr = &you.dex; // Default for the scales.
+    stat_type stat = STAT_DEX; // Default for the scales.
     char  amnt     = 1;
     char  mod      = 0;
 
@@ -1691,7 +1691,7 @@ static bool _is_deadly(mutation_type mutat, bool delete_mut)
     {
     case MUT_FLEXIBLE_WEAK:
     case MUT_WEAK:
-        stat_ptr = &you.strength;
+        stat = STAT_STR;
         // Take might into account so we don't lower base strength below
         // one.
         if (you.duration[DUR_MIGHT])
@@ -1699,14 +1699,14 @@ static bool _is_deadly(mutation_type mutat, bool delete_mut)
         break;
 
     case MUT_DOPEY:
-        stat_ptr = &you.intel;
+        stat = STAT_INT;
         if (you.duration[DUR_BRILLIANCE])
             mod = -5;
         break;
 
     case MUT_STRONG_STIFF:
     case MUT_CLUMSY:
-        stat_ptr = &you.dex;
+        stat = STAT_DEX;
         if (you.duration[DUR_AGILITY])
             mod = -5;
         break;
@@ -1715,7 +1715,7 @@ static bool _is_deadly(mutation_type mutat, bool delete_mut)
         return (false);
     }
 
-    return (amnt >= (*stat_ptr + mod));
+    return (amnt >= (you.stats[stat] + mod));
 }
 
 static bool _accept_mutation(mutation_type mutat, bool ignore_rarity = false,

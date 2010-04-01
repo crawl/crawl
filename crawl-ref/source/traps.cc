@@ -465,7 +465,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             if (trig_knows && one_chance_in(3))
                 mpr("You avoid triggering a blade trap.");
             else if (random2limit(player_evasion(), 40)
-                     + (random2(you.dex) / 3) + (trig_knows ? 3 : 0) > 8)
+                     + (random2(you.dex()) / 3) + (trig_knows ? 3 : 0) > 8)
             {
                 mpr("A huge blade swings just past you!");
             }
@@ -537,7 +537,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             else
             {
                 if (random2limit(player_evasion(), 40)
-                    + (random2(you.dex) / 3) + (trig_knows ? 3 : 0) > 12)
+                    + (random2(you.dex()) / 3) + (trig_knows ? 3 : 0) > 12)
                 {
                     mpr("A net drops to the ground!");
                 }
@@ -850,7 +850,7 @@ void disarm_trap(const coord_def& where)
     if (random2(you.skills[SK_TRAPS_DOORS] + 2) <= random2(you.absdepth0 + 5))
     {
         mpr("You failed to disarm the trap.");
-        if (random2(you.dex) > 5 + random2(5 + you.absdepth0))
+        if (random2(you.dex()) > 5 + random2(5 + you.absdepth0))
             exercise(SK_TRAPS_DOORS, 1 + random2(you.absdepth0 / 5));
         else
         {
@@ -906,7 +906,7 @@ void remove_net_from(monsters *mon)
     if ( random2(you.skills[SK_TRAPS_DOORS] + 2) + paralys
            <= random2( 2*mon->body_size(PSIZE_BODY) + 3 ) + invis)
     {
-        if (one_chance_in(you.skills[SK_TRAPS_DOORS] + you.dex/2))
+        if (one_chance_in(you.skills[SK_TRAPS_DOORS] + you.dex()/2))
         {
             mitm[net].plus--;
             mpr("You tear at the net.");
@@ -930,7 +930,7 @@ void remove_net_from(monsters *mon)
                 mpr("You fail to remove the net.");
         }
 
-        if (random2(you.dex) > 5 + random2( 2*mon->body_size(PSIZE_BODY) ))
+        if (random2(you.dex()) > 5 + random2( 2*mon->body_size(PSIZE_BODY) ))
             exercise(SK_TRAPS_DOORS, 1 + random2(mon->body_size(PSIZE_BODY)/2));
         return;
     }
@@ -986,9 +986,9 @@ static int damage_or_escape_net(int hold)
         damage += 2;
 
     // Check stats.
-    if (x_chance_in_y(you.strength, 18))
+    if (x_chance_in_y(you.strength(), 18))
         damage++;
-    if (x_chance_in_y(you.dex, 12))
+    if (x_chance_in_y(you.dex(), 12))
         escape++;
     if (x_chance_in_y(player_evasion(), 20))
         escape++;
@@ -1260,7 +1260,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
                 // Note that this uses full (not random2limit(foo,40))
                 // player_evasion.
                 int your_dodge = you.melee_evasion(NULL) - 2
-                    + (random2(you.dex) / 3)
+                    + (random2(you.dex()) / 3)
                     + (repel_turns * 10);
 
                 // Check if it got past dodging. Deflect Missiles provides

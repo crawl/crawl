@@ -332,31 +332,30 @@ bool check_transformation_stat_loss(const std::set<equipment_type> &remove,
                                     int int_loss)
 {
     // Initialise with additional losses, if any.
-    int prop_str = str_loss;
-    int prop_dex = dex_loss;
-    int prop_int = int_loss;
+    int prop[3] = { str_loss, int_loss, dex_loss };
 
     // Might is very much temporary and might run out at any point during
     // your transformation, possibly resulting in stat loss caused by a
     // combination of an unequipping (and/or stat lowering) transformation
     // and Might running out at an inopportune moment.
     if (you.duration[DUR_MIGHT])
-        prop_str += 5;
+        prop[STAT_STR] += 5;
     if (you.duration[DUR_BRILLIANCE])
-        prop_int += 5;
+        prop[STAT_INT] += 5;
     if (you.duration[DUR_AGILITY])
-        prop_dex += 5;
+        prop[STAT_DEX] += 5;
 
-    if (prop_str >= you.strength
-        || prop_int >= you.intel
-        || prop_dex >= you.dex)
+    for (int i = 0; i < NUM_STATS; ++i)
     {
-        if (!quiet)
+        if (prop[i] >= you.stats[i])
         {
-            mpr("This transformation would result in fatal stat loss!",
-                MSGCH_WARN);
+            if (!quiet)
+            {
+                mpr("This transformation would result in fatal stat loss!",
+                    MSGCH_WARN);
+            }
+            return (true);
         }
-        return (true);
     }
 
     // Check over all items to be removed or melded.
@@ -385,38 +384,38 @@ bool check_transformation_stat_loss(const std::set<equipment_type> &remove,
 
             switch (item.sub_type)
             {
-            case RING_STRENGTH:     prop_str += item.plus; break;
-            case RING_DEXTERITY:    prop_dex += item.plus; break;
-            case RING_INTELLIGENCE: prop_int += item.plus; break;
-            default:                                       break;
+            case RING_STRENGTH:     prop[STAT_STR] += item.plus; break;
+            case RING_DEXTERITY:    prop[STAT_DEX] += item.plus; break;
+            case RING_INTELLIGENCE: prop[STAT_INT] += item.plus; break;
+            default:                                             break;
             }
         }
         else if (item.base_type == OBJ_ARMOUR)
         {
             switch (get_armour_ego_type( item ))
             {
-            case SPARM_STRENGTH:     prop_str += 3; break;
-            case SPARM_DEXTERITY:    prop_dex += 3; break;
-            case SPARM_INTELLIGENCE: prop_int += 3; break;
-            default:                                break;
+            case SPARM_STRENGTH:     prop[STAT_STR] += 3; break;
+            case SPARM_DEXTERITY:    prop[STAT_DEX] += 3; break;
+            case SPARM_INTELLIGENCE: prop[STAT_INT] += 3; break;
+            default:                                      break;
             }
         }
 
         if (is_artefact(item))
         {
-            prop_str += artefact_known_wpn_property(item, ARTP_STRENGTH);
-            prop_int += artefact_known_wpn_property(item, ARTP_INTELLIGENCE);
-            prop_dex += artefact_known_wpn_property(item, ARTP_DEXTERITY);
+            prop[STAT_STR] += artefact_known_wpn_property(item, ARTP_STRENGTH);
+            prop[STAT_INT] += artefact_known_wpn_property(item, ARTP_INTELLIGENCE);
+            prop[STAT_DEX] += artefact_known_wpn_property(item, ARTP_DEXTERITY);
         }
 
         // Since there might be multiple items whose effects cancel each other
         // out while worn, if at any point in the order of checking this list
         // (which is the same order as when removing items) one of your stats
         // would reach 0, return true.
-        if (prop_str >= you.strength
-            || prop_int >= you.intel
-            || prop_dex >= you.dex)
+        for (int i = 0; i < NUM_STATS; ++i)
         {
+            if (prop[i] < you.stats[i])
+                continue;
             if (!quiet)
             {
                 mpr("This transformation would result in fatal stat loss!",

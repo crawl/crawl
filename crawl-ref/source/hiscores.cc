@@ -1141,9 +1141,9 @@ void scorefile_entry::init()
     final_max_hp     = you.hp_max;
     final_max_max_hp = get_real_hp(true, true);
 
-    str   = std::max(you.strength - stat_modifier(STAT_STR), 1);
-    intel = std::max(you.intel - stat_modifier(STAT_INT), 1);
-    dex   = std::max(you.dex - stat_modifier(STAT_DEX), 1);
+    str   = std::max(you.strength() - stat_modifier(STAT_STR), 1);
+    intel = std::max(you.intel() - stat_modifier(STAT_INT), 1);
+    dex   = std::max(you.dex() - stat_modifier(STAT_DEX), 1);
 
     god = you.religion;
     if (you.religion != GOD_NO_GOD)

@@ -404,7 +404,7 @@ static bool _is_crystal_ball(const item_def &item)
 
 static bool _check_crystal_ball(int subtype, bool known)
 {
-    if (you.intel <= 1)
+    if (you.intel() <= 1)
     {
         mpr( "You lack the intellegence to focus on the shapes in the ball." );
         return (false);
