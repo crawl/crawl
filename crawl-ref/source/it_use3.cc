@@ -406,7 +406,7 @@ static bool _check_crystal_ball(int subtype, bool known)
 {
     if (you.intel() <= 1)
     {
-        mpr( "You lack the intellegence to focus on the shapes in the ball." );
+        mpr( "You lack the intelligence to focus on the shapes in the ball." );
         return (false);
     }
 
