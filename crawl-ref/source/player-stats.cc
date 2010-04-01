@@ -49,8 +49,9 @@ char player::max_dex() const
     return (max_stats[STAT_DEX]);
 }
 
-static void _handle_stat_change(stat_type stat);
-static void _handle_stat_change();
+static void _handle_stat_change(stat_type stat, const char *aux = NULL,
+                                bool see_source = true);
+static void _handle_stat_change(const char *aux = NULL, bool see_source = true);
 
 void attribute_increase()
 {
@@ -123,12 +124,35 @@ void jiyva_stat_action()
     }
 }
 
+static kill_method_type statloss_killtype[] = {
+    KILLED_BY_WEAKNESS,
+    KILLED_BY_CLUMSINESS,
+    KILLED_BY_STUPIDITY
+};
+
+enum stat_desc_type
+{
+    SD_LOSS,
+    SD_DECREASE,
+    SD_INCREASE,
+    NUM_STAT_DESCS
+};
+
+const char* descs[NUM_STATS][NUM_STAT_DESCS] = {
+    { "weakened", "weaker", "stronger" },
+    { "dopey", "stupid", "clever" },
+    { "clumsy", "clumsy", "agile" }
+};
+
+static const char* _stat_desc(stat_type stat, stat_desc_type desc)
+{
+    return (descs[stat][desc]);
+}
+
 void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
                  const char *cause, bool see_source)
 {
     ASSERT(!crawl_state.game_is_arena());
-
-    kill_method_type kill_type = NUM_KILLBY;
 
     // sanity - is non-zero amount?
     if (amount == 0)
@@ -136,48 +160,21 @@ void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
 
     // Stop delays if a stat drops.
     if (amount < 0)
-        interrupt_activity( AI_STAT_CHANGE );
-
-    std::string msg = "You feel ";
+        interrupt_activity(AI_STAT_CHANGE);
 
     if (which_stat == STAT_RANDOM)
         which_stat = static_cast<stat_type>(random2(NUM_STATS));
 
-    switch (which_stat)
+    if (!suppress_msg)
     {
-    case STAT_STR:
-        kill_type    = KILLED_BY_WEAKNESS;
-        msg += ((amount > 0) ? "stronger." : "weaker.");
-        break;
-
-    case STAT_INT:
-        kill_type    = KILLED_BY_STUPIDITY;
-        msg += ((amount > 0) ? "clever." : "stupid.");
-        break;
-
-    case STAT_DEX:
-        kill_type    = KILLED_BY_CLUMSINESS;
-        msg += ((amount > 0) ? "agile." : "clumsy.");
-        break;
-
-    default:
-        break;
+        mprf((amount > 0) ? MSGCH_INTRINSIC_GAIN : MSGCH_WARN,
+             "You feel %s.",
+             _stat_desc(which_stat, (amount > 0) ? SD_INCREASE : SD_DECREASE));
     }
-
-    if (!suppress_msg && amount != 0)
-        mpr( msg.c_str(), (amount > 0) ? MSGCH_INTRINSIC_GAIN : MSGCH_WARN );
 
     you.max_stats[which_stat] += amount;
 
-    if (amount < 0 && you.stat(which_stat) < 1)
-    {
-        if (cause == NULL)
-            ouch(INSTANT_DEATH, NON_MONSTER, kill_type);
-        else
-            ouch(INSTANT_DEATH, NON_MONSTER, kill_type, cause, see_source);
-    }
-
-    _handle_stat_change(which_stat);
+    _handle_stat_change(which_stat, cause, see_source);
 }
 
 void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
@@ -372,63 +369,27 @@ int stat_modifier(stat_type stat)
 bool lose_stat(stat_type which_stat, unsigned char stat_loss, bool force,
                const char *cause, bool see_source)
 {
-    bool statLowered = false;   // must initialise to false {dlb}
-
-    kill_method_type kill_type = NUM_KILLBY;
-
-    // begin outputing message: {dlb}
-    std::string msg = "You feel ";
-
-    // set pointers to appropriate variables: {dlb}
     if (which_stat == STAT_RANDOM)
         which_stat = static_cast<stat_type>(random2(NUM_STATS));
-
-    switch (which_stat)
-    {
-    case STAT_STR:
-        msg       += "weakened";
-        kill_type  = KILLED_BY_WEAKNESS;
-        break;
-
-    case STAT_DEX:
-        msg       += "clumsy";
-        kill_type  = KILLED_BY_CLUMSINESS;
-        break;
-
-    case STAT_INT:
-        msg       += "dopey";
-        kill_type  = KILLED_BY_STUPIDITY;
-        break;
-
-    default:
-        ASSERT(false);
-    }
 
     // scale modifier by player_sust_abil() - right-shift
     // permissible because stat_loss is unsigned: {dlb}
     if (!force)
         stat_loss >>= player_sust_abil();
 
+    mprf(stat_loss > 0 ? MSGCH_WARN : MSGCH_PLAIN,
+         "You feel %s%s.",
+         _stat_desc(which_stat, SD_LOSS),
+         stat_loss > 0 ? "" : " for a moment");
+
     if (stat_loss > 0)
     {
         you.stat_loss[which_stat] += stat_loss;
         _handle_stat_change(which_stat);
+        return (true);
     }
     else
-        msg += " for a moment";
-
-    msg += ".";
-    mpr(msg, statLowered ? MSGCH_WARN : MSGCH_PLAIN);
-
-    if (you.stat(which_stat) < 1)
-    {
-        if (cause == NULL)
-            ouch(INSTANT_DEATH, NON_MONSTER, kill_type);
-        else
-            ouch(INSTANT_DEATH, NON_MONSTER, kill_type, cause, see_source);
-    }
-
-    return (stat_loss > 0);
+        return (false);
 }
 
 bool lose_stat(stat_type which_stat, unsigned char stat_loss, bool force,
@@ -489,6 +450,22 @@ bool lose_stat(stat_type which_stat, unsigned char stat_loss,
     return lose_stat(which_stat, stat_loss, force, verb + " " + name, true);
 }
 
+static std::string _stat_name(stat_type stat)
+{
+    switch (stat)
+    {
+    case STAT_STR:
+        return ("strength");
+    case STAT_INT:
+        return ("intelligence");
+    case STAT_DEX:
+        return ("dexterity");
+    default:
+        ASSERT(false);
+        return ("BUG");
+    }
+}
+
 // Restore the stat in which_stat by the amount in stat_gain, displaying
 // a message if suppress_msg is false, and doing so in the recovery
 // channel if recovery is true.  If stat_gain is 0, restore the stat
@@ -496,12 +473,11 @@ bool lose_stat(stat_type which_stat, unsigned char stat_loss,
 bool restore_stat(stat_type which_stat, unsigned char stat_gain,
                   bool suppress_msg, bool recovery)
 {
-    bool stat_restored = false;
-
     // A bit hackish, but cut me some slack, man! --
     // Besides, a little recursion never hurt anyone {dlb}:
     if (which_stat == STAT_ALL)
     {
+        bool stat_restored = false;
         for (int i = 0; i < NUM_STATS; ++i)
             if (restore_stat(static_cast<stat_type>(i), stat_gain, suppress_msg))
                 stat_restored = true;
@@ -509,45 +485,27 @@ bool restore_stat(stat_type which_stat, unsigned char stat_gain,
         return (stat_restored);
     }
 
-    std::string msg = "You feel your ";
-
     if (which_stat == STAT_RANDOM)
         which_stat = static_cast<stat_type>(random2(NUM_STATS));
 
-    switch (which_stat)
-    {
-    case STAT_STR:
-        msg += "strength";
-        break;
-    case STAT_INT:
-        msg += "intelligence";
-        break;
-    case STAT_DEX:
-        msg += "dexterity";
-        break;
-    default:
-        ASSERT(false);
-    }
-
     if (you.stat_loss[which_stat] > 0)
     {
-        msg += " returning.";
         if (!suppress_msg)
-            mpr(msg.c_str(), (recovery) ? MSGCH_RECOVERY : MSGCH_PLAIN);
+        {
+            mprf(recovery ? MSGCH_RECOVERY : MSGCH_PLAIN,
+                 "You feel your %s returning.",
+                 _stat_name(which_stat).c_str());
+        }
 
         if (stat_gain == 0 || stat_gain > you.stat_loss[which_stat])
             stat_gain = you.stat_loss[which_stat];
 
-        if (stat_gain != 0)
-        {
-            you.stat_loss[which_stat] -= stat_gain;
-            stat_restored = true;
-
-            _handle_stat_change(which_stat);
-        }
+        you.stat_loss[which_stat] -= stat_gain;
+        _handle_stat_change(which_stat);
+        return (true);
     }
-
-    return (stat_restored);
+    else
+        return (false);
 }
 
 static void _normalize_stat(stat_type stat)
@@ -557,9 +515,15 @@ static void _normalize_stat(stat_type stat)
     you.max_stats[stat] = std::min<char>(you.max_stats[stat], 72);
 }
 
-static void _handle_stat_change(stat_type stat)
+static void _handle_stat_change(stat_type stat, const char* cause, bool see_source)
 {
     ASSERT(stat >= 0 && stat < NUM_STATS);
+
+    if (you.stat(stat) < 1)
+    {
+        const kill_method_type kill_type = statloss_killtype[stat];
+        ouch(INSTANT_DEATH, NON_MONSTER, kill_type, cause, see_source);
+    }
 
     you.redraw_stats[stat] = true;
     _normalize_stat(stat);
@@ -583,8 +547,8 @@ static void _handle_stat_change(stat_type stat)
     }
 }
 
-static void _handle_stat_change()
+static void _handle_stat_change(const char* aux, bool see_source)
 {
     for (int i = 0; i < NUM_STATS; ++i)
-        _handle_stat_change(static_cast<stat_type>(i));
+        _handle_stat_change(static_cast<stat_type>(i), aux, see_source);
 }
