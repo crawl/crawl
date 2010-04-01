@@ -5,15 +5,15 @@
 #include "uiwrapper-sdl.h"
 #endif
 
-UIWrapper *wrapper = NULL;
+WindowManager *wm = NULL;
 
-void UIWrapper::create()
+void WindowManager::create()
 {
-    if (wrapper)
+    if (wm)
         return;
 
 #ifdef USE_SDL
-    wrapper = (UIWrapper *) new SDLWrapper();
+    wm = (WindowManager *) new SDLWrapper();
 #endif
 }
 

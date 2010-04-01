@@ -8,7 +8,7 @@
 struct SDL_Surface;
 struct SDL_VideoInfo;
 
-class SDLWrapper : public UIWrapper
+class SDLWrapper : public WindowManager
 {
 public:
     SDLWrapper();

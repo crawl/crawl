@@ -85,10 +85,10 @@ typedef unsigned int (*ui_timer_callback)(unsigned int interval);
 
 class FTFont;
 
-class UIWrapper {
+class WindowManager {
 public:
     // To silence pre 4.3 g++ compiler warnings
-    virtual ~UIWrapper() {};
+    virtual ~WindowManager() {};
 
     // Static Alloc/deallocators
     static void create();
@@ -131,7 +131,7 @@ public:
 };
 
 // Main interface for UI functions
-extern UIWrapper *wrapper;
+extern WindowManager *wm;
 
 #endif //USE_TILE
 #endif //include guard
