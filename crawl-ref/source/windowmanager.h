@@ -83,8 +83,6 @@ typedef struct{
 // custom timer callback function
 typedef unsigned int (*wm_timer_callback)(unsigned int interval);
 
-class FTFont;
-
 class WindowManager {
 public:
     // To silence pre 4.3 g++ compiler warnings
