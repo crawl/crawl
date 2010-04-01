@@ -1932,18 +1932,6 @@ static void _focus_card(int power, deck_rarity_type rarity)
         worst_stat = random2(3);
     }
 
-    you.max_stats[best_stat]++;
-    you.max_stats[worst_stat]--;
-    you.stats[best_stat]++;
-    you.stats[worst_stat]--;
-
-    // Did focusing kill the player?
-    const kill_method_type kill_types[3] = {
-        KILLED_BY_WEAKNESS,
-        KILLED_BY_STUPIDITY,
-        KILLED_BY_CLUMSINESS
-    };
-
     std::string cause = "the Focus card";
 
     if (crawl_state.is_god_acting())
@@ -1960,17 +1948,10 @@ static void _focus_card(int power, deck_rarity_type rarity)
         }
     }
 
-    for (int i = 0; i < 3; ++i)
-        if (you.max_stats[i] < 1 || you.stats[i] < 1)
-        {
-            ouch(INSTANT_DEATH, NON_MONSTER, kill_types[i], cause.c_str(),
-                 true);
-        }
-
-    // The player survived! Yay!
-    you.redraw_stats.init(true);
-
-    burden_change();
+    modify_stat(static_cast<stat_type>(best_stat), 1,
+                true, cause.c_str(), true);
+    modify_stat(static_cast<stat_type>(worst_stat), -1,
+                true, cause.c_str(), true);
 }
 
 static void _shuffle_card(int power, deck_rarity_type rarity)
@@ -1986,17 +1967,7 @@ static void _shuffle_card(int power, deck_rarity_type rarity)
     FixedVector<char, NUM_STATS> new_base;
     FixedVector<char, NUM_STATS> new_max;
     for (int i = 0; i < NUM_STATS; ++i)
-    {
-        new_base[perm[i]] = you.stats[i] - modifiers[i] + modifiers[perm[i]];
         new_max[perm[i]]  = you.max_stats[i] - modifiers[i] + modifiers[perm[i]];
-    }
-
-    // Did the shuffling kill the player?
-    kill_method_type kill_types[NUM_STATS] = {
-        KILLED_BY_WEAKNESS,
-        KILLED_BY_STUPIDITY,
-        KILLED_BY_CLUMSINESS
-    };
 
     std::string cause = "the Shuffle card";
 
@@ -2015,20 +1986,11 @@ static void _shuffle_card(int power, deck_rarity_type rarity)
     }
 
     for (int i = 0; i < NUM_STATS; ++i)
-        if (new_base[i] < 1 || new_max[i] < 1)
-        {
-            ouch(INSTANT_DEATH, NON_MONSTER, kill_types[i], cause.c_str(),
-                 true);
-        }
-
-    // The player survived!
-
-    you.stats = new_base;
-    you.max_stats = new_max;
-    you.redraw_stats.init(true);
-    you.redraw_evasion      = true;
-
-    burden_change();
+    {
+        modify_stat(static_cast<stat_type>(i),
+                    new_max[i] - you.max_stats[i],
+                    true, cause.c_str(), true);
+    }
 }
 
 static void _experience_card(int power, deck_rarity_type rarity)
