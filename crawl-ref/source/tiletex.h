@@ -30,15 +30,15 @@ struct tile_def
     int ymax;
 };
 
+// Arbitrary post-load texture processing
+typedef bool(*tex_proc_func)(unsigned char *pixels, unsigned int w,
+    unsigned int h);
+
 class GenericTexture
 {
 public:
     GenericTexture();
     virtual ~GenericTexture();
-
-    // Arbitrary post-load texture processing
-    typedef bool(*tex_proc_func)(unsigned char *pixels, unsigned int w,
-        unsigned int h);
 
     bool load_texture(const char *filename, MipMapOptions mip_opt,
                       tex_proc_func proc = NULL,

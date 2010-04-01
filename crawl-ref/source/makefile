@@ -248,10 +248,10 @@ EXTRA_OBJECTS += icon.o
 endif
 
 ifdef TILES
-OBJECTS += libgui.o tile2.o tilereg.o tilepick.o tilesdl.o tilefont.o tiletex.o tilemcache.o tilebuf.o uiwrapper.o glwrapper.o cgcontext.o
+OBJECTS += libgui.o tile2.o tilereg.o tilepick.o tilesdl.o tilefont.o tiletex.o tilemcache.o tilebuf.o uiwrapper.o glwrapper.o
 
 ifdef SDL
-OBJECTS += uiwrapper-sdl.o cgcontext-sdl.o
+OBJECTS += uiwrapper-sdl.o
 endif
 
 ifdef GL

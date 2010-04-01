@@ -6,12 +6,12 @@
 
 #ifdef USE_TILE
 #include "uiwrapper.h"
-#include "cgcontext.h"
 #include "glwrapper.h"
 
 #ifdef USE_SDL
 #include "uiwrapper-sdl.h"
 #include <SDL/SDL.h>
+#include <SDL_image.h>
 
 static unsigned char _get_modifiers(SDL_keysym &keysym)
 {
@@ -293,17 +293,14 @@ void SDLWrapper::set_window_title(const char *title)
 
 bool SDLWrapper::set_window_icon(const char* icon_name)
 {
-    // TODO: Figure out how to move this IMG_Load command to cgcontext
-    // so that we're not dependant on SDL_image here
-    GraphicsContext *con = GraphicsContext::create();
-    int ret = con->load_image(datafile_path(icon_name, true, true).c_str());
-    if (ret)
+    SDL_Surface *surf =load_image(datafile_path(icon_name, true, true).c_str());
+    if (!surf)
     {
         printf("Failed to load icon: %s\n", SDL_GetError());
         return (false);
     }
-    SDL_WM_SetIcon((SDL_Surface *)con->native_surface(), NULL);
-    delete con;
+    SDL_WM_SetIcon(surf, NULL);
+    SDL_FreeSurface(surf);
     return (true);
 }
 
@@ -509,6 +506,186 @@ unsigned int SDLWrapper::get_event_count(ui_event_type type)
     return (count);
 }
 
+bool SDLWrapper::load_texture(  GenericTexture *tex, const char *filename,
+                                MipMapOptions mip_opt, unsigned int &orig_width,
+                                unsigned int &orig_height, tex_proc_func proc,
+                                bool force_power_of_two)
+{
+    char acBuffer[512];
+
+    std::string tex_path = datafile_path(filename);
+
+    if (tex_path.c_str()[0] == 0)
+    {
+        fprintf(stderr, "Couldn't find texture '%s'.\n", filename);
+        return (false);
+    }
+
+    SDL_Surface *img = load_image(tex_path.c_str());
+
+    if (!img)
+    {
+        fprintf(stderr, "Couldn't load texture '%s'.\n", tex_path.c_str());
+        return (false);
+    }
+
+    unsigned int bpp = img->format->BytesPerPixel;
+    glmanager->pixelstore_unpack_alignment(bpp);
+
+    // Determine texture format
+    unsigned char *pixels = (unsigned char*)img->pixels;
+
+    int new_width;
+    int new_height;
+    if (force_power_of_two)
+    {
+        new_width = 1;
+        while (new_width < img->w)
+            new_width *= 2;
+
+        new_height = 1;
+        while (new_height < img->h)
+            new_height *= 2;
+    }
+    else
+    {
+        new_width = img->w;
+        new_height = img->h;
+    }
+
+    //GLenum texture_format;
+    if (bpp == 4)
+    {
+        // Even if the size is the same, still go through
+        // SDL_GetRGBA to put the image in the right format.
+        SDL_LockSurface(img);
+        pixels = new unsigned char[4 * new_width * new_height];
+        memset(pixels, 0, 4 * new_width * new_height);
+
+        int dest = 0;
+        for (int y = 0; y < img->h; y++)
+        {
+            for (int x = 0; x < img->w; x++)
+            {
+                unsigned char *p = ((unsigned char*)img->pixels
+                                  + y * img->pitch + x * bpp);
+                unsigned int pixel = *(unsigned int*)p;
+                SDL_GetRGBA(pixel, img->format, &pixels[dest],
+                            &pixels[dest+1], &pixels[dest+2],
+                            &pixels[dest+3]);
+                dest += 4;
+            }
+            dest += 4 * (new_width - img->w);
+        }
+
+        SDL_UnlockSurface(img);
+        //texture_format = GL_RGBA;
+    }
+    else if (bpp == 3)
+    {
+        if (new_width != img->w || new_height != img->h)
+        {
+            SDL_LockSurface(img);
+            pixels = new unsigned char[4 * new_width * new_height];
+            memset(pixels, 0, 4 * new_width * new_height);
+
+            int dest = 0;
+            for (int y = 0; y < img->h; y++)
+            {
+                for (int x = 0; x < img->w; x++)
+                {
+                    unsigned char *p = ((unsigned char*)img->pixels
+                                       + y * img->pitch + x * bpp);
+                    unsigned int pixel;
+                    if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
+                        pixel = p[0] << 16 | p[1] << 8 | p[2];
+                    else
+                        pixel = p[0] | p[1] << 8 | p[2];
+                    SDL_GetRGBA(pixel, img->format, &pixels[dest],
+                                &pixels[dest+1], &pixels[dest+2],
+                                &pixels[dest+3]);
+                    dest += 4;
+                }
+                dest += 4 * (new_width - img->w);
+            }
+
+            SDL_UnlockSurface(img);
+        }
+        //texture_format = GL_RGBA;
+    }
+    else if (bpp == 1)
+    {
+        // need to depalettize
+        SDL_LockSurface(img);
+
+        pixels = new unsigned char[4 * new_width * new_height];
+
+        SDL_Palette* pal = img->format->palette;
+        ASSERT(pal);
+        ASSERT(pal->colors);
+
+        int src = 0;
+        int dest = 0;
+        for (int y = 0; y < img->h; y++)
+        {
+            int x;
+            for (x = 0; x < img->w; x++)
+            {
+                unsigned int index = ((unsigned char*)img->pixels)[src++];
+                pixels[dest*4    ] = pal->colors[index].r;
+                pixels[dest*4 + 1] = pal->colors[index].g;
+                pixels[dest*4 + 2] = pal->colors[index].b;
+                pixels[dest*4 + 3] = (index != img->format->colorkey ? 255 : 0);
+                dest++;
+            }
+            while (x++ < new_width)
+            {
+                // Extend to the right with transparent pixels
+                pixels[dest*4    ] = 0;
+                pixels[dest*4 + 1] = 0;
+                pixels[dest*4 + 2] = 0;
+                pixels[dest*4 + 3] = 0;
+                dest++;
+            }
+        }
+        while (dest < new_width * new_height)
+        {
+            // Extend down with transparent pixels
+            pixels[dest*4    ] = 0;
+            pixels[dest*4 + 1] = 0;
+            pixels[dest*4 + 2] = 0;
+            pixels[dest*4 + 3] = 0;
+            dest++;
+        }
+
+        SDL_UnlockSurface(img);
+
+        bpp = 4;
+        //texture_format = GL_RGBA;
+    }
+    else
+    {
+        printf("Warning: unsupported format, bpp = %d for '%s'\n",
+               bpp, acBuffer);
+        return (false);
+    }
+
+    bool success = false;
+    if (!proc || proc(pixels, new_width, new_height))
+        success |= tex->load_texture(pixels, new_width, new_height, mip_opt);
+
+    // If conversion has occurred, delete converted data.
+    if (pixels != img->pixels)
+        delete[] pixels;
+
+    orig_width  = img->w;
+    orig_height = img->h;
+
+    SDL_FreeSurface(img);
+
+    return (success);
+}
+
 void SDLWrapper::shutdown()
 {
     SDL_Quit();
@@ -521,6 +698,27 @@ int SDLWrapper::byte_order()
     if ( SDL_BYTEORDER == SDL_BIG_ENDIAN )
         return (UI_BIG_ENDIAN);
     return (UI_LIL_ENDIAN);
+}
+
+SDL_Surface *SDLWrapper::load_image( const char *file ) const
+{
+    SDL_Surface *surf = NULL;
+    FILE *imgfile = fopen(file, "rb");
+    if (imgfile)
+    {
+        SDL_RWops *rw = SDL_RWFromFP(imgfile, 0);
+        if (rw)
+        {
+            surf = IMG_Load_RW(rw, 0);
+            SDL_RWclose(rw);
+        }
+        fclose(imgfile);
+    }
+
+    if (!surf)
+        return (NULL);
+
+    return (surf);
 }
 
 #endif // USE_SDL

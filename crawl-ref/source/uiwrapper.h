@@ -6,6 +6,8 @@
 #ifdef USE_TILE
 #include "tilereg.h"
 #include "tilesdl.h"
+#include "tiletex.h" // For tex_proc_func
+#include "glwrapper.h"  // for MipMapOptions enum
 
 typedef enum {
     UI_BIG_ENDIAN,
@@ -118,6 +120,14 @@ public:
     virtual void swap_buffers() = 0;
     virtual int screen_width() = 0;
     virtual int screen_height() = 0;
+
+    // Texture loading
+    virtual bool load_texture(  GenericTexture *tex, const char *filename,
+                                MipMapOptions mip_opt, unsigned int &orig_width,
+                                unsigned int &orig_height,
+                                tex_proc_func proc = NULL,
+                                bool force_power_of_two = true) = 0;
+
 };
 
 // Main interface for UI functions

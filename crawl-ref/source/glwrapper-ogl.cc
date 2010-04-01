@@ -174,6 +174,7 @@ void OGLStateManager::load_texture(unsigned char *pixels, unsigned int width,
     const unsigned int bpp = 4;
     const GLenum texture_format = GL_RGBA;
     const GLenum format = GL_UNSIGNED_BYTE;
+    // Also assume that the texture is already bound using bind_texture
 
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
