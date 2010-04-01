@@ -177,7 +177,6 @@ protected:
     bool m_overlay;
 };
 
-class FTFont;
 /**
  * Expanded CRTRegion to support highlightable and clickable entries - felirx
  * The user of this region will have total control over the positioning of
