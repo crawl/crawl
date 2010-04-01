@@ -1,121 +1,125 @@
 %%%%
 Air Elementalist
 
-Start with book of Air and the Shock spell.
+Air Elementalists have learned the Shock spell. Later on, their book of Air provides them with flexibility to survive.
 %%%%
 Arcane Marksman
 
-Have some missiles with them and the spells to brand them later on.
+Arcane Marksmen carry some missiles as well as a book from which they will learn spells to brand those missiles later on.
 %%%%
 Artificer
 
-Start with two wands and are competent at using such devices.
+Artificeers start with two magical devices and are competent at using such devices.
 %%%%
 Assassin
 
-Are ready to sneak and stab; complete with dagger, cloak and curare.
+Assassins are all about stealth, ready to stab unaware opponents. Not just dagger and cloak, they carry nasty curare needles for their blowgun.
 %%%%
 Berserker
 
-Have an axe and trust in Trog, the magic-hating battle god.
+Berserkers believe in Trog, the magic-hating god of frenzy.
 %%%%
 Chaos Knight
 
-A follower of one of the three chaos gods: Xom, Makhleb, or Lugonu.
+Chaos Knights follow one of the three chaos gods: Xom, Makhleb, or Lugonu.
 %%%%
 Conjurer
 
-Start with one of two spellbooks centered around damaging spells.
+Conjurers confront problems with damaging spells. They can choose whether they want their destruction to be fire or ice flavoured.
 %%%%
 Crusader
 
-Start with a short sword and the book of War Chants.
+Crusaders are melee fighters who can boost themselves in battle with spells from the book of War Chants.
 %%%%
 Death Knight
 
-Either proficient in Necromancy or a follower of Yredelemnul.
+Death Knights are either proficient in Necromancy or follow the evil god Yredelemnul.
 %%%%
 Earth Elementalist
 
-Start with the book of Geomancy and some stones for the Sandblast spell.
+Earth Elementalists know the Sandblast spell, and carry some stone to increase the spell's power. More earthen spells are in their book of Geomancy.
 %%%%
 Enchanter
 
-Get a sword, good darts and the book of Charms.
+Enchanters use spells to boost themselves in battle, or incapatite others. They also start with good darts.
 %%%%
 Fighter
 
-Chooses a weapon and gets scale mail and shield.
+Fighters come with armour and shield, as well as a weapon of their choice. They have more health than any other background.
 %%%%
 Fire Elementalist
 
-Start with the book of Flames and know the Flame Tongue spell.
+Fire Elementalists start with the book of Flames and know the Flame Tongue spell. The other spells in their book focus on destruction as well.
 %%%%
 Gladiator
 
-Have leather armour, shield, helmet, nets and a weapon of their choice.
+Gladiators are ready for the arena with light armour, shield, nets and a weapon of their choice.
 %%%%
 Healer
 
-A follower of Elyvilon, ready to pacify the beasts and brutes.
+Healers are followers of Elyvilon, ready to heal themselves and others. The latter will possibly pacify the beasts and brutes, thereby gaining experience.
 %%%%
 Hunter
 
-Are able to attack at range, the tool depending on species.
+Hunters are able to attack at range, without relying on pesky magic. The hunter's tool depends on species. 
 %%%%
 Ice Elementalist
 
-Start with the book of Frost and the Freeze spell.
+Ice Elementalists start with the book of Frost and the Freeze spell. The book's other spells are quite versatile.
 %%%%
 Monk
 
-Start with nothing but a robe and the ability to fight unarmed.
+Monks are ready to take on the dungeon wearing just a robe and using their body.
 %%%%
 Necromancer
 
-A wizard specializing in the practice of death magic.
+Necromancers are wizards specializing in the practice of death magic. They start out with the Pain spell.
 %%%%
 Paladin
 
-A follower of the Shining One.
+Paladins are righteous warriors joining the Shining One's crusade against evil.
 %%%%
 Priest
 
-A follower of Zin, Yredelemnul, or Beogh.
+Priests are followers of Zin, Yredelemnul, or the orc god Beogh.
 %%%%
 Reaver
 
-Get to choose their weapon and a book of Conjurations.
+Reavers are versatile, using destructive magics alongside melee fighting.
 %%%%
 Stalker
 
-Have robe, cloak, a good dagger, the book of Stalking and the Sting spell.
+Stalkers are ready to stab with robe, cloak and a good weapon. They augment stealth with magic and start with the Sting spell to poison enemies.
 %%%%
 Summoner
 
-Start with the book of Callings and are able to Summon Small Mammals.
+Summoners start with the book of Callings and are able to Summon Small Mammals from the start.
 %%%%
 Thief
 
-Have a short sword, robe, cloak and trained a multitude of skills.
+Thieves start with robe, cloak, weapon and have trained a multitude of skills.
 %%%%
 Transmuter
 
-Have arrows and potions, to be used for spells from the book of Changes.
+Transmuters are specialists in changes of form. They start with arrows and potions to be use with some of their spells.
 %%%%
 Venom Mage
 
-Start with the Young Poisoner's Handbook and the Sting spell.
+Venom Mages start with the Young Poisoner's Handbook and the Sting spell.
 %%%%
 Wanderer
 
-Start with random equipment and skills.
+Wanderers start with random equipment and skills.
 %%%%
 Warper
 
-Choose a weapon and get a Blinking scroll and the Spatial Translocations book.
+Warpers start with a weapon of their choice and a Blinking scroll. They can learn spells from the book of Spatial Translocations.
 %%%%
 Wizard
 
+<<<<<<< HEAD
 Get to choose which book of Minor Magic they start with.
+=======
+Wizards get to choose which book of Minor Magic they start with. They have higher magical reserves than any other background.
+>>>>>>> Another stab at short descriptions for the backgrounds.
 %%%%
