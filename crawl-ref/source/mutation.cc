@@ -1029,7 +1029,7 @@ mutation_def mutation_defs[] = {
     { MUT_SLIMY_GREEN_SCALES,            2,  3, false, true,
       {"You are partially covered in colorless scales (AC +1).",
        "You are mostly covered in slimy green scales (AC +2, EV -1).",
-       "You are completely covered in slimy green scales (AC +3, EV -2, rP)."},
+       "You are completely covered in slimy green scales (AC +3, EV -2, rPois)."},
 
       {"Colorless scales grow over part of your body.",
        "Your colorless scales turn green and spread over more of your body.",
