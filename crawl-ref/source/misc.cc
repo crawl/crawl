@@ -1462,7 +1462,7 @@ bool go_berserk(bool intentional, bool potion)
     deflate_hp(you.hp_max, false);
 
     if (!you.duration[DUR_MIGHT])
-        modify_stat(STAT_STR, 5, true, "going berserk");
+        notify_stat_change(STAT_STR, 5, true, "going berserk");
 
     you.increase_duration(DUR_MIGHT, berserk_duration);
     // doubling the duration here since haste_player already cuts input

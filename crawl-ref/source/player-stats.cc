@@ -119,8 +119,8 @@ void jiyva_stat_action()
         simple_god_message("'s power touches on your attributes.");
         const std::string cause = "the 'helpfulness' of "
                                   + god_name(you.religion);
-        modify_stat(static_cast<stat_type>(stat_up_choice), 1, true, cause);
-        modify_stat(static_cast<stat_type>(stat_down_choice), -1, true, cause);
+        modify_stat(static_cast<stat_type>(stat_up_choice), 1, true, cause.c_str());
+        modify_stat(static_cast<stat_type>(stat_down_choice), -1, true, cause.c_str());
     }
 }
 
@@ -177,34 +177,34 @@ void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
     _handle_stat_change(which_stat, cause, see_source);
 }
 
-void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
-                 const std::string& cause, bool see_source)
+void notify_stat_change(stat_type which_stat, char amount, bool suppress_msg,
+                        const char *cause, bool see_source)
 {
-    modify_stat(which_stat, amount, suppress_msg, cause.c_str(), see_source);
-}
+    ASSERT(!crawl_state.game_is_arena());
 
-void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
-                 const monsters* cause)
-{
-    if (cause == NULL || invalid_monster(cause))
-    {
-        modify_stat(which_stat, amount, suppress_msg, NULL, true);
+    // sanity - is non-zero amount?
+    if (amount == 0)
         return;
+
+    // Stop delays if a stat drops.
+    if (amount < 0)
+        interrupt_activity(AI_STAT_CHANGE);
+
+    if (which_stat == STAT_RANDOM)
+        which_stat = static_cast<stat_type>(random2(NUM_STATS));
+
+    if (!suppress_msg)
+    {
+        mprf((amount > 0) ? MSGCH_INTRINSIC_GAIN : MSGCH_WARN,
+             "You feel %s.",
+             _stat_desc(which_stat, (amount > 0) ? SD_INCREASE : SD_DECREASE));
     }
 
-    bool        vis  = you.can_see(cause);
-    std::string name = cause->name(DESC_NOCAP_A, true);
-
-    if (cause->has_ench(ENCH_SHAPESHIFTER))
-        name += " (shapeshifter)";
-    else if (cause->has_ench(ENCH_GLOWING_SHAPESHIFTER))
-        name += " (glowing shapeshifter)";
-
-    modify_stat(which_stat, amount, suppress_msg, name, vis);
+    _handle_stat_change(which_stat, cause, see_source);
 }
 
-void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
-                 const item_def &cause, bool removed)
+void notify_stat_change(stat_type which_stat, char amount, bool suppress_msg,
+                        const item_def &cause, bool removed)
 {
     std::string name = cause.name(DESC_NOCAP_THE, false, true, false, false,
                                   ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES);
@@ -235,8 +235,13 @@ void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
     default:          verb = "using";
     }
 
-    modify_stat(which_stat, amount, suppress_msg,
-                verb + " " + name, true);
+    notify_stat_change(which_stat, amount, suppress_msg,
+                       (verb + " " + name).c_str(), true);
+}
+
+void notify_stat_change(const char* cause)
+{
+    _handle_stat_change(cause);
 }
 
 static int _strength_modifier()
