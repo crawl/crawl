@@ -117,9 +117,5 @@ Warpers start with a weapon of their choice and a Blinking scroll. They can lear
 %%%%
 Wizard
 
-<<<<<<< HEAD
-Get to choose which book of Minor Magic they start with.
-=======
 Wizards get to choose which book of Minor Magic they start with. They have higher magical reserves than any other background.
->>>>>>> Another stab at short descriptions for the backgrounds.
 %%%%
