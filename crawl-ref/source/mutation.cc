@@ -185,7 +185,7 @@ mutation_def mutation_defs[] = {
 
       "heat resistance"
     },
-    { MUT_COLD_RESISTANCE,            50,  3, false, false,
+    { MUT_COLD_RESISTANCE,            4,  3, false, false,
       {"Your flesh is cold resistant.",
        "Your flesh is very cold resistant.",
        "Your flesh is almost immune to the effects of cold."},
