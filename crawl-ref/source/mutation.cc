@@ -1939,6 +1939,37 @@ static bool _reautomap_callback()
     return true;
 }
 
+static const char* _stat_mut_desc(mutation_type mut, bool gain)
+{
+    stat_type stat;
+    bool positive = gain;
+    switch (mut)
+    {
+    case MUT_WEAK:
+        positive = !positive;
+    case MUT_STRONG:
+        stat = STAT_STR;
+        break;
+
+    case MUT_DOPEY:
+        positive = !positive;
+    case MUT_CLEVER:
+        stat = STAT_INT;
+        break;
+
+    case MUT_CLUMSY:
+        positive = !positive;
+    case MUT_AGILE:
+        stat = STAT_DEX;
+        break;
+
+    default:
+        ASSERT(false);
+        break;
+    }
+    return (stat_desc(stat, positive ? SD_INCREASE : SD_DECREASE));
+}
+
 bool mutate(mutation_type which_mutation, bool failMsg,
             bool force_mutation, bool god_gift, bool stat_gain_potion,
             bool demonspawn, bool non_fatal)
@@ -2127,23 +2158,12 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     const unsigned int old_talents = your_talents(false).size();
 
     bool gain_msg = true;
-    bool stat_msg = false;
-
-    // Save original stats.
-    const stat_type stats[] = {STAT_STR, STAT_DEX,
-                               STAT_INT};
-    int modifiers[3];
-
-    for (int i = 0; i < 3; ++i)
-        modifiers[i] = stat_modifier(stats[i]);
-
-    bool modified_eq = false;
 
     switch (mutat)
     {
     case MUT_STRONG: case MUT_AGILE:  case MUT_CLEVER:
     case MUT_WEAK:   case MUT_CLUMSY: case MUT_DOPEY:
-        stat_msg = true;
+        mprf(MSGCH_MUTATION, "You feel %s.", _stat_mut_desc(mutat, true));
         gain_msg = false;
         break;
 
@@ -2156,10 +2176,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         // Hooves and talons force boots off at 3,
         // check for level 2 or higher here.
         if (you.mutation[mutat] >= 2 && !you.melded[EQ_BOOTS])
-        {
             remove_one_equip(EQ_BOOTS, false, true);
-            modified_eq = true;
-        }
         break;
 
     case MUT_CLAWS:
@@ -2170,10 +2187,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         // mutation yet, so we have to check for level 2 or higher claws
         // here.
         if (you.mutation[mutat] >= 2 && !you.melded[EQ_GLOVES])
-        {
             remove_one_equip(EQ_GLOVES, false, true);
-            modified_eq = true;
-        }
         break;
 
     case MUT_ANTENNAE:
@@ -2188,7 +2202,6 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             && !you.melded[EQ_HELMET])
         {
             remove_one_equip(EQ_HELMET, false, true);
-            modified_eq = true;
         }
         break;
 
@@ -2251,21 +2264,12 @@ static bool _delete_single_mutation_level(mutation_type mutat)
     const mutation_def& mdef = get_mutation_def(mutat);
 
     bool lose_msg = true;
-    bool stat_msg = false;
-
-    // Save original stats.
-    const stat_type stats[] = {STAT_STR, STAT_DEX,
-                               STAT_INT};
-    int modifiers[3];
-
-    for (int i = 0; i < 3; ++i)
-        modifiers[i] = stat_modifier(stats[i]);
 
     switch (mutat)
     {
     case MUT_STRONG: case MUT_AGILE:  case MUT_CLEVER:
     case MUT_WEAK:   case MUT_CLUMSY: case MUT_DOPEY:
-        stat_msg = true;
+        mprf(MSGCH_MUTATION, "You feel %s.", _stat_mut_desc(mutat, false));
         lose_msg = false;
         break;
 

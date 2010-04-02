@@ -668,9 +668,9 @@ void wizard_set_stats()
 
     sscanf(buf, "%d %d %d", &sstr, &sint, &sdex);
 
-    you.max_stats[STAT_STR] = debug_cap_stat(sstr);
-    you.max_stats[STAT_INT] = debug_cap_stat(sint);
-    you.max_stats[STAT_DEX] = debug_cap_stat(sdex);
+    you.base_stats[STAT_STR] = debug_cap_stat(sstr);
+    you.base_stats[STAT_INT] = debug_cap_stat(sint);
+    you.base_stats[STAT_DEX] = debug_cap_stat(sdex);
     you.stat_loss.init(0);
     you.redraw_stats.init(true);
     you.redraw_evasion = true;

@@ -81,7 +81,7 @@ public:
   int base_magic_points2;     // base MPs from levels and potions of magic
 
   FixedVector<char, NUM_STATS> stat_loss;
-  FixedVector<char, NUM_STATS> max_stats;
+  FixedVector<char, NUM_STATS> base_stats;
   stat_type last_chosen;
 
   char hunger_state;
@@ -326,6 +326,7 @@ public:
     char strength() const;
     char intel() const;
     char dex() const;
+    char max_stat(stat_type stat) const;
     char max_strength() const;
     char max_intel() const;
     char max_dex() const;

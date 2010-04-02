@@ -1912,24 +1912,25 @@ static void _potion_card(int power, deck_rarity_type rarity)
 
 static void _focus_card(int power, deck_rarity_type rarity)
 {
-    int best_stat = 0;
-    int worst_stat = 0;
+    stat_type best_stat = STAT_STR;
+    stat_type worst_stat = STAT_STR;
 
     for (int i = 1; i < 3; ++i)
     {
-        const int best_diff = you.max_stats[i] - you.max_stats[best_stat];
+        stat_type s = static_cast<stat_type>(i);
+        const int best_diff = you.max_stat(s) - you.max_stat(best_stat);
         if (best_diff > 0 || best_diff == 0 && coinflip())
-            best_stat = i;
+            best_stat = s;
 
-        const int worst_diff = you.max_stats[i] - you.max_stats[worst_stat];
+        const int worst_diff = you.max_stat(s) - you.max_stat(worst_stat);
         if (worst_diff < 0 || worst_diff == 0 && coinflip())
-            worst_stat = i;
+            worst_stat = s;
     }
 
     while (best_stat == worst_stat)
     {
-        best_stat  = random2(3);
-        worst_stat = random2(3);
+        best_stat  = static_cast<stat_type>(random2(3));
+        worst_stat = static_cast<stat_type>(random2(3));
     }
 
     std::string cause = "the Focus card";
@@ -1948,26 +1949,18 @@ static void _focus_card(int power, deck_rarity_type rarity)
         }
     }
 
-    modify_stat(static_cast<stat_type>(best_stat), 1,
-                true, cause.c_str(), true);
-    modify_stat(static_cast<stat_type>(worst_stat), -1,
-                true, cause.c_str(), true);
+    modify_stat(best_stat, 1, true, cause.c_str(), true);
+    modify_stat(worst_stat, -1, true, cause.c_str(), true);
 }
 
 static void _shuffle_card(int power, deck_rarity_type rarity)
 {
-    FixedVector<char, NUM_STATS> modifiers;
     int perm[NUM_STATS] = { 0, 1, 2 };
-
-    for (int i = 0; i < NUM_STATS; ++i)
-        modifiers[i] = stat_modifier(static_cast<stat_type>(i));
-
     std::random_shuffle(perm, perm + 3);
 
     FixedVector<char, NUM_STATS> new_base;
-    FixedVector<char, NUM_STATS> new_max;
     for (int i = 0; i < NUM_STATS; ++i)
-        new_max[perm[i]]  = you.max_stats[i] - modifiers[i] + modifiers[perm[i]];
+        new_base[perm[i]]  = you.base_stats[i];
 
     std::string cause = "the Shuffle card";
 
@@ -1988,7 +1981,7 @@ static void _shuffle_card(int power, deck_rarity_type rarity)
     for (int i = 0; i < NUM_STATS; ++i)
     {
         modify_stat(static_cast<stat_type>(i),
-                    new_max[i] - you.max_stats[i],
+                    new_base[i] - you.base_stats[i],
                     true, cause.c_str(), true);
     }
 }

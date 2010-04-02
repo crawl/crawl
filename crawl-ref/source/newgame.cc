@@ -475,13 +475,13 @@ static void _unfocus_stats()
     {
         int j = (i + 1) % NUM_STATS;
         int k = (i + 2) % NUM_STATS;
-        if ((needed = MIN_START_STAT - you.max_stats[i]) > 0)
+        if ((needed = MIN_START_STAT - you.base_stats[i]) > 0)
         {
-            if (you.max_stats[j] > you.max_stats[k])
-                you.max_stats[j] -= needed;
+            if (you.base_stats[j] > you.base_stats[k])
+                you.base_stats[j] -= needed;
             else
-                you.max_stats[k] -= needed;
-            you.max_stats[i] = MIN_START_STAT;
+                you.base_stats[k] -= needed;
+            you.base_stats[i] = MIN_START_STAT;
         }
     }
 }
@@ -493,10 +493,10 @@ static void _wanderer_assign_remaining_stats(int points_left)
     {
         // Stats that are already high will be chosen half as often.
         stat_type stat = static_cast<stat_type>(random2(NUM_STATS));
-        if (you.max_stats[stat]> 17 && coinflip())
+        if (you.base_stats[stat] > 17 && coinflip())
             continue;
 
-        you.max_stats[stat]++;
+        you.base_stats[stat]++;
         points_left--;
     }
 }
@@ -1394,9 +1394,9 @@ static void _species_stat_init(species_type which_species)
     case SP_BASE_DRACONIAN:     sb =  9; ib =  6; db =  2;      break;  // 17
     }
 
-    you.max_stats[STAT_STR] = sb + 2;
-    you.max_stats[STAT_INT] = ib + 2;
-    you.max_stats[STAT_DEX] = db + 2;
+    you.base_stats[STAT_STR] = sb + 2;
+    you.base_stats[STAT_INT] = ib + 2;
+    you.base_stats[STAT_DEX] = db + 2;
 }
 
 static void _jobs_stat_init(job_type which_job)
@@ -1456,9 +1456,9 @@ static void _jobs_stat_init(job_type which_job)
     default:                    s =  0; i =  0; d =  0; hp = 10; mp = 0; break;
     }
 
-    you.max_stats[STAT_STR] += s;
-    you.max_stats[STAT_INT] += i;
-    you.max_stats[STAT_DEX] += d;
+    you.base_stats[STAT_STR] += s;
+    you.base_stats[STAT_INT] += i;
+    you.base_stats[STAT_DEX] += d;
 
     // Used for Jiyva's stat swapping if the player has not reached
     // experience level 3.

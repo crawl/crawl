@@ -40,14 +40,13 @@ enum tag_file_type   // file types supported by tag system
 
 // Let CDO updaters know if the syntax changes.
 #define TAG_MAJOR_START     5
-#define TAG_MAJOR_VERSION  19
+#define TAG_MAJOR_VERSION  20
 
 // Minor version will be reset to zero when major version changes.
 enum tag_minor_version
 {
     TAG_MINOR_RESET     = 0, // Minor tags were reset
-    TAG_MINOR_STATLOSS  = 1, // you.stats -> you.stat_loss
-    TAG_MINOR_VERSION   = 1 // Current version.  (Keep equal to max.)
+    TAG_MINOR_VERSION   = 0 // Current version.  (Keep equal to max.)
 };
 
 struct enum_info
