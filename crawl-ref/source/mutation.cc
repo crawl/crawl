@@ -697,7 +697,7 @@ mutation_def mutation_defs[] = {
 
       "hooves"
     },
-    { MUT_ANTENNAE, 5, 3, false, true,
+    { MUT_ANTENNAE,                   5,  3, false,  true,
       {"You have a pair of small antennae on your head.",
        "You have a pair of antennae on your head.",
        "You have a pair of large antennae on your head."},
