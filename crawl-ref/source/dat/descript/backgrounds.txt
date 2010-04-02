@@ -9,7 +9,7 @@ Arcane Marksmen carry some missiles as well as a book from which they will learn
 %%%%
 Artificer
 
-Artificeers start with two magical devices and are competent at using such devices.
+Artificers start with two magical devices and are competent at using such devices.
 %%%%
 Assassin
 
@@ -37,11 +37,11 @@ Death Knights are either proficient in Necromancy or follow the evil god Yredele
 %%%%
 Earth Elementalist
 
-Earth Elementalists know the Sandblast spell, and carry some stone to increase the spell's power. More earthen spells are in their book of Geomancy.
+Earth Elementalists know the Sandblast spell, and carry some stones to increase the spell's power. More earthen spells are in their book of Geomancy.
 %%%%
 Enchanter
 
-Enchanters use spells to boost themselves in battle, or incapatite others. They also start with good darts.
+Enchanters use spells to boost themselves in battle, or incapacitate others. They also start with good darts.
 %%%%
 Fighter
 
@@ -101,7 +101,7 @@ Thieves start with robe, cloak, weapon and have trained a multitude of skills.
 %%%%
 Transmuter
 
-Transmuters are specialists in changes of form. They start with arrows and potions to be use with some of their spells.
+Transmuters are specialists in changes of form. They start with arrows and potions to be used with some of their spells.
 %%%%
 Venom Mage
 
