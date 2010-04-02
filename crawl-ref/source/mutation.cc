@@ -883,7 +883,7 @@ mutation_def mutation_defs[] = {
 
     { MUT_PASSIVE_FREEZE,             0,  1, false, false,
       {"A frigid envelope surrounds you and freezes all who hurt you.", "", ""},
-      {"Your skin feels very cold...", "", ""},
+      {"Your skin feels very cold.", "", ""},
       {"", "", ""},
       "passive freeze",
     },
