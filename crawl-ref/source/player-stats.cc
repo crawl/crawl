@@ -114,17 +114,11 @@ void jiyva_stat_action()
 
     if (stat_up_choice != stat_down_choice)
     {
-        // We have a stat change noticeable to the player at this point.
-        // This could be lethal if the player currently has 1 in a stat
-        // but has a max stat of something higher -- perhaps we should
-        // check for that?
-
-        you.max_stats[stat_up_choice]++;
-        you.max_stats[stat_down_choice]--;
-
         simple_god_message("'s power touches on your attributes.");
-
-        _handle_stat_change();
+        const std::string cause = "the 'helpfulness' of "
+                                  + god_name(you.religion);
+        modify_stat(static_cast<stat_type>(stat_up_choice), 1, true, cause);
+        modify_stat(static_cast<stat_type>(stat_down_choice), -1, true, cause);
     }
 }
 
