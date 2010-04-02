@@ -393,7 +393,7 @@ static void _print_stat(stat_type stat, int x, int y)
     cprintf("%d", you.stat(stat));
 
     if (you.stat_loss[stat] > 0)
-        cprintf(" (%d)  ", you.max_stats[stat]);
+        cprintf(" (%d)  ", you.max_stat(stat));
     else
         cprintf("       ");
 }

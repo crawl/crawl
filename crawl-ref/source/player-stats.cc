@@ -16,7 +16,7 @@
 
 char player::stat(stat_type s) const
 {
-    return (max_stats[s] - stat_loss[s]);
+    return (max_stat(s) - stat_loss[s]);
 }
 
 char player::strength() const
@@ -34,19 +34,26 @@ char player::dex() const
     return (stat(STAT_DEX));
 }
 
+static int _stat_modifier(stat_type stat);
+
+char player::max_stat(stat_type s) const
+{
+    return (std::min(base_stats[s] + _stat_modifier(s), 72));
+}
+
 char player::max_strength() const
 {
-    return (max_stats[STAT_STR]);
+    return (max_stat(STAT_STR));
 }
 
 char player::max_intel() const
 {
-    return (max_stats[STAT_INT]);
+    return (max_stat(STAT_INT));
 }
 
 char player::max_dex() const
 {
-    return (max_stats[STAT_DEX]);
+    return (max_stat(STAT_DEX));
 }
 
 static void _handle_stat_change(stat_type stat, const char *aux = NULL,
@@ -109,7 +116,10 @@ void jiyva_stat_action()
     inc_weight[you.last_chosen] = 2;
 
     for (int x = 0; x < 3; ++x)
-         dec_weight[x] = std::min(10, std::max(0, you.max_stats[x] - 7));
+    {
+         const char m = you.max_stat(static_cast<stat_type>(x));
+         dec_weight[x] = std::min(10, std::max(0, m - 7));
+    }
 
     stat_up_choice = choose_random_weighted(inc_weight, inc_weight + 3);
     stat_down_choice = choose_random_weighted(dec_weight, dec_weight + 3);
@@ -130,21 +140,13 @@ static kill_method_type statloss_killtype[] = {
     KILLED_BY_STUPIDITY
 };
 
-enum stat_desc_type
-{
-    SD_LOSS,
-    SD_DECREASE,
-    SD_INCREASE,
-    NUM_STAT_DESCS
-};
-
 const char* descs[NUM_STATS][NUM_STAT_DESCS] = {
     { "weakened", "weaker", "stronger" },
     { "dopey", "stupid", "clever" },
     { "clumsy", "clumsy", "agile" }
 };
 
-static const char* _stat_desc(stat_type stat, stat_desc_type desc)
+const char* stat_desc(stat_type stat, stat_desc_type desc)
 {
     return (descs[stat][desc]);
 }
@@ -169,10 +171,10 @@ void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
     {
         mprf((amount > 0) ? MSGCH_INTRINSIC_GAIN : MSGCH_WARN,
              "You feel %s.",
-             _stat_desc(which_stat, (amount > 0) ? SD_INCREASE : SD_DECREASE));
+             stat_desc(which_stat, (amount > 0) ? SD_INCREASE : SD_DECREASE));
     }
 
-    you.max_stats[which_stat] += amount;
+    you.base_stats[which_stat] += amount;
 
     _handle_stat_change(which_stat, cause, see_source);
 }
@@ -197,7 +199,7 @@ void notify_stat_change(stat_type which_stat, char amount, bool suppress_msg,
     {
         mprf((amount > 0) ? MSGCH_INTRINSIC_GAIN : MSGCH_WARN,
              "You feel %s.",
-             _stat_desc(which_stat, (amount > 0) ? SD_INCREASE : SD_DECREASE));
+             stat_desc(which_stat, (amount > 0) ? SD_INCREASE : SD_DECREASE));
     }
 
     _handle_stat_change(which_stat, cause, see_source);
@@ -355,7 +357,7 @@ static int _dex_modifier()
     return (result);
 }
 
-int stat_modifier(stat_type stat)
+static int _stat_modifier(stat_type stat)
 {
     switch (stat)
     {
@@ -384,7 +386,7 @@ bool lose_stat(stat_type which_stat, unsigned char stat_loss, bool force,
 
     mprf(stat_loss > 0 ? MSGCH_WARN : MSGCH_PLAIN,
          "You feel %s%s.",
-         _stat_desc(which_stat, SD_LOSS),
+         stat_desc(which_stat, SD_LOSS),
          stat_loss > 0 ? "" : " for a moment");
 
     if (stat_loss > 0)
@@ -515,9 +517,9 @@ bool restore_stat(stat_type which_stat, unsigned char stat_gain,
 
 static void _normalize_stat(stat_type stat)
 {
-    you.stat_loss[stat] = std::max<char>(you.stat_loss[stat], 0);
-    you.stat_loss[stat] = std::min<char>(you.stat_loss[stat], you.max_stats[stat]);
-    you.max_stats[stat] = std::min<char>(you.max_stats[stat], 72);
+    ASSERT(you.stat_loss[stat] >= 0);
+    // XXX: this doesn't prevent effective stats over 72.
+    you.base_stats[stat] = std::min<char>(you.base_stats[stat], 72);
 }
 
 static void _handle_stat_change(stat_type stat, const char* cause, bool see_source)

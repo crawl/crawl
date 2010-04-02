@@ -1,6 +1,16 @@
 #ifndef PLAYER_STATS_H
 #define PLAYER_STATS_H
 
+enum stat_desc_type
+{
+    SD_LOSS,
+    SD_DECREASE,
+    SD_INCREASE,
+    NUM_STAT_DESCS
+};
+
+const char* stat_desc(stat_type stat, stat_desc_type desc);
+
 void attribute_increase();
 
 void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
@@ -11,8 +21,6 @@ void notify_stat_change(stat_type which_stat, char amount, bool suppress_msg,
 void notify_stat_change(stat_type which_stat, char amount, bool suppress_msg,
                         const item_def &cause, bool removed = false);
 void notify_stat_change(const char* cause);
-
-int stat_modifier(stat_type stat);
 
 void jiyva_stat_action();
 

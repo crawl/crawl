@@ -984,6 +984,8 @@ static void tag_construct_you(writer &th)
 
     COMPILE_CHECK(NUM_STATS == 3, c2);
     for (i = 0; i < NUM_STATS; ++i)
+        marshallByte(th, you.base_stats[i]);
+    for (i = 0; i < NUM_STATS; ++i)
         marshallByte(th, you.stat_loss[i]);
 
     marshallByte(th, you.last_chosen);
@@ -997,9 +999,6 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.char_class);
     marshallByte(th, you.experience_level);
     marshallLong(th, you.exp_available);
-
-    for (i = 0; i < NUM_STATS; ++i)
-        marshallByte(th, you.max_stats[i]);
 
     marshallShort(th, you.base_hp);
     marshallShort(th, you.base_hp2);
@@ -1419,6 +1418,8 @@ static void tag_read_you(reader &th, char minorVersion)
     you.max_magic_points          = unmarshallByte(th);
 
     for (i = 0; i < NUM_STATS; ++i)
+        you.base_stats[i] = unmarshallByte(th);
+    for (i = 0; i < NUM_STATS; ++i)
         you.stat_loss[i] = unmarshallByte(th);
 
     you.last_chosen = (stat_type) unmarshallByte(th);
@@ -1433,17 +1434,6 @@ static void tag_read_you(reader &th, char minorVersion)
     you.char_class                = static_cast<job_type>(unmarshallByte(th));
     you.experience_level          = unmarshallByte(th);
     you.exp_available             = unmarshallLong(th);
-
-    for (i = 0; i < NUM_STATS; ++i)
-        you.max_stats[i] = unmarshallByte(th);
-
-    if (minorVersion < TAG_MINOR_STATLOSS)
-    {
-        // The values read into you.stat_loss are actually
-        // the old you.stat.
-        for (i = 0; i < NUM_STATS; ++i)
-            you.stat_loss[i] = you.max_stats[i] - you.stat_loss[i];
-    }
 
     you.base_hp                   = unmarshallShort(th);
     you.base_hp2                  = unmarshallShort(th);
