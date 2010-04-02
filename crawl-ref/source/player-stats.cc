@@ -3,6 +3,7 @@
 #include "player-stats.h"
 
 #include "delay.h"
+#include "godpassive.h"
 #include "macro.h"
 #include "mon-util.h"
 #include "monster.h"
@@ -251,6 +252,8 @@ static int _strength_modifier()
     if (you.duration[DUR_DIVINE_STAMINA])
         result += you.attribute[ATTR_DIVINE_STAMINA];
 
+    result += che_boost(CB_STATS);
+
     // ego items of strength
     result += 3 * count_worn_ego(SPARM_STRENGTH);
 
@@ -290,6 +293,8 @@ static int _int_modifier()
     if (you.duration[DUR_DIVINE_STAMINA])
         result += you.attribute[ATTR_DIVINE_STAMINA];
 
+    result += che_boost(CB_STATS);
+
     // ego items of intelligence
     result += 3 * count_worn_ego(SPARM_INTELLIGENCE);
 
@@ -315,6 +320,8 @@ static int _dex_modifier()
 
     if (you.duration[DUR_DIVINE_STAMINA])
         result += you.attribute[ATTR_DIVINE_STAMINA];
+
+    result += che_boost(CB_STATS);
 
     // ego items of dexterity
     result += 3 * count_worn_ego(SPARM_DEXTERITY);
