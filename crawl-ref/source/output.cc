@@ -379,7 +379,7 @@ short _get_stat_colour(stat_type stat)
     }
 
     // Stat is degenerated.
-    if (you.stat(stat) < you.max_stats[stat])
+    if (you.stat_loss[stat] > 0)
         return (YELLOW);
 
     return (HUD_VALUE_COLOUR);
@@ -392,7 +392,7 @@ static void _print_stat(stat_type stat, int x, int y)
     textcolor(_get_stat_colour(stat));
     cprintf("%d", you.stat(stat));
 
-    if (you.stat(stat) != you.max_stats[stat])
+    if (you.stat_loss[stat] > 0)
         cprintf(" (%d)  ", you.max_stats[stat]);
     else
         cprintf("       ");
