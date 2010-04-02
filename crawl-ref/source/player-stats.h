@@ -4,14 +4,14 @@
 void attribute_increase();
 
 void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
-                 const std::string& cause, bool see_source = true);
-void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
                  const char* cause, bool see_source = true);
-void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
-                 const monsters* cause);
-void modify_stat(stat_type which_stat, char amount, bool suppress_msg,
-                 const item_def &cause, bool removed = false);
     
+void notify_stat_change(stat_type which_stat, char amount, bool suppress_msg,
+                        const char* cause, bool see_source = true);
+void notify_stat_change(stat_type which_stat, char amount, bool suppress_msg,
+                        const item_def &cause, bool removed = false);
+void notify_stat_change(const char* cause);
+
 int stat_modifier(stat_type stat);
 
 void jiyva_stat_action();

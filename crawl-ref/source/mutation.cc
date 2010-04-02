@@ -2216,23 +2216,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
     you.mutation[mutat]++;
 
-    // Don't run this loop if we lost some equipment slots, since
-    // removing armour with stat modifiers makes the value of
-    // new_modifier below different from the previously recorded value,
-    // and the remove_one_equip() call chain already does stat change
-    // from removing items correctly. -cao
-    if (!modified_eq)
-    {
-        for (int i = 0; i < 3; ++i)
-        {
-            const int new_modifier = stat_modifier(stats[i]);
-            if (new_modifier != modifiers[i])
-            {
-                modify_stat(stats[i], new_modifier - modifiers[i],
-                            !stat_msg, "losing a mutation");
-            }
-        }
-    }
+    notify_stat_change("losing a mutation");
 
     if (gain_msg)
         mpr(mdef.gain[you.mutation[mutat]-1], MSGCH_MUTATION);
@@ -2306,16 +2290,7 @@ static bool _delete_single_mutation_level(mutation_type mutat)
     you.redraw_armour_class = true;
 
     you.mutation[mutat]--;
-
-    for (int i = 0; i < 3; ++i)
-    {
-        const int new_modifier = stat_modifier(stats[i]);
-        if (new_modifier != modifiers[i])
-        {
-            modify_stat(stats[i], new_modifier - modifiers[i],
-                        !stat_msg, "losing a mutation");
-        }
-    }
+    notify_stat_change("losing a mutation");
 
     if (lose_msg)
         mpr(mdef.lose[you.mutation[mutat]], MSGCH_MUTATION);

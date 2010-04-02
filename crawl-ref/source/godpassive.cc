@@ -84,9 +84,7 @@ void che_handle_change(che_change_type ct, int diff)
                  god_name(you.religion).c_str(),
                  boostdiff > 0 ? "raises" : "reduces");
             const std::string reason = "Cheibriados " + typestr + " change";
-            modify_stat(STAT_STR, boostdiff, true, reason);
-            modify_stat(STAT_INT, boostdiff, true, reason);
-            modify_stat(STAT_DEX, boostdiff, true, reason);
+            notify_stat_change(reason.c_str());
             break;
         }
         case NUM_BOOSTS:
