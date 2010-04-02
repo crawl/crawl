@@ -131,7 +131,7 @@ static void _list_shop_keys(const std::string &purchasable, bool viewing,
     std::string shop_list = "";
     if (!viewing && you.level_type == LEVEL_DUNGEON)
     {
-        shop_list = "[<w>@</w>] ";
+        shop_list = "[<w>$</w>] ";
         if (num_selected > 0)
             shop_list += "Selected -> shopping list";
         else if (num_in_list > 0)
@@ -261,7 +261,7 @@ static std::string _shop_print_stock( const std::vector<int>& stock,
             textcolor(YELLOW);
 
         if (in_list[i])
-            cprintf("%c @ ", c);
+            cprintf("%c $ ", c);
         else if (selected[i])
             cprintf("%c + ", c);
         else
@@ -599,7 +599,7 @@ static bool _in_a_shop( int shopidx, int &num_in_list )
         }
         else if (key == '?' || key == '*')
             browse_inventory(false);
-        else if (key == '@')
+        else if (key == '$')
         {
             if (viewing || (num_selected == 0 && num_in_list == 0)
                 || you.level_type != LEVEL_DUNGEON)
