@@ -3,6 +3,7 @@
 
 enum stat_desc_type
 {
+    SD_NAME,
     SD_LOSS,
     SD_DECREASE,
     SD_INCREASE,
@@ -37,5 +38,7 @@ bool lose_stat(stat_type which_stat, unsigned char stat_loss,
 
 bool restore_stat(stat_type which_stat, unsigned char stat_gain,
                   bool suppress_msg, bool recovery = false);
+
+void update_stat_zero();
 
 #endif

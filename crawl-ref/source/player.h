@@ -82,6 +82,7 @@ public:
 
   FixedVector<char, NUM_STATS> stat_loss;
   FixedVector<char, NUM_STATS> base_stats;
+  FixedVector<int, NUM_STATS> stat_zero;
   stat_type last_chosen;
 
   char hunger_state;
@@ -322,7 +323,7 @@ public:
 
     void reset_prev_move();
 
-    char stat(stat_type stat) const;
+    char stat(stat_type stat, bool nonneg=true) const;
     char strength() const;
     char intel() const;
     char dex() const;
