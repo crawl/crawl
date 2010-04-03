@@ -1425,7 +1425,7 @@ static std::string _get_artefact_type(const item_def &item,
     case OBJ_ARMOUR:
         return "armour";
     case OBJ_JEWELLERY:
-        // Only in appearance distinguish between amulets and rings.
+        // Distinguish between amulets and rings only in appearance.
         if (!appear)
             return "jewellery";
 
@@ -1841,10 +1841,10 @@ static bool _randart_is_conflicting( const item_def &item,
         return (false);
 
     if (item.sub_type == AMU_STASIS
-       && (proprt[ARTP_BLINK] != 0
-           || proprt[ARTP_CAUSE_TELEPORTATION] != 0
-           || proprt[ARTP_ANGRY] != 0
-           || proprt[ARTP_BERSERK] != 0))
+        && (proprt[ARTP_BLINK] != 0
+            || proprt[ARTP_CAUSE_TELEPORTATION] != 0
+            || proprt[ARTP_ANGRY] != 0
+            || proprt[ARTP_BERSERK] != 0))
     {
         return (true);
     }
