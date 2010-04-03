@@ -627,7 +627,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
     if (check_range && spell_no_hostile_in_range(spell, minRange))
     {
         // Abort if there are no hostiles within range, but flash the range
-        // markers for about half a second.
+        // markers for a short while.
         mpr("There are no visible monsters within range! (Use <w>Z</w> to "
             "cast anyway.)");
 
@@ -635,7 +635,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         {
             crawl_state.darken_range = calc_spell_range(spell);
             viewwindow(false, false);
-            delay(500);
+            delay(50);
             crawl_state.darken_range = -1;
             viewwindow(false, false);
         }
