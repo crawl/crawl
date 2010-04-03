@@ -20,7 +20,7 @@ are the aptitude values shown in version 0.6 and older.)
  -1  (119)  slightly disfavoured aptitude
   0  (100)  standard aptitude (Humans)
  +1   (84)  slightly favoured aptitude
- +2   (71)  strong aptitde
+ +2   (71)  strong aptitude
  +3   (59)  very strong aptitude
  +4   (50)  outstanding aptitude (learning twice as fast as Humans)
  +5   (42)  exceptional aptitude
