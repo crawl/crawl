@@ -2633,6 +2633,7 @@ void world_reacts()
     }
 
     handle_time();
+    update_stat_zero();
     manage_clouds();
 
     if (you.duration[DUR_FIRE_SHIELD] > 0)
