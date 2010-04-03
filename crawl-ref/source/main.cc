@@ -3388,6 +3388,7 @@ static bool _initialise(void)
     init_monster_symbols();
     init_spell_descs();        // This needs to be way up top. {dlb}
     init_zap_index();
+    init_mut_index();
     init_mon_name_cache();
     init_mons_spells();
 

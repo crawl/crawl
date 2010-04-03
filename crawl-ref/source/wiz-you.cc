@@ -455,8 +455,6 @@ void wizard_set_all_skills(void)
 #endif
 
 #ifdef WIZARD
-extern mutation_def mutation_defs[];
-
 bool wizard_add_mutation()
 {
     bool success = false;
@@ -512,7 +510,6 @@ bool wizard_add_mutation()
 
     mutation_type mutat = NUM_MUTATIONS;
 
-
     if (strcmp(specs, "good") == 0)
         mutat = RANDOM_GOOD_MUTATION;
     else if (strcmp(specs, "bad") == 0)
@@ -539,21 +536,21 @@ bool wizard_add_mutation()
 
     std::vector<mutation_type> partial_matches;
 
-    for (unsigned i = 0; true; ++i)
+    for (int i = 0; i < NUM_MUTATIONS; ++i)
     {
-        if (strcmp(specs, mutation_defs[i].wizname) == 0)
+        mutation_type mut = static_cast<mutation_type>(i);
+        if (!is_valid_mutation(mut))
+            continue;
+
+        const mutation_def& mdef = get_mutation_def(mut);
+        if (strcmp(specs, mdef.wizname) == 0)
         {
-            mutat = mutation_defs[i].mutation;
+            mutat = mut;
             break;
         }
 
-        if (strstr(mutation_defs[i].wizname, specs))
-            partial_matches.push_back(mutation_defs[i].mutation);
-
-        // FIXME: hack, but I don't want to export the size
-        // of the array...this is even worse.
-        if (mutation_defs[i].mutation + 1 == NUM_MUTATIONS)
-            break;
+        if (strstr(mdef.wizname, specs))
+            partial_matches.push_back(mut);
     }
 
     // If only one matching mutation, use that.

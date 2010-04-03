@@ -2391,7 +2391,7 @@ enum mutation_type
     MUT_HURL_HELLFIRE,
     MUT_FAST,
     MUT_FAST_METABOLISM,
-    MUT_FEAST,
+    MUT_FEAST,                        // no entry in mutation-data.h
     MUT_FLEXIBLE_WEAK,
     MUT_FRAIL,
     MUT_GOURMAND,
@@ -2453,10 +2453,10 @@ enum mutation_type
 
     NUM_MUTATIONS,
 
-    RANDOM_MUTATION = 100,
-    RANDOM_XOM_MUTATION = 101,
-    RANDOM_GOOD_MUTATION = 102,
-    RANDOM_BAD_MUTATION = 103
+    RANDOM_MUTATION = NUM_MUTATIONS + 1,
+    RANDOM_XOM_MUTATION,
+    RANDOM_GOOD_MUTATION,
+    RANDOM_BAD_MUTATION
 };
 
 enum object_class_type                 // mitm[].base_type
