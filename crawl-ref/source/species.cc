@@ -321,14 +321,14 @@ size_type species_size(species_type species, size_part_type psize)
             return (SIZE_LARGE);
     case SP_CENTAUR:
         return ((psize == PSIZE_TORSO) ? SIZE_MEDIUM : SIZE_LARGE);
-    case SP_SPRIGGAN:
-        return (SIZE_LITTLE);
     case SP_HALFLING:
     case SP_KOBOLD:
         return (SIZE_SMALL);
+    case SP_SPRIGGAN:
+        return (SIZE_LITTLE);
 
     default:
-        return(SIZE_MEDIUM);
+        return (SIZE_MEDIUM);
     }
 }
 
