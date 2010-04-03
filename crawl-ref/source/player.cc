@@ -2162,8 +2162,9 @@ int player_scale_evasion(const int prescaled_ev, const int scale)
 int player_evasion(ev_ignore_type evit)
 {
     const int size_factor = player_evasion_size_factor();
-    // Repulsion fields and size are all that matters when paralysed.
-    if (you.cannot_move() && !(evit & EV_IGNORE_HELPLESS))
+    // Repulsion fields and size are all that matters when paralysed or at 0 dex.
+    if ((you.cannot_move() || you.stat_zero[STAT_DEX])
+        && !(evit & EV_IGNORE_HELPLESS))
     {
         const int paralysed_base_ev = 2 + size_factor / 2;
         const int repulsion_ev =
@@ -3113,7 +3114,7 @@ int check_stealth(void)
         return (1000);
 #endif
 
-    if (you.attribute[ATTR_SHADOWS] || you.berserk())
+    if (you.attribute[ATTR_SHADOWS] || you.berserk() || you.stat_zero[STAT_DEX])
         return (0);
 
     int stealth = you.dex() * 3;
