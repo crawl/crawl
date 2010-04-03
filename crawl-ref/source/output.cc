@@ -364,6 +364,9 @@ static void _print_stats_hp(int x, int y)
 
 short _get_stat_colour(stat_type stat)
 {
+    if (you.stat_zero[stat] > 0)
+        return (LIGHTRED);
+
     // Check the stat_colour option for warning thresholds.
     for (unsigned int i = 0; i < Options.stat_colour.size(); ++i)
         if (you.stat(stat) <= Options.stat_colour[i].first)
@@ -390,7 +393,7 @@ static void _print_stat(stat_type stat, int x, int y)
     cgotoxy(x+5, y, GOTO_STAT);
 
     textcolor(_get_stat_colour(stat));
-    cprintf("%d", you.stat(stat));
+    cprintf("%d", you.stat(stat, false));
 
     if (you.stat_loss[stat] > 0)
         cprintf(" (%d)  ", you.max_stat(stat));

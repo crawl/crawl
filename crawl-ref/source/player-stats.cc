@@ -14,9 +14,10 @@
 #include "transform.h"
 #include "tutorial.h"
 
-char player::stat(stat_type s) const
+char player::stat(stat_type s, bool nonneg) const
 {
-    return (max_stat(s) - stat_loss[s]);
+    const char val = max_stat(s) - stat_loss[s];
+    return (nonneg ? std::max<char>(val, 0) : val);
 }
 
 char player::strength() const
@@ -141,9 +142,9 @@ static kill_method_type statloss_killtype[] = {
 };
 
 const char* descs[NUM_STATS][NUM_STAT_DESCS] = {
-    { "weakened", "weaker", "stronger" },
-    { "dopey", "stupid", "clever" },
-    { "clumsy", "clumsy", "agile" }
+    { "strength", "weakened", "weaker", "stronger" },
+    { "intelligence", "dopey", "stupid", "clever" },
+    { "dexterity", "clumsy", "clumsy", "agile" }
 };
 
 const char* stat_desc(stat_type stat, stat_desc_type desc)
@@ -522,14 +523,20 @@ static void _normalize_stat(stat_type stat)
     you.base_stats[stat] = std::min<char>(you.base_stats[stat], 72);
 }
 
+// Number of turns of stat at zero you start with.
+#define STAT_ZERO_START 10
+// Number of turns of stat at zero you can survive.
+#define STAT_DEATH_TURNS 100
+
 static void _handle_stat_change(stat_type stat, const char* cause, bool see_source)
 {
     ASSERT(stat >= 0 && stat < NUM_STATS);
 
-    if (you.stat(stat) < 1)
+    if (you.stat(stat) <= 0 && you.stat_zero[stat] == 0)
     {
-        const kill_method_type kill_type = statloss_killtype[stat];
-        ouch(INSTANT_DEATH, NON_MONSTER, kill_type, cause, see_source);
+        you.stat_zero[stat] = STAT_ZERO_START;
+        mprf(MSGCH_WARN, "You have lost your %s.", stat_desc(stat, SD_NAME));
+        // any other stat dropping to zero effects here, eg paralysis.
     }
 
     you.redraw_stats[stat] = true;
@@ -558,4 +565,30 @@ static void _handle_stat_change(const char* aux, bool see_source)
 {
     for (int i = 0; i < NUM_STATS; ++i)
         _handle_stat_change(static_cast<stat_type>(i), aux, see_source);
+}
+
+// Called once per turn.
+void update_stat_zero()
+{
+    for (int i = 0; i < NUM_STATS; ++i)
+    {
+        stat_type s = static_cast<stat_type>(i);
+        if (you.stat(s) <= 0)
+            you.stat_zero[s]++;
+        else if (you.stat_zero[s] > 0)
+        {
+            you.stat_zero[s]--;
+            if (you.stat_zero[s] == 0)
+            {
+                mprf("Your %s has recovered.", stat_desc(s, SD_NAME));
+                you.redraw_stats[s] = true;
+            }
+        }
+
+        if (you.stat_zero[i] > STAT_DEATH_TURNS)
+        {
+            const kill_method_type kill_type = statloss_killtype[i];
+            ouch(INSTANT_DEATH, NON_MONSTER, kill_type);
+        }
+    }
 }

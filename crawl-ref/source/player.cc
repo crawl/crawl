@@ -1935,6 +1935,10 @@ int player_speed(void)
 {
     int ps = 10;
 
+    for (int i = 0; i < NUM_STATS; ++i)
+        if (you.stat_zero[i] > 0)
+            ps *= 2;
+
     if (you.duration[DUR_SLOW])
         ps *= 2;
 
