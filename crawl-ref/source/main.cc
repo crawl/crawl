@@ -2206,8 +2206,6 @@ static void _decrement_durations()
         }
     }
 
-    _decrement_a_duration(DUR_EXHAUSTED, delay, "You feel less fatigued.");
-
     _decrement_a_duration(DUR_CONFUSING_TOUCH, delay,
                           ((std::string("Your ") + your_hand(true)) +
                           " stop glowing.").c_str());
@@ -2223,6 +2221,7 @@ static void _decrement_durations()
     }
 
     dec_slow_player(delay);
+    dec_exhaust_player(delay);
     dec_haste_player(delay);
 
     if (_decrement_a_duration(DUR_MIGHT, delay,

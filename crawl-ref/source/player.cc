@@ -4781,6 +4781,24 @@ void dec_slow_player(int delay)
     }
 }
 
+// Exhaustion should last as long as slowing.
+void dec_exhaust_player(int delay)
+{
+    if (!you.duration[DUR_EXHAUSTED])
+        return;
+
+    if (you.duration[DUR_EXHAUSTED] > BASELINE_DELAY)
+    {
+        you.duration[DUR_EXHAUSTED] -= you.duration[DUR_HASTE]
+                                       ? 2 * delay : delay;
+    }
+    if (you.duration[DUR_EXHAUSTED] <= BASELINE_DELAY)
+    {
+        mpr("You feel less exhausted.", MSGCH_DURATION);
+        you.duration[DUR_EXHAUSTED] = 0;
+    }
+}
+
 bool haste_player(int turns)
 {
     ASSERT(!crawl_state.game_is_arena());
