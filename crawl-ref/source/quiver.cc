@@ -570,6 +570,9 @@ static int _get_pack_slot(const item_def& item)
     if (!item.is_valid())
         return -1;
 
+    if (in_inventory(item) && _items_similar(item, you.inv[item.link], false))
+        return (item.link);
+
     // First try to find the exact same item.
     for (int i = 0; i < ENDOFPACK; i++)
     {
