@@ -1235,7 +1235,6 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
                 rc = SPWPN_DRAINING;
             break;
 
-
         case WPN_DAGGER:
             if (one_chance_in(4))
                 rc = SPWPN_RETURNING;
@@ -1363,6 +1362,9 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             if (one_chance_in(3))
                 rc = SPWPN_REACHING;
 
+            if (one_chance_in(8))
+                rc = SPWPN_DRAINING;
+
             if (one_chance_in(6))
                 rc = coinflip() ? SPWPN_FLAMING : SPWPN_FREEZING;
 
@@ -1386,7 +1388,6 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
 
             if (one_chance_in(4))
                 rc = SPWPN_PROTECTION;
-
             // **** intentional fall through here ****
         case WPN_SPEAR:
             if (one_chance_in(25))
@@ -1416,7 +1417,6 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             if (one_chance_in(3))
                 rc = SPWPN_REACHING;
             break;
-
 
         case WPN_SLING:
             if (coinflip())
