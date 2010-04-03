@@ -1320,40 +1320,6 @@ void search_around(bool only_adjacent)
     }
 }
 
-// Checks whether removing boots (due to growing a tail) would be safe,
-// or result in fatal stat loss (false, obviously).
-bool merfolk_change_is_safe(bool quiet)
-{
-    if (you.species != SP_MERFOLK)
-        return (true);
-
-    // If already transformed, no subsequent transformation necessary.
-    if (!you.airborne() && feat_is_water(grd(you.pos())))
-        return (true);
-
-    std::set<equipment_type> r;
-    r.insert(EQ_BOOTS);
-
-    if (check_transformation_stat_loss(r, quiet))
-        return (false);
-
-    return (true);
-}
-
-bool merfolk_unchange_is_safe(bool quiet)
-{
-    if (you.species != SP_MERFOLK)
-        return (true);
-
-    if (you.airborne() || !feat_is_water(grd(you.pos())))
-        return (true);
-
-    const item_def *item = you.slot_item(EQ_BOOTS, true);
-    if (!item)
-        return (true);
-    return (safe_to_remove_or_wear(*item, false, quiet));
-}
-
 void merfolk_start_swimming(bool stepped)
 {
     if (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE)

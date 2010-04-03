@@ -3742,9 +3742,6 @@ static int _prompt_ring_to_remove(int new_ring)
 bool safe_to_remove_or_wear(const item_def &item, bool remove,
                             bool quiet)
 {
-    int prop_str = 0;
-    int prop_dex = 0;
-    int prop_int = 0;
     bool prop_lev = false;
     bool fatal_liquid = false;
     dungeon_feature_type gridhere = grd(you.pos());
@@ -3755,18 +3752,6 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove,
     {
         switch (item.sub_type)
         {
-        case RING_STRENGTH:
-            if (item.plus != 0)
-                prop_str = item.plus;
-            break;
-        case RING_DEXTERITY:
-            if (item.plus != 0)
-                prop_dex = item.plus;
-            break;
-        case RING_INTELLIGENCE:
-            if (item.plus != 0)
-                prop_int = item.plus;
-            break;
         case RING_LEVITATION:
             prop_lev = true;
             break;
@@ -3779,18 +3764,6 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove,
     {
         switch (item.special)
         {
-        case SPARM_STRENGTH:
-            prop_str = 3;
-            break;
-
-        case SPARM_INTELLIGENCE:
-            prop_int = 3;
-            break;
-
-        case SPARM_DEXTERITY:
-            prop_dex = 3;
-            break;
-
         case SPARM_LEVITATION:
             prop_lev = true;
             break;
@@ -3802,10 +3775,6 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove,
 
     if (is_artefact(item))
     {
-        prop_str += artefact_known_wpn_property(item, ARTP_STRENGTH);
-        prop_int += artefact_known_wpn_property(item, ARTP_INTELLIGENCE);
-        prop_dex += artefact_known_wpn_property(item, ARTP_DEXTERITY);
-
         prop_lev = prop_lev || artefact_known_wpn_property(item, ARTP_LEVITATE);
 
         if (!remove && artefact_known_wpn_property(item, ARTP_EYESIGHT))
@@ -3823,21 +3792,7 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove,
     {
         if (you.species == SP_MERFOLK && feat_is_water(gridhere))
         {
-            // Falling into water could lose boots and cause fatal stat loss.
-            // There is a complication here.  Suppose you are taking off a
-            // randart with +Lev and a stat modification, while wearing boots
-            // that modify the same stat.  We have to consider losing both at
-            // the same time.
-
-            // This only handles removal, which is OK, because levitating is
-            // never fatal.
-
-            unwind_var<FixedVector<char, NUM_STATS> > save_stats(you.base_stats);
-            you.base_stats[STAT_STR] -= prop_str;
-            you.base_stats[STAT_INT] -= prop_int;
-            you.base_stats[STAT_DEX] -= prop_dex;
-
-            fatal_liquid = !merfolk_change_is_safe();
+            fatal_liquid = false;
         }
 
         if (gridhere == DNGN_LAVA
@@ -3873,8 +3828,7 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove,
 
     if (remove)
     {
-        if (prop_str >= you.strength() || prop_int >= you.intel()
-            || prop_dex >= you.dex() || prop_lev && fatal_liquid)
+        if (prop_lev && fatal_liquid)
         {
             if (!quiet)
             {
@@ -3886,23 +3840,6 @@ bool safe_to_remove_or_wear(const item_def &item, bool remove,
             return (false);
         }
     }
-    else // put on
-    {
-        if (-prop_str >= you.strength() || -prop_int >= you.intel()
-            || -prop_dex >= you.dex())
-        {
-            if (!quiet)
-            {
-                mprf(MSGCH_WARN, "%s this item would be fatal, so you refuse "
-                                 "to do that.",
-                                 (item.base_type == OBJ_WEAPONS ? "Wielding"
-                                                                : "Wearing"));
-            }
-
-            return (false);
-        }
-    }
-
     return (true);
 }
 
@@ -4731,14 +4668,6 @@ void drink(int slot)
     if (alreadyknown && potion.sub_type == POT_BERSERK_RAGE
         && !berserk_check_wielded_weapon())
     {
-        return;
-    }
-
-    if (alreadyknown && potion.sub_type == POT_LEVITATION
-        && !merfolk_unchange_is_safe(true))
-    {
-        mprf(MSGCH_WARN, "Levitating now would unmeld your boots, which would "
-                         "be fatal.");
         return;
     }
 

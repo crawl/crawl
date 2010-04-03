@@ -1758,22 +1758,10 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_LEVITATION:
-        if (!merfolk_unchange_is_safe(true))
-        {
-            mprf(MSGCH_WARN, "Levitating would unmeld your boots, which would "
-                             "be fatal.");
-            return (SPRET_ABORT);
-        }
         potion_effect(POT_LEVITATION, powc);
         break;
 
     case SPELL_FLY:
-        if (!merfolk_unchange_is_safe())
-        {
-            mprf(MSGCH_WARN, "Flying would unmeld your boots, which would be "
-                             "fatal.");
-            return (SPRET_ABORT);
-        }
         cast_fly(powc);
         break;
 

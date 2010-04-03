@@ -16,8 +16,6 @@ struct activity_interrupt_data;
 bool go_berserk(bool intentional, bool potion = false);
 void search_around(bool only_adjacent = false);
 
-bool merfolk_change_is_safe(bool quiet = false);
-bool merfolk_unchange_is_safe(bool quiet = false);
 void merfolk_start_swimming(bool step = false);
 void merfolk_stop_swimming();
 void trackers_init_new_level(bool transit);
