@@ -1519,7 +1519,7 @@ static int _tileidx_weapon_base(const item_def &item)
     case WPN_DEMON_TRIDENT:
         return TILE_WPN_DEMON_TRIDENT;
 
-    case WPN_HOLY_EUDEMON_BLADE:
+    case WPN_HOLY_BLADE:
         return TILE_WPN_BLESSED_BLADE;
 
     case WPN_LONGBOW:
@@ -4280,33 +4280,33 @@ int tilep_equ_weapon(const item_def &item)
     case WPN_GIANT_CLUB:        return TILEP_HAND1_GIANT_CLUB_PLAIN;
     case WPN_GIANT_SPIKED_CLUB: return TILEP_HAND1_GIANT_CLUB_SPIKE_SLANT;
     case WPN_ANKUS:             return TILEP_HAND1_MACE;
-    case WPN_HOLY_SCOURGE:      return TILEP_HAND1_HOLY_SCOURGE;
     case WPN_WHIP:              return TILEP_HAND1_WHIP;
     case WPN_DEMON_WHIP:        return TILEP_HAND1_BLACK_WHIP;
+    case WPN_HOLY_SCOURGE:      return TILEP_HAND1_HOLY_SCOURGE;
 
     // Edge
-    case WPN_KNIFE:                 return TILEP_HAND1_DAGGER_SLANT;
-    case WPN_DAGGER:                return TILEP_HAND1_DAGGER_SLANT;
-    case WPN_SHORT_SWORD:           return TILEP_HAND1_SHORT_SWORD_SLANT;
-    case WPN_LONG_SWORD:            return TILEP_HAND1_LONG_SWORD_SLANT;
-    case WPN_GREAT_SWORD:           return TILEP_HAND1_GREAT_SWORD_SLANT;
-    case WPN_SCIMITAR:              return TILEP_HAND1_SCIMITAR;
-    case WPN_FALCHION:              return TILEP_HAND1_FALCHION;
-    case WPN_SABRE:                 return TILEP_HAND1_SABRE;
-    case WPN_DEMON_BLADE:           return TILEP_HAND1_DEMON_BLADE;
-    case WPN_QUICK_BLADE:           return TILEP_HAND1_DAGGER;
-    case WPN_KATANA:                return TILEP_HAND1_KATANA_SLANT;
-    case WPN_DOUBLE_SWORD:          return TILEP_HAND1_DOUBLE_SWORD;
-    case WPN_TRIPLE_SWORD:          return TILEP_HAND1_TRIPLE_SWORD;
-    case WPN_HOLY_EUDEMON_BLADE:    return TILEP_HAND1_BLESSED_BLADE;
+    case WPN_KNIFE:                return TILEP_HAND1_DAGGER_SLANT;
+    case WPN_DAGGER:               return TILEP_HAND1_DAGGER_SLANT;
+    case WPN_SHORT_SWORD:          return TILEP_HAND1_SHORT_SWORD_SLANT;
+    case WPN_LONG_SWORD:           return TILEP_HAND1_LONG_SWORD_SLANT;
+    case WPN_GREAT_SWORD:          return TILEP_HAND1_GREAT_SWORD_SLANT;
+    case WPN_SCIMITAR:             return TILEP_HAND1_SCIMITAR;
+    case WPN_FALCHION:             return TILEP_HAND1_FALCHION;
+    case WPN_SABRE:                return TILEP_HAND1_SABRE;
+    case WPN_DEMON_BLADE:          return TILEP_HAND1_DEMON_BLADE;
+    case WPN_QUICK_BLADE:          return TILEP_HAND1_DAGGER;
+    case WPN_KATANA:               return TILEP_HAND1_KATANA_SLANT;
+    case WPN_DOUBLE_SWORD:         return TILEP_HAND1_DOUBLE_SWORD;
+    case WPN_TRIPLE_SWORD:         return TILEP_HAND1_TRIPLE_SWORD;
+    case WPN_HOLY_BLADE:           return TILEP_HAND1_BLESSED_BLADE;
     // new blessed weapons
-    case WPN_BLESSED_LONG_SWORD:    return TILEP_HAND1_LONG_SWORD_SLANT;
-    case WPN_BLESSED_GREAT_SWORD:   return TILEP_HAND1_GREAT_SWORD_SLANT;
-    case WPN_BLESSED_SCIMITAR:      return TILEP_HAND1_SCIMITAR;
-    case WPN_BLESSED_FALCHION:      return TILEP_HAND1_FALCHION;
-    case WPN_BLESSED_KATANA:        return TILEP_HAND1_KATANA_SLANT;
-    case WPN_BLESSED_DOUBLE_SWORD:  return TILEP_HAND1_DOUBLE_SWORD;
-    case WPN_BLESSED_TRIPLE_SWORD:  return TILEP_HAND1_TRIPLE_SWORD;
+    case WPN_BLESSED_LONG_SWORD:   return TILEP_HAND1_LONG_SWORD_SLANT;
+    case WPN_BLESSED_GREAT_SWORD:  return TILEP_HAND1_GREAT_SWORD_SLANT;
+    case WPN_BLESSED_SCIMITAR:     return TILEP_HAND1_SCIMITAR;
+    case WPN_BLESSED_FALCHION:     return TILEP_HAND1_FALCHION;
+    case WPN_BLESSED_KATANA:       return TILEP_HAND1_KATANA_SLANT;
+    case WPN_BLESSED_DOUBLE_SWORD: return TILEP_HAND1_DOUBLE_SWORD;
+    case WPN_BLESSED_TRIPLE_SWORD: return TILEP_HAND1_TRIPLE_SWORD;
 
 
     // Axe

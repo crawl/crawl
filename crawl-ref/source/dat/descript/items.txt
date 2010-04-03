@@ -665,7 +665,7 @@ helmet
 
 A piece of metal headgear.
 %%%%
-holy eudemon blade
+holy blade
 
 A glorious blade from the forges of Heaven.  It is a favored weapon of
 the Shining One's servants.
