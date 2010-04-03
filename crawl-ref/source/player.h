@@ -507,6 +507,10 @@ public:
     int halo_radius2() const;
     int silence_radius2() const;
     bool petrified() const;
+    bool incapacitated() const
+    {
+        return actor::incapacitated() || stat_zero[STAT_DEX];
+    };
 
     bool asleep() const;
     void hibernate(int power = 0);

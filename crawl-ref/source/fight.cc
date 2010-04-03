@@ -3965,7 +3965,9 @@ int melee_attack::player_to_hit(bool random_factor)
 void melee_attack::player_stab_check()
 {
     // Unknown mimics cannot be stabbed.
-    if (mons_is_unknown_mimic(defender->as_monster()))
+    // Confusion and having dex of 0 disallow stabs.
+    if (mons_is_unknown_mimic(defender->as_monster()) || you.stat_zero[STAT_DEX]
+        || you.confused())
     {
         stab_attempt = false;
         stab_bonus = 0;
