@@ -2020,7 +2020,7 @@ bool player_is_shapechanged(void)
 int player_evasion_size_factor()
 {
     // XXX: you.body_size() implementations are incomplete, fix.
-    const size_type size  = you.body_size(PSIZE_BODY);
+    const size_type size = you.body_size(PSIZE_BODY);
     return 2 * (SIZE_MEDIUM - size);
 }
 

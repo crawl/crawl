@@ -1082,8 +1082,8 @@ static item_status_flag_type _determine_weapon_race(const item_def& item,
                 rc = ISFLAG_ORCISH;
             break;
 
-        case WPN_WAR_AXE:
         case WPN_HAND_AXE:
+        case WPN_WAR_AXE:
         case WPN_BROAD_AXE:
         case WPN_BATTLEAXE:
             if (one_chance_in(3))
@@ -2161,8 +2161,8 @@ static item_status_flag_type _determine_armour_race(const item_def& item,
 
         switch (item.sub_type)
         {
-        case ARM_SHIELD:
         case ARM_BUCKLER:
+        case ARM_SHIELD:
         case ARM_LARGE_SHIELD:
             if (one_chance_in(4))
                 rc = ISFLAG_ORCISH;
