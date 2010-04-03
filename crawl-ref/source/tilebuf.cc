@@ -36,25 +36,25 @@ void VertBuffer<PTVert>::draw(GLW_3VF *pt, GLW_3VF *ps) const
 {
     if (size() == 0)
         return;
-    
+
     ASSERT(m_prim == GLW_QUADS);
-    
+
     // Handle texture
     ASSERT(m_tex);
     glmanager->set(m_state);
     m_tex->bind();
-    
+
     GLPrimitive prim(   sizeof(Vert), size(), 2,
                         &(*this)[0].pos_x,
                         NULL,
                         &(*this)[0].tex_x);
-    
+
     prim.mode = m_prim;
-    
+
     // Set prerender matrix manipulations
     if ( pt ) prim.pretranslate = pt;
     if ( ps ) prim.prescale = ps;
-    
+
     // Draw
     glmanager->draw_primitive(prim);
 }
@@ -73,23 +73,23 @@ void VertBuffer<PCVert>::draw(GLW_3VF *pt, GLW_3VF *ps) const
 {
     if (size() == 0)
         return;
-    
+
     ASSERT(m_prim == GLW_QUADS || m_prim == GLW_LINES);
     ASSERT(!m_tex);
     glmanager->set(m_state);
-    
+
     // Create the primitive we wish to draw
     GLPrimitive prim(   sizeof(Vert), size(), 2,
                         &(*this)[0].pos_x,
                         &(*this)[0].col,
                         NULL);
-    
+
     prim.mode = m_prim;
-    
+
     // Set prerender matrix manipulations
     if ( pt ) prim.pretranslate = pt;
     if ( ps ) prim.prescale = ps;
-    
+
     // Draw
     glmanager->draw_primitive(prim);
 }
@@ -109,26 +109,26 @@ void VertBuffer<PTCVert>::draw(GLW_3VF *pt, GLW_3VF *ps) const
 {
     if (size() == 0)
         return;
-    
+
     ASSERT(m_prim == GLW_QUADS);
-    
+
     // Handle texture
     ASSERT(m_tex);
     glmanager->set(m_state);
     m_tex->bind();
-    
+
     // Create the primitive we wish to draw
     GLPrimitive prim(   sizeof(Vert), size(), 2,
                         &(*this)[0].pos_x,
                         &(*this)[0].col,
                         &(*this)[0].tex_x);
-    
+
     prim.mode = m_prim;
-    
+
     // Set prerender matrix manipulations
     if ( pt ) prim.pretranslate = pt;
     if ( ps ) prim.prescale = ps;
-    
+
     // Draw
     glmanager->draw_primitive(prim);
 }
@@ -151,26 +151,26 @@ void VertBuffer<P3TCVert>::draw(GLW_3VF *pt, GLW_3VF *ps) const
 {
     if (size() == 0)
         return;
-    
+
     ASSERT(m_prim == GLW_QUADS);
-    
+
     // Handle texture
     ASSERT(m_tex);
     glmanager->set(m_state);
     m_tex->bind();
-    
+
     // Create the primitive we wish to draw
     GLPrimitive prim(   sizeof(Vert), size(), 3,
                         &(*this)[0].pos_x,
                         &(*this)[0].col,
                         &(*this)[0].tex_x);
-    
+
     prim.mode = m_prim;
-    
+
     // Set prerender matrix manipulations
     if ( pt ) prim.pretranslate = pt;
     if ( ps ) prim.prescale = ps;
-    
+
     // Draw
     glmanager->draw_primitive(prim);
 }
