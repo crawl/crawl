@@ -256,33 +256,6 @@ static bool _check_moveto_trap(const coord_def& p)
     return (true);
 }
 
-static bool _check_moveto_merfolk(const coord_def& p)
-{
-    const dungeon_feature_type old_feat = env.grid(you.pos());
-    const dungeon_feature_type new_feat = env.grid(p);
-
-    // Safer water effects for merfolk.
-    if (feat_is_water(new_feat) && !feat_is_water(old_feat))
-    {
-        // Check for fatal stat loss due to transforming.
-        // Also handles the warning message.
-        if (!merfolk_change_is_safe())
-            return (false);
-    }
-    else if (!feat_is_water(new_feat) && feat_is_water(old_feat)
-             && !is_feat_dangerous(new_feat))
-    {
-        // Check for wearing boots with -stat.
-        if (!merfolk_unchange_is_safe(true))
-        {
-            mprf(MSGCH_WARN, "Stepping onto land would unmeld your "
-                 "boots, and that'd be fatal.");
-            return (false);
-        }
-    }
-    return (true);
-}
-
 static bool _check_moveto_dangerous(const coord_def& p)
 {
     if (you.can_swim() && feat_is_water(env.grid(p))
@@ -300,9 +273,6 @@ static bool _check_moveto_terrain(const coord_def& p)
     // Only consider terrain if player is not levitating.
     if (you.airborne())
         return (true);
-
-    if (you.species == SP_MERFOLK && !_check_moveto_merfolk(p))
-        return (false);
 
     return (_check_moveto_dangerous(p));
 }
@@ -5185,7 +5155,7 @@ bool player::can_swim(bool permanently) const
 {
     // Transforming could be fatal if it would cause unequipment of
     // stat-boosting boots or heavy armour.
-    return ((species == SP_MERFOLK && merfolk_change_is_safe(true))
+    return (species == SP_MERFOLK
             || (!permanently
                 && you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST));
 }

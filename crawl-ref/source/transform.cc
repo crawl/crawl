@@ -323,111 +323,6 @@ static bool _check_for_cursed_equipment(const std::set<equipment_type> &remove,
     return (false);
 }
 
-// Count the stat boosts yielded by all items to be removed, and count
-// future losses (caused by the transformation) like a current stat boost,
-// as well. If the sum of all boosts of a stat is equal to or greater than
-// the current stat, give a message and return true.
-bool check_transformation_stat_loss(const std::set<equipment_type> &remove,
-                                    bool quiet, int str_loss, int dex_loss,
-                                    int int_loss)
-{
-    // Initialise with additional losses, if any.
-    int prop[3] = { str_loss, int_loss, dex_loss };
-
-    // Might is very much temporary and might run out at any point during
-    // your transformation, possibly resulting in stat loss caused by a
-    // combination of an unequipping (and/or stat lowering) transformation
-    // and Might running out at an inopportune moment.
-    if (you.duration[DUR_MIGHT])
-        prop[STAT_STR] += 5;
-    if (you.duration[DUR_BRILLIANCE])
-        prop[STAT_INT] += 5;
-    if (you.duration[DUR_AGILITY])
-        prop[STAT_DEX] += 5;
-
-    for (int i = 0; i < NUM_STATS; ++i)
-    {
-        if (prop[i] >= you.stat(static_cast<stat_type>(i)))
-        {
-            if (!quiet)
-            {
-                mpr("This transformation would result in fatal stat loss!",
-                    MSGCH_WARN);
-            }
-            return (true);
-        }
-    }
-
-    // Check over all items to be removed or melded.
-    std::set<equipment_type>::const_iterator iter;
-    for (iter = remove.begin(); iter != remove.end(); ++iter)
-    {
-        equipment_type e = *iter;
-        if (you.equip[e] == -1)
-            continue;
-
-        const item_def& item = you.inv[you.equip[e]];
-
-        // There are no stat-boosting non-weapons/non-staves.
-        if (e == EQ_WEAPON
-            && item.base_type != OBJ_WEAPONS && item.base_type != OBJ_STAVES)
-        {
-            continue;
-        }
-
-        // Currently, the only non-artefacts which have stat-changing
-        // effects are rings.
-        if (item.base_type == OBJ_JEWELLERY)
-        {
-            if (!item_ident(item, ISFLAG_KNOW_PLUSES))
-                continue;
-
-            switch (item.sub_type)
-            {
-            case RING_STRENGTH:     prop[STAT_STR] += item.plus; break;
-            case RING_DEXTERITY:    prop[STAT_DEX] += item.plus; break;
-            case RING_INTELLIGENCE: prop[STAT_INT] += item.plus; break;
-            default:                                             break;
-            }
-        }
-        else if (item.base_type == OBJ_ARMOUR)
-        {
-            switch (get_armour_ego_type( item ))
-            {
-            case SPARM_STRENGTH:     prop[STAT_STR] += 3; break;
-            case SPARM_DEXTERITY:    prop[STAT_DEX] += 3; break;
-            case SPARM_INTELLIGENCE: prop[STAT_INT] += 3; break;
-            default:                                      break;
-            }
-        }
-
-        if (is_artefact(item))
-        {
-            prop[STAT_STR] += artefact_known_wpn_property(item, ARTP_STRENGTH);
-            prop[STAT_INT] += artefact_known_wpn_property(item, ARTP_INTELLIGENCE);
-            prop[STAT_DEX] += artefact_known_wpn_property(item, ARTP_DEXTERITY);
-        }
-
-        // Since there might be multiple items whose effects cancel each other
-        // out while worn, if at any point in the order of checking this list
-        // (which is the same order as when removing items) one of your stats
-        // would reach 0, return true.
-        for (int i = 0; i < NUM_STATS; ++i)
-        {
-            if (prop[i] < you.stat(static_cast<stat_type>(i)))
-                continue;
-            if (!quiet)
-            {
-                mpr("This transformation would result in fatal stat loss!",
-                    MSGCH_WARN);
-            }
-            return (true);
-        }
-    }
-
-    return (false);
-}
-
 // Returns true if the player got prompted by an inscription warning and
 // chose to opt out.
 bool _check_transformation_inscription_warning(
@@ -698,18 +593,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
     case TRAN_NONE:
     case NUM_TRANSFORMATIONS:
         break;
-    }
-
-    if (check_transformation_stat_loss(rem_stuff, force || which_trans == TRAN_PIG,
-                                       std::max(-str, 0), std::max(-dex,0)))
-    {   // would have died to stat loss
-        if (which_trans == TRAN_PIG)
-        {   // no easy way around this!
-            mpr("A dreadful feeling locks you in place!");
-            if (you.duration[DUR_PARALYSIS]<10 * BASELINE_DELAY)
-                you.duration[DUR_PARALYSIS]=10 * BASELINE_DELAY;
-        }
-        return (_abort_or_fizzle(just_check));
     }
 
     // If we're just pretending return now.
