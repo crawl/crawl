@@ -85,6 +85,11 @@ struct GLPrimitive
     GLW_3VF *color;
 };
 
+// This struct defines all of the state that any particular rendering needs.
+// If other rendering states are needed, they should be added here so that
+// they do not introduce unneeded side effects for other parts of the code
+// that have not thought about turning that new state off.
+
 struct GLState
 {
     GLState();

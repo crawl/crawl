@@ -9,18 +9,13 @@
 #include "tiles.h"
 #include "glwrapper.h"
 
-// This struct defines all of the state that any particular rendering needs.
-// If other rendering states are needed, they should be added here so that
-// they do not introduce unneeded side effects for other parts of the code
-// that have not thought about turning that new state off.
+#include <string>
+#include <vector>
 
 class FontWrapper;
 class formatted_string;
 class GenericTexture;
 class TilesTexture;
-
-#include <string>
-#include <vector>
 
 struct VColour
 {
