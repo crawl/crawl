@@ -87,68 +87,88 @@ const char *naga_deformed_descrip[3] = {
     "Armour fits poorly on your badly deformed serpentine body."
 };
 
-mutation_def mutation_defs[] = {
+mutation_def mut_data[] = {
+
 #include "mutation-data.h"
+
 };
+
+#define MUTDATASIZE (sizeof(mut_data)/sizeof(mutation_def))
+
+static int mut_index[NUM_MUTATIONS];
+
+void init_mut_index()
+{
+    for (int i = 0; i < NUM_MUTATIONS; ++i)
+        mut_index[i] = -1;
+
+    for (unsigned int i = 0; i < MUTDATASIZE; ++i)
+    {
+        const mutation_type mut = mut_data[i].mutation;
+        ASSERT(mut >= 0 && mut < NUM_MUTATIONS);
+        ASSERT(mut_index[mut] == -1);
+        mut_index[mut] = i;
+    }
+}
+
+static mutation_def* _seek_mutation(mutation_type mut)
+{
+    ASSERT(mut >= 0 && mut < NUM_MUTATIONS);
+    if (mut_index[mut] == -1)
+        return (NULL);
+    else
+        return (&mut_data[mut_index[mut]]);
+}
+
+bool is_valid_mutation(mutation_type mut)
+{
+    return (mut >= 0 && mut < NUM_MUTATIONS
+            && _seek_mutation(mut));
+}
 
 const mutation_def& get_mutation_def(mutation_type mut)
 {
-    for (unsigned i = 0; i < ARRAYSZ(mutation_defs); ++i)
-        if (mut == mutation_defs[i].mutation)
-            return mutation_defs[i];
-
-    ASSERT(0);
-    return mutation_defs[0];
+    ASSERT(is_valid_mutation(mut));
+    return (*_seek_mutation(mut));
 }
 
 void fixup_mutations()
 {
     if (player_genus(GENPC_DRACONIAN))
     {
-        for (unsigned i = 0; i < ARRAYSZ(mutation_defs); ++i)
-        {
-            if (mutation_defs[i].mutation == MUT_STINGER
-                || mutation_defs[i].mutation == MUT_BIG_WINGS)
-            {
-                mutation_defs[i].rarity = 1;
-            }
-        }
+        ASSERT(is_valid_mutation(MUT_STINGER));
+        _seek_mutation(MUT_STINGER)->rarity = 1;
+        ASSERT(is_valid_mutation(MUT_BIG_WINGS));
+        _seek_mutation(MUT_BIG_WINGS)->rarity = 1;
     }
 
     if (you.species == SP_TROLL)
     {
-        for (unsigned i = 0; i < ARRAYSZ(mutation_defs); ++i)
+        mutation_def* mdef = _seek_mutation(MUT_CLAWS);
+        ASSERT(mdef);
+        for (int j = 0; j < 3; ++j)
         {
-            if (mutation_defs[i].mutation == MUT_CLAWS)
-            {
-                for (int j = 0; j < 3; ++j)
-                {
-                    mutation_defs[i].gain[j] = troll_claw_gain[j];
-                    mutation_defs[i].lose[j] = troll_claw_lose[j];
-                }
-            }
+            mdef->gain[j] = troll_claw_gain[j];
+            mdef->lose[j] = troll_claw_lose[j];
         }
     }
 
     if (you.species == SP_NAGA)
     {
-        for (unsigned i = 0; i < ARRAYSZ(mutation_defs); ++i)
-        {
-            if (mutation_defs[i].mutation == MUT_DEFORMED)
-            {
-                for (int j = 0; j < 3; ++j)
-                    mutation_defs[i].have[j] = naga_deformed_descrip[j];
-            }
-            else if (mutation_defs[i].mutation == MUT_STINGER)
-                mutation_defs[i].rarity = 1;
-        }
+        ASSERT(is_valid_mutation(MUT_STINGER));
+        _seek_mutation(MUT_STINGER)->rarity = 1;
+
+        ASSERT(is_valid_mutation(MUT_DEFORMED));
+        for (int j = 0; j < 3; ++j)
+            _seek_mutation(MUT_DEFORMED)->have[j] = naga_deformed_descrip[j];
     }
 
     if (you.species == SP_CENTAUR)
-        for (unsigned i = 0; i < ARRAYSZ(mutation_defs); ++i)
-            if (mutation_defs[i].mutation == MUT_DEFORMED)
-                for (int j = 0; j < 3; ++j)
-                    mutation_defs[i].have[j] = centaur_deformed_descrip[j];
+    {
+        ASSERT(is_valid_mutation(MUT_DEFORMED));
+        for (int j = 0; j < 3; ++j)
+            _seek_mutation(MUT_DEFORMED)->have[j] = centaur_deformed_descrip[j];
+    }
 }
 
 bool mutation_is_fully_active(mutation_type mut)
@@ -724,7 +744,7 @@ static bool _is_deadly(mutation_type mutat, bool delete_mut)
 static bool _accept_mutation(mutation_type mutat, bool ignore_rarity = false,
                              bool non_fatal = false, bool delete_mut = false)
 {
-    if (mutat == RANDOM_MUTATION)
+    if (!is_valid_mutation(mutat))
         return (false);
 
     const mutation_def& mdef = get_mutation_def(mutat);
@@ -777,17 +797,21 @@ static mutation_type _get_random_mutation(bool prefer_good,
 {
     int cweight = 0;
     mutation_type chosen = NUM_MUTATIONS;
-    for (unsigned i = 0; i < ARRAYSZ(mutation_defs); ++i)
+    for (unsigned i = 0; i < NUM_MUTATIONS; ++i)
     {
-        if (!mutation_defs[i].rarity)
+        const mutation_type curr = static_cast<mutation_type>(i);
+        if (!is_valid_mutation(curr))
             continue;
 
-        const mutation_type curr = mutation_defs[i].mutation;
+        const mutation_def& mdef = get_mutation_def(curr);
+        if (!mdef.rarity)
+            continue;
+
         if (!_accept_mutation(curr, true, non_fatal))
             continue;
 
-        const bool weighted = mutation_defs[i].bad != prefer_good;
-        int weight = mutation_defs[i].rarity;
+        const bool weighted = mdef.bad != prefer_good;
+        int weight = mdef.rarity;
         if (weighted)
             weight = weight * preferred_multiplier / 100;
 
@@ -1111,6 +1135,9 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         if (mutat == NUM_MUTATIONS)
             return (false);
     }
+
+    if (!is_valid_mutation(mutat))
+        return (false);
 
     // Saprovorous/gourmand can't be randomly acquired.
     if ((mutat == MUT_SAPROVOROUS || mutat == MUT_GOURMAND) && !force_mutation)
@@ -1827,10 +1854,12 @@ void roll_demonspawn_mutations()
 
 bool perma_mutate(mutation_type which_mut, int how_much)
 {
+    ASSERT(is_valid_mutation(which_mut));
+
     int levels = 0;
 
     how_much = std::min(static_cast<short>(how_much),
-                        mutation_defs[which_mut].levels);
+                        get_mutation_def(which_mut).levels);
 
     while (how_much-- > 0)
         if (mutate(which_mut, false, true, false, false, true))

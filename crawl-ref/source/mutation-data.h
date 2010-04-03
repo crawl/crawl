@@ -739,13 +739,6 @@
   "low mp"
 },
 
-{ RANDOM_MUTATION,                0,  3, false, false,
-  {"", "", ""},
-  {"", "", ""},
-  {"", "", ""},
-
-  ""
-},
 { MUT_STOCHASTIC_TORMENT_RESISTANCE, 0, 3, false, false,
   {"You are somewhat able to resist unholy torments (1 in 5 success).",
    "You are decently able to resist unholy torments (2 in 5 success).",

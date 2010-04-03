@@ -28,6 +28,9 @@ struct mutation_def
     const char*   wizname;   // For gaining it in wizmode.
 };
 
+void init_mut_index();
+
+bool is_valid_mutation(mutation_type mut);
 const mutation_def& get_mutation_def(mutation_type mut);
 
 void fixup_mutations();
