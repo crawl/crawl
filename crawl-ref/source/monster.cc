@@ -1261,7 +1261,7 @@ static bool _is_signature_weapon(monsters *monster, const item_def &weapon)
         return (weapon.sub_type == WPN_HOLY_SCOURGE);
 
     if (monster->type == MONS_DAEVA)
-        return (weapon.sub_type == WPN_HOLY_EUDEMON_BLADE);
+        return (weapon.sub_type == WPN_HOLY_BLADE);
 
     // Some other uniques have a signature weapon, usually because they
     // always spawn with it, or because it is referenced in their speech
