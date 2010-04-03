@@ -1122,6 +1122,9 @@ int player_regen()
         rr /= 3;
     }
 
+    if (you.stat_zero[STAT_STR])
+        rr /= 4;
+
     // Trog's Hand.  This circumvents the slow healing effect.
     if (you.attribute[ATTR_DIVINE_REGENERATION])
         rr += 100;
@@ -2355,6 +2358,9 @@ int carrying_capacity(burden_state_type bs)
               + (you.airborne() ? 1000 : 0);
     // We are nice to the lighter species in that strength adds absolutely
     // instead of relatively to body weight. --dpeg
+
+    if (you.stat_zero[STAT_STR])
+        cap /= 2;
 
     if (bs == BS_UNENCUMBERED)
         return ((cap * 5) / 6);
