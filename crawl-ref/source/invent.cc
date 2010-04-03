@@ -1113,10 +1113,10 @@ static void _get_inv_items_to_show(std::vector<const item_def*> &v,
     for (int i = 0; i < ENDOFPACK; i++)
     {
         if (you.inv[i].is_valid()
-            && you.inv[i].slot != excluded_slot
+            && you.inv[i].link != excluded_slot
             && _is_item_selected(you.inv[i], selector))
         {
-            v.push_back( &you.inv[i] );
+            v.push_back(&you.inv[i]);
         }
     }
 }
