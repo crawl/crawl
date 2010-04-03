@@ -536,7 +536,8 @@ static void _handle_stat_change(stat_type stat, const char* cause, bool see_sour
     {
         you.stat_zero[stat] = STAT_ZERO_START;
         mprf(MSGCH_WARN, "You have lost your %s.", stat_desc(stat, SD_NAME));
-        // any other stat dropping to zero effects here, eg paralysis.
+        // 2 to 5 turns of paralysis (XXX: decremented right away?)
+        you.increase_duration(DUR_PARALYSIS, 2 + random2(3));
     }
 
     you.redraw_stats[stat] = true;
