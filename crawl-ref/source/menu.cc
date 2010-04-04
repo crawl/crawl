@@ -47,11 +47,17 @@ void MenuDisplayText::draw_stock_item(int index, const MenuEntry *me)
 
     const int col = m_menu->item_colour(index, me);
     textattr(col);
+    const bool needs_cursor = (m_menu->get_cursor() == index
+                               && m_menu->is_set(MF_MULTISELECT));
+
     if (m_menu->get_flags() & MF_ALLOW_FORMATTING)
-        formatted_string::parse_string(me->get_text(), true, NULL, col).display();
+    {
+        formatted_string::parse_string(me->get_text(needs_cursor),
+                                       true, NULL, col).display();
+    }
     else
     {
-        std::string text = me->get_text();
+        std::string text = me->get_text(needs_cursor);
         if ((int) text.length() > get_number_of_cols())
             text = text.substr(0, get_number_of_cols());
         cprintf("%s", text.c_str());
@@ -74,7 +80,9 @@ MenuDisplayTile::MenuDisplayTile(Menu *menu) : MenuDisplay(menu)
 void MenuDisplayTile::draw_stock_item(int index, const MenuEntry *me)
 {
     int colour = m_menu->item_colour(index, me);
-    std::string text = me->get_text();
+    const bool needs_cursor = (m_menu->get_cursor() == index
+                               && m_menu->is_set(MF_MULTISELECT));
+    std::string text = me->get_text(needs_cursor);
     tiles.get_menu()->set_entry(index, text, colour, me);
 }
 
@@ -465,16 +473,60 @@ bool Menu::process_key( int keyin )
     case '.':
         if (last_selected != -1)
         {
-            if ((first_entry + pagesize - last_selected) == 1)
+            const int next = get_cursor();
+            if (next != -1)
+            {
+                select_index(next);
+                get_selected(&sel);
+                if (get_cursor() < next)
+                {
+                    first_entry = 0;
+                    nav = true;
+                }
+            }
+
+            if (!nav && (first_entry + pagesize - last_selected) == 1)
             {
                 page_down();
                 nav = true;
             }
-
-            select_index(last_selected + 1);
-            get_selected(&sel);
-
             repaint = true;
+        }
+        break;
+
+    case '-':
+        last_selected = get_cursor();
+
+        if (last_selected != -1)
+        {
+            const int it_count = item_count();
+            if (last_selected < it_count
+                && items[last_selected]->level == MEL_ITEM)
+            {
+                draw_item(last_selected);
+            }
+
+            const int next_cursor = get_cursor();
+            if (next_cursor != -1)
+            {
+                if (next_cursor < last_selected)
+                {
+                    first_entry = 0;
+                    nav = true;
+                    repaint = true;
+                }
+                else if ((first_entry + pagesize - last_selected) == 1)
+                {
+                    page_down();
+                    nav = true;
+                    repaint = true;
+                }
+                else if (next_cursor < it_count
+                         && items[next_cursor]->level == MEL_ITEM)
+                {
+                    draw_item(next_cursor);
+                }
+            }
         }
         break;
 
@@ -510,13 +562,8 @@ bool Menu::process_key( int keyin )
         break;
     }
 
-    if (last_selected != -1
-        && (items.size() == ((unsigned int) last_selected + 1)
-            || items[last_selected + 1] == NULL
-            || items[last_selected + 1]->level != MEL_ITEM))
-    {
+    if (last_selected != -1 && get_cursor() == -1)
         last_selected = -1;
-    }
 
     if (!isdigit( keyin ))
         num = -1;
@@ -1001,6 +1048,32 @@ bool Menu::is_selectable(int item) const
     return (false);
 }
 
+void Menu::select_item_index(int idx, int qty, bool draw_cursor)
+{
+    const int old_cursor = get_cursor();
+
+    last_selected = idx;
+    items[idx]->select( qty );
+    draw_item( idx );
+
+    if (draw_cursor)
+    {
+        int it_count = items.size();
+
+        const int new_cursor = get_cursor();
+        if (old_cursor != -1 && old_cursor < it_count
+            && items[old_cursor]->level == MEL_ITEM)
+        {
+            draw_item(old_cursor);
+        }
+        if (new_cursor != -1 && new_cursor < it_count
+            && items[new_cursor]->level == MEL_ITEM)
+        {
+            draw_item(new_cursor);
+        }
+    }
+}
+
 void Menu::select_index( int index, int qty )
 {
     int si = index == -1? first_entry : index;
@@ -1017,11 +1090,7 @@ void Menu::select_index( int index, int qty )
                     continue;
                 }
                 if (is_hotkey(i, items[i]->hotkeys[0]) && is_selectable(i))
-                {
-                    last_selected = i;
-                    items[i]->select( qty );
-                    draw_item( i );
-                }
+                    select_item_index(i, qty);
             }
         }
     }
@@ -1035,19 +1104,13 @@ void Menu::select_index( int index, int qty )
                 continue;
             }
             if (is_hotkey(i, items[i]->hotkeys[0]))
-            {
-                last_selected = i;
-                items[i]->select( qty );
-                draw_item( i );
-            }
+                select_item_index(i, qty);
         }
     }
     else if (items[si]->level == MEL_ITEM
              && (flags & (MF_SINGLESELECT | MF_MULTISELECT)))
     {
-        last_selected = si;
-        items[si]->select( qty );
-        draw_item( si );
+        select_item_index(si, qty, (flags & MF_MULTISELECT));
     }
 }
 
@@ -1263,7 +1326,7 @@ void slider_menu::select_search(const std::string &s)
 
         std::string::size_type found = text.find(srch);
         if (found != std::string::npos
-                && found == text.find_first_not_of(" "))
+            && found == text.find_first_not_of(" "))
         {
             move_selection(i);
             break;

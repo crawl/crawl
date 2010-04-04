@@ -111,7 +111,7 @@ public:
         return (hotkeys.size()? hotkeys[0] == key : false);
     }
 
-    virtual std::string get_text() const
+    virtual std::string get_text(const bool unused = false) const
     {
         if (level == MEL_ITEM && hotkeys.size())
         {
@@ -382,6 +382,25 @@ protected:
 
     MenuDisplay *mdisplay;
 
+public:
+    virtual int get_cursor()
+    {
+        if (last_selected == -1)
+            return (-1);
+
+        unsigned int next = last_selected + 1;
+        if (next == item_count())
+            next = 0;
+
+        if (items[next]->level != MEL_ITEM)
+            next++;
+
+        if (next >= item_count())
+            return (-1);
+
+        return (next);
+    }
+
 protected:
     void check_add_formatted_line(int firstcol, int nextcol,
                                   std::string &line, bool check_eol);
@@ -406,6 +425,7 @@ protected:
 
     void deselect_all(bool update_view = true);
     virtual void select_items( int key, int qty = -1 );
+    void select_item_index(int idx, int qty, bool draw_cursor = true);
     void select_index( int index, int qty = -1 );
 
     bool is_hotkey(int index, int key );
