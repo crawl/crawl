@@ -738,6 +738,9 @@ static void _get_status_lights(std::vector<status_light>& out)
 
     if (you.duration[DUR_BREATH_WEAPON])
         out.push_back(status_light(YELLOW, "BWpn"));
+
+    if (you.duration[DUR_POWERED_BY_DEATH])
+        out.push_back(status_light(LIGHTMAGENTA, "PbD"));
 }
 
 static void _print_status_lights(int y)

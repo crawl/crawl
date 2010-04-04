@@ -826,6 +826,21 @@
 
   "spiny"
 },
+{ MUT_POWERED_BY_DEATH,                 2,  3, false, false,
+  {"You slowly steal the life force of defeated enemies.",
+   "You steal the life force of defeated enemies.",
+   "You quickly steal the life force of defeated enemies."},
+
+  {"A wave of death washes over you.",
+   "The wave of death grows in power.",
+   "The wave of death grows in power."},
+
+  {"Your control of surrounding life forces is gone.",
+   "Your control of surrounding life forces weakens.",
+   "Your control of surrounding life forces weakens."},
+
+  "pbd"
+},
 
 // Scale mutations
 { MUT_DISTORTION_FIELD,                 2,  3, false, false,
