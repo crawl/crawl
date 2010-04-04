@@ -5985,11 +5985,6 @@ int player::has_claws(bool allow_tran) const
         }
     }
 
-    // XXX: Some assumptions about mutations and species in here.
-    int sp_claws = species_has_claws(species);
-    if (sp_claws > 0)
-        return (sp_claws);
-
     return (player_mutation_level(MUT_CLAWS));
 }
 

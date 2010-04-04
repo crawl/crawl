@@ -380,7 +380,7 @@ void ghost_demon::init_player_ghost()
     else
     {
         // Unarmed combat.
-        if (you.species == SP_TROLL)
+        if (you.demon_pow[MUT_CLAWS])
             damage += you.experience_level;
 
         damage += you.skills[SK_UNARMED_COMBAT];

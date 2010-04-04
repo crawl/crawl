@@ -50,25 +50,6 @@
 
 static int _body_covered();
 
-const char *troll_claw_descrip[4] = {
-    "You have claws for hands.",
-    "You have sharp claws for hands.",
-    "You have very sharp claws for hands.",
-    "You have claws sharper than steel for hands."
-};
-
-const char *troll_claw_gain[3] = {
-    "Your claws sharpen.",
-    "Your claws sharpen.",
-    "Your claws steel!"
-};
-
-const char *troll_claw_lose[3] = {
-    "Your claws look duller.",
-    "Your claws look duller.",
-    "Your claws feel softer."
-};
-
 const char *naga_speed_descrip[4] = {
     "You cover ground very slowly.",    // 10*14/10 = 14
     "You cover ground rather slowly.",  //  8*14/10 = 11
@@ -141,17 +122,6 @@ void fixup_mutations()
         _seek_mutation(MUT_STINGER)->rarity = 1;
         ASSERT(is_valid_mutation(MUT_BIG_WINGS));
         _seek_mutation(MUT_BIG_WINGS)->rarity = 1;
-    }
-
-    if (you.species == SP_TROLL)
-    {
-        mutation_def* mdef = _seek_mutation(MUT_CLAWS);
-        ASSERT(mdef);
-        for (int j = 0; j < 3; ++j)
-        {
-            mdef->gain[j] = troll_claw_gain[j];
-            mdef->lose[j] = troll_claw_lose[j];
-        }
     }
 
     if (you.species == SP_NAGA)
@@ -246,16 +216,6 @@ formatted_string describe_mutations()
 
     case SP_GHOUL:
         result += "Your body is rotting away.\n";
-        result += "You have sharp claws for hands.\n";
-        have_any = true;
-        break;
-
-    case SP_TROLL:
-        if (!you.mutation[MUT_CLAWS])
-        {
-            result += mutation_name(MUT_CLAWS, -1, true);
-            result += "\n";
-        }
         have_any = true;
         break;
 
@@ -1489,14 +1449,6 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
 
     std::string result;
     bool innate = false;
-
-    if (mut == MUT_CLAWS
-        && (you.species == SP_TROLL || you.species == SP_GHOUL))
-    {
-        innate = true;
-        if (you.species == SP_TROLL)
-            result = troll_claw_descrip[level];
-    }
 
     if ((mut == MUT_FAST || mut == MUT_BREATHE_POISON)
         && you.species == SP_NAGA)
