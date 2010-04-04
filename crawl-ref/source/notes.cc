@@ -446,7 +446,7 @@ void Note::check_milestone() const
 
             if (dep == 1)
                 mark_milestone("br.enter", "entered " + branch + ".", true);
-            else if (dep == _dungeon_branch_depth(br) && br != BRANCH_HIVE)
+            else if (dep == _dungeon_branch_depth(br))
             {
                 std::string level = place_name(packed_place, true, true);
                 if (level.find("Level ") == 0)
