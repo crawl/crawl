@@ -4144,7 +4144,7 @@ int melee_attack::player_calc_base_unarmed_damage()
             break;
         }
     }
-    else if (you.equip[ EQ_GLOVES ] == -1)
+    else if (you.equip[EQ_GLOVES] == -1)
     {
         // Claw damage only applies for bare hands.
         if (you.species == SP_TROLL)
