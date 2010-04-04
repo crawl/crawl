@@ -1974,8 +1974,8 @@ void check_antennae_detect()
 int count_pbd_corpses()
 {
     int corpse_count = 0;
-    for(radius_iterator ri(you.pos(),
-        player_mutation_level(MUT_POWERED_BY_DEATH)*3); ri; ++ri)
+    for (radius_iterator ri(you.pos(),
+         player_mutation_level(MUT_POWERED_BY_DEATH) * 3); ri; ++ri)
     {
         for (stack_iterator j(*ri); j; ++j)
         {
@@ -1987,10 +1987,9 @@ int count_pbd_corpses()
         }
     }
 
-    if (corpse_count > 7)
-        corpse_count = 7;
+    corpse_count = std::min(7, corpse_count);
 
-    return corpse_count;
+    return (corpse_count);
 }
 
 void rot_pbd_corpses()
