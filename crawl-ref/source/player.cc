@@ -594,7 +594,7 @@ bool you_can_wear(int eq, bool special_armour)
 
     // Of the remaining items, these races can't wear anything.
     if (you.species == SP_TROLL || you.species == SP_SPRIGGAN
-        || player_genus(GENPC_OGRE) || player_genus(GENPC_DRACONIAN))
+        || player_genus(GENPC_OGREISH) || player_genus(GENPC_DRACONIAN))
     {
         return (false);
     }
@@ -6202,7 +6202,7 @@ bool player::cannot_act() const
 
 bool player::can_throw_large_rocks() const
 {
-    return (player_genus(GENPC_OGRE) || species == SP_TROLL);
+    return (player_genus(GENPC_OGREISH) || species == SP_TROLL);
 }
 
 bool player::can_smell() const

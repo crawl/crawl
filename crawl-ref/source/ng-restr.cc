@@ -792,7 +792,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
             return (weapon_restriction(WPN_SPEAR, ng));
 
         case WPN_ANKUS:
-            if (species_genus(ng.species) == GENPC_OGRE)
+            if (species_genus(ng.species) == GENPC_OGREISH)
                 return (CC_UNRESTRICTED);
             // intentional fall-through
         default:
