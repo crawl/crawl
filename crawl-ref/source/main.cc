@@ -2145,7 +2145,7 @@ static void _decrement_durations()
                     && j->special > 50)
                 {
                     j->special -= random2(you.duration[DUR_POWERED_BY_DEATH]/2);
-                    dprf(MSGCH_DIAGNOSTICS, "Rot time: %d", j->special);
+                    dprf("Rot time: %d", j->special);
                 }
             }
         }
