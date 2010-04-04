@@ -65,4 +65,5 @@ int how_mutated(bool all = false, bool levels = false);
 void check_demonic_guardian();
 void check_antennae_detect();
 int count_pbd_corpses();
+void rot_pbd_corpses();
 #endif

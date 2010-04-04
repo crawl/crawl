@@ -2133,23 +2133,10 @@ static void _decrement_durations()
         you.redraw_evasion = true;
     }
 
-    if (!_decrement_a_duration(DUR_POWERED_BY_DEATH, delay,
-                    "You feel less regenerative."))
-    {
-        for(radius_iterator ri(you.pos(),
-                player_mutation_level(MUT_POWERED_BY_DEATH)*3); ri; ++ri)
-        {
-            for (stack_iterator j(*ri); j; ++j)
-            {
-                if (j->base_type == OBJ_CORPSES && j->sub_type == CORPSE_BODY
-                    && j->special > 50)
-                {
-                    j->special -= random2(you.duration[DUR_POWERED_BY_DEATH]/2);
-                    dprf("Rot time: %d", j->special);
-                }
-            }
-        }
-    }
+    _decrement_a_duration(DUR_POWERED_BY_DEATH, delay,
+                          "You feel less regenerative.");
+    if (you.duration[DUR_POWERED_BY_DEATH] > 0)
+        rot_pbd_corpses();
 
     if (_decrement_a_duration(DUR_SEE_INVISIBLE, delay)
         && !you.can_see_invisible())

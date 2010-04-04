@@ -1992,3 +1992,20 @@ int count_pbd_corpses()
 
     return corpse_count;
 }
+
+void rot_pbd_corpses()
+{
+    for(radius_iterator ri(you.pos(),
+            player_mutation_level(MUT_POWERED_BY_DEATH)*3); ri; ++ri)
+    {
+        for (stack_iterator j(*ri); j; ++j)
+        {
+            if (j->base_type == OBJ_CORPSES && j->sub_type == CORPSE_BODY
+                && j->special > 50)
+            {
+                j->special -= random2(you.duration[DUR_POWERED_BY_DEATH]/2);
+                dprf("Rot time: %d", j->special);
+            }
+        }
+    }
+}
