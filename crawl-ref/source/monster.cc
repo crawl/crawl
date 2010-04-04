@@ -3274,14 +3274,14 @@ bool monsters::is_chaotic() const
 
     // Knowing chaotic spells is not enough to make you "essentially"
     // chaotic (i.e. silver doesn't hurt you), it's just unclean for
-    // Zin. Having chaotic abilities (not actual spells) does mean
+    // Zin.  Having chaotic abilities (not actual spells) does mean
     // you're truly changed by chaos.
     if (has_chaotic_spell() && !is_actual_spellcaster())
         return (true);
 
     // Checking for AF_KLOWN doesn't work, as it gets switched to another AF.
-    if (has_attack_flavour(AF_MUTATE)
-        || type == MONS_KILLER_KLOWN
+    if (type == MONS_KILLER_KLOWN
+        || has_attack_flavour(AF_MUTATE)
         || has_attack_flavour(AF_CHAOS))
     {
         return (true);
@@ -3438,14 +3438,14 @@ int monsters::res_water_drowning() const
 {
     const int res = res_asphyx();
     if (res)
-        return res;
+        return (res);
     switch (mons_habitat(this))
     {
     case HT_WATER:
     case HT_AMPHIBIOUS:
-        return 1;
+        return (1);
     default:
-        return 0;
+        return (0);
     }
 }
 
@@ -3585,7 +3585,7 @@ int monsters::res_acid() const
 int monsters::res_magic() const
 {
     if (mons_immune_magic(this))
-        return MAG_IMMUNE;
+        return (MAG_IMMUNE);
 
     int u = (get_monster_data(this->type))->resist_magic;
 
@@ -3626,7 +3626,7 @@ flight_type monsters::flight_mode() const
 
 bool monsters::is_levitating() const
 {
-    // Checking class flags is not enough - see mons_flies.
+    // Checking class flags is not enough - see mons_flies().
     return (flight_mode() == FL_LEVITATE);
 }
 
@@ -3770,8 +3770,8 @@ int monsters::hurt(const actor *agent, int amount, beam_type flavour,
                 flags |= MF_EXPLODE_KILL;
         }
 
-        // Allow the victim to exhibit passive damage behaviour (royal
-        // jelly).
+        // Allow the victim to exhibit passive damage behaviour (e.g.
+        // the royal jelly).
         react_to_damage(agent, amount, flavour);
     }
 
