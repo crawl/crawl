@@ -798,7 +798,9 @@ void set_equip_race( item_def &item, unsigned long flags )
         case OBJ_WEAPONS:
             if (item.sub_type == WPN_QUICK_BLADE
                 || item.sub_type == WPN_LONGBOW)
+            {
                 return;
+            }
             break;
         case OBJ_ARMOUR:
             if (get_armour_slot(item) == EQ_HELMET && !is_hard_helmet(item))
