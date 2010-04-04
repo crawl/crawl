@@ -1104,12 +1104,12 @@ int player_regen()
             rr += 10;
     }
 
-    // Powered By Death mutation, boots regen by 10 per corpse in
+    // Powered By Death mutation, boosts regen by 10 per corpse in
     // a mutation_level * 3 (3/6/9) radius, to a maximum of 7
-    // corpses. If and only if the duration of the effect is
+    // corpses.  If and only if the duration of the effect is
     // still active.
     if (you.duration[DUR_POWERED_BY_DEATH])
-        rr += count_pbd_corpses() * 10;
+        rr += handle_pbd_corpses(false) * 10;
 
     // Slow heal mutation.  Each level reduces your natural healing by
     // one third.

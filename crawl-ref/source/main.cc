@@ -2136,7 +2136,7 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_POWERED_BY_DEATH, delay,
                           "You feel less regenerative.");
     if (you.duration[DUR_POWERED_BY_DEATH] > 0)
-        rot_pbd_corpses();
+        handle_pbd_corpses(true);
 
     if (_decrement_a_duration(DUR_SEE_INVISIBLE, delay)
         && !you.can_see_invisible())
