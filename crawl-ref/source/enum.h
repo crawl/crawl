@@ -2392,7 +2392,6 @@ enum mutation_type
     MUT_HURL_HELLFIRE,
     MUT_FAST,
     MUT_FAST_METABOLISM,
-    MUT_FEAST,                        // no entry in mutation-data.h
     MUT_FLEXIBLE_WEAK,
     MUT_FRAIL,
     MUT_GOURMAND,
