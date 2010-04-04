@@ -452,6 +452,7 @@ void area_shift(void)
     FixedArray<unsigned short, LOS_DIAMETER, LOS_DIAMETER> fprops;
     const coord_def los_delta(LOS_RADIUS, LOS_RADIUS);
 
+    fprops.init(0);
     for (radius_iterator ri(you.get_los()); ri; ++ri)
     {
         fprops(you.pos() - *ri + los_delta) = env.pgrid(*ri);
