@@ -2192,7 +2192,13 @@ static item_status_flag_type _determine_armour_race(const item_def& item,
             break;
 
         case ARM_CAP:
+            if (one_chance_in(6))
+                rc = ISFLAG_ELVEN;
+            break;
+
         case ARM_WIZARD_HAT:
+            if (one_chance_in(6))
+                rc = ISFLAG_ORCISH;
             if (one_chance_in(6))
                 rc = ISFLAG_ELVEN;
             break;
