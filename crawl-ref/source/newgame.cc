@@ -4763,7 +4763,7 @@ bool _give_items_skills()
 
         case SP_OGRE:
             // Give ogres a knife for butchering, as they now start with
-            // a club in stead of an axe.
+            // a club instead of an axe.
             _newgame_make_item(4, EQ_NONE, OBJ_WEAPONS, WPN_KNIFE);
         case SP_TROLL:
             _newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 5,
