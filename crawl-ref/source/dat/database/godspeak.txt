@@ -461,9 +461,9 @@ w:20
 
 "Hey, that's my @xom_plaything@!"
 
-"Oh no, you don't!"
+"Oh, no, you don't!"
 
-"That's my @xom_plaything@, go get your own one!"
+"That's my @xom_plaything@, go get your own!"
 
 "Leave my @xom_plaything@ alone!"
 %%%%
