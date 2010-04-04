@@ -42,6 +42,7 @@
 #include "religion.h"
 #include "random.h"
 #include "skills2.h"
+#include "stuff.h"
 #include "transform.h"
 #include "tutorial.h"
 #include "view.h"
@@ -1606,6 +1607,8 @@ static const facet_def _demon_facets[] =
       { 3, 3, 3 } },
     { { MUT_ROBUST, MUT_ROBUST, MUT_ROBUST },
       { 3, 3, 3 } },
+    { { MUT_POWERED_BY_DEATH, MUT_POWERED_BY_DEATH, MUT_POWERED_BY_DEATH },
+      { 3, 3, 3 } },
     { { MUT_NEGATIVE_ENERGY_RESISTANCE, MUT_NEGATIVE_ENERGY_RESISTANCE,
           MUT_NEGATIVE_ENERGY_RESISTANCE },
       { 3, 3, 3 } },
@@ -1947,7 +1950,8 @@ void check_demonic_guardian()
     }
 }
 
-void check_antennae_detect() {
+void check_antennae_detect()
+{
     // we're already here, so the player has at least 1 level of Antennae
     const int radius = player_mutation_level(MUT_ANTENNAE) == 1 ? 3 : 5;
 
@@ -1963,4 +1967,26 @@ void check_antennae_detect() {
             set_map_knowledge_detected_mons(*ri);
         }
     }
+}
+
+int count_pbd_corpses()
+{
+    int corpse_count = 0;
+    for(radius_iterator ri(you.pos(),
+        player_mutation_level(MUT_POWERED_BY_DEATH)*3); ri; ++ri)
+    {
+        for (stack_iterator j(*ri); j; ++j)
+        {
+            if (j->base_type == OBJ_CORPSES && j->sub_type == CORPSE_BODY
+                && j->special > 50)
+            {
+                ++corpse_count;
+            }
+        }
+    }
+
+    if (corpse_count > 7)
+        corpse_count = 7;
+
+    return corpse_count;
 }

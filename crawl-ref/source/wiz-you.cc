@@ -716,6 +716,7 @@ static const char* dur_names[] =
     "see invisible",
     "weapon brand",
     "demonic guardian",
+    "pbd",
     "silence",
     "condensation shield",
     "stoneskin",

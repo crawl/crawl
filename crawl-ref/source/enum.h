@@ -1187,6 +1187,7 @@ enum duration_type
     DUR_SEE_INVISIBLE,
     DUR_WEAPON_BRAND,                  // general "branding" spell counter
     DUR_DEMONIC_GUARDIAN,              // demonic guardian timeout
+    DUR_POWERED_BY_DEATH,
     DUR_SILENCE,
     DUR_CONDENSATION_SHIELD,
     DUR_STONESKIN,
@@ -2405,6 +2406,7 @@ enum mutation_type
     MUT_PASSIVE_FREEZE,
     MUT_PASSIVE_MAPPING,
     MUT_POISON_RESISTANCE,
+    MUT_POWERED_BY_DEATH,
     MUT_REGENERATION,
     MUT_ROBUST,
     MUT_SAPROVOROUS,

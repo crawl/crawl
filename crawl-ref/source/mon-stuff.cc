@@ -1917,6 +1917,15 @@ int monster_die(monsters *monster, killer_type killer,
             corpse = place_monster_corpse(monster, silent);
     }
 
+    if ((killer == KILL_YOU || killer == KILL_YOU_MISSILE ||
+        killer == KILL_YOU_CONF) && corpse &&
+        player_mutation_level(MUT_POWERED_BY_DEATH))
+    {
+        const int pbd_dur = player_mutation_level(MUT_POWERED_BY_DEATH) * 8
+                            + roll_dice(2, 8);
+        you.set_duration(DUR_POWERED_BY_DEATH, pbd_dur);
+    }
+
     unsigned int exp_gain = 0, avail_gain = 0;
     if (!mons_reset)
     {

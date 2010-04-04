@@ -230,6 +230,7 @@ public:
 
   bool active_demonic_guardian;
   bool disable_demonic_guardian;
+  std::vector<item_def> powered_by_death_corpses;
 
   unsigned char magic_contamination;
 
