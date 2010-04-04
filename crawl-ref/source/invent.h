@@ -81,7 +81,7 @@ public:
     const item_def *item;
 
     InvEntry( const item_def &i );
-    std::string get_text() const;
+    std::string get_text(const bool need_cursor = false) const;
     void set_show_glyph(bool doshow);
 
     const std::string &get_basename() const;

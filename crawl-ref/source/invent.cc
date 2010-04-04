@@ -183,11 +183,17 @@ std::string InvEntry::get_filter_text() const
     return (filtering_item_prefix(*item) + " " + get_text());
 }
 
-std::string InvEntry::get_text() const
+std::string InvEntry::get_text(const bool need_cursor) const
 {
     std::ostringstream tstr;
 
-    tstr << ' ' << static_cast<char>(hotkeys[0]) << ' ';
+    tstr << ' ' << static_cast<char>(hotkeys[0]);
+
+    if (need_cursor)
+        tstr << '[';
+    else
+        tstr << ' ';
+
     if (!selected_qty)
         tstr << '-';
     else if (selected_qty < quantity)
@@ -195,10 +201,15 @@ std::string InvEntry::get_text() const
     else
         tstr << '+';
 
-    if (InvEntry::show_glyph)
-        tstr << " (" << glyph_to_tagstr(get_item_glyph(item)) << ")";
+    if (need_cursor)
+        tstr << ']';
+    else
+        tstr << ' ';
 
-    tstr << ' ' << text;
+    if (InvEntry::show_glyph)
+        tstr << "(" << glyph_to_tagstr(get_item_glyph(item)) << ")" << " ";
+
+    tstr << text;
 
     if (InvEntry::show_prices)
     {
