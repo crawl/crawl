@@ -803,8 +803,11 @@ void set_equip_race( item_def &item, unsigned long flags )
             }
             break;
         case OBJ_ARMOUR:
-            if (get_armour_slot(item) == EQ_HELMET && !is_hard_helmet(item))
+            if (get_armour_slot(item) == EQ_HELMET && !is_hard_helmet(item)
+                && item.sub_type != ARM_WIZARD_HAT)
+            {
                 return;
+            }
             break;
         default:
             break;
