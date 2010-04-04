@@ -1127,6 +1127,8 @@ static item_status_flag_type _determine_weapon_race(const item_def& item,
             break;
 
         case WPN_LONGBOW:
+            if (one_chance_in(6))
+                rc = ISFLAG_ORCISH;
             if (one_chance_in(3))
                 rc = ISFLAG_ELVEN;
             break;
