@@ -1448,9 +1448,9 @@ static int _is_covering(mutation_type mut)
 {
     for (unsigned i = 0; i < ARRAYSZ(_all_scales); ++i)
         if (_all_scales[i] == mut)
-            return 1;
+            return (1);
 
-    return 0;
+    return (0);
 }
 
 static int _body_covered()
@@ -1463,7 +1463,6 @@ static int _body_covered()
 
     if (player_genus(GENPC_DRACONIAN))
         covered += 3;
-
 
     for (unsigned i = 0; i < ARRAYSZ(_all_scales); ++i)
         covered += you.mutation[_all_scales[i]];
@@ -1562,7 +1561,7 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
         // Build the result
         std::ostringstream ostr;
         ostr << '<' << colourname << '>' << result
-             << "</" << colourname << ">";
+             << "</" << colourname << '>';
         result = ostr.str();
     }
 
