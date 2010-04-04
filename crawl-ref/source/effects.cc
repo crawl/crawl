@@ -90,7 +90,7 @@ int holy_word_player(int pow, int caster, actor *attacker)
     if (attacker == &you)
         hploss = std::max(0, you.hp / 2 - 1);
     else
-        hploss = roll_dice(2, 15) + (random2(pow) / 3);
+        hploss = roll_dice(3, 15) + (random2(pow) / 3);
 
     if (!hploss)
         return (0);
@@ -152,7 +152,7 @@ int holy_word_monsters(coord_def where, int pow, int caster,
     if (attacker == monster)
         hploss = std::max(0, monster->hit_points / 2 - 1);
     else
-        hploss = roll_dice(2, 15) + (random2(pow) / 3);
+        hploss = roll_dice(3, 15) + (random2(pow) / 3);
 
     if (hploss)
         simple_monster_message(monster, " convulses!");
