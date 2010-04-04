@@ -397,7 +397,7 @@ bool Menu::process_key( int keyin )
         sel.clear();
         lastch = keyin;
         return (false);
-    case ' ': case CK_PGDN: case '>': case '\'':
+    case ' ': case CK_PGDN: case '>':
     case CK_MOUSE_B1:
     case CK_MOUSE_CLICK:
         nav = true;
@@ -494,7 +494,7 @@ bool Menu::process_key( int keyin )
         }
         break;
 
-    case '-':
+    case '\'':
         last_selected = get_cursor();
 
         if (last_selected != -1)
