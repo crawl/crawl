@@ -394,7 +394,7 @@ formatted_string describe_mutations()
     }
 
     // a bit more stuff
-    if (player_genus(GENPC_OGRE) || you.species == SP_TROLL
+    if (player_genus(GENPC_OGREISH) || you.species == SP_TROLL
         || player_genus(GENPC_DRACONIAN) || you.species == SP_SPRIGGAN)
     {
         result += "Your body does not fit into most forms of armour.\n";

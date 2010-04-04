@@ -359,7 +359,7 @@ static void _give_starting_food()
     {
         item.base_type = OBJ_FOOD;
         if (you.species == SP_HILL_ORC || you.species == SP_KOBOLD
-            || player_genus(GENPC_OGRE) || you.species == SP_TROLL)
+            || player_genus(GENPC_OGREISH) || you.species == SP_TROLL)
         {
             item.sub_type = FOOD_MEAT_RATION;
         }
@@ -3766,7 +3766,7 @@ bool _give_items_skills()
             if (species_skills(SK_MACES_FLAILS, you.species) <
                 species_skills(SK_AXES, you.species))
             {
-                startwep = (player_genus(GENPC_OGRE)) ? WPN_ANKUS : WPN_MACE;
+                startwep = (player_genus(GENPC_OGREISH)) ? WPN_ANKUS : WPN_MACE;
             }
 
             _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, startwep);
@@ -4550,7 +4550,7 @@ bool _give_items_skills()
         if (you.species == SP_SPRIGGAN)
             you.inv[0].sub_type = WPN_DAGGER;
 
-        if (player_genus(GENPC_OGRE) || you.species == SP_TROLL)
+        if (player_genus(GENPC_OGREISH) || you.species == SP_TROLL)
             you.inv[0].sub_type = WPN_CLUB;
 
         weap_skill = 1;
@@ -4668,7 +4668,7 @@ bool _give_items_skills()
         _newgame_make_item(2, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
         _newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_STALKING);
 
-        if (player_genus(GENPC_OGRE) || you.species == SP_TROLL)
+        if (player_genus(GENPC_OGREISH) || you.species == SP_TROLL)
             you.inv[0].sub_type = WPN_CLUB;
 
         weap_skill = 1;
@@ -4693,7 +4693,7 @@ bool _give_items_skills()
         if (you.species == SP_SPRIGGAN)
             you.inv[0].sub_type = WPN_DAGGER;
 
-        if (player_genus(GENPC_OGRE) || you.species == SP_TROLL)
+        if (player_genus(GENPC_OGREISH) || you.species == SP_TROLL)
             you.inv[0].sub_type = WPN_CLUB;
 
         weap_skill = 2;

@@ -2442,7 +2442,7 @@ std::string _status_mut_abilities()
     }                           //end switch - innate abilities
 
     // a bit more stuff
-    if (player_genus(GENPC_OGRE) || you.species == SP_TROLL
+    if (player_genus(GENPC_OGREISH) || you.species == SP_TROLL
         || player_genus(GENPC_DRACONIAN) || you.species == SP_SPRIGGAN)
     {
         mutations.push_back("unfitting armour");

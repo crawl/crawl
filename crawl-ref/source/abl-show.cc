@@ -652,7 +652,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
         if (you.species == SP_TROLL)
             failure -= 30;
         else if (player_genus(GENPC_DWARVEN) || you.species == SP_HILL_ORC
-                || player_genus(GENPC_OGRE))
+                || player_genus(GENPC_OGREISH))
         {
             failure -= 10;
         }

@@ -299,7 +299,7 @@ genus_type species_genus(species_type species)
         return (GENPC_DWARVEN);
 
     case SP_OGRE:
-        return (GENPC_OGRE);
+        return (GENPC_OGREISH);
 
     default:
         return (GENPC_NONE);
