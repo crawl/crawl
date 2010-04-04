@@ -1974,6 +1974,7 @@ void check_antennae_detect()
 int handle_pbd_corpses(bool do_rot)
 {
     int corpse_count = 0;
+
     for (radius_iterator ri(you.pos(),
          player_mutation_level(MUT_POWERED_BY_DEATH) * 3); ri; ++ri)
     {
@@ -1989,11 +1990,12 @@ int handle_pbd_corpses(bool do_rot)
                     j->special -= random2(you.duration[DUR_POWERED_BY_DEATH]/2);
                     dprf("Rot time: %d", j->special);
                 }
+
+                if (corpse_count == 7)
+                    break;
             }
         }
     }
-
-    corpse_count = std::min(7, corpse_count);
 
     return (corpse_count);
 }
