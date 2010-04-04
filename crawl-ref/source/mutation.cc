@@ -1244,8 +1244,9 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         break;
 
     case MUT_NIGHTSTALKER:
-        if(player_mutation_level(mutat) > 1)
-        {
+        // If we already have the mutation, we're about to
+        // go to either level 2 or 3, so we need a LOS reduction
+        if(player_mutation_level(mutat))
             you.current_vision -= 2;
             set_los_radius(you.current_vision);
         }
