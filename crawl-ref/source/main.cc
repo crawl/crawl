@@ -2327,15 +2327,9 @@ static void _decrement_durations()
         Tutorial.tutorial_events[TUT_YOU_ENCHANTED] = tut_slow;
     }
 
-    if (you.duration[DUR_CORONA])
-    {
-        you.duration[DUR_CORONA] -= delay;
-        if (you.duration[DUR_CORONA] < 1)
-            you.duration[DUR_CORONA] = 0;
-
-        if (!you.duration[DUR_CORONA] && !you.backlit())
+    if (_decrement_a_duration(DUR_CORONA, delay))
+        if (!you.backlit())
             mpr("You are no longer glowing.", MSGCH_DURATION);
-    }
 
     // Leak piety from the piety pool into actual piety.
     // Note that changes of religious status without corresponding actions
