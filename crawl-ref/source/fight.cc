@@ -5149,15 +5149,18 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
 
 void melee_attack::mons_do_spines()
 {
+    const item_def *body = you.slot_item(EQ_BODY_ARMOUR, false);
+    int evp = 0;
+
+    if(body)
+        evp = -property(*body, PARM_EVASION);
+
     if (you.mutation[MUT_SPINY]
-        && one_chance_in(-property(*you.slot_item(EQ_BODY_ARMOUR, false),
-                                   PARM_EVASION) + 1)
-        && grid_distance(you.pos(), attacker->as_monster()->pos()) == 1)
+        && grid_distance(you.pos(), attacker->as_monster()->pos()) == 1
+        && one_chance_in(evp + 1))
     {
         int dmg = roll_dice(player_mutation_level(MUT_SPINY), 6);
         int ac = random2(1+attacker->as_monster()->armour_class());
-        const int evp = -property(*you.slot_item(EQ_BODY_ARMOUR, false)
-                                  , PARM_EVASION);
 
         int hurt = dmg - ac - evp;
 
