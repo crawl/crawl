@@ -615,13 +615,16 @@ bool you_can_wear(int eq, bool special_armour)
 
 bool player_has_feet()
 {
-   if (you.species == SP_NAGA || player_genus(GENPC_DRACONIAN))
-       return (false);
+    if (you.species == SP_NAGA || player_genus(GENPC_DRACONIAN))
+        return (false);
 
-   if (player_mutation_level(MUT_HOOVES) >= 3 || player_mutation_level(MUT_TALONS) >= 3)
-       return (false);
+    if (player_mutation_level(MUT_HOOVES) >= 3
+        || player_mutation_level(MUT_TALONS) >= 3)
+    {
+        return (false);
+    }
 
-   return (true);
+    return (true);
 }
 
 bool player_wearing_slot(int eq)
