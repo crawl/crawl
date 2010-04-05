@@ -2505,6 +2505,10 @@ std::string _status_mut_abilities()
                 snprintf(info, INFO_SIZE, "cold resistance %d", level);
                 current = info;
                 break;
+            case MUT_PASSIVE_FREEZE:
+                snprintf(info, INFO_SIZE, "frigid envelope");
+                current = info;
+                break;
             case MUT_SHOCK_RESISTANCE:
                 current = "electricity resistance";
                 break;
