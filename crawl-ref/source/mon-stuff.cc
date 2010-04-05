@@ -1534,6 +1534,23 @@ int monster_die(monsters *monster, killer_type killer,
                 }
             }
 
+            // Divine health and mana restoration doesn't happen when
+            // killing born-friendly monsters.
+            if (good_kill
+                && (you.religion == GOD_MAKHLEB
+                    || you.religion == GOD_SHINING_ONE
+                       && (monster->is_evil() || monster->is_unholy()))
+                && !player_under_penance()
+                && random2(you.piety) >= piety_breakpoint(0))
+            {
+                if (you.hp < you.hp_max)
+                {
+                    mpr("You feel a little better.");
+                    inc_hp(monster->hit_dice + random2(monster->hit_dice),
+                           false);
+                }
+            }
+
             if (good_kill
                 && (you.religion == GOD_MAKHLEB
                     || you.religion == GOD_VEHUMET
