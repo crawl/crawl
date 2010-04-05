@@ -6005,7 +6005,7 @@ int player::has_talons(bool allow_tran) const
     return (player_mutation_level(MUT_TALONS));
 }
 
-bool player::has_usable_talons() const
+bool player::has_usable_talons(bool allow_tran) const
 {
     return (equip[EQ_BOOTS] == -1 && has_talons(allow_tran));
 }
