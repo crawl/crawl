@@ -580,37 +580,6 @@ bool MiscastEffect::_big_cloud(cloud_type cl_type, int power, int size,
 bool MiscastEffect::_lose_stat(stat_type which_stat,
                                unsigned char stat_loss)
 {
-    if (lethality_margin <= 0)
-        return lose_stat(which_stat, stat_loss, false, cause);
-
-    if (which_stat == STAT_RANDOM)
-    {
-        const int might = you.duration[DUR_MIGHT] ? 5 : 0;
-        const int brilliant = you.duration[DUR_BRILLIANCE] ? 5 : 0;
-        const int agile = you.duration[DUR_AGILITY] ? 5 : 0;
-
-        std::vector<stat_type> stat_types;
-        if ((you.strength() - might - stat_loss) > 0)
-            stat_types.push_back(STAT_STR);
-        if ((you.intel() - brilliant - stat_loss) > 0)
-            stat_types.push_back(STAT_INT);
-        if ((you.dex() - agile - stat_loss) > 0)
-            stat_types.push_back(STAT_DEX);
-
-        if (stat_types.size() == 0)
-        {
-            if (avoid_lethal(you.hp))
-                return (false);
-            else
-                return lose_stat(which_stat, stat_loss, false, cause);
-        }
-
-        which_stat = stat_types[random2(stat_types.size())];
-    }
-
-    if ((you.stat(which_stat) - stat_loss) <= 0 && avoid_lethal(you.hp))
-        return (false);
-
     return lose_stat(which_stat, stat_loss, false, cause);
 }
 
