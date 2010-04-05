@@ -1094,6 +1094,7 @@ static void _finish_delay(const delay_queue_item &delay)
     {
     case DELAY_WEAPON_SWAP:
         weapon_switch(delay.parm1);
+        you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
         break;
 
     case DELAY_JEWELLERY_ON:
