@@ -994,10 +994,13 @@ bool melee_attack::player_aux_unarmed()
             unarmed_attack = "kick";
 
             if (player_mutation_level(MUT_HOOVES))
+            {
+                // Centaurs have hooves that do good damage.
                 aux_damage = player_mutation_level(MUT_HOOVES)*3 + 1;
+            }
             else if (you.has_usable_talons())
             {
-                // Kenku have large taloned feet that do good damage.
+                // Kenku have taloned feet that do good damage.
                 unarmed_attack = "claw";
                 miss_verb      = "kick";
                 aux_damage     = player_mutation_level(MUT_TALONS)*2 + 2;
