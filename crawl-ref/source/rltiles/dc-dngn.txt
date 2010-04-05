@@ -665,6 +665,61 @@ wall/brick_gray1
 wall/brick_gray2
 wall/brick_gray3
 
+%weight 2
+wall/stone_brick1 WALL_STONE_BRICK
+wall/stone_brick2
+wall/stone_brick3
+wall/stone_brick4
+wall/stone_brick5
+wall/stone_brick6
+wall/stone_brick7
+wall/stone_brick8
+wall/stone_brick9
+wall/stone_brick10
+%weight 1
+wall/stone_brick11
+wall/stone_brick12
+
+%weight 5
+floor/cobble_blood1 FLOOR_COBBLE_BLOOD
+floor/cobble_blood2
+floor/cobble_blood3
+floor/cobble_blood4
+floor/cobble_blood5
+%weight 3
+floor/cobble_blood6
+floor/cobble_blood7
+%weight 2
+floor/cobble_blood8
+floor/cobble_blood9
+floor/cobble_blood10
+floor/cobble_blood11
+%weight 1
+floor/cobble_blood12
+
+%weight 5
+wall/marble_wall1 WALL_MARBLE
+wall/marble_wall2
+wall/marble_wall3
+wall/marble_wall4
+wall/marble_wall5
+%weight 3
+wall/marble_wall6
+wall/marble_wall7
+wall/marble_wall8
+%weight 1
+wall/marble_wall9
+wall/marble_wall10
+wall/marble_wall11
+wall/marble_wall12
+
+floor/marble_floor1 FLOOR_MARBLE
+floor/marble_floor2
+floor/marble_floor3
+floor/marble_floor4
+floor/marble_floor5
+floor/marble_floor6
+
 wall/stone_gray0 WALL_STONE_GRAY
 wall/stone_gray1
 wall/stone_gray2
