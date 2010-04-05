@@ -1005,7 +1005,7 @@ bool melee_attack::player_aux_unarmed()
                 miss_verb      = "kick";
 
                 // Max talon damage: 8.
-                aux_damage    += player_mutation_level(MUT_TALONS) * 3 / 3;
+                aux_damage += player_mutation_level(MUT_TALONS);
             }
 
             break;
