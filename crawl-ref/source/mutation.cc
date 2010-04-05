@@ -780,10 +780,59 @@ static int _handle_conflicting_mutations(mutation_type mutation,
     return (0);
 }
 
+static const mutation_type _all_scales[] = {
+    MUT_DISTORTION_FIELD,           MUT_ICY_BLUE_SCALES,
+    MUT_IRIDESCENT_SCALES,          MUT_LARGE_BONE_PLATES,
+    MUT_MOLTEN_SCALES,              MUT_ROUGH_BLACK_SCALES,
+    MUT_RUGGED_BROWN_SCALES,        MUT_SLIMY_GREEN_SCALES,
+    MUT_THIN_METALLIC_SCALES,       MUT_THIN_SKELETAL_STRUCTURE,
+    MUT_YELLOW_SCALES,
+};
+
+static int _is_covering(mutation_type mut)
+{
+    for (unsigned i = 0; i < ARRAYSZ(_all_scales); ++i)
+        if (_all_scales[i] == mut)
+            return (1);
+
+    return (0);
+}
+
+static int _body_covered()
+{
+    // Check how much of your body is covered by scales, etc.
+    int covered = 0;
+
+    if (you.species == SP_NAGA)
+        covered++;
+
+    if (player_genus(GENPC_DRACONIAN))
+        covered += 3;
+
+    for (unsigned i = 0; i < ARRAYSZ(_all_scales); ++i)
+    {
+        if (you.species == SP_DEMONSPAWN)
+        {
+            for(unsigned j = 0; j < you.demonic_traits.size(); ++j)
+            {
+                //dprf("%s %s", get_mutation_def(you.demonic_traits[j].mutation).wizname, get_mutation_def(_all_scales[i]).wizname);
+                if (you.demonic_traits[j].mutation == _all_scales[i])
+                {
+                    ++covered;
+                }
+            }
+        } else {
+            covered += you.mutation[_all_scales[i]];
+        }
+    }
+
+    return (covered);
+}
+
 static bool _physiology_mutation_conflict(mutation_type mutat)
 {
     // Strict 3-scale limit
-    if (_is_covering(mutat) && _body_covered() == 3)
+    if (_is_covering(mutat) && _body_covered() >= 3)
         return (true);
 
     // Only Nagas and Draconians can get this one.
@@ -995,14 +1044,6 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     // Saprovorous/gourmand can't be randomly acquired.
     if ((mutat == MUT_SAPROVOROUS || mutat == MUT_GOURMAND) && !force_mutation)
         return (false);
-
-    // These can be forced by demonspawn or god gifts.
-    if ((mutat == MUT_SHAGGY_FUR
-            || mutat >= MUT_DISTORTION_FIELD && mutat <= MUT_LARGE_BONE_PLATES)
-        && _body_covered() >= 3 && !god_gift && !force_mutation)
-    {
-        return (false);
-    }
 
     if (you.species == SP_NAGA)
     {
@@ -1280,41 +1321,6 @@ bool delete_all_mutations()
     }
 
     return (!how_mutated());
-}
-
-static const mutation_type _all_scales[] = {
-    MUT_DISTORTION_FIELD,           MUT_ICY_BLUE_SCALES,
-    MUT_IRIDESCENT_SCALES,          MUT_LARGE_BONE_PLATES,
-    MUT_MOLTEN_SCALES,              MUT_ROUGH_BLACK_SCALES,
-    MUT_RUGGED_BROWN_SCALES,        MUT_SLIMY_GREEN_SCALES,
-    MUT_THIN_METALLIC_SCALES,       MUT_THIN_SKELETAL_STRUCTURE,
-    MUT_YELLOW_SCALES,
-};
-
-static int _is_covering(mutation_type mut)
-{
-    for (unsigned i = 0; i < ARRAYSZ(_all_scales); ++i)
-        if (_all_scales[i] == mut)
-            return (1);
-
-    return (0);
-}
-
-static int _body_covered()
-{
-    // Check how much of your body is covered by scales, etc.
-    int covered = 0;
-
-    if (you.species == SP_NAGA)
-        covered++;
-
-    if (player_genus(GENPC_DRACONIAN))
-        covered += 3;
-
-    for (unsigned i = 0; i < ARRAYSZ(_all_scales); ++i)
-        covered += you.mutation[_all_scales[i]];
-
-    return (covered);
 }
 
 // Return a string describing the mutation.
