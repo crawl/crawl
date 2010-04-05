@@ -152,7 +152,7 @@
   "regeneration"
 },
 // Deep Dwarf/Ghoul only
-{ MUT_SLOW_HEALING,               0,  3,  true, false,
+{ MUT_SLOW_HEALING,               3,  3,  true, false,
   {"You heal slowly.",
    "You heal very slowly.",
    "You do not heal naturally."},
