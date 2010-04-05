@@ -5993,6 +5993,11 @@ bool player::has_usable_claws(bool allow_tran) const
     return (equip[EQ_GLOVES] == -1 && has_claws(allow_tran));
 }
 
+bool player::has_usable_talons() const
+{
+    return (equip[EQ_BOOTS] == -1 && player_mutation_level(MUT_TALONS));
+}
+
 bool player::sicken(int amount)
 {
     ASSERT(!crawl_state.game_is_arena());
