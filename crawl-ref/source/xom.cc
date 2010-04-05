@@ -1956,8 +1956,7 @@ static int _xom_give_mutations(bool good, bool debug = false)
         for (int i = num_tries; i > 0; --i)
         {
             if (mutate(good ? RANDOM_GOOD_MUTATION : RANDOM_XOM_MUTATION,
-                       failMsg, false, true, false, false,
-                       good || !_xom_feels_nasty()))
+                       failMsg, false, true, false, false))
             {
                 rc = true;
             }

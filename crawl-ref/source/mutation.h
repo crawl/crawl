@@ -37,8 +37,13 @@ void fixup_mutations();
 
 bool mutate(mutation_type which_mutation, bool failMsg = true,
             bool force_mutation = false, bool god_gift = false,
-            bool stat_gain_potion = false, bool demonspawn = false,
-            bool non_fatal = false);
+            bool stat_gain_potion = false, bool demonspawn = false);
+
+inline bool give_bad_mutation(bool failMsg = true, bool force_mutation = false)
+{
+    return (mutate(RANDOM_BAD_MUTATION, failMsg, force_mutation,
+                   false, false, false));
+}
 
 void display_mutations();
 bool mutation_is_fully_active(mutation_type mut);
@@ -46,15 +51,12 @@ formatted_string describe_mutations();
 
 bool delete_mutation(mutation_type which_mutation, bool failMsg = true,
                      bool force_mutation = false, bool god_gift = false,
-                     bool disallow_mismatch = false, bool non_fatal = false);
+                     bool disallow_mismatch = false);
 
 bool delete_all_mutations();
 
 std::string mutation_name(mutation_type which_mutat, int level = -1,
                           bool colour = false);
-
-bool give_bad_mutation(bool failMsg = true, bool force_mutation = false,
-                       bool non_fatal = false);
 
 void roll_demonspawn_mutations();
 
