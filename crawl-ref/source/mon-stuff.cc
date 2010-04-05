@@ -1937,7 +1937,7 @@ int monster_die(monsters *monster, killer_type killer,
     if ((killer == KILL_YOU
          || killer == KILL_YOU_MISSILE
          || killer == KILL_YOU_CONF)
-             && corpse && player_mutation_level(MUT_POWERED_BY_DEATH))
+             && corpse > 0 && player_mutation_level(MUT_POWERED_BY_DEATH))
     {
         const int pbd_dur = player_mutation_level(MUT_POWERED_BY_DEATH) * 8
                             + roll_dice(2, 8);

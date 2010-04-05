@@ -1443,14 +1443,14 @@ static const facet_def _demon_facets[] =
       { 3, 3, 3 } },
     { { MUT_ROBUST, MUT_ROBUST, MUT_ROBUST },
       { 3, 3, 3 } },
-    { { MUT_POWERED_BY_DEATH, MUT_POWERED_BY_DEATH, MUT_POWERED_BY_DEATH },
-      { 3, 3, 3 } },
     { { MUT_NEGATIVE_ENERGY_RESISTANCE, MUT_NEGATIVE_ENERGY_RESISTANCE,
           MUT_NEGATIVE_ENERGY_RESISTANCE },
       { 3, 3, 3 } },
     { { MUT_STOCHASTIC_TORMENT_RESISTANCE, MUT_STOCHASTIC_TORMENT_RESISTANCE,
           MUT_STOCHASTIC_TORMENT_RESISTANCE },
       { 3, 3, 3 } },
+    { { MUT_POWERED_BY_DEATH, MUT_POWERED_BY_DEATH, MUT_POWERED_BY_DEATH },
+      { 2, 2, 2 } },
     { { MUT_REGENERATION, MUT_REGENERATION, MUT_REGENERATION },
       { 2, 2, 2 } },
     { { MUT_MAGIC_RESISTANCE, MUT_MAGIC_RESISTANCE, MUT_MAGIC_RESISTANCE },
@@ -1798,7 +1798,7 @@ int handle_pbd_corpses(bool do_rot)
 
                 if (do_rot)
                 {
-                    j->special -= random2(you.duration[DUR_POWERED_BY_DEATH]/2);
+                    j->special -= random2(you.duration[DUR_POWERED_BY_DEATH]*2/5);
                     dprf("Rot time: %d", j->special);
                 }
 
