@@ -620,103 +620,14 @@ static int _calc_mutation_amusement_value(mutation_type which_mutation)
     return (amusement);
 }
 
-static bool _is_deadly(mutation_type mutat, bool delete_mut)
-{
-    if (delete_mut)
-    {
-        // First handle non-stat related problems.
-        if ( mutat == MUT_HEAT_RESISTANCE && grd(you.pos()) == DNGN_LAVA
-             && player_res_fire() == 1 && !you.airborne() )
-        {
-            // Don't let player instantly fry to a crisp in lava.
-            return (true);
-        }
-
-        // Swap things around to the same effect, but as if we were
-        // gaining a mutation, or return early if deleting the mutation
-        // is never a problem.
-        switch (mutat)
-        {
-        case MUT_WEAK:
-        case MUT_DOPEY:
-        case MUT_CLUMSY:
-            return (false);
-
-        case MUT_STRONG_STIFF:
-            mutat = MUT_FLEXIBLE_WEAK;
-            break;
-
-        case MUT_FLEXIBLE_WEAK:
-            mutat = MUT_STRONG_STIFF;
-            break;
-
-        case MUT_STRONG:
-            mutat = MUT_WEAK;
-            break;
-
-        case MUT_CLEVER:
-            mutat = MUT_DOPEY;
-            break;
-
-        case MUT_AGILE:
-            mutat = MUT_CLUMSY;
-            break;
-
-        default:
-            break;
-        }
-    }
-
-    stat_type stat = STAT_DEX; // Default for the scales.
-    char  amnt     = 1;
-    char  mod      = 0;
-
-    switch (mutat)
-    {
-    case MUT_FLEXIBLE_WEAK:
-    case MUT_WEAK:
-        stat = STAT_STR;
-        // Take might into account so we don't lower base strength below
-        // one.
-        if (you.duration[DUR_MIGHT])
-            mod = -5;
-        break;
-
-    case MUT_DOPEY:
-        stat = STAT_INT;
-        if (you.duration[DUR_BRILLIANCE])
-            mod = -5;
-        break;
-
-    case MUT_STRONG_STIFF:
-    case MUT_CLUMSY:
-        stat = STAT_DEX;
-        if (you.duration[DUR_AGILITY])
-            mod = -5;
-        break;
-
-    default:
-        return (false);
-    }
-
-    return (amnt >= (you.stat(stat) + mod));
-}
-
-static bool _accept_mutation(mutation_type mutat, bool ignore_rarity = false,
-                             bool non_fatal = false, bool delete_mut = false)
+static bool _accept_mutation(mutation_type mutat, bool ignore_rarity = false)
 {
     if (!is_valid_mutation(mutat))
         return (false);
 
     const mutation_def& mdef = get_mutation_def(mutat);
 
-    if (delete_mut)
-        return (!non_fatal || !_is_deadly(mutat, delete_mut));
-
     if (you.mutation[mutat] >= mdef.levels)
-        return (false);
-
-    if (non_fatal && _is_deadly(mutat, delete_mut))
         return (false);
 
     if (ignore_rarity)
@@ -728,7 +639,7 @@ static bool _accept_mutation(mutation_type mutat, bool ignore_rarity = false,
     return (x_chance_in_y(rarity, 10));
 }
 
-static mutation_type _get_random_xom_mutation(bool non_fatal = false)
+static mutation_type _get_random_xom_mutation()
 {
     const mutation_type bad_muts[] = {
         MUT_WEAK,          MUT_DOPEY,
@@ -747,14 +658,13 @@ static mutation_type _get_random_xom_mutation(bool non_fatal = false)
         else if (one_chance_in(5))
             mutat = RANDOM_ELEMENT(bad_muts);
     }
-    while (!_accept_mutation(mutat, false, non_fatal));
+    while (!_accept_mutation(mutat, false));
 
     return (mutat);
 }
 
-static mutation_type _get_random_mutation(bool prefer_good,
-                                          int preferred_multiplier,
-                                          bool non_fatal = false)
+static mutation_type _get_random_mutation(int preferred_multiplier = 100,
+                                          bool prefer_good = true)
 {
     int cweight = 0;
     mutation_type chosen = NUM_MUTATIONS;
@@ -768,7 +678,7 @@ static mutation_type _get_random_mutation(bool prefer_good,
         if (!mdef.rarity)
             continue;
 
-        if (!_accept_mutation(curr, true, non_fatal))
+        if (!_accept_mutation(curr, true))
             continue;
 
         const bool weighted = mdef.bad != prefer_good;
@@ -784,16 +694,6 @@ static mutation_type _get_random_mutation(bool prefer_good,
 
     return (chosen);
 }
-
-#ifdef ASSERTS
-static bool _is_random(mutation_type which_mutation)
-{
-    return (which_mutation == RANDOM_MUTATION
-            || which_mutation == RANDOM_XOM_MUTATION
-            || which_mutation == RANDOM_GOOD_MUTATION
-            || which_mutation == RANDOM_BAD_MUTATION);
-}
-#endif
 
 // Tries to give you the mutation by deleting a conflicting
 // one, or clears out conflicting mutations if we should give
@@ -960,10 +860,8 @@ static const char* _stat_mut_desc(mutation_type mut, bool gain)
 
 bool mutate(mutation_type which_mutation, bool failMsg,
             bool force_mutation, bool god_gift, bool stat_gain_potion,
-            bool demonspawn, bool non_fatal)
+            bool demonspawn)
 {
-    ASSERT(!non_fatal || _is_random(which_mutation));
-
     if (!god_gift)
     {
         const god_type god =
@@ -1065,36 +963,26 @@ bool mutate(mutation_type which_mutation, bool failMsg,
                 return (false);
             else
                 return (delete_mutation(RANDOM_MUTATION, failMsg,
-                                        force_mutation, false, non_fatal));
+                                        force_mutation, false));
         }
     }
 
-    if (which_mutation == RANDOM_MUTATION)
+    switch (which_mutation)
     {
-        do
-        {
-            mutat = static_cast<mutation_type>(random2(NUM_MUTATIONS));
-            if (one_chance_in(1000))
-                return (false);
-        }
-        while (!_accept_mutation(mutat, false, non_fatal));
-    }
-    else if (which_mutation == RANDOM_XOM_MUTATION)
-    {
-        if ((mutat = _get_random_xom_mutation(non_fatal)) == NUM_MUTATIONS)
-            return (false);
-    }
-    else if (which_mutation == RANDOM_GOOD_MUTATION)
-    {
-        mutat = _get_random_mutation(true, 500, non_fatal);
-        if (mutat == NUM_MUTATIONS)
-            return (false);
-    }
-    else if (which_mutation == RANDOM_BAD_MUTATION)
-    {
-        mutat = _get_random_mutation(false, 500, non_fatal);
-        if (mutat == NUM_MUTATIONS)
-            return (false);
+    case RANDOM_MUTATION:
+        mutat = _get_random_mutation();
+        break;
+    case RANDOM_XOM_MUTATION:
+        mutat = _get_random_xom_mutation();
+        break;
+    case RANDOM_GOOD_MUTATION:
+        mutat = _get_random_mutation(500, true);
+        break;
+    case RANDOM_BAD_MUTATION:
+        mutat = _get_random_mutation(500, false);
+        break;
+    default:
+        break;
     }
 
     if (!is_valid_mutation(mutat))
@@ -1305,10 +1193,8 @@ static bool _delete_single_mutation_level(mutation_type mutat)
 
 bool delete_mutation(mutation_type which_mutation, bool failMsg,
                      bool force_mutation, bool god_gift,
-                     bool disallow_mismatch, bool non_fatal)
+                     bool disallow_mismatch)
 {
-    ASSERT(!non_fatal || _is_random(which_mutation));
-
     if (!god_gift)
     {
         const god_type god =
@@ -1358,9 +1244,6 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
             {
                 continue;
             }
-
-            if (!_accept_mutation(mutat, true, non_fatal, true))
-                continue;
 
             if (you.demon_pow[mutat] >= you.mutation[mutat])
                 continue;
@@ -1856,29 +1739,6 @@ int how_mutated(bool all, bool levels)
     dprf("how_mutated(): all = %u, levels = %u, j = %d", all, levels, j);
 
     return (j);
-}
-
-bool give_bad_mutation(bool failMsg, bool force_mutation, bool non_fatal)
-{
-    const mutation_type bad_muts[] = {
-        MUT_CARNIVOROUS,   MUT_HERBIVOROUS,   MUT_FAST_METABOLISM,
-        MUT_WEAK,          MUT_DOPEY,
-        MUT_CLUMSY,        MUT_TELEPORT,      MUT_DEFORMED,
-        MUT_SCREAM,        MUT_DETERIORATION, MUT_BLURRY_VISION,
-        MUT_FRAIL,         MUT_LOW_MAGIC
-    };
-
-    mutation_type mutat;
-
-    do
-        mutat = RANDOM_ELEMENT(bad_muts);
-    while (non_fatal && !_accept_mutation(mutat, true, true));
-
-    const bool result = mutate(mutat, failMsg, force_mutation);
-    if (result)
-        learned_something_new(TUT_YOU_MUTATED);
-
-    return (result);
 }
 
 void check_demonic_guardian()

@@ -1937,8 +1937,7 @@ void MiscastEffect::_transmutation(int severity)
             if (target->atype() == ACT_PLAYER)
             {
                 you_msg = "You feel very strange.";
-                delete_mutation(RANDOM_MUTATION, true, false, false, false,
-                                lethality_margin > 0);
+                delete_mutation(RANDOM_MUTATION, true, false, false, false);
             }
             _ouch(5 + random2avg(23, 2));
             break;
@@ -1959,9 +1958,9 @@ void MiscastEffect::_transmutation(int severity)
                 // We don't need messages when the mutation fails,
                 // because we give our own (which is justified anyway as
                 // you take damage).
-                give_bad_mutation(false, false, lethality_margin > 0);
+                give_bad_mutation(false, false);
                 if (coinflip())
-                    give_bad_mutation(false, false, lethality_margin > 0);
+                    give_bad_mutation(false, false);
             }
             _ouch(5 + random2avg(23, 2));
             break;
