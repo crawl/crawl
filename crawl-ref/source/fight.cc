@@ -991,21 +991,20 @@ bool melee_attack::player_aux_unarmed()
                 continue;
             }
 
-            // Kenku have large taloned feet that do good damage.
-            const bool clawed_kick = player_mutation_level(MUT_TALONS) ?
-                            player_mutation_level(MUT_TALONS)*2 + 2 : 5;
+            unarmed_attack = "kick";
 
-            if (player_mutation_level(MUT_TALONS))
+            if (player_mutation_level(MUT_HOOVES))
+                aux_damage = player_mutation_level(MUT_HOOVES)*3 + 1;
+            else if (you.has_usable_talons())
             {
+                // Kenku have large taloned feet that do good damage.
                 unarmed_attack = "claw";
                 miss_verb      = "kick";
+                aux_damage     = player_mutation_level(MUT_TALONS)*2 + 2;
             }
             else
-                unarmed_attack = "kick";
+                aux_damage = 5;
 
-            aux_damage = (player_mutation_level(MUT_HOOVES) ?
-                          player_mutation_level(MUT_HOOVES)*3 + 1
-                          : clawed_kick);
             break;
         }
 
