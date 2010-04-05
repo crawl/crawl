@@ -218,6 +218,9 @@ static bool _find_butchering_implement(int &butcher_tool)
 
             return (false);
         }
+
+        if (!check_old_item_warning(*wpn, OPER_WIELD))
+            return (false);
     }
 
     bool potential_candidate = false;
