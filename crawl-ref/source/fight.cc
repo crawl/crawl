@@ -992,21 +992,21 @@ bool melee_attack::player_aux_unarmed()
             }
 
             unarmed_attack = "kick";
+            aux_damage = 5;
 
             if (player_mutation_level(MUT_HOOVES))
             {
-                // Centaurs have hooves that do good damage.
-                aux_damage = player_mutation_level(MUT_HOOVES)*3 + 1;
+                // Max hoof damage: 10.
+                aux_damage += player_mutation_level(MUT_HOOVES) * 5 / 3;
             }
             else if (you.has_usable_talons())
             {
-                // Kenku have taloned feet that do good damage.
                 unarmed_attack = "claw";
                 miss_verb      = "kick";
-                aux_damage     = player_mutation_level(MUT_TALONS)*2 + 2;
+
+                // Max talon damage: 8.
+                aux_damage    += player_mutation_level(MUT_TALONS) * 3 / 3;
             }
-            else
-                aux_damage = 5;
 
             break;
         }
