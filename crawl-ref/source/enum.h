@@ -2369,6 +2369,30 @@ enum mon_spellbook_type
 
 enum mutation_type
 {
+    // body slot facets
+    MUT_ANTENNAE,       // head
+    MUT_BIG_WINGS,
+    MUT_BEAK,           // head
+    MUT_CLAWS,          // hands
+    MUT_FANGS,
+    MUT_HOOVES,         // feet
+    MUT_HORNS,          // head
+    MUT_STINGER,
+    MUT_TALONS,         // feet
+
+    // scales
+    MUT_DISTORTION_FIELD,
+    MUT_ICY_BLUE_SCALES,
+    MUT_IRIDESCENT_SCALES,
+    MUT_LARGE_BONE_PLATES,
+    MUT_MOLTEN_SCALES,
+    MUT_ROUGH_BLACK_SCALES,
+    MUT_RUGGED_BROWN_SCALES,
+    MUT_SLIMY_GREEN_SCALES,
+    MUT_THIN_METALLIC_SCALES,
+    MUT_THIN_SKELETAL_STRUCTURE,
+    MUT_YELLOW_SCALES,
+
     MUT_ACUTE_VISION,
     MUT_AGILE,
     MUT_BERSERK,
@@ -2427,30 +2451,6 @@ enum mutation_type
     MUT_TORMENT_RESISTANCE,
     MUT_TOUGH_SKIN,
     MUT_WEAK,
-
-    // body slot facets
-    MUT_ANTENNAE,       // head
-    MUT_BIG_WINGS,
-    MUT_BEAK,           // head
-    MUT_CLAWS,          // hands
-    MUT_FANGS,
-    MUT_HOOVES,         // feet
-    MUT_HORNS,          // head
-    MUT_STINGER,
-    MUT_TALONS,         // feet
-
-    // scales
-    MUT_DISTORTION_FIELD,
-    MUT_ICY_BLUE_SCALES,
-    MUT_IRIDESCENT_SCALES,
-    MUT_LARGE_BONE_PLATES,
-    MUT_MOLTEN_SCALES,
-    MUT_ROUGH_BLACK_SCALES,
-    MUT_RUGGED_BROWN_SCALES,
-    MUT_SLIMY_GREEN_SCALES,
-    MUT_THIN_METALLIC_SCALES,
-    MUT_THIN_SKELETAL_STRUCTURE,
-    MUT_YELLOW_SCALES,
 
     NUM_MUTATIONS,
 
