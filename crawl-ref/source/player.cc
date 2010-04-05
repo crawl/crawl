@@ -5990,7 +5990,7 @@ int player::has_claws(bool allow_tran) const
 
 bool player::has_usable_claws(bool allow_tran) const
 {
-    return (equip[EQ_GLOVES] == -1 && has_claws(allow_tran));
+    return (!player_wearing_slot(EQ_GLOVES) && has_claws(allow_tran));
 }
 
 int player::has_talons(bool allow_tran) const
@@ -6007,7 +6007,7 @@ int player::has_talons(bool allow_tran) const
 
 bool player::has_usable_talons(bool allow_tran) const
 {
-    return (equip[EQ_BOOTS] == -1 && has_talons(allow_tran));
+    return (!player_wearing_slot(EQ_BOOTS) && has_talons(allow_tran));
 }
 
 bool player::sicken(int amount)
