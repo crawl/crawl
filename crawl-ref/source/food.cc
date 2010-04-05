@@ -150,6 +150,13 @@ void weapon_switch(int targ)
         if (you.equip[EQ_WEAPON] == you.inv[targ].link)
             return;
 
+        if (!can_wield(&you.inv[targ]))
+        {
+            mprf("Not switching back to %s.",
+                 you.inv[targ].name(DESC_INVENTORY).c_str());
+            return;
+        }
+
         mprf("Switching back to %s.",
              you.inv[targ].name(DESC_INVENTORY).c_str());
     }
