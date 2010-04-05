@@ -5993,9 +5993,21 @@ bool player::has_usable_claws(bool allow_tran) const
     return (equip[EQ_GLOVES] == -1 && has_claws(allow_tran));
 }
 
+int player::has_talons(bool allow_tran) const
+{
+    if (allow_tran)
+    {
+        // no transformations bring talons with them
+        if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
+            return (0);
+    }
+
+    return (player_mutation_level(MUT_TALONS));
+}
+
 bool player::has_usable_talons() const
 {
-    return (equip[EQ_BOOTS] == -1 && player_mutation_level(MUT_TALONS));
+    return (equip[EQ_BOOTS] == -1 && has_talons(allow_tran));
 }
 
 bool player::sicken(int amount)

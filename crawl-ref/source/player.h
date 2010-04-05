@@ -407,7 +407,8 @@ public:
     int       damage_type(int which_attack = -1);
     int       has_claws(bool allow_tran = true) const;
     bool      has_usable_claws(bool allow_tran = true) const;
-    bool      has_usable_talons() const;
+    int       has_talons(bool allow_tran = true) const;
+    bool      has_usable_talons(bool allow_tran = true) const;
     item_def *weapon(int which_attack = -1);
     item_def *shield();
 
