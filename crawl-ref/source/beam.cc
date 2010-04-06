@@ -2441,31 +2441,6 @@ void bolt::affect_place_clouds()
     if (cloudidx != EMPTY_CLOUD)
     {
         cloud_type& ctype = env.cloud[cloudidx].type;
-        // Polymorph randomly changes clouds in its path
-        if (flavour == BEAM_POLYMORPH)
-        {
-            cloud_type new_type = static_cast<cloud_type>(1 + random2(8));
-
-            if (new_type == ctype)
-                return;
-
-            if (p == you.pos())
-            {
-                mprf("The %s you are in turns into %s!",
-                     cloud_name(cloudidx).c_str(), cloud_name(new_type).c_str());
-                obvious_effect = true;
-            }
-            else if (you.see_cell(p))
-            {
-                mprf("A cloud of %s turns into %s.",
-                     cloud_name(cloudidx).c_str(), cloud_name(new_type).c_str());
-                obvious_effect = true;
-            }
-
-            ctype = new_type;
-            env.cloud[cloudidx].name = "";
-            return;
-        }
 
         // fire cancelling cold & vice versa
         if ((ctype == CLOUD_COLD
