@@ -3238,6 +3238,7 @@ void change_labyrinth(bool msg)
         // special cases.
         dungeon_feature_type old_grid = grd(c);
         grd(c) = DNGN_FLOOR;
+        los_terrain_changed(c);
 
         // Add all floor grids meeting a couple of conditions to a vector
         // of potential switch points.
@@ -3273,6 +3274,7 @@ void change_labyrinth(bool msg)
         {
             // Take back the previous change.
             grd(c) = old_grid;
+            los_terrain_changed(c);
             continue;
         }
 
@@ -3339,6 +3341,7 @@ void change_labyrinth(bool msg)
             old_grid = grd[p.x+1][p.y];
         }
         grd(p) = old_grid;
+        los_terrain_changed(p);
 
         // Shift blood some of the time.
         if (is_bloodcovered(p))
