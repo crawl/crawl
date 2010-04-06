@@ -795,7 +795,7 @@ static int _body_covered()
 static bool _physiology_mutation_conflict(mutation_type mutat)
 {
     // If demonspawn, and mutat is a scale, see if they were going
-    // to get it sometime in the future anyways, otherwise, conflict
+    // to get it sometime in the future anyway; otherwise, conflict.
     if (you.species == SP_DEMONSPAWN && _is_covering(mutat) &&
             std::find(_all_scales, _all_scales+ARRAYSZ(_all_scales), mutat) !=
                 _all_scales+ARRAYSZ(_all_scales))
