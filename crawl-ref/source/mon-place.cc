@@ -1707,34 +1707,34 @@ monster_type pick_local_zombifiable_monster_type(int power)
     return (cls);
 }
 
+// Size based on zombie class.
+static zombie_size_type _zombie_class_size(monster_type cs)
+{
+    switch (cs)
+    {
+        case MONS_ZOMBIE_SMALL:
+        case MONS_SIMULACRUM_SMALL:
+        case MONS_SKELETON_SMALL:
+            return (Z_SMALL);
+        case MONS_ZOMBIE_LARGE:
+        case MONS_SIMULACRUM_LARGE:
+        case MONS_SKELETON_LARGE:
+            return (Z_BIG);
+        case MONS_SPECTRAL_THING:
+            return (Z_NOZOMBIE);
+        default:
+            ASSERT(false);
+            return (Z_NOZOMBIE);
+    }
+}
+
 static monster_type _pick_random_zombie(monster_type cs, int power,
                                         const coord_def& pos)
 {
     bool ignore_rarity = false;
     power = std::min(27, power);
 
-    // Set size based on zombie class (cs).
-    zombie_size_type zombie_size = Z_NOZOMBIE;
-    switch (cs)
-    {
-        case MONS_ZOMBIE_SMALL:
-        case MONS_SIMULACRUM_SMALL:
-        case MONS_SKELETON_SMALL:
-            zombie_size = Z_SMALL;
-            break;
-
-        case MONS_ZOMBIE_LARGE:
-        case MONS_SIMULACRUM_LARGE:
-        case MONS_SKELETON_LARGE:
-            zombie_size = Z_BIG;
-            break;
-
-        case MONS_SPECTRAL_THING:
-            break;
-
-        default:
-            break;
-    }
+    zombie_size_type zombie_size = _zombie_class_size(cs);
 
     // How OOD this zombie can be.
     int relax = 5;
@@ -1848,72 +1848,68 @@ static void _define_zombie(monsters* mon, monster_type ztype, monster_type cs,
     else
         mon->base_monster = mons_species(ztype);
 
-    // XXX: Saving this here to overwrite later for whatever reason.
-    //      Maybe define_monster() can overwrite it?
-    const monster_type mons_sec2 = mon->base_monster;
+    ASSERT(_zombie_class_size(cs) == Z_NOZOMBIE
+           || _zombie_class_size(cs) == mons_zombie_size(mon->base_monster));
+
+    // Saving this here to restore later.
+    const monster_type base_mons = mon->base_monster;
 
     // Set type to the base type to calculate appropriate stats.
     mon->type = mon->base_monster;
 
     define_monster(mon);
 
+    mon->type         = cs;
+    mon->base_monster = base_mons;
+
+    mon->colour       = mons_class_colour(cs);
+    mon->speed        = mons_class_zombie_base_speed(mon->base_monster);
+
     // Turn off all spellcasting flags.
     // Hack - kraken get to keep their spell-like ability.
     if (mon->base_monster != MONS_KRAKEN)
-        mon->flags &= ~MF_SPELLCASTER & ~MF_ACTUAL_SPELLS & ~MF_PRIEST;
+        mon->flags   &= ~MF_SPELLCASTER & ~MF_ACTUAL_SPELLS & ~MF_PRIEST;
 
-    mon->hit_points     = hit_points(mon->hit_dice, 6, 5);
-    mon->max_hit_points = mon->hit_points;
-
-    mon->ac -= 2;
-    mon->ac  = std::max(0, mon->ac);
-
-    mon->ev -= 5;
-    mon->ev  = std::max(0, mon->ev);
-
-    mon->speed = mons_class_zombie_base_speed(mon->base_monster);
-
-    // Now override type with the required type.
-    if (cs == MONS_ZOMBIE_SMALL || cs == MONS_ZOMBIE_LARGE)
+    int hp;
+    int acmod, evmod;
+    switch (cs)
     {
-        mon->type = ((mons_zombie_size(mon->base_monster) == Z_BIG) ?
-                             MONS_ZOMBIE_LARGE : MONS_ZOMBIE_SMALL);
-    }
-    else if (cs == MONS_SKELETON_SMALL || cs == MONS_SKELETON_LARGE)
-    {
-        mon->hit_points     = hit_points(mon->hit_dice, 5, 4);
-        mon->max_hit_points = mon->hit_points;
+    case MONS_ZOMBIE_SMALL:
+    case MONS_ZOMBIE_LARGE:
+        hp    = hit_points(mon->hit_dice, 6, 5);
+        acmod = -2;
+        evmod = -5;
+        break;
 
-        mon->ac -= 4;
-        mon->ac  = std::max(0, mon->ac);
+    case MONS_SKELETON_SMALL:
+    case MONS_SKELETON_LARGE:
+        hp    = hit_points(mon->hit_dice, 5, 4);
+        acmod = -6;
+        evmod = -7;
+        break;
 
-        mon->ev -= 2;
-        mon->ev  = std::max(0, mon->ev);
-
-        mon->type = ((mons_zombie_size(mon->base_monster) == Z_BIG) ?
-                             MONS_SKELETON_LARGE : MONS_SKELETON_SMALL);
-    }
-    else if (cs == MONS_SIMULACRUM_SMALL || cs == MONS_SIMULACRUM_LARGE)
-    {
+    case MONS_SIMULACRUM_SMALL:
+    case MONS_SIMULACRUM_LARGE:
         // Simulacra aren't tough, but you can create piles of them. - bwr
-        mon->hit_points     = hit_points(mon->hit_dice, 1, 4);
-        mon->max_hit_points = mon->hit_points;
+        hp    = hit_points(mon->hit_dice, 1, 4);
+        acmod = -2;
+        acmod = -5;
+        break;
 
-        mon->type = ((mons_zombie_size(mon->base_monster) == Z_BIG) ?
-                             MONS_SIMULACRUM_LARGE : MONS_SIMULACRUM_SMALL);
+    case MONS_SPECTRAL_THING:
+        hp    = hit_points(mon->hit_dice, 4, 4);
+        acmod = +2;
+        evmod = -5;
+        break;
+
+    default:
+        ASSERT(false);
+        break;
     }
-    else if (cs == MONS_SPECTRAL_THING)
-    {
-        mon->hit_points     = hit_points(mon->hit_dice, 4, 4);
-        mon->max_hit_points = mon->hit_points;
 
-        mon->ac            += 4;
-
-        mon->type           = MONS_SPECTRAL_THING;
-    }
-
-    mon->base_monster = mons_sec2;
-    mon->colour       = mons_class_colour(cs);
+    mon->hit_points = mon->max_hit_points = hp;
+    mon->ac         = std::max(mon->ac + acmod, 0);
+    mon->ev         = std::max(mon->ev + evmod, 0);
 }
 
 static band_type _choose_band(int mon_type, int power, int &band_size,
