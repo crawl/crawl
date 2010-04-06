@@ -8,9 +8,7 @@
 #ifndef ENUM_H
 #define ENUM_H
 
-#ifndef TAG_MAJOR_VERSION
-#define TAG_MAJOR_VERSION 21 // XXX: Remove this with next update.
-#endif
+#include "tag-version.h"
 
 enum ability_type
 {
