@@ -2394,6 +2394,7 @@ enum mutation_type
     MUT_THIN_SKELETAL_STRUCTURE,
     MUT_YELLOW_SCALES,
 #endif
+
     MUT_ACUTE_VISION,
     MUT_AGILE,
     MUT_BERSERK,

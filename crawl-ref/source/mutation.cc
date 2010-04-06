@@ -813,17 +813,14 @@ static int _body_covered()
     {
         if (you.species == SP_DEMONSPAWN)
         {
-            for(unsigned j = 0; j < you.demonic_traits.size(); ++j)
+            for (unsigned j = 0; j < you.demonic_traits.size(); ++j)
             {
-                //dprf("%s %s", get_mutation_def(you.demonic_traits[j].mutation).wizname, get_mutation_def(_all_scales[i]).wizname);
                 if (you.demonic_traits[j].mutation == _all_scales[i])
-                {
                     ++covered;
-                }
             }
-        } else {
-            covered += you.mutation[_all_scales[i]];
         }
+        else
+            covered += you.mutation[_all_scales[i]];
     }
 
     return (covered);
@@ -831,7 +828,7 @@ static int _body_covered()
 
 static bool _physiology_mutation_conflict(mutation_type mutat)
 {
-    // Strict 3-scale limit
+    // Strict 3-scale limit.
     if (_is_covering(mutat) && _body_covered() >= 3)
         return (true);
 
