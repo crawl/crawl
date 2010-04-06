@@ -2751,7 +2751,7 @@ std::string _status_mut_abilities()
     }
     if (SH_change)
     {
-        snprintf(info, INFO_SIZE, "SH +%d", SH_change);
+        snprintf(info, INFO_SIZE, "SH %s%d", (SH_change > 0 ? "+" : ""), SH_change);
         mutations.push_back(info);
     }
     if (Str_change)
