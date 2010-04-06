@@ -1713,7 +1713,6 @@ static void _define_zombie(int mid, monster_type ztype, monster_type cs,
     ASSERT(mons_class_is_zombified(cs));
 
     monster_type cls             = MONS_PROGRAM_BUG;
-    monster_type mons_sec2       = MONS_PROGRAM_BUG;
     zombie_size_type zombie_size = Z_NOZOMBIE;
     bool ignore_rarity           = false;
 
@@ -1845,13 +1844,15 @@ static void _define_zombie(int mid, monster_type ztype, monster_type cs,
 
         // Set type and secondary appropriately.
         menv[mid].base_monster = cls;
-        mons_sec2              = cls;
     }
     else
     {
         menv[mid].base_monster = mons_species(ztype);
-        mons_sec2              = menv[mid].base_monster;
     }
+
+    // XXX: Saving this here to overwrite later for whatever reason.
+    //      Maybe define_monster() can overwrite it?
+    const monster_type mons_sec2 = menv[mid].base_monster;
 
     // Set type to the base type to calculate appropriate stats.
     menv[mid].type = menv[mid].base_monster;
