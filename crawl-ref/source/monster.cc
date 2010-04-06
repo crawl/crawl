@@ -6083,7 +6083,7 @@ void monsters::react_to_damage(const actor *oppressor, int damage,
     {
         if (!alive()) // overcharging is deadly
             simple_monster_message(this,
-                                   " explodes in an explosion of sparks!");
+                                   " explodes in a shower of sparks!");
         else if (heal(damage*2, false))
             simple_monster_message(this, " seems to be charged up!");
         return;
