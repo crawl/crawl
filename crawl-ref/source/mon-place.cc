@@ -1236,8 +1236,13 @@ static int _place_monster_aux(const mgen_data &mg,
 {
     coord_def fpos;
 
-    if (mons_is_unique(mg.cls) && you.unique_creatures[mg.cls])
+    // Some sanity checks.
+    if (mons_is_unique(mg.cls) && you.unique_creatures[mg.cls]
+        || mg.cls == MONS_MERGED_SLIME_CREATURE)
+    {
+        ASSERT(false);
         return (-1);
+    }
 
     const monsterentry *m_ent = get_monster_data(mg.cls);
 
@@ -1302,12 +1307,6 @@ static int _place_monster_aux(const mgen_data &mg,
             return (-1);
         }
     }
-    else if (mon->type == MONS_MERGED_SLIME_CREATURE) // shouldn't ever happen
-        mon->type = MONS_SLIME_CREATURE;
-#ifdef USE_TILE
-    else
-        _maybe_init_tilenum_props(mon);
-#endif
 
     // Generate a brand shiny new monster, or zombie.
     if (mons_class_is_zombified(mg.cls))
@@ -1610,6 +1609,10 @@ static int _place_monster_aux(const mgen_data &mg,
         mon->set_ghost(ghost);
         mon->dancing_weapon_init();
     }
+
+#ifdef USE_TILE
+    _maybe_init_tilenum_props(mon);
+#endif
 
     mark_interesting_monst(mon, mg.behaviour);
 
