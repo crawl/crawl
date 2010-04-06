@@ -39,10 +39,17 @@ int place_monster(mgen_data mg, bool force_pos = false);
 monster_type pick_random_zombie();
 
 /* ***********************************************************************
- * Returns a monster class type of a zombie that would be generated
+ * Returns a monster class type of a zombie for generation
  * on the player's current level.
+ * hack_hd:    Hack to increase monster HD outside main dungeon.
+ * cs:         Restrict to monster types that fit this zombie type
+ *             (e.g. monsters with skeletons for MONS_SKELETON_SMALL)
+ * pos:        Check habitat at position.
  * *********************************************************************** */
-monster_type pick_local_zombifiable_monster_type(int power);
+monster_type pick_local_zombifiable_monster(int power,
+                                            bool hack_hd = false,
+                                            monster_type cs = MONS_NO_MONSTER,
+                                            const coord_def& pos = coord_def());
 
 class level_id;
 
