@@ -711,7 +711,7 @@
 { MUT_HIGH_MAGIC,                 1,  3, false, false,
   {"You have an increased reservoir of magic (+10% MP).",
    "You have a considerably increased reservoir of magic (+20% MP).",
-   "You have an greatly increased reservoir of magic (+30% MP)."},
+   "You have a greatly increased reservoir of magic (+30% MP)."},
 
   {"You feel more energetic.",
    "You feel more energetic.",
@@ -798,7 +798,7 @@
 { MUT_NIGHTSTALKER,                     3,  3, false, true,
   {"You are slightly more attuned to the shadows.",
    "You are significantly more attuned to the shadows.",
-   "You are completely attuned in the shadows."},
+   "You are completely attuned to the shadows."},
 
   {"You slip into the darkness of the dungeon.",
    "You slip further into the darkness.",
