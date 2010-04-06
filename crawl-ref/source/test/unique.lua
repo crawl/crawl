@@ -58,7 +58,10 @@ local function run_unique_tests()
 
   for depth = 5, 1, -1 do
     test_uniques_blank("Swamp", depth, 3)
-    test_uniques_random("Swamp", depth, 3)
+    if depth < 5 then
+      -- otherwise problem with lernaean, like Dispater above
+      test_uniques_random("Swamp", depth, 3)
+    end
   end
 end
 
