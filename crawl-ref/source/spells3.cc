@@ -1899,14 +1899,14 @@ bool entomb(int powc)
         DNGN_FLOOR_SPECIAL
     };
 
-    for ( adjacent_iterator ai(you.pos()); ai; ++ai )
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
     {
         // Tile already occupied by monster
         if (monster_at(*ai))
             continue;
 
         // This is where power comes in.
-        if ( one_chance_in(powc/5) )
+        if (one_chance_in(powc/5))
             continue;
 
         bool proceed = false;
@@ -1919,7 +1919,7 @@ bool entomb(int powc)
             continue;
 
         // hate to see the orb get destroyed by accident {dlb}:
-        for ( stack_iterator si(*ai); si && proceed; ++si )
+        for (stack_iterator si(*ai); si && proceed; ++si)
             if (si->base_type == OBJ_ORBS)
                 proceed = false;
 
@@ -1928,12 +1928,12 @@ bool entomb(int powc)
             continue;
 
         // Destroy all items on the square.
-        for ( stack_iterator si(*ai); si; ++si )
+        for (stack_iterator si(*ai); si; ++si)
             destroy_item(si->index());
 
         // deal with clouds {dlb}:
         if (env.cgrid(*ai) != EMPTY_CLOUD)
-            delete_cloud( env.cgrid(*ai) );
+            delete_cloud(env.cgrid(*ai));
 
         // All traps are destroyed
         if (trap_def* ptrap = find_trap(*ai))
