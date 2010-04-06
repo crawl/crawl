@@ -5,7 +5,7 @@ Swift, strong and bulky, they need more food than other species.
 %%%%
 Deep Dwarf
 
-They live deep down and are cannot regenerate, but they are resilient and have tools to heal.
+They live deep down and cannot regenerate, but they are resilient and have tools to heal.
 %%%%
 Deep Elf
 
