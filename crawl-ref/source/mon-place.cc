@@ -1639,74 +1639,6 @@ monster_type pick_random_zombie()
     return (zombifiable[random2(zombifiable.size())]);
 }
 
-monster_type pick_local_zombifiable_monster_type(int power)
-{
-    // Generates a dummy zombie likely to be found.
-    // Ripped wholly from _define_zombie().
-    // TODO: Merge this with _pick_random_zombie() below.
-
-    power = std::min(27, power);
-    // How OOD this zombie can be.
-    int relax = 5;
-
-    // Pick an appropriate creature to make a zombie out of, levelwise.
-    // The old code was generating absolutely incredible OOD zombies.
-    monster_type cls;
-    while (true)
-    {
-        cls = pick_random_zombie();
-
-        bool ignore_rarity = false;
-        // On certain branches, zombie creation will fail if we use the
-        // mons_rarity() functions, because (for example) there are NO
-        // zombifiable "native" abyss creatures.  Other branches where
-        // this is a problem are Hell levels and the Crypt.  We have to
-        // watch for summoned zombies on other levels, too, such as the
-        // Temple, the Hall of Blades and the Slime Pits.
-        if (you.level_type != LEVEL_DUNGEON
-            || player_in_hell()
-            || player_in_branch(BRANCH_HALL_OF_ZOT)
-            || player_in_branch(BRANCH_VESTIBULE_OF_HELL)
-            || player_in_branch(BRANCH_ECUMENICAL_TEMPLE)
-            || player_in_branch(BRANCH_CRYPT)
-            || player_in_branch(BRANCH_TOMB)
-            || player_in_branch(BRANCH_HALL_OF_BLADES)
-            || player_in_branch(BRANCH_SNAKE_PIT)
-            || player_in_branch(BRANCH_SLIME_PITS)
-            || one_chance_in(1000))
-        {
-            ignore_rarity = true;
-        }
-
-        // Don't make out-of-rarity zombies when we don't have to.
-        if (!ignore_rarity && mons_rarity(cls) == 0)
-            continue;
-
-        // Check for rarity.. and OOD - identical to mons_place().
-        int level, diff, chance;
-
-        level = mons_level(cls) - 4;
-        diff  = level - power;
-
-        chance = (ignore_rarity) ? 100
-                                 : mons_rarity(cls) - (diff * diff) / 2;
-
-        if (power > level - relax && power < level + relax
-            && random2avg(100, 2) <= chance)
-        {
-            break;
-        }
-
-        // Every so often, we'll relax the OOD restrictions.  This
-        // avoids infinite loops.  If we don't do this, things like
-        // creating a large skeleton on level 1 may hang the game!
-        if (one_chance_in(5))
-            relax++;
-    }
-
-    return (cls);
-}
-
 // Size based on zombie class.
 static zombie_size_type _zombie_class_size(monster_type cs)
 {
@@ -1728,13 +1660,43 @@ static zombie_size_type _zombie_class_size(monster_type cs)
     }
 }
 
-static monster_type _pick_random_zombie(monster_type cs, int power,
-                                        const coord_def& pos)
+// Check base monster class against zombie type and position
+// if set.
+static bool _good_zombie(monster_type base, monster_type cs,
+                         const coord_def& pos)
+{
+    // Actually pick a monster that is happy where we want to put it.
+    // Fish zombies on land are helpless and uncool.
+    if (in_bounds(pos) && !monster_habitable_grid(base, grd(pos)))
+        return (false);
+
+    if (cs == MONS_NO_MONSTER)
+        return (true);
+
+    // If skeleton, monster must have a skeleton.
+    if ((cs == MONS_SKELETON_SMALL || cs == MONS_SKELETON_LARGE)
+        && !mons_skeleton(base))
+    {
+        return (false);
+    }
+
+    // Size must match, but you can make a spectral thing out
+    // of anything.
+    if (cs != MONS_SPECTRAL_THING
+        && mons_zombie_size(base) != _zombie_class_size(cs))
+    {
+        return (false);
+    }
+
+    return (true);
+}
+
+monster_type pick_local_zombifiable_monster(int power, bool hack_hd,
+                                            monster_type cs,
+                                            const coord_def& pos)
 {
     bool ignore_rarity = false;
     power = std::min(27, power);
-
-    zombie_size_type zombie_size = _zombie_class_size(cs);
 
     // How OOD this zombie can be.
     int relax = 5;
@@ -1742,15 +1704,9 @@ static monster_type _pick_random_zombie(monster_type cs, int power,
     // Pick an appropriate creature to make a zombie out of,
     // levelwise.  The old code was generating absolutely
     // incredible OOD zombies.
-    monster_type cls;
     while (true)
     {
-        cls = pick_random_zombie();
-
-        // Actually pick a monster that is happy where we want to put it.
-        // Fish zombies on land are helpless and uncool.
-        if (!monster_habitable_grid(cls, grd(pos)))
-            continue;
+        monster_type base = pick_random_zombie();
 
         // On certain branches, zombie creation will fail if we use
         // the mons_rarity() functions, because (for example) there
@@ -1774,59 +1730,31 @@ static monster_type _pick_random_zombie(monster_type cs, int power,
         }
 
         // Don't make out-of-rarity zombies when we don't have to.
-        if (!ignore_rarity && mons_rarity(cls) == 0)
+        if (!ignore_rarity && mons_rarity(base) == 0)
             continue;
 
-        // If skeleton, monster must have a skeleton.
-        if ((cs == MONS_SKELETON_SMALL || cs == MONS_SKELETON_LARGE)
-            && !mons_skeleton(cls))
-        {
+        // Does the zombie match the parameters?
+        if (!_good_zombie(base, cs, pos))
             continue;
-        }
-
-        // Size must match, but you can make a spectral thing out
-        // of anything.
-        if (cs != MONS_SPECTRAL_THING
-            && mons_zombie_size(cls) != zombie_size)
-        {
-            continue;
-        }
-
-        if (cs == MONS_SKELETON_SMALL || cs == MONS_SIMULACRUM_SMALL)
-        {
-            // Skeletal or icy draconians shouldn't be coloured.
-            // How could you tell?
-            if (mons_genus(cls) == MONS_DRACONIAN
-                && cls != MONS_DRACONIAN)
-            {
-                cls = MONS_DRACONIAN;
-            }
-            // The same goes for rats.
-            else if (mons_genus(cls) == MONS_RAT
-                && cls != MONS_RAT)
-            {
-                cls = MONS_RAT;
-            }
-        }
 
         // Hack -- non-dungeon zombies are always made out of nastier
         // monsters.
-        if (you.level_type != LEVEL_DUNGEON && mons_power(cls) > 8)
-            break;
+        if (hack_hd && you.level_type != LEVEL_DUNGEON && mons_power(base) > 8)
+            return (base);
 
         // Check for rarity.. and OOD - identical to mons_place()
         int level, diff, chance;
 
-        level = mons_level(cls) - 4;
+        level = mons_level(base) - 4;
         diff  = level - power;
 
         chance = (ignore_rarity) ? 100
-                                 : mons_rarity(cls) - (diff * diff) / 2;
+                                 : mons_rarity(base) - (diff * diff) / 2;
 
         if (power > level - relax && power < level + relax
             && random2avg(100, 2) <= chance)
         {
-            break;
+            return (base);
         }
 
         // Every so often, we'll relax the OOD restrictions.  Avoids
@@ -1835,7 +1763,6 @@ static monster_type _pick_random_zombie(monster_type cs, int power,
         if (one_chance_in(5))
             relax++;
     }
-    return (cls);
 }
 
 static void _define_zombie(monsters* mon, monster_type ztype, monster_type cs,
@@ -1843,24 +1770,21 @@ static void _define_zombie(monsters* mon, monster_type ztype, monster_type cs,
 {
     ASSERT(mons_class_is_zombified(cs));
 
+    monster_type base;
     if (ztype == MONS_NO_MONSTER)
-        mon->base_monster = _pick_random_zombie(cs, power, pos);
+        base = pick_local_zombifiable_monster(power, true, cs, pos);
     else
-        mon->base_monster = mons_species(ztype);
+        base = mons_species(ztype);
 
     ASSERT(_zombie_class_size(cs) == Z_NOZOMBIE
-           || _zombie_class_size(cs) == mons_zombie_size(mon->base_monster));
-
-    // Saving this here to restore later.
-    const monster_type base_mons = mon->base_monster;
+           || _zombie_class_size(cs) == mons_zombie_size(base));
 
     // Set type to the base type to calculate appropriate stats.
-    mon->type = mon->base_monster;
-
+    mon->type = base;
     define_monster(mon);
 
     mon->type         = cs;
-    mon->base_monster = base_mons;
+    mon->base_monster = base;
 
     mon->colour       = mons_class_colour(cs);
     mon->speed        = mons_class_zombie_base_speed(mon->base_monster);

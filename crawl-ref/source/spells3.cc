@@ -741,7 +741,7 @@ bool receive_corpses(int pow, coord_def where)
         for (int i = 0; i < 200 && !mons_class_can_be_zombified(mon_type); ++i)
         {
             adjusted_power = std::min(pow / 4, random2(random2(pow)));
-            mon_type = pick_local_zombifiable_monster_type(adjusted_power);
+            mon_type = pick_local_zombifiable_monster(adjusted_power);
         }
 
         // Create corpse object.
