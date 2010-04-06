@@ -10,6 +10,8 @@
 #include <cstdio>
 #include <stdint.h>
 
+#include "tag-version.h"
+
 struct show_type;
 
 enum tag_type   // used during save/load process to identify data blocks
@@ -36,17 +38,6 @@ enum tag_file_type   // file types supported by tag system
     TAGTYPE_GHOST,              // bones.xxx
 
     TAGTYPE_PLAYER_NAME         // Used only to read the player name
-};
-
-// Let CDO updaters know if the syntax changes.
-#define TAG_MAJOR_START     5
-#define TAG_MAJOR_VERSION  21
-
-// Minor version will be reset to zero when major version changes.
-enum tag_minor_version
-{
-    TAG_MINOR_RESET     = 0, // Minor tags were reset
-    TAG_MINOR_VERSION   = 0 // Current version.  (Keep equal to max.)
 };
 
 struct enum_info
