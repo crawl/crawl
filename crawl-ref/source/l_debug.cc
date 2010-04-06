@@ -275,7 +275,7 @@ static bool _check_uniques()
             mprf(MSGCH_ERROR,
                  "Bad unique tracking: %s placed=%d was_set=%d is_set=%d",
                  mons_type_name(mt, DESC_PLAIN).c_str(),
-                 uniques_on_level[mt], you.unique_creatures[mt]);
+                 placed, was_set, is_set);
             ret = false;
         }
     }
