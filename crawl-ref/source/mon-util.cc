@@ -1597,11 +1597,6 @@ static void _get_spells(mon_spellbook_type& book, monsters *mon)
     mon->bind_spell_flags();
 }
 
-void define_monster(int midx)
-{
-    define_monster(menv[midx]);
-}
-
 // Never hand out DARKGREY as a monster colour, even if it is randomly
 // chosen.
 unsigned char random_monster_colour()
@@ -1614,17 +1609,17 @@ unsigned char random_monster_colour()
 }
 
 // Generate a shiny, new and unscarred monster.
-void define_monster(monsters &mons)
+void define_monster(monsters *mons)
 {
-    int mcls                  = mons.type;
+    int mcls                  = mons->type;
     int hd, hp, hp_max, ac, ev, speed;
-    int monnumber             = mons.number;
-    monster_type monbase      = mons.base_monster;
+    int monnumber             = mons->number;
+    monster_type monbase      = mons->base_monster;
     const monsterentry *m     = get_monster_data(mcls);
-    int col                   = mons_class_colour(mons.type);
+    int col                   = mons_class_colour(mons->type);
     mon_spellbook_type spells = MST_NO_SPELLS;
 
-    mons.mname.clear();
+    mons->mname.clear();
     hd = m->hpdice[0];
 
     // misc
@@ -1633,7 +1628,7 @@ void define_monster(monsters &mons)
 
     speed = mons_real_base_speed(mcls);
 
-    mons.god = GOD_NO_GOD;
+    mons->god = GOD_NO_GOD;
 
     switch (mcls)
     {
@@ -1727,7 +1722,7 @@ void define_monster(monsters &mons)
 
     default:
         if (mons_is_mimic(mcls))
-            col = get_mimic_colour(&mons);
+            col = get_mimic_colour(mons);
         break;
     }
 
@@ -1740,30 +1735,30 @@ void define_monster(monsters &mons)
     hp_max = hp;
 
     // So let it be written, so let it be done.
-    mons.hit_dice        = hd;
-    mons.hit_points      = hp;
-    mons.max_hit_points  = hp_max;
-    mons.ac              = ac;
-    mons.ev              = ev;
-    mons.speed           = speed;
-    mons.speed_increment = 70;
+    mons->hit_dice        = hd;
+    mons->hit_points      = hp;
+    mons->max_hit_points  = hp_max;
+    mons->ac              = ac;
+    mons->ev              = ev;
+    mons->speed           = speed;
+    mons->speed_increment = 70;
 
-    if (mons.base_monster == MONS_NO_MONSTER)
-        mons.base_monster = monbase;
+    if (mons->base_monster == MONS_NO_MONSTER)
+        mons->base_monster = monbase;
 
-    if (mons.number == 0)
-        mons.number = monnumber;
+    if (mons->number == 0)
+        mons->number = monnumber;
 
-    mons.flags      = 0L;
-    mons.experience = 0L;
-    mons.colour     = col;
+    mons->flags      = 0L;
+    mons->experience = 0L;
+    mons->colour     = col;
 
     spells = m->sec;
-    _get_spells(spells, &mons);
+    _get_spells(spells, mons);
 
     // Reset monster enchantments.
-    mons.enchantments.clear();
-    mons.ench_countdown = 0;
+    mons->enchantments.clear();
+    mons->ench_countdown = 0;
 
     // NOTE: For player ghosts and (very) ugly things this just ensures
     // that the monster instance is valid and won't crash when used,
@@ -1777,9 +1772,9 @@ void define_monster(monsters &mons)
     {
         ghost_demon ghost;
         ghost.init_random_demon();
-        mons.set_ghost(ghost);
-        mons.pandemon_init();
-        mons.bind_spell_flags();
+        mons->set_ghost(ghost);
+        mons->pandemon_init();
+        mons->bind_spell_flags();
         break;
     }
 
@@ -1787,9 +1782,9 @@ void define_monster(monsters &mons)
     {
         ghost_demon ghost;
         ghost.init_player_ghost();
-        mons.set_ghost(ghost);
-        mons.ghost_init();
-        mons.bind_spell_flags();
+        mons->set_ghost(ghost);
+        mons->ghost_init();
+        mons->bind_spell_flags();
         break;
     }
 
@@ -1798,8 +1793,8 @@ void define_monster(monsters &mons)
     {
         ghost_demon ghost;
         ghost.init_ugly_thing(mcls == MONS_VERY_UGLY_THING);
-        mons.set_ghost(ghost, false);
-        mons.uglything_init();
+        mons->set_ghost(ghost, false);
+        mons->uglything_init();
         break;
     }
     default:

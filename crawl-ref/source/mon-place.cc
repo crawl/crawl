@@ -1306,12 +1306,11 @@ static int _place_monster_aux(const mgen_data &mg,
         _maybe_init_tilenum_props(mon);
 #endif
 
-    const int id = mon->mindex();
     // Generate a brand shiny new monster, or zombie.
     if (mons_class_is_zombified(mg.cls))
         _define_zombie(mon, mg.base_type, mg.cls, mg.power, fpos);
     else
-        define_monster(id);
+        define_monster(mon);
 
     // Is it a god gift?
     if (mg.god != GOD_NO_GOD)
@@ -1452,7 +1451,7 @@ static int _place_monster_aux(const mgen_data &mg,
 
     if (mg.cls == MONS_DANCING_WEAPON)
     {
-        give_item(id, mg.power, summoned);
+        give_item(mon->mindex(), mg.power, summoned);
 
         // Dancing weapons *always* have a weapon. Fail to create them
         // otherwise.
@@ -1469,10 +1468,10 @@ static int _place_monster_aux(const mgen_data &mg,
     }
     else if (mons_class_itemuse(mg.cls) >= MONUSE_STARTING_EQUIPMENT)
     {
-        give_item(id, mg.power, summoned);
+        give_item(mon->mindex(), mg.power, summoned);
         // Give these monsters a second weapon. - bwr
         if (mons_class_wields_two_weapons(mg.cls))
-            give_item(id, mg.power, summoned);
+            give_item(mon->mindex(), mg.power, summoned);
 
         unwind_var<int> save_speedinc(mon->speed_increment);
         mon->wield_melee_weapon(false);
@@ -1617,7 +1616,7 @@ static int _place_monster_aux(const mgen_data &mg,
     if (crawl_state.game_is_arena())
         arena_placed_monster(mon);
 
-    return (id);
+    return (mon->mindex());
 }
 
 monster_type pick_random_zombie()

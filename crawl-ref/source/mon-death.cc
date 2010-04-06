@@ -98,7 +98,7 @@ void hogs_to_humans()
         {
             orig.type     = MONS_HUMAN;
             orig.attitude = mi->attitude;
-            define_monster(orig);
+            define_monster(&orig);
         }
 
         // Keep at same spot.
