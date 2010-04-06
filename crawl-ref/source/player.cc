@@ -1839,56 +1839,48 @@ int player_movement_speed(bool ignore_burden)
 {
     int mv = 10;
 
-    // But only merfolk get a speed bonus in water.
-    if (you.swimming() && you.species == SP_MERFOLK)
-    {
-        // This is swimming... so it doesn't make sense to really
-        // apply the other things (the mutation is "cover ground",
-        // swiftness is an air spell, can't wear boots, can't be
-        // transformed).
+    // transformations
+    if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER)
+        mv = 8;
+    else if (player_in_bat_form())
+        mv = 5; // but allowed minimum is six
+    else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_PIG)
+        mv = 7;
+    else if (you.swimming() && you.species == SP_MERFOLK)
         mv = 6;
-    }
-    else
+
+    // armour
+    if (player_equip_ego_type( EQ_BOOTS, SPARM_RUNNING ))
+        mv -= 2;
+
+    // ponderous brand and artefact property
+    mv += 2 * player_ponderousness();
+
+    // In the air, can fly fast (should be lightly burdened).
+    if (!ignore_burden && you.light_flight())
+        mv--;
+
+    // Swiftness is an Air spell, it doesn't work in water, but
+    // flying players will move faster.
+    if (you.duration[DUR_SWIFTNESS] > 0 && !you.in_water())
+        mv -= (you.flight_mode() == FL_FLY ? 4 : 2);
+
+    // Mutations: -2, -3, -4, unless innate and shapechanged.
+    // Not when swimming, since it is "cover the ground quickly".
+    if (player_mutation_level(MUT_FAST) > 0
+        && (!you.demon_pow[MUT_FAST] || !player_is_shapechanged())
+        && !you.swimming())
     {
-        // transformations
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER)
-            mv = 8;
-        else if (player_in_bat_form())
-            mv = 5; // but allowed minimum is six
-        else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_PIG)
-            mv = 7;
+        mv -= (player_mutation_level(MUT_FAST) + 1);
+    }
 
-        // armour
-        if (player_equip_ego_type( EQ_BOOTS, SPARM_RUNNING ))
-            mv -= 2;
-
-        // ponderous brand and artefact property
-        mv += 2 * player_ponderousness();
-
-        // In the air, can fly fast (should be lightly burdened).
-        if (!ignore_burden && you.light_flight())
-            mv--;
-
-        // Swiftness is an Air spell, it doesn't work in water, but
-        // flying players will move faster.
-        if (you.duration[DUR_SWIFTNESS] > 0 && !you.in_water())
-            mv -= (you.flight_mode() == FL_FLY ? 4 : 2);
-
-        // Mutations: -2, -3, -4, unless innate and shapechanged.
-        if (player_mutation_level(MUT_FAST) > 0
-            && (!you.demon_pow[MUT_FAST] || !player_is_shapechanged()) )
-        {
-            mv -= (player_mutation_level(MUT_FAST) + 1);
-        }
-
-        // Burden
-        if (!ignore_burden)
-        {
-            if (you.burden_state == BS_ENCUMBERED)
-                mv += 1;
-            else if (you.burden_state == BS_OVERLOADED)
-                mv += 3;
-        }
+    // Burden
+    if (!ignore_burden)
+    {
+        if (you.burden_state == BS_ENCUMBERED)
+            mv += 1;
+        else if (you.burden_state == BS_OVERLOADED)
+            mv += 3;
     }
 
     // We'll use the old value of six as a minimum, with haste this could
