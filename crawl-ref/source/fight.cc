@@ -1030,19 +1030,21 @@ bool melee_attack::player_aux_unarmed()
                 continue;
             }
 
+            unarmed_attack = "headbutt";
+            aux_damage = 5;
+
             if (player_mutation_level(MUT_BEAK)
                 && (!player_mutation_level(MUT_HORNS) || coinflip()))
             {
                 unarmed_attack = "peck";
-                aux_damage     = 6;
-                noise_factor   = 75;
+                aux_damage++;
+                noise_factor = 75;
             }
             else
             {
                 // Minotaurs used to get +5 damage here, now they get
                 // +6 because of the horns.
-                unarmed_attack = "headbutt";
-                aux_damage = 5 + player_mutation_level(MUT_HORNS) * 3;
+                aux_damage += player_mutation_level(MUT_HORNS) * 3;
 
                 if (you.equip[EQ_HELMET] != -1)
                 {
@@ -1090,14 +1092,8 @@ bool melee_attack::player_aux_unarmed()
             }
 
             unarmed_attack = "tail-slap";
-            aux_damage     = 6;
-            noise_factor   = 125;
-
-            if (player_mutation_level(MUT_STINGER) > 0)
-            {
-                aux_damage += (player_mutation_level(MUT_STINGER) * 2 - 1);
-                damage_brand  = SPWPN_VENOM;
-            }
+            aux_damage = 6;
+            noise_factor = 125;
 
             // Grey dracs have spiny tails, or something.
             // Maybe add this to player messaging. {dlb}
@@ -1106,7 +1102,13 @@ bool melee_attack::player_aux_unarmed()
             // would probably be a bit much, we'll still get the
             // poison bonus so it's still somewhat good.
             if (you.species == SP_GREY_DRACONIAN && you.experience_level >= 7)
-                aux_damage = 12;
+                aux_damage += 6;
+            else if (player_mutation_level(MUT_STINGER) > 0)
+            {
+                aux_damage += player_mutation_level(MUT_STINGER) * 2 - 1;
+                damage_brand = SPWPN_VENOM;
+            }
+
             break;
 
         case 3:
@@ -1138,8 +1140,8 @@ bool melee_attack::player_aux_unarmed()
             if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
             {
                 unarmed_attack = "slash";
-                aux_damage    += 6;
-                noise_factor   = 75;
+                aux_damage += 6;
+                noise_factor = 75;
                 simple_miss_message = true;
             }
             else if (you.has_usable_claws())
@@ -1171,10 +1173,10 @@ bool melee_attack::player_aux_unarmed()
             }
 
             unarmed_attack = "bite";
-            simple_miss_message = true;
             aux_damage += player_mutation_level(MUT_FANGS) * 2
                           + you.skills[SK_UNARMED_COMBAT] / 5;
             noise_factor = 75;
+            simple_miss_message = true;
 
             if (you.species == SP_VAMPIRE)
             {
