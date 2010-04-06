@@ -284,11 +284,11 @@
   "acute vision"
 },
 { MUT_DEFORMED,                   8,  3,  true,  true,
-  {"Armour fits poorly on your deformed body.",
-   "Armour fits poorly on your badly deformed body.",
-   "Armour fits poorly on your hideously deformed body."},
+  {"Armour fits poorly on your unusually shaped body.",
+   "Armour fits poorly on your deformed body.",
+   "Armour fits poorly on your badly deformed body."},
 
-  {"Your body twists and deforms.",
+  {"Your body twists unusually.",
    "Your body twists and deforms.",
    "Your body twists and deforms."},
 

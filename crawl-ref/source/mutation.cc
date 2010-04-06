@@ -57,18 +57,6 @@ const char *naga_speed_descrip[4] = {
     "You cover ground quickly."         //  6*14/10 =  8
 };
 
-const char *centaur_deformed_descrip[3] = {
-    "Armour fits poorly on your equine body.",
-    "Armour fits poorly on your deformed equine body.",
-    "Armour fits poorly on your badly deformed equine body."
-};
-
-const char *naga_deformed_descrip[3] = {
-    "Armour fits poorly on your serpentine body.",
-    "Armour fits poorly on your deformed serpentine body.",
-    "Armour fits poorly on your badly deformed serpentine body."
-};
-
 mutation_def mut_data[] = {
 
 #include "mutation-data.h"
@@ -128,17 +116,6 @@ void fixup_mutations()
     {
         ASSERT(is_valid_mutation(MUT_STINGER));
         _seek_mutation(MUT_STINGER)->rarity = 1;
-
-        ASSERT(is_valid_mutation(MUT_DEFORMED));
-        for (int j = 0; j < 3; ++j)
-            _seek_mutation(MUT_DEFORMED)->have[j] = naga_deformed_descrip[j];
-    }
-
-    if (you.species == SP_CENTAUR)
-    {
-        ASSERT(is_valid_mutation(MUT_DEFORMED));
-        for (int j = 0; j < 3; ++j)
-            _seek_mutation(MUT_DEFORMED)->have[j] = centaur_deformed_descrip[j];
     }
 }
 
