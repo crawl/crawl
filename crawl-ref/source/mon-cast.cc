@@ -2353,6 +2353,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                 grd(*ai) = DNGN_ROCK_WALL;
                 if (env.cgrid(*ai) != EMPTY_CLOUD)
                     delete_cloud(env.cgrid(*ai));
+                los_terrain_changed(*ai);
                 sumcount++;
             }
         }
