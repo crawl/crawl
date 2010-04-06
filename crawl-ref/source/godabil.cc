@@ -307,7 +307,7 @@ void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
 
     // Recreate the monster as an abomination, or as itself before
     // turning it into a spectral thing below.
-    define_monster(*mon);
+    define_monster(mon);
 
     mon->colour = ETC_UNHOLY;
 

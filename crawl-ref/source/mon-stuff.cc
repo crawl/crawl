@@ -2318,7 +2318,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     monster->number       = 0;
 
     // Note: define_monster() will clear out all enchantments! - bwr
-    define_monster(monster->mindex());
+    define_monster(monster);
 
     monster->mname = name;
     monster->props["original_name"] = name;

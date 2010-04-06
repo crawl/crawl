@@ -1762,7 +1762,7 @@ static bool _find_description(bool &again, std::string& error_inout)
             // things and player ghosts is taken care of in define_monster().
             fake_mon.type = m_type;
             fake_mon.props["fake"] = true;
-            define_monster(fake_mon);
+            define_monster(&fake_mon);
 
             // FIXME: This doesn't generate proper draconian monsters.
             monster_list.push_back(fake_mon);
