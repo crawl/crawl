@@ -59,11 +59,12 @@
 
 //
 // Define 'UNIX' if the target OS is UNIX-like.
+// Unknown OSes are assumed to be here.
 //
 #if defined(TARGET_OS_MACOSX) || defined(TARGET_OS_LINUX) || \
     defined(TARGET_OS_FREEBSD) || defined(TARGET_OS_NETBSD) || \
     defined(TARGET_OS_OPENBSD) || defined(TARGET_COMPILER_CYGWIN) || \
-    defined(TARGET_OS_SOLARIS)
+    defined(TARGET_OS_SOLARIS) || defined(TARGET_OS_UNKNOWN)
     #ifndef UNIX
     #define UNIX
     #endif

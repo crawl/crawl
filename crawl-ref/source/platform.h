@@ -53,11 +53,6 @@
  * TARGET_COMPILER_ICC
  *  Intel C++ Compiler
  *
- * TARGET_BIG_ENDIAN
- *      Running on a big endian byte order architecture.
- * TARGET_LITTLE_ENDIAN
- *      Running on a little endian byte order architecture.
- *
  */
 
 #ifndef __included_cc_platform_detect_h
@@ -81,7 +76,6 @@
 #if defined (__arm__)
 #define PROCESSOR_DETECTED
 #define TARGET_CPU_ARM
-#define TARGET_LITTLE_ENDIAN
 #endif
 #endif
 
@@ -90,7 +84,6 @@
 #if defined (__alpha) || defined (__alpha__)
 #define PROCESSOR_DETECTED
 #define TARGET_CPU_ALPHA
-#define TARGET_LITTLE_ENDIAN /* How should bi-endianness be handled? */
 #endif
 #endif
 
@@ -99,7 +92,6 @@
 #if defined (__sparc) || defined (__sparc__)
 #define PROCESSOR_DETECTED
 #define TARGET_CPU_SPARC
-#define TARGET_BIG_ENDIAN
 #endif
 #endif
 
@@ -108,11 +100,9 @@
 #if defined (__MIPSEL__)
 #define PROCESSOR_DETECTED
 #define TARGET_CPU_MIPS
-#define TARGET_LIDDLE_ENDIAN
 #elif defined (__mips__)
 #define PROCESSOR_DETECTED
 #define TARGET_CPU_MIPS
-#define TARGET_BIG_ENDIAN
 #endif
 #endif
 
@@ -120,11 +110,6 @@
 #if !defined (PROCESSOR_DETECTED)
 #if defined (_ARCH_PPC) || defined (__ppc__) || defined (__ppc64__) || defined (__PPC) || defined (powerpc) || defined (__PPC__) || defined (__powerpc64__) || defined (__powerpc64)
 #define PROCESSOR_DETECTED
-#if defined (__ppc64__) || defined (__powerpc64__) || defined (__powerpc64)
-#define TARGET_CPU_PPC 64
-#else
-#define TARGET_CPU_PPC 32
-#endif
 #define TARGET_BIG_ENDIAN
 #endif
 #endif
@@ -135,7 +120,6 @@
 #define PROCESSOR_DETECTED
 #define TARGET_CPU_X64
 #define TARGET_CPU_X86_64
-#define TARGET_LITTLE_ENDIAN
 #endif
 #endif
 
@@ -144,7 +128,6 @@
 #if defined (__i386__) || defined (__i386) || defined (i386) || defined (_X86_) || defined (_M_IX86)
 #define PROCESSOR_DETECTED
 #define TARGET_CPU_X86
-#define TARGET_LITTLE_ENDIAN
 #endif
 #endif
 
@@ -275,34 +258,17 @@
 #endif
 #endif
 
-#if defined (_LP64) || defined (__LP64__) || defined (_M_X64) || defined(_M_IA64)
-#define TARGET_CPU_BITS 64
-#else
-#define TARGET_CPU_BITS 32
-#endif
+//#if !defined (PROCESSOR_DETECTED)
+//#error "Could not detect target CPU."
+//#endif
 
-#if defined (TARGET_CPU_PPC)
-#if TARGET_CPU_PPC == 32
-#define TARGET_CPU_BITS 32
-#elif TARGET_CPU_PPC == 64
-#define TARGET_CPU_BITS 64
-#endif
-#endif
-
-#if !defined (PROCESSOR_DETECTED)
-#error "Could not detect target CPU."
-#endif
-
-#if !defined (COMPILER_DETECTED)
-#error "Could not detect target compiler."
-#endif
+//#if !defined (COMPILER_DETECTED)
+//#error "Could not detect target compiler."
+//#endif
 
 #if !defined (OS_DETECTED)
-#error "Could not detect target OS."
-#endif
-
-#if !defined (TARGET_CPU_BITS)
-#error "Could not detect 32-bit/64-bit architecture."
+#define TARGET_OS_UNKNOWN
+//#error "Could not detect target OS."
 #endif
 
 /* ICC on Windows uses VC includes, etc */
