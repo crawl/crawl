@@ -478,11 +478,7 @@ static void _dump_ver_stuff(FILE* file)
     fprintf(file, "Platform: DOS\n");
 #endif // UNIX
 
-#if TARGET_CPU_BITS == 64
-    fprintf(file, "Bits: 64\n");
-#else
-    fprintf(file, "Bits: 32\n");
-#endif
+    fprintf(file, "Bits: %d\n", (int)sizeof(void*)*8);
 
 #ifdef USE_TILE
     fprintf(file, "Tiles: yes\n\n");
