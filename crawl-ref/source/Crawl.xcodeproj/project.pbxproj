@@ -2370,10 +2370,12 @@
 			);
 			name = "Generate Headers";
 			outputPaths = (
+				"$(PROJECT_DIR)/build.h",
+				"$(PROJECT_DIR)/compflag.h",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "export PATH=\"/opt/git/bin:/opt/local/bin:/usr/local/bin:/usr/bin:/bin:$PATH\"\ncd \"$PROJECT_DIR\"\nutil/gen_ver.pl build.h\nutil/gen-cflg.pl compflag.h \"<unavailable>\" \"<unavailable>\" \"<unavailable>\"";
+			shellPath = /bin/bash;
+			shellScript = "#!/bin/bash\nexport PATH=\"/opt/git/bin:/opt/local/bin:/usr/local/bin:/usr/bin:/bin:$PATH\"\nif [ -f $HOME/.bashrc ]; then\n\tsource $HOME/.bashrc\nfi\ncd \"$PROJECT_DIR\"\nutil/gen_ver.pl build.h\nutil/gen-cflg.pl compflag.h \"<unavailable>\" \"<unavailable>\" \"<unavailable>\"";
 		};
 		B0D189EE1090B3490071AF40 /* Generate Headers */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2384,10 +2386,12 @@
 			);
 			name = "Generate Headers";
 			outputPaths = (
+				"$(PROJECT_DIR)/build.h",
+				"$(PROJECT_DIR)/compflag.h",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "export PATH=\"/opt/git/bin:/opt/local/bin:/usr/local/bin:/usr/bin:/bin:$PATH\"\ncd \"$PROJECT_DIR\"\nutil/gen_ver.pl build.h\nutil/gen-cflg.pl compflag.h \"<unavailable>\" \"<unavailable>\" \"<unavailable>\"";
+			shellPath = /bin/bash;
+			shellScript = "#!/bin/bash\nexport PATH=\"/opt/git/bin:/opt/local/bin:/usr/local/bin:/usr/bin:/bin:$PATH\"\nif [ -f $HOME/.bashrc ]; then\n\tsource $HOME/.bashrc\nfi\ncd \"$PROJECT_DIR\"\nutil/gen_ver.pl build.h\nutil/gen-cflg.pl compflag.h \"<unavailable>\" \"<unavailable>\" \"<unavailable>\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
