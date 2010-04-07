@@ -107,7 +107,6 @@
 		7B09F5C41133D6AB004F149D /* losparam.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6400B10BD494400A99626 /* losparam.cc */; };
 		7B09F5C51133D6AB004F149D /* luaterp.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6400D10BD494400A99626 /* luaterp.cc */; };
 		7B09F5C61133D6AB004F149D /* macro.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6400F10BD494400A99626 /* macro.cc */; };
-		7B09F5C71133D6AB004F149D /* main.cc in Sources */ = {isa = PBXBuildFile; fileRef = D25C91860FF0368E00D9E8AD /* main.cc */; };
 		7B09F5C81133D6AB004F149D /* main.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6401110BD494400A99626 /* main.cc */; };
 		7B09F5C91133D6AB004F149D /* makeitem.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6401510BD494400A99626 /* makeitem.cc */; };
 		7B09F5CA1133D6AB004F149D /* map_knowledge.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6401710BD494400A99626 /* map_knowledge.cc */; };
@@ -266,6 +265,18 @@
 		7B3B07600BD13AF000F2980E /* libncurses.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B3B075F0BD13AF000F2980E /* libncurses.dylib */; };
 		7BBC4A070B0F783C00F27D45 /* levcomp.lpp in Sources */ = {isa = PBXBuildFile; fileRef = 7B352ED10B001B9E00CABB32 /* levcomp.lpp */; };
 		7BBC4A080B0F783C00F27D45 /* levcomp.ypp in Sources */ = {isa = PBXBuildFile; fileRef = 7B352ED20B001B9E00CABB32 /* levcomp.ypp */; };
+		7BDE8444116D247D00974D63 /* player-equip.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BDE8442116D247D00974D63 /* player-equip.cc */; };
+		7BDE8445116D247D00974D63 /* player-equip.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BDE8442116D247D00974D63 /* player-equip.cc */; };
+		7BDE8447116D24B300974D63 /* abl-show.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63F5D10BD494300A99626 /* abl-show.cc */; };
+		7BDE8448116D24B300974D63 /* abyss.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63F5F10BD494300A99626 /* abyss.cc */; };
+		7BDE8449116D24B300974D63 /* actor-los.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63F6110BD494300A99626 /* actor-los.cc */; };
+		7BDE844A116D24B300974D63 /* actor.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63F6210BD494300A99626 /* actor.cc */; };
+		7BDE844B116D24B300974D63 /* areas.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63F6610BD494300A99626 /* areas.cc */; };
+		7BDE844C116D24B300974D63 /* arena.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63F6810BD494300A99626 /* arena.cc */; };
+		7BDE844D116D24B300974D63 /* artefact.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63F6C10BD494300A99626 /* artefact.cc */; };
+		7BDE844E116D24B300974D63 /* attitude-change.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63F6E10BD494300A99626 /* attitude-change.cc */; };
+		7BDE844F116D24B300974D63 /* beam.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63F7010BD494300A99626 /* beam.cc */; };
+		7BDE8456116D24E600974D63 /* libunix.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7BDE8454116D24E600974D63 /* libunix.cc */; };
 		93F94B1F10C178990077B142 /* l_subvault.cc in Sources */ = {isa = PBXBuildFile; fileRef = 93F94B1E10C178990077B142 /* l_subvault.cc */; };
 		B032D686106C02070002D70D /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B0EFD420BD12E9200002671 /* liblua.a */; };
 		B032D687106C02070002D70D /* libreadline.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B3B07560BD13A8100F2980E /* libreadline.dylib */; };
@@ -870,6 +881,10 @@
 		7B352ED20B001B9E00CABB32 /* levcomp.ypp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.yacc; name = levcomp.ypp; path = util/levcomp.ypp; sourceTree = "<group>"; };
 		7B3B07560BD13A8100F2980E /* libreadline.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libreadline.dylib; path = /usr/lib/libreadline.dylib; sourceTree = "<absolute>"; };
 		7B3B075F0BD13AF000F2980E /* libncurses.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libncurses.dylib; path = /usr/lib/libncurses.dylib; sourceTree = "<absolute>"; };
+		7BDE8442116D247D00974D63 /* player-equip.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "player-equip.cc"; sourceTree = "<group>"; };
+		7BDE8443116D247D00974D63 /* player-equip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "player-equip.h"; sourceTree = "<group>"; };
+		7BDE8454116D24E600974D63 /* libunix.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = libunix.cc; sourceTree = "<group>"; };
+		7BDE8455116D24E600974D63 /* libunix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libunix.h; sourceTree = "<group>"; };
 		8DD76FB20486AB0100D96B5E /* crawl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = crawl; sourceTree = BUILT_PRODUCTS_DIR; };
 		93F94B1E10C178990077B142 /* l_subvault.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = l_subvault.cc; sourceTree = "<group>"; };
 		B02C574310670C63006AC96D /* libgui.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = libgui.cc; sourceTree = "<group>"; };
@@ -1633,6 +1648,8 @@
 				E5D63FFE10BD494400A99626 /* lev-pand.cc */,
 				E5D63FFF10BD494400A99626 /* lev-pand.h */,
 				E5D6400110BD494400A99626 /* libdos.h */,
+				7BDE8454116D24E600974D63 /* libunix.cc */,
+				7BDE8455116D24E600974D63 /* libunix.h */,
 				E5D6400310BD494400A99626 /* libutil.cc */,
 				E5D6400410BD494400A99626 /* libutil.h */,
 				E5D6400910BD494400A99626 /* los.cc */,
@@ -1739,6 +1756,8 @@
 				E5D6405F10BD494500A99626 /* place.cc */,
 				E5D6406010BD494500A99626 /* place.h */,
 				E5D6406110BD494500A99626 /* platform.h */,
+				7BDE8442116D247D00974D63 /* player-equip.cc */,
+				7BDE8443116D247D00974D63 /* player-equip.h */,
 				E5D6406210BD494500A99626 /* player.cc */,
 				E5D6406310BD494500A99626 /* player.h */,
 				E5D6406410BD494500A99626 /* quiver.cc */,
@@ -2340,7 +2359,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd \"$PROJECT_DIR\"\nmake art-data.h rltiles/dc-unrand.txt\ncd \"$PROJECT_DIR/rltiles\"\nfor a in main dngn player gui; do\n\tif [ ! -f tiledef-$a.cc ]; then\n\t\t\"$CONFIGURATION_BUILD_DIR/$FULL_PRODUCT_NAME/Contents/MacOS/$PRODUCT_NAME\" dc-$a.txt\n\tfi\ndone";
+			shellScript = "cd \"$PROJECT_DIR\"\nutil/art-data.pl\ncd \"$PROJECT_DIR/rltiles\"\nfor a in main dngn player gui; do\n\tif [ ! -f tiledef-$a.cc ]; then\n\t\t\"$CONFIGURATION_BUILD_DIR/$FULL_PRODUCT_NAME/Contents/MacOS/$PRODUCT_NAME\" dc-$a.txt\n\tfi\ndone";
 		};
 		B0C9CFB4108DFA1200E7FA35 /* Generate Headers */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2351,10 +2370,12 @@
 			);
 			name = "Generate Headers";
 			outputPaths = (
+				"$(PROJECT_DIR)/build.h",
+				"$(PROJECT_DIR)/compflag.h",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "export PATH=\"/opt/git/bin:/opt/local/bin:/usr/local/bin:/usr/bin:/bin:$PATH\"\ncd \"$PROJECT_DIR\"\nutil/gen_ver.pl build.h\nutil/gen-cflg.pl compflag.h \"<unavailable>\" \"<unavailable>\" \"<unavailable>\"";
+			shellPath = /bin/bash;
+			shellScript = "#!/bin/bash\nexport PATH=\"/opt/git/bin:/opt/local/bin:/usr/local/bin:/usr/bin:/bin:$PATH\"\nif [ -f $HOME/.bashrc ]; then\n\tsource $HOME/.bashrc\nfi\ncd \"$PROJECT_DIR\"\nutil/gen_ver.pl build.h\nutil/gen-cflg.pl compflag.h \"<unavailable>\" \"<unavailable>\" \"<unavailable>\"";
 		};
 		B0D189EE1090B3490071AF40 /* Generate Headers */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2365,10 +2386,12 @@
 			);
 			name = "Generate Headers";
 			outputPaths = (
+				"$(PROJECT_DIR)/build.h",
+				"$(PROJECT_DIR)/compflag.h",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "export PATH=\"/opt/git/bin:/opt/local/bin:/usr/local/bin:/usr/bin:/bin:$PATH\"\ncd \"$PROJECT_DIR\"\nutil/gen_ver.pl build.h\nutil/gen-cflg.pl compflag.h \"<unavailable>\" \"<unavailable>\" \"<unavailable>\"";
+			shellPath = /bin/bash;
+			shellScript = "#!/bin/bash\nexport PATH=\"/opt/git/bin:/opt/local/bin:/usr/local/bin:/usr/bin:/bin:$PATH\"\nif [ -f $HOME/.bashrc ]; then\n\tsource $HOME/.bashrc\nfi\ncd \"$PROJECT_DIR\"\nutil/gen_ver.pl build.h\nutil/gen-cflg.pl compflag.h \"<unavailable>\" \"<unavailable>\" \"<unavailable>\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -2414,6 +2437,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7BDE8447116D24B300974D63 /* abl-show.cc in Sources */,
+				7BDE8448116D24B300974D63 /* abyss.cc in Sources */,
+				7BDE8449116D24B300974D63 /* actor-los.cc in Sources */,
+				7BDE844A116D24B300974D63 /* actor.cc in Sources */,
+				7BDE844B116D24B300974D63 /* areas.cc in Sources */,
+				7BDE844C116D24B300974D63 /* arena.cc in Sources */,
+				7BDE844D116D24B300974D63 /* artefact.cc in Sources */,
+				7BDE844E116D24B300974D63 /* attitude-change.cc in Sources */,
+				7BDE844F116D24B300974D63 /* beam.cc in Sources */,
 				7B09F56D1133D6AB004F149D /* behold.cc in Sources */,
 				7B09F56E1133D6AB004F149D /* bitary.cc in Sources */,
 				7B09F56F1133D6AB004F149D /* branch.cc in Sources */,
@@ -2502,13 +2534,13 @@
 				7BBC4A070B0F783C00F27D45 /* levcomp.lpp in Sources */,
 				7BBC4A080B0F783C00F27D45 /* levcomp.ypp in Sources */,
 				7B09F5BE1133D6AB004F149D /* libgui.cc in Sources */,
+				7BDE8456116D24E600974D63 /* libunix.cc in Sources */,
 				7B09F5C01133D6AB004F149D /* libutil.cc in Sources */,
 				7B09F5C21133D6AB004F149D /* los.cc in Sources */,
 				7B09F5C31133D6AB004F149D /* los_def.cc in Sources */,
 				7B09F5C41133D6AB004F149D /* losparam.cc in Sources */,
 				7B09F5C51133D6AB004F149D /* luaterp.cc in Sources */,
 				7B09F5C61133D6AB004F149D /* macro.cc in Sources */,
-				7B09F5C71133D6AB004F149D /* main.cc in Sources */,
 				7B09F5C81133D6AB004F149D /* main.cc in Sources */,
 				7B09F5C91133D6AB004F149D /* makeitem.cc in Sources */,
 				7B09F5CA1133D6AB004F149D /* map_knowledge.cc in Sources */,
@@ -2553,6 +2585,7 @@
 				7B09F5EE1133D6AB004F149D /* output.cc in Sources */,
 				7B09F5EF1133D6AB004F149D /* pattern.cc in Sources */,
 				7B09F5F01133D6AB004F149D /* place.cc in Sources */,
+				7BDE8444116D247D00974D63 /* player-equip.cc in Sources */,
 				7B09F5F11133D6AB004F149D /* player.cc in Sources */,
 				7B09F5F21133D6AB004F149D /* quiver.cc in Sources */,
 				7B09F5F31133D6AB004F149D /* random.cc in Sources */,
@@ -2812,6 +2845,7 @@
 				E5D6416E10BD494500A99626 /* wiz-mon.cc in Sources */,
 				E5D6416F10BD494500A99626 /* wiz-you.cc in Sources */,
 				E5D6417010BD494500A99626 /* xom.cc in Sources */,
+				7BDE8445116D247D00974D63 /* player-equip.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2927,12 +2961,14 @@
 					DB_NDBM,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_VERSION = 4.0;
+				GCC_VERSION_x86_64 = 4.0;
 				GCC_WARN_SIGN_COMPARE = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_LABEL = NO;
+				MACOSX_DEPLOYMENT_TARGET_x86_64 = 10.5;
 				PRODUCT_NAME = crawl;
+				SDKROOT_x86_64 = /Developer/SDKs/MacOSX10.5.sdk;
 				YACC_GENERATED_FILE_STEM = InputFileStem;
 			};
 			name = Profile;
@@ -3055,12 +3091,14 @@
 					FULLDEBUG,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_VERSION = 4.0;
+				GCC_VERSION_x86_64 = 4.0;
 				GCC_WARN_SIGN_COMPARE = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_LABEL = NO;
+				MACOSX_DEPLOYMENT_TARGET_x86_64 = 10.5;
 				PRODUCT_NAME = crawl;
+				SDKROOT_x86_64 = /Developer/SDKs/MacOSX10.5.sdk;
 				YACC_GENERATED_FILE_STEM = InputFileStem;
 			};
 			name = Debug;
@@ -3124,11 +3162,13 @@
 					DEBUG,
 					DEBUG_ITEM_SCAN,
 				);
-				GCC_VERSION = 4.0;
+				GCC_VERSION_x86_64 = 4.0;
 				GCC_WARN_SIGN_COMPARE = NO;
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_LABEL = NO;
+				MACOSX_DEPLOYMENT_TARGET_x86_64 = 10.5;
 				PRODUCT_NAME = crawl;
+				SDKROOT_x86_64 = /Developer/SDKs/MacOSX10.5.sdk;
 				YACC_GENERATED_FILE_STEM = InputFileStem;
 			};
 			name = Wizard;
@@ -3187,11 +3227,13 @@
 					CLUA_BINDINGS,
 					DB_NDBM,
 				);
-				GCC_VERSION = 4.0;
+				GCC_VERSION_x86_64 = 4.0;
 				GCC_WARN_SIGN_COMPARE = NO;
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_LABEL = NO;
+				MACOSX_DEPLOYMENT_TARGET_x86_64 = 10.5;
 				PRODUCT_NAME = crawl;
+				SDKROOT_x86_64 = /Developer/SDKs/MacOSX10.5.sdk;
 				YACC_GENERATED_FILE_STEM = InputFileStem;
 			};
 			name = Release;
