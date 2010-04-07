@@ -2359,7 +2359,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd \"$PROJECT_DIR\"\nmake art-data.h rltiles/dc-unrand.txt\ncd \"$PROJECT_DIR/rltiles\"\nfor a in main dngn player gui; do\n\tif [ ! -f tiledef-$a.cc ]; then\n\t\t\"$CONFIGURATION_BUILD_DIR/$FULL_PRODUCT_NAME/Contents/MacOS/$PRODUCT_NAME\" dc-$a.txt\n\tfi\ndone";
+			shellScript = "cd \"$PROJECT_DIR\"\nutil/art-data.pl\ncd \"$PROJECT_DIR/rltiles\"\nfor a in main dngn player gui; do\n\tif [ ! -f tiledef-$a.cc ]; then\n\t\t\"$CONFIGURATION_BUILD_DIR/$FULL_PRODUCT_NAME/Contents/MacOS/$PRODUCT_NAME\" dc-$a.txt\n\tfi\ndone";
 		};
 		B0C9CFB4108DFA1200E7FA35 /* Generate Headers */ = {
 			isa = PBXShellScriptBuildPhase;
