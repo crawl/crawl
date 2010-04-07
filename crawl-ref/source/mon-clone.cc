@@ -200,7 +200,7 @@ void mons_summon_illusion_from(monsters *monster, actor *foe,
         ASSERT(foe == &you);
         const int midx =
             create_monster(
-                mgen_data(MONS_PLAYER_GHOST, SAME_ATTITUDE(monster), monster,
+                mgen_data(MONS_PLAYER_ILLUSION, SAME_ATTITUDE(monster), monster,
                           6, spell_cast, monster->pos(), monster->foe, 0));
         if (midx != -1)
         {
