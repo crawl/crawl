@@ -214,7 +214,7 @@ static int dgn_change_level_flags(lua_State *ls)
 }
 
 static const std::string branch_flag_names[] =
-{"no_tele_control", "not_mappable", "no_magic_map", ""};
+{"no_tele_control", "not_mappable", "no_magic_map", "has_orb", "islanded", ""};
 
 static int dgn_bflags(lua_State *ls)
 {
