@@ -3538,7 +3538,7 @@ static void _print_save_version(char *name)
     bool need_unlink = false;
 #endif
     std::string basename = get_savedir_filename(name, "", "");
-    std::string filename = basename + ".sav";
+    std::string filename = basename + ".chr";
 
     FILE *charf = fopen(name, "rb");
 

@@ -1292,7 +1292,7 @@ static void delete_files()
 #ifdef PACKAGE_SUFFIX
         PACKAGE_SUFFIX ,
 #endif
-        ".st", ".kil", ".tc", ".nts", ".tut", ".sav", ".msg", ".tdl"
+        ".st", ".kil", ".tc", ".nts", ".tut", ".chr", ".msg", ".tdl"
     };
 
     const int num_suffixes = sizeof(suffixes) / sizeof(const char*);

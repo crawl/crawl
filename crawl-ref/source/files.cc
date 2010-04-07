@@ -160,7 +160,7 @@ static bool _is_uid_file(const std::string &name, const std::string &ext)
 
 bool is_save_file_name(const std::string &name)
 {
-    return _is_uid_file(name, ".sav");
+    return _is_uid_file(name, ".chr");
 }
 
 #ifdef LOAD_UNPACKAGE_CMD
@@ -747,7 +747,7 @@ std::vector<player_save_info> find_saved_characters()
         escape_path_spaces(zipname);
 
         // This is the filename we actually read ourselves.
-        filename = basename + ".sav";
+        filename = basename + ".chr";
         escape_path_spaces(filename);
 
         std::string dir = get_savedir();
@@ -773,7 +773,7 @@ std::vector<player_save_info> find_saved_characters()
                 {
  #ifndef LOAD_UNPACKAGE_CMD
                     basename = filename.substr(0,
-                            filename.length() - strlen(".sav"));
+                            filename.length() - strlen(".chr"));
  #endif
                     std::string dollname = basename + ".tdl";
                     const std::string dollpath = get_savedir_path(dollname);
@@ -1756,7 +1756,7 @@ static void _save_game_base()
     }
 #endif
 
-    std::string charFile = get_savedir_filename(you.your_name, "", "sav");
+    std::string charFile = get_savedir_filename(you.your_name, "", "chr");
     FILE *charf = fopen(charFile.c_str(), "wb");
     if (!charf)
         end(-1, true, "Unable to open \"%s\" for writing!\n", charFile.c_str());
@@ -2046,7 +2046,7 @@ bool load_ghost(bool creating_level)
 
 void restore_game(void)
 {
-    std::string charFile = get_savedir_filename(you.your_name, "", "sav");
+    std::string charFile = get_savedir_filename(you.your_name, "", "chr");
     FILE *charf = fopen(charFile.c_str(), "rb");
     if (!charf )
         end(-1, true, "Unable to open %s for reading!\n", charFile.c_str() );
