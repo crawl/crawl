@@ -391,6 +391,8 @@ BFLAGS:   Persistent, changeable per-*branch* flags which affect game
           * not_mappable    - prevents the player from remembering where
                               they've been (like in the Abyss)
           * no_magic_map    - which prevents magic mapping from working.
+          * islanded        - allows isolated zones with no stairs.
+          * has_orb         - the Orb of Zot is on the floor in this branch.
 
 LFLOORCOL: blue
           LFLOORCOL: allows you to set the floor colour for the level the
