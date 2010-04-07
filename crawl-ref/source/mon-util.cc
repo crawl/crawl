@@ -1781,6 +1781,7 @@ void define_monster(monsters *mons)
     }
 
     case MONS_PLAYER_GHOST:
+    case MONS_PLAYER_ILLUSION:
     {
         ghost_demon ghost;
         ghost.init_player_ghost();
