@@ -230,6 +230,21 @@ ifdef BUILD_ALL
 endif
 
 #
+# Set up the TILES variant
+#
+ifdef TILES
+
+# For now, everything but the iPad uses the standard
+# SDL/OpenGL/Freetype combination.
+ifndef IPAD
+	SDL = YesPlease
+	GL = YesPlease
+	FT = YesPlease
+endif
+
+endif
+
+#
 # Set up object file dependencies for $(GAME) target.
 #
 include makefile.obj
