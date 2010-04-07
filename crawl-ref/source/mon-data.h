@@ -1382,7 +1382,7 @@ static monsterentry mondata[] = {
 // player ghost - stats are stored in ghost struct
 {
     MONS_PLAYER_GHOST, 'p', WHITE, "player ghost",
-    M_FIGHTER | M_SPEAKS | M_SPELLCASTER | M_ACTUAL_SPELLS | M_UNIQUE
+    M_FIGHTER | M_SPEAKS | M_SPELLCASTER | M_ACTUAL_SPELLS
         | M_INSUBSTANTIAL,
     MR_RES_POISON,
     0, 15, MONS_GHOST, MONS_PLAYER_GHOST, MH_UNDEAD, -5,
