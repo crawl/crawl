@@ -295,7 +295,7 @@ static bool _check_saved_game(void)
     FILE *handle;
 
     std::string basename = get_savedir_filename(you.your_name, "", "");
-    std::string savename = basename + ".sav";
+    std::string savename = basename + ".chr";
 
 #ifdef LOAD_UNPACKAGE_CMD
     std::string zipname = basename + PACKAGE_SUFFIX;
