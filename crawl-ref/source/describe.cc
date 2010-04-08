@@ -1265,7 +1265,7 @@ static std::string _describe_armour( const item_def &item, bool verbose )
             description += "It makes you more clever (+3 to intelligence).";
             break;
         case SPARM_PONDEROUSNESS:
-            description += "It is very cumbersome, slowing your movement.";
+            description += "It is very cumbersome, thus slowing your movement.";
             break;
         case SPARM_LEVITATION:
             description += "It can be activated to allow its wearer to "
