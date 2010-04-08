@@ -868,6 +868,12 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
     if (place.map.has_tag("no_wall_fixup"))
         _mask_vault(place, MMT_NO_WALL);
 
+    if (place.map.has_tag("no_shop_gen"))
+        _mask_vault(place, MMT_NO_SHOP);
+
+    if (place.map.has_tag("no_trap_gen"))
+        _mask_vault(place, MMT_NO_TRAP);
+
     // Now do per-square by-symbol masking.
     for (int y = place.pos.y + place.size.y - 1; y >= place.pos.y; --y)
         for (int x = place.pos.x + place.size.x - 1; x >= place.pos.x; --x)
@@ -2679,7 +2685,7 @@ static builder_rc_type _builder_basic(int level_number)
                      xbegin, ybegin, xend, yend);
 
         dprf("Placing shaft trail...");
-        if (!one_chance_in(3)) // 2/3 chance it ends in a shaft
+        if (!one_chance_in(3) && unforbidden(coord_def(xend, yend), MMT_NO_TRAP)) // 2/3 chance it ends in a shaft
         {
             trap_def& ts(env.trap[0]);
             ts.type = TRAP_SHAFT;
@@ -2853,8 +2859,12 @@ static void _place_traps(int level_number)
         {
             ts.pos.x = random2(GXM);
             ts.pos.y = random2(GYM);
-            if (in_bounds(ts.pos) && grd(ts.pos) == DNGN_FLOOR)
+            if (in_bounds(ts.pos)
+                && grd(ts.pos) == DNGN_FLOOR
+                && unforbidden(ts.pos, MMT_NO_TRAP))
+            {
                 break;
+            }
         }
 
         if (tries == 200)
@@ -5772,7 +5782,7 @@ static void _place_shops(int level_number, int nshops)
             if (timeout > 10000)
                 return;
         }
-        while (grd(shop_place) != DNGN_FLOOR);
+        while (grd(shop_place) != DNGN_FLOOR && unforbidden(shop_place, MMT_NO_SHOP));
 
         if (allow_bazaars && level_number > 9 && level_number < 27
             && one_chance_in(30 - level_number))
@@ -5802,6 +5812,9 @@ void place_spec_shop( int level_number,
 
     bool note_status = notes_are_active();
     activate_notes(false);
+
+    if (!unforbidden(where, MMT_NO_SHOP))
+        return;
 
     for (i = 0; i < MAX_SHOPS; i++)
         if (env.shop[i].type == SHOP_UNASSIGNED)
