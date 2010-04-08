@@ -1077,8 +1077,8 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         mpr(mdef.gain[you.mutation[mutat]], MSGCH_MUTATION);
         gain_msg = false;
 
-        // Hooves and talons force boots off at 3,
-        // check for level 2 or higher here.
+        // Hooves and talons force boots off at 3.  Check for level 2 or
+        // higher here.
         if (you.mutation[mutat] >= 2 && !you.melded[EQ_BOOTS])
             remove_one_equip(EQ_BOOTS, false, true);
         break;
@@ -1094,9 +1094,9 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             remove_one_equip(EQ_GLOVES, false, true);
         break;
 
-    case MUT_ANTENNAE:
     case MUT_HORNS:
     case MUT_BEAK:
+    case MUT_ANTENNAE:
         mpr(mdef.gain[you.mutation[mutat]], MSGCH_MUTATION);
         gain_msg = false;
 
