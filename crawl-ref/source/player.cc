@@ -5168,7 +5168,7 @@ bool player::is_levitating() const
 bool player::in_water() const
 {
     return (!airborne() && !beogh_water_walk()
-            && feat_is_water(grd(this->pos())));
+            && feat_is_water(grd(pos())));
 }
 
 bool player::can_swim(bool permanently) const
@@ -5204,10 +5204,10 @@ bool player::has_spell(spell_type spell) const
 
 bool player::cannot_speak() const
 {
-    if (silenced(this->pos()))
+    if (silenced(pos()))
         return (true);
 
-    if (this->cannot_move()) // we allow talking during sleep ;)
+    if (cannot_move()) // we allow talking during sleep ;)
         return (true);
 
     // No transform that prevents the player from speaking yet.
@@ -5611,10 +5611,10 @@ int player::res_water_drowning() const
 int player::res_asphyx() const
 {
     // The undead are immune to asphyxiation, or so we'll assume.
-    if (this->is_undead)
+    if (is_undead)
         return 1;
 
-    switch (this->attribute[ATTR_TRANSFORMATION])
+    switch (attribute[ATTR_TRANSFORMATION])
     {
     case TRAN_LICH:
     case TRAN_STATUE:
@@ -5674,14 +5674,14 @@ int player::res_magic() const
 {
     int rm = 0;
 
-    switch (this->species)
+    switch (species)
     {
     case SP_MOUNTAIN_DWARF:
     case SP_HILL_ORC:
-        rm = this->experience_level * 2;
+        rm = experience_level * 2;
         break;
     default:
-        rm = this->experience_level * 3;
+        rm = experience_level * 3;
         break;
     case SP_HIGH_ELF:
     case SP_SLUDGE_ELF:
@@ -5689,17 +5689,17 @@ int player::res_magic() const
     case SP_VAMPIRE:
     case SP_DEMIGOD:
     case SP_OGRE:
-        rm = this->experience_level * 4;
+        rm = experience_level * 4;
         break;
     case SP_NAGA:
-        rm = this->experience_level * 5;
+        rm = experience_level * 5;
         break;
     case SP_PURPLE_DRACONIAN:
     case SP_DEEP_DWARF:
-        rm = this->experience_level * 6;
+        rm = experience_level * 6;
         break;
     case SP_SPRIGGAN:
-        rm = this->experience_level * 7;
+        rm = experience_level * 7;
         break;
     }
 
@@ -5713,21 +5713,21 @@ int player::res_magic() const
     rm += 40 * player_equip(EQ_RINGS, RING_PROTECTION_FROM_MAGIC);
 
     // Enchantment skill
-    rm += 2 * this->skills[SK_ENCHANTMENTS];
+    rm += 2 * skills[SK_ENCHANTMENTS];
 
     // Mutations
     rm += 30 * player_mutation_level(MUT_MAGIC_RESISTANCE);
 
     // transformations
-    if (this->attribute[ATTR_TRANSFORMATION] == TRAN_LICH)
+    if (attribute[ATTR_TRANSFORMATION] == TRAN_LICH)
         rm += 50;
 
     // Trog's Hand
-    if (this->attribute[ATTR_DIVINE_REGENERATION])
+    if (attribute[ATTR_DIVINE_REGENERATION])
         rm += 70;
 
     // Enchantment effect
-    if (this->duration[DUR_LOWERED_MR])
+    if (duration[DUR_LOWERED_MR])
         rm /= 2;
 
     return (rm);
@@ -5752,7 +5752,7 @@ flight_type player::flight_mode() const
     }
     else if (is_levitating())
     {
-        return (this->duration[DUR_CONTROLLED_FLIGHT]
+        return (duration[DUR_CONTROLLED_FLIGHT]
                 || wearing_amulet(AMU_CONTROLLED_FLIGHT) ? FL_FLY
                                                          : FL_LEVITATE);
     }
@@ -5767,13 +5767,13 @@ bool player::permanent_levitation() const
     // in order to actually cancel levitation (by setting
     // DUR_LEVITATION to 1.) Note that antimagic() won't do this.
     return (airborne() && player_equip_ego_type(EQ_BOOTS, SPARM_LEVITATION)
-            && this->duration[DUR_LEVITATION] > 1);
+            && duration[DUR_LEVITATION] > 1);
 }
 
 bool player::permanent_flight() const
 {
     return (airborne() && wearing_amulet(AMU_CONTROLLED_FLIGHT)
-            && this->species == SP_KENKU && this->experience_level >= 15);
+            && species == SP_KENKU && experience_level >= 15);
 }
 
 bool player::light_flight() const
@@ -5785,7 +5785,7 @@ bool player::light_flight() const
 
 bool player::travelling_light() const
 {
-    return (this->burden < carrying_capacity(BS_UNENCUMBERED) * 70 / 100);
+    return (burden < carrying_capacity(BS_UNENCUMBERED) * 70 / 100);
 }
 
 int player::mons_species() const
@@ -5890,14 +5890,14 @@ bool player::rot(actor *who, int amount, int immediate, bool quiet)
     if (immediate > 0)
         rot_hp(immediate);
 
-    if (this->rotting < 40)
+    if (rotting < 40)
     {
         // Either this, or the actual rotting message should probably
         // be changed so that they're easier to tell apart. -- bwr
         mprf(MSGCH_WARN, "You feel your flesh %s away!",
-             this->rotting > 0 ? "rotting" : "start to rot");
+             rotting > 0 ? "rotting" : "start to rot");
 
-        this->rotting += amount;
+        rotting += amount;
 
         learned_something_new(TUT_YOU_ROTTING);
     }
@@ -6046,7 +6046,7 @@ bool player::can_see_invisible(bool calc_unid) const
         si++;
 
     //jmf: added see_invisible spell
-    if (this->duration[DUR_SEE_INVISIBLE] > 0)
+    if (duration[DUR_SEE_INVISIBLE] > 0)
         si++;
 
     // randart wpns
@@ -6107,9 +6107,9 @@ bool player::backlit(bool check_haloed, bool self_halo) const
 // This is the imperative version.
 void player::backlight()
 {
-    if (!this->duration[DUR_INVIS])
+    if (!duration[DUR_INVIS])
     {
-        if (this->duration[DUR_CORONA])
+        if (duration[DUR_CORONA])
             mpr("You glow brighter.");
         else
             mpr("You are outlined in light.");
@@ -6134,20 +6134,20 @@ bool player::can_safely_mutate() const
     if (!can_mutate())
         return (false);
 
-    return (!this->is_undead
-            || this->is_undead == US_SEMI_UNDEAD
-               && this->hunger_state == HS_ENGORGED);
+    return (!is_undead
+            || is_undead == US_SEMI_UNDEAD
+               && hunger_state == HS_ENGORGED);
 }
 
 bool player::can_bleed() const
 {
-    if (this->is_undead && (this->species != SP_VAMPIRE
-                          || this->hunger_state <= HS_SATIATED))
+    if (is_undead && (species != SP_VAMPIRE
+                          || hunger_state <= HS_SATIATED))
     {
         return (false);
     }
 
-    const int tran = this->attribute[ATTR_TRANSFORMATION];
+    const int tran = attribute[ATTR_TRANSFORMATION];
     // The corresponding monsters don't bleed either.
     if (tran == TRAN_STATUE || tran == TRAN_ICE_BEAST
         || tran == TRAN_LICH || tran == TRAN_SPIDER)
@@ -6316,9 +6316,9 @@ bool player::do_shaft()
 
     // Handle instances of do_shaft() being invoked magically when
     // the player isn't standing over a shaft.
-    if (get_trap_type(this->pos()) != TRAP_SHAFT)
+    if (get_trap_type(pos()) != TRAP_SHAFT)
     {
-        switch (grd(this->pos()))
+        switch (grd(pos()))
         {
         case DNGN_FLOOR:
         case DNGN_OPEN_DOOR:
@@ -6333,7 +6333,7 @@ bool player::do_shaft()
             return (false);
         }
 
-        handle_items_on_shaft(this->pos(), false);
+        handle_items_on_shaft(pos(), false);
 
         if (airborne() || total_weight() == 0)
             return (true);
