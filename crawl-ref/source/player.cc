@@ -1850,7 +1850,7 @@ int player_movement_speed(bool ignore_burden)
         mv = 6;
 
     // armour
-    if (player_equip_ego_type( EQ_BOOTS, SPARM_RUNNING ))
+    if (player_equip_ego_type(EQ_BOOTS, SPARM_RUNNING))
         mv -= 2;
 
     // ponderous brand and artefact property
@@ -1871,7 +1871,7 @@ int player_movement_speed(bool ignore_burden)
         && (!you.demon_pow[MUT_FAST] || !player_is_shapechanged())
         && !you.swimming())
     {
-        mv -= (player_mutation_level(MUT_FAST) + 1);
+        mv -= player_mutation_level(MUT_FAST) + 1;
     }
 
     // Burden
