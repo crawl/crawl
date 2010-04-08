@@ -12,7 +12,7 @@
 #ifndef MUTATION_DATA_H
 #define MUTATION_DATA_H
 
-{ MUT_TOUGH_SKIN,                10,  3, false,  true,
+{ MUT_TOUGH_SKIN,                0,  3, false,  true,
   {"You have tough skin (AC +1).",
    "You have very tough skin (AC +2).",
    "You have extremely tough skin (AC +3)."},
