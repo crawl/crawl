@@ -1798,9 +1798,11 @@ int handle_pbd_corpses(bool do_rot)
             {
                 ++corpse_count;
 
-                if (do_rot)
+                int chance = player_mutation_level(MUT_POWERED_BY_DEATH)*3;
+                if (do_rot && x_chance_in_y(you.duration[DUR_POWERED_BY_DEATH],
+                                chance))
                 {
-                    j->special -= random2(you.duration[DUR_POWERED_BY_DEATH]*2/5);
+                    j->special -= random2(3);
                     dprf("Rot time: %d", j->special);
                 }
 
