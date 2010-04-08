@@ -323,6 +323,10 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              rock walls will be changed to be the same as the wall type of
              the rest of the level.  If you don't want that to happen then
              use this tag.
+          * "no_trap_gen": Prevents random trap generation at the time of the
+             vault's creation.
+          * "no_shop_gen": Prevents random shop generation at the time of the
+             valut's creation.
           * "uniq_BAR": (uniq_ with any suffix) specifies that only one of
              the vaults with this tag can be used in a game.
           * "luniq": specifies that this vault can be used only once on a
@@ -1037,6 +1041,8 @@ KMASK:    Z = no_monster_gen
           * "no_monster_gen": Prevents random monster generation on that
              symbol. MUST-HAVE for those with water/lava symbols in
              entry vaults.
+          * "no_trap_gen": Prevents random trap generation on that symbol.
+          * "no_shop_gen": Prevents random shop generation on that symbol.
           * "no_pool_fixup": prevents a water square next to land from being
              randomly converted from deep water (the default) to shallow.
           * "no_wall_fixup": prevents (rock) walls from being converted to
