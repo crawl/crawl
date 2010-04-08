@@ -1441,9 +1441,7 @@ void equip_armour_effect(item_def& arm, bool unmeld)
         switch (ego)
         {
         case SPARM_RUNNING:
-            mprf("You feel quick%s.",
-                   (you.species == SP_NAGA || player_mutation_level(MUT_HOOVES))
-                    ? "" : " on your feet");
+            mpr("You feel quick.");
             break;
 
         case SPARM_FIRE_RESISTANCE:
