@@ -1796,7 +1796,7 @@ int handle_pbd_corpses(bool do_rot)
             {
                 ++corpse_count;
 
-                int chance = player_mutation_level(MUT_POWERED_BY_DEATH)*3;
+                int chance = player_mutation_level(MUT_POWERED_BY_DEATH)*16;
                 if (do_rot && x_chance_in_y(you.duration[DUR_POWERED_BY_DEATH],
                                 chance))
                 {
