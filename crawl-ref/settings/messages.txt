@@ -29,6 +29,7 @@ msc = $warning:coins.*counted
 msc = $warning:tolling.*bell
 msc = lightcyan:LOW MAGIC WARNING
 msc = $warning:fails to return
+msc = $warning:no longer ripe
 
 # Unimportant messages and combat clutter
 #
