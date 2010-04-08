@@ -1112,7 +1112,7 @@ int player_regen()
     // corpses.  If and only if the duration of the effect is
     // still active.
     if (you.duration[DUR_POWERED_BY_DEATH])
-        rr += handle_pbd_corpses(false) * 10;
+        rr += handle_pbd_corpses(false) * 100;
 
     // Slow heal mutation.  Each level reduces your natural healing by
     // one third.
