@@ -19,6 +19,14 @@ Breathe Fire
 
 Breathe a blast of fire at a targeted monster.
 %%%%
+Enable Demonic Guardian
+
+Allows a demonic guardian to spawn occasionally, maximum of one at a time.
+%%%%
+Disable Demonic Guardian
+
+Prevents the demonic guardian from spawning.
+%%%%
 Breathe Frost
 
 Breathe a blast of frost at a targeted monster.
