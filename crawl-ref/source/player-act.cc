@@ -62,7 +62,7 @@ bool player::is_summoned(int* _duration, int* summon_type) const
 
 void player::moveto(const coord_def &c)
 {
-    if (c != this->pos())
+    if (c != pos())
         clear_trapping_net();
 
     crawl_view.set_player_at(c);
@@ -96,7 +96,7 @@ void player::set_position(const coord_def &c)
 
     if (real_move)
     {
-        this->reset_prev_move();
+        reset_prev_move();
         dungeon_events.fire_position_event(DET_PLAYER_MOVED, c);
     }
 }
@@ -230,7 +230,7 @@ int player::damage_brand(int)
             break;
 
         case TRAN_BAT:
-            if (this->species == SP_VAMPIRE && one_chance_in(8))
+            if (species == SP_VAMPIRE && one_chance_in(8))
                 ret = SPWPN_VAMPIRICISM;
             break;
 
@@ -386,7 +386,7 @@ std::string player::foot_name(bool plural, bool *can_plural) const
 
     std::string str;
 
-    if (this->attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER)
+    if (attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER)
         str = "hind leg";
     else if (!transform_changed_physiology())
     {
@@ -394,12 +394,12 @@ std::string player::foot_name(bool plural, bool *can_plural) const
             str = "hoof";
         else if (player_mutation_level(MUT_TALONS) >= 3)
             str = "talon";
-        else if (this->species == SP_NAGA)
+        else if (species == SP_NAGA)
         {
             str         = "underbelly";
             *can_plural = false;
         }
-        else if (this->species == SP_MERFOLK && this->swimming())
+        else if (species == SP_MERFOLK && swimming())
         {
             str         = "tail";
             *can_plural = false;
@@ -425,11 +425,11 @@ std::string player::arm_name(bool plural, bool *can_plural) const
 
     std::string str = "arm";
 
-    if (player_genus(GENPC_DRACONIAN) || this->species == SP_NAGA)
+    if (player_genus(GENPC_DRACONIAN) || species == SP_NAGA)
         str = "scaled arm";
-    else if (this->species == SP_KENKU)
+    else if (species == SP_KENKU)
         str = "feathered arm";
-    else if (this->species == SP_MUMMY)
+    else if (species == SP_MUMMY)
         str = "bandage wrapped arm";
 
     if (plural)
