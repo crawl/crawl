@@ -430,7 +430,7 @@ std::string player::arm_name(bool plural, bool *can_plural) const
     else if (species == SP_KENKU)
         str = "feathered arm";
     else if (species == SP_MUMMY)
-        str = "bandage wrapped arm";
+        str = "bandage-wrapped arm";
 
     if (plural)
         str = pluralise(str);
