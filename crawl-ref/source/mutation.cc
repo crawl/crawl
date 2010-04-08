@@ -1471,8 +1471,6 @@ static const facet_def _demon_facets[] =
       { 2, 2, 2 } },
     { { MUT_SPINY, MUT_SPINY, MUT_SPINY },
       { 2, 2, 2 } },
-    { { MUT_TOUGH_SKIN, MUT_TOUGH_SKIN, MUT_TOUGH_SKIN },
-      { 1, 1, 1 } },
     { { MUT_SLOW_METABOLISM, MUT_SLOW_METABOLISM, MUT_SLOW_METABOLISM },
       { 1, 1, 1 } },
     { { MUT_SPIT_POISON, MUT_SPIT_POISON, MUT_SPIT_POISON },
