@@ -611,7 +611,7 @@
 
   "hooves"
 },
-{ MUT_ANTENNAE,                   5,  3, false,  true,
+{ MUT_ANTENNAE,                   4,  3, false,  true,
   {"You have a pair of small antennae on your head.",
    "You have a pair of antennae on your head.",
    "You have a pair of large antennae on your head."},
@@ -795,7 +795,7 @@
   "passive freeze",
 },
 
-{ MUT_NIGHTSTALKER,                     3,  3, false, true,
+{ MUT_NIGHTSTALKER,                     0,  3, false, true,
   {"You are slightly more attuned to the shadows.",
    "You are significantly more attuned to the shadows.",
    "You are completely attuned to the shadows."},
@@ -811,7 +811,7 @@
   "nightstalker"
 },
 
-{ MUT_SPINY,                            2,  3, false, true,
+{ MUT_SPINY,                            0,  3, false, true,
   {"You are partially covered in sharp spines.",
    "You are mostly covered in sharp spines.",
    "You are completely covered in sharp spines."},
@@ -826,7 +826,7 @@
 
   "spiny"
 },
-{ MUT_POWERED_BY_DEATH,                 2,  3, false, false,
+{ MUT_POWERED_BY_DEATH,                 0,  3, false, false,
   {"You slowly steal the life force of defeated enemies.",
    "You steal the life force of defeated enemies.",
    "You quickly steal the life force of defeated enemies."},
