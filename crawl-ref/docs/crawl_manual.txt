@@ -942,7 +942,7 @@ Orcish (cross)bows do a bit more damage with Orcish arrows/bolts. In
 general, Orcs do better with gear from their own kin; this applies to
 weapons, as well as to armours.
 
-Elven body armour is does not hamper spellcasting as other armours of
+Elven body armour does not hamper spellcasting as other armours of
 the same type would. Elven cloaks and boots are particularly useful to
 those who wish to be stealthy. Elven bows are more effective when used
 in conjunction with Elven arrows. An Elf does even a bit better when
