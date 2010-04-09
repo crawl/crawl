@@ -2462,12 +2462,10 @@ std::string _status_mut_abilities()
         bool lowered = (level < you.mutation[i]);
         switch (i)
         {
-            case MUT_SHAGGY_FUR:
-                AC_change += level;
-                if (level == 3)
-                    current = "shaggy fur";
-                break;
             case MUT_TOUGH_SKIN:
+                AC_change += level;
+                break;
+            case MUT_SHAGGY_FUR:
                 AC_change += level;
                 break;
             case MUT_STRONG:
