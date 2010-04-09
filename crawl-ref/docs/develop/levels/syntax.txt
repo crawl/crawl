@@ -575,7 +575,8 @@ MONS:     (list of monsters)
           never be used, but it can be useful for customised vault monsters
           if an alternate tile exists. In ASCII mode, this will do nothing.
 
-      You can set the monster's faction by specifying "att:" one of:
+          You can set the monster's faction by specifying "att:" one of:
+
           * att:hostile -- the default
           * att:friendly -- tame, will follow you
           * att:neutral -- hostile to both you and att:hostile monsters
@@ -638,6 +639,10 @@ MONS:     (list of monsters)
           spec to choose the same alternative.  If a monster is given
           a random launcher, there is no way to force the ammo type to
           match the launcher type.
+
+          You can specify that a monster will always generate a corpse by
+          using the tag "always_corpse". This should only be used in vaults
+          where it is absolutely necessary, tutorial maps, etc.
 
           Overriding Monster Names:
           -------------------------

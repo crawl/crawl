@@ -447,12 +447,19 @@ int place_monster_corpse(const monsters *monster, bool silent,
     item_def corpse;
     const monster_type corpse_class = fill_out_corpse(monster, corpse);
 
+    bool vault_forced = false;
+
     // Don't place a corpse?  If a zombified monster is somehow capable
     // of leaving a corpse, then always place it.
     if (mons_class_is_zombified(monster->type))
         force = true;
 
-    if (corpse_class == MONS_NO_MONSTER || (!force && coinflip()))
+    // "always_corpse" forces monsters to always generate a corpse upon
+    // their deaths.
+    if (monster->props.exists("always_corpse"))
+        vault_forced = true;
+
+    if (corpse_class == MONS_NO_MONSTER || (!force && !vault_forced && coinflip()))
         return (-1);
 
     int o = get_item_slot();
