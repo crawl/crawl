@@ -372,7 +372,8 @@ void cast_chain_lightning(int pow, const actor *caster)
 
     coord_def source, target;
 
-    for (source = caster->pos(); pow > 0; pow -= 8 + random2(13), source = target)
+    for (source = caster->pos(); pow > 0;
+         pow -= 8 + random2(13), source = target)
     {
         // infinity as far as this spell is concerned
         // (Range - 1) is used because the distance is randomised and
