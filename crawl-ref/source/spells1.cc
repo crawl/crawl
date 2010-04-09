@@ -370,6 +370,7 @@ void cast_chain_lightning(int pow, const actor *caster)
     beam.is_explosion   = false;
     beam.is_tracer      = false;
 
+    bool first = true;
     coord_def source, target;
 
     for (source = caster->pos(); pow > 0;
@@ -459,9 +460,10 @@ void cast_chain_lightning(int pow, const actor *caster)
         }
 
         // Trying to limit message spamming here so we'll only mention
-        // the thunder when it's out of LoS.
-        if (!see_source)
-            noisy(25, source, "You hear a mighty clap of thunder!");
+        // the thunder at the start or when it's out of LoS.
+        const char* msg = "You hear a mighty clap of thunder!";
+        noisy(25, source, (first || !see_source) ? msg : NULL);
+        first = false;
 
         if (see_source && !see_targ)
             mpr("The lightning arcs out of your line of sight!");
