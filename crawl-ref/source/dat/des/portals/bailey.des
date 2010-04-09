@@ -50,6 +50,7 @@ function bailey_portal(e, ptype)
         msg = messager })
   e.kfeat("O = enter_portal_vault")
   e.colour("O = lightred")
+  e.tile("c = wall_stone_brick")
 end
 
 function bailey_portal_axe(e)
@@ -66,6 +67,8 @@ function bailey_setup(e)
   e.colour("< = darkgrey")
   e.lrockcol("lightgrey")
   e.lfloorcol("white")
+  e.tile("c = wall_stone_brick")
+  e.lfloortile("floor_cobble_blood")
 end
 
 function bailey_milestone(e)
