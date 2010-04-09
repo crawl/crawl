@@ -1775,6 +1775,8 @@ void check_antennae_detect()
             set_map_knowledge_obj(*ri, show_type(MONS_SENSED));
             set_map_knowledge_detected_mons(*ri);
         }
+        else
+            map_knowledge_forget_mons(*ri);
     }
 }
 
