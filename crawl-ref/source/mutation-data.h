@@ -846,7 +846,7 @@
 { MUT_DISTORTION_FIELD,                 2,  3, false, false,
   {"You are surrounded by a mild repulsion field (EV +2).",
    "You are surrounded by a moderate repulsion field (EV +3).",
-   "You are surrounded by a strong repulsion field (EV +4; rMsl)."},
+   "You are surrounded by a strong repulsion field (EV +4, rMsl)."},
 
   {"You begin to radiate repulsive energy.",
    "Your repulsive radiation grows stronger.",
