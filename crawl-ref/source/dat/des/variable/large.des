@@ -283,11 +283,12 @@ DEPTH:  D:3-27
 ORIENT: northwest
 TAGS:   no_monster_gen no_rotate
 : if you.absdepth() < 7 then
-MONS:   gnoll, gnoll, ogre, jackal
+MONS:   gnoll, gnoll, ogre, jackal, gnoll
 SUBST:  *=*. , *=$ , |=* , *=*.
 : elseif you.absdepth() < 16 then
 MONS:   orc, w:5 orc knight / orc warrior
 MONS:   orc sorcerer / orc warlord / orc knight, warg
+MONS:   orc, warg
 SUBST:  *:*$ , |:*$
 : elseif you.absdepth() < 25 then
 MONS:   deep elf soldier / deep elf fighter
@@ -295,6 +296,7 @@ MONS:   deep elf knight / deep elf mage / deep elf summoner / deep elf priest
 MONS:   deep elf annihilator / deep elf sorcerer / deep elf demonologist /\
         deep elf blademaster/deep elf master archer
 MONS:   nothing
+MONS:   deep elf soldier, nothing
 SUBST:  *:*$, |=|.
 : else
 MONS:   red draconian / green draconian / yellow draconian / pale draconian /\
@@ -304,42 +306,49 @@ MONS:   pale draconian knight / green draconian annihilator /\
 MONS:   red draconian scorcher / white draconian zealot /\
         yellow draconian caller / black draconian shifter
 MONS:   lindwurm / death drake / swamp drake
+MONS:   red draconian / green draconian / yellow draconian / pale draconian /\
+        black draconian / purple draconian
+MONS:   lindwurm / death drake / swamp drake
 MONS:   plant / w:1 oklob plant
 SUBST:  w:wl
 SUBST:  *:*$
 : end
 COLOUR: ? = brown
 FTILE:  ? = floor_hive
-SUBST:  ? = .
+KFEAT:  ? = floor
 SUBST:  X = c =:1
 SUBST:  ~ = ~:2 .
 SUBST:  8 = 89
 MONS:   plant
+TILE:   c = wall_stone_brick
+FTILE:  .1234~*X|+8 = floor_cobble_blood
+FTILE:  = = floor_cobble_blood
+KFEAT:  , = floor
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x......5.................4.4......5............
-x.......................4.4.4...5.............5
-x....wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-x....wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-x....wwccnccwwwwwwwwwwwwwwwwwwwwwwwwwwwwccnccww
-x....wwc1.1c......4.............4.......c1.1cww
-x....wwc.1.cXccccccccccccXXccccccccccccXc.1.cww
-x....wwccc+c....+~~~~~~~+..+~~~~~~~+.***c+cccww
-x....www.X.c||..ccccccccc++ccccccccc.***c.X.www
-x....www.c1c||2.c1...1..1321..1...1c.***c1c.www
-x....www.c.cccccc..1...211112...1..cccccc.c.www
-x....www.c.+....+....1...22...1....+....+.c.www
-x.5..www.c.+....+..1...1....1...1..+....+.c.www
-x....www.c.cccccccccccccc++cccccccccccXcc.c.www
-x....www.c1c1.1..ccccccc....ccccccc..m..c1c.www
-x....www.X.c.2...+.....=....=.....+..m.8c.X.www
-x....wwccc+c1.1..ccccccc....ccccccc..m..c+cccww
-x...5wwc.1.cXccccccccccc++++cccccccccccXc.1.cww
-x....wwc1.1c4..4..4..4..4..4..4..4..4..4c1.1cww
-x....wwccnccwwwwwwwwwwww????wwwwwwwwwwwwccnccww
-x....wwwwwwwwwwwwwwwwwww????wwwwwwwwwwwwwwwwwww
-x5...wwwwwwwwwwwwwwwwwww????wwwwwwwwwwwwwwwwwww
-x..................414..@.....414............5.
+x,,,,,,7,,,,,,,,,,,,,,,,,6,6,,,,,,7,,,,,,,,,,,,
+x,,,,,,,,,,,,,,,,,,,,,,,6,6,6,,,7,,,,,,,,,,,,,7
+x,,,,wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+x,,,,wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+x,,,,wwccnccwwwwwwwwwwwwwwwwwwwwwwwwwwwwccnccww
+x,,,,wwc1.1c......4.............4.......c1.1cww
+x,,,,wwc.1.cXccccccccccccXXccccccccccccXc.1.cww
+x,,,,wwccc+c....+~~~~~~~+..+~~~~~~~+.***c+cccww
+x,,,,www.X.c||..ccccccccc++ccccccccc.***c.X.www
+x,,,,www.c1c||2.c1...1..1321..1...1c.***c1c.www
+x,,,,www.c.cccccc..1...211112...1..cccccc.c.www
+x,,,,www.c.+....+....1...22...1....+....+.c.www
+x,7,,www.c.+....+..1...1....1...1..+....+.c.www
+x,,,,www.c.cccccccccccccc++cccccccccccXcc.c.www
+x,,,,www.c1c1.1..ccccccc....ccccccc..m..c1c.www
+x,,,,www.X.c.2...+.....=....=.....+..m.8c.X.www
+x,,,,wwccc+c1.1..ccccccc....ccccccc..m..c+cccww
+x,,,7wwc.1.cXccccccccccc++++cccccccccccXc.1.cww
+x,,,,wwc1.1c4..4..4..4..4..4..4..4..4..4c1.1cww
+x,,,,wwccnccwwwwwwwwwwww????wwwwwwwwwwwwccnccww
+x,,,,wwwwwwwwwwwwwwwwwww????wwwwwwwwwwwwwwwwwww
+x7,,,wwwwwwwwwwwwwwwwwww????wwwwwwwwwwwwwwwwwww
+x,,,,,,,,,,,,,,,,,,656,,@,,,,,656,,,,,,,,,,,,7,
 ENDMAP
 
 
