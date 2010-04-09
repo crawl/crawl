@@ -343,8 +343,8 @@
   "breathe flames"
 },
 { MUT_BLINK,                      3,  3, false, false,
-  {"You can translocate small distances instantaneously.",
-   "You can translocate small distances instantaneously.",
+  {"You can translocate small distances at will.",
+   "You are good at translocating small distances at will.",
    "You can translocate small distances instantaneously."},
 
   {"You feel a little jumpy.",
