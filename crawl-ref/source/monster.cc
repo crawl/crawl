@@ -47,6 +47,7 @@
 #include "xom.h"
 
 #include <algorithm>
+#include <queue>
 
 struct mon_spellbook
 {
@@ -3937,37 +3938,43 @@ bool monsters::check_set_valid_home(const coord_def &place,
     return (true);
 }
 
-bool monsters::find_home_around(const coord_def &c, int radius)
-{
-    coord_def place(-1, -1);
-    int nvalid = 0;
-    for (int yi = -radius; yi <= radius; ++yi)
-    {
-        const coord_def c1(c.x - radius, c.y + yi);
-        const coord_def c2(c.x + radius, c.y + yi);
-        check_set_valid_home(c1, place, nvalid);
-        check_set_valid_home(c2, place, nvalid);
-    }
-
-    for (int xi = -radius + 1; xi < radius; ++xi)
-    {
-        const coord_def c1(c.x + xi, c.y - radius);
-        const coord_def c2(c.x + xi, c.y + radius);
-        check_set_valid_home(c1, place, nvalid);
-        check_set_valid_home(c2, place, nvalid);
-    }
-
-    if (nvalid)
-        return (move_to_pos(place));
-
-    return (false);
-}
+#define MAX_PLACE_NEAR_DIST 8
 
 bool monsters::find_home_near_place(const coord_def &c)
 {
-    for (int radius = 1; radius < 7; ++radius)
-        if (find_home_around(c, radius))
-            return (true);
+    int last_dist = -1;
+    coord_def place(-1, -1);
+    int nvalid = 0;
+    SquareArray<int, MAX_PLACE_NEAR_DIST> dist(-1);
+    std::queue<coord_def> q;
+
+    q.push(c);
+    dist(c - c) = 0;
+    while (!q.empty())
+    {
+        coord_def p = q.front();
+        q.pop();
+        if (dist(p - c) >= last_dist && nvalid)
+        {
+            // already found a valid closer destination
+            return (move_to_pos(place));
+        }
+        else if (dist(p - c) >= MAX_PLACE_NEAR_DIST)
+            break;
+
+        for (adjacent_iterator ai(p); ai; ++ai)
+        {
+            if (dist(*ai - c) > -1)
+                continue;
+            dist(*ai - c) = last_dist = dist(p - c) + 1;
+
+            if (!monster_habitable_grid(this, grd(*ai)))
+                continue;
+
+            q.push(*ai);
+            check_set_valid_home(*ai, place, nvalid);
+        }
+    }
 
     return (false);
 }

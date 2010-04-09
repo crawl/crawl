@@ -195,7 +195,6 @@ public:
     bool find_place_to_live(bool near_player = false);
     bool find_home_near_place(const coord_def &c);
     bool find_home_near_player();
-    bool find_home_around(const coord_def &c, int radius);
     bool find_home_anywhere();
 
     void set_ghost(const ghost_demon &ghost, bool has_name = true);
