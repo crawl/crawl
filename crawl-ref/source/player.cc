@@ -5458,8 +5458,9 @@ int player::armour_class() const
         }
     }
 
-    // Scale mutations:
+    // Scale mutations, etc.
     AC += player_mutation_level(MUT_TOUGH_SKIN) ? player_mutation_level(MUT_TOUGH_SKIN) * 100 : 0;                          // +1, +2, +3
+    AC += player_mutation_level(MUT_SHAGGY_FUR) ? player_mutation_level(MUT_SHAGGY_FUR) * 100 : 0;                          // +1, +2, +3
     AC += player_mutation_level(MUT_IRIDESCENT_SCALES) ? player_mutation_level(MUT_IRIDESCENT_SCALES) * 300 : 0;            // +3, +6, +9
     AC += player_mutation_level(MUT_LARGE_BONE_PLATES) ? 100 + player_mutation_level(MUT_LARGE_BONE_PLATES) * 100 : 0;      // +2, +3, +4
     AC += player_mutation_level(MUT_ROUGH_BLACK_SCALES) ? 100 + player_mutation_level(MUT_ROUGH_BLACK_SCALES) * 300 : 0;    // +4, +7, +10
@@ -5469,7 +5470,6 @@ int player::armour_class() const
     AC += player_mutation_level(MUT_SLIMY_GREEN_SCALES) ? player_mutation_level(MUT_SLIMY_GREEN_SCALES) * 100 : 0;          // +1, +2, +3
     AC += player_mutation_level(MUT_THIN_METALLIC_SCALES) ? player_mutation_level(MUT_THIN_METALLIC_SCALES) * 100 : 0;      // +1, +2, +3
     AC += player_mutation_level(MUT_YELLOW_SCALES) ? player_mutation_level(MUT_YELLOW_SCALES) * 100 : 0;                    // +1, +2, +3
-    AC += player_mutation_level(MUT_SHAGGY_FUR) ? player_mutation_level(MUT_SHAGGY_FUR) * 100 : 0;                          // +1, +2, +3
 
     return (AC / 100);
 }
