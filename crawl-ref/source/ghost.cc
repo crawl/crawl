@@ -21,6 +21,7 @@
 #include "ng-input.h"
 #include "random.h"
 #include "skills2.h"
+#include "spl-cast.h"
 #include "mon-util.h"
 #include "mon-transit.h"
 #include "place.h"
