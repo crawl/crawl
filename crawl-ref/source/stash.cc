@@ -953,7 +953,7 @@ public:
         ASSERT(level == MEL_ITEM && hotkeys.size());
         char buf[300];
         snprintf(buf, sizeof buf, " %c %c %s",
-                 hotkeys[0], on_list ? '@' : '-', text.c_str());
+                 hotkeys[0], on_list ? '$' : '-', text.c_str());
         return std::string(buf);
     }
 };
