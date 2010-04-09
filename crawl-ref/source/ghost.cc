@@ -684,6 +684,11 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
     // Sabre:             speed 11, 3+7  damage, 2 AC,  5 HP, 12 EV
 }
 
+static bool _know_spell(spell_type spell)
+{
+    return (you.has_spell(spell) && spell_fail(spell) < 50);
+}
+
 static spell_type search_first_list(int ignore_spell)
 {
     for (unsigned i = 0;
@@ -695,7 +700,7 @@ static spell_type search_first_list(int ignore_spell)
         if (search_order_conj[i] == ignore_spell)
             continue;
 
-        if (you.has_spell(search_order_conj[i]))
+        if (_know_spell(search_order_conj[i]))
             return (search_order_conj[i]);
     }
 
@@ -713,7 +718,7 @@ static spell_type search_second_list(int ignore_spell)
         if (search_order_third[i] == ignore_spell)
             continue;
 
-        if (you.has_spell(search_order_third[i]))
+        if (_know_spell(search_order_third[i]))
             return (search_order_third[i]);
     }
 
@@ -731,7 +736,7 @@ static spell_type search_third_list(int ignore_spell)
         if (search_order_misc[i] == ignore_spell)
             continue;
 
-        if (you.has_spell(search_order_misc[i]))
+        if (_know_spell(search_order_misc[i]))
             return (search_order_misc[i]);
     }
 
@@ -758,17 +763,17 @@ void ghost_demon::add_spells()
     if (spells[4] == SPELL_NO_SPELL)
         spells[4] = search_first_list(spells[3]);
 
-    if (you.has_spell(SPELL_DIG))
+    if (_know_spell(SPELL_DIG))
         spells[4] = SPELL_DIG;
 
     // Look for Blink or Teleport Self for the emergency slot.
-    if (you.has_spell(SPELL_CONTROLLED_BLINK)
-        || you.has_spell(SPELL_BLINK))
+    if (_know_spell(SPELL_CONTROLLED_BLINK)
+        || _know_spell(SPELL_BLINK))
     {
         spells[5] = SPELL_CONTROLLED_BLINK;
     }
 
-    if (you.has_spell(SPELL_TELEPORT_SELF))
+    if (_know_spell(SPELL_TELEPORT_SELF))
         spells[5] = SPELL_TELEPORT_SELF;
 
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
