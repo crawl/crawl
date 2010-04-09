@@ -1730,8 +1730,7 @@ enum monster_type                      // (int) menv[].type
     MONS_SIXFIRHY,                     //   90
     MONS_MERGED_SLIME_CREATURE, // used only for recoloring
     MONS_GHOST,                 // common genus for monster and player ghosts
-    //
-    //
+    MONS_SENSED,                // dummy monster for unspecified sensed mons
     //
     // 95
     //

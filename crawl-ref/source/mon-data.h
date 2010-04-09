@@ -5388,7 +5388,20 @@ static monsterentry mondata[] = {
     127, 127, MST_TEST_SPAWNER, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
     I_PLANT, HT_AMPHIBIOUS, FL_NONE, 14, SWIM_ENERGY(6),
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE
-}
+},
+
+// an unspecified monster
+{
+    MONS_SENSED, '~', LIGHTRED, "sensed monster",
+    M_NO_FLAGS,
+    MR_NO_FLAGS,
+    0, 0, MONS_SENSED, MONS_SENSED, MH_NONLIVING, 0,
+    { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 1, 1, 0, 0 },
+    0, 0, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
+    I_NORMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM
+},
 
 /*
   For simplicity, here again the explanation:

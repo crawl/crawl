@@ -1772,11 +1772,7 @@ void check_antennae_detect()
     {
         if (monster_at(*ri))
         {
-            show_type st;
-            st.cls = SH_INVIS_EXPOSED;
-            st.colour = RED;
-
-            set_map_knowledge_obj(*ri, st);
+            set_map_knowledge_obj(*ri, show_type(MONS_SENSED));
             set_map_knowledge_detected_mons(*ri);
         }
     }
