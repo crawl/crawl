@@ -88,11 +88,6 @@ function MonsterOnTrigger:on_trigger(triggerer, marker, ev)
     return
   end
 
-  -- you.losight() seems to be necessary if the player has been moved by
-  -- a wizard command and then the marker triggered by another wizard
-  -- command, since then no turns will have been taken and the LOS info
-  -- won't have been updated.
-  you.losight()
   local see_cell = you.see_cell(x, y)
 
   if (not dgn.create_monster(x, y, self.new_monster)) then
