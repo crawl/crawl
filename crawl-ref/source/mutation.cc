@@ -1770,13 +1770,14 @@ void check_antennae_detect()
 
     for (radius_iterator ri(you.pos(), radius, C_SQUARE); ri; ++ri)
     {
-        if (monster_at(*ri))
+        const monsters* mon = monster_at(*ri);
+        if (!mon)
+            map_knowledge_forget_mons(*ri);
+        else if (!mons_is_firewood(mon))
         {
             set_map_knowledge_obj(*ri, show_type(MONS_SENSED));
             set_map_knowledge_detected_mons(*ri);
         }
-        else
-            map_knowledge_forget_mons(*ri);
     }
 }
 
