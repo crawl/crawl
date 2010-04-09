@@ -283,7 +283,7 @@ DEPTH:  D:3-27
 ORIENT: northwest
 TAGS:   no_monster_gen no_rotate
 : if you.absdepth() < 7 then
-MONS:   gnoll, gnoll, ogre, jackal, gnoll
+MONS:   gnoll, gnoll, ogre, jackal, gnoll, jackal
 SUBST:  *=*. , *=$ , |=* , *=*.
 : elseif you.absdepth() < 16 then
 MONS:   orc, w:5 orc knight / orc warrior
