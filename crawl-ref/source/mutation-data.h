@@ -696,7 +696,7 @@
 { MUT_SHAGGY_FUR,                 2,  3, false,  true,
   {"You are covered in fur (AC +1).",
    "You are covered in thick fur (AC +2).",
-   "Your thick and shaggy fur keeps you warm (AC +3, cold resistant)."},
+   "Your thick and shaggy fur keeps you warm (AC +3, rC+)."},
 
   {"Fur sprouts all over your body.",
    "Your fur grows into a thick mane.",
