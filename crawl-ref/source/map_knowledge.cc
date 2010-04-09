@@ -103,6 +103,17 @@ bool is_map_knowledge_detected_mons(int x, int y)
     return (env.map_knowledge[x][y].flags & MAP_DETECTED_MONSTER);
 }
 
+void map_knowledge_forget_mons(const coord_def& c)
+{
+    if (!is_map_knowledge_detected_mons(c))
+        return;
+
+    env.map_knowledge(c).flags &= ~MAP_DETECTED_MONSTER;
+    show_type* obj = &env.map_knowledge(c).object;
+    if (obj->cls == SH_MONSTER)
+        obj->cls = (obj->feat == DNGN_UNSEEN ? SH_NOTHING : SH_FEATURE);
+}
+
 void set_map_knowledge_obj(const coord_def& where, show_type obj)
 {
     env.map_knowledge(where).object = obj;

@@ -84,6 +84,8 @@ inline void set_terrain_changed(const coord_def &c)
 }
 
 int count_detected_mons(void);
+void map_knowledge_forget_mons(const coord_def &c);
+
 void clear_map(bool clear_items = true, bool clear_mons = true);
 
 int get_map_knowledge_col(const coord_def& p);
