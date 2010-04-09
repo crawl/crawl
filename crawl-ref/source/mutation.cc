@@ -1768,7 +1768,7 @@ void check_antennae_detect()
     // we're already here, so the player has at least 1 level of Antennae
     const int radius = player_mutation_level(MUT_ANTENNAE) == 1 ? 3 : 5;
 
-    for(radius_iterator ri(you.pos(), radius, C_SQUARE);ri; ++ri)
+    for (radius_iterator ri(you.pos(), radius, C_SQUARE); ri; ++ri)
     {
         if (monster_at(*ri))
         {
