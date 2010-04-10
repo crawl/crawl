@@ -300,7 +300,7 @@ giant spore
 
 VISUAL:@The_monster@ waves @possessive@ rhizomes.
 %%%%
-# Shadow imps and white imps copy imps.
+# Iron imps, shadow imps and white imps copy imps.
 imp
 
 # Shout one half the time, taunt the other half.
@@ -311,6 +311,10 @@ SOUND:@The_monster@ @says@, "@imp_taunt@"
 moth of wrath
 
 VISUAL:@The_monster@'s fur bristles in rage as it notices you.
+%%%%
+iron imp
+
+@imp@
 %%%%
 shadow imp
 

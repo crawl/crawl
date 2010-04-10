@@ -1853,7 +1853,7 @@ enum monster_type                      // (int) menv[].type
     MONS_WHITE_IMP = 220,              //  220
     MONS_LEMURE,
     MONS_UFETUBUS,
-    MONS_MANES,
+    MONS_IRON_IMP,
     MONS_MIDGE,
     MONS_NEQOXEC,                      //  225
     MONS_ORANGE_DEMON,

@@ -5336,6 +5336,14 @@ w:1
 w:2
 @_hostile_imp_@
 %%%%
+iron imp
+
+w:1
+@_imp_taunt_@
+
+w:2
+@_hostile_imp_@
+%%%%
 ##################################
 # The reaper has come for you!
 ##################################

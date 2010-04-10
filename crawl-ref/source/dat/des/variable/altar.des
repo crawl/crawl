@@ -307,7 +307,7 @@ ENDMAP
 NAME:  lemuel_hellish_altar
 DEPTH: D:2-21, Crypt, Geh
 TAGS:  no_monster_gen
-MONS:  iron devil/orange demon, beast/rotting devil, lemure/manes, hellion
+MONS:  iron devil/orange demon, beast/rotting devil, lemure/iron imp, hellion
 SUBST: 2 = 23
 SUBST: 2 = 12
 SUBST: 3 = 3L
@@ -975,7 +975,7 @@ TAGS:    no_monster_gen patrolling temple_overflow_makhleb
 TAGS:    layout_rooms layout_city layout_open layout_cross
 KFEAT:   _ = altar_makhleb
 # Either one slow type 3 or 4 demon (iron devil or demonic crawler or smoke demon)
-#     or three slow type 5 demons (manes).
+#     or three slow type 5 demons (iron imp).
 # The smoke demon can only come up in D:9-11.
 SHUFFLE: 1234
 NSUBST:  1 = 1:1 / *:.
@@ -984,7 +984,7 @@ NSUBST:  3 = 2:3 / *:.
 : if you.absdepth() < 9 then
 SUBST:   3 = 12
 : end
-MONS:    iron devil, demonic crawler, smoke demon, manes
+MONS:    iron devil, demonic crawler, smoke demon, iron imp
 MAP
 xxxxxxxxxxxxxxx
 x.............x
