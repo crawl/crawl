@@ -2389,6 +2389,7 @@ int mons_dis_level(int mcls)
     case MONS_DEATH_DRAKE:
     case MONS_HAIRY_DEVIL:
     case MONS_IRON_DEVIL:
+    case MONS_IRON_IMP:
     case MONS_VAMPIRE:
     case MONS_WRAITH:
         mlev += 3;
@@ -2426,6 +2427,7 @@ int mons_dis_rare(int mcls)
     {
     case MONS_IMP:
     case MONS_IRON_DEVIL:
+    case MONS_IRON_IMP:
     case MONS_ZOMBIE_LARGE:
     case MONS_ZOMBIE_SMALL:
         return 99;
