@@ -967,6 +967,10 @@ iron golem
 
 A huge animated metal statue.
 %%%%
+iron imp
+
+An ugly, twisted little minor demon with metal skin.
+%%%%
 iron troll
 
 A great troll, plated with thick scales of rusty iron.
@@ -1050,10 +1054,6 @@ A wizard who didn't want to die, a lich is a skeletal, desiccated corpse kept al
 lindwurm
 
 A small serpentine dragon with a pair of strong forelimbs.  Its thick scales give off an eerie green glow.
-%%%%
-manes
-
-An ugly, twisted little minor demon.
 %%%%
 manticore
 

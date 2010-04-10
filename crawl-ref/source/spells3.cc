@@ -467,7 +467,8 @@ bool cast_call_imp(int pow, god_type god)
     bool success = false;
 
     monster_type mon = (one_chance_in(3)) ? MONS_WHITE_IMP :
-                       (one_chance_in(7)) ? MONS_SHADOW_IMP
+                       (one_chance_in(6)) ? MONS_SHADOW_IMP :
+                       (one_chance_in(9)) ? MONS_IRON_IMP
                                           : MONS_IMP;
 
     const int dur = std::min(2 + (random2(pow) / 4), 6);
@@ -482,7 +483,8 @@ bool cast_call_imp(int pow, god_type god)
         success = true;
 
         mpr((mon == MONS_WHITE_IMP)  ? "A beastly little devil appears in a puff of frigid air." :
-            (mon == MONS_SHADOW_IMP) ? "A shadowy apparition takes form in the air."
+            (mon == MONS_SHADOW_IMP) ? "A shadowy apparition takes form in the air." :
+            (mon == MONS_IRON_IMP)   ? "A metallic apparition takes form in the air."
                                      : "A beastly little devil appears in a puff of flame.");
 
         player_angers_monster(&menv[monster]);

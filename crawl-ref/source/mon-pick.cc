@@ -235,11 +235,11 @@ bool mons_abyss(int mcls)
     case MONS_INSUBSTANTIAL_WISP:
     case MONS_IRON_DEVIL:
     case MONS_IRON_GOLEM:
+    case MONS_IRON_IMP:
     case MONS_JELLY:
     case MONS_LEMURE:
     case MONS_LICH:
     case MONS_LOROCYPROCA:
-    case MONS_MANES:
     case MONS_MIDGE:
     case MONS_MUMMY:
     case MONS_NAGA_MAGE:
@@ -317,8 +317,8 @@ int mons_rare_abyss(int mcls)
     case MONS_ABOMINATION_SMALL:
         return 99;
 
+    case MONS_IRON_IMP:
     case MONS_LEMURE:
-    case MONS_MANES:
     case MONS_MIDGE:
     case MONS_UFETUBUS:
     case MONS_WHITE_IMP:
@@ -550,8 +550,8 @@ bool mons_pan(int mcls)
     case MONS_EXECUTIONER:
     case MONS_GREEN_DEATH:
     case MONS_HELLWING:
+    case MONS_IRON_IMP:
     case MONS_LEMURE:
-    case MONS_MANES:
     case MONS_MIDGE:
     case MONS_NEQOXEC:
     case MONS_ORANGE_DEMON:

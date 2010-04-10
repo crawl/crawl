@@ -99,7 +99,7 @@ void init_pandemonium(void)
         case 0: case 10: env.mons_alloc[pc] = MONS_WHITE_IMP;         break;
         case 1: case 11: env.mons_alloc[pc] = MONS_LEMURE;            break;
         case 2: case 12: env.mons_alloc[pc] = MONS_UFETUBUS;          break;
-        case 3: case 13: env.mons_alloc[pc] = MONS_MANES;             break;
+        case 3: case 13: env.mons_alloc[pc] = MONS_IRON_IMP;          break;
         case 4: case 14: env.mons_alloc[pc] = MONS_MIDGE;             break;
         case 5:          env.mons_alloc[pc] = MONS_NEQOXEC;           break;
         case 6:          env.mons_alloc[pc] = MONS_ORANGE_DEMON;      break;

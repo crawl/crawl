@@ -232,7 +232,7 @@ hellwing MONS_HELLWING
 imp MONS_IMP
 quasit MONS_QUASIT
 lemure MONS_LEMURE
-manes MONS_MANES
+iron_imp MONS_IRON_IMP
 midge MONS_MIDGE
 shadow_imp MONS_SHADOW_IMP
 ufetubus MONS_UFETUBUS

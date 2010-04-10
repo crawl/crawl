@@ -3080,7 +3080,7 @@ monster_type summon_any_demon(demon_class_type dct)
                (temp_rand > 40) ? MONS_WHITE_IMP :  //  9 in 60
                (temp_rand > 31) ? MONS_LEMURE :     //  9 in 60
                (temp_rand > 22) ? MONS_UFETUBUS :   //  9 in 60
-               (temp_rand > 13) ? MONS_MANES :      //  9 in 60
+               (temp_rand > 13) ? MONS_IRON_IMP :   //  9 in 60
                (temp_rand > 4)  ? MONS_MIDGE        //  9 in 60
                                 : MONS_SHADOW_IMP); //  5 in 60
         break;

@@ -119,7 +119,7 @@ ENDMAP
 NAME:   hellmouth_2
 TAGS:   no_monster_gen no_rotate
 ORIENT: float
-MONS:   imp / quasit / shadow imp / manes / lemure
+MONS:   imp / quasit / shadow imp / iron imp / lemure
 MONS:   hellion / rotting devil / iron devil / hairy devil / hell hound
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / wand of draining
@@ -156,7 +156,7 @@ ENDMAP
 ##############################################################################
 # Hellmouth 3 (Lemuel)
 NAME:   hellmouth_3
-MONS:   weight:50 imp / quasit / shadow imp / manes / lemure, hell hound
+MONS:   weight:50 imp / quasit / shadow imp / iron imp / lemure, hell hound
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / nothing
 ORIENT: float
