@@ -1932,26 +1932,41 @@ std::string get_item_description( const item_def &item, bool verbose,
             {
                 description <<
                     "\nIt uses its own mana reservoir for casting spells, and "
-                    "recharges automatically.";
+                    "recharges automatically according to the recharging "
+                    "rate.";
 
                 const int max_charges = MAX_ROD_CHARGE;
+                const int max_recharge_rate = MAX_WPN_ENCHANT;
                 if (item_ident(item, ISFLAG_KNOW_PLUSES))
                 {
                     const int num_charges = item.plus2 / ROD_CHARGE_MULT;
                     if (max_charges > num_charges)
                     {
                         description << "\nIt can currently hold " << num_charges
-                                    << " charges. It can be magically recharged "
-                                    << "to contain up to " << max_charges
-                                    << " charges.";
+                                    << " charges. It can be magically "
+                                    << "recharged to contain up to "
+                                    << max_charges << " charges.";
                     }
                     else
                         description << "\nIt is fully charged.";
+
+                    const int recharge_rate = short(item.props["rod_enchantment"]);
+                    if (recharge_rate < max_recharge_rate)
+                    {
+                        description << "\nIt's current recharge rate is "
+                                    << (recharge_rate >= 0 ? "+" : "")
+                                    << recharge_rate << ". It can be magically "
+                                    << "recharged up to +" << max_recharge_rate
+                                    << ".";
+                    }
+                    else
+                        description << "\nIt's recharge rate is at maximum.";
                 }
                 else
                 {
                     description << "\nIt can have at most " << max_charges
-                                << " charges.";
+                                << " charges and +" << max_recharge_rate
+                                << " recharge rate.";
                 }
             }
             else if (Options.dump_book_spells)
