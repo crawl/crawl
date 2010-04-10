@@ -358,9 +358,9 @@
   "blink"
 },
 { MUT_STRONG_STIFF,              10,  3, false,  true,
-  {"Your muscles are strong (Str +1), but stiff (Dex -1).",
-   "Your muscles are very strong (Str +2), but stiff (Dex -2).",
-   "Your muscles are extremely strong (Str +3), but stiff (Dex -3)."},
+  {"Your muscles are strong, but stiff (Str +1, Dex -1).",
+   "Your muscles are very strong, but stiff (Str +2, Dex -2).",
+   "Your muscles are extremely strong, but stiff (Str +3, Dex -3)."},
 
   {"Your muscles feel sore.",
    "Your muscles feel sore.",
@@ -373,9 +373,9 @@
   "strong stiff"
 },
 { MUT_FLEXIBLE_WEAK,             10,  3, false,  true,
-  {"Your muscles are flexible (Dex +1), but weak (Str -1).",
-   "Your muscles are very flexible (Dex +2), but weak (Str -2).",
-   "Your muscles are extremely flexible (Dex +3), but weak (Str -3)."},
+  {"Your muscles are flexible, but weak (Str -1, Dex +1).",
+   "Your muscles are very flexible, but weak (Str -2, Dex +2).",
+   "Your muscles are extremely flexible, but weak (Str -3, Dex +3)."},
 
   {"Your muscles feel loose.",
    "Your muscles feel loose.",
