@@ -1186,14 +1186,13 @@ bool monsters::drop_item(int eslot, int near)
     return (true);
 }
 
-// We don't want monsters to pick up ammunition that cancels out with
-// the launcher brand or that is identical to the launcher brand,
-// the latter in hope of another monster wandering by who may want to
+// We don't want monsters to pick up ammunition that is identical to the 
+// launcher brand, in hope of another monster wandering by who may want to
 // use the ammo in question.
-static bool _compatible_launcher_ammo_brands(item_def *launcher,
+static bool _nonredundant_launcher_ammo_brands(item_def *launcher,
                                              const item_def *ammo)
 {
-    // If the monster has no ammo then there's no compatibility problems
+    // If the monster has no ammo then there's no redundancy problems
     // to check.
     if (ammo == NULL)
         return (true);
@@ -1204,12 +1203,15 @@ static bool _compatible_launcher_ammo_brands(item_def *launcher,
     switch (ammo_brand)
     {
     case SPMSL_FLAME:
+        return (bow_brand != SPWPN_FLAME);
     case SPMSL_FROST:
-        return (bow_brand != SPWPN_FLAME && bow_brand != SPWPN_FROST);
+        return (bow_brand != SPWPN_FROST);
     case SPMSL_CHAOS:
         return (bow_brand != SPWPN_CHAOS);
     case SPMSL_REAPING:
-        return (bow_brand != SPWPN_HOLY_WRATH);
+        return (bow_brand != SPWPN_REAPING);
+    case SPMSL_PENETRATION:
+        return (bow_brand != SPWPN_PENETRATION);
     default:
         return (true);
     }
@@ -1242,7 +1244,7 @@ bool monsters::pickup_launcher(item_def &launch, int near, bool force)
                         || mons_weapon_damage_rating(*elaunch) == mdam_rating
                            && get_weapon_brand(*elaunch) == SPWPN_NORMAL
                            && get_weapon_brand(launch) != SPWPN_NORMAL
-                           && _compatible_launcher_ammo_brands(&launch,
+                           && _nonredundant_launcher_ammo_brands(&launch,
                                                                missiles()))
                     && drop_item(i, near) && pickup(launch, i, near));
         }
@@ -1740,7 +1742,7 @@ bool monsters::pickup_missile(item_def &item, int near, bool force)
                         || item.plus >= miss->plus
                            && get_ammo_brand(*miss) == SPMSL_NORMAL
                            && item_brand != SPMSL_NORMAL
-                           &&_compatible_launcher_ammo_brands(launch, miss)))
+                           && _nonredundant_launcher_ammo_brands(launch, miss)))
                 {
                     if (!drop_item(MSLOT_MISSILE, near))
                         return (false);
