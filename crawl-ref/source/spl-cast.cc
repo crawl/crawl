@@ -522,6 +522,12 @@ void do_cast_spell_cmd(bool force)
         return;
     }
 
+    if (you.stat_zero[STAT_INT])
+    {
+        mpr("You lack the mental capacity to cast spells.");
+        return;
+    }
+
     // Randart weapons.
     if (scan_artefacts(ARTP_PREVENT_SPELLCASTING))
     {
