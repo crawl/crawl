@@ -1245,7 +1245,7 @@ bool monsters::pickup_launcher(item_def &launch, int near, bool force)
                            && get_weapon_brand(*elaunch) == SPWPN_NORMAL
                            && get_weapon_brand(launch) != SPWPN_NORMAL
                            && _nonredundant_launcher_ammo_brands(&launch,
-                                                               missiles()))
+                                                                 missiles()))
                     && drop_item(i, near) && pickup(launch, i, near));
         }
         else
