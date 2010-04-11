@@ -1720,6 +1720,13 @@ bool can_learn_spell(bool silent)
         return (false);
     }
 
+    if (you.stat_zero[STAT_INT])
+    {
+        if (!silent)
+            mpr("Your brain is not functional enough to learn spells.");
+        return (false);
+    }
+
     int i;
     int j = 0;
 

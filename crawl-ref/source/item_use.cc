@@ -5341,6 +5341,12 @@ void read_scroll(int slot)
         return;
     }
 
+    if (you.stat_zero[STAT_INT])
+    {
+        mpr("Reading requires mental cohesion, which you lack.");
+        return;
+    }
+
     if (inv_count() < 1)
     {
         canned_msg(MSG_NOTHING_CARRIED);
