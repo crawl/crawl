@@ -289,8 +289,8 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     // Book of Callings
     {SPELL_SUMMON_SMALL_MAMMALS,
      SPELL_STICKS_TO_SNAKES,
-     SPELL_CALL_IMP,
      SPELL_CALL_CANINE_FAMILIAR,
+     SPELL_CALL_IMP,
      SPELL_SUMMON_SCORPIONS,
      SPELL_SUMMON_ICE_BEAST,
      SPELL_NO_SPELL,
