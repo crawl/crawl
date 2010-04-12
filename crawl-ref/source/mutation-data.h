@@ -707,7 +707,7 @@
 
   "shaggy fur"
 },
-{ MUT_HIGH_MAGIC,                 1,  3, false, false,
+{ MUT_HIGH_MAGIC,                 2,  3, false, false,
   {"You have an increased reservoir of magic (+10% MP).",
    "You have a considerably increased reservoir of magic (+20% MP).",
    "You have a greatly increased reservoir of magic (+30% MP)."},
