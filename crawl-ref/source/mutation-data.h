@@ -269,6 +269,22 @@
 
   "fast"
 },
+
+{ MUT_SLOW,                       3,  3, true, false,
+  {"You cover ground slowly.",
+   "You cover ground very slowly.",
+   "You cover ground extremely slowly."},
+
+  {"You feel sluggish.",
+   "You feel sluggish.",
+   "You feel sluggish."},
+
+  {"You feel quick.",
+   "You feel quick.",
+   "You feel quick."},
+
+  "slow"
+},
 { MUT_ACUTE_VISION,               2,  1, false, false,
   {"You have supernaturally acute eyesight.", "", ""},
 

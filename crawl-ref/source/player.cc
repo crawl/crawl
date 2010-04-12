@@ -1890,6 +1890,11 @@ int player_movement_speed(bool ignore_burden)
         mv -= player_mutation_level(MUT_FAST) + 1;
     }
 
+    if (player_mutation_level(MUT_SLOW) > 0 && !player_is_shapechanged())
+    {
+        mv += player_mutation_level(MUT_FAST) + 1;
+    }
+
     // Burden
     if (!ignore_burden)
     {
@@ -1905,13 +1910,6 @@ int player_movement_speed(bool ignore_burden)
     // which is a bit of a jump, and a bit too fast) -- bwr
     if (mv < 6)
         mv = 6;
-
-    // Nagas move slowly:
-    if (you.species == SP_NAGA && !player_is_shapechanged())
-    {
-        mv *= 14;
-        mv /= 10;
-    }
 
     return (mv);
 }
