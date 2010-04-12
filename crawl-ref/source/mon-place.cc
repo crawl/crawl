@@ -3076,13 +3076,13 @@ monster_type summon_any_demon(demon_class_type dct)
     {
     case DEMON_LESSER:
         temp_rand = random2(60);
-        mon = ((temp_rand > 49) ? MONS_IMP :        // 10 in 60
-               (temp_rand > 40) ? MONS_WHITE_IMP :  //  9 in 60
-               (temp_rand > 31) ? MONS_LEMURE :     //  9 in 60
-               (temp_rand > 22) ? MONS_UFETUBUS :   //  9 in 60
-               (temp_rand > 13) ? MONS_IRON_IMP :   //  9 in 60
-               (temp_rand > 4)  ? MONS_MIDGE        //  9 in 60
-                                : MONS_SHADOW_IMP); //  5 in 60
+        mon = ((temp_rand > 49) ? MONS_IMP :        // 16.67%
+               (temp_rand > 40) ? MONS_WHITE_IMP :  // 15.00%
+               (temp_rand > 31) ? MONS_LEMURE :     // 15.00%
+               (temp_rand > 22) ? MONS_UFETUBUS :   // 15.00%
+               (temp_rand > 13) ? MONS_IRON_IMP :   // 15.00%
+               (temp_rand > 4)  ? MONS_MIDGE        // 15.00%
+                                : MONS_SHADOW_IMP); //  8.33%
         break;
 
     case DEMON_COMMON:
