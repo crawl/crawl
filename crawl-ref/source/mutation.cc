@@ -1475,8 +1475,6 @@ static const facet_def _demon_facets[] =
       { 1, 1, 1 } },
     { { MUT_SPIT_POISON, MUT_SPIT_POISON, MUT_SPIT_POISON },
       { 1, 1, 1 } },
-    { { MUT_HIGH_MAGIC, MUT_HIGH_MAGIC, MUT_HIGH_MAGIC },
-      { 1, 1, 1 } },
     // Scale mutations
     { { MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD },
       { 1, 1, 1 } },
