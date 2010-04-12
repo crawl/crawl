@@ -575,42 +575,41 @@ bool is_player_same_species(const int mon, bool transform)
 // -------------------------------------------------
 bool you_can_wear(int eq, bool special_armour)
 {
-    // These can be used by all.
-    if (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET
-        || eq == EQ_WEAPON || eq == EQ_CLOAK)
+    switch(eq)
     {
-        return (true);
+        case EQ_LEFT_RING:
+        case EQ_RIGHT_RING:
+        case EQ_AMULET:
+        case EQ_CLOAK:
+            return (true);
+        case EQ_BOOTS:
+            // Bardings
+            if (you.species == SP_NAGA || you.species == SP_CENTAUR)
+                return (special_armour);
+            if (player_mutation_level(MUT_HOOVES) >= 3 ||
+                player_mutation_level(MUT_TALONS) >= 3)
+                return (false);
+            // These species cannot wear boots
+            if (you.species == SP_TROLL || you.species == SP_SPRIGGAN ||
+                player_genus(GENPC_OGREISH) || player_genus(GENPC_DRACONIAN))
+                return (false);
+            return (true);
+        case EQ_BODY_ARMOUR:
+        case EQ_SHIELD:
+            return (special_armour);
+        case EQ_HELMET:
+            if (special_armour || 
+                player_mutation_level(MUT_HORNS) ||
+                player_mutation_level(MUT_BEAK) ||
+                player_mutation_level(MUT_ANTENNAE))
+                return (special_armour);
+        default:
+            if (you.species == SP_TROLL || you.species == SP_SPRIGGAN ||
+                player_genus(GENPC_OGREISH) || player_genus(GENPC_DRACONIAN))
+                return (false);
+
+            return (true);    
     }
-
-    // Anyone can wear caps/hats and robes and at least one of buckler/shield.
-    if (special_armour
-        && (eq == EQ_HELMET || eq == EQ_BODY_ARMOUR || eq == EQ_SHIELD))
-    {
-        return (true);
-    }
-
-    if (eq == EQ_BOOTS && (you.species == SP_NAGA || you.species == SP_CENTAUR))
-        return (special_armour);
-
-    // Of the remaining items, these races can't wear anything.
-    if (you.species == SP_TROLL || you.species == SP_SPRIGGAN
-        || player_genus(GENPC_OGREISH) || player_genus(GENPC_DRACONIAN))
-    {
-        return (false);
-    }
-
-    if (you.species == SP_KENKU && (eq == EQ_HELMET || eq == EQ_BOOTS))
-        return (false);
-
-    if (eq == EQ_HELMET && (player_mutation_level(MUT_HORNS)
-                            || player_mutation_level(MUT_BEAK)
-                            || player_mutation_level(MUT_ANTENNAE)))
-    {
-        return (special_armour);
-    }
-
-    // Else, no problems.
-    return (true);
 }
 
 bool player_has_feet()
