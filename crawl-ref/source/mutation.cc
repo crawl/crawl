@@ -50,13 +50,6 @@
 
 static int _body_covered();
 
-const char *naga_speed_descrip[4] = {
-    "You cover ground very slowly.",    // 10*14/10 = 14
-    "You cover ground rather slowly.",  //  8*14/10 = 11
-    "You cover ground rather quickly.", //  7*14/10 =  9
-    "You cover ground quickly."         //  6*14/10 =  8
-};
-
 mutation_def mut_data[] = {
 
 #include "mutation-data.h"
@@ -174,11 +167,6 @@ formatted_string describe_mutations()
 
     case SP_NAGA:
         result += "You cannot wear boots.\n";
-        if (!you.mutation[MUT_FAST])
-        {
-            result += mutation_name(MUT_FAST, -1, true);
-            result += "\n";
-        }
         // Breathe poison replaces spit poison.
         if (!you.mutation[MUT_BREATHE_POISON])
             result += "You can spit poison.\n";
@@ -587,6 +575,7 @@ static int _calc_mutation_amusement_value(mutation_type which_mutation)
     case MUT_STINGER:
     case MUT_BIG_WINGS:
     case MUT_LOW_MAGIC:
+    case MUT_SLOW:
         amusement *= 2; // funny!
         break;
 
@@ -688,7 +677,8 @@ static int _handle_conflicting_mutations(mutation_type mutation,
         const mutation_type override_conflict[][2] = {
             { MUT_REGENERATION, MUT_SLOW_METABOLISM },
             { MUT_REGENERATION, MUT_SLOW_HEALING    },
-            { MUT_ACUTE_VISION, MUT_BLURRY_VISION   }
+            { MUT_ACUTE_VISION, MUT_BLURRY_VISION   },
+            { MUT_FAST,         MUT_SLOW            }
         };
 
         // If we have one of the pair, delete all levels of the other,
@@ -737,7 +727,8 @@ static int _handle_conflicting_mutations(mutation_type mutation,
         { MUT_CARNIVOROUS,     MUT_HERBIVOROUS     },
         { MUT_SLOW_METABOLISM, MUT_FAST_METABOLISM },
         { MUT_REGENERATION,    MUT_SLOW_HEALING    },
-        { MUT_ACUTE_VISION,    MUT_BLURRY_VISION   }
+        { MUT_ACUTE_VISION,    MUT_BLURRY_VISION   },
+        { MUT_FAST,            MUT_SLOW            }
     };
 
     for (unsigned i = 0; i < ARRAYSZ(simple_conflict); ++i)
@@ -1339,8 +1330,6 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
         && you.species == SP_NAGA)
     {
         innate = true;
-        if (mut == MUT_FAST)
-            result = naga_speed_descrip[level];
     }
 
     const mutation_def& mdef = get_mutation_def(mut);
