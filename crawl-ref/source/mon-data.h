@@ -5392,7 +5392,7 @@ static monsterentry mondata[] = {
 
 // an unspecified monster
 {
-    MONS_SENSED, '~', LIGHTRED, "sensed monster",
+    MONS_SENSED, '{', LIGHTRED, "sensed monster",
     M_NO_FLAGS,
     MR_NO_FLAGS,
     0, 0, MONS_SENSED, MONS_SENSED, MH_NONLIVING, 0,

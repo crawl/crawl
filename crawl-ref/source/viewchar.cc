@@ -12,7 +12,7 @@ static const unsigned dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
     // CSET_ASCII
     {
         '#', '*', '.', ',', '\'', '+', '^', '>', '<',  // wall .. stairs up
-        '_', '\\', '}', '{', '8', '~', '~',            // altar .. item detect
+        '_', '\\', '}', '~', '8', '{', '{',            // altar .. item detect
         '0', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
         ':', '|', '}', '%', '$', '"', '#', '7',        // book .. tree
         ' ', '!', '#', '%', ':', ')', '*', '+',        // space .. fired_burst
@@ -22,7 +22,7 @@ static const unsigned dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
     // CSET_IBM - this is ANSI 437
     {
         177, 176, 249, 250, '\'', 254, '^', '>', '<',  // wall .. stairs up
-        220, 239, 244, 247, '8', '~', '~',             // altar .. item detect
+        220, 239, 244, 247, '8', '{', '{',             // altar .. item detect
         '0', ')', '[', '/', '%', '?', '=', '!', '(',   // orb .. missile
         236, '\\', '}', '%', '$', '"', '#', 234,       // book .. tree
         ' ', '!', '#', '%', '+', ')', '*', '+',        // space .. fired_burst
@@ -50,7 +50,7 @@ static const unsigned dchar_table[ NUM_CSET ][ NUM_DCHAR_TYPES ] =
     */
     {
         0x2592, 0x2591, 0xB7, 0x25E6, '\'', 0x25FC, '^', '>', '<',
-        '_', 0x2229, 0x2320, 0x2248, '8', '~', '~',
+        '_', 0x2229, 0x2320, 0x2248, '8', '{', 0x2206,
         '0', ')', '[', '/', '%', '?', '=', '!', '(',
         0x221E, '|', '}', '%', '$', '"', '#', 0x2663,
         ' ', '!', '#', '%', '+', ')', '*', '+',        // space .. fired_burst
