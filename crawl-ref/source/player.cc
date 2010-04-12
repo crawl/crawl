@@ -1891,7 +1891,10 @@ int player_movement_speed(bool ignore_burden)
     }
 
     if (player_mutation_level(MUT_SLOW) > 0 && !player_is_shapechanged())
-        mv += player_mutation_level(MUT_SLOW) + 1;
+    {
+        mv *= 10 + player_mutation_level(MUT_SLOW) * 2;
+        mv /= 10;
+    }
 
     // Burden
     if (!ignore_burden)
