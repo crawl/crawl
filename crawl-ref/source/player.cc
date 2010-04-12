@@ -602,7 +602,10 @@ bool you_can_wear(int eq, bool special_armour)
             return (true);
         case EQ_BODY_ARMOUR:
         case EQ_SHIELD:
-            return (special_armour);
+            if (special_armour)
+            {
+                return(true);
+            }
         case EQ_HELMET:
             if (special_armour
                 || player_mutation_level(MUT_HORNS)
