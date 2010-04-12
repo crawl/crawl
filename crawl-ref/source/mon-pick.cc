@@ -2710,6 +2710,7 @@ int mons_cocytus_level(int mcls)
     case MONS_ICE_DEVIL:
     case MONS_ICE_DRAGON:
     case MONS_TORMENTOR:
+    case MONS_WHITE_IMP:
         mlev += 5;
         break;
 
@@ -2744,6 +2745,7 @@ int mons_cocytus_rare(int mcls)
 
     case MONS_BLUE_DEVIL:
     case MONS_ICE_DEVIL:
+    case MONS_WHITE_IMP:
         return 76;
 
     case MONS_FLYING_SKULL:
