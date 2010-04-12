@@ -319,10 +319,12 @@ void ghost_demon::init_random_demon()
 // real speed, not a movement cost, so higher is better.
 static int _player_ghost_base_movement_speed()
 {
-    int speed = (you.species == SP_NAGA ? 8 : 10);
+    int speed = 10;
 
     if (player_mutation_level(MUT_FAST))
         speed += player_mutation_level(MUT_FAST) + 1;
+    if (player_mutation_level(MUT_SLOW))
+        speed -= player_mutation_level(MUT_SLOW) + 1;
 
     if (player_equip_ego_type(EQ_BOOTS, SPARM_RUNNING))
         speed += 2;
