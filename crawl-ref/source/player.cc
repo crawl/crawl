@@ -1897,7 +1897,7 @@ int player_movement_speed(bool ignore_burden)
     if (!ignore_burden)
     {
         if (you.burden_state == BS_ENCUMBERED)
-            mv += 1;
+            mv++;
         else if (you.burden_state == BS_OVERLOADED)
             mv += 3;
     }
