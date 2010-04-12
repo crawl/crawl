@@ -33,8 +33,6 @@
 #include "spl-book.h"
 #include "travel.h"
 
-void item_set_appearance(item_def &item);
-
 bool got_curare_roll(const int item_level)
 {
     return one_chance_in(item_level > 27 ? 6   :
