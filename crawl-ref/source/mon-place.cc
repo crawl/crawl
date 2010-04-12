@@ -3086,26 +3086,25 @@ monster_type summon_any_demon(demon_class_type dct)
         break;
 
     case DEMON_COMMON:
-        temp_rand = random2(4066);
-        mon = ((temp_rand > 3947) ? MONS_SIXFIRHY :        //  3.00%
-               (temp_rand > 3367) ? MONS_NEQOXEC :         // 14.69%
-               (temp_rand > 2787) ? MONS_ORANGE_DEMON :    // 14.69%
-               (temp_rand > 2207) ? MONS_HELLWING :        // 14.69%
-               (temp_rand > 1627) ? MONS_SMOKE_DEMON :     // 14.69%
-               (temp_rand > 1047) ? MONS_YNOXINUL :        // 14.69%
-               (temp_rand > 889)  ? MONS_RED_DEVIL :       //  4.00%
-               (temp_rand > 810)  ? MONS_HELLION :         //  2.00%
-               (temp_rand > 731)  ? MONS_ROTTING_DEVIL :   //  2.00%
-               (temp_rand > 652)  ? MONS_TORMENTOR :       //  2.00%
-               (temp_rand > 573)  ? MONS_REAPER :          //  2.00%
-               (temp_rand > 494)  ? MONS_SOUL_EATER :      //  2.00%
-               (temp_rand > 415)  ? MONS_HAIRY_DEVIL :     //  2.00%
-               (temp_rand > 336)  ? MONS_ICE_DEVIL :       //  2.00%
-               (temp_rand > 257)  ? MONS_BLUE_DEVIL :      //  2.00%
-               (temp_rand > 178)  ? MONS_BEAST :           //  2.00%
-               (temp_rand > 99)   ? MONS_IRON_DEVIL :      //  2.00%
-               (temp_rand > 49)   ? MONS_SUN_DEMON         //  1.26%
-                                  : MONS_SHADOW_IMP);      //  1.26%
+        temp_rand = random2(4016);
+        mon = ((temp_rand > 3897) ? MONS_SIXFIRHY :        //  3.00%
+               (temp_rand > 3317) ? MONS_NEQOXEC :         // 14.69%
+               (temp_rand > 2737) ? MONS_ORANGE_DEMON :    // 14.69%
+               (temp_rand > 2157) ? MONS_HELLWING :        // 14.69%
+               (temp_rand > 1577) ? MONS_SMOKE_DEMON :     // 14.69%
+               (temp_rand > 997)  ? MONS_YNOXINUL :        // 14.69%
+               (temp_rand > 839)  ? MONS_RED_DEVIL :       //  4.00%
+               (temp_rand > 760)  ? MONS_HELLION :         //  2.00%
+               (temp_rand > 681)  ? MONS_ROTTING_DEVIL :   //  2.00%
+               (temp_rand > 602)  ? MONS_TORMENTOR :       //  2.00%
+               (temp_rand > 523)  ? MONS_REAPER :          //  2.00%
+               (temp_rand > 444)  ? MONS_SOUL_EATER :      //  2.00%
+               (temp_rand > 365)  ? MONS_HAIRY_DEVIL :     //  2.00%
+               (temp_rand > 286)  ? MONS_ICE_DEVIL :       //  2.00%
+               (temp_rand > 207)  ? MONS_BLUE_DEVIL :      //  2.00%
+               (temp_rand > 128)  ? MONS_BEAST :           //  2.00%
+               (temp_rand > 49)   ? MONS_IRON_DEVIL        //  2.00%
+                                  : MONS_SUN_DEMON);       //  1.26%
         break;
 
     case DEMON_GREATER:
