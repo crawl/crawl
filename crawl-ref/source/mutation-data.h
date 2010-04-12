@@ -297,7 +297,7 @@
 
   "deformed"
 },
-{ MUT_TELEPORT_AT_WILL,           2,  3, false, false,
+{ MUT_TELEPORT_AT_WILL,           0,  3, false, false,
   {"You can teleport at will.",
    "You are good at teleporting at will.",
    "You can teleport instantly at will."},
