@@ -596,7 +596,13 @@ void unequip_weapon_effect(item_def& item, bool showMsgs)
     }
     else if (item.base_type == OBJ_STAVES && item.sub_type == STAFF_POWER)
     {
+        int mp = you.magic_points;
         calc_mp();
+        mp -= you.magic_points;
+
+        // Store the MP in case you'll re-wield quickly.
+        item.special = mp + you.elapsed_time / POWER_DECAY;
+
         mpr("You feel your mana capacity decrease.");
     }
 }
