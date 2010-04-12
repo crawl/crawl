@@ -3109,15 +3109,15 @@ monster_type summon_any_demon(demon_class_type dct)
 
     case DEMON_GREATER:
         temp_rand = random2(1000);
-        mon = ((temp_rand > 868) ? MONS_CACODEMON :        // 13.1%
-               (temp_rand > 737) ? MONS_BALRUG :           // 13.1%
-               (temp_rand > 606) ? MONS_BLUE_DEATH :       // 13.1%
-               (temp_rand > 475) ? MONS_GREEN_DEATH :      // 13.1%
-               (temp_rand > 344) ? MONS_EXECUTIONER :      // 13.1%
-               (temp_rand > 244) ? MONS_FIEND :            // 10.0%
-               (temp_rand > 154) ? MONS_ICE_FIEND :        //  9.0%
-               (temp_rand > 73)  ? MONS_SHADOW_FIEND       //  8.1%
-                                 : MONS_PIT_FIEND);        //  7.4%
+        mon = ((temp_rand > 868) ? MONS_CACODEMON :        // 13.10%
+               (temp_rand > 737) ? MONS_BALRUG :           // 13.10%
+               (temp_rand > 606) ? MONS_BLUE_DEATH :       // 13.10%
+               (temp_rand > 475) ? MONS_GREEN_DEATH :      // 13.10%
+               (temp_rand > 344) ? MONS_EXECUTIONER :      // 13.10%
+               (temp_rand > 244) ? MONS_FIEND :            // 10.00%
+               (temp_rand > 154) ? MONS_ICE_FIEND :        //  9.00%
+               (temp_rand > 73)  ? MONS_SHADOW_FIEND       //  8.10%
+                                 : MONS_PIT_FIEND);        //  7.30%
         break;
 
     default:
