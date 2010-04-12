@@ -1,8 +1,7 @@
-# With current Dungeon Crawl Stone Soup trunk (tentatively
-# titled 0.6), there has been a new shift of glyphs and
-# colours. Some demons have been promoted, and others have
-# been demoted, while queen monsters have been moved into
-# their relevant non-queen glyph.
+# With Dungeon Crawl Stone Soup 0.6, there has been a new shift
+# of glyphs and colours.  Some demons have been promoted, and
+# others have been demoted, while queen monsters have been
+# moved into their relevant non-queen glyph.
 
 ###########################
 # monsters

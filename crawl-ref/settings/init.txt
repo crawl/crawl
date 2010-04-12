@@ -16,6 +16,10 @@
 # always_confirm_butcher  = true
 # target_unshifted_dirs   = true
 # clear_messages          = true
+#
+# Similar options for reverting later changes:
+# include                 = 052_monster_glyphs.txt
+# include                 = 060_monster_glyphs.txt
 
 # Crawl Init file
 #

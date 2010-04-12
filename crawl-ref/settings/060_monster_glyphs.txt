@@ -1,0 +1,10 @@
+# Changes for 0.7 include swapping the water and disturbance glyphs.
+
+###########################
+# features
+###########################
+
+# water and disturbance
+cset_ascii = wavy:{, invis_exposed:~, item_detected:~
+cset_ibm = invis_exposed:~, item_detected:~
+cset_unicode = invis_exposed:~
