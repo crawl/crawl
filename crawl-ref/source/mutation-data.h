@@ -306,7 +306,7 @@
    "You feel more jumpy.",
    "You feel even more jumpy."},
 
-  {"You feel static.",
+  {"You feel a little less jumpy.",
    "You feel less jumpy.",
    "You feel less jumpy."},
 
@@ -347,13 +347,13 @@
    "You are good at translocating small distances at will.",
    "You can translocate small distances instantaneously."},
 
-  {"You feel a little jumpy.",
-   "You feel more jumpy.",
-   "You feel even more jumpy."},
+  {"You feel jittery.",
+   "You feel more jittery.",
+   "You feel even more jittery."},
 
-  {"You feel a little less jumpy.",
-   "You feel less jumpy.",
-   "You feel less jumpy."},
+  {"You feel a little less jittery.",
+   "You feel less jittery.",
+   "You feel less jittery."},
 
   "blink"
 },
