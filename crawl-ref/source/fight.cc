@@ -598,16 +598,16 @@ bool melee_attack::attack()
             if (!mons_near(defender->as_monster()))
             {
                 simple_monster_message(attacker->as_monster(),
-                                       " hits something");
+                                       " hits something.");
             }
             else if (!you.can_see(attacker))
             {
-                mprf("%s hits the %s.", defender->name(DESC_CAP_THE).c_str(),
+                mprf("%s hits %s.", defender->name(DESC_CAP_THE).c_str(),
                      feat_name.c_str());
             }
             else
             {
-                mprf("%s tries to hit the %s, but is blocked by the %s.",
+                mprf("%s tries to hit %s, but is blocked by the %s.",
                      attacker->name(DESC_CAP_THE).c_str(),
                      defender->name(DESC_NOCAP_THE).c_str(),
                      feat_name.c_str());
