@@ -496,6 +496,9 @@ void equip_weapon_effect(item_def& item, bool showMsgs)
     {
         if (item.sub_type == STAFF_POWER)
         {
+            int mp = item.special - you.elapsed_time / POWER_DECAY;
+            if (mp > 0)
+            you.magic_points += mp;
             calc_mp();
             set_ident_type(item, ID_KNOWN_TYPE);
             set_ident_flags(item, ISFLAG_EQ_WEAPON_MASK);
