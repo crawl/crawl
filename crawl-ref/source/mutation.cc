@@ -1326,11 +1326,8 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
     std::string result;
     bool innate = false;
 
-    if ((mut == MUT_FAST || mut == MUT_BREATHE_POISON)
-        && you.species == SP_NAGA)
-    {
+    if (mut == MUT_BREATHE_POISON && you.species == SP_NAGA)
         innate = true;
-    }
 
     const mutation_def& mdef = get_mutation_def(mut);
 
