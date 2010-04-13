@@ -401,7 +401,7 @@ bool cast_sublimation_of_blood(int pow)
         }
         else if (is_blood_potion(you.inv[wielded]))
         {
-            mprf("The blood within %s frothes and boils.",
+            mprf("The blood within %s froths and boils.",
                  you.inv[wielded].quantity > 1 ? "one of your flasks"
                                                : "the flask you are holding");
 
