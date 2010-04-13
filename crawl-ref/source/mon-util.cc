@@ -2294,6 +2294,8 @@ void mons_pacify(monsters *mon, mon_attitude_type att)
         pikel_band_neutralise();
     if (mons_is_elven_twin(mon))
         elven_twins_pacify(mon);
+    if (mons_is_kirke(mon))
+        hogs_to_humans();
 }
 
 static bool _mons_should_fire_beneficial(bolt &beam)
