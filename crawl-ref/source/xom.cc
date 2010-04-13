@@ -2924,7 +2924,7 @@ static int _xom_lose_stats(bool debug = false)
     if (debug)
         return (XOM_BAD_STATLOSS);
 
-    stat_type stat = STAT_RANDOM;
+    stat_type stat = static_cast<stat_type>(random2(NUM_STATS));
     int       max  = 3;
 
     // Don't kill the player unless Xom is being nasty.
