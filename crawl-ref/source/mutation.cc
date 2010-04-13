@@ -909,11 +909,11 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         // resistance mutation.
         if (!god_gift)
         {
-            if (wearing_amulet(AMU_RESIST_MUTATION)
-                    && !one_chance_in(10) && !stat_gain_potion
+            if ((wearing_amulet(AMU_RESIST_MUTATION)
+                    && !one_chance_in(10) && !stat_gain_potion)
                 || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
-                || player_mutation_level(MUT_MUTATION_RESISTANCE)
-                    && !one_chance_in(3))
+                || (player_mutation_level(MUT_MUTATION_RESISTANCE)
+                    && !one_chance_in(3)))
             {
                 if (failMsg)
                     mpr("You feel odd for a moment.", MSGCH_MUTATION);
@@ -1374,7 +1374,7 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
 
     if (colour)
     {
-        const char* colourname = "lightgrey"; // the default
+        const char* colourname = (mdef.bad ? "red" : "lightgrey");
         const bool permanent   = (you.demon_pow[mut] > 0);
         if (innate)
             colourname = (level > 0 ? "cyan" : "lightblue");
@@ -1388,9 +1388,9 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
             else if (!fully_active)
                 colourname = demonspawn ? "yellow"   : "blue";
             else if (extra)
-                colourname = demonspawn ? "lightred" : "cyan";
+                colourname = demonspawn ? "lightmagenta" : "cyan";
             else
-                colourname = demonspawn ? "red"      : "lightblue";
+                colourname = demonspawn ? "magenta"      : "lightblue";
         }
         else if (fully_inactive)
             colourname = "darkgrey";
