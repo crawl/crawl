@@ -3796,6 +3796,18 @@ beh_type actual_same_attitude(const monsters & base)
 
 // Called whenever an already existing monster changes its attitude, possibly
 // temporarily.
-void mons_att_changed(monsters *mons)
+void mons_att_changed(monsters *mon)
 {
+    if (mon->type == MONS_KRAKEN)
+    {
+        const int headnum = mon->mindex();
+        const mon_attitude_type att = mon->temp_attitude();
+
+        for (monster_iterator mi; mi; ++mi)
+            if (mi->type == MONS_KRAKEN_TENTACLE
+                && (int)mi->number == headnum)
+            {
+                mi->attitude = att;
+            }
+    }
 }
