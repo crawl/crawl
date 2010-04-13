@@ -137,6 +137,7 @@ void hogs_to_humans()
             {
                 mi->attitude = ATT_GOOD_NEUTRAL;
                 mi->flags   |= MF_WAS_NEUTRAL;
+                mons_att_changed(*mi);
             }
         }
 

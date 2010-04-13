@@ -157,6 +157,7 @@ int mons_thrown_weapon_damage(const item_def *weap,
 int mons_natural_regen_rate(monsters *monster);
 
 void mons_relocated(monsters *mons);
+void mons_att_changed(monsters *mons);
 
 bool can_go_straight(const coord_def& p1, const coord_def& p2,
                      dungeon_feature_type allowed);

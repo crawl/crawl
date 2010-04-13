@@ -173,6 +173,7 @@ static void _wizard_make_friendly(monsters* m)
         m->flags |= MF_NO_REWARD;
         break;
     }
+    mons_att_changed(m);
 
     // To update visual branding of friendlies. Only seems capabable
     // of adding bolding, not removing it, though.

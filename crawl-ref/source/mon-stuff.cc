@@ -2559,6 +2559,8 @@ void slimify_monster(monsters *mon, bool hostile)
     // Don't want shape-shifters to shift into non-slimes.
     mon->del_ench(ENCH_GLOWING_SHAPESHIFTER);
     mon->del_ench(ENCH_SHAPESHIFTER);
+
+    mons_att_changed(mon);
 }
 
 static bool _habitat_okay( const monsters *monster, dungeon_feature_type targ )
@@ -3790,4 +3792,10 @@ beh_type attitude_creation_behavior(mon_attitude_type att)
 beh_type actual_same_attitude(const monsters & base)
 {
     return attitude_creation_behavior(base.attitude);
+}
+
+// Called whenever an already existing monster changes its attitude, possibly
+// temporarily.
+void mons_att_changed(monsters *mons)
+{
 }

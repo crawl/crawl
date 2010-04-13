@@ -4431,6 +4431,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
         // Wow, permanent enslaving!
         mon->attitude = ATT_FRIENDLY;
         behaviour_event(mon, ME_ALERT, MHITNOT);
+        mons_att_changed(mon);
 
         mons_make_god_gift(mon, god);
 
@@ -4486,6 +4487,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
         else
             mon->add_ench(ENCH_CHARM);
         behaviour_event(mon, ME_ALERT, MHITNOT);
+        mons_att_changed(mon);
         return (MON_AFFECTED);
 
     case BEAM_PAIN:             // pain/agony

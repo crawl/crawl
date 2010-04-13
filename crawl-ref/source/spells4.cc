@@ -469,6 +469,7 @@ static int _tame_beast_monsters(coord_def where, int pow, int, actor *)
         monster->attitude = ATT_FRIENDLY;  // permanent
     else
         monster->add_ench(ENCH_CHARM);     // temporary
+    mons_att_changed(monster);
 
     return 1;
 }

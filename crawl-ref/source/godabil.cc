@@ -1494,6 +1494,7 @@ bool evolve_flora()
     target->flags |= MF_NO_REWARD;
     target->flags |= MF_ATT_CHANGE_ATTEMPT;
     behaviour_event(target, ME_ALERT);
+    mons_att_changed(target);
 
     // Try to remove slowly dying in case we are upgrading a
     // toadstool, and spore production in case we are upgrading a
