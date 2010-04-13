@@ -2711,6 +2711,10 @@ std::string _status_mut_abilities()
                 AC_change += level;
                 EV_change -= level > 1 ? 1 : 0;
                 break;
+            case MUT_ROUGH_BLACK_SCALES:
+                AC_change  += 3*level+1;
+                Dex_change -= level;
+                break;
             case MUT_RUGGED_BROWN_SCALES:
                 AC_change += 2;
                 break;
