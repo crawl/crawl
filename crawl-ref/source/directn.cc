@@ -1719,6 +1719,13 @@ void direction_chooser::handle_wizard_command(command_type key_command,
             marker_result.empty() ? "nothing" : marker_result.c_str());
 
         return;
+
+    case CMD_TARGET_WIZARD_HURT_MONSTER:
+        if (looking_at_you())
+        {
+            set_hp(1, false);
+            print_stats();
+        }
     default:
         break;
     }
