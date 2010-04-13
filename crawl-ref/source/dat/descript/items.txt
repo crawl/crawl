@@ -1633,7 +1633,7 @@ A magical device which throws great bolts of lightning.
 %%%%
 wand of magic darts
 
-A magical device which throws small bolts of destructive energy.
+A magical device which throws small bolts of destructive energy. They never miss.
 %%%%
 wand of paralysis
 
