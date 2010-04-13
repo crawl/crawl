@@ -2122,6 +2122,8 @@ int player_evasion_bonuses(ev_ignore_type evit)
     // mutations
     if (player_mutation_level(MUT_DISTORTION_FIELD) > 0)
         evbonus += player_mutation_level(MUT_DISTORTION_FIELD) + 1;
+    if (player_mutation_level(MUT_ICY_BLUE_SCALES) > 1)
+        evbonus--;
     if (player_mutation_level(MUT_MOLTEN_SCALES) > 1)
         evbonus--;
     evbonus -= std::max(0, player_mutation_level(MUT_SLIMY_GREEN_SCALES) - 1);
