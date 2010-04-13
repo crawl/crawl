@@ -963,6 +963,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
         {
             mon->target = you.pos();
             mon->attitude = ATT_HOSTILE;
+            mons_att_changed(mon);
         }
         else if (src != MHITNOT)
             mon->target = src_pos;
@@ -970,7 +971,10 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
 
     // Now, break charms if appropriate.
     if (breakCharm)
+    {
         mon->del_ench(ENCH_CHARM);
+        mons_att_changed(mon);
+    }
 
     // Do any resultant foe or state changes.
     handle_behaviour(mon);

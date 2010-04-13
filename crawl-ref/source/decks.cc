@@ -2495,6 +2495,7 @@ static void _crusade_card(int power, deck_rarity_type rarity)
                 }
                 else
                     mi->add_ench(ENCH_CHARM);
+                mons_att_changed(*mi);
             }
         }
     }

@@ -179,6 +179,7 @@ static bool _holy_beings_on_level_attitude_change()
             mi->del_ench(ENCH_CHARM, true);
             behaviour_event(*mi, ME_ALERT, MHITYOU);
             // For now CREATED_FRIENDLY/WAS_NEUTRAL stays.
+            mons_att_changed(*mi);
 
             success = true;
         }
@@ -217,6 +218,7 @@ static bool _unholy_and_evil_beings_on_level_attitude_change()
             mi->del_ench(ENCH_CHARM, true);
             behaviour_event(*mi, ME_ALERT, MHITYOU);
             // For now CREATED_FRIENDLY/WAS_NEUTRAL stays.
+            mons_att_changed(*mi);
 
             success = true;
         }
@@ -254,6 +256,7 @@ static bool _unclean_and_chaotic_beings_on_level_attitude_change()
             mi->del_ench(ENCH_CHARM, true);
             behaviour_event(*mi, ME_ALERT, MHITYOU);
             // For now CREATED_FRIENDLY/WAS_NEUTRAL stays.
+            mons_att_changed(*mi);
 
             success = true;
         }
@@ -290,6 +293,7 @@ static bool _spellcasters_on_level_attitude_change()
             mi->del_ench(ENCH_CHARM, true);
             behaviour_event(*mi, ME_ALERT, MHITYOU);
             // For now CREATED_FRIENDLY/WAS_NEUTRAL stays.
+            mons_att_changed(*mi);
 
             success = true;
         }
@@ -365,6 +369,7 @@ static bool _make_holy_god_gifts_on_level_good_neutral(bool seen = false)
         {
             // monster changes attitude
             mi->attitude = ATT_GOOD_NEUTRAL;
+            mons_att_changed(*mi);
 
             if (!seen || simple_monster_message(*mi, " becomes indifferent."))
                 count++;
@@ -410,6 +415,7 @@ static bool _make_god_gifts_on_level_hostile(bool seen = false)
             mi->attitude = ATT_HOSTILE;
             mi->del_ench(ENCH_CHARM, true);
             behaviour_event(*mi, ME_ALERT, MHITYOU);
+            mons_att_changed(*mi);
 
             if (!seen || simple_monster_message(*mi, " turns against you!"))
                 count++;
@@ -472,6 +478,7 @@ static bool _yred_slaves_on_level_abandon_you()
             mi->attitude = ATT_HOSTILE;
             behaviour_event(*mi, ME_ALERT, MHITYOU);
             // For now CREATED_FRIENDLY stays.
+            mons_att_changed(*mi);
 
             success = true;
         }
@@ -500,6 +507,7 @@ static bool _beogh_followers_on_level_abandon_you()
             mi->attitude = ATT_HOSTILE;
             behaviour_event(*mi, ME_ALERT, MHITYOU);
             // For now CREATED_FRIENDLY stays.
+            mons_att_changed(*mi);
 
             success = true;
         }
@@ -526,6 +534,7 @@ static bool _jiyva_slimes_on_level_abandon_you()
             mi->attitude = ATT_HOSTILE;
             behaviour_event(*mi, ME_ALERT, MHITYOU);
             // For now WAS_NEUTRAL stays.
+            mons_att_changed(*mi);
 
             success = true;
         }
@@ -576,6 +585,7 @@ bool yred_slaves_abandon_you()
                     monster->attitude = ATT_HOSTILE;
                     behaviour_event(monster, ME_ALERT, MHITYOU);
                     // For now CREATED_FRIENDLY stays.
+                    mons_att_changed(monster);
                 }
 
                 num_reclaim++;
@@ -629,6 +639,7 @@ static bool _fedhas_plants_on_level_hostile()
             mi->attitude = ATT_HOSTILE;
             mi->del_ench(ENCH_CHARM, true);
             behaviour_event(*mi, ME_ALERT, MHITYOU);
+            mons_att_changed(*mi);
             set_auto_exclude(*mi);
             // For now WAS_NEUTRAL stays.
         }
@@ -695,6 +706,7 @@ bool beogh_followers_abandon_you()
                     monster->attitude = ATT_HOSTILE;
                     behaviour_event(monster, ME_ALERT, MHITYOU);
                     // For now CREATED_FRIENDLY stays.
+                    mons_att_changed(monster);
 
                     if (you.can_see(monster))
                         num_reconvert++; // Only visible ones.
@@ -795,6 +807,8 @@ void good_god_holy_attitude_change(monsters *holy)
 
     // Avoid immobile "followers".
     behaviour_event(holy, ME_ALERT, MHITNOT);
+
+    mons_att_changed(holy);
 }
 
 void good_god_holy_fail_attitude_change(monsters *holy)
@@ -885,6 +899,8 @@ void beogh_convert_orc(monsters *orc, bool emergency,
 
     // Avoid immobile "followers".
     behaviour_event(orc, ME_ALERT, MHITNOT);
+
+    mons_att_changed(orc);
 }
 
 void fedhas_neutralise_plant(monsters *plant)
@@ -899,6 +915,7 @@ void fedhas_neutralise_plant(monsters *plant)
 
     plant->attitude = ATT_GOOD_NEUTRAL;
     plant->flags   |= MF_WAS_NEUTRAL;
+    mons_att_changed(plant);
 }
 
 void jiyva_convert_slime(monsters* slime)
@@ -942,4 +959,5 @@ void jiyva_convert_slime(monsters* slime)
         slime->flags &= ~MF_GOD_GIFT;
 
     mons_make_god_gift(slime, GOD_JIYVA);
+    mons_att_changed(slime);
 }

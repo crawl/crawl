@@ -2823,6 +2823,7 @@ void monsters::go_frenzy()
     add_ench(mon_enchant(ENCH_INSANE, 0, KC_OTHER, duration * 10));
     add_ench(mon_enchant(ENCH_HASTE, 0, KC_OTHER, duration * 10));
     add_ench(mon_enchant(ENCH_MIGHT, 0, KC_OTHER, duration * 10));
+    mons_att_changed(this);
 
     if (simple_monster_message(this, " flies into a frenzy!"))
         // Xom likes monsters going insane.
@@ -4427,6 +4428,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_INSANE:
         attitude = static_cast<mon_attitude_type>(props["old_attitude"].get_short());
+        mons_att_changed(this);
         // deliberate fall through
 
     case ENCH_BERSERK:
