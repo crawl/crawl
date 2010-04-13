@@ -1943,7 +1943,7 @@ bool entomb(int powc)
 
         // Finally, place the wall {dlb}:
         grd(*ai) = DNGN_ROCK_WALL;
-        los_terrain_changed(*ai);
+        set_terrain_changed(*ai);
         number_built++;
     }
 

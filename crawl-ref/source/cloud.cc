@@ -199,6 +199,7 @@ static void _spread_fire(const cloud_struct &cloud)
             if (you.see_cell(*ai))
                 mpr("The forest fire spreads!");
             grd(*ai) = dgn_tree_base_feature_at(*ai);
+            set_terrain_changed(*ai);
             _place_new_cloud( cloud.type, *ai, random2(30)+25, cloud.whose,
                               cloud.killer, cloud.spread_rate, cloud.colour,
                               cloud.name, cloud.tile );
