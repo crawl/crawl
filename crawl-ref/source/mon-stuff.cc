@@ -1894,7 +1894,9 @@ int monster_die(monsters *monster, killer_type killer,
         // And his vault can  be placed again.
         you.uniq_map_names.erase("uniq_boris");
     }
-    else if (mons_is_kirke(monster) && !in_transit)
+    else if (mons_is_kirke(monster)
+             && !in_transit
+             && !testbits(monster->flags, MF_WAS_NEUTRAL))
     {
         hogs_to_humans();
     }
