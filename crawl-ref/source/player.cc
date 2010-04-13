@@ -2076,7 +2076,7 @@ int player_adjusted_body_armour_evasion_penalty(int scale)
 // The total EV penalty to the player for all their worn armour items
 // with a base EV penalty (i.e. EV penalty as a base armour property,
 // not as a randart property).
-static int player_adjusted_evasion_penalty(const int scale)
+static int _player_adjusted_evasion_penalty(const int scale)
 {
     int piece_armour_evasion_penalty = 0;
 
@@ -2098,7 +2098,7 @@ static int player_adjusted_evasion_penalty(const int scale)
 }
 
 // EV bonuses that work even when helpless.
-int _player_para_evasion_bonuses(ev_ignore_type evit)
+static int _player_para_evasion_bonuses(ev_ignore_type evit)
 {
     int evbonus = 0;
 
@@ -2108,7 +2108,7 @@ int _player_para_evasion_bonuses(ev_ignore_type evit)
     if (player_mutation_level(MUT_DISTORTION_FIELD) > 0)
         evbonus += player_mutation_level(MUT_DISTORTION_FIELD) + 1;
 
-    return evbonus;
+    return (evbonus);
 }
 
 // Player EV bonuses for various effects and transformations. This
@@ -2202,7 +2202,7 @@ int player_evasion(ev_ignore_type evit)
     const int size_base_ev = (10 + size_factor) * scale;
 
     const int adjusted_evasion_penalty =
-        player_adjusted_evasion_penalty(scale);
+        _player_adjusted_evasion_penalty(scale);
 
     // The last two parameters are not important.
     const int ev_dex = stepdown_value(you.dex(), 10, 24, 72, 72);
