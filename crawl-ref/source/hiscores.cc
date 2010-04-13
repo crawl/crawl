@@ -1570,7 +1570,8 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         }
         else
         {
-            desc += "Succumbed to " + apostrophise(death_source_name) + " "
+            desc += "Succumbed to " + ((death_source_name == "you")
+                      ? "your own" : apostrophise(death_source_name)) + " "
                     + (auxkilldata.empty()? "poison" : auxkilldata);
         }
         break;
