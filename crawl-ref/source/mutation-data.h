@@ -875,8 +875,8 @@
 },
 { MUT_ICY_BLUE_SCALES,                  2,  3, false, true,
   {"You are partially covered in colorless scales (AC +1).",
-   "You are mostly covered in icy blue scales (AC +2).",
-   "You are completely covered in icy blue scales (AC +3, rC+)."},
+   "You are mostly covered in icy blue scales (AC +2, EV -1).",
+   "You are completely covered in icy blue scales (AC +3, EV -1, rC+)."},
 
   {"Colorless scales grow over part of your body.",
    "Your colorless scales turn blue and spread over more of your body.",
