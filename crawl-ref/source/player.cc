@@ -2097,17 +2097,28 @@ static int player_adjusted_evasion_penalty(const int scale)
             player_adjusted_body_armour_evasion_penalty(scale));
 }
 
+// EV bonuses that work even when helpless.
+int _player_para_evasion_bonuses(ev_ignore_type evit)
+{
+    int evbonus = 0;
+
+    if (you.duration[DUR_PHASE_SHIFT] && !(evit & EV_IGNORE_PHASESHIFT))
+        evbonus += 8;
+
+    if (player_mutation_level(MUT_DISTORTION_FIELD) > 0)
+        evbonus += player_mutation_level(MUT_DISTORTION_FIELD) + 1;
+
+    return evbonus;
+}
+
 // Player EV bonuses for various effects and transformations. This
 // does not include kenku/merfolk EV bonuses for flight/swimming.
 int player_evasion_bonuses(ev_ignore_type evit)
 {
-    int evbonus = 0;
+    int evbonus = _player_para_evasion_bonuses(evit);
 
     if (you.duration[DUR_AGILITY])
         evbonus += 5;
-
-    if (you.duration[DUR_PHASE_SHIFT] && !(evit & EV_IGNORE_PHASESHIFT))
-        evbonus += 8;
 
     if (you.duration[DUR_STONEMAIL])
         evbonus -= 2;
@@ -2120,8 +2131,6 @@ int player_evasion_bonuses(ev_ignore_type evit)
     evbonus += scan_artefacts( ARTP_EVASION );
 
     // mutations
-    if (player_mutation_level(MUT_DISTORTION_FIELD) > 0)
-        evbonus += player_mutation_level(MUT_DISTORTION_FIELD) + 1;
     if (player_mutation_level(MUT_ICY_BLUE_SCALES) > 1)
         evbonus--;
     if (player_mutation_level(MUT_MOLTEN_SCALES) > 1)
@@ -2185,8 +2194,7 @@ int player_evasion(ev_ignore_type evit)
         && !(evit & EV_IGNORE_HELPLESS))
     {
         const int paralysed_base_ev = 2 + size_factor / 2;
-        const int repulsion_ev =
-            std::max(0, player_mutation_level(MUT_DISTORTION_FIELD) + 1);
+        const int repulsion_ev = _player_para_evasion_bonuses(evit);
         return std::max(1, paralysed_base_ev + repulsion_ev);
     }
 
