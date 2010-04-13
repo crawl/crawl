@@ -1556,7 +1556,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         {
             if (!terse)
                 desc += "Succumbed to poison";
-            else if (death_source_name.empty())
+            else if (!death_source_name.empty())
                 desc += "poisoned by " + death_source_name;
             else
                 desc += "poison";
