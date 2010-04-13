@@ -1039,7 +1039,21 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     const mutation_def& mdef = get_mutation_def(mutat);
 
     if (you.mutation[mutat] >= mdef.levels)
-        return (false);
+    {
+        bool found = false;
+        if (you.species == SP_DEMONSPAWN)
+            for (unsigned i = 0; i < you.demonic_traits.size(); ++i)
+                if (you.demonic_traits[i].mutation == mutat)
+                {
+                    // This mutation is about to be re-gained, so there is
+                    // no need to redraw any stats or print any messages.
+                    found = true;
+                    you.mutation[mutat]--;
+                    break;
+                }
+        if (!found)
+            return (false);
+    }
 
     // God gifts and forced mutations clear away conflicting mutations.
     int rc =_handle_conflicting_mutations(mutat, god_gift || force_mutation);
