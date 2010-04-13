@@ -123,6 +123,7 @@ private:
     void _potion_effect(int pot_eff, int pow);
     bool _create_monster(monster_type what, int abj_deg, bool alert = false);
     void send_abyss();
+    void _do_poison(int amount);
 
     bool avoid_lethal(int dam);
 

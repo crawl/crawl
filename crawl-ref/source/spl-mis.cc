@@ -2635,8 +2635,8 @@ void MiscastEffect::_poison(int severity)
             if (target->res_poison() <= 0)
             {
                 you_msg = "You feel sick.";
-                // Monster messages needed.
-                target->poison(act_source, 2 + random2(3));
+                mon_msg_seen = "@The_monster@ looks sick.";
+                _do_poison(2 + random2(3));
             }
             do_msg();
             break;
@@ -2659,8 +2659,8 @@ void MiscastEffect::_poison(int severity)
             if (target->res_poison() <= 0)
             {
                 you_msg = "You feel very sick.";
-                // Monster messages needed.
-                target->poison(act_source, 3 + random2avg(9, 2));
+                mon_msg_seen = "@The_monster@ looks very sick.";
+                _do_poison(3 + random2avg(9, 2));
             }
             do_msg();
             break;
@@ -2691,8 +2691,8 @@ void MiscastEffect::_poison(int severity)
             if (target->res_poison() <= 0)
             {
                 you_msg = "You feel incredibly sick.";
-                // Monster messages needed.
-                target->poison(act_source, 10 + random2avg(19, 2));
+                mon_msg_seen = "@The_monster@ looks incredibly sick.";
+                _do_poison(10 + random2avg(19, 2));
             }
             do_msg();
             break;
@@ -2713,4 +2713,12 @@ void MiscastEffect::_poison(int severity)
         }
         break;
     }
+}
+
+void MiscastEffect::_do_poison(int amount)
+{
+    if (target->atype() == ACT_PLAYER)
+        poison_player(amount, cause, "residual poison");
+    else
+        target->poison(act_source, amount);
 }
