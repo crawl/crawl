@@ -5152,7 +5152,7 @@ void melee_attack::mons_do_spines()
     const item_def *body = you.slot_item(EQ_BODY_ARMOUR, false);
     int evp = 0;
 
-    if(body)
+    if (body)
         evp = -property(*body, PARM_EVASION);
 
     if (you.mutation[MUT_SPINY]
