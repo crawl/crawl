@@ -1286,6 +1286,7 @@ bool cast_summon_elemental(int pow, god_type god,
     if (mon == MONS_EARTH_ELEMENTAL)
     {
         grd(targ) = DNGN_FLOOR;
+        set_terrain_changed(targ);
     }
     else if (env.cgrid(targ) != EMPTY_CLOUD
              && env.cloud[env.cgrid(targ)].type == CLOUD_FIRE

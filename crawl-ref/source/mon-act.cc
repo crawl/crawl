@@ -1610,7 +1610,7 @@ static void _khufu_drop_tomb(monsters *monster)
         if (grd(*ai) == DNGN_ROCK_WALL)
         {
             grd(*ai) = DNGN_FLOOR;
-            los_terrain_changed(*ai);
+            set_terrain_changed(*ai);
             count++;
         }
     }

@@ -845,6 +845,7 @@ void bolt::fire_wall_effect()
         {
             // Destroy the wall.
             grd(pos()) = DNGN_FLOOR;
+            set_terrain_changed(pos());
             if (you.see_cell(pos()))
                 emit_message(MSGCH_PLAIN, "The wax bubbles and burns!");
             else if (you.can_smell())
@@ -860,6 +861,7 @@ void bolt::fire_wall_effect()
         {
             // Destroy the wall.
             grd(pos()) = dgn_tree_base_feature_at(pos());
+            set_terrain_changed(pos());
             if (you.see_cell(pos()))
                 emit_message(MSGCH_PLAIN, "The tree burns like a torch!");
             else if (you.can_smell())
@@ -960,6 +962,7 @@ static void _nuke_wall(const coord_def& p)
     if (is_moldy(p))
         env.pgrid(p) &= ~(FPROP_MOLD);
     grd(p) = DNGN_FLOOR;
+    set_terrain_changed(p);
 }
 
 void bolt::nuke_wall_effect()
