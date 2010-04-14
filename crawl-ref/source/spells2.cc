@@ -923,14 +923,10 @@ bool cast_summon_small_mammals(int pow, god_type god)
 
     for (int i = 0; i < count; ++i)
     {
-        if (x_chance_in_y(10, pow+1))
-        {
-            mon = (coinflip()) ? MONS_GIANT_BAT : MONS_RAT;
-        }
+        if (x_chance_in_y(10, pow + 1))
+            mon = coinflip() ? MONS_GIANT_BAT : MONS_RAT;
         else
-        {
-            mon = (coinflip()) ? MONS_QUOKKA : MONS_GREY_RAT;
-        }
+            mon = coinflip() ? MONS_QUOKKA : MONS_GREY_RAT;
 
         if (create_monster(
                 mgen_data(mon, BEH_FRIENDLY, &you,
