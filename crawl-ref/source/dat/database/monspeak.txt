@@ -188,7 +188,7 @@ VISUAL:@The_monster@ grins evilly.
 
 @The_monster@ screams @at_foe@, "One false step and I'll kill you."
 
-@The_monster@ screams @at_foe@, "I'm going to kill you!  Now!"
+@The_monster@ screams @at_foe@, "I'm going to kill you! Now!"
 
 @The_monster@ shouts, "You will never get the Orb!" @player_only@
 
@@ -343,13 +343,13 @@ VISUAL:@The_monster@ blows smoke rings.
 %%%%
 _friendly_imp_rare_
 
-@The_monster@ says, "Uh-oh!  Wait.  OK."
+@The_monster@ says, "Uh-oh! Wait. OK."
 
 @The_monster@ says, "You're so much nicer than my last boss."
 
-@The_monster@ shouts, "Stay back!  It could be a @ploy@!"
+@The_monster@ shouts, "Stay back! It could be a @ploy@!"
 
-@The_monster@ shouts, "Over here!  I found it!"
+@The_monster@ shouts, "Over here! I found it!"
 
 @The_monster@ says, "Just tell me who NOT to kill."
 
@@ -536,7 +536,7 @@ VISUAL:@The_monster@ looks very confused.
 
 @The_monster@ giggles crazily.
 
-@The_monster@ screams, "@player_name@!  What's going on?!"
+@The_monster@ screams, "@player_name@! What's going on?!"
 
 @The_monster@ prays for help.
 
@@ -550,7 +550,7 @@ _friendly_confused_rare_
 
 @The_monster@ sings.
 
-@The_monster@ screams, "@player_name@!  Help!"
+@The_monster@ screams, "@player_name@! Help!"
 
 @The_monster@ says, "@player_name@, I'm a little confused!"
 ## END friendly confused humanoid ##
@@ -608,11 +608,11 @@ VISUAL:@The_monster@ shakes.
 
 @The_monster@ asks @foe,@ "Who are you?"
 
-@The_monster@ asks @foe,@ "What the hell are we doing here?  Hmm, I see..."
+@The_monster@ asks @foe,@ "What the hell are we doing here? Hmm, I see..."
 
 @The_monster@ cries, "My head! MY HEAD!!!"
 
-@The_monster@ screams, "NO!  I can't bear this much noise."
+@The_monster@ screams, "NO! I can't bear this much noise."
 
 ## END confused humanoid ##
 %%%%
@@ -632,13 +632,13 @@ VISUAL:@The_monster@ tries to hide somewhere.
 
 @The_monster@ shouts, "Cover me!"
 
-@The_monster@ screams, "@player_name@!  Help me!"
+@The_monster@ screams, "@player_name@! Help me!"
 
 @The_monster@ prays for help.
 %%%%
 _friendly_fleeing_rare_
 
-@The_monster@ @shouts@, "WAIT FOR ME, @player_name@!  Could you help me?"
+@The_monster@ @shouts@, "WAIT FOR ME, @player_name@! Could you help me?"
 
 @The_monster@ cries, "Don't forget your friends!"
 
@@ -668,7 +668,7 @@ VISUAL:@The_monster@ @almost@ stumbles in trying to escape.
 
 @The_monster@ @mutters@, "Of all the rotten luck!"
 
-@The_monster@ @moans@, "Oh dear!  Oh dear!"
+@The_monster@ @moans@, "Oh dear! Oh dear!"
 
 @The_monster@ @begs@ @to_foe@, "Please don't kill me!"
 
@@ -684,11 +684,11 @@ _fleeing_humanoid_rare_
 
 @The_monster@ @mutters@, "Damn and blast!"
 
-@The_monster@ shouts @at_foe@, "No!  I'll never do that again!"
+@The_monster@ shouts @at_foe@, "No! I'll never do that again!"
 
 @The_monster@ @blubbers@, "@Mommeee@!"
 
-@The_monster@ @begs@ @to_foe@, "Please!  I have a lot of children..."
+@The_monster@ @begs@ @to_foe@, "Please! I have a lot of children..."
 
 VISUAL:@The_monster@ looks really @rattled@.
 ## END fleeing humanoid ##
@@ -727,7 +727,7 @@ w:1
 %%%%
 _friendly_humanoid_common_
 
-@The_monster@ yells, "Run!  I'll cover you!"
+@The_monster@ yells, "Run! I'll cover you!"
 
 @The_monster@ shouts @at_foe@, "Die, monster!"
 
@@ -751,9 +751,9 @@ _friendly_humanoid_medium_
 
 @The_monster@ says, "@player_name@, you are my only friend."
 
-@The_monster@ shouts, "No mercy!  Kill them all!"
+@The_monster@ shouts, "No mercy! Kill them all!"
 
-@The_monster@ says, "Don't worry.  I'm here with you."
+@The_monster@ says, "Don't worry. I'm here with you."
 
 VISUAL:@The_monster@ smiles happily.
 
@@ -1378,7 +1378,7 @@ WARN:You feel cold.
 
 @The_monster@ whispers, "The ORB doesn't exist." @player_only@
 
-@The_monster@ @wails@, "They lied to you.  The Dungeon just goes down and down forever."
+@The_monster@ @wails@, "They lied to you. The Dungeon just goes down and down forever."
 
 @The_monster@ @wails@, "You will join me soon!"
 
@@ -1397,7 +1397,7 @@ VISUAL:@The_monster@ grins evilly.
 
 @The_monster@ @wails@, "I was like you once."
 
-@The_monster@ @wails@, "Very impressive.  But it won't help.  Nothing will."
+@The_monster@ @wails@, "Very impressive. But it won't help. Nothing will."
 
 @The_monster@ @wails@, "I have seen your future, and it is all used up."
 
@@ -1405,7 +1405,7 @@ VISUAL:@The_monster@ grins evilly.
 
 @The_monster@ screams, "I'll kill anyone who wants the ORB!" @player_only@
 
-@The_monster@ screams @at_foe@, "Don't try to defend!  You have no chance!"
+@The_monster@ screams @at_foe@, "Don't try to defend! You have no chance!"
 
 @The_monster@ screams, "Zot is a myth, the ORB is a fable, you'll soon be a tale!" @player_only@
 
@@ -1420,7 +1420,7 @@ VISUAL:@The_monster@ grins evilly.
 
 @The_monster@ whispers, "They're coming for you..."
 
-@The_monster@ whispers, "Trust me.  Just give in."
+@The_monster@ whispers, "Trust me. Just give in."
 
 %%%%
 _player_ghost_rare_
@@ -1430,7 +1430,7 @@ _player_ghost_rare_
 
 @The_monster@ whispers, "Everlasting silence awaits you."
 
-@The_monster@ whispers, "Death doesn't hurt.  What you feel is life."
+@The_monster@ whispers, "Death doesn't hurt. What you feel is life."
 
 @The_monster@ whispers, "You will understand me better in a moment."
 
@@ -1501,13 +1501,13 @@ _Agnes_common_
 
 VISUAL:@The_monster@ grins evilly.
 
-@The_monster@ says @to_foe@, "I need a new robe.  I'll buy it with your money."
+@The_monster@ says @to_foe@, "I need a new robe. I'll buy it with your money."
 
 @The_monster@ says @to_foe@, "How can you wear that ugly dress?"
 
 @The_monster@ screams @at_foe@, "Give me all your money!"
 
-@The_monster@ screams @at_foe@, "All treasure is mine!  Mine!"
+@The_monster@ screams @at_foe@, "All treasure is mine! Mine!"
 
 @The_monster@ screams @at_foe@, "Die, beast!"
 %%%%
@@ -1517,9 +1517,9 @@ _Agnes_rare_
 
 @The_monster@ screams @at_foe@, "Give me everything and get away!"
 
-@The_monster@ screams @at_foe@, "If you give me all your money I'll let you live.  Maybe."
+@The_monster@ screams @at_foe@, "If you give me all your money I'll let you live. Maybe."
 
-@The_monster@ screams @at_foe@, "I want your rings!  And amulets!  And... EVERYTHING!"
+@The_monster@ screams @at_foe@, "I want your rings! And amulets! And... EVERYTHING!"
 
 @The_monster@ screams, "I hate dirty adventurers like you!" @player_only@
 
@@ -1594,7 +1594,7 @@ VISUAL:@The_monster@ looks angry.
 
 @The_monster@ screams @at_foe@, "I'm much stronger than you!"
 
-@The_monster@ screams @at_foe@, "I'll eat your brain!  And then I'll vomit it back up!"
+@The_monster@ screams @at_foe@, "I'll eat your brain! And then I'll vomit it back up!"
 
 @The_monster@ screams @at_foe@, "You are the ugliest creature I've ever seen!"
 
@@ -1611,13 +1611,13 @@ _Blork_rare_
 
 @The_monster@ screams @at_foe@, "I'll break your arms!"
 
-@The_monster@ screams @at_foe@, "I'll crush all your ribs!  One by one!"
+@The_monster@ screams @at_foe@, "I'll crush all your ribs! One by one!"
 
 @The_monster@ screams @at_foe@, "I'll make a cloak from your skin!"
 
 @The_monster@ screams @at_foe@, "I'll decorate my home with your organs!"
 
-@The_monster@ screams @at_foe@, "I'll drink your blood!  Soon!"
+@The_monster@ screams @at_foe@, "I'll drink your blood! Soon!"
 ## END Blork the orc ##
 %%%%
 ############ BORIS ### An ancient lich with the nasty habit of coming back
@@ -1668,19 +1668,19 @@ _Boris_medium_
 
 @The_monster@ says @to_foe@, "You can't imagine my power."
 
-@The_monster@ says, "Orb?  You want the Orb?  You'll never get it." @player_only@
+@The_monster@ says, "Orb? You want the Orb? You'll never get it." @player_only@
 
 @The_monster@ says @to_foe@, "My power is unlimited."
 
-@The_monster@ says @to_foe@, "You can't kill me.  I'm immortal."
+@The_monster@ says @to_foe@, "You can't kill me. I'm immortal."
 
-@The_monster@ says @to_foe@, "I know the secret of eternal life.  Do you?"
+@The_monster@ says @to_foe@, "I know the secret of eternal life. Do you?"
 
-@The_monster@ says @to_foe@, "I know your future.  Your future is death."
+@The_monster@ says @to_foe@, "I know your future. Your future is death."
 
-@The_monster@ says @to_foe@, "Who wants to live forever?  Me."
+@The_monster@ says @to_foe@, "Who wants to live forever? Me."
 
-@The_monster@ says @to_foe@, "There's only one solution for you.  To die."
+@The_monster@ says @to_foe@, "There's only one solution for you. To die."
 
 @The_monster@ says @to_foe@, "You can never win."
 %%%%
@@ -1690,7 +1690,7 @@ _Boris_rare_
 
 @The_monster@ says @to_foe@, "The world, the flesh and the devil."
 
-@The_monster@ says "Magic.  You know nothing about it."
+@The_monster@ says "Magic. You know nothing about it."
 
 @The_monster@ says @to_foe@, "I'll be back."
 
@@ -1717,7 +1717,7 @@ _Boris_return_common_
 %%%%
 _Boris_return_rare_
 
-@The_monster@ says @to_foe@, "Kill me?  I think not!"
+@The_monster@ says @to_foe@, "Kill me? I think not!"
 
 @The_monster@ says @to_foe@, "You cannot defeat me so easily!"
 
@@ -3394,7 +3394,7 @@ VISUAL:@The_monster@ looks angry.
 
 @The_monster@ says @to_foe@, "I love to fight, but killing is better."
 
-@The_monster@ says @to_foe@, "Fast and perfect.  Such is my way of killing."
+@The_monster@ says @to_foe@, "Fast and perfect. Such is my way of killing."
 
 @The_monster@ screams @at_foe@, "Die!"
 
@@ -3408,7 +3408,7 @@ _Erica_rare_
 
 @The_monster@ screams @at_foe@, "You'll never get it!"
 
-@The_monster@ screams @at_foe@, "Coming here was suicide!  For you!"
+@The_monster@ screams @at_foe@, "Coming here was suicide! For you!"
 ## END Erica ##
 %%%%
 ############ EROLCHA ### An ugly ogre capable of casting
@@ -3554,7 +3554,7 @@ VISUAL:@The_monster@ looks for a scalpel.
 
 VISUAL:@The_monster@ throws something at @foe@.
 
-@The_monster@ says @to_foe@, "You've got nice eyes.  I could use them."
+@The_monster@ says @to_foe@, "You've got nice eyes. I could use them."
 
 @The_monster@ says @to_foe@, "I only need a few of your organs!"
 
@@ -3576,9 +3576,9 @@ _Francis_rare_
 
 @The_monster@ says @to_foe@, "I want you in my laboratory!"
 
-@The_monster@ says @to_foe@, "What about your heart?  Do you need it?"
+@The_monster@ says @to_foe@, "What about your heart? Do you need it?"
 
-@The_monster@ screams @at_foe@, "Don't move!  I want to cut off your ear!"
+@The_monster@ screams @at_foe@, "Don't move! I want to cut off your ear!"
 
 @The_monster@ says @to_foe@, "Say, could I borrow your tongue for a while?"
 
@@ -3778,13 +3778,13 @@ _Harold_common_
 
 VISUAL:@The_monster@ looks nervous.
 
-@The_monster@ says @to_foe@, "Stand still.  I'm trying to kill you."
+@The_monster@ says @to_foe@, "Stand still. I'm trying to kill you."
 
 @The_monster@ screams @at_foe@, "Hurry up!"
 
 @The_monster@ screams @at_foe@, "Die!"
 
-@The_monster@ screams @at_foe@, "DIE!  Now!"
+@The_monster@ screams @at_foe@, "DIE! Now!"
 
 @The_monster@ says @to_foe@, "Only a few hits and it's over."
 
@@ -3792,7 +3792,7 @@ VISUAL:@The_monster@ looks nervous.
 
 @The_monster@ screams @at_foe@, "Could you die a little faster?!"
 
-@The_monster@ shouts @at_foe@, "Come on!  I've got more names on my list!"
+@The_monster@ shouts @at_foe@, "Come on! I've got more names on my list!"
 %%%%
 _Harold_rare_
 
@@ -3806,7 +3806,7 @@ _Harold_rare_
 
 @The_monster@ nervously moans @at_foe@, "This is taking ages..."
 
-@The_monster@ says @to_foe@, "Mine is not to reason why.  Mine's to do, yours to die."
+@The_monster@ says @to_foe@, "Mine is not to reason why. Mine's to do, yours to die."
 ## END Harold ##
 %%%%
 ############ IJYB ### A twisted goblin
@@ -3914,7 +3914,7 @@ VISUAL:@The_monster@ grins evilly.
 
 VISUAL:@The_monster@ looks very angry.
 
-@The_monster@ shouts @at_foe@, "You're disturbing me!  I'll have to kill you!"
+@The_monster@ shouts @at_foe@, "You're disturbing me! I'll have to kill you!"
 
 SPELL:@The_monster@ gestures wildly.
 
@@ -3952,7 +3952,7 @@ VISUAL:@The_monster@ smiles happily.
 
 VISUAL:@The_monster@ tries to grin evilly.
 
-@The_monster@ says @to_foe@, "I'm happy to see you.  And I'll be happy to kill you."
+@The_monster@ says @to_foe@, "I'm happy to see you. And I'll be happy to kill you."
 
 @The_monster@ says @to_foe@, "I've waited for this moment for such a long time."
 
@@ -3964,7 +3964,7 @@ VISUAL:@The_monster@ tries to grin evilly.
 
 @The_monster@ says @to_foe@, "I'm here to kill trespassers. I like my job."
 
-@The_monster@ says @to_foe@, "You must be punished!  Or... I want to punish you!"
+@The_monster@ says @to_foe@, "You must be punished! Or... I want to punish you!"
 %%%%
 _Joseph_rare_
 
@@ -4015,7 +4015,7 @@ VISUAL:@The_monster@ looks satisfied.
 
 @The_monster@ says @to_foe@, "Really sorry, but I've got to feed my family."
 
-@The_monster@ says @to_foe@, "It's nothing personal.  I'm paid for it!"
+@The_monster@ says @to_foe@, "It's nothing personal. I'm paid for it!"
 
 @The_monster@ shouts @at_foe@, "I'll get 500 gold for your head!"
 
@@ -4027,17 +4027,17 @@ VISUAL:@The_monster@ looks satisfied.
 %%%%
 _Jozef_rare_
 
-@The_monster@ says @to_foe@, "I suppose that you are @foe_name@.  Sorry if I'm wrong."
+@The_monster@ says @to_foe@, "I suppose that you are @foe_name@. Sorry if I'm wrong."
 
-@The_monster@ asks @foe,@ "Did you write a testament?  You should."
+@The_monster@ asks @foe,@ "Did you write a testament? You should."
 
-@The_monster@ says @to_foe@, "One dead @foe_name@, 500 gold pieces.  It's in my contract."
+@The_monster@ says @to_foe@, "One dead @foe_name@, 500 gold pieces. It's in my contract."
 
-@The_monster@ says @to_foe@, "My job is sometimes very exciting.  Sometimes..."
+@The_monster@ says @to_foe@, "My job is sometimes very exciting. Sometimes..."
 
 @The_monster@ says @to_foe@, "I think I deserve my money."
 
-@The_monster@ screams @at_foe@, "Die!  I've got more contracts today."
+@The_monster@ screams @at_foe@, "Die! I've got more contracts today."
 ## END Jozef ##
 %%%%
 ############ KHUFU ### mummy emperor with delusions of godhood
@@ -4079,9 +4079,9 @@ VISUAL:@The_monster@ throws some @strange@ powder @at_foe@.
 # Kirke's potions) and in the English interjection.
 @The_monster@ whispers @to_foe@, "Not even holy moly will save you."
 
-@The_monster@ says, "Can we stop fighting?  I have some good wine for you..." @player_only@
+@The_monster@ says, "Can we stop fighting? I have some good wine for you..." @player_only@
 
-@The_monster@ shouts @at_foe@, "You pig!  I'll make you look the way you deserve."
+@The_monster@ shouts @at_foe@, "You pig! I'll make you look the way you deserve."
 
 @_wizard_common_spell_@
 @_fake_spell_effect_@
@@ -4246,9 +4246,9 @@ VISUAL:@The_monster@ looks upset.
 
 @The_monster@ screams @at_foe@, "You can't face my power!"
 
-@The_monster@ screams @at_foe@, "Give me that sword!  Immediately!"
+@The_monster@ screams @at_foe@, "Give me that sword! Immediately!"
 
-@The_monster@ screams @at_foe@, "Your life or 'Entarex'!  You must choose!"
+@The_monster@ screams @at_foe@, "Your life or 'Entarex'! You must choose!"
 
 @The_monster@ screams @at_foe@, "I want it!"
 
@@ -4414,7 +4414,7 @@ VISUAL:@The_monster@ grins evilly.
 
 VISUAL:@The_monster@ seems to say something.
 
-VISUAL:@The_monster@ says something you can't hear.  It was probably not a compliment. @player_only@
+VISUAL:@The_monster@ says something you can't hear. It was probably not a compliment. @player_only@
 ## END silenced Murray ##
 %%%%
 ############ NERGALLE ### ugly orc sorceress
@@ -4498,7 +4498,7 @@ Nikola
 
 @The_monster@ mumbles, "Hm, I wonder if you're conductive."
 %%%%
-############ NORBERT ### A skilled warrior looking for some fame.  More kills = more fame.
+############ NORBERT ### A skilled warrior looking for some fame. More kills = more fame.
 Norbert
 
 @_Norbert_common_@
@@ -4510,7 +4510,7 @@ _Norbert_common_
 
 VISUAL:@The_monster@ smiles happily.
 
-@The_monster@ asks @foe,@ "Did you write a will?  You should."
+@The_monster@ asks @foe,@ "Did you write a will? You should."
 
 @The_monster@ says @to_foe@, "I love killing ugly monsters like you."
 
@@ -4534,7 +4534,7 @@ _Norbert_rare_
 
 @The_monster@ screams @at_foe@, "I'm a hero!"
 
-@The_monster@ shouts @at_foe@, "YES!  Another notch!"
+@The_monster@ shouts @at_foe@, "YES! Another notch!"
 
 ## END Norbert ##
 %%%%
@@ -4806,7 +4806,7 @@ VISUAL:@The_monster@ cries.
 
 @The_monster@ says @to_foe@, "I'm a bad girl, but I can't do anything about it."
 
-@The_monster@ says @to_foe@, "I'm so lonely.  Only corpses are my friends."
+@The_monster@ says @to_foe@, "I'm so lonely. Only corpses are my friends."
 
 @The_monster@ says @to_foe@, "Once you're dead we can play together!"
 
@@ -4965,9 +4965,9 @@ _Rupert_rare_
 
 @The_monster@ shouts @at_foe@, "I'm a great and powerful hero!"
 
-@The_monster@ screams @at_foe@, "Get ready!  I'll kill you!  Or something like that..."
+@The_monster@ screams @at_foe@, "Get ready! I'll kill you! Or something like that..."
 
-@The_monster@ screams @at_foe@, "Red!  No, blue!"
+@The_monster@ screams @at_foe@, "Red! No, blue!"
 ## END Rupert ##
 %%%%
 ############ SAINT ROKA ### orc warlord
@@ -5098,7 +5098,7 @@ _Sonja_rare_
 
 @The_monster@ shouts @at_foe@, "Hah! Missed me again!"
 
-@The_monster@ says @to_foe@, "The Royal Ballet doesn't accept kobolds.  That's why I went into killing people."
+@The_monster@ says @to_foe@, "The Royal Ballet doesn't accept kobolds. That's why I went into killing people."
 
 @The_monster@ says @to_foe@, "If only old Madame Brzewit could see me now!"
 
@@ -5145,7 +5145,7 @@ _Terence_rare_
 
 @The_monster@ says @to_foe@, "You're history."
 
-@The_monster@ says @to_foe@, "Did you write a will?  You should..."
+@The_monster@ says @to_foe@, "Did you write a will? You should..."
 
 @The_monster@ says @to_foe@, "Time to say good-bye..."
 
@@ -5164,13 +5164,13 @@ VISUAL:@The_monster@ grins evilly.
 
 @The_monster@ howls with blood-lust.
 
-@The_monster@ says @to_foe@, "Maybe you aren't @foe_name@.  It doesn't matter."
+@The_monster@ says @to_foe@, "Maybe you aren't @foe_name@. It doesn't matter."
 
-@The_monster@ sneers @at_foe@, "Innocent?  I'll kill you anyway."
+@The_monster@ sneers @at_foe@, "Innocent? I'll kill you anyway."
 
 @The_monster@ screams @at_foe@, "Die!"
 
-@The_monster@ screams @at_foe@, "I'm going to kill you!  Now!"
+@The_monster@ screams @at_foe@, "I'm going to kill you! Now!"
 
 @The_monster@ screams @at_foe@, "Blood and destruction!"
 
@@ -5279,7 +5279,7 @@ _Xtahua_rare_
 
 @The_monster@ roars @at_foe@, "I HOPE YOU'RE TASTY!"
 
-@The_monster@ roars, "BAH!  BLOODY ADVENTURERS." @player_only@
+@The_monster@ roars, "BAH! BLOODY ADVENTURERS." @player_only@
 ## END Xtahua ##
 
 ##########################################
@@ -5818,7 +5818,7 @@ _hostile_orc_beogh_believer_speech_common_
 
 @The_monster@ @orc_says_to_foe@, "Beogh will surely punish you for your arrogance!"
 
-@The_monster@ grunts @at_foe@, "You, the messiah?  You don't even look the part!"
+@The_monster@ grunts @at_foe@, "You, the messiah? You don't even look the part!"
 
 @The_monster@ @orc_says_to_foe@, "The messiah will not be a Hill Orc!"
 
@@ -5908,7 +5908,7 @@ w:5
 
 @The_monster@ says, "May Beogh smile on you, @player_name@."
 
-@The_monster@ shouts, "Fear not, @player_name@!  Beogh smiles on those who fall in battle!"
+@The_monster@ shouts, "Fear not, @player_name@! Beogh smiles on those who fall in battle!"
 
 @The_monster@ lets loose a series of foul curses in Beogh's name.
 

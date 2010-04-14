@@ -26,11 +26,11 @@ Once the primary guardian serpent of a legendary treasure hoard, he was disgrace
 # Uniques
 Agnes
 
-A tall and beautiful warrior, as vain as she is quick.  You can't help but notice both her exotic weapon and graceful movements.  She searches the dungeon for aesthetically pleasing objects to surround herself with.
+A tall and beautiful warrior, as vain as she is quick. You can't help but notice both her exotic weapon and graceful movements. She searches the dungeon for aesthetically pleasing objects to surround herself with.
 %%%%
 Antaeus
 
-Once a mighty and renowned Titan, his arrogance was his undoing.  Now he is corrupt and tainted, a powerful demon who lords over the frozen wastes of Cocytus.  His gigantic body seems as though it would be easily struck by your attacks; unfortunately, it also seems like it would remain unscathed by all but the strongest of them.
+Once a mighty and renowned Titan, his arrogance was his undoing. Now he is corrupt and tainted, a powerful demon who lords over the frozen wastes of Cocytus. His gigantic body seems as though it would be easily struck by your attacks; unfortunately, it also seems like it would remain unscathed by all but the strongest of them.
 %%%%
 Asmodeus
 
@@ -38,11 +38,11 @@ One of the arch-demons who dwell in the depths of Hell.
 %%%%
 Azrael
 
-A powerful, belligerent Efreet.  (Is there any other kind?)
+A powerful, belligerent Efreet. (Is there any other kind?)
 %%%%
 Blork the Orc
 
-A particularly fat and ugly orc.  He seems to have scavenged a pair of rainbow-coloured suspenders from somewhere.  They're not helping.
+A particularly fat and ugly orc. He seems to have scavenged a pair of rainbow-coloured suspenders from somewhere. They're not helping.
 %%%%
 Boris
 
@@ -62,7 +62,7 @@ The lord of the Iron City of Dis.
 %%%%
 Dissolution
 
-The Pits of Slime used to be a thriving civilization, and Dissolution was the prophet of their god.  When the city was overtaken by its current residents, only Dissolution survived, for he alone turned faithfully to the Slime God.  Dissolution become a tremendous mass of acidic ooze, yet retained his intelligence.  He is filled with hatred for anything that can hold a form.
+The Pits of Slime used to be a thriving civilization, and Dissolution was the prophet of their god. When the city was overtaken by its current residents, only Dissolution survived, for he alone turned faithfully to the Slime God. Dissolution become a tremendous mass of acidic ooze, yet retained his intelligence. He is filled with hatred for anything that can hold a form.
 %%%%
 Donald
 {{
@@ -109,7 +109,7 @@ An especially cunning ogre-mage.
 %%%%
 Eustachio
 
-An apprentice summoner with a flowing moustache.  He has funny ideas about honour.
+An apprentice summoner with a flowing moustache. He has funny ideas about honour.
 %%%%
 Frances
 
@@ -177,11 +177,11 @@ A beautiful enchantress.
 %%%%
 the Lernaean hydra
 
-An ancient, outsized serpent-like water beast that possesses numerous heads.  The poets mention more heads than vase-painters can paint, poisonous venom coming out of its eyes, and that this hydra is a guardian of an entrance to the Underworld.  What of this is true, you do not know.
+An ancient, outsized serpent-like water beast that possesses numerous heads. The poets mention more heads than vase-painters can paint, poisonous venom coming out of its eyes, and that this hydra is a guardian of an entrance to the Underworld. What of this is true, you do not know.
 %%%%
 Lom Lobon
 
-An ancient and strangely serene demon.  It regards you coldly from the huge glowing eye in the centre of its forehead.
+An ancient and strangely serene demon. It regards you coldly from the huge glowing eye in the centre of its forehead.
 %%%%
 Lorocyproca
 
@@ -271,7 +271,7 @@ A mighty crusader, far less interested in converting heathens than killing them.
 %%%%
 Saint Roka
 
-A mighty warlord.  Some orcs even say he is the Chosen One of Beogh.
+A mighty warlord. Some orcs even say he is the Chosen One of Beogh.
 %%%%
 Serpent of Hell
 
@@ -289,7 +289,7 @@ You feel a lump in the pit of your stomach.
 %%%%
 Sonja
 
-A graceful kobold assassin.  Admire her graceful pirouettes, thrill at her daring leaps!  But watch out for her knives!
+A graceful kobold assassin. Admire her graceful pirouettes, thrill at her daring leaps! But watch out for her knives!
 %%%%
 Terence
 
@@ -297,7 +297,7 @@ A mean-looking human fighter who likes to kill, and not much else.
 %%%%
 Tiamat
 
-A powerful dragon with mighty wings.  Her scales seem to shimmer and change colour as you watch.
+A powerful dragon with mighty wings. Her scales seem to shimmer and change colour as you watch.
 %%%%
 Urug
 
@@ -332,7 +332,7 @@ A lump of sickly green flesh, dripping with lethal acid.
 %%%%
 air elemental
 
-A spirit drawn from the elemental plane of air.  It exists in this world as a swirling vortex of air, often dissipating and reforming.
+A spirit drawn from the elemental plane of air. It exists in this world as a swirling vortex of air, often dissipating and reforming.
 %%%%
 alligator
 
@@ -352,7 +352,7 @@ A lich who has grown mighty over countless years.
 %%%%
 Angel
 
-A divine warrior of The Shining One, it is a towering winged figure of unnatural beauty surrounded by an aura of brilliant white light.  It appears to be weightless and quite agile while flying, despite wearing heavy armour.
+A divine warrior of The Shining One, it is a towering winged figure of unnatural beauty surrounded by an aura of brilliant white light. It appears to be weightless and quite agile while flying, despite wearing heavy armour.
 %%%%
 ant larva
 
@@ -416,7 +416,7 @@ A blue greater demon.
 %%%%
 blue devil
 
-A strange and nasty blue thing.  It looks cold.
+A strange and nasty blue thing. It looks cold.
 %%%%
 boggart
 
@@ -444,7 +444,7 @@ A viscous liquid, flowing along the floor in search of organic matter to corrode
 %%%%
 bush
 
-A woody plant that, unlike trees, can be removed even with bare hands.  It looks dry enough to be easily set on fire, and it isn't very dense so arrows are likely to go past it.
+A woody plant that, unlike trees, can be removed even with bare hands. It looks dry enough to be easily set on fire, and it isn't very dense so arrows are likely to go past it.
 %%%%
 bumblebee
 
@@ -464,7 +464,7 @@ A hybrid with the torso of a human atop the body of a large horse.
 %%%%
 centaur warrior
 
-A hybrid with the torso of a human atop the body of a large horse.  It looks strong and aggressive.
+A hybrid with the torso of a human atop the body of a large horse. It looks strong and aggressive.
 %%%%
 Chaos spawn
 
@@ -484,7 +484,7 @@ A huge animated crystal statue.
 %%%%
 curse skull
 
-A charred skull floating in the air and rotating slowly.  Mystic symbols carved into its blackened surface indicate its resistance to almost any form of attack.
+A charred skull floating in the air and rotating slowly. Mystic symbols carved into its blackened surface indicate its resistance to almost any form of attack.
 %%%%
 curse toe
 
@@ -492,7 +492,7 @@ A disembodied toe, hanging in the air and radiating an intense field of negative
 %%%%
 cyclops
 
-A giant with one eye in the centre of its forehead.  Despite their lack of binocular vision, cyclopi throw boulders with fearsome accuracy.
+A giant with one eye in the centre of its forehead. Despite their lack of binocular vision, cyclopi throw boulders with fearsome accuracy.
 %%%%
 Daeva
 
@@ -505,7 +505,7 @@ A weapon enchanted to dance through the air and attack under its own power.
 %%%%
 death cob
 
-A dreadful undead cob of maize.  Look, this one was probably a mistake.  We're sorry.
+A dreadful undead cob of maize. Look, this one was probably a mistake. We're sorry.
 %%%%
 death drake
 
@@ -521,11 +521,11 @@ A larger and beefier relative of the common dungeon yak. Its little red eyes gle
 %%%%
 deep elf annihilator
 
-This deep elf exults in conjured mayhem and destruction.  Hated by most passersby with a passion, both for the power and the precision of its destructive magic.
+This deep elf exults in conjured mayhem and destruction. Hated by most passersby with a passion, both for the power and the precision of its destructive magic.
 %%%%
 deep elf blademaster
 
-Once in a very great while, there is a deep elf that scorns magic and devotes herself to the study of the sword.  This is such a champion of the deep elves, wielding two blades with lethal grace.
+Once in a very great while, there is a deep elf that scorns magic and devotes herself to the study of the sword. This is such a champion of the deep elves, wielding two blades with lethal grace.
 %%%%
 deep elf conjurer
 
@@ -561,11 +561,11 @@ This legendary deep elf archer has devoted a lifetime to the pursuit of archery,
 %%%%
 deep elf priest
 
-This deep elf is a servant of an ancient dark god.  Deep elves are extremely hostile towards any alien outside their tribe, including deep elves from elsewhere.  The religious standings of these elves remain mysterious.
+This deep elf is a servant of an ancient dark god. Deep elves are extremely hostile towards any alien outside their tribe, including deep elves from elsewhere. The religious standings of these elves remain mysterious.
 %%%%
 deep elf soldier
 
-While not a natural habitat for most elven-kind, the deep elves managed to settle in this dreary cave.  This is a common soldier of the deep elves.
+While not a natural habitat for most elven-kind, the deep elves managed to settle in this dreary cave. This is a common soldier of the deep elves.
 %%%%
 deep elf sorcerer
 
@@ -663,7 +663,7 @@ These hovering horrors are especially loathed by wizards.
 %%%%
 fiend
 
-One of the most fearsome denizens of any Hell.  A huge and powerful demon wreathed in hellfire, with great scaly wings.
+One of the most fearsome denizens of any Hell. A huge and powerful demon wreathed in hellfire, with great scaly wings.
 %%%%
 fire elemental
 
@@ -683,7 +683,7 @@ A small dragon, puffing clouds of smoke.
 %%%%
 flaming corpse
 
-The remains of an adventurer who was burned to death, covered in unquenchable fire.  It now rushes madly through the dungeon, seeking others to ignite.
+The remains of an adventurer who was burned to death, covered in unquenchable fire. It now rushes madly through the dungeon, seeking others to ignite.
 %%%%
 flayed ghost
 
@@ -743,7 +743,7 @@ It has a lot of legs.
 %%%%
 giant cockroach
 
-A large brown cockroach.  I call him 'Gregor'.
+A large brown cockroach. I call him 'Gregor'.
 %%%%
 giant eyeball
 
@@ -755,7 +755,7 @@ It probably didn't get this big by eating little insects.
 %%%%
 giant gecko
 
-A lizard with pads on its toes allowing it to cling to walls and ceilings, and huge, sharp teeth.  It is many times larger than a normal gecko, yet its size belies its agility.  It probably expects you to be no less tasty than its previous victims have been.
+A lizard with pads on its toes allowing it to cling to walls and ceilings, and huge, sharp teeth. It is many times larger than a normal gecko, yet its size belies its agility. It probably expects you to be no less tasty than its previous victims have been.
 %%%%
 giant goldfish
 
@@ -865,7 +865,7 @@ Serpents are distinct and rare members of scaly society. They are light and swif
 %%%%
 hairy devil
 
-A small humanoid demon covered in brown hair.  Watch out - it may have fleas!
+A small humanoid demon covered in brown hair. Watch out - it may have fleas!
 %%%%
 harpy
 
@@ -901,7 +901,7 @@ A large creature with the hindquarters of a horse and the wings, head and talons
 %%%%
 hobgoblin
 
-A larger and even uglier goblin, with an even worse temper to match.  Many foolish young adventurers have underestimated the danger of crossing a hobgoblin and paid for it with their lives.
+A larger and even uglier goblin, with an even worse temper to match. Many foolish young adventurers have underestimated the danger of crossing a hobgoblin and paid for it with their lives.
 %%%%
 hog
 
@@ -909,11 +909,11 @@ A large, fat and very ugly pig.
 %%%%
 hound
 
-A fearsome hunting dog, lithe and alert.  Its master must be long gone, for it looks dishevelled, and has a lean and hungry look.
+A fearsome hunting dog, lithe and alert. Its master must be long gone, for it looks dishevelled, and has a lean and hungry look.
 %%%%
 human
 
-A remarkably nondescript person.  How odd.
+A remarkably nondescript person. How odd.
 %%%%
 hungry ghost
 
@@ -949,7 +949,7 @@ A huge lizard with great crunching jaws.
 %%%%
 imp
 
-A small, ugly minor demon.  Its fanged maw seems locked in a permanent malign grin, and its horns protrude obscenely from its scaly pate.
+A small, ugly minor demon. Its fanged maw seems locked in a permanent malign grin, and its horns protrude obscenely from its scaly pate.
 %%%%
 insubstantial wisp
 
@@ -957,7 +957,7 @@ A thin wisp of floating gas.
 %%%%
 iron devil
 
-A hideous humanoid figure with metal skin.  While it lacks magical attacks and is slow of foot, it makes up for these failings with brute strength.
+A hideous humanoid figure with metal skin. While it lacks magical attacks and is slow of foot, it makes up for these failings with brute strength.
 %%%%
 iron dragon
 
@@ -997,11 +997,11 @@ A small, powerless larva of a killer bee.
 %%%%
 Killer Klown
 
-A comical figure full of life and laughter.  It looks very happy to see you... but is there a slightly malicious cast to its features?  Is that red face paint or something altogether less pleasant?
+A comical figure full of life and laughter. It looks very happy to see you... but is there a slightly malicious cast to its features? Is that red face paint or something altogether less pleasant?
 %%%%
 kobold
 
-No one knows where kobolds originated.  Some say they were the creation of an ancient demon-god, while others think they are household spirits gone bad.  Yet another legend attributes their origin to cross breeding experiments, between dogs and humans, performed by wizards attempting to create an army with unwavering loyalty.  They retain a small amount of canine agility.  Kobolds look like small, greyish creatures with canine heads.  Whatever their origin, this one is not happy to see you.
+No one knows where kobolds originated. Some say they were the creation of an ancient demon-god, while others think they are household spirits gone bad. Yet another legend attributes their origin to cross breeding experiments, between dogs and humans, performed by wizards attempting to create an army with unwavering loyalty. They retain a small amount of canine agility. Kobolds look like small, greyish creatures with canine heads. Whatever their origin, this one is not happy to see you.
 %%%%
 kobold demonologist
 
@@ -1009,11 +1009,11 @@ A kobold who has learned to summon and direct demons.
 %%%%
 komodo dragon
 
-An enormous monitor lizard. It's more than capable of preying on large animals.  Bits of fetid and rotting flesh from its last few meals are stuck in its teeth.
+An enormous monitor lizard. It's more than capable of preying on large animals. Bits of fetid and rotting flesh from its last few meals are stuck in its teeth.
 %%%%
 kraken
 
-A gargantuan sea monster, capable of devouring entire ships.  It embraces them with its tentacles and draws them into the depths.  Fortunately, the tentacles are too big to embrace a small creature like you.  Wait, did I say "fortunately"?
+A gargantuan sea monster, capable of devouring entire ships. It embraces them with its tentacles and draws them into the depths. Fortunately, the tentacles are too big to embrace a small creature like you. Wait, did I say "fortunately"?
 %%%%
 large abomination
 
@@ -1049,11 +1049,11 @@ A vaguely humanoid blob of putrid white flesh.
 %%%%
 lich
 
-A wizard who didn't want to die, a lich is a skeletal, desiccated corpse kept alive by a mighty exercise of necromancy.  This undead creature can wield great magic and is best avoided by all but the most confident.
+A wizard who didn't want to die, a lich is a skeletal, desiccated corpse kept alive by a mighty exercise of necromancy. This undead creature can wield great magic and is best avoided by all but the most confident.
 %%%%
 lindwurm
 
-A small serpentine dragon with a pair of strong forelimbs.  Its thick scales give off an eerie green glow.
+A small serpentine dragon with a pair of strong forelimbs. Its thick scales give off an eerie green glow.
 %%%%
 manticore
 
@@ -1077,7 +1077,7 @@ A fearsome merfolk champion with a piercing gaze and a large bundle of javelins.
 %%%%
 mermaid
 
-A young woman with a fish tail in place of legs.  Mermaids love to sing and charm their audience.
+A young woman with a fish tail in place of legs. Mermaids love to sing and charm their audience.
 %%%%
 metal gargoyle
 
@@ -1141,7 +1141,7 @@ A wizard specializing in the practice of death magic.
 %%%%
 necrophage
 
-A vile undead creation of the most unholy necromancy, these creatures are made from the decaying corpses of humanoid creatures.  They exist to spread disease and decay, and gain power from the decaying corpses of other beings.
+A vile undead creation of the most unholy necromancy, these creatures are made from the decaying corpses of humanoid creatures. They exist to spread disease and decay, and gain power from the decaying corpses of other beings.
 %%%%
 neqoxec
 
@@ -1165,7 +1165,7 @@ A disgusting glob of grey sludge.
 %%%%
 orange crystal statue
 
-An intricately carved statue of glittering orange crystal.  Its eyes fix on yours with a piercing gaze.
+An intricately carved statue of glittering orange crystal. Its eyes fix on yours with a piercing gaze.
 
 It looks brittle.
 %%%%
@@ -1175,7 +1175,7 @@ A bright orange demon with a venomous stinger.
 %%%%
 orange rat
 
-A huge rat, with weird knobbly orange skin.  It glows with unholy energies.
+A huge rat, with weird knobbly orange skin. It glows with unholy energies.
 %%%%
 Orb Guardian
 
@@ -1251,7 +1251,7 @@ A large and very strong bear covered in glistening white fur.
 %%%%
 program bug
 
-A ravenous and incredibly buggy monster.  Please report its existence to the DevTeam.
+A ravenous and incredibly buggy monster. Please report its existence to the DevTeam.
 %%%%
 pulsating lump
 
@@ -1267,7 +1267,7 @@ A small twisted demon with a long, sharply pointed tail.
 %%%%
 queen ant
 
-A bloated insect, covered in thick chitinous armour.  Now you know where all those ants keep coming from!
+A bloated insect, covered in thick chitinous armour. Now you know where all those ants keep coming from!
 %%%%
 queen bee
 
@@ -1279,15 +1279,15 @@ A long and sinuous dragon, seemingly more neck and tail than anything else. Its 
 %%%%
 quokka
 
-A small marsupial.  Don't call it a rat.
+A small marsupial. Don't call it a rat.
 %%%%
 rakshasa
 
-A demon in the form of a tiger who comes to the material world in search of power and knowledge.  Rakshasas are experts in the art of illusion, and are simultaneously intelligent and cruel.
+A demon in the form of a tiger who comes to the material world in search of power and knowledge. Rakshasas are experts in the art of illusion, and are simultaneously intelligent and cruel.
 %%%%
 rat
 
-Wherever there are men, there are rats - rattus rattus.  This rat has grown large and aggressive in the pestilential dungeon environment.
+Wherever there are men, there are rats - rattus rattus. This rat has grown large and aggressive in the pestilential dungeon environment.
 %%%%
 reaper
 
@@ -1295,7 +1295,7 @@ A skeletal form wielding a giant scythe.
 %%%%
 red devil
 
-A muscular demon covered in spikes and horns.  Two short wings sprout from its shoulders.
+A muscular demon covered in spikes and horns. Two short wings sprout from its shoulders.
 %%%%
 red draconian
 
@@ -1303,15 +1303,15 @@ Before you stands a draconian.
 %%%%
 red wasp
 
-A huge red wasp with a viciously barbed stinger.  Potent paralytic poison drips from its tip.
+A huge red wasp with a viciously barbed stinger. Potent paralytic poison drips from its tip.
 %%%%
 redback
 
-A vicious black spider with a splash of red on its swollen abdomen.  Its mandibles drip with lethal poison.
+A vicious black spider with a splash of red on its swollen abdomen. Its mandibles drip with lethal poison.
 %%%%
 rock troll
 
-An enormous and very nasty-looking humanoid creature.  Its rocky hide seems to heal almost instantaneously from most wounds.
+An enormous and very nasty-looking humanoid creature. Its rocky hide seems to heal almost instantaneously from most wounds.
 %%%%
 rock worm
 
@@ -1382,11 +1382,11 @@ A disturbing creature with the power to change its form. It is very rarely obser
 %%%%
 sheep
 
-A stupid woolly animal, with murder in its eyes.  It looks surprised.
+A stupid woolly animal, with murder in its eyes. It looks surprised.
 %%%%
 shining eye
 
-A huge and strangely deformed eyeball, pulsating with light.  Beauty is certainly nowhere to be found in this beholder.
+A huge and strangely deformed eyeball, pulsating with light. Beauty is certainly nowhere to be found in this beholder.
 %%%%
 silver statue
 
@@ -1396,7 +1396,7 @@ It looks brittle.
 %%%%
 siren
 
-A young woman with a fish tail in place of legs.  Sirens are capable of casting a powerful spell over their audience.
+A young woman with a fish tail in place of legs. Sirens are capable of casting a powerful spell over their audience.
 %%%%
 sixfirhy
 
@@ -1600,7 +1600,7 @@ A large, fat mushroom.
 %%%%
 war dog
 
-A vicious dog, trained to kill.  Its neck is protected by a massive spiked collar.
+A vicious dog, trained to kill. Its neck is protected by a massive spiked collar.
 %%%%
 warg
 
@@ -1644,7 +1644,7 @@ A huge animated wood statue.
 %%%%
 worm
 
-A giant worm, glistening with slime, with unusually large teeth.  You find yourself surprised that a worm should have teeth at all.
+A giant worm, glistening with slime, with unusually large teeth. You find yourself surprised that a worm should have teeth at all.
 %%%%
 wraith
 
@@ -1652,7 +1652,7 @@ This undead spirit appears as a cloud of black mist surrounding an insubstantial
 %%%%
 wyvern
 
-A dragon-like creature with a long, sharply pointed tail.  Although smaller and less formidable than true dragons, wyverns are nonetheless a foe to be reckoned with.
+A dragon-like creature with a long, sharply pointed tail. Although smaller and less formidable than true dragons, wyverns are nonetheless a foe to be reckoned with.
 %%%%
 yak
 
