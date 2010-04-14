@@ -82,6 +82,7 @@ public:
     bool attack();
 
     int  calc_to_hit(bool random = true);
+    random_var player_calc_attack_delay();
 
     static std::string anon_name(description_level_type desc,
                                  bool actor_invisible);
@@ -175,7 +176,6 @@ private:
     int  player_aux_stat_modify_damage(int damage);
     int  player_to_hit(bool random_factor);
     void calc_player_armour_shield_tohit_penalty(bool random_factor);
-    random_var player_calc_attack_delay();
     void player_apply_attack_delay();
     int  player_apply_weapon_bonuses(int damage);
     int  player_apply_weapon_skill(int damage);

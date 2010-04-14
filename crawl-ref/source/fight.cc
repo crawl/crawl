@@ -201,6 +201,12 @@ int calc_your_to_hit( bool random_factor )
     return attk.calc_to_hit(random_factor);
 }
 
+random_var calc_your_attack_delay()
+{
+    melee_attack attk(&you, NULL);
+    return attk.player_calc_attack_delay();
+}
+
 static bool player_fights_well_unarmed(int heavy_armour_penalty)
 {
     return (you.burden_state == BS_UNENCUMBERED
