@@ -313,17 +313,13 @@ bool TilesFramework::initialise()
         return (false);
     }
 
-    m_region_tile = new DungeonRegion(m_image, m_fonts[lbl_font].font,
-                                      TILE_X, TILE_Y);
+    TileRegionInit init(m_image, m_fonts[lbl_font].font, TILE_X, TILE_Y);
+    m_region_tile = new DungeonRegion(init);
     m_region_map  = new MapRegion(Options.tile_map_pixels);
-    m_region_tab  = new TabbedRegion(m_image, m_fonts[lbl_font].font,
-                                     TILE_X, TILE_Y);
-    m_region_inv  = new InventoryRegion(m_image, m_fonts[lbl_font].font,
-                                        TILE_X, TILE_Y);
-    m_region_spl  = new SpellRegion(m_image, m_fonts[lbl_font].font,
-                                    TILE_X, TILE_Y);
-    m_region_mem  = new MemoriseRegion(m_image, m_fonts[lbl_font].font,
-                                       TILE_X, TILE_Y);
+    m_region_tab  = new TabbedRegion(init);
+    m_region_inv  = new InventoryRegion(init);
+    m_region_spl  = new SpellRegion(init);
+    m_region_mem  = new MemoriseRegion(init);
 
     m_region_tab->set_tab_region(TAB_ITEM, m_region_inv, TILEG_TAB_ITEM);
     m_region_tab->set_tab_region(TAB_SPELL, m_region_spl, TILEG_TAB_SPELL);
