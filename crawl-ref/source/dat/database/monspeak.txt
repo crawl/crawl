@@ -3175,7 +3175,7 @@ confused Duane
 
 @The_monster@ says, "Torture me, I'll never tell!"
 
-@The_monster@ whispers, "Okay, okay--the keys are--no!"
+@The_monster@ whispers, "Okay, okay - the keys are - no!"
 %%%%
 _Duane_common_
 
@@ -5208,7 +5208,7 @@ _Wayne_common_
 %%%%
 _Wayne_rare_
 
-VISUAL:@The_monster@ eyes you carefully--or perhaps drunkenly.
+VISUAL:@The_monster@ eyes you carefully - or perhaps drunkenly.
 
 @The_monster@ says, "This cannae be beer, 'tis yak urine! I want ma dwarven ale!"
 
