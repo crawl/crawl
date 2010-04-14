@@ -227,17 +227,17 @@ void Region::set_transform()
     glmanager->set_transform(&trans, &scale);
 }
 
-TileRegion::TileRegion(ImageManager* im, FontWrapper *tag_font, int tile_x, int tile_y)
+TileRegion::TileRegion(const TileRegionInit &init)
 {
-    ASSERT(im);
-    ASSERT(tag_font);
+    ASSERT(init.im);
+    ASSERT(init.tag_font);
 
-    m_image = im;
-    dx = tile_x;
-    dy = tile_y;
-    m_tag_font = tag_font;
+    m_image = init.im;
+    dx = init.tile_x;
+    dy = init.tile_y;
+    m_tag_font = init.tag_font;
 
-    // To quite Valgrind
+    // To quiet Valgrind.
     m_dirty = true;
 }
 
@@ -245,17 +245,16 @@ TileRegion::~TileRegion()
 {
 }
 
-DungeonRegion::DungeonRegion(ImageManager* im, FontWrapper *tag_font,
-                             int tile_x, int tile_y) :
-    TileRegion(im, tag_font, tile_x, tile_y),
+DungeonRegion::DungeonRegion(const TileRegionInit &init) :
+    TileRegion(init),
     m_cx_to_gx(0),
     m_cy_to_gy(0),
-    m_buf_dngn(&im->m_textures[TEX_DUNGEON]),
-    m_buf_doll(&im->m_textures[TEX_PLAYER], TILEP_MASK_SUBMERGED, 18, 16,
+    m_buf_dngn(&init.im->m_textures[TEX_DUNGEON]),
+    m_buf_doll(&init.im->m_textures[TEX_PLAYER], TILEP_MASK_SUBMERGED, 18, 16,
                Options.tile_better_transparency),
-    m_buf_main_trans(&im->m_textures[TEX_DEFAULT], TILE_MASK_SUBMERGED, 18, 16,
+    m_buf_main_trans(&init.im->m_textures[TEX_DEFAULT], TILE_MASK_SUBMERGED, 18, 16,
                      Options.tile_better_transparency),
-    m_buf_main(&im->m_textures[TEX_DEFAULT])
+    m_buf_main(&init.im->m_textures[TEX_DEFAULT])
 {
     for (int i = 0; i < CURSOR_MAX; i++)
         m_cursor[i] = NO_CURSOR;
@@ -2407,14 +2406,13 @@ bool InventoryTile::empty() const
     return (idx == -1);
 }
 
-GridRegion::GridRegion(ImageManager *im, FontWrapper *tag_font,
-                       int tile_x, int tile_y) :
-    TileRegion(im, tag_font, tile_x, tile_y),
+GridRegion::GridRegion(const TileRegionInit &init) :
+    TileRegion(init),
     m_flavour(NULL),
     m_cursor(NO_CURSOR),
-    m_buf_dngn(&im->m_textures[TEX_DUNGEON]),
-    m_buf_spells(&im->m_textures[TEX_GUI]),
-    m_buf_main(&im->m_textures[TEX_DEFAULT])
+    m_buf_dngn(&init.im->m_textures[TEX_DUNGEON]),
+    m_buf_spells(&init.im->m_textures[TEX_GUI]),
+    m_buf_main(&init.im->m_textures[TEX_DEFAULT])
 
 {
 }
@@ -2577,9 +2575,7 @@ void GridRegion::draw_number(int x, int y, int num)
     add_quad_char('0' + c1, x, y, offset_x, offset_y);
 }
 
-SpellRegion::SpellRegion(ImageManager* im, FontWrapper *tag_font,
-                         int tile_x, int tile_y) :
-    GridRegion(im, tag_font, tile_x, tile_y)
+SpellRegion::SpellRegion(const TileRegionInit &init) : GridRegion(init)
 {
     memorise = false;
 }
@@ -2804,9 +2800,7 @@ void SpellRegion::update()
     }
 }
 
-MemoriseRegion::MemoriseRegion(ImageManager* im, FontWrapper *tag_font,
-                         int tile_x, int tile_y) :
-    SpellRegion(im, tag_font, tile_x, tile_y)
+MemoriseRegion::MemoriseRegion(const TileRegionInit &init) : SpellRegion(init)
 {
     memorise = true;
 }
@@ -2937,9 +2931,7 @@ void MemoriseRegion::update()
     }
 }
 
-InventoryRegion::InventoryRegion(ImageManager* im, FontWrapper *tag_font,
-                                 int tile_x, int tile_y) :
-    GridRegion(im, tag_font, tile_x, tile_y)
+InventoryRegion::InventoryRegion(const TileRegionInit &init) : GridRegion(init)
 {
 }
 
@@ -3707,12 +3699,11 @@ void InventoryRegion::update()
     }
 }
 
-TabbedRegion::TabbedRegion(ImageManager *im, FontWrapper *tag_font,
-                           int tile_x, int tile_y) :
-    GridRegion(im, tag_font, tile_x, tile_y),
+TabbedRegion::TabbedRegion(const TileRegionInit &init) :
+    GridRegion(init),
     m_active(0),
     m_mouse_tab(-1),
-    m_buf_gui(&im->m_textures[TEX_GUI])
+    m_buf_gui(&init.im->m_textures[TEX_GUI])
 {
 
 }

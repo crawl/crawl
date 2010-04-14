@@ -32,6 +32,20 @@ public:
     FixedVector<TilesTexture, TEX_MAX> m_textures;
 };
 
+// A convenience class for holding all the data that TileRegion and
+// derived classes need in their constructors.
+class TileRegionInit
+{
+public:
+    TileRegionInit(ImageManager *_im, FontWrapper *_font, int _tx, int _ty) :
+        im(_im), tag_font(_font), tile_x(_tx), tile_y(_ty) { }
+
+    ImageManager *im;
+    FontWrapper *tag_font;
+    int tile_x;
+    int tile_y;
+};
+
 // Windows and internal regions (text, dungeon, map, etc.)
 struct MouseEvent;
 
@@ -257,8 +271,7 @@ protected:
 class TileRegion : public Region
 {
 public:
-    TileRegion(ImageManager *im, FontWrapper *tag_font,
-               int tile_x, int tile_y);
+    TileRegion(const TileRegionInit &init);
     ~TileRegion();
 
 protected:
@@ -276,8 +289,7 @@ struct TextTag
 class DungeonRegion : public TileRegion
 {
 public:
-    DungeonRegion(ImageManager *im, FontWrapper *tag_font,
-                  int tile_x, int tile_y);
+    DungeonRegion(const TileRegionInit &init);
     virtual ~DungeonRegion();
 
     virtual void render();
@@ -305,6 +317,7 @@ protected:
     void pack_mcache(mcache_entry *entry, int x, int y, bool submerged);
     void pack_player(int x, int y, bool submerged);
     void pack_foreground(unsigned int bg, unsigned int fg, int x, int y);
+    void pack_fg_flags(unsigned int bg, unsigned int fg, int x, int y);
     void pack_doll(const dolls_data &doll, int x, int y, bool submerged, bool ghost);
     void pack_cursor(cursor_type type, unsigned int tile);
     void pack_buffers();
@@ -357,7 +370,7 @@ public:
 class GridRegion : public TileRegion
 {
 public:
-    GridRegion(ImageManager *im, FontWrapper *tag_font, int tile_x, int tile_y);
+    GridRegion(const TileRegionInit &init);
     virtual ~GridRegion();
 
     virtual void clear();
@@ -396,8 +409,7 @@ protected:
 class InventoryRegion : public GridRegion
 {
 public:
-    InventoryRegion(ImageManager *im, FontWrapper *tag_font,
-                    int tile_x, int tile_y);
+    InventoryRegion(const TileRegionInit &init);
 
     virtual void update();
     virtual int handle_mouse(MouseEvent &event);
@@ -416,8 +428,7 @@ protected:
 class SpellRegion : public GridRegion
 {
 public:
-    SpellRegion(ImageManager *im, FontWrapper *tag_font,
-                int tile_x, int tile_y);
+    SpellRegion(const TileRegionInit &init);
 
     virtual void update();
     virtual int handle_mouse(MouseEvent &event);
@@ -439,8 +450,7 @@ protected:
 class MemoriseRegion : public SpellRegion
 {
 public:
-    MemoriseRegion(ImageManager *im, FontWrapper *tag_font,
-                   int tile_x, int tile_y);
+    MemoriseRegion(const TileRegionInit &init);
 
     virtual void update();
     virtual int handle_mouse(MouseEvent &event);
@@ -458,8 +468,7 @@ protected:
 class TabbedRegion : public GridRegion
 {
 public:
-    TabbedRegion(ImageManager *im, FontWrapper *tag_font,
-                 int tile_x, int tile_y);
+    TabbedRegion(const TileRegionInit &init);
 
     virtual ~TabbedRegion();
 
