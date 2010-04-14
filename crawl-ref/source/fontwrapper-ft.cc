@@ -8,6 +8,7 @@
 
 #include "defines.h"
 #include "files.h"
+#include "format.h"
 #include "fontwrapper-ft.h"
 #include "glwrapper.h"
 #include "tilebuf.h"
