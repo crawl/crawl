@@ -719,8 +719,11 @@ static bool _can_pacify_monster(const monsters *mon, const int healed)
 
     // I was thinking of jellies when I wrote this, but maybe we shouldn't
     // exclude zombies and such... (jpeg)
-    if (mons_intel(mon) <= I_PLANT) // no self-awareness
+    if (mons_intel(mon) <= I_PLANT // no self-awareness
+        || mon->type == MONS_KRAKEN_TENTACLE) // body part
+    {
         return (false);
+    }
 
     const mon_holy_type holiness = mon->holiness();
 
