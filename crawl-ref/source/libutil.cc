@@ -447,10 +447,9 @@ std::string pluralise(const std::string &name,
         // mage -> magi
         return name.substr(0, name.length() - 1) + "i";
     }
-    else if (ends_with(name, "sheep") || ends_with(name, "manes")
-              || ends_with(name, "fish") || ends_with(name, "folk"))
+    else if (ends_with(name, "sheep") || ends_with(name, "fish")
+             || ends_with(name, "folk"))
     {
-        // Maybe we should generalise 'manes' to ends_with("es")?
         return name;
     }
     else if (ends_with(name, "ch") || ends_with(name, "sh")
