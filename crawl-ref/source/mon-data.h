@@ -3846,7 +3846,7 @@ static monsterentry mondata[] = {
 {
     MONS_SHADOW_IMP, '5', MAGENTA, "shadow imp",
     M_SEE_INVIS | M_SPELLCASTER | M_SPEAKS,
-    mrd(MR_RES_COLD, 2) | MR_RES_POISON,
+    MR_RES_POISON | mrd(MR_RES_COLD, 2),
     0, 11, MONS_IMP, MONS_SHADOW_IMP, MH_DEMONIC, -3,
     { {AT_HIT, AF_PLAIN, 6}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 2, 3, 5, 0 },
