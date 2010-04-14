@@ -3759,7 +3759,7 @@ static monsterentry mondata[] = {
 // note: these things regenerate
 {
     MONS_IMP, '5', RED, "imp",
-    M_SEE_INVIS | M_SPEAKS | M_SPECIAL_ABILITY,
+    M_SPEAKS | M_SPECIAL_ABILITY,
     MR_RES_POISON | MR_RES_HELLFIRE | MR_VUL_COLD,
     0, 13, MONS_IMP, MONS_IMP, MH_DEMONIC, -9,
     { {AT_HIT, AF_PLAIN, 4}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
