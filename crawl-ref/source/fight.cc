@@ -200,9 +200,18 @@ int calc_your_to_hit( bool random_factor )
     return attk.calc_to_hit(random_factor);
 }
 
-int calc_your_attack_delay(random_type rand)
+int calc_your_attack_delay(random_type rand, const item_def* weapon)
 {
-    melee_attack attk(&you, NULL);
+    // XXX: Ugly ugly. Note that despite using a copy of "you", the
+    // melee attack code accesses the real "you" anyway.
+    player copy(you);
+    if (weapon)
+    {
+        copy.inv[0] = *weapon;
+        copy.equip[EQ_WEAPON] = 0;
+        copy.melded[EQ_WEAPON] = false;
+    }
+    melee_attack attk(&copy, NULL);
     return attk.player_calc_attack_delay(rand);
 }
 
