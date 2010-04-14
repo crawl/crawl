@@ -466,10 +466,12 @@ bool cast_call_imp(int pow, god_type god)
 {
     bool success = false;
 
-    monster_type mon = (one_chance_in(3)) ? MONS_WHITE_IMP :
-                       (one_chance_in(6)) ? MONS_SHADOW_IMP :
-                       (one_chance_in(9)) ? MONS_IRON_IMP
-                                          : MONS_IMP;
+    monster_type mon = MONS_PROGRAM_BUG;
+
+    if (random2(pow) >= 24 || one_chance_in(6))
+        mon = one_chance_in(3) ? MONS_IRON_IMP : MONS_SHADOW_IMP;
+    else
+        mon = one_chance_in(3) ? MONS_WHITE_IMP : MONS_IMP;
 
     const int dur = std::min(2 + (random2(pow) / 4), 6);
 
