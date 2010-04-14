@@ -2,7 +2,6 @@
 #define MELEE_ATTACK_H
 
 #include "artefact.h"
-#include "random-enum.h"
 
 class melee_attack
 {
@@ -82,8 +81,6 @@ public:
     bool attack();
 
     int  calc_to_hit(bool random = true);
-    int  player_calc_attack_delay(random_type random = R_RANDOM,
-                                  int scale = 1);
 
     static std::string anon_name(description_level_type desc,
                                  bool actor_invisible);

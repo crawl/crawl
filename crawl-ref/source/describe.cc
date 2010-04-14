@@ -710,20 +710,7 @@ void append_weapon_stats(std::string &description, const item_def &item)
 
     description += "Base attack delay: ";
     _append_value(description, property( item, PWPN_SPEED ) * 10, false);
-    description += "%";
-
-#ifdef WIZARD
-    if (!you.wizard)
-        return;
-
-    description += "\nYour attack delay: ";
-    _append_value(description, calc_your_attack_delay(R_EXPECTED, 10, &item),
-                  false);
-    description += "% (";
-    _append_value(description, calc_your_attack_delay(R_MAXIMUM, 10, &item),
-                  false);
-    description += "% max)";
-#endif
+   description += "%";
 }
 
 //---------------------------------------------------------------
