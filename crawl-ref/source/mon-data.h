@@ -3785,7 +3785,7 @@ static monsterentry mondata[] = {
 {
     MONS_WHITE_IMP, '5', WHITE, "white imp",
     M_SPELLCASTER | M_SPEAKS,
-    mrd(MR_RES_COLD, 2),
+    MR_RES_POISON | mrd(MR_RES_COLD, 2) | MR_VUL_FIRE,
     0, 10, MONS_IMP, MONS_WHITE_IMP, MH_DEMONIC, -3,
     { {AT_HIT, AF_COLD, 4}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 2, 3, 5, 0 },
