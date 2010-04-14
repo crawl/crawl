@@ -3485,7 +3485,7 @@ VISUAL:@The_monster@ twirls @possessive@ moustache.
 
 SPELL:@The_monster@ calls on the powers of Hell!
 
-@The_monster@ brags, "I can call spirits from the vast deeps."
+@The_monster@ brags, "I can call spirits from the vasty deep."
 ## END Eustachio ##
 %%%%
 ############ FRANCES ### A warrior who bested a Pandemonium Lord
