@@ -289,8 +289,8 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     // Book of Callings
     {SPELL_SUMMON_SMALL_MAMMALS,
      SPELL_STICKS_TO_SNAKES,
-     SPELL_CALL_CANINE_FAMILIAR,
      SPELL_CALL_IMP,
+     SPELL_CALL_CANINE_FAMILIAR,
      SPELL_SUMMON_SCORPIONS,
      SPELL_SUMMON_ICE_BEAST,
      SPELL_NO_SPELL,
@@ -552,9 +552,9 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      },
 
     // Book of Demonology - Vehumet special
-    {SPELL_ABJURATION,
+    {SPELL_CALL_IMP,
+     SPELL_ABJURATION,
      SPELL_RECALL,
-     SPELL_CALL_IMP,
      SPELL_SUMMON_DEMON,
      SPELL_DEMONIC_HORDE,
      SPELL_SUMMON_GREATER_DEMON,
@@ -719,9 +719,9 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      },
 
     // Rod of demonology
-    {SPELL_ABJURATION,
+    {SPELL_CALL_IMP,
+     SPELL_ABJURATION,
      SPELL_RECALL,
-     SPELL_CALL_IMP,
      SPELL_SUMMON_DEMON,
      SPELL_NO_SPELL,
      SPELL_NO_SPELL,

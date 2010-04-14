@@ -875,7 +875,7 @@
     SPELL_CALL_IMP, "Call Imp",
      SPTYP_SUMMONING,
      SPFLAG_UNHOLY | SPFLAG_BATTLE,
-     3,
+     2,
      200,
      -1, -1,
      0,
