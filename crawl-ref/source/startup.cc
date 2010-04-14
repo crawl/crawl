@@ -22,6 +22,7 @@
 #include "exclude.h"
 #include "files.h"
 #include "food.h"
+#include "jobs.h"
 #include "lev-pand.h"
 #include "macro.h"
 #include "maps.h"
@@ -50,7 +51,9 @@
 #include "view.h"
 #include "viewchar.h"
 
-#include "jobs.h"
+#ifdef USE_TILE
+#include "tilereg.h"
+#endif
 
 // Initialise a whole lot of stuff...
 void _initialize()

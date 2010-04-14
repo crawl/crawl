@@ -134,4 +134,18 @@ inline bool TilesTexture::get_coords(int idx, int ofs_x, int ofs_y,
     return (true);
 }
 
+class ImageManager
+{
+public:
+    ImageManager();
+    virtual ~ImageManager();
+
+    bool load_textures(bool need_mips);
+    bool load_item_texture();
+    void unload_textures();
+
+    static const char *filenames[TEX_MAX];
+    FixedVector<TilesTexture, TEX_MAX> m_textures;
+};
+
 #endif

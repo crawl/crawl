@@ -7,6 +7,7 @@
 #define TILEFONT_H
 
 #include "externs.h"
+#include "tilebuf.h"
 #include "tiletex.h"
 
 extern const VColour term_colours[MAX_TERM_COLOUR];

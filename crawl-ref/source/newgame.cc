@@ -29,6 +29,10 @@
 #include "stuff.h"
 #include "tutorial.h"
 
+#ifdef USE_TILE
+#include "tilereg.h"
+#endif
+
 static bool _choose_weapon(newgame_def* ng);
 static bool _choose_book(newgame_def* ng, newgame_def* ng_choice);
 static bool _choose_god(newgame_def* ng);

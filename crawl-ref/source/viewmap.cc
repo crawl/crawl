@@ -35,6 +35,10 @@
 #include "viewchar.h"
 #include "viewgeom.h"
 
+#ifdef USE_TILE
+#include "tilereg.h"
+#endif
+
 unsigned get_sightmap_char(dungeon_feature_type feat)
 {
     return (get_feature_def(feat).symbol);

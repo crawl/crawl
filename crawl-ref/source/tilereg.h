@@ -17,20 +17,7 @@
 // Forward declare
 class PrecisionMenu;
 class mcache_entry;
-
-class ImageManager
-{
-public:
-    ImageManager();
-    virtual ~ImageManager();
-
-    bool load_textures(bool need_mips);
-    bool load_item_texture();
-    void unload_textures();
-
-    static const char *filenames[TEX_MAX];
-    FixedVector<TilesTexture, TEX_MAX> m_textures;
-};
+class ImageManager;
 
 // A convenience class for holding all the data that TileRegion and
 // derived classes need in their constructors.

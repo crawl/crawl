@@ -9,7 +9,29 @@
 #define TILESDL_H
 
 #include "externs.h"
-#include "tilereg.h"
+#include "tiletex.h"
+
+class Region;
+class CRTRegion;
+class CRTRegionSingleSelect;
+class MenuRegion;
+class TileRegion;
+class DungeonRegion;
+class GridRegion;
+class InventoryRegion;
+class SpellRegion;
+class MemoriseRegion;
+class ActorRegion;
+class MonsterRegion;
+class ActorRegion;
+class MonsterRegion;
+class TabbedRegion;
+class MapRegion;
+class ControlRegion;
+class TitleRegion;
+class DollEditRegion;
+class StatRegion;
+class MessageRegion;
 
 enum key_mod
 {

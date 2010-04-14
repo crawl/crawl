@@ -23,6 +23,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "tiles.h"
+#include "tilereg.h"
 #include "tilesdl.h"
 #include "travel.h"
 #include "view.h"

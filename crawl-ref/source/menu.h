@@ -16,6 +16,10 @@
 #include "defines.h"
 #include "libutil.h"
 
+#ifdef USE_TILE
+#include "tilebuf.h"
+#endif
+
 class formatted_string;
 
 enum MenuEntryLevel
