@@ -3821,7 +3821,7 @@ static monsterentry mondata[] = {
 {
     MONS_IRON_IMP, '5', CYAN, "iron imp",
     M_SPEAKS,
-    MR_RES_ELEC | MR_RES_HELLFIRE | MR_RES_COLD | MR_RES_POISON,
+    MR_RES_POISON | MR_RES_ELEC | MR_RES_HELLFIRE | MR_RES_COLD,
     0, 14, MONS_IRON_IMP, MONS_IRON_IMP, MH_DEMONIC, -3,
     { {AT_HIT, AF_PLAIN, 5}, {AT_HIT, AF_PLAIN, 3}, {AT_HIT, AF_PLAIN, 3},
        AT_NO_ATK },
@@ -3958,7 +3958,7 @@ static monsterentry mondata[] = {
 {
     MONS_IRON_DEVIL, '3', CYAN, "iron devil",
     M_NO_FLAGS,
-    MR_RES_ELEC | MR_RES_POISON | MR_RES_HELLFIRE | MR_RES_COLD,
+    MR_RES_POISON | MR_RES_ELEC | MR_RES_HELLFIRE | MR_RES_COLD,
     0, 10, MONS_IRON_DEVIL, MONS_IRON_DEVIL, MH_DEMONIC, -6,
     { {AT_HIT, AF_PLAIN, 14}, {AT_HIT, AF_PLAIN, 14}, AT_NO_ATK, AT_NO_ATK },
     { 8, 3, 5, 0 },
