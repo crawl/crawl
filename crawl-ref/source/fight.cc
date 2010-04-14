@@ -200,21 +200,6 @@ int calc_your_to_hit( bool random_factor )
     return attk.calc_to_hit(random_factor);
 }
 
-int calc_your_attack_delay(random_type rand, int scale, const item_def* weapon)
-{
-    // XXX: Ugly ugly. Note that despite using a copy of "you", the
-    // melee attack code accesses the real "you" anyway.
-    player copy(you);
-    if (weapon)
-    {
-        copy.inv[0] = *weapon;
-        copy.equip[EQ_WEAPON] = 0;
-        copy.melded[EQ_WEAPON] = false;
-    }
-    melee_attack attk(&copy, NULL);
-    return attk.player_calc_attack_delay(rand, scale);
-}
-
 static bool player_fights_well_unarmed(int heavy_armour_penalty)
 {
     return (you.burden_state == BS_UNENCUMBERED
@@ -4030,74 +4015,25 @@ void melee_attack::player_stab_check()
     }
 }
 
-int melee_attack::player_calc_attack_delay(random_type random, int scale)
-{
-    int attack_delay = (weapon ? player_weapon_speed()
-                               : player_unarmed_speed());
-
-    switch (random)
-    {
-    case R_RANDOM:
-        if (weapon && hands == HANDS_HALF)
-        {
-            attack_delay += std::min(roll_dice(1, player_body_armour_penalty)
-                                     + roll_dice(1, player_shield_penalty),
-                                     roll_dice(1, player_body_armour_penalty)
-                                     + roll_dice(1, player_shield_penalty));
-        }
-        else if (player_body_armour_penalty)
-        {
-            attack_delay += std::min(roll_dice(1, player_body_armour_penalty),
-                                     roll_dice(1, player_body_armour_penalty));
-        }
-        attack_delay *= scale;
-        break;
-
-    case R_MINIMUM:
-        if (weapon && hands == HANDS_HALF)
-        {
-            attack_delay += (player_body_armour_penalty ? 1 : 0)
-                            + (player_shield_penalty ? 1 : 0);
-        }
-        else if (player_body_armour_penalty)
-        {
-            attack_delay += 1;
-        }
-        attack_delay *= scale;
-        break;
-
-    case R_MAXIMUM:
-        if (weapon && hands == HANDS_HALF)
-            attack_delay += player_body_armour_penalty + player_shield_penalty;
-        else if (player_body_armour_penalty)
-            attack_delay += player_body_armour_penalty;
-        attack_delay *= scale;
-        break;
-
-    case R_EXPECTED:
-        attack_delay *= scale;
-        int penalty = player_body_armour_penalty;
-        // XXX: What's the expected value of min(1dN+1dK,1dN+1dK)?
-        //      Taking min(1d(N+K), 1d(N+K)) instead...
-        if (weapon && hands == HANDS_HALF)
-            penalty += player_shield_penalty;
-
-        if (!penalty)
-            break;
-        // EV of min(1dN,1dN) is (N+1)(2N+1) / 6N.
-        attack_delay += scale * (penalty + 1) * (2*penalty + 1)
-                                / (6 * penalty);
-        break;
-    }
-
-    attack_delay = std::max(attack_delay, 3*scale);
-
-    return (attack_delay);
-}
-
 void melee_attack::player_apply_attack_delay()
 {
-    final_attack_delay = player_calc_attack_delay();
+    int attack_delay = weapon ? player_weapon_speed() : player_unarmed_speed();
+
+    if (weapon && hands == HANDS_HALF)
+    {
+        attack_delay += std::min(roll_dice(1, player_body_armour_penalty)
+                                 + roll_dice(1, player_shield_penalty),
+                                 roll_dice(1, player_body_armour_penalty)
+                                 + roll_dice(1, player_shield_penalty));
+    }
+    else if (player_body_armour_penalty)
+        attack_delay += std::min(roll_dice(1, player_body_armour_penalty),
+                                 roll_dice(1, player_body_armour_penalty));
+
+    if (attack_delay < 3)
+        attack_delay = 3;
+
+    final_attack_delay = attack_delay;
 
     you.time_taken =
         std::max(2, div_rand_round(you.time_taken * final_attack_delay, 10));
