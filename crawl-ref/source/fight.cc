@@ -200,6 +200,12 @@ int calc_your_to_hit( bool random_factor )
     return attk.calc_to_hit(random_factor);
 }
 
+int calc_your_attack_delay(random_type rand)
+{
+    melee_attack attk(&you, NULL);
+    return attk.player_calc_attack_delay(rand);
+}
+
 static bool player_fights_well_unarmed(int heavy_armour_penalty)
 {
     return (you.burden_state == BS_UNENCUMBERED
@@ -4015,25 +4021,61 @@ void melee_attack::player_stab_check()
     }
 }
 
-void melee_attack::player_apply_attack_delay()
+int melee_attack::player_calc_attack_delay(random_type random)
 {
     int attack_delay = weapon ? player_weapon_speed() : player_unarmed_speed();
 
-    if (weapon && hands == HANDS_HALF)
+    switch (random)
     {
-        attack_delay += std::min(roll_dice(1, player_body_armour_penalty)
-                                 + roll_dice(1, player_shield_penalty),
-                                 roll_dice(1, player_body_armour_penalty)
-                                 + roll_dice(1, player_shield_penalty));
+    case R_RANDOM:
+        if (weapon && hands == HANDS_HALF)
+        {
+            attack_delay += std::min(roll_dice(1, player_body_armour_penalty)
+                                     + roll_dice(1, player_shield_penalty),
+                                     roll_dice(1, player_body_armour_penalty)
+                                     + roll_dice(1, player_shield_penalty));
+        }
+        else if (player_body_armour_penalty)
+        {
+            attack_delay += std::min(roll_dice(1, player_body_armour_penalty),
+                                     roll_dice(1, player_body_armour_penalty));
+        }
+        break;
+
+    case R_MINIMUM:
+        if (weapon && hands == HANDS_HALF)
+        {
+            attack_delay += (player_body_armour_penalty ? 1 : 0)
+                            + (player_shield_penalty ? 1 : 0);
+        }
+        else if (player_body_armour_penalty)
+        {
+            attack_delay += 1;
+        }
+        break;
+
+    case R_MAXIMUM:
+        if (weapon && hands == HANDS_HALF)
+            attack_delay += player_body_armour_penalty + player_shield_penalty;
+        else if (player_body_armour_penalty)
+            attack_delay += player_body_armour_penalty;
+        break;
+
+    case R_EXPECTED:
+        // TODO: what is expected value of min(dN, dN) or min(dM+dN, dM+dN)
+        ASSERT(false);
+        break;
     }
-    else if (player_body_armour_penalty)
-        attack_delay += std::min(roll_dice(1, player_body_armour_penalty),
-                                 roll_dice(1, player_body_armour_penalty));
 
     if (attack_delay < 3)
         attack_delay = 3;
 
-    final_attack_delay = attack_delay;
+    return (attack_delay);
+}
+
+void melee_attack::player_apply_attack_delay()
+{
+    final_attack_delay = player_calc_attack_delay();
 
     you.time_taken =
         std::max(2, div_rand_round(you.time_taken * final_attack_delay, 10));
