@@ -3268,7 +3268,8 @@ bool monsters::is_chaotic() const
         || type == MONS_VERY_UGLY_THING
         || type == MONS_ABOMINATION_SMALL
         || type == MONS_ABOMINATION_LARGE
-        || type == MONS_TIAMAT) // For her colour-changing.
+        || type == MONS_KILLER_KLOWN // For their random attacks.
+        || type == MONS_TIAMAT)      // For her colour-changing.
     {
         return (true);
     }
@@ -3277,15 +3278,13 @@ bool monsters::is_chaotic() const
         return (true);
 
     // Knowing chaotic spells is not enough to make you "essentially"
-    // chaotic (i.e. silver doesn't hurt you), it's just unclean for
+    // chaotic (i.e., silver doesn't hurt you), it's just chaotic for
     // Zin.  Having chaotic abilities (not actual spells) does mean
     // you're truly changed by chaos.
     if (has_chaotic_spell() && !is_actual_spellcaster())
         return (true);
 
-    // Checking for AF_KLOWN doesn't work, as it gets switched to another AF.
-    if (type == MONS_KILLER_KLOWN
-        || has_attack_flavour(AF_MUTATE)
+    if (has_attack_flavour(AF_MUTATE)
         || has_attack_flavour(AF_CHAOS))
     {
         return (true);
