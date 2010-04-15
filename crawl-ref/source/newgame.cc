@@ -2688,121 +2688,185 @@ static void _create_wanderer(void)
  */
 static const int COLUMN_WIDTH = 26;
 static const int X_MARGIN = 4;
-static const int SPEC_DESC_START_Y = 12;
-static const int SPECIAL_KEYS_START_Y = 16;
-void _construct_species_menu(PrecisionMenu* menu)
+static const int SPECIAL_KEYS_START_Y = 21;
+static const int CHAR_DESC_START_Y = 18;
+void _construct_species_menu(MenuFreeform* menu)
 {
+    ASSERT(menu != NULL);
     static const int ITEMS_IN_COLUMN = 8;
     species_type prev_specie = get_species(letter_to_index(Options.prev_race));
-    int prev_specie_index = -1;
     // Construct the menu, 3 columns
+    TextItem* tmp = NULL;
+    std::string text;
+    coord_def min_coord(0,0);
+    coord_def max_coord(0,0);
+
     for (int i = 0; i < NUM_SPECIES; ++i) {
         const species_type species = get_species(i);
         if (!_is_species_valid_choice(species))
             continue;
 
-        CRTMenuEntry* tmp = new CRTMenuEntry();
+        tmp = new TextItem();
+        text.clear();
 
         if (you.char_class == JOB_UNKNOWN
             || job_allowed(species, you.char_class) == CC_UNRESTRICTED)
           {
-            tmp->colour = LIGHTGRAY;
-            tmp->set_highlight_colour(GREEN);
+              tmp->set_fg_colour(LIGHTGRAY);
+              tmp->set_highlight_colour(GREEN);
         }
         else
         {
-            tmp->colour = DARKGRAY;
+            tmp->set_fg_colour(DARKGRAY);
             tmp->set_highlight_colour(YELLOW);
         }
         if (you.char_class != JOB_UNKNOWN
             && job_allowed(species, you.char_class) == CC_BANNED)
         {
-            tmp->text = "    ";
-            tmp->text += species_name(species, 1);
-            tmp->text += " N/A";
-            tmp->colour = DARKGRAY;
+            text = "    ";
+            text += species_name(species, 1);
+            text += " N/A";
+            tmp->set_fg_colour(DARKGRAY);
             tmp->set_highlight_colour(RED);
         }
         else
         {
-            tmp->text = index_to_letter(i);
-            tmp->text += " - ";
-            tmp->text += species_name(species, 1);
+            text = index_to_letter(i);
+            text += " - ";
+            text += species_name(species, 1);
         }
-        // Save the hotkey
-        tmp->add_hotkey(index_to_letter(i));
-        // set start x and start y
-        tmp->set_start_x(X_MARGIN + (i / ITEMS_IN_COLUMN) * COLUMN_WIDTH);
-        tmp->set_start_y(3 + i % ITEMS_IN_COLUMN);
-        tmp->set_description_text(getGameStartDescription(species_name(species, 1)));
-        menu->add_item(tmp);
         // Fill to column width - 1
-        tmp->text.append(COLUMN_WIDTH - tmp->text.size() - 1 , ' ');
+        text.append(COLUMN_WIDTH - text.size() - 1 , ' ');
+        tmp->set_text(text);
+        min_coord.x = X_MARGIN + (i / ITEMS_IN_COLUMN) * COLUMN_WIDTH;
+        min_coord.y = 3 + i % ITEMS_IN_COLUMN;
+        max_coord.x = min_coord.x + text.size();
+        max_coord.y = min_coord.y + 1;
+        tmp->set_bounds(min_coord, max_coord);
+
+        tmp->add_hotkey(index_to_letter(i));
+        tmp->set_description_text(getGameStartDescription(species_name(species, 1)));
+        menu->attach_item(tmp);
+        tmp->set_visible(true);
         if (prev_specie == species)
         {
-            prev_specie_index = i;
+            menu->set_active_item(tmp);
         }
     }
 
-    menu->set_description_coordinates(X_MARGIN, SPEC_DESC_START_Y);
-
     // Add all the special button entries
-    CRTMenuEntry* tmp;
-
     if (you.char_class != JOB_UNKNOWN)
     {
-        tmp = new CRTMenuEntry("+ - Viable Species", X_MARGIN,
-                               SPECIAL_KEYS_START_Y, BROWN);
+        tmp = new TextItem();
+        tmp->set_text("+ - Viable Species");
+        min_coord.x = X_MARGIN;
+        min_coord.y = SPECIAL_KEYS_START_Y;
+        max_coord.x = min_coord.x + tmp->get_text().size();
+        max_coord.y = min_coord.y + 1;
+        tmp->set_bounds(min_coord, max_coord);
+        tmp->set_fg_colour(BROWN);
         tmp->add_hotkey('+');
         tmp->set_highlight_colour(LIGHTGRAY);
-        menu->add_item(tmp);
+        tmp->set_description_text("Picks a random viable species based on your current job choice");
+        menu->attach_item(tmp);
+        tmp->set_visible(true);
     }
 
-    tmp = new CRTMenuEntry("# - Viable character", X_MARGIN,
-                           SPECIAL_KEYS_START_Y + 1, BROWN);
+    tmp = new TextItem();
+    tmp->set_text("# - Viable character");
+    min_coord.x = X_MARGIN;
+    min_coord.y = SPECIAL_KEYS_START_Y + 1;
+    max_coord.x = min_coord.x + tmp->get_text().size();
+    max_coord.y = min_coord.y + 1;
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('#');
     tmp->set_highlight_colour(LIGHTGRAY);
-    menu->add_item(tmp);
+    tmp->set_description_text("Shuffles through random viable character combinations "
+                              "until you accept one");
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
 
-    tmp = new CRTMenuEntry("% - List aptitudes", X_MARGIN,
-                           SPECIAL_KEYS_START_Y + 2, BROWN);
+    tmp = new TextItem();
+    tmp->set_text("% - List aptitudes");
+    min_coord.x = X_MARGIN;
+    min_coord.y = SPECIAL_KEYS_START_Y + 2;
+    max_coord.x = min_coord.x + tmp->get_text().size();
+    max_coord.y = min_coord.y + 1;
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('%');
+    tmp->set_description_text("Lists the numerical skill train aptitudes for all races");
     tmp->set_highlight_colour(LIGHTGRAY);
-    menu->add_item(tmp);
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
 
-    tmp = new CRTMenuEntry("? - Help", X_MARGIN,
-                           SPECIAL_KEYS_START_Y + 3, BROWN);
+    tmp = new TextItem();
+    tmp->set_text("? - Help");
+    min_coord.x = X_MARGIN;
+    min_coord.y = SPECIAL_KEYS_START_Y + 3;
+    max_coord.x = min_coord.x + tmp->get_text().size();
+    max_coord.y = min_coord.y + 1;
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('?');
     tmp->set_highlight_colour(LIGHTGRAY);
-    menu->add_item(tmp);
+    tmp->set_description_text("Opens the help screen");
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
 
-    tmp = new CRTMenuEntry("* - Random species", X_MARGIN + COLUMN_WIDTH,
-                           SPECIAL_KEYS_START_Y, BROWN);
+    tmp = new TextItem();
+    tmp->set_text("* - Random species");
+    min_coord.x = X_MARGIN + COLUMN_WIDTH;
+    min_coord.y = SPECIAL_KEYS_START_Y;
+    max_coord.x = min_coord.x + tmp->get_text().size();
+    max_coord.y = min_coord.y + 1;
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('*');
     tmp->set_highlight_colour(LIGHTGRAY);
-    menu->add_item(tmp);
-    tmp = new CRTMenuEntry("! - Random character", X_MARGIN + COLUMN_WIDTH,
-                           SPECIAL_KEYS_START_Y + 1, BROWN);
+    tmp->set_description_text("Picks a random species");
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
+
+    tmp = new TextItem();
+    tmp->set_text("! - Random character");
+    min_coord.x = X_MARGIN + COLUMN_WIDTH;
+    min_coord.y = SPECIAL_KEYS_START_Y + 1;
+    max_coord.x = min_coord.x + tmp->get_text().size();
+    max_coord.y = min_coord.y + 1;
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('!');
     tmp->set_highlight_colour(LIGHTGRAY);
-    menu->add_item(tmp);
+    tmp->set_description_text("Shuffles through random character combinations "
+                              "until you accept one");
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
 
     // Adjust the end marker to align the - because Space text is longer by 4
+    tmp = new TextItem();
     if (you.char_class != JOB_UNKNOWN)
     {
-        tmp = new CRTMenuEntry("Space - change background",
-                               X_MARGIN + COLUMN_WIDTH - 4,
-                               SPECIAL_KEYS_START_Y + 2, BROWN);
+        tmp->set_text("Space - Change background");
+        tmp->set_description_text("Lets you change your background choice");
     }
     else
     {
-        tmp = new CRTMenuEntry("Space - Pick background first",
-                               X_MARGIN + COLUMN_WIDTH - 4,
-                               SPECIAL_KEYS_START_Y + 2, BROWN);
+        tmp->set_text("Space - Pick background first");
+        tmp->set_description_text("Lets you pick your background first");
+
     }
-    tmp->set_highlight_colour(LIGHTGRAY);
+    min_coord.x = X_MARGIN + COLUMN_WIDTH - 4;
+    min_coord.y = SPECIAL_KEYS_START_Y + 2;
+    max_coord.x = min_coord.x + tmp->get_text().size();
+    max_coord.y = min_coord.y + 1;
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->set_fg_colour(BROWN);
     tmp->add_hotkey(' ');
-    menu->add_item(tmp);
+    tmp->set_highlight_colour(LIGHTGRAY);
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
 
     if (Options.prev_race)
     {
@@ -2812,17 +2876,20 @@ void _construct_species_menu(PrecisionMenu* menu)
             tmp_string += _prev_startup_description().c_str();
             // Adjust the end marker to aling the - because
             // Tab text is longer by 2
-            tmp = new CRTMenuEntry(tmp_string, X_MARGIN + COLUMN_WIDTH - 2,
-                                   SPECIAL_KEYS_START_Y + 3, BROWN);
+            tmp = new TextItem();
+            tmp->set_text(tmp_string);
+            min_coord.x = X_MARGIN + COLUMN_WIDTH - 2;
+            min_coord.y = SPECIAL_KEYS_START_Y + 3;
+            max_coord.x = min_coord.x + tmp->get_text().size();
+            max_coord.y = min_coord.y + 1;
+            tmp->set_bounds(min_coord, max_coord);
+            tmp->set_fg_colour(BROWN);
             tmp->add_hotkey('\t');
             tmp->set_highlight_colour(LIGHTGRAY);
-            menu->add_item(tmp);
+            tmp->set_description_text("Play a new game with your previous choice");
+            menu->attach_item(tmp);
+            tmp->set_visible(true);
         }
-    }
-
-    if (prev_specie_index != -1)
-    {
-        menu->highlight_item(prev_specie_index);
     }
 }
 
@@ -2832,13 +2899,12 @@ void _construct_species_menu(PrecisionMenu* menu)
 bool _choose_species()
 {
     PrecisionMenu menu;
-    // Magical numbers alert menu starts from 3rd line and has 8 items per
-    // column. It ends at terminal end on x-dim and at 3+8 on y-dim
-    menu.init(PrecisionMenu::PRECISION_SINGLESELECT, X_MARGIN, 3,
-              get_number_of_cols() - 1, get_number_of_lines());
-#ifdef USE_TILE
-    tiles.get_crt()->set_highlight_style(CRTRegion::CRT_FILLHIGHLIGHT);
-#endif
+    menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
+    MenuFreeform* freeform = new MenuFreeform();
+    freeform->init(coord_def(0,0), coord_def(get_number_of_cols() -1,
+                   get_number_of_lines() -1), "freeform");
+    menu.attach_object(freeform);
+    menu.set_active_object(freeform);
 
     int keyn;
 
@@ -2850,6 +2916,7 @@ bool _choose_species()
 
     clrscr();
 
+    // TODO: attach these to the menu in a NoSelectTextItem
     textcolor( BROWN );
     if (you.your_name.empty() && you.char_class == JOB_UNKNOWN)
     {
@@ -2872,17 +2939,38 @@ bool _choose_species()
     textcolor( YELLOW );
     cprintf("Please select your species");
 
-    _construct_species_menu(&menu);
+    _construct_species_menu(freeform);
+    MenuDescriptor* descriptor = new MenuDescriptor(&menu);
+    descriptor->init(coord_def(X_MARGIN, CHAR_DESC_START_Y),
+                     coord_def(get_number_of_cols(), CHAR_DESC_START_Y + 2),
+                     "descriptor");
+    menu.attach_object(descriptor);
 
-    menu.draw_menu();
+    BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
+    highlighter->init(coord_def(0,0), coord_def(0,0), "highlighter");
+    menu.attach_object(highlighter);
+
+    // Did we have a previous background?
+    if (menu.get_active_item() == NULL)
+    {
+        freeform->set_active_item(0);
+    }
+
+#ifdef USE_TILE
+    tiles.get_crt()->attach_menu(&menu);
+#endif
+
+    freeform->set_visible(true);
+    descriptor->set_visible(true);
+    highlighter->set_visible(true);
 
     textcolor( LIGHTGREY );
-
-
     // Poll input until we have a conclusive escape or pick
     bool loop_flag = true;
     while (loop_flag)
     {
+        menu.draw_menu();
+
         if (Options.race != 0)
         {
             keyn = Options.race;
@@ -2920,20 +3008,22 @@ bool _choose_species()
         }
         // We have had a significant input key event
         // construct the return vector
-        std::vector<CRTMenuEntry*> selection = menu.get_selected_items();
+        std::vector<MenuItem*> selection = menu.get_selected_items();
         if (selection.size() > 0)
         {
             // we have a selection!
             // we only care about the first selection (there should be only one)
             // we only add one hotkey per entry, if at any point we want to add
             // multiples, you would need to process them all
-            if (selection.at(0)->hotkeys.size() == 0)
+            if (selection.at(0)->get_hotkeys().size() == 0)
             {
                 // the selection is uninteresting
                 continue;
             }
 
-            switch (selection.at(0)->hotkeys.at(0))
+            int selection_key = selection.at(0)->get_hotkeys().at(0);
+
+            switch (selection_key)
             {
             case '#':
                 good_random = true;
@@ -3015,15 +3105,15 @@ bool _choose_species()
                 if (you.char_class == JOB_UNKNOWN)
                 {
                     // we have no restrictions!
-                    you.species = get_species(letter_to_index(selection.at(0)->hotkeys.at(0)));
+                    you.species = get_species(letter_to_index(selection_key));
                     // this is probably used for... something
-                    ng_race = selection.at(0)->hotkeys.at(0);
+                    ng_race = selection_key;
                     return true; // pick also background
                 }
                 else
                 {
                     // Can we allow this selection?
-                    if (job_allowed(get_species(letter_to_index(selection.at(0)->hotkeys.at(0))),
+                    if (job_allowed(get_species(letter_to_index(selection_key)),
                                     you.char_class) == CC_BANNED)
                     {
                         // we cannot, repoll for key
@@ -3032,9 +3122,9 @@ bool _choose_species()
                     else
                     {
                         // we have a valid choice!
-                        you.species = get_species(letter_to_index(selection.at(0)->hotkeys.at(0)));
+                        you.species = get_species(letter_to_index(selection_key));
                         // this is probably used for... something
-                        ng_race = selection.at(0)->hotkeys.at(0);
+                        ng_race = selection_key;
                         return false; // no need to pick background
                     }
                 }
@@ -3050,138 +3140,204 @@ bool _choose_species()
  * Helper for _choose_job
  * constructs the menu used and highlights the previous job if there is one
  */
-static const int JOB_DESC_START_Y = 14;
-void _construct_backgrounds_menu(PrecisionMenu* menu)
+void _construct_backgrounds_menu(MenuFreeform* menu)
 {
     static const int ITEMS_IN_COLUMN = 10;
     job_type prev_job = get_job(letter_to_index(Options.prev_cls));
-    int prev_job_index = -1;
     // Construct the menu, 3 columns
+    TextItem* tmp = NULL;
+    std::string text;
+    coord_def min_coord(0,0);
+    coord_def max_coord(0,0);
+
     for (int i = 0; i < NUM_JOBS; ++i) {
         const job_type job = get_job(i);
-
-        CRTMenuEntry* tmp = new CRTMenuEntry();
+        tmp = new TextItem();
+        text.clear();
 
         if (you.species == SP_UNKNOWN
             || job_allowed(you.species, job) == CC_UNRESTRICTED)
         {
-            tmp->colour = LIGHTGRAY;
+            tmp->set_fg_colour(LIGHTGRAY);
             tmp->set_highlight_colour(GREEN);
         }
         else
         {
-            tmp->colour = DARKGRAY;
+            tmp->set_fg_colour(DARKGRAY);
             tmp->set_highlight_colour(YELLOW);
         }
         if (you.species != SP_UNKNOWN
             && job_allowed(you.species, job) == CC_BANNED)
         {
-            tmp->text = "    ";
-            tmp->text += get_job_name(job);
-            tmp->text += " N/A";
-            tmp->colour = DARKGRAY;
+            text = "    ";
+            text += get_job_name(job);
+            text += " N/A";
+            tmp->set_fg_colour(DARKGRAY);
             tmp->set_highlight_colour(RED);
         }
         else
         {
-            tmp->text = index_to_letter(i);
-            tmp->text += " - ";
-            tmp->text += get_job_name(job);
+            text = index_to_letter(i);
+            text += " - ";
+            text += get_job_name(job);
         }
-        // Save the hotkey
+        // fill the text entry to end of column - 1
+        text.append(COLUMN_WIDTH - text.size() - 1 , ' ');
+        tmp->set_text(text);
+        min_coord.x = X_MARGIN + (i / ITEMS_IN_COLUMN) * COLUMN_WIDTH;
+        min_coord.y = 3 + i % ITEMS_IN_COLUMN;
+        max_coord.x = min_coord.x + tmp->get_text().size();
+        max_coord.y = min_coord.y + 1;
+        tmp->set_bounds(min_coord, max_coord);
+
         tmp->add_hotkey(index_to_letter(i));
-        // set start x and start y
-        tmp->set_start_x(X_MARGIN + (i / ITEMS_IN_COLUMN) * COLUMN_WIDTH);
-        tmp->set_start_y(3 + i % ITEMS_IN_COLUMN);
         tmp->set_description_text(getGameStartDescription(get_job_name(job)));
 
-        // fill the text entry to end of column - 1
-        tmp->text.append(COLUMN_WIDTH - tmp->text.size() - 1 , ' ');
-
-        menu->add_item(tmp);
+        menu->attach_item(tmp);
+        tmp->set_visible(true);
         if (prev_job == job)
         {
-            prev_job_index = i;
+            menu->set_active_item(tmp);
         }
     }
 
-    menu->set_description_coordinates(X_MARGIN, JOB_DESC_START_Y);
-
     // Add all the special button entries
-    CRTMenuEntry* tmp;
-
     if (you.species != SP_UNKNOWN)
     {
-        tmp = new CRTMenuEntry("+ - Viable background", X_MARGIN,
-                               SPECIAL_KEYS_START_Y, BROWN);
+        tmp = new TextItem();
+        tmp->set_text("+ - Viable background");
+        min_coord.x = X_MARGIN;
+        min_coord.y = SPECIAL_KEYS_START_Y;
+        max_coord.x = min_coord.x + tmp->get_text().size();
+        max_coord.y = min_coord.y + 1;
+        tmp->set_bounds(min_coord, max_coord);
+        tmp->set_fg_colour(BROWN);
         tmp->add_hotkey('+');
         tmp->set_highlight_colour(LIGHTGRAY);
-        menu->add_item(tmp);
+        tmp->set_description_text("Picks a random viable background based on your current species choice");
+        menu->attach_item(tmp);
+        tmp->set_visible(true);
     }
 
-    tmp = new CRTMenuEntry("# - Viable character", X_MARGIN,
-                           SPECIAL_KEYS_START_Y + 1, BROWN);
+    tmp = new TextItem();
+    tmp->set_text("# - Viable character");
+    min_coord.x = X_MARGIN;
+    min_coord.y = SPECIAL_KEYS_START_Y + 1;
+    max_coord.x = min_coord.x + tmp->get_text().size();
+    max_coord.y = min_coord.y + 1;
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('#');
     tmp->set_highlight_colour(LIGHTGRAY);
-    menu->add_item(tmp);
+    tmp->set_description_text("Shuffles through random viable character combinations "
+                              "until you accept one");
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
 
-    tmp = new CRTMenuEntry("% - List aptitudes", X_MARGIN,
-                           SPECIAL_KEYS_START_Y + 2, BROWN);
+    tmp = new TextItem();
+    tmp->set_text("% - List aptitudes");
+    min_coord.x = X_MARGIN;
+    min_coord.y = SPECIAL_KEYS_START_Y + 2;
+    max_coord.x = min_coord.x + tmp->get_text().size();
+    max_coord.y = min_coord.y + 1;
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('%');
     tmp->set_highlight_colour(LIGHTGRAY);
-    menu->add_item(tmp);
+    tmp->set_description_text("Lists the numerical skill train aptitudes for all races");
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
 
-    tmp = new CRTMenuEntry("? - Help", X_MARGIN,
-                           SPECIAL_KEYS_START_Y + 3, BROWN);
+    tmp = new TextItem();
+    tmp->set_text("? - Help");
+    min_coord.x = X_MARGIN;
+    min_coord.y = SPECIAL_KEYS_START_Y + 3;
+    max_coord.x = min_coord.x + tmp->get_text().size();
+    max_coord.y = min_coord.y + 1;
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('?');
     tmp->set_highlight_colour(LIGHTGRAY);
-    menu->add_item(tmp);
+    tmp->set_description_text("Opens the help screen");
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
 
-    tmp = new CRTMenuEntry("* - Random background", X_MARGIN + COLUMN_WIDTH,
-                           SPECIAL_KEYS_START_Y, BROWN);
+    tmp = new TextItem();
+    tmp->set_text("* - Random background");
+    min_coord.x = X_MARGIN + COLUMN_WIDTH;
+    min_coord.y = SPECIAL_KEYS_START_Y;
+    max_coord.x = min_coord.x + tmp->get_text().size();
+    max_coord.y = min_coord.y + 1;
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('*');
     tmp->set_highlight_colour(LIGHTGRAY);
-    menu->add_item(tmp);
-    tmp = new CRTMenuEntry("! - Random character", X_MARGIN + COLUMN_WIDTH,
-                           SPECIAL_KEYS_START_Y + 1, BROWN);
+    tmp->set_description_text("Picks a random background");
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
+
+    tmp = new TextItem();
+    tmp->set_text("! - Random character");
+    min_coord.x = X_MARGIN + COLUMN_WIDTH;
+    min_coord.y = SPECIAL_KEYS_START_Y + 1;
+    max_coord.x = min_coord.x + tmp->get_text().size();
+    max_coord.y = min_coord.y + 1;
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('!');
     tmp->set_highlight_colour(LIGHTGRAY);
-    menu->add_item(tmp);
+    tmp->set_description_text("Shuffles through random character combinations "
+                              "until you accept one");
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
 
     // Adjust the end marker to align the - because Space text is longer by 4
-    if (you.species != SP_UNKNOWN) {
-            tmp = new CRTMenuEntry("Space - change species",
-                                    X_MARGIN + COLUMN_WIDTH - 4,
-                                    SPECIAL_KEYS_START_Y + 2, BROWN);
+    tmp = new TextItem();
+    if (you.species != SP_UNKNOWN)
+    {
+        tmp->set_text("Space - Change species");
+        tmp->set_description_text("Lets you change your species choice");
     }
-    else {
-        tmp = new CRTMenuEntry("Space - Pick species first",
-                               X_MARGIN + COLUMN_WIDTH - 4,
-                               SPECIAL_KEYS_START_Y + 2, BROWN);
+    else
+    {
+        tmp->set_text("Space - Pick species first");
+        tmp->set_description_text("Lets you pick your species first");
+
     }
-    tmp->set_highlight_colour(LIGHTGRAY);
+    min_coord.x = X_MARGIN + COLUMN_WIDTH - 4;
+    min_coord.y = SPECIAL_KEYS_START_Y + 2;
+    max_coord.x = min_coord.x + tmp->get_text().size();
+    max_coord.y = min_coord.y + 1;
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->set_fg_colour(BROWN);
     tmp->add_hotkey(' ');
-    menu->add_item(tmp);
+    tmp->set_highlight_colour(LIGHTGRAY);
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
 
     if (Options.prev_race)
     {
         if (_prev_startup_options_set())
         {
-            std::string tmp_string = "Tab - ";
-            tmp_string += _prev_startup_description().c_str();
+            text.clear();
+            text = "Tab - ";
+            text += _prev_startup_description().c_str();
             // Adjust the end marker to aling the - because
             // Tab text is longer by 2
-            tmp = new CRTMenuEntry(tmp_string, X_MARGIN + COLUMN_WIDTH - 2,
-                                   SPECIAL_KEYS_START_Y + 3, BROWN);
+            tmp = new TextItem();
+            tmp->set_text(text);
+            min_coord.x = X_MARGIN + COLUMN_WIDTH - 2;
+            min_coord.y = SPECIAL_KEYS_START_Y + 3;
+            max_coord.x = min_coord.x + tmp->get_text().size();
+            max_coord.y = min_coord.y + 1;
+            tmp->set_bounds(min_coord, max_coord);
+            tmp->set_fg_colour(BROWN);
             tmp->add_hotkey('\t');
             tmp->set_highlight_colour(LIGHTGRAY);
-            menu->add_item(tmp);
+            tmp->set_description_text("Play a new game with your previous choice");
+            menu->attach_item(tmp);
+            tmp->set_visible(true);
         }
-    }
-
-    if (prev_job_index != -1)
-    {
-        menu->highlight_item(prev_job_index);
     }
 }
 
@@ -3193,13 +3349,12 @@ void _construct_backgrounds_menu(PrecisionMenu* menu)
 bool _choose_job(void)
 {
     PrecisionMenu menu;
-    // Magical numbers alert menu starts from 3rd line and has 8 items per
-    // column. It ends at terminal end on x-dim and at 3+8 on y-dim
-    menu.init(PrecisionMenu::PRECISION_SINGLESELECT, X_MARGIN, 3,
-              get_number_of_cols() - 1, get_number_of_lines());
-#ifdef USE_TILE
-    tiles.get_crt()->set_highlight_style(CRTRegion::CRT_FILLHIGHLIGHT);
-#endif
+    menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
+    MenuFreeform* freeform = new MenuFreeform();
+    freeform->init(coord_def(0,0), coord_def(get_number_of_cols() -1,
+                   get_number_of_lines() -1), "freeform");
+    menu.attach_object(freeform);
+    menu.set_active_object(freeform);
 
     int keyn;
     ng_cls = 0;
@@ -3215,6 +3370,7 @@ bool _choose_job(void)
 
     clrscr();
 
+    // TODO: attach these to the menu in a NoSelectTextItem
     textcolor( BROWN );
     if (you.your_name.empty() && you.species == SP_UNKNOWN)
     {
@@ -3237,9 +3393,30 @@ bool _choose_job(void)
     textcolor( YELLOW );
     cprintf("Please select your background");
 
-    _construct_backgrounds_menu(&menu);
+    _construct_backgrounds_menu(freeform);
+    MenuDescriptor* descriptor = new MenuDescriptor(&menu);
+    descriptor->init(coord_def(X_MARGIN, CHAR_DESC_START_Y),
+                     coord_def(get_number_of_cols(), CHAR_DESC_START_Y + 2),
+                     "descriptor");
+    menu.attach_object(descriptor);
 
-    menu.draw_menu();
+    BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
+    highlighter->init(coord_def(0,0), coord_def(0,0), "highlighter");
+    menu.attach_object(highlighter);
+
+    // Did we have a previous background?
+    if (menu.get_active_item() == NULL)
+    {
+        freeform->set_active_item(0);
+    }
+
+#ifdef USE_TILE
+    tiles.get_crt()->attach_menu(&menu);
+#endif
+
+    freeform->set_visible(true);
+    descriptor->set_visible(true);
+    highlighter->set_visible(true);
 
     textcolor( LIGHTGREY );
 
@@ -3247,6 +3424,8 @@ bool _choose_job(void)
     bool loop_flag = true;
     while (loop_flag)
     {
+        menu.draw_menu();
+
         if (Options.cls != 0)
         {
             keyn = Options.cls;
@@ -3284,20 +3463,21 @@ bool _choose_job(void)
         }
         // We have had a significant input key event
         // construct the return vector
-        std::vector<CRTMenuEntry*> selection = menu.get_selected_items();
+        std::vector<MenuItem*> selection = menu.get_selected_items();
         if (selection.size() > 0)
         {
             // we have a selection!
             // we only care about the first selection (there should be only one)
             // we only add one hotkey per entry, if at any point we want to add
             // multiples, you would need to process them all
-            if (selection.at(0)->hotkeys.size() == 0)
+            if (selection.at(0)->get_hotkeys().size() == 0)
             {
                 // the selection is uninteresting
                 continue;
             }
+            int selection_key = selection.at(0)->get_hotkeys().at(0);
 
-            switch (selection.at(0)->hotkeys.at(0))
+            switch (selection_key)
             {
             case '#':
                 good_random = true;
@@ -3379,16 +3559,16 @@ bool _choose_job(void)
                 if (you.species == SP_UNKNOWN)
                 {
                     // we have no restrictions!
-                    you.char_class = get_job(letter_to_index(selection.at(0)->hotkeys.at(0)));
+                    you.char_class = get_job(letter_to_index(selection_key));
                     // this is probably used for... something
-                    ng_cls = selection.at(0)->hotkeys.at(0);
+                    ng_cls = selection_key;
                     return true; // pick also specie
                 }
                 else
                 {
                     // Can we allow this selection?
                     if (job_allowed(you.species,
-                        get_job(letter_to_index(selection.at(0)->hotkeys.at(0))))
+                        get_job(letter_to_index(selection_key)))
                         == CC_BANNED)
                     {
                         // we cannot, repoll for key
@@ -3397,9 +3577,9 @@ bool _choose_job(void)
                     else
                     {
                         // we have a valid choice!
-                        you.char_class = get_job(letter_to_index(selection.at(0)->hotkeys.at(0)));
+                        you.char_class = get_job(letter_to_index(selection_key));
                         // this is probably used for... something
-                        ng_cls = selection.at(0)->hotkeys.at(0);
+                        ng_cls = selection_key;
                         return false; // no need to pick specie
                     }
                 }

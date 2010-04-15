@@ -25,6 +25,8 @@
  #include "newgame.h"
  #include "terrain.h"
  #include "tiles.h"
+ #include "tilebuf.h"
+ #include "tilefont.h"
  #include "tiledef-dngn.h"
  #include "tiledef-main.h"
  #include "tiledef-player.h"
@@ -2136,155 +2138,48 @@ int ToggleableMenu::pre_process(int key)
     return key;
 }
 
-CRTMenuEntry::CRTMenuEntry() : MenuEntry("", MEL_ITEM, 0, 0), m_highlight_colour(-1),
-                 m_selected(false)
+/**
+ * Performs regular rectangular AABB intersection between the given AABB
+ * rectangle and a item in the menu_entries
+ * start(x,y)------------
+ *           |          |
+ *           ------------end(x,y)
+ */
+bool _AABB_intersection(const coord_def& item_start,
+                              const coord_def& item_end,
+                              const coord_def& aabb_start,
+                              const coord_def& aabb_end)
 {
+    // Check for no overlap using equals on purpose to rule out entities
+    // that only brush the bounding box
+    if (aabb_start.x >= item_end.x)
+        return false;
+    if (aabb_end.x <= item_start.x)
+        return false;
+    if (aabb_start.y >= item_end.y)
+        return false;
+    if (aabb_end.y <= item_start.y)
+        return false;
+    // We have overlap
+    return true;
 }
 
-CRTMenuEntry::CRTMenuEntry(const std::string& txt, unsigned int x,
-                           unsigned int y, COLORS c) : MenuEntry(txt, MEL_ITEM, 0, 0),
-                           m_start_x(x), m_start_y(y)
-{
-    this->colour = c;
-}
-
-
-void CRTMenuEntry::select(bool flag)
-{
-    m_selected = flag;
-}
-
-bool CRTMenuEntry::selected() const
-{
-    return m_selected;
-}
-
-void CRTMenuEntry::set_highlight_colour(COLORS highlight)
-{
-    m_highlight_colour = highlight << 4;
-}
-
-int CRTMenuEntry::highlight_colour() const
-{
-    return m_highlight_colour;
-}
-
-std::string CRTMenuEntry::get_description_text()
-{
-    return m_description_text;
-}
-
-void CRTMenuEntry::set_description_text(const std::string& desc)
-{
-    m_description_text = desc;
-}
-
-void CRTMenuEntry::set_start_x(int x)
-{
-    m_start_x = x;
-}
-
-void CRTMenuEntry::set_start_y(int y)
-{
-    m_start_y = y;
-}
-
-void CRTMenuEntry::set_end_x(int x)
-{
-    m_end_x = x;
-}
-
-void CRTMenuEntry::set_end_y(int y)
-{
-    m_end_y = y;
-}
-
-int CRTMenuEntry::start_x() const
-{
-    return m_start_x;
-}
-
-int CRTMenuEntry::start_y() const
-{
-    return m_start_y;
-}
-
-int CRTMenuEntry::end_x() const
-{
-    return m_end_x;
-}
-
-int CRTMenuEntry::end_y() const
-{
-    return m_end_y;
-}
-
-PrecisionMenu::PrecisionMenu() : m_select_type(PRECISION_NOMOUSESELECT),
-                                 m_highlighted_index(0),
-                                 m_start_x(0), m_start_y(0),
-                                 m_end_x(get_number_of_cols() - 1),
-                                 m_end_y(get_number_of_lines()),
-                                 m_desc_location(-1, -1)
+PrecisionMenu::PrecisionMenu() : m_active_object(NULL),
+    m_select_type(PRECISION_SINGLESELECT)
 {
 }
 
 PrecisionMenu::~PrecisionMenu()
 {
     clear();
+#ifdef USE_TILE
+    tiles.get_crt()->deattach_menu();
+#endif
 }
 
-/**
- * Initializes the menu
- * @params
- * start_x if set to >0, uses the default
- * start_y if set to >0, uses the default
- * end_x if set to >0, uses the value, otherwise uses default
- * end_y if set to >0, uses default
- * items_in_column if set to >0, uses maximum space
- * column_width if set to >0, uses default
- */
-void PrecisionMenu::init(SelectType flag, int start_x, int start_y, int end_x,
-                         int end_y)
+void PrecisionMenu::set_select_type(SelectType flag)
 {
     m_select_type = flag;
-#ifdef USE_TILE
-    switch (flag)
-    {
-    case PRECISION_NOMOUSESELECT:
-        tiles.set_active_crt(TilesFramework::CRT_NOMOUSESELECT);
-        break;
-    case PRECISION_SINGLESELECT:
-        tiles.set_active_crt(TilesFramework::CRT_SINGLESELECT);
-        break;
-    case PRECISION_MULTISELECT:
-        //tiles.set_active_crt(TilesFramework::CRT_NOMOUSESELECT);
-        break;
-    default:
-        tiles.set_active_crt(TilesFramework::CRT_NOMOUSESELECT);
-        break;
-    }
-    cgotoxy(1,1);
-
-    // console / tile mismatch
-    if (start_x > 0)
-        m_start_x = start_x - 1;
-    if (start_y > 0)
-        m_start_y = start_y - 1;
-    if (end_x > 0)
-        m_end_x = end_x - 1;
-    if (end_y > 0)
-        m_end_y = end_y - 1;
-#else
-    if (start_x > 0)
-        m_start_x = start_x;
-    if (start_y > 0)
-        m_start_y = start_y;
-    if (end_x > 0)
-        m_end_x = end_x;
-    if (end_y > 0)
-        m_end_y = end_y;
-#endif
-    m_entries.clear();
 }
 
 /**
@@ -2292,17 +2187,12 @@ void PrecisionMenu::init(SelectType flag, int start_x, int start_y, int end_x,
  */
 void PrecisionMenu::clear()
 {
-#ifdef USE_TILE
-    // reset the CRTregion to default
-    // this also releases all the data reserved by the menus
-    tiles.set_active_crt(TilesFramework::CRT_NOMOUSESELECT);
-#else
     // release all the data reserved
-    if (m_entries.size() == 0) {
+    if (m_attached_objects.size() == 0) {
         return;
     }
-    std::vector<CRTMenuEntry*>::iterator it;
-    for (it = m_entries.begin() ; it != m_entries.end(); ++it)
+    std::vector<MenuObject*>::iterator it;
+    for (it = m_attached_objects.begin() ; it != m_attached_objects.end(); ++it)
     {
         if (*it != NULL)
         {
@@ -2310,180 +2200,127 @@ void PrecisionMenu::clear()
             *it = NULL;
         }
     }
-#endif
-    m_entries.clear();
+    m_attached_objects.clear();
 }
 
 /**
  * Processes user input
  *
  * Returns:
- * true when we have reached a valid selection and the menu has served it's
- * purpose. This happens when a user presses Enter, any of the shortcuts
- * or Mouse Button1 over any valid Entry
+ * true when a significant event happened, signaling that the player has made a
+ * menu ending action like selecting an item in singleselect mode
  * false otherwise
  */
 bool PrecisionMenu::process_key(int key)
 {
-    coord_def pos;
-    int find_entry = - 1;
-    // for tiles / console mouse - arrows desync
-#ifdef USE_TILE
-    if (tiles.get_crt()->highlight_entry() != m_highlighted_index)
-      m_highlighted_index =  tiles.get_crt()->highlight_entry();
-#endif
-
-    switch (key)
+    if (m_active_object == NULL)
     {
-    case CK_ENTER:
-        if (m_select_type == PRECISION_SINGLESELECT)
+        if (m_attached_objects.size() == 0)
         {
-            _clear_selections();
-            _select_item(m_highlighted_index);
+            // nothing to process
             return true;
         }
         else
         {
-            _select_item(m_highlighted_index);
-            return false;
-        }
-        break;
-    case CK_UP:
-        find_entry = _find_item_by_direction(m_highlighted_index, UP);
-        if (find_entry != -1)
-        {
-            highlight_item(find_entry);
-        }
-        break;
-    case CK_DOWN:
-        find_entry = _find_item_by_direction(m_highlighted_index, DOWN);
-        if (find_entry != -1)
-        {
-            highlight_item(find_entry);
-        }
-        break;
-    case CK_LEFT:
-        find_entry = _find_item_by_direction(m_highlighted_index, LEFT);
-        if (find_entry != -1)
-        {
-            highlight_item(find_entry);
-        }
-        break;
-    case CK_RIGHT:
-        find_entry = _find_item_by_direction(m_highlighted_index, RIGHT);
-        if (find_entry != -1)
-        {
-            highlight_item(find_entry);
-        }
-        break;
-    case CK_MOUSE_CLICK:
-        // Tiles signifies the user has made an important click
-        // either we're in singleselect mode and he has selected an entry
-        // or we are in multiselect mode and he has finished selecting
-        return true;
-    default:
-        if (_select_item_by_hotkey(key))
-        {
-            if (m_select_type == PRECISION_SINGLESELECT)
-                return true;
-        }
-        break;
-    }
-    return false;
-}
-
-void PrecisionMenu::set_start_x(int start_x)
-{
-    ASSERT(start_x > 0 && start_x < m_end_x);
-    m_start_x = start_x;
-}
-
-void PrecisionMenu::set_start_y(int start_y)
-{
-    ASSERT(start_y > 0 && start_y < m_end_y);
-    m_start_y = start_y;
-}
-
-void PrecisionMenu::set_end_x(int end_x)
-{
-    ASSERT(end_x < get_number_of_cols());
-    m_end_x = end_x;
-}
-
-void PrecisionMenu::set_end_y(int end_y)
-{
-    ASSERT(end_y < get_number_of_lines());
-    m_end_y = end_y;
-}
-
-void PrecisionMenu::highlight_item(int index)
-{
-    if (index < 0)
-        return;
-#ifdef USE_TILE
-    tiles.get_crt()->set_highlight_entry(index);
-#endif
-    if (index < static_cast<int> (m_entries.size()))
-    {
-        m_highlighted_index = index;
-    }
-    draw_menu();
-}
-
-void PrecisionMenu::set_description_coordinates(int x, int y)
-{
-#ifdef USE_TILE
-    tiles.get_crt()->set_description_coordinates(x - 1, y - 1);
-#endif
-    if (x == -1 && y == -1)
-    {
-        m_desc_location.x = -1;
-        m_desc_location.y = -1;
-        return;
-    }
-    if (x < m_start_x || x > m_end_x || y < m_start_y || y > m_end_y)
-    {
-        return;
-    }
-    m_desc_location.x = x;
-    m_desc_location.y = y;
-}
-
-/**
- * toggles the selection status of the item
- * Returns:
- * true if success
- * false when item not found
- */
-bool PrecisionMenu::_select_item(unsigned int index)
-{
-    if (index < m_entries.size())
-    {
-        m_entries.at(index)->select(!m_entries.at(index)->selected());
-        draw_menu();
-        return m_entries.at(index)->selected();
-    }
-    return false;
-}
-
-bool PrecisionMenu::_select_item_by_hotkey(int key)
-{
-    // browse through all the Entries
-    // Not using iterator on purpose, to get a usable index for select
-    for (unsigned int i = 0; i < m_entries.size(); ++i)
-    {
-        std::vector<int>::iterator hot_iterator;
-        for (hot_iterator = m_entries.at(i)->hotkeys.begin();
-            hot_iterator != m_entries.at(i)->hotkeys.end();
-            ++hot_iterator)
-        {
-            if (key == *hot_iterator)
+            // pick the first object possible
+            for (std::vector<MenuObject*>::iterator it = m_attached_objects.begin();
+                 it != m_attached_objects.end(); ++it)
             {
-                if (m_select_type == PRECISION_SINGLESELECT)
+                if ((*it)->can_be_focused())
                 {
-                    _clear_selections();
+                    m_active_object = *it;
+                    break;
                 }
-                _select_item(i);
+            }
+        }
+    }
+
+    // Handle CK_MOUSE_CLICK separately
+    // This signifies a menu ending action
+    if (key == CK_MOUSE_CLICK)
+    {
+        return true;
+    }
+
+    bool focus_find = false;
+    PrecisionMenu::Direction focus_direction;
+    MenuObject::InputReturnValue input_ret = m_active_object->process_input(key);
+    switch (input_ret)
+    {
+    case MenuObject::INPUT_NO_ACTION:
+        break;
+    case MenuObject::INPUT_SELECTED:
+        if (m_select_type == PRECISION_SINGLESELECT)
+        {
+            return true;
+        }
+        else
+        {
+            // TODO: Handle multiselect somehow
+        }
+        break;
+    case MenuObject::INPUT_DESELECTED:
+        break;
+    case MenuObject::INPUT_END_MENU_SUCCESS:
+        return true;
+    case MenuObject::INPUT_END_MENU_ABORT:
+        _clear_selections();
+        return true;
+    case MenuObject::INPUT_ACTIVE_CHANGED:
+        break;
+    case MenuObject::INPUT_FOCUS_RELEASE_UP:
+        focus_find = true;
+        focus_direction = PrecisionMenu::UP;
+        break;
+    case MenuObject::INPUT_FOCUS_RELEASE_DOWN:
+        focus_find = true;
+        focus_direction = PrecisionMenu::DOWN;
+        break;
+    case MenuObject::INPUT_FOCUS_RELEASE_LEFT:
+        focus_find = true;
+        focus_direction = PrecisionMenu::LEFT;
+        break;
+    case MenuObject::INPUT_FOCUS_RELEASE_RIGHT:
+        focus_find = true;
+        focus_direction = PrecisionMenu::RIGHT;
+        break;
+    default:
+        ASSERT(!"Malformed return value");
+        break;
+    }
+    if (focus_find)
+    {
+        MenuObject* find_object = _find_object_by_direction(m_active_object,
+                                                            focus_direction);
+        if (find_object != NULL)
+        {
+            m_active_object->set_active_item(-1);
+            m_active_object = find_object;
+            if (focus_direction == PrecisionMenu::UP)
+            {
+                m_active_object->activate_last_item();
+            }
+            else
+            {
+                m_active_object->activate_first_item();
+            }
+        }
+    }
+    // Handle selection of other objects items hotkeys
+    std::vector<MenuObject*>::iterator it;
+    for (it = m_attached_objects.begin(); it != m_attached_objects.end(); ++it)
+    {
+        MenuItem* tmp = (*it)->select_item_by_hotkey(key);
+        if (tmp != NULL)
+        {
+            // was it a toggle?
+            if (!tmp->selected())
+            {
+                continue;
+            }
+            // it was a selection
+            if (m_select_type == PrecisionMenu::PRECISION_SINGLESELECT)
+            {
                 return true;
             }
         }
@@ -2491,16 +2328,71 @@ bool PrecisionMenu::_select_item_by_hotkey(int key)
     return false;
 }
 
-/**
- * Finds the closest rectangle to given entry begin_index on a caardinal
- * direction from it.
- * if no entries are found, -1 is returned
- */
-int PrecisionMenu::_find_item_by_direction(int begin_index, Direction dir)
+#ifdef USE_TILE
+int PrecisionMenu::handle_mouse(const MouseEvent &me)
 {
-    ASSERT(begin_index >= 0);
-    ASSERT(begin_index < static_cast<int> (m_entries.size()));
-    ASSERT(m_entries.size() > 0);
+    // Feed input to each attached object that the mouse is over
+    // The objects are responsible for processing the input
+    // This includes, if applicaple for instance checking if the mouse
+    // is over the item or not
+    MenuObject::InputReturnValue input_return = MenuObject::INPUT_NO_ACTION;
+
+    std::vector<MenuObject*>::iterator it;
+    for (it = m_attached_objects.begin(); it != m_attached_objects.end(); ++it)
+    {
+        input_return = (*it)->handle_mouse(me);
+        switch (input_return)
+        {
+        case MenuObject::INPUT_SELECTED:
+            m_active_object = *it;
+            if (m_select_type == PRECISION_SINGLESELECT)
+            {
+                return CK_MOUSE_CLICK;
+            }
+            // Set the active object to be the one we clicked
+            break;
+        case MenuObject::INPUT_ACTIVE_CHANGED:
+            // Set the active object to be this one
+            m_active_object = *it;
+            break;
+        case MenuObject::INPUT_END_MENU_SUCCESS:
+            // something got clicked that needs to signal the menu to end
+            return CK_MOUSE_CLICK;
+        case MenuObject::INPUT_END_MENU_ABORT:
+            _clear_selections();
+            return CK_MOUSE_CLICK;
+        default:
+            break;
+        }
+    }
+    return 0;
+}
+#endif
+
+void PrecisionMenu::_clear_selections()
+{
+    std::vector<MenuObject*>::iterator it;
+    for (it = m_attached_objects.begin(); it != m_attached_objects.end(); ++it)
+    {
+        (*it)->clear_selections();
+    }
+}
+
+/**
+ * Finds the closest rectangle to given entry start on a caardinal
+ * direction from it.
+ * if no entries are found, NULL is returned
+ *
+ * TODO: This is exact duplicate of MenuObject::_find_item_by_direction()
+ * maybe somehow generalize it and detach it from class
+ */
+MenuObject* PrecisionMenu::_find_object_by_direction(const MenuObject* start,
+                                                   Direction dir)
+{
+    if (start == NULL)
+    {
+        return NULL;
+    }
 
     coord_def aabb_start(0,0);
     coord_def aabb_end(0,0);
@@ -2509,15 +2401,15 @@ int PrecisionMenu::_find_item_by_direction(int begin_index, Direction dir)
     switch (dir)
     {
     case UP:
-        aabb_start.x = m_entries.at(begin_index)->start_x();
-        aabb_end.x = m_entries.at(begin_index)->end_x();
+        aabb_start.x = start->get_min_coord().x;
+        aabb_end.x = start->get_max_coord().x;
         aabb_start.y = 0; // top of screen
-        aabb_end.y = m_entries.at(begin_index)->start_y();
+        aabb_end.y = start->get_min_coord().y;
         break;
     case DOWN:
-        aabb_start.x = m_entries.at(begin_index)->start_x();
-        aabb_end.x = m_entries.at(begin_index)->end_x();
-        aabb_start.y = m_entries.at(begin_index)->end_y();
+        aabb_start.x = start->get_min_coord().x;
+        aabb_end.x = start->get_max_coord().x;
+        aabb_start.y = start->get_max_coord().y;
         // we choose an arbitarily large number here, because
         // tiles saves entry coordinates in pixels, yet console saves them
         // in characters
@@ -2527,16 +2419,16 @@ int PrecisionMenu::_find_item_by_direction(int begin_index, Direction dir)
         break;
     case LEFT:
         aabb_start.x = 0; // left of screen
-        aabb_end.x = m_entries.at(begin_index)->start_x();
-        aabb_start.y = m_entries.at(begin_index)->start_y();
-        aabb_end.y = m_entries.at(begin_index)->end_y();
+        aabb_end.x = start->get_min_coord().x;
+        aabb_start.y = start->get_min_coord().y;
+        aabb_end.y = start->get_max_coord().y;
         break;
     case RIGHT:
-        aabb_start.x = m_entries.at(begin_index)->end_x();
+        aabb_start.x = start->get_max_coord().x;
         // we again want a value that is always larger then the width of screen
         aabb_end.x = 32767;
-        aabb_start.y = m_entries.at(begin_index)->start_y();
-        aabb_end.y = m_entries.at(begin_index)->end_y();
+        aabb_start.y = start->get_min_coord().y;
+        aabb_end.y = start->get_max_coord().y;
         break;
     default:
         ASSERT(!"Bad direction given");
@@ -2544,44 +2436,52 @@ int PrecisionMenu::_find_item_by_direction(int begin_index, Direction dir)
 
     // loop through the entries
     // save the currently closest to the index in a variable
-    int closest = -1;
-    for (unsigned int i = 0; i < m_entries.size(); ++i)
+    MenuObject* closest = NULL;
+    std::vector<MenuObject*>::iterator it;
+    for (it = m_attached_objects.begin(); it != m_attached_objects.end(); ++it)
     {
-        if (!_AABB_intersection(i, aabb_start, aabb_end))
+        if (!(*it)->can_be_focused())
+        {
+            // this is a noselect entry, skip it
+            continue;
+        }
+
+        if (!_AABB_intersection((*it)->get_min_coord(), (*it)->get_max_coord(),
+                                aabb_start, aabb_end))
         {
             continue; // does not intersect, continue loop
         }
 
         // intersects
         // check if it's closer than current
-        if (closest == -1)
+        if (closest == NULL)
         {
-            closest = i;
+            closest = *it;
         }
 
         switch (dir)
         {
         case UP:
-            if (m_entries.at(i)->start_y() > m_entries.at(closest)->start_y())
+            if ((*it)->get_min_coord().y > closest->get_min_coord().y)
             {
-                closest = i;
+                closest = *it;
             }
             break;
         case DOWN:
-            if (m_entries.at(i)->start_y() < m_entries.at(closest)->start_y())
+            if ((*it)->get_min_coord().y < closest->get_min_coord().y)
             {
-                closest = i;
+                closest = *it;
             }
             break;
         case LEFT:
-            if (m_entries.at(i)->start_x() > m_entries.at(closest)->start_x())
+            if ((*it)->get_min_coord().x > closest->get_min_coord().x)
             {
-                closest = i;
+                closest = *it;
             }
         case RIGHT:
-            if (m_entries.at(i)->start_x() < m_entries.at(closest)->start_x())
+            if ((*it)->get_min_coord().x < closest->get_min_coord().x)
             {
-                closest = i;
+                closest = *it;
             }
         }
     }
@@ -2590,160 +2490,1546 @@ int PrecisionMenu::_find_item_by_direction(int begin_index, Direction dir)
     return closest;
 }
 
-/**
- * Performs regular rectangular AABB intersection between the given AABB
- * rectangle and a item in the menu_entries
- * start(x,y)------------
- *           |          |
- *           ------------end(x,y)
- */
-bool PrecisionMenu::_AABB_intersection(int entry_index,
-                                                   coord_def aabb_start,
-                                                   coord_def aabb_end)
+std::vector<MenuItem*> PrecisionMenu::get_selected_items()
 {
-    ASSERT(entry_index >= 0);
-    ASSERT(entry_index < static_cast<int> (m_entries.size()));
-
-    const coord_def entry_start(m_entries.at(entry_index)->start_x(),
-                                m_entries.at(entry_index)->start_y());
-    const coord_def entry_end(m_entries.at(entry_index)->end_x(),
-                              m_entries.at(entry_index)->end_y());
-
-    // Check for no overlap using equals on purpose to rule out entities
-    // that only brush the bounding box
-    if (aabb_start.x >= entry_end.x)
-        return false;
-    if (aabb_end.x <= entry_start.x)
-        return false;
-    if (aabb_start.y >= entry_end.y)
-        return false;
-    if (aabb_end.y <= entry_start.y)
-        return false;
-    // We have overlap
-    return true;
+    std::vector<MenuItem*> ret_val;
+    std::vector<MenuObject*>::iterator it;
+    for (it = m_attached_objects.begin(); it != m_attached_objects.end(); ++it)
+    {
+        std::vector<MenuItem*> object_selected = (*it)->get_selected_items();
+        if (object_selected.size() > 0)
+        {
+            std::vector<MenuItem*>::iterator object_it;
+            for (object_it = object_selected.begin();
+                 object_it != object_selected.end(); ++object_it)
+            {
+                ret_val.push_back(*object_it);
+            }
+        }
+    }
+    return ret_val;
 }
 
-void PrecisionMenu::_clear_selections()
+void PrecisionMenu::attach_object(MenuObject* item)
 {
-    std::vector<CRTMenuEntry*>::iterator it;
+    ASSERT(item != NULL);
+    m_attached_objects.push_back(item);
+}
+
+// Predicate for std::find_if
+struct _string_lookup : public std::binary_function<MenuObject*,
+                                                    const std::string&, bool>
+{
+    bool operator() (MenuObject* item, const std::string& lookup) const
+    {
+        if (item->get_name().compare(lookup) == 0)
+            return true;
+        return false;
+    }
+};
+
+MenuObject* PrecisionMenu::get_object_by_name(const std::string &search)
+{
+    std::vector<MenuObject*>::iterator ret_val;
+    ret_val = std::find_if(m_attached_objects.begin(), m_attached_objects.end(),
+        std::bind2nd(_string_lookup(), search));
+    if (ret_val != m_attached_objects.end())
+    {
+        return *ret_val;
+    }
+    return NULL;
+}
+
+MenuItem* PrecisionMenu::get_active_item()
+{
+    if (m_active_object != NULL)
+    {
+        return m_active_object->get_active_item();
+    }
+    return NULL;
+}
+
+void PrecisionMenu::set_active_object(MenuObject* object)
+{
+    // is the object attached?
+    std::vector<MenuObject*>::iterator find_val;
+    find_val = std::find(m_attached_objects.begin(), m_attached_objects.end(),
+                         object);
+    if (find_val != m_attached_objects.end())
+    {
+        m_active_object = object;
+        m_active_object->set_active_item(0);
+    }
+}
+
+void PrecisionMenu::draw_menu()
+{
+    if (m_attached_objects.size() > 0)
+    {
+        std::vector<MenuObject*>::iterator it;
+        for (it = m_attached_objects.begin(); it != m_attached_objects.end();
+             ++it)
+        {
+            (*it)->render();
+        }
+    }
+    // Render everything else here
+
+    // Reset textcolor just in case
+    textcolor(LIGHTGRAY);
+}
+
+MenuItem::MenuItem(): m_min_coord(0,0), m_max_coord(0,0), m_selected(false),
+                      m_allow_highlight(true), m_dirty(false), m_visible(false)
+{
+    set_fg_colour(LIGHTGRAY);
+    set_bg_colour(BLACK);
+    set_highlight_colour(BLACK);
+}
+
+MenuItem::~MenuItem()
+{
+}
+
+/**
+ * Override this if you use eg funky different sized fonts, tiles etc
+ */
+void MenuItem::set_bounds(const coord_def& min_coord, const coord_def& max_coord)
+{
+#ifdef USE_TILE
+    // these are saved in font dx / dy for mouse to work properly
+    // remove 1 unit from all the entries because console starts at (1,1)
+    // but tiles starts at (0,0)
+    m_min_coord.x = (min_coord.x - 1) * tiles.get_crt_font()->char_width();
+    m_min_coord.y = (min_coord.y - 1) * tiles.get_crt_font()->char_height();
+    m_max_coord.x = (max_coord.x - 1) * tiles.get_crt_font()->char_width();
+    m_max_coord.y = (max_coord.y - 1) * tiles.get_crt_font()->char_height();
+#else
+    m_min_coord = min_coord;
+    m_max_coord = max_coord;
+#endif
+}
+
+/**
+ * This is handly if you are already working with existing multiplied
+ * coordinates and modifying them
+ */
+void MenuItem::set_bounds_no_multiply(const coord_def& min_coord,
+                                      const coord_def& max_coord)
+{
+    m_min_coord = min_coord;
+    m_max_coord = max_coord;
+}
+
+// By default, value does nothing. Override for Items needing it
+void MenuItem::select(bool toggle, int value)
+{
+    select(toggle);
+}
+
+void MenuItem::select(bool toggle)
+{
+    m_selected = toggle;
+    m_dirty = true;
+}
+
+bool MenuItem::selected() const
+{
+    return m_selected;
+}
+
+void MenuItem::allow_highlight(bool toggle)
+{
+    m_allow_highlight = toggle;
+    m_dirty = true;
+}
+
+bool MenuItem::can_be_highlighted() const
+{
+    return m_allow_highlight;
+}
+
+void MenuItem::set_highlight_colour(COLORS colour)
+{
+    m_highlight_colour = colour;
+    m_dirty = true;
+}
+
+COLORS MenuItem::get_highlight_colour() const
+{
+    return m_highlight_colour;
+}
+
+
+void MenuItem::set_bg_colour(COLORS colour)
+{
+    m_bg_colour = colour << 4;
+    m_dirty = true;
+}
+
+void MenuItem::set_fg_colour(COLORS colour)
+{
+    m_fg_colour = colour;
+    m_dirty = true;
+}
+
+COLORS MenuItem::get_fg_colour() const
+{
+    return m_fg_colour;
+}
+
+COLORS MenuItem::get_bg_colour() const
+{
+    return static_cast<COLORS> (m_bg_colour >> 4);
+}
+
+void MenuItem::set_visible(bool flag)
+{
+    m_visible = flag;
+}
+
+bool MenuItem::is_visible() const
+{
+    return m_visible;
+}
+
+void MenuItem::add_hotkey(int key)
+{
+    m_hotkeys.push_back(key);
+}
+
+const std::vector<int>& MenuItem::get_hotkeys() const
+{
+    return m_hotkeys;
+}
+
+#ifdef USE_TILE
+TextItem::TextItem() : m_font_buf(tiles.get_crt_font())
+#else
+TextItem::TextItem()
+#endif
+{
+}
+
+TextItem::~TextItem()
+{
+}
+
+void TextItem::render()
+{
+    if (!m_visible)
+        return;
+
+#ifdef USE_TILE
+    if (m_dirty)
+    {
+        m_font_buf.clear();
+        // TODO: Wrap or chop the text
+        // TODO: handle m_bg_colour
+        m_font_buf.add(m_text, term_colours[m_fg_colour],
+                       m_min_coord.x, m_min_coord.y);
+        m_dirty = false;
+    }
+    m_font_buf.draw();
+#else
+    cgotoxy(m_min_coord.x, m_min_coord.y);
+    textcolor(m_fg_colour | m_bg_colour);
+    // TODO: wrap the text or chop it
+    cprintf("%s", m_text.c_str());
+#endif
+}
+
+void TextItem::set_text(const std::string& text)
+{
+    m_text = text;
+    m_dirty = true;
+}
+
+const std::string& TextItem::get_text() const
+{
+    return m_text;
+}
+
+NoSelectTextItem::NoSelectTextItem()
+{
+}
+
+NoSelectTextItem::~NoSelectTextItem()
+{
+}
+
+// Do not allow selection
+bool NoSelectTextItem::selected() const
+{
+    return false;
+}
+
+// Do not allow highlight
+bool NoSelectTextItem::can_be_highlighted() const
+{
+    return false;
+}
+
+void NoSelectTextItem::render()
+{
+    if (!m_visible)
+        return;
+
+#ifdef USE_TILE
+    if (m_dirty)
+    {
+        m_font_buf.clear();
+        // TODO: Wrap or chop the text
+        m_font_buf.add(m_text, term_colours[m_fg_colour],
+                       m_min_coord.x, m_min_coord.y);
+        m_dirty = false;
+    }
+    m_font_buf.draw();
+#else
+    cgotoxy(m_min_coord.x, m_min_coord.y);
+    textcolor(m_fg_colour | m_bg_colour);
+    // TODO: wrap the text or chop it
+    cprintf("%s", m_text.c_str());
+#endif
+}
+
+#ifdef USE_TILE
+TextTileItem::TextTileItem()
+{
+    for (int i = 0; i < TEX_MAX; i++)
+        m_tile_buf[i].set_tex(&tiles.get_image_manager().m_textures[i]);
+}
+
+TextTileItem::~TextTileItem()
+{
+}
+
+void TextTileItem::add_tile(tile_def tile)
+{
+    m_tiles.push_back(tile);
+    m_dirty = true;
+}
+
+void TextTileItem::set_bounds(const coord_def &min_coord, const coord_def &max_coord)
+{
+    // these are saved in font dx / dy for mouse to work properly
+    // remove 1 unit from all the entries because console starts at (1,1)
+    // but tiles starts at (0,0)
+    m_min_coord.x = (min_coord.x - 1) * tiles.get_crt_font()->char_width();
+    m_max_coord.x = (max_coord.x - 1) * tiles.get_crt_font()->char_width();
+    // TODO: get the tile height from somewhere cleaner
+    m_min_coord.y = (min_coord.y - 1) * 32;
+    m_max_coord.y = (max_coord.y - 1) * 32;
+}
+
+void TextTileItem::render()
+{
+    if (!m_visible)
+        return;
+
+    if (m_dirty)
+    {
+        m_font_buf.clear();
+        for (int t = 0; t < TEX_MAX; t++)
+            m_tile_buf[t].clear();
+        for (unsigned int t = 0; t < m_tiles.size(); ++t)
+        {
+            int tile      = m_tiles[t].tile;
+            TextureID tex = m_tiles[t].tex;
+            m_tile_buf[tex].add_unscaled(tile, m_min_coord.x, m_min_coord.y,
+                                         m_tiles[t].ymax);
+        }
+        // center the text
+        // TODO: Wrap or chop the text
+        const int y_coord = (m_max_coord.y - m_min_coord.y) / 2
+                            - tiles.get_crt_font()->char_height() / 2;
+        const int tile_offset = (m_tiles.size() > 0) ? 32 : 0;
+        m_font_buf.add(m_text, term_colours[m_fg_colour],
+                       m_min_coord.x + tile_offset, m_min_coord.y + y_coord);
+
+
+        m_dirty = false;
+    }
+
+    m_font_buf.draw();
+    for (int i = 0; i < TEX_MAX; i++)
+        m_tile_buf[i].draw();
+}
+
+SaveMenuItem::SaveMenuItem()
+{
+}
+
+SaveMenuItem::~SaveMenuItem()
+{
+    for (int t = 0; t < TEX_MAX; t++)
+        m_tile_buf[t].clear();
+}
+
+void SaveMenuItem::render()
+{
+    if (!m_visible)
+        return;
+
+    TextTileItem::render();
+}
+
+void SaveMenuItem::set_doll(dolls_data doll)
+{
+    m_save_doll = doll;
+    _pack_doll();
+}
+
+void SaveMenuItem::_pack_doll()
+{
+    m_tiles.clear();
+    // FIXME: A lot of code duplication from DungeonRegion::pack_doll().
+    int p_order[TILEP_PART_MAX] =
+    {
+        TILEP_PART_SHADOW,  //  0
+        TILEP_PART_HALO,
+        TILEP_PART_ENCH,
+        TILEP_PART_DRCWING,
+        TILEP_PART_CLOAK,
+        TILEP_PART_BASE,    //  5
+        TILEP_PART_BOOTS,
+        TILEP_PART_LEG,
+        TILEP_PART_BODY,
+        TILEP_PART_ARM,
+        TILEP_PART_HAND1,   // 10
+        TILEP_PART_HAND2,
+        TILEP_PART_HAIR,
+        TILEP_PART_BEARD,
+        TILEP_PART_HELM,
+        TILEP_PART_DRCHEAD  // 15
+    };
+
+    int flags[TILEP_PART_MAX];
+    tilep_calc_flags(m_save_doll.parts, flags);
+
+    // For skirts, boots go under the leg armour.  For pants, they go over.
+    if (m_save_doll.parts[TILEP_PART_LEG] < TILEP_LEG_SKIRT_OFS)
+    {
+        p_order[6] = TILEP_PART_BOOTS;
+        p_order[7] = TILEP_PART_LEG;
+    }
+
+    // Special case bardings from being cut off.
+    bool is_naga = (m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_NAGA
+                    || m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_NAGA + 1);
+    if (m_save_doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_NAGA_BARDING
+        && m_save_doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_NAGA_BARDING_RED)
+    {
+        flags[TILEP_PART_BOOTS] = is_naga ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
+    }
+
+    bool is_cent = (m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_CENTAUR
+                    || m_save_doll.parts[TILEP_PART_BASE] == TILEP_BASE_CENTAUR + 1);
+    if (m_save_doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
+        && m_save_doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED)
+    {
+        flags[TILEP_PART_BOOTS] = is_cent ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
+    }
+
+    for (int i = 0; i < TILEP_PART_MAX; ++i)
+    {
+        const int p   = p_order[i];
+        const int idx = m_save_doll.parts[p];
+        if (idx == 0 || idx == TILEP_SHOW_EQUIP || flags[p] == TILEP_FLAG_HIDE)
+            continue;
+
+        ASSERT(idx >= TILE_MAIN_MAX && idx < TILEP_PLAYER_MAX);
+
+        int ymax = TILE_Y;
+
+        if (flags[p] == TILEP_FLAG_CUT_CENTAUR
+            || flags[p] == TILEP_FLAG_CUT_NAGA)
+        {
+            ymax = 18;
+        }
+
+        m_tiles.push_back(tile_def(idx, TEX_PLAYER, ymax));
+    }
+}
+#endif
+
+
+
+MenuObject::MenuObject() : m_dirty(false), m_allow_focus(true), m_min_coord(0,0),
+                           m_max_coord(0,0)
+{
+    m_object_name = "unnamed object";
+}
+
+MenuObject::~MenuObject()
+{
+}
+
+void MenuObject::init(const coord_def& min_coord, const coord_def& max_coord,
+              const std::string& name)
+{
+#ifdef USE_TILE
+    // these are saved in font dx / dy for mouse to work properly
+    // remove 1 unit from all the entries because console starts at (1,1)
+    // but tiles starts at (0,0)
+    m_min_coord.x = (min_coord.x - 1) * tiles.get_crt_font()->char_width();
+    m_min_coord.y = (min_coord.y - 1) * tiles.get_crt_font()->char_height();
+    m_max_coord.x = (max_coord.x - 1) * tiles.get_crt_font()->char_width();
+    m_max_coord.y = (max_coord.y - 1) * tiles.get_crt_font()->char_height();
+#else
+    m_min_coord = min_coord;
+    m_max_coord = max_coord;
+#endif
+    m_object_name = name;
+}
+
+MenuItem* MenuObject::_find_item_by_mouse_coords(const coord_def& pos)
+{
+    // Traverse
+    std::vector<MenuItem*>::iterator it;
+    for (it = m_entries.begin(); it != m_entries.end(); ++it)
+    {
+        if (!(*it)->can_be_highlighted())
+        {
+            // this is a noselect entry, skip it
+            continue;
+        }
+        if (pos.x >= (*it)->get_min_coord().x
+            && pos.x <= (*it)->get_max_coord().x
+            && pos.y >= (*it)->get_min_coord().y
+            && pos.y <= (*it)->get_max_coord().y)
+        {
+            // We're inside
+            return *it;
+        }
+    }
+    // nothing found
+    return NULL;
+}
+
+MenuItem* MenuObject::select_item_by_hotkey(int key)
+{
+    // browse through all the Entries
+    std::vector<MenuItem*>::iterator it;
+    for (it = m_entries.begin(); it != m_entries.end(); ++it)
+    {
+        std::vector<int>::const_iterator hot_iterator;
+        for (hot_iterator = (*it)->get_hotkeys().begin();
+             hot_iterator != (*it)->get_hotkeys().end();
+            ++hot_iterator)
+        {
+            if (key == *hot_iterator)
+            {
+                select_item(*it);
+                return *it;
+            }
+        }
+    }
+    return NULL;
+}
+
+std::vector<MenuItem*> MenuObject::get_selected_items()
+{
+    std::vector<MenuItem*> ret_val;
+    std::vector<MenuItem*>::iterator it;
+    for (it = m_entries.begin(); it != m_entries.end(); ++it)
+    {
+        if ((*it)->selected())
+        {
+            ret_val.push_back((*it));
+        }
+    }
+    return ret_val;
+}
+
+void MenuObject::clear_selections()
+{
+    std::vector<MenuItem*>::iterator it;
     for (it = m_entries.begin(); it != m_entries.end(); ++it)
     {
         (*it)->select(false);
     }
 }
 
-std::vector<CRTMenuEntry*> PrecisionMenu::get_selected_items()
+void MenuObject::allow_focus(bool toggle)
 {
-    std::vector<CRTMenuEntry*> ret_val;
-    for (std::vector<CRTMenuEntry*>::iterator it = m_entries.begin();
-         it != m_entries.end(); ++it)
+    m_allow_focus = toggle;
+}
+
+bool MenuObject::can_be_focused()
+{
+    return m_allow_focus;
+}
+
+void MenuObject::set_visible(bool flag)
+{
+    m_visible = flag;
+}
+
+bool MenuObject::is_visible() const
+{
+    return m_visible;
+}
+
+
+
+MenuFreeform::MenuFreeform(): m_active_item(NULL)
+{
+}
+
+MenuFreeform::~MenuFreeform()
+{
+    std::vector<MenuItem*>::iterator it;
+    for (it = m_entries.begin(); it != m_entries.end(); ++it)
     {
-        if ((*it)->selected())
+        if (*it != NULL)
         {
-            ret_val.push_back(*it);
+            delete *it;
         }
     }
-    return ret_val;
+    m_entries.clear();
 }
 
-bool PrecisionMenu::add_item(CRTMenuEntry* item)
+MenuObject::InputReturnValue MenuFreeform::process_input(int key)
 {
-    // is the item in bounds? At the moment we only care about start_x and start_y
-    if (item->start_x() < m_start_x || item->start_x() > m_end_x
-        || item->start_y() < m_start_y || item->start_y() > m_end_y)
+    if (m_active_item == NULL)
     {
-        // out of bounds
-        return false;
-    }
-
-    m_entries.push_back(item);
-    // the menu handles all the keyboard events, however Tiles handles the mouse
-#ifdef USE_TILE
-    tiles.get_crt()->add_entry(item);
-#else
-    // calculate item width for console
-    // for now, We only support single line entries
-    if (item->start_x() + (int)item->text.size() > m_end_x)
-    {
-        item->set_end_x(m_end_x);
-    }
-    else
-    {
-        item->set_end_x(item->start_x() + item->text.size());
-    }
-    item->set_end_y(item->start_y() + 1);
-#endif
-    return true;
-}
-
-void PrecisionMenu::draw_menu()
-{
-    // TODO: maybe handle drawing only the changed entries
-#ifdef USE_TILE
-    tiles.get_crt()->render();
-#else
-    std::vector<CRTMenuEntry*>::iterator it;
-    for (unsigned int i = 0; i < m_entries.size(); ++i)
-    {
-        _draw_console_item(i);
-    }
-
-    if (m_desc_location.x != -1 && m_desc_location.y != -1
-        && m_highlighted_index >= 0)
-    {
-        std::string desc_text = m_entries.at(m_highlighted_index)->get_description_text();
-
-        if (static_cast<int> (desc_text.size()) + m_desc_location.x >= m_end_x)
+        if (m_entries.size() == 0)
         {
-            // trim the line (line broken weirdly)
-            desc_text = desc_text.substr(0, m_end_x - m_desc_location.x - m_start_x);
+            // nothing to process
+            return MenuObject::INPUT_NO_ACTION;
         }
         else
         {
-            // fill the line with empty space
-            desc_text.append(m_end_x - m_desc_location.x - desc_text.size(), ' ');
+            // pick the first item possible
+            for (std::vector<MenuItem*>::iterator it = m_entries.begin();
+                 it != m_entries.end(); ++it)
+            {
+                if ((*it)->can_be_highlighted())
+                {
+                    m_active_item = *it;
+                    break;
+                }
+            }
         }
-        // for now, desc text is always white
-        textcolor(WHITE);
-        cgotoxy(m_desc_location.x, m_desc_location.y);
-        cprintf("%s\n", desc_text.c_str());
     }
+
+    MenuItem* find_entry = NULL;
+    switch (key)
+    {
+    case CK_ENTER:
+        if (m_active_item == NULL)
+        {
+            return MenuObject::INPUT_NO_ACTION;
+        }
+
+        select_item(m_active_item);
+        if (m_active_item->selected())
+        {
+            return MenuObject::INPUT_SELECTED;
+        }
+        else
+        {
+            return MenuObject::INPUT_DESELECTED;
+        }
+        break;
+    case CK_UP:
+        find_entry = _find_item_by_direction(m_active_item, UP);
+        if (find_entry != NULL)
+        {
+            set_active_item(find_entry);
+            return MenuObject::INPUT_ACTIVE_CHANGED;
+        }
+        else
+        {
+            return MenuObject::INPUT_FOCUS_RELEASE_UP;
+        }
+        break;
+    case CK_DOWN:
+        find_entry = _find_item_by_direction(m_active_item, DOWN);
+        if (find_entry != NULL)
+        {
+            set_active_item(find_entry);
+            return MenuObject::INPUT_ACTIVE_CHANGED;
+        }
+        else
+        {
+            return MenuObject::INPUT_FOCUS_RELEASE_DOWN;
+        }
+        break;
+    case CK_LEFT:
+        find_entry = _find_item_by_direction(m_active_item, LEFT);
+        if (find_entry != NULL)
+        {
+            set_active_item(find_entry);
+            return MenuObject::INPUT_ACTIVE_CHANGED;
+        }
+        else
+        {
+            return MenuObject::INPUT_FOCUS_RELEASE_LEFT;
+        }
+        break;
+    case CK_RIGHT:
+        find_entry = _find_item_by_direction(m_active_item, RIGHT);
+        if (find_entry != NULL)
+        {
+            set_active_item(find_entry);
+            return MenuObject::INPUT_ACTIVE_CHANGED;
+        }
+        else
+        {
+            return MenuObject::INPUT_FOCUS_RELEASE_RIGHT;
+        }
+        break;
+    default:
+        find_entry = select_item_by_hotkey(key);
+        if (find_entry != NULL)
+        {
+            if (find_entry->selected())
+            {
+                return MenuObject::INPUT_SELECTED;
+            }
+            else
+            {
+                return MenuObject::INPUT_DESELECTED;
+            }
+        }
+        break;
+    }
+    return MenuObject::INPUT_NO_ACTION;
+}
+
+#ifdef USE_TILE
+MenuObject::InputReturnValue MenuFreeform::handle_mouse(const MouseEvent& me)
+{
+    // Is the mouse in our bounds?
+    if (m_min_coord.x > static_cast<int> (me.px)
+        || m_max_coord.x < static_cast<int> (me.px)
+        || m_min_coord.y > static_cast<int> (me.py)
+        || m_max_coord.y < static_cast<int> (me.py))
+    {
+        return INPUT_NO_ACTION;
+    }
+
+    MenuItem* find_item = NULL;
+
+    if (me.event == MouseEvent::MOVE)
+    {
+        find_item = _find_item_by_mouse_coords(coord_def(me.px, me.py));
+        if (find_item == NULL)
+        {
+            set_active_item(-1);
+        }
+        else
+        {
+            set_active_item(find_item);
+        }
+        return INPUT_ACTIVE_CHANGED;
+    }
+    if (me.event == MouseEvent::RELEASE && me.button == MouseEvent::LEFT)
+    {
+        find_item = _find_item_by_mouse_coords(coord_def(me.px,
+                                                        me.py));
+        if (find_item != NULL)
+        {
+            select_item(find_item);
+            if (find_item->selected())
+            {
+                return MenuObject::INPUT_SELECTED;
+            }
+            else
+            {
+                return MenuObject::INPUT_DESELECTED;
+            }
+        }
+    }
+    if (me.event == MouseEvent::PRESS && me.button == MouseEvent::LEFT)
+    {
+        // TODO
+        // pass mouse press event to objects, in case we pressed
+        // down on top of an item with such action
+    }
+    // all the other Mouse Events are uninteresting and are ignored
+    return INPUT_NO_ACTION;
+}
+#endif
+
+void MenuFreeform::render()
+{
+    if (!m_visible)
+        return;
+
+    if (m_dirty)
+        _place_items();
+
+    std::vector<MenuItem*>::iterator it;
+    for (it = m_entries.begin(); it != m_entries.end(); ++it)
+    {
+        (*it)->render();
+    }
+}
+
+/**
+ * Handle all the dirtyness here that the MenuItems themselves do not handle
+ */
+void MenuFreeform::_place_items()
+{
+    m_dirty = false;
+}
+
+MenuItem* MenuFreeform::get_active_item()
+{
+    return m_active_item;
+}
+
+void MenuFreeform::set_active_item(int index)
+{
+    if (index >= 0 && index < static_cast<int> (m_entries.size()))
+    {
+        if (m_entries.at(index)->can_be_highlighted())
+        {
+            m_active_item = m_entries.at(index);
+            m_dirty = true;
+            return;
+        }
+    }
+    // Clear active selection
+    m_active_item = NULL;
+    m_dirty = true;
+}
+
+void MenuFreeform::set_active_item(MenuItem* item)
+{
+    // Does item exist in the menu?
+    std::vector<MenuItem*>::iterator it;
+    it = std::find(m_entries.begin(), m_entries.end(), item);
+    if (it != m_entries.end())
+    {
+        if (item->can_be_highlighted())
+        {
+            m_active_item = item;
+            m_dirty = true;
+            return;
+        }
+    }
+    // Clear active selection
+    m_active_item = NULL;
+    m_dirty = true;
+}
+
+void MenuFreeform::activate_first_item()
+{
+    if (m_entries.size() > 0)
+        set_active_item(0);
+}
+
+void MenuFreeform::activate_last_item()
+{
+    if (m_entries.size() > 0)
+        set_active_item(m_entries.size() - 1);
+}
+
+bool MenuFreeform::select_item(int index)
+{
+    if (index >= 0 && index < static_cast<int> (m_entries.size()))
+    {
+        // Flip the selection flag
+        m_entries.at(index)->select(!m_entries.at(index)->selected());
+    }
+    return m_entries.at(index)->selected();
+}
+
+bool MenuFreeform::select_item(MenuItem* item)
+{
+    ASSERT(item != NULL);
+
+    // Is the given item in menu?
+    std::vector<MenuItem*>::iterator find_val;
+    find_val = std::find(m_entries.begin(), m_entries.end(), item);
+    if (find_val != m_entries.end())
+    {
+        // Flip the selection flag
+        item->select(!item->selected());
+    }
+    return item->selected();
+}
+
+bool MenuFreeform::attach_item(MenuItem* item)
+{
+    // is the item inside boundaries?
+    if (item->get_min_coord().x < m_min_coord.x
+        || item->get_min_coord().x > m_max_coord.x)
+        return false;
+    if (item->get_min_coord().y < m_min_coord.y
+        || item->get_min_coord().y > m_max_coord.y)
+        return false;
+    if (item->get_max_coord().x < m_min_coord.x
+        || item->get_max_coord().x > m_max_coord.x)
+        return false;
+    if (item->get_max_coord().y < m_min_coord.y
+        || item->get_max_coord().y > m_max_coord.y)
+        return false;
+    // It's inside boundaries
+
+    m_entries.push_back(item);
+    return true;
+}
+
+/**
+ * Finds the closest rectangle to given entry begin_index on a caardinal
+ * direction from it.
+ * if no entries are found, -1 is returned
+ */
+MenuItem* MenuFreeform::_find_item_by_direction(const MenuItem* start,
+                                                MenuObject::Direction dir)
+{
+    if (start == NULL)
+    {
+        return NULL;
+    }
+
+    coord_def aabb_start(0,0);
+    coord_def aabb_end(0,0);
+
+    // construct the aabb
+    switch (dir)
+    {
+    case UP:
+        aabb_start.x = start->get_min_coord().x;
+        aabb_end.x = start->get_max_coord().x;
+        aabb_start.y = 0; // top of screen
+        aabb_end.y = start->get_min_coord().y;
+        break;
+    case DOWN:
+        aabb_start.x = start->get_min_coord().x;
+        aabb_end.x = start->get_max_coord().x;
+        aabb_start.y = start->get_max_coord().y;
+        // we choose an arbitarily large number here, because
+        // tiles saves entry coordinates in pixels, yet console saves them
+        // in characters
+        // basicly, we want the AABB to be large enough to extend to the bottom
+        // of the screen in every possible resolution
+        aabb_end.y = 32767;
+        break;
+    case LEFT:
+        aabb_start.x = 0; // left of screen
+        aabb_end.x = start->get_min_coord().x;
+        aabb_start.y = start->get_min_coord().y;
+        aabb_end.y = start->get_max_coord().y;
+        break;
+    case RIGHT:
+        aabb_start.x = start->get_max_coord().x;
+        // we again want a value that is always larger then the width of screen
+        aabb_end.x = 32767;
+        aabb_start.y = start->get_min_coord().y;
+        aabb_end.y = start->get_max_coord().y;
+        break;
+    default:
+        ASSERT(!"Bad direction given");
+    }
+
+    // loop through the entries
+    // save the currently closest to the index in a variable
+    MenuItem* closest = NULL;
+    std::vector<MenuItem*>::iterator it;
+    for (it = m_entries.begin(); it != m_entries.end(); ++it)
+    {
+        if (!(*it)->can_be_highlighted())
+        {
+            // this is a noselect entry, skip it
+            continue;
+        }
+        if (!_AABB_intersection((*it)->get_min_coord(), (*it)->get_max_coord(),
+                                aabb_start, aabb_end))
+        {
+            continue; // does not intersect, continue loop
+        }
+
+        // intersects
+        // check if it's closer than current
+        if (closest == NULL)
+        {
+            closest = *it;
+        }
+
+        switch (dir)
+        {
+        case UP:
+            if ((*it)->get_min_coord().y > closest->get_min_coord().y)
+            {
+                closest = *it;
+            }
+            break;
+        case DOWN:
+            if ((*it)->get_min_coord().y < closest->get_min_coord().y)
+            {
+                closest = *it;
+            }
+            break;
+        case LEFT:
+            if ((*it)->get_min_coord().x > closest->get_min_coord().x)
+            {
+                closest = *it;
+            }
+        case RIGHT:
+            if ((*it)->get_min_coord().x < closest->get_min_coord().x)
+            {
+                closest = *it;
+            }
+        }
+    }
+    // TODO handle special cases here, like pressing down on the last entry
+    // to go the the first item in that line
+    return closest;
+}
+
+MenuScroller::MenuScroller(): m_topmost_visible(0), m_currently_active(0),
+    m_items_shown(0)
+{
+}
+
+MenuScroller::~MenuScroller()
+{
+    std::vector<MenuItem*>::iterator it;
+    for (it = m_entries.begin(); it != m_entries.end(); ++it)
+    {
+        if (*it != NULL)
+        {
+            delete *it;
+        }
+    }
+    m_entries.clear();
+}
+
+MenuObject::InputReturnValue MenuScroller::process_input(int key)
+{
+    if (m_currently_active < 0)
+    {
+        if (m_entries.size() == 0)
+        {
+            // nothing to process
+            return MenuObject::INPUT_NO_ACTION;
+        }
+        else
+        {
+            // pick the first item possible
+            for (unsigned int i = 0; i < m_entries.size(); ++i)
+            {
+                if (m_entries.at(i)->can_be_highlighted())
+                {
+                    set_active_item(i);
+                    break;
+                }
+            }
+        }
+    }
+
+    MenuItem* find_entry = NULL;
+    switch (key)
+    {
+    case CK_ENTER:
+        if (m_currently_active < 0)
+        {
+            return MenuObject::INPUT_NO_ACTION;
+        }
+
+        select_item(m_currently_active);
+        if (get_active_item()->selected())
+        {
+            return MenuObject::INPUT_SELECTED;
+        }
+        else
+        {
+            return MenuObject::INPUT_DESELECTED;
+        }
+        break;
+    case CK_UP:
+        find_entry = _find_item_by_direction(m_currently_active, UP);
+        if (find_entry != NULL)
+        {
+            set_active_item(find_entry);
+            return MenuObject::INPUT_ACTIVE_CHANGED;
+        }
+        else
+        {
+            return MenuObject::INPUT_FOCUS_RELEASE_UP;
+        }
+        break;
+    case CK_DOWN:
+        find_entry = _find_item_by_direction(m_currently_active, DOWN);
+        if (find_entry != NULL)
+        {
+            set_active_item(find_entry);
+            return MenuObject::INPUT_ACTIVE_CHANGED;
+        }
+        else
+        {
+            return MenuObject::INPUT_FOCUS_RELEASE_DOWN;
+        }
+        break;
+    case CK_LEFT:
+        return MenuObject::INPUT_FOCUS_RELEASE_LEFT;
+    case CK_RIGHT:
+        return MenuObject::INPUT_FOCUS_RELEASE_RIGHT;
+    default:
+        find_entry = select_item_by_hotkey(key);
+        if (find_entry != NULL)
+        {
+            if (find_entry->selected())
+            {
+                return MenuObject::INPUT_SELECTED;
+            }
+            else
+            {
+                return MenuObject::INPUT_DESELECTED;
+            }
+        }
+        break;
+    }
+    return MenuObject::INPUT_NO_ACTION;
+}
+
+#ifdef USE_TILE
+MenuObject::InputReturnValue MenuScroller::handle_mouse(const MouseEvent &me)
+{
+    // Is the mouse in our bounds?
+    if (m_min_coord.x > static_cast<int> (me.px)
+        || m_max_coord.x < static_cast<int> (me.px)
+        || m_min_coord.y > static_cast<int> (me.py)
+        || m_max_coord.y < static_cast<int> (me.py))
+    {
+        return INPUT_NO_ACTION;
+    }
+
+    MenuItem* find_item = NULL;
+
+    if (me.event == MouseEvent::MOVE)
+    {
+        find_item = _find_item_by_mouse_coords(coord_def(me.px, me.py));
+        if (find_item == NULL)
+        {
+            set_active_item(-1);
+        }
+        else
+        {
+            set_active_item(find_item);
+        }
+        return INPUT_ACTIVE_CHANGED;
+    }
+    if (me.event == MouseEvent::RELEASE && me.button == MouseEvent::LEFT)
+    {
+        find_item = _find_item_by_mouse_coords(coord_def(me.px,
+                                                        me.py));
+        if (find_item != NULL)
+        {
+            select_item(find_item);
+            if (find_item->selected())
+            {
+                return MenuObject::INPUT_SELECTED;
+            }
+            else
+            {
+                return MenuObject::INPUT_DESELECTED;
+            }
+        }
+    }
+    if (me.event == MouseEvent::PRESS && me.button == MouseEvent::LEFT)
+    {
+        // TODO
+        // pass mouse press event to objects, in case we pressed
+        // down on top of an item with such action
+    }
+    // all the other Mouse Events are uninteresting and are ignored
+    return INPUT_NO_ACTION;
+}
+#endif
+
+void MenuScroller::render()
+{
+    if (!m_visible)
+        return;
+
+    if (m_dirty)
+        _place_items();
+
+    std::vector<MenuItem*>::iterator it;
+    for (it = m_entries.begin(); it != m_entries.end(); ++it)
+    {
+        (*it)->render();
+    }
+}
+
+MenuItem* MenuScroller::get_active_item()
+{
+    if (m_currently_active >= 0
+        && m_currently_active < static_cast<int> (m_entries.size()))
+    {
+        return m_entries.at(m_currently_active);
+    }
+    return NULL;
+}
+
+void MenuScroller::set_active_item(int index)
+{
+    // prevent useless _place_items
+    if (index == m_currently_active)
+    {
+        return;
+    }
+
+    if (index >= 0 && index < static_cast<int> (m_entries.size()))
+    {
+        m_currently_active = index;
+    }
+    else
+    {
+        m_currently_active = -1;
+    }
+    m_dirty = true;
+}
+
+void MenuScroller::set_active_item(MenuItem* item)
+{
+    if (item == NULL)
+    {
+        set_active_item(-1);
+        return;
+    }
+
+    for (int i = 0; i < static_cast<int> (m_entries.size()); ++i)
+    {
+        if (item == m_entries.at(i))
+        {
+            set_active_item(i);
+            return;
+        }
+    }
+    set_active_item(-1);
+}
+
+void MenuScroller::activate_first_item()
+{
+    if (m_entries.size() > 0)
+        set_active_item(0);
+}
+
+void MenuScroller::activate_last_item()
+{
+    if (m_entries.size() > 0)
+        set_active_item(m_entries.size() - 1);
+}
+
+bool MenuScroller::select_item(int index)
+{
+    if (index >= 0 && index < static_cast<int> (m_entries.size()))
+    {
+        // Flip the flag
+        m_entries.at(index)->select(!m_entries.at(index)->selected());
+        return m_entries.at(index)->selected();
+    }
+    return false;
+}
+
+bool MenuScroller::select_item(MenuItem* item)
+{
+    ASSERT(item != NULL);
+    // Is the item in the menu?
+    for (int i = 0; i < static_cast<int> (m_entries.size()); ++i)
+    {
+        if (item == m_entries.at(i))
+        {
+            return select_item(i);
+        }
+    }
+    return false;
+}
+
+bool MenuScroller::attach_item(MenuItem* item)
+{
+    m_entries.push_back(item);
+    m_dirty = true;
+    return true;
+}
+
+/**
+ * Changes the bounds of the items that are to be visible
+ * places invisible entries at (-1,-1),(-1,-1)
+ * preserves user set item heigth
+ * does not preserve width
+ */
+void MenuScroller::_place_items()
+{
+    m_dirty = false;
+
+    int item_height = 0;
+    int space_used = 0;
+    int work_index = 0;
+    const int space_available = m_max_coord.y - m_min_coord.y;
+    coord_def min_coord(0,0);
+    coord_def max_coord(0,0);
+
+    // clear all the space before
+    for (; work_index < m_topmost_visible; ++work_index)
+    {
+        min_coord = m_entries.at(work_index)->get_min_coord();
+        max_coord = m_entries.at(work_index)->get_max_coord();
+        min_coord.x = -1;
+        max_coord.x = -1;
+        m_entries.at(work_index)->set_bounds_no_multiply(min_coord, max_coord);
+    }
+
+    while (space_used < space_available)
+    {
+        if (work_index >= static_cast<int> (m_entries.size()))
+        {
+            // reached end
+            break;
+        }
+        min_coord = m_entries.at(work_index)->get_min_coord();
+        max_coord = m_entries.at(work_index)->get_max_coord();
+        item_height = max_coord.y - min_coord.y;
+        if ((space_used + item_height) > space_available)
+        {
+            // this item will not fit
+            // Have we already added the currently active one?
+            if (work_index > m_currently_active)
+            {
+                // we have, cut this item and escape the loop
+                m_entries.at(work_index)->set_bounds_no_multiply(min_coord, max_coord);
+                m_entries.at(work_index)->set_visible(false);
+                break;
+            }
+            else
+            {
+                // our active item is not yet visible, cut the topmost item
+                // and start the loop from start again
+                min_coord = m_entries.at(m_topmost_visible)->get_min_coord();
+                max_coord = m_entries.at(m_topmost_visible)->get_max_coord();
+                min_coord.x = -1;
+                max_coord.x = -1;
+                m_entries.at(work_index)->set_bounds_no_multiply(min_coord, max_coord);
+                ++m_topmost_visible;
+                space_used = 0;
+                work_index = m_topmost_visible;
+                m_items_shown = 0;
+            }
+        }
+        else
+        {
+            // it will fit
+            min_coord.x = m_min_coord.x;
+            // preserve space for a nice scrollbar
+#ifdef USE_TILE
+            // width of one tile
+            // TODO: get rid of magic number
+            max_coord.x = m_max_coord.x - 32.0f;
+#else
+            // width of one letters
+            max_coord.x = m_max_coord.x - 1;
+#endif
+            min_coord.y = m_min_coord.y + space_used;
+            max_coord.y = min_coord.y + item_height;
+            m_entries.at(work_index)->set_bounds_no_multiply(min_coord, max_coord);
+            space_used += item_height;
+            ++work_index;
+            ++m_items_shown;
+        }
+
+    }
+    // clear all the items after
+    for (; work_index < static_cast<int> (m_entries.size()); ++work_index)
+    {
+        min_coord = m_entries.at(work_index)->get_min_coord();
+        max_coord = m_entries.at(work_index)->get_max_coord();
+        min_coord.x = -1;
+        max_coord.x = -1;
+        m_entries.at(work_index)->set_bounds_no_multiply(min_coord, max_coord);
+    }
+}
+
+MenuItem* MenuScroller::_find_item_by_direction(int start_index,
+                                          MenuObject::Direction dir)
+{
+    MenuItem* find_item = NULL;
+    switch (dir)
+    {
+    case UP:
+        if (start_index - 1 >= 0)
+        {
+            find_item = m_entries.at(start_index - 1);
+        }
+        break;
+    case DOWN:
+        if (start_index + 1 < static_cast<int> (m_entries.size()))
+        {
+            find_item = m_entries.at(start_index + 1);
+        }
+        break;
+    default:
+        break;
+    }
+    return find_item;
+}
+
+MenuDescriptor::MenuDescriptor(PrecisionMenu* parent): m_parent(parent),
+    m_active_item(NULL)
+{
+    ASSERT(m_parent != NULL);
+}
+
+MenuDescriptor::~MenuDescriptor()
+{
+}
+
+std::vector<MenuItem*> MenuDescriptor::get_selected_items()
+{
+    std::vector<MenuItem*> ret_val;
+    return ret_val;
+}
+
+void MenuDescriptor::init(const coord_def& min_coord, const coord_def& max_coord,
+              const std::string& name)
+{
+    MenuObject::init(min_coord, max_coord, name);
+    m_desc_item.set_bounds(min_coord, max_coord);
+    m_desc_item.set_fg_colour(WHITE);
+    m_desc_item.set_visible(true);
+}
+
+MenuObject::InputReturnValue MenuDescriptor::process_input(int key)
+{
+    // just in case we somehow end up processing input of this item
+    return MenuObject::INPUT_NO_ACTION;
+}
+
+#ifdef USE_TILE
+MenuObject::InputReturnValue MenuDescriptor::handle_mouse(const MouseEvent &me)
+{
+    // we have nothing interesting to do on mouse events because render()
+    // always checks if the active has changed
+    // override for things like tooltips
+    return MenuObject::INPUT_NO_ACTION;
+}
+#endif
+
+void MenuDescriptor::render()
+{
+    if (!m_visible)
+        return;
+
+    _place_items();
+
+    m_desc_item.render();
+}
+
+void MenuDescriptor::_place_items()
+{
+    MenuItem* tmp = m_parent->get_active_item();
+    if (tmp != m_active_item)
+    {
+        // update
+        m_active_item = tmp;
+#ifndef USE_TILE
+        textcolor(BLACK | BLACK << 4);
+        for (int i = 0; i < m_desc_item.get_max_coord().y
+                            - m_desc_item.get_min_coord().y; ++i)
+        {
+            cgotoxy(m_desc_item.get_min_coord().x,
+                    m_desc_item.get_min_coord().y + i);
+            clear_to_end_of_line();
+        }
+        textcolor(LIGHTGRAY);
+#endif
+
+
+        if (tmp == NULL)
+        {
+             m_desc_item.set_text("");
+        }
+        else
+        {
+            m_desc_item.set_text(m_active_item->get_description_text());
+        }
+    }
+}
+
+BoxMenuHighlighter::BoxMenuHighlighter(PrecisionMenu *parent): m_parent(parent),
+    m_active_item(NULL)
+{
+    ASSERT(parent != NULL);
+}
+
+BoxMenuHighlighter::~BoxMenuHighlighter()
+{
+}
+
+std::vector<MenuItem*> BoxMenuHighlighter::get_selected_items()
+{
+    std::vector<MenuItem*> ret_val;
+    return ret_val;
+}
+
+
+
+MenuObject::InputReturnValue BoxMenuHighlighter::process_input(int key)
+{
+    // just in case we somehow end up processing input of this item
+    return MenuObject::INPUT_NO_ACTION;
+}
+
+#ifdef USE_TILE
+MenuObject::InputReturnValue BoxMenuHighlighter::handle_mouse(const MouseEvent &me)
+{
+    // we have nothing interesting to do on mouse events because render()
+    // always checks if the active has changed
+    return MenuObject::INPUT_NO_ACTION;
+}
+#endif
+
+void BoxMenuHighlighter::render()
+{
+    if (!m_visible)
+        return;
+
+    if (!m_visible)
+       return;
+    _place_items();
+#ifdef USE_TILE
+    m_line_buf.draw();
+#else
+    if (m_active_item != NULL)
+        m_active_item->render();
 #endif
 }
 
-void PrecisionMenu::_draw_console_item(unsigned int index) const
+void BoxMenuHighlighter::_place_items()
 {
-    if (crawl_state.doing_prev_cmd_again)
+    MenuItem* tmp = m_parent->get_active_item();
+    if (tmp == m_active_item)
         return;
 
-    CRTMenuEntry* item;
-
-    if (index < m_entries.size())
+#ifdef USE_TILE
+    m_line_buf.clear();
+    if (tmp != NULL)
     {
-         item = m_entries.at(index);
+        m_line_buf.add_square(tmp->get_min_coord().x, tmp->get_min_coord().y,
+                              tmp->get_max_coord().x, tmp->get_max_coord().y,
+                              term_colours[tmp->get_highlight_colour()]);
     }
-    else
+#else
+    // we had an active item before
+    if (m_active_item != NULL)
     {
-        return;
+        // clear the background highlight trickery
+        m_active_item->set_bg_colour(m_old_bg_colour);
+        // redraw the old item
+        m_active_item->render();
     }
-
-    cgotoxy(item->start_x(), item->start_y());
-    if (m_highlighted_index >= 0
-        && index == static_cast<unsigned int> (m_highlighted_index))
+    if (tmp != NULL)
     {
-        textcolor(item->colour | item->highlight_colour());
+        m_old_bg_colour = tmp->get_bg_colour();
+        tmp->set_bg_colour(tmp->get_highlight_colour());
     }
-    else
-    {
-        textcolor(item->colour);
-    }
-    // Can our text fit inside our bounds?
-    if (static_cast<int> (item->start_x() + item->text.size()) <= m_end_x)
-    {
-        cprintf("%s", item->text.c_str());
-    }
-    else
-    {
-        cprintf("%s", item->text.substr(0, m_end_x - item->start_x()).c_str());
-    }
+#endif
+    m_active_item = tmp;
 }
