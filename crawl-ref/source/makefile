@@ -279,6 +279,7 @@ MCHMOD := 2755
 
 # Permissions to set on the save directory.
 MCHMOD_SAVEDIR := 775
+MCHMOD_LOGS := 664
 
 # The user:group to install the game as.
 INSTALL_UGRP := games:games
@@ -947,6 +948,8 @@ ifeq ($(USE_DGAMELAUNCH),)
 	$(CHOWN) -R $(INSTALL_UGRP) $(savedir_fp) || true
 	$(CHMOD) $(MCHMOD_SAVEDIR) $(savedir_fp) || true
 	$(CHMOD) $(MCHMOD_SAVEDIR) $(savedir_fp)/saves || true
+	$(CHMOD) $(MCHMOD_LOGS) $(savedir_fp)/saves/logfile || true
+	$(CHMOD) $(MCHMOD_LOGS) $(savedir_fp)/saves/scores || true
 	$(CHMOD) $(MCHMOD_SAVEDIR) $(savedir_fp)/morgue || true
 endif
 endif
