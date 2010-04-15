@@ -776,7 +776,7 @@ SRC_PKG_BASE  := stone_soup
 SRC_VERSION   := $(shell git describe --tags --long 2>/dev/null || cat util/release_ver)
 
 # when making release builds, use just the bare tag
-SRC_VERSION_SHORT := $(shell git describe --tags 2>/dev/null)
+SRC_VERSION_SHORT := $(shell git describe --tags 2>/dev/null || cat util/release_ver)
 ifneq (,$(SRC_VERSION_SHORT))
   ifeq (,$(findstring -,$(SRC_VERSION_SHORT)))
     SRC_VERSION := $(SRC_VERSION_SHORT)
