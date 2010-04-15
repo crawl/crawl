@@ -949,6 +949,8 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
 
         if (you.flight_mode() != FL_FLY || force_stair)
             mpr("You fall through a shaft!");
+        if (you.flight_mode() == FL_FLY && !force_stair)
+            mpr("You dive down through the shaft.");
 
         // Shafts are one-time-use.
         mpr("The shaft crumbles and collapses.");
@@ -1162,11 +1164,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
 
     default:
         if (shaft)
-        {
-            if (you.flight_mode() == FL_FLY && !force_stair)
-                mpr("You dive down through the shaft.");
             handle_items_on_shaft(you.pos(), false);
-        }
         else
             _climb_message(stair_find, false, old_level_type);
         break;
