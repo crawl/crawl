@@ -2,6 +2,7 @@
 #define MELEE_ATTACK_H
 
 #include "artefact.h"
+#include "random-var.h"
 
 class melee_attack
 {
@@ -174,6 +175,7 @@ private:
     int  player_aux_stat_modify_damage(int damage);
     int  player_to_hit(bool random_factor);
     void calc_player_armour_shield_tohit_penalty(bool random_factor);
+    random_var player_calc_attack_delay();
     void player_apply_attack_delay();
     int  player_apply_weapon_bonuses(int damage);
     int  player_apply_weapon_skill(int damage);
@@ -197,8 +199,8 @@ private:
     bool player_check_monster_died();
     void player_calc_hit_damage();
     void player_stab_check();
-    int  player_weapon_speed();
-    int  player_unarmed_speed();
+    random_var player_weapon_speed();
+    random_var player_unarmed_speed();
     void player_announce_hit();
     std::string player_why_missed();
     void player_warn_miss();
