@@ -64,7 +64,7 @@ bool monsters_fight(monsters* attacker, monsters* attacked,
 bool wielded_weapon_check(item_def *weapon, bool no_message = false);
 int calc_your_to_hit(bool random_factor);
 int calc_heavy_armour_penalty(bool random_factor);
-random_var calc_your_attack_delay(const item_def* weapon = NULL);
+random_var calc_your_attack_delay();
 
 unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
                                               const actor *defender);
