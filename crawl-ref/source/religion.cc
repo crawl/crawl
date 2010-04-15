@@ -898,7 +898,7 @@ void dec_penance(god_type god, int val)
                 holy_beings_attitude_change();
         }
         else if (god == GOD_NEMELEX_XOBEH && you.penance[god] > 100)
-        { // Nemelex' penance works actively only until 100
+        { // Nemelex's penance works actively only until 100
             if ((you.penance[god] -= val) > 100)
                 return;
 #ifdef DGL_MILESTONES
