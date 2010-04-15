@@ -1632,8 +1632,14 @@ int monster_die(monsters *monster, killer_type killer,
             if (monster->friendly()
                 && monster->type != MONS_DANCING_WEAPON)
             {
-                did_god_conduct(DID_FRIEND_DIED, 1 + (monster->hit_dice / 2),
-                                true, monster);
+                const int mon_intel = mons_class_intel(monster->type) - I_ANIMAL;
+
+                if (mon_intel > 0)
+                    did_god_conduct(DID_SOULED_FRIEND_DIED, 1 + (monster->hit_dice / 2),
+                                    true, monster);
+                else
+                    did_god_conduct(DID_FRIEND_DIED, 1 + (monster->hit_dice / 2),
+                                    true, monster);
             }
 
             if (pet_kill && fedhas_protects(monster))
