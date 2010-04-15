@@ -296,15 +296,6 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     init_attack();
 }
 
-void melee_attack::check_hand_half_bonus_eligible()
-{
-    hand_half_bonus = (unarmed_ok
-                       && !shield
-                       && weapon
-                       && !weapon->cursed()
-                       && hands == HANDS_HALF);
-}
-
 void melee_attack::init_attack()
 {
     weapon       = attacker->weapon(attack_number);
@@ -340,6 +331,12 @@ void melee_attack::init_attack()
     shield = attacker->shield();
     if (defender)
         defender_shield = defender->shield();
+
+    hand_half_bonus = (unarmed_ok
+                       && !shield
+                       && weapon
+                       && !weapon->cursed()
+                       && hands == HANDS_HALF);
 
     attacker_visible   = attacker->observable();
     attacker_invisible = (!attacker_visible && you.see_cell(attacker->pos()));
@@ -3813,7 +3810,6 @@ int melee_attack::player_to_hit(bool random_factor)
     can_do_unarmed =
         player_fights_well_unarmed(player_armour_tohit_penalty
                                    + player_shield_tohit_penalty);
-    check_hand_half_bonus_eligible();
 
     int your_to_hit = 15 + (calc_stat_to_hit_base() / 2);
 

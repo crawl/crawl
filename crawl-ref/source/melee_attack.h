@@ -93,7 +93,6 @@ public:
 private:
     void init_attack();
     bool is_banished(const actor *) const;
-    void check_hand_half_bonus_eligible();
     void check_autoberserk();
     bool check_unrand_effects(bool mondied = false);
     void emit_nodmg_hit_message();
