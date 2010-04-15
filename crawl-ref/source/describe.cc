@@ -3594,7 +3594,7 @@ static void _detailed_god_description(god_type which_god)
                          "Each deck type comes in three power levels: plain, "
                          "ornate, legendary. The latter contain very powerful "
                          "card effects, potentially hazardous. High piety and "
-                         "Evocations skill help here, as the power of Nemelex' "
+                         "Evocations skill help here, as the power of Nemelex's "
                          "abilities is governed by Evocations instead of "
                          "Invocations. The type of the deck gifts strongly "
                          "depends on the dominating item class sacrificed:\n"
@@ -4001,7 +4001,7 @@ std::string get_skill_description(int skill, bool need_title)
         if (you.religion == GOD_NEMELEX_XOBEH)
         {
             result += "\n";
-            result += "This is the skill all of Nemelex' abilities rely on.";
+            result += "This is the skill all of Nemelex's abilities rely on.";
         }
         break;
 
