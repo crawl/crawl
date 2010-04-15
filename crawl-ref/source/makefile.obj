@@ -152,6 +152,7 @@ player-equip.o \
 player-stats.o \
 quiver.o \
 random.o \
+random-var.o \
 ray.o \
 religion.o \
 rng.o \
