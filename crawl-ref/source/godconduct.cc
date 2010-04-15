@@ -703,6 +703,18 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
+        case DID_UNCLEAN_KILLED_BY_SERVANT:
+        case DID_CHAOTIC_KILLED_BY_SERVANT:
+            if (you.religion == GOD_ZIN)
+            {
+                simple_god_message(" accepts your collateral kill.");
+                retval = true;
+
+                if (random2(level + 10) > 5)
+                    piety_change = 1;
+            }
+            break;
+
         case DID_SPELL_MEMORISE:
             if (you.religion == GOD_TROG)
             {
@@ -931,7 +943,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Use Chaos", "Desecrate Orcish Remains", "Destroy Orcish Idol",
                 "Create Life", "Kill Slime", "Kill Plant", "Ally Kill Plant",
                 "Was Hasty", "Gluttony", "Corpse Violation",
-                "Souled Friend Died"
+                "Souled Friend Died", "Servant Kill Unclean",
+                "Servant Kill Chaotic"
             };
 
             COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS, c1);

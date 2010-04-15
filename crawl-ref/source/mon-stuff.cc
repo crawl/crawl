@@ -1661,7 +1661,7 @@ int monster_die(monsters *monster, killer_type killer,
                 {
                     killer_mon = &menv[killer_index];
 
-                    // If the killer is already dead treat it like an
+                    // If the killer is already dead, treat it like an
                     // anonymous monster.
                     if (killer_mon->type == MONS_NO_MONSTER)
                         anon = true;
@@ -1670,7 +1670,8 @@ int monster_die(monsters *monster, killer_type killer,
                 const mon_holy_type killer_holy =
                     anon ? MH_NATURAL : killer_mon->holiness();
 
-                if (you.religion == GOD_SHINING_ONE
+                if (you.religion == GOD_ZIN
+                    || you.religion == GOD_SHINING_ONE
                     || you.religion == GOD_YREDELEMNUL
                     || you.religion == GOD_KIKUBAAQUDGHA
                     || you.religion == GOD_VEHUMET
@@ -1710,6 +1711,18 @@ int monster_die(monsters *monster, killer_type killer,
                                                       DID_DEMON_KILLED_BY_SERVANT,
                                           monster->hit_dice);
                         }
+
+                        if (monster->is_unclean())
+                        {
+                            notice |= did_god_conduct(DID_UNCLEAN_KILLED_BY_SERVANT,
+                                                      monster->hit_dice);
+                        }
+
+                        if (monster->is_chaotic())
+                        {
+                            notice |= did_god_conduct(DID_CHAOTIC_KILLED_BY_SERVANT,
+                                                      monster->hit_dice);
+                        }
                     }
                     // Yes, we are splitting undead pets from the others
                     // as a way to focus Necromancy vs. Summoning
@@ -1747,6 +1760,18 @@ int monster_die(monsters *monster, killer_type killer,
                     else if (targ_holy == MH_DEMONIC)
                     {
                         notice |= did_god_conduct(DID_DEMON_KILLED_BY_SERVANT,
+                                                  monster->hit_dice);
+                    }
+
+                    if (monster->is_unclean())
+                    {
+                        notice |= did_god_conduct(DID_UNCLEAN_KILLED_BY_SERVANT,
+                                                  monster->hit_dice);
+                    }
+
+                    if (monster->is_chaotic())
+                    {
+                        notice |= did_god_conduct(DID_CHAOTIC_KILLED_BY_SERVANT,
                                                   monster->hit_dice);
                     }
                 }

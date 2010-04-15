@@ -606,7 +606,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
     switch (which_god)
     {
     case GOD_ZIN:
-        likes.push_back("you kill unclean or chaotic beings");
+        likes.push_back("you or your allies kill unclean or chaotic beings");
         break;
 
     case GOD_SHINING_ONE:

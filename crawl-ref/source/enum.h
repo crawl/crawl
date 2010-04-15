@@ -797,6 +797,8 @@ enum conduct_type
     DID_CORPSE_VIOLATION,                 // Fedhas (Necromancy involving
                                           // corpses/chunks).
     DID_SOULED_FRIEND_DIED,               // Zin
+    DID_UNCLEAN_KILLED_BY_SERVANT,        // Zin
+    DID_CHAOTIC_KILLED_BY_SERVANT,        // Zin
 
     NUM_CONDUCTS
 };
