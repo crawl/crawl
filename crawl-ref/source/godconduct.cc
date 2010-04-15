@@ -265,11 +265,11 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
         case DID_FRIEND_DIED:
+        case DID_SOULED_FRIEND_DIED:
             switch (you.religion)
             {
-
             case GOD_FEDHAS:
-                // Ballistomycetes dying is penalized separately.
+                // Ballistomycetes dying is penalised separately.
                 if (victim && fedhas_protects(victim)
                     && victim->type != MONS_BALLISTOMYCETE)
                 {
@@ -296,6 +296,10 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_ZIN:
                 // Converted allies (marked as TSOites) can be martyrs.
                 if (victim && victim->god == GOD_SHINING_ONE)
+                    break;
+
+                // Zin only cares about the deaths of those with souls.
+                if (thing_done == DID_FRIEND_DIED)
                     break;
                 // fall through
 
@@ -926,7 +930,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Deliberate Mutation", "Cause Glowing", "Use Unclean",
                 "Use Chaos", "Desecrate Orcish Remains", "Destroy Orcish Idol",
                 "Create Life", "Kill Slime", "Kill Plant", "Ally Kill Plant",
-                "Was Hasty", "Gluttony", "Corpse Violation"
+                "Was Hasty", "Gluttony", "Corpse Violation",
+                "Souled Friend Died"
             };
 
             COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS, c1);

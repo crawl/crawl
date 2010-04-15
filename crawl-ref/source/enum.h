@@ -794,8 +794,9 @@ enum conduct_type
     DID_ALLY_KILLED_PLANT,                // Fedhas
     DID_HASTY,                            // Cheibriados
     DID_GLUTTONY,                         // Cheibriados
-    DID_CORPSE_VIOLATION,                // Fedhas (Necromancy involving
+    DID_CORPSE_VIOLATION,                 // Fedhas (Necromancy involving
                                           // corpses/chunks).
+    DID_SOULED_FRIEND_DIED,               // Zin
 
     NUM_CONDUCTS
 };
