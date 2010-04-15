@@ -882,7 +882,7 @@ power. Rods can be invoked with the 'v' command when wielded. They have
 a pool of magical energy which regenerates according to the rod's
 enchantment (which can be increased using scrolls of recharging) and
 your Evocations skill. They're shorter than full-length staves and thus
-use the Maces&Flails skill instead of Staves when used as a cudgel.
+use the Maces & Flails skill instead of Staves when used as a cudgel.
 
 +: Books
 --------
