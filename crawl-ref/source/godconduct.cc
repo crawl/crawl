@@ -857,6 +857,14 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
+        case DID_ATTACK_IN_SANCTUARY:
+            if (you.religion == GOD_ZIN)
+            {
+                piety_change = -level;
+                retval = true;
+            }
+            break;
+
         case DID_DESECRATE_ORCISH_REMAINS:
             if (you.religion == GOD_BEOGH)
             {
@@ -944,7 +952,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Create Life", "Kill Slime", "Kill Plant", "Ally Kill Plant",
                 "Was Hasty", "Gluttony", "Corpse Violation",
                 "Souled Friend Died", "Servant Kill Unclean",
-                "Servant Kill Chaotic"
+                "Servant Kill Chaotic", "Attack In Sanctuary"
             };
 
             COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS, c1);

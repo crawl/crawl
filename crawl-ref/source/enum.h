@@ -799,6 +799,7 @@ enum conduct_type
     DID_SOULED_FRIEND_DIED,               // Zin
     DID_UNCLEAN_KILLED_BY_SERVANT,        // Zin
     DID_CHAOTIC_KILLED_BY_SERVANT,        // Zin
+    DID_ATTACK_IN_SANCTUARY,              // Zin
 
     NUM_CONDUCTS
 };
