@@ -879,10 +879,10 @@ Spell staves (called "rods" in the game) are a totally different kind of
 item. They hold spells which you can cast without having to memorise
 them first. You must wield a rod like a weapon in order to gain from its
 power. Rods can be invoked with the 'v' command when wielded. They have
-a pool of magical energy which regenerates rather quickly when you are
-wielding it (drawing from your own Magic), or at a much slower rate when
-it just sits in your backpack. Unlike other staves, rods are unsuited
-for physical combat.
+a pool of magical energy which regenerates according to the rod's
+enchantment (which can be increased using scrolls of recharging) and
+your Evocations skill. They're shorter than full-length staves and thus
+use the Maces&Flails skill instead of Staves when used as a cudgel.
 
 +: Books
 --------
