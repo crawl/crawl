@@ -84,7 +84,7 @@ Jiyva is the chaotic ancient deity of the slimes. Followers are expected to supp
 %%%%
 Zin powers
 
-Zin grants followers the ability to preach to the unenlightened masses. With sufficient piety, a starving follower can pray for nutrition. Later, followers will gain powers to purify and strengthen their bodies, and can eventually find temporary safety in a divine refuge. As piety grows, followers will be protected from mutations. Apart from that, Zin may occasionally directly intervene to save a follower's life.
+Zin grants followers the ability to preach to the unenlightened masses. With sufficient piety, a starving follower can pray for nutrition. Later, followers will gain powers to purify and strengthen their bodies, and can eventually find temporary safety in a divine refuge. As piety grows, followers will be protected from disease, mutation and rotting. Apart from that, Zin may occasionally directly intervene to save a follower's life.
 %%%%
 The Shining One powers
 
