@@ -14,7 +14,6 @@
 #include <sstream>
 #include <iomanip>
 #include <numeric>
-#include <cmath>
 
 #include "externs.h"
 #include "options.h"
@@ -711,20 +710,7 @@ void append_weapon_stats(std::string &description, const item_def &item)
 
     description += "Base attack delay: ";
     _append_value(description, property( item, PWPN_SPEED ) * 10, false);
-    description += "%";
-
-#ifdef WIZARD
-    if (!you.wizard)
-        return;
-
-    random_var delay = calc_your_attack_delay(&item);
-    description += "\nYour attack delay: ";
-    _append_value(description, static_cast<int>(round(10 * delay.expected())),
-                  false);
-    description += "% (";
-    _append_value(description, 10 * delay.max(), false);
-    description += "% max)";
-#endif
+   description += "%";
 }
 
 //---------------------------------------------------------------
