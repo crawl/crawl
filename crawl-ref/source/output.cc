@@ -2658,6 +2658,10 @@ std::string _status_mut_abilities()
                 snprintf(info, INFO_SIZE, "spiny %d", level);
                 current = info;
                 break;
+            case MUT_ANTENNAE:
+                snprintf(info, INFO_SIZE, "antennae %d", level);
+                current = info;
+                break;
             case MUT_NIGHTSTALKER:
                 snprintf(info, INFO_SIZE, "nightstalker %d", level);
                 current = info;
