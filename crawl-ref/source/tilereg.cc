@@ -4624,16 +4624,9 @@ void MessageRegion::render()
     }
 }
 
-CRTRegion::CRTRegion(FTFont *font) : TextRegion(font), m_allow_tooltip(false),
-    m_dirty(false), m_description_index(-1), m_highlight_index(0),
-    m_highlight_style(CRT_LINEHIGHLIGHT),
-    m_font_buf(font)
+CRTRegion::CRTRegion(FTFont *font) : TextRegion(font), m_attached_menu(NULL)
 {
-    m_description_coord.x = -1;
-    m_description_coord.y = -1;
-    m_font_buf.clear();
-    m_line_buf.clear();
-    m_shape_buf.clear();
+
 }
 
 CRTRegion::~CRTRegion()
@@ -4643,10 +4636,20 @@ CRTRegion::~CRTRegion()
 
 int CRTRegion::handle_mouse(MouseEvent &event)
 {
-    if (event.event != MouseEvent::PRESS || event.button != MouseEvent::LEFT)
-        return 0;
-
-    return CK_MOUSE_CLICK;
+    int ret_val = 0;
+    if (m_attached_menu == NULL)
+    {
+        if (event.event == MouseEvent::PRESS
+            && event.button == MouseEvent::LEFT)
+        {
+            ret_val = CK_MOUSE_CLICK;
+        }
+    }
+    else
+    {
+        ret_val = m_attached_menu->handle_mouse(event);
+    }
+    return ret_val;
 }
 
 void CRTRegion::on_resize()
@@ -4654,6 +4657,8 @@ void CRTRegion::on_resize()
     TextRegion::on_resize();
     crawl_view.termsz.x = mx;
     crawl_view.termsz.y = my;
+
+    // Todo: resize attached menu
 }
 
 void CRTRegion::clear()
@@ -4662,326 +4667,40 @@ void CRTRegion::clear()
     TextRegion::clear();
 
     // free all the used memory
-    if (m_entries.size() > 0) {
-        for (std::vector<CRTMenuEntry*>::iterator it = m_entries.begin();
-            it != m_entries.end(); ++it)
-        {
-            if (*it != NULL)
-            {
-                delete *it;
-                *it = NULL;
-            }
-        }
-    }
-    m_entries.clear();
-
-    m_font_buf.clear();
-    m_shape_buf.clear();
-    m_line_buf.clear();
-    for (int t = 0; t < TEX_MAX; t++)
-        m_tile_buf[t].clear();
-
-    m_dirty = false;;
-}
-
-void CRTRegion::_place_entries()
-{
-    // TODO: add support to multiline menu entries, for now
-    //       they are all single line
-
-    const int text_indent     = (Options.tile_menu_icons ? 58 : 0);
-    //const int max_tile_height = (Options.tile_menu_icons ? 32 : 0);
-
-    m_dirty = false;
-
-    m_font_buf.clear();
-    m_shape_buf.clear();
-    m_line_buf.clear();
-    for (int t = 0; t < TEX_MAX; t++)
-        m_tile_buf[t].clear();
-
-    for (std::vector<CRTMenuEntry*>::iterator it = m_entries.begin();
-         it != m_entries.end(); ++it)
+    if (m_attached_menu != NULL)
     {
-        bool tile_added = false;
-        // place the tile first if there is any
-        for (std::vector<tile_def>::iterator tile_it = (*it)->tiles.begin();
-            tile_it !=(*it)->tiles.end(); ++tile_it)
-        {
-            // NOTE: This is not perfect. Tiles will be drawn
-            // sorted by texture first, e.g. you can never draw
-            // a dungeon tile over a monster tile.
-            int tile      = tile_it->tile;
-            TextureID tex = tile_it->tex;
-            m_tile_buf[tex].add_unscaled(tile, (*it)->start_x(),
-                (*it)->start_y(), tile_it->ymax);
-            tile_added = true;
-        }
-        if (tile_added)
-        {
-            m_font_buf.add(formatted_string((*it)->text, (*it)->colour),
-                           (*it)->start_x() + text_indent, (*it)->start_y());
-
-            (*it)->set_end_x((*it)->start_x() + text_indent
-                           + dx * (*it)->text.size());
-            (*it)->set_end_y((*it)->start_y() + dy);
-        }
-        else
-        {
-            m_font_buf.add(formatted_string((*it)->text, (*it)->colour),
-                           (*it)->start_x(), (*it)->start_y());
-
-            (*it)->set_end_x((*it)->start_x() + dx * (*it)->text.size());
-            (*it)->set_end_y((*it)->start_y() + dy);
-        }
-    }
-    // add the description text
-    // TODO allow description text to be in a tooltip
-    if (m_description_index != -1 && m_description_coord.x != -1
-        && m_description_coord.y != -1)
-    {
-        m_font_buf.add(formatted_string(m_entries.at(
-                       m_description_index)->get_description_text(), WHITE),
-                       m_description_coord.x, m_description_coord.y);
-    }
-
-    // add the highlight
-    if (m_highlight_style == CRT_LINEHIGHLIGHT)
-    {
-        m_line_buf.add(m_entries.at(m_highlight_index)->start_x(),
-                       m_entries.at(m_highlight_index)->start_y(),
-                       m_entries.at(m_highlight_index)->end_x(),
-                       m_entries.at(m_highlight_index)->end_y(),
-                       term_colours[m_entries.at(m_highlight_index)->highlight_colour() >> 4]);
-    }
-    else if (m_highlight_style == CRT_FILLHIGHLIGHT)
-    {
-        // adds 3 pxels to end and remonve one from start
-        m_shape_buf.add(m_entries.at(m_highlight_index)->start_x() - 1,
-                        m_entries.at(m_highlight_index)->start_y(),
-                        m_entries.at(m_highlight_index)->end_x() + 3,
-                        m_entries.at(m_highlight_index)->end_y(),
-                        term_colours[m_entries.at(m_highlight_index)->highlight_colour() >> 4]);
+        delete m_attached_menu;
+        m_attached_menu = NULL;
     }
 }
 
 void CRTRegion::render()
 {
-    if (m_dirty)
-        _place_entries();
-
-        set_transform();
+    set_transform();
 
     // render all the inherited texts
     TextRegion::render();
 
-    // render all the added menu entries, some of the texts might be overwritten
-    // if the composer of the menu has been careless
-
-    m_shape_buf.draw();
-    m_line_buf.draw();
-    for (int i = 0; i < TEX_MAX; i++)
-        m_tile_buf[i].draw();
-    m_font_buf.draw();
-}
-
-/**
- * coordinates are given in unit sizes
- */
-bool CRTRegion::add_entry(CRTMenuEntry* entry)
-{
-    // are we in bounds?
-    // console starts at 1,1, however tiles start at 0,0
-    entry->set_start_x(entry->start_x() - 1);
-    entry->set_start_y(entry->start_y() - 1);
-
-    if (entry->start_x() < sx / dx || entry->start_x() > ex / dx
-        || entry->start_y() < sy / dy || entry->start_y() > ey / dy)
+    // render the attached menu if it exists
+    if (m_attached_menu != NULL)
     {
-        return false;
-    }
-    // initial coordinate is at least in bound
-
-    // Translate the unit coords to pixel coords
-    entry->set_start_x(entry->start_x() * dx);
-    entry->set_start_y(entry->start_y() * dy);
-
-    // TODO calculate initial coords somewhere
-
-    m_entries.push_back(entry);
-    m_dirty = true;
-    return true;
-}
-
-/**
- * Construct a new vector holding all the entries that have the selected
- * flag toggled
- */
-std::vector<CRTMenuEntry*> CRTRegion::get_selected_entries()
-{
-    std::vector<CRTMenuEntry*> ret_val;
-    for (std::vector<CRTMenuEntry*>::iterator it = m_entries.begin();
-         it != m_entries.end(); ++it)
-    {
-        if ((*it)->selected())
-            ret_val.push_back(*it);
-    }
-    return ret_val;
-}
-
-/**
- * Sets the entry the description text should use
- * For the correct behaviour, whatever menu you are using should have the
- * same indexes (added in same order) as the CRTRegion entries
- * TODO: Possibly match by MenuEntry* instead?
- */
-void CRTRegion::set_highlight_entry(int index)
-{
-    if (index < 0)
-        return;
-
-    if (index >= static_cast<int> (m_entries.size()))
-    {
-        // out of bounds
-        return;
-    }
-    m_highlight_index = index;
-    // TODO maybe handle this separetely somewhere
-    m_description_index = index;
-    m_dirty = true;
-}
-
-int CRTRegion::highlight_entry() const
-{
-    return m_highlight_index;
-}
-
-void CRTRegion::set_highlight_style(HighlightStyle style)
-{
-    m_highlight_style = style;
-    m_dirty = true;
-}
-
-/**
- * Values are given in units
- * -1, -1 hides the description
- */
-bool CRTRegion::set_description_coordinates(int x, int y)
-{
-    if (x == -1 && y == -1)
-    {
-        m_description_coord.x = -1;
-        m_description_coord.y = -1;
-    }
-    x = x * dx;
-    y = y * dy;
-
-    if (x < sx || x > ex || y < sy || y > ey)
-    {
-        // out of bounds
-        return false;
-    }
-    m_description_coord.x = x;
-    m_description_coord.y = y;
-
-    m_dirty = true;
-    return true;
-}
-
-void CRTRegion::use_tooltip(bool flag) {
-    m_allow_tooltip = flag;
-    m_dirty = true;
-}
-
-/**
- * Traverses through the entries vector, comparing the pos given with the coords
- * saved
- * Returns
- * -1 if no entry was found
- * index number of the first entry found
- */
-int CRTRegion::_find_entry_by_mouse_coords(const coord_def& pos)
-{
-    // is the given coordinate even in bounds?
-    if (pos.x < sx || pos.x > ex || pos.y < sy || pos.y > ey)
-    {
-        // out of bounds
-        return -1;
-    }
-    // Traverse
-    for (unsigned int i = 0; i < m_entries.size(); ++i)
-    {
-        if (pos.x >= m_entries.at(i)->start_x()
-            && pos.x <= m_entries.at(i)->end_x()
-            && pos.y >= m_entries.at(i)->start_y()
-            && pos.y <= m_entries.at(i)->end_y())
-        {
-            // We're inside
-            return i;
-        }
-    }
-    // nothing found
-    return -1;
-}
-
-bool CRTRegion::select_entry(int index)
-{
-    if (index < 0)
-        return false;
-
-    if (index < static_cast<int> (m_entries.size()))
-    {
-        m_entries.at(index)->select(!m_entries.at(index)->selected());
-        m_dirty = true;
-        return m_entries.at(index)->selected();
-    }
-    return false;
-}
-
-
-
-void CRTRegion::_clear_selections()
-{
-    std::vector<CRTMenuEntry*>::iterator it;
-    for (it = m_entries.begin(); it != m_entries.end(); ++it)
-    {
-        (*it)->select(false);
+        m_attached_menu->draw_menu();
     }
 }
 
-
-// CRT_SINGLESELECT
-
-CRTSingleSelect::CRTSingleSelect(FTFont* font) : CRTRegion(font)
+void CRTRegion::attach_menu(PrecisionMenu* menu)
 {
+    deattach_menu();
+
+    m_attached_menu = menu;
 }
 
-int CRTSingleSelect::handle_mouse(MouseEvent& event)
+void CRTRegion::deattach_menu()
 {
-    if (event.event == MouseEvent::MOVE)
-    {
-        int tmp = _find_entry_by_mouse_coords(coord_def(event.px, event.py));
-        if (tmp != -1)
-            set_highlight_entry(tmp);
-        return 0;
-    }
-    if (event.event == MouseEvent::RELEASE && event.button == MouseEvent::LEFT)
-    {
-        int tmp = _find_entry_by_mouse_coords(coord_def(event.px,
-                                                        event.py));
-        if (tmp != -1)
-        {
-            _clear_selections();
-            select_entry(tmp);
-            // Signal the menu class that we had a significant click event
-            // happen and they should call get_selected_entries()
-            return CK_MOUSE_CLICK;
-        }
-    }
-    // all the other Mouse Events are uninteresting and are ignored
-    return 0;
+    // Tiles has no rights over the menu, thus the user must delete it
+    // Via other means
+    m_attached_menu = NULL;
 }
-
 
 MenuRegion::MenuRegion(ImageManager *im, FTFont *entry) :
     m_image(im), m_font_entry(entry), m_mouse_idx(-1),

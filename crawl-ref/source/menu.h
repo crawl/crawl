@@ -570,130 +570,490 @@ protected:
 };
 
 /**
- * New menu entry, perhaps merge the functionality directly to MenuEntry
+ * Written by Janne "felirx" Lahdenpera
+ * Abstract base class interface for all menu items to inherit from
+ * each item should know how it's rendered.
+ * rendering should only check the item bounds and screen bounds to prevent
+ * assertion errors
  */
-class CRTMenuEntry : public MenuEntry
+class MenuItem
 {
 public:
-    CRTMenuEntry();
-    CRTMenuEntry(const std::string& text, unsigned int x, unsigned int y, COLORS c);
+    MenuItem();
+    virtual ~MenuItem();
 
-    virtual void select(bool flag);
+    void set_id(int id) { m_item_id = id; }
+    int get_id() const { return m_item_id; }
+
+    virtual void set_bounds(const coord_def& min_coord, const coord_def& max_coord);
+    virtual void set_bounds_no_multiply(const coord_def& min_coord,
+                                         const coord_def& max_coord);
+    virtual const coord_def& get_min_coord() const { return m_min_coord; }
+    virtual const coord_def& get_max_coord() const { return m_max_coord; }
+
+    virtual void set_description_text(const std::string& text) { m_description = text; }
+    virtual const std::string& get_description_text() const { return m_description; }
+
+    virtual void select(bool toggle);
+    virtual void select(bool toggle, int value);
     virtual bool selected() const;
+    virtual void allow_highlight(bool toggle);
+    virtual bool can_be_highlighted() const;
+    virtual void set_highlight_colour(COLORS colour);
+    virtual COLORS get_highlight_colour() const;
+    virtual void set_fg_colour(COLORS colour);
+    virtual void set_bg_colour(COLORS colour);
+    virtual COLORS get_fg_colour() const;
+    virtual COLORS get_bg_colour() const;
 
-    void set_highlight_colour(COLORS highlight);
-    virtual int highlight_colour() const;
+    virtual void set_visible(bool flag);
+    virtual bool is_visible() const;
 
-    std::string get_description_text();
-    void set_description_text(const std::string& desc);
+    virtual void render() = 0;
 
-    // Given in unit sizes
-    void set_start_x(int x);
-    void set_start_y(int y);
-    void set_end_x(int x);
-    void set_end_y(int y);
-
-    int start_x() const;
-    int start_y() const;
-    int end_x() const;
-    int end_y() const;
-
-private:
-    // These are all in unit sizes to work properly in both console and tiles
-    int m_start_x;
-    int m_start_y;
-    int m_end_x;
-    int m_end_y;
-
-    int m_highlight_colour;
-    std::string m_description_text;
+    void add_hotkey(int key);
+    const std::vector<int>& get_hotkeys() const;
+protected:
+    coord_def m_min_coord;
+    coord_def m_max_coord;
     bool m_selected;
+    bool m_allow_highlight;
+    bool m_dirty;
+    bool m_visible;
+    std::vector<int> m_hotkeys;
+    std::string m_description;
+
+    COLORS m_fg_colour;
+    COLORS m_highlight_colour;
+    int m_bg_colour;
+
+    int m_item_id;
 };
 
 /**
- * A menu that gives the user full control over where the entries are placed
- * Uses and sets up the correct CRTRegion for you to use if using tiles
- * To not lose any lines of text, before calling cprinf, please
- * call init().
- *
- * Responsibilities for this menu are:
- * processing keyboard input to move the highligth, select entries etc
- * tiles handles mouse input part via CRTRegion
- * redrawing (or calling tiles to redraw)
- * returning the selected entries via a call
- *
- * Usage
- * First initialize the menu with init()
- * then feed input data to process_key() until it return true. This signifies a
- * clear selection was made and you should call get_selected_entries() to find
- * out if the user has made valid choices
- *
- * Written by Janne "felirx" Lahdenpera
-*/
-class PrecisionMenu
+ * Basic Item with std::string unformatted text that can be selected
+ */
+class TextItem : public MenuItem
 {
 public:
-    // These should correspond to the available CRT types
-    enum SelectType
+    TextItem();
+    virtual ~TextItem();
+
+    virtual void render();
+
+    void set_text(const std::string& text);
+    const std::string& get_text() const;
+protected:
+    std::string m_text;
+
+#ifdef USE_TILE
+    FontBuffer m_font_buf;
+#endif
+};
+
+/**
+ * Behaves the same as TextItem, expect selection has been overridden to always
+ * return false
+ */
+class NoSelectTextItem : public TextItem
+{
+public:
+    NoSelectTextItem();
+    virtual ~NoSelectTextItem();
+    virtual bool selected() const;
+    virtual bool can_be_highlighted() const;
+
+    virtual void render();
+};
+
+/**
+ * Holds an arbitary number of tiles, currently rendered on top of each other
+ */
+#ifdef USE_TILE
+class TextTileItem : public TextItem
+{
+public:
+    TextTileItem();
+    virtual ~TextTileItem();
+
+    virtual void set_bounds(const coord_def& min_coord, const coord_def& max_coord);
+    virtual void render();
+
+    virtual void add_tile(tile_def tile);
+
+protected:
+    std::vector<tile_def> m_tiles;
+    FixedVector<TileBuffer, TEX_MAX> m_tile_buf;
+};
+
+/**
+ * Specialization of TextTileItem that knows how to pack a player doll
+ * TODO: reform _pack_doll() since it currently holds duplicate code from
+ * tilereg.cc pack_doll_buf()
+ */
+class SaveMenuItem : public TextTileItem
+{
+public:
+    friend class TilesFramework;
+    SaveMenuItem();
+    virtual ~SaveMenuItem();
+
+    virtual void render();
+
+    void set_doll(dolls_data doll);
+
+protected:
+    void _pack_doll();
+    dolls_data m_save_doll;
+};
+#endif
+
+class PrecisionMenu;
+
+/**
+ * Abstract base class interface for all attachable objects
+ * Objects are generally containers that hold MenuItems, however special
+ * objects are also possible, for instance MenuDescriptor, MenuButton.
+ * All objects should have an unique std::string name, although the uniquitity
+ * is not enforced or checked right now.
+ */
+class MenuObject
+{
+public:
+    enum InputReturnValue
     {
-        PRECISION_NOMOUSESELECT,
-        PRECISION_SINGLESELECT,
-        PRECISION_MULTISELECT,
-        PRECISION_TYPE_MAX
+        INPUT_NO_ACTION,          // Nothing happened
+        INPUT_SELECTED,           // Something got selected
+        INPUT_DESELECTED,         // Something got deselected
+        INPUT_END_MENU_SUCCESS,   // Call the menu to end
+        INPUT_END_MENU_ABORT,     // Call the menu to clear all selections and end
+        INPUT_ACTIVE_CHANGED,     // Mouse position or keyboard event changed active
+        INPUT_FOCUS_RELEASE_UP,   // Selection went out of menu from top
+        INPUT_FOCUS_RELEASE_DOWN, // Selection went out of menu from down
+        INPUT_FOCUS_RELEASE_LEFT, // Selection went out of menu from left
+        INPUT_FOCUS_RELEASE_RIGHT // Selection went out of menu from right
     };
 
-    PrecisionMenu();
-    ~PrecisionMenu();
+    MenuObject();
+    virtual ~MenuObject();
 
-    void init(SelectType flag, int start_x, int start_y, int end_x, int end_y);
-    void clear();
+    void init(const coord_def& min_coord, const coord_def& max_coord,
+              const std::string& name);
+    const coord_def& get_min_coord() const { return m_min_coord; }
+    const coord_def& get_max_coord() const { return m_max_coord; }
+    const std::string& get_name() const { return m_object_name; }
 
-    void draw_menu();
-    bool process_key(int ch);
+    virtual void allow_focus(bool toggle);
+    virtual bool can_be_focused();
 
-    void set_start_x(int start_x);
-    void set_start_y(int start_y);
-    void set_end_x(int end_x);
-    void set_end_y(int end_y);
+    virtual InputReturnValue process_input(int key) = 0;
+#ifdef USE_TILE
+    virtual InputReturnValue handle_mouse(const MouseEvent& me) = 0;
+#endif
+    virtual void render() = 0;
 
-    void highlight_item(int index);
-    void set_description_coordinates(int x, int y);
+    virtual void set_active_item(int index) = 0;
+    virtual void set_active_item(MenuItem* item) = 0;
+    virtual void activate_first_item() = 0;
+    virtual void activate_last_item() = 0;
 
-    // not const on purpose
-    std::vector<CRTMenuEntry*> get_selected_items();
+    virtual void set_visible(bool flag);
+    virtual bool is_visible() const;
 
-    bool add_item(CRTMenuEntry* item);
+    virtual std::vector<MenuItem*> get_selected_items();
+    virtual bool select_item(int index) = 0;
+    virtual bool select_item(MenuItem* item) = 0;
+    virtual MenuItem* select_item_by_hotkey(int key);
+    virtual void clear_selections();
+    virtual MenuItem* get_active_item() = 0;
 
-private:
+    virtual bool attach_item(MenuItem* item) = 0;
+
+protected:
     enum Direction{
         UP,
         DOWN,
         LEFT,
         RIGHT
     };
+    virtual void _place_items() = 0;
+    virtual MenuItem* _find_item_by_mouse_coords(const coord_def& pos);
+    virtual MenuItem* _find_item_by_direction(const MenuItem* start,
+                                              MenuObject::Direction dir) = 0;
 
-    bool _select_item_by_hotkey(int key);
-    bool _select_item(unsigned int index);
+    bool m_dirty;
+    bool m_allow_focus;
+    bool m_visible;
+
+    coord_def m_min_coord;
+    coord_def m_max_coord;
+    std::string m_object_name;
+    // by default, entries are held in a vector
+    // if you need a different behaviour, pleare override the
+    // affected methods
+    std::vector<MenuItem*> m_entries;
+};
+
+/**
+ * Container object that holds MenuItems in a 2d plane.
+ * There is no internal hierarchy structure inside the menu, thus the objects
+ * are freely placed within the boundaries of the container
+ */
+class MenuFreeform : public MenuObject
+{
+public:
+    MenuFreeform();
+    virtual ~MenuFreeform();
+
+    virtual InputReturnValue process_input(int key);
+#ifdef USE_TILE
+    virtual InputReturnValue handle_mouse(const MouseEvent& me);
+#endif
+    virtual void render();
+    virtual MenuItem* get_active_item();
+    virtual void set_active_item(int index);
+    virtual void set_active_item(MenuItem* item);
+    virtual void activate_first_item();
+    virtual void activate_last_item();
+
+    virtual bool select_item(int index);
+    virtual bool select_item(MenuItem* item);
+    virtual bool attach_item(MenuItem* item);
+
+protected:
+    virtual void _place_items();
+    virtual MenuItem* _find_item_by_direction(const MenuItem* start,
+                                              MenuObject::Direction dir);
+
+    // cursor position
+    MenuItem* m_active_item;
+};
+
+/**
+ * Container that can hold any number of objects in a scroll list style.
+ * Only certain number of items are visible at the same time.
+ * Navigating the list works with ARROW_UP and ARROW_DOWN keys.
+ * Eventually it should also support scrollbars.
+ */
+class MenuScroller : public MenuObject
+{
+public:
+    MenuScroller();
+    virtual ~MenuScroller();
+
+    virtual InputReturnValue process_input(int key);
+#ifdef USE_TILE
+    virtual InputReturnValue handle_mouse(const MouseEvent& me);
+#endif
+    virtual void render();
+    virtual MenuItem* get_active_item();
+    virtual void set_active_item(int index);
+    virtual void set_active_item(MenuItem* item);
+    virtual void activate_first_item();
+    virtual void activate_last_item();
+
+    virtual bool select_item(int index);
+    virtual bool select_item(MenuItem* item);
+    virtual bool attach_item(MenuItem* item);
+protected:
+    virtual void _place_items();
+    virtual MenuItem* _find_item_by_direction(int start_index,
+                                              MenuObject::Direction dir);
+    virtual MenuItem* _find_item_by_direction(const MenuItem* start,
+                                              MenuObject::Direction dir) { return NULL; }
+
+    int m_topmost_visible;
+    int m_currently_active;
+    int m_items_shown;
+};
+
+/**
+ * Base class for various descriptor and highlighter objects
+ * these should probably be attached last to the menu to be rendered last
+ */
+class MenuDescriptor : public MenuObject
+{
+public:
+    MenuDescriptor(PrecisionMenu* parent);
+    virtual ~MenuDescriptor();
+
+    void init(const coord_def& min_coord, const coord_def& max_coord,
+              const std::string& name);
+
+    virtual InputReturnValue process_input(int key);
+#ifdef USE_TILE
+    virtual InputReturnValue handle_mouse(const MouseEvent& me);
+#endif
+    virtual void render();
+
+    // these are not used, clear them
+    virtual std::vector<MenuItem*> get_selected_items();
+    virtual MenuItem* get_active_item() { return NULL; }
+    virtual bool attach_item(MenuItem* item) { return false; }
+    virtual void set_active_item(int index) {}
+    virtual void set_active_item(MenuItem* item) {}
+    virtual void activate_first_item() {}
+    virtual void activate_last_item() {}
+
+    virtual bool select_item(int index) { return false; }
+    virtual bool select_item(MenuItem* item) { return false;}
+    virtual MenuItem* select_item_by_hotkey(int key) { return NULL; }
+    virtual void clear_selections() {}
+
+    // Do not allow focus
+    virtual void allow_focus(bool toggle) {}
+    virtual bool can_be_focused() { return false; }
+
+protected:
+    virtual void _place_items();
+    virtual MenuItem* _find_item_by_mouse_coords(const coord_def& pos) { return NULL; }
+    virtual MenuItem* _find_item_by_direction(const MenuItem* start,
+                                              MenuObject::Direction dir) { return NULL; }
+
+    // Used to pull out currently active item
+    PrecisionMenu* m_parent;
+    MenuItem* m_active_item;
+    NoSelectTextItem m_desc_item;
+};
+
+/**
+ * Class for mouse over tooltips, does nothing if USE_TILE is not defined
+ * TODO: actually implement render() and _place_items()
+ */
+class MenuTooltip : public MenuDescriptor
+{
+public:
+    MenuTooltip(PrecisionMenu* parent);
+    virtual ~MenuTooltip();
+
+#ifdef USE_TILE
+    virtual InputReturnValue handle_mouse(const MouseEvent& me);
+#endif
+    virtual void render();
+protected:
+    virtual void _place_items();
+
+#ifdef USE_TILE
+    ShapeBuffer m_background;
+    FontBuffer m_font_buf;
+#endif
+};
+
+/**
+ * Highlighter object
+ * TILES: It will create a colored rectangle around the currently active item
+ * CONSOLE: It will muck with the Item background color, setting it to highlight
+ *          colour, reverting the change when active changes.
+ */
+class BoxMenuHighlighter : public MenuObject
+{
+public:
+    BoxMenuHighlighter(PrecisionMenu* parent);
+    virtual ~BoxMenuHighlighter();
+
+    virtual InputReturnValue process_input(int key);
+#ifdef USE_TILE
+    virtual InputReturnValue handle_mouse(const MouseEvent& me);
+#endif
+    virtual void render();
+
+    // these are not used, clear them
+    virtual std::vector<MenuItem*> get_selected_items();
+    virtual MenuItem* get_active_item() { return NULL; }
+    virtual bool attach_item(MenuItem* item) { return false; }
+    virtual void set_active_item(int index) {}
+    virtual void set_active_item(MenuItem* item) {}
+    virtual void activate_first_item() {}
+    virtual void activate_last_item() {}
+
+    virtual bool select_item(int index) { return false; }
+    virtual bool select_item(MenuItem* item) { return false;}
+    virtual MenuItem* select_item_by_hotkey(int key) { return NULL; }
+    virtual void clear_selections() {}
+
+    // Do not allow focus
+    virtual void allow_focus(bool toggle) {}
+    virtual bool can_be_focused() { return false; }
+
+protected:
+    virtual void _place_items();
+    virtual MenuItem* _find_item_by_mouse_coords(const coord_def& pos) { return NULL; }
+    virtual MenuItem* _find_item_by_direction(const MenuItem* start,
+                                              MenuObject::Direction dir) { return NULL; }
+
+    // Used to pull out currently active item
+    PrecisionMenu* m_parent;
+    MenuItem* m_active_item;
+
+#ifdef USE_TILE
+    LineBuffer m_line_buf;
+#else
+    COLORS m_old_bg_colour;
+#endif
+};
+
+/**
+ * Base operations for a button to work
+ * TODO: implement
+ */
+class MenuButton : public MenuObject
+{
+public:
+
+protected:
+
+};
+
+/**
+ * Inheritable root node of a menu that holds MenuObjects.
+ * It is always full screen.
+ * Everything attached to it it owns, thus deleting the memory when it exits the
+ * scope.
+ * TODO: add multiple paging support
+ */
+class PrecisionMenu
+{
+public:
+    enum SelectType
+    {
+        PRECISION_SINGLESELECT,
+        PRECISION_MULTISELECT
+    };
+
+    PrecisionMenu();
+    ~PrecisionMenu();
+
+    virtual void set_select_type(SelectType flag);
+    virtual void clear();
+
+    virtual void draw_menu();
+    virtual bool process_key(int key);
+#ifdef USE_TILE
+    virtual int handle_mouse(const MouseEvent& me);
+#endif
+
+    // not const on purpose
+    virtual std::vector<MenuItem*> get_selected_items();
+
+    virtual void attach_object(MenuObject* item);
+    virtual MenuObject* get_object_by_name(const std::string& search);
+    virtual MenuItem* get_active_item();
+    virtual void set_active_object(MenuObject* object);
+protected:
+    // These correspond to the Arrow keys when used for browsing the menus
+    enum Direction{
+        UP,
+        DOWN,
+        LEFT,
+        RIGHT
+    };
     void _clear_selections();
-    int _find_item_by_direction(int begin_index, Direction dir);
-    bool _AABB_intersection(int entry_index, coord_def aabb_start,
-                             coord_def aabb_end);
+    MenuObject* _find_object_by_direction(const MenuObject* start, Direction dir);
 
-    void _draw_console_item(unsigned int index) const;
-
-    std::vector<CRTMenuEntry*> m_entries;
+    std::vector<MenuObject*> m_attached_objects;
+    MenuObject* m_active_object;
 
     SelectType m_select_type;
-    int m_highlighted_index;
-
-    // These values are mainly used to check if new entries are in bounds
-    // they are in unit sizes
-    int m_start_x;
-    int m_start_y;
-    int m_end_x;
-    int m_end_y;
-
-    coord_def m_desc_location;
 };
 
 int linebreak_string( std::string& s, int wrapcol, int maxcol );

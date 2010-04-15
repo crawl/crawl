@@ -57,14 +57,6 @@ class FTFont;
 class TilesFramework
 {
 public:
-    enum CRTRegionType
-    {
-        CRT_NOMOUSESELECT,
-        CRT_SINGLESELECT,
-       // CRT_MULTISELECT,
-        CRT_MAX
-    };
-
     TilesFramework();
     virtual ~TilesFramework();
 
@@ -115,9 +107,9 @@ public:
     MenuRegion *get_menu() { return m_region_menu; }
     bool is_fullscreen() { return m_fullscreen; }
 
-    void set_active_crt(CRTRegionType type);
-    CRTRegion* get_crt() { return m_region_crt[m_active_crt]; }
-
+    FTFont* get_crt_font() { return m_fonts.at(m_crt_font).font; }
+    CRTRegion* get_crt() { return m_region_crt; }
+    const ImageManager& get_image_manager() { return m_image; }
 protected:
     int load_font(const char *font_file, int font_size,
                   bool default_on_fail, bool outline);
@@ -170,10 +162,8 @@ protected:
     MemoriseRegion  *m_region_mem;
 
     // Full-screen CRT layer
-    CRTRegion       *m_region_crt[CRT_MAX];
+    CRTRegion       *m_region_crt;
     MenuRegion      *m_region_menu;
-
-    CRTRegionType m_active_crt;
 
     struct font_info
     {
@@ -183,6 +173,7 @@ protected:
         FTFont *font;
     };
     std::vector<font_info> m_fonts;
+    int m_crt_font;
     int m_msg_font;
     int m_tip_font;
 

@@ -14,6 +14,8 @@
 #include "tiles.h"
 #include <vector>
 
+// Forward declare
+class PrecisionMenu;
 class mcache_entry;
 
 class ImageManager
@@ -175,7 +177,6 @@ protected:
     bool m_overlay;
 };
 
-class CRTMenuEntry;
 class FTFont;
 /**
  * Expanded CRTRegion to support highlightable and clickable entries - felirx
@@ -190,12 +191,6 @@ class FTFont;
 class CRTRegion : public TextRegion
 {
 public:
-    enum HighlightStyle
-    {
-        CRT_NOHIGHLIGHT,
-        CRT_LINEHIGHLIGHT,
-        CRT_FILLHIGHLIGHT
-    };
 
     CRTRegion(FTFont *font);
     virtual ~CRTRegion();
@@ -207,45 +202,10 @@ public:
 
     virtual void on_resize();
 
-    virtual bool add_entry(CRTMenuEntry* entry);
-    // not const on purpose
-    virtual std::vector<CRTMenuEntry*> get_selected_entries();
-    void set_highlight_entry(int index);
-    int highlight_entry() const;
-    void set_highlight_style(HighlightStyle style);
-    bool select_entry(int index);
-    bool set_description_coordinates(int x, int y);
-    void use_tooltip(bool flag);
+    void attach_menu(PrecisionMenu* menu);
+    void deattach_menu();
 protected:
-    void _place_entries();
-    int _find_entry_by_mouse_coords(const coord_def& pos);
-    void _clear_selections();
-
-    bool m_allow_tooltip;
-    bool m_dirty;
-
-    coord_def m_description_coord;
-    int m_description_index;
-    int m_highlight_index;
-    HighlightStyle m_highlight_style;
-
-    std::vector<CRTMenuEntry*> m_entries;
-    ShapeBuffer m_shape_buf;
-    LineBuffer m_line_buf;
-    FontBuffer m_font_buf;
-    FixedVector<TileBuffer, TEX_MAX> m_tile_buf;
-};
-
-/**
- * Enhanced Mouse handling for CRTRegion
- * The behaviour is CRT_SINGESELECT
- */
-class CRTSingleSelect : public CRTRegion
-{
-public:
-    CRTSingleSelect(FTFont* font);
-
-    virtual int handle_mouse(MouseEvent& event);
+    PrecisionMenu* m_attached_menu;
 };
 
 class MenuEntry;
