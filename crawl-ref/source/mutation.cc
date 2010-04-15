@@ -853,7 +853,7 @@ static bool _reautomap_callback()
 
 static const char* _stat_mut_desc(mutation_type mut, bool gain)
 {
-    stat_type stat;
+    stat_type stat = STAT_STR;
     bool positive = gain;
     switch (mut)
     {
