@@ -2576,12 +2576,16 @@ std::string _status_mut_abilities()
             case MUT_BLINK:
                 current = "blink";
                 break;
+            case MUT_BEAK:
+                current = "beak";
+                break;
             case MUT_HORNS:
                 snprintf(info, INFO_SIZE, "horns %d", level);
                 current = info;
                 break;
-            case MUT_BEAK:
-                current = "beak";
+            case MUT_ANTENNAE:
+                snprintf(info, INFO_SIZE, "antennae %d", level);
+                current = info;
                 break;
             case MUT_STRONG_STIFF:
                 Str_change += level;
@@ -2658,21 +2662,16 @@ std::string _status_mut_abilities()
                 snprintf(info, INFO_SIZE, "spiny %d", level);
                 current = info;
                 break;
-            case MUT_ANTENNAE:
-                snprintf(info, INFO_SIZE, "antennae %d", level);
-                current = info;
-                break;
             case MUT_NIGHTSTALKER:
                 snprintf(info, INFO_SIZE, "nightstalker %d", level);
                 current = info;
                 break;
-
             case MUT_CLAWS:
                 snprintf(info, INFO_SIZE, "claws %d", level);
                 current = info;
                 break;
             case MUT_FANGS:
-                snprintf(info, INFO_SIZE, "sharp teeth %d", level);
+                snprintf(info, INFO_SIZE, "fangs %d", level);
                 current = info;
                 break;
             case MUT_HOOVES:
