@@ -22,7 +22,7 @@ butterfly4
 butterfly5
 butterfly6
 
-## Hounds ('h')
+## Hounds and hogs ('h')
 jackal MONS_JACKAL
 hound MONS_HOUND
 warg MONS_WARG
@@ -59,7 +59,7 @@ grey_rat MONS_GREY_RAT
 green_rat MONS_GREEN_RAT
 orange_rat MONS_ORANGE_RAT
 
-## Spiders ('s')
+## Spiders and insects ('s')
 giant_centipede MONS_GIANT_CENTIPEDE
 giant_mite MONS_GIANT_MITE
 scorpion MONS_SCORPION
