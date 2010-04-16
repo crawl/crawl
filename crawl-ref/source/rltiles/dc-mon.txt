@@ -10,6 +10,7 @@ dc-misc/error MONS_PROGRAM_BUG
 giant_cockroach MONS_GIANT_COCKROACH
 giant_ant MONS_GIANT_ANT
 soldier_ant MONS_SOLDIER_ANT
+queen_ant MONS_QUEEN_ANT
 
 ## Batty monsters ('b')
 giant_bat MONS_GIANT_BAT
@@ -32,8 +33,9 @@ hog MONS_HOG
 hell_hog MONS_HELL_HOG
 
 ## Bees ('k')
-bumblebee MONS_BUMBLEBEE
 killer_bee MONS_KILLER_BEE
+bumblebee MONS_BUMBLEBEE
+queen_bee MONS_QUEEN_BEE
 
 ## Lizards ('l')
 giant_newt MONS_GIANT_NEWT
@@ -125,10 +127,6 @@ giant_toad MONS_GIANT_TOAD
 blink_frog MONS_BLINK_FROG
 %rim 1
 spiny_frog MONS_SPINY_FROG
-
-## Queen insects ('Q')
-queen_ant MONS_QUEEN_ANT
-queen_bee MONS_QUEEN_BEE
 
 ## Snakes ('S')
 small_snake MONS_SMALL_SNAKE
