@@ -23,7 +23,7 @@ butterfly CORPSE_BUTTERFLY
 %back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
 giant_bat CORPSE_GIANT_BAT
 
-## Hounds ('h')
+## Hounds and hogs ('h')
 jackal CORPSE_JACKAL
 hound CORPSE_HOUND
 warg CORPSE_WARG
@@ -59,7 +59,7 @@ grey_rat CORPSE_GREY_RAT
 green_rat CORPSE_GREEN_RAT
 orange_rat CORPSE_ORANGE_RAT
 
-## Spiders ('s')
+## Spiders and insects ('s')
 %back dc-misc/blood_green
 giant_centipede CORPSE_GIANT_CENTIPEDE
 giant_mite CORPSE_GIANT_MITE
