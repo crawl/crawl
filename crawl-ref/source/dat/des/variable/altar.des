@@ -1005,6 +1005,83 @@ ENDMAP
 
 ### Okawaru overflow altars ###################################################
 
+NAME:   okawaru_metal_pillars_1
+WEIGHT: 4
+DEPTH:  2-10
+TAGS:   temple_overflow_okawaru
+KFEAT:  _ = altar_okawaru
+MAP
+.....
+.v.v.
+.._..
+.v.v.
+.....
+ENDMAP
+
+NAME:   okawaru_metal_pillars_2
+WEIGHT: 3
+DEPTH:  2-10
+TAGS:   temple_overflow_okawaru
+KFEAT:  _ = altar_okawaru
+MAP
+.....
+..v..
+.v_v.
+..v..
+.....
+ENDMAP
+
+NAME:   okawaru_metal_pillars_3
+WEIGHT: 3
+DEPTH:  2-10
+TAGS:   temple_overflow_okawaru
+KFEAT:  _ = altar_okawaru
+MAP
+.......
+...v...
+..v.v..
+.v._.v.
+..v.v..
+...v...
+.......
+ENDMAP
+
+NAME:   okawaru_trees_1
+WEIGHT: 5
+DEPTH:  2-10
+TAGS:   temple_overflow_okawaru
+KFEAT:  _ = altar_okawaru
+MAP
+.........
+.v.t.t.v.
+.........
+.t.t.t.t.
+...._....
+.t.t.t.t.
+.........
+.v.t.t.v.
+.........
+ENDMAP
+
+NAME:   okawaru_trees_2
+WEIGHT: 5
+DEPTH:  2-10
+TAGS:   temple_overflow_okawaru
+KFEAT:  _ = altar_okawaru
+MAP
+...........
+.v...t...v.
+....t.t....
+...t.t.t...
+..t.t.t.t..
+.t.t._.t.t.
+..t.t.t.t..
+...t.t.t...
+....t.t....
+.v...t...v.
+...........
+ENDMAP
+
 ### Sif Muna overflow altars ##################################################
 
 NAME:   lemuel_blue_sif_altar
@@ -1195,6 +1272,54 @@ MAP
 ...+..
 ......
 ......
+ENDMAP
+
+NAME:    vehumet_statue
+DEPTH:   4-10
+TAGS:    temple_overflow_vehumet
+SHUFFLE: 12
+MONS:    statue name:charred name_adjective hp:12 hd:3 spells:throw_flame
+MONS:    statue name:frost-covered name_adjective hp:12 hd:3 spells:throw_frost
+KFEAT:   _ = altar_vehumet
+MAP
+...........
+.bbbbbbbbb.
+.b.......b.
+.b.1._.....
+.b.......b.
+.bbbbbbbbb.
+...........
+ENDMAP
+
+NAME:    vehumet_crystals
+DEPTH:   2-10
+TAGS:    temple_overflow_vehumet
+KFEAT:   _ = altar_vehumet
+MAP
+.........
+..b...b..
+.bbb.bbb.
+..b...b..
+...._....
+..b...b..
+.bbb.bbb.
+..b...b..
+.........
+ENDMAP
+
+# Vehumet wants you to burn the damn trees down.
+NAME:    vehumet_trees
+DEPTH:   2-10
+TAGS:    temple_overflow_vehumet
+KFEAT:   _ = altar_vehumet
+MAP
+.......
+.ttttt.
+.t...t.
+.t._.t.
+.t...t.
+.ttttt.
+.......
 ENDMAP
 
 ### Xom overflow altars #######################################################
