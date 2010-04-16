@@ -218,6 +218,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_GIANT_ANT;
     case MONS_SOLDIER_ANT:
         return TILEP_MONS_SOLDIER_ANT;
+    case MONS_QUEEN_ANT:
+        return TILEP_MONS_QUEEN_ANT;
 
     // batty monsters ('b')
     case MONS_GIANT_BAT:
@@ -324,6 +326,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_KILLER_BEE;
     case MONS_BUMBLEBEE:
         return TILEP_MONS_BUMBLEBEE;
+    case MONS_QUEEN_BEE:
+        return TILEP_MONS_QUEEN_BEE;
 
     // lizards ('l')
     case MONS_GIANT_NEWT:
@@ -727,12 +731,6 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_BUSH;
     case MONS_OKLOB_PLANT:
         return TILEP_MONS_OKLOB_PLANT;
-
-    // queen insects ('Q')
-    case MONS_QUEEN_BEE:
-        return TILEP_MONS_QUEEN_BEE;
-    case MONS_QUEEN_ANT:
-        return TILEP_MONS_QUEEN_ANT;
 
     // rakshasa ('R')
     case MONS_RAKSHASA:
@@ -1864,6 +1862,8 @@ static int _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_GIANT_ANT;
     case MONS_SOLDIER_ANT:
         return TILE_CORPSE_SOLDIER_ANT;
+    case MONS_QUEEN_ANT:
+        return TILE_CORPSE_QUEEN_ANT;
 
     // batty monsters ('b')
     case MONS_GIANT_BAT:
@@ -1960,6 +1960,8 @@ static int _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_KILLER_BEE;
     case MONS_BUMBLEBEE:
         return TILE_CORPSE_BUMBLEBEE;
+    case MONS_QUEEN_BEE:
+        return TILE_CORPSE_QUEEN_BEE;
 
     // lizards ('l')
     case MONS_GIANT_NEWT:
@@ -2205,12 +2207,6 @@ static int _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_OGRE;
     case MONS_TWO_HEADED_OGRE:
         return TILE_CORPSE_TWO_HEADED_OGRE;
-
-    // queen insects ('Q')
-    case MONS_QUEEN_BEE:
-        return TILE_CORPSE_QUEEN_BEE;
-    case MONS_QUEEN_ANT:
-        return TILE_CORPSE_QUEEN_ANT;
 
     // snakes ('S')
     case MONS_SMALL_SNAKE:
