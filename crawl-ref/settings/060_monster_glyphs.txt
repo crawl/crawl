@@ -8,3 +8,10 @@
 cset_ascii = wavy:{, invis_exposed:~, item_detected:~
 cset_ibm = invis_exposed:~, item_detected:~
 cset_unicode = invis_exposed:~
+
+###########################
+# monsters
+###########################
+
+# spiders and insects
+mon_glyph = demonic crawler : green 3

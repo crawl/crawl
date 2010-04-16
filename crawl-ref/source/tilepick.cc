@@ -443,6 +443,8 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_TRAPDOOR_SPIDER;
     case MONS_REDBACK:
         return TILEP_MONS_REDBACK;
+    case MONS_DEMONIC_CRAWLER:
+        return TILEP_MONS_DEMONIC_CRAWLER;
 
     // turtles and crocodiles ('t')
     case MONS_CROCODILE:
@@ -942,8 +944,6 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_ORANGE_DEMON;
     case MONS_YNOXINUL:
         return TILEP_MONS_YNOXINUL;
-    case MONS_DEMONIC_CRAWLER:
-        return TILEP_MONS_DEMONIC_CRAWLER;
     case MONS_SHADOW_DEMON:
         return TILEP_MONS_SHADOW_DEMON;
     case MONS_CHAOS_SPAWN:
