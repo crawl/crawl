@@ -66,6 +66,7 @@ scorpion MONS_SCORPION
 wolf_spider MONS_WOLF_SPIDER
 trapdoor_spider MONS_TRAPDOOR_SPIDER
 redback MONS_REDBACK
+demonic_crawler MONS_DEMONIC_CRAWLER
 
 ## Turtles and crocodiles ('t')
 crocodile MONS_CROCODILE
@@ -207,7 +208,6 @@ sun_demon MONS_SUN_DEMON
 # type '3' demons
 blue_devil MONS_BLUE_DEVIL
 chaos_spawn MONS_CHAOS_SPAWN
-demonic_crawler MONS_DEMONIC_CRAWLER
 hellion MONS_HELLION
 iron_devil MONS_IRON_DEVIL
 neqoxec MONS_NEQOXEC
