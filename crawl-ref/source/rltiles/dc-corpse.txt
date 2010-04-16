@@ -16,6 +16,7 @@
 giant_cockroach CORPSE_GIANT_COCKROACH
 giant_ant CORPSE_GIANT_ANT
 soldier_ant CORPSE_SOLDIER_ANT
+queen_ant CORPSE_QUEEN_ANT
 
 ## Batty monsters ('b')
 butterfly CORPSE_BUTTERFLY
@@ -32,8 +33,9 @@ hog CORPSE_HOG
 
 ## Bees ('k')
 %back dc-misc/blood_green
-bumblebee CORPSE_BUMBLEBEE
 killer_bee CORPSE_KILLER_BEE
+bumblebee CORPSE_BUMBLEBEE
+queen_bee CORPSE_QUEEN_BEE
 
 ## Lizards ('l')
 %back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
@@ -114,11 +116,6 @@ giant_frog CORPSE_GIANT_FROG
 giant_toad CORPSE_GIANT_TOAD
 blink_frog CORPSE_BLINK_FROG
 spiny_frog CORPSE_SPINY_FROG
-
-## Queen insects ('Q')
-%back dc-misc/blood_green
-queen_ant CORPSE_QUEEN_ANT
-queen_bee CORPSE_QUEEN_BEE
 
 ## Snakes ('S')
 %back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
