@@ -731,7 +731,8 @@ public:
         INPUT_FOCUS_RELEASE_UP,   // Selection went out of menu from top
         INPUT_FOCUS_RELEASE_DOWN, // Selection went out of menu from down
         INPUT_FOCUS_RELEASE_LEFT, // Selection went out of menu from left
-        INPUT_FOCUS_RELEASE_RIGHT // Selection went out of menu from right
+        INPUT_FOCUS_RELEASE_RIGHT,// Selection went out of menu from right
+        INPUT_FOCUS_LOST          // Eg. the user is moving his mouse somewhere else
     };
 
     MenuObject();
@@ -777,6 +778,7 @@ protected:
         RIGHT
     };
     virtual void _place_items() = 0;
+    virtual bool _is_mouse_in_bounds(const coord_def& pos);
     virtual MenuItem* _find_item_by_mouse_coords(const coord_def& pos);
     virtual MenuItem* _find_item_by_direction(const MenuItem* start,
                                               MenuObject::Direction dir) = 0;
@@ -990,6 +992,24 @@ protected:
 #else
     COLORS m_old_bg_colour;
 #endif
+};
+
+class BlackWhiteHighlighter : public BoxMenuHighlighter
+{
+public:
+    BlackWhiteHighlighter(PrecisionMenu* parent);
+    virtual ~BlackWhiteHighlighter();
+
+    virtual void render();
+protected:
+    virtual void _place_items();
+
+#ifdef USE_TILE
+    // Tiles does not seem to support background colors
+    ShapeBuffer m_shape_buf;
+#endif
+    COLORS m_old_bg_colour;
+    COLORS m_old_fg_colour;
 };
 
 /**

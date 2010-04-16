@@ -636,7 +636,7 @@ static void _apply_job_colour(item_def &item)
     }
 }
 
-bool new_game(void)
+bool new_game(const std::string& name)
 {
     clrscr();
     _init_player();
@@ -661,7 +661,7 @@ bool new_game(void)
 
     opening_screen();
     ng.init(you);
-    enter_player_name(ng, true);
+    ng.name = name;
     ng.save(you);
 
     if (!you.your_name.empty())
