@@ -820,7 +820,7 @@ static monsterentry mondata[] = {
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_LITTLE
 },
 
-// hounds ('h')
+// hounds and hogs ('h')
 {
     MONS_JACKAL, 'h', BROWN, "jackal",
     M_WARM_BLOOD | M_BLOOD_SCENT,
