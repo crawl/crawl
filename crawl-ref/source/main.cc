@@ -115,6 +115,7 @@
 #include "stash.h"
 #include "state.h"
 #include "stuff.h"
+#include "startup.h"
 #include "tags.h"
 #include "terrain.h"
 #include "transform.h"
@@ -174,7 +175,6 @@ const struct coord_def Compass[8] =
 
 // Functions in main module
 static void _do_berserk_no_combat_penalty(void);
-static bool _initialise(void);
 static void _input(void);
 static void _move_player(int move_x, int move_y);
 static void _move_player(coord_def move);
@@ -261,7 +261,10 @@ int main(int argc, char *argv[])
         return -1;
 #endif
 
-    const bool game_start = _initialise();
+    const bool game_start = startup_step();
+
+    // Attach the macro key recorder
+    add_key_recorder(&repeat_again_rec);
 
     // Override some options for tutorial.
     init_tutorial_options();
@@ -3361,276 +3364,6 @@ static void _close_door(coord_def move)
             break;
         }
     }
-}
-
-// Initialise a whole lot of stuff...
-// Returns true if a new character.
-static bool _initialise(void)
-{
-    Options.fixup_options();
-
-    // Read the options the player used last time they created a new
-    // character.
-    read_startup_prefs();
-
-    you.symbol = '@';
-    you.colour = LIGHTGREY;
-
-    if (Options.seed)
-        seed_rng(Options.seed);
-    else
-        seed_rng();
-    get_typeid_array().init(ID_UNKNOWN_TYPE);
-    init_char_table(Options.char_set);
-    init_show_table();
-    init_monster_symbols();
-    init_spell_descs();        // This needs to be way up top. {dlb}
-    init_zap_index();
-    init_mut_index();
-    init_mon_name_cache();
-    init_mons_spells();
-
-    // init_item_name_cache() needs to be redone after init_char_table()
-    // and init_show_table() have been called, so that the glyphs will
-    // be set to use with item_names_by_glyph_cache.
-    init_item_name_cache();
-
-    msg::initialise_mpr_streams();
-
-    // Init item array.
-    for (int i = 0; i < MAX_ITEMS; ++i)
-        init_item(i);
-
-    // Empty messaging string.
-    info[0] = 0;
-
-    for (int i = 0; i < MAX_MONSTERS; ++i)
-        menv[i].reset();
-
-    igrd.init(NON_ITEM);
-    mgrd.init(NON_MONSTER);
-    env.map_knowledge.init(map_cell());
-    env.pgrid.init(0);
-
-    you.unique_creatures.init(false);
-    you.unique_items.init(UNIQ_NOT_EXISTS);
-
-    // Set up the Lua interpreter for the dungeon builder.
-    init_dungeon_lua();
-
-#ifdef USE_TILE
-    // Draw the splash screen before the database gets initialised as that
-    // may take awhile and it's better if the player can look at a pretty
-    // screen while this happens.
-    if (!crawl_state.map_stat_gen && !crawl_state.test
-        && Options.tile_title_screen)
-    {
-        tiles.draw_title();
-        tiles.update_title_msg("Loading Databases...");
-    }
-#endif
-
-    // Initialise internal databases.
-    databaseSystemInit();
-#ifdef USE_TILE
-    if (Options.tile_title_screen)
-        tiles.update_title_msg("Loading Spells and Features...");
-#endif
-
-    init_feat_desc_cache();
-    init_spell_name_cache();
-    init_spell_rarities();
-#ifdef USE_TILE
-    if (Options.tile_title_screen)
-        tiles.update_title_msg("Loading maps...");
-#endif
-
-    // Read special levels and vaults.
-    read_maps();
-
-    if (crawl_state.build_db)
-        end(0);
-
-    cio_init();
-
-    // System initialisation stuff.
-    textbackground(0);
-#ifdef USE_TILE
-    if (Options.tile_title_screen)
-    {
-        tiles.update_title_msg("Loading complete, press any key to start.");
-        tiles.hide_title();
-    }
-#endif
-
-    clrscr();
-
-#ifdef DEBUG_DIAGNOSTICS
-    if (crawl_state.map_stat_gen)
-    {
-        generate_map_stats();
-        end(0, false);
-    }
-#endif
-
-    if (crawl_state.test)
-    {
-#if defined(DEBUG_TESTS) && !defined(DEBUG)
-#error "DEBUG must be defined if DEBUG_TESTS is defined"
-#endif
-
-#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_TESTS)
-#ifdef USE_TILE
-        init_player_doll();
-        tiles.initialise_items();
-#endif
-        crawl_state.show_more_prompt = false;
-        crawl_tests::run_tests(true);
-        // Superfluous, just to make it clear that this is the end of
-        // the line.
-        end(0, false);
-#else
-        end(1, false, "Non-debug Crawl cannot run tests. "
-            "Please use a debug build (defined FULLDEBUG, DEBUG_DIAGNOSTIC "
-            "or DEBUG_TESTS)");
-#endif
-    }
-
-
-    if (crawl_state.game_is_arena())
-    {
-        run_map_preludes();
-        initialise_item_descriptions();
-#ifdef USE_TILE
-        tiles.initialise_items();
-#endif
-
-        run_arena();
-        end(0, false);
-    }
-
-    // Sets up a new game.
-    const bool newc = new_game();
-    if (!newc)
-        restore_game();
-
-    // Fix the mutation definitions for the species we're playing.
-    fixup_mutations();
-
-    // Load macros
-    macro_init();
-
-    crawl_state.need_save = true;
-
-    calc_hp();
-    calc_mp();
-
-    run_map_preludes();
-
-    if (newc && you.char_direction == GDT_GAME_START)
-    {
-        // Chaos Knights of Lugonu start out in the Abyss.
-        you.level_type  = LEVEL_ABYSS;
-        you.entry_cause = EC_UNKNOWN;
-    }
-
-    load(you.entering_level ? you.transit_stair : DNGN_STONE_STAIRS_DOWN_I,
-         you.entering_level ? LOAD_ENTER_LEVEL :
-         newc               ? LOAD_START_GAME : LOAD_RESTART_GAME,
-         NUM_LEVEL_AREA_TYPES, -1, you.where_are_you);
-
-    if (newc && you.char_direction == GDT_GAME_START)
-    {
-        // Randomise colours properly for the Abyss.
-        init_pandemonium();
-    }
-
-#ifdef DEBUG_DIAGNOSTICS
-    // Debug compiles display a lot of "hidden" information, so we auto-wiz.
-    you.wizard = true;
-#endif
-
-    init_properties();
-    burden_change();
-    make_hungry(0, true);
-
-    you.redraw_stats.init(true);
-    you.redraw_armour_class = true;
-    you.redraw_evasion      = true;
-    you.redraw_experience   = true;
-    you.redraw_quiver       = true;
-    you.wield_change        = true;
-
-    // Start timer on session.
-    you.start_time = time(NULL);
-
-#ifdef CLUA_BINDINGS
-    clua.runhook("chk_startgame", "b", newc);
-    std::string yname = you.your_name; // XXX: what's this for?
-    read_init_file(true);
-    Options.fixup_options();
-    you.your_name = yname;
-
-    // In case Lua changed the character set.
-    init_char_table(Options.char_set);
-    init_show_table();
-    init_monster_symbols();
-#endif
-
-#ifdef USE_TILE
-    // Override inventory weights options for tiled menus.
-    if (Options.tile_menu_icons && Options.show_inventory_weights)
-        Options.show_inventory_weights = false;
-
-    init_player_doll();
-
-    tiles.resize();
-#endif
-
-    draw_border();
-    new_level();
-    update_turn_count();
-
-    // Set vision radius to player's current vision.
-    set_los_radius(you.current_vision);
-    init_exclusion_los();
-
-    trackers_init_new_level(false);
-
-    if (newc) // start a new game
-    {
-        you.friendly_pickup = Options.default_friendly_pickup;
-
-        // Mark items in inventory as of unknown origin.
-        origin_set_inventory(origin_set_unknown);
-
-        // For a new game, wipe out monsters in LOS, and
-        // for new tutorial games also the items.
-        zap_los_monsters(Tutorial.tutorial_events[TUT_SEEN_FIRST_OBJECT]);
-
-        // For a newly started tutorial, turn secret doors into normal ones.
-        if (Tutorial.tutorial_left)
-            tutorial_zap_secret_doors();
-    }
-
-#ifdef USE_TILE
-    tiles.initialise_items();
-    // Must re-run as the feature table wasn't initialised yet.
-    TileNewLevel(newc);
-#endif
-
-    // This just puts the view up for the first turn.
-    viewwindow(false);
-
-    activate_notes(true);
-
-    add_key_recorder(&repeat_again_rec);
-
-    // XXX: And run Lua map postludes for D:1. Kinda hacky, it shouldn't really
-    // be here.
-    run_map_epilogues();
-
-    return (newc);
 }
 
 // An attempt to tone down berserk a little bit. -- bwross

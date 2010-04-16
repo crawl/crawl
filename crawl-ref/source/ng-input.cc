@@ -18,8 +18,8 @@ void opening_screen(void)
     "<yellow>Hello, welcome to " CRAWL " " + Version::Long() + "!</yellow>\n"
     "<brown>(c) Copyright 1997-2002 Linley Henzell, "
     "2002-2010 Crawl DevTeam\n"
-    "Please consult crawl_manual.txt for instructions and legal details."
-    "</brown>\n";
+    "Read the instructions for legal details."
+    "</brown>" ;
 
     const bool init_found = init_file_error.empty();
 
@@ -104,7 +104,7 @@ static void _preprocess_character_name(std::string &name, bool blankOK)
     }
 }
 
-static bool _is_good_name(std::string &name, bool blankOK, bool verbose)
+bool is_good_name(std::string &name, bool blankOK, bool verbose)
 {
     _preprocess_character_name(name, blankOK);
 
@@ -205,7 +205,7 @@ void enter_player_name(newgame_def &ng, bool blankOK)
     if (!ng.name.empty())
         ask_name = false;
 
-    if (blankOK && (ask_name || !_is_good_name(ng.name, false, false)))
+    if (blankOK && (ask_name || !is_good_name(ng.name, false, false)))
     {
         existing_chars = find_saved_characters();
         if (existing_chars.empty())
@@ -254,7 +254,7 @@ void enter_player_name(newgame_def &ng, bool blankOK)
             trim_string(ng.name);
         }
     }
-    while (ask_name = !_is_good_name(ng.name, blankOK, true));
+    while (ask_name = !is_good_name(ng.name, blankOK, true));
 }
 
 bool validate_player_name(const std::string &name, bool verbose)

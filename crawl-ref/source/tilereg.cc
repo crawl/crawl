@@ -4665,13 +4665,7 @@ void CRTRegion::clear()
 {
     // clear all the texts
     TextRegion::clear();
-
-    // free all the used memory
-    if (m_attached_menu != NULL)
-    {
-        delete m_attached_menu;
-        m_attached_menu = NULL;
-    }
+    detach_menu();
 }
 
 void CRTRegion::render()
@@ -4690,12 +4684,12 @@ void CRTRegion::render()
 
 void CRTRegion::attach_menu(PrecisionMenu* menu)
 {
-    deattach_menu();
+    detach_menu();
 
     m_attached_menu = menu;
 }
 
-void CRTRegion::deattach_menu()
+void CRTRegion::detach_menu()
 {
     // Tiles has no rights over the menu, thus the user must delete it
     // Via other means

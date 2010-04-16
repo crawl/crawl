@@ -57,7 +57,7 @@ struct newgame_def
 
 undead_state_type get_undead_state(const species_type sp);
 
-bool new_game();
+bool new_game(const std::string& name);
 
 int give_first_conjuration_book();
 

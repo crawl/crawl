@@ -2173,7 +2173,7 @@ PrecisionMenu::~PrecisionMenu()
 {
     clear();
 #ifdef USE_TILE
-    tiles.get_crt()->deattach_menu();
+    tiles.get_crt()->detach_menu();
 #endif
 }
 
@@ -2349,7 +2349,6 @@ int PrecisionMenu::handle_mouse(const MouseEvent &me)
             {
                 return CK_MOUSE_CLICK;
             }
-            // Set the active object to be the one we clicked
             break;
         case MenuObject::INPUT_ACTIVE_CHANGED:
             // Set the active object to be this one
@@ -2361,6 +2360,12 @@ int PrecisionMenu::handle_mouse(const MouseEvent &me)
         case MenuObject::INPUT_END_MENU_ABORT:
             _clear_selections();
             return CK_MOUSE_CLICK;
+        case MenuObject::INPUT_FOCUS_LOST:
+            if (*it == m_active_object)
+            {
+                // The object lost it's focus and is no longer the active one
+                m_active_object = NULL;
+            }
         default:
             break;
         }
@@ -2983,8 +2988,27 @@ void MenuObject::init(const coord_def& min_coord, const coord_def& max_coord,
     m_object_name = name;
 }
 
+bool MenuObject::_is_mouse_in_bounds(const coord_def& pos)
+{
+    // Is the mouse in our bounds?
+    if (m_min_coord.x > static_cast<int> (pos.x)
+        || m_max_coord.x < static_cast<int> (pos.x)
+        || m_min_coord.y > static_cast<int> (pos.y)
+        || m_max_coord.y < static_cast<int> (pos.y))
+    {
+        return false;
+    }
+    return true;
+}
+
 MenuItem* MenuObject::_find_item_by_mouse_coords(const coord_def& pos)
 {
+    // Is the mouse even in bounds?
+    if (!_is_mouse_in_bounds(pos))
+    {
+        return NULL;
+    }
+
     // Traverse
     std::vector<MenuItem*>::iterator it;
     for (it = m_entries.begin(); it != m_entries.end(); ++it)
@@ -2992,6 +3016,11 @@ MenuItem* MenuObject::_find_item_by_mouse_coords(const coord_def& pos)
         if (!(*it)->can_be_highlighted())
         {
             // this is a noselect entry, skip it
+            continue;
+        }
+        if (!(*it)->is_visible())
+        {
+            // this item is not visible, skip it
             continue;
         }
         if (pos.x >= (*it)->get_min_coord().x
@@ -3092,6 +3121,9 @@ MenuFreeform::~MenuFreeform()
 
 MenuObject::InputReturnValue MenuFreeform::process_input(int key)
 {
+    if (!m_allow_focus || !m_visible)
+        return INPUT_NO_ACTION;
+
     if (m_active_item == NULL)
     {
         if (m_entries.size() == 0)
@@ -3202,13 +3234,22 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
 #ifdef USE_TILE
 MenuObject::InputReturnValue MenuFreeform::handle_mouse(const MouseEvent& me)
 {
-    // Is the mouse in our bounds?
-    if (m_min_coord.x > static_cast<int> (me.px)
-        || m_max_coord.x < static_cast<int> (me.px)
-        || m_min_coord.y > static_cast<int> (me.py)
-        || m_max_coord.y < static_cast<int> (me.py))
+    if (!m_allow_focus || !m_visible)
     {
         return INPUT_NO_ACTION;
+    }
+
+    if (!_is_mouse_in_bounds(coord_def(me.px, me.py)))
+    {
+        if (m_active_item != NULL)
+        {
+            set_active_item(-1);
+            return INPUT_FOCUS_LOST;
+        }
+        else
+        {
+            return INPUT_NO_ACTION;
+        }
     }
 
     MenuItem* find_item = NULL;
@@ -3218,13 +3259,21 @@ MenuObject::InputReturnValue MenuFreeform::handle_mouse(const MouseEvent& me)
         find_item = _find_item_by_mouse_coords(coord_def(me.px, me.py));
         if (find_item == NULL)
         {
-            set_active_item(-1);
+            if (m_active_item != NULL)
+            {
+                set_active_item(-1);
+                return INPUT_NO_ACTION;
+            }
         }
         else
         {
-            set_active_item(find_item);
+            if (m_active_item != find_item)
+            {
+                set_active_item(find_item);
+                return INPUT_ACTIVE_CHANGED;
+            }
         }
-        return INPUT_ACTIVE_CHANGED;
+        return INPUT_NO_ACTION;
     }
     if (me.event == MouseEvent::RELEASE && me.button == MouseEvent::LEFT)
     {
@@ -3439,6 +3488,11 @@ MenuItem* MenuFreeform::_find_item_by_direction(const MenuItem* start,
             // this is a noselect entry, skip it
             continue;
         }
+        if (!(*it)->is_visible())
+        {
+            // this item is not visible, skip it
+            continue;
+        }
         if (!_AABB_intersection((*it)->get_min_coord(), (*it)->get_max_coord(),
                                 aabb_start, aabb_end))
         {
@@ -3503,6 +3557,9 @@ MenuScroller::~MenuScroller()
 
 MenuObject::InputReturnValue MenuScroller::process_input(int key)
 {
+    if (!m_allow_focus || !m_visible)
+        return INPUT_NO_ACTION;
+
     if (m_currently_active < 0)
     {
         if (m_entries.size() == 0)
@@ -3592,13 +3649,22 @@ MenuObject::InputReturnValue MenuScroller::process_input(int key)
 #ifdef USE_TILE
 MenuObject::InputReturnValue MenuScroller::handle_mouse(const MouseEvent &me)
 {
-    // Is the mouse in our bounds?
-    if (m_min_coord.x > static_cast<int> (me.px)
-        || m_max_coord.x < static_cast<int> (me.px)
-        || m_min_coord.y > static_cast<int> (me.py)
-        || m_max_coord.y < static_cast<int> (me.py))
+    if (!m_allow_focus || !m_visible)
     {
         return INPUT_NO_ACTION;
+    }
+
+    if (!_is_mouse_in_bounds(coord_def(me.px, me.py)))
+    {
+        if (m_currently_active >= 0)
+        {
+            set_active_item(-1);
+            return INPUT_FOCUS_LOST;
+        }
+        else
+        {
+            return INPUT_NO_ACTION;
+        }
     }
 
     MenuItem* find_item = NULL;
@@ -3608,14 +3674,39 @@ MenuObject::InputReturnValue MenuScroller::handle_mouse(const MouseEvent &me)
         find_item = _find_item_by_mouse_coords(coord_def(me.px, me.py));
         if (find_item == NULL)
         {
-            set_active_item(-1);
+            if (m_currently_active >= 0)
+            {
+                // Do not signal on cleared active events
+                set_active_item(-1);
+                return INPUT_NO_ACTION;
+            }
         }
         else
         {
-            set_active_item(find_item);
+            if (m_currently_active >= 0)
+            {
+                // prevent excess _place_item calls if the mouse over is already
+                // active
+                if (find_item != m_entries.at(m_currently_active))
+                {
+                    set_active_item(find_item);
+                    return INPUT_ACTIVE_CHANGED;
+                }
+                else
+                {
+                    return INPUT_NO_ACTION;
+                }
+            }
+            else
+            {
+                set_active_item(find_item);
+                return INPUT_ACTIVE_CHANGED;
+            }
+
         }
-        return INPUT_ACTIVE_CHANGED;
+        return INPUT_NO_ACTION;
     }
+
     if (me.event == MouseEvent::RELEASE && me.button == MouseEvent::LEFT)
     {
         find_item = _find_item_by_mouse_coords(coord_def(me.px,
@@ -3680,6 +3771,10 @@ void MenuScroller::set_active_item(int index)
     if (index >= 0 && index < static_cast<int> (m_entries.size()))
     {
         m_currently_active = index;
+        if (m_currently_active < m_topmost_visible)
+        {
+            m_topmost_visible = m_currently_active;
+        }
     }
     else
     {
@@ -3710,7 +3805,10 @@ void MenuScroller::set_active_item(MenuItem* item)
 void MenuScroller::activate_first_item()
 {
     if (m_entries.size() > 0)
+    {
+        m_topmost_visible = 0;
         set_active_item(0);
+    }
 }
 
 void MenuScroller::activate_last_item()
@@ -3746,6 +3844,8 @@ bool MenuScroller::select_item(MenuItem* item)
 
 bool MenuScroller::attach_item(MenuItem* item)
 {
+    // _place_entries controls visibility, hide it until it's processed
+    item->set_visible(false);
     m_entries.push_back(item);
     m_dirty = true;
     return true;
@@ -3753,97 +3853,84 @@ bool MenuScroller::attach_item(MenuItem* item)
 
 /**
  * Changes the bounds of the items that are to be visible
- * places invisible entries at (-1,-1),(-1,-1)
  * preserves user set item heigth
  * does not preserve width
  */
 void MenuScroller::_place_items()
 {
     m_dirty = false;
+    m_items_shown = 0;
 
     int item_height = 0;
     int space_used = 0;
-    int work_index = 0;
+    int one_past_last = 0;
     const int space_available = m_max_coord.y - m_min_coord.y;
     coord_def min_coord(0,0);
     coord_def max_coord(0,0);
 
-    // clear all the space before
-    for (; work_index < m_topmost_visible; ++work_index)
+    // Hide all the items
+    std::vector<MenuItem*>::iterator it;
+    for (it = m_entries.begin(); it != m_entries.end(); ++it)
     {
-        min_coord = m_entries.at(work_index)->get_min_coord();
-        max_coord = m_entries.at(work_index)->get_max_coord();
-        min_coord.x = -1;
-        max_coord.x = -1;
-        m_entries.at(work_index)->set_bounds_no_multiply(min_coord, max_coord);
+        (*it)->set_visible(false);
+        (*it)->allow_highlight(false);
     }
 
-    while (space_used < space_available)
+    // calculate how many entries we can fit
+    for (one_past_last = m_topmost_visible;
+         one_past_last < static_cast<int> (m_entries.size());
+         ++one_past_last)
     {
-        if (work_index >= static_cast<int> (m_entries.size()))
+        space_used += m_entries.at(one_past_last)->get_max_coord().y
+                      - m_entries.at(one_past_last)->get_min_coord().y;
+        if (space_used > space_available)
         {
-            // reached end
-            break;
-        }
-        min_coord = m_entries.at(work_index)->get_min_coord();
-        max_coord = m_entries.at(work_index)->get_max_coord();
-        item_height = max_coord.y - min_coord.y;
-        if ((space_used + item_height) > space_available)
-        {
-            // this item will not fit
-            // Have we already added the currently active one?
-            if (work_index > m_currently_active)
+            if (m_currently_active < 0)
             {
-                // we have, cut this item and escape the loop
-                m_entries.at(work_index)->set_bounds_no_multiply(min_coord, max_coord);
-                m_entries.at(work_index)->set_visible(false);
+                break; // all space allocated
+            }
+            if (one_past_last > m_currently_active)
+            {
+                /// we included our active one, ok!
                 break;
             }
             else
             {
-                // our active item is not yet visible, cut the topmost item
-                // and start the loop from start again
-                min_coord = m_entries.at(m_topmost_visible)->get_min_coord();
-                max_coord = m_entries.at(m_topmost_visible)->get_max_coord();
-                min_coord.x = -1;
-                max_coord.x = -1;
-                m_entries.at(work_index)->set_bounds_no_multiply(min_coord, max_coord);
+                // active one didn't fit, chop the first one and run the loop
+                // again
                 ++m_topmost_visible;
+                one_past_last = m_topmost_visible - 1;
                 space_used = 0;
-                work_index = m_topmost_visible;
-                m_items_shown = 0;
+                continue;
             }
         }
-        else
-        {
-            // it will fit
-            min_coord.x = m_min_coord.x;
-            // preserve space for a nice scrollbar
-#ifdef USE_TILE
-            // width of one tile
-            // TODO: get rid of magic number
-            max_coord.x = m_max_coord.x - 32.0f;
-#else
-            // width of one letters
-            max_coord.x = m_max_coord.x - 1;
-#endif
-            min_coord.y = m_min_coord.y + space_used;
-            max_coord.y = min_coord.y + item_height;
-            m_entries.at(work_index)->set_bounds_no_multiply(min_coord, max_coord);
-            space_used += item_height;
-            ++work_index;
-            ++m_items_shown;
-        }
-
     }
-    // clear all the items after
-    for (; work_index < static_cast<int> (m_entries.size()); ++work_index)
+
+    space_used = 0;
+    int work_index = 0;
+
+    for (work_index = m_topmost_visible; work_index < one_past_last;
+         ++work_index)
     {
         min_coord = m_entries.at(work_index)->get_min_coord();
         max_coord = m_entries.at(work_index)->get_max_coord();
-        min_coord.x = -1;
-        max_coord.x = -1;
+        item_height = max_coord.y - min_coord.y;
+
+        min_coord.y = m_min_coord.y + space_used;
+        max_coord.y = min_coord.y + item_height;
+        min_coord.x = m_min_coord.x;
+#ifdef USE_TILE
+        // reserve one tile space for scrollbar
+        max_coord.x = m_max_coord.x - 32;
+#else
+        // reserve one character space for scrollbar
+        max_coord.x = m_max_coord.x - 1;
+#endif
         m_entries.at(work_index)->set_bounds_no_multiply(min_coord, max_coord);
+        m_entries.at(work_index)->set_visible(true);
+        m_entries.at(work_index)->allow_highlight(true);
+        space_used += item_height;
+        ++m_items_shown;
     }
 }
 
@@ -3854,13 +3941,13 @@ MenuItem* MenuScroller::_find_item_by_direction(int start_index,
     switch (dir)
     {
     case UP:
-        if (start_index - 1 >= 0)
+        if ((start_index - 1) >= 0)
         {
             find_item = m_entries.at(start_index - 1);
         }
         break;
     case DOWN:
-        if (start_index + 1 < static_cast<int> (m_entries.size()))
+        if ((start_index + 1) < static_cast<int> (m_entries.size()))
         {
             find_item = m_entries.at(start_index + 1);
         }
@@ -4031,5 +4118,69 @@ void BoxMenuHighlighter::_place_items()
         tmp->set_bg_colour(tmp->get_highlight_colour());
     }
 #endif
+    m_active_item = tmp;
+}
+
+
+BlackWhiteHighlighter::BlackWhiteHighlighter(PrecisionMenu* parent):
+    BoxMenuHighlighter(parent)
+{
+    ASSERT(m_parent != NULL);
+}
+
+BlackWhiteHighlighter::~BlackWhiteHighlighter()
+{
+}
+
+void BlackWhiteHighlighter::render()
+{
+    if (!m_visible)
+    {
+        return;
+    }
+
+    _place_items();
+
+    if (m_active_item != NULL)
+    {
+#ifdef USE_TILE
+        m_shape_buf.draw();
+#endif
+        m_active_item->render();
+    }
+}
+
+void BlackWhiteHighlighter::_place_items()
+{
+    MenuItem* tmp = m_parent->get_active_item();
+    if (tmp == m_active_item)
+    {
+        return;
+    }
+
+#ifdef USE_TILE
+    m_shape_buf.clear();
+#endif
+    // we had an active item before
+    if (m_active_item != NULL)
+    {
+        // clear the highlight trickery
+        m_active_item->set_fg_colour(m_old_fg_colour);
+        m_active_item->set_bg_colour(m_old_bg_colour);
+        // redraw the old item
+        m_active_item->render();
+    }
+    if (tmp != NULL)
+    {
+#ifdef USE_TILE
+        m_shape_buf.add(tmp->get_min_coord().x, tmp->get_min_coord().y,
+                        tmp->get_max_coord().x, tmp->get_max_coord().y,
+                        term_colours[LIGHTGRAY]);
+#endif
+        m_old_bg_colour = tmp->get_bg_colour();
+        m_old_fg_colour = tmp->get_fg_colour();
+        tmp->set_bg_colour(LIGHTGRAY);
+        tmp->set_fg_colour(BLACK);
+    }
     m_active_item = tmp;
 }

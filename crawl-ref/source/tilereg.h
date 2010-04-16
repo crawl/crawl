@@ -203,7 +203,7 @@ public:
     virtual void on_resize();
 
     void attach_menu(PrecisionMenu* menu);
-    void deattach_menu();
+    void detach_menu();
 protected:
     PrecisionMenu* m_attached_menu;
 };
