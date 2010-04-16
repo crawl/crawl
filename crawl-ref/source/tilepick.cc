@@ -293,7 +293,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_BOGGART:
         return TILEP_MONS_BOGGART;
 
-    // hounds ('h')
+    // hounds and hogs ('h')
     case MONS_JACKAL:
         return TILEP_MONS_JACKAL;
     case MONS_HOUND:
@@ -430,7 +430,7 @@ int tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_ORANGE_RAT:
         return TILEP_MONS_ORANGE_RAT;
 
-    // spiders ('s')
+    // spiders and insects ('s')
     case MONS_GIANT_MITE:
         return TILEP_MONS_GIANT_MITE;
     case MONS_GIANT_CENTIPEDE:
@@ -1933,7 +1933,7 @@ static int _tileidx_corpse(const item_def &item)
     case MONS_GNOLL:
         return TILE_CORPSE_GNOLL;
 
-    // hounds ('h')
+    // hounds and hogs ('h')
     case MONS_JACKAL:
         return TILE_CORPSE_JACKAL;
     case MONS_HOUND:
@@ -2022,7 +2022,7 @@ static int _tileidx_corpse(const item_def &item)
     case MONS_ORANGE_RAT:
         return TILE_CORPSE_ORANGE_RAT;
 
-    // spiders ('s')
+    // spiders and insects ('s')
     case MONS_GIANT_MITE:
         return TILE_CORPSE_GIANT_MITE;
     case MONS_GIANT_CENTIPEDE:
