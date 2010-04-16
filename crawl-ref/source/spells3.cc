@@ -1487,7 +1487,7 @@ void you_teleport(void)
     // [Cha] here we block teleportation, which will save the player from
     // death from read-id'ing scrolls (in sprint)
     if (crawl_state.game_is_sprint() || item_blocks_teleport(true, true))
-        canned_msg(MSG_WEIRD_STASIS);
+        canned_msg(MSG_STRANGE_STASIS);
     else if (you.duration[DUR_TELEPORT])
     {
         mpr("You feel strangely stable.");
@@ -1598,7 +1598,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
 
     if (item_blocks_teleport(true, true) && !wizard_tele)
     {
-        canned_msg(MSG_WEIRD_STASIS);
+        canned_msg(MSG_STRANGE_STASIS);
         return (false);
     }
 
