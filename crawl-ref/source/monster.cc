@@ -3278,7 +3278,7 @@ bool monsters::is_chaotic() const
         return (true);
 
     // Knowing chaotic spells is not enough to make you "essentially"
-    // chaotic (i.e., silver doesn't hurt you), it's just chaotic for
+    // chaotic (i.e., silver doesn't hurt you), it's just unclean for
     // Zin.  Having chaotic abilities (not actual spells) does mean
     // you're truly changed by chaos.
     if (has_chaotic_spell() && !is_actual_spellcaster())
