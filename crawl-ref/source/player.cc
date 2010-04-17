@@ -3402,49 +3402,6 @@ static void _display_vampire_status()
     }
 }
 
-static void _display_transform_status()
-{
-    std::string text;
-
-    if ((you.species != SP_VAMPIRE || !player_in_bat_form())
-        && dur_expiring(DUR_TRANSFORMATION))
-    {
-        text = "Expiring: ";
-    }
-
-    switch (you.attribute[ATTR_TRANSFORMATION])
-    {
-    case TRAN_SPIDER:
-        text += "You are in spider-form.";
-        break;
-    case TRAN_BAT:
-        text += "You are in ";
-        if (you.species == SP_VAMPIRE)
-            text += "vampire ";
-        text += "bat-form.";
-        break;
-    case TRAN_BLADE_HANDS:
-        text += "You have blades for hands.";
-        break;
-    case TRAN_STATUE:
-        text += "You are a statue.";
-        break;
-    case TRAN_ICE_BEAST:
-        text += "You are an ice creature.";
-        break;
-    case TRAN_DRAGON:
-        text += "You are in dragon-form.";
-        break;
-    case TRAN_LICH:
-        text += "You are in lich-form.";
-        break;
-    case TRAN_PIG:
-        text += "You are a filthy swine.";
-        break;
-    }
-    mpr(text.c_str());
-}
-
 // Durations and similar temporary status effects.
 static void _display_durations()
 {
@@ -3740,7 +3697,7 @@ void display_char_status()
         _display_vampire_status();
 
     if (you.duration[DUR_TRANSFORMATION] > 0)
-        _display_transform_status();
+        mpr(transform_desc(false));
 
     if (you.burden_state == BS_ENCUMBERED)
         mpr("You are burdened.");
