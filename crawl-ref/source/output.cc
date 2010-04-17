@@ -2284,44 +2284,8 @@ std::string _status_mut_abilities()
     text += comma_separated_line(status.begin(), status.end(), ", ", ", ");
 
     if (you.duration[DUR_TRANSFORMATION])
-    {
-        switch (you.attribute[ATTR_TRANSFORMATION])
-        {
-        case TRAN_SPIDER:
-            text += "\nYou are in spider-form.";
-            break;
-        case TRAN_BAT:
-            text += "\nYou are in ";
-            if (you.species == SP_VAMPIRE)
-                text += "vampire ";
-            text += "bat-form.";
-            break;
-        case TRAN_BLADE_HANDS:
-            text += "\nYou have blades for hands.";
-            break;
-        case TRAN_STATUE:
-            text += "\nYou are a statue.";
-            break;
-        case TRAN_ICE_BEAST:
-            text += "\nYou are an ice creature.";
-            break;
-        case TRAN_DRAGON:
-            text += "\nYou are in dragon-form.";
-            break;
-        case TRAN_LICH:
-            text += "\nYou are in lich-form.";
-            break;
-        case TRAN_PIG:
-            text += "\nYou are a filthy swine.";
-            break;
-        }
-        if ((you.species != SP_VAMPIRE
-                || you.attribute[ATTR_TRANSFORMATION] != TRAN_BAT)
-            && dur_expiring(DUR_TRANSFORMATION))
-        {
-            text += " (Expiring.)";
-        }
-    }
+        text += "\n" + transform_desc(true);
+
 /*
 //  Commenting out until this information is actually meaningful. (jpeg)
     const int to_hit = calc_your_to_hit( false ) * 2;
