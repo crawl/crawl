@@ -3346,142 +3346,108 @@ static void _output_expiring_message(duration_type dur, const char* msg)
     }
 }
 
-void display_char_status()
+static void _display_vampire_status()
 {
-    if (you.is_undead == US_SEMI_UNDEAD && you.hunger_state == HS_ENGORGED)
-        mpr("You feel almost alive.");
-    else if (you.is_undead)
-        mpr("You are undead.");
-    else if (you.duration[DUR_DEATHS_DOOR])
+    std::string msg = "At your current hunger state you ";
+    std::vector<std::string> attrib;
+
+    switch (you.hunger_state)
     {
-        _output_expiring_message(DUR_DEATHS_DOOR,
-                                 "You are standing in death's doorway.");
-    }
-    else
-        mpr("You are alive.");
-
-    const int halo_size = you.halo_radius2();
-    if (halo_size >= 0)
-    {
-        if (halo_size > 37)
-            mpr("You are illuminated by a large divine halo.");
-        else if (halo_size > 10)
-            mpr("You are illuminated by a divine halo.");
-        else
-            mpr("You are illuminated by a small divine halo.");
-    }
-
-    if (you.species == SP_VAMPIRE)
-    {
-        std::string msg = "At your current hunger state you ";
-        std::vector<std::string> attrib;
-
-        switch (you.hunger_state)
-        {
-            case HS_STARVING:
-                attrib.push_back("resist poison");
-                attrib.push_back("significantly resist cold");
-                attrib.push_back("strongly resist negative energy");
-                attrib.push_back("resist torment");
-                attrib.push_back("do not heal.");
-                break;
-            case HS_NEAR_STARVING:
-                attrib.push_back("resist poison");
-                attrib.push_back("significantly resist cold");
-                attrib.push_back("strongly resist negative energy");
-                attrib.push_back("have an extremely slow metabolism");
-                attrib.push_back("heal slowly.");
-                break;
-            case HS_HUNGRY:
-            case HS_VERY_HUNGRY:
-                attrib.push_back("resist poison");
-                attrib.push_back("resist cold");
-                attrib.push_back("significantly resist negative energy");
-                if (you.hunger_state == HS_HUNGRY)
-                    attrib.push_back("have a slow metabolism");
-                else
-                    attrib.push_back("have a very slow metabolism");
-                attrib.push_back("heal slowly.");
-                break;
-            case HS_SATIATED:
-                attrib.push_back("resist negative energy.");
-                break;
-            case HS_FULL:
-                attrib.push_back("have a fast metabolism");
-                attrib.push_back("heal quickly.");
-                break;
-            case HS_VERY_FULL:
-                attrib.push_back("have a very fast metabolism");
-                attrib.push_back("heal quickly.");
-                break;
-            case HS_ENGORGED:
-                attrib.push_back("have an extremely fast metabolism");
-                attrib.push_back("heal extremely quickly.");
-                break;
-        }
-
-        if (!attrib.empty())
-        {
-            msg += comma_separated_line(attrib.begin(), attrib.end());
-            mpr(msg.c_str());
-        }
+        case HS_STARVING:
+            attrib.push_back("resist poison");
+            attrib.push_back("significantly resist cold");
+            attrib.push_back("strongly resist negative energy");
+            attrib.push_back("resist torment");
+            attrib.push_back("do not heal.");
+            break;
+        case HS_NEAR_STARVING:
+            attrib.push_back("resist poison");
+            attrib.push_back("significantly resist cold");
+            attrib.push_back("strongly resist negative energy");
+            attrib.push_back("have an extremely slow metabolism");
+            attrib.push_back("heal slowly.");
+            break;
+        case HS_HUNGRY:
+        case HS_VERY_HUNGRY:
+            attrib.push_back("resist poison");
+            attrib.push_back("resist cold");
+            attrib.push_back("significantly resist negative energy");
+            if (you.hunger_state == HS_HUNGRY)
+                attrib.push_back("have a slow metabolism");
+            else
+                attrib.push_back("have a very slow metabolism");
+            attrib.push_back("heal slowly.");
+            break;
+        case HS_SATIATED:
+            attrib.push_back("resist negative energy.");
+            break;
+        case HS_FULL:
+            attrib.push_back("have a fast metabolism");
+            attrib.push_back("heal quickly.");
+            break;
+        case HS_VERY_FULL:
+            attrib.push_back("have a very fast metabolism");
+            attrib.push_back("heal quickly.");
+            break;
+        case HS_ENGORGED:
+            attrib.push_back("have an extremely fast metabolism");
+            attrib.push_back("heal extremely quickly.");
+            break;
     }
 
-    if (you.duration[DUR_TRANSFORMATION] > 0)
+    if (!attrib.empty())
     {
-        std::string text;
+        msg += comma_separated_line(attrib.begin(), attrib.end());
+        mpr(msg.c_str());
+    }
+}
 
-        if ((you.species != SP_VAMPIRE || !player_in_bat_form())
-            && dur_expiring(DUR_TRANSFORMATION))
-        {
-            text = "Expiring: ";
-        }
+static void _display_transform_status()
+{
+    std::string text;
 
-        switch (you.attribute[ATTR_TRANSFORMATION])
-        {
-        case TRAN_SPIDER:
-            text += "You are in spider-form.";
-            break;
-        case TRAN_BAT:
-            text += "You are in ";
-            if (you.species == SP_VAMPIRE)
-                text += "vampire ";
-            text += "bat-form.";
-            break;
-        case TRAN_BLADE_HANDS:
-            text += "You have blades for hands.";
-            break;
-        case TRAN_STATUE:
-            text += "You are a statue.";
-            break;
-        case TRAN_ICE_BEAST:
-            text += "You are an ice creature.";
-            break;
-        case TRAN_DRAGON:
-            text += "You are in dragon-form.";
-            break;
-        case TRAN_LICH:
-            text += "You are in lich-form.";
-            break;
-        case TRAN_PIG:
-            text += "You are a filthy swine.";
-            break;
-        }
-        mpr(text.c_str());
+    if ((you.species != SP_VAMPIRE || !player_in_bat_form())
+        && dur_expiring(DUR_TRANSFORMATION))
+    {
+        text = "Expiring: ";
     }
 
-    if (you.burden_state == BS_ENCUMBERED)
-        mpr("You are burdened.");
-    else if (you.burden_state == BS_OVERLOADED)
-        mpr("You are overloaded with stuff.");
-    else if (you.species == SP_KENKU && you.flight_mode() == FL_FLY)
+    switch (you.attribute[ATTR_TRANSFORMATION])
     {
-        if (you.travelling_light())
-            mpr("Your small burden allows quick flight.");
-        else
-            mpr("Your heavy burden is slowing your flight.");
+    case TRAN_SPIDER:
+        text += "You are in spider-form.";
+        break;
+    case TRAN_BAT:
+        text += "You are in ";
+        if (you.species == SP_VAMPIRE)
+            text += "vampire ";
+        text += "bat-form.";
+        break;
+    case TRAN_BLADE_HANDS:
+        text += "You have blades for hands.";
+        break;
+    case TRAN_STATUE:
+        text += "You are a statue.";
+        break;
+    case TRAN_ICE_BEAST:
+        text += "You are an ice creature.";
+        break;
+    case TRAN_DRAGON:
+        text += "You are in dragon-form.";
+        break;
+    case TRAN_LICH:
+        text += "You are in lich-form.";
+        break;
+    case TRAN_PIG:
+        text += "You are a filthy swine.";
+        break;
     }
+    mpr(text.c_str());
+}
 
+// Durations and similar temporary status effects.
+static void _display_durations()
+{
     if (you.duration[DUR_SAGE])
     {
         std::string msg  = "You are studying ";
@@ -3671,7 +3637,10 @@ void display_char_status()
              (you.duration[DUR_SURE_BLADE] >  5 * BASELINE_DELAY) ? ""
                                                  : "weak ");
     }
+}
 
+static void _display_movement_speed()
+{
     const int move_cost = (player_speed() * player_movement_speed()) / 10;
 
     const bool water  = you.in_water();
@@ -3701,15 +3670,12 @@ void display_char_status()
           (move_cost == 10) ? "average" :
           (move_cost <  13) ? "slow"
                             : "very slow" );
+}
 
-#ifdef DEBUG_DIAGNOSTICS
+static void _display_tohit()
+{
     const int to_hit = calc_your_to_hit(false) * 2;
-    mprf("To-hit: %d", to_hit);
-    const random_var delay = calc_your_attack_delay();
-    mprf("Attack delay: %d%% (max %d%%)",
-         static_cast<int>(round(10 * delay.expected())),
-         10 * delay.max());
-#endif
+    dprf("To-hit: %d", to_hit);
 /*
     // Messages based largely on percentage chance of missing the
     // average EV 10 humanoid, and very agile EV 30 (pretty much
@@ -3730,10 +3696,73 @@ void display_char_status()
          (to_hit < 100) ? "You feel comfortable with your ability to fight"
                         : "You feel confident with your ability to fight" );
 */
+}
+
+static void _display_attack_delay()
+{
+    const random_var delay = calc_your_attack_delay();
+
+    // Scale to fit the displayed weapon base delay, i.e.,
+    // normal speed is 100 (as in 100%).
+    // We could also compute the variance if desired.
+    const int avg = static_cast<int>(round(10 * delay.expected()));
+    const int max = 10 * delay.max();
+
+    dprf("Attack delay: %d%% (max %d%%)", avg, max);
+}
+
+void display_char_status()
+{
+    if (you.is_undead == US_SEMI_UNDEAD && you.hunger_state == HS_ENGORGED)
+        mpr("You feel almost alive.");
+    else if (you.is_undead)
+        mpr("You are undead.");
+    else if (you.duration[DUR_DEATHS_DOOR])
+    {
+        _output_expiring_message(DUR_DEATHS_DOOR,
+                                 "You are standing in death's doorway.");
+    }
+    else
+        mpr("You are alive.");
+
+    const int halo_size = you.halo_radius2();
+    if (halo_size >= 0)
+    {
+        if (halo_size > 37)
+            mpr("You are illuminated by a large divine halo.");
+        else if (halo_size > 10)
+            mpr("You are illuminated by a divine halo.");
+        else
+            mpr("You are illuminated by a small divine halo.");
+    }
+
+    if (you.species == SP_VAMPIRE)
+        _display_vampire_status();
+
+    if (you.duration[DUR_TRANSFORMATION] > 0)
+        _display_transform_status();
+
+    if (you.burden_state == BS_ENCUMBERED)
+        mpr("You are burdened.");
+    else if (you.burden_state == BS_OVERLOADED)
+        mpr("You are overloaded with stuff.");
+    else if (you.species == SP_KENKU && you.flight_mode() == FL_FLY)
+    {
+        if (you.travelling_light())
+            mpr("Your small burden allows quick flight.");
+        else
+            mpr("Your heavy burden is slowing your flight.");
+    }
+
+    _display_durations();
+
+    _display_movement_speed();
+    _display_tohit();
+    _display_attack_delay();
 
     // magic resistance
-    const int mr = you.res_magic();
-    mprf("You are %s resistant to hostile enchantments.", magic_res_adjective(mr).c_str());
+    mprf("You are %s resistant to hostile enchantments.",
+         magic_res_adjective(you.res_magic()).c_str());
 
     // character evaluates their ability to sneak around:
     mprf("You feel %s.", stealth_desc(check_stealth()).c_str());
