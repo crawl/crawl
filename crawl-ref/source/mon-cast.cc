@@ -2006,9 +2006,8 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         duration  = std::min(2 + monster->hit_dice / 10, 6);
         for (sumcount = 0; sumcount < sumcount2; ++sumcount)
         {
-            const int chance = std::max(6 - (monster->hit_dice / 6), 1);
-            monster_type mon = (one_chance_in(chance) ? MONS_VERY_UGLY_THING
-                                                      : MONS_UGLY_THING);
+            const monster_type mon = (one_chance_in(3) ? MONS_VERY_UGLY_THING
+                                                       : MONS_UGLY_THING);
 
             create_monster(
                 mgen_data(mon, SAME_ATTITUDE(monster), monster,
