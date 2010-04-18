@@ -27,7 +27,7 @@ wearer of the benefits of levitation.
 amulet of guardian spirit
 
 This amulet makes its wearer immune to external damage, draining magical
-power instead.  Should the reserves of magic be depleted, the spirit will
+power instead. Should the reserves of magic be depleted, the spirit will
 fail to provide its protection until more power is available.
 %%%%
 amulet of inaccuracy
@@ -38,7 +38,7 @@ targeting monsters via ranged attacks or spells.
 amulet of rage
 
 This amulet enables its wearer to attempt to enter a state of berserk
-rage, and increases their chance of successfully doing so.  It also
+rage, and increases their chance of successfully doing so. It also
 partially protects the user from passing out when coming out of that
 rage.
 %%%%
@@ -126,43 +126,43 @@ A strip of preserved dead cow or bull.
 %%%%
 blessed double sword
 
-A magical weapon with two razor-sharp blades.  It has been enhanced by
+A magical weapon with two razor-sharp blades. It has been enhanced by
 the Shining One's power.
 %%%%
 blessed falchion
 
-A sword with a broad slashing blade.  It has been enhanced by the
+A sword with a broad slashing blade. It has been enhanced by the
 Shining One's power.
 %%%%
 blessed great sword
 
-A sword with a very long, heavy blade and a long handle.  It has been
+A sword with a very long, heavy blade and a long handle. It has been
 enhanced by the Shining One's power.
 %%%%
 blessed katana
 
 A very rare and extremely effective imported weapon, featuring a long
-single-edged blade.  It has been enhanced by the Shining One's power.
+single-edged blade. It has been enhanced by the Shining One's power.
 %%%%
 blessed long sword
 
-A sword with a long, slashing blade.  It has been enhanced by the
+A sword with a long, slashing blade. It has been enhanced by the
 Shining One's power.
 %%%%
 blessed scimitar
 
-A long sword with a curved blade.  It has been enhanced by the Shining
+A long sword with a curved blade. It has been enhanced by the Shining
 One's power.
 %%%%
 blessed triple sword
 
-A magical weapon with three great razor-sharp blades.  It has been
+A magical weapon with three great razor-sharp blades. It has been
 enhanced by the Shining One's power.
 %%%%
 blowgun
 
-A long, light tube, open at both ends.  Doing very little damage, its
-main use is to fire poisoned needles from afar.  It makes very little
+A long, light tube, open at both ends. Doing very little damage, its
+main use is to fire poisoned needles from afar. It makes very little
 noise.
 %%%%
 bolt
@@ -175,10 +175,10 @@ A book of magic spells.
 %%%%
 book of annihilations
 
-While browsing, you note blood leaking from the pages.  Even an
+While browsing, you note blood leaking from the pages. Even an
 illiterate will feel the sheer impact of arcane fury contained in this
 book. It is sought after by sorcerers, for it allows the gifted and
-resourceful to command destruction with the ease of a twinkle.  Feeble
+resourceful to command destruction with the ease of a twinkle. Feeble
 wizards, however, may well meet their doom when trying to read this
 opus.
 %%%%
@@ -465,7 +465,7 @@ results.
 crystal plate mail
 
 An incredibly heavy but extremely effective suit of crystalline
-armour.  It is somewhat resistant to corrosion.
+armour. It is somewhat resistant to corrosion.
 %%%%
 dagger
 
@@ -667,7 +667,7 @@ A piece of metal headgear.
 %%%%
 holy blade
 
-A glorious blade from the forges of Heaven.  It is a favored weapon of
+A glorious blade from the forges of Heaven. It is a favored weapon of
 the Shining One's servants.
 %%%%
 holy scourge
@@ -980,7 +980,7 @@ poison.
 %%%%
 potion of restore abilities
 
-A potion which restores the abilities of one who drinks it.  It also allows
+A potion which restores the abilities of one who drinks it. It also allows
 to use a breath weapon again, cancelling the delay.
 %%%%
 potion of slowing
@@ -1125,9 +1125,9 @@ often.
 ring of teleport control
 
 This ring allows its wearer to control the destination of any
-teleportation, although without perfect accuracy.  Trying to teleport
+teleportation, although without perfect accuracy. Trying to teleport
 into a solid object will result in a random teleportation, at least in
-the case of a normal teleportation.  Also be wary that controlled
+the case of a normal teleportation. Also be wary that controlled
 teleports will contaminate the subject with residual magical energy.
 %%%%
 ring of teleportation
@@ -1214,7 +1214,7 @@ as they can use it to obtain the powerful spells of their specialty.
 scroll of blinking
 
 This scroll allows its reader to teleport a short distance, with
-precise control.  Be wary that controlled teleports will cause the
+precise control. Be wary that controlled teleports will cause the
 subject to become contaminated with magical energy.
 %%%%
 scroll of curse armour
@@ -1561,7 +1561,7 @@ A magical weapon with three great razor-sharp blades.
 %%%%
 troll hide
 
-The stiff and knobbly hide of a troll.  I suppose you could wear it if
+The stiff and knobbly hide of a troll. I suppose you could wear it if
 you really wanted to.
 %%%%
 troll leather armour
