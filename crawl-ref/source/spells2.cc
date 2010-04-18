@@ -1512,7 +1512,6 @@ bool summon_berserker(int pow, god_type god, int spell,
     summon->update_ench(abj);
 
     player_angers_monster(&menv[monster]);
-
     return (true);
 }
 
@@ -1550,7 +1549,6 @@ static bool _summon_holy_being_wrapper(int pow, god_type god, int spell,
     }
 
     player_angers_monster(&menv[monster]);
-
     return (true);
 }
 

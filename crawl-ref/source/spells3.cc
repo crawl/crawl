@@ -464,8 +464,6 @@ bool cast_sublimation_of_blood(int pow)
 
 bool cast_call_imp(int pow, god_type god)
 {
-    bool success = false;
-
     monster_type mon = MONS_PROGRAM_BUG;
 
     if (random2(pow) >= 24 || one_chance_in(6))
@@ -482,19 +480,17 @@ bool cast_call_imp(int pow, god_type god)
 
     if (monster != -1)
     {
-        success = true;
-
         mpr((mon == MONS_WHITE_IMP)  ? "A beastly little devil appears in a puff of frigid air." :
             (mon == MONS_SHADOW_IMP) ? "A shadowy apparition takes form in the air." :
             (mon == MONS_IRON_IMP)   ? "A metallic apparition takes form in the air."
                                      : "A beastly little devil appears in a puff of flame.");
 
         player_angers_monster(&menv[monster]);
+        return (true);
     }
-    else
-        canned_msg(MSG_NOTHING_HAPPENS);
 
-    return (success);
+    canned_msg(MSG_NOTHING_HAPPENS);
+    return (false);
 }
 
 static bool _summon_demon_wrapper(int pow, god_type god, int spell,
@@ -622,15 +618,14 @@ bool cast_shadow_creatures(god_type god)
                       you.pos(), MHITYOU,
                       MG_FORCE_BEH, god), false);
 
-    if (monster == -1)
+    if (monster != -1)
     {
-        mpr("The shadows disperse without effect.");
-        return (false);
+        player_angers_monster(&menv[monster]);
+        return (true);
     }
 
-    player_angers_monster(&menv[monster]);
-
-    return (true);
+    mpr("The shadows disperse without effect.");
+    return (false);
 }
 
 bool cast_summon_horrible_things(int pow, god_type god)
@@ -1373,7 +1368,6 @@ bool cast_twisted_resurrection(int pow, god_type god)
     }
 
     player_angers_monster(&menv[monster]);
-
     return (true);
 }
 
