@@ -2007,7 +2007,7 @@
     SPELL_SUMMON_UGLY_THING, "Summon Ugly Thing",
      SPTYP_SUMMONING,
      SPFLAG_CHAOTIC,
-     5,
+     4,
      200,
      -1, -1,
      0,
