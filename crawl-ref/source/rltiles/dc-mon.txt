@@ -66,9 +66,11 @@ scorpion MONS_SCORPION
 wolf_spider MONS_WOLF_SPIDER
 trapdoor_spider MONS_TRAPDOOR_SPIDER
 redback MONS_REDBACK
+%sdir dc-mon/demons
 demonic_crawler MONS_DEMONIC_CRAWLER
 
 ## Turtles and crocodiles ('t')
+%sdir dc-mon/animals
 crocodile MONS_CROCODILE
 alligator_baby MONS_BABY_ALLIGATOR
 alligator MONS_ALLIGATOR
@@ -249,7 +251,6 @@ mara MONS_MARA_FAKE
 %sdir dc-mon/demons
 rakshasa MONS_RAKSHASA
 rakshasa MONS_RAKSHASA_FAKE
-
 
 ## Abominations ('X')
 cigotuvis_monster MONS_CIGOTUVIS_MONSTER
