@@ -466,7 +466,7 @@ bool cast_call_imp(int pow, god_type god)
 {
     monster_type mon = MONS_PROGRAM_BUG;
 
-    if (random2(pow) >= 24 || one_chance_in(6))
+    if (random2(pow) >= 47 || one_chance_in(6))
         mon = one_chance_in(3) ? MONS_IRON_IMP : MONS_SHADOW_IMP;
     else
         mon = one_chance_in(3) ? MONS_WHITE_IMP : MONS_IMP;
