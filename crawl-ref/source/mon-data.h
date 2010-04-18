@@ -4142,7 +4142,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_ICE_FIEND, '1', WHITE, "Ice Fiend",
-    M_SPELLCASTER | M_SEE_INVIS,
+    M_SPELLCASTER | M_SEE_INVIS | M_GLOWS,
     MR_RES_POISON | MR_VUL_FIRE | mrd(MR_RES_COLD, 3),
     0, 10, MONS_FIEND, MONS_ICE_FIEND, MH_DEMONIC, -12,
     { {AT_CLAW, AF_COLD, 25}, {AT_CLAW, AF_COLD, 25}, AT_NO_ATK, AT_NO_ATK },
