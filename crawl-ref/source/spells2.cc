@@ -1387,7 +1387,7 @@ bool cast_summon_ugly_thing(int pow, god_type god)
 {
     monster_type mon = MONS_PROGRAM_BUG;
 
-    if (random2(pow) >= 54 || x_chance_in_y(3, 20))
+    if (random2(pow) >= 22 || one_chance_in(6))
         mon = MONS_VERY_UGLY_THING;
     else
         mon = MONS_UGLY_THING;
