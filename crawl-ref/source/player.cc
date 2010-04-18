@@ -17,6 +17,7 @@
 #include <sstream>
 #include <algorithm>
 
+#include "areas.h"
 #include "artefact.h"
 #include "branch.h"
 #include "cloud.h"
@@ -68,7 +69,7 @@
 #include "stairs.h"
 #include "state.h"
 #include "stuff.h"
-#include "areas.h"
+#include "tagstring.h"
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"
@@ -3655,6 +3656,20 @@ static void _display_tohit()
 */
 }
 
+static std::string _attack_delay_desc(int attack_delay)
+{
+    return ((attack_delay >= 200) ? "extremely slow" :
+            (attack_delay >= 155) ? "very slow" :
+            (attack_delay >= 125) ? "quite slow" :
+            (attack_delay >= 105) ? "below average" :
+            (attack_delay >=  95) ? "average" :
+            (attack_delay >=  75) ? "above average" :
+            (attack_delay >=  55) ? "quite fast" :
+            (attack_delay >=  45) ? "very fast" :
+            (attack_delay >=  35) ? "extremely fast" :
+                                    "blindingly fast");
+}
+
 static void _display_attack_delay()
 {
     const random_var delay = calc_your_attack_delay();
@@ -3665,7 +3680,17 @@ static void _display_attack_delay()
     const int avg = static_cast<int>(round(10 * delay.expected()));
     const int max = 10 * delay.max();
 
-    dprf("Attack delay: %d%% (max %d%%)", avg, max);
+    std::string msg = "Your attack speed is " + _attack_delay_desc(avg) + ".";
+
+#ifdef DEBUG_DIAGNOSTICS
+    if (you.wizard)
+    {
+        msg += colour_string(make_stringf(" %d%% (max %d%%)", avg, max),
+                             channel_to_colour(MSGCH_DIAGNOSTICS));
+    }
+#endif
+
+    mpr(msg);
 }
 
 void display_char_status()
