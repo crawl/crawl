@@ -3703,8 +3703,12 @@ void display_char_status()
                             : "very slow" );
 
 #ifdef DEBUG_DIAGNOSTICS
-    const int to_hit = calc_your_to_hit( false ) * 2;
+    const int to_hit = calc_your_to_hit(false) * 2;
     mprf("To-hit: %d", to_hit);
+    const random_var delay = calc_your_attack_delay();
+    mprf("Attack delay: %d%% (max %d%%)",
+         static_cast<int>(round(10 * delay.expected())),
+         10 * delay.max());
 #endif
 /*
     // Messages based largely on percentage chance of missing the

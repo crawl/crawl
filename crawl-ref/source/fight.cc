@@ -54,6 +54,7 @@
 #include "mutation.h"
 #include "ouch.h"
 #include "player.h"
+#include "random-var.h"
 #include "religion.h"
 #include "godconduct.h"
 #include "shopping.h"
@@ -198,6 +199,12 @@ int calc_your_to_hit( bool random_factor )
 {
     melee_attack attk(&you, NULL);
     return attk.calc_to_hit(random_factor);
+}
+
+random_var calc_your_attack_delay()
+{
+    melee_attack attk(&you, NULL);
+    return attk.player_calc_attack_delay();
 }
 
 static bool player_fights_well_unarmed(int heavy_armour_penalty)
@@ -4011,48 +4018,55 @@ void melee_attack::player_stab_check()
     }
 }
 
-void melee_attack::player_apply_attack_delay()
+random_var melee_attack::player_calc_attack_delay()
 {
-    int attack_delay = weapon ? player_weapon_speed() : player_unarmed_speed();
+    random_var attack_delay = weapon ? player_weapon_speed()
+                                     : player_unarmed_speed();
 
     if (weapon && hands == HANDS_HALF)
     {
-        attack_delay += std::min(roll_dice(1, player_body_armour_penalty)
-                                 + roll_dice(1, player_shield_penalty),
-                                 roll_dice(1, player_body_armour_penalty)
-                                 + roll_dice(1, player_shield_penalty));
+        attack_delay += rv::min(rv::roll_dice(1, player_body_armour_penalty)
+                                + rv::roll_dice(1, player_shield_penalty),
+                                rv::roll_dice(1, player_body_armour_penalty)
+                                + rv::roll_dice(1, player_shield_penalty));
     }
     else if (player_body_armour_penalty)
-        attack_delay += std::min(roll_dice(1, player_body_armour_penalty),
-                                 roll_dice(1, player_body_armour_penalty));
+        attack_delay += rv::min(rv::roll_dice(1, player_body_armour_penalty),
+                                rv::roll_dice(1, player_body_armour_penalty));
 
-    if (attack_delay < 3)
-        attack_delay = 3;
+    attack_delay = rv::max(attack_delay, constant(3));
 
-    final_attack_delay = attack_delay;
+    return (attack_delay);
+}
+
+void melee_attack::player_apply_attack_delay()
+{
+    final_attack_delay = player_calc_attack_delay().roll();
 
     you.time_taken =
         std::max(2, div_rand_round(you.time_taken * final_attack_delay, 10));
 
-    dprf( "Weapon speed: %d; min: %d; attack time: %d",
-          final_attack_delay, min_delay, you.time_taken );
+    dprf("Weapon speed: %d; min: %d; attack time: %d",
+         final_attack_delay, min_delay, you.time_taken);
 }
 
-int melee_attack::player_weapon_speed()
+random_var melee_attack::player_weapon_speed()
 {
-    int attack_delay = 0;
+    random_var attack_delay = constant(0);
 
     if (weapon && (weapon->base_type == OBJ_WEAPONS
                    || weapon->base_type == OBJ_STAVES))
     {
-        attack_delay = property( *weapon, PWPN_SPEED );
+        attack_delay = constant(property(*weapon, PWPN_SPEED));
 
         if (player_body_armour_penalty)
-            attack_delay = std::max(attack_delay,
-                                    (roll_dice(1, 10) +
-                                     roll_dice(1, player_body_armour_penalty)));
+        {
+            attack_delay = rv::max(attack_delay,
+               rv::roll_dice(1, 10)
+               + rv::roll_dice(1, player_body_armour_penalty));
+        }
 
-        attack_delay -= you.skills[ wpn_skill ] / 2;
+        attack_delay -= constant(you.skills[wpn_skill] / 2);
 
         min_delay = property( *weapon, PWPN_SPEED ) / 2;
 
@@ -4072,25 +4086,24 @@ int melee_attack::player_weapon_speed()
             min_delay = 3;
 
         // apply minimum to weapon skill modification
-        if (attack_delay < min_delay)
-            attack_delay = min_delay;
+        attack_delay = rv::max(attack_delay, min_delay);
 
         if (weapon->base_type == OBJ_WEAPONS
             && damage_brand == SPWPN_SPEED)
         {
-            attack_delay = (attack_delay + 1) / 2;
+            attack_delay = (attack_delay + constant(1)) / 2;
         }
     }
 
     return (attack_delay);
 }
 
-int melee_attack::player_unarmed_speed()
+random_var melee_attack::player_unarmed_speed()
 {
-    int unarmed_delay =
-        std::max(10,
-                 (roll_dice(1, 10) +
-                  roll_dice(2, player_body_armour_penalty)));
+    random_var unarmed_delay =
+        rv::max(constant(10),
+                 (rv::roll_dice(1, 10) +
+                  rv::roll_dice(2, player_body_armour_penalty)));
 
     // Not even bats can attack faster than this.
     min_delay = 5;
@@ -4099,10 +4112,10 @@ int melee_attack::player_unarmed_speed()
     if (you.burden_state == BS_UNENCUMBERED)
     {
         unarmed_delay =
-            std::max(unarmed_delay
-                     - (you.skills[SK_UNARMED_COMBAT]
-                        / (player_in_bat_form() ? 3 : 5)),
-                     min_delay);
+            rv::max(unarmed_delay
+                     - constant(you.skills[SK_UNARMED_COMBAT]
+                                / (player_in_bat_form() ? 3 : 5)),
+                    constant(min_delay));
     }
 
     return (unarmed_delay);
