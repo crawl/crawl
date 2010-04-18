@@ -1012,6 +1012,13 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     if (!is_valid_mutation(mutat))
         return (false);
 
+    // [Cha] don't allow teleportation or teleport at will mutations in sprint
+    if ((mutat == MUT_TELEPORT || mutat == MUT_TELEPORT_AT_WILL)
+        && crawl_state.game_is_sprint())
+    {
+        return (false);
+    }
+
     // Saprovorous/gourmand can't be randomly acquired.
     if ((mutat == MUT_SAPROVOROUS || mutat == MUT_GOURMAND) && !force_mutation)
         return (false);
