@@ -1166,7 +1166,7 @@ A decaying skeleton.
 %%%%
 slice of pizza
 
-A slice of pizza; a flatbread with tomato sauce, mozarella di bufala, and basil.
+A slice of pizza: a flatbread with tomato sauce, mozzarella di bufala, and basil.
 %%%%
 sling
 
