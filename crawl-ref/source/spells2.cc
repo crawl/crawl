@@ -1385,9 +1385,12 @@ bool cast_summon_ice_beast(int pow, god_type god)
 
 bool cast_summon_ugly_thing(int pow, god_type god)
 {
-    const int chance = std::max(6 - (pow / 14), 1);
-    monster_type mon = (one_chance_in(chance)) ? MONS_VERY_UGLY_THING
-                                               : MONS_UGLY_THING;
+    monster_type mon = MONS_PROGRAM_BUG;
+
+    if (random2(pow) >= 54 || x_chance_in_y(3, 20))
+        mon = MONS_VERY_UGLY_THING;
+    else
+        mon = MONS_UGLY_THING;
 
     const int dur = std::min(2 + (random2(pow) / 4), 6);
 
