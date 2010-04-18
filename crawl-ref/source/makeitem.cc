@@ -31,6 +31,7 @@
 #include "player.h"
 #include "random.h"
 #include "spl-book.h"
+#include "state.h"
 #include "travel.h"
 
 bool got_curare_roll(const int item_level)
@@ -2783,10 +2784,12 @@ static void _generate_scroll_item(item_def& item, int force_type,
             item.sub_type = random_choose_weighted(
                 1797, SCR_IDENTIFY,
                 1305, SCR_REMOVE_CURSE,
-                 802, SCR_TELEPORTATION,
+                // [Cha] don't generate teleportation scrolls if in sprint
+		(crawl_state.game_is_sprint() ? 0 : 802), SCR_TELEPORTATION,
                  642, SCR_DETECT_CURSE,
                  331, SCR_FEAR,
-                 331, SCR_NOISE,
+                // [Cha] don't generate noise scrolls if in sprint
+                (crawl_state.game_is_sprint() ? 0 : 331), SCR_NOISE,
                  331, SCR_MAGIC_MAPPING,
                  331, SCR_FOG,
                  331, SCR_RANDOM_USELESSNESS,
