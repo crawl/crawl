@@ -3678,13 +3678,14 @@ static void _display_attack_delay()
     // normal speed is 100 (as in 100%).
     // We could also compute the variance if desired.
     const int avg = static_cast<int>(round(10 * delay.expected()));
-    const int max = 10 * delay.max();
 
     std::string msg = "Your attack speed is " + _attack_delay_desc(avg) + ".";
 
 #ifdef DEBUG_DIAGNOSTICS
     if (you.wizard)
     {
+        const int max = 10 * delay.max();
+
         msg += colour_string(make_stringf(" %d%% (max %d%%)", avg, max),
                              channel_to_colour(MSGCH_DIAGNOSTICS));
     }
