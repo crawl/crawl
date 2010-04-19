@@ -22,6 +22,7 @@ struct mutation_def
                              // rewards.
     bool          physical;  // A mutation affecting a character's outward
                              // appearance.
+    const char*   short_desc;// What appears on the '%' screen.
     const char*   have[3];   // What appears on the 'A' screen.
     const char*   gain[3];   // Message when you gain the mutation.
     const char*   lose[3];   // Message when you lose the mutation.
