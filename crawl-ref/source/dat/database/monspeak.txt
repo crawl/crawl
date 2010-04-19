@@ -1751,6 +1751,9 @@ Xom Crazy Yiuf
 # Nietzsche
 @The_monster@ says, "Against boredom even gods struggle in vain."
 
+# Ralph Waldo Emerson
+@The_monster@ says, "No facts are to me sacred; none are profane; I simply experiment, an endless seeker, with no past at my back."
+
 VISUAL:@The_monster@ considers dialectic materialism.
 
 VISUAL:@The_monster@ ponders an existential dilemma.
@@ -1758,7 +1761,6 @@ VISUAL:@The_monster@ ponders an existential dilemma.
 VISUAL:@The_monster@ shuffles his notes under his cloak.
 
 VISUAL:@The_monster@ heaves a sigh in contemplation.
-
 %%%%
 # Not quite so mad when he's confused.
 confused Crazy Yiuf
