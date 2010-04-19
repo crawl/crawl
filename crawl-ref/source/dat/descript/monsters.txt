@@ -492,7 +492,7 @@ A disembodied toe, hanging in the air and radiating an intense field of negative
 %%%%
 cyclops
 
-A giant with one eye in the centre of its forehead. Despite their lack of binocular vision, cyclopi throw boulders with fearsome accuracy.
+A giant with one eye in the centre of its forehead. Despite their lack of binocular vision, cyclopes throw boulders with fearsome accuracy.
 %%%%
 Daeva
 
@@ -521,7 +521,7 @@ A larger and beefier relative of the common dungeon yak. Its little red eyes gle
 %%%%
 deep elf annihilator
 
-This deep elf exults in conjured mayhem and destruction. Hated by most passersby with a passion, both for the power and the precision of its destructive magic.
+This deep elf exults in conjured mayhem and destruction. Hated by most passers-by with a passion, both for the power and the precision of its destructive magic.
 %%%%
 deep elf blademaster
 
@@ -1203,7 +1203,7 @@ A servant of the ancient and cruel gods of the orcs, dressed in a long robe. It 
 %%%%
 orc sorcerer
 
-An exceptionally competent orcish wizard. Most of them draw magical power from Hell, but some are fueled by other sources.
+An exceptionally competent orcish wizard. Most of them draw magical power from Hell, but some are fuelled by other sources.
 %%%%
 orc warlord
 

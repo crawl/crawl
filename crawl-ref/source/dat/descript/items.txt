@@ -67,7 +67,7 @@ A delicious, firm red fruit, tart to the tongue.
 %%%%
 apricot
 
-A succulent yellow-orange fruit, Prunus armeniaca.
+A succulent yellow-orange fruit, prunus armeniaca.
 %%%%
 arrow
 
@@ -469,7 +469,7 @@ A terrible weapon, forged in the fires of Hell.
 %%%%
 demon trident
 
-A terrible weapon, molded by fire and brimstone.
+A terrible weapon, moulded by fire and brimstone.
 %%%%
 demon whip
 
@@ -577,11 +577,11 @@ A piece of metal headgear.
 %%%%
 holy blade
 
-A glorious blade from the forges of Heaven. It is a favored weapon of the Shining One's servants.
+A glorious blade from the forges of Heaven. It is a favoured weapon of the Shining One's servants.
 %%%%
 holy scourge
 
-A blessed weapon, woven by the saints in Heaven and hated by the unholy. It is a favored weapon of the Shining One's servants.
+A blessed weapon, woven by the saints in Heaven and hated by the unholy. It is a favoured weapon of the Shining One's servants.
 %%%%
 honeycomb
 
