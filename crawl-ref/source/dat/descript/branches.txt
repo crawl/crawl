@@ -17,7 +17,7 @@ The Orcish Mines are four levels deep and contain the entrance to the Elven Hall
 %%%%
 Elven Halls
 
-Whereas most elven folk would never move into a dark subterranean complex like this, the deep elves did. Their halls are filled with riches, but any passersby should be aware of the legendary magical prowess of this species.
+Whereas most elven folk would never move into a dark subterranean complex like this, the deep elves did. Their halls are filled with riches, but any passers-by should be aware of the legendary magical prowess of this species.
 
 The Elven Halls are seven levels deep.
 %%%%
@@ -53,7 +53,7 @@ The Snake Pit is five levels deep and contains the serpentine rune. A dungeon fe
 %%%%
 Hive
 
-You hear a many-fold buzzing.
+You hear a manifold buzzing.
 
 The Hive is two levels deep. The entry is located between dungeon levels 11 and 16.
 %%%%
@@ -113,13 +113,13 @@ Tartarus is seven levels deep and contains the bone rune. It can be accessed via
 %%%%
 Pan
 
-Pandemonium is an infinite realm of pain and suffering. It contains four special runes, as well as generic ones, in addition to lots of loot. All these treasures are guarded by demons and even crueler demon lords. Many a hero, confusing confidence with megalomania, has died unsuspectingly in the barrage of torment and hellfire.
+Pandemonium is an infinite realm of pain and suffering. It contains four special runes, as well as generic ones, in addition to lots of loot. All these treasures are guarded by demons and even crueller demon lords. Many a hero, confusing confidence with megalomania, has died unsuspectingly in the barrage of torment and hellfire.
 
 Pandemonium is endless. Portals there are found abundantly in the deeper parts of the main dungeon. Note that getting back might be more difficult.
 %%%%
 Abyss
 
-The Abyss is a truly bizarre place, everchanging and twisted. It is filled with all sorts of monsters, mostly of demonic nature, whose common aim is to feast on intruders. It is also the garbage dump for many sorcerers, who delight in sending would-be champions like you to these proving grounds of madness. Reportedly, there is some structure to the chaos, as Lugonu seems to concoct schemes around this place and its denizens.
+The Abyss is a truly bizarre place, ever-changing and twisted. It is filled with all sorts of monsters, mostly of demonic nature, whose common aim is to feast on intruders. It is also the garbage dump for many sorcerers, who delight in sending would-be champions like you to these proving grounds of madness. Reportedly, there is some structure to the chaos, as Lugonu seems to concoct schemes around this place and its denizens.
 
 The Abyss can be purposefully reached through portals in the deeper levels of the main dungeon.
 %%%%

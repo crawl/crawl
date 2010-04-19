@@ -152,7 +152,7 @@ Death's Door
 This spell is extremely powerful, but carries a degree of risk. It renders living casters nigh invulnerable to harm for a brief period, but
 can bring them dangerously close to death. So close in fact, that the body believes itself to be dead - healing effects will confuse and paralyze the caster, while cancelling the spell.
 
-The caster will receive one warning shortly before the spell expires. Being more skilled at Necromancy leaves the caster more resilent. Undead cannot use this spell.
+The caster will receive one warning shortly before the spell expires. Being more skilled at Necromancy leaves the caster more resilient. Undead cannot use this spell.
 %%%%
 Debugging Ray
 
@@ -380,7 +380,7 @@ This spell bathes the caster's surroundings in poisonous green light.
 %%%%
 Orb of Destruction
 
-This spell conjures an orb made of pure destructive magic.  Compared to most other projectiles, these orbs travel at a relatively slow pace.  The orbs home onto their targets, yet because of their huge inertia, especially agile opponents may be able to outmaneuver them.
+This spell conjures an orb made of pure destructive magic.  Compared to most other projectiles, these orbs travel at a relatively slow pace.  The orbs home onto their targets, yet because of their huge inertia, especially agile opponents may be able to outmanoeuvre them.
 
 It is said that most copies of this spell suffer from a scribal error that makes the orbs unstable beyond a short range.  Certain individuals may have access to spellbooks without this flaw, so beware!
 %%%%
@@ -639,7 +639,7 @@ This spell throws a small bolt of frost.
 %%%%
 Tukima's Dance
 
-This spell causes a weapon held in the caster's hand to dance into the air and strike the caster's enemies. It will not function on magical staves and certain willful artefacts.
+This spell causes a weapon held in the caster's hand to dance into the air and strike the caster's enemies. It will not function on magical staves and certain wilful artefacts.
 %%%%
 Tukima's Vorpal Blade
 
