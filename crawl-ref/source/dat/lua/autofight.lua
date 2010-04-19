@@ -31,6 +31,15 @@ local function adjacent(dx, dy)
   return abs(dx) <= 1 and abs(dy) <= 1
 end
 
+local function reaching(dx, dy)
+  local wp = items.equipped_at("weapon")
+  if wp and wp.ego_type == "reaching" then
+    return abs(dx) <= 2 and abs(dy) <= 2
+  else
+    return nil
+  end
+end
+
 local function can_move(feat)
   return travel.feature_traversable(feat)
 end
@@ -46,7 +55,9 @@ end
 
 local function move_towards(dx, dy)
   local move = nil
-  if adjacent(dx, dy) then
+  if reaching(dx, dy) then
+    move = 'vf'
+  elseif adjacent(dx, dy) then
     move = delta_to_vi(dx, dy)
   elseif abs(dx) > abs(dy) then
     move = try_move(sign(dx), 0)
