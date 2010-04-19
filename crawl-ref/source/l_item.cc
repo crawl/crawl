@@ -715,7 +715,11 @@ IDEF(sub_type)
 
 IDEF(ego_type)
 {
-    ASSERT_DLUA;
+    if (CLua::get_vm(ls).managed_vm && !item_ident(*item, ISFLAG_KNOW_TYPE))
+    {
+        lua_pushstring(ls, "unknown");
+        return (1);
+    }
 
     lua_pushstring(ls, ego_type_string(*item).c_str());
     return (1);
