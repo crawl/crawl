@@ -1039,9 +1039,9 @@
    "Your repulsive radiation grows stronger.",
    "Your repulsive radiation grows stronger."},
 
-  {"You feel attractive.",
-   "You feel attractive.",
-   "You feel attractive."},
+  {"You feel less repulsive.",
+   "You feel less repulsive.",
+   "You feel less repulsive."},
 
   "repulsion field"
 },
