@@ -2508,7 +2508,7 @@ std::string _status_mut_abilities()
 
             // scales -> calculate sum of AC bonus
             case MUT_DISTORTION_FIELD:
-                EV_change += level+1;
+                EV_change += level + 1;
                 if (level == 3)
                     current = "repel missiles";
                 break;
