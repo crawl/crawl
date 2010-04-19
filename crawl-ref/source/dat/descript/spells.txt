@@ -73,7 +73,7 @@ This spell hurls a sizzling bolt of molten rock.
 %%%%
 Bone Shards
 
-This spell uses the bones of a skeleton to dispense a lethal spray of slicing fragments, allowing its caster to dispense with conjurations in favour of necromancy alone to provide a low-level yet very powerful offensive spell.  The use of a large and heavy skeleton (by wielding it) amplifies this spell's effect.
+This spell uses the bones of a skeleton to dispense a lethal spray of slicing fragments, allowing its caster to dispense with conjurations in favour of necromancy alone to provide a low-level yet very powerful offensive spell. The use of a large and heavy skeleton (by wielding it) amplifies this spell's effect.
 %%%%
 Borgnjor's Revivification
 
@@ -328,7 +328,7 @@ This spell throws a crackling sphere of destructive energy.
 %%%%
 Lee's Rapid Deconstruction
 
-This spell fragments a wall into an explosion of deadly shrapnel.  It can also be used directly on monsters made of wall-like substances.
+This spell fragments a wall into an explosion of deadly shrapnel. It can also be used directly on monsters made of wall-like substances.
 %%%%
 Lehudib's Crystal Spear
 
@@ -380,13 +380,13 @@ This spell bathes the caster's surroundings in poisonous green light.
 %%%%
 Orb of Destruction
 
-This spell conjures an orb made of pure destructive magic.  Compared to most other projectiles, these orbs travel at a relatively slow pace.  The orbs home onto their targets, yet because of their huge inertia, especially agile opponents may be able to outmanoeuvre them.
+This spell conjures an orb made of pure destructive magic. Compared to most other projectiles, these orbs travel at a relatively slow pace. The orbs home onto their targets, yet because of their huge inertia, especially agile opponents may be able to outmanoeuvre them.
 
-It is said that most copies of this spell suffer from a scribal error that makes the orbs unstable beyond a short range.  Certain individuals may have access to spellbooks without this flaw, so beware!
+It is said that most copies of this spell suffer from a scribal error that makes the orbs unstable beyond a short range. Certain individuals may have access to spellbooks without this flaw, so beware!
 %%%%
 Ozocubu's Armour
 
-This spell envelops the caster's body in a protective layer of ice, the power of which depends on his or her skill with ice magic.  The caster and the caster's equipment will not suffer cold from this layer, yet can be affected by other sources of cold normally.  The spell will not function for casters already wearing heavy armour (any body armour with an evasion penalty of 2 or more).  The effects of this spell are boosted if the caster is in ice form.
+This spell envelops the caster's body in a protective layer of ice, the power of which depends on his or her skill with ice magic. The caster and the caster's equipment will not suffer cold from this layer, yet can be affected by other sources of cold normally. The spell will not function for casters already wearing heavy armour (any body armour with an evasion penalty of 2 or more). The effects of this spell are boosted if the caster is in ice form.
 %%%%
 Ozocubu's Refrigeration
 

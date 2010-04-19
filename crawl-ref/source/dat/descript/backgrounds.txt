@@ -61,7 +61,7 @@ Healers are followers of Elyvilon, ready to heal themselves and others. The latt
 %%%%
 Hunter
 
-Hunters are able to attack at range, without relying on pesky magic. The hunter's tool depends on species. 
+Hunters are able to attack at range, without relying on pesky magic. The hunter's tool depends on species.
 %%%%
 Ice Elementalist
 

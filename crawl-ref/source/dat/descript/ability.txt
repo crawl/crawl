@@ -389,12 +389,12 @@ Create giant spores from corpses in your line of sight. The spores will explode,
 %%%%
 Evolution
 
-Turn plants and fungi adjacent to you into stronger species. Upgrading fungi requires piety, upgrading plants requires fruit. Plants upgraded gain a bonus to attack accuracy proportional to the user's invocations skill, and oklob plants are more likely to spit acid at higher invocations.  
+Turn plants and fungi adjacent to you into stronger species. Upgrading fungi requires piety, upgrading plants requires fruit. Plants upgraded gain a bonus to attack accuracy proportional to the user's invocations skill, and oklob plants are more likely to spit acid at higher invocations.
 %%%%
 # Cheibriados
 Make Ponderous
 
-Alter a piece of body armour of your choice so it slows the wearer down.  This is generally bad for hasty people, those who appreciate taking the time may benefit from Cheibriados's favour when they are not so fast.
+Alter a piece of body armour of your choice so it slows the wearer down. This is generally bad for hasty people, those who appreciate taking the time may benefit from Cheibriados's favour when they are not so fast.
 %%%%
 Bend Time
 
@@ -402,11 +402,11 @@ Slow down everyone who's standing just next to you.
 %%%%
 Slouch
 
-Cause damage to everyone in sight who is moving faster than you.  Those magically hasted will be hurt particularly painfully.
+Cause damage to everyone in sight who is moving faster than you. Those magically hasted will be hurt particularly painfully.
 %%%%
 Step From Time
 
-Remove yourself from the flow of time.  Things around you will happen at their usual busy pace, monsters will wander, perishable items will decay, plants will grow.  After some time has passed, you will return in the same state as the very second you departed.
+Remove yourself from the flow of time. Things around you will happen at their usual busy pace, monsters will wander, perishable items will decay, plants will grow. After some time has passed, you will return in the same state as the very second you departed.
 %%%%
 Renounce Religion
 
