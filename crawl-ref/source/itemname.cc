@@ -1248,7 +1248,7 @@ std::string item_def::name_aux(description_level_type desc,
         else if (flags & ISFLAG_BLESSED_WEAPON && !dbname)
         {   // Since Angels and Daevas can get blessed base items, we
             // need a separate flag for this, so they can still have
-            // their holy scourges and blessed eudemon blades.
+            // their holy scourges and holy blades.
             buff << "Blessed ";
             if (weapon_skill(*this) == SK_MACES_FLAILS)
                 buff << "Scourge";
