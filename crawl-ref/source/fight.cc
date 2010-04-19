@@ -5156,6 +5156,48 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
     }
 }
 
+void melee_attack::mons_do_passive_freeze()
+{
+    if (you.mutation[MUT_PASSIVE_FREEZE]
+        && attacker->alive()
+        && grid_distance(you.pos(), attacker->as_monster()->pos()) == 1)
+    {
+        bolt beam;
+        beam.flavour = BEAM_COLD;
+        beam.thrower = KILL_YOU;
+
+        monsters *mon = attacker->as_monster();
+
+        const int orig_hurted = random2(11);
+        int hurted = mons_adjust_flavoured(mon, beam, orig_hurted);
+
+        if (!hurted)
+            return;
+
+        simple_monster_message(mon, " is very cold.");
+
+#ifndef USE_TILE
+        flash_monster_colour(mon, LIGHTBLUE, 200);
+#endif
+
+        mon->hurt(&you, hurted);
+
+        if (mon->alive())
+        {
+            mon->expose_to_element(BEAM_COLD, orig_hurted);
+            print_wounds(mon);
+
+            const int cold_res = mon->res_cold();
+
+            if (cold_res <= 0)
+            {
+                const int stun = (1 - cold_res) * random2(7);
+                mon->speed_increment -= stun;
+            }
+        }
+    }
+}
+
 void melee_attack::mons_do_spines()
 {
     const item_def *body = you.slot_item(EQ_BODY_ARMOUR, false);
@@ -5165,6 +5207,7 @@ void melee_attack::mons_do_spines()
         evp = -property(*body, PARM_EVASION);
 
     if (you.mutation[MUT_SPINY]
+        && attacker->alive()
         && grid_distance(you.pos(), attacker->as_monster()->pos()) == 1
         && one_chance_in(evp + 1))
     {
@@ -5595,12 +5638,19 @@ void melee_attack::mons_perform_attack_rounds()
             set_ident_flags(*weap, ISFLAG_KNOW_CURSE);
         }
 
-        if(!shield_blocked && attacker != defender &&
+        if (!shield_blocked && attacker != defender &&
             defender->atype() == ACT_PLAYER)
         {
             // Check for spiny mutation
             mons_do_spines();
         }
+    }
+
+    // Check for passive freeze mutation
+    if (defender->atype() == ACT_PLAYER && defender->alive()
+        && attacker != defender)
+    {
+        mons_do_passive_freeze();
     }
 
     // Handle noise from last round.

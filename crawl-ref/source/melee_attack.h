@@ -163,6 +163,7 @@ private:
     void mons_do_napalm();
     std::string mons_defender_name();
     void wasp_paralyse_defender();
+    void mons_do_passive_freeze();
     void mons_do_spines();
 
     mon_attack_flavour random_chaos_attack_flavour();
