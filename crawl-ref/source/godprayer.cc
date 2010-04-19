@@ -171,6 +171,8 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
     {
         convert2bad(wpn);
 
+        wpn.flags &= ~ISFLAG_BLESSED_WEAPON;
+
         burden_change();
     }
 
