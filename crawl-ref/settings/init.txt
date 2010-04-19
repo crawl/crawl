@@ -298,7 +298,7 @@ menu_colour = inventory:white:\w \#\s
 #
 #   lightred   = really important messages  ($danger)
 #   yellow     = significant messages       ($warning)
-#   lightred   = item damaged/destryoed     ($item_dmg [same as $danger])
+#   lightred   = item damaged/destroyed     ($item_dmg [same as $danger])
 #   darkgrey   = boring, message clutter    ($boring)
 #
 include = messages.txt
