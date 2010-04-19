@@ -2548,6 +2548,9 @@ std::string _status_mut_abilities()
             case MUT_YELLOW_SCALES:
                 AC_change += level;
                 break;
+            default:
+                ASSERT(false);
+                break;
             }
         }
 
