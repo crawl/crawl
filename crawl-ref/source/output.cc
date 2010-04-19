@@ -33,6 +33,7 @@
 #include "mon-stuff.h"
 #include "mon-info.h"
 #include "mon-util.h"
+#include "mutation.h"
 #include "newgame.h"
 #include "jobs.h"
 #include "ouch.h"
@@ -2422,10 +2423,29 @@ std::string _status_mut_abilities()
         if (!level)
             continue;
 
+        const bool lowered = (level < you.mutation[i]);
+        const mutation_def& mdef = get_mutation_def((mutation_type) i);
+
         current = "";
-        bool lowered = (level < you.mutation[i]);
-        switch (i)
+
+        if (mdef.short_desc)
         {
+            current += mdef.short_desc;
+
+            if (mdef.levels > 1)
+            {
+                current += " ";
+
+                std::ostringstream ostr;
+                ostr << mdef.levels;
+
+                current += ostr.str();
+            }
+        }
+        else
+        {
+            switch (i)
+            {
             case MUT_TOUGH_SKIN:
                 AC_change += level;
                 break;
@@ -2441,55 +2461,6 @@ std::string _status_mut_abilities()
             case MUT_AGILE:
                 Dex_change += level;
                 break;
-            case MUT_POISON_RESISTANCE:
-                current = "poison resistance";
-                break;
-            case MUT_SAPROVOROUS:
-                snprintf(info, INFO_SIZE, "saprovore %d", level);
-                current = info;
-                break;
-            case MUT_GOURMAND:
-                current = "gourmand";
-                break;
-            case MUT_CARNIVOROUS:
-                snprintf(info, INFO_SIZE, "carnivore %d", level);
-                current = info;
-                break;
-            case MUT_HERBIVOROUS:
-                snprintf(info, INFO_SIZE, "herbivore %d", level);
-                current = info;
-                break;
-            case MUT_HEAT_RESISTANCE:
-                snprintf(info, INFO_SIZE, "fire resistance %d", level);
-                current = info;
-                break;
-            case MUT_COLD_RESISTANCE:
-                snprintf(info, INFO_SIZE, "cold resistance %d", level);
-                current = info;
-                break;
-            case MUT_PASSIVE_FREEZE:
-                snprintf(info, INFO_SIZE, "frigid envelope");
-                current = info;
-                break;
-            case MUT_SHOCK_RESISTANCE:
-                current = "electricity resistance";
-                break;
-            case MUT_REGENERATION:
-                snprintf(info, INFO_SIZE, "regeneration %d", level);
-                current = info;
-                break;
-            case MUT_SLOW_HEALING:
-                snprintf(info, INFO_SIZE, "slow healing %d", level);
-                current = info;
-                break;
-            case MUT_FAST_METABOLISM:
-                snprintf(info, INFO_SIZE, "fast metabolism %d", level);
-                current = info;
-                break;
-            case MUT_SLOW_METABOLISM:
-                snprintf(info, INFO_SIZE, "slow metabolism %d", level);
-                current = info;
-                break;
             case MUT_WEAK:
                 Str_change -= level;
                 break;
@@ -2499,58 +2470,6 @@ std::string _status_mut_abilities()
             case MUT_CLUMSY:
                 Dex_change -= level;
                 break;
-            case MUT_TELEPORT_CONTROL:
-                current = "teleport control";
-                break;
-            case MUT_TELEPORT:
-                snprintf(info, INFO_SIZE, "teleportitis %d", level);
-                current = info;
-                break;
-            case MUT_MAGIC_RESISTANCE:
-                snprintf(info, INFO_SIZE, "magic resistance %d", level);
-                current = info;
-                break;
-            case MUT_FAST:
-                snprintf(info, INFO_SIZE, "speed %d", level);
-                current = info;
-                break;
-            case MUT_ACUTE_VISION:
-                current = "see invisible";
-                break;
-            case MUT_DEFORMED:
-                snprintf(info, INFO_SIZE, "deformed body %d", level);
-                current = info;
-                break;
-            case MUT_TELEPORT_AT_WILL:
-                snprintf(info, INFO_SIZE, "teleport at will %d", level);
-                current = info;
-                break;
-            case MUT_SPIT_POISON:
-                snprintf(info, INFO_SIZE, "spit poison %d", level);
-                current = info;
-                break;
-            case MUT_PASSIVE_MAPPING:
-                snprintf(info, INFO_SIZE, "sense surroundings %d", level);
-                current = info;
-                break;
-            case MUT_BREATHE_FLAMES:
-                snprintf(info, INFO_SIZE, "breathe flames %d", level);
-                current = info;
-                break;
-            case MUT_BLINK:
-                current = "blink";
-                break;
-            case MUT_BEAK:
-                current = "beak";
-                break;
-            case MUT_HORNS:
-                snprintf(info, INFO_SIZE, "horns %d", level);
-                current = info;
-                break;
-            case MUT_ANTENNAE:
-                snprintf(info, INFO_SIZE, "antennae %d", level);
-                current = info;
-                break;
             case MUT_STRONG_STIFF:
                 Str_change += level;
                 Dex_change -= level;
@@ -2558,29 +2477,6 @@ std::string _status_mut_abilities()
             case MUT_FLEXIBLE_WEAK:
                 Str_change -= level;
                 Dex_change += level;
-                break;
-            case MUT_SCREAM:
-                snprintf(info, INFO_SIZE, "screaming %d", level);
-                current = info;
-                break;
-            case MUT_CLARITY:
-                current = "clarity";
-                break;
-            case MUT_BERSERK:
-                snprintf(info, INFO_SIZE, "berserk %d", level);
-                current = info;
-                break;
-            case MUT_DETERIORATION:
-                snprintf(info, INFO_SIZE, "deterioration %d", level);
-                current = info;
-                break;
-            case MUT_BLURRY_VISION:
-                snprintf(info, INFO_SIZE, "blurry vision %d", level);
-                current = info;
-                break;
-            case MUT_MUTATION_RESISTANCE:
-                snprintf(info, INFO_SIZE, "mutation resistance %d", level);
-                current = info;
                 break;
             case MUT_FRAIL:
                 snprintf(info, INFO_SIZE, "-%d%% hp", level*10);
@@ -2598,64 +2494,19 @@ std::string _status_mut_abilities()
                 snprintf(info, INFO_SIZE, "+%d%% mp", level*10);
                 current = info;
                 break;
-            case MUT_TORMENT_RESISTANCE:
-                current = "torment resistance";
-                break;
             case MUT_STOCHASTIC_TORMENT_RESISTANCE:
                 snprintf(info, INFO_SIZE, "%d%% torment resistance", level*20);
                 current = info;
                 break;
-            case MUT_NEGATIVE_ENERGY_RESISTANCE:
-                snprintf(info, INFO_SIZE, "life protection %d", level);
-                current = info;
+            case MUT_ICEMAIL:
+            {
+                // FIXME: This duplicates code in mutation.cc:mutation_name().
+                int amt = ICEMAIL_MAX;
+                amt -= you.duration[DUR_ICEMAIL_DEPLETED] * ICEMAIL_MAX / ICEMAIL_TIME;
+
+                AC_change += amt;
                 break;
-            case MUT_HURL_HELLFIRE:
-                current = "hurl hellfire";
-                break;
-            case MUT_THROW_FLAMES:
-                current = "throw flames of Gehenna";
-                break;
-            case MUT_THROW_FROST:
-                current = "throw frost of Cocytus";
-                break;
-            case MUT_DEMONIC_GUARDIAN:
-                snprintf(info, INFO_SIZE, "demonic guardian %d", level);
-                current = info;
-                break;
-            case MUT_SPINY:
-                snprintf(info, INFO_SIZE, "spiny %d", level);
-                current = info;
-                break;
-            case MUT_NIGHTSTALKER:
-                snprintf(info, INFO_SIZE, "nightstalker %d", level);
-                current = info;
-                break;
-            case MUT_CLAWS:
-                snprintf(info, INFO_SIZE, "claws %d", level);
-                current = info;
-                break;
-            case MUT_FANGS:
-                snprintf(info, INFO_SIZE, "fangs %d", level);
-                current = info;
-                break;
-            case MUT_HOOVES:
-                snprintf(info, INFO_SIZE, "hooves %d", level);
-                current = info;
-                break;
-            case MUT_TALONS:
-                snprintf(info, INFO_SIZE, "talons %d", level);
-                current = info;
-                break;
-            case MUT_BREATHE_POISON:
-                current = "breathe poison";
-                break;
-            case MUT_STINGER:
-                snprintf(info, INFO_SIZE, "stinger %d", level);
-                current = info;
-                break;
-            case MUT_BIG_WINGS:
-                current = "large and strong wings";
-                break;
+            }
 
             // scales -> calculate sum of AC bonus
             case MUT_DISTORTION_FIELD:
@@ -2699,6 +2550,7 @@ std::string _status_mut_abilities()
             case MUT_YELLOW_SCALES:
                 AC_change += level;
                 break;
+            }
         }
 
         if (!current.empty())
