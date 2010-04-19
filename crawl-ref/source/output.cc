@@ -2434,10 +2434,8 @@ std::string _status_mut_abilities()
 
             if (mdef.levels > 1)
             {
-                current += " ";
-
                 std::ostringstream ostr;
-                ostr << mdef.levels;
+                ostr << ' ' << mdef.levels;
 
                 current += ostr.str();
             }
