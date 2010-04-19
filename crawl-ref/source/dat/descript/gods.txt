@@ -72,7 +72,7 @@ Beogh is the deity worshipped by the cave orcs native to parts of the dungeon. O
 %%%%
 Fedhas
 
-Fedhas Madash is the god of plant and fungal life. Fedhas demands that followers encourage the decomposition of corpses. Fedhas forbids followers from harming any species under Fedhas' protection, and from using any necromantic effects that interfere with corpses. In return Fedhas grants a number of abilities that promote the growth of plants and fungi. These abilities may incidentally prove useful to adventurers. 
+Fedhas Madash is the god of plant and fungal life. Fedhas demands that followers encourage the decomposition of corpses. Fedhas forbids followers from harming any species under Fedhas' protection, and from using any necromantic effects that interfere with corpses. In return Fedhas grants a number of abilities that promote the growth of plants and fungi. These abilities may incidentally prove useful to adventurers.
 %%%%
 Cheibriados
 
@@ -142,7 +142,7 @@ Plants and fungi will not attack Fedhas worshipers without provocation. Fedhas w
 %%%%
 Cheibriados powers
 
-Followers are rewarded for moving slowly and killing creatures which are faster than they are.  Moving too quickly or using magically hastened weapons is frowned upon.  Cheibriados rewards the faithful with a slowed metabolism, the power to slow other creatures, the power to harm those who move more quickly than you do and, finally, the ability to step out of the flow of time.
+Followers are rewarded for moving slowly and killing creatures which are faster than they are. Moving too quickly or using magically hastened weapons is frowned upon. Cheibriados rewards the faithful with a slowed metabolism, the power to slow other creatures, the power to harm those who move more quickly than you do and, finally, the ability to step out of the flow of time.
 %%%%
 Jiyva powers
 
