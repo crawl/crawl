@@ -5626,6 +5626,7 @@ int player_mutation_level(mutation_type mut)
     case HS_SATIATED:
         return (std::min(mlevel, 1));
     }
+
     return (0);
 }
 
