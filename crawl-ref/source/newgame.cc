@@ -30,7 +30,7 @@
 #include "tutorial.h"
 
 #ifdef USE_TILE
-#include "tilereg.h"
+#include "tilereg-crt.h"
 #endif
 
 static bool _choose_weapon(newgame_def* ng);

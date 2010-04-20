@@ -4031,3 +4031,62 @@ void describe_skill(int skill)
     if (getchm() == 0)
         getchm();
 }
+
+void alt_desc_proc::nextline()
+{
+    ostr << "\n";
+}
+
+void alt_desc_proc::print(const std::string &str)
+{
+    ostr << str;
+}
+
+int alt_desc_proc::count_newlines(const std::string &str)
+{
+    int count = 0;
+    for (size_t i = 0; i < str.size(); i++)
+    {
+        if (str[i] == '\n')
+            count++;
+    }
+    return count;
+}
+
+void alt_desc_proc::trim(std::string &str)
+{
+    int idx = str.size();
+    while (--idx >= 0)
+    {
+        if (str[idx] != '\n')
+            break;
+    }
+    str.resize(idx + 1);
+}
+
+bool alt_desc_proc::chop(std::string &str)
+{
+    int loc = -1;
+    for (size_t i = 1; i < str.size(); i++)
+        if (str[i] == '\n' && str[i-1] == '\n')
+            loc = i;
+
+    if (loc == -1)
+        return (false);
+
+    str.resize(loc);
+    return (true);
+}
+
+void alt_desc_proc::get_string(std::string &str)
+{
+    str = replace_all(ostr.str(), "\n\n\n\n", "\n\n");
+    str = replace_all(str, "\n\n\n", "\n\n");
+
+    trim(str);
+    while (count_newlines(str) > h)
+    {
+        if (!chop(str))
+            break;
+    }
+}

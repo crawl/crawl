@@ -201,3 +201,44 @@ wiz-item.o \
 wiz-mon.o \
 wiz-you.o \
 xom.o
+
+ifdef TILES
+OBJECTS += \
+glwrapper.o \
+libgui.o \
+tile2.o \
+tilebuf.o \
+tiledoll.o \
+tilefont.o \
+tilemcache.o \
+tilepick.o \
+tilereg.o \
+tilereg-crt.o \
+tilereg-dgn.o \
+tilereg-doll.o \
+tilereg-grid.o \
+tilereg-inv.o \
+tilereg-map.o \
+tilereg-mem.o \
+tilereg-menu.o \
+tilereg-msg.o \
+tilereg-spl.o \
+tilereg-stat.o \
+tilereg-tab.o \
+tilereg-text.o \
+tilereg-title.o \
+tilesdl.o \
+tiletex.o
+endif
+
+ifdef SDL
+OBJECTS += windowmanager-sdl.o
+endif
+
+ifdef GL
+OBJECTS += glwrapper-ogl.o
+endif
+
+ifdef FT
+OBJECTS += fontwrapper-ft.o
+endif

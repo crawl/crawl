@@ -20,15 +20,7 @@
 #include <stdint.h>
 
 #ifdef USE_TILE
-struct dolls_data
-{
-    dolls_data();
-    dolls_data(const dolls_data& orig);
-    const dolls_data& operator=(const dolls_data& other);
-    ~dolls_data();
-
-    int *parts;
-};
+#include "tiledoll.h"
 #endif
 
 class player : public actor

@@ -80,35 +80,6 @@
 #include "viewgeom.h"
 #include "xom.h"
 
-#ifdef USE_TILE
-#include "tiles.h"
-#include "tiledef-player.h"
-
-dolls_data::dolls_data()
-{
-    parts = new int[TILEP_PART_MAX];
-    memset(parts, 0, TILEP_PART_MAX * sizeof(int));
-}
-
-dolls_data::dolls_data(const dolls_data& _orig)
-{
-    parts = new int[TILEP_PART_MAX];
-    memcpy(parts, _orig.parts, TILEP_PART_MAX * sizeof(int));
-}
-
-const dolls_data& dolls_data::operator=(const dolls_data& other)
-{
-    memcpy(parts, other.parts, TILEP_PART_MAX * sizeof(int));
-    return (*this);
-}
-
-dolls_data::~dolls_data()
-{
-    delete[] parts;
-    parts = NULL;
-}
-#endif
-
 static void _moveto_maybe_repel_stairs()
 {
     const dungeon_feature_type new_grid = env.grid(you.pos());

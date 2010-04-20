@@ -52,7 +52,7 @@
 #include "viewchar.h"
 
 #ifdef USE_TILE
-#include "tilereg.h"
+#include "tilereg-crt.h"
 #endif
 
 // Initialise a whole lot of stuff...

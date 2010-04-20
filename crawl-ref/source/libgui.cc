@@ -17,7 +17,7 @@
 #include "defines.h"
 #include "env.h"
 #include "externs.h"
-#include "tilereg.h"
+#include "tilereg-text.h"
 #include "message.h"
 #include "stash.h"
 #include "state.h"
