@@ -92,6 +92,31 @@ int str_to_trap(const std::string &s);
 
 int count_desc_lines(const std::string _desc, const int width);
 
+class alt_desc_proc
+{
+public:
+    alt_desc_proc(int _w, int _h) { w = _w; h = _h; }
+
+    int width() { return w; }
+    int height() { return h; }
+
+    void nextline();
+    void print(const std::string &str);
+    static int count_newlines(const std::string &str);
+
+    // Remove trailing newlines.
+    static void trim(std::string &str);
+    // rfind consecutive newlines and truncate.
+    static bool chop(std::string &str);
+
+    void get_string(std::string &str);
+
+protected:
+    int w;
+    int h;
+    std::ostringstream ostr;
+};
+
 /* ***********************************************************************
  * template implementations
  * *********************************************************************** */

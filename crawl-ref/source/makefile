@@ -262,22 +262,7 @@ ifdef WIN32
 EXTRA_OBJECTS += icon.o
 endif
 
-ifdef TILES
-OBJECTS += libgui.o tile2.o tilereg.o tilepick.o tilesdl.o tilefont.o tiletex.o tilemcache.o tilebuf.o glwrapper.o
-
-ifdef SDL
-OBJECTS += windowmanager-sdl.o
-endif
-
-ifdef GL
-OBJECTS += glwrapper-ogl.o
-endif
-
-ifdef FT
-OBJECTS += fontwrapper-ft.o
-endif
-
-else
+ifndef TILES
 ifdef NEED_LIBW32C
 OBJECTS += libw32c.o
 else

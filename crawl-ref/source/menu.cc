@@ -30,7 +30,8 @@
  #include "tiledef-dngn.h"
  #include "tiledef-main.h"
  #include "tiledef-player.h"
- #include "tilereg.h"
+ #include "tilereg-crt.h"
+ #include "tilereg-menu.h"
  #include "travel.h"
 #endif
 

@@ -25,7 +25,7 @@
 #include "fprop.h"
 #include "defines.h"
 #ifdef USE_TILE
- #include "tilereg.h"
+ #include "tilereg-map.h"
 #endif
 #include "invent.h"
 #include "item_use.h"

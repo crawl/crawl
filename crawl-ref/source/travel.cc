@@ -4207,3 +4207,57 @@ void do_interlevel_travel()
     if (you.running)
         mesclr();
 }
+
+
+// (0,0) = same position is handled elsewhere.
+const int dir_dx[8] = {-1, 0, 1, -1, 1, -1,  0,  1};
+const int dir_dy[8] = { 1, 1, 1,  0, 0, -1, -1, -1};
+
+const int cmd_array[8] = {CMD_MOVE_DOWN_LEFT, CMD_MOVE_DOWN, CMD_MOVE_DOWN_RIGHT,
+                          CMD_MOVE_LEFT, CMD_MOVE_RIGHT,
+                          CMD_MOVE_UP_LEFT, CMD_MOVE_UP, CMD_MOVE_UP_RIGHT};
+
+
+static int _adjacent_cmd(const coord_def &gc, bool force)
+{
+    const coord_def dir = gc - you.pos();
+    for (int i = 0; i < 8; i++)
+    {
+        if (dir_dx[i] != dir.x || dir_dy[i] != dir.y)
+            continue;
+
+        int cmd = cmd_array[i];
+        if (force)
+            cmd += CMD_OPEN_DOOR_LEFT - CMD_MOVE_LEFT;
+
+        return command_to_key((command_type) cmd);
+    }
+
+    return 0;
+}
+
+int click_travel(const coord_def &gc, bool force)
+{
+    if (!in_bounds(gc))
+        return 0;
+
+    int cmd = _adjacent_cmd(gc, force);
+    if (cmd)
+        return cmd;
+
+    if (i_feel_safe())
+    {
+        start_travel(gc);
+        return CK_MOUSE_CMD;
+    }
+
+    // If not safe, then take one step towards the click.
+    travel_pathfind tp;
+    tp.set_src_dst(you.pos(), gc);
+    const coord_def dest = tp.pathfind(RMODE_TRAVEL);
+
+    if (!dest.x && !dest.y)
+        return 0;
+
+    return _adjacent_cmd(dest, force);
+}
