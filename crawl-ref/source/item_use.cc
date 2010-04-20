@@ -497,12 +497,19 @@ void equip_weapon_effect(item_def& item, bool showMsgs)
         if (item.sub_type == STAFF_POWER)
         {
             int mp = item.special - you.elapsed_time / POWER_DECAY;
+
             if (mp > 0)
-            you.magic_points += mp;
+                you.magic_points += mp;
+
+            if ((you.max_magic_points + 13) *
+                (1.0+player_mutation_level(MUT_HIGH_MAGIC)/10.0) > 50)
+                mpr("You feel your mana capacity is already quite full.");
+            else
+                mpr("You feel your mana capacity increase.");
+
             calc_mp();
             set_ident_type(item, ID_KNOWN_TYPE);
             set_ident_flags(item, ISFLAG_EQ_WEAPON_MASK);
-            mpr("You feel your mana capacity increase.");
         }
         else if (!maybe_identify_staff(item))
         {
@@ -3565,7 +3572,12 @@ void equip_jewellery_effect(item_def &item)
         break;
 
     case RING_MAGICAL_POWER:
-        mpr("You feel your mana capacity increase.");
+        if ((you.max_magic_points + 9) *
+            (1.0+player_mutation_level(MUT_HIGH_MAGIC)/10.0) > 50)
+            mpr("You feel your mana capacity is already quite full.");
+        else
+            mpr("You feel your mana capacity increase.");
+
         calc_mp();
         if (artefact)
             fake_rap = ARTP_MAGICAL_POWER;
@@ -5842,7 +5854,7 @@ void use_artefact(item_def &item, bool *show_msgs, bool unmeld)
     if (proprt[ARTP_MAGICAL_POWER] && !known[ARTP_MAGICAL_POWER])
     {
         mprf("You feel your mana capacity %s.",
-             proprt[ARTP_MAGICAL_POWER] > 0? "increase" : "decrease");
+             proprt[ARTP_MAGICAL_POWER] > 0 ? "increase" : "decrease");
         artefact_wpn_learn_prop(item, ARTP_MAGICAL_POWER);
     }
 
