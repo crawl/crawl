@@ -528,12 +528,6 @@ std::string show_startup_menu()
     text += "Use the up/down keys to select the type of game or load a character.\n";
     text += "You can type your name; with \".\" you will be asked later. Press ";
     text += "Enter to start.\n";
-    if (Options.prev_name.length() && Options.remember_name)
-    {
-        text += "If you leave the name blank, you will be called again ";
-        text += Options.prev_name;
-        text += ".\n";
-    }
     tmp->set_text(text);
     tmp->set_bounds(coord_def(1, MISC_TEXT_START_Y),
                     coord_def(get_number_of_cols() - 2, MISC_TEXT_START_Y + 4));
@@ -543,17 +537,6 @@ std::string show_startup_menu()
     menu.attach_object(freeform);
     menu.attach_object(game_modes);
     menu.attach_object(save_games);
-
-    if (!chars.empty())
-    {
-        menu.set_active_object(save_games);
-        save_games->activate_first_item();
-    }
-    else
-    {
-        menu.set_active_object(game_modes);
-        game_modes->activate_first_item();
-    }
 
     MenuDescriptor* descriptor = new MenuDescriptor(&menu);
     descriptor->init(coord_def(1, MISC_TEXT_START_Y + 4),
@@ -583,9 +566,39 @@ std::string show_startup_menu()
     // Draw legal info etc
     opening_screen();
 
-    bool loop_flag = true;
     std::string input_string;
-    while (loop_flag)
+
+    // If the game filled in a complete name, the user will
+    // usually want to enter a new name instead of adding
+    // to the current one.
+    bool full_name = false;
+    if (Options.prev_name.length() && Options.remember_name)
+    {
+        input_string = Options.prev_name;
+        full_name = true;
+    }
+
+    if (!chars.empty())
+    {
+        menu.set_active_object(save_games);
+        int i = _find_save(chars, input_string);
+        if (i == -1)
+        {
+            save_games->activate_first_item();
+            input_string = chars.at(0).name;
+        }
+        else
+        {
+            save_games->set_active_item(i);
+        }
+    }
+    else
+    {
+        menu.set_active_object(game_modes);
+        game_modes->activate_first_item();
+    }
+
+    while (true)
     {
         menu.draw_menu();
         textcolor(WHITE);
@@ -610,6 +623,11 @@ std::string show_startup_menu()
             if (std::isalnum(keyn) || keyn == '-' || keyn == '.'
                 || keyn == '_' || keyn == ' ')
             {
+                if (full_name)
+                {
+                    full_name = false;
+                    input_string = "";
+                }
                 input_string += static_cast<char> (keyn);
                 changed_name = true;
             }
@@ -619,10 +637,11 @@ std::string show_startup_menu()
                 {
                     input_string.erase(input_string.size() - 1);
                     changed_name = true;
+                    full_name = false;
                 }
             }
             // clear the "That's a silly name line"
-            cgotoxy(SCROLLER_MARGIN_X ,GAME_MODES_START_Y - 1);
+            cgotoxy(SCROLLER_MARGIN_X, GAME_MODES_START_Y - 1);
             clear_to_end_of_line();
 
             // Depending on whether the current name occurs
@@ -643,9 +662,32 @@ std::string show_startup_menu()
                     save_games->set_active_item(i);
                 }
             }
+            else
+            {
+                // Menu might have changed selection -- sync name.
+                int id = menu.get_active_item()->get_id();
+                switch (id)
+                {
+                case GAME_TYPE_NORMAL:
+                case GAME_TYPE_TUTORIAL:
+                case GAME_TYPE_SPRINT:
+                case GAME_TYPE_ARENA:
+                    // If a game type is chosen, the user expects
+                    // to start a new game. Just blanking the name
+                    // it it clashes for now.
+                    if (_find_save(chars, input_string) != -1)
+                        input_string = "";
+                    break;
 
-            // poll a new key
-            continue;
+                case '?':
+                    break;
+
+                default:
+                    int save_number = id - NUM_GAME_TYPE;
+                    input_string = chars.at(save_number).name;
+                    break;
+                }
+            }
         }
         // we had a significant action!
         std::vector<MenuItem*> selected = menu.get_selected_items();
