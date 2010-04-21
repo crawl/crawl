@@ -1,37 +1,38 @@
 ########################################################
 # Frequently Asked Questions (FAQ.txt)
 ########################################################
-# This file lists a number of Frequently Asked Questions and their answers,
-# and sometimes also questions we wish were asked more often. :)
+# This file lists a number of Frequently Asked Questions and their
+# answers, and sometimes also questions we wish were asked more often.
+# :)
 #
 # Syntax is as follows:
 #  Q:key word, for the question
 #  A:key word, for the corresponding answer
 #
-# Questions are pushed into a menu in the order the questions are defined
-# in this file. Answers need not necessarily be right next to the question,
-# but it's easier to read if they are.
+# Questions are pushed into a menu in the order the questions are
+# defined in this file. Answers need not necessarily be right next to
+# the question, but it's easier to read if they are.
+#
 # There may be at most 52 questions, but it is recommended to keep the
 # number much lower than that.
 #
 # This file is not meant as an easy-access spoiler file, but rather
 # intended to answer general questions that crop up from time to time.
 #
-# #######################################################
+########################################################
 #
 # Translating txt -> html:
 #
 # * Use util/FAQ2html.pl to create the corresponding html file in the
 #   docs/ directory.
 # * All commands should be encased in single quotes, e.g. '?', which
-#   means they will be displayed in bold in the html. This will only work
-#   for commands that don't contain spaces.
+#   means they will be displayed in bold in the html. This will only
+#   work for commands that don't contain spaces.
 # * Emphasis using asterisks will be replaced with italics.
 # * Hyperlinks should begin with http:// and should never be directly
 #   followed by a dot (reorder the sentence, if need be), so they can be
 #   turned into properly clickable links.
 #
-
 ##############################################
 # Beginners' questions about playing the game.
 ##############################################
@@ -42,15 +43,9 @@ What exactly is the goal of this game?
 %%%%
 A:goal
 
-A: To survive and to win, obviously. For this you need to find the fabled
-Orb of Zot deep down in the dungeon and bring it back to the surface.
-To enter the realm of Zot, you'll first need to collect three runes to be
-found in various branches of the dungeon.
+A: To survive and to win, obviously. For this you need to find the fabled Orb of Zot deep down in the dungeon and bring it back to the surface. To enter the realm of Zot, you'll first need to collect three runes to be found in various branches of the dungeon.
 
-However, if you're new to the game you really shouldn't worry about this.
-Just try to delve as deeply as possible and have fun exploring the many
-side branches in Crawl with various characters of different species,
-skill sets, and religions.
+However, if you're new to the game, you really shouldn't worry about this. Just try to delve as deeply as possible and have fun exploring the many side branches in Crawl with various characters of different species, skill sets, and religions.
 %%%%
 Q:drop
 
@@ -58,10 +53,7 @@ How can I drop/pick up only part of a stack?
 %%%%
 A:drop
 
-A: Press 'd' (or ','/'g'), followed by a number (the amount), and finally
-the item's letter. For pickup, this is only possible when choosing items
-from a menu, i.e. ',,' or 'gg'.
-Stacks that are selected only in part are marked with '#' rather than '+'.
+A: Press 'd' (or ','/'g'), followed by a number (the amount), and finally the item's letter. For pickup, this is only possible when choosing items from a menu, i.e. ',,' or 'gg'. Stacks that are selected only in part are marked with '#' rather than '+'.
 %%%%
 Q:roguelike difference
 
@@ -69,22 +61,17 @@ What are the biggest differences to other popular roguelike games?
 %%%%
 A:roguelike difference
 
-A: First, you might want to read the philosophy section in the manual ('?N')
-to read about general important principles in Stone Soup's game design.
+A: First, you might want to read the philosophy section in the manual ('?N') to read about general important principles in Stone Soup's game design.
 
 As for specific differences, the most important are probably the following:
 * Species is *much* more important than the character background (or "class").
 * Bones files only contain ghosts, never the dead character's equipment.
 * You cannot sell items to shops or elsewhere.
 * Resistances can be gained via mutations or items, never through eating.
-* For most gods in Crawl, prayer doesn't have any effect at all. Where it
-  does, it has both benefits and drawbacks. Check '^' to find out more.
-* There are inevitable deaths, but new players can win without spoilers, if
-  they learn from their mistakes. Very good players win streaks.
+* For most gods in Crawl, prayer doesn't have any effect at all. Where it does, it has both benefits and drawbacks. Check '^' to find out more.
+* There are inevitable deaths, but new players can win without spoilers, if they learn from their mistakes. Very good players win streaks.
 
-Also, our aim is to give Crawl a really smooth interface, so you should really
-read through the command list ('??') some time. The most intriguing "newish"
-commands are probably the following:
+Also, our aim is to give Crawl a really smooth interface, so you should really read through the command list ('??') some time. The most intriguing "newish" commands are probably the following:
 
 * 'o', for automatic exploration of an unknown level
 * 'G', for automatic travel to another level ('G?' for help)
@@ -97,25 +84,13 @@ How can I avoid dying all the time? Can you give me some playing tips?
 %%%%
 A:survival
 
-A: If you've got trouble even reaching the Temple, you might want to try
-out the tutorial for some general playing hints. (To do this, press 'Ctrl-T'
-in the character selection menu.)
+A: If you've got trouble even reaching the Temple, you might want to try out the tutorial for some general playing hints. (To do this, press 'Ctrl-T' in the character selection menu.)
 
-Also, there are easy playing combinations and more challenging ones
-(marked in dark grey on the selection screen). If you are new to Crawl,
-sticking to the easier ones is advisable. In general, treat each new
-monster you meet with utmost caution and keep an eye on your hit points
-and magic.
+Also, there are easy playing combinations and more challenging ones (marked in dark grey on the selection screen). If you are new to Crawl, sticking to the easier ones is advisable. In general, treat each new monster you meet with utmost caution and keep an eye on your hit points and magic.
 
-For specific hints dealing with a particular character, you can press '#'
-in-game to create a "character dump" in your morgue folder that you can then
-post on e.g. the rec.games.roguelike.misc group or in the Something Awful
-forum, so other players can comment on your equipment, skills or spell
-selection.
-Please try to trim your dump by removing stuff unnecessary for this task
-(such as the extensive Vanquished list). If you join the ##crawl channel
-of the freenode IRC, you will find helpful souls who will even watch you
-and give hints should you play on one of the public servers.
+For specific hints dealing with a particular character, you can press '#' in-game to create a "character dump" in your morgue folder that you can then post on e.g. the rec.games.roguelike.misc group or in the Something Awful forum, so other players can comment on your equipment, skills or spell selection.
+
+Please try to trim your dump by removing stuff unnecessary for this task (such as the extensive Vanquished list). If you join the ##crawl channel of the freenode IRC, you will find helpful souls who will even watch you and give hints should you play on one of the public servers.
 %%%%
 Q:downstairs
 
@@ -123,17 +98,9 @@ I can't find any downstairs. Am I missing something?
 %%%%
 A:downstairs
 
-A: While this might be a bug, chances are the downstairs are somewhere in
-a room closed off by a secret door. If you search (with '5') in suspicious
-looking corridors and along walls near empty terrain, you will eventually
-find one. Note that most levels feature three downstairs as well as three
-upstairs, not counting any escape hatches. If you get stuck, you might
-try another set of stairs from the level above.
+A: While this might be a bug, chances are the downstairs are somewhere in a room closed off by a secret door. If you search (with '5') in suspicious-looking corridors and along walls near empty terrain, you will eventually find one. Note that most levels feature three downstairs as well as three upstairs, not counting any escape hatches. If you get stuck, you might try another set of stairs from the level above.
 
-Alternatively, if you are in one of the branches, you might also have
-reached its lowest level and have to turn around to explore another one.
-Check the overview ('Ctrl-O') to see how deep you've delved into a given
-branch, or the database ('?/b') for the number of levels for unseen branches.
+Alternatively, if you are in one of the branches, you might also have reached its lowest level and have to turn around to explore another one. Check the overview ('Ctrl-O') to see how deep you've delved into a given branch, or the database ('?/b') for the number of levels for unseen branches.
 %%%%
 Q:stuck
 
@@ -141,16 +108,11 @@ I teleported and ended up in a closed room without any exits. Am I stuck?
 %%%%
 A:stuck
 
-A: Hopefully not. Search all the walls with '5' in case there's a secret
-door. If you really can't find any, it could be a bug and need fixing, so
-please report it on our Mantis tracker: http://crawl.develz.org/mantis/
+A: Hopefully not. Search all the walls with '5' in case there's a secret door. If you really can't find any, it could be a bug and need fixing, so please report it on our Mantis tracker: http://crawl.develz.org/mantis/
 
-Be sure to upload your save file! (If you're playing online, you'll need to
-ask the admin to upload your save file, and can continue playing once they
-did so.)
+Be sure to upload your save file! (If you're playing online, you'll need to ask the admin to upload your save file, and can continue playing once they do so.)
 
-In the meantime, you can try to escape with digging, disintegration or
-teleportation.
+In the meantime, you can try to escape with digging, disintegration or teleportation.
 %%%%
 Q:starving
 
@@ -158,18 +120,9 @@ My characters keep starving. What am I doing wrong?
 %%%%
 A:starving
 
-A: It's possible that you simply spend too much time on cleared levels
-where not enough monsters are generated to dine on. You might also be too
-choosy about what you eat: unless you are herbivorous you will have to
-occasionally eat monster chunks, even those that sometimes make you sick
-(coloured brown in the menu and the prompt). If you worship a god who
-enjoys sacrifices pay attention to your own hunger status instead of offering
-all corpses you come across.
+A: It's possible that you simply spend too much time on cleared levels where not enough monsters are generated to dine on. You might also be too choosy about what you eat; unless you are herbivorous, you will have to occasionally eat monster chunks, even those that sometimes make you sick (coloured brown in the menu and the prompt). If you worship a god who enjoys sacrifices, pay attention to your own hunger status instead of offering all corpses you come across.
 
-Also, casting (difficult) spells will make you hungry, but high
-Intelligence and Spellcasting will lessen this effect. If you press 'II',
-you can read about the hunger effects of your spells.
-Invocations likewise often have a Food cost.
+Also, casting (difficult) spells will make you hungry, but high Intelligence and Spellcasting will lessen this effect. If you press 'II', you can read about the hunger effects of your spells. Invocations likewise often have a Food cost.
 %%%%
 Q:labyrinth
 
@@ -179,20 +132,13 @@ A:labyrinth
 
 A: To escape a labyrinth, it can be useful to know a few things:
 
-1. Each labyrinth consists of several layers of different wall types,
-   ranging from rock in the outer border to metal in the centre part, at the
-   very centre of which the exit is located. (Though the exit itself may be
-   part of a vault that has non-metal walls.)
+1. Each labyrinth consists of several layers of different wall types, ranging from rock in the outer border to metal in the centre part, at the very centre of which the exit is located. (Though the exit itself may be part of a vault that has non-metal walls.)
 
 2. Teleportation will never take you into or even near the metal region.
 
-3. From time to time, the walls will rearrange themselves. Though they will
-   never close off the path to the exit, the path itself might change. In
-   particular, this means that the "left hand" rule is not entirely reliable.
+3. From time to time, the walls will rearrange themselves. Though they will never close off the path to the exit, the path itself might change. In particular, this means that the "left hand" rule is not entirely reliable.
 
-Also, exit and loot are guarded by a brutish minotaur, who is very much
-alive. Don't let yourself get sidetracked by necromantic remnants of its
-ancestors.
+Also, exit and loot are guarded by a brutish minotaur, who is very much alive. Don't let yourself get sidetracked by necromantic remnants of its ancestors.
 %%%%
 Q:cheating
 
@@ -200,17 +146,9 @@ Is there a cheating mode to Crawl where I can play without dying?
 %%%%
 A:cheating
 
-A: Not a cheating mode, exactly, but if your build supports it you can
-play in wizard mode (access with '&') where you are prompted whenever
-you're about to die and have access to a number of nifty commands to
-create equipment, travel to distant branches, or fiddle with your stats
-or skills.
-Note that wizard mode games will never appear on the highscore list.
+A: Not a cheating mode, exactly, but if your build supports it you can play in wizard mode (access with '&') where you are prompted whenever you're about to die and have access to a number of nifty commands to create equipment, travel to distant branches, or fiddle with your stats or skills. Note that wizard mode games will never appear on the highscore list.
 
-Many players reckon long-time use of wizard mode to be detrimental to your
-playing skills. On the other hand, wizard mode has its uses: we are really
-grateful whenever we get bug reports using wizard mode for reproducing and
-exploring bugs.
+Many players reckon long-time use of wizard mode to be detrimental to your playing skills. On the other hand, wizard mode has its uses: we are really grateful whenever we get bug reports using wizard mode for reproducing and exploring bugs.
 %%%%
 Q:weapons
 
@@ -218,17 +156,9 @@ I've got two cool weapons. How can I tell which one is better?
 %%%%
 A:weapons
 
-A: "Better" depends on a number of factors, such as your weapon skills,
-whether it's one or two-handed, the randart properties, the weapon brand,
-and the monsters you're about to face. In general, switching from a weapon
-type at which you are already highly skilled to another one that you have
-no skill in is a waste of time. The brands may greatly differ in damage
-output but you can get a good idea by bashing a few comparatively harmless
-monsters with each and comparing the results.
+A: "Better" depends on a number of factors, such as your weapon skills, whether it's one- or two-handed, the randart properties, the weapon brand, and the monsters you're about to face. In general, switching from a weapon type at which you are already highly skilled to another one that you have no skill in is a waste of time. The brands may greatly differ in damage output, but you can get a good idea by bashing a few comparatively harmless monsters with each and comparing the results.
 
-Of the enchantments, the second value (damage) is usually more important
-than the first (accuracy) unless you hardly ever manage to hit with a
-weapon.
+Of the enchantments, the second value (damage) is usually more important than the first (accuracy), unless you hardly ever manage to hit with a weapon.
 %%%%
 Q:religion
 
@@ -236,11 +166,9 @@ Which gods would you recommend to a beginning player?
 %%%%
 A:religion
 
-A: The easiest gods to play are probably Trog (for pure fighters), Vehumet or
-Sif Muna (for spellcasters), Beogh (for orcs), and Xom (for general fun).
+A: The easiest gods to play are probably Trog (for pure fighters), Vehumet or Sif Muna (for spellcasters), Beogh (for orcs), and Xom (for general fun).
 
-Whenever you encounter an altar, be sure to read the corresponding god's
-description and take your time in deciding whether to pick this deity or not.
+Whenever you encounter an altar, be sure to read the corresponding god's description and take your time in deciding whether to pick this deity or not.
 %%%%
 Q:ghosts
 
@@ -250,17 +178,9 @@ A:ghosts
 
 A: There isn't any such option, and we're not planning to add one, either.
 
-For a more constructive answer, once a ghost has been loaded onto a level, it
-won't be loaded again - unless you happen to die on that level, thus creating
-a bones file featuring more than one ghost.
-Keep in mind that you don't absolutely have to fight every monster you meet,
-and with ghosts it's even easier: they cannot leave the level they were
-created on.
+For a more constructive answer, once a ghost has been loaded onto a level, it won't be loaded again - unless you happen to die on that level, thus creating a bones file featuring more than one ghost. Keep in mind that you don't absolutely have to fight every monster you meet, and with ghosts it's even easier: they cannot leave the level they were created on.
 
-Alternatively, you could play a couple characters of strong species/background
-combinations for the sole purpose of busting those ghosts, for example
-Berserkers, Paladins of the Shining One, or a spellcaster who's learned
-Dispel Undead.
+Alternatively, you could play a couple characters of strong species/background combinations for the sole purpose of busting those ghosts, e.g. Berserkers, Paladins, or spellcasters who've learned Dispel Undead.
 %%%%
 Q:instadeath
 
@@ -268,12 +188,7 @@ I went down these stairs and got killed instantly! Is this a bug?
 %%%%
 A:instadeath
 
-A: Probably not. While your death might be due to an ill-placed vault (this
-would be a bug), it is generally just really bad luck. We believe that a
-game is more fun if the risk of death is real. This means that such instant
-deaths cannot be fully avoided as Crawl relies on randomness for posing
-challenges. It is important to realize that for highly skilled players, the
-margin of such deaths is really slim...
+A: Probably not. While your death might be due to an ill-placed vault (this would be a bug), it is generally just really bad luck. We believe that a game is more fun if the risk of death is real. This means that such instant deaths cannot be fully avoided, as Crawl relies on randomness for posing challenges. It is important to realize that for highly skilled players, the margin of such deaths is really slim...
 %%%%
 Q:zombified
 
@@ -281,12 +196,7 @@ My zombies refuse to follow me into the next level. Is this a bug?
 %%%%
 A:zombified
 
-A: No, it's a deliberate design decision. As of version 0.5, zombies,
-skeletons and simulacra are considered too stupid to manoeuvre along
-staircases. We realize that this weakens Necromancers but we consider the
-interface improvement of zombie herding becoming unfeasible to be more
-important. Interestingly, this makes Necromancy and Yredelemnul more fun
-than before.
+A: No, it's a deliberate design decision. As of version 0.5, zombies, skeletons and simulacra are considered too stupid to manoeuvre along staircases. We realize that this weakens Necromancers, but we consider the interface improvement of zombie herding's becoming unfeasible to be more important. Interestingly, this makes Necromancy and Yredelemnul more fun than before.
 
 Keep in mind that the same also applies to hostile undead of the same kind!
 %%%%
@@ -296,13 +206,12 @@ I've somehow ended up in a place called "Abyss". How do I get out of here?
 %%%%
 A:abyss
 
-A: If you are in the Abyss for the first time, chances of getting out are
-slim. Still, here are a few general hints:
+A: If you are in the Abyss for the first time, chances of getting out are slim. Still, here are a few general hints:
 
 * You need to find a gateway leading out of the Abyss. These are rare!
-* Don't stick around to fight, move as much as possible!
-* The Abyss wraps around, so avoid going straight into one direction.
-* If you have it, use defensive equipment (weapon of protection etc.).
+* Don't stick around to fight; move as much as possible!
+* The Abyss wraps around, so avoid going straight in one direction.
+* If you have it, use defensive equipment (weapons of protection, etc.).
 * Use teleportation to hopefully end up in a completely new part of the Abyss.
 * Teleportation might take much longer to kick in than in the Dungeon.
 * Consider switching your allegiance to Lugonu to get out of there.
@@ -313,9 +222,7 @@ Oklob plants suck! Are you planning to remove them at last?
 %%%%
 A:oklobs
 
-A: No, we don't, because we feel that Oklob plants provide an interesting
-challenge. Resist the urge to kill them at once. If you absolutely need to
-bypass them use your resources wisely.
+A: No, we don't, because we feel that Oklob plants provide an interesting challenge. Resist the urge to kill them at once. If you absolutely need to bypass them, use your resources wisely.
 
 A hint: They cannot see invisible.
 %%%%
@@ -325,26 +232,14 @@ What do the terms "randart", "unrandart" and "egoitem" signify?
 %%%%
 A:randart
 
-A: Apart from the standard items you'll find lying around in the dungeon,
-you might also stumble upon artefacts which come in two varieties:
+A: Apart from the standard items you'll find lying around in the dungeon, you might also stumble upon artefacts which come in two varieties:
 
-* randart: a random artefact, usually a weapon or type of armour with
-  random properties such as conferring resistances or abilities
-* unrandart: an artefact that looks like a randart but is really
-  predefined. While a few (formerly known as "fixed artefacts") have
-  special hardcoded effects, for most there's no further difference except
-  that players "in the know" can recognize such an item by its special
-  description and/or colour/tile.
+* randart: a random artefact, usually a weapon or type of armour with random properties such as conferring resistances or abilities
+* unrandart: an artefact that looks like a randart but is really predefined. While a few (formerly known as "fixed artefacts") have special hardcoded effects, for most there's no further difference except that players "in the know" can recognize such an item by its special description and/or colour/tile.
 
-Neither of these types can be enchanted or branded, neither temporarily nor
-permanently. There is another type of special item that pops up a bit more
-frequently:
+Neither of these types can be enchanted or branded, either temporarily or permanently. There is another type of special item that pops up a bit more frequently:
 
-* egoitem: these are ordinary items with one special property. For example,
-  a short sword of venom, a cap of see invisible, or boots of running.
-  These can be affected by enchanting scrolls and also by corrosion and
-  acids. Weapons of this type are branded, and only divine intervention can
-  change the brand.
+* egoitem: these are ordinary items with one special property. For example, a short sword of venom, a cap of see invisible, or boots of running. These can be affected by enchanting scrolls and also by corrosion and acids. Weapons of this type are branded, and only divine intervention can change the brand.
 %%%%
 Q:interact
 
@@ -352,15 +247,11 @@ Is there a way for me to interact with other players?
 %%%%
 A:interact
 
-A: If you play online on http://crawl.akrasiac.org or http://crawl.develz.org
-you can watch games in progress, other players can watch you while you play,
-and you can kill other players' ghosts. You can even send and receive
-messages.
-Check docs/ssh_guide.txt or http://crawl.develz.org/wordpress/howto for an
-explanation about how to play online.
+A: If you play online on http://crawl.akrasiac.org or http://crawl.develz.org, you can watch games in progress, other players can watch you while you play, and you can kill other players' ghosts. You can even send and receive messages.
 
-You can also chat in the Crawl channel (irc.freenode.net, ##crawl), or discuss
-in the Something Awful forum or the rec.games.roguelike.misc newsgroup.
+Check docs/ssh_guide.txt or http://crawl.develz.org/wordpress/howto for an explanation about how to play online.
+
+You can also chat in the Crawl channel (irc.freenode.net, ##crawl), or discuss in the Something Awful forum or the rec.games.roguelike.misc newsgroup.
 %%%%
 ##############################################
 # Questions about the development process.
@@ -371,18 +262,11 @@ Is there a way for me to play the new version before it is released?
 %%%%
 A:beta
 
-A: There certainly is! You can play "trunk" (what will eventually become
-the next version) online on http://crawl.develz.org, or you can download
-Windows binaries from the same site. Note that trunk may be buggy, and that
-some changes may invalidate your saved games. If that doesn't bother you,
-go ahead and play!
+A: There certainly is! You can play "trunk" (what will eventually become the next version) online on http://crawl.develz.org, or you can download Windows binaries from the same site. Note that trunk may be buggy, and that some changes may invalidate your saved games. If that doesn't bother you, go ahead and play!
 
-Be sure to leave some feedback/suggestions/bug reports on the
-Mantis tracker: http://crawl.develz.org/mantis/, and
-Mantis wiki: http://crawl.develz.org/wiki/doku.php?id=start
+Be sure to leave some feedback/suggestions/bug reports on the Mantis tracker: http://crawl.develz.org/mantis/, and Mantis wiki: http://crawl.develz.org/wiki/doku.php?id=start
 
-When doing so please mention the version (see '?v') you're currently playing,
-in case the bug's already been fixed or the feature already implemented.
+When doing so, please mention the version (see '?v') you're currently playing, in case the bug's already been fixed or the feature already implemented.
 %%%%
 Q:bug
 
@@ -393,17 +277,12 @@ A:bug
 A: Please submit a bug report on Mantis (http://crawl.develz.org/mantis/),
 and give as much information as you can:
 * What were you doing at the time?
-* What did you expect to happen, what happened instead? etc.
+* What did you expect to happen, what happened instead, etc.
 * Most importantly, what version are you playing?
   (If you're not sure, you can check in-game with '?v'.)
 * Console or tiles?
 
-Sometimes a screenshot can be helpful. For crashes or monsters/items/levels
-behaving oddly, we probably need a save file. To be on the safe side, attach
-the entire zipped or tarballed save of the character in question. If there
-are error messages, please write them down. Short of a save file, a guide on
-how to reproduce the crash (or bug) can be useful; you can use wizard mode
-for this.
+Sometimes a screenshot can be helpful. For crashes or monsters/items/levels behaving oddly, we probably need a save file. To be on the safe side, attach the entire zipped or tarballed save of the character in question. If there are error messages, please write them down. Short of a save file, a guide on how to reproduce the crash (or bug) can be useful; you can use wizard mode for this.
 
 Thanks in advance!
 %%%%
@@ -415,21 +294,13 @@ A:ideas
 
 A: Sorry, but no. At least not on ideas alone.
 
-All of the devteam members submitted a number of code intensive patches
-and/or took over responsibility over an important side project before
-joining. A good way to become indispensable is to help us with patches or
-vaults etc.
+All of the devteam members submitted a number of code intensive patches and/or took over responsibility over an important side project before joining. A good way to become indispensable is to help us with patches or vaults, etc.
 
-Please add your ideas in the appropriate section of the Mantis wiki:
-http://crawl.develz.org/wiki/doku.php?id=start
+Please add your ideas in the appropriate section of the Mantis wiki: http://crawl.develz.org/wiki/doku.php?id=start
 
-If they catch the interest of at least one coder, chances are they'll make
-it into the game.
+If they catch the interest of at least one coder, chances are they'll make it into the game.
 
-Note that your idea has a better chance of being accepted if you present the
-ramifications on gameplay. Since we put a lot of emphasis on the interface,
-a good proposal on how to make the game play smoother may go in without
-much ado.
+Note that your idea has a better chance of being accepted if you present the ramifications on gameplay. Since we put a lot of emphasis on the interface, a good proposal on how to make the game play smoother may go in without much ado.
 %%%%
 Q:feature
 
@@ -437,25 +308,17 @@ Hey! Why did you close my feature request?
 %%%%
 A:feature
 
-A: If you submitted a report on our Mantis tracker, you will get an email
-any time someone replies to (or fiddles with) the thread in question.
-Once a thread has been resolved or closed, you can still access it by
-searching for requests with the "Resolved" and "Closed" status, respectively.
+A: If you submitted a report on our Mantis tracker, you will get an email any time someone replies to (or fiddles with) the thread in question. Once a thread has been resolved or closed, you can still access it by searching for requests with the "Resolved" and "Closed" status, respectively.
 
-We always try to give a reason for closing a request that has not been
-implemented, but it usually boils down to three reasons:
+We always try to give a reason for closing a request that has not been implemented, but it usually boils down to three reasons:
+
 * It doesn't fit into the Crawl world as we see it.
 * It violates Crawl's philosophy to avoid grinding and spoiler-heavy stuff.
 * We just don't think it's interesting enough to ever be implemented.
 
-Also, many requests that are reasonable but not urgent are moved to the wiki,
-where it's easier to keep track of them than in the bug tracker.
+Also, many requests that are reasonable but not urgent are moved to the wiki, where it's easier to keep track of them than in the bug tracker.
 
-Please don't let this stop you from bringing up more suggestions. Already the
-next one might generate heavy interest and excitement, and end up in the
-game. However, do try to be specific in your suggestions. If you cannot even
-explain the basics of your idea, why should we bother to flesh it out, let
-alone code it?
+Please don't let this stop you from bringing up more suggestions. Already the next one might generate heavy interest and excitement, and end up in the game. However, do try to be specific in your suggestions. If you cannot even explain the basics of your idea, why should we bother to flesh it out, let alone code it?
 %%%%
 Q:patch
 
@@ -463,18 +326,11 @@ I've written a patch for a cool new feature! Where should I send it?
 %%%%
 A:patch
 
-A: Please submit it as a new issue on our Mantis tracker:
-http://crawl.develz.org/mantis/
+A: Please submit it as a new issue on our Mantis tracker: http://crawl.develz.org/mantis/
 
-Keep in mind that without previous discussions, we may not be able to use
-the patch, or it might need heavy modification. In general, it is safer to
-first file your suggestions under Feature Requests and wait for people to
-become enthusiastic and give feedback before you submit a patch. If you
-want, you can also write a patch that implements an existing FR or fixes a
-bug.
+Keep in mind that without previous discussions, we may not be able to use the patch, or it might need heavy modification. In general, it is safer to first file your suggestions under Feature Requests and wait for people to become enthusiastic and give feedback before you submit a patch. If you want, you can also write a patch that implements an existing FR or fixes a bug.
 
-If you'd like to write a patch but don't know how to go about it,
-patch_guide.txt in the docs/develop/ folder is the file for you.
+If you'd like to write a patch but don't know how to go about it, patch_guide.txt in the docs/develop/ folder is the file for you.
 
 We really appreciate your help!
 %%%%
@@ -484,20 +340,15 @@ I cannot code, but I'd like to help improve the game. What can I do?
 %%%%
 A:help
 
-A: There are several areas where you can get creative and outside help is
-much appreciated. These are:
-* the maps/vaults (see dat/ folder, docs/develop/levels/introduction.txt)
+A: There are several areas where you can get creative and outside help is much appreciated. These are:
+* maps/vaults (see dat/ folder, docs/develop/levels/introduction.txt)
 * monster speech (see dat/database/, docs/develop/monster_speech.txt)
 * monster/item/spell descriptions (see dat/descript/)
 * tiles (see source/rltiles/, docs/develop/tiles_creation.txt)
 
-Also, if you'd like to write a patch but don't know how to go about it, read
-patch_guide.txt in the docs/develop/ folder.
+Also, if you'd like to write a patch but don't know how to go about it, read patch_guide.txt in the docs/develop/ folder.
 
-If you've got some cool addition, you can send it over the mailing list, or
-post it as a Mantis item. You can also help us by giving feedback on the most
-recent version or trunk (available via git, Windows binaries downloadable
-from http://crawl.develz.org/trunk/).
+If you've got some cool addition, you can send it over the mailing list, or post it as a Mantis item. You can also help us by giving feedback on the most recent version or trunk (available via git, Windows binaries downloadable from http://crawl.develz.org/trunk/).
 
 Thanks a lot for your support!
 %%%%
@@ -507,9 +358,7 @@ What did you change in the most recent version?
 %%%%
 A:changes
 
-A: The admittedly highly subjective highlights of the most recent major
-release are listed along with the version information under '?v'. For more
-details, check out changelog.txt in the docs/ folder.
+A: The admittedly highly subjective highlights of the most recent major release are listed along with the version information under '?v'. For more details, check out changelog.txt in the docs/ folder.
 %%%%
 ##############################################
 # Questions about the Tiles version
@@ -520,19 +369,11 @@ The Tiles version is awfully slow! How can I improve that?
 %%%%
 A:tiles lag
 
-A: Crawl renders its graphics using OpenGL and SDL. Because it uses OpenGL,
-it depends on a little bit of hardware acceleration to not run slowly. If
-your system is not set up to enable this, then Crawl will run quite poorly.
+A: Crawl renders its graphics using OpenGL and SDL. Because it uses OpenGL, it depends on a little bit of hardware acceleration to not run slowly. If your system is not set up to enable this, then Crawl will run quite poorly.
 
-On Windows, the default driver that ships with Windows is extremely slow.
-Make sure to update your graphics card driver to the latest one available.
-On Linux, you should be sure to enable DRI.
+On Windows, the default driver that ships with Windows is extremely slow. Make sure to update your graphics card driver to the latest one available. On Linux, you should be sure to enable DRI.
 
-In addition to these suggestions, you can also try to see whether tweaking
-some options will improve performance. See docs/tiles_help.txt for details.
-If things are still too laggy after all of that, you could try the
-non-graphical console version or wait for a future version that does not
-depend on OpenGL.
+In addition to these suggestions, you can also try to see whether tweaking some options will improve performance. See docs/tiles_help.txt for details. If things are still too laggy after all of that, you could try the non-graphical console version, or wait for a future version that does not depend on OpenGL.
 %%%%
 Q:tiles online
 
@@ -540,12 +381,9 @@ Can I play Tiles online?
 %%%%
 A:tiles online
 
-A: Sadly, no, that's not possible at the moment. We are planning to change
-that but so far we haven't even decided how to go about it, and so it's
-still far off.
+A: Sadly, no, that's not possible at the moment. We are planning to change that, but so far we haven't even decided how to go about it, and so it's still far off.
 
-If you can, do give the console version a try: playing online is certainly
-worth it.
+If you can, do give the console version a try: playing online is certainly worth it.
 %%%%
 Q:tiles graphics
 
@@ -553,33 +391,21 @@ Is there a way for me to replace some of the tiles with different ones?
 %%%%
 A:tiles graphics
 
-A: It depends. If all you want are minor modifications such as colour
-changes you can directly modify the *.png files in the dat/tiles/ folder.
+A: It depends. If all you want are minor modifications such as colour changes, you can directly modify the *.png files in the dat/tiles/ folder.
 
-Otherwise, you'll need to be able to compile the game. In this case you can
-either directly replace the tiles in the rltiles/ subfolders, or change
-their paths in the dc-xxxx.txt files. For the compilation to be successful,
-you may also need to delete or rename the *.png files in rltiles/. Upon
-compilation, the newly rolled *.png files are copied into the dat/tiles/
-folder which is where the game accesses the tiles it needs. You can then
-share these files with other players, so they can use your tileset without
-having to compile the game.
+Otherwise, you'll need to be able to compile the game. In this case you can either directly replace the tiles in the rltiles/ subfolders, or change their paths in the dc-xxxx.txt files. For the compilation to be successful, you may also need to delete or rename the *.png files in rltiles/. Upon compilation, the newly rolled *.png files are copied into the dat/tiles/ folder which is where the game accesses the tiles it needs. You can then share these files with other players, so they can use your tileset without having to compile the game.
 
-If you've created some nice new tiles or variations of existing ones you'd
-like to share you might want to send it to one of the Tiles developers or
-submit them as a Mantis item: http://crawl.develz.org/mantis/
+If you've created some nice new tiles or variations of existing ones you'd like to share, you might want to send them to one of the Tiles developers or submit them as a Mantis item: http://crawl.develz.org/mantis/
 
-See http://crawl.develz.org/wiki/doku.php?id=dcss:help:tiles_creation or
-docs/develop/tiles_creation.txt for a somewhat more detailed explanation.
+See http://crawl.develz.org/wiki/doku.php?id=dcss:help:tiles_creation or docs/develop/tiles_creation.txt for a somewhat more detailed explanation.
 
 Thanks in advance!
 %%%%
 Q:tiles options
 
-Is there a way to modify the size of the tiles screen, the font etc?
+Is there a way to modify the size of the tiles screen, the font, etc.?
 %%%%
 A:tiles options
 
-A: Yes. Play around with the options in settings/tiles_options.txt until
-you are satisfied. See docs/options_guide.txt for some explanations.
+A: Yes. Play around with the options in settings/tiles_options.txt until you are satisfied. See docs/options_guide.txt for some explanations.
 %%%%
