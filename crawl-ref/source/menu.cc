@@ -3090,6 +3090,11 @@ void MenuObject::allow_focus(bool toggle)
 
 bool MenuObject::can_be_focused()
 {
+	if (m_entries.empty())
+	{
+		// Do not allow focusing empty containers by default
+		return false;
+	}
     return m_allow_focus;
 }
 
