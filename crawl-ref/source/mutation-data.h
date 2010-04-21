@@ -136,7 +136,7 @@
 
   "cold resistance"
 },
-{ MUT_DEMONIC_GUARDIAN,            2,  3, false, false,
+{ MUT_DEMONIC_GUARDIAN,            0,  3, false, false,
   "demonic guardian",
 
   {"You are protected by a weak demonic guardian.",
@@ -973,7 +973,7 @@
   "passive freeze",
 },
 
-{ MUT_NIGHTSTALKER,                     0,  3, false, true,
+{ MUT_NIGHTSTALKER,               0,  3, false, true,
   "nightstalker",
 
   {"You are slightly more attuned to the shadows.",
@@ -991,7 +991,7 @@
   "nightstalker"
 },
 
-{ MUT_SPINY,                            0,  3, false, true,
+{ MUT_SPINY,                      0,  3, false, true,
   "spiny",
 
   {"You are partially covered in sharp spines.",
@@ -1009,7 +1009,7 @@
   "spiny"
 },
 
-{ MUT_POWERED_BY_DEATH,                 0,  3, false, false,
+{ MUT_POWERED_BY_DEATH,           0,  3, false, false,
   "powered by death",
 
   {"You slowly steal the life force of defeated enemies.",
