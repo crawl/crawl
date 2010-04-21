@@ -623,42 +623,15 @@ std::string show_startup_menu()
             continue;
         }
 
-        switch (selected.at(0)->get_id())
+        int id = selected.at(0)->get_id();
+        switch (id)
         {
         case GAME_TYPE_NORMAL:
-            if (is_good_name(input_string, true, false))
-            {
-                crawl_state.type = GAME_TYPE_NORMAL;
-                return input_string;
-            }
-            else
-            {
-                // bad name
-                textcolor(RED);
-                cgotoxy(SCROLLER_MARGIN_X ,GAME_MODES_START_Y - 1);
-                clear_to_end_of_line();
-                cprintf("That's a silly name");
-            }
-            continue;
         case GAME_TYPE_TUTORIAL:
-            if (is_good_name(input_string, true, false))
-            {
-                crawl_state.type = GAME_TYPE_TUTORIAL;
-                return input_string;
-            }
-            else
-            {
-                // bad name
-                textcolor(RED);
-                cgotoxy(SCROLLER_MARGIN_X ,GAME_MODES_START_Y - 1);
-                clear_to_end_of_line();
-                cprintf("That's a silly name");
-            }
-            continue;
         case GAME_TYPE_SPRINT:
             if (is_good_name(input_string, true, false))
             {
-                crawl_state.type = GAME_TYPE_SPRINT;
+                crawl_state.type = static_cast<game_type>(id);
                 return input_string;
             }
             else
@@ -670,19 +643,23 @@ std::string show_startup_menu()
                 cprintf("That's a silly name");
             }
             continue;
+
         case GAME_TYPE_ARENA:
             // Do we need to set anything else? :D
             crawl_state.type = GAME_TYPE_ARENA;
             return "";
+
         case '?':
             list_commands();
             // recursive escape because help messes up CRTRegion
             return show_startup_menu();
+
+        default:
+            // It was a savegame instead
+            int save_number = id - NUM_GAME_TYPE;
+            // Return the savegame character name
+            return chars.at(save_number).name;
         }
-        // It was a savegame instead
-        int save_number = selected.at(0)->get_id() - NUM_GAME_TYPE;
-        // Return the savegame character name
-        return chars.at(save_number).name;
     }
     // this should never happen
     return "";
