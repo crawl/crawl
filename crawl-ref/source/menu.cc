@@ -2556,6 +2556,9 @@ MenuItem* PrecisionMenu::get_active_item()
 
 void PrecisionMenu::set_active_object(MenuObject* object)
 {
+    if (object == m_active_object)
+        return;
+
     // is the object attached?
     std::vector<MenuObject*>::iterator find_val;
     find_val = std::find(m_attached_objects.begin(), m_attached_objects.end(),
