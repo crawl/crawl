@@ -1794,7 +1794,6 @@ int handle_pbd_corpses(bool do_rot)
                                 chance))
                 {
                     j->special -= random2(3);
-                    dprf("Rot time: %d", j->special);
                 }
 
                 if (corpse_count == 7)
