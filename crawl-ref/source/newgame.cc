@@ -736,7 +736,7 @@ game_start:
                  you.class_name );
 
         ng.init(you);
-        enter_player_name(ng, false);
+        enter_player_name(ng);
         ng.save(you);
 
         if (_check_saved_game())

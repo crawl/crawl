@@ -52,38 +52,12 @@ void opening_screen(void)
     textcolor( LIGHTGREY );
 }
 
-static void _show_name_prompt(int where, bool blankOK,
-                              const std::vector<player_save_info> &existing_chars,
-                              slider_menu &menu)
+static void _show_name_prompt(int where)
 {
     cgotoxy(1, where);
     textcolor( CYAN );
-    if (blankOK)
-    {
-        if (Options.prev_name.length() && Options.remember_name)
-        {
-            cprintf("\n"
-                    "Press <Enter> for \"%s\", or . to be prompted later."
-                    "\n",
-                    Options.prev_name.c_str());
-        }
-        else
-        {
-            cprintf("\n"
-                    "Press <Enter> to answer this after species and "
-                    "background are chosen.\n");
-        }
-    }
 
     cprintf("\nWhat is your name today? ");
-
-    if (!existing_chars.empty())
-    {
-        const int name_x = wherex(), name_y = wherey();
-        menu.set_limits(name_y + 3, get_number_of_lines());
-        menu.display();
-        cgotoxy(name_x, name_y);
-    }
 
     textcolor( LIGHTGREY );
 }
@@ -137,29 +111,14 @@ bool is_good_name(std::string &name, bool blankOK, bool verbose)
     return (validate_player_name(name, verbose));
 }
 
-static int newname_keyfilter(int &ch)
-{
-    if (ch == CK_DOWN || ch == CK_PGDN || ch == '\t')
-        return -1;
-
-    return 1;
-}
-
-static bool _read_player_name(std::string &name,
-                              const std::vector<player_save_info> &existing,
-                              slider_menu &menu)
+static bool _read_player_name(std::string &name)
 {
     const int name_x = wherex(), name_y = wherey();
-    int (*keyfilter)(int &) = newname_keyfilter;
-    if (existing.empty())
-        keyfilter = NULL;
     char buf[kNameLen];
     // XXX: Prompt displays garbage otherwise, but don't really know why.
     //      Other places don't do this. --rob
     buf[0] = '\0';
     line_reader reader(buf, sizeof(buf));
-
-    reader.set_keyproc(keyfilter);
 
     while (true)
     {
@@ -178,83 +137,26 @@ static bool _read_player_name(std::string &name,
         if (ret == CK_ESCAPE)
             return (false);
 
-        if (!existing.empty())
-        {
-            menu.set_search(name);
-            menu.show();
-            const MenuEntry *sel = menu.selected_entry();
-            if (sel)
-            {
-                name = static_cast<player_save_info*>(sel->data)->name;
-                return true;
-            }
-        }
-
         // Go back and prompt the user.
     }
 }
 
 // Reads a valid name from the player, writing it to ng.name.
-void enter_player_name(newgame_def &ng, bool blankOK)
+void enter_player_name(newgame_def &ng)
 {
     int prompt_start = wherey();
-    bool ask_name = true;
-    std::vector<player_save_info> existing_chars;
-    slider_menu char_menu(MF_SINGLESELECT | MF_NOWRAP, false);
-
-    if (!ng.name.empty())
-        ask_name = false;
-
-    if (blankOK && (ask_name || !is_good_name(ng.name, false, false)))
-    {
-        existing_chars = find_saved_characters();
-        if (existing_chars.empty())
-        {
-            if (!crawl_state.game_is_sprint()) {
-                cgotoxy(1,12);
-                formatted_string::parse_string(
-                                            "  If you've never been here before, you might want to try out\n"
-                                            "  the Dungeon Crawl tutorial. To do this, press "
-                                            "<white>Ctrl-T</white> on the next\n"
-                                            "  screen.").display();
-            }
-        }
-        else
-        {
-            MenuEntry *title = new MenuEntry("Or choose an existing character:");
-            title->colour = LIGHTCYAN;
-            char_menu.set_title( title );
-            for (unsigned int i = 0; i < existing_chars.size(); ++i)
-            {
-                std::string desc = " " + existing_chars[i].short_desc();
-                if (static_cast<int>(desc.length()) >= get_number_of_cols())
-                    desc = desc.substr(0, get_number_of_cols() - 1);
-
-#ifdef USE_TILE
-                MenuEntry *me = new PlayerMenuEntry(desc);
-#else
-                MenuEntry *me = new MenuEntry(desc);
-#endif
-                me->data = &existing_chars[i];
-                char_menu.add_entry(me);
-            }
-        }
-    }
 
     do
     {
         // Prompt for a new name if current one unsatisfactory {dlb}:
-        if (ask_name)
-        {
-            _show_name_prompt(prompt_start, blankOK, existing_chars, char_menu);
+        _show_name_prompt(prompt_start);
 
-            // If the player wants out, we bail out.
-            if (!_read_player_name(ng.name, existing_chars, char_menu))
-                end(0);
-            trim_string(ng.name);
-        }
+        // If the player wants out, we bail out.
+        if (!_read_player_name(ng.name))
+            end(0);
+        trim_string(ng.name);
     }
-    while (ask_name = !is_good_name(ng.name, blankOK, true));
+    while (!is_good_name(ng.name, false, true));
 }
 
 bool validate_player_name(const std::string &name, bool verbose)
