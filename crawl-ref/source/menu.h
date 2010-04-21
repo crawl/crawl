@@ -1041,7 +1041,7 @@ public:
     };
 
     PrecisionMenu();
-    ~PrecisionMenu();
+    virtual ~PrecisionMenu();
 
     virtual void set_select_type(SelectType flag);
     virtual void clear();
