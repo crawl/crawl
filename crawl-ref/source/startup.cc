@@ -460,6 +460,16 @@ static void _construct_save_games_menu(MenuScroller* menu,
     }
 }
 
+// Should probably use some std::find invocation instead.
+static int _find_save(const std::vector<player_save_info>& chars,
+                      const std::string& name)
+{
+    for (int i = 0; i < static_cast<int>(chars.size()); ++i)
+        if (chars[i].name == name)
+            return (i);
+    return (-1);
+}
+
 static const int SCROLLER_MARGIN_X = 18;
 static const int GAME_MODES_START_Y = 7;
 static const int SAVE_GAMES_START_Y = GAME_MODES_START_Y + 2 + NUM_GAME_TYPE;
@@ -596,21 +606,43 @@ std::string show_startup_menu()
         {
             // handle the non-action keys by hand to poll input
             // Only consider alphanumeric keys and -_ .
+            bool changed_name = false;
             if (std::isalnum(keyn) || keyn == '-' || keyn == '.'
                 || keyn == '_' || keyn == ' ')
             {
                 input_string += static_cast<char> (keyn);
+                changed_name = true;
             }
             else if (keyn == CK_BKSP)
             {
                 if (!input_string.empty())
                 {
                     input_string.erase(input_string.size() - 1);
+                    changed_name = true;
                 }
             }
             // clear the "That's a silly name line"
             cgotoxy(SCROLLER_MARGIN_X ,GAME_MODES_START_Y - 1);
             clear_to_end_of_line();
+
+            // Depending on whether the current name occurs
+            // in the saved games, update the active object.
+            // We want enter to start a new game if no character
+            // with the given name exists, or load the corresponding
+            // game.
+            if (changed_name)
+            {
+                int i = _find_save(chars, input_string);
+                if (i == -1)
+                {
+                    menu.set_active_object(game_modes);
+                }
+                else
+                {
+                    menu.set_active_object(save_games);
+                    save_games->set_active_item(i);
+                }
+            }
 
             // poll a new key
             continue;
