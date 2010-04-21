@@ -1083,7 +1083,9 @@ void dgn_reset_level(bool enable_random_maps)
     // except that 0 == no random monsters).
     if (you.level_type == LEVEL_DUNGEON)
     {
-        if (you.where_are_you == BRANCH_ECUMENICAL_TEMPLE)
+        if (you.where_are_you == BRANCH_ECUMENICAL_TEMPLE
+            || crawl_state.game_is_tutorial())
+            // No random monsters in tutorial or ecu temple
             env.spawn_random_rate = 0;
         else
             env.spawn_random_rate = 240;
@@ -1823,7 +1825,8 @@ static void _build_dungeon_level(int level_number, int level_type)
 
     // Hook up the special room (if there is one, and it hasn't
     // been hooked up already in roguey_level()).
-    if (sr.created && !sr.hooked_up && !crawl_state.game_is_sprint())
+    if (sr.created && !sr.hooked_up && !crawl_state.game_is_sprint()
+        && !crawl_state.game_is_tutorial())
         _specr_2(sr);
 
     // Now place items, monster, gates, etc.
@@ -1865,7 +1868,7 @@ static void _build_dungeon_level(int level_number, int level_type)
     // Any further vaults must make sure not to disrupt level layout.
     dgn_check_connectivity = !player_in_branch(BRANCH_SHOALS);
 
-    if (you.where_are_you == BRANCH_MAIN_DUNGEON)
+    if (you.where_are_you == BRANCH_MAIN_DUNGEON && !crawl_state.game_is_tutorial())
     {
         _build_overflow_temples(level_number);
 
@@ -1875,7 +1878,7 @@ static void _build_dungeon_level(int level_number, int level_type)
 
     // Try to place minivaults that really badly want to be placed. Still
     // no guarantees, seeing this is a minivault.
-    if (!crawl_state.game_is_sprint()) {
+    if (!crawl_state.game_is_sprint() && !crawl_state.game_is_tutorial()) {
         _place_minivaults();
         _place_branch_entrances( level_number, level_type );
         _place_extra_vaults();
@@ -1891,7 +1894,7 @@ static void _build_dungeon_level(int level_number, int level_type)
         _place_shops(level_number);
 
     // Any vault-placement activity must happen before this check.
-    if (!crawl_state.game_is_sprint()) {
+    if (!crawl_state.game_is_sprint() && !crawl_state.game_is_tutorial()) {
         _dgn_verify_connectivity(nvaults);
     }
 
@@ -1904,7 +1907,7 @@ static void _build_dungeon_level(int level_number, int level_type)
     _place_fog_machines(level_number);
 
     // Place items.
-    if (!crawl_state.game_is_sprint()) {
+    if (!crawl_state.game_is_sprint() && !crawl_state.game_is_tutorial()) {
         _builder_items(level_number, level_type,
                        _num_items_wanted(level_number));
     }
@@ -1912,7 +1915,7 @@ static void _build_dungeon_level(int level_number, int level_type)
     // Place monsters.
     _builder_monsters(level_number, level_type, _num_mons_wanted(level_type));
 
-    if (!crawl_state.game_is_sprint()) {
+    if (!crawl_state.game_is_sprint() && !crawl_state.game_is_tutorial()) {
         _fixup_walls();
         _fixup_branch_stairs();
     }
@@ -2399,13 +2402,16 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
 
     const map_def *vault = random_map_for_place(lid, minivault);
 
-    // Disallow entry vaults for tutorial (only complicates things).
     if (!vault
         && lid.branch == BRANCH_MAIN_DUNGEON
-        && lid.depth == 1 && !Tutorial.tutorial_left)
+        && lid.depth == 1)
     {
         if (crawl_state.game_is_sprint()) {
             vault = random_map_for_tag("sprint");
+        }
+        else if (crawl_state.game_is_tutorial())
+        {
+            vault = find_map_by_name("tutorial_basic_1");
         }
         else {
             vault = random_map_for_tag("entry");
@@ -4326,7 +4332,7 @@ bool dgn_place_map(const map_def *mdef,
 
     if (rune_subst == -1 && mdef->has_tag_suffix("_entry"))
         rune_subst = _dgn_find_rune_subst_tags(mdef->tags);
-    if (!crawl_state.game_is_sprint()) {
+    if (!crawl_state.game_is_sprint() && !crawl_state.game_is_tutorial()) {
         did_map = _build_secondary_vault(you.absdepth0, mdef, rune_subst,
                                          clobber, make_no_exits, where);
     }

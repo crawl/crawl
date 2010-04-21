@@ -3347,6 +3347,10 @@ void god_pitch(god_type which_god)
         make_stringf(" welcomes you%s!",
                      you.worshipped[which_god] ? " back" : "").c_str());
     more();
+    if (crawl_state.game_is_tutorial())
+    {
+        gain_piety(35, true, true); // tutorial needs minor destruction usable
+    }
 
     god_welcome_identify_gear();
 
