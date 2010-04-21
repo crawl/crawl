@@ -290,6 +290,7 @@ static void _pick_random_species_and_job( bool unrestricted_only )
     you.char_class = job;
 }
 
+// Returns true if a save game exists with name you.your_name.
 static bool _check_saved_game(void)
 {
     FILE *handle;
@@ -677,21 +678,11 @@ bool new_game(const std::string& name)
         clrscr();
     }
 
-    if (!Options.player_name.empty())
-        you.your_name = Options.player_name;
-
     textcolor(LIGHTGREY);
 
-    // Copy name into you.your_name if set from environment --
-    // note that you.your_name could already be set from init.txt.
-    // This, clearly, will overwrite such information. {dlb}
-    if (!SysEnv.crawl_name.empty())
-        you.your_name = SysEnv.crawl_name;
-
     opening_screen();
-    ng.init(you);
-    ng.name = name;
-    ng.save(you);
+
+    you.your_name = name;
 
     if (!you.your_name.empty())
     {
