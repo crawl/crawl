@@ -2523,9 +2523,9 @@ void PrecisionMenu::attach_object(MenuObject* item)
 
 // Predicate for std::find_if
 struct _string_lookup : public std::binary_function<MenuObject*,
-                                                    const std::string&, bool>
+                                                    std::string, bool>
 {
-    bool operator() (MenuObject* item, const std::string& lookup) const
+    bool operator() (MenuObject* item, std::string lookup) const
     {
         if (item->get_name().compare(lookup) == 0)
             return true;
