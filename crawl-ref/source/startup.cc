@@ -452,7 +452,7 @@ static void _construct_save_games_menu(MenuScroller* menu,
         // unique id
         tmp->set_id(NUM_GAME_TYPE + i);
 #ifdef USE_TILE
-        tmp->set_doll(existing_chars.at(i).doll);
+        tmp->set_doll(chars.at(i).doll);
 #endif
         //tmp->set_description_text("...");
         menu->attach_item(tmp);
