@@ -2686,7 +2686,7 @@ static void _create_wanderer(void)
  * Helper function for _choose_species
  * Constructs the menu screen
  */
-static const int COLUMN_WIDTH = 26;
+static const int COLUMN_WIDTH = 25;
 static const int X_MARGIN = 4;
 static const int SPECIAL_KEYS_START_Y = 21;
 static const int CHAR_DESC_START_Y = 18;
@@ -2901,8 +2901,8 @@ bool _choose_species()
     PrecisionMenu menu;
     menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
     MenuFreeform* freeform = new MenuFreeform();
-    freeform->init(coord_def(0,0), coord_def(get_number_of_cols() -1,
-                   get_number_of_lines() -1), "freeform");
+    freeform->init(coord_def(0,0), coord_def(get_number_of_cols(),
+                   get_number_of_lines()), "freeform");
     menu.attach_object(freeform);
     menu.set_active_object(freeform);
 
@@ -3351,8 +3351,8 @@ bool _choose_job(void)
     PrecisionMenu menu;
     menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
     MenuFreeform* freeform = new MenuFreeform();
-    freeform->init(coord_def(0,0), coord_def(get_number_of_cols() -1,
-                   get_number_of_lines() -1), "freeform");
+    freeform->init(coord_def(0,0), coord_def(get_number_of_cols(),
+                   get_number_of_lines()), "freeform");
     menu.attach_object(freeform);
     menu.set_active_object(freeform);
 
