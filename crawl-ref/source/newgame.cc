@@ -636,6 +636,35 @@ static void _apply_job_colour(item_def &item)
     }
 }
 
+void _setup_tutorial_character()
+{
+    you.species = SP_HIGH_ELF;
+    you.char_class = JOB_FIGHTER;
+
+    Options.weapon = WPN_MACE;
+}
+
+static void _newgame_make_item(int, equipment_type, object_class_type base,
+                               int, int, int, int, int);
+void _setup_tutorial_miscs()
+{
+    // Give him spellcasting
+    you.skills[SK_SPELLCASTING] = 3;
+    you.skills[SK_CONJURATIONS] = 1;
+    // Give him some mana to play around with
+    inc_max_mp(2);
+    // Get rid of the starting items!
+    you.equip[EQ_WEAPON] = -1;
+    you.equip[EQ_BODY_ARMOUR] = -1;
+    you.equip[EQ_SHIELD] = -1;
+    _newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE, -1,
+                       1, 0, 0);
+    _newgame_make_item(1, EQ_BOOTS, OBJ_ARMOUR, ARM_BOOTS, -1, 1, 0, 0);
+    _newgame_make_item(2, EQ_WEAPON, OBJ_WEAPONS, WPN_CLUB, -1, 1, 0, 0);
+    // Make him hungry for the butchering tutorial
+    you.hunger = 2650;
+}
+
 bool new_game(const std::string& name)
 {
     clrscr();
@@ -679,6 +708,10 @@ game_start:
     {
         _pick_random_species_and_job(Options.good_random);
         ng_random = true;
+    }
+    else if (crawl_state.game_is_tutorial())
+    {
+        _setup_tutorial_character();
     }
     else
     {
@@ -809,6 +842,11 @@ game_start:
     _give_starting_food();
     if (crawl_state.game_is_sprint()) {
         sprint_give_items();
+    }
+    // Give tutorial skills etc
+    if (crawl_state.game_is_tutorial())
+    {
+        _setup_tutorial_miscs();
     }
     _mark_starting_books();
     _racialise_starting_equipment();
