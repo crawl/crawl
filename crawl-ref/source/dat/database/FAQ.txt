@@ -21,14 +21,14 @@
 #
 # Translating txt -> html:
 #
-# * Use util/FAQ2html.pl to create the corresponding html file in the 
-#   docs/ directory. 
-# * All commands should be encased in single quotes, e.g. '?', which 
+# * Use util/FAQ2html.pl to create the corresponding html file in the
+#   docs/ directory.
+# * All commands should be encased in single quotes, e.g. '?', which
 #   means they will be displayed in bold in the html. This will only work
 #   for commands that don't contain spaces.
 # * Emphasis using asterisks will be replaced with italics.
-# * Hyperlinks should begin with http:// and should never be directly 
-#   followed by a dot (reorder the sentence, if need be), so they can be 
+# * Hyperlinks should begin with http:// and should never be directly
+#   followed by a dot (reorder the sentence, if need be), so they can be
 #   turned into properly clickable links.
 #
 
@@ -222,7 +222,7 @@ A: "Better" depends on a number of factors, such as your weapon skills,
 whether it's one or two-handed, the randart properties, the weapon brand,
 and the monsters you're about to face. In general, switching from a weapon
 type at which you are already highly skilled to another one that you have
-no skill in is a waste of time. The brands may greatly differ in damage 
+no skill in is a waste of time. The brands may greatly differ in damage
 output but you can get a good idea by bashing a few comparatively harmless
 monsters with each and comparing the results.
 
@@ -356,7 +356,7 @@ A: If you play online on http://crawl.akrasiac.org or http://crawl.develz.org
 you can watch games in progress, other players can watch you while you play,
 and you can kill other players' ghosts. You can even send and receive
 messages.
-Check docs/ssh_guide.txt or http://crawl.develz.org/wordpress/howto for an 
+Check docs/ssh_guide.txt or http://crawl.develz.org/wordpress/howto for an
 explanation about how to play online.
 
 You can also chat in the Crawl channel (irc.freenode.net, ##crawl), or discuss
@@ -439,7 +439,7 @@ A:feature
 
 A: If you submitted a report on our Mantis tracker, you will get an email
 any time someone replies to (or fiddles with) the thread in question.
-Once a thread has been resolved or closed, you can still access it by 
+Once a thread has been resolved or closed, you can still access it by
 searching for requests with the "Resolved" and "Closed" status, respectively.
 
 We always try to give a reason for closing a request that has not been
@@ -530,8 +530,8 @@ On Linux, you should be sure to enable DRI.
 
 In addition to these suggestions, you can also try to see whether tweaking
 some options will improve performance. See docs/tiles_help.txt for details.
-If things are still too laggy after all of that, you could try the 
-non-graphical console version or wait for a future version that does not 
+If things are still too laggy after all of that, you could try the
+non-graphical console version or wait for a future version that does not
 depend on OpenGL.
 %%%%
 Q:tiles online
