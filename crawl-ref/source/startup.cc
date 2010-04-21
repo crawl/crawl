@@ -465,7 +465,7 @@ bool _construct_save_games_menu(MenuScroller* menu)
     return true;
 }
 
-static const int SCROLLER_MARGIN_X = 17;
+static const int SCROLLER_MARGIN_X = 18;
 static const int GAME_MODES_START_Y = 7;
 static const int SAVE_GAMES_START_Y = GAME_MODES_START_Y + 2 + NUM_GAME_TYPE;
 static const int MISC_TEXT_START_Y = 19;
