@@ -426,30 +426,26 @@ void _construct_game_modes_menu(MenuScroller* menu)
     tmp->set_visible(true);
 }
 
-/**
- * true if saves found
- * false if no saves
- */
-bool _construct_save_games_menu(MenuScroller* menu)
+static void _construct_save_games_menu(MenuScroller* menu,
+                       const std::vector<player_save_info>& chars)
 {
-    std::vector<player_save_info> existing_chars = find_saved_characters();
-    if (existing_chars.size() == 0)
+    if (chars.size() == 0)
     {
         // no saves
-        return false;
+        return;
     }
 
     std::string text;
 
     std::vector<player_save_info>::iterator it;
-    for (unsigned int i = 0; i < existing_chars.size(); ++i)
+    for (unsigned int i = 0; i < chars.size(); ++i)
     {
 #ifdef USE_TILE
         SaveMenuItem* tmp = new SaveMenuItem();
 #else
         TextItem* tmp = new TextItem();
 #endif
-        tmp->set_text(existing_chars.at(i).short_desc());
+        tmp->set_text(chars.at(i).short_desc());
         tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
         tmp->set_fg_colour(WHITE);
         tmp->set_highlight_colour(WHITE);
@@ -462,7 +458,6 @@ bool _construct_save_games_menu(MenuScroller* menu)
         menu->attach_item(tmp);
         tmp->set_visible(true);
     }
-    return true;
 }
 
 static const int SCROLLER_MARGIN_X = 18;
@@ -494,7 +489,8 @@ std::string show_startup_menu()
                      coord_def(get_number_of_cols() - 1, MISC_TEXT_START_Y - 1),
                      "save games");
     _construct_game_modes_menu(game_modes);
-    bool saves_found = _construct_save_games_menu(save_games);
+    std::vector<player_save_info> chars = find_saved_characters();
+    _construct_save_games_menu(save_games, chars);
 
     NoSelectTextItem* tmp = new NoSelectTextItem();
     tmp->set_text("Enter your name:");
@@ -538,7 +534,7 @@ std::string show_startup_menu()
     menu.attach_object(game_modes);
     menu.attach_object(save_games);
 
-    if (saves_found)
+    if (!chars.empty())
     {
         menu.set_active_object(save_games);
         save_games->activate_first_item();
@@ -686,7 +682,7 @@ std::string show_startup_menu()
         // It was a savegame instead
         int save_number = selected.at(0)->get_id() - NUM_GAME_TYPE;
         // Return the savegame character name
-        return find_saved_characters().at(save_number).name;
+        return chars.at(save_number).name;
     }
     // this should never happen
     return "";
