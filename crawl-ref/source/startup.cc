@@ -478,7 +478,7 @@ static const int GAME_MODES_WIDTH = 60;
 /**
  * Setups the game mode and returns the wanted player name
  */
-std::string show_startup_menu()
+static std::string show_startup_menu(const std::string& default_name)
 {
     clrscr();
     PrecisionMenu menu;
@@ -566,17 +566,12 @@ std::string show_startup_menu()
     // Draw legal info etc
     opening_screen();
 
-    std::string input_string;
+    std::string input_string = default_name;
 
     // If the game filled in a complete name, the user will
     // usually want to enter a new name instead of adding
     // to the current one.
-    bool full_name = false;
-    if (Options.prev_name.length() && Options.remember_name)
-    {
-        input_string = Options.prev_name;
-        full_name = true;
-    }
+    bool full_name = !input_string.empty();
 
     if (!chars.empty())
     {
@@ -726,7 +721,7 @@ std::string show_startup_menu()
         case '?':
             list_commands();
             // recursive escape because help messes up CRTRegion
-            return show_startup_menu();
+            return show_startup_menu(default_name);
 
         default:
             // It was a savegame instead
@@ -745,7 +740,28 @@ bool startup_step()
     std::string name;
 
     _initialize();
-    name = show_startup_menu();
+
+    if (!Options.player_name.empty())
+        name = Options.player_name;
+
+    // Copy name into you.your_name if set from environment --
+    // note that Options.player_name could already be set from init.txt.
+    // This, clearly, will overwrite such information. {dlb}
+    if (!SysEnv.crawl_name.empty())
+        name = SysEnv.crawl_name;
+
+    // If a name is specified through options (command line),
+    // we don't show the startup menu. It's unclear that is ideal,
+    // but is how DGL installs work currently.
+    // We could also check whether game type has been set here,
+    // but it's probably not necessary to choose non-default game
+    // types while specifying a name externally.
+    if (!is_good_name(name, false, false))
+    {
+        if (Options.prev_name.length() && Options.remember_name)
+            name = Options.prev_name;
+        name = show_startup_menu(name);
+    }
 
     switch (crawl_state.type)
     {
