@@ -70,6 +70,7 @@ static void _jobs_stat_init(job_type which_job);
 static void _species_stat_init(species_type which_species);
 bool _choose_species(void);
 bool _choose_job(void);
+static bool _choose_book();
 
 static void _create_wanderer(void);
 static bool _give_items_skills(void);
@@ -193,6 +194,22 @@ static void _print_character_info()
         cprintf("%s the %s %s.\n", you.your_name.c_str(),
                 species_name(you.species, 1).c_str(),
                 get_job_name(you.char_class));
+    }
+}
+
+static void _print_character_info_ng()
+{
+    clrscr();
+
+    // At this point all of name, species and job should be decided.
+    if (!ng.name.empty()
+        && ng.job != JOB_UNKNOWN && ng.species != SP_UNKNOWN)
+    {
+        cprintf("Welcome, ");
+        textcolor( YELLOW );
+        cprintf("%s the %s %s.\n", ng.name.c_str(),
+                species_name(ng.species, 1).c_str(),
+                get_job_name(ng.job));
     }
 }
 
@@ -718,6 +735,30 @@ game_start:
         while (_choose_species() && _choose_job());
     }
 
+    // TODO: choose weapon and god here. Get rid of the goto.
+    //       Not sure all of the resetting is necessary.
+    if (!_choose_book())
+    {
+        // Now choose again, name stays same.
+        const std::string old_name = you.your_name;
+
+        Options.prev_randpick = false;
+        Options.prev_race     = ng_race;
+        Options.prev_cls      = ng_cls;
+        Options.prev_weapon   = ng_weapon;
+        // ck, dk, pr and book are asked last --> don't need to be changed
+
+        // Reset stats.
+        _init_player();
+
+        Options.reset_startup_options();
+
+        you.your_name = old_name;
+
+        // Choose new character.
+        goto game_start;
+    }
+
     // Pick random draconian type.
     if (you.species == SP_RED_DRACONIAN)
         you.species = random_draconian_player_species();
@@ -959,164 +1000,6 @@ static int _start_to_book(int firstbook, int booktype)
     default:
         return (-1);
     }
-}
-
-static bool _choose_book( int slot, int firstbook, int numbooks )
-{
-    clrscr();
-
-    ng.init(you); // XXX
-
-    item_def &book(you.inv[slot]);
-    book.base_type = OBJ_BOOKS;
-    book.sub_type  = firstbook;
-    book.quantity  = 1;
-    book.plus      = 0;
-    book.plus2     = 0;
-    book.special   = 1;
-
-    // Assume a choice of no more than three books, and that all book
-    // choices are contiguous.
-    ASSERT(numbooks >= 1 && numbooks <= 3);
-    char_choice_restriction book_restrictions[3];
-    for (int i = 0; i < numbooks; i++)
-    {
-        book_restrictions[i] = book_restriction(
-                                   _book_to_start(firstbook + i), ng);
-    }
-
-    if (Options.book)
-    {
-        const int opt_book = _start_to_book(firstbook, Options.book);
-        if (opt_book != -1)
-        {
-            book.sub_type = opt_book;
-            ng_book = Options.book;
-            return (true);
-        }
-    }
-
-    if (Options.prev_book)
-    {
-        if (_start_to_book(firstbook, Options.prev_book) == -1
-            && Options.prev_book != SBT_RANDOM)
-        {
-            Options.prev_book = SBT_NO_SELECTION;
-        }
-    }
-
-    int keyin = 0;
-    if (!Options.random_pick && Options.book != SBT_RANDOM)
-    {
-        _print_character_info();
-
-        textcolor( CYAN );
-        cprintf("\nYou have a choice of books:  "
-                    "(Press %% for a list of aptitudes)\n");
-
-        for (int i = 0; i < numbooks; ++i)
-        {
-            book.sub_type = firstbook + i;
-
-            if (book_restrictions[i] == CC_UNRESTRICTED)
-                textcolor(LIGHTGREY);
-            else
-                textcolor(DARKGREY);
-
-            cprintf("%c - %s\n", 'a' + i,
-                    book.name(DESC_PLAIN, false, true).c_str());
-        }
-
-        textcolor(BROWN);
-        cprintf("\n* - Random choice; + - Good random choice; "
-                    "Bksp - Back to species and background selection; "
-                    "X - Quit\n");
-
-        if (Options.prev_book != SBT_NO_SELECTION)
-        {
-            cprintf("; Enter - %s",
-                    Options.prev_book == SBT_FIRE   ? "Fire"      :
-                    Options.prev_book == SBT_COLD   ? "Cold"      :
-                    Options.prev_book == SBT_SUMM   ? "Summoning" :
-                    Options.prev_book == SBT_RANDOM ? "Random"
-                                                    : "Buggy Book");
-        }
-        cprintf("\n");
-
-        do
-        {
-            textcolor( CYAN );
-            cprintf("\nWhich book? ");
-            textcolor( LIGHTGREY );
-
-            keyin = getch_ck();
-
-            switch (keyin)
-            {
-            case 'X':
-                cprintf("\nGoodbye!");
-                end(0);
-                break;
-            case CK_BKSP:
-            case ESCAPE:
-            case ' ':
-                return (false);
-            case '\r':
-            case '\n':
-                if (Options.prev_book != SBT_NO_SELECTION)
-                {
-                    if (Options.prev_book == SBT_RANDOM)
-                        keyin = '*';
-                    else
-                    {
-                        keyin = 'a'
-                                + _start_to_book(firstbook, Options.prev_book)
-                                - firstbook;
-                    }
-                }
-                break;
-            case '%':
-                list_commands('%');
-                return _choose_book(slot, firstbook, numbooks);
-            default:
-                break;
-            }
-        }
-        while (keyin != '*' && keyin != '+'
-               && (keyin < 'a' || keyin >= ('a' + numbooks)));
-    }
-
-    if (Options.random_pick || Options.book == SBT_RANDOM || keyin == '*'
-        || keyin == '+')
-    {
-        ng_book = SBT_RANDOM;
-
-        int good_choices = 0;
-        if (keyin == '+'
-            || Options.good_random
-               && (Options.random_pick || Options.book == SBT_RANDOM))
-        {
-            for (int i = 0; i < numbooks; i++)
-            {
-                if (book_restriction(_book_to_start(firstbook + i), ng)
-                            == CC_UNRESTRICTED
-                        && one_chance_in(++good_choices))
-                {
-                    keyin = i;
-                }
-            }
-        }
-
-        if (!good_choices)
-            keyin = random2(numbooks);
-
-        keyin += 'a';
-    }
-    else
-        ng_book = _book_to_start(keyin - 'a' + firstbook);
-
-    book.sub_type = firstbook + keyin - 'a';
-    return (true);
 }
 
 static bool _choose_weapon()
@@ -3620,6 +3503,184 @@ bool _choose_job(void)
     return true;
 }
 
+// firstbook/numbooks required to prompt with the actual book
+// names.
+// Returns false if aborted, else an actual book choice
+// is written to ng.book.
+static bool _choose_book(int firstbook, int numbooks)
+{
+    clrscr();
+
+    ng.init(you); // XXX
+
+    item_def book;
+    book.base_type = OBJ_BOOKS;
+    book.sub_type  = firstbook;
+    book.quantity  = 1;
+    book.plus      = 0;
+    book.plus2     = 0;
+    book.special   = 1;
+
+    // Assume a choice of no more than three books, and that all book
+    // choices are contiguous.
+    ASSERT(numbooks >= 1 && numbooks <= 3);
+    char_choice_restriction book_restrictions[3];
+    for (int i = 0; i < numbooks; i++)
+    {
+        book_restrictions[i] = book_restriction(
+                                   _book_to_start(firstbook + i), ng);
+    }
+
+    if (Options.book)
+    {
+        const int opt_book = _start_to_book(firstbook, Options.book);
+        if (opt_book != -1)
+        {
+            book.sub_type = opt_book;
+            ng_book = Options.book;
+            ng.book = static_cast<startup_book_type>(Options.book);
+            return (true);
+        }
+    }
+
+    if (Options.prev_book)
+    {
+        if (_start_to_book(firstbook, Options.prev_book) == -1
+            && Options.prev_book != SBT_RANDOM)
+        {
+            Options.prev_book = SBT_NO_SELECTION;
+        }
+    }
+
+    int keyin = 0;
+    if (!Options.random_pick && Options.book != SBT_RANDOM)
+    {
+        _print_character_info_ng();
+
+        textcolor( CYAN );
+        cprintf("\nYou have a choice of books:  "
+                    "(Press %% for a list of aptitudes)\n");
+
+        for (int i = 0; i < numbooks; ++i)
+        {
+            book.sub_type = firstbook + i;
+
+            if (book_restrictions[i] == CC_UNRESTRICTED)
+                textcolor(LIGHTGREY);
+            else
+                textcolor(DARKGREY);
+
+            cprintf("%c - %s\n", 'a' + i,
+                    book.name(DESC_PLAIN, false, true).c_str());
+        }
+
+        textcolor(BROWN);
+        cprintf("\n* - Random choice; + - Good random choice; "
+                    "Bksp - Back to species and background selection; "
+                    "X - Quit\n");
+
+        if (Options.prev_book != SBT_NO_SELECTION)
+        {
+            cprintf("; Enter - %s",
+                    Options.prev_book == SBT_FIRE   ? "Fire"      :
+                    Options.prev_book == SBT_COLD   ? "Cold"      :
+                    Options.prev_book == SBT_SUMM   ? "Summoning" :
+                    Options.prev_book == SBT_RANDOM ? "Random"
+                                                    : "Buggy Book");
+        }
+        cprintf("\n");
+
+        do
+        {
+            textcolor( CYAN );
+            cprintf("\nWhich book? ");
+            textcolor( LIGHTGREY );
+
+            keyin = getch_ck();
+
+            switch (keyin)
+            {
+            case 'X':
+                cprintf("\nGoodbye!");
+                end(0);
+                break;
+            case CK_BKSP:
+            case ESCAPE:
+            case ' ':
+                return (false);
+            case '\r':
+            case '\n':
+                if (Options.prev_book != SBT_NO_SELECTION)
+                {
+                    if (Options.prev_book == SBT_RANDOM)
+                        keyin = '*';
+                    else
+                    {
+                        keyin = 'a'
+                                + _start_to_book(firstbook, Options.prev_book)
+                                - firstbook;
+                    }
+                }
+                break;
+            case '%':
+                list_commands('%');
+                return _choose_book(firstbook, numbooks);
+            default:
+                break;
+            }
+        }
+        while (keyin != '*' && keyin != '+'
+               && (keyin < 'a' || keyin >= ('a' + numbooks)));
+    }
+
+    if (Options.random_pick || Options.book == SBT_RANDOM || keyin == '*'
+        || keyin == '+')
+    {
+        ng_book = SBT_RANDOM;
+
+        int good_choices = 0;
+        if (keyin == '+'
+            || Options.good_random
+               && (Options.random_pick || Options.book == SBT_RANDOM))
+        {
+            for (int i = 0; i < numbooks; i++)
+            {
+                if (book_restriction(_book_to_start(firstbook + i), ng)
+                            == CC_UNRESTRICTED
+                        && one_chance_in(++good_choices))
+                {
+                    keyin = i;
+                }
+            }
+        }
+
+        if (!good_choices)
+            keyin = random2(numbooks);
+
+        keyin += 'a';
+    }
+    else
+        ng_book = _book_to_start(keyin - 'a' + firstbook);
+
+    ng.book = _book_to_start(firstbook + keyin - 'a');
+    return (true);
+}
+
+static bool _choose_book()
+{
+    ng.init(you);
+    switch (ng.job)
+    {
+    case JOB_REAVER:
+    case JOB_CONJURER:
+        return (_choose_book(BOOK_CONJURATIONS_I, 2));
+    case JOB_WIZARD:
+        return (_choose_book(BOOK_MINOR_MAGIC_I, 3));
+    default:
+        return (true);
+    }
+}
+
 bool _needs_butchering_tool()
 {
     // Mummies/Vampires don't eat.
@@ -4624,9 +4685,8 @@ bool _give_items_skills()
 
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
                            ARM_ROBE);
-
-        if (!_choose_book(2, BOOK_CONJURATIONS_I, 2))
-            return (false);
+        _newgame_make_item(2, EQ_NONE, OBJ_BOOKS,
+                           _start_to_book(BOOK_CONJURATIONS_I, ng.book));
 
         you.skills[SK_FIGHTING]     = 2;
         you.skills[SK_ARMOUR]       = 1;
@@ -4708,8 +4768,8 @@ bool _give_items_skills()
         _newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         _newgame_make_item(1, EQ_HELMET, OBJ_ARMOUR, ARM_WIZARD_HAT);
 
-        if (!_choose_book(2, BOOK_MINOR_MAGIC_I, 3))
-            return (false);
+        _newgame_make_item(2, EQ_NONE, OBJ_BOOKS,
+                           _start_to_book(BOOK_MINOR_MAGIC_I, ng.book));
 
         you.skills[SK_DODGING]        = 2;
         you.skills[SK_STEALTH]        = 2;
@@ -4738,8 +4798,8 @@ bool _give_items_skills()
     case JOB_CONJURER:
         _newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
 
-        if (!_choose_book(1, BOOK_CONJURATIONS_I, 2))
-            return (false);
+        _newgame_make_item(2, EQ_NONE, OBJ_BOOKS,
+                           _start_to_book(BOOK_CONJURATIONS_I, ng.book));
 
         you.skills[SK_CONJURATIONS] = 4;
         you.skills[SK_SPELLCASTING] = 1;
