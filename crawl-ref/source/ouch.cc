@@ -62,6 +62,7 @@
 #include "religion.h"
 #include "shopping.h"
 #include "skills2.h"
+#include "spells1.h"
 #include "spells4.h"
 #include "state.h"
 #include "stuff.h"
