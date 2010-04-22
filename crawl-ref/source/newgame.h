@@ -49,6 +49,8 @@ struct newgame_def
     species_type species;
     job_type job;
 
+    startup_book_type book;
+
     // TODO: fill in
 
     void init(const player &p);
