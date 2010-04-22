@@ -49,9 +49,12 @@ struct newgame_def
     species_type species;
     job_type job;
 
+    weapon_type weapon;
     startup_book_type book;
 
     // TODO: fill in
+
+    newgame_def();
 
     void init(const player &p);
     void save(player &p);

@@ -70,6 +70,7 @@ static void _jobs_stat_init(job_type which_job);
 static void _species_stat_init(species_type which_species);
 bool _choose_species(void);
 bool _choose_job(void);
+static bool _choose_weapon();
 static bool _choose_book();
 
 static void _create_wanderer(void);
@@ -80,6 +81,12 @@ static bool _give_items_skills(void);
 //
 
 static newgame_def ng;
+
+newgame_def::newgame_def()
+    : name(), species(NUM_SPECIES), job(NUM_JOBS),
+      weapon(NUM_WEAPONS), book(SBT_NO_SELECTION)
+{
+}
 
 // XXX: temporary to get data in and out of
 // purely rewritten functions.
@@ -737,7 +744,7 @@ game_start:
 
     // TODO: choose weapon and god here. Get rid of the goto.
     //       Not sure all of the resetting is necessary.
-    if (!_choose_book())
+    if (!_choose_weapon() || !_choose_book())
     {
         // Now choose again, name stays same.
         const std::string old_name = you.your_name;
@@ -1002,202 +1009,6 @@ static int _start_to_book(int firstbook, int booktype)
     }
 }
 
-static bool _choose_weapon()
-{
-    weapon_type startwep[5] = { WPN_SHORT_SWORD, WPN_MACE,
-                                WPN_HAND_AXE, WPN_SPEAR, WPN_UNKNOWN };
-
-    ng.init(you);
-
-    // Gladiators that are at least medium sized get to choose a trident
-    // rather than a spear.
-    if (you.char_class == JOB_GLADIATOR
-        && you.body_size(PSIZE_BODY) >= SIZE_MEDIUM)
-    {
-        startwep[3] = WPN_TRIDENT;
-    }
-
-    const bool claws_allowed =
-        (you.char_class != JOB_GLADIATOR && you.has_claws());
-
-    if (claws_allowed)
-    {
-        for (int i = 3; i >= 0; --i)
-            startwep[i + 1] = startwep[i];
-
-        startwep[0] = WPN_UNARMED;
-    }
-    else
-    {
-        switch (you.species)
-        {
-        case SP_OGRE:
-            startwep[1] = WPN_ANKUS;
-            break;
-        case SP_MERFOLK:
-            startwep[3] = WPN_TRIDENT;
-            break;
-        default:
-            break;
-        }
-    }
-
-    char_choice_restriction startwep_restrictions[5];
-    const int num_choices = (claws_allowed ? 5 : 4);
-
-    for (int i = 0; i < num_choices; i++)
-        startwep_restrictions[i] = weapon_restriction(startwep[i], ng);
-
-    if (Options.weapon == WPN_UNARMED && claws_allowed)
-    {
-        you.inv[0].quantity = 0; // no weapon
-        ng_weapon = Options.weapon;
-        return (true);
-    }
-
-    if (Options.weapon != WPN_UNKNOWN && Options.weapon != WPN_RANDOM
-        && Options.weapon != WPN_UNARMED)
-    {
-        // If Options.weapon is available, then use it.
-        for (int i = 0; i < num_choices; i++)
-        {
-            if (startwep[i] == Options.weapon
-                && startwep_restrictions[i] != CC_BANNED)
-            {
-                you.inv[0].sub_type = Options.weapon;
-                ng_weapon = Options.weapon;
-                return (true);
-            }
-        }
-    }
-
-    int keyin = 0;
-    if (!Options.random_pick && Options.weapon != WPN_RANDOM)
-    {
-        _print_character_info();
-
-        textcolor( CYAN );
-        cprintf("\nYou have a choice of weapons:  "
-                    "(Press %% for a list of aptitudes)\n");
-
-        bool prevmatch = false;
-        for (int i = 0; i < num_choices; i++)
-        {
-            ASSERT(startwep[i] != WPN_UNKNOWN);
-
-            if (startwep_restrictions[i] == CC_BANNED)
-                continue;
-
-            if (startwep_restrictions[i] == CC_UNRESTRICTED)
-                textcolor(LIGHTGREY);
-            else
-                textcolor(DARKGREY);
-
-            const char letter = 'a' + i;
-            cprintf("%c - %s\n", letter,
-                    startwep[i] == WPN_UNARMED ? "claws"
-                                               : weapon_base_name(startwep[i]));
-
-            if (Options.prev_weapon == startwep[i])
-                prevmatch = true;
-        }
-
-        if (!prevmatch && Options.prev_weapon != WPN_RANDOM)
-            Options.prev_weapon = WPN_UNKNOWN;
-
-        textcolor(BROWN);
-        cprintf("\n* - Random choice; + - Good random choice; "
-                    "Bksp - Back to species and background selection; "
-                    "X - Quit\n");
-
-        if (prevmatch || Options.prev_weapon == WPN_RANDOM)
-        {
-            cprintf("; Enter - %s",
-                    Options.prev_weapon == WPN_RANDOM  ? "Random" :
-                    Options.prev_weapon == WPN_UNARMED ? "claws"  :
-                    weapon_base_name(Options.prev_weapon));
-        }
-        cprintf("\n");
-
-        do
-        {
-            textcolor( CYAN );
-            cprintf("\nWhich weapon? ");
-            textcolor( LIGHTGREY );
-
-            keyin = getch_ck();
-
-            switch (keyin)
-            {
-            case 'X':
-                cprintf("\nGoodbye!");
-                end(0);
-                break;
-            case CK_BKSP:
-            case CK_ESCAPE:
-            case ' ':
-                return (false);
-            case '\r':
-            case '\n':
-                if (Options.prev_weapon != WPN_UNKNOWN)
-                {
-                    if (Options.prev_weapon == WPN_RANDOM)
-                        keyin = '*';
-                    else
-                    {
-                        for (int i = 0; i < num_choices; ++i)
-                             if (startwep[i] == Options.prev_weapon)
-                                 keyin = 'a' + i;
-                    }
-                }
-                break;
-            case '%':
-                list_commands('%');
-                return _choose_weapon();
-            default:
-                break;
-           }
-        }
-        while (keyin != '*' && keyin != '+'
-               && (keyin < 'a' || keyin >= ('a' + num_choices)
-                   || startwep_restrictions[keyin - 'a'] == CC_BANNED));
-    }
-
-    if (Options.random_pick || Options.weapon == WPN_RANDOM
-        || keyin == '*' || keyin == '+')
-    {
-        Options.weapon = WPN_RANDOM;
-        ng_weapon = WPN_RANDOM;
-
-        int good_choices = 0;
-        if (keyin == '+' || Options.good_random && keyin != '*')
-        {
-            for (int i = 0; i < num_choices; i++)
-            {
-                if (weapon_restriction(startwep[i], ng) == CC_UNRESTRICTED
-                    && one_chance_in(++good_choices))
-                {
-                    keyin = i;
-                }
-            }
-        }
-
-        if (!good_choices)
-            keyin = random2(num_choices);
-
-        keyin += 'a';
-    }
-    else
-        ng_weapon = startwep[keyin - 'a'];
-
-    if (startwep[keyin - 'a'] == WPN_UNARMED)
-        you.inv[0].quantity = 0; // no weapon
-    else
-        you.inv[0].sub_type = startwep[keyin - 'a'];
-
-    return (true);
-}
-
 static bool _necromancy_okay()
 {
     switch (you.species)
@@ -1380,6 +1191,19 @@ static void _jobs_stat_init(job_type which_job)
     set_mp( mp, true );
 }
 
+static int _claws_level(species_type sp)
+{
+    switch (sp)
+    {
+    case SP_GHOUL:
+        return 1;
+    case SP_TROLL:
+        return 3;
+    default:
+        return 0;
+    }
+}
+
 void give_basic_mutations(species_type speci)
 {
     // We should switch over to a size-based system
@@ -1434,7 +1258,6 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_POISON_RESISTANCE]          = 1;
         you.mutation[MUT_COLD_RESISTANCE]            = 1;
         you.mutation[MUT_NEGATIVE_ENERGY_RESISTANCE] = 3;
-        you.mutation[MUT_CLAWS]                      = 1;
         you.mutation[MUT_SAPROVOROUS]                = 3;
         you.mutation[MUT_CARNIVOROUS]                = 3;
         you.mutation[MUT_SLOW_HEALING]               = 1;
@@ -1463,6 +1286,10 @@ void give_basic_mutations(species_type speci)
     default:
         break;
     }
+
+    // Some mutations out-sourced because they're
+    // relevant during character choice.
+    you.mutation[MUT_CLAWS] = _claws_level(speci);
 
     // Starting mutations are unremovable.
     for (int i = 0; i < NUM_MUTATIONS; ++i)
@@ -3503,6 +3330,222 @@ bool _choose_job(void)
     return true;
 }
 
+static int _claws_level(species_type sp);
+
+static bool _do_choose_weapon()
+{
+    weapon_type startwep[5] = { WPN_SHORT_SWORD, WPN_MACE,
+                                WPN_HAND_AXE, WPN_SPEAR, WPN_UNKNOWN };
+
+    ng.init(you);
+
+    // Gladiators that are at least medium sized get to choose a trident
+    // rather than a spear.
+    if (ng.job == JOB_GLADIATOR
+        && species_size(ng.species, PSIZE_BODY) >= SIZE_MEDIUM)
+    {
+        startwep[3] = WPN_TRIDENT;
+    }
+
+    const bool claws_allowed =
+        (ng.job != JOB_GLADIATOR && _claws_level(ng.species));
+
+    if (claws_allowed)
+    {
+        for (int i = 3; i >= 0; --i)
+            startwep[i + 1] = startwep[i];
+
+        startwep[0] = WPN_UNARMED;
+    }
+    else
+    {
+        switch (ng.species)
+        {
+        case SP_OGRE:
+            startwep[1] = WPN_ANKUS;
+            break;
+        case SP_MERFOLK:
+            startwep[3] = WPN_TRIDENT;
+            break;
+        default:
+            break;
+        }
+    }
+
+    char_choice_restriction startwep_restrictions[5];
+    const int num_choices = (claws_allowed ? 5 : 4);
+
+    for (int i = 0; i < num_choices; i++)
+        startwep_restrictions[i] = weapon_restriction(startwep[i], ng);
+
+    if (Options.weapon == WPN_UNARMED && claws_allowed)
+    {
+        ng_weapon = Options.weapon;
+        ng.weapon = static_cast<weapon_type>(Options.weapon);
+        return (true);
+    }
+
+    if (Options.weapon != WPN_UNKNOWN && Options.weapon != WPN_RANDOM
+        && Options.weapon != WPN_UNARMED)
+    {
+        // If Options.weapon is available, then use it.
+        for (int i = 0; i < num_choices; i++)
+        {
+            if (startwep[i] == Options.weapon
+                && startwep_restrictions[i] != CC_BANNED)
+            {
+                ng_weapon = Options.weapon;
+                ng.weapon = static_cast<weapon_type>(Options.weapon);
+                return (true);
+            }
+        }
+    }
+
+    int keyin = 0;
+    if (!Options.random_pick && Options.weapon != WPN_RANDOM)
+    {
+        _print_character_info_ng();
+
+        textcolor( CYAN );
+        cprintf("\nYou have a choice of weapons:  "
+                    "(Press %% for a list of aptitudes)\n");
+
+        bool prevmatch = false;
+        for (int i = 0; i < num_choices; i++)
+        {
+            ASSERT(startwep[i] != WPN_UNKNOWN);
+
+            if (startwep_restrictions[i] == CC_BANNED)
+                continue;
+
+            if (startwep_restrictions[i] == CC_UNRESTRICTED)
+                textcolor(LIGHTGREY);
+            else
+                textcolor(DARKGREY);
+
+            const char letter = 'a' + i;
+            cprintf("%c - %s\n", letter,
+                    startwep[i] == WPN_UNARMED ? "claws"
+                                               : weapon_base_name(startwep[i]));
+
+            if (Options.prev_weapon == startwep[i])
+                prevmatch = true;
+        }
+
+        if (!prevmatch && Options.prev_weapon != WPN_RANDOM)
+            Options.prev_weapon = WPN_UNKNOWN;
+
+        textcolor(BROWN);
+        cprintf("\n* - Random choice; + - Good random choice; "
+                    "Bksp - Back to species and background selection; "
+                    "X - Quit\n");
+
+        if (prevmatch || Options.prev_weapon == WPN_RANDOM)
+        {
+            cprintf("; Enter - %s",
+                    Options.prev_weapon == WPN_RANDOM  ? "Random" :
+                    Options.prev_weapon == WPN_UNARMED ? "claws"  :
+                    weapon_base_name(Options.prev_weapon));
+        }
+        cprintf("\n");
+
+        do
+        {
+            textcolor( CYAN );
+            cprintf("\nWhich weapon? ");
+            textcolor( LIGHTGREY );
+
+            keyin = getch_ck();
+
+            switch (keyin)
+            {
+            case 'X':
+                cprintf("\nGoodbye!");
+                end(0);
+                break;
+            case CK_BKSP:
+            case CK_ESCAPE:
+            case ' ':
+                return (false);
+            case '\r':
+            case '\n':
+                if (Options.prev_weapon != WPN_UNKNOWN)
+                {
+                    if (Options.prev_weapon == WPN_RANDOM)
+                        keyin = '*';
+                    else
+                    {
+                        for (int i = 0; i < num_choices; ++i)
+                             if (startwep[i] == Options.prev_weapon)
+                                 keyin = 'a' + i;
+                    }
+                }
+                break;
+            case '%':
+                list_commands('%');
+                return _do_choose_weapon();
+            default:
+                break;
+           }
+        }
+        while (keyin != '*' && keyin != '+'
+               && (keyin < 'a' || keyin >= ('a' + num_choices)
+                   || startwep_restrictions[keyin - 'a'] == CC_BANNED));
+    }
+
+    if (Options.random_pick || Options.weapon == WPN_RANDOM
+        || keyin == '*' || keyin == '+')
+    {
+        Options.weapon = WPN_RANDOM;
+        ng_weapon = WPN_RANDOM;
+
+        int good_choices = 0;
+        if (keyin == '+' || Options.good_random && keyin != '*')
+        {
+            for (int i = 0; i < num_choices; i++)
+            {
+                if (weapon_restriction(startwep[i], ng) == CC_UNRESTRICTED
+                    && one_chance_in(++good_choices))
+                {
+                    keyin = i;
+                }
+            }
+        }
+
+        if (!good_choices)
+            keyin = random2(num_choices);
+
+        keyin += 'a';
+    }
+    else
+        ng_weapon = startwep[keyin - 'a'];
+
+    ng.weapon = startwep[keyin - 'a'];
+
+    return (true);
+}
+
+// Returns false if aborted, else an actual weapon choice
+// is written to ng.weapon for the jobs that call
+// _update_weapon() later.
+static bool _choose_weapon()
+{
+    ng.init(you);
+    switch (ng.job)
+    {
+    case JOB_FIGHTER:
+    case JOB_GLADIATOR:
+    case JOB_CHAOS_KNIGHT:
+    case JOB_DEATH_KNIGHT:
+    case JOB_CRUSADER:
+    case JOB_REAVER:
+    case JOB_WARPER:
+        return (_do_choose_weapon());
+    default:
+        return (true);
+    }
+}
+
 // firstbook/numbooks required to prompt with the actual book
 // names.
 // Returns false if aborted, else an actual book choice
@@ -3939,6 +3982,16 @@ wand_done:
     return (true);
 }
 
+static void _update_weapon()
+{
+    ASSERT(ng.weapon != NUM_WEAPONS);
+
+    if (ng.weapon == WPN_UNARMED)
+        _newgame_clear_item(0);
+    else
+        you.inv[0].sub_type = ng.weapon;
+}
+
 bool _give_items_skills()
 {
     char keyn;
@@ -3952,12 +4005,7 @@ bool _give_items_skills()
     case JOB_FIGHTER:
         // Equipment.
         _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
-
-        if (!_choose_weapon())
-            return (false);
-
-        if (you.inv[0].quantity < 1)
-            _newgame_clear_item(0);
+        _update_weapon();
 
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_SCALE_MAIL,
                            ARM_ROBE);
@@ -3978,10 +4026,7 @@ bool _give_items_skills()
     {
         // Equipment.
         _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
-
-        // No unarmed for Trolls/Ghouls this time.
-        if (!_choose_weapon())
-            return (false);
+        _update_weapon();
 
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
                            ARM_ANIMAL_SKIN);
@@ -4271,10 +4316,8 @@ bool _give_items_skills()
     case JOB_CHAOS_KNIGHT:
     {
         _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD, -1, 1,
-                           2);
-
-        if (!_choose_weapon())
-            return (false);
+                           2, 2);
+        _update_weapon();
 
         const god_type gods[3] = { GOD_XOM, GOD_MAKHLEB, GOD_LUGONU };
 
@@ -4423,11 +4466,6 @@ bool _give_items_skills()
                                   : you.religion;
         }
 
-        if (you.inv[0].quantity < 1)
-            _newgame_clear_item(0);
-        else
-            you.inv[0].plus2 = 4 - you.inv[0].plus;
-
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
                            ARM_ROBE, 1, you.religion == GOD_XOM ? 2 : 0);
 
@@ -4473,9 +4511,7 @@ bool _give_items_skills()
     }
     case JOB_DEATH_KNIGHT:
         _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
-
-        if (!_choose_weapon())
-            return (false);
+        _update_weapon();
 
         choice = DK_NO_SELECTION;
 
@@ -4628,9 +4664,6 @@ bool _give_items_skills()
             break;
         }
 
-        if (you.inv[0].quantity < 1)
-            _newgame_clear_item(0);
-
         you.skills[SK_FIGHTING] = 2;
         you.skills[SK_ARMOUR]   = 1;
         you.skills[SK_DODGING]  = 1;
@@ -4655,12 +4688,7 @@ bool _give_items_skills()
 
     case JOB_CRUSADER:
         _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
-
-        if (!_choose_weapon())
-            return (false);
-
-        if (you.inv[0].quantity < 1)
-            _newgame_clear_item(0);
+        _update_weapon();
 
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
                            ARM_ROBE);
@@ -4676,12 +4704,7 @@ bool _give_items_skills()
 
     case JOB_REAVER:
         _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
-
-        if (!_choose_weapon())
-            return (false);
-
-        if (you.inv[0].quantity < 1)
-            _newgame_clear_item(0);
+        _update_weapon();
 
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
                            ARM_ROBE);
@@ -4698,12 +4721,7 @@ bool _give_items_skills()
 
     case JOB_WARPER:
         _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
-
-        if (!_choose_weapon())
-            return (false);
-
-        if (you.inv[0].quantity < 1)
-            _newgame_clear_item(0);
+        _update_weapon();
 
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
                            ARM_ROBE);
