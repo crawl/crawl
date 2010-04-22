@@ -73,6 +73,7 @@ bool _choose_job(void);
 static bool _choose_weapon();
 static bool _choose_book();
 static bool _choose_god();
+static bool _choose_wand();
 
 static void _create_wanderer(void);
 static bool _give_items_skills(void);
@@ -86,7 +87,7 @@ static newgame_def ng;
 newgame_def::newgame_def()
     : name(), species(NUM_SPECIES), job(NUM_JOBS),
       weapon(NUM_WEAPONS), book(SBT_NO_SELECTION),
-      religion(GOD_NO_GOD)
+      religion(GOD_NO_GOD), wand(SWT_NO_SELECTION)
 {
 }
 
@@ -743,7 +744,8 @@ game_start:
 
     // TODO: choose weapon and god here. Get rid of the goto.
     //       Not sure all of the resetting is necessary.
-    if (!_choose_weapon() || !_choose_book() || !_choose_god())
+    if (!_choose_weapon() || !_choose_book()
+        || !_choose_god() || !_choose_wand())
     {
         // Now choose again, name stays same.
         const std::string old_name = you.your_name;
@@ -4127,11 +4129,16 @@ static int _start_to_wand(int wandtype, bool& is_rod)
 
 static bool _choose_wand()
 {
+    if (ng.job != JOB_ARTIFICER)
+        return (true);
+
     // Wand-choosing interface for Artificers -- Greenberg/Bane
 
     const wand_type startwand[5] = { WAND_ENSLAVEMENT, WAND_CONFUSION,
                                      WAND_MAGIC_DARTS, WAND_FROST, WAND_FLAME };
-    _make_rod(you.inv[2], STAFF_STRIKING, 8);
+
+    item_def wand;
+    _make_rod(wand, STAFF_STRIKING, 8);
     const int num_choices = 6;
 
     int keyin = 0;
@@ -4143,7 +4150,8 @@ static bool _choose_wand()
         {
             keyin = 'a' + Options.wand - 1;
             ng_wand = Options.wand;
-            goto wand_done;
+            ng.wand = static_cast<startup_wand_type>(Options.wand);
+            return (true);
         }
     }
 
@@ -4173,8 +4181,8 @@ static bool _choose_wand()
             if (i == num_choices - 1)
             {
                 cprintf("%c - %s\n", letter,
-                        you.inv[2].name(DESC_QUALNAME, false, true).c_str());
-                wandtype = you.inv[2].sub_type;
+                        wand.name(DESC_QUALNAME, false, true).c_str());
+                wandtype = wand.sub_type;
                 is_rod = true;
             }
             else
@@ -4240,7 +4248,7 @@ static bool _choose_wand()
                         {
                             if (i == num_choices - 1)
                             {
-                                wandtype = you.inv[2].sub_type;
+                                wandtype = wand.sub_type;
                                 is_rod = true;
                             }
                             else
@@ -4279,22 +4287,28 @@ static bool _choose_wand()
     else
         ng_wand = keyin - 'a' + 1;
 
-wand_done:
-
-    if (keyin - 'a' == num_choices - 1)
-    {
-        // Choose the rod; we're all done.
-        return (true);
-    }
-
-    // 1 wand of random effects and one chosen lesser wand
-    const wand_type choice = startwand[keyin - 'a'];
-    const int ncharges = 15;
-    _newgame_make_item(2, EQ_NONE, OBJ_WANDS, WAND_RANDOM_EFFECTS, -1, 1,
-                       ncharges, 0);
-    _newgame_make_item(3, EQ_NONE, OBJ_WANDS, choice, -1, 1, ncharges, 0);
-
+    ng.wand = static_cast<startup_wand_type>(keyin - 'a' + 1);
     return (true);
+}
+
+static void _give_wand()
+{
+    bool is_rod;
+    int wand = _start_to_wand(ng.wand, is_rod);
+    ASSERT(wand != -1);
+
+    if (is_rod)
+        _make_rod(you.inv[2], STAFF_STRIKING, 8);
+    else
+    {
+        // 1 wand of random effects and one chosen lesser wand
+        const wand_type choice = static_cast<wand_type>(wand);
+        const int ncharges = 15;
+        _newgame_make_item(2, EQ_NONE, OBJ_WANDS, WAND_RANDOM_EFFECTS,
+                           -1, 1, ncharges, 0);
+        _newgame_make_item(3, EQ_NONE, OBJ_WANDS, choice,
+                           -1, 1, ncharges, 0);
+    }
 }
 
 static void _update_weapon()
@@ -4982,8 +4996,7 @@ bool _give_items_skills()
         // Choice of lesser wands, 15 charges plus wand of random
         // effects: confusion, enslavement, slowing, magic dart, frost,
         // flame; OR a rod of striking, 8 charges and no random effects.
-        if (!_choose_wand())
-            return (false);
+        _give_wand();
 
         // If an offensive wand or the rod of striking was chosen,
         // don't hand out a weapon.

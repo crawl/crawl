@@ -44,8 +44,7 @@ struct newgame_def
     weapon_type weapon;
     startup_book_type book;
     god_type religion;
-
-    // TODO: fill in
+    startup_wand_type wand;
 
     newgame_def();
 
