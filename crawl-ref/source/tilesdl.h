@@ -109,9 +109,9 @@ public:
     MenuRegion *get_menu() { return m_region_menu; }
     bool is_fullscreen() { return m_fullscreen; }
 
-    FTFont* get_crt_font() { return m_fonts.at(m_crt_font).font; }
+    FontWrapper* get_crt_font() { return m_fonts.at(m_crt_font).font; }
     CRTRegion* get_crt() { return m_region_crt; }
-    const ImageManager& get_image_manager() { return m_image; }
+    const ImageManager* get_image_manager() { return m_image; }
 protected:
     int load_font(const char *font_file, int font_size,
                   bool default_on_fail, bool outline);
