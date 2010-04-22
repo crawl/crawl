@@ -627,6 +627,12 @@ protected:
     COLORS m_highlight_colour;
     int m_bg_colour;
 
+#ifdef USE_TILE
+    // Holds the conversion values to translate unit values to pixel values
+    unsigned int m_unit_width_pixels;
+    unsigned int m_unit_height_pixels;
+#endif
+
     int m_item_id;
 };
 
@@ -639,12 +645,19 @@ public:
     TextItem();
     virtual ~TextItem();
 
+    virtual void set_bounds(const coord_def& min_coord, const coord_def& max_coord);
+    virtual void set_bounds_no_multiply(const coord_def& min_coord,
+                                         const coord_def& max_coord);
+
     virtual void render();
 
     void set_text(const std::string& text);
     const std::string& get_text() const;
 protected:
+    void _wrap_text();
+
     std::string m_text;
+    std::string m_render_text;
 
 #ifdef USE_TILE
     FontBuffer m_font_buf;
@@ -662,8 +675,6 @@ public:
     virtual ~NoSelectTextItem();
     virtual bool selected() const;
     virtual bool can_be_highlighted() const;
-
-    virtual void render();
 };
 
 /**
@@ -794,6 +805,11 @@ protected:
     // if you need a different behaviour, pleare override the
     // affected methods
     std::vector<MenuItem*> m_entries;
+#ifdef USE_TILE
+    // Holds the conversion values to translate unit values to pixel values
+    unsigned int m_unit_width_pixels;
+    unsigned int m_unit_height_pixels;
+#endif
 };
 
 /**

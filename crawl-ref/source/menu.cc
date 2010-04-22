@@ -2588,8 +2588,14 @@ void PrecisionMenu::draw_menu()
 }
 
 MenuItem::MenuItem(): m_min_coord(0,0), m_max_coord(0,0), m_selected(false),
-                      m_allow_highlight(true), m_dirty(false), m_visible(false)
+                      m_allow_highlight(true), m_dirty(false), m_visible(false),
+                      m_item_id(-1)
 {
+#ifdef USE_TILE
+    m_unit_width_pixels = tiles.get_crt_font()->char_width();
+    m_unit_height_pixels = tiles.get_crt_font()->char_height();
+#endif
+
     set_fg_colour(LIGHTGRAY);
     set_bg_colour(BLACK);
     set_highlight_colour(BLACK);
@@ -2608,10 +2614,10 @@ void MenuItem::set_bounds(const coord_def& min_coord, const coord_def& max_coord
     // these are saved in font dx / dy for mouse to work properly
     // remove 1 unit from all the entries because console starts at (1,1)
     // but tiles starts at (0,0)
-    m_min_coord.x = (min_coord.x - 1) * tiles.get_crt_font()->char_width();
-    m_min_coord.y = (min_coord.y - 1) * tiles.get_crt_font()->char_height();
-    m_max_coord.x = (max_coord.x - 1) * tiles.get_crt_font()->char_width();
-    m_max_coord.y = (max_coord.y - 1) * tiles.get_crt_font()->char_height();
+    m_min_coord.x = (min_coord.x - 1) * m_unit_width_pixels;
+    m_min_coord.y = (min_coord.y - 1) * m_unit_height_pixels;
+    m_max_coord.x = (max_coord.x - 1) * m_unit_width_pixels;
+    m_max_coord.y = (max_coord.y - 1) * m_unit_height_pixels;
 #else
     m_min_coord = min_coord;
     m_max_coord = max_coord;
@@ -2723,6 +2729,27 @@ TextItem::~TextItem()
 {
 }
 
+/**
+ * Rewrap the text if bounds changes
+ */
+void TextItem::set_bounds(const coord_def& min_coord, const coord_def& max_coord)
+{
+    MenuItem::set_bounds(min_coord, max_coord);
+    _wrap_text();
+    m_dirty = true;
+}
+
+/**
+ * Rewrap the text if bounds changes
+ */
+void TextItem::set_bounds_no_multiply(const coord_def& min_coord,
+                                      const coord_def& max_coord)
+{
+    MenuItem::set_bounds_no_multiply(min_coord, max_coord);
+    _wrap_text();
+    m_dirty = true;
+}
+
 void TextItem::render()
 {
     if (!m_visible)
@@ -2732,30 +2759,95 @@ void TextItem::render()
     if (m_dirty)
     {
         m_font_buf.clear();
-        // TODO: Wrap or chop the text
         // TODO: handle m_bg_colour
-        m_font_buf.add(m_text, term_colours[m_fg_colour],
+        m_font_buf.add(m_render_text, term_colours[m_fg_colour],
                        m_min_coord.x, m_min_coord.y);
         m_dirty = false;
     }
     m_font_buf.draw();
 #else
-    cgotoxy(m_min_coord.x, m_min_coord.y);
-    textcolor(m_fg_colour | m_bg_colour);
-    // TODO: wrap the text or chop it
-    cprintf("%s", m_text.c_str());
+    // Clean the drawing area first
+    // clear_to_end_of_line does not work for us
+    std::string white_space(m_max_coord.x - m_min_coord.x, ' ');
+    textcolor(BLACK);
+    for (int i = 0; i < (m_max_coord.y - m_min_coord.y); ++i)
+    {
+        cgotoxy(m_min_coord.x, m_min_coord.y + i);
+        cprintf("%s", white_space.c_str());
+    }
+
+    // print each line separately, is there a cleaner solution?
+    size_t newline_pos = 0;
+    size_t endline_pos = 0;
+    for (int i = 0; i < (m_max_coord.y - m_min_coord.y); ++i)
+    {
+        endline_pos = m_render_text.find('\n', newline_pos);
+        cgotoxy(m_min_coord.x, m_min_coord.y + i);
+        textcolor(m_fg_colour | m_bg_colour);
+        cprintf("%s", m_render_text.substr(newline_pos, endline_pos).c_str());
+        if (endline_pos != std::string::npos)
+        {
+            newline_pos = endline_pos + 1;
+        }
+        else
+        {
+            break;
+        }
+    }
 #endif
 }
 
 void TextItem::set_text(const std::string& text)
 {
     m_text = text;
+    _wrap_text();
     m_dirty = true;
 }
 
 const std::string& TextItem::get_text() const
 {
     return m_text;
+}
+
+/**
+ * Wraps and chops the m_text variable and saves the chopped
+ * text to m_render_text.
+ * This is done to preserve the old text in case the text item
+ * changes size and could fit more text
+ * Override if you use font with different sizes than CRTRegion font
+ */
+void TextItem::_wrap_text()
+{
+    m_render_text = m_text; // preserve original copy intact
+    int max_cols;
+    int max_lines;
+    max_cols = (m_max_coord.x - m_min_coord.x);
+    max_lines = (m_max_coord.y - m_min_coord.y);
+#ifdef USE_TILE
+    // Tiles saves coordinates in pixels
+    max_cols = max_cols / m_unit_width_pixels;
+    max_lines = max_lines / m_unit_height_pixels;
+#endif
+    if (max_cols == 0 || max_lines == 0)
+    {
+        // escape and set render text to nothing
+        m_render_text = "";
+        return;
+    }
+
+    int num_linebreaks = linebreak_string2(m_render_text, max_cols);
+    if (num_linebreaks > max_lines)
+    {
+        size_t pos = 0;
+        // find the max_line'th occurence of '\n'
+        for (int i = 0; i < max_lines; ++i)
+        {
+            pos = m_render_text.find('\n', pos);
+        }
+        // Chop of all the nonfitting text
+        m_render_text = m_render_text.substr(pos);
+    }
+    // m_render_text now holds the fitting part of the text, ready for render!
 }
 
 NoSelectTextItem::NoSelectTextItem()
@@ -2776,29 +2868,6 @@ bool NoSelectTextItem::selected() const
 bool NoSelectTextItem::can_be_highlighted() const
 {
     return false;
-}
-
-void NoSelectTextItem::render()
-{
-    if (!m_visible)
-        return;
-
-#ifdef USE_TILE
-    if (m_dirty)
-    {
-        m_font_buf.clear();
-        // TODO: Wrap or chop the text
-        m_font_buf.add(m_text, term_colours[m_fg_colour],
-                       m_min_coord.x, m_min_coord.y);
-        m_dirty = false;
-    }
-    m_font_buf.draw();
-#else
-    cgotoxy(m_min_coord.x, m_min_coord.y);
-    textcolor(m_fg_colour | m_bg_colour);
-    // TODO: wrap the text or chop it
-    cprintf("%s", m_text.c_str());
-#endif
 }
 
 #ifdef USE_TILE
@@ -2823,8 +2892,8 @@ void TextTileItem::set_bounds(const coord_def &min_coord, const coord_def &max_c
     // these are saved in font dx / dy for mouse to work properly
     // remove 1 unit from all the entries because console starts at (1,1)
     // but tiles starts at (0,0)
-    m_min_coord.x = (min_coord.x - 1) * tiles.get_crt_font()->char_width();
-    m_max_coord.x = (max_coord.x - 1) * tiles.get_crt_font()->char_width();
+    m_min_coord.x = (min_coord.x - 1) * m_unit_width_pixels;
+    m_max_coord.x = (max_coord.x - 1) * m_unit_height_pixels;
     // TODO: get the tile height from somewhere cleaner
     m_min_coord.y = (min_coord.y - 1) * 32;
     m_max_coord.y = (max_coord.y - 1) * 32;
@@ -2848,9 +2917,9 @@ void TextTileItem::render()
                                          m_tiles[t].ymax);
         }
         // center the text
-        // TODO: Wrap or chop the text
+        // TODO wrap / chop the text
         const int y_coord = (m_max_coord.y - m_min_coord.y) / 2
-                            - tiles.get_crt_font()->char_height() / 2;
+                            - m_unit_height_pixels / 2;
         const int tile_offset = (m_tiles.size() > 0) ? 32 : 0;
         m_font_buf.add(m_text, term_colours[m_fg_colour],
                        m_min_coord.x + tile_offset, m_min_coord.y + y_coord);
@@ -2967,6 +3036,10 @@ MenuObject::MenuObject() : m_dirty(false), m_allow_focus(true), m_min_coord(0,0)
                            m_max_coord(0,0)
 {
     m_object_name = "unnamed object";
+#ifdef USE_TILE
+    m_unit_width_pixels = tiles.get_crt_font()->char_width();
+    m_unit_height_pixels = tiles.get_crt_font()->char_height();
+#endif
 }
 
 MenuObject::~MenuObject()
@@ -2980,10 +3053,10 @@ void MenuObject::init(const coord_def& min_coord, const coord_def& max_coord,
     // these are saved in font dx / dy for mouse to work properly
     // remove 1 unit from all the entries because console starts at (1,1)
     // but tiles starts at (0,0)
-    m_min_coord.x = (min_coord.x - 1) * tiles.get_crt_font()->char_width();
-    m_min_coord.y = (min_coord.y - 1) * tiles.get_crt_font()->char_height();
-    m_max_coord.x = (max_coord.x - 1) * tiles.get_crt_font()->char_width();
-    m_max_coord.y = (max_coord.y - 1) * tiles.get_crt_font()->char_height();
+    m_min_coord.x = (min_coord.x - 1) * m_unit_width_pixels;
+    m_min_coord.y = (min_coord.y - 1) * m_unit_height_pixels;
+    m_max_coord.x = (max_coord.x - 1) * m_unit_width_pixels;
+    m_max_coord.y = (max_coord.y - 1) * m_unit_height_pixels;
 #else
     m_min_coord = min_coord;
     m_max_coord = max_coord;
@@ -3927,12 +4000,10 @@ void MenuScroller::_place_items()
         min_coord.y = m_min_coord.y + space_used;
         max_coord.y = min_coord.y + item_height;
         min_coord.x = m_min_coord.x;
+        max_coord.x = m_max_coord.x;
 #ifdef USE_TILE
         // reserve one tile space for scrollbar
-        max_coord.x = m_max_coord.x - 32;
-#else
-        // reserve one character space for scrollbar
-        max_coord.x = m_max_coord.x - 1;
+        max_coord.x -= 32;
 #endif
         m_entries.at(work_index)->set_bounds_no_multiply(min_coord, max_coord);
         m_entries.at(work_index)->set_visible(true);
