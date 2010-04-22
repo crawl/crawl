@@ -631,7 +631,10 @@ static std::string show_startup_menu(const std::string& default_name)
             {
                 if (!input_string.empty())
                 {
-                    input_string.erase(input_string.size() - 1);
+                    if (full_name)
+                        input_string = "";
+                    else
+                        input_string.erase(input_string.size() - 1);
                     changed_name = true;
                     full_name = false;
                 }
@@ -681,6 +684,7 @@ static std::string show_startup_menu(const std::string& default_name)
                 default:
                     int save_number = id - NUM_GAME_TYPE;
                     input_string = chars.at(save_number).name;
+                    full_name = true;
                     break;
                 }
             }
