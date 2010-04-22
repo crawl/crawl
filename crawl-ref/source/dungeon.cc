@@ -8679,11 +8679,9 @@ void remember_vault_placement(std::string key, vault_placement &place)
                                     table.size() + 1);
 
     std::string place_str
-        = make_stringf("(%d,%d) (%d,%d) orient: %d lev: %d rune: %d "
-                       "subst: %d",
+        = make_stringf("(%d,%d) (%d,%d) orient: %d lev: %d subst: %d",
                        place.pos.x, place.pos.y, place.size.x, place.size.y,
-                       place.orient, place.level_number,
-                       place.num_runes, place.rune_subst);
+                       place.orient, place.level_number, place.rune_subst);
 
     table[name] = place_str;
 

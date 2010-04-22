@@ -146,7 +146,7 @@ public:
     map_def map;
     std::vector<coord_def> exits;
 
-    int level_number, num_runes;
+    int level_number;
 
     // If we're not placing runes, this is the substitute feature.
     int rune_subst;
@@ -154,7 +154,7 @@ public:
 public:
     vault_placement()
         : pos(-1, -1), size(0, 0), orient(0), map(),
-          exits(), level_number(0), num_runes(0), rune_subst(-1)
+          exits(), level_number(0), rune_subst(-1)
     {
     }
 
