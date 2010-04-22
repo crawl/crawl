@@ -264,8 +264,13 @@ static void _generate_area(const coord_def& topleft,
                     && one_chance_in(abyssal_rune_roll))
                 {
                     thing_created = items(1, OBJ_MISCELLANY,
-                                          MISC_RUNE_OF_ZOT, true, 51, 51);
-                    placed_abyssal_rune = true;
+                                          MISC_RUNE_OF_ZOT, true, DEPTH_ABYSS, 0);
+                    if (thing_created != NON_ITEM)
+                    {
+                        mitm[thing_created].plus = RUNE_ABYSSAL;
+                        item_colour(mitm[thing_created]);
+                    }
+                    placed_abyssal_rune = true; // even if not, it will spare retries
 #ifdef DEBUG_ABYSS
                     mpr("Placing an Abyssal rune.", MSGCH_DIAGNOSTICS);
 #endif

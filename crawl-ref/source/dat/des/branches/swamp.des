@@ -134,6 +134,7 @@ MONS:    swamp drake / nothing
 MONS:    hydra / nothing
 SHUFFLE: 12
 SUBST:   ' = t
+KITEM:   O = decaying rune of Zot
 MAP
        @
        2
@@ -169,6 +170,7 @@ ITEM:    nothing
 SUBST:   1=111., 2=2., 3=333., 4=4., L=l.
 SHUFFLE: Od, 123, lw
 SUBST:   l=l .:2, '=.t, "=tc, _=c.
+KITEM:   O = decaying rune of Zot
 MAP
    @       @
    1'       2'
@@ -205,6 +207,7 @@ MARKER:  R = lua:fog_machine { cloud_type = "flame", pow_min = 8, \
              pow_max = 12, delay_min = 40, delay_max = 70, \
              size = 1, walk_dist = 1, spread_rate= 3 }
 KFEAT:   XR = lava
+KITEM:   O = decaying rune of Zot
 MAP
                              @      .@
                        lS     .  3.'
@@ -241,6 +244,7 @@ KMONS:   ? = swamp worm simulacrum / giant goldfish simulacrum / electric eel \
              simulacrum
 MONS:    ice dragon, hydra simulacrum, freezing wraith, azure jelly / ice dragon w:5
 SUBST:   X = tt., RY = wWwww., Q=t
+KITEM:   O = decaying rune of Zot
 MAP
                wwttttttttt
         @.  @ wwttcccccctt
@@ -297,7 +301,7 @@ MARKER:  O = lua:fog_machine { cloud_type = "foul pestilence", \
              pow_min = 8, pow_max = 12, delay_min = 20, delay_max = 30, \
              size = 1, walk_dist = 1, spread_rate= 33 }
 KMONS:   O = bone dragon
-KFEAT:   O = O
+KITEM:   O = decaying rune of Zot
 SUBST:   ? = ? ! w
 KMONS:   ? = big fish zombie
 KMONS:   ! = swamp worm zombie
@@ -345,6 +349,7 @@ SHUFFLE: ab
 SUBST:   a=c, b=', " = ttw, u = wwwwwWWWWxxx., ' = W.
 SHUFFLE: 12
 SUBST:   1=1111., 2=2222., 3=3333.
+KITEM:   O = decaying rune of Zot
 MAP
                t
     x   "t     t"   x        t

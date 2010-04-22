@@ -381,6 +381,7 @@ MARKER:  O = lua:item_pickup_change_flags { \
             branch_flags="!no_tele_control", item="auto" \
          }
 KMASK:   O = no_item_gen
+KITEM:   O = golden rune of Zot
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

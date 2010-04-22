@@ -67,6 +67,7 @@ SUBST:   " : " .:3,  " = .c
 NSUBST:  P = O / *|
 KMASK:   | = no_monster_gen
 KFEAT:   Z = altar_jiyva
+KITEM:   O = slimy rune of Zot
 SHUFFLE: ([{
 LFLAGS:  no_tele_control
 
