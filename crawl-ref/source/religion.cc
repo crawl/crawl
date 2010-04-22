@@ -1981,6 +1981,35 @@ static bool _jiyva_mutate()
         return (mutate(RANDOM_GOOD_MUTATION, true, false, true));
 }
 
+static int _give_first_conjuration_book()
+{
+    // Assume the fire/earth book, as conjurations is strong with fire. -- bwr
+    int book = BOOK_CONJURATIONS_I;
+
+    // Conjuration books are largely Fire or Ice, so we'll use
+    // that as the primary condition, and air/earth to break ties. -- bwr
+    if (you.skills[SK_ICE_MAGIC] > you.skills[SK_FIRE_MAGIC]
+        || you.skills[SK_FIRE_MAGIC] == you.skills[SK_ICE_MAGIC]
+           && you.skills[SK_AIR_MAGIC] > you.skills[SK_EARTH_MAGIC])
+    {
+        book = BOOK_CONJURATIONS_II;
+    }
+    else if (you.skills[SK_FIRE_MAGIC] == 0 && you.skills[SK_EARTH_MAGIC] == 0)
+    {
+        // If we're here it's because we were going to default to the
+        // fire/earth book... but we don't have those skills.  So we
+        // choose randomly based on the species weighting, again
+        // ignoring air/earth which are secondary in these books. - bwr
+        if (random2(species_skills(SK_ICE_MAGIC, you.species)) <
+            random2(species_skills(SK_FIRE_MAGIC, you.species)))
+        {
+            book = BOOK_CONJURATIONS_II;
+        }
+    }
+
+    return (book);
+}
+
 bool do_god_gift(bool prayed_for, bool forced)
 {
     ASSERT(you.religion != GOD_NO_GOD);
@@ -2152,7 +2181,7 @@ bool do_god_gift(bool prayed_for, bool forced)
                 else if (you.religion == GOD_VEHUMET)
                 {
                     if (!you.had_book[BOOK_CONJURATIONS_I])
-                        gift = give_first_conjuration_book();
+                        gift = _give_first_conjuration_book();
                     else if (!you.had_book[BOOK_POWER])
                         gift = BOOK_POWER;
                     else if (!you.had_book[BOOK_ANNIHILATIONS])

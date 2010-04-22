@@ -34,6 +34,7 @@
 #include "newgame.h"
 #include "ng-input.h"
 #include "ng-init.h"
+#include "ng-setup.h"
 #include "notes.h"
 #include "output.h"
 #include "stairs.h"
@@ -189,10 +190,15 @@ void _initialize()
  */
 bool _setup_generic(const std::string& name)
 {
-    // Sets up a new game.
-    const bool newc = new_game(name);
-    if (!newc)
-        restore_game();
+    newgame_def ng;
+    ng.name = name;
+    // Defines a new game, or returns false if a save game
+    // with that name exists.
+    const bool newc = choose_game(&ng);
+    if (newc)
+        setup_game(ng);
+    else
+        restore_game(ng.name);
 
     // Fix the mutation definitions for the species we're playing.
     fixup_mutations();

@@ -47,17 +47,15 @@ struct newgame_def
     startup_wand_type wand;
 
     newgame_def();
-
-    void init(const player &p);
-    void save(player &p);
 };
 
 undead_state_type get_undead_state(const species_type sp);
 
-bool new_game(const std::string& name);
+bool choose_game(newgame_def *ng);
 
-int give_first_conjuration_book();
-
-void give_basic_mutations(species_type speci);
+void make_rod(item_def &item, stave_type rod_type, int ncharges);
+int claws_level(species_type sp);
+int start_to_wand(int wandtype, bool& is_rod);
+int start_to_book(int firstbook, int booktype);
 
 #endif
