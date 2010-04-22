@@ -1312,11 +1312,18 @@ NAME:    vehumet_trees
 DEPTH:   2-10
 TAGS:    temple_overflow_vehumet
 KFEAT:   _ = altar_vehumet
+SHUFFLE: ><
+# 1KB suggests that instead of a hatch (to make sure the player can escape the
+# vault, if they would get trapped by a teleport or something), make Vehumet
+# burn the trees down when you take the god. If anyone would like to script
+# this in, go ahead! Probably needs "beckoning messages" where Vehumet promises
+# to free the player of the cage of trees. --evk
 MAP
 .......
 .ttttt.
 .t...t.
 .t._.t.
+.t.>.t.
 .t...t.
 .ttttt.
 .......
