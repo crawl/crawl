@@ -63,7 +63,6 @@
 # book = (fire | ice | summ | random)
 # wand = (enslavement | confusion | magic darts | frost | flame | striking | random)
 # chaos_knight = (Xom | Makhleb | random)
-# death_knight = (necromancy | Yredelemnul | random)
 # priest       = (Zin | Yredelemnul | Beogh | random)
 # species = (Human |...| Vampire | random)
 # job     = (Fighter |...| Wanderer | random)

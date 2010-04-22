@@ -12,14 +12,6 @@
 #include "enum.h"
 #include "itemprop-enum.h"
 
-enum death_knight_type
-{
-    DK_NO_SELECTION,
-    DK_NECROMANCY,
-    DK_YREDELEMNUL,
-    DK_RANDOM
-};
-
 enum startup_book_type
 {
     SBT_NO_SELECTION = 0,
