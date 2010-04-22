@@ -524,10 +524,11 @@ static std::string show_startup_menu(const std::string& default_name)
     tmp->set_visible(true);
 
     tmp = new NoSelectTextItem();
-    std::string text = "";
-    text += "Use the up/down keys to select the type of game or load a character.\n";
-    text += "You can type your name; with \".\" you will be asked later. Press ";
-    text += "Enter to start.\n";
+    std::string text = "Use the up/down keys to select the type of game "
+                       "or load a character.\n"
+                       "You can type your name; if you leave it blank "
+                       "you will be asked later.\n"
+                       "Press Enter to start.\n";
     tmp->set_text(text);
     tmp->set_bounds(coord_def(1, MISC_TEXT_START_Y),
                     coord_def(get_number_of_cols() - 2, MISC_TEXT_START_Y + 4));
