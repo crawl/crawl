@@ -4774,6 +4774,8 @@ void dec_napalm_player(int delay)
 
         if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
             remove_condensation_shield();
+        if (you.duration[DUR_ICY_ARMOUR] > 0)
+            remove_ice_armour();
     }
 
     you.duration[DUR_LIQUID_FLAMES] -= delay;

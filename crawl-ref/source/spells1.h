@@ -58,6 +58,7 @@ void cast_resist_poison(int power);
 void cast_swiftness(int power);
 void cast_teleport_control(int power);
 void deflection(int pow);
+void remove_ice_armour();
 void ice_armour(int pow, bool extending);
 void missile_prot(int pow);
 void stone_scales(int pow);

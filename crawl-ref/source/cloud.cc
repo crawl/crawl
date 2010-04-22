@@ -730,9 +730,6 @@ void in_a_cloud()
     int resist;
     std::string name = env.cloud[cl].name;
 
-    if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
-        remove_condensation_shield();
-
     switch (env.cloud[cl].type)
     {
     case CLOUD_FIRE:
