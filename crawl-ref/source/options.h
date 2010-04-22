@@ -140,7 +140,6 @@ public:
     int         book;            // auto-choose book for character
     int         wand;            // auto-choose wand for character
     int         chaos_knight;    // choice of god for Chaos Knights (Xom/Makleb)
-    int         death_knight;    // choice of god/necromancy for Death Knights
     god_type    priest;          // choice of god for priests (Zin/Yred)
     bool        random_pick;     // randomly generate character
     bool        good_random;     // when chosing randomly only choose

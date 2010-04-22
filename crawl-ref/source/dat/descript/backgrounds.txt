@@ -33,7 +33,7 @@ Crusaders are melee fighters who can boost themselves in battle with spells from
 %%%%
 Death Knight
 
-Death Knights are either proficient in Necromancy or follow the evil god Yredelemnul.
+Death Knights are melee fighters proficient in Necromancy.
 %%%%
 Earth Elementalist
 

@@ -1139,9 +1139,7 @@ You will be asked afterwards if you really want to attend this circle.
 Note that the good gods will not accept demonic or undead devotees.
 
 If you like to start the game with a religion, choose your background
-from Healer, Priest, Paladin, Berserker, Chaos Knight or Death Knight
-(the last only if you draw your power from your god, instead of from
-necromancy).
+from Healer, Priest, Paladin, Berserker or Chaos Knight.
 
 
 ------------------------------------------------------------------------
@@ -1953,9 +1951,7 @@ spreading death and disorder.
 Death Knights:
 --------------
 The Death Knight is a fighter who aligns him or herself with the powers
-of death. There are two types of Death Knights: those who worship and
-draw their abilities from the Death-God Yredelemnul, and those who study
-the fearsome arts of necromancy.
+of death, by studying the fearsome arts of necromancy.
 
 Crusaders:
 ----------

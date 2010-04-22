@@ -15,7 +15,7 @@ The contents of this text are:
 0-d     Aliases and variables.
 1-  Starting Screen.
                 name, remember_name, weapon, book, wand,
-                chaos_knight, death_knight, priest,
+                chaos_knight, priest,
                 species, background, random_pick, good_random
 2-  File System and Sound.
                 crawl_dir, morgue_dir, save_dir, macro_dir, sound
@@ -287,11 +287,9 @@ wand = (enslavement | confusion | magic darts | frost | flame | striking | rando
 
 chaos_knight = (Xom | Makhleb | random)
 
-death_knight = (necromancy | Yredelemnul | random)
-
 priest = (Zin | Yredelemnul | Beogh | random)
         The above three make in advance the additional choices for
-        Chaos Knights, Death Knights, and Priests (Beogh for HO only).
+        Chaos Knights and Priests (Beogh for HO only).
 
 species = (Human |...| Vampire | random)
         The usual abbreviations (Hu, HE, etc.) work.

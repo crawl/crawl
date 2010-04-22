@@ -438,7 +438,6 @@ void game_options::reset_startup_options()
     random_pick            = false;
     good_random            = true;
     chaos_knight           = GOD_NO_GOD;
-    death_knight           = DK_NO_SELECTION;
     priest                 = GOD_NO_GOD;
 }
 
@@ -640,11 +639,11 @@ void game_options::reset_options()
     prev_race     = 0;
     prev_cls      = 0;
     prev_ck       = GOD_NO_GOD;
-    prev_dk       = DK_NO_SELECTION;
     prev_pr       = GOD_NO_GOD;
     prev_weapon   = WPN_UNKNOWN;
     prev_book     = SBT_NO_SELECTION;
     prev_wand     = SWT_NO_SELECTION;
+    prev_name     = "";
     prev_randpick = false;
     remember_name = true;
 
@@ -1305,7 +1304,6 @@ void read_startup_prefs()
     Options.prev_randpick = temp.random_pick;
     Options.prev_weapon   = temp.weapon;
     Options.prev_pr       = temp.priest;
-    Options.prev_dk       = temp.death_knight;
     Options.prev_ck       = temp.chaos_knight;
     Options.prev_cls      = temp.cls;
     Options.prev_race     = temp.race;
@@ -1340,13 +1338,6 @@ static void write_newgame_options(FILE *f)
                 Options.prev_ck == GOD_MAKHLEB ? "makhleb" :
                 Options.prev_ck == GOD_LUGONU  ? "lugonu"
                                                : "random");
-    }
-    if (Options.prev_dk != DK_NO_SELECTION)
-    {
-        fprintf(f, "death_knight = %s\n",
-                Options.prev_dk == DK_NECROMANCY  ? "necromancy" :
-                Options.prev_dk == DK_YREDELEMNUL ? "yredelemnul"
-                                                  : "random");
     }
     if (is_priest_god(Options.prev_pr) || Options.prev_pr == GOD_RANDOM)
     {
@@ -2301,15 +2292,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             chaos_knight = GOD_LUGONU;
         else if (field == "random")
             chaos_knight = GOD_RANDOM;
-    }
-    else if (key == "death_knight")
-    {
-        if (field == "necromancy")
-            death_knight = DK_NECROMANCY;
-        else if (field == "yredelemnul")
-            death_knight = DK_YREDELEMNUL;
-        else if (field == "random")
-            death_knight = DK_RANDOM;
     }
     else if (key == "priest")
     {

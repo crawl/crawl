@@ -106,7 +106,7 @@ void newgame_def::save(player &p)
 
 static char ng_race, ng_cls;
 static bool ng_random;
-static int  ng_ck, ng_dk;
+static int  ng_ck;
 static int  ng_weapon;
 static int  ng_book;
 static int  ng_wand;
@@ -117,7 +117,6 @@ static void _reset_newgame_options(void)
     ng_race   = ng_cls = 0;
     ng_random = false;
     ng_ck     = GOD_NO_GOD;
-    ng_dk     = DK_NO_SELECTION;
     ng_pr     = GOD_NO_GOD;
     ng_weapon = WPN_UNKNOWN;
     ng_book   = SBT_NO_SELECTION;
@@ -132,7 +131,6 @@ static void _save_newgame_options(void)
     Options.prev_cls        = ng_cls;
     Options.prev_randpick   = ng_random;
     Options.prev_ck         = ng_ck;
-    Options.prev_dk         = ng_dk;
     Options.prev_pr         = ng_pr;
     Options.prev_weapon     = ng_weapon;
     Options.prev_book       = ng_book;
@@ -146,7 +144,6 @@ static void _set_startup_options(void)
     Options.race         = Options.prev_race;
     Options.cls          = Options.prev_cls;
     Options.chaos_knight = Options.prev_ck;
-    Options.death_knight = Options.prev_dk;
     Options.priest       = Options.prev_pr;
     Options.weapon       = Options.prev_weapon;
     Options.book         = Options.prev_book;
@@ -753,7 +750,7 @@ game_start:
         Options.prev_race     = ng_race;
         Options.prev_cls      = ng_cls;
         Options.prev_weapon   = ng_weapon;
-        // ck, dk, pr and book are asked last --> don't need to be changed
+        // ck, pr and book are asked last --> don't need to be changed
 
         // Reset stats.
         _init_player();
@@ -859,7 +856,7 @@ game_start:
         Options.prev_race     = ng_race;
         Options.prev_cls      = ng_cls;
         Options.prev_weapon   = ng_weapon;
-        // ck, dk, pr and book are asked last --> don't need to be changed
+        // ck, pr and book are asked last --> don't need to be changed
 
         // Reset stats.
         _init_player();
@@ -1006,26 +1003,6 @@ static int _start_to_book(int firstbook, int booktype)
 
     default:
         return (-1);
-    }
-}
-
-static bool _necromancy_okay()
-{
-    switch (you.species)
-    {
-    case SP_DEEP_ELF:
-    case SP_SLUDGE_ELF:
-    case SP_DEEP_DWARF:
-    case SP_DEMONSPAWN:
-    case SP_KENKU:
-    case SP_MUMMY:
-    case SP_VAMPIRE:
-        return (true);
-
-    default:
-        if (player_genus(GENPC_DRACONIAN))
-            return (true);
-        return (false);
     }
 }
 
@@ -1373,8 +1350,7 @@ static void _give_basic_spells(job_type which_job)
         which_spell = SPELL_SANDBLAST;
         break;
     case JOB_DEATH_KNIGHT:
-        if (you.species == SP_DEMIGOD || you.religion != GOD_YREDELEMNUL)
-            which_spell = SPELL_PAIN;
+        which_spell = SPELL_PAIN;
         break;
 
     default:
@@ -3996,7 +3972,6 @@ bool _give_items_skills()
 {
     char keyn;
     int weap_skill = 0;
-    int choice;                 // used for third-screen choices
 
     ng.init(you); // XXX
 
@@ -4513,156 +4488,13 @@ bool _give_items_skills()
         _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
         _update_weapon();
 
-        choice = DK_NO_SELECTION;
-
-        // Order is important here. -- bwr
-        if (you.species == SP_DEMIGOD)
-            choice = DK_NECROMANCY;
-        else if (Options.death_knight != DK_NO_SELECTION
-                 && Options.death_knight != DK_RANDOM)
-        {
-            ng_dk = choice = Options.death_knight;
-        }
-        else if (Options.random_pick || Options.death_knight == DK_RANDOM)
-        {
-            ng_dk = DK_RANDOM;
-
-            bool did_chose = false;
-            if (Options.good_random)
-            {
-                if (_necromancy_okay())
-                {
-                    choice = DK_NECROMANCY;
-                    did_chose = true;
-                }
-
-                if (religion_restriction(GOD_YREDELEMNUL, ng) == CC_UNRESTRICTED)
-                {
-                    if (!did_chose || coinflip())
-                        choice = DK_YREDELEMNUL;
-                    did_chose = true;
-                }
-            }
-
-            if (!did_chose)
-                choice = (coinflip() ? DK_NECROMANCY : DK_YREDELEMNUL);
-        }
-        else
-        {
-            _print_character_info();
-
-            textcolor(CYAN);
-            cprintf("\nFrom where do you draw your power?\n");
-            textcolor(_necromancy_okay() ? LIGHTGREY : DARKGREY);
-            cprintf("a - Necromantic magic\n");
-
-            // Yredelemnul is an okay choice for everyone.
-            if (religion_restriction(GOD_YREDELEMNUL, ng) == CC_UNRESTRICTED)
-                textcolor(LIGHTGREY);
-            else
-                textcolor(DARKGREY);
-
-            cprintf("b - the god Yredelemnul\n");
-
-            textcolor( BROWN );
-            cprintf("\n* - Random choice; + - Good random choice \n"
-                        "Bksp - Back to species and background selection; "
-                        "X - Quit\n");
-
-            if (Options.prev_dk != DK_NO_SELECTION)
-            {
-                textcolor(BROWN);
-                cprintf("\nEnter - %s\n",
-                        Options.prev_dk == DK_NECROMANCY  ? "Necromancy" :
-                        Options.prev_dk == DK_YREDELEMNUL ? "Yredelemnul"
-                                                          : "Random");
-            }
-
-            do
-            {
-                keyn = getch_ck();
-
-                switch (keyn)
-                {
-                case 'X':
-                    cprintf("\nGoodbye!");
-                    end(0);
-                    break;
-                case CK_BKSP:
-                case ESCAPE:
-                case ' ':
-                    return (false);
-                case '\r':
-                case '\n':
-                    if (Options.prev_dk == DK_NO_SELECTION)
-                        break;
-
-                    if (Options.prev_dk != DK_RANDOM)
-                    {
-                        choice = Options.prev_dk;
-                        break;
-                    }
-                    keyn = '*'; // for ng_dk setting
-                    // fall-through for random
-                case '+':
-                    if (keyn == '+')
-                    {
-                        bool did_chose = false;
-                        if (_necromancy_okay())
-                        {
-                            choice = DK_NECROMANCY;
-                            did_chose = true;
-                        }
-
-                        if (religion_restriction(GOD_YREDELEMNUL, ng)
-                                == CC_UNRESTRICTED)
-                        {
-                            if (!did_chose || coinflip())
-                                choice = DK_YREDELEMNUL;
-                            did_chose = true;
-                        }
-                        if (did_chose)
-                            break;
-                    }
-                    // fall-through for random
-                case '*':
-                    choice = coinflip()? DK_NECROMANCY : DK_YREDELEMNUL;
-                    break;
-                case 'a':
-                    cprintf("\nVery well.");
-                    choice = DK_NECROMANCY;
-                    break;
-                case 'b':
-                    choice = DK_YREDELEMNUL;
-                default:
-                    break;
-                }
-            }
-            while (choice == DK_NO_SELECTION);
-
-            ng_dk = (keyn == '*'? DK_RANDOM : choice);
-        }
-
         _newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
                               ARM_ROBE);
 
-        switch (choice)
-        {
-        default:  // This shouldn't happen anyway. -- bwr
-        case DK_NECROMANCY:
-            _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_NECROMANCY);
+        _newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_NECROMANCY);
 
-            you.skills[SK_SPELLCASTING] = 1;
-            you.skills[SK_NECROMANCY]   = 2;
-            break;
-        case DK_YREDELEMNUL:
-            you.religion = GOD_YREDELEMNUL;
-            you.piety = 28;
-            you.inv[0].plus  = 2;
-            you.inv[0].plus2 = 2;
-            you.skills[SK_INVOCATIONS] = 3;
-            break;
-        }
+        you.skills[SK_SPELLCASTING] = 1;
+        you.skills[SK_NECROMANCY]   = 2;
 
         you.skills[SK_FIGHTING] = 2;
         you.skills[SK_ARMOUR]   = 1;
