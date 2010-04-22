@@ -2497,14 +2497,8 @@ std::string _status_mut_abilities()
                 current = info;
                 break;
             case MUT_ICEMAIL:
-            {
-                // FIXME: This duplicates code in mutation.cc:mutation_name().
-                int amt = ICEMAIL_MAX;
-                amt -= you.duration[DUR_ICEMAIL_DEPLETED] * ICEMAIL_MAX / ICEMAIL_TIME;
-
-                AC_change += amt;
+                AC_change += player_icemail_armour_class();
                 break;
-            }
 
             // scales -> calculate sum of AC bonus
             case MUT_DISTORTION_FIELD:

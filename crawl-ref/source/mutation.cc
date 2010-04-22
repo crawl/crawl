@@ -1356,11 +1356,7 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
     else if (mut == MUT_ICEMAIL)
     {
         std::ostringstream ostr;
-
-        int amt = ICEMAIL_MAX;
-        amt -= you.duration[DUR_ICEMAIL_DEPLETED] * ICEMAIL_MAX / ICEMAIL_TIME;
-
-        ostr << mdef.have[0] << amt << ").";
+        ostr << mdef.have[0] << player_icemail_armour_class() << ").";
         result = ostr.str();
     }
     else if (result.empty() && level > 0)
