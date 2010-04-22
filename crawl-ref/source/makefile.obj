@@ -140,6 +140,8 @@ newgame.o \
 ng-init.o \
 ng-input.o \
 ng-restr.o \
+ng-setup.o \
+ng-wanderer.o \
 notes.o \
 ouch.o \
 output.o \

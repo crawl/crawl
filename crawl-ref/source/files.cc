@@ -2044,9 +2044,9 @@ bool load_ghost(bool creating_level)
     return (true);
 }
 
-void restore_game(void)
+void restore_game(const std::string& name)
 {
-    std::string charFile = get_savedir_filename(you.your_name, "", "chr");
+    std::string charFile = get_savedir_filename(name, "", "chr");
     FILE *charf = fopen(charFile.c_str(), "rb");
     if (!charf )
         end(-1, true, "Unable to open %s for reading!\n", charFile.c_str() );
@@ -2072,7 +2072,7 @@ void restore_game(void)
     }
     fclose(charf);
 
-    std::string stashFile = get_savedir_filename( you.your_name, "", "st" );
+    std::string stashFile = get_savedir_filename(name, "", "st");
     FILE *stashf = fopen(stashFile.c_str(), "rb");
     if (stashf)
     {
@@ -2082,11 +2082,11 @@ void restore_game(void)
     }
 
 #ifdef CLUA_BINDINGS
-    std::string luaFile = get_savedir_filename( you.your_name, "", "lua" );
-    clua.execfile( luaFile.c_str() );
+    std::string luaFile = get_savedir_filename(name, "", "lua");
+    clua.execfile(luaFile.c_str());
 #endif
 
-    std::string killFile = get_savedir_filename( you.your_name, "", "kil" );
+    std::string killFile = get_savedir_filename(name, "", "kil");
     FILE *killf = fopen(killFile.c_str(), "rb");
     if (killf)
     {
@@ -2095,7 +2095,7 @@ void restore_game(void)
         fclose(killf);
     }
 
-    std::string travelCacheFile = get_savedir_filename(you.your_name,"","tc");
+    std::string travelCacheFile = get_savedir_filename(name, "", "tc");
     FILE *travelf = fopen(travelCacheFile.c_str(), "rb");
     if (travelf)
     {
@@ -2104,7 +2104,7 @@ void restore_game(void)
         fclose(travelf);
     }
 
-    std::string notesFile = get_savedir_filename(you.your_name, "", "nts");
+    std::string notesFile = get_savedir_filename(name, "", "nts");
     FILE *notesf = fopen(notesFile.c_str(), "rb");
     if (notesf)
     {
@@ -2114,7 +2114,7 @@ void restore_game(void)
     }
 
     /* tutorial */
-    std::string tutorFile = get_savedir_filename(you.your_name, "", "tut");
+    std::string tutorFile = get_savedir_filename(name, "", "tut");
     FILE *tutorf = fopen(tutorFile.c_str(), "rb");
     if (tutorf)
     {
@@ -2124,7 +2124,7 @@ void restore_game(void)
     }
 
     /* messages */
-    std::string msgFile = get_savedir_filename(you.your_name, "", "msg");
+    std::string msgFile = get_savedir_filename(name, "", "msg");
     FILE *msgf = fopen(msgFile.c_str(), "rb");
     if (msgf)
     {
