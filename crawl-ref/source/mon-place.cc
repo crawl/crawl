@@ -58,8 +58,8 @@ static std::vector<int> vault_mon_weights;
 #define VAULT_MON_WEIGHTS_KEY "vault_mon_weights"
 
 // NEW place_monster -- note that power should be set to:
-// 51 for abyss
-// 52 for pandemonium
+// DEPTH_ABYSS for abyss
+// DEPTH_PAN for pandemonium
 // x otherwise
 
 // proximity is the same as for mons_place:
@@ -477,7 +477,7 @@ monster_type pick_random_monster(const level_id &place, int power,
     lev_mons = power;
 
     if (place == BRANCH_MAIN_DUNGEON
-        && lev_mons != 51 && one_chance_in(4))
+        && lev_mons != DEPTH_ABYSS && one_chance_in(4))
     {
         lev_mons = random2(power);
     }
@@ -503,7 +503,7 @@ monster_type pick_random_monster(const level_id &place, int power,
 
     // Abyss or Pandemonium. Almost never called from Pan; probably only
     // if a random demon gets summon anything spell.
-    if (lev_mons == 51
+    if (lev_mons == DEPTH_ABYSS
         || place.level_type == LEVEL_PANDEMONIUM
         || place.level_type == LEVEL_ABYSS)
     {
