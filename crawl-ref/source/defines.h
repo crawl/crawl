@@ -183,6 +183,9 @@ const int MAX_SEC_ENCHANT = 2;
 // The time (in aut) for a staff of power to decay 1 mp.
 #define POWER_DECAY 50
 
+const int DEPTH_ABYSS = 51;
+const int DEPTH_PAN   = 52;
+
 // Size of unique_items in player class
 #define MAX_UNRANDARTS 100
 

@@ -2913,9 +2913,9 @@ int level_id::absdepth() const
     case LEVEL_DUNGEON:
         return absdungeon_depth(branch, depth);
     case LEVEL_PANDEMONIUM:
-        return 52;
+        return DEPTH_PAN;
     case LEVEL_ABYSS:
-        return 51;
+        return DEPTH_ABYSS;
     default:
         // No true notion of depth here.
         return you.absdepth0;
