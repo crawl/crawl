@@ -652,6 +652,8 @@ int player_hunger_rate(void);
 
 int calc_hunger(int food_cost);
 
+int player_icemail_armour_class();
+
 int player_mag_abil(bool is_weighted);
 int player_magical_power(void);
 

@@ -5382,6 +5382,16 @@ int player::skill(skill_type sk, bool bump) const
     return (bump? skill_bump(sk) : skills[sk]);
 }
 
+int player_icemail_armour_class()
+{
+    if (!you.mutation[MUT_ICEMAIL])
+        return (0);
+
+    return (ICEMAIL_MAX
+               - (you.duration[DUR_ICEMAIL_DEPLETED]
+                   * ICEMAIL_MAX / ICEMAIL_TIME));
+}
+
 int player::armour_class() const
 {
     int AC = 0;
@@ -5429,9 +5439,7 @@ int player::armour_class() const
         AC += 200 + 100 * skills[SK_EARTH_MAGIC] / 5;       // max 7
 
     if (mutation[MUT_ICEMAIL])
-        AC += (100 * ICEMAIL_MAX)
-              - (duration[DUR_ICEMAIL_DEPLETED] * 100
-                     * ICEMAIL_MAX / ICEMAIL_TIME);
+        AC += 100 * player_icemail_armour_class();
 
     if (attribute[ATTR_TRANSFORMATION] == TRAN_NONE
         || attribute[ATTR_TRANSFORMATION] == TRAN_LICH
