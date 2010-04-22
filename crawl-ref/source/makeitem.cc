@@ -3111,9 +3111,6 @@ static void _generate_misc_item(item_def& item, int force_type, int item_race)
                                                0);
         init_deck(item);
     }
-
-    if (item.sub_type == MISC_RUNE_OF_ZOT)
-        item.plus = item_race;
 }
 
 // Returns item slot or NON_ITEM if it fails.

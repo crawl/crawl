@@ -29,6 +29,7 @@ ORIENT:    northeast
 LFLOORCOL: yellow
 LROCKCOL:  red
 MONS:      patrolling Mnoleg, neqoxec
+KITEM:     O = glowing rune of Zot
 epilogue{{
   crawl.mpr("The air here is shimmering with an eerie glow.")
   pan_lord_warning(_G)
@@ -78,6 +79,7 @@ LFLOORCOL: lightgrey
 TAGS:      no_rotate
 LROCKCOL:  white
 MONS:      patrolling Lom Lobon, giant orange brain, rakshasa, wizard
+KITEM:     O = magical rune of Zot
 epilogue{{
   crawl.mpr("You sense a powerful magical presence. It is not pleased.")
   pan_lord_warning(_G)
@@ -129,6 +131,7 @@ ORIENT:    northeast
 LFLOORCOL: red
 LROCKCOL:  red
 MONS:      patrolling Cerebov, Balrug, Pit Fiend
+KITEM:     O = fiery rune of Zot
 epilogue{{
   crawl.mpr("Searing heat pours from the floors and walls of this place.")
   pan_lord_warning(_G)
@@ -185,6 +188,7 @@ ORIENT:    southwest
 LFLOORCOL: darkgrey
 LROCKCOL:  darkgrey
 MONS:      patrolling Gloorx Vloq, Executioner, demonic crawler, shadow demon
+KITEM:     O = dark rune of Zot
 epilogue{{
   crawl.mpr("Shadowy figures dance across your vision.")
   pan_lord_warning(_G)
@@ -297,6 +301,7 @@ NAME: rand_demon_4
 TAGS: pan allow_dup
 MONS: pandemonium demon, any demon, any demon
 SUBST: P = O..
+KITEM: O = demonic rune of Zot
 MAP
 ............
 .xxxxxxxxx..
@@ -318,6 +323,7 @@ NAME: rand_demon_5
 TAGS: pan allow_dup
 MONS: pandemonium demon, any demon, any demon
 SUBST: P = O..
+KITEM: O = demonic rune of Zot
 MAP
 ............
 ...xxxxxx...
@@ -399,6 +405,7 @@ NAME: rand_demon_9
 TAGS: pan allow_dup
 MONS: pandemonium demon, any demon, greater demon
 SUBST: P = O..
+KITEM: O = demonic rune of Zot
 MAP
 ............
 .xxxxxxxxxx.
@@ -427,7 +434,7 @@ SUBST:   A=2, B=2, C=2, D=2, E=2, F=2, G=., H=.
 SUBST:   n=n =:1
 SUBST:   m:mn
 KMONS:   O = eye of draining
-KFEAT:   O = O
+KITEM:   O = demonic rune of Zot
 MAP
                   ....bbb..
 .......           ....bBb..
@@ -483,7 +490,7 @@ MONS:    smoke demon / weight:1 fiend
 SHUFFLE: mx/nc
 SHUFFLE: O1/AB
 SUBST:   A=|, B=|
-# has a rune!
+KITEM:   O = demonic rune of Zot
 MAP
 .......@.......
 xxxxxx+++xxxxxx

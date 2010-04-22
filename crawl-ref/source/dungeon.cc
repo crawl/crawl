@@ -4634,10 +4634,14 @@ static void _dgn_place_item_explicit(const item_spec &spec,
                 init_stack_blood_potions(item);
         }
 
-        if (spec.plus >= 0 && item.base_type == OBJ_BOOKS
-            && item.sub_type == BOOK_MANUAL)
+        if (spec.plus >= 0
+            && (item.base_type == OBJ_BOOKS
+                && item.sub_type == BOOK_MANUAL)
+            || (item.base_type == OBJ_MISCELLANY
+                && item.sub_type == MISC_RUNE_OF_ZOT))
         {
             item.plus = spec.plus;
+            item_colour(item);
         }
     }
 
@@ -5130,6 +5134,10 @@ static void _vault_grid(vault_placement &place,
     case '~':
         place_specific_trap(where, random_trap_for_place(place.level_number));
         break;
+    case 'O':
+        if (place.rune_subst != -1)
+            grd(where) = static_cast<dungeon_feature_type>(place.rune_subst);
+        break;
     }
 
     if ((vgrid == '=' || vgrid == '+')
@@ -5148,7 +5156,6 @@ static void _vault_grid(vault_placement &place,
         case '%':
         case '*':
         case '|':
-        case 'O':                   // definite rune
         {
             int item_made = NON_ITEM;
             object_class_type which_class = OBJ_RANDOM;
@@ -5156,60 +5163,24 @@ static void _vault_grid(vault_placement &place,
             int which_depth;
             int spec = 250;
 
-            // If rune_subst is set to 0, the rune was already placed,
-            // take appropriate steps.
-            if (place.rune_subst == 0 && vgrid == 'O')
-                place.num_runes++;
-
             if (vgrid == '$')
             {
                 which_class = OBJ_GOLD;
                 which_type = OBJ_RANDOM;
             }
-            else if (vgrid == '%' || vgrid == '*')
-            {
-                which_class = OBJ_RANDOM;
-                which_type = OBJ_RANDOM;
-            }
-            else if (vgrid == '|' || (vgrid == 'O' && place.num_runes > 0))
+            else if (vgrid == '|')
             {
                 which_class = RANDOM_ELEMENT(_acquirement_item_classes);
                 which_type = OBJ_RANDOM;
             }
             else
             {
-                if (place.rune_subst != -1)
-                {
-                    grd(where) =
-                        static_cast<dungeon_feature_type>(place.rune_subst);
-                    break;
-                }
-
-                which_class = OBJ_MISCELLANY;
-                which_type  = MISC_RUNE_OF_ZOT;
-                place.num_runes++;
-
-                if (you.level_type == LEVEL_PANDEMONIUM)
-                {
-                    if (place.map.has_tag("mnoleg"))
-                        spec = RUNE_MNOLEG;
-                    else if (place.map.has_tag("lom_lobon"))
-                        spec = RUNE_LOM_LOBON;
-                    else if (place.map.has_tag("gloorx_vloq"))
-                        spec = RUNE_GLOORX_VLOQ;
-                    else if (place.map.has_tag("cerebov"))
-                        spec = RUNE_CEREBOV;
-                    else
-                        spec = RUNE_DEMONIC;
-                }
-                else if (you.level_type == LEVEL_ABYSS)
-                    spec = RUNE_ABYSSAL;
-                else
-                    spec = you.where_are_you;
+                which_class = OBJ_RANDOM;
+                which_type = OBJ_RANDOM;
             }
 
             which_depth = place.level_number;
-            if (vgrid == '|' || vgrid == 'O')
+            if (vgrid == '|')
                 which_depth = MAKE_GOOD_ITEM;
             else if (vgrid == '*')
                 which_depth = 5 + (place.level_number * 2);

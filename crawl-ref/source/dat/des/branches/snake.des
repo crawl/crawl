@@ -30,6 +30,7 @@ SUBST:   X=xc..++, Y=xc++
 SUBST:   T : T U V .:30 b
 SUBST:   _:.!, !:!.x, !=x .:2
 SHUFFLE: 123, 45, ([<
+KITEM:   O = serpentine rune of Zot
 #
 validate {{ return glyphs_connected('{', 'O') }}
 #
@@ -87,6 +88,7 @@ MONS:   naga warrior / nothing
 SUBST:  c = c .:1
 SUBST:  v = v .:1
 SUBST:  v = x
+KITEM:  O = serpentine rune of Zot
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx..@.xxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxx.............xxxxxxxx

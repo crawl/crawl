@@ -459,7 +459,7 @@ ENDMAP
 NAME:  vault8_rune
 TAGS:  vault8_rune
 KMONS: O = 8 / 9
-KFEAT: O = O
+KITEM: O = silver rune of Zot
 MAP
 O
 ENDMAP
