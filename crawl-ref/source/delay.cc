@@ -1415,9 +1415,7 @@ static void _armour_wear_effects(const int item_slot)
     {
         if (you.duration[DUR_ICY_ARMOUR] != 0)
         {
-            mpr("Your icy armour melts away.", MSGCH_DURATION);
-            you.redraw_armour_class = true;
-            you.duration[DUR_ICY_ARMOUR] = 0;
+            remove_ice_armour();
         }
     }
     else if (eq_slot == EQ_SHIELD)

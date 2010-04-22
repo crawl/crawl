@@ -96,6 +96,8 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
     {
         if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
             remove_condensation_shield();
+        if (you.duration[DUR_ICY_ARMOUR] > 0)
+            remove_ice_armour();
     }
 
     switch (flavour)
@@ -659,6 +661,9 @@ bool expose_player_to_element(beam_type flavour, int strength)
             you.duration[DUR_ICEMAIL_DEPLETED] = ICEMAIL_TIME;
             you.redraw_armour_class = true;
         }
+
+        if (you.duration[DUR_ICY_ARMOUR] > 0)
+            remove_ice_armour();
     }
 
     if (strength <= 0)

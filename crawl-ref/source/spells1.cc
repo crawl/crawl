@@ -187,10 +187,11 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
             // Controlling teleport contaminates the player. -- bwr
             if (!wizard_blink)
                 contaminate_player( 1, true );
-        }
 
-        if (!wizard_blink && you.duration[DUR_CONDENSATION_SHIELD] > 0)
-            remove_condensation_shield();
+
+            if (!wizard_blink && you.duration[DUR_CONDENSATION_SHIELD] > 0)
+                remove_condensation_shield();
+        }
     }
 
     crawl_state.cancel_cmd_again();
@@ -1338,6 +1339,12 @@ void extension(int pow)
 
     if (contamination)
         contaminate_player( contamination, true );
+}
+
+void remove_ice_armour() {
+    mpr("Your icy armour melts away.", MSGCH_DURATION);
+    you.redraw_armour_class = true;
+    you.duration[DUR_ICY_ARMOUR] = 0;
 }
 
 void ice_armour(int pow, bool extending)
