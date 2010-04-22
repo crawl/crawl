@@ -2771,27 +2771,22 @@ static bool _find_subtype_by_name(item_def &item,
     {
         item.sub_type = i;
 
+        int npluses = 1;
         if (base_type == OBJ_BOOKS && i == BOOK_MANUAL)
+            npluses = NUM_SKILLS;
+        else if (base_type == OBJ_MISCELLANY && i == MISC_RUNE_OF_ZOT)
+            npluses = NUM_RUNE_TYPES;
+
+        for (int j = 0; j < npluses; ++j)
         {
-            for (int j = 0; j < NUM_SKILLS; ++j)
+            item.plus = j;
+
+            if (name == lowercase_string(item.name(DESC_PLAIN)))
             {
-                if (!skill_name(j))
-                    continue;
-
-                item.plus = j;
-
-                if (name == lowercase_string(item.name(DESC_PLAIN)))
-                {
-                    type_wanted = i;
-                    i = ntypes;
-                    break;
-                }
+                type_wanted = i;
+                i = ntypes;
+                break;
             }
-        }
-        else if (name == lowercase_string(item.name(DESC_PLAIN)))
-        {
-            type_wanted = i;
-            break;
         }
     }
 
@@ -2836,6 +2831,7 @@ item_def find_item_type(object_class_type base_type, std::string name)
         0,              // gold         -- handled specially
         0,              // "gemstones"  -- no items of type
     };
+    COMPILE_CHECK(sizeof(max_subtype)/sizeof(int) == NUM_OBJECT_CLASSES, c1);
 
     if (base_type == OBJ_UNASSIGNED)
     {
