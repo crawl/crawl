@@ -62,26 +62,8 @@ static void _show_name_prompt(int where)
     textcolor( LIGHTGREY );
 }
 
-static void _preprocess_character_name(std::string &name, bool blankOK)
+bool is_good_name(const std::string& name, bool blankOK, bool verbose)
 {
-    if (name.empty() && blankOK && Options.prev_name.length()
-        && Options.remember_name)
-    {
-        name = Options.prev_name;
-    }
-
-    // '.', '?' and '*' are blanked.
-    if (name.length() == 1
-        && (name[0] == '.' || name[0] == '*' || name[0] == '?'))
-    {
-        name = "";
-    }
-}
-
-bool is_good_name(std::string &name, bool blankOK, bool verbose)
-{
-    _preprocess_character_name(name, blankOK);
-
     // verification begins here {dlb}:
     if (name.empty())
     {
