@@ -3702,6 +3702,177 @@ static bool _choose_book()
     }
 }
 
+static bool _choose_priest()
+{
+    if (ng.species == SP_DEMONSPAWN || ng.species == SP_MUMMY
+        || ng.species == SP_GHOUL || ng.species == SP_VAMPIRE)
+    {
+        ng.religion = GOD_YREDELEMNUL;
+    }
+    else
+    {
+        const god_type gods[3] = { GOD_ZIN, GOD_YREDELEMNUL, GOD_BEOGH };
+
+        // Disallow invalid choices.
+        if (religion_restriction(Options.priest, ng) == CC_BANNED)
+            Options.priest = GOD_NO_GOD;
+
+        if (Options.priest != GOD_NO_GOD && Options.priest != GOD_RANDOM)
+            ng_pr = ng.religion = static_cast<god_type>(Options.priest);
+        else if (Options.random_pick || Options.priest == GOD_RANDOM)
+        {
+            bool did_chose = false;
+            if (Options.good_random)
+            {
+                int count = 0;
+                for (int i = 0; i < 3; i++)
+                {
+                    if (religion_restriction(gods[i], ng) == CC_BANNED)
+                        continue;
+
+                    if (religion_restriction(gods[i], ng) == CC_UNRESTRICTED
+                        && one_chance_in(++count))
+                    {
+                        ng.religion = gods[i];
+                        did_chose = true;
+                    }
+                }
+            }
+
+            if (!did_chose)
+            {
+                ng.religion = (coinflip() ? GOD_YREDELEMNUL : GOD_ZIN);
+
+                // For orcs 50% chance of Beogh instead.
+                if (ng.species == SP_HILL_ORC && coinflip())
+                    ng.religion = GOD_BEOGH;
+            }
+            ng_pr = GOD_RANDOM;
+        }
+        else
+        {
+            _print_character_info_ng();
+
+            textcolor(CYAN);
+            cprintf("\nWhich god do you wish to serve?\n");
+
+            const char* god_name[3] = {"Zin (for traditional priests)",
+                                       "Yredelemnul (for priests of death)",
+                                       "Beogh (for priests of Orcs)"};
+
+            for (int i = 0; i < 3; i++)
+            {
+                if (religion_restriction(gods[i], ng) == CC_BANNED)
+                    continue;
+
+                if (religion_restriction(gods[i], ng) == CC_UNRESTRICTED)
+                    textcolor(LIGHTGREY);
+                else
+                    textcolor(DARKGREY);
+
+                const char letter = 'a' + i;
+                cprintf("%c - %s\n", letter, god_name[i]);
+            }
+
+            textcolor(BROWN);
+            cprintf("\n* - Random choice; + - Good random choice\n"
+                        "Bksp - Back to species and background selection; "
+                        "X - Quit\n");
+
+            if (religion_restriction(Options.prev_pr, ng) == CC_BANNED)
+                Options.prev_pr = GOD_NO_GOD;
+
+            if (Options.prev_pr != GOD_NO_GOD)
+            {
+                textcolor(BROWN);
+                cprintf("\nEnter - %s\n",
+                        Options.prev_pr == GOD_ZIN         ? "Zin" :
+                        Options.prev_pr == GOD_YREDELEMNUL ? "Yredelemnul" :
+                        Options.prev_pr == GOD_BEOGH       ? "Beogh"
+                                                           : "Random");
+            }
+
+            int keyn;
+            do
+            {
+                keyn = getch_ck();
+
+                switch (keyn)
+                {
+                case 'X':
+                    cprintf("\nGoodbye!");
+                    end(0);
+                    break;
+                case CK_BKSP:
+                case ESCAPE:
+                case ' ':
+                    return (false);
+                case '\r':
+                case '\n':
+                    if (Options.prev_pr == GOD_NO_GOD
+                        || Options.prev_pr == GOD_BEOGH
+                           && you.species != SP_HILL_ORC)
+                    {
+                        break;
+                    }
+                    if (Options.prev_pr != GOD_RANDOM)
+                    {
+                        Options.prev_pr
+                                 = static_cast<god_type>(Options.prev_pr);
+                        ng.religion = Options.prev_pr;
+                        break;
+                    }
+                    keyn = '*'; // for ng_pr setting
+                    // fall-through for random
+                case '+':
+                    if (keyn == '+')
+                    {
+                        int count = 0;
+                        for (int i = 0; i < 3; i++)
+                        {
+                            if (religion_restriction(gods[i], ng) == CC_BANNED)
+                                continue;
+
+                            if (religion_restriction(gods[i], ng)
+                                    == CC_UNRESTRICTED
+                                && one_chance_in(++count))
+                            {
+                                ng.religion = gods[i];
+                            }
+                        }
+                        if (count > 0)
+                            break;
+                    }
+                    // intentional fall-through
+                case '*':
+                    ng.religion = coinflip() ? GOD_ZIN : GOD_YREDELEMNUL;
+                    if (ng.species == SP_HILL_ORC && coinflip())
+                        ng.religion = GOD_BEOGH;
+                    break;
+                case 'a':
+                    ng.religion = GOD_ZIN;
+                    break;
+                case 'b':
+                    ng.religion = GOD_YREDELEMNUL;
+                    break;
+                case 'c':
+                    if (ng.species == SP_HILL_ORC)
+                    {
+                        ng.religion = GOD_BEOGH;
+                        break;
+                    } // else fall through
+                default:
+                    break;
+                }
+            }
+            while (ng.religion == GOD_NO_GOD);
+
+            ng_pr = (keyn == '*' ? GOD_RANDOM : ng.religion);
+        }
+    }
+    return (true);
+}
+
 static bool _choose_chaos_knight()
 {
     const god_type gods[3] = { GOD_XOM, GOD_MAKHLEB, GOD_LUGONU };
@@ -3854,12 +4025,15 @@ static bool _choose_chaos_knight()
     return (true);
 }
 
+// For jobs with god choice, fill in ng.religion.
 static bool _choose_god()
 {
     switch (ng.job)
     {
     case JOB_CHAOS_KNIGHT:
         return (_choose_chaos_knight());
+    case JOB_PRIEST:
+        return (_choose_priest());
     default:
         return (true);
     }
@@ -4135,7 +4309,6 @@ static void _update_weapon()
 
 bool _give_items_skills()
 {
-    char keyn;
     int weap_skill = 0;
 
     ng.init(you); // XXX
@@ -4268,174 +4441,8 @@ bool _give_items_skills()
         break;
 
     case JOB_PRIEST:
+        you.religion = ng.religion;
         you.piety = 45;
-
-        // Set gods.
-        if (you.species == SP_DEMONSPAWN || you.species == SP_MUMMY
-            || you.species == SP_GHOUL || you.species == SP_VAMPIRE)
-        {
-            you.religion = GOD_YREDELEMNUL;
-        }
-        else
-        {
-            const god_type gods[3] = { GOD_ZIN, GOD_YREDELEMNUL, GOD_BEOGH };
-
-            // Disallow invalid choices.
-            if (religion_restriction(Options.priest, ng) == CC_BANNED)
-                Options.priest = GOD_NO_GOD;
-
-            if (Options.priest != GOD_NO_GOD && Options.priest != GOD_RANDOM)
-                ng_pr = you.religion = static_cast<god_type>(Options.priest);
-            else if (Options.random_pick || Options.priest == GOD_RANDOM)
-            {
-                bool did_chose = false;
-                if (Options.good_random)
-                {
-                    int count = 0;
-                    for (int i = 0; i < 3; i++)
-                    {
-                        if (religion_restriction(gods[i], ng) == CC_BANNED)
-                            continue;
-
-                        if (religion_restriction(gods[i], ng) == CC_UNRESTRICTED
-                            && one_chance_in(++count))
-                        {
-                            you.religion = gods[i];
-                            did_chose = true;
-                        }
-                    }
-                }
-
-                if (!did_chose)
-                {
-                    you.religion = (coinflip() ? GOD_YREDELEMNUL : GOD_ZIN);
-
-                    // For orcs 50% chance of Beogh instead.
-                    if (you.species == SP_HILL_ORC && coinflip())
-                        you.religion = GOD_BEOGH;
-                }
-                ng_pr = GOD_RANDOM;
-            }
-            else
-            {
-                _print_character_info();
-
-                textcolor( CYAN );
-                cprintf("\nWhich god do you wish to serve?\n");
-
-                const char* god_name[3] = {"Zin (for traditional priests)",
-                                           "Yredelemnul (for priests of death)",
-                                           "Beogh (for priests of Orcs)"};
-
-                for (int i = 0; i < 3; i++)
-                {
-                    if (religion_restriction(gods[i], ng) == CC_BANNED)
-                        continue;
-
-                    if (religion_restriction(gods[i], ng) == CC_UNRESTRICTED)
-                        textcolor(LIGHTGREY);
-                    else
-                        textcolor(DARKGREY);
-
-                    const char letter = 'a' + i;
-                    cprintf("%c - %s\n", letter, god_name[i]);
-                }
-
-                textcolor( BROWN );
-                cprintf("\n* - Random choice; + - Good random choice\n"
-                            "Bksp - Back to species and background selection; "
-                            "X - Quit\n");
-
-                if (religion_restriction(Options.prev_pr, ng) == CC_BANNED)
-                    Options.prev_pr = GOD_NO_GOD;
-
-                if (Options.prev_pr != GOD_NO_GOD)
-                {
-                    textcolor(BROWN);
-                    cprintf("\nEnter - %s\n",
-                            Options.prev_pr == GOD_ZIN         ? "Zin" :
-                            Options.prev_pr == GOD_YREDELEMNUL ? "Yredelemnul" :
-                            Options.prev_pr == GOD_BEOGH       ? "Beogh"
-                                                               : "Random");
-                }
-
-                do
-                {
-                    keyn = getch_ck();
-
-                    switch (keyn)
-                    {
-                    case 'X':
-                        cprintf("\nGoodbye!");
-                        end(0);
-                        break;
-                    case CK_BKSP:
-                    case ESCAPE:
-                    case ' ':
-                        return (false);
-                    case '\r':
-                    case '\n':
-                        if (Options.prev_pr == GOD_NO_GOD
-                            || Options.prev_pr == GOD_BEOGH
-                               && you.species != SP_HILL_ORC)
-                        {
-                            break;
-                        }
-                        if (Options.prev_pr != GOD_RANDOM)
-                        {
-                            Options.prev_pr
-                                     = static_cast<god_type>(Options.prev_pr);
-                            you.religion = Options.prev_pr;
-                            break;
-                        }
-                        keyn = '*'; // for ng_pr setting
-                        // fall-through for random
-                    case '+':
-                        if (keyn == '+')
-                        {
-                            int count = 0;
-                            for (int i = 0; i < 3; i++)
-                            {
-                                if (religion_restriction(gods[i], ng) == CC_BANNED)
-                                    continue;
-
-                                if (religion_restriction(gods[i], ng)
-                                        == CC_UNRESTRICTED
-                                    && one_chance_in(++count))
-                                {
-                                    you.religion = gods[i];
-                                }
-                            }
-                            if (count > 0)
-                                break;
-                        }
-                        // intentional fall-through
-                    case '*':
-                        you.religion = coinflip() ? GOD_ZIN : GOD_YREDELEMNUL;
-                        if (you.species == SP_HILL_ORC && coinflip())
-                            you.religion = GOD_BEOGH;
-                        break;
-                    case 'a':
-                        you.religion = GOD_ZIN;
-                        break;
-                    case 'b':
-                        you.religion = GOD_YREDELEMNUL;
-                        break;
-                    case 'c':
-                        if (you.species == SP_HILL_ORC)
-                        {
-                            you.religion = GOD_BEOGH;
-                            break;
-                        } // else fall through
-                    default:
-                        break;
-                    }
-                }
-                while (you.religion == GOD_NO_GOD);
-
-                ng_pr = (keyn == '*' ? GOD_RANDOM : you.religion);
-            }
-        }
 
         if (you.religion == GOD_BEOGH)
             _newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_HAND_AXE);
