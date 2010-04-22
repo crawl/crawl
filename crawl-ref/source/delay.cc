@@ -48,6 +48,7 @@
 #include "random.h"
 #include "religion.h"
 #include "godconduct.h"
+#include "spells1.h"
 #include "spells4.h"
 #include "spl-util.h"
 #include "stairs.h"
