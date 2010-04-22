@@ -2764,7 +2764,7 @@ void TextItem::render()
                        m_min_coord.x, m_min_coord.y);
         m_dirty = false;
     }
-    m_font_buf.draw();
+    m_font_buf.draw(NULL, NULL);
 #else
     // Clean the drawing area first
     // clear_to_end_of_line does not work for us
@@ -2874,7 +2874,7 @@ bool NoSelectTextItem::can_be_highlighted() const
 TextTileItem::TextTileItem()
 {
     for (int i = 0; i < TEX_MAX; i++)
-        m_tile_buf[i].set_tex(&tiles.get_image_manager().m_textures[i]);
+        m_tile_buf[i].set_tex(&tiles.get_image_manager()->m_textures[i]);
 }
 
 TextTileItem::~TextTileItem()
@@ -2928,9 +2928,9 @@ void TextTileItem::render()
         m_dirty = false;
     }
 
-    m_font_buf.draw();
+    m_font_buf.draw(NULL, NULL);
     for (int i = 0; i < TEX_MAX; i++)
-        m_tile_buf[i].draw();
+        m_tile_buf[i].draw(NULL, NULL);
 }
 
 SaveMenuItem::SaveMenuItem()
@@ -4161,7 +4161,7 @@ void BoxMenuHighlighter::render()
        return;
     _place_items();
 #ifdef USE_TILE
-    m_line_buf.draw();
+    m_line_buf.draw(NULL, NULL);
 #else
     if (m_active_item != NULL)
         m_active_item->render();
@@ -4223,7 +4223,7 @@ void BlackWhiteHighlighter::render()
     if (m_active_item != NULL)
     {
 #ifdef USE_TILE
-        m_shape_buf.draw();
+        m_shape_buf.draw(NULL, NULL);
 #endif
         m_active_item->render();
     }
