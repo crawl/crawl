@@ -1341,7 +1341,8 @@ void extension(int pow)
         contaminate_player( contamination, true );
 }
 
-void remove_ice_armour() {
+void remove_ice_armour()
+{
     mpr("Your icy armour melts away.", MSGCH_DURATION);
     you.redraw_armour_class = true;
     you.duration[DUR_ICY_ARMOUR] = 0;
