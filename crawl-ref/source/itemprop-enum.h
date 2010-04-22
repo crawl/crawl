@@ -255,6 +255,7 @@ enum missile_type
 
 enum rune_type
 {
+#if TAG_MAJOR_VERSION == 22
     // Note: that runes DIS-SWAMP have the same numeric value as the branch
     RUNE_DIS         = BRANCH_DIS,
     RUNE_GEHENNA     = BRANCH_GEHENNA,
@@ -280,6 +281,29 @@ enum rune_type
     RUNE_GLOORX_VLOQ,
     NUM_RUNE_TYPES,             // should always be last
     RUNE_NONE
+#else
+    RUNE_SWAMP,
+    RUNE_SNAKE_PIT,
+    RUNE_SHOALS,
+    RUNE_SLIME_PITS,
+    RUNE_ELVEN_HALLS, // unused
+    RUNE_VAULTS,
+    RUNE_TOMB,
+
+    RUNE_DIS,
+    RUNE_GEHENNA,
+    RUNE_COCYTUS,
+    RUNE_TARTARUS,
+
+    RUNE_ABYSSAL,
+
+    RUNE_DEMONIC,
+    RUNE_MNOLEG,
+    RUNE_LOM_LOBON,
+    RUNE_CEREBOV,
+    RUNE_GLOORX_VLOQ,
+    NUM_RUNE_TYPES             // should always be last
+#endif
 };
 
 enum scroll_type
