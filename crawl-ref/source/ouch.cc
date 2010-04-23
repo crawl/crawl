@@ -37,6 +37,7 @@
 #include "beam.h"
 #include "chardump.h"
 #include "delay.h"
+#include "dgnevent.h"
 #include "effects.h"
 #include "env.h"
 #include "files.h"
@@ -1045,6 +1046,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
                 && you.hp <= (you.hp_max * Options.hp_warning) / 100)
             {
                 mpr( "* * * LOW HITPOINT WARNING * * *", MSGCH_DANGER );
+                dungeon_events.fire_event(DET_HP_WARNING);
             }
 
             _xom_checks_damage(death_type, dam, death_source);
