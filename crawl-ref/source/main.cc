@@ -200,7 +200,6 @@ static void _wanderer_startup_message();
 static void _god_greeting_message(bool game_start);
 static void _take_starting_note();
 static void _startup_tutorial();
-static void _print_tutorial_welcome();
 
 static void _compile_time_asserts();
 
@@ -298,10 +297,6 @@ int main(int argc, char *argv[])
 
     if (game_start)
     {
-        if (crawl_state.game_is_tutorial())
-        {
-            _print_tutorial_welcome();
-        }
         // TODO: convert this to the hints mode
         if (Tutorial.tutorial_left)
             _startup_tutorial();
@@ -491,23 +486,6 @@ static void _startup_tutorial()
     const int ch = getch_ck();
     if (ch != ESCAPE)
         tut_starting_screen();
-}
-
-static void _print_tutorial_welcome()
-{
-#ifdef USE_TILE
-    msg::streams(MSGCH_TUTORIAL)
-        << "Welcome to the tutorial. We start with basic movement."
-        << "You can <white>click</white> on a square to move there."
-        << "You can also use <white>numpad</white> or vi-keys to move."
-        << std::endl;
-#else
-    msg::streams(MSGCH_TUTORIAL)
-        << "Welcome to the tutorial. We start with basic movement."
-        << "You can use <white>numpad</white> or vi-keys to move."
-        << std::endl;
-#endif
-    // TODO: draw numpad / vi-keys chart here
 }
 
 #ifdef WIZARD
