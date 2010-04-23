@@ -342,9 +342,7 @@ int kbhit()
 {
     // Look for the presence of any keyboard events in the queue.
     int count = wm->get_event_count(WM_KEYDOWN);
-
-    ASSERT(count != -1);
-    return (count == 1 ? 1 : 0);
+    return (count > 0);
 }
 
 #ifdef UNIX
