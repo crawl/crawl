@@ -364,15 +364,16 @@ function iter.stack_destroy(coord, extra)
   local stack = dgn.items_at(_x, _y)
 
   while #stack ~= 0 do
+    local name = stack[1].name()
     if stack[1].destroy() then
-      if #stack >= dgn.items_at(_x, _y) then
-        error("destroyed an item ('" .. stack[1].name() .. "'), but the "
+      if #stack <= #dgn.items_at(_x, _y) then
+        error("destroyed an item ('" .. name .. "'), but the "
               .. "stack size is the same")
         return
       end
       stack = dgn.items_at(_x, _y)
     else
-      error("couldn't destroy item '" .. stack[1].name() .. "'")
+      error("couldn't destroy item '" .. name .. "'")
       return false
     end
   end

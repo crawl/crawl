@@ -4639,6 +4639,9 @@ static void _dgn_place_item_explicit(const item_spec &spec,
             item.plus = spec.plus;
             item_colour(item);
         }
+
+        if (props.exists("uncursed"))
+            do_uncurse_item(item);
     }
 
     // [ds] Don't modify dungeon to accommodate items - vault
