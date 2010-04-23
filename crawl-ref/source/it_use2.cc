@@ -546,14 +546,10 @@ void unequip_weapon_effect(item_def& item, bool showMsgs)
             case SPWPN_VAMPIRICISM:
                 if (showMsgs)
                 {
-                    if(you.species == SP_VAMPIRE)
-                    {
+                    if (you.species == SP_VAMPIRE)
                         mpr("You feel your glee subside.");
-                    }
                     else
-                    {
                         mpr("You feel the dreadful sensation subside.");
-                    }
                 }
                 break;
 
