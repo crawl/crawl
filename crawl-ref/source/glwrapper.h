@@ -63,13 +63,13 @@ enum drawing_modes
 
 struct GLPrimitive
 {
-    GLPrimitive(long unsigned int sz, size_t ct, unsigned int vs,
+    GLPrimitive(size_t sz, size_t ct, unsigned int vs,
                 const void* v_pt, const void *c_pt, const void *t_pt);
 
     // Primitive Metadata
     drawing_modes mode;
     unsigned int vert_size; // Coords per vertex
-    long unsigned int size;
+    size_t size;
     size_t count;
 
     // Primitive Data

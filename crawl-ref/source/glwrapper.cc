@@ -4,7 +4,7 @@
 
 /////////////////////////////////////////////////////////////////////////////
 // GLPrimitive
-GLPrimitive::GLPrimitive(long unsigned int sz, size_t ct, unsigned int vs,
+GLPrimitive::GLPrimitive(size_t sz, size_t ct, unsigned int vs,
                          const void* v_pt, const void *c_pt, const void *t_pt) :
     mode(GLW_QUADS),
     vert_size(vs),
