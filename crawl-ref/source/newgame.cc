@@ -29,8 +29,6 @@
 #include "stuff.h"
 #include "tutorial.h"
 
-static bool _choose_species(newgame_def* ng);
-static bool _choose_job(newgame_def* ng);
 static bool _choose_weapon(newgame_def* ng);
 static bool _choose_book(newgame_def* ng);
 static bool _choose_god(newgame_def* ng);
@@ -43,88 +41,79 @@ static bool _choose_wand(newgame_def* ng);
 newgame_def::newgame_def()
     : name(), species(SP_UNKNOWN), job(JOB_UNKNOWN),
       weapon(NUM_WEAPONS), book(SBT_NO_SELECTION),
-      religion(GOD_NO_GOD), wand(SWT_NO_SELECTION)
+      religion(GOD_NO_GOD), wand(SWT_NO_SELECTION),
+      fully_random(false)
 {
 }
 
-static char ng_race, ng_cls;
-static bool ng_random;
-static int  ng_ck;
-static int  ng_weapon;
-static int  ng_book;
-static int  ng_wand;
-static god_type ng_pr;
-
-static void _reset_newgame_options(void)
-{
-    ng_race   = ng_cls = 0;
-    ng_random = false;
-    ng_ck     = GOD_NO_GOD;
-    ng_pr     = GOD_NO_GOD;
-    ng_weapon = WPN_UNKNOWN;
-    ng_book   = SBT_NO_SELECTION;
-    ng_wand   = SWT_NO_SELECTION;
-}
+// XXX: temporary global.
+static newgame_def ngchoice;
 
 static void _save_newgame_options(void)
 {
     // Note that we store species and job directly here, whereas up until
     // now we've been storing the hotkey.
-    Options.prev_race       = ng_race;
-    Options.prev_cls        = ng_cls;
-    Options.prev_randpick   = ng_random;
-    Options.prev_ck         = ng_ck;
-    Options.prev_pr         = ng_pr;
-    Options.prev_weapon     = ng_weapon;
-    Options.prev_book       = ng_book;
-    Options.prev_wand       = ng_wand;
+    Options.prev_game = ngchoice;
 
     write_newgame_options_file();
-}
-
-static void _set_startup_options(void)
-{
-    Options.race         = Options.prev_race;
-    Options.cls          = Options.prev_cls;
-    Options.chaos_knight = Options.prev_ck;
-    Options.priest       = Options.prev_pr;
-    Options.weapon       = Options.prev_weapon;
-    Options.book         = Options.prev_book;
-    Options.wand         = Options.prev_wand;
 }
 
 static bool _prev_startup_options_set(void)
 {
     // Are these two enough? They should be, in theory, since we'll
     // remember the player's weapon and god choices.
-    return (Options.prev_race && Options.prev_cls);
+    return (Options.prev_game.species != SP_UNKNOWN
+            && Options.prev_game.job != JOB_UNKNOWN);
 }
 
-static std::string _get_opt_species_name(char species)
+static bool _is_random_species(species_type sp)
 {
-    species_type pspecies = get_species(letter_to_index(species));
-    return (pspecies == SP_UNKNOWN ? "Random" : species_name(pspecies, 1));
+    return (sp == SP_RANDOM || sp == SP_VIABLE);
 }
 
-static std::string _get_opt_job_name(char ojob)
+static bool _is_random_job(job_type job)
 {
-    job_type pjob = get_job(letter_to_index(ojob));
-    return (pjob == JOB_UNKNOWN ? "Random" : get_job_name(pjob));
+    return (job == JOB_RANDOM || job == JOB_VIABLE);
 }
 
-static std::string _prev_startup_description(void)
+static bool _is_random_choice(const newgame_def& choice)
 {
-    if (Options.prev_race == '*' && Options.prev_cls == '*')
-        Options.prev_randpick = true;
+    return (_is_random_species(choice.species)
+            && _is_random_job(choice.job));
+}
 
-    if (Options.prev_randpick)
+static bool _is_random_viable_choice(const newgame_def& choice)
+{
+    return (_is_random_choice(choice) &&
+            (choice.job == JOB_VIABLE || choice.species == SP_VIABLE));
+}
+
+// XXX remove this
+static bool _viable_random(const newgame_def& choice)
+{
+    return (choice.fully_random && choice.species == SP_VIABLE);
+}
+
+static std::string _prev_startup_description()
+{
+    const newgame_def& prev = Options.prev_game;
+    if (_is_random_viable_choice(prev))
+        return "Viable character";
+    else if (_is_random_choice(prev))
         return "Random character";
-
-    if (Options.prev_cls == '?')
-        return "Random " + _get_opt_species_name(Options.prev_race);
-
-    return _get_opt_species_name(Options.prev_race) + " " +
-           _get_opt_job_name(Options.prev_cls);
+    else if (_is_random_job(prev.job))
+    {
+        const std::string j = (prev.job == JOB_RANDOM ? "Random " : "Viable ");
+        return (j + species_name(prev.species, 1));
+    }
+    else if (_is_random_species(prev.species))
+    {
+        const std::string s = (prev.species == SP_RANDOM ? "Random "
+                                                         : "Viable ");
+        return (s + get_job_name(prev.job));
+    }
+    else
+        return (species_name(prev.species, 1) + " " + get_job_name(prev.job));
 }
 
 static std::string _welcome(const newgame_def* ng)
@@ -176,47 +165,6 @@ static bool _is_species_valid_choice(species_type species)
 
     // Draconians other than red return false.
     return (false);
-}
-
-static void _pick_random_species_and_job(newgame_def* ng,
-                                         bool unrestricted_only)
-{
-    // We pick both species and job at the same time to give each
-    // valid possibility a fair chance.  For proof that this will
-    // work correctly see the proof in religion.cc:handle_god_time().
-    int job_count = 0;
-
-    species_type species = SP_UNKNOWN;
-    job_type job = JOB_UNKNOWN;
-
-    // For each valid (species, job) choose one randomly.
-    for (int sp = 0; sp < NUM_SPECIES; sp++)
-    {
-        // We only want draconians counted once in this loop...
-        if (!_is_species_valid_choice(static_cast<species_type>(sp)))
-            continue;
-
-        for (int cl = JOB_FIGHTER; cl < NUM_JOBS; cl++)
-        {
-            if (is_good_combination(static_cast<species_type>(sp),
-                                    static_cast<job_type>(cl),
-                                    unrestricted_only))
-            {
-                job_count++;
-                if (one_chance_in(job_count))
-                {
-                    species = static_cast<species_type>(sp);
-                    job = static_cast<job_type>(cl);
-                }
-            }
-        }
-    }
-
-    // At least one job must exist in the game, else we're in big trouble.
-    ASSERT(species != SP_UNKNOWN && job != JOB_UNKNOWN);
-
-    ng->species = species;
-    ng->job = job;
 }
 
 // Returns true if a save game exists with given name.
@@ -288,75 +236,158 @@ undead_state_type get_undead_state(const species_type sp)
     }
 }
 
-static void _setup_tutorial_character(newgame_def* ng)
+static void _setup_tutorial_character(newgame_def* ng_choice)
 {
-    ng->species = SP_HIGH_ELF;
-    ng->job = JOB_FIGHTER;
-
-    Options.weapon = WPN_MACE;
+    ng_choice->species = SP_HIGH_ELF;
+    ng_choice->job = JOB_FIGHTER;
+    ng_choice->weapon = WPN_MACE;
 }
 
-static void _choose_species_job(newgame_def* ng)
+static void _resolve_species(newgame_def* ng, const newgame_def* ng_choice)
 {
-    if (Options.random_pick)
+    // Don't overwrite existing species, unless we want it blanked.
+    if (ng->species != SP_UNKNOWN && ng_choice->species != SP_UNKNOWN)
+        return;
+
+    bool viable = false;
+    switch (ng_choice->species)
     {
-        _pick_random_species_and_job(ng, Options.good_random);
-        ng_random = true;
-    }
-    else if (crawl_state.game_is_tutorial())
-    {
-        _setup_tutorial_character(ng);
-    }
-    else
-    {
-        if (Options.race != 0 && Options.cls != 0
-            && Options.race != '*' && Options.cls != '*'
-            && !job_allowed(get_species(letter_to_index(Options.race)),
-                            get_job(letter_to_index(Options.cls))))
+    case SP_UNKNOWN:
+        ng->species = SP_UNKNOWN;
+        return;
+
+    case SP_VIABLE:
+        viable = true;
+        // intentional fall-through
+    case SP_RANDOM:
+        if (ng->job == JOB_UNKNOWN)
         {
-            end(1, false,
-                "Incompatible species and background specified in options file.");
+            // any species will do
+            ng->species = get_species(random2(ng_num_species()));
         }
-        // Repeat until valid species/background combination found.
-        while (_choose_species(ng) && _choose_job(ng));
+        else
+        {
+            // depending on viable flag, pick either a
+            // viable combo or a random combo
+            do
+            {
+                ng->species = get_species(random2(ng_num_species()));
+            }
+            while (!is_good_combination(ng->species, ng->job, viable));
+        }
+        return;
+
+    default:
+        ng->species = ng_choice->species;
+        return;
     }
 }
 
-// For completely random combinations (!, #, or Options.random_pick)
+static void _resolve_job(newgame_def* ng, const newgame_def* ng_choice)
+{
+    if (ng->job != JOB_UNKNOWN && ng_choice->job != JOB_UNKNOWN)
+        return;
+
+    bool viable = false;
+    switch (ng_choice->job)
+    {
+    case JOB_UNKNOWN:
+        ng->job = JOB_UNKNOWN;
+        return;
+
+    case JOB_VIABLE:
+        viable = true;
+        // intentional fall-through
+    case JOB_RANDOM:
+        if (ng->species == SP_UNKNOWN)
+        {
+            // any job will do
+            ng->job = get_job(random2(ng_num_jobs()));
+        }
+        else
+        {
+            // depending on viable flag, pick either a
+            // viable combo or a random combo
+            do
+            {
+                ng->job = get_job(random2(ng_num_jobs()));
+            }
+            while (!is_good_combination(ng->species, ng->job, viable));
+        }
+        return;
+
+    default:
+        ng->job = ng_choice->job;
+        return;
+    }
+}
+
+static void _resolve_species_job(newgame_def* ng, const newgame_def* ng_choice)
+{
+    _resolve_species(ng, ng_choice);
+    _resolve_job(ng, ng_choice);
+}
+
+static void _prompt_species(const newgame_def* ng, newgame_def* ng_choice);
+static void _prompt_job(const newgame_def* ng, newgame_def* ng_choice);
+
+static void _choose_species_job(newgame_def* ng, newgame_def* ng_choice)
+{
+    _resolve_species_job(ng, ng_choice);
+
+    while (ng_choice->species == SP_UNKNOWN || ng_choice->job == JOB_UNKNOWN)
+    {
+        if (ng_choice->species == SP_UNKNOWN)
+            _prompt_species(ng, ng_choice);
+        _resolve_species_job(ng, ng_choice);
+        if (ng_choice->job == JOB_UNKNOWN)
+            _prompt_job(ng, ng_choice);
+        _resolve_species_job(ng, ng_choice);
+    }
+
+    if (!job_allowed(ng->species, ng->job))
+    {
+        // Either an invalid combination was passed in through options,
+        // or we messed up.
+        end(1, false,
+            "Incompatible species and background specified in options file.");
+    }
+}
+
+// For completely random combinations (!, #, or Options.game.fully_random)
 // reroll characters until the player accepts one of them or quits.
 static bool _reroll_random(newgame_def* ng)
 {
-    if (Options.random_pick)
-    {
-        clrscr();
+    clrscr();
 
-        std::string specs = species_name(ng->species, 1);
-        if (specs.length() > 79)
-            specs = specs.substr(0, 79);
+    std::string specs = species_name(ng->species, 1);
+    if (specs.length() > 79)
+        specs = specs.substr(0, 79);
 
-        cprintf("You are a%s %s %s.\n",
-                (is_vowel( specs[0] )) ? "n" : "", specs.c_str(),
-                get_job_name(ng->job));
+    cprintf("You are a%s %s %s.\n",
+            (is_vowel( specs[0] )) ? "n" : "", specs.c_str(),
+            get_job_name(ng->job));
 
-        cprintf("\nDo you want to play this combination? (ynq) [y]");
-        char c = getchm();
-        if (c == ESCAPE || tolower(c) == 'q')
-            end(0);
-        if (tolower(c) == 'n')
-            return (true);
-    }
-    return (false);
+    cprintf("\nDo you want to play this combination? (ynq) [y]");
+    char c = getchm();
+    if (c == ESCAPE || tolower(c) == 'q')
+        end(0);
+    return (tolower(c) == 'n');
 }
 
 static void _choose_char(newgame_def* ng)
 {
+    ngchoice = Options.game;
+    ngchoice.name = ng->name;
+
+    if (crawl_state.game_is_tutorial())
+        _setup_tutorial_character(&ngchoice);
+
     while (true)
     {
-        _reset_newgame_options();
+        _choose_species_job(ng, &ngchoice);
 
-        _choose_species_job(ng);
-
-        if (_reroll_random(ng))
+        if (ngchoice.fully_random && _reroll_random(ng))
             continue;
 
         if (_choose_weapon(ng) && _choose_book(ng)
@@ -369,15 +400,10 @@ static void _choose_char(newgame_def* ng)
         // Else choose again, name stays same.
         const std::string old_name = ng->name;
 
-        Options.prev_randpick = false;
-        Options.prev_race     = ng_race;
-        Options.prev_cls      = ng_cls;
-        Options.prev_weapon   = ng_weapon;
-        // ck, pr and book are asked last --> don't need to be changed
+        Options.prev_game = ngchoice;
 
         *ng = newgame_def();
-
-        Options.reset_startup_options();
+        ngchoice = newgame_def();
 
         ng->name = old_name;
     }
@@ -403,7 +429,7 @@ bool choose_game(newgame_def* ng)
     {
         if (_check_saved_game(ng->name))
         {
-            Options.prev_name = ng->name;
+            Options.prev_game.name = ng->name;
             save_player_name();
             return (false);
         }
@@ -533,7 +559,7 @@ static void _construct_species_menu(const newgame_def* ng, MenuFreeform* menu)
 {
     ASSERT(menu != NULL);
     static const int ITEMS_IN_COLUMN = 8;
-    species_type prev_specie = get_species(letter_to_index(Options.prev_race));
+    species_type prev_specie = Options.prev_game.species;
     // Construct the menu, 3 columns
     TextItem* tmp = NULL;
     std::string text;
@@ -694,7 +720,6 @@ static void _construct_species_menu(const newgame_def* ng, MenuFreeform* menu)
     {
         tmp->set_text("Space - Pick background first");
         tmp->set_description_text("Lets you pick your background first");
-
     }
     min_coord.x = X_MARGIN + COLUMN_WIDTH - 4;
     min_coord.y = SPECIAL_KEYS_START_Y + 2;
@@ -707,7 +732,7 @@ static void _construct_species_menu(const newgame_def* ng, MenuFreeform* menu)
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
-    if (Options.prev_race)
+    if (Options.prev_game.species != SP_UNKNOWN)
     {
         if (_prev_startup_options_set())
         {
@@ -735,7 +760,7 @@ static void _construct_species_menu(const newgame_def* ng, MenuFreeform* menu)
 // choose_species returns true if the player should also pick a background.
 // This is done because of the '!' option which will pick a random
 // character, obviating the necessity of choosing a class.
-static bool _choose_species(newgame_def* ng)
+static void _prompt_species(const newgame_def* ng, newgame_def* ng_choice)
 {
     PrecisionMenu menu;
     menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
@@ -746,12 +771,6 @@ static bool _choose_species(newgame_def* ng)
     menu.set_active_object(freeform);
 
     int keyn;
-
-    if (Options.cls)
-    {
-        ng->job = get_job(letter_to_index(Options.cls));
-        ng_cls = Options.cls;
-    }
 
     clrscr();
 
@@ -789,22 +808,11 @@ static bool _choose_species(newgame_def* ng)
 
     textcolor( LIGHTGREY );
     // Poll input until we have a conclusive escape or pick
-    bool loop_flag = true;
-    while (loop_flag)
+    while (true)
     {
         menu.draw_menu();
 
-        if (Options.race != 0)
-        {
-            keyn = Options.race;
-        }
-        else
-        {
-            keyn = getch_ck();
-        }
-
-        bool good_random = false;
-        int random_index = -1;
+        keyn = getch_ck();
 
         // First process all the menu entries available
         if (!menu.process_key(keyn))
@@ -816,12 +824,10 @@ static bool _choose_species(newgame_def* ng)
             case ESCAPE:
                 cprintf("\nGoodbye!");
                 end(0);
-                loop_flag = false;
-                break;
+                return;
             case CK_BKSP:
-                ng->species  = SP_UNKNOWN;
-                Options.race = 0;
-                return true;
+                ng_choice->species = SP_UNKNOWN;
+                return;
             default:
                 // if we get this far, we did not get a significant selection
                 // from the menu, nor did we get an escape character
@@ -849,114 +855,59 @@ static bool _choose_species(newgame_def* ng)
             switch (selection_key)
             {
             case '#':
-                good_random = true;
-                // intentional fall-through
+                ng_choice->species = SP_VIABLE;
+                ng_choice->job = JOB_VIABLE;
+                ng_choice->fully_random = true;
+                return;
             case '!':
-                _pick_random_species_and_job(ng, good_random);
-                Options.random_pick = true; // used to give random weapon/god as well
-                ng_random = true;
-                if (good_random)
-                    Options.good_random = true;
-                return false;
+                ng_choice->species = SP_RANDOM;
+                ng_choice->job = JOB_RANDOM;
+                ng_choice->fully_random = true;
+                return;
             case '\t':
                 if (_prev_startup_options_set())
                 {
-                    if (Options.prev_randpick
-                        || Options.prev_race == '*' && Options.prev_cls == '*')
-                    {
-                        Options.random_pick = true;
-                        ng_random = true;
-                        _pick_random_species_and_job(ng, Options.good_random);
-                        return (false);
-                    }
-                    _set_startup_options();
-                    ng->species = SP_UNKNOWN;
-                    ng->job = JOB_UNKNOWN;
-                    return true;
+                    *ng_choice = Options.prev_game;
+                    return;
                 }
-                // ignore Tab because we don't have previous start options set
-                continue;
+                else
+                {
+                    // ignore Tab because we don't have previous start options
+                    continue;
+                }
             case ' ':
-                ng->species  = SP_UNKNOWN;
-                Options.race = 0;
-                return true;
+                ng_choice->species = SP_UNKNOWN;
+                ng_choice->job     = JOB_UNKNOWN;
+                return;
             case '?':
                  // access to the help files
                 list_commands('1');
-                return _choose_species(ng);
+                return _prompt_species(ng, ng_choice);
             case '%':
                 list_commands('%');
-                return _choose_species(ng);
-            case CONTROL('t'):
-                // intentional fallthrough
-                // TODO: remove these when we have a new start menu
-            case 'T':
-                if (!crawl_state.game_is_sprint())
-                {
-                    return !pick_tutorial();
-                }
-                break;
+                return _prompt_species(ng, ng_choice);
             case '+':
-                good_random = true;
-                // intentional fallthrough
+                ng_choice->species = SP_VIABLE;
+                return;
             case '*':
-                // pick a random allowed specie
-                if (ng->job == JOB_UNKNOWN)
-                {
-                    // pick any specie
-                    random_index = random2(ng_num_species());
-                    ng->species = get_species(random_index);
-                    ng_race = selection_key;
-                    return true;
-                }
-                else
-                {
-                    // depending on good_random flag, pick either a
-                    // viable combo or a random combo
-                    do
-                    {
-                        random_index = random2(ng_num_species());
-                    }
-                    while (!is_good_combination(get_species(random_index),
-                                                ng->job, good_random));
-                    ng->species = get_species(random_index);
-                    ng_race = selection_key;
-                    return false;
-                }
+                ng_choice->species = SP_RANDOM;
+                return;
             default:
                 // we have a species selection
-                if (ng->job == JOB_UNKNOWN)
+                species_type species = get_species(letter_to_index(selection_key));
+                if (ng->job == JOB_UNKNOWN
+                    || job_allowed(species, ng->job) != CC_BANNED)
                 {
-                    // we have no restrictions!
-                    ng->species = get_species(letter_to_index(selection_key));
-                    // this is probably used for... something
-                    ng_race = selection_key;
-                    return true; // pick also background
+                    ng_choice->species = species;
+                    return;
                 }
                 else
                 {
-                    // Can we allow this selection?
-                    if (job_allowed(get_species(letter_to_index(selection_key)),
-                                    ng->job) == CC_BANNED)
-                    {
-                        // we cannot, repoll for key
-                        continue;
-                    }
-                    else
-                    {
-                        // we have a valid choice!
-                        ng->species = get_species(letter_to_index(selection_key));
-                        // this is probably used for... something
-                        ng_race = selection_key;
-                        return false; // no need to pick background
-                    }
+                    continue;
                 }
-                break;
             }
         }
     }
-    // we will never reach here
-    return true;
 }
 
 /**
@@ -967,7 +918,7 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
                                         MenuFreeform* menu)
 {
     static const int ITEMS_IN_COLUMN = 10;
-    job_type prev_job = get_job(letter_to_index(Options.prev_cls));
+    job_type prev_job = Options.prev_game.job;
     // Construct the menu, 3 columns
     TextItem* tmp = NULL;
     std::string text;
@@ -1139,7 +1090,7 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
-    if (Options.prev_race)
+    if (Options.prev_game.species != SP_UNKNOWN)
     {
         if (_prev_startup_options_set())
         {
@@ -1166,11 +1117,10 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
 }
 
 /**
- * _choose_job menu
- * returns true if we should also pick a species
- * false if we already have the specie selected
+ * _prompt_job menu
+ * Saves the choice to ng_choice, doesn't resolve random choices.
  */
-static bool _choose_job(newgame_def* ng)
+static void _prompt_job(const newgame_def* ng, newgame_def* ng_choice)
 {
     PrecisionMenu menu;
     menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
@@ -1181,16 +1131,6 @@ static bool _choose_job(newgame_def* ng)
     menu.set_active_object(freeform);
 
     int keyn;
-    ng_cls = 0;
-
-    if (ng->species != SP_UNKNOWN && ng->job != JOB_UNKNOWN)
-        return false;
-
-    if (Options.cls)
-    {
-        ng->job = get_job(letter_to_index(Options.cls));
-        ng_cls = Options.cls;
-    }
 
     clrscr();
 
@@ -1229,22 +1169,11 @@ static bool _choose_job(newgame_def* ng)
     textcolor( LIGHTGREY );
 
     // Poll input until we have a conclusive escape or pick
-    bool loop_flag = true;
-    while (loop_flag)
+    while (true)
     {
         menu.draw_menu();
 
-        if (Options.cls != 0)
-        {
-            keyn = Options.cls;
-        }
-        else
-        {
-            keyn = getch_ck();
-        }
-
-        bool good_random = false;
-        int random_index = -1;
+        keyn = getch_ck();
 
         // First process all the menu entries available
         if (!menu.process_key(keyn))
@@ -1256,12 +1185,10 @@ static bool _choose_job(newgame_def* ng)
             case ESCAPE:
                 cprintf("\nGoodbye!");
                 end(0);
-                loop_flag = false;
-                break;
+                return;
             case CK_BKSP:
-                ng->job = JOB_UNKNOWN;
-                Options.cls = 0;
-                return true;
+                ng_choice->job = JOB_UNKNOWN;
+                return;
             default:
                 // if we get this far, we did not get a significant selection
                 // from the menu, nor did we get an escape character
@@ -1288,116 +1215,59 @@ static bool _choose_job(newgame_def* ng)
             switch (selection_key)
             {
             case '#':
-                good_random = true;
-                // intentional fall-through
+                ng_choice->species = SP_VIABLE;
+                ng_choice->job = JOB_VIABLE;
+                ng_choice->fully_random = true;
+                return;
             case '!':
-                _pick_random_species_and_job(ng, good_random);
-                Options.random_pick = true; // used to give random weapon/god as well
-                ng_random = true;
-                if (good_random)
-                    Options.good_random = true;
-                return false;
+                ng_choice->species = SP_RANDOM;
+                ng_choice->job = JOB_RANDOM;
+                ng_choice->fully_random = true;
+                return;
             case '\t':
                 if (_prev_startup_options_set())
                 {
-                    if (Options.prev_randpick
-                        || Options.prev_race == '*' && Options.prev_cls == '*')
-                    {
-                        Options.random_pick = true;
-                        ng_random = true;
-                        _pick_random_species_and_job(ng, Options.good_random);
-                        return false;
-                    }
-                    _set_startup_options();
-                    ng->species = SP_UNKNOWN;
-                    ng->job = JOB_UNKNOWN;
-                    return true;
+                    *ng_choice = Options.prev_game;
+                    return;
                 }
-                // ignore Tab because we don't have previous start options set
-                continue;
+                else
+                {
+                    // ignore Tab because we don't have previous start options
+                    continue;
+                }
             case ' ':
-                ng->job = JOB_UNKNOWN;
-                Options.cls = 0;
-                return true;
+                ng_choice->species = SP_UNKNOWN;
+                ng_choice->job     = JOB_UNKNOWN;
+                return;
             case '?':
                  // access to the help files
                 list_commands('1');
-                return _choose_job(ng);
+                return _prompt_job(ng, ng_choice);
             case '%':
                 list_commands('%');
-                return _choose_job(ng);
-            case CONTROL('t'):
-                // intentional fallthrough
-                // TODO: remove these when we have a new start menu
-            case 'T':
-                if (!crawl_state.game_is_sprint())
-                {
-                    return !pick_tutorial();
-                }
-                break;
+                return _prompt_job(ng, ng_choice);
             case '+':
-                good_random = true;
-                // intentional fallthrough
+                ng_choice->job = JOB_VIABLE;
+                return;
             case '*':
-                // pick a random allowed background
-                if (ng->species == SP_UNKNOWN)
-                {
-                    // pick any specie
-                    random_index = random2(ng_num_jobs());
-                    ng->job = get_job(random_index);
-                    ng_cls = selection_key;
-                    return true;
-                }
-                else
-                {
-                    // depending on good_random flag, pick either a
-                    // viable combo or a random combo
-                    do
-                    {
-                        random_index = random2(ng_num_species());
-                    }
-                    while (!is_good_combination(ng->species,
-                                                get_job(random_index),
-                                                good_random));
-                    ng->job = get_job(random_index);
-                    ng_cls = selection_key;
-                    return false;
-                }
+                ng_choice->job = JOB_RANDOM;
+                return;
             default:
-                // we have a background selection
-                if (ng->species == SP_UNKNOWN)
+                // we have a job selection
+                job_type job = get_job(letter_to_index(selection_key));
+                if (ng->species == SP_UNKNOWN
+                    || job_allowed(ng->species, job) != CC_BANNED)
                 {
-                    // we have no restrictions!
-                    ng->job = get_job(letter_to_index(selection_key));
-                    // this is probably used for... something
-                    ng_cls = selection_key;
-                    return true; // pick also specie
+                    ng_choice->job = job;
+                    return;
                 }
                 else
                 {
-                    // Can we allow this selection?
-                    if (job_allowed(ng->species,
-                        get_job(letter_to_index(selection_key)))
-                        == CC_BANNED)
-                    {
-                        // we cannot, repoll for key
-                        continue;
-                    }
-                    else
-                    {
-                        // we have a valid choice!
-                        ng->job = get_job(letter_to_index(selection_key));
-                        // this is probably used for... something
-                        ng_cls = selection_key;
-                        return false; // no need to pick specie
-                    }
+                    continue;
                 }
-                break;
             }
         }
     }
-    // we will never reach here
-    return true;
 }
 
 static bool _do_choose_weapon(newgame_def *ng)
@@ -1444,31 +1314,29 @@ static bool _do_choose_weapon(newgame_def *ng)
     for (int i = 0; i < num_choices; i++)
         startwep_restrictions[i] = weapon_restriction(startwep[i], *ng);
 
-    if (Options.weapon == WPN_UNARMED && claws_allowed)
+    if (ngchoice.weapon == WPN_UNARMED && claws_allowed)
     {
-        ng_weapon = Options.weapon;
-        ng->weapon = static_cast<weapon_type>(Options.weapon);
+        ng->weapon = ngchoice.weapon;
         return (true);
     }
 
-    if (Options.weapon != WPN_UNKNOWN && Options.weapon != WPN_RANDOM
-        && Options.weapon != WPN_UNARMED)
+    if (ngchoice.weapon != WPN_UNKNOWN && ngchoice.weapon != WPN_RANDOM
+        && ngchoice.weapon != WPN_UNARMED)
     {
-        // If Options.weapon is available, then use it.
+        // If Options.game.weapon is available, then use it.
         for (int i = 0; i < num_choices; i++)
         {
-            if (startwep[i] == Options.weapon
+            if (startwep[i] == ngchoice.weapon
                 && startwep_restrictions[i] != CC_BANNED)
             {
-                ng_weapon = Options.weapon;
-                ng->weapon = static_cast<weapon_type>(Options.weapon);
+                ng->weapon = ngchoice.weapon;
                 return (true);
             }
         }
     }
 
     int keyin = 0;
-    if (!Options.random_pick && Options.weapon != WPN_RANDOM)
+    if (!ngchoice.fully_random && ngchoice.weapon != WPN_RANDOM)
     {
         _print_character_info(ng);
 
@@ -1494,24 +1362,24 @@ static bool _do_choose_weapon(newgame_def *ng)
                     startwep[i] == WPN_UNARMED ? "claws"
                                                : weapon_base_name(startwep[i]));
 
-            if (Options.prev_weapon == startwep[i])
+            if (Options.prev_game.weapon == startwep[i])
                 prevmatch = true;
         }
 
-        if (!prevmatch && Options.prev_weapon != WPN_RANDOM)
-            Options.prev_weapon = WPN_UNKNOWN;
+        if (!prevmatch && Options.prev_game.weapon != WPN_RANDOM)
+            Options.prev_game.weapon = WPN_UNKNOWN;
 
         textcolor(BROWN);
         cprintf("\n* - Random choice; + - Good random choice; "
                     "Bksp - Back to species and background selection; "
                     "X - Quit\n");
 
-        if (prevmatch || Options.prev_weapon == WPN_RANDOM)
+        if (prevmatch || Options.prev_game.weapon == WPN_RANDOM)
         {
             cprintf("; Enter - %s",
-                    Options.prev_weapon == WPN_RANDOM  ? "Random" :
-                    Options.prev_weapon == WPN_UNARMED ? "claws"  :
-                    weapon_base_name(Options.prev_weapon));
+                    Options.prev_game.weapon == WPN_RANDOM  ? "Random" :
+                    Options.prev_game.weapon == WPN_UNARMED ? "claws"  :
+                    weapon_base_name(Options.prev_game.weapon));
         }
         cprintf("\n");
 
@@ -1535,14 +1403,14 @@ static bool _do_choose_weapon(newgame_def *ng)
                 return (false);
             case '\r':
             case '\n':
-                if (Options.prev_weapon != WPN_UNKNOWN)
+                if (Options.prev_game.weapon != WPN_UNKNOWN)
                 {
-                    if (Options.prev_weapon == WPN_RANDOM)
+                    if (Options.prev_game.weapon == WPN_RANDOM)
                         keyin = '*';
                     else
                     {
                         for (int i = 0; i < num_choices; ++i)
-                             if (startwep[i] == Options.prev_weapon)
+                             if (startwep[i] == Options.prev_game.weapon)
                                  keyin = 'a' + i;
                     }
                 }
@@ -1559,14 +1427,13 @@ static bool _do_choose_weapon(newgame_def *ng)
                    || startwep_restrictions[keyin - 'a'] == CC_BANNED));
     }
 
-    if (Options.random_pick || Options.weapon == WPN_RANDOM
+    if (ngchoice.fully_random || ngchoice.weapon == WPN_RANDOM
         || keyin == '*' || keyin == '+')
     {
-        Options.weapon = WPN_RANDOM;
-        ng_weapon = WPN_RANDOM;
+        ngchoice.weapon = WPN_RANDOM;
 
         int good_choices = 0;
-        if (keyin == '+' || Options.good_random && keyin != '*')
+        if (keyin == '+' || _viable_random(ngchoice) && keyin != '*')
         {
             for (int i = 0; i < num_choices; i++)
             {
@@ -1584,7 +1451,7 @@ static bool _do_choose_weapon(newgame_def *ng)
         keyin += 'a';
     }
     else
-        ng_weapon = startwep[keyin - 'a'];
+        ngchoice.weapon = startwep[keyin - 'a'];
 
     ng->weapon = startwep[keyin - 'a'];
 
@@ -1637,29 +1504,29 @@ static bool _choose_book(newgame_def* ng, int firstbook, int numbooks)
                                    _book_to_start(firstbook + i), *ng);
     }
 
-    if (Options.book)
+    if (Options.game.book)
     {
-        const int opt_book = start_to_book(firstbook, Options.book);
+        const int opt_book = start_to_book(firstbook, Options.game.book);
         if (opt_book != -1)
         {
             book.sub_type = opt_book;
-            ng_book = Options.book;
-            ng->book = static_cast<startup_book_type>(Options.book);
+            ngchoice.book = Options.game.book;
+            ng->book = static_cast<startup_book_type>(Options.game.book);
             return (true);
         }
     }
 
-    if (Options.prev_book)
+    if (Options.prev_game.book)
     {
-        if (start_to_book(firstbook, Options.prev_book) == -1
-            && Options.prev_book != SBT_RANDOM)
+        if (start_to_book(firstbook, Options.prev_game.book) == -1
+            && Options.prev_game.book != SBT_RANDOM)
         {
-            Options.prev_book = SBT_NO_SELECTION;
+            Options.prev_game.book = SBT_NO_SELECTION;
         }
     }
 
     int keyin = 0;
-    if (!Options.random_pick && Options.book != SBT_RANDOM)
+    if (!Options.game.fully_random && Options.game.book != SBT_RANDOM)
     {
         _print_character_info(ng);
 
@@ -1685,13 +1552,13 @@ static bool _choose_book(newgame_def* ng, int firstbook, int numbooks)
                     "Bksp - Back to species and background selection; "
                     "X - Quit\n");
 
-        if (Options.prev_book != SBT_NO_SELECTION)
+        if (Options.prev_game.book != SBT_NO_SELECTION)
         {
             cprintf("; Enter - %s",
-                    Options.prev_book == SBT_FIRE   ? "Fire"      :
-                    Options.prev_book == SBT_COLD   ? "Cold"      :
-                    Options.prev_book == SBT_SUMM   ? "Summoning" :
-                    Options.prev_book == SBT_RANDOM ? "Random"
+                    Options.prev_game.book == SBT_FIRE   ? "Fire"      :
+                    Options.prev_game.book == SBT_COLD   ? "Cold"      :
+                    Options.prev_game.book == SBT_SUMM   ? "Summoning" :
+                    Options.prev_game.book == SBT_RANDOM ? "Random"
                                                     : "Buggy Book");
         }
         cprintf("\n");
@@ -1716,14 +1583,14 @@ static bool _choose_book(newgame_def* ng, int firstbook, int numbooks)
                 return (false);
             case '\r':
             case '\n':
-                if (Options.prev_book != SBT_NO_SELECTION)
+                if (Options.prev_game.book != SBT_NO_SELECTION)
                 {
-                    if (Options.prev_book == SBT_RANDOM)
+                    if (Options.prev_game.book == SBT_RANDOM)
                         keyin = '*';
                     else
                     {
                         keyin = 'a'
-                                + start_to_book(firstbook, Options.prev_book)
+                                + start_to_book(firstbook, Options.prev_game.book)
                                 - firstbook;
                     }
                 }
@@ -1739,15 +1606,15 @@ static bool _choose_book(newgame_def* ng, int firstbook, int numbooks)
                && (keyin < 'a' || keyin >= ('a' + numbooks)));
     }
 
-    if (Options.random_pick || Options.book == SBT_RANDOM || keyin == '*'
+    if (Options.game.fully_random || Options.game.book == SBT_RANDOM || keyin == '*'
         || keyin == '+')
     {
-        ng_book = SBT_RANDOM;
+        ngchoice.book = SBT_RANDOM;
 
         int good_choices = 0;
         if (keyin == '+'
-            || Options.good_random
-               && (Options.random_pick || Options.book == SBT_RANDOM))
+            || _viable_random(ngchoice)
+               && (Options.game.fully_random || Options.game.book == SBT_RANDOM))
         {
             for (int i = 0; i < numbooks; i++)
             {
@@ -1766,7 +1633,7 @@ static bool _choose_book(newgame_def* ng, int firstbook, int numbooks)
         keyin += 'a';
     }
     else
-        ng_book = _book_to_start(keyin - 'a' + firstbook);
+        ngchoice.book = _book_to_start(keyin - 'a' + firstbook);
 
     ng->book = _book_to_start(firstbook + keyin - 'a');
     return (true);
@@ -1798,15 +1665,15 @@ static bool _choose_priest(newgame_def* ng)
         const god_type gods[3] = { GOD_ZIN, GOD_YREDELEMNUL, GOD_BEOGH };
 
         // Disallow invalid choices.
-        if (religion_restriction(Options.priest, *ng) == CC_BANNED)
-            Options.priest = GOD_NO_GOD;
+        if (religion_restriction(Options.game.religion, *ng) == CC_BANNED)
+            Options.game.religion = GOD_NO_GOD;
 
-        if (Options.priest != GOD_NO_GOD && Options.priest != GOD_RANDOM)
-            ng_pr = ng->religion = static_cast<god_type>(Options.priest);
-        else if (Options.random_pick || Options.priest == GOD_RANDOM)
+        if (Options.game.religion != GOD_NO_GOD && Options.game.religion != GOD_RANDOM)
+            ngchoice.religion = ng->religion = static_cast<god_type>(Options.game.religion);
+        else if (Options.game.fully_random || Options.game.religion == GOD_RANDOM)
         {
             bool did_chose = false;
-            if (Options.good_random)
+            if (_viable_random(ngchoice))
             {
                 int count = 0;
                 for (int i = 0; i < 3; i++)
@@ -1831,7 +1698,7 @@ static bool _choose_priest(newgame_def* ng)
                 if (ng->species == SP_HILL_ORC && coinflip())
                     ng->religion = GOD_BEOGH;
             }
-            ng_pr = GOD_RANDOM;
+            ngchoice.religion = GOD_RANDOM;
         }
         else
         {
@@ -1863,16 +1730,16 @@ static bool _choose_priest(newgame_def* ng)
                         "Bksp - Back to species and background selection; "
                         "X - Quit\n");
 
-            if (religion_restriction(Options.prev_pr, *ng) == CC_BANNED)
-                Options.prev_pr = GOD_NO_GOD;
+            if (religion_restriction(Options.prev_game.religion, *ng) == CC_BANNED)
+                Options.prev_game.religion = GOD_NO_GOD;
 
-            if (Options.prev_pr != GOD_NO_GOD)
+            if (Options.prev_game.religion != GOD_NO_GOD)
             {
                 textcolor(BROWN);
                 cprintf("\nEnter - %s\n",
-                        Options.prev_pr == GOD_ZIN         ? "Zin" :
-                        Options.prev_pr == GOD_YREDELEMNUL ? "Yredelemnul" :
-                        Options.prev_pr == GOD_BEOGH       ? "Beogh"
+                        Options.prev_game.religion == GOD_ZIN         ? "Zin" :
+                        Options.prev_game.religion == GOD_YREDELEMNUL ? "Yredelemnul" :
+                        Options.prev_game.religion == GOD_BEOGH       ? "Beogh"
                                                            : "Random");
             }
 
@@ -1893,20 +1760,20 @@ static bool _choose_priest(newgame_def* ng)
                     return (false);
                 case '\r':
                 case '\n':
-                    if (Options.prev_pr == GOD_NO_GOD
-                        || Options.prev_pr == GOD_BEOGH
+                    if (Options.prev_game.religion == GOD_NO_GOD
+                        || Options.prev_game.religion == GOD_BEOGH
                            && ng->species != SP_HILL_ORC)
                     {
                         break;
                     }
-                    if (Options.prev_pr != GOD_RANDOM)
+                    if (Options.prev_game.religion != GOD_RANDOM)
                     {
-                        Options.prev_pr
-                                 = static_cast<god_type>(Options.prev_pr);
-                        ng->religion = Options.prev_pr;
+                        Options.prev_game.religion
+                                 = static_cast<god_type>(Options.prev_game.religion);
+                        ng->religion = Options.prev_game.religion;
                         break;
                     }
-                    keyn = '*'; // for ng_pr setting
+                    keyn = '*'; // for ngchoice.religion setting
                     // fall-through for random
                 case '+':
                     if (keyn == '+')
@@ -1951,7 +1818,7 @@ static bool _choose_priest(newgame_def* ng)
             }
             while (ng->religion == GOD_NO_GOD);
 
-            ng_pr = (keyn == '*' ? GOD_RANDOM : ng->religion);
+            ngchoice.religion = (keyn == '*' ? GOD_RANDOM : ng->religion);
         }
     }
     return (true);
@@ -1961,16 +1828,16 @@ static bool _choose_chaos_knight(newgame_def* ng)
 {
     const god_type gods[3] = { GOD_XOM, GOD_MAKHLEB, GOD_LUGONU };
 
-    if (Options.chaos_knight != GOD_NO_GOD
-        && Options.chaos_knight != GOD_RANDOM)
+    if (Options.game.religion != GOD_NO_GOD
+        && Options.game.religion != GOD_RANDOM)
     {
-        ng_ck = ng->religion =
-            static_cast<god_type>(Options.chaos_knight);
+        ngchoice.religion = ng->religion =
+            static_cast<god_type>(Options.game.religion);
     }
-    else if (Options.random_pick || Options.chaos_knight == GOD_RANDOM)
+    else if (Options.game.fully_random || Options.game.religion == GOD_RANDOM)
     {
         bool did_chose = false;
-        if (Options.good_random)
+        if (_viable_random(ngchoice))
         {
             int count = 0;
             for (int i = 0; i < 3; i++)
@@ -1993,7 +1860,7 @@ static bool _choose_chaos_knight(newgame_def* ng)
                            coinflip()       ? GOD_MAKHLEB
                                             : GOD_LUGONU);
         }
-        ng_ck = GOD_RANDOM;
+        ngchoice.religion = GOD_RANDOM;
     }
     else
     {
@@ -2025,13 +1892,13 @@ static bool _choose_chaos_knight(newgame_def* ng)
                     "Bksp - Back to species and background selection; "
                     "X - Quit\n");
 
-        if (Options.prev_ck != GOD_NO_GOD)
+        if (Options.prev_game.religion != GOD_NO_GOD)
         {
             textcolor(BROWN);
             cprintf("\nEnter - %s\n",
-                    Options.prev_ck == GOD_XOM     ? "Xom" :
-                    Options.prev_ck == GOD_MAKHLEB ? "Makhleb" :
-                    Options.prev_ck == GOD_LUGONU  ? "Lugonu"
+                    Options.prev_game.religion == GOD_XOM     ? "Xom" :
+                    Options.prev_game.religion == GOD_MAKHLEB ? "Makhleb" :
+                    Options.prev_game.religion == GOD_LUGONU  ? "Lugonu"
                                                    : "Random");
             textcolor(LIGHTGREY);
         }
@@ -2053,15 +1920,15 @@ static bool _choose_chaos_knight(newgame_def* ng)
                 return (false);
             case '\r':
             case '\n':
-                if (Options.prev_ck == GOD_NO_GOD)
+                if (Options.prev_game.religion == GOD_NO_GOD)
                     break;
 
-                if (Options.prev_ck != GOD_RANDOM)
+                if (Options.prev_game.religion != GOD_RANDOM)
                 {
-                    ng->religion = static_cast<god_type>(Options.prev_ck);
+                    ng->religion = static_cast<god_type>(Options.prev_game.religion);
                     break;
                 }
-                keyn = '*'; // for ng_ck setting
+                keyn = '*'; // for ngchoice.religion setting
                 // fall-through for random
             case '+':
                 if (keyn == '+')
@@ -2103,7 +1970,7 @@ static bool _choose_chaos_knight(newgame_def* ng)
         }
         while (ng->religion == GOD_NO_GOD);
 
-        ng_ck = (keyn == '*') ? GOD_RANDOM
+        ngchoice.religion = (keyn == '*') ? GOD_RANDOM
                               : ng->religion;
     }
     return (true);
@@ -2208,27 +2075,17 @@ static bool _choose_wand(newgame_def* ng)
     int keyin = 0;
     int wandtype;
     bool is_rod;
-    if (Options.wand)
+
+    if (Options.prev_game.wand)
     {
-        if (start_to_wand(Options.wand, is_rod) != -1)
+        if (start_to_wand(Options.prev_game.wand, is_rod) == -1
+            && Options.prev_game.wand != SWT_RANDOM)
         {
-            keyin = 'a' + Options.wand - 1;
-            ng_wand = Options.wand;
-            ng->wand = static_cast<startup_wand_type>(Options.wand);
-            return (true);
+            Options.prev_game.wand = SWT_NO_SELECTION;
         }
     }
 
-    if (Options.prev_wand)
-    {
-        if (start_to_wand(Options.prev_wand, is_rod) == -1
-            && Options.prev_wand != SWT_RANDOM)
-        {
-            Options.prev_wand = SWT_NO_SELECTION;
-        }
-    }
-
-    if (!Options.random_pick && Options.wand != SWT_RANDOM)
+    if (!Options.game.fully_random && Options.game.wand != SWT_RANDOM)
     {
         _print_character_info(ng);
 
@@ -2256,28 +2113,28 @@ static bool _choose_wand(newgame_def* ng)
                 is_rod = false;
             }
 
-            if (Options.prev_wand == _wand_to_start(wandtype, is_rod))
+            if (Options.prev_game.wand == _wand_to_start(wandtype, is_rod))
                 prevmatch = true;
         }
 
-        if (!prevmatch && Options.prev_wand != SWT_RANDOM)
-            Options.prev_wand = SWT_NO_SELECTION;
+        if (!prevmatch && Options.prev_game.wand != SWT_RANDOM)
+            Options.prev_game.wand = SWT_NO_SELECTION;
 
         textcolor(BROWN);
         cprintf("\n* - Random choice; "
                     "Bksp - Back to species and background selection; "
                     "X - Quit\n");
 
-        if (prevmatch || Options.prev_wand == SWT_RANDOM)
+        if (prevmatch || Options.prev_game.wand == SWT_RANDOM)
         {
             cprintf("; Enter - %s",
-                    Options.prev_wand == SWT_ENSLAVEMENT ? "Enslavement" :
-                    Options.prev_wand == SWT_CONFUSION   ? "Confusion"   :
-                    Options.prev_wand == SWT_MAGIC_DARTS ? "Magic Darts" :
-                    Options.prev_wand == SWT_FROST       ? "Frost"       :
-                    Options.prev_wand == SWT_FLAME       ? "Flame"       :
-                    Options.prev_wand == SWT_STRIKING    ? "Striking"    :
-                    Options.prev_wand == SWT_RANDOM      ? "Random"
+                    Options.prev_game.wand == SWT_ENSLAVEMENT ? "Enslavement" :
+                    Options.prev_game.wand == SWT_CONFUSION   ? "Confusion"   :
+                    Options.prev_game.wand == SWT_MAGIC_DARTS ? "Magic Darts" :
+                    Options.prev_game.wand == SWT_FROST       ? "Frost"       :
+                    Options.prev_game.wand == SWT_FLAME       ? "Flame"       :
+                    Options.prev_game.wand == SWT_STRIKING    ? "Striking"    :
+                    Options.prev_game.wand == SWT_RANDOM      ? "Random"
                                                          : "Buggy Tool");
         }
         cprintf("\n");
@@ -2302,9 +2159,9 @@ static bool _choose_wand(newgame_def* ng)
                 return (false);
             case '\r':
             case '\n':
-                if (Options.prev_wand != SWT_NO_SELECTION)
+                if (Options.prev_game.wand != SWT_NO_SELECTION)
                 {
-                    if (Options.prev_wand == SWT_RANDOM)
+                    if (Options.prev_game.wand == SWT_RANDOM)
                         keyin = '*';
                     else
                     {
@@ -2321,7 +2178,7 @@ static bool _choose_wand(newgame_def* ng)
                                 is_rod = false;
                             }
 
-                            if (Options.prev_wand ==
+                            if (Options.prev_game.wand ==
                                 _wand_to_start(wandtype, is_rod))
                             {
                                  keyin = 'a' + i;
@@ -2340,16 +2197,16 @@ static bool _choose_wand(newgame_def* ng)
         while (keyin != '*'  && (keyin < 'a' || keyin >= ('a' + num_choices)));
     }
 
-    if (Options.random_pick || Options.wand == SWT_RANDOM || keyin == '*')
+    if (Options.game.fully_random || Options.game.wand == SWT_RANDOM || keyin == '*')
     {
-        Options.wand = WPN_RANDOM;
-        ng_wand = SWT_RANDOM;
+        Options.game.wand = SWT_RANDOM;
+        ngchoice.wand = SWT_RANDOM;
 
         keyin = random2(num_choices);
         keyin += 'a';
     }
     else
-        ng_wand = keyin - 'a' + 1;
+        ngchoice.wand = static_cast<startup_wand_type>(keyin - 'a' + 1);
 
     ng->wand = static_cast<startup_wand_type>(keyin - 'a' + 1);
     return (true);

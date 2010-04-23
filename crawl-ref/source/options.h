@@ -3,13 +3,13 @@
 
 #include "feature.h"
 #include "pattern.h"
+#include "newgame_def.h"
 
 class InitLineInput;
 struct game_options
 {
 public:
     game_options();
-    void reset_startup_options();
     void reset_options();
 
     void read_option_line(const std::string &s, bool runscripts = false);
@@ -45,8 +45,6 @@ public:
     std::string morgue_dir;     // Directory where character dumps and morgue
                                 // dumps are saved. Overrides crawl_dir.
     std::vector<std::string> additional_macro_files;
-
-    std::string player_name;
 
     unsigned long       seed;   // Non-random games.
 
@@ -136,18 +134,8 @@ public:
     msg_colour_type channels[NUM_MESSAGE_CHANNELS];  // msg channel colouring
     bool        darken_beyond_range; // for whether targeting is out of range
 
-    int         weapon;          // auto-choose weapon for character
-    int         book;            // auto-choose book for character
-    int         wand;            // auto-choose wand for character
-    int         chaos_knight;    // choice of god for Chaos Knights (Xom/Makleb)
-    god_type    priest;          // choice of god for priests (Zin/Yred)
-    bool        random_pick;     // randomly generate character
-    bool        good_random;     // when chosing randomly only choose
-                                 // unrestricted combinations
     int         hp_warning;      // percentage hp for danger warning
     int         magic_point_warning;    // percentage mp for danger warning
-    char        race;            // preselected race
-    char        cls;             // preselected class
     bool        clear_messages;   // clear messages each turn
     bool        show_more;        // Show message-full more prompts.
     bool        small_more;       // Show one-char more prompts.
@@ -384,19 +372,8 @@ public:
     opt_map     named_options;          // All options not caught above are
                                         // recorded here.
 
-    ///////////////////////////////////////////////////////////////////////
-    // These options cannot be directly set by the user. Instead they're
-    // set indirectly to the choices the user made for the last character
-    // created. XXX: Isn't there a better place for these?
-    std::string prev_name;
-    char        prev_race;
-    char        prev_cls;
-    int         prev_ck, prev_dk;
-    god_type    prev_pr;
-    int         prev_weapon;
-    int         prev_book;
-    int         prev_wand;
-    bool        prev_randpick;
+    newgame_def game;      // Choices for new game.
+    newgame_def prev_game; // Previous game's choices.
 
 private:
     typedef std::map<std::string, std::string> string_map;

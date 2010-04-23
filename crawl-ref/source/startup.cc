@@ -752,8 +752,8 @@ bool startup_step()
 
     _initialize();
 
-    if (!Options.player_name.empty())
-        name = Options.player_name;
+    if (!Options.game.name.empty())
+        name = Options.game.name;
 
     // Copy name into you.your_name if set from environment --
     // note that Options.player_name could already be set from init.txt.
@@ -769,8 +769,8 @@ bool startup_step()
     // types while specifying a name externally.
     if (!is_good_name(name, false, false))
     {
-        if (Options.prev_name.length() && Options.remember_name)
-            name = Options.prev_name;
+        if (Options.prev_game.name.length() && Options.remember_name)
+            name = Options.prev_game.name;
         name = show_startup_menu(name);
     }
 

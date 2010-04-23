@@ -1493,7 +1493,9 @@ enum job_type
     JOB_ARCANE_MARKSMAN,
     NUM_JOBS,                          // always after the last job
 
-    JOB_UNKNOWN = 100
+    JOB_UNKNOWN = 100,
+    JOB_RANDOM  = 101,
+    JOB_VIABLE  = 102
 };
 
 enum KeymapContext
@@ -2749,7 +2751,9 @@ enum species_type
     SP_GNOME,                          // (placeholder)
     NUM_SPECIES,                       // always after the last species
 
-    SP_UNKNOWN  = 100
+    SP_UNKNOWN  = 100,
+    SP_RANDOM   = 101,
+    SP_VIABLE   = 102
 };
 
 enum spell_type
