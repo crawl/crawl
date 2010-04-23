@@ -138,14 +138,14 @@ static std::string _welcome(const newgame_def* ng)
             text += " ";
         text += get_job_name(ng->job);
     }
-    if (!text.empty())
-        text = "the " + text;
     if (!ng->name.empty())
     {
         if (!text.empty())
-            text = " " + text;
+            text = " the " + text;
         text = ng->name + text;
     }
+    else if (!text.empty())
+        text = "unnamed " + text;
     if (!text.empty())
         text = ", " + text;
     text = "Welcome" + text + ".";
