@@ -127,21 +127,36 @@ static std::string _prev_startup_description(void)
            _get_opt_job_name(Options.prev_cls);
 }
 
-// Output full character info when weapons/books/religion are chosen.
+static std::string _welcome(const newgame_def* ng)
+{
+    std::string text;
+    if (ng->species != SP_UNKNOWN)
+        text = species_name(ng->species, 1);
+    if (ng->job != JOB_UNKNOWN)
+    {
+        if (!text.empty())
+            text += " ";
+        text += get_job_name(ng->job);
+    }
+    if (!text.empty())
+        text = "the " + text;
+    if (!ng->name.empty())
+    {
+        if (!text.empty())
+            text = " " + text;
+        text = ng->name + text;
+    }
+    if (!text.empty())
+        text = ", " + text;
+    text = "Welcome" + text + ".";
+    return (text);
+}
+
 static void _print_character_info(const newgame_def* ng)
 {
     clrscr();
-
-    // At this point all of name, species and job should be decided.
-    if (!ng->name.empty()
-        && ng->job != JOB_UNKNOWN && ng->species != SP_UNKNOWN)
-    {
-        cprintf("Welcome, ");
-        textcolor( YELLOW );
-        cprintf("%s the %s %s.\n", ng->name.c_str(),
-                species_name(ng->species, 1).c_str(),
-                get_job_name(ng->job));
-    }
+    textcolor(BROWN);
+    cprintf("%s\n", _welcome(ng).c_str());
 }
 
 // Determines if a species is valid. If 'display' is true, returns if
@@ -747,27 +762,11 @@ static bool _choose_species(newgame_def* ng)
     clrscr();
 
     // TODO: attach these to the menu in a NoSelectTextItem
-    textcolor( BROWN );
-    if (ng->name.empty() && ng->job == JOB_UNKNOWN)
-    {
-        cprintf("Welcome. ");
-    }
-    else if (ng->name.empty() && ng->job != JOB_UNKNOWN)
-    {
-        cprintf("Welcome, the %s. ", get_job_name(ng->job));
-    }
-    else if (ng->job != JOB_UNKNOWN)
-    {
-        cprintf("Welcome, %s the %s. ", ng->name.c_str(),
-                get_job_name(ng->job));
-    }
-    else
-    {
-        cprintf("Welcome, %s. ", ng->name.c_str());
-    }
+    textcolor(BROWN);
+    cprintf("%s", _welcome(ng).c_str());
 
-    textcolor( YELLOW );
-    cprintf("Please select your species");
+    textcolor(YELLOW);
+    cprintf(" Please select your species");
 
     _construct_species_menu(ng, freeform);
     MenuDescriptor* descriptor = new MenuDescriptor(&menu);
@@ -1202,27 +1201,11 @@ static bool _choose_job(newgame_def* ng)
     clrscr();
 
     // TODO: attach these to the menu in a NoSelectTextItem
-    textcolor( BROWN );
-    if (ng->name.empty() && ng->species == SP_UNKNOWN)
-    {
-        cprintf("Welcome. ");
-    }
-    else if (ng->name.empty() && ng->species != SP_UNKNOWN)
-    {
-        cprintf("Welcome, the %s. ", species_name(ng->species, 1).c_str());
-    }
-    else if (ng->species != SP_UNKNOWN)
-    {
-        cprintf("Welcome, %s the %s. ", ng->name.c_str(),
-                species_name(ng->species, 1).c_str());
-    }
-    else
-    {
-        cprintf("Welcome, %s. ", ng->name.c_str());
-    }
+    textcolor(BROWN);
+    cprintf("%s", _welcome(ng).c_str());
 
     textcolor( YELLOW );
-    cprintf("Please select your background");
+    cprintf(" Please select your background");
 
     _construct_backgrounds_menu(ng, freeform);
     MenuDescriptor* descriptor = new MenuDescriptor(&menu);
