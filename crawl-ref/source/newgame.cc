@@ -162,7 +162,7 @@ static void _print_character_info(const newgame_def* ng)
 // Determines if a species is valid. If 'display' is true, returns if
 // the species is displayable in the new game screen - this is
 // primarily used to suppress the display of the draconian variants.
-static bool _is_species_valid_choice(species_type species, bool display = true)
+static bool _is_species_valid_choice(species_type species)
 {
     if (species < 0 || species > NUM_SPECIES)
         return (false);
@@ -174,8 +174,8 @@ static bool _is_species_valid_choice(species_type species, bool display = true)
     if (species <= SP_RED_DRACONIAN || species > SP_BASE_DRACONIAN)
         return (true);
 
-    // Draconians other than red return false if display == true.
-    return (!display);
+    // Draconians other than red return false.
+    return (false);
 }
 
 static void _pick_random_species_and_job(newgame_def* ng,
@@ -193,7 +193,6 @@ static void _pick_random_species_and_job(newgame_def* ng,
     for (int sp = 0; sp < NUM_SPECIES; sp++)
     {
         // We only want draconians counted once in this loop...
-        // We'll add the variety lower down -- bwr
         if (!_is_species_valid_choice(static_cast<species_type>(sp)))
             continue;
 
@@ -216,12 +215,7 @@ static void _pick_random_species_and_job(newgame_def* ng,
     // At least one job must exist in the game, else we're in big trouble.
     ASSERT(species != SP_UNKNOWN && job != JOB_UNKNOWN);
 
-    // Return draconian variety here.
-    if (species == SP_RED_DRACONIAN)
-        ng->species = random_draconian_player_species();
-    else
-        ng->species = species;
-
+    ng->species = species;
     ng->job = job;
 }
 
