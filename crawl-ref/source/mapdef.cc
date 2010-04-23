@@ -4034,6 +4034,10 @@ item_spec item_list::parse_single_spec(std::string s)
     {
         result.level = ISPEC_RANDART;
     }
+    if (strip_tag(s, "not_cursed"))
+    {
+        result.props["uncursed"] = bool(true);
+    }
 
     if (strip_tag(s, "no_uniq"))
         result.allow_uniques = 0;

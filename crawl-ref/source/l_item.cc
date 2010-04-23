@@ -737,6 +737,16 @@ IDEF(artefact_name)
     return (1);
 }
 
+IDEF(is_cursed)
+{
+    ASSERT_DLUA;
+
+    bool cursed = item->cursed();
+
+    lua_pushboolean(ls, cursed);
+    return (1);
+}
+
 // Library functions below
 static int l_item_inventory(lua_State *ls)
 {
@@ -941,6 +951,7 @@ static ItemAccessor item_attrs[] =
     { "sub_type",          l_item_sub_type },
     { "ego_type",          l_item_ego_type },
     { "artefact_name",     l_item_artefact_name },
+    { "is_cursed",         l_item_is_cursed },
 };
 
 static int item_get(lua_State *ls)
