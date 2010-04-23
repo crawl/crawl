@@ -58,7 +58,7 @@ function tutorial.message0 ()
   local text = "Great! There's another <blue>blue square</blue> further up the corridor. Head for that next."
 
   if not crawl.is_tiles() then
-    text = "Great! However, pressing the same key multiples times can be a bit tedious, and sometimes outright dangerous. There's another <blue>blue square</blue> down the corridor. You can safely 'run' (right) with " .. tutorial.get_cmd("CMD_RUN_LEFT") .. ". Try it!"
+    text = "Great! However, pressing the same key multiple times can be a bit tedious, and sometimes outright dangerous. There's another <blue>blue square</blue> down the corridor. You can safely 'run' (right) with " .. tutorial.get_cmd("CMD_RUN_LEFT") .. ". Try it!"
   end
 
   return tutorial.message(text, "tutorial", true)
@@ -102,7 +102,7 @@ MARKER:  A = lua:tutorial.message1()
 MARKER:  B = lua:tutorial.message2()
 MARKER:  C = lua:tutorial.message( "Exploring manually is very tedious, which is why we suggest you use auto-explore. Try it by pressing " .. tutorial.get_cmd("CMD_EXPLORE") .. ".", "tutorial", "true" )
 MARKER:  D = lua:tutorial.message( "This is a door. Open it by moving into it, you can close it with <white>C</white>. Note that it is a capital <white>C</white> - keyboard commands are case-sensitive. <white>Ctrl-click</white> and <white>Ctrl-direction</white> also works.", "tutorial", "true" )
-MARKER:  } = lua:tutorial.message( "Take stairs down with <white>shift-click</white> or <white>></white>.", "tutorial", "true" )
+MARKER:  } = lua:tutorial.message( "Take stairs down with <white>Shift-click</white> or <white>></white>.", "tutorial", "true" )
 MARKER:  E = lua:tutorial.message( "Pick up the mace and the helmet with <white>g</white> or <white>clicking</white> your character while standing on the items. You can also <white>click</white> items in the floor section in the inventory region to pick them up.", "tutorial", "true" )
 # TODO: Make the messages sensitive to if the game is tiles or console.
 MARKER:  F = lua:tutorial.message( "Wield it by <white>clicking</white> the mace in the inventory in the lower right (or by hitting <white>w</white>). Wear the helmet by <white>clicking</white> in the inventory (or by hitting <white>W</white> - again, note the capital <white>W</white>.", "tutorial", "true" )
@@ -154,13 +154,13 @@ ITEM:    randbook disc:conjuration numspells:1 slevels:1 spell:magic_dart \
                   owner:Newbie
 KFEAT:   ABCDEF = .
 COLOUR:  ABCDEF = blue
-MARKER:  [ = lua:message_at_spot ( "\nPress <white>shift-click</white> your character or <white><<</white> to climb these stairs.", "tutorial", "true" )
-MARKER:  A = lua:message_at_spot ( "\nHere are some darts, pick them up.", "tutorial", "true" )
+MARKER:  [ = lua:message_at_spot ( "\nPress <white>Shift-click</white> on your character or <white><<</white> to climb these stairs.", "tutorial", "true" )
+MARKER:  A = lua:message_at_spot ( "\nHere are some darts; pick them up.", "tutorial", "true" )
 # TODO: Targetting needs tutorial messages; these can't be done on the map side.
 MARKER:  B = lua:message_at_spot ( "\nPress <white>f</white> to throw darts.", "tutorial", "true" )
 MARKER:  C = lua:message_at_spot ( "\nRemember to rest with <white>5</white>.", "tutorial", "true" )
-MARKER:  D = lua:message_at_spot ( "\nMemorize the spell from this spellbook by <white>clicking</white> on the memorize tab on the lower right. You can also press <white>M</white> to enter memorization screen.", "tutorial", "true" )
-MARKER:  E = lua:message_at_spot ( "\n<white>Click</white> magic dart in the spell tab, or press <white>z</white>, or <white>ctrl-click</white> on the monster.", "tutorial", "true" )
+MARKER:  D = lua:message_at_spot ( "\nMemorise the spell from this spellbook by <white>clicking</white> on the memorise tab on the lower right. You can also press <white>M</white> to enter the memorisation screen.", "tutorial", "true" )
+MARKER:  E = lua:message_at_spot ( "\n<white>Click</white> magic dart in the spell tab, or press <white>z</white>, or <white>Ctrl-click</white> on the monster.", "tutorial", "true" )
 MARKER:  F = lua:message_at_spot ( "\nRest up!", "tutorial", "true" )
 MONS:    training dummy ; stone q:30
 MAP
@@ -258,7 +258,7 @@ KFEAT:   ABCDEF = .
 COLOUR:  ABCDEF = blue
 MONS:    rat, rat always_corpse
 MONS:    training dummy spells:blink;blink;blink;blink;blink;blink ; whip ego:reaching
-MARKER:  A = lua:message_at_spot ( "\nYou may have got poisoned from the trap. Drink a potion of healing, or rest with <white>5</white> to try to wait it out.", "tutorial", "true" )
+MARKER:  A = lua:message_at_spot ( "\nYou may have been poisoned from the trap. Drink a potion of healing, or rest with <white>5</white> to try to wait it out.", "tutorial", "true" )
 MARKER:  B = lua:message_at_spot ( "\nLook for the secret door in the glass wall. Either wait a single turn with <white>s</white> or <white>.</white>, or search longer with <white>5</white>.", "tutorial", "true" )
 # TODO: Hax some piety for the player so that minor destruction is immediately usable.
 MARKER:  C = lua:message_at_spot ( "\nHere's an altar to one of the gods in the game. You can <white>p</white>ray on an altar to start worshipping.", "tutorial", "true" )
