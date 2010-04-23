@@ -2406,16 +2406,12 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
         && lid.branch == BRANCH_MAIN_DUNGEON
         && lid.depth == 1)
     {
-        if (crawl_state.game_is_sprint()) {
+        if (crawl_state.game_is_sprint())
             vault = random_map_for_tag("sprint");
-        }
         else if (crawl_state.game_is_tutorial())
-        {
             vault = find_map_by_name("tutorial_basic_1");
-        }
-        else {
+        else
             vault = random_map_for_tag("entry");
-        }
     }
 
     return (vault);
