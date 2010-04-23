@@ -906,7 +906,7 @@ static bool _choose_species(newgame_def* ng)
                     // pick any specie
                     random_index = random2(ng_num_species());
                     ng->species = get_species(random_index);
-                    ng_race = index_to_letter(random_index);
+                    ng_race = selection_key;
                     return true;
                 }
                 else
@@ -920,7 +920,7 @@ static bool _choose_species(newgame_def* ng)
                     while (!is_good_combination(get_species(random_index),
                                                 ng->job, good_random));
                     ng->species = get_species(random_index);
-                    ng_race = index_to_letter(random_index);
+                    ng_race = selection_key;
                     return false;
                 }
             default:
@@ -1345,7 +1345,7 @@ static bool _choose_job(newgame_def* ng)
                     // pick any specie
                     random_index = random2(ng_num_jobs());
                     ng->job = get_job(random_index);
-                    ng_cls = index_to_letter(random_index);
+                    ng_cls = selection_key;
                     return true;
                 }
                 else
@@ -1360,7 +1360,7 @@ static bool _choose_job(newgame_def* ng)
                                                 get_job(random_index),
                                                 good_random));
                     ng->job = get_job(random_index);
-                    ng_cls = index_to_letter(random_index);
+                    ng_cls = selection_key;
                     return false;
                 }
             default:
