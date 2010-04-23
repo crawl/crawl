@@ -1262,7 +1262,6 @@ void _setup_tutorial_miscs()
     newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE, -1,
                        1, 0, 0);
     newgame_make_item(1, EQ_BOOTS, OBJ_ARMOUR, ARM_BOOTS, -1, 1, 0, 0);
-    newgame_make_item(2, EQ_WEAPON, OBJ_WEAPONS, WPN_CLUB, -1, 1, 0, 0);
     // Make him hungry for the butchering tutorial
     you.hunger = 2650;
 }
