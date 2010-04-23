@@ -51,7 +51,7 @@ bool GenericTexture::load_texture(unsigned char *pixels, unsigned int new_width,
 
     m_width = new_width;
     m_height = new_height;
-    
+
     glmanager->generate_textures(1, &m_handle);
     bind();
     glmanager->load_texture(pixels, m_width, m_height, mip_opt);
@@ -68,7 +68,7 @@ void GenericTexture::bind() const
 TilesTexture::TilesTexture() :
     GenericTexture(), m_tile_max(0), m_info_func(NULL)
 {
-    
+
 }
 
 void TilesTexture::set_info(int tile_max, tile_info_func *info_func)

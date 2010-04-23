@@ -2598,7 +2598,7 @@ void corrode_monster(monsters *monster)
 {
     item_def *has_shield = monster->mslot_item(MSLOT_SHIELD);
     item_def *has_armour = monster->mslot_item(MSLOT_ARMOUR);
-            
+
     if (one_chance_in(3) && (has_shield || has_armour))
     {
         item_def &thing_chosen = (has_armour ? *has_armour : *has_shield);
@@ -2613,12 +2613,12 @@ void corrode_monster(monsters *monster)
             // same formula as for players
             bool resists = false;
             int enchant = abs(thing_chosen.plus);
-                    
+
             if (enchant >= 0 && enchant <= 4)
                 resists = x_chance_in_y(2 + (4 << enchant) + enchant * 8, 100);
             else
                 resists = true;
-                        
+
             if (!resists)
             {
                 thing_chosen.plus--;

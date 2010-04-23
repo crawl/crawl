@@ -244,9 +244,9 @@ bool TilesFramework::initialise()
     putenv("SDL_VIDEO_WINDOW_POS=center");
     putenv("SDL_VIDEO_CENTERED=1");
 #endif
-    
+
     _init_consoles();
-    
+
     const char *icon_name =
 #ifdef DATA_DIR_PATH
     DATA_DIR_PATH

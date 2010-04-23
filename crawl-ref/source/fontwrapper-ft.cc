@@ -444,7 +444,7 @@ static void _draw_box(int x_pos, int y_pos, float width, float height,
                         &verts[0].x,
                         &verts[0].r,
                         NULL);
-    
+
     glmanager->draw_primitive(prim);
 }
 
