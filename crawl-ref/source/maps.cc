@@ -677,6 +677,8 @@ bool map_selector::accept(const map_def &mapdef) const
                 && mapdef.place == place
                 && !mapdef.has_tag("layout")
                 && !mapdef.has_tag("place_unique")
+                && (!mapdef.has_tag("tutorial")
+                    || crawl_state.game_is_tutorial())
                 && (!mapdef.has_tag_prefix("temple_")
                     || mapdef.has_tag_prefix("uniq_altar_"))
                 && map_matches_layout_type(mapdef)
@@ -694,6 +696,7 @@ bool map_selector::accept(const map_def &mapdef) const
                 && !mapdef.has_tag("bazaar")
                 && !mapdef.has_tag("layout")
                 && !mapdef.has_tag("place_unique")
+                && !mapdef.has_tag("tutorial")
                 && (!mapdef.has_tag_prefix("temple_")
                     || mapdef.has_tag_prefix("uniq_altar_"))
                 && (!check_layout || map_matches_layout_type(mapdef))

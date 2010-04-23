@@ -1,7 +1,7 @@
 # TODO: Use dynamic commands instead of hard-coding them to text.
 
 NAME:    tutorial_basic_1
-TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_shop_gen
+TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_shop_gen tutorial
 BFLAGS:  islanded
 KMASK:   + = no_secret_doors
 ORIENT:  encompass
@@ -52,7 +52,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    tutorial_basic_2
-TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_shop_gen
+TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_shop_gen tutorial
 KPROP:   l = no_cloud_gen
 ORIENT:  encompass
 PLACE:   D:2
@@ -91,7 +91,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    tutorial_basic_3
-TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_shop_gen
+TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_shop_gen tutorial
 KPROP:   l = no_cloud_gen
 ORIENT:  encompass
 PLACE:   D:3
@@ -153,7 +153,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    tutorial_basic_4
-TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_shop_gen
+TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_shop_gen tutorial
 KMASK:   + = no_secret_doors
 ORIENT:  encompass
 PLACE:   D:4
