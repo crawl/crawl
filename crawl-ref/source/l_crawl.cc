@@ -102,7 +102,7 @@ LUAFN(crawl_stderr)
 LUAWRAP(crawl_delay, delay(luaL_checkint(ls, 1)))
 LUAWRAP(crawl_more, more())
 LUAWRAP(crawl_flush_prev_message, flush_prev_message())
-LUAWRAP(crawl_mesclr, mesclr())
+LUAWRAP(crawl_mesclr, mesclr( lua_isboolean(ls, 1) ? lua_toboolean(ls, 1) : false))
 LUAWRAP(crawl_redraw_screen, redraw_screen())
 
 static int crawl_set_more_autoclear(lua_State *ls)
@@ -528,6 +528,19 @@ static int crawl_is_tiles(lua_State *ls)
     return (1);
 }
 
+static int crawl_get_command (lua_State *ls)
+{
+    if (lua_gettop(ls) == 0)
+    {
+        lua_pushnil(ls);
+        return (1);
+    }
+
+    command_type cmd = name_to_command(luaL_checkstring(ls, 1));
+    lua_pushstring(ls, command_to_string(cmd).c_str());
+    return (1);
+}
+
 static int crawl_random_element(lua_State *ls)
 {
     const int table_idx = 1;
@@ -659,6 +672,7 @@ static const struct luaL_reg crawl_clib[] =
     { "game_started",   crawl_game_started },
     { "is_tiles",       crawl_is_tiles },
     { "err_trace",      crawl_err_trace },
+    { "get_command",    crawl_get_command },
 
     { NULL, NULL },
 };
