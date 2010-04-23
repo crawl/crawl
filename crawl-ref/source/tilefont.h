@@ -28,7 +28,9 @@ class formatted_string;
 class FontWrapper
 {
 public:
-    // static creation functions
+    // Static creation functions.
+    // Implementation-specific files (e.g. fontwrapper-ft.cc) should
+    // contain their own version of this factory function.
     static FontWrapper *create();
 
     virtual ~FontWrapper() {};

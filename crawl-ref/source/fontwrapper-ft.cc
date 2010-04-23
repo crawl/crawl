@@ -18,6 +18,11 @@
 #include "tilebuf.h"
 #include "tilefont.h"
 
+FontWrapper* FontWrapper::create()
+{
+    return (new FTFontWrapper());
+}
+
 FTFontWrapper::FTFontWrapper() :
     m_glyphs(NULL),
     m_max_advance(0, 0),

@@ -1,9 +1,6 @@
 #ifdef USE_TILE
-#include "glwrapper.h"
 
-#ifdef USE_GL
-#include "glwrapper-ogl.h"
-#endif
+#include "glwrapper.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // GLPrimitive
@@ -39,26 +36,6 @@ GLState::GLState() :
 
 /////////////////////////////////////////////////////////////////////////////
 // GLStateManager
-
-GLStateManager *glmanager = NULL;
-
-void GLStateManager::init()
-{
-    if (glmanager)
-        return;
-
-#ifdef USE_GL
-    glmanager = (GLStateManager *) new OGLStateManager();
-#endif
-}
-
-void GLStateManager::shutdown()
-{
-    if (!glmanager)
-        return;
-
-    delete glmanager;
-}
 
 #ifdef ASSERTS
 bool GLStateManager::_valid(int num_verts, drawing_modes mode)

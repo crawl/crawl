@@ -263,7 +263,7 @@ EXTRA_OBJECTS += icon.o
 endif
 
 ifdef TILES
-OBJECTS += libgui.o tile2.o tilereg.o tilepick.o tilesdl.o tilefont.o tiletex.o tilemcache.o tilebuf.o windowmanager.o glwrapper.o
+OBJECTS += libgui.o tile2.o tilereg.o tilepick.o tilesdl.o tilefont.o tiletex.o tilemcache.o tilebuf.o glwrapper.o
 
 ifdef SDL
 OBJECTS += windowmanager-sdl.o

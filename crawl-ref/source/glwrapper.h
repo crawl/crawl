@@ -113,6 +113,8 @@ public:
     // To silence pre 4.3 g++ compiler warnings
     virtual ~GLStateManager() {};
 
+    // Note: the init/shutdown static functions should be written in the derived
+    // implementation-specific cc file, e.g. glwrapper-ogl.cc.
     static void init();
     static void shutdown();
 

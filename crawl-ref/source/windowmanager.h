@@ -100,6 +100,8 @@ public:
     virtual ~WindowManager() {};
 
     // Static Alloc/deallocators
+    // Note: Write this function in each implementation-specific file,
+    // e.g. windowmanager-sdl.cc has its own WindowManager::create().
     static void create();
 
     // Class functions

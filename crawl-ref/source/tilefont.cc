@@ -3,10 +3,6 @@
 #ifdef USE_TILE
 #include "tilefont.h"
 
-#ifdef USE_FT
-#include "fontwrapper-ft.h"
-#endif
-
 const VColour term_colours[MAX_TERM_COLOUR] =
 {
     VColour(  0,   0,   0), // BLACK
@@ -26,14 +22,5 @@ const VColour term_colours[MAX_TERM_COLOUR] =
     VColour(255, 255,  82), // YELLOW
     VColour(255, 255, 255)  // WHITE
 };
-
-FontWrapper* FontWrapper::create()
-{
-    FontWrapper *ret = NULL;
-#ifdef USE_FT
-    ret = (FontWrapper *) new FTFontWrapper();
-#endif
-    return (ret);
-}
 
 #endif // USE_TILE
