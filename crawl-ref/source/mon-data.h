@@ -4402,7 +4402,6 @@ static monsterentry mondata[] = {
     MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
-// only appear in Dis castle
 {
     MONS_METAL_GARGOYLE, '9', CYAN, "metal gargoyle",
     M_NO_FLAGS,
@@ -4416,7 +4415,6 @@ static monsterentry mondata[] = {
     MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
-// only appear in Gehenna castle & one minivault
 {
     MONS_MOLTEN_GARGOYLE, '9', RED, "molten gargoyle",
     M_NO_FLAGS,
