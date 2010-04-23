@@ -1,8 +1,9 @@
 #include "AppHdr.h"
 
-#include "debug.h"
-
 #ifdef USE_TILE
+#ifdef USE_GL
+
+#include "glwrapper-ogl.h"
 
 // How do we get access to the GL calls?
 // If other UI types use the -ogl wrapper they should
@@ -11,8 +12,7 @@
 #include <SDL_opengl.h>
 #endif
 
-#ifdef USE_GL
-#include "glwrapper-ogl.h"
+#include "debug.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // OGLStateManager
@@ -107,33 +107,33 @@ void OGLStateManager::pixelstore_unpack_alignment(unsigned int bpp)
 void OGLStateManager::draw_primitive(const GLPrimitive &prim)
 {
     // Handle errors
-    if ( !prim.vert_pointer || prim.count < 1 || prim.size < 1 )
+    if (!prim.vert_pointer || prim.count < 1 || prim.size < 1)
         return;
-    //ASSERT(GLStateManager::_valid(prim.count, prim.mode));
+    ASSERT(GLStateManager::_valid(prim.count, prim.mode));
 
     // Set pointers
     glVertexPointer(prim.vert_size, GL_FLOAT, prim.size, prim.vert_pointer);
-    if ( prim.texture_pointer )
+    if (prim.texture_pointer)
         glTexCoordPointer(2, GL_FLOAT, prim.size, prim.texture_pointer);
-    if ( prim.colour_pointer )
+    if (prim.colour_pointer)
         glColorPointer(4, GL_UNSIGNED_BYTE, prim.size, prim.colour_pointer);
 
     // Handle pre-render matrix manipulations
-    if ( prim.pretranslate || prim.prescale )
+    if (prim.pretranslate || prim.prescale)
     {
         glPushMatrix();
-        if ( prim.pretranslate )
+        if (prim.pretranslate)
         {
-            glTranslatef(   prim.pretranslate->x,
-                            prim.pretranslate->y,
-                            prim.pretranslate->z);
+            glTranslatef(prim.pretranslate->x,
+                         prim.pretranslate->y,
+                         prim.pretranslate->z);
         }
-        if ( prim.prescale )
+        if (prim.prescale)
             glScalef(prim.prescale->x, prim.prescale->y, prim.prescale->z);
     }
 
     // Draw!
-    switch( prim.mode )
+    switch (prim.mode)
     {
     case GLW_QUADS:
         glDrawArrays(GL_QUADS, 0, prim.count);
@@ -146,7 +146,7 @@ void OGLStateManager::draw_primitive(const GLPrimitive &prim)
     }
 
     // Clean up
-    if ( prim.pretranslate || prim.prescale )
+    if (prim.pretranslate || prim.prescale)
     {
         glPopMatrix();
     }
@@ -157,7 +157,7 @@ void OGLStateManager::delete_textures(size_t count, unsigned int *textures)
     glDeleteTextures(count, (GLuint*)textures);
 }
 
-void OGLStateManager::generate_textures( size_t count, unsigned int *textures)
+void OGLStateManager::generate_textures(size_t count, unsigned int *textures)
 {
     glGenTextures(count, (GLuint*)textures);
 }
@@ -168,7 +168,7 @@ void OGLStateManager::bind_texture(unsigned int texture)
 }
 
 void OGLStateManager::load_texture(unsigned char *pixels, unsigned int width,
-    unsigned int height, MipMapOptions mip_opt)
+                                   unsigned int height, MipMapOptions mip_opt)
 {
     // Assumptions...
     const unsigned int bpp = 4;

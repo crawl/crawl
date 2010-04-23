@@ -8,7 +8,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // GLPrimitive
 GLPrimitive::GLPrimitive(long unsigned int sz, size_t ct, unsigned int vs,
-        const void* v_pt, const void *c_pt, const void *t_pt) :
+                         const void* v_pt, const void *c_pt, const void *t_pt) :
     mode(GLW_QUADS),
     vert_size(vs),
     size(sz),
@@ -63,7 +63,7 @@ void GLStateManager::shutdown()
 #ifdef ASSERTS
 bool GLStateManager::_valid(int num_verts, drawing_modes mode)
 {
-    switch( mode )
+    switch (mode)
     {
     case GLW_QUADS:
     case GLW_TRIANGLE_STRIP:

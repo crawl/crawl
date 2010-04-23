@@ -1,17 +1,18 @@
 #include "AppHdr.h"
 
-#include "cio.h"
-#include "options.h"
-#include "files.h"
-
 #ifdef USE_TILE
-#include "windowmanager.h"
-#include "glwrapper.h"
-
 #ifdef USE_SDL
+
 #include "windowmanager-sdl.h"
+
 #include <SDL/SDL.h>
 #include <SDL_image.h>
+
+#include "cio.h"
+#include "files.h"
+#include "glwrapper.h"
+#include "options.h"
+#include "windowmanager.h"
 
 static unsigned char _get_modifiers(SDL_keysym &keysym)
 {
@@ -318,7 +319,8 @@ key_mod SDLWrapper::get_mod_state() const
 {
     SDLMod mod = SDL_GetModState();
 
-    switch (mod) {
+    switch (mod)
+    {
     case KMOD_LSHIFT:
     case KMOD_RSHIFT:
         return MOD_SHIFT;
@@ -340,7 +342,8 @@ key_mod SDLWrapper::get_mod_state() const
 void SDLWrapper::set_mod_state(key_mod mod)
 {
     SDLMod set_to;
-    switch (mod) {
+    switch (mod)
+    {
     case MOD_NONE:
         set_to = KMOD_NONE;
         break;
@@ -368,7 +371,8 @@ int SDLWrapper::wait_event(wm_event *event)
         return (0);
 
     // translate the SDL_Event into the almost-analogous wm_event
-    switch (sdlevent.type) {
+    switch (sdlevent.type)
+    {
     case SDL_ACTIVEEVENT:
         SDL_SetModState(KMOD_NONE);
         event->type = WM_ACTIVEEVENT;
@@ -412,7 +416,7 @@ int SDLWrapper::wait_event(wm_event *event)
         event->type = WM_QUIT;
         break;
 
-        // I leave these as the same, because the original tilesdl does, too
+    // I leave these as the same, because the original tilesdl does, too
     case SDL_USEREVENT:
     default:
         event->type = WM_CUSTOMEVENT;
@@ -451,50 +455,51 @@ unsigned int SDLWrapper::get_event_count(wm_event_type type)
 {
     // Look for the presence of any keyboard events in the queue.
     Uint32 eventmask;
-    switch( type )
+    switch (type)
     {
     case WM_ACTIVEEVENT:
-        eventmask = SDL_EVENTMASK( SDL_ACTIVEEVENT );
+        eventmask = SDL_EVENTMASK(SDL_ACTIVEEVENT);
         break;
 
     case WM_KEYDOWN:
-        eventmask = SDL_EVENTMASK( SDL_KEYDOWN );
+        eventmask = SDL_EVENTMASK(SDL_KEYDOWN);
         break;
 
     case WM_KEYUP:
-        eventmask = SDL_EVENTMASK( SDL_KEYUP );
+        eventmask = SDL_EVENTMASK(SDL_KEYUP);
         break;
 
     case WM_MOUSEMOTION:
-        eventmask = SDL_EVENTMASK( SDL_MOUSEMOTION );
+        eventmask = SDL_EVENTMASK(SDL_MOUSEMOTION);
         break;
 
     case WM_MOUSEBUTTONUP:
-        eventmask = SDL_EVENTMASK( SDL_MOUSEBUTTONUP );
+        eventmask = SDL_EVENTMASK(SDL_MOUSEBUTTONUP);
         break;
 
     case WM_MOUSEBUTTONDOWN:
-        eventmask = SDL_EVENTMASK( SDL_MOUSEBUTTONDOWN );
+        eventmask = SDL_EVENTMASK(SDL_MOUSEBUTTONDOWN);
         break;
 
     case WM_QUIT:
-        eventmask = SDL_EVENTMASK( SDL_QUIT );
+        eventmask = SDL_EVENTMASK(SDL_QUIT);
         break;
 
     case WM_CUSTOMEVENT:
-        eventmask = SDL_EVENTMASK( SDL_USEREVENT );
+        eventmask = SDL_EVENTMASK(SDL_USEREVENT);
         break;
 
     case WM_RESIZE:
-        eventmask = SDL_EVENTMASK( SDL_VIDEORESIZE );
+        eventmask = SDL_EVENTMASK(SDL_VIDEORESIZE);
         break;
 
     case WM_EXPOSE:
-        eventmask = SDL_EVENTMASK( SDL_VIDEOEXPOSE );
+        eventmask = SDL_EVENTMASK(SDL_VIDEOEXPOSE);
         break;
 
     default:
-        return (-1); // Error
+        // Error
+        return (-1);
     }
 
     SDL_Event store;
@@ -506,10 +511,10 @@ unsigned int SDLWrapper::get_event_count(wm_event_type type)
     return (count);
 }
 
-bool SDLWrapper::load_texture(  GenericTexture *tex, const char *filename,
-                                MipMapOptions mip_opt, unsigned int &orig_width,
-                                unsigned int &orig_height, tex_proc_func proc,
-                                bool force_power_of_two)
+bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
+                              MipMapOptions mip_opt, unsigned int &orig_width,
+                              unsigned int &orig_height, tex_proc_func proc,
+                              bool force_power_of_two)
 {
     char acBuffer[512];
 
@@ -553,7 +558,7 @@ bool SDLWrapper::load_texture(  GenericTexture *tex, const char *filename,
         new_height = img->h;
     }
 
-    //GLenum texture_format;
+    // GLenum texture_format
     if (bpp == 4)
     {
         // Even if the size is the same, still go through
@@ -579,7 +584,6 @@ bool SDLWrapper::load_texture(  GenericTexture *tex, const char *filename,
         }
 
         SDL_UnlockSurface(img);
-        //texture_format = GL_RGBA;
     }
     else if (bpp == 3)
     {
@@ -611,7 +615,6 @@ bool SDLWrapper::load_texture(  GenericTexture *tex, const char *filename,
 
             SDL_UnlockSurface(img);
         }
-        //texture_format = GL_RGBA;
     }
     else if (bpp == 1)
     {
@@ -661,7 +664,6 @@ bool SDLWrapper::load_texture(  GenericTexture *tex, const char *filename,
         SDL_UnlockSurface(img);
 
         bpp = 4;
-        //texture_format = GL_RGBA;
     }
     else
     {
@@ -695,12 +697,12 @@ void SDLWrapper::shutdown()
 
 int SDLWrapper::byte_order()
 {
-    if ( SDL_BYTEORDER == SDL_BIG_ENDIAN )
+    if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
         return (WM_BIG_ENDIAN);
     return (WM_LIL_ENDIAN);
 }
 
-SDL_Surface *SDLWrapper::load_image( const char *file ) const
+SDL_Surface *SDLWrapper::load_image(const char *file) const
 {
     SDL_Surface *surf = NULL;
     FILE *imgfile = fopen(file, "rb");

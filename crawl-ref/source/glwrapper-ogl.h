@@ -2,9 +2,10 @@
 #define OGL_GL_WRAPPER_H
 
 #ifdef USE_TILE
+#ifdef USE_GL
+
 #include "glwrapper.h"
 
-#ifdef USE_GL
 class OGLStateManager : public GLStateManager
 {
 public:
@@ -15,8 +16,8 @@ public:
     virtual void pixelstore_unpack_alignment(unsigned int bpp);
     virtual void reset_view_for_redraw(float x, float y);
     virtual void reset_view_for_resize(coord_def &m_windowsz);
-    virtual void set_transform(  const GLW_3VF *trans = NULL,
-                                const GLW_3VF *scale = NULL);
+    virtual void set_transform(const GLW_3VF *trans = NULL,
+                               const GLW_3VF *scale = NULL);
     virtual void reset_transform();
     virtual void set_current_color(GLW_3VF &color);
     virtual void set_current_color(GLW_4VF &color);
@@ -29,7 +30,7 @@ public:
     virtual void generate_textures(size_t count, unsigned int *textures);
     virtual void bind_texture(unsigned int texture);
     virtual void load_texture(unsigned char *pixels, unsigned int width,
-        unsigned int height, MipMapOptions mip_opt);
+                              unsigned int height, MipMapOptions mip_opt);
 };
 
 #endif // USE_GL

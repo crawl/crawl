@@ -7,8 +7,8 @@
 #ifndef TILETEX_H
 #define TILETEX_H
 
+#include "glwrapper.h"
 #include "tiles.h"
-#include "glwrapper.h"  // for MipMapOptions enum
 
 // The different texture types.
 enum TextureID

@@ -118,7 +118,7 @@ void TilesFramework::shutdown()
     m_region_inv   = NULL;
     m_region_spl   = NULL;
     m_region_mem   = NULL;
-    m_region_crt = NULL;
+    m_region_crt   = NULL;
     m_region_menu  = NULL;
 
     for (unsigned int i = 0; i < LAYER_MAX; i++)
@@ -263,10 +263,12 @@ bool TilesFramework::initialise()
 
     // Create an instance of UIWrapper for the library we were compiled for
     WindowManager::create();
-    if ( !wm ) return (false);
+    if (!wm)
+        return (false);
 
     // Initialize the wrapper
-    if ( !wm->init(&m_windowsz) ) return (false);
+    if (!wm->init(&m_windowsz))
+        return (false);
 
     wm->set_window_title(title.c_str());
     wm->set_window_icon(icon_name);

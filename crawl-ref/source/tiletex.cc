@@ -3,10 +3,9 @@
 #ifdef USE_TILE
 
 #include "files.h"
-#include "tiletex.h"
-
-#include "windowmanager.h"
 #include "glwrapper.h"
+#include "tiletex.h"
+#include "windowmanager.h"
 
 GenericTexture::GenericTexture() :
     m_handle(0),
@@ -37,7 +36,7 @@ bool GenericTexture::load_texture(const char *filename,
 {
     bool success = false;
     success = wm->load_texture(this, filename, mip_opt, m_orig_width,
-        m_orig_height, proc, force_power_of_two);
+                               m_orig_height, proc, force_power_of_two);
 
     return (success);
 }
