@@ -766,7 +766,7 @@ static bool _choose_species(newgame_def* ng)
     cprintf("%s", _welcome(ng).c_str());
 
     textcolor(YELLOW);
-    cprintf(" Please select your species");
+    cprintf(" Please select your species.");
 
     _construct_species_menu(ng, freeform);
     MenuDescriptor* descriptor = new MenuDescriptor(&menu);
@@ -1205,7 +1205,7 @@ static bool _choose_job(newgame_def* ng)
     cprintf("%s", _welcome(ng).c_str());
 
     textcolor( YELLOW );
-    cprintf(" Please select your background");
+    cprintf(" Please select your background.");
 
     _construct_backgrounds_menu(ng, freeform);
     MenuDescriptor* descriptor = new MenuDescriptor(&menu);
