@@ -1,5 +1,83 @@
 # TODO: Use dynamic commands instead of hard-coding them to text.
 
+{{
+
+tutorial = {}
+
+function tutorial.get_cmd (command)
+  return "<white>" .. crawl.get_command(command) .. "</white>"
+end
+
+function tutorial.message (text, channel, repeated)
+  local data = {text=text, channel=channel}
+  local function messenger (data, triggerable, triggerer, marker, ev)
+      crawl.mesclr(true)
+      crawl.mpr(data.text, data.channel)
+  end
+
+  return function_at_spot(messenger, data, repeated)
+end
+
+function tutorial.messagestart ()
+    crawl.mesclr(true)
+    local text = "Welcome to the tutorial! We'll start with basic movement. "
+
+    if crawl.is_tiles() then
+        text = text  .. "<white>Clicking</white> on a square will make you try to move there. (You can also use the <white>numpad</white> or <white>vi-keys</white> to move, but we'll be focussing on mouse movement for the time being.)"
+    else
+        text = text .. "You can use the <white>numpad</white> or <white>vi-keys</white> to move.\n"
+    end
+
+    crawl.mpr(text, "tutorial")
+    crawl.more()
+    crawl.mesclr(true)
+
+    if not crawl.is_tiles() then
+        crawl.mpr("You can move with  <white>1 2 3</white>\n" ..
+        "the <white>numpad</white>:         \\|/\n" ..
+        "                   <white>4</white><<-><white>6</white>\n" ..
+        "                    /|\\\n" ..
+        "                   <white>7 8 9</white>", "tutorial")
+        crawl.more()
+        crawl.mesclr(true)
+        crawl.mpr("Or you can move    " .. tutorial.get_cmd("CMD_MOVE_UP_LEFT") .. " " .. tutorial.get_cmd("CMD_MOVE_UP") .. " " .. tutorial.get_cmd("CMD_MOVE_UP_RIGHT") .. "\n" ..
+        "with <white>vi-keys</white>:       \\|/\n" ..
+        "                   " .. tutorial.get_cmd("CMD_MOVE_LEFT") .. "<<->" .. tutorial.get_cmd("CMD_MOVE_RIGHT") .. "\n" ..
+        "                    /|\\\n" ..
+        "                   " .. tutorial.get_cmd("CMD_MOVE_DOWN_LEFT") .. " " .. tutorial.get_cmd("CMD_MOVE_DOWN") .. " " .. tutorial.get_cmd("CMD_MOVE_DOWN_RIGHT"), "tutorial")
+    else
+        crawl.mpr("(If you want, you can see a list of movement keys by pressing " .. tutorial.get_cmd("CMD_DISPLAY_COMMANDS") .. " followed by <white>?</white>.)", "tutorial")
+    end
+
+    crawl.more()
+    crawl.mesclr(true)
+    crawl.mpr("Now, try moving towards that <blue>blue square</blue>.", "tutorial")
+end
+
+function tutorial.message0 ()
+  local text = "Great! There's another <blue>blue square</blue> further up the corridor. "
+
+  if not crawl.is_tiles() then
+    text = "Great! However, pressing the same key multiples times can be a bit tedious, and sometimes outright dangerous. There's another <blue>blue square</blue> down the corridor. You can safely 'run' (right) with " .. tutorial.get_cmd("CMD_RUN_LEFT") .. ". Try it!"
+  end
+
+  return tutorial.message(text, "tutorial", false)
+end
+
+function tutorial.message1 ()
+  local text = "You need to move diagonally here, "
+
+  if crawl.is_tiles() then
+    text = text .. "either <white>Click</white> with the mouse, "
+  end
+
+  text = text .. "press <white>3</white> or " .. tutorial.get_cmd("CMD_MOVE_DOWN_RIGHT") .. "."
+
+  return tutorial.message(text, "tutorial", false)
+end
+
+}}
+
 NAME:    tutorial_basic_1
 TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_shop_gen tutorial
 BFLAGS:  islanded
@@ -7,26 +85,35 @@ KMASK:   + = no_secret_doors
 ORIENT:  encompass
 ITEM:    mace ego:none, helmet ego:none
 # TODO: Include a travel stopper to the message square.
-MARKER:  A = lua:message_at_spot ( "\nYou need to move diagonally here. <white>Click</white> with \
-         mouse, <white>3</white> or <white>n</white>.", "tutorial", "true" )
-MARKER:  B = lua:message_at_spot ( "\nNow use <white>1</white> or <white>b</white>.", "tutorial", "true" )
-MARKER:  C = lua:message_at_spot ( "\nExploring manually can be tedious, try auto-explore <white>o</white>.", "tutorial", "true" )
-MARKER:  D = lua:message_at_spot ( "\nThis is a door. Open it by moving into it, you can close it with <white>C</white>. Note that it is a capital <white>C</white> - keyboard commands are case-sensitive. <white>Ctrl-click</white> and <white>Ctrl-direction</white> also works.", "tutorial", "true" )
-MARKER:  } = lua:message_at_spot ( "\nTake stairs down with <white>shift-click</white> or <white>></white>.", "tutorial", "true" )
-MARKER:  E = lua:message_at_spot ( "\nPick up the mace and the helmet with <white>g</white> or <white>clicking</white> your character while standing on the items. You can also <white>click</white> items in the floor section in the inventory region to pick them up.", "tutorial", "true" )
+: if not crawl.is_tiles() then
+MARKER:  Q = lua:tutorial.message0()
+: end
+MARKER:  A = lua:tutorial.message1()
+MARKER:  B = lua:tutorial.message( "Now use <white>1</white> or <white>b</white>.", "tutorial", "true" )
+MARKER:  C = lua:tutorial.message( "Exploring manually is very tedious, which is why we suggest you use auto-explore. Try it by pressing " .. tutorial.get_cmd("CMD_EXPLORE") .. ".", "tutorial", "true" )
+MARKER:  D = lua:tutorial.message( "This is a door. Open it by moving into it, you can close it with <white>C</white>. Note that it is a capital <white>C</white> - keyboard commands are case-sensitive. <white>Ctrl-click</white> and <white>Ctrl-direction</white> also works.", "tutorial", "true" )
+MARKER:  } = lua:tutorial.message( "Take stairs down with <white>shift-click</white> or <white>></white>.", "tutorial", "true" )
+MARKER:  E = lua:tutorial.message( "Pick up the mace and the helmet with <white>g</white> or <white>clicking</white> your character while standing on the items. You can also <white>click</white> items in the floor section in the inventory region to pick them up.", "tutorial", "true" )
 # TODO: Make the messages sensitive to if the game is tiles or console.
-MARKER:  F = lua:message_at_spot ( "\nWield it by <white>clicking</white> the mace in the inventory in the lower right (or by hitting <white>w</white>). Wear the helmet by <white>clicking</white> in the inventory (or by hitting <white>W</white> - again, note the capital <white>W</white>.", "tutorial", "true" )
-MARKER:  G = lua:message_at_spot ( "\nTo attack monsters, move into them (or <white>click</white> while adjecent).", "tutorial", "true" )
-MARKER:  H = lua:message_at_spot ( "\nRest! You have probably lost health in your battle. (See upper right stat area.) You regain health by resting. Press <white>5</white> to rest untill healed. ", "tutorial", "true" )
+MARKER:  F = lua:tutorial.message( "\nWield it by <white>clicking</white> the mace in the inventory in the lower right (or by hitting <white>w</white>). Wear the helmet by <white>clicking</white> in the inventory (or by hitting <white>W</white> - again, note the capital <white>W</white>.", "tutorial", "true" )
+MARKER:  G = lua:tutorial.message( "\nTo attack monsters, move into them (or <white>click</white> while adjecent).", "tutorial", "true" )
+MARKER:  H = lua:tutorial.message( "\nRest! You have probably lost health in your battle. (See upper right stat area.) You regain health by resting. Press <white>5</white> to rest untill healed. ", "tutorial", "true" )
 KFEAT:   ABCDEFGH = .
 COLOUR:  ABCDEFGH = blue
 #TILE:    ABCDEFGH = tutorial_message_tile_name_here
+: if not crawl.is_tiles() then
+COLOUR:  Q = blue
+KFEAT:   Q = .
+: end
 MONS:    training dummy ; club ego:none
+epilogue{{
+  tutorial.messagestart()
+}}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x..[..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x..{.............Axxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x..{.....Q.......Axxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x.....xxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxxxxxxxxxxxxxxxx
 x..(..xxxxxxxxxxxxx.xxxxxxxxxxxxxxxx...EdeF.........xxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxx.xx....xxxxxxxx.xxxxxxxxxxxxxxxxxx
@@ -37,7 +124,7 @@ xxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxoooxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxx...xxxxxxxxxxxxxGxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxBxxxxxxxxxxxx.}.xxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxx...xxxxxxxxxxxxx1xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxx.xxxxx.Cxxxxxxxx+xxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx.xxxxxxCxxxxxxxx+xxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxx.xxxxxx.x.xxxxxxxDxxxxxxxxxxxxxxHxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxx.xxxxxx.xxx.xxxxxxx.xxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxx.xxxxxx.xxxxx.xxxxx.xxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxx
@@ -47,7 +134,7 @@ xxxxxxxxxxxxxxxx.xxxxxx.xxxxxxxx.xxxx.xxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxx.xxxxx.xxxxxxxxx.xx.xxxxxxxxxxxxxx)xxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxx.xxx.xxxxxxxxxx.x.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxx.x.xxxxxxxxxx.xx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxx..xxxxxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
