@@ -591,6 +591,8 @@ end
 -- * door_opened, door_closed: Called whenever doors are opened and closed by
 --      the player, or whenever they are closed by monsters (monsters do not
 --      open doors).
+--
+-- * hp_warning: Called whenever a HP warning is triggered.
 
 DgnTriggerer = { CLASS = "DgnTriggerer" }
 DgnTriggerer.__index = DgnTriggerer
@@ -778,6 +780,10 @@ function DgnTriggerer:door_opened(triggerable, marker, ev)
 end
 
 function DgnTriggerer:door_closed(triggerable, marker, ev)
+  triggerable:do_trigger(self, marker, ev)
+end
+
+function DgnTriggerer:hp_warning(triggerable, marker, ev)
   triggerable:do_trigger(self, marker, ev)
 end
 

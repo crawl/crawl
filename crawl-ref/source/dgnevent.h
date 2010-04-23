@@ -31,10 +31,11 @@ enum dgn_event_type
     DET_WALL_HIT        = 0x1000,
     DET_DOOR_OPENED     = 0x2000,
     DET_DOOR_CLOSED     = 0x4000,
+    DET_HP_WARNING      = 0x8000,
 
     DET_GLOBAL_MASK     = DET_TURN_ELAPSED | DET_LEAVING_LEVEL
                         | DET_ENTERING_LEVEL | DET_ENTERED_LEVEL
-                        | DET_MONSTER_DIED,
+                        | DET_MONSTER_DIED | DET_HP_WARNING,
 
     DET_POSITION_MASK   = DET_MONSTER_MOVED | DET_PLAYER_MOVED
                         | DET_PLAYER_IN_LOS | DET_ITEM_PICKUP
