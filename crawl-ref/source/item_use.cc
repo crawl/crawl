@@ -652,7 +652,7 @@ void equip_weapon_effect(item_def& item, bool showMsgs)
                     break;
 
                 case SPWPN_VAMPIRICISM:
-                    if(you.species == SP_VAMPIRE)
+                    if (you.species == SP_VAMPIRE)
                     {
                         mpr("You feel a bloodthirsty glee!");
                         break;
@@ -665,9 +665,7 @@ void equip_weapon_effect(item_def& item, bool showMsgs)
                         make_hungry(4500, false, false);
                     }
                     else
-                    {
                         mpr("You feel an empty sense of dread.");
-                    }
                     break;
 
                 case SPWPN_RETURNING:
@@ -675,7 +673,7 @@ void equip_weapon_effect(item_def& item, bool showMsgs)
                     break;
 
                 case SPWPN_PAIN:
-                    if(you.skills[SK_NECROMANCY] == 0)
+                    if (you.skills[SK_NECROMANCY] == 0)
                         mpr("You have a feeling of ineptitude.");
                     else if(you.skills[SK_NECROMANCY] <= 4)
                         mpr("Pain shudders through your arm!");
