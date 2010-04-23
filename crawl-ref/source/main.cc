@@ -269,11 +269,14 @@ int main(int argc, char *argv[])
     // Override some options for tutorial.
     init_tutorial_options();
 
-    msg::stream << "Welcome" << (game_start? "" : " back") << ", "
-                << you.your_name << " the "
-                << species_name(you.species,you.experience_level)
-                << " " << you.class_name << "."
-                << std::endl;
+    if (!crawl_state.game_is_tutorial())
+    {
+        msg::stream << "Welcome" << (game_start? "" : " back") << ", "
+                    << you.your_name << " the "
+                    << species_name(you.species,you.experience_level)
+                    << " " << you.class_name << "."
+                    << std::endl;
+    }
 
     // Activate markers only after the welcome message, so the
     // player can see any resulting messages.
@@ -291,7 +294,8 @@ int main(int argc, char *argv[])
     // Warn player about their weapon, if unsuitable.
     wield_warning(false);
 
-    mpr("Press <w>?</w> for a list of commands and other information.");
+    if (!crawl_state.game_is_tutorial())
+        mpr("Press <w>?</w> for a list of commands and other information.");
 
     _prep_input();
 
