@@ -140,7 +140,7 @@ std::string channel_to_str( int channel )
     return message_channel_names[channel];
 }
 
-static int _str_to_book( const std::string& str )
+static startup_book_type _str_to_book(const std::string& str)
 {
     if (str == "flame" || str == "fire")
         return (SBT_FIRE);
@@ -154,7 +154,7 @@ static int _str_to_book( const std::string& str )
     return (SBT_NO_SELECTION);
 }
 
-static int _str_to_weapon( const std::string &str )
+static weapon_type _str_to_weapon(const std::string &str)
 {
     if (str == "shortsword" || str == "short sword")
         return (WPN_SHORT_SWORD);
@@ -200,7 +200,7 @@ static std::string _weapon_to_str( int weapon )
     }
 }
 
-static int _str_to_wand( const std::string& str )
+static startup_wand_type _str_to_wand(const std::string& str)
 {
     if (str == "enslavement")
         return (SWT_ENSLAVEMENT);
@@ -294,48 +294,67 @@ static fire_type _str_to_fire_types( const std::string &str )
     return (FIRE_NONE);
 }
 
-static char _str_to_species( const std::string &str )
+static std::string _species_to_str(species_type sp)
 {
-    if (str == "random")
-        return '*';
-
-    int index = -1;
-
-    if (str.length() == 1)      // old system of using menu letter
-        return (str[0]);
-    else if (str.length() == 2) // scan abbreviations
-        index = get_species_index_by_abbrev( str.c_str() );
-
-    // if we don't have a match, scan the full names
-    if (index == -1)
-        index = get_species_index_by_name( str.c_str() );
-
-    if (index == -1)
-        fprintf( stderr, "Unknown species choice: %s\n", str.c_str() );
-
-    return ((index != -1) ? index_to_letter( index ) : 0);
+    if (sp == SP_RANDOM)
+        return "random";
+    else if (sp == SP_VIABLE)
+        return "viable";
+    else
+        return species_name(sp, 1);
 }
 
-static int _str_to_job( const std::string &str )
+static species_type _str_to_species(const std::string &str)
 {
     if (str == "random")
-        return '*';
+        return SP_RANDOM;
+    else if (str == "viable")
+        return SP_VIABLE;
 
-    int index = -1;
-
-    if (str.length() == 1)      // old system of using menu letter
-        return (str[0]);
-    else if (str.length() == 2) // scan abbreviations
-        index = get_job_index_by_abbrev( str.c_str() );
+    species_type ret = SP_UNKNOWN;
+    if (str.length() == 2) // scan abbreviations
+        ret = get_species_by_abbrev(str.c_str());
 
     // if we don't have a match, scan the full names
-    if (index == -1)
-        index = get_job_index_by_name( str.c_str() );
+    if (ret == SP_UNKNOWN)
+        ret = str_to_species(str);
 
-    if (index == -1)
+    if (ret == SP_UNKNOWN)
+        fprintf(stderr, "Unknown species choice: %s\n", str.c_str());
+
+    return (ret);
+}
+
+static std::string _job_to_str(job_type job)
+{
+    if (job == JOB_RANDOM)
+        return "random";
+    else if (job == JOB_VIABLE)
+        return "viable";
+    else
+        return get_job_name(job);
+}
+
+static job_type _str_to_job(const std::string &str)
+{
+    if (str == "random")
+        return JOB_RANDOM;
+    else if (str == "viable")
+        return JOB_VIABLE;
+
+    job_type job = JOB_UNKNOWN;
+
+    if (str.length() == 2) // scan abbreviations
+        job = get_job_by_abbrev(str.c_str());
+
+    // if we don't have a match, scan the full names
+    if (job == JOB_UNKNOWN)
+        job = get_job_by_name(str.c_str());
+
+    if (job == JOB_UNKNOWN)
         fprintf( stderr, "Unknown background choice: %s\n", str.c_str() );
 
-    return ((index != -1) ? index_to_letter( index ) : 0);
+    return (job);
 }
 
 static bool _read_bool( const std::string &field, bool def_value )
@@ -426,19 +445,6 @@ void game_options::new_dump_fields(const std::string &text, bool add)
                 }
             }
     }
-}
-
-void game_options::reset_startup_options()
-{
-    race                   = 0;
-    cls                    = 0;
-    weapon                 = WPN_UNKNOWN;
-    book                   = SBT_NO_SELECTION;
-    wand                   = SWT_NO_SELECTION;
-    random_pick            = false;
-    good_random            = true;
-    chaos_knight           = GOD_NO_GOD;
-    priest                 = GOD_NO_GOD;
 }
 
 void game_options::set_default_activity_interrupts()
@@ -570,8 +576,6 @@ void game_options::reset_options()
 
     set_default_activity_interrupts();
 
-    reset_startup_options();
-
 #if defined(SAVE_DIR_PATH)
 #if defined(DGAMELAUNCH)
     save_dir   = SAVE_DIR_PATH;
@@ -598,8 +602,6 @@ void game_options::reset_options()
 #endif
 
     additional_macro_files.clear();
-
-    player_name.clear();
 
     seed = 0;
 #ifdef DGL_SIMPLE_MESSAGING
@@ -636,15 +638,9 @@ void game_options::reset_options()
     show_gold_turns = false;
     show_beam       = true;
 
-    prev_race     = 0;
-    prev_cls      = 0;
-    prev_ck       = GOD_NO_GOD;
-    prev_pr       = GOD_NO_GOD;
-    prev_weapon   = WPN_UNKNOWN;
-    prev_book     = SBT_NO_SELECTION;
-    prev_wand     = SWT_NO_SELECTION;
-    prev_name     = "";
-    prev_randpick = false;
+    game = newgame_def();
+    prev_game = newgame_def();
+
     remember_name = true;
 
 #ifdef USE_ASCII_CHARACTERS
@@ -1301,61 +1297,31 @@ void read_startup_prefs()
     temp.read_options(fl, false);
     fclose(f);
 
-    Options.prev_randpick = temp.random_pick;
-    Options.prev_weapon   = temp.weapon;
-    Options.prev_pr       = temp.priest;
-    Options.prev_ck       = temp.chaos_knight;
-    Options.prev_cls      = temp.cls;
-    Options.prev_race     = temp.race;
-    Options.prev_book     = temp.book;
-    Options.prev_wand     = temp.wand;
-    Options.prev_name     = temp.player_name;
+    Options.prev_game = temp.game;
 #endif // !DISABLE_STICKY_STARTUP_OPTIONS
 }
 
 #ifndef DISABLE_STICKY_STARTUP_OPTIONS
 static void write_newgame_options(FILE *f)
 {
-    // Write current player name
-    fprintf(f, "name = %s\n", Options.prev_name.c_str());
-
-    if (Options.prev_randpick)
-        Options.prev_race = Options.prev_cls = '*';
-
-    // Race selection
-    if (Options.prev_race)
-        fprintf(f, "species = %c\n", Options.prev_race);
-    if (Options.prev_cls)
-        fprintf(f, "background = %c\n", Options.prev_cls);
-
-    if (Options.prev_weapon != WPN_UNKNOWN)
-        fprintf(f, "weapon = %s\n", _weapon_to_str(Options.prev_weapon).c_str());
-
-    if (Options.prev_ck != GOD_NO_GOD)
-    {
-        fprintf(f, "chaos_knight = %s\n",
-                Options.prev_ck == GOD_XOM     ? "xom" :
-                Options.prev_ck == GOD_MAKHLEB ? "makhleb" :
-                Options.prev_ck == GOD_LUGONU  ? "lugonu"
-                                               : "random");
-    }
-    if (is_priest_god(Options.prev_pr) || Options.prev_pr == GOD_RANDOM)
-    {
-        fprintf(f, "priest = %s\n",
-                lowercase_string(god_name(Options.prev_pr)).c_str());
-    }
-
-    if (Options.prev_book != SBT_NO_SELECTION)
+    const newgame_def& prev = Options.prev_game;
+    fprintf(f, "name = %s\n", prev.name.c_str());
+    fprintf(f, "species = %s\n", _species_to_str(prev.species).c_str());
+    fprintf(f, "background = %s\n", _job_to_str(prev.job).c_str());
+    if (prev.weapon != WPN_UNKNOWN)
+        fprintf(f, "weapon = %s\n", _weapon_to_str(prev.weapon).c_str());
+    if (prev.religion != GOD_NO_GOD)
+        fprintf(f, "religion = %s\n", god_name(prev.religion).c_str());
+    if (prev.book != SBT_NO_SELECTION)
     {
         fprintf(f, "book = %s\n",
-                Options.prev_book == SBT_FIRE ? "fire" :
-                Options.prev_book == SBT_COLD ? "cold" :
-                Options.prev_book == SBT_SUMM ? "summ" :
+                prev.book == SBT_FIRE ? "fire" :
+                prev.book == SBT_COLD ? "cold" :
+                prev.book == SBT_SUMM ? "summ" :
                 "random");
     }
-
-    if (Options.prev_wand != SWT_NO_SELECTION)
-        fprintf(f, "wand = %s\n", _wand_to_str(Options.prev_wand).c_str());
+    if (prev.wand != SWT_NO_SELECTION)
+        fprintf(f, "wand = %s\n", _wand_to_str(prev.wand).c_str());
 }
 #endif // !DISABLE_STICKY_STARTUP_OPTIONS
 
@@ -2088,7 +2054,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "name")
     {
         // field is already cleaned up from trim_string()
-        player_name = field;
+        game.name = field;
     }
 #endif
 #ifndef USE_TILE
@@ -2266,40 +2232,35 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     // no_dark_brand applies here as well.
     else CURSES_OPTION(heap_brand);
     else COLOUR_OPTION(status_caption_colour);
+    else if (key == "species" || key == "race")
+    {
+        game.species = _str_to_species(field);
+    }
+    else if (key == "background" || key == "job" || key == "class")
+    {
+        game.job = _str_to_job( field );
+    }
     else if (key == "weapon")
     {
         // Choose this weapon for backgrounds that get choice.
-        weapon = _str_to_weapon( field );
+        game.weapon = _str_to_weapon( field );
     }
     else if (key == "book")
     {
         // Choose this book for backgrounds that get choice.
-        book = _str_to_book( field );
+        game.book = _str_to_book( field );
     }
     else if (key == "wand")
     {
         // Choose this wand for backgrounds that get choice.
-        wand = _str_to_wand( field );
+        game.wand = _str_to_wand( field );
     }
-    else if (key == "chaos_knight")
+    else if (key == "religion")
     {
-        // Choose god for Chaos Knights.
-        if (field == "xom")
-            chaos_knight = GOD_XOM;
-        else if (field == "makhleb")
-            chaos_knight = GOD_MAKHLEB;
-        else if (field == "lugonu")
-            chaos_knight = GOD_LUGONU;
-        else if (field == "random")
-            chaos_knight = GOD_RANDOM;
+        // Choose god for Chaos Knights or Priests.
+        game.religion = str_to_god(field);
     }
-    else if (key == "priest")
-    {
-        // Choose this weapon for backgrounds that get choice.
-        priest = str_to_god(field);
-        if (!is_priest_god(priest))
-            priest = GOD_RANDOM;
-    }
+    else BOOL_OPTION(game.fully_random);
     else if (key == "fire_items_start")
     {
         if (isalpha( field[0] ))
@@ -2326,8 +2287,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         // field is already cleaned up from trim_string()
         pizza = field;
     }
-    else BOOL_OPTION(random_pick);
-    else BOOL_OPTION(good_random);
 #if !defined(DGAMELAUNCH) || defined(DGL_REMEMBER_NAME)
     else BOOL_OPTION(remember_name);
 #endif
@@ -2406,14 +2365,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
 #endif
 #endif
-    else if (key == "species" || key == "race")
-    {
-        race = _str_to_species( field );
-    }
-    else if (key == "background" || key == "job" || key == "class")
-    {
-        cls = _str_to_job( field );
-    }
     else BOOL_OPTION(auto_list);
     else if (key == "default_target")
     {
@@ -3831,7 +3782,7 @@ bool parse_args( int argc, char **argv, bool rc_only )
             if (!next_is_param)
                 return (false);
             if (!rc_only)
-                Options.player_name = next_arg;
+                Options.game.name = next_arg;
             nextUsed = true;
             break;
 
@@ -3843,10 +3794,10 @@ bool parse_args( int argc, char **argv, bool rc_only )
             if (!rc_only)
             {
                 if (o == 2)
-                    Options.race = _str_to_species( std::string( next_arg ) );
+                    Options.game.species = _str_to_species(std::string(next_arg));
 
                 if (o == 3)
-                    Options.cls = _str_to_job( std::string( next_arg ) );
+                    Options.game.job = _str_to_job(std::string(next_arg));
             }
             nextUsed = true;
             break;

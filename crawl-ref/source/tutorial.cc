@@ -196,10 +196,9 @@ bool pick_tutorial()
             // Did the player recently see a monster turn invisible?
             Tutorial.tut_seen_invisible = 0;
 
-            Options.random_pick = false;
-            if (!Options.book || Options.book == SBT_SUMM)
-                Options.book = SBT_RANDOM;
-            Options.weapon = WPN_HAND_AXE; // easiest choice for fighters
+            Options.game.fully_random = false;
+            Options.game.book = SBT_RANDOM;
+            Options.game.weapon = WPN_HAND_AXE; // easiest choice for fighters
 
             crawl_state.type = GAME_TYPE_TUTORIAL;
 
@@ -211,8 +210,8 @@ bool pick_tutorial()
             // In this case, undo previous choices.
             you.species    = SP_UNKNOWN;
             you.char_class = JOB_UNKNOWN;
-            Options.race   = 0;
-            Options.cls    = 0;
+            Options.game.species = SP_UNKNOWN;
+            Options.game.job = JOB_UNKNOWN;
         }
 
         switch (keyn)
