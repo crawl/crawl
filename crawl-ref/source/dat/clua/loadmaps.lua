@@ -7,7 +7,5 @@
 local des_files = file.datadir_files_recursive("dat/des", ".des")
 
 for _, file in ipairs(des_files) do
-  if string.find(file, "tutorial") == nil then
-    dgn.load_des_file("des/" .. file)
-  end
+  dgn.load_des_file("des/" .. file)
 end
