@@ -15,6 +15,25 @@
 #include "debug.h"
 
 /////////////////////////////////////////////////////////////////////////////
+// Static functions from GLStateManager
+
+GLStateManager *glmanager = NULL;
+
+void GLStateManager::init()
+{
+    if (glmanager)
+        return;
+
+    glmanager = new OGLStateManager();
+}
+
+void GLStateManager::shutdown()
+{
+    delete glmanager;
+    glmanager = NULL;
+}
+
+/////////////////////////////////////////////////////////////////////////////
 // OGLStateManager
 
 OGLStateManager::OGLStateManager()

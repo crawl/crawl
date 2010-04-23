@@ -14,6 +14,16 @@
 #include "options.h"
 #include "windowmanager.h"
 
+WindowManager *wm = NULL;
+
+void WindowManager::create()
+{
+    if (wm)
+        return;
+
+    wm = new SDLWrapper();
+}
+
 static unsigned char _get_modifiers(SDL_keysym &keysym)
 {
     // keysym.mod can't be used to keep track of the modifier state.
