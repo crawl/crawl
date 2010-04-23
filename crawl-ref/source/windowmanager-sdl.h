@@ -2,9 +2,10 @@
 #define SDL_WINDOWMANAGER_H
 
 #ifdef USE_TILE
+#ifdef USE_SDL
+
 #include "windowmanager.h"
 
-#ifdef USE_SDL
 struct SDL_Surface;
 struct SDL_VideoInfo;
 
@@ -25,8 +26,8 @@ public:
     virtual int byte_order();
 
     // System time functions
-    virtual void set_timer( unsigned int interval,
-                            wm_timer_callback callback);
+    virtual void set_timer(unsigned int interval,
+                           wm_timer_callback callback);
     virtual unsigned int get_ticks() const;
     virtual void delay(unsigned int ms);
 
@@ -42,16 +43,16 @@ public:
     virtual int screen_height() const;
 
     // Texture loading
-    virtual bool load_texture(  GenericTexture *tex, const char *filename,
-                                MipMapOptions mip_opt, unsigned int &orig_width,
-                                unsigned int &orig_height,
-                                tex_proc_func proc = NULL,
-                                bool force_power_of_two = true);
+    virtual bool load_texture(GenericTexture *tex, const char *filename,
+                              MipMapOptions mip_opt, unsigned int &orig_width,
+                              unsigned int &orig_height,
+                              tex_proc_func proc = NULL,
+                              bool force_power_of_two = true);
 
 protected:
     // Helper functions
-    SDL_Surface *load_image( const char *file ) const;
-    
+    SDL_Surface *load_image(const char *file) const;
+
     SDL_Surface *m_context;
     const SDL_VideoInfo* video_info;
 };

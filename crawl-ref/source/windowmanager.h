@@ -1,20 +1,22 @@
 #ifndef WINDOWMANAGER_H
 #define WINDOWMANAGER_H
 
-#include "externs.h"
-
 #ifdef USE_TILE
+
+#include "externs.h"
+#include "glwrapper.h"
 #include "tilereg.h"
 #include "tilesdl.h"
-#include "tiletex.h" // For tex_proc_func
-#include "glwrapper.h"  // for MipMapOptions enum
+#include "tiletex.h"
 
-typedef enum {
+enum wm_endianness
+{
     WM_BIG_ENDIAN,
     WM_LIL_ENDIAN
-} wm_endianness;
+};
 
-typedef enum {
+enum wm_event_type
+{
     WM_NOEVENT = 0,
     WM_ACTIVEEVENT,
     WM_KEYDOWN,
@@ -27,49 +29,57 @@ typedef enum {
     WM_RESIZE,
     WM_EXPOSE,
     WM_NUMEVENTS = 15
-} wm_event_type;
+};
 
-typedef struct{
+struct wm_keysym
+{
     unsigned char scancode;
     int sym;
     unsigned char key_mod;
     unsigned int unicode;
-} wm_keysym;
+};
 
-typedef struct{
+struct wm_active_event
+{
     unsigned char type;
     unsigned char gain;
     unsigned char state;
-} wm_active_event;
+};
 
-typedef struct{
+struct wm_keyboard_event
+{
     unsigned char type;
     unsigned char state;
     wm_keysym keysym;
-} wm_keyboard_event;
+};
 
-typedef struct{
+struct wm_resize_event
+{
     unsigned char type;
     int w, h;
-} wm_resize_event;
+};
 
-typedef struct{
+struct wm_expose_event
+{
     unsigned char type;
-} wm_expose_event;
+};
 
-typedef struct{
+struct wm_quit_event
+{
     unsigned char type;
-} wm_quit_event;
+};
 
-typedef struct{
+struct wm_custom_event
+{
     unsigned char type;
     int code;
     void *data1;
     void *data2;
-} wm_custom_event;
+};
 
 // Basically a generic SDL_Event
-typedef struct{
+struct wm_event
+{
     unsigned char type;
     wm_active_event active;
     wm_keyboard_event key;
@@ -78,12 +88,13 @@ typedef struct{
     wm_expose_event expose;
     wm_quit_event quit;
     wm_custom_event custom;
-} wm_event;
+};
 
 // custom timer callback function
 typedef unsigned int (*wm_timer_callback)(unsigned int interval);
 
-class WindowManager {
+class WindowManager
+{
 public:
     // To silence pre 4.3 g++ compiler warnings
     virtual ~WindowManager() {};
@@ -103,8 +114,8 @@ public:
     virtual int byte_order() = 0;
 
     // System time functions
-    virtual void set_timer( unsigned int interval,
-                            wm_timer_callback callback) = 0;
+    virtual void set_timer(unsigned int interval,
+                           wm_timer_callback callback) = 0;
     virtual unsigned int get_ticks() const = 0;
     virtual void delay(unsigned int ms) = 0;
 
@@ -120,11 +131,11 @@ public:
     virtual int screen_height() const = 0;
 
     // Texture loading
-    virtual bool load_texture(  GenericTexture *tex, const char *filename,
-                                MipMapOptions mip_opt, unsigned int &orig_width,
-                                unsigned int &orig_height,
-                                tex_proc_func proc = NULL,
-                                bool force_power_of_two = true) = 0;
+    virtual bool load_texture(GenericTexture *tex, const char *filename,
+                              MipMapOptions mip_opt, unsigned int &orig_width,
+                              unsigned int &orig_height,
+                              tex_proc_func proc = NULL,
+                              bool force_power_of_two = true) = 0;
 
 };
 

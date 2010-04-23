@@ -1,10 +1,10 @@
 #ifndef GL_WRAPPER_H
 #define GL_WRAPPER_H
 
-#include <stdlib.h> // For size_t
-#include <vector> // for std::vector
-
 #ifdef USE_TILE
+
+#include <stdlib.h>
+#include <vector>
 
 struct coord_def;
 
@@ -52,23 +52,23 @@ enum MipMapOptions
 };
 
 // TODO: Ixtli - Remove QUADS entirely.
-typedef enum
+enum drawing_modes
 {
     GLW_POINTS,
     GLW_LINES,
     GLW_TRIANGLES,
     GLW_TRIANGLE_STRIP,
     GLW_QUADS
-} drawing_modes;
+};
 
 struct GLPrimitive
 {
     GLPrimitive(long unsigned int sz, size_t ct, unsigned int vs,
-        const void* v_pt, const void *c_pt, const void *t_pt);
+                const void* v_pt, const void *c_pt, const void *t_pt);
 
     // Primitive Metadata
     drawing_modes mode;
-    unsigned int vert_size;  // Coords per vertex
+    unsigned int vert_size; // Coords per vertex
     long unsigned int size;
     size_t count;
 
@@ -121,8 +121,8 @@ public:
     virtual void pixelstore_unpack_alignment(unsigned int bpp) = 0;
     virtual void reset_view_for_redraw(float x, float y) = 0;
     virtual void reset_view_for_resize(coord_def &m_windowsz) = 0;
-    virtual void set_transform(  const GLW_3VF *trans = NULL,
-                                const GLW_3VF *scale = NULL) = 0;
+    virtual void set_transform(const GLW_3VF *trans = NULL,
+                               const GLW_3VF *scale = NULL) = 0;
     virtual void reset_transform() = 0;
     virtual void set_current_color(GLW_3VF &color) = 0;
     virtual void set_current_color(GLW_4VF &color) = 0;
@@ -135,7 +135,7 @@ public:
     virtual void generate_textures(size_t count, unsigned int *textures) = 0;
     virtual void bind_texture(unsigned int texture) = 0;
     virtual void load_texture(unsigned char *pixels, unsigned int width,
-        unsigned int height, MipMapOptions mip_opt) = 0;
+                              unsigned int height, MipMapOptions mip_opt) = 0;
 
     // Debug
 #ifdef DEBUG

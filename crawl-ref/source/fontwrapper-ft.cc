@@ -1,24 +1,22 @@
 /*
- *  Moved from the following file:
- *  File:       tilefont.cc
+ *  File:       fontwrapper-ft.cc
  *  Created by: ennewalker on Sat Apr 26 01:33:53 2008 UTC
  */
 
 #include "AppHdr.h"
 
 #ifdef USE_TILE
-
-#include "tilebuf.h"
-#include "tilefont.h"
-#include "defines.h"
-#include "files.h"
-
-#include "glwrapper.h"
-
 #ifdef USE_FT
-#include "fontwrapper-ft.h"
+
 #include <ft2build.h>
 #include FT_FREETYPE_H
+
+#include "defines.h"
+#include "files.h"
+#include "fontwrapper-ft.h"
+#include "glwrapper.h"
+#include "tilebuf.h"
+#include "tilefont.h"
 
 FTFontWrapper::FTFontWrapper() :
     m_glyphs(NULL),
@@ -32,7 +30,8 @@ FTFontWrapper::~FTFontWrapper()
     delete[] m_glyphs;
 }
 
-bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size, bool outl)
+bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
+                              bool outl)
 {
     FT_Library library;
     FT_Face face;
@@ -240,7 +239,7 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size, boo
     return success;
 }
 
-struct FontVertLayout
+struct font_vert
 {
     float pos_x;
     float pos_y;
@@ -253,9 +252,10 @@ struct FontVertLayout
 };
 
 void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
-                              unsigned char *chars, unsigned char *colours,
-                              unsigned int width, unsigned int height,
-                              bool drop_shadow)
+                                     unsigned char *chars,
+                                     unsigned char *colours,
+                                     unsigned int width, unsigned int height,
+                                     bool drop_shadow)
 {
     if (!chars || !colours || !width || !height || !m_glyphs)
         return;
@@ -263,7 +263,7 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
     coord_def adv(std::max(-m_min_offset, 0), 0);
     unsigned int i = 0;
 
-    std::vector<FontVertLayout> verts;
+    std::vector<font_vert> verts;
     // TODO enne - make this better
     // This is bad for the CRT.  Maybe we should just reserve some fixed limit?
     // Maybe we should just cache this in FTFontWrapper?
@@ -281,7 +281,7 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
 
             if (col_bg != 0)
             {
-                FontVertLayout v;
+                font_vert v;
                 v.tex_x = v.tex_y = 0;
                 v.r = term_colours[col_bg].r;
                 v.g = term_colours[col_bg].g;
@@ -315,7 +315,7 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
                 float tex_y = (float)(c / 16) / 16.0f;
                 float tex_x2 = tex_x + (float)this_width / (float)m_tex.width();
                 float tex_y2 = tex_y + texcoord_dy;
-                FontVertLayout v;
+                font_vert v;
                 v.r = term_colours[col_fg].r;
                 v.g = term_colours[col_fg].g;
                 v.b = term_colours[col_fg].b;
@@ -365,10 +365,10 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
     glmanager->set(state);
     m_tex.bind();
 
-    GLPrimitive prim(   sizeof(FontVertLayout), verts.size(), 2,
-                        &verts[0].pos_x,
-                        NULL,
-                        &verts[0].tex_x);
+    GLPrimitive prim(sizeof(font_vert), verts.size(), 2,
+                     &verts[0].pos_x,
+                     NULL,
+                     &verts[0].tex_x);
 
     // Defaults to GLW_QUADS
     GLW_3VF trans(x_pos, y_pos, 0.0f);
@@ -440,10 +440,10 @@ static void _draw_box(int x_pos, int y_pos, float width, float height,
     state.blend = true;
     glmanager->set(state);
 
-    GLPrimitive prim(   sizeof(box_vert), sizeof(verts) / sizeof(box_vert), 2,
-                        &verts[0].x,
-                        &verts[0].r,
-                        NULL);
+    GLPrimitive prim(sizeof(box_vert), sizeof(verts) / sizeof(box_vert), 2,
+                     &verts[0].x,
+                     &verts[0].r,
+                     NULL);
 
     glmanager->draw_primitive(prim);
 }
@@ -513,7 +513,8 @@ int FTFontWrapper::find_index_before_width(const char *text, int max_width)
 }
 
 formatted_string FTFontWrapper::split(const formatted_string &str,
-                               unsigned int max_width, unsigned int max_height)
+                                      unsigned int max_width,
+                                      unsigned int max_height)
 {
     int max_lines = max_height / char_height();
 
@@ -570,13 +571,14 @@ formatted_string FTFontWrapper::split(const formatted_string &str,
 }
 
 void FTFontWrapper::render_string(unsigned int px, unsigned int py,
-                           const char *text,
-                           const coord_def &min_pos, const coord_def &max_pos,
-                           unsigned char font_colour, bool drop_shadow,
-                           unsigned char box_alpha,
-                           unsigned char box_colour,
-                           unsigned int outline,
-                           bool tooltip)
+                                  const char *text,
+                                  const coord_def &min_pos,
+                                  const coord_def &max_pos,
+                                  unsigned char font_colour, bool drop_shadow,
+                                  unsigned char box_alpha,
+                                  unsigned char box_colour,
+                                  unsigned int outline,
+                                  bool tooltip)
 {
     ASSERT(text);
 
@@ -662,13 +664,14 @@ void FTFontWrapper::render_string(unsigned int px, unsigned int py,
 }
 
 void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
-                   const std::string &str, const VColour &col)
+                          const std::string &str, const VColour &col)
 {
     store(buf, x, y, str, col, x);
 }
 
 void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
-                   const std::string &str, const VColour &col, float orig_x)
+                          const std::string &str, const VColour &col,
+                          float orig_x)
 {
     for (unsigned int i = 0; i < str.size(); i++)
     {
@@ -686,13 +689,13 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
 }
 
 void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
-                   const formatted_string &fs)
+                          const formatted_string &fs)
 {
     store(buf, x, y, fs, x);
 }
 
 void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
-                   const formatted_string &fs, float orig_x)
+                          const formatted_string &fs, float orig_x)
 {
     int colour = LIGHTGREY;
     for (unsigned int i = 0; i < fs.ops.size(); i++)
@@ -713,7 +716,7 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
 }
 
 void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
-                   unsigned char c, const VColour &col)
+                          unsigned char c, const VColour &col)
 {
     if (!m_glyphs[c].renderable)
     {
