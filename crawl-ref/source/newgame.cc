@@ -921,7 +921,7 @@ static bool _choose_species(newgame_def* ng)
                                                 ng->job, good_random));
                     ng->species = get_species(random_index);
                     ng_race = index_to_letter(random_index);
-                    return true;
+                    return false;
                 }
             default:
                 // we have a species selection
@@ -1361,7 +1361,7 @@ static bool _choose_job(newgame_def* ng)
                                                 good_random));
                     ng->job = get_job(random_index);
                     ng_cls = index_to_letter(random_index);
-                    return true;
+                    return false;
                 }
             default:
                 // we have a background selection
