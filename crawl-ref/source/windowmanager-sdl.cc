@@ -59,7 +59,7 @@ static int _translate_keysym(SDL_keysym &keysym)
     // 0-1k : Other SDL keys (F1, Windows keys, etc...) and modifiers
     // 1k-3k: Non-ASCII with modifiers other than just shift or just ctrl.
     // 3k+  : ASCII with the left alt modifier.
-    
+
     int offset = mod ? 1000 + 256 * mod : 0;
     int numpad_offset = 0;
     if (mod == MOD_CTRL)
@@ -80,7 +80,7 @@ static int _translate_keysym(SDL_keysym &keysym)
         return (CK_ESCAPE + offset);
     case SDLK_DELETE:
         return (CK_DELETE + offset);
-        
+
     case SDLK_NUMLOCK:
     case SDLK_CAPSLOCK:
     case SDLK_SCROLLOCK:
@@ -92,7 +92,7 @@ static int _translate_keysym(SDL_keysym &keysym)
     case SDLK_COMPOSE:
         // Don't handle these.
         return (0);
-        
+
     case SDLK_F1:
     case SDLK_F2:
     case SDLK_F3:
@@ -118,11 +118,11 @@ static int _translate_keysym(SDL_keysym &keysym)
     case SDLK_UNDO:
         ASSERT(keysym.sym >= SDLK_F1 && keysym.sym <= SDLK_UNDO);
         return (keysym.sym + (SDLK_UNDO - SDLK_F1 + 1) * mod);
-        
+
         // Hack.  libw32c overloads clear with '5' too.
     case SDLK_KP5:
         return (CK_CLEAR + numpad_offset);
-        
+
     case SDLK_KP8:
     case SDLK_UP:
         return (CK_UP + numpad_offset);
@@ -317,7 +317,7 @@ unsigned int SDLWrapper::get_ticks() const
 key_mod SDLWrapper::get_mod_state() const
 {
     SDLMod mod = SDL_GetModState();
-    
+
     switch (mod) {
     case KMOD_LSHIFT:
     case KMOD_RSHIFT:
@@ -431,7 +431,7 @@ void SDLWrapper::set_timer(unsigned int interval, wm_timer_callback callback)
 }
 
 int SDLWrapper::raise_custom_event()
-{   
+{
     SDL_Event send_event;
     send_event.type = SDL_USEREVENT;
     return (SDL_PushEvent(&send_event));

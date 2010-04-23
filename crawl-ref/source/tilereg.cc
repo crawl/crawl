@@ -223,7 +223,7 @@ void Region::set_transform()
 {
     GLW_3VF trans(sx + ox, sy + oy, 0);
     GLW_3VF scale(dx, dy, 1);
-    
+
     glmanager->set_transform(&trans, &scale);
 }
 
