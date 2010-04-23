@@ -1,8 +1,3 @@
-/*
- *  File:       fontwrapper-ft.cc
- *  Created by: ennewalker on Sat Apr 26 01:33:53 2008 UTC
- */
-
 #include "AppHdr.h"
 
 #ifdef USE_TILE

@@ -6,12 +6,13 @@
 
 #include "tilefont.h"
 
-// This class handles loading FreeType2 fonts and rendering them via OpenGL.
-
 // TODO enne - Fonts could be made better by:
 //
 // * handling kerning
 // * using SDL_font (maybe?)
+// * the possibility of streaming this class in and out so that Crawl doesn't
+//   have to link against FreeType2 or be forced do as much processing at
+//   load time.
 
 class FTFontWrapper : public FontWrapper
 {
