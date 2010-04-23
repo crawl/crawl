@@ -657,6 +657,12 @@ void canned_msg(canned_message_type which_message)
     case MSG_NO_SPELLS:
         mpr("You don't know any spells.");
         break;
+    case MSG_MANA_INCREASE:
+        mpr("You feel your mana capacity increase.");
+        break;
+    case MSG_MANA_DECREASE:
+        mpr("You feel your mana capacity decrease.");
+        break;
     }
 }
 

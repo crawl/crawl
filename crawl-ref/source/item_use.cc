@@ -505,7 +505,7 @@ void equip_weapon_effect(item_def& item, bool showMsgs)
                 (1.0+player_mutation_level(MUT_HIGH_MAGIC)/10.0) > 50)
                 mpr("You feel your mana capacity is already quite full.");
             else
-                mpr("You feel your mana capacity increase.");
+                canned_msg(MSG_MANA_INCREASE);
 
             calc_mp();
             set_ident_type(item, ID_KNOWN_TYPE);
@@ -3576,7 +3576,7 @@ void equip_jewellery_effect(item_def &item)
             (1.0+player_mutation_level(MUT_HIGH_MAGIC)/10.0) > 50)
             mpr("You feel your mana capacity is already quite full.");
         else
-            mpr("You feel your mana capacity increase.");
+            canned_msg(MSG_MANA_INCREASE);
 
         calc_mp();
         if (artefact)
@@ -4146,8 +4146,7 @@ void unequip_jewellery_effect(item_def &item, bool mesg)
         break;
 
     case RING_MAGICAL_POWER:
-        mpr("You feel your mana capacity decrease.");
-        // dec_max_mp(9);
+        canned_msg(MSG_MANA_DECREASE);
         break;
 
     case AMU_THE_GOURMAND:
@@ -5853,8 +5852,8 @@ void use_artefact(item_def &item, bool *show_msgs, bool unmeld)
 
     if (proprt[ARTP_MAGICAL_POWER] && !known[ARTP_MAGICAL_POWER])
     {
-        mprf("You feel your mana capacity %s.",
-             proprt[ARTP_MAGICAL_POWER] > 0 ? "increase" : "decrease");
+        canned_msg(proprt[ARTP_MAGICAL_POWER] > 0 ? MSG_MANA_INCREASE
+                                                  : MSG_MANA_DECREASE);
         artefact_wpn_learn_prop(item, ARTP_MAGICAL_POWER);
     }
 

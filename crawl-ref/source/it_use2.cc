@@ -603,7 +603,7 @@ void unequip_weapon_effect(item_def& item, bool showMsgs)
         // Store the MP in case you'll re-wield quickly.
         item.special = mp + you.elapsed_time / POWER_DECAY;
 
-        mpr("You feel your mana capacity decrease.");
+        canned_msg(MSG_MANA_DECREASE);
     }
 }
 
@@ -756,8 +756,8 @@ void unuse_artefact(const item_def &item, bool *show_msgs)
 
     if (proprt[ARTP_MAGICAL_POWER] && !known[ARTP_MAGICAL_POWER])
     {
-        mprf("You feel your mana capacity %s.",
-              proprt[ARTP_MAGICAL_POWER] > 0 ? "decrease" : "increase");
+        canned_msg(proprt[ARTP_MAGICAL_POWER] > 0 ? MSG_MANA_DECREASE
+                                                  : MSG_MANA_INCREASE);
     }
 
     // Modify ability scores; always output messages.
