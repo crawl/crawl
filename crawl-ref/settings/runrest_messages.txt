@@ -48,3 +48,4 @@ ignore = friend_enchant:
 ignore = friend_action:
 ignore = sound:
 stop = god:
+stop = tutorial:
