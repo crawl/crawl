@@ -232,6 +232,13 @@ LUARET1(you_see_cell_no_trans, boolean,
 
 LUARET1(you_piety, number, you.piety)
 
+LUAFN(you_stop_running)
+{
+    stop_running();
+
+    return (0);
+}
+
 LUAFN(you_moveto)
 {
     const coord_def place(luaL_checkint(ls, 1), luaL_checkint(ls, 2));
@@ -372,6 +379,7 @@ static const struct luaL_reg you_dlib[] =
 { "shopping_list_has",  _you_shopping_list_has },
 { "shopping_list_add",  _you_shopping_list_add },
 { "shopping_list_del",  _you_shopping_list_del },
+{ "stop_running",       you_stop_running },
 
 { NULL, NULL }
 };

@@ -8,11 +8,22 @@ function tutorial.get_cmd (command)
   return "<white>" .. crawl.get_command(command) .. "</white>"
 end
 
-function tutorial.message (text, channel, repeated)
-  local data = {text=text, channel=channel}
+function tutorial.message (text, channel, repeated, more)
+  if more == nil then
+    more = false
+  else
+    more = true
+  end
+
+  local data = {text=text, channel=channel, more=more}
+
   local function messenger (data, triggerable, triggerer, marker, ev)
       crawl.mesclr(true)
       crawl.mpr(data.text, data.channel)
+      if data.more == true then
+        crawl.redraw_view()
+        crawl.more()
+      end
   end
 
   return function_at_spot(messenger, data, repeated)
@@ -33,24 +44,18 @@ function tutorial.messagestart ()
     crawl.mesclr(true)
 
     if not crawl.is_tiles() then
-        crawl.mpr("You can move with  <white>1 2 3</white>\n" ..
-        "the <white>numpad</white>:         \\|/\n" ..
-        "                   <white>4</white><<-><white>6</white>\n" ..
-        "                    /|\\\n" ..
-        "                   <white>7 8 9</white>", "tutorial")
+        crawl.mpr("You can move with  <white>1 2 3</white>    " .. "Or you can move    " .. tutorial.get_cmd("CMD_MOVE_UP_LEFT") .. " " .. tutorial.get_cmd("CMD_MOVE_UP") .. " " .. tutorial.get_cmd("CMD_MOVE_UP_RIGHT") .. "\n" ..
+"the <white>numpad</white>:         \\|/    " .. " with <white>vi-keys</white>:       \\|/\n" ..
+"                   <white>4</white><<-><white>6</white>    " .. "                   " .. tutorial.get_cmd("CMD_MOVE_LEFT") .. "<<->" .. tutorial.get_cmd("CMD_MOVE_RIGHT") .. "\n" ..
+"                    /|\\    " .. "                    /|\\\n" ..
+"                   <white>7 8 9</white>    " .. "                   " .. tutorial.get_cmd("CMD_MOVE_DOWN_LEFT") .. " " .. tutorial.get_cmd("CMD_MOVE_DOWN") .. " " .. tutorial.get_cmd("CMD_MOVE_DOWN_RIGHT"), "tutorial")
         crawl.more()
-        crawl.mesclr(true)
-        crawl.mpr("Or you can move    " .. tutorial.get_cmd("CMD_MOVE_UP_LEFT") .. " " .. tutorial.get_cmd("CMD_MOVE_UP") .. " " .. tutorial.get_cmd("CMD_MOVE_UP_RIGHT") .. "\n" ..
-        "with <white>vi-keys</white>:       \\|/\n" ..
-        "                   " .. tutorial.get_cmd("CMD_MOVE_LEFT") .. "<<->" .. tutorial.get_cmd("CMD_MOVE_RIGHT") .. "\n" ..
-        "                    /|\\\n" ..
-        "                   " .. tutorial.get_cmd("CMD_MOVE_DOWN_LEFT") .. " " .. tutorial.get_cmd("CMD_MOVE_DOWN") .. " " .. tutorial.get_cmd("CMD_MOVE_DOWN_RIGHT"), "tutorial")
     else
         crawl.mpr("(If you want, you can see a list of movement keys by pressing " .. tutorial.get_cmd("CMD_DISPLAY_COMMANDS") .. " followed by <white>?</white>.)", "tutorial")
+        crawl.more()
+        crawl.mesclr(true)
     end
 
-    crawl.more()
-    crawl.mesclr(true)
     crawl.mpr("Now, try moving towards that <blue>blue square</blue>.", "tutorial")
 end
 
@@ -58,7 +63,7 @@ function tutorial.message0 ()
   local text = "Great! There's another <blue>blue square</blue> further up the corridor. Head for that next."
 
   if not crawl.is_tiles() then
-    text = "Great! However, pressing the same key multiple times can be a bit tedious, and sometimes outright dangerous. There's another <blue>blue square</blue> down the corridor. You can safely 'run' (right) with " .. tutorial.get_cmd("CMD_RUN_LEFT") .. ". Try it!"
+    text = "Great! However, pressing the same key multiple times can be a bit tedious, and sometimes outright dangerous. There's another <blue>blue square</blue> down the corridor. You can safely 'run' to the right with " .. tutorial.get_cmd("CMD_RUN_RIGHT") .. ". Try it!"
   end
 
   return tutorial.message(text, "tutorial", true)
@@ -88,6 +93,39 @@ function tutorial.message2 ()
   return tutorial.message(text, "tutorial", true)
 end
 
+function tutorial.message3 ()
+  return tutorial.message("Exploring manually is very tedious, which is why we suggest you use auto-explore. Try it by pressing " .. tutorial.get_cmd("CMD_EXPLORE") .. ".", "tutorial", true)
+end
+
+function tutorial.message4 ()
+  local text = "In front of you is a door. You can open them by moving into them, and you can also close them with " .. tutorial.get_cmd("CMD_CLOSE_DOOR") .. " (keyboard commands are case-sensitive). "
+  if crawl.is_tiles() then
+    text = text .. "You can also <white>Ctrl-Click</white> on doors to close them, as well as press " .. tutorial.get_cmd("CMD_OPEN_DOOR_UP") .. "."
+  else
+    text = text .. "You can also press " .. tutorial.get_cmd("CMD_OPEN_DOOR_UP") .. " to close it."
+  end
+
+  return tutorial.message(text, "tutorial", true, true)
+end
+
+function tutorial.message5 ()
+  return tutorial.message("You can go down stairs with <white>Shift-Click</white> or " .. tutorial.get_cmd("CMD_GO_DOWNSTAIRS") .. " while standing over them.", "tutorial", true)
+end
+
+function tutorial.message6 ()
+  local text = "In front of you are a mace and a helmet. You can pick up objects by pressing <white>g</white> or " .. tutorial.get_cmd("CMD_PICKUP")
+
+  if crawl.is_tiles() then
+    text = text .. " or <white>Clicking</white> your character while standing on the items. You can also <white>Click</white> items in the floor section in the inventory region of the screen to pick them up."
+  else
+    text = text .. "."
+  end
+
+  text = text .. " Try picking them up!"
+
+  return tutorial.message(text, "tutorial", true)
+end
+
 }}
 
 NAME:    tutorial_basic_1
@@ -95,15 +133,15 @@ TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen 
 BFLAGS:  islanded
 KMASK:   + = no_secret_doors
 ORIENT:  encompass
-ITEM:    mace ego:none, helmet ego:none
+ITEM:    mace ego:none not_cursed, helmet ego:none not_cursed
 # TODO: Include a travel stopper to the message square.
 MARKER:  Q = lua:tutorial.message0()
 MARKER:  A = lua:tutorial.message1()
 MARKER:  B = lua:tutorial.message2()
-MARKER:  C = lua:tutorial.message( "Exploring manually is very tedious, which is why we suggest you use auto-explore. Try it by pressing " .. tutorial.get_cmd("CMD_EXPLORE") .. ".", "tutorial", "true" )
-MARKER:  D = lua:tutorial.message( "This is a door. Open it by moving into it, you can close it with <white>C</white>. Note that it is a capital <white>C</white> - keyboard commands are case-sensitive. <white>Ctrl-click</white> and <white>Ctrl-direction</white> also works.", "tutorial", "true" )
-MARKER:  } = lua:tutorial.message( "Take stairs down with <white>Shift-click</white> or <white>></white>.", "tutorial", "true" )
-MARKER:  E = lua:tutorial.message( "Pick up the mace and the helmet with <white>g</white> or <white>clicking</white> your character while standing on the items. You can also <white>click</white> items in the floor section in the inventory region to pick them up.", "tutorial", "true" )
+MARKER:  C = lua:tutorial.message3()
+MARKER:  D = lua:tutorial.message4()
+MARKER:  } = lua:tutorial.message5()
+MARKER:  E = lua:tutorial.message6()
 # TODO: Make the messages sensitive to if the game is tiles or console.
 MARKER:  F = lua:tutorial.message( "Wield it by <white>clicking</white> the mace in the inventory in the lower right (or by hitting <white>w</white>). Wear the helmet by <white>clicking</white> in the inventory (or by hitting <white>W</white> - again, note the capital <white>W</white>.", "tutorial", "true" )
 MARKER:  G = lua:tutorial.message( "To attack monsters, move into them (or <white>click</white> while adjecent).", "tutorial", "true" )
@@ -116,32 +154,32 @@ epilogue{{
   tutorial.messagestart()
 }}
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x..[..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x..{.....Q.......Axxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x.....xxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxx....xxxxxxxxxxxxxxxxxxxxxxxxxxx
-x..(..xxxxxxxxxxxxx.xxxxxxxxxxxxxxxx...EdeF.........xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxx.xx....xxxxxxxx.xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxx...xxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxx.].xxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxx...xxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxoooxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxx...xxxxxxxxxxxxxGxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxBxxxxxxxxxxxx.}.xxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxx...xxxxxxxxxxxxx1xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxx.xxxxxxCxxxxxxxx+xxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxx.xxxxxx.x.xxxxxxxDxxxxxxxxxxxxxxHxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxx.xxxxxx.xxx.xxxxxxx.xxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxx.xxxxxx.xxxxx.xxxxx.xxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxx.xxxxxx.xxxxxx.xxxxxx.xxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxx.xxxxxx.xxxxxxxx.xxxx.xxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxx.xxxxxx.xxxxxxxx.xxxx.xxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxx.xxxxx.xxxxxxxxx.xx.xxxxxxxxxxxxxx)xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxx.xxx.xxxxxxxxxx.x.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxx.x.xxxxxxxxxx.xx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x..[..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x..{.....Q.......Axxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x.....xxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxx....xxxxxxxxxx
+x..(..xxxxxxxxxxxxx.xxxxxxxxxxxxxxxx..E.de.F........x
+xxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxx.xx....xxxxxxxx.x
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxx...xxxxxxxxxxxxx.x
+xxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxx.].xxxxxxxxxxxxx.x
+xxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxx...xxxxxxxxxxxxx.x
+xxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxoooxxxxxxxxxxxxx.x
+xxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxx...xxxxxxxxxxxxxGx
+xxxxxxxxxxxxxxxxxxxxxxBxxxxxxxxxxxx.}.xxxxxxxxxxxxx.x
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxx...xxxxxxxxxxxxx1x
+xxxxxxxxxxxxxxxxxxxx.xxxxxCxxxxxxxxx+xxxxxxxxxxxxxx.x
+xxxxxxxxxxxxxxxxxxx.xxxxx.x.xxxxxxxxDxxxxxxxxxxxxxxHx
+xxxxxxxxxxxxxxxxxx.xxxxx.xxx.xxxxxxxx.xxxxxxxxxxxxx.x
+xxxxxxxxxxxxxxxxx.xxxxx.xxxxx.xxxxxx.xxxxxxxxxxxxxx.x
+xxxxxxxxxxxxxxxx.xxxxx.xxxxxxx.xxxxxx.xxxxxxxxxxxxx.x
+xxxxxxxxxxxxxxx.xxxxx.xxxxxxxxx.xxxx.xxxxxxxxxxxxxx.x
+xxxxxxxxxxxxxxxx.xxxxx.xxxxxxxxx.xxxx.xxxxxxxxxxxxx.x
+xxxxxxxxxxxxxxxxx.xxxxx.xxxxxxxxx.xx.xxxxxxxxxxxxxx)x
+xxxxxxxxxxxxxxxxxx.xxx.xxxxxxxxxx.x.xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx.x.xxxxxxxxxx.xx.xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxx..xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    tutorial_basic_2
@@ -154,33 +192,33 @@ ITEM:    randbook disc:conjuration numspells:1 slevels:1 spell:magic_dart \
                   owner:Newbie
 KFEAT:   ABCDEF = .
 COLOUR:  ABCDEF = blue
-MARKER:  [ = lua:message_at_spot ( "\nPress <white>Shift-click</white> on your character or <white><<</white> to climb these stairs.", "tutorial", "true" )
-MARKER:  A = lua:message_at_spot ( "\nHere are some darts; pick them up.", "tutorial", "true" )
+MARKER:  [ = lua:tutorial.message( "\nPress <white>Shift-click</white> on your character or <white><<</white> to climb these stairs.", "tutorial", "true" )
+MARKER:  A = lua:tutorial.message( "\nHere are some darts; pick them up.", "tutorial", "true" )
 # TODO: Targetting needs tutorial messages; these can't be done on the map side.
-MARKER:  B = lua:message_at_spot ( "\nPress <white>f</white> to throw darts.", "tutorial", "true" )
-MARKER:  C = lua:message_at_spot ( "\nRemember to rest with <white>5</white>.", "tutorial", "true" )
-MARKER:  D = lua:message_at_spot ( "\nMemorise the spell from this spellbook by <white>clicking</white> on the memorise tab on the lower right. You can also press <white>M</white> to enter the memorisation screen.", "tutorial", "true" )
-MARKER:  E = lua:message_at_spot ( "\n<white>Click</white> magic dart in the spell tab, or press <white>z</white>, or <white>Ctrl-click</white> on the monster.", "tutorial", "true" )
-MARKER:  F = lua:message_at_spot ( "\nRest up!", "tutorial", "true" )
+MARKER:  B = lua:tutorial.message( "\nPress <white>f</white> to throw darts.", "tutorial", "true" )
+MARKER:  C = lua:tutorial.message( "\nRemember to rest with <white>5</white>.", "tutorial", "true" )
+MARKER:  D = lua:tutorial.message( "\nMemorise the spell from this spellbook by <white>clicking</white> on the memorise tab on the lower right. You can also press <white>M</white> to enter the memorisation screen.", "tutorial", "true" )
+MARKER:  E = lua:tutorial.message( "\n<white>Click</white> magic dart in the spell tab, or press <white>z</white>, or <white>Ctrl-click</white> on the monster.", "tutorial", "true" )
+MARKER:  F = lua:tutorial.message( "\nRest up!", "tutorial", "true" )
 MONS:    training dummy ; stone q:30
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xx(xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xx.xxxxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxx
-xxAxxxxxxx...d.D...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.[.xxxxxxxx
-xx.xxxxxxx.x.....x.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxx
-xx.xxxxxxx.xxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.{.xxxxxxxx
-xx.x.....x.x.l...x.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxx
-xx.x.....x.x.l...x.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xx.B.....C.x1l...E.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxlllllxxx.l...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxx..1..xxx.l...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxFxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxx)xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxx}.]xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xx(xxxxxxxxxxxxxxxxxxxxxxxxxx
+xx.xxxxxxxxx.....xxxxxxxx...x
+xxAxxxxxxx...d.D...xxxxxx.[.x
+xx.xxxxxxx.x.....x.xxxxxx...x
+xx.xxxxxxx.xxxxxxx.xxxxxx.{.x
+xx.x.....x.x.l...x.xxxxxx...x
+xx.x.....x.x.l...x.xxxxxxxxxx
+xx.B.....C.x1l...E.xxxxxxxxxx
+xxxxlllllxxx.l...xxxxxxxxxxxx
+xxxx..1..xxx.l...xxxxxxxxxxxx
+xxxxxxxxxxxxxxFxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx.xxxxxxxxxxxxxx
+xxxxxxxxxxxxxx.xxxxxxxxxxxxxx
+xxxxxxxxxxxxxx)xxxxxxxxxxxxxx
+xxxxxxxxxxxxx}.]xxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    tutorial_basic_3
@@ -203,46 +241,44 @@ KITEM:   o = wand of fireball
 KFEAT:   o = .
 KFEAT:   ABCDEFGH = .
 COLOUR:  ABCDEFGH = blue
-MARKER:  A = lua:message_at_spot ( "\nYou can chop up corpses with <white>c</white> into edible meat chunks. You need a sharp object, such as the axe here.", "tutorial", "true" )
-MARKER:  d = lua:message_at_spot ( "\nThis axe was picked up automatically because you didn't have a butchering tool.", "tutorial", "true" )
-MARKER:  B = lua:message_at_spot ( "\nThis bread ration is permanent food. It will not rot, like the chunks from corpses.", "tutorial", "true" )
-MARKER:  C = lua:message_at_spot ( "\nHere is a scroll of identify and an unknown ring. Item properties are often hidden and you need to find out what they do by experimentation or identification. Try the scroll on the ring. (use it by <white>clicking</white> or <white>r</white>ead). You can put on jewellery with capital <white>P</white> or <white>clicking</white> it in the inventory.", "tutorial", "true" )
-MARKER:  D = lua:message_at_spot ( "\nThese meat rations weigh too much. You can drop them with <white>d</white>. You can also drop e.g. only 10, by typing <white>d</white>, <white>10</white> and then selecting the meat rations.", "tutorial", "true" )
-MARKER:  E = lua:message_at_spot ( "\nThis sword is cursed. If you wield it, you can uncurse it by reading this remove curse scroll. Remove curse scrolls uncurses all the cursed items you have currently equipped. The other items in your inventory are not affected.", "tutorial", "true" )
-MARKER:  F = lua:message_at_spot ( "\nHere are three stacks of unknown potions. Go ahead and experiment! <white>Click</white> or <white>q</white>uaff.", "tutorial", "true" )
-MARKER:  G = lua:message_at_spot ( "\nYou can evoke wands with <white>V</white>.", "tutorial", "true" )
-MARKER:  H = lua:message_at_spot ( "\nHere's some gold. Shops exist in the game. Note that they don't buy items from you, so there's no need to carry stuff around that you can't use. Gold is picked up automatically.", "tutorial", "true" )
+MARKER:  A = lua:tutorial.message( "\nYou can chop up corpses with <white>c</white> into edible meat chunks. You need a sharp object, such as the axe here.", "tutorial", "true" )
+MARKER:  d = lua:tutorial.message( "\nThis axe was picked up automatically because you didn't have a butchering tool.", "tutorial", "true" )
+MARKER:  B = lua:tutorial.message( "\nThis bread ration is permanent food. It will not rot, like the chunks from corpses.", "tutorial", "true" )
+MARKER:  C = lua:tutorial.message( "\nHere is a scroll of identify and an unknown ring. Item properties are often hidden and you need to find out what they do by experimentation or identification. Try the scroll on the ring. (use it by <white>clicking</white> or <white>r</white>ead). You can put on jewellery with capital <white>P</white> or <white>clicking</white> it in the inventory.", "tutorial", "true" )
+MARKER:  D = lua:tutorial.message( "\nThese meat rations weigh too much. You can drop them with <white>d</white>. You can also drop e.g. only 10, by typing <white>d</white>, <white>10</white> and then selecting the meat rations.", "tutorial", "true" )
+MARKER:  E = lua:tutorial.message( "\nThis sword is cursed. If you wield it, you can uncurse it by reading this remove curse scroll. Remove curse scrolls uncurses all the cursed items you have currently equipped. The other items in your inventory are not affected.", "tutorial", "true" )
+MARKER:  F = lua:tutorial.message( "\nHere are three stacks of unknown potions. Go ahead and experiment! <white>Click</white> or <white>q</white>uaff.", "tutorial", "true" )
+MARKER:  G = lua:tutorial.message( "\nYou can evoke wands with <white>V</white>.", "tutorial", "true" )
+MARKER:  H = lua:tutorial.message( "\nHere's some gold. Shops exist in the game. Note that they don't buy items from you, so there's no need to carry stuff around that you can't use. Gold is picked up automatically.", "tutorial", "true" )
 MONS:    rat, rat always_corpse
 MONS:    training dummy ; stone q:30
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxx..3..xxxxxx....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxlllllxxxxxx.$$.xx)xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xx[.(xxxxxxxxxxxxxx..........H.$$..}.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxx{xxxxxxxxxxxxxxx..o..xxxxxx.$$.xx]xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxAxxxxxxxxxxxxxxxxxGxxxxxxxx....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x.....xxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x,....xxxxxxxxxxxxxxx.xx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x.1,1.xxxxxxxxxxxxxxx....pmn.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x..1.,xxxxxxxxxxxxxxxxxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xd.,2.xxxxxxxxxxxxxxxxxxxxFxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxx.xxxxxxxxxxxxxxx.....xx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxx.x.....xxxxxxxxx...i.xx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxx.x.....xxxxx.....E......xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxx...B.e...xxx.xxx...j.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxx.....x.xxx.xxx.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxx.....x.x.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxx.x..h..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxx.....x.x.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxx.f...x.x..D..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxx...C...x.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxx.g...xxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxx.....xxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxx.xxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxx.........xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx..3..xxxxxx....xxxx
+xx[.(xxxxxxxxxxxxxxlllllxxxxxx.$$.xx)x
+xxx{xxxxxxxxxxxxxxx..........H.$$..}.x
+xxxAxxxxxxxxxxxxxxx..o..xxxxxx.$$.xx]x
+xxx.xxxxxxxxxxxxxxxxxGxxxxxxxx....xxxx
+x.....xxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxx
+x,....xxxxxxxxxxxxxxx.xx.....xxxxxxxxx
+x.1,1.xxxxxxxxxxxxxxx....pmn.xxxxxxxxx
+x..1.,xxxxxxxxxxxxxxxxxx.....xxxxxxxxx
+xd.,2.xxxxxxxxxxxxxxxxxxxxFxxxxxxxxxxx
+xxx.xxxxxxxxxxxxxxx.....xx.xxxxxxxxxxx
+xxx.x.....xxxxxxxxx...i.xx.xxxxxxxxxxx
+xxx.x.....xxxxx.....E......xxxxxxxxxxx
+xxx...B.e...xxx.xxx...j.xxxxxxxxxxxxxx
+xxxxx.....x.xxx.xxx.....xxxxxxxxxxxxxx
+xxxxx.....x.x.....xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx.x..h..xxxxxxxxxxxxxxxxxxxx
+xxxxx.....x.x.....xxxxxxxxxxxxxxxxxxxx
+xxxxx.f...x.x..D..xxxxxxxxxxxxxxxxxxxx
+xxxxx...C...x.....xxxxxxxxxxxxxxxxxxxx
+xxxxx.g...xxxxx.xxxxxxxxxxxxxxxxxxxxxx
+xxxxx.....xxxxx.xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxx.xxxxxxx.xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxx.........xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    tutorial_basic_4
@@ -251,6 +287,7 @@ KMASK:   + = no_secret_doors
 ORIENT:  encompass
 PLACE:   D:4
 KFEAT:   ^ = needle trap
+MARKER:  ^ = lua:props_marker {poisoned_needle_trap="true", force_hit="true"}
 KFEAT:   _ = altar_makhleb
 KMONS:   S = Sigmund
 KFEAT:   S = .
@@ -258,32 +295,31 @@ KFEAT:   ABCDEF = .
 COLOUR:  ABCDEF = blue
 MONS:    rat, rat always_corpse
 MONS:    training dummy spells:blink;blink;blink;blink;blink;blink ; whip ego:reaching
-MARKER:  A = lua:message_at_spot ( "\nYou may have been poisoned from the trap. Drink a potion of healing, or rest with <white>5</white> to try to wait it out.", "tutorial", "true" )
-MARKER:  B = lua:message_at_spot ( "\nLook for the secret door in the glass wall. Either wait a single turn with <white>s</white> or <white>.</white>, or search longer with <white>5</white>.", "tutorial", "true" )
+MARKER:  A = lua:tutorial.message( "\nYou may have been poisoned from the trap. Drink a potion of healing, or rest with <white>5</white> to try to wait it out.", "tutorial", "true" )
+MARKER:  B = lua:tutorial.message( "\nLook for the secret door in the glass wall. Either wait a single turn with <white>s</white> or <white>.</white>, or search longer with <white>5</white>.", "tutorial", "true" )
 # TODO: Hax some piety for the player so that minor destruction is immediately usable.
-MARKER:  C = lua:message_at_spot ( "\nHere's an altar to one of the gods in the game. You can <white>p</white>ray on an altar to start worshipping.", "tutorial", "true" )
-MARKER:  D = lua:message_at_spot ( "\nMakheb accepts kills and corpse sacrifices. Kill these rats, and then <white>p</white>ray over their corpses to sacrifice them to Makheb", "tutorial", "true" )
-MARKER:  E = lua:message_at_spot ( "\nUse minor destruction <white>a</white>bility to attack this annoying dummy.", "tutorial", "true" )
-MARKER:  F = lua:message_at_spot ( "\nBehind this door is Sigmund. He is a powerful unique monster, and is likely to kill you. In Crawl, running away is often a very important tactic. Thanks for playing the tutorial!", "tutorial", "true" )
+MARKER:  C = lua:tutorial.message( "\nHere's an altar to one of the gods in the game. You can <white>p</white>ray on an altar to start worshipping.", "tutorial", "true" )
+MARKER:  D = lua:tutorial.message( "\nMakheb accepts kills and corpse sacrifices. Kill these rats, and then <white>p</white>ray over their corpses to sacrifice them to Makheb", "tutorial", "true" )
+MARKER:  E = lua:tutorial.message( "\nUse minor destruction <white>a</white>bility to attack this annoying dummy.", "tutorial", "true" )
+MARKER:  F = lua:tutorial.message( "\nBehind this door is Sigmund. He is a powerful unique monster, and is likely to kill you. In Crawl, running away is often a very important tactic. Thanks for playing the tutorial!", "tutorial", "true" )
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x(xxxxxxxxxxxxxxxxxxxxxxxx].)xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x.{...^.A..xxxxxxxxxxxxxxxx}xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x[xxxxxxxx.xxxxxxxxxxxxxxxS..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxBxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxx.....xxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxx.....xxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxoo=ooxxxxxxxxxxxxxx+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxx..C..xxxxxxx..3..xxFxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxx.._..xxxxxxx.....xx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxx.....xxxxxxx........xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxx.xxx..1..x..E..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxx.xxx....rxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxx..D+.....+...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxx.1..1xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxx...2.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x(xxxxxxxxxxxxxxxxxxxxxxxx].)x
+x.{...^.A..xxxxxxxxxxxxxxxx}xx
+x[xxxxxxxx.xxxxxxxxxxxxxxxS..x
+xxxxxxxxxxBxxxxxxxxxxxxxxx...x
+xxxxxxxx.....xxxxxxxxxxxxx...x
+xxxxxxxx.....xxxxxxxxxxxxx...x
+xxxxxxxxoo=ooxxxxxxxxxxxxxx+xx
+xxxxxxxx..C..xxxxxxx..3..xxFxx
+xxxxxxxx.._..xxxxxxx.....xx.xx
+xxxxxxxx.....xxxxxxx........xx
+xxxxxxxxxx.xxx..1..x..E..xxxxx
+xxxxxxxxxx.xxx....rxxx.xxxxxxx
+xxxxxxxxxx..D+.....+...xxxxxxx
+xxxxxxxxxxxxxx.1..1xxxxxxxxxxx
+xxxxxxxxxxxxxx...2.xxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 # TODO: The game should end after dying to Sigm.. after managing to enter D:5
