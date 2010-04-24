@@ -1216,9 +1216,17 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
         const coord_def apos = act.pos();
 
         item_def shot = this->generate_trap_item();
+
+        bool force_poison = (env.markers.property_at(pos, MAT_ANY,
+                                "poisoned_needle_trap") == "true");
+
+        bool force_hit = (env.markers.property_at(pos, MAT_ANY,
+                                "force_hit") == "true");
+
         bool poison = (this->type == TRAP_NEEDLE
                        && !act.res_poison()
-                       && x_chance_in_y(50 - (3*act.armour_class()) / 2, 100));
+                       && (x_chance_in_y(50 - (3*act.armour_class()) / 2, 100)
+                            || force_poison));
 
         int damage_taken =
             std::max(this->shot_damage(act) - random2(act.armour_class()+1),0);
@@ -1227,7 +1235,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
 
         if (act.atype() == ACT_PLAYER)
         {
-            if (one_chance_in(5) || (was_known && !one_chance_in(4)))
+            if (one_chance_in(5) || (was_known && !one_chance_in(4)) && !force_hit)
             {
                 mprf( "You avoid triggering %s trap.",
                       this->name(DESC_NOCAP_A).c_str() );
@@ -1245,7 +1253,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
 
             const int con_block = random2(20 + you.shield_block_penalty());
             const int pro_block = you.shield_bonus();
-            if (pro_block >= con_block)
+            if (pro_block >= con_block && !force_hit)
             {
                 // Note that we don't call shield_block_succeeded()
                 // because that can exercise Shields skill.
@@ -1266,7 +1274,8 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
                 // Check if it got past dodging. Deflect Missiles provides
                 // immunity to such traps.
                 if (trap_hit >= your_dodge
-                    && you.duration[DUR_DEFLECT_MISSILES] == 0)
+                    && you.duration[DUR_DEFLECT_MISSILES] == 0
+                    || force_hit)
                 {
                     // OK, we've been hit.
                     msg += "hits you!";
