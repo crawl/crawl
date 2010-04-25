@@ -36,6 +36,12 @@
 #include "windowmanager.h"
 #include "glwrapper.h"
 
+#ifdef TARGET_OS_WINDOWS
+
+#include <windows.h>
+
+#endif
+
 // Default Screen Settings
 // width, height, map, crt, stat, msg, tip, lbl
 static int _screen_sizes[4][8] =
