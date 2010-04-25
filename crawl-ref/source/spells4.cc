@@ -1552,7 +1552,7 @@ bool cast_fragmentation(int pow, const dist& spd)
                     beam.damage.num++;
                 break;
             }
-            else if (mons_is_skeletal(mon->type)
+            else if (mon->is_skeletal()
                 || mon->type == MONS_FLYING_SKULL) // blast of bone
             {
                 mprf("The %s explodes into sharp fragments of bone!",

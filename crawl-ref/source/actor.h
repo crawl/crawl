@@ -161,6 +161,7 @@ public:
 
     virtual bool is_icy() const = 0;
     virtual bool is_fiery() const = 0;
+    virtual bool is_skeletal() const = 0;
     virtual bool can_mutate() const = 0;
     virtual bool can_safely_mutate() const = 0;
     virtual bool can_bleed() const = 0;
