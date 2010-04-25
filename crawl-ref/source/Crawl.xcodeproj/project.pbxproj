@@ -341,7 +341,6 @@
 		B032D697106C02150002D70D /* libgui.cc in Sources */ = {isa = PBXBuildFile; fileRef = B02C574310670C63006AC96D /* libgui.cc */; };
 		B032D698106C02150002D70D /* tilesdl.cc in Sources */ = {isa = PBXBuildFile; fileRef = D2660E120FF0868B00986331 /* tilesdl.cc */; };
 		B032D6DC106C02150002D70D /* mapdef.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B352E9D0B00183400CABB32 /* mapdef.cc */; };
-		B032D6F3106C02150002D70D /* tile2.cc in Sources */ = {isa = PBXBuildFile; fileRef = D2660E070FF0868B00986331 /* tile2.cc */; };
 		B032D6F4106C02150002D70D /* tilebuf.cc in Sources */ = {isa = PBXBuildFile; fileRef = D2660E080FF0868B00986331 /* tilebuf.cc */; };
 		B032D6F5106C02150002D70D /* tilefont.cc in Sources */ = {isa = PBXBuildFile; fileRef = D2660E0A0FF0868B00986331 /* tilefont.cc */; };
 		B032D6F6106C02150002D70D /* tilemcache.cc in Sources */ = {isa = PBXBuildFile; fileRef = D2660E0C0FF0868B00986331 /* tilemcache.cc */; };
@@ -1046,7 +1045,6 @@
 		D2660C000FF0749200986331 /* dc-dngn.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "dc-dngn.txt"; path = "rltiles/dc-dngn.txt"; sourceTree = "<group>"; };
 		D2660C010FF0749200986331 /* dc-main.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "dc-main.txt"; path = "rltiles/dc-main.txt"; sourceTree = "<group>"; };
 		D2660C020FF0749200986331 /* dc-player.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "dc-player.txt"; path = "rltiles/dc-player.txt"; sourceTree = "<group>"; };
-		D2660E070FF0868B00986331 /* tile2.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tile2.cc; sourceTree = "<group>"; };
 		D2660E080FF0868B00986331 /* tilebuf.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tilebuf.cc; sourceTree = "<group>"; };
 		D2660E090FF0868B00986331 /* tilebuf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tilebuf.h; sourceTree = "<group>"; };
 		D2660E0A0FF0868B00986331 /* tilefont.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tilefont.cc; sourceTree = "<group>"; };
@@ -2131,7 +2129,6 @@
 				B02C574410670C63006AC96D /* libgui.h */,
 				B02C575F10670ED2006AC96D /* SDLMain.h */,
 				B02C576010670ED2006AC96D /* SDLMain.m */,
-				D2660E070FF0868B00986331 /* tile2.cc */,
 				D2660E080FF0868B00986331 /* tilebuf.cc */,
 				D2660E090FF0868B00986331 /* tilebuf.h */,
 				D2660E0A0FF0868B00986331 /* tilefont.cc */,
@@ -3029,7 +3026,6 @@
 				7B5165CB11859D82005B23ED /* tagstring.cc in Sources */,
 				E5D6416010BD494500A99626 /* teleport.cc in Sources */,
 				E5D6416110BD494500A99626 /* terrain.cc in Sources */,
-				B032D6F3106C02150002D70D /* tile2.cc in Sources */,
 				B032D6F4106C02150002D70D /* tilebuf.cc in Sources */,
 				B032D692106C02150002D70D /* tiledef-dngn.cc in Sources */,
 				B032D693106C02150002D70D /* tiledef-gui.cc in Sources */,
