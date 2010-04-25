@@ -150,8 +150,10 @@ static startup_book_type _str_to_book(const std::string& str)
         return (SBT_SUMM);
     if (str == "random")
         return (SBT_RANDOM);
+    if (str == "viable")
+        return (SBT_VIABLE);
 
-    return (SBT_NO_SELECTION);
+    return (SBT_NONE);
 }
 
 static weapon_type _str_to_weapon(const std::string &str)
@@ -1312,13 +1314,14 @@ static void write_newgame_options(FILE *f)
         fprintf(f, "weapon = %s\n", _weapon_to_str(prev.weapon).c_str());
     if (prev.religion != GOD_NO_GOD)
         fprintf(f, "religion = %s\n", god_name(prev.religion).c_str());
-    if (prev.book != SBT_NO_SELECTION)
+    if (prev.book != SBT_NONE)
     {
         fprintf(f, "book = %s\n",
                 prev.book == SBT_FIRE ? "fire" :
                 prev.book == SBT_COLD ? "cold" :
                 prev.book == SBT_SUMM ? "summ" :
-                "random");
+                prev.book == SBT_RANDOM ? "random" :
+                "viable");
     }
     if (prev.wand != SWT_NO_SELECTION)
         fprintf(f, "wand = %s\n", _wand_to_str(prev.wand).c_str());
