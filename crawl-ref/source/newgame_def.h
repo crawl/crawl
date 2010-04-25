@@ -5,11 +5,12 @@
 
 enum startup_book_type
 {
-    SBT_NO_SELECTION = 0,
     SBT_FIRE,
     SBT_COLD,
     SBT_SUMM,
-    SBT_RANDOM
+    SBT_NONE,
+    SBT_RANDOM,
+    SBT_VIABLE
 };
 
 enum startup_wand_type
