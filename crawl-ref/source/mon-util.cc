@@ -663,14 +663,6 @@ bool mons_eats_food(const monsters *mon)
     return (mons_itemeat(mon) == MONEAT_FOOD);
 }
 
-bool mons_is_skeletal(int mc)
-{
-    return (mc == MONS_SKELETON_SMALL
-            || mc == MONS_SKELETON_LARGE
-            || mc == MONS_BONE_DRAGON
-            || mc == MONS_SKELETAL_WARRIOR);
-}
-
 bool invalid_monster(const monsters *mon)
 {
     return (!mon || invalid_monster_type(mon->type));

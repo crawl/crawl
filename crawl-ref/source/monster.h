@@ -342,6 +342,7 @@ public:
 
     bool is_icy() const;
     bool is_fiery() const;
+    bool is_skeletal() const;
     bool paralysed() const;
     bool cannot_move() const;
     bool cannot_act() const;

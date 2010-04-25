@@ -5696,6 +5696,19 @@ bool monsters::is_fiery() const
     return (_mons_is_fiery(type));
 }
 
+static bool _mons_is_skeletal(int mc)
+{
+    return (mc == MONS_SKELETON_SMALL
+            || mc == MONS_SKELETON_LARGE
+            || mc == MONS_BONE_DRAGON
+            || mc == MONS_SKELETAL_WARRIOR);
+}
+
+bool monsters::is_skeletal() const
+{
+    return (_mons_is_skeletal(type));
+}
+
 bool monsters::has_action_energy() const
 {
     return (speed_increment >= 80);
@@ -5954,7 +5967,7 @@ bool monsters::can_drink_potion(potion_type ptype) const
         return (false);
 
     // These monsters cannot drink.
-    if (mons_is_skeletal(type) || is_insubstantial()
+    if (is_skeletal() || is_insubstantial()
         || mons_species() == MONS_LICH || mons_genus(type) == MONS_MUMMY
         || type == MONS_GASTRONOK)
     {

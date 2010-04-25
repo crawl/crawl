@@ -6244,6 +6244,11 @@ bool player::is_fiery() const
     return (false);
 }
 
+bool player::is_skeletal() const
+{
+    return (false);
+}
+
 void player::shiftto(const coord_def &c)
 {
     crawl_view.shift_player_to(c);
