@@ -206,7 +206,6 @@ ifdef TILES
 OBJECTS += \
 glwrapper.o \
 libgui.o \
-tile2.o \
 tilebuf.o \
 tiledoll.o \
 tilefont.o \
