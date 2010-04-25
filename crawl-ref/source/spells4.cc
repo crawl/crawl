@@ -98,7 +98,7 @@ static bool _player_hurt_monster(monsters& m, int damage,
 // Here begin the actual spells:
 static int _shatter_monsters(coord_def where, int pow, int, actor *)
 {
-    dice_def dam_dice(0, 5 + pow / 3);  // number of dice set below
+    dice_def dam_dice(0, 5 + pow / 3); // number of dice set below
     monsters *monster = monster_at(where);
 
     if (monster == NULL)
@@ -109,16 +109,11 @@ static int _shatter_monsters(coord_def where, int pow, int, actor *)
     // made out of the substance. - bwr
     switch (monster->type)
     {
-    case MONS_ICE_BEAST:        // 3/2 damage
-    case MONS_SIMULACRUM_SMALL:
-    case MONS_SIMULACRUM_LARGE:
-    case MONS_SILVER_STATUE:
+    case MONS_SILVER_STATUE: // 3/2 damage
         dam_dice.num = 4;
         break;
 
-    case MONS_SKELETON_SMALL: // double damage
-    case MONS_SKELETON_LARGE:
-    case MONS_CURSE_SKULL:
+    case MONS_CURSE_SKULL:      // double damage
     case MONS_CLAY_GOLEM:
     case MONS_STONE_GOLEM:
     case MONS_IRON_GOLEM:
@@ -127,8 +122,6 @@ static int _shatter_monsters(coord_def where, int pow, int, actor *)
     case MONS_STATUE:
     case MONS_EARTH_ELEMENTAL:
     case MONS_GARGOYLE:
-    case MONS_BONE_DRAGON:
-    case MONS_SKELETAL_WARRIOR:
         dam_dice.num = 6;
         break;
 
@@ -151,15 +144,19 @@ static int _shatter_monsters(coord_def where, int pow, int, actor *)
     case MONS_MOLTEN_GARGOYLE:
     case MONS_QUICKSILVER_DRAGON:
         // Soft, earth creatures... would normally resist to 1 die, but
-        // are sensitive to this spell. -- bwr
+        // are sensitive to this spell. - bwr
         dam_dice.num = 2;
         break;
 
-    default:                    // normal damage
-        if (monster->is_insubstantial())
+    default:
+        if (monster->is_insubstantial()) // normal damage
             dam_dice.num = 0;
-        else if (mons_flies(monster))
+        else if (mons_flies(monster))    // 1/3 damage
             dam_dice.num = 1;
+        else if (monster->is_icy())      // 3/2 damage
+            dam_dice.num = 4;
+        else if (monster->is_skeletal()) // double damage
+            dam_dice.num = 6;
         else
             dam_dice.num = 3;
         break;
@@ -1467,7 +1464,7 @@ bool cast_fragmentation(int pow, const dist& spd)
 
             // We use beam.damage not only for inflicting damage here,
             // but so that later on we'll know that the spell didn't
-            // fizzle (since we don't actually explode wood golems). -- bwr
+            // fizzle (since we don't actually explode wood golems). - bwr
             explode         = false;
             beam.damage.num = 2;
             _player_hurt_monster(*mon, beam.damage.roll(),
@@ -1599,8 +1596,8 @@ bool cast_fragmentation(int pow, const dist& spd)
             // Mark that a monster was targeted.
             beam.damage.num = 1;
 
-            // Yes, this spell does lousy damage if the monster
-            // isn't susceptible. -- bwr
+            // Yes, this spell does lousy damage if the monster isn't
+            // susceptible. - bwr
             _player_hurt_monster(*mon, roll_dice(1, 5 + pow / 25),
                                  BEAM_DISINTEGRATION);
             goto do_terrain;
