@@ -98,7 +98,7 @@ static bool _player_hurt_monster(monsters& m, int damage,
 // Here begin the actual spells:
 static int _shatter_monsters(coord_def where, int pow, int, actor *)
 {
-    dice_def   dam_dice( 0, 5 + pow / 3 );  // number of dice set below
+    dice_def dam_dice(0, 5 + pow / 3);  // number of dice set below
     monsters *monster = monster_at(where);
 
     if (monster == NULL)
@@ -106,7 +106,7 @@ static int _shatter_monsters(coord_def where, int pow, int, actor *)
 
     // Removed a lot of silly monsters down here... people, just because
     // it says ice, rock, or iron in the name doesn't mean it's actually
-    // made out of the substance. -- bwr
+    // made out of the substance. - bwr
     switch (monster->type)
     {
     case MONS_ICE_BEAST:        // 3/2 damage
@@ -132,23 +132,6 @@ static int _shatter_monsters(coord_def where, int pow, int, actor *)
         dam_dice.num = 6;
         break;
 
-    case MONS_VAPOUR:
-    case MONS_INSUBSTANTIAL_WISP:
-    case MONS_AIR_ELEMENTAL:
-    case MONS_FIRE_ELEMENTAL:
-    case MONS_WATER_ELEMENTAL:
-    case MONS_SPECTRAL_WARRIOR:
-    case MONS_FREEZING_WRAITH:
-    case MONS_WRAITH:
-    case MONS_PHANTOM:
-    case MONS_PLAYER_GHOST:
-    case MONS_SHADOW:
-    case MONS_HUNGRY_GHOST:
-    case MONS_FLAYED_GHOST:
-    case MONS_SMOKE_DEMON:      //jmf: I hate these bastards...
-        dam_dice.num = 0;
-        break;
-
     case MONS_PULSATING_LUMP:
     case MONS_JELLY:
     case MONS_SLIME_CREATURE:
@@ -158,8 +141,8 @@ static int _shatter_monsters(coord_def where, int pow, int, actor *)
     case MONS_ACID_BLOB:
     case MONS_ROYAL_JELLY:
     case MONS_OOZE:
-    case MONS_SPECTRAL_THING:
     case MONS_JELLYFISH:
+    case MONS_WATER_ELEMENTAL:
         dam_dice.num = 1;
         dam_dice.size /= 2;
         break;
@@ -173,6 +156,8 @@ static int _shatter_monsters(coord_def where, int pow, int, actor *)
         break;
 
     default:                    // normal damage
+        if (monster->is_insubstantial())
+            dam_dice.num = 0;
         if (mons_flies(monster))
             dam_dice.num = 1;
         else
