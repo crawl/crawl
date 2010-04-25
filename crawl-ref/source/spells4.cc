@@ -158,7 +158,7 @@ static int _shatter_monsters(coord_def where, int pow, int, actor *)
     default:                    // normal damage
         if (monster->is_insubstantial())
             dam_dice.num = 0;
-        if (mons_flies(monster))
+        else if (mons_flies(monster))
             dam_dice.num = 1;
         else
             dam_dice.num = 3;
