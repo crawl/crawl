@@ -151,12 +151,12 @@ static int _shatter_monsters(coord_def where, int pow, int, actor *)
     default:
         if (monster->is_insubstantial()) // normal damage
             dam_dice.num = 0;
-        else if (mons_flies(monster))    // 1/3 damage
-            dam_dice.num = 1;
         else if (monster->is_icy())      // 3/2 damage
             dam_dice.num = 4;
         else if (monster->is_skeletal()) // double damage
             dam_dice.num = 6;
+        else if (mons_flies(monster))    // 1/3 damage
+            dam_dice.num = 1;
         else
             dam_dice.num = 3;
         break;
