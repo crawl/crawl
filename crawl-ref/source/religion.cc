@@ -2271,6 +2271,7 @@ std::string god_name(god_type which_god, bool long_name)
     case GOD_NO_GOD: return "No God";
     case GOD_RANDOM: return "random";
     case GOD_NAMELESS: return "nameless";
+    case GOD_VIABLE: return "viable";
     case GOD_ZIN:           return (long_name ? "Zin the Law-Giver" : "Zin");
     case GOD_SHINING_ONE:   return "The Shining One";
     case GOD_KIKUBAAQUDGHA: return "Kikubaaqudgha";
