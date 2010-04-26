@@ -507,7 +507,8 @@ enum weapon_type
 // special cases
     WPN_UNARMED = 500,                 //  500
     WPN_UNKNOWN = 1000,                // 1000
-    WPN_RANDOM
+    WPN_RANDOM,
+    WPN_VIABLE
 };
 
 enum weapon_description_type
