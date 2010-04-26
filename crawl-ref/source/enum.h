@@ -1373,7 +1373,8 @@ enum god_type
     NUM_GODS,                          // always after last god
 
     GOD_RANDOM = 100,
-    GOD_NAMELESS = 101                 // for monsters with non-player gods
+    GOD_NAMELESS = 101,                // for monsters with non-player gods
+    GOD_VIABLE = 102
 };
 
 enum holy_word_source_type

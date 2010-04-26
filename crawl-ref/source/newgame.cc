@@ -24,6 +24,7 @@
 #include "ng-restr.h"
 #include "options.h"
 #include "random.h"
+#include "religion.h"
 #include "species.h"
 #include "state.h"
 #include "stuff.h"
@@ -35,7 +36,7 @@
 
 static bool _choose_weapon(newgame_def* ng);
 static bool _choose_book(newgame_def* ng, newgame_def* ng_choice);
-static bool _choose_god(newgame_def* ng);
+static bool _choose_god(newgame_def* ng, newgame_def* ng_choice);
 static bool _choose_wand(newgame_def* ng);
 
 ////////////////////////////////////////////////////////////////////////
@@ -395,7 +396,7 @@ static void _choose_char(newgame_def* ng)
             continue;
 
         if (_choose_weapon(ng) && _choose_book(ng, &ngchoice)
-            && _choose_god(ng) && _choose_wand(ng))
+            && _choose_god(ng, &ngchoice) && _choose_wand(ng))
         {
             // We're done!
             return;
@@ -1654,341 +1655,188 @@ static bool _choose_book(newgame_def* ng, newgame_def* ng_choice)
     }
 }
 
-static bool _choose_priest(newgame_def* ng)
+// Covers both chaos knight and priest choices.
+static std::string _god_text(god_type god)
 {
-    if (ng->species == SP_DEMONSPAWN || ng->species == SP_MUMMY
-        || ng->species == SP_GHOUL || ng->species == SP_VAMPIRE)
+    switch (god)
     {
-        ng->religion = GOD_YREDELEMNUL;
-    }
-    else
-    {
-        const god_type gods[3] = { GOD_ZIN, GOD_YREDELEMNUL, GOD_BEOGH };
-
-        // Disallow invalid choices.
-        if (religion_restriction(Options.game.religion, *ng) == CC_BANNED)
-            Options.game.religion = GOD_NO_GOD;
-
-        if (Options.game.religion != GOD_NO_GOD && Options.game.religion != GOD_RANDOM)
-            ngchoice.religion = ng->religion = static_cast<god_type>(Options.game.religion);
-        else if (Options.game.fully_random || Options.game.religion == GOD_RANDOM)
-        {
-            bool did_chose = false;
-            if (_viable_random(ngchoice))
-            {
-                int count = 0;
-                for (int i = 0; i < 3; i++)
-                {
-                    if (religion_restriction(gods[i], *ng) == CC_BANNED)
-                        continue;
-
-                    if (religion_restriction(gods[i], *ng) == CC_UNRESTRICTED
-                        && one_chance_in(++count))
-                    {
-                        ng->religion = gods[i];
-                        did_chose = true;
-                    }
-                }
-            }
-
-            if (!did_chose)
-            {
-                ng->religion = (coinflip() ? GOD_YREDELEMNUL : GOD_ZIN);
-
-                // For orcs 50% chance of Beogh instead.
-                if (ng->species == SP_HILL_ORC && coinflip())
-                    ng->religion = GOD_BEOGH;
-            }
-            ngchoice.religion = GOD_RANDOM;
-        }
-        else
-        {
-            _print_character_info(ng);
-
-            textcolor(CYAN);
-            cprintf("\nWhich god do you wish to serve?\n");
-
-            const char* god_name[3] = {"Zin (for traditional priests)",
-                                       "Yredelemnul (for priests of death)",
-                                       "Beogh (for priests of Orcs)"};
-
-            for (int i = 0; i < 3; i++)
-            {
-                if (religion_restriction(gods[i], *ng) == CC_BANNED)
-                    continue;
-
-                if (religion_restriction(gods[i], *ng) == CC_UNRESTRICTED)
-                    textcolor(LIGHTGREY);
-                else
-                    textcolor(DARKGREY);
-
-                const char letter = 'a' + i;
-                cprintf("%c - %s\n", letter, god_name[i]);
-            }
-
-            textcolor(BROWN);
-            cprintf("\n* - Random choice; + - Good random choice\n"
-                        "Bksp - Back to species and background selection; "
-                        "X - Quit\n");
-
-            if (religion_restriction(Options.prev_game.religion, *ng) == CC_BANNED)
-                Options.prev_game.religion = GOD_NO_GOD;
-
-            if (Options.prev_game.religion != GOD_NO_GOD)
-            {
-                textcolor(BROWN);
-                cprintf("\nEnter - %s\n",
-                        Options.prev_game.religion == GOD_ZIN         ? "Zin" :
-                        Options.prev_game.religion == GOD_YREDELEMNUL ? "Yredelemnul" :
-                        Options.prev_game.religion == GOD_BEOGH       ? "Beogh"
-                                                           : "Random");
-            }
-
-            int keyn;
-            do
-            {
-                keyn = getch_ck();
-
-                switch (keyn)
-                {
-                case 'X':
-                    cprintf("\nGoodbye!");
-                    end(0);
-                    break;
-                case CK_BKSP:
-                case ESCAPE:
-                case ' ':
-                    return (false);
-                case '\r':
-                case '\n':
-                    if (Options.prev_game.religion == GOD_NO_GOD
-                        || Options.prev_game.religion == GOD_BEOGH
-                           && ng->species != SP_HILL_ORC)
-                    {
-                        break;
-                    }
-                    if (Options.prev_game.religion != GOD_RANDOM)
-                    {
-                        Options.prev_game.religion
-                                 = static_cast<god_type>(Options.prev_game.religion);
-                        ng->religion = Options.prev_game.religion;
-                        break;
-                    }
-                    keyn = '*'; // for ngchoice.religion setting
-                    // fall-through for random
-                case '+':
-                    if (keyn == '+')
-                    {
-                        int count = 0;
-                        for (int i = 0; i < 3; i++)
-                        {
-                            if (religion_restriction(gods[i], *ng) == CC_BANNED)
-                                continue;
-
-                            if (religion_restriction(gods[i], *ng)
-                                    == CC_UNRESTRICTED
-                                && one_chance_in(++count))
-                            {
-                                ng->religion = gods[i];
-                            }
-                        }
-                        if (count > 0)
-                            break;
-                    }
-                    // intentional fall-through
-                case '*':
-                    ng->religion = coinflip() ? GOD_ZIN : GOD_YREDELEMNUL;
-                    if (ng->species == SP_HILL_ORC && coinflip())
-                        ng->religion = GOD_BEOGH;
-                    break;
-                case 'a':
-                    ng->religion = GOD_ZIN;
-                    break;
-                case 'b':
-                    ng->religion = GOD_YREDELEMNUL;
-                    break;
-                case 'c':
-                    if (ng->species == SP_HILL_ORC)
-                    {
-                        ng->religion = GOD_BEOGH;
-                        break;
-                    } // else fall through
-                default:
-                    break;
-                }
-            }
-            while (ng->religion == GOD_NO_GOD);
-
-            ngchoice.religion = (keyn == '*' ? GOD_RANDOM : ng->religion);
-        }
-    }
-    return (true);
-}
-
-static bool _choose_chaos_knight(newgame_def* ng)
-{
-    const god_type gods[3] = { GOD_XOM, GOD_MAKHLEB, GOD_LUGONU };
-
-    if (Options.game.religion != GOD_NO_GOD
-        && Options.game.religion != GOD_RANDOM)
-    {
-        ngchoice.religion = ng->religion =
-            static_cast<god_type>(Options.game.religion);
-    }
-    else if (Options.game.fully_random || Options.game.religion == GOD_RANDOM)
-    {
-        bool did_chose = false;
-        if (_viable_random(ngchoice))
-        {
-            int count = 0;
-            for (int i = 0; i < 3; i++)
-            {
-                if (religion_restriction(gods[i], *ng) == CC_BANNED)
-                    continue;
-
-                if (religion_restriction(gods[i], *ng) == CC_UNRESTRICTED
-                    && one_chance_in(++count))
-                {
-                    ng->religion = gods[i];
-                    did_chose = true;
-                }
-            }
-        }
-
-        if (!did_chose)
-        {
-            ng->religion = (one_chance_in(3) ? GOD_XOM :
-                           coinflip()       ? GOD_MAKHLEB
-                                            : GOD_LUGONU);
-        }
-        ngchoice.religion = GOD_RANDOM;
-    }
-    else
-    {
-        _print_character_info(ng);
-
-        textcolor(CYAN);
-        cprintf("\nWhich god of chaos do you wish to serve?\n");
-
-        const char* god_name[3] = {"Xom of Chaos",
-                                   "Makhleb the Destroyer",
-                                   "Lugonu the Unformed"};
-
-        for (int i = 0; i < 3; i++)
-        {
-            if (religion_restriction(gods[i], *ng) == CC_BANNED)
-                continue;
-
-            if (religion_restriction(gods[i], *ng) == CC_UNRESTRICTED)
-                textcolor(LIGHTGREY);
-            else
-                textcolor(DARKGREY);
-
-            const char letter = 'a' + i;
-            cprintf("%c - %s\n", letter, god_name[i]);
-        }
-
-        textcolor(BROWN);
-        cprintf("\n* - Random choice; + - Good random choice\n"
-                    "Bksp - Back to species and background selection; "
-                    "X - Quit\n");
-
-        if (Options.prev_game.religion != GOD_NO_GOD)
-        {
-            textcolor(BROWN);
-            cprintf("\nEnter - %s\n",
-                    Options.prev_game.religion == GOD_XOM     ? "Xom" :
-                    Options.prev_game.religion == GOD_MAKHLEB ? "Makhleb" :
-                    Options.prev_game.religion == GOD_LUGONU  ? "Lugonu"
-                                                   : "Random");
-            textcolor(LIGHTGREY);
-        }
-
-        int keyn;
-        do
-        {
-            keyn = getch_ck();
-
-            switch (keyn)
-            {
-            case 'X':
-                cprintf("\nGoodbye!");
-                end(0);
-                break;
-            case CK_BKSP:
-            case CK_ESCAPE:
-            case ' ':
-                return (false);
-            case '\r':
-            case '\n':
-                if (Options.prev_game.religion == GOD_NO_GOD)
-                    break;
-
-                if (Options.prev_game.religion != GOD_RANDOM)
-                {
-                    ng->religion = static_cast<god_type>(Options.prev_game.religion);
-                    break;
-                }
-                keyn = '*'; // for ngchoice.religion setting
-                // fall-through for random
-            case '+':
-                if (keyn == '+')
-                {
-                    int count = 0;
-                    for (int i = 0; i < 3; i++)
-                    {
-                        if (religion_restriction(gods[i], *ng) == CC_BANNED)
-                            continue;
-
-                        if (religion_restriction(gods[i], *ng)
-                                == CC_UNRESTRICTED
-                            && one_chance_in(++count))
-                        {
-                            ng->religion = gods[i];
-                        }
-                    }
-                    if (count > 0)
-                        break;
-                }
-                // intentional fall-through
-            case '*':
-                ng->religion = (one_chance_in(3) ? GOD_XOM :
-                               coinflip()       ? GOD_MAKHLEB
-                                                : GOD_LUGONU);
-                break;
-            case 'a':
-                ng->religion = GOD_XOM;
-                break;
-            case 'b':
-                ng->religion = GOD_MAKHLEB;
-                break;
-            case 'c':
-                ng->religion = GOD_LUGONU;
-                break;
-            default:
-                break;
-            }
-        }
-        while (ng->religion == GOD_NO_GOD);
-
-        ngchoice.religion = (keyn == '*') ? GOD_RANDOM
-                              : ng->religion;
-    }
-    return (true);
-}
-
-// For jobs with god choice, fill in ng->religion.
-static bool _choose_god(newgame_def* ng)
-{
-    switch (ng->job)
-    {
-    case JOB_CHAOS_KNIGHT:
-        return (_choose_chaos_knight(ng));
-    case JOB_PRIEST:
-        return (_choose_priest(ng));
+    case GOD_ZIN:
+        return "Zin (for traditional priests)";
+    case GOD_YREDELEMNUL:
+        return "Yredelemnul (for priests of death)";
+    case GOD_BEOGH:
+        return "Beogh (for priests of Orcs)";
+    case GOD_XOM:
+        return "Xom of Chaos";
+    case GOD_MAKHLEB:
+        return "Makhleb the Destroyer";
+    case GOD_LUGONU:
+        return "Lugonu the Unformed";
     default:
+        ASSERT(false);
+        return "";
+    }
+}
+
+typedef std::pair<god_type, char_choice_restriction> god_choice;
+
+static god_type _fixup_god(god_type god, const std::vector<god_choice>& gods)
+{
+    if (god == GOD_NO_GOD || god == GOD_RANDOM || god == GOD_VIABLE)
+        return (god);
+    for (unsigned int i = 0; i < gods.size(); ++i)
+        if (god == gods[i].first)
+            return (god);
+    return (GOD_NO_GOD);
+}
+
+static bool _prompt_god(const newgame_def* ng, newgame_def* ng_choice,
+                        const std::vector<god_choice>& gods)
+{
+    _print_character_info(ng);
+
+    textcolor(CYAN);
+    cprintf("\nWhich god do you wish to serve?\n");
+
+    for (unsigned int i = 0; i < gods.size(); ++i)
+    {
+        if (gods[i].second == CC_UNRESTRICTED)
+            textcolor(LIGHTGREY);
+        else
+            textcolor(DARKGREY);
+
+        const char letter = 'a' + i;
+        cprintf("%c - %s\n", letter, _god_text(gods[i].first).c_str());
+    }
+
+    textcolor(BROWN);
+    cprintf("\n* - Random choice; + - Good random choice\n"
+                "Bksp - Back to species and background selection; "
+                "X - Quit\n");
+
+    const god_type defgod = _fixup_god(Options.prev_game.religion, gods);
+    if (defgod != GOD_NO_GOD)
+    {
+        textcolor(BROWN);
+        cprintf("\nEnter - %s\n", defgod == GOD_RANDOM ? "Random" :
+                                  defgod == GOD_VIABLE ? "Viable" :
+                                  god_name(defgod).c_str());
+        textcolor(LIGHTGREY);
+    }
+
+    while (true)
+    {
+        int keyn = getch_ck();
+
+        switch (keyn)
+        {
+        case 'X':
+            cprintf("\nGoodbye!");
+            end(0);
+            break;
+        case CK_BKSP:
+        case CK_ESCAPE:
+        case ' ':
+            return (false);
+        case '\r':
+        case '\n':
+            if (defgod != GOD_NO_GOD)
+            {
+                ng_choice->religion = defgod;
+                return (true);
+            }
+            else
+                continue;
+        case '+':
+            ng_choice->religion = GOD_VIABLE;
+            return (true);
+        case '*':
+            ng_choice->religion = GOD_RANDOM;
+            return (true);
+        default:
+            if (keyn - 'a' >= 0 && keyn - 'a' < (int)gods.size())
+            {
+                ng_choice->religion = gods[keyn - 'a'].first;
+                return (true);
+            }
+            else
+                continue;
+        }
+    }
+}
+
+static void _resolve_god(newgame_def* ng, const newgame_def* ng_choice,
+                         const std::vector<god_choice>& gods)
+{
+    switch (ng_choice->religion)
+    {
+    case GOD_NO_GOD:
+        ng->religion = GOD_NO_GOD;
+        return;
+
+    case GOD_VIABLE:
+    {
+        int good_choices = 0;
+        for (unsigned int i = 0; i < gods.size(); i++)
+        {
+            if (gods[i].second == CC_UNRESTRICTED
+                && one_chance_in(++good_choices))
+            {
+                ng->religion = gods[i].first;
+            }
+        }
+        if (good_choices)
+            return;
+    }
+        // intentional fall-through
+    case GOD_RANDOM:
+        ng->religion = gods[random2(gods.size())].first;
+        return;
+
+    default:
+        // Check this is a legal choice, in case it came
+        // through command line options.
+        ng->religion = _fixup_god(ng_choice->religion, gods);
+        if (ng->religion == GOD_NO_GOD)
+        {
+            // Either an invalid combination was passed in through options,
+            // or we messed up.
+            end(1, false,
+                "Incompatible book specified in options file.");
+        }
+        return;
+    }
+}
+
+static bool _choose_god(newgame_def* ng, newgame_def* ng_choice)
+{
+    if (ng->job != JOB_PRIEST && ng->job != JOB_CHAOS_KNIGHT)
+        return (true);
+
+    std::vector<god_choice> gods;
+    for (unsigned int i = 0; i < NUM_GODS; ++i)
+    {
+        god_choice god;
+        god.first = static_cast<god_type>(i);
+        god.second = religion_restriction(god.first, *ng);
+        if (god.second != CC_BANNED)
+            gods.push_back(god);
+    }
+
+    ASSERT(!gods.empty());
+    if (gods.size() == 1)
+    {
+        ng->religion = ng_choice->religion = gods[0].first;
         return (true);
     }
+
+    // XXX: assumes we can never choose between a god and no god.
+    if (ng_choice->religion == GOD_NO_GOD)
+        if (!_prompt_god(ng, ng_choice, gods))
+            return (false);
+
+    _resolve_god(ng, ng_choice, gods);
+    return (true);
 }
 
 static startup_wand_type _wand_to_start(int wand, bool is_rod)
