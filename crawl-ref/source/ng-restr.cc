@@ -811,20 +811,23 @@ char_choice_restriction religion_restriction(god_type god,
     ASSERT(is_valid_species(ng.species));
     ASSERT(is_valid_job(ng.job));
 
-    // Sanity check.
     if (ng.species == SP_DEMIGOD)
+        return (CC_BANNED);
+    if (ng.job != JOB_PRIEST && ng.job != JOB_CHAOS_KNIGHT)
         return (CC_BANNED);
 
     switch (god)
     {
         case GOD_BEOGH:
-            if (ng.species == SP_HILL_ORC)
+            if (ng.job == JOB_PRIEST && ng.species == SP_HILL_ORC)
                 return (CC_UNRESTRICTED);
             return (CC_BANNED);
 
         case GOD_ZIN:
+            if (ng.job != JOB_PRIEST)
+                return (CC_BANNED);
             switch (ng.species)
-        {
+            {
             case SP_DEMONSPAWN:
             case SP_MUMMY:
             case SP_GHOUL:
@@ -842,8 +845,10 @@ char_choice_restriction religion_restriction(god_type god,
         }
 
         case GOD_YREDELEMNUL:
+            if (ng.job != JOB_PRIEST)
+                return (CC_BANNED);
             switch (ng.species)
-        {
+            {
             case SP_HILL_ORC:
                 // Restrict in favour of Beogh, else unrestricted.
                 if (ng.job == JOB_PRIEST)
@@ -880,11 +885,13 @@ char_choice_restriction religion_restriction(god_type god,
                 if (species_genus(ng.species) == GENPC_DRACONIAN)
                     return (CC_UNRESTRICTED);
                 return (CC_RESTRICTED);
-        }
+            }
 
         case GOD_XOM:
+            if (ng.job != JOB_CHAOS_KNIGHT)
+                return (CC_BANNED);
             switch (ng.species)
-        {
+            {
             case SP_MOUNTAIN_DWARF:
             case SP_HILL_ORC:
             case SP_MERFOLK:
@@ -899,11 +906,13 @@ char_choice_restriction religion_restriction(god_type god,
                 if (species_genus(ng.species) == GENPC_DRACONIAN)
                     return (CC_UNRESTRICTED);
                 return (CC_RESTRICTED);
-        }
+            }
 
         case GOD_MAKHLEB:
+            if (ng.job != JOB_CHAOS_KNIGHT)
+                return (CC_BANNED);
             switch (ng.species)
-        {
+            {
             case SP_HUMAN:
             case SP_HIGH_ELF:
             case SP_DEEP_ELF:
@@ -928,11 +937,13 @@ char_choice_restriction religion_restriction(god_type god,
                 if (species_genus(ng.species) == GENPC_DRACONIAN)
                     return (CC_UNRESTRICTED);
                 return (CC_RESTRICTED);
-        }
+            }
 
         case GOD_LUGONU:
+            if (ng.job != JOB_CHAOS_KNIGHT)
+                return (CC_BANNED);
             switch (ng.species)
-        {
+            {
             case SP_HUMAN:
             case SP_MOUNTAIN_DWARF:
             case SP_HILL_ORC:
@@ -950,9 +961,9 @@ char_choice_restriction religion_restriction(god_type god,
                 if (species_genus(ng.species) == GENPC_DRACONIAN)
                     return (CC_UNRESTRICTED);
                 return (CC_RESTRICTED);
-        }
+            }
 
         default:
-            return (CC_RESTRICTED);
+            return (CC_BANNED);
     }
 }
