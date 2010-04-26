@@ -140,7 +140,7 @@ public:
                               unsigned int height, MipMapOptions mip_opt) = 0;
 
     // Debug
-#ifdef DEBUG
+#ifdef ASSERTS
     static bool _valid(int num_verts, drawing_modes mode);
 #endif
 };
