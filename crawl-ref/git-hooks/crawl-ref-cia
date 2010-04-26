@@ -171,7 +171,7 @@ $user =~ s/steven/neunon/;
 $user =~ s/scintilla/greensnark/;
 $user =~ s/homelesspete/Twinge/;
 $user =~ s/yobbobandana/yobbo/;
-
+$user =~ s/burnhamrobertp/Cryp71c/;
 
 $rev = substr($commit, 0, 12);
 
