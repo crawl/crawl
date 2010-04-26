@@ -1063,17 +1063,14 @@ bool melee_attack::player_aux_unarmed()
                 // +6 because of the horns.
                 aux_damage += player_mutation_level(MUT_HORNS) * 3;
 
-                if (you.equip[EQ_HELMET] != -1)
+                item_def* helmet = you.slot_item(EQ_HELMET);
+                if (helmet && is_hard_helmet(*helmet))
                 {
-                    const item_def& helmet = you.inv[you.equip[EQ_HELMET]];
-                    if (is_hard_helmet(helmet))
+                    aux_damage += 2;
+                    if (get_helmet_desc(*helmet) == THELM_DESC_SPIKED
+                        || get_helmet_desc(*helmet) == THELM_DESC_HORNED)
                     {
-                        aux_damage += 2;
-                        if (get_helmet_desc(helmet) == THELM_DESC_SPIKED
-                            || get_helmet_desc(helmet) == THELM_DESC_HORNED)
-                        {
-                            aux_damage += 3;
-                        }
+                        aux_damage += 3;
                     }
                 }
             }
