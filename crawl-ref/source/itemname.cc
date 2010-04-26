@@ -2058,7 +2058,7 @@ public:
     {
     }
 
-    virtual std::string get_text() const
+    virtual std::string get_text(const bool = false) const
     {
         return std::string(" ") + item->name(DESC_PLAIN);
     }
