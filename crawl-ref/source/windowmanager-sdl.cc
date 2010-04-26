@@ -24,6 +24,12 @@ void WindowManager::create()
     wm = new SDLWrapper();
 }
 
+void WindowManager::shutdown()
+{
+    delete wm;
+    wm = NULL;
+}
+
 static unsigned char _get_modifiers(SDL_keysym &keysym)
 {
     // keysym.mod can't be used to keep track of the modifier state.
@@ -221,6 +227,11 @@ static void _translate_event(const SDL_MouseButtonEvent &sdl_event,
 SDLWrapper::SDLWrapper():
     m_context(NULL)
 {
+}
+
+SDLWrapper::~SDLWrapper()
+{
+    SDL_Quit();
 }
 
 int SDLWrapper::init(coord_def *m_windowsz)
@@ -697,13 +708,6 @@ bool SDLWrapper::load_texture(GenericTexture *tex, const char *filename,
     SDL_FreeSurface(img);
 
     return (success);
-}
-
-void SDLWrapper::shutdown()
-{
-    SDL_Quit();
-    m_context = NULL;
-    video_info = NULL;
 }
 
 int SDLWrapper::byte_order()
