@@ -2389,6 +2389,9 @@ enum mutation_type
     MUT_HORNS,          // head
     MUT_STINGER,
     MUT_TALONS,         // feet
+#if TAG_MAJOR_VERSION != 22
+    MUT_SPIKED_TAIL,
+#endif
 
     // scales
     MUT_DISTORTION_FIELD,
