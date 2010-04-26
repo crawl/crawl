@@ -57,8 +57,6 @@ bool GLStateManager::_valid(int num_verts, drawing_modes mode)
 {
     switch (mode)
     {
-    case GLW_QUADS:
-        return (num_verts % 4 == 0);
     case GLW_RECTANGLE:
         return (num_verts % 4 == 0);
     case GLW_LINES:
