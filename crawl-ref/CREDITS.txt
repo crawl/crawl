@@ -28,28 +28,29 @@ Vollmert, Enne Walker) would like to thank:
 We'd also like to thank members of the Dungeon Crawl community who have
 contributed to Dungeon Crawl Stone Soup:
 
-Warwick Allison            Chris Hamons              Dylan O'Donnell
-Juha Arpiainen             R. Dan Henry              Yuuma Oohara
-Roy Axenov                 Brendan Hickey            Pedro
-Max Bane                   Benoit Hudson             Arlen Phillips
-Bill Beher                 Sylvia 'Onia' Hörnke      Lemuel Pitkin
-Alexander Beisig           Iainuki                   Derek Ray
-Stu Black                  Ilyak                     Remsleep
-Erik Inge Bolsø            Matthew Ince              Will Rogers
-Peter Borgmann             Mitsuhiro Itakura         David Rose
-Daniel Mark Brownrigg      Mikko Juola               Sebastian Salman
-Trent W. Buck              Jarmo Kielosto            Brett Scarborough
-Robert Burnham             Kornel Kisielewicz        Robert Shimmin
-Joe Buzzelli               Daniel Klein              Sigurd
-Terje Bø                   Vambola Kotkas            Edgar Simo
-Henry Cipolla              Ryan Kusnery              Alex Smith
-Aaron Curtis               Jukka Kuusisto            Solf
-Denzi                      Janne Lahdenperä          Michael Spang
-Mike Drinen                Maciej Lapinski           Johan Strandell
-Kieron Dunbar              Jordan Lewis              Roman Sêk
-Micha Elsner               Icy Lich                  William Tanksley, Jr.
-Christopher Evenstar       Markus Maier              Jared 'Twinge' Tinney
-Brett Foster               Arien Malec               Matt Titus
+Warwick Allison            Sophie Hamilton           nyra
+Juha Arpiainen             Chris Hamons              Dylan O'Donnell
+Roy Axenov                 R. Dan Henry              Yuuma Oohara
+Max Bane                   Brendan Hickey            Pedro
+Bill Beher                 Benoit Hudson             Arlen Phillips
+Alexander Beisig           Sylvia 'Onia' Hörnke      Lemuel Pitkin
+Stu Black                  Iainuki                   Derek Ray
+Erik Inge Bolsø            Ilyak                     Remsleep
+Peter Borgmann             Matthew Ince              Will Rogers
+Daniel Mark Brownrigg      Mitsuhiro Itakura         David Rose
+Trent W. Buck              Mikko Juola               Sebastian Salman
+Robert Burnham             Jarmo Kielosto            Brett Scarborough
+Joe Buzzelli               Kornel Kisielewicz        Robert Shimmin
+Terje Bø                   Daniel Klein              Sigurd
+Henry Cipolla              Vambola Kotkas            Edgar Simo
+Aaron Curtis               Ryan Kusnery              Alex Smith
+Denzi                      Jukka Kuusisto            Solf
+Mike Drinen                Janne Lahdenperä          Michael Spang
+Kieron Dunbar              Maciej Lapinski           Johan Strandell
+Micha Elsner               Jordan Lewis              Roman Sêk
+Christopher Evenstar       Icy Lich                  William Tanksley, Jr.
+Brett Foster               Markus Maier              Jared 'Twinge' Tinney
+Chris Galardi              Arien Malec               Matt Titus
 Ben Goetter                Paul Maloney              Steven Wheeler
 Rob Grant                  Andrew Minton             Thomas Willem
 John Greenberg             Shawn M Moore             Evan Williams
@@ -57,5 +58,4 @@ GreyKnight                 Eva Myers                 Jeremey Wilson
 Joshua Gross               Wille Mäntylä             Yelve Yakut
 Brian Haase                Erkki Nurmi               Zooko
 Shayne Halvorson           Mattias Nyberg
-Sophie Hamilton            nyra
 
