@@ -16,8 +16,11 @@
 #include "macro.h"
 
 TitleRegion::TitleRegion(int width, int height, FontWrapper* font) :
-  m_buf(&m_img, GLW_QUADS), m_font_buf(font)
+    m_buf(true, false), m_font_buf(font)
 {
+    // set the texture for the title image
+    m_buf.set_tex(&m_img);
+
     sx = sy = 0;
     dx = dy = 1;
 
@@ -30,34 +33,11 @@ TitleRegion::TitleRegion(int width, int height, FontWrapper* font) :
     ox = (wx - m_img.orig_width()) / 2;
     oy = (wy - m_img.orig_height()) / 2;
 
-    {
-        PTVert &v = m_buf.get_next();
-        v.pos_x = 0;
-        v.pos_y = 0;
-        v.tex_x = 0;
-        v.tex_y = 0;
-    }
-    {
-        PTVert &v = m_buf.get_next();
-        v.pos_x = 0;
-        v.pos_y = m_img.height();
-        v.tex_x = 0;
-        v.tex_y = 1;
-    }
-    {
-        PTVert &v = m_buf.get_next();
-        v.pos_x = m_img.width();
-        v.pos_y = m_img.height();
-        v.tex_x = 1;
-        v.tex_y = 1;
-    }
-    {
-        PTVert &v = m_buf.get_next();
-        v.pos_x = m_img.width();
-        v.pos_y = 0;
-        v.tex_x = 1;
-        v.tex_y = 0;
-    }
+    GLWRect rect(0, 0, m_img.width(), m_img.height());
+    rect.set_tex(0, 0, 1, 1);
+
+    // Push it
+    m_buf.push(rect);
 }
 
 void TitleRegion::render()

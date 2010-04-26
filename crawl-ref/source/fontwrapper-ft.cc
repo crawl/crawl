@@ -737,38 +737,13 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
     float tex_ex = tex_sx + (float)this_width / (float)m_tex.width();
     float tex_ey = tex_sy + (float)m_max_advance.y / (float)m_tex.height();
 
-    {
-        PTCVert &v = buf.get_next();
-        v.col = col;
-        v.pos_x = pos_sx;
-        v.pos_y = pos_sy;
-        v.tex_x = tex_sx;
-        v.tex_y = tex_sy;
-    }
-    {
-        PTCVert &v = buf.get_next();
-        v.col = col;
-        v.pos_x = pos_sx;
-        v.pos_y = pos_ey;
-        v.tex_x = tex_sx;
-        v.tex_y = tex_ey;
-    }
-    {
-        PTCVert &v = buf.get_next();
-        v.col = col;
-        v.pos_x = pos_ex;
-        v.pos_y = pos_ey;
-        v.tex_x = tex_ex;
-        v.tex_y = tex_ey;
-    }
-    {
-        PTCVert &v = buf.get_next();
-        v.col = col;
-        v.pos_x = pos_ex;
-        v.pos_y = pos_sy;
-        v.tex_x = tex_ex;
-        v.tex_y = tex_sy;
-    }
+    // Construct rectangle
+    GLWRect rect(pos_sx, pos_sy, pos_ex, pos_ey);
+    rect.set_tex(tex_sx, tex_sy, tex_ex, tex_ey);
+    rect.set_col(&col, &col, &col, &col);
+
+    // Push it
+    buf.push(rect);
 
     x += m_glyphs[c].advance;
 }

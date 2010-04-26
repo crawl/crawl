@@ -17,65 +17,42 @@ class formatted_string;
 class GenericTexture;
 class TilesTexture;
 
-struct PTCVert
-{
-    float pos_x;
-    float pos_y;
-    float tex_x;
-    float tex_y;
-    VColour col;
-};
-
-struct P3TCVert
-{
-    float pos_x;
-    float pos_y;
-    float pos_z;
-    float tex_x;
-    float tex_y;
-    VColour col;
-};
-
-struct PTVert
-{
-    float pos_x;
-    float pos_y;
-    float tex_x;
-    float tex_y;
-};
-
-struct PCVert
-{
-    float pos_x;
-    float pos_y;
-    VColour col;
-};
-
-// V: vertex data
-template<class V>
-class VertBuffer : public std::vector<V>
+class VertBuffer
 {
 public:
-    typedef V Vert;
+    VertBuffer(bool texture, bool colour, const GenericTexture *tex = NULL,
+               drawing_modes prim = GLW_RECTANGLE, bool flush = false);
+    ~VertBuffer();
 
-    VertBuffer(const GenericTexture *tex, drawing_modes prim);
+    // Rendering
+    void draw(GLW_3VF *pt = NULL, GLW_3VF *ps = NULL) const;
 
-    // Vertices are fat, so to avoid an extra copy of all the data members,
-    // pre-construct the vertex and return a reference to it.
-    V& get_next();
-    void draw(GLW_3VF *pt, GLW_3VF *ps) const;
+    // State query
+    const GLState& state() const { return m_state; }
+    const GenericTexture* current_texture() const { return m_tex; }
+    unsigned int size() const;
 
-    GLState &state() { return m_state; }
+    // State Manipulation
+    void set_state(const GLState &state);
+    void push(const GLWRect &rect);
+    void clear();
+
+    // Note: this could invalidate previous additions if they were
+    // from a different texture.
+    // But we leave it here as a convenience and because it is required to set
+    // textures that load late. Specifically ones that rely on the item
+    // description tables -- Ixtli
+    void set_tex(const GenericTexture *tex);
 
 protected:
-    void init_state();
-
     const GenericTexture *m_tex;
-    drawing_modes m_prim;
+    GLShapeBuffer *vert_buff;
     GLState m_state;
+    drawing_modes m_prim;
+    bool flush_verts, colour_verts, texture_verts;
 };
 
-class FontBuffer : public VertBuffer<PTCVert>
+class FontBuffer : public VertBuffer
 {
 public:
     FontBuffer(FontWrapper *font);
@@ -85,21 +62,16 @@ protected:
     FontWrapper *m_font;
 };
 
-class TileBuffer : public VertBuffer<PTVert>
+class TileBuffer : public VertBuffer
 {
 public:
     TileBuffer(const TilesTexture *tex = NULL);
 
     void add_unscaled(int idx, float x, float y, int ymax = TILE_Y);
     void add(int idx, int x, int y, int ox = 0, int oy = 0, bool centre = true, int ymax = -1);
-
-
-    // Note: this could invalidate previous additions if they were
-    // from a different texture.
-    void set_tex(const TilesTexture *tex);
 };
 
-class ColouredTileBuffer : public VertBuffer<P3TCVert>
+class ColouredTileBuffer : public VertBuffer
 {
 public:
     ColouredTileBuffer(const TilesTexture *tex = NULL);
@@ -146,37 +118,19 @@ protected:
     ColouredTileBuffer m_above_water;
 };
 
-class ShapeBuffer : public VertBuffer<PCVert>
+class ShapeBuffer : public VertBuffer
 {
 public:
     ShapeBuffer();
     void add(float sx, float sy, float ex, float ey, const VColour &c);
 };
 
-class LineBuffer : public VertBuffer<PCVert>
+class LineBuffer : public VertBuffer
 {
 public:
     LineBuffer();
     void add(float sx, float sy, float ex, float ey, const VColour &c);
     void add_square(float sx, float sy, float ex, float ey, const VColour &c);
 };
-
-/////////////////////////////////////////////////////////////////////////////
-// template implementation
-
-template<class V>
-inline VertBuffer<V>::VertBuffer(const GenericTexture *tex, drawing_modes prim) :
-    m_tex(tex), m_prim(prim)
-{
-    init_state();
-}
-
-template<class V>
-inline V& VertBuffer<V>::get_next()
-{
-    size_t last = std::vector<V>::size();
-    std::vector<V>::resize(last + 1);
-    return ((*this)[last]);
-}
 
 #endif

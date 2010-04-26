@@ -22,157 +22,103 @@ VColour VColour::transparent(0, 0, 0, 0);
 /////////////////////////////////////////////////////////////////////////////
 // VertBuffer
 
-template<>
-void VertBuffer<PTVert>::init_state()
+VertBuffer::VertBuffer(bool texture, bool colour, const GenericTexture *tex,
+        drawing_modes prim, bool flush) :
+    m_tex(tex),
+    m_prim(prim),
+    flush_verts(flush),
+    colour_verts(colour),
+    texture_verts(texture)
 {
-    m_state.array_vertex   = true;
-    m_state.array_texcoord = true;
-    m_state.blend          = true;
-    m_state.texture        = true;
-}
+    vert_buff = GLShapeBuffer::create(texture, colour_verts, m_prim);
+    ASSERT(vert_buff);
 
-template<>
-void VertBuffer<PTVert>::draw(GLW_3VF *pt, GLW_3VF *ps) const
-{
-    if (size() == 0)
-        return;
-
-    ASSERT(m_prim == GLW_QUADS);
-
-    // Handle texture
-    ASSERT(m_tex);
-    glmanager->set(m_state);
-    m_tex->bind();
-
-    GLPrimitive prim(sizeof(Vert), size(), 2,
-                     &(*this)[0].pos_x,
-                     NULL,
-                     &(*this)[0].tex_x);
-
-    prim.mode = m_prim;
-    prim.pretranslate = pt;
-    prim.prescale = ps;
-
-    // Draw
-    glmanager->draw_primitive(prim);
-}
-
-template<>
-void VertBuffer<PCVert>::init_state()
-{
+    // Set default gl state
     m_state.array_vertex = true;
-    m_state.array_colour = true;
-    m_state.blend        = true;
-    m_state.texture      = false;
+    m_state.blend = true; // This seems to be a safe default here
+    if(texture_verts)
+    {
+        m_state.array_texcoord = true;
+        m_state.texture = true;
+    }
+    if(colour_verts)
+    {
+        m_state.array_colour = true;
+    }
 }
 
-template<>
-void VertBuffer<PCVert>::draw(GLW_3VF *pt, GLW_3VF *ps) const
+void VertBuffer::draw(GLW_3VF *pt, GLW_3VF *ps) const
 {
+    // Note:    This check is here because MenuRegion::render will try and
+    //          render m_tile_buf[2] which, before the item description table
+    //          is created, will be bound to a texture that has not been loaded.
+    //          It never crashes, though, because m_tile_buf[2] will always be
+    //          empty (no pushed verts) before you start a game. -- ixtli
     if (size() == 0)
         return;
 
-    ASSERT(m_prim == GLW_QUADS || m_prim == GLW_LINES);
-    ASSERT(!m_tex);
+    // Set state
     glmanager->set(m_state);
-
-    // Create the primitive we wish to draw
-    GLPrimitive prim(sizeof(Vert), size(), 2,
-                     &(*this)[0].pos_x,
-                     &(*this)[0].col,
-                     NULL);
-
-    prim.mode = m_prim;
-    prim.pretranslate = pt;
-    prim.prescale = ps;
-
-    // Draw
-    glmanager->draw_primitive(prim);
-}
-
-template<>
-void VertBuffer<PTCVert>::init_state()
-{
-    m_state.array_vertex   = true;
-    m_state.array_texcoord = true;
-    m_state.array_colour   = true;
-    m_state.blend          = true;
-    m_state.texture        = true;
-}
-
-template<>
-void VertBuffer<PTCVert>::draw(GLW_3VF *pt, GLW_3VF *ps) const
-{
-    if (size() == 0)
-        return;
-
-    ASSERT(m_prim == GLW_QUADS);
 
     // Handle texture
-    ASSERT(m_tex);
-    glmanager->set(m_state);
-    m_tex->bind();
-
-    // Create the primitive we wish to draw
-    GLPrimitive prim(sizeof(Vert), size(), 2,
-                     &(*this)[0].pos_x,
-                     &(*this)[0].col,
-                     &(*this)[0].tex_x);
-
-    prim.mode = m_prim;
-    prim.pretranslate = pt;
-    prim.prescale = ps;
+    if(texture_verts)
+    {
+        ASSERT(m_tex);
+        m_tex->bind();
+    }
 
     // Draw
-    glmanager->draw_primitive(prim);
+    vert_buff->draw(pt, ps, flush_verts);
 }
 
-template<>
-void VertBuffer<P3TCVert>::init_state()
+void VertBuffer::set_state(const GLState &s)
 {
-    m_state.array_vertex   = true;
-    m_state.array_texcoord = true;
-    m_state.array_colour   = true;
-    m_state.blend          = true;
-    m_state.texture        = true;
-    m_state.depthtest      = true;
-    m_state.alphatest      = true;
-    m_state.alpharef       = 0;
+    // At this point, don't allow toggling of prim_type, texturing, or colouring
+    // as GLVertexBuffer doesn't support it
+    m_state.blend = s.blend;
+    // This needs more testing
+    //m_state.texture = state.texture; 
+    m_state.depthtest = s.depthtest;
+    m_state.alphatest = s.alphatest;
+    m_state.alpharef = s.alpharef;
 }
 
-template<>
-void VertBuffer<P3TCVert>::draw(GLW_3VF *pt, GLW_3VF *ps) const
+void VertBuffer::clear()
 {
-    if (size() == 0)
-        return;
+    vert_buff->clear();
+}
 
-    ASSERT(m_prim == GLW_QUADS);
+void VertBuffer::push(const GLWRect &rect)
+{
+    vert_buff->push(rect);
+}
 
-    // Handle texture
-    ASSERT(m_tex);
-    glmanager->set(m_state);
-    m_tex->bind();
+unsigned int VertBuffer::size() const
+{
+    return vert_buff->size();
+}
 
-    // Create the primitive we wish to draw
-    GLPrimitive prim(sizeof(Vert), size(), 3,
-                     &(*this)[0].pos_x,
-                     &(*this)[0].col,
-                     &(*this)[0].tex_x);
+void VertBuffer::set_tex(const GenericTexture *new_tex)
+{
+    ASSERT(texture_verts);
+    ASSERT(new_tex);
+    m_tex = new_tex;
+}
 
-    prim.mode = m_prim;
-    prim.pretranslate = pt;
-    prim.prescale = ps;
-
-    // Draw
-    glmanager->draw_primitive(prim);
+VertBuffer::~VertBuffer()
+{
+    if(vert_buff)
+        delete vert_buff;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // FontBuffer
 
 FontBuffer::FontBuffer(FontWrapper *font) :
-    VertBuffer<PTCVert>(font->font_tex(), GLW_QUADS), m_font(font)
+    VertBuffer(true, true, font->font_tex()), m_font(font)
 {
+    m_state.array_colour = true;
+
     ASSERT(m_font);
     ASSERT(m_tex);
 }
@@ -180,19 +126,17 @@ FontBuffer::FontBuffer(FontWrapper *font) :
 void FontBuffer::add(const formatted_string &fs, float x, float y)
 {
     m_font->store(*this, x, y, fs);
-    ASSERT(GLStateManager::_valid(size(), m_prim));
 }
 
 void FontBuffer::add(const std::string &s, const VColour &col, float x, float y)
 {
     m_font->store(*this, x, y, s, col);
-    ASSERT(GLStateManager::_valid(size(), m_prim));
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // TileBuffer
 
-TileBuffer::TileBuffer(const TilesTexture *t) : VertBuffer<PTVert>(t, GLW_QUADS)
+TileBuffer::TileBuffer(const TilesTexture *t) : VertBuffer(true, false, t)
 {
 }
 
@@ -210,39 +154,12 @@ void TileBuffer::add_unscaled(int idx, float x, float y, int ymax)
     if (!drawn)
         return;
 
-    size_t last = std::vector<Vert>::size();
-    std::vector<Vert>::resize(last + 4);
+    // Construct rectangle
+    GLWRect rect(pos_sx, pos_sy, pos_ex, pos_ey);
+    rect.set_tex(tex_sx, tex_sy, tex_ex, tex_ey);
 
-    {
-        Vert &v = (*this)[last];
-        v.pos_x = pos_sx;
-        v.pos_y = pos_sy;
-        v.tex_x = tex_sx;
-        v.tex_y = tex_sy;
-    }
-    {
-        Vert &v = (*this)[last + 1];
-        v.pos_x = pos_sx;
-        v.pos_y = pos_ey;
-        v.tex_x = tex_sx;
-        v.tex_y = tex_ey;
-    }
-    {
-        Vert &v = (*this)[last + 2];
-        v.pos_x = pos_ex;
-        v.pos_y = pos_ey;
-        v.tex_x = tex_ex;
-        v.tex_y = tex_ey;
-    }
-    {
-        Vert &v = (*this)[last + 3];
-        v.pos_x = pos_ex;
-        v.pos_y = pos_sy;
-        v.tex_x = tex_ex;
-        v.tex_y = tex_sy;
-    }
-
-    ASSERT(GLStateManager::_valid(size(), m_prim));
+    // Push it
+    push(rect);
 }
 
 void TileBuffer::add(int idx, int x, int y, int ox, int oy, bool centre, int ymax)
@@ -259,54 +176,24 @@ void TileBuffer::add(int idx, int x, int y, int ox, int oy, bool centre, int yma
     if (!drawn)
         return;
 
-    size_t last = std::vector<Vert>::size();
-    std::vector<Vert>::resize(last + 4);
+    // Construct rectangle
+    GLWRect rect(pos_sx, pos_sy, pos_ex, pos_ey);
+    rect.set_tex(tex_sx, tex_sy, tex_ex, tex_ey);
 
-    {
-        Vert &v = (*this)[last];
-        v.pos_x = pos_sx;
-        v.pos_y = pos_sy;
-        v.tex_x = tex_sx;
-        v.tex_y = tex_sy;
-    }
-
-    {
-        Vert &v = (*this)[last + 1];
-        v.pos_x = pos_sx;
-        v.pos_y = pos_ey;
-        v.tex_x = tex_sx;
-        v.tex_y = tex_ey;
-    }
-
-    {
-        Vert &v = (*this)[last + 2];
-        v.pos_x = pos_ex;
-        v.pos_y = pos_ey;
-        v.tex_x = tex_ex;
-        v.tex_y = tex_ey;
-    }
-
-    {
-        Vert &v = (*this)[last + 3];
-        v.pos_x = pos_ex;
-        v.pos_y = pos_sy;
-        v.tex_x = tex_ex;
-        v.tex_y = tex_sy;
-    }
-}
-
-void TileBuffer::set_tex(const TilesTexture *new_tex)
-{
-    ASSERT(new_tex);
-    m_tex = new_tex;
+    // Push it
+    push(rect);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // ColouredTileBuffer
 
 ColouredTileBuffer::ColouredTileBuffer(const TilesTexture *t) :
-    VertBuffer<P3TCVert>(t, GLW_QUADS)
+    VertBuffer(true, true, t)
 {
+    m_state.array_colour   = true;
+    m_state.depthtest      = true;
+    m_state.alphatest      = true;
+    m_state.alpharef       = 0;
 }
 
 static unsigned char _get_alpha(float lerp, int alpha_top, int alpha_bottom)
@@ -352,47 +239,13 @@ void ColouredTileBuffer::add(int idx, int x, int y, int z,
 
     float pos_z = (float)z;
 
-    size_t last = std::vector<Vert>::size();
-    std::vector<Vert>::resize(last + 4);
-    {
-        Vert &v = (*this)[last];
-        v.pos_x = pos_sx;
-        v.pos_y = pos_sy;
-        v.pos_z = pos_z;
-        v.tex_x = tex_sx;
-        v.tex_y = tex_sy;
-        v.col = col_sy;
-    }
+    // Construct rectangle
+    GLWRect rect(pos_sx, pos_sy, pos_ex, pos_ey, pos_z);
+    rect.set_tex(tex_sx, tex_sy, tex_ex, tex_ey);
+    rect.set_col(&col_sy, &col_sy, &col_ey, &col_ey);
 
-    {
-        Vert &v = (*this)[last + 1];
-        v.pos_x = pos_sx;
-        v.pos_y = pos_ey;
-        v.pos_z = pos_z;
-        v.tex_x = tex_sx;
-        v.tex_y = tex_ey;
-        v.col = col_ey;
-    }
-
-    {
-        Vert &v = (*this)[last + 2];
-        v.pos_x = pos_ex;
-        v.pos_y = pos_ey;
-        v.pos_z = pos_z;
-        v.tex_x = tex_ex;
-        v.tex_y = tex_ey;
-        v.col = col_ey;
-    }
-
-    {
-        Vert &v = (*this)[last + 3];
-        v.pos_x = pos_ex;
-        v.pos_y = pos_sy;
-        v.pos_z = pos_z;
-        v.tex_x = tex_ex;
-        v.tex_y = tex_sy;
-        v.col = col_sy;
-    }
+    // Push it
+    push(rect);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -415,11 +268,13 @@ SubmergedTileBuffer::SubmergedTileBuffer(const TilesTexture *tex,
     // Adjust the state of the mask buffer so that we can use it to mask out
     // the bottom half of the tile when drawing the character a second time.
     // See the draw() function for more details.
-    GLState &state = m_mask.state();
-    state.blend = true;
-    state.depthtest = true;
-    state.alphatest = true;
-    state.alpharef = 255;
+    GLState new_state;
+    new_state.set( m_mask.state() );
+    new_state.blend = true;
+    new_state.depthtest = true;
+    new_state.alphatest = true;
+    new_state.alpharef = 255;
+    m_mask.set_state(new_state);
 }
 
 void SubmergedTileBuffer::add(int idx, int x, int y, int z, bool submerged,
@@ -468,7 +323,7 @@ void SubmergedTileBuffer::draw() const
     {
         // First, draw anything below water.  Alpha blending is turned on,
         // so these tiles will blend with anything previously drawn.
-        m_below_water.draw(NULL, NULL);
+        m_below_water.draw();
 
         // Second, draw all of the mask tiles.  The mask is white
         // (255,255,255,255) above water and transparent (0,0,0,0) below water.
@@ -489,12 +344,12 @@ void SubmergedTileBuffer::draw() const
         // Now, draw all the above water tiles.  Some of these may draw over
         // top of part of the below water tiles, but that's fine as the mask
         // will take care of only drawing the correct parts.
-        m_above_water.draw(NULL, NULL);
+        m_above_water.draw();
     }
     else
     {
-        m_below_water.draw(NULL, NULL);
-        m_above_water.draw(NULL, NULL);
+        m_below_water.draw();
+        m_above_water.draw();
 
         ASSERT(m_mask.size() == 0);
     }
@@ -515,65 +370,39 @@ void SubmergedTileBuffer::clear()
 // glPointSize unless GL_SMOOTH_POINTS is on.  GL_SMOOTH_POINTS is
 // *terrible* for performance if it has to fall back on software rendering,
 // so instead we'll just make quads.
-ShapeBuffer::ShapeBuffer() : VertBuffer<PCVert>(NULL, GLW_QUADS)
+ShapeBuffer::ShapeBuffer() : VertBuffer(false, true)
 {
+    m_state.array_colour = true;
 }
 
 void ShapeBuffer::add(float pos_sx, float pos_sy, float pos_ex, float pos_ey,
                       const VColour &col)
 {
-    {
-        Vert &v = get_next();
-        v.pos_x = pos_sx;
-        v.pos_y = pos_sy;
-        v.col = col;
-    }
-    {
-        Vert &v = get_next();
-        v.pos_x = pos_sx;
-        v.pos_y = pos_ey;
-        v.col = col;
-    }
-    {
-        Vert &v = get_next();
-        v.pos_x = pos_ex;
-        v.pos_y = pos_ey;
-        v.col = col;
-    }
-    {
-        Vert &v = get_next();
-        v.pos_x = pos_ex;
-        v.pos_y = pos_sy;
-        v.col = col;
-    }
+    // Construct rectangle
+    GLWRect rect(pos_sx, pos_sy, pos_ex, pos_ey);
+    rect.set_col(&col, &col, &col, &col);
 
-    ASSERT(GLStateManager::_valid(size(), m_prim));
+    // Push it
+    push(rect);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // LineBuffer
 
-LineBuffer::LineBuffer() : VertBuffer<PCVert>(NULL, GLW_LINES)
+LineBuffer::LineBuffer() : VertBuffer(false, true, NULL, GLW_LINES)
 {
+    m_state.array_colour = true;
 }
 
 void LineBuffer::add(float pos_sx, float pos_sy, float pos_ex, float pos_ey,
                      const VColour &col)
 {
-    {
-        Vert &v = get_next();
-        v.pos_x = pos_sx;
-        v.pos_y = pos_sy;
-        v.col = col;
-    }
-    {
-        Vert &v = get_next();
-        v.pos_x = pos_ex;
-        v.pos_y = pos_ey;
-        v.col = col;
-    }
+    // Construct rectangle
+    GLWRect rect(pos_sx, pos_sy, pos_ex, pos_ey);
+    rect.set_col(&col, &col);
 
-    ASSERT(GLStateManager::_valid(size(), m_prim));
+    // Push it
+    push(rect);
 }
 
 void LineBuffer::add_square(float sx, float sy, float ex, float ey,
