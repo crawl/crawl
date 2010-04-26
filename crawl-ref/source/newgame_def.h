@@ -15,13 +15,15 @@ enum startup_book_type
 
 enum startup_wand_type
 {
-    SWT_NO_SELECTION = 0,
     SWT_ENSLAVEMENT,
     SWT_CONFUSION,
     SWT_MAGIC_DARTS,
     SWT_FROST,
     SWT_FLAME,
     SWT_STRIKING, // actually a rod
+    NUM_STARTUP_WANDS,
+
+    SWT_NO_SELECTION = NUM_STARTUP_WANDS,
     SWT_RANDOM
 };
 
