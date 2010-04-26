@@ -103,10 +103,10 @@ public:
     // Note: Write this function in each implementation-specific file,
     // e.g. windowmanager-sdl.cc has its own WindowManager::create().
     static void create();
+    static void shutdown();
 
     // Class functions
     virtual int init(coord_def *m_windowsz) = 0;
-    virtual void shutdown() = 0;
 
     // Environment state functions
     virtual void set_window_title(const char *title) = 0;

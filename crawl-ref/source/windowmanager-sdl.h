@@ -13,10 +13,10 @@ class SDLWrapper : public WindowManager
 {
 public:
     SDLWrapper();
+    ~SDLWrapper();
 
     // Class functions
     virtual int init(coord_def *m_windowsz);
-    virtual void shutdown();
 
     // Environment state functions
     virtual void set_window_title(const char *title);

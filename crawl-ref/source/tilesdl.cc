@@ -158,8 +158,7 @@ void TilesFramework::shutdown()
     delete m_image;
 
     GLStateManager::shutdown();
-    wm->shutdown();
-    delete wm;
+    WindowManager::shutdown();
 
     _shutdown_console();
 }
