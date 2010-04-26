@@ -337,20 +337,7 @@ bool TilesFramework::initialise()
     m_region_tab->set_tab_region(TAB_ITEM, m_region_inv, TILEG_TAB_ITEM);
     m_region_tab->set_tab_region(TAB_SPELL, m_region_spl, TILEG_TAB_SPELL);
     m_region_tab->set_tab_region(TAB_MEMORISE, m_region_mem, TILEG_TAB_MEMORISE);
-
-    switch (Options.tile_display)
-    {
-    default:
-    case TDSP_INVENT:
-        m_region_tab->activate_tab(TAB_ITEM);
-        break;
-    case TDSP_SPELLS:
-        m_region_tab->activate_tab(TAB_SPELL);
-        break;
-    case TDSP_MEMORISE:
-        m_region_tab->activate_tab(TAB_MEMORISE);
-        break;
-    }
+    m_region_tab->activate_tab(TAB_ITEM);
 
     m_region_msg  = new MessageRegion(m_fonts[m_msg_font].font);
     m_region_stat = new StatRegion(m_fonts[stat_font].font);
