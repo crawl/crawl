@@ -43,14 +43,11 @@ bool GLStateManager::_valid(int num_verts, drawing_modes mode)
     switch (mode)
     {
     case GLW_QUADS:
-    case GLW_TRIANGLE_STRIP:
         return (num_verts % 4 == 0);
-    case GLW_TRIANGLES:
-        return (num_verts % 3 == 0);
+    case GLW_RECTANGLE:
+        return (num_verts % 4 == 0);
     case GLW_LINES:
         return (num_verts % 2 == 0);
-    case GLW_POINTS:
-        return (true);
     default:
         return (false);
     }

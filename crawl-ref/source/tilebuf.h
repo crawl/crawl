@@ -17,22 +17,6 @@ class formatted_string;
 class GenericTexture;
 class TilesTexture;
 
-struct VColour
-{
-    VColour() {}
-    VColour(unsigned char _r, unsigned char _g, unsigned char _b,
-            unsigned char _a = 255) : r(_r), g(_g), b(_b), a(_a) {}
-
-    unsigned char r;
-    unsigned char g;
-    unsigned char b;
-    unsigned char a;
-
-    static VColour white;
-    static VColour black;
-    static VColour transparent;
-};
-
 struct PTCVert
 {
     float pos_x;

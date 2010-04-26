@@ -8,16 +8,70 @@
 
 struct coord_def;
 
+struct VColour
+{
+    VColour() {}
+    VColour(unsigned char _r, unsigned char _g, unsigned char _b,
+            unsigned char _a = 255) : r(_r), g(_g), b(_b), a(_a) {}
+    VColour(const VColour &vc) : r(vc.r), g(vc.g), b(vc.b), a(vc.a) {}
+
+    inline void set(const VColour &in)
+    {
+        r = in.r;
+        g = in.g;
+        b = in.b;
+        a = in.a;
+    }
+
+    unsigned char r;
+    unsigned char g;
+    unsigned char b;
+    unsigned char a;
+
+    static VColour white;
+    static VColour black;
+    static VColour transparent;
+};
+
+struct GLW_2VF
+{
+    GLW_2VF() {};
+    GLW_2VF(float l, float m) : x(l), y(m) {}
+
+    inline void set(float l, float m)
+    {
+        x = l;
+        y = m;
+    }
+
+    inline void set(const GLW_2VF &in)
+    {
+        x = in.x;
+        y = in.y;
+    }
+
+    union {float x; float u; float s;};
+    union {float y; float v; float t;};
+};
+
 struct GLW_3VF
 {
     GLW_3VF() {};
     GLW_3VF(float l, float m, float n) : x(l), y(m), z(n) {}
+    GLW_3VF(float l, float m) : x(l), y(m), z(0.0) {}
 
-    inline void set(float l, float m, float n)
+    inline void set(float l, float m, float n = 0.0)
     {
         x = l;
         y = m;
         z = n;
+    }
+
+    inline void set(const GLW_3VF &in)
+    {
+        x = in.x;
+        y = in.y;
+        z = in.z;
     }
 
     union {float x; float r;};
@@ -38,10 +92,18 @@ struct GLW_4VF
         t = p;
     }
 
-    union {float x; float r;};
-    union {float y; float g;};
-    union {float z; float b;};
-    union {float t; float a;};
+    inline void set(const GLW_4VF &in)
+    {
+        x = in.x;
+        y = in.y;
+        z = in.z;
+        t = in.t;
+    }
+
+    union {float x; float r;                    };
+    union {float y; float g;                    };
+    union {float z; float b; float u; float s;  };
+    union {float t; float a; float v;           };
 };
 
 enum MipMapOptions
@@ -54,11 +116,55 @@ enum MipMapOptions
 // TODO: Ixtli - Remove QUADS entirely.
 enum drawing_modes
 {
-    GLW_POINTS,
     GLW_LINES,
-    GLW_TRIANGLES,
-    GLW_TRIANGLE_STRIP,
+    GLW_RECTANGLE,
     GLW_QUADS
+};
+
+enum glw_winding
+{
+    GLW_CW,
+    GLW_CCW
+};
+
+// Convenience structure for passing around rectangles
+// (or lines) which crawl does a lot of
+struct GLWRect
+{
+    // Constructor assumes we're always going to have a position
+    GLWRect(float sx, float sy, float ex, float ey, float z = 0.0f) :
+        pos_sx(sx), pos_sy(sy), pos_ex(ex), pos_ey(ey), pos_z(z),
+        tex_sx(0.0f), tex_sy(0.0f), tex_ex(0.0f), tex_ey(0.0f),
+        col_bl(NULL), col_br(NULL), col_tl(NULL), col_tr(NULL) {}
+
+    inline void set_tex(float sx, float sy, float ex, float ey)
+    {
+        tex_sx = sx;
+        tex_sy = sy;
+        tex_ex = ex;
+        tex_ey = ey;
+    }
+
+    inline void set_col(VColour const *bl, VColour const *br,
+        VColour const *tl, VColour const *tr)
+    {
+        col_bl = bl;
+        col_br = br;
+        col_tl = tl;
+        col_tr = tr;
+    }
+
+    inline void set_col(VColour const *s, VColour const *e)
+    {
+        col_s = s;
+        col_e = e;
+    }
+
+    float pos_sx, pos_sy, pos_ex, pos_ey, pos_z;
+    float tex_sx, tex_sy, tex_ex, tex_ey;
+    union {VColour const *col_bl; VColour const *col_s;};
+    union {VColour const *col_br; VColour const *col_e;};
+    VColour const *col_tl, *col_tr;
 };
 
 struct GLPrimitive
@@ -117,6 +223,9 @@ public:
     // implementation-specific cc file, e.g. glwrapper-ogl.cc.
     static void init();
     static void shutdown();
+
+    // State query
+    virtual glw_winding winding() = 0;
 
     // State Manipulation
     virtual void set(const GLState& state) = 0;
