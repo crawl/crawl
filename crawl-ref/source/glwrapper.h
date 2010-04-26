@@ -167,30 +167,6 @@ struct GLWRect
     VColour const *col_tl, *col_tr;
 };
 
-struct GLPrimitive
-{
-    GLPrimitive(size_t sz, size_t ct, unsigned int vs,
-                const void* v_pt, const void *c_pt, const void *t_pt);
-
-    // Primitive Metadata
-    drawing_modes mode;
-    unsigned int vert_size; // Coords per vertex
-    size_t size;
-    size_t count;
-
-    // Primitive Data
-    const void *vert_pointer;
-    const void *colour_pointer;
-    const void *texture_pointer;
-
-    // Primitive render manipulations
-    GLW_3VF *pretranslate;
-    GLW_3VF *prescale;
-
-    // State manipulations
-    GLW_3VF *color;
-};
-
 // This struct defines all of the state that any particular rendering needs.
 // If other rendering states are needed, they should be added here so that
 // they do not introduce unneeded side effects for other parts of the code
@@ -242,9 +218,6 @@ public:
     virtual void reset_transform() = 0;
     virtual void set_current_color(GLW_3VF &color) = 0;
     virtual void set_current_color(GLW_4VF &color) = 0;
-
-    // Drawing GLPrimitives
-    virtual void draw_primitive(const GLPrimitive &prim) = 0;
 
     // Texture-specific functinos
     virtual void delete_textures(size_t count, unsigned int *textures) = 0;
