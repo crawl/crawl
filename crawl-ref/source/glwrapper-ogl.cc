@@ -166,54 +166,6 @@ void OGLStateManager::pixelstore_unpack_alignment(unsigned int bpp)
     glPixelStorei(GL_UNPACK_ALIGNMENT, bpp);
 }
 
-void OGLStateManager::draw_primitive(const GLPrimitive &prim)
-{
-    // Handle errors
-    if (!prim.vert_pointer || prim.count < 1 || prim.size < 1)
-        return;
-    ASSERT(GLStateManager::_valid(prim.count, prim.mode));
-
-    // Set pointers
-    glVertexPointer(prim.vert_size, GL_FLOAT, prim.size, prim.vert_pointer);
-    if (prim.texture_pointer)
-        glTexCoordPointer(2, GL_FLOAT, prim.size, prim.texture_pointer);
-    if (prim.colour_pointer)
-        glColorPointer(4, GL_UNSIGNED_BYTE, prim.size, prim.colour_pointer);
-
-    // Handle pre-render matrix manipulations
-    if (prim.pretranslate || prim.prescale)
-    {
-        glPushMatrix();
-        if (prim.pretranslate)
-        {
-            glTranslatef(prim.pretranslate->x,
-                         prim.pretranslate->y,
-                         prim.pretranslate->z);
-        }
-        if (prim.prescale)
-            glScalef(prim.prescale->x, prim.prescale->y, prim.prescale->z);
-    }
-
-    // Draw!
-    switch (prim.mode)
-    {
-    case GLW_QUADS:
-        glDrawArrays(GL_QUADS, 0, prim.count);
-        break;
-    case GLW_LINES:
-        glDrawArrays(GL_LINES, 0, prim.count);
-        break;
-    default:
-        break;
-    }
-
-    // Clean up
-    if (prim.pretranslate || prim.prescale)
-    {
-        glPopMatrix();
-    }
-}
-
 void OGLStateManager::delete_textures(size_t count, unsigned int *textures)
 {
     glDeleteTextures(count, (GLuint*)textures);

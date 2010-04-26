@@ -240,18 +240,6 @@ bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
     return success;
 }
 
-struct font_vert
-{
-    float pos_x;
-    float pos_y;
-    float tex_x;
-    float tex_y;
-    unsigned char r;
-    unsigned char g;
-    unsigned char b;
-    unsigned char a;
-};
-
 void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
                                      unsigned char *chars,
                                      unsigned char *colours,
@@ -264,11 +252,11 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
     coord_def adv(std::max(-m_min_offset, 0), 0);
     unsigned int i = 0;
 
-    std::vector<font_vert> verts;
+    GLShapeBuffer *buf = GLShapeBuffer::create(true, true);
     // TODO enne - make this better
     // This is bad for the CRT.  Maybe we should just reserve some fixed limit?
     // Maybe we should just cache this in FTFontWrapper?
-    verts.reserve(4 * width * height);
+    // TODO ixtli - facilitate the above TODO buy using the buffer better
 
     float texcoord_dy = (float)m_max_advance.y / (float)m_tex.height();
 
@@ -282,28 +270,13 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
 
             if (col_bg != 0)
             {
-                font_vert v;
-                v.tex_x = v.tex_y = 0;
-                v.r = term_colours[col_bg].r;
-                v.g = term_colours[col_bg].g;
-                v.b = term_colours[col_bg].b;
-                v.a = 255;
-
-                v.pos_x = adv.x;
-                v.pos_y = adv.y;
-                verts.push_back(v);
-
-                v.pos_x = adv.x;
-                v.pos_y = adv.y + m_max_advance.y;
-                verts.push_back(v);
-
-                v.pos_x = adv.x + m_max_advance.x;
-                v.pos_y = adv.y + m_max_advance.y;
-                verts.push_back(v);
-
-                v.pos_x = adv.x + m_max_advance.x;
-                v.pos_y = adv.y;
-                verts.push_back(v);
+                GLWRect rect(adv.x, adv.y,
+                    adv.x + m_max_advance.x, adv.y + m_max_advance.y);
+                // Leave tex coords at their default 0.0f
+                VColour col(term_colours[col_bg].r, term_colours[col_bg].g,
+                    term_colours[col_bg].b);
+                rect.set_col(&col, &col, &col, &col);
+                buf->push(rect);
             }
 
             adv.x += m_glyphs[c].offset;
@@ -316,35 +289,15 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
                 float tex_y = (float)(c / 16) / 16.0f;
                 float tex_x2 = tex_x + (float)this_width / (float)m_tex.width();
                 float tex_y2 = tex_y + texcoord_dy;
-                font_vert v;
-                v.r = term_colours[col_fg].r;
-                v.g = term_colours[col_fg].g;
-                v.b = term_colours[col_fg].b;
-                v.a = 255;
 
-                v.pos_x = adv.x;
-                v.pos_y = adv.y;
-                v.tex_x = tex_x;
-                v.tex_y = tex_y;
-                verts.push_back(v);
+                GLWRect rect(adv.x, adv.y, adv.x + this_width,
+                    adv.y + m_max_advance.y);
+                VColour col(term_colours[col_fg].r, term_colours[col_fg].g,
+                    term_colours[col_fg].b);
+                rect.set_col(&col, &col, &col, &col);
+                rect.set_tex(tex_x, tex_y, tex_x2, tex_y2);
 
-                v.pos_x = adv.x;
-                v.pos_y = adv.y + m_max_advance.y;
-                v.tex_x = tex_x;
-                v.tex_y = tex_y2;
-                verts.push_back(v);
-
-                v.pos_x = adv.x + this_width;
-                v.pos_y = adv.y + m_max_advance.y;
-                v.tex_x = tex_x2;
-                v.tex_y = tex_y2;
-                verts.push_back(v);
-
-                v.pos_x = adv.x + this_width;
-                v.pos_y = adv.y;
-                v.tex_x = tex_x2;
-                v.tex_y = tex_y;
-                verts.push_back(v);
+                buf->push(rect);
             }
 
             i++;
@@ -355,7 +308,7 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
         adv.y += m_max_advance.y;
     }
 
-    if (!verts.size())
+    if (!buf->size())
         return;
 
     GLState state;
@@ -365,11 +318,6 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
     state.texture = true;
     glmanager->set(state);
     m_tex.bind();
-
-    GLPrimitive prim(sizeof(font_vert), verts.size(), 2,
-                     &verts[0].pos_x,
-                     NULL,
-                     &verts[0].tex_x);
 
     // Defaults to GLW_QUADS
     GLW_3VF trans(x_pos, y_pos, 0.0f);
@@ -382,7 +330,7 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
         trans.x++;
         trans.y++;
         glmanager->set_transform(&trans);
-        glmanager->draw_primitive(prim);
+        buf->draw(NULL, NULL, true);
         trans.x--;
         trans.y--;
 
@@ -394,11 +342,12 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
     // here is really necessary ...
     state.array_colour = true;
     glmanager->set(state);
-    prim.colour_pointer = &verts[0].r;
     glmanager->set_transform(&trans);
-    glmanager->draw_primitive(prim);
+    buf->draw();
     state.array_colour = false;
     glmanager->set(state);
+
+    delete buf;
 }
 
 struct box_vert
@@ -415,22 +364,15 @@ static void _draw_box(int x_pos, int y_pos, float width, float height,
                       float box_width, unsigned char box_colour,
                       unsigned char box_alpha)
 {
-    box_vert verts[4];
-    for (unsigned int i = 0; i < 4; i++)
-    {
-        verts[i].r = term_colours[box_colour].r;
-        verts[i].g = term_colours[box_colour].g;
-        verts[i].b = term_colours[box_colour].b;
-        verts[i].a = box_alpha;
-    }
-    verts[0].x = x_pos - box_width;
-    verts[0].y = y_pos - box_width;
-    verts[1].x = verts[0].x;
-    verts[1].y = y_pos + height + box_width;
-    verts[2].x = x_pos + width + box_width;
-    verts[2].y = verts[1].y;
-    verts[3].x = verts[2].x;
-    verts[3].y = verts[0].y;
+    GLShapeBuffer *buf = GLShapeBuffer::create(false, true);
+    GLWRect rect(x_pos - box_width, y_pos - box_width,
+        x_pos + width + box_width, y_pos + height + box_width);
+
+    VColour colour(term_colours[box_colour].r, term_colours[box_colour].g,
+        term_colours[box_colour].b, box_alpha);
+    rect.set_col(&colour, &colour, &colour, &colour);
+
+    buf->push(rect);
 
     // Load identity matrix
     glmanager->set_transform();
@@ -440,13 +382,10 @@ static void _draw_box(int x_pos, int y_pos, float width, float height,
     state.array_colour = true;
     state.blend = true;
     glmanager->set(state);
+    buf->draw();
 
-    GLPrimitive prim(sizeof(box_vert), sizeof(verts) / sizeof(box_vert), 2,
-                     &verts[0].x,
-                     &verts[0].r,
-                     NULL);
-
-    glmanager->draw_primitive(prim);
+    // Clean up
+    delete buf;
 }
 
 unsigned int FTFontWrapper::string_height(const formatted_string &str) const

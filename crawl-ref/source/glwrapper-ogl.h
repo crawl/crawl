@@ -26,9 +26,6 @@ public:
     virtual void set_current_color(GLW_3VF &color);
     virtual void set_current_color(GLW_4VF &color);
 
-    // Drawing GLPrimitives
-    virtual void draw_primitive(const GLPrimitive &prim);
-
     // Texture-specific functinos
     virtual void delete_textures(size_t count, unsigned int *textures);
     virtual void generate_textures(size_t count, unsigned int *textures);

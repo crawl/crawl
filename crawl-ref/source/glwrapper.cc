@@ -10,22 +10,6 @@ VColour VColour::black(0, 0, 0, 255);
 VColour VColour::transparent(0, 0, 0, 0);
 
 /////////////////////////////////////////////////////////////////////////////
-// GLPrimitive
-GLPrimitive::GLPrimitive(size_t sz, size_t ct, unsigned int vs,
-                         const void* v_pt, const void *c_pt, const void *t_pt) :
-    mode(GLW_QUADS),
-    vert_size(vs),
-    size(sz),
-    count(ct),
-    vert_pointer(v_pt),
-    colour_pointer(c_pt),
-    texture_pointer(t_pt),
-    pretranslate(NULL),
-    prescale(NULL)
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
 // GLState
 
 // Note: these defaults should match the OpenGL defaults
