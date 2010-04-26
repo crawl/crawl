@@ -1581,8 +1581,7 @@ static bool _prompt_book(const newgame_def* ng, newgame_def* ng_choice,
         default:
             if (keyin >= 'a' && keyin < 'a' + numbooks)
             {
-                ng_choice->book = static_cast<startup_book_type>(
-                                      keyin - 'a' + firstbook);
+                ng_choice->book = static_cast<startup_book_type>(keyin - 'a');
                 return (true);
             }
             else
@@ -1621,7 +1620,7 @@ static void _resolve_book(newgame_def* ng, const newgame_def* ng_choice,
         return;
 
     default:
-        if (ng->book >= 0 && ng->book < numbooks)
+        if (ng_choice->book >= 0 && ng_choice->book < numbooks)
             ng->book = ng_choice->book;
         else
         {
