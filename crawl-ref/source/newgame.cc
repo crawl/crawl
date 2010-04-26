@@ -34,10 +34,14 @@
 #include "tilereg-crt.h"
 #endif
 
-static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice);
-static bool _choose_book(newgame_def* ng, newgame_def* ng_choice);
-static bool _choose_god(newgame_def* ng, newgame_def* ng_choice);
-static bool _choose_wand(newgame_def* ng, newgame_def* ng_choice);
+static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice,
+                          const newgame_def& defaults);
+static bool _choose_book(newgame_def* ng, newgame_def* ng_choice,
+                         const newgame_def& defaults);
+static bool _choose_god(newgame_def* ng, newgame_def* ng_choice,
+                        const newgame_def& defaults);
+static bool _choose_wand(newgame_def* ng, newgame_def* ng_choice,
+                         const newgame_def& defaults);
 
 ////////////////////////////////////////////////////////////////////////
 // Remember player's startup options
@@ -51,24 +55,10 @@ newgame_def::newgame_def()
 {
 }
 
-// XXX: temporary global.
-static newgame_def ngchoice;
-
-static void _save_newgame_options(void)
+static void _save_newgame_options(const newgame_def& choice)
 {
-    // Note that we store species and job directly here, whereas up until
-    // now we've been storing the hotkey.
-    Options.prev_game = ngchoice;
-
+    Options.prev_game = choice;
     write_newgame_options_file();
-}
-
-static bool _prev_startup_options_set(void)
-{
-    // Are these two enough? They should be, in theory, since we'll
-    // remember the player's weapon and god choices.
-    return (Options.prev_game.species != SP_UNKNOWN
-            && Options.prev_game.job != JOB_UNKNOWN);
 }
 
 static bool _is_random_species(species_type sp)
@@ -93,26 +83,30 @@ static bool _is_random_viable_choice(const newgame_def& choice)
             (choice.job == JOB_VIABLE || choice.species == SP_VIABLE));
 }
 
-static std::string _prev_startup_description()
+static bool _char_defined(const newgame_def& ng)
 {
-    const newgame_def& prev = Options.prev_game;
-    if (_is_random_viable_choice(prev))
+    return (ng.species != SP_UNKNOWN && ng.job != JOB_UNKNOWN);
+}
+
+static std::string _char_description(const newgame_def& ng)
+{
+    if (_is_random_viable_choice(ng))
         return "Viable character";
-    else if (_is_random_choice(prev))
+    else if (_is_random_choice(ng))
         return "Random character";
-    else if (_is_random_job(prev.job))
+    else if (_is_random_job(ng.job))
     {
-        const std::string j = (prev.job == JOB_RANDOM ? "Random " : "Viable ");
-        return (j + species_name(prev.species, 1));
+        const std::string j = (ng.job == JOB_RANDOM ? "Random " : "Viable ");
+        return (j + species_name(ng.species, 1));
     }
-    else if (_is_random_species(prev.species))
+    else if (_is_random_species(ng.species))
     {
-        const std::string s = (prev.species == SP_RANDOM ? "Random "
-                                                         : "Viable ");
-        return (s + get_job_name(prev.job));
+        const std::string s = (ng.species == SP_RANDOM ? "Random "
+                                                       : "Viable ");
+        return (s + get_job_name(ng.job));
     }
     else
-        return (species_name(prev.species, 1) + " " + get_job_name(prev.job));
+        return (species_name(ng.species, 1) + " " + get_job_name(ng.job));
 }
 
 static std::string _welcome(const newgame_def* ng)
@@ -327,10 +321,13 @@ static void _resolve_species_job(newgame_def* ng, const newgame_def* ng_choice)
     _resolve_job(ng, ng_choice);
 }
 
-static void _prompt_species(newgame_def* ng, newgame_def* ng_choice);
-static void _prompt_job(newgame_def* ng, newgame_def* ng_choice);
+static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
+                            const newgame_def& defaults);
+static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
+                        const newgame_def& defaults);
 
-static void _choose_species_job(newgame_def* ng, newgame_def* ng_choice)
+static void _choose_species_job(newgame_def* ng, newgame_def* ng_choice,
+                                const newgame_def& defaults)
 {
     _resolve_species_job(ng, ng_choice);
 
@@ -341,10 +338,10 @@ static void _choose_species_job(newgame_def* ng, newgame_def* ng_choice)
         // random character to be rolled. They will reset relevant fields
         // in *ng for this purpose.
         if (ng_choice->species == SP_UNKNOWN)
-            _prompt_species(ng, ng_choice);
+            _prompt_species(ng, ng_choice, defaults);
         _resolve_species_job(ng, ng_choice);
         if (ng_choice->job == JOB_UNKNOWN)
-            _prompt_job(ng, ng_choice);
+            _prompt_job(ng, ng_choice, defaults);
         _resolve_species_job(ng, ng_choice);
     }
 
@@ -378,26 +375,26 @@ static bool _reroll_random(newgame_def* ng)
     return (tolower(c) == 'n');
 }
 
-static void _choose_char(newgame_def* ng)
+static void _choose_char(newgame_def* ng, newgame_def* choice,
+                         newgame_def defaults)
 {
-    ngchoice = Options.game;
-    ngchoice.name = ng->name;
-
     if (crawl_state.game_is_tutorial())
-        _setup_tutorial_character(&ngchoice);
+        _setup_tutorial_character(choice);
 
     while (true)
     {
-        _choose_species_job(ng, &ngchoice);
+        _choose_species_job(ng, choice, defaults);
 
-        if (ngchoice.fully_random && _reroll_random(ng))
+        if (choice->fully_random && _reroll_random(ng))
         {
             *ng = newgame_def();
             continue;
         }
 
-        if (_choose_weapon(ng, &ngchoice) && _choose_book(ng, &ngchoice)
-            && _choose_god(ng, &ngchoice) && _choose_wand(ng, &ngchoice))
+        if (_choose_weapon(ng, choice, defaults)
+            && _choose_book(ng, choice, defaults)
+            && _choose_god(ng, choice, defaults)
+            && _choose_wand(ng, choice, defaults))
         {
             // We're done!
             return;
@@ -406,10 +403,9 @@ static void _choose_char(newgame_def* ng)
         // Else choose again, name stays same.
         const std::string old_name = ng->name;
 
-        Options.prev_game = ngchoice;
-
+        defaults = *choice;
         *ng = newgame_def();
-        ngchoice = newgame_def();
+        *choice = newgame_def();
 
         ng->name = old_name;
     }
@@ -441,7 +437,10 @@ bool choose_game(newgame_def* ng)
         }
     }
 
-    _choose_char(ng);
+    newgame_def choice = Options.game;
+    choice.name = ng->name;
+
+    _choose_char(ng, &choice, Options.prev_game);
 
     // New: pick name _after_ character choices.
     if (ng->name.empty())
@@ -467,7 +466,8 @@ bool choose_game(newgame_def* ng)
         }
     }
 
-    _save_newgame_options();
+    _save_newgame_options(choice);
+
     return (true);
 }
 
@@ -560,11 +560,12 @@ static const int COLUMN_WIDTH = 25;
 static const int X_MARGIN = 4;
 static const int SPECIAL_KEYS_START_Y = 21;
 static const int CHAR_DESC_START_Y = 18;
-static void _construct_species_menu(const newgame_def* ng, MenuFreeform* menu)
+static void _construct_species_menu(const newgame_def* ng,
+                                    const newgame_def& defaults,
+                                    MenuFreeform* menu)
 {
     ASSERT(menu != NULL);
     static const int ITEMS_IN_COLUMN = 8;
-    species_type prev_specie = Options.prev_game.species;
     // Construct the menu, 3 columns
     TextItem* tmp = NULL;
     std::string text;
@@ -618,7 +619,7 @@ static void _construct_species_menu(const newgame_def* ng, MenuFreeform* menu)
         tmp->set_description_text(getGameStartDescription(species_name(species, 1)));
         menu->attach_item(tmp);
         tmp->set_visible(true);
-        if (prev_specie == species)
+        if (defaults.species == species)
         {
             menu->set_active_item(tmp);
         }
@@ -737,35 +738,33 @@ static void _construct_species_menu(const newgame_def* ng, MenuFreeform* menu)
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
-    if (Options.prev_game.species != SP_UNKNOWN)
+    if (_char_defined(defaults))
     {
-        if (_prev_startup_options_set())
-        {
-            std::string tmp_string = "Tab - ";
-            tmp_string += _prev_startup_description().c_str();
-            // Adjust the end marker to aling the - because
-            // Tab text is longer by 2
-            tmp = new TextItem();
-            tmp->set_text(tmp_string);
-            min_coord.x = X_MARGIN + COLUMN_WIDTH - 2;
-            min_coord.y = SPECIAL_KEYS_START_Y + 3;
-            max_coord.x = min_coord.x + tmp->get_text().size();
-            max_coord.y = min_coord.y + 1;
-            tmp->set_bounds(min_coord, max_coord);
-            tmp->set_fg_colour(BROWN);
-            tmp->add_hotkey('\t');
-            tmp->set_highlight_colour(LIGHTGRAY);
-            tmp->set_description_text("Play a new game with your previous choice");
-            menu->attach_item(tmp);
-            tmp->set_visible(true);
-        }
+        std::string tmp_string = "Tab - ";
+        tmp_string += _char_description(defaults).c_str();
+        // Adjust the end marker to aling the - because
+        // Tab text is longer by 2
+        tmp = new TextItem();
+        tmp->set_text(tmp_string);
+        min_coord.x = X_MARGIN + COLUMN_WIDTH - 2;
+        min_coord.y = SPECIAL_KEYS_START_Y + 3;
+        max_coord.x = min_coord.x + tmp->get_text().size();
+        max_coord.y = min_coord.y + 1;
+        tmp->set_bounds(min_coord, max_coord);
+        tmp->set_fg_colour(BROWN);
+        tmp->add_hotkey('\t');
+        tmp->set_highlight_colour(LIGHTGRAY);
+        tmp->set_description_text("Play a new game with your previous choice");
+        menu->attach_item(tmp);
+        tmp->set_visible(true);
     }
 }
 
 // Prompt the player for a choice of species.
 // ng should be const, but we need to reset it for _resolve_species_job
 // to work correctly in view of fully random characters.
-static void _prompt_species(newgame_def* ng, newgame_def* ng_choice)
+static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
+                            const newgame_def& defaults)
 {
     PrecisionMenu menu;
     menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
@@ -786,7 +785,7 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice)
     textcolor(YELLOW);
     cprintf(" Please select your species.");
 
-    _construct_species_menu(ng, freeform);
+    _construct_species_menu(ng, defaults, freeform);
     MenuDescriptor* descriptor = new MenuDescriptor(&menu);
     descriptor->init(coord_def(X_MARGIN, CHAR_DESC_START_Y),
                      coord_def(get_number_of_cols(), CHAR_DESC_START_Y + 2),
@@ -867,9 +866,9 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice)
                 _mark_fully_random(ng, ng_choice, viable);
                 return;
             case '\t':
-                if (_prev_startup_options_set())
+                if (_char_defined(defaults))
                 {
-                    *ng_choice = Options.prev_game;
+                    *ng_choice = defaults;
                     return;
                 }
                 else
@@ -884,10 +883,10 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice)
             case '?':
                  // access to the help files
                 list_commands('1');
-                return _prompt_species(ng, ng_choice);
+                return _prompt_species(ng, ng_choice, defaults);
             case '%':
                 list_commands('%');
-                return _prompt_species(ng, ng_choice);
+                return _prompt_species(ng, ng_choice, defaults);
             case '+':
                 ng_choice->species = SP_VIABLE;
                 return;
@@ -917,10 +916,10 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice)
  * constructs the menu used and highlights the previous job if there is one
  */
 static void _construct_backgrounds_menu(const newgame_def* ng,
+                                        const newgame_def& defaults,
                                         MenuFreeform* menu)
 {
     static const int ITEMS_IN_COLUMN = 10;
-    job_type prev_job = Options.prev_game.job;
     // Construct the menu, 3 columns
     TextItem* tmp = NULL;
     std::string text;
@@ -972,7 +971,7 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
 
         menu->attach_item(tmp);
         tmp->set_visible(true);
-        if (prev_job == job)
+        if (defaults.job == job)
         {
             menu->set_active_item(tmp);
         }
@@ -1092,29 +1091,26 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
-    if (Options.prev_game.species != SP_UNKNOWN)
+    if (_char_defined(defaults))
     {
-        if (_prev_startup_options_set())
-        {
-            text.clear();
-            text = "Tab - ";
-            text += _prev_startup_description().c_str();
-            // Adjust the end marker to aling the - because
-            // Tab text is longer by 2
-            tmp = new TextItem();
-            tmp->set_text(text);
-            min_coord.x = X_MARGIN + COLUMN_WIDTH - 2;
-            min_coord.y = SPECIAL_KEYS_START_Y + 3;
-            max_coord.x = min_coord.x + tmp->get_text().size();
-            max_coord.y = min_coord.y + 1;
-            tmp->set_bounds(min_coord, max_coord);
-            tmp->set_fg_colour(BROWN);
-            tmp->add_hotkey('\t');
-            tmp->set_highlight_colour(LIGHTGRAY);
-            tmp->set_description_text("Play a new game with your previous choice");
-            menu->attach_item(tmp);
-            tmp->set_visible(true);
-        }
+        text.clear();
+        text = "Tab - ";
+        text += _char_description(defaults).c_str();
+        // Adjust the end marker to aling the - because
+        // Tab text is longer by 2
+        tmp = new TextItem();
+        tmp->set_text(text);
+        min_coord.x = X_MARGIN + COLUMN_WIDTH - 2;
+        min_coord.y = SPECIAL_KEYS_START_Y + 3;
+        max_coord.x = min_coord.x + tmp->get_text().size();
+        max_coord.y = min_coord.y + 1;
+        tmp->set_bounds(min_coord, max_coord);
+        tmp->set_fg_colour(BROWN);
+        tmp->add_hotkey('\t');
+        tmp->set_highlight_colour(LIGHTGRAY);
+        tmp->set_description_text("Play a new game with your previous choice");
+        menu->attach_item(tmp);
+        tmp->set_visible(true);
     }
 }
 
@@ -1125,7 +1121,8 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
  * ng should be const, but we need to reset it for _resolve_species_job
  * to work correctly in view of fully random characters.
  */
-static void _prompt_job(newgame_def* ng, newgame_def* ng_choice)
+static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
+                        const newgame_def& defaults)
 {
     PrecisionMenu menu;
     menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
@@ -1146,7 +1143,7 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice)
     textcolor( YELLOW );
     cprintf(" Please select your background.");
 
-    _construct_backgrounds_menu(ng, freeform);
+    _construct_backgrounds_menu(ng, defaults, freeform);
     MenuDescriptor* descriptor = new MenuDescriptor(&menu);
     descriptor->init(coord_def(X_MARGIN, CHAR_DESC_START_Y),
                      coord_def(get_number_of_cols(), CHAR_DESC_START_Y + 2),
@@ -1227,9 +1224,9 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice)
                 _mark_fully_random(ng, ng_choice, viable);
                 return;
             case '\t':
-                if (_prev_startup_options_set())
+                if (_char_defined(defaults))
                 {
-                    *ng_choice = Options.prev_game;
+                    *ng_choice = defaults;
                     return;
                 }
                 else
@@ -1244,10 +1241,10 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice)
             case '?':
                  // access to the help files
                 list_commands('1');
-                return _prompt_job(ng, ng_choice);
+                return _prompt_job(ng, ng_choice, defaults);
             case '%':
                 list_commands('%');
-                return _prompt_job(ng, ng_choice);
+                return _prompt_job(ng, ng_choice, defaults);
             case '+':
                 ng_choice->job = JOB_VIABLE;
                 return;
@@ -1286,6 +1283,7 @@ static weapon_type _fixup_weapon(weapon_type wp,
 }
 
 static bool _prompt_weapon(const newgame_def* ng, newgame_def* ng_choice,
+                           const newgame_def& defaults,
                            const std::vector<weapon_choice>& weapons)
 {
     _print_character_info(ng);
@@ -1307,7 +1305,7 @@ static bool _prompt_weapon(const newgame_def* ng, newgame_def* ng_choice,
                   ? "claws" : weapon_base_name(weapons[i].first));
     }
 
-    weapon_type defweapon = _fixup_weapon(Options.prev_game.weapon, weapons);
+    weapon_type defweapon = _fixup_weapon(defaults.weapon, weapons);
 
     textcolor(BROWN);
     cprintf("\n* - Random choice; + - Viable random choice; "
@@ -1359,7 +1357,7 @@ static bool _prompt_weapon(const newgame_def* ng, newgame_def* ng_choice,
             return (true);
         case '%':
             list_commands('%');
-            return _prompt_weapon(ng, ng_choice, weapons);
+            return _prompt_weapon(ng, ng_choice, defaults, weapons);
         default:
             if (keyin - 'a' >= 0 && keyin - 'a' < (int)weapons.size())
             {
@@ -1458,7 +1456,8 @@ static void _resolve_weapon(newgame_def* ng, newgame_def* ng_choice,
 // Returns false if aborted, else an actual weapon choice
 // is written to ng->weapon for the jobs that call
 // _update_weapon() later.
-static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice)
+static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice,
+                           const newgame_def& defaults)
 {
     switch (ng->job)
     {
@@ -1484,7 +1483,7 @@ static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice)
     }
 
     if (ng_choice->weapon == WPN_UNKNOWN)
-        if (!_prompt_weapon(ng, ng_choice, weapons))
+        if (!_prompt_weapon(ng, ng_choice, defaults, weapons))
             return (false);
 
     _resolve_weapon(ng, ng_choice, weapons);
@@ -1524,6 +1523,7 @@ std::string _startup_book_name(startup_book_type book)
 
 // Returns false if the user aborted.
 static bool _prompt_book(const newgame_def* ng, newgame_def* ng_choice,
+                         const newgame_def& defaults,
                          book_type firstbook, int numbooks)
 {
     clrscr();
@@ -1558,8 +1558,7 @@ static bool _prompt_book(const newgame_def* ng, newgame_def* ng_choice,
                 "Bksp - Back to species and background selection; "
                 "X - Quit\n");
 
-    startup_book_type defbook = _fixup_book(Options.prev_game.book,
-                                            numbooks);
+    startup_book_type defbook = _fixup_book(defaults.book, numbooks);
 
     if (defbook != SBT_NONE)
         cprintf("; Enter - %s", _startup_book_name(defbook).c_str());
@@ -1594,7 +1593,7 @@ static bool _prompt_book(const newgame_def* ng, newgame_def* ng_choice,
                 continue;
         case '%':
             list_commands('%');
-            return _prompt_book(ng, ng_choice, firstbook, numbooks);
+            return _prompt_book(ng, ng_choice, defaults, firstbook, numbooks);
         case '+':
             ng_choice->book = SBT_VIABLE;
             return (true);
@@ -1657,10 +1656,11 @@ static void _resolve_book(newgame_def* ng, const newgame_def* ng_choice,
 }
 
 static bool _choose_book(newgame_def* ng, newgame_def* ng_choice,
+                         const newgame_def& defaults,
                          book_type firstbook, int numbooks)
 {
     if (ng_choice->book == SBT_NONE
-        && !_prompt_book(ng, ng_choice, firstbook, numbooks))
+        && !_prompt_book(ng, ng_choice, defaults, firstbook, numbooks))
     {
         return (false);
     }
@@ -1668,15 +1668,16 @@ static bool _choose_book(newgame_def* ng, newgame_def* ng_choice,
     return (true);
 }
 
-static bool _choose_book(newgame_def* ng, newgame_def* ng_choice)
+static bool _choose_book(newgame_def* ng, newgame_def* ng_choice,
+                         const newgame_def& defaults)
 {
     switch (ng->job)
     {
     case JOB_REAVER:
     case JOB_CONJURER:
-        return (_choose_book(ng, ng_choice, BOOK_CONJURATIONS_I, 2));
+        return (_choose_book(ng, ng_choice, defaults, BOOK_CONJURATIONS_I, 2));
     case JOB_WIZARD:
-        return (_choose_book(ng, ng_choice, BOOK_MINOR_MAGIC_I, 3));
+        return (_choose_book(ng, ng_choice, defaults, BOOK_MINOR_MAGIC_I, 3));
     default:
         return (true);
     }
@@ -1718,6 +1719,7 @@ static god_type _fixup_god(god_type god, const std::vector<god_choice>& gods)
 }
 
 static bool _prompt_god(const newgame_def* ng, newgame_def* ng_choice,
+                        const newgame_def& defaults,
                         const std::vector<god_choice>& gods)
 {
     _print_character_info(ng);
@@ -1741,7 +1743,7 @@ static bool _prompt_god(const newgame_def* ng, newgame_def* ng_choice,
                 "Bksp - Back to species and background selection; "
                 "X - Quit\n");
 
-    const god_type defgod = _fixup_god(Options.prev_game.religion, gods);
+    const god_type defgod = _fixup_god(defaults.religion, gods);
     if (defgod != GOD_NO_GOD)
     {
         textcolor(BROWN);
@@ -1835,7 +1837,8 @@ static void _resolve_god(newgame_def* ng, const newgame_def* ng_choice,
     }
 }
 
-static bool _choose_god(newgame_def* ng, newgame_def* ng_choice)
+static bool _choose_god(newgame_def* ng, newgame_def* ng_choice,
+                        const newgame_def& defaults)
 {
     if (ng->job != JOB_PRIEST && ng->job != JOB_CHAOS_KNIGHT)
         return (true);
@@ -1859,7 +1862,7 @@ static bool _choose_god(newgame_def* ng, newgame_def* ng_choice)
 
     // XXX: assumes we can never choose between a god and no god.
     if (ng_choice->religion == GOD_NO_GOD)
-        if (!_prompt_god(ng, ng_choice, gods))
+        if (!_prompt_god(ng, ng_choice, defaults, gods))
             return (false);
 
     _resolve_god(ng, ng_choice, gods);
@@ -1896,7 +1899,8 @@ int start_to_wand(int wandtype, bool& is_rod)
     }
 }
 
-static bool _prompt_wand(const newgame_def* ng, newgame_def* ng_choice)
+static bool _prompt_wand(const newgame_def* ng, newgame_def* ng_choice,
+                         const newgame_def& defaults)
 {
     _print_character_info(ng);
 
@@ -1931,7 +1935,7 @@ static bool _prompt_wand(const newgame_def* ng, newgame_def* ng_choice)
                 "Bksp - Back to species and background selection; "
                 "X - Quit\n");
 
-    startup_wand_type defwand = Options.prev_game.wand;
+    startup_wand_type defwand = defaults.wand;
 
     if (defwand != SWT_NO_SELECTION)
     {
@@ -1977,7 +1981,7 @@ static bool _prompt_wand(const newgame_def* ng, newgame_def* ng_choice)
                 continue;
         case '%':
             list_commands('%');
-            return _prompt_wand(ng, ng_choice);
+            return _prompt_wand(ng, ng_choice, defaults);
         case '*':
             ng_choice->wand = SWT_RANDOM;
             return (true);
@@ -2006,13 +2010,14 @@ static void _resolve_wand(newgame_def* ng, const newgame_def* ng_choice)
     }
 }
 
-static bool _choose_wand(newgame_def* ng, newgame_def* ng_choice)
+static bool _choose_wand(newgame_def* ng, newgame_def* ng_choice,
+                         const newgame_def& defaults)
 {
     if (ng->job != JOB_ARTIFICER)
         return (true);
 
     if (ng_choice->wand == SWT_NO_SELECTION)
-        if (!_prompt_wand(ng, ng_choice))
+        if (!_prompt_wand(ng, ng_choice, defaults))
             return (false);
 
     _resolve_wand(ng, ng_choice);
