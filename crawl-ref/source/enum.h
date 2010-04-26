@@ -3275,13 +3275,6 @@ enum tag_pref
     TAGPREF_ENEMY,    // display text tags on enemy named monsters
     TAGPREF_MAX
 };
-
-enum tile_display_type
-{
-    TDSP_INVENT = 0,
-    TDSP_SPELLS,
-    TDSP_MEMORISE
-};
 #endif
 
 #ifdef WIZARD
