@@ -929,22 +929,23 @@ bool melee_attack::player_aux_unarmed()
     unwind_var<int> save_brand(damage_brand);
 
     damage_brand = SPWPN_NORMAL;
-    int uattack  = UNAT_NO_ATTACK;
+    unarmed_attack_type baseattack = UNAT_NO_ATTACK;
     bool simple_miss_message = false;
     std::string miss_verb;
 
     coord_def defender_pos = defender->pos();
+
     if (can_do_unarmed)
     {
         if (you.species == SP_NAGA)
-            uattack = UNAT_HEADBUTT;
+            baseattack = UNAT_HEADBUTT;
         else
-            uattack = (coinflip() ? UNAT_HEADBUTT : UNAT_KICK);
+            baseattack = (coinflip() ? UNAT_HEADBUTT : UNAT_KICK);
 
         if (player_mutation_level(MUT_FANGS)
             || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
         {
-            uattack = UNAT_BITE;
+            baseattack = UNAT_BITE;
         }
 
         if ((you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
@@ -953,18 +954,30 @@ bool melee_attack::player_aux_unarmed()
                || player_mutation_level(MUT_STINGER))
             && one_chance_in(3))
         {
-            uattack = UNAT_TAILSLAP;
+            baseattack = UNAT_TAILSLAP;
         }
 
         if (coinflip())
-            uattack = UNAT_PUNCH;
+            baseattack = UNAT_PUNCH;
 
         if (you.species == SP_VAMPIRE && !one_chance_in(3))
-            uattack = UNAT_BITE;
+            baseattack = UNAT_BITE;
     }
 
-    for (int scount = 0; scount < 5 && defender->alive(); scount++)
+    /*
+     * baseattack is the auxiliary unarmed attack the player gets
+     * for unarmed combat skill. Note that this can still be skipped,
+     * e.g. UNAT_PUNCH with a shield.
+     *
+     * Then, they can get extra attacks depending on mutations.
+     */
+    for (int i = UNAT_FIRST_ATTACK; i <= UNAT_LAST_ATTACK; ++i)
     {
+        if (!defender->alive())
+            break;
+
+        unarmed_attack_type atk = static_cast<unarmed_attack_type>(i);
+
         noise_factor = 100;
 
         unarmed_attack.clear();
@@ -973,11 +986,11 @@ bool melee_attack::player_aux_unarmed()
         damage_brand = SPWPN_NORMAL;
         aux_damage = 0;
 
-        switch (scount)
+        switch (atk)
         {
-        case 0:
+        case UNAT_KICK:
         {
-            if (uattack != UNAT_KICK)        //jmf: hooves mutation
+            if (baseattack != UNAT_KICK)
             {
                 if (!player_mutation_level(MUT_HOOVES)
                         && !player_mutation_level(MUT_TALONS)
@@ -1015,8 +1028,8 @@ bool melee_attack::player_aux_unarmed()
             break;
         }
 
-        case 1:
-            if (uattack != UNAT_HEADBUTT)
+        case UNAT_HEADBUTT:
+            if (baseattack != UNAT_HEADBUTT)
             {
                 if (!player_mutation_level(MUT_HORNS)
                        && !player_mutation_level(MUT_BEAK)
@@ -1066,8 +1079,8 @@ bool melee_attack::player_aux_unarmed()
             }
             break;
 
-        case 2:             // draconians
-            if (uattack != UNAT_TAILSLAP)
+        case UNAT_TAILSLAP:
+            if (baseattack != UNAT_TAILSLAP)
             {
                 // not draconian, and not wet merfolk
                 if (!player_genus(GENPC_DRACONIAN)
@@ -1115,8 +1128,8 @@ bool melee_attack::player_aux_unarmed()
 
             break;
 
-        case 3:
-            if (uattack != UNAT_PUNCH)
+        case UNAT_PUNCH:
+            if (baseattack != UNAT_PUNCH)
                 continue;
 
             if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER
@@ -1157,8 +1170,8 @@ bool melee_attack::player_aux_unarmed()
 
             break;
 
-        case 4:
-            if (uattack != UNAT_BITE)
+        case UNAT_BITE:
+            if (baseattack != UNAT_BITE)
                 continue;
 
             if (!player_mutation_level(MUT_FANGS))
@@ -1209,7 +1222,7 @@ bool melee_attack::player_aux_unarmed()
         }
 
         // unified to-hit calculation
-        to_hit = random2(calc_your_to_hit_unarmed(uattack,
+        to_hit = random2(calc_your_to_hit_unarmed(atk,
                          damage_brand == SPWPN_VAMPIRICISM));
 
         make_hungry(2, true);
