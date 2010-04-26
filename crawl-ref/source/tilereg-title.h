@@ -26,7 +26,7 @@ protected:
     virtual void on_resize() {}
 
     GenericTexture m_img;
-    VertBuffer<PTVert> m_buf;
+    VertBuffer m_buf;
     FontBuffer m_font_buf;
 };
 
