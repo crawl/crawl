@@ -20,13 +20,17 @@
 
 MemoriseRegion::MemoriseRegion(const TileRegionInit &init) : SpellRegion(init)
 {
-    memorise = true;
 }
 
 void MemoriseRegion::activate()
 {
     // Print a fitting message if we can't memorise anything.
     has_spells_to_memorise(false);
+}
+
+int MemoriseRegion::get_max_slots()
+{
+    return (m_items.size());
 }
 
 void MemoriseRegion::draw_tag()

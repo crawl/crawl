@@ -19,12 +19,11 @@ public:
     virtual bool update_tip_text(std::string &tip);
     virtual bool update_tab_tip_text(std::string &tip, bool active);
     virtual bool update_alt_text(std::string &alt);
-    virtual bool check_memorise();
 
     virtual const std::string name() const { return "Spells"; }
 
 protected:
-    bool memorise;
+    virtual int get_max_slots();
 
     virtual void pack_buffers();
     virtual void draw_tag();
