@@ -948,7 +948,7 @@ public:
         on_list = _on_list;
     }
 
-    std::string get_text() const
+    std::string get_text(const bool = false) const
     {
         ASSERT(level == MEL_ITEM && hotkeys.size());
         char buf[300];
