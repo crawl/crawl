@@ -11,6 +11,9 @@ class OGLStateManager : public GLStateManager
 public:
     OGLStateManager();
 
+    // State query
+    virtual glw_winding winding() { return (GLW_CW); }
+
     // State Manipulation
     virtual void set(const GLState& state);
     virtual void pixelstore_unpack_alignment(unsigned int bpp);
