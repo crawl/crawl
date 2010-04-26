@@ -113,12 +113,10 @@ enum MipMapOptions
     MIPMAP_MAX
 };
 
-// TODO: Ixtli - Remove QUADS entirely.
 enum drawing_modes
 {
     GLW_LINES,
-    GLW_RECTANGLE,
-    GLW_QUADS
+    GLW_RECTANGLE
 };
 
 enum glw_winding
