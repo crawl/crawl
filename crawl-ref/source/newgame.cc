@@ -244,8 +244,8 @@ static void _setup_tutorial_character(newgame_def* ng_choice)
 
 static void _resolve_species(newgame_def* ng, const newgame_def* ng_choice)
 {
-    // Don't overwrite existing species, unless we want it blanked.
-    if (ng->species != SP_UNKNOWN && ng_choice->species != SP_UNKNOWN)
+    // Don't overwrite existing species.
+    if (ng->species != SP_UNKNOWN)
         return;
 
     bool viable = false;
@@ -284,7 +284,7 @@ static void _resolve_species(newgame_def* ng, const newgame_def* ng_choice)
 
 static void _resolve_job(newgame_def* ng, const newgame_def* ng_choice)
 {
-    if (ng->job != JOB_UNKNOWN && ng_choice->job != JOB_UNKNOWN)
+    if (ng->job != JOB_UNKNOWN)
         return;
 
     bool viable = false;
@@ -327,8 +327,8 @@ static void _resolve_species_job(newgame_def* ng, const newgame_def* ng_choice)
     _resolve_job(ng, ng_choice);
 }
 
-static void _prompt_species(const newgame_def* ng, newgame_def* ng_choice);
-static void _prompt_job(const newgame_def* ng, newgame_def* ng_choice);
+static void _prompt_species(newgame_def* ng, newgame_def* ng_choice);
+static void _prompt_job(newgame_def* ng, newgame_def* ng_choice);
 
 static void _choose_species_job(newgame_def* ng, newgame_def* ng_choice)
 {
@@ -336,6 +336,10 @@ static void _choose_species_job(newgame_def* ng, newgame_def* ng_choice)
 
     while (ng_choice->species == SP_UNKNOWN || ng_choice->job == JOB_UNKNOWN)
     {
+        // Slightly non-obvious behaviour here is due to the fact that
+        // both _prompt_species and _prompt_job can ask for an entirely
+        // random character to be rolled. They will reset relevant fields
+        // in *ng for this purpose.
         if (ng_choice->species == SP_UNKNOWN)
             _prompt_species(ng, ng_choice);
         _resolve_species_job(ng, ng_choice);
@@ -387,7 +391,10 @@ static void _choose_char(newgame_def* ng)
         _choose_species_job(ng, &ngchoice);
 
         if (ngchoice.fully_random && _reroll_random(ng))
+        {
+            *ng = newgame_def();
             continue;
+        }
 
         if (_choose_weapon(ng, &ngchoice) && _choose_book(ng, &ngchoice)
             && _choose_god(ng, &ngchoice) && _choose_wand(ng, &ngchoice))
@@ -524,6 +531,25 @@ void make_rod(item_def &item, stave_type rod_type, int ncharges)
     item.colour    = BROWN;
 
     init_rod_mp(item, ncharges);
+}
+
+static void _mark_fully_random(newgame_def* ng, newgame_def* ng_choice,
+                               bool viable)
+{
+    // Reset *ng so _resolve_species_job will work properly.
+    *ng = newgame_def();
+
+    ng_choice->fully_random = true;
+    if (viable)
+    {
+        ng_choice->species = SP_VIABLE;
+        ng_choice->job = JOB_VIABLE;
+    }
+    else
+    {
+        ng_choice->species = SP_RANDOM;
+        ng_choice->job = JOB_RANDOM;
+    }
 }
 
 /**
@@ -736,10 +762,10 @@ static void _construct_species_menu(const newgame_def* ng, MenuFreeform* menu)
     }
 }
 
-// choose_species returns true if the player should also pick a background.
-// This is done because of the '!' option which will pick a random
-// character, obviating the necessity of choosing a class.
-static void _prompt_species(const newgame_def* ng, newgame_def* ng_choice)
+// Prompt the player for a choice of species.
+// ng should be const, but we need to reset it for _resolve_species_job
+// to work correctly in view of fully random characters.
+static void _prompt_species(newgame_def* ng, newgame_def* ng_choice)
 {
     PrecisionMenu menu;
     menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
@@ -831,17 +857,14 @@ static void _prompt_species(const newgame_def* ng, newgame_def* ng_choice)
 
             int selection_key = selection.at(0)->get_hotkeys().at(0);
 
+            bool viable = false;
             switch (selection_key)
             {
             case '#':
-                ng_choice->species = SP_VIABLE;
-                ng_choice->job = JOB_VIABLE;
-                ng_choice->fully_random = true;
-                return;
+                viable = true;
+                // intentional fall-through
             case '!':
-                ng_choice->species = SP_RANDOM;
-                ng_choice->job = JOB_RANDOM;
-                ng_choice->fully_random = true;
+                _mark_fully_random(ng, ng_choice, viable);
                 return;
             case '\t':
                 if (_prev_startup_options_set())
@@ -855,8 +878,8 @@ static void _prompt_species(const newgame_def* ng, newgame_def* ng_choice)
                     continue;
                 }
             case ' ':
-                ng_choice->species = SP_UNKNOWN;
-                ng_choice->job     = JOB_UNKNOWN;
+                ng->species = ng_choice->species = SP_UNKNOWN;
+                ng->job     = ng_choice->job     = JOB_UNKNOWN;
                 return;
             case '?':
                  // access to the help files
@@ -1098,8 +1121,11 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
 /**
  * _prompt_job menu
  * Saves the choice to ng_choice, doesn't resolve random choices.
+ *
+ * ng should be const, but we need to reset it for _resolve_species_job
+ * to work correctly in view of fully random characters.
  */
-static void _prompt_job(const newgame_def* ng, newgame_def* ng_choice)
+static void _prompt_job(newgame_def* ng, newgame_def* ng_choice)
 {
     PrecisionMenu menu;
     menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
@@ -1191,17 +1217,14 @@ static void _prompt_job(const newgame_def* ng, newgame_def* ng_choice)
             }
             int selection_key = selection.at(0)->get_hotkeys().at(0);
 
+            bool viable = false;
             switch (selection_key)
             {
             case '#':
-                ng_choice->species = SP_VIABLE;
-                ng_choice->job = JOB_VIABLE;
-                ng_choice->fully_random = true;
-                return;
+                viable = true;
+                // intentional fall-through
             case '!':
-                ng_choice->species = SP_RANDOM;
-                ng_choice->job = JOB_RANDOM;
-                ng_choice->fully_random = true;
+                _mark_fully_random(ng, ng_choice, viable);
                 return;
             case '\t':
                 if (_prev_startup_options_set())
@@ -1215,8 +1238,8 @@ static void _prompt_job(const newgame_def* ng, newgame_def* ng_choice)
                     continue;
                 }
             case ' ':
-                ng_choice->species = SP_UNKNOWN;
-                ng_choice->job     = JOB_UNKNOWN;
+                ng->species = ng_choice->species = SP_UNKNOWN;
+                ng->job     = ng_choice->job     = JOB_UNKNOWN;
                 return;
             case '?':
                  // access to the help files
