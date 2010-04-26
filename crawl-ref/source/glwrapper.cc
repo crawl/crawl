@@ -34,6 +34,30 @@ GLState::GLState() :
 {
 }
 
+GLState::GLState(const GLState &state) :
+    array_vertex(state.array_vertex),
+    array_texcoord(state.array_texcoord),
+    array_colour(state.array_colour),
+    blend(state.blend),
+    texture(state.texture),
+    depthtest(state.depthtest),
+    alphatest(state.alphatest),
+    alpharef(state.alpharef)
+{
+}
+
+void GLState::set(const GLState &state)
+{
+    array_vertex = state.array_vertex;
+    array_texcoord = state.array_texcoord;
+    array_colour = state.array_colour;
+    blend = state.blend;
+    texture = state.texture;
+    depthtest = state.depthtest;
+    alphatest = state.alphatest;
+    alpharef = state.alpharef;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // GLStateManager
 
