@@ -1,9 +1,9 @@
 
 The Dungeon Crawl Stone Soup team (Peter Berger, Adam Borowski, Jude Brown,
-Matthew Cline, Paul Du Bois, Eino Keskitalo, Vsevolod Kozlov, Nat Lanza,
-Jesse Luehrs, Neil Middleton, Steven Noonan, Haran Pilpel, David Ploog, 
-Johanna Ploog, Stefan O'Rear, Charles Otto, David Lawrence Ramsey, Robert
-Vollmert, Enne Walker) would like to thank:
+Robert Burnham, Matthew Cline, Paul Du Bois, Eino Keskitalo, Vsevolod Kozlov,
+Janne Lahdenperä, Nat Lanza, Jesse Luehrs, Neil Middleton, Steven Noonan,
+Haran Pilpel, David Ploog, Johanna Ploog, Stefan O'Rear, Charles Otto, David
+Lawrence Ramsey, Robert Vollmert, Enne Walker) would like to thank:
 
 * Linley Henzell, the author of Dungeon Crawl, for writing this great game.
 
@@ -39,23 +39,22 @@ Erik Inge Bolsø            Ilyak                     Remsleep
 Peter Borgmann             Matthew Ince              Will Rogers
 Daniel Mark Brownrigg      Mitsuhiro Itakura         David Rose
 Trent W. Buck              Mikko Juola               Sebastian Salman
-Robert Burnham             Jarmo Kielosto            Brett Scarborough
-Joe Buzzelli               Kornel Kisielewicz        Robert Shimmin
-Terje Bø                   Daniel Klein              Sigurd
-Henry Cipolla              Vambola Kotkas            Edgar Simo
-Aaron Curtis               Ryan Kusnery              Alex Smith
-Denzi                      Jukka Kuusisto            Solf
-Mike Drinen                Janne Lahdenperä          Michael Spang
-Kieron Dunbar              Maciej Lapinski           Johan Strandell
-Micha Elsner               Jordan Lewis              Roman Sêk
-Christopher Evenstar       Icy Lich                  William Tanksley, Jr.
-Brett Foster               Markus Maier              Jared 'Twinge' Tinney
-Chris Galardi              Arien Malec               Matt Titus
-Ben Goetter                Paul Maloney              Steven Wheeler
-Rob Grant                  Andrew Minton             Thomas Willem
-John Greenberg             Shawn M Moore             Evan Williams
-GreyKnight                 Eva Myers                 Jeremey Wilson
-Joshua Gross               Wille Mäntylä             Yelve Yakut
-Brian Haase                Erkki Nurmi               Zooko
-Shayne Halvorson           Mattias Nyberg
+Joe Buzzelli               Jarmo Kielosto            Brett Scarborough
+Terje Bø                   Kornel Kisielewicz        Robert Shimmin
+Henry Cipolla              Daniel Klein              Sigurd
+Aaron Curtis               Vambola Kotkas            Edgar Simo
+Denzi                      Ryan Kusnery              Alex Smith
+Mike Drinen                Jukka Kuusisto            Solf
+Kieron Dunbar              Maciej Lapinski           Michael Spang
+Micha Elsner               Jordan Lewis              Johan Strandell
+Christopher Evenstar       Icy Lich                  Roman Sêk
+Brett Foster               Markus Maier              William Tanksley, Jr.
+Chris Galardi              Arien Malec               Jared 'Twinge' Tinney
+Ben Goetter                Paul Maloney              Matt Titus
+Rob Grant                  Andrew Minton             Steven Wheeler
+John Greenberg             Shawn M Moore             Thomas Willem
+GreyKnight                 Eva Myers                 Evan Williams
+Joshua Gross               Wille Mäntylä             Jeremey Wilson
+Brian Haase                Erkki Nurmi               Yelve Yakut
+Shayne Halvorson           Mattias Nyberg            Zooko
 
