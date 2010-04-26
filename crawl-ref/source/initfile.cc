@@ -1325,6 +1325,7 @@ static void write_newgame_options(FILE *f)
     }
     if (prev.wand != SWT_NO_SELECTION)
         fprintf(f, "wand = %s\n", _wand_to_str(prev.wand).c_str());
+    fprintf(f, "fully_random = %s\n", prev.fully_random ? "yes" : "no");
 }
 #endif // !DISABLE_STICKY_STARTUP_OPTIONS
 
@@ -2263,7 +2264,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         // Choose god for Chaos Knights or Priests.
         game.religion = str_to_god(field);
     }
-    else BOOL_OPTION(game.fully_random);
+    BOOL_OPTION_NAMED("fully_random", game.fully_random);
     else if (key == "fire_items_start")
     {
         if (isalpha( field[0] ))
