@@ -22,6 +22,8 @@ public:
     virtual const std::string name() const { return "Memorisation"; }
 
 protected:
+    virtual int get_max_slots();
+
     virtual void draw_tag();
     virtual void activate();
 };

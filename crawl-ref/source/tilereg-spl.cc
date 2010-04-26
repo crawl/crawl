@@ -23,12 +23,6 @@
 
 SpellRegion::SpellRegion(const TileRegionInit &init) : GridRegion(init)
 {
-    memorise = false;
-}
-
-bool SpellRegion::check_memorise()
-{
-    return (memorise);
 }
 
 void SpellRegion::activate()
@@ -161,10 +155,14 @@ static int _get_max_spells()
     return (max_spells);
 }
 
+int SpellRegion::get_max_slots()
+{
+    return (_get_max_spells());
+}
+
 void SpellRegion::pack_buffers()
 {
-    const int max_spells = (check_memorise() ? m_items.size()
-                                             : _get_max_spells());
+    const int max_spells = get_max_slots();
 
     // Pack base separately, as it comes from a different texture...
     int i = 0;
