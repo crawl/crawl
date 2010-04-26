@@ -199,6 +199,10 @@ struct GLPrimitive
 struct GLState
 {
     GLState();
+    GLState(const GLState &state);
+
+    // convenience methods
+    void set(const GLState &state);
 
     // vertex arrays
     bool array_vertex;
@@ -229,6 +233,7 @@ public:
 
     // State Manipulation
     virtual void set(const GLState& state) = 0;
+    virtual const GLState& get_state() const = 0;
     virtual void pixelstore_unpack_alignment(unsigned int bpp) = 0;
     virtual void reset_view_for_redraw(float x, float y) = 0;
     virtual void reset_view_for_resize(coord_def &m_windowsz) = 0;
@@ -252,6 +257,34 @@ public:
 #ifdef ASSERTS
     static bool _valid(int num_verts, drawing_modes mode);
 #endif
+};
+
+class GenericTexture;  // Defined in tiletex.h
+
+class GLShapeBuffer
+{
+public:
+    virtual ~GLShapeBuffer() {};
+
+    // Static Constructors
+    // Note: the init/shutdown static functions should be written in the derived
+    // implementation-specific cc file, e.g. glwrapper-ogl.cc.
+    static GLShapeBuffer *create(bool texture = false, bool colour = false,
+                                 drawing_modes prim = GLW_RECTANGLE);
+
+    // Accounting
+    virtual const char *print_statistics() const = 0;
+    virtual unsigned int size() const = 0;
+
+    // Add a rectangle or line
+    virtual void push(const GLWRect &rect) = 0;
+
+    // Draw the buffer
+    virtual void draw(GLW_3VF *pt = NULL, GLW_3VF *ps = NULL,
+                      bool flush = false) = 0;
+
+    // Manipulate state
+    virtual void clear() = 0;
 };
 
 // Main interface for GL functions

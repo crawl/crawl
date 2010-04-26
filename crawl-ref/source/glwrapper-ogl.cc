@@ -34,6 +34,15 @@ void GLStateManager::shutdown()
 }
 
 /////////////////////////////////////////////////////////////////////////////
+// Static functions from GLShapeBuffer
+
+GLShapeBuffer *GLShapeBuffer::create(bool texture, bool colour,
+                                     drawing_modes prim)
+{
+    return ((GLShapeBuffer*) new OGLShapeBuffer(texture, colour, prim));
+}
+
+/////////////////////////////////////////////////////////////////////////////
 // OGLStateManager
 
 OGLStateManager::OGLStateManager()
@@ -45,52 +54,86 @@ OGLStateManager::OGLStateManager()
 
 void OGLStateManager::set(const GLState& state)
 {
-    if (state.array_vertex)
-        glEnableClientState(GL_VERTEX_ARRAY);
-    else
-        glDisableClientState(GL_VERTEX_ARRAY);
+    bool dirty = false;
 
-    if (state.array_texcoord)
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-    else
-        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-
-    if (state.array_colour)
+    if(state.array_vertex != current_state.array_vertex)
     {
-        glEnableClientState(GL_COLOR_ARRAY);
-    }
-    else
-    {
-        glDisableClientState(GL_COLOR_ARRAY);
-
-        // [enne] This should *not* be necessary, but the Linux OpenGL
-        // driver that I'm using sets this to the last colour of the
-        // colour array.  So, we need to unset it here.
-        glColor3f(1.0f, 1.0f, 1.0f);
+        if (state.array_vertex)
+            glEnableClientState(GL_VERTEX_ARRAY);
+        else
+            glDisableClientState(GL_VERTEX_ARRAY);
+        dirty = true;
     }
 
-    if (state.texture)
-        glEnable(GL_TEXTURE_2D);
-    else
-        glDisable(GL_TEXTURE_2D);
-
-    if (state.blend)
-        glEnable(GL_BLEND);
-    else
-        glDisable(GL_BLEND);
-
-    if (state.depthtest)
-        glEnable(GL_DEPTH_TEST);
-    else
-        glDisable(GL_DEPTH_TEST);
-
-    if (state.alphatest)
+    if(state.array_texcoord != current_state.array_texcoord)
     {
-        glEnable(GL_ALPHA_TEST);
-        glAlphaFunc(GL_NOTEQUAL, state.alpharef);
+        if (state.array_texcoord)
+            glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+        else
+            glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+        dirty = true;
     }
-    else
-        glDisable(GL_ALPHA_TEST);
+
+    if(state.array_colour != current_state.array_colour )
+    {
+        if (state.array_colour)
+        {
+            glEnableClientState(GL_COLOR_ARRAY);
+        }
+        else
+        {
+            glDisableClientState(GL_COLOR_ARRAY);
+
+            // [enne] This should *not* be necessary, but the Linux OpenGL
+            // driver that I'm using sets this to the last colour of the
+            // colour array.  So, we need to unset it here.
+            glColor3f(1.0f, 1.0f, 1.0f);
+        }
+        dirty = true;
+    }
+
+    if(state.texture != current_state.texture)
+    {
+        if (state.texture)
+            glEnable(GL_TEXTURE_2D);
+        else
+            glDisable(GL_TEXTURE_2D);
+        dirty = true;
+    }
+
+    if(state.blend != current_state.blend)
+    {
+        if (state.blend)
+            glEnable(GL_BLEND);
+        else
+            glDisable(GL_BLEND);
+        dirty = true;
+    }
+
+    if(state.depthtest != current_state.depthtest)
+    {
+        if (state.depthtest)
+            glEnable(GL_DEPTH_TEST);
+        else
+            glDisable(GL_DEPTH_TEST);
+        dirty = true;
+    }
+
+    if(state.alphatest != current_state.alphatest)
+    {
+        if (state.alphatest)
+        {
+            glEnable(GL_ALPHA_TEST);
+            glAlphaFunc(GL_NOTEQUAL, state.alpharef);
+        }
+        else
+            glDisable(GL_ALPHA_TEST);
+        dirty = true;
+    }
+
+    // Copy current state because querying it is slow
+    if(dirty)
+        current_state.set(state);
 }
 
 void OGLStateManager::set_transform(const GLW_3VF *trans, const GLW_3VF *scale)
@@ -232,6 +275,211 @@ void OGLStateManager::set_current_color(GLW_3VF &color)
 void OGLStateManager::set_current_color(GLW_4VF &color)
 {
     glColor4f(color.r, color.g, color.b, color.a);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// OGLShapeBuffer
+
+OGLShapeBuffer::OGLShapeBuffer(bool texture, bool colour, drawing_modes prim) :
+    prim_type(prim),
+    texture_verts(texture),
+    colour_verts(colour)
+{
+}
+
+// Accounting
+const char *OGLShapeBuffer::print_statistics() const
+{
+    return (NULL);
+}
+
+unsigned int OGLShapeBuffer::size() const
+{
+    return (position_buffer.size());
+}
+
+// Add a rectangle
+void OGLShapeBuffer::push(const GLWRect &rect)
+{
+    switch( prim_type )
+    {
+    case GLW_RECTANGLE:
+        push_rect(rect);
+        break;
+    case GLW_LINES:
+        push_line(rect);
+        break;
+    default:
+        break;
+    }
+}
+
+void OGLShapeBuffer::push_rect(const GLWRect &rect)
+{
+    // Copy vert positions
+    size_t last = position_buffer.size();
+    position_buffer.resize(last + 4);
+    position_buffer[last    ].set(rect.pos_sx, rect.pos_sy, rect.pos_z);
+    position_buffer[last + 1].set(rect.pos_sx, rect.pos_ey, rect.pos_z);
+    position_buffer[last + 2].set(rect.pos_ex, rect.pos_sy, rect.pos_z);
+    position_buffer[last + 3].set(rect.pos_ex, rect.pos_ey, rect.pos_z);
+
+    // Copy texture coords if necessary
+    if( texture_verts )
+    {
+        last = texture_buffer.size();
+        texture_buffer.resize(last + 4);
+        texture_buffer[last    ].set(rect.tex_sx, rect.tex_sy);
+        texture_buffer[last + 1].set(rect.tex_sx, rect.tex_ey);
+        texture_buffer[last + 2].set(rect.tex_ex, rect.tex_sy);
+        texture_buffer[last + 3].set(rect.tex_ex, rect.tex_ey);
+    }
+
+    // Copy vert colours if necessary
+    if( colour_verts )
+    {
+        // ensure that there are no NULL VColours
+        // TODO: Maybe we can have a default colour here? -- ixtli
+        ASSERT(rect.col_bl && rect.col_br && rect.col_tl && rect.col_tr);
+
+        last = colour_buffer.size();
+        colour_buffer.resize(last + 4);
+        colour_buffer[last    ].set(*rect.col_bl);
+        colour_buffer[last + 1].set(*rect.col_tl);
+        colour_buffer[last + 2].set(*rect.col_br);
+        colour_buffer[last + 3].set(*rect.col_tr);
+    }
+
+    // build indices
+    last = ind_buffer.size();
+
+    if( last > 3 )
+    {
+        // This is not the first box so make FOUR degenerate triangles
+        ind_buffer.resize(last + 6);
+        unsigned short int val = ind_buffer[last - 1];
+
+        // the first three degens finish the previous box and move
+        // to the first position of the new one we just added and
+        // the fourth degen creates a triangle that is a line from p1 to p3
+        ind_buffer[last    ] = val++;
+        ind_buffer[last + 1] = val;
+
+        // Now add as normal
+        ind_buffer[last + 2] = val++;
+        ind_buffer[last + 3] = val++;
+        ind_buffer[last + 4] = val++;
+        ind_buffer[last + 5] = val;
+    }
+    else
+    {
+        // This is the first box so don't bother making any degenerate triangles
+        ind_buffer.resize(last + 4);
+        ind_buffer[0] = 0;
+        ind_buffer[1] = 1;
+        ind_buffer[2] = 2;
+        ind_buffer[3] = 3;
+    }
+}
+
+void OGLShapeBuffer::push_line(const GLWRect &rect)
+{
+    // Copy vert positions
+    size_t last = position_buffer.size();
+    position_buffer.resize(last + 2);
+    position_buffer[last    ].set(rect.pos_sx, rect.pos_sy, rect.pos_z);
+    position_buffer[last + 1].set(rect.pos_ex, rect.pos_ey, rect.pos_z);
+
+    // Copy texture coords if necessary
+    if( texture_verts )
+    {
+        last = texture_buffer.size();
+        texture_buffer.resize(last + 2);
+        texture_buffer[last    ].set(rect.tex_sx, rect.tex_sy);
+        texture_buffer[last + 1].set(rect.tex_ex, rect.tex_ey);
+    }
+
+    // Copy vert colours if necessary
+    if( colour_verts )
+    {
+        // ensure that there are no NULL VColours
+        // TODO: Maybe we can have a default colour here? -- ixtli
+        ASSERT(rect.col_bl && rect.col_br);
+
+        last = colour_buffer.size();
+        colour_buffer.resize(last + 2);
+        colour_buffer[last    ].set(*rect.col_s);
+        colour_buffer[last + 1].set(*rect.col_e);
+    }
+    
+}
+
+// Draw the buffer
+void OGLShapeBuffer::draw(GLW_3VF *pt, GLW_3VF *ps, bool flush)
+{
+    // Make sure we're drawing something
+    if (position_buffer.size() == 0)
+        return;
+
+    // Get the current renderer state;
+    const GLState &state = glmanager->get_state();
+
+    // Set position pointers
+    // TODO: Is there ever a reason to set array_vertex to false and still
+    // try and draw? -- ixtli
+    if (state.array_vertex)
+        glVertexPointer(3, GL_FLOAT, 0, &position_buffer[0]);
+
+    // set texture pointer
+    if (state.array_texcoord && texture_verts)
+        glTexCoordPointer(2, GL_FLOAT, 0, &texture_buffer[0]);
+
+    // set colour pointer
+    if (state.array_colour && colour_verts)
+        glColorPointer(4, GL_UNSIGNED_BYTE, 0, &colour_buffer[0]);
+
+    // Handle pre-render matrix manipulations
+    if (pt || ps)
+    {
+        glPushMatrix();
+        if (pt)
+            glTranslatef(pt->x, pt->y, pt->z);
+        if (ps)
+            glScalef(ps->x, ps->y, ps->z);
+    }
+
+    // Draw!
+    switch (prim_type)
+    {
+    case GLW_RECTANGLE:
+        glDrawElements( GL_TRIANGLE_STRIP, ind_buffer.size(),
+                        GL_UNSIGNED_SHORT, &ind_buffer[0]);
+        break;
+    case GLW_LINES:
+        glDrawArrays( GL_LINES, 0, position_buffer.size());
+        break;
+    default:
+        break;
+    }
+
+    // Clean up
+    if (pt || ps)
+        glPopMatrix();
+
+    if(flush)
+        clear();
+}
+
+void OGLShapeBuffer::clear()
+{
+    // reset all buffers
+    position_buffer.clear();
+    if( prim_type != GLW_LINES )
+        ind_buffer.clear();
+    if( texture_verts )
+        texture_buffer.clear();
+    if( colour_verts )
+        colour_buffer.clear();
 }
 
 #endif // USE_GL
