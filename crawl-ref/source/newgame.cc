@@ -37,7 +37,7 @@
 static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice);
 static bool _choose_book(newgame_def* ng, newgame_def* ng_choice);
 static bool _choose_god(newgame_def* ng, newgame_def* ng_choice);
-static bool _choose_wand(newgame_def* ng);
+static bool _choose_wand(newgame_def* ng, newgame_def* ng_choice);
 
 ////////////////////////////////////////////////////////////////////////
 // Remember player's startup options
@@ -390,7 +390,7 @@ static void _choose_char(newgame_def* ng)
             continue;
 
         if (_choose_weapon(ng, &ngchoice) && _choose_book(ng, &ngchoice)
-            && _choose_god(ng, &ngchoice) && _choose_wand(ng))
+            && _choose_god(ng, &ngchoice) && _choose_wand(ng, &ngchoice))
         {
             // We're done!
             return;
@@ -1844,44 +1844,6 @@ static bool _choose_god(newgame_def* ng, newgame_def* ng_choice)
     return (true);
 }
 
-static startup_wand_type _wand_to_start(int wand, bool is_rod)
-{
-    if (!is_rod)
-    {
-        switch (wand)
-        {
-        case WAND_ENSLAVEMENT:
-            return (SWT_ENSLAVEMENT);
-
-        case WAND_CONFUSION:
-            return (SWT_CONFUSION);
-
-        case WAND_MAGIC_DARTS:
-            return (SWT_MAGIC_DARTS);
-
-        case WAND_FROST:
-            return (SWT_FROST);
-
-        case WAND_FLAME:
-            return (SWT_FLAME);
-
-        default:
-            return (SWT_NO_SELECTION);
-        }
-    }
-    else
-    {
-        switch (wand)
-        {
-        case STAFF_STRIKING:
-            return (SWT_STRIKING);
-
-        default:
-            return (SWT_NO_SELECTION);
-        }
-    }
-}
-
 int start_to_wand(int wandtype, bool& is_rod)
 {
     is_rod = false;
@@ -1912,156 +1874,125 @@ int start_to_wand(int wandtype, bool& is_rod)
     }
 }
 
-static bool _choose_wand(newgame_def* ng)
+static bool _prompt_wand(const newgame_def* ng, newgame_def* ng_choice)
+{
+    _print_character_info(ng);
+
+    textcolor(CYAN);
+    cprintf("\nYou have a choice of tools:\n"
+                "(Press %% for a list of aptitudes)\n");
+
+    for (int i = 0; i < NUM_STARTUP_WANDS; i++)
+    {
+        startup_wand_type sw = static_cast<startup_wand_type>(i);
+        textcolor(LIGHTGREY);
+
+        const char letter = 'a' + i;
+
+        if (sw == SWT_STRIKING)
+        {
+            item_def rod;
+            make_rod(rod, STAFF_STRIKING, 8);
+            cprintf("%c - %s\n", letter,
+                    rod.name(DESC_QUALNAME, false, true).c_str());
+        }
+        else
+        {
+            bool dummy;
+            wand_type w = static_cast<wand_type>(start_to_wand(sw, dummy));
+            cprintf("%c - %s\n", letter, wand_type_name(w));
+        }
+    }
+
+    textcolor(BROWN);
+    cprintf("\n* - Random choice; "
+                "Bksp - Back to species and background selection; "
+                "X - Quit\n");
+
+    startup_wand_type defwand = Options.prev_game.wand;
+
+    if (defwand != SWT_NO_SELECTION)
+    {
+        cprintf("; Enter - %s",
+                defwand == SWT_ENSLAVEMENT ? "Enslavement" :
+                defwand == SWT_CONFUSION   ? "Confusion"   :
+                defwand == SWT_MAGIC_DARTS ? "Magic Darts" :
+                defwand == SWT_FROST       ? "Frost"       :
+                defwand == SWT_FLAME       ? "Flame"       :
+                defwand == SWT_STRIKING    ? "Striking"    :
+                defwand == SWT_RANDOM      ? "Random"      :
+                                             "Buggy");
+    }
+
+    cprintf("\n");
+
+    while (true)
+    {
+        textcolor(CYAN);
+        cprintf("\nWhich tool? ");
+        textcolor(LIGHTGREY);
+
+        int keyin = getch_ck();
+
+        switch (keyin)
+        {
+        case 'X':
+            cprintf("\nGoodbye!");
+            end(0);
+            break;
+        case CK_BKSP:
+        case CK_ESCAPE:
+        case ' ':
+            return (false);
+        case '\r':
+        case '\n':
+            if (defwand != SWT_NO_SELECTION)
+            {
+                ng_choice->wand = defwand;
+                return (true);
+            }
+            else
+                continue;
+        case '%':
+            list_commands('%');
+            return _prompt_wand(ng, ng_choice);
+        case '*':
+            ng_choice->wand = SWT_RANDOM;
+            return (true);
+        default:
+            if (keyin - 'a' >= 0 && keyin - 'a' < NUM_STARTUP_WANDS)
+            {
+                ng_choice->wand = static_cast<startup_wand_type>(keyin - 'a');
+                return (true);
+            }
+            else
+                continue;
+        }
+    }
+}
+
+static void _resolve_wand(newgame_def* ng, const newgame_def* ng_choice)
+{
+    switch (ng_choice->wand)
+    {
+    case SWT_RANDOM:
+        ng->wand = static_cast<startup_wand_type>(random2(NUM_STARTUP_WANDS));
+        return;
+    default:
+        ng->wand = ng_choice->wand;
+        return;
+    }
+}
+
+static bool _choose_wand(newgame_def* ng, newgame_def* ng_choice)
 {
     if (ng->job != JOB_ARTIFICER)
         return (true);
 
-    // Wand-choosing interface for Artificers -- Greenberg/Bane
+    if (ng_choice->wand == SWT_NO_SELECTION)
+        if (!_prompt_wand(ng, ng_choice))
+            return (false);
 
-    const wand_type startwand[5] = { WAND_ENSLAVEMENT, WAND_CONFUSION,
-                                     WAND_MAGIC_DARTS, WAND_FROST, WAND_FLAME };
-
-    item_def wand;
-    make_rod(wand, STAFF_STRIKING, 8);
-    const int num_choices = 6;
-
-    int keyin = 0;
-    int wandtype;
-    bool is_rod;
-
-    if (Options.prev_game.wand)
-    {
-        if (start_to_wand(Options.prev_game.wand, is_rod) == -1
-            && Options.prev_game.wand != SWT_RANDOM)
-        {
-            Options.prev_game.wand = SWT_NO_SELECTION;
-        }
-    }
-
-    if (!Options.game.fully_random && Options.game.wand != SWT_RANDOM)
-    {
-        _print_character_info(ng);
-
-        textcolor( CYAN );
-        cprintf("\nYou have a choice of tools:\n"
-                    "(Press %% for a list of aptitudes)\n");
-
-        bool prevmatch = false;
-        for (int i = 0; i < num_choices; i++)
-        {
-            textcolor(LIGHTGREY);
-
-            const char letter = 'a' + i;
-            if (i == num_choices - 1)
-            {
-                cprintf("%c - %s\n", letter,
-                        wand.name(DESC_QUALNAME, false, true).c_str());
-                wandtype = wand.sub_type;
-                is_rod = true;
-            }
-            else
-            {
-                cprintf("%c - %s\n", letter, wand_type_name(startwand[i]));
-                wandtype = startwand[i];
-                is_rod = false;
-            }
-
-            if (Options.prev_game.wand == _wand_to_start(wandtype, is_rod))
-                prevmatch = true;
-        }
-
-        if (!prevmatch && Options.prev_game.wand != SWT_RANDOM)
-            Options.prev_game.wand = SWT_NO_SELECTION;
-
-        textcolor(BROWN);
-        cprintf("\n* - Random choice; "
-                    "Bksp - Back to species and background selection; "
-                    "X - Quit\n");
-
-        if (prevmatch || Options.prev_game.wand == SWT_RANDOM)
-        {
-            cprintf("; Enter - %s",
-                    Options.prev_game.wand == SWT_ENSLAVEMENT ? "Enslavement" :
-                    Options.prev_game.wand == SWT_CONFUSION   ? "Confusion"   :
-                    Options.prev_game.wand == SWT_MAGIC_DARTS ? "Magic Darts" :
-                    Options.prev_game.wand == SWT_FROST       ? "Frost"       :
-                    Options.prev_game.wand == SWT_FLAME       ? "Flame"       :
-                    Options.prev_game.wand == SWT_STRIKING    ? "Striking"    :
-                    Options.prev_game.wand == SWT_RANDOM      ? "Random"
-                                                         : "Buggy Tool");
-        }
-        cprintf("\n");
-
-        do
-        {
-            textcolor( CYAN );
-            cprintf("\nWhich tool? ");
-            textcolor( LIGHTGREY );
-
-            keyin = getch_ck();
-
-            switch (keyin)
-            {
-            case 'X':
-                cprintf("\nGoodbye!");
-                end(0);
-                break;
-            case CK_BKSP:
-            case CK_ESCAPE:
-            case ' ':
-                return (false);
-            case '\r':
-            case '\n':
-                if (Options.prev_game.wand != SWT_NO_SELECTION)
-                {
-                    if (Options.prev_game.wand == SWT_RANDOM)
-                        keyin = '*';
-                    else
-                    {
-                        for (int i = 0; i < num_choices; ++i)
-                        {
-                            if (i == num_choices - 1)
-                            {
-                                wandtype = wand.sub_type;
-                                is_rod = true;
-                            }
-                            else
-                            {
-                                wandtype = startwand[i];
-                                is_rod = false;
-                            }
-
-                            if (Options.prev_game.wand ==
-                                _wand_to_start(wandtype, is_rod))
-                            {
-                                 keyin = 'a' + i;
-                            }
-                        }
-                    }
-                }
-                break;
-            case '%':
-                list_commands('%');
-                return _choose_wand(ng);
-            default:
-                break;
-           }
-        }
-        while (keyin != '*'  && (keyin < 'a' || keyin >= ('a' + num_choices)));
-    }
-
-    if (Options.game.fully_random || Options.game.wand == SWT_RANDOM || keyin == '*')
-    {
-        Options.game.wand = SWT_RANDOM;
-        ngchoice.wand = SWT_RANDOM;
-
-        keyin = random2(num_choices);
-        keyin += 'a';
-    }
-    else
-        ngchoice.wand = static_cast<startup_wand_type>(keyin - 'a' + 1);
-
-    ng->wand = static_cast<startup_wand_type>(keyin - 'a' + 1);
+    _resolve_wand(ng, ng_choice);
     return (true);
 }
