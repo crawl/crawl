@@ -13,13 +13,6 @@
 #include "tilefont.h"
 
 /////////////////////////////////////////////////////////////////////////////
-// VColour
-
-VColour VColour::white(255, 255, 255, 255);
-VColour VColour::black(0, 0, 0, 255);
-VColour VColour::transparent(0, 0, 0, 0);
-
-/////////////////////////////////////////////////////////////////////////////
 // VertBuffer
 
 VertBuffer::VertBuffer(bool texture, bool colour, const GenericTexture *tex,
