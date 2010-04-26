@@ -3,6 +3,13 @@
 #include "glwrapper.h"
 
 /////////////////////////////////////////////////////////////////////////////
+// VColour
+
+VColour VColour::white(255, 255, 255, 255);
+VColour VColour::black(0, 0, 0, 255);
+VColour VColour::transparent(0, 0, 0, 0);
+
+/////////////////////////////////////////////////////////////////////////////
 // GLPrimitive
 GLPrimitive::GLPrimitive(size_t sz, size_t ct, unsigned int vs,
                          const void* v_pt, const void *c_pt, const void *t_pt) :
