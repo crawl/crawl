@@ -59,7 +59,7 @@ InvTitle::InvTitle( Menu *mn, const std::string &title,
     titlefn = tfn;
 }
 
-std::string InvTitle::get_text() const
+std::string InvTitle::get_text(const bool) const
 {
     return (titlefn ? titlefn( m, MenuEntry::get_text() )
                     : MenuEntry::get_text());

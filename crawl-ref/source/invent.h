@@ -61,7 +61,7 @@ struct InvTitle : public MenuEntry
     InvTitle( Menu *mn, const std::string &title,
               invtitle_annotator tfn );
 
-    std::string get_text() const;
+    std::string get_text(const bool = false) const;
 };
 
 class InvShowPrices;
