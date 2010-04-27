@@ -1197,9 +1197,9 @@
    "You have a moderately thin skeletal structure (Dex +2, Str -2).",
    "You have an unnaturally thin skeletal structure (Dex +3, Str -3)."},
 
-  {"Your bones become slightly less dense, you feel more stealthy.",
-   "Your bones become somewhat less dense, you feel more stealthy.",
-   "Your bones become less dense, you feel stealthy."},
+  {"Your bones become slightly less dense; you feel more stealthy.",
+   "Your bones become somewhat less dense; you feel more stealthy.",
+   "Your bones become less dense; you feel stealthy."},
 
   {"Your skeletal structure returns to normal.",
    "Your skeletal structure densifies.",
