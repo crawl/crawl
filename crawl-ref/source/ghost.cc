@@ -86,7 +86,7 @@ static spell_type search_order_third[] = {
     SPELL_DEMONIC_HORDE,
     SPELL_HASTE,
     SPELL_SILENCE,
-    SPELL_SUMMON_SWARM,
+    SPELL_SUMMON_BUTTERFLIES,
     SPELL_SUMMON_UGLY_THING,
 // 10
     SPELL_SWIFTNESS,
