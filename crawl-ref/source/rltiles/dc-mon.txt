@@ -724,8 +724,8 @@ draco-job-scorcher DRACO_SCORCHER
 draco-job-shifter DRACO_SHIFTER
 draco-job-zealot DRACO_ZEALOT
 
-%sdir dc-mon/nonliving
-test_spawner MONS_TEST_SPAWNER
+dc-mon/nonliving/test_spawner MONS_TEST_SPAWNER
+dc-mon/statues/training_dummy MONS_TRAINING_DUMMY
 
 dc-misc/unseen PLAYER
 

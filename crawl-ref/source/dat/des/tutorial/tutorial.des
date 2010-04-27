@@ -144,7 +144,7 @@ MARKER:  H = lua:tutorial.message( "Rest! You have probably lost health in your 
 KFEAT:   ABCDEFGHQ = .
 COLOUR:  ABCDEFGHQ = blue
 #TILE:    ABCDEFGH = tutorial_message_tile_name_here
-MONS:    training dummy ; club ego:none
+MONS:    training dummy tile:mons_training_dummy ; club ego:none
 epilogue{{
   tutorial.messagestart()
 }}
@@ -195,7 +195,7 @@ MARKER:  C = lua:tutorial.message( "Remember to rest with <white>5</white>.", "t
 MARKER:  D = lua:tutorial.message( "Memorise the spell from this spellbook by <white>clicking</white> on the memorise tab on the lower right. You can also press <white>M</white> to enter the memorisation screen.", "tutorial", "true" )
 MARKER:  E = lua:tutorial.message( "<white>Click</white> magic dart in the spell tab, or press <white>z</white>, or <white>Ctrl-click</white> on the monster.", "tutorial", "true" )
 MARKER:  F = lua:tutorial.message( "Rest up!", "tutorial", "true" )
-MONS:    training dummy ; stone q:30
+MONS:    training dummy tile:mons_training_dummy ; stone q:30
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xx(xxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -246,7 +246,7 @@ MARKER:  F = lua:tutorial.message( "Here are three stacks of unknown potions. Go
 MARKER:  G = lua:tutorial.message( "You can evoke wands with <white>V</white>.", "tutorial", "true" )
 MARKER:  H = lua:tutorial.message( "Here's some gold. Shops exist in the game. Note that they don't buy items from you, so there's no need to carry stuff around that you can't use. Gold is picked up automatically.", "tutorial", "true" )
 MONS:    rat, rat always_corpse
-MONS:    training dummy ; stone q:30
+MONS:    training dummy tile:mons_training_dummy ; stone q:30
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxx..3..xxxxxx....xxxx
@@ -289,7 +289,7 @@ KFEAT:   S = .
 KFEAT:   ABCDEF = .
 COLOUR:  ABCDEF = blue
 MONS:    rat, rat always_corpse
-MONS:    training dummy spells:blink;blink;blink;blink;blink;blink ; whip ego:reaching
+MONS:    training dummy tile:mons_training_dummy spells:blink;blink;blink;blink;blink;blink ; whip ego:reaching
 MARKER:  A = lua:tutorial.message( "You may have been poisoned from the trap. Drink a potion of healing, or rest with <white>5</white> to try to wait it out.", "tutorial", "true" )
 MARKER:  B = lua:tutorial.message( "Look for the secret door in the glass wall. Either wait a single turn with <white>s</white> or <white>.</white>, or search longer with <white>5</white>.", "tutorial", "true" )
 # TODO: Hax some piety for the player so that minor destruction is immediately usable.
