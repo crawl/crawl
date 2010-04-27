@@ -3,6 +3,7 @@
 #include "ng-setup.h"
 
 #include "abl-show.h"
+#include "arena.h"
 #include "dungeon.h"
 #include "files.h"
 #include "food.h"
@@ -11,6 +12,7 @@
 #include "items.h"
 #include "jobs.h"
 #include "libutil.h"
+#include "maps.h"
 #include "misc.h"
 #include "mutation.h"
 #include "newgame.h"
@@ -1495,8 +1497,81 @@ static void _apply_job_colour(item_def &item)
     }
 }
 
+static void _setup_normal_game();
+static void _setup_tutorial();
+static void _setup_sprint();
+static void _setup_arena();
+static void _setup_generic(const newgame_def& ng);
+
 // Initialise a game based on the choice stored in ng.
 void setup_game(const newgame_def& ng)
+{
+    crawl_state.type = ng.type;
+
+    switch (crawl_state.type)
+    {
+    case GAME_TYPE_NORMAL:
+        _setup_normal_game();
+        _setup_generic(ng);
+        break;
+    case GAME_TYPE_TUTORIAL:
+        _setup_tutorial();
+        _setup_generic(ng);
+        break;
+    case GAME_TYPE_SPRINT:
+        _setup_sprint();
+        _setup_generic(ng);
+        break;
+    case GAME_TYPE_ARENA:
+        _setup_arena();
+        // this will never happen
+        return;
+    default:
+        ASSERT(!"Bad game type");
+        end(-1);
+    }
+}
+
+/**
+ * Special steps that normal game needs;
+ */
+void _setup_normal_game()
+{
+    make_hungry(0, true);
+}
+
+/**
+ * Special steps that tutorial game needs;
+ */
+void _setup_tutorial()
+{
+    make_hungry(0, true);
+}
+
+/**
+ * Special steps that arena needs;
+ */
+void _setup_arena()
+{
+    run_map_preludes();
+    initialise_item_descriptions();
+#ifdef USE_TILE
+    tiles.initialise_items();
+#endif
+
+    run_arena();
+    end(0, false);
+}
+
+/**
+ * Special steps that sprint needs;
+ */
+void _setup_sprint()
+{
+
+}
+
+static void _setup_generic(const newgame_def& ng)
 {
     _init_player();
 

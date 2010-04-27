@@ -60,10 +60,6 @@ void _initialize()
 {
     Options.fixup_options();
 
-    // Read the options the player used last time they created a new
-    // character.
-    read_startup_prefs();
-
     you.symbol = '@';
     you.colour = LIGHTGREY;
 
@@ -188,21 +184,8 @@ void _initialize()
     }
 }
 
-/**
- * Performs all the common steps that normal, tutorial and sprint share
- */
-bool _setup_generic(const std::string& name)
+void _post_init(bool newc)
 {
-    newgame_def ng;
-    ng.name = name;
-    // Defines a new game, or returns false if a save game
-    // with that name exists.
-    const bool newc = choose_game(&ng);
-    if (newc)
-        setup_game(ng);
-    else
-        restore_game(ng.name);
-
     // Fix the mutation definitions for the species we're playing.
     fixup_mutations();
 
@@ -315,47 +298,6 @@ bool _setup_generic(const std::string& name)
     // XXX: And run Lua map postludes for D:1. Kinda hacky, it shouldn't really
     // be here.
     run_map_epilogues();
-
-    return (newc);
-}
-
-/**
- * Special steps that normal game needs;
- */
-void _setup_normal_game()
-{
-    make_hungry(0, true);
-}
-
-/**
- * Special steps that tutorial game needs;
- */
-void _setup_tutorial()
-{
-    make_hungry(0, true);
-}
-
-/**
- * Special steps that arena needs;
- */
-void _setup_arena()
-{
-    run_map_preludes();
-    initialise_item_descriptions();
-#ifdef USE_TILE
-    tiles.initialise_items();
-#endif
-
-    run_arena();
-    end(0, false);
-}
-
-/**
- * Special steps that sprint needs;
- */
-void _setup_sprint()
-{
-
 }
 
 /**
@@ -485,9 +427,11 @@ static const int SAVE_GAMES_START_Y = GAME_MODES_START_Y + 2 + NUM_GAME_TYPE;
 static const int MISC_TEXT_START_Y = 19;
 static const int GAME_MODES_WIDTH = 60;
 /**
- * Setups the game mode and returns the wanted player name
+ * Saves game mode and player name to ng_choice.
  */
-static std::string show_startup_menu(const std::string& default_name)
+static void _show_startup_menu(newgame_def* ng_choice,
+                               const newgame_def& defaults,
+                               const std::vector<player_save_info>& chars)
 {
     clrscr();
     PrecisionMenu menu;
@@ -508,7 +452,6 @@ static std::string show_startup_menu(const std::string& default_name)
                      coord_def(get_number_of_cols() - 1, MISC_TEXT_START_Y - 1),
                      "save games");
     _construct_game_modes_menu(game_modes);
-    std::vector<player_save_info> chars = find_saved_characters();
     _construct_save_games_menu(save_games, chars);
 
     NoSelectTextItem* tmp = new NoSelectTextItem();
@@ -576,26 +519,28 @@ static std::string show_startup_menu(const std::string& default_name)
     // Draw legal info etc
     opening_screen();
 
-    std::string input_string = default_name;
+    std::string input_string = defaults.name;
 
     // If the game filled in a complete name, the user will
     // usually want to enter a new name instead of adding
     // to the current one.
     bool full_name = !input_string.empty();
 
-    if (!chars.empty())
+    int save = _find_save(chars, input_string);
+    if (save != -1)
     {
         menu.set_active_object(save_games);
-        int i = _find_save(chars, input_string);
-        if (i == -1)
-        {
-            save_games->activate_first_item();
-            input_string = chars.at(0).name;
-        }
-        else
-        {
-            save_games->set_active_item(i);
-        }
+        save_games->set_active_item(save);
+    }        
+    else if (defaults.type != NUM_GAME_TYPE)
+    {
+        menu.set_active_object(game_modes);
+        game_modes->set_active_item(defaults.type);
+    }
+    else if (!chars.empty())
+    {
+        menu.set_active_object(save_games);
+        save_games->activate_first_item();
     }
     else
     {
@@ -714,8 +659,9 @@ static std::string show_startup_menu(const std::string& default_name)
         case GAME_TYPE_SPRINT:
             if (is_good_name(input_string, true, false))
             {
-                crawl_state.type = static_cast<game_type>(id);
-                return input_string;
+                ng_choice->type = static_cast<game_type>(id);
+                ng_choice->name = input_string;
+                return;
             }
             else
             {
@@ -728,41 +674,39 @@ static std::string show_startup_menu(const std::string& default_name)
             continue;
 
         case GAME_TYPE_ARENA:
-            // Do we need to set anything else? :D
-            crawl_state.type = GAME_TYPE_ARENA;
-            return "";
+            ng_choice->type = GAME_TYPE_ARENA;
+            return;
 
         case '?':
             list_commands();
             // recursive escape because help messes up CRTRegion
-            return show_startup_menu(default_name);
+            _show_startup_menu(ng_choice, defaults, chars);
+            return;
 
         default:
             // It was a savegame instead
             int save_number = id - NUM_GAME_TYPE;
-            // Return the savegame character name
-            return chars.at(save_number).name;
+            // Save the savegame character name
+            ng_choice->name = chars.at(save_number).name;
+            return;
         }
     }
-    // this should never happen
-    return "";
 }
 
 bool startup_step()
 {
-    bool new_character = false;
     std::string name;
 
     _initialize();
 
-    if (!Options.game.name.empty())
-        name = Options.game.name;
+    std::vector<player_save_info> chars = find_saved_characters();
 
-    // Copy name into you.your_name if set from environment --
-    // note that Options.player_name could already be set from init.txt.
-    // This, clearly, will overwrite such information. {dlb}
+    newgame_def choice = Options.game;
+    newgame_def defaults = read_startup_prefs();
+
+    // Name from environment overwrites the one from command line.
     if (!SysEnv.crawl_name.empty())
-        name = SysEnv.crawl_name;
+        choice.name = SysEnv.crawl_name;
 
     // If a name is specified through options (command line),
     // we don't show the startup menu. It's unclear that is ideal,
@@ -770,35 +714,32 @@ bool startup_step()
     // We could also check whether game type has been set here,
     // but it's probably not necessary to choose non-default game
     // types while specifying a name externally.
-    if (!is_good_name(name, false, false))
+    if (!is_good_name(choice.name, false, false))
+        _show_startup_menu(&choice, defaults, chars);
+
+    bool newchar = false;
+    if (_find_save(chars, choice.name) != -1)
     {
-        if (Options.prev_game.name.length() && Options.remember_name)
-            name = Options.prev_game.name;
-        name = show_startup_menu(name);
+        restore_game(choice.name);
+        save_player_name();
+    }
+    else
+    {
+        newgame_def ng;
+        bool restore = choose_game(&ng, &choice, defaults);
+        if (restore)
+        {
+            restore_game(ng.name);
+            save_player_name();
+        }
+        else
+        {
+            setup_game(ng);
+            newchar = true;
+        }
     }
 
-    switch (crawl_state.type)
-    {
-    case GAME_TYPE_NORMAL:
-        _setup_normal_game();
-        new_character = _setup_generic(name);
-        break;
-    case GAME_TYPE_TUTORIAL:
-        _setup_tutorial();
-        new_character = _setup_generic(name);
-        break;
-    case GAME_TYPE_SPRINT:
-        _setup_sprint();
-        new_character = _setup_generic(name);
-        break;
-    case GAME_TYPE_ARENA:
-        _setup_arena();
-        // this will never happen
-        return false;
-    default:
-        ASSERT(!"Bad game type");
-        end(-1);
-    }
+    _post_init(newchar);
 
-    return new_character;
+    return (newchar);
 }

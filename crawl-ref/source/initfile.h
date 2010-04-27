@@ -24,7 +24,9 @@ int str_to_summon_type (const std::string &str);
 
 std::string read_init_file(bool runscript = false);
 
-void read_startup_prefs();
+struct newgame_def;
+newgame_def read_startup_prefs();
+
 void read_options(FILE *f, bool runscript = false);
 void read_options(const std::string &s, bool runscript = false,
                   bool clear_aliases = false);
@@ -75,7 +77,8 @@ extern system_environment SysEnv;
 
 bool parse_args(int argc, char **argv, bool rc_only);
 
-void write_newgame_options_file(void);
+struct newgame_def;
+void write_newgame_options_file(const newgame_def& prefs);
 
 void save_player_name(void);
 

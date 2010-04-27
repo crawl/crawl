@@ -296,6 +296,34 @@ static fire_type _str_to_fire_types( const std::string &str )
     return (FIRE_NONE);
 }
 
+static std::string _gametype_to_str(game_type type)
+{
+    switch (type)
+    {
+    case GAME_TYPE_NORMAL:
+        return ("normal");
+    case GAME_TYPE_TUTORIAL:
+        return ("tutorial");
+    case GAME_TYPE_ARENA:
+        return ("arena");
+    case GAME_TYPE_SPRINT:
+        return ("sprint");
+    default:
+        return ("none");
+    }
+}
+
+static game_type _str_to_gametype(const std::string& s)
+{
+    for (int i = 0; i < NUM_GAME_TYPE; ++i)
+    {
+        game_type t = static_cast<game_type>(i);
+        if (s == _gametype_to_str(t))
+            return (t);
+    }
+    return (NUM_GAME_TYPE);
+}
+
 static std::string _species_to_str(species_type sp)
 {
     if (sp == SP_RANDOM)
@@ -889,7 +917,9 @@ void game_options::reset_options()
     tile_runrest_rate     = 100;
     tile_key_repeat_delay = 200;
     tile_tooltip_ms       = 500;
-    tile_tag_pref         = crawl_state.game_is_arena() ? TAGPREF_NAMED : TAGPREF_ENEMY;
+    // XXX: arena may now be chose after options are read.
+    tile_tag_pref         = crawl_state.game_is_arena() ? TAGPREF_NAMED
+                                                        : TAGPREF_ENEMY;
 
     tile_show_minihealthbar  = true;
     tile_show_minimagicbar   = true;
@@ -1285,57 +1315,60 @@ std::string read_init_file(bool runscript)
     return ("");
 }
 
-void read_startup_prefs()
+newgame_def read_startup_prefs()
 {
 #ifndef DISABLE_STICKY_STARTUP_OPTIONS
     std::string fn = get_prefs_filename();
     FILE *f = fopen(fn.c_str(), "r");
     if (!f)
-        return;
+        return newgame_def();
 
     game_options temp;
     FileLineInput fl(f);
     temp.read_options(fl, false);
     fclose(f);
 
-    Options.prev_game = temp.game;
+    return (temp.game);
 #endif // !DISABLE_STICKY_STARTUP_OPTIONS
 }
 
 #ifndef DISABLE_STICKY_STARTUP_OPTIONS
-static void write_newgame_options(FILE *f)
+static void write_newgame_options(const newgame_def& prefs, FILE *f)
 {
-    const newgame_def& prev = Options.prev_game;
-    fprintf(f, "name = %s\n", prev.name.c_str());
-    fprintf(f, "species = %s\n", _species_to_str(prev.species).c_str());
-    fprintf(f, "background = %s\n", _job_to_str(prev.job).c_str());
-    if (prev.weapon != WPN_UNKNOWN)
-        fprintf(f, "weapon = %s\n", _weapon_to_str(prev.weapon).c_str());
-    if (prev.religion != GOD_NO_GOD)
-        fprintf(f, "religion = %s\n", god_name(prev.religion).c_str());
-    if (prev.book != SBT_NONE)
+    if (prefs.type != NUM_GAME_TYPE)
+        fprintf(f, "type = %s\n", _gametype_to_str(prefs.type).c_str());
+    fprintf(f, "name = %s\n", prefs.name.c_str());
+    if (prefs.species != SP_UNKNOWN)
+        fprintf(f, "species = %s\n", _species_to_str(prefs.species).c_str());
+    if (prefs.job != JOB_UNKNOWN)
+        fprintf(f, "background = %s\n", _job_to_str(prefs.job).c_str());
+    if (prefs.weapon != WPN_UNKNOWN)
+        fprintf(f, "weapon = %s\n", _weapon_to_str(prefs.weapon).c_str());
+    if (prefs.religion != GOD_NO_GOD)
+        fprintf(f, "religion = %s\n", god_name(prefs.religion).c_str());
+    if (prefs.book != SBT_NONE)
     {
         fprintf(f, "book = %s\n",
-                prev.book == SBT_FIRE ? "fire" :
-                prev.book == SBT_COLD ? "cold" :
-                prev.book == SBT_SUMM ? "summ" :
-                prev.book == SBT_RANDOM ? "random" :
+                prefs.book == SBT_FIRE ? "fire" :
+                prefs.book == SBT_COLD ? "cold" :
+                prefs.book == SBT_SUMM ? "summ" :
+                prefs.book == SBT_RANDOM ? "random" :
                 "viable");
     }
-    if (prev.wand != SWT_NO_SELECTION)
-        fprintf(f, "wand = %s\n", _wand_to_str(prev.wand).c_str());
-    fprintf(f, "fully_random = %s\n", prev.fully_random ? "yes" : "no");
+    if (prefs.wand != SWT_NO_SELECTION)
+        fprintf(f, "wand = %s\n", _wand_to_str(prefs.wand).c_str());
+    fprintf(f, "fully_random = %s\n", prefs.fully_random ? "yes" : "no");
 }
 #endif // !DISABLE_STICKY_STARTUP_OPTIONS
 
-void write_newgame_options_file()
+void write_newgame_options_file(const newgame_def& prefs)
 {
 #ifndef DISABLE_STICKY_STARTUP_OPTIONS
     std::string fn = get_prefs_filename();
     FILE *f = fopen(fn.c_str(), "w");
     if (!f)
         return;
-    write_newgame_options(f);
+    write_newgame_options(prefs, f);
     fclose(f);
 #endif // !DISABLE_STICKY_STARTUP_OPTIONS
 }
@@ -1347,10 +1380,11 @@ void save_player_name()
         return ;
 
     // Read other preferences
-    read_startup_prefs();
+    newgame_def prefs = read_startup_prefs();
+    prefs.name = you.your_name;
 
     // And save
-    write_newgame_options_file();
+    write_newgame_options_file(prefs);
 #endif // !DISABLE_STICKY_STARTUP_OPTIONS
 }
 
@@ -2235,6 +2269,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     // no_dark_brand applies here as well.
     else CURSES_OPTION(heap_brand);
     else COLOUR_OPTION(status_caption_colour);
+    else if (key == "type")
+    {
+        game.type = _str_to_gametype(field);
+    }
     else if (key == "species" || key == "race")
     {
         game.species = _str_to_species(field);
@@ -3719,11 +3757,14 @@ bool parse_args( int argc, char **argv, bool rc_only )
             break;
 
         case CLO_ARENA:
-            crawl_state.type = GAME_TYPE_ARENA;
-            if (next_is_param)
+            if (!rc_only)
             {
-                SysEnv.arena_teams = next_arg;
-                nextUsed = true;
+                Options.game.type = GAME_TYPE_ARENA;
+                if (next_is_param)
+                {
+                    SysEnv.arena_teams = next_arg;
+                    nextUsed = true;
+                }
             }
             break;
 
@@ -3869,7 +3910,8 @@ bool parse_args( int argc, char **argv, bool rc_only )
             break;
 
         case CLO_SPRINT:
-            crawl_state.type = GAME_TYPE_SPRINT;
+            if (!rc_only)
+                Options.game.type = GAME_TYPE_SPRINT;
             break;
 
         case CLO_EXTRA_OPT_FIRST:
