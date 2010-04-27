@@ -372,7 +372,6 @@ public:
                                         // recorded here.
 
     newgame_def game;      // Choices for new game.
-    newgame_def prev_game; // Previous game's choices.
 
 private:
     typedef std::map<std::string, std::string> string_map;
