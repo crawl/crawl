@@ -301,7 +301,7 @@ void _post_init(bool newc)
 }
 
 /**
- * Helpor for show_startup_menu()
+ * Helper for show_startup_menu()
  * constructs the game modes section
  */
 void _construct_game_modes_menu(MenuScroller* menu)
