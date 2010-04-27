@@ -3405,24 +3405,7 @@ void change_labyrinth(bool msg)
             {
                 // Once a valid grid is found, move all items from the
                 // stack onto it.
-                int it = igrd(*ri);
-                while (it != NON_ITEM)
-                {
-                    mitm[it].pos.x = p.x;
-                    mitm[it].pos.y = p.y;
-                    if (mitm[it].link == NON_ITEM)
-                    {
-                        // Link to the stack on the target grid p,
-                        // or NON_ITEM, if empty.
-                        mitm[it].link = igrd(p);
-                        break;
-                    }
-                    it = mitm[it].link;
-                }
-
-                // Move entire stack over to p.
-                igrd(p) = igrd(*ri);
-                igrd(*ri) = NON_ITEM;
+                move_items(*ri, p);
 
                 if (msg)
                 {
