@@ -160,52 +160,6 @@ static bool _is_species_valid_choice(species_type species)
     return (false);
 }
 
-// Returns true if a save game exists with given name.
-static bool _check_saved_game(const std::string& name)
-{
-    FILE *handle;
-
-    std::string basename = get_savedir_filename(name, "", "");
-    std::string savename = basename + ".chr";
-
-#ifdef LOAD_UNPACKAGE_CMD
-    std::string zipname = basename + PACKAGE_SUFFIX;
-    handle = fopen(zipname.c_str(), "rb+");
-    if (handle != NULL)
-    {
-        fclose(handle);
-
-        // Create command.
-        char cmd_buff[1024];
-
-        std::string directory = get_savedir();
-
-        escape_path_spaces(basename);
-        escape_path_spaces(directory);
-        snprintf( cmd_buff, sizeof(cmd_buff), LOAD_UNPACKAGE_CMD,
-                  basename.c_str(), directory.c_str() );
-
-        if (system( cmd_buff ) != 0)
-        {
-            cprintf( "\nWarning: Zip command (LOAD_UNPACKAGE_CMD) "
-                         "returned non-zero value!\n" );
-        }
-
-        // Remove save game package.
-        unlink(zipname.c_str());
-    }
-#endif
-
-    handle = fopen(savename.c_str(), "rb+");
-
-    if (handle != NULL)
-    {
-        fclose(handle);
-        return (true);
-    }
-    return (false);
-}
-
 #ifdef ASSERTS
 static bool _species_is_undead( const species_type speci )
 {
@@ -457,7 +411,7 @@ bool choose_game(newgame_def* ng)
 
         enter_player_name(ng);
 
-        if (_check_saved_game(ng->name))
+        if (save_exists(choice->name))
         {
             cprintf("\nDo you really want to overwrite your old game? ");
             char c = getchm();
