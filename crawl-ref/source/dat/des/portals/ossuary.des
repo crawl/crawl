@@ -58,7 +58,7 @@ function ossuary_setup_features(e)
         e.lrockcol("white")
         e.lfloorcol("yellow")
         e.lrocktile("wall_tomb")
-        e.lfloortile("floor_tomb")
+        e.lfloortile("floor_sandstone")
 end
 }}
 
@@ -76,7 +76,7 @@ NAME:   enter_ossuary_1
 TAGS:   uniq_ossuary no_monster_gen
 SUBST:  . = . ':7
 COLOUR: ' = yellow
-FTILE:  ' = floor_tomb
+FTILE:  ' = floor_sandstone
 SUBST:  ' = .
 : ossuary_portal(_G)
 MAP
@@ -95,7 +95,7 @@ COLOUR:  C = yellow
 COLOUR:  D = yellow
 SUBST:   D = =
 SUBST:   C = c
-FTILE:   ' = floor_tomb
+FTILE:   ' = floor_sandstone
 SUBST:   ' = .
 : ossuary_portal(_G)
 MAP
@@ -112,7 +112,7 @@ NAME:   enter_ossuary_3
 TAGS:   uniq_ossuary no_monster_gen
 SUBST:  . = Y .
 COLOUR: Y = yellow
-FTILE:  Y = floor_tomb
+FTILE:  Y = floor_sandstone
 SUBST:  Y = .
 MONS:   rat zombie / jackal zombie / worm zombie
 MONS:   kobold zombie / goblin zombie / hobgoblin zombie
@@ -129,7 +129,7 @@ NAME:   enter_ossuary_4
 TAGS:   uniq_ossuary no_monster_gen
 COLOUR: 1 = yellow, ' = yellow, x = white
 MONS:   rat zombie / quokka zombie / goblin zombie
-FTILE:  1 = floor_tomb, ' = floor_tomb, x = floor_tomb, O = floor_tomb
+FTILE:  1 = floor_sandstone, ' = floor_sandstone, x = floor_sandstone, O = floor_sandstone
 RTILE:  x = wall_tomb
 : ossuary_portal(_G)
 MAP
@@ -147,7 +147,7 @@ NAME:   enter_ossuary_5
 TAGS:   uniq_ossuary no_monster_gen
 COLOUR: c = white, = = white, ' = yellow
 RTILE:  c = wall_tomb, = = wall_tomb
-FTILE:  ' = floor_tomb
+FTILE:  ' = floor_sandstone
 NSUBST: = = 1:= / *:c
 SUBST:  c : cx
 : ossuary_portal(_G)
@@ -864,7 +864,7 @@ MAP
          c..ddd..c
          c...d...c
          c.......c
-         c......cc
+         cc.....cc
           ccc.ccc
             c+c
   ccccc   ccc.ccc   ccccc
@@ -910,15 +910,15 @@ cddd~~~~c.............c~~~c
 cd<d~~<~+.............+~<~c
 cddd~~~~c.............c~~~c
 cdddccccccc1ccc1ccc1cccc+cc
-ccccc     ccc ccc ccc c...c 
+ccccc     ccc ccc ccc c...c
                      cc...cc
                      c1...1c
                      cc...cc
-                      c...c 
+                      c...c
                      cc...cc
                      c1...1c
                      cc...cc
-                      c...c 
+                      c...c
                      cc...cc
                      c1...1c
                      cc...cc
