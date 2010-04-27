@@ -12,8 +12,8 @@
 
 undead_state_type get_undead_state(const species_type sp);
 
-
-bool choose_game(newgame_def *ng);
+bool choose_game(newgame_def *ng, newgame_def* choice,
+                 const newgame_def& defaults);
 
 void make_rod(item_def &item, stave_type rod_type, int ncharges);
 int claws_level(species_type sp);

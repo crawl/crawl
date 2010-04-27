@@ -13,15 +13,6 @@
 class monsters;
 class mon_acting;
 
-enum game_type
-{
-    GAME_TYPE_NORMAL,
-    GAME_TYPE_TUTORIAL,
-    GAME_TYPE_ARENA,
-    GAME_TYPE_SPRINT,
-    NUM_GAME_TYPE
-};
-
 struct god_act_state
 {
 public:

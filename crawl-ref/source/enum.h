@@ -889,6 +889,15 @@ enum game_direction_type
     GDT_ASCENDING
 };
 
+enum game_type
+{
+    GAME_TYPE_NORMAL,
+    GAME_TYPE_TUTORIAL,
+    GAME_TYPE_ARENA,
+    GAME_TYPE_SPRINT,
+    NUM_GAME_TYPE
+};
+
 enum level_flag_type
 {
     LFLAG_NONE = 0,

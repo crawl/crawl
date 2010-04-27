@@ -48,17 +48,12 @@ static bool _choose_wand(newgame_def* ng, newgame_def* ng_choice,
 //
 
 newgame_def::newgame_def()
-    : name(), species(SP_UNKNOWN), job(JOB_UNKNOWN),
+    : name(), type(NUM_GAME_TYPE),
+      species(SP_UNKNOWN), job(JOB_UNKNOWN),
       weapon(WPN_UNKNOWN), book(SBT_NONE),
       religion(GOD_NO_GOD), wand(SWT_NO_SELECTION),
       fully_random(false)
 {
-}
-
-static void _save_newgame_options(const newgame_def& choice)
-{
-    Options.prev_game = choice;
-    write_newgame_options_file();
 }
 
 static bool _is_random_species(species_type sp)
@@ -183,7 +178,7 @@ undead_state_type get_undead_state(const species_type sp)
     }
 }
 
-static void _setup_tutorial_character(newgame_def* ng_choice)
+static void _choose_tutorial_character(newgame_def* ng_choice)
 {
     ng_choice->species = SP_HIGH_ELF;
     ng_choice->job = JOB_FIGHTER;
@@ -332,8 +327,11 @@ static bool _reroll_random(newgame_def* ng)
 static void _choose_char(newgame_def* ng, newgame_def* choice,
                          newgame_def defaults)
 {
-    if (crawl_state.game_is_tutorial())
-        _setup_tutorial_character(choice);
+    ng->name = choice->name;
+    ng->type = choice->type;
+
+    if (ng->type == GAME_TYPE_TUTORIAL)
+        _choose_tutorial_character(choice);
 
     while (true)
     {
@@ -368,10 +366,12 @@ static void _choose_char(newgame_def* ng, newgame_def* choice,
 // Read a choice of game into ng.
 // Returns false if a game (with name ng->name) should
 // be restored instead of starting a new character.
-bool choose_game(newgame_def* ng)
+bool choose_game(newgame_def* ng, newgame_def* choice,
+                 const newgame_def& defaults)
 {
     clrscr();
 
+    // XXX: this should be somewhere else.
     if (!crawl_state.startup_errors.empty()
         && !Options.suppress_startup_errors)
     {
@@ -381,23 +381,10 @@ bool choose_game(newgame_def* ng)
 
     textcolor(LIGHTGREY);
 
-    if (!ng->name.empty())
-    {
-        if (_check_saved_game(ng->name))
-        {
-            Options.prev_game.name = ng->name;
-            save_player_name();
-            return (false);
-        }
-    }
-
-    newgame_def choice = Options.game;
-    choice.name = ng->name;
-
-    _choose_char(ng, &choice, Options.prev_game);
+    _choose_char(ng, choice, defaults);
 
     // New: pick name _after_ character choices.
-    if (ng->name.empty())
+    if (choice->name.empty())
     {
         clrscr();
 
@@ -409,20 +396,21 @@ bool choose_game(newgame_def* ng)
                 (is_vowel( specs[0] )) ? "n" : "", specs.c_str(),
                 get_job_name(ng->job));
 
-        enter_player_name(ng);
+        enter_player_name(choice);
+        ng->name = choice->name;
 
         if (save_exists(choice->name))
         {
             cprintf("\nDo you really want to overwrite your old game? ");
             char c = getchm();
             if (c != 'Y' && c != 'y')
-                return (false);
+                return (true);
         }
     }
 
-    _save_newgame_options(choice);
+    write_newgame_options_file(*choice);
 
-    return (true);
+    return (false);
 }
 
 int start_to_book(int firstbook, int booktype)

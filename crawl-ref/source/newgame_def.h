@@ -33,6 +33,7 @@ enum startup_wand_type
 struct newgame_def
 {
     std::string name;
+    game_type type;
 
     species_type species;
     job_type job;
