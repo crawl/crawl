@@ -98,12 +98,7 @@ function tutorial.message3 ()
 end
 
 function tutorial.message4 ()
-  local text = "In front of you is a door. You can open them by moving into them, and you can also close them with " .. tutorial.get_cmd("CMD_CLOSE_DOOR") .. " (keyboard commands are case-sensitive). "
-  if crawl.is_tiles() then
-    text = text .. "You can also <white>Ctrl-Click</white> on doors to close them, as well as press " .. tutorial.get_cmd("CMD_OPEN_DOOR_UP") .. "."
-  else
-    text = text .. "You can also press " .. tutorial.get_cmd("CMD_OPEN_DOOR_UP") .. " to close it."
-  end
+  local text = "Doors, like the one in front of you, can be opened by walking into them. They'll also be opened automatically while traveling or auto-exploring."
 
   return tutorial.message(text, "tutorial", true, true)
 end
@@ -192,14 +187,14 @@ ITEM:    randbook disc:conjuration numspells:1 slevels:1 spell:magic_dart \
                   owner:Newbie
 KFEAT:   ABCDEF = .
 COLOUR:  ABCDEF = blue
-MARKER:  [ = lua:tutorial.message( "\nPress <white>Shift-click</white> on your character or <white><<</white> to climb these stairs.", "tutorial", "true" )
-MARKER:  A = lua:tutorial.message( "\nHere are some darts; pick them up.", "tutorial", "true" )
+MARKER:  [ = lua:tutorial.message( "Press <white>Shift-click</white> on your character or <white><<</white> to climb these stairs.", "tutorial", "true" )
+MARKER:  A = lua:tutorial.message( "Here are some darts; pick them up.", "tutorial", "true" )
 # TODO: Targetting needs tutorial messages; these can't be done on the map side.
-MARKER:  B = lua:tutorial.message( "\nPress <white>f</white> to throw darts.", "tutorial", "true" )
-MARKER:  C = lua:tutorial.message( "\nRemember to rest with <white>5</white>.", "tutorial", "true" )
-MARKER:  D = lua:tutorial.message( "\nMemorise the spell from this spellbook by <white>clicking</white> on the memorise tab on the lower right. You can also press <white>M</white> to enter the memorisation screen.", "tutorial", "true" )
-MARKER:  E = lua:tutorial.message( "\n<white>Click</white> magic dart in the spell tab, or press <white>z</white>, or <white>Ctrl-click</white> on the monster.", "tutorial", "true" )
-MARKER:  F = lua:tutorial.message( "\nRest up!", "tutorial", "true" )
+MARKER:  B = lua:tutorial.message( "Press <white>f</white> to throw darts.", "tutorial", "true" )
+MARKER:  C = lua:tutorial.message( "Remember to rest with <white>5</white>.", "tutorial", "true" )
+MARKER:  D = lua:tutorial.message( "Memorise the spell from this spellbook by <white>clicking</white> on the memorise tab on the lower right. You can also press <white>M</white> to enter the memorisation screen.", "tutorial", "true" )
+MARKER:  E = lua:tutorial.message( "<white>Click</white> magic dart in the spell tab, or press <white>z</white>, or <white>Ctrl-click</white> on the monster.", "tutorial", "true" )
+MARKER:  F = lua:tutorial.message( "Rest up!", "tutorial", "true" )
 MONS:    training dummy ; stone q:30
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -241,15 +236,15 @@ KITEM:   o = wand of fireball
 KFEAT:   o = .
 KFEAT:   ABCDEFGH = .
 COLOUR:  ABCDEFGH = blue
-MARKER:  A = lua:tutorial.message( "\nYou can chop up corpses with <white>c</white> into edible meat chunks. You need a sharp object, such as the axe here.", "tutorial", "true" )
-MARKER:  d = lua:tutorial.message( "\nThis axe was picked up automatically because you didn't have a butchering tool.", "tutorial", "true" )
-MARKER:  B = lua:tutorial.message( "\nThis bread ration is permanent food. It will not rot, like the chunks from corpses.", "tutorial", "true" )
-MARKER:  C = lua:tutorial.message( "\nHere is a scroll of identify and an unknown ring. Item properties are often hidden and you need to find out what they do by experimentation or identification. Try the scroll on the ring. (use it by <white>clicking</white> or <white>r</white>ead). You can put on jewellery with capital <white>P</white> or <white>clicking</white> it in the inventory.", "tutorial", "true" )
-MARKER:  D = lua:tutorial.message( "\nThese meat rations weigh too much. You can drop them with <white>d</white>. You can also drop e.g. only 10, by typing <white>d</white>, <white>10</white> and then selecting the meat rations.", "tutorial", "true" )
-MARKER:  E = lua:tutorial.message( "\nThis sword is cursed. If you wield it, you can uncurse it by reading this remove curse scroll. Remove curse scrolls uncurses all the cursed items you have currently equipped. The other items in your inventory are not affected.", "tutorial", "true" )
-MARKER:  F = lua:tutorial.message( "\nHere are three stacks of unknown potions. Go ahead and experiment! <white>Click</white> or <white>q</white>uaff.", "tutorial", "true" )
-MARKER:  G = lua:tutorial.message( "\nYou can evoke wands with <white>V</white>.", "tutorial", "true" )
-MARKER:  H = lua:tutorial.message( "\nHere's some gold. Shops exist in the game. Note that they don't buy items from you, so there's no need to carry stuff around that you can't use. Gold is picked up automatically.", "tutorial", "true" )
+MARKER:  A = lua:tutorial.message( "You can chop up corpses with <white>c</white> into edible meat chunks. You need a sharp object, such as the axe here.", "tutorial", "true" )
+MARKER:  d = lua:tutorial.message( "This axe was picked up automatically because you didn't have a butchering tool.", "tutorial", "true" )
+MARKER:  B = lua:tutorial.message( "This bread ration is permanent food. It will not rot, like the chunks from corpses.", "tutorial", "true" )
+MARKER:  C = lua:tutorial.message( "Here is a scroll of identify and an unknown ring. Item properties are often hidden and you need to find out what they do by experimentation or identification. Try the scroll on the ring. (use it by <white>clicking</white> or <white>r</white>ead). You can put on jewellery with capital <white>P</white> or <white>clicking</white> it in the inventory.", "tutorial", "true" )
+MARKER:  D = lua:tutorial.message( "These meat rations weigh too much. You can drop them with <white>d</white>. You can also drop e.g. only 10, by typing <white>d</white>, <white>10</white> and then selecting the meat rations.", "tutorial", "true" )
+MARKER:  E = lua:tutorial.message( "This sword is cursed. If you wield it, you can uncurse it by reading this remove curse scroll. Remove curse scrolls uncurses all the cursed items you have currently equipped. The other items in your inventory are not affected.", "tutorial", "true" )
+MARKER:  F = lua:tutorial.message( "Here are three stacks of unknown potions. Go ahead and experiment! <white>Click</white> or <white>q</white>uaff.", "tutorial", "true" )
+MARKER:  G = lua:tutorial.message( "You can evoke wands with <white>V</white>.", "tutorial", "true" )
+MARKER:  H = lua:tutorial.message( "Here's some gold. Shops exist in the game. Note that they don't buy items from you, so there's no need to carry stuff around that you can't use. Gold is picked up automatically.", "tutorial", "true" )
 MONS:    rat, rat always_corpse
 MONS:    training dummy ; stone q:30
 MAP
@@ -295,13 +290,13 @@ KFEAT:   ABCDEF = .
 COLOUR:  ABCDEF = blue
 MONS:    rat, rat always_corpse
 MONS:    training dummy spells:blink;blink;blink;blink;blink;blink ; whip ego:reaching
-MARKER:  A = lua:tutorial.message( "\nYou may have been poisoned from the trap. Drink a potion of healing, or rest with <white>5</white> to try to wait it out.", "tutorial", "true" )
-MARKER:  B = lua:tutorial.message( "\nLook for the secret door in the glass wall. Either wait a single turn with <white>s</white> or <white>.</white>, or search longer with <white>5</white>.", "tutorial", "true" )
+MARKER:  A = lua:tutorial.message( "You may have been poisoned from the trap. Drink a potion of healing, or rest with <white>5</white> to try to wait it out.", "tutorial", "true" )
+MARKER:  B = lua:tutorial.message( "Look for the secret door in the glass wall. Either wait a single turn with <white>s</white> or <white>.</white>, or search longer with <white>5</white>.", "tutorial", "true" )
 # TODO: Hax some piety for the player so that minor destruction is immediately usable.
-MARKER:  C = lua:tutorial.message( "\nHere's an altar to one of the gods in the game. You can <white>p</white>ray on an altar to start worshipping.", "tutorial", "true" )
-MARKER:  D = lua:tutorial.message( "\nMakheb accepts kills and corpse sacrifices. Kill these rats, and then <white>p</white>ray over their corpses to sacrifice them to Makheb", "tutorial", "true" )
-MARKER:  E = lua:tutorial.message( "\nUse minor destruction <white>a</white>bility to attack this annoying dummy.", "tutorial", "true" )
-MARKER:  F = lua:tutorial.message( "\nBehind this door is Sigmund. He is a powerful unique monster, and is likely to kill you. In Crawl, running away is often a very important tactic. Thanks for playing the tutorial!", "tutorial", "true" )
+MARKER:  C = lua:tutorial.message( "Here's an altar to one of the gods in the game. You can <white>p</white>ray on an altar to start worshipping.", "tutorial", "true" )
+MARKER:  D = lua:tutorial.message( "Makheb accepts kills and corpse sacrifices. Kill these rats, and then <white>p</white>ray over their corpses to sacrifice them to Makheb", "tutorial", "true" )
+MARKER:  E = lua:tutorial.message( "Use minor destruction <white>a</white>bility to attack this annoying dummy.", "tutorial", "true" )
+MARKER:  F = lua:tutorial.message( "Behind this door is Sigmund. He is a powerful unique monster, and is likely to kill you. In Crawl, running away is often a very important tactic. Thanks for playing the tutorial!", "tutorial", "true" )
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x(xxxxxxxxxxxxxxxxxxxxxxxx].)x
