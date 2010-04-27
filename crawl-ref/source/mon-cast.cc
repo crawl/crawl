@@ -2372,6 +2372,8 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                 if (env.cgrid(*ai) != EMPTY_CLOUD)
                     delete_cloud(env.cgrid(*ai));
                 set_terrain_changed(*ai);
+                if (igrd(*ai) != NON_ITEM)
+                    move_items(*ai, monster->pos());
                 sumcount++;
             }
         }

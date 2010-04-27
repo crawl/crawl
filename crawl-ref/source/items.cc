@@ -3578,3 +3578,28 @@ bool get_item_by_name(item_def *item, char* specs,
 
     return (true);
 }
+
+void move_items(const coord_def r, const coord_def p)
+{
+    ASSERT(in_bounds(r));
+    ASSERT(in_bounds(p));
+
+    int it = igrd(r);
+    while (it != NON_ITEM)
+    {
+        mitm[it].pos.x = p.x;
+        mitm[it].pos.y = p.y;
+        if (mitm[it].link == NON_ITEM)
+        {
+            // Link to the stack on the target grid p,
+            // or NON_ITEM, if empty.
+            mitm[it].link = igrd(p);
+            break;
+        }
+        it = mitm[it].link;
+    }
+
+    // Move entire stack over to p.
+    igrd(p) = igrd(r);
+    igrd(r) = NON_ITEM;
+}
