@@ -99,6 +99,7 @@ void save_game_state();
 
 bool get_save_version(FILE *file, char &major, char &minor);
 
+bool save_exists(const std::string& name);
 void restore_game(const std::string& name);
 
 bool apply_to_all_dungeons(bool (*applicator)());
