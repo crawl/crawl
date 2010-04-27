@@ -823,6 +823,7 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     case SPELL_ANIMATE_DEAD:
     case SPELL_CALL_IMP:
     case SPELL_SUMMON_SCORPIONS:
+    case SPELL_SUMMON_SWARM:
     case SPELL_SUMMON_UFETUBUS:
     case SPELL_SUMMON_BEAST:       // Geryon
     case SPELL_SUMMON_UNDEAD:      // summon undead around player
@@ -1560,6 +1561,19 @@ static bool _mons_abjured(monsters *monster, bool nearby)
     return (false);
 }
 
+static monster_type _pick_swarmer()
+{
+    static monster_type swarmers[] =
+    {
+        MONS_KILLER_BEE, MONS_SCORPION, MONS_WORM,
+        MONS_GIANT_MOSQUITO, MONS_GIANT_BEETLE, MONS_GIANT_BLOWFLY,
+        MONS_WOLF_SPIDER, MONS_BUTTERFLY, MONS_YELLOW_WASP,
+        MONS_GIANT_ANT,
+    };
+
+    return (RANDOM_ELEMENT(swarmers));
+}
+
 static monster_type _pick_random_wraith()
 {
     static monster_type wraiths[] =
@@ -2053,6 +2067,11 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                           duration, spell_cast, monster->pos(), monster->foe, 0,
                           god));
         }
+        return;
+
+    case SPELL_SUMMON_SWARM:
+        _do_high_level_summon(monster, monsterNearby, spell_cast,
+                              _pick_swarmer, random_range(3, 6), god);
         return;
 
     case SPELL_SUMMON_UFETUBUS:
