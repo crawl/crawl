@@ -51,28 +51,25 @@ static unsigned char _random_potion_description()
 // Determine starting depths of branches.
 void initialise_branch_depths()
 {
-    for (int branch = BRANCH_ECUMENICAL_TEMPLE;
-         branch < NUM_BRANCHES;
-         ++branch) {
+    for (int branch = BRANCH_ECUMENICAL_TEMPLE; branch < NUM_BRANCHES; ++branch)
+    {
         Branch *b = &branches[branch];
-        if (crawl_state.game_is_sprint()) {
+        if (crawl_state.game_is_sprint())
             b->startdepth = -1;
-        }
-        else if (branch < BRANCH_VESTIBULE_OF_HELL) {
+        else if (branch < BRANCH_VESTIBULE_OF_HELL)
             b->startdepth = random_range(b->mindepth, b->maxdepth);
-        }
     }
 
     // Disable one of the Swamp/Shoals/Snake Pit.
     const branch_type disabled_branch =
         static_cast<branch_type>(
             random_choose(BRANCH_SWAMP, BRANCH_SHOALS, BRANCH_SNAKE_PIT, -1));
+
     dprf("Disabling branch: %s", branches[disabled_branch].shortname);
     branches[disabled_branch].startdepth = -1;
 
-    if (crawl_state.game_is_sprint()) {
+    if (crawl_state.game_is_sprint())
         branches[BRANCH_MAIN_DUNGEON].depth = 1;
-    }
 }
 
 #define MAX_OVERFLOW_LEVEL 9
