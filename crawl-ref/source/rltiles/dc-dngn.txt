@@ -720,6 +720,84 @@ floor/marble_floor4
 floor/marble_floor5
 floor/marble_floor6
 
+%weight 5
+wall/sandstone_wall0 WALL_SANDSTONE
+wall/sandstone_wall1
+wall/sandstone_wall2
+wall/sandstone_wall3
+wall/sandstone_wall4
+%weight 1
+wall/sandstone_wall5
+wall/sandstone_wall6
+wall/sandstone_wall7
+wall/sandstone_wall8
+wall/sandstone_wall9
+
+%weight 5
+floor/sandstone_floor0 FLOOR_SANDSTONE
+floor/sandstone_floor1
+floor/sandstone_floor2
+floor/sandstone_floor3
+floor/sandstone_floor4
+%weight 2
+floor/sandstone_floor5
+%weight 1
+floor/sandstone_floor6
+floor/sandstone_floor7
+floor/sandstone_floor8
+floor/sandstone_floor9
+
+wall/volcanic_wall0 WALL_VOLCANIC
+wall/volcanic_wall1
+wall/volcanic_wall2
+wall/volcanic_wall3
+wall/volcanic_wall4
+wall/volcanic_wall5
+wall/volcanic_wall6
+
+floor/volcanic_floor0 FLOOR_VOLCANIC
+floor/volcanic_floor1
+floor/volcanic_floor2
+floor/volcanic_floor3
+floor/volcanic_floor4
+floor/volcanic_floor5
+floor/volcanic_floor6
+
+%weight 5
+wall/crystal_wall00 WALL_CRYSTAL_SQUARES
+%weight 3
+wall/crystal_wall01
+%weight 6
+wall/crystal_wall02
+%weight 2
+wall/crystal_wall03
+%weight 4
+wall/crystal_wall04
+wall/crystal_wall06
+wall/crystal_wall08
+wall/crystal_wall10
+%weight 2
+wall/crystal_wall05
+wall/crystal_wall07
+wall/crystal_wall09
+wall/crystal_wall11
+%weight 3
+wall/crystal_wall12
+%weight 1
+wall/crystal_wall13
+
+%weight 8
+floor/crystal_floor0 FLOOR_CRYSTAL_SQUARES
+%weight 4
+floor/crystal_floor1
+floor/crystal_floor2
+%weight 2
+floor/crystal_floor3
+floor/crystal_floor4
+%weight 1
+floor/crystal_floor5
+
+
 wall/stone_gray0 WALL_STONE_GRAY
 wall/stone_gray1
 wall/stone_gray2
