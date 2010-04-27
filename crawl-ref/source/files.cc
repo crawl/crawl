@@ -934,7 +934,7 @@ std::string get_save_filename(const std::string &prefix,
 std::string get_prefs_filename()
 {
 #ifdef DGL_STARTUP_PREFS_BY_NAME
-    return get_savedir_filename("start-" + Options.player_name + "-",
+    return get_savedir_filename("start-" + Options.game.name + "-",
                                 "ns", "prf", true);
 #else
     return get_savedir_filename("start", "ns", "prf");
