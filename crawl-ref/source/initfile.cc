@@ -669,7 +669,6 @@ void game_options::reset_options()
     show_beam       = true;
 
     game = newgame_def();
-    prev_game = newgame_def();
 
     remember_name = true;
 
