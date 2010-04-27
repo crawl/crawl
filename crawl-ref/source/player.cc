@@ -3227,7 +3227,7 @@ int check_stealth(void)
         stealth -= 50;
 
     // Mutations.
-    stealth += 15 * player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
+    stealth += 25 * player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
     stealth += 40 * player_mutation_level(MUT_NIGHTSTALKER);
 
     stealth = std::max(0, stealth);
