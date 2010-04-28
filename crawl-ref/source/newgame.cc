@@ -369,6 +369,8 @@ static void _choose_char(newgame_def* ng, newgame_def* choice,
 
     if (ng->type == GAME_TYPE_TUTORIAL)
         _choose_tutorial_character(choice);
+    else if (ng->type == GAME_TYPE_HINTS)
+        pick_hints(choice);
 
     while (true)
     {

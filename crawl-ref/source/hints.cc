@@ -130,8 +130,38 @@ void init_hints_options()
 #endif
 }
 
+void init_hints()
+{
+    // Activate all triggers.
+    // This is rather backwards: If (true) an event still needs to be
+    // triggered, if (false) the relevant message was already printed.
+    Hints.hints_events.init(true);
+    Hints.hints_left = HINT_EVENTS_NUM;
+
+    // Used to compare which fighting means was used most often.
+    // XXX: This gets reset with every save, which seems odd.
+    //      On the other hand, it's precisely between saves that
+    //      players are most likely to forget these.
+    Hints.hints_spell_counter   = 0;
+    Hints.hints_throw_counter   = 0;
+    Hints.hints_melee_counter   = 0;
+    Hints.hints_berserk_counter = 0;
+
+    // Store whether explore, stash search or travelling was used.
+    // XXX: Also not stored across save games.
+    Hints.hints_explored = true;
+    Hints.hints_stashes  = true;
+    Hints.hints_travel   = true;
+
+    // For occasional healing reminders.
+    Hints.hints_last_healed = 0;
+
+    // Did the player recently see a monster turn invisible?
+    Hints.hints_seen_invisible = 0;
+}
+
 // Tutorial selection screen and choice.
-bool pick_hints()
+void pick_hints(newgame_def* choice)
 {
     clrscr();
 
@@ -142,7 +172,7 @@ bool pick_hints()
         "<cyan>You can be:</cyan>"
         "\n").display();
 
-    textcolor( LIGHTGREY );
+    textcolor(LIGHTGREY);
 
     for (int i = 0; i < HINT_TYPES_NUM; i++)
         print_hints_menu(i);
@@ -166,68 +196,24 @@ bool pick_hints()
         if (keyn >= 'a' && keyn <= 'a' + HINT_TYPES_NUM - 1)
         {
             Hints.hints_type = keyn - 'a';
-            you.species    = _get_hints_species(Hints.hints_type);
-            you.char_class = _get_hints_job(Hints.hints_type);
+            choice->species  = _get_hints_species(Hints.hints_type);
+            choice->job = _get_hints_job(Hints.hints_type);
+            choice->book = SBT_RANDOM;
+            choice->weapon = WPN_HAND_AXE; // easiest choice for fighters
 
-            // Activate all triggers.
-            // This is rather backwards: If (true) an event still needs to be
-            // triggered, if (false) the relevant message was already printed.
-            Hints.hints_events.init(true);
-            Hints.hints_left = HINT_EVENTS_NUM;
-
-            // Used to compare which fighting means was used most often.
-            // XXX: This gets reset with every save, which seems odd.
-            //      On the other hand, it's precisely between saves that
-            //      players are most likely to forget these.
-            Hints.hints_spell_counter   = 0;
-            Hints.hints_throw_counter   = 0;
-            Hints.hints_melee_counter   = 0;
-            Hints.hints_berserk_counter = 0;
-
-            // Store whether explore, stash search or travelling was used.
-            // XXX: Also not stored across save games.
-            Hints.hints_explored = true;
-            Hints.hints_stashes  = true;
-            Hints.hints_travel   = true;
-
-            // For occasional healing reminders.
-            Hints.hints_last_healed = 0;
-
-            // Did the player recently see a monster turn invisible?
-            Hints.hints_seen_invisible = 0;
-
-            Options.game.fully_random = false;
-            Options.game.book = SBT_RANDOM;
-            Options.game.weapon = WPN_HAND_AXE; // easiest choice for fighters
-
-            crawl_state.type = GAME_TYPE_TUTORIAL;
-
-            return (true);
-        }
-
-        if (keyn == CK_BKSP || keyn == ' ' || keyn == ESCAPE)
-        {
-            // In this case, undo previous choices.
-            you.species    = SP_UNKNOWN;
-            you.char_class = JOB_UNKNOWN;
-            Options.game.species = SP_UNKNOWN;
-            Options.game.job = JOB_UNKNOWN;
+            return;
         }
 
         switch (keyn)
         {
         case CK_BKSP:
         case ESCAPE:
-            return (false);
-        case ' ':
-            return (false);
         case 'X':
             cprintf("\nGoodbye!");
             end(0);
-            return (false);
+            return;
         }
     }
-    return (false);
 }
 
 void hints_load_game()

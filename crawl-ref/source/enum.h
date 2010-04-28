@@ -895,6 +895,7 @@ enum game_type
     GAME_TYPE_TUTORIAL,
     GAME_TYPE_ARENA,
     GAME_TYPE_SPRINT,
+    GAME_TYPE_HINTS,
     NUM_GAME_TYPE
 };
 

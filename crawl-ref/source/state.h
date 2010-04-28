@@ -159,6 +159,7 @@ public:
     bool game_is_tutorial();
     bool game_is_arena();
     bool game_is_sprint();
+    bool game_is_hints();
 
     friend class mon_acting;
 };
