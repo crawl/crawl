@@ -191,7 +191,6 @@ static void _resolve_species(newgame_def* ng, const newgame_def* ng_choice)
     if (ng->species != SP_UNKNOWN)
         return;
 
-    bool viable = false;
     switch (ng_choice->species)
     {
     case SP_UNKNOWN:
@@ -199,7 +198,20 @@ static void _resolve_species(newgame_def* ng, const newgame_def* ng_choice)
         return;
 
     case SP_VIABLE:
-        viable = true;
+    {
+        int good_choices = 0;
+        for (int i = 0; i < ng_num_species(); i++)
+        {
+            species_type sp = get_species(i);
+            if (is_good_combination(sp, ng->job, true)
+                && one_chance_in(++good_choices))
+            {
+                ng->species = sp;
+            }
+        }
+        if (good_choices)
+            return;
+    }
         // intentional fall-through
     case SP_RANDOM:
         if (ng->job == JOB_UNKNOWN)
@@ -209,13 +221,19 @@ static void _resolve_species(newgame_def* ng, const newgame_def* ng_choice)
         }
         else
         {
-            // depending on viable flag, pick either a
-            // viable combo or a random combo
-            do
+            // Pick a random legal character.
+            int good_choices = 0;
+            for (int i = 0; i < ng_num_species(); i++)
             {
-                ng->species = get_species(random2(ng_num_species()));
+                species_type sp = get_species(i);
+                if (is_good_combination(sp, ng->job, false)
+                    && one_chance_in(++good_choices))
+                {
+                    ng->species = sp;
+                }
             }
-            while (!is_good_combination(ng->species, ng->job, viable));
+            if (!good_choices)
+                end(1, false, "Failed to find legal species.");
         }
         return;
 
@@ -230,7 +248,6 @@ static void _resolve_job(newgame_def* ng, const newgame_def* ng_choice)
     if (ng->job != JOB_UNKNOWN)
         return;
 
-    bool viable = false;
     switch (ng_choice->job)
     {
     case JOB_UNKNOWN:
@@ -238,7 +255,20 @@ static void _resolve_job(newgame_def* ng, const newgame_def* ng_choice)
         return;
 
     case JOB_VIABLE:
-        viable = true;
+    {
+        int good_choices = 0;
+        for (int i = 0; i < ng_num_jobs(); i++)
+        {
+            job_type job = get_job(i);
+            if (is_good_combination(ng->species, job, true)
+                && one_chance_in(++good_choices))
+            {
+                ng->job = job;
+            }
+        }
+        if (good_choices)
+            return;
+    }
         // intentional fall-through
     case JOB_RANDOM:
         if (ng->species == SP_UNKNOWN)
@@ -248,13 +278,19 @@ static void _resolve_job(newgame_def* ng, const newgame_def* ng_choice)
         }
         else
         {
-            // depending on viable flag, pick either a
-            // viable combo or a random combo
-            do
+            // Pick a random legal character.
+            int good_choices = 0;
+            for (int i = 0; i < ng_num_jobs(); i++)
             {
-                ng->job = get_job(random2(ng_num_jobs()));
+                job_type job = get_job(i);
+                if (is_good_combination(ng->species, job, false)
+                    && one_chance_in(++good_choices))
+                {
+                    ng->job = job;
+                }
             }
-            while (!is_good_combination(ng->species, ng->job, viable));
+            if (!good_choices)
+                end(1, false, "Failed to find legal background.");
         }
         return;
 
