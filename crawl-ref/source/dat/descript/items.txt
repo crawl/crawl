@@ -603,8 +603,8 @@ javelin
 
 A long, light polearm that can be thrown by hand. {{
 if you.race() == "Halfling"
-   or you.race() == "Kobold"
-   or you.race() == "Spriggan"
+    or you.race() == "Kobold"
+    or you.race() == "Spriggan"
 then
     return "Unfortunately, it is too long and awkward for you to use."
 else
@@ -1295,8 +1295,8 @@ throwing net
 
 A throwing net as used by gladiators. {{
 if you.race() == "Halfling"
-   or you.race() == "Kobold"
-   or you.race() == "Spriggan"
+    or you.race() == "Kobold"
+    or you.race() == "Spriggan"
 then
     return "Unfortunately, it is too large and awkward for you to use."
 else
