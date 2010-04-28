@@ -29,4 +29,22 @@ simulacrum_small MONS_SIMULACRUM_SMALL
 simulacrum_large MONS_SIMULACRUM_LARGE
 
 ## Spectral things
-spectral_thing MONS_SPECTRAL_THING
+%sdir dc-mon/undead/spectrals
+spectral_thing MONS_SPECTRAL_SMALL
+spectral_thing MONS_SPECTRAL_LARGE
+spectral_quadruped_small MONS_SPECTRAL_QUADRUPED_SMALL
+spectral_quadruped_large MONS_SPECTRAL_QUADRUPED_LARGE
+spectral_bat MONS_SPECTRAL_BAT
+spectral_bee MONS_SPECTRAL_BEE
+spectral_ant MONS_SPECTRAL_BEETLE
+spectral_fish MONS_SPECTRAL_FISH
+spectral_centaur MONS_SPECTRAL_CENTAUR
+spectral_naga MONS_SPECTRAL_NAGA
+spectral_snake MONS_SPECTRAL_SNAKE
+spectral_spider MONS_SPECTRAL_SPIDER
+spectral_dragon MONS_SPECTRAL_DRAGON
+spectral_hydra1 MONS_SPECTRAL_HYDRA
+spectral_hydra2
+spectral_hydra3
+spectral_hydra4
+spectral_hydra5
