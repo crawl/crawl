@@ -2580,7 +2580,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
             if (ur_herbivorous)
             {
                 if (!suppress_msg)
-                    mpr("Blech - you need greens!");
+                    mpr("Sorry, you're a herbivore.");
                 return (false);
             }
             else if (kindof_thing == FOOD_CHUNK)
@@ -2626,7 +2626,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
                 if (ur_herbivorous)
                 {
                     if (!suppress_msg)
-                        mpr("Urks, you're a herbivore!");
+                        mpr("Sorry, you're a herbivore.");
                     return (false);
                 }
                 return (true);
