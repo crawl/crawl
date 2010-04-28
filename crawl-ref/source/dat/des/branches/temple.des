@@ -1579,6 +1579,52 @@ tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
 ENDMAP
 
+# 2 gods (plus Lugonu and possibly more)
+NAME:     corrupted_temple
+PLACE:    Temple
+ORIENT:   encompass
+SUBST:    O = OOC
+KFEAT:    O = altar_lugonu
+# C doesn't work in the Temple.
+KFEAT:    C = altar_makhleb / altar_xom / altar_beogh / altar_vehumet
+MONS:     plant col:random name:demonic name_adjective
+SUBST:    . = . x:1 w:1 l:1
+SUBST:    x = xxxcv
+SUBST:    ' = .
+
+: local brnd = crawl.random2(4)
+: if brnd == 0 then
+LROCKCOL: magenta
+: elseif brnd == 1 then
+LROCKCOL: lightblue
+: elseif brnd == 2 then
+LROCKCOL: lightcyan
+: else
+LROCKCOL: lightred
+: end
+MAP
+       xxxxx
+      xx.O.xx
+      x.'...x
+      xO...Ox
+      x.'.'.x
+      xx.'.xx
+ xxxxx x'..x xxxxx
+xx.O.xxx.'.xxx.O.xx
+x...'''''.'.'..'..x
+xO.'.......'.'''.Bx
+x.'.......'.....'.x
+xx.O.xxx.'.xxx.B.xx
+ xxxxx x..'x xxxxx
+       x.'.x
+       x..'x
+       x..'x
+       x.'.x
+       x[.(x
+       x1{1x
+       xxxxx
+ENDMAP
+
 #############################################################################
 # Overflow temples
 ##############################################################################
