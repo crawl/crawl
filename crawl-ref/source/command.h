@@ -18,6 +18,7 @@ void list_jewellery();
 void swap_inv_slots(int slot1, int slot2, bool verbose);
 
 void show_levelmap_help();
+void show_pickup_menu_help();
 void show_targeting_help();
 void show_interlevel_travel_branch_help();
 void show_interlevel_travel_depth_help();

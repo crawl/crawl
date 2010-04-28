@@ -10,6 +10,7 @@
 
 #include "cio.h"
 #include "colour.h"
+#include "command.h"
 #include "coord.h"
 #include "env.h"
 #include "menu.h"
@@ -532,6 +533,12 @@ bool Menu::process_key( int keyin )
                 }
             }
         }
+        break;
+
+    case '_':
+        show_pickup_menu_help();
+        nav     = true;
+        repaint = true;
         break;
 
     default:
