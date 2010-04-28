@@ -48,7 +48,7 @@ static bool _choose_wand(newgame_def* ng, newgame_def* ng_choice,
 //
 
 newgame_def::newgame_def()
-    : name(), type(NUM_GAME_TYPE),
+    : name(), type(GAME_TYPE_NORMAL),
       species(SP_UNKNOWN), job(JOB_UNKNOWN),
       weapon(WPN_UNKNOWN), book(SBT_NONE),
       religion(GOD_NO_GOD), wand(SWT_NO_SELECTION),
