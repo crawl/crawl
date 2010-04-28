@@ -407,6 +407,9 @@ bool choose_game(newgame_def* ng, newgame_def* choice,
     }
 #endif
 
+    if (ng->name.empty())
+        end(1, false, "No player name specified.");
+
     ASSERT(is_good_name(ng->name, false, false)
            && job_allowed(ng->species, ng->job)
            && ng->type != NUM_GAME_TYPE);
