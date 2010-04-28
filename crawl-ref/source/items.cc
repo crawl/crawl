@@ -754,7 +754,7 @@ static void _pickup_menu(int item_link)
     item_list_on_square( items, item_link, false );
 
     std::vector<SelItem> selected =
-        select_items( items, "Select items to pick up" );
+        select_items( items, "Select items to pick up or press _ for help" );
     redraw_screen();
 
     std::string pickup_warning;
@@ -2199,8 +2199,8 @@ void drop()
     }
 
     std::vector<SelItem> tmp_items;
-    tmp_items = prompt_invent_items( "Drop what?", MT_DROP, -1,
-                                     _drop_menu_title, true, true, 0,
+    tmp_items = prompt_invent_items( "Drop what?  (Press _ for help.)", MT_DROP,
+                                     -1, _drop_menu_title, true, true, 0,
                                      &Options.drop_filter, _drop_selitem_text,
                                      &items_for_multidrop );
 

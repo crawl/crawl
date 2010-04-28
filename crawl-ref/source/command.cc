@@ -2116,6 +2116,11 @@ void show_levelmap_help()
     show_specific_help( getHelpString("level-map") );
 }
 
+void show_pickup_menu_help()
+{
+    show_specific_help( getHelpString("pick-up") );
+}
+
 void show_targeting_help()
 {
     column_composer cols(2, 40);

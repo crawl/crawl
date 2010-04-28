@@ -1,4 +1,64 @@
 %%%%
+pick-up
+
+<h>Picking up and dropping items</h>
+
+You will pick up and drop items very often. There are four ways to do this:
+
+* Single items
+* Cursored mode
+* Category shortcuts
+* Regular expressions
+
+Note that selecting an already selected item will deselect it.
+
+
+<h>Item letters</h>
+
+Pressing an item's letter key will select the item.
+
+
+<h>Cursored mode</h>
+
+When you want to pick up or drop several items at once, it can be convenient
+to use the cursor, rather than pressing each item's key. The cursor looks
+like <w>[</w>-<w>]</w> and selecting an item via its letter key will move the cursor
+to the item after it. You can select items with the cursor as follows:
+<w>Down</w>   moves the cursor to the next item without change
+<w>Right</w>  selects the cursored item and moves the cursor down
+<w>Up</w>     moves the cursor up, without changing selection
+<w>Left</w>   selects the cursored item and moves the cursor up
+
+
+<h>Regular expressions</h>
+
+By pressing <w>Ctrl-F</w> you can enter a word (which could even be a
+regular expression). All matching items will be selected.
+
+
+<h>Category shortcuts</w>
+
+You can quickly select items by type by pressing
+<w>(</w>         weapons
+<w>)</w>         ammunition
+<w>[</w>         armour
+<w>=</w> or <w>"</w>    jewellery
+<w>!</w>         potions
+<w>?</w>         scrolls
+<w>:</w> or <w>+</w>    books
+<w>/</w>         wands
+<w>%</w>         food
+<w>&</w>         carrion (corpses, skeletons, useless chunks)
+
+Apart from these, there are the general shortcuts
+<w>-</w>         deselect everything
+<w>,</w>         select everything
+<w>*</w>         invert selection
+
+Note that for dropping, the <w>,</w> and <w>-</w> commands use the
+<w>drop_filter</w> option which narrows the range of items to be (de)selected.
+The default value of the option is useless items.
+%%%%
 stash-search.prompt
 
 <h>Searching the stash-tracker</h>
