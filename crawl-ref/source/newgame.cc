@@ -378,7 +378,7 @@ static void _choose_char(newgame_def* ng, newgame_def* choice,
 
         if (choice->fully_random && _reroll_random(ng))
         {
-            *ng = newgame_def();
+            *ng = ng_reset;
             continue;
         }
 
