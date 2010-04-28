@@ -9,7 +9,7 @@ Arcane Marksmen carry some missiles as well as a book from which they will learn
 %%%%
 Artificer
 
-Artificers start with two magical devices and are competent at using such devices.
+Artificers start with two magical devices and are competent at using such tools.
 %%%%
 Assassin
 
@@ -17,7 +17,7 @@ Assassins are all about stealth, ready to stab unaware opponents. Not just dagge
 %%%%
 Berserker
 
-Berserkers believe in Trog, the magic-hating god of frenzy.
+Berserkers believe in Trog, the magic-hating god of frenzy. Not much can stop ca raging berserker early on, apart from hubris.
 %%%%
 Chaos Knight
 
@@ -57,7 +57,7 @@ Gladiators are ready for the arena with light armour, shield, nets and a weapon 
 %%%%
 Healer
 
-Healers are followers of Elyvilon, ready to heal themselves and others. The latter will possibly pacify the beasts and brutes, thereby gaining experience.
+Healers are followers of Elyvilon, ready to heal themselves and others. The latter will possibly pacify beasts and brutes, thereby yielding experience.
 %%%%
 Hunter
 
@@ -69,7 +69,7 @@ Ice Elementalists start with the book of Frost and the Freeze spell. The book's 
 %%%%
 Monk
 
-Monks are ready to take on the dungeon wearing just a robe and using their body.
+Monks are ready to take on everything in the dungeon wearing just a robe and using their body.
 %%%%
 Necromancer
 
@@ -105,7 +105,7 @@ Transmuters are specialists in changes of form. They start with arrows and potio
 %%%%
 Venom Mage
 
-Venom Mages start with the Young Poisoner's Handbook and the Sting spell.
+Venom Mages start with the Young Poisoner's Handbook and the Sting spell. They have an easy time early on.
 %%%%
 Wanderer
 
