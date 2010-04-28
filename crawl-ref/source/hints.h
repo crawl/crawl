@@ -32,7 +32,9 @@ void save_hints(writer& outf);
 void load_hints(reader& inf);
 void init_hints_options(void);
 
-bool pick_hints(void);
+struct newgame_def;
+void init_hints();
+void pick_hints(newgame_def* choice);
 void hints_load_game(void);
 void print_hints_menu(unsigned int type);
 void hints_zap_secret_doors(void);

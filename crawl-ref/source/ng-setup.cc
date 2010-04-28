@@ -7,6 +7,7 @@
 #include "dungeon.h"
 #include "files.h"
 #include "food.h"
+#include "hints.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -1501,6 +1502,7 @@ static void _setup_normal_game();
 static void _setup_tutorial();
 static void _setup_sprint();
 static void _setup_arena();
+static void _setup_hints();
 static void _setup_generic(const newgame_def& ng);
 
 // Initialise a game based on the choice stored in ng.
@@ -1525,6 +1527,10 @@ void setup_game(const newgame_def& ng)
     case GAME_TYPE_ARENA:
         _setup_arena();
         // this will never happen
+        return;
+    case GAME_TYPE_HINTS:
+        _setup_hints();
+        _setup_generic(ng);
         return;
     default:
         ASSERT(!"Bad game type");
@@ -1569,6 +1575,14 @@ void _setup_arena()
 void _setup_sprint()
 {
 
+}
+
+/**
+ * Special steps that hints mode needs;
+ */
+void _setup_hints()
+{
+    init_hints();
 }
 
 static void _setup_generic(const newgame_def& ng)

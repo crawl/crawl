@@ -579,3 +579,9 @@ bool game_state::game_is_sprint()
     ASSERT(type < NUM_GAME_TYPE);
     return type == GAME_TYPE_SPRINT;
 }
+
+bool game_state::game_is_hints()
+{
+    ASSERT(type < NUM_GAME_TYPE);
+    return type == GAME_TYPE_HINTS;
+}

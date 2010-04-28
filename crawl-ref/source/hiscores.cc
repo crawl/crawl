@@ -93,6 +93,8 @@ std::string score_file_name()
         ret += "-sprint";
     if (crawl_state.game_is_tutorial())
         ret += "-tutorial";
+    if (crawl_state.game_is_hints())
+        ret += "-hints";
 
     return (ret);
 }
