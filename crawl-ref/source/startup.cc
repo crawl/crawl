@@ -430,8 +430,7 @@ static const int GAME_MODES_WIDTH = 60;
  * Saves game mode and player name to ng_choice.
  */
 static void _show_startup_menu(newgame_def* ng_choice,
-                               const newgame_def& defaults,
-                               const std::vector<player_save_info>& chars)
+                               const newgame_def& defaults)
 {
     clrscr();
     PrecisionMenu menu;
@@ -452,6 +451,7 @@ static void _show_startup_menu(newgame_def* ng_choice,
                      coord_def(get_number_of_cols() - 1, MISC_TEXT_START_Y - 1),
                      "save games");
     _construct_game_modes_menu(game_modes);
+    std::vector<player_save_info> chars = find_saved_characters();
     _construct_save_games_menu(save_games, chars);
 
     NoSelectTextItem* tmp = new NoSelectTextItem();
@@ -680,7 +680,7 @@ static void _show_startup_menu(newgame_def* ng_choice,
         case '?':
             list_commands();
             // recursive escape because help messes up CRTRegion
-            _show_startup_menu(ng_choice, defaults, chars);
+            _show_startup_menu(ng_choice, defaults);
             return;
 
         default:
@@ -699,8 +699,6 @@ bool startup_step()
 
     _initialize();
 
-    std::vector<player_save_info> chars = find_saved_characters();
-
     newgame_def choice = Options.game;
     newgame_def defaults = read_startup_prefs();
 
@@ -713,11 +711,11 @@ bool startup_step()
     // but it's probably not necessary to choose non-default game
     // types while specifying a name externally.
     if (!is_good_name(choice.name, false, false))
-        _show_startup_menu(&choice, defaults, chars);
+        _show_startup_menu(&choice, defaults);
 #endif
 
     bool newchar = false;
-    if (_find_save(chars, choice.name) != -1)
+    if (save_exists(choice.name))
     {
         restore_game(choice.name);
         save_player_name();
