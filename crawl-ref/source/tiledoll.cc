@@ -11,6 +11,8 @@
 
 #include "tiledoll.h"
 
+#include <sys/stat.h>
+
 #include "files.h"
 #include "tilebuf.h"
 #include "tiledef-player.h"
