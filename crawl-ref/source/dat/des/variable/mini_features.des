@@ -188,6 +188,20 @@ MAP
 ..............
 ENDMAP
 
+NAME:  patterned_corridor
+DEPTH: D, Elf
+SUBST: x : xxccv
+MAP
+xxxxxxxxxxxxxxxxxxxxxxx
+x.......x.......x.....@
+x.xxxxx.x.xxxxx.x.xxxxx
+x.x...x.x.x...x.x.x...x
+x...x.x.x...x.x.x...x.x
+xxxxx.x.xxxxx.x.xxxxx.x
+@.....x.......x.......x
+xxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
 #####################################################################
 #
 # Various vaults themed around inaccessible items (without monsters).
@@ -461,6 +475,16 @@ xxxxx
 x...x
 x.*.=
 x...x
+xxxxx
+ENDMAP
+
+NAME:  firewood_loft
+DEPTH: D:1-26
+KITEM: " = quarterstaff, quarterstaff, quarterstaff
+KITEM: ' = quarterstaff, quarterstaff / any staff w:3
+MAP
+xxxxx
+x"']x
 xxxxx
 ENDMAP
 
