@@ -37,7 +37,7 @@
 #include "stuff.h"
 #include "terrain.h"
 #include "transform.h"
-#include "tutorial.h"
+#include "hints.h"
 #include "xom.h"
 
 // From an actual potion, pow == 40 -- bwr
@@ -203,17 +203,17 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
 
     case POT_GAIN_STRENGTH:
         if (mutate(MUT_STRONG, true, false, false, true))
-            learned_something_new(TUT_YOU_MUTATED);
+            learned_something_new(HINT_YOU_MUTATED);
         break;
 
     case POT_GAIN_DEXTERITY:
         if (mutate(MUT_AGILE, true, false, false, true))
-            learned_something_new(TUT_YOU_MUTATED);
+            learned_something_new(HINT_YOU_MUTATED);
         break;
 
     case POT_GAIN_INTELLIGENCE:
         if (mutate(MUT_CLEVER, true, false, false, true))
-            learned_something_new(TUT_YOU_MUTATED);
+            learned_something_new(HINT_YOU_MUTATED);
         break;
 
     case POT_LEVITATION:
@@ -431,7 +431,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         for (int i = 0; i < 3; i++)
             mutate(RANDOM_MUTATION, false);
 
-        learned_something_new(TUT_YOU_MUTATED);
+        learned_something_new(HINT_YOU_MUTATED);
         did_god_conduct(DID_DELIBERATE_MUTATING, 10, was_known);
         did_god_conduct(DID_STIMULANTS, 4 + random2(4), was_known);
         break;

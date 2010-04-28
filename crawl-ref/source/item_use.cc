@@ -80,7 +80,7 @@
 #include "teleport.h"
 #include "transform.h"
 #include "traps.h"
-#include "tutorial.h"
+#include "hints.h"
 #include "view.h"
 #include "shout.h"
 #include "viewchar.h"
@@ -386,12 +386,12 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     if (show_weff_messages)
         wield_warning();
 
-    if (Tutorial.tutorial_left)
+    if (Hints.hints_left)
     {
         if (new_wpn.cursed())
-            learned_something_new(TUT_YOU_CURSED);
+            learned_something_new(HINT_YOU_CURSED);
         else if (your_talents(false).size() > old_talents)
-            learned_something_new(TUT_NEW_ABILITY_ITEM);
+            learned_something_new(HINT_NEW_ABILITY_ITEM);
     }
 
     // Time calculations.
@@ -3299,8 +3299,8 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     }
     else
     {
-        if (Tutorial.tutorial_left)
-            Tutorial.tut_throw_counter++;
+        if (Hints.hints_left)
+            Hints.hints_throw_counter++;
 
         // Dropping item copy, since the launched item might be different.
         pbolt.drop_item = !did_return;
@@ -3688,7 +3688,7 @@ void equip_jewellery_effect(item_def &item)
     {
         mprf("Oops, that %s feels deathly cold.",
              jewellery_is_amulet(item)? "amulet" : "ring");
-        learned_something_new(TUT_YOU_CURSED);
+        learned_something_new(HINT_YOU_CURSED);
 
         int amusement = 32;
         if (!known_cursed && !known_bad)
@@ -4011,8 +4011,8 @@ bool puton_item(int item_slot)
     // Actually equip the item.
     equip_item(hand_used, item_slot);
 
-    if (Tutorial.tutorial_left && your_talents(false).size() > old_talents)
-        learned_something_new(TUT_NEW_ABILITY_ITEM);
+    if (Hints.hints_left && your_talents(false).size() > old_talents)
+        learned_something_new(HINT_NEW_ABILITY_ITEM);
 
     // Putting on jewellery is as fast as wielding weapons.
     you.time_taken /= 2;
@@ -5566,7 +5566,7 @@ void read_scroll(int slot)
         {
             // Also sets wield_change.
             do_curse_item( *you.weapon(), false );
-            learned_something_new(TUT_YOU_CURSED);
+            learned_something_new(HINT_YOU_CURSED);
             bad_effect = true;
         }
         break;
@@ -5710,7 +5710,7 @@ void read_scroll(int slot)
 
         // Make the name before we curse it.
         do_curse_item( you.inv[you.equip[affected]], false );
-        learned_something_new(TUT_YOU_CURSED);
+        learned_something_new(HINT_YOU_CURSED);
         bad_effect = true;
         break;
     }

@@ -68,7 +68,7 @@
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
-#include "tutorial.h"
+#include "hints.h"
 #include "view.h"
 #include "shout.h"
 #include "xom.h"
@@ -802,8 +802,8 @@ bool melee_attack::player_attack()
     if (player_hits_monster())
     {
         did_hit = true;
-        if (Tutorial.tutorial_left)
-            Tutorial.tut_melee_counter++;
+        if (Hints.hints_left)
+            Hints.hints_melee_counter++;
 
         const bool shield_blocked = attack_shield_blocked(true);
 
@@ -5792,7 +5792,7 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
 
         const bool result = yesno(prompt.c_str(), true, 'n');
 
-        learned_something_new(TUT_WIELD_WEAPON); // for tutorial Rangers
+        learned_something_new(HINT_WIELD_WEAPON); // for tutorial Rangers
 
         // Don't warn again if you decide to continue your attack.
         if (result)

@@ -53,7 +53,7 @@
 #include "stuff.h"
 #include "terrain.h"
 #include "traps.h"
-#include "tutorial.h"
+#include "hints.h"
 #include "view.h"
 #include "shout.h"
 #include "viewchar.h"
@@ -2667,7 +2667,7 @@ static void _mons_open_door(monsters* monster, const coord_def &pos)
             mprf("%s was actually a secret door!",
                  feature_description(grid, NUM_TRAPS, false,
                                      DESC_CAP_THE, false).c_str());
-            learned_something_new(TUT_FOUND_SECRET_DOOR, pos);
+            learned_something_new(HINT_FOUND_SECRET_DOOR, pos);
         }
 
         std::string open_str = "opens the ";
@@ -3125,10 +3125,10 @@ static bool _do_move_monster(monsters *monster, const coord_def& delta)
     // this message to avoid confusion.
     if (monster->seen_context == _just_seen && !you.see_cell(f))
         simple_monster_message(monster, " moves out of view.");
-    else if (Tutorial.tutorial_left && (monster->flags & MF_WAS_IN_VIEW)
+    else if (Hints.hints_left && (monster->flags & MF_WAS_IN_VIEW)
              && !you.see_cell(f))
     {
-        learned_something_new(TUT_MONSTER_LEFT_LOS, monster->pos());
+        learned_something_new(HINT_MONSTER_LEFT_LOS, monster->pos());
     }
 
     // The seen context no longer applies if the monster is moving normally.

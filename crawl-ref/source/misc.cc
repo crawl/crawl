@@ -87,7 +87,7 @@
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
-#include "tutorial.h"
+#include "hints.h"
 #include "view.h"
 #include "viewgeom.h"
 #include "shout.h"
@@ -1305,7 +1305,7 @@ void search_around(bool only_adjacent)
                 {
                     ptrap->reveal();
                     mpr("You found a trap!");
-                    learned_something_new(TUT_SEEN_TRAP, *ri);
+                    learned_something_new(HINT_SEEN_TRAP, *ri);
                     exercise(SK_TRAPS_DOORS, (coinflip() ? 2 : 1));
                 }
                 else
@@ -1408,8 +1408,8 @@ bool go_berserk(bool intentional, bool potion)
         return (false);
     }
 
-    if (Tutorial.tutorial_left)
-        Tutorial.tut_berserk_counter++;
+    if (Hints.hints_left)
+        Hints.hints_berserk_counter++;
 
     mpr("A red film seems to cover your vision as you go berserk!");
     mpr("You feel yourself moving faster!");
@@ -1867,7 +1867,7 @@ void reveal_secret_door(const coord_def& p)
     grd(p) = feat_is_opaque(door) ? DNGN_DETECTED_SECRET_DOOR
                                   : DNGN_OPEN_DOOR;
     viewwindow(false);
-    learned_something_new(TUT_FOUND_SECRET_DOOR, p);
+    learned_something_new(HINT_FOUND_SECRET_DOOR, p);
 
     // If a transparent secret door was forced open to preserve LOS,
     // check if it had an opening prompt.

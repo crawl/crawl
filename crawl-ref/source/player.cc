@@ -74,7 +74,7 @@
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
-#include "tutorial.h"
+#include "hints.h"
 #include "view.h"
 #include "shout.h"
 #include "viewgeom.h"
@@ -2403,7 +2403,7 @@ int burden_change(void)
         if (old_burdenstate != you.burden_state)
         {
             mpr("You are being weighed down by all of your possessions.");
-            learned_something_new(TUT_HEAVY_LOAD);
+            learned_something_new(HINT_HEAVY_LOAD);
         }
     }
     else
@@ -2413,7 +2413,7 @@ int burden_change(void)
         if (old_burdenstate != you.burden_state)
         {
             mpr("You are being crushed by all of your possessions.");
-            learned_something_new(TUT_HEAVY_LOAD);
+            learned_something_new(HINT_HEAVY_LOAD);
         }
     }
 
@@ -3092,15 +3092,15 @@ void level_change(bool skip_attribute_increase)
 
         xom_is_stimulated(16);
 
-        learned_something_new(TUT_NEW_LEVEL);
+        learned_something_new(HINT_NEW_LEVEL);
     }
 
     redraw_skill(you.your_name, player_title());
 
     // Increase tutorial time-out now that it's actually become useful
     // for a longer time.
-    if (Tutorial.tutorial_left && you.experience_level >= 7)
-        tutorial_finished();
+    if (Hints.hints_left && you.experience_level >= 7)
+        hints_finished();
 }
 
 // Here's a question for you: does the ordering of mods make a difference?
@@ -4476,7 +4476,7 @@ void contaminate_player(int change, bool controlled, bool status_only)
         return;
 
     if (you.magic_contamination > 0)
-        learned_something_new(TUT_GLOWING);
+        learned_something_new(HINT_GLOWING);
 
     // Zin doesn't like mutations or mutagenic radiation.
     if (you.religion == GOD_ZIN)
@@ -4527,7 +4527,7 @@ bool confuse_player(int amount, bool resistable)
         mprf(MSGCH_WARN, "You are %sconfused.",
              old_value > 0 ? "more " : "");
 
-        learned_something_new(TUT_YOU_ENCHANTED);
+        learned_something_new(HINT_YOU_ENCHANTED);
 
         xom_is_stimulated((you.duration[DUR_CONF] - old_value)
                            / BASELINE_DELAY);
@@ -4586,7 +4586,7 @@ bool poison_player(int amount, std::string source, std::string source_aux,
         mprf(MSGCH_WARN, "You are %spoisoned.",
              old_value > 0 ? "more " : "");
 
-        learned_something_new(TUT_YOU_POISON);
+        learned_something_new(HINT_YOU_POISON);
     }
 
     you.props["poisoner"] = source;
@@ -4779,7 +4779,7 @@ bool slow_player(int turns)
             mpr("You feel as though you will be slow longer.");
 
         you.increase_duration(DUR_SLOW, turns, threshold);
-        learned_something_new(TUT_YOU_ENCHANTED);
+        learned_something_new(HINT_YOU_ENCHANTED);
     }
 
     return (true);
@@ -5928,7 +5928,7 @@ bool player::rot(actor *who, int amount, int immediate, bool quiet)
 
         rotting += amount;
 
-        learned_something_new(TUT_YOU_ROTTING);
+        learned_something_new(HINT_YOU_ROTTING);
     }
 
     if (one_chance_in(4))
@@ -6054,7 +6054,7 @@ bool player::sicken(int amount)
     if (disease > 210 * BASELINE_DELAY)
         disease = 210 * BASELINE_DELAY;
 
-    learned_something_new(TUT_YOU_SICK);
+    learned_something_new(HINT_YOU_SICK);
     return (true);
 }
 
@@ -6197,7 +6197,7 @@ bool player::mutate()
     {
         if (::mutate(RANDOM_MUTATION))
         {
-            learned_something_new(TUT_YOU_MUTATED);
+            learned_something_new(HINT_YOU_MUTATED);
             return (true);
         }
     }

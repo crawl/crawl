@@ -28,7 +28,7 @@
 #include "player-stats.h"
 #include "species.h"
 #include "stuff.h"
-#include "tutorial.h"
+#include "hints.h"
 
 typedef std::string (*string_fn)();
 typedef std::map<std::string, string_fn> skill_op_map;
@@ -1426,19 +1426,19 @@ static void _display_skill_table(bool show_aptitudes, bool show_description)
         }
     }
 
-    if (Tutorial.tutorial_left)
+    if (Hints.hints_left)
     {
         if (show_description || maxln >= bottom_line - 5)
         {
             cgotoxy(1, bottom_line-2);
             // Doesn't mention the toggle between progress/aptitudes.
-            print_tut_skills_description_info();
+            print_hints_skills_description_info();
         }
         else
         {
             cgotoxy(1, bottom_line-5);
             // Doesn't mention the toggle between progress/aptitudes.
-            print_tut_skills_info();
+            print_hints_skills_info();
         }
     }
     else
@@ -1505,7 +1505,7 @@ void show_skills()
         {
             // Show skill description.
             show_description = !show_description;
-            if (Tutorial.tutorial_left)
+            if (Hints.hints_left)
                 clrscr();
             continue;
         }

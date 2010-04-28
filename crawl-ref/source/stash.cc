@@ -40,7 +40,7 @@
 #include "terrain.h"
 #include "traps.h"
 #include "travel.h"
-#include "tutorial.h"
+#include "hints.h"
 #include "viewgeom.h"
 
 #include <cctype>
@@ -382,7 +382,7 @@ void Stash::update()
         else
         {
             pitem = &mitm[you.visible_igrd(p)];
-            tutorial_first_item(*pitem);
+            hints_first_item(*pitem);
         }
 
         const item_def& item = *pitem;

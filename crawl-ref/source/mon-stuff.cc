@@ -58,7 +58,7 @@
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"
-#include "tutorial.h"
+#include "hints.h"
 #include "view.h"
 #include "shout.h"
 #include "spells3.h"
@@ -499,16 +499,16 @@ int place_monster_corpse(const monsters *monster, bool silent,
                              && player_res_poison() <= 0);
 
         if (o != NON_ITEM)
-            tutorial_dissection_reminder(!poison);
+            hints_dissection_reminder(!poison);
     }
 
     return (o == NON_ITEM ? -1 : o);
 }
 
-static void _tutorial_inspect_kill()
+static void _hints_inspect_kill()
 {
-    if (Tutorial.tutorial_events[TUT_KILLED_MONSTER])
-        learned_something_new(TUT_KILLED_MONSTER);
+    if (Hints.hints_events[HINT_KILLED_MONSTER])
+        learned_something_new(HINT_KILLED_MONSTER);
 }
 
 #ifdef DGL_MILESTONES
@@ -1453,7 +1453,7 @@ int monster_die(monsters *monster, killer_type killer,
 
             // Killing triggers tutorial lesson.
             if (gives_xp)
-                _tutorial_inspect_kill();
+                _hints_inspect_kill();
 
             // Prevent summoned creatures from being good kills.
             if (bad_kill || good_kill)
@@ -3459,8 +3459,8 @@ void seen_monster(monsters *monster)
 
     if (!mons_is_mimic(monster->type))
     {
-        if (Tutorial.tutorial_left)
-            tutorial_monster_seen(*monster);
+        if (Hints.hints_left)
+            hints_monster_seen(*monster);
 
         if (MONST_INTERESTING(monster))
         {

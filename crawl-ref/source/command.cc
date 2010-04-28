@@ -51,7 +51,7 @@
 #include "env.h"
 #include "terrain.h"
 #include "transform.h"
-#include "tutorial.h"
+#include "hints.h"
 #include "view.h"
 #include "viewchar.h"
 
@@ -2507,7 +2507,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
             false, true, _cmdhelp_textfilter);
 }
 
-static void _add_formatted_tutorial_help(column_composer &cols)
+static void _add_formatted_hints_help(column_composer &cols)
 {
     cols.add_formatted(
             0, "<h>Item types (and common commands)\n",
@@ -2616,8 +2616,8 @@ void list_commands(int hotkey, bool do_redraw_screen)
     // Page size is number of lines - one line for --more-- prompt.
     cols.set_pagesize(get_number_of_lines() - 1);
 
-    if (Tutorial.tutorial_left)
-        _add_formatted_tutorial_help(cols);
+    if (Hints.hints_left)
+        _add_formatted_hints_help(cols);
     else
         _add_formatted_keyhelp(cols);
 

@@ -56,6 +56,7 @@ goditem.o \
 godpassive.o \
 godprayer.o \
 godwrath.o \
+hints.o \
 hiscores.o \
 initfile.o \
 invent.o \
@@ -190,7 +191,6 @@ terrain.o \
 transform.o \
 traps.o \
 travel.o \
-tutorial.o \
 view.o \
 viewchar.o \
 viewgeom.o \

@@ -35,7 +35,7 @@
 #include "tags.h"
 #include "tagstring.h"
 #include "travel.h"
-#include "tutorial.h"
+#include "hints.h"
 #include "view.h"
 #include "shout.h"
 #include "viewchar.h"
@@ -554,7 +554,7 @@ public:
         {
             cgotoxy(use_first_col() ? 2 : 1, last_row, GOTO_MSG);
             textcolor(channel_to_colour(MSGCH_PROMPT));
-            if (Tutorial.tutorial_left)
+            if (Hints.hints_left)
             {
                 std::string more_str = "--more-- Press Space ";
 #ifdef USE_TILE

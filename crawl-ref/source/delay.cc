@@ -58,7 +58,7 @@
 #include "env.h"
 #include "transform.h"
 #include "travel.h"
-#include "tutorial.h"
+#include "hints.h"
 #include "view.h"
 #include "xom.h"
 
@@ -1427,8 +1427,8 @@ static void _armour_wear_effects(const int item_slot)
 
     equip_item(eq_slot, item_slot);
 
-    if (Tutorial.tutorial_left && your_talents(false).size() > old_talents)
-        learned_something_new(TUT_NEW_ABILITY_ITEM);
+    if (Hints.hints_left && your_talents(false).size() > old_talents)
+        learned_something_new(HINT_NEW_ABILITY_ITEM);
 }
 
 void equip_armour_effect(item_def& arm, bool unmeld)
@@ -1538,7 +1538,7 @@ void equip_armour_effect(item_def& arm, bool unmeld)
     if (arm.cursed() && !unmeld)
     {
         mpr("Oops, that feels deathly cold.");
-        learned_something_new(TUT_YOU_CURSED);
+        learned_something_new(HINT_YOU_CURSED);
 
         if (!known_cursed)
         {
@@ -1869,8 +1869,8 @@ inline static void _monster_warning(activity_interrupt_type ai,
         const_cast<monsters*>(mon)->seen_context = "just seen";
     }
 
-    if (Tutorial.tutorial_left)
-        tutorial_monster_seen(*mon);
+    if (Hints.hints_left)
+        hints_monster_seen(*mon);
 }
 
 // Turns autopickup off if we ran into an invisible monster or saw a monster
@@ -1888,10 +1888,10 @@ void autotoggle_autopickup(bool off)
                  "Deactivating autopickup; reactivate with <w>%s</w>.",
                  command_to_string(CMD_TOGGLE_AUTOPICKUP).c_str());
         }
-        if (Tutorial.tutorial_left)
+        if (Hints.hints_left)
         {
-            learned_something_new(TUT_INVISIBLE_DANGER);
-            Tutorial.tut_seen_invisible = you.num_turns;
+            learned_something_new(HINT_INVISIBLE_DANGER);
+            Hints.hints_seen_invisible = you.num_turns;
         }
     }
     else if (Options.autopickup_on < 0) // was turned off automatically

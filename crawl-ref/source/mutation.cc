@@ -44,7 +44,7 @@
 #include "skills2.h"
 #include "stuff.h"
 #include "transform.h"
-#include "tutorial.h"
+#include "hints.h"
 #include "view.h"
 #include "xom.h"
 
@@ -1159,8 +1159,8 @@ bool mutate(mutation_type which_mutation, bool failMsg,
 
     take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat]));
 
-    if (Tutorial.tutorial_left && your_talents(false).size() > old_talents)
-        learned_something_new(TUT_NEW_ABILITY_MUT);
+    if (Hints.hints_left && your_talents(false).size() > old_talents)
+        learned_something_new(HINT_NEW_ABILITY_MUT);
 
     return (true);
 }

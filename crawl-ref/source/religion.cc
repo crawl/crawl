@@ -84,7 +84,7 @@
 #include "stuff.h"
 #include "terrain.h"
 #include "transform.h"
-#include "tutorial.h"
+#include "hints.h"
 #include "view.h"
 #include "xom.h"
 
@@ -2600,7 +2600,7 @@ void gain_piety(int original_gain, bool all_at_once, bool force)
             if (_abil_chg_message(god_gain_power_messages[you.religion][i],
                               "You can now %s."))
             {
-                learned_something_new(TUT_NEW_ABILITY_GOD);
+                learned_something_new(HINT_NEW_ABILITY_GOD);
             }
 
             if (you.religion == GOD_SHINING_ONE)
@@ -2850,7 +2850,7 @@ void lose_piety(int pgn)
         end_prayer();
 
     if (you.piety > 0 && you.piety <= 5)
-        learned_something_new(TUT_GOD_DISPLEASED);
+        learned_something_new(HINT_GOD_DISPLEASED);
 
     if (you.religion == GOD_BEOGH)
     {
@@ -3099,7 +3099,7 @@ void excommunication(god_type new_god)
         mpr("The divine host forsakes you.", MSGCH_MONSTER_ENCHANT);
 
     // Evil hack.
-    learned_something_new(TUT_EXCOMMUNICATE,
+    learned_something_new(HINT_EXCOMMUNICATE,
                           coord_def((int)new_god, old_piety));
 }
 
@@ -3481,7 +3481,7 @@ void god_pitch(god_type which_god)
 
     redraw_skill(you.your_name, player_title());
 
-    learned_something_new(TUT_CONVERT);
+    learned_something_new(HINT_CONVERT);
 }
 
 bool god_hates_your_god(god_type god, god_type your_god)

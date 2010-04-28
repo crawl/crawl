@@ -63,7 +63,7 @@
 #include "output.h"
 #include "player.h"
 #include "religion.h"
-#include "tutorial.h"
+#include "hints.h"
 #include "view.h"
 
 stack_iterator::stack_iterator(const coord_def& pos, bool accessible)
@@ -609,7 +609,7 @@ void canned_msg(canned_message_type which_message)
         break;
     case MSG_YOU_RESIST:
         mpr("You resist.");
-        learned_something_new(TUT_YOU_RESIST);
+        learned_something_new(HINT_YOU_RESIST);
         break;
     case MSG_YOU_PARTIALLY_RESIST:
         mpr("You partially resist.");

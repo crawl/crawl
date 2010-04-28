@@ -28,7 +28,7 @@
 #include "species.h"
 #include "state.h"
 #include "stuff.h"
-#include "tutorial.h"
+#include "hints.h"
 
 #ifdef USE_TILE
 #include "tilereg-crt.h"

@@ -17,7 +17,7 @@
 #include "message.h"
 #include "options.h"
 #include "player.h"
-#include "tutorial.h"
+#include "hints.h"
 
 #ifdef USE_TILE
  #include "mon-stuff.h"

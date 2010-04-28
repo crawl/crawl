@@ -42,7 +42,7 @@
 #include "areas.h"
 #include "terrain.h"
 #include "transform.h"
-#include "tutorial.h"
+#include "hints.h"
 #include "view.h"
 #include "shout.h"
 #include "xom.h"
@@ -704,7 +704,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
     if (you_trigger)
     {
-        learned_something_new(TUT_SEEN_TRAP, p);
+        learned_something_new(HINT_SEEN_TRAP, p);
 
         // Exercise T&D if the trap revealed itself, but not if it ran
         // out of ammo.

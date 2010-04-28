@@ -12,7 +12,7 @@
 #include "religion.h"
 #include "state.h"
 #include "transform.h"
-#include "tutorial.h"
+#include "hints.h"
 
 char player::stat(stat_type s, bool nonneg) const
 {
@@ -65,7 +65,7 @@ void attribute_increase()
 {
     mpr("Your experience leads to an increase in your attributes!",
         MSGCH_INTRINSIC_GAIN);
-    learned_something_new(TUT_CHOOSE_STAT);
+    learned_something_new(HINT_CHOOSE_STAT);
     mpr("Increase (S)trength, (I)ntelligence, or (D)exterity? ", MSGCH_PROMPT);
 
     while (true)

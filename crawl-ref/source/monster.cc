@@ -41,7 +41,7 @@
 #include "stuff.h"
 #include "terrain.h"
 #include "traps.h"
-#include "tutorial.h"
+#include "hints.h"
 #include "view.h"
 #include "shout.h"
 #include "xom.h"
@@ -4301,7 +4301,7 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
             patrol_point.reset();
         }
         if (you.can_see(this))
-            learned_something_new(TUT_MONSTER_FRIENDLY, pos());
+            learned_something_new(HINT_MONSTER_FRIENDLY, pos());
         break;
 
     default:

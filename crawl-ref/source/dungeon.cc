@@ -66,7 +66,7 @@
 #include "terrain.h"
 #include "traps.h"
 #include "travel.h"
-#include "tutorial.h"
+#include "hints.h"
 
 #ifdef DEBUG_DIAGNOSTICS
 #define DEBUG_TEMPLES
