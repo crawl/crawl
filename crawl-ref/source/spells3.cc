@@ -1229,6 +1229,13 @@ bool cast_simulacrum(int pow, god_type god)
                 && weapon->sub_type == FOOD_CHUNK)))
     {
         const monster_type type = static_cast<monster_type>(weapon->plus);
+
+        if (!mons_class_can_be_zombified(type))
+        {
+            canned_msg(MSG_NOTHING_HAPPENS);
+            return (false);
+        }
+
         const monster_type sim_type = mons_zombie_size(type) == Z_BIG ?
             MONS_SIMULACRUM_LARGE : MONS_SIMULACRUM_SMALL;
 
