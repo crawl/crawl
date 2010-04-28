@@ -708,14 +708,13 @@ bool startup_step()
     if (!SysEnv.crawl_name.empty())
         choice.name = SysEnv.crawl_name;
 
-    // If a name is specified through options (command line),
-    // we don't show the startup menu. It's unclear that is ideal,
-    // but is how DGL installs work currently.
+#ifndef DGAMELAUNCH
     // We could also check whether game type has been set here,
     // but it's probably not necessary to choose non-default game
     // types while specifying a name externally.
     if (!is_good_name(choice.name, false, false))
         _show_startup_menu(&choice, defaults, chars);
+#endif
 
     bool newchar = false;
     if (_find_save(chars, choice.name) != -1)

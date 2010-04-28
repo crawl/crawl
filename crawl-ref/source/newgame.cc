@@ -383,6 +383,7 @@ bool choose_game(newgame_def* ng, newgame_def* choice,
 
     _choose_char(ng, choice, defaults);
 
+#ifndef DGAMELAUNCH
     // New: pick name _after_ character choices.
     if (choice->name.empty())
     {
@@ -407,6 +408,7 @@ bool choose_game(newgame_def* ng, newgame_def* choice,
                 return (true);
         }
     }
+#endif
 
     write_newgame_options_file(*choice);
 
