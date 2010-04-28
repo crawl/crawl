@@ -45,7 +45,7 @@ Mundane and average.
 %%%%
 Kenku
 
-Bird-men who love to fight, both with weapons and spells; can fly later on.
+Bird-men who love to fight, both with weapons and spells. They are quite fragile, but they learn to fly later on.
 %%%%
 Kobold
 
@@ -57,7 +57,7 @@ Half fish, half man, the merfolk are citizens of both water and land.
 %%%%
 Minotaur
 
-A large muscular human with the head of a bull.
+A large muscular human with the head of a bull. They excel at all forms of close and ranged combat.
 %%%%
 Mountain Dwarf
 
