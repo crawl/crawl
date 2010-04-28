@@ -47,7 +47,7 @@
 #include "stuff.h"
 #include "options.h"
 #include "terrain.h"
-#include "tutorial.h"
+#include "hints.h"
 #include "view.h"
 #include "viewchar.h"
 
@@ -277,11 +277,11 @@ void _post_init(bool newc)
 
         // For a new game, wipe out monsters in LOS, and
         // for new tutorial games also the items.
-        zap_los_monsters(Tutorial.tutorial_events[TUT_SEEN_FIRST_OBJECT]);
+        zap_los_monsters(Hints.hints_events[HINT_SEEN_FIRST_OBJECT]);
 
         // For a newly started tutorial, turn secret doors into normal ones.
-        if (Tutorial.tutorial_left)
-            tutorial_zap_secret_doors();
+        if (Hints.hints_left)
+            hints_zap_secret_doors();
     }
 
 #ifdef USE_TILE

@@ -49,7 +49,7 @@
 #include "stuff.h"
 #include "transform.h"
 #include "travel.h"
-#include "tutorial.h"
+#include "hints.h"
 #include "xom.h"
 
 static corpse_effect_type _determine_chunk_effect(corpse_effect_type chunktype,
@@ -256,7 +256,7 @@ static bool _find_butchering_implement(int &butcher_tool)
     if (!potential_candidate)
     {
         mpr("You don't carry any weapon you could use for butchering.");
-        if (Tutorial.tutorial_left)
+        if (Hints.hints_left)
         {
             mpr("You should pick up the first knife, dagger, sword or axe "
                 "you find so you can use it to butcher corpses.",
@@ -960,7 +960,7 @@ bool food_change(bool suppress_message)
                     xom_is_stimulated(64);
                 }
 
-                learned_something_new(TUT_YOU_STARVING);
+                learned_something_new(HINT_YOU_STARVING);
                 you.check_awaken(500);
                 break;
 
@@ -972,7 +972,7 @@ bool food_change(bool suppress_message)
 
                 mprf(MSGCH_FOOD, less_hungry, "%s", msg.c_str());
 
-                learned_something_new(TUT_YOU_HUNGRY);
+                learned_something_new(HINT_YOU_HUNGRY);
                 break;
 
             case HS_VERY_HUNGRY:
@@ -985,7 +985,7 @@ bool food_change(bool suppress_message)
 
                 mprf(MSGCH_FOOD, less_hungry, "%s", msg.c_str());
 
-                learned_something_new(TUT_YOU_HUNGRY);
+                learned_something_new(HINT_YOU_HUNGRY);
                 break;
 
             default:

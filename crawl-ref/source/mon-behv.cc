@@ -24,7 +24,7 @@
 #include "state.h"
 #include "terrain.h"
 #include "traps.h"
-#include "tutorial.h"
+#include "hints.h"
 #include "view.h"
 #include "shout.h"
 
@@ -909,7 +909,7 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
             mon->foe = MHITYOU;
 
         if (you.see_cell(mon->pos()))
-            learned_something_new(TUT_FLEEING_MONSTER);
+            learned_something_new(HINT_FLEEING_MONSTER);
 
         if (mon->type == MONS_KRAKEN)
         {

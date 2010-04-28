@@ -73,7 +73,7 @@
 #include "terrain.h"
 #include "traps.h"
 #include "travel.h"
-#include "tutorial.h"
+#include "hints.h"
 #include "view.h"
 #include "shout.h"
 #include "viewchar.h"
@@ -3632,7 +3632,7 @@ static void _rot_inventory_food(long time_delta)
         else if (!msg.empty())
             mpr(msg.c_str(), MSGCH_ROTTEN_MEAT);
 
-        learned_something_new(TUT_ROTTEN_FOOD);
+        learned_something_new(HINT_ROTTEN_FOOD);
     }
 
     if (burden_changed_by_rot)

@@ -121,7 +121,7 @@
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
-#include "tutorial.h"
+#include "hints.h"
 #include "view.h"
 #include "shout.h"
 #include "viewchar.h"
@@ -268,7 +268,7 @@ int main(int argc, char *argv[])
     add_key_recorder(&repeat_again_rec);
 
     // Override some options for tutorial.
-    init_tutorial_options();
+    init_hints_options();
 
     if (!crawl_state.game_is_tutorial())
     {
@@ -303,12 +303,12 @@ int main(int argc, char *argv[])
     if (game_start)
     {
         // TODO: convert this to the hints mode
-        if (Tutorial.tutorial_left)
+        if (Hints.hints_left)
             _startup_tutorial();
         _take_starting_note();
     }
     else
-        tutorial_load_game();
+        hints_load_game();
 
     // Catch up on any experience levels we did not assign last time. This
     // can happen if Crawl sees SIGHUP while it is waiting for the player
@@ -482,7 +482,7 @@ static void _take_starting_note()
 static void _startup_tutorial()
 {
     // Don't allow triggering at game start.
-    Tutorial.tut_just_triggered = true;
+    Hints.hints_just_triggered = true;
 
     msg::streams(MSGCH_TUTORIAL)
         << "Press any key to start the tutorial intro, or Escape to skip it."
@@ -491,7 +491,7 @@ static void _startup_tutorial()
     flush_prev_message();
     const int ch = getch_ck();
     if (ch != ESCAPE)
-        tut_starting_screen();
+        hints_starting_screen();
 }
 
 #ifdef WIZARD
@@ -731,8 +731,8 @@ static void _handle_wizard_command(void)
 // Set up the running variables for the current run.
 static void _start_running(int dir, int mode)
 {
-    if (Tutorial.tutorial_events[TUT_SHIFT_RUN] && mode == RMODE_START)
-        Tutorial.tutorial_events[TUT_SHIFT_RUN] = false;
+    if (Hints.hints_events[HINT_SHIFT_RUN] && mode == RMODE_START)
+        Hints.hints_events[HINT_SHIFT_RUN] = false;
 
     if (i_feel_safe(true))
         you.running.initialise(dir, mode);
@@ -1012,7 +1012,7 @@ static void _input()
 
     update_monsters_in_view();
 
-    tutorial_new_turn();
+    hints_new_turn();
 
     if (you.cannot_act())
     {
@@ -1536,8 +1536,8 @@ static void _do_clear_map()
 
 static void _do_display_map()
 {
-    if (Tutorial.tutorial_events[TUT_MAP_VIEW])
-        Tutorial.tutorial_events[TUT_MAP_VIEW] = false;
+    if (Hints.hints_events[HINT_MAP_VIEW])
+        Hints.hints_events[HINT_MAP_VIEW] = false;
 
 #ifndef DEBUG_DIAGNOSTICS
     if (!player_in_mappable_area())
@@ -1670,8 +1670,8 @@ void process_command(command_type cmd)
 
         // Stash commands.
     case CMD_SEARCH_STASHES:
-        if (Tutorial.tut_stashes)
-            Tutorial.tut_stashes = 0;
+        if (Hints.hints_stashes)
+            Hints.hints_stashes = 0;
         StashTrack.search_stashes();
         break;
 
@@ -1864,7 +1864,7 @@ void process_command(command_type cmd)
 
     case CMD_NO_CMD:
     default:
-        if (Tutorial.tutorial_left)
+        if (Hints.hints_left)
         {
            std::string msg = "Unknown command. (For a list of commands type "
                              "<w>?\?<lightgrey>.)";
@@ -2309,8 +2309,8 @@ static void _decrement_durations()
         you.increase_duration(DUR_EXHAUSTED, dur * 2);
 
         // Don't trigger too many tutorial messages.
-        const bool tut_slow = Tutorial.tutorial_events[TUT_YOU_ENCHANTED];
-        Tutorial.tutorial_events[TUT_YOU_ENCHANTED] = false;
+        const bool hints_slow = Hints.hints_events[HINT_YOU_ENCHANTED];
+        Hints.hints_events[HINT_YOU_ENCHANTED] = false;
 
         {
             // Don't give duplicate 'You feel yourself slow down' messages.
@@ -2333,8 +2333,8 @@ static void _decrement_durations()
         you.hp = (you.hp + 1) * 2 / 3;
         calc_hp();
 
-        learned_something_new(TUT_POSTBERSERK);
-        Tutorial.tutorial_events[TUT_YOU_ENCHANTED] = tut_slow;
+        learned_something_new(HINT_POSTBERSERK);
+        Hints.hints_events[HINT_YOU_ENCHANTED] = hints_slow;
     }
 
     if (_decrement_a_duration(DUR_CORONA, delay))
@@ -2549,7 +2549,7 @@ void world_reacts()
     }
 
 #ifdef USE_TILE
-    if (Tutorial.tutorial_left)
+    if (Hints.hints_left)
     {
         tiles.clear_text_tags(TAG_TUTORIAL);
         tiles.place_cursor(CURSOR_TUTORIAL, Region::NO_CURSOR);

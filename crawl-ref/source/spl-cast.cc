@@ -59,7 +59,7 @@
 #include "stuff.h"
 #include "areas.h"
 #include "transform.h"
-#include "tutorial.h"
+#include "hints.h"
 #include "view.h"
 #include "shout.h"
 #include "colour.h"
@@ -536,8 +536,8 @@ void do_cast_spell_cmd(bool force)
         return;
     }
 
-    if (Tutorial.tutorial_left)
-        Tutorial.tut_spell_counter++;
+    if (Hints.hints_left)
+        Hints.hints_spell_counter++;
     if (!cast_a_spell(!force))
         flush_input_buffer(FLUSH_ON_FAILURE);
 }
@@ -680,7 +680,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         if (spellh > 0)
         {
             make_hungry(spellh, true);
-            learned_something_new(TUT_SPELL_HUNGER);
+            learned_something_new(HINT_SPELL_HUNGER);
         }
     }
 
@@ -1202,7 +1202,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
 
             mpr("You miscast the spell.");
             flush_input_buffer(FLUSH_ON_FAILURE);
-            learned_something_new(TUT_SPELL_MISCAST);
+            learned_something_new(HINT_SPELL_MISCAST);
 
             if (you.religion == GOD_SIF_MUNA
                 && !player_under_penance()

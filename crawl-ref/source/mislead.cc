@@ -13,7 +13,7 @@
 #include "mon-util.h"
 #include "view.h"
 #include "random.h"
-#include "tutorial.h"
+#include "hints.h"
 #include "xom.h"
 
 bool unsuitable_misled_monster(monster_type mons)
@@ -116,7 +116,7 @@ void mons_cast_mislead(monsters *monster)
         else
             mpr("You are even more misled!", MSGCH_WARN);
 
-        learned_something_new(TUT_YOU_ENCHANTED);
+        learned_something_new(HINT_YOU_ENCHANTED);
 
         xom_is_stimulated((you.duration[DUR_MISLED] - old_value)
                            / BASELINE_DELAY);

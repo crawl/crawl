@@ -62,7 +62,7 @@
 #include "terrain.h"
 #include "traps.h"
 #include "travel.h"
-#include "tutorial.h"
+#include "hints.h"
 #include "view.h"
 #include "viewchar.h"
 #include "viewgeom.h"
@@ -3886,7 +3886,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 #if defined(DEBUG_DIAGNOSTICS) && defined(WIZARD)
         debug_stethoscope(mgrd(where));
 #endif
-        if (Tutorial.tutorial_left && tutorial_monster_interesting(mon))
+        if (Hints.hints_left && hints_monster_interesting(mon))
         {
             std::string msg;
 #ifdef USE_TILE
@@ -3953,7 +3953,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
          height_desc.c_str());
 #else
     const bool bloody = is_bloodcovered(where);
-    if (Tutorial.tutorial_left && tutorial_pos_interesting(where.x, where.y))
+    if (Hints.hints_left && hints_pos_interesting(where.x, where.y))
     {
 #ifdef USE_TILE
         feature_desc += " (<w>Right-click</w> for more information.)";

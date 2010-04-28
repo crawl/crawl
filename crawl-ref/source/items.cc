@@ -64,7 +64,7 @@
 #include "state.h"
 #include "terrain.h"
 #include "travel.h"
-#include "tutorial.h"
+#include "hints.h"
 #include "viewchar.h"
 #include "viewgeom.h"
 #include "xom.h"
@@ -742,7 +742,7 @@ void item_check(bool verbose)
         strm << "There are many items here." << std::endl;
 
     if (items.size() > 5)
-        learned_something_new(TUT_MULTI_PICKUP);
+        learned_something_new(HINT_MULTI_PICKUP);
 }
 
 static void _pickup_menu(int item_link)
@@ -801,7 +801,7 @@ static void _pickup_menu(int item_link)
     if (!pickup_warning.empty())
     {
         mpr(pickup_warning.c_str());
-        learned_something_new(TUT_HEAVY_LOAD);
+        learned_something_new(HINT_HEAVY_LOAD);
     }
 
     if (n_did_pickup)
@@ -1145,13 +1145,13 @@ bool pickup_single_item(int link, int qty)
     if (num == -1)
     {
         mpr("You can't carry that many items.");
-        learned_something_new(TUT_HEAVY_LOAD);
+        learned_something_new(HINT_HEAVY_LOAD);
         return (false);
     }
     else if (num == 0)
     {
         mpr("You can't carry that much weight.");
-        learned_something_new(TUT_HEAVY_LOAD);
+        learned_something_new(HINT_HEAVY_LOAD);
         return (false);
     }
 
@@ -1526,7 +1526,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
                  you.gold, you.gold != 1 ? "s" : "");
         }
 
-        learned_something_new(TUT_SEEN_GOLD);
+        learned_something_new(HINT_SEEN_GOLD);
 
         you.turn_is_over = true;
         return (retval);
@@ -1684,11 +1684,11 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         mpr(get_menu_colour_prefix_tags(you.inv[freeslot],
                                         DESC_INVENTORY).c_str());
     }
-    if (Tutorial.tutorial_left)
+    if (Hints.hints_left)
     {
         taken_new_item(item.base_type);
         if (is_artefact(item) || get_equip_desc( item ) != ISFLAG_NO_DESC)
-            learned_something_new(TUT_SEEN_RANDART);
+            learned_something_new(HINT_SEEN_RANDART);
     }
 
     if (item.base_type == OBJ_ORBS

@@ -27,7 +27,7 @@
 #include "mon-place.h"
 #include "mon-project.h"
 #include "terrain.h"
-#include "tutorial.h"
+#include "hints.h"
 #include "mislead.h"
 #include "mgen_data.h"
 #include "coord.h"

@@ -34,7 +34,7 @@
 #include "terrain.h"
 #include "traps.h"
 #include "travel.h"
-#include "tutorial.h"
+#include "hints.h"
 #include "view.h"
 #include "viewchar.h"
 #include "xom.h"
@@ -560,7 +560,7 @@ void up_stairs(dungeon_feature_type force_stair,
         bool stay = (!yesno("Are you sure you want to leave the Dungeon?",
                             false, 'n') || !_check_carrying_orb());
 
-        if (!stay && Tutorial.tutorial_left)
+        if (!stay && Hints.hints_left)
         {
             if (!yesno("Are you *sure*?  Doing so will end the game!", false,
                        'n'))
@@ -1149,7 +1149,7 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
             mpr("You feel Cheibriados slowing down the madness of this place.",
                 MSGCH_GOD, GOD_CHEIBRIADOS);
         }
-        learned_something_new(TUT_ABYSS);
+        learned_something_new(HINT_ABYSS);
         break;
 
     case LEVEL_PANDEMONIUM:

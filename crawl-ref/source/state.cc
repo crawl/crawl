@@ -21,7 +21,7 @@
 #include "religion.h"
 #include "showsymb.h"
 #include "state.h"
-#include "tutorial.h"
+#include "hints.h"
 
 game_state::game_state()
     : game_crashed(false), mouse_enabled(false), waiting_for_command(false),
@@ -222,8 +222,8 @@ bool interrupt_cmd_repeat( activity_interrupt_type ai,
             mpr(text, MSGCH_WARN);
         }
 
-        if (Tutorial.tutorial_left)
-            tutorial_monster_seen(*mon);
+        if (Hints.hints_left)
+            hints_monster_seen(*mon);
 #else
         formatted_string fs( channel_to_colour(MSGCH_WARN) );
         fs.cprintf("%s (", mon->name(DESC_PLAIN, true).c_str());

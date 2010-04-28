@@ -23,7 +23,7 @@
 #include "spl-cast.h"
 #include "sprint.h"
 #include "state.h"
-#include "tutorial.h"
+#include "hints.h"
 
 
 // MAX_COST_LIMIT is the maximum XP amount it will cost to raise a skill
@@ -295,7 +295,7 @@ void _gain_skill_level(skill_type exsk)
     else if (you.skills[exsk] == 1)
     {
         mprf(MSGCH_INTRINSIC_GAIN, "You have gained %s skill!", skill_name(exsk));
-        tut_gained_new_skill(exsk);
+        hints_gained_new_skill(exsk);
     }
     else
     {
@@ -303,7 +303,7 @@ void _gain_skill_level(skill_type exsk)
              skill_name(exsk), you.skills[exsk]);
     }
 
-    learned_something_new(TUT_SKILL_RAISE);
+    learned_something_new(HINT_SKILL_RAISE);
 
     // Recalculate this skill's order for tie breaking skills
     // at its new level.   See skills2.cc::init_skill_order()

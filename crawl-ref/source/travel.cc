@@ -53,7 +53,7 @@
 #endif
 #include "traps.h"
 #include "travel.h"
-#include "tutorial.h"
+#include "hints.h"
 #include "view.h"
 
 #include <algorithm>
@@ -783,7 +783,7 @@ static void _explore_find_target_square()
         if (!estatus)
         {
             mpr("Done exploring.");
-            learned_something_new(TUT_DONE_EXPLORE);
+            learned_something_new(HINT_DONE_EXPLORE);
         }
         else
         {
@@ -2818,8 +2818,8 @@ void start_travel(const coord_def& p)
 
 void start_explore(bool grab_items)
 {
-    if (Tutorial.tut_explored)
-        Tutorial.tut_explored = false;
+    if (Hints.hints_explored)
+        Hints.hints_explored = false;
 
     if (!player_in_mappable_area())
     {
@@ -4056,7 +4056,7 @@ void explore_discoveries::add_item(const item_def &i)
 
     // First item of this type?
     // XXX: Only works when travelling.
-    tutorial_first_item(i);
+    hints_first_item(i);
 }
 
 void explore_discoveries::found_item(const coord_def &pos, const item_def &i)
@@ -4181,8 +4181,8 @@ bool explore_discoveries::prompt_stop() const
 
 void do_interlevel_travel()
 {
-    if (Tutorial.tut_travel)
-        Tutorial.tut_travel = 0;
+    if (Hints.hints_travel)
+        Hints.hints_travel = 0;
 
     if (!can_travel_interlevel())
     {

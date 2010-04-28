@@ -22,7 +22,7 @@
 #include "tags.h"
 #include "terrain.h"
 #include "travel.h"
-#include "tutorial.h"
+#include "hints.h"
 #include "view.h"
 
 static bool _mon_needs_auto_exclude(const monsters *mon, bool sleepy = false)
@@ -77,7 +77,7 @@ void set_auto_exclude(const monsters *mon)
 #ifdef USE_TILE
         viewwindow(false);
 #endif
-        learned_something_new(TUT_AUTO_EXCLUSION, mon->pos());
+        learned_something_new(HINT_AUTO_EXCLUSION, mon->pos());
     }
 }
 

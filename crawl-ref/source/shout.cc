@@ -29,7 +29,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "areas.h"
-#include "tutorial.h"
+#include "hints.h"
 #include "view.h"
 
 #include <sstream>
@@ -291,8 +291,8 @@ void handle_monster_shouts(monsters* monster, bool force)
     const int  noise_level = get_shout_noise_level(s_type);
     const bool heard       = noisy(noise_level, monster->pos(), monster->mindex());
 
-    if (Tutorial.tutorial_left && (heard || you.can_see(monster)))
-        learned_something_new(TUT_MONSTER_SHOUT, monster->pos());
+    if (Hints.hints_left && (heard || you.can_see(monster)))
+        learned_something_new(HINT_MONSTER_SHOUT, monster->pos());
 }
 
 #ifdef WIZARD

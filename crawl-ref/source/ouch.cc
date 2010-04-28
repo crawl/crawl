@@ -67,7 +67,7 @@
 #include "spells4.h"
 #include "state.h"
 #include "stuff.h"
-#include "tutorial.h"
+#include "hints.h"
 #include "view.h"
 #include "shout.h"
 #include "xom.h"
@@ -1289,8 +1289,8 @@ void end_game(scorefile_entry &se)
         flush_prev_message();
         viewwindow(false); // don't do for leaving/winning characters
 
-        if (Tutorial.tutorial_left)
-            tutorial_death_screen();
+        if (Hints.hints_left)
+            hints_death_screen();
     }
 
     if (!dump_char(morgue_name(se.death_time), false, true, &se))

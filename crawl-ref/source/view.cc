@@ -65,7 +65,7 @@
 #include "tilemcache.h"
 #include "tilesdl.h"
 #include "travel.h"
-#include "tutorial.h"
+#include "hints.h"
 #include "xom.h"
 
 #ifdef USE_TILE
@@ -728,8 +728,8 @@ static int player_view_update_at(const coord_def &gc)
     }
 
     // Print tutorial messages for features in LOS.
-    if (Tutorial.tutorial_left)
-        tutorial_observe_cell(gc);
+    if (Hints.hints_left)
+        hints_observe_cell(gc);
 
     if (is_terrain_changed(gc) || !is_terrain_seen(gc))
         ret |= UF_AFFECT_EXCLUDES;
