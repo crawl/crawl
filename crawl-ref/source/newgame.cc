@@ -329,6 +329,7 @@ static void _choose_char(newgame_def* ng, newgame_def* choice,
 {
     ng->name = choice->name;
     ng->type = choice->type;
+    const newgame_def ng_reset = *ng;
 
     if (ng->type == GAME_TYPE_TUTORIAL)
         _choose_tutorial_character(choice);
@@ -352,14 +353,10 @@ static void _choose_char(newgame_def* ng, newgame_def* choice,
             return;
         }
 
-        // Else choose again, name stays same.
-        const std::string old_name = ng->name;
-
+        // Else choose again, name and type stays same.
         defaults = *choice;
-        *ng = newgame_def();
-        *choice = newgame_def();
-
-        ng->name = old_name;
+        *ng = ng_reset;
+        *choice = ng_reset;
     }
 }
 
