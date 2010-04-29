@@ -320,14 +320,27 @@ void give_basic_mutations(species_type speci)
         you.demon_pow[i] = you.mutation[i];
 }
 
+void _newgame_make_item_tutorial(int slot, equipment_type eqslot,
+                                 object_class_type base,
+                                 int sub_type, int replacement = -1,
+                                 int qty = 1, int plus = 0, int plus2 = 0)
+{
+    newgame_make_item(slot, eqslot, base, sub_type, replacement, qty, plus,
+                      plus2, true);
+}
+
 // Creates an item of a given base and sub type.
 // replacement is used when handing out armour that is not wearable for
 // some species; otherwise use -1.
 void newgame_make_item(int slot, equipment_type eqslot,
                        object_class_type base,
                        int sub_type, int replacement,
-                       int qty, int plus, int plus2)
+                       int qty, int plus, int plus2, bool force_tutorial)
 {
+    // Don't set normal equipment in the tutorial.
+    if (!force_tutorial && crawl_state.game_is_tutorial())
+        return;
+
     if (slot == -1)
     {
         // If another of the item type is already there, add to the
@@ -1248,7 +1261,7 @@ static void _give_starting_food()
         item.quantity = 2;
 
     const int slot = find_free_slot(item);
-    you.inv[slot] = item;       // will ASSERT if couldn't find free slot
+    you.inv[slot]  = item;       // will ASSERT if couldn't find free slot
 }
 
 void _setup_tutorial_miscs()
@@ -1256,17 +1269,20 @@ void _setup_tutorial_miscs()
     // Give him spellcasting
     you.skills[SK_SPELLCASTING] = 3;
     you.skills[SK_CONJURATIONS] = 1;
-    // Give him some mana to play around with
+
+    // Give him some mana to play around with.
     inc_max_mp(2);
-    // Get rid of the starting items!
-    you.equip[EQ_WEAPON] = -1;
-    you.equip[EQ_BODY_ARMOUR] = -1;
-    you.equip[EQ_SHIELD] = -1;
-    newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE, -1,
-                       1, 0, 0);
-    newgame_make_item(1, EQ_BOOTS, OBJ_ARMOUR, ARM_BOOTS, -1, 1, 0, 0);
-    // Make him hungry for the butchering tutorial
-    you.hunger = 2650;
+
+    _newgame_make_item_tutorial(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
+
+    // No need for Shields skill without shield.
+    you.skills[SK_SHIELDS] = 0;
+
+    // Make him hungry for the butchering tutorial.
+    you.hunger = 2700;
+
+    // Set Str low enough for the burdened tutorial.
+    you.base_stats[STAT_STR] = 14;
 }
 
 static void _mark_starting_books()
@@ -1626,16 +1642,14 @@ static void _setup_generic(const newgame_def& ng)
         roll_demonspawn_mutations();
 
     _give_starting_food();
+
     if (crawl_state.game_is_sprint())
-    {
         sprint_give_items();
-    }
 
     // Give tutorial skills etc
     if (crawl_state.game_is_tutorial())
-    {
         _setup_tutorial_miscs();
-    }
+
     _mark_starting_books();
     _racialise_starting_equipment();
 
