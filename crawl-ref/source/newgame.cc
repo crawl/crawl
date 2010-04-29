@@ -2032,13 +2032,20 @@ static void _prompt_sprint_map(const newgame_def* ng, newgame_def* ng_choice,
     }
 
     textcolor(BROWN);
-    cprintf("\n* - Random choice; X - Quit\n");
+    cprintf("\n* - Random choice; X - Quit");
 
     if (!defaults.map.empty())
     {
         // Should check that it actually occurs in maps.
         cprintf("; Enter - %s", defaults.map.c_str());
     }
+ 
+    const bool tab_enabled = (defaults.type == GAME_TYPE_SPRINT
+                && !defaults.map.empty()
+                && _char_defined(defaults));
+    // TODO: Should describe choice here: char + map.
+    if (tab_enabled)
+        cprintf("; Tab - %s", "last game's choice");
 
     cprintf("\n");
 
@@ -2060,6 +2067,14 @@ static void _prompt_sprint_map(const newgame_def* ng, newgame_def* ng_choice,
             if (!defaults.map.empty())
             {
                 ng_choice->map = defaults.map;
+                return;
+            }
+            else
+                continue;
+        case '\t':
+            if (tab_enabled)
+            {
+                *ng_choice = defaults;
                 return;
             }
             else
