@@ -1474,8 +1474,6 @@ static const facet_def _demon_facets[] =
       { 2, 2, 2 } },
     { { MUT_SPINY, MUT_SPINY, MUT_SPINY },
       { 2, 2, 2 } },
-    { { MUT_SLOW_METABOLISM, MUT_SLOW_METABOLISM, MUT_SLOW_METABOLISM },
-      { 1, 1, 1 } },
     { { MUT_SPIT_POISON, MUT_SPIT_POISON, MUT_SPIT_POISON },
       { 1, 1, 1 } },
     // Scale mutations
@@ -1563,12 +1561,6 @@ try_again:
                 if (_is_covering(m))
                     ++scales;
 
-                if (m == MUT_SLOW_METABOLISM)
-                    slow_dig = 1;
-
-                if (m == MUT_REGENERATION)
-                    regen = 1;
-
                 if (m == MUT_SPIT_POISON || m == MUT_BREATHE_POISON
                         || m == MUT_BREATHE_FLAMES)
                     breath_weapons++;
@@ -1590,9 +1582,6 @@ try_again:
         goto try_again;
 
     if (slots_lost != 1)
-        goto try_again;
-
-    if (slow_dig && regen)
         goto try_again;
 
     if (breath_weapons > 1)
