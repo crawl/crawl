@@ -1487,12 +1487,12 @@ static const facet_def _demon_facets[] =
       { 1, 1, 1 } },
     { { MUT_MOLTEN_SCALES, MUT_MOLTEN_SCALES, MUT_MOLTEN_SCALES },
       { 1, 1, 1 } },
-    { { MUT_ROUGH_BLACK_SCALES, MUT_ROUGH_BLACK_SCALES, MUT_ROUGH_BLACK_SCALES},
+    { { MUT_ROUGH_BLACK_SCALES, MUT_ROUGH_BLACK_SCALES, MUT_ROUGH_BLACK_SCALES },
       { 1, 1, 1 } },
     { { MUT_RUGGED_BROWN_SCALES, MUT_RUGGED_BROWN_SCALES,
         MUT_RUGGED_BROWN_SCALES },
       { 1, 1, 1 } },
-    { { MUT_SLIMY_GREEN_SCALES, MUT_SLIMY_GREEN_SCALES, MUT_SLIMY_GREEN_SCALES},
+    { { MUT_SLIMY_GREEN_SCALES, MUT_SLIMY_GREEN_SCALES, MUT_SLIMY_GREEN_SCALES },
       { 1, 1, 1 } },
     { { MUT_THIN_METALLIC_SCALES, MUT_THIN_METALLIC_SCALES,
         MUT_THIN_METALLIC_SCALES },
@@ -1559,17 +1559,28 @@ try_again:
                 if (_is_covering(m))
                     ++scales;
 
-                if (m == MUT_SPIT_POISON || m == MUT_BREATHE_POISON
-                        || m == MUT_BREATHE_FLAMES)
+                if (m == MUT_SPIT_POISON
+                    || m == MUT_BREATHE_POISON
+                    || m == MUT_BREATHE_FLAMES)
+                {
                     breath_weapons++;
+                }
 
-                if (m == MUT_COLD_RESISTANCE || m == MUT_BREATHE_FLAMES)
+                if (m == MUT_COLD_RESISTANCE
+                    || m == MUT_BREATHE_FLAMES)
+                {
                     elemental++;
+                }
 
-                if (m == MUT_CLAWS && i == 2 || m == MUT_HORNS && i == 0 ||
-                    m == MUT_BEAK && i == 0 || m == MUT_ANTENNAE && i == 0 ||
-                    m == MUT_TALONS && i == 2 || m == MUT_HOOVES && i == 2)
+                if (m == MUT_CLAWS && i == 2
+                    || m == MUT_HORNS && i == 0
+                    || m == MUT_BEAK && i == 0
+                    || m == MUT_ANTENNAE && i == 0
+                    || m == MUT_TALONS && i == 2
+                    || m == MUT_HOOVES && i == 2)
+                {
                     ++slots_lost;
+                }
             }
 
             ++absfacet;
