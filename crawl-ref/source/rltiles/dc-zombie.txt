@@ -19,12 +19,26 @@ zombie_hydra3
 zombie_hydra4
 zombie_hydra5
 
-%sdir dc-mon/undead
+%sdir dc-mon/undead/skeletons
 ## Skeletons
-skeleton_small MONS_SKELETON_SMALL
-skeleton_large MONS_SKELETON_LARGE
+skeleton_humanoid_small MONS_SKELETON_SMALL
+skeleton_humanoid_large MONS_SKELETON_LARGE
+skeleton_quadruped_small MONS_SKELETON_QUADRUPED_SMALL
+skeleton_quadruped_large MONS_SKELETON_QUADRUPED_LARGE
+skeleton_bat MONS_SKELETON_BAT
+skeleton_fish MONS_SKELETON_FISH
+skeleton_centaur MONS_SKELETON_CENTAUR
+skeleton_naga MONS_SKELETON_NAGA
+skeleton_snake MONS_SKELETON_SNAKE
+skeleton_dragon MONS_SKELETON_DRAGON
+skeleton_hydra1 MONS_SKELETON_HYDRA
+skeleton_hydra2
+skeleton_hydra3
+skeleton_hydra4
+skeleton_hydra5
 
 ## Simulacra
+%sdir dc-mon/undead
 simulacrum_small MONS_SIMULACRUM_SMALL
 simulacrum_large MONS_SIMULACRUM_LARGE
 
