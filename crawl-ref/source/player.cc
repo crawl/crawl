@@ -2238,11 +2238,17 @@ int player_body_armour_racial_spellcasting_bonus(const int scale)
 int player_armour_shield_spell_penalty()
 {
     const int scale = 100;
-    return ((25 * player_adjusted_body_armour_evasion_penalty(scale)
-             + 25 * player_adjusted_shield_evasion_penalty(scale)
-             - 20 * scale
-             - player_body_armour_racial_spellcasting_bonus(scale))
-            / scale);
+
+    const int body_armour_penalty =
+        std::max(25 * player_adjusted_body_armour_evasion_penalty(scale)
+                    - player_body_armour_racial_spellcasting_bonus(scale),
+                 0);
+
+    const int total_penalty = body_armour_penalty
+                 + 25 * player_adjusted_shield_evasion_penalty(scale)
+                 - 20 * scale;
+
+    return (std::max(total_penalty, 0) / scale);
 }
 
 int player_magical_power(void)
