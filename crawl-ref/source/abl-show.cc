@@ -2097,7 +2097,7 @@ int choose_ability_menu(const std::vector<talent>& talents)
     if (Hints.hints_left)
     {
         // XXX: This could be buggy if you manage to pick up lots and
-        // lots of abilities during the tutorial.
+        // lots of abilities during hints mode.
         abil_menu.set_more(hints_abilities_info());
     }
     else

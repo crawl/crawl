@@ -727,7 +727,7 @@ static int player_view_update_at(const coord_def &gc)
         }
     }
 
-    // Print tutorial messages for features in LOS.
+    // Print hints mode messages for features in LOS.
     if (Hints.hints_left)
         hints_observe_cell(gc);
 

@@ -181,7 +181,7 @@ void pick_hints(newgame_def* choice)
         "\n"
         "<brown>SPACE - Back to background selection; "
         "Bksp - Back to species selection; X - Quit"
-        "\n* - Random tutorial"
+        "\n* - Random hints mode character"
         "</brown>\n").display();
 
     while (true)
@@ -192,7 +192,7 @@ void pick_hints(newgame_def* choice)
         if (keyn == '*' || keyn == '+' || keyn == '!' || keyn == '#')
             keyn = 'a' + random2(HINT_TYPES_NUM);
 
-        // Choose character for tutorial game and set starting values.
+        // Choose character for hints mode game and set starting values.
         if (keyn >= 'a' && keyn <= 'a' + HINT_TYPES_NUM - 1)
         {
             Hints.hints_type = keyn - 'a';
@@ -298,7 +298,7 @@ void hints_zap_secret_doors()
             grd(*ri) = DNGN_CLOSED_DOOR;
 }
 
-// Prints the tutorial welcome screen.
+// Prints the hints mode welcome screen.
 static void _hints_print_starting_info(unsigned int width)
 {
     std::string text;
@@ -318,8 +318,9 @@ static void _hints_print_starting_info(unsigned int width)
         "  <white>%</white>  - saves the game, to be resumed later "
         "(but note that death is permanent)\n"
         "  <white>%</white>  - examines something in your vicinity\n\n"
-        "This tutorial will help you play Crawl without reading any "
-        "documentation. If you feel intrigued, there is more information "
+        "The hint mode will help you play Crawl without reading any "
+        "documentation. If you haven't yet, you might want to try out "
+        "the tutorial. Also, if you feel intrigued, there is more information "
         "available in the following files from the docs/ folder (all of "
         "which can also be read in-game):"
         "\n"
@@ -514,7 +515,7 @@ static formatted_string _hints_debug()
 {
     std::string result;
     bool lbreak = false;
-    snprintf(info, INFO_SIZE, "Tutorial Debug Screen");
+    snprintf(info, INFO_SIZE, "Hints Mode Debug Screen");
 
     int i = _get_hints_cols()/2-1 - strlen(info) / 2;
     result += std::string(i, ' ');
@@ -549,7 +550,7 @@ static formatted_string _hints_debug()
     result += info;
     result += "\n";
 
-    snprintf(info, INFO_SIZE, "You are a %s %s, and the tutorial will reflect "
+    snprintf(info, INFO_SIZE, "You are a %s %s, and the hint mode will reflect "
              "that.", species_name(you.species, 1), you.class_name);
 
     result += info;
@@ -636,7 +637,7 @@ static void _hints_message_intro()
               "left "
 #endif
               "part of the screen is reserved for messages. "
-              "Everything related to the tutorial is shown in this colour. ";
+              "Everything related to the hint mode is shown in this colour. ";
 
     if (!Options.clear_messages)
     {
@@ -830,7 +831,7 @@ void hints_new_turn()
     }
 }
 
-// Once a tutorial character dies, offer some playing hints.
+// Once a hints mode character dies, offer some last playing hints.
 void hints_death_screen()
 {
     Hints.hints_left = 0;
@@ -965,7 +966,7 @@ void hints_death_screen()
     Hints.hints_events.init(false);
 }
 
-// If a character survives until Xp 7, the tutorial is declared finished
+// If a character survives until Xp 7, the hints mode is declared finished
 // and they get a more advanced playing hint, depending on what they might
 // know by now.
 void hints_finished()
@@ -973,7 +974,7 @@ void hints_finished()
     std::string text;
 
     Hints.hints_left = 0;
-    text =  "Congrats! You survived until the end of this tutorial - be sure "
+    text =  "Congrats! You survived until the end of the hint mode - be sure "
             "to try the other ones as well. Note that the command help screen "
             "(<w>%?</w>) will look very different from now on. Here's a last "
             "playing hint:";
@@ -1062,7 +1063,7 @@ void hints_finished()
 
     Hints.hints_events.init(false);
 
-    // Unlink tutorial file.
+    // Unlink hints mode file.
     const std::string basename = get_savedir_filename(you.your_name, "", "");
     const std::string tmpname = basename + ".tut";
     unlink( tmpname.c_str() );
@@ -1101,7 +1102,7 @@ void hints_dissection_reminder(bool healthy)
                 "<w>left mouse button</w>";
 #endif
 
-        text += ". Whenever you view a corpse while in tutorial mode you can "
+        text += ". Whenever you view a corpse while in hint mode you can "
                 "reread this information.";
 
         mpr(text, MSGCH_TUTORIAL, 0);
@@ -1754,7 +1755,7 @@ static bool _rare_hints_event(hints_event_type event)
     }
 }
 
-// Here most of the tutorial messages for various triggers are handled.
+// Here most of the hints mode messages for various triggers are handled.
 void learned_something_new(hints_event_type seen_what, coord_def gc)
 {
     // Already learned about that.
@@ -1852,7 +1853,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             text << "\nHowever, first you will have to get accustomed to "
                     "spellcasting by reading lots of scrolls.";
         }
-        text << "\nDuring the tutorial you can reread this information at "
+        text << "\nIn hint mode you can reread this information at "
                 "any time by "
 #ifndef USE_TILE
                 "having a look in your <w>%</w>nventory at the item in "
@@ -2052,7 +2053,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                     "accept rotting flesh.";
             cmd.push_back(CMD_PRAY);
         }
-        text << "\nDuring the tutorial you can reread this information at "
+        text << "\nIn hint mode you can reread this information at "
                 "any time by selecting the item in question in your "
                 "<w>%</w>nventory.";
         cmd.push_back(CMD_DISPLAY_INVENTORY);
@@ -2118,7 +2119,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         text << " Both wielding and evoking a wielded item can be achieved "
                 "by clicking on it with your <w>left mouse button</w>.";
 #endif
-        text << "\nDuring the tutorial you can reread this information at "
+        text << "\nIn hint mode you can reread this information at "
                 "any time by selecting the item in question in your "
                 "<w>%</w>nventory.";
         cmd.push_back(CMD_DISPLAY_INVENTORY);
@@ -2232,7 +2233,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
 
     case HINT_SEEN_PORTAL:
-        // Delay in the unlikely event that a player still in tutorial mode
+        // Delay in the unlikely event that a player still in hints mode
         // creates a portal with a Trowel card, since a portal vault
         // entry's description doesn't seem to get set properly until
         // after the vault is done being placed.
@@ -2891,7 +2892,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_AUTO_EXCLUSION:
         // In the highly unlikely case the player encounters a
-        // hostile statue or oklob plant during the tutorial...
+        // hostile statue or oklob plant during the hints mode...
         if (Hints.hints_explored)
         {
             // Hack: Reset hints_just_triggered, to force recursive calling of
@@ -4709,7 +4710,7 @@ static void _hints_describe_feature(int x, int y)
 
                 // I think right now Sif Muna is the only god for whom
                 // you can find altars early and who may refuse to accept
-                // worship by one of the tutorial characters. (jpeg)
+                // worship by one of the hint mode characters. (jpeg)
                 if (altar_god == GOD_SIF_MUNA
                     && !player_can_join_god(altar_god))
                 {

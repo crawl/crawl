@@ -1451,7 +1451,7 @@ int monster_die(monsters *monster, killer_type killer,
                     mpr("That felt strangely unrewarding.");
             }
 
-            // Killing triggers tutorial lesson.
+            // Killing triggers hints mode lesson.
             if (gives_xp)
                 _hints_inspect_kill();
 
@@ -2629,7 +2629,7 @@ void corrode_monster(monsters *monster)
             }
         }
     }
-}              
+}
 
 static bool _habitat_okay( const monsters *monster, dungeon_feature_type targ )
 {

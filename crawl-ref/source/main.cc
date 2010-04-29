@@ -200,7 +200,7 @@ static void _show_commandline_options_help();
 static void _wanderer_startup_message();
 static void _god_greeting_message(bool game_start);
 static void _take_starting_note();
-static void _startup_tutorial();
+static void _startup_hints_mode();
 
 static void _compile_time_asserts();
 
@@ -267,7 +267,7 @@ int main(int argc, char *argv[])
     // Attach the macro key recorder
     add_key_recorder(&repeat_again_rec);
 
-    // Override some options for tutorial.
+    // Override some options when playing in hints mode.
     init_hints_options();
 
     if (!crawl_state.game_is_tutorial())
@@ -304,7 +304,7 @@ int main(int argc, char *argv[])
     {
         // TODO: convert this to the hints mode
         if (Hints.hints_left)
-            _startup_tutorial();
+            _startup_hints_mode();
         _take_starting_note();
     }
     else
@@ -479,13 +479,13 @@ static void _take_starting_note()
                    notestr.str().c_str()));
 }
 
-static void _startup_tutorial()
+static void _startup_hints_mode()
 {
     // Don't allow triggering at game start.
     Hints.hints_just_triggered = true;
 
     msg::streams(MSGCH_TUTORIAL)
-        << "Press any key to start the tutorial intro, or Escape to skip it."
+        << "Press any key to start the hints mode intro, or Escape to skip it."
         << std::endl;
 
     flush_prev_message();
@@ -2308,7 +2308,7 @@ static void _decrement_durations()
         // duration.
         you.increase_duration(DUR_EXHAUSTED, dur * 2);
 
-        // Don't trigger too many tutorial messages.
+        // Don't trigger too many hints mode messages.
         const bool hints_slow = Hints.hints_events[HINT_YOU_ENCHANTED];
         Hints.hints_events[HINT_YOU_ENCHANTED] = false;
 

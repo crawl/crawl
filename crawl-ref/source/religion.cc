@@ -3371,7 +3371,8 @@ void god_pitch(god_type which_god)
     more();
     if (crawl_state.game_is_tutorial())
     {
-        gain_piety(35, true); // tutorial needs minor destruction usable
+        // Tutorial needs minor destruction usable.
+        gain_piety(35, true);
     }
 
     god_welcome_identify_gear();
