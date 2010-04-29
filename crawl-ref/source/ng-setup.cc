@@ -1530,15 +1530,12 @@ void setup_game(const newgame_def& ng)
     {
     case GAME_TYPE_NORMAL:
         _setup_normal_game();
-        _setup_generic(ng);
         break;
     case GAME_TYPE_TUTORIAL:
         _setup_tutorial();
-        _setup_generic(ng);
         break;
     case GAME_TYPE_SPRINT:
         _setup_sprint(ng);
-        _setup_generic(ng);
         break;
     case GAME_TYPE_ARENA:
         _setup_arena();
@@ -1546,12 +1543,13 @@ void setup_game(const newgame_def& ng)
         return;
     case GAME_TYPE_HINTS:
         _setup_hints();
-        _setup_generic(ng);
         return;
     default:
         ASSERT(!"Bad game type");
         end(-1);
     }
+
+    _setup_generic(ng);
 }
 
 /**
