@@ -1517,8 +1517,8 @@ static void _apply_job_colour(item_def &item)
 static void _setup_normal_game();
 static void _setup_tutorial();
 static void _setup_sprint(const newgame_def& ng);
-static void _setup_arena();
 static void _setup_hints();
+static void _setup_arena();
 static void _setup_generic(const newgame_def& ng);
 
 // Initialise a game based on the choice stored in ng.
@@ -1537,12 +1537,12 @@ void setup_game(const newgame_def& ng)
     case GAME_TYPE_SPRINT:
         _setup_sprint(ng);
         break;
-    case GAME_TYPE_ARENA:
-        _setup_arena();
-        // this will never happen
-        return;
     case GAME_TYPE_HINTS:
         _setup_hints();
+        break;
+    case GAME_TYPE_ARENA:
+        _setup_arena();
+        // This will never happen.
         return;
     default:
         ASSERT(!"Bad game type");
