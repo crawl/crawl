@@ -2686,7 +2686,7 @@ COLORS MenuItem::get_highlight_colour() const
 
 void MenuItem::set_bg_colour(COLORS colour)
 {
-    m_bg_colour = colour << 4;
+    m_bg_colour = colour;
     m_dirty = true;
 }
 
@@ -2703,7 +2703,7 @@ COLORS MenuItem::get_fg_colour() const
 
 COLORS MenuItem::get_bg_colour() const
 {
-    return static_cast<COLORS> (m_bg_colour >> 4);
+    return static_cast<COLORS> (m_bg_colour);
 }
 
 void MenuItem::set_visible(bool flag)
@@ -2792,7 +2792,8 @@ void TextItem::render()
     {
         endline_pos = m_render_text.find('\n', newline_pos);
         cgotoxy(m_min_coord.x, m_min_coord.y + i);
-        textcolor(m_fg_colour | m_bg_colour);
+        textcolor(m_fg_colour);
+        textbackground(m_bg_colour);
         cprintf("%s", m_render_text.substr(newline_pos, endline_pos).c_str());
         if (endline_pos != std::string::npos)
         {
@@ -2803,6 +2804,8 @@ void TextItem::render()
             break;
         }
     }
+    // clear text background
+    textbackground(BLACK);
 #endif
 }
 
@@ -4105,7 +4108,8 @@ void MenuDescriptor::_place_items()
         // update
         m_active_item = tmp;
 #ifndef USE_TILE
-        textcolor(BLACK | BLACK << 4);
+        textcolor(BLACK);
+        textbackground(BLACK);
         for (int i = 0; i < m_desc_item.get_max_coord().y
                             - m_desc_item.get_min_coord().y; ++i)
         {
