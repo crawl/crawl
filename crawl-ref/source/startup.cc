@@ -276,10 +276,10 @@ void _post_init(bool newc)
         origin_set_inventory(origin_set_unknown);
 
         // For a new game, wipe out monsters in LOS, and
-        // for new tutorial games also the items.
+        // for new hints mode games also the items.
         zap_los_monsters(Hints.hints_events[HINT_SEEN_FIRST_OBJECT]);
 
-        // For a newly started tutorial, turn secret doors into normal ones.
+        // For a newly started hints mode, turn secret doors into normal ones.
         if (Hints.hints_left)
             hints_zap_secret_doors();
     }
@@ -318,8 +318,8 @@ void _construct_game_modes_menu(MenuScroller* menu)
     // Scroller does not care about x-coordinates and only cares about
     // item height obtained from max.y - min.y
     tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
-    tmp->set_description_text("Dungeon Crawl: The main game: full of monsters,"
-                              " items, gods and danger!");
+    tmp->set_description_text("Dungeon Crawl: The main game: full of monsters, "
+                              "items, gods and danger!");
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
@@ -332,8 +332,8 @@ void _construct_game_modes_menu(MenuScroller* menu)
     // Scroller does not care about x-coordinates and only cares about
     // item height obtained from max.y - min.y
     tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
-    tmp->set_description_text("Tutorial that covers the basics of Dungeon crawl"
-                              " survival.");
+    tmp->set_description_text("Tutorial that covers the basics of "
+                              "Dungeon Crawl survival.");
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
@@ -346,21 +346,8 @@ void _construct_game_modes_menu(MenuScroller* menu)
     // Scroller does not care about x-coordinates and only cares about
     // item height obtained from max.y - min.y
     tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
-    tmp->set_description_text("A mostly normal game that provides more advanced"
-                              " hints than the tutorial.");
-    menu->attach_item(tmp);
-    tmp->set_visible(true);
-
-    tmp = new TextItem();
-    text = "Instructions";
-    tmp->set_text(text);
-    tmp->set_fg_colour(WHITE);
-    tmp->set_highlight_colour(WHITE);
-    tmp->set_id('?');
-    // Scroller does not care about x-coordinates and only cares about
-    // item height obtained from max.y - min.y
-    tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
-    tmp->set_description_text("Help menu.");
+    tmp->set_description_text("A mostly normal game that provides more "
+                              "advanced hints than the tutorial.");
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
@@ -374,6 +361,19 @@ void _construct_game_modes_menu(MenuScroller* menu)
     // item height obtained from max.y - min.y
     tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
     tmp->set_description_text("Hard, fixed single level game mode.");
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
+
+    tmp = new TextItem();
+    text = "Instructions";
+    tmp->set_text(text);
+    tmp->set_fg_colour(WHITE);
+    tmp->set_highlight_colour(WHITE);
+    tmp->set_id('?');
+    // Scroller does not care about x-coordinates and only cares about
+    // item height obtained from max.y - min.y
+    tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
+    tmp->set_description_text("Help menu.");
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
@@ -556,7 +556,7 @@ static void _show_startup_menu(newgame_def* ng_choice,
     {
         menu.set_active_object(save_games);
         save_games->set_active_item(save);
-    }        
+    }
     else if (defaults.type != NUM_GAME_TYPE)
     {
         menu.set_active_object(game_modes);

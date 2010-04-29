@@ -2364,7 +2364,7 @@ bool describe_item( item_def &item, bool allow_inscribe, bool shopping )
 // * using the inscribe command ('{') -> msgwin = true
 // * from the inventory when viewing an item -> msgwin = false
 //
-// msgwin also controls whether a tutorial explanation can be
+// msgwin also controls whether a hints mode explanation can be
 // shown, or whether the pre- and post-inscription item names need to be
 // printed.
 void inscribe_item(item_def &item, bool msgwin)

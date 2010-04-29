@@ -62,9 +62,10 @@ end
 function tutorial.message0 ()
   local text = "Great! There's another <blue>blue square</blue> further up the corridor. Head for that next."
 
-  if not crawl.is_tiles() then
+-- I think this is useful information even for Tiles. (jpeg)
+--  if not crawl.is_tiles() then
     text = "Great! However, pressing the same key multiple times can be a bit tedious, and sometimes outright dangerous. There's another <blue>blue square</blue> down the corridor. You can safely 'run' to the right with " .. tutorial.get_cmd("CMD_RUN_RIGHT") .. ". Try it!"
-  end
+--  end
 
   return tutorial.message(text, "tutorial", true)
 end
@@ -298,7 +299,7 @@ MARKER:  B = lua:tutorial.message( "Look for the secret door in the glass wall. 
 MARKER:  C = lua:tutorial.message( "Here's an altar to one of the gods in the game. You can <white>p</white>ray on an altar to start worshipping. Confirm your choice with a capital <white>Y</white>. Back in the game, you can then press <white>^</white> (or <white>right-click</white> on your character) to read the description of whatever god you're worshipping at the time.", "tutorial", "true" )
 MARKER:  D = lua:tutorial.message( "Makhleb accepts kills and corpse sacrifices. Kill these rats, and then <white>p</white>ray over their corpses to sacrifice them to Makhleb.", "tutorial", "true" )
 MARKER:  E = lua:tutorial.message( "Use the Minor Destruction <white>a</white>bility to attack this annoying dummy.", "tutorial", "true" )
-MARKER:  F = lua:tutorial.message( "Behind this door is Sigmund. He is a powerful unique monster, and is likely to kill you. In Crawl, running away is often a very important tactic. Thanks for playing the tutorial!", "tutorial", "true" )
+MARKER:  F = lua:tutorial.message( "Behind this door is Sigmund. He is a powerful unique monster, and is likely to kill you. In Crawl, running away is often a very important tactic. You might want to also try playing the game with enabled hints mode. Thanks for playing the tutorial!", "tutorial", "true" )
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x(xxxxxxxxxxxxxxxxxxxxxxxx].)x
@@ -320,5 +321,5 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 # TODO: The game should end after dying to Sigm.. after managing to enter D:5
-# Could have a conglatulatory map as D:5 with nice scenery.
+# Could have a congratulatory map as D:5 with nice scenery.
 

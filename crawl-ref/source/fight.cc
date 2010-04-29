@@ -5792,7 +5792,7 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
 
         const bool result = yesno(prompt.c_str(), true, 'n');
 
-        learned_something_new(HINT_WIELD_WEAPON); // for tutorial Rangers
+        learned_something_new(HINT_WIELD_WEAPON); // for hints mode Rangers
 
         // Don't warn again if you decide to continue your attack.
         if (result)

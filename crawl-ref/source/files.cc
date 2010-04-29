@@ -1789,7 +1789,7 @@ static void _save_game_base()
         DO_CHMOD_PRIVATE(notesFile.c_str());
     }
 
-    /* tutorial */
+    /* hints mode */
     if (Hints.hints_left)
     {
         std::string tutorFile = get_savedir_filename(you.your_name, "", "tut");
@@ -2187,7 +2187,7 @@ void restore_game(const std::string& name)
         fclose(notesf);
     }
 
-    /* tutorial */
+    /* hints mode */
     std::string tutorFile = get_savedir_filename(name, "", "tut");
     FILE *tutorf = fopen(tutorFile.c_str(), "rb");
     if (tutorf)
