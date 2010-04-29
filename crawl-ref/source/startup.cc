@@ -435,6 +435,13 @@ static int _find_save(const std::vector<player_save_info>& chars,
     return (-1);
 }
 
+static bool _game_defined(const newgame_def& ng)
+{
+    return (ng.type != NUM_GAME_TYPE
+            && ng.species != SP_UNKNOWN
+            && ng.job != JOB_UNKNOWN);
+}
+
 static const int SCROLLER_MARGIN_X = 18;
 static const int GAME_MODES_START_Y = 7;
 static const int SAVE_GAMES_START_Y = GAME_MODES_START_Y + 2 + NUM_GAME_TYPE;
@@ -494,7 +501,11 @@ static void _show_startup_menu(newgame_def* ng_choice,
                        "or load a character.\n"
                        "You can type your name; if you leave it blank "
                        "you will be asked later.\n"
-                       "Press Enter to start.\n";
+                       "Press Enter to start";
+    // TODO: this should include a description of that character.
+    if (_game_defined(defaults))
+        text += ", Tab to repeat the last game's choice";
+    text += ".\n";
     tmp->set_text(text);
     tmp->set_bounds(coord_def(1, MISC_TEXT_START_Y),
                     coord_def(get_number_of_cols() - 2, MISC_TEXT_START_Y + 4));
@@ -577,6 +588,11 @@ static void _show_startup_menu(newgame_def* ng_choice,
         {
             // End the game
             end(0);
+        }
+        else if (keyn == '\t' && _game_defined(defaults))
+        {
+            *ng_choice = defaults;
+            return;
         }
 
         if (!menu.process_key(keyn))
