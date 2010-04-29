@@ -26,6 +26,7 @@
 #include "random.h"
 #include "religion.h"
 #include "species.h"
+#include "sprint.h"
 #include "state.h"
 #include "stuff.h"
 #include "hints.h"
@@ -34,6 +35,8 @@
 #include "tilereg-crt.h"
 #endif
 
+static void _choose_sprint_map(newgame_def* ng, newgame_def* ng_choice,
+                               const newgame_def& defaults);
 static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice,
                           const newgame_def& defaults);
 static bool _choose_book(newgame_def* ng, newgame_def* ng_choice,
@@ -363,8 +366,6 @@ static bool _reroll_random(newgame_def* ng)
 static void _choose_char(newgame_def* ng, newgame_def* choice,
                          newgame_def defaults)
 {
-    ng->name = choice->name;
-    ng->type = choice->type;
     const newgame_def ng_reset = *ng;
 
     if (ng->type == GAME_TYPE_TUTORIAL)
@@ -415,6 +416,12 @@ bool choose_game(newgame_def* ng, newgame_def* choice,
     }
 
     textcolor(LIGHTGREY);
+
+    ng->name = choice->name;
+    ng->type = choice->type;
+
+    if (ng->type == GAME_TYPE_SPRINT)
+        _choose_sprint_map(ng, choice, defaults);
 
     _choose_char(ng, choice, defaults);
 
@@ -2008,4 +2015,96 @@ static bool _choose_wand(newgame_def* ng, newgame_def* ng_choice,
 
     _resolve_wand(ng, ng_choice);
     return (true);
+}
+
+static void _prompt_sprint_map(const newgame_def* ng, newgame_def* ng_choice,
+                               const newgame_def& defaults,
+                               const std::vector<std::string>& maps)
+{
+    textcolor(CYAN);
+    cprintf("\nYou have a choice of maps:\n\n");
+
+    textcolor(LIGHTGREY);
+    for (unsigned int i = 0; i < maps.size(); i++)
+    {
+        const char letter = 'a' + i;
+        cprintf("%c - %s\n", letter, maps[i].c_str());
+    }
+
+    textcolor(BROWN);
+    cprintf("\n* - Random choice; X - Quit\n");
+
+    if (!defaults.map.empty())
+    {
+        // Should check that it actually occurs in maps.
+        cprintf("; Enter - %s", defaults.map.c_str());
+    }
+
+    cprintf("\n");
+
+    while (true)
+    {
+        textcolor(LIGHTGREY);
+
+        int keyin = getch_ck();
+
+        switch (keyin)
+        {
+        case 'X':
+        case CK_ESCAPE:
+            cprintf("\nGoodbye!");
+            end(0);
+            break;
+        case '\r':
+        case '\n':
+            if (!defaults.map.empty())
+            {
+                ng_choice->map = defaults.map;
+                return;
+            }
+            else
+                continue;
+        case '%':
+            list_commands('%');
+            return _prompt_sprint_map(ng, ng_choice, defaults, maps);
+        case '*':
+            ng_choice->map = "random";
+            return;
+        default:
+            if (keyin - 'a' >= 0 && keyin - 'a' < (int)maps.size())
+            {
+                ng_choice->map = maps[keyin - 'a'];
+                return;
+            }
+            else
+                continue;
+        }
+    }
+}
+
+static void _resolve_sprint_map(newgame_def* ng, const newgame_def* ng_choice,
+                                const std::vector<std::string>& maps)
+{
+    if (ng_choice->map == "random")
+        ng->map = maps[random2(maps.size())];
+    else
+        ng->map = ng_choice->map;
+}
+
+static void _choose_sprint_map(newgame_def* ng, newgame_def* ng_choice,
+                               const newgame_def& defaults)
+{
+    std::vector<std::string> maps = get_sprint_maps();
+    if (maps.empty())
+        end(1, true, "No sprint maps found.");
+
+    if (ng_choice->map.empty())
+    {
+        if (maps.size() > 1)
+            _prompt_sprint_map(ng, ng_choice, defaults, maps);
+        else
+            ng_choice->map = maps[0];
+    }
+
+    _resolve_sprint_map(ng, ng_choice, maps);
 }

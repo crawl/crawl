@@ -60,6 +60,7 @@
 #include "spells3.h"
 #include "spl-book.h"
 #include "spl-util.h"
+#include "sprint.h"
 #include "state.h"
 #include "stuff.h"
 #include "tags.h"
@@ -2414,9 +2415,20 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
         && lid.depth == 1)
     {
         if (crawl_state.game_is_sprint())
-            vault = random_map_for_tag("sprint");
+        {
+            vault = find_map_by_name(get_sprint_map());
+            if (vault == NULL)
+            {
+                end(1, false, "Couldn't find selected Sprint map '%s'.",
+                    get_sprint_map().c_str());
+            }
+        }
         else if (crawl_state.game_is_tutorial())
+        {
             vault = find_map_by_name("tutorial_basic_1");
+            if (vault == NULL)
+                end(1, false, "Couldn't find tutorial map.");
+        }
         else
             vault = random_map_for_tag("entry");
     }

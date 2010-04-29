@@ -2,6 +2,7 @@
 
 #include "externs.h"
 #include "items.h"
+#include "maps.h"
 #include "mon-util.h"
 #include "mpr.h"
 #include "player.h"
@@ -72,4 +73,31 @@ int sprint_modify_abyss_exit_chance(int exit_chance)
 bool sprint_veto_random_abyss_monster(monster_type type)
 {
     return random2(20) > (int)get_monster_data(type)->hpdice[0];
+}
+
+std::vector<std::string> get_sprint_maps()
+{
+    // TODO: provide descriptions?
+    std::vector<map_def> mapdefs = find_maps_for_tag("sprint");
+    std::vector<std::string> maps;
+    for (unsigned int i = 0; i < mapdefs.size(); ++i)
+        maps.push_back(mapdefs[i].name);
+    return (maps);
+}
+
+// We could save this in crawl_state instead.
+// Or choose_game() could save *ng to crawl_state
+// entirely, though that'd be redundant with
+// you.your_name, you.species, crawl_state.type, ...
+
+static std::string _sprint_map;
+
+std::string get_sprint_map()
+{
+    return _sprint_map;
+}
+
+void set_sprint_map(const std::string& map)
+{
+    _sprint_map = map;
 }

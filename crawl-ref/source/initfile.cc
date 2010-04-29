@@ -1336,6 +1336,8 @@ static void write_newgame_options(const newgame_def& prefs, FILE *f)
 {
     if (prefs.type != NUM_GAME_TYPE)
         fprintf(f, "type = %s\n", _gametype_to_str(prefs.type).c_str());
+    if (!prefs.map.empty())
+        fprintf(f, "map = %s\n", prefs.map.c_str());
     fprintf(f, "name = %s\n", prefs.name.c_str());
     if (prefs.species != SP_UNKNOWN)
         fprintf(f, "species = %s\n", _species_to_str(prefs.species).c_str());
@@ -2268,6 +2270,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     // no_dark_brand applies here as well.
     else CURSES_OPTION(heap_brand);
     else COLOUR_OPTION(status_caption_colour);
+    else if (key == "map")
+    {
+        game.map = field;
+    }
     else if (key == "type")
     {
         game.type = _str_to_gametype(field);
