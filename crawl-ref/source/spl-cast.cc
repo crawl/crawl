@@ -335,7 +335,7 @@ int spell_fail(spell_type spell)
 
     const int armour_shield_penalty = player_armour_shield_spell_penalty();
     dprf("Armour+Shield spell failure penalty: %d", armour_shield_penalty);
-    chance += std::max(0, armour_shield_penalty);
+    chance += armour_shield_penalty;
 
     if (you.weapon() && you.weapon()->base_type == OBJ_WEAPONS)
     {
