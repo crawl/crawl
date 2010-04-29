@@ -52,6 +52,12 @@
 #ifdef TARGET_OS_WINDOWS
 
 #include <windows.h>
+// WINAPI defines these, but we are already using them in
+// wm_event_type enum,
+// so we have to undef these to have working input when using
+// Windows and Tiles
+#undef WM_KEYDOWN
+#undef WM_KEYUP
 
 #endif
 
