@@ -1613,7 +1613,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
     else
     {
         int i;
-        for (i=0; i<1000; i++)
+        for (i = 0; i < 1000; ++i)
         {
             item.sub_type = _determine_weapon_subtype(item_level);
             if (is_weapon_brand_ok(item.sub_type, item.special))
@@ -1628,7 +1628,7 @@ brand_ok:
     {
         int i;
         int ego = item.special;
-        for (i=0; i<100; i++)
+        for (i = 0; i < 100; ++i)
             if (_try_make_weapon_artefact(item, force_type, 0, true) && is_artefact(item))
             {
                 if (ego > SPWPN_NORMAL)
