@@ -1516,7 +1516,7 @@ static void _apply_job_colour(item_def &item)
 
 static void _setup_normal_game();
 static void _setup_tutorial();
-static void _setup_sprint();
+static void _setup_sprint(const newgame_def& ng);
 static void _setup_arena();
 static void _setup_hints();
 static void _setup_generic(const newgame_def& ng);
@@ -1537,7 +1537,7 @@ void setup_game(const newgame_def& ng)
         _setup_generic(ng);
         break;
     case GAME_TYPE_SPRINT:
-        _setup_sprint();
+        _setup_sprint(ng);
         _setup_generic(ng);
         break;
     case GAME_TYPE_ARENA:
@@ -1588,9 +1588,9 @@ void _setup_arena()
 /**
  * Special steps that sprint needs;
  */
-void _setup_sprint()
+void _setup_sprint(const newgame_def& ng)
 {
-
+    set_sprint_map(ng.map);
 }
 
 /**

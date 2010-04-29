@@ -35,6 +35,10 @@ struct newgame_def
     std::string name;
     game_type type;
 
+    // map name for sprint (or others in the future)
+    // XXX: "random" means a random eligible map
+    std::string map;
+
     species_type species;
     job_type job;
 
