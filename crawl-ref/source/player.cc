@@ -2134,7 +2134,7 @@ int player_scale_evasion(const int prescaled_ev, const int scale)
             const int ev_bonus =
                 std::min(9 * scale,
                          std::max(2 * scale,
-                                  prescaled_ev * scale / 4));
+                                  prescaled_ev / 4));
             return (prescaled_ev + ev_bonus);
         }
         break;
@@ -2146,7 +2146,7 @@ int player_scale_evasion(const int prescaled_ev, const int scale)
             const int ev_bonus =
                 std::min(9 * scale,
                          std::max(1 * scale,
-                                  prescaled_ev * scale / 5));
+                                  prescaled_ev / 5));
             return (prescaled_ev + ev_bonus);
         }
         break;
