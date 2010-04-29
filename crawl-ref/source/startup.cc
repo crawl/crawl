@@ -651,10 +651,12 @@ static void _show_startup_menu(newgame_def* ng_choice,
                 int id = menu.get_active_item()->get_id();
                 switch (id)
                 {
+                case GAME_TYPE_ARENA:
+                    input_string = "";
+                    break;
                 case GAME_TYPE_NORMAL:
                 case GAME_TYPE_TUTORIAL:
                 case GAME_TYPE_SPRINT:
-                case GAME_TYPE_ARENA:
                 case GAME_TYPE_HINTS:
                     // If a game type is chosen, the user expects
                     // to start a new game. Just blanking the name
@@ -731,7 +733,7 @@ bool startup_step()
 
     _initialize();
 
-    newgame_def choice = Options.game;
+    newgame_def choice   = Options.game;
     newgame_def defaults = read_startup_prefs();
 
     // Name from environment overwrites the one from command line.
