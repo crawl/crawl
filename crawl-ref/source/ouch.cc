@@ -1181,13 +1181,14 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 #else
 
     // Only add non-wizards to the score file.
-    // Never generate bones files of wizard characters -- bwr
+    // Never generate bones files of wizard or tutorial characters -- bwr
     if (!you.wizard)
     {
         hiscores_new_entry(se);
         logfile_new_entry(se);
 
-        if (death_type != KILLED_BY_LEAVING
+        if (!crawl_state.game_is_tutorial()
+            && death_type != KILLED_BY_LEAVING
             && death_type != KILLED_BY_WINNING
             && death_type != KILLED_BY_QUITTING)
         {

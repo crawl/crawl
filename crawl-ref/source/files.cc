@@ -1449,7 +1449,8 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         builder(you.absdepth0, you.level_type);
         just_created_level = true;
 
-        if ((you.absdepth0 > 1 || you.level_type != LEVEL_DUNGEON)
+        if (!crawl_state.game_is_tutorial()
+            && (you.absdepth0 > 1 || you.level_type != LEVEL_DUNGEON)
             && one_chance_in(3))
         {
             load_ghost(true);
