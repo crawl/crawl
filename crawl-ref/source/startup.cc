@@ -442,11 +442,11 @@ static bool _game_defined(const newgame_def& ng)
             && ng.job != JOB_UNKNOWN);
 }
 
-static const int SCROLLER_MARGIN_X = 18;
+static const int SCROLLER_MARGIN_X  = 18;
 static const int GAME_MODES_START_Y = 7;
 static const int SAVE_GAMES_START_Y = GAME_MODES_START_Y + 2 + NUM_GAME_TYPE;
-static const int MISC_TEXT_START_Y = 19;
-static const int GAME_MODES_WIDTH = 60;
+static const int MISC_TEXT_START_Y  = 19; // TODO: Respect actual screen size.
+static const int GAME_MODES_WIDTH   = 60;
 /**
  * Saves game mode and player name to ng_choice.
  */

@@ -299,8 +299,22 @@ void hints_zap_secret_doors()
 }
 
 // Prints the hints mode welcome screen.
-static void _hints_print_starting_info(unsigned int width)
+void hints_starting_screen()
 {
+#ifndef USE_TILE
+    cgotoxy(1, 1);
+#endif
+    clrscr();
+
+    int width = _get_hints_cols();
+#ifdef USE_TILE
+    // Use a more sensible screen width.
+    if (width < 80 && width < crawl_view.msgsz.x + crawl_view.hudsz.x)
+        width = crawl_view.msgsz.x + crawl_view.hudsz.x;
+    if (width > 80)
+        width = 80;
+#endif
+
     std::string text;
 
     text  = "<white>Welcome to Dungeon Crawl!</white>\n\n";
@@ -332,13 +346,19 @@ static void _hints_print_starting_info(unsigned int width)
         "Crawl's interface is highly configurable. This document \n"
         "                       explains all the options.\n"
         "\n"
-        "Press <white>Space</white> to proceed to the basics "
-        "(the screen division and movement).\n"
-        "Press <white>Esc</white> to fast forward to the game start.";
+        "Happy Crawling!";
 
     insert_commands(text, CMD_DISPLAY_COMMANDS, CMD_SAVE_GAME, CMD_LOOK_AROUND, 0);
     linebreak_string2(text, width);
     display_tagged_block(text);
+
+#ifndef USE_TILE
+    getch_ck();
+#else
+    mouse_control mc(MOUSE_MODE_MORE);
+    getchm();
+#endif
+    redraw_screen();
 }
 
 #ifdef TUTORIAL_DEBUG
@@ -559,221 +579,6 @@ static formatted_string _hints_debug()
 }
 #endif // debug
 
-#ifndef USE_TILE
-static void _hints_map_intro()
-{
-    std::string result;
-
-    result  = "<";
-    result += colour_to_str(channel_to_colour(MSGCH_TUTORIAL));
-    result += ">";
-    result += "What you see here is the typical Crawl screen. The upper left "
-              "map shows your hero as the <w>@</w> in the center. The parts "
-              "of the map you remember but cannot currently see will be greyed "
-              "out.";
-    result += "</";
-    result += colour_to_str(channel_to_colour(MSGCH_TUTORIAL));
-    result += ">\n";
-
-    mpr(result);
-}
-#endif
-
-static void _hints_stats_intro()
-{
-    std::ostringstream istr;
-
-#ifdef USE_TILE
-    istr << "To the upper right, important properties of the character are "
-            "displayed. The most basic one is Health, shown as "
-            "<w>Health: " << you.hp << "/" << you.hp_max << "</w> "
-            "and meaning current out of maximum health points. When Health "
-            "drops to zero, you die. "
-            "<w>Magic: " << you.magic_points << "/" << you.max_magic_points
-         << "</w> represents your energy for casting spells, although other "
-            "actions often draw from Magic, too.\n"
-            "<w>Str</w>ength, <w>Int</w>elligence, <w>Dex</w>terity below "
-            "provide an all-around account of the character's attributes. "
-            "Don't worry about the rest for now.\n";
-
-    mpr(istr.str(), MSGCH_TUTORIAL, 0);
-#else
-    // Note: must fill up everything to override the map
-    istr << "<"
-         << colour_to_str(channel_to_colour(MSGCH_TUTORIAL))
-         << ">"
-         << "To the right, important properties \n"
-            "of the character are displayed. The \n"
-            "most basic one is Health, shown as \n"
-            "<w>Health: " << you.hp << "/" << you.hp_max << "</w> "
-            "and meaning current \n"
-            "out of maximum health points. When \n"
-            "Health drops to zero, you die. \n"
-            "<w>Magic: " << you.magic_points << "/" << you.max_magic_points
-         << "</w> represents your energy \n"
-            "for casting spells, although other \n"
-            "actions often draw from Magic, too. \n"
-            "<w>Str</w>ength, <w>Int</w>elligence, <w>Dex</w>terity \n"
-            "below provide an all-around account \n"
-            "of the character's attributes. \n"
-            "Don't worry about the rest for now. \n"
-         << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">"
-            "                                      \n"
-            "<lightgrey> --more--                               "
-            "Press <white>Escape</white> to skip the basics.</lightgrey>\n"
-            "                                      \n"
-            "                                      \n";
-
-    display_tagged_block(istr.str());
-#endif
-}
-
-static void _hints_message_intro()
-{
-    std::string result;
-
-    result  = "This lower "
-#ifdef USE_TILE
-              "left "
-#endif
-              "part of the screen is reserved for messages. "
-              "Everything related to the hint mode is shown in this colour. ";
-
-    if (!Options.clear_messages)
-    {
-        result += "Old messages will be displayed until new ones roll in, so "
-                  "you will often see messages from several turns ago. In the "
-                  "message window, the beginning of a new turn is marked with "
-                  "messages getting prefixed with <w>_</w>. ";
-    }
-
-    result += "If you missed something, previous messages can be read again "
-              "with <w>%</w>"
-#ifdef USE_TILE
-              " or by <w>clicking into the message area</w>"
-#endif
-              ".\n";
-    insert_commands(result, CMD_REPLAY_MESSAGES, 0);
-
-#ifdef USE_TILE
-    mpr(result, MSGCH_TUTORIAL, 0);
-
-    result = "To the bottom right of the screen is a display of items. The "
-             "top part is reserved for your inventory, the remaining slots "
-             "may be filled with items beneath you on the floor.\n"
-             "If you click on the tabs to the left of this display you can "
-             "switch to a spell display for currently memorised spells to "
-             "cast them, or to a display of not yet memorised spells "
-             "included in books you are carrying, so as to commit them to "
-             "memory.\n";
-#endif
-
-    mpr(result, MSGCH_TUTORIAL, 0);
-}
-
-static void _hints_movement_info()
-{
-    std::string text =
-        "To move your character, use the numpad; try Numlock both on and off. "
-        "If your system has no number pad, or if you are familiar with the vi "
-        "keys, movement is also possible with <w>%%%%%%%%</w>. "
-#ifdef USE_TILE
-        "You can also move by clicking somewhere on the map. If this is "
-        "considered safe, i.e. there are no monsters around, you'll move "
-        "towards the chosen square."
-#endif
-        "\n"
-        "A basic command list can be found under <w>?\?</w>, and the most "
-        "important commands will be explained to you as it becomes necessary."
-        "\n";
-
-    insert_commands(text, CMD_MOVE_LEFT, CMD_MOVE_DOWN, CMD_MOVE_UP,
-                    CMD_MOVE_RIGHT, CMD_MOVE_UP_LEFT, CMD_MOVE_UP_RIGHT,
-                    CMD_MOVE_DOWN_LEFT, CMD_MOVE_DOWN_RIGHT, 0);
-    mpr(text, MSGCH_TUTORIAL, 0);
-}
-
-// copied from display_mutations and adapted
-void hints_starting_screen()
-{
-    int MAX_INFO = 4;
-#ifdef TUTORIAL_DEBUG
-    MAX_INFO = 5; // add hints_debug
-#endif
-    char ch = 0;
-
-    int i;
-    for (i = 0; i <= MAX_INFO; i++)
-    {
-#ifndef USE_TILE
-        // Map window (starts at 1) or message window (starts at 18).
-        // FIXME: This should be done more cleanly using the
-        //        crawl_view settings!
-        int y_pos = (i == 1 || i == 3) ? 18 : 1;
-
-        cgotoxy(1, y_pos);
-#endif
-        if (i == 0)
-            clrscr();
-
-        int width = _get_hints_cols();
-#ifdef USE_TILE
-        // use a more sensible screen width
-        if (width < 80 && width < crawl_view.msgsz.x + crawl_view.hudsz.x)
-            width = crawl_view.msgsz.x + crawl_view.hudsz.x;
-        if (width > 80)
-            width = 80;
-#endif
-        if (i == 0)
-            _hints_print_starting_info(width);
-        else if (i == 1)
-        {
-#ifdef USE_TILE
-            // Skip map explanation for Tiles.
-            continue;
-#else
-            _hints_map_intro();
-#endif
-        }
-        else if (i == 2)
-            _hints_stats_intro();
-        else if (i == 3)
-            _hints_message_intro();
-        else if (i == 4)
-            _hints_movement_info();
-        else
-        {
-#ifdef TUTORIAL_DEBUG
-            clrscr();
- #ifndef USE_TILE
-            cgotoxy(1,y_pos);
- #endif
-            _hints_debug().display();
-#else
-            continue;
-#endif
-        }
-
-        if (i < MAX_INFO)
-        {
-            if (i < 2)
-            {
-#ifndef USE_TILE
-                ch = getch_ck();
-#else
-                mouse_control mc(MOUSE_MODE_MORE);
-                ch = getchm();
-#endif
-            }
-            redraw_screen();
-            if (ch == ESCAPE)
-                break;
-        }
-    }
-    mpr("Introduction finished, you can start playing now.");
-    mpr("Again, press <w>?</w> for the help, and <w>Ctrl-P</w> to reread the message history.");
-}
-
 // Called each turn from _input. Better name welcome.
 void hints_new_turn()
 {
@@ -807,8 +612,6 @@ void hints_new_turn()
                      && you.hp == you.hp_max
                      && you.magic_points == you.max_magic_points)
             {
-                learned_something_new(HINT_MAP_VIEW);
-
                 learned_something_new(HINT_MAP_VIEW);
             }
             else if (!you.running
