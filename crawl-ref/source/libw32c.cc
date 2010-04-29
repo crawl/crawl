@@ -553,6 +553,17 @@ void textcolor(int c)
     current_color = macro_fg | (macro_bg << 4);
 }
 
+void textbackground(int c)
+{
+    // change current background color used to stamp chars
+    // parameter does NOT come bitshifted by four
+    short bg = c & 0xF;
+    short macro_bg = Options.colour[bg];
+
+    current_color = current_color | (macro_bg << 4);
+}
+
+
 static void cprintf_aux(const char *s)
 {
     // early out -- not initted yet
@@ -862,12 +873,6 @@ int kbhit()
 void delay(int ms)
 {
     Sleep((DWORD)ms);
-}
-
-void textbackground(int c)
-{
-    // do nothing
-    UNUSED( c );
 }
 
 int get_console_string(char *buf, int maxlen)
