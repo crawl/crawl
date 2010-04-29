@@ -1528,8 +1528,6 @@ try_again:
     ret.clear();
     int absfacet = 0;
     int scales = 0;
-    int slow_dig = 0;
-    int regen = 0;
     int slots_lost = 0;
     int breath_weapons = 0;
     int elemental = 0;
