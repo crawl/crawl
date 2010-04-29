@@ -1275,92 +1275,262 @@ static weapon_type _fixup_weapon(weapon_type wp,
     return (WPN_UNKNOWN);
 }
 
+static void _construct_weapon_menu(const weapon_type& defweapon,
+                                   const std::vector<weapon_choice>& weapons,
+                                   MenuFreeform* menu)
+{
+    static const int ITEMS_START_Y = 5;
+    TextItem* tmp = NULL;
+    std::string text;
+    coord_def min_coord(0,0);
+    coord_def max_coord(0,0);
+
+    for (unsigned int i = 0; i < weapons.size(); ++i)
+    {
+        tmp = new TextItem();
+        text.clear();
+
+        if (weapons[i].second == CC_UNRESTRICTED)
+        {
+            tmp->set_fg_colour(LIGHTGRAY);
+            tmp->set_highlight_colour(GREEN);
+        }
+        else
+        {
+            tmp->set_fg_colour(DARKGRAY);
+            tmp->set_highlight_colour(YELLOW);
+        }
+        const char letter = 'a' + i;
+        tmp->add_hotkey(letter);
+        tmp->set_id(weapons[i].first);
+
+        text += letter;
+        text += " - ";
+        text += weapons[i].first == WPN_UNARMED
+                ? "claws" : weapon_base_name(weapons[i].first);
+        // Fill to column width to give extra padding for the highlight
+        text.append(COLUMN_WIDTH - text.size() - 1 , ' ');
+        tmp->set_text(text);
+
+        min_coord.x = X_MARGIN;
+        min_coord.y = ITEMS_START_Y + i;
+        max_coord.x = min_coord.x + text.size();
+        max_coord.y = min_coord.y + 1;
+        tmp->set_bounds(min_coord, max_coord);
+
+        menu->attach_item(tmp);
+        tmp->set_visible(true);
+        // Is this item our default weapon?
+        if (weapons[i].first == defweapon)
+        {
+            menu->set_active_item(tmp);
+        }
+    }
+    // Add all the special button entries
+    tmp = new TextItem();
+    tmp->set_text("+ - Viable random choice");
+    min_coord.x = X_MARGIN;
+    min_coord.y = SPECIAL_KEYS_START_Y;
+    max_coord.x = min_coord.x + tmp->get_text().size();
+    max_coord.y = min_coord.y + 1;
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->set_fg_colour(BROWN);
+    tmp->add_hotkey('+');
+    tmp->set_id(WPN_VIABLE);
+    tmp->set_highlight_colour(LIGHTGRAY);
+    tmp->set_description_text("Picks a random viable weapon");
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
+
+    tmp = new TextItem();
+    tmp->set_text("% - List aptitudes");
+    min_coord.x = X_MARGIN;
+    min_coord.y = SPECIAL_KEYS_START_Y + 1;
+    max_coord.x = min_coord.x + tmp->get_text().size();
+    max_coord.y = min_coord.y + 1;
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->set_fg_colour(BROWN);
+    tmp->add_hotkey('%');
+    tmp->set_id('%');
+    tmp->set_highlight_colour(LIGHTGRAY);
+    tmp->set_description_text("Lists the numerical skill train aptitudes for all races");
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
+
+    tmp = new TextItem();
+    tmp->set_text("? - Help");
+    min_coord.x = X_MARGIN;
+    min_coord.y = SPECIAL_KEYS_START_Y + 2;
+    max_coord.x = min_coord.x + tmp->get_text().size();
+    max_coord.y = min_coord.y + 1;
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->set_fg_colour(BROWN);
+    tmp->add_hotkey('?');
+    tmp->set_id('?');
+    tmp->set_highlight_colour(LIGHTGRAY);
+    tmp->set_description_text("Opens the help screen");
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
+
+    tmp = new TextItem();
+    tmp->set_text("* - Random weapon");
+    min_coord.x = X_MARGIN + COLUMN_WIDTH;
+    min_coord.y = SPECIAL_KEYS_START_Y;
+    max_coord.x = min_coord.x + tmp->get_text().size();
+    max_coord.y = min_coord.y + 1;
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->set_fg_colour(BROWN);
+    tmp->add_hotkey('*');
+    tmp->set_id(WPN_RANDOM);
+    tmp->set_highlight_colour(LIGHTGRAY);
+    tmp->set_description_text("Picks a random weapon");
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
+
+    // Adjust the end marker to align the - because Bksp text is longer by 3
+    tmp = new TextItem();
+    tmp->set_text("Bksp - Return to character menu");
+    tmp->set_description_text("Lets you return back to Character choice menu");
+    min_coord.x = X_MARGIN + COLUMN_WIDTH - 3;
+    min_coord.y = SPECIAL_KEYS_START_Y + 1;
+    max_coord.x = min_coord.x + tmp->get_text().size();
+    max_coord.y = min_coord.y + 1;
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->set_fg_colour(BROWN);
+    tmp->add_hotkey(CK_BKSP);
+    tmp->set_id(CK_BKSP);
+    tmp->set_highlight_colour(LIGHTGRAY);
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
+
+    if (defweapon != WPN_UNKNOWN)
+    {
+        text.clear();
+        text = "Tab - ";
+
+        text += defweapon == WPN_RANDOM  ? "Random" :
+                defweapon == WPN_VIABLE  ? "Viable" :
+                defweapon == WPN_UNARMED ? "claws"  :
+                weapon_base_name(defweapon);
+
+        // Adjust the end marker to aling the - because
+        // Tab text is longer by 2
+        tmp = new TextItem();
+        tmp->set_text(text);
+        min_coord.x = X_MARGIN + COLUMN_WIDTH - 2;
+        min_coord.y = SPECIAL_KEYS_START_Y + 2;
+        max_coord.x = min_coord.x + tmp->get_text().size();
+        max_coord.y = min_coord.y + 1;
+        tmp->set_bounds(min_coord, max_coord);
+        tmp->set_fg_colour(BROWN);
+        tmp->add_hotkey('\t');
+        tmp->set_id(defweapon);
+        tmp->set_highlight_colour(LIGHTGRAY);
+        tmp->set_description_text("Select your old weapon");
+        menu->attach_item(tmp);
+        tmp->set_visible(true);
+    }
+}
+
+/**
+ * Returns false if user escapes
+ */
 static bool _prompt_weapon(const newgame_def* ng, newgame_def* ng_choice,
                            const newgame_def& defaults,
                            const std::vector<weapon_choice>& weapons)
 {
-    _print_character_info(ng);
-
-    textcolor( CYAN );
-    cprintf("\nYou have a choice of weapons:  "
-                "(Press %% for a list of aptitudes)\n");
-
-    for (unsigned int i = 0; i < weapons.size(); ++i)
-    {
-        if (weapons[i].second == CC_UNRESTRICTED)
-            textcolor(LIGHTGREY);
-        else
-            textcolor(DARKGREY);
-
-        const char letter = 'a' + i;
-        cprintf("%c - %s\n", letter,
-                weapons[i].first == WPN_UNARMED
-                  ? "claws" : weapon_base_name(weapons[i].first));
-    }
+    PrecisionMenu menu;
+    menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
+    MenuFreeform* freeform = new MenuFreeform();
+    freeform->init(coord_def(1,1), coord_def(get_number_of_cols(),
+                   get_number_of_lines()), "freeform");
+    menu.attach_object(freeform);
+    menu.set_active_object(freeform);
 
     weapon_type defweapon = _fixup_weapon(defaults.weapon, weapons);
 
-    textcolor(BROWN);
-    cprintf("\n* - Random choice; + - Viable random choice; "
-                "Bksp - Back to species and background selection; "
-                "X - Quit\n");
+    _construct_weapon_menu(defweapon, weapons, freeform);
 
-    if (defweapon != WPN_UNKNOWN)
+    BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
+    highlighter->init(coord_def(0,0), coord_def(0,0), "highlighter");
+    menu.attach_object(highlighter);
+
+    // Did we have a previous weapon?
+    if (menu.get_active_item() == NULL)
     {
-        cprintf("; Enter - %s",
-                defweapon == WPN_RANDOM  ? "Random" :
-                defweapon == WPN_VIABLE  ? "Viable" :
-                defweapon == WPN_UNARMED ? "claws"  :
-                weapon_base_name(defweapon));
+        freeform->activate_first_item();
     }
-    cprintf("\n");
+    _print_character_info(ng); // calls clrscr() so needs to be before attach()
+
+#ifdef USE_TILE
+    tiles.get_crt()->attach_menu(&menu);
+#endif
+
+    freeform->set_visible(true);
+    highlighter->set_visible(true);
+
+    textcolor( CYAN );
+    cprintf("\nYou have a choice of weapons:  ");
 
     while (true)
     {
-        textcolor(CYAN);
-        cprintf("\nWhich weapon? ");
-        textcolor(LIGHTGREY);
+        menu.draw_menu();
 
-        int keyin = getch_ck();
+        int keyn = getch_ck();
 
-        switch (keyin)
+        // First process menu entries
+        if (!menu.process_key(keyn))
         {
-        case 'X':
-            cprintf("\nGoodbye!");
-            end(0);
-            break;
-        case CK_BKSP:
-        case CK_ESCAPE:
-        case ' ':
-            return (false);
-        case '\r':
-        case '\n':
-            if (defweapon != WPN_UNKNOWN)
+            // Process all the keys that are not attached to items
+            switch (keyn)
             {
-                ng_choice->weapon = defweapon;
-                return (true);
-            }
-            else
+            case 'X':
+                cprintf("\nGoodbye!");
+                end(0);
+                break;
+            case CK_ESCAPE:
+            case ' ':
+                return false;
+            default:
+                // if we get this far, we did not get a significant selection
+                // from the menu, nor did we get an escape character
+                // continue the while loop from the beginning and poll a new key
                 continue;
-        case '+':
-            ng_choice->weapon = WPN_VIABLE;
-            return (true);
-        case '*':
-            ng_choice->weapon = WPN_RANDOM;
-            return (true);
+            }
+        }
+        // We have a significant key input!
+        // Construct selection vector
+        std::vector<MenuItem*> selection = menu.get_selected_items();
+        // There should only be one selection, otherwise something broke
+        if (selection.size() != 1)
+        {
+            // poll a new key
+            continue;
+        }
+
+        // Get the stored id from the selection
+        int selection_ID = selection.at(0)->get_id();
+        switch (selection_ID)
+        {
+        case CK_BKSP:
+            return false;
         case '%':
             list_commands('%');
             return _prompt_weapon(ng, ng_choice, defaults, weapons);
+        case WPN_VIABLE:
+            ng_choice->weapon = WPN_VIABLE;
+            return true;
+        case WPN_RANDOM:
+            ng_choice->weapon = WPN_RANDOM;
+            return true;
         default:
-            if (keyin - 'a' >= 0 && keyin - 'a' < (int)weapons.size())
-            {
-                ng_choice->weapon = weapons[keyin - 'a'].first;
-                return (true);
-            }
-            else
-                continue;
-       }
+            // We got an item selection
+            ng_choice->weapon = static_cast<weapon_type> (selection_ID);
+            return true;
+        }
     }
+    // This should never happen
+    return false;
 }
 
 static std::vector<weapon_choice> _get_weapons(const newgame_def* ng)
