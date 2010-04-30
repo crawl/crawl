@@ -43,7 +43,7 @@ void mpr_comma_separated_list(const std::string prefix,
                               const msg_channel_type channel = MSGCH_PLAIN,
                               const int param = 0);
 
-class input_history;
+#include "cio.h"
 
 // Sets whether messages that are printed through mpr are
 // considered temporary.
