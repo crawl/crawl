@@ -63,8 +63,6 @@ public:
 
     int map_gen_iters;
 
-    std::string arena_teams;
-
     std::vector<std::string> extra_opts_first;
     std::vector<std::string> extra_opts_last;
 

@@ -727,6 +727,33 @@ static void _show_startup_menu(newgame_def* ng_choice,
     }
 }
 
+static void _choose_arena_teams(newgame_def* choice,
+                                const newgame_def& defaults)
+{
+    if (!choice->arena_teams.empty())
+        return;
+    clrscr();
+
+    cprintf("Enter your choice of teams:\n");
+
+    cgotoxy(1, 4);
+    if (!defaults.arena_teams.empty())
+        cprintf("Enter - %s\n", defaults.arena_teams.c_str());
+    cprintf("\n");
+    cprintf("Examples:\n");
+    cprintf("  Sigmund v Jessica\n");
+    cprintf("  99 orc v the royal jelly\n");
+    cprintf("  20-headed hydra v 10 kobold ; scimitar ego:flaming\n");
+    cgotoxy(1, 2);
+
+    char buf[80];
+    if (cancelable_get_line(buf, sizeof(buf)))
+        end(0);
+    choice->arena_teams = buf;
+    if (choice->arena_teams.empty())
+        choice->arena_teams = defaults.arena_teams;
+}
+
 bool startup_step()
 {
     std::string name;
@@ -751,10 +778,14 @@ bool startup_step()
     }
 #endif
 
+    // TODO: integrate arena better with
+    //       choose_game and setup_game
     if (choice.type == GAME_TYPE_ARENA)
     {
         crawl_state.type = GAME_TYPE_ARENA;
-        run_arena();
+        _choose_arena_teams(&choice, defaults);
+        write_newgame_options_file(choice);
+        run_arena(choice.arena_teams);
         end(0, false);
     }
 

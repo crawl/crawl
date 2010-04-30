@@ -82,6 +82,8 @@ namespace arena
         }
     };
 
+    std::string teams;
+
     int total_trials = 0;
 
     bool contest_canceled = false;
@@ -280,8 +282,8 @@ namespace arena
 
     std::string find_monster_spec()
     {
-        if (!SysEnv.arena_teams.empty())
-            return (SysEnv.arena_teams);
+        if (!teams.empty())
+            return (teams);
         else
             return ("random v random");
     }
@@ -932,8 +934,9 @@ namespace arena
         dump_messages();
     }
 
-    void global_setup()
+    void global_setup(const std::string& arena_teams)
     {
+        teams = arena_teams;
         // Set various options from the arena spec's tags
         try
         {
@@ -1443,7 +1446,7 @@ static void _init_arena()
 #endif
 }
 
-void run_arena()
+void run_arena(const std::string& teams)
 {
     _init_arena();
 
@@ -1454,7 +1457,7 @@ void run_arena()
     unwind_bool wiz(you.wizard, true);
 #endif
 
-    arena::global_setup();
+    arena::global_setup(teams);
     arena::simulate();
     arena::global_shutdown();
 }
