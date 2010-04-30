@@ -274,13 +274,20 @@ void splash_with_acid(int acid_strength, bool corrode_items,
 
     for (int slot = EQ_MIN_ARMOUR; slot <= EQ_MAX_ARMOUR; slot++)
     {
-        if (!player_wearing_slot(slot))
+        const bool cloak_protects = wearing_cloak && coinflip()
+                                    && slot != EQ_SHIELD && slot != EQ_CLOAK;
+
+        if (!cloak_protects)
         {
-            if (!wearing_cloak || coinflip())
+            if (!player_wearing_slot(slot) && slot != EQ_SHIELD)
                 dam += roll_dice(1, acid_strength);
+
+            if (player_wearing_slot(slot) && corrode_items
+                && x_chance_in_y(acid_strength + 1, 20))
+            {
+                _item_corrode(you.equip[slot]);
+            }
         }
-        else if (corrode_items && x_chance_in_y(acid_strength + 1, 20))
-            _item_corrode(you.equip[slot]);
     }
 
     // two extra virtual slots so players can't be immune
