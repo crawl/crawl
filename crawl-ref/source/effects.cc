@@ -58,6 +58,7 @@
 #include "mutation.h"
 #include "notes.h"
 #include "ouch.h"
+#include "place.h"
 #include "player.h"
 #include "player-stats.h"
 #include "religion.h"
@@ -4883,6 +4884,10 @@ void recharge_rods(long aut, bool level_only)
 
 void slime_wall_damage(actor* act, int delay)
 {
+    const int depth = player_in_branch(BRANCH_SLIME_PITS)
+                      ? player_branch_depth()
+                      : 1;
+
     int walls = 0;
     for (adjacent_iterator ai(act->pos()); ai; ++ai)
         if (env.grid(*ai) == DNGN_SLIMY_WALL)
@@ -4891,7 +4896,8 @@ void slime_wall_damage(actor* act, int delay)
     if (!walls)
         return;
 
-    int strength = div_rand_round(3 * walls, delay);
+    // Up to 1d6 damage per wall per slot.
+    const int strength = div_rand_round(depth * walls * BASELINE_DELAY, delay);
 
     if (act->atype() == ACT_PLAYER)
     {
