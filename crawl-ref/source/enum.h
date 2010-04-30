@@ -993,6 +993,7 @@ enum dungeon_feature_type
     DNGN_METAL_WALL,
     DNGN_GREEN_CRYSTAL_WALL,
     DNGN_ROCK_WALL,
+    DNGN_SLIMY_WALL,
     DNGN_STONE_WALL,
     DNGN_PERMAROCK_WALL,               // for undiggable walls
     DNGN_CLEAR_ROCK_WALL,              // transparent walls
@@ -1020,7 +1021,7 @@ enum dungeon_feature_type
 
     // Can be seen through and reached past.
     DNGN_TREE,
-    DNGN_ORCISH_IDOL = 15,
+    DNGN_ORCISH_IDOL,
     DNGN_GRANITE_STATUE = 21,
     DNGN_STATUE_RESERVED,
 

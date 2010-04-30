@@ -18,6 +18,7 @@
 #include "delay.h"
 #include "directn.h"
 #include "dungeon.h"
+#include "effects.h"
 #include "env.h"
 #include "map_knowledge.h"
 #include "food.h"
@@ -1805,6 +1806,10 @@ void handle_monster_move(monsters *monster)
                 break;
             }
         }
+
+        slime_wall_damage(monster, monster->speed);
+        if (!monster->alive())
+            break;
 
         if (monster->type == MONS_TIAMAT && one_chance_in(3))
         {

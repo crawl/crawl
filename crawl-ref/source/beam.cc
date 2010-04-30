@@ -784,7 +784,8 @@ void bolt::fake_flavour()
 void bolt::digging_wall_effect()
 {
     const dungeon_feature_type feat = grd(pos());
-    if (feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL)
+    if (feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL
+        || feat == DNGN_SLIMY_WALL)
     {
         grd(pos()) = DNGN_FLOOR;
         // Mark terrain as changed so travel excludes can be updated
@@ -900,6 +901,7 @@ static bool _nuke_wall_msg(dungeon_feature_type feat, const coord_def& p)
     switch (feat)
     {
     case DNGN_ROCK_WALL:
+    case DNGN_SLIMY_WALL:
     case DNGN_WAX_WALL:
     case DNGN_CLEAR_ROCK_WALL:
     case DNGN_GRANITE_STATUE:
@@ -978,6 +980,7 @@ void bolt::nuke_wall_effect()
     switch (feat)
     {
     case DNGN_ROCK_WALL:
+    case DNGN_SLIMY_WALL:
     case DNGN_WAX_WALL:
     case DNGN_CLEAR_ROCK_WALL:
     case DNGN_GRANITE_STATUE:
@@ -2405,7 +2408,8 @@ maybe_bool bolt::affects_wall(dungeon_feature_type wall) const
 {
     // digging
     if (flavour == BEAM_DIGGING
-        && (wall == DNGN_ROCK_WALL || wall == DNGN_CLEAR_ROCK_WALL))
+        && (wall == DNGN_ROCK_WALL || wall == DNGN_CLEAR_ROCK_WALL
+            || wall == DNGN_SLIMY_WALL))
     {
         return (B_TRUE);
     }

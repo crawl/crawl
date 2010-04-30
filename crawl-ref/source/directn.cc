@@ -2923,6 +2923,8 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
             return ("wall of the weird stuff which makes up Pandemonium");
         else
             return ("rock wall");
+    case DNGN_SLIMY_WALL:
+        return ("slime covered rock wall");
     case DNGN_PERMAROCK_WALL:
         return ("unnaturally hard rock wall");
     case DNGN_OPEN_SEA:
@@ -3128,19 +3130,6 @@ std::string raw_feature_description(dungeon_feature_type grid,
 
     if (base_desc)
         return (base_str);
-
-    if (you.level_type == LEVEL_DUNGEON)
-    {
-        switch (you.where_are_you)
-        {
-            case BRANCH_SLIME_PITS:
-                if (grid == DNGN_ROCK_WALL)
-                    base_str = "slime covered rock wall";
-                break;
-            default:
-                break;
-        }
-    }
 
     desc_map::iterator i = base_desc_to_short.find(base_str);
 

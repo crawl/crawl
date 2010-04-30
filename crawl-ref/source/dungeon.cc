@@ -1862,6 +1862,13 @@ static void _build_dungeon_level(int level_number, int level_type)
         } while (depth > 0);
     }
 
+    // XXX: right place to do this?
+    if (player_in_branch(BRANCH_SLIME_PITS))
+    {
+        dgn_replace_area(0, 0, GXM-1, GYM-1,
+                         DNGN_ROCK_WALL, DNGN_SLIMY_WALL);
+    }
+
     // Change pre-rock to rock, and pre-floor to floor.
     dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_BUILDER_SPECIAL_WALL,
                      DNGN_ROCK_WALL);

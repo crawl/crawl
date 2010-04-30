@@ -32,7 +32,7 @@
 #include "directn.h"
 #include "dgnevent.h"
 #include "env.h"
-#include "map_knowledge.h"
+#include "fight.h"
 #include "fprop.h"
 #include "food.h"
 #include "hiscores.h"
@@ -43,6 +43,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "makeitem.h"
+#include "map_knowledge.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
@@ -4877,5 +4878,43 @@ void recharge_rods(long aut, bool level_only)
     for (int item = 0; item < MAX_ITEMS; ++item)
     {
         _recharge_rod( mitm[item], aut, false );
+    }
+}
+
+void slime_wall_damage(actor* act, int delay)
+{
+    int walls = 0;
+    for (adjacent_iterator ai(act->pos()); ai; ++ai)
+        if (env.grid(*ai) == DNGN_SLIMY_WALL)
+            walls++;
+
+    if (!walls)
+        return;
+
+    int strength = div_rand_round(3 * walls, delay);
+
+    if (act->atype() == ACT_PLAYER)
+    {
+        ASSERT(act == &you);
+        splash_with_acid(strength, false,
+                         (walls > 1) ? "The walls burn you!"
+                                     : "The wall burns you!");
+    }
+    else
+    {
+        monsters* mon = act->as_monster();
+
+        // Slime native monsters are immune to slime walls.
+        if (mons_is_slime(mon))
+            return;
+
+         const int dam = resist_adjust_damage(mon, BEAM_ACID, mon->res_acid(),
+                                              roll_dice(2, strength));
+         if (dam > 0 && you.can_see(mon))
+         {
+             mprf((walls > 1) ? "The walls burn %s!" : "The wall burns %s!",
+                  mon->name(DESC_NOCAP_THE).c_str());
+         }
+         mon->hurt(NULL, dam, BEAM_ACID);
     }
 }

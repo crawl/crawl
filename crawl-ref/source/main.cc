@@ -2600,6 +2600,9 @@ void world_reacts()
     if (!crawl_state.game_is_arena() && env.cgrid(you.pos()) != EMPTY_CLOUD)
         in_a_cloud();
 
+    if (!crawl_state.game_is_arena())
+        slime_wall_damage(&you, you.time_taken);
+
     if (you.level_type == LEVEL_DUNGEON && you.duration[DUR_TELEPATHY])
         detect_creatures(1 + you.duration[DUR_TELEPATHY] /
                          (2 * BASELINE_DELAY), true);

@@ -87,4 +87,6 @@ void update_level(long elapsedTime);
 void handle_time();
 void recharge_rods(long aut, bool floor_only);
 
+void slime_wall_damage(actor* act, int delay);
+
 #endif
