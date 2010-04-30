@@ -283,20 +283,19 @@ void splash_with_acid(int acid_strength, bool corrode_items,
             _item_corrode(you.equip[slot]);
     }
 
+    // two extra virtual slots so players can't be immune
+    dam += roll_dice(2, acid_strength);
 
-    if (dam > 0)
+    const int post_res_dam = dam * player_acid_resist_factor() / 100;
+
+    if (post_res_dam > 0)
     {
-        const int post_res_dam = dam * player_acid_resist_factor() / 100;
+        mpr(hurt_message.empty() ? "The acid burns!" : hurt_message);
 
-        if (post_res_dam > 0)
-        {
-            mpr(hurt_message.empty() ? "The acid burns!" : hurt_message);
+        if (post_res_dam < dam)
+            canned_msg(MSG_YOU_RESIST);
 
-            if (post_res_dam < dam)
-                canned_msg(MSG_YOU_RESIST);
-
-            ouch(post_res_dam, NON_MONSTER, KILLED_BY_ACID);
-        }
+        ouch(post_res_dam, NON_MONSTER, KILLED_BY_ACID);
     }
 }
 
