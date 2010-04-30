@@ -3416,9 +3416,6 @@ void get_system_environment(void)
     // The full path to the init file -- this overrides CRAWL_DIR.
     SysEnv.crawl_rc = check_string( getenv("CRAWL_RC") );
 
-    // Rename giant and giant spiked clubs.
-    SysEnv.board_with_nail = (getenv("BOARD_WITH_NAIL") != NULL);
-
 #ifdef MULTIUSER
     // The user's home directory (used to look for ~/.crawlrc file)
     SysEnv.home = check_string( getenv("HOME") );

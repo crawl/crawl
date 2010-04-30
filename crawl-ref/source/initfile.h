@@ -51,7 +51,6 @@ public:
                                    // locate datafiles.
     std::string crawl_exe;         // File from argv[0].
     std::string home;              // only used by MULTIUSER systems
-    bool  board_with_nail;         // Easter Egg silliness
 
 #ifdef DGL_SIMPLE_MESSAGING
     std::string messagefile;       // File containing messages from other users.
