@@ -1338,6 +1338,8 @@ static void write_newgame_options(const newgame_def& prefs, FILE *f)
         fprintf(f, "type = %s\n", _gametype_to_str(prefs.type).c_str());
     if (!prefs.map.empty())
         fprintf(f, "map = %s\n", prefs.map.c_str());
+    if (!prefs.arena_teams.empty())
+        fprintf(f, "arena_teams = %s\n", prefs.arena_teams.c_str());
     fprintf(f, "name = %s\n", prefs.name.c_str());
     if (prefs.species != SP_UNKNOWN)
         fprintf(f, "species = %s\n", _species_to_str(prefs.species).c_str());
@@ -2273,6 +2275,10 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "map")
     {
         game.map = field;
+    }
+    else if (key == "arena_teams")
+    {
+        game.arena_teams = field;
     }
     else if (key == "type")
     {
@@ -3764,7 +3770,7 @@ bool parse_args( int argc, char **argv, bool rc_only )
             if (next_is_param)
             {
                 if (!rc_only)
-                    SysEnv.arena_teams = next_arg;
+                    Options.game.arena_teams = next_arg;
                 nextUsed = true;
             }
             break;

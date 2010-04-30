@@ -39,6 +39,8 @@ struct newgame_def
     // XXX: "random" means a random eligible map
     std::string map;
 
+    std::string arena_teams;
+
     species_type species;
     job_type job;
 
