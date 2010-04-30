@@ -849,6 +849,21 @@ void set_helmet_desc( item_def &item, helmet_desc_type type )
     item.plus2 = type;
 }
 
+int get_helmet_bonus_damage()
+{
+    if (!player_wearing_slot(EQ_HELMET))
+        return 0;
+
+    if (get_helmet_desc(*you.slot_item(EQ_HELMET)) == THELM_DESC_SPIKED
+        || get_helmet_desc(*you.slot_item(EQ_HELMET)) == THELM_DESC_HORNED)
+        return 5;
+
+    if (is_hard_helmet(*you.slot_item(EQ_HELMET)))
+        return 2;
+
+    return 0;
+}
+
 bool is_helmet(const item_def& item)
 {
     return (item.base_type == OBJ_ARMOUR && get_armour_slot(item) == EQ_HELMET);

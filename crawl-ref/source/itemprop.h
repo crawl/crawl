@@ -44,6 +44,8 @@ void  set_helmet_random_desc( item_def &item );
 
 short get_helmet_desc( const item_def &item );
 
+int get_helmet_bonus_damage();
+
 bool  is_helmet( const item_def& item );
 bool  is_hard_helmet( const item_def& item );
 
