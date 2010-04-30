@@ -58,6 +58,17 @@ mutation_def mut_data[] = {
 
 #define MUTDATASIZE (sizeof(mut_data)/sizeof(mutation_def))
 
+static const body_facet_def _body_facets[] =
+{
+    //{ EQ_NONE, MUT_FANGS, 1 },
+    { EQ_HELMET, MUT_HORNS, 1 },
+    { EQ_HELMET, MUT_ANTENNAE, 1 },
+    //{ EQ_HELMET, MUT_BEAK, 1 },
+    { EQ_GLOVES, MUT_CLAWS, 3 },
+    { EQ_BOOTS, MUT_HOOVES, 3 },
+    { EQ_BOOTS, MUT_TALONS, 3 }
+};
+
 static int mut_index[NUM_MUTATIONS];
 
 void init_mut_index()
@@ -87,6 +98,17 @@ bool is_valid_mutation(mutation_type mut)
 {
     return (mut >= 0 && mut < NUM_MUTATIONS
             && _seek_mutation(mut));
+}
+
+bool is_body_facet(mutation_type mut)
+{
+    for (unsigned i = 0; i < ARRAYSZ(_body_facets); i++)
+    {
+        if (_body_facets[i].mut == mut)
+            return (true);
+    }
+
+    return (false);
 }
 
 const mutation_def& get_mutation_def(mutation_type mut)
@@ -1408,22 +1430,6 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
     return (result);
 }
 
-struct facet_def
-{
-    mutation_type muts[3];
-    int tiers[3];
-};
-
-struct demon_mutation_info
-{
-    mutation_type mut;
-    int tier;
-    int facet;
-
-    demon_mutation_info(mutation_type m, int t, int f)
-        : mut(m), tier(t), facet(f) { }
-};
-
 static int ct_of_tier[] = { 0, 2, 3, 1 };
 
 static const facet_def _demon_facets[] =
@@ -1520,8 +1526,81 @@ static int _rank_for_tier(const facet_def& facet, int tier)
     return (k);
 }
 
+static std::vector<demon_mutation_info> _select_monstrous_mutations()
+{
+    const int NUM_FACETS = 6;
+    const int NUM_BODY_FACETS = 3;
+
+    std::vector<demon_mutation_info> ret;
+    std::set<mutation_type> mut_used;
+    std::set<equipment_type> eq_used;
+    int absfacet = 0;
+
+    facet_def facet;
+    body_facet_def body_facet;
+
+    for (int i = 0; i < NUM_BODY_FACETS; i++, absfacet++)
+    {
+        do
+        {
+            body_facet = RANDOM_ELEMENT(_body_facets);
+        }
+        while (eq_used.find(body_facet.eq) != eq_used.end());
+
+        eq_used.insert(body_facet.eq);
+
+        for (unsigned j = 0; j < ARRAYSZ(_demon_facets); j++)
+        {
+            if (_demon_facets[j].muts[0] == body_facet.mut)
+            {
+                mut_used.insert(_demon_facets[j].muts[0]);
+
+                ret.push_back(demon_mutation_info(body_facet.mut,
+                              _demon_facets[j].tiers[0], absfacet));
+                ret.push_back(demon_mutation_info(body_facet.mut,
+                              _demon_facets[j].tiers[1], absfacet));
+                ret.push_back(demon_mutation_info(body_facet.mut,
+                              _demon_facets[j].tiers[1], absfacet));
+
+                break;
+            }
+        }
+    }
+
+    int i, tier;
+
+    for (i = 0, tier = 2; i < NUM_FACETS - NUM_BODY_FACETS;
+         i++, absfacet++, tier++)
+    {
+        do
+        {
+            facet = RANDOM_ELEMENT(_demon_facets);
+
+            // no body other body slot facets
+            for (unsigned j = 0; j < ARRAYSZ(_body_facets); j++)
+                if (_body_facets[j].mut == facet.muts[0])
+                    continue;
+        }
+        while (mut_used.find(facet.muts[0]) != mut_used.end()
+               && !_works_at_tier(facet, tier));
+
+        ret.push_back(demon_mutation_info(facet.muts[0], facet.tiers[0],
+                                          absfacet));
+        ret.push_back(demon_mutation_info(facet.muts[1], facet.tiers[1],
+                                          absfacet));
+        ret.push_back(demon_mutation_info(facet.muts[2], facet.tiers[2],
+                                          absfacet));
+    }
+
+    return ret;
+}
+
 static std::vector<demon_mutation_info> _select_ds_mutations()
 {
+    // 1 in 10 chance to create a monsterous set
+    if (one_chance_in(10))
+        return _select_monstrous_mutations();
+
 try_again:
     std::vector<demon_mutation_info> ret;
 

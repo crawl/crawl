@@ -923,328 +923,182 @@ bool melee_attack::player_attack()
     return (did_primary_hit || did_hit);
 }
 
+unarmed_attack_data melee_attack::_calc_aux_data(unarmed_attack_type type)
+{
+    ASSERT(UNAT_FIRST <= type <= UNAT_LAST);
+
+    unarmed_attack_data uc_data [] = {
+        {
+            UNAT_PUNCH,
+            SPWPN_NORMAL,
+            5 + you.skills[SK_UNARMED_COMBAT] / 3,
+            you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS ? 6 :
+                (you.has_usable_claws() ? roll_dice(1, 3) : 0),
+            100,
+            you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS ?
+                "slash" : (you.has_usable_claws() ? "claw" : "punch"),
+            "",
+            true,
+            coinflip() && !shield && weapon
+                && (hands == HANDS_ONE || hands == HANDS_HALF
+                    || hands == HANDS_DOUBLE)
+                && weapon->base_type != OBJ_STAVES,
+            false
+        },
+        {
+            UNAT_KICK, SPWPN_NORMAL, 5,
+            player_mutation_level(MUT_HOOVES) * 5 / 3 +
+                player_mutation_level(MUT_TALONS),
+            100,
+            player_mutation_level(MUT_TALONS) ? "claw" : "kick",
+            player_mutation_level(MUT_TALONS) ? "kick" : "",
+            false,
+            coinflip() && you.species != SP_NAGA &&
+                (you.species != SP_MERFOLK || !you.swimming()) ,
+            coinflip() && (player_mutation_level(MUT_HOOVES)
+                || player_mutation_level(MUT_TALONS))
+                && (you.species != SP_MERFOLK || !you.swimming())
+        },
+        {
+            UNAT_HEADBUTT, SPWPN_NORMAL, 5,
+            player_mutation_level(MUT_HORNS) * 3 + get_helmet_bonus_damage(),
+            75,
+            player_mutation_level(MUT_BEAK) &&
+                (!player_mutation_level(MUT_HORNS) || coinflip()) ? "peck"
+                : "headbutt",
+            "",
+            false,
+            coinflip(),
+            coinflip() && (player_mutation_level(MUT_HORNS)
+                || player_mutation_level(MUT_BEAK))
+        },
+        {
+            UNAT_TAILSLAP,
+            player_mutation_level(MUT_STINGER) ? SPWPN_VENOM : SPWPN_NORMAL,
+            6,
+            (you.species == SP_GREY_DRACONIAN && you.experience_level >= 7) ?
+                6 : player_mutation_level(MUT_STINGER) ?
+                    player_mutation_level(MUT_STINGER) * 2 - 1 : 0,
+            125,
+            "tail-slap",
+            "",
+            false,
+            false,
+            !one_chance_in(4) && (player_genus(GENPC_DRACONIAN)
+                || (you.species == SP_MERFOLK && you.swimming())
+                || player_mutation_level(MUT_STINGER))
+        },
+        {
+            UNAT_BITE,
+            (you.species == SP_VAMPIRE
+             && _vamp_wants_blood_from_monster(defender->as_monster())
+             && ((you.hunger_state >= HS_SATIATED && coinflip())
+                 || you.hunger_state != HS_STARVING && coinflip()))
+            ? SPWPN_VAMPIRICISM : SPWPN_NORMAL,
+            player_mutation_level(MUT_FANGS) * 2
+                + you.skills[SK_UNARMED_COMBAT] / 5,
+            0,
+            75,
+            you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS ?
+                "slash" : (you.has_usable_claws() ? "claw" : "punch"),
+            "",
+            true,
+            false,
+            player_mutation_level(MUT_FANGS)
+            && ((you.species == SP_VAMPIRE && !one_chance_in(7))
+                || x_chance_in_y(2, 5))
+            && (!player_wearing_slot(EQ_HELMET) ||
+                get_helmet_desc(*you.slot_item(EQ_HELMET))
+                    != THELM_DESC_VISORED)
+        }
+    };
+
+    for (unsigned i = 0; i < ARRAYSZ(uc_data) ; i++)
+    {
+        if (uc_data[i].uattack == type)
+            return uc_data[i];
+    }
+
+    return uc_data[0];  // execution should never reach this
+}
+
+bool melee_attack::aux_attack_check(unarmed_attack_data data,
+                              unarmed_attack_type baseattack)
+{
+    // special conditions are (typically) mutation related
+    // conditions are regular (UC-combat) related
+    if (!data.uc_special_conditions)
+        if (data.uattack != baseattack
+            || !can_do_unarmed
+            || !data.uc_conditions)
+            return false;
+
+    // punch, kick, and headbutt are all unavailable in ice_beast,
+    // spider, bat, and dragon forms. tail-slap is unavailable unless
+    // in dragon form, bite is available in any form, so long as
+    // its conditions are met
+    if (baseattack <= 3 &&
+        (you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST
+        || you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER
+        || you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT
+        || (data.uattack != UNAT_HEADBUTT &&
+            you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)))
+        return false;
+
+    return true;
+}
+
 // Returns true to end the attack round.
 bool melee_attack::player_aux_unarmed()
 {
     unwind_var<int> save_brand(damage_brand);
 
-    damage_brand = SPWPN_NORMAL;
-    unarmed_attack_type baseattack = UNAT_NO_ATTACK;
-    bool simple_miss_message = false;
-    std::string miss_verb;
-
-    coord_def defender_pos = defender->pos();
-
-    if (can_do_unarmed)
+    // short circuit out if no possible unarmed attacks
+    if (!can_do_unarmed
+        && !player_mutation_level(MUT_CLAWS)
+        && !player_mutation_level(MUT_HORNS)
+        && !player_mutation_level(MUT_BEAK)
+        && !player_mutation_level(MUT_HOOVES)
+        && !player_mutation_level(MUT_TALONS)
+        && !player_mutation_level(MUT_STINGER)
+        && !player_mutation_level(MUT_FANGS))
     {
-        if (you.species == SP_NAGA)
-            baseattack = UNAT_HEADBUTT;
-        else
-            baseattack = (coinflip() ? UNAT_HEADBUTT : UNAT_KICK);
-
-        if (player_mutation_level(MUT_FANGS)
-            || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
-        {
-            baseattack = UNAT_BITE;
-        }
-
-        if ((you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
-               || player_genus(GENPC_DRACONIAN)
-               || (you.species == SP_MERFOLK && you.swimming())
-               || player_mutation_level(MUT_STINGER))
-            && one_chance_in(3))
-        {
-            baseattack = UNAT_TAILSLAP;
-        }
-
-        if (coinflip())
-            baseattack = UNAT_PUNCH;
-
-        if (you.species == SP_VAMPIRE && !one_chance_in(3))
-            baseattack = UNAT_BITE;
+        return (false);
     }
 
-    /*
-     * baseattack is the auxiliary unarmed attack the player gets
-     * for unarmed combat skill. Note that this can still be skipped,
-     * e.g. UNAT_PUNCH with a shield.
-     *
-     * Then, they can get extra attacks depending on mutations.
-     */
-    for (int i = UNAT_FIRST_ATTACK; i <= UNAT_LAST_ATTACK; ++i)
+    unarmed_attack_type baseattack =
+        static_cast<unarmed_attack_type>(roll_dice(1,3));
+
+    for (int i = UNAT_FIRST; i <= UNAT_LAST; i++)
     {
-        if (!defender->alive())
-            break;
-
-        unarmed_attack_type atk = static_cast<unarmed_attack_type>(i);
-
-        noise_factor = 100;
-
-        unarmed_attack.clear();
-        miss_verb.clear();
-        simple_miss_message = false;
-        damage_brand = SPWPN_NORMAL;
-        aux_damage = 0;
-
-        switch (atk)
-        {
-        case UNAT_KICK:
-        {
-            if (baseattack != UNAT_KICK)
-            {
-                if (!player_mutation_level(MUT_HOOVES)
-                        && !player_mutation_level(MUT_TALONS)
-                    || coinflip())
-                {
-                    continue;
-                }
-            }
-
-            if (you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
-            {
-                continue;
-            }
-
-            unarmed_attack = "kick";
-            aux_damage = 5;
-
-            if (player_mutation_level(MUT_HOOVES))
-            {
-                // Max hoof damage: 10.
-                aux_damage += player_mutation_level(MUT_HOOVES) * 5 / 3;
-            }
-            else if (you.has_usable_talons())
-            {
-                unarmed_attack = "claw";
-                miss_verb      = "kick";
-
-                // Max talon damage: 8.
-                aux_damage += player_mutation_level(MUT_TALONS);
-            }
-
-            break;
-        }
-
-        case UNAT_HEADBUTT:
-            if (baseattack != UNAT_HEADBUTT)
-            {
-                if (!player_mutation_level(MUT_HORNS)
-                       && !player_mutation_level(MUT_BEAK)
-                    || !one_chance_in(3))
-                {
-                    continue;
-                }
-            }
-
-            if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
-            {
-                continue;
-            }
-
-            unarmed_attack = "headbutt";
-            aux_damage = 5;
-
-            if (player_mutation_level(MUT_BEAK)
-                && (!player_mutation_level(MUT_HORNS) || coinflip()))
-            {
-                unarmed_attack = "peck";
-                aux_damage++;
-                noise_factor = 75;
-            }
-            else
-            {
-                // Minotaurs used to get +5 damage here, now they get
-                // +6 because of the horns.
-                aux_damage += player_mutation_level(MUT_HORNS) * 3;
-
-                item_def* helmet = you.slot_item(EQ_HELMET);
-                if (helmet && is_hard_helmet(*helmet))
-                {
-                    aux_damage += 2;
-                    if (get_helmet_desc(*helmet) == THELM_DESC_SPIKED
-                        || get_helmet_desc(*helmet) == THELM_DESC_HORNED)
-                    {
-                        aux_damage += 3;
-                    }
-                }
-            }
-            break;
-
-        case UNAT_TAILSLAP:
-            if (baseattack != UNAT_TAILSLAP)
-            {
-                // not draconian, and not wet merfolk
-                if (!player_genus(GENPC_DRACONIAN)
-                       && !(you.species == SP_MERFOLK && you.swimming())
-                       && !player_mutation_level(MUT_STINGER)
-                    || (!one_chance_in(4)))
-
-                {
-                    continue;
-                }
-            }
-
-            if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
-            {
-                continue;
-            }
-
-            // TSO worshippers don't use their stinger in order to
-            // avoid poisoning.
-            if (you.religion == GOD_SHINING_ONE
-                && player_mutation_level(MUT_STINGER) > 0)
-            {
-                continue;
-            }
-
-            unarmed_attack = "tail-slap";
-            aux_damage = 6;
-            noise_factor = 125;
-
-            // Grey dracs have spiny tails, or something.
-            // Maybe add this to player messaging. {dlb}
-            //
-            // STINGER mutation doesn't give extra damage here... that
-            // would probably be a bit much, we'll still get the
-            // poison bonus so it's still somewhat good.
-            if (you.species == SP_GREY_DRACONIAN && you.experience_level >= 7)
-                aux_damage += 6;
-            else if (player_mutation_level(MUT_STINGER) > 0)
-            {
-                aux_damage += player_mutation_level(MUT_STINGER) * 2 - 1;
-                damage_brand = SPWPN_VENOM;
-            }
-
-            break;
-
-        case UNAT_PUNCH:
-            if (baseattack != UNAT_PUNCH)
-                continue;
-
-            if (you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
-                || you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT)
-            {
-                continue;
-            }
-
-            // No punching with a shield or 2-handed wpn, except staves.
-            if (shield || coinflip()
-                || (weapon
-                    && hands == HANDS_TWO
-                    && weapon->base_type != OBJ_STAVES
-                    && weapon_skill(*weapon) != SK_STAVES))
-            {
-                continue;
-            }
-
-            unarmed_attack = "punch";
-            // applied twice
-            aux_damage = 5 + you.skills[SK_UNARMED_COMBAT] / 3;
-
-            if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
-            {
-                unarmed_attack = "slash";
-                aux_damage += 6;
-                noise_factor = 75;
-                simple_miss_message = true;
-            }
-            else if (you.has_usable_claws())
-            {
-                unarmed_attack = "claw";
-                aux_damage += roll_dice(1, 3);
-                simple_miss_message = true;
-            }
-
-            break;
-
-        case UNAT_BITE:
-            if (baseattack != UNAT_BITE)
-                continue;
-
-            if (!player_mutation_level(MUT_FANGS))
-                continue;
-
-            if (you.species != SP_VAMPIRE && one_chance_in(5)
-                || one_chance_in(7))
-            {
-                continue;
-            }
-            // no biting with visored helmet
-            if (const item_def *helmet = you.slot_item(EQ_HELMET, false))
-            {
-                if (get_helmet_desc(*helmet) == THELM_DESC_VISORED)
-                    continue;
-            }
-
-            unarmed_attack = "bite";
-            aux_damage += player_mutation_level(MUT_FANGS) * 2
-                          + you.skills[SK_UNARMED_COMBAT] / 5;
-            noise_factor = 75;
-            simple_miss_message = true;
-
-            if (you.species == SP_VAMPIRE)
-            {
-                if (_vamp_wants_blood_from_monster(defender->as_monster()))
-                {
-                    // prob of vampiric bite:
-                    // 1/4 when non-thirsty, 1/2 when thirsty, 100% when
-                    // bloodless
-                    if (you.hunger_state >= HS_SATIATED && coinflip())
-                        break;
-
-                    if (you.hunger_state != HS_STARVING && coinflip())
-                        break;
-
-                    damage_brand = SPWPN_VAMPIRICISM;
-                }
-                else if (!one_chance_in(3)) // monster not interesting bloodwise
-                    continue;
-            }
-
-            break;
-
-            // To add more, add to while part of loop below as well
-        default:
-            continue;
-        }
-
-        // unified to-hit calculation
-        to_hit = random2(calc_your_to_hit_unarmed(atk,
-                         damage_brand == SPWPN_VAMPIRICISM));
-
-        make_hungry(2, true);
-
-        handle_noise(defender_pos);
-        alert_nearby_monsters();
-
-        // [ds] kraken can flee when near death, causing the tentacle
-        // the player was beating up to "die" and no longer be
-        // available to answer questions beyond this point.
-        // handle_noise stirs up all nearby monsters with a stick, so
-        // the player may be beating up a tentacle, but the main body
-        // of the kraken still gets a chance to act and submerge
-        // tentacles before we get here.
         if (!defender->alive())
             return (true);
 
-        // XXX We're clobbering did_hit
-        did_hit = false;
+        unarmed_attack_type type = static_cast<unarmed_attack_type>(i);
+        unarmed_attack_data data = _calc_aux_data(type);
 
-        bool ely_block = false;
+        if(!aux_attack_check(data, baseattack))
+            continue;
+
+        unarmed_attack_type uattack =   data.uattack;
+        damage_brand                =   data.damage_brand;
+        aux_damage                  =   data.base_damage
+                                            + data.bonus_damage;
+        noise_factor                =   data.noise_factor;
+        unarmed_attack              =   data.attack_verb;
+        std::string miss_verb       =   data.miss_verb;
+
+        to_hit = random2(calc_your_to_hit_unarmed(uattack,
+                            damage_brand == SPWPN_VAMPIRICISM));
+
+        handle_noise(defender->pos());
+        alert_nearby_monsters();
+
         const int evasion = defender->melee_evasion(attacker);
         const int helpful_evasion =
             defender->melee_evasion(attacker, EV_IGNORE_HELPLESS);
-        // No monster Phase Shift yet
+        bool auto_hit = one_chance_in(30);
+
         if (you.religion != GOD_ELYVILON
             && you.penance[GOD_ELYVILON]
             && god_hates_your_god(GOD_ELYVILON, you.religion)
@@ -1252,60 +1106,48 @@ bool melee_attack::player_aux_unarmed()
             && one_chance_in(20))
         {
             simple_god_message(" blocks your attack.", GOD_ELYVILON);
-            ely_block = true;
+
+            dec_penance(GOD_ELYVILON, 1 + random2(to_hit - evasion));
         }
 
-        bool auto_hit = one_chance_in(30);
-
-        if (!ely_block && !auto_hit && to_hit >= evasion
+        if (!auto_hit && to_hit >= evasion
             && !(to_hit >= helpful_evasion)
             && defender_visible)
-        {
             mprf("Helpless, %s fails to dodge your %s.",
                  defender->name(DESC_NOCAP_THE).c_str(),
                  miss_verb.empty() ? unarmed_attack.c_str()
                                    : miss_verb.c_str());
-        }
 
-        if (!ely_block && (to_hit >= evasion || auto_hit))
+
+        if (to_hit >= evasion || auto_hit)
         {
             // Upset the monster.
             behaviour_event(defender->as_monster(), ME_WHACK, MHITYOU);
-            if (!defender->alive())
-                return (true);
 
             if (attack_shield_blocked(true))
                 continue;
-            if (player_apply_aux_unarmed())
+
+            if(player_perform_aux_unarmed())
                 return (true);
         }
         else
         {
-            if (simple_miss_message)
-            {
-                mprf("You miss %s.",
-                     defender->name(DESC_NOCAP_THE).c_str());
-            }
+            if (data.simple_miss_message)
+                mprf("You miss %s.", defender->name(DESC_NOCAP_THE).c_str());
             else
-            {
                 mprf("Your %s misses %s.",
                      miss_verb.empty() ? unarmed_attack.c_str()
                                        : miss_verb.c_str(),
                      defender->name(DESC_NOCAP_THE).c_str());
-            }
-
-            if (ely_block)
-                dec_penance(GOD_ELYVILON, 1 + random2(to_hit - evasion));
         }
+
     }
 
     return (false);
 }
 
-bool melee_attack::player_apply_aux_unarmed()
+bool melee_attack::player_perform_aux_unarmed()
 {
-    did_hit = true;
-
     aux_damage  = player_aux_stat_modify_damage(aux_damage);
     aux_damage += slaying_bonus(PWPN_DAMAGE);
 
@@ -1323,6 +1165,8 @@ bool melee_attack::player_apply_aux_unarmed()
 
     aux_damage  = defender->hurt(&you, aux_damage, BEAM_MISSILE, false);
     damage_done = aux_damage;
+
+    did_hit = true;
 
     if (damage_done > 0)
     {
@@ -5219,7 +5063,6 @@ void melee_attack::mons_do_spines()
 
     if (you.mutation[MUT_SPINY]
         && attacker->alive()
-        && grid_distance(you.pos(), attacker->as_monster()->pos()) == 1
         && one_chance_in(evp + 1))
     {
         int dmg = roll_dice(player_mutation_level(MUT_SPINY), 6);
@@ -5650,7 +5493,9 @@ void melee_attack::mons_perform_attack_rounds()
         }
 
         if (!shield_blocked && attacker != defender &&
-            defender->atype() == ACT_PLAYER)
+            defender->atype() == ACT_PLAYER &&
+            (grid_distance(you.pos(), attacker->as_monster()->pos()) == 1
+            || attk.flavour == AF_REACH))
         {
             // Check for spiny mutation
             mons_do_spines();

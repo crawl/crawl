@@ -14,13 +14,27 @@
 enum unarmed_attack_type
 {
     UNAT_NO_ATTACK,                    //    0
+    UNAT_PUNCH,
     UNAT_KICK,
     UNAT_HEADBUTT,
     UNAT_TAILSLAP,
-    UNAT_PUNCH,
     UNAT_BITE,
-    UNAT_FIRST_ATTACK = UNAT_KICK,
-    UNAT_LAST_ATTACK = UNAT_BITE
+    UNAT_FIRST = UNAT_PUNCH,
+    UNAT_LAST = UNAT_BITE
+};
+
+struct unarmed_attack_data
+{
+    unarmed_attack_type uattack;
+    int                 damage_brand;
+    int                 base_damage;
+    int                 bonus_damage;
+    int                 noise_factor;
+    std::string         attack_verb;
+    std::string         miss_verb;
+    bool                simple_miss_message;
+    bool                uc_conditions;
+    bool                uc_special_conditions;
 };
 
 enum unchivalric_attack_type

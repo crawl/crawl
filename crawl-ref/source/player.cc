@@ -2998,28 +2998,54 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_DEMONSPAWN:
+            {
+                bool gave_message = false;
+                int level = 0;
+                mutation_type first_body_facet = NUM_MUTATIONS;
+
+                for (unsigned i = 0; i < you.demonic_traits.size(); ++i)
                 {
-                    bool gave_message = false;
-
-                    for (unsigned i = 0; i < you.demonic_traits.size(); ++i)
+                    if (is_body_facet(you.demonic_traits[i].mutation))
                     {
-                        if (you.demonic_traits[i].level_gained
-                            == you.experience_level)
+                        if (first_body_facet < NUM_MUTATIONS
+                            && you.demonic_traits[i].mutation
+                                != first_body_facet)
                         {
-                            if (!gave_message)
-                            {
-                                mpr("Your demonic ancestry asserts itself...",
-                                    MSGCH_INTRINSIC_GAIN);
+                            if(you.experience_level == level)
+                                mpr("You feel monstrous as your "
+                                    "demonic heritage exerts itself.",
+                                    MSGCH_MUTATION);
 
-                                gave_message = true;
-                            }
-                            perma_mutate(you.demonic_traits[i].mutation, 1);
+                            i = you.demonic_traits.size();
+                            break;
+                        }
+
+                        if (first_body_facet == NUM_MUTATIONS) {
+                            first_body_facet = you.demonic_traits[i].mutation;
+                            level = you.demonic_traits[i].level_gained;
                         }
                     }
                 }
 
+                for (unsigned i = 0; i < you.demonic_traits.size(); ++i)
+                {
+                    if (you.demonic_traits[i].level_gained
+                        == you.experience_level)
+                    {
+                        if (!gave_message)
+                        {
+                            mpr("Your demonic ancestry asserts itself...",
+                                MSGCH_INTRINSIC_GAIN);
+
+                            gave_message = true;
+                        }
+                        perma_mutate(you.demonic_traits[i].mutation, 1);
+                    }
+                }
+            }
                 if (!(you.experience_level % 4))
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
+
                 break;
 
             case SP_GHOUL:

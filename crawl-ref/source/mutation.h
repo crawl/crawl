@@ -12,6 +12,29 @@
 
 class formatted_string;
 
+struct body_facet_def
+{
+    equipment_type eq;
+    mutation_type mut;
+    int level_lost;
+};
+
+struct facet_def
+{
+    mutation_type muts[3];
+    int tiers[3];
+};
+
+struct demon_mutation_info
+{
+    mutation_type mut;
+    int tier;
+    int facet;
+
+    demon_mutation_info(mutation_type m, int t, int f)
+        : mut(m), tier(t), facet(f) { }
+};
+
 struct mutation_def
 {
     mutation_type mutation;
@@ -32,6 +55,7 @@ struct mutation_def
 void init_mut_index();
 
 bool is_valid_mutation(mutation_type mut);
+bool is_body_facet(mutation_type mut);
 const mutation_def& get_mutation_def(mutation_type mut);
 
 void fixup_mutations();
@@ -64,8 +88,8 @@ void roll_demonspawn_mutations();
 bool perma_mutate(mutation_type which_mut, int how_much);
 int how_mutated(bool all = false, bool levels = false);
 
-
 void check_demonic_guardian();
 void check_antennae_detect();
 int handle_pbd_corpses(bool do_rot);
+
 #endif
