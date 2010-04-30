@@ -243,6 +243,7 @@ static int _shatter_walls(coord_def where, int pow, int, actor *)
 
     case DNGN_CLEAR_ROCK_WALL:
     case DNGN_ROCK_WALL:
+    case DNGN_SLIMY_WALL:
         chance = pow / 4;
         break;
 
@@ -890,6 +891,7 @@ bool _feat_is_passwallable(dungeon_feature_type feat)
     switch (feat)
     {
     case DNGN_ROCK_WALL:
+    case DNGN_SLIMY_WALL:
     case DNGN_CLEAR_ROCK_WALL:
     case DNGN_SECRET_DOOR:
         return (true);

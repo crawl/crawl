@@ -62,6 +62,7 @@ void _init_feat(feature_def &f, dungeon_feature_type feat)
             break;
 
         case DNGN_ROCK_WALL:
+        case DNGN_SLIMY_WALL:
         case DNGN_PERMAROCK_WALL:
             f.dchar        = DCHAR_WALL;
             f.colour       = ETC_ROCK;

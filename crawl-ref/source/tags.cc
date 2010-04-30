@@ -1948,11 +1948,22 @@ void marshallShowtype(writer &th, const show_type &obj)
     marshallShort(th, obj.colour);
 }
 
+// TAG_MINOR_SLIMY shifted some DNGN_ values.
+static dungeon_feature_type _fixup_feat(dungeon_feature_type feat)
+{
+    if (feat > DNGN_ROCK_WALL && feat < DNGN_GRANITE_STATUE)
+        return (static_cast<dungeon_feature_type>(feat+1));
+    else
+        return (feat);
+}
+
 show_type unmarshallShowtype(reader &th)
 {
     show_type obj;
     obj.cls = static_cast<show_class>(unmarshallByte(th));
     obj.feat = static_cast<dungeon_feature_type>(unmarshallShort(th));
+    if (th.getMinorVersion() < TAG_MINOR_SLIMY)
+        obj.feat = _fixup_feat(obj.feat);
     obj.item = static_cast<show_item_type>(unmarshallShort(th));
     obj.mons = static_cast<monster_type>(unmarshallShort(th));
     obj.colour = unmarshallShort(th);
@@ -2223,6 +2234,8 @@ static void tag_read_level( reader &th, char minorVersion )
             grd[i][j] =
                 static_cast<dungeon_feature_type>(
                     static_cast<unsigned char>(unmarshallByte(th)) );
+            if (th.getMinorVersion() < TAG_MINOR_SLIMY)
+                grd[i][j] = _fixup_feat(grd[i][j]);
 
             env.map_knowledge[i][j].object   = unmarshallShowtype(th);
             env.map_knowledge[i][j].flags    = unmarshallShort(th);

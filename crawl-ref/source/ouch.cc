@@ -266,7 +266,8 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
     return (hurted);
 }
 
-void splash_with_acid(int acid_strength, bool corrode_items)
+void splash_with_acid(int acid_strength, bool corrode_items,
+                      std::string hurt_message)
 {
     int dam = 0;
     const bool wearing_cloak = player_wearing_slot(EQ_CLOAK);
@@ -289,7 +290,7 @@ void splash_with_acid(int acid_strength, bool corrode_items)
 
         if (post_res_dam > 0)
         {
-            mpr("The acid burns!");
+            mpr(hurt_message.empty() ? "The acid burns!" : hurt_message);
 
             if (post_res_dam < dam)
                 canned_msg(MSG_YOU_RESIST);

@@ -2780,6 +2780,8 @@ int tileidx_feature(dungeon_feature_type feat, int gx, int gy)
     case DNGN_ROCK_WALL:
     case DNGN_PERMAROCK_WALL:
         return TILE_WALL_NORMAL;
+    case DNGN_SLIMY_WALL:
+        return TILE_WALL_SLIME;
     case DNGN_OPEN_SEA:
         return TILE_DNGN_OPEN_SEA;
     case DNGN_SECRET_DOOR:
