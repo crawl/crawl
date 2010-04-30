@@ -4896,7 +4896,7 @@ void slime_wall_damage(actor* act, int delay)
     if (act->atype() == ACT_PLAYER)
     {
         ASSERT(act == &you);
-        splash_with_acid(strength, false,
+        splash_with_acid(strength, true,
                          (walls > 1) ? "The walls burn you!"
                                      : "The wall burns you!");
     }
@@ -4915,6 +4915,7 @@ void slime_wall_damage(actor* act, int delay)
              mprf((walls > 1) ? "The walls burn %s!" : "The wall burns %s!",
                   mon->name(DESC_NOCAP_THE).c_str());
          }
+         corrode_monster(mon);
          mon->hurt(NULL, dam, BEAM_ACID);
     }
 }
