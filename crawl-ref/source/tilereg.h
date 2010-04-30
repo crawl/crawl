@@ -558,7 +558,7 @@ public:
     TitleRegion(int width, int height, FTFont* font);
 
     virtual void render();
-    virtual void clear() {};
+    virtual void clear() {}
     virtual void run();
 
     virtual int handle_mouse(MouseEvent &event) { return 0; }
