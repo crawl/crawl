@@ -1456,11 +1456,7 @@ static const facet_def _demon_facets[] =
       { 3, 3, 3 } },
     { { MUT_POWERED_BY_DEATH, MUT_POWERED_BY_DEATH, MUT_POWERED_BY_DEATH },
       { 2, 2, 2 } },
-    { { MUT_REGENERATION, MUT_REGENERATION, MUT_REGENERATION },
-      { 2, 2, 2 } },
     { { MUT_MAGIC_RESISTANCE, MUT_MAGIC_RESISTANCE, MUT_MAGIC_RESISTANCE },
-      { 2, 2, 2 } },
-    { { MUT_BREATHE_FLAMES, MUT_BREATHE_FLAMES, MUT_BREATHE_FLAMES },
       { 2, 2, 2 } },
     { { MUT_PASSIVE_MAPPING, MUT_PASSIVE_MAPPING, MUT_PASSIVE_MAPPING },
       { 2, 2, 2 } },
@@ -1475,6 +1471,10 @@ static const facet_def _demon_facets[] =
     { { MUT_SPINY, MUT_SPINY, MUT_SPINY },
       { 2, 2, 2 } },
     { { MUT_SPIT_POISON, MUT_SPIT_POISON, MUT_SPIT_POISON },
+      { 1, 1, 1 } },
+    { { MUT_BREATHE_FLAMES, MUT_BREATHE_FLAMES, MUT_BREATHE_FLAMES },
+      { 1, 1, 1 } },
+    { { MUT_REGENERATION, MUT_REGENERATION, MUT_REGENERATION },
       { 1, 1, 1 } },
     // Scale mutations
     { { MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD },
@@ -1560,14 +1560,13 @@ try_again:
                     ++scales;
 
                 if (m == MUT_SPIT_POISON
-                    || m == MUT_BREATHE_POISON
                     || m == MUT_BREATHE_FLAMES)
                 {
                     breath_weapons++;
                 }
 
                 if (m == MUT_COLD_RESISTANCE
-                    || m == MUT_BREATHE_FLAMES)
+                    || m == MUT_THROW_FLAMES)
                 {
                     elemental++;
                 }
