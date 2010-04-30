@@ -3,7 +3,6 @@
 #include "ng-setup.h"
 
 #include "abl-show.h"
-#include "arena.h"
 #include "dungeon.h"
 #include "files.h"
 #include "food.h"
@@ -1518,7 +1517,6 @@ static void _setup_normal_game();
 static void _setup_tutorial();
 static void _setup_sprint(const newgame_def& ng);
 static void _setup_hints();
-static void _setup_arena();
 static void _setup_generic(const newgame_def& ng);
 
 // Initialise a game based on the choice stored in ng.
@@ -1541,9 +1539,6 @@ void setup_game(const newgame_def& ng)
         _setup_hints();
         break;
     case GAME_TYPE_ARENA:
-        _setup_arena();
-        // This will never happen.
-        return;
     default:
         ASSERT(!"Bad game type");
         end(-1);
@@ -1566,21 +1561,6 @@ void _setup_normal_game()
 void _setup_tutorial()
 {
     make_hungry(0, true);
-}
-
-/**
- * Special steps that arena needs;
- */
-void _setup_arena()
-{
-    run_map_preludes();
-    initialise_item_descriptions();
-#ifdef USE_TILE
-    tiles.initialise_items();
-#endif
-
-    run_arena();
-    end(0, false);
 }
 
 /**

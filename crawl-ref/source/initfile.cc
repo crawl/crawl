@@ -916,7 +916,7 @@ void game_options::reset_options()
     tile_runrest_rate     = 100;
     tile_key_repeat_delay = 200;
     tile_tooltip_ms       = 500;
-    // XXX: arena may now be chose after options are read.
+    // XXX: arena may now be chosen after options are read.
     tile_tag_pref         = crawl_state.game_is_arena() ? TAGPREF_NAMED
                                                         : TAGPREF_ENEMY;
 
@@ -3763,13 +3763,12 @@ bool parse_args( int argc, char **argv, bool rc_only )
 
         case CLO_ARENA:
             if (!rc_only)
-            {
                 Options.game.type = GAME_TYPE_ARENA;
-                if (next_is_param)
-                {
+            if (next_is_param)
+            {
+                if (!rc_only)
                     SysEnv.arena_teams = next_arg;
-                    nextUsed = true;
-                }
+                nextUsed = true;
             }
             break;
 
