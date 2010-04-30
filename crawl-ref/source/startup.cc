@@ -744,9 +744,19 @@ bool startup_step()
     // We could also check whether game type has been set here,
     // but it's probably not necessary to choose non-default game
     // types while specifying a name externally.
-    if (!is_good_name(choice.name, false, false))
+    if (!is_good_name(choice.name, false, false)
+        && choice.type != GAME_TYPE_ARENA)
+    {
         _show_startup_menu(&choice, defaults);
+    }
 #endif
+
+    if (choice.type == GAME_TYPE_ARENA)
+    {
+        crawl_state.type = GAME_TYPE_ARENA;
+        run_arena();
+        end(0, false);
+    }
 
     bool newchar = false;
     if (save_exists(choice.name))

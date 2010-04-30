@@ -32,6 +32,7 @@
 #include "mon-place.h"
 #include "mgen_data.h"
 #include "mon-stuff.h"
+#include "ng-init.h"
 #include "options.h"
 #include "spl-mis.h"
 #include "spl-util.h"
@@ -1433,8 +1434,19 @@ int arena_cull_items()
 
 /////////////////////////////////////////////////////////////////////////////
 
+static void _init_arena()
+{
+    run_map_preludes();
+    initialise_item_descriptions();
+#ifdef USE_TILE
+    tiles.initialise_items();
+#endif
+}
+
 void run_arena()
 {
+    _init_arena();
+
     ASSERT(!crawl_state.arena_suspended);
 
 #ifdef WIZARD
