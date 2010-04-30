@@ -2082,21 +2082,22 @@ void finished_eating_message(int food_type)
         {
             int temp_rand;
             if (carnivorous) // non-vegetable
-                temp_rand = 5 + random2(4);
+                temp_rand = random2(6);
             else if (herbivorous) // non-meaty
-                temp_rand = random2(6) + 2;
+                temp_rand = 6 + random2(3);
             else
                 temp_rand = random2(9);
 
             mprf("Mmm... %s",
                 (temp_rand == 0) ? "Ham and pineapple." :
-                (temp_rand == 2) ? "Vegetable." :
+                (temp_rand == 1) ? "Supreme." :
+                (temp_rand == 2) ? "Super Supreme!" :
                 (temp_rand == 3) ? "Pepperoni." :
                 (temp_rand == 4) ? "Yeuchh - Anchovies!" :
-                (temp_rand == 5) ? "Cheesy." :
-                (temp_rand == 6) ? "Supreme." :
-                (temp_rand == 7) ? "Super Supreme!"
-                                 : "Chicken.");
+                (temp_rand == 5) ? "Chicken." :
+                (temp_rand == 6) ? "Vegetable." :
+                (temp_rand == 7) ? "Cheesy."
+                                 : "Mushroom.");
         }
         break;
     case FOOD_CHEESE:
