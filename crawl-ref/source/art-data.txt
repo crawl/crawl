@@ -709,7 +709,7 @@ NAME:     captain's cutlass
 APPEAR:   black cutlass
 OBJ:      OBJ_WEAPONS/WPN_SABRE
 PLUS:     +6/+7
-COLOUR:   DARKGRAY
+COLOUR:   DARKGREY
 TILE:     urand_cutlass
 TILE_EQ:  cutlass
 BRAND:    SPWPN_SPEED
