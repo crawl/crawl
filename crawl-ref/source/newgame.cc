@@ -2124,7 +2124,7 @@ static void _construct_god_menu(const god_type& defgod,
     tmp->set_bounds(min_coord, max_coord);
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('+');
-    tmp->set_id(SBT_VIABLE);
+    tmp->set_id(GOD_VIABLE);
     tmp->set_highlight_colour(LIGHTGRAY);
     tmp->set_description_text("Picks a random viable god");
     menu->attach_item(tmp);
@@ -2169,7 +2169,7 @@ static void _construct_god_menu(const god_type& defgod,
     tmp->set_bounds(min_coord, max_coord);
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('*');
-    tmp->set_id(SBT_RANDOM);
+    tmp->set_id(GOD_RANDOM);
     tmp->set_highlight_colour(LIGHTGRAY);
     tmp->set_description_text("Picks a random god");
     menu->attach_item(tmp);
@@ -2425,102 +2425,270 @@ int start_to_wand(int wandtype, bool& is_rod)
     }
 }
 
-static bool _prompt_wand(const newgame_def* ng, newgame_def* ng_choice,
-                         const newgame_def& defaults)
+static void _construct_wand_menu(const startup_wand_type& defwand,
+                                MenuFreeform* menu)
 {
-    _print_character_info(ng);
+    static const int ITEMS_START_Y = 5;
+    TextItem* tmp = NULL;
+    std::string text;
+    coord_def min_coord(0,0);
+    coord_def max_coord(0,0);
 
-    textcolor(CYAN);
-    cprintf("\nYou have a choice of tools:\n"
-                "(Press %% for a list of aptitudes)\n");
 
     for (int i = 0; i < NUM_STARTUP_WANDS; i++)
     {
+        tmp = new TextItem();
+        text.clear();
         startup_wand_type sw = static_cast<startup_wand_type>(i);
-        textcolor(LIGHTGREY);
+
+        tmp->set_fg_colour(LIGHTGREY);
+        tmp->set_highlight_colour(GREEN);
 
         const char letter = 'a' + i;
+        text += letter;
+        text += " - ";
 
         if (sw == SWT_STRIKING)
         {
             item_def rod;
             make_rod(rod, STAFF_STRIKING, 8);
-            cprintf("%c - %s\n", letter,
-                    rod.name(DESC_QUALNAME, false, true).c_str());
+            text += rod.name(DESC_QUALNAME, false, true);
         }
         else
         {
             bool dummy;
             wand_type w = static_cast<wand_type>(start_to_wand(sw, dummy));
-            cprintf("%c - %s\n", letter, wand_type_name(w));
+            text += wand_type_name(w);
+        }
+        // Add padding
+        text.append(COLUMN_WIDTH - text.size() - 1 , ' ');
+        tmp->set_text(text);
+
+        tmp->add_hotkey(letter);
+        tmp->set_id(sw);
+
+        min_coord.x = X_MARGIN;
+        min_coord.y = ITEMS_START_Y + i;
+        max_coord.x = min_coord.x + text.size();
+        max_coord.y = min_coord.y + 1;
+        tmp->set_bounds(min_coord, max_coord);
+
+        menu->attach_item(tmp);
+        tmp->set_visible(true);
+        // Is this item our default god?
+        if (sw == defwand)
+        {
+            menu->set_active_item(tmp);
         }
     }
 
-    textcolor(BROWN);
-    cprintf("\n* - Random choice; "
-                "Bksp - Back to species and background selection; "
-                "X - Quit\n");
+    // Add all the special button entries
+    // Wands do not have unviable choices
+    //tmp = new TextItem();
+    //tmp->set_text("+ - Viable random choice");
+    //min_coord.x = X_MARGIN;
+    //min_coord.y = SPECIAL_KEYS_START_Y;
+    //max_coord.x = min_coord.x + tmp->get_text().size();
+    //max_coord.y = min_coord.y + 1;
+    //tmp->set_bounds(min_coord, max_coord);
+    //tmp->set_fg_colour(BROWN);
+    //tmp->add_hotkey('+');
+    //tmp->set_id(SBT_VIABLE);
+    //tmp->set_highlight_colour(LIGHTGRAY);
+    //tmp->set_description_text("Picks a random viable god");
+    //menu->attach_item(tmp);
+    //tmp->set_visible(true);
 
-    startup_wand_type defwand = defaults.wand;
+    tmp = new TextItem();
+    tmp->set_text("% - List aptitudes");
+    min_coord.x = X_MARGIN;
+    min_coord.y = SPECIAL_KEYS_START_Y + 1;
+    max_coord.x = min_coord.x + tmp->get_text().size();
+    max_coord.y = min_coord.y + 1;
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->set_fg_colour(BROWN);
+    tmp->add_hotkey('%');
+    tmp->set_id('%');
+    tmp->set_highlight_colour(LIGHTGRAY);
+    tmp->set_description_text("Lists the numerical skill train aptitudes for all races");
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
 
+    tmp = new TextItem();
+    tmp->set_text("? - Help");
+    min_coord.x = X_MARGIN;
+    min_coord.y = SPECIAL_KEYS_START_Y + 2;
+    max_coord.x = min_coord.x + tmp->get_text().size();
+    max_coord.y = min_coord.y + 1;
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->set_fg_colour(BROWN);
+    tmp->add_hotkey('?');
+    tmp->set_id('?');
+    tmp->set_highlight_colour(LIGHTGRAY);
+    tmp->set_description_text("Opens the help screen");
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
+
+    tmp = new TextItem();
+    tmp->set_text("* - Random wand");
+    min_coord.x = X_MARGIN + COLUMN_WIDTH;
+    min_coord.y = SPECIAL_KEYS_START_Y;
+    max_coord.x = min_coord.x + tmp->get_text().size();
+    max_coord.y = min_coord.y + 1;
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->set_fg_colour(BROWN);
+    tmp->add_hotkey('*');
+    tmp->set_id(SWT_RANDOM);
+    tmp->set_highlight_colour(LIGHTGRAY);
+    tmp->set_description_text("Picks a random wand");
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
+
+    // Adjust the end marker to align the - because Bksp text is longer by 3
+    tmp = new TextItem();
+    tmp->set_text("Bksp - Return to character menu");
+    tmp->set_description_text("Lets you return back to Character choice menu");
+    min_coord.x = X_MARGIN + COLUMN_WIDTH - 3;
+    min_coord.y = SPECIAL_KEYS_START_Y + 1;
+    max_coord.x = min_coord.x + tmp->get_text().size();
+    max_coord.y = min_coord.y + 1;
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->set_fg_colour(BROWN);
+    tmp->add_hotkey(CK_BKSP);
+    tmp->set_id(CK_BKSP);
+    tmp->set_highlight_colour(LIGHTGRAY);
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
+
+    // Only add tab entry if we have a previous wand choice
     if (defwand != SWT_NO_SELECTION)
     {
-        cprintf("; Enter - %s",
-                defwand == SWT_ENSLAVEMENT ? "Enslavement" :
+        tmp = new TextItem();
+        text.clear();
+        text = "Tab - ";
+
+        text += defwand == SWT_ENSLAVEMENT ? "Enslavement" :
                 defwand == SWT_CONFUSION   ? "Confusion"   :
                 defwand == SWT_MAGIC_DARTS ? "Magic Darts" :
                 defwand == SWT_FROST       ? "Frost"       :
                 defwand == SWT_FLAME       ? "Flame"       :
                 defwand == SWT_STRIKING    ? "Striking"    :
                 defwand == SWT_RANDOM      ? "Random"      :
-                                             "Buggy");
-    }
+                                             "Buggy";
 
-    cprintf("\n");
+        // Adjust the end marker to aling the - because
+        // Tab text is longer by 2
+        tmp = new TextItem();
+        tmp->set_text(text);
+        min_coord.x = X_MARGIN + COLUMN_WIDTH - 2;
+        min_coord.y = SPECIAL_KEYS_START_Y + 2;
+        max_coord.x = min_coord.x + tmp->get_text().size();
+        max_coord.y = min_coord.y + 1;
+        tmp->set_bounds(min_coord, max_coord);
+        tmp->set_fg_colour(BROWN);
+        tmp->add_hotkey('\t');
+        tmp->set_id(defwand);
+        tmp->set_highlight_colour(LIGHTGRAY);
+        tmp->set_description_text("Select your previous wand choice");
+        menu->attach_item(tmp);
+        tmp->set_visible(true);
+    }
+}
+
+static bool _prompt_wand(const newgame_def* ng, newgame_def* ng_choice,
+                         const newgame_def& defaults)
+{
+    PrecisionMenu menu;
+    menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
+    MenuFreeform* freeform = new MenuFreeform();
+    freeform->init(coord_def(1,1), coord_def(get_number_of_cols(),
+                   get_number_of_lines()), "freeform");
+    menu.attach_object(freeform);
+    menu.set_active_object(freeform);
+
+    const startup_wand_type defwand = defaults.wand;
+
+    _construct_wand_menu(defwand, freeform);
+
+    BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
+    highlighter->init(coord_def(0,0), coord_def(0,0), "highlighter");
+    menu.attach_object(highlighter);
+
+    // Did we have a previous god?
+    if (menu.get_active_item() == NULL)
+    {
+        freeform->activate_first_item();
+    }
+    _print_character_info(ng); // calls clrscr() so needs to be before attach()
+
+#ifdef USE_TILE
+    tiles.get_crt()->attach_menu(&menu);
+#endif
+
+    freeform->set_visible(true);
+    highlighter->set_visible(true);
+
+    textcolor(CYAN);
+    cprintf("\nYou have a choice of tools:");
 
     while (true)
     {
-        textcolor(CYAN);
-        cprintf("\nWhich tool? ");
-        textcolor(LIGHTGREY);
+        menu.draw_menu();
 
-        int keyin = getch_ck();
+        int keyn = getch_ck();
 
-        switch (keyin)
+        // First process menu entries
+        if (!menu.process_key(keyn))
         {
-        case 'X':
-            cprintf("\nGoodbye!");
-            end(0);
-            break;
-        case CK_BKSP:
-        case CK_ESCAPE:
-        case ' ':
-            return (false);
-        case '\r':
-        case '\n':
-            if (defwand != SWT_NO_SELECTION)
+            // Process all the keys that are not attached to items
+            switch (keyn)
             {
-                ng_choice->wand = defwand;
-                return (true);
-            }
-            else
+            case 'X':
+                cprintf("\nGoodbye!");
+                end(0);
+                break;
+            case CK_ESCAPE:
+            case ' ':
+                return false;
+            default:
+                // if we get this far, we did not get a significant selection
+                // from the menu, nor did we get an escape character
+                // continue the while loop from the beginning and poll a new key
                 continue;
+            }
+        }
+        // We have a significant key input!
+        // Construct selection vector
+        std::vector<MenuItem*> selection = menu.get_selected_items();
+        // There should only be one selection, otherwise something broke
+        if (selection.size() != 1)
+        {
+            // poll a new key
+            continue;
+        }
+
+        // Get the stored id from the selection
+        int selection_ID = selection.at(0)->get_id();
+        switch (selection_ID)
+        {
+        case CK_BKSP:
+            return false;
         case '%':
             list_commands('%');
             return _prompt_wand(ng, ng_choice, defaults);
-        case '*':
+        case '?':
+            list_commands('?');
+            return _prompt_wand(ng, ng_choice, defaults);
+        case SWT_RANDOM:
             ng_choice->wand = SWT_RANDOM;
-            return (true);
+            return true;
         default:
-            if (keyin - 'a' >= 0 && keyin - 'a' < NUM_STARTUP_WANDS)
-            {
-                ng_choice->wand = static_cast<startup_wand_type>(keyin - 'a');
-                return (true);
-            }
-            else
-                continue;
+            // We got an item selection
+            ng_choice->wand = static_cast<startup_wand_type> (selection_ID);
+            return true;
         }
     }
+    return false;
 }
 
 static void _resolve_wand(newgame_def* ng, const newgame_def* ng_choice)
