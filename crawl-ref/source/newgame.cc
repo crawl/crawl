@@ -2062,80 +2062,262 @@ static god_type _fixup_god(god_type god, const std::vector<god_choice>& gods)
     return (GOD_NO_GOD);
 }
 
+static void _construct_god_menu(const god_type& defgod,
+                                const std::vector<god_choice>& gods,
+                                MenuFreeform* menu)
+{
+    static const int ITEMS_START_Y = 5;
+    TextItem* tmp = NULL;
+    std::string text;
+    coord_def min_coord(0,0);
+    coord_def max_coord(0,0);
+
+    for (unsigned int i = 0; i < gods.size(); ++i)
+    {
+        tmp = new TextItem();
+        text.clear();
+
+        if (gods[i].second == CC_UNRESTRICTED)
+        {
+            tmp->set_fg_colour(LIGHTGREY);
+            tmp->set_highlight_colour(GREEN);
+        }
+        else
+        {
+            tmp->set_fg_colour(DARKGREY);
+            tmp->set_highlight_colour(YELLOW);
+
+        }
+        const char letter = 'a' + i;
+        text += letter;
+        text += " - ";
+        text += _god_text(gods[i].first);
+        //god text is longer than COLUMN_WIDTH
+        //text.append(COLUMN_WIDTH - text.size() - 1 , ' ');
+        tmp->set_text(text);
+
+        tmp->add_hotkey(letter);
+        tmp->set_id(gods[i].first);
+
+        min_coord.x = X_MARGIN;
+        min_coord.y = ITEMS_START_Y + i;
+        max_coord.x = min_coord.x + text.size();
+        max_coord.y = min_coord.y + 1;
+        tmp->set_bounds(min_coord, max_coord);
+
+        menu->attach_item(tmp);
+        tmp->set_visible(true);
+        // Is this item our default god?
+        if (gods[i].first == defgod)
+        {
+            menu->set_active_item(tmp);
+        }
+    }
+
+    // Add all the special button entries
+    tmp = new TextItem();
+    tmp->set_text("+ - Viable random choice");
+    min_coord.x = X_MARGIN;
+    min_coord.y = SPECIAL_KEYS_START_Y;
+    max_coord.x = min_coord.x + tmp->get_text().size();
+    max_coord.y = min_coord.y + 1;
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->set_fg_colour(BROWN);
+    tmp->add_hotkey('+');
+    tmp->set_id(SBT_VIABLE);
+    tmp->set_highlight_colour(LIGHTGRAY);
+    tmp->set_description_text("Picks a random viable god");
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
+
+    tmp = new TextItem();
+    tmp->set_text("% - List aptitudes");
+    min_coord.x = X_MARGIN;
+    min_coord.y = SPECIAL_KEYS_START_Y + 1;
+    max_coord.x = min_coord.x + tmp->get_text().size();
+    max_coord.y = min_coord.y + 1;
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->set_fg_colour(BROWN);
+    tmp->add_hotkey('%');
+    tmp->set_id('%');
+    tmp->set_highlight_colour(LIGHTGRAY);
+    tmp->set_description_text("Lists the numerical skill train aptitudes for all races");
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
+
+    tmp = new TextItem();
+    tmp->set_text("? - Help");
+    min_coord.x = X_MARGIN;
+    min_coord.y = SPECIAL_KEYS_START_Y + 2;
+    max_coord.x = min_coord.x + tmp->get_text().size();
+    max_coord.y = min_coord.y + 1;
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->set_fg_colour(BROWN);
+    tmp->add_hotkey('?');
+    tmp->set_id('?');
+    tmp->set_highlight_colour(LIGHTGRAY);
+    tmp->set_description_text("Opens the help screen");
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
+
+    tmp = new TextItem();
+    tmp->set_text("* - Random god");
+    min_coord.x = X_MARGIN + COLUMN_WIDTH;
+    min_coord.y = SPECIAL_KEYS_START_Y;
+    max_coord.x = min_coord.x + tmp->get_text().size();
+    max_coord.y = min_coord.y + 1;
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->set_fg_colour(BROWN);
+    tmp->add_hotkey('*');
+    tmp->set_id(SBT_RANDOM);
+    tmp->set_highlight_colour(LIGHTGRAY);
+    tmp->set_description_text("Picks a random god");
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
+
+    // Adjust the end marker to align the - because Bksp text is longer by 3
+    tmp = new TextItem();
+    tmp->set_text("Bksp - Return to character menu");
+    tmp->set_description_text("Lets you return back to Character choice menu");
+    min_coord.x = X_MARGIN + COLUMN_WIDTH - 3;
+    min_coord.y = SPECIAL_KEYS_START_Y + 1;
+    max_coord.x = min_coord.x + tmp->get_text().size();
+    max_coord.y = min_coord.y + 1;
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->set_fg_colour(BROWN);
+    tmp->add_hotkey(CK_BKSP);
+    tmp->set_id(CK_BKSP);
+    tmp->set_highlight_colour(LIGHTGRAY);
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
+
+    // Only add tab entry if we have a previous book choice
+    if (defgod != GOD_NO_GOD)
+    {
+        tmp = new TextItem();
+        text.clear();
+        text = "Tab - ";
+
+        text += defgod == GOD_RANDOM ? "Random" :
+                defgod == GOD_VIABLE ? "Viable" :
+                god_name(defgod);
+
+        // Adjust the end marker to aling the - because
+        // Tab text is longer by 2
+        tmp = new TextItem();
+        tmp->set_text(text);
+        min_coord.x = X_MARGIN + COLUMN_WIDTH - 2;
+        min_coord.y = SPECIAL_KEYS_START_Y + 2;
+        max_coord.x = min_coord.x + tmp->get_text().size();
+        max_coord.y = min_coord.y + 1;
+        tmp->set_bounds(min_coord, max_coord);
+        tmp->set_fg_colour(BROWN);
+        tmp->add_hotkey('\t');
+        tmp->set_id(defgod);
+        tmp->set_highlight_colour(LIGHTGRAY);
+        tmp->set_description_text("Select your previous book choice");
+        menu->attach_item(tmp);
+        tmp->set_visible(true);
+    }
+}
+
 static bool _prompt_god(const newgame_def* ng, newgame_def* ng_choice,
                         const newgame_def& defaults,
                         const std::vector<god_choice>& gods)
 {
-    _print_character_info(ng);
-
-    textcolor(CYAN);
-    cprintf("\nWhich god do you wish to serve?\n");
-
-    for (unsigned int i = 0; i < gods.size(); ++i)
-    {
-        if (gods[i].second == CC_UNRESTRICTED)
-            textcolor(LIGHTGREY);
-        else
-            textcolor(DARKGREY);
-
-        const char letter = 'a' + i;
-        cprintf("%c - %s\n", letter, _god_text(gods[i].first).c_str());
-    }
-
-    textcolor(BROWN);
-    cprintf("\n* - Random choice; + - Good random choice\n"
-                "Bksp - Back to species and background selection; "
-                "X - Quit\n");
+    PrecisionMenu menu;
+    menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
+    MenuFreeform* freeform = new MenuFreeform();
+    freeform->init(coord_def(1,1), coord_def(get_number_of_cols(),
+                   get_number_of_lines()), "freeform");
+    menu.attach_object(freeform);
+    menu.set_active_object(freeform);
 
     const god_type defgod = _fixup_god(defaults.religion, gods);
-    if (defgod != GOD_NO_GOD)
+    _construct_god_menu(defgod, gods, freeform);
+
+    BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
+    highlighter->init(coord_def(0,0), coord_def(0,0), "highlighter");
+    menu.attach_object(highlighter);
+
+    // Did we have a previous god?
+    if (menu.get_active_item() == NULL)
     {
-        textcolor(BROWN);
-        cprintf("\nEnter - %s\n", defgod == GOD_RANDOM ? "Random" :
-                                  defgod == GOD_VIABLE ? "Viable" :
-                                  god_name(defgod).c_str());
-        textcolor(LIGHTGREY);
+        freeform->activate_first_item();
     }
+    _print_character_info(ng); // calls clrscr() so needs to be before attach()
+
+#ifdef USE_TILE
+    tiles.get_crt()->attach_menu(&menu);
+#endif
+
+    freeform->set_visible(true);
+    highlighter->set_visible(true);
+
+    textcolor(CYAN);
+    cprintf("\nWhich god do you wish to serve?");
 
     while (true)
     {
+        menu.draw_menu();
+
         int keyn = getch_ck();
 
-        switch (keyn)
+        // First process menu entries
+        if (!menu.process_key(keyn))
         {
-        case 'X':
-            cprintf("\nGoodbye!");
-            end(0);
-            break;
+            // Process all the keys that are not attached to items
+            switch (keyn)
+            {
+            case 'X':
+                cprintf("\nGoodbye!");
+                end(0);
+                break;
+            case CK_ESCAPE:
+            case ' ':
+                return false;
+            default:
+                // if we get this far, we did not get a significant selection
+                // from the menu, nor did we get an escape character
+                // continue the while loop from the beginning and poll a new key
+                continue;
+            }
+        }
+        // We have a significant key input!
+        // Construct selection vector
+        std::vector<MenuItem*> selection = menu.get_selected_items();
+        // There should only be one selection, otherwise something broke
+        if (selection.size() != 1)
+        {
+            // poll a new key
+            continue;
+        }
+
+        // Get the stored id from the selection
+        int selection_ID = selection.at(0)->get_id();
+        switch (selection_ID)
+        {
         case CK_BKSP:
-        case CK_ESCAPE:
-        case ' ':
-            return (false);
-        case '\r':
-        case '\n':
-            if (defgod != GOD_NO_GOD)
-            {
-                ng_choice->religion = defgod;
-                return (true);
-            }
-            else
-                continue;
-        case '+':
+            return false;
+        case '%':
+            list_commands('%');
+            return _prompt_god(ng, ng_choice, defaults, gods);
+        case '?':
+            list_commands('?');
+            return _prompt_god(ng, ng_choice, defaults, gods);
+        case GOD_VIABLE:
             ng_choice->religion = GOD_VIABLE;
-            return (true);
-        case '*':
+            return true;
+        case GOD_RANDOM:
             ng_choice->religion = GOD_RANDOM;
-            return (true);
+            return true;
         default:
-            if (keyn - 'a' >= 0 && keyn - 'a' < (int)gods.size())
-            {
-                ng_choice->religion = gods[keyn - 'a'].first;
-                return (true);
-            }
-            else
-                continue;
+            // We got an item selection
+            ng_choice->religion = static_cast<god_type> (selection_ID);
+            return true;
         }
     }
+    return false;
 }
 
 static void _resolve_god(newgame_def* ng, const newgame_def* ng_choice,
