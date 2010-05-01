@@ -2924,10 +2924,6 @@ bool bolt::misses_player()
             real_tohit += 2 + random2(8);
     }
 
-    // Wow, what a horrid test.  These cannot be blocked or dodged
-    if (!is_beam && !is_blockable())
-        return (false);
-
     bool train_shields_more = false;
 
     if (is_blockable()
