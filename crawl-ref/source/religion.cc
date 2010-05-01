@@ -1149,8 +1149,7 @@ void get_pure_deck_weights(int weights[])
                  + you.sacrifice_value[OBJ_MISSILES] + 1;
     weights[2] = you.sacrifice_value[OBJ_MISCELLANY]
                  + you.sacrifice_value[OBJ_JEWELLERY]
-                 + you.sacrifice_value[OBJ_BOOKS]
-                 + you.sacrifice_value[OBJ_GOLD];     // only via acquirement
+                 + you.sacrifice_value[OBJ_BOOKS];
     weights[3] = you.sacrifice_value[OBJ_CORPSES] / 2;
     weights[4] = you.sacrifice_value[OBJ_POTIONS]
                  + you.sacrifice_value[OBJ_SCROLLS]
@@ -1178,11 +1177,9 @@ static void _update_sacrifice_weights(int which)
         you.sacrifice_value[OBJ_MISCELLANY] /= 5;
         you.sacrifice_value[OBJ_JEWELLERY]  /= 5;
         you.sacrifice_value[OBJ_BOOKS]      /= 5;
-        you.sacrifice_value[OBJ_GOLD]       /= 5;
         you.sacrifice_value[OBJ_MISCELLANY] *= 4;
         you.sacrifice_value[OBJ_JEWELLERY]  *= 4;
         you.sacrifice_value[OBJ_BOOKS]      *= 4;
-        you.sacrifice_value[OBJ_GOLD]       *= 4;
     case 3:
         you.sacrifice_value[OBJ_CORPSES] /= 5;
         you.sacrifice_value[OBJ_CORPSES] *= 4;
@@ -3234,6 +3231,7 @@ bool god_likes_item(god_type god, const item_def& item)
         return (!is_deck(item)
                 && !item.is_critical()
                 && !is_rune(item)
+                && item.base_type != OBJ_GOLD
                 && (item.base_type != OBJ_MISCELLANY
                     || item.sub_type != MISC_HORN_OF_GERYON
                     || item.plus2));
