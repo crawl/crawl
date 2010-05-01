@@ -182,7 +182,7 @@ static void _pick_float_exits(vault_placement &place,
 static void _connect_vault(const vault_placement &vp);
 
 // ITEM & SHOP FUNCTIONS
-static void _place_shops(int level_number, int nshops = 0);
+static void _place_shops(int level_number);
 static object_class_type _item_in_shop(unsigned char shop_type);
 static bool _treasure_area(int level_number, unsigned char ta1_x,
                            unsigned char ta2_x, unsigned char ta1_y,
@@ -5749,30 +5749,23 @@ static void _place_altar()
     }
 }
 
-static void _place_shops(int level_number, int nshops)
+static void _place_shops(int level_number)
 {
-    int temp_rand = 0;          // probability determination {dlb}
-
     coord_def shop_place;
 
-    bool allow_bazaars = false;
+    bool allow_bazaars = true;
 
-    temp_rand = random2(125);
-
-    if (!nshops)
-    {
 #ifdef DEBUG_SHOPS
-        nshops = MAX_SHOPS;
+    int nshops = MAX_SHOPS;
 #else
-        nshops = ((temp_rand > 28) ? 0 :                        // 76.8%
-                  (temp_rand > 4)  ? 1                          // 19.2%
-                                   : random_range(1, MAX_RANDOM_SHOPS)); // 0.4%
+    int temp_rand = random2(125);
+    int nshops = ((temp_rand < 96)  ? 0 :              // 76.8%
+                  (temp_rand < 121) ? 1 :              // 20%
+                  random_range(2, MAX_RANDOM_SHOPS));  // 3.2% (0.8% each)
 
-        if (nshops == 0 || level_number < 3)
-            return;
+    if (nshops == 0 || level_number < 3)
+        return;
 #endif
-        allow_bazaars = true;
-    }
 
     for (int i = 0; i < nshops; i++)
     {
@@ -5787,7 +5780,8 @@ static void _place_shops(int level_number, int nshops)
             if (timeout > 10000)
                 return;
         }
-        while (grd(shop_place) != DNGN_FLOOR && unforbidden(shop_place, MMT_NO_SHOP));
+        while (grd(shop_place) != DNGN_FLOOR
+               && unforbidden(shop_place, MMT_NO_SHOP));
 
         if (allow_bazaars && level_number > 9 && level_number < 27
             && one_chance_in(30 - level_number))
