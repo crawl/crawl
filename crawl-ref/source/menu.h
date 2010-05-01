@@ -451,58 +451,6 @@ protected:
     std::vector<int> toggle_keys;
 };
 
-
-// Uses a sliding selector rather than hotkeyed selection.
-class slider_menu : public Menu
-{
-public:
-    // Multiselect would be awkward to implement.
-    slider_menu(int flags = MF_SINGLESELECT | MF_NOWRAP, bool text_only = true);
-    void display();
-    std::vector<MenuEntry *> show();
-
-    void set_search(const std::string &search);
-    void set_limits(int starty, int endy);
-    const MenuEntry *selected_entry() const;
-
-protected:
-    int item_colour(int index, const MenuEntry *me) const;
-    void draw_stock_item(int index, const MenuEntry *me) const;
-    void draw_menu();
-    void show_less();
-    void show_more();
-    void calc_y_offset();
-    void adjust_pagesizes(int rdepth = 3);
-    int  entry_end() const;
-    void fill_line() const;
-
-    void new_selection(int nsel);
-    bool move_selection(int nsel);
-
-    bool page_down();
-    bool line_down();
-    bool page_up();
-    bool line_up();
-
-    bool is_set(int flag) const;
-    void select_items( int key, int qty );
-    bool fix_entry(int rdepth = 3);
-    bool process_key( int keyin );
-
-    int post_process(int key);
-
-    void select_search(const std::string &search);
-
-protected:
-    formatted_string less;
-    int starty, endy;
-    int selected;
-    bool need_less, need_more;
-    int oldselect;
-    time_t lastkey;
-    std::string search;
-};
-
 // This is only tangentially related to menus, but what the heck.
 // Note, column margins start on 1, not 0.
 class column_composer
