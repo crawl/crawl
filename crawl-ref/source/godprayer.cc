@@ -812,6 +812,9 @@ void offer_items()
         else if (you.religion == GOD_BEOGH)
             simple_god_message(" only cares about orcish remains!");
         else if (you.religion == GOD_NEMELEX_XOBEH)
-            simple_god_message(" expects you to use your decks, not offer them!");
+            if (disliked_item->base_type == OBJ_GOLD)
+                simple_god_message(" does not care about gold!");
+            else
+                simple_god_message(" expects you to use your decks, not offer them!");
     }
 }
