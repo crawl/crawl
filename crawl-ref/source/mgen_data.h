@@ -38,6 +38,14 @@ struct mgen_data
     // Where the monster will be created.
     coord_def       pos;
 
+    // A grid feature to prefer when finding a place to create monsters.
+    // For instance, using DNGN_FLOOR when placing flying monsters or
+    // merfolk in the Shoals will force them to appear on land.
+    // preferred_grid_feature will be ignored if it is incompatible with
+    // the monster's native habitat (for instance, if trying to place
+    // a big fish with preferred_grid_feature DNGN_FLOOR).
+    dungeon_feature_type preferred_grid_feature;
+
     // The monster's foe, i.e. which monster it will want to attack. foe
     // may be an index into the monster array (0 - (MAX_MONSTERS-1)), or
     // it may be MHITYOU to indicate that the monster wants to attack the
@@ -125,8 +133,9 @@ struct mgen_data
               std::string nas = "")
 
         : cls(mt), base_type(base), behaviour(beh), summoner(sner),
-          abjuration_duration(abj), summon_type(st), pos(p), foe(mfoe),
-          flags(monflags), god(which_god), number(monnumber), colour(moncolour),
+          abjuration_duration(abj), summon_type(st), pos(p),
+          preferred_grid_feature(DNGN_UNSEEN), foe(mfoe), flags(monflags),
+          god(which_god), number(monnumber), colour(moncolour),
           power(monpower), proximity(prox), level_type(ltype), map_mask(0),
           hd(mhd), hp(mhp), extra_flags(mflags), mname(monname),
           non_actor_summoner(nas), props()
