@@ -249,6 +249,14 @@ void tile_colour::change_lum(int lum_percent)
     set_from_hsl(hue, sat, lum);
 }
 
+void
+png_write_fn(png_structp png_ptr, png_bytep data, png_size_t length)
+{
+    FILE* fp = (FILE*)png_ptr->io_ptr;
+    if(fwrite(data, 1, length, fp) < 0)
+        png_error(png_ptr, "Write Error");
+}
+
 bool write_png(const char *filename, tile_colour *pixels,
                unsigned int width, unsigned int height)
 {
@@ -271,7 +279,7 @@ bool write_png(const char *filename, tile_colour *pixels,
         return (false);
     }
 
-    png_init_io(png_ptr, fp);
+    png_set_write_fn(png_ptr, fp, png_write_fn, NULL);
 
     int bit_depth        = 8;
     int colour_type      = PNG_COLOR_TYPE_RGB_ALPHA;
