@@ -324,6 +324,7 @@ menu_colour = notes:white:Reached XP level
 force_more_message = You have reached level
 force_more_message = Your scales start
 force_more_message = You fall through a shaft
+force_more_message = You are starting to lose your buoyancy
 
 ##### 4-k	Firing Commands #######################
 #
