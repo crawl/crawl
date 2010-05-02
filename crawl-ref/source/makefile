@@ -375,7 +375,7 @@ LMACH := $(shell gcc -dumpmachine)-
 ifeq ($(LMACH),-)
 LMACH :=
 endif
-ifeq ($(shell which $(LMACH)gcc$(GCC_VER_SUFFIX) 2> /dev/null),)
+ifeq ($(shell which $(LMACH)gcc$(GCC_VER_SUFFIX) > /dev/null 2> /dev/null && echo "Yes"),)
 LMACH :=
 endif
 

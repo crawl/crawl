@@ -29,7 +29,7 @@ LMACH := $(shell gcc -dumpmachine)-
 ifeq ($(LMACH),-)
 LMACH :=
 endif
-ifeq ($(shell which $(LMACH)gcc 2> /dev/null),)
+ifeq ($(shell which $(LMACH)gcc > /dev/null 2> /dev/null && echo "Yes"),)
 LMACH :=
 endif
 CXX = $(LMACH)g++
