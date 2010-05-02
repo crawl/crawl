@@ -2556,7 +2556,13 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         append_vector(note_items, split_string(",", field));
     }
-    else if (key == "autoinscribe")
+
+#ifndef _MSC_VER
+	// break if-else chain on broken Microsoft compilers with stupid nesting limits
+	else
+#endif
+
+    if (key == "autoinscribe")
     {
         if (field.empty())
         {
