@@ -135,7 +135,10 @@ bool monster_habitable_grid(const monsters *m,
     const monster_type montype = mons_is_zombified(m) ? mons_zombie_base(m)
                                                       : m->type;
 
-    return (monster_habitable_grid(montype, actual_grid, mons_flies(m),
+    return (monster_habitable_grid(montype,
+                                   actual_grid,
+                                   DNGN_UNSEEN,
+                                   mons_flies(m),
                                    m->cannot_move()));
 }
 
@@ -156,6 +159,7 @@ bool mons_airborne(int mcls, int flies, bool paralysed)
 // anyway.
 bool monster_habitable_grid(monster_type montype,
                             dungeon_feature_type actual_grid,
+                            dungeon_feature_type wanted_grid_feature,
                             int flies, bool paralysed)
 {
     // No monster may be placed on open sea.
@@ -166,6 +170,19 @@ bool monster_habitable_grid(monster_type montype,
         habitat2grid(mons_class_primary_habitat(montype));
     const dungeon_feature_type feat_nonpreferred =
         habitat2grid(mons_class_secondary_habitat(montype));
+
+    const bool monster_is_airborne = mons_airborne(montype, flies, paralysed);
+
+    // If the caller insists on a specific feature type, try to honour
+    // the request. This allows the builder to place amphibious
+    // creatures only on land, or flying creatures only on lava, etc.
+    if (wanted_grid_feature != DNGN_UNSEEN
+        && (feat_compatible(feat_preferred, wanted_grid_feature)
+            || feat_compatible(feat_nonpreferred, wanted_grid_feature)
+            || (monster_is_airborne && !feat_is_solid(wanted_grid_feature))))
+    {
+        return (feat_compatible(wanted_grid_feature, actual_grid));
+    }
 
     // Special check for fire elementals since their habitat is floor which
     // is generally considered compatible with shallow water.
@@ -182,7 +199,7 @@ bool monster_habitable_grid(monster_type montype,
     // [dshaligram] Flying creatures are all DNGN_FLOOR, so we
     // only have to check for the additional valid grids of deep
     // water and lava.
-    if (mons_airborne(montype, flies, paralysed)
+    if (monster_is_airborne
         && (actual_grid == DNGN_LAVA || actual_grid == DNGN_DEEP_WATER))
     {
         return (true);
@@ -839,7 +856,7 @@ static bool _valid_monster_generation_location( const mgen_data &mg,
 
     const monster_type montype = (mons_class_is_zombified(mg.cls) ? mg.base_type
                                                                   : mg.cls);
-    if (!monster_habitable_grid(montype, grd(mg_pos),
+    if (!monster_habitable_grid(montype, grd(mg_pos), mg.preferred_grid_feature,
                                 mons_class_flies(montype), false)
         || (mg.behaviour != BEH_FRIENDLY && is_sanctuary(mg_pos)))
     {

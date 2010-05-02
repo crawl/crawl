@@ -3668,13 +3668,21 @@ static void _builder_monsters(int level_number, char level_type, int mon_wanted)
         return;
     }
 
+    // Try to place Shoals monsters on floor where possible instead of
+    // letting all the merfolk be generated in the middle of the
+    // water.
+    const dungeon_feature_type preferred_grid_feature =
+        player_in_branch(BRANCH_SHOALS)? DNGN_FLOOR : DNGN_UNSEEN;
+
+    dprf("_builder_monsters: Generating %d monsters", mon_wanted);
     for (int i = 0; i < mon_wanted; i++)
     {
         mgen_data mg;
-        mg.behaviour = BEH_SLEEP;
-        mg.power     = level_number;
-        mg.flags    |= MG_PERMIT_BANDS;
-        mg.map_mask |= MMT_NO_MONS;
+        mg.behaviour              = BEH_SLEEP;
+        mg.power                  = level_number;
+        mg.flags                 |= MG_PERMIT_BANDS;
+        mg.map_mask              |= MMT_NO_MONS;
+        mg.preferred_grid_feature = preferred_grid_feature;
 
         place_monster(mg);
     }
