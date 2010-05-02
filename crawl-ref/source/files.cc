@@ -1766,7 +1766,7 @@ static void _save_game_exit()
 
 #ifdef USE_TAR
     snprintf( cmd_buff, sizeof(cmd_buff),
-              "cd %s && "SAVE_PACKAGE_CMD" -zcf %s"PACKAGE_SUFFIX" --remove-files %s.*",
+              "cd %s && FILES=%s.* && "SAVE_PACKAGE_CMD" -zcf %s"PACKAGE_SUFFIX" $FILES && rm $FILES",
               dirname.c_str(), basename.c_str(), basename.c_str());
 #else
 # ifdef USE_ZIP
