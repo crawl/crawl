@@ -59,6 +59,19 @@ newgame_def::newgame_def()
 {
 }
 
+enum MenuOptions
+{
+    M_QUIT = -1,
+    M_ABORT = -2,
+    M_APTITUDES  = -3,
+    M_HELP = -4,
+    M_VIABLE = -5,
+    M_RANDOM = -6,
+    M_VIABLE_CHAR = -7,
+    M_RANDOM_CHAR = -8,
+    M_DEFAULT_CHOICE = -9
+};
+
 static bool _is_random_species(species_type sp)
 {
     return (sp == SP_RANDOM || sp == SP_VIABLE);
@@ -609,6 +622,7 @@ static void _construct_species_menu(const newgame_def* ng,
         tmp->set_bounds(min_coord, max_coord);
 
         tmp->add_hotkey(index_to_letter(i));
+        tmp->set_id(species);
         tmp->set_description_text(getGameStartDescription(species_name(species, 1)));
         menu->attach_item(tmp);
         tmp->set_visible(true);
@@ -630,6 +644,7 @@ static void _construct_species_menu(const newgame_def* ng,
         tmp->set_bounds(min_coord, max_coord);
         tmp->set_fg_colour(BROWN);
         tmp->add_hotkey('+');
+        tmp->set_id(M_VIABLE);
         tmp->set_highlight_colour(LIGHTGRAY);
         tmp->set_description_text("Picks a random viable species based on your current job choice");
         menu->attach_item(tmp);
@@ -645,6 +660,7 @@ static void _construct_species_menu(const newgame_def* ng,
     tmp->set_bounds(min_coord, max_coord);
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('#');
+    tmp->set_id(M_VIABLE_CHAR);
     tmp->set_highlight_colour(LIGHTGRAY);
     tmp->set_description_text("Shuffles through random viable character combinations "
                               "until you accept one");
@@ -660,6 +676,7 @@ static void _construct_species_menu(const newgame_def* ng,
     tmp->set_bounds(min_coord, max_coord);
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('%');
+    tmp->set_id(M_APTITUDES);
     tmp->set_description_text("Lists the numerical skill train aptitudes for all races");
     tmp->set_highlight_colour(LIGHTGRAY);
     menu->attach_item(tmp);
@@ -674,6 +691,7 @@ static void _construct_species_menu(const newgame_def* ng,
     tmp->set_bounds(min_coord, max_coord);
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('?');
+    tmp->set_id(M_HELP);
     tmp->set_highlight_colour(LIGHTGRAY);
     tmp->set_description_text("Opens the help screen");
     menu->attach_item(tmp);
@@ -688,6 +706,7 @@ static void _construct_species_menu(const newgame_def* ng,
     tmp->set_bounds(min_coord, max_coord);
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('*');
+    tmp->set_id(M_RANDOM);
     tmp->set_highlight_colour(LIGHTGRAY);
     tmp->set_description_text("Picks a random species");
     menu->attach_item(tmp);
@@ -702,6 +721,7 @@ static void _construct_species_menu(const newgame_def* ng,
     tmp->set_bounds(min_coord, max_coord);
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('!');
+    tmp->set_id(M_RANDOM_CHAR);
     tmp->set_highlight_colour(LIGHTGRAY);
     tmp->set_description_text("Shuffles through random character combinations "
                               "until you accept one");
@@ -727,6 +747,7 @@ static void _construct_species_menu(const newgame_def* ng,
     tmp->set_bounds(min_coord, max_coord);
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey(' ');
+    tmp->set_id(M_ABORT);
     tmp->set_highlight_colour(LIGHTGRAY);
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -746,6 +767,7 @@ static void _construct_species_menu(const newgame_def* ng,
         tmp->set_bounds(min_coord, max_coord);
         tmp->set_fg_colour(BROWN);
         tmp->add_hotkey('\t');
+        tmp->set_id(M_DEFAULT_CHOICE);
         tmp->set_highlight_colour(LIGHTGRAY);
         tmp->set_description_text("Play a new game with your previous choice");
         menu->attach_item(tmp);
@@ -839,26 +861,18 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
         {
             // we have a selection!
             // we only care about the first selection (there should be only one)
-            // we only add one hotkey per entry, if at any point we want to add
-            // multiples, you would need to process them all
-            if (selection.at(0)->get_hotkeys().size() == 0)
-            {
-                // the selection is uninteresting
-                continue;
-            }
-
-            int selection_key = selection.at(0)->get_hotkeys().at(0);
+            int selection_key = selection.at(0)->get_id();
 
             bool viable = false;
             switch (selection_key)
             {
-            case '#':
+            case M_VIABLE_CHAR:
                 viable = true;
                 // intentional fall-through
-            case '!':
+            case M_RANDOM_CHAR:
                 _mark_fully_random(ng, ng_choice, viable);
                 return;
-            case '\t':
+            case M_DEFAULT_CHOICE:
                 if (_char_defined(defaults))
                 {
                     *ng_choice = defaults;
@@ -869,26 +883,26 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
                     // ignore Tab because we don't have previous start options
                     continue;
                 }
-            case ' ':
+            case M_ABORT:
                 ng->species = ng_choice->species = SP_UNKNOWN;
                 ng->job     = ng_choice->job     = JOB_UNKNOWN;
                 return;
-            case '?':
+            case M_HELP:
                  // access to the help files
                 list_commands('1');
                 return _prompt_species(ng, ng_choice, defaults);
-            case '%':
+            case M_APTITUDES:
                 list_commands('%');
                 return _prompt_species(ng, ng_choice, defaults);
-            case '+':
+            case M_VIABLE:
                 ng_choice->species = SP_VIABLE;
                 return;
-            case '*':
+            case M_RANDOM:
                 ng_choice->species = SP_RANDOM;
                 return;
             default:
                 // we have a species selection
-                species_type species = get_species(letter_to_index(selection_key));
+                species_type species = static_cast<species_type> (selection_key);
                 if (ng->job == JOB_UNKNOWN
                     || job_allowed(species, ng->job) != CC_BANNED)
                 {
@@ -960,6 +974,7 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
         tmp->set_bounds(min_coord, max_coord);
 
         tmp->add_hotkey(index_to_letter(i));
+        tmp->set_id(job);
         tmp->set_description_text(getGameStartDescription(get_job_name(job)));
 
         menu->attach_item(tmp);
@@ -982,6 +997,7 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
         tmp->set_bounds(min_coord, max_coord);
         tmp->set_fg_colour(BROWN);
         tmp->add_hotkey('+');
+        tmp->set_id(M_VIABLE);
         tmp->set_highlight_colour(LIGHTGRAY);
         tmp->set_description_text("Picks a random viable background based on your current species choice");
         menu->attach_item(tmp);
@@ -997,6 +1013,7 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
     tmp->set_bounds(min_coord, max_coord);
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('#');
+    tmp->set_id(M_VIABLE_CHAR);
     tmp->set_highlight_colour(LIGHTGRAY);
     tmp->set_description_text("Shuffles through random viable character combinations "
                               "until you accept one");
@@ -1012,6 +1029,7 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
     tmp->set_bounds(min_coord, max_coord);
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('%');
+    tmp->set_id(M_APTITUDES);
     tmp->set_highlight_colour(LIGHTGRAY);
     tmp->set_description_text("Lists the numerical skill train aptitudes for all races");
     menu->attach_item(tmp);
@@ -1026,6 +1044,7 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
     tmp->set_bounds(min_coord, max_coord);
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('?');
+    tmp->set_id(M_HELP);
     tmp->set_highlight_colour(LIGHTGRAY);
     tmp->set_description_text("Opens the help screen");
     menu->attach_item(tmp);
@@ -1040,6 +1059,7 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
     tmp->set_bounds(min_coord, max_coord);
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('*');
+    tmp->set_id(M_RANDOM);
     tmp->set_highlight_colour(LIGHTGRAY);
     tmp->set_description_text("Picks a random background");
     menu->attach_item(tmp);
@@ -1054,6 +1074,7 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
     tmp->set_bounds(min_coord, max_coord);
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('!');
+    tmp->set_id(M_RANDOM_CHAR);
     tmp->set_highlight_colour(LIGHTGRAY);
     tmp->set_description_text("Shuffles through random character combinations "
                               "until you accept one");
@@ -1080,6 +1101,7 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
     tmp->set_bounds(min_coord, max_coord);
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey(' ');
+    tmp->set_id(M_ABORT);
     tmp->set_highlight_colour(LIGHTGRAY);
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -1100,6 +1122,7 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
         tmp->set_bounds(min_coord, max_coord);
         tmp->set_fg_colour(BROWN);
         tmp->add_hotkey('\t');
+        tmp->set_id(M_DEFAULT_CHOICE);
         tmp->set_highlight_colour(LIGHTGRAY);
         tmp->set_description_text("Play a new game with your previous choice");
         menu->attach_item(tmp);
@@ -1198,25 +1221,18 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
         {
             // we have a selection!
             // we only care about the first selection (there should be only one)
-            // we only add one hotkey per entry, if at any point we want to add
-            // multiples, you would need to process them all
-            if (selection.at(0)->get_hotkeys().size() == 0)
-            {
-                // the selection is uninteresting
-                continue;
-            }
-            int selection_key = selection.at(0)->get_hotkeys().at(0);
+            int selection_key = selection.at(0)->get_id();
 
             bool viable = false;
             switch (selection_key)
             {
-            case '#':
+            case M_VIABLE_CHAR:
                 viable = true;
                 // intentional fall-through
-            case '!':
+            case M_RANDOM_CHAR:
                 _mark_fully_random(ng, ng_choice, viable);
                 return;
-            case '\t':
+            case M_DEFAULT_CHOICE:
                 if (_char_defined(defaults))
                 {
                     *ng_choice = defaults;
@@ -1224,29 +1240,29 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
                 }
                 else
                 {
-                    // ignore Tab because we don't have previous start options
+                    // ignore default because we don't have previous start options
                     continue;
                 }
-            case ' ':
+            case M_ABORT:
                 ng->species = ng_choice->species = SP_UNKNOWN;
                 ng->job     = ng_choice->job     = JOB_UNKNOWN;
                 return;
-            case '?':
+            case M_HELP:
                  // access to the help files
                 list_commands('1');
                 return _prompt_job(ng, ng_choice, defaults);
-            case '%':
+            case M_APTITUDES:
                 list_commands('%');
                 return _prompt_job(ng, ng_choice, defaults);
-            case '+':
+            case M_VIABLE:
                 ng_choice->job = JOB_VIABLE;
                 return;
-            case '*':
+            case M_RANDOM:
                 ng_choice->job = JOB_RANDOM;
                 return;
             default:
                 // we have a job selection
-                job_type job = get_job(letter_to_index(selection_key));
+                job_type job = static_cast<job_type> (selection_key);
                 if (ng->species == SP_UNKNOWN
                     || job_allowed(ng->species, job) != CC_BANNED)
                 {
@@ -1336,7 +1352,7 @@ static void _construct_weapon_menu(const weapon_type& defweapon,
     tmp->set_bounds(min_coord, max_coord);
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('+');
-    tmp->set_id(WPN_VIABLE);
+    tmp->set_id(M_VIABLE);
     tmp->set_highlight_colour(LIGHTGRAY);
     tmp->set_description_text("Picks a random viable weapon");
     menu->attach_item(tmp);
@@ -1351,7 +1367,7 @@ static void _construct_weapon_menu(const weapon_type& defweapon,
     tmp->set_bounds(min_coord, max_coord);
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('%');
-    tmp->set_id('%');
+    tmp->set_id(M_APTITUDES);
     tmp->set_highlight_colour(LIGHTGRAY);
     tmp->set_description_text("Lists the numerical skill train aptitudes for all races");
     menu->attach_item(tmp);
@@ -1366,7 +1382,7 @@ static void _construct_weapon_menu(const weapon_type& defweapon,
     tmp->set_bounds(min_coord, max_coord);
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('?');
-    tmp->set_id('?');
+    tmp->set_id(M_HELP);
     tmp->set_highlight_colour(LIGHTGRAY);
     tmp->set_description_text("Opens the help screen");
     menu->attach_item(tmp);
@@ -1398,7 +1414,7 @@ static void _construct_weapon_menu(const weapon_type& defweapon,
     tmp->set_bounds(min_coord, max_coord);
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey(CK_BKSP);
-    tmp->set_id(CK_BKSP);
+    tmp->set_id(M_ABORT);
     tmp->set_highlight_colour(LIGHTGRAY);
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -1424,7 +1440,7 @@ static void _construct_weapon_menu(const weapon_type& defweapon,
         tmp->set_bounds(min_coord, max_coord);
         tmp->set_fg_colour(BROWN);
         tmp->add_hotkey('\t');
-        tmp->set_id(defweapon);
+        tmp->set_id(M_DEFAULT_CHOICE);
         tmp->set_highlight_colour(LIGHTGRAY);
         tmp->set_description_text("Select your old weapon");
         menu->attach_item(tmp);
@@ -1512,18 +1528,27 @@ static bool _prompt_weapon(const newgame_def* ng, newgame_def* ng_choice,
         int selection_ID = selection.at(0)->get_id();
         switch (selection_ID)
         {
-        case CK_BKSP:
+        case M_ABORT:
             return false;
-        case '%':
+        case M_APTITUDES:
             list_commands('%');
             return _prompt_weapon(ng, ng_choice, defaults, weapons);
-        case '?':
+        case M_HELP:
             list_commands('?');
             return _prompt_weapon(ng, ng_choice, defaults, weapons);
-        case WPN_VIABLE:
+        case M_DEFAULT_CHOICE:
+            if (defweapon != WPN_UNKNOWN)
+            {
+                ng_choice->weapon = defweapon;
+                return true;
+            }
+            // No default weapon defined.
+            // This case should never happen in those cases but just in case
+            continue;
+        case M_VIABLE:
             ng_choice->weapon = WPN_VIABLE;
             return true;
-        case WPN_RANDOM:
+        case M_RANDOM:
             ng_choice->weapon = WPN_RANDOM;
             return true;
         default:
@@ -1761,7 +1786,7 @@ static void _construct_book_menu(const newgame_def& ng,
     tmp->set_bounds(min_coord, max_coord);
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('+');
-    tmp->set_id(SBT_VIABLE);
+    tmp->set_id(M_VIABLE);
     tmp->set_highlight_colour(LIGHTGRAY);
     tmp->set_description_text("Picks a random viable book");
     menu->attach_item(tmp);
@@ -1776,7 +1801,7 @@ static void _construct_book_menu(const newgame_def& ng,
     tmp->set_bounds(min_coord, max_coord);
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('%');
-    tmp->set_id('%');
+    tmp->set_id(M_APTITUDES);
     tmp->set_highlight_colour(LIGHTGRAY);
     tmp->set_description_text("Lists the numerical skill train aptitudes for all races");
     menu->attach_item(tmp);
@@ -1791,7 +1816,7 @@ static void _construct_book_menu(const newgame_def& ng,
     tmp->set_bounds(min_coord, max_coord);
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('?');
-    tmp->set_id('?');
+    tmp->set_id(M_HELP);
     tmp->set_highlight_colour(LIGHTGRAY);
     tmp->set_description_text("Opens the help screen");
     menu->attach_item(tmp);
@@ -1806,7 +1831,7 @@ static void _construct_book_menu(const newgame_def& ng,
     tmp->set_bounds(min_coord, max_coord);
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('*');
-    tmp->set_id(SBT_RANDOM);
+    tmp->set_id(M_RANDOM);
     tmp->set_highlight_colour(LIGHTGRAY);
     tmp->set_description_text("Picks a random book");
     menu->attach_item(tmp);
@@ -1823,7 +1848,7 @@ static void _construct_book_menu(const newgame_def& ng,
     tmp->set_bounds(min_coord, max_coord);
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey(CK_BKSP);
-    tmp->set_id(CK_BKSP);
+    tmp->set_id(M_ABORT);
     tmp->set_highlight_colour(LIGHTGRAY);
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -1848,7 +1873,7 @@ static void _construct_book_menu(const newgame_def& ng,
         tmp->set_bounds(min_coord, max_coord);
         tmp->set_fg_colour(BROWN);
         tmp->add_hotkey('\t');
-        tmp->set_id(defbook);
+        tmp->set_id(M_DEFAULT_CHOICE);
         tmp->set_highlight_colour(LIGHTGRAY);
         tmp->set_description_text("Select your previous book choice");
         menu->attach_item(tmp);
@@ -1933,18 +1958,26 @@ static bool _prompt_book(const newgame_def* ng, newgame_def* ng_choice,
         int selection_ID = selection.at(0)->get_id();
         switch (selection_ID)
         {
-        case CK_BKSP:
+        case M_ABORT:
             return false;
-        case '%':
+        case M_APTITUDES:
             list_commands('%');
             return _prompt_book(ng, ng_choice, defaults, firstbook, numbooks);
-        case '?':
+        case M_HELP:
             list_commands('?');
             return _prompt_book(ng, ng_choice, defaults, firstbook, numbooks);
-        case SBT_VIABLE:
+        case M_DEFAULT_CHOICE:
+            if (defbook != SBT_NONE)
+            {
+                ng_choice->book = defbook;
+                return true;
+            }
+            // This case should not happen if defbook == SBT_NONE
+            continue;
+        case M_VIABLE:
             ng_choice->book = SBT_VIABLE;
             return true;
-        case SBT_RANDOM:
+        case M_RANDOM:
             ng_choice->book = SBT_RANDOM;
             return true;
         default:
@@ -2124,7 +2157,7 @@ static void _construct_god_menu(const god_type& defgod,
     tmp->set_bounds(min_coord, max_coord);
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('+');
-    tmp->set_id(GOD_VIABLE);
+    tmp->set_id(M_VIABLE);
     tmp->set_highlight_colour(LIGHTGRAY);
     tmp->set_description_text("Picks a random viable god");
     menu->attach_item(tmp);
@@ -2139,7 +2172,7 @@ static void _construct_god_menu(const god_type& defgod,
     tmp->set_bounds(min_coord, max_coord);
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('%');
-    tmp->set_id('%');
+    tmp->set_id(M_APTITUDES);
     tmp->set_highlight_colour(LIGHTGRAY);
     tmp->set_description_text("Lists the numerical skill train aptitudes for all races");
     menu->attach_item(tmp);
@@ -2154,7 +2187,7 @@ static void _construct_god_menu(const god_type& defgod,
     tmp->set_bounds(min_coord, max_coord);
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('?');
-    tmp->set_id('?');
+    tmp->set_id(M_HELP);
     tmp->set_highlight_colour(LIGHTGRAY);
     tmp->set_description_text("Opens the help screen");
     menu->attach_item(tmp);
@@ -2169,7 +2202,7 @@ static void _construct_god_menu(const god_type& defgod,
     tmp->set_bounds(min_coord, max_coord);
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('*');
-    tmp->set_id(GOD_RANDOM);
+    tmp->set_id(M_RANDOM);
     tmp->set_highlight_colour(LIGHTGRAY);
     tmp->set_description_text("Picks a random god");
     menu->attach_item(tmp);
@@ -2186,7 +2219,7 @@ static void _construct_god_menu(const god_type& defgod,
     tmp->set_bounds(min_coord, max_coord);
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey(CK_BKSP);
-    tmp->set_id(CK_BKSP);
+    tmp->set_id(M_ABORT);
     tmp->set_highlight_colour(LIGHTGRAY);
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -2213,7 +2246,7 @@ static void _construct_god_menu(const god_type& defgod,
         tmp->set_bounds(min_coord, max_coord);
         tmp->set_fg_colour(BROWN);
         tmp->add_hotkey('\t');
-        tmp->set_id(defgod);
+        tmp->set_id(M_DEFAULT_CHOICE);
         tmp->set_highlight_colour(LIGHTGRAY);
         tmp->set_description_text("Select your previous book choice");
         menu->attach_item(tmp);
@@ -2297,18 +2330,26 @@ static bool _prompt_god(const newgame_def* ng, newgame_def* ng_choice,
         int selection_ID = selection.at(0)->get_id();
         switch (selection_ID)
         {
-        case CK_BKSP:
+        case M_ABORT:
             return false;
-        case '%':
+        case M_APTITUDES:
             list_commands('%');
             return _prompt_god(ng, ng_choice, defaults, gods);
-        case '?':
+        case M_HELP:
             list_commands('?');
             return _prompt_god(ng, ng_choice, defaults, gods);
-        case GOD_VIABLE:
+        case M_DEFAULT_CHOICE:
+            if (defgod != GOD_NO_GOD)
+            {
+                ng_choice->religion = defgod;
+                return true;
+            }
+            // This case should not happen when defgod == god_no_god
+            continue;
+        case M_VIABLE:
             ng_choice->religion = GOD_VIABLE;
             return true;
-        case GOD_RANDOM:
+        case M_RANDOM:
             ng_choice->religion = GOD_RANDOM;
             return true;
         default:
@@ -2508,7 +2549,7 @@ static void _construct_wand_menu(const startup_wand_type& defwand,
     tmp->set_bounds(min_coord, max_coord);
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('%');
-    tmp->set_id('%');
+    tmp->set_id(M_APTITUDES);
     tmp->set_highlight_colour(LIGHTGRAY);
     tmp->set_description_text("Lists the numerical skill train aptitudes for all races");
     menu->attach_item(tmp);
@@ -2523,7 +2564,7 @@ static void _construct_wand_menu(const startup_wand_type& defwand,
     tmp->set_bounds(min_coord, max_coord);
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('?');
-    tmp->set_id('?');
+    tmp->set_id(M_HELP);
     tmp->set_highlight_colour(LIGHTGRAY);
     tmp->set_description_text("Opens the help screen");
     menu->attach_item(tmp);
@@ -2538,7 +2579,7 @@ static void _construct_wand_menu(const startup_wand_type& defwand,
     tmp->set_bounds(min_coord, max_coord);
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey('*');
-    tmp->set_id(SWT_RANDOM);
+    tmp->set_id(M_RANDOM);
     tmp->set_highlight_colour(LIGHTGRAY);
     tmp->set_description_text("Picks a random wand");
     menu->attach_item(tmp);
@@ -2555,7 +2596,7 @@ static void _construct_wand_menu(const startup_wand_type& defwand,
     tmp->set_bounds(min_coord, max_coord);
     tmp->set_fg_colour(BROWN);
     tmp->add_hotkey(CK_BKSP);
-    tmp->set_id(CK_BKSP);
+    tmp->set_id(M_ABORT);
     tmp->set_highlight_colour(LIGHTGRAY);
     menu->attach_item(tmp);
     tmp->set_visible(true);
@@ -2587,7 +2628,7 @@ static void _construct_wand_menu(const startup_wand_type& defwand,
         tmp->set_bounds(min_coord, max_coord);
         tmp->set_fg_colour(BROWN);
         tmp->add_hotkey('\t');
-        tmp->set_id(defwand);
+        tmp->set_id(M_DEFAULT_CHOICE);
         tmp->set_highlight_colour(LIGHTGRAY);
         tmp->set_description_text("Select your previous wand choice");
         menu->attach_item(tmp);
@@ -2671,15 +2712,23 @@ static bool _prompt_wand(const newgame_def* ng, newgame_def* ng_choice,
         int selection_ID = selection.at(0)->get_id();
         switch (selection_ID)
         {
-        case CK_BKSP:
+        case M_ABORT:
             return false;
-        case '%':
+        case M_APTITUDES:
             list_commands('%');
             return _prompt_wand(ng, ng_choice, defaults);
-        case '?':
+        case M_HELP:
             list_commands('?');
             return _prompt_wand(ng, ng_choice, defaults);
-        case SWT_RANDOM:
+        case M_DEFAULT_CHOICE:
+            if (defwand != SWT_NO_SELECTION)
+            {
+                ng_choice->wand = defwand;
+                return true;
+            }
+            // This case should not happen if defwand == swt_no_selection
+            continue;
+        case M_RANDOM:
             ng_choice->wand = SWT_RANDOM;
             return true;
         default:
