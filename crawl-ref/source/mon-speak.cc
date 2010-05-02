@@ -678,7 +678,7 @@ bool mons_speaks(monsters *monster)
         std::string key = "'";
 
         // Database keys are case-insensitve.
-        if (isupper(mons_base_char(monster->type)))
+        if (isaupper(mons_base_char(monster->type)))
             key += "cap-";
 
         key += mons_base_char(monster->type);

@@ -590,7 +590,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
                 if (!crawl_state.doing_prev_cmd_again)
                     redraw_screen();
 
-                if (isalpha(keyin) || keyin == ESCAPE)
+                if (isaalpha(keyin) || keyin == ESCAPE)
                     break;
                 else
                     mesclr();
@@ -607,7 +607,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
             return (false);
         }
 
-        if (!isalpha(keyin))
+        if (!isaalpha(keyin))
         {
             mpr("You don't know that spell.");
             crawl_state.zero_turns_taken();

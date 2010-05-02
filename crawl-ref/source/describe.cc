@@ -2946,7 +2946,7 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
 
     std::string symbol;
     symbol += get_monster_data(mons.type)->showchar;
-    if (isupper(symbol[0]))
+    if (isaupper(symbol[0]))
         symbol = "cap-" + symbol;
 
     std::string quote2;

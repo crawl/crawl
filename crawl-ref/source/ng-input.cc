@@ -164,6 +164,7 @@ bool validate_player_name(const std::string &name, bool verbose)
         // and doesn't take the time to escape every character that
         // might be a problem for some random shell or OS... so we
         // play it very conservative here.  -- bwr
+        // Accented 8-bit letters are probably harmless here.  -- 1KB
         if (!isalnum(c) && c != '-' && c != '.' && c != '_' && c != ' ')
         {
             if (verbose)

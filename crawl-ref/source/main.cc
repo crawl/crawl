@@ -3669,7 +3669,7 @@ static void _move_player(coord_def move)
 
 static int _get_num_and_char_keyfun(int &ch)
 {
-    if (ch == CK_BKSP || isdigit(ch) || ch >= 128)
+    if (ch == CK_BKSP || isadigit(ch) || (unsigned)ch >= 128)
         return 1;
 
     return -1;

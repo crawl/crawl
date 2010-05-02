@@ -1678,7 +1678,7 @@ std::string game_options::unalias(const std::string &key) const
     return (i == aliases.end()? key : i->second);
 }
 
-#define IS_VAR_CHAR(c) (isalpha(c) || c == '_' || c == '-')
+#define IS_VAR_CHAR(c) (isaalpha(c) || c == '_' || c == '-')
 
 std::string game_options::expand_vars(const std::string &field) const
 {
@@ -2315,7 +2315,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     BOOL_OPTION_NAMED("fully_random", game.fully_random);
     else if (key == "fire_items_start")
     {
-        if (isalpha( field[0] ))
+        if (isaalpha( field[0] ))
             fire_items_start = letter_to_index( field[0] );
         else
         {

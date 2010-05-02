@@ -930,7 +930,7 @@ bool activate_ability()
             canned_msg( MSG_OK );
             return (false);
         }
-        else if ( isalpha(keyin) )
+        else if ( isaalpha(keyin) )
         {
             // Try to find the hotkey.
             for (unsigned int i = 0; i < talents.size(); ++i)

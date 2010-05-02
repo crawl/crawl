@@ -246,7 +246,7 @@ level_range level_range::parse(std::string s) throw (std::string)
 void level_range::parse_partial(level_range &lr, const std::string &s)
     throw (std::string)
 {
-    if (isdigit(s[0]))
+    if (isadigit(s[0]))
     {
         lr.branch = NUM_BRANCHES;
         parse_depth_range(s, &lr.shallowest, &lr.deepest);
@@ -3202,7 +3202,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         if (strip_tag(mon_str, "always_corpse"))
             mspec.props["always_corpse"] = true;
 
-        if (!mon_str.empty() && isdigit(mon_str[0]))
+        if (!mon_str.empty() && isadigit(mon_str[0]))
         {
             // Look for space after initial digits.
             std::string::size_type pos =

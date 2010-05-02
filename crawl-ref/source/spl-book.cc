@@ -2037,7 +2037,7 @@ int staff_spell( int staff )
         }
     }
 
-    if ( !isalpha(keyin) )
+    if ( !isaalpha(keyin) )
     {
         canned_msg(MSG_HUH);
         return -1;

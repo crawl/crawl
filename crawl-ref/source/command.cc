@@ -388,7 +388,7 @@ static void _adjust_spells(void)
             keyin = list_spells(false);
     }
 
-    if (!isalpha(keyin))
+    if (!isaalpha(keyin))
     {
         canned_msg(MSG_OK);
         return;
@@ -409,7 +409,7 @@ static void _adjust_spells(void)
 
     // Select target slot.
     keyin = 0;
-    while (!isalpha(keyin))
+    while (!isaalpha(keyin))
     {
         mpr("Adjust to which letter? ", MSGCH_PROMPT);
         keyin = get_ch();
@@ -466,7 +466,7 @@ static void _adjust_ability(void)
             canned_msg(MSG_OK);
             return;
         }
-        else if (isalpha(keyin))
+        else if (isaalpha(keyin))
         {
             // Try to find the hotkey.
             for (unsigned int i = 0; i < talents.size(); ++i)
@@ -498,7 +498,7 @@ static void _adjust_ability(void)
 
     const int keyin = get_ch();
 
-    if (!isalpha(keyin))
+    if (!isaalpha(keyin))
     {
         canned_msg(MSG_HUH);
         return;
@@ -814,18 +814,18 @@ static void _add_file_to_scroller(FILE* fp, formatted_scroller& m,
     while (fgets(buf, sizeof buf, fp))
     {
         MenuEntry* me = new MenuEntry(buf);
-        if (next_is_hotkey && (isupper(buf[0]) || isdigit(buf[0]))
+        if (next_is_hotkey && (isaupper(buf[0]) || isadigit(buf[0]))
             || is_first && first_hotkey)
         {
             int hotkey = (is_first ? first_hotkey : buf[0]);
             if (!is_first && buf[0] == 'X'
-                && strlen(buf) >= 3 && isdigit(buf[2]))
+                && strlen(buf) >= 3 && isadigit(buf[2]))
             {
                 // X.# is hotkeyed to the #
                 hotkey = buf[2];
             }
             me->add_hotkey(hotkey);
-            if (isupper(hotkey))
+            if (isaupper(hotkey))
                 me->add_hotkey(tolower(hotkey));
             me->level  = MEL_SUBTITLE;
             me->colour = WHITE;

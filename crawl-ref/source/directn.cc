@@ -4018,7 +4018,7 @@ command_type targeting_behaviour::get_command(int key)
 
 #ifndef USE_TILE
     // Overrides the movement keys while mlist_targeting is active.
-    if (crawl_state.mlist_targeting && islower(key))
+    if (crawl_state.mlist_targeting && isalower(key))
         return static_cast<command_type>(CMD_TARGET_CYCLE_MLIST + (key - 'a'));
 #endif
 
