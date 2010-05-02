@@ -38,6 +38,33 @@ static inline int unscale_round_up(int number, int scale)
     return ((number + scale - 1) / scale);
 }
 
+// Chinese rod numerals are _not_ digits for our purposes.
+static inline int isadigit(int c)
+{
+    return (c >= '0' && c <= '9');
+}
+
+// 'ä' is a letter, but not a valid inv slot/etc.
+static inline int isalower(int c)
+{
+    return (c >= 'a' && c <= 'z');
+}
+
+static inline int isaupper(int c)
+{
+    return (c >= 'A' && c <= 'Z');
+}
+
+static inline int isaalpha(int c)
+{
+    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+}
+
+static inline int isaalnum(int c)
+{
+    return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9');
+}
+
 bool ends_with(const std::string &s, const std::string &suffix);
 
 #ifdef UNIX

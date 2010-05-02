@@ -899,7 +899,7 @@ bool InvMenu::process_key( int key )
 unsigned char InvMenu::getkey() const
 {
     unsigned char mkey = lastch;
-    if (!isalnum(mkey) && mkey != '$' && mkey != '-' && mkey != '?'
+    if (!isaalnum(mkey) && mkey != '$' && mkey != '-' && mkey != '?'
         && mkey != '*' && mkey != ESCAPE && mkey != '\\')
     {
         mkey = ' ';
@@ -923,7 +923,7 @@ unsigned char get_invent(int invent_type)
         select = invent_select(NULL, MT_INVLIST, invent_type, -1,
                                MF_SINGLESELECT);
 
-        if (isalpha(select))
+        if (isaalpha(select))
         {
             const int invidx = letter_to_index(select);
             if (you.inv[invidx].is_valid())
@@ -1194,7 +1194,7 @@ static unsigned char _get_invent_quant( unsigned char keyin, int &quant )
     {
         keyin = get_ch();
 
-        if (!isdigit( keyin ))
+        if (!isadigit( keyin ))
             break;
 
         quant *= 10;
@@ -1320,7 +1320,7 @@ std::vector<SelItem> prompt_invent_items(
                             || keyin == ',' || keyin == '+');
             need_prompt = need_redraw;
         }
-        else if (isdigit( keyin ))
+        else if (isadigit( keyin ))
         {
             // The "read in quantity" mode
             keyin = _get_invent_quant( keyin, count );
@@ -1336,7 +1336,7 @@ std::vector<SelItem> prompt_invent_items(
             ret = PROMPT_ABORT;
             break;
         }
-        else if (isalpha( keyin ))
+        else if (isaalpha( keyin ))
         {
             ret = letter_to_index( keyin );
 
@@ -1680,7 +1680,7 @@ int prompt_invent_item( const char *prompt,
 
             // Don't redraw if we're just going to display another listing
             need_redraw = (keyin != '?' && keyin != '*')
-                          && !(count && auto_list && isdigit(keyin));
+                          && !(count && auto_list && isadigit(keyin));
 
             need_prompt = need_redraw;
 
@@ -1696,7 +1696,7 @@ int prompt_invent_item( const char *prompt,
                 }
             }
         }
-        else if (count != NULL && isdigit( keyin ))
+        else if (count != NULL && isadigit( keyin ))
         {
             // The "read in quantity" mode
             keyin = _get_invent_quant( keyin, *count );
@@ -1707,7 +1707,7 @@ int prompt_invent_item( const char *prompt,
             if (auto_list)
                 need_redraw = true;
         }
-        else if (count == NULL && isdigit( keyin ))
+        else if (count == NULL && isadigit( keyin ))
         {
             // scan for our item
             int res = _digit_to_index( keyin, oper );
@@ -1735,7 +1735,7 @@ int prompt_invent_item( const char *prompt,
                 else
                     mpr("You don't recognise anything yet!");
         }
-        else if (isalpha( keyin ))
+        else if (isaalpha( keyin ))
         {
             ret = letter_to_index( keyin );
 

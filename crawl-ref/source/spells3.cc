@@ -90,7 +90,7 @@ bool cast_selective_amnesia(bool force)
             redraw_screen();
         }
 
-        if (!isalpha(keyin))
+        if (!isaalpha(keyin))
             mesclr();
         else
             break;
@@ -2158,7 +2158,7 @@ int portal()
     while (amount == 0)
     {
         const int keyin = getch();
-        if (isdigit(keyin))
+        if (isadigit(keyin))
             amount = (keyin - '0') * dir_sign;
         else if (keyin == 'x')
         {

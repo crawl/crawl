@@ -650,7 +650,7 @@ static bool _in_a_shop( int shopidx, int &num_in_list )
                 }
             }
         }
-        else if (!isalpha(key))
+        else if (!isaalpha(key))
         {
             _shop_print("Huh?", 1);
             _shop_more();

@@ -908,7 +908,7 @@ static bool _prompt_amount(int max, int& selected, const std::string& prompt)
             return (true);
 
         // Otherwise they should enter a digit
-        if (isdigit(keyin))
+        if (isadigit(keyin))
         {
             selected = keyin - '0';
             if (selected > 0 && selected <= max)

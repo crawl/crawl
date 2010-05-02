@@ -701,7 +701,7 @@ bool mons_is_demon(int mc)
 
     // Not every demonic monster is a demon (hell hog, hell hound, etc.)
     if (mons_class_holiness(mc) == MH_DEMONIC
-        && (isdigit(show_char) || show_char == '&'))
+        && (isadigit(show_char) || show_char == '&'))
     {
         return (true);
     }
@@ -3052,12 +3052,12 @@ bool monster_senior(const monsters *m1, const monsters *m2, bool fleeing)
     int mchar2 = me2->showchar;
 
     // If both are demons, the smaller number is the nastier demon.
-    if (isdigit(mchar1) && isdigit(mchar2))
+    if (isadigit(mchar1) && isadigit(mchar2))
         return (fleeing || mchar1 < mchar2);
 
     // &s are the evillest demons of all, well apart from Geryon, who really
     // profits from *not* pushing past beasts.
-    if (mchar1 == '&' && isdigit(mchar2) && m1->type != MONS_GERYON)
+    if (mchar1 == '&' && isadigit(mchar2) && m1->type != MONS_GERYON)
         return (fleeing || m1->hit_dice > m2->hit_dice);
 
     // If they're the same holiness, monsters smart enough to use stairs can

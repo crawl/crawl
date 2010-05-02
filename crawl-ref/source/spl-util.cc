@@ -245,7 +245,7 @@ spschool_flag_type school_by_name(std::string name)
 
 int get_spell_slot_by_letter( char letter )
 {
-    ASSERT( isalpha( letter ) );
+    ASSERT( isaalpha( letter ) );
 
     const int index = letter_to_index( letter );
 
@@ -257,7 +257,7 @@ int get_spell_slot_by_letter( char letter )
 
 spell_type get_spell_by_letter( char letter )
 {
-    ASSERT( isalpha( letter ) );
+    ASSERT( isaalpha( letter ) );
 
     const int slot = get_spell_slot_by_letter( letter );
 

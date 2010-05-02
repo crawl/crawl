@@ -1510,7 +1510,7 @@ void show_skills()
             continue;
         }
 
-        if (!isalpha(keyin))
+        if (!isaalpha(keyin))
             break;
 
         menu_letter lcount = 'a';       // toggle skill practise

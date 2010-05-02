@@ -549,7 +549,7 @@ bool Menu::process_key( int keyin )
         if (!(flags & (MF_SINGLESELECT | MF_MULTISELECT)))
             return (false);
 
-        if (!is_set(MF_NO_SELECT_QTY) && keyin < 0x100 && isdigit( keyin ))
+        if (!is_set(MF_NO_SELECT_QTY) && isadigit( keyin ))
         {
             if (num > 999)
                 num = -1;
@@ -565,7 +565,7 @@ bool Menu::process_key( int keyin )
         draw_select_count( sel.size() );
 
         if (flags & MF_ANYPRINTABLE
-            && (!isdigit(keyin) || is_set(MF_NO_SELECT_QTY)))
+            && (!isadigit(keyin) || is_set(MF_NO_SELECT_QTY)))
         {
             return (false);
         }
@@ -576,7 +576,7 @@ bool Menu::process_key( int keyin )
     if (last_selected != -1 && get_cursor() == -1)
         last_selected = -1;
 
-    if (keyin >= 0x100 || !isdigit( keyin ))
+    if (!isadigit( keyin ))
         num = -1;
 
     if (nav)

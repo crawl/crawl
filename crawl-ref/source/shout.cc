@@ -14,6 +14,7 @@
 #include "env.h"
 #include "ghost.h"
 #include "jobs.h"
+#include "libutil.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
@@ -193,7 +194,7 @@ void handle_monster_shouts(monsters* monster, bool force)
         std::string glyph_key = "'";
 
         // Database keys are case-insensitve.
-        if (isupper(mchar))
+        if (isaupper(mchar))
             glyph_key += "cap-";
 
         glyph_key += mchar;

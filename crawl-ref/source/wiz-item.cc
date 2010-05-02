@@ -371,9 +371,9 @@ static void _tweak_randart(item_def &item)
     char     keyin = tolower( get_ch() );
     unsigned int  choice;
 
-    if (isalpha(keyin))
+    if (isaalpha(keyin))
         choice = keyin - 'a';
-    else if (isdigit(keyin) && keyin != '0')
+    else if (isadigit(keyin) && keyin != '0')
         choice = keyin - '1' + 26;
     else
         return;
