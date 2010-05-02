@@ -549,7 +549,7 @@ bool Menu::process_key( int keyin )
         if (!(flags & (MF_SINGLESELECT | MF_MULTISELECT)))
             return (false);
 
-        if (!is_set(MF_NO_SELECT_QTY) && isdigit( keyin ))
+        if (!is_set(MF_NO_SELECT_QTY) && keyin < 0x100 && isdigit( keyin ))
         {
             if (num > 999)
                 num = -1;
@@ -576,7 +576,7 @@ bool Menu::process_key( int keyin )
     if (last_selected != -1 && get_cursor() == -1)
         last_selected = -1;
 
-    if (!isdigit( keyin ))
+    if (keyin >= 0x100 || !isdigit( keyin ))
         num = -1;
 
     if (nav)
