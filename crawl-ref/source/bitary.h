@@ -10,7 +10,7 @@
 #ifndef BITARY_H
 #define BITARY_H
 
-struct bit_array
+class bit_array
 {
 public:
     bit_array(unsigned long size = 0);

@@ -1270,12 +1270,13 @@ int corpse_spores(beh_type behavior, bool interactive)
 
 struct monster_conversion
 {
-    monster_conversion()
+    monster_conversion() :
+        base_monster(NULL),
+        piety_cost(0),
+        fruit_cost(0)
     {
-        base_monster = NULL;
-        piety_cost = 0;
-        fruit_cost = 0;
     }
+
     monsters * base_monster;
     int piety_cost;
     int fruit_cost;

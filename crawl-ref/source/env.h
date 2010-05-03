@@ -9,7 +9,6 @@
 typedef FixedArray<short, GXM, GYM> grid_heightmap;
 struct crawl_environment
 {
-public:
     unsigned char rock_colour;
     unsigned char floor_colour;
 

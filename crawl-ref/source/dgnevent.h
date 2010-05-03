@@ -73,23 +73,19 @@ public:
 // Alarm goes off when something enters this square.
 struct dgn_square_alarm
 {
-public:
     dgn_square_alarm() : eventmask(0), listeners() { }
 
-public:
     unsigned eventmask;
     std::list<dgn_event_listener*> listeners;
 };
 
 struct dgn_listener_def
 {
-public:
     dgn_listener_def(unsigned mask, dgn_event_listener *l)
         : eventmask(mask), listener(l)
     {
     }
 
-public:
     unsigned eventmask;
     dgn_event_listener *listener;
 };

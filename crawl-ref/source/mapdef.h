@@ -775,8 +775,9 @@ private:
 typedef std::vector<level_range> depth_ranges;
 
 class map_def;
-struct dlua_set_map
+class dlua_set_map
 {
+public:
     dlua_set_map(map_def *map);
     ~dlua_set_map();
 };
