@@ -5758,10 +5758,10 @@ static void _place_altar()
 }
 
 // If a level gets shops, how many there are.
-// Just one most of the time; expected value is 1.34.
+// Just one most of the time; expected value is 1.42.
 static int _num_shops()
 {
-    if (x_chance_in_y(25, 29))
+    if (x_chance_in_y(5, 6))
         return (1);
     else
         return (random_range(2, MAX_RANDOM_SHOPS));
@@ -5777,7 +5777,7 @@ static void _place_shops(int level_number)
 #ifdef DEBUG_SHOPS
     nshops = MAX_SHOPS;
 #else
-    if (level_number < 3 || x_chance_in_y(96, 125))
+    if (level_number < 3 || x_chance_in_y(4, 5))
         return;
     nshops = _num_shops();
 #endif
