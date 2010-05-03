@@ -296,13 +296,10 @@ void handle_monster_shouts(monsters* monster, bool force)
         learned_something_new(HINT_MONSTER_SHOUT, monster->pos());
 }
 
-#ifdef WIZARD
 void force_monster_shout(monsters* monster)
 {
     handle_monster_shouts(monster, true);
 }
-#endif
-
 
 bool check_awaken(monsters* monster)
 {
