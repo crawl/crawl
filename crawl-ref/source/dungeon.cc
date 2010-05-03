@@ -5757,22 +5757,29 @@ static void _place_altar()
     }
 }
 
+// If a level gets shops, how many there are.
+// Just one most of the time; expected value is 1.34.
+static int _num_shops()
+{
+    if (x_chance_in_y(25, 29))
+        return (1);
+    else
+        return (random_range(2, MAX_RANDOM_SHOPS));
+}
+
 static void _place_shops(int level_number)
 {
     coord_def shop_place;
 
+    int nshops;
     bool allow_bazaars = true;
 
 #ifdef DEBUG_SHOPS
-    int nshops = MAX_SHOPS;
+    nshops = MAX_SHOPS;
 #else
-    int temp_rand = random2(125);
-    int nshops = ((temp_rand < 96)  ? 0 :              // 76.8%
-                  (temp_rand < 121) ? 1 :              // 20%
-                  random_range(2, MAX_RANDOM_SHOPS));  // 3.2% (0.8% each)
-
-    if (nshops == 0 || level_number < 3)
+    if (level_number < 3 || x_chance_in_y(96, 125))
         return;
+    nshops = _num_shops();
 #endif
 
     for (int i = 0; i < nshops; i++)
