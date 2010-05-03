@@ -1655,8 +1655,9 @@ protected:
 };
 
 // helper for search_stashes
-struct compare_by_distance
+class compare_by_distance
 {
+public:
     bool operator()(const stash_search_result& lhs,
                     const stash_search_result& rhs)
     {
@@ -1676,8 +1677,9 @@ struct compare_by_distance
 };
 
 // helper for search_stashes
-struct compare_by_name
+class compare_by_name
 {
+public:
     bool operator()(const stash_search_result& lhs,
                     const stash_search_result& rhs)
     {

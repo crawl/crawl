@@ -325,8 +325,9 @@ bool player_tracer( zap_type ztype, int power, bolt &pbolt, int range)
 }
 
 template<typename T>
-struct power_deducer
+class power_deducer
 {
+public:
     virtual T operator()(int pow) const = 0;
     virtual ~power_deducer() {}
 };
@@ -334,8 +335,9 @@ struct power_deducer
 typedef power_deducer<int> tohit_deducer;
 
 template<int adder, int mult_num = 0, int mult_denom = 1>
-struct tohit_calculator : public tohit_deducer
+class tohit_calculator : public tohit_deducer
 {
+public:
     int operator()(int pow) const
     {
         return adder + (pow * mult_num) / mult_denom;
@@ -345,8 +347,9 @@ struct tohit_calculator : public tohit_deducer
 typedef power_deducer<dice_def> dam_deducer;
 
 template<int numdice, int adder, int mult_num, int mult_denom>
-struct dicedef_calculator : public dam_deducer
+class dicedef_calculator : public dam_deducer
 {
+public:
     dice_def operator()(int pow) const
     {
         return dice_def(numdice, adder + (pow * mult_num) / mult_denom);
@@ -354,8 +357,9 @@ struct dicedef_calculator : public dam_deducer
 };
 
 template<int numdice, int adder, int mult_num, int mult_denom>
-struct calcdice_calculator : public dam_deducer
+class calcdice_calculator : public dam_deducer
 {
+public:
     dice_def operator()(int pow) const
     {
         return calc_dice(numdice, adder + (pow * mult_num) / mult_denom);

@@ -53,15 +53,17 @@ struct SelItem
 typedef std::string (*invtitle_annotator)(
             const Menu *m, const std::string &oldtitle);
 
-struct InvTitle : public MenuEntry
+class InvTitle : public MenuEntry
 {
-    Menu *m;
-    invtitle_annotator titlefn;
-
+public:
     InvTitle( Menu *mn, const std::string &title,
               invtitle_annotator tfn );
 
     std::string get_text(const bool = false) const;
+
+private:
+    Menu *m;
+    invtitle_annotator titlefn;
 };
 
 class InvShowPrices;

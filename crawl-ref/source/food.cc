@@ -1105,8 +1105,9 @@ void eat_floor_item(int item_link)
 }
 
 // Returns which of two food items is older (true for first, else false).
-struct compare_by_freshness
+class compare_by_freshness
 {
+public:
     bool operator()(item_def *food1, item_def *food2)
     {
         ASSERT(food1->base_type == OBJ_CORPSES || food1->base_type == OBJ_FOOD);

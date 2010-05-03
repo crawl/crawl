@@ -33,10 +33,7 @@ struct level_exit
     coord_def target;
     bool unreachable;
 
-public:
-    level_exit(coord_def t = coord_def(-1, -1),
-               bool u = true)
-
+    level_exit(coord_def t = coord_def(-1, -1), bool u = true)
         : target(t), unreachable(u)
     {
     }

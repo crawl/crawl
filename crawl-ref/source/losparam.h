@@ -17,8 +17,9 @@ enum opacity_type
     NUM_OPACITIES
 };
 
-struct opacity_func
+class opacity_func
 {
+public:
     virtual opacity_type operator()(const coord_def& p) const = 0;
     virtual ~opacity_func() {}
     virtual opacity_func* clone() const = 0;
@@ -31,8 +32,9 @@ struct opacity_func
     }
 
 // Default LOS rules.
-struct opacity_default : public opacity_func
+class opacity_default : public opacity_func
 {
+public:
     CLONE(opacity_default)
 
     opacity_type operator()(const coord_def& p) const;
@@ -41,8 +43,9 @@ static opacity_default opc_default;
 
 // Default LOS rules, but only consider fully opaque features blocking.
 // In particular, clouds don't affect the result.
-struct opacity_fullyopaque : public opacity_func
+class opacity_fullyopaque : public opacity_func
 {
+public:
     CLONE(opacity_fullyopaque)
 
     opacity_type operator()(const coord_def& p) const;
@@ -52,8 +55,9 @@ static opacity_fullyopaque opc_fullyopaque;
 // Make transparent features block in addition to normal LOS.
 // * Translocations opacity: blink, apportation, portal projectile.
 // * Various "I feel safe"-related stuff.
-struct opacity_no_trans : public opacity_func
+class opacity_no_trans : public opacity_func
 {
+public:
     CLONE(opacity_no_trans)
 
     opacity_type operator()(const coord_def& p) const;
@@ -62,8 +66,9 @@ static opacity_no_trans opc_no_trans;
 
 // Make immobile monsters block in addition to no_trans.
 // This is used for monster movement.
-struct opacity_immob : public opacity_func
+class opacity_immob : public opacity_func
 {
+public:
     CLONE(opacity_immob)
 
     opacity_type operator()(const coord_def& p) const;
@@ -71,8 +76,9 @@ struct opacity_immob : public opacity_func
 static opacity_immob opc_immob;
 
 // Make anything solid block in addition to normal LOS.
-struct opacity_solid : public opacity_func
+class opacity_solid : public opacity_func
 {
+public:
     CLONE(opacity_solid)
 
     opacity_type operator()(const coord_def& p) const;
@@ -80,10 +86,9 @@ struct opacity_solid : public opacity_func
 static opacity_solid opc_solid;
 
 // Opacity for monster movement, based on the late monster_los.
-struct opacity_monmove : public opacity_func
+class opacity_monmove : public opacity_func
 {
-    const monsters& mon;
-
+public:
     opacity_monmove(const monsters& m)
         : mon(m)
     {
@@ -92,12 +97,15 @@ struct opacity_monmove : public opacity_func
     CLONE(opacity_monmove)
 
     opacity_type operator()(const coord_def& p) const;
+private:
+    const monsters& mon;
 };
 
 // Make any actor (as well as solid features) block.
 // Note that the blocking actors are still "visible".
-struct opacity_no_actor : public opacity_func
+class opacity_no_actor : public opacity_func
 {
+public:
     CLONE(opacity_no_actor)
 
     opacity_type operator()(const coord_def& p) const;
@@ -109,8 +117,9 @@ static opacity_no_actor opc_no_actor;
 // relative coordinates (-8,-8)..(8,8) and real coordinates,
 // specify how opaque the cells are and determine what values
 // are written to the visible cells.
-struct los_param
+class los_param
 {
+public:
     virtual ~los_param() {}
 
     // Whether the translated coordinate lies within the map

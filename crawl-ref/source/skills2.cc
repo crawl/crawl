@@ -38,10 +38,9 @@ static skill_op_map Skill_Op_Map;
 // The species for which the skill title is being worked out.
 static species_type Skill_Species = SP_UNKNOWN;
 
-struct skill_title_key_t {
-    const char *key;
-    string_fn op;
-
+class skill_title_key_t
+{
+public:
     skill_title_key_t(const char *k, string_fn o) : key(k), op(o)
     {
         Skill_Op_Map[k] = o;
@@ -52,6 +51,9 @@ struct skill_title_key_t {
         skill_op_map::const_iterator i = Skill_Op_Map.find(key);
         return (i == Skill_Op_Map.end()? std::string() : (i->second)());
     }
+private:
+    const char *key;
+    string_fn op;
 };
 
 typedef skill_title_key_t stk;
