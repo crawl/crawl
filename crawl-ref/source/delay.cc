@@ -48,6 +48,7 @@
 #include "random.h"
 #include "religion.h"
 #include "godconduct.h"
+#include "shout.h"
 #include "spells1.h"
 #include "spells4.h"
 #include "spl-util.h"
@@ -145,6 +146,11 @@ static int _recite_to_monsters(coord_def where, int pow, int, actor *)
                                               (16 + random2avg(13, 2)) * 10)))
         {
             simple_monster_message(mon, " goes into a battle-frenzy!");
+        }
+        else if (!one_chance_in(3)
+                 && mons_shouts(mon->type, false) != S_SILENT)
+        {
+            force_monster_shout(mon);
         }
         else
             return (0); // nothing happens
