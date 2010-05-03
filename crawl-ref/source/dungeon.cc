@@ -1904,7 +1904,7 @@ static void _build_dungeon_level(int level_number, int level_type)
 
     // Place shops, if appropriate. This must be protected by the connectivity
     // check.
-    if (level_type == LEVEL_DUNGEON && your_branch().has_shops)
+    if (level_type == LEVEL_DUNGEON)
         _place_shops(level_number);
 
     // Any vault-placement activity must happen before this check.
@@ -5757,22 +5757,31 @@ static void _place_altar()
     }
 }
 
+// If a level gets shops, how many there are.
+// Just one most of the time; expected value is 1.42.
+static int _num_shops()
+{
+    if (x_chance_in_y(5, 6))
+        return (1);
+    else
+        return (random_range(2, MAX_RANDOM_SHOPS));
+}
+
 static void _place_shops(int level_number)
 {
     coord_def shop_place;
 
+    int nshops;
     bool allow_bazaars = true;
 
 #ifdef DEBUG_SHOPS
-    int nshops = MAX_SHOPS;
+    nshops = MAX_SHOPS;
 #else
-    int temp_rand = random2(125);
-    int nshops = ((temp_rand < 96)  ? 0 :              // 76.8%
-                  (temp_rand < 121) ? 1 :              // 20%
-                  random_range(2, MAX_RANDOM_SHOPS));  // 3.2% (0.8% each)
-
-    if (nshops == 0 || level_number < 3)
+    if (level_number < 3)
         return;
+    if (!x_chance_in_y(your_branch().shop_chance, 100))
+        return;
+    nshops = _num_shops();
 #endif
 
     for (int i = 0; i < nshops; i++)

@@ -42,7 +42,7 @@ struct Branch
     const char* longname;       // "The Pits of Slime"
     const char* abbrevname;     // "Slime"
     const char* entry_message;
-    bool has_shops;
+    int shop_chance;       // How likely a level is to have shops (percent)
     bool has_uniques;
     char floor_colour;          // Zot needs special handling.
     char rock_colour;
