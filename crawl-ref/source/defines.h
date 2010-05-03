@@ -129,6 +129,7 @@ const int LABYRINTH_BORDER = 4;
 #define MAX_SHOPS         25
 
 // max shops randomly generated in a level.
+// changing this affects the total number of shops in a game
 #define MAX_RANDOM_SHOPS  5
 
 // Can be passed to monster_die to indicate that a friendly did the killing.
