@@ -26,7 +26,7 @@ PLUARET(type, expr);             \
 
 BRANCHFN(floorcol, number, br.floor_colour)
 BRANCHFN(rockcol, number, br.rock_colour)
-BRANCHFN(has_shops, boolean, br.has_shops)
+BRANCHFN(has_shops, boolean, br.shop_chance > 0)
 BRANCHFN(has_uniques, boolean, br.has_uniques)
 BRANCHFN(parent_branch, string,
          br.parent_branch == NUM_BRANCHES
