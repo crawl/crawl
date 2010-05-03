@@ -5648,10 +5648,10 @@ void melee_attack::mons_perform_attack_rounds()
             set_ident_flags(*weap, ISFLAG_KNOW_CURSE);
         }
 
-        if (!shield_blocked && attacker != defender &&
-            defender->atype() == ACT_PLAYER &&
-            (grid_distance(you.pos(), attacker->as_monster()->pos()) == 1
-            || attk.flavour == AF_REACH))
+        if (!shield_blocked && attacker != defender
+            && defender->atype() == ACT_PLAYER
+            && (grid_distance(you.pos(), attacker->as_monster()->pos()) == 1
+                || attk.flavour == AF_REACH))
         {
             // Check for spiny mutation
             mons_do_spines();
