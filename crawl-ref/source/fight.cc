@@ -5219,7 +5219,6 @@ void melee_attack::mons_do_spines()
 
     if (you.mutation[MUT_SPINY]
         && attacker->alive()
-        && grid_distance(you.pos(), attacker->as_monster()->pos()) == 1
         && one_chance_in(evp + 1))
     {
         int dmg = roll_dice(player_mutation_level(MUT_SPINY), 6);
@@ -5650,7 +5649,9 @@ void melee_attack::mons_perform_attack_rounds()
         }
 
         if (!shield_blocked && attacker != defender &&
-            defender->atype() == ACT_PLAYER)
+            defender->atype() == ACT_PLAYER &&
+            (grid_distance(you.pos(), attacker->as_monster()->pos()) == 1
+            || attk.flavour == AF_REACH))
         {
             // Check for spiny mutation
             mons_do_spines();
