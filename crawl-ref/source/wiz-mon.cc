@@ -34,6 +34,7 @@
 #include "mon-util.h"
 #include "output.h"
 #include "religion.h"
+#include "shout.h"
 #include "spells2.h"
 #include "spl-mis.h"
 #include "spl-util.h"
@@ -579,8 +580,6 @@ void wizard_dismiss_all_monsters(bool force_all)
     if (!*buf)
         autotoggle_autopickup(false);
 }
-
-extern void force_monster_shout(monsters* monster);
 
 void debug_make_monster_shout(monsters* mon)
 {
