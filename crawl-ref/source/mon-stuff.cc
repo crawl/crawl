@@ -2273,6 +2273,9 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     // the monster is still a mermaid/siren.
     you.remove_beholder(monster);
 
+    if (monster->type == MONS_KRAKEN)
+        _destroy_tentacles(monster);
+
     // Inform listeners that the original monster is gone.
     _fire_monster_death_event(monster, KILL_MISC, NON_MONSTER, true);
 
