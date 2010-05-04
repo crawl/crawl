@@ -33,6 +33,11 @@ Game:
 * Fix old player ghost speech, and add player ghost speech
   fitting the ghost.
 
+Monsters:
+* Manes are now iron imps.
+* (Very) ugly things are no longer amphibious.
+* Glyph change for demonic crawlers.
+
 Technical:
 * LOS and areas recalculated on-demand.
 * Asserts are enabled by default.
