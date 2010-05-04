@@ -1,3 +1,45 @@
+Balancing 0.6 features:
+* Monster double actions due to energy randomization always
+  include a move.
+* Greatly accelerate armour training when armour is heavy
+  relative to skill.
+* Make heavy armour guaranteed damage reduction percentage
+  independent of armour skill.
+
+Unsorted:
+* New mini-game, Dungeon Crawl Sprint.
+* New tutorial, old tutorial now a hints mode.
+* Aptitudes now on a scale +5 to -5.
+* Track the source of poison for death messages.
+
+Interface:
+* New starting menus, mouse-operable in tiles builds.
+* New inventory selection mode with cursor.
+* Swap water and disturbance glyphs ('~' and '{').
+* Show effective weapon speed in '@' character info.
+
+Game:
+* Walls in the Slime Pits are acidic.
+* Changed shop distribution between branches.
+* Removed instant stat death.
+* Silence radius decreases over time.
+* Monster silence.
+* Monster halos.
+* Rearranged and rebalanced some summoning spells.
+* New demonspawn mutations.
+* Make Shoals monsters generate on land.
+* Reduced missile enchantment effect on mulching.
+* New maps.
+* Fix Sif Muna piety being unfair to skilled species.
+* Fix old player ghost speech, and add player ghost speech
+  fitting the ghost.
+
+Technical:
+* LOS and areas recalculated on-demand.
+* Asserts are enabled by default.
+* Abstract tiles code from SDL and OpenGL
+* Cleaned up game selection code.
+
 Stone Soup 0.6 (20100326)
 -------------------------
 Disclaimer: These are merely the highlights, not an exhaustive list of changes.
