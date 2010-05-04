@@ -33,10 +33,22 @@ Game:
 * Fix old player ghost speech, and add player ghost speech
   fitting the ghost.
 
+Gods:
+* Zin no longer objects to deaths of non-sentient allies.
+* Yredelemnul no longer gifts vampires.
+
 Monsters:
 * Manes are now iron imps.
 * (Very) ugly things are no longer amphibious.
 * Glyph change for demonic crawlers.
+
+Spells:
+* Call Imp has been buffed: it is now level 2, it takes spell
+  power into account, and it can summon iron imps.
+* Call Canine Familiar replaces Summon Elemental in the book
+  of Callings, and is removed from the book of Summonings.
+* Summon Ugly Thing has been nerfed: at full spell power, it
+  now summons very ugly things only 33% of the time.
 
 Technical:
 * LOS and areas recalculated on-demand.
