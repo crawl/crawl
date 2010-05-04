@@ -22,7 +22,6 @@ Game:
 * Walls in the Slime Pits are acidic.
 * Changed shop distribution between branches.
 * Removed instant stat death.
-* Silence radius decreases over time.
 * Monster silence.
 * Monster halos.
 * Rearranged and rebalanced some summoning spells.
