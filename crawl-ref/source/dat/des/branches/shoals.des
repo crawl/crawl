@@ -352,16 +352,16 @@ PLACE:   Shoals:$
 TAGS:    mini_float
 KMONS:   1 = Ilsuiw band, siren
 KMONS:   2 = merfolk impaler / merfolk javelineer
-SUBST:   3 = 33.
+SUBST:   3 = 33w
 KMONS:   3 = merfolk aquamancer / merfolk impaler / merfolk javelineer
 KFEAT:   123 = w
 LROCKTILE:  wall_vines
 MAP
  wxwxw
 wxw2wxw
-xwwWwwx
-w3W1W3w
-xwwWwwx
+xwwwwwx
+w3w1w3w
+xwwwwwx
 wxw2wxw
  wxwxw
 ENDMAP
