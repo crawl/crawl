@@ -925,7 +925,7 @@ bool melee_attack::player_attack()
 
 unarmed_attack_data melee_attack::_calc_aux_data(unarmed_attack_type type)
 {
-    ASSERT(UNAT_FIRST <= type <= UNAT_LAST);
+    ASSERT(UNAT_FIRST <= type && type <= UNAT_LAST);
 
     unarmed_attack_data uc_data [] = {
         {
@@ -1067,8 +1067,20 @@ bool melee_attack::player_aux_unarmed()
     }
 
     unarmed_attack_type baseattack =
-        static_cast<unarmed_attack_type>(roll_dice(1,3));
+        static_cast<unarmed_attack_type>(std::max(1, roll_dice(1,4)-1));
 
+    int test[3] = {0,0,0};
+    for(int i = 0 ; i <= 10000; i++)
+    {
+    unarmed_attack_type baseattack =
+        static_cast<unarmed_attack_type>(std::max(1, roll_dice(1,4)-1));
+
+        test[(int)baseattack -1]++;
+    }
+
+    dprf("%d %d %d", test[0], test[1], test[2]);
+
+    return false;
     for (int i = UNAT_FIRST; i <= UNAT_LAST; i++)
     {
         if (!defender->alive())
