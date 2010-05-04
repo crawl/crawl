@@ -1108,16 +1108,19 @@ bool melee_attack::player_aux_unarmed()
             simple_god_message(" blocks your attack.", GOD_ELYVILON);
 
             dec_penance(GOD_ELYVILON, 1 + random2(to_hit - evasion));
+
+            return (false);
         }
 
         if (!auto_hit && to_hit >= evasion
             && !(to_hit >= helpful_evasion)
             && defender_visible)
+        {
             mprf("Helpless, %s fails to dodge your %s.",
                  defender->name(DESC_NOCAP_THE).c_str(),
                  miss_verb.empty() ? unarmed_attack.c_str()
                                    : miss_verb.c_str());
-
+        }
 
         if (to_hit >= evasion || auto_hit)
         {
