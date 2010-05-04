@@ -65,7 +65,7 @@ enum shoals_height_thresholds
     SHT_STONE = 400,
     SHT_ROCK  = 135,
     SHT_FLOOR = 0,
-    SHT_SHALLOW_WATER = -14
+    SHT_SHALLOW_WATER = -30
 };
 
 enum tide_direction
@@ -147,11 +147,11 @@ static dgn_island_plan _shoals_island_plan()
 
     plan.n_island_centre_delta_points = int_range(50, 60);
     plan.island_centre_radius_range = int_range(3, 10);
-    plan.island_centre_point_height_increment = int_range(40, 60);
+    plan.island_centre_point_height_increment = int_range(80, 110);
 
     plan.n_island_aux_delta_points = int_range(25, 45);
     plan.island_aux_radius_range = int_range(2, 7);
-    plan.island_aux_point_height_increment = int_range(25, 35);
+    plan.island_aux_point_height_increment = int_range(50, 65);
 
     return (plan);
 }
