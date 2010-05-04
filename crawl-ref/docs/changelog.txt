@@ -53,7 +53,7 @@ Spells:
 Technical:
 * LOS and areas recalculated on-demand.
 * Asserts are enabled by default.
-* Abstract tiles code from SDL and OpenGL
+* Abstract tiles code from SDL and OpenGL.
 * Cleaned up game selection code.
 
 Stone Soup 0.6 (20100326)
