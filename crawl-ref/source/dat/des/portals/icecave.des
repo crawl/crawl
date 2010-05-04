@@ -52,8 +52,8 @@ function ice_cave_portal(e)
   e.colour("X = white")
   e.kfeat("X = x")
   e.rtile("X = wall_ice")
-  e.colour(".123 = blue")
-  e.ftile(".123O+ = floor_ice")
+  e.colour(".1234 = blue")
+  e.ftile(".1234O+ = floor_ice")
 end
 }}
 
