@@ -68,8 +68,8 @@ function spiders_nest_random_monster_set(e)
   e.set_random_mon_list("giant cockroach / giant mite / scorpion / redback / \
                          wolf spider / trapdoor spider / giant mosquito / \
                          giant blowfly / yellow wasp / red wasp / \
-                         moth of wrath / giant beetle / boring beetle / \
-                         boulder beetle / giant centipede")
+                         giant beetle / boring beetle / boulder beetle / \
+			 giant centipede")
 end
 }}
 
@@ -120,7 +120,6 @@ MONS:    giant centipede
 MONS:    scorpion
 MONS:    trapdoor spider generate_awake / nothing w:20
 MONS:    redback / wolf spider
-MONS:    moth of wrath
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -144,8 +143,8 @@ xxxW....xxxxxx.2222.xx..xx.....Wxxxxx.<*x
 xxxxxx...xxxx...xx...x..x...xx..Wxxx....x
 xxxxxxx...xx...xxxx........xxxx..Wx...xxx
 xxxxxxxx......xxxxxx..44..xxxxxx.....xxxx
-xxxxxxxxx............4..4...........xxxxx
-xxxxxxxxxW..3........4..4........5..xxxxx
+xxxxxxxxx............4..4........33.xxxxx
+xxxxxxxxxW..3........4..4........33.xxxxx
 xxxxxxxxxWW..xxxxxxxW.44.Wxxxxxx....xxxxx
 xxxxxxxxxxxxxxxxxxxxWW..WWxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
