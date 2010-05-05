@@ -8,6 +8,7 @@
 
 #include "item_use.h"
 
+#include <math.h>
 #include <sstream>
 #include <string.h>
 #include <stdlib.h>
@@ -3653,6 +3654,37 @@ void equip_jewellery_effect(item_def &item)
         // drink anything.  Not worth complicating the code, IMHO. [1KB]
         if (player_mutation_level(MUT_SLOW_HEALING) < 3)
             ident = ID_KNOWN_TYPE;
+        break;
+
+    case AMU_STASIS:
+        int amount = you.duration[DUR_HASTE] + you.duration[DUR_SLOW];
+        if (you.duration[DUR_TELEPORT])
+            amount += 30 + random2(150);
+        if (amount)
+        {
+            mprf("The amulet engulfs you in a%s magical discharge!",
+                 (amount > 250) ? " massive" :
+                 (amount >  50) ? " violent" :
+                                  "");
+            ident = ID_KNOWN_TYPE;
+
+            contaminate_player(pow(amount, 0.333), item_type_known(item));
+
+            int dir = 0;
+            if (you.duration[DUR_HASTE])
+                dir++;
+            if (you.duration[DUR_SLOW])
+                dir--;
+            if (dir > 0)
+                mpr("You abruptly slow down.", MSGCH_DURATION);
+            else if (dir < 0)
+                mpr("Your slowness suddenly goes away.", MSGCH_DURATION);
+            if (you.duration[DUR_TELEPORT])
+                mpr("You feel strangely stable.", MSGCH_DURATION);
+            you.duration[DUR_HASTE] = 0;
+            you.duration[DUR_SLOW] = 0;
+            you.duration[DUR_TELEPORT] = 0;
+        }
         break;
 
     }

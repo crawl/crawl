@@ -2316,8 +2316,8 @@ static void _decrement_durations()
             // Don't give duplicate 'You feel yourself slow down' messages.
             no_messages nm;
 
-            // While the amulet of resist slowing does prevent the post-berserk
-            // slowing, exhaustion still ends haste.
+            // Even if you had built up haste before going berserk,
+            // exhaustion still ends it.
             if (you.duration[DUR_HASTE] > 0)
             {
                 // Silently cancel haste, then slow player.

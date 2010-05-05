@@ -1506,11 +1506,32 @@ static std::string _operation_verb(operation_types oper)
     }
 }
 
-bool _removing_amulet_of_faith(const item_def &item, operation_types oper)
+static bool _nasty_stasis(const item_def &item, operation_types oper)
 {
-    return (oper == OPER_REMOVE
+    return (oper == OPER_PUTON
             && item.base_type == OBJ_JEWELLERY
-            && item.sub_type == AMU_FAITH);
+            && item.sub_type == AMU_STASIS
+            && (you.duration[DUR_HASTE] || you.duration[DUR_SLOW])
+                || you.duration[DUR_TELEPORT]);
+}
+
+static bool _needs_warning(const item_def &item, operation_types oper)
+{
+    if (has_warning_inscription(item, oper))
+        return (true);
+
+    if (oper == OPER_REMOVE
+        && item.base_type == OBJ_JEWELLERY
+        && item.sub_type == AMU_FAITH
+        && you.religion != GOD_NO_GOD)
+    {
+        return (true);
+    }
+
+    if (_nasty_stasis(item, oper))
+        return (true);
+
+    return (false);
 }
 
 // Returns true if user OK'd it (or no warning), false otherwise.
@@ -1518,9 +1539,7 @@ bool check_warning_inscriptions( const item_def& item,
                                  operation_types oper )
 {
     if (item.is_valid()
-        && (has_warning_inscription(item, oper)
-            || (_removing_amulet_of_faith(item, oper)
-                && you.religion != GOD_NO_GOD)))
+        && _needs_warning(item, oper))
     {
         // When it's about destroying an item, don't even ask.
         // If the player really wants to do that, they'll have
@@ -1564,6 +1583,9 @@ bool check_warning_inscriptions( const item_def& item,
         std::string prompt = "Really " + _operation_verb(oper) + " ";
         prompt += (in_inventory(item) ? item.name(DESC_INVENTORY)
                                       : item.name(DESC_NOCAP_A));
+        if (_nasty_stasis(item, oper))
+            prompt += std::string(" while ")
+                      + (you.duration[DUR_HASTE] ? "hasted" : "slowed");
         prompt += "?";
         return (yesno(prompt.c_str(), false, 'n')
                 && check_old_item_warning(item, oper));
