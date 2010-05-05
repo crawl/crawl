@@ -579,7 +579,7 @@ x?//.././///x??xl/x
 ENDMAP
 
 ################################################################################
-#	Hibernating monster in a tunnel, can be pretty dangerous
+#       Hibernating monster in a tunnel, can be pretty dangerous
 #
 NAME:   hibernation_bobbens
 DEPTH:  Lair:4-8

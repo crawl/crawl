@@ -46,7 +46,7 @@ ccc+c+c+c+c+c+c+c+c+ccc
 ENDMAP
 
 ##############################################################################
-#	small crypt building
+#       small crypt building
 NAME:   minicrypt_bobbens
 TAGS:   mini_float allow_dup
 DEPTH:  Crypt
@@ -217,7 +217,7 @@ ENDMAP
 # Crypt ends
 
 ##############################################################################
-#	churchlike map with customizeable monster sets
+#       churchlike map with customizeable monster sets
 #
 NAME:   church_of_pain_bobbens
 ORIENT: float
@@ -330,7 +330,7 @@ ENDMAP
 
 
 ##############################################################################
-#	gigantic sort of aquatic base
+#       gigantic sort of aquatic base
 #
 NAME:   cryptofortress_bobbens
 ORIENT: encompass

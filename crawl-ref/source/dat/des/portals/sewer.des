@@ -140,7 +140,7 @@ MAP
 .........
 ENDMAP
 
-NAME:	portal_sewer_entry_d
+NAME:   portal_sewer_entry_d
 TAGS:   uniq_sewer no_monster_gen
 : sewer_portal(_G)
 KMONS:  1 = big fish
@@ -480,7 +480,7 @@ ITEM:     scroll of fear / scroll of fog / scroll of teleportation w:50 / \
           scroll of blinking / scroll of identify / nothing
 ITEM:     potion of levitation w:50 / potion of invisibility / \
           potion of might w:3 / potion of agility w:4 / \
-	  potion of brilliance w:3 / nothing
+          potion of brilliance w:3 / nothing
 # possibly rather generous loot, if you get to the center
 ITEM:     scroll of vulnerability / scroll of identify / wizard hat / \
           potion of magic / potion of brilliance / potion of resistance
