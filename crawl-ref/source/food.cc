@@ -2797,7 +2797,7 @@ static bool _vampire_consume_corpse(int slot, bool invent)
     // The delay for eating a chunk (mass 1000) is 2
     // Here the base nutrition value equals that of chunks,
     // but the delay should be smaller.
-    const int max_chunks = mons_weight(corpse.plus) / 150;
+    const int max_chunks = get_max_corpse_chunks(corpse.plus);
     int duration = 1 + max_chunks / 3;
     duration = stepdown_value(duration, 6, 6, 12, 12);
 
