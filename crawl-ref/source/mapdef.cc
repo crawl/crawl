@@ -18,6 +18,7 @@
 #include "colour.h"
 #include "coord.h"
 #include "coordit.h"
+#include "debug.h"
 #include "describe.h"
 #include "directn.h"
 #include "dungeon.h"
@@ -3837,32 +3838,37 @@ static int str_to_ego(item_spec &spec, std::string ego_str)
         "archery",
         NULL
     };
+    COMPILE_CHECK(ARRAYSZ(armour_egos) == NUM_SPECIAL_ARMOURS,
+                  cc_armour_ego);
 
     const char* weapon_brands[] = {
-        "flaming",        // 1
+        "flaming",
         "freezing",
         "holy_wrath",
         "electrocution",
-        "orc_slaying",    // 5
+        "orc_slaying",
         "dragon_slaying",
         "venom",
         "protection",
         "draining",
-        "speed",          // 10
+        "speed",
         "vorpal",
         "flame",
         "frost",
         "vampiricism",
-        "pain",           // 15
+        "pain",
         "distortion",
         "reaching",
         "returning",
         "chaos",
-        "confuse",        // 20
+        "evasion",
+        "confuse",
         "penetration",
         "reaping",
         NULL
     };
+    COMPILE_CHECK(ARRAYSZ(weapon_brands) == NUM_REAL_SPECIAL_WEAPONS,
+                  cc_weapon_brands);
 
     const char* missile_brands[] = {
         "flame",
@@ -3877,7 +3883,6 @@ static int str_to_ego(item_spec &spec, std::string ego_str)
         "exploding",
         "steel",
         "silver",
-        "electric",
         "paralysis",
         "slow",
         "sleep",
@@ -3886,6 +3891,8 @@ static int str_to_ego(item_spec &spec, std::string ego_str)
         "wrath",
         NULL
     };
+    COMPILE_CHECK(ARRAYSZ(missile_brands) == NUM_SPECIAL_MISSILES,
+                  cc_missile_brands);
 
     const char** name_lists[3] = {armour_egos, weapon_brands, missile_brands};
 

@@ -1592,6 +1592,7 @@ bool is_weapon_brand_ok(int type, int brand)
     case SPWPN_FORBID_BRAND:
     case SPWPN_DEBUG_RANDART:
     case NUM_SPECIAL_WEAPONS:
+    case NUM_REAL_SPECIAL_WEAPONS:
     case SPWPN_DUMMY_CRUSHING:
         ASSERT(!"invalid brand");
         break;
