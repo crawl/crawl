@@ -11,6 +11,7 @@ Unsorted:
 * New tutorial, old tutorial now a hints mode.
 * Aptitudes now on a scale +5 to -5.
 * Track the source of poison for death messages.
+* Death Knights are now necromancy-only.
 
 Interface:
 * New starting menus, mouse-operable in tiles builds.
