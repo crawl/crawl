@@ -126,8 +126,8 @@ bool is_potentially_evil_item(const item_def& item)
     return (false);
 }
 
-// This is a subset of is_evil_item
-bool is_corpse_violating_item(const item_def & item)
+// This is a subset of is_evil_item().
+bool is_corpse_violating_item(const item_def& item)
 {
     bool retval = false;
 
@@ -145,8 +145,8 @@ bool is_corpse_violating_item(const item_def & item)
     {
         const int item_brand = get_weapon_brand(item);
         retval = (item_brand == SPWPN_REAPING);
-    }
         break;
+    }
     case OBJ_MISSILES:
     {
         const int item_brand = get_ammo_brand(item);
@@ -190,11 +190,11 @@ bool is_evil_item(const item_def& item)
         }
         break;
     case OBJ_MISSILES:
-    {
+        {
         const int item_brand = get_ammo_brand(item);
         retval = (item_brand == SPMSL_REAPING);
+        }
         break;
-    }
     case OBJ_WANDS:
         retval = (item.sub_type == WAND_DRAINING);
         break;
