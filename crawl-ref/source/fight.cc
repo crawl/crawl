@@ -953,7 +953,7 @@ unarmed_attack_data melee_attack::_calc_aux_data(unarmed_attack_type type)
             player_mutation_level(MUT_HOOVES) * 5 / 3 +
                 player_mutation_level(MUT_TALONS),
             100,
-            player_mutation_level(MUT_TALONS) ? "claw" : "kick",
+            (you.has_usable_talons() ? "claw" : "kick"),
             player_mutation_level(MUT_TALONS) ? "kick" : "",
             false,
             coinflip() && you.species != SP_NAGA &&
