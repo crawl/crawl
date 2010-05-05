@@ -105,6 +105,9 @@ enum brand_type // equivalent to (you.inv[].special or mitm[].special) % 30
     SPWPN_CONFUSE,                     //   20
     SPWPN_PENETRATION,
     SPWPN_REAPING,
+
+    NUM_REAL_SPECIAL_WEAPONS,
+
     SPWPN_DEBUG_RANDART = 25,          //   25
     NUM_SPECIAL_WEAPONS,
     SPWPN_DUMMY_CRUSHING         // ONLY TEMPORARY USAGE -- converts to VORPAL
