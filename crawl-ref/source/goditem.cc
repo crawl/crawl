@@ -236,6 +236,7 @@ bool is_unclean_item(const item_def& item)
     {
     case OBJ_BOOKS:
         retval = is_unclean_spellbook(item);
+        break;
     case OBJ_STAVES:
         retval = is_unclean_rod(item);
         break;
