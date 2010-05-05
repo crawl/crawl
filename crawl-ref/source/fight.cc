@@ -943,7 +943,10 @@ unarmed_attack_data melee_attack::_calc_aux_data(unarmed_attack_type type)
                 && (hands == HANDS_ONE || hands == HANDS_HALF
                     || hands == HANDS_DOUBLE)
                 && weapon->base_type != OBJ_STAVES,
-            false
+            conflip() && player_mutation_level(MUT_CLAWS)
+                && !shield && weapon
+                && (hands == HANDS_ONE || hands == HANDS_HALF
+                    || hands == HANDS_DOUBLE)
         },
         {
             UNAT_KICK, SPWPN_NORMAL, 5,
