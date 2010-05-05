@@ -2368,7 +2368,7 @@ static bool _monster_eat_single_corpse(monsters *monster, item_def& item,
     // from misc.cc:turn_corpse_into_chunks() and the butchery-related
     // delays in delay.cc:stop_delay().
 
-    const int max_chunks = mons_weight(mt) / 150;
+    const int max_chunks = get_max_corpse_chunks(mt);
 
     // Only fresh corpses bleed enough to colour the ground.
     if (!food_is_rotten(item))

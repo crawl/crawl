@@ -138,11 +138,16 @@ static void _create_monster_hide(const item_def corpse)
         break;
     }
 
-    monster_type mtype = static_cast<monster_type>(corpse.orig_monnum - 1);
-    if (!invalid_monster_type(mtype) && mons_is_unique(mtype))
-        item.inscription = mons_type_name(mtype, DESC_PLAIN);
+    monster_type montype = static_cast<monster_type>(corpse.orig_monnum - 1);
+    if (!invalid_monster_type(montype) && mons_is_unique(montype))
+        item.inscription = mons_type_name(montype, DESC_PLAIN);
 
     move_item_to_grid(&o, you.pos());
+}
+
+int get_max_corpse_chunks(int mons_class)
+{
+    return (mons_weight(mons_class) / 150);
 }
 
 void turn_corpse_into_skeleton(item_def &item)
@@ -171,7 +176,7 @@ void turn_corpse_into_chunks(item_def &item)
 {
     ASSERT(item.base_type == OBJ_CORPSES && item.sub_type == CORPSE_BODY);
     const monster_type montype = static_cast<monster_type>(item.plus);
-    const int max_chunks = mons_weight(montype) / 150;
+    const int max_chunks = get_max_corpse_chunks(item.plus);
 
     // Only fresh corpses bleed enough to colour the ground.
     if (!food_is_rotten(item))
@@ -889,15 +894,15 @@ bool check_blood_corpses_on_ground()
 // Deliberately don't check for rottenness here, so this check
 // can also be used to verify whether you *could* have bottled
 // a now rotten corpse.
-bool can_bottle_blood_from_corpse(int mons_type)
+bool can_bottle_blood_from_corpse(int mons_class)
 {
     if (you.species != SP_VAMPIRE || you.experience_level < 6
-        || !mons_has_blood(mons_type))
+        || !mons_has_blood(mons_class))
     {
         return (false);
     }
 
-    int chunk_type = mons_corpse_effect( mons_type );
+    int chunk_type = mons_corpse_effect(mons_class);
     if (chunk_type == CE_CLEAN || chunk_type == CE_CONTAMINATED)
         return (true);
 
@@ -910,11 +915,11 @@ int num_blood_potions_from_corpse(int mons_class, int chunk_type)
         chunk_type = mons_corpse_effect(mons_class);
 
     // Max. amount is about one third of the max. amount for chunks.
-    const int max_chunks = mons_weight( mons_class ) / 150;
+    const int max_chunks = get_max_corpse_chunks(mons_class);
 
     // Max. amount is about one third of the max. amount for chunks.
-    int pot_quantity = max_chunks/3;
-        pot_quantity = stepdown_value( pot_quantity, 2, 2, 6, 6 );
+    int pot_quantity = max_chunks / 3;
+    pot_quantity = stepdown_value(pot_quantity, 2, 2, 6, 6);
 
     // Halve number of potions obtained from contaminated chunk type corpses.
     if (chunk_type == CE_CONTAMINATED)

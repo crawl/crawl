@@ -380,7 +380,9 @@ bool explode_corpse(item_def& corpse, const coord_def& where)
 
     ld.update();
 
-    int nchunks = 1 + random2(mons_weight(corpse.plus) / 150);
+    const int max_chunks = get_max_corpse_chunks(corpse.plus);
+
+    int nchunks = 1 + random2(max_chunks);
     nchunks = stepdown_value(nchunks, 4, 4, 12, 12);
 
     int ntries = 0;
