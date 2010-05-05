@@ -15,8 +15,12 @@ extern std::string init_file_error; // defined in main.cc
 void opening_screen(void)
 {
     std::string msg =
-    "<yellow>Hello, welcome to Zot Defense 0.1.</yellow>" EOL
-    "<brown>Zot Defense is based on " CRAWL " " + Version::Long() + ",</brown>" EOL
+    (game_is_zotdef() ? 
+        "<yellow>Hello, welcome to Zot Defense 0.1.</yellow>" EOL
+        "<brown>Zot Defense is based on " CRAWL " " + Version::Long() + ",</brown>" EOL
+        :
+        "<yellow>Hello, welcome to " CRAWL " " + Version::Long() + "!</yellow>" EOL
+    ) + 
     "<brown>(c) Copyright 1997-2002 Linley Henzell, "
     "2002-2010 Crawl DevTeam" EOL
     "Please consult crawl_manual.txt for instructions and legal details."

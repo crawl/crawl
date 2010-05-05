@@ -113,15 +113,16 @@ void trap_def::prepare_ammo()
         this->ammo_qty = 2 + random2avg(6, 3);
         break;
     case TRAP_ALARM:
-	// Zotdef: alarm traps have unlimited ammo
-        this->ammo_qty = 1000000;
+        this->ammo_qty = 1 + random2(3);
+        // Zotdef: alarm traps have unlimited ammo
+        if (game_is_zotdef()) this->ammo_qty = 100000;
         break;
     default:
         this->ammo_qty = 0;
         break;
     }
     // Zot def: traps have 10x as much ammo
-    this->ammo_qty*=10;
+    if (game_is_zotdef()) this->ammo_qty*=10;
 }
 
 void trap_def::reveal()
@@ -393,10 +394,10 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
 
     // Zot def - player never sets off known traps
-    if (you_trigger && you_know) 
+    if (game_is_zotdef() && you_trigger && you_know) 
     {
-	mpr("You step safely past the trap");
-	return;
+        mpr("You step safely past the trap");
+        return;
     }
 
     // If set, the trap will be removed at the end of the
@@ -424,11 +425,10 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
 
     // Zot def - friendly monsters never set off known traps
-    //mprf("Monster trigger: m=%p friendly %d knows?  %d",m,(m?mons_friendly(m):-101),trig_knows);
-    if (m && m->friendly() && trig_knows)
+    if (game_is_zotdef() && m && m->friendly() && trig_knows)
     {
-	simple_monster_message(m," carefully avoids a trap.");
-	return;
+        simple_monster_message(m," carefully avoids a trap.");
+        return;
     }
 
 
@@ -485,26 +485,28 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         {
             // Alarm traps aren't set off by hostile monsters, because
             // that would be way too nasty for the player.
-	    std::string msg;
-	    if (you_trigger) 
-	    {
-		msg="An alarm trap emits a blaring wail!";
-	    }
-	    else 
-	    {
-		std::string dir=direction_string(this->pos, !in_sight);
-		msg=std::string("You hear a ")+
-			((in_sight)?"":"distant ")
-			+ "blaring wail "
-			+((dir.length())? ("to the "+dir+".") : "behind you!");
-	    }
+            std::string msg;
+            if (you_trigger) 
+            {
+                msg="An alarm trap emits a blaring wail!";
+            }
+            else 
+            {
+                std::string dir=direction_string(this->pos, !in_sight);
+                msg=std::string("You hear a ")+
+                    ((in_sight)?"":"distant ")
+                    + "blaring wail "
+                    +((dir.length())? ("to the "+dir+".") : "behind you!");
+            }
             // Monsters of normal or greater intelligence will realize that
             // they were the one to set off the trap.
             int source = !m ? you.mindex() :
                          mons_intel(m) >= I_NORMAL ? m->mindex() : -1;
 
-	    // Zotdef - Made alarm traps noisier
-            noisy(30, this->pos, msg.c_str(), source, false);
+            // Zotdef - Made alarm traps noisier and more noticeable
+            int noiselevel = game_is_zotdef() ? 30 : 12;
+            noisy(noiselevel, this->pos, msg.c_str(), source, false);
+            if (game_is_zotdef()) more();
         }
         break;
 
@@ -863,7 +865,7 @@ void disarm_trap(const coord_def& where)
     {
     case DNGN_TRAP_MAGICAL:
         // Zotdef - allow alarm traps to be disarmed
-	if (trap.type != TRAP_ALARM)
+	if (!game_is_zotdef() || trap.type != TRAP_ALARM)
 	{
 	    mpr("You can't disarm that trap.");
 	    return;
@@ -1405,7 +1407,7 @@ dungeon_feature_type trap_category(trap_type type)
 bool is_valid_shaft_level(const level_id &place)
 {
     // Zot def - no shafts
-    return (false);
+    if (game_is_zotdef()) return (false);
 
     if (place.level_type != LEVEL_DUNGEON)
         return (false);

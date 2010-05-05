@@ -7,6 +7,7 @@
 #include "AppHdr.h"
 
 #include "branch.h"
+#include "directn.h"
 #include "dungeon.h" // for Zotdef unique placement
 #include "env.h"
 #include "externs.h"
@@ -880,4 +881,67 @@ monster_type pick_unique(int lev)
 
     return static_cast<monster_type>(which_unique);
 }
+
+// Ask for a location and place a trap there. Returns true
+// for success
+bool create_trap(trap_type spec_type)
+{
+    dist abild;
+    direction_chooser_args args;
+    args.restricts = DIR_TARGET;
+    args.needs_path = false;
+    args.may_target_monster = false;
+    args.top_prompt="Make trap where?";
+    direction(abild, args);
+    const dungeon_feature_type grid = grd(abild.target);
+    if (!abild.isValid)
+    {
+        if (abild.isCancel)
+            canned_msg(MSG_OK);
+        return (false);
+    }
+    // only try to create on floor squares 
+    if (grid >= DNGN_FLOOR_MIN && grid <= DNGN_FLOOR_MAX)
+    {
+        return place_specific_trap(abild.target, spec_type);
+    }
+    else
+    {
+        mpr("You can't create a trap there!");
+        return (false);
+    }
+}
+
+bool create_zotdef_ally(monster_type mtyp, const char *successmsg)
+{
+    dist abild;
+    std::string msg="Make ";
+    msg+=get_monster_data(mtyp)->name;
+    msg+=" where?";
+
+    direction_chooser_args args;
+    args.restricts = DIR_TARGET;
+    args.needs_path = false;
+    args.may_target_monster = false;
+    args.top_prompt=msg;
+    direction(abild, args);
+
+    if (!abild.isValid)
+    {
+        if (abild.isCancel)
+            canned_msg(MSG_OK);
+        return (false);
+    }
+    if (mons_place( mgen_data(mtyp, BEH_FRIENDLY, &you, 0, 0, abild.target, you.pet_target)) != -1)
+    {
+        mpr(successmsg);
+        return (true);
+    }
+    else
+    {
+       mpr("You can't create it there!");
+       return (false);
+    }
+}
+
 

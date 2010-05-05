@@ -423,11 +423,11 @@ static void _reassess_starting_skills()
     // otherwise)
     for (int i = 0; i < NUM_SKILLS; ++i)
     {
-	you.practise_skill[i]=false;	// Zotdef
+        if (game_is_zotdef()) you.practise_skill[i]=false;
         if (you.skills[i] == 0
             && (you.species != SP_VAMPIRE || i != SK_UNARMED_COMBAT))
         {
-	    you.practise_skill[i]=true;	// Zotdef
+            if (game_is_zotdef()) you.practise_skill[i]=true;
             continue;
         }
 
@@ -852,7 +852,7 @@ game_start:
     _racialise_starting_equipment();
     
     //Zotdef:  Start with 2 potions of healing extra
-     _newgame_make_item(-1, EQ_NONE, OBJ_POTIONS, POT_HEALING, -1, 2);
+     if (game_is_zotdef()) _newgame_make_item(-1, EQ_NONE, OBJ_POTIONS, POT_HEALING, -1, 2);
 
     _give_basic_spells(you.char_class);
     _give_basic_knowledge(you.char_class);
@@ -1509,7 +1509,8 @@ static void _jobs_stat_init(job_type which_job)
 
 void give_basic_mutations(species_type speci)
 {
-    you.mutation[MUT_TELEPORT_CONTROL] = 1; // //
+    if (game_is_zotdef())
+        you.mutation[MUT_TELEPORT_CONTROL] = 1; 
 
     // We should switch over to a size-based system
     // for the fast/slow metabolism when we get around to it.
@@ -3495,8 +3496,6 @@ wand_done:
 
 bool _give_items_skills()
 {
-    you.exp_available = 80; // //
-
     char keyn;
     int weap_skill = 0;
     int choice;                 // used for third-screen choices

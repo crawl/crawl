@@ -3331,8 +3331,8 @@ void bolt::affect_ground()
             env.pgrid(pos()) |= FPROP_MOLD;
         }
 
-        // Turn off in Zotdef
-        if(x_chance_in_y(0, 21)
+        if(x_chance_in_y(2, 21)
+           && !game_is_zotdef() // Turn off in Zotdef
            && mons_class_can_pass(MONS_BALLISTOMYCETE, env.grid(pos()))
            && !actor_at(pos()))
         {
