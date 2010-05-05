@@ -60,7 +60,7 @@ function coc_setup(e)
    dgn.set_feature_desc_long("stone wall", "A stone wall coated in a thick layer of ice.\n")
    dgn.set_feature_desc_short("Floor", "Frost-covered floor")
    dgn.set_feature_desc_long("Floor", "Frost-covered floor. It crunches " ..
-				"satisfyingly underfoot.\n")
+                             "satisfyingly underfoot.\n")
 end
 
 function tar_setup(e)
@@ -822,15 +822,15 @@ MONS:   Balrug, sun demon, hellion, fire giant
 KMONS:  7 = molten gargoyle
 KMONS:  8 = imp
 # Place one Serpent in the inner circle.
-KFEAT:	H = lava
-KMONS:	H = Serpent of Hell
+KFEAT:  H = lava
+KMONS:  H = Serpent of Hell
 NSUBST: X = 1:H / *:l
 SUBST:  4 = 344567788
 SUBST:  % = $ |
 SUBST:  " : """.l , " : ""; , " = .l , ; = ...l
 SUBST:  ' : '''.x , ' : ''; , ' = .x , ; = ...x
 : geh_setup(_G)
-COLOUR:	= = red
+COLOUR: = = red
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x...."llvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvlllll"xx
@@ -1061,8 +1061,8 @@ KMONS:   9 = frost giant
 SUBST:   3 = 3333344445555666779
 KMONS:   E = water elemental
 KFEAT:   E = w
-SUBST:	 ^ : ^^^W. , ^ = W.
-SUBST:	 X : XXXc. , X = c.
+SUBST:   ^ : ^^^W. , ^ = W.
+SUBST:   X : XXXc. , X = c.
 SUBST:   " = 8:1 .:10
 SUBST:   ' = .cc
 SUBST:   ; : ;;;;w , ; = wc

@@ -69,7 +69,7 @@ function spiders_nest_random_monster_set(e)
                          wolf spider / trapdoor spider / giant mosquito / \
                          giant blowfly / yellow wasp / red wasp / \
                          giant beetle / boring beetle / boulder beetle / \
-			 giant centipede")
+                         giant centipede")
 end
 }}
 

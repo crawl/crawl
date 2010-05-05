@@ -1193,7 +1193,7 @@ ENDMAP
 
 NAME:    spider_temple_joshua
 DEPTH:   D:20-26
-TAGS:	 no_rotate
+TAGS:    no_rotate
 MONS:    naga mage / naga w:5 / naga skeleton w:2
 MONS:    wolf spider w:7 / giant mite w:3
 MONS:    oklob plant
