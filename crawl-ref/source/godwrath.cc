@@ -783,7 +783,7 @@ static bool _sif_muna_retribution()
         // a duration of one round, thus potentially exposing
         // the player to real danger.
         antimagic();
-        mpr("You sense a dampening of magic.", MSGCH_WARN);
+        mpr("Your magical effects suddenly unravel.", MSGCH_WARN);
         break;
     }
 
