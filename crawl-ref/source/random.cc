@@ -89,7 +89,9 @@ int random_choose_weighted(int weight, int first, ...)
     return (chosen);
 }
 
+#ifndef UINT32_MAX
 #define UINT32_MAX ((uint32_t)(-1))
+#endif
 
 int random2(int max)
 {
