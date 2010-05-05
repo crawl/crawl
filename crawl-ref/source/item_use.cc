@@ -5336,7 +5336,8 @@ static void _vulnerability_scroll()
         }
     }
 
-    you.set_duration(DUR_LOWERED_MR, 40, 0, "Magic dampens around you!");
+    you.set_duration(DUR_LOWERED_MR, 40, 0,
+                     "Magic dampens, then quickly surges around you.");
 }
 
 void read_scroll(int slot)
