@@ -297,6 +297,35 @@ bool is_chaotic_item(const item_def& item)
     return (retval);
 }
 
+bool is_potentially_hasty_item(const item_def& item)
+{
+    switch (item.base_type)
+    {
+    case OBJ_WEAPONS:
+        {
+        const int item_brand = get_weapon_brand(item);
+        if (item_brand == SPWPN_CHAOS)
+            return (true);
+        }
+        break;
+    case OBJ_MISSILES:
+        {
+        const int item_brand = get_ammo_brand(item);
+        if (item_brand == SPMSL_CHAOS)
+            return (true);
+        }
+        break;
+    case OBJ_WANDS:
+        if (item.sub_type == WAND_RANDOM_EFFECTS)
+            return (true);
+        break;
+    default:
+        break;
+    }
+
+    return (false);
+}
+
 bool is_hasty_item(const item_def& item)
 {
     bool retval = false;
@@ -634,8 +663,11 @@ conduct_type god_hates_item_handling(const item_def &item)
         break;
 
     case GOD_CHEIBRIADOS:
-        if (item_type_known(item) && is_hasty_item(item))
+        if (item_type_known(item)
+            && (is_potentially_hasty_item(item) || is_hasty_item(item)))
+        {
             return (DID_HASTY);
+        }
         break;
 
     default:
