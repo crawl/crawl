@@ -1391,7 +1391,7 @@ static int _digit_to_index( char digit, operation_types oper )
     return -1;
 }
 
-bool has_warning_inscription(const item_def& item,
+static bool _has_warning_inscription(const item_def& item,
                              operation_types oper)
 {
     const char iletter = static_cast<char>(oper);
@@ -1517,7 +1517,7 @@ static bool _nasty_stasis(const item_def &item, operation_types oper)
 
 bool needs_handle_warning(const item_def &item, operation_types oper)
 {
-    if (has_warning_inscription(item, oper))
+    if (_has_warning_inscription(item, oper))
         return (true);
 
     if (!item_ident(item, ISFLAG_KNOW_TYPE))

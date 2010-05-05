@@ -241,9 +241,8 @@ static bool _find_butchering_implement(int &butcher_tool)
             if (Options.easy_butcher
                 && item_known_uncursed(tool)
                 && item_type_known(tool)
-                && get_weapon_brand(tool) != SPWPN_DISTORTION
                 // Don't even ask!
-                && !has_warning_inscription(tool, OPER_WIELD))
+                && !needs_handle_warning(tool, OPER_WIELD))
             {
                 butcher_tool = i;
                 return (true);
