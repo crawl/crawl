@@ -305,6 +305,7 @@ int get_item_slot( int reserve )
     if (crawl_state.arena)
         reserve = 0;
 
+    //mprf("get_item_slot, reserve %d",reserve);
     int item = NON_ITEM;
 
     for (item = 0; item < (MAX_ITEMS - reserve); item++)
@@ -324,11 +325,13 @@ int get_item_slot( int reserve )
         else
             item = (reserve <= 10) ? _cull_items() : NON_ITEM;
 
+	mprf("get_item_slot, post-cull item=%d",item);
         if (item == NON_ITEM)
             return (NON_ITEM);
     }
 
     ASSERT( item != NON_ITEM );
+    //mprf("get_item_slot, got item=%d",item);
 
     init_item( item );
 
@@ -1009,6 +1012,17 @@ bool is_unique_rune(const item_def &item)
             && item.plus != RUNE_ABYSSAL);
 }
 
+// Returns the Orb's position. If orPlayer is true,
+// returns the player's position if the Orb can't be found. Otherwise
+// returns a zero coord. Used in various places that used to
+// use find_floor_item(OBJ_ORBS,ORB_ZOT)->pos, and that is a NULL deref
+// once you pick up the Orb :(
+coord_def orb_position(bool orPlayer)
+{
+    item_def* orb=find_floor_item(OBJ_ORBS,ORB_ZOT);
+    return (orb ? orb->pos: (orPlayer?you.pos():coord_def()));
+}
+
 bool origin_describable(const item_def &item)
 {
     return (origin_known(item)
@@ -1511,6 +1525,16 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         return (1);
     }
 
+    if (mitm[obj].base_type == OBJ_ORBS)
+    {
+        std::vector<int> runes;
+        if (runes_in_pack(runes) < 15)
+        {
+            mpr("You must possess at least fifteen runes to touch the sacred Orb which you defend.");
+            return (1);
+        }
+    }
+
     int retval = quant_got;
 
     // Gold has no mass, so we handle it first.
@@ -1691,17 +1715,17 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
             learned_something_new(TUT_SEEN_RANDART);
     }
 
-    if (item.base_type == OBJ_ORBS
-        && you.char_direction == GDT_DESCENDING)
-    {
+    // //    if (item.base_type == OBJ_ORBS
+    // //    && you.char_direction == GDT_DESCENDING)
+    // // {
         // Take a note!
-        _check_note_item(item);
-
-        if (!quiet)
-            mpr("Now all you have to do is get back out of the dungeon!");
-        you.char_direction = GDT_ASCENDING;
-        xom_is_stimulated(255, XM_INTRIGUED);
-    }
+    // //    _check_note_item(item);
+// //
+     // //   if (!quiet)
+    // //        mpr("Now all you have to do is get back out of the dungeon!");
+    // //    you.char_direction = GDT_ASCENDING;
+    // //    xom_is_stimulated(255, XM_INTRIGUED);
+    // //}
 
     if (item.base_type == OBJ_ORBS && you.level_type == LEVEL_DUNGEON)
         unset_branch_flags(BFLAG_HAS_ORB);
@@ -3585,4 +3609,12 @@ bool get_item_by_name(item_def *item, char* specs,
     item_set_appearance(*item);
 
     return (true);
+}
+
+// Returns the position of the Orb on the floor, or
+// coord_def() if not present
+coord_def orb_position()
+{
+    item_def* orb=find_floor_item(OBJ_ORBS,ORB_ZOT);
+    return (orb ? orb->pos: coord_def());
 }

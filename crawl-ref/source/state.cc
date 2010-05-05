@@ -554,3 +554,8 @@ bool game_state::player_is_dead()
 {
     return (updating_scores && !need_save);
 }
+
+bool game_is_zotdef()
+{
+    return true;
+}

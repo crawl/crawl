@@ -196,5 +196,6 @@ private:
     monsters *mon;
 };
 
+bool game_is_zotdef();
 
 #endif

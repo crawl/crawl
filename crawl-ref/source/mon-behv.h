@@ -47,4 +47,12 @@ bool mons_avoids_cloud(const monsters *monster, cloud_type cl_type,
 bool mons_avoids_cloud(const monsters *monster, int cloud_num,
                        cloud_type *cl_type = NULL, bool placement = false);
 
+// For Zotdef: the target position of MHITYOU monsters is
+// the orb, if it's on the ground. Note that zotdef_target()
+// returns the orb position, or you.pos if the orb's not
+// on the ground.
+#define PLAYER_POS (game_is_zotdef()?zotdef_target():you.pos())
+
+coord_def zotdef_target();
+
 #endif

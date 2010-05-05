@@ -1799,6 +1799,11 @@ void you_teleport_now(bool allow_control, bool new_abyss_area, bool wizard_tele)
 
 bool entomb(int powc)
 {
+
+    // Zotdef - turned off
+    mpr("The dungeon rumbles ominously, and rocks fall from the ceiling!");
+    return false;
+
     // power guidelines:
     // powc is roughly 50 at Evoc 10 with no godly assistance, ranging
     // up to 300 or so with godly assistance or end-level, and 1200
@@ -2010,7 +2015,8 @@ bool recall(char type_recalled)
 // balance: otherwise you have an instant teleport from anywhere.
 int portal()
 {
-    if (!player_in_branch(BRANCH_MAIN_DUNGEON))
+    // Disabled for zotdef
+    if (true || !player_in_branch(BRANCH_MAIN_DUNGEON))
     {
         mpr("This spell doesn't work here.");
         return (-1);

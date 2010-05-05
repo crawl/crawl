@@ -454,6 +454,14 @@ int place_monster_corpse(const monsters *monster, bool silent,
         return (-1);
 
     int o = get_item_slot();
+
+    // Zotdef corpse creation forces cleanup, otherwise starvation
+    // kicks in. The magic number 9 is less than the magic number of
+    // 10 in get_item_slot which indicates that a cull will be initiated
+    // if a free slot can't be found.
+    if (o==NON_ITEM && game_is_zotdef()) 
+        o = get_item_slot(9);
+
     if (o == NON_ITEM)
     {
         item_was_destroyed(corpse);
@@ -600,7 +608,8 @@ static void _give_adjusted_experience(monsters *monster, killer_type killer,
         if (old_lev == you.experience_level)
             need_xp_msg = true;
     }
-    else if (pet_kill && !already_got_half_xp)
+    // Get exp for all kills in Zotdef
+    else if ((pet_kill && !already_got_half_xp) || game_is_zotdef())
     {
         int old_lev = you.experience_level;
         gain_exp(half_xp, exp_gain, avail_gain);
@@ -2811,6 +2820,9 @@ bool can_go_straight(const coord_def& p1, const coord_def& p2,
     if (distance(p1, p2) > get_los_radius_sq())
         return (false);
 
+    // If no distance, then trivially true
+    if (p1==p2) return (true);
+
     // XXX: Hack to improve results for now. See FIXME above.
     if (!exists_ray(p1, p2, opc_immob))
         return (false);
@@ -3733,3 +3745,20 @@ bool mons_reaped(actor *killer, monsters *victim)
 
     return (true);
 }
+
+// Return the number of monsters of the specified type.
+// If friendlyOnly is true, only count friendly
+// monsters, otherwise all of them
+int count_monsters(monster_type mtyp, bool friendlyOnly)
+{
+    int count = 0;
+    for (int mon = 0; mon < MAX_MONSTERS; mon++)
+    {
+        monsters *monster = &menv[mon];
+        if (monster->alive() && monster->type==mtyp
+        && (!friendlyOnly || monster->friendly()))
+        count++;
+    }
+    return (count);
+}
+

@@ -1874,6 +1874,14 @@ bool cast_apportation(int pow, const coord_def& where)
         return (false);
     }
 
+    //NB find_floor_item will return NULL if the Orb's not on the ground!
+    if (find_floor_item(OBJ_ORBS,ORB_ZOT)
+	&& where == find_floor_item(OBJ_ORBS,ORB_ZOT)->pos)
+    {
+        mpr( "You cannot apport the sacred Orb." );
+        return(0);
+    }
+
     // Let's look at the top item in that square...
     // And don't allow apporting from shop inventories.
     const int item_idx = igrd(where);

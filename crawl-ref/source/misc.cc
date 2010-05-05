@@ -1572,7 +1572,7 @@ static void set_entry_cause(entry_cause_type default_cause,
     }
 }
 
-static int runes_in_pack(std::vector<int> &runes)
+int runes_in_pack(std::vector<int> &runes)
 {
     int num_runes = 0;
 

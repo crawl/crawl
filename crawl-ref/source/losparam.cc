@@ -11,6 +11,7 @@
 #include "env.h"
 #include "externs.h"
 #include "mon-util.h"
+#include "state.h"
 #include "terrain.h"
 
 opacity_type opacity_default::operator()(const coord_def& p) const
@@ -53,6 +54,10 @@ static bool mons_block_immob(const monsters* mons)
 {
     if (mons == NULL)
         return false;
+
+    // In Zotdef, plants don't block movement as critters
+    // will attack them
+    if (game_is_zotdef()) return (false);
 
     switch (mons->id())
     {

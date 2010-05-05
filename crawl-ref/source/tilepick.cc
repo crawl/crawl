@@ -661,7 +661,9 @@ int tileidx_monster_base(const monsters *mon, bool detected)
         if (cloud_type_at(mon->pos()) == CLOUD_FIRE)
             return TILEP_MONS_BUSH_BURNING;
         return TILEP_MONS_BUSH;
+    case MONS_OKLOB_SAPLING:
     case MONS_OKLOB_PLANT:
+    case MONS_BURNING_BUSH:
         return TILEP_MONS_OKLOB_PLANT;
 
     // queen insects ('Q')

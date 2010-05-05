@@ -3761,9 +3761,12 @@ void handle_time()
     // The checks below assume the function is called at least
     // once every 50 elapsed time units.
 
+/* Zotdef: turned off
     // Every 5 turns, spawn random monsters.
     if (_div(base_time, 50) > _div(old_time, 50))
         spawn_random_monsters();
+
+*/
 
     // Every 20 turns, a variety of other effects.
     if (! (_div(base_time, 200) > _div(old_time, 200)))

@@ -27,6 +27,20 @@
     #endif
 #endif
 
+// length of a single zot defense cycle
+#define CYCLE_LENGTH 200
+
+// Waiting time before monsters arrive
+#define CYCLE_INTERVAL 50
+
+// peak size of a random spawn
+#define SPAWN_SIZE 1
+
+// Extra power to assign to a boss monster
+#define BOSS_MONSTER_EXTRA_POWER 5
+
+// number of waves to pass between bosses generated with a rune
+#define FREQUENCY_OF_RUNES 7
 
 // max size of inventory array {dlb}:
 #define ENDOFPACK 52
@@ -38,7 +52,7 @@ const int STR_REQ_THRESHOLD = 10;
 const int MAX_GHOSTS = 10;
 
 // max size of monter array {dlb}:
-#define MAX_MONSTERS     350
+#define MAX_MONSTERS     500
 // number of monster enchantments
 #define NUM_MON_ENCHANTS 6
 // non-monster for mgrd[][] -- (MNST + 1) {dlb}:
@@ -52,9 +66,9 @@ const int MAX_GHOSTS = 10;
 #define MAX_SUBTYPES    50
 
 // max size of item list {dlb}:
-#define MAX_ITEMS 500
+#define MAX_ITEMS 2000   // //
 // non-item -- (ITEMS + 1) {dlb}
-#define NON_ITEM 501
+#define NON_ITEM 2001    // //
 
 // max size of cloud array {dlb}:
 #define MAX_CLOUDS 180

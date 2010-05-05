@@ -2496,6 +2496,7 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         break;
 
     case BEAM_ACID:
+	
         hurted = resist_adjust_damage(monster, pbolt.flavour,
                                       monster->res_acid(),
                                       hurted, true);
@@ -3330,7 +3331,8 @@ void bolt::affect_ground()
             env.pgrid(pos()) |= FPROP_MOLD;
         }
 
-        if(x_chance_in_y(2, 21)
+        // Turn off in Zotdef
+        if(x_chance_in_y(0, 21)
            && mons_class_can_pass(MONS_BALLISTOMYCETE, env.grid(pos()))
            && !actor_at(pos()))
         {
