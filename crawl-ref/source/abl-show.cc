@@ -520,6 +520,11 @@ static talent _get_talent(ability_type ability, bool check_confused)
         const ability_def &abil = get_ability_def(result.which);
         if (you.confused() && !testbits(abil.flags, ABFLAG_CONF_OK))
         {
+            // Initialize these so compilers don't complain.
+            result.is_invocation = 0;
+            result.hotkey = 0;
+            result.fail = 0;
+
             result.which = ABIL_NON_ABILITY;
             return result;
         }
