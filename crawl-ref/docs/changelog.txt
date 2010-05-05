@@ -24,21 +24,24 @@ Game:
 * Removed instant stat death.
 * Monster silence.
 * Monster halos.
-* Rearranged and rebalanced some summoning spells.
 * New demonspawn mutations.
 * Make Shoals monsters generate on land.
 * Reduced missile enchantment effect on mulching.
 * New maps.
-* Fix Sif Muna piety being unfair to skilled species.
 * Fix old player ghost speech, and add player ghost speech
   fitting the ghost.
 
 Gods:
+* Sif Muna's piety is no longer unfair to skilled species.
 * Zin no longer objects to deaths of non-sentient allies.
 * Yredelemnul no longer gifts vampires.
+* Jiyva now paralyses fellow slimes under prayer instead of
+  creating a jelly shield.
 
 Monsters:
-* Manes are now iron imps.
+* Manes are now iron imps, with stat tweaks.
+* Imps lose see invisible while shadow imps gain it, and white
+  imps resist poison but are vulnerable to fire.
 * (Very) ugly things are no longer amphibious.
 * Glyph change for demonic crawlers.
 
