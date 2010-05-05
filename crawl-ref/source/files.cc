@@ -131,10 +131,17 @@ static void _redraw_all(void)
 
 static std::string _uid_as_string()
 {
-#ifdef MULTIUSER
+#ifndef MULTIUSER
+    return std::string();
+#else
+#ifndef SAVE_DIR_PATH
     return make_stringf("-%d", static_cast<int>(getuid()));
 #else
-    return std::string();
+    if (SAVE_DIR_PATH[0] != '~')
+        return make_stringf("-%d", static_cast<int>(getuid()));
+    else
+        return std::string();
+#endif
 #endif
 }
 
@@ -1766,7 +1773,7 @@ static void _save_game_exit()
 
 #ifdef USE_TAR
     snprintf( cmd_buff, sizeof(cmd_buff),
-              "cd %s && "SAVE_PACKAGE_CMD" -zcf %s"PACKAGE_SUFFIX" --remove-files %s.*",
+              "cd %s && FILES=`echo %s.*` && "SAVE_PACKAGE_CMD" -zcf %s"PACKAGE_SUFFIX" $FILES && rm $FILES",
               dirname.c_str(), basename.c_str(), basename.c_str());
 #else
 # ifdef USE_ZIP
