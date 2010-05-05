@@ -188,9 +188,6 @@ ifeq ($(uname_S),Darwin)
 	NEED_APPKIT = YesPlease
 	LIBNCURSES_IS_UNICODE = Yes
 	NO_PKGCONFIG = Yes
-	ifndef NO_APPLE_GCC
-		APPLE_GCC = YesPlease
-	endif
 	BUILD_SQLITE = YesPlease
 	ifdef TILES
 		EXTRA_LIBS += -framework AppKit -framework AudioUnit -framework Carbon -framework IOKit -framework OpenGL contrib/install/lib/libSDLmain.a
@@ -242,6 +239,15 @@ ifndef IPAD
 	FT = YesPlease
 endif
 
+endif
+
+#
+# Check for an Apple-released compiler.
+#
+ifeq ($(uname_S),Darwin)
+ifneq ($(shell gcc -v 2>&1 | grep Apple),)
+APPLE_GCC = YesPlease
+endif
 endif
 
 #
@@ -335,7 +341,6 @@ ifdef APPLE_GCC
 # Compatibility level for Mac OS X
 #
 SDK_VER := 10.4
-GCC_VER := 4.0
 
 ARCHS := $(shell arch)
 export ARCHS
@@ -345,8 +350,10 @@ CF_ARCHS := $(patsubst %,-arch %,$(ARCHS))
 # Mac OS X 10.4 adds a 'u' on the end of the SDK name. Everything
 # else is much easier to predict the name of.
 ifeq ($(SDK_VER),10.4)
+GCC_VER := 4.0
 SDKROOT := /Developer/SDKs/MacOSX$(SDK_VER)u.sdk
 else
+GCC_VER := 4.2
 SDKROOT := /Developer/SDKs/MacOSX$(SDK_VER).sdk
 endif
 
