@@ -1801,8 +1801,11 @@ bool entomb(int powc)
 {
 
     // Zotdef - turned off
-    mpr("The dungeon rumbles ominously, and rocks fall from the ceiling!");
-    return false;
+    if (game_is_zotdef())
+    {
+        mpr("The dungeon rumbles ominously, and rocks fall from the ceiling!");
+        return false;
+    }
 
     // power guidelines:
     // powc is roughly 50 at Evoc 10 with no godly assistance, ranging
@@ -2016,7 +2019,7 @@ bool recall(char type_recalled)
 int portal()
 {
     // Disabled for zotdef
-    if (true || !player_in_branch(BRANCH_MAIN_DUNGEON))
+    if (game_is_zotdef() || !player_in_branch(BRANCH_MAIN_DUNGEON))
     {
         mpr("This spell doesn't work here.");
         return (-1);

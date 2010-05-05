@@ -61,6 +61,7 @@
 #include "areas.h"
 #include "transform.h"
 #include "tutorial.h"
+#include "zotdef.h"
 
 #ifdef UNIX
 #include "libunix.h"
@@ -1450,69 +1451,6 @@ int _calc_breath_ability_range(ability_type ability)
     return (-2);
 }
 
-// Ask for a location and place a trap there. Returns true
-// for success
-static bool _create_trap(trap_type spec_type)
-{
-    dist abild;
-    direction_chooser_args args;
-    args.restricts = DIR_TARGET;
-    args.needs_path = false;
-    args.may_target_monster = false;
-    args.top_prompt="Make trap where?";
-    direction(abild, args);
-    const dungeon_feature_type grid = grd(abild.target);
-    if (!abild.isValid)
-    {
-        if (abild.isCancel)
-            canned_msg(MSG_OK);
-        return (false);
-    }
-    // only try to create on floor squares 
-    if (grid >= DNGN_FLOOR_MIN && grid <= DNGN_FLOOR_MAX)
-    {
-        return place_specific_trap(abild.target, spec_type);
-    }
-    else
-    {
-        mpr("You can't create a trap there!");
-        return (false);
-    }
-}
-
-static bool _create_zotdef_ally(monster_type mtyp, const char *successmsg)
-{
-    dist abild;
-    std::string msg="Make ";
-    msg+=get_monster_data(mtyp)->name;
-    msg+=" where?";
-
-    direction_chooser_args args;
-    args.restricts = DIR_TARGET;
-    args.needs_path = false;
-    args.may_target_monster = false;
-    args.top_prompt=msg;
-    direction(abild, args);
-
-    if (!abild.isValid)
-    {
-        if (abild.isCancel)
-            canned_msg(MSG_OK);
-        return (false);
-    }
-    if (mons_place( mgen_data(mtyp, BEH_FRIENDLY, &you, 0, 0, abild.target, you.pet_target)) != -1)
-    {
-        mpr(successmsg);
-        return (true);
-    }
-    else
-    {
-       mpr("You can't create it there!");
-       return (false);
-    }
-}
-
-
 static bool _do_ability(const ability_def& abil)
 {
     int power;
@@ -1544,55 +1482,55 @@ static bool _do_ability(const ability_def& abil)
         break; // //
 
     case ABIL_MAKE_PLANT:
-        if (!_create_zotdef_ally(MONS_PLANT,
+        if (!create_zotdef_ally(MONS_PLANT,
 	      "Tendrils and shoots erupt from the earth and gnarl into the form of a plant."))
             return false;
 
         break; // //
 
     case ABIL_MAKE_OKLOB_SAPLING:
-        if (!_create_zotdef_ally(MONS_OKLOB_SAPLING,
+        if (!create_zotdef_ally(MONS_OKLOB_SAPLING,
             "A rhizome shoots up through the ground and merges with vitriolic spirits in the atmosphere."))
             return false;
         break; // //
 
     case ABIL_MAKE_OKLOB_PLANT:
-        if (!_create_zotdef_ally(MONS_OKLOB_PLANT,
+        if (!create_zotdef_ally(MONS_OKLOB_PLANT,
             "A rhizome shoots up through the ground and merges with vitriolic spirits in the atmosphere."))
             return false;
         break; // //
 
     case ABIL_MAKE_BURNING_BUSH:
-        if (!_create_zotdef_ally(MONS_BURNING_BUSH,
+        if (!create_zotdef_ally(MONS_BURNING_BUSH,
             "Blackened shoots writhe from the ground and burst into flame!"))
             return false;
         break; // //
 
 
     case ABIL_MAKE_DART_TRAP:
-        if (!_create_trap(TRAP_DART)) return false;
+        if (!create_trap(TRAP_DART)) return false;
         break; // //
 
     case ABIL_MAKE_ICE_STATUE:
-        if (!_create_zotdef_ally(MONS_ICE_STATUE,
+        if (!create_zotdef_ally(MONS_ICE_STATUE,
             "Water vapor collects and crystallizes into an icy humanoid shape."))
             return false;
         break; // //
 
     case ABIL_MAKE_OCS:
-        if (!_create_zotdef_ally(MONS_ORANGE_STATUE,
+        if (!create_zotdef_ally(MONS_ORANGE_STATUE,
             "Quartz juts from the ground and forms a humanoid shape. You smell citrus."))
             return false;
         break; // //
 
     case ABIL_MAKE_SILVER_STATUE:
-        if (!_create_zotdef_ally(MONS_SILVER_STATUE,
+        if (!create_zotdef_ally(MONS_SILVER_STATUE,
             "Droplets of mercury fall from the ceiling and turn to silver, congealing into a humanoid shape."))
             return false;
         break; // //
 
     case ABIL_MAKE_CURSE_SKULL:
-        if (!_create_zotdef_ally(MONS_CURSE_SKULL,
+        if (!create_zotdef_ally(MONS_CURSE_SKULL,
             "You sculpt a terrible being from the primitive principle of evil."))
             return false;
         break; // //
@@ -1602,39 +1540,39 @@ static bool _do_ability(const ability_def& abil)
         break; // //
 
     case ABIL_MAKE_ARROW_TRAP:
-        if (!_create_trap(TRAP_ARROW)) return false;
+        if (!create_trap(TRAP_ARROW)) return false;
         break; // //
 
     case ABIL_MAKE_BOLT_TRAP:
-        if (!_create_trap(TRAP_BOLT)) return false;
+        if (!create_trap(TRAP_BOLT)) return false;
         break; // //
 
     case ABIL_MAKE_SPEAR_TRAP:
-        if (!_create_trap(TRAP_SPEAR)) return false;
+        if (!create_trap(TRAP_SPEAR)) return false;
         break; // //
 
     case ABIL_MAKE_AXE_TRAP:
-        if (!_create_trap(TRAP_AXE)) return false;
+        if (!create_trap(TRAP_AXE)) return false;
         break; // //
 
     case ABIL_MAKE_NEEDLE_TRAP:
-        if (!_create_trap(TRAP_NEEDLE)) return false;
+        if (!create_trap(TRAP_NEEDLE)) return false;
         break; // //
 
     case ABIL_MAKE_NET_TRAP:
-        if (!_create_trap(TRAP_NET)) return false;
+        if (!create_trap(TRAP_NET)) return false;
         break; // //
 
     case ABIL_MAKE_TELEPORT_TRAP:
-        if (!_create_trap(TRAP_TELEPORT)) return false;
+        if (!create_trap(TRAP_TELEPORT)) return false;
         break; // //
 
     case ABIL_MAKE_ALARM_TRAP:
-        if (!_create_trap(TRAP_ALARM)) return false;
+        if (!create_trap(TRAP_ALARM)) return false;
         break; // //
 
     case ABIL_MAKE_BLADE_TRAP:
-        if (!_create_trap(TRAP_BLADE)) return false;
+        if (!create_trap(TRAP_BLADE)) return false;
         break; // //
 
     case ABIL_MAKE_OKLOB_CIRCLE:
@@ -1663,7 +1601,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_MAKE_ELECTRIC_EEL:
-        if (!_create_zotdef_ally(MONS_ELECTRIC_EEL,
+        if (!create_zotdef_ally(MONS_ELECTRIC_EEL,
             "You make an electric eel."))
             return false;
         break; // //
@@ -2763,67 +2701,70 @@ std::vector<talent> your_talents(bool check_confused)
     std::vector<talent> talents;
 
     // // zot defense abilities; must also be updated in player.cc when these levels are changed
-    if (you.experience_level >= 1)
-        _add_talent(talents, ABIL_MAKE_DART_TRAP, check_confused);
-    if (you.experience_level >= 1)
-        _add_talent(talents, ABIL_MAKE_OKLOB_SAPLING, check_confused);
-    if (you.experience_level >= 3)
-        _add_talent(talents, ABIL_MAKE_ARROW_TRAP, check_confused);
-    if (you.experience_level >= 4)
-        _add_talent(talents, ABIL_MAKE_PLANT, check_confused);
-    if (you.experience_level >= 4)
-        _add_talent(talents, ABIL_REMOVE_CURSE, check_confused);
-    if (you.experience_level >= 5)
-        _add_talent(talents, ABIL_MAKE_BURNING_BUSH, check_confused);
-    if (you.experience_level >= 6)
-        _add_talent(talents, ABIL_MAKE_ALTAR, check_confused);
-    if (you.experience_level >= 6)
-        _add_talent(talents, ABIL_MAKE_GRENADES, check_confused);
-    if (you.experience_level >= 7)
-        _add_talent(talents, ABIL_MAKE_OKLOB_PLANT, check_confused);
-    if (you.experience_level >= 8)
-        _add_talent(talents, ABIL_MAKE_NET_TRAP, check_confused);
-    if (you.experience_level >= 9)
-        _add_talent(talents, ABIL_MAKE_ICE_STATUE, check_confused);
-    if (you.experience_level >= 10)
-        _add_talent(talents, ABIL_MAKE_SPEAR_TRAP, check_confused);
-    if (you.experience_level >= 11)
-        _add_talent(talents, ABIL_MAKE_ALARM_TRAP, check_confused);
-    if (you.experience_level >= 12)
-        _add_talent(talents, ABIL_MAKE_FUNGUS, check_confused);
-    if (you.experience_level >= 13)
-        _add_talent(talents, ABIL_MAKE_AXE_TRAP, check_confused);
-    if (you.experience_level >= 14)
-        _add_talent(talents, ABIL_MAKE_OCS, check_confused);
-    if (you.experience_level >= 15)
-        _add_talent(talents, ABIL_MAKE_NEEDLE_TRAP, check_confused);
-    if (you.experience_level >= 16)
-        _add_talent(talents, ABIL_MAKE_TELEPORT, check_confused);
-    if (you.experience_level >= 17)
-        _add_talent(talents, ABIL_MAKE_WATER, check_confused);
-    if (you.experience_level >= 18)
-        _add_talent(talents, ABIL_MAKE_BOLT_TRAP, check_confused);
-    if (you.experience_level >= 19)
-        _add_talent(talents, ABIL_MAKE_ELECTRIC_EEL, check_confused);
-    if (you.experience_level >= 20)
-        _add_talent(talents, ABIL_MAKE_SILVER_STATUE, check_confused);
-    // gain bazaar and gold together
-    if (you.experience_level >= 21)
-        _add_talent(talents, ABIL_MAKE_BAZAAR, check_confused);
-    if (you.experience_level >= 21)
-        _add_talent(talents, ABIL_MAKE_ACQUIRE_GOLD, check_confused);
-    if (you.experience_level >= 22)
-        _add_talent(talents, ABIL_MAKE_OKLOB_CIRCLE, check_confused);
-    if (you.experience_level >= 23)
-        _add_talent(talents, ABIL_MAKE_SAGE, check_confused);
-    if (you.experience_level >= 24)
-        _add_talent(talents, ABIL_MAKE_BLADE_TRAP, check_confused);
-    if (you.experience_level >= 25)
-        _add_talent(talents, ABIL_MAKE_ACQUIREMENT, check_confused);
-    if (you.experience_level >= 26)
-        _add_talent(talents, ABIL_MAKE_CURSE_SKULL, check_confused);
-    if (you.experience_level >= 27)
-        _add_talent(talents, ABIL_MAKE_TELEPORT_TRAP, check_confused);
+    if (game_is_zotdef())
+    {
+        if (you.experience_level >= 1)
+            _add_talent(talents, ABIL_MAKE_DART_TRAP, check_confused);
+        if (you.experience_level >= 1)
+            _add_talent(talents, ABIL_MAKE_OKLOB_SAPLING, check_confused);
+        if (you.experience_level >= 3)
+            _add_talent(talents, ABIL_MAKE_ARROW_TRAP, check_confused);
+        if (you.experience_level >= 4)
+            _add_talent(talents, ABIL_MAKE_PLANT, check_confused);
+        if (you.experience_level >= 4)
+            _add_talent(talents, ABIL_REMOVE_CURSE, check_confused);
+        if (you.experience_level >= 5)
+            _add_talent(talents, ABIL_MAKE_BURNING_BUSH, check_confused);
+        if (you.experience_level >= 6)
+            _add_talent(talents, ABIL_MAKE_ALTAR, check_confused);
+        if (you.experience_level >= 6)
+            _add_talent(talents, ABIL_MAKE_GRENADES, check_confused);
+        if (you.experience_level >= 7)
+            _add_talent(talents, ABIL_MAKE_OKLOB_PLANT, check_confused);
+        if (you.experience_level >= 8)
+            _add_talent(talents, ABIL_MAKE_NET_TRAP, check_confused);
+        if (you.experience_level >= 9)
+            _add_talent(talents, ABIL_MAKE_ICE_STATUE, check_confused);
+        if (you.experience_level >= 10)
+            _add_talent(talents, ABIL_MAKE_SPEAR_TRAP, check_confused);
+        if (you.experience_level >= 11)
+            _add_talent(talents, ABIL_MAKE_ALARM_TRAP, check_confused);
+        if (you.experience_level >= 12)
+            _add_talent(talents, ABIL_MAKE_FUNGUS, check_confused);
+        if (you.experience_level >= 13)
+            _add_talent(talents, ABIL_MAKE_AXE_TRAP, check_confused);
+        if (you.experience_level >= 14)
+            _add_talent(talents, ABIL_MAKE_OCS, check_confused);
+        if (you.experience_level >= 15)
+            _add_talent(talents, ABIL_MAKE_NEEDLE_TRAP, check_confused);
+        if (you.experience_level >= 16)
+            _add_talent(talents, ABIL_MAKE_TELEPORT, check_confused);
+        if (you.experience_level >= 17)
+            _add_talent(talents, ABIL_MAKE_WATER, check_confused);
+        if (you.experience_level >= 18)
+            _add_talent(talents, ABIL_MAKE_BOLT_TRAP, check_confused);
+        if (you.experience_level >= 19)
+            _add_talent(talents, ABIL_MAKE_ELECTRIC_EEL, check_confused);
+        if (you.experience_level >= 20)
+            _add_talent(talents, ABIL_MAKE_SILVER_STATUE, check_confused);
+        // gain bazaar and gold together
+        if (you.experience_level >= 21)
+            _add_talent(talents, ABIL_MAKE_BAZAAR, check_confused);
+        if (you.experience_level >= 21)
+            _add_talent(talents, ABIL_MAKE_ACQUIRE_GOLD, check_confused);
+        if (you.experience_level >= 22)
+            _add_talent(talents, ABIL_MAKE_OKLOB_CIRCLE, check_confused);
+        if (you.experience_level >= 23)
+            _add_talent(talents, ABIL_MAKE_SAGE, check_confused);
+        if (you.experience_level >= 24)
+            _add_talent(talents, ABIL_MAKE_BLADE_TRAP, check_confused);
+        if (you.experience_level >= 25)
+            _add_talent(talents, ABIL_MAKE_ACQUIREMENT, check_confused);
+        if (you.experience_level >= 26)
+            _add_talent(talents, ABIL_MAKE_CURSE_SKULL, check_confused);
+        if (you.experience_level >= 27)
+            _add_talent(talents, ABIL_MAKE_TELEPORT_TRAP, check_confused);
+    }
 
     // Species-based abilities.
     if (you.species == SP_MUMMY && you.experience_level >= 13)

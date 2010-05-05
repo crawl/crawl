@@ -1874,9 +1874,11 @@ bool cast_apportation(int pow, const coord_def& where)
         return (false);
     }
 
+    // Can't apport the Orb in Zotdef.
     //NB find_floor_item will return NULL if the Orb's not on the ground!
-    if (find_floor_item(OBJ_ORBS,ORB_ZOT)
-	&& where == find_floor_item(OBJ_ORBS,ORB_ZOT)->pos)
+    if (game_is_zotdef()
+        && find_floor_item(OBJ_ORBS,ORB_ZOT)
+        && where == find_floor_item(OBJ_ORBS,ORB_ZOT)->pos)
     {
         mpr( "You cannot apport the sacred Orb." );
         return(0);

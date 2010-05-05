@@ -2692,10 +2692,12 @@ void world_reacts()
     handle_time();
     manage_clouds();
 
-    if (you.num_turns == 100) zotdef_set_wave();
+    if (game_is_zotdef() && you.num_turns == 100) 
+        zotdef_set_wave();
 
     // Zotdef spawns only in the main dungeon
-    if (you.level_type==LEVEL_DUNGEON
+    if (game_is_zotdef()
+        && you.level_type==LEVEL_DUNGEON
         && you.where_are_you==BRANCH_MAIN_DUNGEON
         && you.num_turns > 100)
     {
@@ -2750,10 +2752,18 @@ void world_reacts()
     if (you.num_turns != -1)
     {
         // Zotdef: Time only passes in the main dungeon
-        if (you.num_turns < LONG_MAX
-          && you.where_are_you==BRANCH_MAIN_DUNGEON
-          && you.level_type==LEVEL_DUNGEON)
-            you.num_turns++;
+        if (you.num_turns < LONG_MAX)
+        {
+            if (!game_is_zotdef())
+            {
+                you.num_turns++;
+            }
+            else
+            {
+                if (you.where_are_you==BRANCH_MAIN_DUNGEON && you.level_type==LEVEL_DUNGEON)
+                    you.num_turns++;
+            }
+        }
 
         if (env.turns_on_level < INT_MAX)
             env.turns_on_level++;
@@ -4043,21 +4053,6 @@ static void _move_player(coord_def move)
                                      || is_sanctuary(you.pos())
                                         && is_sanctuary(targ));
 
-    // Are you standing on the Orb? If so, are the critters near?
-    const bool onOrb = (you.pos()==orb_position());
-    bool leaveOrbUnguarded=false;
-    if (onOrb)
-    {
-        for (int i = 0; i < MAX_MONSTERS; ++i)
-        {
-            monsters& mon = menv[i];
-            if (you.can_see(&mon) && !mon.friendly() &&
-                (grid_distance(you.pos(), mon.pos())<4))
-            {
-                leaveOrbUnguarded=true;
-            }
-        }
-    }
 
     // You cannot move away from a mermaid but you CAN fight monsters on
     // neighbouring squares.
@@ -4104,15 +4099,33 @@ static void _move_player(coord_def move)
 
     if (!attacking && targ_pass && moving && !beholder)
     {
-
-        if (leaveOrbUnguarded)
+        if (game_is_zotdef())
         {
-                std::string prompt = "Are you sure you want to leave the Orb unguarded?";
-                if (!yesno(prompt.c_str(), false, 'n'))
+            // Are you standing on the Orb? If so, are the critters near?
+            const bool onOrb = (you.pos()==orb_position());
+            bool leaveOrbUnguarded=false;
+            if (onOrb)
+            {
+                for (int i = 0; i < MAX_MONSTERS; ++i)
                 {
-                    canned_msg(MSG_OK);
-                    return;
+                    monsters& mon = menv[i];
+                    if (you.can_see(&mon) && !mon.friendly() &&
+                        (grid_distance(you.pos(), mon.pos())<4))
+                    {
+                        leaveOrbUnguarded=true;
+                    }
                 }
+            }
+
+            if (leaveOrbUnguarded)
+            {
+                    std::string prompt = "Are you sure you want to leave the Orb unguarded?";
+                    if (!yesno(prompt.c_str(), false, 'n'))
+                    {
+                        canned_msg(MSG_OK);
+                        return;
+                    }
+            }
         }
 
         you.time_taken *= player_movement_speed();
