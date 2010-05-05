@@ -577,6 +577,12 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
         beam.colour   = YELLOW;
         beam.name     = "splash of acid";
         beam.damage   = dice_def( 3, 7 );
+
+        // Zotdef change: make acid splash dmg dependent on power
+        // Oklob saplings pwr=48, oklobs pwr=120, acid blobs pwr=216
+        //  =>             3d3        3d6            3d9
+        beam.damage   = dice_def( 3, 2 + (power / 30) );
+
         beam.hit      = 20 + (3 * mons->hit_dice);
         beam.flavour  = BEAM_ACID;
         break;
@@ -2031,9 +2037,13 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         return;
 
     case SPELL_SUMMON_ICE_BEAST:
-        create_monster(
-            mgen_data(MONS_ICE_BEAST, SAME_ATTITUDE(monster), monster,
-                      5, spell_cast, monster->pos(), monster->foe, 0, god));
+        // Zotdef: reduce ice beast frequency, and reduce duration to 3
+        if (!one_chance_in(3))
+        {
+            create_monster(
+                mgen_data(MONS_ICE_BEAST, SAME_ATTITUDE(monster), monster,
+                          3, spell_cast, monster->pos(), monster->foe, 0, god));
+        }
         return;
 
     case SPELL_SUMMON_MUSHROOMS:   // Summon swarms of icky crawling fungi.

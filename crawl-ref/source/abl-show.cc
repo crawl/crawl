@@ -19,22 +19,28 @@
 #include "abyss.h"
 #include "artefact.h"
 #include "beam.h"
+#include "coordit.h"
 #include "database.h"
 #include "decks.h"
 #include "delay.h"
 #include "describe.h"
 #include "directn.h"
+#include "dungeon.h"
 #include "effects.h"
 #include "env.h"
 #include "food.h"
 #include "godabil.h"
+#include "items.h"
 #include "item_use.h"
 #include "it_use2.h"
 #include "macro.h"
+#include "maps.h"
 #include "message.h"
 #include "menu.h"
 #include "misc.h"
 #include "mon-place.h"
+#include "mon-stuff.h"
+#include "mon-util.h"
 #include "mgen_data.h"
 #include "mutation.h"
 #include "notes.h"
@@ -44,6 +50,7 @@
 #include "skills.h"
 #include "species.h"
 #include "spl-cast.h"
+#include "spl-mis.h"
 #include "spl-util.h"
 #include "spells1.h"
 #include "spells2.h"
@@ -72,13 +79,20 @@ enum ability_flag_type
     ABFLAG_PERMANENT_MP   = 0x00000080, // costs permanent MPs
     ABFLAG_CONF_OK        = 0x00000100, // can use even if confused
     ABFLAG_FRUIT          = 0x00000200, // ability requires fruit
-    ABFLAG_VARIABLE_FRUIT = 0x00000400  // ability requires fruit or piety
+    ABFLAG_VARIABLE_FRUIT = 0x00000400,  // ability requires fruit or piety
+    ABFLAG_ENCH_MISCAST = 0X00000800, // // severity 3 enchantment miscast
+    ABFLAG_TLOC_MISCAST = 0X00001000, // // severity 3 translocation miscast
+    ABFLAG_NECRO_MISCAST_MINOR = 0X00002000, // // severity 2 necro miscast
+    ABFLAG_NECRO_MISCAST = 0X00004000, // // severity 3 necro miscast
+    ABFLAG_TMIG_MISCAST = 0X00008000, // // severity 3 transmigration miscast
+    ABFLAG_LEVEL_DRAIN  = 0X00010000, // // drains 2 levels
+    ABFLAG_STAT_DRAIN   = 0x00020000  // stat drain
 };
 
 static int  _find_ability_slot( ability_type which_ability );
 static bool _activate_talent(const talent& tal);
 static bool _do_ability(const ability_def& abil);
-static void _pay_ability_costs(const ability_def& abil);
+static void _pay_ability_costs(const ability_def& abil, int xpcost);
 static std::string _describe_talent(const talent& tal);
 
 // this all needs to be split into data/util/show files
@@ -346,6 +360,38 @@ static const ability_def Ability_List[] =
     { ABIL_HARM_PROTECTION_II, "Reliable Protection From Harm",
       0, 0, 0, 0, ABFLAG_PIETY },
 
+    // // zot defense abilities
+    { ABIL_MAKE_FUNGUS, "Make mushroom circle", 0, 0, 0, 0, ABFLAG_NONE, 10 },
+    { ABIL_MAKE_DART_TRAP, "Make dart trap", 0, 0, 0, 0, ABFLAG_NONE, 5 },
+    { ABIL_MAKE_PLANT, "Make plant", 0, 0, 0, 0, ABFLAG_NONE, 2},
+    { ABIL_MAKE_OKLOB_SAPLING, "Make oklob sapling", 0, 0, 0, 0, ABFLAG_NONE, 60},
+    { ABIL_MAKE_BURNING_BUSH, "Make burning bush", 0, 0, 0, 0, ABFLAG_NONE, 200},
+    { ABIL_MAKE_OKLOB_PLANT, "Make oklob plant", 0, 0, 0, 0, ABFLAG_NONE, 250},
+    { ABIL_MAKE_ICE_STATUE, "Make ice statue", 0, 0, 50, 0, ABFLAG_NONE, 2000},
+    { ABIL_MAKE_OCS, "Make crystal statue", 0, 0, 200, 0, ABFLAG_NONE, 2000},
+    { ABIL_MAKE_SILVER_STATUE, "Make silver statue", 0, 0, 400, 0, ABFLAG_NONE, 3000},
+    { ABIL_MAKE_CURSE_SKULL, "Make curse skull", 0, 0, 600, 0, ABFLAG_NECRO_MISCAST_MINOR, 10000}, 
+    { ABIL_MAKE_TELEPORT, "Zot-teleport", 0, 0, 0, 0, ABFLAG_NONE, 2},
+    { ABIL_MAKE_ARROW_TRAP, "Make arrow trap", 0, 0, 0, 0, ABFLAG_NONE, 30 },
+    { ABIL_MAKE_BOLT_TRAP, "Make bolt trap", 0, 0, 0, 0, ABFLAG_NONE, 50 },
+    { ABIL_MAKE_SPEAR_TRAP, "Make spear trap", 0, 0, 0, 0, ABFLAG_NONE, 50 },
+    { ABIL_MAKE_AXE_TRAP, "Make axe trap", 0, 0, 0, 0, ABFLAG_NONE, 100 },
+    { ABIL_MAKE_NEEDLE_TRAP, "Make needle trap", 0, 0, 0, 0, ABFLAG_NONE, 30 },
+    { ABIL_MAKE_NET_TRAP, "Make net trap", 0, 0, 0, 0, ABFLAG_NONE, 2 },
+    { ABIL_MAKE_TELEPORT_TRAP, "Make teleport trap", 0, 0, 0, 0, ABFLAG_TLOC_MISCAST, 10000 }, 
+    { ABIL_MAKE_ALARM_TRAP, "Make alarm trap", 0, 0, 0, 0, ABFLAG_NONE, 2 },
+    { ABIL_MAKE_BLADE_TRAP, "Make blade trap", 0, 0, 0, 0, ABFLAG_NONE, 300 },
+    { ABIL_MAKE_OKLOB_CIRCLE, "Make oklob circle", 0, 0, 0, 0, ABFLAG_NONE, 1000},
+    { ABIL_MAKE_ACQUIRE_GOLD, "Acquire gold", 0, 0, 0, 0, ABFLAG_LEVEL_DRAIN, 0 },
+    { ABIL_MAKE_ACQUIREMENT, "Acquirement", 0, 0, 0, 0, ABFLAG_LEVEL_DRAIN, 0 },
+    { ABIL_MAKE_WATER, "Make water", 0, 0, 0, 0, ABFLAG_NONE, 10 },
+    { ABIL_MAKE_ELECTRIC_EEL, "Make electric eel", 0, 0, 0, 0, ABFLAG_NONE, 100},
+    { ABIL_MAKE_BAZAAR, "Make bazaar", 0, 0, 0, 0, ABFLAG_NONE, 100 },
+    { ABIL_MAKE_ALTAR, "Make altar", 0, 0, 0, 0, ABFLAG_NONE, 2 },
+    { ABIL_MAKE_GRENADES, "Make grenades", 0, 0, 0, 0, ABFLAG_NONE, 2 },
+    { ABIL_MAKE_SAGE, "Sage", 0, 0, 300, 0,  ABFLAG_INSTANT, 0 },
+    { ABIL_REMOVE_CURSE, "Remove Curse", 0, 0, 300, 0, ABFLAG_STAT_DRAIN, 0 },
+
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion", 0, 0, 0, 0, ABFLAG_NONE },
 };
 
@@ -397,6 +443,78 @@ std::string print_abilities()
     return text;
 }
 
+int count_relevant_monsters(const ability_def& abil)
+{
+    monster_type mtyp=MONS_PROGRAM_BUG;
+    switch(abil.ability)
+    {
+	case ABIL_MAKE_OKLOB_SAPLING: mtyp=MONS_OKLOB_SAPLING; break;
+	case ABIL_MAKE_OKLOB_CIRCLE:
+	case ABIL_MAKE_OKLOB_PLANT: mtyp=MONS_OKLOB_PLANT; break;
+	case ABIL_MAKE_BURNING_BUSH: mtyp=MONS_BURNING_BUSH; break;
+	case ABIL_MAKE_ELECTRIC_EEL: mtyp=MONS_ELECTRIC_EEL; break;
+	case ABIL_MAKE_ICE_STATUE: mtyp=MONS_ICE_STATUE; break;
+	case ABIL_MAKE_OCS: mtyp=MONS_ORANGE_STATUE; break;
+	case ABIL_MAKE_SILVER_STATUE: mtyp=MONS_SILVER_STATUE; break;
+	case ABIL_MAKE_CURSE_SKULL: mtyp=MONS_CURSE_SKULL; break;
+	default: mprf("DEBUG: NO RELEVANT MONSTER FOR %d",abil.ability);break;
+    }
+    if (mtyp==MONS_PROGRAM_BUG) return 0;
+    return count_monsters(mtyp, true);	/* Friendly ones only */
+}
+
+// Scale the xp cost by the number of friendly monsters
+// of that type. Each successive critter costs 20% more
+// than the last one, after the first two.
+int xp_cost(const ability_def& abil)
+{
+    int cost=abil.xp_cost;
+    int scale10=0;	// number of times to scale up by 10%
+    int scale20=0;	// number of times to scale up by 20%
+    int num_mon;
+    switch(abil.ability)
+    {
+	default: cost=abil.xp_cost; break;
+
+	// type 1: reasonably generous
+	case ABIL_MAKE_OKLOB_SAPLING:
+	case ABIL_MAKE_OKLOB_PLANT:
+	case ABIL_MAKE_OKLOB_CIRCLE:
+	case ABIL_MAKE_BURNING_BUSH:
+	case ABIL_MAKE_ELECTRIC_EEL:
+	    num_mon=count_relevant_monsters(abil);
+	    // special case for oklob circles
+	    if (abil.ability==ABIL_MAKE_OKLOB_CIRCLE) num_mon/=2;
+	    num_mon-=2;	// first two are base cost
+	    num_mon=std::max(num_mon,0);
+	    scale10=std::min(num_mon,10);	// next 10 at 10% increment
+	    scale20=num_mon-scale10;		// after that at 20% increment
+	    break;
+
+	// type 2: less generous
+	case ABIL_MAKE_ICE_STATUE:
+	case ABIL_MAKE_OCS:
+	    num_mon=count_relevant_monsters(abil);
+	    num_mon-=2; // first two are base cost
+	    scale20=std::max(num_mon,0);	// after first two, 20% increment
+
+	// type 3: least generous
+	case ABIL_MAKE_SILVER_STATUE:
+	case ABIL_MAKE_CURSE_SKULL:
+	    scale20=count_relevant_monsters(abil);	// scale immediately
+    }
+    for (; scale10>0; scale10--)
+    {
+	cost = (cost*11)/10;	// +10%
+    }
+    for (; scale20>0; scale20--)
+    {
+	cost = (cost*6)/5;	// +20%
+    }
+
+    return cost;
+}
+
 const std::string make_cost_description(ability_type ability)
 {
     const ability_def& abil = get_ability_def(ability);
@@ -418,6 +536,14 @@ const std::string make_cost_description(ability_type ability)
         if (abil.flags & ABFLAG_PERMANENT_HP)
             ret << " Permanent";
         ret << " HP";
+    }
+    if (abil.xp_cost)
+    {
+        if (!ret.str().empty())
+            ret << ", ";
+
+        ret << xp_cost(abil);
+        ret << " XP";
     }
 
     if (abil.food_cost && you.is_undead != US_UNDEAD
@@ -499,6 +625,23 @@ const std::string make_cost_description(ability_type ability)
         ret << "Fruit or Piety";
     }
 
+
+    if (abil.flags & ABFLAG_LEVEL_DRAIN)
+    {
+        if (!ret.str().empty())
+            ret << ", "; 
+
+        ret << "Level drain";      // //
+    }
+
+    if (abil.flags & ABFLAG_STAT_DRAIN)
+    {
+        if(!ret.str().empty())
+            ret << ", ";
+
+        ret << "Stat drain";
+    }
+
     // If we haven't output anything so far, then the effect has no cost
     if (ret.str().empty())
         ret << "None";
@@ -540,6 +683,41 @@ static talent _get_talent(ability_type ability, bool check_confused)
     // begin spell abilities
     case ABIL_DELAYED_FIREBALL:
     case ABIL_MUMMY_RESTORATION:
+        perfect = true;
+        failure = 0;
+        break;
+
+    // // begin zot defense abilities
+    case ABIL_MAKE_FUNGUS:
+    case ABIL_MAKE_PLANT:
+    case ABIL_MAKE_OKLOB_PLANT:
+    case ABIL_MAKE_OKLOB_SAPLING:
+    case ABIL_MAKE_BURNING_BUSH:
+    case ABIL_MAKE_DART_TRAP:
+    case ABIL_MAKE_ICE_STATUE:
+    case ABIL_MAKE_OCS:
+    case ABIL_MAKE_SILVER_STATUE:
+    case ABIL_MAKE_CURSE_SKULL:
+    case ABIL_MAKE_TELEPORT:
+    case ABIL_MAKE_ARROW_TRAP:
+    case ABIL_MAKE_BOLT_TRAP:
+    case ABIL_MAKE_SPEAR_TRAP:
+    case ABIL_MAKE_AXE_TRAP:
+    case ABIL_MAKE_NEEDLE_TRAP:
+    case ABIL_MAKE_NET_TRAP:
+    case ABIL_MAKE_TELEPORT_TRAP:
+    case ABIL_MAKE_ALARM_TRAP:
+    case ABIL_MAKE_BLADE_TRAP:
+    case ABIL_MAKE_OKLOB_CIRCLE:
+    case ABIL_MAKE_ACQUIRE_GOLD:
+    case ABIL_MAKE_ACQUIREMENT:
+    case ABIL_MAKE_WATER:
+    case ABIL_MAKE_ELECTRIC_EEL:
+    case ABIL_MAKE_BAZAAR:
+    case ABIL_MAKE_ALTAR:
+    case ABIL_MAKE_GRENADES:
+    case ABIL_MAKE_SAGE:
+    case ABIL_REMOVE_CURSE:
         perfect = true;
         failure = 0;
         break;
@@ -1221,6 +1399,16 @@ static bool _activate_talent(const talent& tal)
         return (false);
     }
 
+    int xpcost=xp_cost(abil);
+    if (xpcost)
+    {
+        if (!enough_xp(xpcost, false))
+        {
+            crawl_state.zero_turns_taken();
+            return (false);
+        }
+    }
+
     if (!_check_ability_possible(abil, hungerCheck))
     {
         crawl_state.zero_turns_taken();
@@ -1237,7 +1425,7 @@ static bool _activate_talent(const talent& tal)
 
     const bool success = _do_ability(abil);
     if (success)
-        _pay_ability_costs(abil);
+        _pay_ability_costs(abil, xpcost);
 
     return (success);
 }
@@ -1262,6 +1450,69 @@ int _calc_breath_ability_range(ability_type ability)
     return (-2);
 }
 
+// Ask for a location and place a trap there. Returns true
+// for success
+static bool _create_trap(trap_type spec_type)
+{
+    dist abild;
+    direction_chooser_args args;
+    args.restricts = DIR_TARGET;
+    args.needs_path = false;
+    args.may_target_monster = false;
+    args.top_prompt="Make trap where?";
+    direction(abild, args);
+    const dungeon_feature_type grid = grd(abild.target);
+    if (!abild.isValid)
+    {
+        if (abild.isCancel)
+            canned_msg(MSG_OK);
+        return (false);
+    }
+    // only try to create on floor squares 
+    if (grid >= DNGN_FLOOR_MIN && grid <= DNGN_FLOOR_MAX)
+    {
+        return place_specific_trap(abild.target, spec_type);
+    }
+    else
+    {
+        mpr("You can't create a trap there!");
+        return (false);
+    }
+}
+
+static bool _create_zotdef_ally(monster_type mtyp, const char *successmsg)
+{
+    dist abild;
+    std::string msg="Make ";
+    msg+=get_monster_data(mtyp)->name;
+    msg+=" where?";
+
+    direction_chooser_args args;
+    args.restricts = DIR_TARGET;
+    args.needs_path = false;
+    args.may_target_monster = false;
+    args.top_prompt=msg;
+    direction(abild, args);
+
+    if (!abild.isValid)
+    {
+        if (abild.isCancel)
+            canned_msg(MSG_OK);
+        return (false);
+    }
+    if (mons_place( mgen_data(mtyp, BEH_FRIENDLY, &you, 0, 0, abild.target, you.pet_target)) != -1)
+    {
+        mpr(successmsg);
+        return (true);
+    }
+    else
+    {
+       mpr("You can't create it there!");
+       return (false);
+    }
+}
+
+
 static bool _do_ability(const ability_def& abil)
 {
     int power;
@@ -1269,10 +1520,227 @@ static bool _do_ability(const ability_def& abil)
     bolt beam;
     dist spd;
 
+    direction_chooser_args args;
+    args.restricts = DIR_TARGET;
+    args.needs_path = false;
+    args.may_target_monster = false;
+
+
     // Note: the costs will not be applied until after this switch
     // statement... it's assumed that only failures have returned! - bwr
     switch (abil.ability)
     {
+    case ABIL_MAKE_FUNGUS:
+        args.top_prompt="Center fungus circle where?";
+        direction(abild, args);
+        if (!abild.isValid)
+        {
+            if (abild.isCancel)
+            canned_msg(MSG_OK);
+            return (false);
+        }
+        for(adjacent_iterator ai(abild.target); ai; ++ai)
+            place_monster( mgen_data(MONS_FUNGUS, BEH_FRIENDLY, &you, 0, 0, *ai, you.pet_target), true);
+        break; // //
+
+    case ABIL_MAKE_PLANT:
+        if (!_create_zotdef_ally(MONS_PLANT,
+	      "Tendrils and shoots erupt from the earth and gnarl into the form of a plant."))
+            return false;
+
+        break; // //
+
+    case ABIL_MAKE_OKLOB_SAPLING:
+        if (!_create_zotdef_ally(MONS_OKLOB_SAPLING,
+            "A rhizome shoots up through the ground and merges with vitriolic spirits in the atmosphere."))
+            return false;
+        break; // //
+
+    case ABIL_MAKE_OKLOB_PLANT:
+        if (!_create_zotdef_ally(MONS_OKLOB_PLANT,
+            "A rhizome shoots up through the ground and merges with vitriolic spirits in the atmosphere."))
+            return false;
+        break; // //
+
+    case ABIL_MAKE_BURNING_BUSH:
+        if (!_create_zotdef_ally(MONS_BURNING_BUSH,
+            "Blackened shoots writhe from the ground and burst into flame!"))
+            return false;
+        break; // //
+
+
+    case ABIL_MAKE_DART_TRAP:
+        if (!_create_trap(TRAP_DART)) return false;
+        break; // //
+
+    case ABIL_MAKE_ICE_STATUE:
+        if (!_create_zotdef_ally(MONS_ICE_STATUE,
+            "Water vapor collects and crystallizes into an icy humanoid shape."))
+            return false;
+        break; // //
+
+    case ABIL_MAKE_OCS:
+        if (!_create_zotdef_ally(MONS_ORANGE_STATUE,
+            "Quartz juts from the ground and forms a humanoid shape. You smell citrus."))
+            return false;
+        break; // //
+
+    case ABIL_MAKE_SILVER_STATUE:
+        if (!_create_zotdef_ally(MONS_SILVER_STATUE,
+            "Droplets of mercury fall from the ceiling and turn to silver, congealing into a humanoid shape."))
+            return false;
+        break; // //
+
+    case ABIL_MAKE_CURSE_SKULL:
+        if (!_create_zotdef_ally(MONS_CURSE_SKULL,
+            "You sculpt a terrible being from the primitive principle of evil."))
+            return false;
+        break; // //
+
+    case ABIL_MAKE_TELEPORT:
+        you_teleport_now( true, true ); 
+        break; // //
+
+    case ABIL_MAKE_ARROW_TRAP:
+        if (!_create_trap(TRAP_ARROW)) return false;
+        break; // //
+
+    case ABIL_MAKE_BOLT_TRAP:
+        if (!_create_trap(TRAP_BOLT)) return false;
+        break; // //
+
+    case ABIL_MAKE_SPEAR_TRAP:
+        if (!_create_trap(TRAP_SPEAR)) return false;
+        break; // //
+
+    case ABIL_MAKE_AXE_TRAP:
+        if (!_create_trap(TRAP_AXE)) return false;
+        break; // //
+
+    case ABIL_MAKE_NEEDLE_TRAP:
+        if (!_create_trap(TRAP_NEEDLE)) return false;
+        break; // //
+
+    case ABIL_MAKE_NET_TRAP:
+        if (!_create_trap(TRAP_NET)) return false;
+        break; // //
+
+    case ABIL_MAKE_TELEPORT_TRAP:
+        if (!_create_trap(TRAP_TELEPORT)) return false;
+        break; // //
+
+    case ABIL_MAKE_ALARM_TRAP:
+        if (!_create_trap(TRAP_ALARM)) return false;
+        break; // //
+
+    case ABIL_MAKE_BLADE_TRAP:
+        if (!_create_trap(TRAP_BLADE)) return false;
+        break; // //
+
+    case ABIL_MAKE_OKLOB_CIRCLE:
+        args.top_prompt="Center oklob circle where?";
+        direction(abild, args);
+        if (!abild.isValid)
+        {
+            if (abild.isCancel)
+            canned_msg(MSG_OK);
+            return (false);
+        }
+        for(adjacent_iterator ai(abild.target); ai; ++ai)
+            place_monster( mgen_data(MONS_OKLOB_PLANT, BEH_FRIENDLY, &you, 0, 0, *ai, you.pet_target), true);
+        break; // //
+
+    case ABIL_MAKE_ACQUIRE_GOLD:
+        acquirement(OBJ_GOLD, AQ_SCROLL); // //
+        break;
+
+    case ABIL_MAKE_ACQUIREMENT:
+        acquirement(OBJ_RANDOM, AQ_SCROLL); // //
+        break;
+
+    case ABIL_MAKE_WATER:
+        _create_pond(you.pos(), 3, false); // //
+        break;
+
+    case ABIL_MAKE_ELECTRIC_EEL:
+        if (!_create_zotdef_ally(MONS_ELECTRIC_EEL,
+            "You make an electric eel."))
+            return false;
+        break; // //
+
+    case ABIL_MAKE_BAZAAR:
+    {
+        // Early exit: don't clobber important features.
+        if (is_critical_feature(grd(you.pos())))
+        {
+            mpr("The dungeon trembles momentarily.");
+            return (false);
+        }
+
+        // Generate a portal to something.
+        const map_def *mapidx = random_map_for_tag("trowel_portal", false);
+        if (!mapidx)
+        {
+            mpr("A buggy portal flickers into view, then vanishes.");
+        }
+        else
+        {
+            no_messages n;
+            dgn_place_map(mapidx, false, true, you.pos());
+            mpr("A mystic portal forms.");
+        }
+
+        break;
+    }
+
+    case ABIL_MAKE_ALTAR:
+        // Generate an altar.
+        if (grd(you.pos()) == DNGN_FLOOR)
+        {
+            god_type rgod=GOD_NO_GOD;
+            // Don't allow Fedhas, as his abilities don't fit
+            while (rgod==GOD_NO_GOD || rgod==GOD_FEDHAS)
+            {
+                rgod = static_cast<god_type>(random2(NUM_GODS));
+            }
+            grd(you.pos()) = altar_for_god(rgod);
+
+            if (grd(you.pos()) != DNGN_FLOOR)
+            {
+                mprf("An altar to %s grows from the floor before you!",
+                     god_name(rgod).c_str());
+            }
+        }
+	else
+	{
+	    mpr("The dungeon dims for a moment.");
+	    return (false);
+	}
+        break;
+
+    case ABIL_MAKE_GRENADES:
+        if (create_monster(
+               mgen_data(MONS_GIANT_SPORE, BEH_FRIENDLY, &you, 6, 0,
+                         you.pos(), you.pet_target,
+                         0)) != -1)
+	    mpr( "You create a living grenade." );
+        if (create_monster(
+               mgen_data(MONS_GIANT_SPORE, BEH_FRIENDLY, &you, 6, 0,
+                         you.pos(), you.pet_target,
+                         0)) != -1)
+	    mpr( "You create a living grenade." );
+        break;
+
+    case ABIL_REMOVE_CURSE:
+        remove_curse( false );
+        lose_stat(STAT_RANDOM, (1 + random2avg(4, 2)), false, "zot ability");
+
+        break;
+
+    case ABIL_MAKE_SAGE:
+        _sage_card( 20, DECK_RARITY_RARE);
+        break;
+
     case ABIL_MUMMY_RESTORATION:
     {
         mpr("You infuse your body with magical energy.");
@@ -2112,7 +2580,9 @@ static bool _do_ability(const ability_def& abil)
     return (true);
 }
 
-static void _pay_ability_costs(const ability_def& abil)
+// We pass in ability cost as it may have changed during the exercise
+// of the ability (if the cost is scaled, for example)
+static void _pay_ability_costs(const ability_def& abil, int xpcost)
 {
     // currently only delayed fireball is instantaneous -- bwr
     you.turn_is_over = !(abil.flags & ABFLAG_INSTANT);
@@ -2137,6 +2607,39 @@ static void _pay_ability_costs(const ability_def& abil)
         if (abil.flags & ABFLAG_PERMANENT_HP)
             rot_hp(1);
     }
+
+    if (xpcost)
+    {
+        you.exp_available -= xpcost;
+        you.redraw_experience = true;
+    }
+   
+    if (abil.flags & ABFLAG_ENCH_MISCAST)
+    {
+        MiscastEffect(&you, NON_MONSTER, SPTYP_ENCHANTMENT, 10, 90, "power out of control", NH_DEFAULT);
+    }
+    if (abil.flags & ABFLAG_NECRO_MISCAST)
+    {
+        MiscastEffect(&you, NON_MONSTER, SPTYP_NECROMANCY, 10, 90, "power out of control");
+    }
+    if (abil.flags & ABFLAG_NECRO_MISCAST_MINOR)
+    {
+        MiscastEffect(&you, NON_MONSTER, SPTYP_NECROMANCY, 5, 90, "power out of control");
+    }
+    if (abil.flags & ABFLAG_TLOC_MISCAST)
+    {
+        MiscastEffect(&you, NON_MONSTER, SPTYP_TRANSLOCATION, 10, 90, "power out of control");
+    }
+    if (abil.flags & ABFLAG_TMIG_MISCAST)
+    {
+        MiscastEffect(&you, NON_MONSTER, SPTYP_TRANSMUTATION, 10, 90, "power out of control");
+    }
+    if (abil.flags & ABFLAG_LEVEL_DRAIN)
+    {
+        lose_level();
+        lose_level();
+    }
+
 
     if (food_cost)
         make_hungry( food_cost, false, true );
@@ -2258,6 +2761,69 @@ static void _add_talent(std::vector<talent>& vec, const ability_type ability,
 std::vector<talent> your_talents(bool check_confused)
 {
     std::vector<talent> talents;
+
+    // // zot defense abilities; must also be updated in player.cc when these levels are changed
+    if (you.experience_level >= 1)
+        _add_talent(talents, ABIL_MAKE_DART_TRAP, check_confused);
+    if (you.experience_level >= 1)
+        _add_talent(talents, ABIL_MAKE_OKLOB_SAPLING, check_confused);
+    if (you.experience_level >= 3)
+        _add_talent(talents, ABIL_MAKE_ARROW_TRAP, check_confused);
+    if (you.experience_level >= 4)
+        _add_talent(talents, ABIL_MAKE_PLANT, check_confused);
+    if (you.experience_level >= 4)
+        _add_talent(talents, ABIL_REMOVE_CURSE, check_confused);
+    if (you.experience_level >= 5)
+        _add_talent(talents, ABIL_MAKE_BURNING_BUSH, check_confused);
+    if (you.experience_level >= 6)
+        _add_talent(talents, ABIL_MAKE_ALTAR, check_confused);
+    if (you.experience_level >= 6)
+        _add_talent(talents, ABIL_MAKE_GRENADES, check_confused);
+    if (you.experience_level >= 7)
+        _add_talent(talents, ABIL_MAKE_OKLOB_PLANT, check_confused);
+    if (you.experience_level >= 8)
+        _add_talent(talents, ABIL_MAKE_NET_TRAP, check_confused);
+    if (you.experience_level >= 9)
+        _add_talent(talents, ABIL_MAKE_ICE_STATUE, check_confused);
+    if (you.experience_level >= 10)
+        _add_talent(talents, ABIL_MAKE_SPEAR_TRAP, check_confused);
+    if (you.experience_level >= 11)
+        _add_talent(talents, ABIL_MAKE_ALARM_TRAP, check_confused);
+    if (you.experience_level >= 12)
+        _add_talent(talents, ABIL_MAKE_FUNGUS, check_confused);
+    if (you.experience_level >= 13)
+        _add_talent(talents, ABIL_MAKE_AXE_TRAP, check_confused);
+    if (you.experience_level >= 14)
+        _add_talent(talents, ABIL_MAKE_OCS, check_confused);
+    if (you.experience_level >= 15)
+        _add_talent(talents, ABIL_MAKE_NEEDLE_TRAP, check_confused);
+    if (you.experience_level >= 16)
+        _add_talent(talents, ABIL_MAKE_TELEPORT, check_confused);
+    if (you.experience_level >= 17)
+        _add_talent(talents, ABIL_MAKE_WATER, check_confused);
+    if (you.experience_level >= 18)
+        _add_talent(talents, ABIL_MAKE_BOLT_TRAP, check_confused);
+    if (you.experience_level >= 19)
+        _add_talent(talents, ABIL_MAKE_ELECTRIC_EEL, check_confused);
+    if (you.experience_level >= 20)
+        _add_talent(talents, ABIL_MAKE_SILVER_STATUE, check_confused);
+    // gain bazaar and gold together
+    if (you.experience_level >= 21)
+        _add_talent(talents, ABIL_MAKE_BAZAAR, check_confused);
+    if (you.experience_level >= 21)
+        _add_talent(talents, ABIL_MAKE_ACQUIRE_GOLD, check_confused);
+    if (you.experience_level >= 22)
+        _add_talent(talents, ABIL_MAKE_OKLOB_CIRCLE, check_confused);
+    if (you.experience_level >= 23)
+        _add_talent(talents, ABIL_MAKE_SAGE, check_confused);
+    if (you.experience_level >= 24)
+        _add_talent(talents, ABIL_MAKE_BLADE_TRAP, check_confused);
+    if (you.experience_level >= 25)
+        _add_talent(talents, ABIL_MAKE_ACQUIREMENT, check_confused);
+    if (you.experience_level >= 26)
+        _add_talent(talents, ABIL_MAKE_CURSE_SKULL, check_confused);
+    if (you.experience_level >= 27)
+        _add_talent(talents, ABIL_MAKE_TELEPORT_TRAP, check_confused);
 
     // Species-based abilities.
     if (you.species == SP_MUMMY && you.experience_level >= 13)

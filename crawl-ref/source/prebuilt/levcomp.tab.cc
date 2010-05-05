@@ -174,6 +174,9 @@
 #include <map>
 #include <algorithm>
 
+#include <map>
+#include <algorithm>
+
 #include "AppHdr.h"
 #include "l_defs.h"
 #include "libutil.h"

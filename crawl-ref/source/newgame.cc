@@ -67,6 +67,10 @@ static void _jobs_stat_init(job_type which_job);
 static void _species_stat_init(species_type which_species);
 bool _choose_species(void);
 bool _choose_job(void);
+static void _newgame_make_item(int slot, equipment_type eqslot,
+                               object_class_type base,
+                               int sub_type, int replacement = -1,
+                               int qty = 1, int plus = 0, int plus2 = 0);
 
 static void _create_wanderer(void);
 static bool _give_items_skills(void);
@@ -414,11 +418,16 @@ static void _racialise_starting_equipment()
 // skill levels.
 static void _reassess_starting_skills()
 {
+    // Zotdef: all skills turned off, but not those with no
+    // skill points (makes it too hard to learn a new skill 
+    // otherwise)
     for (int i = 0; i < NUM_SKILLS; ++i)
     {
+	you.practise_skill[i]=false;	// Zotdef
         if (you.skills[i] == 0
             && (you.species != SP_VAMPIRE || i != SK_UNARMED_COMBAT))
         {
+	    you.practise_skill[i]=true;	// Zotdef
             continue;
         }
 
@@ -841,6 +850,9 @@ game_start:
     _give_starting_food();
     _mark_starting_books();
     _racialise_starting_equipment();
+    
+    //Zotdef:  Start with 2 potions of healing extra
+     _newgame_make_item(-1, EQ_NONE, OBJ_POTIONS, POT_HEALING, -1, 2);
 
     _give_basic_spells(you.char_class);
     _give_basic_knowledge(you.char_class);
@@ -1497,6 +1509,8 @@ static void _jobs_stat_init(job_type which_job)
 
 void give_basic_mutations(species_type speci)
 {
+    you.mutation[MUT_TELEPORT_CONTROL] = 1; // //
+
     // We should switch over to a size-based system
     // for the fast/slow metabolism when we get around to it.
     switch (speci)
@@ -1688,8 +1702,8 @@ static void _make_rod(item_def &item, stave_type rod_type, int ncharges)
 // some species; otherwise use -1.
 static void _newgame_make_item(int slot, equipment_type eqslot,
                                object_class_type base,
-                               int sub_type, int replacement = -1,
-                               int qty = 1, int plus = 0, int plus2 = 0)
+                               int sub_type, int replacement,
+                               int qty, int plus, int plus2)
 {
     if (slot == -1)
     {
@@ -3481,6 +3495,8 @@ wand_done:
 
 bool _give_items_skills()
 {
+    you.exp_available = 80; // //
+
     char keyn;
     int weap_skill = 0;
     int choice;                 // used for third-screen choices

@@ -65,6 +65,7 @@ struct ability_def
     unsigned int        food_cost;      // + rand2avg( food_cost, 2 )
     generic_cost        piety_cost;     // + random2( (piety_cost + 1) / 2 + 1 )
     unsigned int        flags;          // used for additonal cost notices
+    unsigned int        xp_cost;        // hit point cost of ability
 };
 
 struct talent

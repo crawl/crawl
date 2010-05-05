@@ -181,9 +181,5 @@ view.o \
 viewchar.o \
 viewgeom.o \
 viewmap.o \
-wiz-dgn.o \
-wiz-fsim.o \
-wiz-item.o \
-wiz-mon.o \
-wiz-you.o \
-xom.o
+xom.o \
+zotdef.o

@@ -172,4 +172,6 @@ std::string summoned_poof_msg(const int midx, const item_def &item);
 std::string summoned_poof_msg(const monsters* monster, const item_def &item);
 
 bool mons_reaped(actor *killer, monsters *victim);
+int count_monsters(monster_type mtyp, bool friendlyOnly);
+
 #endif

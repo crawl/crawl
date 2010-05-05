@@ -14,6 +14,7 @@
 #include "monster.h"
 #include "player.h"
 #include "random.h"
+#include "state.h"
 #include "stuff.h"
 #include "terrain.h"
 #include "traps.h"
@@ -101,7 +102,7 @@ bool try_pathfind(monsters *mon, const dungeon_feature_type can_move)
     // next turn, and even extend that flag to neighbouring
     // monsters of similar movement restrictions.
 
-    bool need_pathfind = !can_go_straight(mon->pos(), you.pos(), can_move);
+    bool need_pathfind = !can_go_straight(mon->pos(), PLAYER_POS, can_move);
 
     // Smart monsters that can fire through obstacles won't use
     // pathfinding.
@@ -115,7 +116,7 @@ bool try_pathfind(monsters *mon, const dungeon_feature_type can_move)
     // Also don't use pathfinding if the monster can shoot
     // across the blocking terrain, and is smart enough to
     // realise that.
-    if (need_pathfind
+    if ((!game_is_zotdef()) && need_pathfind
         && mons_intel(mon) >= I_NORMAL && !mon->friendly()
         && (mons_has_ranged_spell(mon, true)
             || mons_has_ranged_attack(mon))
@@ -145,16 +146,23 @@ bool try_pathfind(monsters *mon, const dungeon_feature_type can_move)
 
 #ifdef DEBUG_PATHFIND
     mprf("%s: Player out of reach! What now?",
-         mon->name(DESC_PLAIN).c_str());
+         mon->name(DESC_PLAIN,true).c_str());
+    mprf("travelling? %d  target %d",mon->is_travelling(),mon->travel_target);
 #endif
+
     // If we're already on our way, do nothing.
     if (mon->is_travelling() && mon->travel_target == MTRAV_PLAYER)
     {
         const int len = mon->travel_path.size();
         const coord_def targ = mon->travel_path[len - 1];
 
+#ifdef DEBUG_PATHFIND
+        mprf("Travelling: targ=%d %d, aiming for %d,%d. Straight? %d",
+            targ.x,targ.y,PLAYER_POS.x,PLAYER_POS.y,can_go_straight(targ, PLAYER_POS, can_move));
+#endif
+
         // Current target still valid?
-        if (can_go_straight(targ, you.pos(), can_move))
+        if (can_go_straight(targ, PLAYER_POS, can_move))
         {
             // Did we reach the target?
             if (mon->pos() == mon->travel_path[0])
@@ -165,6 +173,9 @@ bool try_pathfind(monsters *mon, const dungeon_feature_type can_move)
                 if (!mon->travel_path.empty())
                 {
                     mon->target = mon->travel_path[0];
+#ifdef DEBUG_PATHFIND
+                    mprf("Returning true");
+#endif
                     return (true);
                 }
             }
@@ -172,18 +183,23 @@ bool try_pathfind(monsters *mon, const dungeon_feature_type can_move)
                                      can_move))
             {
                 mon->target = mon->travel_path[0];
+#ifdef DEBUG_PATHFIND
+                mprf("Returning true");
+#endif
                 return (true);
             }
         }
     }
 
     // Use pathfinding to find a (new) path to the player.
-    const int dist = grid_distance(mon->pos(), you.pos());
+    const int dist = grid_distance(mon->pos(), PLAYER_POS);
 
 #ifdef DEBUG_PATHFIND
     mprf("Need to calculate a path... (dist = %d)", dist);
 #endif
-    const int range = mons_tracking_range(mon);
+    // All monsters can find the Orb in Zotdef
+    const int range = (game_is_zotdef() ? 1000 : mons_tracking_range(mon));
+    
     if (range > 0 && dist > range)
     {
         mon->travel_target = MTRAV_UNREACHABLE;
@@ -196,13 +212,14 @@ bool try_pathfind(monsters *mon, const dungeon_feature_type can_move)
 
 #ifdef DEBUG_PATHFIND
     mprf("Need a path for %s from (%d, %d) to (%d, %d), max. dist = %d",
-         mon->name(DESC_PLAIN).c_str(), mon->pos(), you.pos(), range);
+         mon->name(DESC_PLAIN,true).c_str(), mon->pos().x, mon->pos().y, PLAYER_POS.x, PLAYER_POS.y, range);
 #endif
+    //mprf("DOING PATHFIND %d %d",you.pos().x,you.pos().y);
     monster_pathfind mp;
     if (range > 0)
         mp.set_range(range);
 
-    if (mp.init_pathfind(mon, you.pos()))
+    if (mp.init_pathfind(mon, PLAYER_POS))
     {
         mon->travel_path = mp.calc_waypoints();
         if (!mon->travel_path.empty())
@@ -210,6 +227,10 @@ bool try_pathfind(monsters *mon, const dungeon_feature_type can_move)
             // Okay then, we found a path.  Let's use it!
             mon->target = mon->travel_path[0];
             mon->travel_target = MTRAV_PLAYER;
+#ifdef DEBUG_PATHFIND
+            mprf("Found a path");
+#endif
+            //mprf("PATH FOUND FOR %s!",mon->name(DESC_PLAIN,true).c_str());
             return (true);
         }
         else
@@ -218,6 +239,7 @@ bool try_pathfind(monsters *mon, const dungeon_feature_type can_move)
     else
         _set_no_path_found(mon);
 
+    //mprf("PATH NOT FOUND FOR %s!",mon->name(DESC_PLAIN,true).c_str());
     // We didn't find a path.
     return (false);
 }

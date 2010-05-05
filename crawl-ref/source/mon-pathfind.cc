@@ -394,7 +394,9 @@ bool monster_pathfind::traversable(const coord_def p)
     //      All of this should eventually be replaced by
     //      giving the monster a proper pathfinding LOS.
     if (opc_immob(p) == OPC_OPAQUE)
+    {
         return (false);
+    }
 
     if (mons)
         return mons_traversable(p);

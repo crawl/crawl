@@ -338,7 +338,8 @@ bool builder(int level_number, int level_type, bool enable_random_maps)
             mapgen_report_map_veto();
 #endif
 
-        if (!dgn_level_vetoed && _valid_dungeon_level(level_number, level_type))
+        if ((!dgn_level_vetoed && _valid_dungeon_level(level_number, level_type))
+            || game_is_zotdef())
         {
 #if DEBUG_MONS_SCAN
             // If debug_mons_scan() finds a problem while Generating_Level is
@@ -1815,7 +1816,7 @@ static void _build_dungeon_level(int level_number, int level_type)
 
     // Hook up the special room (if there is one, and it hasn't
     // been hooked up already in roguey_level()).
-    if (sr.created && !sr.hooked_up)
+    if (sr.created && !sr.hooked_up && !game_is_zotdef())
         _specr_2(sr);
 
     // Now place items, monster, gates, etc.
@@ -1867,9 +1868,12 @@ static void _build_dungeon_level(int level_number, int level_type)
 
     // Try to place minivaults that really badly want to be placed. Still
     // no guarantees, seeing this is a minivault.
-    _place_minivaults();
-    _place_branch_entrances( level_number, level_type );
-    _place_extra_vaults();
+    if (!game_is_zotdef())
+    {
+        _place_minivaults();
+        _place_branch_entrances( level_number, level_type );
+        _place_extra_vaults();
+    }
 
     // XXX: Moved this here from builder_monsters so that connectivity can be
     //      ensured
@@ -1881,24 +1885,33 @@ static void _build_dungeon_level(int level_number, int level_type)
         _place_shops(level_number);
 
     // Any vault-placement activity must happen before this check.
-    _dgn_verify_connectivity(nvaults);
+    if (!game_is_zotdef())
+    {
+        _dgn_verify_connectivity(nvaults);
+    }
 
-    if (dgn_level_vetoed)
+    if (dgn_level_vetoed && !game_is_zotdef())
         return;
 
-    if (level_type != LEVEL_ABYSS)
+    if (level_type != LEVEL_ABYSS && !game_is_zotdef())
         _place_traps(level_number);
 
     _place_fog_machines(level_number);
 
     // Place items.
-    _builder_items(level_number, level_type, _num_items_wanted(level_number));
+    if (!game_is_zotdef())
+    {
+        _builder_items(level_number, level_type, _num_items_wanted(level_number));
+    }
 
     // Place monsters.
-    _builder_monsters(level_number, level_type, _num_mons_wanted(level_type));
+    if (!game_is_zotdef())
+    {
+        _builder_monsters(level_number, level_type, _num_mons_wanted(level_type));
+        _fixup_walls();
+        _fixup_branch_stairs();
+    }
 
-    _fixup_walls();
-    _fixup_branch_stairs();
 
     _place_altars();
 
@@ -2387,7 +2400,14 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
         && lid.branch == BRANCH_MAIN_DUNGEON
         && lid.depth == 1 && !Tutorial.tutorial_left)
     {
-        vault = random_map_for_tag("entry");
+        if (game_is_zotdef())
+        {
+            vault = random_map_for_tag("zotdef");
+        }
+        else
+        {
+            vault = random_map_for_tag("entry");
+        }
     }
 
     return (vault);
@@ -4300,8 +4320,11 @@ bool dgn_place_map(const map_def *mdef,
 
     if (rune_subst == -1 && mdef->has_tag_suffix("_entry"))
         rune_subst = _dgn_find_rune_subst_tags(mdef->tags);
-    did_map = _build_secondary_vault(you.absdepth0, mdef, rune_subst,
+    if (!game_is_zotdef())
+    {
+        did_map = _build_secondary_vault(you.absdepth0, mdef, rune_subst,
                                      clobber, make_no_exits, where);
+    }
 
     // Activate any markers within the map.
     if (did_map && !Generating_Level)

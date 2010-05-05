@@ -47,6 +47,38 @@ enum ability_type
     ABIL_EVOKE_STOP_LEVITATING,
     ABIL_END_TRANSFORMATION,           //   55
 
+    // // zot defense abilities
+    ABIL_MAKE_FUNGUS = 57,             //   57
+    ABIL_MAKE_PLANT,
+    ABIL_MAKE_OKLOB_SAPLING,
+    ABIL_MAKE_DART_TRAP,               // // 60
+    ABIL_MAKE_ICE_STATUE,
+    ABIL_MAKE_OCS,
+    ABIL_MAKE_SILVER_STATUE,
+    ABIL_MAKE_CURSE_SKULL,
+    ABIL_MAKE_TELEPORT,                // // 65
+    ABIL_MAKE_ARROW_TRAP,
+    ABIL_MAKE_BOLT_TRAP,
+    ABIL_MAKE_SPEAR_TRAP,
+    ABIL_MAKE_AXE_TRAP,
+    ABIL_MAKE_NEEDLE_TRAP,             // // 70
+    ABIL_MAKE_NET_TRAP,
+    ABIL_MAKE_TELEPORT_TRAP,
+    ABIL_MAKE_ALARM_TRAP,
+    ABIL_MAKE_BLADE_TRAP,
+    ABIL_MAKE_OKLOB_CIRCLE,            // // 75
+    ABIL_MAKE_ACQUIRE_GOLD,
+    ABIL_MAKE_ACQUIREMENT,
+    ABIL_MAKE_WATER,
+    ABIL_MAKE_ELECTRIC_EEL,
+    ABIL_MAKE_BAZAAR,                  // // 80
+    ABIL_MAKE_ALTAR,
+    ABIL_MAKE_GRENADES,
+    ABIL_MAKE_SAGE,
+    ABIL_MAKE_OKLOB_PLANT,
+    ABIL_MAKE_BURNING_BUSH,
+    ABIL_REMOVE_CURSE,
+
     // Divine abilities
     ABIL_ZIN_SUSTENANCE = 109,              //  109
     ABIL_ZIN_RECITE,
@@ -1843,6 +1875,8 @@ enum monster_type                      // (int) menv[].type
     MONS_ALLIGATOR_SNAPPING_TURTLE,
     MONS_SEA_SNAKE,
 
+    MONS_OKLOB_SAPLING,
+    MONS_BURNING_BUSH,
     //jmf: end new monsters
     MONS_WHITE_IMP = 220,              //  220
     MONS_LEMURE,

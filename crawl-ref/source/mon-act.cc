@@ -2229,7 +2229,8 @@ static bool _monster_eat_item(monsters *monster, bool nearby)
         return (false);
 
     int hps_changed = 0;
-    int max_eat = roll_dice(1, 10);
+    // Zotdef jellies are toned down slightly
+    int max_eat = roll_dice(1, (game_is_zotdef()?8:10));
     int eaten = 0;
     bool eaten_net = false;
     bool death_ooze_ate_good = false;
@@ -2263,7 +2264,7 @@ static bool _monster_eat_item(monsters *monster, bool nearby)
         {
             quant = std::min(quant, max_eat - eaten);
 
-            hps_changed += (quant * item_mass(*si)) / 20 + quant;
+            hps_changed += (quant * item_mass(*si)) / (game_is_zotdef()?30:20) + quant;
             eaten += quant;
 
             if (monster->caught()
@@ -2621,6 +2622,10 @@ static bool _is_trap_safe(const monsters *monster, const coord_def& where,
         return (true);
     }
 
+    // In Zotdef critters will risk death to get to the Orb
+    if (game_is_zotdef() && mechanical)
+        return (true);
+
     // Friendly and good neutral monsters don't enjoy Zot trap perks;
     // handle accordingly.  In the arena Zot traps affect all monsters.
     if (monster->wont_attack() || crawl_state.arena)
@@ -2900,7 +2905,17 @@ static bool _mon_can_move_to_pos(const monsters *monster,
         if (mons_aligned(monster, targmonster)
             && !_mons_can_displace(monster, targmonster))
         {
-            return (false);
+            // In Zotdef hostiles will whack other hostiles if immobile
+            // - prevents plugging gaps with hostile oklobs
+            if (game_is_zotdef())
+            {
+                if (!mons_is_stationary(targmonster) || targmonster->attitude!=ATT_HOSTILE)
+                    return (false);
+            } 
+            else
+            {
+                return (false);
+            }
         }
     }
 
@@ -3524,6 +3539,14 @@ static bool _monster_move(monsters *monster)
         }
 
         mmov.reset();
+
+        // zotdef: sometimes seem to get gridlock. Reset travel path
+        // if we can't move, occasionally
+        if (game_is_zotdef() && one_chance_in(50)) 
+        {
+             monster->travel_path.clear();
+             monster->travel_target = MTRAV_NONE;
+        }
 
         // Fleeing monsters that can't move will panic and possibly
         // turn to face their attacker.

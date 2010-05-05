@@ -95,6 +95,8 @@ int speed_to_duration(int speed);
 
 bool scramble(void);
 
+int runes_in_pack(std::vector<int> &runes);
+
 bool interrupt_cmd_repeat(activity_interrupt_type ai,
                           const activity_interrupt_data &at);
 
