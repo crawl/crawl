@@ -1429,7 +1429,7 @@ bool check_old_item_warning( const item_def& item,
             return (true);
 
         old_item = *you.weapon();
-        if (!has_warning_inscription(old_item, OPER_WIELD))
+        if (!needs_handle_warning(old_item, OPER_WIELD))
             return (true);
 
         prompt += "Really unwield ";
@@ -1445,7 +1445,7 @@ bool check_old_item_warning( const item_def& item,
 
         old_item = you.inv[you.equip[eq_slot]];
 
-        if (!has_warning_inscription(old_item, OPER_TAKEOFF))
+        if (!needs_handle_warning(old_item, OPER_TAKEOFF))
             return (true);
 
         prompt += "Really take off ";
@@ -1461,7 +1461,7 @@ bool check_old_item_warning( const item_def& item,
                 return (true);
 
             old_item = you.inv[you.equip[EQ_AMULET]];
-            if (!has_warning_inscription(old_item, OPER_TAKEOFF))
+            if (!needs_handle_warning(old_item, OPER_TAKEOFF))
                 return (true);
 
             prompt += "Really remove ";
@@ -1515,10 +1515,13 @@ static bool _nasty_stasis(const item_def &item, operation_types oper)
                 || you.duration[DUR_TELEPORT]);
 }
 
-static bool _needs_warning(const item_def &item, operation_types oper)
+bool needs_handle_warning(const item_def &item, operation_types oper)
 {
     if (has_warning_inscription(item, oper))
         return (true);
+
+    if (!item_ident(item, ISFLAG_KNOW_TYPE))
+        return (false);
 
     if (oper == OPER_REMOVE
         && item.base_type == OBJ_JEWELLERY
@@ -1531,6 +1534,13 @@ static bool _needs_warning(const item_def &item, operation_types oper)
     if (_nasty_stasis(item, oper))
         return (true);
 
+    if (oper == OPER_WIELD // unwielding uses OPER_WIELD too
+        && item.base_type == OBJ_WEAPONS
+        && get_weapon_brand(item) == SPWPN_DISTORTION)
+    {
+        return (true);
+    }
+
     return (false);
 }
 
@@ -1539,7 +1549,7 @@ bool check_warning_inscriptions( const item_def& item,
                                  operation_types oper )
 {
     if (item.is_valid()
-        && _needs_warning(item, oper))
+        && needs_handle_warning(item, oper))
     {
         // When it's about destroying an item, don't even ask.
         // If the player really wants to do that, they'll have

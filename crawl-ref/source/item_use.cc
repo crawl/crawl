@@ -3783,7 +3783,7 @@ static int _prompt_ring_to_remove(int new_ring)
     const int eqslot = (c == lslot || c == '<') ? EQ_LEFT_RING
                                                 : EQ_RIGHT_RING;
 
-    if (!check_warning_inscriptions(you.inv[you.equip[eqslot]], OPER_REMOVE))
+    if (!needs_handle_warning(you.inv[you.equip[eqslot]], OPER_REMOVE))
         return (-1);
 
     return (you.equip[eqslot]);
