@@ -189,10 +189,8 @@ int player::total_weight() const
 
 int player::damage_type(int)
 {
-    const int wpn = equip[EQ_WEAPON];
-
-    if (wpn != -1)
-        return (get_vorpal_type(inv[wpn]));
+    if (const item_def* wp = weapon())
+        return (get_vorpal_type(*wp));
     else if (attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
         return (DVORP_SLICING);
     else if (has_usable_claws())
