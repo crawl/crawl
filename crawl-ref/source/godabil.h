@@ -9,7 +9,7 @@
 #include "enum.h"
 #include "externs.h"
 
-class bolt;
+struct bolt;
 
 bool is_ponderousifiable(const item_def& item);
 bool ponderousify_armour();

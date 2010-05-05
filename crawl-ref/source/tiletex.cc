@@ -47,16 +47,11 @@ bool GenericTexture::load_texture(const char *filename,
     }
 
     SDL_Surface *img = NULL;
-    FILE *imgfile = fopen(tex_path.c_str(), "rb");
-    if (imgfile)
+    SDL_RWops *rw = SDL_RWFromFile(tex_path.c_str(), "rb");
+    if (rw)
     {
-        SDL_RWops *rw = SDL_RWFromFP(imgfile, 0);
-        if (rw)
-        {
-            img = IMG_Load_RW(rw, 0);
-            SDL_RWclose(rw);
-        }
-        fclose(imgfile);
+        img = IMG_Load_RW(rw, 0);
+        SDL_RWclose(rw);
     }
 
     if (!img)
