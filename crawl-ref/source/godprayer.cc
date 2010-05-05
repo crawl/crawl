@@ -42,7 +42,7 @@ static bool _confirm_pray_sacrifice(god_type god)
     for (stack_iterator si(you.pos(), true); si; ++si)
     {
         if (god_likes_item(god, *si)
-            && has_warning_inscription(*si, OPER_PRAY))
+            && needs_handle_warning(*si, OPER_PRAY))
         {
             std::string prompt = "Really sacrifice stack with ";
             prompt += si->name(DESC_NOCAP_A);

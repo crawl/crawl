@@ -5612,7 +5612,7 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
 
     if (weapon)
     {
-        if (has_warning_inscription(*weapon, OPER_ATTACK)
+        if (needs_handle_warning(*weapon, OPER_ATTACK)
             || weapon->base_type != OBJ_STAVES
                && (weapon->base_type != OBJ_WEAPONS
                    || is_range_weapon(*weapon)))

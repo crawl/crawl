@@ -228,7 +228,6 @@ std::string item_class_name(int type, bool terse = false);
 
 bool check_old_item_warning(const item_def& item, operation_types oper);
 bool check_warning_inscriptions(const item_def& item, operation_types oper);
-bool has_warning_inscription(const item_def& item, operation_types oper);
 
 void init_item_sort_comparators(item_sort_comparators &list,
                                 const std::string &set);
