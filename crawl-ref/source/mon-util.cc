@@ -3113,12 +3113,7 @@ bool mons_can_pass(const monsters *mon, dungeon_feature_type grid)
 
 static bool _mons_can_open_doors(const monsters *mon)
 {
-    // Zombies inherit base monster's open doors capability, but not
-    // other item use.
-    if (mons_is_zombified(mon))
-        return (mons_class_itemuse(mon->base_monster) >= MONUSE_OPEN_DOORS);
-    else
-        return (mons_itemuse(mon) >= MONUSE_OPEN_DOORS);
+    return (mons_itemuse(mon) >= MONUSE_OPEN_DOORS);
 }
 
 // Some functions that check whether a monster can open/eat/pass a
