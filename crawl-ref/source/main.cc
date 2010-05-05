@@ -216,9 +216,6 @@ int main(int argc, char *argv[])
 
     init_crash_handler();
 
-    FILE *f=fopen("q.debug","w");
-    set_msg_dump_file(f);
-
     // Hardcoded initial keybindings.
     init_keybindings();
 
@@ -4047,7 +4044,7 @@ static void _move_player(coord_def move)
                                         && is_sanctuary(targ));
 
     // Are you standing on the Orb? If so, are the critters near?
-    const bool onOrb = (you.pos()==orb_position(false));
+    const bool onOrb = (you.pos()==orb_position());
     bool leaveOrbUnguarded=false;
     if (onOrb)
     {

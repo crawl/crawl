@@ -128,8 +128,6 @@ int find_free_slot(const item_def &i);
 bool is_rune(const item_def &item);
 bool is_unique_rune(const item_def &item);
 
-coord_def orb_position(bool orPlayer);
-
 bool need_to_autoinscribe();
 void request_autoinscribe(bool do_inscribe = true);
 void autoinscribe();
@@ -145,6 +143,7 @@ bool get_item_by_name(item_def *item, char* specs,
                       object_class_type class_wanted,
                       bool create_for_real = false);
 
+// Returns the Orb's position on the ground, or origin()
 coord_def orb_position();
 
 #endif

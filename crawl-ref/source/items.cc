@@ -1012,17 +1012,6 @@ bool is_unique_rune(const item_def &item)
             && item.plus != RUNE_ABYSSAL);
 }
 
-// Returns the Orb's position. If orPlayer is true,
-// returns the player's position if the Orb can't be found. Otherwise
-// returns a zero coord. Used in various places that used to
-// use find_floor_item(OBJ_ORBS,ORB_ZOT)->pos, and that is a NULL deref
-// once you pick up the Orb :(
-coord_def orb_position(bool orPlayer)
-{
-    item_def* orb=find_floor_item(OBJ_ORBS,ORB_ZOT);
-    return (orb ? orb->pos: (orPlayer?you.pos():coord_def()));
-}
-
 bool origin_describable(const item_def &item)
 {
     return (origin_known(item)
@@ -3618,3 +3607,4 @@ coord_def orb_position()
     item_def* orb=find_floor_item(OBJ_ORBS,ORB_ZOT);
     return (orb ? orb->pos: coord_def());
 }
+
