@@ -551,7 +551,7 @@ monster_type pick_random_monster(const level_id &place, int power,
     }
     else
     {
-        int level, diff, chance;
+        int level = 0, diff, chance;
 
         lev_mons = std::min(30, lev_mons);
 
@@ -1817,8 +1817,8 @@ static void _define_zombie(monsters* mon, monster_type ztype, monster_type cs,
     if (mon->base_monster != MONS_KRAKEN)
         mon->flags   &= ~MF_SPELLCASTER & ~MF_ACTUAL_SPELLS & ~MF_PRIEST;
 
-    int hp;
-    int acmod, evmod;
+    int hp = 0;
+    int acmod = 0, evmod = 0;
     switch (cs)
     {
     case MONS_ZOMBIE_SMALL:
