@@ -1,5 +1,5 @@
 Balancing 0.6 features:
-* Monster double actions due to energy randomization always
+* Monster double actions due to energy randomisation always
   include a move.
 * Greatly accelerate armour training when armour is heavy
   relative to skill.
@@ -33,7 +33,8 @@ Game:
 
 Gods:
 * Sif Muna's piety is no longer unfair to skilled species.
-* Zin no longer objects to deaths of non-sentient allies.
+* Zin no longer objects to deaths of non-sentient allies, and
+  takes collateral kills of unclean and chaotic monsters.
 * Yredelemnul no longer gifts vampires.
 * Jiyva now paralyses fellow slimes under prayer instead of
   creating a jelly shield.
@@ -46,12 +47,12 @@ Monsters:
 * Glyph change for demonic crawlers.
 
 Spells:
-* Call Imp has been buffed: it is now level 2, it takes spell
-  power into account, and it can summon iron imps.
+* Call Imp is buffed: it is now level 2, it takes spell power
+  into account, and it can summon iron imps.
 * Call Canine Familiar replaces Summon Elemental in the book
   of Callings, and is removed from the book of Summonings.
-* Summon Ugly Thing has been nerfed: at full spell power, it
-  now summons very ugly things only 33% of the time.
+* Summon Ugly Thing is nerfed: at full spell power, it now
+  summons very ugly things only 33% of the time.
 
 Technical:
 * LOS and areas recalculated on-demand.
