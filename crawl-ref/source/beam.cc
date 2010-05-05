@@ -4910,7 +4910,7 @@ void bolt::refine_for_explosion()
     if (seeMsg == NULL)
     {
         seeMsg  = "The beam explodes into a cloud of software bugs!";
-        hearMsg = "You hear the sound of one hand clapping!";
+        hearMsg = "You hear the sound of one hand!";
     }
 
 
