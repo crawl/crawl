@@ -171,11 +171,8 @@ private:
 private:
     // Player-attack specific stuff
     bool player_attack();
-    unarmed_attack_data _calc_aux_data(unarmed_attack_type type);
-    bool aux_attack_check(unarmed_attack_data data,
-                          unarmed_attack_type baseattack);
     bool player_aux_unarmed();
-    bool player_perform_aux_unarmed();
+    bool player_apply_aux_unarmed();
     int  player_stat_modify_damage(int damage);
     int  player_aux_stat_modify_damage(int damage);
     int  player_to_hit(bool random_factor);
