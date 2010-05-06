@@ -1234,7 +1234,7 @@ enum duration_type
     NUM_DURATIONS
 };
 
-// This list must match the enchant_names array in mon-util.cc or Crawl
+// This list must match the enchant_names array in monster.cc or Crawl
 // will CRASH, we kid you not.
 // Enchantments that imply other enchantments should come first
 // to avoid timeout message confusion. Currently:
@@ -1283,7 +1283,7 @@ enum enchant_type
     ENCH_INSANE,
     ENCH_SILENCE,
 
-    // Update enchantment names in mon-util.cc when adding or removing
+    // Update enchantment names in monster.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
 };
