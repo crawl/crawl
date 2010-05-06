@@ -4904,10 +4904,10 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
             defender->poison(attacker, roll_dice(1, 3));
             if (one_chance_in(4))
             {
-                stat_type poison_stat = (flavour == AF_POISON_STR ? STAT_STR :
-                                         flavour == AF_POISON_INT ? STAT_INT
-                                                                  : STAT_DEX);
-                defender->drain_stat(poison_stat, 1, attacker);
+                stat_type drained_stat = (flavour == AF_POISON_STR ? STAT_STR :
+                                          flavour == AF_POISON_INT ? STAT_INT
+                                                                   : STAT_DEX);
+                defender->drain_stat(drained_stat, 1, attacker);
             }
         }
         break;
@@ -5026,18 +5026,13 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         break;
 
     case AF_DRAIN_STR:
-        if ((one_chance_in(20) || damage_done > 0 && one_chance_in(3))
-            && defender->res_negative_energy() < random2(4))
-        {
-            defender->drain_stat(STAT_STR, 1, attacker);
-        }
-        break;
-
     case AF_DRAIN_DEX:
         if ((one_chance_in(20) || (damage_done > 0 && one_chance_in(3)))
             && defender->res_negative_energy() < random2(4))
         {
-            defender->drain_stat(STAT_DEX, 1, attacker);
+            stat_type drained_stat = (flavour == AF_DRAIN_STR ? STAT_STR
+                                                              : STAT_DEX);
+            defender->drain_stat(drained_stat, 1, attacker);
         }
         break;
 
