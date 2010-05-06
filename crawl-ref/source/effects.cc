@@ -440,15 +440,15 @@ static bool _conduct_electricity_damage(bolt &beam, actor* victim,
 {
     dmg = (10 + random2(15)) / 2;
 
-    return false;
+    return (false);
 }
 
 static bool _conduct_electricity_aoe(bolt& beam, const coord_def& target)
 {
     if (feat_is_water(grd(target)))
-        return true;
+        return (true);
 
-    return false;
+    return (false);
 }
 
 void conduct_electricity(coord_def where, actor *attacker)
