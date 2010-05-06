@@ -993,9 +993,9 @@ static bool _is_emergency_spell(const monster_spells &msp, int spell)
 
 // Function should return false if friendlies shouldn't animate any dead.
 // Currently, this only happens if the player is in the middle of butchering
-// a corpse (infurating), or if they are less than satiated. Only applies
+// a corpse (infurating), or if they are less than satiated.  Only applies
 // to friendly corpse animators. {due}
-static bool _animate_dead_okay ()
+static bool _animate_dead_okay()
 {
     // It's always okay in the arena.
     if (crawl_state.game_is_arena())
@@ -1004,8 +1004,8 @@ static bool _animate_dead_okay ()
     if (is_butchering())
         return (false);
 
-    // TODO: Could probably check herbivoriness here too, but this should be
-    // enough for the minute.
+    // TODO: Could probably check herbivorousness here too, but this should be
+    // enough for the moment.
     if (you.hunger_state < HS_SATIATED)
         return (false);
 
