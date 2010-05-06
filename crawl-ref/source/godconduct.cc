@@ -199,7 +199,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
        case DID_KILL_PLANT:
-       case DID_ALLY_KILLED_PLANT:
+       case DID_PLANT_KILLED_BY_SERVANT:
            // Piety loss but no penance for killing a plant.
            if (you.religion == GOD_FEDHAS)
            {
@@ -949,7 +949,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Drink Blood", "Cannibalism", "Eat Meat", "Eat Souled Being",
                 "Deliberate Mutation", "Cause Glowing", "Use Unclean",
                 "Use Chaos", "Desecrate Orcish Remains", "Destroy Orcish Idol",
-                "Create Life", "Kill Slime", "Kill Plant", "Ally Kill Plant",
+                "Create Life", "Kill Slime", "Kill Plant", "Servant Kill Plant",
                 "Was Hasty", "Gluttony", "Corpse Violation",
                 "Souled Friend Died", "Servant Kill Unclean",
                 "Servant Kill Chaotic", "Attack In Sanctuary"

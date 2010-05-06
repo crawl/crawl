@@ -1646,7 +1646,7 @@ int monster_die(monsters *monster, killer_type killer,
 
             if (pet_kill && fedhas_protects(monster))
             {
-                did_god_conduct(DID_ALLY_KILLED_PLANT, 1 + (monster->hit_dice / 2),
+                did_god_conduct(DID_PLANT_KILLED_BY_SERVANT, 1 + (monster->hit_dice / 2),
                                 true, monster);
             }
 

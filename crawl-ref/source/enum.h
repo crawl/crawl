@@ -793,7 +793,7 @@ enum conduct_type
     DID_CREATE_LIFE,                      // unused
     DID_KILL_SLIME,                       // Jiyva
     DID_KILL_PLANT,                       // Fedhas
-    DID_ALLY_KILLED_PLANT,                // Fedhas
+    DID_PLANT_KILLED_BY_SERVANT,          // Fedhas
     DID_HASTY,                            // Cheibriados
     DID_GLUTTONY,                         // Cheibriados
     DID_CORPSE_VIOLATION,                 // Fedhas (Necromancy involving
