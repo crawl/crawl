@@ -2120,6 +2120,22 @@ enum monster_type                      // (int) menv[].type
     MONS_ALLIGATOR,
     MONS_BABY_ALLIGATOR,
 
+    // Spriggans:
+    MONS_SPRIGGAN = 500,
+    MONS_SPRIGGAN_DRUID,
+    MONS_SPRIGGAN_ASSASSIN,
+    MONS_SPRIGGAN_MAGE,
+    MONS_SPRIGGAN_WARPER,
+    MONS_SPRIGGAN_DEFENDER,
+    MONS_THE_ENCHANTRESS,
+
+    // Dwarves:
+    MONS_DEEP_DWARF = 510,
+    MONS_DEEP_DWARF_HEALER,
+    MONS_DEEP_DWARF_LORD,
+    MONS_DEEP_DWARF_DIGGER,
+    MONS_DEEP_DWARF_NECROMANCER,
+
     // Testing monsters
     MONS_TEST_SPAWNER,
 
