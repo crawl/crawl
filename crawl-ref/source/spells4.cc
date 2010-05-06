@@ -1387,7 +1387,10 @@ bool cast_fulsome_distillation(int /*pow*/)
     {
         if (smc->attack[nattk].flavour == AF_POISON_MEDIUM
             || smc->attack[nattk].flavour == AF_POISON_STRONG
-            || smc->attack[nattk].flavour == AF_POISON_STR)
+            || smc->attack[nattk].flavour == AF_POISON_STR
+            || smc->attack[nattk].flavour == AF_POISON_INT
+            || smc->attack[nattk].flavour == AF_POISON_DEX
+            || smc->attack[nattk].flavour == AF_POISON_STAT)
         {
             pot_type = POT_STRONG_POISON;
         }

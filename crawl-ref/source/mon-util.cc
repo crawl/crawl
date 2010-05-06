@@ -613,7 +613,10 @@ bool mons_is_poisoner(const monsters *mon)
         || mon->has_attack_flavour(AF_POISON_NASTY)
         || mon->has_attack_flavour(AF_POISON_MEDIUM)
         || mon->has_attack_flavour(AF_POISON_STRONG)
-        || mon->has_attack_flavour(AF_POISON_STR))
+        || mon->has_attack_flavour(AF_POISON_STR)
+        || mon->has_attack_flavour(AF_POISON_INT)
+        || mon->has_attack_flavour(AF_POISON_DEX)
+        || mon->has_attack_flavour(AF_POISON_STAT))
     {
         return (true);
     }
@@ -1175,6 +1178,14 @@ mon_attack_def mons_attack_spec(const monsters *mon, int attk_number)
     {
         mon_attack_flavour flavours[] =
             {AF_POISON_NASTY, AF_ROT, AF_DRAIN_XP, AF_FIRE, AF_COLD, AF_BLINK};
+
+        attk.flavour = RANDOM_ELEMENT(flavours);
+    }
+
+    if (attk.flavour == AF_POISON_STAT)
+    {
+        mon_attack_flavour flavours[] =
+            {AF_POISON_STR, AF_POISON_INT, AF_POISON_DEX};
 
         attk.flavour = RANDOM_ELEMENT(flavours);
     }

@@ -8,6 +8,8 @@
 #ifndef MON_ENUM_H
 #define MON_ENUM_H
 
+#include "tag-version.h"
+
 enum corpse_effect_type
 {
     CE_NOCORPSE,        //    0
@@ -75,6 +77,11 @@ enum mon_attack_flavour
     AF_POISON_MEDIUM,
     AF_POISON_STRONG,
     AF_POISON_STR,
+#if TAG_MAJOR_VERSION != 22
+    AF_POISON_INT,
+    AF_POISON_DEX,
+    AF_POISON_STAT,
+#endif
     AF_ROT,
     AF_VAMPIRIC,
     AF_KLOWN,
@@ -85,7 +92,12 @@ enum mon_attack_flavour
     AF_STEAL,
     AF_STEAL_FOOD,
     AF_CRUSH,
-    AF_REACH
+    AF_REACH,
+#if TAG_MAJOR_VERSION == 22
+    AF_POISON_INT,
+    AF_POISON_DEX,
+    AF_POISON_STAT
+#endif
 };
 
 // Non-spell "summoning" types to give to monsters::mark_summoned(), or
