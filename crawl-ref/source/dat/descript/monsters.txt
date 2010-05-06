@@ -1478,6 +1478,10 @@ spiny worm
 
 A great black worm, its many-segmented body covered in spiky plates of chitinous armour. Acidic venom drips from its toothy maw.
 %%%%
+spriggan
+
+A small humanoid, resembling a human or elf except for the size. They move at a great speed, and love playing dirty tricks on people.
+%%%%
 steam dragon
 
 A relatively small grey dragon, with steam pouring from its mouth.
