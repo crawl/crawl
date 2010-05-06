@@ -980,8 +980,11 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
         {
             description += "\nIt can be maximally enchanted to +";
             _append_value(description, MAX_WPN_ENCHANT, false);
-            description += ", +";
-            _append_value(description, MAX_WPN_ENCHANT, false);
+            if (item.sub_type != WPN_BLOWGUN)
+            {
+                description += ", +";
+                _append_value(description, MAX_WPN_ENCHANT, false);
+            }
             description += ".";
         }
     }

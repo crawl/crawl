@@ -1229,7 +1229,7 @@ std::string item_def::name_aux(description_level_type desc,
 
         if (know_pluses)
         {
-            if (terse && it_plus == item_plus2)
+            if ((terse && it_plus == item_plus2) || sub_type == WPN_BLOWGUN)
                 output_with_sign(buff, it_plus);
             else
             {
