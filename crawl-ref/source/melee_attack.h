@@ -51,7 +51,7 @@ public:
     std::string attack_verb, verb_degree;
     std::string no_damage_message;
     std::string special_damage_message;
-    std::string unarmed_attack;
+    std::string aux_attack, aux_verb;
     beam_type special_damage_flavour;
 
     item_def  *shield;
@@ -171,8 +171,14 @@ private:
 private:
     // Player-attack specific stuff
     bool player_attack();
+
+    // Auxiliary unarmed attacks.
     bool player_aux_unarmed();
-    bool player_apply_aux_unarmed();
+    bool player_aux_skip(unarmed_attack_type atk);
+    void player_aux_setup(unarmed_attack_type atk);
+    bool player_aux_test_hit();
+    bool player_aux_apply();
+
     int  player_stat_modify_damage(int damage);
     int  player_aux_stat_modify_damage(int damage);
     int  player_to_hit(bool random_factor);
