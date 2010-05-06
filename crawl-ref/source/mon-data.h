@@ -3996,7 +3996,7 @@ static monsterentry mondata[] = {
     M_NO_FLAGS,
     MR_NO_FLAGS,
     0, 12, MONS_ORANGE_DEMON, MONS_ORANGE_DEMON, MH_DEMONIC, -6,
-    { {AT_HIT, AF_PLAIN, 8}, {AT_STING, AF_POISON_STR, 10}, AT_NO_ATK,
+    { {AT_HIT, AF_PLAIN, 8}, {AT_STING, AF_POISON_STAT, 10}, AT_NO_ATK,
        AT_NO_ATK },
     { 8, 4, 5, 0 },
     3, 7, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SCREECH,

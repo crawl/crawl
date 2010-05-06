@@ -4897,11 +4897,18 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         break;
 
     case AF_POISON_STR:
+    case AF_POISON_INT:
+    case AF_POISON_DEX:
         if (defender->res_poison() <= 0)
         {
             defender->poison(attacker, roll_dice(1, 3));
             if (one_chance_in(4))
-                defender->drain_stat(STAT_STR, 1, attacker);
+            {
+                stat_type poison_stat = (flavour == AF_POISON_STR ? STAT_STR :
+                                         flavour == AF_POISON_INT ? STAT_INT
+                                                                  : STAT_DEX);
+                defender->drain_stat(poison_stat, 1, attacker);
+            }
         }
         break;
 
