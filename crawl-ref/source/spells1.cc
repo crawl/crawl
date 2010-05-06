@@ -295,8 +295,9 @@ bool cast_fire_storm(int pow, bolt &beam)
 
     setup_fire_storm(&you, pow, beam);
 
-    if (beam.explode(false))
-        mpr("A raging storm of fire appears!");
+    mpr("A raging storm of fire appears!");
+
+    beam.explode(false);
 
     viewwindow(false);
     return true;
