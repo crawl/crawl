@@ -531,6 +531,8 @@ bool is_player_same_species(const int mon, bool transform)
             if (mons_genus(mon) == MONS_KOBOLD)
                 return (true);
             return (false);
+        case SP_SPRIGGAN:
+            return (mons_genus(mon) == MONS_SPRIGGAN);
         default: // no monster equivalent
             return (false);
 

@@ -919,6 +919,19 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
+// spriggans ('i')
+{
+    MONS_SPRIGGAN, 'i', LIGHTGREY, "spriggan",
+    M_WARM_BLOOD | M_SPEAKS | M_SEE_INVIS,
+    MR_NO_FLAGS,
+    200, 10, MONS_SPRIGGAN, MONS_SPRIGGAN, MH_NATURAL, -7,
+    { {AT_HIT, AF_PLAIN, 10}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 7, 2, 2, 0 },
+    1, 20, MST_NO_SPELLS, CE_CONTAMINATED, Z_SMALL, S_SHOUT,
+    I_HIGH, HT_LAND, FL_NONE, 16, DEFAULT_ENERGY,
+    MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_LITTLE
+},
+
 // slugs ('j')
 {
     MONS_GIANT_SLUG, 'j', GREEN, "giant slug",
