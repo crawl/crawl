@@ -64,8 +64,13 @@ enum mon_attack_flavour
     AF_COLD,
     AF_CONFUSE,
     AF_DISEASE,
+#if TAG_MAJOR_VERSION == 22
     AF_DRAIN_DEX,
     AF_DRAIN_STR,
+#else
+    AF_DRAIN_STR,
+    AF_DRAIN_DEX,
+#endif
     AF_DRAIN_XP,
     AF_ELEC,
     AF_FIRE,
