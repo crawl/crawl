@@ -3697,11 +3697,8 @@ void bolt::tracer_nonenchantment_affect_monster(monsters* mon)
 void bolt::tracer_affect_monster(monsters* mon)
 {
     // Ignore unseen monsters.
-    if (!mon->visible_to(&you)
-        || (YOU_KILL(thrower) && !you.see_cell(mon->pos())))
-    {
+    if (!agent() || !mon->visible_to(agent()))
         return;
-    }
 
     // Trigger explosion on exploding beams.
     if (is_explosion && !in_explosion_phase)
