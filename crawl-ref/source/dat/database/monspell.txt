@@ -125,6 +125,18 @@ Orb of Destruction cast
 
 @The_monster@ launches a ball of destructive magic.
 %%%%
+Sunray cast
+
+@The_monster@ raises @possessive@ hand.
+
+@The_monster@ calls in a beam of light.
+%%%%
+unseen Sunray cast
+
+Suddenly, a bright light shines from nowhere!
+
+An intense light blinds you for a moment.
+%%%%
 #####################################################
 # Individual innate spells (breathing and spitting).
 #####################################################

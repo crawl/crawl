@@ -703,6 +703,14 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
         beam.is_beam  = true;
         break;
 
+    case SPELL_SUNRAY:
+        beam.colour   = ETC_HOLY;
+        beam.name     = "ray of light";
+        beam.damage   = dice_def( 3, 7 + (power / 12) );
+        beam.hit      = 5 + power / 50; // VERY lousy accuracy, but ignores RMsl
+        beam.flavour  = BEAM_LIGHT;
+        break;
+
     default:
         if (check_validity)
         {

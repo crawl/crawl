@@ -1021,4 +1021,20 @@
     0
 },
 
+{
+    ZAP_SUNRAY,
+    "ray of light",
+    200,
+    new calcdice_calculator<4, 15, 1, 1>,
+    new tohit_calculator<5, 1, 20>,
+    ETC_HOLY,
+    false,
+    BEAM_LIGHT,
+    DCHAR_FIRED_BOLT,
+    true,
+    true,
+    false,
+    6 // XXX: Less noise because it's poison?
+},
+
 #endif

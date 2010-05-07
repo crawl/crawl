@@ -207,6 +207,7 @@ enum beam_type                  // beam[].flavour
     BEAM_LAVA,
     BEAM_ICE,
     BEAM_NUKE,
+    BEAM_LIGHT,
     BEAM_RANDOM,                  // currently translates into FIRE..ACID
     BEAM_CHAOS,
 
@@ -2399,6 +2400,7 @@ enum mon_spellbook_type
     MST_BORIS,
     MST_FREDERICK,
     MST_WAYNE,
+    MST_SPRIGGAN_DRUID,
 
     MST_TEST_SPAWNER = 200,
     NUM_MSTYPES,
@@ -2991,6 +2993,8 @@ enum spell_type
     SPELL_IOOD,
     SPELL_INK_CLOUD,
     SPELL_MIGHT,
+    SPELL_SUNRAY,
+    SPELL_AWAKEN_FOREST,
 
     NUM_SPELLS
 };
@@ -3241,6 +3245,7 @@ enum zap_type
     ZAP_SLEEP,
     ZAP_PRIMAL_WAVE,
     ZAP_IOOD,
+    ZAP_SUNRAY,
     NUM_ZAPS
 };
 
