@@ -565,14 +565,14 @@ bool MiscastEffect::_explosion()
     return (true);
 }
 
-bool MiscastEffect::_big_cloud(cloud_type cl_type, int power, int size,
+bool MiscastEffect::_big_cloud(cloud_type cl_type, int cloud_pow, int size,
                                int spread_rate)
 {
-    if (avoid_lethal( 2 * max_cloud_damage(cl_type, power) ))
+    if (avoid_lethal(2 * max_cloud_damage(cl_type, cloud_pow)))
         return (false);
 
     do_msg(true);
-    big_cloud(cl_type, kc, kt, target->pos(), power, size, spread_rate);
+    big_cloud(cl_type, kc, kt, target->pos(), cloud_pow, size, spread_rate);
 
     return (true);
 }
@@ -587,7 +587,7 @@ void MiscastEffect::_potion_effect(potion_type pot_eff, int pot_pow)
 {
     if (target->atype() == ACT_PLAYER)
     {
-        potion_effect(pot_eff, pow, false, false);
+        potion_effect(pot_eff, pot_pow, false, false);
         return;
     }
 
@@ -599,7 +599,7 @@ void MiscastEffect::_potion_effect(potion_type pot_eff, int pot_pow)
             // There's no levitation enchantment for monsters, and,
             // anyway, it's not nearly as inconvenient for monsters as
             // for the player, so backlight them instead.
-            mon_target->add_ench(mon_enchant(ENCH_CORONA, pow, kc));
+            mon_target->add_ench(mon_enchant(ENCH_CORONA, pot_pow, kc));
             break;
         case POT_BERSERK_RAGE:
             if (target->can_go_berserk())
@@ -609,13 +609,13 @@ void MiscastEffect::_potion_effect(potion_type pot_eff, int pot_pow)
             }
             // Intentional fallthrough if that didn't work.
         case POT_SLOWING:
-            target->slow_down(act_source, pow);
+            target->slow_down(act_source, pot_pow);
             break;
         case POT_PARALYSIS:
-            target->paralyse(act_source, pow);
+            target->paralyse(act_source, pot_pow);
             break;
         case POT_CONFUSION:
-            target->confuse(act_source, pow);
+            target->confuse(act_source, pot_pow);
             break;
 
         default:

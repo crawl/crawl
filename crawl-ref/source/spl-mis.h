@@ -117,10 +117,10 @@ private:
     void do_msg(bool suppress_nothing_happens = false);
     bool _ouch(int dam, beam_type flavour = BEAM_NONE);
     bool _explosion();
-    bool _big_cloud(cloud_type cl_type, int pow, int size,
+    bool _big_cloud(cloud_type cl_type, int cloud_pow, int size,
                     int spread_rate = -1);
     bool _lose_stat(stat_type which_stat, unsigned char stat_loss);
-    void _potion_effect(potion_type pot_eff, int pow);
+    void _potion_effect(potion_type pot_eff, int pot_pow);
     bool _create_monster(monster_type what, int abj_deg, bool alert = false);
     void send_abyss();
     void _do_poison(int amount);
