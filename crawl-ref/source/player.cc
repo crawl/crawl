@@ -498,6 +498,10 @@ bool is_player_same_species(const int mon, bool transform)
         case SP_SLUDGE_ELF:
             return (mons_genus(mon) == MONS_ELF);
 
+        case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
+            return (mons_genus(mon) == MONS_DWARF);
+
         case SP_RED_DRACONIAN:
         case SP_WHITE_DRACONIAN:
         case SP_GREEN_DRACONIAN:
