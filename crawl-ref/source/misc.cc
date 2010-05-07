@@ -159,14 +159,6 @@ void turn_corpse_into_skeleton(item_def &item)
     if (!mons_skeleton(item.plus))
         return;
 
-    // While it is possible to distinguish draconian corpses by colour,
-    // their skeletons are indistinguishable.
-    if (mons_genus(item.plus) == MONS_DRACONIAN && item.plus != MONS_DRACONIAN)
-        item.plus = MONS_DRACONIAN;
-    // The same goes for rat corpses.
-    else if (mons_genus(item.plus) == MONS_RAT && item.plus != MONS_RAT)
-        item.plus = MONS_RAT;
-
     item.sub_type = CORPSE_SKELETON;
     item.special  = 200; // reset rotting counter
     item.colour   = LIGHTGREY;
