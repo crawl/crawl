@@ -54,7 +54,6 @@ Monsters:
 * Glyph change for demonic crawlers.
 * Orange demons resist poison, and their poison can now drain
   any stat.
-* Hairy devils no longer resist poison.
 
 Spells:
 * Call Imp is buffed: it is now level 2, it takes spell power
