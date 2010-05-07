@@ -2627,9 +2627,12 @@ void corrode_monster(monsters *monster)
             {
                 thing_chosen.plus--;
                 monster->ac--;
-                mprf("The acid corrodes %s %s!",
-                     apostrophise(monster->name(DESC_NOCAP_THE)).c_str(),
-                     thing_chosen.name(DESC_PLAIN).c_str());
+                if (you.can_see(monster))
+                {
+                    mprf("The acid corrodes %s's %s!",
+                         monster->name(DESC_NOCAP_THE).c_str(),
+                         thing_chosen.name(DESC_PLAIN).c_str());
+                }
             }
         }
     }
