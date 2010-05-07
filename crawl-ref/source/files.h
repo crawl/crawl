@@ -111,12 +111,13 @@ bool is_existing_level(const level_id &level);
 class level_excursion
 {
     level_id original;
+    bool ever_changed_levels;
 
 public:
     level_excursion();
     ~level_excursion();
 
-    void go_to(const level_id &level, bool orig=false);
+    void go_to(const level_id &level);
 };
 
 void save_ghost( bool force = false );

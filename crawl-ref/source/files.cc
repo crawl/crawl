@@ -2118,7 +2118,7 @@ void restore_game(void)
     SavefileCallback::post_restore();
 }
 
-static void _load_level(const level_id &level, bool orig)
+static void _load_level(const level_id &level)
 {
     // Load the given level.
     you.where_are_you = level.branch;
@@ -2127,16 +2127,6 @@ static void _load_level(const level_id &level, bool orig)
 
     load(DNGN_STONE_STAIRS_DOWN_I, LOAD_VISITOR,
          you.level_type, you.absdepth0, you.where_are_you);
-
-    // Restore state when returning to original level.
-    if (orig)
-    {
-        // Rebuild the show grid, which was cleared out before.
-        you.update_los();
-
-        // Reactivate markers.
-        env.markers.activate_all();
-    }
 }
 
 // Given a level returns true if the level has been created already
@@ -2149,17 +2139,18 @@ bool is_existing_level(const level_id &level)
 // This class provides a way to walk the dungeon with a bit more flexibility
 // than you get with apply_to_all_dungeons.
 level_excursion::level_excursion()
-    : original(level_id::current())
+    : original(level_id::current()), ever_changed_levels(false)
 {
 }
 
-// If orig is true, restore unsaved game state (LOS, markers).
-void level_excursion::go_to(const level_id& next, bool orig)
+void level_excursion::go_to(const level_id& next)
 {
     if (level_id::current() != next)
     {
+        ever_changed_levels = true;
+
         _save_level(you.absdepth0, you.level_type, you.where_are_you);
-        _load_level(next, orig);
+        _load_level(next);
 
         LevelInfo &li = travel_cache.get_level_info(next);
         li.set_level_excludes();
@@ -2170,7 +2161,17 @@ void level_excursion::go_to(const level_id& next, bool orig)
 
 level_excursion::~level_excursion()
 {
-    go_to(original, true);
+    // Restore marker and LOS state if we ever left the level.
+    if (ever_changed_levels)
+    {
+        go_to(original);
+
+        // Rebuild the show grid, which was cleared out before.
+        you.update_los();
+
+        // Reactivate markers.
+        env.markers.activate_all();
+    }
 }
 
 
