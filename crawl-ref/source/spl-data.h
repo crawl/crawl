@@ -2605,6 +2605,32 @@
 },
 
 {
+    SPELL_SUNRAY, "Sunray",
+     SPTYP_CONJURATION,
+     SPFLAG_DIR_OR_TARGET,
+     6,
+     200,
+     9, 9,
+     -9,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_AWAKEN_FOREST, "Awaken Forest",
+     SPTYP_ENCHANTMENT,
+     SPFLAG_NONE,
+     6,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

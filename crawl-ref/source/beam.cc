@@ -1714,6 +1714,29 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         }
         break;
 
+    case BEAM_LIGHT:
+        if (monster->invisible())
+            hurted = 0;
+        else if (mons_genus(monster->type) == MONS_VAMPIRE)
+            hurted += hurted / 2;
+        if (!hurted)
+        {
+            if (doFlavouredEffects)
+            {
+                if (original > 0)
+                    simple_monster_message(monster,"appears unharmed.");
+                else if (monster->observable())
+                    mprf("The beam of light passes harmlessly through %s.",
+                         monster->name(DESC_NOCAP_THE, true).c_str());
+            }
+        }
+        else if (original < hurted)
+        {
+            if (doFlavouredEffects)
+                simple_monster_message(monster, " is burned terribly!");
+        }
+        break;
+
     case BEAM_SPORE:
         if (monster->type == MONS_BALLISTOMYCETE)
             hurted = 0;
@@ -2975,6 +2998,8 @@ bool bolt::misses_player()
     bool dmsl = you.duration[DUR_DEFLECT_MISSILES];
     bool rmsl = dmsl || you.duration[DUR_REPEL_MISSILES]
                 || player_mutation_level(MUT_DISTORTION_FIELD) == 3;
+    if (flavour == BEAM_LIGHT)
+        dmsl = rmsl = false;
 
     if (!_test_beam_hit(real_tohit, dodge_less, is_beam, false, false, r))
     {
@@ -5482,6 +5507,7 @@ std::string beam_type_name(beam_type type)
     case BEAM_LAVA:                 return ("magma");
     case BEAM_ICE:                  return ("ice");
     case BEAM_NUKE:                 return ("nuke");
+    case BEAM_LIGHT:                return ("light");
     case BEAM_RANDOM:               return ("random");
     case BEAM_CHAOS:                return ("chaos");
     case BEAM_SLOW:                 return ("slow");

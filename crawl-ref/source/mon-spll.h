@@ -1374,6 +1374,17 @@
       }
     },
 
+    {  MST_SPRIGGAN_DRUID,
+      {
+       SPELL_SUNRAY,
+       SPELL_AWAKEN_FOREST,
+       SPELL_NO_SPELL,
+       SPELL_SUMMON_MUSHROOMS,
+       SPELL_NO_SPELL,
+       SPELL_MINOR_HEALING
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,
