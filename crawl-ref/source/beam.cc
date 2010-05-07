@@ -2428,6 +2428,7 @@ maybe_bool bolt::affects_wall(dungeon_feature_type wall) const
         || flavour == BEAM_NUKE)
     {
         if (wall == DNGN_ROCK_WALL
+            || wall == DNGN_SLIMY_WALL
             || wall == DNGN_WAX_WALL
             || wall == DNGN_CLEAR_ROCK_WALL
             || wall == DNGN_GRANITE_STATUE
