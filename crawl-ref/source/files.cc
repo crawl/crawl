@@ -1362,8 +1362,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
 #endif
 
     const bool make_changes =
-        (load_mode != LOAD_RESTART_GAME && load_mode != LOAD_VISITOR
-         && load_mode != LOAD_RETURN);
+        (load_mode != LOAD_RESTART_GAME && load_mode != LOAD_VISITOR);
 
     bool just_created_level = false;
 
@@ -1596,9 +1595,6 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
             handle_monsters();
         }
     }
-
-    if (load_mode == LOAD_RETURN)
-        env.markers.activate_all();
 
     if (load_mode == LOAD_ENTER_LEVEL && just_created_level)
         run_map_epilogues();
@@ -2217,14 +2213,14 @@ void restore_game(const std::string& name)
     SavefileCallback::post_restore();
 }
 
-static void _load_level(const level_id &level, bool orig)
+static void _load_level(const level_id &level)
 {
     // Load the given level.
     you.where_are_you = level.branch;
     you.absdepth0 = level.dungeon_absdepth();
     you.level_type = level.level_type;
 
-    load(DNGN_STONE_STAIRS_DOWN_I, orig ? LOAD_RETURN : LOAD_VISITOR,
+    load(DNGN_STONE_STAIRS_DOWN_I, LOAD_VISITOR,
          you.level_type, you.absdepth0, you.where_are_you);
 }
 
@@ -2238,17 +2234,18 @@ bool is_existing_level(const level_id &level)
 // This class provides a way to walk the dungeon with a bit more flexibility
 // than you get with apply_to_all_dungeons.
 level_excursion::level_excursion()
-    : original(level_id::current())
+    : original(level_id::current()), ever_changed_levels(false)
 {
 }
 
-// If orig is true, restore unsaved game state (LOS, markers).
-void level_excursion::go_to(const level_id& next, bool orig)
+void level_excursion::go_to(const level_id& next)
 {
     if (level_id::current() != next)
     {
+        ever_changed_levels = true;
+
         _save_level(you.absdepth0, you.level_type, you.where_are_you);
-        _load_level(next, orig);
+        _load_level(next);
 
         LevelInfo &li = travel_cache.get_level_info(next);
         li.set_level_excludes();
@@ -2259,7 +2256,18 @@ void level_excursion::go_to(const level_id& next, bool orig)
 
 level_excursion::~level_excursion()
 {
-    go_to(original, true);
+    // Go back to original level and reactivate markers if we ever
+    // left the level.
+    if (ever_changed_levels)
+    {
+        // This may be a no-op if the level-excursion subsequently
+        // returned to the original level. However, at this point
+        // markers will still not be activated.
+        go_to(original);
+
+        // Reactivate markers.
+        env.markers.activate_all();
+    }
 }
 
 

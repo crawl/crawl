@@ -20,8 +20,7 @@ enum load_mode_type
     LOAD_START_GAME,            // game has just begun
     LOAD_RESTART_GAME,          // loaded savefile
     LOAD_ENTER_LEVEL,           // entered a level for the first time
-    LOAD_VISITOR,               // Visitor pattern to see all levels
-    LOAD_RETURN                 // Returning to original level after visit.
+    LOAD_VISITOR                // Visitor pattern to see all levels
 };
 
 // referenced in files - newgame - ouch - dgn-overview:
@@ -113,12 +112,13 @@ bool is_existing_level(const level_id &level);
 class level_excursion
 {
     level_id original;
+    bool ever_changed_levels;
 
 public:
     level_excursion();
     ~level_excursion();
 
-    void go_to(const level_id &level, bool orig=false);
+    void go_to(const level_id &level);
 };
 
 void save_ghost( bool force = false );
