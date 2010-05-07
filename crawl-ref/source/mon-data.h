@@ -3920,7 +3920,7 @@ static monsterentry mondata[] = {
 {
     MONS_HAIRY_DEVIL, '4', LIGHTRED, "hairy devil",
     M_NO_FLAGS,
-    MR_NO_FLAGS,
+    MR_RES_POISON,
     0, 10, MONS_HAIRY_DEVIL, MONS_HAIRY_DEVIL, MH_DEMONIC, -4,
     { {AT_HIT, AF_PLAIN, 9}, {AT_HIT, AF_PLAIN, 9}, AT_NO_ATK, AT_NO_ATK },
     { 6, 3, 5, 0 },
