@@ -460,59 +460,43 @@ bool is_player_same_species(const int mon, bool transform)
     switch (you.species)
     {
         case SP_HUMAN:
-            if (mons_genus(mon) == MONS_HUMAN)
-                return (true);
-            return (false);
+            return (mons_genus(mon) == MONS_HUMAN);
+
         case SP_CENTAUR:
-            if (mons_genus(mon) == MONS_CENTAUR)
-                return (true);
-            return (false);
+            return (mons_genus(mon) == MONS_CENTAUR);
+
         case SP_OGRE:
-            if (mons_genus(mon) == MONS_OGRE)
-                return (true);
-            return (false);
+            return (mons_genus(mon) == MONS_OGRE);
+
         case SP_TROLL:
-            if (mons_genus(mon) == MONS_TROLL)
-                return (true);
-            return (false);
+            return (mons_genus(mon) == MONS_TROLL);
+
         case SP_MUMMY:
-            if (mons_genus(mon) == MONS_MUMMY)
-                return (true);
-            return (false);
+            return (mons_genus(mon) == MONS_MUMMY);
+
         case SP_GHOUL: // Genus would include necrophage and rotting hulk.
-            if (mons_species(mon) == MONS_GHOUL)
-                return (true);
-            return (false);
+            return (mons_species(mon) == MONS_GHOUL);
+
         case SP_VAMPIRE:
-            if (mons_genus(mon) == MONS_VAMPIRE)
-                return (true);
-            return (false);
+            return (mons_genus(mon) == MONS_VAMPIRE);
+
         case SP_MINOTAUR:
-            if (mons_genus(mon) == MONS_MINOTAUR)
-                return (true);
-            return (false);
+            return (mons_genus(mon) == MONS_MINOTAUR);
+
         case SP_NAGA:
-            if (mons_genus(mon) == MONS_NAGA)
-                return (true);
-            return (false);
+            return (mons_genus(mon) == MONS_NAGA);
+
         case SP_HILL_ORC:
-            if (mons_genus(mon) == MONS_ORC)
-                return (true);
-            return (false);
+            return (mons_genus(mon) == MONS_ORC);
+
         case SP_MERFOLK:
-            if (mons_genus(mon) == MONS_MERFOLK
-                || mons_genus(mon) == MONS_MERMAID)
-            {
-                return (true);
-            }
-            return (false);
+            return (mons_genus(mon) == MONS_MERFOLK
+                    || mons_genus(mon) == MONS_MERMAID);
 
         case SP_HIGH_ELF:
         case SP_DEEP_ELF:
         case SP_SLUDGE_ELF:
-            if (mons_genus(mon) == MONS_ELF)
-                return (true);
-            return (false);
+            return (mons_genus(mon) == MONS_ELF);
 
         case SP_RED_DRACONIAN:
         case SP_WHITE_DRACONIAN:
@@ -523,16 +507,14 @@ bool is_player_same_species(const int mon, bool transform)
         case SP_PURPLE_DRACONIAN:
         case SP_MOTTLED_DRACONIAN:
         case SP_PALE_DRACONIAN:
-            if (mons_genus(mon) == MONS_DRACONIAN)
-                return (true);
-            return (false);
+            return (mons_genus(mon) == MONS_DRACONIAN);
 
         case SP_KOBOLD:
-            if (mons_genus(mon) == MONS_KOBOLD)
-                return (true);
-            return (false);
+            return (mons_genus(mon) == MONS_KOBOLD);
+
         case SP_SPRIGGAN:
             return (mons_genus(mon) == MONS_SPRIGGAN);
+
         default: // no monster equivalent
             return (false);
 
