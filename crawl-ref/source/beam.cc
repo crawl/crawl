@@ -4729,7 +4729,7 @@ void bolt::tracer_nonenchantment_affect_monster(monsters* mon)
 void bolt::tracer_affect_monster(monsters* mon)
 {
     // Ignore unseen monsters.
-    if (!mon->visible_to(&you)
+    if (!can_see_invis && mon->invisible()
         || (YOU_KILL(thrower) && !you.see_cell(mon->pos())))
     {
         return;
