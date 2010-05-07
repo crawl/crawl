@@ -42,6 +42,7 @@ Gods:
   creating a jelly shield.
 
 Items:
+* Scrolls of holy word do more damage to susceptible monsters.
 * Blowguns no longer show damage, as they do none; accordingly,
   scrolls of enchant weapon II no longer work on them.
 
