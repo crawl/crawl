@@ -184,7 +184,7 @@ public:
 
     bool can_drink_potion(potion_type ptype) const;
     bool should_drink_potion(potion_type ptype) const;
-    item_type_id_state_type drink_potion_effect(potion_type ptype);
+    item_type_id_state_type drink_potion_effect(potion_type pot_eff);
 
     void timeout_enchantments(int levels);
 
