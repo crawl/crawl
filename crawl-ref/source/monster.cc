@@ -1186,7 +1186,7 @@ bool monsters::drop_item(int eslot, int near)
     return (true);
 }
 
-// We don't want monsters to pick up ammunition that is identical to the 
+// We don't want monsters to pick up ammunition that is identical to the
 // launcher brand, in hope of another monster wandering by who may want to
 // use the ammo in question.
 static bool _nonredundant_launcher_ammo_brands(item_def *launcher,
@@ -5716,6 +5716,8 @@ bool monsters::has_action_energy() const
 
 void monsters::check_redraw(const coord_def &old) const
 {
+    if (!crawl_state.io_inited)
+        return;
     const bool see_new = you.see_cell(pos());
     const bool see_old = you.see_cell(old);
     if ((see_new || see_old) && !view_update())
