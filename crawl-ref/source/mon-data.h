@@ -3994,7 +3994,7 @@ static monsterentry mondata[] = {
 {
     MONS_ORANGE_DEMON, '3', LIGHTRED, "orange demon",
     M_NO_FLAGS,
-    MR_NO_FLAGS,
+    MR_RES_POISON,
     0, 12, MONS_ORANGE_DEMON, MONS_ORANGE_DEMON, MH_DEMONIC, -6,
     { {AT_HIT, AF_PLAIN, 8}, {AT_STING, AF_POISON_STAT, 10}, AT_NO_ATK,
        AT_NO_ATK },
