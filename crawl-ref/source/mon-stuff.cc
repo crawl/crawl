@@ -2129,7 +2129,6 @@ static bool _valid_morph(monsters *monster, monster_type new_mclass)
 
         // Other poly-unsuitable things.
         || new_mclass == MONS_ORB_GUARDIAN
-        || new_mclass == MONS_DWARF
         || mons_is_statue(new_mclass)
         || mons_is_projectile(new_mclass)
 
