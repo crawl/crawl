@@ -52,7 +52,8 @@ Monsters:
   imps resist poison but are vulnerable to fire.
 * (Very) ugly things are no longer amphibious.
 * Glyph change for demonic crawlers.
-* Orange demons' poison can now drain any stat.
+* Orange demons resist poison, and their poison can now drain
+  any stat.
 
 Spells:
 * Call Imp is buffed: it is now level 2, it takes spell power
