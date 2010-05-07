@@ -688,7 +688,7 @@ ARTENUM
 sub write_tiles
 {
     my $tilefile = "dc-unrand.txt";
-    print "Updating $tilefile...\n";
+    print "    GEN $tilefile\n";
 
     die "Can't write to $tilefile\n"  if (-e $tilefile && !-w $tilefile);
     unless (open(TILES, ">$tilefile"))
@@ -878,7 +878,7 @@ HEADER_END
     # Create tiledef-unrand.cc for the function unrandart_to_tile().
     # Should we also create tiledef-unrand.h this way?
     $tilefile = "tiledef-unrand.cc";
-    print "Updating $tilefile...\n";
+    print "    GEN $tilefile\n";
 
     die "Can't write to $tilefile\n"  if (-e $tilefile && !-w $tilefile);
     unless (open(TILES, ">$tilefile"))
