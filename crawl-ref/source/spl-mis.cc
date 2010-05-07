@@ -580,14 +580,14 @@ bool MiscastEffect::_big_cloud(cloud_type cl_type, int power, int size,
 bool MiscastEffect::_lose_stat(stat_type which_stat,
                                unsigned char stat_loss)
 {
-    return lose_stat(which_stat, stat_loss, false, cause);
+    return (lose_stat(which_stat, stat_loss, false, cause));
 }
 
-void MiscastEffect::_potion_effect(int pot_eff, int pot_pow)
+void MiscastEffect::_potion_effect(potion_type pot_eff, int pot_pow)
 {
     if (target->atype() == ACT_PLAYER)
     {
-        potion_effect(static_cast<potion_type>(pot_eff), pot_pow, false, false);
+        potion_effect(pot_eff, pow, false, false);
         return;
     }
 
@@ -599,7 +599,7 @@ void MiscastEffect::_potion_effect(int pot_eff, int pot_pow)
             // There's no levitation enchantment for monsters, and,
             // anyway, it's not nearly as inconvenient for monsters as
             // for the player, so backlight them instead.
-            mon_target->add_ench(mon_enchant(ENCH_CORONA, pot_pow, kc));
+            mon_target->add_ench(mon_enchant(ENCH_CORONA, pow, kc));
             break;
         case POT_BERSERK_RAGE:
             if (target->can_go_berserk())
@@ -609,13 +609,13 @@ void MiscastEffect::_potion_effect(int pot_eff, int pot_pow)
             }
             // Intentional fallthrough if that didn't work.
         case POT_SLOWING:
-            target->slow_down(act_source, pot_pow);
+            target->slow_down(act_source, pow);
             break;
         case POT_PARALYSIS:
-            target->paralyse(act_source, pot_pow);
+            target->paralyse(act_source, pow);
             break;
         case POT_CONFUSION:
-            target->confuse(act_source, pot_pow);
+            target->confuse(act_source, pow);
             break;
 
         default:
