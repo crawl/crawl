@@ -1300,7 +1300,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
 
 // Combines code using in Confusing Eye, Giant Eye and Eye of Draining to
 // reduce clutter.
-bool _eyeball_will_use_ability (monsters *monster)
+bool _eyeball_will_use_ability(monsters *monster)
 {
     return (coinflip()
         && !mons_is_wandering(monster)
