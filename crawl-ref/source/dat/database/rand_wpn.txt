@@ -632,11 +632,15 @@ philosophy_name
 
 Monotheism
 
+Henotheism
+
 Polytheism
 
 Atheism
 
 Pantheism
+
+Panentheism
 
 Agnosticism
 
