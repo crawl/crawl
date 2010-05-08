@@ -31,6 +31,7 @@ Game:
 * New maps.
 * Fix old player ghost speech, and add player ghost speech
   fitting the ghost.
+* Monster equipment can be corroded by acid.
 
 Gods:
 * Zin no longer objects to deaths of non-sentient allies, and
