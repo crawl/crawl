@@ -1095,11 +1095,7 @@ bool melee_attack::player_aux_skip(unarmed_attack_type atk)
     {
     case UNAT_PUNCH:
         // No punching with a shield or 2-handed wpn, except staves.
-        return (shield || coinflip()
-                || (weapon
-                    && hands == HANDS_TWO
-                    && weapon->base_type != OBJ_STAVES
-                    && weapon_skill(*weapon) != SK_STAVES));
+        return (!you.has_usable_offhand() || coinflip());
 
     case UNAT_BITE:
         if (you.species == SP_VAMPIRE)

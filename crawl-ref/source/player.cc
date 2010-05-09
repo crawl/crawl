@@ -6128,6 +6128,22 @@ int player::has_usable_tail(bool allow_tran) const
     return (has_tail(allow_tran));
 }
 
+// Whether the player has a usable offhand for the
+// purpose of punching.
+// XXX: The weapon check should probably involve HANDS_DOUBLE
+//      at some point.
+bool player::has_usable_offhand() const
+{
+    if (player_wearing_slot(EQ_SHIELD))
+        return (false);
+
+    const item_def* wp = slot_item(EQ_WEAPON);
+    return (!wp
+            || hands_reqd(*wp, body_size()) != HANDS_TWO
+            || wp->base_type == OBJ_STAVES
+            || weapon_skill(*wp) == SK_STAVES);
+}
+
 bool player::sicken(int amount)
 {
     ASSERT(!crawl_state.game_is_arena());
