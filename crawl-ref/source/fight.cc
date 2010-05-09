@@ -1099,10 +1099,6 @@ bool melee_attack::player_aux_skip(unarmed_attack_type atk)
 {
     switch (atk)
     {
-    case UNAT_PUNCH:
-        // No punching with a shield or 2-handed wpn, except staves.
-        return (!you.has_usable_offhand() || coinflip());
-
     case UNAT_BITE:
         if (you.species == SP_VAMPIRE)
         {
@@ -1121,24 +1117,29 @@ bool melee_attack::player_aux_skip(unarmed_attack_type atk)
 
 unarmed_attack_type melee_attack::player_aux_choose_baseattack()
 {
-    unarmed_attack_type baseattack;
+    unarmed_attack_type baseattack = static_cast<unarmed_attack_type>
+        (random_choose(UNAT_HEADBUTT, UNAT_KICK, UNAT_PUNCH, UNAT_NO_ATTACK,
+                       -1));
 
-    if (you.species == SP_NAGA)
+    // No punching with a shield or 2-handed wpn, except staves.
+    if (baseattack == UNAT_PUNCH && !you.has_usable_offhand())
+        baseattack = UNAT_NO_ATTACK;
+
+    if (you.species == SP_NAGA && baseattack == UNAT_KICK)
         baseattack = UNAT_HEADBUTT;
-    else
-        baseattack = (coinflip() ? UNAT_HEADBUTT : UNAT_KICK);
 
-    if (you.has_usable_fangs())
-        baseattack = UNAT_BITE;
-
-    if (you.has_usable_tail() && one_chance_in(3))
+    if (you.has_usable_tail()
+        && (baseattack == UNAT_HEADBUTT || baseattack == UNAT_KICK)
+        && one_chance_in(3))
+    {
         baseattack = UNAT_TAILSLAP;
+    }
 
-    if (coinflip())
-        baseattack = UNAT_PUNCH;
-
-    if (you.species == SP_VAMPIRE && you.has_usable_fangs()
-        && !one_chance_in(3))
+    // With fangs, replace head attacks with bites.
+    if (you.has_usable_fangs()
+        && (baseattack == UNAT_HEADBUTT
+            || baseattack == UNAT_KICK
+            || you.species == SP_VAMPIRE && x_chance_in_y(2, 3)))
     {
         baseattack = UNAT_BITE;
     }
