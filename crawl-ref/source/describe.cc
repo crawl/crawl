@@ -3949,7 +3949,7 @@ std::string get_skill_description(int skill, bool need_title)
 
         if (!you.weapon())
             unarmed_attacks.push_back("throw a punch");
-        else if (!you.shield())
+        else if (you.has_usable_offhand())
             unarmed_attacks.push_back("punch with your free hand");
 
         if (!unarmed_attacks.empty())

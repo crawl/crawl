@@ -407,6 +407,7 @@ public:
     int       has_usable_fangs(bool allow_tran = true) const;
     int       has_tail(bool allow_tran = true) const;
     int       has_usable_tail(bool allow_tran = true) const;
+    bool      has_usable_offhand() const;
 
     item_def *weapon(int which_attack = -1);
     item_def *shield();
