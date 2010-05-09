@@ -1093,28 +1093,6 @@ static bool _extra_aux_attack(unarmed_attack_type atk)
     }
 }
 
-// Skip an auxiliary unarmed attack for a variety of reasons,
-// after it has been selected.
-bool melee_attack::player_aux_skip(unarmed_attack_type atk)
-{
-    switch (atk)
-    {
-    case UNAT_BITE:
-        if (you.species == SP_VAMPIRE)
-        {
-            if (_vamp_wants_blood_from_monster(defender->as_monster()))
-                return (one_chance_in(7));
-            else
-                return (x_chance_in_y(4, 7));
-        }
-        else
-            return (one_chance_in(5));
-
-    default:
-        return (false);
-    }
-}
-
 unarmed_attack_type melee_attack::player_aux_choose_baseattack()
 {
     unarmed_attack_type baseattack = static_cast<unarmed_attack_type>
@@ -1139,12 +1117,13 @@ unarmed_attack_type melee_attack::player_aux_choose_baseattack()
     if (you.has_usable_fangs()
         && (baseattack == UNAT_HEADBUTT
             || baseattack == UNAT_KICK
-            || you.species == SP_VAMPIRE && x_chance_in_y(2, 3)))
+            || _vamp_wants_blood_from_monster(defender->as_monster())
+               && x_chance_in_y(2, 3)))
     {
         baseattack = UNAT_BITE;
     }
 
-    if (player_aux_skip(baseattack) || _tran_forbid_aux_attack(baseattack))
+    if (_tran_forbid_aux_attack(baseattack))
         baseattack = UNAT_NO_ATTACK;
 
     return (baseattack);

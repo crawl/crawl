@@ -174,7 +174,6 @@ private:
 
     // Auxiliary unarmed attacks.
     bool player_aux_unarmed();
-    bool player_aux_skip(unarmed_attack_type atk);
     unarmed_attack_type player_aux_choose_baseattack();
     void player_aux_setup(unarmed_attack_type atk);
     bool player_aux_test_hit();
