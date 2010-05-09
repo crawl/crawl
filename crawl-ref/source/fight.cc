@@ -1102,24 +1102,15 @@ bool melee_attack::player_aux_skip(unarmed_attack_type atk)
                     && weapon_skill(*weapon) != SK_STAVES));
 
     case UNAT_BITE:
-        if (!you.has_usable_fangs())
-            return (true);
-
-        if (you.species != SP_VAMPIRE && one_chance_in(5)
-            || one_chance_in(7))
+        if (you.species == SP_VAMPIRE)
         {
-            return (true);
+            if (_vamp_wants_blood_from_monster(defender->as_monster()))
+                return (one_chance_in(7));
+            else
+                return (x_chance_in_y(4, 7));
         }
-
-        if (you.species == SP_VAMPIRE
-            && !_vamp_wants_blood_from_monster(defender->as_monster())
-            && !one_chance_in(3))
-        {
-            // monster not interesting bloodwise
-            return (true);
-        }
-
-        return (false);
+        else
+            return (one_chance_in(5));
 
     default:
         return (false);
