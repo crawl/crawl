@@ -3924,18 +3924,8 @@ std::string get_skill_description(int skill, bool need_title)
         // Give a detailed listing of what attacks the character may perform.
         std::vector<std::string> unarmed_attacks;
 
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
-            || player_genus(GENPC_DRACONIAN)
-            || you.species == SP_MERFOLK && you.swimming()
-            || player_mutation_level( MUT_STINGER ))
-        {
-            // TSO worshippers will not use their venomous tails.
-            if (you.religion != GOD_SHINING_ONE
-                || !player_mutation_level(MUT_STINGER))
-            {
-                unarmed_attacks.push_back("slap with your tail");
-            }
-        }
+        if (you.has_usable_tail())
+            unarmed_attacks.push_back("slap with your tail");
 
         if (you.has_fangs())
             unarmed_attacks.push_back("bite with your sharp teeth");

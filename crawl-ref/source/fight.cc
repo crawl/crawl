@@ -984,18 +984,13 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
 
     case UNAT_TAILSLAP:
         aux_attack = aux_verb = "tail-slap";
-        aux_damage = 6;
+
+        // Usually one level, or two for grey draconians.
+        aux_damage = 6 * you.has_usable_tail();
+
         noise_factor = 125;
 
-        // Grey dracs have spiny tails, or something.
-        // Maybe add this to player messaging. {dlb}
-        //
-        // STINGER mutation doesn't give extra damage here... that
-        // would probably be a bit much, we'll still get the
-        // poison bonus so it's still somewhat good.
-        if (you.species == SP_GREY_DRACONIAN && you.experience_level >= 7)
-            aux_damage += 6;
-        else if (player_mutation_level(MUT_STINGER) > 0)
+        if (player_mutation_level(MUT_STINGER) > 0)
         {
             aux_damage += player_mutation_level(MUT_STINGER) * 2 - 1;
             damage_brand = SPWPN_VENOM;
@@ -1062,9 +1057,7 @@ static bool _extra_aux_attack(unarmed_attack_type atk)
                 && one_chance_in(3));
 
     case UNAT_TAILSLAP:
-        return ((player_genus(GENPC_DRACONIAN)
-                 || you.species == SP_MERFOLK && you.swimming()
-                 || player_mutation_level(MUT_STINGER))
+        return (you.has_usable_tail()
                 && one_chance_in(4));
 
     default:
@@ -1100,12 +1093,6 @@ bool melee_attack::player_aux_skip(unarmed_attack_type atk)
 {
     switch (atk)
     {
-    case UNAT_TAILSLAP:
-        // TSO worshippers don't use their stinger in order to
-        // avoid poisoning.
-        return (you.religion == GOD_SHINING_ONE
-                && player_mutation_level(MUT_STINGER) > 0);
-
     case UNAT_PUNCH:
         // No punching with a shield or 2-handed wpn, except staves.
         return (shield || coinflip()
@@ -1201,14 +1188,8 @@ static unarmed_attack_type _aux_choose_baseattack()
     if (you.has_fangs())
         baseattack = UNAT_BITE;
 
-    if ((you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
-           || player_genus(GENPC_DRACONIAN)
-           || (you.species == SP_MERFOLK && you.swimming())
-           || player_mutation_level(MUT_STINGER))
-        && one_chance_in(3))
-    {
+    if (you.has_usable_tail() && one_chance_in(3))
         baseattack = UNAT_TAILSLAP;
-    }
 
     if (coinflip())
         baseattack = UNAT_PUNCH;
