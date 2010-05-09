@@ -1701,7 +1701,7 @@ std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
             if (god == GOD_NO_GOD)
                 result = skills[best_skill][skill_rank];
             else
-                result = god_title((god_type) god);
+                result = god_title((god_type)god, (species_type)species);
             break;
 
         case SK_BOWS:

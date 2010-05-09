@@ -43,7 +43,7 @@ bool is_dumpable_artefact( const item_def &item, bool verbose );
 std::string get_item_description( const item_def &item, bool verbose,
                                   bool dump = false, bool noquote = false );
 
-std::string god_title(god_type which_god);
+std::string god_title(god_type which_god, species_type which_species);
 void describe_god( god_type which_god, bool give_title );
 
 void describe_feature_wide(const coord_def& pos);
