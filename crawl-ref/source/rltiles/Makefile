@@ -4,8 +4,8 @@ ifneq (,$(findstring MINGW,$(uname_S)))
 LDFLAGS += -lmingw32
 endif
 
-SDL_CFLAGS := $(shell pkg-config sdl --cflags 2> /dev/null || echo "-I../contrib/install/include/SDL")
-SDL_LDFLAGS := $(shell pkg-config sdl --libs 2> /dev/null && echo "-lSDL_image" || echo "../contrib/install/lib/libSDL.a ../contrib/install/lib/libSDLmain.a ../contrib/install/lib/libSDL_image.a")
+SDL_CFLAGS := $(shell sdl-config --cflags 2> /dev/null || echo "-I../contrib/install/include/SDL")
+SDL_LDFLAGS := $(shell sdl-config --libs 2> /dev/null && echo "-lSDL_image" || echo "../contrib/install/lib/libSDL.a ../contrib/install/lib/libSDLmain.a ../contrib/install/lib/libSDL_image.a")
 
 PNG_INCLUDE := $(shell pkg-config libpng --cflags 2> /dev/null || echo "-I../contrib/install/include")
 PNG_LIB := $(shell pkg-config libpng --libs 2> /dev/null || echo "../contrib/install/lib/libpng.a ../contrib/install/lib/libz.a")
