@@ -6074,6 +6074,51 @@ int player::has_fangs(bool allow_tran) const
     return (player_mutation_level(MUT_FANGS));
 }
 
+int player::has_tail(bool allow_tran) const
+{
+    if (allow_tran)
+    {
+        // these transformations bring a tail with them
+        if (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
+            return (1);
+
+        // transformations other than these will override the tail
+        if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE
+            && attribute[ATTR_TRANSFORMATION] != TRAN_BLADE_HANDS
+            && attribute[ATTR_TRANSFORMATION] != TRAN_LICH)
+        {
+            return (0);
+        }
+    }
+
+
+    if (you.species == SP_GREY_DRACONIAN && you.experience_level >= 7)
+        return (2);
+
+    // XXX: Do merfolk in water belong under allow_tran?
+    if (player_genus(GENPC_DRACONIAN)
+        || you.species == SP_MERFOLK && you.swimming()
+        || player_mutation_level(MUT_STINGER))
+    {
+        return (1);
+    }
+
+    return (0);
+}
+
+int player::has_usable_tail(bool allow_tran) const
+{
+    // TSO worshippers don't use their stinger in order
+    // to avoid poisoning.
+    if (you.religion == GOD_SHINING_ONE
+        && player_mutation_level(MUT_STINGER) > 0)
+    {
+        return (0);
+    }
+
+    return (has_tail(allow_tran));
+}
+
 bool player::sicken(int amount)
 {
     ASSERT(!crawl_state.game_is_arena());
