@@ -1113,6 +1113,36 @@ bool melee_attack::player_aux_skip(unarmed_attack_type atk)
     }
 }
 
+unarmed_attack_type melee_attack::player_aux_choose_baseattack()
+{
+    unarmed_attack_type baseattack;
+
+    if (you.species == SP_NAGA)
+        baseattack = UNAT_HEADBUTT;
+    else
+        baseattack = (coinflip() ? UNAT_HEADBUTT : UNAT_KICK);
+
+    if (you.has_usable_fangs())
+        baseattack = UNAT_BITE;
+
+    if (you.has_usable_tail() && one_chance_in(3))
+        baseattack = UNAT_TAILSLAP;
+
+    if (coinflip())
+        baseattack = UNAT_PUNCH;
+
+    if (you.species == SP_VAMPIRE && you.has_usable_fangs()
+        && !one_chance_in(3))
+    {
+        baseattack = UNAT_BITE;
+    }
+
+    if (player_aux_skip(baseattack))
+        baseattack = UNAT_NO_ATTACK;
+
+    return (baseattack);
+}
+
 bool melee_attack::player_aux_test_hit()
 {
     // XXX We're clobbering did_hit
@@ -1156,33 +1186,6 @@ bool melee_attack::player_aux_test_hit()
     }
 }
 
-static unarmed_attack_type _aux_choose_baseattack()
-{
-    unarmed_attack_type baseattack;
-
-    if (you.species == SP_NAGA)
-        baseattack = UNAT_HEADBUTT;
-    else
-        baseattack = (coinflip() ? UNAT_HEADBUTT : UNAT_KICK);
-
-    if (you.has_usable_fangs())
-        baseattack = UNAT_BITE;
-
-    if (you.has_usable_tail() && one_chance_in(3))
-        baseattack = UNAT_TAILSLAP;
-
-    if (coinflip())
-        baseattack = UNAT_PUNCH;
-
-    if (you.species == SP_VAMPIRE && you.has_usable_fangs()
-        && !one_chance_in(3))
-    {
-        baseattack = UNAT_BITE;
-    }
-
-    return (baseattack);
-}
-
 // Returns true to end the attack round.
 bool melee_attack::player_aux_unarmed()
 {
@@ -1198,7 +1201,7 @@ bool melee_attack::player_aux_unarmed()
      */
     unarmed_attack_type baseattack = UNAT_NO_ATTACK;
     if (can_do_unarmed)
-        baseattack = _aux_choose_baseattack();
+        baseattack = player_aux_choose_baseattack();
 
     for (int i = UNAT_FIRST_ATTACK; i <= UNAT_LAST_ATTACK; ++i)
     {
@@ -1211,9 +1214,6 @@ bool melee_attack::player_aux_unarmed()
             continue;
 
         if (_tran_forbid_aux_attack(atk))
-            continue;
-
-        if (player_aux_skip(atk))
             continue;
 
         // Determine and set damage and attack words.
