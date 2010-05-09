@@ -1042,29 +1042,6 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
     }
 }
 
-static bool _extra_aux_attack(unarmed_attack_type atk)
-{
-    switch (atk)
-    {
-    case UNAT_KICK:
-        return ((player_mutation_level(MUT_HOOVES)
-                 || you.has_usable_talons())
-                && coinflip());
-
-    case UNAT_HEADBUTT:
-        return ((player_mutation_level(MUT_HORNS)
-                 || player_mutation_level(MUT_BEAK))
-                && one_chance_in(3));
-
-    case UNAT_TAILSLAP:
-        return (you.has_usable_tail()
-                && one_chance_in(4));
-
-    default:
-        return (false);
-    }
-}
-
 static bool _tran_forbid_aux_attack(unarmed_attack_type atk)
 {
     switch (atk)
@@ -1081,6 +1058,35 @@ static bool _tran_forbid_aux_attack(unarmed_attack_type atk)
         return (you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT);
+
+    default:
+        return (false);
+    }
+}
+
+static bool _extra_aux_attack(unarmed_attack_type atk)
+{
+    // No extra unarmed attacks for disabled mutations.
+    // XXX: It might be better to make player_mutation_level
+    //      aware of mutations that are disabled due to transformation.
+    if (_tran_forbid_aux_attack(atk))
+        return (false);
+
+    switch (atk)
+    {
+    case UNAT_KICK:
+        return ((player_mutation_level(MUT_HOOVES)
+                 || you.has_usable_talons())
+                && coinflip());
+
+    case UNAT_HEADBUTT:
+        return ((player_mutation_level(MUT_HORNS)
+                 || player_mutation_level(MUT_BEAK))
+                && one_chance_in(3));
+
+    case UNAT_TAILSLAP:
+        return (you.has_usable_tail()
+                && one_chance_in(4));
 
     default:
         return (false);
@@ -1137,7 +1143,7 @@ unarmed_attack_type melee_attack::player_aux_choose_baseattack()
         baseattack = UNAT_BITE;
     }
 
-    if (player_aux_skip(baseattack))
+    if (player_aux_skip(baseattack) || _tran_forbid_aux_attack(baseattack))
         baseattack = UNAT_NO_ATTACK;
 
     return (baseattack);
@@ -1211,9 +1217,6 @@ bool melee_attack::player_aux_unarmed()
         unarmed_attack_type atk = static_cast<unarmed_attack_type>(i);
 
         if (baseattack != atk && !_extra_aux_attack(atk))
-            continue;
-
-        if (_tran_forbid_aux_attack(atk))
             continue;
 
         // Determine and set damage and attack words.
