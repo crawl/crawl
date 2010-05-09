@@ -1026,8 +1026,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
         // prob of vampiric bite:
         // 1/4 when non-thirsty, 1/2 when thirsty, 100% when
         // bloodless
-        if (you.species == SP_VAMPIRE
-            && _vamp_wants_blood_from_monster(defender->as_monster())
+        if (_vamp_wants_blood_from_monster(defender->as_monster())
             && (you.hunger_state == HS_STARVING
                 || you.hunger_state < HS_SATIATED && coinflip()
                 || you.hunger_state >= HS_SATIATED && one_chance_in(4)))
