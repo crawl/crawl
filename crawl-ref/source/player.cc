@@ -6074,6 +6074,15 @@ int player::has_fangs(bool allow_tran) const
     return (player_mutation_level(MUT_FANGS));
 }
 
+int player::has_usable_fangs(bool allow_tran) const
+{
+    const item_def* helmet = you.slot_item(EQ_HELMET);
+    if (helmet && get_helmet_desc(*helmet) == THELM_DESC_VISORED)
+        return (0);
+
+    return (has_fangs(allow_tran));
+}
+
 int player::has_tail(bool allow_tran) const
 {
     if (allow_tran)

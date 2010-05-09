@@ -3927,7 +3927,7 @@ std::string get_skill_description(int skill, bool need_title)
         if (you.has_usable_tail())
             unarmed_attacks.push_back("slap with your tail");
 
-        if (you.has_fangs())
+        if (you.has_usable_fangs())
             unarmed_attacks.push_back("bite with your sharp teeth");
         else if (player_mutation_level(MUT_BEAK))
             unarmed_attacks.push_back("peck with your beak");

@@ -1019,7 +1019,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
 
     case UNAT_BITE:
         aux_attack = aux_verb = "bite";
-        aux_damage += you.has_fangs() * 2
+        aux_damage += you.has_usable_fangs() * 2
                       + you.skills[SK_UNARMED_COMBAT] / 5;
         noise_factor = 75;
 
@@ -1102,18 +1102,11 @@ bool melee_attack::player_aux_skip(unarmed_attack_type atk)
                     && weapon_skill(*weapon) != SK_STAVES));
 
     case UNAT_BITE:
-        if (!you.has_fangs())
+        if (!you.has_usable_fangs())
             return (true);
 
         if (you.species != SP_VAMPIRE && one_chance_in(5)
             || one_chance_in(7))
-        {
-            return (true);
-        }
-
-        // no biting with visored helmet
-        const item_def* helmet = you.slot_item(EQ_HELMET, false);
-        if (helmet &&get_helmet_desc(*helmet) == THELM_DESC_VISORED)
         {
             return (true);
         }
@@ -1185,7 +1178,7 @@ static unarmed_attack_type _aux_choose_baseattack()
     else
         baseattack = (coinflip() ? UNAT_HEADBUTT : UNAT_KICK);
 
-    if (you.has_fangs())
+    if (you.has_usable_fangs())
         baseattack = UNAT_BITE;
 
     if (you.has_usable_tail() && one_chance_in(3))
@@ -1194,8 +1187,11 @@ static unarmed_attack_type _aux_choose_baseattack()
     if (coinflip())
         baseattack = UNAT_PUNCH;
 
-    if (you.species == SP_VAMPIRE && !one_chance_in(3))
+    if (you.species == SP_VAMPIRE && you.has_usable_fangs()
+        && !one_chance_in(3))
+    {
         baseattack = UNAT_BITE;
+    }
 
     return (baseattack);
 }
