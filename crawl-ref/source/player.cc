@@ -6054,6 +6054,26 @@ bool player::has_usable_talons(bool allow_tran) const
     return (!player_wearing_slot(EQ_BOOTS) && has_talons(allow_tran));
 }
 
+int player::has_fangs(bool allow_tran) const
+{
+    if (allow_tran)
+    {
+        // these transformations bring fangs with them
+        if (attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
+            return (3);
+
+        // transformations other than these will override fangs
+        if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE
+            && attribute[ATTR_TRANSFORMATION] != TRAN_BLADE_HANDS
+            && attribute[ATTR_TRANSFORMATION] != TRAN_LICH)
+        {
+            return (0);
+        }
+    }
+
+    return (player_mutation_level(MUT_FANGS));
+}
+
 bool player::sicken(int amount)
 {
     ASSERT(!crawl_state.game_is_arena());
