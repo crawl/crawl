@@ -1087,6 +1087,11 @@ static bool _extra_aux_attack(unarmed_attack_type atk)
         return (you.has_usable_tail()
                 && one_chance_in(4));
 
+    case UNAT_PUNCH:
+        return (you.has_usable_claws()
+                && you.has_usable_offhand()
+                && one_chance_in(4));
+
     default:
         return (false);
     }
