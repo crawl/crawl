@@ -3937,11 +3937,8 @@ std::string get_skill_description(int skill, bool need_title)
             }
         }
 
-        if (player_mutation_level(MUT_FANGS)
-            || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
-        {
+        if (you.has_fangs())
             unarmed_attacks.push_back("bite with your sharp teeth");
-        }
         else if (player_mutation_level(MUT_BEAK))
             unarmed_attacks.push_back("peck with your beak");
 

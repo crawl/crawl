@@ -1024,7 +1024,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
 
     case UNAT_BITE:
         aux_attack = aux_verb = "bite";
-        aux_damage += player_mutation_level(MUT_FANGS) * 2
+        aux_damage += you.has_fangs() * 2
                       + you.skills[SK_UNARMED_COMBAT] / 5;
         noise_factor = 75;
 
@@ -1115,7 +1115,7 @@ bool melee_attack::player_aux_skip(unarmed_attack_type atk)
                     && weapon_skill(*weapon) != SK_STAVES));
 
     case UNAT_BITE:
-        if (!player_mutation_level(MUT_FANGS))
+        if (!you.has_fangs())
             return (true);
 
         if (you.species != SP_VAMPIRE && one_chance_in(5)
@@ -1198,11 +1198,8 @@ static unarmed_attack_type _aux_choose_baseattack()
     else
         baseattack = (coinflip() ? UNAT_HEADBUTT : UNAT_KICK);
 
-    if (player_mutation_level(MUT_FANGS)
-        || you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON)
-    {
+    if (you.has_fangs())
         baseattack = UNAT_BITE;
-    }
 
     if ((you.attribute[ATTR_TRANSFORMATION] == TRAN_DRAGON
            || player_genus(GENPC_DRACONIAN)
