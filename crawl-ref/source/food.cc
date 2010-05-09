@@ -479,7 +479,7 @@ bool butchery(int which_corpse, bool bottle_blood)
     // Vampires' fangs are optimised for biting, not for tearing flesh.
     // (Not that they really need to.) Other species with this mutation
     // might still benefit from it.
-    bool teeth_butcher    = (you.has_fangs() == 3
+    bool teeth_butcher    = (you.has_usable_fangs() == 3
                              && you.species != SP_VAMPIRE);
 
     bool barehand_butcher = (transform_can_butcher_barehanded(transform)
