@@ -1053,7 +1053,7 @@ static bool _extra_aux_attack(unarmed_attack_type atk)
     {
     case UNAT_KICK:
         return ((player_mutation_level(MUT_HOOVES)
-                 || player_mutation_level(MUT_TALONS))
+                 || you.has_usable_talons())
                 && coinflip());
 
     case UNAT_HEADBUTT:
