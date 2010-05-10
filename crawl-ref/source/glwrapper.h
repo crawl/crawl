@@ -125,9 +125,9 @@ struct GLWRect
 {
     // Constructor assumes we're always going to have a position
     GLWRect(float sx, float sy, float ex, float ey, float z = 0.0f) :
-        pos_sx(sx), pos_sy(sy), pos_ex(ex), pos_ey(ey), pos_z(z),
-        tex_sx(0.0f), tex_sy(0.0f), tex_ex(0.0f), tex_ey(0.0f),
-        col_bl(NULL), col_br(NULL), col_tl(NULL), col_tr(NULL) {}
+            pos_sx(sx), pos_sy(sy), pos_ex(ex), pos_ey(ey), pos_z(z),
+            tex_sx(0.0f), tex_sy(0.0f), tex_ex(0.0f), tex_ey(0.0f),
+            col_bl(NULL), col_br(NULL), col_tl(NULL), col_tr(NULL) {}
 
     inline void set_tex(float sx, float sy, float ex, float ey)
     {
@@ -169,8 +169,8 @@ struct GLState
     GLState();
     GLState(const GLState &state);
 
-    // convenience methods
-    void set(const GLState &state);
+    const GLState &operator=(const GLState &state);
+    bool operator==(const GLState &state) const;
 
     // vertex arrays
     bool array_vertex;
@@ -221,7 +221,7 @@ public:
 #endif
 };
 
-class GenericTexture;  // Defined in tiletex.h
+class GenericTexture;
 
 class GLShapeBuffer
 {

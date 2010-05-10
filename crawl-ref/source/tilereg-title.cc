@@ -35,8 +35,6 @@ TitleRegion::TitleRegion(int width, int height, FontWrapper* font) :
 
     GLWRect rect(0, 0, m_img.width(), m_img.height());
     rect.set_tex(0, 0, 1, 1);
-
-    // Push it
     m_buf.push(rect);
 }
 

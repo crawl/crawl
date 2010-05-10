@@ -46,10 +46,11 @@ public:
 
 protected:
     const GenericTexture *m_tex;
-    GLShapeBuffer *vert_buff;
+    GLShapeBuffer *m_vert_buf;
     GLState m_state;
     drawing_modes m_prim;
-    bool colour_verts, texture_verts;
+    bool m_colour_verts;
+    bool m_texture_verts;
 };
 
 class FontBuffer : public VertBuffer

@@ -16,24 +16,24 @@
 // VertBuffer
 
 VertBuffer::VertBuffer(bool texture, bool colour, const GenericTexture *tex,
-        drawing_modes prim) :
+                       drawing_modes prim) :
     m_tex(tex),
     m_prim(prim),
-    colour_verts(colour),
-    texture_verts(texture)
+    m_colour_verts(colour),
+    m_texture_verts(texture)
 {
-    vert_buff = GLShapeBuffer::create(texture, colour_verts, m_prim);
-    ASSERT(vert_buff);
+    m_vert_buf = GLShapeBuffer::create(texture, m_colour_verts, m_prim);
+    ASSERT(m_vert_buf);
 
-    // Set default gl state
+    // Default state for most buffers.
     m_state.array_vertex = true;
-    m_state.blend = true; // This seems to be a safe default here
-    if(texture_verts)
+    m_state.blend = true;
+    if (m_texture_verts)
     {
         m_state.array_texcoord = true;
         m_state.texture = true;
     }
-    if(colour_verts)
+    if (m_colour_verts)
     {
         m_state.array_colour = true;
     }
@@ -49,58 +49,56 @@ void VertBuffer::draw(GLW_3VF *pt, GLW_3VF *ps) const
     if (size() == 0)
         return;
 
-    // Set state
     glmanager->set(m_state);
 
-    // Handle texture
-    if(texture_verts)
+    if (m_texture_verts)
     {
         ASSERT(m_tex);
         m_tex->bind();
     }
 
-    // Draw
-    vert_buff->draw(pt, ps);
+    m_vert_buf->draw(pt, ps);
 }
 
 void VertBuffer::set_state(const GLState &s)
 {
     // At this point, don't allow toggling of prim_type, texturing, or colouring
-    // as GLVertexBuffer doesn't support it
+    // as GLVertexBuffer doesn't support it.
     m_state.blend = s.blend;
-    // This needs more testing
-    //m_state.texture = state.texture; 
     m_state.depthtest = s.depthtest;
     m_state.alphatest = s.alphatest;
     m_state.alpharef = s.alpharef;
+
+    // If this test fails, then you're trying to set a state via set_state
+    // that isn't supported in the above list.
+    ASSERT(m_state == s);
 }
 
 void VertBuffer::clear()
 {
-    vert_buff->clear();
+    m_vert_buf->clear();
 }
 
 void VertBuffer::push(const GLWRect &rect)
 {
-    vert_buff->push(rect);
+    m_vert_buf->push(rect);
 }
 
 unsigned int VertBuffer::size() const
 {
-    return vert_buff->size();
+    return (m_vert_buf->size());
 }
 
 void VertBuffer::set_tex(const GenericTexture *new_tex)
 {
-    ASSERT(texture_verts);
+    ASSERT(m_texture_verts);
     ASSERT(new_tex);
     m_tex = new_tex;
 }
 
 VertBuffer::~VertBuffer()
 {
-    if(vert_buff)
-        delete vert_buff;
+    delete m_vert_buf;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -146,11 +144,8 @@ void TileBuffer::add_unscaled(int idx, float x, float y, int ymax)
     if (!drawn)
         return;
 
-    // Construct rectangle
     GLWRect rect(pos_sx, pos_sy, pos_ex, pos_ey);
     rect.set_tex(tex_sx, tex_sy, tex_ex, tex_ey);
-
-    // Push it
     push(rect);
 }
 
@@ -168,11 +163,8 @@ void TileBuffer::add(int idx, int x, int y, int ox, int oy, bool centre, int yma
     if (!drawn)
         return;
 
-    // Construct rectangle
     GLWRect rect(pos_sx, pos_sy, pos_ex, pos_ey);
     rect.set_tex(tex_sx, tex_sy, tex_ex, tex_ey);
-
-    // Push it
     push(rect);
 }
 
@@ -231,12 +223,9 @@ void ColouredTileBuffer::add(int idx, int x, int y, int z,
 
     float pos_z = (float)z;
 
-    // Construct rectangle
     GLWRect rect(pos_sx, pos_sy, pos_ex, pos_ey, pos_z);
     rect.set_tex(tex_sx, tex_sy, tex_ex, tex_ey);
     rect.set_col(&col_sy, &col_sy, &col_ey, &col_ey);
-
-    // Push it
     push(rect);
 }
 
@@ -260,8 +249,7 @@ SubmergedTileBuffer::SubmergedTileBuffer(const TilesTexture *tex,
     // Adjust the state of the mask buffer so that we can use it to mask out
     // the bottom half of the tile when drawing the character a second time.
     // See the draw() function for more details.
-    GLState new_state;
-    new_state.set( m_mask.state() );
+    GLState new_state(m_mask.state());
     new_state.blend = true;
     new_state.depthtest = true;
     new_state.alphatest = true;
@@ -370,11 +358,8 @@ ShapeBuffer::ShapeBuffer() : VertBuffer(false, true)
 void ShapeBuffer::add(float pos_sx, float pos_sy, float pos_ex, float pos_ey,
                       const VColour &col)
 {
-    // Construct rectangle
     GLWRect rect(pos_sx, pos_sy, pos_ex, pos_ey);
     rect.set_col(&col, &col, &col, &col);
-
-    // Push it
     push(rect);
 }
 
@@ -389,11 +374,8 @@ LineBuffer::LineBuffer() : VertBuffer(false, true, NULL, GLW_LINES)
 void LineBuffer::add(float pos_sx, float pos_sy, float pos_ex, float pos_ey,
                      const VColour &col)
 {
-    // Construct rectangle
     GLWRect rect(pos_sx, pos_sy, pos_ex, pos_ey);
     rect.set_col(&col, &col);
-
-    // Push it
     push(rect);
 }
 

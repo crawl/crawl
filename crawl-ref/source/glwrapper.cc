@@ -37,7 +37,7 @@ GLState::GLState(const GLState &state) :
 {
 }
 
-void GLState::set(const GLState &state)
+const GLState &GLState::operator=(const GLState &state)
 {
     array_vertex = state.array_vertex;
     array_texcoord = state.array_texcoord;
@@ -47,6 +47,20 @@ void GLState::set(const GLState &state)
     depthtest = state.depthtest;
     alphatest = state.alphatest;
     alpharef = state.alpharef;
+
+    return (*this);
+}
+
+bool GLState::operator==(const GLState &state) const
+{
+    return (array_vertex == state.array_vertex
+            && array_texcoord == state.array_texcoord
+            && array_colour == state.array_colour
+            && blend == state.blend
+            && texture == state.texture
+            && depthtest == state.depthtest
+            && alphatest == state.alphatest
+            && alpharef == state.alpharef);
 }
 
 /////////////////////////////////////////////////////////////////////////////
