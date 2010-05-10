@@ -119,12 +119,6 @@ enum drawing_modes
     GLW_RECTANGLE
 };
 
-enum glw_winding
-{
-    GLW_CW,
-    GLW_CCW
-};
-
 // Convenience structure for passing around rectangles
 // (or lines) which crawl does a lot of
 struct GLWRect
@@ -201,9 +195,6 @@ public:
     // implementation-specific cc file, e.g. glwrapper-ogl.cc.
     static void init();
     static void shutdown();
-
-    // State query
-    virtual glw_winding winding() = 0;
 
     // State Manipulation
     virtual void set(const GLState& state) = 0;
