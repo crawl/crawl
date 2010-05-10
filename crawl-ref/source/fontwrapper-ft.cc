@@ -343,19 +343,7 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
     glmanager->set(state);
     glmanager->set_transform(&trans);
     m_buf->draw();
-    state.array_colour = false;
-    glmanager->set(state);
 }
-
-struct box_vert
-{
-    float x;
-    float y;
-    unsigned char r;
-    unsigned char g;
-    unsigned char b;
-    unsigned char a;
-};
 
 static void _draw_box(int x_pos, int y_pos, float width, float height,
                       float box_width, unsigned char box_colour,
