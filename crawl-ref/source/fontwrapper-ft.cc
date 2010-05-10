@@ -24,11 +24,13 @@ FTFontWrapper::FTFontWrapper() :
     m_max_advance(0, 0),
     m_min_offset(0)
 {
+    m_buf = GLShapeBuffer::create(true, true);
 }
 
 FTFontWrapper::~FTFontWrapper()
 {
     delete[] m_glyphs;
+    delete m_buf;
 }
 
 bool FTFontWrapper::load_font(const char *font_name, unsigned int font_size,
@@ -252,11 +254,8 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
     coord_def adv(std::max(-m_min_offset, 0), 0);
     unsigned int i = 0;
 
-    GLShapeBuffer *buf = GLShapeBuffer::create(true, true);
-    // TODO enne - make this better
-    // This is bad for the CRT.  Maybe we should just reserve some fixed limit?
-    // Maybe we should just cache this in FTFontWrapper?
-    // TODO ixtli - facilitate the above TODO buy using the buffer better
+    ASSERT(m_buf);
+    m_buf->clear();
 
     float texcoord_dy = (float)m_max_advance.y / (float)m_tex.height();
 
@@ -276,7 +275,7 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
                 VColour col(term_colours[col_bg].r, term_colours[col_bg].g,
                     term_colours[col_bg].b);
                 rect.set_col(&col, &col, &col, &col);
-                buf->push(rect);
+                m_buf->push(rect);
             }
 
             adv.x += m_glyphs[c].offset;
@@ -297,7 +296,7 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
                 rect.set_col(&col, &col, &col, &col);
                 rect.set_tex(tex_x, tex_y, tex_x2, tex_y2);
 
-                buf->push(rect);
+                m_buf->push(rect);
             }
 
             i++;
@@ -308,7 +307,7 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
         adv.y += m_max_advance.y;
     }
 
-    if (!buf->size())
+    if (!m_buf->size())
         return;
 
     GLState state;
@@ -330,7 +329,7 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
         trans.x++;
         trans.y++;
         glmanager->set_transform(&trans);
-        buf->draw();
+        m_buf->draw();
         trans.x--;
         trans.y--;
 
@@ -343,11 +342,9 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
     state.array_colour = true;
     glmanager->set(state);
     glmanager->set_transform(&trans);
-    buf->draw();
+    m_buf->draw();
     state.array_colour = false;
     glmanager->set(state);
-
-    delete buf;
 }
 
 struct box_vert
