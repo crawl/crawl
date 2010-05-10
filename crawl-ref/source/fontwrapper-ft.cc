@@ -270,10 +270,11 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
             if (col_bg != 0)
             {
                 GLWRect rect(adv.x, adv.y,
-                    adv.x + m_max_advance.x, adv.y + m_max_advance.y);
+                             adv.x + m_max_advance.x, adv.y + m_max_advance.y);
                 // Leave tex coords at their default 0.0f
-                VColour col(term_colours[col_bg].r, term_colours[col_bg].g,
-                    term_colours[col_bg].b);
+                VColour col(term_colours[col_bg].r,
+                            term_colours[col_bg].g,
+                            term_colours[col_bg].b);
                 rect.set_col(&col, &col, &col, &col);
                 m_buf->push(rect);
             }
@@ -290,9 +291,10 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
                 float tex_y2 = tex_y + texcoord_dy;
 
                 GLWRect rect(adv.x, adv.y, adv.x + this_width,
-                    adv.y + m_max_advance.y);
-                VColour col(term_colours[col_fg].r, term_colours[col_fg].g,
-                    term_colours[col_fg].b);
+                             adv.y + m_max_advance.y);
+                VColour col(term_colours[col_fg].r,
+                            term_colours[col_fg].g,
+                            term_colours[col_fg].b);
                 rect.set_col(&col, &col, &col, &col);
                 rect.set_tex(tex_x, tex_y, tex_x2, tex_y2);
 
@@ -349,12 +351,14 @@ static void _draw_box(int x_pos, int y_pos, float width, float height,
                       float box_width, unsigned char box_colour,
                       unsigned char box_alpha)
 {
-    GLShapeBuffer *buf = GLShapeBuffer::create(false, true);
+    std::auto_ptr<GLShapeBuffer> buf(GLShapeBuffer::create(false, true));
     GLWRect rect(x_pos - box_width, y_pos - box_width,
-        x_pos + width + box_width, y_pos + height + box_width);
+                 x_pos + width + box_width, y_pos + height + box_width);
 
-    VColour colour(term_colours[box_colour].r, term_colours[box_colour].g,
-        term_colours[box_colour].b, box_alpha);
+    VColour colour(term_colours[box_colour].r,
+                   term_colours[box_colour].g,
+                   term_colours[box_colour].b,
+                   box_alpha);
     rect.set_col(&colour, &colour, &colour, &colour);
 
     buf->push(rect);
@@ -367,10 +371,8 @@ static void _draw_box(int x_pos, int y_pos, float width, float height,
     state.array_colour = true;
     state.blend = true;
     glmanager->set(state);
-    buf->draw();
 
-    // Clean up
-    delete buf;
+    buf->draw();
 }
 
 unsigned int FTFontWrapper::string_height(const formatted_string &str) const
@@ -661,12 +663,9 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
     float tex_ex = tex_sx + (float)this_width / (float)m_tex.width();
     float tex_ey = tex_sy + (float)m_max_advance.y / (float)m_tex.height();
 
-    // Construct rectangle
     GLWRect rect(pos_sx, pos_sy, pos_ex, pos_ey);
     rect.set_tex(tex_sx, tex_sy, tex_ex, tex_ey);
     rect.set_col(&col, &col, &col, &col);
-
-    // Push it
     buf.push(rect);
 
     x += m_glyphs[c].advance;

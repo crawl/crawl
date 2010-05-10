@@ -13,7 +13,7 @@ public:
 
     // State Manipulation
     virtual void set(const GLState& state);
-    virtual const GLState& get_state() const { return (current_state); }
+    virtual const GLState& get_state() const { return (m_current_state); }
     virtual void pixelstore_unpack_alignment(unsigned int bpp);
     virtual void reset_view_for_redraw(float x, float y);
     virtual void reset_view_for_resize(coord_def &m_windowsz);
@@ -30,7 +30,7 @@ public:
     virtual void load_texture(unsigned char *pixels, unsigned int width,
                               unsigned int height, MipMapOptions mip_opt);
 protected:
-    GLState current_state;
+    GLState m_current_state;
 };
 
 class OGLShapeBuffer : public GLShapeBuffer
@@ -43,26 +43,23 @@ public:
     virtual const char *print_statistics() const;
     virtual unsigned int size() const;
 
-    // Add a rectangle
     virtual void push(const GLWRect &rect);
-
-    // Draw the buffer
     virtual void draw(GLW_3VF *pt = NULL, GLW_3VF *ps = NULL);
-
-    // Manipulate state
     virtual void clear();
+
 protected:
     // Helper methods for pushing specific prim types
     void push_rect(const GLWRect &rect);
     void push_line(const GLWRect &rect);
 
-    drawing_modes prim_type;
-    bool texture_verts, colour_verts;
+    drawing_modes m_prim_type;
+    bool m_texture_verts;
+    bool m_colour_verts;
 
-    std::vector<GLW_3VF> position_buffer;
-    std::vector<GLW_2VF> texture_buffer;
-    std::vector<VColour> colour_buffer;
-    std::vector<unsigned short int> ind_buffer;     //indicies
+    std::vector<GLW_3VF> m_position_buffer;
+    std::vector<GLW_2VF> m_texture_buffer;
+    std::vector<VColour> m_colour_buffer;
+    std::vector<unsigned short int> m_ind_buffer;
 };
 
 #endif // USE_GL
