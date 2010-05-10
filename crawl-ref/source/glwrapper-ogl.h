@@ -50,7 +50,7 @@ public:
     virtual void push(const GLWRect &rect);
 
     // Draw the buffer
-    virtual void draw(GLW_3VF *pt = NULL, GLW_3VF *ps = NULL, bool flush = false);
+    virtual void draw(GLW_3VF *pt = NULL, GLW_3VF *ps = NULL);
 
     // Manipulate state
     virtual void clear();

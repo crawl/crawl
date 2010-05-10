@@ -330,7 +330,7 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
         trans.x++;
         trans.y++;
         glmanager->set_transform(&trans);
-        buf->draw(NULL, NULL, true);
+        buf->draw();
         trans.x--;
         trans.y--;
 

@@ -367,7 +367,7 @@ void OGLShapeBuffer::push_line(const GLWRect &rect)
 }
 
 // Draw the buffer
-void OGLShapeBuffer::draw(GLW_3VF *pt, GLW_3VF *ps, bool flush)
+void OGLShapeBuffer::draw(GLW_3VF *pt, GLW_3VF *ps)
 {
     // Make sure we're drawing something
     if (position_buffer.size() == 0)
@@ -417,9 +417,6 @@ void OGLShapeBuffer::draw(GLW_3VF *pt, GLW_3VF *ps, bool flush)
     // Clean up
     if (pt || ps)
         glPopMatrix();
-
-    if(flush)
-        clear();
 }
 
 void OGLShapeBuffer::clear()
