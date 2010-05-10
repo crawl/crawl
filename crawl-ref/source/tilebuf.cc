@@ -16,10 +16,9 @@
 // VertBuffer
 
 VertBuffer::VertBuffer(bool texture, bool colour, const GenericTexture *tex,
-        drawing_modes prim, bool flush) :
+        drawing_modes prim) :
     m_tex(tex),
     m_prim(prim),
-    flush_verts(flush),
     colour_verts(colour),
     texture_verts(texture)
 {
@@ -61,7 +60,7 @@ void VertBuffer::draw(GLW_3VF *pt, GLW_3VF *ps) const
     }
 
     // Draw
-    vert_buff->draw(pt, ps, flush_verts);
+    vert_buff->draw(pt, ps);
 }
 
 void VertBuffer::set_state(const GLState &s)

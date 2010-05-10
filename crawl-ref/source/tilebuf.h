@@ -21,7 +21,7 @@ class VertBuffer
 {
 public:
     VertBuffer(bool texture, bool colour, const GenericTexture *tex = NULL,
-               drawing_modes prim = GLW_RECTANGLE, bool flush = false);
+               drawing_modes prim = GLW_RECTANGLE);
     ~VertBuffer();
 
     // Rendering
@@ -49,7 +49,7 @@ protected:
     GLShapeBuffer *vert_buff;
     GLState m_state;
     drawing_modes m_prim;
-    bool flush_verts, colour_verts, texture_verts;
+    bool colour_verts, texture_verts;
 };
 
 class FontBuffer : public VertBuffer
