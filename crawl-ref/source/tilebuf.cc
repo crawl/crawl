@@ -45,7 +45,7 @@ void VertBuffer::draw(GLW_3VF *pt, GLW_3VF *ps) const
     //          render m_tile_buf[2] which, before the item description table
     //          is created, will be bound to a texture that has not been loaded.
     //          It never crashes, though, because m_tile_buf[2] will always be
-    //          empty (no pushed verts) before you start a game. -- ixtli
+    //          empty (no verts) before you start a game. -- ixtli
     if (size() == 0)
         return;
 
@@ -79,9 +79,9 @@ void VertBuffer::clear()
     m_vert_buf->clear();
 }
 
-void VertBuffer::push(const GLWRect &rect)
+void VertBuffer::add_primitive(const GLWRect &rect)
 {
-    m_vert_buf->push(rect);
+    m_vert_buf->add(rect);
 }
 
 unsigned int VertBuffer::size() const
@@ -146,7 +146,7 @@ void TileBuffer::add_unscaled(int idx, float x, float y, int ymax)
 
     GLWRect rect(pos_sx, pos_sy, pos_ex, pos_ey);
     rect.set_tex(tex_sx, tex_sy, tex_ex, tex_ey);
-    push(rect);
+    add_primitive(rect);
 }
 
 void TileBuffer::add(int idx, int x, int y, int ox, int oy, bool centre, int ymax)
@@ -165,7 +165,7 @@ void TileBuffer::add(int idx, int x, int y, int ox, int oy, bool centre, int yma
 
     GLWRect rect(pos_sx, pos_sy, pos_ex, pos_ey);
     rect.set_tex(tex_sx, tex_sy, tex_ex, tex_ey);
-    push(rect);
+    add_primitive(rect);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -226,7 +226,7 @@ void ColouredTileBuffer::add(int idx, int x, int y, int z,
     GLWRect rect(pos_sx, pos_sy, pos_ex, pos_ey, pos_z);
     rect.set_tex(tex_sx, tex_sy, tex_ex, tex_ey);
     rect.set_col(&col_sy, &col_sy, &col_ey, &col_ey);
-    push(rect);
+    add_primitive(rect);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -360,7 +360,7 @@ void ShapeBuffer::add(float pos_sx, float pos_sy, float pos_ex, float pos_ey,
 {
     GLWRect rect(pos_sx, pos_sy, pos_ex, pos_ey);
     rect.set_col(&col, &col, &col, &col);
-    push(rect);
+    add_primitive(rect);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -376,7 +376,7 @@ void LineBuffer::add(float pos_sx, float pos_sy, float pos_ex, float pos_ey,
 {
     GLWRect rect(pos_sx, pos_sy, pos_ex, pos_ey);
     rect.set_col(&col, &col);
-    push(rect);
+    add_primitive(rect);
 }
 
 void LineBuffer::add_square(float sx, float sy, float ex, float ey,

@@ -239,16 +239,15 @@ unsigned int OGLShapeBuffer::size() const
     return (m_position_buffer.size());
 }
 
-// Add a rectangle
-void OGLShapeBuffer::push(const GLWRect &rect)
+void OGLShapeBuffer::add(const GLWRect &rect)
 {
     switch (m_prim_type)
     {
     case GLW_RECTANGLE:
-        push_rect(rect);
+        add_rect(rect);
         break;
     case GLW_LINES:
-        push_line(rect);
+        add_line(rect);
         break;
     default:
         ASSERT(!"Invalid primitive type");
@@ -256,7 +255,7 @@ void OGLShapeBuffer::push(const GLWRect &rect)
     }
 }
 
-void OGLShapeBuffer::push_rect(const GLWRect &rect)
+void OGLShapeBuffer::add_rect(const GLWRect &rect)
 {
     // Copy vert positions
     size_t last = m_position_buffer.size();
@@ -324,7 +323,7 @@ void OGLShapeBuffer::push_rect(const GLWRect &rect)
     }
 }
 
-void OGLShapeBuffer::push_line(const GLWRect &rect)
+void OGLShapeBuffer::add_line(const GLWRect &rect)
 {
     // Copy vert positions
     size_t last = m_position_buffer.size();

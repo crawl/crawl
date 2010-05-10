@@ -234,17 +234,16 @@ public:
     static GLShapeBuffer *create(bool texture = false, bool colour = false,
                                  drawing_modes prim = GLW_RECTANGLE);
 
-    // Accounting
     virtual const char *print_statistics() const = 0;
     virtual unsigned int size() const = 0;
 
-    // Add a rectangle or line
-    virtual void push(const GLWRect &rect) = 0;
+    // Add a primitive to be drawn.
+    virtual void add(const GLWRect &rect) = 0;
 
-    // Draw the buffer
+    // Draw all the primitives in the buffer.
     virtual void draw(GLW_3VF *pt = NULL, GLW_3VF *ps = NULL) = 0;
 
-    // Manipulate state
+    // Clear all the primitives from the buffer.
     virtual void clear() = 0;
 };
 
