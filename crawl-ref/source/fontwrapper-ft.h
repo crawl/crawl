@@ -94,6 +94,7 @@ protected:
     int m_min_offset;
 
     GenericTexture m_tex;
+    GLShapeBuffer *m_buf;
 };
 
 #endif // USE_FT
