@@ -39,18 +39,17 @@ public:
     OGLShapeBuffer(bool texture = false, bool colour = false,
                    drawing_modes prim = GLW_RECTANGLE);
 
-    // Accounting
     virtual const char *print_statistics() const;
     virtual unsigned int size() const;
 
-    virtual void push(const GLWRect &rect);
+    virtual void add(const GLWRect &rect);
     virtual void draw(GLW_3VF *pt = NULL, GLW_3VF *ps = NULL);
     virtual void clear();
 
 protected:
-    // Helper methods for pushing specific prim types
-    void push_rect(const GLWRect &rect);
-    void push_line(const GLWRect &rect);
+    // Helper methods for adding specific primitives.
+    void add_rect(const GLWRect &rect);
+    void add_line(const GLWRect &rect);
 
     drawing_modes m_prim_type;
     bool m_texture_verts;

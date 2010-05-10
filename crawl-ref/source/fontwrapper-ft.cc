@@ -276,7 +276,7 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
                             term_colours[col_bg].g,
                             term_colours[col_bg].b);
                 rect.set_col(&col, &col, &col, &col);
-                m_buf->push(rect);
+                m_buf->add(rect);
             }
 
             adv.x += m_glyphs[c].offset;
@@ -298,7 +298,7 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
                 rect.set_col(&col, &col, &col, &col);
                 rect.set_tex(tex_x, tex_y, tex_x2, tex_y2);
 
-                m_buf->push(rect);
+                m_buf->add(rect);
             }
 
             i++;
@@ -361,7 +361,7 @@ static void _draw_box(int x_pos, int y_pos, float width, float height,
                    box_alpha);
     rect.set_col(&colour, &colour, &colour, &colour);
 
-    buf->push(rect);
+    buf->add(rect);
 
     // Load identity matrix
     glmanager->set_transform();
@@ -666,7 +666,7 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
     GLWRect rect(pos_sx, pos_sy, pos_ex, pos_ey);
     rect.set_tex(tex_sx, tex_sy, tex_ex, tex_ey);
     rect.set_col(&col, &col, &col, &col);
-    buf.push(rect);
+    buf.add_primitive(rect);
 
     x += m_glyphs[c].advance;
 }
