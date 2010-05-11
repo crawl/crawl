@@ -21,7 +21,7 @@ public:
                                const GLW_3VF *scale = NULL);
     virtual void reset_transform();
     virtual void set_current_color(GLW_3VF &color);
-    virtual void set_current_color(GLW_4VF &color);
+    virtual void set_current_color(VColour &color);
 
     // Texture-specific functinos
     virtual void delete_textures(size_t count, unsigned int *textures);
