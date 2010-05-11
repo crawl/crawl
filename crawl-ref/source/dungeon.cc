@@ -7296,6 +7296,21 @@ static void _diamond_rooms(int level_number)
     }
 }
 
+static dungeon_feature_type _random_wall()
+{
+    const dungeon_feature_type min_rand = DNGN_METAL_WALL;
+    const dungeon_feature_type max_rand = DNGN_STONE_WALL;
+    dungeon_feature_type wall;
+    do
+    {
+        wall = static_cast<dungeon_feature_type>(
+                   random_range(min_rand, max_rand));
+    }
+    while (wall == DNGN_SLIMY_WALL);
+
+    return (wall);
+}
+
 static void _big_room(int level_number)
 {
     dungeon_feature_type type_floor = DNGN_FLOOR;
@@ -7352,11 +7367,7 @@ static void _big_room(int level_number)
     dgn_replace_area(sr.tl, sr.br, DNGN_CLOSED_DOOR, type_floor);
 
     if (type_floor == DNGN_FLOOR)
-    {
-        const int minwall = DNGN_RNDWALL_MIN;
-        const int range   = DNGN_RNDWALL_MAX - DNGN_RNDWALL_MIN + 1;
-        type_2 = static_cast<dungeon_feature_type>(minwall + random2(range));
-    }
+        type_2 = _random_wall();
 
     // No lava in the Crypt or Tomb, thanks!
     if (player_in_branch( BRANCH_CRYPT ) || player_in_branch( BRANCH_TOMB ))
