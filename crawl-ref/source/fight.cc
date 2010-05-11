@@ -1000,7 +1000,6 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
 
     case UNAT_PUNCH:
         aux_attack = aux_verb = "punch";
-        // applied twice
         aux_damage = 5 + you.skills[SK_UNARMED_COMBAT] / 3;
 
         if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
@@ -1245,9 +1244,6 @@ bool melee_attack::player_aux_apply()
 
     aux_damage  = random2(aux_damage);
 
-    // Clobber wpn_skill.
-    wpn_skill   = SK_UNARMED_COMBAT;
-    aux_damage  = player_apply_weapon_skill(aux_damage);
     aux_damage  = player_apply_fighting_skill(aux_damage, true);
     aux_damage  = player_apply_misc_modifiers(aux_damage);
 
@@ -1260,6 +1256,8 @@ bool melee_attack::player_aux_apply()
 
     if (damage_done > 0)
     {
+        // Clobber wpn_skill.
+        wpn_skill   = SK_UNARMED_COMBAT;
         player_exercise_combat_skills();
 
         mprf("You %s %s%s%s",
