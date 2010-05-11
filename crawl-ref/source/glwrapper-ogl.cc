@@ -213,7 +213,7 @@ void OGLStateManager::set_current_color(GLW_3VF &color)
     glColor3f(color.r, color.g, color.b);
 }
 
-void OGLStateManager::set_current_color(GLW_4VF &color)
+void OGLStateManager::set_current_color(VColour &color)
 {
     glColor4f(color.r, color.g, color.b, color.a);
 }

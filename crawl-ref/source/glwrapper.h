@@ -79,33 +79,6 @@ struct GLW_3VF
     union {float z; float b;};
 };
 
-struct GLW_4VF
-{
-    GLW_4VF() {};
-    GLW_4VF(float l, float m, float n, float p) : x(l), y(m), z(n), t(p) {}
-
-    inline void set(float l, float m, float n, float p)
-    {
-        x = l;
-        y = m;
-        z = n;
-        t = p;
-    }
-
-    inline void set(const GLW_4VF &in)
-    {
-        x = in.x;
-        y = in.y;
-        z = in.z;
-        t = in.t;
-    }
-
-    union {float x; float r;                    };
-    union {float y; float g;                    };
-    union {float z; float b; float u; float s;  };
-    union {float t; float a; float v;           };
-};
-
 enum MipMapOptions
 {
     MIPMAP_CREATE,
@@ -206,7 +179,7 @@ public:
                                const GLW_3VF *scale = NULL) = 0;
     virtual void reset_transform() = 0;
     virtual void set_current_color(GLW_3VF &color) = 0;
-    virtual void set_current_color(GLW_4VF &color) = 0;
+    virtual void set_current_color(VColour &color) = 0;
 
     // Texture-specific functinos
     virtual void delete_textures(size_t count, unsigned int *textures) = 0;
