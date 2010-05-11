@@ -1005,10 +1005,6 @@ enum dungeon_feature_type
     DNGN_MINWALL = DNGN_WAX_WALL,
     DNGN_MAXWALL = DNGN_CLEAR_PERMAROCK_WALL,
 
-    // Random wall types for big rooms.
-    DNGN_RNDWALL_MIN = DNGN_METAL_WALL,
-    DNGN_RNDWALL_MAX = DNGN_STONE_WALL,
-
     // Highest grid value which is opaque.
     DNGN_MAXOPAQUE = DNGN_PERMAROCK_WALL,
 
