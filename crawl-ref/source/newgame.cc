@@ -564,8 +564,8 @@ static void _mark_fully_random(newgame_def* ng, newgame_def* ng_choice,
  */
 static const int COLUMN_WIDTH = 25;
 static const int X_MARGIN = 4;
-static const int SPECIAL_KEYS_START_Y = 21;
-static const int CHAR_DESC_START_Y = 18;
+static const int CHAR_DESC_START_Y = 17;
+static const int SPECIAL_KEYS_START_Y = CHAR_DESC_START_Y + 3;
 static void _construct_species_menu(const newgame_def* ng,
                                     const newgame_def& defaults,
                                     MenuFreeform* menu)
