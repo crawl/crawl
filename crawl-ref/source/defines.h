@@ -282,7 +282,6 @@ const char * const MONSTER_NUMBER = "monster-number";
 #define KEY_MACRO_MORE_PROTECT -10
 #define KEY_MACRO_DISABLE_MORE -1
 #define KEY_MACRO_ENABLE_MORE  -2
-#define KEY_REPEAT_KEYS        -3
 
 // cgotoxy regions
 enum GotoRegion

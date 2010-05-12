@@ -731,10 +731,6 @@ enum command_type
     // [ds] Silently ignored, requests another round of input.
     CMD_NEXT_CMD,
 
-    // Stick the keyspresses of the command to be repeated into the
-    // input buffer.
-    CMD_REPEAT_KEYS,
-
     // Must always be last
     CMD_MAX_CMD
 };

@@ -192,7 +192,7 @@ static void _prep_input();
 static command_type _get_next_cmd();
 static keycode_type _get_next_keycode();
 static command_type _keycode_to_command(keycode_type key);
-static void _setup_cmd_repeat();
+static void _do_cmd_repeat();
 static void _do_prev_cmd_again();
 static void _update_replay_state();
 
@@ -1474,56 +1474,6 @@ static void _do_rest()
     _start_running(RDIR_REST, RMODE_REST_DURATION);
 }
 
-static bool _do_repeated_cmd()
-{
-    ASSERT(crawl_state.is_repeating_cmd());
-
-    if (!crawl_state.cmd_repeat_start
-        && crawl_state.prev_repetition_turn == you.num_turns
-        && crawl_state.repeat_cmd != CMD_WIZARD
-        && (crawl_state.repeat_cmd != CMD_PREV_CMD_AGAIN
-            || crawl_state.prev_cmd != CMD_WIZARD))
-    {
-        // This is a catch-all that shouldn't really happen.
-        // If the command always takes zero turns, then it
-        // should be prevented in cmd_is_repeatable().  If
-        // a command sometimes takes zero turns (because it
-        // can't be done, for instance), then
-        // crawl_state.zero_turns_taken() should be called when
-        // it does take zero turns, to cancel command repetition
-        // before we reach here.
-#ifdef WIZARD
-        crawl_state.cant_cmd_repeat("Can't repeat a command which "
-                                    "takes no turns (unless it's a "
-                                    "wizard command), cancelling ");
-#else
-        crawl_state.cant_cmd_repeat("Can't repeat a command which "
-                                    "takes no turns, cancelling "
-                                    "repetitions.");
-#endif
-        crawl_state.cancel_cmd_repeat();
-        return false;
-    }
-
-    if (crawl_state.cmd_repeat_count >= crawl_state.cmd_repeat_goal)
-    {
-        crawl_state.cancel_cmd_repeat();
-        return false;
-    }
-
-    crawl_state.cmd_repeat_start = false;
-    crawl_state.cmd_repeat_count++;
-
-    ASSERT(crawl_state.repeat_cmd_keys.size() > 0);
-    repeat_again_rec.paused = true;
-    macro_buf_add(crawl_state.repeat_cmd_keys);
-    macro_buf_add(KEY_REPEAT_KEYS);
-
-    crawl_state.prev_repetition_turn = you.num_turns;
-
-    return true;
-}
-
 static void _do_clear_map()
 {
     if (player_in_mappable_area())
@@ -1643,13 +1593,12 @@ void process_command(command_type cmd)
     case CMD_OPEN_DOOR:       _open_door(0, 0);  break;
     case CMD_CLOSE_DOOR:      _close_door(coord_def(0, 0)); break;
 
-        // Repeat commands.
-    case CMD_REPEAT_KEYS:    if (!_do_repeated_cmd()) return; break;
-    case CMD_REPEAT_CMD:     _setup_cmd_repeat(); break;
+    // Repeat commands.
+    case CMD_REPEAT_CMD:     _do_cmd_repeat();  break;
     case CMD_PREV_CMD_AGAIN: _do_prev_cmd_again(); break;
-    case CMD_MACRO_ADD:      macro_add_query(); break;
+    case CMD_MACRO_ADD:      macro_add_query();    break;
 
-        // Toggle commands.
+    // Toggle commands.
     case CMD_DISABLE_MORE: crawl_state.show_more_prompt = false; break;
     case CMD_ENABLE_MORE:  crawl_state.show_more_prompt = true;  break;
 
@@ -2734,7 +2683,6 @@ static command_type _keycode_to_command(keycode_type key)
 
     case KEY_MACRO_DISABLE_MORE: return CMD_DISABLE_MORE;
     case KEY_MACRO_ENABLE_MORE:  return CMD_ENABLE_MORE;
-    case KEY_REPEAT_KEYS:        return CMD_REPEAT_KEYS;
 
     default:
         return key_to_command(key, KMC_DEFAULT);
@@ -3694,26 +3642,6 @@ static void _cancel_cmd_repeat()
     flush_input_buffer(FLUSH_REPLAY_SETUP_FAILURE);
 }
 
-// Setup crawl_state fields for command repeat.
-static void _init_cmd_repeat(command_type cmd, const keyseq& keys, int count)
-{
-    crawl_state.cmd_repeat_start     = true;
-    crawl_state.cmd_repeat_count     = 0;
-    crawl_state.repeat_cmd           = cmd;
-    crawl_state.repeat_cmd_keys      = keys;
-    crawl_state.cmd_repeat_goal      = count;
-    crawl_state.prev_repetition_turn = you.num_turns;
-
-    crawl_state.prev_repeat_cmd      = cmd;
-    crawl_state.prev_cmd_repeat_goal = count;
-
-    crawl_state.cmd_repeat_started_unsafe = !i_feel_safe();
-
-    crawl_state.input_line_strs.clear();
-
-    macro_buf_add(KEY_REPEAT_KEYS);
-}
-
 static command_type _find_command(const keyseq& keys)
 {
     // Add it back in to find out the command.
@@ -3726,7 +3654,36 @@ static command_type _find_command(const keyseq& keys)
     return (cmd);
 }
 
-static void _setup_cmd_repeat()
+static void _check_cmd_repeat(int last_turn)
+{
+    if (last_turn == you.num_turns
+        && crawl_state.repeat_cmd != CMD_WIZARD
+        && (crawl_state.repeat_cmd != CMD_PREV_CMD_AGAIN
+            || crawl_state.prev_cmd != CMD_WIZARD))
+    {
+        // This is a catch-all that shouldn't really happen.
+        // If the command always takes zero turns, then it
+        // should be prevented in cmd_is_repeatable().  If
+        // a command sometimes takes zero turns (because it
+        // can't be done, for instance), then
+        // crawl_state.zero_turns_taken() should be called when
+        // it does take zero turns, to cancel command repetition
+        // before we reach here.
+#ifdef WIZARD
+        crawl_state.cant_cmd_repeat("Can't repeat a command which "
+                                    "takes no turns (unless it's a "
+                                    "wizard command), cancelling ");
+#else
+        crawl_state.cant_cmd_repeat("Can't repeat a command which "
+                                    "takes no turns, cancelling "
+                                    "repetitions.");
+#endif
+        crawl_state.cancel_cmd_repeat();
+        return;
+    }
+}
+
+static void _do_cmd_repeat()
 {
     if (is_processing_macro())
     {
@@ -3737,23 +3694,12 @@ static void _setup_cmd_repeat()
     }
 
     ASSERT(!crawl_state.is_repeating_cmd());
-    ASSERT(crawl_state.repeat_cmd_keys.empty());
-
-    if (crawl_state.doing_prev_cmd_again)
-    {
-        // prev_cmd_keys stores just the old repeat_cmd_keys, not
-        // the whole repeat command input including number
-        _init_cmd_repeat(crawl_state.prev_repeat_cmd,
-                         crawl_state.prev_cmd_keys,
-                         crawl_state.prev_cmd_repeat_goal);
-        return;
-    }
 
     char buf[80];
 
     // Function ensures that the buffer contains only digits.
     int ch = _get_num_and_char("Number of times to repeat, then command key: ",
-                               buf, 80);
+                               buf, sizeof(buf));
 
     if (strlen(buf) == 0)
     {
@@ -3790,24 +3736,50 @@ static void _setup_cmd_repeat()
         ch = macro_buf_get();
     } while (ch != -1);
 
-    command_type cmd = _find_command(keys);
+    const command_type cmd = _find_command(keys);
+    command_type real_cmd = cmd;
     if (cmd == CMD_PREV_CMD_AGAIN)
-    {
-        keys = crawl_state.prev_cmd_keys;
-        cmd = _find_command(keys);
-    }
+        real_cmd = crawl_state.prev_cmd;
 
-    if (cmd != CMD_MOUSE_MOVE)
+    if (real_cmd != CMD_MOUSE_MOVE)
         c_input_reset(false);
 
-    if (!_cmd_is_repeatable(cmd))
+    if (!_cmd_is_repeatable(real_cmd))
     {
         _cancel_cmd_repeat();
         return;
     }
 
-    crawl_state.prev_cmd_keys = keys;
-    _init_cmd_repeat(cmd, keys, count);
+    keyseq repeat_keys;
+    int i = 0;
+    if (cmd != CMD_PREV_CMD_AGAIN)
+    {
+        repeat_again_rec.keys.clear();
+        macro_buf_add(keys, true);
+        while (get_macro_buf_size() > 0)
+            _input();
+        repeat_keys = crawl_state.prev_cmd_keys;
+        i++;
+    }
+    else
+        repeat_keys = crawl_state.prev_cmd_keys;
+
+    crawl_state.repeat_cmd                = real_cmd;
+    crawl_state.cmd_repeat_started_unsafe = !i_feel_safe();
+    crawl_state.input_line_strs.clear();
+
+    int last_repeat_turn;
+    for (; i < count && crawl_state.is_repeating_cmd(); ++i)
+    {
+        last_repeat_turn = you.num_turns;
+        macro_buf_add(repeat_keys, true);
+        while (get_macro_buf_size() > 0)
+            _input();
+        _check_cmd_repeat(last_repeat_turn);
+    }
+    crawl_state.prev_repeat_cmd           = cmd;
+    crawl_state.prev_cmd_repeat_goal      = count;
+    crawl_state.repeat_cmd                = CMD_NO_CMD;
 }
 
 static void _do_prev_cmd_again()
@@ -3839,9 +3811,14 @@ static void _do_prev_cmd_again()
     ASSERT(crawl_state.prev_cmd_keys.size() > 0);
 
     if (crawl_state.prev_cmd == CMD_REPEAT_CMD)
-        macro_buf_add_cmd(CMD_REPEAT_CMD, true);
-    else
-        macro_buf_add(crawl_state.prev_cmd_keys, true);
+    {
+        // just call the relevant part of _do_repeat_cmd again
+        // _do_repeat_cmd_again
+        crawl_state.doing_prev_cmd_again = false;
+        return;
+    }
+
+    macro_buf_add(crawl_state.prev_cmd_keys, true);
 
     // crawl_state.doing_prev_cmd_again can be set to false
     // while input() does its stuff if something causes

@@ -199,16 +199,7 @@ void wizard_heal(bool super_heal)
         you.magic_contamination = 0;
         you.duration[DUR_LIQUID_FLAMES] = 0;
         you.clear_beholders();
-
-        // If we're repeating then do the HP increase all at once.
-        int amount = 10;
-        if (crawl_state.cmd_repeat_goal > 0)
-        {
-            amount *= crawl_state.cmd_repeat_goal;
-            crawl_state.cancel_cmd_repeat();
-        }
-
-        inc_hp(amount, true);
+        inc_hp(10, true);
     }
 
     // Clear most status ailments.
