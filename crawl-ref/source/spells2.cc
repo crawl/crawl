@@ -309,7 +309,15 @@ bool brand_weapon(brand_type which_brand, int power)
 
     // Can't rebrand a temporarily-branded item to a different brand.
     if (temp_brand && (get_weapon_brand(weapon) != which_brand))
+
+    // Some brandings are restricted to certain damage types.
+    const int wpn_type = get_vorpal_type(weapon);
+    if (which_brand == SPWPN_VENOM && wpn_type == DVORP_CRUSHING
+        || which_brand == SPWPN_VORPAL && wpn_type != DVORP_SLICING
+        || which_brand == SPWPN_DUMMY_CRUSHING && wpn_type != DVORP_CRUSHING)
+    {
         return (false);
+    }
 
     // Can only brand launchers with sensical brands
     if (is_range_weapon(weapon))
@@ -336,7 +344,6 @@ bool brand_weapon(brand_type which_brand, int power)
     }
 
     std::string msg = weapon.name(DESC_CAP_YOUR);
-    const int wpn_type = get_vorpal_type(weapon);
 
     bool emit_special_message = !temp_brand;
     int duration_affected = 0;
@@ -359,9 +366,6 @@ bool brand_weapon(brand_type which_brand, int power)
         break;
 
     case SPWPN_VENOM:
-        if (wpn_type == DVORP_CRUSHING)
-            return (false);
-
         msg += " starts dripping with poison.";
         duration_affected = 15;
         break;
@@ -372,9 +376,6 @@ bool brand_weapon(brand_type which_brand, int power)
         break;
 
     case SPWPN_VORPAL:
-        if (wpn_type != DVORP_SLICING)
-            return (false);
-
         msg += " glows silver and looks extremely sharp.";
         duration_affected = 10;
         break;
@@ -401,9 +402,6 @@ bool brand_weapon(brand_type which_brand, int power)
         break;
 
     case SPWPN_DUMMY_CRUSHING:  //jmf: Added for Maxwell's Silver Hammer.
-        if (wpn_type != DVORP_CRUSHING)
-            return (false);
-
         which_brand = SPWPN_VORPAL;
         msg += " glows silver and feels heavier.";
         duration_affected = 7;
