@@ -22,7 +22,7 @@ public:
 public:
     key_recorder();
 
-    void add_keys(const keyseq& ks, bool reverse = false);
+    void add_key(int key, bool reverse = false);
     void clear();
 };
 
