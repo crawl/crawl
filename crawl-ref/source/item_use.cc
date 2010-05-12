@@ -188,7 +188,7 @@ bool can_wield(item_def *weapon, bool say_reason,
     {
         if (say_reason)
         {
-            mpr("As you grasp it, you feel a great hunger.  Being not satiated, you stop.");
+            mpr("As you grasp it, you feel a great hunger. Being not satiated, you stop.");
             // If it's a standard weapon, you know its ego now.
             if (!is_artefact(*weapon) && !is_blessed(*weapon)
                 && !item_type_known(*weapon))
