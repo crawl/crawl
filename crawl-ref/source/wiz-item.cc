@@ -29,6 +29,7 @@
 #include "mon-util.h"
 #include "options.h"
 #include "output.h"
+#include "player-equip.h"
 #include "religion.h"
 #include "skills2.h"
 #include "spl-book.h"
@@ -630,8 +631,13 @@ void wizard_make_object_randart()
         return;
     }
 
-    if (you.weapon() == &item)
-        you.wield_change = true;
+    const equipment_type eq = item_equip_slot(item);
+    int invslot = 0;
+    if (eq != EQ_NONE)
+    {
+        invslot = you.equip[eq];
+        unequip_item(eq);
+    }
 
     if (is_random_artefact(item))
     {
@@ -640,9 +646,6 @@ void wizard_make_object_randart()
             canned_msg(MSG_OK);
             return;
         }
-
-        if (item_is_equipped(item))
-            unuse_artefact(item);
 
         item.special = 0;
         item.flags  &= ~ISFLAG_RANDART;
@@ -681,9 +684,9 @@ void wizard_make_object_randart()
     if (Options.autoinscribe_artefacts)
         add_autoinscription(item, artefact_auto_inscription(you.inv[i]));
 
-    // If equipped, apply new randart benefits.
-    if (item_is_equipped(item))
-        use_artefact(item);
+    // If it was equipped, requip the item.
+    if (eq != EQ_NONE)
+        equip_item(eq, invslot);
 
     mpr(item.name(DESC_INVENTORY_EQUIP).c_str());
 }
