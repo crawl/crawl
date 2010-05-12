@@ -32,8 +32,7 @@ game_state::game_state()
       glyph2strfn(NULL), multibyte_strlen(NULL),
       terminal_resize_handler(NULL), terminal_resize_check(NULL),
       doing_prev_cmd_again(false), prev_cmd(CMD_NO_CMD),
-      repeat_cmd(CMD_NO_CMD), cmd_repeat_count(0), cmd_repeat_goal(0),
-      prev_repetition_turn(0), cmd_repeat_started_unsafe(false),
+      repeat_cmd(CMD_NO_CMD),cmd_repeat_started_unsafe(false),
       input_line_curr(0), level_annotation_shown(false),
 #ifndef USE_TILE
       mlist_targeting(false),
@@ -77,11 +76,6 @@ bool game_state::is_replaying_keys() const
 
 bool game_state::is_repeating_cmd() const
 {
-    ASSERT((cmd_repeat_goal == 0 && cmd_repeat_count == 0
-            && repeat_cmd == CMD_NO_CMD && !cmd_repeat_start)
-           || (cmd_repeat_goal > 0 && cmd_repeat_count <= cmd_repeat_goal
-               && repeat_cmd != CMD_NO_CMD));
-
     return (repeat_cmd != CMD_NO_CMD);
 }
 
@@ -278,12 +272,7 @@ bool interrupt_cmd_repeat( activity_interrupt_type ai,
 void game_state::reset_cmd_repeat()
 {
     repeat_cmd           = CMD_NO_CMD;
-    cmd_repeat_count     = 0;
-    cmd_repeat_goal      = 0;
     cmd_repeat_start     = false;
-    prev_repetition_turn = 0;
-
-    repeat_cmd_keys.clear();
 }
 
 void game_state::reset_cmd_again()
@@ -498,24 +487,6 @@ void game_state::dump()
         fprintf(stderr, "\n\n");
     }
     fprintf(stderr, "repeat_cmd = %s\n", command_to_name(repeat_cmd).c_str());
-
-    if (cmd_repeat_count > 0 || cmd_repeat_goal > 0)
-    {
-        fprintf(stderr, "Doing command repetition:\n");
-        fprintf(stderr, "cmd_repeat_start:%d, cmd_repeat_count: %d, "
-                      "cmd_repeat_goal:%d\n"
-                      "prev_cmd_repeat_goal: %d\n",
-                cmd_repeat_start, cmd_repeat_count, cmd_repeat_goal,
-                prev_cmd_repeat_goal);
-        fprintf(stderr, "Keys being repeated: ");
-        for (unsigned int i = 0; i < repeat_cmd_keys.size(); i++)
-            fprintf(stderr, "%d, ", repeat_cmd_keys[i]);
-        fprintf(stderr, "\n");
-        fprintf(stderr, "As ASCII keys: ");
-        for (unsigned int i = 0; i < repeat_cmd_keys.size(); i++)
-            fprintf(stderr, "%c", (char) repeat_cmd_keys[i]);
-        fprintf(stderr, "\n");
-    }
 
     fprintf(stderr, "\n");
 

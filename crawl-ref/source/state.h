@@ -69,13 +69,9 @@ struct game_state
     std::deque<int> prev_cmd_keys;
 
     command_type    repeat_cmd;
-    std::deque<int> repeat_cmd_keys;
     bool            cmd_repeat_start;
-    int             cmd_repeat_count;
-    int             cmd_repeat_goal;
     command_type    prev_repeat_cmd;
     int             prev_cmd_repeat_goal;
-    int             prev_repetition_turn;
     bool            cmd_repeat_started_unsafe;
 
     std::vector<std::string> startup_errors;
