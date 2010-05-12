@@ -96,6 +96,4 @@ void autotoggle_autopickup(bool off);
 bool interrupt_activity( activity_interrupt_type ai,
                          const activity_interrupt_data &a
                             = activity_interrupt_data() );
-
-void equip_armour_effect(item_def& item, bool unmeld);
 #endif
