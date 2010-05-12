@@ -288,7 +288,7 @@ bool brand_weapon(brand_type which_brand, int power)
     if (!you.weapon())
         return (false);
 
-    const bool temp_brand = you.duration[DUR_WEAPON_BRAND];
+    bool temp_brand = you.duration[DUR_WEAPON_BRAND];
     item_def& weapon = *you.weapon();
 
     // Can't brand non-weapons, but can brand some launchers (see later).
@@ -306,9 +306,6 @@ bool brand_weapon(brand_type which_brand, int power)
     // Can't brand already-branded items.
     if (!temp_brand && get_weapon_brand(weapon) != SPWPN_NORMAL)
         return (false);
-
-    // Can't rebrand a temporarily-branded item to a different brand.
-    if (temp_brand && (get_weapon_brand(weapon) != which_brand))
 
     // Some brandings are restricted to certain damage types.
     const int wpn_type = get_vorpal_type(weapon);
@@ -341,6 +338,14 @@ bool brand_weapon(brand_type which_brand, int power)
         // Otherwise, convert to the correct brand type, most specifically (but
         // not necessarily only) flaming -> flame, freezing -> frost.
         which_brand = _convert_to_launcher(which_brand);
+    }
+
+    // Allow rebranding a temporarily-branded item to a different brand.
+    if (temp_brand && (get_weapon_brand(weapon) != which_brand))
+    {
+        you.duration[DUR_WEAPON_BRAND] = 0;
+        set_item_ego_type(weapon, OBJ_WEAPONS, SPWPN_NORMAL);
+        temp_brand = false;
     }
 
     std::string msg = weapon.name(DESC_CAP_YOUR);
