@@ -48,8 +48,10 @@ void macro_save();
 
 void macro_userfn(const char *keys, const char *registryname);
 
-void macro_buf_add(int key, bool reverse = false);
-void macro_buf_add(const keyseq &actions, bool reverse = false);
+void macro_buf_add(int key,
+                   bool reverse = false, bool expanded = true);
+void macro_buf_add(const keyseq &actions,
+                   bool reverse = false, bool expanded = true);
 int macro_buf_get();
 
 void macro_buf_add_cmd(command_type cmd, bool reverse = false);

@@ -408,11 +408,13 @@ static void macro_del( macromap &mapref, keyseq key )
     mapref.erase( key );
 }
 
+static void _register_expanded_keys(int num, bool reverse);
+
 /*
  * Adds keypresses from a sequence into the internal keybuffer. Ignores
  * macros.
  */
-void macro_buf_add(const keyseq &actions, bool reverse)
+void macro_buf_add(const keyseq &actions, bool reverse, bool expanded)
 {
     keyseq act;
     bool need_more_reset = false;
@@ -432,17 +434,22 @@ void macro_buf_add(const keyseq &actions, bool reverse)
 
     Buffer.insert(reverse? Buffer.begin() : Buffer.end(),
                    act.begin(), act.end());
+
+    if (expanded)
+        _register_expanded_keys(act.size(), reverse);
 }
 
 /*
  * Adds a single keypress into the internal keybuffer.
  */
-void macro_buf_add(int key, bool reverse)
+void macro_buf_add(int key, bool reverse, bool expanded)
 {
     if (reverse)
         Buffer.push_front(key);
     else
         Buffer.push_back(key);
+    if (expanded)
+        _register_expanded_keys(1, reverse);
 }
 
 /*
@@ -455,7 +462,7 @@ void macro_buf_add_cmd(command_type cmd, bool reverse)
     // There should be plenty of room between the synthetic keys
     // (KEY_MACRO_MORE_PROTECT == -10) and USERFUNCBASE (-10000) for
     // command_type to fit (currently 1000 through 2069).
-    macro_buf_add(-((int) cmd), reverse);
+    macro_buf_add(-((int) cmd), reverse, true);
 }
 
 /*
@@ -487,7 +494,7 @@ static void macro_buf_add_long(keyseq actions,
             // macro into the buffer.
             if (subst != keymap.end() && !subst->second.empty())
             {
-                macro_buf_add(subst->second);
+                macro_buf_add(subst->second, false, false);
                 break;
             }
 
@@ -500,7 +507,7 @@ static void macro_buf_add_long(keyseq actions,
         {
             // Didn't find a macro. Add the first keypress of the sequence
             // into the buffer, remove it from the sequence, and try again.
-            macro_buf_add(actions.front());
+            macro_buf_add(actions.front(), false, false);
             actions.pop_front();
         }
         else
@@ -510,6 +517,21 @@ static void macro_buf_add_long(keyseq actions,
             for (unsigned int i = 0; i < tmp.size(); i++)
                 actions.pop_front();
         }
+    }
+}
+
+// Number of keys from start of buffer that have already gone through
+// macro expansion.
+static int expanded_keys_left = 0;
+static void _register_expanded_keys(int num, bool reverse)
+{
+    expanded_keys_left += num;
+    if (!reverse)
+    {
+        // We added at the end of the buffer, so the whole buffer had
+        // better be full of expanded keys.
+        ASSERT((int)Buffer.size() == expanded_keys_left);
+        expanded_keys_left = Buffer.size();
     }
 }
 
@@ -526,7 +548,7 @@ bool is_processing_macro()
  */
 static void macro_buf_apply_command_macro()
 {
-    if (macro_keys_left > 0)
+    if (macro_keys_left > 0 || expanded_keys_left > 0)
         return;
 
     keyseq tmp = Buffer;
@@ -546,7 +568,7 @@ static void macro_buf_apply_command_macro()
 
             macro_keys_left = result.size();
 
-            macro_buf_add(result, true);
+            macro_buf_add(result, true, true);
 
             break;
         }
@@ -561,6 +583,9 @@ static void macro_buf_apply_command_macro()
  */
 int macro_buf_get()
 {
+    ASSERT(macro_keys_left <= (int)Buffer.size()
+           && expanded_keys_left <= (int)Buffer.size());
+
     if (Buffer.size() == 0)
     {
         // If we're trying to fetch a new keystroke, then the processing
@@ -576,6 +601,8 @@ int macro_buf_get()
 
     if (macro_keys_left >= 0)
         macro_keys_left--;
+    if (expanded_keys_left > 0)
+        expanded_keys_left--;
 
     for (int i = 0, size_i = recorders.size(); i < size_i; i++)
         recorders[i]->add_key(key);
@@ -679,7 +706,7 @@ int getchm(KeymapContext mc, int (*rgetch)())
     // Read some keys...
     keyseq keys = _getch_mul(rgetch);
     if (mc == KMC_NONE)
-        macro_buf_add(keys);
+        macro_buf_add(keys, false, false);
     else
         macro_buf_add_long(keys, Keymaps[mc]);
 
@@ -742,6 +769,7 @@ void flush_input_buffer( int reason )
                 crawl_state.show_more_prompt = true;
         }
         macro_keys_left = -1;
+        expanded_keys_left = 0;
     }
 }
 
