@@ -123,7 +123,16 @@ public:
     int width() { return get_number_of_cols() - 1; }
     int height() { return get_number_of_lines(); }
     void print(const std::string &str) { cprintf("%s", str.c_str()); }
-    void nextline() { cgotoxy(1, wherey() + 1); }
+
+    void nextline()
+    {
+        if (wherey() <= height())
+            cgotoxy(1, wherey() + 1);
+        else
+            cgotoxy(1, wherey());
+        // Otherwise cgotoxy asserts; let's just clobber the last line
+        // instead, which should be noticable enough.
+    }
 };
 
 void print_description(const describe_info &inf)
