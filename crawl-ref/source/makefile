@@ -49,6 +49,11 @@ GAME = crawl
 
 ASSERTS = yes
 
+# Disable GNU Make implicit rules and variables. Leaving them enabled will slow
+# down MinGW and Cygwin builds by a very VERY noticeable degree. Besides, we have
+# _explicit_ rules defined for everything. So we don't need them.
+MAKEFLAGS += -rR
+
 #
 # Compiler Flags
 #
