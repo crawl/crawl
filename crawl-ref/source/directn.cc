@@ -1362,6 +1362,7 @@ void direction_chooser::feature_cycle_forward(int feature)
 
 void direction_chooser::update_previous_target() const
 {
+    you.prev_targ = MHITNOT;
     you.prev_grd_targ.reset();
 
     // Maybe we should except just_looking here?
