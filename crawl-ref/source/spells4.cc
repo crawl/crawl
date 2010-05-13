@@ -260,6 +260,7 @@ static int _shatter_walls(coord_def where, int pow, int, actor *)
         noisy(30, where);
 
         grd(where) = DNGN_FLOOR;
+        set_terrain_changed(where);
 
         if (grid == DNGN_ORCISH_IDOL)
             did_god_conduct(DID_DESTROY_ORCISH_IDOL, 8);
