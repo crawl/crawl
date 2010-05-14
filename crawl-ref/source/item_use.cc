@@ -2811,6 +2811,14 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
             baseDam = property(item, PWPN_DAMAGE);
 
+            // [dshaligram] The defined base damage applies only when used
+            // for launchers. Hand-thrown stones do only half
+            // base damage. Yet another evil 4.0ism.
+            if (wepClass == OBJ_MISSILES && wepType == MI_STONE)
+            {
+                baseDam = div_rand_round(baseDam, 2);
+            }
+
             // Dwarves/orcs with dwarven/orcish weapons.
             if (get_equip_race(item) == ISFLAG_DWARVEN
                    && player_genus(GENPC_DWARVEN)
@@ -2883,15 +2891,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 exercise(SK_THROWING, 1);
                 break;
             }
-        }
-
-        // [dshaligram] The defined base damage applies only when used
-        // for launchers. Hand-thrown stones and darts do only half
-        // base damage. Yet another evil 4.0ism.
-        if (wepClass == OBJ_MISSILES
-            && (wepType == MI_DART || wepType == MI_STONE))
-        {
-            baseDam = div_rand_round(baseDam, 2);
         }
 
         // exercise skill
