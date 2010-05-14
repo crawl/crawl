@@ -537,50 +537,66 @@ bool you_can_wear(int eq, bool special_armour)
 {
     switch (eq)
     {
-        case EQ_LEFT_RING:
-        case EQ_RIGHT_RING:
-        case EQ_AMULET:
-        case EQ_CLOAK:
+    case EQ_LEFT_RING:
+    case EQ_RIGHT_RING:
+    case EQ_AMULET:
+    case EQ_CLOAK:
+        return (true);
+
+    case EQ_BOOTS:
+        // Bardings
+        if (you.species == SP_NAGA || you.species == SP_CENTAUR)
+            return (special_armour);
+        if (player_mutation_level(MUT_HOOVES) >= 3
+            || player_mutation_level(MUT_TALONS) >= 3)
+        {
+            return (false);
+        }
+        // These species cannot wear boots
+        if (you.species == SP_TROLL
+            || you.species == SP_SPRIGGAN
+            || player_genus(GENPC_OGREISH)
+            || player_genus(GENPC_DRACONIAN))
+        {
+            return (false);
+        }
+        return (true);
+
+    case EQ_BODY_ARMOUR:
+    case EQ_SHIELD:
+        // Anyone can wear robes or a buckler/shield.
+        if (special_armour)
             return (true);
-        case EQ_BOOTS:
-            // Bardings
-            if (you.species == SP_NAGA || you.species == SP_CENTAUR)
-                return (special_armour);
-            if (player_mutation_level(MUT_HOOVES) >= 3
-                || player_mutation_level(MUT_TALONS) >= 3)
-            {
-                return (false);
-            }
-            // These species cannot wear boots
-            if (you.species == SP_TROLL
-                || you.species == SP_SPRIGGAN
-                || player_genus(GENPC_OGREISH)
-                || player_genus(GENPC_DRACONIAN))
-            {
-                return (false);
-            }
+        if (you.species == SP_TROLL
+            || you.species == SP_SPRIGGAN
+            || player_genus(GENPC_OGREISH)
+            || player_genus(GENPC_DRACONIAN))
+        {
+            return (false);
+        }
+        return (true);
+
+    case EQ_HELMET:
+        // Anyone can wear caps.
+        if (special_armour)
             return (true);
-        case EQ_BODY_ARMOUR:
-        case EQ_SHIELD:
-            if (special_armour)
-                return (true);
-        case EQ_HELMET:
-            if (special_armour
-                || player_mutation_level(MUT_HORNS)
-                || player_mutation_level(MUT_BEAK)
-                || player_mutation_level(MUT_ANTENNAE))
-            {
-                return (special_armour);
-            }
-        default:
-            if (you.species == SP_TROLL
-                || you.species == SP_SPRIGGAN
-                || player_genus(GENPC_OGREISH)
-                || player_genus(GENPC_DRACONIAN))
-            {
-                return (false);
-            }
-            return (true);
+        if (player_mutation_level(MUT_HORNS)
+            || player_mutation_level(MUT_BEAK)
+            || player_mutation_level(MUT_ANTENNAE))
+        {
+            return (false);
+        }
+        if (you.species == SP_TROLL
+            || you.species == SP_SPRIGGAN
+            || player_genus(GENPC_OGREISH)
+            || player_genus(GENPC_DRACONIAN))
+        {
+            return (false);
+        }
+        return (true);
+
+    default:
+        return (true);
     }
 }
 
