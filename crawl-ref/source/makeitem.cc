@@ -2253,11 +2253,11 @@ static special_armour_type _determine_armour_ego(const item_def& item,
     case ARM_BUCKLER:
         rc = static_cast<special_armour_type>(
             random_choose_weighted(40, SPARM_RESISTANCE,
-                                   40, SPARM_REFLECTION,
                                    120, SPARM_FIRE_RESISTANCE,
                                    120, SPARM_COLD_RESISTANCE,
                                    120, SPARM_POISON_RESISTANCE,
                                    120, SPARM_POSITIVE_ENERGY,
+                                   240, SPARM_REFLECTION,
                                    480, SPARM_PROTECTION,
                                    0));
         break;
