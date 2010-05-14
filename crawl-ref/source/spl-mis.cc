@@ -2617,7 +2617,7 @@ void MiscastEffect::_poison(int severity)
         case 9:
             if (neither_end_silenced())
             {
-                all_msg        = "You hear a slurping sound.";
+                all_msg        = "You hear a sucking sound.";
                 msg_ch         = MSGCH_SOUND;
                 sound_loudness = 2;
             }
