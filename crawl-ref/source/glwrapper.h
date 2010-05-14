@@ -3,6 +3,8 @@
 
 #ifdef USE_TILE
 
+#include "tiletex.h"
+
 #include <stdlib.h>
 #include <vector>
 
@@ -77,13 +79,6 @@ struct GLW_3VF
     union {float x; float r;};
     union {float y; float g;};
     union {float z; float b;};
-};
-
-enum MipMapOptions
-{
-    MIPMAP_CREATE,
-    MIPMAP_NONE,
-    MIPMAP_MAX
 };
 
 enum drawing_modes
