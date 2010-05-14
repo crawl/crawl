@@ -7,7 +7,6 @@
 #ifndef TILETEX_H
 #define TILETEX_H
 
-#include "glwrapper.h"
 #include "tiles.h"
 
 // The different texture types.
@@ -18,6 +17,13 @@ enum TextureID
     TEX_DEFAULT, // main.png
     TEX_GUI,     // gui.png
     TEX_MAX
+};
+
+enum MipMapOptions
+{
+    MIPMAP_CREATE,
+    MIPMAP_NONE,
+    MIPMAP_MAX
 };
 
 struct tile_def
