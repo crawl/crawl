@@ -111,7 +111,8 @@ void OGLStateManager::set(const GLState& state)
             glDisable(GL_DEPTH_TEST);
     }
 
-    if (state.alphatest != m_current_state.alphatest)
+    if (state.alphatest != m_current_state.alphatest
+        || state.alpharef != m_current_state.alpharef)
     {
         if (state.alphatest)
         {
