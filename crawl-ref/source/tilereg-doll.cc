@@ -20,10 +20,8 @@
 
 DollEditRegion::DollEditRegion(ImageManager *im, FontWrapper *font) :
     m_font_buf(font),
-    m_tile_buf(&im->m_textures[TEX_PLAYER], TILEP_MASK_SUBMERGED, 18, 16,
-               Options.tile_better_transparency),
-    m_cur_buf(&im->m_textures[TEX_PLAYER], TILEP_MASK_SUBMERGED, 18, 16,
-              Options.tile_better_transparency)
+    m_tile_buf(&im->m_textures[TEX_PLAYER], 17),
+    m_cur_buf(&im->m_textures[TEX_PLAYER], 17)
 {
     sx = sy = 0;
     dx = dy = 32;
