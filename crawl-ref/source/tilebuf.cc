@@ -373,7 +373,7 @@ void LineBuffer::add(float pos_sx, float pos_sy, float pos_ex, float pos_ey,
                      const VColour &col)
 {
     GLWRect rect(pos_sx, pos_sy, pos_ex, pos_ey);
-    rect.set_col(&col, &col);
+    rect.set_col(&col, &col, &col, &col);
     add_primitive(rect);
 }
 
