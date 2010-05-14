@@ -223,7 +223,7 @@ void ColouredTileBuffer::add(int idx, int x, int y, int z,
 
     GLWRect rect(pos_sx, pos_sy, pos_ex, pos_ey, pos_z);
     rect.set_tex(tex_sx, tex_sy, tex_ex, tex_ey);
-    rect.set_col(&col_sy, &col_sy, &col_ey, &col_ey);
+    rect.set_col(col_sy, col_ey);
     add_primitive(rect);
 }
 
@@ -357,7 +357,7 @@ void ShapeBuffer::add(float pos_sx, float pos_sy, float pos_ex, float pos_ey,
                       const VColour &col)
 {
     GLWRect rect(pos_sx, pos_sy, pos_ex, pos_ey);
-    rect.set_col(&col, &col, &col, &col);
+    rect.set_col(col);
     add_primitive(rect);
 }
 
@@ -373,7 +373,7 @@ void LineBuffer::add(float pos_sx, float pos_sy, float pos_ex, float pos_ey,
                      const VColour &col)
 {
     GLWRect rect(pos_sx, pos_sy, pos_ex, pos_ey);
-    rect.set_col(&col, &col, &col, &col);
+    rect.set_col(col);
     add_primitive(rect);
 }
 
