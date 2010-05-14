@@ -544,7 +544,7 @@ bool you_can_wear(int eq, bool special_armour)
         return (true);
 
     case EQ_BOOTS:
-        // Bardings
+        // Bardings.
         if (you.species == SP_NAGA || you.species == SP_CENTAUR)
             return (special_armour);
         if (player_mutation_level(MUT_HOOVES) >= 3
@@ -552,7 +552,7 @@ bool you_can_wear(int eq, bool special_armour)
         {
             return (false);
         }
-        // These species cannot wear boots
+        // These species cannot wear boots.
         if (you.species == SP_TROLL
             || you.species == SP_SPRIGGAN
             || player_genus(GENPC_OGREISH)
