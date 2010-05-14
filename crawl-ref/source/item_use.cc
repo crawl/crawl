@@ -519,7 +519,7 @@ static bool cloak_is_being_removed( void )
 //---------------------------------------------------------------
 void wear_armour(int slot) // slot is for tiles
 {
-    if (player_in_bat_form())
+    if (!player_can_handle_equipment())
     {
         mpr("You can't wear anything in your present form.");
         return;
@@ -3464,7 +3464,7 @@ bool puton_item(int item_slot)
 
 bool puton_ring(int slot)
 {
-    if (player_in_bat_form())
+    if (!player_can_handle_equipment())
     {
         mpr("You can't put on anything in your present form.");
         return (false);
@@ -3501,7 +3501,7 @@ bool puton_ring(int slot)
 
 bool remove_ring(int slot, bool announce)
 {
-    if (player_in_bat_form())
+    if (!player_can_handle_equipment())
     {
         mpr("You can't wear or remove anything in your present form.");
         return (false);
@@ -3650,7 +3650,7 @@ static bool _dont_use_invis()
 
 void zap_wand(int slot)
 {
-    if (player_in_bat_form())
+    if (!player_can_handle_equipment())
     {
         canned_msg(MSG_PRESENT_FORM);
         return;
@@ -3959,10 +3959,10 @@ void drink(int slot)
         return;
     }
 
-    if (player_in_bat_form())
+    if (!player_can_handle_equipment())
     {
        canned_msg(MSG_PRESENT_FORM);
-        _vampire_corpse_help();
+       _vampire_corpse_help();
        return;
     }
 
@@ -4668,7 +4668,7 @@ void read_scroll(int slot)
         return;
     }
 
-    if (player_in_bat_form())
+    if (!player_can_handle_equipment())
     {
         canned_msg(MSG_PRESENT_FORM);
         return;
@@ -5327,7 +5327,7 @@ void tile_item_use(int idx)
             return;
 
         case OBJ_ARMOUR:
-            if (player_in_bat_form())
+            if (!player_can_handle_equipment())
             {
                 mpr("You can't wear or remove anything in your present form.");
                 return;
