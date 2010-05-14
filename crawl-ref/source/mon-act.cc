@@ -1601,31 +1601,6 @@ static void _monster_add_energy(monsters *monster)
     }
 }
 
-static void _khufu_drop_tomb(monsters *monster)
-{
-    int count = 0;
-
-    monster->behaviour = BEH_SEEK; // don't wander on duty!
-    for (adjacent_iterator ai(monster->pos()); ai; ++ai)
-    {
-        if (grd(*ai) == DNGN_ROCK_WALL)
-        {
-            grd(*ai) = DNGN_FLOOR;
-            set_terrain_changed(*ai);
-            count++;
-        }
-    }
-    if (count)
-    {
-        if (monster->observable())
-            mpr("The walls disappear!");
-        else
-            mpr("You hear a deep rumble.");
-    }
-    monster->number = 0;
-    monster->lose_energy(EUT_SPELL);
-}
-
 #ifdef DEBUG
 #    define DEBUG_ENERGY_USE(problem) \
     if (monster->speed_increment == old_energy && monster->alive()) \
@@ -1958,12 +1933,6 @@ void handle_monster_move(monsters *monster)
             }
         }
         mon_nearby_ability(monster);
-
-        if (monster->type == MONS_KHUFU && monster->number
-            && monster->hit_points == monster->max_hit_points)
-        {
-            _khufu_drop_tomb(monster);
-        }
 
         if (!monster->asleep() && !mons_is_wandering(monster)
             // Berserking monsters are limited to running up and
