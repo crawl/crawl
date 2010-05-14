@@ -3683,6 +3683,27 @@ static void _check_cmd_repeat(int last_turn)
     }
 }
 
+static void _run_input_with_keys(const keyseq& keys)
+{
+    ASSERT(crawl_state.is_replaying_keys());
+
+    const int old_buf_size = get_macro_buf_size();
+
+    macro_buf_add(keys, true);
+
+    while (get_macro_buf_size() > old_buf_size
+           && crawl_state.is_replaying_keys())
+    {
+        _input();
+    }
+
+    if (get_macro_buf_size() < old_buf_size)
+    {
+        mpr("(Key replay stole keys)", MSGCH_ERROR);
+        crawl_state.cancel_cmd_all();
+    }
+}
+
 static void _do_cmd_repeat()
 {
     if (is_processing_macro())
@@ -3772,9 +3793,7 @@ static void _do_cmd_repeat()
     for (; i < count && crawl_state.is_repeating_cmd(); ++i)
     {
         last_repeat_turn = you.num_turns;
-        macro_buf_add(repeat_keys, true);
-        while (get_macro_buf_size() > 0)
-            _input();
+        _run_input_with_keys(repeat_keys);
         _check_cmd_repeat(last_repeat_turn);
     }
     crawl_state.prev_repeat_cmd           = cmd;
@@ -3818,15 +3837,7 @@ static void _do_prev_cmd_again()
         return;
     }
 
-    macro_buf_add(crawl_state.prev_cmd_keys, true);
-
-    // crawl_state.doing_prev_cmd_again can be set to false
-    // while input() does its stuff if something causes
-    // crawl_state.cancel_cmd_again() to be called.
-    while (get_macro_buf_size() > 0 && crawl_state.doing_prev_cmd_again)
-    {
-        _input();
-    }
+    _run_input_with_keys(crawl_state.prev_cmd_keys);
 
     crawl_state.doing_prev_cmd_again = false;
 }
