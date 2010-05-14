@@ -2320,24 +2320,20 @@ static special_armour_type _determine_armour_ego(const item_def& item,
     }
 
     case ARM_ROBE:
-        switch (random2(4))
+        rc = static_cast<special_armour_type>(
+                 random_choose_weighted(1, SPARM_RESISTANCE,
+                                        2, SPARM_COLD_RESISTANCE,
+                                        2, SPARM_FIRE_RESISTANCE,
+                                        2, SPARM_POSITIVE_ENERGY,
+                                        4, SPARM_MAGIC_RESISTANCE,
+                                        4, SPARM_ARCHMAGI));
+
+        // Only ever generate robes of archmagi for random pieces of armour,
+        // for whatever reason.
+        if (rc == SPARM_ARCHMAGI
+            && (force_type != OBJ_RANDOM || !x_chance_in_y(11 + item_level, 50)))
         {
-        case 0:
-            rc = coinflip() ? SPARM_COLD_RESISTANCE : SPARM_FIRE_RESISTANCE;
-            break;
-
-        case 1:
-            rc = SPARM_MAGIC_RESISTANCE;
-            break;
-
-        case 2:
-            rc = coinflip() ? SPARM_POSITIVE_ENERGY : SPARM_RESISTANCE;
-            break;
-        case 3:
-            // This is an odd limitation, but I'm not changing it yet.
-            if (force_type == OBJ_RANDOM && x_chance_in_y(11 + item_level, 50))
-                rc = SPARM_ARCHMAGI;
-            break;
+            rc = SPARM_NORMAL;
         }
         break;
 
