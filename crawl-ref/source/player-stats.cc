@@ -135,11 +135,21 @@ void jiyva_stat_action()
     }
 }
 
-static kill_method_type statloss_killtype[] = {
-    KILLED_BY_WEAKNESS,
-    KILLED_BY_CLUMSINESS,
-    KILLED_BY_STUPIDITY
-};
+static kill_method_type _statloss_killtype(stat_type stat)
+{
+    switch (stat)
+    {
+    case STAT_STR:
+        return KILLED_BY_WEAKNESS;
+    case STAT_INT:
+        return KILLED_BY_STUPIDITY;
+    case STAT_DEX:
+        return KILLED_BY_CLUMSINESS;
+    default:
+        ASSERT(false);
+        return NUM_KILLBY;
+    }
+}
 
 const char* descs[NUM_STATS][NUM_STAT_DESCS] = {
     { "strength", "weakened", "weaker", "stronger" },
@@ -587,9 +597,6 @@ void update_stat_zero()
         }
 
         if (you.stat_zero[i] > STAT_DEATH_TURNS)
-        {
-            const kill_method_type kill_type = statloss_killtype[i];
-            ouch(INSTANT_DEATH, NON_MONSTER, kill_type);
-        }
+            ouch(INSTANT_DEATH, NON_MONSTER, _statloss_killtype(s));
     }
 }
