@@ -1693,6 +1693,7 @@ bool cast_fragmentation(int pow, const dist& spd)
             // terrain blew up real good:
             beam.ex_size        = 2;
             grd(spd.target)     = DNGN_FLOOR;
+            set_terrain_changed(spd.target);
             debris              = DEBRIS_ROCK;
         }
         break;
@@ -1712,6 +1713,7 @@ bool cast_fragmentation(int pow, const dist& spd)
         {
             beam.damage.num += 2;
             grd(spd.target)  = DNGN_FLOOR;
+            set_terrain_changed(spd.target);
             debris           = DEBRIS_METAL;
         }
         break;
@@ -1732,6 +1734,7 @@ bool cast_fragmentation(int pow, const dist& spd)
         {
             beam.ex_size    = coinflip() ? 3 : 2;
             grd(spd.target) = DNGN_FLOOR;
+            set_terrain_changed(spd.target);
             debris          = DEBRIS_CRYSTAL;
         }
         break;
@@ -1773,6 +1776,7 @@ bool cast_fragmentation(int pow, const dist& spd)
     case DNGN_DETECTED_SECRET_DOOR:
         // Doors always blow up, stone arches never do (would cause problems).
         grd(spd.target) = DNGN_FLOOR;
+        set_terrain_changed(spd.target);
 
         // fall-through
     case DNGN_STONE_ARCH:          // Floor -- small explosion.
