@@ -410,14 +410,15 @@ note_monsters = orb of fire, ancient lich, Sigmund
 # cset_ascii, cset_ibm, cset_dec, cset_unicode, cset_any,
 # feature, mon_glyph
 
-# use_fake_cursor = false
-# use_fake_player_cursor = false
-
 ##### 6-b	DOS and Windows #######################
 #
 # dos_use_background_intensity = true
 # background = black
+
+##### 6-c   Unix ##################################
 #
+# use_fake_cursor = false
+# use_fake_player_cursor = true
 
 ##### 6-d   Alternative keybinding files ##########
 #
