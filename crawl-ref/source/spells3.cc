@@ -577,11 +577,11 @@ bool cast_summon_demon(int pow, god_type god)
 
 bool cast_demonic_horde(int pow, god_type god)
 {
+    mpr("You open a gate to Pandemonium!");
+
     bool success = false;
 
     const int how_many = 7 + random2(5);
-
-    mpr("You open a gate to Pandemonium!");
 
     for (int i = 0; i < how_many; ++i)
     {
