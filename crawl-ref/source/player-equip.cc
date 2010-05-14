@@ -1343,9 +1343,6 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg)
     const bool old_showuncursed = Options.show_uncursed;
     Options.show_uncursed = false;
 
-    if (mesg)
-        mprf("You remove %s.", item.name(DESC_NOCAP_YOUR).c_str());
-
     Options.show_uncursed = old_showuncursed;
 
     switch (item.sub_type)
