@@ -1496,7 +1496,7 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
 
     // mutations:
     re += player_mutation_level(MUT_THIN_METALLIC_SCALES) == 3 ? 1 : 0;
-    re += player_mutation_level(MUT_SHOCK_RESISTANCE) == 3 ? 1 : 0;
+    re += player_mutation_level(MUT_SHOCK_RESISTANCE);
 
     return (re);
 }
