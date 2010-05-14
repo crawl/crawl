@@ -444,7 +444,7 @@ static void _give_items_skills(const newgame_def& ng)
         _update_weapon(ng);
 
         newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_SCALE_MAIL,
-                           ARM_ROBE);
+                          ARM_ROBE);
         newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD, ARM_BUCKLER);
 
         // Skills.
@@ -454,7 +454,7 @@ static void _give_items_skills(const newgame_def& ng)
         weap_skill = 2;
 
         you.skills[(player_effectively_in_light_armour()
-                    ? SK_DODGING : SK_ARMOUR)] = 3;
+                   ? SK_DODGING : SK_ARMOUR)] = 3;
 
         break;
 
