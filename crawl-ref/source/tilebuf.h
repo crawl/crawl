@@ -34,7 +34,7 @@ public:
 
     // State Manipulation
     void set_state(const GLState &state);
-    void add_primitive(const GLWRect &rect);
+    void add_primitive(const GLWPrim &rect);
     void clear();
 
     // Note: this could invalidate previous additions if they were

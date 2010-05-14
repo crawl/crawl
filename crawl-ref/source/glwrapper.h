@@ -90,12 +90,12 @@ enum drawing_modes
     GLW_RECTANGLE
 };
 
-// Convenience structure for passing around rectangles
-// (or lines) which crawl does a lot of
-struct GLWRect
+// Convenience structure for passing around primitives (lines or quads)
+class GLWPrim
 {
+public:
     // Constructor assumes we're always going to have a position
-    GLWRect(float sx, float sy, float ex, float ey, float z = 0.0f) :
+    GLWPrim(float sx, float sy, float ex, float ey, float z = 0.0f) :
             pos_sx(sx), pos_sy(sy), pos_ex(ex), pos_ey(ey), pos_z(z),
             tex_sx(0.0f), tex_sy(0.0f), tex_ex(0.0f), tex_ey(0.0f),
             col_s(VColour::white), col_e(VColour::white) {}
@@ -202,7 +202,7 @@ public:
     virtual unsigned int size() const = 0;
 
     // Add a primitive to be drawn.
-    virtual void add(const GLWRect &rect) = 0;
+    virtual void add(const GLWPrim &prim) = 0;
 
     // Draw all the primitives in the buffer.
     virtual void draw(const GLState &state, GLW_3VF *pt = NULL,
