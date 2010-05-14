@@ -20,6 +20,7 @@
 #include "fight.h"
 #include "fprop.h"
 #include "ghost.h"
+#include "godabil.h"
 #include "goditem.h"
 #include "itemname.h"
 #include "items.h"
@@ -5798,7 +5799,8 @@ void monsters::apply_location_effects(const coord_def &oldpos,
 
 bool monsters::move_to_pos(const coord_def &newpos)
 {
-    if (actor_at(newpos))
+    const actor* a = actor_at(newpos);
+    if (a && (a != &you || !fedhas_passthrough(this)))
         return (false);
 
     const int index = mindex();
