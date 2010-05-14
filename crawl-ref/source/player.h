@@ -736,6 +736,11 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = NULL,
 bool player_in_bat_form();
 bool player_can_open_doors();
 
+inline bool player_can_handle_equipment()
+{
+    return player_can_open_doors();
+}
+
 void level_change(bool skip_attribute_increase = false);
 
 bool player_genus( genus_type which_genus,

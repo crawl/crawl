@@ -1414,7 +1414,7 @@ static void _do_look_around()
 
 static void _do_remove_armour()
 {
-    if (player_in_bat_form())
+    if (!player_can_handle_equipment())
     {
         mpr("You can't wear or remove anything in your present form.");
         return;
