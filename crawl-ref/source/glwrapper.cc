@@ -9,6 +9,16 @@ VColour VColour::white(255, 255, 255, 255);
 VColour VColour::black(0, 0, 0, 255);
 VColour VColour::transparent(0, 0, 0, 0);
 
+bool VColour::operator==(const VColour &vc) const
+{
+    return (r == vc.r && g == vc.g && b == vc.b && a == vc.a);
+}
+
+bool VColour::operator!=(const VColour &vc) const
+{
+    return (r != vc.r || g != vc.g || b != vc.b || a != vc.a);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // GLState
 
@@ -21,7 +31,8 @@ GLState::GLState() :
     texture(false),
     depthtest(false),
     alphatest(false),
-    alpharef(0)
+    alpharef(0),
+    colour(VColour::white)
 {
 }
 
@@ -33,7 +44,8 @@ GLState::GLState(const GLState &state) :
     texture(state.texture),
     depthtest(state.depthtest),
     alphatest(state.alphatest),
-    alpharef(state.alpharef)
+    alpharef(state.alpharef),
+    colour(state.colour)
 {
 }
 
@@ -47,6 +59,7 @@ const GLState &GLState::operator=(const GLState &state)
     depthtest = state.depthtest;
     alphatest = state.alphatest;
     alpharef = state.alpharef;
+    colour = state.colour;
 
     return (*this);
 }
@@ -60,7 +73,8 @@ bool GLState::operator==(const GLState &state) const
             && texture == state.texture
             && depthtest == state.depthtest
             && alphatest == state.alphatest
-            && alpharef == state.alpharef);
+            && alpharef == state.alpharef
+            && colour == state.colour);
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -317,28 +317,25 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
     GLState state;
     state.array_vertex = true;
     state.array_texcoord = true;
+    state.array_colour = true;
     state.blend = true;
     state.texture = true;
+
     m_tex.bind();
 
-    // Defaults to GLW_QUADS
     GLW_3VF trans(x_pos, y_pos, 0.0f);
 
     if (drop_shadow)
     {
-        GLW_3VF color(0.0f, 0.0f, 0.0f);
-        glmanager->set_current_color(color);
+        GLState state_shadow;
+        state_shadow.array_colour = false;
+        state_shadow.colour = VColour::black;
 
         GLW_3VF trans_shadow(trans.x + 1, trans.y + 1, 0.0f);
-        m_buf->draw(state, &trans_shadow);
 
-        color.set(1.0f, 1.0f, 1.0f);
-        glmanager->set_current_color(color);
+        m_buf->draw(state_shadow, &trans_shadow);
     }
 
-    // TODO: Review this to see if turning array color on and off
-    // here is really necessary ...
-    state.array_colour = true;
     m_buf->draw(state, &trans);
 }
 
