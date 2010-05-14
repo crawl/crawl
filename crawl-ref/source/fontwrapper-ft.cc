@@ -312,12 +312,13 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
     if (!m_buf->size())
         return;
 
+    glmanager->reset_transform();
+
     GLState state;
     state.array_vertex = true;
     state.array_texcoord = true;
     state.blend = true;
     state.texture = true;
-    glmanager->set(state);
     m_tex.bind();
 
     // Defaults to GLW_QUADS
@@ -328,12 +329,8 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
         GLW_3VF color(0.0f, 0.0f, 0.0f);
         glmanager->set_current_color(color);
 
-        trans.x++;
-        trans.y++;
-        glmanager->set_transform(&trans);
-        m_buf->draw();
-        trans.x--;
-        trans.y--;
+        GLW_3VF trans_shadow(trans.x + 1, trans.y + 1, 0.0f);
+        m_buf->draw(state, &trans_shadow);
 
         color.set(1.0f, 1.0f, 1.0f);
         glmanager->set_current_color(color);
@@ -342,9 +339,7 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
     // TODO: Review this to see if turning array color on and off
     // here is really necessary ...
     state.array_colour = true;
-    glmanager->set(state);
-    glmanager->set_transform(&trans);
-    m_buf->draw();
+    m_buf->draw(state, &trans);
 }
 
 static void _draw_box(int x_pos, int y_pos, float width, float height,
@@ -370,9 +365,7 @@ static void _draw_box(int x_pos, int y_pos, float width, float height,
     state.array_vertex = true;
     state.array_colour = true;
     state.blend = true;
-    glmanager->set(state);
-
-    buf->draw();
+    buf->draw(state);
 }
 
 unsigned int FTFontWrapper::string_height(const formatted_string &str) const

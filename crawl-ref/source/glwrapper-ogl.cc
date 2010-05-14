@@ -356,15 +356,15 @@ void OGLShapeBuffer::add_line(const GLWRect &rect)
 }
 
 // Draw the buffer
-void OGLShapeBuffer::draw(GLW_3VF *pt, GLW_3VF *ps)
+void OGLShapeBuffer::draw(const GLState &state, GLW_3VF *pt, GLW_3VF *ps)
 {
     if (m_position_buffer.size() == 0)
         return;
 
-    const GLState &state = glmanager->get_state();
-
     if (!state.array_vertex)
         return;
+
+    glmanager->set(state);
 
     glVertexPointer(3, GL_FLOAT, 0, &m_position_buffer[0]);
 
