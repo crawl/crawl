@@ -3408,6 +3408,7 @@ bool monster_descriptor(int which_class, mon_desc_type which_descriptor)
         case MONS_KILLER_KLOWN:
         case MONS_LERNAEAN_HYDRA:
         case MONS_DISSOLUTION:
+        case MONS_TEST_SPAWNER:
             return (true);
         default:
             return (false);

@@ -148,7 +148,7 @@ enum mons_class_flags
                                           // drainable by vampires
     M_WARM_BLOOD        = (1<<17),        // no effect currently,
                                           // drainable by vampires
-    M_REGEN             = (1<<18),        // regenerates quickly
+    //                    (1<<18)         // XXX: unused
     M_BURROWS           = (1<<19),        // monster digs through rock
 
     M_SUBMERGES         = (1<<20),        // monster can submerge
