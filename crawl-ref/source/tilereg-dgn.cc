@@ -45,10 +45,8 @@ DungeonRegion::DungeonRegion(const TileRegionInit &init) :
     m_cx_to_gx(0),
     m_cy_to_gy(0),
     m_buf_dngn(&init.im->m_textures[TEX_DUNGEON]),
-    m_buf_doll(&init.im->m_textures[TEX_PLAYER], TILEP_MASK_SUBMERGED, 18, 16,
-               Options.tile_better_transparency),
-    m_buf_main_trans(&init.im->m_textures[TEX_DEFAULT], TILE_MASK_SUBMERGED, 18, 16,
-                     Options.tile_better_transparency),
+    m_buf_doll(&init.im->m_textures[TEX_PLAYER], 17),
+    m_buf_main_trans(&init.im->m_textures[TEX_DEFAULT], 17),
     m_buf_main(&init.im->m_textures[TEX_DEFAULT])
 {
     for (int i = 0; i < CURSOR_MAX; i++)

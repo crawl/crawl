@@ -33,7 +33,6 @@ public:
     unsigned int size() const;
 
     // State Manipulation
-    void set_state(const GLState &state);
     void add_primitive(const GLWPrim &rect);
     void clear();
 
@@ -86,19 +85,7 @@ public:
 class SubmergedTileBuffer
 {
 public:
-    // mask_idx is the tile index in tex of the mask texture
-    // It should be opaque white for water and fully transparent above.
-    //
-    // above_max is the maximum height (from the top of the tile) where
-    // there are still pixels above water.
-    //
-    // below_min is the minimum height (from the top of the tile) where
-    // there are still pixels below water.
-    //
-    // All heights are from 0 (top of the tile) to TILE_Y-1 (bottom of the tile)
-    SubmergedTileBuffer(const TilesTexture *tex,
-                        int mask_idx, int above_max, int below_min,
-                        bool better_transparency);
+    SubmergedTileBuffer(const TilesTexture *tex, int water_level);
 
     void add(int idx, int x, int y, int z = 0, bool submerged = false,
              bool ghost = false, int ox = 0, int oy = 0, int ymax = -1);
@@ -107,15 +94,9 @@ public:
     void clear();
 
 protected:
-    int m_mask_idx;
-    int m_above_max;
-    int m_below_min;
-
-    int m_max_z;
-    bool m_better_trans;
+    int m_water_level;
 
     ColouredTileBuffer m_below_water;
-    ColouredTileBuffer m_mask;
     ColouredTileBuffer m_above_water;
 };
 

@@ -58,20 +58,6 @@ void VertBuffer::draw(GLW_3VF *pt, GLW_3VF *ps) const
     m_vert_buf->draw(m_state, pt, ps);
 }
 
-void VertBuffer::set_state(const GLState &s)
-{
-    // At this point, don't allow toggling of prim_type, texturing, or colouring
-    // as GLVertexBuffer doesn't support it.
-    m_state.blend = s.blend;
-    m_state.depthtest = s.depthtest;
-    m_state.alphatest = s.alphatest;
-    m_state.alpharef = s.alpharef;
-
-    // If this test fails, then you're trying to set a state via set_state
-    // that isn't supported in the above list.
-    ASSERT(m_state == s);
-}
-
 void VertBuffer::clear()
 {
     m_vert_buf->clear();
@@ -232,111 +218,42 @@ void ColouredTileBuffer::add(int idx, int x, int y, int z,
 
 
 SubmergedTileBuffer::SubmergedTileBuffer(const TilesTexture *tex,
-                                         int mask_idx, int above_max,
-                                         int below_min,
-                                         bool better_trans) :
-    m_mask_idx(mask_idx),
-    m_above_max(above_max),
-    m_below_min(below_min),
-    m_max_z(-1000),
-    m_better_trans(better_trans),
+                                         int water_level) :
+    m_water_level(water_level),
     m_below_water(tex),
-    m_mask(tex),
     m_above_water(tex)
 {
-    // Adjust the state of the mask buffer so that we can use it to mask out
-    // the bottom half of the tile when drawing the character a second time.
-    // See the draw() function for more details.
-    GLState new_state(m_mask.state());
-    new_state.blend = true;
-    new_state.depthtest = true;
-    new_state.alphatest = true;
-    new_state.alpharef = 255;
-    m_mask.set_state(new_state);
 }
 
 void SubmergedTileBuffer::add(int idx, int x, int y, int z, bool submerged,
                               bool ghost, int ox, int oy, int ymax)
 {
-    // Keep track of the maximum z.  We'll use this for drawing the mask
-    // later, to ensure it is closer than all other tiles drawn.
-    m_max_z = std::max(m_max_z, z);
-
     // Arbitrary alpha values for the top and bottom.
     int alpha_top = ghost ? 100 : 255;
     int alpha_bottom = ghost ? 0 : 40;
 
     if (submerged)
     {
-        if (m_better_trans)
-        {
-            m_below_water.add(idx, x, y, z, ox, oy, m_below_min, ymax,
-                              alpha_top, alpha_bottom);
-
-            m_mask.add(m_mask_idx, x, y, 0, 0, 0, -1, -1, 255, 255);
-            int above_max = (ymax == -1) ? m_above_max
-                                         : std::min(ymax, m_above_max);
-            m_above_water.add(idx, x, y, z, ox, oy, -1, above_max,
-                              alpha_top, alpha_top);
-        }
-        else
-        {
-            int water_level = (m_above_max + m_below_min) / 2;
-            m_below_water.add(idx, x, y, z, ox, oy, water_level, ymax,
-                              alpha_top, alpha_bottom);
-            m_above_water.add(idx, x, y, z, ox, oy, -1, water_level,
-                              alpha_top, alpha_top);
-        }
+        m_below_water.add(idx, x, y, z, ox, oy, m_water_level, ymax,
+                          alpha_top, alpha_bottom);
+        m_above_water.add(idx, x, y, z, ox, oy, -1, m_water_level,
+                          alpha_top, alpha_top);
     }
     else
     {
-        // Unsubmerged tiles don't need a mask.
         m_above_water.add(idx, x, y, z, ox, oy, -1, ymax, alpha_top, alpha_top);
     }
 }
 
 void SubmergedTileBuffer::draw() const
 {
-    if (m_better_trans)
-    {
-        // First, draw anything below water.  Alpha blending is turned on,
-        // so these tiles will blend with anything previously drawn.
-        m_below_water.draw();
-
-        // Second, draw all of the mask tiles.  The mask is white
-        // (255,255,255,255) above water and transparent (0,0,0,0) below water.
-        //
-        // Alpha testing is turned on with a ref value of 255, so none of the
-        // white pixels will be drawn because they will culled by alpha
-        // testing.  The transparent pixels below water will be "drawn", but
-        // because they are fully transparent, they will not affect any colours
-        // on screen.  Instead, they will will set the z-buffer to a z-value
-        // (depth) that is greater than the closest depth in either the below
-        // or above buffers.  Because all of the above water tiles are at lower
-        // z-values than this maximum, they will not draw over these
-        // transparent pixels, effectively masking them out. (My kingdom for a
-        // shader.)
-        GLW_3VF trans(0, 0, m_max_z + 1);
-        m_mask.draw(&trans, NULL);
-
-        // Now, draw all the above water tiles.  Some of these may draw over
-        // top of part of the below water tiles, but that's fine as the mask
-        // will take care of only drawing the correct parts.
-        m_above_water.draw();
-    }
-    else
-    {
-        m_below_water.draw();
-        m_above_water.draw();
-
-        ASSERT(m_mask.size() == 0);
-    }
+    m_below_water.draw();
+    m_above_water.draw();
 }
 
 void SubmergedTileBuffer::clear()
 {
     m_below_water.clear();
-    m_mask.clear();
     m_above_water.clear();
 }
 
