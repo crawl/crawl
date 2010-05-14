@@ -2176,7 +2176,7 @@ mon_glyph = <monster name or symbol> : <colour> <glyph>
 pizza = <topping name>
         The player's choice of pizza topping.
 
-use_fake_player_cursor = false
+use_fake_player_cursor = true
         Makes the main view highlight the player without using the
         terminal cursor. This means it won't flicker when the cursor
         is turned off to move elsewhere for drawing, and allows

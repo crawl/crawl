@@ -787,7 +787,7 @@ void game_options::reset_options()
 #else
     use_fake_cursor        = false;
 #endif
-    use_fake_player_cursor = false;
+    use_fake_player_cursor = true;
 
     stash_tracking         = STM_ALL;
 
