@@ -397,6 +397,7 @@ note_monsters = orb of fire, ancient lich, Sigmund
 # mouse_input      = true
 # wiz_mode         = no
 # char_set         = ascii
+# use_fake_player_cursor = false
 #
 # classic_item_colours = true
 #
@@ -418,7 +419,6 @@ note_monsters = orb of fire, ancient lich, Sigmund
 ##### 6-c   Unix ##################################
 #
 # use_fake_cursor = false
-# use_fake_player_cursor = true
 
 ##### 6-d   Alternative keybinding files ##########
 #
