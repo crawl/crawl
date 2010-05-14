@@ -171,7 +171,6 @@ public:
 
     // State Manipulation
     virtual void set(const GLState& state) = 0;
-    virtual const GLState& get_state() const = 0;
     virtual void pixelstore_unpack_alignment(unsigned int bpp) = 0;
     virtual void reset_view_for_redraw(float x, float y) = 0;
     virtual void reset_view_for_resize(coord_def &m_windowsz) = 0;
@@ -214,7 +213,8 @@ public:
     virtual void add(const GLWRect &rect) = 0;
 
     // Draw all the primitives in the buffer.
-    virtual void draw(GLW_3VF *pt = NULL, GLW_3VF *ps = NULL) = 0;
+    virtual void draw(const GLState &state, GLW_3VF *pt = NULL,
+                      GLW_3VF *ps = NULL) = 0;
 
     // Clear all the primitives from the buffer.
     virtual void clear() = 0;

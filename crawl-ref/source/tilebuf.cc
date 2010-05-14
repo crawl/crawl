@@ -49,15 +49,13 @@ void VertBuffer::draw(GLW_3VF *pt, GLW_3VF *ps) const
     if (size() == 0)
         return;
 
-    glmanager->set(m_state);
-
     if (m_texture_verts)
     {
         ASSERT(m_tex);
         m_tex->bind();
     }
 
-    m_vert_buf->draw(pt, ps);
+    m_vert_buf->draw(m_state, pt, ps);
 }
 
 void VertBuffer::set_state(const GLState &s)
