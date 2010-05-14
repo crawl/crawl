@@ -98,7 +98,7 @@ struct GLWRect
     GLWRect(float sx, float sy, float ex, float ey, float z = 0.0f) :
             pos_sx(sx), pos_sy(sy), pos_ex(ex), pos_ey(ey), pos_z(z),
             tex_sx(0.0f), tex_sy(0.0f), tex_ex(0.0f), tex_ey(0.0f),
-            col_bl(NULL), col_br(NULL), col_tl(NULL), col_tr(NULL) {}
+            col_s(VColour::white), col_e(VColour::white) {}
 
     inline void set_tex(float sx, float sy, float ex, float ey)
     {
@@ -108,21 +108,21 @@ struct GLWRect
         tex_ey = ey;
     }
 
-    inline void set_col(VColour const *bl, VColour const *br,
-        VColour const *tl, VColour const *tr)
+    inline void set_col(const VColour &vc)
     {
-        col_bl = bl;
-        col_br = br;
-        col_tl = tl;
-        col_tr = tr;
+        col_s = vc;
+        col_e = vc;
+    }
+
+    inline void set_col(const VColour &s, const VColour &e)
+    {
+        col_s = s;
+        col_e = e;
     }
 
     float pos_sx, pos_sy, pos_ex, pos_ey, pos_z;
     float tex_sx, tex_sy, tex_ex, tex_ey;
-    VColour const *col_bl;
-    VColour const *col_br;
-    VColour const *col_tl;
-    VColour const *col_tr;
+    VColour col_s, col_e;
 };
 
 // This struct defines all of the state that any particular rendering needs.
