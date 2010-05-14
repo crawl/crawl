@@ -269,7 +269,7 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
 
             if (col_bg != 0)
             {
-                GLWRect rect(adv.x, adv.y,
+                GLWPrim rect(adv.x, adv.y,
                              adv.x + m_max_advance.x, adv.y + m_max_advance.y);
                 // Leave tex coords at their default 0.0f
                 VColour col(term_colours[col_bg].r,
@@ -290,7 +290,7 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
                 float tex_x2 = tex_x + (float)this_width / (float)m_tex.width();
                 float tex_y2 = tex_y + texcoord_dy;
 
-                GLWRect rect(adv.x, adv.y, adv.x + this_width,
+                GLWPrim rect(adv.x, adv.y, adv.x + this_width,
                              adv.y + m_max_advance.y);
                 VColour col(term_colours[col_fg].r,
                             term_colours[col_fg].g,
@@ -344,7 +344,7 @@ static void _draw_box(int x_pos, int y_pos, float width, float height,
                       unsigned char box_alpha)
 {
     std::auto_ptr<GLShapeBuffer> buf(GLShapeBuffer::create(false, true));
-    GLWRect rect(x_pos - box_width, y_pos - box_width,
+    GLWPrim rect(x_pos - box_width, y_pos - box_width,
                  x_pos + width + box_width, y_pos + height + box_width);
 
     VColour colour(term_colours[box_colour].r,
@@ -653,7 +653,7 @@ void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
     float tex_ex = tex_sx + (float)this_width / (float)m_tex.width();
     float tex_ey = tex_sy + (float)m_max_advance.y / (float)m_tex.height();
 
-    GLWRect rect(pos_sx, pos_sy, pos_ex, pos_ey);
+    GLWPrim rect(pos_sx, pos_sy, pos_ex, pos_ey);
     rect.set_tex(tex_sx, tex_sy, tex_ex, tex_ey);
     rect.set_col(col);
     buf.add_primitive(rect);

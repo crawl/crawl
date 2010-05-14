@@ -33,7 +33,7 @@ TitleRegion::TitleRegion(int width, int height, FontWrapper* font) :
     ox = (wx - m_img.orig_width()) / 2;
     oy = (wy - m_img.orig_height()) / 2;
 
-    GLWRect rect(0, 0, m_img.width(), m_img.height());
+    GLWPrim rect(0, 0, m_img.width(), m_img.height());
     rect.set_tex(0, 0, 1, 1);
     m_buf.add_primitive(rect);
 }

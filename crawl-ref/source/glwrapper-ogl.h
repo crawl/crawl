@@ -39,15 +39,15 @@ public:
     virtual const char *print_statistics() const;
     virtual unsigned int size() const;
 
-    virtual void add(const GLWRect &rect);
+    virtual void add(const GLWPrim &rect);
     virtual void draw(const GLState &state, GLW_3VF *pt = NULL,
                       GLW_3VF *ps = NULL);
     virtual void clear();
 
 protected:
     // Helper methods for adding specific primitives.
-    void add_rect(const GLWRect &rect);
-    void add_line(const GLWRect &rect);
+    void add_rect(const GLWPrim &rect);
+    void add_line(const GLWPrim &rect);
 
     drawing_modes m_prim_type;
     bool m_texture_verts;

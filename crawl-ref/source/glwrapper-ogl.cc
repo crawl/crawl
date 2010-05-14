@@ -236,7 +236,7 @@ unsigned int OGLShapeBuffer::size() const
     return (m_position_buffer.size());
 }
 
-void OGLShapeBuffer::add(const GLWRect &rect)
+void OGLShapeBuffer::add(const GLWPrim &rect)
 {
     switch (m_prim_type)
     {
@@ -252,7 +252,7 @@ void OGLShapeBuffer::add(const GLWRect &rect)
     }
 }
 
-void OGLShapeBuffer::add_rect(const GLWRect &rect)
+void OGLShapeBuffer::add_rect(const GLWPrim &rect)
 {
     // Copy vert positions
     size_t last = m_position_buffer.size();
@@ -316,7 +316,7 @@ void OGLShapeBuffer::add_rect(const GLWRect &rect)
     }
 }
 
-void OGLShapeBuffer::add_line(const GLWRect &rect)
+void OGLShapeBuffer::add_line(const GLWPrim &rect)
 {
     // Copy vert positions
     size_t last = m_position_buffer.size();

@@ -77,7 +77,7 @@ void VertBuffer::clear()
     m_vert_buf->clear();
 }
 
-void VertBuffer::add_primitive(const GLWRect &rect)
+void VertBuffer::add_primitive(const GLWPrim &rect)
 {
     m_vert_buf->add(rect);
 }
@@ -142,7 +142,7 @@ void TileBuffer::add_unscaled(int idx, float x, float y, int ymax)
     if (!drawn)
         return;
 
-    GLWRect rect(pos_sx, pos_sy, pos_ex, pos_ey);
+    GLWPrim rect(pos_sx, pos_sy, pos_ex, pos_ey);
     rect.set_tex(tex_sx, tex_sy, tex_ex, tex_ey);
     add_primitive(rect);
 }
@@ -161,7 +161,7 @@ void TileBuffer::add(int idx, int x, int y, int ox, int oy, bool centre, int yma
     if (!drawn)
         return;
 
-    GLWRect rect(pos_sx, pos_sy, pos_ex, pos_ey);
+    GLWPrim rect(pos_sx, pos_sy, pos_ex, pos_ey);
     rect.set_tex(tex_sx, tex_sy, tex_ex, tex_ey);
     add_primitive(rect);
 }
@@ -221,7 +221,7 @@ void ColouredTileBuffer::add(int idx, int x, int y, int z,
 
     float pos_z = (float)z;
 
-    GLWRect rect(pos_sx, pos_sy, pos_ex, pos_ey, pos_z);
+    GLWPrim rect(pos_sx, pos_sy, pos_ex, pos_ey, pos_z);
     rect.set_tex(tex_sx, tex_sy, tex_ex, tex_ey);
     rect.set_col(col_sy, col_ey);
     add_primitive(rect);
@@ -356,7 +356,7 @@ ShapeBuffer::ShapeBuffer() : VertBuffer(false, true)
 void ShapeBuffer::add(float pos_sx, float pos_sy, float pos_ex, float pos_ey,
                       const VColour &col)
 {
-    GLWRect rect(pos_sx, pos_sy, pos_ex, pos_ey);
+    GLWPrim rect(pos_sx, pos_sy, pos_ex, pos_ey);
     rect.set_col(col);
     add_primitive(rect);
 }
@@ -372,7 +372,7 @@ LineBuffer::LineBuffer() : VertBuffer(false, true, NULL, GLW_LINES)
 void LineBuffer::add(float pos_sx, float pos_sy, float pos_ex, float pos_ey,
                      const VColour &col)
 {
-    GLWRect rect(pos_sx, pos_sy, pos_ex, pos_ey);
+    GLWPrim rect(pos_sx, pos_sy, pos_ex, pos_ey);
     rect.set_col(col);
     add_primitive(rect);
 }
