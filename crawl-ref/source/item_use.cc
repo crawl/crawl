@@ -1950,15 +1950,16 @@ int _blowgun_power_roll (bolt &beam)
     int base_power = 0;
     int blowgun_base = 0;
 
-    if (agent->atype() == ACT_MONSTER)
+    if (!agent || agent->atype() == ACT_MONSTER)
     {
-        monsters* mons = static_cast<monsters*>(agent);
+        monsters* mons = agent->as_monster();
         base_power += mons->hit_dice;
         blowgun_base += (*mons).launcher()->plus;
     }
     else
     {
         base_power += you.skills[SK_THROWING];
+        ASSERT(you.weapon());
         blowgun_base += (you.weapon())->plus;
     }
 
@@ -1969,12 +1970,13 @@ bool _blowgun_check (bolt &beam, actor* victim, bool message = true)
 {
     actor* agent = beam.agent();
 
-    if (agent->atype() == ACT_MONSTER)
+    if (!agent || agent->atype() == ACT_MONSTER)
         return (true);
 
-    monsters* mons = static_cast<monsters*>(victim);
+    monsters* mons = victim->as_monster();
 
     int skill = you.skills[SK_THROWING];
+    ASSERT(you.weapon());
     int enchantment = (you.weapon())->plus;
 
     // You have a really minor chance of hitting with no skills or good
@@ -1984,7 +1986,8 @@ bool _blowgun_check (bolt &beam, actor* victim, bool message = true)
 
     int resist_roll = 2 + random2(4 + skill + enchantment);
 
-    dprf("Brand rolled %d against monster HD: %d.", resist_roll, mons->hit_dice);
+    dprf("Brand rolled %d against monster HD: %d.",
+         resist_roll, mons->hit_dice);
 
     if (resist_roll < mons->hit_dice)
     {
@@ -2075,10 +2078,7 @@ static bool _rage_hit_victim (bolt &beam, actor* victim, int dmg,
         return (false);
 
     if (victim->atype() == ACT_MONSTER)
-    {
-        monsters* mons = static_cast<monsters*>(victim);
-        mons->go_frenzy();
-    }
+        victim->as_monster()->go_frenzy();
     else
         victim->go_berserk(false);
 
