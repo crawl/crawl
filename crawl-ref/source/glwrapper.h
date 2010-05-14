@@ -55,8 +55,8 @@ struct GLW_2VF
         y = in.y;
     }
 
-    union {float x; float u; float s;};
-    union {float y; float v; float t;};
+    float x;
+    float y;
 };
 
 struct GLW_3VF
@@ -79,9 +79,9 @@ struct GLW_3VF
         z = in.z;
     }
 
-    union {float x; float r;};
-    union {float y; float g;};
-    union {float z; float b;};
+    float x;
+    float y;
+    float z;
 };
 
 enum drawing_modes
@@ -117,17 +117,12 @@ struct GLWRect
         col_tr = tr;
     }
 
-    inline void set_col(VColour const *s, VColour const *e)
-    {
-        col_s = s;
-        col_e = e;
-    }
-
     float pos_sx, pos_sy, pos_ex, pos_ey, pos_z;
     float tex_sx, tex_sy, tex_ex, tex_ey;
-    union {VColour const *col_bl; VColour const *col_s;};
-    union {VColour const *col_br; VColour const *col_e;};
-    VColour const *col_tl, *col_tr;
+    VColour const *col_bl;
+    VColour const *col_br;
+    VColour const *col_tl;
+    VColour const *col_tr;
 };
 
 // This struct defines all of the state that any particular rendering needs.

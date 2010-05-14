@@ -340,14 +340,12 @@ void OGLShapeBuffer::add_line(const GLWRect &rect)
     // Copy vert colours if necessary
     if (m_colour_verts)
     {
-        // ensure that there are no NULL VColours
-        // TODO: Maybe we can have a default colour here? -- ixtli
-        ASSERT(rect.col_bl && rect.col_br);
+        ASSERT(rect.col_bl);
 
         last = m_colour_buffer.size();
         m_colour_buffer.resize(last + 2);
-        m_colour_buffer[last    ].set(*rect.col_s);
-        m_colour_buffer[last + 1].set(*rect.col_e);
+        m_colour_buffer[last    ].set(*rect.col_bl);
+        m_colour_buffer[last + 1].set(*rect.col_bl);
     }
 }
 
