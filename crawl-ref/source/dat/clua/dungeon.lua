@@ -404,7 +404,7 @@ function persist_to_string()
 end
 
 -- List of useful scrolls, with some reasonable weights.
--- Attention: total weight is 1000 = 3*120 + 7*70 + 4*30 + 30
+-- Attention: total weight is 1000 = 3*120 + 6*70 + 4*40 + 2*15 + 30
 -- When changing the list or the weights, please keep the total weight at 1000.
 dgn.good_scrolls = [[
     w:80 scroll of identify / scroll of identify q:2 w:30 /
@@ -418,16 +418,16 @@ dgn.good_scrolls = [[
     w:50  scroll of blinking / scroll of blinking q:2 w:20 /
     w:50  scroll of enchant armour / scroll of enchant armour q:2 w:20 /
     w:50  scroll of recharging / scroll of recharging q:2 w:20 /
-    w:50  scroll of silence / scroll of silence q:2 w:20 /
-    w:20  scroll of magic mapping / scroll of magic mapping q:2 w:10 /
-    w:20  scroll of detect curse / scroll of detect curse q:2 w:10 /
-    w:20  scroll of holy word / scroll of holy word q:2 w:10 /
-    w:20  scroll of enchant weapon III / scroll of enchant weapon III q:2 w:10 /
+    w:30  scroll of magic mapping / scroll of magic mapping q:2 w:10 /
+    w:30  scroll of detect curse / scroll of detect curse q:2 w:10 /
+    w:30  scroll of holy word / scroll of holy word q:2 w:10 /
+    w:30  scroll of enchant weapon III / scroll of enchant weapon III q:2 w:10 /
     w:10  scroll of acquirement / scroll of acquirement q:2 w:4 /
                                   scroll of acquirement q:3 w:1/
-    w:5   scroll of vorpalise weapon /
-    w:5   scroll of immolation /
-    w:5   scroll of vulnerability
+    w:10   scroll of silence / scroll of silence q:2 w:5 /
+    w:10   scroll of vorpalise weapon /
+    w:10   scroll of immolation /
+    w:10   scroll of vulnerability
     ]]
 
 -- Returns true if point1 is inside radius(X, point2).
