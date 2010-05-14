@@ -284,11 +284,11 @@ void MenuRegion::render()
         place_entries();
 
     set_transform();
-    m_shape_buf.draw(NULL, NULL);
-    m_line_buf.draw(NULL, NULL);
+    m_shape_buf.draw();
+    m_line_buf.draw();
     for (int i = 0; i < TEX_MAX; i++)
-        m_tile_buf[i].draw(NULL, NULL);
-    m_font_buf.draw(NULL, NULL);
+        m_tile_buf[i].draw();
+    m_font_buf.draw();
 }
 
 void MenuRegion::clear()

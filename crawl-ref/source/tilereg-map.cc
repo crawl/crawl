@@ -153,8 +153,8 @@ void MapRegion::render()
     }
 
     set_transform();
-    m_buf_map.draw(NULL, NULL);
-    m_buf_lines.draw(NULL, NULL);
+    m_buf_map.draw();
+    m_buf_lines.draw();
 }
 
 void MapRegion::recenter()

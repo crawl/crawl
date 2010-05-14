@@ -2433,7 +2433,7 @@ void TextItem::render()
                        m_min_coord.x, m_min_coord.y);
         m_dirty = false;
     }
-    m_font_buf.draw(NULL, NULL);
+    m_font_buf.draw();
 #else
     // Clean the drawing area first
     // clear_to_end_of_line does not work for us
@@ -2600,9 +2600,9 @@ void TextTileItem::render()
         m_dirty = false;
     }
 
-    m_font_buf.draw(NULL, NULL);
+    m_font_buf.draw();
     for (int i = 0; i < TEX_MAX; i++)
-        m_tile_buf[i].draw(NULL, NULL);
+        m_tile_buf[i].draw();
 }
 
 SaveMenuItem::SaveMenuItem()
@@ -3834,7 +3834,7 @@ void BoxMenuHighlighter::render()
        return;
     _place_items();
 #ifdef USE_TILE
-    m_line_buf.draw(NULL, NULL);
+    m_line_buf.draw();
 #else
     if (m_active_item != NULL)
         m_active_item->render();
@@ -3896,7 +3896,7 @@ void BlackWhiteHighlighter::render()
     if (m_active_item != NULL)
     {
 #ifdef USE_TILE
-        m_shape_buf.draw(NULL, NULL);
+        m_shape_buf.draw();
 #endif
         m_active_item->render();
     }

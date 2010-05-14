@@ -312,8 +312,6 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
     if (!m_buf->size())
         return;
 
-    glmanager->reset_transform();
-
     GLState state;
     state.array_vertex = true;
     state.array_texcoord = true;
@@ -324,6 +322,7 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
     m_tex.bind();
 
     GLW_3VF trans(x_pos, y_pos, 0.0f);
+    GLW_3VF scale(1, 1, 1);
 
     if (drop_shadow)
     {
@@ -332,11 +331,13 @@ void FTFontWrapper::render_textblock(unsigned int x_pos, unsigned int y_pos,
         state_shadow.colour = VColour::black;
 
         GLW_3VF trans_shadow(trans.x + 1, trans.y + 1, 0.0f);
+        glmanager->set_transform(trans_shadow, scale);
 
-        m_buf->draw(state_shadow, &trans_shadow);
+        m_buf->draw(state_shadow);
     }
 
-    m_buf->draw(state, &trans);
+    glmanager->set_transform(trans, scale);
+    m_buf->draw(state);
 }
 
 static void _draw_box(int x_pos, int y_pos, float width, float height,
@@ -356,7 +357,7 @@ static void _draw_box(int x_pos, int y_pos, float width, float height,
     buf->add(rect);
 
     // Load identity matrix
-    glmanager->set_transform();
+    glmanager->reset_transform();
 
     GLState state;
     state.array_vertex = true;

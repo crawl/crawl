@@ -44,8 +44,8 @@ void TitleRegion::render()
     cprintf("rendering TitleRegion\n");
 #endif
     set_transform();
-    m_buf.draw(NULL, NULL);
-    m_font_buf.draw(NULL, NULL);
+    m_buf.draw();
+    m_font_buf.draw();
 }
 
 void TitleRegion::run()

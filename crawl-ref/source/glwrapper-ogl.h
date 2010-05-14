@@ -15,9 +15,8 @@ public:
     virtual void set(const GLState& state);
     virtual void pixelstore_unpack_alignment(unsigned int bpp);
     virtual void reset_view_for_redraw(float x, float y);
-    virtual void reset_view_for_resize(coord_def &m_windowsz);
-    virtual void set_transform(const GLW_3VF *trans = NULL,
-                               const GLW_3VF *scale = NULL);
+    virtual void reset_view_for_resize(const coord_def &m_windowsz);
+    virtual void set_transform(const GLW_3VF &trans, const GLW_3VF &scale);
     virtual void reset_transform();
 
     // Texture-specific functinos
@@ -40,8 +39,7 @@ public:
     virtual unsigned int size() const;
 
     virtual void add(const GLWPrim &rect);
-    virtual void draw(const GLState &state, GLW_3VF *pt = NULL,
-                      GLW_3VF *ps = NULL);
+    virtual void draw(const GLState &state);
     virtual void clear();
 
 protected:

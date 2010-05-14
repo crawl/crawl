@@ -105,12 +105,12 @@ void MessageRegion::render()
         {
             height *= m_font->char_height();
 
-            glmanager->set_transform();
+            glmanager->reset_transform();
 
             ShapeBuffer buff;
             VColour col(100, 100, 100, 100);
             buff.add(sx, sy, ex, sy + height, col);
-            buff.draw(NULL, NULL);
+            buff.draw();
         }
     }
 

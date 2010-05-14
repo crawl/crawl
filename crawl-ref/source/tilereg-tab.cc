@@ -177,7 +177,7 @@ void TabbedRegion::render()
     cprintf("rendering TabbedRegion\n");
 #endif
     set_transform();
-    m_buf_gui.draw(NULL, NULL);
+    m_buf_gui.draw();
 
     m_tabs[m_active].reg->render();
 
