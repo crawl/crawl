@@ -3510,8 +3510,10 @@ bool remove_ring(int slot, bool announce)
     equipment_type hand_used = EQ_NONE;
     int ring_wear_2;
 
-    if (you.equip[EQ_LEFT_RING] == -1 && you.equip[EQ_RIGHT_RING] == -1
-        && you.equip[EQ_AMULET] == -1)
+    const bool left  = player_wearing_slot(EQ_LEFT_RING);
+    const bool right = player_wearing_slot(EQ_RIGHT_RING);
+    const bool amu   = player_wearing_slot(EQ_AMULET);
+    if (!left && !right && !amu)
     {
         mpr("You aren't wearing any rings or amulets.");
         return (false);
@@ -3523,31 +3525,20 @@ bool remove_ring(int slot, bool announce)
         return (false);
     }
 
-    if (you.equip[EQ_GLOVES] != -1
-        && you.inv[you.equip[EQ_GLOVES]] .cursed()
-        && you.equip[EQ_AMULET] == -1)
+    const item_def* gloves = you.slot_item(EQ_GLOVES);
+    const bool gloves_cursed = gloves && gloves->cursed();
+    if (gloves_cursed && !amu)
     {
         mpr("You can't take your gloves off to remove any rings!");
         return (false);
     }
 
-    if (you.equip[EQ_LEFT_RING] != -1 && you.equip[EQ_RIGHT_RING] == -1
-        && you.equip[EQ_AMULET] == -1)
-    {
+    if (left && !right && !amu)
         hand_used = EQ_LEFT_RING;
-    }
-
-    if (you.equip[EQ_LEFT_RING] == -1 && you.equip[EQ_RIGHT_RING] != -1
-        && you.equip[EQ_AMULET] == -1)
-    {
+    else if (!left && right && !amu)
         hand_used = EQ_RIGHT_RING;
-    }
-
-    if (you.equip[EQ_LEFT_RING] == -1 && you.equip[EQ_RIGHT_RING] == -1
-        && you.equip[EQ_AMULET] != -1)
-    {
+    else if (!left && !right && amu)
         hand_used = EQ_AMULET;
-    }
 
     if (hand_used == EQ_NONE)
     {
@@ -3561,23 +3552,34 @@ bool remove_ring(int slot, bool announce)
         if (prompt_failed(equipn))
             return (false);
 
-        if (you.inv[equipn].base_type != OBJ_JEWELLERY)
-        {
-            mpr("That isn't a piece of jewellery.");
-            return (false);
-        }
-
-        if (you.equip[EQ_LEFT_RING] == equipn)
-            hand_used = EQ_LEFT_RING;
-        else if (you.equip[EQ_RIGHT_RING] == equipn)
-            hand_used = EQ_RIGHT_RING;
-        else if (you.equip[EQ_AMULET] == equipn)
-            hand_used = EQ_AMULET;
-        else
+        hand_used = item_equip_slot(you.inv[equipn]);
+        if (hand_used == EQ_NONE)
         {
             mpr("You aren't wearing that.");
             return (false);
         }
+        else if (you.inv[equipn].base_type != OBJ_JEWELLERY)
+        {
+            mpr("That isn't a piece of jewellery.");
+            return (false);
+        }
+    }
+
+    if (you.equip[hand_used] == -1)
+    {
+        mpr("I don't think you really meant that.");
+        return (false);
+    }
+    else if (you.melded[hand_used])
+    {
+        mpr("You can't take that off while it's melded.");
+        return (false);
+    }
+    else if (gloves_cursed
+             && (hand_used == EQ_LEFT_RING || hand_used == EQ_RIGHT_RING))
+    {
+        mpr("You can't take your gloves off to remove any rings!");
+        return (false);
     }
 
     if (!check_warning_inscriptions(you.inv[you.equip[hand_used]],
@@ -3587,21 +3589,7 @@ bool remove_ring(int slot, bool announce)
         return (false);
     }
 
-    if (you.equip[EQ_GLOVES] != -1
-        && you.inv[you.equip[EQ_GLOVES]] .cursed()
-        && (hand_used == EQ_LEFT_RING || hand_used == EQ_RIGHT_RING))
-    {
-        mpr("You can't take your gloves off to remove any rings!");
-        return (false);
-    }
-
-    if (you.equip[hand_used] == -1)
-    {
-        mpr("I don't think you really meant that.");
-        return (false);
-    }
-
-    if (you.inv[you.equip[hand_used]] .cursed())
+    if (you.inv[you.equip[hand_used]].cursed())
     {
         if (announce)
         {
