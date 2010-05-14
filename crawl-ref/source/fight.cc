@@ -5092,6 +5092,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         }
         break;
     }
+
     case AF_CRUSH:
         mprf("%s %s being crushed%s",
              def_name(DESC_CAP_THE).c_str(),
@@ -5257,8 +5258,8 @@ void melee_attack::mons_perform_attack_rounds()
 
         if (attk.type == AT_NONE)
         {
-            // Make sure the monster uses up some energy, even
-            // though it didn't actually attack.
+            // Make sure the monster uses up some energy, even though it
+            // didn't actually attack.
             if (effective_attack_number == 0)
                 attacker->as_monster()->lose_energy(EUT_ATTACK);
             break;
@@ -5381,7 +5382,8 @@ void melee_attack::mons_perform_attack_rounds()
 
             if (defender_invisible)
             {
-                // No evasion feedback if we don't know what we're fighting
+                // No evasion feedback if we don't know what we're
+                // fighting.
                 defender_evasion_help = defender_evasion;
                 defender_evasion_nophase = defender_evasion;
             }
@@ -5389,7 +5391,7 @@ void melee_attack::mons_perform_attack_rounds()
             if (attacker == defender
                 || test_melee_hit(to_hit, defender_evasion_help, r))
             {
-                // would have hit no matter what
+                // Will hit no matter what.
                 this_round_hit = true;
             }
             else if (test_melee_hit(to_hit, defender_evasion, r))
@@ -5418,7 +5420,7 @@ void melee_attack::mons_perform_attack_rounds()
             }
             else
             {
-                // Misses no matter what
+                // Misses no matter what.
                 if (needs_message)
                 {
                     mprf("%s misses %s.",
@@ -5476,8 +5478,8 @@ void melee_attack::mons_perform_attack_rounds()
             special_damage_flavour = BEAM_NONE;
 
             // Monsters attacking themselves don't get attack flavour.
-            // The message sequences look too weird.
-            // Also, stealing attacks aren't handled until after the damage msg.
+            // The message sequences look too weird.  Also, stealing
+            // attacks aren't handled until after the damage msg.
             if (attacker != defender && attk.flavour != AF_STEAL)
                 mons_apply_attack_flavour(attk);
 
@@ -5584,12 +5586,12 @@ void melee_attack::mons_perform_attack_rounds()
             (grid_distance(you.pos(), attacker->as_monster()->pos()) == 1
             || attk.flavour == AF_REACH))
         {
-            // Check for spiny mutation
+            // Check for spiny mutation.
             mons_do_spines();
         }
     }
 
-    // Check for passive freeze mutation
+    // Check for passive freeze mutation.
     if (defender->atype() == ACT_PLAYER && defender->alive()
         && attacker != defender)
     {
