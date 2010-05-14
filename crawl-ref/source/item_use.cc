@@ -1631,12 +1631,14 @@ static bool _charged_hit_victim(bolt &beam, actor* victim, int &dmg,
         return (false);
 
     if (you.can_see(victim))
+    {
         if (victim->atype() == ACT_PLAYER)
             dmg_msg = "You are electrocuted!";
         else if (victim->id() == MONS_SIXFIRHY)
             dmg_msg = victim->name(DESC_CAP_THE) + " is charged up!";
         else
             dmg_msg = "There is a sudden explosion of sparks!";
+    }
 
     if (feat_is_water(grd(victim->pos())))
     {
@@ -1662,7 +1664,7 @@ static bool _blessed_hit_victim(bolt &beam, actor* victim, int &dmg,
     return (false);
 }
 
-int _blowgun_power_roll (bolt &beam)
+int _blowgun_power_roll(bolt &beam)
 {
     actor* agent = beam.agent();
     int base_power = 0;
@@ -1683,7 +1685,7 @@ int _blowgun_power_roll (bolt &beam)
     return (base_power + blowgun_base);
 }
 
-bool _blowgun_check (bolt &beam, actor* victim, bool message = true)
+bool _blowgun_check(bolt &beam, actor* victim, bool message = true)
 {
     actor* agent = beam.agent();
 
@@ -1713,8 +1715,8 @@ bool _blowgun_check (bolt &beam, actor* victim, bool message = true)
     return (true);
 }
 
-static bool _paralysis_hit_victim (bolt& beam, actor* victim, int dmg,
-                                  int corpse)
+static bool _paralysis_hit_victim(bolt& beam, actor* victim, int dmg,
+                                 int corpse)
 {
     if (beam.is_tracer)
         return (false);
@@ -1727,8 +1729,8 @@ static bool _paralysis_hit_victim (bolt& beam, actor* victim, int dmg,
     return (true);
 }
 
-static bool _sleep_hit_victim (bolt& beam, actor* victim, int dmg,
-                                  int corpse)
+static bool _sleep_hit_victim(bolt& beam, actor* victim, int dmg,
+                              int corpse)
 {
     if (beam.is_tracer)
         return (false);
@@ -1741,8 +1743,8 @@ static bool _sleep_hit_victim (bolt& beam, actor* victim, int dmg,
     return (true);
 }
 
-static bool _confusion_hit_victim (bolt &beam, actor* victim, int dmg,
-                                   int corpse)
+static bool _confusion_hit_victim(bolt &beam, actor* victim, int dmg,
+                                  int corpse)
 {
     if (beam.is_tracer)
         return (false);
@@ -1755,8 +1757,8 @@ static bool _confusion_hit_victim (bolt &beam, actor* victim, int dmg,
     return (true);
 }
 
-static bool _slow_hit_victim (bolt &beam, actor* victim, int dmg,
-                                   int corpse)
+static bool _slow_hit_victim(bolt &beam, actor* victim, int dmg,
+                                  int corpse)
 {
     if (beam.is_tracer)
         return (false);
@@ -1769,8 +1771,8 @@ static bool _slow_hit_victim (bolt &beam, actor* victim, int dmg,
     return (true);
 }
 
-static bool _sickness_hit_victim (bolt &beam, actor* victim, int dmg,
-                                   int corpse)
+static bool _sickness_hit_victim(bolt &beam, actor* victim, int dmg,
+                                 int corpse)
 {
     if (beam.is_tracer)
         return (false);
@@ -1783,8 +1785,8 @@ static bool _sickness_hit_victim (bolt &beam, actor* victim, int dmg,
     return (true);
 }
 
-static bool _rage_hit_victim (bolt &beam, actor* victim, int dmg,
-                                   int corpse)
+static bool _rage_hit_victim(bolt &beam, actor* victim, int dmg,
+                             int corpse)
 {
     if (beam.is_tracer)
         return (false);
@@ -2028,7 +2030,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     if (blessed)
         beam.damage_funcs.push_back(_blessed_hit_victim);
 
-    // New needle brands have no affect when thrown without launcher.
+    // New needle brands have no effect when thrown without launcher.
     if (launcher != NULL)
     {
         if (paralysis)
