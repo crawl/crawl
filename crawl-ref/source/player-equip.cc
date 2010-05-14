@@ -857,13 +857,13 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
             break;
 
         case SPARM_SPIRIT_SHIELD:
-            if (player_spirit_shield()<2)
+            if (player_spirit_shield() < 2)
             {
                 set_mp(0, false);
                 mpr("You feel spirits watching over you.");
                 if (you.species == SP_DEEP_DWARF)
                     mpr("Now linked to your health, your magic stops regenerating.");
-           }
+            }
             break;
 
         case SPARM_ARCHERY:
@@ -1233,7 +1233,7 @@ static void _equip_jewellery_effect(item_def &item)
         break;
 
     case AMU_GUARDIAN_SPIRIT:
-        if (player_spirit_shield()<2)
+        if (player_spirit_shield() < 2)
         {
             set_mp(0, false);
             mpr("You feel your power drawn to a protective spirit.");
@@ -1413,6 +1413,7 @@ static void _unequip_jewellery_effect(item_def &item, bool mesg)
     case AMU_GUARDIAN_SPIRIT:
         if (you.species == SP_DEEP_DWARF)
             mpr("Your magic begins regenerating once more.");
+        break;
     }
 
     if (is_artefact(item))
