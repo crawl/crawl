@@ -167,9 +167,8 @@ public:
     virtual void set(const GLState& state) = 0;
     virtual void pixelstore_unpack_alignment(unsigned int bpp) = 0;
     virtual void reset_view_for_redraw(float x, float y) = 0;
-    virtual void reset_view_for_resize(coord_def &m_windowsz) = 0;
-    virtual void set_transform(const GLW_3VF *trans = NULL,
-                               const GLW_3VF *scale = NULL) = 0;
+    virtual void reset_view_for_resize(const coord_def &m_windowsz) = 0;
+    virtual void set_transform(const GLW_3VF &trans, const GLW_3VF &scale) = 0;
     virtual void reset_transform() = 0;
 
     // Texture-specific functinos
@@ -205,8 +204,7 @@ public:
     virtual void add(const GLWPrim &prim) = 0;
 
     // Draw all the primitives in the buffer.
-    virtual void draw(const GLState &state, GLW_3VF *pt = NULL,
-                      GLW_3VF *ps = NULL) = 0;
+    virtual void draw(const GLState &state) = 0;
 
     // Clear all the primitives from the buffer.
     virtual void clear() = 0;

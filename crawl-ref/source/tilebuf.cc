@@ -39,7 +39,7 @@ VertBuffer::VertBuffer(bool texture, bool colour, const GenericTexture *tex,
     }
 }
 
-void VertBuffer::draw(GLW_3VF *pt, GLW_3VF *ps) const
+void VertBuffer::draw() const
 {
     // Note:    This check is here because MenuRegion::render will try and
     //          render m_tile_buf[2] which, before the item description table
@@ -55,7 +55,7 @@ void VertBuffer::draw(GLW_3VF *pt, GLW_3VF *ps) const
         m_tex->bind();
     }
 
-    m_vert_buf->draw(m_state, pt, ps);
+    m_vert_buf->draw(m_state);
 }
 
 void VertBuffer::clear()

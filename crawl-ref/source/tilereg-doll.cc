@@ -173,13 +173,13 @@ void DollEditRegion::render()
 
 
     set_transform();
-    m_shape_buf.draw(NULL, NULL);
+    m_shape_buf.draw();
     m_tile_buf.draw();
 
     {
         GLW_3VF trans(32 * left_gutter, 32 * edit_doll_line, 0);
         GLW_3VF scale(64, 64, 1);
-        glmanager->set_transform(&trans, &scale);
+        glmanager->set_transform(trans, scale);
     }
 
     m_cur_buf.draw();
@@ -206,7 +206,7 @@ void DollEditRegion::render()
     {
         GLW_3VF trans(32 * (left_gutter + 3), 32 * edit_doll_line, 0);
         GLW_3VF scale(32, 32, 1);
-        glmanager->set_transform(&trans, &scale);
+        glmanager->set_transform(trans, scale);
     }
 
     m_cur_buf.draw();
@@ -302,7 +302,7 @@ void DollEditRegion::render()
         m_font_buf.add("Quit menu          q, Ctrl-Q",                                          VColour::white, start_x, start_y + height * 5);
     }
 
-    m_font_buf.draw(NULL, NULL);
+    m_font_buf.draw();
 }
 
 int DollEditRegion::handle_mouse(MouseEvent &event)

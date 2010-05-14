@@ -611,10 +611,10 @@ void DungeonRegion::render()
     }
 
     set_transform();
-    m_buf_dngn.draw(NULL, NULL);
+    m_buf_dngn.draw();
     m_buf_doll.draw();
     m_buf_main_trans.draw();
-    m_buf_main.draw(NULL, NULL);
+    m_buf_main.draw();
 
     draw_minibars();
 
@@ -623,7 +623,7 @@ void DungeonRegion::render()
         ShapeBuffer buff;
         VColour red_film(130, 0, 0, 100);
         buff.add(0, 0, mx, my, red_film);
-        buff.draw(NULL, NULL);
+        buff.draw();
     }
 
     FixedArray<tag_def, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tag_show;
@@ -779,7 +779,7 @@ void DungeonRegion::draw_minibars()
                      hp_spent);
         }
 
-        buff.draw(NULL, NULL);
+        buff.draw();
     }
 }
 

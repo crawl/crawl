@@ -132,16 +132,14 @@ void OGLStateManager::set(const GLState& state)
     m_current_state = state;
 }
 
-void OGLStateManager::set_transform(const GLW_3VF *trans, const GLW_3VF *scale)
+void OGLStateManager::set_transform(const GLW_3VF &trans, const GLW_3VF &scale)
 {
     glLoadIdentity();
-    if (trans)
-        glTranslatef(trans->x, trans->y, trans->z);
-    if (scale)
-        glScalef(scale->x, scale->y, scale->z);
+    glTranslatef(trans.x, trans.y, trans.z);
+    glScalef(scale.x, scale.y, scale.z);
 }
 
-void OGLStateManager::reset_view_for_resize(coord_def &m_windowsz)
+void OGLStateManager::reset_view_for_resize(const coord_def &m_windowsz)
 {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -344,7 +342,10 @@ void OGLShapeBuffer::add_line(const GLWPrim &rect)
 }
 
 // Draw the buffer
-void OGLShapeBuffer::draw(const GLState &state, GLW_3VF *pt, GLW_3VF *ps)
+#if 0
+void OGLShapeBuffer::draw(const GLState &state, const GLW_3VF *pt, const GLW_3VF *ps)
+#endif
+void OGLShapeBuffer::draw(const GLState &state)
 {
     if (m_position_buffer.size() == 0)
         return;
@@ -362,16 +363,6 @@ void OGLShapeBuffer::draw(const GLState &state, GLW_3VF *pt, GLW_3VF *ps)
     if (state.array_colour && m_colour_verts)
         glColorPointer(4, GL_UNSIGNED_BYTE, 0, &m_colour_buffer[0]);
 
-    // Handle pre-render matrix manipulations
-    if (pt || ps)
-    {
-        glPushMatrix();
-        if (pt)
-            glTranslatef(pt->x, pt->y, pt->z);
-        if (ps)
-            glScalef(ps->x, ps->y, ps->z);
-    }
-
     switch (m_prim_type)
     {
     case GLW_RECTANGLE:
@@ -385,10 +376,6 @@ void OGLShapeBuffer::draw(const GLState &state, GLW_3VF *pt, GLW_3VF *ps)
         ASSERT(!"Invalid primitive type");
         break;
     }
-
-    // Clean up
-    if (pt || ps)
-        glPopMatrix();
 }
 
 void OGLShapeBuffer::clear()

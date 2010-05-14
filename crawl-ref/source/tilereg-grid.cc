@@ -162,10 +162,10 @@ void GridRegion::render()
     cprintf("rendering GridRegion\n");
 #endif
     set_transform();
-    m_buf_dngn.draw(NULL, NULL);
-    m_buf_spells.draw(NULL, NULL);
-    m_buf_doll.draw(NULL, NULL);
-    m_buf_main.draw(NULL, NULL);
+    m_buf_dngn.draw();
+    m_buf_spells.draw();
+    m_buf_doll.draw();
+    m_buf_main.draw();
 
     draw_tag();
 }

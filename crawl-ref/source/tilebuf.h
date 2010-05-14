@@ -25,7 +25,8 @@ public:
     ~VertBuffer();
 
     // Rendering
-    void draw(GLW_3VF *pt = NULL, GLW_3VF *ps = NULL) const;
+    // void draw(const GLW_3VF *pt = NULL, const GLW_3VF *ps = NULL) const;
+    void draw() const;
 
     // State query
     const GLState& state() const { return m_state; }
