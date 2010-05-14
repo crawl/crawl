@@ -3609,7 +3609,8 @@ bool remove_ring(int slot, bool announce)
     if (!safe_to_remove_or_wear(you.inv[ring_wear_2], true))
         return (false);
 
-    unequip_item(hand_used, ring_wear_2);
+    mprf("You remove %s.", you.inv[ring_wear_2].name(DESC_NOCAP_YOUR).c_str());
+    unequip_item(hand_used);
 
     you.time_taken /= 2;
     you.turn_is_over = true;
