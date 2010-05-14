@@ -14,6 +14,7 @@
 #include "dungeon.h"
 #include "env.h"
 #include "libutil.h"
+#include "message.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "religion.h"
@@ -33,8 +34,7 @@ int debug_prompt_for_int( const char *prompt, bool nonneg )
 {
     char specs[80];
 
-    mpr(prompt, MSGCH_PROMPT);
-    get_input_line( specs, sizeof( specs ) );
+    msgwin_get_line(prompt, specs, sizeof(specs));
 
     if (specs[0] == '\0')
         return (nonneg ? -1 : 0);
@@ -365,12 +365,11 @@ void debug_dump_mon(const monsters* mon, bool recurse)
 // debug_prompt_for_skill
 //
 //---------------------------------------------------------------
-int debug_prompt_for_skill( const char *prompt )
+int debug_prompt_for_skill(const char *prompt)
 {
     char specs[80];
 
-    mpr(prompt, MSGCH_PROMPT);
-    get_input_line( specs, sizeof( specs ) );
+    msgwin_get_line_autohist(prompt, specs, sizeof(specs));
 
     if (specs[0] == '\0')
         return (-1);
