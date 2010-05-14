@@ -1312,7 +1312,11 @@ static int _place_monster_aux(const mgen_data &mg,
     mon->number       = mg.number;
 
     // Set pos and link monster into monster grid.
-    mon->move_to_pos(fpos);
+    if (!mon->move_to_pos(fpos))
+    {
+        mon->reset();
+        return (-1);
+    }
 
     if (mons_is_mimic(mg.cls))
     {
