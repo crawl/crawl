@@ -1275,6 +1275,7 @@ enum enchant_type
     ENCH_TIDE,
     ENCH_INSANE,
     ENCH_SILENCE,
+    ENCH_ENTOMBED,
 
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.

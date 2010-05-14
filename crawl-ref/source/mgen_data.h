@@ -62,8 +62,7 @@ struct mgen_data
     god_type        god;
 
     // The number of hydra heads, the number of manticore attack volleys,
-    // the number of merged slime creatures, or the indicator for when
-    // Khufu is entombed.
+    // or the number of merged slime creatures.
     //
     // Note: in older versions this field was used for both this and for
     // base_type.

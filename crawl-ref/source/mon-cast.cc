@@ -2334,6 +2334,12 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     case SPELL_TOMB_OF_DOROKLOHE:
     {
         sumcount = 0;
+
+        const int hp_lost = monster->max_hit_points - monster->hit_points;
+
+        if (!hp_lost)
+            sumcount++;
+
         for (adjacent_iterator ai(monster->pos()); ai; ++ai)
         {
             // we can blink away the crowd, but only our allies
@@ -2375,6 +2381,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                         continue;
                 }
             }
+
             if (grd(*ai) == DNGN_FLOOR || feat_is_trap(grd(*ai)))
             {
                 grd(*ai) = DNGN_ROCK_WALL;
@@ -2386,9 +2393,16 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                 sumcount++;
             }
         }
+
         if (sumcount)
             mpr("Walls emerge from the floor!");
-        monster->number = 1; // mark Khufu as entombed
+
+        // XXX: Assume that the entombed monster can regenerate.  Also,
+        // base the regeneration rate on HD to avoid randomness.
+        const int tomb_duration =
+            hp_lost * std::max(1, monster->hit_dice / 3);
+        monster->add_ench(mon_enchant(ENCH_ENTOMBED, 0, KC_OTHER,
+                          tomb_duration * 10));
         return;
     }
     case SPELL_CHAIN_LIGHTNING:
