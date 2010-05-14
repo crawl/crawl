@@ -701,17 +701,19 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
     std::string prompt = make_stringf("%s ", str ? str : "Buggy prompt?");
 
     mouse_control mc(MOUSE_MODE_MORE);
-    while (true)
-    {
-        if (!noprompt)
-        {
-            if (message)
-                mpr(prompt.c_str(), MSGCH_PROMPT);
-            else
-                cprintf("%s", prompt.c_str());
-        }
 
-        int tmp = getchm(KMC_CONFIRM);
+    if (!noprompt)
+    {
+        if (message)
+            msgwin_prompt(prompt);
+        else
+            cprintf("%s", prompt.c_str());
+    }
+
+    int tmp = 0;
+    while (tmp != 'Y' && tmp != 'N')
+    {
+        tmp = getchm(KMC_CONFIRM);
 
 #if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE) && defined(USE_CURSES)
         // Prevent infinite loop if Curses HUP signal handling happens;
@@ -738,25 +740,16 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
         {
             tmp = toupper( tmp );
         }
-
-        if (clear_after && message)
-            mesclr();
-
-        if (tmp == 'N')
-            return (false);
-        else if (tmp == 'Y')
-            return (true);
-        else if (!noprompt)
-        {
-            const std::string pr = "[Y]es or [N]o only, please.";
-            if (message)
-                mpr(pr);
-            else
-                cprintf(("\n" + pr + "\n").c_str());
-        }
     }
-}
 
+    if (clear_after && message)
+        mesclr();
+
+    if (!noprompt && message)
+        msgwin_reply(make_stringf("%c", tmp));
+
+    return (tmp == 'Y');
+}
 static std::string _list_alternative_yes(char yes1, char yes2,
                                          bool lowered = false,
                                          bool brackets = false)
