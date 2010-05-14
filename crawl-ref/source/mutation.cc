@@ -122,15 +122,15 @@ void fixup_mutations()
     if (player_genus(GENPC_DRACONIAN))
     {
         ASSERT(is_valid_mutation(MUT_STINGER));
-        _seek_mutation(MUT_STINGER)->rarity = 1;
+        _seek_mutation(MUT_STINGER)->rarity = 8;
         ASSERT(is_valid_mutation(MUT_BIG_WINGS));
-        _seek_mutation(MUT_BIG_WINGS)->rarity = 1;
+        _seek_mutation(MUT_BIG_WINGS)->rarity = 4;
     }
 
     if (you.species == SP_NAGA)
     {
         ASSERT(is_valid_mutation(MUT_STINGER));
-        _seek_mutation(MUT_STINGER)->rarity = 1;
+        _seek_mutation(MUT_STINGER)->rarity = 8;
     }
 }
 
