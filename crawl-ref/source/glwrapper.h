@@ -25,6 +25,9 @@ struct VColour
         a = in.a;
     }
 
+    bool operator==(const VColour &vc) const;
+    bool operator!=(const VColour &vc) const;
+
     unsigned char r;
     unsigned char g;
     unsigned char b;
@@ -151,6 +154,7 @@ struct GLState
     bool depthtest;
     bool alphatest;
     unsigned char alpharef;
+    VColour colour;
 };
 
 class GLStateManager
@@ -172,8 +176,6 @@ public:
     virtual void set_transform(const GLW_3VF *trans = NULL,
                                const GLW_3VF *scale = NULL) = 0;
     virtual void reset_transform() = 0;
-    virtual void set_current_color(GLW_3VF &color) = 0;
-    virtual void set_current_color(VColour &color) = 0;
 
     // Texture-specific functinos
     virtual void delete_textures(size_t count, unsigned int *textures) = 0;

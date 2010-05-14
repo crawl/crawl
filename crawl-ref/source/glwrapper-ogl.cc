@@ -123,6 +123,12 @@ void OGLStateManager::set(const GLState& state)
             glDisable(GL_ALPHA_TEST);
     }
 
+    if (state.colour != m_current_state.colour)
+    {
+        glColor4f(state.colour.r, state.colour.g,
+                  state.colour.b, state.colour.a);
+    }
+
     m_current_state = state;
 }
 
@@ -207,16 +213,6 @@ void OGLStateManager::reset_view_for_redraw(float x, float y)
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glTranslatef(x, y , 1.0f);
-}
-
-void OGLStateManager::set_current_color(GLW_3VF &color)
-{
-    glColor3f(color.r, color.g, color.b);
-}
-
-void OGLStateManager::set_current_color(VColour &color)
-{
-    glColor4f(color.r, color.g, color.b, color.a);
 }
 
 /////////////////////////////////////////////////////////////////////////////
