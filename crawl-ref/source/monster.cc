@@ -1696,7 +1696,7 @@ bool monsters::pickup_missile(item_def &item, int near, bool force)
         if (item.sub_type == MI_THROWING_NET)
         {
             // Monster may not pick up trapping net.
-            if (this->caught() && item_is_stationary(item))
+            if (caught() && item_is_stationary(item))
                 return (false);
         }
         else // None of these exceptions hold for throwing nets.
@@ -2774,7 +2774,7 @@ bool monsters::fumbles_attack(bool verbose)
             if (you.can_see(this))
             {
                 mprf("%s splashes around in the water.",
-                     this->name(DESC_CAP_THE).c_str());
+                     name(DESC_CAP_THE).c_str());
             }
             else if (player_can_hear(pos(), LOS_RADIUS))
                 mpr("You hear a splashing noise.", MSGCH_SOUND);
@@ -3000,7 +3000,7 @@ bool monsters::confused_by_you() const
 
 bool monsters::paralysed() const
 {
-    return this->has_ench(ENCH_PARALYSIS);
+    return (has_ench(ENCH_PARALYSIS));
 }
 
 bool monsters::cannot_act() const
@@ -3030,7 +3030,7 @@ bool monsters::backlit(bool check_haloed, bool self_halo) const
 
 bool monsters::caught() const
 {
-    return this->has_ench(ENCH_HELD);
+    return (has_ench(ENCH_HELD));
 }
 
 bool monsters::petrified() const
@@ -3461,8 +3461,8 @@ int monsters::res_poison() const
     {
         u += scan_mon_inv_randarts(this, ARTP_POISON);
 
-        const int armour = this->inv[MSLOT_ARMOUR];
-        const int shld = this->inv[MSLOT_SHIELD];
+        const int armour = inv[MSLOT_ARMOUR];
+        const int shld = inv[MSLOT_SHIELD];
 
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
         {
@@ -3544,8 +3544,8 @@ int monsters::res_negative_energy() const
     {
         u += scan_mon_inv_randarts(this, ARTP_NEGATIVE_ENERGY);
 
-        const int armour = this->inv[MSLOT_ARMOUR];
-        const int shld = this->inv[MSLOT_SHIELD];
+        const int armour = inv[MSLOT_ARMOUR];
+        const int shld = inv[MSLOT_SHIELD];
 
         if (armour != NON_ITEM && mitm[armour].base_type == OBJ_ARMOUR)
         {
@@ -3591,19 +3591,19 @@ int monsters::res_magic() const
     if (mons_immune_magic(this))
         return (MAG_IMMUNE);
 
-    int u = (get_monster_data(this->type))->resist_magic;
+    int u = (get_monster_data(type))->resist_magic;
 
     // Negative values get multiplied with monster hit dice.
     if (u < 0)
-        u = this->hit_dice * -u * 4 / 3;
+        u = hit_dice * -u * 4 / 3;
 
     // Randarts have a multiplicative effect.
     u *= (scan_mon_inv_randarts(this, ARTP_MAGIC) + 100);
     u /= 100;
 
     // ego armour resistance
-    const int armour = this->inv[MSLOT_ARMOUR];
-    const int _shield = this->inv[MSLOT_SHIELD];
+    const int armour = inv[MSLOT_ARMOUR];
+    const int _shield = inv[MSLOT_SHIELD];
 
     if (armour != NON_ITEM
         && get_armour_ego_type( mitm[armour] ) == SPARM_MAGIC_RESISTANCE )
@@ -3617,7 +3617,7 @@ int monsters::res_magic() const
         u += 30;
     }
 
-    if (this->has_ench(ENCH_LOWERED_MR))
+    if (has_ench(ENCH_LOWERED_MR))
         u /= 2;
 
     return (u);
@@ -4453,7 +4453,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_SILENCE:
-        if (!quiet && !silenced(this->pos()))
+        if (!quiet && !silenced(pos()))
             simple_monster_message(this, " becomes audible again.");
         invalidate_agrid();
         break;
@@ -4516,7 +4516,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         else if (type != MONS_KRAKEN_TENTACLE)
         {
             snprintf(info, INFO_SIZE, " seems to regain %s courage.",
-                     this->pronoun(PRONOUN_NOCAP_POSSESSIVE, true).c_str());
+                     pronoun(PRONOUN_NOCAP_POSSESSIVE, true).c_str());
         }
 
         if (!quiet)
@@ -4604,7 +4604,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_HELD:
     {
-        int net = get_trapping_net(this->pos());
+        int net = get_trapping_net(pos());
         if (net != NON_ITEM)
             remove_item_stationary(mitm[net]);
 
@@ -4632,7 +4632,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             behaviour_event(this, ME_EVAL);
         }
 
-        if (you.pos() == this->pos())
+        if (you.pos() == pos())
         {
             mprf(MSGCH_ERROR, "%s is on the same square as you!",
                  name(DESC_CAP_A).c_str());
@@ -4977,11 +4977,9 @@ void monsters::apply_enchantment(const mon_enchant &me)
     case ENCH_HELD:
     {
         if (mons_is_stationary(this) || cannot_act() || asleep())
-        {
             break;
-        }
 
-        int net = get_trapping_net(this->pos(), true);
+        int net = get_trapping_net(pos(), true);
 
         if (net == NON_ITEM) // Really shouldn't happen!
         {
@@ -5189,7 +5187,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
             if (mons_near(this) && visible_to(&you))
             {
                 mprf("The flames covering %s go out.",
-                     this->name(DESC_NOCAP_THE, false).c_str());
+                     name(DESC_NOCAP_THE, false).c_str());
             }
             del_ench(ENCH_STICKY_FLAME);
             break;
@@ -5231,7 +5229,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
             if (you.see_cell(position))
             {
                 mprf("A nearby %s withers and dies.",
-                     this->name(DESC_PLAIN, false).c_str());
+                     name(DESC_PLAIN, false).c_str());
             }
 
             monster_die(this, KILL_MISC, NON_MONSTER, true);
@@ -5239,10 +5237,9 @@ void monsters::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_SPORE_PRODUCTION:
-
         // Reduce the timer, if that means we lose the enchantment then
-        // spawn a spore and re-add the enchantment
-        if(decay_enchantment(me))
+        // spawn a spore and re-add the enchantment.
+        if (decay_enchantment(me))
         {
             // Search for an open adjacent square to place a spore on
             int idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
@@ -5252,7 +5249,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
             for (unsigned i = 0; i < 8; ++i)
             {
-                coord_def adjacent = this->pos() + Compass[idx[i]];
+                coord_def adjacent = pos() + Compass[idx[i]];
 
                 if (mons_class_can_pass(MONS_GIANT_SPORE, env.grid(adjacent))
                                         && !actor_at(adjacent))
@@ -5277,14 +5274,14 @@ void monsters::apply_enchantment(const mon_enchant &me)
                             mpr("A ballistomycete spawns a giant spore.");
 
                         // Decrease the count and maybe become inactive
-                        // again
-                        if (this->number)
+                        // again.
+                        if (number)
                         {
-                            this->number--;
-                            if (this->number == 0)
+                            number--;
+                            if (number == 0)
                             {
-                                this->colour = MAGENTA;
-                                this->del_ench(ENCH_SPORE_PRODUCTION);
+                                colour = MAGENTA;
+                                del_ench(ENCH_SPORE_PRODUCTION);
                                 re_add = false;
                             }
                         }
@@ -5296,7 +5293,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
             // Re-add the enchantment (this resets the spore production
             // timer).
             if (re_add)
-                this->add_ench(ENCH_SPORE_PRODUCTION);
+                add_ench(ENCH_SPORE_PRODUCTION);
         }
 
         break;
@@ -5305,7 +5302,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
         // Number of actions is fine for shapeshifters.  Don't change
         // shape while taking the stairs because monster_polymorph() has
         // an assert about it. -cao
-        if (!(this->flags & MF_TAKING_STAIRS) && !asleep()
+        if (!(flags & MF_TAKING_STAIRS) && !asleep()
             && (type == MONS_GLOWING_SHAPESHIFTER
                 || one_chance_in(4)))
         {
@@ -5314,7 +5311,7 @@ void monsters::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_SHAPESHIFTER:         // This ench never runs out!
-        if (!(this->flags & MF_TAKING_STAIRS) && !asleep()
+        if (!(flags & MF_TAKING_STAIRS) && !asleep()
             && (type == MONS_SHAPESHIFTER
                 || x_chance_in_y(1000 / (15 * hit_dice / 5), 1000)))
         {
@@ -5581,9 +5578,9 @@ bool monsters::needs_berserk(bool check_spells) const
 
 bool monsters::can_see_invisible() const
 {
-    if (mons_is_ghost_demon(this->type))
-        return (this->ghost->see_invis);
-    else if (mons_class_flag(this->type, M_SEE_INVIS))
+    if (mons_is_ghost_demon(type))
+        return (ghost->see_invis);
+    else if (mons_class_flag(type, M_SEE_INVIS))
         return (true);
     else if (scan_mon_inv_randarts(this, ARTP_EYESIGHT) > 0)
         return (true);
@@ -5656,9 +5653,9 @@ bool monsters::mutate()
 
     // Polymorphing a shapeshifter will make it revert to its original
     // form.
-    if (this->has_ench(ENCH_GLOWING_SHAPESHIFTER))
+    if (has_ench(ENCH_GLOWING_SHAPESHIFTER))
         return (monster_polymorph(this, MONS_GLOWING_SHAPESHIFTER));
-    if (this->has_ench(ENCH_SHAPESHIFTER))
+    if (has_ench(ENCH_SHAPESHIFTER))
         return (monster_polymorph(this, MONS_SHAPESHIFTER));
 
     return (monster_polymorph(this, RANDOM_MONSTER));
@@ -5826,7 +5823,7 @@ bool monsters::do_shaft()
 
     // Handle instances of do_shaft() being invoked magically when
     // the monster isn't standing over a shaft.
-    if (get_trap_type(this->pos()) != TRAP_SHAFT)
+    if (get_trap_type(pos()) != TRAP_SHAFT)
     {
         switch (grd(pos()))
         {
@@ -5856,7 +5853,7 @@ bool monsters::do_shaft()
                     mpr("A shaft briefly opens up in the floor!");
             }
 
-            handle_items_on_shaft(this->pos(), false);
+            handle_items_on_shaft(pos(), false);
             return (false);
         }
     }
@@ -5874,7 +5871,7 @@ bool monsters::do_shaft()
     const bool reveal =
         simple_monster_message(this, " falls through a shaft!");
 
-    handle_items_on_shaft(this->pos(), false);
+    handle_items_on_shaft(pos(), false);
 
     // Monster is no longer on this level.
     destroy_inventory();
@@ -5923,7 +5920,7 @@ monster_type monsters::get_mislead_type() const
 
 int monsters::action_energy(energy_use_type et) const
 {
-    bool swift = has_ench(ENCH_SWIFT);
+    const bool swift = has_ench(ENCH_SWIFT);
 
     if (const monsterentry *me = find_monsterentry())
     {
@@ -6326,9 +6323,7 @@ int mon_enchant::calc_duration(const monsters *mons,
     {
     case ENCH_SWIFT:
         cturn = 1000 / _mod_speed(25, mons->speed);
-
         break;
-
     case ENCH_HASTE:
     case ENCH_MIGHT:
     case ENCH_INVIS:
