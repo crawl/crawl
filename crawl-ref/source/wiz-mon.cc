@@ -189,8 +189,8 @@ void wizard_create_spec_monster_name()
         ghost.name = "John Doe";
 
         char input_str[80];
-        mpr("Make player ghost which species? (case-sensitive) ", MSGCH_PROMPT);
-        get_input_line( input_str, sizeof( input_str ) );
+        msgwin_get_line("Make player ghost which species? (case-sensitive) ",
+                        input_str, sizeof(input_str));
 
         species_type sp_id = get_species_by_abbrev(input_str);
         if (sp_id == SP_UNKNOWN)
@@ -202,8 +202,8 @@ void wizard_create_spec_monster_name()
         }
         ghost.species = static_cast<species_type>(sp_id);
 
-        mpr("Give player ghost which background? ", MSGCH_PROMPT);
-        get_input_line( input_str, sizeof( input_str ) );
+        msgwin_get_line("Give player ghost which background? ",
+                        input_str, sizeof(input_str));
 
         int job_id = get_job_by_abbrev(input_str);
 
@@ -1003,8 +1003,8 @@ void wizard_make_monster_summoned(monsters* mon)
         {
             char specs[80];
 
-            mpr("Cast which spell by name? ", MSGCH_PROMPT);
-            get_input_line( specs, sizeof( specs ) );
+            msgwin_get_line("Cast which spell by name? ",
+                            specs, sizeof(specs));
 
             if (specs[0] == '\0')
             {

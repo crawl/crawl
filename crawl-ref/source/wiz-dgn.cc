@@ -461,8 +461,8 @@ void debug_make_trap()
         return;
     }
 
-    mprf(MSGCH_PROMPT, "What kind of trap? ");
-    get_input_line( requested_trap, sizeof( requested_trap ) );
+    msgwin_get_line("What kind of trap? ",
+                    requested_trap, sizeof(requested_trap));
     if (!*requested_trap)
         return;
 
@@ -543,8 +543,8 @@ void debug_make_shop()
         return;
     }
 
-    mprf(MSGCH_PROMPT, "What kind of shop? ");
-    get_input_line( requested_shop, sizeof( requested_shop ) );
+    msgwin_get_line("What kind of shop? ",
+                    requested_shop, sizeof(requested_shop));
     if (!*requested_shop)
         return;
 

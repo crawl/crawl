@@ -36,8 +36,8 @@ void wizard_change_species( void )
     char specs[80];
     int i;
 
-    mpr("What species would you like to be now? " , MSGCH_PROMPT);
-    get_input_line( specs, sizeof( specs ) );
+    msgwin_get_line("What species would you like to be now? " ,
+                    specs, sizeof(specs));
 
     if (specs[0] == '\0')
         return;
@@ -492,8 +492,8 @@ bool wizard_add_mutation()
     }
     const bool god_gift = (answer == 1);
 
-    mpr("Which mutation (name, 'good', 'bad', 'any', 'xom')? ", MSGCH_PROMPT);
-    get_input_line( specs, sizeof( specs ) );
+    msgwin_get_line("Which mutation (name, 'good', 'bad', 'any', 'xom')? ",
+                    specs, sizeof(specs));
 
     if (specs[0] == '\0')
         return (false);
@@ -611,8 +611,7 @@ void wizard_get_religion(void)
 {
     char specs[80];
 
-    mpr("Which god (by name)? ", MSGCH_PROMPT);
-    get_input_line( specs, sizeof( specs ) );
+    msgwin_get_line("Which god (by name)? ", specs, sizeof(specs));
 
     if (specs[0] == '\0')
         return;
