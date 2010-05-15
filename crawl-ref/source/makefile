@@ -343,14 +343,17 @@ INCLUDES_L += -Iutil -I.
 
 ifdef APPLE_GCC
 
-# Compatibility level for Mac OS X
-#
-SDK_VER := 10.4
+ARCH := $(shell arch)
 
-ARCHS := $(shell arch)
-export ARCHS
-
-CF_ARCHS := $(patsubst %,-arch %,$(ARCHS))
+ifeq ($(ARCH),ppc)
+	SDK_VER := 10.4
+endif
+ifeq ($(ARCH),i386)
+	SDK_VER := 10.4
+endif
+ifeq ($(ARCH),x86_64)
+	SDK_VER := 10.6
+endif
 
 # Mac OS X 10.4 adds a 'u' on the end of the SDK name. Everything
 # else is much easier to predict the name of.
@@ -362,8 +365,8 @@ GCC_VER := 4.2
 SDKROOT := /Developer/SDKs/MacOSX$(SDK_VER).sdk
 endif
 
-CC = $(GCC) $(CF_ARCHS) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
-CXX = $(GXX) $(CF_ARCHS) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
+CC = $(GCC) -arch $(ARCH) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
+CXX = $(GXX) -arch $(ARCH) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
 
 ifdef USE_ICC
 CC += -gcc-name=gcc-$(GCC_VER) -gxx-name=g++-$(GCC_VER)
