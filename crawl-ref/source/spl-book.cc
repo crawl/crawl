@@ -134,8 +134,8 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
     // Book of Summonings
     {SPELL_ABJURATION,
      SPELL_RECALL,
-     SPELL_SUMMON_UGLY_THING,
      SPELL_SHADOW_CREATURES,
+     SPELL_SUMMON_UGLY_THING,
      SPELL_HAUNT,
      SPELL_SUMMON_HORRIBLE_THINGS,
      SPELL_NO_SPELL,
