@@ -1586,8 +1586,9 @@ void MiscastEffect::_necromancy(int severity)
             mon_msg_seen = "@The_monster@ shivers with cold.";
             break;
         case 7:
-            you_msg      = "You sense a malignant aura.";
-            mon_msg_seen = "@The_monster@ is briefly tinged with black.";
+            you_msg        = "You sense a malignant aura.";
+            mon_msg_seen   = "@The_monster@ is briefly tinged with black.";
+            mon_msg_unseen = "The air has a black tinge for a moment.";
             // Monster messages needed.
             break;
         case 8:
@@ -2617,8 +2618,9 @@ void MiscastEffect::_poison(int severity)
             // care of elsewhere.
             break;
         case 9:
-            you_msg      = "Your vision is briefly tinged with green.";
-            mon_msg_seen = "@The_monster@ is briefly tinged with green.";
+            you_msg        = "Your vision is briefly tinged with green.";
+            mon_msg_seen   = "@The_monster@ is briefly tinged with green.";
+            mon_msg_unseen = "The air has a green tinge for a moment.";
             break;
         }
         do_msg();
