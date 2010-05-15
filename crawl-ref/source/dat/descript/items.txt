@@ -995,10 +995,6 @@ rod of destruction
 
 This rod contains spells of mayhem and destruction.
 %%%%
-rod of discovery
-
-This rod contains spells which reveal various aspects of an explorer's surroundings to them.
-%%%%
 rod of smiting
 
 This rod allows its wielder to smite foes from afar.

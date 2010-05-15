@@ -1023,7 +1023,6 @@ static const char* staff_type_name(int stafftype)
     case STAFF_SPELL_SUMMONING: return "summoning";
     case STAFF_CHANNELING:      return "channeling";
     case STAFF_WARDING:         return "warding";
-    case STAFF_DISCOVERY:       return "discovery";
     case STAFF_SMITING:         return "smiting";
     case STAFF_STRIKING:        return "striking";
     case STAFF_DEMONOLOGY:      return "demonology";
