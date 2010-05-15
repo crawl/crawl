@@ -499,9 +499,7 @@ void wizard_tweak_object(void)
             mprf("Old value: %ld (0x%08lx)", *ptr, *ptr );
         }
 
-        mpr("New value? ", MSGCH_PROMPT);
-        get_input_line( specs, sizeof( specs ) );
-
+        msgwin_get_line("New value? ", specs, sizeof(specs));
         if (specs[0] == '\0')
             return;
 
