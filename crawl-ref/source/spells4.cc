@@ -465,17 +465,17 @@ void cast_tame_beasts(int pow)
 
 static int _ignite_poison_objects(coord_def where, int pow, int, actor *)
 {
-    UNUSED( pow );
+    UNUSED(pow);
 
     int strength = 0;
 
-    for ( stack_iterator si(where); si; ++si )
+    for (stack_iterator si(where); si; ++si)
     {
         if (si->base_type == OBJ_POTIONS)
         {
             switch (si->sub_type)
             {
-                // intentional fall-through all the way down
+            // intentional fall-through all the way down
             case POT_STRONG_POISON:
                 strength += 20;
             case POT_DEGENERATION:
@@ -487,7 +487,6 @@ static int _ignite_poison_objects(coord_def where, int pow, int, actor *)
                 break;
             }
         }
-
         // FIXME: implement burning poisoned ammo
     }
 
@@ -502,7 +501,7 @@ static int _ignite_poison_objects(coord_def where, int pow, int, actor *)
 
 static int _ignite_poison_clouds( coord_def where, int pow, int, actor *)
 {
-    UNUSED( pow );
+    UNUSED(pow);
 
     bool did_anything = false;
 
@@ -708,15 +707,13 @@ void cast_ignite_poison(int pow)
             damage *= 3;
         }
         else
-        {
             mpr("The poison in your system burns!");
-        }
 
         ouch(damage, NON_MONSTER, KILLED_BY_TARGETING);
 
         if (you.duration[DUR_POISONING] > 0)
         {
-            mpr( "You feel that the poison has left your system." );
+            mpr("You feel that the poison has left your system.");
             you.duration[DUR_POISONING] = 0;
         }
     }
@@ -738,7 +735,7 @@ void cast_silence(int pow)
 
     you.attribute[ATTR_WAS_SILENCED] = 1;
 
-    you.increase_duration(DUR_SILENCE, 10 + random2avg(pow,2), 100);
+    you.increase_duration(DUR_SILENCE, 10 + random2avg(pow, 2), 100);
     invalidate_agrid();
 
     if (you.beheld())

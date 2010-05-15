@@ -1992,13 +1992,11 @@ bool player_effectively_in_light_armour()
     return is_effectively_light_armour(armour);
 }
 
-//
 // This function returns true if the player has a radically different
 // shape... minor changes like blade hands don't count, also note
 // that lich transformation doesn't change the character's shape
 // (so we end up with Naga-lichs, Spiggan-lichs, Minotaur-lichs)
-// it just makes the character undead (with the benefits that implies). --bwr
-//
+// it just makes the character undead (with the benefits that implies). - bwr
 bool player_is_shapechanged(void)
 {
     if (you.attribute[ATTR_TRANSFORMATION] == TRAN_NONE
@@ -2064,7 +2062,7 @@ static int _player_adjusted_evasion_penalty(const int scale)
 
         // [ds] Evasion modifiers for armour are negatives, change
         // those to positive for penalty calc.
-        const int penalty = -property( you.inv[ you.equip[i] ], PARM_EVASION );
+        const int penalty = -property(you.inv[you.equip[i]], PARM_EVASION);
         if (penalty > 0)
             piece_armour_evasion_penalty += penalty;
     }
@@ -2099,12 +2097,12 @@ int player_evasion_bonuses(ev_ignore_type evit)
     if (you.duration[DUR_STONEMAIL])
         evbonus -= 2;
 
-    evbonus += player_equip( EQ_RINGS_PLUS, RING_EVASION );
+    evbonus += player_equip(EQ_RINGS_PLUS, RING_EVASION);
 
-    if (player_equip_ego_type( EQ_WEAPON, SPWPN_EVASION ))
+    if (player_equip_ego_type(EQ_WEAPON, SPWPN_EVASION))
         evbonus += 5;
 
-    evbonus += scan_artefacts( ARTP_EVASION );
+    evbonus += scan_artefacts(ARTP_EVASION);
 
     // mutations
     if (player_mutation_level(MUT_ICY_BLUE_SCALES) > 1)
@@ -2165,7 +2163,8 @@ int player_scale_evasion(const int prescaled_ev, const int scale)
 int player_evasion(ev_ignore_type evit)
 {
     const int size_factor = player_evasion_size_factor();
-    // Repulsion fields and size are all that matters when paralysed or at 0 dex.
+    // Repulsion fields and size are all that matters when paralysed or
+    // at 0 dex.
     if ((you.cannot_move() || you.stat_zero[STAT_DEX])
         && !(evit & EV_IGNORE_HELPLESS))
     {
@@ -2218,7 +2217,8 @@ int player_body_armour_racial_spellcasting_bonus(const int scale)
 
     const unsigned long armour_race = get_equip_race(*body_armour);
 
-    // get the armour race value that corresponds to the character's race:
+    // Get the armour race value that corresponds to the character's
+    // race:
     const unsigned long player_race
                             = ((player_genus(GENPC_DWARVEN)) ? ISFLAG_DWARVEN :
                                (player_genus(GENPC_ELVEN))   ? ISFLAG_ELVEN :
@@ -2237,8 +2237,8 @@ int player_body_armour_racial_spellcasting_bonus(const int scale)
     return (armour_racial_spellcasting_bonus * scale);
 }
 
-// Returns the spellcasting penalty (increase in spell failure) for
-// the player's worn body armour and shield.
+// Returns the spellcasting penalty (increase in spell failure) for the
+// player's worn body armour and shield.
 int player_armour_shield_spell_penalty()
 {
     const int scale = 100;
