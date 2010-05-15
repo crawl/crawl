@@ -42,7 +42,6 @@ void puttext(int x1, int y1, int x2, int y2, const screen_buffer_t *);
 void update_screen(void);
 void clear_to_end_of_line(void);
 void clear_to_end_of_screen(void);
-void get_input_line_from_curses( char *const buff, int len );
 
 void delay(unsigned long time);
 void unixcurses_shutdown(void);

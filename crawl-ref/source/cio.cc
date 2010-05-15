@@ -133,57 +133,6 @@ int unmangle_direction_keys(int keyin, KeymapContext keymap,
     return (keyin);
 }
 
-void get_input_line( char *const buff, int len )
-{
-    buff[0] = 0;         // just in case
-
-    if (crawl_state.is_replaying_keys())
-    {
-        ASSERT(crawl_state.input_line_curr <
-               crawl_state.input_line_strs.size());
-
-        unsigned int curr = crawl_state.input_line_curr++;
-        std::string &line = crawl_state.input_line_strs[curr];
-
-        strlcpy(buff, line.c_str(), len);
-        return;
-    }
-
-#if defined(USE_TILE)
-    get_input_line_gui( buff, len );
-#elif defined(UNIX)
-    get_input_line_from_curses( buff, len ); // implemented in libunix.cc
-#elif defined(TARGET_OS_WINDOWS)
-    getstr( buff, len );
-#else
-
-    // [dshaligram] Turn on the cursor for DOS.
-#ifdef TARGET_OS_DOS
-    _setcursortype(_NORMALCURSOR);
-#endif
-
-    fgets( buff, len, stdin );  // much safer than gets()
-#endif
-
-    buff[ len - 1 ] = 0;  // just in case
-
-    // Removing white space from the end in order to get rid of any
-    // newlines or carriage returns that any of the above might have
-    // left there (ie fgets especially).  -- bwr
-    const int end = strlen( buff );
-    int i;
-
-    for (i = end - 1; i >= 0; i++)
-    {
-        if (isspace( buff[i] ))
-            buff[i] = 0;
-        else
-            break;
-    }
-
-    crawl_state.input_line_strs.push_back(buff);
-}
-
 // Wrapper around cgotoxy that can draw a fake cursor for Unix terms where
 // cursoring over darkgrey or black causes problems.
 void cursorxy(int x, int y)
