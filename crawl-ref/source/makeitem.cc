@@ -2326,7 +2326,8 @@ static special_armour_type _determine_armour_ego(const item_def& item,
                                         2, SPARM_FIRE_RESISTANCE,
                                         2, SPARM_POSITIVE_ENERGY,
                                         4, SPARM_MAGIC_RESISTANCE,
-                                        4, SPARM_ARCHMAGI));
+                                        4, SPARM_ARCHMAGI,
+                                        0));
 
         // Only ever generate robes of archmagi for random pieces of armour,
         // for whatever reason.
