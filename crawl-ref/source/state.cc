@@ -33,7 +33,7 @@ game_state::game_state()
       terminal_resize_handler(NULL), terminal_resize_check(NULL),
       doing_prev_cmd_again(false), prev_cmd(CMD_NO_CMD),
       repeat_cmd(CMD_NO_CMD),cmd_repeat_started_unsafe(false),
-      input_line_curr(0), level_annotation_shown(false),
+      level_annotation_shown(false),
 #ifndef USE_TILE
       mlist_targeting(false),
 #endif

@@ -49,8 +49,6 @@ int m_getch();
 int unmangle_direction_keys(int keyin, KeymapContext keymap = KMC_DEFAULT,
                             bool fake_ctrl = true, bool fake_shift = true);
 
-void get_input_line( char *const buff, int len );
-
 int nowrapcprintf( int wrapcol, const char *s, ... );
 int nowrap_eol_cprintf( const char *s, ... );
 

@@ -76,9 +76,6 @@ struct game_state
 
     std::vector<std::string> startup_errors;
 
-    std::vector<std::string> input_line_strs;
-    unsigned int             input_line_curr;
-
     bool level_annotation_shown;
 
 #ifndef USE_TILE

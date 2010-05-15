@@ -1061,8 +1061,6 @@ static void _input()
 
     repeat_again_rec.paused = crawl_state.is_replaying_keys();
 
-    crawl_state.input_line_curr = 0;
-
     {
         // Flush messages and display message window.
         msgwin_new_cmd();
@@ -1088,7 +1086,6 @@ static void _input()
             && !crawl_state.is_replaying_keys())
         {
             crawl_state.prev_cmd = cmd;
-            crawl_state.input_line_strs.clear();
         }
 
         if (cmd != CMD_MOUSE_MOVE)
@@ -3787,7 +3784,6 @@ static void _do_cmd_repeat()
 
     crawl_state.repeat_cmd                = real_cmd;
     crawl_state.cmd_repeat_started_unsafe = !i_feel_safe();
-    crawl_state.input_line_strs.clear();
 
     int last_repeat_turn;
     for (; i < count && crawl_state.is_repeating_cmd(); ++i)

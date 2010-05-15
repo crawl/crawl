@@ -117,16 +117,6 @@ static int crawl_set_more_autoclear(lua_State *ls)
     return (0);
 }
 
-static int crawl_input_line(lua_State *ls)
-{
-    // This is arbitrary, but anybody entering so many characters is psychotic.
-    char linebuf[500];
-
-    get_input_line(linebuf, sizeof linebuf);
-    lua_pushstring(ls, linebuf);
-    return (1);
-}
-
 static int crawl_c_input_line(lua_State *ls)
 {
     char linebuf[500];
@@ -644,7 +634,6 @@ static const struct luaL_reg crawl_clib[] =
     { "random_range",   crawl_random_range },
     { "random_element", crawl_random_element },
     { "redraw_screen",  crawl_redraw_screen },
-    { "input_line",     crawl_input_line },
     { "c_input_line",   crawl_c_input_line},
     { "getch",          crawl_getch },
     { "yesno",          crawl_yesno },

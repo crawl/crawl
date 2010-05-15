@@ -36,7 +36,6 @@ void clear_to_end_of_line(void);
 void clear_to_end_of_screen(void);
 int get_number_of_lines(void);
 int get_number_of_cols(void);
-void get_input_line_gui(char *const buff, int len);
 void _setcursortype(int curstype);
 void textbackground(int bg);
 void textcolor(int col);

@@ -755,17 +755,6 @@ int get_number_of_cols(void)
     return (COLS);
 }
 
-void get_input_line_from_curses( char *const buff, int len )
-{
-    echo();
-    wgetnstr( stdscr, buff, len );
-    noecho();
-
-    // Don't return a partial string if a HUP signal interrupted things.
-    if (crawl_state.seen_hups)
-        buff[0] = '\0';
-}
-
 int clrscr()
 {
     int retval;
