@@ -97,11 +97,13 @@ enum mon_attack_flavour
     AF_STEAL,
     AF_STEAL_FOOD,
     AF_CRUSH,
-    AF_REACH,
 #if TAG_MAJOR_VERSION == 22
+    AF_REACH,
     AF_POISON_INT,
     AF_POISON_DEX,
     AF_POISON_STAT
+#else
+    AF_REACH
 #endif
 };
 
