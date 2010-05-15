@@ -1073,7 +1073,7 @@ void MiscastEffect::_translocation(int severity)
             // care of elsewhere.
             break;
         case 9:
-            you_msg = "You feel uncomfortable.";
+            you_msg      = "You feel uncomfortable.";
             mon_msg_seen = "@The_monster@ scowls.";
             break;
         }
@@ -1586,7 +1586,8 @@ void MiscastEffect::_necromancy(int severity)
             mon_msg_seen = "@The_monster@ shivers with cold.";
             break;
         case 7:
-            you_msg = "You sense a malignant aura.";
+            you_msg      = "You sense a malignant aura.";
+            mon_msg_seen = "@The_monster@ is briefly tinged with black.";
             // Monster messages needed.
             break;
         case 8:
@@ -1608,7 +1609,7 @@ void MiscastEffect::_necromancy(int severity)
             if (target->res_torment())
             {
                 you_msg      = "You feel weird for a moment.";
-                mon_msg_seen = "@The_monster@ has an odd expression for a "
+                mon_msg_seen = "@The_monster@ has a weird expression for a "
                                "moment.";
             }
             else
@@ -1693,7 +1694,7 @@ void MiscastEffect::_necromancy(int severity)
             if (target->res_torment())
             {
                 you_msg      = "You feel weird for a moment.";
-                mon_msg_seen = "@The_monster@ has an odd expression for a "
+                mon_msg_seen = "@The_monster@ has a weird expression for a "
                                "moment.";
             }
             else
@@ -2578,12 +2579,12 @@ void MiscastEffect::_poison(int severity)
         switch (random2(10))
         {
         case 0:
-            you_msg = "You feel mildly nauseous.";
-            // Monster messages needed.
+            you_msg      = "You feel mildly nauseous.";
+            mon_msg_seen = "@The_monster@ briefly looks nauseous.";
             break;
         case 1:
-            you_msg = "You feel slightly ill.";
-            // Monster messages needed.
+            you_msg      = "You feel slightly ill.";
+            mon_msg_seen = "@The_monster@ briefly looks sick.";
             break;
         case 2:
             you_msg      = "Wisps of poison gas drift from your @hands@.";
@@ -2595,27 +2596,29 @@ void MiscastEffect::_poison(int severity)
             // Monster messages needed.
             break;
         case 4:
-            you_msg = "You feel faint for a moment.";
-            // Monster messages needed.
+            you_msg      = "You feel faint for a moment.";
+            mon_msg_seen = "@The_monster@ looks faint for a moment.";
             break;
         case 5:
-            you_msg = "You feel sick.";
-            // Monster messages needed.
+            you_msg      = "You feel sick.";
+            mon_msg_seen = "@The_monster@ looks sick.";
             break;
         case 6:
-            you_msg = "You feel odd.";
-            // Monster messages needed.
+            you_msg      = "You feel odd.";
+            mon_msg_seen = "@The_monster@ has an odd expression for a "
+                           "moment.";
             break;
         case 7:
-            you_msg = "You feel weak for a moment.";
-            // Monster messages needed.
+            you_msg      = "You feel weak for a moment.";
+            mon_msg_seen = "@The_monster@ looks weak for a moment.";
             break;
         case 8:
             // Set nothing; canned_msg(MSG_NOTHING_HAPPENS) will be taken
             // care of elsewhere.
             break;
         case 9:
-            you_msg = "Your vision is briefly tinged with green.";
+            you_msg      = "Your vision is briefly tinged with green.";
+            mon_msg_seen = "@The_monster@ is briefly tinged with green.";
             break;
         }
         do_msg();
@@ -2627,7 +2630,7 @@ void MiscastEffect::_poison(int severity)
         case 0:
             if (target->res_poison() <= 0)
             {
-                you_msg = "You feel sick.";
+                you_msg      = "You feel sick.";
                 mon_msg_seen = "@The_monster@ looks sick.";
                 _do_poison(2 + random2(3));
             }
@@ -2651,7 +2654,7 @@ void MiscastEffect::_poison(int severity)
         case 0:
             if (target->res_poison() <= 0)
             {
-                you_msg = "You feel very sick.";
+                you_msg      = "You feel very sick.";
                 mon_msg_seen = "@The_monster@ looks very sick.";
                 _do_poison(3 + random2avg(9, 2));
             }
@@ -2683,7 +2686,7 @@ void MiscastEffect::_poison(int severity)
         case 0:
             if (target->res_poison() <= 0)
             {
-                you_msg = "You feel incredibly sick.";
+                you_msg      = "You feel incredibly sick.";
                 mon_msg_seen = "@The_monster@ looks incredibly sick.";
                 _do_poison(10 + random2avg(19, 2));
             }
