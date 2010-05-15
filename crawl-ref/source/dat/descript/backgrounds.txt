@@ -31,10 +31,6 @@ Crusader
 
 Crusaders are melee fighters who can boost themselves in battle with spells from the book of War Chants.
 %%%%
-Death Knight
-
-Death Knights are melee fighters proficient in Necromancy.
-%%%%
 Earth Elementalist
 
 Earth Elementalists know the Sandblast spell, and carry stones to increase the spell's power. More earthen spells are in their book of Geomancy.
@@ -94,10 +90,6 @@ Stalkers are ready to stab with robe, cloak and a good weapon. They augment stea
 Summoner
 
 Summoners start with the book of Callings and are able to Summon Small Mammals from the start.
-%%%%
-Thief
-
-Thieves start with robe, cloak, weapon and have trained a multitude of skills.
 %%%%
 Transmuter
 

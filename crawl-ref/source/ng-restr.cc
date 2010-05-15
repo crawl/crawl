@@ -160,21 +160,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
                 return (CC_UNRESTRICTED);
         }
 
-        case JOB_DEATH_KNIGHT:
-            switch (speci)
-        {
-            case SP_DEEP_ELF:
-            case SP_SLUDGE_ELF:
-            case SP_DEEP_DWARF:
-            case SP_DEMONSPAWN:
-            case SP_KENKU:
-            case SP_MUMMY:
-            case SP_VAMPIRE:
-                return (CC_UNRESTRICTED);
-            default:
-                return (CC_RESTRICTED);
-        }
-
         case JOB_HEALER:
             switch (speci)
         {
@@ -533,9 +518,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             default:
                 return (CC_UNRESTRICTED);
         }
-
-        case JOB_THIEF:
-            return (CC_RESTRICTED);
 
         case JOB_ASSASSIN:
             switch (speci)

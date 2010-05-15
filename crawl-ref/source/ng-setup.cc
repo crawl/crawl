@@ -100,7 +100,6 @@ static void _give_last_paycheck(job_type which_job)
     switch (which_job)
     {
     case JOB_HEALER:
-    case JOB_THIEF:
         you.gold = 100;
         break;
 
@@ -154,7 +153,6 @@ static void _jobs_stat_init(job_type which_job)
     case JOB_PALADIN:           s =  7; i =  2; d =  3; hp = 14; mp = 0; break;
 
     case JOB_CRUSADER:          s =  4; i =  4; d =  4; hp = 13; mp = 1; break;
-    case JOB_DEATH_KNIGHT:      s =  5; i =  3; d =  4; hp = 13; mp = 1; break;
     case JOB_CHAOS_KNIGHT:      s =  4; i =  4; d =  4; hp = 13; mp = 1; break;
 
     case JOB_REAVER:            s =  5; i =  5; d =  2; hp = 13; mp = 1; break;
@@ -162,7 +160,6 @@ static void _jobs_stat_init(job_type which_job)
     case JOB_PRIEST:            s =  5; i =  4; d =  3; hp = 12; mp = 1; break;
 
     case JOB_ASSASSIN:          s =  3; i =  3; d =  6; hp = 12; mp = 0; break;
-    case JOB_THIEF:             s =  4; i =  2; d =  6; hp = 13; mp = 0; break;
     case JOB_STALKER:           s =  2; i =  4; d =  6; hp = 12; mp = 1; break;
 
     case JOB_HUNTER:            s =  4; i =  3; d =  5; hp = 13; mp = 0; break;
@@ -634,23 +631,6 @@ static void _give_items_skills(const newgame_def& ng)
         }
         break;
     }
-    case JOB_DEATH_KNIGHT:
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
-        _update_weapon(ng);
-
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
-                              ARM_ROBE);
-
-        newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_NECROMANCY);
-
-        you.skills[SK_SPELLCASTING] = 1;
-        you.skills[SK_NECROMANCY]   = 2;
-
-        you.skills[SK_FIGHTING] = 2;
-        you.skills[SK_ARMOUR]   = 1;
-        you.skills[SK_DODGING]  = 1;
-        weap_skill = 2;
-        break;
 
     case JOB_HEALER:
         you.religion = GOD_ELYVILON;
@@ -951,30 +931,6 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_STABBING]     = 2;
         you.skills[SK_SPELLCASTING] = 1;
         you.skills[SK_ENCHANTMENTS] = 1;
-        break;
-
-    case JOB_THIEF:
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-        newgame_make_item(2, EQ_CLOAK, OBJ_ARMOUR, ARM_CLOAK);
-        newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 20);
-
-        // Spriggans used to get a rod of striking, but now that anyone
-        // can get one when playing an Artificer, this is no longer
-        // necessary. (jpeg)
-        if (you.species == SP_SPRIGGAN)
-            you.inv[0].sub_type = WPN_DAGGER;
-
-        if (player_genus(GENPC_OGREISH) || you.species == SP_TROLL)
-            you.inv[0].sub_type = WPN_CLUB;
-
-        weap_skill = 2;
-        you.skills[SK_FIGHTING] = 1;
-        you.skills[SK_DODGING]  = 2;
-        you.skills[SK_STEALTH]  = 2;
-        you.skills[SK_STABBING] = 2;
-        you.skills[SK_TRAPS_DOORS] = 2;
-        you.skills[SK_THROWING] = 2;
         break;
 
     case JOB_ASSASSIN:
@@ -1369,9 +1325,6 @@ static void _give_basic_spells(job_type which_job)
     case JOB_EARTH_ELEMENTALIST:
         which_spell = SPELL_SANDBLAST;
         break;
-    case JOB_DEATH_KNIGHT:
-        which_spell = SPELL_PAIN;
-        break;
 
     default:
         break;
@@ -1488,7 +1441,6 @@ static void _apply_job_colour(item_def &item)
 
     switch (you.char_class)
     {
-    case JOB_THIEF:
     case JOB_NECROMANCER:
     case JOB_ASSASSIN:
         item.colour = DARKGREY;
