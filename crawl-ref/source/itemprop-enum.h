@@ -399,10 +399,9 @@ enum stave_type
     STAFF_DESTRUCTION_III,
     STAFF_DESTRUCTION_IV,
     STAFF_WARDING,
-    STAFF_DISCOVERY,
     STAFF_DEMONOLOGY,
     STAFF_STRIKING,
-    STAFF_VENOM,                // 23
+    STAFF_VENOM,                // 22
     NUM_STAVES                  // must remain last member {dlb}
 };
 
