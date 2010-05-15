@@ -2615,14 +2615,7 @@ void MiscastEffect::_poison(int severity)
             // care of elsewhere.
             break;
         case 9:
-            if (neither_end_silenced())
-            {
-                all_msg        = "You hear a sucking sound.";
-                msg_ch         = MSGCH_SOUND;
-                sound_loudness = 2;
-            }
-            else if (you.species != SP_MUMMY)
-                you_msg = "You taste almonds.";
+            you_msg = "Your vision is briefly tinged with green.";
             break;
         }
         do_msg();
