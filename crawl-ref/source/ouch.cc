@@ -1299,12 +1299,12 @@ void end_game(scorefile_entry &se)
     delete_files();
 
     // death message
-    if (se.death_type != KILLED_BY_LEAVING
-        && se.death_type != KILLED_BY_QUITTING
-        && se.death_type != KILLED_BY_WINNING)
+    if (se.get_death_type() != KILLED_BY_LEAVING
+        && se.get_death_type() != KILLED_BY_QUITTING
+        && se.get_death_type() != KILLED_BY_WINNING)
     {
         mprnojoin("You die...");      // insert player name here? {dlb}
-        xom_death_message((kill_method_type) se.death_type);
+        xom_death_message((kill_method_type) se.get_death_type());
         if (you.religion == GOD_FEDHAS)
             simple_god_message(" appreciates your contribution to the "
                                "ecosystem.", GOD_FEDHAS);
@@ -1316,7 +1316,7 @@ void end_game(scorefile_entry &se)
             hints_death_screen();
     }
 
-    if (!dump_char(morgue_name(se.death_time), false, true, &se))
+    if (!dump_char(morgue_name(se.get_death_time()), false, true, &se))
     {
         mpr("Char dump unsuccessful! Sorry about that.");
         if (!crawl_state.seen_hups)
@@ -1325,10 +1325,10 @@ void end_game(scorefile_entry &se)
     }
 
 #ifdef DGL_WHEREIS
-    whereis_record(se.death_type == KILLED_BY_QUITTING? "quit" :
-                   se.death_type == KILLED_BY_WINNING ? "won"  :
-                   se.death_type == KILLED_BY_LEAVING ? "bailed out"
-                                                      : "dead");
+    whereis_record(se.get_death_type() == KILLED_BY_QUITTING? "quit" :
+                   se.get_death_type() == KILLED_BY_WINNING ? "won"  :
+                   se.get_death_type() == KILLED_BY_LEAVING ? "bailed out"
+                                                            : "dead");
 #endif
 
     if (!crawl_state.seen_hups)

@@ -131,7 +131,7 @@ void hiscores_new_entry( const scorefile_entry &ne )
             break;
 
         // compare points..
-        if (!inserted && ne.points >= hs_list[i]->points)
+        if (!inserted && ne.get_score() >= hs_list[i]->get_score())
         {
             newest_entry = i;           // for later printing
             inserted = true;
