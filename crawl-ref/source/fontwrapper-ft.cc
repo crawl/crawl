@@ -14,6 +14,8 @@
 #include "tilebuf.h"
 #include "tilefont.h"
 
+#include <malloc.h>
+
 FontWrapper* FontWrapper::create()
 {
     return (new FTFontWrapper());
