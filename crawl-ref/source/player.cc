@@ -337,10 +337,9 @@ bool move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift,
     const bool from_above = (old_pos == p);
     const dungeon_feature_type old_grid =
         (from_above) ? DNGN_FLOOR : grd(old_pos);
-    const dungeon_feature_type new_grid = grd(p);
 
     // Really must be clear.
-    ASSERT(you.can_pass_through_feat(new_grid));
+    ASSERT(you.can_pass_through_feat(grd(p)));
 
     // Better not be an unsubmerged monster either.
     ASSERT(swapping && monster_at(p)
