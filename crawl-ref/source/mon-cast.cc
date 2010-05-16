@@ -2349,7 +2349,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
 
         for (adjacent_iterator ai(monster->pos()); ai; ++ai)
         {
-            // we can blink away the crowd, but only our allies
+            // We can blink away the crowd, but only our allies.
             if (monster_at(*ai)
                 && monster_at(*ai)->attitude != monster->attitude)
             {
