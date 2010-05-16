@@ -1897,57 +1897,45 @@ bool entomb(int powc)
     // as more or less the theoretical maximum.
     int number_built = 0;
 
-    const dungeon_feature_type safe_to_overwrite[] = {
-        DNGN_FLOOR, DNGN_SHALLOW_WATER, DNGN_OPEN_DOOR,
-        DNGN_TRAP_MECHANICAL, DNGN_TRAP_MAGICAL, DNGN_TRAP_NATURAL,
-        DNGN_UNDISCOVERED_TRAP,
-        DNGN_FLOOR_SPECIAL
+    const dungeon_feature_type safe_tiles[] = {
+        DNGN_SHALLOW_WATER, DNGN_FLOOR, DNGN_FLOOR_SPECIAL, DNGN_OPEN_DOOR
     };
 
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
     {
-        // Tile already occupied by monster
+        // The tile is occupied by a monster.
         if (monster_at(*ai))
             continue;
 
         // This is where power comes in.
-        if (one_chance_in(powc/5))
+        if (one_chance_in(powc / 5))
             continue;
 
+        // Make sure we have a legitimate tile.
         bool proceed = false;
-        for (unsigned int i=0; i < ARRAYSZ(safe_to_overwrite) && !proceed; ++i)
-            if (grd(*ai) == safe_to_overwrite[i])
+        for (unsigned int i = 0; i < ARRAYSZ(safe_tiles) && !proceed; ++i)
+            if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai)))
                 proceed = true;
 
-        // checkpoint one - do we have a legitimate tile? {dlb}
-        if (!proceed)
-            continue;
+        if (proceed)
+        {
+            // All items are moved inside.
+            if (igrd(*ai) != NON_ITEM)
+                move_items(*ai, you.pos());
 
-        // hate to see the orb get destroyed by accident {dlb}:
-        for (stack_iterator si(*ai); si && proceed; ++si)
-            if (si->base_type == OBJ_ORBS)
-                proceed = false;
+            // All clouds are destroyed.
+            if (env.cgrid(*ai) != EMPTY_CLOUD)
+                delete_cloud(env.cgrid(*ai));
 
-        // checkpoint two - is the orb resting in the tile? {dlb}:
-        if (!proceed)
-            continue;
+            // All traps are destroyed.
+            if (trap_def *ptrap = find_trap(*ai))
+                ptrap->destroy();
 
-        // Destroy all items on the square.
-        for (stack_iterator si(*ai); si; ++si)
-            destroy_item(si->index());
-
-        // deal with clouds {dlb}:
-        if (env.cgrid(*ai) != EMPTY_CLOUD)
-            delete_cloud(env.cgrid(*ai));
-
-        // All traps are destroyed
-        if (trap_def* ptrap = find_trap(*ai))
-            ptrap->destroy();
-
-        // Finally, place the wall {dlb}:
-        grd(*ai) = DNGN_ROCK_WALL;
-        set_terrain_changed(*ai);
-        number_built++;
+            // Actually place the wall.
+            grd(*ai) = DNGN_ROCK_WALL;
+            set_terrain_changed(*ai);
+            number_built++;
+        }
     }
 
     if (number_built > 0)
