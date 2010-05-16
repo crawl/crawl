@@ -10,8 +10,6 @@
 
 #include "tilereg-title.h"
 
-#include <SDL_opengl.h>
-
 #include "libutil.h"
 #include "macro.h"
 

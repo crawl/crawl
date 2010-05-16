@@ -10,8 +10,6 @@
 
 #include "tilereg-msg.h"
 
-#include <SDL_opengl.h>
-
 #include "libutil.h"
 #include "macro.h"
 #include "tilefont.h"
