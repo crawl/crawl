@@ -636,7 +636,7 @@ static const char* _job_abbrev(int job)
 
 static int _job_by_name(const std::string& name)
 {
-    int job = get_job_by_name(name);
+    int job = get_job_by_name(name.c_str());
 
     if (job != JOB_UNKNOWN)
         return (job);
@@ -649,7 +649,7 @@ static int _job_by_name(const std::string& name)
     return (JOB_UNKNOWN);
 }
 
-static void scorefile_entry::init_with_fields()
+void scorefile_entry::init_with_fields()
 {
     version = fields->str_field("v");
     points  = fields->long_field("sc");
