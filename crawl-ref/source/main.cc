@@ -209,7 +209,7 @@ static void _compile_time_asserts();
 //  to new_game and then input.
 //
 
-#ifdef USE_TILE
+#ifdef USE_SDL
 #include <SDL_main.h>
 #endif
 
