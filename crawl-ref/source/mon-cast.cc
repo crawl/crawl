@@ -45,6 +45,7 @@
 #include "stuff.h"
 #include "areas.h"
 #include "teleport.h"
+#include "traps.h"
 #include "view.h"
 #include "viewchar.h"
 #include "xom.h"
@@ -2340,6 +2341,12 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         if (!hp_lost)
             sumcount++;
 
+        const dungeon_feature_type safe_tiles[] = {
+            DNGN_SHALLOW_WATER, DNGN_FLOOR, DNGN_FLOOR_SPECIAL, DNGN_OPEN_DOOR
+        };
+
+        bool proceed;
+
         for (adjacent_iterator ai(monster->pos()); ai; ++ai)
         {
             // we can blink away the crowd, but only our allies
@@ -2349,11 +2356,14 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                 sumcount++;
             }
 
-            if (grd(*ai) != DNGN_FLOOR && grd(*ai) > DNGN_MAX_NONREACH
-                && !feat_is_trap(grd(*ai)))
-            {
+            // Make sure we have a legitimate tile.
+            proceed = false;
+            for (unsigned int i = 0; i < ARRAYSZ(safe_tiles) && !proceed; ++i)
+                if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai)))
+                    proceed = true;
+
+            if (!proceed && grd(*ai) > DNGN_MAX_NONREACH)
                 sumcount++;
-            }
         }
 
         if (abs(you.pos().x - monster->pos().x) <= 1
@@ -2382,14 +2392,29 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                 }
             }
 
-            if (grd(*ai) == DNGN_FLOOR || feat_is_trap(grd(*ai)))
+            // Make sure we have a legitimate tile.
+            proceed = false;
+            for (unsigned int i = 0; i < ARRAYSZ(safe_tiles) && !proceed; ++i)
+                if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai)))
+                    proceed = true;
+
+            if (proceed)
             {
-                grd(*ai) = DNGN_ROCK_WALL;
-                if (env.cgrid(*ai) != EMPTY_CLOUD)
-                    delete_cloud(env.cgrid(*ai));
-                set_terrain_changed(*ai);
+                // All items are moved inside.
                 if (igrd(*ai) != NON_ITEM)
                     move_items(*ai, monster->pos());
+
+                // All clouds are destroyed.
+                if (env.cgrid(*ai) != EMPTY_CLOUD)
+                    delete_cloud(env.cgrid(*ai));
+
+                // All traps are destroyed.
+                if (trap_def *ptrap = find_trap(*ai))
+                    ptrap->destroy();
+
+                // Actually place the wall.
+                grd(*ai) = DNGN_ROCK_WALL;
+                set_terrain_changed(*ai);
                 sumcount++;
             }
         }
