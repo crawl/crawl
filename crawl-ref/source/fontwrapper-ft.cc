@@ -14,8 +14,6 @@
 #include "tilebuf.h"
 #include "tilefont.h"
 
-#include <malloc.h>
-
 FontWrapper* FontWrapper::create()
 {
     return (new FTFontWrapper());
@@ -522,8 +520,8 @@ void FTFontWrapper::render_string(unsigned int px, unsigned int py,
     }
 
     // Create the text block
-    unsigned char *chars = (unsigned char *)alloca(max_rows * max_cols);
-    unsigned char *colours = (unsigned char *)alloca(max_rows * max_cols);
+    unsigned char *chars = (unsigned char *)malloc(max_rows * max_cols);
+    unsigned char *colours = (unsigned char *)malloc(max_rows * max_cols);
     memset(chars, ' ', max_rows * max_cols);
     memset(colours, font_colour, max_rows * max_cols);
 
@@ -581,6 +579,9 @@ void FTFontWrapper::render_string(unsigned int px, unsigned int py,
         _draw_box(tx, ty, wx, wy, outline, box_colour, box_alpha);
 
     render_textblock(tx, ty, chars, colours, max_cols, max_rows, drop_shadow);
+
+    free(chars);
+    free(colours);
 }
 
 void FTFontWrapper::store(FontBuffer &buf, float &x, float &y,
