@@ -72,7 +72,7 @@ private:
     std::string name;
     long        uid;                // for multiuser systems
     species_type race;
-    job_type    cls;
+    int         job;                // job_type + legacy values
     std::string race_class_name;    // overrides race & cls if non-empty.
     char        lvl;                // player level.
     char        best_skill;         // best skill #
