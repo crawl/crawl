@@ -122,11 +122,12 @@
 #include "traps.h"
 #include "travel.h"
 #include "hints.h"
-#include "view.h"
 #include "shout.h"
+#include "stash.h"
+#include "view.h"
 #include "viewchar.h"
 #include "viewgeom.h"
-#include "stash.h"
+#include "viewmap.h"
 #include "wiz-dgn.h"
 #include "wiz-fsim.h"
 #include "wiz-item.h"
@@ -1503,13 +1504,13 @@ static void _do_display_map()
 #endif
 
     level_pos pos;
-    show_map(pos, true);
+    const bool travel = show_map(pos, true);
     redraw_screen();
 
 #ifdef USE_TILE
     mpr("Returning to the game...");
 #endif
-    if (pos.pos.x > 0)
+    if (travel)
         start_translevel_travel(pos);
 }
 

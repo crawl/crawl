@@ -574,7 +574,7 @@ public:
 // the player from getting "artificial" location clues by using the
 // map to see how close to the end they are.  They'll need to explore
 // to get that.  This function is still a mess, though. -- bwr
-void show_map( level_pos &spec_place, bool travel_mode, bool allow_esc )
+bool show_map(level_pos &spec_place, bool travel_mode, bool allow_esc)
 {
     levelview_excursion le;
     level_id original(level_id::current());
@@ -610,6 +610,7 @@ void show_map( level_pos &spec_place, bool travel_mode, bool allow_esc )
 
     bool map_alive  = true;
     bool redraw_map = true;
+    bool chose      = false;
 
 #ifndef USE_TILE
     clrscr();
@@ -708,7 +709,7 @@ void show_map( level_pos &spec_place, bool travel_mode, bool allow_esc )
         if (crawl_state.seen_hups)
         {
             spec_place = level_pos();
-            break;
+            chose = false;
         }
 #endif
 
@@ -751,6 +752,7 @@ void show_map( level_pos &spec_place, bool travel_mode, bool allow_esc )
             if (cme.left_clicked() && in_bounds(grdp))
             {
                 spec_place = level_pos(level_id::current(), grdp);
+                chose      = true;
                 map_alive  = false;
             }
             else if (cme.scroll_up())
@@ -1044,6 +1046,7 @@ void show_map( level_pos &spec_place, bool travel_mode, bool allow_esc )
             else
             {
                 spec_place = level_pos(level_id::current(), coord_def(x, y));
+                chose = true;
                 map_alive = false;
                 break;
             }
@@ -1156,6 +1159,8 @@ void show_map( level_pos &spec_place, bool travel_mode, bool allow_esc )
 #ifdef USE_TILE
     tiles.place_cursor(CURSOR_MAP, Region::NO_CURSOR);
 #endif
+
+    return (chose);
 }
 
 bool emphasise(const coord_def& where)

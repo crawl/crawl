@@ -62,6 +62,7 @@
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
+#include "viewmap.h"
 #include "shout.h"
 #include "xom.h"
 
@@ -1645,7 +1646,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
         while (true)
         {
             level_pos lpos;
-            show_map(lpos, false, true);
+            bool chose = show_map(lpos, false, true);
             pos = lpos.pos;
             redraw_screen();
 
@@ -1664,7 +1665,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
 
             dprf("Target square (%d,%d)", pos.x, pos.y );
 
-            if (pos == you.pos() || pos == coord_def(-1,-1))
+            if (!chose || pos == you.pos())
             {
                 if (!wizard_tele)
                 {
@@ -1986,16 +1987,20 @@ bool project_noise(void)
     coord_def pos(1, 0);
     level_pos lpos;
 
-    mpr( "Choose the noise's source (press '.' or delete to select)." );
+    mpr("Choose the noise's source (press '.' or delete to select).");
     more();
-    show_map(lpos, false);
+
+    // Might abort with SIG_HUP despite !allow_esc.
+    if (!show_map(lpos, false, false))
+        lpos = level_pos::current();
     pos = lpos.pos;
+    ASSERT(map_bounds(pos));
 
     redraw_screen();
 
-    dprf("Target square (%d,%d)", pos.x, pos.y );
+    dprf("Target square (%d,%d)", pos.x, pos.y);
 
-    if (!silenced( pos ))
+    if (!silenced(pos))
     {
         if (in_bounds(pos) && !feat_is_solid(grd(pos)))
         {
