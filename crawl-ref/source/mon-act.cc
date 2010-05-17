@@ -1782,7 +1782,7 @@ void handle_monster_move(monsters *monster)
             }
         }
 
-        slime_wall_damage(monster, monster->speed);
+        slime_wall_damage(monster, speed_to_duration(monster->speed));
         if (!monster->alive())
             break;
 
