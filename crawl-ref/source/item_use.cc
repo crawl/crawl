@@ -1667,44 +1667,53 @@ static bool _blessed_hit_victim(bolt &beam, actor* victim, int &dmg,
 int _blowgun_power_roll(bolt &beam)
 {
     actor* agent = beam.agent();
-    int base_power = 0;
-    int blowgun_base = 0;
+    if (!agent)
+        return 0;
 
-    if (!agent || agent->atype() == ACT_MONSTER)
+    // Could check player shield skill here or something,
+    // but that won't work with potential other sources
+    // of reflection, and it doesn't matter anyway. [rob]
+    if (beam.reflections > 0)
+        return (agent->get_experience_level() / 3);
+
+    int base_power;
+    item_def* blowgun;
+    if (agent->atype() == ACT_MONSTER)
     {
-        monsters* mons = agent->as_monster();
-        base_power += mons->hit_dice;
-        blowgun_base += (*mons).launcher()->plus;
+        base_power = agent->get_experience_level();
+        blowgun = agent->as_monster()->launcher();
     }
     else
     {
-        base_power += you.skills[SK_THROWING];
-        ASSERT(you.weapon());
-        blowgun_base += (you.weapon())->plus;
+        base_power = agent->skill(SK_THROWING);
+        blowgun = agent->weapon();
     }
 
-    return (base_power + blowgun_base);
+    ASSERT(blowgun && blowgun->sub_type == WPN_BLOWGUN);
+
+    return (base_power + blowgun->plus);
 }
 
 bool _blowgun_check(bolt &beam, actor* victim, bool message = true)
 {
     actor* agent = beam.agent();
 
-    if (!agent || agent->atype() == ACT_MONSTER)
+    if (!agent || agent->atype() == ACT_MONSTER || beam.reflections > 0)
         return (true);
 
     monsters* mons = victim->as_monster();
 
-    int skill = you.skills[SK_THROWING];
-    ASSERT(you.weapon());
-    int enchantment = (you.weapon())->plus;
+    const int skill = you.skills[SK_THROWING];
+    const item_def* wp = agent->weapon();
+    ASSERT(wp && wp->sub_type == WPN_BLOWGUN);
+    const int enchantment = wp->plus;
 
     // You have a really minor chance of hitting with no skills or good
     // enchants.
     if (mons->hit_dice < 15 && random2(100) <= 2)
         return (true);
 
-    int resist_roll = 2 + random2(4 + skill + enchantment);
+    const int resist_roll = 2 + random2(4 + skill + enchantment);
 
     dprf("Brand rolled %d against monster HD: %d.",
          resist_roll, mons->hit_dice);
