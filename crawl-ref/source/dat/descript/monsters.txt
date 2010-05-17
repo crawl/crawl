@@ -869,7 +869,7 @@ A small humanoid demon covered in brown hair. Watch out - it may have fleas!
 %%%%
 harpy
 
-Harpies have roamed these coasts as long as seafarers can remember. They strike fear in the hearts of all sentient beings, but not for their claws. It is their way to steal food from the unwary, causing many a man to starve to death.
+Harpies have roamed these coasts as long as seafarers can remember. They strike fear in the hearts of all sentient beings, but not for their claws. It is their way to devour the food of the unwary, causing many a man to starve to death.
 %%%%
 hell hound
 
