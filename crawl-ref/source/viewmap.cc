@@ -557,7 +557,12 @@ static void _draw_title(const coord_def& cpos, const feature_list& feats)
 
 class levelview_excursion : public level_excursion
 {
+    bool travel_mode;
+
 public:
+    levelview_excursion(bool tm)
+        : travel_mode(tm) {}
+
     void go_to(const level_id& next)
     {
 #ifdef USE_TILE
@@ -567,6 +572,12 @@ public:
 #else
         level_excursion::go_to(next);
 #endif
+
+        if (travel_mode)
+        {
+            travel_init_new_level();
+            travel_cache.update();
+        }
     }
 };
 
@@ -576,7 +587,7 @@ public:
 // to get that.  This function is still a mess, though. -- bwr
 bool show_map(level_pos &spec_place, bool travel_mode, bool allow_esc)
 {
-    levelview_excursion le;
+    levelview_excursion le(travel_mode);
     level_id original(level_id::current());
 
     cursor_control ccon(!Options.use_fake_cursor);
@@ -629,12 +640,8 @@ bool show_map(level_pos &spec_place, bool travel_mode, bool allow_esc)
 
             // Vector to track all features we can travel to, in order of distance.
             if (travel_mode)
-            {
-                travel_init_new_level();
-                travel_cache.update();
-
                 _reset_travel_colours(features, on_level);
-            }
+
             feats.init();
 
             min_x = GXM, max_x = 0, min_y = 0, max_y = 0;
@@ -1152,10 +1159,6 @@ bool show_map(level_pos &spec_place, bool travel_mode, bool allow_esc)
 #endif
     }
 
-    le.go_to(original);
-
-    travel_init_new_level();
-    travel_cache.update();
 #ifdef USE_TILE
     tiles.place_cursor(CURSOR_MAP, Region::NO_CURSOR);
 #endif
