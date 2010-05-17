@@ -1480,8 +1480,6 @@ static const facet_def _demon_facets[] =
       { 1, 1, 1 } },
     { { MUT_BREATHE_FLAMES, MUT_BREATHE_FLAMES, MUT_BREATHE_FLAMES },
       { 1, 1, 1 } },
-    { { MUT_REGENERATION, MUT_REGENERATION, MUT_REGENERATION },
-      { 1, 1, 1 } },
     // Scale mutations
     { { MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD },
       { 1, 1, 1 } },
@@ -1671,7 +1669,7 @@ try_again:
     if (slots_lost != 1)
         goto try_again;
 
-    if (breath_weapons > 1)
+    if (breath_weapons > 3)
         goto try_again;
 
     if (elemental > 1)
