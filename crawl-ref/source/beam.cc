@@ -5546,7 +5546,7 @@ std::string beam_type_name(beam_type type)
     case BEAM_POTION_MUTAGENIC:     return ("mutagenic fog");
     case BEAM_VISUAL:               return ("visual effects");
     case BEAM_TORMENT_DAMAGE:       return ("torment damage");
-    case BEAM_STEAL_FOOD:           return ("steal food");
+    case BEAM_DEVOUR_FOOD:          return ("devour food");
     case BEAM_GLOOM:                return ("gloom");
     case BEAM_INK:                  return ("ink");
 

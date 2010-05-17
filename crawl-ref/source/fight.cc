@@ -5074,19 +5074,19 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         if (defender->atype() != ACT_PLAYER)
             break;
 
-        const bool stolen = expose_player_to_element(BEAM_STEAL_FOOD, 10);
-        const bool ground = expose_items_to_element(BEAM_STEAL_FOOD, you.pos(),
+        const bool stolen = expose_player_to_element(BEAM_DEVOUR_FOOD, 10);
+        const bool ground = expose_items_to_element(BEAM_DEVOUR_FOOD, you.pos(),
                                                     10);
         if (needs_message)
         {
             if (stolen)
             {
-                mprf("%s steals some of your food!",
+                mprf("%s devours some of your food!",
                      atk_name(DESC_CAP_THE).c_str());
             }
             else if (ground)
             {
-                mprf("%s steals some of the food from beneath you!",
+                mprf("%s devours some of the food beneath you!",
                      atk_name(DESC_CAP_THE).c_str());
             }
         }

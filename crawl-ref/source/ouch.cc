@@ -462,7 +462,7 @@ static int _get_target_class(beam_type flavour)
         break;
 
     case BEAM_SPORE:
-    case BEAM_STEAL_FOOD:
+    case BEAM_DEVOUR_FOOD:
         target_class = OBJ_FOOD;
         break;
 
@@ -507,8 +507,8 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
             || target_class == OBJ_FOOD
                && you.inv[i].base_type == OBJ_CORPSES)
         {
-            // Conservation doesn't help against harpies stealing food.
-            if (flavour != BEAM_STEAL_FOOD
+            // Conservation doesn't help against harpies' devouring food.
+            if (flavour != BEAM_DEVOUR_FOOD
                 && player_item_conserve() && !one_chance_in(10))
             {
                 continue;
@@ -552,7 +552,7 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
         return (false);
 
     // Message handled elsewhere.
-    if (flavour == BEAM_STEAL_FOOD)
+    if (flavour == BEAM_DEVOUR_FOOD)
         return (true);
 
     switch (target_class)
@@ -622,7 +622,7 @@ bool expose_items_to_element(beam_type flavour, const coord_def& where,
     if (!num_dest)
         return (false);
 
-    if (flavour == BEAM_STEAL_FOOD)
+    if (flavour == BEAM_DEVOUR_FOOD)
         return (true);
 
     if (you.see_cell(where))
