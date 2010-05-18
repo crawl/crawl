@@ -2720,6 +2720,15 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
 
         break;
 
+    case SPELL_AWAKEN_FOREST:
+        if (mon->has_ench(ENCH_AWAKEN_FOREST)
+            || env.forest_awoken_until > you.elapsed_time
+            || !forest_near_enemy(mon))
+        {
+            ret = true;
+        }
+        break;
+
     case SPELL_NO_SPELL:
         ret = true;
         break;

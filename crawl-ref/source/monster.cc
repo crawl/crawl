@@ -4721,6 +4721,12 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         }
         break;
 
+    case ENCH_AWAKEN_FOREST:
+        env.forest_awoken_until = 0;
+        if (!quiet)
+            forest_message(pos(), "The forest calms down.");
+        break;
+
     default:
         break;
     }
@@ -5365,7 +5371,12 @@ void monsters::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_EAT_ITEMS:
-         break;
+        break;
+
+    case ENCH_AWAKEN_FOREST:
+        forest_damage(this);
+        decay_enchantment(me);
+        break;
 
     default:
         break;
@@ -6256,7 +6267,7 @@ static const char *enchant_names[] =
     "sleepy", "held", "battle_frenzy", "temp_pacif", "petrifying",
     "petrified", "lowered_mr", "soul_ripe", "slowly_dying", "eat_items",
     "aquatic_land", "spore_production", "slouch", "swift", "tide",
-    "insane", "silenced", "entombed", "buggy"
+    "insane", "silenced", "entombed", "awaken_forest", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

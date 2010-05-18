@@ -1877,6 +1877,8 @@ static void tag_construct_level(writer &th)
         for (rectangle_iterator ri(0); ri; ++ri)
             marshallShort(th, heightmap(*ri));
     }
+
+    marshallLong(th, env.forest_awoken_until);
 }
 
 void marshallItem(writer &th, const item_def &item)
@@ -2301,6 +2303,15 @@ static void tag_read_level( reader &th, char minorVersion )
         for (rectangle_iterator ri(0); ri; ++ri)
             heightmap(*ri) = unmarshallShort(th);
     }
+
+#if TAG_MAJOR_VERSION == 22
+    if (minorVersion >= TAG_MINOR_AF)
+#endif
+        env.forest_awoken_until = unmarshallLong(th);
+#if TAG_MAJOR_VERSION == 22
+    else
+        env.forest_awoken_until = 0;
+#endif
 }
 
 static void tag_read_level_items(reader &th, char minorVersion)

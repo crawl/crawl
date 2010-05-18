@@ -865,6 +865,7 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     case SPELL_CALL_TIDE:
     case SPELL_INK_CLOUD:
     case SPELL_SILENCE:
+    case SPELL_AWAKEN_FOREST:
         return (true);
     default:
         if (check_validity)
@@ -2474,6 +2475,16 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         return;
     case SPELL_IOOD:
         cast_iood(monster, 6 * monster->hit_dice, &pbolt);
+        return;
+    case SPELL_AWAKEN_FOREST:
+        duration = 50 + random2(monster->hit_dice * 20);
+
+        monster->add_ench(mon_enchant(ENCH_AWAKEN_FOREST, 0, KC_OTHER, duration));
+        // Actually, it's a boolean marker... save for a sanity check.
+        env.forest_awoken_until = you.elapsed_time + duration;
+
+        // You may be unable to see the monster, but notice an affected tree.
+        forest_message(monster->pos(), "The forest starts to sway and rumble!");
         return;
     }
 
