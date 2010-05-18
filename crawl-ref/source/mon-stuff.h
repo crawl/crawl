@@ -175,4 +175,9 @@ std::string summoned_poof_msg(const int midx, const item_def &item);
 std::string summoned_poof_msg(const monsters* monster, const item_def &item);
 
 bool mons_reaped(actor *killer, monsters *victim);
+
+actor* forest_near_enemy(const actor *mon);
+void forest_message(const coord_def pos, const std::string msg,
+                    msg_channel_type ch = MSGCH_PLAIN);
+void forest_damage(const actor *mon);
 #endif

@@ -2620,7 +2620,7 @@
 {
     SPELL_AWAKEN_FOREST, "Awaken Forest",
      SPTYP_ENCHANTMENT,
-     SPFLAG_NONE,
+     SPFLAG_AREA,
      6,
      200,
      LOS_RADIUS, LOS_RADIUS,
