@@ -708,7 +708,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
         beam.colour   = ETC_HOLY;
         beam.name     = "ray of light";
         beam.damage   = dice_def( 3, 7 + (power / 12) );
-        beam.hit      = 5 + power / 50; // VERY lousy accuracy, but ignores RMsl
+        beam.hit      = 10 + power / 25; // lousy accuracy, but ignores RMsl
         beam.flavour  = BEAM_LIGHT;
         break;
 
