@@ -1407,9 +1407,10 @@ void mon_nearby_ability(monsters *monster)
             else
                 mpr("You feel you are being watched by something.");
 
-            dec_mp(5 + random2avg(13, 3));
+            int mp = std::min(5 + random2avg(13, 3), you.magic_points);
+            dec_mp(mp);
 
-            monster->heal(10, true); // heh heh {dlb}
+            monster->heal(mp, true); // heh heh {dlb}
         }
         break;
 
