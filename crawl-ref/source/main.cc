@@ -1504,7 +1504,7 @@ static void _do_display_map()
 #endif
 
     level_pos pos;
-    const bool travel = show_map(pos, true);
+    const bool travel = show_map(pos, true, true, true);
     redraw_screen();
 
 #ifdef USE_TILE

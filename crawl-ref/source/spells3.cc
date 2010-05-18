@@ -1646,7 +1646,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
         while (true)
         {
             level_pos lpos;
-            bool chose = show_map(lpos, false, true);
+            bool chose = show_map(lpos, false, true, false);
             pos = lpos.pos;
             redraw_screen();
 
@@ -1991,7 +1991,7 @@ bool project_noise(void)
     more();
 
     // Might abort with SIG_HUP despite !allow_esc.
-    if (!show_map(lpos, false, false))
+    if (!show_map(lpos, false, false, false))
         lpos = level_pos::current();
     pos = lpos.pos;
     ASSERT(map_bounds(pos));

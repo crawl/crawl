@@ -1088,7 +1088,7 @@ void debug_pathfind(int mid)
 #endif
     coord_def dest;
     level_pos ldest;
-    bool chose = show_map(ldest, false);
+    bool chose = show_map(ldest, false, true, false);
     dest = ldest.pos;
     redraw_screen();
     if (!chose)
