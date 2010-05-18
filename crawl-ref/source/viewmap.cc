@@ -585,7 +585,8 @@ public:
 // the player from getting "artificial" location clues by using the
 // map to see how close to the end they are.  They'll need to explore
 // to get that.  This function is still a mess, though. -- bwr
-bool show_map(level_pos &spec_place, bool travel_mode, bool allow_esc)
+bool show_map(level_pos &spec_place,
+              bool travel_mode, bool allow_esc, bool allow_offlevel)
 {
     levelview_excursion le(travel_mode);
     level_id original(level_id::current());
@@ -874,6 +875,9 @@ bool show_map(level_pos &spec_place, bool travel_mode, bool allow_esc)
         case CMD_MAP_PREV_LEVEL:
         case CMD_MAP_NEXT_LEVEL:
         {
+            if (!allow_offlevel)
+                break;
+
             level_id next;
 
             next = (cmd == CMD_MAP_PREV_LEVEL)
@@ -891,6 +895,9 @@ bool show_map(level_pos &spec_place, bool travel_mode, bool allow_esc)
 
         case CMD_MAP_GOTO_LEVEL:
         {
+            if (!allow_offlevel)
+                break;
+
             std::string name;
             const level_pos pos =
                 prompt_translevel_target(TPF_DEFAULT_OPTIONS, name).p;
