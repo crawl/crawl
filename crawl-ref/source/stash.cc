@@ -1970,8 +1970,10 @@ bool StashTracker::display_search_results(
                 redraw_screen();
                 level_pos lp = res->pos;
                 if (show_map(lp, true, true, true))
+                {
                     start_translevel_travel(lp);
-                return (false);
+                    return (false);
+                }
             }
             continue;
         }
@@ -1986,6 +1988,8 @@ bool StashTracker::display_search_results(
         level_pos lp = res->pos;
         if (show_map(lp, true, true, true))
             start_translevel_travel(lp);
+        else
+            return (true);
     }
     return (false);
 }
