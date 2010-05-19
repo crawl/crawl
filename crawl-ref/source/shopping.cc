@@ -1775,6 +1775,12 @@ unsigned int item_value(item_def item, bool ident)
 
                 if (item.sub_type == RING_SLAYING && item.plus2 > 0)
                     valued += 10 * item.plus2;
+
+                if (item.plus < 0)
+                    valued -= 50;
+
+                if (item.sub_type == RING_SLAYING && item.plus2 < 0)
+                    valued -= 50;
             }
 
             switch (item.sub_type)
@@ -2357,8 +2363,14 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
 
     // Ignore stat-modification rings which reduce a stat, since they're
     // worthless.
-    if (item.plus < 0 && item.base_type == OBJ_JEWELLERY)
-        return (0);
+    if (item.base_type == OBJ_JEWELLERY)
+    {
+        if (item.plus < 0)
+            return (0);
+
+        if (item.sub_type == RING_SLAYING && item.plus2 < 0)
+            return (0);
+    }
 
     // Item is already on shopping-list.
     const bool on_list = find_thing(item, level_pos::current()) != -1;
