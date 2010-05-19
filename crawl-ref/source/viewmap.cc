@@ -915,7 +915,7 @@ bool show_map(level_pos &lpos,
             {
                 lpos = dest;
             }
-            break;
+            continue;
         }
 
         case CMD_MAP_GOTO_LEVEL:
@@ -936,7 +936,7 @@ bool show_map(level_pos &lpos,
             }
 
             lpos = pos;
-            break;
+            continue;
         }
 
         case CMD_MAP_JUMP_DOWN_LEFT:
