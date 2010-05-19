@@ -1861,10 +1861,16 @@ static void _blade_card(int power, deck_rarity_type rarity)
 
         if (!brand_weapon(RANDOM_ELEMENT(brands), random2(power/4)))
         {
-            if (!you.weapon())
-                mprf("Your %s twitch.", your_hand(true).c_str());
+            item_def* wpn = you.weapon();
+
+            if (wpn)
+            {
+                mprf("%s vibrate%s crazily for a second.",
+                     wpn->name(DESC_CAP_YOUR).c_str(),
+                     wpn->quantity > 1 ? "s" : "");
+            }
             else
-                mpr("Your weapon vibrates for a moment.");
+                mprf("Your %s twitch.", your_hand(true).c_str());
         }
     }
 }
