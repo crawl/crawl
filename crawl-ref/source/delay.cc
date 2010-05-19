@@ -747,6 +747,22 @@ bool already_learning_spell(int spell)
     return (false);
 }
 
+// Check whether this monster might be influenced by Recite.
+// Returns 0, if no monster found
+// Returns 1, if eligible monster found
+// Returns -1, if monster already affected or too dumb to understand.
+int check_recital_monster_at(const coord_def& where)
+{
+    monsters *mon = monster_at(where);
+    if (mon == NULL)
+        return (0);
+
+    if (!_recite_mons_useless(mon))
+        return (1);
+
+    return (-1);
+}
+
 // Check whether there are monsters who might be influenced by Recite.
 // Returns 0, if no monsters found
 // Returns 1, if eligible audience found
@@ -757,14 +773,13 @@ int check_recital_audience()
 
     for (radius_iterator ri(you.pos(), 8); ri; ++ri)
     {
-        monsters* mons = monster_at(*ri);
-        if (mons == NULL)
-            continue;
+        const int retval = check_recital_monster_at(*ri);
 
-        found_monsters = true;
+        if (retval == -1)
+            found_monsters = true;
 
         // Check if audience can listen.
-        if (!_recite_mons_useless(mons))
+        if (retval == 1)
             return (1);
     }
 

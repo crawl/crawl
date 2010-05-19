@@ -4687,6 +4687,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
         }
         return (MON_AFFECTED);
     }
+
     case BEAM_CHARM:
         if (player_will_anger_monster(mon))
         {

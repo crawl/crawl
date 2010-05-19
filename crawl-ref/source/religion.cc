@@ -211,7 +211,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     // Zin
     { "recite Zin's Axioms of Law",
       "call upon Zin for vitalisation",
-      "",
+      "call upon Zin to imprison the lawless",
       "",
       "call upon Zin to create a sanctuary" },
     // TSO

@@ -48,8 +48,14 @@ enum ability_type
     ABIL_ZIN_SUSTENANCE = 109,              //  109
     ABIL_ZIN_RECITE,
     ABIL_ZIN_VITALISATION,
+#if TAG_MAJOR_VERSION != 22
+    ABIL_ZIN_IMPRISON,
+#endif
     ABIL_ZIN_SANCTUARY,
     ABIL_ZIN_CURE_ALL_MUTATIONS,
+#if TAG_MAJOR_VERSION == 22
+    ABIL_ZIN_IMPRISON,
+#endif
     ABIL_TSO_DIVINE_SHIELD = 120,           //  120
     ABIL_TSO_CLEANSING_FLAME,
     ABIL_TSO_SUMMON_DIVINE_WARRIOR,
@@ -1260,7 +1266,7 @@ enum enchant_type
     ENCH_SICK,
     ENCH_SLEEPY,         //   Monster can't wake until this wears off.
     ENCH_HELD,           //   Caught in a net.
-    ENCH_BATTLE_FRENZY,  //   Monster is in a battle frenzy
+    ENCH_BATTLE_FRENZY,  //   Monster is in a battle frenzy.
     ENCH_TEMP_PACIF,
     ENCH_PETRIFYING,
     ENCH_PETRIFIED,
@@ -3237,6 +3243,7 @@ enum zap_type
     ZAP_PRIMAL_WAVE,
     ZAP_IOOD,
     ZAP_SUNRAY,
+
     NUM_ZAPS
 };
 
