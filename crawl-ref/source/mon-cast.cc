@@ -2353,9 +2353,10 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
             const actor* act = actor_at(*ai);
 
             // We can blink away the crowd, but only our allies.
-            if (act->atype() == ACT_PLAYER
-                || (act->atype() == ACT_MONSTER
-                    && act->as_monster()->attitude != monster->attitude))
+            if (act
+                && (act->atype() == ACT_PLAYER
+                    || (act->atype() == ACT_MONSTER
+                        && act->as_monster()->attitude != monster->attitude)))
             {
                 sumcount++;
             }
@@ -2379,7 +2380,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         sumcount = 0;
         for (adjacent_iterator ai(monster->pos()); ai; ++ai)
         {
-            if (monster_at(*ai) && monster_at(*ai) != monster)
+            if (monster_at(*ai))
             {
                 monster_at(*ai)->blink();
                 if (monster_at(*ai))
