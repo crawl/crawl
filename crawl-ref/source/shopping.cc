@@ -2365,10 +2365,10 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
     // worthless.
     if (item.base_type == OBJ_JEWELLERY)
     {
-        if (item.plus < 0)
+        if (item.sub_type == RING_SLAYING && item.plus < 0 && item.plus2 < 0)
             return (0);
 
-        if (item.sub_type == RING_SLAYING && item.plus2 < 0)
+        if (item.plus < 0)
             return (0);
     }
 
