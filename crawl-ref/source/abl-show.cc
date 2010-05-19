@@ -35,6 +35,7 @@
 #include "menu.h"
 #include "misc.h"
 #include "mon-place.h"
+#include "mon-util.h"
 #include "mgen_data.h"
 #include "mutation.h"
 #include "notes.h"
@@ -98,7 +99,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
       ABIL_NON_ABILITY },
     // Zin
-    { ABIL_ZIN_RECITE, ABIL_ZIN_VITALISATION, ABIL_NON_ABILITY,
+    { ABIL_ZIN_RECITE, ABIL_ZIN_VITALISATION, ABIL_ZIN_IMPRISON,
       ABIL_NON_ABILITY, ABIL_ZIN_SANCTUARY },
     // TSO
     { ABIL_NON_ABILITY, ABIL_TSO_DIVINE_SHIELD, ABIL_NON_ABILITY,
@@ -226,6 +227,7 @@ static const ability_def Ability_List[] =
     { ABIL_ZIN_SUSTENANCE, "Sustenance", 0, 0, 0, 0, ABFLAG_PIETY },
     { ABIL_ZIN_RECITE, "Recite", 3, 0, 0, 0, ABFLAG_DELAY },
     { ABIL_ZIN_VITALISATION, "Vitalisation", 0, 0, 100, 2, ABFLAG_CONF_OK },
+    { ABIL_ZIN_IMPRISON, "Imprison", 5, 0, 125, 8, ABFLAG_NONE },
     { ABIL_ZIN_SANCTUARY, "Sanctuary", 7, 0, 150, 15, ABFLAG_NONE },
     { ABIL_ZIN_CURE_ALL_MUTATIONS, "Cure All Mutations",
       0, 0, 0, 0, ABFLAG_NONE },
@@ -744,6 +746,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
         failure = 50 - (you.piety / 20) - (you.skills[SK_INVOCATIONS] * 4);
         break;
 
+    case ABIL_ZIN_IMPRISON:
     case ABIL_LUGONU_BANISH:
         invoc = true;
         failure = 60 - (you.piety / 20) - (5 * you.skills[SK_INVOCATIONS]);
@@ -1523,6 +1526,44 @@ static bool _do_ability(const ability_def& abil)
             exercise(SK_INVOCATIONS, (coinflip() ? 3 : 2));
         break;
 
+    case ABIL_ZIN_IMPRISON:
+    {
+        beam.range = LOS_RADIUS;
+        if (!spell_direction(spd, beam))
+            return (false);
+
+        if (beam.target == you.pos())
+        {
+            mpr("You cannot imprison yourself!");
+            return (false);
+        }
+
+        const int retval = check_recital_monster_at(beam.target);
+
+        if (retval == 0)
+        {
+            mpr("There is no monster there to imprison!");
+            return (false);
+        }
+
+        if (retval == -1)
+        {
+            mpr("You cannot imprison this monster!");
+            return (false);
+        }
+
+        monsters *monster = monster_at(beam.target);
+
+        power = 3 + roll_dice(3, 10 * (3 + you.skills[SK_INVOCATIONS])
+                                    / (3 + monster->hit_dice)) / 3;
+
+        if (!cast_imprison(power, monster))
+            return (false);
+
+        exercise(SK_INVOCATIONS, 3 + random2(5));
+        break;
+    }
+
     case ABIL_ZIN_SANCTUARY:
         if (cast_sanctuary(you.skills[SK_INVOCATIONS] * 4))
             exercise(SK_INVOCATIONS, 5 + random2(8));
@@ -1656,8 +1697,8 @@ static bool _do_ability(const ability_def& abil)
             return (false);
 
         power = you.skills[SK_INVOCATIONS] * 3
-                + random2( 1 + you.skills[SK_INVOCATIONS] )
-                + random2( 1 + you.skills[SK_INVOCATIONS] );
+                + random2(1 + you.skills[SK_INVOCATIONS])
+                + random2(1 + you.skills[SK_INVOCATIONS]);
 
         // Since the actual beam is random, check with BEAM_MMISSILE and the
         // highest range possible (orb of electricity).

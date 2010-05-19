@@ -1890,7 +1890,8 @@ void you_teleport_now(bool allow_control, bool new_abyss_area, bool wizard_tele)
     }
 }
 
-bool entomb(int powc)
+static bool _do_imprison(const int power, const coord_def& where,
+                         bool force_alone, bool force_full)
 {
     // power guidelines:
     // powc is roughly 50 at Evoc 10 with no godly assistance, ranging
@@ -1902,15 +1903,25 @@ bool entomb(int powc)
         DNGN_SHALLOW_WATER, DNGN_FLOOR, DNGN_FLOOR_SPECIAL, DNGN_OPEN_DOOR
     };
 
-    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+    for (adjacent_iterator ai(where); ai; ++ai)
     {
-        // The tile is occupied by a monster.
-        if (monster_at(*ai))
-            continue;
+        // The tile is occupied.
+        if (actor_at(*ai))
+        {
+            if (force_alone)
+                return (false);
+            else
+                continue;
+        }
 
         // This is where power comes in.
-        if (one_chance_in(powc / 5))
-            continue;
+        if (one_chance_in(power / 5))
+        {
+            if (force_full)
+                return (false);
+            else
+                continue;
+        }
 
         // Make sure we have a legitimate tile.
         bool proceed = false;
@@ -1922,7 +1933,7 @@ bool entomb(int powc)
         {
             // All items are moved inside.
             if (igrd(*ai) != NON_ITEM)
-                move_items(*ai, you.pos());
+                move_items(*ai, where);
 
             // All clouds are destroyed.
             if (env.cgrid(*ai) != EMPTY_CLOUD)
@@ -1948,6 +1959,23 @@ bool entomb(int powc)
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return (number_built > 0);
+}
+
+bool entomb(const int power)
+{
+    return (_do_imprison(power, you.pos(), false, false));
+}
+
+bool cast_imprison(const int power, monsters *monster)
+{
+    if (_do_imprison(power, monster->pos(), true, true))
+    {
+        monster->add_ench(mon_enchant(ENCH_ENTOMBED, 0, KC_YOU,
+                                      power * 10));
+        return (true);
+    }
+
+    return (false);
 }
 
 bool cast_sanctuary(const int power)
