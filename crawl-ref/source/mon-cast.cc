@@ -2419,14 +2419,17 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         }
 
         if (sumcount)
+        {
             mpr("Walls emerge from the floor!");
 
-        // XXX: Assume that the entombed monster can regenerate.  Also,
-        // base the regeneration rate on HD to avoid randomness.
-        const int tomb_duration =
-            hp_lost * std::max(1, monster->hit_dice / 3);
-        monster->add_ench(mon_enchant(ENCH_ENTOMBED, 0, KC_OTHER,
-                          tomb_duration * 10));
+            // XXX: Assume that the entombed monster can regenerate.
+            // Also, base the regeneration rate on HD to avoid
+            // randomness.
+            const int tomb_duration =
+                hp_lost * std::max(1, monster->hit_dice / 3);
+            monster->add_ench(mon_enchant(ENCH_ENTOMBED, 0, KC_OTHER,
+                              tomb_duration * 10));
+        }
         return;
     }
     case SPELL_CHAIN_LIGHTNING:
