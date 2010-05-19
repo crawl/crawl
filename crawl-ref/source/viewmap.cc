@@ -1125,20 +1125,19 @@ bool show_map(level_pos &lpos,
 
 #ifdef USE_TILE
         {
-            int new_x = lpos.pos.x + move_x;
-            int new_y = lpos.pos.y + move_y;
-
-            curs_x += (new_x < 1 || new_x > GXM) ? 0 : move_x;
-            curs_y += (new_y < 1 || new_y > GYM) ? 0 : move_y;
-            lpos.pos.x += (new_x < 1 || new_x > GXM) ? 0 : move_x;
-            lpos.pos.y += (new_y < 1 || new_y > GYM) ? 0 : move_y;
+            const coord_def oldp = lpos.pos;
+            lpos.pos.x += move_x;
+            lpos.pos.y += move_y;
+            lpos.pos.x = std::min(std::max(lpos.pos.x, 1), GXM);
+            lpos.pos.y = std::min(std::max(lpos.pos.y, 1), GYM);
+            curs_x += lpos.pos.x - oldp.x;
+            curs_y += lpos.pos.y - oldp.y;
         }
 #else
         if (curs_x + move_x < 1 || curs_x + move_x > crawl_view.termsz.x)
             move_x = 0;
 
         curs_x += move_x;
-        lpos.pos.x += move_x;
 
         if (num_lines < map_lines)
         {
@@ -1182,12 +1181,15 @@ bool show_map(level_pos &lpos,
                     move_y = 0;
             }
         }
+        start_y = screen_y - half_screen;
 
         if (curs_y + move_y < 1 || curs_y + move_y > num_lines)
             move_y = 0;
 
         curs_y += move_y;
-        lpos.pos.y += move_y;
+
+        lpos.pos.x = start_x + curs_x - 1;
+        lpos.pos.y = start_y + curs_y - 1;
 #endif
     }
 
