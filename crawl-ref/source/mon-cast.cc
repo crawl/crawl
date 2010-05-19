@@ -2428,7 +2428,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
             const int tomb_duration =
                 hp_lost * std::max(1, monster->hit_dice / 3);
             monster->add_ench(mon_enchant(ENCH_ENTOMBED, 0, KC_OTHER,
-                              tomb_duration * 10));
+                                          tomb_duration * 10));
         }
         return;
     }
