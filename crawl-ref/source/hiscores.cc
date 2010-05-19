@@ -541,6 +541,14 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     fixup_char_name();
 }
 
+xlog_fields scorefile_entry::get_fields() const
+{
+    if (!fields.get())
+        return (xlog_fields());
+    else
+        return (*fields.get());
+}
+
 bool scorefile_entry::parse(const std::string &line)
 {
     // Scorefile formats down the ages:
@@ -2320,11 +2328,12 @@ void mark_milestone(const std::string &type,
     {
         const scorefile_entry se(0, 0, KILL_MISC, NULL);
         se.set_base_xlog_fields();
-        xlog_fields xl = *se.fields;
+        xlog_fields xl = se.get_fields();
         if (report_origin_level)
             xl.add_field("oplace", "%s",
                          current_level_parent().describe().c_str());
-        xl.add_field("time", "%s", make_date_string(se.death_time).c_str());
+        xl.add_field("time", "%s",
+                     make_date_string(se.get_death_time()).c_str());
         xl.add_field("type", "%s", type.c_str());
         xl.add_field("milestone", "%s", milestone.c_str());
         fprintf(fp, "%s\n", xl.xlog_line().c_str());
@@ -2338,7 +2347,8 @@ std::string xlog_status_line()
 {
     const scorefile_entry se(0, 0, KILL_MISC, NULL);
     se.set_base_xlog_fields();
-    se.fields->add_field("time", "%s", make_date_string(time(NULL)).c_str());
-    return (se.fields->xlog_line());
+    xlog_fields xl = se.get_fields();
+    xl.add_field("time", "%s", make_date_string(time(NULL)).c_str());
+    return (xl.xlog_line());
 }
 #endif // DGL_WHEREIS
