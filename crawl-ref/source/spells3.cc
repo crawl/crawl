@@ -1800,7 +1800,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
     return (!is_controlled);
 }
 
-bool you_teleport_to (const coord_def where_to, bool move_monsters)
+bool you_teleport_to(const coord_def where_to, bool move_monsters)
 {
     // Attempts to teleport the player from their current location to 'where'.
     // Follows this line of reasoning:
