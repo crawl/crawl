@@ -1197,6 +1197,7 @@ bool show_map(level_pos &lpos,
     tiles.place_cursor(CURSOR_MAP, Region::NO_CURSOR);
 #endif
 
+    redraw_screen();
     return (chose);
 }
 
