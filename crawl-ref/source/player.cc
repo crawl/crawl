@@ -542,6 +542,16 @@ bool you_can_wear(int eq, bool special_armour)
     case EQ_CLOAK:
         return (true);
 
+    case EQ_GLOVES:
+        if (you.species == SP_TROLL
+            || you.species == SP_SPRIGGAN
+            || player_genus(GENPC_OGREISH)
+            || player_genus(GENPC_DRACONIAN))
+        {
+            return (false);
+        }
+        return (true);
+
     case EQ_BOOTS:
         // Bardings.
         if (you.species == SP_NAGA || you.species == SP_CENTAUR)
