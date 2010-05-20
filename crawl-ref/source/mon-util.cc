@@ -2209,7 +2209,7 @@ bool mons_is_influenced_by_sanctuary(const monsters *m)
 {
     return (!m->wont_attack()
             && (m->holiness() != MH_PLANT
-                || mons_is_stationary(m)));
+                || !mons_is_stationary(m)));
 }
 
 bool mons_is_fleeing_sanctuary(const monsters *m)
