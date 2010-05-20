@@ -362,6 +362,8 @@ void ghost_demon::init_player_ghost()
 
     if (you.weapon())
     {
+        // This includes ranged weapons, but they're treated as melee.
+
         const item_def& weapon = *you.weapon();
         if (weapon.base_type == OBJ_WEAPONS || weapon.base_type == OBJ_STAVES)
         {
@@ -377,6 +379,10 @@ void ghost_demon::init_player_ghost()
                 // Ghosts can't get holy wrath, but they get to keep
                 // the weapon.
                 if (brand == SPWPN_HOLY_WRATH)
+                    brand = SPWPN_NORMAL;
+
+                // Don't copy ranged-only brands from launchers (reaping etc.).
+                if (brand > MAX_PAN_LORD_BRANDS)
                     brand = SPWPN_NORMAL;
             }
         }
