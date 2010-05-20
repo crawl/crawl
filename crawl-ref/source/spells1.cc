@@ -450,6 +450,16 @@ void cast_chain_lightning(int pow, const actor *caster)
             }
         }
 
+        if (caster == &you)
+        {
+            monsters *monster = monster_at(target);
+            if (monster)
+            {
+                if (stop_attack_prompt(monster, false, you.pos()))
+                    return;
+            }
+        }
+
         const bool see_source = you.see_cell( source );
         const bool see_targ   = you.see_cell( target );
 
