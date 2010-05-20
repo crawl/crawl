@@ -1459,8 +1459,10 @@ static void _do_rest()
 
     if (i_feel_safe())
     {
-        if ((you.hp == you.hp_max || you.species == SP_VAMPIRE
-             && you.hunger_state == HS_STARVING)
+        if ((you.hp == you.hp_max
+                || player_mutation_level(MUT_SLOW_HEALING) == 3
+                || (you.species == SP_VAMPIRE
+                    && you.hunger_state == HS_STARVING))
             && you.magic_points == you.max_magic_points)
         {
             mpr("You start searching.");
