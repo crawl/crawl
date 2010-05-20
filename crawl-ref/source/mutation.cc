@@ -864,6 +864,28 @@ static bool _physiology_mutation_conflict(mutation_type mutat)
         return (true);
     }
 
+    equipment_type eq_type = EQ_NONE;
+
+    // Mutations of the same slot conflict
+    if (is_body_facet(mutat))
+    {
+        // Find equipment slot of attempted mutation
+        for (unsigned i = 0; i < ARRAYSZ(_body_facets); i++)
+            if (mutat == _body_facets[i].mut)
+                eq_type = _body_facets[i].eq;
+
+        if (eq_type != EQ_NONE) {
+            for (unsigned i = 0; i < ARRAYSZ(_body_facets); i++) {
+                if (eq_type == _body_facets[i].eq
+                    && mutat != _body_facets[i].mut
+                    && player_mutation_level(_body_facets[i].mut))
+                {
+                    return (true);
+                }
+            }
+        }
+    }
+
     return (false);
 }
 
