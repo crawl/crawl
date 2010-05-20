@@ -2755,8 +2755,11 @@ static bool _mon_can_move_to_pos(const monsters *monster,
 
     // The kraken is so large it cannot enter shallow water.
     // Its tentacles can, and will, though.
-    if (mons_base_type(monster) == MONS_KRAKEN && target_grid == DNGN_SHALLOW_WATER)
+    if (mons_base_type(monster) == MONS_KRAKEN
+        && target_grid == DNGN_SHALLOW_WATER)
+    {
         return (false);
+    }
 
     // Effectively slows down monster movement across water.
     // Fire elementals can't cross at all.
@@ -2785,9 +2788,7 @@ static bool _mon_can_move_to_pos(const monsters *monster,
             return (false);
     }
     else if (no_water && feat_is_water(target_grid))
-    {
         return (false);
-    }
     else if (!mons_can_traverse(monster, targ, false)
              && !_habitat_okay(monster, target_grid))
     {
@@ -2802,15 +2803,15 @@ static bool _mon_can_move_to_pos(const monsters *monster,
         return (false);
     }
 
-    // Wandering mushrooms don't move while you are looking.
+    // Wandering mushrooms usually don't move while you are looking.
     if (monster->type == MONS_WANDERING_MUSHROOM)
     {
-        if (!monster->friendly() && you.see_cell(targ)
-             || mon_enemies_around(monster))
+        if (!monster->friendly()
+                && you.see_cell(targ)
+            || mon_enemies_around(monster))
         {
-            return false;
+            return (false);
         }
-
     }
 
     // Water elementals avoid fire and heat.
