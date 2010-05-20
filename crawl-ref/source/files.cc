@@ -1552,10 +1552,9 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     _redraw_all();
 
     if (load_mode != LOAD_VISITOR)
-    {
         dungeon_events.fire_event(DET_ENTERING_LEVEL);
-        los_changed();
-    }
+
+    los_changed();
 
     // Things to update for player entering level
     if (load_mode == LOAD_ENTER_LEVEL)
