@@ -4335,8 +4335,6 @@ static bool _drop_tomb(monsters* mon)
             mpr("You hear a deep rumble.");
     }
 
-    mon->lose_energy(EUT_SPELL);
-
     return (count > 0);
 }
 
@@ -4490,6 +4488,9 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_ENTOMBED:
         _drop_tomb(this);
+
+        if (me.who == KC_OTHER)
+            lose_energy(EUT_SPELL);
         break;
 
     case ENCH_MIGHT:
