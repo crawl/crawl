@@ -2002,6 +2002,10 @@ static int _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_WAR_DOG;
     case MONS_HOG:
         return TILE_CORPSE_HOG;
+    case MONS_HELL_HOUND:
+        return TILE_CORPSE_HELL_HOUND;
+    case MONS_HELL_HOG:
+        return TILE_CORPSE_HELL_HOG;
 
     // slugs ('j')
     case MONS_ELEPHANT_SLUG:
@@ -2093,6 +2097,8 @@ static int _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_TRAPDOOR_SPIDER;
     case MONS_REDBACK:
         return TILE_CORPSE_REDBACK;
+    case MONS_DEMONIC_CRAWLER:
+        return TILE_CORPSE_DEMONIC_CRAWLER;
 
     // turtles and crocodiles ('t')
     case MONS_CROCODILE:
