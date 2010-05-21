@@ -26,7 +26,7 @@ Scarab
 %%%%
 jewellery_special_name
 
-Misfortune
+Disaster
 
 Ephemeral Luck
 
