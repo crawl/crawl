@@ -55,6 +55,7 @@ Monsters:
 * (Very) ugly things are no longer amphibious.
 * Glyph change for demonic crawlers.
 * Orange demons' poison can now drain any stat.
+* Hell hounds, hell hogs and demonic crawlers now leave corpses.
 
 Spells:
 * Call Imp is buffed: it is now level 2, it takes spell power
