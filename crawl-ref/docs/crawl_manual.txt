@@ -2748,6 +2748,7 @@ some commands:
   !a   prompt before attacking when wielding this item
        Non-weapons and ranged weapons prompt automatically. Also, if you
        answer 'y', you won't be prompted again until you switch weapons.
+  !d   prompt before dropping
   !e   prompt before eating
   !q   prompt before quaffing
   !r   prompt before reading
