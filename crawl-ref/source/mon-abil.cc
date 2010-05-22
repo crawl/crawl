@@ -1433,7 +1433,8 @@ void mon_nearby_ability(monsters *monster)
 // off of.
 void ballisto_on_move(monsters * monster, const coord_def & position)
 {
-    if (monster->type == MONS_GIANT_SPORE)
+    if (monster->type == MONS_GIANT_SPORE
+        && !monster->is_summoned())
     {
         dungeon_feature_type ftype = env.grid(monster->pos());
 
@@ -1510,7 +1511,8 @@ bool _player_at(const coord_def & target)
 void activate_ballistomycetes(monsters * monster, const coord_def & origin,
                               bool player_kill)
 {
-    if (!monster || monster->type != MONS_BALLISTOMYCETE
+    if (!monster || monster->is_summoned()
+                 || monster->type != MONS_BALLISTOMYCETE
                     && monster->type != MONS_GIANT_SPORE)
     {
         return;

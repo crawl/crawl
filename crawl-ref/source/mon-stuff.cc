@@ -979,8 +979,16 @@ static bool _spore_goes_pop(monsters *monster, killer_type killer,
     beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
     beam.source       = monster->pos();
     beam.target       = monster->pos();
-    beam.thrower      = crawl_state.game_is_arena() ? KILL_MON
-      : monster->attitude == ATT_FRIENDLY ? KILL_YOU : KILL_MON;
+
+    if (!crawl_state.game_is_arena() && monster->attitude == ATT_FRIENDLY
+        && !monster->is_summoned())
+    {
+        beam.thrower = KILL_YOU;
+    }
+    else
+    {
+        beam.thrower = KILL_MON;
+    }
     beam.aux_source.clear();
     beam.attitude = monster->attitude;
 

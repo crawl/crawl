@@ -2363,7 +2363,8 @@ void bolt::affect_ground()
     // Spore explosions might spawn a fungus.  The spore explosion
     // covers 21 tiles in open space, so the expected number of spores
     // produced is the x in x_chance_in_y() in the conditional below.
-    if (is_explosion && flavour == BEAM_SPORE)
+    if (is_explosion && flavour == BEAM_SPORE
+        && this->agent() && !this->agent()->is_summoned())
     {
         if (env.grid(pos()) >= DNGN_FLOOR_MIN
             && env.grid(pos())<= DNGN_FLOOR_MAX)
