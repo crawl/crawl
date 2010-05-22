@@ -3108,7 +3108,7 @@ static void _open_door(coord_def move, bool check_confused)
                 dungeon_feature_type secret
                     = grid_secret_door_appearance(dc);
                 mprf("That %s was a secret door!",
-                     feature_description(secret, NUM_TRAPS, false,
+                     feature_description(secret, NUM_TRAPS, "",
                                          DESC_PLAIN, false).c_str());
             }
         }
