@@ -801,8 +801,8 @@ void bolt::digging_wall_effect()
         // Blood does not transfer onto floor.
         if (is_bloodcovered(pos()))
             env.pgrid(pos()) &= ~(FPROP_BLOODY);
-        if (is_moldy(pos()))
-            env.pgrid(pos()) &= ~(FPROP_MOLD);
+
+        remove_mold(pos());
 
         if (!msg_generated)
         {
@@ -965,8 +965,9 @@ static void _nuke_wall(const coord_def& p)
     // Blood does not transfer onto floor.
     if (is_bloodcovered(p))
         env.pgrid(p) &= ~(FPROP_BLOODY);
-    if (is_moldy(p))
-        env.pgrid(p) &= ~(FPROP_MOLD);
+
+    remove_mold(p);
+
     grd(p) = DNGN_FLOOR;
     set_terrain_changed(p);
 }
@@ -2394,7 +2395,7 @@ void bolt::affect_ground()
 
             if (rc != -1)
             {
-                env.pgrid(pos()) &= ~FPROP_MOLD;
+                remove_mold(pos());
                 if (you.see_cell(pos()))
                     mpr("A fungus suddenly grows.");
 

@@ -1459,7 +1459,7 @@ void ballisto_on_move(monsters * monster, const coord_def & position)
                 if (rc != -1)
                 {
                     // Don't leave mold on squares we place ballistos on
-                    env.pgrid(position) &= ~FPROP_MOLD;
+                    remove_mold(position);
                     if  (you.can_see(&env.mons[rc]))
                         mprf("A ballistomycete grows in the wake of the spore.");
                 }
@@ -1620,8 +1620,7 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
             // NOTE: Not triggered if eradication happens by hostile monster,
             //       so we don't give anything away. (jpeg)
             for (rectangle_iterator ri(1); ri; ++ri)
-                if (is_moldy(*ri))
-                    env.pgrid(*ri) &= ~(FPROP_MOLD);
+                remove_mold(*ri);
         }
 
         return;
@@ -1636,9 +1635,7 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
     std::random_shuffle(candidates.begin(), candidates.end());
 
     int index = 0;
-    you.mold_colour = LIGHTRED;
 
-    bool draw = false;
     for (int i=0; i<activation_count; ++i)
     {
         index = i % candidates.size();
@@ -1667,26 +1664,12 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
         {
             if (you.see_cell(thread->pos))
             {
-                view_update_at(thread->pos);
-                draw = true;
+                env.pgrid(thread->pos) |= FPROP_GLOW_MOLD;
+
             }
 
             thread = thread->last;
         }
     }
 
-    if (draw)
-    {
-        viewwindow(false, false);
-        int sp_delay = 150;
-
-        // Scale delay to match change in arena_delay.
-        if (crawl_state.game_is_arena())
-        {
-            sp_delay *= Options.arena_delay;
-            sp_delay /= 600;
-        }
-
-        delay(sp_delay);
-    }
 }

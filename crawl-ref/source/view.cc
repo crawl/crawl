@@ -1007,7 +1007,6 @@ void viewwindow(bool monster_updates, bool show_updates)
     // Leaving it this way because short flashes can occur in long ones,
     // and this simply works without requiring a stack.
     you.flash_colour = BLACK;
-    you.mold_colour = LIGHTGREEN;
 #ifndef USE_TILE
     you.last_view_update = you.num_turns;
     puttext(crawl_view.viewp.x, crawl_view.viewp.y,
