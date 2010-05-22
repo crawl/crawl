@@ -2509,6 +2509,24 @@ static void _update_mold()
     {
         _update_mold_state(*ri);
     }
+    for (monster_iterator mon_it; mon_it; ++mon_it)
+    {
+        if (mon_it->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
+        {
+            for (radius_iterator rad_it(mon_it->pos(),
+                                        2, true, false); rad_it; ++rad_it)
+            {
+                // A threshold greater than 5, less than 8 on distance
+                // matches the blast of a radius 2 explosion.
+                int range = distance(mon_it->pos(), *rad_it);
+                if (range < 6 && is_moldy(*rad_it) )
+                {
+                    env.pgrid(*rad_it) |= FPROP_MOLD;
+                    env.pgrid(*rad_it) |= FPROP_GLOW_MOLD;
+                }
+            }
+        }
+    }
 }
 
 void world_reacts()
