@@ -1356,7 +1356,7 @@ static bool _place_ballisto(const coord_def & pos)
 
     if (ballisto != -1)
     {
-        env.pgrid(pos) &= ~FPROP_MOLD;
+        remove_mold(pos);
         mprf("The mold grows into a ballistomycete.");
         mprf("Your piety has decreased.");
         lose_piety(1);

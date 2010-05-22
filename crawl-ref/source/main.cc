@@ -2484,6 +2484,33 @@ static void _regenerate_hp_and_mp(int delay)
     you.magic_points_regeneration = static_cast<unsigned char>(tmp);
 }
 
+static void _update_mold_state(const coord_def & pos)
+{
+    if (glowing_mold(pos))
+    {
+        // Doing a weird little state thing with the two mold
+        // fprops. 'glowing' mold should turn back to normal after
+        // a couple display update (i.e. after the player makes their
+        // next move), since we happen to have two bits dedicated to
+        // mold now we may as well use them? -cao
+        if (env.pgrid(pos) & FPROP_MOLD)
+            env.pgrid(pos) &= ~FPROP_MOLD;
+        else
+        {
+            env.pgrid(pos) |= FPROP_MOLD;
+            env.pgrid(pos) &= ~FPROP_GLOW_MOLD;
+        }
+    }
+}
+
+static void _update_mold()
+{
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        _update_mold_state(*ri);
+    }
+}
+
 void world_reacts()
 {
     reset_show_terrain();
@@ -2595,6 +2622,7 @@ void world_reacts()
     handle_time();
     update_stat_zero();
     manage_clouds();
+    _update_mold();
 
     if (you.duration[DUR_FIRE_SHIELD] > 0)
         manage_fire_shield(you.time_taken);

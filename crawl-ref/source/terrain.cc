@@ -745,7 +745,7 @@ static void _dgn_check_terrain_covering(const coord_def &pos,
                                      dungeon_feature_type new_feat)
 {
     if (!testbits(env.pgrid(pos), FPROP_BLOODY)
-        && !testbits(env.pgrid(pos), FPROP_MOLD))
+        && !is_moldy(pos))
     {
         return;
     }
@@ -757,7 +757,7 @@ static void _dgn_check_terrain_covering(const coord_def &pos,
         if (old_feat != DNGN_FLOOR && !feat_is_solid(old_feat))
         {
             env.pgrid(pos) &= ~(FPROP_BLOODY);
-            env.pgrid(pos) &= ~(FPROP_MOLD);
+            remove_mold(pos);
         }
     }
     else
@@ -767,7 +767,7 @@ static void _dgn_check_terrain_covering(const coord_def &pos,
             || is_critical_feature(new_feat))
         {
             env.pgrid(pos) &= ~(FPROP_BLOODY);
-            env.pgrid(pos) &= ~(FPROP_MOLD);
+            remove_mold(pos);
         }
     }
 }
