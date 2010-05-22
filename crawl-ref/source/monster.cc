@@ -3035,12 +3035,12 @@ bool monsters::caught() const
 
 bool monsters::petrified() const
 {
-    return has_ench(ENCH_PETRIFIED);
+    return (has_ench(ENCH_PETRIFIED));
 }
 
 bool monsters::petrifying() const
 {
-    return has_ench(ENCH_PETRIFYING);
+    return (has_ench(ENCH_PETRIFYING));
 }
 
 bool monsters::friendly() const
