@@ -1769,7 +1769,7 @@ void handle_monster_move(monsters *monster)
                 if (monster->type == MONS_NO_MONSTER)
                 {
                     monster->speed_increment -= entry->energy_usage.move;
-                    break;  // problem with vortices
+                    break; // problem with vortices
                 }
             }
 

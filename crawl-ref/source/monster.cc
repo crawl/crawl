@@ -5132,7 +5132,6 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
                 del_ench(ENCH_HELD, true);
             }
-
         }
         break;
     }
