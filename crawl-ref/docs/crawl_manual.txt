@@ -1824,7 +1824,7 @@ naturally immune to poisons, negative energy and torment; have little
 warmth left to be affected by cold; and are not susceptible to
 mutations.
 
-There are three types of undead available to players: Mummies, Ghouls,
+There are three types of undead available to players: Mummies, Ghouls
 and Vampires.
 
 Mummies
