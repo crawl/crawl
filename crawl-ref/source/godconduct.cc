@@ -271,7 +271,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_FEDHAS:
                 // Ballistomycetes dying is penalised separately.
                 if (victim && fedhas_protects(victim)
-                    && victim->type != MONS_BALLISTOMYCETE)
+                    && victim->mons_species() != MONS_BALLISTOMYCETE)
                 {
                     // level is (1 + monsterHD/2) for this conduct,
                     // trying a fixed cost since plant HD aren't that

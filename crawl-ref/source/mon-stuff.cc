@@ -1983,7 +1983,7 @@ int monster_die(monsters *monster, killer_type killer,
             _mummy_curse(monster, killer, killer_index);
     }
 
-    if (monster->type == MONS_BALLISTOMYCETE)
+    if (monster->mons_species() == MONS_BALLISTOMYCETE)
     {
         activate_ballistomycetes(monster, monster->pos(),
                                  YOU_KILL(killer) || pet_kill);
