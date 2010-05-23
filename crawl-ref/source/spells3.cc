@@ -1891,7 +1891,7 @@ void you_teleport_now(bool allow_control, bool new_abyss_area, bool wizard_tele)
 }
 
 static bool _do_imprison(const int power, const coord_def& where,
-                         bool force_alone, bool force_full)
+                         bool force_full)
 {
     // power guidelines:
     // powc is roughly 50 at Evoc 10 with no godly assistance, ranging
@@ -1903,28 +1903,53 @@ static bool _do_imprison(const int power, const coord_def& where,
         DNGN_SHALLOW_WATER, DNGN_FLOOR, DNGN_FLOOR_SPECIAL, DNGN_OPEN_DOOR
     };
 
+    bool proceed;
+
+    if (force_full)
+    {
+        bool success = true;
+
+        for (adjacent_iterator ai(where); ai; ++ai)
+        {
+            // The tile is occupied.
+            if (actor_at(*ai))
+            {
+                success = false;
+                break;
+            }
+
+            // Make sure we have a legitimate tile.
+            proceed = false;
+            for (unsigned int i = 0; i < ARRAYSZ(safe_tiles) && !proceed; ++i)
+                if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai)))
+                    proceed = true;
+
+            if (!proceed && grd(*ai) > DNGN_MAX_NONREACH)
+            {
+                success = false;
+                break;
+            }
+        }
+
+        if (!success)
+        {
+            mpr("Half-formed walls emerge from the floor, then retract.");
+            return (false);
+        }
+    }
+
     for (adjacent_iterator ai(where); ai; ++ai)
     {
+        // This is where power comes in.
+        if (!force_full && one_chance_in(power / 5))
+            continue;
+
         // The tile is occupied.
         if (actor_at(*ai))
-        {
-            if (force_alone)
-                return (false);
-            else
-                continue;
-        }
-
-        // This is where power comes in.
-        if (one_chance_in(power / 5))
-        {
-            if (force_full)
-                return (false);
-            else
-                continue;
-        }
+            continue;
 
         // Make sure we have a legitimate tile.
-        bool proceed = false;
+        proceed = false;
         for (unsigned int i = 0; i < ARRAYSZ(safe_tiles) && !proceed; ++i)
             if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai)))
                 proceed = true;
@@ -1963,12 +1988,12 @@ static bool _do_imprison(const int power, const coord_def& where,
 
 bool entomb(const int power)
 {
-    return (_do_imprison(power, you.pos(), false, false));
+    return (_do_imprison(power, you.pos(), false));
 }
 
 bool cast_imprison(const int power, monsters *monster)
 {
-    if (_do_imprison(power, monster->pos(), true, true))
+    if (_do_imprison(power, monster->pos(), true))
     {
         monster->add_ench(mon_enchant(ENCH_ENTOMBED, 0, KC_YOU,
                                       power * 10));
