@@ -2355,7 +2355,7 @@ static void _decrement_durations()
     // attacks somewhat less painful, but that seems wrong-headed {dlb}:
     if (you.species == SP_GHOUL)
     {
-        if (one_chance_in((you.religion == GOD_CHEIBRIADOS && you.piety >
+        if (one_chance_in((you.religion == GOD_CHEIBRIADOS && you.piety >=
                            piety_breakpoint(0)) ? 600 : 400))
         {
             mpr("You feel your flesh rotting away.", MSGCH_WARN);
