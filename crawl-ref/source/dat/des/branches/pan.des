@@ -144,7 +144,7 @@ TILE:       n = dngn_metal_wall_cracked
 :           dgn.set_feature_desc_long("translucent stone wall",
 :                                     "This metal wall has suffered some " ..
 :                                     "damage.  Alas, the hole is not big " ..
-:                                     "enough to crawl though.\n")
+:                                     "enough to crawl through.\n")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
