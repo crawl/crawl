@@ -2864,15 +2864,13 @@ std::string thing_do_grammar(description_level_type dtype,
 }
 
 std::string feature_description(dungeon_feature_type grid,
-                                trap_type trap, bool bloody,
+                                trap_type trap,
+                                const std::string & cover_desc,
                                 description_level_type dtype,
-                                bool add_stop, bool base_desc, bool mold)
+                                bool add_stop, bool base_desc)
 {
     std::string desc = raw_feature_description(grid, trap, base_desc);
-    if (bloody)
-        desc += ", spattered with blood";
-    else if (mold)
-        desc += ", covered with mold";
+    desc += cover_desc;
 
     return thing_do_grammar(dtype, add_stop, feat_is_trap(grid), desc);
 }
@@ -3204,15 +3202,21 @@ std::string feature_description(const coord_def& where, bool covering,
     std::string marker_desc =
         env.markers.property_at(where, MAT_ANY, "feature_description");
 
-    bool bloody = covering && is_bloodcovered(where);
-    bool mold = covering && is_moldy(where);
+    std::string covering_description = "";
+
+    if (covering)
+    {
+        if (is_bloodcovered(where))
+            covering_description = ", spattered with blood";
+        else if (glowing_mold(where))
+            covering_description = ", covered with glowing mold";
+        else if (is_moldy(where))
+            covering_description = ", covered with mold";
+    }
 
     if (!marker_desc.empty())
     {
-        if (bloody)
-            marker_desc += ", spattered with blood";
-        else if (mold)
-            marker_desc += ", covered with mold";
+        marker_desc += covering_description;
 
         return thing_do_grammar(dtype, add_stop, false, marker_desc);
     }
@@ -3266,10 +3270,7 @@ std::string feature_description(const coord_def& where, bool covering,
 
         desc += door_desc_suffix;
 
-        if (bloody)
-            desc += ", spattered with blood";
-        else if (mold)
-            desc += ", covered with mold";
+        desc += covering_description;
 
         return thing_do_grammar(dtype, add_stop, false, desc);
     }
@@ -3289,8 +3290,9 @@ std::string feature_description(const coord_def& where, bool covering,
     case DNGN_TRAP_MECHANICAL:
     case DNGN_TRAP_MAGICAL:
     case DNGN_TRAP_NATURAL:
-        return (feature_description(grid, get_trap_type(where), bloody,
-                                    dtype, add_stop, base_desc, mold));
+        return (feature_description(grid, get_trap_type(where),
+                                    covering_description, dtype,
+                                    add_stop, base_desc));
     case DNGN_ABANDONED_SHOP:
         return thing_do_grammar(dtype, add_stop, false, "An abandoned shop");
 
@@ -3303,8 +3305,8 @@ std::string feature_description(const coord_def& where, bool covering,
                     dtype, add_stop, false,
                     "UNAMED PORTAL VAULT ENTRY"));
     default:
-        return (feature_description(grid, NUM_TRAPS, bloody, dtype, add_stop,
-                                    base_desc, mold));
+        return (feature_description(grid, NUM_TRAPS, covering_description,
+                                    dtype, add_stop, base_desc));
     }
 }
 
@@ -3542,7 +3544,7 @@ static std::vector<std::string> _get_monster_desc_vector(const monsters *mon)
         && _blocked_ray(mon->pos(), &blocking_feat))
     {
         descs.push_back("fire blocked by "
-                        + feature_description(blocking_feat, NUM_TRAPS, false,
+                        + feature_description(blocking_feat, NUM_TRAPS, "",
                                               DESC_NOCAP_A, false));
     }
 
@@ -3621,7 +3623,7 @@ static std::string _get_monster_desc(const monsters *mon)
     {
         text += "Your line of fire to " + mon->pronoun(PRONOUN_OBJECTIVE)
               + " is blocked by "
-              + feature_description(blocking_feat, NUM_TRAPS, false,
+              + feature_description(blocking_feat, NUM_TRAPS, "",
                                     DESC_NOCAP_A)
               + "\n";
     }

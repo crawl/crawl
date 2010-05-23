@@ -1291,7 +1291,7 @@ struct monster_conversion
 bool _possible_evolution(const monsters * input,
                          monster_conversion & possible_monster)
 {
-    switch (input->mons_species())
+    switch (input->type)
     {
     case MONS_PLANT:
     case MONS_BUSH:
@@ -1300,7 +1300,6 @@ bool _possible_evolution(const monsters * input,
         break;
 
     case MONS_FUNGUS:
-    case MONS_BALLISTOMYCETE:
         possible_monster.new_type = MONS_WANDERING_MUSHROOM;
         possible_monster.piety_cost = 1;
         break;
@@ -1308,6 +1307,11 @@ bool _possible_evolution(const monsters * input,
     case MONS_TOADSTOOL:
         possible_monster.new_type = MONS_WANDERING_MUSHROOM;
         possible_monster.piety_cost = 2;
+        break;
+
+    case MONS_BALLISTOMYCETE:
+        possible_monster.new_type = MONS_HYPERACTIVE_BALLISTOMYCETE;
+        possible_monster.piety_cost = 4;
         break;
 
     default:
@@ -1352,7 +1356,7 @@ static bool _place_ballisto(const coord_def & pos)
 
     if (ballisto != -1)
     {
-        env.pgrid(pos) &= ~FPROP_MOLD;
+        remove_mold(pos);
         mprf("The mold grows into a ballistomycete.");
         mprf("Your piety has decreased.");
         lose_piety(1);
@@ -1479,16 +1483,20 @@ bool evolve_flora()
     }
 
     case MONS_FUNGUS:
-    case MONS_BALLISTOMYCETE:
     case MONS_TOADSTOOL:
         simple_monster_message(target,
                                " can now pick up its mycelia and move.");
+        break;
+
+    case MONS_BALLISTOMYCETE:
+        simple_monster_message(target, " appears agitated.");
         break;
 
     default:
         break;
     }
 
+    mprf("new type %d", upgrade.new_type);
     target->upgrade_type(upgrade.new_type, true, true);
     target->god = GOD_FEDHAS;
     target->attitude = ATT_FRIENDLY;
@@ -1502,6 +1510,9 @@ bool evolve_flora()
     // ballistomycete.
     target->del_ench(ENCH_SLOWLY_DYING);
     target->del_ench(ENCH_SPORE_PRODUCTION);
+
+    if (target->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
+        target->add_ench(ENCH_EXPLODING);
 
     target->hit_dice += you.skills[SK_INVOCATIONS];
 

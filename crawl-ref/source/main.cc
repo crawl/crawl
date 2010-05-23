@@ -2484,6 +2484,51 @@ static void _regenerate_hp_and_mp(int delay)
     you.magic_points_regeneration = static_cast<unsigned char>(tmp);
 }
 
+static void _update_mold_state(const coord_def & pos)
+{
+    if (glowing_mold(pos))
+    {
+        // Doing a weird little state thing with the two mold
+        // fprops. 'glowing' mold should turn back to normal after
+        // a couple display update (i.e. after the player makes their
+        // next move), since we happen to have two bits dedicated to
+        // mold now we may as well use them? -cao
+        if (env.pgrid(pos) & FPROP_MOLD)
+            env.pgrid(pos) &= ~FPROP_MOLD;
+        else
+        {
+            env.pgrid(pos) |= FPROP_MOLD;
+            env.pgrid(pos) &= ~FPROP_GLOW_MOLD;
+        }
+    }
+}
+
+static void _update_mold()
+{
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        _update_mold_state(*ri);
+    }
+    for (monster_iterator mon_it; mon_it; ++mon_it)
+    {
+        if (mon_it->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
+        {
+            for (radius_iterator rad_it(mon_it->pos(),
+                                        2, true, false); rad_it; ++rad_it)
+            {
+                // A threshold greater than 5, less than 8 on distance
+                // matches the blast of a radius 2 explosion.
+                int range = distance(mon_it->pos(), *rad_it);
+                if (range < 6 && is_moldy(*rad_it) )
+                {
+                    env.pgrid(*rad_it) |= FPROP_MOLD;
+                    env.pgrid(*rad_it) |= FPROP_GLOW_MOLD;
+                }
+            }
+        }
+    }
+}
+
 void world_reacts()
 {
     reset_show_terrain();
@@ -2595,6 +2640,7 @@ void world_reacts()
     handle_time();
     update_stat_zero();
     manage_clouds();
+    _update_mold();
 
     if (you.duration[DUR_FIRE_SHIELD] > 0)
         manage_fire_shield(you.time_taken);
@@ -3080,7 +3126,7 @@ static void _open_door(coord_def move, bool check_confused)
                 dungeon_feature_type secret
                     = grid_secret_door_appearance(dc);
                 mprf("That %s was a secret door!",
-                     feature_description(secret, NUM_TRAPS, false,
+                     feature_description(secret, NUM_TRAPS, "",
                                          DESC_PLAIN, false).c_str());
             }
         }

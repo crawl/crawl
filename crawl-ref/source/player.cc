@@ -104,7 +104,7 @@ static void _moveto_maybe_repel_stairs()
         if (slide_feature_over(you.pos(), coord_def(-1, -1), false))
         {
             std::string stair_str =
-                feature_description(new_grid, NUM_TRAPS, false,
+                feature_description(new_grid, NUM_TRAPS, "",
                                     DESC_CAP_THE, false);
             std::string prep = feat_preposition(new_grid, true, &you);
 
@@ -215,7 +215,7 @@ static bool _check_moveto_trap(const coord_def& p)
                 "Really step %s that %s?",
                 (type == TRAP_ALARM) ? "onto" : "into",
                 feature_description(new_grid, type,
-                                    false, DESC_BASENAME,
+                                    "", DESC_BASENAME,
                                     false).c_str());
 
             if (!yesno(prompt.c_str(), true, 'n'))
@@ -5027,7 +5027,6 @@ void player::init()
 
     your_name = "";
 
-    mold_colour = LIGHTGREEN;
     banished = false;
     banished_by.clear();
 

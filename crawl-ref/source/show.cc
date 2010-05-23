@@ -112,12 +112,14 @@ static bool _show_bloodcovered(const coord_def& where)
     return (!is_critical_feature(feat) && !feat_is_trap(feat));
 }
 
-static bool _show_mold(const coord_def & where)
+static bool _show_mold(const coord_def & where, unsigned char & mold_colour)
 {
     if (!is_moldy(where))
         return (false);
 
     dungeon_feature_type feat = env.grid(where);
+
+    mold_colour = glowing_mold(where) ? LIGHTRED : LIGHTGREEN;
 
     // Altars, stairs (of any kind) and traps should not be coloured red.
     return (!is_critical_feature(feat) && !feat_is_trap(feat));
@@ -146,6 +148,7 @@ static unsigned short _feat_colour(const coord_def &where,
                             && feat <= DNGN_ESCAPE_HATCH_UP
                             && is_exclude_root(where));
 
+    unsigned char mold_colour;
     if (excluded_stairs)
         colour = Options.tc_excluded;
     else if (feat >= DNGN_MINMOVE && you.get_beholder(where))
@@ -170,8 +173,8 @@ static unsigned short _feat_colour(const coord_def &where,
     }
     else if (_show_bloodcovered(where))
         colour = RED;
-    else if (_show_mold(where))
-        colour = you.mold_colour;
+    else if (_show_mold(where, mold_colour))
+        colour = mold_colour;
     else if (env.grid_colours(where))
         colour = env.grid_colours(where);
     else

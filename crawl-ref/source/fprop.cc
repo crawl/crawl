@@ -34,7 +34,19 @@ bool is_tide_immune(const coord_def &p)
 
 bool is_moldy(const coord_def & p)
 {
-    return (env.pgrid(p) & FPROP_MOLD);
+    return (env.pgrid(p) & FPROP_MOLD
+            || env.pgrid(p) & FPROP_GLOW_MOLD);
+}
+
+bool glowing_mold(const coord_def & p)
+{
+    return (env.pgrid(p) & FPROP_GLOW_MOLD);
+}
+
+void remove_mold(const coord_def & p)
+{
+    env.pgrid(p) &= ~FPROP_MOLD;
+    env.pgrid(p) &= ~FPROP_GLOW_MOLD;
 }
 
 feature_property_type str_to_fprop(const std::string &str)

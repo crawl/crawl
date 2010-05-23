@@ -5339,6 +5339,31 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
         break;
 
+    case ENCH_EXPLODING:
+    {
+        // Reduce the timer, if that means we lose the enchantment then
+        // spawn a spore and re-add the enchantment
+        if(decay_enchantment(me))
+        {
+            monster_type mtype = type;
+            bolt beam;
+
+            setup_spore_explosion(beam, *this);
+
+            beam.explode();
+
+            // The ballisto dying, then a spore being created in its slot
+            // env.mons means we can appear to be alive, but in fact be
+            // an entirely different monster.
+            if (alive() && type == mtype)
+            {
+                add_ench(ENCH_EXPLODING);
+            }
+        }
+
+    }
+
+    break;
     case ENCH_GLOWING_SHAPESHIFTER: // This ench never runs out!
         // Number of actions is fine for shapeshifters.  Don't change
         // shape while taking the stairs because monster_polymorph() has
@@ -6267,7 +6292,7 @@ static const char *enchant_names[] =
     "sleepy", "held", "battle_frenzy", "temp_pacif", "petrifying",
     "petrified", "lowered_mr", "soul_ripe", "slowly_dying", "eat_items",
     "aquatic_land", "spore_production", "slouch", "swift", "tide",
-    "insane", "silenced", "entombed", "awaken_forest", "buggy",
+    "insane", "silenced", "entombed", "awaken_forest", "exploding", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -6427,6 +6452,9 @@ int mon_enchant::calc_duration(const monsters *mons,
         // This is used as a simple timer, when the enchantment runs out
         // the monster will create a giant spore.
         return (random_range(475, 525) * 10);
+
+    case ENCH_EXPLODING:
+        return (random_range(3,7) * 10);
 
     case ENCH_ABJ:
         if (deg >= 6)
