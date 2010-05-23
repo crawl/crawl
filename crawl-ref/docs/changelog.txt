@@ -12,6 +12,7 @@ Unsorted:
 * Aptitudes now on a scale +5 to -5.
 * Track the source of poison for death messages.
 * Remove Death Knights and Thieves.
+* Ghouls can no longer starve; they just rot faster.
 
 Interface:
 * New starting menus, mouse-operable in tiles builds.
@@ -40,6 +41,8 @@ Gods:
 * Yredelemnul no longer gifts vampires.
 * Sif Muna's piety is no longer unfair to skilled species.
 * Nemelex no longer takes gold sacrifices.
+* Fedhas can now evolve ballistomycetes into hyperactive
+  ballistomycetes.
 * Jiyva now paralyses fellow slimes under prayer instead of
   creating a jelly shield.
 
