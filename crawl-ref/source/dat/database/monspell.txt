@@ -26,7 +26,7 @@
 # For all lookups, if the monster is unseen by the player it will add the
 # prefix "unseen" to the key, or if the player or monster is silenced
 # it will prefix "silent" to the key (if the monster is both unseen and
-# unheard no message is ever given).  If using the prefix "silent" gives
+# unheard no message is ever given). If using the prefix "silent" gives
 # no results it will try again without the prefix, assuming that the
 # spell has no sound component.
 #

@@ -803,7 +803,7 @@ w:160
 # adjective in front of the object type name ("bloodstained dagger"),
 # unidentified non-artefact jewellery is described with both an adjective and
 # material ("runed wooden ring"), making a description like "runed ring" a bit
-# weird.  So give randart jewellery an adjective that no non-artefact jewellery
+# weird. So give randart jewellery an adjective that no non-artefact jewellery
 # would have, plus a material that a non-artefact might or might not have.
 jewellery appearance
 

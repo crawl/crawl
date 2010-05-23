@@ -39,7 +39,7 @@ end
 
 -- NOTE: To make beehives occur in the Lair with the same absolute frequency
 -- as in 0.4, the special room definitions which don't fit there should
--- just do nothing.  Can't use dummy vaults to do this since vault
+-- just do nothing. Can't use dummy vaults to do this since vault
 -- frequency is controlled by absolute depth rather than by branch depth.
 function is_in_lair()
     local l_name = dgn.level_name(dgn.level_id())

@@ -926,7 +926,7 @@ __NONE
 w:1
 @_friendly_imp_@
 ####################################################################
-# Player ghost phrases.  Ghosts with different classes can be given
+# Player ghost phrases. Ghosts with different classes can be given
 # different messages.
 ####################################################################
 %%%%
@@ -5180,7 +5180,7 @@ VISUAL:@The_monster@ grins evilly.
 @The_monster@ screams @at_foe@, "I love blood!"
 ## END Urug ##
 %%%%
-############ WAYNE ### A dwarf.  Nuff said.
+############ WAYNE ### A dwarf. Nuff said.
 Wayne
 
 @_Wayne_common_@
