@@ -2335,7 +2335,7 @@ static void _decrement_durations()
     {
         // XXX: Mummies have an ability (albeit an expensive one) that
         // can fix rotted HPs now... it's probably impossible for them
-        // to even start rotting right now, but that could be changed. -- bwr
+        // to even start rotting right now, but that could be changed. - bwr
         // It's not normal biology, so Cheibriados won't help.
         if (you.species == SP_MUMMY)
             you.rotting = 0;
