@@ -971,7 +971,7 @@ static bool _check_ability_possible(const ability_def& abil,
 {
     // Don't insta-starve the player.
     // (Happens at 100, losing consciousness possible from 500 downward.)
-    if (hungerCheck && you.species != SP_VAMPIRE)
+    if (hungerCheck && !you.is_undead)
     {
         const int expected_hunger = you.hunger - abil.food_cost * 2;
         dprf("hunger: %d, max. food_cost: %d, expected hunger: %d",

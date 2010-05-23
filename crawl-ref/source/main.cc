@@ -2355,9 +2355,18 @@ static void _decrement_durations()
     // attacks somewhat less painful, but that seems wrong-headed {dlb}:
     if (you.species == SP_GHOUL)
     {
-        if (one_chance_in((you.religion == GOD_CHEIBRIADOS && you.piety >=
-                           piety_breakpoint(0)) ? 600 : 400))
+        int resilience = 400;
+
+        if (you.religion == GOD_CHEIBRIADOS && you.piety >= piety_breakpoint(0))
+            resilience = resilience * 3 / 2;
+
+        // Faster rotting when hungry.
+        for (int hs = you.hunger_state; hs < HS_SATIATED; hs++)
+            resilience = resilience * 2 / 3;
+
+        if (one_chance_in(resilience))
         {
+            dprf("rot rate: 1/%d", resilience);
             mpr("You feel your flesh rotting away.", MSGCH_WARN);
             ouch(1, NON_MONSTER, KILLED_BY_ROTTING);
             rot_hp(1);

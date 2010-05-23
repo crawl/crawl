@@ -2853,8 +2853,8 @@ int you_min_hunger()
     if (you.is_undead == US_UNDEAD)
         return (6000);
 
-    // Vampires can never starve to death.
-    if (you.species == SP_VAMPIRE)
+    // Vampires can never starve to death.  Ghouls will just rot much faster.
+    if (you.is_undead)
         return (701);
 
     return (0);
