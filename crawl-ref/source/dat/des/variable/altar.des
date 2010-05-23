@@ -29,7 +29,7 @@
 #      For this, use one B glyph in your map.
 #
 # If you want to check overflow temple placement in wizard mode, use the &:
-# command.  The levels overflow temples are placed on, and which gods are
+# command. The levels overflow temples are placed on, and which gods are
 # in them, are chosen at new-game time.
 #
 ###############################################################################
@@ -1383,7 +1383,7 @@ COLOUR: G = lightgray
 COLOUR: c = white
 MONS:   angel
 : local za_desc = "A divine agent of Zin, it is a towering winged figure " ..
-:   "with an aura of brilliant white light.  This angel's face, though, " ..
+:   "with an aura of brilliant white light. This angel's face, though, " ..
 :   "is marked by a scowl, as if its zeal against any real or perceived " ..
 :   "vice overshadowed its goodness.\n"
 MARKER: 1 = lua:MonPropsMarker:new {speech_key="zin_priest"; description=za_desc}

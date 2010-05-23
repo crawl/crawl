@@ -5,7 +5,7 @@
 #
 # wpnnoise.txt contains the messages of randart weapons with
 # the noise property and of the noisy unrandart weapons,
-# like the Singing Sword.  To make an entry for a noisy
+# like the Singing Sword. To make an entry for a noisy
 # unrandart weapon, make the entry's key exactly the same as
 # the weapon's name, but all lower case.
 #
@@ -296,7 +296,7 @@ w:50
 %%%%
 rare_speaking
 
-@The_weapon@ says, "Hi!  I'm the Singing Sword!"
+@The_weapon@ says, "Hi! I'm the Singing Sword!"
 
 @The_weapon@ chants, "I am golden and pointed, and with blood well anointed."
 
@@ -320,7 +320,7 @@ w:5
 
 @The_weapon@ announces, "I dedicate these songs to @player_name@!"
 
-@The_weapon@ says, "Hey!  Are you even listening?"
+@The_weapon@ says, "Hey! Are you even listening?"
 
 %%%%
 real_song
@@ -480,7 +480,7 @@ weapon_chatter
 
 @Your_weapon@ sighs, "How I wish you were a better fighter."
 
-@Your_weapon@ grouses, "Could you please kill something?  I'm itching all over."
+@Your_weapon@ grouses, "Could you please kill something? I'm itching all over."
 
 @Your_weapon@ shouts, "Make war, not love!"
 
@@ -498,7 +498,7 @@ weapon_chatter
 
 @Your_weapon@ shouts a battle cry!
 
-@Your_weapon@ shouts, "Onwards!  It's kill or die!"
+@Your_weapon@ shouts, "Onwards! It's kill or die!"
 
 @Your_weapon@ grouses, "Silence can be so depressing."
 
@@ -513,9 +513,9 @@ w:30
 %%%%
 rare_chatter
 
-@Your_weapon@ shouts, "This level is mine!  Um, ours."
+@Your_weapon@ shouts, "This level is mine! Um, ours."
 
-@Your_weapon@ cries, "Don't ditch me yet!  I promise to be forever silent."
+@Your_weapon@ cries, "Don't ditch me yet! I promise to be forever silent."
 
 @Your_weapon@ groans, "That's what you call fighting?"
 
@@ -525,7 +525,7 @@ rare_chatter
 
 @Your_weapon@ asks, "Did you take a vow of silence?"
 
-@Your_weapon@ says, "You can tell me everything!  I can keep a secret!"
+@Your_weapon@ says, "You can tell me everything! I can keep a secret!"
 
 @Your_weapon@ prematurely composes your obituary.
 

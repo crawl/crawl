@@ -12,7 +12,7 @@
 # in view of the player. Zero experience monsters like plants are exempt.
 #
 # This file is structured as follows:
-# -1- Simple maps.  Small and neither lua nor complicated syntax.
+# -1- Simple maps. Small and neither lua nor complicated syntax.
 # -2- Twisted maps. Maps which either use a lot of lua or heavy SUBSTing etc.
 # -3- Large maps.   
 #
@@ -3444,7 +3444,7 @@ SHUFFLE: XZ
 NSUBST:  Z = ) / ]
 NSUBST:  X = ( / [
 MARKER:  = = lua:props_marker { \
-            door_open_prompt="This door is covered in warnings.  Open " .. \
+            door_open_prompt="This door is covered in warnings. Open " .. \
                              "it anyway?", \
             door_description_prefix="warning scrawled " \
          }
@@ -3585,7 +3585,7 @@ FTILE:   1234+ABCDEabcdem = floor_dirt
 SHUFFLE: abcde / fghij
 # Don't let auto-explore open the door and unleash the caged monsters.
 MARKER:   + = lua:props_marker { \
-            door_open_prompt="This door is covered in warnings.  Open " .. \
+            door_open_prompt="This door is covered in warnings. Open " .. \
                              "it anyway?", \
             door_description_prefix="warning scrawled " \
          }

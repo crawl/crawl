@@ -663,7 +663,7 @@ ENDMAP
 ##############################################################################
 # Slaugherhouse (Zaba)
 #
-# Butchers have either knives or hand axes.  They have some chance of opening
+# Butchers have either knives or hand axes. They have some chance of opening
 # the doors so animals can go for a walk, that's intended.
 #
 NAME:   slaughterhouse

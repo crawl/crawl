@@ -16,7 +16,7 @@
 {{
 function ice_cave_portal(e)
   local desc_long = "A permanent cold front seems to surround this " ..
-    "portal.  Whatever lives on the other side, they will be full of " ..
+    "portal. Whatever lives on the other side, they will be full of " ..
     "grim and arctic fury. You note that the archway is melting away."
 
   local timeout_turns = crawl.random_range(1200, 1700)
