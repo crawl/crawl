@@ -1671,7 +1671,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
                 && feat_stair_direction(stair_taken) != CMD_NO_CMD)
             {
                 std::string stair_str =
-                    feature_description(feat, NUM_TRAPS, false,
+                    feature_description(feat, NUM_TRAPS, "",
                                         DESC_CAP_THE, false);
                 std::string verb = stair_climb_verb(feat);
 

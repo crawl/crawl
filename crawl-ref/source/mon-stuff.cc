@@ -961,6 +961,49 @@ static void _mummy_curse(monsters* monster, killer_type killer, int index)
     }
 }
 
+void _setup_base_explosion(bolt & beam, const monsters & origin)
+{
+    beam.is_tracer    = false;
+    beam.is_explosion = true;
+    beam.beam_source  = origin.mindex();
+    beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.source       = origin.pos();
+    beam.target       = origin.pos();
+
+    if (!crawl_state.game_is_arena() && origin.attitude == ATT_FRIENDLY
+        && !origin.is_summoned())
+    {
+        beam.thrower = KILL_YOU;
+    }
+    else
+    {
+        beam.thrower = KILL_MON;
+    }
+
+    beam.aux_source.clear();
+    beam.attitude = origin.attitude;
+}
+
+void setup_spore_explosion(bolt & beam, const monsters & origin)
+{
+    _setup_base_explosion(beam, origin);
+    beam.flavour = BEAM_SPORE;
+    beam.damage  = dice_def(3, 15);
+    beam.name    = "explosion of spores";
+    beam.colour  = LIGHTGREY;
+    beam.ex_size = 2;
+}
+
+void setup_lightning_explosion(bolt & beam, const monsters & origin)
+{
+    _setup_base_explosion(beam, origin);
+    beam.flavour = BEAM_ELECTRICITY;
+    beam.damage  = dice_def(3, 20);
+    beam.name    = "blast of lightning";
+    beam.colour  = LIGHTCYAN;
+    beam.ex_size = coinflip() ? 3 : 2;
+}
+
 static bool _spore_goes_pop(monsters *monster, killer_type killer,
                             int killer_index, bool pet_kill, bool wizard)
 {
@@ -973,50 +1016,18 @@ static bool _spore_goes_pop(monsters *monster, killer_type killer,
     bolt beam;
     const int type = monster->type;
 
-    beam.is_tracer    = false;
-    beam.is_explosion = true;
-    beam.beam_source  = monster->mindex();
-    beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
-    beam.source       = monster->pos();
-    beam.target       = monster->pos();
-
-    if (!crawl_state.game_is_arena() && monster->attitude == ATT_FRIENDLY
-        && !monster->is_summoned())
-    {
-        beam.thrower = KILL_YOU;
-    }
-    else
-    {
-        beam.thrower = KILL_MON;
-    }
-    beam.aux_source.clear();
-    beam.attitude = monster->attitude;
-
-    if (YOU_KILL(killer))
-        beam.aux_source = "set off by themselves";
-    else if (pet_kill)
-        beam.aux_source = "set off by their pet";
-
     const char* msg       = NULL;
     const char* sanct_msg = NULL;
     if (type == MONS_GIANT_SPORE)
     {
-        beam.flavour = BEAM_SPORE;
-        beam.damage  = dice_def(3, 15);
-        beam.name    = "explosion of spores";
-        beam.colour  = LIGHTGREY;
-        beam.ex_size = 2;
+        setup_spore_explosion(beam, *monster);
         msg          = "The giant spore explodes!";
         sanct_msg    = "By Zin's power, the giant spore's explosion is "
                        "contained.";
     }
     else if (type == MONS_BALL_LIGHTNING)
     {
-        beam.flavour = BEAM_ELECTRICITY;
-        beam.damage  = dice_def(3, 20);
-        beam.name    = "blast of lightning";
-        beam.colour  = LIGHTCYAN;
-        beam.ex_size = coinflip() ? 3 : 2;
+        setup_lightning_explosion(beam, *monster);
         msg          = "The ball lightning explodes!";
         sanct_msg    = "By Zin's power, the ball lightning's explosion "
                        "is contained.";
@@ -1028,6 +1039,11 @@ static bool _spore_goes_pop(monsters *monster, killer_type killer,
                                         << std::endl;
         return (false);
     }
+
+    if (YOU_KILL(killer))
+        beam.aux_source = "set off by themselves";
+    else if (pet_kill)
+        beam.aux_source = "set off by their pet";
 
     bool saw = false;
     if (you.can_see(monster))
@@ -1967,7 +1983,7 @@ int monster_die(monsters *monster, killer_type killer,
             _mummy_curse(monster, killer, killer_index);
     }
 
-    if (monster->type == MONS_BALLISTOMYCETE)
+    if (monster->mons_species() == MONS_BALLISTOMYCETE)
     {
         activate_ballistomycetes(monster, monster->pos(),
                                  YOU_KILL(killer) || pet_kill);

@@ -1158,7 +1158,7 @@ static void _recap_feat_keys(std::vector<std::string> &keys)
             keys[i] = "A shop";
         else
         {
-            keys[i] = feature_description(type, NUM_TRAPS, false, DESC_CAP_A,
+            keys[i] = feature_description(type, NUM_TRAPS, "", DESC_CAP_A,
                                           false);
         }
     }

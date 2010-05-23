@@ -52,7 +52,8 @@ bool need_auto_exclude(const monsters *mon, bool sleepy)
     for (unsigned i = 0; i < Options.auto_exclude.size(); ++i)
         if (Options.auto_exclude[i].matches(name)
             && _mon_needs_auto_exclude(mon, sleepy)
-            && mon->attitude == ATT_HOSTILE)
+            && (mon->attitude == ATT_HOSTILE
+                || mon->type == MONS_HYPERACTIVE_BALLISTOMYCETE))
         {
             return (true);
         }
@@ -66,7 +67,10 @@ void set_auto_exclude(const monsters *mon)
 {
     if (need_auto_exclude(mon) && !is_exclude_root(mon->pos()))
     {
-        set_exclude(mon->pos(), LOS_RADIUS, true);
+        int rad = LOS_RADIUS;
+        if (mon->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
+            rad = 2;
+        set_exclude(mon->pos(), rad, true);
         // FIXME: If this happens for several monsters in the same turn
         //        (as is possible for some vaults), this could be really
         //        annoying. (jpeg)
@@ -529,7 +533,9 @@ void maybe_remove_autoexclusion(const coord_def &p)
             return;
 
         const monsters *m = monster_at(p);
-        if (!m || !you.can_see(m) || m->attitude != ATT_HOSTILE
+        if (!m || !you.can_see(m)
+            || m->attitude != ATT_HOSTILE
+                && m->type != MONS_HYPERACTIVE_BALLISTOMYCETE
             || strcmp(mons_type_name(m->type, DESC_PLAIN).c_str(),
                       exc->desc.c_str()) != 0)
         {
