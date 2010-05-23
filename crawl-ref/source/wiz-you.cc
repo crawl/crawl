@@ -239,7 +239,9 @@ void wizard_set_hunger_state()
     case 'e': you.hunger = 12000; break;
     default:  canned_msg(MSG_OK); break;
     }
+
     food_change();
+
     if (you.species == SP_GHOUL && you.hunger_state >= HS_SATIATED)
         mpr("Ghouls can never be full or above!");
 }

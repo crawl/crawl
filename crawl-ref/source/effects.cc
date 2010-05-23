@@ -1215,7 +1215,7 @@ static bool _try_give_plain_armour(item_def &arm)
 void _acquirement_determine_food(int& type_wanted, int& quantity,
                                  const has_vector& already_has)
 {
-    // food is a little less predictable now -- bwr
+    // Food is a little less predictable now. - bwr
     if (you.species == SP_GHOUL)
         type_wanted = one_chance_in(10) ? FOOD_ROYAL_JELLY : FOOD_CHUNK;
     else if (you.species == SP_VAMPIRE)

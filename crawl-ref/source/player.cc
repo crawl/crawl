@@ -3280,7 +3280,7 @@ int check_stealth(void)
     return (stealth);
 }
 
-static const char * _get_rotting_how()
+static const char *_get_rotting_how()
 {
     ASSERT(you.rotting > 0 || you.species == SP_GHOUL);
 
