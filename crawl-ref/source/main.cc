@@ -2361,7 +2361,6 @@ static void _decrement_durations()
             mpr("You feel your flesh rotting away.", MSGCH_WARN);
             ouch(1, NON_MONSTER, KILLED_BY_ROTTING);
             rot_hp(1);
-
             if (you.rotting > 0)
                 you.rotting--;
         }
