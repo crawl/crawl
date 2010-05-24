@@ -995,7 +995,7 @@ static void _maybe_spawn_jellies(int dam, const char* aux,
 }
 
 
-#ifdef WIZARD
+#if defined(WIZARD) || defined(DEBUG)
 static void _wizard_restore_life()
 {
     if (you.hp <= 0)
