@@ -1288,10 +1288,13 @@ static void delete_files()
 void end_game(scorefile_entry &se)
 {
     for (int i = 0; i < ENDOFPACK; i++)
-        set_ident_flags(you.inv[i], ISFLAG_IDENT_MASK);
+        if (!item_type_known(you.inv[i]))
+            add_inscription(you.inv[i], "unknown");
 
     for (int i = 0; i < ENDOFPACK; i++)
     {
+        set_ident_flags(you.inv[i], ISFLAG_IDENT_MASK);
+
         if (you.inv[i].base_type != 0)
             set_ident_type(you.inv[i], ID_KNOWN_TYPE);
     }
