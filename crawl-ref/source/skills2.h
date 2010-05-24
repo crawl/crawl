@@ -19,6 +19,11 @@ std::string skill_title(
     unsigned char best_skill, unsigned char skill_lev,
     // these used for ghosts and hiscores:
     int species = -1, int str = -1, int dex = -1, int god = -1 );
+std::string skill_title_by_rank(
+    unsigned char best_skill, unsigned char skill_rank,
+    // these used for ghosts and hiscores:
+    int species = -1, int str = -1, int dex = -1, int god = -1 );
+unsigned get_skill_rank(unsigned skill_lev);
 
 std::string player_title();
 

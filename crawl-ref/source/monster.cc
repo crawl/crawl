@@ -3234,7 +3234,7 @@ bool monsters::is_unclean() const
     return (false);
 }
 
-bool monsters::is_chaotic() const
+bool monsters::is_known_chaotic() const
 {
     if (type == MONS_UGLY_THING
         || type == MONS_VERY_UGLY_THING
@@ -3246,7 +3246,7 @@ bool monsters::is_chaotic() const
         return (true);
     }
 
-    if (is_shapeshifter())
+    if (is_shapeshifter() && (flags & MF_KNOWN_MIMIC))
         return (true);
 
     // Knowing chaotic spells is not enough to make you "essentially"
@@ -3263,6 +3263,11 @@ bool monsters::is_chaotic() const
     }
 
     return (false);
+}
+
+bool monsters::is_chaotic() const
+{
+    return is_shapeshifter() || is_known_chaotic();
 }
 
 bool monsters::is_insubstantial() const

@@ -1853,17 +1853,22 @@ static const char *ugly_colour_names[] = {
     "red", "brown", "green", "cyan", "purple", "white"
 };
 
-std::string ugly_thing_colour_name(const monsters *mon)
+std::string ugly_thing_colour_name(unsigned char colour)
 {
-    int colour_offset = -1;
-
-    if (mon->type == MONS_UGLY_THING || mon->type == MONS_VERY_UGLY_THING)
-        colour_offset = ugly_thing_colour_offset(mon->colour);
+    int colour_offset = ugly_thing_colour_offset(colour);
 
     if (colour_offset == -1)
         return ("buggy");
 
     return (ugly_colour_names[colour_offset]);
+}
+
+std::string ugly_thing_colour_name(const monsters *mon)
+{
+    if (mon->type == MONS_UGLY_THING || mon->type == MONS_VERY_UGLY_THING)
+        return (ugly_thing_colour_name(mon->colour));
+    else
+        return ("buggy");
 }
 
 static const unsigned char ugly_colour_values[] = {
