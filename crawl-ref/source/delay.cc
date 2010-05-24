@@ -1541,6 +1541,14 @@ static void _handle_run_delays(const delay_queue_item &delay)
     {
         handle_delay();
     }
+    else if (!you.turn_is_over)
+    {
+        // We want to reset you.time_taken if we didn't do
+        // anything (could check against CMD_NO_CMD above),
+        // but leave it set up in case we handle a different
+        // delay.
+        you.time_taken = 0;
+    }
 }
 
 static void _handle_macro_delay()
