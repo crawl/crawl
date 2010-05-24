@@ -335,6 +335,7 @@ WEIGHT: 100
 
 NAME:   uniq_polyphemus
 DEPTH:  Shoals
+WEIGHT: 50
 : place_unique(_G, "Polyphemus band")
 
 NAME:   uniq_ilsuiw
