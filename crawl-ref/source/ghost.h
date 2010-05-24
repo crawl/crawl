@@ -14,6 +14,9 @@
 #include "mon-enum.h"
 #include "mon_resist_def.h"
 
+mon_attack_flavour ugly_thing_colour_to_flavour(unsigned char u_colour);
+mon_resist_def ugly_thing_resists(bool very_ugly, mon_attack_flavour u_att_flav);
+
 class ghost_demon
 {
 public:

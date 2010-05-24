@@ -931,8 +931,7 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
     if (!monster_descriptor(m->type, MDSC_NOMSG_WOUNDS))
     {
         std::string damage_desc;
-        mon_dam_level_type damage_level;
-        mons_get_damage_level(m, damage_desc, damage_level);
+        mon_dam_level_type damage_level = mons_get_damage_level(m);
 
         switch (damage_level)
         {

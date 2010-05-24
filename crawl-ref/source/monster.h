@@ -316,6 +316,7 @@ public:
     bool is_unholy() const;
     bool is_evil() const;
     bool is_unclean() const;
+    bool is_known_chaotic() const;
     bool is_chaotic() const;
     bool is_insubstantial() const;
     int res_fire() const;

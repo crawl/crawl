@@ -73,6 +73,7 @@
 #include "itemname.h"
 #include "libutil.h"
 #include "mapmark.h"
+#include "mon-info.h"
 #include "mon-util.h"
 #include "mon-transit.h"
 #include "quiver.h"
@@ -2353,6 +2354,40 @@ void marshallMonster(writer &th, const monsters &m)
     }
 
     m.props.write(th);
+}
+
+void marshallMonsterInfo(writer &th, const monster_info& mi)
+{
+    marshallCoord(th, mi.pos);
+    marshallUnsigned(th, mi.mb);
+    marshallString(th, mi.mname);
+    marshallUnsigned(th, mi.type);
+    marshallUnsigned(th, mi.base_type);
+    marshallUnsigned(th, mi.number);
+    marshallUnsigned(th, mi.colour);
+    marshallUnsigned(th, mi.attitude);
+    marshallUnsigned(th, mi.dam);
+    marshallUnsigned(th, mi.fire_blocker);
+    marshallString(th, mi.description);
+    marshallString(th, mi.quote);
+    marshallUnsigned(th, mi.fly);
+}
+
+void unmarshallMonsterInfo(reader &th, monster_info& mi)
+{
+    mi.pos = unmarshallCoord(th);
+    unmarshallUnsigned(th, mi.mb);
+    mi.mname = unmarshallString(th);
+    unmarshallUnsigned(th, mi.type);
+    unmarshallUnsigned(th, mi.base_type);
+    unmarshallUnsigned(th, mi.number);
+    unmarshallUnsigned(th, mi.colour);
+    unmarshallUnsigned(th, mi.attitude);
+    unmarshallUnsigned(th, mi.dam);
+    unmarshallUnsigned(th, mi.fire_blocker);
+    mi.description = unmarshallString(th);
+    mi.quote = unmarshallString(th);
+    unmarshallUnsigned(th, mi.fly);
 }
 
 static void tag_construct_level_monsters(writer &th)

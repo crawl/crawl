@@ -27,30 +27,40 @@ void lua_push_moninf(lua_State *ls, monster_info *mi)
     monster_info *var = *(monster_info **) \
         luaL_checkudata(ls, n, MONINF_METATABLE)
 
-#define MIRET1(type, field) \
+#define MIRET1(type, field, cfield) \
     static int moninf_get_##field(lua_State *ls) \
     { \
         MONINF(ls, 1, mi); \
-        lua_push##type(ls, mi->m_##field); \
+        lua_push##type(ls, mi->cfield); \
         return (1); \
     }
 
 #define MIREG(field) { #field, moninf_get_##field }
 
-MIRET1(number, damage_level)
-MIRET1(boolean, is_safe)
+MIRET1(number, damage_level, dam)
+MIRET1(boolean, is_safe, is(MB_SAFE))
+MIRET1(string, mname, mname.c_str())
+MIRET1(number, type, type)
+MIRET1(number, base_type, base_type)
+MIRET1(number, number, number)
+MIRET1(number, colour, colour)
+
+LUAFN(moninf_get_is)
+{
+    MONINF(ls, 1, mi);
+    int num = luaL_checknumber(ls, 2);
+    lua_pushboolean(ls, mi->is(num));
+    return (1);
+}
 
 LUAFN(moninf_get_damage_desc)
 {
     MONINF(ls, 1, mi);
-    lua_pushstring(ls, mi->m_damage_desc.c_str());
+    std::string s = mi->damage_desc();
+    lua_pushstring(ls, s.c_str());
     return (1);
 }
 
-// FIXME: This is unsafe, since monster_info::to_string
-//        acccesses the underlying monsters*. monster_info
-//        should be changed to collect all info it needs
-//        on instantiation.
 LUAFN(moninf_get_desc)
 {
     MONINF(ls, 1, mi);
@@ -63,6 +73,12 @@ LUAFN(moninf_get_desc)
 
 static const struct luaL_reg moninf_lib[] =
 {
+    MIREG(type),
+    MIREG(base_type),
+    MIREG(number),
+    MIREG(colour),
+    MIREG(mname),
+    MIREG(is),
     MIREG(is_safe),
     MIREG(damage_level),
     MIREG(damage_desc),

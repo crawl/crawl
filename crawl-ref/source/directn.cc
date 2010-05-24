@@ -666,19 +666,20 @@ void full_describe_view()
 
             std::string prefix = "";
 #ifndef USE_TILE
-            const std::string col_string = colour_to_str(mi->m_glyph_colour);
+            glyph g = get_mons_glyph(mi->mon());
+            const std::string col_string = colour_to_str(g.col);
             prefix = "(<" + col_string + ">"
-                     + stringize_glyph(mi->m_glyph)
+                     + stringize_glyph(g.ch)
                      + "</" + col_string + ">) ";
 #endif
-            std::string str = get_monster_equipment_desc(mi->m_mon, true,
+            std::string str = get_monster_equipment_desc(mi->mon(), true,
                                                          DESC_CAP_A, true);
 
-            if (you.beheld_by(mi->m_mon))
+            if (mi->is(MB_MESMERIZING))
                 str += ", keeping you mesmerised";
 
-            if (mi->m_damage_level != MDAM_OKAY)
-                str += ", " + mi->m_damage_desc;
+            if (mi->dam != MDAM_OKAY)
+                str += ", " + mi->damage_desc();
 
 #ifndef USE_TILE
             // Wraparound if the description is longer than allowed.
@@ -690,7 +691,7 @@ void full_describe_view()
             for (unsigned int j = 0; j < fss.size(); ++j)
             {
                 if (j == 0)
-                    me = new MonsterMenuEntry(prefix+str, mi->m_mon, hotkey++);
+                    me = new MonsterMenuEntry(prefix+str, mi->mon(), hotkey++);
 #ifndef USE_TILE
                 else
                 {
@@ -2227,10 +2228,10 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
     if (need_path && _blocked_ray(mon->pos()))
         return (false);
 
-    const monsters *monl = mlist[real_idx].m_mon;
+    const monsters *monl = mlist[real_idx].mon();
     extern mon_attitude_type mons_attitude(const monsters *m);
 
-    if (mons_attitude(mon) != mlist[idx].m_attitude)
+    if (mons_attitude(mon) != mlist[idx].attitude)
         return (false);
 
     if (mon->type != monl->type)

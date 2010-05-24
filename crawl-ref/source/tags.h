@@ -13,6 +13,7 @@
 #include "tag-version.h"
 
 struct show_type;
+struct monster_info;
 
 enum tag_type   // used during save/load process to identify data blocks
 {
@@ -135,6 +136,7 @@ void marshallString4 (writer &, const std::string &);
 void marshallCoord   (writer &, const coord_def &);
 void marshallItem    (writer &, const item_def &);
 void marshallMonster (writer &, const monsters &);
+void marshallMonsterInfo (writer &, const monster_info &);
 void marshallShowtype (writer &, const show_type &);
 
 void marshallEnumVal (writer &, const enum_info *, int);
@@ -192,6 +194,7 @@ void        unmarshallString4 (reader &, std::string&);
 coord_def   unmarshallCoord   (reader &);
 void        unmarshallItem    (reader &, item_def &item);
 void        unmarshallMonster (reader &, monsters &item);
+void        unmarshallMonsterInfo (reader &, monster_info &mi);
 show_type   unmarshallShowtype (reader &);
 
 int         unmarshallEnumVal (reader &, const enum_info *);
