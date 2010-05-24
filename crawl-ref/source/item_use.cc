@@ -3091,13 +3091,13 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where)
 {
     ASSERT(item != NULL);
 
-    int chance = 0;
-
     std::string name = item->name(DESC_PLAIN, false, true, false);
 
     // Exploding missiles are always destroyed.
     if (name.find("explod") != std::string::npos)
         return (true);
+
+    int chance = 0;
 
     if (item->base_type == OBJ_MISSILES)
     {
@@ -3153,7 +3153,7 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where)
     bool destroyed = (chance == 0) ? false : (one_chance_in(chance)
                                               && x_chance_in_y(3, item->plus + 3));
 
-    return destroyed;
+    return (destroyed);
 }
 
 static int _prompt_ring_to_remove(int new_ring)
