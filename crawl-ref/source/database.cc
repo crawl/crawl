@@ -353,7 +353,7 @@ static void _add_entry(DBM *db, const std::string &k, std::string &v)
 
 static void _parse_text_db(std::ifstream &inf, DBM *db)
 {
-    char buf[1000];
+    char buf[2000];
 
     std::string key;
     std::string value;
