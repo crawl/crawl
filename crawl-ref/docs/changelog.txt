@@ -52,6 +52,7 @@ Items:
   scrolls of enchant weapon II no longer work on them.
 
 Monsters:
+* Skeletal dragons are renamed to bone dragons.
 * Manes are now iron imps, with stat tweaks.
 * Imps lose see invisible while shadow imps gain it, and white
   imps resist poison but are vulnerable to fire.
