@@ -1240,17 +1240,6 @@ static void _grab_followers()
             pikel = fmenv;
     }
 
-    // Handle interlevel followers
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (testbits(mi->flags, MF_INTERLEVEL_FOLLOWER)
-            || testbits(mi->flags, MF_DEMONIC_GUARDIAN))
-        {
-            mi->flags |= MF_TAKING_STAIRS;
-            _grab_follower_at(mi->pos());
-        }
-    }
-
     // Deal with Dowan and Duvessa here.
     if (dowan && duvessa)
     {
