@@ -99,15 +99,15 @@ static bool _player_hurt_monster(monsters& m, int damage,
 static int _shatter_monsters(coord_def where, int pow, int, actor *)
 {
     dice_def dam_dice(0, 5 + pow / 3); // number of dice set below
-    monsters *monster = monster_at(where);
+    monsters *mon = monster_at(where);
 
-    if (monster == NULL)
+    if (mon == NULL)
         return (0);
 
     // Removed a lot of silly monsters down here... people, just because
     // it says ice, rock, or iron in the name doesn't mean it's actually
     // made out of the substance. - bwr
-    switch (monster->type)
+    switch (mon->type)
     {
     case MONS_SILVER_STATUE: // 3/2 damage
         dam_dice.num = 4;
@@ -149,25 +149,32 @@ static int _shatter_monsters(coord_def where, int pow, int, actor *)
         break;
 
     default:
-        if (monster->is_insubstantial()) // normal damage
+        if (mon->is_insubstantial()) // normal damage
             dam_dice.num = 0;
-        else if (monster->is_icy())      // 3/2 damage
+        else if (mon->is_icy())      // 3/2 damage
             dam_dice.num = 4;
-        else if (monster->is_skeletal()) // double damage
+        else if (mon->is_skeletal()) // double damage
             dam_dice.num = 6;
-        else if (mons_flies(monster))    // 1/3 damage
+        else if (mons_flies(mon))    // 1/3 damage
             dam_dice.num = 1;
         else
-            dam_dice.num = 3;
+        {
+            const bool petrifying = mon->petrifying();
+            const bool petrified = mon->petrified() && !petrifying;
+
+            // Petrifying or petrified monsters can be shattered.
+            if (petrifying || petrified)
+                dam_dice.num = petrifying ? 4 : 6; // 3/2 or double damage
+            else
+                dam_dice.num = 3;
+        }
         break;
     }
 
-    int damage = dam_dice.roll() - random2(monster->ac);
+    int damage = std::max(0, dam_dice.roll() - random2(mon->ac));
 
     if (damage > 0)
-        _player_hurt_monster(*monster, damage);
-    else
-        damage = 0;
+        _player_hurt_monster(*mon, damage);
 
     return (damage);
 }
@@ -1471,7 +1478,7 @@ bool cast_fragmentation(int pow, const dist& spd)
             explode         = false;
             beam.damage.num = 2;
             _player_hurt_monster(*mon, beam.damage.roll(),
-                    BEAM_DISINTEGRATION);
+                                 BEAM_DISINTEGRATION);
             break;
 
         case MONS_IRON_GOLEM:
@@ -1481,7 +1488,7 @@ bool cast_fragmentation(int pow, const dist& spd)
             beam.colour     = CYAN;
             beam.damage.num = 4;
             if (_player_hurt_monster(*mon, beam.damage.roll(),
-                        BEAM_DISINTEGRATION))
+                                     BEAM_DISINTEGRATION))
                 beam.damage.num += 2;
             break;
 
@@ -1496,7 +1503,7 @@ bool cast_fragmentation(int pow, const dist& spd)
             beam.colour     = BROWN;
             beam.damage.num = 3;
             if (_player_hurt_monster(*mon, beam.damage.roll(),
-                        BEAM_DISINTEGRATION))
+                                     BEAM_DISINTEGRATION))
                 beam.damage.num++;
             break;
 
@@ -1523,7 +1530,7 @@ bool cast_fragmentation(int pow, const dist& spd)
                     statue_damage = mon->hit_points;
 
                 if (_player_hurt_monster(*mon, statue_damage,
-                            BEAM_DISINTEGRATION))
+                                         BEAM_DISINTEGRATION))
                     beam.damage.num += 2;
             }
             break;
@@ -1535,7 +1542,7 @@ bool cast_fragmentation(int pow, const dist& spd)
             beam.colour     = WHITE;
             beam.damage.num = 4;
             if (_player_hurt_monster(*mon, beam.damage.roll(),
-                        BEAM_DISINTEGRATION))
+                                     BEAM_DISINTEGRATION))
                 beam.damage.num += 2;
             break;
 
@@ -1571,7 +1578,7 @@ bool cast_fragmentation(int pow, const dist& spd)
                 {
                       beam.damage.num = 2;
                       if (_player_hurt_monster(*mon, beam.damage.roll(),
-                                  BEAM_DISINTEGRATION))
+                                               BEAM_DISINTEGRATION))
                           beam.damage.num += 2;
                   }
                   goto all_done; // i.e., no "Foo Explodes!"
@@ -1590,7 +1597,7 @@ bool cast_fragmentation(int pow, const dist& spd)
                     beam.colour     = mons_class_colour(mon->type);
                     beam.damage.num = petrifying ? 2 : 3;
                     if (_player_hurt_monster(*mon, beam.damage.roll(),
-                                BEAM_DISINTEGRATION))
+                                             BEAM_DISINTEGRATION))
                         beam.damage.num++;
                     break;
                 }
