@@ -1421,15 +1421,6 @@ int monster_die(monsters *monster, killer_type killer,
         }
     }
 
-    // Death of a Demonic Guardian resets flag and duration
-    if (testbits(monster->flags, MF_DEMONIC_GUARDIAN))
-    {
-        you.active_demonic_guardian = false;
-        const int dur = player_mutation_level(MUT_DEMONIC_GUARDIAN) * 200
-                        + roll_dice(10, 10);
-        you.set_duration(DUR_DEMONIC_GUARDIAN, dur);
-    }
-
     const bool death_message = !silent && !did_death_message
                                && mons_near(monster)
                                && monster->visible_to(&you);

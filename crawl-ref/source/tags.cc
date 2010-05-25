@@ -1067,9 +1067,6 @@ static void tag_construct_you(writer &th)
         marshallShort(th, you.demonic_traits[j].mutation);
     }
 
-    marshallBoolean(th, you.active_demonic_guardian);
-    marshallBoolean(th, you.disable_demonic_guardian);
-
     // how many penances?
     marshallByte(th, MAX_NUM_GODS);
     for (i = 0; i < MAX_NUM_GODS; i++)
@@ -1518,9 +1515,6 @@ static void tag_read_you(reader &th, char minorVersion)
         dt.mutation = static_cast<mutation_type>(unmarshallShort(th));
         you.demonic_traits.push_back(dt);
     }
-
-    you.active_demonic_guardian = unmarshallBoolean(th);
-    you.disable_demonic_guardian = unmarshallBoolean(th);
 
     // how many penances?
     count_c = unmarshallByte(th);

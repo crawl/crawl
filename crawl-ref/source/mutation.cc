@@ -1841,22 +1841,22 @@ int how_mutated(bool all, bool levels)
 void check_demonic_guardian()
 {
     const int mutlevel = player_mutation_level(MUT_DEMONIC_GUARDIAN);
-    if(!you.active_demonic_guardian && you.duration[DUR_DEMONIC_GUARDIAN] == 0
-       && !you.disable_demonic_guardian && one_chance_in(mutlevel*100))
+    if (you.duration[DUR_DEMONIC_GUARDIAN] == 0
+        && one_chance_in(5-mutlevel)
+        && get_tension(GOD_NO_GOD) > mutlevel*3 + random2(mutlevel*2))
     {
         const monster_type mt = static_cast<monster_type>(
                             MONS_WHITE_IMP + (mutlevel-1)*5 + random2(5));
         const int guardian = create_monster(mgen_data(mt, BEH_FRIENDLY, &you,
-                                                      0, 0, you.pos(),
+                                                      2, 0, you.pos(),
                                                       MHITYOU, MG_FORCE_BEH));
 
         if (guardian == -1)
             return;
 
         menv[guardian].flags |= MF_NO_REWARD;
-        menv[guardian].flags |= MF_DEMONIC_GUARDIAN;
 
-        you.active_demonic_guardian = true;
+        you.duration[DUR_DEMONIC_GUARDIAN] = random2(mutlevel)*5 + 10;
     }
 }
 

@@ -3939,8 +3939,6 @@ bool tso_unchivalric_attack_safe_monster(const monsters *mon)
 
 int get_tension(god_type god, bool count_travelling)
 {
-    ASSERT(god != GOD_NO_GOD);
-
     int total = 0;
 
     bool nearby_monster = false;
@@ -3993,7 +3991,10 @@ int get_tension(god_type god, bool count_travelling)
         exper *= mons->hit_points;
         exper /= mons->max_hit_points;
 
-        const bool gift = mons_is_god_gift(*mons, god);
+        bool gift = false;
+
+        if (god != GOD_NO_GOD)
+            gift = mons_is_god_gift(*mons, god);
 
         if (att == ATT_HOSTILE)
         {
