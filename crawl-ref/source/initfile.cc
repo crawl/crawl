@@ -381,11 +381,6 @@ static job_type _str_to_job(const std::string &str)
     if (job == JOB_UNKNOWN)
         job = get_job_by_name(str.c_str());
 
-#if TAG_MAJOR_VERSION == 22
-    if (job == JOB_THIEF || job == JOB_DEATH_KNIGHT)
-        job = JOB_UNKNOWN;
-#endif
-
     if (job == JOB_UNKNOWN)
         fprintf( stderr, "Unknown background choice: %s\n", str.c_str() );
 
