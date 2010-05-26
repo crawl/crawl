@@ -1496,7 +1496,6 @@ bool evolve_flora()
         break;
     }
 
-    mprf("new type %d", upgrade.new_type);
     target->upgrade_type(upgrade.new_type, true, true);
     target->god = GOD_FEDHAS;
     target->attitude = ATT_FRIENDLY;
