@@ -1516,6 +1516,14 @@ static void tag_read_you(reader &th, char minorVersion)
         you.demonic_traits.push_back(dt);
     }
 
+#if TAG_MAJOR_VERSION == 22
+    if (minorVersion < TAG_MINOR_NOACT_DG)
+    {
+        /*you.active_demonic_guardian =*/ unmarshallBoolean(th);
+        /*you.disable_demonic_guardian =*/ unmarshallBoolean(th);
+    }
+#endif
+
     // how many penances?
     count_c = unmarshallByte(th);
     for (i = 0; i < count_c; i++)
