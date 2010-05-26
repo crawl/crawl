@@ -1535,12 +1535,16 @@ bool is_weapon_brand_ok(int type, int brand)
     item.base_type = OBJ_WEAPONS;
     item.sub_type = type;
 
+    int vorp = get_vorpal_type(item);
     int skill = weapon_skill(OBJ_WEAPONS, type);
 
     if (brand <= SPWPN_NORMAL)
         return (true);
 
     if (type == WPN_QUICK_BLADE && brand == SPWPN_SPEED)
+        return (false);
+
+    if (vorp == DVORP_CRUSHING && skill != SK_STAVES && brand == SPWPN_VENOM)
         return (false);
 
     if (skill != SK_POLEARMS && brand == SPWPN_DRAGON_SLAYING)
