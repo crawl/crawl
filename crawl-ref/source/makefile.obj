@@ -207,6 +207,7 @@ OBJECTS += \
 glwrapper.o \
 libgui.o \
 tilebuf.o \
+tiledgnbuf.o \
 tiledoll.o \
 tilefont.o \
 tilemcache.o \

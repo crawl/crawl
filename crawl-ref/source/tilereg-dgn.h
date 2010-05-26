@@ -8,6 +8,7 @@
 #define TILEREG_DGN_H
 
 #include "tilereg.h"
+#include "tiledgnbuf.h"
 #include <vector>
 
 class mcache_entry;
@@ -45,14 +46,8 @@ public:
     void clear_overlays();
 
 protected:
-    void pack_background(unsigned int bg, int x, int y);
-    void pack_mcache(mcache_entry *entry, int x, int y, bool submerged);
-    void pack_player(int x, int y, bool submerged);
-    void pack_foreground(unsigned int bg, unsigned int fg, int x, int y);
-    void pack_fg_flags(unsigned int bg, unsigned int fg, int x, int y);
-    void pack_doll(const dolls_data &doll, int x, int y, bool submerged, bool ghost);
-    void pack_cursor(cursor_type type, unsigned int tile);
     void pack_buffers();
+    void pack_cursor(cursor_type type, unsigned int tile);
 
     void draw_minibars();
 
@@ -65,10 +60,7 @@ protected:
     coord_def m_cursor[CURSOR_MAX];
     std::vector<TextTag> m_tags[TAG_MAX];
 
-    TileBuffer m_buf_dngn;
-    SubmergedTileBuffer m_buf_doll;
-    SubmergedTileBuffer m_buf_main_trans;
-    TileBuffer m_buf_main;
+    DungeonCellBuffer m_buf_dngn;
 
     struct tile_overlay
     {
