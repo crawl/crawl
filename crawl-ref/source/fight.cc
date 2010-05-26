@@ -1109,6 +1109,11 @@ static bool _extra_aux_attack(unarmed_attack_type atk)
         return (you.has_usable_pseudopods()
                 && one_chance_in(3));
 
+    case UNAT_BITE:
+        return ((you.has_usable_fangs()
+                 || player_mutation_level(MUT_ACIDIC_BITE))
+                && one_chance_in(5));
+
     default:
         return (false);
     }
