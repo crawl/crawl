@@ -1970,10 +1970,14 @@ static bool _jiyva_mutate()
 
     const int rand = random2(100);
 
-    if (rand < 40)
-        return (mutate(RANDOM_MUTATION, true, false, true));
+    if (rand < 10)
+        return (delete_mutation(RANDOM_SLIME_MUTATION, true, false, true));
+    else if (rand < 40)
+        return (delete_mutation(RANDOM_NON_SLIME_MUTATION, true, false, true));
     else if (rand < 60)
-        return (delete_mutation(RANDOM_MUTATION, true, false, true));
+        return (mutate(RANDOM_MUTATION, true, false, true));
+    else if (rand < 75)
+        return (mutate(RANDOM_SLIME_MUTATION, true, false, true));
     else
         return (mutate(RANDOM_GOOD_MUTATION, true, false, true));
 }

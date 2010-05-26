@@ -2479,12 +2479,22 @@ enum mutation_type
     MUT_WEAK,
     MUT_SLOW,
 
+    // Jiyva-specific mutations
+    MUT_ACIDIC_BITE,
+    MUT_EYEBALLS,
+    MUT_FOOD_JELLY,
+    MUT_GELATINOUS_BODY,
+    MUT_PSEUDOPODS,
+    MUT_TRANSLUCENT_SKIN,
+
     NUM_MUTATIONS,
 
     RANDOM_MUTATION = NUM_MUTATIONS + 1,
     RANDOM_XOM_MUTATION,
     RANDOM_GOOD_MUTATION,
-    RANDOM_BAD_MUTATION
+    RANDOM_BAD_MUTATION,
+    RANDOM_SLIME_MUTATION,
+    RANDOM_NON_SLIME_MUTATION
 };
 
 enum object_class_type                 // mitm[].base_type

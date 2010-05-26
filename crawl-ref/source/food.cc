@@ -32,8 +32,10 @@
 #include "item_use.h"
 #include "it_use2.h"
 #include "macro.h"
+#include "mgen_data.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-place.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "output.h"
@@ -1939,6 +1941,17 @@ static void _eating(unsigned char item_class, int item_type)
 
             start_delay(DELAY_EAT, duration, 0, item_type);
             lessen_hunger(food_value, true);
+
+            if (player_mutation_level(MUT_FOOD_JELLY)
+                && x_chance_in_y(food_value, 12000))
+            {
+                mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, 0, 0, 0,
+                             you.pos(), MHITNOT, 0, you.religion);
+
+                if (create_monster(mg) != -1)
+                    mprf("A jelly spawns from your body.");
+            }
+
             if (you.hunger_level() >= HS_FULL)
                 did_god_conduct(DID_GLUTTONY, food_value, true);
         }
