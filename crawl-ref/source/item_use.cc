@@ -564,24 +564,34 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         return (false);
     }
 
-    bool can_wear = true;
     const int sub_type = item.sub_type;
     const equipment_type slot = get_armour_slot(item);
 
-    if (sub_type == ARM_NAGA_BARDING)
-        can_wear = (you.species == SP_NAGA);
-    else if (sub_type == ARM_CENTAUR_BARDING)
-        can_wear = (you.species == SP_CENTAUR);
-    else
+    if (you.species == SP_NAGA && sub_type == ARM_NAGA_BARDING
+        && (ignore_temporary || !player_is_shapechanged()))
     {
-        can_wear = (fit_armour_size(item,
-                        you.body_size(PSIZE_TORSO, ignore_temporary)) == 0);
+        // It fits.
+        return (true);
+    }
+    else if (you.species == SP_CENTAUR
+             && sub_type == ARM_CENTAUR_BARDING
+             && (ignore_temporary || !player_is_shapechanged()))
+    {
+        // It fits.
+        return (true);
     }
 
-    if (!can_wear)
+    size_type player_size = you.body_size(PSIZE_TORSO, ignore_temporary);
+    // Draconians are medium for weapons, large for armour.
+    if (player_genus(GENPC_DRACONIAN)) // no transforms which alter size allow armour
+        player_size = SIZE_LARGE;
+    int bad_size = fit_armour_size(item, player_size);
+
+    if (bad_size)
     {
         if (verbose)
-            mpr("You can't wear that!");
+            mprf("This armour is too %s for you!",
+                 (bad_size > 0) ? "big" : "small");
 
         return (false);
     }
@@ -630,20 +640,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         }
     }
 
-    if (you.species == SP_NAGA && sub_type == ARM_NAGA_BARDING
-        && (ignore_temporary || !player_is_shapechanged()))
-    {
-        // It fits.
-        return (true);
-    }
-    else if (you.species == SP_CENTAUR
-             && sub_type == ARM_CENTAUR_BARDING
-             && (ignore_temporary || !player_is_shapechanged()))
-    {
-        // It fits.
-        return (true);
-    }
-    else if (slot == EQ_HELMET)
+    if (slot == EQ_HELMET)
     {
         // Soft helmets (caps and wizard hats) always fit.
         if (!is_hard_helmet( item ))
@@ -680,44 +677,6 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             mpr("You can't wear that in your present form.");
 
         return (false);
-    }
-
-    // Giant races and draconians.
-    if (you.body_size(PSIZE_TORSO, ignore_temporary) >= SIZE_LARGE
-        || player_genus(GENPC_DRACONIAN))
-    {
-        if (sub_type >= ARM_LEATHER_ARMOUR
-               && sub_type <= ARM_PLATE_MAIL
-            || sub_type == ARM_GLOVES
-            || sub_type == ARM_BOOTS
-            || sub_type == ARM_BUCKLER
-            || sub_type == ARM_CRYSTAL_PLATE_MAIL
-            || is_hard_helmet(item))
-        {
-            if (verbose)
-               mpr("This armour doesn't fit on your body.");
-
-            return (false);
-        }
-    }
-
-    // Tiny races.
-    if (you.body_size(PSIZE_TORSO, ignore_temporary) <= SIZE_LITTLE)
-    {
-        if ((sub_type >= ARM_LEATHER_ARMOUR
-                && sub_type <= ARM_PLATE_MAIL)
-            || sub_type == ARM_GLOVES
-            || sub_type == ARM_BOOTS
-            || sub_type == ARM_SHIELD
-            || sub_type == ARM_LARGE_SHIELD
-            || sub_type == ARM_CRYSTAL_PLATE_MAIL
-            || is_hard_helmet(item))
-        {
-            if (verbose)
-               mpr("This armour doesn't fit on your body.");
-
-            return (false);
-        }
     }
 
     return (true);
