@@ -2156,6 +2156,13 @@ void get_square_desc(const coord_def &c, describe_info &inf,
         // Third priority: features.
         get_feature_desc(c, inf);
     }
+
+    const int cloudidx = env.cgrid(c);
+    if (cloudidx != EMPTY_CLOUD)
+    {
+        inf.prefix = "There is a cloud of " + cloud_name(cloudidx)
+                     + " here.\n\n";
+    }
 }
 
 void full_describe_square(const coord_def &c)

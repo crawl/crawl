@@ -1086,12 +1086,6 @@ bool DungeonRegion::update_alt_text(std::string &alt)
     if (you.see_cell(gc))
     {
         get_square_desc(gc, inf, true, false);
-        const int cloudidx = env.cgrid(gc);
-        if (cloudidx != EMPTY_CLOUD)
-        {
-            inf.prefix = "There is a cloud of " + cloud_name(cloudidx)
-                         + " here.\n\n";
-        }
     }
     else if (grid_appearance(gc) != DNGN_FLOOR
              && !feat_is_wall(grid_appearance(gc)))
