@@ -570,6 +570,9 @@ private:
                          unsigned long ignore_flags) const;
 };
 
+typedef item_def item_info;
+item_info get_item_info(const item_def& info);
+
 class runrest
 {
 public:
