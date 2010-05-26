@@ -1290,13 +1290,13 @@
 { MUT_THIN_SKELETAL_STRUCTURE,          2,  3, false,  true,
   NULL,
 
-  {"You have a somewhat thin skeletal structure (Dex +1, Str -1).",
-   "You have a moderately thin skeletal structure (Dex +2, Str -2).",
-   "You have an unnaturally thin skeletal structure (Dex +3, Str -3)."},
+  {"You have a somewhat thin skeletal structure (Dex +1, Str -1, Stlth).",
+   "You have a moderately thin skeletal structure (Dex +2, Str -2, Stlth).",
+   "You have an unnaturally thin skeletal structure (Dex +3, Str -3, Stlth)."},
 
-  {"Your bones become slightly less dense; you feel more stealthy.",
-   "Your bones become somewhat less dense; you feel more stealthy.",
-   "Your bones become less dense; you feel stealthy."},
+  {"Your bones become slightly less dense.",
+   "Your bones become somewhat less dense.",
+   "Your bones become less dense."},
 
   {"Your skeletal structure returns to normal.",
    "Your skeletal structure densifies.",
