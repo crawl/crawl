@@ -45,6 +45,9 @@ Gods:
   ballistomycetes.
 * Jiyva now paralyses fellow slimes under prayer instead of
   creating a jelly shield.
+* Jiyva's royal jelly effect now produces temporary friendly
+  slimes instead of permanent neutral ones.
+* Jiyva can now give the player unique slime-related mutations.
 
 Items:
 * Scrolls of holy word do more damage to susceptible monsters.
