@@ -3914,17 +3914,6 @@ void tilep_job_default(int job, int gender, int *parts)
             parts[TILEP_PART_CLOAK] = TILEP_CLOAK_BLUE;
             break;
 
-#if TAG_MAJOR_VERSION == 22
-        case JOB_DEATH_KNIGHT:
-            parts[TILEP_PART_BODY]  = TILEP_BODY_SHIRT_BLACK3;
-            parts[TILEP_PART_LEG]   = TILEP_LEG_METAL_GRAY;
-            parts[TILEP_PART_HELM]  = TILEP_HELM_FHELM_OFS;
-            parts[TILEP_PART_ARM]   = TILEP_ARM_GLOVE_BLACK;
-            parts[TILEP_PART_CLOAK] = TILEP_CLOAK_YELLOW;
-            parts[TILEP_PART_HAND2] = TILEP_HAND2_BOOK_BLACK;
-            break;
-#endif
-
         case JOB_CHAOS_KNIGHT:
             parts[TILEP_PART_BODY]  = TILEP_BODY_BELT1;
             parts[TILEP_PART_LEG]   = TILEP_LEG_METAL_GRAY;
@@ -3943,18 +3932,6 @@ void tilep_job_default(int job, int gender, int *parts)
             parts[TILEP_PART_HAND2] = TILEP_HAND2_BOOK_RED_DIM;
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
             break;
-
-#if TAG_MAJOR_VERSION == 22
-        case JOB_THIEF:
-            parts[TILEP_PART_HELM]  = TILEP_HELM_HOOD_YBROWN;
-            parts[TILEP_PART_BODY]  = TILEP_BODY_LEATHER_JACKET;
-            parts[TILEP_PART_LEG]   = TILEP_LEG_PANTS_SHORT_GRAY;
-            parts[TILEP_PART_HAND1] = TILEP_HAND1_SWORD_THIEF;
-            parts[TILEP_PART_ARM]   = TILEP_ARM_GLOVE_WRIST_PURPLE;
-            parts[TILEP_PART_CLOAK] = TILEP_CLOAK_LBROWN;
-            parts[TILEP_PART_BOOTS] = TILEP_BOOTS_MIDDLE_BROWN2;
-            break;
-#endif
 
         case JOB_STALKER:
             parts[TILEP_PART_HELM]  = TILEP_HELM_HOOD_GREEN;

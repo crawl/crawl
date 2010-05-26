@@ -38,29 +38,17 @@ job_type get_job(const int index)
 
 static const char * Job_Abbrev_List[ NUM_JOBS ] =
     { "Fi", "Wz", "Pr",
-#if TAG_MAJOR_VERSION == 22
-      "Th",
-#endif
       "Gl", "Ne", "Pa", "As", "Be", "Hu",
       "Cj", "En", "FE", "IE", "Su", "AE", "EE", "Cr",
-#if TAG_MAJOR_VERSION == 22
-      "DK",
-#endif
       "VM",
       "CK", "Tm", "He", "Re", "St", "Mo", "Wr", "Wn", "Ar", "AM" };
 
 static const char * Job_Name_List[ NUM_JOBS ] =
     { "Fighter", "Wizard", "Priest",
-#if TAG_MAJOR_VERSION == 22
-      "Thief",
-#endif
       "Gladiator", "Necromancer",
       "Paladin", "Assassin", "Berserker", "Hunter", "Conjurer", "Enchanter",
       "Fire Elementalist", "Ice Elementalist", "Summoner", "Air Elementalist",
       "Earth Elementalist", "Crusader",
-#if TAG_MAJOR_VERSION == 22
-      "Death Knight",
-#endif
       "Venom Mage",
       "Chaos Knight", "Transmuter", "Healer", "Reaver", "Stalker",
       "Monk", "Warper", "Wanderer", "Artificer", "Arcane Marksman" };

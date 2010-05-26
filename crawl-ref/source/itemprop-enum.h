@@ -258,33 +258,6 @@ enum missile_type
 
 enum rune_type
 {
-#if TAG_MAJOR_VERSION == 22
-    // Note: that runes DIS-SWAMP have the same numeric value as the branch
-    RUNE_DIS         = BRANCH_DIS,
-    RUNE_GEHENNA     = BRANCH_GEHENNA,
-    RUNE_COCYTUS     = BRANCH_COCYTUS,
-    RUNE_TARTARUS    = BRANCH_TARTARUS,
-    RUNE_SLIME_PITS  = BRANCH_SLIME_PITS,
-    RUNE_VAULTS      = BRANCH_VAULTS,
-    RUNE_SNAKE_PIT   = BRANCH_SNAKE_PIT,
-    RUNE_ELVEN_HALLS = BRANCH_ELVEN_HALLS, // unused
-    RUNE_TOMB        = BRANCH_TOMB,
-    RUNE_SWAMP       = BRANCH_SWAMP,
-    RUNE_SHOALS      = BRANCH_SHOALS,
-
-    // Runes 50 and 51 are for Pandemonium (general demon) and the Abyss
-    RUNE_DEMONIC                = 50,
-    RUNE_ABYSSAL,
-
-    // Runes 60-63 correspond to the Pandemonium demonlords,
-    // and are equal to the corresponding vault.
-    RUNE_MNOLEG                 = 60,
-    RUNE_LOM_LOBON,
-    RUNE_CEREBOV,
-    RUNE_GLOORX_VLOQ,
-    NUM_RUNE_TYPES,             // should always be last
-    RUNE_NONE
-#else
     RUNE_SWAMP,
     RUNE_SNAKE_PIT,
     RUNE_SHOALS,
@@ -306,7 +279,6 @@ enum rune_type
     RUNE_CEREBOV,
     RUNE_GLOORX_VLOQ,
     NUM_RUNE_TYPES             // should always be last
-#endif
 };
 
 enum scroll_type

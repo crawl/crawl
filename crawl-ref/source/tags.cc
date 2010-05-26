@@ -1516,14 +1516,6 @@ static void tag_read_you(reader &th, char minorVersion)
         you.demonic_traits.push_back(dt);
     }
 
-#if TAG_MAJOR_VERSION == 22
-    if (minorVersion < TAG_MINOR_NOACT_DG)
-    {
-        /*you.active_demonic_guardian =*/ unmarshallBoolean(th);
-        /*you.disable_demonic_guardian =*/ unmarshallBoolean(th);
-    }
-#endif
-
     // how many penances?
     count_c = unmarshallByte(th);
     for (i = 0; i < count_c; i++)
@@ -1952,22 +1944,11 @@ void marshallShowtype(writer &th, const show_type &obj)
     marshallShort(th, obj.colour);
 }
 
-// TAG_MINOR_SLIMY shifted some DNGN_ values.
-static dungeon_feature_type _fixup_feat(dungeon_feature_type feat)
-{
-    if (feat > DNGN_ROCK_WALL && feat < DNGN_GRANITE_STATUE)
-        return (static_cast<dungeon_feature_type>(feat+1));
-    else
-        return (feat);
-}
-
 show_type unmarshallShowtype(reader &th)
 {
     show_type obj;
     obj.cls = static_cast<show_class>(unmarshallByte(th));
     obj.feat = static_cast<dungeon_feature_type>(unmarshallShort(th));
-    if (th.getMinorVersion() < TAG_MINOR_SLIMY)
-        obj.feat = _fixup_feat(obj.feat);
     obj.item = static_cast<show_item_type>(unmarshallShort(th));
     obj.mons = static_cast<monster_type>(unmarshallShort(th));
     obj.colour = unmarshallShort(th);
@@ -2238,8 +2219,6 @@ static void tag_read_level( reader &th, char minorVersion )
             grd[i][j] =
                 static_cast<dungeon_feature_type>(
                     static_cast<unsigned char>(unmarshallByte(th)) );
-            if (th.getMinorVersion() < TAG_MINOR_SLIMY)
-                grd[i][j] = _fixup_feat(grd[i][j]);
 
             env.map_knowledge[i][j].object   = unmarshallShowtype(th);
             env.map_knowledge[i][j].flags    = unmarshallShort(th);
@@ -2306,14 +2285,7 @@ static void tag_read_level( reader &th, char minorVersion )
             heightmap(*ri) = unmarshallShort(th);
     }
 
-#if TAG_MAJOR_VERSION == 22
-    if (minorVersion >= TAG_MINOR_AF)
-#endif
-        env.forest_awoken_until = unmarshallLong(th);
-#if TAG_MAJOR_VERSION == 22
-    else
-        env.forest_awoken_until = 0;
-#endif
+    env.forest_awoken_until = unmarshallLong(th);
 }
 
 static void tag_read_level_items(reader &th, char minorVersion)

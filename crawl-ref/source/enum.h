@@ -35,10 +35,6 @@ enum ability_type
     ABIL_EVOKE_TELEPORTATION,
     ABIL_EVOKE_BLINK,
     ABIL_RECHARGING,                   //   20
-#if TAG_MAJOR_VERSION == 22
-    ABIL_ENABLE_DEMONIC_GUARDIAN,
-    ABIL_DISABLE_DEMONIC_GUARDIAN,
-#endif
     // 23 - 50 unused
     ABIL_EVOKE_TURN_INVISIBLE = 51,    //   51
     ABIL_EVOKE_TURN_VISIBLE,
@@ -50,14 +46,9 @@ enum ability_type
     ABIL_ZIN_SUSTENANCE = 109,              //  109
     ABIL_ZIN_RECITE,
     ABIL_ZIN_VITALISATION,
-#if TAG_MAJOR_VERSION != 22
     ABIL_ZIN_IMPRISON,
-#endif
     ABIL_ZIN_SANCTUARY,
     ABIL_ZIN_CURE_ALL_MUTATIONS,
-#if TAG_MAJOR_VERSION == 22
-    ABIL_ZIN_IMPRISON,
-#endif
     ABIL_TSO_DIVINE_SHIELD = 120,           //  120
     ABIL_TSO_CLEANSING_FLAME,
     ABIL_TSO_SUMMON_DIVINE_WARRIOR,
@@ -1206,9 +1197,7 @@ enum duration_type
     DUR_PHASE_SHIFT,
     DUR_SEE_INVISIBLE,
     DUR_WEAPON_BRAND,                  // general "branding" spell counter
-#if TAG_MAJOR_VERSION == 22
     DUR_DEMONIC_GUARDIAN,              // demonic guardian timeout
-#endif
     DUR_POWERED_BY_DEATH,
     DUR_SILENCE,
     DUR_CONDENSATION_SHIELD,
@@ -1482,9 +1471,6 @@ enum job_type
     JOB_FIGHTER,
     JOB_WIZARD,
     JOB_PRIEST,
-#if TAG_MAJOR_VERSION == 22
-    JOB_THIEF,
-#endif
     JOB_GLADIATOR,
     JOB_NECROMANCER,
     JOB_PALADIN,
@@ -1499,9 +1485,6 @@ enum job_type
     JOB_AIR_ELEMENTALIST,
     JOB_EARTH_ELEMENTALIST,
     JOB_CRUSADER,
-#if TAG_MAJOR_VERSION == 22
-    JOB_DEATH_KNIGHT,
-#endif
     JOB_VENOM_MAGE,
     JOB_CHAOS_KNIGHT,
     JOB_TRANSMUTER,
@@ -2422,9 +2405,6 @@ enum mutation_type
     MUT_HORNS,          // head
     MUT_STINGER,
     MUT_TALONS,         // feet
-#if TAG_MAJOR_VERSION != 22
-    MUT_SPIKED_TAIL,
-#endif
 
     // scales
     MUT_DISTORTION_FIELD,
