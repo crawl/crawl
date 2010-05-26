@@ -3965,8 +3965,7 @@ void handle_time()
             change_labyrinth();
     }
 
-    if (you.religion == GOD_JIYVA && !player_under_penance()
-        && one_chance_in(10))
+    if (you.religion == GOD_JIYVA && one_chance_in(10))
     {
         int total_jellies = 1 + random2(5);
         bool success = false;
@@ -4009,7 +4008,7 @@ void handle_time()
     }
 
     if (you.religion == GOD_JIYVA && x_chance_in_y(you.piety / 4, MAX_PIETY)
-        && !player_under_penance())
+        && !player_under_penance() && one_chance_in(4))
     {
         jiyva_stat_action();
     }

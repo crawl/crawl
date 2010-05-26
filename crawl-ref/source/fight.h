@@ -19,8 +19,9 @@ enum unarmed_attack_type
     UNAT_TAILSLAP,
     UNAT_PUNCH,
     UNAT_BITE,
+    UNAT_PSEUDOPODS,
     UNAT_FIRST_ATTACK = UNAT_KICK,
-    UNAT_LAST_ATTACK = UNAT_BITE
+    UNAT_LAST_ATTACK = UNAT_PSEUDOPODS
 };
 
 enum unchivalric_attack_type

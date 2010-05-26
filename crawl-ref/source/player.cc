@@ -1,4 +1,4 @@
-/*
+ /*
  *  File:       player.cc
  *  Summary:    Player related functions.
  *  Written by: Linley Henzell
@@ -2119,6 +2119,8 @@ int player_evasion_bonuses(ev_ignore_type evit)
     if (player_mutation_level(MUT_MOLTEN_SCALES) > 1)
         evbonus--;
     evbonus -= std::max(0, player_mutation_level(MUT_SLIMY_GREEN_SCALES) - 1);
+    if (player_mutation_level(MUT_GELATINOUS_BODY))
+        evbonus += player_mutation_level(MUT_GELATINOUS_BODY) - 1;
 
     // transformation penalties/bonuses not covered by size alone:
     switch (you.attribute[ATTR_TRANSFORMATION])
@@ -3274,6 +3276,8 @@ int check_stealth(void)
     // Mutations.
     stealth += 25 * player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
     stealth += 40 * player_mutation_level(MUT_NIGHTSTALKER);
+    if (player_mutation_level(MUT_TRANSLUCENT_SKIN) > 1)
+        stealth += 20 * (player_mutation_level(MUT_TRANSLUCENT_SKIN) - 1);
 
     stealth = std::max(0, stealth);
 
@@ -5432,7 +5436,8 @@ int player::armour_class() const
 
         // The deformed don't fit into body armour very well.
         // (This includes nagas and centaurs.)
-        if (eq == EQ_BODY_ARMOUR && player_mutation_level(MUT_DEFORMED))
+        if (eq == EQ_BODY_ARMOUR && (player_mutation_level(MUT_DEFORMED)
+            || player_mutation_level(MUT_PSEUDOPODS)))
             AC -= ac_value / 2;
     }
 
@@ -5541,7 +5546,7 @@ int player::armour_class() const
     AC += player_mutation_level(MUT_SLIMY_GREEN_SCALES) ? player_mutation_level(MUT_SLIMY_GREEN_SCALES) * 100 : 0;          // +1, +2, +3
     AC += player_mutation_level(MUT_THIN_METALLIC_SCALES) ? player_mutation_level(MUT_THIN_METALLIC_SCALES) * 100 : 0;      // +1, +2, +3
     AC += player_mutation_level(MUT_YELLOW_SCALES) ? player_mutation_level(MUT_YELLOW_SCALES) * 100 : 0;                    // +1, +2, +3
-
+    AC += player_mutation_level(MUT_GELATINOUS_BODY) ? (player_mutation_level(MUT_GELATINOUS_BODY) == 3 ? 200 : 100) : 0;   // +1, +1, +2
     return (AC / 100);
 }
 
@@ -6168,6 +6173,22 @@ bool player::has_usable_offhand() const
             || weapon_skill(*wp) == SK_STAVES);
 }
 
+int player::has_pseudopods(bool allow_tran) const
+{
+    if (allow_tran)
+    {
+        if (attribute[ATTR_TRANSFORMATION] != TRAN_NONE)
+            return (0);
+    }
+
+    return (player_mutation_level(MUT_PSEUDOPODS));
+}
+
+int player::has_usable_pseudopods(bool allow_tran) const
+{
+    return (has_pseudopods(allow_tran));
+}
+
 bool player::sicken(int amount)
 {
     ASSERT(!crawl_state.game_is_arena());
@@ -6206,6 +6227,9 @@ bool player::can_see_invisible(bool calc_unid) const
 
     // antennae give sInvis at 3
     if (player_mutation_level(MUT_ANTENNAE) == 3)
+        si++;
+
+    if (player_mutation_level(MUT_EYEBALLS) == 3)
         si++;
 
     //jmf: added see_invisible spell

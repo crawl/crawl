@@ -627,6 +627,44 @@ static bool _accept_mutation(mutation_type mutat, bool ignore_rarity = false)
     return (x_chance_in_y(rarity, 10));
 }
 
+static mutation_type _get_random_slime_mutation()
+{
+    const mutation_type slime_muts[] = {
+        MUT_GELATINOUS_BODY, MUT_EYEBALLS, MUT_TRANSLUCENT_SKIN,
+        MUT_PSEUDOPODS, MUT_FOOD_JELLY, MUT_ACIDIC_BITE
+    };
+
+    return RANDOM_ELEMENT(slime_muts);
+}
+
+static mutation_type _delete_random_slime_mutation()
+{
+    mutation_type mutat;
+
+    while (true)
+    {
+        mutat = _get_random_slime_mutation();
+
+        if (you.mutation[mutat] > 0)
+            break;
+
+        if (one_chance_in(500))
+        {
+            mutat = NUM_MUTATIONS;
+            break;
+        }
+    }
+
+    return mutat;
+}
+
+static bool _is_slime_mutation(mutation_type m)
+{
+    return (m == MUT_GELATINOUS_BODY || m == MUT_EYEBALLS
+            || m == MUT_TRANSLUCENT_SKIN || m == MUT_PSEUDOPODS
+            || m == MUT_FOOD_JELLY || m == MUT_ACIDIC_BITE);
+}
+
 static mutation_type _get_random_xom_mutation()
 {
     const mutation_type bad_muts[] = {
@@ -1049,6 +1087,9 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     case RANDOM_BAD_MUTATION:
         mutat = _get_random_mutation(500, false);
         break;
+    case RANDOM_SLIME_MUTATION:
+        mutat = _get_random_slime_mutation();
+        break;
     default:
         break;
     }
@@ -1318,7 +1359,8 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
     if (which_mutation == RANDOM_MUTATION
         || which_mutation == RANDOM_XOM_MUTATION
         || which_mutation == RANDOM_GOOD_MUTATION
-        || which_mutation == RANDOM_BAD_MUTATION)
+        || which_mutation == RANDOM_BAD_MUTATION
+        || which_mutation == RANDOM_NON_SLIME_MUTATION)
     {
         while (true)
         {
@@ -1338,12 +1380,18 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
                 continue;
             }
 
+            if (which_mutation == RANDOM_NON_SLIME_MUTATION
+                && _is_slime_mutation(mutat))
+            {
+                continue;
+            }
+
             if (you.demon_pow[mutat] >= you.mutation[mutat])
                 continue;
 
             const mutation_def& mdef = get_mutation_def(mutat);
 
-            if (random2(10) >= mdef.rarity)
+            if (random2(10) >= mdef.rarity && !_is_slime_mutation(mutat))
                 continue;
 
             const bool mismatch =
@@ -1355,6 +1403,13 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
 
             break;
         }
+    }
+    else if (which_mutation == RANDOM_SLIME_MUTATION)
+    {
+        mutat = _delete_random_slime_mutation();
+
+        if (mutat == NUM_MUTATIONS)
+            return false;
     }
 
     return (_delete_single_mutation_level(mutat));
@@ -1441,6 +1496,8 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
         }
         else if (fully_inactive)
             colourname = "darkgrey";
+        else if (_is_slime_mutation(mut))
+            colourname = "green";
 
         // Build the result
         std::ostringstream ostr;

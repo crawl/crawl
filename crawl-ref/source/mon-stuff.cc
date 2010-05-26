@@ -3803,6 +3803,11 @@ std::string summoned_poof_msg(const monsters* monster, bool plural)
         {
             msg = "dissolve%s into sparkling lights";
         }
+
+        if(mons_is_slime(monster) && monster->god == GOD_JIYVA)
+        {
+            msg = "dissolve%s into a puddle of slime";
+        }
     }
 
     // Conjugate.
