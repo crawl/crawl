@@ -1589,6 +1589,7 @@ bool is_weapon_brand_ok(int type, int brand)
             return (false);
         break;
 
+    case SPWPN_ACID:
     case SPWPN_FORBID_BRAND:
     case SPWPN_DEBUG_RANDART:
     case NUM_SPECIAL_WEAPONS:

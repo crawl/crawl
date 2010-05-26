@@ -1035,6 +1035,13 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
         {
             damage_brand = SPWPN_VAMPIRICISM;
         }
+
+        if (player_mutation_level(MUT_ACIDIC_BITE))
+        {
+            damage_brand = SPWPN_ACID;
+            aux_damage += roll_dice(2,4);
+        }
+
         break;
 
     case UNAT_PSEUDOPODS:
@@ -1259,7 +1266,6 @@ bool melee_attack::player_aux_unarmed()
 
 bool melee_attack::player_aux_apply()
 {
-    bool acid_bite = false;
     did_hit = true;
 
     aux_damage  = player_aux_stat_modify_damage(aux_damage);
@@ -1273,13 +1279,6 @@ bool melee_attack::player_aux_apply()
     // Clear stab bonus which will be set for the primary weapon attack.
     stab_bonus  = 0;
     aux_damage  = player_apply_monster_ac(aux_damage);
-
-    if (strcmp(aux_verb.c_str(), "bite") == 0
-        && player_mutation_level(MUT_ACIDIC_BITE))
-    {
-        acid_bite = true;
-        aux_damage += roll_dice(2,4);
-    }
 
     aux_damage  = defender->hurt(&you, aux_damage, BEAM_MISSILE, false);
     damage_done = aux_damage;
@@ -1296,7 +1295,7 @@ bool melee_attack::player_aux_apply()
              debug_damage_number().c_str(),
              attack_strength_punctuation().c_str());
 
-        if (acid_bite)
+        if (damage_brand == SPWPN_ACID)
         {
             mprf("%s is splashed with acid.",
                  defender->name(DESC_CAP_THE).c_str());
