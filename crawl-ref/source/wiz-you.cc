@@ -494,7 +494,8 @@ bool wizard_add_mutation()
     }
     const bool god_gift = (answer == 1);
 
-    msgwin_get_line("Which mutation (name, 'good', 'bad', 'any', 'xom')? ",
+    msgwin_get_line("Which mutation (name, 'good', 'bad', 'any', "
+                    "'xom', 'slime')? ",
                     specs, sizeof(specs));
 
     if (specs[0] == '\0')
@@ -512,6 +513,8 @@ bool wizard_add_mutation()
         mutat = RANDOM_MUTATION;
     else if (strcmp(specs, "xom") == 0)
         mutat = RANDOM_XOM_MUTATION;
+    else if (strcmp(specs, "slime") == 0)
+        mutat = RANDOM_SLIME_MUTATION;
 
     if (mutat != NUM_MUTATIONS)
     {
