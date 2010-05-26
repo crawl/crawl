@@ -23,6 +23,7 @@
 #include "terrain.h"
 #include "viewchar.h"
 #include "viewgeom.h"
+#include "coord.h"
 
 glyph get_show_glyph(show_type object)
 {
@@ -47,58 +48,44 @@ glyph get_show_glyph(show_type object)
     return (g);
 }
 
-static int _get_mons_colour(const monsters *mons)
+static int _get_mons_colour(const monster_info& mi)
 {
-    int col = mons->colour;
+    int col = mi.colour;
 
-    if (mons->type == MONS_SLIME_CREATURE && mons->number > 1)
+    if (mi.type == MONS_SLIME_CREATURE && mi.number > 1)
         col = mons_class_colour(MONS_MERGED_SLIME_CREATURE);
 
-    if (!crawl_state.game_is_arena() && you.misled())
-    {
-        const monsterentry* mdat = get_monster_data(mons->get_mislead_type());
-        col = mdat->colour;
-        // Some monsters (specifically, ugly things and butterflies) are generated
-        // black. Ugly things are an object of mislead, but never a subject; however
-        // if a monster summons ugly things (such as Kirke) while under the Misled
-        // status effect, they will show up black instead of their assigned colour.
-        // Likewise with any other black-coloured monsters on-screen but not yet
-        // mislead. {due}
-        if (col == BLACK)
-            col = mons->colour;
-    }
-
-    if (mons->berserk())
+    if (mi.is(MB_BERSERK))
         col = RED;
 
-    if (mons->friendly())
+    if (mi.attitude == ATT_FRIENDLY)
     {
         col |= COLFLAG_FRIENDLY_MONSTER;
     }
-    else if (mons->neutral())
+    else if (mi.attitude != ATT_HOSTILE)
     {
         col |= COLFLAG_NEUTRAL_MONSTER;
     }
     else if (Options.stab_brand != CHATTR_NORMAL
-             && mons_looks_stabbable(mons))
+             && mi.is(MB_STABBABLE))
     {
         col |= COLFLAG_WILLSTAB;
     }
     else if (Options.may_stab_brand != CHATTR_NORMAL
-             && mons_looks_distracted(mons))
+             && mi.is(MB_DISTRACTED))
     {
         col |= COLFLAG_MAYSTAB;
     }
-    else if (mons_is_stationary(mons))
+    else if (mons_class_is_stationary(mi.type))
     {
         if (Options.feature_item_brand != CHATTR_NORMAL
-            && is_critical_feature(grd(mons->pos()))
-            && feat_stair_direction(grd(mons->pos())) != CMD_NO_CMD)
+            && is_critical_feature(grd(player2grid(mi.pos)))
+            && feat_stair_direction(grd(player2grid(mi.pos))) != CMD_NO_CMD)
         {
             col |= COLFLAG_FEATURE_ITEM;
         }
         else if (Options.heap_brand != CHATTR_NORMAL
-                 && you.visible_igrd(mons->pos()) != NON_ITEM
+                 && you.visible_igrd(player2grid(mi.pos)) != NON_ITEM
                  && !crawl_state.game_is_arena())
         {
             col |= COLFLAG_ITEM_HEAP;
@@ -106,8 +93,8 @@ static int _get_mons_colour(const monsters *mons)
     }
 
     // Backlit monsters are fuzzy and override brands.
-    if (!crawl_state.game_is_arena() && !you.can_see_invisible()
-        && mons->has_ench(ENCH_INVIS) && mons->backlit())
+    if (!crawl_state.game_is_arena() && 
+        !you.can_see_invisible() && mi.is(MB_INVISIBLE))
     {
         col = DARKGREY;
     }
@@ -133,17 +120,14 @@ glyph get_item_glyph(const item_def *item)
     return (g);
 }
 
-glyph get_mons_glyph(const monsters *mons, bool realcol)
+glyph get_mons_glyph(const monster_info& mi, bool realcol)
 {
     glyph g;
-
-    if (!crawl_state.game_is_arena() && you.misled())
-        g.ch = mons_char(mons->get_mislead_type());
-    else if (mons->type == MONS_SLIME_CREATURE && mons->number > 1)
+    if (mi.type == MONS_SLIME_CREATURE && mi.number > 1)
         g.ch = mons_char(MONS_MERGED_SLIME_CREATURE);
     else
-        g.ch = mons_char(mons->type);
-    g.col = _get_mons_colour(mons);
+        g.ch = mons_char(mi.type);
+    g.col = _get_mons_colour(mi);
     if (realcol)
         g.col = real_colour(g.col);
     return (g);

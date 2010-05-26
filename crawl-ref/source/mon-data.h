@@ -4715,7 +4715,6 @@ static monsterentry mondata[] = {
     I_NORMAL, HT_LAND, FL_FLY, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_MEDIUM
 },
-
 // major demons ('&')
 // Random demon in pan - only one per level.  Stats are stored in ghost struct.
 {
@@ -4724,7 +4723,7 @@ static monsterentry mondata[] = {
     MR_RES_POISON,
     0, 14, MONS_PANDEMONIUM_DEMON, MONS_PANDEMONIUM_DEMON, MH_DEMONIC, -5,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 4, 2, 3, 0 },
+    { 19, 0, 8, 100 },
     1, 2, MST_GHOST, CE_NOCORPSE, Z_NOZOMBIE, S_DEMON_TAUNT,
     I_HIGH, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_LARGE

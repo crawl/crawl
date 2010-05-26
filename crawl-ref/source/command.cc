@@ -1350,33 +1350,8 @@ static void _do_description(std::string key, std::string type,
         if (mon_num != MONS_PROGRAM_BUG && !mons_is_ghost_demon(mon_num)
             && !mons_class_is_zombified(mon_num) && !mons_is_mimic(mon_num))
         {
-            monsters mon;
-            mon.type = mon_num;
-
-            if (mons_genus(mon_num) == MONS_DRACONIAN)
-            {
-                switch (mon_num)
-                {
-                case MONS_BLACK_DRACONIAN:
-                case MONS_MOTTLED_DRACONIAN:
-                case MONS_YELLOW_DRACONIAN:
-                case MONS_GREEN_DRACONIAN:
-                case MONS_PURPLE_DRACONIAN:
-                case MONS_RED_DRACONIAN:
-                case MONS_WHITE_DRACONIAN:
-                case MONS_GREY_DRACONIAN:
-                case MONS_PALE_DRACONIAN:
-                    mon.base_monster = mon_num;
-                    break;
-                default:
-                    mon.base_monster = MONS_NO_MONSTER;
-                    break;
-                }
-            }
-            else
-                mon.base_monster = MONS_NO_MONSTER;
-
-            describe_monsters(mon, true, footer, false);
+            monster_info mi(mon_num);
+            describe_monsters(mi, true);
             return;
         }
         else

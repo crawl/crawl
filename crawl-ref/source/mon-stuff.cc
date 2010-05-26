@@ -554,7 +554,7 @@ static std::string _milestone_kill_verb(killer_type killer)
 }
 
 static void _check_kill_milestone(const monsters *mons,
-                                 killer_type killer, int i)
+                                  killer_type killer, int i)
 {
     // XXX: See comment in monster_polymorph.
     bool is_unique = mons_is_unique(mons->type);
@@ -563,8 +563,9 @@ static void _check_kill_milestone(const monsters *mons,
 
     if (mons->type == MONS_PLAYER_GHOST)
     {
+        monster_info mi(mons);
         std::string milestone = _milestone_kill_verb(killer) + "the ghost of ";
-        milestone += get_ghost_description(*mons, true);
+        milestone += get_ghost_description(mi, true);
         milestone += ".";
         mark_milestone("ghost", milestone);
     }
