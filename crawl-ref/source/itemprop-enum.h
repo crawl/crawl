@@ -487,16 +487,6 @@ enum weapon_type
     WPN_VIABLE
 };
 
-enum weapon_description_type
-{
-    DWPN_PLAIN = 0,                    //    0 - added to round out enum {dlb}
-    DWPN_RUNED = 1,                    //    1
-    DWPN_GLOWING,
-    DWPN_ORCISH,
-    DWPN_ELVEN,
-    DWPN_DWARVEN                       //    5
-};
-
 enum weapon_property_type
 {
     PWPN_DAMAGE,                       //    0
