@@ -1054,7 +1054,7 @@
    "Your body is completely covered in golden eyeballs (Acc +7, SInv)"},
 
    {"Eyeballs grow over part of your body.",
-    "Eyeballs cover a large potion of your body.",
+    "Eyeballs cover a large portion of your body.",
     "Eyeballs cover you completely."},
 
    {"The eyeballs on your body disappear.",
