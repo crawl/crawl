@@ -316,10 +316,10 @@ bool brand_weapon(brand_type which_brand, int power)
         return (false);
     }
 
-    // Can only brand launchers with sensical brands
+    // Can only brand launchers with sensible brands.
     if (is_range_weapon(weapon))
     {
-        // If the new missile type wouldn't match the launcher, say no
+        // If the new missile type wouldn't match the launcher, say no.
         missile_type missile = fires_ammo_type(weapon);
 
         // XXX: To deal with the fact that is_missile_brand_ok will be
