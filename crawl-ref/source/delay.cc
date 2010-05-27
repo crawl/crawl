@@ -484,7 +484,6 @@ void stop_delay( bool stop_stair_travel )
 
         delay.duration = 0;
         _pop_delay();
-        handle_delay();
         return;
     }
 
@@ -936,9 +935,6 @@ void handle_delay()
                 {
                     // Don't attempt to offer a skeleton.
                     _pop_delay();
-
-                    // Chain onto the next delay.
-                    handle_delay();
                     return;
                 }
             }
@@ -966,7 +962,6 @@ void handle_delay()
                         mpr("You stop bottling this corpse's foul-smelling "
                             "blood!");
                         _pop_delay();
-                        handle_delay();
                         return;
                     }
                 }
@@ -1105,7 +1100,11 @@ void handle_delay()
         }
     }
     else
+    {
         _finish_delay(delay);
+        if (!you.turn_is_over)
+            you.time_taken = 0;
+    }
 }
 
 static void _armour_wear_effects(const int item_slot);
@@ -1339,7 +1338,6 @@ static void _finish_delay(const delay_queue_item &delay)
                  delay.type == DELAY_BUTCHER ? "butchering the corpse"
                                              : "bottling this corpse's blood");
             _pop_delay();
-            handle_delay();
         }
         StashTrack.update_stash(you.pos()); // Stash-track the generbated items.
         break;
@@ -1397,9 +1395,6 @@ static void _finish_delay(const delay_queue_item &delay)
     you.wield_change = true;
     print_stats();  // force redraw of the stats
     _pop_delay();
-
-    // Chain onto the next delay.
-    handle_delay();
 
 #ifdef USE_TILE
     tiles.update_inventory();
@@ -1525,6 +1520,8 @@ static void _handle_run_delays(const delay_queue_item &delay)
             mesclr();
         process_command(cmd);
     }
+    else
+        you.time_taken = 0;
 
     // If you.running has gone to zero, and the run delay was not
     // removed, remove it now. This is needed to clean up after
@@ -1533,21 +1530,6 @@ static void _handle_run_delays(const delay_queue_item &delay)
     {
         _pop_delay();
         update_turn_count();
-    }
-
-    if (you.running && !you.turn_is_over
-        && you_are_delayed()
-        && !is_run_delay(current_delay_action()))
-    {
-        handle_delay();
-    }
-    else if (!you.turn_is_over)
-    {
-        // We want to reset you.time_taken if we didn't do
-        // anything (could check against CMD_NO_CMD above),
-        // but leave it set up in case we handle a different
-        // delay.
-        you.time_taken = 0;
     }
 }
 
