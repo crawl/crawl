@@ -122,6 +122,68 @@ function tutorial.message6 ()
   return tutorial.message(text, "tutorial", true)
 end
 
+function tutorial.message7 ()
+  local text = "Wield the mace "
+
+  if crawl.is_tiles() then
+    text = text .. "and helmet by <white>clicking</white> on them in the inventory, in the lower right part of the screen."
+  else
+    text = text .. "by pressing " .. tutorial.get_cmd("CMD_WIELD_WEAPON") .. ". You can also wear the helmet by pressing " .. tutorial.get_cmd("CMD_WEAR_ARMOUR").. "."
+  end
+
+  return tutorial.message(text, "tutorial", true)
+end
+
+function tutorial.message8 ()
+  local text = "To attack monsters, "
+
+  if crawl.is_tiles() then
+    text = text .. "move adjacent to and then <white>click</white> on it."
+  else
+    text = text .. "simply walk into it."
+  end
+
+  return tutorial.message(text, "tutorial", true)
+end
+
+function tutorial.message9 ()
+  local hp, maxhp = you.hp()
+  local text
+  if hp < maxhp then
+    text = "As you were wounded during the battle, you can "
+  else
+    text = "If you had been wounded during the battle, you could "
+  end
+
+  text = text .. "regain health by resting. Press " .. tutorial.get_cmd("CMD_REST") .. " to rest until healed. Always keep an eye on your hit points and health bar!"
+
+  return tutorial.message(text,  "tutorial", true)
+end
+
+function tutorial.message10 ()
+  local text = "(If you've forgotten any of the commands mentioned above, you can re-read previous message by "
+
+  if crawl.is_tiles() then
+    text = text .. "<white>clicking</white> on the message area. "
+  else
+    text = text .. "pressing " .. tutorial.get_cmd("CMD_REPLAY_MESSAGES") .. ". "
+  end
+
+  text = text .. "To access the complete command help, press " .. tutorial.get_cmd("CMD_DISPLAY_COMMANDS") .. " followed by <white>?</white>.)"
+
+  return tutorial.message(text, "tutorial", true)
+end
+
+function tutorial.message11 ()
+  local text = "Whenever you see a new monster, it's always a good idea to check its description for clues on how to deal with it. To view the description, "
+  if crawl.is_tiles() then
+    text = text .. "<white>mouse over</white> or <white>right click</white> the monster tile."
+  else
+    text = text .. "press " .. tutorial.get_cmd("CMD_LOOK_AROUND") .. ", move the cursor over the monster, and press " .. tutorial.get_cmd("CMD_TARGET_DESCRIBE") .. "."
+  end
+
+  return tutorial.message(text, "tutorial", true)
+end
 }}
 
 NAME:    tutorial_basic_1
@@ -139,11 +201,11 @@ MARKER:  D = lua:tutorial.message4()
 MARKER:  } = lua:tutorial.message5()
 MARKER:  E = lua:tutorial.message6()
 # TODO: Make the messages sensitive to if the game is tiles or console.
-MARKER:  F = lua:tutorial.message( "Wield the mace with " .. tutorial.get_cmd("CMD_WIELD_WEAPON") .. " or by <white>clicking</white> on the tile in the inventory in the lower right. Wear the helmet by <white>clicking</white> in the inventory (or by hitting " .. tutorial.get_cmd("CMD_WEAR_ARMOUR") .. " - again, note the capital letter).", "tutorial", "true" )
-MARKER:  G = lua:tutorial.message( "To attack monsters, move into them (or <white>click</white> while adjacent).", "tutorial", "true" )
-MARKER:  H = lua:tutorial.message( "If you were wounded during the battle, you can regain health by resting. Press " .. tutorial.get_cmd("CMD_REST") .. " to rest until healed. Always keep an eye on your hit points and health bar!", "tutorial", "true" )
-MARKER:  I = lua:tutorial.message( "If you've forgotten the commands, you can reread previous messages with " .. tutorial.get_cmd("CMD_REPLAY_MESSAGES") .. " (or by <white>clicking</white> into the message area). To access the complete command help, type " .. tutorial.get_cmd("CMD_DISPLAY_COMMANDS") .. "<white>?</white>.", "tutorial", "true" )
-MARKER:  J = lua:tutorial.message( "Whenever you see a new monster you've never seen before, it's always a good idea to check its description for clues on how to deal with it. To do so, press " .. tutorial.get_cmd("CMD_LOOK_AROUND") .. ", move the cursor to the monster and press <white>v</white>, or simply <white>mouse over</white> or <white>right click</white> the monster tile.", "tutorial", "true" )
+MARKER:  F = lua:tutorial.message7()
+MARKER:  G = lua:tutorial.message8()
+MARKER:  H = lua:tutorial.message9()
+MARKER:  I = lua:tutorial.message10()
+MARKER:  J = lua:tutorial.message11()
 KFEAT:   ABCDEFGHQIJ = .
 COLOUR:  ABCDEFGHQIJ = blue
 #TILE:    ABCDEFGH = tutorial_message_tile_name_here
@@ -157,9 +219,9 @@ x..[..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x.....xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x..{.....Q.......Axxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x.....xxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxx....xxxxxxxxxx
-x..(..xxxxxxxxxxxxx.xxxxxxxxxxxxxxxx..E.de.F........x
-xxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxx.xx....xxxxxxxxJx
-xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxx...xxxxxxxxxxxxx.x
+x..(..xxxxxxxxxxxxx.xxxxxxxxxxxxxxxx..E.de.F.......xx
+xxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxx.xx....xxxxxxx..x
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxx...xxxxxxxxxxxxxJx
 xxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxx.].xxxxxxxxxxxxx.x
 xxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxx...xxxxxxxxxxxxx.x
 xxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxoooxxxxxxxxxxxxx.x
