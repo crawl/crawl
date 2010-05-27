@@ -1939,7 +1939,7 @@ bool item_type_known( const item_def& item )
     if (item.base_type == OBJ_MISSILES
         && missile_brand_obvious(get_ammo_brand(item)))
     {
-            return (true);
+        return (true);
     }
 
     const item_type_id_type idt = objtype_to_idtype(item.base_type);
@@ -1947,6 +1947,17 @@ bool item_type_known( const item_def& item )
         return (type_ids[idt][item.sub_type] == ID_KNOWN_TYPE);
     else
         return (false);
+}
+
+bool item_type_unknown(const item_def& item)
+{
+    if (item_type_known(item))
+        return (false);
+
+    if (is_artefact(item))
+        return (true);
+
+    return (objtype_to_idtype(item.base_type) != NUM_IDTYPE);
 }
 
 bool item_type_known(const object_class_type base_type, const int sub_type)
