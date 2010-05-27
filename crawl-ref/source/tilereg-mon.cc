@@ -5,6 +5,7 @@
 #include "AppHdr.h"
 
 #ifdef USE_TILE
+#include <algorithm>
 
 #include "tilereg-mon.h"
 
