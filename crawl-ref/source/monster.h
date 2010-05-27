@@ -382,6 +382,7 @@ public:
 
     void poison(actor *agent, int amount = 1);
     bool sicken(int strength);
+    bool bleed(int amount, int degree);
     void paralyse(actor *, int str);
     void petrify(actor *, int str);
     void slow_down(actor *, int str);
