@@ -3531,15 +3531,26 @@ static int _pick_random_dngn_tile(unsigned int idx, int value = -1)
     return (idx);
 }
 
-// Modify wall tile index depending on floor/wall flavour.
-static inline void _finalise_tile(unsigned int *tile,
-                                  unsigned int wall_flv,
-                                  unsigned int floor_flv,
-                                  unsigned int special_flv,
-                                  coord_def gc)
+// Updates the "flavour" of tiles that are animated.
+void tile_apply_animations(screen_buffer_t bg, tile_flavour *flv)
 {
-    int orig = (*tile) & TILE_FLAG_MASK;
-    int flag = (*tile) & (~TILE_FLAG_MASK);
+    int bg_idx = bg & TILE_FLAG_MASK;
+    if (bg_idx >= TILE_DNGN_LAVA && bg_idx < TILE_BLOOD)
+    {
+        flv->special = random2(256);
+    }
+    else if (bg_idx == TILE_DNGN_PORTAL_WIZARD_LAB
+             || bg_idx == TILE_DNGN_ALTAR_CHEIBRIADOS)
+    {
+        flv->special = (flv->special + 1) % tile_dngn_count(bg_idx);
+    }
+}
+
+static inline void _apply_variations(const tile_flavour &flv,
+                                     screen_buffer_t *bg)
+{
+    screen_buffer_t orig = (*bg) & TILE_FLAG_MASK;
+    screen_buffer_t flag = (*bg) & (~TILE_FLAG_MASK);
 
     // TODO enne - expose this as an option, so ziggurat can use it too.
     // Alternatively, allow the stone type to be set.
@@ -3553,12 +3564,12 @@ static inline void _finalise_tile(unsigned int *tile,
     }
 
     if (orig == TILE_FLOOR_NORMAL)
-        (*tile) = floor_flv;
+        *bg = flv.floor;
     else if (orig == TILE_WALL_NORMAL)
-        (*tile) = wall_flv;
+        *bg = flv.wall;
     else if (orig == TILE_DNGN_CLOSED_DOOR || orig == TILE_DNGN_OPEN_DOOR)
     {
-        int override = env.tile_flv(gc).feat;
+        int override = flv.feat;
         // Setting an override on a door specifically for undetected secret
         // doors causes issues if there are a number of variants for that tile.
         // In these instances, append "last_tile" and have the tile specifier
@@ -3571,30 +3582,23 @@ static inline void _finalise_tile(unsigned int *tile,
         {
             // XXX: This doesn't deal properly with detected doors.
             bool opened = (orig == TILE_DNGN_OPEN_DOOR);
-            int offset = _get_door_offset(override, opened, false, special_flv);
-            (*tile) = override + offset;
+            int offset = _get_door_offset(override, opened, false, flv.special);
+            *bg = override + offset;
         }
         else
-            (*tile) = orig + std::min((int)special_flv, 3);
+            *bg = orig + std::min((int)flv.special, 3);
     }
     else if (orig == TILE_DNGN_PORTAL_WIZARD_LAB
              || orig == TILE_DNGN_ALTAR_CHEIBRIADOS)
     {
-        if (++env.tile_flv(gc).special >= tile_dngn_count(orig))
-            env.tile_flv(gc).special = 0;
-
-        (*tile) = orig + env.tile_flv(gc).special;
+        *bg = orig + flv.special;
     }
     else if (orig < TILE_DNGN_MAX)
     {
-        // Some tiles may change from turn to turn, but only if in view.
-        if (orig >= TILE_DNGN_LAVA && orig < TILE_BLOOD && you.see_cell(gc))
-            env.tile_flv(gc).special = random2(256);
-
-        (*tile) = _pick_random_dngn_tile(orig, special_flv);
+        *bg = _pick_random_dngn_tile(orig, flv.special);
     }
 
-    (*tile) |= flag;
+    *bg |= flag;
 }
 
 void tilep_calc_flags(const int parts[], int flag[])
@@ -5504,86 +5508,60 @@ static bool _suppress_blood(const coord_def pos)
     return (false);
 }
 
-void tile_finish_dngn(unsigned int *tileb, int cx, int cy)
+void tile_apply_properties(const coord_def &gc, screen_buffer_t *fg,
+                           screen_buffer_t *bg)
 {
-    int x, y;
-    int count = 0;
+    if (is_excluded(gc))
+    {
+        if (is_exclude_root(gc))
+            *bg |= TILE_FLAG_EXCL_CTR;
+        else
+            *bg |= TILE_FLAG_TRAV_EXCL;
+    }
 
-    for (y = 0; y < crawl_view.viewsz.y; y++)
-        for (x = 0; x < crawl_view.viewsz.x; x++)
+    if (!map_bounds(gc))
+        return;
+
+    _apply_variations(env.tile_flv(gc), bg);
+
+    bool print_blood = true;
+    if (haloed(gc))
+    {
+        monsters *mon = monster_at(gc);
+        if (you.see_cell(gc) && mon)
         {
-            const coord_def ep = coord_def(x, y) + crawl_view.viewp
-                                 + coord_def(cx, cy) - crawl_view.vgrdc;
-            const coord_def gc = view2grid(ep);
-
-            unsigned int wall_flv    = 0;
-            unsigned int floor_flv   = 0;
-            unsigned int special_flv = 0;
-            const bool in_bounds = (map_bounds(gc));
-
-            if (in_bounds)
+            if (!mons_class_flag(mon->type, M_NO_EXP_GAIN)
+                 && (!mons_is_mimic(mon->type)
+                     || testbits(mon->flags, MF_KNOWN_MIMIC)))
             {
-                wall_flv    = env.tile_flv(gc).wall;
-                floor_flv   = env.tile_flv(gc).floor;
-                special_flv = env.tile_flv(gc).special;
-
-                _finalise_tile(&tileb[count+1],
-                               wall_flv, floor_flv, special_flv,
-                               gc);
+                *bg |= TILE_FLAG_HALO;
+                print_blood = false;
             }
-
-            if (is_excluded(gc))
-            {
-                if (is_exclude_root(gc))
-                    tileb[count+1] |= TILE_FLAG_EXCL_CTR;
-                else
-                    tileb[count+1] |= TILE_FLAG_TRAV_EXCL;
-            }
-
-            if (in_bounds)
-            {
-                bool print_blood = true;
-                if (haloed(gc))
-                {
-                    monsters *mon = monster_at(gc);
-                    if (you.see_cell(gc) && mon)
-                    {
-                        if (!mons_class_flag(mon->type, M_NO_EXP_GAIN)
-                             && (!mons_is_mimic(mon->type)
-                                 || testbits(mon->flags, MF_KNOWN_MIMIC)))
-                        {
-                            tileb[count+1] |= TILE_FLAG_HALO;
-                            print_blood = false;
-                        }
-                    }
-                }
-
-                if (print_blood && _suppress_blood(gc))
-                    print_blood = false;
-
-                // Mold has the same restrictions as blood
-                // but mold takes precendence over blood.
-                if (print_blood)
-                {
-                    if (is_moldy(gc))
-                        tileb[count+1] |= TILE_FLAG_MOLD;
-                    else if (is_bloodcovered(gc))
-                        tileb[count+1] |= TILE_FLAG_BLOOD;
-                }
-
-                const dungeon_feature_type feat = grd(gc);
-                if (feat_is_water(feat) || feat == DNGN_LAVA)
-                    tileb[count+1] |= TILE_FLAG_WATER;
-
-                if (is_sanctuary(gc))
-                    tileb[count+1] |= TILE_FLAG_SANCTUARY;
-
-                if (silenced(gc))
-                    tileb[count+1] |= TILE_FLAG_SILENCED;
-            }
-
-            count += 2;
         }
+    }
+
+    if (print_blood && _suppress_blood(gc))
+        print_blood = false;
+
+    // Mold has the same restrictions as blood
+    // but mold takes precendence over blood.
+    if (print_blood)
+    {
+        if (is_moldy(gc))
+            *bg |= TILE_FLAG_MOLD;
+        else if (is_bloodcovered(gc))
+            *bg |= TILE_FLAG_BLOOD;
+    }
+
+    const dungeon_feature_type feat = grd(gc);
+    if (feat_is_water(feat) || feat == DNGN_LAVA)
+        *bg |= TILE_FLAG_WATER;
+
+    if (is_sanctuary(gc))
+        *bg |= TILE_FLAG_SANCTUARY;
+
+    if (silenced(gc))
+        *bg |= TILE_FLAG_SILENCED;
 }
 
 static FixedVector<const char*, TAGPREF_MAX>
