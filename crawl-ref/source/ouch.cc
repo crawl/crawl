@@ -1288,7 +1288,7 @@ static void delete_files()
 void end_game(scorefile_entry &se)
 {
     for (int i = 0; i < ENDOFPACK; i++)
-        if (!item_type_known(you.inv[i]))
+        if (item_type_unknown(you.inv[i]))
             add_inscription(you.inv[i], "unknown");
 
     for (int i = 0; i < ENDOFPACK; i++)

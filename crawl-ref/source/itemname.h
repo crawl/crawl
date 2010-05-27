@@ -83,6 +83,7 @@ std::string quant_name( const item_def &item, int quant,
                         description_level_type des, bool terse = false );
 
 bool item_type_known( const item_def &item );
+bool item_type_unknown( const item_def &item );
 bool item_type_known( const object_class_type base_type, const int sub_type );
 bool item_type_tried( const item_def &item );
 
