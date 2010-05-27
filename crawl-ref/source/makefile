@@ -1018,7 +1018,11 @@ wizard: all
 # test.
 
 $(UTIL)%.o: $(UTIL)%.cc .cflags
+ifdef NO_INLINE_DEPGEN
+	$(QUIET_CXX)$(CXX) $(YACC_CFLAGS) -c $< -o $(UTIL)$*.o
+else
 	$(QUIET_CXX)$(CXX) $(YACC_CFLAGS) -Wp,-MD,$(UTIL)$*.d,-MT,$(UTIL)$*.o -c $< -o $(UTIL)$*.o
+endif
 
 ifdef PCH
 %.h.gch: %.h
