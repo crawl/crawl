@@ -33,6 +33,7 @@ Game:
 * Fix old player ghost speech, and add player ghost speech
   fitting the ghost.
 * Monster equipment can be corroded by acid.
+* Lost stats are now recovered one point at a time.
 
 Gods:
 * Zin no longer objects to deaths of non-sentient allies, and
