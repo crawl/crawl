@@ -73,7 +73,7 @@ void DungeonRegion::pack_cursor(cursor_type type, unsigned int tile)
         return;
 
     const coord_def ep(gc.x - m_cx_to_gx, gc.y - m_cy_to_gy);
-    m_buf_dngn.add_tile(ep.x, ep.y, tile);
+    m_buf_dngn.add_main_tile(tile, ep.x, ep.y);
 }
 
 void DungeonRegion::pack_buffers()
@@ -98,7 +98,7 @@ void DungeonRegion::pack_buffers()
                 pack_waves(gc, &cell);
             }
 
-            m_buf_dngn.add(x, y, cell);
+            m_buf_dngn.add(cell, x, y);
 
             tile += 2;
         }
@@ -111,9 +111,9 @@ void DungeonRegion::pack_buffers()
     if (m_cursor[CURSOR_TUTORIAL] != NO_CURSOR
         && on_screen(m_cursor[CURSOR_TUTORIAL]))
     {
-        m_buf_dngn.add_tile(m_cursor[CURSOR_TUTORIAL].x,
-                            m_cursor[CURSOR_TUTORIAL].y,
-                            TILE_TUTORIAL_CURSOR);
+        m_buf_dngn.add_main_tile(TILE_TUTORIAL_CURSOR,
+                                 m_cursor[CURSOR_TUTORIAL].x,
+                                 m_cursor[CURSOR_TUTORIAL].y);
     }
 
     for (unsigned int i = 0; i < m_overlays.size(); i++)
@@ -128,7 +128,7 @@ void DungeonRegion::pack_buffers()
 
         const coord_def ep(m_overlays[i].gc.x - m_cx_to_gx, 
                            m_overlays[i].gc.y - m_cy_to_gy);
-        m_buf_dngn.add_tile(ep.x, ep.y, idx);
+        m_buf_dngn.add_main_tile(idx, ep.x, ep.y);
     }
 }
 

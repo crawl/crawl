@@ -19,7 +19,8 @@ DungeonCellBuffer::DungeonCellBuffer(ImageManager *im) :
     m_buf_dngn(&im->m_textures[TEX_DUNGEON]),
     m_buf_doll(&im->m_textures[TEX_PLAYER], 17),
     m_buf_main_trans(&im->m_textures[TEX_DEFAULT], 17),
-    m_buf_main(&im->m_textures[TEX_DEFAULT])
+    m_buf_main(&im->m_textures[TEX_DEFAULT]),
+    m_buf_spells(&im->m_textures[TEX_GUI])
 {
 }
 
@@ -42,7 +43,7 @@ static void _lichform_add_weapon(SubmergedTileBuffer &buf, int x, int y,
     buf.add(wep, x, y, 0, in_water, false, -1, 0);
 }
 
-void DungeonCellBuffer::add(int x, int y, const packed_cell &cell)
+void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
 {
     pack_background(x, y, cell);
 
@@ -72,9 +73,24 @@ void DungeonCellBuffer::add(int x, int y, const packed_cell &cell)
 
 }
 
-void DungeonCellBuffer::add_tile(int x, int y, int tileidx)
+void DungeonCellBuffer::add_dngn_tile(int tileidx, int x, int y)
+{
+    m_buf_dngn.add(tileidx, x, y);
+}
+
+void DungeonCellBuffer::add_main_tile(int tileidx, int x, int y)
 {
     m_buf_main.add(tileidx, x, y);
+}
+
+void DungeonCellBuffer::add_main_tile(int tileidx, int x, int y, int ox, int oy)
+{
+    m_buf_main.add(tileidx, x, y, ox, oy, false);
+}
+
+void DungeonCellBuffer::add_spell_tile(int tileidx, int x, int y)
+{
+    m_buf_spells.add(tileidx, x, y);
 }
 
 void DungeonCellBuffer::clear()
@@ -83,6 +99,7 @@ void DungeonCellBuffer::clear()
     m_buf_doll.clear();
     m_buf_main_trans.clear();
     m_buf_main.clear();
+    m_buf_spells.clear();
 }
 
 void DungeonCellBuffer::draw()
@@ -91,6 +108,7 @@ void DungeonCellBuffer::draw()
     m_buf_doll.draw();
     m_buf_main_trans.draw();
     m_buf_main.draw();
+    m_buf_spells.draw();
 }
 
 enum wave_type

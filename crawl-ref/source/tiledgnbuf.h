@@ -42,8 +42,11 @@ class DungeonCellBuffer
 public:
     DungeonCellBuffer(ImageManager *im);
 
-    void add(int x, int y, const packed_cell &cell);
-    void add_tile(int x, int y, int tileidx);
+    void add(const packed_cell &cell, int x, int y);
+    void add_dngn_tile(int tileidx, int x, int y);
+    void add_main_tile(int tileidx, int x, int y);
+    void add_main_tile(int tileidx, int x, int y, int ox, int oy);
+    void add_spell_tile(int tileidx, int x, int y);
 
     void clear();
     void draw();
@@ -61,6 +64,7 @@ protected:
     SubmergedTileBuffer m_buf_doll;
     SubmergedTileBuffer m_buf_main_trans;
     TileBuffer m_buf_main;
+    TileBuffer m_buf_spells;
 };
 
 #endif

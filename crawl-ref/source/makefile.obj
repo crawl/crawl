@@ -213,6 +213,7 @@ tilefont.o \
 tilemcache.o \
 tilepick.o \
 tilereg.o \
+tilereg-act.o \
 tilereg-crt.o \
 tilereg-dgn.o \
 tilereg-doll.o \
@@ -221,6 +222,7 @@ tilereg-inv.o \
 tilereg-map.o \
 tilereg-mem.o \
 tilereg-menu.o \
+tilereg-mon.o \
 tilereg-msg.o \
 tilereg-spl.o \
 tilereg-stat.o \

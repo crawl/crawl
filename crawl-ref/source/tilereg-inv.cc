@@ -57,11 +57,11 @@ void InventoryRegion::pack_buffers()
                     break;
 
                 int num_floor = tile_dngn_count(env.tile_default.floor);
-                m_buf_dngn.add(env.tile_default.floor
-                                + m_flavour[i] % num_floor, x, y);
+                int tileidx = env.tile_default.floor + m_flavour[i] % num_floor;
+                m_buf.add_dngn_tile(tileidx, x, y);
             }
             else
-                m_buf_dngn.add(TILE_ITEM_SLOT, x, y);
+                m_buf.add_dngn_tile(TILE_ITEM_SLOT, x, y);
         }
     }
 
@@ -81,37 +81,36 @@ void InventoryRegion::pack_buffers()
             if (item.flag & TILEI_FLAG_EQUIP)
             {
                 if (item.flag & TILEI_FLAG_CURSE)
-                    m_buf_main.add(TILE_ITEM_SLOT_EQUIP_CURSED, x, y);
+                    m_buf.add_main_tile(TILE_ITEM_SLOT_EQUIP_CURSED, x, y);
                 else
-                    m_buf_main.add(TILE_ITEM_SLOT_EQUIP, x, y);
+                    m_buf.add_main_tile(TILE_ITEM_SLOT_EQUIP, x, y);
 
                 if (item.flag & TILEI_FLAG_MELDED)
-                    m_buf_main.add(TILE_MESH, x, y);
+                    m_buf.add_main_tile(TILE_MESH, x, y);
             }
             else if (item.flag & TILEI_FLAG_CURSE)
-                m_buf_main.add(TILE_ITEM_SLOT_CURSED, x, y);
+                m_buf.add_main_tile(TILE_ITEM_SLOT_CURSED, x, y);
 
-            // TODO enne - need better graphic here
             if (item.flag & TILEI_FLAG_SELECT)
-                m_buf_main.add(TILE_ITEM_SLOT_SELECTED, x, y);
+                m_buf.add_main_tile(TILE_ITEM_SLOT_SELECTED, x, y);
 
             if (item.flag & TILEI_FLAG_CURSOR)
-                m_buf_main.add(TILE_CURSOR, x, y);
+                m_buf.add_main_tile(TILE_CURSOR, x, y);
 
             if (item.tile)
-                m_buf_main.add(item.tile, x, y);
+                m_buf.add_main_tile(item.tile, x, y);
 
             if (item.quantity != -1)
                 draw_number(x, y, item.quantity);
 
             if (item.special)
-                m_buf_main.add(item.special, x, y, 0, 0, false);
+                m_buf.add_main_tile(item.special, x, y, 0, 0);
 
             if (item.flag & TILEI_FLAG_TRIED)
-                m_buf_main.add(TILE_TRIED, x, y, 0, TILE_Y / 2, false);
+                m_buf.add_main_tile(TILE_TRIED, x, y, 0, TILE_Y / 2);
 
             if (item.flag & TILEI_FLAG_INVALID)
-                m_buf_main.add(TILE_MESH, x, y);
+                m_buf.add_main_tile(TILE_MESH, x, y);
         }
     }
 }
