@@ -1348,6 +1348,15 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
             break;
         }
 
+        case UNAT_HEADBUTT:
+        {
+            const int horns = player_mutation_level(MUT_HORNS);
+            const int stun = bestroll(std::max(damage_done, 7), 1 + horns);
+
+            defender->as_monster()->speed_increment -= stun;
+            break;
+        }
+
         default:
             break;
     }
