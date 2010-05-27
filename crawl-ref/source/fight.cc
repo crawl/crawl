@@ -921,6 +921,11 @@ bool melee_attack::player_attack()
         && where == defender->pos())
     {
         print_wounds(defender->as_monster());
+
+	const int degree = player_mutation_level(MUT_CLAWS);
+
+	if (defender->can_bleed() && degree > 0)
+		defender->as_monster()->bleed(5 + roll_dice(degree, 3), degree);
     }
 
     return (did_primary_hit || did_hit);
@@ -1261,7 +1266,7 @@ bool melee_attack::player_aux_unarmed()
 
             if (attack_shield_blocked(true))
                 continue;
-            if (player_aux_apply())
+            if (player_aux_apply(atk))
                 return (true);
         }
     }
@@ -1269,7 +1274,7 @@ bool melee_attack::player_aux_unarmed()
     return (false);
 }
 
-bool melee_attack::player_aux_apply()
+bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 {
     did_hit = true;
 
@@ -1330,6 +1335,21 @@ bool melee_attack::player_aux_apply()
         _monster_die(defender->as_monster(), KILL_YOU, NON_MONSTER);
 
         return (true);
+    }
+
+    switch(atk)
+    {
+        case UNAT_PUNCH:
+        {
+            const int degree = player_mutation_level(MUT_CLAWS);
+
+            if (degree > 0 && defender->can_bleed())
+                defender->as_monster()->bleed(3 + roll_dice(degree, 3), degree);
+            break;
+        }
+
+        default:
+            break;
     }
 
     return (false);
