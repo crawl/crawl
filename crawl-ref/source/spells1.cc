@@ -1035,8 +1035,7 @@ bool cast_vitalisation()
              || you.dex() < you.max_dex())
     {
         type = 1;
-        while (!restore_stat(STAT_RANDOM, 0, true))
-            ;
+        restore_stat(STAT_RANDOM, 0, true);
         success = true;
     }
     else
