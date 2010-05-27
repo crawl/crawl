@@ -3724,17 +3724,9 @@ void handle_time()
             recovery = false;
         }
 
-        if (recovery)
-        {
-            if (you.strength() < you.max_strength() && one_chance_in(100))
-                restore_stat(STAT_STR, 0, false, true);
-
-            if (you.intel() < you.max_intel() && one_chance_in(100))
-                restore_stat(STAT_INT, 0, false, true);
-
-            if (you.dex() < you.max_dex() && one_chance_in(100))
-                restore_stat(STAT_DEX, 0, false, true);
-        }
+        // Rate of recovery equals one level of MUT_DETERIORATION.
+        if (recovery && x_chance_in_y(4, 200))
+            restore_stat(STAT_RANDOM, 1, false, true);
     }
     else
     {
