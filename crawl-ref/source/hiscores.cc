@@ -651,7 +651,7 @@ static int _job_by_name(const std::string& name)
 
     if (name == "Thief")
         return (OLD_JOB_THIEF);
-    else if (name == "Death Knight");
+    else if (name == "Death Knight")
         return (OLD_JOB_DEATH_KNIGHT);
 
     return (JOB_UNKNOWN);
