@@ -213,7 +213,6 @@ tilefont.o \
 tilemcache.o \
 tilepick.o \
 tilereg.o \
-tilereg-act.o \
 tilereg-crt.o \
 tilereg-dgn.o \
 tilereg-doll.o \
