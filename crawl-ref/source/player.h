@@ -509,7 +509,7 @@ public:
     bool incapacitated() const
     {
         return actor::incapacitated() || stat_zero[STAT_DEX];
-    };
+    }
 
     bool asleep() const;
     void hibernate(int power = 0);
