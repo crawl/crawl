@@ -7,6 +7,7 @@
 #ifndef TILEREG_GRID_H
 #define TILEREG_GRID_H
 
+#include "tiledgnbuf.h"
 #include "tilereg.h"
 
 class InventoryTile
@@ -64,10 +65,7 @@ protected:
 
     std::vector<InventoryTile> m_items;
 
-    TileBuffer m_buf_dngn;
-    TileBuffer m_buf_spells;
-    TileBuffer m_buf_main;
-    TileBuffer m_buf_doll;
+    DungeonCellBuffer m_buf;
 };
 
 #endif

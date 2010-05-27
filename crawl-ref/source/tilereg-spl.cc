@@ -176,7 +176,7 @@ void SpellRegion::pack_buffers()
             if (i++ >= max_spells)
                 break;
 
-            m_buf_dngn.add(TILE_ITEM_SLOT, x, y);
+            m_buf.add_dngn_tile(TILE_ITEM_SLOT, x, y);
         }
     }
 
@@ -193,16 +193,16 @@ void SpellRegion::pack_buffers()
 
             InventoryTile &item = m_items[i++];
             if (item.flag & TILEI_FLAG_INVALID)
-                m_buf_main.add(TILE_MESH, x, y);
+                m_buf.add_main_tile(TILE_MESH, x, y);
 
             if (item.flag & TILEI_FLAG_CURSOR)
-                m_buf_main.add(TILE_CURSOR, x, y);
+                m_buf.add_main_tile(TILE_CURSOR, x, y);
 
             if (item.quantity != -1)
                 draw_number(x, y, item.quantity);
 
             if (item.tile)
-                m_buf_spells.add(item.tile, x, y);
+                m_buf.add_spell_tile(item.tile, x, y);
         }
     }
 }

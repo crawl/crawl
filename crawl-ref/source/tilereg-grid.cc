@@ -33,10 +33,7 @@ GridRegion::GridRegion(const TileRegionInit &init) :
     TileRegion(init),
     m_flavour(NULL),
     m_cursor(NO_CURSOR),
-    m_buf_dngn(&init.im->m_textures[TEX_DUNGEON]),
-    m_buf_spells(&init.im->m_textures[TEX_GUI]),
-    m_buf_main(&init.im->m_textures[TEX_DEFAULT]),
-    m_buf_doll(&init.im->m_textures[TEX_PLAYER])
+    m_buf(init.im)
 {
 }
 
@@ -49,10 +46,7 @@ GridRegion::~GridRegion()
 void GridRegion::clear()
 {
     m_items.clear();
-    m_buf_dngn.clear();
-    m_buf_main.clear();
-    m_buf_spells.clear();
-    m_buf_doll.clear();
+    m_buf.clear();
 }
 
 void GridRegion::on_resize()
@@ -139,17 +133,14 @@ void GridRegion::add_quad_char(char c, int x, int y, int ofs_x, int ofs_y)
     ASSERT(num >= 0 && num <= 9);
     int idx = TILE_NUM0 + num;
 
-    m_buf_main.add(idx, x, y, ofs_x, ofs_y, false);
+    m_buf.add_main_tile(idx, x, y, ofs_x, ofs_y);
 }
 
 void GridRegion::render()
 {
     if (m_dirty)
     {
-        m_buf_dngn.clear();
-        m_buf_main.clear();
-        m_buf_spells.clear();
-        m_buf_doll.clear();
+        m_buf.clear();
 
         // Ensure the cursor has been placed.
         place_cursor(m_cursor);
@@ -162,10 +153,7 @@ void GridRegion::render()
     cprintf("rendering GridRegion\n");
 #endif
     set_transform();
-    m_buf_dngn.draw();
-    m_buf_spells.draw();
-    m_buf_doll.draw();
-    m_buf_main.draw();
+    m_buf.draw();
 
     draw_tag();
 }

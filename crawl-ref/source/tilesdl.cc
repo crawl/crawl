@@ -37,6 +37,7 @@
 #include "tilereg-map.h"
 #include "tilereg-mem.h"
 #include "tilereg-menu.h"
+#include "tilereg-mon.h"
 #include "tilereg-msg.h"
 #include "tilereg-spl.h"
 #include "tilereg-stat.h"
@@ -132,6 +133,7 @@ void TilesFramework::shutdown()
     delete m_region_inv;
     delete m_region_spl;
     delete m_region_mem;
+    delete m_region_mon;
     delete m_region_crt;
     delete m_region_menu;
 
@@ -143,6 +145,7 @@ void TilesFramework::shutdown()
     m_region_inv   = NULL;
     m_region_spl   = NULL;
     m_region_mem   = NULL;
+    m_region_mon   = NULL;
     m_region_crt   = NULL;
     m_region_menu  = NULL;
 
@@ -338,10 +341,12 @@ bool TilesFramework::initialise()
     m_region_inv  = new InventoryRegion(init);
     m_region_spl  = new SpellRegion(init);
     m_region_mem  = new MemoriseRegion(init);
+    m_region_mon  = new MonsterRegion(init);
 
     m_region_tab->set_tab_region(TAB_ITEM, m_region_inv, TILEG_TAB_ITEM);
     m_region_tab->set_tab_region(TAB_SPELL, m_region_spl, TILEG_TAB_SPELL);
     m_region_tab->set_tab_region(TAB_MEMORISE, m_region_mem, TILEG_TAB_MEMORISE);
+    m_region_tab->set_tab_region(TAB_MONSTER, m_region_mon, TILEG_TAB_MONSTER);
     m_region_tab->activate_tab(TAB_ITEM);
 
     m_region_msg  = new MessageRegion(m_fonts[m_msg_font].font);
