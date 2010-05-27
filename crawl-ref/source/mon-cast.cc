@@ -1372,6 +1372,7 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
             && !player_or_mon_in_sanct(monster))
         {
             spell_cast = draco_breath;
+            setup_mons_cast(monster, beem, spell_cast);
             finalAnswer = true;
         }
 
