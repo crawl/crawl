@@ -126,7 +126,7 @@ void DungeonRegion::pack_buffers()
         if (idx >= TILE_MAIN_MAX)
             continue;
 
-        const coord_def ep(m_overlays[i].gc.x - m_cx_to_gx, 
+        const coord_def ep(m_overlays[i].gc.x - m_cx_to_gx,
                            m_overlays[i].gc.y - m_cy_to_gy);
         m_buf_dngn.add_main_tile(idx, ep.x, ep.y);
     }
@@ -635,12 +635,12 @@ static const bool _have_appropriate_spell(const actor* target)
     return (false);
 }
 
-static bool _handle_distant_monster(monsters* mon, MouseEvent &event)
+static bool _handle_distant_monster(monsters* mon, unsigned char mod)
 {
     const coord_def gc = mon->pos();
-    const bool shift = (event.mod & MOD_SHIFT);
-    const bool ctrl  = (event.mod & MOD_CTRL);
-    const bool alt   = (shift && ctrl || (event.mod & MOD_ALT));
+    const bool shift = (mod & MOD_SHIFT);
+    const bool ctrl  = (mod & MOD_CTRL);
+    const bool alt   = (shift && ctrl || (mod & MOD_ALT));
 
     // Handle evoking items at monster.
     if (alt && _have_appropriate_evokable(mon))
@@ -825,22 +825,27 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
     if (event.button != MouseEvent::LEFT)
         return 0;
 
+    return (tile_click_cell(gc, event.mod));
+}
+
+int tile_click_cell(const coord_def &gc, unsigned char mod)
+{
     monsters* mon = monster_at(gc);
     if (mon && you.can_see(mon))
     {
-        if (_handle_distant_monster(mon, event))
+        if (_handle_distant_monster(mon, mod))
             return (CK_MOUSE_CMD);
     }
 
-    if ((event.mod & MOD_CTRL) && adjacent(you.pos(), gc))
-        return click_travel(gc, event.mod & MOD_CTRL);
+    if ((mod & MOD_CTRL) && adjacent(you.pos(), gc))
+        return (click_travel(gc, mod & MOD_CTRL));
 
     // Don't move if we've tried to fire/cast/evoke when there's nothing
     // available.
-    if (event.mod & (MOD_SHIFT | MOD_CTRL | MOD_ALT))
+    if (mod & (MOD_SHIFT | MOD_CTRL | MOD_ALT))
         return (CK_MOUSE_CMD);
 
-    return click_travel(gc, event.mod & MOD_CTRL);
+    return (click_travel(gc, mod & MOD_CTRL));
 }
 
 void DungeonRegion::to_screen_coords(const coord_def &gc, coord_def &pc) const
@@ -905,7 +910,7 @@ void DungeonRegion::place_cursor(cursor_type type, const coord_def &gc)
     }
 }
 
-bool DungeonRegion::update_tip_text(std::string& tip)
+bool DungeonRegion::update_tip_text(std::string &tip)
 {
     // TODO enne - it would be really nice to use the tutorial
     // descriptions here for features, monsters, etc...
@@ -920,12 +925,17 @@ bool DungeonRegion::update_tip_text(std::string& tip)
     if (!map_bounds(m_cursor[CURSOR_MOUSE]))
         return (false);
 
+    return (tile_dungeon_tip(m_cursor[CURSOR_MOUSE], tip));
+}
+
+bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
+{
     const bool have_reach = you.weapon()
         && get_weapon_brand(*(you.weapon())) == SPWPN_REACHING;
     const int  attack_dist = have_reach ? 2 : 1;
 
     std::vector<command_type> cmd;
-    if (m_cursor[CURSOR_MOUSE] == you.pos())
+    if (gc == you.pos())
     {
         tip = you.your_name;
         tip += " (";
@@ -933,13 +943,13 @@ bool DungeonRegion::update_tip_text(std::string& tip)
         tip += get_job_abbrev(you.char_class);
         tip += ")";
 
-        if (you.visible_igrd(m_cursor[CURSOR_MOUSE]) != NON_ITEM)
+        if (you.visible_igrd(gc) != NON_ITEM)
         {
             tip += "\n[L-Click] Pick up items (%)";
             cmd.push_back(CMD_PICKUP);
         }
 
-        const dungeon_feature_type feat = grd(m_cursor[CURSOR_MOUSE]);
+        const dungeon_feature_type feat = grd(gc);
         const command_type dir = feat_stair_direction(feat);
         if (dir != CMD_NO_CMD)
         {
@@ -971,14 +981,14 @@ bool DungeonRegion::update_tip_text(std::string& tip)
             cmd.push_back(CMD_DISPLAY_RELIGION);
         }
     }
-    else if (abs(m_cursor[CURSOR_MOUSE].x - you.pos().x) <= attack_dist
-             && abs(m_cursor[CURSOR_MOUSE].y - you.pos().y) <= attack_dist)
+    else if (abs(gc.x - you.pos().x) <= attack_dist
+             && abs(gc.y - you.pos().y) <= attack_dist)
     {
         tip = "";
 
-        if (!cell_is_solid(m_cursor[CURSOR_MOUSE]))
+        if (!cell_is_solid(gc))
         {
-            const monsters *mon = monster_at(m_cursor[CURSOR_MOUSE]);
+            const monsters *mon = monster_at(gc);
             if (!mon || mon->friendly() || !mon->visible_to(&you))
                 tip = "[L-Click] Move\n";
             else if (mon)
@@ -990,13 +1000,13 @@ bool DungeonRegion::update_tip_text(std::string& tip)
     }
     else
     {
-        if (i_feel_safe() && !cell_is_solid(m_cursor[CURSOR_MOUSE]))
+        if (i_feel_safe() && !cell_is_solid(gc))
             tip = "[L-Click] Travel\n";
     }
 
-    if (m_cursor[CURSOR_MOUSE] != you.pos())
+    if (gc != you.pos())
     {
-        const monsters* mon = monster_at(m_cursor[CURSOR_MOUSE]);
+        const monsters* mon = monster_at(gc);
         if (mon && you.can_see(mon))
         {
             if (you.see_cell_no_trans(mon->pos())
@@ -1008,7 +1018,7 @@ bool DungeonRegion::update_tip_text(std::string& tip)
         }
     }
 
-    const actor* target = actor_at(m_cursor[CURSOR_MOUSE]);
+    const actor* target = actor_at(gc);
     if (target && you.can_see(target))
     {
         std::string str = "";
@@ -1035,27 +1045,27 @@ bool DungeonRegion::update_tip_text(std::string& tip)
 
         if (!str.empty())
         {
-            if (m_cursor[CURSOR_MOUSE] == you.pos())
+            if (gc == you.pos())
                 tip += "\n";
 
             tip += str;
         }
     }
 
-    if (m_cursor[CURSOR_MOUSE] != you.pos())
+    if (gc != you.pos())
         tip += "[R-Click] Describe";
 
-    if (!target && adjacent(m_cursor[CURSOR_MOUSE], you.pos()))
+    if (!target && adjacent(gc, you.pos()))
     {
-        trap_def *trap = find_trap(m_cursor[CURSOR_MOUSE]);
+        trap_def *trap = find_trap(gc);
         if (trap && trap->is_known()
             && trap->category() == DNGN_TRAP_MECHANICAL)
         {
             tip += "\n[Ctrl-L-Click] Disarm";
         }
-        else if (grd(m_cursor[CURSOR_MOUSE]) == DNGN_OPEN_DOOR)
+        else if (grd(gc) == DNGN_OPEN_DOOR)
             tip += "\n[Ctrl-L-Click] Close door (C)";
-        else if (feat_is_closed_door(grd(m_cursor[CURSOR_MOUSE])))
+        else if (feat_is_closed_door(grd(gc)))
             tip += "\n[Ctrl-L-Click] Open door (O)";
     }
 
