@@ -19,6 +19,9 @@ struct TextTag
     coord_def gc;
 };
 
+bool tile_dungeon_tip(const coord_def &gc, std::string &tip);
+int tile_click_cell(const coord_def &gc, unsigned char mod);
+
 class DungeonRegion : public TileRegion
 {
 public:

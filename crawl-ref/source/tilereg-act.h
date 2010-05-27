@@ -9,6 +9,7 @@
 #include "mon-info.h"
 #include "tilereg-grid.h"
 
+// A region that can display monsters (allies, enemies, anything)
 class ActorRegion : public GridRegion
 {
 public:

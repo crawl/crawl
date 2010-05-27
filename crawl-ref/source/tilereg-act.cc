@@ -16,6 +16,7 @@
 #include "tiledef-dngn.h"
 #include "tiledef-player.h"
 #include "tilereg-act.h"
+#include "tilereg-dgn.h"
 #include "viewgeom.h"
 
 ActorRegion::ActorRegion(const TileRegionInit &init) : GridRegion(init)
@@ -37,7 +38,7 @@ void ActorRegion::draw_tag()
     const monsters *mon = get_monster(idx);
     if (!mon)
         return;
-    
+
     std::string desc = mon->name(DESC_CAP_A);
     draw_desc(desc.c_str());
 }
@@ -64,22 +65,31 @@ int ActorRegion::handle_mouse(MouseEvent &event)
 
     const coord_def &gc = mon->position;
     tiles.place_cursor(CURSOR_MOUSE, gc);
-    
-    if (event.button != MouseEvent::RIGHT)
+
+    if (event.event != MouseEvent::PRESS)
         return (0);
 
-    full_describe_square(gc);
-    redraw_screen();
-    return (CK_MOUSE_CMD);
+    if (event.button == MouseEvent::LEFT)
+    {
+        you.last_clicked_item = item_idx;
+        return (tile_click_cell(gc, event.mod));
+    }
+    else if (event.button == MouseEvent::RIGHT)
+    {
+        full_describe_square(gc);
+        redraw_screen();
+        return (CK_MOUSE_CMD);
+    }
+
+    return (0);
 }
 
 bool ActorRegion::update_tab_tip_text(std::string &tip, bool active)
 {
-    // No actions but describe in handle_mouse, so nothing to mention here.
     return (false);
 }
 
-bool ActorRegion::update_tip_text(std::string& tip)
+bool ActorRegion::update_tip_text(std::string &tip)
 {
     if (m_cursor == NO_CURSOR)
         return (false);
@@ -89,10 +99,7 @@ bool ActorRegion::update_tip_text(std::string& tip)
     if (!mon)
         return (false);
 
-    tip = mon->name(DESC_CAP_A);
-    tip += "\n[R-Click] Describe";
-
-    return (true);
+    return (tile_dungeon_tip(mon->position, tip));
 }
 
 bool ActorRegion::update_alt_text(std::string &alt)
@@ -136,7 +143,7 @@ void ActorRegion::pack_buffers()
     {
         for (int x = 0; x < mx; x++)
         {
-            bool cursor = (i < m_items.size()) ? 
+            bool cursor = (i < m_items.size()) ?
                 (m_items[i].flag & TILEI_FLAG_CURSOR) : false;
 
             const monsters *mon = get_monster(i++);
