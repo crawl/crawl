@@ -58,8 +58,6 @@ void DungeonRegion::load_dungeon(unsigned int* tileb, int cx_to_gx, int cy_to_gy
 
     int len = 2 * crawl_view.viewsz.x * crawl_view.viewsz.y;
     m_tileb.resize(len);
-    // TODO enne - move this function into dungeonregion
-    tile_finish_dngn(tileb, cx_to_gx + mx/2, cy_to_gy + my/2);
     memcpy(&m_tileb[0], tileb, sizeof(unsigned int) * len);
 
     m_cx_to_gx = cx_to_gx;

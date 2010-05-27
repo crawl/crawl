@@ -865,6 +865,7 @@ static void draw_los(screen_buffer_t* buffy,
 #else
     buffy[0] = env.tile_fg(ep);
     buffy[1] = env.tile_bg(ep);
+    tile_apply_animations(buffy[1], &env.tile_flv(gc));
 #endif
 }
 
@@ -1001,6 +1002,8 @@ void viewwindow(bool monster_updates, bool show_updates)
         // Grey out grids that cannot be reached due to beholders.
         else if (you.get_beholder(gc))
             buffy[bufcount + 1] |= TILE_FLAG_OOR;
+
+        tile_apply_properties(gc, &buffy[bufcount], &buffy[bufcount + 1]);
 #endif
     }
 
