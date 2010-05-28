@@ -3545,9 +3545,10 @@ void bolt::affect_player()
 
 int bolt::beam_source_as_target() const
 {
-    return (MON_KILL(thrower)     ? beam_source :
-            thrower == KILL_MISC  ? MHITNOT
-                                  : MHITYOU);
+    return (MON_KILL(thrower)       ? beam_source :
+            thrower == KILL_MISCAST ? beam_source :
+            thrower == KILL_MISC    ? MHITNOT
+                                    : MHITYOU);
 }
 
 void bolt::update_hurt_or_helped(monsters *mon)
