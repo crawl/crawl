@@ -42,7 +42,7 @@ enum unrand_flag_type
     UNRAND_FLAG_CHAOTIC          = 0x20,
     UNRAND_FLAG_CORPSE_VIOLATING = 0x40,
     UNRAND_FLAG_NOGEN            = 0x80
-    // Warning!  Any further extension and you need'll to change the field from
+    // Warning!  Any further extension and you'll need to change the field from
     // a char.  What a loss of 82*sizeof() bytes...
 };
 
