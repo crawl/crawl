@@ -308,7 +308,7 @@ TILE:    spwpn_sword_of_cerebov
 TILE_EQ: sword_twist
 VALUE:   2000
 BRAND:   SPWPN_FLAMING
-BOOL:    cursed, tilerim, special, evil
+BOOL:    cursed, tilerim, special, evil, nogen
 DESC:    Eerie flames cover its twisted blade.
 
 NAME:    Staff of Dispater
@@ -319,7 +319,7 @@ COLOUR:  ETC_GOLD
 TILE:    spwpn_staff_of_dispater
 TILE_EQ: dispater
 VALUE:   1200
-BOOL:    tilerim, special, evil
+BOOL:    tilerim, special, evil, nogen
 DESC_ID: This legendary item can unleash the fury of Hell.
 
 NAME:    Sceptre of Asmodeus
@@ -330,7 +330,7 @@ COLOUR:  ETC_BLOOD
 TILE:    spwpn_sceptre_of_asmodeus
 TILE_EQ: asmodeus
 VALUE:   1500
-BOOL:    tilerim, special, evil
+BOOL:    tilerim, special, evil, nogen
 DESC_ID: It carries some of the powers of the arch-fiend Asmodeus.
 
 ##################### End of old fixed arts.
