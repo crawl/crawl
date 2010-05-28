@@ -1656,7 +1656,7 @@ int find_okay_unrandart(unsigned char aclass, unsigned char atype,
 
         // Never randomly generated until lost in the abyss.
         if ((!in_abyss || status != UNIQ_LOST_IN_ABYSS)
-            && index >= UNRAND_CEREBOV && index <= UNRAND_ASMODEUS)
+            && entry->flags & UNRAND_FLAG_NOGEN)
         {
             continue;
         }
