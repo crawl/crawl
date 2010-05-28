@@ -751,7 +751,7 @@
 
   {"You have a pair of small antennae on your head.",
    "You have a pair of antennae on your head.",
-   "You have a pair of large antennae on your head."},
+   "You have a pair of large antennae on your head (SInv)."},
 
   {"A pair of antennae grows on your head!",
    "The antennae on your head grow some more.",
@@ -1049,9 +1049,9 @@
 { MUT_EYEBALLS,                   0,  3, true, true,
   NULL,
 
-  {"Your body is partially covered in golden eyeballs (Acc +3)",
-   "Your body is mostly covered in golden eyeballs (Acc +5)",
-   "Your body is completely covered in golden eyeballs (Acc +7, SInv)"},
+  {"Your body is partially covered in golden eyeballs (Acc +3).",
+   "Your body is mostly covered in golden eyeballs (Acc +5).",
+   "Your body is completely covered in golden eyeballs (Acc +7, SInv)."},
 
    {"Eyeballs grow over part of your body.",
     "Eyeballs cover a large portion of your body.",
