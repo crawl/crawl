@@ -384,6 +384,32 @@ xxxxxxxxxxxxxx...2.xxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-# TODO: The game should end after dying to Sigm.. after managing to enter D:5
-# Could have a congratulatory map as D:5 with nice scenery.
+NAME:    tutorial_basic_5
+TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_shop_gen tutorial
+LFLAGS:  no_tele_control
+KMASK:   + = no_secret_doors
+ORIENT:  encompass
+PLACE:   D:5
+MONS:    pandemonium lord name:Plog name_replace spells:fire_storm;;haste;;;
+KFEAT:   ABC = .
+COLOUR:  ABC = blue
+MARKER:  A = lua:tutorial.message( "Congratulations, You have succesfully defeated Sigmund! He is one of the many early game threats that you will face in your adventures.", "tutorial", "true" )
+MARKER:  B = lua:tutorial.message( "Death in Crawl is inevitable, sometimes you will get yourself way over your head and you will die. Often", "tutorial", "true" )
+MARKER:  C = lua:tutorial.message( "How on earth did you manage to defeat or escape from that Pandemonium lord?", "tutorial", "true" )
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+v{.(vvvvvv....vvvvvvvvvvvvvvv
+v.[.vvvvv.WWWW.vvvvvvvvvvvvvv
+vvAvvvvv.W....W.vvvvvvvvvvvvv
+vv.vvvv.W......W.vvvvvvvvvvvv
+vv.vvv.W..UwwU..W.vvvvvvv}.)v
+vv..B+.W..w1.w..W.=.....C.].v
+vv..B+.W..w..w..W.vvvvvvvvvvv
+vv.vvv.W..UwwU..W.vvvvvvvvvvv
+vvvvvvv.W......W.vvvvvvvvvvvv
+vvvvvvvv.W....W.vvvvvvvvvvvvv
+vvvvvvvvv.WWWW.vvvvvvvvvvvvvv
+vvvvvvvvvv....vvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
 
