@@ -30,6 +30,8 @@ warg CORPSE_WARG
 war_dog CORPSE_WAR_DOG
 wolf CORPSE_WOLF
 hog CORPSE_HOG
+hell_hound CORPSE_HELL_HOUND
+hell_hog CORPSE_HELL_HOG
 
 ## Bees ('k')
 %back dc-misc/blood_green
@@ -67,8 +69,11 @@ scorpion CORPSE_SCORPION
 wolf_spider CORPSE_WOLF_SPIDER
 trapdoor_spider CORPSE_TRAPDOOR_SPIDER
 redback CORPSE_REDBACK
+%sdir dc-mon/demons
+demonic_crawler CORPSE_DEMONIC_CRAWLER
 
 ## Turtles and crocodiles ('t')
+%sdir dc-mon/animals
 %back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
 crocodile CORPSE_CROCODILE
 alligator_baby CORPSE_BABY_ALLIGATOR

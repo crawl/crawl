@@ -484,6 +484,20 @@ static std::string _stat_name(stat_type stat)
     }
 }
 
+static stat_type _random_lost_stat()
+{
+    stat_type choice = NUM_STATS;
+    int found = 0;
+    for (int i = 0; i < NUM_STATS; ++i)
+        if (you.stat_loss[i] > 0)
+        {
+            found++;
+            if (one_chance_in(found))
+                choice = static_cast<stat_type>(i);
+        }
+    return (choice);
+}
+
 // Restore the stat in which_stat by the amount in stat_gain, displaying
 // a message if suppress_msg is false, and doing so in the recovery
 // channel if recovery is true.  If stat_gain is 0, restore the stat
@@ -504,26 +518,24 @@ bool restore_stat(stat_type which_stat, unsigned char stat_gain,
     }
 
     if (which_stat == STAT_RANDOM)
-        which_stat = static_cast<stat_type>(random2(NUM_STATS));
+        which_stat = _random_lost_stat();
 
-    if (you.stat_loss[which_stat] > 0)
-    {
-        if (!suppress_msg)
-        {
-            mprf(recovery ? MSGCH_RECOVERY : MSGCH_PLAIN,
-                 "You feel your %s returning.",
-                 _stat_name(which_stat).c_str());
-        }
-
-        if (stat_gain == 0 || stat_gain > you.stat_loss[which_stat])
-            stat_gain = you.stat_loss[which_stat];
-
-        you.stat_loss[which_stat] -= stat_gain;
-        _handle_stat_change(which_stat);
-        return (true);
-    }
-    else
+    if (which_stat >= NUM_STATS || you.stat_loss[which_stat] == 0)
         return (false);
+
+    if (!suppress_msg)
+    {
+        mprf(recovery ? MSGCH_RECOVERY : MSGCH_PLAIN,
+             "You feel your %s returning.",
+             _stat_name(which_stat).c_str());
+    }
+
+    if (stat_gain == 0 || stat_gain > you.stat_loss[which_stat])
+        stat_gain = you.stat_loss[which_stat];
+
+    you.stat_loss[which_stat] -= stat_gain;
+    _handle_stat_change(which_stat);
+    return (true);
 }
 
 static void _normalize_stat(stat_type stat)

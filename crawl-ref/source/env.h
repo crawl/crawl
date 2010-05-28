@@ -70,6 +70,7 @@ struct crawl_environment
 
     coord_def sanctuary_pos;
     int sanctuary_time;
+    long forest_awoken_until;
 };
 
 extern struct crawl_environment env;

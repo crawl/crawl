@@ -42,6 +42,7 @@
 #include "travel.h"
 #include "hints.h"
 #include "viewgeom.h"
+#include "viewmap.h"
 
 #include <cctype>
 #include <cstdio>
@@ -925,7 +926,8 @@ void ShopInfo::describe_shop_item(const shop_item &si) const
     const unsigned long oldflags = si.item.flags;
 
     if (shoptype_identifies_stock(static_cast<shop_type>(this->shoptype)))
-        const_cast<shop_item&>(si).item.flags |= ISFLAG_IDENT_MASK;
+        const_cast<shop_item&>(si).item.flags |= ISFLAG_IDENT_MASK
+            | ISFLAG_NOTED_ID | ISFLAG_NOTED_GET;
 
     item_def it = static_cast<item_def>(si.item);
     describe_item( it );
@@ -1967,9 +1969,12 @@ bool StashTracker::display_search_results(
             if (dotravel && can_travel_to(res->pos.id))
             {
                 redraw_screen();
-                const travel_target lp = res->pos;
-                start_translevel_travel(lp);
-                return (false);
+                level_pos lp = res->pos;
+                if (show_map(lp, true, true, true))
+                {
+                    start_translevel_travel(lp);
+                    return (false);
+                }
             }
             continue;
         }
@@ -1981,8 +1986,11 @@ bool StashTracker::display_search_results(
     {
         const stash_search_result *res =
                 static_cast<stash_search_result *>(sel[0]->data);
-        const level_pos lp = res->pos;
-        start_translevel_travel(lp);
+        level_pos lp = res->pos;
+        if (show_map(lp, true, true, true))
+            start_translevel_travel(lp);
+        else
+            return (true);
     }
     return (false);
 }

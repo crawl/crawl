@@ -34,7 +34,7 @@ MONS:   jelly / ooze / brown ooze / giant amoeba
 MONS:   acid blob / slime creature w:5
 MONS:   azure jelly
 MARKER: + = lua:restrict_door({ \
-            door_open_prompt="This door is covered in warnings.  Open " .. \
+            door_open_prompt="This door is covered in warnings. Open " .. \
                              "it anyway?", \
             door_description_prefix="warning scrawled " \
          })
@@ -66,7 +66,7 @@ SHUFFLE: ([{
 LFLAGS:  no_tele_control
 
 {{
--- Attach function to the royal jelly itself.  This will follow it wherever
+-- Attach function to the royal jelly itself. This will follow it wherever
 -- it goes, even through polymorphs, and set dgn.persist.royal_jelly_dead
 -- when it dies through means other than being banished.
 local function monster_die(monster, killer_type, killer_index, silent, wizard)
@@ -150,7 +150,7 @@ fixup_marker:add_triggerer(DgnTriggerer:new {
     dgn.set_feature_desc_short("stone wall", "rune carved stone wall")
     dgn.set_feature_desc_long("stone wall",
 "This strangely slime-free stone wall is carved all over with countless "..
-"mystical runes.  One often repeated set of runes seems to refer to "..
+"mystical runes. One often repeated set of runes seems to refer to "..
 "'the royal jelly.'")
 }}
 MAP

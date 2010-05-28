@@ -141,7 +141,7 @@ __DEMON_TAUNT
 # End of default shouts
 ############################################
 ############################################################
-# Player ghost shouts.  Potentially different ones for each
+# Player ghost shouts. Potentially different ones for each
 # class, though currently they all just copy the default
 # player ghost.
 ############################################################

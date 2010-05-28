@@ -8,7 +8,7 @@
 #ifndef HISCORES_H
 #define HISCORES_H
 
-struct scorefile_entry;
+class scorefile_entry;
 
 void hiscores_new_entry( const scorefile_entry &se );
 
@@ -62,9 +62,9 @@ private:
     mutable xl_map fieldmap;
 };
 
-struct scorefile_entry
+class scorefile_entry
 {
-public:
+private:
     std::string raw_line;
 
     std::string version;
@@ -72,7 +72,7 @@ public:
     std::string name;
     long        uid;                // for multiuser systems
     species_type race;
-    job_type    cls;
+    int         job;                // job_type + legacy values
     std::string race_class_name;    // overrides race & cls if non-empty.
     char        lvl;                // player level.
     char        best_skill;         // best skill #
@@ -144,6 +144,11 @@ public:
     std::string death_description(death_desc_verbosity) const;
     std::string death_place(death_desc_verbosity) const;
     std::string game_time(death_desc_verbosity) const;
+
+    long   get_score() const      { return points; }
+    int    get_death_type() const { return death_type; }
+    time_t get_death_time() const { return death_time; }
+    xlog_fields get_fields() const;
 
     void set_base_xlog_fields() const;
 

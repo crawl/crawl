@@ -1215,7 +1215,7 @@ static bool _try_give_plain_armour(item_def &arm)
 void _acquirement_determine_food(int& type_wanted, int& quantity,
                                  const has_vector& already_has)
 {
-    // food is a little less predictable now -- bwr
+    // Food is a little less predictable now. - bwr
     if (you.species == SP_GHOUL)
         type_wanted = one_chance_in(10) ? FOOD_ROYAL_JELLY : FOOD_CHUNK;
     else if (you.species == SP_VAMPIRE)
@@ -3724,17 +3724,9 @@ void handle_time()
             recovery = false;
         }
 
-        if (recovery)
-        {
-            if (you.strength() < you.max_strength() && one_chance_in(100))
-                restore_stat(STAT_STR, 0, false, true);
-
-            if (you.intel() < you.max_intel() && one_chance_in(100))
-                restore_stat(STAT_INT, 0, false, true);
-
-            if (you.dex() < you.max_dex() && one_chance_in(100))
-                restore_stat(STAT_DEX, 0, false, true);
-        }
+        // Rate of recovery equals one level of MUT_DETERIORATION.
+        if (recovery && x_chance_in_y(4, 200))
+            restore_stat(STAT_RANDOM, 1, false, true);
     }
     else
     {
@@ -3965,8 +3957,7 @@ void handle_time()
             change_labyrinth();
     }
 
-    if (you.religion == GOD_JIYVA && !player_under_penance()
-        && one_chance_in(10))
+    if (you.religion == GOD_JIYVA && one_chance_in(10))
     {
         int total_jellies = 1 + random2(5);
         bool success = false;
@@ -4009,7 +4000,7 @@ void handle_time()
     }
 
     if (you.religion == GOD_JIYVA && x_chance_in_y(you.piety / 4, MAX_PIETY)
-        && !player_under_penance())
+        && !player_under_penance() && one_chance_in(4))
     {
         jiyva_stat_action();
     }

@@ -3956,6 +3956,9 @@ std::string get_skill_description(int skill, bool need_title)
             unarmed_attacks.push_back("deliver a kick");
         }
 
+        if (you.has_usable_pseudopods())
+            unarmed_attacks.push_back("slap with your pseudopods");
+
         if (!you.weapon())
             unarmed_attacks.push_back("throw a punch");
         else if (you.has_usable_offhand())

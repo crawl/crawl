@@ -422,7 +422,7 @@ This spell hurls a magical arrow coated with the most vile and noxious toxin. No
 %%%%
 Poison Weapon
 
-This spell temporarily coats any weapon or launcher with poison. It will only work on weapons without an existing enchantment, it doesn't work on blunt weapons as well.
+This spell temporarily coats any weapon or launcher with poison. It will only work on weapons without an existing enchantment; it also doesn't work on blunt weapons.
 %%%%
 Poisonous Cloud
 

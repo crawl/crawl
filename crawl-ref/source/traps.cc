@@ -835,7 +835,7 @@ void disarm_trap(const coord_def& where)
                                "Really try disarming that %s?",
                                feature_description(trap.category(),
                                                    get_trap_type(where),
-                                                   false, DESC_BASENAME,
+                                                   "", DESC_BASENAME,
                                                    false).c_str());
 
         if (!yesno(prompt.c_str(), true, 'n'))

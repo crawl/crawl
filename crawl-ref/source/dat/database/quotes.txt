@@ -4,15 +4,7 @@
 ####################################################
 Tomb
 
-"In the depths of every heart, there is a tomb and a dungeon, though
-the lights, the music, and revelry above may cause us to forget their
-existence, and the buried ones, or prisoners whom they hide. But
-sometimes, and oftenest at midnight, those dark receptacles are flung
-wide open. In an hour like this, when the mind has a passive
-sensibility, but no active strength; when the imagination is a mirror,
-imparting vividness to all ideas, without the power of selecting or
-controlling them; then pray that your grieves may slumber, and the
-brotherhood of remorse not break their chain."
+"In the depths of every heart, there is a tomb and a dungeon, though the lights, the music, and revelry above may cause us to forget their existence, and the buried ones, or prisoners whom they hide. But sometimes, and oftenest at midnight, those dark receptacles are flung wide open. In an hour like this, when the mind has a passive sensibility, but no active strength; when the imagination is a mirror, imparting vividness to all ideas, without the power of selecting or controlling them; then pray that your grieves may slumber, and the brotherhood of remorse not break their chain."
     -Nathaniel Hawthorne
 %%%%
 ####################################################
@@ -21,7 +13,7 @@ brotherhood of remorse not break their chain."
 A gateway to Hell
 
 "Lasciate ogne speranza, voi ch'intrate."
-   -Dante Alighieri, _Divina Commedia_, "L'Inferno", Canto III.  Circa 1315.
+   -Dante Alighieri, _Divina Commedia_, "L'Inferno", Canto III. Circa 1315.
 %%%%
 A granite statue
 
@@ -39,29 +31,21 @@ A granite statue
  Nothing beside remains: round the decay
  Of that colossal wreck, boundless and bare,
  The lone and level sands stretch far away."
-    -Percy Bysshe Shelley, "Ozymandias".  1818.
+    -Percy Bysshe Shelley, "Ozymandias". 1818.
 %%%%
 A labyrinth entrance
 
 "Maze-treaders, whose vision ahead and behind is severely constricted and fragmented, suffer confusion, whereas maze-viewers who see the pattern whole, from above or in a diagram, are dazzled by its complex artistry. What you see depends on where you stand, and thus, at one and the same time, labyrinths are single (there is one physical structure) and double: they simultaneously incorporate order and disorder, clarity and confusion, unity and multiplicity, artistry and chaos."
-        -Mark Z. Danielewski, "House of Leaves".  2000.
+        -Mark Z. Danielewski, "House of Leaves". 2000.
 %%%%
 A one-way gate to the infinite horrors of the Abyss
 
-"And if you gaze for long into an abyss,
- the abyss gazes also into you."
+"And if you gaze for long into an abyss, the abyss gazes also into you."
     -Friedrich Nietzsche, "Beyond Good and Evil"
 %%%%
 A portal to a secret trove of treasure
 
-"'Stop thief! Stop thief!' There is a magic in the sound. The tradesman
- leaves his counter, and the car-man his waggon; the butcher throws down
- his tray; the baker his basket; the milkman his pail; the errand-boy
- his parcels; the school-boy his marbles; the paviour his pickaxe; the
- child his battledore. Away they run, pell-mell, helter-skelter, slap-dash:
- tearing, yelling, screaming, knocking down the passengers as they turn
- the corners, rousing up the dogs, and astonishing the fowls: and streets,
- squares, and courts, re-echo with the sound."
+"'Stop thief! Stop thief!' There is a magic in the sound. The tradesman leaves his counter, and the car-man his waggon; the butcher throws down his tray; the baker his basket; the milkman his pail; the errand-boy his parcels; the school-boy his marbles; the paviour his pickaxe; the child his battledore. Away they run, pell-mell, helter-skelter, slap-dash: tearing, yelling, screaming, knocking down the passengers as they turn the corners, rousing up the dogs, and astonishing the fowls: and streets, squares, and courts, re-echo with the sound."
     -Charles Dickens, "Oliver Twist"
 %%%%
 A rock wall
@@ -76,15 +60,7 @@ A rock wall
 %%%%
 A staircase to the Tomb
 
-"In the depths of every heart, there is a tomb and a dungeon, though
-the lights, the music, and revelry above may cause us to forget their
-existence, and the buried ones, or prisoners whom they hide. But
-sometimes, and oftenest at midnight, those dark receptacles are flung
-wide open. In an hour like this, when the mind has a passive
-sensibility, but no active strength; when the imagination is a mirror,
-imparting vividness to all ideas, without the power of selecting or
-controlling them; then pray that your grieves may slumber, and the
-brotherhood of remorse not break their chain."
+"In the depths of every heart, there is a tomb and a dungeon, though the lights, the music, and revelry above may cause us to forget their existence, and the buried ones, or prisoners whom they hide. But sometimes, and oftenest at midnight, those dark receptacles are flung wide open. In an hour like this, when the mind has a passive sensibility, but no active strength; when the imagination is a mirror, imparting vividness to all ideas, without the power of selecting or controlling them; then pray that your grieves may slumber, and the brotherhood of remorse not break their chain."
     -Nathaniel Hawthorne
 %%%%
 A tree
@@ -97,52 +73,25 @@ A tree
 ####################################################
 apple
 
-"MINERVA was the goddess of wisdom, but on one occasion she
-did a very foolish thing; she entered into competition with
-Juno and Venus for the prize of beauty. It happened thus:
-At the nuptials of Peleus and Thetis all the gods were
-invited with the exception of Eris, or Discord. Enraged
-at her exclusion, the goddess threw a golden apple among
-the guests, with the inscription, 'For the fairest.'"
+"MINERVA was the goddess of wisdom, but on one occasion she did a very foolish thing; she entered into competition with Juno and Venus for the prize of beauty. It happened thus: At the nuptials of Peleus and Thetis all the gods were invited with the exception of Eris, or Discord. Enraged at her exclusion, the goddess threw a golden apple among the guests, with the inscription, 'For the fairest.'"
     -Bullfinch's Mythology, Chap. XXVII. a.
 %%%%
 apricot
 
 "Apricot Ratafia
 
-This is made two Ways, viz. either by infusing the Apricots cut in
-Pieces in Brandy for a Day or two, and then passing it thro' the draining
-Bag, and putting in the usual Ingredients; or else the Apricots may be
-boil'd in White wine, and by that Means more easily clarify'd adding an
-equal Quantity of Brandy, and a quarter of a pound of Sugar to every quart,
-with Cinnamon, Cloves, Mace, and Kernels of the Apricots. After all
-the Ingredients have infused eight or ten Days the Liquor is to be strain'd
-again and put into Bottles and so kept."
-    -Charles Carter, _The Compleat City and Country Cook:
-        Or, Accomplish'd House-wife_.  1732.
+This is made two Ways, viz. either by infusing the Apricots cut in Pieces in Brandy for a Day or two, and then passing it thro' the draining Bag, and putting in the usual Ingredients; or else the Apricots may be boil'd in White wine, and by that Means more easily clarify'd adding an equal Quantity of Brandy, and a quarter of a pound of Sugar to every quart, with Cinnamon, Cloves, Mace, and Kernels of the Apricots. After all the Ingredients have infused eight or ten Days the Liquor is to be strain'd again and put into Bottles and so kept."
+    -Charles Carter, _The Compleat City and Country Cook: Or, Accomplish'd House-wife_. 1732.
 %%%%
 bread ration
 
-"It is further reported that in the provinces [Caesar] gave banquets
-constantly in two dining halls, in one of which his officers or Greek
-companions, in the other Roman civilians and the more distinguished of
-the provincials reclined at table. He was so punctilious and strict in
-the management of his household, in small matters as well as in those
-of greater importance, that he put his baker in irons for serving him
-with one kind of bread and his guests with another..."
+"It is further reported that in the provinces [Caesar] gave banquets constantly in two dining halls, in one of which his officers or Greek companions, in the other Roman civilians and the more distinguished of the provincials reclined at table. He was so punctilious and strict in the management of his household, in small matters as well as in those of greater importance, that he put his baker in irons for serving him with one kind of bread and his guests with another..."
     -Suetonius, _De Vita Caesarum, Divus Iulius_. 110 CE.
 %%%%
 choko
 
-"I ought not to omit naming a vegetable which Mr Yates placed on
-our table, and to which he directed our attention. It was the
-Tchu-tchu (Sechium edule) called also by the people _pepinella_.
-It is a small gourd, very much like vegetable marrow; one seed
-covers a wall with its ramifications."
-    -John Overton Choules, _The Cruise of the Steam Yacht
-    North Star: A Narrative of the Excursion of Mr. Vanderbilt's
-    Party to England, Russia, Denmark, France, Spain, Malta, Turkey,
-    Madeira, Etc_.  1854.
+"I ought not to omit naming a vegetable which Mr Yates placed on our table, and to which he directed our attention. It was the Tchu-tchu (Sechium edule) called also by the people _pepinella_. It is a small gourd, very much like vegetable marrow; one seed covers a wall with its ramifications."
+    -John Overton Choules, _The Cruise of the Steam Yacht North Star: A Narrative of the Excursion of Mr. Vanderbilt's Party to England, Russia, Denmark, France, Spain, Malta, Turkey, Madeira, Etc_. 1854.
 %%%%
 cloak
 
@@ -154,7 +103,7 @@ cloak
    So far above their own degree.
  Once in my life I'll take a view;
    For I'll have a new cloak about me."
-    -Anonymous, "The Old Cloak".  16th Century.
+    -Anonymous, "The Old Cloak". 16th Century.
 %%%%
 club
 
@@ -177,12 +126,7 @@ dagger
 %%%%
 gold piece
 
-"Here it was that the ambassadors of the Samnites, finding him
-boiling turnips in the chimney corner, offered him a present of
-gold; but he sent them away with this saying; that he, who was
-content with such a supper, had no need of gold; and that he
-thought it more honourable to conquer those who possessed the
-gold, than to possess the gold itself."
+"Here it was that the ambassadors of the Samnites, finding him boiling turnips in the chimney corner, offered him a present of gold; but he sent them away with this saying; that he, who was content with such a supper, had no need of gold; and that he thought it more honourable to conquer those who possessed the gold, than to possess the gold itself."
     -Plutarch, "Marcus Cato"
 %%%%
 long sword
@@ -196,35 +140,19 @@ long sword
    They cost me deep in the purse
  But you will have the better of them
    And I will have the worst."
-    -English traditional ballad, "Mattie Groves".  Circa 1600.
+    -English traditional ballad, "Mattie Groves". Circa 1600.
 %%%%
 lychee
 
-"The Litchi is the most celebrated native fruit of China.  It is
-nearly round, about an inch and a half in diameter, the shell is
-tough, becoming brittle, of a chocolate brown colour covered all
-over with wart-like protuberances. When fresh it is filled with a
-white almost transparent, sweet, jelly-like pulp in which lies a
-rather large, shining, brown seed; the pulp is of a delicious sub-acid
-flavour when fresh.  The Chinese dry it when it becomes black like
-a prune and thus preserve it for use throughout the year; in this state
-it is frequently to be seen in the London fruit shops."
-    -John Smith, _A Dictionary of Popular Names of the Plants
-    which Furnish the Natural and Acquired Wants of Man, in
-    All Matters of Domestic and General Economy: Their History,
-    Products, & Uses_. 1882.
+"The Litchi is the most celebrated native fruit of China. It is nearly round, about an inch and a half in diameter, the shell is tough, becoming brittle, of a chocolate brown colour covered all over with wart-like protuberances. When fresh it is filled with a white almost transparent, sweet, jelly-like pulp in which lies a rather large, shining, brown seed; the pulp is of a delicious sub-acid flavour when fresh. The Chinese dry it when it becomes black like a prune and thus preserve it for use throughout the year; in this state it is frequently to be seen in the London fruit shops."
+    -John Smith, _A Dictionary of Popular Names of the Plants which Furnish the Natural and Acquired Wants of Man, in All Matters of Domestic and General Economy: Their History, Products, & Uses_. 1882.
 %%%%
 orange
 
 "Conserve of Orange Peel
 
-HAVING grated the rinds of some Seville oranges as thin as you can,
-weigh them, and to every pound of orange rind add three pounds of loaf sugar.
-Pound the orange rind well in a marble mortar, mix the sugar by degrees
-with them and beat all well together.  Put it into gallipots and tie
-it down so as properly to prevent the air getting to it."
-    -Francis Collingwood, John Woollams, _The Universal
-    Cook: And City and Country Housekeeper._ 1792.
+HAVING grated the rinds of some Seville oranges as thin as you can, weigh them, and to every pound of orange rind add three pounds of loaf sugar. Pound the orange rind well in a marble mortar, mix the sugar by degrees with them and beat all well together. Put it into gallipots and tie it down so as properly to prevent the air getting to it."
+    -Francis Collingwood, John Woollams, _The Universal Cook: And City and Country Housekeeper._ 1792.
 %%%%
 potion
 
@@ -239,19 +167,8 @@ potion
 %%%%
 rambutan
 
-"The rambutan (_nephelium lappaceum_) is a beautiful fruit to which
-I have already alluded, as resembling the mammoth arbutus; and you suppose
-them at first, when at a little distance from you, a delicious dish of
-some tropical strawberry. But you find on inquiring into the 'particulars
-within' the outer coat, that there is concealed beneath the red and hairy
-covering a semi-transparent pulp of a pleasant acid taste, enveloping a
-single oval and oblong seed. I know not but I am peculiar in my memory
-of the beautiful fruits of the straits, but none lingers in my recollection
-so sweetly in its clustered beauties of the fruit-dish as the bearded
-and rosy rambutan."
-    -Fitch Waterman Taylor, _A Voyage Round the World And Visits
-    to Various Foreign Countries, in the United States Frigate
-    Columbia_.  1847.
+"The rambutan (_nephelium lappaceum_) is a beautiful fruit to which I have already alluded, as resembling the mammoth arbutus; and you suppose them at first, when at a little distance from you, a delicious dish of some tropical strawberry. But you find on inquiring into the 'particulars within' the outer coat, that there is concealed beneath the red and hairy covering a semi-transparent pulp of a pleasant acid taste, enveloping a single oval and oblong seed. I know not but I am peculiar in my memory of the beautiful fruits of the straits, but none lingers in my recollection so sweetly in its clustered beauties of the fruit-dish as the bearded and rosy rambutan."
+    -Fitch Waterman Taylor, _A Voyage Round the World And Visits to Various Foreign Countries, in the United States Frigate Columbia_. 1847.
 %%%%
 slice of pizza
 
@@ -260,40 +177,20 @@ slice of pizza
 %%%%
 strawberry
 
-"A Samurai was out walking when a large tiger began to chase him. The
-samurai ran for his life, never seeing the cliff under his feet. As
-he fell, he reached out and caught a vine that hung down. He looked
-down and saw another tiger circling below; the first tiger waited
-above. The vine began to give away. The samurai then saw a single
-strawberry growing on the vine. He reached out and ate the strawberry.
-How sweet it tasted!"
+"A Samurai was out walking when a large tiger began to chase him. The samurai ran for his life, never seeing the cliff under his feet. As he fell, he reached out and caught a vine that hung down. He looked down and saw another tiger circling below; the first tiger waited above. The vine began to give away. The samurai then saw a single strawberry growing on the vine. He reached out and ate the strawberry. How sweet it tasted!"
     -Attributed to various Japanese buddhist monks.
 %%%%
 sultana
 
-"A Turkish garden was among the curiosities to which the Jew found access
-for Bentham. It was a sort of orchard of vines and other trees, without
-order or apparent arrangement. From that garden Bentham sent specimens
-of the Sultana raisin to England which he believed to have been the first
-of that species which had ever reached his country."
-    -John Bowring, _The Works of Jeremy Bentham_.  1839.
+"A Turkish garden was among the curiosities to which the Jew found access for Bentham. It was a sort of orchard of vines and other trees, without order or apparent arrangement. From that garden Bentham sent specimens of the Sultana raisin to England which he believed to have been the first of that species which had ever reached his country."
+    -John Bowring, _The Works of Jeremy Bentham_. 1839.
 %%%%
 ####################################################
 # Monsters
 ####################################################
 __c_suffix
 
-"When Peleus, some distance away, saw him torn apart by the frightful
-wound he shouted: 'Accept this tribute to the dead, at least, Crantor,
-dearest of youths, ' and with his powerful arm, he hurled his ash spear,
-at full strength, at Demoleon.  It ruptured the ribcage, and stuck
-quivering in the bone. The centaur pulled out the shaft minus its head
-(he tried with difficulty to reach that also) but the head was caught
-in his lung. The pain itself strengthened his will: wounded, he reared
-up at his enemy and beat the hero down with his hooves. Peleus received
-the resounding blows on helmet and shield, and defending his upper arms,
-and controlling the weapon he held out, with one blow through the arm
-he pierced the bi-formed breast.'"
+"When Peleus, some distance away, saw him torn apart by the frightful wound he shouted: 'Accept this tribute to the dead, at least, Crantor, dearest of youths, ' and with his powerful arm, he hurled his ash spear, at full strength, at Demoleon. It ruptured the ribcage, and stuck quivering in the bone. The centaur pulled out the shaft minus its head (he tried with difficulty to reach that also) but the head was caught in his lung. The pain itself strengthened his will: wounded, he reared up at his enemy and beat the hero down with his hooves. Peleus received the resounding blows on helmet and shield, and defending his upper arms, and controlling the weapon he held out, with one blow through the arm he pierced the bi-formed breast.'"
     -Ovid, _Metamorphoses_, XII 330
 %%%%
 __r_suffix
@@ -303,7 +200,7 @@ __r_suffix
 %%%%
 __cap-D_suffix
 
-"On the other hand, Confucius is made to say to his disciples, 'I know how birds can fly, how fishes can swim, and how animals can run.  But the runner may be snared, the swimmer may be hooked, and the flyer may be shot by the arrow.  But there is the dragon.  I cannot tell how he mounts on the wind through the clouds, and rises to heaven.  Today I have seen Lao-tsze, and can only compare him to the dragon.'"
+"On the other hand, Confucius is made to say to his disciples, 'I know how birds can fly, how fishes can swim, and how animals can run. But the runner may be snared, the swimmer may be hooked, and the flyer may be shot by the arrow. But there is the dragon. I cannot tell how he mounts on the wind through the clouds, and rises to heaven. Today I have seen Lao-tsze, and can only compare him to the dragon.'"
      -Life of Confucius
 
 "This Dragon had Two furious Wings
@@ -315,51 +212,30 @@ __cap-D_suffix
  With a Hide as tough, as any Buff,
    Which did him round environ."
 
-    -"An Excellent Ballad of a most dreadful Combat, fought between
-    Moore of Moore-Hall, and the Dragon of Wantley", retold by
-    Ambrose Philips, _A Collection of Old Ballads. Corrected from the
-    Best and Most Ancient Copies Extant. With Introductions Historical,
-    Critical, Or Humorous_.  1723.
+    -"An Excellent Ballad of a most dreadful Combat, fought between Moore of Moore-Hall, and the Dragon of Wantley", retold by Ambrose Philips, _A Collection of Old Ballads. Corrected from the Best and Most Ancient Copies Extant. With Introductions Historical, Critical, Or Humorous_. 1723.
 %%%%
 __cap-K_suffix
 
-"The Parts Septentrionall are with these Sp'ryts Much haunted..
-About the places where they dig for Oare. The Greekes and Germans
-call them Cobali."
+"The Parts Septentrionall are with these Sp'ryts Much haunted.. About the places where they dig for Oare. The Greekes and Germans call them Cobali."
     -Heywood, Hierarch. ix. 568, circa 1635
 %%%%
 __cap-O_suffix
 
-"The little princess, asleep in her cradle, floated on the water, and at
-last she was cast up on the shore of a beautiful country, where, however,
-very few people dwelt since the ogre Ravagio and his wife Tourmentine had
-gone to live there-for they ate up everybody. Ogres are terrible people.
-When once they have tasted raw human flesh they will hardly eat anything
-else, and Tourmentine always knew how to make some body come their way,
-for she was half a fairy."
-    -Marie-Catherine Le Jumel de Barneville, Baronne d'Aulnoy,
-    "'Orangier et l'Abeille".  1697
+"The little princess, asleep in her cradle, floated on the water, and at last she was cast up on the shore of a beautiful country, where, however, very few people dwelt since the ogre Ravagio and his wife Tourmentine had gone to live there-for they ate up everybody. Ogres are terrible people. When once they have tasted raw human flesh they will hardly eat anything else, and Tourmentine always knew how to make some body come their way, for she was half a fairy."
+    -Marie-Catherine Le Jumel de Barneville, Baronne d'Aulnoy, "'Orangier et l'Abeille". 1697.
 
 "NO. Layers. Onions have layers. Ogres have layers. Onions have layers. You get it? We both have layers."
-    -Shrek.  2001.
+    -Shrek. 2001.
 %%%%
 __cap-S_suffix
 
-"The latter lived in the country, and before his house there was an oak,
-in which there was a lair of snakes. His servants killed the snakes, but
-Melampus gathered wood and burnt the reptiles, and reared the young ones.
-And when the young were full grown, they stood beside him at each of his
-shoulders as he slept, and they purged his ears with their tongues. He
-started up in a great fright, but understood the voices of the birds flying
-overhead, and from what he learned from them he foretold to men what should
-come to pass."
-    -Apollodorus (apocryphal), Library and Epitome, 1.9.11. circa 150 BC.
-    Sir James George Frazer, translator
+"The latter lived in the country, and before his house there was an oak, in which there was a lair of snakes. His servants killed the snakes, but Melampus gathered wood and burnt the reptiles, and reared the young ones. And when the young were full grown, they stood beside him at each of his shoulders as he slept, and they purged his ears with their tongues. He started up in a great fright, but understood the voices of the birds flying overhead, and from what he learned from them he foretold to men what should come to pass."
+    -Apollodorus (apocryphal), Library and Epitome, 1.9.11. circa 150 BC. Sir James George Frazer, translator.
 
 "A snake, with mottles rare,
-Surveyed my chamber floor,
-In feature as the worm before,
-But ringed with power."
+ Surveyed my chamber floor,
+ In feature as the worm before,
+ But ringed with power."
     -Emily Dickinson, "In Winter In My Room"
 %%%%
 __cap-T_suffix
@@ -378,32 +254,25 @@ __cap-T_suffix
 Aizul
 
 "I went to Heaven --
-  'Twas a small Town --
+ 'Twas a small Town --
  Lit -- with a Ruby --
-  Lathed -- with Down --"
+ Lathed -- with Down --"
     -Emily Dickinson, _I went to Heaven_
 %%%%
 Antaeus
 
-"That country was then ruled by Antaeus, son of Poseidon, who used to
-kill strangers by forcing them to wrestle. Being forced to wrestle with
-him, Hercules hugged him, lifted him aloft, broke and killed him; for
-when he touched earth so it was that he waxed stronger, wherefore some
-said that he was a son of Earth."
-    -Apollodorus (apocryphal), _Library and Epitome_, 2.5.11, circa 150 BC.
-    Sir James George Frazer, translator.
+"That country was then ruled by Antaeus, son of Poseidon, who used to kill strangers by forcing them to wrestle. Being forced to wrestle with him, Hercules hugged him, lifted him aloft, broke and killed him; for when he touched earth so it was that he waxed stronger, wherefore some said that he was a son of Earth."
+    -Apollodorus (apocryphal), _Library and Epitome_, 2.5.11, circa 150 BC. Sir James George Frazer, translator.
 %%%%
 Asmodeus
 
-"For myself, I have other occupations:  I make absurd matches; I marry greybeards with minors, masters with servants, girls with small fortunes with tender lovers who have none.  It is I who introduced into this world luxury, debauchery, games of chance, and chemistry.  I am the author of the first cookery book, the inventor of festivals, of dancing, music, plays, and of the newest fashions; in a word, I am ASMODEUS, surnamed The Devil on Two Sticks."
-    -Alain René Le Sage, _Asmodeus: Or,The Devil on Two Sticks.  1707.
+"For myself, I have other occupations:  I make absurd matches; I marry greybeards with minors, masters with servants, girls with small fortunes with tender lovers who have none. It is I who introduced into this world luxury, debauchery, games of chance, and chemistry. I am the author of the first cookery book, the inventor of festivals, of dancing, music, plays, and of the newest fashions; in a word, I am ASMODEUS, surnamed The Devil on Two Sticks."
+    -Alain René Le Sage, _Asmodeus: Or,The Devil on Two Sticks. 1707.
 %%%%
 Cacodemon
 
-"We'll call him Cacodemon, with his black Gib there, his Succuba, his
-Devil's Seed, his Spawn of Phlegethon, that o' my Consience was bred
-o' the Spume of Cocytus."
-    -John Fletcher, _The Knight of Malta_.  1647.
+"We'll call him Cacodemon, with his black Gib there, his Succuba, his Devil's Seed, his Spawn of Phlegethon, that o' my Consience was bred o' the Spume of Cocytus."
+    -John Fletcher, _The Knight of Malta_. 1647.
 %%%%
 Dispater
 
@@ -412,8 +281,7 @@ Dispater
 %%%%
 Dowan
 
-"Skill and grace, the twin brother and sister,
- are dancing playfully on your finger tips."
+"Skill and grace, the twin brother and sister, are dancing playfully on your finger tips."
     -Rabindranath Tagore, _Chitra, Act I, Scene IV_
 %%%%
 Duvessa
@@ -432,26 +300,18 @@ Edmund
  Now, gods, stand up for bastards!"
     -Shakespeare, King Lear.
 
-"When the forces stood in array Edmund proposed to decide their claims
-by single combat; but Canute saying that he, a man of small stature,
-would have little chance against the tall athletic Edmund, proposed, on
-the contrary, for them to divide the realm as their fathers had done."
+"When the forces stood in array Edmund proposed to decide their claims by single combat; but Canute saying that he, a man of small stature, would have little chance against the tall athletic Edmund, proposed, on the contrary, for them to divide the realm as their fathers had done."
     -Thomas Keightley, _The History of England_. 1839.
 %%%%
 Geryon
 
-"Khrysaor, married to Kallirhoe, daughter of glorious Okeanos, was father to
-the triple-headed Geryon, but Geryon was killed by the great strength of
-Herakles at sea-circled Erytheis beside his own shambling cattle on that day
-when Herakles drove those broad-faced cattle toward holy Tiryns, when he
-crossed the stream of Okeanos and had killed Orthos and the oxherd Eurytion
-out in the gloomy meadow beyond fabulous Okeanos."
+"Khrysaor, married to Kallirhoe, daughter of glorious Okeanos, was father to the triple-headed Geryon, but Geryon was killed by the great strength of Herakles at sea-circled Erytheis beside his own shambling cattle on that day when Herakles drove those broad-faced cattle toward holy Tiryns, when he crossed the stream of Okeanos and had killed Orthos and the oxherd Eurytion out in the gloomy meadow beyond fabulous Okeanos."
     -Hesiod, _Theogony_, circa 700 BCE.
 %%%%
 Killer Klown
 
 "All the world loves a clown."
-    -Cole Porter, "Be a Clown".  1948.
+    -Cole Porter, "Be a Clown". 1948.
 %%%%
 Murray
 
@@ -476,7 +336,7 @@ Psyche
  The rivers black and deadly floods of pain
  And darkness eke as thrall to him remain."
     -Apuleius, _Asinus aureus_, "Cupid and Psyche"
-    circa 160 AD.  William Adlington, Translator, 1566.
+    circa 160 AD. William Adlington, Translator, 1566.
 %%%%
 Sigmund
 
@@ -521,17 +381,9 @@ big fish
 boggart
 
 "He thinks every bush a boggart."
-    -John Ray, _A Compleat Collection of English Proverbs_.  1768.
+    -John Ray, _A Compleat Collection of English Proverbs_. 1768.
 
-"A BOGGART intruded himself, upon what pretext or by what authority is
-unknown, into the house of a quiet, inoffensive, and laborious farmer; and,
-when once it had taken possession it disputed the right of domicile with the
-legal mortal tenant, in a very unneighbourly and arbitrary manner. In
-particular, it seemed to have a great aversion to children. As there is no
-point on which a parent feels more acutely than that of the maltreatment of
-his offspring, the feelings of the father and more particularly of his good
-dame, were daily, ay, and nightly, harrowed up by the malice of this
-malignant and invisible boggart."
+"A BOGGART intruded himself, upon what pretext or by what authority is unknown, into the house of a quiet, inoffensive, and laborious farmer; and, when once it had taken possession it disputed the right of domicile with the legal mortal tenant, in a very unneighbourly and arbitrary manner. In particular, it seemed to have a great aversion to children. As there is no point on which a parent feels more acutely than that of the maltreatment of his offspring, the feelings of the father and more particularly of his good dame, were daily, ay, and nightly, harrowed up by the malice of this malignant and invisible boggart."
     -C.J.T., _Folk-lore and Legends: English_  1890.
 %%%%
 bumblebee
@@ -540,64 +392,40 @@ bumblebee
      Improve each shining Hour,
  And gather Honey all the day
      From every opening Flower!"
-    -Isaac Watts.  1715.
+    -Isaac Watts. 1715.
 %%%%
 bush
 
-"And the angel of the LORD appeared unto him in a flame of fire out of the
- midst of a bush: and he looked, and, behold, the bush burned with fire, and
- the bush was not consumed."
+"And the angel of the LORD appeared unto him in a flame of fire out of the midst of a bush: and he looked, and, behold, the bush burned with fire, and the bush was not consumed."
     -KJV Bible, Ex3:2.
 %%%%
 butterfly
 
-"Happiness is a butterfly, which when pursued, is always just beyond your
-grasp, but which, if you will sit down quietly, may alight upon you."
+"Happiness is a butterfly, which when pursued, is always just beyond your grasp, but which, if you will sit down quietly, may alight upon you."
     -Nathaniel Hawthorne
 %%%%
 clay golem
 
-"Once upon a time a great Cabbalist lived in Prague called the Rabbi Löw.
-He made a human figure of clay, and left a small aperture in the lesser
-brain in which he laid a parchment with the unutterable name of God
-written on it. The clod immediately arose and was a man; he performed
-all the duties of a servant for his creator, he fetched water, and hewed
-wood.  All through the Jews quarter he was known as the Golem of the great
-Rabbi Löw. Every Friday evening the Rabbi took the parchment out of his
-head, and he was clay until Sunday morning. Once the Rabbi forgot this
-duty, all were in the Synagogue, the Sabbath hymn was begun, when all the
-women and children in the assembly started and screamed out, 'the Golem!
-the Golem is destroying everything!' The Rabbi ordered the precentor to
-pause at the end of the prayer: it was yet possible to save all, but later
-nought would avail, the whole world would be destroyed.  He hastened home,
-and saw the Golem already seizing the joists of his house to tear down the
-building: he sprang forward, took the parchment out, and dead clay again
-lay at his feet."
+"Once upon a time a great Cabbalist lived in Prague called the Rabbi Löw. He made a human figure of clay, and left a small aperture in the lesser brain in which he laid a parchment with the unutterable name of God written on it. The clod immediately arose and was a man; he performed all the duties of a servant for his creator, he fetched water, and hewed wood. All through the Jews quarter he was known as the Golem of the great Rabbi Löw. Every Friday evening the Rabbi took the parchment out of his head, and he was clay until Sunday morning. Once the Rabbi forgot this duty, all were in the Synagogue, the Sabbath hymn was begun, when all the women and children in the assembly started and screamed out, 'the Golem! the Golem is destroying everything!' The Rabbi ordered the precentor to pause at the end of the prayer: it was yet possible to save all, but later nought would avail, the whole world would be destroyed. He hastened home, and saw the Golem already seizing the joists of his house to tear down the building: he sprang forward, took the parchment out, and dead clay again lay at his feet."
     -Berthold Auerbach, _Spinoza_. 1882.
 %%%%
 efreet
 
-"When the hoopoe returned to Solomon (he told him the news), and he responded (to Sheba's people): "Are you giving me money? What GOD has given me is far better than what He has given you. You are the ones to rejoice in such gifts."
-(To the hoopoe, he said,) "Go back to them (and let them know that) we will come to them with forces they cannot imagine. We will evict them, humiliated and debased."
-He said, "O you elders, which of you can bring me her mansion, before they arrive here as submitters?"
-One afrit from the jinns said, "I can bring it to you before you stand up. I am powerful enough to do this."
+"When the hoopoe returned to Solomon (he told him the news), and he responded (to Sheba's people): "Are you giving me money? What GOD has given me is far better than what He has given you. You are the ones to rejoice in such gifts." (To the hoopoe, he said,) "Go back to them (and let them know that) we will come to them with forces they cannot imagine. We will evict them, humiliated and debased." He said, "O you elders, which of you can bring me her mansion, before they arrive here as submitters?" One afrit from the jinns said, "I can bring it to you before you stand up. I am powerful enough to do this."
     -The Quran, Sura 27 Al-Naml
 %%%%
 ettin
 
 "But he had not been long in his hiding-hole, before the awful Ettin came in; and no sooner was he in, than he was heard crying:
 'Snouk but and snouk ben,
-I find the smell of an earthly man,
-Be he living, or be he dead,
-His heart this night shall kitchen my bread.'"
+ I find the smell of an earthly man,
+ Be he living, or be he dead,
+ His heart this night shall kitchen my bread.'"
     -Joseph Jacobs, _The Red Ettin_
 %%%%
 flying skull
 
-"Alas, poor Yorick! I knew him, Horatio, a fellow of infinite
-jest, of most excellent fancy. He hath bore me on his back a
-thousand times, and now how abhorr'd in my imagination it is!
-My gorge rises at it."
+"Alas, poor Yorick! I knew him, Horatio, a fellow of infinite jest, of most excellent fancy. He hath bore me on his back a thousand times, and now how abhorr'd in my imagination it is! My gorge rises at it."
     -William Shakespeare, _Hamlet_, V, 1. 1600.
 %%%%
 ghoul
@@ -612,7 +440,7 @@ ghoul
  'But I like it
  Because it is bitter,
  And because it is my heart.'"
-    -Stephen Crane, _The Black Riders and Other Lines_.  1895.
+    -Stephen Crane, _The Black Riders and Other Lines_. 1895.
 %%%%
 giant frog
 
@@ -643,14 +471,8 @@ giant snail
 %%%%
 gnoll
 
-"Then he descended softly and beckoned to Nuth.  But the gnoles had
-watched him through knavish holes that they bore in trunks of the
-trees, and the unearthly silence gave way, as it were with a grace,
-to the rapid screams of Tonker as they picked him up from behind -- screams
-that came faster and faster until they were incoherent.  And where they took
-him it is not good to ask, and what they did with him I shall not say."
-    -Lord Dunsanay, "How Nuth Would Have Practiced His Art Upon the Gnoles".
-    1912.
+"Then he descended softly and beckoned to Nuth. But the gnoles had watched him through knavish holes that they bore in trunks of the trees, and the unearthly silence gave way, as it were with a grace, to the rapid screams of Tonker as they picked him up from behind -- screams that came faster and faster until they were incoherent. And where they took him it is not good to ask, and what they did with him I shall not say."
+    -Lord Dunsanay, "How Nuth Would Have Practiced His Art Upon the Gnoles". 1912.
 %%%%
 goblin
 
@@ -694,8 +516,7 @@ hobgoblin
 %%%%
 hog
 
-"Fern came slowly down the stairs. Her eyes were red from crying. As she approached her chair, the carton wobbled, and there was a scratching noise. Fern looked at her father. Then she lifted the lid of the carton. There, inside, looking up at her, was the newborn pig. It was a white one. The morning light shone through its ears, turning them pink.
-"He's yours," said Mr. Arable. "Saved from an untimely death. And may the good Lord forgive me for this foolishness."
+"Fern came slowly down the stairs. Her eyes were red from crying. As she approached her chair, the carton wobbled, and there was a scratching noise. Fern looked at her father. Then she lifted the lid of the carton. There, inside, looking up at her, was the newborn pig. It was a white one. The morning light shone through its ears, turning them pink. "He's yours," said Mr. Arable. "Saved from an untimely death. And may the good Lord forgive me for this foolishness."
     -E.B. White, _Charlotte's Web_
 %%%%
 hound
@@ -718,9 +539,7 @@ human
 %%%%
 imp
 
-"The Devil, too, sometimes steals human children; it is not infrequent
-for him to carry away infants within the first six weeks after birth,
-and to substitute in their place imps."
+"The Devil, too, sometimes steals human children; it is not infrequent for him to carry away infants within the first six weeks after birth, and to substitute in their place imps."
     -Martin Luther
 %%%%
 jelly
@@ -737,38 +556,17 @@ jelly
 %%%%
 Khufu
 
-"And then I looked farther, beyond the pallid line of the sands,
- and I saw a Pyramid of gold, the wonder Khufu had built.  As a
- golden wonder it saluted me, as a golden thing it greeted me,
- as a golden miracle I shall remember it."
-
+"And then I looked farther, beyond the pallid line of the sands, and I saw a Pyramid of gold, the wonder Khufu had built. As a golden wonder it saluted me, as a golden thing it greeted me, as a golden miracle I shall remember it."
   -Robert Hichens, _The Spell of Egypt_
 %%%%
 kraken
 
-"... Kraken, also called the Crab-fish, which [according to the pilots of
-Norway] is not that huge, for heads and tails counted, he is no larger than
-our Öland is wide [i.e. less than 16 km] ... He stays at the sea floor,
-constantly surrounded by innumerable small fishes, who serve as his food and
-are fed by him in return: for his meal, if I remember correctly what E.
-Pontoppidan writes, lasts no longer than three months, and another three are
-then needed to digest it. His excrements nurture in the following an army of
-lesser fish, and for this reason, fishermen plumb after his resting place
-... Gradually, Kraken ascends to the surface, and when he is at ten to
-twelve fathoms, the boats had better move out of his vicinity, as he will
-shortly thereafter burst up, like a floating island, spurting water from his
-dreadful nostrils and making ring waves around him, which can reach many
-miles. Could one doubt that this is the Leviathan of Job?"
+"... Kraken, also called the Crab-fish, which [according to the pilots of Norway] is not that huge, for heads and tails counted, he is no larger than our Öland is wide [i.e. less than 16 km] ... He stays at the sea floor, constantly surrounded by innumerable small fishes, who serve as his food and are fed by him in return: for his meal, if I remember correctly what E. Pontoppidan writes, lasts no longer than three months, and another three are then needed to digest it. His excrements nurture in the following an army of lesser fish, and for this reason, fishermen plumb after his resting place ... Gradually, Kraken ascends to the surface, and when he is at ten to twelve fathoms, the boats had better move out of his vicinity, as he will shortly thereafter burst up, like a floating island, spurting water from his dreadful nostrils and making ring waves around him, which can reach many miles. Could one doubt that this is the Leviathan of Job?"
     -Jacob Wallenberg, "Min son på galejan", 1781.
 %%%%
 Mara
 
-"This night the Lord of Illusion passed among you, Mara, mighty among
- dreamers, mighty for ill. He did come upon another who may work with the
- stuff of dreams in a different way. He did meet with Dharma, who may expel
- a dreamer from his dream. They did struggle, and the Lord Mara is no more.
- Why did they struggle, deathgod against illusionist? You say their ways are
- incomprehensible, being the ways of gods. This is not the answer."
+"This night the Lord of Illusion passed among you, Mara, mighty among dreamers, mighty for ill. He did come upon another who may work with the stuff of dreams in a different way. He did meet with Dharma, who may expel a dreamer from his dream. They did struggle, and the Lord Mara is no more. Why did they struggle, deathgod against illusionist? You say their ways are incomprehensible, being the ways of gods. This is not the answer."
     -Roger Zelazny, "Lord of Light", 1967
 %%%%
 Menkaure
@@ -831,8 +629,7 @@ program bug
 %%%%
 rakshasa
 
-"He is brilliant, yet utterly corrupt.  Like rotten mackerel by moonlight,
-he both shines and stinks."
+"He is brilliant, yet utterly corrupt. Like rotten mackerel by moonlight, he both shines and stinks."
     -John Randolph
 %%%%
 shadow
@@ -862,7 +659,7 @@ small skeleton
  When it gets too hot for comfort
  And you can’t get ice cream cones
  T'ain't no sin to take off your skin
- And dance around your bones."
+ And dance around in your bones."
     -William S. Burroughs and Tom Waits, "T'ain't no sin"
 %%%%
 worm

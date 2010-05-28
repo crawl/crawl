@@ -77,38 +77,39 @@ const int SP_UNKNOWN_BRAND = 31; // seen_weapon/armour is a 32-bit bitfield
 
 enum brand_type // equivalent to (you.inv[].special or mitm[].special) % 30
 {
-    SPWPN_FORBID_BRAND = -1,           //   -1
-    SPWPN_NORMAL,                      //    0
+    SPWPN_FORBID_BRAND = -1,
+    SPWPN_NORMAL,
     SPWPN_FLAMING,
     SPWPN_FREEZING,
     SPWPN_HOLY_WRATH,
     SPWPN_ELECTROCUTION,
-    SPWPN_ORC_SLAYING,                 //    5
+    SPWPN_ORC_SLAYING,
     SPWPN_DRAGON_SLAYING,
     SPWPN_VENOM,
     SPWPN_PROTECTION,
     SPWPN_DRAINING,
-    SPWPN_SPEED,                       //   10
+    SPWPN_SPEED,
     SPWPN_VORPAL,
     SPWPN_FLAME,   // ranged, only
     SPWPN_FROST,   // ranged, only
     SPWPN_VAMPIRICISM,
-    SPWPN_PAIN,                        //   15
+    SPWPN_PAIN,
     SPWPN_DISTORTION,
     SPWPN_REACHING,
-    SPWPN_RETURNING,                   //   18
+    SPWPN_RETURNING,
     SPWPN_CHAOS,
     SPWPN_EVASION,
 
     MAX_PAN_LORD_BRANDS = SPWPN_EVASION,
 
-    SPWPN_CONFUSE,                     //   20
+    SPWPN_CONFUSE,
     SPWPN_PENETRATION,
     SPWPN_REAPING,
 
     NUM_REAL_SPECIAL_WEAPONS,
 
-    SPWPN_DEBUG_RANDART = 25,          //   25
+    SPWPN_ACID,    // acid bite only for the moment
+    SPWPN_DEBUG_RANDART,
     NUM_SPECIAL_WEAPONS,
     SPWPN_DUMMY_CRUSHING         // ONLY TEMPORARY USAGE -- converts to VORPAL
 };
@@ -258,33 +259,6 @@ enum missile_type
 
 enum rune_type
 {
-#if TAG_MAJOR_VERSION == 22
-    // Note: that runes DIS-SWAMP have the same numeric value as the branch
-    RUNE_DIS         = BRANCH_DIS,
-    RUNE_GEHENNA     = BRANCH_GEHENNA,
-    RUNE_COCYTUS     = BRANCH_COCYTUS,
-    RUNE_TARTARUS    = BRANCH_TARTARUS,
-    RUNE_SLIME_PITS  = BRANCH_SLIME_PITS,
-    RUNE_VAULTS      = BRANCH_VAULTS,
-    RUNE_SNAKE_PIT   = BRANCH_SNAKE_PIT,
-    RUNE_ELVEN_HALLS = BRANCH_ELVEN_HALLS, // unused
-    RUNE_TOMB        = BRANCH_TOMB,
-    RUNE_SWAMP       = BRANCH_SWAMP,
-    RUNE_SHOALS      = BRANCH_SHOALS,
-
-    // Runes 50 and 51 are for Pandemonium (general demon) and the Abyss
-    RUNE_DEMONIC                = 50,
-    RUNE_ABYSSAL,
-
-    // Runes 60-63 correspond to the Pandemonium demonlords,
-    // and are equal to the corresponding vault.
-    RUNE_MNOLEG                 = 60,
-    RUNE_LOM_LOBON,
-    RUNE_CEREBOV,
-    RUNE_GLOORX_VLOQ,
-    NUM_RUNE_TYPES,             // should always be last
-    RUNE_NONE
-#else
     RUNE_SWAMP,
     RUNE_SNAKE_PIT,
     RUNE_SHOALS,
@@ -306,7 +280,6 @@ enum rune_type
     RUNE_CEREBOV,
     RUNE_GLOORX_VLOQ,
     NUM_RUNE_TYPES             // should always be last
-#endif
 };
 
 enum scroll_type

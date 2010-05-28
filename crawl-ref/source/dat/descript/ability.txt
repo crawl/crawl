@@ -171,6 +171,10 @@ Vitalisation
 
 Vitalise yourself. This will remove a negative affliction from you, or restore one of your attributes. In case neither of these is necessary, it will give you temporary boosts to your attributes instead.
 %%%%
+Imprison
+
+Temporarily imprison a monster surrounded by empty space in rock. It only works on monsters receptive to Recite.
+%%%%
 Sanctuary
 
 For a short duration gain safety in a divine refuge. While you are inside the sanctuary, monsters will not attack you, but the protection will disappear at once should you breach the divine peace.

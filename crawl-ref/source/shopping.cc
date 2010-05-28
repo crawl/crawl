@@ -868,14 +868,14 @@ int artefact_value( const item_def &item )
     return ((ret > 0) ? ret : 0);
 }
 
-unsigned int item_value( item_def item, bool ident )
+unsigned int item_value(item_def item, bool ident)
 {
     // Note that we pass item in by value, since we want a local
     // copy to mangle as necessary.
     item.flags = (ident) ? (item.flags | ISFLAG_IDENT_MASK) : (item.flags);
 
-    if (is_unrandom_artefact( item )
-        && item_ident( item, ISFLAG_KNOW_PROPERTIES ))
+    if (is_unrandom_artefact(item)
+        && item_ident(item, ISFLAG_KNOW_PROPERTIES))
     {
         const unrandart_entry *entry = get_unrand_entry(item.special);
         if (entry->value != 0)
@@ -1372,7 +1372,7 @@ unsigned int item_value( item_def item, bool ident )
 
         if (item_type_known(item))
         {
-            const int sparm = get_armour_ego_type( item );
+            const int sparm = get_armour_ego_type(item);
             switch (sparm)
             {
             case SPARM_NORMAL:
@@ -1437,7 +1437,7 @@ unsigned int item_value( item_def item, bool ident )
             valued /= 10;
         }
 
-        if (item_ident( item, ISFLAG_KNOW_PLUSES ))
+        if (item_ident(item, ISFLAG_KNOW_PLUSES))
         {
             valued += 5;
             if (item.plus >= 0)
@@ -1456,10 +1456,10 @@ unsigned int item_value( item_def item, bool ident )
             }
         }
 
-        if (is_artefact( item ))
+        if (is_artefact(item))
         {
             if (item_type_known(item))
-                valued += (7 * artefact_value( item ));
+                valued += (7 * artefact_value(item));
             else
                 valued += 50;
         }
@@ -1476,7 +1476,7 @@ unsigned int item_value( item_def item, bool ident )
         break;
 
     case OBJ_WANDS:
-        if ( !item_type_known(item) )
+        if (!item_type_known(item))
             valued += 200;
         else
         {
@@ -1534,7 +1534,7 @@ unsigned int item_value( item_def item, bool ident )
                 break;
             }
 
-            if (item_ident( item, ISFLAG_KNOW_PLUSES ))
+            if (item_ident(item, ISFLAG_KNOW_PLUSES))
             {
                 if (item.plus == 0)
                     valued -= 50;
@@ -1545,7 +1545,7 @@ unsigned int item_value( item_def item, bool ident )
         break;
 
     case OBJ_POTIONS:
-        if ( !item_type_known(item) )
+        if (!item_type_known(item))
             valued += 9;
         else
         {
@@ -1554,46 +1554,57 @@ unsigned int item_value( item_def item, bool ident )
             case POT_EXPERIENCE:
                 valued += 500;
                 break;
+
             case POT_GAIN_DEXTERITY:
             case POT_GAIN_INTELLIGENCE:
             case POT_GAIN_STRENGTH:
                 valued += 350;
                 break;
+
             case POT_CURE_MUTATION:
                 valued += 150;
                 break;
+
             case POT_MAGIC:
             case POT_RESISTANCE:
                 valued += 70;
                 break;
+
             case POT_INVISIBILITY:
                 valued += 55;
                 break;
+
             case POT_MUTATION:
             case POT_RESTORE_ABILITIES:
                 valued += 50;
                 break;
+
             case POT_BERSERK_RAGE:
             case POT_HEAL_WOUNDS:
                 valued += 30;
                 break;
+
             case POT_MIGHT:
             case POT_AGILITY:
             case POT_BRILLIANCE:
             case POT_SPEED:
                 valued += 25;
                 break;
+
             case POT_HEALING:
             case POT_LEVITATION:
                 valued += 20;
                 break;
+
             case POT_BLOOD:
             case POT_PORRIDGE:
                 valued += 10;
                 break;
+
             case POT_BLOOD_COAGULATED:
                 valued += 5;
                 break;
+
             case POT_CONFUSION:
             case POT_DECAY:
             case POT_DEGENERATION:
@@ -1666,7 +1677,7 @@ unsigned int item_value( item_def item, bool ident )
         break;
 
     case OBJ_SCROLLS:
-        if ( !item_type_known(item) )
+        if (!item_type_known(item))
             valued += 10;
         else
         {
@@ -1675,51 +1686,64 @@ unsigned int item_value( item_def item, bool ident )
             case SCR_ACQUIREMENT:
                 valued += 520;
                 break;
+
             case SCR_ENCHANT_WEAPON_III:
             case SCR_VORPALISE_WEAPON:
                 valued += 200;
                 break;
+
             case SCR_SUMMONING:
                 valued += 95;
                 break;
+
             case SCR_TORMENT:
             case SCR_HOLY_WORD:
             case SCR_SILENCE:
             case SCR_VULNERABILITY:
                 valued += 75;
                 break;
+
             case SCR_ENCHANT_WEAPON_II:
                 valued += 55;
                 break;
+
             case SCR_RECHARGING:
                 valued += 50;
                 break;
+
             case SCR_ENCHANT_ARMOUR:
             case SCR_ENCHANT_WEAPON_I:
                 valued += 48;
                 break;
+
             case SCR_FEAR:
                 valued += 45;
                 break;
+
             case SCR_MAGIC_MAPPING:
                 valued += 35;
                 break;
+
             case SCR_BLINKING:
             case SCR_REMOVE_CURSE:
             case SCR_TELEPORTATION:
                 valued += 30;
                 break;
+
             case SCR_DETECT_CURSE:
             case SCR_IDENTIFY:
                 valued += 20;
                 break;
+
             case SCR_FOG:
                 valued += 10;
                 break;
+
             case SCR_NOISE:
             case SCR_RANDOM_USELESSNESS:
                 valued += 2;
                 break;
+
             case SCR_CURSE_ARMOUR:
             case SCR_CURSE_WEAPON:
             case SCR_PAPER:
@@ -1734,11 +1758,11 @@ unsigned int item_value( item_def item, bool ident )
         if (item_known_cursed(item))
             valued -= 10;
 
-        if ( !item_type_known(item) )
+        if (!item_type_known(item))
             valued += 50;
         else
         {
-            if (item_ident( item, ISFLAG_KNOW_PLUSES )
+            if (item_ident(item, ISFLAG_KNOW_PLUSES)
                 && (item.sub_type == RING_PROTECTION
                     || item.sub_type == RING_STRENGTH
                     || item.sub_type == RING_EVASION
@@ -1751,6 +1775,12 @@ unsigned int item_value( item_def item, bool ident )
 
                 if (item.sub_type == RING_SLAYING && item.plus2 > 0)
                     valued += 10 * item.plus2;
+
+                if (item.plus < 0)
+                    valued -= 50;
+
+                if (item.sub_type == RING_SLAYING && item.plus2 < 0)
+                    valued -= 50;
             }
 
             switch (item.sub_type)
@@ -1758,26 +1788,33 @@ unsigned int item_value( item_def item, bool ident )
             case RING_INVISIBILITY:
                 valued += 100;
                 break;
+
             case RING_REGENERATION:
                 valued += 75;
                 break;
+
             case RING_FIRE:
             case RING_ICE:
                 valued += 62;
                 break;
+
             case RING_LIFE_PROTECTION:
                 valued += 60;
                 break;
+
             case RING_TELEPORT_CONTROL:
                 valued += 42;
                 break;
+
             case RING_MAGICAL_POWER:
             case RING_PROTECTION_FROM_MAGIC:
                 valued += 40;
                 break;
+
             case RING_WIZARDRY:
                 valued += 35;
                 break;
+
             case RING_LEVITATION:
             case RING_POISON_RESISTANCE:
             case RING_PROTECTION_FROM_COLD:
@@ -1785,14 +1822,17 @@ unsigned int item_value( item_def item, bool ident )
             case RING_SLAYING:
                 valued += 30;
                 break;
+
             case RING_SUSTAIN_ABILITIES:
             case RING_SUSTENANCE:
             case RING_TELEPORTATION: // usually cursed
                 valued += 25;
                 break;
+
             case RING_SEE_INVISIBLE:
                 valued += 20;
                 break;
+
             case RING_DEXTERITY:
             case RING_EVASION:
             case RING_INTELLIGENCE:
@@ -1800,28 +1840,34 @@ unsigned int item_value( item_def item, bool ident )
             case RING_STRENGTH:
                 valued += 10;
                 break;
+
             case RING_HUNGER:
                 valued -= 50;
                 break;
+
             case AMU_THE_GOURMAND:
             case AMU_GUARDIAN_SPIRIT:
             case AMU_FAITH:
                 valued += 35;
                 break;
+
             case AMU_CLARITY:
             case AMU_RESIST_CORROSION:
             case AMU_RESIST_MUTATION:
             case AMU_WARDING:
                 valued += 30;
                 break;
+
             case AMU_CONSERVATION:
             case AMU_CONTROLLED_FLIGHT:
                 valued += 25;
                 break;
+
             case AMU_RAGE:
             case AMU_STASIS:
                 valued += 20;
                 break;
+
             case AMU_INACCURACY:
                 valued -= 50;
                 break;
@@ -1833,9 +1879,9 @@ unsigned int item_value( item_def item, bool ident )
                 // in this branch we're guaranteed to know
                 // the item type!
                 if (valued < 0)
-                    valued = artefact_value( item ) - 5;
+                    valued = artefact_value(item) - 5;
                 else
-                    valued += artefact_value( item );
+                    valued += artefact_value(item);
             }
 
             valued *= 7;
@@ -1850,18 +1896,23 @@ unsigned int item_value( item_def item, bool ident )
             case MISC_RUNE_OF_ZOT:  // upped from 1200 to encourage collecting
                 valued += 10000;
                 break;
+
             case MISC_HORN_OF_GERYON:
                 valued += 5000;
                 break;
+
             case MISC_DISC_OF_STORMS:
                 valued += 2000;
                 break;
+
             case MISC_CRYSTAL_BALL_OF_SEEING:
                 valued += 500;
                 break;
+
             case MISC_BOTTLED_EFREET:
                 valued += 400;
                 break;
+
             case MISC_CRYSTAL_BALL_OF_FIXATION:
             case MISC_EMPTY_EBONY_CASKET:
                 valued += 20;
@@ -1880,15 +1931,19 @@ unsigned int item_value( item_def item, bool ident )
             case MISC_RUNE_OF_ZOT:
                 valued += 5000;
                 break;
+
             case MISC_HORN_OF_GERYON:
                 valued += 1000;
                 break;
+
             case MISC_CRYSTAL_BALL_OF_SEEING:
                 valued += 450;
                 break;
+
             case MISC_BOTTLED_EFREET:
                 valued += 350;
                 break;
+
             default:
                 valued += 400;
             }
@@ -1897,6 +1952,7 @@ unsigned int item_value( item_def item, bool ident )
 
     case OBJ_BOOKS:
         valued = 150;
+
         if (item_type_known(item))
         {
             double rarity = 0;
@@ -1957,14 +2013,14 @@ unsigned int item_value( item_def item, bool ident )
         else
             valued = 250;
 
-        if (item_is_rod( item ) && item_ident( item, ISFLAG_KNOW_PLUSES ))
+        if (item_is_rod(item) && item_ident(item, ISFLAG_KNOW_PLUSES))
             valued += 50 * (item.plus2 / ROD_CHARGE_MULT);
-
         break;
 
     case OBJ_ORBS:
         valued = 250000;
         break;
+
     default:
         break;
     }                           // end switch
@@ -2278,7 +2334,7 @@ bool ShoppingList::del_thing(std::string desc, const level_pos* _pos)
 // TODO:
 //
 // * If you get a randart which lets you turn invisible, then remove
-//   any ordinary rings of invisiblity from the shopping list.
+//   any ordinary rings of invisibility from the shopping list.
 //
 // * If you collected enough spellbooks that all the spells in a
 //   shopping list book are covered, then auto-remove it.
@@ -2290,7 +2346,7 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
     if (cost != -1 && you.level_type != LEVEL_DUNGEON)
         return (0);
 
-    switch(item.base_type)
+    switch (item.base_type)
     {
     case OBJ_JEWELLERY:
     case OBJ_BOOKS:
@@ -2307,8 +2363,14 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
 
     // Ignore stat-modification rings which reduce a stat, since they're
     // worthless.
-    if (item.plus < 0 && item.base_type == OBJ_JEWELLERY)
-        return (0);
+    if (item.base_type == OBJ_JEWELLERY)
+    {
+        if (item.sub_type == RING_SLAYING && item.plus < 0 && item.plus2 < 0)
+            return (0);
+
+        if (item.plus < 0)
+            return (0);
+    }
 
     // Item is already on shopping-list.
     const bool on_list = find_thing(item, level_pos::current()) != -1;
@@ -2358,7 +2420,7 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
             // Only prompt once.
             if (thing.exists(REPLACE_PROMPTED_KEY))
                 continue;
-            thing[REPLACE_PROMPTED_KEY] = (bool) true;
+            thing[REPLACE_PROMPTED_KEY] = (bool)true;
 
             std::string prompt =
                 make_stringf("Shopping-list: replace %dgp %s with cheaper "

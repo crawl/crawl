@@ -3035,12 +3035,12 @@ bool monsters::caught() const
 
 bool monsters::petrified() const
 {
-    return has_ench(ENCH_PETRIFIED);
+    return (has_ench(ENCH_PETRIFIED));
 }
 
 bool monsters::petrifying() const
 {
-    return has_ench(ENCH_PETRIFYING);
+    return (has_ench(ENCH_PETRIFYING));
 }
 
 bool monsters::friendly() const
@@ -4335,8 +4335,6 @@ static bool _drop_tomb(monsters* mon)
             mpr("You hear a deep rumble.");
     }
 
-    mon->lose_energy(EUT_SPELL);
-
     return (count > 0);
 }
 
@@ -4490,6 +4488,9 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
     case ENCH_ENTOMBED:
         _drop_tomb(this);
+
+        if (me.who == KC_OTHER)
+            lose_energy(EUT_SPELL);
         break;
 
     case ENCH_MIGHT:
@@ -4719,6 +4720,12 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this,
                                    "'s soul is no longer ripe for the taking.");
         }
+        break;
+
+    case ENCH_AWAKEN_FOREST:
+        env.forest_awoken_until = 0;
+        if (!quiet)
+            forest_message(pos(), "The forest calms down.");
         break;
 
     default:
@@ -5125,7 +5132,6 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
                 del_ench(ENCH_HELD, true);
             }
-
         }
         break;
     }
@@ -5333,6 +5339,31 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
         break;
 
+    case ENCH_EXPLODING:
+    {
+        // Reduce the timer, if that means we lose the enchantment then
+        // spawn a spore and re-add the enchantment
+        if(decay_enchantment(me))
+        {
+            monster_type mtype = type;
+            bolt beam;
+
+            setup_spore_explosion(beam, *this);
+
+            beam.explode();
+
+            // The ballisto dying, then a spore being created in its slot
+            // env.mons means we can appear to be alive, but in fact be
+            // an entirely different monster.
+            if (alive() && type == mtype)
+            {
+                add_ench(ENCH_EXPLODING);
+            }
+        }
+
+    }
+
+    break;
     case ENCH_GLOWING_SHAPESHIFTER: // This ench never runs out!
         // Number of actions is fine for shapeshifters.  Don't change
         // shape while taking the stairs because monster_polymorph() has
@@ -5365,7 +5396,12 @@ void monsters::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_EAT_ITEMS:
-         break;
+        break;
+
+    case ENCH_AWAKEN_FOREST:
+        forest_damage(this);
+        decay_enchantment(me);
+        break;
 
     default:
         break;
@@ -6256,7 +6292,7 @@ static const char *enchant_names[] =
     "sleepy", "held", "battle_frenzy", "temp_pacif", "petrifying",
     "petrified", "lowered_mr", "soul_ripe", "slowly_dying", "eat_items",
     "aquatic_land", "spore_production", "slouch", "swift", "tide",
-    "insane", "silenced", "entombed", "buggy"
+    "insane", "silenced", "entombed", "awaken_forest", "exploding", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -6416,6 +6452,9 @@ int mon_enchant::calc_duration(const monsters *mons,
         // This is used as a simple timer, when the enchantment runs out
         // the monster will create a giant spore.
         return (random_range(475, 525) * 10);
+
+    case ENCH_EXPLODING:
+        return (random_range(3,7) * 10);
 
     case ENCH_ABJ:
         if (deg >= 6)

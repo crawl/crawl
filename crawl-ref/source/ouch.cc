@@ -462,7 +462,7 @@ static int _get_target_class(beam_type flavour)
         break;
 
     case BEAM_SPORE:
-    case BEAM_STEAL_FOOD:
+    case BEAM_DEVOUR_FOOD:
         target_class = OBJ_FOOD;
         break;
 
@@ -507,8 +507,8 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
             || target_class == OBJ_FOOD
                && you.inv[i].base_type == OBJ_CORPSES)
         {
-            // Conservation doesn't help against harpies stealing food.
-            if (flavour != BEAM_STEAL_FOOD
+            // Conservation doesn't help against harpies' devouring food.
+            if (flavour != BEAM_DEVOUR_FOOD
                 && player_item_conserve() && !one_chance_in(10))
             {
                 continue;
@@ -552,7 +552,7 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
         return (false);
 
     // Message handled elsewhere.
-    if (flavour == BEAM_STEAL_FOOD)
+    if (flavour == BEAM_DEVOUR_FOOD)
         return (true);
 
     switch (target_class)
@@ -622,7 +622,7 @@ bool expose_items_to_element(beam_type flavour, const coord_def& where,
     if (!num_dest)
         return (false);
 
-    if (flavour == BEAM_STEAL_FOOD)
+    if (flavour == BEAM_DEVOUR_FOOD)
         return (true);
 
     if (you.see_cell(where))
@@ -961,8 +961,8 @@ static void _maybe_spawn_jellies(int dam, const char* aux,
             int count_created = 0;
             for (int i = 0; i < how_many; ++i)
             {
-                mgen_data mg(mon, BEH_STRICT_NEUTRAL, &you, 0, 0, you.pos(),
-                             MHITNOT, 0, GOD_JIYVA);
+                mgen_data mg(mon, BEH_FRIENDLY, &you, 2, 0, you.pos(),
+                             death_source, 0, GOD_JIYVA);
 
                 if (create_monster(mg) != -1)
                     count_created++;
@@ -1288,10 +1288,13 @@ static void delete_files()
 void end_game(scorefile_entry &se)
 {
     for (int i = 0; i < ENDOFPACK; i++)
-        set_ident_flags(you.inv[i], ISFLAG_IDENT_MASK);
+        if (item_type_unknown(you.inv[i]))
+            add_inscription(you.inv[i], "unknown");
 
     for (int i = 0; i < ENDOFPACK; i++)
     {
+        set_ident_flags(you.inv[i], ISFLAG_IDENT_MASK);
+
         if (you.inv[i].base_type != 0)
             set_ident_type(you.inv[i], ID_KNOWN_TYPE);
     }
@@ -1299,12 +1302,12 @@ void end_game(scorefile_entry &se)
     delete_files();
 
     // death message
-    if (se.death_type != KILLED_BY_LEAVING
-        && se.death_type != KILLED_BY_QUITTING
-        && se.death_type != KILLED_BY_WINNING)
+    if (se.get_death_type() != KILLED_BY_LEAVING
+        && se.get_death_type() != KILLED_BY_QUITTING
+        && se.get_death_type() != KILLED_BY_WINNING)
     {
         mprnojoin("You die...");      // insert player name here? {dlb}
-        xom_death_message((kill_method_type) se.death_type);
+        xom_death_message((kill_method_type) se.get_death_type());
         if (you.religion == GOD_FEDHAS)
             simple_god_message(" appreciates your contribution to the "
                                "ecosystem.", GOD_FEDHAS);
@@ -1316,7 +1319,7 @@ void end_game(scorefile_entry &se)
             hints_death_screen();
     }
 
-    if (!dump_char(morgue_name(se.death_time), false, true, &se))
+    if (!dump_char(morgue_name(se.get_death_time()), false, true, &se))
     {
         mpr("Char dump unsuccessful! Sorry about that.");
         if (!crawl_state.seen_hups)
@@ -1325,10 +1328,10 @@ void end_game(scorefile_entry &se)
     }
 
 #ifdef DGL_WHEREIS
-    whereis_record(se.death_type == KILLED_BY_QUITTING? "quit" :
-                   se.death_type == KILLED_BY_WINNING ? "won"  :
-                   se.death_type == KILLED_BY_LEAVING ? "bailed out"
-                                                      : "dead");
+    whereis_record(se.get_death_type() == KILLED_BY_QUITTING? "quit" :
+                   se.get_death_type() == KILLED_BY_WINNING ? "won"  :
+                   se.get_death_type() == KILLED_BY_LEAVING ? "bailed out"
+                                                            : "dead");
 #endif
 
     if (!crawl_state.seen_hups)

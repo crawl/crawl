@@ -175,7 +175,7 @@ tea
 
 wet wool
 %%%%
-# This doesn't necessarily have to make sense.  For example, a name of a
+# This doesn't necessarily have to make sense. For example, a name of a
 # fruit or an insect will work here.
 roaring_animal_name
 

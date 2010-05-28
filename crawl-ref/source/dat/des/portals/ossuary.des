@@ -383,7 +383,7 @@ ccc.c   ccc+ccc   c.ccc
          ccccc
 ENDMAP
 
-# Scorpions, and lots of them.  Hope you weren't expecting to breeze through
+# Scorpions, and lots of them. Hope you weren't expecting to breeze through
 # the ossuary just because you found a mace of holy wrath!
 NAME:   minmay_ossuary_scorpions
 WEIGHT: 20
@@ -707,7 +707,7 @@ MAP
 ENDMAP
 
 NAME:   ossuary_zaba_two_paths
-# There is no way up in the end.  This is to give the zombies in the beginning
+# There is no way up in the end. This is to give the zombies in the beginning
 # more time to go for a walk and another chance to meet the player.
 ORIENT: encompass
 WEIGHT: 10

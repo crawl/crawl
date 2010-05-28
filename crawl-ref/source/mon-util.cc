@@ -2207,8 +2207,7 @@ bool mons_is_lurking(const monsters *m)
 
 bool mons_is_influenced_by_sanctuary(const monsters *m)
 {
-    return (!m->wont_attack()
-            && (m->holiness() != MH_PLANT || mons_is_stationary(m)));
+    return (!m->wont_attack() && !mons_is_stationary(m));
 }
 
 bool mons_is_fleeing_sanctuary(const monsters *m)
@@ -2718,6 +2717,15 @@ bool ms_waste_of_time( const monsters *mon, spell_type monspell )
         if (count_mara_fakes() == 2)
             ret = true;
 
+        break;
+
+    case SPELL_AWAKEN_FOREST:
+        if (mon->has_ench(ENCH_AWAKEN_FOREST)
+            || env.forest_awoken_until > you.elapsed_time
+            || !forest_near_enemy(mon))
+        {
+            ret = true;
+        }
         break;
 
     case SPELL_NO_SPELL:

@@ -31,6 +31,12 @@ function ch_item_wieldable(it)
         return true
     end
 
+    if spells["Sublimation of Blood"]
+            and string.find( it.name("a"), " potions? of blood")
+    then
+        return true
+    end
+
     if spells["Sandblast"]
             and it.class(true) == "missile"
             and string.find( it.name("a"), " stones?" )

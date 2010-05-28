@@ -801,8 +801,8 @@ void bolt::digging_wall_effect()
         // Blood does not transfer onto floor.
         if (is_bloodcovered(pos()))
             env.pgrid(pos()) &= ~(FPROP_BLOODY);
-        if (is_moldy(pos()))
-            env.pgrid(pos()) &= ~(FPROP_MOLD);
+
+        remove_mold(pos());
 
         if (!msg_generated)
         {
@@ -965,8 +965,9 @@ static void _nuke_wall(const coord_def& p)
     // Blood does not transfer onto floor.
     if (is_bloodcovered(p))
         env.pgrid(p) &= ~(FPROP_BLOODY);
-    if (is_moldy(p))
-        env.pgrid(p) &= ~(FPROP_MOLD);
+
+    remove_mold(p);
+
     grd(p) = DNGN_FLOOR;
     set_terrain_changed(p);
 }
@@ -2363,7 +2364,8 @@ void bolt::affect_ground()
     // Spore explosions might spawn a fungus.  The spore explosion
     // covers 21 tiles in open space, so the expected number of spores
     // produced is the x in x_chance_in_y() in the conditional below.
-    if (is_explosion && flavour == BEAM_SPORE)
+    if (is_explosion && flavour == BEAM_SPORE
+        && this->agent() && !this->agent()->is_summoned())
     {
         if (env.grid(pos()) >= DNGN_FLOOR_MIN
             && env.grid(pos())<= DNGN_FLOOR_MAX)
@@ -2393,7 +2395,7 @@ void bolt::affect_ground()
 
             if (rc != -1)
             {
-                env.pgrid(pos()) &= ~FPROP_MOLD;
+                remove_mold(pos());
                 if (you.see_cell(pos()))
                     mpr("A fungus suddenly grows.");
 
@@ -4687,6 +4689,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
         }
         return (MON_AFFECTED);
     }
+
     case BEAM_CHARM:
         if (player_will_anger_monster(mon))
         {
@@ -5546,7 +5549,7 @@ std::string beam_type_name(beam_type type)
     case BEAM_POTION_MUTAGENIC:     return ("mutagenic fog");
     case BEAM_VISUAL:               return ("visual effects");
     case BEAM_TORMENT_DAMAGE:       return ("torment damage");
-    case BEAM_STEAL_FOOD:           return ("steal food");
+    case BEAM_DEVOUR_FOOD:          return ("devour food");
     case BEAM_GLOOM:                return ("gloom");
     case BEAM_INK:                  return ("ink");
 

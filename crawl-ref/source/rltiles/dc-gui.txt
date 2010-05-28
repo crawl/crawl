@@ -57,3 +57,16 @@ dc-misc/error ERROR
 %compose tab_selected
 %compose tab_label_memorise
 %finish
+
+%start
+%compose tab_unselected
+%compose tab_label_monster
+%finish TAB_MONSTER
+%start
+%compose tab_mouseover
+%compose tab_label_monster
+%finish
+%start
+%compose tab_selected
+%compose tab_label_monster
+%finish

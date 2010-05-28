@@ -8,11 +8,7 @@
 #define DEBUG_H
 
 // Synch with ANSI definitions.
-#if defined(DEBUG) && defined(NDEBUG)
-#error DEBUG and NDEBUG are out of sync!
-#endif
-
-#if !defined(DEBUG) && !defined(NDEBUG)
+#if !(defined(DEBUG) ^ defined(NDEBUG))
 #error DEBUG and NDEBUG are out of sync!
 #endif
 

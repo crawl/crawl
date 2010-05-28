@@ -578,7 +578,8 @@ static void _construct_species_menu(const newgame_def* ng,
     coord_def min_coord(0,0);
     coord_def max_coord(0,0);
 
-    for (int i = 0; i < NUM_SPECIES; ++i) {
+    for (int i = 0; i < ng_num_species(); ++i)
+    {
         const species_type species = get_species(i);
         if (!_is_species_valid_choice(species))
             continue;
@@ -933,7 +934,8 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
     coord_def min_coord(0,0);
     coord_def max_coord(0,0);
 
-    for (int i = 0; i < NUM_JOBS; ++i) {
+    for (int i = 0; i < ng_num_jobs(); ++i)
+    {
         const job_type job = get_job(i);
         tmp = new TextItem();
         text.clear();
@@ -1655,7 +1657,6 @@ static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice,
     case JOB_FIGHTER:
     case JOB_GLADIATOR:
     case JOB_CHAOS_KNIGHT:
-    case JOB_DEATH_KNIGHT:
     case JOB_CRUSADER:
     case JOB_REAVER:
     case JOB_WARPER:

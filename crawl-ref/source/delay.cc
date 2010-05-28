@@ -484,7 +484,6 @@ void stop_delay( bool stop_stair_travel )
 
         delay.duration = 0;
         _pop_delay();
-        handle_delay();
         return;
     }
 
@@ -747,6 +746,22 @@ bool already_learning_spell(int spell)
     return (false);
 }
 
+// Check whether this monster might be influenced by Recite.
+// Returns 0, if no monster found
+// Returns 1, if eligible monster found
+// Returns -1, if monster already affected or too dumb to understand.
+int check_recital_monster_at(const coord_def& where)
+{
+    monsters *mon = monster_at(where);
+    if (mon == NULL)
+        return (0);
+
+    if (!_recite_mons_useless(mon))
+        return (1);
+
+    return (-1);
+}
+
 // Check whether there are monsters who might be influenced by Recite.
 // Returns 0, if no monsters found
 // Returns 1, if eligible audience found
@@ -757,14 +772,13 @@ int check_recital_audience()
 
     for (radius_iterator ri(you.pos(), 8); ri; ++ri)
     {
-        monsters* mons = monster_at(*ri);
-        if (mons == NULL)
-            continue;
+        const int retval = check_recital_monster_at(*ri);
 
-        found_monsters = true;
+        if (retval == -1)
+            found_monsters = true;
 
         // Check if audience can listen.
-        if (!_recite_mons_useless(mons))
+        if (retval == 1)
             return (1);
     }
 
@@ -921,9 +935,6 @@ void handle_delay()
                 {
                     // Don't attempt to offer a skeleton.
                     _pop_delay();
-
-                    // Chain onto the next delay.
-                    handle_delay();
                     return;
                 }
             }
@@ -951,7 +962,6 @@ void handle_delay()
                         mpr("You stop bottling this corpse's foul-smelling "
                             "blood!");
                         _pop_delay();
-                        handle_delay();
                         return;
                     }
                 }
@@ -1090,7 +1100,11 @@ void handle_delay()
         }
     }
     else
+    {
         _finish_delay(delay);
+        if (!you.turn_is_over)
+            you.time_taken = 0;
+    }
 }
 
 static void _armour_wear_effects(const int item_slot);
@@ -1324,7 +1338,6 @@ static void _finish_delay(const delay_queue_item &delay)
                  delay.type == DELAY_BUTCHER ? "butchering the corpse"
                                              : "bottling this corpse's blood");
             _pop_delay();
-            handle_delay();
         }
         StashTrack.update_stash(you.pos()); // Stash-track the generbated items.
         break;
@@ -1382,9 +1395,6 @@ static void _finish_delay(const delay_queue_item &delay)
     you.wield_change = true;
     print_stats();  // force redraw of the stats
     _pop_delay();
-
-    // Chain onto the next delay.
-    handle_delay();
 
 #ifdef USE_TILE
     tiles.update_inventory();
@@ -1510,6 +1520,8 @@ static void _handle_run_delays(const delay_queue_item &delay)
             mesclr();
         process_command(cmd);
     }
+    else
+        you.time_taken = 0;
 
     // If you.running has gone to zero, and the run delay was not
     // removed, remove it now. This is needed to clean up after
@@ -1518,13 +1530,6 @@ static void _handle_run_delays(const delay_queue_item &delay)
     {
         _pop_delay();
         update_turn_count();
-    }
-
-    if (you.running && !you.turn_is_over
-        && you_are_delayed()
-        && !is_run_delay(current_delay_action()))
-    {
-        handle_delay();
     }
 }
 

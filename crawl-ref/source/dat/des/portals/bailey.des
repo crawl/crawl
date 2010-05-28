@@ -387,12 +387,12 @@ KITEM:  Z = good_item broad axe w:5 / broad axe / war axe /\
             good_item war axe w:5 / good_item executioner's axe w:1
 KFEAT:  Z = teleport trap
 #
-# Traps are alarm on the entrance and alarm/net near the loot.  Yes, I want
+# Traps are alarm on the entrance and alarm/net near the loot. Yes, I want
 # everyone to wake up.
 KFEAT: ~ = alarm trap / floor
 #
-# There is only one way up.  You have to pass near the axe-throwing kobolds
-# twice.  This is intended.  Teleportation traps ensure you won't get
+# There is only one way up. You have to pass near the axe-throwing kobolds
+# twice. This is intended. Teleportation traps ensure you won't get
 # stranded.
 NSUBST: s = 1:T / *:.
 NSUBST: t = 1:T / *:.

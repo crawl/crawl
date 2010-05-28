@@ -131,7 +131,7 @@ void hiscores_new_entry( const scorefile_entry &ne )
             break;
 
         // compare points..
-        if (!inserted && ne.points >= hs_list[i]->points)
+        if (!inserted && ne.get_score() >= hs_list[i]->get_score())
         {
             newest_entry = i;           // for later printing
             inserted = true;
@@ -501,7 +501,7 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     name              = se.name;
     uid               = se.uid;
     race              = se.race;
-    cls               = se.cls;
+    job               = se.job;
     race_class_name   = se.race_class_name;
     lvl               = se.lvl;
     best_skill        = se.best_skill;
@@ -539,6 +539,14 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     gold_spent        = se.gold_spent;
     gold_found        = se.gold_found;
     fixup_char_name();
+}
+
+xlog_fields scorefile_entry::get_fields() const
+{
+    if (!fields.get())
+        return (xlog_fields());
+    else
+        return (*fields.get());
 }
 
 bool scorefile_entry::parse(const std::string &line)
@@ -596,6 +604,59 @@ static const char* _short_branch_name(int branch)
     return ("");
 }
 
+enum old_job_type
+{
+    OLD_JOB_THIEF        = -1,
+    OLD_JOB_DEATH_KNIGHT = -2
+};
+
+static const char* _job_name(int job)
+{
+    if (is_valid_job(static_cast<job_type>(job)))
+        return get_job_name(job);
+
+    switch (job)
+    {
+    case OLD_JOB_THIEF:
+        return "Thief";
+    case OLD_JOB_DEATH_KNIGHT:
+        return "Death Knight";
+    default:
+        return "unknown";
+    }
+}
+
+static const char* _job_abbrev(int job)
+{
+    if (is_valid_job(static_cast<job_type>(job)))
+        return get_job_abbrev(job);
+
+    switch (job)
+    {
+    case OLD_JOB_THIEF:
+        return "Th";
+    case OLD_JOB_DEATH_KNIGHT:
+        return "DK";
+    default:
+        return "??";
+    }
+}
+
+static int _job_by_name(const std::string& name)
+{
+    int job = get_job_by_name(name.c_str());
+
+    if (job != JOB_UNKNOWN)
+        return (job);
+
+    if (name == "Thief")
+        return (OLD_JOB_THIEF);
+    else if (name == "Death Knight")
+        return (OLD_JOB_DEATH_KNIGHT);
+
+    return (JOB_UNKNOWN);
+}
+
 void scorefile_entry::init_with_fields()
 {
     version = fields->str_field("v");
@@ -604,7 +665,7 @@ void scorefile_entry::init_with_fields()
     name    = fields->str_field("name");
     uid     = fields->int_field("uid");
     race    = str_to_species(fields->str_field("race"));
-    cls     = get_job_by_name(fields->str_field("cls").c_str());
+    job     = _job_by_name(fields->str_field("cls"));
     lvl     = fields->int_field("xl");
     race_class_name = fields->str_field("char");
 
@@ -669,7 +730,7 @@ void scorefile_entry::set_base_xlog_fields() const
     fields->add_field("uid",  "%d", uid);
     fields->add_field("race", "%s",
                       species_name(race, lvl).c_str());
-    fields->add_field("cls",  "%s", get_job_name(cls));
+    fields->add_field("cls",  "%s", _job_name(job));
     fields->add_field("char", "%s", race_class_name.c_str());
     fields->add_field("xl",    "%d", lvl);
     fields->add_field("sk",    "%s", skill_name(best_skill));
@@ -941,7 +1002,7 @@ void scorefile_entry::reset()
     name.clear();
     uid                  = 0;
     race                 = SP_UNKNOWN;
-    cls                  = JOB_UNKNOWN;
+    job                  = JOB_UNKNOWN;
     lvl                  = 0;
     race_class_name.clear();
     best_skill           = 0;
@@ -1119,7 +1180,7 @@ void scorefile_entry::init()
         points = 99999999;
 
     race = you.species;
-    cls  = you.char_class;
+    job  = you.char_class;
 
     race_class_name.clear();
     fixup_char_name();
@@ -1350,8 +1411,7 @@ void scorefile_entry::fixup_char_name()
         race_class_name = make_stringf("%s%s",
                                        is_valid_species(race) ?
                                            get_species_abbrev( race ) : "??",
-                                       is_valid_job(cls) ?
-                                           get_job_abbrev( cls ) : "??");
+                                       _job_abbrev(job));
     }
 }
 
@@ -1392,7 +1452,7 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
         snprintf( buf, HIGHSCORE_SIZE, "%8ld %s the %s %s (level %d",
                   points, name.c_str(),
                   species_name(static_cast<species_type>(race), lvl).c_str(),
-                  get_job_name(cls), lvl );
+                  _job_name(job), lvl );
         desc = buf;
     }
 
@@ -1416,10 +1476,10 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
     if (verbose)
     {
         std::string srace = species_name(static_cast<species_type>(race), lvl);
-        snprintf( scratch, INFO_SIZE, "Began as a%s %s %s",
-                  is_vowel(srace[0]) ? "n" : "",
-                  srace.c_str(),
-                  get_job_name(cls) );
+        snprintf(scratch, INFO_SIZE, "Began as a%s %s %s",
+                 is_vowel(srace[0]) ? "n" : "",
+                 srace.c_str(),
+                 _job_name(job));
         desc += scratch;
 
         if (birth_time > 0)
@@ -2268,11 +2328,12 @@ void mark_milestone(const std::string &type,
     {
         const scorefile_entry se(0, 0, KILL_MISC, NULL);
         se.set_base_xlog_fields();
-        xlog_fields xl = *se.fields;
+        xlog_fields xl = se.get_fields();
         if (report_origin_level)
             xl.add_field("oplace", "%s",
                          current_level_parent().describe().c_str());
-        xl.add_field("time", "%s", make_date_string(se.death_time).c_str());
+        xl.add_field("time", "%s",
+                     make_date_string(se.get_death_time()).c_str());
         xl.add_field("type", "%s", type.c_str());
         xl.add_field("milestone", "%s", milestone.c_str());
         fprintf(fp, "%s\n", xl.xlog_line().c_str());
@@ -2286,7 +2347,8 @@ std::string xlog_status_line()
 {
     const scorefile_entry se(0, 0, KILL_MISC, NULL);
     se.set_base_xlog_fields();
-    se.fields->add_field("time", "%s", make_date_string(time(NULL)).c_str());
-    return (se.fields->xlog_line());
+    xlog_fields xl = se.get_fields();
+    xl.add_field("time", "%s", make_date_string(time(NULL)).c_str());
+    return (xl.xlog_line());
 }
 #endif // DGL_WHEREIS

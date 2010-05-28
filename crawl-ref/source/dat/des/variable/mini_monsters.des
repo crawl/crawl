@@ -1014,7 +1014,7 @@ TAGS:  patrolling mini_float
 MONS:  rotting devil
 MONS:  necrophage
 MARKER:  + = lua:props_marker { \
-            door_open_prompt="This door is covered in warnings.  Open " .. \
+            door_open_prompt="This door is covered in warnings. Open " .. \
                              "it anyway?", \
             door_description_prefix="warning scrawled " \
          }

@@ -35,8 +35,6 @@ enum ability_type
     ABIL_EVOKE_TELEPORTATION,
     ABIL_EVOKE_BLINK,
     ABIL_RECHARGING,                   //   20
-    ABIL_ENABLE_DEMONIC_GUARDIAN,
-    ABIL_DISABLE_DEMONIC_GUARDIAN,
     // 23 - 50 unused
     ABIL_EVOKE_TURN_INVISIBLE = 51,    //   51
     ABIL_EVOKE_TURN_VISIBLE,
@@ -48,6 +46,7 @@ enum ability_type
     ABIL_ZIN_SUSTENANCE = 109,              //  109
     ABIL_ZIN_RECITE,
     ABIL_ZIN_VITALISATION,
+    ABIL_ZIN_IMPRISON,
     ABIL_ZIN_SANCTUARY,
     ABIL_ZIN_CURE_ALL_MUTATIONS,
     ABIL_TSO_DIVINE_SHIELD = 120,           //  120
@@ -266,7 +265,7 @@ enum beam_type                  // beam[].flavour
 
     BEAM_TORMENT_DAMAGE,          // Pseudo-beam for damage flavour.
     BEAM_FIRST_PSEUDO = BEAM_TORMENT_DAMAGE,
-    BEAM_STEAL_FOOD,              // Pseudo-beam for harpies stealing food.
+    BEAM_DEVOUR_FOOD,             // Pseudo-beam for harpies' devouring food.
 
     NUM_BEAMS
 };
@@ -1260,7 +1259,7 @@ enum enchant_type
     ENCH_SICK,
     ENCH_SLEEPY,         //   Monster can't wake until this wears off.
     ENCH_HELD,           //   Caught in a net.
-    ENCH_BATTLE_FRENZY,  //   Monster is in a battle frenzy
+    ENCH_BATTLE_FRENZY,  //   Monster is in a battle frenzy.
     ENCH_TEMP_PACIF,
     ENCH_PETRIFYING,
     ENCH_PETRIFIED,
@@ -1276,6 +1275,8 @@ enum enchant_type
     ENCH_INSANE,
     ENCH_SILENCE,
     ENCH_ENTOMBED,
+    ENCH_AWAKEN_FOREST,
+    ENCH_EXPLODING,
 
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
@@ -1470,7 +1471,6 @@ enum job_type
     JOB_FIGHTER,
     JOB_WIZARD,
     JOB_PRIEST,
-    JOB_THIEF,
     JOB_GLADIATOR,
     JOB_NECROMANCER,
     JOB_PALADIN,
@@ -1485,7 +1485,6 @@ enum job_type
     JOB_AIR_ELEMENTALIST,
     JOB_EARTH_ELEMENTALIST,
     JOB_CRUSADER,
-    JOB_DEATH_KNIGHT,
     JOB_VENOM_MAGE,
     JOB_CHAOS_KNIGHT,
     JOB_TRANSMUTER,
@@ -1860,8 +1859,10 @@ enum monster_type                      // (int) menv[].type
     MONS_MERFOLK_JAVELINEER,
 
     MONS_SNAPPING_TURTLE,
-    MONS_ALLIGATOR_SNAPPING_TURTLE,
+    MONS_ALLIGATOR_SNAPPING_TURTLE,    //  205
     MONS_SEA_SNAKE,
+
+    MONS_HYPERACTIVE_BALLISTOMYCETE,
 
     //jmf: end new monsters
     MONS_WHITE_IMP = 220,              //  220
@@ -2236,9 +2237,8 @@ enum monster_flag_type
     MF_NAME_DEFINITE      = 0x4000000,// give this monster the definite "the"
                                       // article, instead of the indefinite "a"
                                       // article.
-    MF_INTERLEVEL_FOLLOWER = 0x8000000,// will travel with the player regardless
+    MF_INTERLEVEL_FOLLOWER = 0x8000000// will travel with the player regardless
                                        // of where the monster is at on the level
-    MF_DEMONIC_GUARDIAN   = 0x10000000 // monster is a demonic guardian
 };
 
 // Adding slots breaks saves. YHBW.
@@ -2405,9 +2405,6 @@ enum mutation_type
     MUT_HORNS,          // head
     MUT_STINGER,
     MUT_TALONS,         // feet
-#if TAG_MAJOR_VERSION != 22
-    MUT_SPIKED_TAIL,
-#endif
 
     // scales
     MUT_DISTORTION_FIELD,
@@ -2482,12 +2479,22 @@ enum mutation_type
     MUT_WEAK,
     MUT_SLOW,
 
+    // Jiyva-specific mutations
+    MUT_ACIDIC_BITE,
+    MUT_EYEBALLS,
+    MUT_FOOD_JELLY,
+    MUT_GELATINOUS_BODY,
+    MUT_PSEUDOPODS,
+    MUT_TRANSLUCENT_SKIN,
+
     NUM_MUTATIONS,
 
     RANDOM_MUTATION = NUM_MUTATIONS + 1,
     RANDOM_XOM_MUTATION,
     RANDOM_GOOD_MUTATION,
-    RANDOM_BAD_MUTATION
+    RANDOM_BAD_MUTATION,
+    RANDOM_SLIME_MUTATION,
+    RANDOM_NON_SLIME_MUTATION
 };
 
 enum object_class_type                 // mitm[].base_type
@@ -3232,6 +3239,7 @@ enum zap_type
     ZAP_PRIMAL_WAVE,
     ZAP_IOOD,
     ZAP_SUNRAY,
+
     NUM_ZAPS
 };
 

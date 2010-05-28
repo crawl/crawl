@@ -740,7 +740,7 @@ static void _get_status_lights(std::vector<status_light>& out)
     if (you.duration[DUR_BREATH_WEAPON])
         out.push_back(status_light(YELLOW, "BWpn"));
 
-    if (you.duration[DUR_POWERED_BY_DEATH])
+    if (you.duration[DUR_POWERED_BY_DEATH] && handle_pbd_corpses(false) > 0)
         out.push_back(status_light(LIGHTMAGENTA, "PbD"));
 }
 
@@ -2499,6 +2499,10 @@ std::string _status_mut_abilities()
             case MUT_ICEMAIL:
                 AC_change += player_icemail_armour_class();
                 break;
+            case MUT_EYEBALLS:
+                 snprintf(info, INFO_SIZE, "+%d accuracy", level*2+1);
+                 current = info;
+                 break;
 
             // scales -> calculate sum of AC bonus
             case MUT_DISTORTION_FIELD:
@@ -2541,6 +2545,10 @@ std::string _status_mut_abilities()
                 break;
             case MUT_YELLOW_SCALES:
                 AC_change += level;
+                break;
+            case MUT_GELATINOUS_BODY:
+                AC_change += (level == 3) ? 2 : 1;
+                EV_change += level - 1;
                 break;
             default:
                 ASSERT(false);

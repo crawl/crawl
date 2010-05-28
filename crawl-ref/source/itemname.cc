@@ -1909,6 +1909,12 @@ std::string item_def::name_aux(description_level_type desc,
 
 static item_type_id_type objtype_to_idtype(object_class_type base_type)
 {
+    COMPILE_CHECK(NUM_WANDS     <= NUM_ID_SUBTYPE, c1);
+    COMPILE_CHECK(NUM_SCROLLS   <= NUM_ID_SUBTYPE, c2);
+    COMPILE_CHECK(NUM_JEWELLERY <= NUM_ID_SUBTYPE, c3);
+    COMPILE_CHECK(NUM_POTIONS   <= NUM_ID_SUBTYPE, c4);
+    COMPILE_CHECK(NUM_STAVES    <= NUM_ID_SUBTYPE, c5);
+
     switch (base_type)
     {
     case OBJ_WANDS:     return (IDTYPE_WANDS);
@@ -1933,20 +1939,31 @@ bool item_type_known( const item_def& item )
     if (item.base_type == OBJ_MISSILES
         && missile_brand_obvious(get_ammo_brand(item)))
     {
-            return (true);
+        return (true);
     }
 
     const item_type_id_type idt = objtype_to_idtype(item.base_type);
-    if (idt != NUM_IDTYPE && item.sub_type < 50 )
+    if (idt != NUM_IDTYPE)
         return (type_ids[idt][item.sub_type] == ID_KNOWN_TYPE);
     else
         return (false);
 }
 
+bool item_type_unknown(const item_def& item)
+{
+    if (item_type_known(item))
+        return (false);
+
+    if (is_artefact(item))
+        return (true);
+
+    return (objtype_to_idtype(item.base_type) != NUM_IDTYPE);
+}
+
 bool item_type_known(const object_class_type base_type, const int sub_type)
 {
     const item_type_id_type idt = objtype_to_idtype(base_type);
-    if (idt != NUM_IDTYPE && sub_type < 50 )
+    if (idt != NUM_IDTYPE)
         return (type_ids[idt][sub_type] == ID_KNOWN_TYPE);
     else
         return (false);
@@ -1969,7 +1986,7 @@ bool item_type_tried( const item_def& item )
     }
 
     const item_type_id_type idt = objtype_to_idtype(item.base_type);
-    if (idt != NUM_IDTYPE && item.sub_type < 50)
+    if (idt != NUM_IDTYPE)
     {
         return (type_ids[idt][item.sub_type] == ID_TRIED_TYPE
                 || type_ids[idt][item.sub_type] == ID_MON_TRIED_TYPE

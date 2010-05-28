@@ -627,6 +627,44 @@ static bool _accept_mutation(mutation_type mutat, bool ignore_rarity = false)
     return (x_chance_in_y(rarity, 10));
 }
 
+static mutation_type _get_random_slime_mutation()
+{
+    const mutation_type slime_muts[] = {
+        MUT_GELATINOUS_BODY, MUT_EYEBALLS, MUT_TRANSLUCENT_SKIN,
+        MUT_PSEUDOPODS, MUT_FOOD_JELLY, MUT_ACIDIC_BITE
+    };
+
+    return RANDOM_ELEMENT(slime_muts);
+}
+
+static mutation_type _delete_random_slime_mutation()
+{
+    mutation_type mutat;
+
+    while (true)
+    {
+        mutat = _get_random_slime_mutation();
+
+        if (you.mutation[mutat] > 0)
+            break;
+
+        if (one_chance_in(500))
+        {
+            mutat = NUM_MUTATIONS;
+            break;
+        }
+    }
+
+    return mutat;
+}
+
+static bool _is_slime_mutation(mutation_type m)
+{
+    return (m == MUT_GELATINOUS_BODY || m == MUT_EYEBALLS
+            || m == MUT_TRANSLUCENT_SKIN || m == MUT_PSEUDOPODS
+            || m == MUT_FOOD_JELLY || m == MUT_ACIDIC_BITE);
+}
+
 static mutation_type _get_random_xom_mutation()
 {
     const mutation_type bad_muts[] = {
@@ -864,6 +902,28 @@ static bool _physiology_mutation_conflict(mutation_type mutat)
         return (true);
     }
 
+    equipment_type eq_type = EQ_NONE;
+
+    // Mutations of the same slot conflict
+    if (is_body_facet(mutat))
+    {
+        // Find equipment slot of attempted mutation
+        for (unsigned i = 0; i < ARRAYSZ(_body_facets); i++)
+            if (mutat == _body_facets[i].mut)
+                eq_type = _body_facets[i].eq;
+
+        if (eq_type != EQ_NONE) {
+            for (unsigned i = 0; i < ARRAYSZ(_body_facets); i++) {
+                if (eq_type == _body_facets[i].eq
+                    && mutat != _body_facets[i].mut
+                    && player_mutation_level(_body_facets[i].mut))
+                {
+                    return (true);
+                }
+            }
+        }
+    }
+
     return (false);
 }
 
@@ -1026,6 +1086,9 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         break;
     case RANDOM_BAD_MUTATION:
         mutat = _get_random_mutation(500, false);
+        break;
+    case RANDOM_SLIME_MUTATION:
+        mutat = _get_random_slime_mutation();
         break;
     default:
         break;
@@ -1296,7 +1359,8 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
     if (which_mutation == RANDOM_MUTATION
         || which_mutation == RANDOM_XOM_MUTATION
         || which_mutation == RANDOM_GOOD_MUTATION
-        || which_mutation == RANDOM_BAD_MUTATION)
+        || which_mutation == RANDOM_BAD_MUTATION
+        || which_mutation == RANDOM_NON_SLIME_MUTATION)
     {
         while (true)
         {
@@ -1316,12 +1380,18 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
                 continue;
             }
 
+            if (which_mutation == RANDOM_NON_SLIME_MUTATION
+                && _is_slime_mutation(mutat))
+            {
+                continue;
+            }
+
             if (you.demon_pow[mutat] >= you.mutation[mutat])
                 continue;
 
             const mutation_def& mdef = get_mutation_def(mutat);
 
-            if (random2(10) >= mdef.rarity)
+            if (random2(10) >= mdef.rarity && !_is_slime_mutation(mutat))
                 continue;
 
             const bool mismatch =
@@ -1333,6 +1403,13 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
 
             break;
         }
+    }
+    else if (which_mutation == RANDOM_SLIME_MUTATION)
+    {
+        mutat = _delete_random_slime_mutation();
+
+        if (mutat == NUM_MUTATIONS)
+            return false;
     }
 
     return (_delete_single_mutation_level(mutat));
@@ -1419,6 +1496,8 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
         }
         else if (fully_inactive)
             colourname = "darkgrey";
+        else if (_is_slime_mutation(mut))
+            colourname = "green";
 
         // Build the result
         std::ostringstream ostr;
@@ -1479,8 +1558,6 @@ static const facet_def _demon_facets[] =
     { { MUT_SPIT_POISON, MUT_SPIT_POISON, MUT_SPIT_POISON },
       { 1, 1, 1 } },
     { { MUT_BREATHE_FLAMES, MUT_BREATHE_FLAMES, MUT_BREATHE_FLAMES },
-      { 1, 1, 1 } },
-    { { MUT_REGENERATION, MUT_REGENERATION, MUT_REGENERATION },
       { 1, 1, 1 } },
     // Scale mutations
     { { MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD },
@@ -1671,7 +1748,7 @@ try_again:
     if (slots_lost != 1)
         goto try_again;
 
-    if (breath_weapons > 1)
+    if (breath_weapons > 3)
         goto try_again;
 
     if (elemental > 1)
@@ -1821,22 +1898,22 @@ int how_mutated(bool all, bool levels)
 void check_demonic_guardian()
 {
     const int mutlevel = player_mutation_level(MUT_DEMONIC_GUARDIAN);
-    if(!you.active_demonic_guardian && you.duration[DUR_DEMONIC_GUARDIAN] == 0
-       && !you.disable_demonic_guardian && one_chance_in(mutlevel*100))
+    if (you.duration[DUR_DEMONIC_GUARDIAN] == 0
+        && one_chance_in(5-mutlevel)
+        && get_tension(GOD_NO_GOD) > mutlevel*3 + random2(mutlevel*2))
     {
         const monster_type mt = static_cast<monster_type>(
                             MONS_WHITE_IMP + (mutlevel-1)*5 + random2(5));
         const int guardian = create_monster(mgen_data(mt, BEH_FRIENDLY, &you,
-                                                      0, 0, you.pos(),
+                                                      2, 0, you.pos(),
                                                       MHITYOU, MG_FORCE_BEH));
 
         if (guardian == -1)
             return;
 
         menv[guardian].flags |= MF_NO_REWARD;
-        menv[guardian].flags |= MF_DEMONIC_GUARDIAN;
 
-        you.active_demonic_guardian = true;
+        you.duration[DUR_DEMONIC_GUARDIAN] = random2(mutlevel)*5 + 10;
     }
 }
 

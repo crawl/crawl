@@ -1407,9 +1407,10 @@ void mon_nearby_ability(monsters *monster)
             else
                 mpr("You feel you are being watched by something.");
 
-            dec_mp(5 + random2avg(13, 3));
+            int mp = std::min(5 + random2avg(13, 3), you.magic_points);
+            dec_mp(mp);
 
-            monster->heal(10, true); // heh heh {dlb}
+            monster->heal(mp, true); // heh heh {dlb}
         }
         break;
 
@@ -1432,7 +1433,8 @@ void mon_nearby_ability(monsters *monster)
 // off of.
 void ballisto_on_move(monsters * monster, const coord_def & position)
 {
-    if (monster->type == MONS_GIANT_SPORE)
+    if (monster->type == MONS_GIANT_SPORE
+        && !monster->is_summoned())
     {
         dungeon_feature_type ftype = env.grid(monster->pos());
 
@@ -1457,7 +1459,7 @@ void ballisto_on_move(monsters * monster, const coord_def & position)
                 if (rc != -1)
                 {
                     // Don't leave mold on squares we place ballistos on
-                    env.pgrid(position) &= ~FPROP_MOLD;
+                    remove_mold(position);
                     if  (you.can_see(&env.mons[rc]))
                         mprf("A ballistomycete grows in the wake of the spore.");
                 }
@@ -1509,7 +1511,8 @@ bool _player_at(const coord_def & target)
 void activate_ballistomycetes(monsters * monster, const coord_def & origin,
                               bool player_kill)
 {
-    if (!monster || monster->type != MONS_BALLISTOMYCETE
+    if (!monster || monster->is_summoned()
+                 || monster->mons_species() != MONS_BALLISTOMYCETE
                     && monster->type != MONS_GIANT_SPORE)
     {
         return;
@@ -1521,8 +1524,10 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
     int activation_count = 1;
     if (monster->type == MONS_BALLISTOMYCETE)
         activation_count += monster->number;
+    if (monster->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
+        activation_count = 0;
 
-    int spore_count = 0;
+    int non_activable_count = 0;
     int ballisto_count = 0;
 
     bool any_friendly = monster->attitude == ATT_FRIENDLY;
@@ -1533,8 +1538,11 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
         {
             if (mi->type == MONS_BALLISTOMYCETE)
                 ballisto_count++;
-            else if (mi->type == MONS_GIANT_SPORE)
-                spore_count++;
+            else if (mi->type == MONS_GIANT_SPORE
+                     || mi->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
+            {
+                non_activable_count++;
+            }
 
             if (mi->attitude == ATT_FRIENDLY)
                 any_friendly = true;
@@ -1556,7 +1564,7 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
 
     if (you.religion == GOD_FEDHAS)
     {
-        if (spore_count == 0
+        if (non_activable_count == 0
             && ballisto_count == 0
             && any_friendly
             && monster->type == MONS_BALLISTOMYCETE)
@@ -1604,7 +1612,7 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
     {
         if (player_kill
             && !fedhas_mode
-            && spore_count == 0
+            && non_activable_count == 0
             && ballisto_count == 0
             && monster->attitude == ATT_HOSTILE)
         {
@@ -1617,8 +1625,7 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
             // NOTE: Not triggered if eradication happens by hostile monster,
             //       so we don't give anything away. (jpeg)
             for (rectangle_iterator ri(1); ri; ++ri)
-                if (is_moldy(*ri))
-                    env.pgrid(*ri) &= ~(FPROP_MOLD);
+                remove_mold(*ri);
         }
 
         return;
@@ -1633,9 +1640,7 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
     std::random_shuffle(candidates.begin(), candidates.end());
 
     int index = 0;
-    you.mold_colour = LIGHTRED;
 
-    bool draw = false;
     for (int i=0; i<activation_count; ++i)
     {
         index = i % candidates.size();
@@ -1652,7 +1657,7 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
             // are moving from 0 to 1.
             if (spawner->number == 1)
             {
-                spawner->colour = LIGHTRED;
+                spawner->colour = RED;
                 // Reset the spore production timer.
                 spawner->del_ench(ENCH_SPORE_PRODUCTION, false);
                 spawner->add_ench(ENCH_SPORE_PRODUCTION);
@@ -1664,26 +1669,12 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
         {
             if (you.see_cell(thread->pos))
             {
-                view_update_at(thread->pos);
-                draw = true;
+                env.pgrid(thread->pos) |= FPROP_GLOW_MOLD;
+
             }
 
             thread = thread->last;
         }
     }
 
-    if (draw)
-    {
-        viewwindow(false, false);
-        int sp_delay = 150;
-
-        // Scale delay to match change in arena_delay.
-        if (crawl_state.game_is_arena())
-        {
-            sp_delay *= Options.arena_delay;
-            sp_delay /= 600;
-        }
-
-        delay(sp_delay);
-    }
 }

@@ -355,11 +355,11 @@ ENDMAP
 # awkward to reach via teleport, and there is now always a monster on the
 # rune.
 #
-# Vaults:8 extensively uses subvaults.  To provide another Vault:8 quadrant
-# variation, create a map tagged vault8_quadrant that is 27x24.  It should
+# Vaults:8 extensively uses subvaults. To provide another Vault:8 quadrant
+# variation, create a map tagged vault8_quadrant that is 27x24. It should
 # have three blank cells on one corner (see any existing quadrant for an
 # example), which will be used to orient that corner towards the middle of
-# the map.  Each quadrant must be capable of generating a rune, which
+# the map. Each quadrant must be capable of generating a rune, which
 # should be done by placing an 'O' glyph and calling vault8_rune(_G).
 #
 # There is a lot of variance among the possible quadrants but we do ensure
@@ -381,7 +381,7 @@ MONS: vault guard
 {{
   local detail = "is etched with murals depicting, in great and gruesome "..
 "detail, exactly what will be done to anyone caught stealing from the "..
-"Vaults.  It makes you feel queasy."
+"Vaults. It makes you feel queasy."
 
   dgn.set_feature_desc_short("metal wall", "heavily etched metal wall")
   dgn.set_feature_desc_long("metal wall", "This metal wall " .. detail)
@@ -485,9 +485,9 @@ ENDMAP
 ##############################################################################
 # Vault:8 - Rooms Quadrant
 #
-# This quadrant uses a subvault for each room.  Any subvault tagged
-# vault8_room_rune should be guaranteed to provide a rune.  Any subvault
-# tagged vault8_room should just provide loot.  Note that the rooms
+# This quadrant uses a subvault for each room. Any subvault tagged
+# vault8_room_rune should be guaranteed to provide a rune. Any subvault
+# tagged vault8_room should just provide loot. Note that the rooms
 # are not all the same sizes.
 #
 # about 24 |

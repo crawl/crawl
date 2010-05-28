@@ -182,9 +182,8 @@ bool can_wield(item_def *weapon, bool say_reason,
 
     if (!ignore_temporary_disability
         && you.hunger_state < HS_FULL
-        && you.hunger < you_max_hunger() - 500 // ghouls
         && get_weapon_brand(*weapon) == SPWPN_VAMPIRICISM
-        && you.species != SP_VAMPIRE && you.is_undead != US_UNDEAD)
+        && !you.is_undead)
     {
         if (say_reason)
         {
@@ -1522,6 +1521,12 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
     if (beam.is_tracer)
         return (true);
 
+    if (victim->atype() == ACT_PLAYER && item_blocks_teleport(true, true))
+    {
+        canned_msg(MSG_STRANGE_STASIS);
+        return (false);
+    }
+
     const bool was_seen = you.can_see(victim);
     const bool no_sanct = victim->kill_alignment() == KC_OTHER;
 
@@ -1667,44 +1672,53 @@ static bool _blessed_hit_victim(bolt &beam, actor* victim, int &dmg,
 int _blowgun_power_roll(bolt &beam)
 {
     actor* agent = beam.agent();
-    int base_power = 0;
-    int blowgun_base = 0;
+    if (!agent)
+        return 0;
 
-    if (!agent || agent->atype() == ACT_MONSTER)
+    // Could check player shield skill here or something,
+    // but that won't work with potential other sources
+    // of reflection, and it doesn't matter anyway. [rob]
+    if (beam.reflections > 0)
+        return (agent->get_experience_level() / 3);
+
+    int base_power;
+    item_def* blowgun;
+    if (agent->atype() == ACT_MONSTER)
     {
-        monsters* mons = agent->as_monster();
-        base_power += mons->hit_dice;
-        blowgun_base += (*mons).launcher()->plus;
+        base_power = agent->get_experience_level();
+        blowgun = agent->as_monster()->launcher();
     }
     else
     {
-        base_power += you.skills[SK_THROWING];
-        ASSERT(you.weapon());
-        blowgun_base += (you.weapon())->plus;
+        base_power = agent->skill(SK_THROWING);
+        blowgun = agent->weapon();
     }
 
-    return (base_power + blowgun_base);
+    ASSERT(blowgun && blowgun->sub_type == WPN_BLOWGUN);
+
+    return (base_power + blowgun->plus);
 }
 
 bool _blowgun_check(bolt &beam, actor* victim, bool message = true)
 {
     actor* agent = beam.agent();
 
-    if (!agent || agent->atype() == ACT_MONSTER)
+    if (!agent || agent->atype() == ACT_MONSTER || beam.reflections > 0)
         return (true);
 
     monsters* mons = victim->as_monster();
 
-    int skill = you.skills[SK_THROWING];
-    ASSERT(you.weapon());
-    int enchantment = (you.weapon())->plus;
+    const int skill = you.skills[SK_THROWING];
+    const item_def* wp = agent->weapon();
+    ASSERT(wp && wp->sub_type == WPN_BLOWGUN);
+    const int enchantment = wp->plus;
 
     // You have a really minor chance of hitting with no skills or good
     // enchants.
     if (mons->hit_dice < 15 && random2(100) <= 2)
         return (true);
 
-    int resist_roll = 2 + random2(4 + skill + enchantment);
+    const int resist_roll = 2 + random2(4 + skill + enchantment);
 
     dprf("Brand rolled %d against monster HD: %d.",
          resist_roll, mons->hit_dice);
@@ -3083,13 +3097,13 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where)
 {
     ASSERT(item != NULL);
 
-    int chance = 0;
-
     std::string name = item->name(DESC_PLAIN, false, true, false);
 
     // Exploding missiles are always destroyed.
     if (name.find("explod") != std::string::npos)
         return (true);
+
+    int chance = 0;
 
     if (item->base_type == OBJ_MISSILES)
     {
@@ -3145,7 +3159,7 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where)
     bool destroyed = (chance == 0) ? false : (one_chance_in(chance)
                                               && x_chance_in_y(3, item->plus + 3));
 
-    return destroyed;
+    return (destroyed);
 }
 
 static int _prompt_ring_to_remove(int new_ring)

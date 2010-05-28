@@ -122,11 +122,12 @@
 #include "traps.h"
 #include "travel.h"
 #include "hints.h"
-#include "view.h"
 #include "shout.h"
+#include "stash.h"
+#include "view.h"
 #include "viewchar.h"
 #include "viewgeom.h"
-#include "stash.h"
+#include "viewmap.h"
 #include "wiz-dgn.h"
 #include "wiz-fsim.h"
 #include "wiz-item.h"
@@ -209,7 +210,7 @@ static void _compile_time_asserts();
 //  to new_game and then input.
 //
 
-#ifdef USE_TILE
+#ifdef USE_SDL
 #include <SDL_main.h>
 #endif
 
@@ -1012,6 +1013,13 @@ static void _input()
 
     update_monsters_in_view();
 
+    // Monster update can cause a weapon swap.
+    if (you.turn_is_over)
+    {
+        world_reacts();
+        return;
+    }
+
     hints_new_turn();
 
     if (you.cannot_act())
@@ -1458,8 +1466,10 @@ static void _do_rest()
 
     if (i_feel_safe())
     {
-        if ((you.hp == you.hp_max || you.species == SP_VAMPIRE
-             && you.hunger_state == HS_STARVING)
+        if ((you.hp == you.hp_max
+                || player_mutation_level(MUT_SLOW_HEALING) == 3
+                || (you.species == SP_VAMPIRE
+                    && you.hunger_state == HS_STARVING))
             && you.magic_points == you.max_magic_points)
         {
             mpr("You start searching.");
@@ -1503,13 +1513,13 @@ static void _do_display_map()
 #endif
 
     level_pos pos;
-    show_map(pos, true);
+    const bool travel = show_map(pos, true, true, true);
     redraw_screen();
 
 #ifdef USE_TILE
     mpr("Returning to the game...");
 #endif
-    if (pos.pos.x > 0)
+    if (travel)
         start_translevel_travel(pos);
 }
 
@@ -2332,7 +2342,7 @@ static void _decrement_durations()
     {
         // XXX: Mummies have an ability (albeit an expensive one) that
         // can fix rotted HPs now... it's probably impossible for them
-        // to even start rotting right now, but that could be changed. -- bwr
+        // to even start rotting right now, but that could be changed. - bwr
         // It's not normal biology, so Cheibriados won't help.
         if (you.species == SP_MUMMY)
             you.rotting = 0;
@@ -2352,13 +2362,21 @@ static void _decrement_durations()
     // attacks somewhat less painful, but that seems wrong-headed {dlb}:
     if (you.species == SP_GHOUL)
     {
-        if (one_chance_in((you.religion == GOD_CHEIBRIADOS && you.piety >
-                           piety_breakpoint(0)) ? 600 : 400))
+        int resilience = 400;
+
+        if (you.religion == GOD_CHEIBRIADOS && you.piety >= piety_breakpoint(0))
+            resilience = resilience * 3 / 2;
+
+        // Faster rotting when hungry.
+        for (int hs = you.hunger_state; hs < HS_SATIATED; hs++)
+            resilience = resilience * 2 / 3;
+
+        if (one_chance_in(resilience))
         {
+            dprf("rot rate: 1/%d", resilience);
             mpr("You feel your flesh rotting away.", MSGCH_WARN);
             ouch(1, NON_MONSTER, KILLED_BY_ROTTING);
             rot_hp(1);
-
             if (you.rotting > 0)
                 you.rotting--;
         }
@@ -2481,6 +2499,51 @@ static void _regenerate_hp_and_mp(int delay)
     you.magic_points_regeneration = static_cast<unsigned char>(tmp);
 }
 
+static void _update_mold_state(const coord_def & pos)
+{
+    if (glowing_mold(pos))
+    {
+        // Doing a weird little state thing with the two mold
+        // fprops. 'glowing' mold should turn back to normal after
+        // a couple display update (i.e. after the player makes their
+        // next move), since we happen to have two bits dedicated to
+        // mold now we may as well use them? -cao
+        if (env.pgrid(pos) & FPROP_MOLD)
+            env.pgrid(pos) &= ~FPROP_MOLD;
+        else
+        {
+            env.pgrid(pos) |= FPROP_MOLD;
+            env.pgrid(pos) &= ~FPROP_GLOW_MOLD;
+        }
+    }
+}
+
+static void _update_mold()
+{
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        _update_mold_state(*ri);
+    }
+    for (monster_iterator mon_it; mon_it; ++mon_it)
+    {
+        if (mon_it->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
+        {
+            for (radius_iterator rad_it(mon_it->pos(),
+                                        2, true, false); rad_it; ++rad_it)
+            {
+                // A threshold greater than 5, less than 8 on distance
+                // matches the blast of a radius 2 explosion.
+                int range = distance(mon_it->pos(), *rad_it);
+                if (range < 6 && is_moldy(*rad_it) )
+                {
+                    env.pgrid(*rad_it) |= FPROP_MOLD;
+                    env.pgrid(*rad_it) |= FPROP_GLOW_MOLD;
+                }
+            }
+        }
+    }
+}
+
 void world_reacts()
 {
     reset_show_terrain();
@@ -2592,6 +2655,7 @@ void world_reacts()
     handle_time();
     update_stat_zero();
     manage_clouds();
+    _update_mold();
 
     if (you.duration[DUR_FIRE_SHIELD] > 0)
         manage_fire_shield(you.time_taken);
@@ -3077,7 +3141,7 @@ static void _open_door(coord_def move, bool check_confused)
                 dungeon_feature_type secret
                     = grid_secret_door_appearance(dc);
                 mprf("That %s was a secret door!",
-                     feature_description(secret, NUM_TRAPS, false,
+                     feature_description(secret, NUM_TRAPS, "",
                                          DESC_PLAIN, false).c_str());
             }
         }

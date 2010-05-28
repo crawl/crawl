@@ -1027,6 +1027,103 @@
   "pbd"
 },
 
+// Jiyva only mutations
+{ MUT_GELATINOUS_BODY,            0,  3, true, true,
+  NULL,
+
+  {"Your rubbery body absorbs attacks (AC +1).",
+   "Your pliable body absorbs attacks (AC +1, EV +1).",
+   "Your gelatinous body deflects attacks (AC +2, EV +2)."},
+
+   {"Your body becomes stretchy.",
+    "Your body becomes more malleable.",
+    "Your body becomes viscous."},
+
+   {"Your body returns to its normal consistency.",
+    "Your body becomes less viscous.",
+    "Your body becomes less viscous."},
+
+    "gelatinous body"
+},
+
+{ MUT_EYEBALLS,                   0,  3, true, true,
+  NULL,
+
+  {"Your body is partially covered in golden eyeballs (Acc +3)",
+   "Your body is mostly covered in golden eyeballs (Acc +5)",
+   "Your body is completely covered in golden eyeballs (Acc +7, SInv)"},
+
+   {"Eyeballs grow over part of your body.",
+    "Eyeballs cover a large portion of your body.",
+    "Eyeballs cover you completely."},
+
+   {"The eyeballs on your body disappear.",
+    "The eyeballs on your body recede somewhat.",
+    "The eyeballs on your body recede somewhat."},
+
+    "eyeballs"
+},
+
+{ MUT_TRANSLUCENT_SKIN,           0,   3, true, true,
+  "translucent skin",
+
+  {"Your skin is partially translucent.",
+   "Your skin is mostly translucent (Stlth).",
+   "Your transparent skin reduces the accuracy of your foes (Stlth)."},
+
+  {"Your skin becomes partially translucent.",
+   "Your skin becomes more translucent.",
+   "Your skin becomes completely transparent."},
+
+  {"Your skin returns to its normal opacity.",
+   "Your skin's translucency fades.",
+   "Your skin's transparency fades."},
+
+   "translucent skin"
+},
+
+{ MUT_PSEUDOPODS,                 0,    3, true, true,
+  "pseudopods",
+
+  {"Armour fits poorly on your pseudopods.",
+   "Armour fits poorly on your large pseudopods.",
+   "Armour fits poorly on your massive pseudopods."},
+
+  {"Pseudopods emerge from your body.",
+   "Your pseudopods grow in size.",
+   "Your pseudopods grow in size."},
+
+  {"Your pseudopods retract into your body.",
+   "Your pseudopods become smaller.",
+   "Your pseudopods become smaller."},
+
+   "pseudopods"
+},
+
+{ MUT_FOOD_JELLY,                 0,    1, true, true,
+  "spawn jellies when eating",
+
+  {"You occasionally spawn a jelly by eating.", "", ""},
+
+  {"You feel more connected to the slimes.", "", ""},
+
+  {"Your connection to the slimes vanishes.", "", ""},
+
+  "jelly spawner"
+},
+
+{ MUT_ACIDIC_BITE,                0,     1, true, true,
+  "acidic bite",
+
+  {"You have acidic saliva.", "", ""},
+
+  {"Acid begins to drip from your mouth.", "", ""},
+
+  {"Your mouth feels dry.", "", ""},
+
+  "acidic bite"
+},
+
 // Scale mutations
 { MUT_DISTORTION_FIELD,                 2,  3, false, false,
   NULL,
@@ -1193,13 +1290,13 @@
 { MUT_THIN_SKELETAL_STRUCTURE,          2,  3, false,  true,
   NULL,
 
-  {"You have a somewhat thin skeletal structure (Dex +1, Str -1).",
-   "You have a moderately thin skeletal structure (Dex +2, Str -2).",
-   "You have an unnaturally thin skeletal structure (Dex +3, Str -3)."},
+  {"You have a somewhat thin skeletal structure (Dex +1, Str -1, Stlth).",
+   "You have a moderately thin skeletal structure (Dex +2, Str -2, Stlth).",
+   "You have an unnaturally thin skeletal structure (Dex +3, Str -3, Stlth)."},
 
-  {"Your bones become slightly less dense; you feel more stealthy.",
-   "Your bones become somewhat less dense; you feel more stealthy.",
-   "Your bones become less dense; you feel stealthy."},
+  {"Your bones become slightly less dense.",
+   "Your bones become somewhat less dense.",
+   "Your bones become less dense."},
 
   {"Your skeletal structure returns to normal.",
    "Your skeletal structure densifies.",

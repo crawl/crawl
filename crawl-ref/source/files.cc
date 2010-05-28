@@ -1240,17 +1240,6 @@ static void _grab_followers()
             pikel = fmenv;
     }
 
-    // Handle interlevel followers
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (testbits(mi->flags, MF_INTERLEVEL_FOLLOWER)
-            || testbits(mi->flags, MF_DEMONIC_GUARDIAN))
-        {
-            mi->flags |= MF_TAKING_STAIRS;
-            _grab_follower_at(mi->pos());
-        }
-    }
-
     // Deal with Dowan and Duvessa here.
     if (dowan && duvessa)
     {
@@ -1552,10 +1541,9 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     _redraw_all();
 
     if (load_mode != LOAD_VISITOR)
-    {
         dungeon_events.fire_event(DET_ENTERING_LEVEL);
-        los_changed();
-    }
+
+    los_changed();
 
     // Things to update for player entering level
     if (load_mode == LOAD_ENTER_LEVEL)
@@ -1672,7 +1660,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
                 && feat_stair_direction(stair_taken) != CMD_NO_CMD)
             {
                 std::string stair_str =
-                    feature_description(feat, NUM_TRAPS, false,
+                    feature_description(feat, NUM_TRAPS, "",
                                         DESC_CAP_THE, false);
                 std::string verb = stair_climb_verb(feat);
 

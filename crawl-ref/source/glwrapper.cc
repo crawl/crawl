@@ -1,3 +1,5 @@
+#include "AppHdr.h"
+
 #ifdef USE_TILE
 
 #include "glwrapper.h"

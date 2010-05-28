@@ -83,6 +83,7 @@ std::string quant_name( const item_def &item, int quant,
                         description_level_type des, bool terse = false );
 
 bool item_type_known( const item_def &item );
+bool item_type_unknown( const item_def &item );
 bool item_type_known( const object_class_type base_type, const int sub_type );
 bool item_type_tried( const item_def &item );
 
@@ -101,7 +102,8 @@ const char* armour_ego_name(const item_def& item, bool terse);
 
 void init_properties();
 
-typedef FixedArray < item_type_id_state_type, NUM_IDTYPE, 50 > id_arr;
+const int NUM_ID_SUBTYPE = 50;
+typedef FixedArray<item_type_id_state_type, NUM_IDTYPE, NUM_ID_SUBTYPE> id_arr;
 
 id_arr& get_typeid_array();
 item_type_id_state_type get_ident_type(const item_def &item);
