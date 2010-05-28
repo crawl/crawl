@@ -528,7 +528,9 @@ bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
     else
     {
         // Do we want to display the floor type or is that too distracting?
-        const coord_def c = item->pos;
+        const coord_def c = item->held_by_monster()
+            ? item->holding_monster()->pos()
+            : item->pos;
         int ch = -1;
         if (c.x == 0)
         {
