@@ -245,6 +245,7 @@ ENDMAP
 NAME:    tutorial_basic_2
 TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_shop_gen tutorial
 KPROP:   l = no_cloud_gen
+KMASK:   + = no_secret_doors
 ORIENT:  encompass
 PLACE:   D:2
 KITEM:   A = arrow q:25 ego:none, bow ego:none not_cursed
@@ -269,8 +270,8 @@ xxAxxxxxxx...d.D...xxxxxx.[.x
 xx.xxxxxxx.x.....x.xxxxxx...x
 xx.xxxxxxx.xxxxxxx.xxxxxx.{.x
 xx.x.....x.x.l...x.xxxxxx...x
-xx.x.....x.x.l...x.xxxxxxxxxx
-xx.B.....C.x1l...E.xxxxxxxxxx
+xxBx.....x.x.l...xExxxxxxxxxx
+xx.+.....C.x1l...+.xxxxxxxxxx
 xxxxlllllxxx.l...xxxxxxxxxxxx
 xxxx..1..xxx.l...xxxxxxxxxxxx
 xxxxxxxxxxxxxxFxxxxxxxxxxxxxx
@@ -284,21 +285,21 @@ ENDMAP
 NAME:    tutorial_basic_3
 TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_shop_gen tutorial
 KPROP:   l = no_cloud_gen
+KMASK:   + = no_secret_doors
 ORIENT:  encompass
 PLACE:   D:3
 KFEAT:   , = .
 KPROP:   , = bloody
 ITEM:    hand axe ego:none not_cursed
 ITEM:    bread ration
-ITEM:    scroll of identify q:3, ring of slaying good_item no_uniq
+ITEM:    scroll of identify q:3, ring of slaying good_item no_uniq not_cursed
 ITEM:    cursed great sword ego:none, scroll of remove curse q:3
 KITEM:   p = potion of healing q:3
 KITEM:   m = potion of restore abilities q:3
 KITEM:   n = potion of degeneration q:3
 KITEM:   D = meat ration q:50
 KFEAT:   pmn = .
-KITEM:   o = wand of fireball
-KFEAT:   o = .
+KITEM:   G = wand of fireball
 KFEAT:   ABCDEFGHI = .
 COLOUR:  ABCDEFGHI = blue
 MARKER:  A = lua:tutorial.message( "You can chop up corpses with " .. tutorial.get_cmd("CMD_BUTCHER") .. " into edible meat chunks while standing over them. For that you'll need a sharp object, such as the axe over there.", "tutorial", "true" )
@@ -318,9 +319,9 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxx..3..xxxxxx....xxxx
 xx[.(xxxxxxxxxxxxxxlllllxxxxxx.$$.xx)x
 xxx{xxxxxxxxxxxxxxx..........H.$$..}.x
-xxxAxxxxxxxxxxxxxxx..o..xxxxxx.$$.xx]x
-xxx.xxxxxxxxxxxxxxxxxGxxxxxxxx....xxxx
-x.....xxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxx
+xxxAxxxxxxxxxxxxxxx.....xxxxxx.$$.xx]x
+xxx.xxxxxxxxxxxxxxxxx+xxxxxxxx....xxxx
+x.....xxxxxxxxxxxxxxxGxxxxxxxxxxxxxxxx
 x,....xxxxxxxxxxxxxxx.xx.....xxxxxxxxx
 x.1,1.xxxxxxxxxxxxxxx....pmn.xxxxxxxxx
 x..1.,xxxxxxxxxxxxxxxxxx.....xxxxxxxxx
@@ -375,8 +376,8 @@ xxxxxxxxoo=ooxxxxxxxxxxxxxx+xx
 xxxxxxxx..C..xxxxxxx..3..xxFxx
 xxxxxxxx.._..xxxxxxx.....xx.xx
 xxxxxxxx.....xxxxxxx........xx
-xxxxxxxxxx.xxx..1..x..E..xxxxx
-xxxxxxxxxx.xxx....rxxx.xxxxxxx
+xxxxxxxxxx.xxx..1..x.....xxxxx
+xxxxxxxxxx.xxx....rxxxExxxxxxx
 xxxxxxxxxx..D+.....+...xxxxxxx
 xxxxxxxxxxxxxx.1..1xxxxxxxxxxx
 xxxxxxxxxxxxxx...2.xxxxxxxxxxx
