@@ -393,8 +393,8 @@ PLACE:   D:5
 MONS:    pandemonium lord name:Plog name_replace spells:fire_storm;;haste;;;
 KFEAT:   ABC = .
 COLOUR:  ABC = blue
-MARKER:  A = lua:tutorial.message( "Congratulations, You have succesfully defeated Sigmund! He is one of the many early game threats that you will face in your adventures.", "tutorial", "true" )
-MARKER:  B = lua:tutorial.message( "Death in Crawl is inevitable, sometimes you will get yourself way over your head and you will die. Often", "tutorial", "true" )
+MARKER:  A = lua:tutorial.message( "Congratulations, You have succeeded in defeating Sigmund! He is one of the many early game threats that you will face on your adventures.", "tutorial", "true" )
+MARKER:  B = lua:tutorial.message( "Death in Crawl is inevitable, sometimes you will get yourself in way over your head; often, you will die.", "tutorial", "true" )
 MARKER:  C = lua:tutorial.message( "How on earth did you manage to defeat or escape from that Pandemonium lord?", "tutorial", "true" )
 MAP
 vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
