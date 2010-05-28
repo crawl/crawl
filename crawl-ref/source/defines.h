@@ -39,7 +39,7 @@ const int MAX_GHOSTS = 10;
 
 enum extra_monster_index_type
 {
-    MAX_MONSTERS = 350, // max size of monter array {dlb}
+    MAX_MONSTERS = 350, // max size of monster array {dlb}
     NON_MONSTER,        // no monster
 
     MHITNOT = NON_MONSTER,
