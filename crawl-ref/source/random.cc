@@ -199,7 +199,11 @@ void scale_dice(dice_def &dice, int threshold)
 // Calculates num/den and randomly adds one based on the remainder.
 int div_rand_round(int num, int den)
 {
-    return (num / den + (random2(den) < num % den));
+    int rem = num % den;
+    if (rem)
+        return (num / den + (random2(den) < rem));
+    else
+        return (num / den);
 }
 
 int bestroll(int max, int rolls)

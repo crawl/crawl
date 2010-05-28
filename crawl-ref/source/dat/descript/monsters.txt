@@ -585,35 +585,35 @@ A long and bloated body, supported by dozens of short legs and topped with an ev
 %%%%
 draconian
 
-Before you stands a draconian.
+Before you stands a scale-covered humanoid with a reptilian tail and small wings.
 %%%%
 draconian annihilator
 
-Before you stands a draconian.
+This draconian, in addition to its deadly breath, can use powerful conjurations to destroy anyone who dares to stand in its way.
 %%%%
 draconian caller
 
-Before you stands a draconian.
+While formidable in combat, this draconian specializes in summoning hordes of drakes against you. While lesser in power than full-sized dragons, they are nevertheless deadlier than most creatures you can meet.
 %%%%
 draconian knight
 
-Before you stands a draconian.
+Protected by both its thick scales and its skill in use of weapons and armour, this draconian is a dangerous opponent.
 %%%%
 draconian monk
 
-Before you stands a draconian.
+While lacking the claws possessed by dragons it was created from, this draconian doesn't need weapons to defeat you, for its arms and spiky tail are mighty indeed.
 %%%%
 draconian scorcher
 
-Before you stands a draconian.
+Capable of roasting you and any other interlopers to a crisp, these guys really enjoy making sure you are well done.
 %%%%
 draconian shifter
 
-Before you stands a draconian.
+A master of the warp, this draconian can translocate both itself and you to any place, either on this world or outside of it.
 %%%%
 draconian zealot
 
-Before you stands a draconian.
+This draconian draws its power from the worship of dark gods known to neither men, dwarves, elves nor orcs.
 %%%%
 dragon
 
@@ -869,7 +869,7 @@ A small humanoid demon covered in brown hair. Watch out - it may have fleas!
 %%%%
 harpy
 
-Harpies have roamed these coasts as long as seafarers can remember. They strike fear in the hearts of all sentient beings, but not for their claws. It is their way to steal food from the unwary, causing many a man to starve to death.
+Harpies have roamed these coasts as long as seafarers can remember. They strike fear in the hearts of all sentient beings, but not for their claws. It is their way to devour the food of the unwary, causing many a man to starve to death.
 %%%%
 hell hound
 

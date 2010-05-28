@@ -316,10 +316,10 @@ bool brand_weapon(brand_type which_brand, int power)
         return (false);
     }
 
-    // Can only brand launchers with sensical brands
+    // Can only brand launchers with sensible brands.
     if (is_range_weapon(weapon))
     {
-        // If the new missile type wouldn't match the launcher, say no
+        // If the new missile type wouldn't match the launcher, say no.
         missile_type missile = fires_ammo_type(weapon);
 
         // XXX: To deal with the fact that is_missile_brand_ok will be
@@ -1641,8 +1641,9 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
 
         if (wpn)
         {
-            mprf("%s vibrates crazily for a second.",
-                 wpn->name(DESC_CAP_YOUR).c_str());
+            mprf("%s vibrate%s crazily for a second.",
+                 wpn->name(DESC_CAP_YOUR).c_str(),
+                 wpn->quantity > 1 ? "s" : "");
         }
         else
             mprf("Your %s twitch.", your_hand(true).c_str());

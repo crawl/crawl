@@ -1,6 +1,6 @@
 ###############################################################################
-# layout.des: All large layout vaults go here.  These are defined by having
-#             both ORIENT: encompass and TAGS: layout.  These are not true
+# layout.des: All large layout vaults go here. These are defined by having
+#             both ORIENT: encompass and TAGS: layout. These are not true
 #             vaults, in that the dungeon builder can add other vaults on
 #             top of them.
 #
@@ -25,7 +25,7 @@
 ##############################################################
 # layout_forbidden_doughnut
 #
-# This replaces dungeon.cc:_plan_1().  It usually creates a
+# This replaces dungeon.cc:_plan_1(). It usually creates a
 # room with a large hole in the middle.
 #
 NAME:   layout_forbidden_donut
@@ -92,7 +92,7 @@ ENDMAP
 ##############################################################
 # layout_cross
 #
-# This replaces dungeon.cc:_plan_2().  It creates a large cross
+# This replaces dungeon.cc:_plan_2(). It creates a large cross
 # of varying width.
 #
 NAME:    layout_cross
@@ -147,8 +147,8 @@ ENDMAP
 #############################################################
 # layout_big_octagon
 #
-# This replaces dungeon.cc:_plan_6().  It has an octagonal
-# room with some number of pillars in the middle.  The stairs
+# This replaces dungeon.cc:_plan_6(). It has an octagonal
+# room with some number of pillars in the middle. The stairs
 # are generally all grouped together.
 #
 
@@ -209,7 +209,7 @@ TAGS:    layout allow_dup
         make_rounded_square}
 
     -- Pillar size params
-    -- NOTE: Be careful about tweaking the ranges here.  Pillars that are
+    -- NOTE: Be careful about tweaking the ranges here. Pillars that are
     -- too large, close, or large in number can entirely surround the center.
 
     local pfunc = pillar_func[crawl.random2(#pillar_func) + 1]

@@ -172,6 +172,9 @@ static int calc_your_to_hit_unarmed(int uattack = UNAT_NO_ATTACK,
     if (wearing_amulet(AMU_INACCURACY))
         your_to_hit -= 5;
 
+    if (player_mutation_level(MUT_EYEBALLS))
+        your_to_hit += 2 * player_mutation_level(MUT_EYEBALLS) + 1;
+
     // Vampires know how to bite and aim better when thirsty.
     if (you.species == SP_VAMPIRE && uattack == UNAT_BITE)
     {
@@ -1032,6 +1035,19 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
         {
             damage_brand = SPWPN_VAMPIRICISM;
         }
+
+        if (player_mutation_level(MUT_ACIDIC_BITE))
+        {
+            damage_brand = SPWPN_ACID;
+            aux_damage += roll_dice(2,4);
+        }
+
+        break;
+
+    case UNAT_PSEUDOPODS:
+        aux_attack = aux_verb = "slap";
+        aux_damage += 4 * you.has_usable_pseudopods();
+        noise_factor = 125;
         break;
 
     default:
@@ -1056,6 +1072,9 @@ static bool _tran_forbid_aux_attack(unarmed_attack_type atk)
         return (you.attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST
                 || you.attribute[ATTR_TRANSFORMATION] == TRAN_BAT);
+
+    case UNAT_PSEUDOPODS:
+        return (you.attribute[ATTR_TRANSFORMATION] != TRAN_NONE);
 
     default:
         return (false);
@@ -1086,6 +1105,15 @@ static bool _extra_aux_attack(unarmed_attack_type atk)
         return (you.has_usable_tail()
                 && one_chance_in(4));
 
+    case UNAT_PSEUDOPODS:
+        return (you.has_usable_pseudopods()
+                && one_chance_in(3));
+
+    case UNAT_BITE:
+        return ((you.has_usable_fangs()
+                 || player_mutation_level(MUT_ACIDIC_BITE))
+                && one_chance_in(5));
+
     default:
         return (false);
     }
@@ -1111,8 +1139,14 @@ unarmed_attack_type melee_attack::player_aux_choose_baseattack()
         baseattack = UNAT_TAILSLAP;
     }
 
+    if (you.has_usable_pseudopods()
+        && baseattack == UNAT_KICK && coinflip())
+    {
+        baseattack = UNAT_PSEUDOPODS;
+    }
+
     // With fangs, replace head attacks with bites.
-    if (you.has_usable_fangs()
+    if ((you.has_usable_fangs() || player_mutation_level(MUT_ACIDIC_BITE))
         && (baseattack == UNAT_HEADBUTT
             || baseattack == UNAT_KICK
             || _vamp_wants_blood_from_monster(defender->as_monster())
@@ -1265,6 +1299,13 @@ bool melee_attack::player_aux_apply()
              defender->name(DESC_NOCAP_THE).c_str(),
              debug_damage_number().c_str(),
              attack_strength_punctuation().c_str());
+
+        if (damage_brand == SPWPN_ACID)
+        {
+            mprf("%s is splashed with acid.",
+                 defender->name(DESC_CAP_THE).c_str());
+                 corrode_monster(defender->as_monster());
+        }
 
         if (damage_brand == SPWPN_VENOM && coinflip())
             poison_monster(defender->as_monster(), KC_YOU);
@@ -3836,6 +3877,10 @@ int melee_attack::player_to_hit(bool random_factor)
     // armour penalty
     your_to_hit -= (player_armour_tohit_penalty + player_shield_tohit_penalty);
 
+    //mutation
+    if (player_mutation_level(MUT_EYEBALLS))
+        your_to_hit += 2 * player_mutation_level(MUT_EYEBALLS) + 1;
+
 #ifdef DEBUG_DIAGNOSTICS
     int roll_hit = your_to_hit;
 #endif
@@ -5074,19 +5119,19 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         if (defender->atype() != ACT_PLAYER)
             break;
 
-        const bool stolen = expose_player_to_element(BEAM_STEAL_FOOD, 10);
-        const bool ground = expose_items_to_element(BEAM_STEAL_FOOD, you.pos(),
+        const bool stolen = expose_player_to_element(BEAM_DEVOUR_FOOD, 10);
+        const bool ground = expose_items_to_element(BEAM_DEVOUR_FOOD, you.pos(),
                                                     10);
         if (needs_message)
         {
             if (stolen)
             {
-                mprf("%s steals some of your food!",
+                mprf("%s devours some of your food!",
                      atk_name(DESC_CAP_THE).c_str());
             }
             else if (ground)
             {
-                mprf("%s steals some of the food from beneath you!",
+                mprf("%s devours some of the food beneath you!",
                      atk_name(DESC_CAP_THE).c_str());
             }
         }
@@ -5140,6 +5185,28 @@ void melee_attack::mons_do_passive_freeze()
                 const int stun = (1 - cold_res) * random2(7);
                 mon->speed_increment -= stun;
             }
+        }
+    }
+}
+
+void melee_attack::mons_do_eyeball_confusion()
+{
+    if (you.mutation[MUT_EYEBALLS]
+        && attacker->alive()
+        && grid_distance(you.pos(), attacker->as_monster()->pos()) == 1
+        && x_chance_in_y(player_mutation_level(MUT_EYEBALLS), 20))
+    {
+        const int ench_pow = player_mutation_level(MUT_EYEBALLS) * 30;
+        monsters *mon = attacker->as_monster();
+
+        if(!mon->check_res_magic(ench_pow)
+            && mons_class_is_confusable(mon->type))
+        {
+            mprf("The eyeballs on your body gaze at %s.",
+                 mon->name(DESC_NOCAP_THE).c_str());
+
+            mon->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_YOU,
+                                      30 + random2(100)));
         }
     }
 }
@@ -5591,10 +5658,11 @@ void melee_attack::mons_perform_attack_rounds()
         }
     }
 
-    // Check for passive freeze mutation.
+    // Check for passive freeze or eyeball mutation.
     if (defender->atype() == ACT_PLAYER && defender->alive()
         && attacker != defender)
     {
+        mons_do_eyeball_confusion();
         mons_do_passive_freeze();
     }
 
@@ -5672,6 +5740,10 @@ int melee_attack::mons_to_hit()
 
     if (defender->backlit(true, false))
         mhit += 2 + random2(8);
+
+     if (defender->atype() == ACT_PLAYER
+         && player_mutation_level(MUT_TRANSLUCENT_SKIN) >= 3)
+         mhit -= 5;
 
     // Invisible defender is hard to hit if you can't see invis. Note
     // that this applies only to monsters vs monster and monster vs

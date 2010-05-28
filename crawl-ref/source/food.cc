@@ -32,8 +32,10 @@
 #include "item_use.h"
 #include "it_use2.h"
 #include "macro.h"
+#include "mgen_data.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-place.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "output.h"
@@ -897,10 +899,10 @@ bool food_change(bool suppress_message)
             less_hungry = true;
 
         you.hunger_state = newstate;
-        set_redraw_status( REDRAW_HUNGER );
+        set_redraw_status(REDRAW_HUNGER);
 
         if (newstate < HS_SATIATED)
-            interrupt_activity( AI_HUNGRY );
+            interrupt_activity(AI_HUNGRY);
 
         if (you.species == SP_VAMPIRE)
         {
@@ -1939,6 +1941,17 @@ static void _eating(unsigned char item_class, int item_type)
 
             start_delay(DELAY_EAT, duration, 0, item_type);
             lessen_hunger(food_value, true);
+
+            if (player_mutation_level(MUT_FOOD_JELLY)
+                && x_chance_in_y(food_value, 12000))
+            {
+                mgen_data mg(MONS_JELLY, BEH_STRICT_NEUTRAL, 0, 0, 0,
+                             you.pos(), MHITNOT, 0, you.religion);
+
+                if (create_monster(mg) != -1)
+                    mprf("A jelly spawns from your body.");
+            }
+
             if (you.hunger_level() >= HS_FULL)
                 did_god_conduct(DID_GLUTTONY, food_value, true);
         }
@@ -2840,7 +2853,7 @@ int you_max_hunger()
     if (you.is_undead == US_UNDEAD)
         return (6000);
 
-    // Take care of ghouls - they can never be 'full'.
+    // Ghouls can never be full or above.
     if (you.species == SP_GHOUL)
         return (6999);
 
@@ -2853,8 +2866,8 @@ int you_min_hunger()
     if (you.is_undead == US_UNDEAD)
         return (6000);
 
-    // Vampires can never starve to death.
-    if (you.species == SP_VAMPIRE)
+    // Vampires can never starve to death.  Ghouls will just rot much faster.
+    if (you.is_undead)
         return (701);
 
     return (0);
@@ -2881,4 +2894,3 @@ void handle_starvation()
         }
     }
 }
-

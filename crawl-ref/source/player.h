@@ -97,7 +97,6 @@ public:
   bool redraw_evasion;
 
   unsigned char flash_colour;
-  unsigned char mold_colour;
 
   unsigned char hit_points_regeneration;
   unsigned char magic_points_regeneration;
@@ -220,8 +219,6 @@ public:
 
   std::vector<demon_trait> demonic_traits;
 
-  bool active_demonic_guardian;
-  bool disable_demonic_guardian;
   std::vector<item_def> powered_by_death_corpses;
 
   unsigned char magic_contamination;
@@ -408,6 +405,8 @@ public:
     int       has_tail(bool allow_tran = true) const;
     int       has_usable_tail(bool allow_tran = true) const;
     bool      has_usable_offhand() const;
+    int       has_pseudopods(bool allow_tran = true) const;
+    int       has_usable_pseudopods(bool allow_tran = true) const;
 
     item_def *weapon(int which_attack = -1);
     item_def *shield();
@@ -510,7 +509,7 @@ public:
     bool incapacitated() const
     {
         return actor::incapacitated() || stat_zero[STAT_DEX];
-    };
+    }
 
     bool asleep() const;
     void hibernate(int power = 0);

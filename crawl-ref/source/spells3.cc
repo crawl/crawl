@@ -62,6 +62,7 @@
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
+#include "viewmap.h"
 #include "shout.h"
 #include "xom.h"
 
@@ -1645,7 +1646,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
         while (true)
         {
             level_pos lpos;
-            show_map(lpos, false, true);
+            bool chose = show_map(lpos, false, true, false);
             pos = lpos.pos;
             redraw_screen();
 
@@ -1664,7 +1665,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
 
             dprf("Target square (%d,%d)", pos.x, pos.y );
 
-            if (pos == you.pos() || pos == coord_def(-1,-1))
+            if (!chose || pos == you.pos())
             {
                 if (!wizard_tele)
                 {
@@ -1799,7 +1800,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
     return (!is_controlled);
 }
 
-bool you_teleport_to (const coord_def where_to, bool move_monsters)
+bool you_teleport_to(const coord_def where_to, bool move_monsters)
 {
     // Attempts to teleport the player from their current location to 'where'.
     // Follows this line of reasoning:
@@ -1889,7 +1890,8 @@ void you_teleport_now(bool allow_control, bool new_abyss_area, bool wizard_tele)
     }
 }
 
-bool entomb(int powc)
+static bool _do_imprison(const int power, const coord_def& where,
+                         bool force_full)
 {
     // power guidelines:
     // powc is roughly 50 at Evoc 10 with no godly assistance, ranging
@@ -1897,57 +1899,80 @@ bool entomb(int powc)
     // as more or less the theoretical maximum.
     int number_built = 0;
 
-    const dungeon_feature_type safe_to_overwrite[] = {
-        DNGN_FLOOR, DNGN_SHALLOW_WATER, DNGN_OPEN_DOOR,
-        DNGN_TRAP_MECHANICAL, DNGN_TRAP_MAGICAL, DNGN_TRAP_NATURAL,
-        DNGN_UNDISCOVERED_TRAP,
-        DNGN_FLOOR_SPECIAL
+    const dungeon_feature_type safe_tiles[] = {
+        DNGN_SHALLOW_WATER, DNGN_FLOOR, DNGN_FLOOR_SPECIAL, DNGN_OPEN_DOOR
     };
 
-    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+    bool proceed;
+
+    if (force_full)
     {
-        // Tile already occupied by monster
-        if (monster_at(*ai))
-            continue;
+        bool success = true;
 
+        for (adjacent_iterator ai(where); ai; ++ai)
+        {
+            // The tile is occupied.
+            if (actor_at(*ai))
+            {
+                success = false;
+                break;
+            }
+
+            // Make sure we have a legitimate tile.
+            proceed = false;
+            for (unsigned int i = 0; i < ARRAYSZ(safe_tiles) && !proceed; ++i)
+                if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai)))
+                    proceed = true;
+
+            if (!proceed && grd(*ai) > DNGN_MAX_NONREACH)
+            {
+                success = false;
+                break;
+            }
+        }
+
+        if (!success)
+        {
+            mpr("Half-formed walls emerge from the floor, then retract.");
+            return (false);
+        }
+    }
+
+    for (adjacent_iterator ai(where); ai; ++ai)
+    {
         // This is where power comes in.
-        if (one_chance_in(powc/5))
+        if (!force_full && one_chance_in(power / 5))
             continue;
 
-        bool proceed = false;
-        for (unsigned int i=0; i < ARRAYSZ(safe_to_overwrite) && !proceed; ++i)
-            if (grd(*ai) == safe_to_overwrite[i])
+        // The tile is occupied.
+        if (actor_at(*ai))
+            continue;
+
+        // Make sure we have a legitimate tile.
+        proceed = false;
+        for (unsigned int i = 0; i < ARRAYSZ(safe_tiles) && !proceed; ++i)
+            if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai)))
                 proceed = true;
 
-        // checkpoint one - do we have a legitimate tile? {dlb}
-        if (!proceed)
-            continue;
+        if (proceed)
+        {
+            // All items are moved inside.
+            if (igrd(*ai) != NON_ITEM)
+                move_items(*ai, where);
 
-        // hate to see the orb get destroyed by accident {dlb}:
-        for (stack_iterator si(*ai); si && proceed; ++si)
-            if (si->base_type == OBJ_ORBS)
-                proceed = false;
+            // All clouds are destroyed.
+            if (env.cgrid(*ai) != EMPTY_CLOUD)
+                delete_cloud(env.cgrid(*ai));
 
-        // checkpoint two - is the orb resting in the tile? {dlb}:
-        if (!proceed)
-            continue;
+            // All traps are destroyed.
+            if (trap_def *ptrap = find_trap(*ai))
+                ptrap->destroy();
 
-        // Destroy all items on the square.
-        for (stack_iterator si(*ai); si; ++si)
-            destroy_item(si->index());
-
-        // deal with clouds {dlb}:
-        if (env.cgrid(*ai) != EMPTY_CLOUD)
-            delete_cloud(env.cgrid(*ai));
-
-        // All traps are destroyed
-        if (trap_def* ptrap = find_trap(*ai))
-            ptrap->destroy();
-
-        // Finally, place the wall {dlb}:
-        grd(*ai) = DNGN_ROCK_WALL;
-        set_terrain_changed(*ai);
-        number_built++;
+            // Actually place the wall.
+            grd(*ai) = DNGN_ROCK_WALL;
+            set_terrain_changed(*ai);
+            number_built++;
+        }
     }
 
     if (number_built > 0)
@@ -1959,6 +1984,23 @@ bool entomb(int powc)
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return (number_built > 0);
+}
+
+bool entomb(const int power)
+{
+    return (_do_imprison(power, you.pos(), false));
+}
+
+bool cast_imprison(const int power, monsters *monster)
+{
+    if (_do_imprison(power, monster->pos(), true))
+    {
+        monster->add_ench(mon_enchant(ENCH_ENTOMBED, 0, KC_YOU,
+                                      power * 10));
+        return (true);
+    }
+
+    return (false);
 }
 
 bool cast_sanctuary(const int power)
@@ -1998,16 +2040,20 @@ bool project_noise(void)
     coord_def pos(1, 0);
     level_pos lpos;
 
-    mpr( "Choose the noise's source (press '.' or delete to select)." );
+    mpr("Choose the noise's source (press '.' or delete to select).");
     more();
-    show_map(lpos, false);
+
+    // Might abort with SIG_HUP despite !allow_esc.
+    if (!show_map(lpos, false, false, false))
+        lpos = level_pos::current();
     pos = lpos.pos;
+    ASSERT(map_bounds(pos));
 
     redraw_screen();
 
-    dprf("Target square (%d,%d)", pos.x, pos.y );
+    dprf("Target square (%d,%d)", pos.x, pos.y);
 
-    if (!silenced( pos ))
+    if (!silenced(pos))
     {
         if (in_bounds(pos) && !feat_is_solid(grd(pos)))
         {

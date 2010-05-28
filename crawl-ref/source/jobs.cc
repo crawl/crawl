@@ -13,7 +13,7 @@ static job_type jobs_order[] = {
     // religious professions (incl. Berserker above)
     JOB_PALADIN,            JOB_PRIEST,
     JOB_HEALER,             JOB_CHAOS_KNIGHT,
-    JOB_DEATH_KNIGHT,       JOB_CRUSADER,
+    JOB_CRUSADER,
     // general and niche spellcasters (incl. Crusader above)
     JOB_REAVER,             JOB_WARPER,
     JOB_WIZARD,             JOB_CONJURER,
@@ -23,7 +23,7 @@ static job_type jobs_order[] = {
     JOB_AIR_ELEMENTALIST,   JOB_EARTH_ELEMENTALIST,
     // poison specialists and stabbers
     JOB_VENOM_MAGE,         JOB_STALKER,
-    JOB_THIEF,              JOB_ASSASSIN,
+    JOB_ASSASSIN,
     JOB_HUNTER,             JOB_ARTIFICER,
     JOB_ARCANE_MARKSMAN,    JOB_WANDERER
 };
@@ -37,15 +37,19 @@ job_type get_job(const int index)
 }
 
 static const char * Job_Abbrev_List[ NUM_JOBS ] =
-    { "Fi", "Wz", "Pr", "Th", "Gl", "Ne", "Pa", "As", "Be", "Hu",
-      "Cj", "En", "FE", "IE", "Su", "AE", "EE", "Cr", "DK", "VM",
+    { "Fi", "Wz", "Pr",
+      "Gl", "Ne", "Pa", "As", "Be", "Hu",
+      "Cj", "En", "FE", "IE", "Su", "AE", "EE", "Cr",
+      "VM",
       "CK", "Tm", "He", "Re", "St", "Mo", "Wr", "Wn", "Ar", "AM" };
 
 static const char * Job_Name_List[ NUM_JOBS ] =
-    { "Fighter", "Wizard", "Priest", "Thief", "Gladiator", "Necromancer",
+    { "Fighter", "Wizard", "Priest",
+      "Gladiator", "Necromancer",
       "Paladin", "Assassin", "Berserker", "Hunter", "Conjurer", "Enchanter",
       "Fire Elementalist", "Ice Elementalist", "Summoner", "Air Elementalist",
-      "Earth Elementalist", "Crusader", "Death Knight", "Venom Mage",
+      "Earth Elementalist", "Crusader",
+      "Venom Mage",
       "Chaos Knight", "Transmuter", "Healer", "Reaver", "Stalker",
       "Monk", "Warper", "Wanderer", "Artificer", "Arcane Marksman" };
 

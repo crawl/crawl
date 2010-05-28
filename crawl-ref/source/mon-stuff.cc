@@ -961,6 +961,49 @@ static void _mummy_curse(monsters* monster, killer_type killer, int index)
     }
 }
 
+void _setup_base_explosion(bolt & beam, const monsters & origin)
+{
+    beam.is_tracer    = false;
+    beam.is_explosion = true;
+    beam.beam_source  = origin.mindex();
+    beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.source       = origin.pos();
+    beam.target       = origin.pos();
+
+    if (!crawl_state.game_is_arena() && origin.attitude == ATT_FRIENDLY
+        && !origin.is_summoned())
+    {
+        beam.thrower = KILL_YOU;
+    }
+    else
+    {
+        beam.thrower = KILL_MON;
+    }
+
+    beam.aux_source.clear();
+    beam.attitude = origin.attitude;
+}
+
+void setup_spore_explosion(bolt & beam, const monsters & origin)
+{
+    _setup_base_explosion(beam, origin);
+    beam.flavour = BEAM_SPORE;
+    beam.damage  = dice_def(3, 15);
+    beam.name    = "explosion of spores";
+    beam.colour  = LIGHTGREY;
+    beam.ex_size = 2;
+}
+
+void setup_lightning_explosion(bolt & beam, const monsters & origin)
+{
+    _setup_base_explosion(beam, origin);
+    beam.flavour = BEAM_ELECTRICITY;
+    beam.damage  = dice_def(3, 20);
+    beam.name    = "blast of lightning";
+    beam.colour  = LIGHTCYAN;
+    beam.ex_size = coinflip() ? 3 : 2;
+}
+
 static bool _spore_goes_pop(monsters *monster, killer_type killer,
                             int killer_index, bool pet_kill, bool wizard)
 {
@@ -973,42 +1016,18 @@ static bool _spore_goes_pop(monsters *monster, killer_type killer,
     bolt beam;
     const int type = monster->type;
 
-    beam.is_tracer    = false;
-    beam.is_explosion = true;
-    beam.beam_source  = monster->mindex();
-    beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
-    beam.source       = monster->pos();
-    beam.target       = monster->pos();
-    beam.thrower      = crawl_state.game_is_arena() ? KILL_MON
-      : monster->attitude == ATT_FRIENDLY ? KILL_YOU : KILL_MON;
-    beam.aux_source.clear();
-    beam.attitude = monster->attitude;
-
-    if (YOU_KILL(killer))
-        beam.aux_source = "set off by themselves";
-    else if (pet_kill)
-        beam.aux_source = "set off by their pet";
-
     const char* msg       = NULL;
     const char* sanct_msg = NULL;
     if (type == MONS_GIANT_SPORE)
     {
-        beam.flavour = BEAM_SPORE;
-        beam.damage  = dice_def(3, 15);
-        beam.name    = "explosion of spores";
-        beam.colour  = LIGHTGREY;
-        beam.ex_size = 2;
+        setup_spore_explosion(beam, *monster);
         msg          = "The giant spore explodes!";
         sanct_msg    = "By Zin's power, the giant spore's explosion is "
                        "contained.";
     }
     else if (type == MONS_BALL_LIGHTNING)
     {
-        beam.flavour = BEAM_ELECTRICITY;
-        beam.damage  = dice_def(3, 20);
-        beam.name    = "blast of lightning";
-        beam.colour  = LIGHTCYAN;
-        beam.ex_size = coinflip() ? 3 : 2;
+        setup_lightning_explosion(beam, *monster);
         msg          = "The ball lightning explodes!";
         sanct_msg    = "By Zin's power, the ball lightning's explosion "
                        "is contained.";
@@ -1020,6 +1039,11 @@ static bool _spore_goes_pop(monsters *monster, killer_type killer,
                                         << std::endl;
         return (false);
     }
+
+    if (YOU_KILL(killer))
+        beam.aux_source = "set off by themselves";
+    else if (pet_kill)
+        beam.aux_source = "set off by their pet";
 
     bool saw = false;
     if (you.can_see(monster))
@@ -1395,15 +1419,6 @@ int monster_die(monsters *monster, killer_type killer,
             else
                 killer = KILL_RESET;
         }
-    }
-
-    // Death of a Demonic Guardian resets flag and duration
-    if (testbits(monster->flags, MF_DEMONIC_GUARDIAN))
-    {
-        you.active_demonic_guardian = false;
-        const int dur = player_mutation_level(MUT_DEMONIC_GUARDIAN) * 200
-                        + roll_dice(10, 10);
-        you.set_duration(DUR_DEMONIC_GUARDIAN, dur);
     }
 
     const bool death_message = !silent && !did_death_message
@@ -1959,7 +1974,7 @@ int monster_die(monsters *monster, killer_type killer,
             _mummy_curse(monster, killer, killer_index);
     }
 
-    if (monster->type == MONS_BALLISTOMYCETE)
+    if (monster->mons_species() == MONS_BALLISTOMYCETE)
     {
         activate_ballistomycetes(monster, monster->pos(),
                                  YOU_KILL(killer) || pet_kill);
@@ -2065,6 +2080,12 @@ int monster_die(monsters *monster, killer_type killer,
 void monster_cleanup(monsters *monster)
 {
     crawl_state.mon_gone(monster);
+
+    if (monster->has_ench(ENCH_AWAKEN_FOREST))
+    {
+        forest_message(monster->pos(), "The forest abruptly stops moving.");
+        env.forest_awoken_until = 0;
+    }
 
     unsigned int monster_killed = monster->mindex();
     monster->reset();
@@ -3782,6 +3803,11 @@ std::string summoned_poof_msg(const monsters* monster, bool plural)
         {
             msg = "dissolve%s into sparkling lights";
         }
+
+        if(mons_is_slime(monster) && monster->god == GOD_JIYVA)
+        {
+            msg = "dissolve%s into a puddle of slime";
+        }
     }
 
     // Conjugate.
@@ -3884,6 +3910,94 @@ void mons_att_changed(monsters *mon)
                 && (int)mi->number == headnum)
             {
                 mi->attitude = att;
+            }
+    }
+}
+
+// Find an enemy who would suffer from Awaken Forest.
+actor* forest_near_enemy(const actor *mon)
+{
+    const coord_def pos = mon->pos();
+
+    for (radius_iterator ri(pos, LOS_RADIUS); ri; ++ri)
+    {
+        actor* foe = actor_at(*ri);
+        if (!foe || mons_aligned(foe, mon))
+            continue;
+
+        for (adjacent_iterator ai(*ri); ai; ++ai)
+            if (grd(*ai) == DNGN_TREE && cell_see_cell(pos, *ai, LOS_DEFAULT))
+                return (foe);
+    }
+
+    return (NULL);
+}
+
+// Print a message only if you can see any affected trees.
+void forest_message(const coord_def pos, const std::string msg, msg_channel_type ch)
+{
+    for (radius_iterator ri(pos, LOS_RADIUS); ri; ++ri)
+        if (grd(*ri) == DNGN_TREE
+            && cell_see_cell(you.pos(), *ri, LOS_DEFAULT)
+            && cell_see_cell(pos, *ri, LOS_DEFAULT))
+        {
+            mpr(msg, ch);
+            return;
+        }
+}
+
+void forest_damage(const actor *mon)
+{
+    const coord_def pos = mon->pos();
+
+    if (one_chance_in(4))
+        forest_message(pos, random_choose_string(
+            "The trees move their gnarly branches around.",
+            "You feel roots moving beneath the ground.",
+            "Branches wave dangerously above you.",
+            "Trunks creak and shift.",
+            "Tree limbs sway around you.",
+            0), MSGCH_TALK_VISUAL);
+
+    for (radius_iterator ri(pos, LOS_RADIUS); ri; ++ri)
+    {
+        actor* foe = actor_at(*ri);
+        if (!foe || mons_aligned(foe, mon))
+            continue;
+
+        for (adjacent_iterator ai(*ri); ai; ++ai)
+            if (grd(*ai) == DNGN_TREE && cell_see_cell(pos, *ai, LOS_DEFAULT))
+            {
+                const int damage = 5 + random2(10);
+                if (foe->atype() == ACT_PLAYER)
+                {
+                    mpr(random_choose_string(
+                        "You are hit by a branch!",
+                        "A tree reaches out and hits you!",
+                        "A root smacks you from below.",
+                        0));
+                    ouch(damage, mon->mindex(), KILLED_BY_MONSTER,
+                         "angry trees", true);
+                }
+                else
+                {
+                    if (you.see_cell(foe->pos()))
+                    {
+                        const char *msg = random_choose_string(
+                            "%s is hit by a branch!",
+                            "A tree reaches out and hits %s!",
+                            "A root smacks %s from below.",
+                            0);
+                        const bool up = *msg == '%';
+                        // "it" looks butt-ugly here...
+                        mprf(msg, foe->visible_to(&you) ?
+                                      foe->name(up ? DESC_CAP_THE
+                                                   : DESC_NOCAP_THE).c_str()
+                                    : up ? "Something" : "something");
+                    }
+                    foe->hurt(mon, damage);
+                }
+                break;
             }
     }
 }

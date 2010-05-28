@@ -63,7 +63,7 @@ static int dgn_feature_desc(lua_State *ls)
     description_type_by_name(lua_tostring(ls, 2));
     const bool need_stop = lua_isboolean(ls, 3)? lua_toboolean(ls, 3) : false;
     const std::string s =
-    feature_description(feat, NUM_TRAPS, false, dtype, need_stop);
+    feature_description(feat, NUM_TRAPS, "", dtype, need_stop);
     lua_pushstring(ls, s.c_str());
     return (1);
 }

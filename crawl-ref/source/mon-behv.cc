@@ -141,7 +141,6 @@ void handle_behaviour(monsters *mon)
             || isScared)
         {
             mon->behaviour = BEH_FLEE;
-
         }
     }
 

@@ -8,11 +8,14 @@
 
 #include "wiz-mon.h"
 
+#include "areas.h"
 #include "cio.h"
 #include "colour.h"
+#include "coord.h"
 #include "dbg-util.h"
 #include "delay.h"
 #include "dungeon.h"
+#include "env.h"
 #include "files.h"
 #include "ghost.h"
 #include "goditem.h"
@@ -25,7 +28,6 @@
 #include "mon-place.h"
 #include "terrain.h"
 #include "mgen_data.h"
-#include "coord.h"
 #include "mapdef.h"
 #include "mon-pathfind.h"
 #include "mon-speak.h"
@@ -39,9 +41,8 @@
 #include "spl-mis.h"
 #include "spl-util.h"
 #include "stuff.h"
-#include "env.h"
-#include "areas.h"
 #include "view.h"
+#include "viewmap.h"
 
 #ifdef WIZARD
 // Creates a specific monster by mon type number.
@@ -1087,10 +1088,10 @@ void debug_pathfind(int mid)
 #endif
     coord_def dest;
     level_pos ldest;
-    show_map(ldest, false);
+    bool chose = show_map(ldest, false, true, false);
     dest = ldest.pos;
     redraw_screen();
-    if (!dest.x)
+    if (!chose)
     {
         canned_msg(MSG_OK);
         return;

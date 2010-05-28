@@ -1158,7 +1158,7 @@ static void _recap_feat_keys(std::vector<std::string> &keys)
             keys[i] = "A shop";
         else
         {
-            keys[i] = feature_description(type, NUM_TRAPS, false, DESC_CAP_A,
+            keys[i] = feature_description(type, NUM_TRAPS, "", DESC_CAP_A,
                                           false);
         }
     }
@@ -2191,7 +2191,6 @@ static void _add_insert_commands(column_composer &cols, const int column,
 
         cmd_vector.push_back((command_type) value);
     }
-    ASSERT(nargs > 0);
     va_end(args);
 
     std::string line = desc;
@@ -2218,7 +2217,6 @@ static void _add_insert_commands(column_composer &cols, const int column,
 
         cmd_vector.push_back((command_type) value);
     }
-    ASSERT(nargs > 0);
     va_end(args);
 
     std::string line = desc;

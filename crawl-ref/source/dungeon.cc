@@ -8100,6 +8100,9 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
     // First pass: look for an exact match.
     for (int xcode = 0; xcode < GXM; ++xcode )
     {
+        if (stair_to_find == DNGN_FLOOR)
+            break;
+
         const int xsign = ((xcode % 2) ? 1 : -1);
         const int xdiff = xsign * (xcode + 1)/2;
         const int xpos  = (basex + xdiff + GXM) % GXM;
@@ -8144,6 +8147,9 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
     // Second pass: find a staircase in the proper direction.
     for (int xcode = 0; xcode < GXM; ++xcode )
     {
+        if (stair_to_find == DNGN_FLOOR)
+            break;
+
         const int xsign = ((xcode % 2) ? 1 : -1);
         const int xdiff = xsign * (xcode + 1)/2;
         const int xpos  = (basex + xdiff + GXM) % GXM;
@@ -8212,6 +8218,9 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
                 }
             }
         }
+
+    if (found)
+        return (result);
 
     // Last attempt: look for marker.
     const coord_def pos(dgn_find_feature_marker(stair_to_find));

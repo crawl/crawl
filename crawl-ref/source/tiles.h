@@ -82,7 +82,9 @@ void tile_place_ray(const coord_def& gc, bool in_range);
 void tile_draw_rays(bool resetCount);
 void tile_clear_buf();
 
-void tile_finish_dngn(unsigned int *tileb, int cx, int cy);
+void tile_apply_animations(screen_buffer_t bg, tile_flavour *flv);
+void tile_apply_properties(const coord_def &gc, screen_buffer_t *fg,
+                           screen_buffer_t *bg);
 
 // Tile Inventory display
 void tile_draw_inv(int flag = -1);

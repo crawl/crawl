@@ -1544,8 +1544,7 @@ bool needs_handle_warning(const item_def &item, operation_types oper)
     if (oper == OPER_WIELD
         && item.base_type == OBJ_WEAPONS
         && get_weapon_brand(item) == SPWPN_VAMPIRICISM
-        && you.is_undead != US_UNDEAD // mummy or lich form
-        && you.species != SP_VAMPIRE)
+        && !you.is_undead)
     {
         return (true);
     }

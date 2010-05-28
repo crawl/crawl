@@ -984,6 +984,20 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         item.colour = RED;  // forced by force_item above {dlb}
         break;
 
+    case MONS_SPRIGGAN:
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        // no quick blades for mooks
+        item.sub_type  = random_choose(WPN_DAGGER, WPN_SHORT_SWORD,
+                                       WPN_SABRE, -1);
+        break;
+
+    case MONS_SPRIGGAN_DRUID:
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = WPN_QUARTERSTAFF;
+        break;
+
     default:
         break;
     }
@@ -1314,6 +1328,13 @@ void give_shield(monsters *mon, int level)
                                   level, MAKE_ITEM_ELVEN);
         }
         break;
+    case MONS_SPRIGGAN:
+        if (one_chance_in(4))
+        {
+            make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER,
+                                  level, MAKE_ITEM_NO_RACE);
+        }
+        break;
     case MONS_NORRIS:
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER,
                               level * 2 + 1, MAKE_ITEM_RANDOM_RACE, 1);
@@ -1623,10 +1644,18 @@ void give_armour(monsters *mon, int level)
     case MONS_ILSUIW:
     case MONS_MARA:
     case MONS_MERFOLK_AQUAMANCER:
+    case MONS_SPRIGGAN:
         if (item_race == MAKE_ITEM_RANDOM_RACE)
             item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ROBE;
+        break;
+
+    case MONS_SPRIGGAN_DRUID:
+        item_race      = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type  = ARM_ROBE;
+        force_colour   = GREEN;
         break;
 
     case MONS_TIAMAT:

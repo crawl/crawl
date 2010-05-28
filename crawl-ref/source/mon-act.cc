@@ -1769,7 +1769,7 @@ void handle_monster_move(monsters *monster)
                 if (monster->type == MONS_NO_MONSTER)
                 {
                     monster->speed_increment -= entry->energy_usage.move;
-                    break;  // problem with vortices
+                    break; // problem with vortices
                 }
             }
 
@@ -1782,7 +1782,7 @@ void handle_monster_move(monsters *monster)
             }
         }
 
-        slime_wall_damage(monster, monster->speed);
+        slime_wall_damage(monster, speed_to_duration(monster->speed));
         if (!monster->alive())
             break;
 
@@ -2639,7 +2639,7 @@ static void _mons_open_door(monsters* monster, const coord_def &pos)
         if (was_secret)
         {
             mprf("%s was actually a secret door!",
-                 feature_description(grid, NUM_TRAPS, false,
+                 feature_description(grid, NUM_TRAPS, "",
                                      DESC_CAP_THE, false).c_str());
             learned_something_new(HINT_FOUND_SECRET_DOOR, pos);
         }
@@ -2755,8 +2755,11 @@ static bool _mon_can_move_to_pos(const monsters *monster,
 
     // The kraken is so large it cannot enter shallow water.
     // Its tentacles can, and will, though.
-    if (mons_base_type(monster) == MONS_KRAKEN && target_grid == DNGN_SHALLOW_WATER)
+    if (mons_base_type(monster) == MONS_KRAKEN
+        && target_grid == DNGN_SHALLOW_WATER)
+    {
         return (false);
+    }
 
     // Effectively slows down monster movement across water.
     // Fire elementals can't cross at all.
@@ -2785,9 +2788,7 @@ static bool _mon_can_move_to_pos(const monsters *monster,
             return (false);
     }
     else if (no_water && feat_is_water(target_grid))
-    {
         return (false);
-    }
     else if (!mons_can_traverse(monster, targ, false)
              && !_habitat_okay(monster, target_grid))
     {
@@ -2802,15 +2803,21 @@ static bool _mon_can_move_to_pos(const monsters *monster,
         return (false);
     }
 
-    // Wandering mushrooms don't move while you are looking.
+    // Wandering mushrooms usually don't move while you are looking.
     if (monster->type == MONS_WANDERING_MUSHROOM)
     {
-        if (!monster->friendly() && you.see_cell(targ)
-             || mon_enemies_around(monster))
+        if (!monster->wont_attack()
+            && is_sanctuary(monster->pos()))
         {
-            return false;
+            return (true);
         }
-
+ 
+        if (!monster->friendly()
+                && you.see_cell(targ)
+            || mon_enemies_around(monster))
+        {
+            return (false);
+        }
     }
 
     // Water elementals avoid fire and heat.

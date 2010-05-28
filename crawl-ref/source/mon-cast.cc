@@ -45,6 +45,7 @@
 #include "stuff.h"
 #include "areas.h"
 #include "teleport.h"
+#include "traps.h"
 #include "view.h"
 #include "viewchar.h"
 #include "xom.h"
@@ -707,7 +708,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
         beam.colour   = ETC_HOLY;
         beam.name     = "ray of light";
         beam.damage   = dice_def( 3, 7 + (power / 12) );
-        beam.hit      = 5 + power / 50; // VERY lousy accuracy, but ignores RMsl
+        beam.hit      = 10 + power / 25; // lousy accuracy, but ignores RMsl
         beam.flavour  = BEAM_LIGHT;
         break;
 
@@ -864,6 +865,7 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     case SPELL_CALL_TIDE:
     case SPELL_INK_CLOUD:
     case SPELL_SILENCE:
+    case SPELL_AWAKEN_FOREST:
         return (true);
     default:
         if (check_validity)
@@ -1347,10 +1349,11 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
 
                     // don't cast a targetted spell at the player if the
                     // monster is friendly and targetting the player -doy
-                    if ((monster->wont_attack() && monster->foe == MHITYOU) &&
-                        spell_needs_tracer(spell_cast) &&
-                        spell_needs_foe(spell_cast) &&
-                        spell_harms_target(spell_cast)) {
+                    if (monster->wont_attack() && monster->foe == MHITYOU
+                        && spell_needs_tracer(spell_cast)
+                        && spell_needs_foe(spell_cast)
+                        && spell_harms_target(spell_cast))
+                    {
                         spell_cast = SPELL_NO_SPELL;
                     }
                 }
@@ -1369,6 +1372,7 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
             && !player_or_mon_in_sanct(monster))
         {
             spell_cast = draco_breath;
+            setup_mons_cast(monster, beem, spell_cast);
             finalAnswer = true;
         }
 
@@ -2340,26 +2344,33 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         if (!hp_lost)
             sumcount++;
 
+        const dungeon_feature_type safe_tiles[] = {
+            DNGN_SHALLOW_WATER, DNGN_FLOOR, DNGN_FLOOR_SPECIAL, DNGN_OPEN_DOOR
+        };
+
+        bool proceed;
+
         for (adjacent_iterator ai(monster->pos()); ai; ++ai)
         {
-            // we can blink away the crowd, but only our allies
-            if (monster_at(*ai)
-                && monster_at(*ai)->attitude != monster->attitude)
+            const actor* act = actor_at(*ai);
+
+            // We can blink away the crowd, but only our allies.
+            if (act
+                && (act->atype() == ACT_PLAYER
+                    || (act->atype() == ACT_MONSTER
+                        && act->as_monster()->attitude != monster->attitude)))
             {
                 sumcount++;
             }
 
-            if (grd(*ai) != DNGN_FLOOR && grd(*ai) > DNGN_MAX_NONREACH
-                && !feat_is_trap(grd(*ai)))
-            {
-                sumcount++;
-            }
-        }
+            // Make sure we have a legitimate tile.
+            proceed = false;
+            for (unsigned int i = 0; i < ARRAYSZ(safe_tiles) && !proceed; ++i)
+                if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai)))
+                    proceed = true;
 
-        if (abs(you.pos().x - monster->pos().x) <= 1
-            && abs(you.pos().y - monster->pos().y) <= 1)
-        {
-            sumcount++;
+            if (!proceed && grd(*ai) > DNGN_MAX_NONREACH)
+                sumcount++;
         }
 
         if (sumcount)
@@ -2371,7 +2382,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         sumcount = 0;
         for (adjacent_iterator ai(monster->pos()); ai; ++ai)
         {
-            if (monster_at(*ai) && monster_at(*ai) != monster)
+            if (monster_at(*ai))
             {
                 monster_at(*ai)->blink();
                 if (monster_at(*ai))
@@ -2382,27 +2393,45 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                 }
             }
 
-            if (grd(*ai) == DNGN_FLOOR || feat_is_trap(grd(*ai)))
+            // Make sure we have a legitimate tile.
+            proceed = false;
+            for (unsigned int i = 0; i < ARRAYSZ(safe_tiles) && !proceed; ++i)
+                if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai)))
+                    proceed = true;
+
+            if (proceed)
             {
-                grd(*ai) = DNGN_ROCK_WALL;
-                if (env.cgrid(*ai) != EMPTY_CLOUD)
-                    delete_cloud(env.cgrid(*ai));
-                set_terrain_changed(*ai);
+                // All items are moved inside.
                 if (igrd(*ai) != NON_ITEM)
                     move_items(*ai, monster->pos());
+
+                // All clouds are destroyed.
+                if (env.cgrid(*ai) != EMPTY_CLOUD)
+                    delete_cloud(env.cgrid(*ai));
+
+                // All traps are destroyed.
+                if (trap_def *ptrap = find_trap(*ai))
+                    ptrap->destroy();
+
+                // Actually place the wall.
+                grd(*ai) = DNGN_ROCK_WALL;
+                set_terrain_changed(*ai);
                 sumcount++;
             }
         }
 
         if (sumcount)
+        {
             mpr("Walls emerge from the floor!");
 
-        // XXX: Assume that the entombed monster can regenerate.  Also,
-        // base the regeneration rate on HD to avoid randomness.
-        const int tomb_duration =
-            hp_lost * std::max(1, monster->hit_dice / 3);
-        monster->add_ench(mon_enchant(ENCH_ENTOMBED, 0, KC_OTHER,
-                          tomb_duration * 10));
+            // XXX: Assume that the entombed monster can regenerate.
+            // Also, base the regeneration rate on HD to avoid
+            // randomness.
+            const int tomb_duration =
+                hp_lost * std::max(1, monster->hit_dice / 3);
+            monster->add_ench(mon_enchant(ENCH_ENTOMBED, 0, KC_OTHER,
+                                          tomb_duration * 10));
+        }
         return;
     }
     case SPELL_CHAIN_LIGHTNING:
@@ -2449,6 +2478,16 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         return;
     case SPELL_IOOD:
         cast_iood(monster, 6 * monster->hit_dice, &pbolt);
+        return;
+    case SPELL_AWAKEN_FOREST:
+        duration = 50 + random2(monster->hit_dice * 20);
+
+        monster->add_ench(mon_enchant(ENCH_AWAKEN_FOREST, 0, KC_OTHER, duration));
+        // Actually, it's a boolean marker... save for a sanity check.
+        env.forest_awoken_until = you.elapsed_time + duration;
+
+        // You may be unable to see the monster, but notice an affected tree.
+        forest_message(monster->pos(), "The forest starts to sway and rumble!");
         return;
     }
 

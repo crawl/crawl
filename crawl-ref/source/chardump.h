@@ -25,7 +25,7 @@ enum item_origin_dump_selector
     IODS_EVERYTHING       = 0xFF
 };
 
-struct scorefile_entry;
+class scorefile_entry;
 bool dump_char(const std::string &fname,
                bool show_prices,
                bool full_id = false,

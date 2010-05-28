@@ -27,10 +27,12 @@ bool cast_bone_shards(int power, bolt &);
 
 bool cast_selective_amnesia(bool force);
 bool cast_smiting(int power, const coord_def& where);
+bool entomb(const int power);
+bool cast_imprison(const int power, monsters *monster);
 bool cast_sanctuary(const int power);
 bool project_noise();
 bool detect_curse(int scroll, bool suppress_msg);
-bool entomb(int powc);
+
 int portal();
 bool recall(char type_recalled);
 bool remove_curse(bool suppress_msg);

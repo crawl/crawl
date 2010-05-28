@@ -24,7 +24,6 @@ class MemoriseRegion;
 class ActorRegion;
 class MonsterRegion;
 class ActorRegion;
-class MonsterRegion;
 class TabbedRegion;
 class MapRegion;
 class ControlRegion;
@@ -154,6 +153,7 @@ protected:
         TAB_ITEM,
         TAB_SPELL,
         TAB_MEMORISE,
+        TAB_MONSTER,
         TAB_MAX
     };
 
@@ -183,6 +183,7 @@ protected:
     InventoryRegion *m_region_inv;
     SpellRegion     *m_region_spl;
     MemoriseRegion  *m_region_mem;
+    MonsterRegion   *m_region_mon;
 
     // Full-screen CRT layer
     CRTRegion       *m_region_crt;

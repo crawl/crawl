@@ -11,7 +11,9 @@ Unsorted:
 * New tutorial, old tutorial now a hints mode.
 * Aptitudes now on a scale +5 to -5.
 * Track the source of poison for death messages.
-* Death Knights are now necromancy-only.
+* Remove Death Knights and Thieves.
+* Ghouls can no longer starve; they just rot faster.
+* New tiles monster list tab.
 
 Interface:
 * New starting menus, mouse-operable in tiles builds.
@@ -32,15 +34,22 @@ Game:
 * Fix old player ghost speech, and add player ghost speech
   fitting the ghost.
 * Monster equipment can be corroded by acid.
+* Lost stats are now recovered one point at a time.
 
 Gods:
 * Zin no longer objects to deaths of non-sentient allies, and
   takes collateral kills of unclean and chaotic monsters.
+* Zin has a new power: Imprison.
 * Yredelemnul no longer gifts vampires.
 * Sif Muna's piety is no longer unfair to skilled species.
 * Nemelex no longer takes gold sacrifices.
+* Fedhas can now evolve ballistomycetes into hyperactive
+  ballistomycetes.
 * Jiyva now paralyses fellow slimes under prayer instead of
   creating a jelly shield.
+* Jiyva's royal jelly effect now produces temporary friendly
+  slimes instead of permanent neutral ones.
+* Jiyva can now give the player unique slime-related mutations.
 
 Items:
 * Scrolls of holy word do more damage to susceptible monsters.
@@ -48,12 +57,15 @@ Items:
   scrolls of enchant weapon II no longer work on them.
 
 Monsters:
+* Anacondas are now amphibious.
+* Skeletal dragons are renamed to bone dragons.
 * Manes are now iron imps, with stat tweaks.
 * Imps lose see invisible while shadow imps gain it, and white
   imps resist poison but are vulnerable to fire.
 * (Very) ugly things are no longer amphibious.
 * Glyph change for demonic crawlers.
 * Orange demons' poison can now drain any stat.
+* Hell hounds, hell hogs and demonic crawlers now leave corpses.
 
 Spells:
 * Call Imp is buffed: it is now level 2, it takes spell power

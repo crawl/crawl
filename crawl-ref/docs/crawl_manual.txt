@@ -1824,7 +1824,7 @@ naturally immune to poisons, negative energy and torment; have little
 warmth left to be affected by cold; and are not susceptible to
 mutations.
 
-There are three types of undead available to players: Mummies, Ghouls,
+There are three types of undead available to players: Mummies, Ghouls
 and Vampires.
 
 Mummies
@@ -1948,11 +1948,6 @@ the faithful. Lugonu the Unformed rules over the Abyss, and grants
 followers some control over that unpleasant place in return for
 spreading death and disorder.
 
-Death Knights:
---------------
-The Death Knight is a fighter who aligns him or herself with the powers
-of death, by studying the fearsome arts of necromancy.
-
 Crusaders:
 ----------
 The Crusader is a decent fighter who can use the magical arts of
@@ -2053,17 +2048,10 @@ Stalkers:
 ---------
 The Stalker is an Assassin who has trained in the use of poison magic.
 
-Thieves:
---------
-The Thief is one of the trickiest backgrounds to play. Thieves start
-out with a large variety of useful skills, and need to use all of them
-to survive. They enter the Dungeon with a short sword, some darts and
-light armour.
-
 Assassins:
 ----------
-An Assassin is a Thief who is especially good at killing. Assassins are
-like Thieves in most respects, but are more dangerous in combat.
+An Assassin is a stealthy character who is especially good at killing,
+using daggers or blowguns.
 
 Hunters:
 --------
@@ -2760,6 +2748,7 @@ some commands:
   !a   prompt before attacking when wielding this item
        Non-weapons and ranged weapons prompt automatically. Also, if you
        answer 'y', you won't be prompted again until you switch weapons.
+  !d   prompt before dropping
   !e   prompt before eating
   !q   prompt before quaffing
   !r   prompt before reading

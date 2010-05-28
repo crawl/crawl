@@ -594,7 +594,7 @@ OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
 ENDMAP
 
 ############################################################################
-# Sewer in the shape of the letter W.  Sort of.
+# Sewer in the shape of the letter W. Sort of.
 #
 NAME:    minmay_sewer_w
 TAGS:    sewer no_item_gen no_monster_gen no_pool_fixup

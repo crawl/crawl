@@ -127,7 +127,7 @@ hi link desOrientation Type
 hi link desTransparent Type
 
 " It would be really nice if this worked for people who switch bg
-" post-loading, like "normal" highlights do.  Does someone know how?
+" post-loading, like "normal" highlights do. Does someone know how?
 if &bg == "dark"
   hi desMapWall guifg=darkgray term=bold gui=bold ctermfg=white
   hi desMapCrystalWall guifg=#009040 term=bold gui=bold ctermfg=green

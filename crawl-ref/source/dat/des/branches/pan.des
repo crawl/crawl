@@ -143,8 +143,8 @@ TILE:       n = dngn_metal_wall_cracked
 :                                      "cracked metal wall")
 :           dgn.set_feature_desc_long("translucent stone wall",
 :                                     "This metal wall has suffered some " ..
-:                                     "damage.  Alas, the hole is not big " ..
-:                                     "enough to crawl though.\n")
+:                                     "damage. Alas, the hole is not big " ..
+:                                     "enough to crawl through.\n")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -568,7 +568,7 @@ ENDMAP
 
 ###################################
 
-# Sadly, this vault works well only in text.  If we could get changing tiles,
+# Sadly, this vault works well only in text. If we could get changing tiles,
 # it would be great, but for now, these are static.
 #
 NAME:   pan_disco_hall
