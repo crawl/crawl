@@ -1288,10 +1288,56 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 
     // Clear stab bonus which will be set for the primary weapon attack.
     stab_bonus  = 0;
-    aux_damage  = player_apply_monster_ac(aux_damage);
 
-    aux_damage  = defender->hurt(&you, aux_damage, BEAM_MISSILE, false);
+    const int pre_ac_dmg = aux_damage;
+    const int post_ac_dmg = player_apply_monster_ac(aux_damage);
+
+    aux_damage = post_ac_dmg;
+    aux_damage = defender->hurt(&you, aux_damage, BEAM_MISSILE, false);
     damage_done = aux_damage;
+
+    switch(atk)
+    {
+        case UNAT_PUNCH:
+        {
+            const int degree = player_mutation_level(MUT_CLAWS);
+
+            if (defender->as_monster()->hit_points > 0 && degree > 0
+                && defender->can_bleed())
+            {
+                defender->as_monster()->bleed(3 + roll_dice(degree, 3), degree);
+            }
+            break;
+        }
+
+        case UNAT_HEADBUTT:
+        {
+            const int horns = player_mutation_level(MUT_HORNS);
+            const int stun = bestroll(std::max(damage_done, 7), 1 + horns);
+
+            defender->as_monster()->speed_increment -= stun;
+            break;
+        }
+
+        case UNAT_KICK:
+        {
+            const int hooves = player_mutation_level(MUT_HOOVES);
+
+            if (hooves && pre_ac_dmg > post_ac_dmg)
+            {
+                ASSERT(pre_ac_dmg < post_ac_dmg);
+
+                const int dmg = bestroll(pre_ac_dmg - post_ac_dmg, hooves);
+                // do some of the previously ignored damage in extra-damage
+                damage_done += defender->hurt(&you, dmg, BEAM_MISSILE, false);
+            }
+
+            break;
+        }
+
+        default:
+            break;
+    }
 
     if (damage_done > 0)
     {
@@ -1335,30 +1381,6 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
         _monster_die(defender->as_monster(), KILL_YOU, NON_MONSTER);
 
         return (true);
-    }
-
-    switch(atk)
-    {
-        case UNAT_PUNCH:
-        {
-            const int degree = player_mutation_level(MUT_CLAWS);
-
-            if (degree > 0 && defender->can_bleed())
-                defender->as_monster()->bleed(3 + roll_dice(degree, 3), degree);
-            break;
-        }
-
-        case UNAT_HEADBUTT:
-        {
-            const int horns = player_mutation_level(MUT_HORNS);
-            const int stun = bestroll(std::max(damage_done, 7), 1 + horns);
-
-            defender->as_monster()->speed_increment -= stun;
-            break;
-        }
-
-        default:
-            break;
     }
 
     return (false);
