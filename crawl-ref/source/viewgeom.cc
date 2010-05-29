@@ -228,19 +228,50 @@ class _mlist_col_layout : public _layout
 // crawl_view_buffer
 
 crawl_view_buffer::crawl_view_buffer()
-    : buffer(NULL)
+    : m_size(0, 0)
+    , m_buffer(NULL)
 {
+}
+crawl_view_buffer::crawl_view_buffer(const coord_def &sz)
+    : m_size(0, 0)
+    , m_buffer(NULL)
+{
+    resize(sz);
 }
 
 crawl_view_buffer::~crawl_view_buffer()
 {
-    delete [] buffer;
+    delete [] m_buffer;
 }
 
-void crawl_view_buffer::size(const coord_def &sz)
+void crawl_view_buffer::resize(const coord_def &sz)
 {
-    delete [] buffer;
-    buffer = new screen_buffer_t [ sz.x * sz.y * 2 ];
+    delete [] m_buffer;
+    m_size = sz;
+    m_buffer = new screen_cell_t [ sz.x * sz.y ];
+}
+
+bool crawl_view_buffer::empty() const
+{
+    return (m_size.x * m_size.y <= 0);
+}
+
+const crawl_view_buffer &crawl_view_buffer::operator = (const crawl_view_buffer &rhs)
+{
+    resize(rhs.m_size);
+    if (rhs.m_buffer)
+    {
+        size_t count = sizeof(m_buffer[0]) * m_size.x * m_size.y;
+        memcpy(m_buffer, rhs.m_buffer, count);
+    }
+    return (*this);
+}
+
+void crawl_view_buffer::clear()
+{
+    delete [] m_buffer;
+    m_buffer = NULL;
+    m_size = coord_def(0,0);
 }
 
 // ----------------------------------------------------------------------
@@ -262,7 +293,7 @@ crawl_view_geometry::crawl_view_geometry()
 void crawl_view_geometry::init_view()
 {
     viewhalfsz = viewsz / 2;
-    vbuf.size(viewsz);
+    vbuf.resize(viewsz);
     set_player_at(you.pos(), true);
 }
 

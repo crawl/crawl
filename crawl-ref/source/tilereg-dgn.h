@@ -9,6 +9,7 @@
 
 #include "tilereg.h"
 #include "tiledgnbuf.h"
+#include "viewgeom.h"
 #include <vector>
 
 class mcache_entry;
@@ -35,7 +36,7 @@ public:
     virtual bool update_alt_text(std::string &alt);
     virtual void on_resize();
 
-    void load_dungeon(unsigned int* tileb, int cx_to_gx, int cy_to_gy);
+    void load_dungeon(const crawl_view_buffer &vbuf, const coord_def &gc);
     void place_cursor(cursor_type type, const coord_def &gc);
     bool on_screen(const coord_def &gc) const;
 
@@ -57,7 +58,7 @@ protected:
     int get_buffer_index(const coord_def &gc);
     void to_screen_coords(const coord_def &gc, coord_def& pc) const;
 
-    std::vector<unsigned int> m_tileb;
+    crawl_view_buffer m_vbuf;
     int m_cx_to_gx;
     int m_cy_to_gy;
     coord_def m_cursor[CURSOR_MAX];

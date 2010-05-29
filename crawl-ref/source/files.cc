@@ -1404,7 +1404,8 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (load_mode != LOAD_VISITOR)
     {
         tiles.clear_minimap();
-        tiles.load_dungeon(NULL, crawl_view.vgrdc);
+        crawl_view_buffer empty_vbuf;
+        tiles.load_dungeon(empty_vbuf, crawl_view.vgrdc);
     }
 #endif
 

@@ -15,6 +15,7 @@
 #include "defines.h"
 
 typedef unsigned int screen_buffer_t;
+typedef unsigned int tileidx_t;
 
 void set_mouse_enabled(bool enabled);
 

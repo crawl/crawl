@@ -3532,9 +3532,9 @@ static int _pick_random_dngn_tile(unsigned int idx, int value = -1)
 }
 
 // Updates the "flavour" of tiles that are animated.
-void tile_apply_animations(screen_buffer_t bg, tile_flavour *flv)
+void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
 {
-    int bg_idx = bg & TILE_FLAG_MASK;
+    tileidx_t bg_idx = bg & TILE_FLAG_MASK;
     if (bg_idx >= TILE_DNGN_LAVA && bg_idx < TILE_BLOOD)
     {
         flv->special = random2(256);
@@ -3547,10 +3547,10 @@ void tile_apply_animations(screen_buffer_t bg, tile_flavour *flv)
 }
 
 static inline void _apply_variations(const tile_flavour &flv,
-                                     screen_buffer_t *bg)
+                                     tileidx_t *bg)
 {
-    screen_buffer_t orig = (*bg) & TILE_FLAG_MASK;
-    screen_buffer_t flag = (*bg) & (~TILE_FLAG_MASK);
+    tileidx_t orig = (*bg) & TILE_FLAG_MASK;
+    tileidx_t flag = (*bg) & (~TILE_FLAG_MASK);
 
     // TODO enne - expose this as an option, so ziggurat can use it too.
     // Alternatively, allow the stone type to be set.
@@ -5508,8 +5508,8 @@ static bool _suppress_blood(const coord_def pos)
     return (false);
 }
 
-void tile_apply_properties(const coord_def &gc, screen_buffer_t *fg,
-                           screen_buffer_t *bg)
+void tile_apply_properties(const coord_def &gc, tileidx_t *fg,
+                           tileidx_t *bg)
 {
     if (is_excluded(gc))
     {
