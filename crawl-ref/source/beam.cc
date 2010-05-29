@@ -767,6 +767,7 @@ void bolt::bounce()
     while (feat_is_solid(grd(ray.pos())));
 
     bounce_pos = ray.pos();
+    bounces++;
     reflect_grid rg;
     for (adjacent_iterator ai(ray.pos(), false); ai; ++ai)
         rg(*ai - ray.pos()) = feat_is_solid(grd(*ai));
