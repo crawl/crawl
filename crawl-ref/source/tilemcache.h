@@ -24,10 +24,10 @@ class tile_draw_info
 public:
     tile_draw_info() : idx(~0), ofs_x(0), ofs_y(0) {}
 
-    void set(unsigned int _idx, int _ofs_x = 0, int _ofs_y = 0)
+    void set(tileidx_t _idx, int _ofs_x = 0, int _ofs_y = 0)
         { idx = _idx; ofs_x = _ofs_x; ofs_y = _ofs_y; }
 
-    unsigned int idx;
+    tileidx_t idx;
     int ofs_x;
     int ofs_y;
 };
@@ -62,7 +62,7 @@ public:
     ~mcache_manager();
 
     unsigned int register_monster(const monsters *mon);
-    mcache_entry *get(unsigned int idx);
+    mcache_entry *get(tileidx_t idx);
 
     void clear_nonref();
     void clear_all();

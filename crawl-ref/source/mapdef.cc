@@ -1785,11 +1785,11 @@ int map_lines::count_feature_in_box(const coord_def &tl, const coord_def &br,
 #ifdef USE_TILE
 bool map_tile_list::parse(const std::string &s, int weight)
 {
-    unsigned int idx = 0;
-    if (s != "none" && !tile_dngn_index(s.c_str(), idx))
+    tileidx_t idx = 0;
+    if (s != "none" && !tile_dngn_index(s.c_str(), &idx))
         return false;
 
-    push_back(map_weighted_tile((int)idx, weight));
+    push_back(map_weighted_tile(idx, weight));
     return true;
 }
 
@@ -1840,12 +1840,12 @@ std::string map_lines::add_spec_tile(const std::string &sub)
 //////////////////////////////////////////////////////////////////////////
 // tile_spec
 
-int tile_spec::get_tile()
+tileidx_t tile_spec::get_tile()
 {
     if (chose_fixed)
         return fixed_tile;
 
-    int chosen = 0;
+    tileidx_t chosen = 0;
     int cweight = 0;
     for (int i = 0, size = tiles.size(); i < size; ++i)
         if (x_chance_in_y(tiles[i].second, cweight += tiles[i].second))
@@ -3311,8 +3311,8 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
 #ifdef USE_TILE
         if (!tile.empty())
         {
-            unsigned int index;
-            if (!tile_player_index(tile.c_str(), index))
+            tileidx_t index;
+            if (!tile_player_index(tile.c_str(), &index))
             {
                 error = make_stringf("bad tile name: \"%s\".", tile.c_str());
                 return (slot);

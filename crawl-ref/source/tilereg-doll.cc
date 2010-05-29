@@ -132,7 +132,10 @@ void DollEditRegion::render()
     // Draw current category of parts.
     int max_part = tile_player_part_count[m_cat_idx];
     if (m_cat_idx == TILEP_PART_BASE)
-        max_part = tile_player_count(tilep_species_to_base_tile()) - 1;
+    {
+        tileidx_t idx = tilep_species_to_base_tile(you.species, you.experience_level);
+        max_part = tile_player_count(idx) - 1;
+    }
 
     int show = std::min(max_show, max_part);
     int half_show = show / 2;
@@ -318,8 +321,8 @@ void DollEditRegion::run()
     // Initialise job default.
     m_job_default = equip_doll;
     tilep_race_default(you.species, doll_gender,
-                       you.experience_level, m_job_default.parts);
-    tilep_job_default(you.char_class, doll_gender, m_job_default.parts);
+                       you.experience_level, &m_job_default);
+    tilep_job_default(you.char_class, doll_gender, &m_job_default);
 
     // Read predefined dolls from file.
     for (unsigned int i = 0; i < NUM_MAX_DOLLS; ++i)

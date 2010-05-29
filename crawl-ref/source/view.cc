@@ -403,8 +403,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 #ifdef USE_TILE
                 // Can't use set_map_knowledge_obj because that would
                 // overwrite the gmap.
-                env.tile_bk_bg(*ri) = tile_idx_unseen_terrain(ri->x, ri->y,
-                                                              grd(*ri));
+                env.tile_bk_bg(*ri) = tileidx_unseen_terrain(*ri, grd(*ri));
 #endif
             }
             else
@@ -783,12 +782,12 @@ void tile_draw_floor()
             const coord_def ep(cx, cy);
             const coord_def gc = show2grid(ep);
 
-            int bg = TILE_DNGN_UNSEEN | tile_unseen_flag(gc);
+            tileidx_t bg = TILE_DNGN_UNSEEN | tile_unseen_flag(gc);
 
             if (you.see_cell(gc))
             {
                 dungeon_feature_type feat = grid_appearance(gc);
-                bg = tileidx_feature(grd(gc), gc.x, gc.y);
+                bg = tileidx_feature(grd(gc), gc);
 
                 if (feat == DNGN_DETECTED_SECRET_DOOR)
                      bg |= TILE_FLAG_WAS_SECRET;
@@ -798,8 +797,8 @@ void tile_draw_floor()
 
 
             // init tiles
-            env.tile_bg[ep.x][ep.y] = bg;
-            env.tile_fg[ep.x][ep.y] = 0;
+            env.tile_bg(ep) = bg;
+            env.tile_fg(ep) = 0;
         }
 }
 #endif
@@ -809,7 +808,7 @@ static void _draw_unseen(screen_cell_t *cell, const coord_def &gc)
     cell->glyph  = ' ';
     cell->colour = DARKGREY;
 #ifdef USE_TILE
-    tileidx_unseen(cell->tile_fg, cell->tile_bg, ' ', gc);
+    tileidx_unseen(&cell->tile_fg, &cell->tile_bg, ' ', gc);
 #endif
 }
 
@@ -823,7 +822,7 @@ static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc)
     tileidx_t bg = env.tile_bk_bg(gc);
     tileidx_t fg = env.tile_bk_fg(gc);
     if (bg == 0 && fg == 0)
-        tileidx_unseen(fg, bg, get_map_knowledge_char(gc), gc);
+        tileidx_unseen(&fg, &bg, get_map_knowledge_char(gc), gc);
 
     cell->tile_fg = fg;
     cell->tile_bg = bg | tile_unseen_flag(gc);
@@ -881,7 +880,7 @@ static void _draw_los_backup(screen_cell_t *cell,
         cell->tile_bg = bg | tile_unseen_flag(gc);
     }
     else
-        tileidx_unseen(cell->tile_fg, cell->tile_bg, cell->glyph, gc);
+        tileidx_unseen(&cell->tile_fg, &cell->tile_bg, cell->glyph, gc);
 #endif
 }
 

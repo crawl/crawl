@@ -20,13 +20,13 @@
 
 dolls_data::dolls_data()
 {
-    parts = new int[TILEP_PART_MAX];
+    parts = new tileidx_t[TILEP_PART_MAX];
     memset(parts, 0, TILEP_PART_MAX * sizeof(int));
 }
 
 dolls_data::dolls_data(const dolls_data& _orig)
 {
-    parts = new int[TILEP_PART_MAX];
+    parts = new tileidx_t[TILEP_PART_MAX];
     memcpy(parts, _orig.parts, TILEP_PART_MAX * sizeof(int));
 }
 
@@ -144,7 +144,7 @@ bool load_doll_data(const char *fn, dolls_data *dolls, int max,
                     doll_gender = coinflip();
 
                 if (*mode == TILEP_MODE_DEFAULT)
-                    tilep_job_default(you.char_class, doll_gender, dolls[0].parts);
+                    tilep_job_default(you.char_class, doll_gender, &dolls[0]);
 
                 // If we don't need to load a doll, return now.
                 fclose(fp);
@@ -159,8 +159,9 @@ bool load_doll_data(const char *fn, dolls_data *dolls, int max,
 
                 if (*cur == count++)
                 {
-                    tilep_scan_parts(fbuf, dolls[0]);
-                    doll_gender = get_gender_from_tile(dolls[0].parts);
+                    tilep_scan_parts(fbuf, dolls[0], you.species,
+                                     you.experience_level);
+                    doll_gender = get_gender_from_tile(dolls[0]);
                     break;
                 }
             }
@@ -172,7 +173,8 @@ bool load_doll_data(const char *fn, dolls_data *dolls, int max,
                 if (fbuf[0] == '#') // Skip comment lines.
                     continue;
 
-                tilep_scan_parts(fbuf, dolls[count++]);
+                tilep_scan_parts(fbuf, dolls[count++], you.species,
+                                 you.experience_level);
             }
         }
 
@@ -197,7 +199,7 @@ void init_player_doll()
     {
         player_doll = dolls[cur];
         tilep_race_default(you.species, doll_gender, you.experience_level,
-                           player_doll.parts);
+                           &player_doll);
         return;
     }
 
@@ -206,12 +208,12 @@ void init_player_doll()
 
     for (int i = 0; i < TILEP_PART_MAX; i++)
         player_doll.parts[i] = TILEP_SHOW_EQUIP;
-    tilep_race_default(you.species, doll_gender, you.experience_level, player_doll.parts);
+    tilep_race_default(you.species, doll_gender, you.experience_level, &player_doll);
 
     if (mode == TILEP_MODE_EQUIP)
         return;
 
-    tilep_job_default(you.char_class, doll_gender, player_doll.parts);
+    tilep_job_default(you.char_class, doll_gender, &player_doll);
 }
 
 static int _get_random_doll_part(int p)
@@ -247,7 +249,7 @@ void create_random_doll(dolls_data &rdoll)
         _fill_doll_part(rdoll, TILEP_PART_HELM);
 
     // Only male dolls get a chance at a beard.
-    if (get_gender_from_tile(rdoll.parts) == TILEP_GENDER_MALE && one_chance_in(4))
+    if (get_gender_from_tile(rdoll) == TILEP_GENDER_MALE && one_chance_in(4))
         _fill_doll_part(rdoll, TILEP_PART_BEARD);
 }
 
@@ -257,9 +259,9 @@ void fill_doll_equipment(dolls_data &result)
     if (result.parts[TILEP_PART_BASE] == TILEP_SHOW_EQUIP)
     {
         if (doll_gender == -1)
-            doll_gender = get_gender_from_tile(player_doll.parts);
+            doll_gender = get_gender_from_tile(player_doll);
         tilep_race_default(you.species, doll_gender, you.experience_level,
-                           result.parts);
+                           &result);
     }
 
     // Main hand.
@@ -367,10 +369,11 @@ void fill_doll_equipment(dolls_data &result)
     // Draconian head/wings.
     if (player_genus(GENPC_DRACONIAN))
     {
-        int base = 0;
-        int head = 0;
-        int wing = 0;
-        tilep_draconian_init(you.species, you.experience_level, base, head, wing);
+        tileidx_t base = 0;
+        tileidx_t head = 0;
+        tileidx_t wing = 0;
+        tilep_draconian_init(you.species, you.experience_level,
+                             &base, &head, &wing);
 
         if (result.parts[TILEP_PART_DRCHEAD] == TILEP_SHOW_EQUIP)
             result.parts[TILEP_PART_DRCHEAD] = head;
@@ -430,7 +433,7 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll, int x, int 
     };
 
     int flags[TILEP_PART_MAX];
-    tilep_calc_flags(doll.parts, flags);
+    tilep_calc_flags(doll, flags);
 
     // For skirts, boots go under the leg armour.  For pants, they go over.
     if (doll.parts[TILEP_PART_LEG] < TILEP_LEG_SKIRT_OFS)

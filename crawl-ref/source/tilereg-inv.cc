@@ -57,8 +57,8 @@ void InventoryRegion::pack_buffers()
                     break;
 
                 int num_floor = tile_dngn_count(env.tile_default.floor);
-                int tileidx = env.tile_default.floor + m_flavour[i] % num_floor;
-                m_buf.add_dngn_tile(tileidx, x, y);
+                tileidx_t t = env.tile_default.floor + m_flavour[i] % num_floor;
+                m_buf.add_dngn_tile(t, x, y);
             }
             else
                 m_buf.add_dngn_tile(TILE_ITEM_SLOT, x, y);

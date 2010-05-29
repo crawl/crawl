@@ -19,7 +19,7 @@
 
 #include "env.h"
 
-unsigned int get_tile_idx(lua_State *ls, int arg)
+tileidx_t get_tile_idx(lua_State *ls, int arg)
 {
     if (!lua_isstring(ls, arg))
     {
@@ -29,8 +29,8 @@ unsigned int get_tile_idx(lua_State *ls, int arg)
 
     const char *tile_name = luaL_checkstring(ls, arg);
 
-    unsigned int idx;
-    if (!tile_dngn_index(tile_name, idx))
+    tileidx_t idx;
+    if (!tile_dngn_index(tile_name, &idx))
     {
         std::string error = "Couldn't find tile '";
         error += tile_name;
@@ -78,7 +78,7 @@ LUAFN(dgn_lrocktile)
     MAP(ls, 1, map);
 
 #ifdef USE_TILE
-    unsigned short tile = get_tile_idx(ls, 2);
+    tileidx_t tile = get_tile_idx(ls, 2);
     map->rock_tile = tile;
 
     const char *tile_name = tile_dngn_name(tile);
@@ -94,7 +94,7 @@ LUAFN(dgn_lfloortile)
     MAP(ls, 1, map);
 
 #ifdef USE_TILE
-    unsigned short tile = get_tile_idx(ls, 2);
+    tileidx_t tile = get_tile_idx(ls, 2);
     map->floor_tile = tile;
 
     const char *tile_name = tile_dngn_name(tile);

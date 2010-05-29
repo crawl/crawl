@@ -117,11 +117,6 @@ static void _fuzz_detect_creatures(int pow, int *fuzz_radius, int *fuzz_chance)
 static bool _mark_detected_creature(coord_def where, const monsters *mon,
                                     int fuzz_chance, int fuzz_radius)
 {
-#ifdef USE_TILE
-    // Get monster index pre-fuzz.
-    int idx = mgrd(where);
-#endif
-
     bool found_good = false;
 
     if (fuzz_radius && x_chance_in_y(fuzz_chance, 100))
@@ -163,7 +158,7 @@ static bool _mark_detected_creature(coord_def where, const monsters *mon,
     set_map_knowledge_detected_mons(where);
 
 #ifdef USE_TILE
-    tile_place_monster(where.x, where.y, idx, false, true);
+    tile_place_monster(where, mon, false, true);
 #endif
 
     return (found_good);

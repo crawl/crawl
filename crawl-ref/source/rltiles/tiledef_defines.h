@@ -4,6 +4,8 @@
 #include <cassert>
 #include <vector>
 
+typedef unsigned int tileidx_t;
+
 class tile_info
 {
 public:
@@ -44,9 +46,9 @@ public:
     unsigned short ey;
 };
 
-typedef unsigned int (tile_count_func)(unsigned int);
-typedef const char *(tile_name_func)(unsigned int);
-typedef tile_info &(tile_info_func)(unsigned int);
+typedef unsigned int (tile_count_func)(tileidx_t);
+typedef const char *(tile_name_func)(tileidx_t);
+typedef tile_info &(tile_info_func)(tileidx_t);
 
 struct tile_variation
 {
@@ -70,7 +72,7 @@ struct tile_variation
 
 template<class F, class R>
 bool binary_search(F find, std::pair<F, R> *arr, int num_pairs,
-                   int (*cmpfnc)(F, F), R &result)
+                   int (*cmpfnc)(F, F), R *result)
 {
     int first = 0;
     int last = num_pairs - 1;
@@ -85,7 +87,7 @@ bool binary_search(F find, std::pair<F, R> *arr, int num_pairs,
             first = half + 1;
         else
         {
-            result = arr[half].second;
+            *result = arr[half].second;
             return true;
         }
 

@@ -930,7 +930,7 @@ HEADER_END
         print TILES (" " x 4) . "case $enum:"
             . " " x ($longest_enum - length($enum) + 2) . "return TILE_$enum;\n";
     }
-    print TILES (" " x 4) . "default: return -1;\n";
+    print TILES (" " x 4) . "default: return 0;\n";
     print TILES (" " x 4) . "}\n";
     print TILES "}\n\n";
 
@@ -954,7 +954,7 @@ HEADER_END
                 . " " x ($longest_enum - length($enum) + 2) . "return $t_enum;\n";
         }
     }
-    print TILES (" " x 4) . "default: return -1;\n";
+    print TILES (" " x 4) . "default: return 0;\n";
     print TILES (" " x 4) . "}\n";
     print TILES "}\n\n";
     close(TILES);
