@@ -721,20 +721,24 @@ static bool _mons_hostile(const monsters *mon)
     return (!mon->wont_attack() && !mon->neutral());
 }
 
-static bool _can_pacify_monster(const monsters *mon, const int healed)
+// Check whether this monster might be pacified.
+// Returns 0, if monster can be pacified but the attempt failed.
+// Returns 1, if monster is pacified.
+// Returns -1, if monster can never be pacified.
+static int _can_pacify_monster(const monsters *mon, const int healed)
 {
     if (you.religion != GOD_ELYVILON)
-        return (false);
+        return (-1);
 
     if (healed < 1)
-        return (false);
+        return (0);
 
     // I was thinking of jellies when I wrote this, but maybe we shouldn't
     // exclude zombies and such... (jpeg)
     if (mons_intel(mon) <= I_PLANT // no self-awareness
         || mon->type == MONS_KRAKEN_TENTACLE) // body part
     {
-        return (false);
+        return (-1);
     }
 
     const mon_holy_type holiness = mon->holiness();
@@ -744,14 +748,14 @@ static bool _can_pacify_monster(const monsters *mon, const int healed)
         && holiness != MH_DEMONIC
         && holiness != MH_NATURAL)
     {
-        return (false);
+        return (-1);
     }
 
     if (mons_is_stationary(mon)) // not able to leave the level
-        return (false);
+        return (-1);
 
     if (mon->asleep()) // not aware of what is happening
-        return (false);
+        return (0);
 
     const int factor = (mons_intel(mon) <= I_ANIMAL)       ? 3 : // animals
                        (is_player_same_species(mon->type)) ? 2   // same species
@@ -774,9 +778,9 @@ static bool _can_pacify_monster(const monsters *mon, const int healed)
          you.skills[SK_INVOCATIONS], healed, random_factor);
 
     if (mon->max_hit_points < factor * random_factor)
-        return (true);
+        return (1);
 
-    return (false);
+    return (0);
 }
 
 // Returns: 1 -- success, 0 -- failure, -1 -- cancel
@@ -829,7 +833,15 @@ static int _healing_spell(int healed, bool divine_ability,
         return (0);
     }
 
-    const bool can_pacify = _can_pacify_monster(monster, healed);
+    int pacify_attempt = _can_pacify_monster(monster, healed);
+
+    if (pacify_attempt == -1)
+    {
+        mpr("You cannot pacify this monster!");
+        return (0);
+    }
+
+    const bool can_pacify = (pacify_attempt == 1);
     const bool is_hostile = _mons_hostile(monster);
 
     // Don't divinely heal a monster you can't pacify.
