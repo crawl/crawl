@@ -124,7 +124,7 @@ struct bolt
     std::vector<coord_def> path_taken; // Path beam took.
 
     // INTERNAL use - should not usually be set outside of beam.cc
-    int         range_used;
+    int         extra_range_used;
     bool        is_tracer;       // is this a tracer?
     bool        aimed_at_feet;   // this was aimed at self!
     bool        msg_generated;   // an appropriate msg was already mpr'd
@@ -193,6 +193,7 @@ public:
 private:
     void do_fire();
     coord_def pos() const;
+    coord_def leg_source() const;
 
     // Lots of properties of the beam.
     bool is_blockable() const;
@@ -212,6 +213,7 @@ private:
     bool need_regress() const;
 
     int beam_source_as_target() const;
+
     int range_used_on_hit(const actor* victim) const;
 
     std::string zapper() const;
@@ -271,6 +273,7 @@ public:
     void elec_wall_effect();
     void nuke_wall_effect();
     void drop_object();
+    int range_used(bool leg_only = false) const;
     void finish_beam();
     bool fuzz_invis_tracer();
 
