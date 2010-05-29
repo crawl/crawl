@@ -336,8 +336,6 @@ public:
 
     // Is c in view but behind a transparent wall?
     bool trans_wall_blocking(const coord_def &c) const;
-    // Override LOS for arena.
-    void set_arena_los(const coord_def &c);
 
     bool is_icy() const;
     bool is_fiery() const;
