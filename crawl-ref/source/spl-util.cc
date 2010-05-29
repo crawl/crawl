@@ -1328,7 +1328,8 @@ bool spell_no_hostile_in_range(spell_type spell, int minRange)
     if (range < 0)
         return (false);
 
-    if (range + bonus < minRange)
+    const int rsq = (range + bonus) * (range + bonus) + 1;
+    if (rsq < minRange)
         return (true);
 
     return (false);
