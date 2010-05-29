@@ -1602,19 +1602,6 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
     return (true);
 }
 
-static bool _electricity_water_explosion(const bolt &beam, const actor *victim,
-                                         int &used)
-{
-    used = 1000;
-
-    ASSERT(!beam.is_tracer);
-    if (you.can_see(victim))
-        mpr("Electricity arcs through the water!");
-    conduct_electricity(victim->pos(), beam.agent());
-
-    return (true);
-}
-
 static bool _charged_hit_victim(bolt &beam, actor* victim, int &dmg,
                                    std::string &dmg_msg)
 {
@@ -1647,8 +1634,11 @@ static bool _charged_hit_victim(bolt &beam, actor* victim, int &dmg,
 
     if (feat_is_water(grd(victim->pos())))
     {
-        beam.range_funcs.insert(beam.range_funcs.begin(),
-            _electricity_water_explosion);
+        if (you.can_see(victim))
+            mpr("Electricity arcs through the water!");
+
+        conduct_electricity(victim->pos(), beam.agent());
+        beam.finish_beam();
     }
 
     return (false);
