@@ -747,8 +747,8 @@ bool already_learning_spell(int spell)
 }
 
 // Check whether this monster might be influenced by Recite.
-// Returns 0, if no monster found
-// Returns 1, if eligible monster found
+// Returns 0, if no monster found.
+// Returns 1, if eligible monster found.
 // Returns -1, if monster already affected or too dumb to understand.
 int check_recital_monster_at(const coord_def& where)
 {
