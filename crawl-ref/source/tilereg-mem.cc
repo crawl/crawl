@@ -17,6 +17,7 @@
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "stuff.h"
+#include "tilepick.h"
 
 MemoriseRegion::MemoriseRegion(const TileRegionInit &init) : SpellRegion(init)
 {

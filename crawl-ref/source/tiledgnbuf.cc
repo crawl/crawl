@@ -11,9 +11,12 @@
 #include "cloud.h"
 #include "coordit.h"
 #include "env.h"
+#include "player.h"
 #include "tiledef-dngn.h"
 #include "tiledef-player.h"
+#include "tiledoll.h"
 #include "tilemcache.h"
+#include "tilepick.h"
 
 DungeonCellBuffer::DungeonCellBuffer(ImageManager *im) :
     m_buf_dngn(&im->m_textures[TEX_DUNGEON]),

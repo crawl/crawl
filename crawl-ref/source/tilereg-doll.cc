@@ -13,8 +13,10 @@
 #include "libutil.h"
 #include "macro.h"
 #include "options.h"
+#include "player.h"
 #include "tiledef-player.h"
 #include "tilefont.h"
+#include "tilepick.h"
 
 DollEditRegion::DollEditRegion(ImageManager *im, FontWrapper *font) :
     m_font_buf(font),

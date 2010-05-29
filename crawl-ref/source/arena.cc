@@ -37,6 +37,9 @@
 #include "spl-mis.h"
 #include "spl-util.h"
 #include "state.h"
+#ifdef USE_TILE
+ #include "tilepick.h"
+#endif
 #include "view.h"
 #include "viewgeom.h"
 

@@ -16,6 +16,9 @@
 #include "showsymb.h"
 #include "stuff.h"
 #include "terrain.h"
+#ifdef USE_TILE
+ #include "tilepick.h"
+#endif
 #include "view.h"
 
 // These are hidden from the rest of the world... use the functions

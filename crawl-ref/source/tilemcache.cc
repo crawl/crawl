@@ -1,14 +1,14 @@
 #include "AppHdr.h"
 
 #ifdef USE_TILE
+#include "tilemcache.h"
 
 #include "env.h"
-#include "tilemcache.h"
-#include "tags.h"
 #include "ghost.h"
 #include "mon-util.h"
-
+#include "tags.h"
 #include "tiledef-player.h"
+#include "tilepick.h"
 
 mcache_manager mcache;
 
@@ -22,6 +22,15 @@ enum mcache_type
     MCACHE_MAX,
 
     MCACHE_NULL
+};
+
+struct demon_data
+{
+    demon_data() { head = body = wings = 0; }
+
+    tileidx_t head;
+    tileidx_t body;
+    tileidx_t wings;
 };
 
 // Custom marshall/unmarshall functions.

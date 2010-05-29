@@ -77,8 +77,8 @@
 #include "stuff.h"
 #include "tags.h"
 #ifdef USE_TILE
-#include "tiles.h"
-#include "tiledef-player.h"
+ #include "tiledef-player.h"
+ #include "tilepick.h"
 #endif
 #include "terrain.h"
 #include "travel.h"

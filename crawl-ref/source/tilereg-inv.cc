@@ -28,7 +28,7 @@
 #include "stuff.h"
 #include "tiledef-dngn.h"
 #include "tiledef-main.h"
-#include "tiles.h"
+#include "tilepick.h"
 #include "viewgeom.h"
 
 InventoryRegion::InventoryRegion(const TileRegionInit &init) : GridRegion(init)
@@ -615,9 +615,9 @@ static void _fill_item_info(InventoryTile &desc, const item_def &item)
         desc.quantity = -1;
 
     if (type == OBJ_WEAPONS || type == OBJ_MISSILES || type == OBJ_ARMOUR)
-        desc.special = tile_known_brand(item);
+        desc.special = tileidx_known_brand(item);
     else if (type == OBJ_CORPSES)
-        desc.special = tile_corpse_brand(item);
+        desc.special = tileidx_corpse_brand(item);
 
     desc.flag = 0;
     if (item.cursed() && item_ident(item, ISFLAG_KNOW_CURSE))

@@ -37,6 +37,7 @@
 
 #ifdef USE_TILE
 #include "tilereg.h"
+#include "tilepick.h"
 #endif
 
 unsigned get_sightmap_char(dungeon_feature_type feat)

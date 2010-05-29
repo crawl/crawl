@@ -83,7 +83,6 @@
 #include "stuff.h"
 #include "tagstring.h"
 #include "terrain.h"
-#include "tiles.h"
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"

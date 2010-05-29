@@ -81,8 +81,10 @@
 #include "stuff.h"
 #include "env.h"
 #include "tags.h"
-#include "tiles.h"
-#include "tilemcache.h"
+#ifdef USE_TILE
+ #include "tilemcache.h"
+ #include "tilepick.h"
+#endif
 #include "travel.h"
 
 #if defined(DEBUG) || defined(DEBUG_MONS_SCAN)

@@ -23,7 +23,8 @@
 #include "spl-util.h"
 #include "state.h"
 #ifdef USE_TILE
-#include "tiledef-dngn.h"
+ #include "tiledef-dngn.h"
+ #include "tilepick.h"
 #endif
 #include "view.h"
 

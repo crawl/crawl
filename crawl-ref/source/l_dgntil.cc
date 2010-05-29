@@ -15,9 +15,10 @@
 
 #ifdef USE_TILE
 
-#include "tiledef-dngn.h"
-
 #include "env.h"
+#include "tiledef-dngn.h"
+#include "tilepick.h"
+
 
 tileidx_t get_tile_idx(lua_State *ls, int arg)
 {

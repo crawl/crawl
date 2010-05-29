@@ -35,12 +35,12 @@
 #include "spells3.h" // for the halo
 #include "stuff.h"
 #include "terrain.h"
-#include "tiles.h"
 #include "tilemcache.h"
 #include "tiledef-dngn.h"
 #include "tiledef-player.h"
 #include "tiledef-gui.h"
 #include "tiledef-unrand.h"
+#include "tilepick.h"
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
@@ -84,7 +84,7 @@ void TileNewLevel(bool first_time)
 
 /**** tile index routines ****/
 
-tileidx_t tile_unseen_flag(const coord_def &gc)
+tileidx_t tileidx_unseen_flag(const coord_def &gc)
 {
     if (!map_bounds(gc))
         return (TILE_FLAG_UNSEEN);
@@ -1894,6 +1894,122 @@ static tileidx_t _tileidx_food(const item_def &item)
     return TILE_ERROR;
 }
 
+
+tileidx_t tileidx_known_brand(const item_def &item)
+{
+    if (!item_type_known(item))
+        return 0;
+
+    if (item.base_type == OBJ_WEAPONS)
+    {
+        const int brand = get_weapon_brand(item);
+        if (brand != SPWPN_NORMAL)
+            return (TILE_BRAND_FLAMING + get_weapon_brand(item) - 1);
+    }
+    else if (item.base_type == OBJ_ARMOUR)
+    {
+        const int brand = get_armour_ego_type(item);
+        if (brand != SPARM_NORMAL)
+            return (TILE_BRAND_ARM_RUNNING + get_armour_ego_type(item) - 1);
+        else if (is_artefact(item)
+                 && artefact_wpn_property(item, ARTP_PONDEROUS))
+        {
+            return (TILE_BRAND_ARM_PONDEROUSNESS);
+        }
+    }
+    else if (item.base_type == OBJ_MISSILES)
+    {
+        switch (get_ammo_brand(item))
+        {
+        case SPMSL_FLAME:
+            return TILE_BRAND_FLAME;
+        case SPMSL_FROST:
+            return TILE_BRAND_FROST;
+        case SPMSL_POISONED:
+            return TILE_BRAND_POISONED;
+        case SPMSL_CURARE:
+            return TILE_BRAND_CURARE;
+        case SPMSL_RETURNING:
+            return TILE_BRAND_RETURNING;
+        case SPMSL_CHAOS:
+            return TILE_BRAND_CHAOS;
+        case SPMSL_PENETRATION:
+            return TILE_BRAND_PENETRATION;
+        case SPMSL_REAPING:
+            return TILE_BRAND_REAPING;
+        case SPMSL_DISPERSAL:
+            return TILE_BRAND_DISPERSAL;
+        case SPMSL_EXPLODING:
+            return TILE_BRAND_EXPLOSION;
+        case SPMSL_CONFUSION:
+            return TILE_BRAND_CONFUSION;
+        case SPMSL_PARALYSIS:
+            return TILE_BRAND_PARALYSIS;
+        case SPMSL_SLOW:
+            return TILE_BRAND_SLOWING;
+        case SPMSL_SICKNESS:
+            return TILE_BRAND_SICKNESS;
+        case SPMSL_RAGE:
+            return TILE_BRAND_RAGE;
+        case SPMSL_SLEEP:
+            return TILE_BRAND_SLEEP;
+        default:
+            break;
+        }
+    }
+    return 0;
+}
+
+tileidx_t tileidx_corpse_brand(const item_def &item)
+{
+    if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
+        return (0);
+
+    const bool fulsome_dist = you.has_spell(SPELL_FULSOME_DISTILLATION);
+    const bool rotten       = food_is_rotten(item);
+    const bool saprovorous  = player_mutation_level(MUT_SAPROVOROUS);
+
+    // Brands are mostly meaningless to herbivores.
+    // Could still be interesting for Fulsome Distillation, though.
+    if (fulsome_dist && player_mutation_level(MUT_HERBIVOROUS) == 3)
+        return (0);
+
+    // Vampires are only interested in fresh blood.
+    if (you.species == SP_VAMPIRE
+        && (rotten || !mons_has_blood(item.plus)))
+    {
+        return TILE_FOOD_INEDIBLE;
+    }
+
+    // Rotten corpses' chunk effects are meaningless if we are neither
+    // saprovorous nor have the Fulsome Distillation spell.
+    if (rotten && !saprovorous && !fulsome_dist)
+        return TILE_FOOD_INEDIBLE;
+
+    // Harmful chunk effects > religious rules > chance of sickness.
+    if (is_poisonous(item))
+        return TILE_FOOD_POISONED;
+
+    if (is_mutagenic(item))
+        return TILE_FOOD_MUTAGENIC;
+
+    if (causes_rot(item))
+        return TILE_FOOD_ROTTING;
+
+    if (is_forbidden_food(item))
+        return TILE_FOOD_FORBIDDEN;
+
+    if (is_contaminated(item))
+        return TILE_FOOD_CONTAMINATED;
+
+    // If no special chunk effects, mark corpse as inedible
+    // unless saprovorous.
+    if (rotten && !saprovorous)
+        return TILE_FOOD_INEDIBLE;
+
+    return 0;
+}
+
 // Returns index of corpse tiles.
 // Parameter item holds the corpse.
 static tileidx_t _tileidx_corpse(const item_def &item)
@@ -3117,6 +3233,21 @@ tileidx_t tileidx_player(int job)
     return ch;
 }
 
+tileidx_t tileidx_unseen_terrain(const coord_def &gc, int what)
+{
+    dungeon_feature_type feature = grd(gc);
+
+    tileidx_t t = tileidx_feature(feature, gc);
+    if (t == TILE_ERROR || what == ' ')
+    {
+        tileidx_t fg_dummy;
+        tileidx_unseen(&fg_dummy, &t, what, gc);
+    }
+
+    t |= tileidx_unseen_flag(gc);
+
+    return t;
+}
 
 void tileidx_unseen(tileidx_t *fg, tileidx_t *bg, screen_buffer_t ch,
                     const coord_def &gc)
@@ -3125,7 +3256,7 @@ void tileidx_unseen(tileidx_t *fg, tileidx_t *bg, screen_buffer_t ch,
     if (ch < 32)
         ch = 32;
 
-    tileidx_t flag = tile_unseen_flag(gc);
+    tileidx_t flag = tileidx_unseen_flag(gc);
     *fg = 0;
     *bg = TILE_FLOOR_NORMAL | flag;
 
@@ -5553,25 +5684,6 @@ void tile_apply_properties(const coord_def &gc, tileidx_t *fg,
 
     if (silenced(gc))
         *bg |= TILE_FLAG_SILENCED;
-}
-
-static FixedVector<const char*, TAGPREF_MAX>
-    tag_prefs("none", "tutorial", "named", "enemy");
-
-tag_pref string2tag_pref(const char *opt)
-{
-    for (int i = 0; i < TAGPREF_MAX; i++)
-    {
-        if (!stricmp(opt, tag_prefs[i]))
-            return ((tag_pref)i);
-    }
-
-    return TAGPREF_ENEMY;
-}
-
-const char *tag_pref2string(tag_pref pref)
-{
-    return tag_prefs[pref];
 }
 
 #endif

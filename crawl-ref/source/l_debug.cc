@@ -24,6 +24,9 @@
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "place.h"
+#ifdef USE_TILE
+ #include "tilepick.h"
+#endif
 #include "view.h"
 #include "wiz-dgn.h"
 

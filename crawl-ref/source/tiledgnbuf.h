@@ -27,6 +27,7 @@ struct packed_cell
 // dungeon overlay of the passed in packed_cell.
 void pack_waves(const coord_def &gc, packed_cell *cell);
 
+class dolls_data;
 class mcache_entry;
 class ImageManager;
 

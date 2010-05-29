@@ -40,9 +40,9 @@
 #include "state.h"
 
 #ifdef USE_TILE
-#include "tiles.h"
-#include "tiledef-main.h"
-#include "tiledef-dngn.h"
+ #include "tiledef-main.h"
+ #include "tiledef-dngn.h"
+ #include "tilepick.h"
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -567,13 +567,13 @@ bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
     if (item->base_type == OBJ_WEAPONS || item->base_type == OBJ_MISSILES
         || item->base_type == OBJ_ARMOUR)
     {
-        int brand = tile_known_brand(*item);
+        tileidx_t brand = tileidx_known_brand(*item);
         if (brand)
             tileset.push_back(tile_def(brand, TEX_DEFAULT));
     }
     else if (item->base_type == OBJ_CORPSES)
     {
-        int brand = tile_corpse_brand(*item);
+        tileidx_t brand = tileidx_corpse_brand(*item);
         if (brand)
             tileset.push_back(tile_def(brand, TEX_DEFAULT));
     }

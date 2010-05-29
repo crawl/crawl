@@ -50,6 +50,9 @@
 #include "stuff.h"
 #include "env.h"
 #include "terrain.h"
+#ifdef USE_TILE
+#include "tilepick.h"
+#endif
 #include "transform.h"
 #include "hints.h"
 #include "view.h"

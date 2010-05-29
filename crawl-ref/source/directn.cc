@@ -56,7 +56,7 @@
 #include "areas.h"
 #include "stash.h"
 #ifdef USE_TILE
- #include "tiles.h"
+ #include "tilepick.h"
  #include "tilereg.h"
 #endif
 #include "terrain.h"
