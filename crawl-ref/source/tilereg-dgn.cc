@@ -48,20 +48,15 @@ DungeonRegion::~DungeonRegion()
 {
 }
 
-void DungeonRegion::load_dungeon(unsigned int* tileb, int cx_to_gx, int cy_to_gy)
+void DungeonRegion::load_dungeon(const crawl_view_buffer &vbuf,
+                                 const coord_def &gc)
 {
-    m_tileb.clear();
     m_dirty = true;
 
-    if (!tileb)
-        return;
+    m_cx_to_gx = gc.x - mx / 2;
+    m_cy_to_gy = gc.y - my / 2;
 
-    int len = 2 * crawl_view.viewsz.x * crawl_view.viewsz.y;
-    m_tileb.resize(len);
-    memcpy(&m_tileb[0], tileb, sizeof(unsigned int) * len);
-
-    m_cx_to_gx = cx_to_gx;
-    m_cy_to_gy = cy_to_gy;
+    m_vbuf = vbuf;
 
     place_cursor(CURSOR_TUTORIAL, m_cursor[CURSOR_TUTORIAL]);
 }
@@ -80,27 +75,27 @@ void DungeonRegion::pack_buffers()
 {
     m_buf_dngn.clear();
 
-    if (m_tileb.empty())
+    if (m_vbuf.empty())
         return;
 
-    int tile = 0;
+    screen_cell_t *vbuf_cell = m_vbuf;
     for (int y = 0; y < crawl_view.viewsz.y; ++y)
         for (int x = 0; x < crawl_view.viewsz.x; ++x)
         {
             coord_def gc(x + m_cx_to_gx, y + m_cy_to_gy);
 
-            packed_cell cell;
-            cell.bg = m_tileb[tile + 1];
-            cell.fg = m_tileb[tile];
+            packed_cell tile_cell;
+            tile_cell.bg = vbuf_cell->tile_bg;
+            tile_cell.fg = vbuf_cell->tile_fg;
             if (in_bounds(gc))
             {
-                cell.flv = env.tile_flv(gc);
-                pack_waves(gc, &cell);
+                tile_cell.flv = env.tile_flv(gc);
+                pack_waves(gc, &tile_cell);
             }
 
-            m_buf_dngn.add(cell, x, y);
+            m_buf_dngn.add(tile_cell, x, y);
 
-            tile += 2;
+            vbuf_cell++;
         }
 
     pack_cursor(CURSOR_TUTORIAL, TILE_TUTORIAL_CURSOR);
@@ -325,7 +320,7 @@ void DungeonRegion::draw_minibars()
 
 void DungeonRegion::clear()
 {
-    m_tileb.clear();
+    m_vbuf.clear();
 }
 
 void DungeonRegion::on_resize()
@@ -863,16 +858,6 @@ bool DungeonRegion::on_screen(const coord_def &gc) const
     int y = gc.y - m_cy_to_gy;
 
     return (x >= 0 && x < mx && y >= 0 && y < my);
-}
-
-// Returns the index into m_tileb for the foreground tile.
-// This value may not be valid.  Check on_screen() first.
-// Add one to the return value to get the background tile idx.
-int DungeonRegion::get_buffer_index(const coord_def &gc)
-{
-    int x = gc.x - m_cx_to_gx;
-    int y = gc.y - m_cy_to_gy;
-    return 2 * (x + y * mx);
 }
 
 void DungeonRegion::place_cursor(cursor_type type, const coord_def &gc)

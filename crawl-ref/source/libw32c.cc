@@ -916,16 +916,18 @@ int get_console_string(char *buf, int maxlen)
     return (int)nread;
 }
 
-void puttext(int x1, int y1, int x2, int y2, const screen_buffer_t *buf)
+void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
 {
-    for (int y = y1; y <= y2; ++y)
+    const screen_cell_t *cell = vbuf;
+    const coord_def size = vbuf.size();
+    for (int y = 1; y <= size.y; ++y)
     {
         cgotoxy(x1, y);
-        for (int x = x1; x <= x2; x++)
+        for (int x = 1; x <= size.x; ++x)
         {
-            textattr( buf[1] );
-            putwch( *buf );
-            buf += 2;
+            textattr(cell->colour);
+            putwch(cell->glyph);
+            cell++;
         }
     }
     update_screen();

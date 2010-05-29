@@ -404,15 +404,15 @@ int TilesFramework::load_font(const char *font_file, int font_size,
 
     return (m_fonts.size() - 1);
 }
-
-void TilesFramework::load_dungeon(unsigned int *tileb, const coord_def &gc)
+void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
+                                  const coord_def &gc)
 {
     m_active_layer = LAYER_NORMAL;
 
-    unsigned int ox = m_region_tile->mx/2;
-    unsigned int oy = m_region_tile->my/2;
-    m_region_tile->load_dungeon(tileb, gc.x - ox, gc.y - oy);
+    m_region_tile->load_dungeon(vbuf, gc);
 
+    int ox = m_region_tile->mx/2;
+    int oy = m_region_tile->my/2;
     coord_def win_start(gc.x - ox, gc.y - oy);
     coord_def win_end(gc.x + ox + 1, gc.y + oy + 1);
 

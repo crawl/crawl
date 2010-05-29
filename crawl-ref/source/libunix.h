@@ -21,6 +21,8 @@ typedef unsigned short screen_buffer_t;
 
 #include <stdio.h>
 
+class crawl_view_buffer;
+
 int get_number_of_lines();
 int get_number_of_cols();
 
@@ -38,7 +40,7 @@ int translate_keypad(int keyin);
 int wherex(void);
 int wherey(void);
 int window(int x1, int y1, int x2, int y2);
-void puttext(int x1, int y1, int x2, int y2, const screen_buffer_t *);
+void puttext(int x, int y, const crawl_view_buffer &vbuf);
 void update_screen(void);
 void clear_to_end_of_line(void);
 void clear_to_end_of_screen(void);
