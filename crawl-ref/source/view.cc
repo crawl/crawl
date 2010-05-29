@@ -987,8 +987,9 @@ void viewwindow(bool monster_updates, bool show_updates)
         }
         else if (crawl_state.darken_range >= 0)
         {
-            bool out_of_range = grid_distance(you.pos(), gc) >
-                                    crawl_state.darken_range
+            const int rsq = (crawl_state.darken_range
+                             * crawl_state.darken_range) + 1;
+            bool out_of_range = distance(you.pos(), gc) > rsq
                                 || !you.see_cell(gc);
 #ifndef USE_TILE
             if (out_of_range)
