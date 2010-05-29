@@ -50,8 +50,8 @@
 #include "stuff.h"
 #include "teleport.h"
 #ifdef USE_TILE
-#include "tiles.h"
-#include "tiledef-main.h"
+ #include "tiledef-main.h"
+ #include "tilepick.h"
 #endif
 #include "terrain.h"
 #include "traps.h"

@@ -136,9 +136,9 @@
 #include "xom.h"
 
 #ifdef USE_TILE
-#include "tiles.h"
-#include "tiledef-dngn.h"
-#include "tilereg.h"
+ #include "tiledef-dngn.h"
+ #include "tilepick.h"
+ #include "tilereg.h"
 #endif
 
 #ifdef DGL_SIMPLE_MESSAGING

@@ -18,11 +18,13 @@
 #include "externs.h"
 #include "species.h"
 #include "cio.h"
+#include "colour.h"
 #include "database.h"
 #include "debug.h"
 #include "delay.h"
 #include "food.h"
 #include "format.h"
+#include "godconduct.h"
 #include "goditem.h"
 #include "invent.h"
 #include "itemname.h"
@@ -33,14 +35,15 @@
 #include "message.h"
 #include "player.h"
 #include "religion.h"
-#include "godconduct.h"
 #include "spl-cast.h"
 #include "spl-mis.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
+#ifdef USE_TILE
+ #include "tilepick.h"
+#endif
 #include "transform.h"
-#include "colour.h"
 
 #define SPELL_LIST_KEY "spell_list"
 

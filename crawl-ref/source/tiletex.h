@@ -7,8 +7,6 @@
 #ifndef TILETEX_H
 #define TILETEX_H
 
-#include "tiles.h"
-
 // The different texture types.
 enum TextureID
 {

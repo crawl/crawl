@@ -457,6 +457,22 @@ static unsigned curses_attribute(const std::string &field)
     return CHATTR_NORMAL;
 }
 
+#ifdef USE_TILE
+static FixedVector<const char*, TAGPREF_MAX>
+    tag_prefs("none", "tutorial", "named", "enemy");
+
+static tag_pref _str_to_tag_pref(const char *opt)
+{
+    for (int i = 0; i < TAGPREF_MAX; i++)
+    {
+        if (!stricmp(opt, tag_prefs[i]))
+            return ((tag_pref)i);
+    }
+
+    return TAGPREF_ENEMY;
+}
+#endif
+
 void game_options::new_dump_fields(const std::string &text, bool add)
 {
     // Easy; chardump.cc has most of the intelligence.
@@ -3212,7 +3228,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(tile_show_demon_tier);
     else if (key == "tile_tag_pref")
     {
-        tile_tag_pref = string2tag_pref(field.c_str());
+        tile_tag_pref = _str_to_tag_pref(field.c_str());
     }
 #endif // USE_TILE
 

@@ -43,9 +43,9 @@
 #include "spells3.h"
 #include "terrain.h"
 #ifdef USE_TILE
-#include "tiledef-dngn.h"
+ #include "tiledef-dngn.h"
+ #include "tilepick.h"
 #endif
-#include "tiles.h"
 #include "traps.h"
 #include "travel.h"
 #include "view.h"

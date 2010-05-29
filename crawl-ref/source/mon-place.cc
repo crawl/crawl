@@ -44,7 +44,8 @@
 #include "travel.h"
 #include "view.h"
 #ifdef USE_TILE
-#include "tiledef-player.h"
+ #include "tiledef-player.h"
+ #include "tilepick.h"
 #endif
 
 band_type active_monster_band = BAND_NO_BAND;

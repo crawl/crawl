@@ -66,6 +66,9 @@
 #include "stuff.h"
 #include "teleport.h"
 #include "terrain.h"
+#ifdef USE_TILE
+ #include "tilepick.h"
+#endif
 #include "transform.h"
 #include "traps.h"
 #include "view.h"
@@ -73,8 +76,6 @@
 #include "viewchar.h"
 #include "viewgeom.h"
 #include "xom.h"
-
-#include "tiles.h"
 
 //#define DEBUG_BEAM
 //#define DEBUG_CHAOS_BOUNCE

@@ -11,6 +11,8 @@
 #include "debug.h"
 #include <vector>
 
+class dolls_data;
+
 // The monster cache is designed to hold extra information about monsters that
 // can't be contained in a single tile.  This is usually for equipment,
 // doll parts, or demon parts.

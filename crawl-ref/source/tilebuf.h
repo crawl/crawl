@@ -6,7 +6,6 @@
 #ifndef TILEBUF_H
 #define TILEBUF_H
 
-#include "tiles.h"
 #include "glwrapper.h"
 
 #include <string>

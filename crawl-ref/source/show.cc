@@ -23,6 +23,9 @@
 #include "stuff.h"
 #include "areas.h"
 #include "terrain.h"
+#ifdef USE_TILE
+ #include "tilepick.h"
+#endif
 #include "viewgeom.h"
 #include "viewmap.h"
 

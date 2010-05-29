@@ -11,6 +11,7 @@
 #include "directn.h"
 #include "env.h"
 #include "files.h"
+#include "hints.h"
 #include "hiscores.h"
 #include "itemname.h"
 #include "items.h"
@@ -32,9 +33,11 @@
 #include "stuff.h"
 #include "tagstring.h"
 #include "terrain.h"
+#ifdef USE_TILE
+ #include "tilepick.h"
+#endif
 #include "traps.h"
 #include "travel.h"
-#include "hints.h"
 #include "view.h"
 #include "viewchar.h"
 #include "xom.h"

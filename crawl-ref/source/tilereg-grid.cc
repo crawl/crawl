@@ -11,6 +11,8 @@
 #include "tilereg-grid.h"
 
 #include "libutil.h"
+#include "random.h"
+#include "player.h" // FIXME: Only needed because last_clicked is global.  :(
 #include "tiledef-main.h"
 #include "tilefont.h"
 

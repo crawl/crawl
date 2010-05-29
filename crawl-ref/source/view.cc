@@ -58,7 +58,6 @@
 #include "env.h"
 #include "spells3.h"
 #include "stash.h"
-#include "tiles.h"
 #include "travel.h"
 #include "state.h"
 #include "terrain.h"
@@ -69,7 +68,8 @@
 #include "xom.h"
 
 #ifdef USE_TILE
-#include "tiledef-dngn.h"
+ #include "tiledef-dngn.h"
+ #include "tilepick.h"
 #endif
 
 //#define DEBUG_PANE_BOUNDS
@@ -782,7 +782,7 @@ void tile_draw_floor()
             const coord_def ep(cx, cy);
             const coord_def gc = show2grid(ep);
 
-            tileidx_t bg = TILE_DNGN_UNSEEN | tile_unseen_flag(gc);
+            tileidx_t bg = TILE_DNGN_UNSEEN | tileidx_unseen_flag(gc);
 
             if (you.see_cell(gc))
             {
@@ -825,7 +825,7 @@ static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc)
         tileidx_unseen(&fg, &bg, get_map_knowledge_char(gc), gc);
 
     cell->tile_fg = fg;
-    cell->tile_bg = bg | tile_unseen_flag(gc);
+    cell->tile_bg = bg | tileidx_unseen_flag(gc);
 #endif
 }
 
@@ -877,7 +877,7 @@ static void _draw_los_backup(screen_cell_t *cell,
     if (bg != 0 || fg != 0)
     {
         cell->tile_fg = fg;
-        cell->tile_bg = bg | tile_unseen_flag(gc);
+        cell->tile_bg = bg | tileidx_unseen_flag(gc);
     }
     else
         tileidx_unseen(&cell->tile_fg, &cell->tile_bg, cell->glyph, gc);

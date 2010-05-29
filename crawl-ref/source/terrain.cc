@@ -36,6 +36,9 @@
 #include "spells3.h"
 #include "stuff.h"
 #include "env.h"
+#ifdef USE_TILE
+ #include "tilepick.h"
+#endif
 #include "travel.h"
 #include "transform.h"
 #include "traps.h"
