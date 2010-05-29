@@ -16,7 +16,7 @@ public:
     InventoryTile();
 
     // tile index
-    int tile;
+    tileidx_t tile;
     // mitm/you.inv idx (depends on flag & TILEI_FLAG_FLOOR)
     int idx;
     // quantity of this item (0-999 valid, >999 shows as 999, <0 shows nothing)

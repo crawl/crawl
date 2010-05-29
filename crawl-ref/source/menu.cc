@@ -848,11 +848,11 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
 
     const bool      fake = m->props.exists("fake");
     const coord_def c  = m->pos();
-          int       ch = TILE_FLOOR_NORMAL;
+          tileidx_t ch = TILE_FLOOR_NORMAL;
 
     if (!fake)
     {
-       ch = tileidx_feature(grd(c), c.x, c.y);
+       ch = tileidx_feature(grd(c), c);
        if (ch == TILE_FLOOR_NORMAL)
            ch = env.tile_flv(c).floor;
        else if (ch == TILE_WALL_NORMAL)
@@ -952,8 +952,7 @@ bool FeatureMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
 
     MenuEntry::get_tiles(tileset);
 
-    tileset.push_back(tile_def(tileidx_feature(feat, pos.x, pos.y),
-                               TEX_DUNGEON));
+    tileset.push_back(tile_def(tileidx_feature(feat, pos), TEX_DUNGEON));
 
     if (in_bounds(pos) && is_unknown_stair(pos))
         tileset.push_back(tile_def(TILE_NEW_STAIR, TEX_DEFAULT));
@@ -993,7 +992,7 @@ bool PlayerMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
     };
 
     int flags[TILEP_PART_MAX];
-    tilep_calc_flags(equip_doll.parts, flags);
+    tilep_calc_flags(equip_doll, flags);
 
     // For skirts, boots go under the leg armour.  For pants, they go over.
     if (equip_doll.parts[TILEP_PART_LEG] < TILEP_LEG_SKIRT_OFS)
@@ -2654,7 +2653,7 @@ void SaveMenuItem::_pack_doll()
     };
 
     int flags[TILEP_PART_MAX];
-    tilep_calc_flags(m_save_doll.parts, flags);
+    tilep_calc_flags(m_save_doll, flags);
 
     // For skirts, boots go under the leg armour.  For pants, they go over.
     if (m_save_doll.parts[TILEP_PART_LEG] < TILEP_LEG_SKIRT_OFS)

@@ -502,7 +502,7 @@ bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
     if (quantity <= 0)
         return (false);
 
-    int idx = tileidx_item(*item);
+    tileidx_t idx = tileidx_item(*item);
     if (!idx)
         return (false);
 
@@ -531,7 +531,7 @@ bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
         const coord_def c = item->held_by_monster()
             ? item->holding_monster()->pos()
             : item->pos;
-        int ch = -1;
+        tileidx_t ch = 0;
         if (c.x == 0)
         {
             // Store items.
@@ -539,7 +539,7 @@ bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
         }
         else if (c != coord_def())
         {
-            ch = tileidx_feature(grd(c), c.x, c.y);
+            ch = tileidx_feature(grd(c), c);
             if (ch == TILE_FLOOR_NORMAL)
                 ch = env.tile_flv(c).floor;
             else if (ch == TILE_WALL_NORMAL)
@@ -549,7 +549,7 @@ bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
         }
         tileset.push_back(tile_def(idx, TEX_DEFAULT));
 
-        if (ch != -1)
+        if (ch != 0)
         {
             // Needs to be displayed so as to not give away mimics in shallow water.
             if (ch == TILE_DNGN_SHALLOW_WATER)

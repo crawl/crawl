@@ -207,7 +207,7 @@ public:
 };
 
 #ifdef USE_TILE
-typedef std::pair<int, int> map_weighted_tile;
+typedef std::pair<tileidx_t, int> map_weighted_tile;
 class map_tile_list : public std::vector<map_weighted_tile>
 {
 public:
@@ -223,7 +223,7 @@ public:
     {
     }
 
-    int get_tile();
+    tileidx_t get_tile();
 
 public:
     std::string key;
@@ -233,7 +233,7 @@ public:
     bool last_tile;
     bool floor;
     bool feat;
-    int fixed_tile;
+    tileidx_t fixed_tile;
     map_tile_list tiles;
 };
 #endif

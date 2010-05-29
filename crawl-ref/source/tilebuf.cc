@@ -114,7 +114,7 @@ TileBuffer::TileBuffer(const TilesTexture *t) : VertBuffer(true, false, t)
 {
 }
 
-void TileBuffer::add_unscaled(int idx, float x, float y, int ymax)
+void TileBuffer::add_unscaled(tileidx_t idx, float x, float y, int ymax)
 {
     float pos_sx = x;
     float pos_sy = y;
@@ -133,7 +133,8 @@ void TileBuffer::add_unscaled(int idx, float x, float y, int ymax)
     add_primitive(rect);
 }
 
-void TileBuffer::add(int idx, int x, int y, int ox, int oy, bool centre, int ymax)
+void TileBuffer::add(tileidx_t idx, int x, int y, int ox, int oy,
+                     bool centre, int ymax)
 {
     float pos_sx = x;
     float pos_sy = y;
@@ -177,7 +178,7 @@ static unsigned char _get_alpha(float lerp, int alpha_top, int alpha_bottom)
     return (static_cast<unsigned char>(ret));
 }
 
-void ColouredTileBuffer::add(int idx, int x, int y, int z,
+void ColouredTileBuffer::add(tileidx_t idx, int x, int y, int z,
                              int ox,  int oy, int ymin, int ymax,
                              int alpha_top, int alpha_bottom)
 {
@@ -225,7 +226,7 @@ SubmergedTileBuffer::SubmergedTileBuffer(const TilesTexture *tex,
 {
 }
 
-void SubmergedTileBuffer::add(int idx, int x, int y, int z, bool submerged,
+void SubmergedTileBuffer::add(tileidx_t idx, int x, int y, int z, bool submerged,
                               bool ghost, int ox, int oy, int ymax)
 {
     // Arbitrary alpha values for the top and bottom.

@@ -29,16 +29,15 @@
 #include "viewgeom.h"
 #include "windowmanager.h"
 
-int tile_idx_unseen_terrain(int x, int y, int what)
+tileidx_t tileidx_unseen_terrain(const coord_def &gc, int what)
 {
-    const coord_def gc(x,y);
     dungeon_feature_type feature = grd(gc);
 
-    unsigned int t = tileidx_feature(feature, gc.x, gc.y);
+    tileidx_t t = tileidx_feature(feature, gc);
     if (t == TILE_ERROR || what == ' ')
     {
-        unsigned int fg_dummy;
-        tileidx_unseen(fg_dummy, t, what, gc);
+        tileidx_t fg_dummy;
+        tileidx_unseen(&fg_dummy, &t, what, gc);
     }
 
     t |= tile_unseen_flag(gc);

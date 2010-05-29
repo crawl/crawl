@@ -33,11 +33,11 @@ struct crawl_environment
 #ifdef USE_TILE
     // indexed by grid coords
     FixedArray<tile_fg_store, GXM, GYM> tile_bk_fg;
-    FixedArray<unsigned int, GXM, GYM> tile_bk_bg;
+    FixedArray<tileidx_t, GXM, GYM> tile_bk_bg;
     FixedArray<tile_flavour, GXM, GYM> tile_flv;
     // indexed by (show-1) coords
-    FixedArray<unsigned int, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tile_fg;
-    FixedArray<unsigned int, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tile_bg;
+    FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tile_fg;
+    FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tile_bg;
     tile_flavour tile_default;
 #endif
 

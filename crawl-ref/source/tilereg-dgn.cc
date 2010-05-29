@@ -117,7 +117,7 @@ void DungeonRegion::pack_buffers()
         if (!crawl_view.in_grid_los(m_overlays[i].gc))
             continue;
 
-        int idx = m_overlays[i].idx;
+        tileidx_t idx = m_overlays[i].idx;
         if (idx >= TILE_MAIN_MAX)
             continue;
 
@@ -212,7 +212,7 @@ void DungeonRegion::render()
 
             const coord_def gc = show2grid(ep);
             coord_def pc;
-            to_screen_coords(gc, pc);
+            to_screen_coords(gc, &pc);
             // center this coord, which is at the top left of gc's cell
             pc.x += dx / 2;
 
@@ -252,7 +252,7 @@ void DungeonRegion::draw_minibars()
         // that gives coords by pixel (the current one), one that gives
         // them by grid.
         coord_def player_on_screen;
-        to_screen_coords(you.pos(), player_on_screen);
+        to_screen_coords(you.pos(), &player_on_screen);
 
         static const float tile_width  = wx / mx;
         static const float tile_height = wy / my;
@@ -843,13 +843,13 @@ int tile_click_cell(const coord_def &gc, unsigned char mod)
     return (click_travel(gc, mod & MOD_CTRL));
 }
 
-void DungeonRegion::to_screen_coords(const coord_def &gc, coord_def &pc) const
+void DungeonRegion::to_screen_coords(const coord_def &gc, coord_def *pc) const
 {
     int cx = gc.x - m_cx_to_gx;
     int cy = gc.y - m_cy_to_gy;
 
-    pc.x = sx + ox + cx * dx;
-    pc.y = sy + oy + cy * dy;
+    pc->x = sx + ox + cx * dx;
+    pc->y = sy + oy + cy * dy;
 }
 
 bool DungeonRegion::on_screen(const coord_def &gc) const

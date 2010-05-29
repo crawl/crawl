@@ -766,9 +766,9 @@ static void _fill_player_doll(player_save_info &p, const std::string &dollfile)
         {
             tilep_scan_parts(fbuf, equip_doll, p.species, p.experience_level);
             tilep_race_default(p.species,
-                               get_gender_from_tile(equip_doll.parts),
+                               get_gender_from_tile(equip_doll),
                                p.experience_level,
-                               equip_doll.parts);
+                               &equip_doll);
             success = true;
 
             while (fscanf(fdoll, "%1023s", fbuf) != EOF)
@@ -787,7 +787,7 @@ static void _fill_player_doll(player_save_info &p, const std::string &dollfile)
             job = JOB_FIGHTER;
 
         int gender = coinflip();
-        tilep_job_default(job, gender, equip_doll.parts);
+        tilep_job_default(job, gender, &equip_doll);
     }
     p.doll = equip_doll;
 }

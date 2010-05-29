@@ -1101,7 +1101,7 @@ void TilesFramework::update_minimap_bounds()
     m_region_map->update_bounds();
 }
 
-int tile_known_brand(const item_def item)
+tileidx_t tile_known_brand(const item_def &item)
 {
     if (!item_type_known(item))
         return 0;
@@ -1166,7 +1166,7 @@ int tile_known_brand(const item_def item)
     return 0;
 }
 
-int tile_corpse_brand(const item_def item)
+tileidx_t tile_corpse_brand(const item_def &item)
 {
     if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
         return (0);
@@ -1275,7 +1275,7 @@ const coord_def &TilesFramework::get_cursor() const
     return (m_region_tile->get_cursor());
 }
 
-void TilesFramework::add_overlay(const coord_def &gc, int idx)
+void TilesFramework::add_overlay(const coord_def &gc, tileidx_t idx)
 {
     m_region_tile->add_overlay(gc, idx);
 }

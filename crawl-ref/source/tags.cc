@@ -2105,8 +2105,8 @@ void tag_construct_level_tiles(writer &th)
     unsigned int tile = 0;
     unsigned int last_tile = 0;
 
-    // tile routine subversion
-    marshallShort(th, TILETAG_CURRENT);
+    // Legacy version number.
+    marshallShort(th, 0);
 
     // Map grids.
     // how many X?
@@ -2562,10 +2562,7 @@ void tag_read_level_tiles(reader &th)
             env.tile_flv[x][y].feat   = unmarshallShort(th);
         }
 
-    if (ver > TILETAG_PRE_MCACHE)
-        mcache.read(th);
-    else
-        mcache.clear_all();
+    mcache.read(th);
 
 #endif
 }
@@ -2580,8 +2577,8 @@ static void tag_missing_level_tiles()
         for (int j = 0; j < GYM; j++)
         {
             coord_def gc(i, j);
-            unsigned int fg, bg;
-            tileidx_unseen(fg, bg, get_map_knowledge_char(i, j), gc);
+            tileidx_t fg, bg;
+            tileidx_unseen(&fg, &bg, get_map_knowledge_char(i, j), gc);
             env.tile_bk_fg[i][j] = fg;
             env.tile_bk_bg[i][j] = bg;
         }

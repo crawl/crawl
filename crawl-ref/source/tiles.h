@@ -15,75 +15,70 @@
 #include "player.h"
 #include "show.h"
 
-enum tag_version
-{
-    TILETAG_PRE_MCACHE = 71,
-    TILETAG_CURRENT    = 72
-};
-
 struct demon_data
 {
     demon_data() { head = body = wings = 0; }
 
-    int head;
-    int body;
-    int wings;
+    tileidx_t head;
+    tileidx_t body;
+    tileidx_t wings;
 };
 
 //*tile1.cc: get data from core part and drives tile drawing codes
 
 //**convert in-game data to tile index
-int tileidx_feature(dungeon_feature_type feat, int gx, int gy);
-int tileidx_player(int job);
-void tileidx_unseen(unsigned int &fg, unsigned int &bg, int ch,
+tileidx_t tileidx_feature(dungeon_feature_type feat, const coord_def &gc);
+tileidx_t tileidx_player(int job);
+void tileidx_unseen(tileidx_t *fg, tileidx_t *bg, screen_buffer_t ch,
                     const coord_def& gc);
-int tileidx_item(const item_def &item);
-int tileidx_item_throw(const item_def &item, int dx, int dy);
-int tileidx_bolt(const bolt &bolt);
-int tileidx_zap(int colour);
-int tile_idx_unseen_terrain(int x, int y, int what);
-int tile_unseen_flag(const coord_def& gc);
-int tileidx_monster_base(const monsters *mon, bool detected = false);
-int tileidx_monster(const monsters *mon, bool detected = false);
-int tileidx_spell(spell_type spell);
+tileidx_t tileidx_item(const item_def &item);
+tileidx_t tileidx_item_throw(const item_def &item, int dx, int dy);
+tileidx_t tileidx_bolt(const bolt &bolt);
+tileidx_t tileidx_zap(int colour);
+tileidx_t tileidx_unseen_terrain(const coord_def &gc, int what);
+tileidx_t tile_unseen_flag(const coord_def &gc);
+tileidx_t tileidx_monster_base(const monsters *mon, bool detected = false);
+tileidx_t tileidx_monster(const monsters *mon, bool detected = false);
+tileidx_t tileidx_spell(spell_type spell);
 
 // Player tile related
-int get_gender_from_tile(const int parts[]);
-bool is_player_tile(const int tile, const int base_tile);
-int tilep_species_to_base_tile(int sp = you.species,
-                               int level = you.experience_level);
-void tilep_draconian_init(int sp, int level, int &base, int &head, int &wing);
-void tilep_race_default(int sp, int gender, int level, int *parts);
-void tilep_job_default(int job, int gender, int *parts);
-void tilep_calc_flags(const int parts[], int flag[]);
+int get_gender_from_tile(const dolls_data &doll);
+bool is_player_tile(tileidx_t tile, tileidx_t base_tile);
+tileidx_t tilep_species_to_base_tile(int sp, int level);
+
+void tilep_draconian_init(int sp, int level, tileidx_t *base,
+                          tileidx_t *head, tileidx_t *wing);
+void tilep_race_default(int sp, int gender, int level, dolls_data *doll);
+void tilep_job_default(int job, int gender, dolls_data *doll);
+void tilep_calc_flags(const dolls_data &data, int flag[]);
 
 void tilep_part_to_str(int number, char *buf);
 int  tilep_str_to_part(char *str);
 
-void tilep_scan_parts(char *fbuf, dolls_data &doll, int species = you.species,
-                      int level = you.experience_level);
+void tilep_scan_parts(char *fbuf, dolls_data &doll, int species, int level);
 void tilep_print_parts(char *fbuf, const dolls_data &doll);
 
-int tilep_equ_weapon(const item_def &item);
-int tilep_equ_shield(const item_def &item);
-int tilep_equ_armour(const item_def &item);
-int tilep_equ_cloak(const item_def &item);
-int tilep_equ_helm(const item_def &item);
-int tilep_equ_gloves(const item_def &item);
-int tilep_equ_boots(const item_def &item);
+tileidx_t tilep_equ_weapon(const item_def &item);
+tileidx_t tilep_equ_shield(const item_def &item);
+tileidx_t tilep_equ_armour(const item_def &item);
+tileidx_t tilep_equ_cloak(const item_def &item);
+tileidx_t tilep_equ_helm(const item_def &item);
+tileidx_t tilep_equ_gloves(const item_def &item);
+tileidx_t tilep_equ_boots(const item_def &item);
 
 // Tile display related
-void tile_place_monster(int gx, int gy, int idx, bool foreground = true,
-                        bool detected = false);
-void tile_place_item(int x, int y, int idx);
-void tile_place_item_marker(int x, int y, int idx);
-void tile_place_cloud(int x, int y, cloud_struct cl);
-void tile_place_ray(const coord_def& gc, bool in_range);
-void tile_draw_rays(bool resetCount);
+void tile_place_monster(const coord_def &gc, const monsters *mons,
+                        bool foreground = true, bool detected = false);
+void tile_place_item(const coord_def &gc, const item_def &item);
+void tile_place_item_marker(const coord_def &gc, const item_def &item);
+void tile_place_cloud(const coord_def &gc, const cloud_struct &cl);
+void tile_place_ray(const coord_def &gc, bool in_range);
+void tile_draw_rays(bool reset_count);
 void tile_clear_buf();
 
 void tile_apply_animations(tileidx_t bg, tile_flavour *flv);
-void tile_apply_properties(const coord_def &gc, tileidx_t *fg, tileidx_t *bg);
+void tile_apply_properties(const coord_def &gc, tileidx_t *fg,
+                           tileidx_t *bg);
 
 // Tile Inventory display
 void tile_draw_inv(int flag = -1);
@@ -100,7 +95,7 @@ void tile_clear_flavour();
 void tile_init_flavour();
 void tile_init_flavour(const coord_def &gc);
 
-void tile_floor_halo(dungeon_feature_type target, int tile);
+void tile_floor_halo(dungeon_feature_type target, tileidx_t tile);
 
 void tile_set_force_redraw_tiles(bool redraw);
 void tile_set_force_redraw_inv(bool redraw);
@@ -121,11 +116,10 @@ int TileDrawCursor(int x, int y, int flag);
 
 void TileNewLevel(bool first_time);
 
-int item_unid_type(const item_def &item);
-int tile_known_brand(const item_def item);
-int tile_corpse_brand(const item_def item);
+tileidx_t tile_known_brand(const item_def &item);
+tileidx_t tile_corpse_brand(const item_def &item);
 
-int get_clean_map_idx(int tile_idx);
+tileidx_t get_clean_map_idx(tileidx_t tile_idx);
 
 // Flags for drawing routines
 enum tile_flags

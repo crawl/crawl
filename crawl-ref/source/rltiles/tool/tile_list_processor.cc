@@ -11,7 +11,7 @@
 using namespace std;
 
 tile_list_processor::tile_list_processor() :
-    m_last_enum(~0),
+    m_last_enum(0),
     m_rim(false),
     m_corpsify(false),
     m_composing(false),
@@ -719,7 +719,7 @@ void tile_list_processor::add_image(tile &img, const char *enumname)
     int weight = m_weight;
     if (enumname)
         m_last_enum = m_page.m_counts.size() - 1;
-    else if (m_last_enum < m_page.m_counts.size())
+    else if (m_last_enum < m_page.m_counts.size() && m_page.m_probs.size() > 0)
     {
         m_page.m_counts[m_last_enum]++;
         weight += m_page.m_probs[m_page.m_probs.size() - 1];
@@ -962,22 +962,22 @@ bool tile_list_processor::write_data()
 
         fprintf(fp, "    %s_%s_MAX\n};\n\n", m_prefix.c_str(), ucname.c_str());
 
-        fprintf(fp, "int tile_%s_count(unsigned int idx);\n", lcname.c_str());
-        fprintf(fp, "int tile_%s_basetile(unsigned int idx);\n", lcname.c_str());
+        fprintf(fp, "unsigned int tile_%s_count(tileidx_t idx);\n", lcname.c_str());
+        fprintf(fp, "tileidx_t tile_%s_basetile(tileidx_t idx);\n", lcname.c_str());
         if (strcmp(m_name.c_str(), "dngn") == 0)
         {
-            fprintf(fp, "int tile_%s_probs(unsigned int idx);\n",
+            fprintf(fp, "int tile_%s_probs(tileidx_t idx);\n",
                     lcname.c_str());
         }
-        fprintf(fp, "const char *tile_%s_name(unsigned int idx);\n",
+        fprintf(fp, "const char *tile_%s_name(tileidx_t idx);\n",
             lcname.c_str());
-        fprintf(fp, "tile_info &tile_%s_info(unsigned int idx);\n",
+        fprintf(fp, "tile_info &tile_%s_info(tileidx_t idx);\n",
             lcname.c_str());
-        fprintf(fp, "bool tile_%s_index(const char *str, unsigned int &idx);\n",
+        fprintf(fp, "bool tile_%s_index(const char *str, tileidx_t *idx);\n",
             lcname.c_str());
-        fprintf(fp, "bool tile_%s_equal(unsigned int tile, unsigned int idx);\n",
+        fprintf(fp, "bool tile_%s_equal(tileidx_t tile, tileidx_t idx);\n",
             lcname.c_str());
-        fprintf(fp, "unsigned int tile_%s_coloured(unsigned int idx, int col);\n",
+        fprintf(fp, "tileidx_t tile_%s_coloured(tileidx_t idx, int col);\n",
             lcname.c_str());
 
         if (m_categories.size() > 0)
@@ -991,9 +991,9 @@ bool tile_list_processor::write_data()
 
             fprintf(fp, "    %s\n};\n\n", ctg_max.c_str());
 
-            fprintf(fp, "extern int tile_%s_part_count[%s];\n",
+            fprintf(fp, "extern unsigned int tile_%s_part_count[%s];\n",
                     lcname.c_str(), ctg_max.c_str());
-            fprintf(fp, "extern int tile_%s_part_start[%s];\n",
+            fprintf(fp, "extern tileidx_t tile_%s_part_start[%s];\n",
                     lcname.c_str(), ctg_max.c_str());
         }
 
@@ -1025,26 +1025,26 @@ bool tile_list_processor::write_data()
         fprintf(fp, "#include <cassert>\n");
         fprintf(fp, "using namespace std;\n\n");
 
-        fprintf(fp, "int _tile_%s_count[%s - %s] =\n{\n",
+        fprintf(fp, "unsigned int _tile_%s_count[%s - %s] =\n{\n",
                 lcname.c_str(), max.c_str(), m_start_value.c_str());
         for (unsigned int i = 0; i < m_page.m_counts.size(); i++)
-            fprintf(fp, "    %d,\n", m_page.m_counts[i]);
+            fprintf(fp, "    %u,\n", m_page.m_counts[i]);
         fprintf(fp, "};\n\n");
 
-        fprintf(fp, "int tile_%s_count(unsigned int idx)\n{\n", lcname.c_str());
+        fprintf(fp, "unsigned int tile_%s_count(tileidx_t idx)\n{\n", lcname.c_str());
         fprintf(fp, "    assert(idx >= %s && idx < %s);\n",
                 m_start_value.c_str(), max.c_str());
         fprintf(fp, "    return _tile_%s_count[idx - %s];\n",
                 lcname.c_str(), m_start_value.c_str());
         fprintf(fp, "}\n\n");
 
-        fprintf(fp, "int _tile_%s_basetiles[%s - %s] =\n{\n",
+        fprintf(fp, "tileidx_t _tile_%s_basetiles[%s - %s] =\n{\n",
                 lcname.c_str(), max.c_str(), m_start_value.c_str());
         for (unsigned int i = 0; i < m_page.m_base_tiles.size(); i++)
-            fprintf(fp, "    %d,\n", m_page.m_base_tiles[i]);
+            fprintf(fp, "    %u,\n", m_page.m_base_tiles[i]);
         fprintf(fp, "};\n\n");
 
-        fprintf(fp, "int tile_%s_basetile(unsigned int idx)\n{\n", lcname.c_str());
+        fprintf(fp, "tileidx_t tile_%s_basetile(tileidx_t idx)\n{\n", lcname.c_str());
         fprintf(fp, "    assert(idx >= %s && idx < %s);\n",
                 m_start_value.c_str(), max.c_str());
         fprintf(fp, "    return _tile_%s_basetiles[idx - %s];\n",
@@ -1059,7 +1059,7 @@ bool tile_list_processor::write_data()
                 fprintf(fp, "    %d,\n", m_page.m_probs[i]);
             fprintf(fp, "};\n\n");
 
-            fprintf(fp, "int tile_%s_probs(unsigned int idx)\n{\n",
+            fprintf(fp, "int tile_%s_probs(tileidx_t idx)\n{\n",
                         lcname.c_str());
             fprintf(fp, "    assert(idx >= %s && idx < %s);\n",
                     m_start_value.c_str(), max.c_str());
@@ -1095,7 +1095,7 @@ bool tile_list_processor::write_data()
         }
         fprintf(fp, "};\n\n");
 
-        fprintf(fp, "const char *tile_%s_name(unsigned int idx)\n{\n",
+        fprintf(fp, "const char *tile_%s_name(tileidx_t idx)\n{\n",
                 lcname.c_str());
         fprintf(fp, "    assert(idx >= %s && idx < %s);\n",
                 m_start_value.c_str(), max.c_str());
@@ -1115,7 +1115,7 @@ bool tile_list_processor::write_data()
         }
         fprintf(fp, "};\n\n");
 
-        fprintf(fp, "tile_info &tile_%s_info(unsigned int idx)\n{\n",
+        fprintf(fp, "tile_info &tile_%s_info(tileidx_t idx)\n{\n",
                 lcname.c_str());
         fprintf(fp, "    assert(idx >= %s && idx < %s);\n",
                 m_start_value.c_str(), max.c_str());
@@ -1125,7 +1125,7 @@ bool tile_list_processor::write_data()
 
         if (m_categories.size() > 0)
         {
-            fprintf(fp, "int tile_%s_part_count[%s] =\n{\n",
+            fprintf(fp, "unsigned int tile_%s_part_count[%s] =\n{\n",
                     lcname.c_str(), ctg_max.c_str());
 
             for (int i = 0; i < m_ctg_counts.size(); i++)
@@ -1133,11 +1133,11 @@ bool tile_list_processor::write_data()
 
             fprintf(fp, "};\n\n");
 
-            fprintf(fp, "int tile_%s_part_start[%s] =\n{\n",
+            fprintf(fp, "tileidx_t tile_%s_part_start[%s] =\n{\n",
                     lcname.c_str(), ctg_max.c_str());
 
             for (int i = 0; i < m_categories.size(); i++)
-                fprintf(fp, "    %d+%s,\n", part_min[i], m_start_value.c_str());
+                fprintf(fp, "    %u+%s,\n", part_min[i], m_start_value.c_str());
 
             fprintf(fp, "};\n\n");
         }
@@ -1174,7 +1174,7 @@ bool tile_list_processor::write_data()
         fprintf(fp, "};\n\n");
 
         fprintf(fp,
-            "bool tile_%s_index(const char *str, unsigned int &idx)\n"
+            "bool tile_%s_index(const char *str, tileidx_t *idx)\n"
             "{\n"
             "    assert(str);\n"
             "    if (!str)\n"
@@ -1185,14 +1185,14 @@ bool tile_list_processor::write_data()
             "        lc[i] = tolower(lc[i]);\n"
             "\n"
             "    int num_pairs = sizeof(%s_name_pairs) / sizeof(%s_name_pairs[0]);\n"
-            "    bool result = binary_search<const char *, unsigned int>(\n"
+            "    bool result = binary_search<const char *, tileidx_t>(\n"
             "       lc.c_str(), &%s_name_pairs[0], num_pairs, &strcmp, idx);\n"
             "    return (result);\n"
             "}\n\n",
             lcname.c_str(), lcname.c_str(), lcname.c_str(), lcname.c_str());
 
         fprintf(fp,
-            "bool tile_%s_equal(unsigned int tile, unsigned int idx)\n"
+            "bool tile_%s_equal(tileidx_t tile, tileidx_t idx)\n"
             "{\n"
             "    assert(tile >= %s && tile < %s);\n"
             "    return (idx >= tile && idx < tile + tile_%s_count(tile));\n"
@@ -1224,14 +1224,14 @@ bool tile_list_processor::write_data()
         fprintf(fp, "%s", "};\n\n");
 
         fprintf(fp,
-            "unsigned int tile_%s_coloured(unsigned int idx, int col)\n"
+            "tileidx_t tile_%s_coloured(tileidx_t idx, int col)\n"
             "{\n"
             "    int num_pairs = sizeof(%s_colour_pairs) / sizeof(%s_colour_pairs[0]);\n"
             "    tile_variation key(idx, col);\n"
-            "    unsigned int found;\n"
-            "    bool result = binary_search<tile_variation, unsigned int>(\n"
+            "    tileidx_t found;\n"
+            "    bool result = binary_search<tile_variation, tileidx_t>(\n"
             "       key, &%s_colour_pairs[0], num_pairs,\n"
-            "       &tile_variation::cmp, found);\n"
+            "       &tile_variation::cmp, &found);\n"
             "    return (result ? found : idx);\n"
             "}\n\n",
             lcname.c_str(), lcname.c_str(), lcname.c_str(), lcname.c_str());

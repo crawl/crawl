@@ -25,7 +25,7 @@ public:
         TAB_OFS_MAX
     };
 
-    void set_tab_region(int idx, GridRegion *reg, int tile_tab);
+    void set_tab_region(int idx, GridRegion *reg, tileidx_t tile_tab);
     GridRegion *get_tab_region(int idx);
     void activate_tab(int idx);
     int active_tab() const;
@@ -58,7 +58,7 @@ protected:
     struct TabInfo
     {
         GridRegion *reg;
-        int tile_tab;
+        tileidx_t tile_tab;
         int ofs_y;
         int min_y;
         int max_y;

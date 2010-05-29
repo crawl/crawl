@@ -56,7 +56,7 @@ protected:
     void draw_minibars();
 
     int get_buffer_index(const coord_def &gc);
-    void to_screen_coords(const coord_def &gc, coord_def& pc) const;
+    void to_screen_coords(const coord_def &gc, coord_def *pc) const;
 
     crawl_view_buffer m_vbuf;
     int m_cx_to_gx;
@@ -69,7 +69,7 @@ protected:
     struct tile_overlay
     {
         coord_def gc;
-        int idx;
+        tileidx_t idx;
     };
     std::vector<tile_overlay> m_overlays;
 };

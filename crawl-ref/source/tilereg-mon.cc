@@ -174,8 +174,8 @@ void MonsterRegion::pack_buffers()
                 if (crawl_view.in_grid_los(gc))
                 {
                     packed_cell cell;
-                    cell.fg = env.tile_fg[ep.x][ep.y];
-                    cell.bg = env.tile_bg[ep.x][ep.y];
+                    cell.fg = env.tile_fg(ep);
+                    cell.bg = env.tile_bg(ep);
                     cell.flv = env.tile_flv(gc);
                     tile_apply_properties(gc, &cell.fg, &cell.bg);
 
