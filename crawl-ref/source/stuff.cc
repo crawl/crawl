@@ -338,11 +338,7 @@ void cio_init()
 #endif
 
     if (Options.char_set == CSET_UNICODE && !crawl_state.unicode_ok)
-    {
-        crawl_state.add_startup_error(
-            "Unicode glyphs are not available, falling back to ASCII.");
-        Options.char_set = CSET_ASCII;
-    }
+        end("Unicode glyphs are not available, falling back to ASCII.");
 }
 
 void cio_cleanup()
