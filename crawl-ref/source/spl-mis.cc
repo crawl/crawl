@@ -1689,7 +1689,9 @@ void MiscastEffect::_necromancy(int severity)
                 }
             }
 
-            // If draining failed, just flow through...
+            // If we didn't do anything, just flow through...
+            if (did_msg)
+                break;
 
         case 2:
             if (target->res_torment())
@@ -1763,8 +1765,8 @@ void MiscastEffect::_necromancy(int severity)
                 break;
             }
 
-            // If draining failed, just flow through if it's the player...
-            if (target->atype() == ACT_MONSTER)
+            // If we didn't do anything, just flow through if it's the player.
+            if (target->atype() == ACT_MONSTER || did_msg)
                 break;
 
         case 5:
