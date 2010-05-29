@@ -569,7 +569,7 @@ static void _munge_bounced_bolt(bolt &old_bolt, bolt &new_bolt,
     // Don't use up range in bouncing off walls, so that chaos beams have
     // as many chances as possible to bounce.  They're like demented
     // ping-pong balls on caffeine.
-    int range_spent = new_bolt.range_used - old_bolt.range_used;
+    int range_spent = new_bolt.range_used() - old_bolt.range_used();
     new_bolt.range += range_spent;
 }
 
@@ -581,7 +581,7 @@ bool bolt::visible() const
 void bolt::initialise_fire()
 {
     // Fix some things which the tracer might have set.
-    range_used         = 0;
+    extra_range_used   = 0;
     in_explosion_phase = false;
     use_target_as_pos  = false;
 
@@ -766,13 +766,14 @@ void bolt::bounce()
         ray.regress();
     while (feat_is_solid(grd(ray.pos())));
 
+    extra_range_used += range_used(true);
     bounce_pos = ray.pos();
     bounces++;
     reflect_grid rg;
     for (adjacent_iterator ai(ray.pos(), false); ai; ++ai)
         rg(*ai - ray.pos()) = feat_is_solid(grd(*ai));
     ray.bounce(rg);
-    range_used += 2;
+    extra_range_used += 2;
 
     ASSERT(!feat_is_solid(grd(ray.pos())));
     _munge_bounced_bolt(old_bolt, *this, old_ray, ray);
@@ -1019,9 +1020,21 @@ void bolt::nuke_wall_effect()
     finish_beam();
 }
 
+// integer square root, such that _length((8,1)) == 8.
+static int _length(const coord_def& c)
+{
+    return (int)(ceil(sqrt(c.abs()-1)));
+}
+
+int bolt::range_used(bool leg_only) const
+{
+    const int leg_length = _length(pos() - leg_source());
+    return (leg_only ? leg_length : leg_length + extra_range_used);
+}
+
 void bolt::finish_beam()
 {
-    range_used = range;
+    extra_range_used = BEAM_STOP;
 }
 
 void bolt::affect_wall()
@@ -1220,15 +1233,15 @@ bool bolt::apply_dmg_funcs(actor* victim, int &dmg,
 static void _undo_tracer(bolt &orig, bolt &copy)
 {
     // FIXME: we should have a better idea of what gets changed!
-    orig.target        = copy.target;
-    orig.source        = copy.source;
-    orig.aimed_at_spot = copy.aimed_at_spot;
-    orig.range_used    = copy.range_used;
-    orig.auto_hit      = copy.auto_hit;
-    orig.ray           = copy.ray;
-    orig.colour        = copy.colour;
-    orig.flavour       = copy.flavour;
-    orig.real_flavour  = copy.real_flavour;
+    orig.target           = copy.target;
+    orig.source           = copy.source;
+    orig.aimed_at_spot    = copy.aimed_at_spot;
+    orig.extra_range_used = copy.extra_range_used;
+    orig.auto_hit         = copy.auto_hit;
+    orig.ray              = copy.ray;
+    orig.colour           = copy.colour;
+    orig.flavour          = copy.flavour;
+    orig.real_flavour     = copy.real_flavour;
 }
 
 // This saves some important things before calling fire().
@@ -1269,7 +1282,7 @@ void bolt::do_fire()
 {
     initialise_fire();
 
-    if (range <= range_used && range > 0)
+    if (range < extra_range_used && range > 0)
     {
 #ifdef DEBUG
         mprf(MSGCH_DIAGNOSTICS, "fire_beam() called on already done beam "
@@ -1309,14 +1322,13 @@ void bolt::do_fire()
 
     while (map_bounds(pos()))
     {
+        if (range_used() > range)
+            break;
+
         path_taken.push_back(pos());
 
         if (!affects_nothing)
             affect_cell();
-
-        range_used++;
-        if (range_used >= range)
-            break;
 
         if (beam_cancelled)
             return;
@@ -2495,7 +2507,7 @@ void bolt::affect_place_clouds()
                 mpr("You hear a sizzling sound!", MSGCH_SOUND);
 
             delete_cloud(cloudidx);
-            range_used += 5;
+            extra_range_used += 5;
         }
         return;
     }
@@ -2845,10 +2857,18 @@ bool bolt::harmless_to_player() const
 
 bool bolt::is_reflectable(const item_def *it) const
 {
-    if (range_used >= range)
+    if (range_used() > range)
         return (false);
 
     return (it && is_shield(*it) && shield_reflects(*it));
+}
+
+coord_def bolt::leg_source() const
+{
+    if (bounces > 0 && map_bounds(bounce_pos))
+        return (bounce_pos);
+    else
+        return (source);
 }
 
 // Reflect a beam back the direction it came. This is used
@@ -2857,13 +2877,8 @@ void bolt::reflect()
 {
     reflections++;
 
-    // If it bounced off a wall before being reflected then head back towards
-    // the wall.
-    if (bounces > 0 && map_bounds(bounce_pos))
-        target = bounce_pos;
-    else
-        target = source;
-
+    target = leg_source();
+    extra_range_used += range_used(true);
     source = pos();
 
     // Reset bounce_pos, so that if we somehow reflect again before reaching
@@ -2933,7 +2948,7 @@ void bolt::tracer_affect_player()
         mpr(messages[i].c_str(), MSGCH_WARN);
 
     apply_hit_funcs(&you, 0);
-    range_used += range_used_on_hit(&you);
+    extra_range_used += range_used_on_hit(&you);
 }
 
 bool bolt::misses_player()
@@ -3074,7 +3089,7 @@ void bolt::affect_player_enchantment()
         if (flavour == BEAM_TELEPORT && you.level_type == LEVEL_ABYSS)
             xom_is_stimulated(255);
 
-        range_used += range_used_on_hit(&you);
+        extra_range_used += range_used_on_hit(&you);
         return;
     }
 
@@ -3340,7 +3355,7 @@ void bolt::affect_player_enchantment()
 
     // Regardless of effect, we need to know if this is a stopper
     // or not - it seems all of the above are.
-    range_used += range_used_on_hit(&you);
+    extra_range_used += range_used_on_hit(&you);
 }
 
 
@@ -3538,7 +3553,7 @@ void bolt::affect_player()
 
     internal_ouch(hurted);
 
-    range_used += range_used_on_hit(&you);
+    extra_range_used += range_used_on_hit(&you);
 
     if (flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE)
         water_hits_actor(&you);
@@ -3605,7 +3620,7 @@ void bolt::tracer_enchantment_affect_monster(monsters* mon)
     if (!beam_cancelled)
     {
         apply_hit_funcs(mon, 0);
-        range_used += range_used_on_hit(mon);
+        extra_range_used += range_used_on_hit(mon);
     }
 }
 
@@ -3720,7 +3735,7 @@ void bolt::tracer_nonenchantment_affect_monster(monsters* mon)
     apply_hit_funcs(mon, final);
 
     // Either way, we could hit this monster, so update range used.
-    range_used += range_used_on_hit(mon);
+    extra_range_used += range_used_on_hit(mon);
 }
 
 void bolt::tracer_affect_monster(monsters* mon)
@@ -3823,7 +3838,7 @@ void bolt::enchantment_affect_monster(monsters* mon)
     }
 
     apply_hit_funcs(mon, 0);
-    range_used += range_used_on_hit(mon);
+    extra_range_used += range_used_on_hit(mon);
 }
 
 void bolt::monster_post_hit(monsters* mon, int dmg)
@@ -4281,7 +4296,7 @@ void bolt::affect_monster(monsters* mon)
     }
 
     apply_hit_funcs(mon, final, corpse);
-    range_used += range_used_on_hit(mon);
+    extra_range_used += range_used_on_hit(mon);
 }
 
 bool bolt::has_saving_throw() const
@@ -5338,7 +5353,7 @@ bolt::bolt() : origin_spell(SPELL_NO_SPELL),
                affects_nothing(false), affects_items(true), effect_known(true),
                draw_delay(15), special_explosion(NULL), range_funcs(),
                damage_funcs(), hit_funcs(), aoe_funcs(), obvious_effect(false),
-               seen(false), heard(false), path_taken(), range_used(0),
+               seen(false), heard(false), path_taken(), extra_range_used(0),
                is_tracer(false), aimed_at_feet(false), msg_generated(false),
                passed_target(false), in_explosion_phase(false),
                smart_monster(false), can_see_invis(false),
@@ -5393,10 +5408,10 @@ void bolt::setup_retrace()
         target = pos();
 
     std::swap(source, target);
-    chose_ray       = false;
-    affects_nothing = true;
-    aimed_at_spot   = true;
-    range_used      = 0;
+    chose_ray        = false;
+    affects_nothing  = true;
+    aimed_at_spot    = true;
+    extra_range_used = 0;
 }
 
 void bolt::set_agent(actor *actor)
