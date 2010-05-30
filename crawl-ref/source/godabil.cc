@@ -176,7 +176,7 @@ void zin_remove_divine_stamina()
 //                every two out of three turns
 // overall shield duration = duration + attribute
 // recasting simply resets those two values (to better values, presumably)
-void cast_divine_shield()
+void tso_divine_shield()
 {
     if (!you.duration[DUR_DIVINE_SHIELD])
     {
@@ -205,7 +205,7 @@ void cast_divine_shield()
     you.redraw_armour_class = true;
 }
 
-void remove_divine_shield()
+void tso_remove_divine_shield()
 {
     mpr("Your divine shield disappears!", MSGCH_DURATION);
     you.duration[DUR_DIVINE_SHIELD] = 0;
