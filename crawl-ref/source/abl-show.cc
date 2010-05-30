@@ -1958,7 +1958,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_FEDHAS_SPAWN_SPORES:
     {
-        int rc = corpse_spores();
+        int rc = fedhas_corpse_spores();
         if (rc <= 0)
         {
             if (rc == 0)
