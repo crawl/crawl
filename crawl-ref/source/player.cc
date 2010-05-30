@@ -4380,7 +4380,7 @@ int get_real_hp(bool trans, bool rotted)
 
     // Frail and robust mutations, divine vigour, and rugged scale mut.
     hitp *= 100 + (player_mutation_level(MUT_ROBUST) * 10)
-                + (you.attribute[ATTR_DIVINE_VIGOUR] * 10)
+                + (you.attribute[ATTR_DIVINE_VIGOUR] * 5)
                 + (player_mutation_level(MUT_RUGGED_BROWN_SCALES) ? player_mutation_level(MUT_RUGGED_BROWN_SCALES) * 2 + 1 : 0)
                 - (player_mutation_level(MUT_FRAIL) * 10);
     hitp /= 100;
