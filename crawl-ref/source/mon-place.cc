@@ -1255,6 +1255,7 @@ static int _place_monster_aux(const mgen_data &mg,
 
     // Some sanity checks.
     if (mons_is_unique(mg.cls) && you.unique_creatures[mg.cls]
+            && !crawl_state.game_is_arena()
         || mg.cls == MONS_MERGED_SLIME_CREATURE)
     {
         ASSERT(false);
