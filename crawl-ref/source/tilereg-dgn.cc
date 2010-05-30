@@ -257,8 +257,8 @@ void DungeonRegion::draw_minibars()
         static const float tile_width  = wx / mx;
         static const float tile_height = wy / my;
 
-        player_on_screen.x = player_on_screen.x / tile_width;
-        player_on_screen.y = player_on_screen.y / tile_height;
+        player_on_screen.x = player_on_screen.x / static_cast<int>(tile_width);
+        player_on_screen.y = player_on_screen.y / static_cast<int>(tile_height);
 
         if (Options.tile_show_minimagicbar && you.max_magic_points > 0)
         {

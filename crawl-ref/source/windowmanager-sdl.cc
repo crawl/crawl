@@ -520,7 +520,7 @@ unsigned int SDLWrapper::get_event_count(wm_event_type type)
 
     default:
         // Error
-        return (-1);
+        return (0);
     }
 
     SDL_Event store;
