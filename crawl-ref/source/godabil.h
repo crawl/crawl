@@ -37,6 +37,8 @@ bool yred_injury_mirror(bool actual = true);
 void yred_make_enslaved_soul(monsters *mon, bool force_hostile = false,
                              bool quiet = false, bool unrestricted = false);
 
+bool kiku_receive_corpses(int pow, coord_def where);
+
 bool fedhas_passthrough_class(const monster_type mc);
 bool fedhas_passthrough(const monsters * target);
 bool fedhas_shoot_through(const bolt & beam, const monsters * victim);
