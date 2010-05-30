@@ -957,7 +957,7 @@ bool cast_divine_vigour()
         mprf("%s grants you divine vigour.",
              god_name(you.religion).c_str());
 
-        const int vigour_amt = 1 + (you.skills[SK_INVOCATIONS]/6);
+        const int vigour_amt = 1 + (you.skills[SK_INVOCATIONS]/3);
         const int old_hp_max = you.hp_max;
         const int old_mp_max = you.max_magic_points;
         you.attribute[ATTR_DIVINE_VIGOUR] = vigour_amt;
