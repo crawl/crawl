@@ -2123,9 +2123,10 @@ bool do_god_gift(bool prayed_for, bool forced)
         case GOD_JIYVA:
             if (prayed_for && jiyva_accepts_prayer())
                 jiyva_paralyse_jellies();
-            else if (forced ||
-                     you.piety > 80 && random2(you.piety) > 50 && one_chance_in(4)
-                     && you.gift_timeout == 0 && you.can_safely_mutate())
+            else if (forced
+                     || you.piety > 80 && random2(you.piety) > 50
+                         && one_chance_in(4) && you.gift_timeout == 0
+                         && you.can_safely_mutate())
             {
                 if (_jiyva_mutate())
                 {
@@ -2141,7 +2142,6 @@ bool do_god_gift(bool prayed_for, bool forced)
         case GOD_KIKUBAAQUDGHA:
         case GOD_SIF_MUNA:
         case GOD_VEHUMET:
-
             // Break early if giving a gift now means it would be lost.
             if (!feat_has_solid_floor(grd(you.pos())))
                 break;
