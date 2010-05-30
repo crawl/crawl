@@ -503,7 +503,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
 
             m_start_value = m_args[1];
             if (m_args.size() > 2)
-                m_include = m_args[2];
+                m_include.push_back(m_args[2]);
         }
         else if (strcmp(arg, "pal") == 0)
         {
@@ -881,8 +881,10 @@ bool tile_list_processor::write_data()
                 ucname.c_str(), ucname.c_str());
         fprintf(fp, "#include \"tiledef_defines.h\"\n\n");
 
-        if (!m_include.empty())
-            fprintf(fp, "#include \"%s\"\n\n", m_include.c_str());
+        for (size_t i = 0; i < m_include.size(); ++i)
+            fprintf(fp, "#include \"%s\"\n", m_include[i].c_str());
+
+        fprintf(fp, "%s", "\n\n");
 
         fprintf(fp, "enum tile_%s_type\n{\n", lcname.c_str());
 
