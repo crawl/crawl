@@ -1604,6 +1604,43 @@ tileidx_t tileidx_monster(const monsters *mons, bool detected)
     return ch;
 }
 
+tileidx_t tileidx_draco_base(const monsters *mon)
+{
+    int draco = draco_subspecies(mon);
+    int colour = 0;
+
+    switch (draco)
+    {
+    default:
+    case MONS_DRACONIAN:        colour = 0; break;
+    case MONS_BLACK_DRACONIAN:  colour = 1; break;
+    case MONS_YELLOW_DRACONIAN: colour = 2; break;
+    case MONS_GREEN_DRACONIAN:  colour = 3; break;
+    case MONS_MOTTLED_DRACONIAN:colour = 4; break;
+    case MONS_PALE_DRACONIAN:   colour = 5; break;
+    case MONS_PURPLE_DRACONIAN: colour = 6; break;
+    case MONS_RED_DRACONIAN:    colour = 7; break;
+    case MONS_WHITE_DRACONIAN:  colour = 8; break;
+    }
+
+    return (TILEP_DRACO_BASE + colour);
+}
+
+tileidx_t tileidx_draco_job(const monsters *mon)
+{
+
+    switch (mon->type)
+    {
+        case MONS_DRACONIAN_CALLER:      return (TILEP_DRACO_CALLER);
+        case MONS_DRACONIAN_MONK:        return (TILEP_DRACO_MONK);
+        case MONS_DRACONIAN_ZEALOT:      return (TILEP_DRACO_ZEALOT);
+        case MONS_DRACONIAN_SHIFTER:     return (TILEP_DRACO_SHIFTER);
+        case MONS_DRACONIAN_ANNIHILATOR: return (TILEP_DRACO_ANNIHILATOR);
+        case MONS_DRACONIAN_KNIGHT:      return (TILEP_DRACO_KNIGHT);
+        case MONS_DRACONIAN_SCORCHER:    return (TILEP_DRACO_SCORCHER);
+        default:                         return (0);
+    }
+}
 
 static tileidx_t _tileidx_unrand_artefact(int idx)
 {

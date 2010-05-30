@@ -879,6 +879,13 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
         tileset.push_back(tile_def(tileidx_item(item), TEX_DEFAULT));
         tileset.push_back(tile_def(TILE_ANIMATED_WEAPON, TEX_DEFAULT));
     }
+    else if (mons_is_draconian(m->type))
+    {
+        tileset.push_back(tile_def(tileidx_draco_base(m), TEX_PLAYER));
+        tileidx_t job = tileidx_draco_job(m);
+        if (job)
+            tileset.push_back(tile_def(job, TEX_PLAYER));
+    }
     else if (mons_is_mimic(m->type))
         tileset.push_back(tile_def(tileidx_monster_base(m), TEX_DEFAULT));
     else

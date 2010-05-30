@@ -593,53 +593,10 @@ mcache_draco::mcache_draco(const monsters *mon)
 {
     ASSERT(mcache_draco::valid(mon));
 
-    int draco = draco_subspecies(mon);
-    int colour;
-    switch (draco)
-    {
-    default:
-    case MONS_DRACONIAN:        colour = 0; break;
-    case MONS_BLACK_DRACONIAN:  colour = 1; break;
-    case MONS_YELLOW_DRACONIAN: colour = 2; break;
-    case MONS_GREEN_DRACONIAN:  colour = 3; break;
-    case MONS_MOTTLED_DRACONIAN:colour = 4; break;
-    case MONS_PALE_DRACONIAN:   colour = 5; break;
-    case MONS_PURPLE_DRACONIAN: colour = 6; break;
-    case MONS_RED_DRACONIAN:    colour = 7; break;
-    case MONS_WHITE_DRACONIAN:  colour = 8; break;
-    }
-
-    m_mon_tile = TILEP_DRACO_BASE + colour;
+    m_mon_tile = tileidx_draco_base(mon);
     int mon_wep = mon->inv[MSLOT_WEAPON];
     m_equ_tile = (mon_wep != NON_ITEM) ? tilep_equ_weapon(mitm[mon_wep]) : 0;
-
-    switch (mon->type)
-    {
-        case MONS_DRACONIAN_CALLER:
-            m_job_tile = TILEP_DRACO_CALLER;
-            break;
-        case MONS_DRACONIAN_MONK:
-            m_job_tile = TILEP_DRACO_MONK;
-            break;
-        case MONS_DRACONIAN_ZEALOT:
-            m_job_tile = TILEP_DRACO_ZEALOT;
-            break;
-        case MONS_DRACONIAN_SHIFTER:
-            m_job_tile = TILEP_DRACO_SHIFTER;
-            break;
-        case MONS_DRACONIAN_ANNIHILATOR:
-            m_job_tile = TILEP_DRACO_ANNIHILATOR;
-            break;
-        case MONS_DRACONIAN_KNIGHT:
-            m_job_tile = TILEP_DRACO_KNIGHT;
-            break;
-        case MONS_DRACONIAN_SCORCHER:
-            m_job_tile = TILEP_DRACO_SCORCHER;
-            break;
-        default:
-            m_job_tile = 0;
-            break;
-    }
+    m_job_tile = tileidx_draco_job(mon);
 }
 
 unsigned int mcache_draco::info(tile_draw_info *dinfo) const
@@ -657,8 +614,7 @@ unsigned int mcache_draco::info(tile_draw_info *dinfo) const
 
 bool mcache_draco::valid(const monsters *mon)
 {
-    return (mon && mon->type >= MONS_FIRST_DRACONIAN
-            && mon->type <= MONS_LAST_DRACONIAN);
+    return (mon && mons_is_draconian(mon->type));
 }
 
 mcache_draco::mcache_draco(reader &th) : mcache_entry(th)
