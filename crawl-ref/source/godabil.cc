@@ -159,6 +159,19 @@ bool zin_vitalisation()
     return (success);
 }
 
+void remove_divine_stamina()
+{
+    mpr("Your divine stamina fades away.", MSGCH_DURATION);
+    notify_stat_change(STAT_STR, -you.attribute[ATTR_DIVINE_STAMINA],
+                true, "Zin's divine stamina running out");
+    notify_stat_change(STAT_INT, -you.attribute[ATTR_DIVINE_STAMINA],
+                true, "Zin's divine stamina running out");
+    notify_stat_change(STAT_DEX, -you.attribute[ATTR_DIVINE_STAMINA],
+                true, "Zin's divine stamina running out");
+    you.duration[DUR_DIVINE_STAMINA] = 0;
+    you.attribute[ATTR_DIVINE_STAMINA] = 0;
+}
+
 bool vehumet_supports_spell(spell_type spell)
 {
     if (spell_typematch(spell, SPTYP_CONJURATION | SPTYP_SUMMONING))
@@ -409,6 +422,15 @@ bool elyvilon_divine_vigour()
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return (success);
+}
+
+void remove_divine_vigour()
+{
+    mpr("Your divine vigour fades away.", MSGCH_DURATION);
+    you.duration[DUR_DIVINE_VIGOUR] = 0;
+    you.attribute[ATTR_DIVINE_VIGOUR] = 0;
+    calc_hp();
+    calc_mp();
 }
 
 bool yred_injury_mirror(bool actual)
