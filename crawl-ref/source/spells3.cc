@@ -2031,12 +2031,12 @@ bool project_noise(void)
             success = true;
         }
 
-        if (!silenced( you.pos() ))
+        if (!silenced(you.pos()))
         {
             if (success)
             {
                 mprf(MSGCH_SOUND, "You hear a %svoice call your name.",
-                     (!you.see_cell(pos) ? "distant " : "") );
+                     (!you.see_cell(pos) ? "distant " : ""));
             }
             else
                 mprf(MSGCH_SOUND, "You hear a dull thud.");
