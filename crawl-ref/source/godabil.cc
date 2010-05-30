@@ -505,13 +505,6 @@ bool trog_burn_spellbooks()
     return (true);
 }
 
-bool yred_injury_mirror(bool actual)
-{
-    return (you.religion == GOD_YREDELEMNUL && !player_under_penance()
-            && you.piety >= piety_breakpoint(1)
-            && (!actual || you.duration[DUR_PRAYER]));
-}
-
 bool beogh_water_walk()
 {
     return (you.religion == GOD_BEOGH && !player_under_penance()
@@ -565,6 +558,13 @@ bool jiyva_remove_bad_mutation()
 
     mpr("You feel cleansed.");
     return (true);
+}
+
+bool yred_injury_mirror(bool actual)
+{
+    return (you.religion == GOD_YREDELEMNUL && !player_under_penance()
+            && you.piety >= piety_breakpoint(1)
+            && (!actual || you.duration[DUR_PRAYER]));
 }
 
 static bool _is_yred_enslaved_soul(const monsters* mon)
