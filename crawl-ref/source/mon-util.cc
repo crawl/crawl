@@ -712,6 +712,11 @@ bool mons_is_demon(int mc)
     return (false);
 }
 
+bool mons_is_draconian(int mc)
+{
+    return (mc >= MONS_FIRST_DRACONIAN && mc <= MONS_LAST_DRACONIAN);
+}
+
 // Returns true if the given monster's foe is also a monster.
 bool mons_foe_is_mons(const monsters *mons)
 {

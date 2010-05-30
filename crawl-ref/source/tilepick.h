@@ -21,6 +21,8 @@ tileidx_t tileidx_feature(dungeon_feature_type feat, const coord_def &gc);
 
 tileidx_t tileidx_monster_base(const monsters *mon, bool detected = false);
 tileidx_t tileidx_monster(const monsters *mon, bool detected = false);
+tileidx_t tileidx_draco_base(const monsters *mon);
+tileidx_t tileidx_draco_job(const monsters *mon);
 
 tileidx_t tileidx_item(const item_def &item);
 tileidx_t tileidx_item_throw(const item_def &item, int dx, int dy);
