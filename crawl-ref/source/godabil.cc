@@ -1396,7 +1396,7 @@ bool evolve_flora()
     args.may_target_monster = false;
     args.show_floor_desc = true;
     args.top_prompt = "Select plant or fungus to evolve.";
-    
+
     direction(spelld, args);
 
     if (!spelld.isValid)
@@ -1541,7 +1541,7 @@ bool ponderousify_armour()
     if (!is_ponderousifiable(arm)) // player pressed '*' and made a bad choice
     {
         mpr("That item can't be made ponderous.");
-        return false;
+        return (false);
     }
 
     const int old_ponder = player_ponderousness();
@@ -1584,8 +1584,6 @@ int cheibriados_slouch(int pow)
 {
     return (apply_area_visible(_slouch_monsters, pow, false, &you));
 }
-
-////////////////////////////////////////////////////////////////////////////
 
 static int _lugonu_warp_monster(coord_def where, int pow, int, actor *)
 {
@@ -1641,8 +1639,6 @@ void lugonu_bends_space()
     const int damage = roll_dice(1, 4);
     ouch(damage, NON_MONSTER, KILLED_BY_WILD_MAGIC, "a spatial distortion");
 }
-
-////////////////////////////////////////////////////////////////////////
 
 void cheibriados_time_bend(int pow)
 {
