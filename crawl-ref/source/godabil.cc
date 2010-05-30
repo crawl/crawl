@@ -2136,28 +2136,6 @@ bool ponderousify_armour()
     return (true);
 }
 
-static int _slouch_monsters(coord_def where, int pow, int, actor* agent)
-{
-    monsters* mon = monster_at(where);
-    if (mon == NULL || mons_is_stationary(mon) || mon->cannot_move()
-        || mons_is_projectile(mon->type)
-        || mon->asleep() && !mons_is_confused(mon))
-    {
-        return (0);
-    }
-
-    int dmg = (mon->speed - 1000/player_movement_speed()/player_speed());
-    dmg = (dmg > 0 ? roll_dice(dmg*4, 3)/2 : 0);
-
-    mon->hurt(agent, dmg, BEAM_MMISSILE, true);
-    return (1);
-}
-
-int cheibriados_slouch(int pow)
-{
-    return (apply_area_visible(_slouch_monsters, pow, false, &you));
-}
-
 void cheibriados_time_bend(int pow)
 {
     mpr("The flow of time bends around you.");
@@ -2181,6 +2159,28 @@ void cheibriados_time_bend(int pow)
             do_slow_monster(mon, KC_YOU);
         }
     }
+}
+
+static int _slouch_monsters(coord_def where, int pow, int, actor* agent)
+{
+    monsters* mon = monster_at(where);
+    if (mon == NULL || mons_is_stationary(mon) || mon->cannot_move()
+        || mons_is_projectile(mon->type)
+        || mon->asleep() && !mons_is_confused(mon))
+    {
+        return (0);
+    }
+
+    int dmg = (mon->speed - 1000/player_movement_speed()/player_speed());
+    dmg = (dmg > 0 ? roll_dice(dmg*4, 3)/2 : 0);
+
+    mon->hurt(agent, dmg, BEAM_MMISSILE, true);
+    return (1);
+}
+
+int cheibriados_slouch(int pow)
+{
+    return (apply_area_visible(_slouch_monsters, pow, false, &you));
 }
 
 void cheibriados_time_step(int pow) // pow is the number of turns to skip
