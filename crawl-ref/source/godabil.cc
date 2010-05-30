@@ -185,7 +185,7 @@ void tso_divine_shield()
             || you.duration[DUR_CONDENSATION_SHIELD])
         {
             mprf("Your shield is strengthened by %s's divine power.",
-                 god_name(you.religion).c_str());
+                 god_name(GOD_SHINING_ONE).c_str());
         }
         else
             mpr("A divine shield forms around you!");
