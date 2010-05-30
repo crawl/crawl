@@ -9,14 +9,15 @@
 int che_boost_level()
 {
     if (you.religion != GOD_CHEIBRIADOS)
-        return 0;
-    return std::min(player_ponderousness(), piety_rank() - 1);
+        return (0);
+
+    return (std::min(player_ponderousness(), piety_rank() - 1));
 }
 
 int che_boost(che_boost_type bt, int level)
 {
     if (level == 0)
-        return 0;
+        return (0);
 
     switch (bt)
     {
@@ -27,9 +28,9 @@ int che_boost(che_boost_type bt, int level)
     case CB_RFIRE:
         return (level > 2 ? 1 : 0);
     case CB_STATS:
-        return (level * (level+1)) / 2;
+        return (level * (level + 1)) / 2;
     default:
-        return 0;
+        return (0);
     }
 }
 
