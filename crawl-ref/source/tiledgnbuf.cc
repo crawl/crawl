@@ -16,7 +16,7 @@
 #include "tiledef-player.h"
 #include "tiledoll.h"
 #include "tilemcache.h"
-#include "tilepick.h"
+#include "tilepick-p.h"
 
 DungeonCellBuffer::DungeonCellBuffer(ImageManager *im) :
     m_buf_dngn(&im->m_textures[TEX_DUNGEON]),

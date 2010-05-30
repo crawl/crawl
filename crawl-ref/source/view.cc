@@ -70,6 +70,7 @@
 #ifdef USE_TILE
  #include "tiledef-dngn.h"
  #include "tilepick.h"
+ #include "tilepick-p.h"
  #include "tileview.h"
 #endif
 
@@ -847,7 +848,7 @@ static void _draw_player(screen_cell_t *cell,
         cell->colour |= COLFLAG_REVERSE;
 
 #ifdef USE_TILE
-    cell->tile_fg = env.tile_fg(ep) = tileidx_player(you.char_class);
+    cell->tile_fg = env.tile_fg(ep) = tileidx_player();
     cell->tile_bg = env.tile_bg(ep);
 #endif
 }

@@ -16,7 +16,7 @@
 #include "player.h"
 #include "tiledef-player.h"
 #include "tilefont.h"
-#include "tilepick.h"
+#include "tilepick-p.h"
 
 DollEditRegion::DollEditRegion(ImageManager *im, FontWrapper *font) :
     m_font_buf(font),

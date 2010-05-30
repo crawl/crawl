@@ -16,7 +16,7 @@
 #include "files.h"
 #include "tilebuf.h"
 #include "tiledef-player.h"
-#include "tilepick.h"
+#include "tilepick-p.h"
 #include "transform.h"
 
 dolls_data::dolls_data()
