@@ -43,7 +43,7 @@ DELETE = rm -f
 TOOLDIR := tool
 TILEGEN := $(TOOLDIR)/tilegen.elf
 
-INPUTS := main dngn player gui
+INPUTS := main dngn floor wall feat player gui
 INPUTFILES := $(INPUTS:%=dc-%.txt)
 HEADERS := $(INPUTS:%=tiledef-%.h)
 HTML := $(INPUTS:%=tile-%.html)

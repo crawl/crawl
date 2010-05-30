@@ -519,7 +519,7 @@ bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
         else if (item_known_cursed(*item))
             tileset.push_back(tile_def(TILE_ITEM_SLOT_CURSED, TEX_DEFAULT));
 
-        tileset.push_back(tile_def(TILE_ITEM_SLOT, TEX_DUNGEON));
+        tileset.push_back(tile_def(TILE_ITEM_SLOT, TEX_FEAT));
         tileset.push_back(tile_def(idx, TEX_DEFAULT));
 
         if (eq != EQ_NONE && you.melded[eq])
@@ -535,7 +535,7 @@ bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
         if (c.x == 0)
         {
             // Store items.
-            tileset.push_back(tile_def(TILE_ITEM_SLOT, TEX_DUNGEON));
+            tileset.push_back(tile_def(TILE_ITEM_SLOT, TEX_FEAT));
         }
         else if (c != coord_def())
         {
@@ -545,7 +545,7 @@ bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
             else if (ch == TILE_WALL_NORMAL)
                 ch = env.tile_flv(c).wall;
 
-            tileset.push_back(tile_def(ch, TEX_DUNGEON));
+            tileset.push_back(tile_def(ch, get_dngn_tex(ch)));
         }
         tileset.push_back(tile_def(idx, TEX_DEFAULT));
 

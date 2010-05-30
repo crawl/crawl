@@ -2567,6 +2567,17 @@ void tag_read_level_tiles(reader &th)
 
     mcache.read(th);
 
+    {
+        // Tiles were reordered, so this would likely cause huge
+        // issues on saved levels.
+        //
+        // FIXME: This should happen automatically.
+        bool reset_due_to_tile_reordering =
+            (_tag_minor_version < TAG_MINOR_TILE_CHANGES);
+
+        if (reset_due_to_tile_reordering)
+            tag_missing_level_tiles();
+    }
 #endif
 }
 

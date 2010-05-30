@@ -860,7 +860,7 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
            ch = env.tile_flv(c).wall;
     }
 
-    tileset.push_back(tile_def(ch, TEX_DUNGEON));
+    tileset.push_back(tile_def(ch, get_dngn_tex(ch)));
 
     if (m->type == MONS_DANCING_WEAPON)
     {
@@ -960,7 +960,8 @@ bool FeatureMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
 
     MenuEntry::get_tiles(tileset);
 
-    tileset.push_back(tile_def(tileidx_feature(feat, pos), TEX_DUNGEON));
+    tileidx_t tile = tileidx_feature(feat, pos);
+    tileset.push_back(tile_def(tile, get_dngn_tex(tile)));
 
     if (in_bounds(pos) && is_unknown_stair(pos))
         tileset.push_back(tile_def(TILE_NEW_STAIR, TEX_DEFAULT));

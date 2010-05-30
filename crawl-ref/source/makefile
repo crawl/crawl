@@ -747,18 +747,14 @@ endif
 endif
 
 ifdef TILES
-TILEDEFS = dngn main player gui unrand
+TILEIMAGEFILES := floor wall feat main player gui
+TILEDEFS = $(TILEIMAGEFILES) dngn unrand
 TILEDEFPRES = $(TILEDEFS:%=$(RLTILES)/tiledef-%)
-TILEDEFTXTS = $(TILEDEFPRES:%=%.txt)
 TILEDEFOBJS = $(TILEDEFPRES:%=%.o)
 TILEDEFSRCS = $(TILEDEFPRES:%=%.cc)
 TILEDEFHDRS = $(TILEDEFPRES:%=%.h)
 
-TILEFILES = \
-	main.png \
-	player.png \
-    dngn.png \
-    gui.png
+TILEFILES = $(TILEIMAGEFILES:%=%.png)
 ORIGTILEFILES = $(TILEFILES:%=$(RLTILES)/%)
 DESTTILEFILES = $(TILEFILES:%=dat/tiles/%)
 
