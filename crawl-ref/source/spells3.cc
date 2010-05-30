@@ -2003,36 +2003,6 @@ bool cast_imprison(const int power, monsters *monster)
     return (false);
 }
 
-bool zin_sanctuary(const int power)
-{
-    // Casting is disallowed while previous sanctuary in effect.
-    // (Checked in abl-show.cc.)
-    if (env.sanctuary_time)
-        return (false);
-
-    // Yes, shamelessly stolen from NetHack...
-    if (!silenced(you.pos())) // How did you manage that?
-        mpr("You hear a choir sing!", MSGCH_SOUND);
-    else
-        mpr("You are suddenly bathed in radiance!");
-
-    flash_view(WHITE);
-
-    holy_word(100, HOLY_WORD_ZIN, you.pos(), true);
-
-#ifndef USE_TILE
-    // Allow extra time for the flash to linger.
-    delay(1000);
-#endif
-
-    // Pets stop attacking and converge on you.
-    you.pet_target = MHITYOU;
-
-    create_sanctuary(you.pos(), 7 + you.skills[SK_INVOCATIONS] / 2);
-
-    return (true);
-}
-
 bool project_noise(void)
 {
     bool success = false;
