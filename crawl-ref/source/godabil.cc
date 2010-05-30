@@ -56,6 +56,12 @@
 #include "tiledef-main.h"
 #endif
 
+bool zin_sustenance(bool actual)
+{
+    return (you.piety >= piety_breakpoint(0)
+            && (!actual || you.hunger_state == HS_STARVING));
+}
+
 bool vehumet_supports_spell(spell_type spell)
 {
     if (spell_typematch(spell, SPTYP_CONJURATION | SPTYP_SUMMONING))
