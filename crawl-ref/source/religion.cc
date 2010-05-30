@@ -920,12 +920,6 @@ void dec_penance(int val)
     dec_penance(you.religion, val);
 }
 
-bool zin_sustenance(bool actual)
-{
-    return (you.piety >= piety_breakpoint(0)
-            && (!actual || you.hunger_state == HS_STARVING));
-}
-
 bool zin_remove_all_mutations()
 {
     if (!how_mutated())
