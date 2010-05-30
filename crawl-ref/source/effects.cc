@@ -4619,8 +4619,9 @@ int spawn_corpse_mushrooms(item_def &corpse,
             {
                 // Going to explicitly override the die-off timer in
                 // this case (this condition means we got called from
-                // fungal_bloom() or similar, and are creating a lot of
-                // toadstools at once that should die off quickly).
+                // fedhas_fungal_bloom() or similar, and are creating a
+                // lot of toadstools at once that should die off
+                // quickly).
                 if (distance_as_time)
                 {
                     coord_def offset = corpse.pos - current;

@@ -399,7 +399,7 @@ bool fedhas_shoot_through(const bolt & beam, const monsters * victim)
 // Turns corpses in LOS into skeletons and grows toadstools on them.
 // Can also turn zombies into skeletons and destroy ghoul-type monsters.
 // Returns the number of corpses consumed.
-int fungal_bloom()
+int fedhas_fungal_bloom()
 {
     int seen_mushrooms  = 0;
     int seen_corpses    = 0;
