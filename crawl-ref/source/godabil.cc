@@ -1276,7 +1276,7 @@ struct monster_conversion
 
 
 // Given a monster (which should be a plant/fungus), see if
-// evolve_flora() can upgrade it, and set up a monster_conversion
+// fedhas_evolve_flora() can upgrade it, and set up a monster_conversion
 // structure for it.  Return true (and fill in possible_monster) if the
 // monster can be upgraded, and return false otherwise.
 bool _possible_evolution(const monsters * input,
@@ -1361,7 +1361,7 @@ static bool _place_ballisto(const coord_def & pos)
     return (false);
 }
 
-bool evolve_flora()
+bool fedhas_evolve_flora()
 {
     monster_conversion upgrade;
 

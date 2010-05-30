@@ -1970,7 +1970,7 @@ static bool _do_ability(const ability_def& abil)
     }
 
     case ABIL_FEDHAS_EVOLUTION:
-        if (!evolve_flora())
+        if (!fedhas_evolve_flora())
             return (false);
 
         exercise(SK_INVOCATIONS, 2 + random2(3));
