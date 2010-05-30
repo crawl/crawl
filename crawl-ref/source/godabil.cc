@@ -172,119 +172,6 @@ void zin_remove_divine_stamina()
     you.attribute[ATTR_DIVINE_STAMINA] = 0;
 }
 
-bool vehumet_supports_spell(spell_type spell)
-{
-    if (spell_typematch(spell, SPTYP_CONJURATION | SPTYP_SUMMONING))
-        return (true);
-
-    if (spell == SPELL_SHATTER
-        || spell == SPELL_FRAGMENTATION
-        || spell == SPELL_SANDBLAST)
-    {
-        return (true);
-    }
-
-    return (false);
-}
-
-// Returns false if the invocation fails (no spellbooks in sight, etc.).
-bool trog_burn_spellbooks()
-{
-    if (you.religion != GOD_TROG)
-        return (false);
-
-    god_acting gdact;
-
-    for (stack_iterator si(you.pos()); si; ++si)
-    {
-        if (si->base_type == OBJ_BOOKS
-            && si->sub_type != BOOK_MANUAL
-            && si->sub_type != BOOK_DESTRUCTION)
-        {
-            mpr("Burning your own feet might not be such a smart idea!");
-            return (false);
-        }
-    }
-
-    int totalpiety = 0;
-
-    for (radius_iterator ri(you.pos(), LOS_RADIUS, true, true, true); ri; ++ri)
-    {
-        // If a grid is blocked, books lying there will be ignored.
-        // Allow bombing of monsters.
-        const unsigned short cloud = env.cgrid(*ri);
-        if (feat_is_solid(grd(*ri))
-            || cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE)
-        {
-            continue;
-        }
-
-        int count = 0;
-        int rarity = 0;
-        for (stack_iterator si(*ri); si; ++si)
-        {
-            if (si->base_type != OBJ_BOOKS
-                || si->sub_type == BOOK_MANUAL
-                || si->sub_type == BOOK_DESTRUCTION)
-            {
-                continue;
-            }
-
-            // Ignore {!D} inscribed books.
-            if (!check_warning_inscriptions(*si, OPER_DESTROY))
-            {
-                mpr("Won't ignite {!D} inscribed book.");
-                continue;
-            }
-
-            rarity += book_rarity(si->sub_type);
-            // Piety increases by 2 for books never cracked open, else 1.
-            // Conversely, rarity influences the duration of the pyre.
-            if (!item_type_known(*si))
-                totalpiety += 2;
-            else
-                totalpiety++;
-
-            dprf("Burned book rarity: %d", rarity);
-            destroy_item(si.link());
-            count++;
-        }
-
-        if (count)
-        {
-            if (cloud != EMPTY_CLOUD)
-            {
-                // Reinforce the cloud.
-                mpr("The fire roars with new energy!");
-                const int extra_dur = count + random2(rarity / 2);
-                env.cloud[cloud].decay += extra_dur * 5;
-                env.cloud[cloud].set_whose(KC_YOU);
-                continue;
-            }
-
-            const int duration = std::min(4 + count + random2(rarity/2), 23);
-            place_cloud(CLOUD_FIRE, *ri, duration, KC_YOU);
-
-            mprf(MSGCH_GOD, "The book%s burst%s into flames.",
-                 count == 1 ? ""  : "s",
-                 count == 1 ? "s" : "");
-        }
-    }
-
-    if (!totalpiety)
-    {
-         mpr("You cannot see a spellbook to ignite!");
-         return (false);
-    }
-    else
-    {
-         simple_god_message(" is delighted!", GOD_TROG);
-         gain_piety(totalpiety);
-    }
-
-    return (true);
-}
-
 // Is the destroyed weapon valuable enough to gain piety by doing so?
 // Unholy and evil weapons are handled specially.
 static bool _destroyed_valuable_weapon(int value, int type)
@@ -431,6 +318,119 @@ void elyvilon_remove_divine_vigour()
     you.attribute[ATTR_DIVINE_VIGOUR] = 0;
     calc_hp();
     calc_mp();
+}
+
+bool vehumet_supports_spell(spell_type spell)
+{
+    if (spell_typematch(spell, SPTYP_CONJURATION | SPTYP_SUMMONING))
+        return (true);
+
+    if (spell == SPELL_SHATTER
+        || spell == SPELL_FRAGMENTATION
+        || spell == SPELL_SANDBLAST)
+    {
+        return (true);
+    }
+
+    return (false);
+}
+
+// Returns false if the invocation fails (no spellbooks in sight, etc.).
+bool trog_burn_spellbooks()
+{
+    if (you.religion != GOD_TROG)
+        return (false);
+
+    god_acting gdact;
+
+    for (stack_iterator si(you.pos()); si; ++si)
+    {
+        if (si->base_type == OBJ_BOOKS
+            && si->sub_type != BOOK_MANUAL
+            && si->sub_type != BOOK_DESTRUCTION)
+        {
+            mpr("Burning your own feet might not be such a smart idea!");
+            return (false);
+        }
+    }
+
+    int totalpiety = 0;
+
+    for (radius_iterator ri(you.pos(), LOS_RADIUS, true, true, true); ri; ++ri)
+    {
+        // If a grid is blocked, books lying there will be ignored.
+        // Allow bombing of monsters.
+        const unsigned short cloud = env.cgrid(*ri);
+        if (feat_is_solid(grd(*ri))
+            || cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE)
+        {
+            continue;
+        }
+
+        int count = 0;
+        int rarity = 0;
+        for (stack_iterator si(*ri); si; ++si)
+        {
+            if (si->base_type != OBJ_BOOKS
+                || si->sub_type == BOOK_MANUAL
+                || si->sub_type == BOOK_DESTRUCTION)
+            {
+                continue;
+            }
+
+            // Ignore {!D} inscribed books.
+            if (!check_warning_inscriptions(*si, OPER_DESTROY))
+            {
+                mpr("Won't ignite {!D} inscribed book.");
+                continue;
+            }
+
+            rarity += book_rarity(si->sub_type);
+            // Piety increases by 2 for books never cracked open, else 1.
+            // Conversely, rarity influences the duration of the pyre.
+            if (!item_type_known(*si))
+                totalpiety += 2;
+            else
+                totalpiety++;
+
+            dprf("Burned book rarity: %d", rarity);
+            destroy_item(si.link());
+            count++;
+        }
+
+        if (count)
+        {
+            if (cloud != EMPTY_CLOUD)
+            {
+                // Reinforce the cloud.
+                mpr("The fire roars with new energy!");
+                const int extra_dur = count + random2(rarity / 2);
+                env.cloud[cloud].decay += extra_dur * 5;
+                env.cloud[cloud].set_whose(KC_YOU);
+                continue;
+            }
+
+            const int duration = std::min(4 + count + random2(rarity/2), 23);
+            place_cloud(CLOUD_FIRE, *ri, duration, KC_YOU);
+
+            mprf(MSGCH_GOD, "The book%s burst%s into flames.",
+                 count == 1 ? ""  : "s",
+                 count == 1 ? "s" : "");
+        }
+    }
+
+    if (!totalpiety)
+    {
+         mpr("You cannot see a spellbook to ignite!");
+         return (false);
+    }
+    else
+    {
+         simple_god_message(" is delighted!", GOD_TROG);
+         gain_piety(totalpiety);
+    }
+
+    return (true);
 }
 
 bool yred_injury_mirror(bool actual)
