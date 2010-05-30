@@ -2546,10 +2546,11 @@ static tileidx_t _tileidx_rune(const item_def &item)
     case RUNE_CEREBOV:     return TILE_MISC_RUNE_CEREBOV;
     case RUNE_GLOORX_VLOQ: return TILE_MISC_RUNE_GLOORX_VLOQ;
 
-    // All others use the default rune for now.
+    case RUNE_SNAKE_PIT:   return TILE_MISC_RUNE_SNAKE;
+
+    // Most others use the default rune for now.
     case RUNE_SLIME_PITS:
     case RUNE_VAULTS:
-    case RUNE_SNAKE_PIT:
     case RUNE_ELVEN_HALLS:
     case RUNE_TOMB:
     case RUNE_SWAMP:
