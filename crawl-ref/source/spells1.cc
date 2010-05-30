@@ -939,28 +939,6 @@ int cast_healing(int pow, bool divine_ability, const coord_def& where,
                            not_self, mode));
 }
 
-void remove_divine_vigour()
-{
-    mpr("Your divine vigour fades away.", MSGCH_DURATION);
-    you.duration[DUR_DIVINE_VIGOUR] = 0;
-    you.attribute[ATTR_DIVINE_VIGOUR] = 0;
-    calc_hp();
-    calc_mp();
-}
-
-void remove_divine_stamina()
-{
-    mpr("Your divine stamina fades away.", MSGCH_DURATION);
-    notify_stat_change(STAT_STR, -you.attribute[ATTR_DIVINE_STAMINA],
-                true, "Zin's divine stamina running out");
-    notify_stat_change(STAT_INT, -you.attribute[ATTR_DIVINE_STAMINA],
-                true, "Zin's divine stamina running out");
-    notify_stat_change(STAT_DEX, -you.attribute[ATTR_DIVINE_STAMINA],
-                true, "Zin's divine stamina running out");
-    you.duration[DUR_DIVINE_STAMINA] = 0;
-    you.attribute[ATTR_DIVINE_STAMINA] = 0;
-}
-
 bool cast_revivification(int pow)
 {
     bool success = false;

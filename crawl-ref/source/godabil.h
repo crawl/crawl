@@ -13,6 +13,7 @@ struct bolt;
 
 bool zin_sustenance(bool actual = true);
 bool zin_vitalisation();
+void remove_divine_stamina();
 
 bool vehumet_supports_spell(spell_type spell);
 
@@ -20,6 +21,7 @@ bool trog_burn_spellbooks();
 
 bool elyvilon_destroy_weapons();
 bool elyvilon_divine_vigour();
+void remove_divine_vigour();
 
 bool yred_injury_mirror(bool actual = true);
 
