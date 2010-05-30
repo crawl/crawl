@@ -1154,7 +1154,7 @@ bool prioritise_adjacent(const coord_def &target, std::vector<coord_def> & candi
 
     std::vector<coord_def> mons_positions;
     // collect hostile monster positions in LOS
-    for ( ; los_it; ++los_it)
+    for (; los_it; ++los_it)
     {
         monsters *hostile = monster_at(*los_it);
 
@@ -1225,7 +1225,6 @@ static bool _prompt_amount(int max, int& selected, const std::string& prompt)
 
     return (max);
 }
-
 
 static int _collect_fruit(std::vector<std::pair<int,int> >& available_fruit)
 {
