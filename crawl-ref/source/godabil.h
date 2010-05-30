@@ -60,7 +60,7 @@ void lugonu_bend_space();
 
 bool is_ponderousifiable(const item_def& item);
 bool ponderousify_armour();
-int cheibriados_slouch(int pow);
 void cheibriados_time_bend(int pow);
+int cheibriados_slouch(int pow);
 void cheibriados_time_step(int pow);
 #endif
