@@ -1804,7 +1804,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_LUGONU_BEND_SPACE:
-        lugonu_bends_space();
+        lugonu_bend_space();
         exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
 
