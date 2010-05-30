@@ -1012,7 +1012,7 @@ bool fedhas_plant_ring_from_fruit()
     if (!_prompt_amount(max_use, target_count,
                         "How many plants will you create?"))
     {
-        // User canceled at the prompt
+        // User canceled at the prompt.
         crawl_state.darken_range = -1;
         viewwindow(false, false);
         return (false);
@@ -1196,11 +1196,11 @@ int corpse_spores(beh_type behavior, bool interactive)
     }
 
     if (count == 0)
-        return count;
+        return (count);
 
     crawl_state.darken_range = 0;
     viewwindow(false, false);
-    for(unsigned i = 0; i < positions.size(); ++i)
+    for (unsigned i = 0; i < positions.size(); ++i)
     {
 #ifndef USE_TILE
 
@@ -1222,7 +1222,7 @@ int corpse_spores(beh_type behavior, bool interactive)
     {
         crawl_state.darken_range = -1;
         viewwindow(false, false);
-        return -1;
+        return (-1);
     }
 
     for (unsigned i = 0; i < positions.size(); ++i)
@@ -1315,7 +1315,7 @@ bool _possible_evolution(const monsters * input,
 bool mons_is_evolvable(const monsters * mon)
 {
     monster_conversion temp;
-    return _possible_evolution(mon, temp);
+    return (_possible_evolution(mon, temp));
 }
 
 void _collect_adjacent_monsters(std::vector<monster_conversion>& available,
@@ -1351,14 +1351,14 @@ static bool _place_ballisto(const coord_def & pos)
         mprf("The mold grows into a ballistomycete.");
         mprf("Your piety has decreased.");
         lose_piety(1);
-        return true;
+        return (true);
     }
 
     // Monster placement failing should be quite unusual, but it could happen.
     // Not entirely sure what to say about it, but a more informative message
     // might be good. -cao
     canned_msg(MSG_NOTHING_HAPPENS);
-    return false;
+    return (false);
 }
 
 bool evolve_flora()
@@ -1420,7 +1420,7 @@ bool evolve_flora()
                 mprf("You must target a plant or fungus.");
             return (false);
         }
-        return _place_ballisto(spelld.target);
+        return (_place_ballisto(spelld.target));
 
     }
 
