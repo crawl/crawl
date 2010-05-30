@@ -948,7 +948,7 @@ void remove_divine_vigour()
     calc_mp();
 }
 
-bool cast_divine_vigour()
+bool elyvilon_divine_vigour()
 {
     bool success = false;
 

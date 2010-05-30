@@ -16,7 +16,7 @@ int cast_healing(int pow, bool divine_ability = false,
                  bool not_self = false, targ_mode_type mode = TARG_NUM_MODES);
 
 void remove_divine_vigour();
-bool cast_divine_vigour();
+bool elyvilon_divine_vigour();
 void remove_divine_stamina();
 
 void big_cloud(cloud_type cl_type, kill_category whose, const coord_def& where,
