@@ -2516,7 +2516,7 @@ void tag_read_level_tiles(reader &th)
     unsigned int tile = 0;
 
     int ver = unmarshallShort(th);
-    if (ver == 0) return;
+    UNUSED(ver);
 
     // Map grids.
     // how many X?
