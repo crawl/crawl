@@ -970,19 +970,6 @@ void cast_cure_poison(int pow)
         canned_msg(MSG_NOTHING_HAPPENS);
 }
 
-void elyvilon_purification()
-{
-    mpr("You feel purified!");
-
-    you.disease = 0;
-    you.rotting = 0;
-    you.duration[DUR_POISONING] = 0;
-    you.duration[DUR_CONF] = 0;
-    you.duration[DUR_SLOW] = 0;
-    you.duration[DUR_PARALYSIS] = 0;          // can't currently happen -- bwr
-    you.duration[DUR_PETRIFIED] = 0;
-}
-
 int allowed_deaths_door_hp(void)
 {
     int hp = you.skills[SK_NECROMANCY] / 2;

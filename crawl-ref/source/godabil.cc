@@ -373,6 +373,19 @@ bool elyvilon_destroy_weapons()
     return (success);
 }
 
+void elyvilon_purification()
+{
+    mpr("You feel purified!");
+
+    you.disease = 0;
+    you.rotting = 0;
+    you.duration[DUR_POISONING] = 0;
+    you.duration[DUR_CONF] = 0;
+    you.duration[DUR_SLOW] = 0;
+    you.duration[DUR_PARALYSIS] = 0;          // can't currently happen -- bwr
+    you.duration[DUR_PETRIFIED] = 0;
+}
+
 bool elyvilon_divine_vigour()
 {
     bool success = false;
