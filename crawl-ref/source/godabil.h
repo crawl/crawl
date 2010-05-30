@@ -18,6 +18,8 @@ bool vehumet_supports_spell(spell_type spell);
 
 bool trog_burn_spellbooks();
 
+bool ely_destroy_weapons();
+
 bool yred_injury_mirror(bool actual = true);
 
 bool jiyva_accepts_prayer();
