@@ -14,7 +14,7 @@ struct bolt;
 bool zin_sustenance(bool actual = true);
 bool zin_vitalisation();
 void zin_remove_divine_stamina();
-bool zin_sanctuary(const int power);
+bool zin_sanctuary();
 
 void tso_divine_shield();
 void tso_remove_divine_shield();
