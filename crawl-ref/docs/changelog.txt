@@ -40,6 +40,7 @@ Gods:
 * Zin no longer objects to deaths of non-sentient allies, and
   takes collateral kills of unclean and chaotic monsters.
 * Zin has a new power: Imprison.
+* Elyvilon's Divine Vigour scales better in terms of power.
 * Yredelemnul no longer gifts vampires.
 * Sif Muna's piety is no longer unfair to skilled species.
 * Nemelex no longer takes gold sacrifices.
