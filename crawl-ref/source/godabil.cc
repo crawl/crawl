@@ -56,68 +56,6 @@
 #include "tiledef-main.h"
 #endif
 
-bool yred_injury_mirror(bool actual)
-{
-    return (you.religion == GOD_YREDELEMNUL && !player_under_penance()
-            && you.piety >= piety_breakpoint(1)
-            && (!actual || you.duration[DUR_PRAYER]));
-}
-
-bool beogh_water_walk()
-{
-    return (you.religion == GOD_BEOGH && !player_under_penance()
-            && you.piety >= piety_breakpoint(4));
-}
-
-bool jiyva_accepts_prayer()
-{
-    return (you.religion == GOD_JIYVA && !player_under_penance()
-            && you.piety >= piety_breakpoint(2));
-}
-
-void jiyva_paralyse_jellies()
-{
-    int jelly_count = 0;
-    for (radius_iterator ri(you.pos(), 9); ri; ++ri)
-    {
-        monsters *mon = monster_at(*ri);
-
-        if (mon != NULL && mons_is_slime(mon))
-        {
-            mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0,
-                                      KC_OTHER, 200));
-            jelly_count++;
-        }
-    }
-
-    if (jelly_count > 0)
-    {
-        mprf(MSGCH_PRAY, "%s.",
-             jelly_count > 1 ? "The nearby slimes join your prayer"
-                             : "A nearby slime joins your prayer");
-        lose_piety(5);
-    }
-}
-
-bool jiyva_remove_bad_mutation()
-{
-    if (!how_mutated())
-    {
-        mpr("You have no bad mutations to be cured!");
-        return (false);
-    }
-
-    // Ensure that only bad mutations are removed.
-    if (!delete_mutation(RANDOM_BAD_MUTATION, true, false, true, true))
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return (false);
-    }
-
-    mpr("You feel cleansed.");
-    return (true);
-}
-
 bool vehumet_supports_spell(spell_type spell)
 {
     if (spell_typematch(spell, SPTYP_CONJURATION | SPTYP_SUMMONING))
@@ -339,6 +277,68 @@ bool elyvilon_destroy_weapons()
         mpr("There are no weapons here to destroy!");
 
     return (success);
+}
+
+bool yred_injury_mirror(bool actual)
+{
+    return (you.religion == GOD_YREDELEMNUL && !player_under_penance()
+            && you.piety >= piety_breakpoint(1)
+            && (!actual || you.duration[DUR_PRAYER]));
+}
+
+bool beogh_water_walk()
+{
+    return (you.religion == GOD_BEOGH && !player_under_penance()
+            && you.piety >= piety_breakpoint(4));
+}
+
+bool jiyva_accepts_prayer()
+{
+    return (you.religion == GOD_JIYVA && !player_under_penance()
+            && you.piety >= piety_breakpoint(2));
+}
+
+void jiyva_paralyse_jellies()
+{
+    int jelly_count = 0;
+    for (radius_iterator ri(you.pos(), 9); ri; ++ri)
+    {
+        monsters *mon = monster_at(*ri);
+
+        if (mon != NULL && mons_is_slime(mon))
+        {
+            mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0,
+                                      KC_OTHER, 200));
+            jelly_count++;
+        }
+    }
+
+    if (jelly_count > 0)
+    {
+        mprf(MSGCH_PRAY, "%s.",
+             jelly_count > 1 ? "The nearby slimes join your prayer"
+                             : "A nearby slime joins your prayer");
+        lose_piety(5);
+    }
+}
+
+bool jiyva_remove_bad_mutation()
+{
+    if (!how_mutated())
+    {
+        mpr("You have no bad mutations to be cured!");
+        return (false);
+    }
+
+    // Ensure that only bad mutations are removed.
+    if (!delete_mutation(RANDOM_BAD_MUTATION, true, false, true, true))
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return (false);
+    }
+
+    mpr("You feel cleansed.");
+    return (true);
 }
 
 static bool _is_yred_enslaved_soul(const monsters* mon)
