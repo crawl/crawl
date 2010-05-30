@@ -1935,7 +1935,7 @@ static bool _do_ability(const ability_def& abil)
     }
 
     case ABIL_FEDHAS_SUNLIGHT:
-        sunlight();
+        fedhas_sunlight();
         exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
 

@@ -580,7 +580,7 @@ static int _create_plant(coord_def & target, int hp_adjust = 0)
     return (plant != -1);
 }
 
-bool sunlight()
+bool fedhas_sunlight()
 {
     const int c_size = 5;
     const int x_offset[] = {-1, 0, 0, 0, 1};

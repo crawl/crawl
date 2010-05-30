@@ -27,7 +27,7 @@ bool fedhas_passthrough_class(const monster_type mc);
 bool fedhas_passthrough(const monsters * target);
 bool fedhas_shoot_through(const bolt & beam, const monsters * victim);
 int fedhas_fungal_bloom();
-bool sunlight();
+bool fedhas_sunlight();
 bool prioritise_adjacent(const coord_def &target,
                          std::vector<coord_def> &candidates);
 bool plant_ring_from_fruit();
