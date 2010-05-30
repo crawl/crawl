@@ -12,7 +12,6 @@
 struct bolt;
 
 bool zin_sustenance(bool actual = true);
-bool zin_remove_all_mutations();
 
 bool vehumet_supports_spell(spell_type spell);
 
