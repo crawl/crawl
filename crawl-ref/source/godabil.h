@@ -26,7 +26,7 @@ void yred_make_enslaved_soul(monsters *mon, bool force_hostile = false,
 bool fedhas_passthrough_class(const monster_type mc);
 bool fedhas_passthrough(const monsters * target);
 bool fedhas_shoot_through(const bolt & beam, const monsters * victim);
-int fungal_bloom();
+int fedhas_fungal_bloom();
 bool sunlight();
 bool prioritise_adjacent(const coord_def &target,
                          std::vector<coord_def> &candidates);

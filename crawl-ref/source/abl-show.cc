@@ -1907,7 +1907,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_FEDHAS_FUNGAL_BLOOM:
     {
-        int count = fungal_bloom();
+        int count = fedhas_fungal_bloom();
 
         if (!count)
         {
