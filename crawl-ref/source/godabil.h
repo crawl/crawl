@@ -42,7 +42,7 @@ int corpse_spores(beh_type behavior = BEH_FRIENDLY, bool interactive = true);
 bool evolve_flora();
 bool mons_is_evolvable(const monsters * mon);
 
-void lugonu_bends_space();
+void lugonu_bend_space();
 
 bool is_ponderousifiable(const item_def& item);
 bool ponderousify_armour();

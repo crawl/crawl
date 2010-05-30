@@ -1557,7 +1557,7 @@ static void _lugonu_warp_area(int pow)
     apply_area_around_square(_lugonu_warp_monster, you.pos(), pow);
 }
 
-void lugonu_bends_space()
+void lugonu_bend_space()
 {
     const int pow = 4 + skill_bump(SK_INVOCATIONS);
     const bool area_warp = random2(pow) > 9;
