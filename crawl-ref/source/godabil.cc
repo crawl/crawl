@@ -990,7 +990,6 @@ bool plant_ring_from_fruit()
         return (false);
     }
 
-
     prioritise_adjacent(you.pos(), adjacent);
 
     // Screwing around with display code I don't really understand. -cao
@@ -1004,8 +1003,7 @@ bool plant_ring_from_fruit()
         cgotoxy(temp.x, temp.y, GOTO_DNGN);
         put_colour_ch(GREEN, '1' + i);
 #else
-        tiles.add_overlay(adjacent[i], TILE_INDICATOR + i );
-
+        tiles.add_overlay(adjacent[i], TILE_INDICATOR + i);
 #endif
     }
 
@@ -1022,7 +1020,6 @@ bool plant_ring_from_fruit()
 
     const int hp_adjust = you.skills[SK_INVOCATIONS] * 10;
 
-
     // The user entered a number, remove all number overlays which
     // are higher than that number.
 #ifndef USE_TILE
@@ -1038,12 +1035,8 @@ bool plant_ring_from_fruit()
     // we want.
     tiles.clear_overlays();
     for (int i = 0; i < target_count; ++i)
-    {
-        tiles.add_overlay(adjacent[i], TILE_INDICATOR + i );
-    }
-
+        tiles.add_overlay(adjacent[i], TILE_INDICATOR + i);
 #endif
-
 
     int created_count = 0;
     for (int i = 0; i < target_count; ++i)
@@ -1057,9 +1050,7 @@ bool plant_ring_from_fruit()
 #ifdef USE_TILE
         tiles.clear_overlays();
         for (int j = i + 1; j < target_count; ++j)
-        {
             tiles.add_overlay(adjacent[j], TILE_INDICATOR + j);
-        }
         viewwindow(false, false);
 #endif
         delay(200);
