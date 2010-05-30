@@ -1549,7 +1549,7 @@ static bool _do_ability(const ability_def& abil)
     }
 
     case ABIL_ZIN_SANCTUARY:
-        if (cast_sanctuary(you.skills[SK_INVOCATIONS] * 4))
+        if (zin_sanctuary(you.skills[SK_INVOCATIONS] * 4))
             exercise(SK_INVOCATIONS, 5 + random2(8));
         break;
 
