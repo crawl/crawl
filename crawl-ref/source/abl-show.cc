@@ -1303,7 +1303,7 @@ static bool _do_ability(const ability_def& abil)
         else
         {
             zapping(ZAP_SPIT_POISON, pow, beam);
-            you.set_duration(DUR_BREATH_WEAPON, 3 + random2(5) );
+            you.set_duration(DUR_BREATH_WEAPON, 3 + random2(5));
         }
         break;
     }
@@ -1468,7 +1468,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_EVOKE_TURN_INVISIBLE:     // ring, randarts, darkness items
         potion_effect(POT_INVISIBILITY, 2 * you.skills[SK_EVOCATIONS] + 5);
-        contaminate_player( 1 + random2(3), true );
+        contaminate_player(1 + random2(3), true);
         exercise(SK_EVOCATIONS, 1);
         break;
 
@@ -1760,6 +1760,7 @@ static bool _do_ability(const ability_def& abil)
         exercise(SK_INVOCATIONS, 1);
         break;
     }
+
     case ABIL_ELYVILON_PURIFICATION:
         elyvilon_purification();
         exercise(SK_INVOCATIONS, 2 + random2(3));
@@ -1780,6 +1781,7 @@ static bool _do_ability(const ability_def& abil)
         exercise(SK_INVOCATIONS, 3 + random2(5));
         break;
     }
+
     case ABIL_ELYVILON_RESTORATION:
         restore_stat(STAT_ALL, 0, false);
         unrot_hp(100);
