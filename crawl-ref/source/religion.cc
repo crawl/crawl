@@ -75,7 +75,6 @@
 #include "skills2.h"
 #include "spells1.h"
 #include "spells3.h"
-#include "spells4.h"
 #include "spl-book.h"
 #include "spl-mis.h"
 #include "sprint.h"

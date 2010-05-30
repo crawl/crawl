@@ -50,7 +50,6 @@
 #include "spells1.h"
 #include "spells2.h"
 #include "spells3.h"
-#include "spells4.h"
 #include "state.h"
 #include "stuff.h"
 #include "areas.h"
