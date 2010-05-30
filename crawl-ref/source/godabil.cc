@@ -174,7 +174,7 @@ void zin_remove_divine_stamina()
     you.attribute[ATTR_DIVINE_STAMINA] = 0;
 }
 
-bool zin_sanctuary(const int power)
+bool zin_sanctuary()
 {
     // Casting is disallowed while previous sanctuary in effect.
     // (Checked in abl-show.cc.)
