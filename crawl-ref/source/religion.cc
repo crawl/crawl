@@ -1004,7 +1004,7 @@ static void _inc_penance(god_type god, int val)
         else if (god == GOD_ZIN)
         {
             if (you.duration[DUR_DIVINE_STAMINA])
-                remove_divine_stamina();
+                zin_remove_divine_stamina();
         }
         // Neither does TSO's halo or divine shield.
         else if (god == GOD_SHINING_ONE)
@@ -1021,7 +1021,7 @@ static void _inc_penance(god_type god, int val)
         else if (god == GOD_ELYVILON)
         {
             if (you.duration[DUR_DIVINE_VIGOUR])
-                remove_divine_vigour();
+                elyvilon_remove_divine_vigour();
         }
         else if (god == GOD_JIYVA)
         {
@@ -2910,7 +2910,7 @@ void excommunication(god_type new_god)
 
     case GOD_ZIN:
         if (you.duration[DUR_DIVINE_STAMINA])
-            remove_divine_stamina();
+            zin_remove_divine_stamina();
 
         if (env.sanctuary_time)
             remove_sanctuary();
@@ -2929,7 +2929,7 @@ void excommunication(god_type new_god)
 
     case GOD_ELYVILON:
         if (you.duration[DUR_DIVINE_VIGOUR])
-            remove_divine_vigour();
+            elyvilon_remove_divine_vigour();
 
         // Leaving Elyvilon for a non-good god will make all your
         // followers (originally from TSO) abandon you.
