@@ -1510,7 +1510,7 @@ static bool _do_ability(const ability_def& abil)
     }
 
     case ABIL_ZIN_VITALISATION:
-        if (cast_vitalisation())
+        if (zin_vitalisation())
             exercise(SK_INVOCATIONS, (coinflip() ? 3 : 2));
         break;
 

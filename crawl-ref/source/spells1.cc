@@ -997,7 +997,7 @@ static bool _kill_duration(duration_type dur)
     return (rc);
 }
 
-bool cast_vitalisation()
+bool zin_vitalisation()
 {
     bool success = false;
     int type = 0;
