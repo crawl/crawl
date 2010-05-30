@@ -1907,7 +1907,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_FEDHAS_FUNGAL_BLOOM:
     {
-        int count = fedhas_fungal_bloom();
+        const int count = fedhas_fungal_bloom();
 
         if (!count)
         {
@@ -1958,7 +1958,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_FEDHAS_SPAWN_SPORES:
     {
-        int rc = fedhas_corpse_spores();
+        const int rc = fedhas_corpse_spores();
         if (rc <= 0)
         {
             if (rc == 0)
