@@ -2121,7 +2121,7 @@ bool do_god_gift(bool prayed_for, bool forced)
             break;
 
         case GOD_JIYVA:
-            if (prayed_for && jiyva_accepts_prayer())
+            if (prayed_for && jiyva_can_paralyse_jellies())
                 jiyva_paralyse_jellies();
             else if (forced
                      || you.piety > 80 && random2(you.piety) > 50
