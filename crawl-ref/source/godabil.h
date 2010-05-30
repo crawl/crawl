@@ -34,6 +34,7 @@ bool jiyva_remove_bad_mutation();
 bool beogh_water_walk();
 
 bool yred_injury_mirror(bool actual = true);
+void yred_drain_life(int pow);
 void yred_make_enslaved_soul(monsters *mon, bool force_hostile = false,
                              bool quiet = false, bool unrestricted = false);
 
