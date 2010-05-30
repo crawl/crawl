@@ -919,23 +919,6 @@ void dec_penance(int val)
     dec_penance(you.religion, val);
 }
 
-bool zin_remove_all_mutations()
-{
-    if (!how_mutated())
-    {
-        mpr("You have no mutations to be cured!");
-        return (false);
-    }
-
-    you.num_gifts[GOD_ZIN]++;
-    take_note(Note(NOTE_GOD_GIFT, you.religion));
-
-    simple_god_message(" draws all chaos from your body!");
-    delete_all_mutations();
-
-    return (true);
-}
-
 static bool _need_water_walking()
 {
     return (!you.airborne() && you.species != SP_MERFOLK

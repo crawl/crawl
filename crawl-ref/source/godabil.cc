@@ -38,6 +38,7 @@
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "mutation.h"
+#include "notes.h"
 #include "options.h"
 #include "player-stats.h"
 #include "random.h"
@@ -172,6 +173,23 @@ void zin_remove_divine_stamina()
                 true, "Zin's divine stamina running out");
     you.duration[DUR_DIVINE_STAMINA] = 0;
     you.attribute[ATTR_DIVINE_STAMINA] = 0;
+}
+
+bool zin_remove_all_mutations()
+{
+    if (!how_mutated())
+    {
+        mpr("You have no mutations to be cured!");
+        return (false);
+    }
+
+    you.num_gifts[GOD_ZIN]++;
+    take_note(Note(NOTE_GOD_GIFT, you.religion));
+
+    simple_god_message(" draws all chaos from your body!");
+    delete_all_mutations();
+
+    return (true);
 }
 
 bool zin_sanctuary()
