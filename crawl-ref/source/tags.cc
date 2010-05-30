@@ -84,6 +84,7 @@
 #ifdef USE_TILE
  #include "tilemcache.h"
  #include "tilepick.h"
+ #include "tileview.h"
 #endif
 #include "travel.h"
 
@@ -2587,7 +2588,7 @@ static void tag_missing_level_tiles()
 
     mcache.clear_all();
 
-    TileNewLevel(true);
+    tile_new_level(true);
 #endif
 }
 

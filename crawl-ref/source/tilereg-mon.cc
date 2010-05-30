@@ -19,6 +19,7 @@
 #include "tiledef-player.h"
 #include "tilereg-dgn.h"
 #include "tilepick.h"
+#include "tileview.h"
 #include "viewgeom.h"
 
 MonsterRegion::MonsterRegion(const TileRegionInit &init) : GridRegion(init)

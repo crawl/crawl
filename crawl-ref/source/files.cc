@@ -79,6 +79,7 @@
 #ifdef USE_TILE
  #include "tiledef-player.h"
  #include "tilepick.h"
+ #include "tileview.h"
 #endif
 #include "terrain.h"
 #include "travel.h"
@@ -1535,7 +1536,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         // Tell stash-tracker and travel that we've changed levels.
         trackers_init_new_level(true);
 #ifdef USE_TILE
-        TileNewLevel(just_created_level);
+        tile_new_level(just_created_level);
 #endif
     }
 

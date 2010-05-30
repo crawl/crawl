@@ -32,7 +32,7 @@
 #include "stuff.h"
 #include "terrain.h"
 #ifdef USE_TILE
- #include "tilepick.h"
+ #include "tileview.h"
 #endif
 #include "travel.h"
 #include "traps.h"
@@ -215,7 +215,7 @@ static void _wizard_go_to_level(const level_pos &pos)
     const bool newlevel = load(stair_taken, LOAD_ENTER_LEVEL, old_level_type,
         old_level, old_where);
 #ifdef USE_TILE
-    TileNewLevel(newlevel);
+    tile_new_level(newlevel);
 #else
     UNUSED(newlevel);
 #endif

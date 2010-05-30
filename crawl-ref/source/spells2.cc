@@ -51,7 +51,7 @@
 #include "teleport.h"
 #ifdef USE_TILE
  #include "tiledef-main.h"
- #include "tilepick.h"
+ #include "tileview.h"
 #endif
 #include "terrain.h"
 #include "traps.h"

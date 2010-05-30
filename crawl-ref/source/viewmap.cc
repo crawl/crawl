@@ -37,7 +37,7 @@
 
 #ifdef USE_TILE
 #include "tilereg.h"
-#include "tilepick.h"
+#include "tileview.h"
 #endif
 
 unsigned get_sightmap_char(dungeon_feature_type feat)
@@ -569,7 +569,7 @@ public:
 #ifdef USE_TILE
         tiles.clear_minimap();
         level_excursion::go_to(next);
-        TileNewLevel(false);
+        tile_new_level(false);
 #else
         level_excursion::go_to(next);
 #endif
