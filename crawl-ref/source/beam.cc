@@ -1024,6 +1024,8 @@ void bolt::nuke_wall_effect()
 // integer square root, such that _length((8,1)) == 8.
 static int _length(const coord_def& c)
 {
+    if (c.origin())
+        return (0);
     return (int)(ceil(sqrt(c.abs()-1)));
 }
 
@@ -1243,6 +1245,8 @@ static void _undo_tracer(bolt &orig, bolt &copy)
     orig.colour           = copy.colour;
     orig.flavour          = copy.flavour;
     orig.real_flavour     = copy.real_flavour;
+    orig.bounces          = copy.bounces;
+    orig.bounce_pos       = copy.bounce_pos;
 }
 
 // This saves some important things before calling fire().
