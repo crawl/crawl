@@ -1870,7 +1870,7 @@ int player_movement_speed(bool ignore_burden)
     // Mutations: -2, -3, -4, unless innate and shapechanged.
     // Not when swimming, since it is "cover the ground quickly".
     if (player_mutation_level(MUT_FAST) > 0
-        && (!you.demon_pow[MUT_FAST] || !player_is_shapechanged())
+        && (!you.innate_mutations[MUT_FAST] || !player_is_shapechanged())
         && !you.swimming())
     {
         mv -= player_mutation_level(MUT_FAST) + 1;
@@ -5115,7 +5115,7 @@ void player::init()
     ability_letter_table.init(ABIL_NON_ABILITY);
 
     mutation.init(0);
-    demon_pow.init(0);
+    innate_mutations.init(0);
 
     demonic_traits.clear();
 

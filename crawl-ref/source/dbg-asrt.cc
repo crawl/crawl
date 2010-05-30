@@ -229,8 +229,8 @@ static void _dump_player(FILE *file)
 
     fprintf(file, "Demon mutations:\n");
     for (int i = 0; i < NUM_MUTATIONS; ++i)
-        if (you.demon_pow[i] > 0)
-            fprintf(file, "    #%d: %d\n", i, you.demon_pow[i]);
+        if (you.innate_mutations[i] > 0)
+            fprintf(file, "    #%d: %d\n", i, you.innate_mutations[i]);
 
     fprintf(file, "\n");
 
