@@ -2377,7 +2377,7 @@ std::vector<talent> your_talents(bool check_confused)
     }
 
     // And finally, the ability to opt-out of your faith {dlb}:
-    if (you.religion != GOD_NO_GOD && !silenced( you.pos() ))
+    if (you.religion != GOD_NO_GOD && !silenced( you.pos()))
         _add_talent(talents, ABIL_RENOUNCE_RELIGION, check_confused);
 
     //jmf: Check for breath weapons - they're exclusive of each other, I hope!
@@ -2413,9 +2413,9 @@ std::vector<talent> your_talents(bool check_confused)
     }
 
     // Note: This ability only applies to this counter.
-    if (player_equip( EQ_RINGS, RING_LEVITATION )
-        || player_equip_ego_type( EQ_BOOTS, SPARM_LEVITATION )
-        || scan_artefacts( ARTP_LEVITATE ))
+    if (player_equip(EQ_RINGS, RING_LEVITATION)
+        || player_equip_ego_type(EQ_BOOTS, SPARM_LEVITATION)
+        || scan_artefacts( ARTP_LEVITATE))
     {
         // Has no effect on permanently flying Kenku.
         if (!you.permanent_flight())
@@ -2430,10 +2430,8 @@ std::vector<talent> your_talents(bool check_confused)
         }
     }
 
-    if (player_equip( EQ_RINGS, RING_TELEPORTATION ))
-    {
+    if (player_equip(EQ_RINGS, RING_TELEPORTATION))
         _add_talent(talents, ABIL_EVOKE_TELEPORTATION, check_confused);
-    }
 
     // Find hotkeys for the non-hotkeyed talents.
     for (unsigned int i = 0; i < talents.size(); ++i)
@@ -2469,7 +2467,7 @@ std::vector<talent> your_talents(bool check_confused)
         // here (if you have 53 or more abilities simultaneously).
     }
 
-    return talents;
+    return (talents);
 }
 
 // Note: we're trying for a behaviour where the player gets
