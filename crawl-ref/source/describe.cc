@@ -3845,7 +3845,7 @@ void describe_god( god_type which_god, bool give_title )
         }
         else if (which_god == GOD_JIYVA)
         {
-            if (jiyva_accepts_prayer())
+            if (jiyva_can_paralyse_jellies())
             {
                 have_any = true;
                 std::string buf = "Your slimes' item consumption is ";

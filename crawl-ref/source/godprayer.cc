@@ -102,7 +102,7 @@ bool god_accepts_prayer(god_type god)
         return (yred_injury_mirror(false));
 
     case GOD_JIYVA:
-        return (jiyva_accepts_prayer());
+        return (jiyva_can_paralyse_jellies());
 
     case GOD_BEOGH:
     case GOD_NEMELEX_XOBEH:

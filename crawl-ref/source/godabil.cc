@@ -512,7 +512,7 @@ bool beogh_water_walk()
             && you.piety >= piety_breakpoint(4));
 }
 
-bool jiyva_accepts_prayer()
+bool jiyva_can_paralyse_jellies()
 {
     return (you.religion == GOD_JIYVA && !player_under_penance()
             && you.piety >= piety_breakpoint(2));
