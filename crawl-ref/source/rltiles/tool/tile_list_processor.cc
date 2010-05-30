@@ -966,11 +966,8 @@ bool tile_list_processor::write_data()
 
         fprintf(fp, "unsigned int tile_%s_count(tileidx_t idx);\n", lcname.c_str());
         fprintf(fp, "tileidx_t tile_%s_basetile(tileidx_t idx);\n", lcname.c_str());
-        if (strcmp(m_name.c_str(), "dngn") == 0)
-        {
-            fprintf(fp, "int tile_%s_probs(tileidx_t idx);\n",
-                    lcname.c_str());
-        }
+        fprintf(fp, "int tile_%s_probs(tileidx_t idx);\n",
+                lcname.c_str());
         fprintf(fp, "const char *tile_%s_name(tileidx_t idx);\n",
             lcname.c_str());
         fprintf(fp, "tile_info &tile_%s_info(tileidx_t idx);\n",
@@ -1053,22 +1050,19 @@ bool tile_list_processor::write_data()
                 lcname.c_str(), m_start_value.c_str());
         fprintf(fp, "}\n\n");
 
-        if (strcmp(m_name.c_str(), "dngn") == 0)
-        {
-            fprintf(fp, "int _tile_%s_probs[%s - %s] =\n{\n",
-                    lcname.c_str(), max.c_str(), m_start_value.c_str());
-            for (unsigned int i = 0; i < m_page.m_probs.size(); i++)
-                fprintf(fp, "    %d,\n", m_page.m_probs[i]);
-            fprintf(fp, "};\n\n");
+        fprintf(fp, "int _tile_%s_probs[%s - %s] =\n{\n",
+                lcname.c_str(), max.c_str(), m_start_value.c_str());
+        for (unsigned int i = 0; i < m_page.m_probs.size(); i++)
+            fprintf(fp, "    %d,\n", m_page.m_probs[i]);
+        fprintf(fp, "};\n\n");
 
-            fprintf(fp, "int tile_%s_probs(tileidx_t idx)\n{\n",
-                        lcname.c_str());
-            fprintf(fp, "    assert(idx >= %s && idx < %s);\n",
-                    m_start_value.c_str(), max.c_str());
-            fprintf(fp, "    return _tile_%s_probs[idx - %s];\n",
-                    lcname.c_str(), m_start_value.c_str());
-            fprintf(fp, "}\n\n");
-        }
+        fprintf(fp, "int tile_%s_probs(tileidx_t idx)\n{\n",
+                    lcname.c_str());
+        fprintf(fp, "    assert(idx >= %s && idx < %s);\n",
+                m_start_value.c_str(), max.c_str());
+        fprintf(fp, "    return _tile_%s_probs[idx - %s];\n",
+                lcname.c_str(), m_start_value.c_str());
+        fprintf(fp, "}\n\n");
 
         fprintf(fp, "const char *_tile_%s_name[%s - %s] =\n{\n",
                 lcname.c_str(), max.c_str(), m_start_value.c_str());
@@ -1271,7 +1265,7 @@ bool tile_list_processor::write_data()
 
             if (m_page.m_tiles[i]->enumcount() == 0)
             {
-                if (i == 0 || strcmp(m_name.c_str(), "dngn") != 0)
+                if (i == 0)
                     fprintf(fp, "<td></td><td></td>");
                 else
                 {
@@ -1286,8 +1280,7 @@ bool tile_list_processor::write_data()
                 for (unsigned int c = 0; c < lcenum.size(); c++)
                     lcenum[c] = std::tolower(lcenum[c]);
 
-                if (i == 0 || m_page.m_counts[i] == 1
-                    || strcmp(m_name.c_str(), "dngn") != 0)
+                if (i == 0 || m_page.m_counts[i] == 1)
                 {
                     fprintf(fp, "<td>%s</td>", lcenum.c_str());
                 }
