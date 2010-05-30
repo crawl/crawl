@@ -958,7 +958,7 @@ static void _decrease_amount(std::vector<std::pair<int, int> >& available,
 // prompted to select a stack of fruit, and then plants are placed on open
 // squares adjacent to the user.  Of course, one piece of fruit is
 // consumed per plant, so a complete ring may not be formed.
-bool plant_ring_from_fruit()
+bool fedhas_plant_ring_from_fruit()
 {
     // How much fruit is available?
     std::vector<std::pair<int, int> > collected_fruit;
