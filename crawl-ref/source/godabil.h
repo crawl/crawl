@@ -27,14 +27,13 @@ bool vehumet_supports_spell(spell_type spell);
 
 bool trog_burn_spellbooks();
 
-bool yred_injury_mirror(bool actual = true);
-
 bool jiyva_accepts_prayer();
 void jiyva_paralyse_jellies();
 bool jiyva_remove_bad_mutation();
 
 bool beogh_water_walk();
 
+bool yred_injury_mirror(bool actual = true);
 void yred_make_enslaved_soul(monsters *mon, bool force_hostile = false,
                              bool quiet = false, bool unrestricted = false);
 
