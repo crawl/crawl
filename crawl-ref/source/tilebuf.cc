@@ -172,7 +172,7 @@ static unsigned char _get_alpha(float lerp, int alpha_top, int alpha_bottom)
     if (lerp > 1.0f)
         lerp = 1.0f;
 
-    int ret = alpha_top * (1.0f - lerp) + alpha_bottom * lerp;
+    int ret = static_cast<int>(alpha_top * (1.0f - lerp) + alpha_bottom * lerp);
 
     ret = std::min(std::max(0, ret), 255);
     return (static_cast<unsigned char>(ret));
