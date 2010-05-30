@@ -1536,7 +1536,7 @@ static bool _do_ability(const ability_def& abil)
 
         if (retval == -1)
         {
-            mpr("You cannot imprison this monster!");
+            canned_msg(MSG_NOTHING_HAPPENS);
             return (false);
         }
 
