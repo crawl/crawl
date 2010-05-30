@@ -18,7 +18,7 @@ bool vehumet_supports_spell(spell_type spell);
 
 bool trog_burn_spellbooks();
 
-bool ely_destroy_weapons();
+bool elyvilon_destroy_weapons();
 
 bool yred_injury_mirror(bool actual = true);
 

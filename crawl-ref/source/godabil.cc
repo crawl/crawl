@@ -259,7 +259,7 @@ static bool _destroyed_valuable_weapon(int value, int type)
     return (false);
 }
 
-bool ely_destroy_weapons()
+bool elyvilon_destroy_weapons()
 {
     if (you.religion != GOD_ELYVILON)
         return (false);
