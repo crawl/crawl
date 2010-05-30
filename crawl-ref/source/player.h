@@ -209,7 +209,7 @@ public:
 
 
   FixedVector<unsigned char, NUM_MUTATIONS> mutation;
-  FixedVector<unsigned char, NUM_MUTATIONS> demon_pow;
+  FixedVector<unsigned char, NUM_MUTATIONS> innate_mutations;
 
   struct demon_trait
   {

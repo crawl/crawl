@@ -3831,7 +3831,7 @@ int melee_attack::player_to_hit(bool random_factor)
     }
     else
     {                       // ...you must be unarmed
-        your_to_hit += you.demon_pow[MUT_CLAWS] ? 4 : 2;
+        your_to_hit += you.innate_mutations[MUT_CLAWS] ? 4 : 2;
 
         your_to_hit += maybe_random2(1 + you.skills[SK_UNARMED_COMBAT],
                                      random_factor);

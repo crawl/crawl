@@ -1060,7 +1060,7 @@ static void tag_construct_you(writer &th)
     for (j = 0; j < NUM_MUTATIONS; ++j)
     {
         marshallByte(th, you.mutation[j]);
-        marshallByte(th, you.demon_pow[j]);
+        marshallByte(th, you.innate_mutations[j]);
     }
 
     marshallByte(th, you.demonic_traits.size());
@@ -1506,7 +1506,7 @@ static void tag_read_you(reader &th, char minorVersion)
     for (j = 0; j < count_s; ++j)
     {
         you.mutation[j]  = unmarshallByte(th);
-        you.demon_pow[j] = unmarshallByte(th);
+        you.innate_mutations[j] = unmarshallByte(th);
     }
 
     count_c = unmarshallByte(th);

@@ -141,7 +141,7 @@ bool mutation_is_fully_active(mutation_type mut)
         return (true);
 
     // Innate mutations are always active
-    if (you.demon_pow[mut])
+    if (you.innate_mutations[mut])
         return (true);
 
     // ... as are all mutations for semi-undead who are fully alive
@@ -159,7 +159,7 @@ static bool _mutation_is_fully_inactive(mutation_type mut)
 {
     const mutation_def& mdef = get_mutation_def(mut);
     return (you.is_undead == US_SEMI_UNDEAD && you.hunger_state < HS_SATIATED
-            && !you.demon_pow[mut] && !mdef.physical);
+            && !you.innate_mutations[mut] && !mdef.physical);
 }
 
 formatted_string describe_mutations()
@@ -378,7 +378,7 @@ formatted_string describe_mutations()
     // First add (non-removable) inborn abilities and demon powers.
     for (int i = 0; i < NUM_MUTATIONS; i++)
     {
-        if (you.mutation[i] != 0 && you.demon_pow[i])
+        if (you.mutation[i] != 0 && you.innate_mutations[i])
         {
             mutation_type mut_type = static_cast<mutation_type>(i);
             result += mutation_name(mut_type, -1, true);
@@ -390,7 +390,7 @@ formatted_string describe_mutations()
     // Now add removable mutations.
     for (int i = 0; i < NUM_MUTATIONS; i++)
     {
-        if (you.mutation[i] != 0 && !you.demon_pow[i])
+        if (you.mutation[i] != 0 && !you.innate_mutations[i])
         {
             mutation_type mut_type = static_cast<mutation_type>(i);
             result += mutation_name(mut_type, -1, true);
@@ -621,7 +621,7 @@ static bool _accept_mutation(mutation_type mutat, bool ignore_rarity = false)
     if (ignore_rarity)
         return (true);
 
-    const int rarity = mdef.rarity + you.demon_pow[mutat];
+    const int rarity = mdef.rarity + you.innate_mutations[mutat];
 
     // Low rarity means unlikely to choose it.
     return (x_chance_in_y(rarity, 10));
@@ -1262,7 +1262,7 @@ static bool _delete_single_mutation_level(mutation_type mutat)
     if (you.mutation[mutat] == 0)
         return (false);
 
-    if (you.demon_pow[mutat] >= you.mutation[mutat])
+    if (you.innate_mutations[mutat] >= you.mutation[mutat])
         return (false);
 
     const mutation_def& mdef = get_mutation_def(mutat);
@@ -1386,7 +1386,7 @@ bool delete_mutation(mutation_type which_mutation, bool failMsg,
                 continue;
             }
 
-            if (you.demon_pow[mutat] >= you.mutation[mutat])
+            if (you.innate_mutations[mutat] >= you.mutation[mutat])
                 continue;
 
             const mutation_def& mdef = get_mutation_def(mutat);
@@ -1477,13 +1477,13 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
     if (colour)
     {
         const char* colourname = (mdef.bad ? "red" : "lightgrey");
-        const bool permanent   = (you.demon_pow[mut] > 0);
+        const bool permanent   = (you.innate_mutations[mut] > 0);
         if (innate)
             colourname = (level > 0 ? "cyan" : "lightblue");
         else if (permanent)
         {
             const bool demonspawn = (you.species == SP_DEMONSPAWN);
-            const bool extra = (you.mutation[mut] > you.demon_pow[mut]);
+            const bool extra = (you.mutation[mut] > you.innate_mutations[mut]);
 
             if (fully_inactive)
                 colourname = "darkgrey";
@@ -1858,7 +1858,7 @@ bool perma_mutate(mutation_type which_mut, int how_much)
         if (mutate(which_mut, false, true, false, false, true))
             levels++;
 
-    you.demon_pow[which_mut] += levels;
+    you.innate_mutations[which_mut] += levels;
 
     return (levels > 0);
 }
@@ -1871,7 +1871,7 @@ int how_mutated(bool all, bool levels)
     {
         if (you.mutation[i])
         {
-            if (!all && you.demon_pow[i] >= you.mutation[i])
+            if (!all && you.innate_mutations[i] >= you.mutation[i])
                 continue;
 
             if (levels)
