@@ -2003,7 +2003,7 @@ bool cast_imprison(const int power, monsters *monster)
     return (false);
 }
 
-bool cast_sanctuary(const int power)
+bool zin_sanctuary(const int power)
 {
     // Casting is disallowed while previous sanctuary in effect.
     // (Checked in abl-show.cc.)
