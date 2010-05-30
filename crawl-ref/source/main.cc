@@ -2405,11 +2405,11 @@ static void _decrement_durations()
         }
     }
 
-    if (_decrement_a_duration(DUR_DIVINE_VIGOUR, delay))
-        remove_divine_vigour();
-
     if (_decrement_a_duration(DUR_DIVINE_STAMINA, delay))
-        remove_divine_stamina();
+        zin_remove_divine_stamina();
+
+    if (_decrement_a_duration(DUR_DIVINE_VIGOUR, delay))
+        elyvilon_remove_divine_vigour();
 
     _decrement_a_duration(DUR_REPEL_STAIRS_MOVE, 1);
     _decrement_a_duration(DUR_REPEL_STAIRS_CLIMB, 1);

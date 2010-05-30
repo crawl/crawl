@@ -159,7 +159,7 @@ bool zin_vitalisation()
     return (success);
 }
 
-void remove_divine_stamina()
+void zin_remove_divine_stamina()
 {
     mpr("Your divine stamina fades away.", MSGCH_DURATION);
     notify_stat_change(STAT_STR, -you.attribute[ATTR_DIVINE_STAMINA],
@@ -424,7 +424,7 @@ bool elyvilon_divine_vigour()
     return (success);
 }
 
-void remove_divine_vigour()
+void elyvilon_remove_divine_vigour()
 {
     mpr("Your divine vigour fades away.", MSGCH_DURATION);
     you.duration[DUR_DIVINE_VIGOUR] = 0;
