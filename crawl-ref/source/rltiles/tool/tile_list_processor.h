@@ -20,6 +20,12 @@ protected:
     void add_image(tile &img, const char *enumname);
     void recolour(tile &img);
 
+    void tile_list_processor::add_abstracts(
+        FILE *fp,
+        const char *format,
+        const std::vector<std::string> &lc_enum,
+        const std::vector<std::string> &uc_max_enum);
+
     std::string m_name;
 
     tile_page m_page;
@@ -58,6 +64,10 @@ protected:
     lum_list m_lum;
 
     std::vector<std::string> m_depends;
+
+    typedef std::pair<std::string, std::string> string_pair;
+    typedef std::vector<string_pair> string_pair_list;
+    string_pair_list m_abstract;
 };
 
 #endif
