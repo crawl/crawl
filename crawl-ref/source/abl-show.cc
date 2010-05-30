@@ -1574,7 +1574,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_KIKU_RECEIVE_CORPSES:
-        receive_corpses(you.skills[SK_INVOCATIONS] * 4, you.pos());
+        kiku_receive_corpses(you.skills[SK_INVOCATIONS] * 4, you.pos());
         exercise(SK_INVOCATIONS, (coinflip() ? 3 : 2));
         break;
 

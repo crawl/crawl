@@ -695,10 +695,10 @@ bool cast_summon_horrible_things(int pow, god_type god)
     return (count > 0);
 }
 
-bool receive_corpses(int pow, coord_def where)
+bool kiku_receive_corpses(int pow, coord_def where)
 {
     // pow = invocations * 4, ranges from 0 to 108
-    dprf("receive_corpses() power: %d", pow);
+    dprf("kiku_receive_corpses() power: %d", pow);
 
     // Kiku gives branch-appropriate corpses (like shadow creatures).
     int expected_extra_corpses = 3 + pow / 18; // 3 at 0 Inv, 9 at 27 Inv.
