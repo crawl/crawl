@@ -1528,15 +1528,12 @@ static bool _do_ability(const ability_def& abil)
 
         const int retval = check_recital_monster_at(beam.target);
 
-        if (retval == -1)
+        if (retval <= 0)
         {
-            canned_msg(MSG_NOTHING_HAPPENS);
-            return (false);
-        }
-
-        if (retval == 0)
-        {
-            mpr("There is no monster there to imprison!");
+            if (retval == 0)
+                canned_msg(MSG_NOTHING_HAPPENS);
+            else
+                mpr("There is no monster there to imprison!");
             return (false);
         }
 
@@ -1958,10 +1955,10 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_FEDHAS_SPAWN_SPORES:
     {
-        const int rc = fedhas_corpse_spores();
-        if (rc <= 0)
+        const int retval = fedhas_corpse_spores();
+        if (retval <= 0)
         {
-            if (rc == 0)
+            if (retval == 0)
                 mprf("No corpses are in range.");
             else
                 canned_msg(MSG_OK);
