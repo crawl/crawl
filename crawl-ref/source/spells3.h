@@ -22,13 +22,13 @@ class dist;
 struct bolt;
 
 bool allow_control_teleport(bool quiet = false);
-int airstrike(int power, const dist &beam);
+int airstrike(int pow, const dist &beam);
 bool cast_bone_shards(int power, bolt &);
 
 bool cast_selective_amnesia(bool force);
 bool cast_smiting(int power, const coord_def& where);
-bool entomb(const int power);
-bool cast_imprison(const int power, monsters *monster);
+bool entomb(int pow);
+bool cast_imprison(int pow, monsters *monster);
 bool project_noise();
 bool detect_curse(int scroll, bool suppress_msg);
 

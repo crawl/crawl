@@ -235,7 +235,7 @@ bool detect_curse(int scroll, bool suppress_msg)
     return (true);
 }
 
-bool cast_smiting(int power, const coord_def& where)
+bool cast_smiting(int pow, const coord_def& where)
 {
     monsters *m = monster_at(where);
 
@@ -270,7 +270,7 @@ bool cast_smiting(int power, const coord_def& where)
         // Maxes out at around 40 damage at 27 Invocations, which is
         // plenty in my book (the old max damage was around 70,
         // which seems excessive).
-        m->hurt(&you, 7 + (random2(power) * 33 / 191));
+        m->hurt(&you, 7 + (random2(pow) * 33 / 191));
         if (m->alive())
             print_wounds(m);
     }
@@ -278,7 +278,7 @@ bool cast_smiting(int power, const coord_def& where)
     return (success);
 }
 
-int airstrike(int power, const dist &beam)
+int airstrike(int pow, const dist &beam)
 {
     bool success = false;
 
@@ -301,7 +301,7 @@ int airstrike(int power, const dist &beam)
                  monster->name(DESC_NOCAP_THE).c_str());
 
             behaviour_event(monster, ME_ANNOY, MHITYOU);
-            if (mons_is_mimic( monster->type ))
+            if (mons_is_mimic(monster->type))
                 mimic_alert(monster);
         }
 
@@ -309,8 +309,8 @@ int airstrike(int power, const dist &beam)
 
         if (success)
         {
-            int hurted = 8 + random2(random2(4) + (random2(power) / 6)
-                           + (random2(power) / 7));
+            int hurted = 8 + random2(random2(4) + (random2(pow) / 6)
+                           + (random2(pow) / 7));
 
             if (mons_flies(monster))
             {
@@ -320,8 +320,7 @@ int airstrike(int power, const dist &beam)
 
             hurted -= random2(1 + monster->ac);
 
-            if (hurted < 0)
-                hurted = 0;
+            hurted = std::max(0, hurted);
 
             monster->hurt(&you, hurted);
             if (monster->alive())
@@ -1788,8 +1787,7 @@ void you_teleport_now(bool allow_control, bool new_abyss_area, bool wizard_tele)
     }
 }
 
-static bool _do_imprison(const int power, const coord_def& where,
-                         bool force_full)
+static bool _do_imprison(int pow, const coord_def& where, bool force_full)
 {
     // power guidelines:
     // powc is roughly 50 at Evoc 10 with no godly assistance, ranging
@@ -1839,7 +1837,7 @@ static bool _do_imprison(const int power, const coord_def& where,
     for (adjacent_iterator ai(where); ai; ++ai)
     {
         // This is where power comes in.
-        if (!force_full && one_chance_in(power / 5))
+        if (!force_full && one_chance_in(pow / 5))
             continue;
 
         // The tile is occupied.
@@ -1884,24 +1882,24 @@ static bool _do_imprison(const int power, const coord_def& where,
     return (number_built > 0);
 }
 
-bool entomb(const int power)
+bool entomb(int pow)
 {
-    return (_do_imprison(power, you.pos(), false));
+    return (_do_imprison(pow, you.pos(), false));
 }
 
-bool cast_imprison(const int power, monsters *monster)
+bool cast_imprison(int pow, monsters *monster)
 {
-    if (_do_imprison(power, monster->pos(), true))
+    if (_do_imprison(pow, monster->pos(), true))
     {
         monster->add_ench(mon_enchant(ENCH_ENTOMBED, 0, KC_YOU,
-                                      power * 10));
+                                      pow * 10));
         return (true);
     }
 
     return (false);
 }
 
-bool project_noise(void)
+bool project_noise()
 {
     bool success = false;
 
