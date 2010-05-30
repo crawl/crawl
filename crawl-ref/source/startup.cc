@@ -49,7 +49,7 @@
 #include "stuff.h"
 #include "terrain.h"
 #ifdef USE_TILE
- #include "tilepick.h"
+ #include "tileview.h"
 #endif
 #include "view.h"
 #include "viewchar.h"
@@ -290,7 +290,7 @@ void _post_init(bool newc)
 #ifdef USE_TILE
     tiles.initialise_items();
     // Must re-run as the feature table wasn't initialised yet.
-    TileNewLevel(newc);
+    tile_new_level(newc);
 #endif
 
     // This just puts the view up for the first turn.

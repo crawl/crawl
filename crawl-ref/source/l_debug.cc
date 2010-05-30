@@ -25,7 +25,7 @@
 #include "mon-util.h"
 #include "place.h"
 #ifdef USE_TILE
- #include "tilepick.h"
+ #include "tileview.h"
 #endif
 #include "view.h"
 #include "wiz-dgn.h"
@@ -74,7 +74,7 @@ LUAFN(debug_generate_level)
 #ifdef USE_TILE
     tile_init_default_flavour();
     tile_clear_flavour();
-    TileNewLevel(true);
+    tile_new_level(true);
 #endif
     builder(you.absdepth0, you.level_type,
             lua_isboolean(ls, 1)? lua_toboolean(ls, 1) : true);

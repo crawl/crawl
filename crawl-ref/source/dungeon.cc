@@ -66,7 +66,7 @@
 #include "tags.h"
 #include "terrain.h"
 #ifdef USE_TILE
- #include "tilepick.h"
+ #include "tileview.h"
 #endif
 #include "traps.h"
 #include "travel.h"

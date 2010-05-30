@@ -70,6 +70,7 @@
 #ifdef USE_TILE
  #include "tiledef-dngn.h"
  #include "tilepick.h"
+ #include "tileview.h"
 #endif
 
 //#define DEBUG_PANE_BOUNDS

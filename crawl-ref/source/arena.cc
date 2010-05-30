@@ -38,7 +38,7 @@
 #include "spl-util.h"
 #include "state.h"
 #ifdef USE_TILE
- #include "tilepick.h"
+ #include "tileview.h"
 #endif
 #include "view.h"
 #include "viewgeom.h"
@@ -277,7 +277,7 @@ namespace arena
             env.floor_colour = LIGHTGREY;
 
 #ifdef USE_TILE
-        TileNewLevel(true);
+        tile_new_level(true);
 #endif
         los_changed();
         env.markers.activate_all();

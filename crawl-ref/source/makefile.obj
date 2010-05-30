@@ -229,7 +229,8 @@ tilereg-tab.o \
 tilereg-text.o \
 tilereg-title.o \
 tilesdl.o \
-tiletex.o
+tiletex.o \
+tileview.o
 endif
 
 ifdef SDL
