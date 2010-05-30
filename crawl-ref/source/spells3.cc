@@ -2048,7 +2048,7 @@ bool project_noise(void)
 
 // Type recalled:
 // 0 = anything
-// 1 = undead only (Kiku/Yred religion ability)
+// 1 = undead only (Yred religion ability)
 // 2 = orcs only (Beogh religion ability)
 bool recall(char type_recalled)
 {
