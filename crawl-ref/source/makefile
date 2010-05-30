@@ -504,7 +504,7 @@ SDL_INCLUDE := $(shell pkg-config sdl --cflags-only-I)
 SDL_CFLAGS  := $(shell pkg-config sdl --cflags-only-other)
 SDL_LDFLAGS := $(shell pkg-config sdl --libs-only-L) $(shell pkg-config sdl --libs-only-l)
 
-LIBS += -lSDL_image $(SDL_LDFLAGS) $(FREETYPE_LDFLAGS)
+LIBS += -pthread -lSDL_image $(SDL_LDFLAGS) $(FREETYPE_LDFLAGS)
 
 endif # pkg-config
 
