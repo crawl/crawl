@@ -18,7 +18,6 @@ int cast_healing(int pow, bool divine_ability = false,
 void remove_divine_vigour();
 bool cast_divine_vigour();
 void remove_divine_stamina();
-bool zin_vitalisation();
 
 void big_cloud(cloud_type cl_type, kill_category whose, const coord_def& where,
                int pow, int size, int spread_rate = -1, int colour = -1,
