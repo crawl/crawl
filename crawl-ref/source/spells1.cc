@@ -970,7 +970,7 @@ void cast_cure_poison(int pow)
         canned_msg(MSG_NOTHING_HAPPENS);
 }
 
-void purification(void)
+void elyvilon_purification()
 {
     mpr("You feel purified!");
 
