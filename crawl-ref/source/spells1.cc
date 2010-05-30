@@ -855,7 +855,8 @@ static int _healing_spell(int healed, bool divine_ability,
     bool did_something = false;
 
     if (you.religion == GOD_ELYVILON
-        && can_pacify == 1 && is_hostile)
+        && can_pacify == 1
+        && is_hostile)
     {
         did_something = true;
 
