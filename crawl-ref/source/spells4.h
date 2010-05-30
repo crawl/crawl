@@ -22,8 +22,6 @@ int disperse_monsters(coord_def where, int pow);
 
 void remove_condensation_shield();
 void cast_condensation_shield(int pow);
-void remove_divine_shield();
-void cast_divine_shield();
 void cast_detect_secret_doors(int pow);
 void cast_discharge(int pow);
 std::string get_evaporate_result_list(int potion);

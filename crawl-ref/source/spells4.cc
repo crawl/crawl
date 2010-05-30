@@ -1999,47 +1999,6 @@ void cast_condensation_shield(int pow)
     }
 }
 
-void remove_divine_shield()
-{
-    mpr("Your divine shield disappears!", MSGCH_DURATION);
-    you.duration[DUR_DIVINE_SHIELD] = 0;
-    you.attribute[ATTR_DIVINE_SHIELD] = 0;
-    you.redraw_armour_class = true;
-}
-
-// shield bonus = attribute for duration turns, then decreasing by 1
-//                every two out of three turns
-// overall shield duration = duration + attribute
-// recasting simply resets those two values (to better values, presumably)
-void cast_divine_shield()
-{
-    if (!you.duration[DUR_DIVINE_SHIELD])
-    {
-        if (you.shield()
-            || you.duration[DUR_FIRE_SHIELD]
-            || you.duration[DUR_CONDENSATION_SHIELD])
-        {
-            mprf("Your shield is strengthened by %s's divine power.",
-                 god_name(you.religion).c_str());
-        }
-        else
-            mpr("A divine shield forms around you!");
-    }
-    else
-        mpr("Your divine shield is renewed.");
-
-    you.redraw_armour_class = true;
-
-    // duration of complete shield bonus from 35 to 80 turns
-    you.set_duration(DUR_DIVINE_SHIELD,
-                     35 + (you.skills[SK_INVOCATIONS] * 4) / 3);
-
-    // shield bonus up to 8
-    you.attribute[ATTR_DIVINE_SHIELD] = 3 + you.skills[SK_SHIELDS]/5;
-
-    you.redraw_armour_class = true;
-}
-
 static int _quadrant_blink(coord_def where, int pow, int, actor *)
 {
     if (where == you.pos())
