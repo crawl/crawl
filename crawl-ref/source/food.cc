@@ -2163,7 +2163,7 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
                                 mons_corpse_effect(mons_type), false);
 
     // Duration depends on corpse weight.
-    const int max_chunks = mons_weight(mons_type)/150;
+    const int max_chunks = get_max_corpse_chunks(mons_type);
     int chunk_amount     = 1 + max_chunks/3;
         chunk_amount     = stepdown_value( chunk_amount, 6, 6, 12, 12 );
 
