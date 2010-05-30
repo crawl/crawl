@@ -1742,7 +1742,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_ELYVILON_DESTROY_WEAPONS:
-        if (!ely_destroy_weapons())
+        if (!elyvilon_destroy_weapons())
             return (false);
         break;
 
