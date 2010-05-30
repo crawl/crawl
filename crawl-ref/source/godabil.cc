@@ -7,6 +7,7 @@
 
 #include <queue>
 
+#include "areas.h"
 #include "artefact.h"
 #include "beam.h"
 #include "cloud.h"
@@ -170,6 +171,36 @@ void zin_remove_divine_stamina()
                 true, "Zin's divine stamina running out");
     you.duration[DUR_DIVINE_STAMINA] = 0;
     you.attribute[ATTR_DIVINE_STAMINA] = 0;
+}
+
+bool zin_sanctuary(const int power)
+{
+    // Casting is disallowed while previous sanctuary in effect.
+    // (Checked in abl-show.cc.)
+    if (env.sanctuary_time)
+        return (false);
+
+    // Yes, shamelessly stolen from NetHack...
+    if (!silenced(you.pos())) // How did you manage that?
+        mpr("You hear a choir sing!", MSGCH_SOUND);
+    else
+        mpr("You are suddenly bathed in radiance!");
+
+    flash_view(WHITE);
+
+    holy_word(100, HOLY_WORD_ZIN, you.pos(), true);
+
+#ifndef USE_TILE
+    // Allow extra time for the flash to linger.
+    delay(1000);
+#endif
+
+    // Pets stop attacking and converge on you.
+    you.pet_target = MHITYOU;
+
+    create_sanctuary(you.pos(), 7 + you.skills[SK_INVOCATIONS] / 2);
+
+    return (true);
 }
 
 // shield bonus = attribute for duration turns, then decreasing by 1
