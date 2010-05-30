@@ -410,7 +410,7 @@ static bool _kikubaaqudgha_retribution()
     if (random2(you.experience_level) > 4)
     {
         // Either zombies, or corpse rot + skeletons.
-        receive_corpses(you.experience_level * 4, you.pos());
+        kiku_receive_corpses(you.experience_level * 4, you.pos());
 
         if (coinflip())
             corpse_rot();

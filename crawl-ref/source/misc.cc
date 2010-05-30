@@ -95,9 +95,9 @@
 
 static void _create_monster_hide(const item_def corpse)
 {
-    // receive_corpses() in spells3.cc creates corpses that
-    // are easily scummed for hides.  We prevent this by setting
-    // "DoNotDropHide" as an item property of corpses it creates.
+    // kiku_receive_corpses() creates corpses that are easily scummed
+    // for hides.  We prevent this by setting "DoNotDropHide" as an item
+    // property of corpses it creates.
     if (corpse.props.exists("DoNotDropHide"))
         return;
 
