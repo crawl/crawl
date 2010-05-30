@@ -1431,6 +1431,18 @@ bool melee_attack::player_hits_monster()
         defender->melee_evasion(attacker, EV_IGNORE_HELPLESS);
     dprf("your to-hit: %d; defender effective EV: %d", to_hit, evasion);
 
+    // No monster Phase Shift yet
+    if (you.religion != GOD_ELYVILON
+        && you.penance[GOD_ELYVILON]
+        && god_hates_your_god(GOD_ELYVILON, you.religion)
+        && to_hit >= evasion
+        && one_chance_in(20))
+    {
+        simple_god_message(" blocks your attack.", GOD_ELYVILON);
+        dec_penance(GOD_ELYVILON, 1 + random2(to_hit - evasion));
+        return (false);
+    }
+
     if (to_hit >= helpful_evasion || one_chance_in(20))
         return (true);
 
