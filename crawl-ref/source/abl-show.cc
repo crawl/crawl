@@ -1940,7 +1940,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_FEDHAS_PLANT_RING:
-        if (!plant_ring_from_fruit())
+        if (!fedhas_plant_ring_from_fruit())
             return (false);
 
         exercise(SK_INVOCATIONS, 2 + random2(3));
