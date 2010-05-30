@@ -66,7 +66,6 @@ bool remove_all_jiyva_altars();
 bool fedhas_protects(const monsters * target);
 bool fedhas_protects_species(int mc);
 bool fedhas_neutralises(const monsters * target);
-bool ely_destroy_weapons();
 void print_sacrifice_message(god_type, const item_def &,
                              piety_gain_t, bool = false);
 
