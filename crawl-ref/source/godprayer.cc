@@ -80,7 +80,8 @@ bool god_accepts_prayer(god_type god)
 {
     harm_protection_type hpt = god_protects_from_harm(god, false);
 
-    if (hpt == HPT_PRAYING || hpt == HPT_PRAYING_PLUS_ANYTIME
+    if (hpt == HPT_PRAYING
+        || hpt == HPT_PRAYING_PLUS_ANYTIME
         || hpt == HPT_RELIABLE_PRAYING_PLUS_ANYTIME)
     {
         return (true);
