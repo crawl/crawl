@@ -10,7 +10,9 @@
 // The different texture types.
 enum TextureID
 {
-    TEX_DUNGEON, // dngn.png
+    TEX_FLOOR,   // floor.png
+    TEX_WALL,    // wall.png
+    TEX_FEAT,    // feat.png
     TEX_PLAYER,  // player.png
     TEX_DEFAULT, // main.png
     TEX_GUI,     // gui.png
@@ -33,6 +35,8 @@ struct tile_def
     TextureID tex;
     int ymax;
 };
+
+TextureID get_dngn_tex(tileidx_t idx);
 
 // Arbitrary post-load texture processing
 typedef bool(*tex_proc_func)(unsigned char *pixels, unsigned int w,

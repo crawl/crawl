@@ -1,0 +1,736 @@
+%name wall 
+%prefix TILE
+%startvalue TILE_FLOOR_MAX tiledef-floor.h
+
+%sdir dc-dngn
+
+# Multiple tile definitions are STATIC, that is they may change between
+# saves but are otherwise fixed.
+
+%weight 5
+wall/brick_brown0 WALL_NORMAL WALL_BRICK WALL_BRICK_BROWN
+wall/brick_brown1
+wall/brick_brown2
+wall/brick_brown4
+wall/brick_brown5
+%weight 2
+wall/brick_brown3
+wall/brick_brown6
+%weight 1
+wall/brick_brown7
+
+%variation WALL_BRICK blue
+%hue 30 240
+%hue 0 240
+%repeat WALL_BRICK WALL_BRICK_BLUE
+%resetcol
+
+%variation WALL_BRICK green
+%hue 30 90
+%hue 0 90
+%repeat WALL_BRICK WALL_BRICK_GREEN WALL_SNAKE
+%resetcol
+
+%variation WALL_BRICK cyan
+%hue 30 180
+%hue 0 180
+%repeat WALL_BRICK WALL_BRICK_CYAN
+%resetcol
+
+%variation WALL_BRICK red
+%hue 30 0
+%repeat WALL_BRICK WALL_BRICK_RED
+%resetcol
+
+%variation WALL_BRICK magenta
+%hue 30 300
+%hue 0 300
+%repeat WALL_BRICK WALL_BRICK_MAGENTA
+%resetcol
+
+%variation WALL_BRICK lightgray
+%desat 30
+%desat 0
+%lum 0 10
+%repeat WALL_BRICK WALL_BRICK_LIGHTGRAY
+%resetcol
+
+%variation WALL_BRICK darkgray
+%desat 30
+%lum 30 -20
+%desat 0
+%repeat WALL_BRICK WALL_BRICK_DARKGRAY
+%resetcol
+
+%variation WALL_BRICK lightblue
+%hue 30 240
+%lum 30 15
+%hue 0 240
+%repeat WALL_BRICK WALL_BRICK_LIGHTBLUE
+%resetcol
+
+%variation WALL_BRICK lightgreen
+%hue 30 90
+%lum 30 15
+%hue 0 90
+%lum 0 5
+%repeat WALL_BRICK WALL_BRICK_LIGHTGREEN
+%resetcol
+
+%variation WALL_BRICK lightcyan
+%hue 30 180
+%lum 30 15
+%hue 0 180
+%lum 0 5
+%repeat WALL_BRICK WALL_BRICK_LIGHTCYAN
+%resetcol
+
+%variation WALL_BRICK lightred
+%hue 30 0
+%lum 30 15
+%lum 0 5
+%repeat WALL_BRICK WALL_BRICK_LIGHTRED
+%resetcol
+
+%variation WALL_BRICK lightmagenta
+%hue 30 300
+%lum 30 15
+%hue 0 300
+%lum 0 5
+%repeat WALL_BRICK WALL_BRICK_LIGHTMAGENTA
+%resetcol
+
+%variation WALL_BRICK yellow
+%hue 30 60
+%hue 0 60
+%repeat WALL_BRICK WALL_BRICK_YELLOW
+%resetcol
+
+%variation WALL_BRICK white
+%desat 30
+%lum 30 30
+%desat 0
+%lum 0 15
+%repeat WALL_BRICK WALL_BRICK_WHITE
+%resetcol
+
+# Variant of BRICK_WALL_BROWN with vines
+wall/brick_brown-vines1 WALL_BRICK_VINES WALL_BRICK_BROWN_VINES
+wall/brick_brown-vines2
+wall/brick_brown-vines3
+wall/brick_brown-vines4
+
+wall/relief0 WALL_HALL
+wall/relief1
+wall/relief2
+wall/relief3
+
+%variation WALL_HALL white
+%lum 0 40
+%lum 28 40
+%lum 29 40
+%lum 30 40
+%repeat WALL_HALL WALL_HALL_WHITE
+%resetcol
+
+%variation WALL_HALL darkgray
+%lum 0 -25
+%repeat WALL_HALL WALL_HALL_DARKGRAY
+%resetcol
+
+# Maybe move these down to the "pebble" section?
+#wall/hive0 WALL_HIVE_OLD
+#wall/hive1
+#wall/hive2
+#wall/hive3
+
+wall/beehives0 WALL_HIVE
+wall/beehives1
+wall/beehives2
+wall/beehives3
+wall/beehives4
+wall/beehives5
+wall/beehives6
+wall/beehives7
+wall/beehives8
+wall/beehives9
+
+wall/lair0 WALL_LAIR WALL_ORC WALL_SWAMP
+wall/lair1
+wall/lair2
+wall/lair3
+
+wall/slime0 WALL_SLIME
+wall/slime1
+wall/slime2
+wall/slime3
+
+wall/tomb0 WALL_TOMB
+wall/tomb1
+wall/tomb2
+wall/tomb3
+
+wall/vault0 WALL_VAULT
+wall/vault1
+wall/vault2
+wall/vault3
+
+wall/zot_blue0 WALL_ZOT WALL_ZOT_BLUE
+wall/zot_blue1
+wall/zot_blue2
+wall/zot_blue3
+
+%variation WALL_ZOT green
+%hue 240 120
+%repeat WALL_ZOT WALL_ZOT_GREEN
+%resetcol
+
+%variation WALL_ZOT cyan
+%hue 240 180
+%repeat WALL_ZOT WALL_ZOT_CYAN WALL_ICE
+%resetcol
+
+%variation WALL_ZOT red
+%hue 240 0
+%repeat WALL_ZOT WALL_ZOT_RED
+%resetcol
+
+%variation WALL_ZOT magenta
+%hue 240 300
+%repeat WALL_ZOT WALL_ZOT_MAGENTA
+%resetcol
+
+%variation WALL_ZOT brown
+%hue 240 30
+%repeat WALL_ZOT WALL_ZOT_BROWN
+%resetcol
+
+%variation WALL_ZOT lightgray
+%desat 240
+%lum 240 -15
+%repeat WALL_ZOT WALL_ZOT_LIGHTGRAY
+%resetcol
+
+%variation WALL_ZOT darkgray
+%desat 240
+%lum 240 -30
+%repeat WALL_ZOT WALL_ZOT_DARKGRAY
+%resetcol
+
+%variation WALL_ZOT lightblue
+%lum 240 40
+%repeat WALL_ZOT WALL_ZOT_LIGHTBLUE
+%resetcol
+
+%variation WALL_ZOT lightgreen
+%hue 240 120
+%lum 240 15
+%repeat WALL_ZOT WALL_ZOT_LIGHTGREEN
+%resetcol
+
+%variation WALL_ZOT lightcyan
+%hue 240 180
+%lum 240 15
+%repeat WALL_ZOT WALL_ZOT_LIGHTCYAN
+%resetcol
+
+%variation WALL_ZOT lightred
+%hue 240 0
+%lum 240 40
+%repeat WALL_ZOT WALL_ZOT_LIGHTRED
+%resetcol
+
+%variation WALL_ZOT lightmagenta
+%hue 240 300
+%lum 240 40
+%repeat WALL_ZOT WALL_ZOT_LIGHTMAGENTA
+%resetcol
+
+%variation WALL_ZOT yellow
+%hue 240 60
+%repeat WALL_ZOT WALL_ZOT_YELLOW
+%resetcol
+
+%variation WALL_ZOT white
+%desat 240
+%lum 240 10
+%repeat WALL_ZOT WALL_ZOT_WHITE
+%resetcol
+
+%weight 2
+wall/wall_flesh0 WALL_FLESH
+wall/wall_flesh1
+wall/wall_flesh2
+wall/wall_flesh3
+%weight 1
+wall/wall_flesh4
+wall/wall_flesh5
+wall/wall_flesh6
+%weight 2
+wall/transparent_flesh1 WALL_TRANSPARENT_FLESH
+wall/transparent_flesh2
+wall/transparent_flesh3
+%weight 1
+wall/transparent_flesh4
+wall/transparent_flesh5
+wall/transparent_flesh6
+
+wall/wall_vines0 WALL_VINES
+wall/wall_vines1
+wall/wall_vines2
+wall/wall_vines3
+wall/wall_vines4
+wall/wall_vines5
+wall/wall_vines6
+
+wall/pebble_red0 WALL_PEBBLE WALL_PEBBLE_RED
+wall/pebble_red1
+wall/pebble_red2
+wall/pebble_red3
+
+%variation WALL_PEBBLE blue
+%hue 0 240
+%repeat WALL_PEBBLE WALL_PEBBLE_BLUE
+%resetcol
+
+%variation WALL_PEBBLE green
+%hue 0 90
+%repeat WALL_PEBBLE WALL_PEBBLE_GREEN
+%resetcol
+
+%variation WALL_PEBBLE cyan
+%hue 0 180
+%repeat WALL_PEBBLE WALL_PEBBLE_CYAN
+%resetcol
+
+%variation WALL_PEBBLE magenta
+%hue 0 300
+%repeat WALL_PEBBLE WALL_PEBBLE_MAGENTA
+%resetcol
+
+%variation WALL_PEBBLE brown
+%hue 0 30
+%repeat WALL_PEBBLE WALL_PEBBLE_BROWN
+%resetcol
+
+%variation WALL_PEBBLE lightgray
+%desat 0
+%lum 0 -10
+%repeat WALL_PEBBLE WALL_PEBBLE_LIGHTGRAY
+%resetcol
+
+%variation WALL_PEBBLE darkgray
+%desat 0
+%lum 0 -30
+%repeat WALL_PEBBLE WALL_PEBBLE_DARKGRAY
+%resetcol
+
+%variation WALL_PEBBLE lightblue
+%hue 0 240
+%lum 0 15
+%repeat WALL_PEBBLE WALL_PEBBLE_LIGHTBLUE
+%resetcol
+
+%variation WALL_PEBBLE lightgreen
+%hue 0 90
+%lum 0 15
+%repeat WALL_PEBBLE WALL_PEBBLE_LIGHTGREEN
+%resetcol
+
+%variation WALL_PEBBLE lightcyan
+%hue 0 180
+%lum 0 15
+%repeat WALL_PEBBLE WALL_PEBBLE_LIGHTCYAN
+%resetcol
+
+%variation WALL_PEBBLE lightred
+%lum 0 15
+%repeat WALL_PEBBLE WALL_PEBBLE_LIGHTRED
+%resetcol
+
+%variation WALL_PEBBLE lightmagenta
+%hue 0 300
+%lum 0 15
+%repeat WALL_PEBBLE WALL_PEBBLE_LIGHTMAGENTA
+%resetcol
+
+%variation WALL_PEBBLE yellow
+%hue 0 60
+%repeat WALL_PEBBLE WALL_PEBBLE_YELLOW
+%resetcol
+
+%variation WALL_PEBBLE white
+%desat 0
+%lum 0 20
+%repeat WALL_PEBBLE WALL_PEBBLE_WHITE
+%resetcol
+
+wall/wall_yellow_rock0 WALL_YELLOW_ROCK
+wall/wall_yellow_rock1
+wall/wall_yellow_rock2
+wall/wall_yellow_rock3
+
+wall/brick_gray0 WALL_BRICK_GRAY
+wall/brick_gray1
+wall/brick_gray2
+wall/brick_gray3
+
+%weight 2
+wall/stone_brick1 WALL_STONE_BRICK
+wall/stone_brick2
+wall/stone_brick3
+wall/stone_brick4
+wall/stone_brick5
+wall/stone_brick6
+wall/stone_brick7
+wall/stone_brick8
+wall/stone_brick9
+wall/stone_brick10
+%weight 1
+wall/stone_brick11
+wall/stone_brick12
+
+%weight 5
+wall/marble_wall1 WALL_MARBLE
+wall/marble_wall2
+wall/marble_wall3
+wall/marble_wall4
+wall/marble_wall5
+%weight 3
+wall/marble_wall6
+wall/marble_wall7
+wall/marble_wall8
+%weight 1
+wall/marble_wall9
+wall/marble_wall10
+wall/marble_wall11
+wall/marble_wall12
+
+%weight 5
+wall/sandstone_wall0 WALL_SANDSTONE
+wall/sandstone_wall1
+wall/sandstone_wall2
+wall/sandstone_wall3
+wall/sandstone_wall4
+%weight 1
+wall/sandstone_wall5
+wall/sandstone_wall6
+wall/sandstone_wall7
+wall/sandstone_wall8
+wall/sandstone_wall9
+
+wall/volcanic_wall0 WALL_VOLCANIC
+wall/volcanic_wall1
+wall/volcanic_wall2
+wall/volcanic_wall3
+wall/volcanic_wall4
+wall/volcanic_wall5
+wall/volcanic_wall6
+
+%weight 5
+wall/crystal_wall00 WALL_CRYSTAL_SQUARES
+%weight 3
+wall/crystal_wall01
+%weight 6
+wall/crystal_wall02
+%weight 2
+wall/crystal_wall03
+%weight 4
+wall/crystal_wall04
+wall/crystal_wall06
+wall/crystal_wall08
+wall/crystal_wall10
+%weight 2
+wall/crystal_wall05
+wall/crystal_wall07
+wall/crystal_wall09
+wall/crystal_wall11
+%weight 3
+wall/crystal_wall12
+%weight 1
+wall/crystal_wall13
+
+
+wall/stone_gray0 WALL_STONE_GRAY
+wall/stone_gray1
+wall/stone_gray2
+wall/stone_gray3
+
+%variation WALL_STONE_GRAY white
+%lum 0 35
+%repeat WALL_STONE_GRAY WALL_STONE_WHITE
+%resetcol
+
+wall/stone_dark0 WALL_STONE_DARK
+wall/stone_dark1
+wall/stone_dark2
+wall/stone_dark3
+
+# For the Doroklohe WizLab
+wall/stone_black_marked0 WALL_STONE_BLACK_MARKED
+wall/stone_black_marked1
+wall/stone_black_marked2
+wall/stone_black_marked3
+wall/stone_black_marked4
+wall/stone_black_marked5
+wall/stone_black_marked6
+wall/stone_black_marked7
+%weight 1
+wall/stone_black_marked8
+
+wall/undead0 WALL_UNDEAD
+wall/undead1
+wall/undead2
+wall/undead3
+
+wall/stone2_gray0 DNGN_STONE_WALL DNGN_STONE_WALL_LIGHTGRAY
+wall/stone2_gray1
+wall/stone2_gray2
+wall/stone2_gray3
+
+wall/stone2_dark0 DNGN_STONE_DARK
+wall/stone2_dark1
+wall/stone2_dark2
+wall/stone2_dark3
+
+%variation DNGN_STONE_WALL blue
+%hue 26 240
+%hue 27 240
+%hue 28 240
+%hue 29 240
+%hue 30 240
+%hue 31 240
+%hue 32 240
+%hue 33 240
+wall/stone2_brown0 DNGN_STONE_WALL_BLUE
+wall/stone2_brown1
+wall/stone2_brown2
+wall/stone2_brown3
+%resetcol
+
+%variation DNGN_STONE_WALL green
+%hue 240 120
+%repeat DNGN_STONE_WALL_BLUE DNGN_STONE_WALL_GREEN
+%resetcol
+
+%variation DNGN_STONE_WALL cyan
+%hue 240 180
+%repeat DNGN_STONE_WALL_BLUE DNGN_STONE_WALL_CYAN
+%resetcol
+
+%variation DNGN_STONE_WALL red
+%hue 240 0
+%repeat DNGN_STONE_WALL_BLUE DNGN_STONE_WALL_RED
+%resetcol
+
+%variation DNGN_STONE_WALL magenta
+%hue 240 300
+%repeat DNGN_STONE_WALL_BLUE DNGN_STONE_WALL_MAGENTA
+%resetcol
+
+%variation DNGN_STONE_WALL brown
+%hue 240 30
+%repeat DNGN_STONE_WALL_BLUE DNGN_STONE_WALL_BROWN
+%resetcol
+
+%variation DNGN_STONE_WALL darkgray
+%lum 0 -20
+%repeat DNGN_STONE_WALL DNGN_STONE_WALL_DARKGRAY
+%resetcol
+
+%variation DNGN_STONE_WALL yellow
+%hue 240 60
+%repeat DNGN_STONE_WALL_BLUE DNGN_STONE_WALL_YELLOW
+%resetcol
+
+%variation DNGN_STONE_WALL white
+%lum 0 30
+%repeat DNGN_STONE_WALL DNGN_STONE_WALL_WHITE
+%resetcol
+
+wall/dngn_wax_wall DNGN_WAX_WALL
+
+# Coloured glass walls
+wall/dngn_transparent_wall DNGN_TRANSPARENT_WALL DNGN_TRANSPAREN_WALL_CYAN
+
+%variation DNGN_TRANSPARENT_WALL blue
+%hue 180 240
+%repeat DNGN_TRANSPARENT_WALL DNGN_TRANSPARENT_WALL_BLUE
+%resetcol
+
+%variation DNGN_TRANSPARENT_WALL green
+%hue 240 120
+%repeat DNGN_TRANSPARENT_WALL_BLUE DNGN_TRANSPARENT_WALL_GREEN
+%resetcol
+
+%variation DNGN_TRANSPARENT_WALL red
+%hue 240 0
+%repeat DNGN_TRANSPARENT_WALL_BLUE DNGN_TRANSPARENT_WALL_RED
+%resetcol
+
+%variation DNGN_TRANSPARENT_WALL magenta
+%hue 240 300
+%repeat DNGN_TRANSPARENT_WALL_BLUE DNGN_TRANSPARENT_WALL_MAGENTA
+%resetcol
+
+%variation DNGN_TRANSPARENT_WALL brown
+%hue 240 30
+%repeat DNGN_TRANSPARENT_WALL_BLUE DNGN_TRANSPARENT_WALL_BROWN
+%resetcol
+
+%variation DNGN_TRANSPARENT_WALL darkgray
+%desat 180
+%lum 180 -40
+%repeat DNGN_TRANSPARENT_WALL DNGN_TRANSPARENT_WALL_DARKGRAY
+%resetcol
+
+%variation DNGN_TRANSPARENT_WALL yellow
+%hue 240 60
+%repeat DNGN_TRANSPARENT_WALL_BLUE DNGN_TRANSPARENT_WALL_YELLOW
+%resetcol
+
+%variation DNGN_TRANSPARENT_WALL white
+%desat 180
+%lum 0 35
+%repeat DNGN_TRANSPARENT_WALL DNGN_TRANSPARENT_WALL_WHITE
+%resetcol
+
+
+# Coloured metal walls
+wall/dngn_mirrored_wall DNGN_MIRROR_WALL
+
+wall/dngn_metal_wall DNGN_METAL_WALL
+
+%variation DNGN_METAL_WALL blue
+%hue 26 240
+%hue 27 240
+%hue 28 240
+%hue 29 240
+%hue 30 240
+%hue 31 240
+%hue 32 240
+%hue 33 240
+wall/dngn_metal_wall_brown DNGN_METAL_WALL_BLUE
+%resetcol
+
+%variation DNGN_METAL_WALL green
+%hue 240 120
+%repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_GREEN
+%resetcol
+
+%variation DNGN_METAL_WALL cyan
+%hue 240 180
+%repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_CYAN
+%resetcol
+
+%variation DNGN_METAL_WALL red
+%hue 240 0
+%repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_RED
+%resetcol
+
+%variation DNGN_METAL_WALL magenta
+%hue 240 300
+%repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_MAGENTA
+%resetcol
+
+%variation DNGN_METAL_WALL brown
+%hue 240 30
+%repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_BROWN
+%resetcol
+
+%variation DNGN_METAL_WALL darkgray
+%lum 0 -20
+%repeat DNGN_METAL_WALL DNGN_METAL_WALL_DARKGRAY
+%resetcol
+
+%variation DNGN_METAL_WALL yellow
+%hue 240 60
+%repeat DNGN_METAL_WALL_BLUE DNGN_METAL_WALL_YELLOW
+%resetcol
+
+%variation DNGN_METAL_WALL white
+%lum 0 30
+%repeat DNGN_METAL_WALL DNGN_METAL_WALL_WHITE
+%resetcol
+
+wall/dngn_metal_wall_cracked DNGN_METAL_WALL_CRACKED
+
+%hue 150 120
+wall/dngn_green_crystal_wall DNGN_GREEN_CRYSTAL_WALL DNGN_CRYSTAL DNGN_CRYSTAL_GREEN
+%resetcol
+
+%variation DNGN_CRYSTAL blue
+%hue 120 240
+%repeat DNGN_CRYSTAL DNGN_CRYSTAL_BLUE
+%resetcol
+
+%variation DNGN_CRYSTAL cyan
+%hue 120 180
+%repeat DNGN_CRYSTAL DNGN_CRYSTAL_CYAN
+%resetcol
+
+%variation DNGN_CRYSTAL red
+%hue 120 0
+%repeat DNGN_CRYSTAL DNGN_CRYSTAL_RED
+%resetcol
+
+%variation DNGN_CRYSTAL magenta
+%hue 120 300
+%repeat DNGN_CRYSTAL DNGN_CRYSTAL_MAGENTA
+%resetcol
+
+%variation DNGN_CRYSTAL brown
+%hue 120 30
+%repeat DNGN_CRYSTAL DNGN_CRYSTAL_BROWN
+%resetcol
+
+%variation DNGN_CRYSTAL lightgray
+%desat 120
+%lum 120 -20
+%repeat DNGN_CRYSTAL DNGN_CRYSTAL_LIGHTGRAY
+%resetcol
+
+%variation DNGN_CRYSTAL darkgray
+%desat 120
+%lum 120 -40
+%repeat DNGN_CRYSTAL DNGN_CRYSTAL_DARKGRAY
+%resetcol
+
+%variation DNGN_CRYSTAL lightblue
+%hue 120 240
+%lum 120 30
+%repeat DNGN_CRYSTAL DNGN_CRYSTAL_LIGHTBLUE
+%resetcol
+
+%variation DNGN_CRYSTAL lightgreen
+%lum 120 30
+%repeat DNGN_CRYSTAL DNGN_CRYSTAL_LIGHTGREEN
+%resetcol
+
+%variation DNGN_CRYSTAL lightcyan
+%hue 120 180
+%lum 120 30
+%repeat DNGN_CRYSTAL DNGN_CRYSTAL_LIGHTCYAN
+%resetcol
+
+%variation DNGN_CRYSTAL lightred
+%hue 120 0
+%lum 120 30
+%repeat DNGN_CRYSTAL DNGN_CRYSTAL_LIGHTRED
+%resetcol
+
+%variation DNGN_CRYSTAL lightmagenta
+%hue 120 300
+%lum 120 30
+%repeat DNGN_CRYSTAL DNGN_CRYSTAL_LIGHTMAGENTA
+%resetcol
+
+%variation DNGN_CRYSTAL yellow
+%hue 120 60
+%repeat DNGN_CRYSTAL DNGN_CRYSTAL_YELLOW
+%resetcol
+
+%variation DNGN_CRYSTAL white
+%desat 120
+%repeat DNGN_CRYSTAL DNGN_CRYSTAL_WHITE
+%resetcol

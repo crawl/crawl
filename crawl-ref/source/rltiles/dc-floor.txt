@@ -1,0 +1,480 @@
+%name floor
+%prefix TILE
+
+%sdir dc-dngn
+
+dngn_unseen DNGN_UNSEEN
+dc-misc/error DNGN_ERROR
+
+# Multiple tile definitions are STATIC, that is they may change between
+# saves but are otherwise fixed.
+
+# The colorized versions of FLOOR_PEBBLE were made from
+# pebble_gray*.png, by colorizing the non-border color
+# with hue 30, sat 50, lum +20 in GIMP.
+%desat 28
+%desat 29
+%desat 30
+floor/pebble_brown0 FLOOR_PEBBLE FLOOR_PEBBLE_LIGHTGRAY FLOOR_NORMAL
+floor/pebble_brown1
+floor/pebble_brown2
+floor/pebble_brown3
+floor/pebble_brown4
+floor/pebble_brown5
+floor/pebble_brown6
+floor/pebble_brown7
+floor/pebble_brown8
+%resetcol
+
+%variation FLOOR_PEBBLE brown
+%hue 28 30
+%hue 29 30
+# Can't just use %repeat here, as we want the coloured versions.
+floor/pebble_brown0 FLOOR_PEBBLE_BROWN
+floor/pebble_brown1
+floor/pebble_brown2
+floor/pebble_brown3
+floor/pebble_brown4
+floor/pebble_brown5
+floor/pebble_brown6
+floor/pebble_brown7
+floor/pebble_brown8
+%resetcol
+
+%variation FLOOR_PEBBLE blue
+%hue 28 240
+%hue 29 240
+%hue 30 240
+%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_BLUE
+%resetcol
+
+%variation FLOOR_PEBBLE green
+%hue 28 90
+%hue 29 90
+%hue 30 90
+%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_GREEN
+%resetcol
+
+%variation FLOOR_PEBBLE cyan
+%hue 28 180
+%hue 29 180
+%hue 30 180
+%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_CYAN
+%resetcol
+
+%variation FLOOR_PEBBLE red
+%hue 28 0
+%hue 29 0
+%hue 30 0
+%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_RED
+%resetcol
+
+%variation FLOOR_PEBBLE magenta
+%hue 28 300
+%hue 29 300
+%hue 30 300
+%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_MAGENTA
+%resetcol
+
+%variation FLOOR_PEBBLE darkgray
+%desat 28
+%desat 29
+%desat 30
+%lum 28 -7
+%lum 29 -7
+%lum 30 -7
+%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_DARKGRAY
+%resetcol
+
+%variation FLOOR_PEBBLE lightblue
+%hue 28 240
+%hue 29 240
+%hue 30 240
+%lum 28 7
+%lum 29 7
+%lum 30 7
+%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_LIGHTBLUE
+%resetcol
+
+%variation FLOOR_PEBBLE lightgreen
+%hue 28 90
+%hue 29 90
+%hue 30 90
+%lum 28 7
+%lum 29 7
+%lum 30 7
+%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_LIGHTGREEN
+%resetcol
+
+%variation FLOOR_PEBBLE lightcyan
+%hue 28 180
+%hue 29 180
+%hue 30 180
+%lum 28 7
+%lum 29 7
+%lum 30 7
+%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_LIGHTCYAN
+%resetcol
+
+%variation FLOOR_PEBBLE lightred
+%hue 28 0
+%hue 29 0
+%hue 30 0
+%lum 28 7
+%lum 29 7
+%lum 30 7
+%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_LIGHTRED
+%resetcol
+
+%variation FLOOR_PEBBLE lightmagenta
+%hue 28 300
+%hue 29 300
+%hue 30 300
+%lum 28 7
+%lum 29 7
+%lum 30 7
+%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_LIGHTMAGENTA
+%resetcol
+
+%variation FLOOR_PEBBLE yellow
+%hue 28 60
+%hue 29 60
+%hue 30 60
+%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_YELLOW
+%resetcol
+
+%variation FLOOR_PEBBLE white
+%desat 28
+%desat 29
+%desat 30
+%lum 0 20
+%lum 28 40
+%lum 29 40
+%lum 30 40
+%repeat FLOOR_PEBBLE_BROWN FLOOR_PEBBLE_WHITE
+%resetcol
+
+floor/mesh0 FLOOR_HALL
+floor/mesh1
+floor/mesh2
+floor/mesh3
+
+floor/hive0 FLOOR_HIVE FLOOR_ORC
+floor/hive1
+floor/hive2
+floor/hive3
+
+floor/ice0 FLOOR_ICE
+floor/ice1
+floor/ice2
+floor/ice3
+
+floor/lair0 FLOOR_LAIR
+floor/lair1
+floor/lair2
+floor/lair3
+
+floor/bog_green0 FLOOR_SLIME
+floor/bog_green1
+floor/bog_green2
+floor/bog_green3
+
+floor/snake0 FLOOR_SNAKE
+floor/snake1
+floor/snake2
+floor/snake3
+
+## swamp also doesn't have any unique walls...
+floor/swamp0 FLOOR_SWAMP
+floor/swamp1
+floor/swamp2
+floor/swamp3
+
+floor/tomb0 FLOOR_TOMB
+floor/tomb1
+floor/tomb2
+floor/tomb3
+
+floor/rect_gray0 FLOOR_VAULT
+floor/rect_gray1
+floor/rect_gray2
+floor/rect_gray3
+
+floor/floor_vines0 FLOOR_VINES
+floor/floor_vines1
+floor/floor_vines2
+floor/floor_vines3
+floor/floor_vines4
+floor/floor_vines5
+floor/floor_vines6
+
+floor/rough_red0 FLOOR_ROUGH FLOOR_ROUGH_RED
+floor/rough_red1
+floor/rough_red2
+floor/rough_red3
+
+%variation FLOOR_ROUGH blue
+%hue 0 240
+%repeat FLOOR_ROUGH FLOOR_ROUGH_BLUE
+%resetcol
+
+%variation FLOOR_ROUGH green
+%hue 0 90
+%repeat FLOOR_ROUGH FLOOR_ROUGH_GREEN
+%resetcol
+
+%variation FLOOR_ROUGH cyan
+%hue 0 180
+%repeat FLOOR_ROUGH FLOOR_ROUGH_CYAN
+%resetcol
+
+%variation FLOOR_ROUGH magenta
+%hue 0 300
+%repeat FLOOR_ROUGH FLOOR_ROUGH_MAGENTA
+%resetcol
+
+%variation FLOOR_ROUGH brown
+%hue 0 30
+%repeat FLOOR_ROUGH FLOOR_ROUGH_BROWN
+%resetcol
+
+%variation FLOOR_ROUGH lightgray
+%desat 0
+%repeat FLOOR_ROUGH FLOOR_ROUGH_LIGHTGRAY
+%resetcol
+
+%variation FLOOR_ROUGH darkgray
+%desat 0
+%lum 0 -10
+%repeat FLOOR_ROUGH FLOOR_ROUGH_DARKGRAY
+%resetcol
+
+%variation FLOOR_ROUGH lightblue
+%hue 0 240
+%lum 0 10
+%repeat FLOOR_ROUGH FLOOR_ROUGH_LIGHTBLUE
+%resetcol
+
+%variation FLOOR_ROUGH lightgreen
+%hue 0 90
+%lum 0 10
+%repeat FLOOR_ROUGH FLOOR_ROUGH_LIGHTGREEN
+%resetcol
+
+%variation FLOOR_ROUGH lightcyan
+%hue 0 180
+%lum 0 10
+%repeat FLOOR_ROUGH FLOOR_ROUGH_LIGHTCYAN
+%resetcol
+
+%variation FLOOR_ROUGH lightred
+%lum 0 10
+%repeat FLOOR_ROUGH FLOOR_ROUGH_LIGHTRED
+%resetcol
+
+%variation FLOOR_ROUGH lightmagenta
+%hue 0 300
+%lum 0 10
+%repeat FLOOR_ROUGH FLOOR_ROUGH_LIGHTMAGENTA
+%resetcol
+
+%variation FLOOR_ROUGH yellow
+%hue 0 60
+%repeat FLOOR_ROUGH FLOOR_ROUGH_YELLOW
+%resetcol
+
+%variation FLOOR_ROUGH white
+%desat 0
+%lum 0 20
+%repeat FLOOR_ROUGH FLOOR_ROUGH_WHITE
+%resetcol
+
+%weight 5
+floor/floor_sand_stone0 FLOOR_SAND_STONE
+floor/floor_sand_stone1
+floor/floor_sand_stone2
+floor/floor_sand_stone3
+%weight 2
+floor/floor_sand_stone4
+floor/floor_sand_stone5
+floor/floor_sand_stone7
+%weight 1
+floor/floor_sand_stone6
+
+%weight 5
+floor/cobble_blood1 FLOOR_COBBLE_BLOOD
+floor/cobble_blood2
+floor/cobble_blood3
+floor/cobble_blood4
+floor/cobble_blood5
+%weight 3
+floor/cobble_blood6
+floor/cobble_blood7
+%weight 2
+floor/cobble_blood8
+floor/cobble_blood9
+floor/cobble_blood10
+floor/cobble_blood11
+%weight 1
+floor/cobble_blood12
+
+floor/marble_floor1 FLOOR_MARBLE
+floor/marble_floor2
+floor/marble_floor3
+floor/marble_floor4
+floor/marble_floor5
+floor/marble_floor6
+
+%weight 5
+floor/sandstone_floor0 FLOOR_SANDSTONE
+floor/sandstone_floor1
+floor/sandstone_floor2
+floor/sandstone_floor3
+floor/sandstone_floor4
+%weight 2
+floor/sandstone_floor5
+%weight 1
+floor/sandstone_floor6
+floor/sandstone_floor7
+floor/sandstone_floor8
+floor/sandstone_floor9
+
+floor/volcanic_floor0 FLOOR_VOLCANIC
+floor/volcanic_floor1
+floor/volcanic_floor2
+floor/volcanic_floor3
+floor/volcanic_floor4
+floor/volcanic_floor5
+floor/volcanic_floor6
+
+%weight 8
+floor/crystal_floor0 FLOOR_CRYSTAL_SQUARES
+%weight 4
+floor/crystal_floor1
+floor/crystal_floor2
+%weight 2
+floor/crystal_floor3
+floor/crystal_floor4
+%weight 1
+floor/crystal_floor5
+
+%sdir dc-dngn/floor/grass
+%weight 15
+grass0 FLOOR_GRASS
+grass1
+grass2
+%weight 1
+grass_flowers_blue1
+grass_flowers_blue2
+grass_flowers_blue3
+grass_flowers_red1
+grass_flowers_red2
+grass_flowers_red3
+grass_flowers_yellow1
+grass_flowers_yellow2
+grass_flowers_yellow3
+
+grass_n HALO_GRASS
+grass_ne
+grass_e
+grass_se
+grass_s
+grass_sw
+grass_w
+grass_nw
+grass_full
+
+grass0-dirt-mix1 FLOOR_GRASS_DIRT_MIX
+grass0-dirt-mix2
+grass0-dirt-mix3
+
+%sdir dc-dngn
+floor/floor_nerves0 FLOOR_NERVES
+floor/floor_nerves1
+floor/floor_nerves2
+floor/floor_nerves3
+floor/floor_nerves4
+floor/floor_nerves5
+floor/floor_nerves6
+
+%start
+%compose floor/grass/grass0
+%compose floor/pedestal_n
+%finish HALO_GRASS2
+%start
+%compose floor/grass/grass1
+%compose floor/pedestal_ne
+%finish
+%start
+%compose floor/grass/grass2
+%compose floor/pedestal_e
+%finish
+%start
+%compose floor/grass/grass1
+%compose floor/pedestal_se
+%finish
+%start
+%compose floor/grass/grass0
+%compose floor/pedestal_s
+%finish
+%start
+%compose floor/grass/grass1
+%compose floor/pedestal_sw
+%finish
+%start
+%compose floor/grass/grass2
+%compose floor/pedestal_w
+%finish
+%start
+%compose floor/grass/grass0
+%compose floor/pedestal_nw
+%finish
+floor/pedestal_full
+
+%start
+%compose floor/rect_gray0
+%compose floor/pedestal_n
+%finish HALO_VAULT
+%start
+%compose floor/rect_gray1
+%compose floor/pedestal_ne
+%finish
+%start
+%compose floor/rect_gray2
+%compose floor/pedestal_e
+%finish
+%start
+%compose floor/rect_gray3
+%compose floor/pedestal_se
+%finish
+%start
+%compose floor/rect_gray2
+%compose floor/pedestal_s
+%finish
+%start
+%compose floor/rect_gray1
+%compose floor/pedestal_sw
+%finish
+%start
+%compose floor/rect_gray0
+%compose floor/pedestal_w
+%finish
+%start
+%compose floor/rect_gray3
+%compose floor/pedestal_nw
+%finish
+floor/pedestal_full
+
+floor/dirt0 FLOOR_DIRT
+floor/dirt1
+floor/dirt2
+
+floor/dirt_n HALO_DIRT
+floor/dirt_ne
+floor/dirt_e
+floor/dirt_se
+floor/dirt_s
+floor/dirt_sw
+floor/dirt_w
+floor/dirt_nw
+floor/dirt_full
