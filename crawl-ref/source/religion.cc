@@ -1013,7 +1013,7 @@ static void _inc_penance(god_type god, int val)
                 mpr("Your divine halo fades away.");
 
             if (you.duration[DUR_DIVINE_SHIELD])
-                remove_divine_shield();
+                tso_remove_divine_shield();
 
             make_god_gifts_disappear(); // only on level
         }
@@ -2891,7 +2891,7 @@ void excommunication(god_type new_god)
             mpr("Your divine halo fades away.");
 
         if (you.duration[DUR_DIVINE_SHIELD])
-            remove_divine_shield();
+            tso_remove_divine_shield();
 
         // Leaving TSO for a non-good god will make all your followers
         // abandon you.  Leaving him for a good god will make your holy

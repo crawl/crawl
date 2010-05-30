@@ -1559,7 +1559,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_TSO_DIVINE_SHIELD:
-        cast_divine_shield();
+        tso_divine_shield();
         exercise(SK_INVOCATIONS, (coinflip() ? 3 : 2));
         break;
 
