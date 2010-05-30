@@ -1789,7 +1789,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_ELYVILON_DIVINE_VIGOUR:
-        if (!cast_divine_vigour())
+        if (!elyvilon_divine_vigour())
             return (false);
 
         exercise(SK_INVOCATIONS, 6 + random2(10));
