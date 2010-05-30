@@ -1025,7 +1025,7 @@ int spell_noise(unsigned int disciplines, int level)
 
 spell_type zap_type_to_spell(zap_type zap)
 {
-    switch(zap)
+    switch (zap)
     {
     case ZAP_FLAME:
         return(SPELL_THROW_FLAME);
@@ -1088,7 +1088,7 @@ bool spell_is_empowered(spell_type spell)
         // looking at player_movement_speed, this should be correct ~DMB
         if (player_movement_speed() > 6
             && you.duration[DUR_CONTROLLED_FLIGHT] > 0
-            && you.duration[DUR_SWIFTNESS]  < 1)
+            && you.duration[DUR_SWIFTNESS] < 1)
         {
             return (true);
         }
@@ -1137,8 +1137,8 @@ bool spell_is_useful(spell_type spell)
         }
         break;
     case SPELL_HASTE:
-        if(you.duration[DUR_SLOW] > 0
-           && you.duration[DUR_HASTE] <= 0)
+        if (you.duration[DUR_SLOW] > 0
+            && you.duration[DUR_HASTE] <= 0)
         {
             return (true);
         }
@@ -1158,7 +1158,7 @@ bool spell_is_risky(spell_type spell)
     if (god_hates_spell(spell, you.religion))
         return (true);
 
-    switch(spell)
+    switch (spell)
     {
     case SPELL_ALTER_SELF:
         return (true);
@@ -1189,7 +1189,7 @@ bool spell_is_useless(spell_type spell, bool transient)
         }
     }
 
-    switch(spell)
+    switch (spell)
     {
     case SPELL_BLINK:
     case SPELL_CONTROLLED_BLINK:

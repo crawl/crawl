@@ -1865,7 +1865,6 @@ static bool _decrement_a_duration(duration_type dur, int delay,
 
     const int midpoint = get_expiration_threshold(dur);
 
-
     int old_dur = you.duration[dur];
 
     you.duration[dur] -= delay;
@@ -1908,7 +1907,7 @@ static void _decrement_durations()
 
     if (you.duration[DUR_ICEMAIL_DEPLETED] > 0)
     {
-        if(delay > you.duration[DUR_ICEMAIL_DEPLETED])
+        if (delay > you.duration[DUR_ICEMAIL_DEPLETED])
             you.duration[DUR_ICEMAIL_DEPLETED] = 0;
         else
             you.duration[DUR_ICEMAIL_DEPLETED] -= delay;
@@ -1921,7 +1920,7 @@ static void _decrement_durations()
 
     if (you.duration[DUR_DEMONIC_GUARDIAN] > 0)
     {
-        if(delay > you.duration[DUR_DEMONIC_GUARDIAN])
+        if (delay > you.duration[DUR_DEMONIC_GUARDIAN])
             you.duration[DUR_DEMONIC_GUARDIAN] = 0;
         else
             you.duration[DUR_DEMONIC_GUARDIAN] -= delay;
