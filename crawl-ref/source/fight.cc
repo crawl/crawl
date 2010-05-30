@@ -1193,9 +1193,7 @@ bool melee_attack::player_aux_test_hit()
     }
 
     if (to_hit >= evasion || auto_hit)
-    {
         return (true);
-    }
     else
     {
         mprf("Your %s misses %s.", aux_attack.c_str(),
@@ -1429,20 +1427,18 @@ void melee_attack::player_warn_miss()
 bool melee_attack::player_hits_monster()
 {
     const int evasion = defender->melee_evasion(attacker);
-    const int evasion_helpful
-        = defender->melee_evasion(attacker, EV_IGNORE_HELPLESS);
+    const int helpful_evasion =
+        defender->melee_evasion(attacker, EV_IGNORE_HELPLESS);
     dprf("your to-hit: %d; defender effective EV: %d", to_hit, evasion);
 
-    if (to_hit >= evasion_helpful || one_chance_in(20))
-    {
+    if (to_hit >= helpful_evasion || one_chance_in(20))
         return (true);
-    }
 
     if (to_hit >= evasion
         || ((defender->cannot_act() || defender->asleep())
             && !one_chance_in(10 + you.skills[SK_STABBING]))
         || defender->as_monster()->petrifying()
-           && !one_chance_in(2 + you.skills[SK_STABBING]))
+            && !one_chance_in(2 + you.skills[SK_STABBING]))
     {
         if (defender_visible)
             msg::stream << "Helpless, " << defender->name(DESC_NOCAP_THE)
