@@ -948,35 +948,6 @@ void remove_divine_vigour()
     calc_mp();
 }
 
-bool elyvilon_divine_vigour()
-{
-    bool success = false;
-
-    if (!you.duration[DUR_DIVINE_VIGOUR])
-    {
-        mprf("%s grants you divine vigour.",
-             god_name(you.religion).c_str());
-
-        const int vigour_amt = 1 + (you.skills[SK_INVOCATIONS]/3);
-        const int old_hp_max = you.hp_max;
-        const int old_mp_max = you.max_magic_points;
-        you.attribute[ATTR_DIVINE_VIGOUR] = vigour_amt;
-        you.set_duration(DUR_DIVINE_VIGOUR,
-                         40 + (you.skills[SK_INVOCATIONS]*5)/2);
-
-        calc_hp();
-        inc_hp(you.hp_max - old_hp_max, false);
-        calc_mp();
-        inc_mp(you.max_magic_points - old_mp_max, false);
-
-        success = true;
-    }
-    else
-        canned_msg(MSG_NOTHING_HAPPENS);
-
-    return (success);
-}
-
 void remove_divine_stamina()
 {
     mpr("Your divine stamina fades away.", MSGCH_DURATION);
