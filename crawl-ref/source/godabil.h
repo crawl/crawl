@@ -41,7 +41,7 @@ int fedhas_rain(const coord_def &target);
 int fedhas_corpse_spores(beh_type behavior = BEH_FRIENDLY,
                          bool interactive = true);
 bool mons_is_evolvable(const monsters * mon);
-bool evolve_flora();
+bool fedhas_evolve_flora();
 
 void lugonu_bend_space();
 
