@@ -2058,7 +2058,7 @@ bool recall(char type_recalled)
     int step_value     = 1;
     int end_count      = (MAX_MONSTERS - 1);
 
-    monsters *monster = 0;
+    monsters *monster = NULL;
 
     // someone really had to make life difficult {dlb}:
     // sometimes goes through monster list backwards
