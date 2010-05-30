@@ -1,0 +1,44 @@
+/*
+ *  File:       tilepick-p.h
+ *  Summary:    Look-up functions for player tiles.
+ */
+
+#ifndef TILEPICK_P_H
+#define TILEPICK_P_H
+
+#ifdef USE_TILE
+
+#include "tiledef_defines.h"
+
+class dolls_data;
+class item_def;
+
+// Player equipment lookup
+tileidx_t tilep_equ_weapon(const item_def &item);
+tileidx_t tilep_equ_shield(const item_def &item);
+tileidx_t tilep_equ_armour(const item_def &item);
+tileidx_t tilep_equ_cloak(const item_def &item);
+tileidx_t tilep_equ_helm(const item_def &item);
+tileidx_t tilep_equ_gloves(const item_def &item);
+tileidx_t tilep_equ_boots(const item_def &item);
+
+tileidx_t tileidx_player();
+int get_gender_from_tile(const dolls_data &doll);
+bool is_player_tile(tileidx_t tile, tileidx_t base_tile);
+
+tileidx_t tilep_species_to_base_tile(int sp, int level);
+
+void tilep_draconian_init(int sp, int level, tileidx_t *base,
+                          tileidx_t *head, tileidx_t *wing);
+void tilep_race_default(int sp, int gender, int level, dolls_data *doll);
+void tilep_job_default(int job, int gender, dolls_data *doll);
+void tilep_calc_flags(const dolls_data &data, int flag[]);
+
+void tilep_part_to_str(int number, char *buf);
+int  tilep_str_to_part(char *str);
+
+void tilep_scan_parts(char *fbuf, dolls_data &doll, int species, int level);
+void tilep_print_parts(char *fbuf, const dolls_data &doll);
+
+#endif
+#endif

@@ -78,7 +78,7 @@
 #include "tags.h"
 #ifdef USE_TILE
  #include "tiledef-player.h"
- #include "tilepick.h"
+ #include "tilepick-p.h"
  #include "tileview.h"
 #endif
 #include "terrain.h"

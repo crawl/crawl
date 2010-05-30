@@ -31,6 +31,7 @@
  #include "tiledef-main.h"
  #include "tiledef-player.h"
  #include "tilepick.h"
+ #include "tilepick-p.h"
  #include "tilereg-crt.h"
  #include "tilereg-menu.h"
  #include "travel.h"

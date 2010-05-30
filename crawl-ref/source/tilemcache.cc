@@ -9,6 +9,7 @@
 #include "tags.h"
 #include "tiledef-player.h"
 #include "tilepick.h"
+#include "tilepick-p.h"
 
 mcache_manager mcache;
 

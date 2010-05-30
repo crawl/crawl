@@ -212,6 +212,7 @@ tiledoll.o \
 tilefont.o \
 tilemcache.o \
 tilepick.o \
+tilepick-p.o \
 tilereg.o \
 tilereg-crt.o \
 tilereg-dgn.o \
