@@ -920,10 +920,10 @@ void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
 {
     const screen_cell_t *cell = vbuf;
     const coord_def size = vbuf.size();
-    for (int y = 1; y <= size.y; ++y)
+    for (int y = 0; y < size.y; ++y)
     {
-        cgotoxy(x1, y);
-        for (int x = 1; x <= size.x; ++x)
+        cgotoxy(x1, y1 + y);
+        for (int x = 0; x < size.x; ++x)
         {
             textattr(cell->colour);
             putwch(cell->glyph);
