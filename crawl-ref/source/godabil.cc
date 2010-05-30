@@ -393,7 +393,7 @@ bool fedhas_shoot_through(const bolt & beam, const monsters * victim)
             && !beam.is_enchantment()
             && !(beam.is_explosion && beam.in_explosion_phase)
             && (mons_atts_aligned(victim->attitude, origin_attitude)
-                || victim->neutral() ));
+                || victim->neutral()));
 }
 
 // Turns corpses in LOS into skeletons and grows toadstools on them.
@@ -815,7 +815,7 @@ static void _point_point_distance(const std::vector<coord_def> & origins,
     // Consider all points of origin as blocked (you can search outward
     // from one, but you can't form a path across a different one).
     std::set<int> base_exclusions;
-    for (unsigned i=0; i < origins.size(); ++i)
+    for (unsigned i = 0; i < origins.size(); ++i)
     {
         int idx = origins[i].x + origins[i].y * X_WIDTH;
         base_exclusions.insert(idx);
@@ -997,7 +997,7 @@ bool plant_ring_from_fruit()
     crawl_state.darken_range = 1;
     viewwindow(false, false);
 
-    for (int i=0; i < max_use; ++i)
+    for (int i = 0; i < max_use; ++i)
     {
 #ifndef USE_TILE
         coord_def temp = grid2view(adjacent[i]);
@@ -1027,7 +1027,7 @@ bool plant_ring_from_fruit()
     // are higher than that number.
 #ifndef USE_TILE
     unsigned not_used = adjacent.size() - unsigned(target_count);
-    for (unsigned i=adjacent.size() - not_used;
+    for (unsigned i = adjacent.size() - not_used;
          i < adjacent.size();
          i++)
     {
@@ -1037,7 +1037,7 @@ bool plant_ring_from_fruit()
     // For tiles we have to clear all overlays and redraw the ones
     // we want.
     tiles.clear_overlays();
-    for (int i=0; i < target_count; ++i)
+    for (int i = 0; i < target_count; ++i)
     {
         tiles.add_overlay(adjacent[i], TILE_INDICATOR + i );
     }
@@ -1209,7 +1209,7 @@ int corpse_spores(beh_type behavior, bool interactive)
 
     crawl_state.darken_range = 0;
     viewwindow(false, false);
-    for(unsigned i=0; i < positions.size(); ++i)
+    for(unsigned i = 0; i < positions.size(); ++i)
     {
 #ifndef USE_TILE
 
@@ -1234,7 +1234,7 @@ int corpse_spores(beh_type behavior, bool interactive)
         return -1;
     }
 
-    for (unsigned i=0; i < positions.size(); ++i)
+    for (unsigned i = 0; i < positions.size(); ++i)
     {
         count++;
         int rc = create_monster(mgen_data(MONS_GIANT_SPORE,
