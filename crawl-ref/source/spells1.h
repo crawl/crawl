@@ -61,6 +61,5 @@ void stone_scales(int pow);
 void antimagic();
 void identify(int power, int item_slot = -1);
 void manage_fire_shield(int delay);
-void elyvilon_purification();
 void random_blink(bool, bool override_abyss = false);
 #endif
