@@ -644,7 +644,7 @@ void cast_refrigeration(int pow, bool non_player)
     }
 }
 
-void drain_life(int pow)
+void yred_drain_life(int pow)
 {
     mpr("You draw life from your surroundings.");
 
