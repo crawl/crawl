@@ -132,7 +132,7 @@ bool zin_vitalisation()
             type = 2;
 
             mprf("%s grants you divine stamina.",
-                 god_name(you.religion).c_str());
+                 god_name(GOD_ZIN).c_str());
 
             const int stamina_amt = 3;
             you.attribute[ATTR_DIVINE_STAMINA] = stamina_amt;
