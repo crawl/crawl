@@ -2099,7 +2099,7 @@ bool recall(char type_recalled)
 
         coord_def empty;
         if (empty_surrounds(you.pos(), DNGN_FLOOR, 3, false, empty)
-            && monster->move_to_pos( empty ) )
+            && monster->move_to_pos(empty))
         {
             // only informed if monsters recalled are visible {dlb}:
             if (simple_monster_message(monster, " is recalled."))
