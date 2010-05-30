@@ -14,6 +14,10 @@ struct bolt;
 bool zin_sustenance(bool actual = true);
 bool zin_remove_all_mutations();
 
+bool vehumet_supports_spell(spell_type spell);
+
+bool trog_burn_spellbooks();
+
 bool yred_injury_mirror(bool actual = true);
 
 bool jiyva_accepts_prayer();
@@ -37,10 +41,6 @@ int rain(const coord_def &target);
 int corpse_spores(beh_type behavior = BEH_FRIENDLY, bool interactive = true);
 bool evolve_flora();
 bool mons_is_evolvable(const monsters * mon);
-
-bool vehumet_supports_spell(spell_type spell);
-
-bool trog_burn_spellbooks();
 
 void lugonu_bends_space();
 

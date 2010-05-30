@@ -1518,6 +1518,61 @@ bool evolve_flora()
     return (true);
 }
 
+static int _lugonu_warp_monster(coord_def where, int pow, int, actor *)
+{
+    if (!in_bounds(where))
+        return (0);
+
+    monsters* mon = monster_at(where);
+    if (mon == NULL)
+        return (0);
+
+    if (!mon->friendly())
+        behaviour_event(mon, ME_ANNOY, MHITYOU);
+
+    if (mon->check_res_magic(pow * 2))
+    {
+        mprf("%s %s.",
+             mon->name(DESC_CAP_THE).c_str(), mons_resist_string(mon));
+        return (1);
+    }
+
+    const int damage = 1 + random2(pow / 6);
+    if (mons_genus(mon->type) == MONS_BLINK_FROG)
+        mon->heal(damage, false);
+    else if (!mon->check_res_magic(pow))
+    {
+        mon->hurt(&you, damage);
+        if (!mon->alive())
+            return (1);
+    }
+
+    mon->blink();
+
+    return (1);
+}
+
+static void _lugonu_warp_area(int pow)
+{
+    apply_area_around_square(_lugonu_warp_monster, you.pos(), pow);
+}
+
+void lugonu_bends_space()
+{
+    const int pow = 4 + skill_bump(SK_INVOCATIONS);
+    const bool area_warp = random2(pow) > 9;
+
+    mprf("Space bends %saround you!", area_warp ? "sharply " : "");
+
+    if (area_warp)
+        _lugonu_warp_area(pow);
+
+    random_blink(false, true);
+
+    const int damage = roll_dice(1, 4);
+    ouch(damage, NON_MONSTER, KILLED_BY_WILD_MAGIC, "a spatial distortion");
+}
+
 bool is_ponderousifiable(const item_def& item)
 {
     return (item.base_type == OBJ_ARMOUR
@@ -1583,61 +1638,6 @@ static int _slouch_monsters(coord_def where, int pow, int, actor* agent)
 int cheibriados_slouch(int pow)
 {
     return (apply_area_visible(_slouch_monsters, pow, false, &you));
-}
-
-static int _lugonu_warp_monster(coord_def where, int pow, int, actor *)
-{
-    if (!in_bounds(where))
-        return (0);
-
-    monsters* mon = monster_at(where);
-    if (mon == NULL)
-        return (0);
-
-    if (!mon->friendly())
-        behaviour_event(mon, ME_ANNOY, MHITYOU);
-
-    if (mon->check_res_magic(pow * 2))
-    {
-        mprf("%s %s.",
-             mon->name(DESC_CAP_THE).c_str(), mons_resist_string(mon));
-        return (1);
-    }
-
-    const int damage = 1 + random2(pow / 6);
-    if (mons_genus(mon->type) == MONS_BLINK_FROG)
-        mon->heal(damage, false);
-    else if (!mon->check_res_magic(pow))
-    {
-        mon->hurt(&you, damage);
-        if (!mon->alive())
-            return (1);
-    }
-
-    mon->blink();
-
-    return (1);
-}
-
-static void _lugonu_warp_area(int pow)
-{
-    apply_area_around_square(_lugonu_warp_monster, you.pos(), pow);
-}
-
-void lugonu_bends_space()
-{
-    const int pow = 4 + skill_bump(SK_INVOCATIONS);
-    const bool area_warp = random2(pow) > 9;
-
-    mprf("Space bends %saround you!", area_warp ? "sharply " : "");
-
-    if (area_warp)
-        _lugonu_warp_area(pow);
-
-    random_blink(false, true);
-
-    const int damage = roll_dice(1, 4);
-    ouch(damage, NON_MONSTER, KILLED_BY_WILD_MAGIC, "a spatial distortion");
 }
 
 void cheibriados_time_bend(int pow)
