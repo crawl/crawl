@@ -25,7 +25,6 @@ int detect_items(int pow);
 int detect_traps(int pow);
 void cast_refrigeration(int pow, bool non_player = false);
 void cast_toxic_radiance(bool non_player = false);
-void yred_drain_life(int pow);
 
 bool summon_animals(int pow);
 bool cast_summon_butterflies(int pow, god_type god = GOD_NO_GOD);

@@ -568,6 +568,54 @@ bool yred_injury_mirror(bool actual)
             && (!actual || you.duration[DUR_PRAYER]));
 }
 
+void yred_drain_life(int pow)
+{
+    mpr("You draw life from your surroundings.");
+
+    // Incoming power to this function is skill in INVOCATIONS, so
+    // we'll add an assert here to warn anyone who tries to use
+    // this function with spell level power.
+    ASSERT(pow <= 27);
+
+    flash_view(DARKGREY);
+    more();
+    mesclr();
+
+    int hp_gain = 0;
+
+    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    {
+        if (mi->holiness() != MH_NATURAL
+            || mi->res_negative_energy())
+        {
+            continue;
+        }
+
+        mprf("You draw life from %s.",
+             mi->name(DESC_NOCAP_THE).c_str());
+
+        const int hurted = 3 + random2(7) + random2(pow);
+        behaviour_event(*mi, ME_WHACK, MHITYOU, you.pos());
+        if (!mi->is_summoned())
+            hp_gain += hurted;
+
+        mi->hurt(&you, hurted);
+
+        if (mi->alive())
+            print_wounds(*mi);
+    }
+
+    hp_gain /= 2;
+
+    hp_gain = std::min(pow * 2, hp_gain);
+
+    if (hp_gain)
+    {
+        mpr("You feel life flooding into your body.");
+        inc_hp(hp_gain, false);
+    }
+}
+
 static bool _is_yred_enslaved_soul(const monsters* mon)
 {
     return (mon->alive() && mons_enslaved_soul(mon));
