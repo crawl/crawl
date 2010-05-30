@@ -1324,12 +1324,21 @@ void bolt::do_fire()
     while (map_bounds(pos()))
     {
         if (range_used() > range)
+        {
+            // previous step was still < range, but end point
+            ray.regress();
+            extra_range_used++;
+            ASSERT(range_used() >= range);
             break;
+        }
 
         path_taken.push_back(pos());
 
         if (!affects_nothing)
             affect_cell();
+
+        if (range_used() >= range)
+            break;
 
         if (beam_cancelled)
             return;
