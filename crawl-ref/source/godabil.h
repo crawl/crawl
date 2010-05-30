@@ -37,7 +37,7 @@ bool fedhas_sunlight();
 bool prioritise_adjacent(const coord_def &target,
                          std::vector<coord_def> &candidates);
 bool fedhas_plant_ring_from_fruit();
-int rain(const coord_def &target);
+int fedhas_rain(const coord_def &target);
 int corpse_spores(beh_type behavior = BEH_FRIENDLY, bool interactive = true);
 bool evolve_flora();
 bool mons_is_evolvable(const monsters * mon);

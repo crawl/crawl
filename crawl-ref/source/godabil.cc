@@ -1070,7 +1070,7 @@ bool fedhas_plant_ring_from_fruit()
 // chance of spawning plants or fungus on unoccupied dry floor tiles
 // outside of the rainfall area.  Return the number of plants/fungi
 // created.
-int rain(const coord_def &target)
+int fedhas_rain(const coord_def &target)
 {
     int spawned_count = 0;
     int processed_count = 0;
