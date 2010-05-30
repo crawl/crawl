@@ -1172,7 +1172,7 @@ int fedhas_rain(const coord_def &target)
 // and make 1 giant spore per corpse.  Spores are given the input as
 // their starting behavior; the function returns the number of corpses
 // processed.
-int corpse_spores(beh_type behavior, bool interactive)
+int fedhas_corpse_spores(beh_type behavior, bool interactive)
 {
     int count = 0;
     std::vector<stack_iterator> positions;
