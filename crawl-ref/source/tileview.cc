@@ -580,6 +580,34 @@ void tile_floor_halo(dungeon_feature_type target, tileidx_t tile)
         }
 }
 
+void tile_draw_floor()
+{
+    for (int cy = 0; cy < env.tile_fg.height(); cy++)
+        for (int cx = 0; cx < env.tile_fg.width(); cx++)
+        {
+            const coord_def ep(cx, cy);
+            const coord_def gc = show2grid(ep);
+
+            tileidx_t bg = TILE_DNGN_UNSEEN | tileidx_unseen_flag(gc);
+
+            if (you.see_cell(gc))
+            {
+                dungeon_feature_type feat = grid_appearance(gc);
+                bg = tileidx_feature(grd(gc), gc);
+
+                if (feat == DNGN_DETECTED_SECRET_DOOR)
+                     bg |= TILE_FLAG_WAS_SECRET;
+                else if (is_unknown_stair(gc))
+                     bg |= TILE_FLAG_NEW_STAIR;
+            }
+
+
+            // init tiles
+            env.tile_bg(ep) = bg;
+            env.tile_fg(ep) = 0;
+        }
+}
+
 // Called from item() in view.cc
 void tile_place_item(const coord_def &gc, const item_def &item)
 {

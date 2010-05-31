@@ -68,7 +68,6 @@
 #include "xom.h"
 
 #ifdef USE_TILE
- #include "tiledef-dngn.h"
  #include "tilepick.h"
  #include "tilepick-p.h"
  #include "tileview.h"
@@ -774,36 +773,6 @@ static void player_view_update()
     if (need_update)
         deferred_exclude_update();
 }
-
-#ifdef USE_TILE
-void tile_draw_floor()
-{
-    for (int cy = 0; cy < env.tile_fg.height(); cy++)
-        for (int cx = 0; cx < env.tile_fg.width(); cx++)
-        {
-            const coord_def ep(cx, cy);
-            const coord_def gc = show2grid(ep);
-
-            tileidx_t bg = TILE_DNGN_UNSEEN | tileidx_unseen_flag(gc);
-
-            if (you.see_cell(gc))
-            {
-                dungeon_feature_type feat = grid_appearance(gc);
-                bg = tileidx_feature(grd(gc), gc);
-
-                if (feat == DNGN_DETECTED_SECRET_DOOR)
-                     bg |= TILE_FLAG_WAS_SECRET;
-                else if (is_unknown_stair(gc))
-                     bg |= TILE_FLAG_NEW_STAIR;
-            }
-
-
-            // init tiles
-            env.tile_bg(ep) = bg;
-            env.tile_fg(ep) = 0;
-        }
-}
-#endif
 
 static void _draw_unseen(screen_cell_t *cell, const coord_def &gc)
 {
