@@ -634,7 +634,14 @@ static void debug_load_map_by_name(std::string name)
     }
 
     if (dgn_place_map(toplace, true, false, where))
+    {
         mprf("Successfully placed %s.", toplace->name.c_str());
+#ifdef USE_TILE
+        // Fix up doors from vaults and any changes to the default walls
+        // and floors from the vault.
+        tile_init_flavour();
+#endif
+    }
     else
         mprf("Failed to place %s.", toplace->name.c_str());
 }
