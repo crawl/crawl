@@ -180,6 +180,7 @@ dngn_shoals_shallow_water_disturbance1 SHOALS_SHALLOW_WATER_DISTURBANCE
 dngn_shoals_shallow_water_disturbance2
 dngn_shoals_shallow_water_disturbance3
 
+%shrink 0
 ## deep water waves
 # corner waves (diagonals)
 deep_water_wave_corner_NE WAVE_DEEP_CORNER_NE
@@ -221,6 +222,7 @@ ink_wave_W WAVE_INK_W
 
 #full
 ink_full WAVE_INK_FULL
+%shrink 1
 
 %sdir dc-dngn/gateways
 dngn_entrance DNGN_UNSEEN_ENTRANCE
