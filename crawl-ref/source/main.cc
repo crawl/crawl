@@ -2367,8 +2367,8 @@ static void _decrement_durations()
             resilience = resilience * 3 / 2;
 
         // Faster rotting when hungry.
-        for (int hs = you.hunger_state; hs < HS_SATIATED; hs++)
-            resilience = resilience * 2 / 3;
+        if (you.hunger_state < HS_SATIATED)
+            resilience >>= HS_SATIATED - you.hunger_state;
 
         if (one_chance_in(resilience))
         {
