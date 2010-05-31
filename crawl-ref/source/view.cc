@@ -850,6 +850,7 @@ static void _draw_player(screen_cell_t *cell,
 #ifdef USE_TILE
     cell->tile_fg = env.tile_fg(ep) = tileidx_player();
     cell->tile_bg = env.tile_bg(ep);
+    tile_apply_animations(cell->tile_bg, &env.tile_flv(gc));
 #endif
 }
 
