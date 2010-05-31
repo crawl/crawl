@@ -468,7 +468,7 @@ static bool _mon_exposed(const monsters* mon)
 static bool _is_target_in_range(const coord_def& where, int range)
 {
     // range == -1 means that range doesn't matter.
-    return (range == -1 || grid_distance(you.pos(), where) <= range);
+    return (range == -1 || distance(you.pos(), where) <= range*range + 1);
 }
 
 targeting_behaviour direction_chooser::stock_behaviour;
