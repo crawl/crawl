@@ -885,7 +885,7 @@ static inline void _apply_variations(const tile_flavour &flv, tileidx_t *bg)
     else if (orig == TILE_DNGN_PORTAL_WIZARD_LAB
              || orig == TILE_DNGN_ALTAR_CHEIBRIADOS)
     {
-        *bg = orig + flv.special;
+        *bg = orig + flv.special % tile_dngn_count(orig);
     }
     else if (orig < TILE_DNGN_MAX)
     {
