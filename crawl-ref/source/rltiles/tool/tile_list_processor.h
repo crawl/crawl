@@ -20,7 +20,7 @@ protected:
     void add_image(tile &img, const char *enumname);
     void recolour(tile &img);
 
-    void tile_list_processor::add_abstracts(
+    void add_abstracts(
         FILE *fp,
         const char *format,
         const std::vector<std::string> &lc_enum,
