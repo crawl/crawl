@@ -119,6 +119,7 @@ void monsters::reset()
     foe             = MHITNOT;
     number          = 0;
     refcount        = 0;
+    source          = MHITNOT;
 
     mons_remove_from_grid(this);
     position.reset();
@@ -162,6 +163,7 @@ void monsters::init_with(const monsters &mon)
     foe_memory        = mon.foe_memory;
     god               = mon.god;
     props             = mon.props;
+    source            = mon.source;
 
     if (mon.ghost.get())
         ghost.reset(new ghost_demon(*mon.ghost));

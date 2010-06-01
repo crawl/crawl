@@ -2,6 +2,7 @@
 #define MONSTER_H
 
 #include "actor.h"
+#include "mon-index.h"
 
 const int KRAKEN_TENTACLE_RANGE = 3;
 #define TIDE_CALL_TURN "tide-call-turn"
@@ -107,6 +108,8 @@ public:
                                        // AI_SEE_MONSTER
 
     CrawlHashTable props;
+
+    auto_mindex source;
 
 public:
     mon_attitude_type temp_attitude() const;
