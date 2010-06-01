@@ -4798,8 +4798,11 @@ int bolt::range_used_on_hit(const actor* victim) const
         used = 1;
 
     // Assume we didn't hit, after all.
-    if (is_tracer && beam_source == NON_MONSTER && used == BEAM_STOP)
+    if (is_tracer && beam_source == NON_MONSTER && used == BEAM_STOP
+        && hit < AUTOMATIC_HIT)
+    {
         return 1;
+    }
 
     if (in_explosion_phase)
         return (used);
