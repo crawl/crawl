@@ -30,6 +30,7 @@
 #include "terrain.h"
 #include "tiledef-main.h"
 #include "tilefont.h"
+#include "tilepick.h"
 #include "traps.h"
 #include "travel.h"
 #include "viewgeom.h"
@@ -910,7 +911,44 @@ bool DungeonRegion::update_tip_text(std::string &tip)
     if (!map_bounds(m_cursor[CURSOR_MOUSE]))
         return (false);
 
-    return (tile_dungeon_tip(m_cursor[CURSOR_MOUSE], tip));
+    const coord_def gc = m_cursor[CURSOR_MOUSE];
+    bool ret = (tile_dungeon_tip(gc, tip));
+
+#ifdef WIZARD
+    if (you.wizard)
+    {
+        if (ret)
+            tip += "\n\n";
+
+        if (you.see_cell(gc))
+        {
+            const coord_def ep = view2show(grid2view(gc));
+
+            tip += make_stringf("GC(%d, %d) EP(%d, %d)\n\n",
+                                gc.x, gc.y, ep.x, ep.y);
+
+            tip += tile_debug_string(env.tile_fg(ep), env.tile_bg(ep), ' ');
+        }
+        else
+        {
+            tip += make_stringf("GC(%d, %d) [out of sight]\n\n", gc.x, gc.y);
+        }
+
+        tip += tile_debug_string(env.tile_bk_fg(gc), env.tile_bk_bg(gc), 'B');
+
+        if (!m_vbuf.empty())
+        {
+            const screen_cell_t *vbuf = m_vbuf;
+            const coord_def vc(gc.x - m_cx_to_gx, gc.y - m_cy_to_gy);
+            const screen_cell_t &cell = vbuf[crawl_view.viewsz.x * vc.y + vc.x];
+            tip += tile_debug_string(cell.tile_fg, cell.tile_bg, 'V');
+        }
+
+        ret = true;
+    }
+#endif
+
+    return (ret);
 }
 
 bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
