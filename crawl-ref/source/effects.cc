@@ -4894,9 +4894,13 @@ void slime_wall_damage(actor* act, int delay)
     if (act->atype() == ACT_PLAYER)
     {
         ASSERT(act == &you);
-        splash_with_acid(strength, true,
-                         (walls > 1) ? "The walls burn you!"
-                                     : "The wall burns you!");
+
+        if (you.religion != GOD_JIYVA || you.penance[GOD_JIYVA])
+        {
+            splash_with_acid(strength, true,
+                             (walls > 1) ? "The walls burn you!"
+                                         : "The wall burns you!");
+        }
     }
     else
     {
