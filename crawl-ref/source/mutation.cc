@@ -1529,8 +1529,6 @@ static const facet_def _demon_facets[] =
       { 3, 3, 3 } },
     { { MUT_THROW_FLAMES, MUT_HEAT_RESISTANCE, MUT_CONSERVE_SCROLLS },
       { 3, 3, 3 } },
-    { { MUT_FAST, MUT_FAST, MUT_FAST },
-      { 3, 3, 3 } },
     { { MUT_ROBUST, MUT_ROBUST, MUT_ROBUST },
       { 3, 3, 3 } },
     { { MUT_NEGATIVE_ENERGY_RESISTANCE, MUT_NEGATIVE_ENERGY_RESISTANCE,
