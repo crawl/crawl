@@ -17,6 +17,7 @@
 #include "food.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "libutil.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "options.h"
@@ -29,6 +30,7 @@
 #include "tiledef-main.h"
 #include "tiledef-player.h"
 #include "tiledef-unrand.h"
+#include "tilemcache.h"
 #include "traps.h"
 
 static tileidx_t _tileidx_trap(trap_type type)
@@ -3547,6 +3549,59 @@ tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile)
     tile += etable[idx][etype];
 
     return (tile);
+}
+
+std::string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix)
+{
+    tileidx_t fg_idx = fg & TILE_FLAG_MASK;
+    tileidx_t bg_idx = bg & TILE_FLAG_MASK;
+
+    std::string fg_name;
+    if (fg_idx < TILE_MAIN_MAX)
+        fg_name = tile_main_name(fg_idx);
+    else if (fg_idx < TILEP_MCACHE_START)
+        fg_name = (tile_player_name(fg_idx));
+    else
+    {
+        fg_name = "mc:";
+        mcache_entry *entry = mcache.get(fg_idx);
+        if (entry)
+        {
+            tile_draw_info dinfo[mcache_entry::MAX_INFO_COUNT];
+            unsigned int count = entry->info(&dinfo[0]);
+            for (unsigned int i = 0; i < count; ++i)
+            {
+                tileidx_t mc_idx = dinfo[i].idx;
+                if (mc_idx < TILE_MAIN_MAX)
+                    fg_name += tile_main_name(mc_idx);
+                else if (mc_idx < TILEP_PLAYER_MAX)
+                    fg_name += tile_player_name(mc_idx);
+                else
+                    fg_name += "[invalid index]";
+
+                if (i < count - 1)
+                    fg_name += ", ";
+            }
+        }
+        else
+        {
+            fg_name += "[not found]";
+        }
+    }
+
+    std::string tile_string = make_stringf(
+        "%cFG: %4d | 0x%8x (%s)\n"
+        "%cBG: %4d | 0x%8x (%s)\n",
+        prefix,
+        fg_idx,
+        fg & ~TILE_FLAG_MASK,
+        fg_name.c_str(),
+        prefix,
+        bg_idx,
+        bg & ~TILE_FLAG_MASK,
+        tile_dngn_name(bg_idx));
+
+    return (tile_string);
 }
 
 #endif

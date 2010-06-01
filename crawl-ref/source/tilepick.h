@@ -47,6 +47,9 @@ int enchant_to_int(const item_def &item);
 // If tile has variations, select among them based upon the enchant of item.
 tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile);
 
+// For a given fg/bg set of tile indices and a 1 character prefix,
+// return index, flag, and tile name as a printable string.
+std::string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix);
 
 #endif
 #endif
