@@ -159,6 +159,7 @@ bool _iood_hit(monsters &mon, const coord_def &pos, bool big_boom = false)
     beam.source = pos;
     beam.target = pos;
     beam.hit = AUTOMATIC_HIT;
+    beam.beam_source = mon.source;
 
     int pow = mon.props["iood_pow"].get_short();
     pow = stepdown_value(pow, 30, 30, 200, -1);
