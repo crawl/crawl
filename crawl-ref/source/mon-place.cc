@@ -1204,6 +1204,15 @@ int place_monster(mgen_data mg, bool force_pos)
         }
     }
 
+    // hold on to the source
+    if (mg.summoner)
+    {
+        if (monsters *source = mg.summoner->as_monster())
+            mon->source = source->mindex();
+        else
+            mon->source = MHITNOT;
+    }
+
     // Placement of first monster, at least, was a success.
     return (id);
 }
