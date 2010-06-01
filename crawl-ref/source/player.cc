@@ -3262,8 +3262,6 @@ int check_stealth(void)
         else if ( !you.can_swim() && !you.extra_balanced() )
             stealth /= 2;       // splashy-splashy
     }
-    else if (player_mutation_level(MUT_HOOVES) >= 3)
-        stealth -= 10;  // clippety-clop
 
     // Radiating silence is the negative complement of shouting all the
     // time... a sudden change from background noise to no noise is going
