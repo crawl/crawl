@@ -536,8 +536,6 @@ bool MiscastEffect::_ouch(int dam, beam_type flavour)
             else
                 method = KILLED_BY_DIVINE_WRATH;
         }
-        else if (!invalid_monster_index(source))
-            method = KILLED_BY_MONSTER;
         else
             method = KILLED_BY_SOMETHING;
 
