@@ -450,6 +450,12 @@ private:
     bool check_set_valid_home(const coord_def &place,
                               coord_def &chosen,
                               int &nvalid) const;
+
+public:
+    int refcount;
+
+    void retain() { ++refcount; }
+    void release() { if(!--refcount) reset(); }
 };
 
 #endif

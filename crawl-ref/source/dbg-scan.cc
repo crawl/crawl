@@ -128,7 +128,7 @@ void debug_item_scan( void )
         }
         else if (mon != NULL && mon->type == MONS_NO_MONSTER)
         {
-            mpr("Unlinked item held by dead monster:", MSGCH_ERROR);
+            mpr("Unlinked item held by dead monster (%d):", MSGCH_ERROR, i);
             _dump_item( name, i, mitm[i] );
         }
         else if ((mitm[i].pos.x > 0 || mitm[i].pos.y > 0) && !visited[i])
@@ -325,6 +325,15 @@ void debug_mons_scan()
         is_floating[i] = false;
 
         const monsters *m = &menv[i];
+
+        if(m->refcount && m->type == MONS_NO_MONSTER)
+            mprf(MSGCH_ERROR, "Found a non-monster (%d) "
+                              "with a non-zero refcount = %d",
+                 i, m->refcount);
+        else if(m->refcount == 0 && m->type != MONS_NO_MONSTER)
+            mprf(MSGCH_ERROR, "Found a monster: %s (%d) with a zero refcount",
+                 m->full_name(DESC_PLAIN, true).c_str(), i, m->refcount);
+
         if (!m->alive())
             continue;
 
