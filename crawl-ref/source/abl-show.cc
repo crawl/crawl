@@ -996,6 +996,7 @@ static bool _check_ability_possible(const ability_def& abil,
         }
         return (true);
     }
+
     case ABIL_ZIN_CURE_ALL_MUTATIONS:
         return (how_mutated());
 
