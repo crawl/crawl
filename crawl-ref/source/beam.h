@@ -10,6 +10,7 @@
 
 
 #include "externs.h"
+#include "mon-index.h"
 #include "random.h"
 #include "ray.h"
 
@@ -74,7 +75,7 @@ struct bolt
 
     // beam_source can be -GOD_ENUM_VALUE besides monster indices
     // and MHITNOT, MHITYOU.
-    int         beam_source;           // NON_MONSTER or monster index #
+    auto_mindex beam_source;           // NON_MONSTER or monster index #
     std::string source_name;           // The name of the source, if it
                                        // should be different from
                                        // actor->name(), or the actor dies
