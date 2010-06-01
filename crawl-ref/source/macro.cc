@@ -868,11 +868,16 @@ void macro_add_query( void )
     }
 
     msgwin_prompt("Input macro action: ");
+    const int x = wherex();
+    const int y = wherey();
     keyseq action;
     bool done = false;
 
     while (!done)
     {
+        cgotoxy(x, y);
+        cprintf("%s", vtostr(action).c_str());
+
         input = m_getch();
 
         switch (input)
