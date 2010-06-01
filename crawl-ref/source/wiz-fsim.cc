@@ -116,6 +116,7 @@ static bool _fsim_ranged_combat(FILE *out, int wskill, int mi,
                                 const item_def *item, int missile_slot)
 {
     monsters &mon = menv[mi];
+    const monsters orig = mon;
     unsigned long cumulative_damage = 0L;
     unsigned long time_taken = 0L;
     long hits = 0L;
@@ -135,7 +136,7 @@ static bool _fsim_ranged_combat(FILE *out, int wskill, int mi,
     const int hunger = you.hunger;
     for (long i = 0; i < iter_limit; ++i)
     {
-        mon.hit_points = mon.max_hit_points;
+        mon = orig;
         bolt beam;
         you.time_taken = player_speed();
 
@@ -196,6 +197,7 @@ static bool _fsim_melee_combat(FILE *out, int wskill, int mi,
                                const item_def *item)
 {
     monsters &mon = menv[mi];
+    const monsters orig = mon;
     unsigned long cumulative_damage = 0L;
     unsigned long time_taken = 0L;
     long hits = 0L;
@@ -208,7 +210,7 @@ static bool _fsim_melee_combat(FILE *out, int wskill, int mi,
     const int hunger = you.hunger;
     for (long i = 0; i < iter_limit; ++i)
     {
-        mon.hit_points = mon.max_hit_points;
+        mon = orig;
         you.time_taken = player_speed();
         if (you_attack(mi, true))
             hits++;
