@@ -1979,7 +1979,8 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
         prompt = true;
     }
     else if (inSanctuary || wontAttack
-             || (you.religion == GOD_JIYVA && mons_is_slime(mon))
+             || (you.religion == GOD_JIYVA && mons_is_slime(mon)
+                 && !mon->is_shapeshifter())
              || (isNeutral || isHoly) && is_good_god(you.religion)
              || isUnchivalric
                 && you.religion == GOD_SHINING_ONE
