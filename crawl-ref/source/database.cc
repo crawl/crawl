@@ -353,20 +353,19 @@ static void _add_entry(DBM *db, const std::string &k, std::string &v)
 
 static void _parse_text_db(std::ifstream &inf, DBM *db)
 {
-    char buf[2000];
-
     std::string key;
     std::string value;
 
     bool in_entry = false;
     while (!inf.eof())
     {
-        inf.getline(buf, sizeof buf);
+        std::string line;
+        std::getline(inf, line);
 
-        if (*buf == '#')
+        if (!line.empty() && line[0] == '#')
             continue;
 
-        if (!strncmp(buf, "%%%%", 4))
+        if (!line.compare(0, 4, "%%%%"))
         {
             if (!key.empty())
                 _add_entry(db, key, value);
@@ -381,13 +380,12 @@ static void _parse_text_db(std::ifstream &inf, DBM *db)
 
         if (key.empty())
         {
-            key = buf;
+            key = line;
             trim_string(key);
             lowercase(key);
         }
         else
         {
-            std::string line = buf;
             trim_string_right(line);
             value += line + "\n";
         }
