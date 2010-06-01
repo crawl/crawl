@@ -1228,7 +1228,7 @@ bool tile_list_processor::write_data()
             fprintf(fp, "};\n\n");
         }
 
-        fprintf(fp, "\ntypedef std::pair<const char*, unsigned int> _name_pair;\n\n");
+        fprintf(fp, "\ntypedef std::pair<const char*, tileidx_t> _name_pair;\n\n");
 
         fprintf(fp, "_name_pair %s_name_pairs[] =\n"
                     "{\n", lcname.c_str());
@@ -1285,7 +1285,7 @@ bool tile_list_processor::write_data()
             "}\n\n",
             lcname.c_str(), m_start_value.c_str(), max.c_str(), lcname.c_str());
 
-        fprintf(fp, "\ntypedef std::pair<tile_variation, unsigned int> _colour_pair;\n\n");
+        fprintf(fp, "\ntypedef std::pair<tile_variation, tileidx_t> _colour_pair;\n\n");
 
         fprintf(fp,
             "_colour_pair %s_colour_pairs[] =\n"
