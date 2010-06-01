@@ -832,22 +832,17 @@ static int _healing_spell(int healed, bool divine_ability,
     }
 
     const int can_pacify = _can_pacify_monster(monster, healed);
-
-    if (you.religion == GOD_ELYVILON
-        && can_pacify == -1)
-    {
-        mpr("You cannot pacify this monster!");
-        return (0);
-    }
-
     const bool is_hostile = _mons_hostile(monster);
 
     // Don't divinely heal a monster you can't pacify.
     if (divine_ability
         && you.religion == GOD_ELYVILON
-        && can_pacify == 0)
+        && can_pacify <= 0)
     {
-        canned_msg(MSG_NOTHING_HAPPENS);
+        if (can_pacify == 0)
+            canned_msg(MSG_NOTHING_HAPPENS);
+        else
+            mpr("You cannot pacify this monster!");
         return (0);
     }
 
