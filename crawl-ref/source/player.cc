@@ -3857,7 +3857,6 @@ static int _species_exp_mod(species_type species)
         case SP_DEEP_ELF:
         case SP_CENTAUR:
         case SP_MINOTAUR:
-        case SP_DEMONSPAWN:
         case SP_MUMMY:
             return 14;
         case SP_HIGH_ELF:
@@ -3865,6 +3864,7 @@ static int _species_exp_mod(species_type species)
         case SP_TROLL:
             return 15;
         case SP_DEMIGOD:
+        case SP_DEMONSPAWN:
             return 16;
         default:
             return 0;
