@@ -867,13 +867,40 @@ void macro_add_query( void )
         }
     }
 
-    char    buff[4096];
-    msgwin_get_line_autohist("Input Macro Action: ", buff, sizeof(buff));
+    msgwin_prompt("Input macro action: ");
+    keyseq action;
+    bool done = false;
 
-    if (Options.macro_meta_entry)
-        macro_add( mapref, key, parse_keyseq(buff) );
+    while (!done)
+    {
+        input = m_getch();
+
+        switch (input)
+        {
+        case ESCAPE:
+            done = true;
+            action = keyseq();
+            break;
+
+        case '\n':
+        case '\r':
+            done = true;
+            break;
+
+        default:
+            action.push_back(input);
+            break;
+        }
+    }
+
+    msgwin_reply(vtostr(action));
+
+    if (action.empty())
+        macro_del(mapref, key);
+    else if (Options.macro_meta_entry)
+        macro_add(mapref, key, parse_keyseq(vtostr(action)));
     else
-        macro_add( mapref, key, buff );
+        macro_add(mapref, key, action);
 
     crawl_state.unsaved_macros = true;
     redraw_screen();
