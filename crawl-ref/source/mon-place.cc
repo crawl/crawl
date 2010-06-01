@@ -1211,11 +1211,15 @@ int place_monster(mgen_data mg, bool force_pos)
 monsters* get_free_monster()
 {
     for (int i = 0; i < MAX_MONSTERS; ++i)
-        if (env.mons[i].type == MONS_NO_MONSTER)
+    {
+        monsters &mons = env.mons[i];
+        if (mons.type == MONS_NO_MONSTER)
         {
-            env.mons[i].reset();
-            return (&env.mons[i]);
+            mons.reset();
+            mons.retain();
+            return &mons;
         }
+    }
 
     return (NULL);
 }
