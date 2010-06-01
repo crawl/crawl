@@ -392,14 +392,6 @@ static void macro_add( macromap &mapref, keyseq key, keyseq action )
     mapref[key] = action;
 }
 
-static void macro_add( macromap &mapref, keyseq key, const char *buff )
-{
-    keyseq  act;
-    buf2keyseq(buff, act);
-    if (!act.empty())
-        macro_add( mapref, key, act );
-}
-
 /*
  * Remove a macro.
  */
