@@ -35,6 +35,7 @@
 #include "fight.h"
 #include "fprop.h"
 #include "food.h"
+#include "godpassive.h"
 #include "hiscores.h"
 #include "invent.h"
 #include "it_use2.h"
@@ -4004,6 +4005,9 @@ void handle_time()
     {
         jiyva_stat_action();
     }
+
+    if (you.religion == GOD_JIYVA && one_chance_in(25))
+        jiyva_eat_offlevel_items();
 }
 
 // Move monsters around to fake them walking around while player was

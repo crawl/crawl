@@ -2,9 +2,18 @@
 
 #include "godpassive.h"
 
+#include "branch.h"
+#include "coord.h"
+#include "defines.h"
+#include "env.h"
+#include "files.h"
+#include "godprayer.h"
+#include "items.h"
+#include "mon-stuff.h"
 #include "player.h"
 #include "player-stats.h"
 #include "religion.h"
+#include "stuff.h"
 
 int che_boost_level()
 {
@@ -93,3 +102,61 @@ void che_handle_change(che_change_type ct, int diff)
         }
     }
 }
+
+// Eat from one random off-level item stack.
+void jiyva_eat_offlevel_items()
+{
+    // For wizard mode 'J' command
+    if (you.religion != GOD_JIYVA)
+        return;
+
+    while (true)
+    {
+        if (one_chance_in(200))
+            break;
+
+        const int branch = random2(NUM_BRANCHES);
+
+        // Choose level based on main dungeon depth so that levels short branches
+        // aren't picked more often.
+        ASSERT(branches[branch].depth <= branches[BRANCH_MAIN_DUNGEON].depth);
+        const int level  = random2(branches[BRANCH_MAIN_DUNGEON].depth) + 1;
+
+        const level_id lid(static_cast<branch_type>(branch), level);
+
+        if (lid == level_id::current() || !is_existing_level(lid))
+            continue;
+
+        dprf("Checking %s", lid.describe().c_str());
+
+        level_excursion le;
+        le.go_to(lid);
+        while (true)
+        {
+            if (one_chance_in(200))
+                break;
+
+            const coord_def p = random_in_bounds();
+
+            if (igrd(p) == NON_ITEM)
+                continue;
+
+            for (stack_iterator si(p); si; ++si)
+            {
+                if (!is_item_jelly_edible(*si) || one_chance_in(4))
+                    continue;
+
+                if (one_chance_in(4))
+                    break;
+
+                dprf("Eating %s on %s",
+                     si->name(DESC_PLAIN).c_str(), lid.describe().c_str());
+
+                sacrifice_item_stack(*si);
+                destroy_item(si.link());
+            }
+            return;
+        }
+    }
+}
+

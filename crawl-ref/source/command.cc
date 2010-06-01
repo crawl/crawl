@@ -2712,6 +2712,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>|</w>      : create all predefined artefacts\n"
                        "<w>+</w>      : make randart from item\n"
                        "<w>'</w>      : list items\n"
+                       "<w>J</w>      : Jiyva off-level sacrifice\n"
                        "\n"
                        "<yellow>Debugging commands</yellow>\n"
                        "<w>f</w>      : player combat damage stats\n"
