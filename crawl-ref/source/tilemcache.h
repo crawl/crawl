@@ -44,7 +44,13 @@ public:
     void dec_ref() { m_ref_count--; ASSERT(m_ref_count >= 0); }
     int ref_count() { return m_ref_count; }
 
-    virtual unsigned int info(tile_draw_info *dinfo) const { return 0; }
+    enum
+    {
+        // The maximum number of values written in the info function.
+        MAX_INFO_COUNT = 3
+    };
+
+    virtual int info(tile_draw_info *dinfo) const { return 0; }
     virtual const dolls_data *doll() const { return NULL; }
 
     virtual void construct(writer &th);

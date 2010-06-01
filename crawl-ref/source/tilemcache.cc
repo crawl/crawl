@@ -71,7 +71,7 @@ public:
     mcache_monster(const monsters *mon);
     mcache_monster(reader &th);
 
-    virtual unsigned int info(tile_draw_info *dinfo) const;
+    virtual int info(tile_draw_info *dinfo) const;
 
     static bool valid(const monsters *mon);
 
@@ -90,7 +90,7 @@ public:
     mcache_draco(const monsters *mon);
     mcache_draco(reader &th);
 
-    virtual unsigned int info(tile_draw_info *dinfo) const;
+    virtual int info(tile_draw_info *dinfo) const;
 
     static bool valid(const monsters *mon);
 
@@ -126,7 +126,7 @@ public:
     mcache_demon(const monsters *mon);
     mcache_demon(reader &th);
 
-    virtual unsigned int info(tile_draw_info *dinfo) const;
+    virtual int info(tile_draw_info *dinfo) const;
 
     static bool valid(const monsters *mon);
 
@@ -523,7 +523,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     return (true);
 }
 
-unsigned int mcache_monster::info(tile_draw_info *dinfo) const
+int mcache_monster::info(tile_draw_info *dinfo) const
 {
     int ofs_x, ofs_y;
     get_weapon_offset(m_mon_tile, &ofs_x, &ofs_y);
@@ -599,9 +599,9 @@ mcache_draco::mcache_draco(const monsters *mon)
     m_job_tile = tileidx_draco_job(mon);
 }
 
-unsigned int mcache_draco::info(tile_draw_info *dinfo) const
+int mcache_draco::info(tile_draw_info *dinfo) const
 {
-    unsigned int i = 0;
+    int i = 0;
 
     dinfo[i++].set(m_mon_tile);
     if (m_job_tile)
@@ -823,7 +823,7 @@ mcache_demon::mcache_demon(const monsters *mon)
         m_demon.wings = 0;
 }
 
-unsigned int mcache_demon::info(tile_draw_info *dinfo) const
+int mcache_demon::info(tile_draw_info *dinfo) const
 {
     if (m_demon.wings)
     {

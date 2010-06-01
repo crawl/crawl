@@ -545,11 +545,9 @@ void DungeonCellBuffer::pack_mcache(mcache_entry *entry, int x, int y,
     if (doll)
         pack_doll(*doll, x, y, submerged, trans);
 
-    tile_draw_info dinfo[3];
-    unsigned int draw_info_count = entry->info(&dinfo[0]);
-    ASSERT(draw_info_count <= sizeof(dinfo) / (sizeof(dinfo[0])));
-
-    for (unsigned int i = 0; i < draw_info_count; i++)
+    tile_draw_info dinfo[mcache_entry::MAX_INFO_COUNT];
+    int draw_info_count = entry->info(&dinfo[0]);
+    for (int i = 0; i < draw_info_count; i++)
     {
         m_buf_doll.add(dinfo[i].idx, x, y, 0, submerged, trans,
                        dinfo[i].ofs_x, dinfo[i].ofs_y);
