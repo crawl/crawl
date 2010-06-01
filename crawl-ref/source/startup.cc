@@ -199,6 +199,7 @@ void _post_init(bool newc)
 
     calc_hp();
     calc_mp();
+    food_change(true);
 
     run_map_preludes();
 
