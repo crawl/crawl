@@ -5413,18 +5413,15 @@ void monsters::apply_enchantment(const mon_enchant &me)
 
     case ENCH_BLEED:
     {
-        if (one_chance_in(3))
+        // 3, 6, 9% of current hp
+        int dam = random2((1 + hit_points)*(me.degree * 3)/100);
+
+        if (dam < hit_points)
         {
-            // 3, 6, 9% of current hp
-            int dam = bestroll((1 + hit_points)*(me.degree * 3)/100,me.degree);
+            hurt(NULL, dam);
 
-            if (dam < hit_points)
-            {
-                hurt(NULL, dam);
-
-                dprf("hit_points: %d ; bleed damage: %d ; degree: %d",
-                     hit_points, dam, me.degree);
-            }
+            dprf("hit_points: %d ; bleed damage: %d ; degree: %d",
+                 hit_points, dam, me.degree);
         }
 
         decay_enchantment(me, true);
