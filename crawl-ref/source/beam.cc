@@ -2669,6 +2669,8 @@ void bolt::internal_ouch(int dam)
     if (!invalid_monster_index(beam_source) && menv[beam_source].type != -1)
         monst = &menv[beam_source];
 
+    const char *what = aux_source.empty() ? name.c_str() : aux_source.c_str();
+
     // The order of this is important.
     if (monst && (monst->type == MONS_GIANT_SPORE
                   || monst->type == MONS_BALL_LIGHTNING))
@@ -2690,7 +2692,7 @@ void bolt::internal_ouch(int dam)
         }
     }
     else if (flavour == BEAM_DISINTEGRATION || flavour == BEAM_NUKE)
-        ouch(dam, beam_source, KILLED_BY_DISINT, aux_source.c_str());
+        ouch(dam, beam_source, KILLED_BY_DISINT, what);
     else if (MON_KILL(thrower))
         ouch(dam, beam_source, KILLED_BY_BEAM, aux_source.c_str());
     else // KILL_MISC || (YOU_KILL && aux_source)
