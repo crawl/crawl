@@ -64,6 +64,7 @@
 #include "files.h"
 #include "food.h"
 #include "godabil.h"
+#include "godpassive.h"
 #include "godprayer.h"
 #include "hiscores.h"
 #include "initfile.h"
@@ -566,6 +567,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 'D': wizard_detect_creatures();             break;
     case 'u': case 'U': wizard_level_travel(false);  break;
     case '%': case 'o': wizard_create_spec_object(); break;
+    case 'J' : jiyva_eat_offlevel_items();           break;
 
     case 'x':
         you.experience = 1 + exp_needed(2 + you.experience_level);

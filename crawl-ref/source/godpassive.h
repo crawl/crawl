@@ -24,6 +24,7 @@ enum che_change_type
 int che_boost_level();
 int che_boost(che_boost_type bt, int level = che_boost_level());
 void che_handle_change(che_change_type ct, int diff);
+void jiyva_eat_offlevel_items();
 
 #endif
 
