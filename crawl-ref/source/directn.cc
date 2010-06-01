@@ -423,7 +423,8 @@ static void _draw_ray_glyph(const coord_def &pos, int colour,
 {
     if (const monsters *mons = monster_at(pos))
     {
-        if (mons->alive() && mons->visible_to(&you))
+        if (mons->alive() && mons->visible_to(&you)
+            && !mons_is_unknown_mimic(mons))
         {
             glych  = get_screen_glyph(pos);
             colour = mcol;
