@@ -1136,7 +1136,7 @@ int player_hunger_rate(void)
     int hunger = 3;
 
     if (player_in_bat_form())
-        return 1;
+        return (1);
 
     if (you.species == SP_TROLL)
         hunger += 3;            // in addition to the +3 for fast metabolism
@@ -1145,8 +1145,7 @@ int player_hunger_rate(void)
         hunger += 4;
 
     // If Cheibriados has slowed your life processes, you will hunger less.
-    if (GOD_CHEIBRIADOS == you.religion
-        && you.piety >= piety_breakpoint(0))
+    if (you.religion == GOD_CHEIBRIADOS && you.piety >= piety_breakpoint(0))
         hunger--;
 
     // Moved here from main.cc... maintaining the >= 40 behaviour.
@@ -1155,7 +1154,7 @@ int player_hunger_rate(void)
         if (you.duration[DUR_INVIS] > 0)
             hunger += 5;
 
-        // Berserk has its own food penalty -- excluding berserk haste.
+        // Berserk has its own food penalty - excluding berserk haste.
         if (you.duration[DUR_HASTE] > 0 && !you.berserk())
             hunger += 5;
     }
@@ -1198,14 +1197,16 @@ int player_hunger_rate(void)
 
     // rings
     if (you.hp < you.hp_max)
-        hunger += 3 * player_equip( EQ_RINGS, RING_REGENERATION );
-    hunger += 4 * player_equip( EQ_RINGS, RING_HUNGER );
-    hunger -= 2 * player_equip( EQ_RINGS, RING_SUSTENANCE );
+        hunger += 3 * player_equip(EQ_RINGS, RING_REGENERATION);
+    hunger += 4 * player_equip(EQ_RINGS, RING_HUNGER);
+    hunger -= 2 * player_equip(EQ_RINGS, RING_SUSTENANCE);
 
     // troll leather armour
     if (you.species != SP_TROLL && you.hp < you.hp_max)
-        if (player_equip( EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR ))
+    {
+        if (player_equip(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR))
             hunger += coinflip() ? 2 : 1;
+    }
 
     // randarts
     hunger += scan_artefacts(ARTP_METABOLISM);
