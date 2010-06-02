@@ -691,8 +691,8 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
                 // else fall through
             case SP_HIGH_ELF:
             case SP_DEEP_ELF:
-                // Sludge elves have bad aptitudes with short swords (110) but are
-                // still better with them than any other starting weapon.
+                // Sludge elves have bad aptitudes with short swords (-1), but
+                // are still better with them than any other starting weapon.
             case SP_SLUDGE_ELF:
             case SP_HALFLING:
             case SP_KOBOLD:
