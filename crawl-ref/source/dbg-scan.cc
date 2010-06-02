@@ -453,6 +453,22 @@ void debug_mons_scan()
         } // for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
     } // for (int i = 0; i < MAX_MONSTERS; ++i)
 
+
+    for (int i = 0; i < MAX_MONSTERS; ++i)
+    {
+        int refs = 0;
+        if (env.mons[i].alive())
+            refs++;
+        for (int j = 0; j < MAX_MONSTERS; ++j)
+            if (env.mons[j].source == i)
+                refs++;
+        if (refs != env.mons[i].refcount)
+        {
+            mprf(MSGCH_ERROR, "monster %d: refcount %d #refs %d",
+                 i, env.mons[i].refcount, refs);
+        }
+    }
+
     // No problems?
     if (!warned)
         return;
