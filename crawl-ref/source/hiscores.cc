@@ -886,7 +886,6 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
     {
         const monsters *monster = &menv[death_source];
 
-        death_source = monster->type;
         mon_num = monster->base_monster;
 
         // Previously the weapon was only used for dancing weapons,
@@ -929,6 +928,7 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             death_type == KILLED_BY_SPORE ? DESC_PLAIN : DESC_NOCAP_A;
 
         death_source_name = monster->name(desc, death);
+
         if (death || you.can_see(monster))
             death_source_name = monster->full_name(desc, true);
 
@@ -1292,19 +1292,7 @@ const char *scorefile_entry::damage_verb() const
 
 std::string scorefile_entry::death_source_desc() const
 {
-    if (death_type != KILLED_BY_MONSTER && death_type != KILLED_BY_BEAM
-        && death_type != KILLED_BY_DISINT)
-    {
-        return ("");
-    }
-
-    // XXX: Deals specially with Mara's clones.
-    if (death_source == MONS_MARA_FAKE)
-        return ("an illusion of Mara");
-
-    // XXX no longer handles mons_num correctly! FIXME
-    return (!death_source_name.empty() ?
-            death_source_name : mons_type_name(death_source, DESC_NOCAP_A));
+    return (death_source_name);
 }
 
 std::string scorefile_entry::damage_string(bool terse) const
