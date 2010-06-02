@@ -766,7 +766,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
             switch (ng.species)
             {
             case SP_MOUNTAIN_DWARF:
-            case SP_OGRE:
+            case SP_DEEP_DWARF:
             case SP_GHOUL:
             case SP_VAMPIRE:
                 return (CC_UNRESTRICTED);
