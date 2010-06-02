@@ -96,7 +96,7 @@ static bool _recite_mons_useless(const monsters *mon)
 }
 
 // Power is maximum 50.
-static int _recite_to_monsters(coord_def where, int pow, int, actor *)
+int recite_to_single_monster(int pow, const coord_def& where)
 {
     monsters *mon = monster_at(where);
 
@@ -234,6 +234,11 @@ static int _recite_to_monsters(coord_def where, int pow, int, actor *)
     }
 
     return (1);
+}
+
+static int _recite_to_monsters(coord_def where, int pow, int, actor *)
+{
+    return (recite_to_single_monster(pow, where));
 }
 
 static std::string _get_recite_speech(const std::string key, int weight)
