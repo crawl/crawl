@@ -932,6 +932,9 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
         if (death || you.can_see(monster))
             death_source_name = monster->full_name(desc, true);
 
+        if (death && monster->type == MONS_MARA_FAKE)
+            death_source_name = "an illusion of Mara";
+
         if (monster->has_ench(ENCH_SHAPESHIFTER))
             death_source_name += " (shapeshifter)";
         else if (monster->has_ench(ENCH_GLOWING_SHAPESHIFTER))
