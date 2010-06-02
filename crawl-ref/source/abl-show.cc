@@ -983,7 +983,7 @@ static bool _check_ability_possible(const ability_def& abil,
     {
     case ABIL_ZIN_RECITE:
     {
-        const int result = check_recital_audience();
+        const int result = zin_check_recite_to_monsters();
         if (result < 0)
         {
             mpr("There's no appreciative audience!");
@@ -1521,7 +1521,7 @@ static bool _do_ability(const ability_def& abil)
             return (false);
         }
 
-        const int retval = check_recital_monster_at(beam.target);
+        const int retval = zin_check_recite_to_single_monster(beam.target);
 
         if (retval <= 0)
         {
