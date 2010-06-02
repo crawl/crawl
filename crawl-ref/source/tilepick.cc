@@ -33,6 +33,9 @@
 #include "tilemcache.h"
 #include "traps.h"
 
+// This should not be changed.
+COMPILE_CHECK(TILE_DNGN_UNSEEN == 0, c1);
+
 static tileidx_t _tileidx_trap(trap_type type)
 {
     switch (type)
