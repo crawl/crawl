@@ -1676,7 +1676,7 @@ static const char *delay_names[] =
     "not_delayed", "eat", "vampire_feed", "armour_on", "armour_off",
     "jewellery_on", "memorise", "butcher", "bottle_blood", "weapon_swap",
     "passwall", "drop_item", "multidrop", "ascending_stairs",
-    "descending_stairs", "zin_recite", "run", "rest", "travel", "macro",
+    "descending_stairs", "recite", "run", "rest", "travel", "macro",
     "macro_process_key", "interruptible", "uninterruptible"
 };
 
