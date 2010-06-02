@@ -72,7 +72,7 @@ bool zin_sustenance(bool actual)
 // Monsters cannot be affected in these states.
 // (All results of Recite, plus stationary and friendly + stupid;
 // note that berserk monsters are also hasted.)
-static bool _recite_mons_useless(const monsters *mon)
+static bool _zin_recite_mons_useless(const monsters *mon)
 {
     const mon_holy_type holiness = mon->holiness();
 
@@ -93,7 +93,7 @@ static bool _recite_mons_useless(const monsters *mon)
 }
 
 // Power is maximum 50.
-int recite_to_single_monster(const coord_def& where, int pow)
+int zin_recite_to_single_monster(const coord_def& where, int pow)
 {
     if (you.religion != GOD_ZIN)
         return (0);
@@ -103,7 +103,7 @@ int recite_to_single_monster(const coord_def& where, int pow)
     if (mon == NULL)
         return (0);
 
-    if (_recite_mons_useless(mon))
+    if (_zin_recite_mons_useless(mon))
         return (0);
 
     // nothing happens
@@ -245,29 +245,29 @@ int recite_to_single_monster(const coord_def& where, int pow)
 // Returns 0, if no monster found.
 // Returns 1, if eligible monster found.
 // Returns -1, if monster already affected or too dumb to understand.
-int check_recital_monster_at(const coord_def& where)
+int zin_check_recite_to_single_monster(const coord_def& where)
 {
     monsters *mon = monster_at(where);
     if (mon == NULL)
         return (0);
 
-    if (!_recite_mons_useless(mon))
+    if (!_zin_recite_mons_useless(mon))
         return (1);
 
     return (-1);
 }
 
 // Check whether there are monsters who might be influenced by Recite.
-// Returns 0, if no monsters found
-// Returns 1, if eligible audience found
+// Returns 0, if no monsters found.
+// Returns 1, if eligible audience found.
 // Returns -1, if entire audience already affected or too dumb to understand.
-int check_recital_audience()
+int zin_check_recite_to_monsters()
 {
     bool found_monsters = false;
 
     for (radius_iterator ri(you.pos(), 8); ri; ++ri)
     {
-        const int retval = check_recital_monster_at(*ri);
+        const int retval = zin_check_recite_to_single_monster(*ri);
 
         if (retval == -1)
             found_monsters = true;

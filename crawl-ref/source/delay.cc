@@ -71,12 +71,12 @@ static void _handle_run_delays(const delay_queue_item &delay);
 static void _handle_macro_delay();
 static void _finish_delay(const delay_queue_item &delay);
 
-static int _recite_to_monsters(coord_def where, int pow, int, actor *)
+static int _zin_recite_to_monsters(coord_def where, int pow, int, actor *)
 {
-    return (recite_to_single_monster(where, pow));
+    return (zin_recite_to_single_monster(where, pow));
 }
 
-static std::string _get_recite_speech(const std::string key, int weight)
+static std::string _get_zin_recite_speech(const std::string key, int weight)
 {
     seed_rng(weight + you.pos().x + you.pos().y);
     const std::string str = getSpeakString("zin_recite_speech_" + key);
@@ -256,7 +256,7 @@ void stop_delay( bool stop_stair_travel )
 
     case DELAY_RECITE:
         mprf(MSGCH_PLAIN, "You stop %s.",
-             _get_recite_speech("other",
+             _get_zin_recite_speech("other",
                                 you.num_turns + delay.duration).c_str());
         _pop_delay();
         break;
@@ -647,8 +647,8 @@ void handle_delay()
 
         case DELAY_RECITE:
             mprf(MSGCH_PLAIN, "You %s",
-                 _get_recite_speech("start", you.num_turns + delay.duration).c_str());
-            if (apply_area_visible(_recite_to_monsters, delay.parm1))
+                 _get_zin_recite_speech("start", you.num_turns + delay.duration).c_str());
+            if (apply_area_visible(_zin_recite_to_monsters, delay.parm1))
                 viewwindow(false);
             break;
 
@@ -789,10 +789,10 @@ void handle_delay()
     }
     else if (delay.type == DELAY_RECITE)
     {
-        if (check_recital_audience() < 1 // Maybe you've lost your audience...
+        if (zin_check_recite_to_monsters() < 1 // You've lost your audience...
             || Options.hp_warning && you.hp*Options.hp_warning <= you.hp_max
                && delay.parm2*Options.hp_warning > you.hp_max
-            || you.hp*2 < delay.parm2) // ... or significant health drop.
+            || you.hp*2 < delay.parm2) // ...or significant health drop.
         {
             stop_delay();
             return;
@@ -853,8 +853,8 @@ void handle_delay()
 
         case DELAY_RECITE:
             mprf(MSGCH_MULTITURN_ACTION, "You continue %s.",
-                 _get_recite_speech("other", you.num_turns + delay.duration+1).c_str());
-            if (apply_area_visible(_recite_to_monsters, delay.parm1))
+                 _get_zin_recite_speech("other", you.num_turns + delay.duration+1).c_str());
+            if (apply_area_visible(_zin_recite_to_monsters, delay.parm1))
                 viewwindow(false);
             break;
 
@@ -976,7 +976,7 @@ static void _finish_delay(const delay_queue_item &delay)
 
     case DELAY_RECITE:
         mprf(MSGCH_PLAIN, "You finish %s.",
-             _get_recite_speech("other", you.num_turns + delay.duration).c_str());
+             _get_zin_recite_speech("other", you.num_turns + delay.duration).c_str());
         break;
 
     case DELAY_PASSWALL:
@@ -1676,7 +1676,7 @@ static const char *delay_names[] =
     "not_delayed", "eat", "vampire_feed", "armour_on", "armour_off",
     "jewellery_on", "memorise", "butcher", "bottle_blood", "weapon_swap",
     "passwall", "drop_item", "multidrop", "ascending_stairs",
-    "descending_stairs", "recite", "run", "rest", "travel", "macro",
+    "descending_stairs", "zin_recite", "run", "rest", "travel", "macro",
     "macro_process_key", "interruptible", "uninterruptible"
 };
 

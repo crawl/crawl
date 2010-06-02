@@ -4500,7 +4500,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         {
             // XXX: Assume that if the tomb was your doing, it came from
             // Zin's Imprison ability.
-            recite_to_single_monster(this->pos());
+            zin_recite_to_single_monster(this->pos());
         }
         break;
 
