@@ -64,6 +64,8 @@ void find_connected_range(const coord_def& d, dungeon_feature_type ft_min,
                           std::set<coord_def>& out);
 std::set<coord_def> connected_doors(const coord_def& d);
 
+bool slime_wall_neighbour(const coord_def& c, bool check_god = false);
+
 void get_door_description(int door_size, const char** adjective, const char** noun);
 // Returns info about the grid a secret door is mimicing.  Returns true
 // if it finds a grid position to mimic, which will be stored in gc.
