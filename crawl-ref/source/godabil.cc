@@ -99,6 +99,7 @@ static bool _zin_recite_mons_useless(const monsters *mon)
 int zin_check_recite_to_single_monster(const coord_def& where)
 {
     monsters *mon = monster_at(where);
+
     if (mon == NULL)
         return (0);
 
