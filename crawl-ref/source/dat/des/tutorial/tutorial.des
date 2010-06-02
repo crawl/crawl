@@ -105,7 +105,24 @@ function tutorial.message_door ()
 end
 
 function tutorial.message_downstairs ()
-  return tutorial.message("You can go down stairs with <white>Shift-Click</white> or " .. tutorial.get_cmd("CMD_GO_DOWNSTAIRS") .. " while standing over them.", "tutorial", true)
+  local text = "You can go down stairs with "
+  if crawl.is_tiles() then
+    text = text .. "<white>Shift-Click</white> or "
+  end
+  text = text .. tutorial.get_cmd("CMD_GO_DOWNSTAIRS") .. " while standing over them."
+
+  return tutorial.message(text, "tutorial", true)
+end
+
+function tutorial.message_upstairs ()
+  local text = "You can go up stairs with "
+  if crawl.is_tiles() then
+    text = text .. "<white>Shift-Click</white> or "
+  end
+-- TODO fix hardcoding <
+  text = text .. "<white><<</white> while standing over them."
+
+  return tutorial.message(text, "tutorial", true)
 end
 
 function tutorial.message_pick_up ()
@@ -184,6 +201,47 @@ function tutorial.message_monster_description ()
 
   return tutorial.message(text, "tutorial", true)
 end
+
+function tutorial.message_wield_ranged ()
+  local text = "Here are a bow and some arrows. Once picked up, you can wield the bow with " .. tutorial.get_cmd("CMD_WIELD_WEAPON")
+  if crawl.is_tiles() then
+    text = text .. " or by <white>clicking</white> on it"
+  end
+  text = text .. "."
+
+  return tutorial.message(text, "tutorial", true)
+end
+
+function tutorial.message_ranged_combat ()
+  local text = "Press " .. tutorial.get_cmd("CMD_FIRE")
+  if crawl.is_tiles() then
+    text = text .. ", or <white>Shift-Left click</white> on the enemy"
+  end
+  text = text .. " to shoot an arrow from your wielded bow. You can also pick up the stones thrown at you, and throw them back, also with " .. tutorial.get_cmd("CMD_FIRE") .. ". Use " .. tutorial.get_cmd("CMD_CYCLE_QUIVER_FORWARD") .. " to cycle through your available missiles."
+  return tutorial.message(text, "tutorial", true)
+end
+
+function tutorial.message_rest_reminder ()
+  local text = "Remember to rest with " .. tutorial.get_cmd("CMD_REST") .. "."
+  return tutorial.message(text, "tutorial", true)
+end
+
+function tutorial.message_memorize ()
+  local text = "Memorise the spell from this spellbook by pressing " .. tutorial.get_cmd("CMD_MEMORISE_SPELL") .. " to enter the memorisation screen."
+  if crawl.is_tiles() then
+    text = text .. "You can also memorise spells by <white>clicking</white> the spell icon on the book tab in your inventory."
+  end
+  return tutorial.message(text, "tutorial", true)
+end
+
+function tutorial.message_magic_combat ()
+  local text = "To cast Magic Dart on the monster press " .. tutorial.get_cmd("CMD_CAST_SPELL") .. ". "
+  if crawl.is_tiles() then
+    text = text .. "You can also cast spells by <white>clicking</white> the spell icon on the star tab or <white>Ctrl-clicking</white> on the monster. "
+  end
+  text = text .. "Once you're out of mana, you can rest with " .. tutorial.get_cmd("CMD_REST") .. " to get it back up or you can fire some more arrows with " .. tutorial.get_cmd("CMD_FIRE") .. "."
+  return tutorial.message(text, "tutorial", true)
+end
 }}
 
 NAME:    tutorial_basic_1
@@ -253,13 +311,13 @@ ITEM:    randbook disc:conjuration numspells:1 slevels:1 spell:magic_dart \
                   owner:Newbie
 KFEAT:   ABCDEF = .
 COLOUR:  ABCDEF = blue
-MARKER:  [ = lua:tutorial.message( "Press <white>Shift-click</white> on your character or <white><<</white> to climb these stairs.", "tutorial", "true" )
-MARKER:  A = lua:tutorial.message( "Here are a bow and some arrows. Once picked up, you can wield the bow with " .. tutorial.get_cmd("CMD_WIELD_WEAPON") .. " or by <white>clicking</white> on it.", "tutorial", "true" )
+MARKER:  [ = lua:tutorial.message_upstairs()
+MARKER:  A = lua:tutorial.message_wield_ranged()
 # TODO: Targetting needs tutorial messages; these can't be done on the map side.
-MARKER:  B = lua:tutorial.message( "Press " .. tutorial.get_cmd("CMD_FIRE") .. " to shoot an arrow from your wielded bow. You can also pick up the stones thrown at you, and throw them back, also with " .. tutorial.get_cmd("CMD_FIRE") .. ". Use " .. tutorial.get_cmd("CMD_CYCLE_QUIVER_FORWARD") .. " to cycle through your available missiles.", "tutorial", "true" )
-MARKER:  C = lua:tutorial.message( "Remember to rest with " .. tutorial.get_cmd("CMD_REST") .. ".", "tutorial", "true" )
-MARKER:  D = lua:tutorial.message( "Memorise the spell from this spellbook by <white>clicking</white> on the book tab on the lower right of the inventory. You can also press " .. tutorial.get_cmd("CMD_MEMORISE_SPELL") .. " to enter the memorisation screen.", "tutorial", "true" )
-MARKER:  E = lua:tutorial.message( "To cast Magic Dart on the monster, <white>click</white> on the star tab, or press " .. tutorial.get_cmd("CMD_CAST_SPELL") .. ", or <white>Ctrl-click</white> on the monster. Once you're out of mana, you can rest with " .. tutorial.get_cmd("CMD_REST") .. " to get it back up or you can fire some more arrows with " .. tutorial.get_cmd("CMD_FIRE") .. ".", "tutorial", "true" )
+MARKER:  B = lua:tutorial.message_ranged_combat()
+MARKER:  C = lua:tutorial.message_rest_reminder()
+MARKER:  D = lua:tutorial.message_memorize()
+MARKER:  E = lua:tutorial.message_magic_combat()
 MARKER:  F = lua:tutorial.message( "Rest up!", "tutorial", "true" )
 MONS:    training dummy tile:mons_training_dummy ; stone q:30
 MAP
