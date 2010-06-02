@@ -12,6 +12,9 @@
 struct bolt;
 
 bool zin_sustenance(bool actual = true);
+int recite_to_single_monster(const coord_def& where, int pow = -1);
+int check_recital_monster_at(const coord_def& where);
+int check_recital_audience();
 bool zin_vitalisation();
 void zin_remove_divine_stamina();
 bool zin_remove_all_mutations();

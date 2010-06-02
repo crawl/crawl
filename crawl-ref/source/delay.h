@@ -64,14 +64,10 @@ struct ait_hp_loss
     ait_hp_loss(int _hp, int _ht) : hp(_hp), hurt_type(_ht) { }
 };
 
-int recite_to_single_monster(const coord_def& where, int pow = -1);
-
 void start_delay( delay_type type, int turns, int parm1 = 0, int parm2 = 0 );
 void stop_delay( bool stop_stair_travel = false );
 bool you_are_delayed();
 delay_type current_delay_action();
-int check_recital_monster_at(const coord_def& where);
-int check_recital_audience();
 void handle_delay();
 void finish_last_delay();
 

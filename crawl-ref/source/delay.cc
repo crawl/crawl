@@ -13,7 +13,6 @@
 
 #include "abl-show.h"
 #include "artefact.h"
-#include "attitude-change.h"
 #include "clua.h"
 #include "command.h"
 #include "coord.h"
@@ -26,6 +25,7 @@
 #include "fprop.h"
 #include "exclude.h"
 #include "food.h"
+#include "godabil.h"
 #include "godpassive.h"
 #include "invent.h"
 #include "items.h"
@@ -48,7 +48,6 @@
 #include "random.h"
 #include "religion.h"
 #include "godconduct.h"
-#include "shout.h"
 #include "spells1.h"
 #include "spells4.h"
 #include "spl-util.h"
@@ -71,178 +70,6 @@ static void _xom_check_corpse_waste();
 static void _handle_run_delays(const delay_queue_item &delay);
 static void _handle_macro_delay();
 static void _finish_delay(const delay_queue_item &delay);
-
-// Monsters cannot be affected in these states.
-// (All results of Recite, plus stationary and friendly + stupid;
-//  note that berserk monsters are also hasted.)
-static bool _recite_mons_useless(const monsters *mon)
-{
-    const mon_holy_type holiness = mon->holiness();
-
-    return (mons_intel(mon) < I_NORMAL
-            || !mon->is_holy()
-               && holiness != MH_NATURAL
-               && holiness != MH_UNDEAD
-               && holiness != MH_DEMONIC
-            || mons_is_stationary(mon)
-            || mons_is_fleeing(mon)
-            || mon->asleep()
-            || mon->wont_attack()
-            || mon->neutral()
-            || mons_is_confused(mon)
-            || mon->paralysed()
-            || mon->has_ench(ENCH_BATTLE_FRENZY)
-            || mon->has_ench(ENCH_HASTE));
-}
-
-// Power is maximum 50.
-int recite_to_single_monster(const coord_def& where, int pow)
-{
-    if (you.religion != GOD_ZIN)
-        return (0);
-
-    monsters *mon = monster_at(where);
-
-    if (mon == NULL)
-        return (0);
-
-    if (_recite_mons_useless(mon))
-        return (0);
-
-    // nothing happens
-    if (coinflip())
-        return (0);
-
-    // up to (60 + 40)/2 = 50
-    if (pow == -1)
-        pow = (2 * skill_bump(SK_INVOCATIONS) + you.piety / 5) / 2;
-
-    int resist;
-    const mon_holy_type holiness = mon->holiness();
-
-    if (mon->is_holy())
-        resist = std::max(0, 7 - random2(you.skills[SK_INVOCATIONS]));
-    else
-    {
-        resist = mon->res_magic();
-
-        if (holiness == MH_UNDEAD)
-            pow -= 2 + random2(3);
-        else if (holiness == MH_DEMONIC)
-            pow -= 3 + random2(5);
-    }
-
-    pow -= resist;
-
-    if (pow > 0)
-        pow = random2avg(pow, 2);
-
-    if (pow <= 0) // Uh oh...
-    {
-        if (one_chance_in(resist + 1))
-            return (0);  // nothing happens, whew!
-
-        if (!one_chance_in(4)
-             && mon->add_ench(mon_enchant(ENCH_HASTE, 0, KC_YOU,
-                                          (16 + random2avg(13, 2)) * 10)))
-        {
-
-            simple_monster_message(mon, " speeds up in annoyance!");
-        }
-        else if (!one_chance_in(3)
-                 && mon->add_ench(mon_enchant(ENCH_BATTLE_FRENZY, 1, KC_YOU,
-                                              (16 + random2avg(13, 2)) * 10)))
-        {
-            simple_monster_message(mon, " goes into a battle-frenzy!");
-        }
-        else if (!one_chance_in(3)
-                 && mons_shouts(mon->type, false) != S_SILENT)
-        {
-            force_monster_shout(mon);
-        }
-        else
-            return (0); // nothing happens
-
-        // Bad effects stop the recital.
-        stop_delay();
-        return (1);
-    }
-
-    switch (pow)
-    {
-        case 0:
-            return (0); // handled above
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-            if (!mons_class_is_confusable(mon->type)
-                || !mon->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_YOU,
-                                              (16 + random2avg(13, 2)) * 10)))
-            {
-                return (0);
-            }
-            simple_monster_message(mon, " looks confused.");
-            break;
-        case 5:
-        case 6:
-        case 7:
-        case 8:
-            mon->hibernate();
-            simple_monster_message(mon, " falls asleep!");
-            break;
-        case 9:
-        case 10:
-        case 11:
-        case 12:
-            if (!mon->add_ench(mon_enchant(ENCH_TEMP_PACIF, 0, KC_YOU,
-                               (16 + random2avg(13, 2)) * 10)))
-            {
-                return (0);
-            }
-            simple_monster_message(mon, " seems impressed!");
-            break;
-        case 13:
-        case 14:
-        case 15:
-            if (!mon->add_ench(ENCH_FEAR))
-                return (0);
-            simple_monster_message(mon, " turns to flee.");
-            break;
-        case 16:
-        case 17:
-            if (!mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0, KC_YOU,
-                               (16 + random2avg(13, 2)) * 10)))
-            {
-                return (0);
-            }
-            simple_monster_message(mon, " freezes in fright!");
-            break;
-        default:
-            if (mon->is_holy())
-                good_god_holy_attitude_change(mon);
-            else
-            {
-                if (holiness == MH_UNDEAD || holiness == MH_DEMONIC)
-                {
-                    if (!mon->add_ench(mon_enchant(ENCH_TEMP_PACIF, 0, KC_YOU,
-                                       (16 + random2avg(13, 2)) * 10)))
-                    {
-                        return (0);
-                    }
-                    simple_monster_message(mon, " seems impressed!");
-                }
-                else
-                {
-                    simple_monster_message(mon, " seems fully impressed!");
-                    mons_pacify(mon);
-                }
-            }
-            break;
-    }
-
-    return (1);
-}
 
 static int _recite_to_monsters(coord_def where, int pow, int, actor *)
 {
@@ -757,55 +584,6 @@ bool already_learning_spell(int spell)
             return (true);
     }
     return (false);
-}
-
-// Check whether this monster might be influenced by Recite.
-// Returns 0, if no monster found.
-// Returns 1, if eligible monster found.
-// Returns -1, if monster already affected or too dumb to understand.
-int check_recital_monster_at(const coord_def& where)
-{
-    monsters *mon = monster_at(where);
-    if (mon == NULL)
-        return (0);
-
-    if (!_recite_mons_useless(mon))
-        return (1);
-
-    return (-1);
-}
-
-// Check whether there are monsters who might be influenced by Recite.
-// Returns 0, if no monsters found
-// Returns 1, if eligible audience found
-// Returns -1, if entire audience already affected or too dumb to understand.
-int check_recital_audience()
-{
-    bool found_monsters = false;
-
-    for (radius_iterator ri(you.pos(), 8); ri; ++ri)
-    {
-        const int retval = check_recital_monster_at(*ri);
-
-        if (retval == -1)
-            found_monsters = true;
-
-        // Check if audience can listen.
-        if (retval == 1)
-            return (1);
-    }
-
-    if (!found_monsters)
-        dprf("No audience found!");
-    else
-        dprf("No sensible audience found!");
-
-   // No use preaching to the choir, nor to common animals.
-   if (found_monsters)
-       return (-1);
-
-   // Sorry, no audience found!
-   return (0);
 }
 
 // Xom is amused by a potential food source going to waste, and is
