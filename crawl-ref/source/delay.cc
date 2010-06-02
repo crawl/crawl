@@ -96,8 +96,11 @@ static bool _recite_mons_useless(const monsters *mon)
 }
 
 // Power is maximum 50.
-int recite_to_single_monster(int pow, const coord_def& where)
+int recite_to_single_monster(const coord_def& where, int pow)
 {
+    if (you.religion != GOD_ZIN)
+        return (0);
+
     monsters *mon = monster_at(where);
 
     if (mon == NULL)
@@ -106,8 +109,13 @@ int recite_to_single_monster(int pow, const coord_def& where)
     if (_recite_mons_useless(mon))
         return (0);
 
-    if (coinflip()) // nothing happens
+    // nothing happens
+    if (coinflip())
         return (0);
+
+    // up to (60 + 40)/2 = 50
+    if (pow == -1)
+        pow = (2 * skill_bump(SK_INVOCATIONS) + you.piety / 5) / 2;
 
     int resist;
     const mon_holy_type holiness = mon->holiness();
@@ -238,7 +246,7 @@ int recite_to_single_monster(int pow, const coord_def& where)
 
 static int _recite_to_monsters(coord_def where, int pow, int, actor *)
 {
-    return (recite_to_single_monster(pow, where));
+    return (recite_to_single_monster(where, pow));
 }
 
 static std::string _get_recite_speech(const std::string key, int weight)
