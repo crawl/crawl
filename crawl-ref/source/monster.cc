@@ -4496,6 +4496,12 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
         if (me.who == KC_OTHER)
             lose_energy(EUT_SPELL);
+        else
+        {
+            // XXX: Assume that if the tomb was your doing, it came from
+            // Zin's Imprison ability.
+            recite_to_single_monster(this->pos());
+        }
         break;
 
     case ENCH_MIGHT:
