@@ -833,18 +833,13 @@ char_choice_restriction religion_restriction(god_type god,
             switch (ng.species)
             {
             case SP_HILL_ORC:
-                // Restrict in favour of Beogh, else unrestricted.
-                if (ng.job == JOB_PRIEST)
-                    return (CC_RESTRICTED);
-                return (CC_UNRESTRICTED);
+                // Restrict in favour of Beogh.
+                return (CC_RESTRICTED);
 
             case SP_DEEP_ELF:
             case SP_KENKU:
-                // Unrestrict these only for Priests as Zin is worse, but
-                // Necromancy (DK) the better choice.
-                if (ng.job == JOB_PRIEST)
-                    return (CC_UNRESTRICTED);
-                return (CC_RESTRICTED);
+                // Unrestrict these as Zin is worse.
+                return (CC_UNRESTRICTED);
 
             case SP_HUMAN:
             case SP_HIGH_ELF:
