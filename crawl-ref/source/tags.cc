@@ -2425,7 +2425,7 @@ static void tag_read_level_monsters(reader &th, char minorVersion)
         unmarshallMonster(th, m);
 
         // place monster
-        if (m.type != MONS_NO_MONSTER)
+        if (m.alive())
         {
 #if defined(DEBUG) || defined(DEBUG_MONS_SCAN)
             if (invalid_monster_type(m.type))
