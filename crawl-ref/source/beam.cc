@@ -2677,6 +2677,8 @@ void bolt::internal_ouch(int dam)
     {
         ouch(dam, beam_source, KILLED_BY_SPORE, aux_source.c_str());
     }
+    else if (flavour == BEAM_DISINTEGRATION || flavour == BEAM_NUKE)
+        ouch(dam, beam_source, KILLED_BY_DISINT, what);
     else if (YOU_KILL(thrower) && aux_source.empty())
     {
         if (reflections > 0)
@@ -2691,8 +2693,6 @@ void bolt::internal_ouch(int dam)
                 ouch(dam, NON_MONSTER, KILLED_BY_TARGETING);
         }
     }
-    else if (flavour == BEAM_DISINTEGRATION || flavour == BEAM_NUKE)
-        ouch(dam, beam_source, KILLED_BY_DISINT, what);
     else if (MON_KILL(thrower))
         ouch(dam, beam_source, KILLED_BY_BEAM, aux_source.c_str());
     else // KILL_MISC || (YOU_KILL && aux_source)
