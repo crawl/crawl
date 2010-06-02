@@ -364,6 +364,7 @@ void wizard_spawn_control()
         int max_spawn = MAX_MONSTERS - 50;
         for (monster_iterator mi; mi; ++mi)
             if (mi->alive())
+                max_spawn--;
 
         if (max_spawn <= 0)
         {
