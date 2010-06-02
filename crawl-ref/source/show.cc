@@ -178,6 +178,8 @@ static unsigned short _feat_colour(const coord_def &where,
         colour = RED;
     else if (_show_mold(where, mold_colour))
         colour = mold_colour;
+    else if (slime_wall_neighbour(where))
+        colour = LIGHTGREEN;
     else if (env.grid_colours(where))
         colour = env.grid_colours(where);
     else

@@ -355,7 +355,8 @@ static bool _is_reseedable(const coord_def& c)
     return (feat_is_water(grid)
                || grid == DNGN_LAVA
                || is_trap(c)
-               || _is_monster_blocked(c));
+               || _is_monster_blocked(c)
+               || slime_wall_neighbour(c, true));
 }
 
 // Returns true if the square at (x,y) is okay to travel over. If ignore_hostile
@@ -398,6 +399,9 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile)
 
     if (is_trap(c) && _is_safe_trap(c))
         return (true);
+
+    if (slime_wall_neighbour(c, true))
+        return (false);
 
     return (feat_is_traversable(grid));
 }
