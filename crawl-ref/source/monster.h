@@ -457,8 +457,18 @@ private:
 public:
     int refcount;
 
-    void retain() { ++refcount; }
-    void release() { if(!--refcount) reset(); }
+    void retain()
+    {
+        ASSERT(refcount >= 0);
+        ++refcount;
+    }
+
+    void release()
+    {
+        ASSERT(refcount > 0);
+        if (!--refcount)
+            reset();
+    }
 };
 
 #endif
