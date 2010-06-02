@@ -964,6 +964,11 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             killerpath = "";
         }
     }
+    else if (death_type == KILLED_BY_DISINT)
+    {
+        death_source_name = "you";
+        indirectkiller = killerpath = "";
+    }
     else
     {
         mon_num = 0;
@@ -1943,11 +1948,10 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
             desc += "disintegration";
         else
         {
-            desc += "Blown up";
-            if (death_source == NON_MONSTER)
-                desc += " themselves";
+            if (death_source_name == "you")
+                desc += "Blew themselves up";
             else
-                desc += " by " + death_source_desc();
+                desc += "Blown up by " + death_source_desc();
             needs_beam_cause_line = true;
         }
 
