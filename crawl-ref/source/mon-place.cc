@@ -1217,9 +1217,9 @@ int place_monster(mgen_data mg, bool force_pos)
     return (id);
 }
 
-monsters* get_free_monster()
+monsters* get_free_monster(int space)
 {
-    for (int i = 0; i < MAX_MONSTERS; ++i)
+    for (int i = 0; i < MAX_MONSTERS - space; ++i)
     {
         monsters &mons = env.mons[i];
         if (mons.type == MONS_NO_MONSTER)
