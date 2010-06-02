@@ -18,6 +18,7 @@
 #include "terrain.h"
 #ifdef USE_TILE
  #include "tilepick.h"
+ #include "tileview.h"
 #endif
 #include "view.h"
 
@@ -219,11 +220,6 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
         if (!clear_detected_monsters && is_map_knowledge_detected_mons(p))
             continue;
 
-#ifdef USE_TILE
-        if (is_terrain_mapped(p) && !is_map_knowledge_detected_mons(p))
-            continue;
-#endif
-
         show_type plain = env.map_knowledge(p).object;
 
         // If it's an immobile monster or a feature, don't erase.
@@ -231,30 +227,14 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
             && plain.cls != SH_FEATURE)
         {
             plain = show_type(plain.feat);
+#ifdef USE_TILE
+            tile_clear_map(p);
+#endif
         }
 
         set_map_knowledge_obj(p, to_knowledge(plain));
         set_map_knowledge_detected_mons(p, false);
         set_map_knowledge_detected_item(p, false);
-
-#ifdef USE_TILE
-        // FIXME: shouldn't be referencing env.grid here.
-        if (is_terrain_mapped(p))
-        {
-            tileidx_t fg;
-            tileidx_t bg;
-            tileidx_unseen(&fg, &bg, get_feat_symbol(grd(p)), p);
-            env.tile_bk_bg(p) = bg;
-            env.tile_bk_fg(p) = fg;
-        }
-        else
-        {
-            env.tile_bk_bg(p) = is_terrain_seen(p) ?
-                tileidx_unseen_terrain(p, grd(p)) :
-                tileidx_feature(DNGN_UNSEEN, p);
-            env.tile_bk_fg(p) = 0;
-        }
-#endif
     }
 }
 
