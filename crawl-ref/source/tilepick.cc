@@ -3401,22 +3401,6 @@ tileidx_t get_clean_map_idx(tileidx_t tile_idx)
     return tile_idx;
 }
 
-tileidx_t tileidx_unseen_terrain(const coord_def &gc, int what)
-{
-    dungeon_feature_type feature = grd(gc);
-
-    tileidx_t t = tileidx_feature(feature, gc);
-    if (t == TILE_ERROR || what == ' ')
-    {
-        tileidx_t fg_dummy;
-        tileidx_unseen(&fg_dummy, &t, what, gc);
-    }
-
-    t |= tileidx_unseen_flag(gc);
-
-    return t;
-}
-
 tileidx_t tileidx_unseen_flag(const coord_def &gc)
 {
     if (!map_bounds(gc))
