@@ -59,7 +59,7 @@ function tutorial.messagestart ()
     crawl.mpr("Now, try moving towards that <blue>blue square</blue>.", "tutorial")
 end
 
-function tutorial.message0 ()
+function tutorial.message_run ()
   local text = "Great! There's another <blue>blue square</blue> further up the corridor. Head for that next."
 
 -- I think this is useful information even for Tiles. (jpeg)
@@ -70,7 +70,7 @@ function tutorial.message0 ()
   return tutorial.message(text, "tutorial", true)
 end
 
-function tutorial.message1 ()
+function tutorial.message_diagonal1 ()
   local text = "You need to move diagonally here, so "
 
   if crawl.is_tiles() then
@@ -82,7 +82,7 @@ function tutorial.message1 ()
   return tutorial.message(text, "tutorial", true)
 end
 
-function tutorial.message2 ()
+function tutorial.message_diagonal2 ()
   local text = "Now, either "
 
   if crawl.is_tiles() then
@@ -94,21 +94,21 @@ function tutorial.message2 ()
   return tutorial.message(text, "tutorial", true)
 end
 
-function tutorial.message3 ()
+function tutorial.message_autoexplore ()
   return tutorial.message("Exploring manually is very tedious, which is why we suggest you use auto-explore. Try it by pressing " .. tutorial.get_cmd("CMD_EXPLORE") .. ".", "tutorial", true)
 end
 
-function tutorial.message4 ()
+function tutorial.message_door ()
   local text = "Doors, like the one in front of you, can be opened by walking into them. They'll also be opened automatically while traveling or auto-exploring."
 
   return tutorial.message(text, "tutorial", true, true)
 end
 
-function tutorial.message5 ()
+function tutorial.message_downstairs ()
   return tutorial.message("You can go down stairs with <white>Shift-Click</white> or " .. tutorial.get_cmd("CMD_GO_DOWNSTAIRS") .. " while standing over them.", "tutorial", true)
 end
 
-function tutorial.message6 ()
+function tutorial.message_pick_up ()
   local text = "In front of you are a mace and a helmet. You can pick up objects by pressing <white>g</white> or " .. tutorial.get_cmd("CMD_PICKUP")
 
   if crawl.is_tiles() then
@@ -122,7 +122,7 @@ function tutorial.message6 ()
   return tutorial.message(text, "tutorial", true)
 end
 
-function tutorial.message7 ()
+function tutorial.message_wield ()
   local text = "Wield the mace "
 
   if crawl.is_tiles() then
@@ -134,7 +134,7 @@ function tutorial.message7 ()
   return tutorial.message(text, "tutorial", true)
 end
 
-function tutorial.message8 ()
+function tutorial.message_melee_attack ()
   local text = "To attack monsters, "
 
   if crawl.is_tiles() then
@@ -146,7 +146,7 @@ function tutorial.message8 ()
   return tutorial.message(text, "tutorial", true)
 end
 
-function tutorial.message9 ()
+function tutorial.message_rest ()
   local hp, maxhp = you.hp()
   local text
   if hp < maxhp then
@@ -160,7 +160,7 @@ function tutorial.message9 ()
   return tutorial.message(text,  "tutorial", true)
 end
 
-function tutorial.message10 ()
+function tutorial.message_log ()
   local text = "(If you've forgotten any of the commands mentioned above, you can re-read previous message by "
 
   if crawl.is_tiles() then
@@ -174,7 +174,7 @@ function tutorial.message10 ()
   return tutorial.message(text, "tutorial", true)
 end
 
-function tutorial.message11 ()
+function tutorial.message_monster_description ()
   local text = "Whenever you see a new monster, it's always a good idea to check its description for clues on how to deal with it. To view the description, "
   if crawl.is_tiles() then
     text = text .. "<white>mouse over</white> or <white>right click</white> the monster tile."
@@ -193,19 +193,19 @@ KMASK:   + = no_secret_doors
 ORIENT:  encompass
 ITEM:    mace ego:none not_cursed, helmet ego:none not_cursed
 # TODO: Include a travel stopper to the message square.
-MARKER:  Q = lua:tutorial.message0()
-MARKER:  A = lua:tutorial.message1()
-MARKER:  B = lua:tutorial.message2()
-MARKER:  C = lua:tutorial.message3()
-MARKER:  D = lua:tutorial.message4()
-MARKER:  } = lua:tutorial.message5()
-MARKER:  E = lua:tutorial.message6()
+MARKER:  Q = lua:tutorial.message_run()
+MARKER:  A = lua:tutorial.message_diagonal1()
+MARKER:  B = lua:tutorial.message_diagonal2()
+MARKER:  C = lua:tutorial.message_autoexplore()
+MARKER:  D = lua:tutorial.message_door()
+MARKER:  } = lua:tutorial.message_downstairs()
+MARKER:  E = lua:tutorial.message_pick_up()
 # TODO: Make the messages sensitive to if the game is tiles or console.
-MARKER:  F = lua:tutorial.message7()
-MARKER:  G = lua:tutorial.message8()
-MARKER:  H = lua:tutorial.message9()
-MARKER:  I = lua:tutorial.message10()
-MARKER:  J = lua:tutorial.message11()
+MARKER:  F = lua:tutorial.message_wield()
+MARKER:  G = lua:tutorial.message_melee_attack()
+MARKER:  H = lua:tutorial.message_rest()
+MARKER:  I = lua:tutorial.message_log()
+MARKER:  J = lua:tutorial.message_monster_description()
 KFEAT:   ABCDEFGHQIJ = .
 COLOUR:  ABCDEFGHQIJ = blue
 #TILE:    ABCDEFGH = tutorial_message_tile_name_here
