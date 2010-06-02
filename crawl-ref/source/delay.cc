@@ -857,7 +857,6 @@ void handle_delay()
         case DELAY_RECITE:
             mprf(MSGCH_PLAIN, "You %s",
                  _get_recite_speech("start", you.num_turns + delay.duration).c_str());
-
             if (apply_area_visible(_recite_to_monsters, delay.parm1))
                 viewwindow(false);
             break;
