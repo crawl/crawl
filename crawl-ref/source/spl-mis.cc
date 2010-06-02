@@ -243,7 +243,8 @@ void MiscastEffect::init()
     if (cause.empty())
         cause = get_default_cause(false);
     beam.aux_source  = cause;
-    beam.beam_source = (kill_source <= MHITYOU) ? kill_source : MHITNOT;
+    beam.beam_source = (0 <= kill_source && kill_source <= MHITYOU)
+                       ? kill_source : MHITNOT;
     beam.thrower     = kt;
 }
 
