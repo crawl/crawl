@@ -3806,6 +3806,16 @@ void zap_wand(int slot)
         beam.effect_known = false;
 
     beam.source   = you.pos();
+
+#ifdef HISCORE_WEAPON_DETAIL
+    beam.aux_source =
+        wand.name(DESC_QUALNAME, false, true, false, false);
+#else
+    beam.aux_source =
+        wand.name(DESC_QUALNAME, false, true, false, false,
+                  ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES);
+#endif
+
     beam.attitude = ATT_FRIENDLY;
     beam.set_target(zap_wand);
 
