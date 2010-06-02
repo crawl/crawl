@@ -979,4 +979,9 @@ void tile_apply_properties(const coord_def &gc, tileidx_t *fg,
         *bg |= TILE_FLAG_SILENCED;
 }
 
+void tile_clear_map(const coord_def& gc)
+{
+    env.tile_bk_fg(gc) = 0;
+}
+
 #endif
