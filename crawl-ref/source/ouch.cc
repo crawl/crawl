@@ -1176,7 +1176,6 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         {
             const std::string death_desc
                 = se.death_description(scorefile_entry::DDV_VERBOSE);
-#ifdef USE_OPTIONAL_WIZARD_DEATH
 
             dprf("Damage: %d; Hit points: %d", dam, you.hp);
 
@@ -1187,15 +1186,6 @@ void ouch(int dam, int death_source, kill_method_type death_type,
                 _wizard_restore_life();
                 return;
             }
-#else  // !def USE_OPTIONAL_WIZARD_DEATH
-            mpr("Since you're a debugger, I'll let you live.");
-            mpr("Be more careful next time, okay?");
-
-            take_note(Note( NOTE_DEATH, you.hp, you.hp_max,
-                            death_desc.c_str()), true);
-            _wizard_restore_life();
-            return;
-#endif  // USE_OPTIONAL_WIZARD_DEATH
         }
     }
 #endif  // WIZARD
@@ -1211,28 +1201,9 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     // Prevent bogus notes.
     activate_notes(false);
 
-#ifdef SCORE_WIZARD_CHARACTERS
     // Add this highscore to the score file.
     hiscores_new_entry(se);
     logfile_new_entry(se);
-#else
-
-    // Only add non-wizards to the score file.
-    // Never generate bones files of wizard or tutorial characters -- bwr
-    if (!you.wizard)
-    {
-        hiscores_new_entry(se);
-        logfile_new_entry(se);
-
-        if (!crawl_state.game_is_tutorial()
-            && death_type != KILLED_BY_LEAVING
-            && death_type != KILLED_BY_WINNING
-            && death_type != KILLED_BY_QUITTING)
-        {
-            save_ghost();
-        }
-    }
-#endif
 
     end_game(se);
 }
