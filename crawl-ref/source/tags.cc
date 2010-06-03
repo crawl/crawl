@@ -2034,9 +2034,6 @@ void marshallMonster(writer &th, const monsters &m)
     marshallShort(th, m.base_monster);
     marshallShort(th, m.colour);
 
-    marshallLong(th, m.source);
-    marshallLong(th, m.refcount);
-
     for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
         marshallShort(th, m.inv[j]);
 
@@ -2375,14 +2372,10 @@ void unmarshallMonster(reader &th, monsters &m)
     m.base_monster   = static_cast<monster_type>(unmarshallShort(th));
     m.colour         = unmarshallShort(th);
 
-    if (th.getMinorVersion() >= TAG_MINOR_MON_REFCOUNT)
+    if (th.getMinorVersion() == TAG_MINOR_MON_REFCOUNT)
     {
-        m.source.replace(unmarshallLong(th));
-        m.refcount = unmarshallLong(th);
-    }
-    else if (m.type != MONS_NO_MONSTER)
-    {
-        m.refcount = 1;
+        unmarshallLong(th);
+        unmarshallLong(th);
     }
 
     for (int j = 0; j < NUM_MONSTER_SLOTS; j++)

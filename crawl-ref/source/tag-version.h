@@ -11,7 +11,8 @@ enum tag_minor_version
     TAG_MINOR_RESET     = 0, // Minor tags were reset
     TAG_MINOR_TILE_CHANGES = 1,
     TAG_MINOR_MON_REFCOUNT = 2,  // Monster reference counting.
-    TAG_MINOR_VERSION   = 2  // Current version.  (Keep equal to max.)
+    TAG_MINOR_MON_REFCOUNT_REV = 3,  // Monster reference counting reverted.
+    TAG_MINOR_VERSION   = 3  // Current version.  (Keep equal to max.)
 };
 
 #endif
