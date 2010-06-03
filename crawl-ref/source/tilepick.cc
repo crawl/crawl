@@ -127,9 +127,9 @@ tileidx_t tileidx_feature(dungeon_feature_type feat, const coord_def &gc)
         dungeon_feature_type dfeat;
         coord_def door;
         if (find_secret_door_info(gc, &dfeat, &door))
-            return tileidx_feature(grid_appearance(door), door);
+            return tileidx_feature(dfeat, door);
         else
-            return dfeat;
+            return tileidx_feature(dfeat, gc);
     }
     case DNGN_CLEAR_ROCK_WALL:
     case DNGN_CLEAR_STONE_WALL:
