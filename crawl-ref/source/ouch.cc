@@ -1013,7 +1013,7 @@ static void _wizard_restore_life()
 
 // death_source should be set to NON_MONSTER for non-monsters. {dlb}
 void ouch(int dam, int death_source, kill_method_type death_type,
-          const char *aux, bool see_source)
+          const char *aux, bool see_source, const char *death_source_name)
 {
     ASSERT(!crawl_state.game_is_arena());
     if (you.duration[DUR_TIME_STEP])
@@ -1165,7 +1165,8 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     crawl_state.cancel_cmd_all();
 
     // Construct scorefile entry.
-    scorefile_entry se(dam, death_source, death_type, aux);
+    scorefile_entry se(dam, death_source, death_type, aux, false,
+                       death_source_name);
 
 #ifdef WIZARD
     if (death_type != KILLED_BY_QUITTING
