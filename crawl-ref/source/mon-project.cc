@@ -73,6 +73,9 @@ bool cast_iood(actor *caster, int pow, bolt *beam)
             ((monsters*)caster)->friendly() ? KC_FRIENDLY : KC_OTHER;
     mon.props["iood_pow"].get_short() = pow;
     mon.flags &= ~MF_JUST_SUMMONED;
+    mon.props["iood_caster"].get_string() = caster->as_monster()
+        ? caster->name(DESC_PLAIN, true)
+        : "";
 
     _fuzz_direction(mon, pow);
 
@@ -159,6 +162,7 @@ bool _iood_hit(monsters &mon, const coord_def &pos, bool big_boom = false)
     beam.source = pos;
     beam.target = pos;
     beam.hit = AUTOMATIC_HIT;
+    beam.source_name = mon.props["iood_caster"].get_string();
 
     int pow = mon.props["iood_pow"].get_short();
     pow = stepdown_value(pow, 30, 30, 200, -1);
