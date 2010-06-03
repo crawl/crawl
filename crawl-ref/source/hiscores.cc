@@ -509,7 +509,6 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     best_skill_lvl    = se.best_skill_lvl;
     death_type        = se.death_type;
     death_source      = se.death_source;
-    mon_num           = se.mon_num;
     death_source_name = se.death_source_name;
     auxkilldata       = se.auxkilldata;
     indirectkiller    = se.indirectkiller;
@@ -893,8 +892,6 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
     {
         const monsters *monster = &menv[death_source];
 
-        mon_num = monster->base_monster;
-
         // Previously the weapon was only used for dancing weapons,
         // but now we pass it in as a string through the scorefile
         // entry to be appended in hiscores_format_single in long or
@@ -981,7 +978,6 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
     }
     else
     {
-        mon_num = 0;
         if (dsrc_name)
             death_source_name = dsrc_name;
         else
@@ -1022,7 +1018,6 @@ void scorefile_entry::reset()
     best_skill_lvl       = 0;
     death_type           = KILLED_BY_SOMETHING;
     death_source         = NON_MONSTER;
-    mon_num              = 0;
     death_source_name.clear();
     auxkilldata.clear();
     indirectkiller.clear();
