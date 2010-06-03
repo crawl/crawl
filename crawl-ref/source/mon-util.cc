@@ -498,7 +498,7 @@ bool mons_has_body(const monsters *mon)
         return false;
     }
 
-    switch(mons_base_char(mon->type))
+    switch (mons_base_char(mon->type))
     {
     case 'P':
     case 'v':
@@ -2333,7 +2333,7 @@ static bool _mons_should_fire_beneficial(bolt &beam)
 
 static bool _beneficial_beam_flavour(beam_type flavour)
 {
-    switch(flavour)
+    switch (flavour)
     {
     case BEAM_HASTE:
     case BEAM_HEALING:
