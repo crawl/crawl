@@ -19,7 +19,6 @@
 #include "ghost.h"
 #include "items.h"
 #include "libutil.h"
-#include "mapmark.h"
 #include "misc.h"
 #include "message.h"
 #include "mon-behv.h"
@@ -2428,10 +2427,10 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
             // XXX: Assume that the entombed monster can regenerate.
             // Also, base the regeneration rate on HD to avoid
             // randomness.
-            const int tomb_duration = BASELINE_DELAY
-                * hp_lost * std::max(1, monster->hit_dice / 3);
-            env.markers.add(new map_tomb_marker(monster->pos(),
-                                                tomb_duration));
+            const int tomb_duration =
+                hp_lost * std::max(1, monster->hit_dice / 3);
+            monster->add_ench(mon_enchant(ENCH_ENTOMBED, 0, KC_OTHER,
+                                          tomb_duration * 10));
         }
         return;
     }
