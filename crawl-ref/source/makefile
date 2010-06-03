@@ -107,7 +107,7 @@ CXX = $(GXX)
 RM = rm -f
 COPY = cp
 COPY_R = cp -r
-STRIP = strip
+STRIP = strip -s
 WINDRES = windres
 CHMOD = chmod 2>/dev/null
 CHOWN = chown 2>/dev/null
@@ -190,6 +190,7 @@ ifeq ($(uname_S),DOS)
 	NO_RDYNAMIC = yes
 endif
 ifeq ($(uname_S),Darwin)
+	STRIP := strip -x
 	NEED_APPKIT = YesPlease
 	LIBNCURSES_IS_UNICODE = Yes
 	NO_PKGCONFIG = Yes
@@ -935,7 +936,7 @@ ifeq ($(DESTDIR)$(prefix),)
 endif
 	[ -d $(prefix_fp)/$(bin_prefix) ] || mkdir -p $(prefix_fp)/$(bin_prefix)
 	$(COPY) $(GAME) $(prefix_fp)/$(bin_prefix)/
-	$(STRIP) -s $(prefix_fp)/$(bin_prefix)/$(GAME)
+	$(STRIP) $(prefix_fp)/$(bin_prefix)/$(GAME)
 	$(CHOWN) $(INSTALL_UGRP) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
 	$(CHMOD) $(MCHMOD) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
 	mkdir -p $(datadir_fp)/dat/des
