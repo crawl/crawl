@@ -116,13 +116,14 @@ private:
 public:
     scorefile_entry();
     scorefile_entry(int damage, int death_source, int death_type,
-                    const char *aux, bool death_cause_only = false);
+                    const char *aux, bool death_cause_only = false,
+                    const char *death_source_name = NULL);
     scorefile_entry(const scorefile_entry &se);
 
     scorefile_entry &operator = (const scorefile_entry &other);
 
     void init_death_cause(int damage, int death_source, int death_type,
-                          const char *aux);
+                          const char *aux, const char *death_source_name);
     void init();
     void reset();
 

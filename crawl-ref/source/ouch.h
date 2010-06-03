@@ -66,7 +66,8 @@ class actor;
 int actor_to_death_source(const actor* agent);
 
 void ouch(int dam, int death_source, kill_method_type death_type,
-          const char *aux = NULL, bool see_source = true);
+          const char *aux = NULL, bool see_source = true,
+          const char *death_source_name = NULL);
 
 void lose_level(void);
 bool drain_exp(bool announce_full = true);

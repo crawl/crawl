@@ -468,11 +468,12 @@ kill_method_type str_to_kill_method(const std::string &s)
 // scorefile_entry
 
 scorefile_entry::scorefile_entry(int dam, int dsource, int dtype,
-                                 const char *aux, bool death_cause_only)
+                                 const char *aux, bool death_cause_only,
+                                 const char *dsource_name)
 {
     reset();
 
-    init_death_cause(dam, dsource, dtype, aux);
+    init_death_cause(dam, dsource, dtype, aux, dsource_name);
     if (!death_cause_only)
         init();
 }
@@ -855,7 +856,8 @@ std::string scorefile_entry::short_kill_message() const
 }
 
 void scorefile_entry::init_death_cause(int dam, int dsrc,
-                                       int dtype, const char *aux)
+                                       int dtype, const char *aux,
+                                       const char *dsrc_name)
 {
     death_source = dsrc;
     death_type   = dtype;
@@ -974,13 +976,16 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
     }
     else if (death_type == KILLED_BY_DISINT)
     {
-        death_source_name = "you";
+        death_source_name = dsrc_name ? dsrc_name : "you";
         indirectkiller = killerpath = "";
     }
     else
     {
         mon_num = 0;
-        death_source_name.clear();
+        if (dsrc_name)
+            death_source_name = dsrc_name;
+        else
+            death_source_name.clear();
         indirectkiller = killerpath = "";
     }
 
