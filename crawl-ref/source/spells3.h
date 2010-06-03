@@ -28,7 +28,7 @@ bool cast_bone_shards(int power, bolt &);
 bool cast_selective_amnesia(bool force);
 bool cast_smiting(int power, const coord_def& where);
 bool entomb(int pow);
-bool cast_imprison(int pow, monsters *monster);
+bool cast_imprison(int pow, monsters *monster, int source);
 bool project_noise();
 bool detect_curse(int scroll, bool suppress_msg);
 

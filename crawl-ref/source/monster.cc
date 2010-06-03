@@ -4310,37 +4310,6 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
     }
 }
 
-static bool _drop_tomb(monsters* mon)
-{
-    int count = 0;
-
-    // Don't wander on duty!
-    mon->behaviour = BEH_SEEK;
-
-    bool seen_change = false;
-    for (adjacent_iterator ai(mon->pos()); ai; ++ai)
-    {
-        if (grd(*ai) == DNGN_ROCK_WALL)
-        {
-            grd(*ai) = DNGN_FLOOR;
-            set_terrain_changed(*ai);
-            count++;
-            if (you.see_cell(*ai))
-                seen_change = true;
-        }
-    }
-
-    if (count)
-    {
-        if (seen_change)
-            mpr("The walls disappear!");
-        else
-            mpr("You hear a deep rumble.");
-    }
-
-    return (count > 0);
-}
-
 static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
 {
     if (me.ench != ENCH_SUBMERGED)
@@ -4487,19 +4456,6 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         if (!quiet && !silenced(pos()))
             simple_monster_message(this, " becomes audible again.");
         invalidate_agrid();
-        break;
-
-    case ENCH_ENTOMBED:
-        _drop_tomb(this);
-
-        if (me.who == KC_OTHER)
-            lose_energy(EUT_SPELL);
-        else
-        {
-            // XXX: Assume that if the tomb was your doing, it came from
-            // Zin's Imprison ability.
-            zin_recite_to_single_monster(this->pos());
-        }
         break;
 
     case ENCH_MIGHT:
@@ -4824,7 +4780,7 @@ void monsters::timeout_enchantments(int levels)
         case ENCH_SICK:  case ENCH_SLEEPY: case ENCH_PARALYSIS:
         case ENCH_PETRIFYING: case ENCH_PETRIFIED: case ENCH_SWIFT:
         case ENCH_BATTLE_FRENZY: case ENCH_TEMP_PACIF: case ENCH_SILENCE:
-        case ENCH_ENTOMBED: case ENCH_LOWERED_MR: case ENCH_SOUL_RIPE:
+        case ENCH_LOWERED_MR: case ENCH_SOUL_RIPE:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -4988,7 +4944,6 @@ void monsters::apply_enchantment(const mon_enchant &me)
     case ENCH_ABJ:
     case ENCH_CHARM:
     case ENCH_SLEEP_WARY:
-    case ENCH_ENTOMBED:
     case ENCH_LOWERED_MR:
     case ENCH_SOUL_RIPE:
     case ENCH_TIDE:
@@ -6301,7 +6256,7 @@ static const char *enchant_names[] =
     "sleepy", "held", "battle_frenzy", "temp_pacif", "petrifying",
     "petrified", "lowered_mr", "soul_ripe", "slowly_dying", "eat_items",
     "aquatic_land", "spore_production", "slouch", "swift", "tide",
-    "insane", "silenced", "entombed", "awaken_forest", "exploding", "buggy",
+    "insane", "silenced", "awaken_forest", "exploding", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

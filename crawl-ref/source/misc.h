@@ -72,6 +72,8 @@ bool there_are_monsters_nearby(bool dangerous_only = false,
                                bool require_visible = true,
                                bool consider_user_options = false);
 
+void timeout_tombs(int duration);
+
 void setup_environment_effects();
 
 // Lava smokes, swamp water mists.
