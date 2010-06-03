@@ -1278,8 +1278,10 @@ NAME:    vehumet_statue
 DEPTH:   4-10
 TAGS:    temple_overflow_vehumet
 SHUFFLE: 12
-MONS:    statue name:charred name_adjective hp:12 hd:3 spells:throw_flame
-MONS:    statue name:frost-covered name_adjective hp:12 hd:3 spells:throw_frost
+MONS:    statue name:charred name_adjective tile:mons_statue_mage \
+             hp:12 hd:3 spells:throw_flame
+MONS:    statue name:frost-covered name_adjective tile:mons_statue_mage \
+             hp:12 hd:3 spells:throw_frost
 KFEAT:   _ = altar_vehumet
 MAP
 ...........
