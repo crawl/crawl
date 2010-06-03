@@ -4205,7 +4205,7 @@ void update_level(long elapsedTime)
 #ifdef DEBUG_DIAGNOSTICS
     int mons_total = 0;
 
-    mprf(MSGCH_DIAGNOSTICS, "turns: %d", turns );
+    mprf(MSGCH_DIAGNOSTICS, "turns: %d", turns);
 #endif
 
     update_corpses(elapsedTime);
@@ -4217,7 +4217,7 @@ void update_level(long elapsedTime)
         if (turns >= env.sanctuary_time)
             remove_sanctuary();
         else
-          env.sanctuary_time -= turns;
+            env.sanctuary_time -= turns;
     }
 
     dungeon_events.fire_event(
@@ -4286,7 +4286,6 @@ static void _maybe_restart_fountain_flow(const coord_def& where,
 
     if (grid < DNGN_DRY_FOUNTAIN_BLUE || grid > DNGN_DRY_FOUNTAIN_BLOOD)
         return;
-
 
     for (int i = 0; i < tries; ++i)
     {
