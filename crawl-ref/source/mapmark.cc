@@ -441,7 +441,7 @@ map_marker *map_lua_marker::parse(
 
 map_corruption_marker::map_corruption_marker(const coord_def &p,
                                              int dur)
-    : map_marker(MAT_CORRUPTION_NEXUS, p), duration(dur), radius(0)
+    : map_marker(MAT_CORRUPTION_NEXUS, p), duration(dur)
 {
 }
 
@@ -449,14 +449,15 @@ void map_corruption_marker::write(writer &out) const
 {
     map_marker::write(out);
     marshallShort(out, duration);
-    marshallShort(out, radius);
 }
 
 void map_corruption_marker::read(reader &in)
 {
     map_marker::read(in);
     duration = unmarshallShort(in);
-    radius   = unmarshallShort(in);
+
+    if (TAG_MINOR_VERSION < TAG_MINOR_CORRUPTION_RAD)
+        unmarshallShort(in); // radius
 }
 
 map_marker *map_corruption_marker::read(reader &in, map_marker_type)
@@ -469,7 +470,6 @@ map_marker *map_corruption_marker::read(reader &in, map_marker_type)
 map_marker *map_corruption_marker::clone() const
 {
     map_corruption_marker *mark = new map_corruption_marker(pos, duration);
-    mark->radius = radius;
     return (mark);
 }
 
