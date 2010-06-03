@@ -99,7 +99,7 @@ public:
     static map_marker *read(reader &, map_marker_type);
 
 public:
-    int duration, radius;
+    int duration;
 };
 
 // A marker powered by Lua.
