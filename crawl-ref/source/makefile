@@ -835,6 +835,7 @@ test:
 
 
 ifeq (,$(findstring clean,$(MAKECMDGOALS)))
+ifeq (,$(findstring test,$(MAKECMDGOALS)))
 
 #
 # CFLAGS difference check
@@ -866,6 +867,7 @@ ifneq ($(DEPS),)
 -include $(DEPS)
 endif
 
+endif
 endif
 
 depend: $(OBJECTS:.o=.d)
