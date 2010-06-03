@@ -1583,7 +1583,6 @@ enum map_marker_type
     MAT_LUA_MARKER,
     MAT_CORRUPTION_NEXUS,
     MAT_WIZ_PROPS,
-    MAT_TOMB,
     NUM_MAP_MARKER_TYPES,
     MAT_ANY
 };

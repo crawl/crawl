@@ -1783,58 +1783,6 @@ static void apply_environment_effect(const coord_def &c)
         check_place_cloud(CLOUD_MIST,        c, random_range(2, 5), KC_OTHER);
 }
 
-static bool _drop_tomb(const coord_def& pos)
-{
-    int count = 0;
-
-    monsters* mon = monster_at(pos);
-    // Don't wander on duty!
-    if (mon)
-        mon->behaviour = BEH_SEEK;
-
-    for (adjacent_iterator ai(pos); ai; ++ai)
-    {
-        if (grd(*ai) == DNGN_ROCK_WALL)
-        {
-            grd(*ai) = DNGN_FLOOR;
-            set_terrain_changed(*ai);
-            count++;
-        }
-    }
-
-    if (count)
-    {
-        if (you.see_cell(pos))
-            mpr("The walls disappear!");
-        else
-            mpr("You hear a deep rumble.");
-    }
-}
-
-static void _timeout_tombs(int duration)
-{
-    if (!duration)
-        return;
-
-    std::vector<map_marker*> markers = env.markers.get_all(MAT_TOMB);
-
-    for (int i = 0, size = markers.size(); i < size; ++i)
-    {
-        map_marker *mark = markers[i];
-        if (mark->get_type() != MAT_TOMB)
-            continue;
-
-        map_tomb_marker *cmark = dynamic_cast<map_tomb_marker*>(mark);
-        cmark->duration -= duration;
-
-        if (cmark->duration <= 0)
-        {
-            _drop_tomb(cmark->pos);
-            env.markers.remove(cmark);
-        }
-    }
-}
-
 static const int Base_Sfx_Chance = 5;
 void run_environment_effects()
 {
@@ -1872,7 +1820,6 @@ void run_environment_effects()
 
     run_corruption_effects(you.time_taken);
     shoals_apply_tides(div_rand_round(you.time_taken, 10));
-    _timeout_tombs(you.time_taken);
 }
 
 coord_def pick_adjacent_free_square(const coord_def& p)

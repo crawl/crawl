@@ -4310,6 +4310,34 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
     }
 }
 
+static bool _drop_tomb(monsters* mon)
+{
+    int count = 0;
+
+    // Don't wander on duty!
+    mon->behaviour = BEH_SEEK;
+
+    for (adjacent_iterator ai(mon->pos()); ai; ++ai)
+    {
+        if (grd(*ai) == DNGN_ROCK_WALL)
+        {
+            grd(*ai) = DNGN_FLOOR;
+            set_terrain_changed(*ai);
+            count++;
+        }
+    }
+
+    if (count)
+    {
+        if (you.can_see(mon))
+            mpr("The walls disappear!");
+        else
+            mpr("You hear a deep rumble.");
+    }
+
+    return (count > 0);
+}
+
 static bool _prepare_del_ench(monsters* mon, const mon_enchant &me)
 {
     if (me.ench != ENCH_SUBMERGED)
@@ -4459,6 +4487,16 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_ENTOMBED:
+        _drop_tomb(this);
+
+        if (me.who == KC_OTHER)
+            lose_energy(EUT_SPELL);
+        else
+        {
+            // XXX: Assume that if the tomb was your doing, it came from
+            // Zin's Imprison ability.
+            zin_recite_to_single_monster(this->pos());
+        }
         break;
 
     case ENCH_MIGHT:
