@@ -969,6 +969,7 @@ void _setup_base_explosion(bolt & beam, const monsters & origin)
     beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
     beam.source       = origin.pos();
     beam.target       = origin.pos();
+    beam.source_name  = "ball lightning";
 
     if (!crawl_state.game_is_arena() && origin.attitude == ATT_FRIENDLY
         && !origin.is_summoned())
