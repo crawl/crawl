@@ -143,7 +143,7 @@ function tutorial.message_wield ()
   local text = "Wield the mace "
 
   if crawl.is_tiles() then
-    text = text .. "and helmet by <white>clicking</white> on them in the inventory, in the lower right part of the screen."
+    text = text .. "and wear the helmet by <white>clicking</white> on them in the inventory, in the lower right part of the screen."
   else
     text = text .. "by pressing " .. tutorial.get_cmd("CMD_WIELD_WEAPON") .. ". You can also wear the helmet by pressing " .. tutorial.get_cmd("CMD_WEAR_ARMOUR").. "."
   end
@@ -427,7 +427,7 @@ KITEM:   G = wand of fireball
 KFEAT:   ABCDEFGHI = .
 COLOUR:  ABCDEFGHI = blue
 MARKER:  A = lua:tutorial.message( "You can chop up corpses with " .. tutorial.get_cmd("CMD_BUTCHER") .. " into edible meat chunks while standing over them. For that you'll need a sharp object, such as the axe over there.", "tutorial", "true" )
-MARKER:  d = lua:tutorial.message( "This axe was picked up automatically because you didn't have a butchering tool. Once you've " .. tutorial.get_cmd("CMD_FIRE") .. "hopped a corpse you're standing on, you can eat the resulting chunks with " .. tutorial.get_cmd("CMD_EAT") .. ", though only if you're hungry.", "tutorial", "true" )
+MARKER:  d = lua:tutorial.message( "This axe was picked up automatically because you didn't have a butchering tool. Once you've " .. tutorial.get_cmd("CMD_BUTCHER") .. "hopped a corpse you're standing on, you can eat the resulting chunks with " .. tutorial.get_cmd("CMD_EAT") .. ", though only if you're hungry.", "tutorial", "true" )
 MARKER:  B = lua:tutorial.message_eat()
 MARKER:  C = lua:tutorial.message_identify()
 MARKER:  D = lua:tutorial.message( "These meat rations weigh too much. You can drop them with <white>d</white>. You can also drop e.g. only 10, by typing " .. tutorial.get_cmd("CMD_DROP") .. ", <white>10</white> and then selecting the meat rations.", "tutorial", "true" )
