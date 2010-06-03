@@ -4317,6 +4317,7 @@ static bool _drop_tomb(monsters* mon)
     // Don't wander on duty!
     mon->behaviour = BEH_SEEK;
 
+    bool seen_change = false;
     for (adjacent_iterator ai(mon->pos()); ai; ++ai)
     {
         if (grd(*ai) == DNGN_ROCK_WALL)
@@ -4324,12 +4325,14 @@ static bool _drop_tomb(monsters* mon)
             grd(*ai) = DNGN_FLOOR;
             set_terrain_changed(*ai);
             count++;
+            if (you.see_cell(*ai))
+                seen_change = true;
         }
     }
 
     if (count)
     {
-        if (you.can_see(mon))
+        if (seen_change)
             mpr("The walls disappear!");
         else
             mpr("You hear a deep rumble.");
