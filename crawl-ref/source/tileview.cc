@@ -220,7 +220,7 @@ void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
 
 void tile_clear_flavour()
 {
-    for (rectangle_iterator ri(1); ri; ++ri)
+    for (rectangle_iterator ri(0); ri; ++ri)
     {
         env.tile_flv(*ri).floor   = 0;
         env.tile_flv(*ri).wall    = 0;
