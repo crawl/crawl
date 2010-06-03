@@ -333,7 +333,7 @@ MARKER:  J = lua:tutorial.message_monster_description()
 KFEAT:   ABCDEFGHQIJ = .
 COLOUR:  ABCDEFGHQIJ = blue
 #TILE:    ABCDEFGH = tutorial_message_tile_name_here
-MONS:    training dummy tile:mons_training_dummy; club ego:none
+MONS:    training dummy tile:mons_training_dummy hp:20 ; club ego:none
 epilogue{{
   tutorial.messagestart()
 }}
@@ -385,7 +385,7 @@ MARKER:  C = lua:tutorial.message_rest_reminder()
 MARKER:  D = lua:tutorial.message_memorize()
 MARKER:  E = lua:tutorial.message_magic_combat()
 MARKER:  F = lua:tutorial.message( "Rest up!", "tutorial", "true" )
-MONS:    training dummy tile:mons_training_dummy ; stone q:30
+MONS:    training dummy tile:mons_training_dummy hp:20 ; stone q:30
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xx(xxxxxxxxxxxxxxxxxxxxxxxxxx
