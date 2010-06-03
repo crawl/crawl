@@ -39,6 +39,7 @@
 #include "items.h"
 #include "item_use.h"
 #include "libutil.h"
+#include "mapmark.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-behv.h"
@@ -1887,12 +1888,16 @@ bool entomb(int pow)
     return (_do_imprison(pow, you.pos(), false));
 }
 
-bool cast_imprison(int pow, monsters *monster)
+bool cast_imprison(int pow, monsters *monster, int source)
 {
     if (_do_imprison(pow, monster->pos(), true))
     {
-        monster->add_ench(mon_enchant(ENCH_ENTOMBED, 0, KC_YOU,
-                                      pow * 10));
+        const int tomb_duration = BASELINE_DELAY
+            * pow;
+        env.markers.add(new map_tomb_marker(monster->pos(),
+                                            tomb_duration,
+                                            source,
+                                            monster->mindex()));
         return (true);
     }
 

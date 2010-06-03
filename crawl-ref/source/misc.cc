@@ -48,6 +48,7 @@
 #include "fight.h"
 #include "files.h"
 #include "food.h"
+#include "godabil.h"
 #include "hiscores.h"
 #include "itemname.h"
 #include "itemprop.h"
@@ -1739,6 +1740,77 @@ bool player_in_a_dangerous_place(bool *invis)
     return (gen_threat > logexp * 1.3 || hi_threat > logexp / 2);
 }
 
+static void _drop_tomb(const coord_def& pos)
+{
+    int count = 0;
+
+    monsters* mon = monster_at(pos);
+    // Don't wander on duty!
+    if (mon)
+        mon->behaviour = BEH_SEEK;
+
+    bool seen_change = false;
+    for (adjacent_iterator ai(pos); ai; ++ai)
+    {
+        if (grd(*ai) == DNGN_ROCK_WALL)
+        {
+            grd(*ai) = DNGN_FLOOR;
+            set_terrain_changed(*ai);
+            count++;
+            if (you.see_cell(*ai))
+                seen_change = true;
+        }
+    }
+
+    if (count)
+    {
+        if (seen_change)
+            mpr("The walls disappear!");
+        else
+            mpr("You hear a deep rumble.");
+    }
+}
+
+void timeout_tombs(int duration)
+{
+    if (!duration)
+        return;
+
+    std::vector<map_marker*> markers = env.markers.get_all(MAT_TOMB);
+
+    for (int i = 0, size = markers.size(); i < size; ++i)
+    {
+        map_marker *mark = markers[i];
+        if (mark->get_type() != MAT_TOMB)
+            continue;
+
+        map_tomb_marker *cmark = dynamic_cast<map_tomb_marker*>(mark);
+        cmark->duration -= duration;
+
+        // Tombs without monsters in them disappear early.
+        if (cmark->duration <= 0 || !monster_at(cmark->pos))
+        {
+            _drop_tomb(cmark->pos);
+
+            monsters *mon_src =
+                !invalid_monster_index(cmark->source) ? &menv[cmark->source]
+                                                      : NULL;
+            monsters *mon_targ =
+                !invalid_monster_index(cmark->target) ? &menv[cmark->target]
+                                                      : NULL;
+
+            // Zin's Imprison ability.
+            if (cmark->source == -GOD_ZIN && mon_targ)
+                zin_recite_to_single_monster(mon_targ->pos());
+            // A monster's Tomb of Doroklohe spell.
+            else if (mon_src)
+                mon_src->lose_energy(EUT_SPELL);
+
+            env.markers.remove(cmark);
+        }
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////
 // Living breathing dungeon stuff.
 //
@@ -1820,6 +1892,7 @@ void run_environment_effects()
 
     run_corruption_effects(you.time_taken);
     shoals_apply_tides(div_rand_round(you.time_taken, 10));
+    timeout_tombs(you.time_taken);
 }
 
 coord_def pick_adjacent_free_square(const coord_def& p)

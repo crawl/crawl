@@ -1274,7 +1274,6 @@ enum enchant_type
     ENCH_TIDE,
     ENCH_INSANE,
     ENCH_SILENCE,
-    ENCH_ENTOMBED,
     ENCH_AWAKEN_FOREST,
     ENCH_EXPLODING,
 
@@ -1583,6 +1582,7 @@ enum map_marker_type
     MAT_LUA_MARKER,
     MAT_CORRUPTION_NEXUS,
     MAT_WIZ_PROPS,
+    MAT_TOMB,
     NUM_MAP_MARKER_TYPES,
     MAT_ANY
 };

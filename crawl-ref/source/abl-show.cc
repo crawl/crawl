@@ -1537,7 +1537,7 @@ static bool _do_ability(const ability_def& abil)
         power = 3 + roll_dice(3, 10 * (3 + you.skills[SK_INVOCATIONS])
                                     / (3 + monster->hit_dice)) / 3;
 
-        if (!cast_imprison(power, monster))
+        if (!cast_imprison(power, monster, -GOD_ZIN))
             return (false);
 
         exercise(SK_INVOCATIONS, 3 + random2(5));

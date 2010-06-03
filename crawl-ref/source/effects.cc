@@ -4210,6 +4210,7 @@ void update_level(long elapsedTime)
 
     update_corpses(elapsedTime);
     shoals_apply_tides(turns, true);
+    timeout_tombs(turns);
     recharge_rods(turns, true);
 
     if (env.sanctuary_time)
