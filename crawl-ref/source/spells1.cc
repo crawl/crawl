@@ -370,6 +370,9 @@ void cast_chain_lightning(int pow, const actor *caster)
     beam.is_explosion   = false;
     beam.is_tracer      = false;
 
+    if (const monsters *monster = caster->as_monster())
+        beam.source_name = monster->name(DESC_PLAIN, true);
+
     bool first = true;
     coord_def source, target;
 
