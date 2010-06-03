@@ -102,6 +102,23 @@ public:
     int duration, radius;
 };
 
+class map_tomb_marker : public map_marker
+{
+public:
+     map_tomb_marker(const coord_def& pos = coord_def(0, 0),
+                     int dur = 0);
+
+    void write(writer &) const;
+    void read(reader &);
+    map_marker *clone() const;
+    std::string debug_describe() const;
+
+    static map_marker *read(reader &, map_marker_type);
+
+public:
+    int duration;
+};
+
 // A marker powered by Lua.
 class map_lua_marker : public map_marker, public dgn_event_listener
 {

@@ -1323,9 +1323,22 @@ void end_game(scorefile_entry &se)
     {
         mprnojoin("You die...");      // insert player name here? {dlb}
         xom_death_message((kill_method_type) se.get_death_type());
-        if (you.religion == GOD_FEDHAS)
+
+        switch (you.religion)
+        {
+        case GOD_FEDHAS:
             simple_god_message(" appreciates your contribution to the "
-                               "ecosystem.", GOD_FEDHAS);
+                               "ecosystem.");
+            break;
+
+        case GOD_NEMELEX_XOBEH:
+            mpr("Your body glows with a rainbow of weird colours "
+                "and disappears.", MSGCH_GOD, GOD_NEMELEX_XOBEH);
+            break;
+
+        default:
+            break;
+        }
 
         flush_prev_message();
         viewwindow(false); // don't do for leaving/winning characters
