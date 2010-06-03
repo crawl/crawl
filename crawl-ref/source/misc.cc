@@ -1128,7 +1128,7 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
         {
             env.pgrid(where) |= FPROP_BLOODY;
 
-            if (smell_alert)
+            if (smell_alert && in_bounds(where))
                 blood_smell(12, where);
         }
 
