@@ -106,7 +106,6 @@ void add_monster_to_transit(const level_id &lid, const monsters &m)
 {
     m_transit_list &mlist = the_lost_ones[lid];
     mlist.push_back(m);
-    mlist.back().mons.source = MHITNOT;
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "Monster in transit: %s",
@@ -242,50 +241,54 @@ void follower::load_mons_items()
 
 bool follower::place(bool near_player)
 {
-    // Find first empty slot in menv and copy monster into it.
-    monsters* mp = get_free_monster(5);
-    if (!mp)
-        return (false);
-
-    monsters& m = *mp;
-
-    m = mons;
-    m.retain();
-
-    bool placed = false;
-
-    // In certain instances (currently, falling through a shaft)
-    // try to place monster as close as possible to its previous
-    // <x,y> coordinates.
-    if (!near_player && you.level_type == LEVEL_DUNGEON
-        && in_bounds(m.pos()))
+    for (int i = 0; i < MAX_MONSTERS - 5; ++i)
     {
-        const coord_def where_to_go =
-            dgn_find_nearby_stair(DNGN_ESCAPE_HATCH_DOWN,
-                                  m.pos(), true);
+        // Find first empty slot in menv and copy monster into it.
+        monsters &m = menv[i];
+        if (m.alive())
+            continue;
+        m = mons;
 
-        if (where_to_go == you.pos())
-            near_player = true;
-        else if (m.find_home_near_place(where_to_go))
-            placed = true;
+        bool placed = false;
+
+        // In certain instances (currently, falling through a shaft)
+        // try to place monster as close as possible to its previous
+        // <x,y> coordinates.
+        if (!near_player && you.level_type == LEVEL_DUNGEON
+            && in_bounds(m.pos()))
+        {
+            const coord_def where_to_go =
+                dgn_find_nearby_stair(DNGN_ESCAPE_HATCH_DOWN,
+                                      m.pos(), true);
+
+            if (where_to_go == you.pos())
+                near_player = true;
+            else if (m.find_home_near_place(where_to_go))
+                placed = true;
+        }
+
+        if (!placed)
+            placed = m.find_place_to_live(near_player);
+
+        if (placed)
+        {
+#ifdef DEBUG_DIAGNOSTICS
+            mprf(MSGCH_DIAGNOSTICS, "Placed follower: %s",
+                 m.name(DESC_PLAIN).c_str());
+#endif
+            m.target.reset();
+
+            m.flags &= ~MF_TAKING_STAIRS;
+            m.flags |= MF_JUST_SUMMONED;
+
+            restore_mons_items(m);
+            return (true);
+        }
+
+        m.reset();
+        break;
     }
 
-    if (!placed)
-        placed = m.find_place_to_live(near_player);
-
-    if (placed)
-    {
-        dprf("Placed follower: %s", m.name(DESC_PLAIN).c_str());
-        m.target.reset();
-
-        m.flags &= ~MF_TAKING_STAIRS;
-        m.flags |= MF_JUST_SUMMONED;
-
-        restore_mons_items(m);
-        return (true);
-    }
-
-    m.reset();
     return (false);
 }
 

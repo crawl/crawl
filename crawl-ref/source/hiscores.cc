@@ -875,6 +875,11 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
     else
         auxkilldata = aux;
 
+    if (!invalid_monster_index(death_source)
+        && !env.mons[death_source].alive())
+    {
+        death_source = NON_MONSTER;
+    }
     // for death by monster
     if ((death_type == KILLED_BY_MONSTER
             || death_type == KILLED_BY_BEAM

@@ -54,9 +54,9 @@ static bool _valid_mon_spells[NUM_SPELLS];
 
 void init_mons_spells()
 {
-    monsters* fake_mon = get_free_monster();
-    fake_mon->type = MONS_BLACK_DRACONIAN;
-    fake_mon->hit_points = 1;
+    monsters fake_mon;
+    fake_mon.type       = MONS_BLACK_DRACONIAN;
+    fake_mon.hit_points = 1;
 
     bolt pbolt;
 
@@ -69,11 +69,9 @@ void init_mons_spells()
         if (!is_valid_spell(spell))
             continue;
 
-        if (setup_mons_cast(fake_mon, pbolt, spell, true))
+        if (setup_mons_cast(&fake_mon, pbolt, spell, true))
             _valid_mon_spells[i] = true;
     }
-
-    monster_cleanup(fake_mon);
 }
 
 bool is_valid_mon_spell(spell_type spell)

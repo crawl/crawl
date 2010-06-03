@@ -2088,10 +2088,7 @@ void monster_cleanup(monsters *monster)
     }
 
     unsigned int monster_killed = monster->mindex();
-    // pretend that the monster is dead (even if it isn't) to avoid
-    // complaints from the debug scan
-    monster->hit_points = 0;
-    monster->release();
+    monster->reset();
 
     for (monster_iterator mi; mi; ++mi)
        if (mi->foe == monster_killed)

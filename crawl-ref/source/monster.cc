@@ -70,8 +70,7 @@ monsters::monsters()
       attitude(ATT_HOSTILE), behaviour(BEH_WANDER), foe(MHITYOU),
       enchantments(), flags(0L), experience(0), base_monster(MONS_NO_MONSTER),
       number(0), colour(BLACK), foe_memory(0), shield_blocks(0),
-      god(GOD_NO_GOD), ghost(), seen_context(""), props(),
-      refcount(0)
+      god(GOD_NO_GOD), ghost(), seen_context(""), props()
 
 {
     travel_path.clear();
@@ -86,7 +85,6 @@ monsters::~monsters()
 
 monsters::monsters(const monsters &mon)
 {
-    refcount = 0;
     init_with(mon);
 }
 
@@ -118,8 +116,6 @@ void monsters::reset()
     behaviour       = BEH_SLEEP;
     foe             = MHITNOT;
     number          = 0;
-    refcount        = 0;
-    source          = MHITNOT;
 
     mons_remove_from_grid(this);
     position.reset();
@@ -163,7 +159,6 @@ void monsters::init_with(const monsters &mon)
     foe_memory        = mon.foe_memory;
     god               = mon.god;
     props             = mon.props;
-    source            = mon.source;
 
     if (mon.ghost.get())
         ghost.reset(new ghost_demon(*mon.ghost));

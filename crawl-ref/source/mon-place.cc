@@ -1204,31 +1204,18 @@ int place_monster(mgen_data mg, bool force_pos)
         }
     }
 
-    // hold on to the source
-    if (mg.summoner)
-    {
-        if (monsters *source = mg.summoner->as_monster())
-            mon->source = source->mindex();
-        else
-            mon->source = MHITNOT;
-    }
-
     // Placement of first monster, at least, was a success.
     return (id);
 }
 
-monsters* get_free_monster(int space)
+monsters* get_free_monster()
 {
-    for (int i = 0; i < MAX_MONSTERS - space; ++i)
-    {
-        monsters &mons = env.mons[i];
-        if (mons.type == MONS_NO_MONSTER)
+    for (int i = 0; i < MAX_MONSTERS; ++i)
+        if (env.mons[i].type == MONS_NO_MONSTER)
         {
-            mons.reset();
-            mons.retain();
-            return &mons;
+            env.mons[i].reset();
+            return (&env.mons[i]);
         }
-    }
 
     return (NULL);
 }

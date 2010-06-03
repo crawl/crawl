@@ -122,7 +122,6 @@ mon-clone.o \
 mon-death.o \
 mon-gear.o \
 mon-grow.o \
-mon-index.o \
 mon-info.o \
 mon-iter.o \
 mon-movetarget.o \
