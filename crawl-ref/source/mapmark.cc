@@ -31,12 +31,14 @@ map_marker::marker_reader map_marker::readers[NUM_MAP_MARKER_TYPES] =
     &map_lua_marker::read,
     &map_corruption_marker::read,
     &map_wiz_props_marker::read,
+    &map_tomb_marker::read
 };
 
 map_marker::marker_parser map_marker::parsers[NUM_MAP_MARKER_TYPES] =
 {
     &map_feature_marker::parse,
     &map_lua_marker::parse,
+    NULL,
     NULL,
     NULL
 };
@@ -562,6 +564,44 @@ map_marker *map_wiz_props_marker::parse(
 std::string map_wiz_props_marker::debug_describe() const
 {
     return "Wizard props: " + property("feature_description");
+}
+
+//////////////////////////////////////////////////////////////////////////
+// map_tomb_marker
+
+map_tomb_marker::map_tomb_marker(const coord_def &p, int dur)
+    : map_marker(MAT_TOMB, p), duration(dur)
+{
+}
+
+void map_tomb_marker::write(writer &out) const
+{
+    map_marker::write(out);
+    marshallShort(out, duration);
+}
+
+void map_tomb_marker::read(reader &in)
+{
+    map_marker::read(in);
+    duration = unmarshallShort(in);
+}
+
+map_marker *map_tomb_marker::read(reader &in, map_marker_type)
+{
+    map_tomb_marker *mc = new map_tomb_marker();
+    mc->read(in);
+    return (mc);
+}
+
+map_marker *map_tomb_marker::clone() const
+{
+    map_tomb_marker *mark = new map_tomb_marker(pos, duration);
+    return (mark);
+}
+
+std::string map_tomb_marker::debug_describe() const
+{
+    return make_stringf("Tomb (%d)", duration);
 }
 
 //////////////////////////////////////////////////////////////////////////
