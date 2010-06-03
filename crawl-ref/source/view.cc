@@ -787,8 +787,8 @@ static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc)
 {
     // Outside the env.show area.
     cell->glyph  = get_map_knowledge_char(gc);
-    cell->colour = Options.colour_map ? DARKGREY
-                                      : real_colour(get_map_col(gc, false));
+    cell->colour = Options.colour_map ? real_colour(get_map_col(gc, false))
+                                      : DARKGREY;
 #ifdef USE_TILE
     tileidx_t bg = env.tile_bk_bg(gc);
     tileidx_t fg = env.tile_bk_fg(gc);
@@ -841,8 +841,8 @@ static void _draw_los_backup(screen_cell_t *cell,
                              const coord_def &gc, const coord_def &ep)
 {
     cell->glyph  = get_map_knowledge_char(gc);
-    cell->colour = Options.colour_map ? DARKGREY
-                                      : real_colour(get_map_col(gc, false));
+    cell->colour = Options.colour_map ? real_colour(get_map_col(gc, false))
+                                      : DARKGREY;
 #ifdef USE_TILE
     tileidx_t bg = env.tile_bk_bg(gc);
     tileidx_t fg = env.tile_bk_fg(gc);
