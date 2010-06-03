@@ -353,7 +353,11 @@ ifeq ($(ARCH),i386)
 	SDK_VER := 10.4
 endif
 ifeq ($(ARCH),x86_64)
+ifdef TILES
 	SDK_VER := 10.6
+else
+	SDK_VER := 10.5
+endif
 endif
 
 # Mac OS X 10.4 adds a 'u' on the end of the SDK name. Everything
