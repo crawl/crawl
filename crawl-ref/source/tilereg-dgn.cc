@@ -88,7 +88,7 @@ void DungeonRegion::pack_buffers()
             packed_cell tile_cell;
             tile_cell.bg = vbuf_cell->tile_bg;
             tile_cell.fg = vbuf_cell->tile_fg;
-            if (in_bounds(gc))
+            if (map_bounds(gc))
             {
                 tile_cell.flv = env.tile_flv(gc);
                 pack_waves(gc, &tile_cell);
