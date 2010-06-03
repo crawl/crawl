@@ -1332,8 +1332,7 @@ void end_game(scorefile_entry &se)
             break;
 
         case GOD_NEMELEX_XOBEH:
-            mpr("Your body glows with a rainbow of weird colours "
-                "and disappears.", MSGCH_GOD, GOD_NEMELEX_XOBEH);
+            nemelex_death_message();
             break;
 
         default:

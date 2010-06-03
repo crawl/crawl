@@ -2989,20 +2989,21 @@ static void _erase_between(std::string& s,
         s.erase(s.begin() + left_pos, s.begin() + right_pos + right.size());
 }
 
-void print_sacrifice_message(god_type god, const item_def &item,
-                             piety_gain_t piety_gain, bool your)
+static std::string _sacrifice_message(std::string msg,
+                                      const std::string& itname,
+                                      bool glowing, bool plural,
+                                      piety_gain_t piety_gain)
 {
-    std::string msg(_Sacrifice_Messages[god][piety_gain]);
-    std::string itname = item.name(your ? DESC_CAP_YOUR : DESC_CAP_THE);
-    if (itname.find("glowing") != std::string::npos)
+    if (glowing)
     {
         _replace(msg, "[", "");
         _replace(msg, "]", "");
     }
     else
         _erase_between(msg, "[", "]");
-    _replace(msg, "%", (item.quantity == 1? "s" : ""));
-    _replace(msg, "&", (item.quantity == 1? "is" : "are"));
+    _replace(msg, "%", (plural ? "" : "s"));
+    _replace(msg, "&", (plural ? "are" : "is"));
+
     const char *tag_start, *tag_end;
     switch (piety_gain)
     {
@@ -3023,7 +3024,26 @@ void print_sacrifice_message(god_type god, const item_def &item,
     msg.insert(0, itname);
     msg = tag_start + msg + tag_end;
 
-    mpr(msg, MSGCH_GOD);
+    return (msg);
+}
+
+void print_sacrifice_message(god_type god, const item_def &item,
+                             piety_gain_t piety_gain, bool your)
+{
+    const std::string itname = item.name(your ? DESC_CAP_YOUR : DESC_CAP_THE);
+    mpr(_sacrifice_message(_Sacrifice_Messages[god][piety_gain], itname,
+                           itname.find("glowing") != std::string::npos,
+                           item.quantity > 1,
+                           piety_gain),
+        MSGCH_GOD, god);
+}
+
+void nemelex_death_message()
+{
+    const piety_gain_t piety_gain = static_cast<piety_gain_t>
+            (std::min(random2(you.piety) / 30, (int)PIETY_LOTS));
+    mpr(_sacrifice_message(_Sacrifice_Messages[GOD_NEMELEX_XOBEH][piety_gain],
+                           "Your body", you.backlit(), false, piety_gain));
 }
 
 bool god_hates_attacking_friend(god_type god, const actor *fr)
