@@ -68,6 +68,7 @@ bool fedhas_protects_species(int mc);
 bool fedhas_neutralises(const monsters * target);
 void print_sacrifice_message(god_type, const item_def &,
                              piety_gain_t, bool = false);
+void nemelex_death_message();
 
 bool tso_unchivalric_attack_safe_monster(const monsters *mon);
 
