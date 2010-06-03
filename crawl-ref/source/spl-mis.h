@@ -14,12 +14,6 @@
 #include "mpr.h"
 #include "spl-util.h"
 
-#define ZOT_TRAP_MISCAST     (NON_MONSTER + 1)
-#define WIELD_MISCAST        (NON_MONSTER + 2)
-#define MELEE_MISCAST        (NON_MONSTER + 3)
-#define MISC_KNOWN_MISCAST   (NON_MONSTER + 4)
-#define MISC_UNKNOWN_MISCAST (NON_MONSTER + 5)
-
 enum nothing_happens_when_type
 {
     NH_DEFAULT,

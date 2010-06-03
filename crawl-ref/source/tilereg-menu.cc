@@ -195,13 +195,11 @@ void MenuRegion::place_entries()
                     // NOTE: This is not perfect. Tiles will be drawn
                     // sorted by texture first, e.g. you can never draw
                     // a dungeon tile over a monster tile.
-                    int tile      = m_entries[i].tiles[t].tile;
-                    TextureID tex = m_entries[i].tiles[t].tex;
+                    tileidx_t tile = m_entries[i].tiles[t].tile;
+                    TextureID tex  = m_entries[i].tiles[t].tex;
                     m_tile_buf[tex].add_unscaled(tile, m_entries[i].sx,
                                                  m_entries[i].sy,
                                                  m_entries[i].tiles[t].ymax);
-//                     m_tile_buf[tex].add(tile, m_entries[i].sx, m_entries[i].sy,
-//                                         0, 0, true, TILE_Y);
                 }
             }
             else
@@ -380,10 +378,6 @@ void MenuRegion::set_more(const formatted_string &more)
 {
     m_more.clear();
     m_more += more;
-#if 0
-    // Not needed? (jpeg)
-    m_dirty = true;
-#endif
 }
 
 #endif

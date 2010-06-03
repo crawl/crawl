@@ -27,6 +27,7 @@ struct packed_cell
 // dungeon overlay of the passed in packed_cell.
 void pack_waves(const coord_def &gc, packed_cell *cell);
 
+class dolls_data;
 class mcache_entry;
 class ImageManager;
 
@@ -60,7 +61,9 @@ protected:
     void pack_doll(const dolls_data &doll, int x, int y,
                    bool submerged, bool ghost);
 
-    TileBuffer m_buf_dngn;
+    TileBuffer m_buf_floor;
+    TileBuffer m_buf_wall;
+    TileBuffer m_buf_feat;
     SubmergedTileBuffer m_buf_doll;
     SubmergedTileBuffer m_buf_main_trans;
     TileBuffer m_buf_main;

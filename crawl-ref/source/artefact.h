@@ -40,7 +40,10 @@ enum unrand_flag_type
     UNRAND_FLAG_EVIL             = 0x08,
     UNRAND_FLAG_UNCLEAN          = 0x10,
     UNRAND_FLAG_CHAOTIC          = 0x20,
-    UNRAND_FLAG_CORPSE_VIOLATING = 0x40
+    UNRAND_FLAG_CORPSE_VIOLATING = 0x40,
+    UNRAND_FLAG_NOGEN            = 0x80
+    // Warning!  Any further extension and you'll need to change the field from
+    // a char.  What a loss of 82*sizeof() bytes...
 };
 
 enum setup_missile_type
@@ -54,8 +57,8 @@ enum setup_missile_type
 // code (see mon-util.h & mon-util.cc) and modified (LRH).
 struct unrandart_entry
 {
-    const char *name;        // true name of unrandart (max 31 chars)
-    const char *unid_name;   // un-id'd name of unrandart (max 31 chars)
+    const char *name;        // true name of unrandart
+    const char *unid_name;   // un-id'd name of unrandart
 
     object_class_type base_type;
     unsigned char     sub_type;
@@ -68,12 +71,10 @@ struct unrandart_entry
 
     short prpty[ART_PROPERTIES];
 
-    // special description added to 'v' command output (max 31 chars)
-    const char *desc;
-    // special description added to 'v' command output (max 31 chars)
-    const char *desc_id;
-    // special description added to 'v' command output (max 31 chars)
-    const char *desc_end;
+    // special description added to 'v' command output
+    const char *desc;     // replaces un-ided (and default ided) db entry
+    const char *desc_id;  // replaces ided
+    const char *desc_end; // appended to ided
 
     void (*equip_func)(item_def* item, bool* show_msgs, bool unmeld);
     void (*unequip_func)(const item_def* item, bool* show_msgs);

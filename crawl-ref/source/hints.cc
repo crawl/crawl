@@ -56,9 +56,6 @@
 #include "env.h"
 #include "tags.h"
 #include "terrain.h"
-#ifdef USE_TILE
- #include "tiles.h"
-#endif
 #include "travel.h"
 #include "view.h"
 #include "viewchar.h"

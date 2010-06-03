@@ -12,6 +12,17 @@
 #include "tiletex.h"
 #include "windowmanager.h"
 
+TextureID get_dngn_tex(tileidx_t idx)
+{
+    assert(idx < TILE_FEAT_MAX);
+    if (idx < TILE_FLOOR_MAX)
+        return (TEX_FLOOR);
+    else if (idx < TILE_WALL_MAX)
+        return (TEX_WALL);
+    else
+        return (TEX_FEAT);
+}
+
 GenericTexture::GenericTexture() :
     m_handle(0),
     m_width(0),
@@ -81,9 +92,12 @@ void TilesTexture::set_info(int tile_max, tile_info_func *info_func)
     m_info_func = info_func;
 }
 
+// This array should correspond to the TEXTURE_ enum.
 const char *ImageManager::filenames[TEX_MAX] =
 {
-    "dngn.png",
+    "floor.png",
+    "wall.png",
+    "feat.png",
     "player.png",
     "main.png",
     "gui.png"
@@ -102,16 +116,16 @@ bool ImageManager::load_textures(bool need_mips)
 {
     MipMapOptions mip = need_mips ?
         MIPMAP_CREATE : MIPMAP_NONE;
-    if (!m_textures[TEX_DUNGEON].load_texture(filenames[TEX_DUNGEON], mip))
-        return (false);
 
-    if (!m_textures[TEX_PLAYER].load_texture(filenames[TEX_PLAYER], mip))
-        return (false);
+    for (size_t i = 0; i < sizeof(filenames) / sizeof(filenames[0]); ++i)
+    {
+        if (!m_textures[i].load_texture(filenames[i], mip))
+            return (false);
+    }
 
-    if (!m_textures[TEX_GUI].load_texture(filenames[TEX_GUI], mip))
-        return (false);
-
-    m_textures[TEX_DUNGEON].set_info(TILE_DNGN_MAX, &tile_dngn_info);
+    m_textures[TEX_FLOOR].set_info(TILE_FLOOR_MAX, &tile_floor_info);
+    m_textures[TEX_WALL].set_info(TILE_DNGN_MAX, &tile_wall_info);
+    m_textures[TEX_FEAT].set_info(TILE_DNGN_MAX, &tile_feat_info);
     m_textures[TEX_PLAYER].set_info(TILEP_PLAYER_MAX, &tile_player_info);
     m_textures[TEX_GUI].set_info(TILEG_GUI_MAX, &tile_gui_info);
 

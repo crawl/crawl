@@ -27,7 +27,6 @@
 #include "tiledef-gui.h"
 #include "tiledef-main.h"
 #include "tilefont.h"
-#include "tiles.h"
 #include "tilereg.h"
 #include "tilereg-crt.h"
 #include "tilereg-dgn.h"
@@ -404,15 +403,15 @@ int TilesFramework::load_font(const char *font_file, int font_size,
 
     return (m_fonts.size() - 1);
 }
-
-void TilesFramework::load_dungeon(unsigned int *tileb, const coord_def &gc)
+void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
+                                  const coord_def &gc)
 {
     m_active_layer = LAYER_NORMAL;
 
-    unsigned int ox = m_region_tile->mx/2;
-    unsigned int oy = m_region_tile->my/2;
-    m_region_tile->load_dungeon(tileb, gc.x - ox, gc.y - oy);
+    m_region_tile->load_dungeon(vbuf, gc);
 
+    int ox = m_region_tile->mx/2;
+    int oy = m_region_tile->my/2;
     coord_def win_start(gc.x - ox, gc.y - oy);
     coord_def win_end(gc.x + ox + 1, gc.y + oy + 1);
 
@@ -1101,121 +1100,6 @@ void TilesFramework::update_minimap_bounds()
     m_region_map->update_bounds();
 }
 
-int tile_known_brand(const item_def item)
-{
-    if (!item_type_known(item))
-        return 0;
-
-    if (item.base_type == OBJ_WEAPONS)
-    {
-        const int brand = get_weapon_brand(item);
-        if (brand != SPWPN_NORMAL)
-            return (TILE_BRAND_FLAMING + get_weapon_brand(item) - 1);
-    }
-    else if (item.base_type == OBJ_ARMOUR)
-    {
-        const int brand = get_armour_ego_type(item);
-        if (brand != SPARM_NORMAL)
-            return (TILE_BRAND_ARM_RUNNING + get_armour_ego_type(item) - 1);
-        else if (is_artefact(item)
-                 && artefact_wpn_property(item, ARTP_PONDEROUS))
-        {
-            return (TILE_BRAND_ARM_PONDEROUSNESS);
-        }
-    }
-    else if (item.base_type == OBJ_MISSILES)
-    {
-        switch (get_ammo_brand(item))
-        {
-        case SPMSL_FLAME:
-            return TILE_BRAND_FLAME;
-        case SPMSL_FROST:
-            return TILE_BRAND_FROST;
-        case SPMSL_POISONED:
-            return TILE_BRAND_POISONED;
-        case SPMSL_CURARE:
-            return TILE_BRAND_CURARE;
-        case SPMSL_RETURNING:
-            return TILE_BRAND_RETURNING;
-        case SPMSL_CHAOS:
-            return TILE_BRAND_CHAOS;
-        case SPMSL_PENETRATION:
-            return TILE_BRAND_PENETRATION;
-        case SPMSL_REAPING:
-            return TILE_BRAND_REAPING;
-        case SPMSL_DISPERSAL:
-            return TILE_BRAND_DISPERSAL;
-        case SPMSL_EXPLODING:
-            return TILE_BRAND_EXPLOSION;
-        case SPMSL_CONFUSION:
-            return TILE_BRAND_CONFUSION;
-        case SPMSL_PARALYSIS:
-            return TILE_BRAND_PARALYSIS;
-        case SPMSL_SLOW:
-            return TILE_BRAND_SLOWING;
-        case SPMSL_SICKNESS:
-            return TILE_BRAND_SICKNESS;
-        case SPMSL_RAGE:
-            return TILE_BRAND_RAGE;
-        case SPMSL_SLEEP:
-            return TILE_BRAND_SLEEP;
-        default:
-            break;
-        }
-    }
-    return 0;
-}
-
-int tile_corpse_brand(const item_def item)
-{
-    if (item.base_type != OBJ_CORPSES || item.sub_type != CORPSE_BODY)
-        return (0);
-
-    const bool fulsome_dist = you.has_spell(SPELL_FULSOME_DISTILLATION);
-    const bool rotten       = food_is_rotten(item);
-    const bool saprovorous  = player_mutation_level(MUT_SAPROVOROUS);
-
-    // Brands are mostly meaningless to herbivores.
-    // Could still be interesting for Fulsome Distillation, though.
-    if (fulsome_dist && player_mutation_level(MUT_HERBIVOROUS) == 3)
-        return (0);
-
-    // Vampires are only interested in fresh blood.
-    if (you.species == SP_VAMPIRE
-        && (rotten || !mons_has_blood(item.plus)))
-    {
-        return TILE_FOOD_INEDIBLE;
-    }
-
-    // Rotten corpses' chunk effects are meaningless if we are neither
-    // saprovorous nor have the Fulsome Distillation spell.
-    if (rotten && !saprovorous && !fulsome_dist)
-        return TILE_FOOD_INEDIBLE;
-
-    // Harmful chunk effects > religious rules > chance of sickness.
-    if (is_poisonous(item))
-        return TILE_FOOD_POISONED;
-
-    if (is_mutagenic(item))
-        return TILE_FOOD_MUTAGENIC;
-
-    if (causes_rot(item))
-        return TILE_FOOD_ROTTING;
-
-    if (is_forbidden_food(item))
-        return TILE_FOOD_FORBIDDEN;
-
-    if (is_contaminated(item))
-        return TILE_FOOD_CONTAMINATED;
-
-    // If no special chunk effects, mark corpse as inedible
-    // unless saprovorous.
-    if (rotten && !saprovorous)
-        return TILE_FOOD_INEDIBLE;
-
-    return 0;
-}
-
 void TilesFramework::update_inventory()
 {
     if (!Options.tile_show_items || crawl_state.game_is_arena())
@@ -1275,7 +1159,7 @@ const coord_def &TilesFramework::get_cursor() const
     return (m_region_tile->get_cursor());
 }
 
-void TilesFramework::add_overlay(const coord_def &gc, int idx)
+void TilesFramework::add_overlay(const coord_def &gc, tileidx_t idx)
 {
     m_region_tile->add_overlay(gc, idx);
 }

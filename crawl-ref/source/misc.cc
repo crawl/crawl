@@ -83,7 +83,6 @@
 #include "stuff.h"
 #include "tagstring.h"
 #include "terrain.h"
-#include "tiles.h"
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
@@ -96,9 +95,9 @@
 
 static void _create_monster_hide(const item_def corpse)
 {
-    // receive_corpses() in spells3.cc creates corpses that
-    // are easily scummed for hides.  We prevent this by setting
-    // "DoNotDropHide" as an item property of corpses it creates.
+    // kiku_receive_corpses() creates corpses that are easily scummed
+    // for hides.  We prevent this by setting "DoNotDropHide" as an item
+    // property of corpses it creates.
     if (corpse.props.exists("DoNotDropHide"))
         return;
 
@@ -1129,7 +1128,7 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
         {
             env.pgrid(where) |= FPROP_BLOODY;
 
-            if (smell_alert)
+            if (smell_alert && in_bounds(where))
                 blood_smell(12, where);
         }
 
@@ -1980,7 +1979,8 @@ bool stop_attack_prompt(const monsters *mon, bool beam_attack,
         prompt = true;
     }
     else if (inSanctuary || wontAttack
-             || (you.religion == GOD_JIYVA && mons_is_slime(mon))
+             || (you.religion == GOD_JIYVA && mons_is_slime(mon)
+                 && !mon->is_shapeshifter())
              || (isNeutral || isHoly) && is_good_god(you.religion)
              || isUnchivalric
                 && you.religion == GOD_SHINING_ONE

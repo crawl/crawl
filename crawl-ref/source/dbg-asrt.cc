@@ -35,6 +35,10 @@
 #include "state.h"
 #include "travel.h"
 
+#ifdef DGL_MILESTONES
+#include "hiscores.h"
+#endif
+
 #ifdef ASSERTS
 static std::string _assert_msg;
 #endif
@@ -229,8 +233,8 @@ static void _dump_player(FILE *file)
 
     fprintf(file, "Demon mutations:\n");
     for (int i = 0; i < NUM_MUTATIONS; ++i)
-        if (you.demon_pow[i] > 0)
-            fprintf(file, "    #%d: %d\n", i, you.demon_pow[i]);
+        if (you.innate_mutations[i] > 0)
+            fprintf(file, "    #%d: %d\n", i, you.innate_mutations[i]);
 
     fprintf(file, "\n");
 
@@ -615,6 +619,10 @@ void do_crash_dump()
     fprintf(file, ">>>>>>>>>>>>>>>>>>>>>>\n");
 
     set_msg_dump_file(NULL);
+
+#ifdef DGL_MILESTONES
+    mark_milestone("crash", _assert_msg);
+#endif
 
     if (file != stderr)
         fclose(file);

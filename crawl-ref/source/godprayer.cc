@@ -80,7 +80,8 @@ bool god_accepts_prayer(god_type god)
 {
     harm_protection_type hpt = god_protects_from_harm(god, false);
 
-    if (hpt == HPT_PRAYING || hpt == HPT_PRAYING_PLUS_ANYTIME
+    if (hpt == HPT_PRAYING
+        || hpt == HPT_PRAYING_PLUS_ANYTIME
         || hpt == HPT_RELIABLE_PRAYING_PLUS_ANYTIME)
     {
         return (true);
@@ -101,7 +102,7 @@ bool god_accepts_prayer(god_type god)
         return (yred_injury_mirror(false));
 
     case GOD_JIYVA:
-        return (jiyva_accepts_prayer());
+        return (jiyva_can_paralyse_jellies());
 
     case GOD_BEOGH:
     case GOD_NEMELEX_XOBEH:
@@ -206,6 +207,8 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
 
     if (god == GOD_KIKUBAAQUDGHA)
     {
+        you.gift_timeout = 0; // no protection during pain branding weapon
+
         torment(TORMENT_KIKUBAAQUDGHA, you.pos());
 
         // Bloodify surrounding squares (75% chance).

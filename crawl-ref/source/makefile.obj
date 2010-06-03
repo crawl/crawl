@@ -212,6 +212,7 @@ tiledoll.o \
 tilefont.o \
 tilemcache.o \
 tilepick.o \
+tilepick-p.o \
 tilereg.o \
 tilereg-crt.o \
 tilereg-dgn.o \
@@ -229,7 +230,8 @@ tilereg-tab.o \
 tilereg-text.o \
 tilereg-title.o \
 tilesdl.o \
-tiletex.o
+tiletex.o \
+tileview.o
 endif
 
 ifdef SDL

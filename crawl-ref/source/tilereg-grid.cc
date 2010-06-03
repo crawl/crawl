@@ -11,6 +11,8 @@
 #include "tilereg-grid.h"
 
 #include "libutil.h"
+#include "random.h"
+#include "player.h" // FIXME: Only needed because last_clicked is global.  :(
 #include "tiledef-main.h"
 #include "tilefont.h"
 
@@ -131,7 +133,7 @@ void GridRegion::add_quad_char(char c, int x, int y, int ofs_x, int ofs_y)
 {
     int num = c - '0';
     ASSERT(num >= 0 && num <= 9);
-    int idx = TILE_NUM0 + num;
+    tileidx_t idx = TILE_NUM0 + num;
 
     m_buf.add_main_tile(idx, x, y, ofs_x, ofs_y);
 }

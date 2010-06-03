@@ -90,8 +90,6 @@ void clear_map(bool clear_items = true, bool clear_mons = true);
 
 int get_map_knowledge_col(const coord_def& p);
 
-void set_map_knowledge_glyph(const coord_def& c, show_type object, int col);
-
 void clear_map_knowledge_grid(const coord_def& p);
 
 #endif

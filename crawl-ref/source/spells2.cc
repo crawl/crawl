@@ -50,8 +50,8 @@
 #include "stuff.h"
 #include "teleport.h"
 #ifdef USE_TILE
-#include "tiles.h"
-#include "tiledef-main.h"
+ #include "tiledef-main.h"
+ #include "tileview.h"
 #endif
 #include "terrain.h"
 #include "traps.h"
@@ -117,11 +117,6 @@ static void _fuzz_detect_creatures(int pow, int *fuzz_radius, int *fuzz_chance)
 static bool _mark_detected_creature(coord_def where, const monsters *mon,
                                     int fuzz_chance, int fuzz_radius)
 {
-#ifdef USE_TILE
-    // Get monster index pre-fuzz.
-    int idx = mgrd(where);
-#endif
-
     bool found_good = false;
 
     if (fuzz_radius && x_chance_in_y(fuzz_chance, 100))
@@ -163,7 +158,7 @@ static bool _mark_detected_creature(coord_def where, const monsters *mon,
     set_map_knowledge_detected_mons(where);
 
 #ifdef USE_TILE
-    tile_place_monster(where.x, where.y, idx, false, true);
+    tile_place_monster(where, mon, false, true);
 #endif
 
     return (found_good);
@@ -646,54 +641,6 @@ void cast_refrigeration(int pow, bool non_player)
         {
             mi->add_ench(ENCH_SLOW);
         }
-    }
-}
-
-void drain_life(int pow)
-{
-    mpr("You draw life from your surroundings.");
-
-    // Incoming power to this function is skill in INVOCATIONS, so
-    // we'll add an assert here to warn anyone who tries to use
-    // this function with spell level power.
-    ASSERT(pow <= 27);
-
-    flash_view(DARKGREY);
-    more();
-    mesclr();
-
-    int hp_gain = 0;
-
-    for (monster_iterator mi(you.get_los()); mi; ++mi)
-    {
-        if (mi->holiness() != MH_NATURAL
-            || mi->res_negative_energy())
-        {
-            continue;
-        }
-
-        mprf("You draw life from %s.",
-             mi->name(DESC_NOCAP_THE).c_str());
-
-        const int hurted = 3 + random2(7) + random2(pow);
-        behaviour_event(*mi, ME_WHACK, MHITYOU, you.pos());
-        if (!mi->is_summoned())
-            hp_gain += hurted;
-
-        mi->hurt(&you, hurted);
-
-        if (mi->alive())
-            print_wounds(*mi);
-    }
-
-    hp_gain /= 2;
-
-    hp_gain = std::min(pow * 2, hp_gain);
-
-    if (hp_gain)
-    {
-        mpr("You feel life flooding into your body.");
-        inc_hp(hp_gain, false);
     }
 }
 

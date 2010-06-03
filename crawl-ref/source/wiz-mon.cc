@@ -85,10 +85,10 @@ void wizard_create_spec_monster_name()
     if (!err.empty())
     {
         std::string newerr;
-        // Try for a partial match, but not if the user accidently entered
+        // Try for a partial match, but not if the user accidentally entered
         // only a few letters.
         monster_type partial = get_monster_by_name(specs);
-        if (strlen(specs) >= 3 && partial != NON_MONSTER)
+        if (strlen(specs) >= 3 && partial != MONS_NO_MONSTER)
         {
             mlist.clear();
             newerr = mlist.add_mons(mons_type_name(partial, DESC_PLAIN));
@@ -364,6 +364,7 @@ void wizard_spawn_control()
         int max_spawn = MAX_MONSTERS - 50;
         for (monster_iterator mi; mi; ++mi)
             if (mi->alive())
+                max_spawn--;
 
         if (max_spawn <= 0)
         {

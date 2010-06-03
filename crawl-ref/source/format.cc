@@ -49,12 +49,13 @@ void display_tagged_block(const std::string &s)
     std::vector<formatted_string> lines;
     formatted_string::parse_string_to_multiple(s, lines);
 
+    int x = wherex();
+    int y = wherey();
     for (int i = 0, size = lines.size(); i < size; ++i)
     {
-        int x = wherex();
-        int y = wherey();
+        cgotoxy(x, y);
         lines[i].display();
-        cgotoxy(x, y+1);
+        y++;
     }
 }
 

@@ -3301,6 +3301,104 @@ enum tag_pref
     TAGPREF_ENEMY,    // display text tags on enemy named monsters
     TAGPREF_MAX
 };
+enum tile_flags
+{
+    // Foreground flags
+    TILE_FLAG_S_UNDER    = 0x00000800,
+    TILE_FLAG_FLYING     = 0x00001000,
+    TILE_FLAG_PET        = 0x00002000,
+    TILE_FLAG_GD_NEUTRAL = 0x00004000,
+    TILE_FLAG_NEUTRAL    = 0x00008000,
+    TILE_FLAG_STAB       = 0x00010000,
+    TILE_FLAG_MAY_STAB   = 0x00020000,
+    TILE_FLAG_NET        = 0x00040000,
+    TILE_FLAG_POISON     = 0x00080000,
+    TILE_FLAG_ANIM_WEP   = 0x00100000,
+    TILE_FLAG_FLAME      = 0x00200000,
+    TILE_FLAG_BERSERK    = 0x00400000,
+
+    // MDAM has 5 possibilities, so uses 3 bits.
+    TILE_FLAG_MDAM_MASK  = 0x03800000,
+    TILE_FLAG_MDAM_LIGHT = 0x00800000,
+    TILE_FLAG_MDAM_MOD   = 0x01000000,
+    TILE_FLAG_MDAM_HEAVY = 0x01800000,
+    TILE_FLAG_MDAM_SEV   = 0x02000000,
+    TILE_FLAG_MDAM_ADEAD = 0x02800000,
+
+    // Demon difficulty has 5 possibilities, so uses 3 bits.
+    TILE_FLAG_DEMON   = 0x34000000,
+    TILE_FLAG_DEMON_5 = 0x04000000,
+    TILE_FLAG_DEMON_4 = 0x10000000,
+    TILE_FLAG_DEMON_3 = 0x14000000,
+    TILE_FLAG_DEMON_2 = 0x20000000,
+    TILE_FLAG_DEMON_1 = 0x24000000,
+
+    // Background flags
+    TILE_FLAG_RAY        = 0x00000800,
+    TILE_FLAG_MM_UNSEEN  = 0x00001000,
+    TILE_FLAG_UNSEEN     = 0x00002000,
+    TILE_FLAG_CURSOR1    = 0x00004000,
+    TILE_FLAG_CURSOR2    = 0x00008000,
+    TILE_FLAG_CURSOR3    = 0x0000C000,
+    TILE_FLAG_CURSOR     = 0x0000C000,
+    TILE_FLAG_BLOOD      = 0x00010000,
+    TILE_FLAG_HALO       = 0x00020000,
+    TILE_FLAG_NEW_STAIR  = 0x00040000,
+    TILE_FLAG_WAS_SECRET = 0x00080000,
+    TILE_FLAG_TRAV_EXCL  = 0x00100000,
+    TILE_FLAG_EXCL_CTR   = 0x00200000,
+    TILE_FLAG_SANCTUARY  = 0x00400000,
+    TILE_FLAG_TUT_CURSOR = 0x00800000,
+    TILE_FLAG_RAY_OOR    = 0x01000000,
+    TILE_FLAG_OOR        = 0x02000000,
+    TILE_FLAG_WATER      = 0x04000000,
+    TILE_FLAG_MOLD       = 0x08000000,
+    TILE_FLAG_SILENCED   = 0x10000000,
+
+    // General
+    TILE_FLAG_MASK       = 0x000007FF
+};
+
+enum tile_inventory_flags
+{
+    TILEI_FLAG_SELECT  = 0x0100,
+    TILEI_FLAG_TRIED   = 0x0200,
+    TILEI_FLAG_EQUIP   = 0x0400,
+    TILEI_FLAG_FLOOR   = 0x0800,
+    TILEI_FLAG_CURSE   = 0x1000,
+    TILEI_FLAG_CURSOR  = 0x2000,
+    TILEI_FLAG_MELDED  = 0x4000,
+    TILEI_FLAG_INVALID = 0x8000
+};
+
+enum tile_player_flags
+{
+    TILEP_GENDER_FEMALE = 0,
+    TILEP_GENDER_MALE   = 1,
+    TILEP_SHOW_EQUIP    = 0x1000
+};
+
+enum tile_player_flag_cut
+{
+    TILEP_FLAG_HIDE,
+    TILEP_FLAG_NORMAL,
+    TILEP_FLAG_CUT_CENTAUR,
+    TILEP_FLAG_CUT_NAGA
+};
+
+// normal tile size in px
+enum
+{
+    TILE_X = 32,
+    TILE_Y = 32
+};
+
+// Don't change this without also modifying the data save/load routines.
+enum
+{
+    NUM_MAX_DOLLS = 10
+};
+
 #endif
 
 #ifdef WIZARD

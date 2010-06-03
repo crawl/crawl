@@ -23,6 +23,9 @@
 #include "stuff.h"
 #include "areas.h"
 #include "terrain.h"
+#ifdef USE_TILE
+ #include "tileview.h"
+#endif
 #include "viewgeom.h"
 #include "viewmap.h"
 
@@ -175,6 +178,8 @@ static unsigned short _feat_colour(const coord_def &where,
         colour = RED;
     else if (_show_mold(where, mold_colour))
         colour = mold_colour;
+    else if (slime_wall_neighbour(where))
+        colour = LIGHTGREEN;
     else if (env.grid_colours(where))
         colour = env.grid_colours(where);
     else
@@ -279,14 +284,10 @@ void show_def::_update_item_at(const coord_def &gp, const coord_def &ep)
     }
 
 #ifdef USE_TILE
-    int idx = you.visible_igrd(gp);
-    if (idx != NON_ITEM)
-    {
-        if (feat_is_stair(feat))
-            tile_place_item_marker(ep.x, ep.y, idx);
-        else
-            tile_place_item(ep.x, ep.y, idx);
-    }
+    if (feat_is_stair(feat))
+        tile_place_item_marker(ep, *eitem);
+    else
+        tile_place_item(ep, *eitem);
 #endif
 }
 
@@ -301,7 +302,7 @@ void show_def::_update_cloud(int cloudno)
     grid(e).colour = which_colour;
 
 #ifdef USE_TILE
-    tile_place_cloud(e.x, e.y, env.cloud[cloudno]);
+    tile_place_cloud(e, env.cloud[cloudno]);
 #endif
 }
 
@@ -337,7 +338,7 @@ void show_def::_update_monster(const monsters* mons)
     if (mons_is_unknown_mimic(mons))
     {
 #ifdef USE_TILE
-        tile_place_monster(mons->pos().x, mons->pos().y, mons->mindex(), true);
+        tile_place_monster(mons->pos(), mons, true);
 #endif
         return;
     }
@@ -398,7 +399,7 @@ void show_def::_update_monster(const monsters* mons)
     grid(e).colour = get_mons_glyph(mons, false).col;
 
 #ifdef USE_TILE
-    tile_place_monster(mons->pos().x, mons->pos().y, mons->mindex(), true);
+    tile_place_monster(mons->pos(), mons, true);
 #endif
 }
 

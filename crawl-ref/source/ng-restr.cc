@@ -691,8 +691,8 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
                 // else fall through
             case SP_HIGH_ELF:
             case SP_DEEP_ELF:
-                // Sludge elves have bad aptitudes with short swords (110) but are
-                // still better with them than any other starting weapon.
+                // Sludge elves have bad aptitudes with short swords (-1), but
+                // are still better with them than any other starting weapon.
             case SP_SLUDGE_ELF:
             case SP_HALFLING:
             case SP_KOBOLD:
@@ -739,6 +739,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
             case SP_HILL_ORC:
             case SP_MERFOLK:
             case SP_NAGA:
+            case SP_OGRE:
             case SP_CENTAUR:
             case SP_MINOTAUR:
             case SP_KENKU:
@@ -765,7 +766,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
             switch (ng.species)
             {
             case SP_MOUNTAIN_DWARF:
-            case SP_OGRE:
+            case SP_DEEP_DWARF:
             case SP_GHOUL:
             case SP_VAMPIRE:
                 return (CC_UNRESTRICTED);
@@ -832,18 +833,13 @@ char_choice_restriction religion_restriction(god_type god,
             switch (ng.species)
             {
             case SP_HILL_ORC:
-                // Restrict in favour of Beogh, else unrestricted.
-                if (ng.job == JOB_PRIEST)
-                    return (CC_RESTRICTED);
-                return (CC_UNRESTRICTED);
+                // Restrict in favour of Beogh.
+                return (CC_RESTRICTED);
 
             case SP_DEEP_ELF:
             case SP_KENKU:
-                // Unrestrict these only for Priests as Zin is worse, but
-                // Necromancy (DK) the better choice.
-                if (ng.job == JOB_PRIEST)
-                    return (CC_UNRESTRICTED);
-                return (CC_RESTRICTED);
+                // Unrestrict these as Zin is worse.
+                return (CC_UNRESTRICTED);
 
             case SP_HUMAN:
             case SP_HIGH_ELF:

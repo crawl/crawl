@@ -7,7 +7,9 @@
 
 #include <queue>
 
+#include "areas.h"
 #include "artefact.h"
+#include "attitude-change.h"
 #include "beam.h"
 #include "cloud.h"
 #include "colour.h"
@@ -21,6 +23,7 @@
 #include "files.h"
 #include "fprop.h"
 #include "godabil.h"
+#include "goditem.h"
 #include "godpassive.h"
 #include "invent.h"
 #include "itemprop.h"
@@ -36,15 +39,20 @@
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "mutation.h"
+#include "notes.h"
 #include "options.h"
+#include "player-stats.h"
 #include "random.h"
 #include "religion.h"
+#include "skills2.h"
 #include "shopping.h"
+#include "shout.h"
 #include "spells1.h"
 #include "spells3.h"
 #include "spells4.h"
 #include "spl-book.h"
 #include "spl-util.h"
+#include "stash.h"
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
@@ -55,66 +63,589 @@
 #include "tiledef-main.h"
 #endif
 
-bool yred_injury_mirror(bool actual)
+bool zin_sustenance(bool actual)
 {
-    return (you.religion == GOD_YREDELEMNUL && !player_under_penance()
-            && you.piety >= piety_breakpoint(1)
-            && (!actual || you.duration[DUR_PRAYER]));
+    return (you.piety >= piety_breakpoint(0)
+            && (!actual || you.hunger_state == HS_STARVING));
 }
 
-bool beogh_water_walk()
+// Monsters cannot be affected in these states.
+// (All results of Recite, plus stationary and friendly + stupid;
+// note that berserk monsters are also hasted.)
+static bool _zin_recite_mons_useless(const monsters *mon)
 {
-    return (you.religion == GOD_BEOGH && !player_under_penance()
-            && you.piety >= piety_breakpoint(4));
+    const mon_holy_type holiness = mon->holiness();
+
+    return (mons_intel(mon) < I_NORMAL
+            || !mon->is_holy()
+               && holiness != MH_NATURAL
+               && holiness != MH_UNDEAD
+               && holiness != MH_DEMONIC
+            || mons_is_stationary(mon)
+            || mons_is_fleeing(mon)
+            || mon->asleep()
+            || mon->wont_attack()
+            || mon->neutral()
+            || mons_is_confused(mon)
+            || mon->paralysed()
+            || mon->has_ench(ENCH_BATTLE_FRENZY)
+            || mon->has_ench(ENCH_HASTE));
 }
 
-bool jiyva_accepts_prayer()
+// Check whether this monster might be influenced by Recite.
+// Returns 0, if no monster found.
+// Returns 1, if eligible monster found.
+// Returns -1, if monster already affected or too dumb to understand.
+int zin_check_recite_to_single_monster(const coord_def& where)
 {
-    return (you.religion == GOD_JIYVA && !player_under_penance()
-            && you.piety >= piety_breakpoint(2));
+    monsters *mon = monster_at(where);
+
+    if (mon == NULL)
+        return (0);
+
+    if (!_zin_recite_mons_useless(mon))
+        return (1);
+
+    return (-1);
 }
 
-void jiyva_paralyse_jellies()
+// Check whether there are monsters who might be influenced by Recite.
+// Returns 0, if no monsters found.
+// Returns 1, if eligible audience found.
+// Returns -1, if entire audience already affected or too dumb to understand.
+int zin_check_recite_to_monsters()
 {
-    int jelly_count = 0;
-    for (radius_iterator ri(you.pos(), 9); ri; ++ri)
+    bool found_monsters = false;
+
+    for (radius_iterator ri(you.pos(), 8); ri; ++ri)
     {
-        monsters *mon = monster_at(*ri);
+        const int retval = zin_check_recite_to_single_monster(*ri);
 
-        if (mon != NULL && mons_is_slime(mon))
+        if (retval == -1)
+            found_monsters = true;
+
+        // Check if audience can listen.
+        if (retval == 1)
+            return (1);
+    }
+
+    if (!found_monsters)
+        dprf("No audience found!");
+    else
+        dprf("No sensible audience found!");
+
+   // No use preaching to the choir, nor to common animals.
+   if (found_monsters)
+       return (-1);
+
+   // Sorry, no audience found!
+   return (0);
+}
+
+// Power is maximum 50.
+int zin_recite_to_single_monster(const coord_def& where, int pow)
+{
+    if (you.religion != GOD_ZIN)
+        return (0);
+
+    monsters *mon = monster_at(where);
+
+    if (mon == NULL)
+        return (0);
+
+    if (_zin_recite_mons_useless(mon))
+        return (0);
+
+    // nothing happens
+    if (coinflip())
+        return (0);
+
+    // up to (60 + 40)/2 = 50
+    if (pow == -1)
+        pow = (2 * skill_bump(SK_INVOCATIONS) + you.piety / 5) / 2;
+
+    int resist;
+    const mon_holy_type holiness = mon->holiness();
+
+    if (mon->is_holy())
+        resist = std::max(0, 7 - random2(you.skills[SK_INVOCATIONS]));
+    else
+    {
+        resist = mon->res_magic();
+
+        if (holiness == MH_UNDEAD)
+            pow -= 2 + random2(3);
+        else if (holiness == MH_DEMONIC)
+            pow -= 3 + random2(5);
+    }
+
+    pow -= resist;
+
+    if (pow > 0)
+        pow = random2avg(pow, 2);
+
+    if (pow <= 0) // Uh oh...
+    {
+        if (one_chance_in(resist + 1))
+            return (0);  // nothing happens, whew!
+
+        if (!one_chance_in(4)
+             && mon->add_ench(mon_enchant(ENCH_HASTE, 0, KC_YOU,
+                                          (16 + random2avg(13, 2)) * 10)))
         {
-            mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0,
-                                      KC_OTHER, 200));
-            jelly_count++;
+
+            simple_monster_message(mon, " speeds up in annoyance!");
+        }
+        else if (!one_chance_in(3)
+                 && mon->add_ench(mon_enchant(ENCH_BATTLE_FRENZY, 1, KC_YOU,
+                                              (16 + random2avg(13, 2)) * 10)))
+        {
+            simple_monster_message(mon, " goes into a battle-frenzy!");
+        }
+        else if (!one_chance_in(3)
+                 && mons_shouts(mon->type, false) != S_SILENT)
+        {
+            force_monster_shout(mon);
+        }
+        else
+            return (0); // nothing happens
+
+        // Bad effects stop the recital.
+        stop_delay();
+        return (1);
+    }
+
+    switch (pow)
+    {
+        case 0:
+            return (0); // handled above
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+            if (!mons_class_is_confusable(mon->type)
+                || !mon->add_ench(mon_enchant(ENCH_CONFUSION, 0, KC_YOU,
+                                              (16 + random2avg(13, 2)) * 10)))
+            {
+                return (0);
+            }
+            simple_monster_message(mon, " looks confused.");
+            break;
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+            mon->hibernate();
+            simple_monster_message(mon, " falls asleep!");
+            break;
+        case 9:
+        case 10:
+        case 11:
+        case 12:
+            if (!mon->add_ench(mon_enchant(ENCH_TEMP_PACIF, 0, KC_YOU,
+                               (16 + random2avg(13, 2)) * 10)))
+            {
+                return (0);
+            }
+            simple_monster_message(mon, " seems impressed!");
+            break;
+        case 13:
+        case 14:
+        case 15:
+            if (!mon->add_ench(ENCH_FEAR))
+                return (0);
+            simple_monster_message(mon, " turns to flee.");
+            break;
+        case 16:
+        case 17:
+            if (!mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0, KC_YOU,
+                               (16 + random2avg(13, 2)) * 10)))
+            {
+                return (0);
+            }
+            simple_monster_message(mon, " freezes in fright!");
+            break;
+        default:
+            if (mon->is_holy())
+                good_god_holy_attitude_change(mon);
+            else
+            {
+                if (holiness == MH_UNDEAD || holiness == MH_DEMONIC)
+                {
+                    if (!mon->add_ench(mon_enchant(ENCH_TEMP_PACIF, 0, KC_YOU,
+                                       (16 + random2avg(13, 2)) * 10)))
+                    {
+                        return (0);
+                    }
+                    simple_monster_message(mon, " seems impressed!");
+                }
+                else
+                {
+                    simple_monster_message(mon, " seems fully impressed!");
+                    mons_pacify(mon);
+                }
+            }
+            break;
+    }
+
+    return (1);
+}
+
+static bool _kill_duration(duration_type dur)
+{
+    const bool rc = (you.duration[dur] > 0);
+    you.duration[dur] = 0;
+    return (rc);
+}
+
+bool zin_vitalisation()
+{
+    bool success = false;
+    int type = 0;
+
+    // Remove negative afflictions.
+    if (you.disease || you.rotting || you.confused()
+        || you.duration[DUR_PARALYSIS] || you.duration[DUR_POISONING]
+        || you.petrified())
+    {
+        do
+        {
+            switch (random2(6))
+            {
+            case 0:
+                if (you.disease)
+                {
+                    success = true;
+                    you.disease = 0;
+                }
+                break;
+            case 1:
+                if (you.rotting)
+                {
+                    success = true;
+                    you.rotting = 0;
+                }
+                break;
+            case 2:
+                success = _kill_duration(DUR_CONF);
+                break;
+            case 3:
+                success = _kill_duration(DUR_PARALYSIS);
+                break;
+            case 4:
+                success = _kill_duration(DUR_POISONING);
+                break;
+            case 5:
+                success = _kill_duration(DUR_PETRIFIED);
+                break;
+            }
+        }
+        while (!success);
+    }
+    // Restore stats.
+    else if (you.strength() < you.max_strength()
+             || you.intel() < you.max_intel()
+             || you.dex() < you.max_dex())
+    {
+        type = 1;
+        restore_stat(STAT_RANDOM, 0, true);
+        success = true;
+    }
+    else
+    {
+        // Add divine stamina.
+        if (!you.duration[DUR_DIVINE_STAMINA])
+        {
+            success = true;
+            type = 2;
+
+            mprf("%s grants you divine stamina.",
+                 god_name(GOD_ZIN).c_str());
+
+            const int stamina_amt = 3;
+            you.attribute[ATTR_DIVINE_STAMINA] = stamina_amt;
+            you.set_duration(DUR_DIVINE_STAMINA,
+                             40 + (you.skills[SK_INVOCATIONS]*5)/2);
+
+            notify_stat_change(STAT_STR, stamina_amt, true, "");
+            notify_stat_change(STAT_INT, stamina_amt, true, "");
+            notify_stat_change(STAT_DEX, stamina_amt, true, "");
         }
     }
 
-    if (jelly_count > 0)
+    // If vitalisation has succeeded, display an appropriate message.
+    if (success)
     {
-        mprf(MSGCH_PRAY, "%s.",
-             jelly_count > 1 ? "The nearby slimes join your prayer"
-                             : "A nearby slime joins your prayer");
-        lose_piety(5);
+        mprf("You feel %s.", (type == 0) ? "better" :
+                             (type == 1) ? "renewed"
+                                         : "powerful");
     }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return (success);
 }
 
-bool jiyva_remove_bad_mutation()
+void zin_remove_divine_stamina()
+{
+    mpr("Your divine stamina fades away.", MSGCH_DURATION);
+    notify_stat_change(STAT_STR, -you.attribute[ATTR_DIVINE_STAMINA],
+                true, "Zin's divine stamina running out");
+    notify_stat_change(STAT_INT, -you.attribute[ATTR_DIVINE_STAMINA],
+                true, "Zin's divine stamina running out");
+    notify_stat_change(STAT_DEX, -you.attribute[ATTR_DIVINE_STAMINA],
+                true, "Zin's divine stamina running out");
+    you.duration[DUR_DIVINE_STAMINA] = 0;
+    you.attribute[ATTR_DIVINE_STAMINA] = 0;
+}
+
+bool zin_remove_all_mutations()
 {
     if (!how_mutated())
     {
-        mpr("You have no bad mutations to be cured!");
+        mpr("You have no mutations to be cured!");
         return (false);
     }
 
-    // Ensure that only bad mutations are removed.
-    if (!delete_mutation(RANDOM_BAD_MUTATION, true, false, true, true))
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return (false);
-    }
+    you.num_gifts[GOD_ZIN]++;
+    take_note(Note(NOTE_GOD_GIFT, you.religion));
 
-    mpr("You feel cleansed.");
+    simple_god_message(" draws all chaos from your body!");
+    delete_all_mutations();
+
     return (true);
+}
+
+bool zin_sanctuary()
+{
+    // Casting is disallowed while previous sanctuary in effect.
+    // (Checked in abl-show.cc.)
+    if (env.sanctuary_time)
+        return (false);
+
+    // Yes, shamelessly stolen from NetHack...
+    if (!silenced(you.pos())) // How did you manage that?
+        mpr("You hear a choir sing!", MSGCH_SOUND);
+    else
+        mpr("You are suddenly bathed in radiance!");
+
+    flash_view(WHITE);
+
+    holy_word(100, HOLY_WORD_ZIN, you.pos(), true);
+
+#ifndef USE_TILE
+    // Allow extra time for the flash to linger.
+    delay(1000);
+#endif
+
+    // Pets stop attacking and converge on you.
+    you.pet_target = MHITYOU;
+
+    create_sanctuary(you.pos(), 7 + you.skills[SK_INVOCATIONS] / 2);
+
+    return (true);
+}
+
+// shield bonus = attribute for duration turns, then decreasing by 1
+//                every two out of three turns
+// overall shield duration = duration + attribute
+// recasting simply resets those two values (to better values, presumably)
+void tso_divine_shield()
+{
+    if (!you.duration[DUR_DIVINE_SHIELD])
+    {
+        if (you.shield()
+            || you.duration[DUR_FIRE_SHIELD]
+            || you.duration[DUR_CONDENSATION_SHIELD])
+        {
+            mprf("Your shield is strengthened by %s's divine power.",
+                 god_name(GOD_SHINING_ONE).c_str());
+        }
+        else
+            mpr("A divine shield forms around you!");
+    }
+    else
+        mpr("Your divine shield is renewed.");
+
+    you.redraw_armour_class = true;
+
+    // duration of complete shield bonus from 35 to 80 turns
+    you.set_duration(DUR_DIVINE_SHIELD,
+                     35 + (you.skills[SK_INVOCATIONS] * 4) / 3);
+
+    // shield bonus up to 8
+    you.attribute[ATTR_DIVINE_SHIELD] = 3 + you.skills[SK_SHIELDS]/5;
+
+    you.redraw_armour_class = true;
+}
+
+void tso_remove_divine_shield()
+{
+    mpr("Your divine shield disappears!", MSGCH_DURATION);
+    you.duration[DUR_DIVINE_SHIELD] = 0;
+    you.attribute[ATTR_DIVINE_SHIELD] = 0;
+    you.redraw_armour_class = true;
+}
+
+// Is the destroyed weapon valuable enough to gain piety by doing so?
+// Unholy and evil weapons are handled specially.
+static bool _destroyed_valuable_weapon(int value, int type)
+{
+    // Artefacts, including most randarts.
+    if (random2(value) >= random2(250))
+        return (true);
+
+    // Medium valuable items are more likely to net piety at low piety,
+    // more so for missiles, since they're worth less as single items.
+    if (random2(value) >= random2((type == OBJ_MISSILES) ? 10 : 100)
+        && one_chance_in(1 + you.piety / 50))
+    {
+        return (true);
+    }
+
+    // If not for the above, missiles shouldn't yield piety.
+    if (type == OBJ_MISSILES)
+        return (false);
+
+    // Weapons, on the other hand, are always acceptable to boost low
+    // piety.
+    if (you.piety < piety_breakpoint(0) || player_under_penance())
+        return (true);
+
+    return (false);
+}
+
+bool elyvilon_destroy_weapons()
+{
+    if (you.religion != GOD_ELYVILON)
+        return (false);
+
+    god_acting gdact;
+
+    bool success = false;
+    for (stack_iterator si(you.pos(), true); si; ++si)
+    {
+        item_def& item(*si);
+        if (item.base_type != OBJ_WEAPONS
+                && item.base_type != OBJ_MISSILES
+            || item_is_stationary(item)) // Held in a net?
+        {
+            continue;
+        }
+
+        if (!check_warning_inscriptions(item, OPER_DESTROY))
+        {
+            mpr("Won't destroy {!D} inscribed item.");
+            continue;
+        }
+
+        // item_value() multiplies by quantity.
+        const int value = item_value(item, true) / item.quantity;
+        dprf("Destroyed weapon value: %d", value);
+
+        piety_gain_t pgain = PIETY_NONE;
+        const bool unholy_weapon = is_unholy_item(item);
+        const bool evil_weapon = is_evil_item(item);
+
+        if (unholy_weapon
+            || evil_weapon
+            || _destroyed_valuable_weapon(value, item.base_type))
+        {
+            pgain = PIETY_SOME;
+        }
+
+        if (get_weapon_brand(item) == SPWPN_HOLY_WRATH)
+        {
+            // Weapons blessed by TSO don't get destroyed but are instead
+            // returned whence they came. (jpeg)
+            simple_god_message(
+                make_stringf(" %sreclaims %s.",
+                             pgain == PIETY_SOME ? "gladly " : "",
+                             item.name(DESC_NOCAP_THE).c_str()).c_str(),
+                GOD_SHINING_ONE);
+        }
+        else
+        {
+            // Elyvilon doesn't care about item sacrifices at altars, so
+            // I'm stealing _Sacrifice_Messages.
+            print_sacrifice_message(GOD_ELYVILON, item, pgain);
+            if (unholy_weapon || evil_weapon)
+            {
+                const char *desc_weapon = evil_weapon ? "evil" : "unholy";
+
+                // Print this in addition to the above!
+                simple_god_message(
+                    make_stringf(" welcomes the destruction of %s %s "
+                                 "weapon%s.",
+                                 item.quantity == 1 ? "this" : "these",
+                                 desc_weapon,
+                                 item.quantity == 1 ? ""     : "s").c_str(),
+                    GOD_ELYVILON);
+            }
+        }
+
+        if (pgain == PIETY_SOME)
+            gain_piety(1);
+
+        destroy_item(si.link());
+        success = true;
+    }
+
+    if (!success)
+        mpr("There are no weapons here to destroy!");
+
+    return (success);
+}
+
+void elyvilon_purification()
+{
+    mpr("You feel purified!");
+
+    you.disease = 0;
+    you.rotting = 0;
+    you.duration[DUR_POISONING] = 0;
+    you.duration[DUR_CONF] = 0;
+    you.duration[DUR_SLOW] = 0;
+    you.duration[DUR_PARALYSIS] = 0;          // can't currently happen -- bwr
+    you.duration[DUR_PETRIFIED] = 0;
+}
+
+bool elyvilon_divine_vigour()
+{
+    bool success = false;
+
+    if (!you.duration[DUR_DIVINE_VIGOUR])
+    {
+        mprf("%s grants you divine vigour.",
+             god_name(GOD_ELYVILON).c_str());
+
+        const int vigour_amt = 1 + (you.skills[SK_INVOCATIONS]/3);
+        const int old_hp_max = you.hp_max;
+        const int old_mp_max = you.max_magic_points;
+        you.attribute[ATTR_DIVINE_VIGOUR] = vigour_amt;
+        you.set_duration(DUR_DIVINE_VIGOUR,
+                         40 + (you.skills[SK_INVOCATIONS]*5)/2);
+
+        calc_hp();
+        inc_hp(you.hp_max - old_hp_max, false);
+        calc_mp();
+        inc_mp(you.max_magic_points - old_mp_max, false);
+
+        success = true;
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return (success);
+}
+
+void elyvilon_remove_divine_vigour()
+{
+    mpr("Your divine vigour fades away.", MSGCH_DURATION);
+    you.duration[DUR_DIVINE_VIGOUR] = 0;
+    you.attribute[ATTR_DIVINE_VIGOUR] = 0;
+    calc_hp();
+    calc_mp();
 }
 
 bool vehumet_supports_spell(spell_type spell)
@@ -228,6 +759,116 @@ bool trog_burn_spellbooks()
     }
 
     return (true);
+}
+
+bool beogh_water_walk()
+{
+    return (you.religion == GOD_BEOGH && !player_under_penance()
+            && you.piety >= piety_breakpoint(4));
+}
+
+bool jiyva_can_paralyse_jellies()
+{
+    return (you.religion == GOD_JIYVA && !player_under_penance()
+            && you.piety >= piety_breakpoint(2));
+}
+
+void jiyva_paralyse_jellies()
+{
+    int jelly_count = 0;
+    for (radius_iterator ri(you.pos(), 9); ri; ++ri)
+    {
+        monsters *mon = monster_at(*ri);
+
+        if (mon != NULL && mons_is_slime(mon))
+        {
+            mon->add_ench(mon_enchant(ENCH_PARALYSIS, 0,
+                                      KC_OTHER, 200));
+            jelly_count++;
+        }
+    }
+
+    if (jelly_count > 0)
+    {
+        mprf(MSGCH_PRAY, "%s.",
+             jelly_count > 1 ? "The nearby slimes join your prayer"
+                             : "A nearby slime joins your prayer");
+        lose_piety(5);
+    }
+}
+
+bool jiyva_remove_bad_mutation()
+{
+    if (!how_mutated())
+    {
+        mpr("You have no bad mutations to be cured!");
+        return (false);
+    }
+
+    // Ensure that only bad mutations are removed.
+    if (!delete_mutation(RANDOM_BAD_MUTATION, true, false, true, true))
+    {
+        canned_msg(MSG_NOTHING_HAPPENS);
+        return (false);
+    }
+
+    mpr("You feel cleansed.");
+    return (true);
+}
+
+bool yred_injury_mirror(bool actual)
+{
+    return (you.religion == GOD_YREDELEMNUL && !player_under_penance()
+            && you.piety >= piety_breakpoint(1)
+            && (!actual || you.duration[DUR_PRAYER]));
+}
+
+void yred_drain_life(int pow)
+{
+    mpr("You draw life from your surroundings.");
+
+    // Incoming power to this function is skill in INVOCATIONS, so
+    // we'll add an assert here to warn anyone who tries to use
+    // this function with spell level power.
+    ASSERT(pow <= 27);
+
+    flash_view(DARKGREY);
+    more();
+    mesclr();
+
+    int hp_gain = 0;
+
+    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    {
+        if (mi->holiness() != MH_NATURAL
+            || mi->res_negative_energy())
+        {
+            continue;
+        }
+
+        mprf("You draw life from %s.",
+             mi->name(DESC_NOCAP_THE).c_str());
+
+        const int hurted = 3 + random2(7) + random2(pow);
+        behaviour_event(*mi, ME_WHACK, MHITYOU, you.pos());
+        if (!mi->is_summoned())
+            hp_gain += hurted;
+
+        mi->hurt(&you, hurted);
+
+        if (mi->alive())
+            print_wounds(*mi);
+    }
+
+    hp_gain /= 2;
+
+    hp_gain = std::min(pow * 2, hp_gain);
+
+    if (hp_gain)
+    {
+        mpr("You feel life flooding into your body.");
+        inc_hp(hp_gain, false);
+    }
 }
 
 static bool _is_yred_enslaved_soul(const monsters* mon)
@@ -347,6 +988,108 @@ void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
     }
 }
 
+bool kiku_receive_corpses(int pow, coord_def where)
+{
+    // pow = invocations * 4, ranges from 0 to 108
+    dprf("kiku_receive_corpses() power: %d", pow);
+
+    // Kiku gives branch-appropriate corpses (like shadow creatures).
+    int expected_extra_corpses = 3 + pow / 18; // 3 at 0 Inv, 9 at 27 Inv.
+    int corpse_delivery_radius = 1;
+
+    // We should get the same number of corpses
+    // in a hallway as in an open room.
+    int spaces_for_corpses = 0;
+    for (radius_iterator ri(where, corpse_delivery_radius, C_ROUND,
+                            you.get_los(), true);
+         ri; ++ri)
+    {
+        if (mons_class_can_pass(MONS_HUMAN, grd(*ri)))
+            spaces_for_corpses++;
+    }
+
+    int percent_chance_a_square_receives_extra_corpse = // can be > 100
+        int(float(expected_extra_corpses) / float(spaces_for_corpses) * 100.0);
+
+    int corpses_created = 0;
+
+    for (radius_iterator ri(where, corpse_delivery_radius, C_ROUND,
+                            you.get_los());
+         ri; ++ri)
+    {
+        bool square_is_walkable = mons_class_can_pass(MONS_HUMAN, grd(*ri));
+        bool square_is_player_square = (*ri == where);
+        bool square_gets_corpse =
+            (random2(100) < percent_chance_a_square_receives_extra_corpse)
+            || (square_is_player_square && random2(100) < 97);
+
+        if (!square_is_walkable || !square_gets_corpse)
+            continue;
+
+        corpses_created++;
+
+        // Find an appropriate monster corpse for level and power.
+        monster_type mon_type = MONS_PROGRAM_BUG;
+        int adjusted_power = 0;
+        for (int i = 0; i < 200 && !mons_class_can_be_zombified(mon_type); ++i)
+        {
+            adjusted_power = std::min(pow / 4, random2(random2(pow)));
+            mon_type = pick_local_zombifiable_monster(adjusted_power);
+        }
+
+        // Create corpse object.
+        monsters dummy;
+        dummy.type = mon_type;
+        int index_of_corpse_created = get_item_slot();
+
+        if (index_of_corpse_created == NON_ITEM)
+            break;
+
+        if (mons_genus(mon_type) == MONS_HYDRA)
+            dummy.number = random2(20) + 1;
+
+        int valid_corpse = fill_out_corpse(&dummy,
+                                           mitm[index_of_corpse_created],
+                                           false);
+        if (valid_corpse == -1)
+        {
+            mitm[index_of_corpse_created].clear();
+            continue;
+        }
+
+        mitm[index_of_corpse_created].props["DoNotDropHide"] = true;
+
+        ASSERT(valid_corpse >= 0);
+
+        // Higher piety means fresher corpses.  One out of ten corpses
+        // will always be rotten.
+        int rottedness = 200 -
+            (!one_chance_in(10) ? random2(200 - you.piety)
+                                : random2(100 + random2(75)));
+        mitm[index_of_corpse_created].special = rottedness;
+
+        // Place the corpse.
+        move_item_to_grid(&index_of_corpse_created, *ri);
+    }
+
+    if (corpses_created)
+    {
+        if (you.religion == GOD_KIKUBAAQUDGHA)
+        {
+            simple_god_message(corpses_created > 1 ? " delivers you corpses!"
+                                                   : " delivers you a corpse!");
+        }
+        maybe_update_stashes();
+        return (true);
+    }
+    else
+    {
+        if (you.religion == GOD_KIKUBAAQUDGHA)
+            simple_god_message(" can find no cadavers for you!");
+        return (false);
+    }
+}
+
 bool fedhas_passthrough_class(const monster_type mc)
 {
     return (you.religion == GOD_FEDHAS
@@ -393,13 +1136,13 @@ bool fedhas_shoot_through(const bolt & beam, const monsters * victim)
             && !beam.is_enchantment()
             && !(beam.is_explosion && beam.in_explosion_phase)
             && (mons_atts_aligned(victim->attitude, origin_attitude)
-                || victim->neutral() ));
+                || victim->neutral()));
 }
 
 // Turns corpses in LOS into skeletons and grows toadstools on them.
 // Can also turn zombies into skeletons and destroy ghoul-type monsters.
 // Returns the number of corpses consumed.
-int fungal_bloom()
+int fedhas_fungal_bloom()
 {
     int seen_mushrooms  = 0;
     int seen_corpses    = 0;
@@ -580,7 +1323,7 @@ static int _create_plant(coord_def & target, int hp_adjust = 0)
     return (plant != -1);
 }
 
-bool sunlight()
+bool fedhas_sunlight()
 {
     const int c_size = 5;
     const int x_offset[] = {-1, 0, 0, 0, 1};
@@ -815,7 +1558,7 @@ static void _point_point_distance(const std::vector<coord_def> & origins,
     // Consider all points of origin as blocked (you can search outward
     // from one, but you can't form a path across a different one).
     std::set<int> base_exclusions;
-    for (unsigned i=0; i < origins.size(); ++i)
+    for (unsigned i = 0; i < origins.size(); ++i)
     {
         int idx = origins[i].x + origins[i].y * X_WIDTH;
         base_exclusions.insert(idx);
@@ -848,7 +1591,7 @@ bool prioritise_adjacent(const coord_def &target, std::vector<coord_def> & candi
 
     std::vector<coord_def> mons_positions;
     // collect hostile monster positions in LOS
-    for ( ; los_it; ++los_it)
+    for (; los_it; ++los_it)
     {
         monsters *hostile = monster_at(*los_it);
 
@@ -920,7 +1663,6 @@ static bool _prompt_amount(int max, int& selected, const std::string& prompt)
     return (max);
 }
 
-
 static int _collect_fruit(std::vector<std::pair<int,int> >& available_fruit)
 {
     int total = 0;
@@ -958,7 +1700,7 @@ static void _decrease_amount(std::vector<std::pair<int, int> >& available,
 // prompted to select a stack of fruit, and then plants are placed on open
 // squares adjacent to the user.  Of course, one piece of fruit is
 // consumed per plant, so a complete ring may not be formed.
-bool plant_ring_from_fruit()
+bool fedhas_plant_ring_from_fruit()
 {
     // How much fruit is available?
     std::vector<std::pair<int, int> > collected_fruit;
@@ -990,22 +1732,20 @@ bool plant_ring_from_fruit()
         return (false);
     }
 
-
     prioritise_adjacent(you.pos(), adjacent);
 
     // Screwing around with display code I don't really understand. -cao
     crawl_state.darken_range = 1;
     viewwindow(false, false);
 
-    for (int i=0; i < max_use; ++i)
+    for (int i = 0; i < max_use; ++i)
     {
 #ifndef USE_TILE
         coord_def temp = grid2view(adjacent[i]);
         cgotoxy(temp.x, temp.y, GOTO_DNGN);
         put_colour_ch(GREEN, '1' + i);
 #else
-        tiles.add_overlay(adjacent[i], TILE_INDICATOR + i );
-
+        tiles.add_overlay(adjacent[i], TILE_INDICATOR + i);
 #endif
     }
 
@@ -1014,7 +1754,7 @@ bool plant_ring_from_fruit()
     if (!_prompt_amount(max_use, target_count,
                         "How many plants will you create?"))
     {
-        // User canceled at the prompt
+        // User canceled at the prompt.
         crawl_state.darken_range = -1;
         viewwindow(false, false);
         return (false);
@@ -1022,12 +1762,11 @@ bool plant_ring_from_fruit()
 
     const int hp_adjust = you.skills[SK_INVOCATIONS] * 10;
 
-
     // The user entered a number, remove all number overlays which
     // are higher than that number.
 #ifndef USE_TILE
     unsigned not_used = adjacent.size() - unsigned(target_count);
-    for (unsigned i=adjacent.size() - not_used;
+    for (unsigned i = adjacent.size() - not_used;
          i < adjacent.size();
          i++)
     {
@@ -1037,13 +1776,9 @@ bool plant_ring_from_fruit()
     // For tiles we have to clear all overlays and redraw the ones
     // we want.
     tiles.clear_overlays();
-    for (int i=0; i < target_count; ++i)
-    {
-        tiles.add_overlay(adjacent[i], TILE_INDICATOR + i );
-    }
-
+    for (int i = 0; i < target_count; ++i)
+        tiles.add_overlay(adjacent[i], TILE_INDICATOR + i);
 #endif
-
 
     int created_count = 0;
     for (int i = 0; i < target_count; ++i)
@@ -1057,9 +1792,7 @@ bool plant_ring_from_fruit()
 #ifdef USE_TILE
         tiles.clear_overlays();
         for (int j = i + 1; j < target_count; ++j)
-        {
             tiles.add_overlay(adjacent[j], TILE_INDICATOR + j);
-        }
         viewwindow(false, false);
 #endif
         delay(200);
@@ -1079,7 +1812,7 @@ bool plant_ring_from_fruit()
 // chance of spawning plants or fungus on unoccupied dry floor tiles
 // outside of the rainfall area.  Return the number of plants/fungi
 // created.
-int rain(const coord_def &target)
+int fedhas_rain(const coord_def &target)
 {
     int spawned_count = 0;
     int processed_count = 0;
@@ -1181,7 +1914,7 @@ int rain(const coord_def &target)
 // and make 1 giant spore per corpse.  Spores are given the input as
 // their starting behavior; the function returns the number of corpses
 // processed.
-int corpse_spores(beh_type behavior, bool interactive)
+int fedhas_corpse_spores(beh_type behavior, bool interactive)
 {
     int count = 0;
     std::vector<stack_iterator> positions;
@@ -1205,11 +1938,11 @@ int corpse_spores(beh_type behavior, bool interactive)
     }
 
     if (count == 0)
-        return count;
+        return (count);
 
     crawl_state.darken_range = 0;
     viewwindow(false, false);
-    for(unsigned i=0; i < positions.size(); ++i)
+    for (unsigned i = 0; i < positions.size(); ++i)
     {
 #ifndef USE_TILE
 
@@ -1231,10 +1964,10 @@ int corpse_spores(beh_type behavior, bool interactive)
     {
         crawl_state.darken_range = -1;
         viewwindow(false, false);
-        return -1;
+        return (-1);
     }
 
-    for (unsigned i=0; i < positions.size(); ++i)
+    for (unsigned i = 0; i < positions.size(); ++i)
     {
         count++;
         int rc = create_monster(mgen_data(MONS_GIANT_SPORE,
@@ -1285,7 +2018,7 @@ struct monster_conversion
 
 
 // Given a monster (which should be a plant/fungus), see if
-// evolve_flora() can upgrade it, and set up a monster_conversion
+// fedhas_evolve_flora() can upgrade it, and set up a monster_conversion
 // structure for it.  Return true (and fill in possible_monster) if the
 // monster can be upgraded, and return false otherwise.
 bool _possible_evolution(const monsters * input,
@@ -1324,7 +2057,7 @@ bool _possible_evolution(const monsters * input,
 bool mons_is_evolvable(const monsters * mon)
 {
     monster_conversion temp;
-    return _possible_evolution(mon, temp);
+    return (_possible_evolution(mon, temp));
 }
 
 void _collect_adjacent_monsters(std::vector<monster_conversion>& available,
@@ -1360,17 +2093,17 @@ static bool _place_ballisto(const coord_def & pos)
         mprf("The mold grows into a ballistomycete.");
         mprf("Your piety has decreased.");
         lose_piety(1);
-        return true;
+        return (true);
     }
 
     // Monster placement failing should be quite unusual, but it could happen.
     // Not entirely sure what to say about it, but a more informative message
     // might be good. -cao
     canned_msg(MSG_NOTHING_HAPPENS);
-    return false;
+    return (false);
 }
 
-bool evolve_flora()
+bool fedhas_evolve_flora()
 {
     monster_conversion upgrade;
 
@@ -1405,7 +2138,7 @@ bool evolve_flora()
     args.may_target_monster = false;
     args.show_floor_desc = true;
     args.top_prompt = "Select plant or fungus to evolve.";
-    
+
     direction(spelld, args);
 
     if (!spelld.isValid)
@@ -1429,7 +2162,7 @@ bool evolve_flora()
                 mprf("You must target a plant or fungus.");
             return (false);
         }
-        return _place_ballisto(spelld.target);
+        return (_place_ballisto(spelld.target));
 
     }
 
@@ -1527,75 +2260,6 @@ bool evolve_flora()
     return (true);
 }
 
-bool is_ponderousifiable(const item_def& item)
-{
-    return (item.base_type == OBJ_ARMOUR
-            && you_tran_can_wear(item)
-            && !is_shield(item)
-            && !is_artefact(item)
-            && get_armour_ego_type(item) != SPARM_RUNNING
-            && get_armour_ego_type(item) != SPARM_PONDEROUSNESS);
-}
-
-bool ponderousify_armour()
-{
-    const int item_slot = prompt_invent_item("Make which item ponderous?",
-                                             MT_INVLIST, OSEL_PONDER_ARM,
-                                             true, true, false);
-
-    if (prompt_failed(item_slot))
-        return (false);
-
-    item_def& arm(you.inv[item_slot]);
-    if (!is_ponderousifiable(arm)) // player pressed '*' and made a bad choice
-    {
-        mpr("That item can't be made ponderous.");
-        return false;
-    }
-
-    const int old_ponder = player_ponderousness();
-    cheibriados_make_item_ponderous(arm);
-
-    you.redraw_armour_class = true;
-    you.redraw_evasion = true;
-
-    simple_god_message(" says: Use this wisely!");
-
-    const int new_ponder = player_ponderousness();
-    if (new_ponder > old_ponder)
-    {
-        mprf("You feel %s ponderous.",
-             old_ponder? "even more" : "rather");
-        che_handle_change(CB_PONDEROUS, new_ponder - old_ponder);
-    }
-
-    return (true);
-}
-
-static int _slouch_monsters(coord_def where, int pow, int, actor* agent)
-{
-    monsters* mon = monster_at(where);
-    if (mon == NULL || mons_is_stationary(mon) || mon->cannot_move()
-        || mons_is_projectile(mon->type)
-        || mon->asleep() && !mons_is_confused(mon))
-    {
-        return (0);
-    }
-
-    int dmg = (mon->speed - 1000/player_movement_speed()/player_speed());
-    dmg = (dmg > 0 ? roll_dice(dmg*4, 3)/2 : 0);
-
-    mon->hurt(agent, dmg, BEAM_MMISSILE, true);
-    return (1);
-}
-
-int cheibriados_slouch(int pow)
-{
-    return (apply_area_visible(_slouch_monsters, pow, false, &you));
-}
-
-////////////////////////////////////////////////////////////////////////////
-
 static int _lugonu_warp_monster(coord_def where, int pow, int, actor *)
 {
     if (!in_bounds(where))
@@ -1635,7 +2299,7 @@ static void _lugonu_warp_area(int pow)
     apply_area_around_square(_lugonu_warp_monster, you.pos(), pow);
 }
 
-void lugonu_bends_space()
+void lugonu_bend_space()
 {
     const int pow = 4 + skill_bump(SK_INVOCATIONS);
     const bool area_warp = random2(pow) > 9;
@@ -1651,7 +2315,50 @@ void lugonu_bends_space()
     ouch(damage, NON_MONSTER, KILLED_BY_WILD_MAGIC, "a spatial distortion");
 }
 
-////////////////////////////////////////////////////////////////////////
+bool is_ponderousifiable(const item_def& item)
+{
+    return (item.base_type == OBJ_ARMOUR
+            && you_tran_can_wear(item)
+            && !is_shield(item)
+            && !is_artefact(item)
+            && get_armour_ego_type(item) != SPARM_RUNNING
+            && get_armour_ego_type(item) != SPARM_PONDEROUSNESS);
+}
+
+bool ponderousify_armour()
+{
+    const int item_slot = prompt_invent_item("Make which item ponderous?",
+                                             MT_INVLIST, OSEL_PONDER_ARM,
+                                             true, true, false);
+
+    if (prompt_failed(item_slot))
+        return (false);
+
+    item_def& arm(you.inv[item_slot]);
+    if (!is_ponderousifiable(arm)) // player pressed '*' and made a bad choice
+    {
+        mpr("That item can't be made ponderous.");
+        return (false);
+    }
+
+    const int old_ponder = player_ponderousness();
+    cheibriados_make_item_ponderous(arm);
+
+    you.redraw_armour_class = true;
+    you.redraw_evasion = true;
+
+    simple_god_message(" says: Use this wisely!");
+
+    const int new_ponder = player_ponderousness();
+    if (new_ponder > old_ponder)
+    {
+        mprf("You feel %s ponderous.",
+             old_ponder? "even more" : "rather");
+        che_handle_change(CB_PONDEROUS, new_ponder - old_ponder);
+    }
+
+    return (true);
+}
 
 void cheibriados_time_bend(int pow)
 {
@@ -1676,6 +2383,28 @@ void cheibriados_time_bend(int pow)
             do_slow_monster(mon, KC_YOU);
         }
     }
+}
+
+static int _slouch_monsters(coord_def where, int pow, int, actor* agent)
+{
+    monsters* mon = monster_at(where);
+    if (mon == NULL || mons_is_stationary(mon) || mon->cannot_move()
+        || mons_is_projectile(mon->type)
+        || mon->asleep() && !mons_is_confused(mon))
+    {
+        return (0);
+    }
+
+    int dmg = (mon->speed - 1000/player_movement_speed()/player_speed());
+    dmg = (dmg > 0 ? roll_dice(dmg*4, 3)/2 : 0);
+
+    mon->hurt(agent, dmg, BEAM_MMISSILE, true);
+    return (1);
+}
+
+int cheibriados_slouch(int pow)
+{
+    return (apply_area_visible(_slouch_monsters, pow, false, &you));
 }
 
 void cheibriados_time_step(int pow) // pow is the number of turns to skip

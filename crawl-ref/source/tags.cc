@@ -81,8 +81,11 @@
 #include "stuff.h"
 #include "env.h"
 #include "tags.h"
-#include "tiles.h"
-#include "tilemcache.h"
+#ifdef USE_TILE
+ #include "tilemcache.h"
+ #include "tilepick.h"
+ #include "tileview.h"
+#endif
 #include "travel.h"
 
 #if defined(DEBUG) || defined(DEBUG_MONS_SCAN)
@@ -1057,7 +1060,7 @@ static void tag_construct_you(writer &th)
     for (j = 0; j < NUM_MUTATIONS; ++j)
     {
         marshallByte(th, you.mutation[j]);
-        marshallByte(th, you.demon_pow[j]);
+        marshallByte(th, you.innate_mutations[j]);
     }
 
     marshallByte(th, you.demonic_traits.size());
@@ -1503,7 +1506,7 @@ static void tag_read_you(reader &th, char minorVersion)
     for (j = 0; j < count_s; ++j)
     {
         you.mutation[j]  = unmarshallByte(th);
-        you.demon_pow[j] = unmarshallByte(th);
+        you.innate_mutations[j] = unmarshallByte(th);
     }
 
     count_c = unmarshallByte(th);
@@ -2105,8 +2108,8 @@ void tag_construct_level_tiles(writer &th)
     unsigned int tile = 0;
     unsigned int last_tile = 0;
 
-    // tile routine subversion
-    marshallShort(th, TILETAG_CURRENT);
+    // Legacy version number.
+    marshallShort(th, 0);
 
     // Map grids.
     // how many X?
@@ -2369,6 +2372,12 @@ void unmarshallMonster(reader &th, monsters &m)
     m.base_monster   = static_cast<monster_type>(unmarshallShort(th));
     m.colour         = unmarshallShort(th);
 
+    if (th.getMinorVersion() == TAG_MINOR_MON_REFCOUNT)
+    {
+        unmarshallLong(th);
+        unmarshallLong(th);
+    }
+
     for (int j = 0; j < NUM_MONSTER_SLOTS; j++)
         m.inv[j] = unmarshallShort(th);
 
@@ -2409,7 +2418,7 @@ static void tag_read_level_monsters(reader &th, char minorVersion)
         unmarshallMonster(th, m);
 
         // place monster
-        if (m.type != MONS_NO_MONSTER)
+        if (m.alive())
         {
 #if defined(DEBUG) || defined(DEBUG_MONS_SCAN)
             if (invalid_monster_type(m.type))
@@ -2513,7 +2522,7 @@ void tag_read_level_tiles(reader &th)
     unsigned int tile = 0;
 
     int ver = unmarshallShort(th);
-    if (ver == 0) return;
+    UNUSED(ver);
 
     // Map grids.
     // how many X?
@@ -2562,11 +2571,19 @@ void tag_read_level_tiles(reader &th)
             env.tile_flv[x][y].feat   = unmarshallShort(th);
         }
 
-    if (ver > TILETAG_PRE_MCACHE)
-        mcache.read(th);
-    else
-        mcache.clear_all();
+    mcache.read(th);
 
+    {
+        // Tiles were reordered, so this would likely cause huge
+        // issues on saved levels.
+        //
+        // FIXME: This should happen automatically.
+        bool reset_due_to_tile_reordering =
+            (_tag_minor_version < TAG_MINOR_TILE_CHANGES);
+
+        if (reset_due_to_tile_reordering)
+            tag_missing_level_tiles();
+    }
 #endif
 }
 
@@ -2580,15 +2597,15 @@ static void tag_missing_level_tiles()
         for (int j = 0; j < GYM; j++)
         {
             coord_def gc(i, j);
-            unsigned int fg, bg;
-            tileidx_unseen(fg, bg, get_map_knowledge_char(i, j), gc);
+            tileidx_t fg, bg;
+            tileidx_unseen(&fg, &bg, get_map_knowledge_char(i, j), gc);
             env.tile_bk_fg[i][j] = fg;
             env.tile_bk_bg[i][j] = bg;
         }
 
     mcache.clear_all();
 
-    TileNewLevel(true);
+    tile_new_level(true);
 #endif
 }
 

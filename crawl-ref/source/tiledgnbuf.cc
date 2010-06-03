@@ -11,12 +11,17 @@
 #include "cloud.h"
 #include "coordit.h"
 #include "env.h"
+#include "player.h"
 #include "tiledef-dngn.h"
 #include "tiledef-player.h"
+#include "tiledoll.h"
 #include "tilemcache.h"
+#include "tilepick-p.h"
 
 DungeonCellBuffer::DungeonCellBuffer(ImageManager *im) :
-    m_buf_dngn(&im->m_textures[TEX_DUNGEON]),
+    m_buf_floor(&im->m_textures[TEX_FLOOR]),
+    m_buf_wall(&im->m_textures[TEX_WALL]),
+    m_buf_feat(&im->m_textures[TEX_FEAT]),
     m_buf_doll(&im->m_textures[TEX_PLAYER], 17),
     m_buf_main_trans(&im->m_textures[TEX_DEFAULT], 17),
     m_buf_main(&im->m_textures[TEX_DEFAULT]),
@@ -75,7 +80,14 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
 
 void DungeonCellBuffer::add_dngn_tile(int tileidx, int x, int y)
 {
-    m_buf_dngn.add(tileidx, x, y);
+    assert(tileidx < TILE_FEAT_MAX);
+
+    if (tileidx < TILE_FLOOR_MAX)
+        m_buf_floor.add(tileidx, x, y);
+    else if (tileidx < TILE_WALL_MAX)
+        m_buf_wall.add(tileidx, x, y);
+    else
+        m_buf_feat.add(tileidx, x, y);
 }
 
 void DungeonCellBuffer::add_main_tile(int tileidx, int x, int y)
@@ -95,7 +107,9 @@ void DungeonCellBuffer::add_spell_tile(int tileidx, int x, int y)
 
 void DungeonCellBuffer::clear()
 {
-    m_buf_dngn.clear();
+    m_buf_floor.clear();
+    m_buf_wall.clear();
+    m_buf_feat.clear();
     m_buf_doll.clear();
     m_buf_main_trans.clear();
     m_buf_main.clear();
@@ -104,7 +118,9 @@ void DungeonCellBuffer::clear()
 
 void DungeonCellBuffer::draw()
 {
-    m_buf_dngn.draw();
+    m_buf_floor.draw();
+    m_buf_wall.draw();
+    m_buf_feat.draw();
     m_buf_doll.draw();
     m_buf_main_trans.draw();
     m_buf_main.draw();
@@ -321,51 +337,51 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
 
     if (bg_idx >= TILE_DNGN_WAX_WALL)
     {
-        m_buf_dngn.add(cell.flv.floor, x, y);
+        add_dngn_tile(cell.flv.floor, x, y);
     }
-    m_buf_dngn.add(bg_idx, x, y);
+    add_dngn_tile(bg_idx, x, y);
 
     if (bg_idx > TILE_DNGN_UNSEEN)
     {
         if (bg & TILE_FLAG_WAS_SECRET)
-            m_buf_dngn.add(TILE_DNGN_DETECTED_SECRET_DOOR, x, y);
+            m_buf_feat.add(TILE_DNGN_DETECTED_SECRET_DOOR, x, y);
 
         if (bg & TILE_FLAG_BLOOD)
         {
             int offset = cell.flv.special % tile_dngn_count(TILE_BLOOD);
-            m_buf_dngn.add(TILE_BLOOD + offset, x, y);
+            m_buf_feat.add(TILE_BLOOD + offset, x, y);
         }
         else if (bg & TILE_FLAG_MOLD)
         {
             int offset = cell.flv.special % tile_dngn_count(TILE_MOLD);
-            m_buf_dngn.add(TILE_MOLD + offset, x, y);
+            m_buf_feat.add(TILE_MOLD + offset, x, y);
         }
 
         for (int i = 0; i < cell.num_dngn_overlay; ++i)
-            m_buf_dngn.add(cell.dngn_overlay[i], x, y);
+            add_dngn_tile(cell.dngn_overlay[i], x, y);
 
         if (bg & TILE_FLAG_HALO)
-            m_buf_dngn.add(TILE_HALO, x, y);
+            m_buf_feat.add(TILE_HALO, x, y);
 
         if (!(bg & TILE_FLAG_UNSEEN))
         {
             if (bg & TILE_FLAG_SANCTUARY)
-                m_buf_dngn.add(TILE_SANCTUARY, x, y);
+                m_buf_feat.add(TILE_SANCTUARY, x, y);
             if (bg & TILE_FLAG_SILENCED)
-                m_buf_dngn.add(TILE_SILENCED, x, y);
+                m_buf_feat.add(TILE_SILENCED, x, y);
 
             // Apply the travel exclusion under the foreground if the cell is
             // visible.  It will be applied later if the cell is unseen.
             if (bg & TILE_FLAG_EXCL_CTR)
-                m_buf_dngn.add(TILE_TRAVEL_EXCLUSION_CENTRE_BG, x, y);
+                m_buf_feat.add(TILE_TRAVEL_EXCLUSION_CENTRE_BG, x, y);
             else if (bg & TILE_FLAG_TRAV_EXCL)
-                m_buf_dngn.add(TILE_TRAVEL_EXCLUSION_BG, x, y);
+                m_buf_feat.add(TILE_TRAVEL_EXCLUSION_BG, x, y);
         }
 
         if (bg & TILE_FLAG_RAY)
-            m_buf_dngn.add(TILE_RAY, x, y);
+            m_buf_feat.add(TILE_RAY, x, y);
         else if (bg & TILE_FLAG_RAY_OOR)
-            m_buf_dngn.add(TILE_RAY_OUT_OF_RANGE, x, y);
+            m_buf_feat.add(TILE_RAY_OUT_OF_RANGE, x, y);
     }
 }
 
@@ -529,11 +545,9 @@ void DungeonCellBuffer::pack_mcache(mcache_entry *entry, int x, int y,
     if (doll)
         pack_doll(*doll, x, y, submerged, trans);
 
-    tile_draw_info dinfo[3];
-    unsigned int draw_info_count = entry->info(&dinfo[0]);
-    ASSERT(draw_info_count <= sizeof(dinfo) / (sizeof(dinfo[0])));
-
-    for (unsigned int i = 0; i < draw_info_count; i++)
+    tile_draw_info dinfo[mcache_entry::MAX_INFO_COUNT];
+    int draw_info_count = entry->info(&dinfo[0]);
+    for (int i = 0; i < draw_info_count; i++)
     {
         m_buf_doll.add(dinfo[i].idx, x, y, 0, submerged, trans,
                        dinfo[i].ofs_x, dinfo[i].ofs_y);

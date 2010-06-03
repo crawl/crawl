@@ -190,7 +190,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
 
        case DID_KILL_SLIME:
-            if (you.religion == GOD_JIYVA)
+            if (you.religion == GOD_JIYVA && !victim->is_shapeshifter())
             {
                 retval = true;
                 piety_change = -level;
@@ -234,7 +234,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 break;
 
             case GOD_JIYVA:
-                if (victim && mons_is_slime(victim))
+                if (victim && mons_is_slime(victim)
+                    && !victim->is_shapeshifter())
                 {
                     piety_change = -(level/2 + 3);
                     penance = level/2 + 3;

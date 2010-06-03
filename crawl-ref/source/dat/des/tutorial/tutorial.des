@@ -1,4 +1,4 @@
-# TODO: Use dynamic commands instead of hard-coding them to text.
+# TODO: Use dynamic commands instead of hard-coding them to text. This is done for everything but mouse commands for now.
 
 {{
 
@@ -59,7 +59,7 @@ function tutorial.messagestart ()
     crawl.mpr("Now, try moving towards that <blue>blue square</blue>.", "tutorial")
 end
 
-function tutorial.message0 ()
+function tutorial.message_run ()
   local text = "Great! There's another <blue>blue square</blue> further up the corridor. Head for that next."
 
 -- I think this is useful information even for Tiles. (jpeg)
@@ -70,7 +70,7 @@ function tutorial.message0 ()
   return tutorial.message(text, "tutorial", true)
 end
 
-function tutorial.message1 ()
+function tutorial.message_diagonal1 ()
   local text = "You need to move diagonally here, so "
 
   if crawl.is_tiles() then
@@ -82,7 +82,7 @@ function tutorial.message1 ()
   return tutorial.message(text, "tutorial", true)
 end
 
-function tutorial.message2 ()
+function tutorial.message_diagonal2 ()
   local text = "Now, either "
 
   if crawl.is_tiles() then
@@ -94,21 +94,38 @@ function tutorial.message2 ()
   return tutorial.message(text, "tutorial", true)
 end
 
-function tutorial.message3 ()
+function tutorial.message_autoexplore ()
   return tutorial.message("Exploring manually is very tedious, which is why we suggest you use auto-explore. Try it by pressing " .. tutorial.get_cmd("CMD_EXPLORE") .. ".", "tutorial", true)
 end
 
-function tutorial.message4 ()
+function tutorial.message_door ()
   local text = "Doors, like the one in front of you, can be opened by walking into them. They'll also be opened automatically while traveling or auto-exploring."
 
   return tutorial.message(text, "tutorial", true, true)
 end
 
-function tutorial.message5 ()
-  return tutorial.message("You can go down stairs with <white>Shift-Click</white> or " .. tutorial.get_cmd("CMD_GO_DOWNSTAIRS") .. " while standing over them.", "tutorial", true)
+function tutorial.message_downstairs ()
+  local text = "You can go down stairs with "
+  if crawl.is_tiles() then
+    text = text .. "<white>Shift-Click</white> or "
+  end
+  text = text .. tutorial.get_cmd("CMD_GO_DOWNSTAIRS") .. " while standing over them."
+
+  return tutorial.message(text, "tutorial", true)
 end
 
-function tutorial.message6 ()
+function tutorial.message_upstairs ()
+  local text = "You can go up stairs with "
+  if crawl.is_tiles() then
+    text = text .. "<white>Shift-Click</white> or "
+  end
+-- TODO: fix hardcoding <
+  text = text .. "<white><<</white> while standing over them."
+
+  return tutorial.message(text, "tutorial", true)
+end
+
+function tutorial.message_pick_up ()
   local text = "In front of you are a mace and a helmet. You can pick up objects by pressing <white>g</white> or " .. tutorial.get_cmd("CMD_PICKUP")
 
   if crawl.is_tiles() then
@@ -122,7 +139,7 @@ function tutorial.message6 ()
   return tutorial.message(text, "tutorial", true)
 end
 
-function tutorial.message7 ()
+function tutorial.message_wield ()
   local text = "Wield the mace "
 
   if crawl.is_tiles() then
@@ -134,7 +151,7 @@ function tutorial.message7 ()
   return tutorial.message(text, "tutorial", true)
 end
 
-function tutorial.message8 ()
+function tutorial.message_melee_attack ()
   local text = "To attack monsters, "
 
   if crawl.is_tiles() then
@@ -146,7 +163,7 @@ function tutorial.message8 ()
   return tutorial.message(text, "tutorial", true)
 end
 
-function tutorial.message9 ()
+function tutorial.message_rest ()
   local hp, maxhp = you.hp()
   local text
   if hp < maxhp then
@@ -160,7 +177,7 @@ function tutorial.message9 ()
   return tutorial.message(text,  "tutorial", true)
 end
 
-function tutorial.message10 ()
+function tutorial.message_log ()
   local text = "(If you've forgotten any of the commands mentioned above, you can re-read previous message by "
 
   if crawl.is_tiles() then
@@ -174,13 +191,122 @@ function tutorial.message10 ()
   return tutorial.message(text, "tutorial", true)
 end
 
-function tutorial.message11 ()
+function tutorial.message_monster_description ()
   local text = "Whenever you see a new monster, it's always a good idea to check its description for clues on how to deal with it. To view the description, "
   if crawl.is_tiles() then
     text = text .. "<white>mouse over</white> or <white>right click</white> the monster tile."
   else
     text = text .. "press " .. tutorial.get_cmd("CMD_LOOK_AROUND") .. ", move the cursor over the monster, and press " .. tutorial.get_cmd("CMD_TARGET_DESCRIBE") .. "."
   end
+
+  return tutorial.message(text, "tutorial", true)
+end
+
+function tutorial.message_wield_ranged ()
+  local text = "Here are a bow and some arrows. Once picked up, you can wield the bow with " .. tutorial.get_cmd("CMD_WIELD_WEAPON")
+  if crawl.is_tiles() then
+    text = text .. " or by <white>clicking</white> on it"
+  end
+  text = text .. "."
+
+  return tutorial.message(text, "tutorial", true)
+end
+
+function tutorial.message_ranged_combat ()
+  local text = "Press " .. tutorial.get_cmd("CMD_FIRE")
+  if crawl.is_tiles() then
+    text = text .. ", or <white>Shift-Left click</white> on the enemy"
+  end
+  text = text .. " to shoot an arrow from your wielded bow. You can also pick up the stones thrown at you, and throw them back, also with " .. tutorial.get_cmd("CMD_FIRE") .. ". Use " .. tutorial.get_cmd("CMD_CYCLE_QUIVER_FORWARD") .. " to cycle through your available missiles."
+
+  return tutorial.message(text, "tutorial", true)
+end
+
+function tutorial.message_rest_reminder ()
+  local text = "Remember to rest with " .. tutorial.get_cmd("CMD_REST") .. "."
+
+  return tutorial.message(text, "tutorial", true)
+end
+
+function tutorial.message_memorize ()
+  local text = "Memorise the spell from this spellbook by pressing " .. tutorial.get_cmd("CMD_MEMORISE_SPELL") .. " to enter the memorisation screen."
+  if crawl.is_tiles() then
+    text = text .. "You can also memorise spells by <white>clicking</white> the spell icon on the book tab in your inventory."
+  end
+
+  return tutorial.message(text, "tutorial", true)
+end
+
+function tutorial.message_magic_combat ()
+  local text = "To cast Magic Dart on the monster press " .. tutorial.get_cmd("CMD_CAST_SPELL") .. ". "
+  if crawl.is_tiles() then
+    text = text .. "You can also cast spells by <white>clicking</white> the spell icon on the star tab or <white>Ctrl-clicking</white> on the monster. "
+  end
+  text = text .. "Once you're out of mana, you can rest with " .. tutorial.get_cmd("CMD_REST") .. " to get it back up or you can fire some more arrows with " .. tutorial.get_cmd("CMD_FIRE") .. "."
+
+  return tutorial.message(text, "tutorial", true)
+end
+
+function tutorial.message_eat ()
+  local text = "This bread ration is permanent food. It will not rot, like the chunks from corpses. You can eat it with " .. tutorial.get_cmd("CMD_EAT")
+  if crawl.is_tiles() then
+    text = text .. " or by <white>clicking</white> on it"
+  end
+  text = text .. "."
+
+  return tutorial.message(text, "tutorial", true)
+end
+
+function tutorial.message_identify ()
+  local text = "Here is a scroll of identify and an unknown ring. Item properties are often hidden and you need to find out what they do by experimentation or identification. Try the scroll on the ring. (To do so, you can read it with " .. tutorial.get_cmd("CMD_READ")
+  if crawl.is_tiles() then
+    text = text .. " or <white>click</white> on its tile"
+  end
+  text = text .. ". You can put on jewellery with capital " .. tutorial.get_cmd("CMD_WEAR_JEWELLERY")
+  if crawl.is_tiles() then
+    text = text .. " or by <white>clicking</white> on it in the inventory"
+  end
+  text = text .. "."
+
+  return tutorial.message(text, "tutorial", true)
+end
+
+function tutorial.message_quaff ()
+  local text = "Here are three stacks of unknown potions that you can quaff with " .. tutorial.get_cmd("CMD_QUAFF")
+  if crawl.is_tiles() then
+    text = text .. " or by <white>clicking</white> in the inventory"
+  end
+  text = text .. ". Go ahead and experiment!"
+
+  return tutorial.message(text, "tutorial", true)
+end
+
+function tutorial.message_evoke ()
+  local text = "You can evoke this wand with " .. tutorial.get_cmd("CMD_EVOKE")
+  if crawl.is_tiles() then
+    text = text .. " or by <white>clicking</white> on it"
+  end
+  text = text .. "."
+
+  return tutorial.message(text, "tutorial", true)
+end
+
+function tutorial.message_inventory ()
+  local text = "You can read item descriptions from your inventory by pressing " .. tutorial.get_cmd("CMD_DISPLAY_INVENTORY")
+  if crawl.is_tiles() then
+    text = text .. " or by doing a <white>mouseover</white> or <white>right-click</white> on the item tile"
+  end
+  text = text .. "."
+
+  return tutorial.message(text, "tutorial", true)
+end
+
+function tutorial.message_pray ()
+  local text = "Here's an altar to one of the gods in the game. You can pray on an altar with " .. tutorial.get_cmd("CMD_PRAY") .. " to start worshipping. Confirm your choice with a capital <white>Y</white>. Back in the game, you can then press " .. tutorial.get_cmd("CMD_DISPLAY_RELIGION")
+  if crawl.is_tiles() then
+    text = text .. "or <white>right-click</white> on your character"
+  end
+  text = text .. " to read the description of whatever god you're worshipping at the time."
 
   return tutorial.message(text, "tutorial", true)
 end
@@ -192,20 +318,18 @@ BFLAGS:  islanded
 KMASK:   + = no_secret_doors
 ORIENT:  encompass
 ITEM:    mace ego:none not_cursed, helmet ego:none not_cursed
-# TODO: Include a travel stopper to the message square.
-MARKER:  Q = lua:tutorial.message0()
-MARKER:  A = lua:tutorial.message1()
-MARKER:  B = lua:tutorial.message2()
-MARKER:  C = lua:tutorial.message3()
-MARKER:  D = lua:tutorial.message4()
-MARKER:  } = lua:tutorial.message5()
-MARKER:  E = lua:tutorial.message6()
-# TODO: Make the messages sensitive to if the game is tiles or console.
-MARKER:  F = lua:tutorial.message7()
-MARKER:  G = lua:tutorial.message8()
-MARKER:  H = lua:tutorial.message9()
-MARKER:  I = lua:tutorial.message10()
-MARKER:  J = lua:tutorial.message11()
+MARKER:  Q = lua:tutorial.message_run()
+MARKER:  A = lua:tutorial.message_diagonal1()
+MARKER:  B = lua:tutorial.message_diagonal2()
+MARKER:  C = lua:tutorial.message_autoexplore()
+MARKER:  D = lua:tutorial.message_door()
+MARKER:  } = lua:tutorial.message_downstairs()
+MARKER:  E = lua:tutorial.message_pick_up()
+MARKER:  F = lua:tutorial.message_wield()
+MARKER:  G = lua:tutorial.message_melee_attack()
+MARKER:  H = lua:tutorial.message_rest()
+MARKER:  I = lua:tutorial.message_log()
+MARKER:  J = lua:tutorial.message_monster_description()
 KFEAT:   ABCDEFGHQIJ = .
 COLOUR:  ABCDEFGHQIJ = blue
 #TILE:    ABCDEFGH = tutorial_message_tile_name_here
@@ -245,6 +369,7 @@ ENDMAP
 NAME:    tutorial_basic_2
 TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_shop_gen tutorial
 KPROP:   l = no_cloud_gen
+KMASK:   + = no_secret_doors
 ORIENT:  encompass
 PLACE:   D:2
 KITEM:   A = arrow q:25 ego:none, bow ego:none not_cursed
@@ -252,13 +377,13 @@ ITEM:    randbook disc:conjuration numspells:1 slevels:1 spell:magic_dart \
                   owner:Newbie
 KFEAT:   ABCDEF = .
 COLOUR:  ABCDEF = blue
-MARKER:  [ = lua:tutorial.message( "Press <white>Shift-click</white> on your character or <white><<</white> to climb these stairs.", "tutorial", "true" )
-MARKER:  A = lua:tutorial.message( "Here are a bow and some arrows. Once picked up, you can wield the bow with " .. tutorial.get_cmd("CMD_WIELD_WEAPON") .. " or by <white>clicking</white> on it.", "tutorial", "true" )
+MARKER:  [ = lua:tutorial.message_upstairs()
+MARKER:  A = lua:tutorial.message_wield_ranged()
 # TODO: Targetting needs tutorial messages; these can't be done on the map side.
-MARKER:  B = lua:tutorial.message( "Press " .. tutorial.get_cmd("CMD_FIRE") .. " to shoot an arrow from your wielded bow. You can also pick up the stones thrown at you, and throw them back, also with " .. tutorial.get_cmd("CMD_FIRE") .. ". Use " .. tutorial.get_cmd("CMD_CYCLE_QUIVER_FORWARD") .. " to cycle through your available missiles.", "tutorial", "true" )
-MARKER:  C = lua:tutorial.message( "Remember to rest with " .. tutorial.get_cmd("CMD_REST") .. ".", "tutorial", "true" )
-MARKER:  D = lua:tutorial.message( "Memorise the spell from this spellbook by <white>clicking</white> on the book tab on the lower right of the inventory. You can also press " .. tutorial.get_cmd("CMD_MEMORISE_SPELL") .. " to enter the memorisation screen.", "tutorial", "true" )
-MARKER:  E = lua:tutorial.message( "To cast Magic Dart on the monster, <white>click</white> on the star tab, or press " .. tutorial.get_cmd("CMD_CAST_SPELL") .. ", or <white>Ctrl-click</white> on the monster. Once you're out of mana, you can rest with " .. tutorial.get_cmd("CMD_REST") .. " to get it back up or you can fire some more arrows with " .. tutorial.get_cmd("CMD_FIRE") .. ".", "tutorial", "true" )
+MARKER:  B = lua:tutorial.message_ranged_combat()
+MARKER:  C = lua:tutorial.message_rest_reminder()
+MARKER:  D = lua:tutorial.message_memorize()
+MARKER:  E = lua:tutorial.message_magic_combat()
 MARKER:  F = lua:tutorial.message( "Rest up!", "tutorial", "true" )
 MONS:    training dummy tile:mons_training_dummy ; stone q:30
 MAP
@@ -269,8 +394,8 @@ xxAxxxxxxx...d.D...xxxxxx.[.x
 xx.xxxxxxx.x.....x.xxxxxx...x
 xx.xxxxxxx.xxxxxxx.xxxxxx.{.x
 xx.x.....x.x.l...x.xxxxxx...x
-xx.x.....x.x.l...x.xxxxxxxxxx
-xx.B.....C.x1l...E.xxxxxxxxxx
+xxBx.....x.x.l...xExxxxxxxxxx
+xx.+.....C.x1l...+.xxxxxxxxxx
 xxxxlllllxxx.l...xxxxxxxxxxxx
 xxxx..1..xxx.l...xxxxxxxxxxxx
 xxxxxxxxxxxxxxFxxxxxxxxxxxxxx
@@ -284,33 +409,33 @@ ENDMAP
 NAME:    tutorial_basic_3
 TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_shop_gen tutorial
 KPROP:   l = no_cloud_gen
+KMASK:   + = no_secret_doors
 ORIENT:  encompass
 PLACE:   D:3
 KFEAT:   , = .
 KPROP:   , = bloody
 ITEM:    hand axe ego:none not_cursed
 ITEM:    bread ration
-ITEM:    scroll of identify q:3, ring of slaying good_item no_uniq
+ITEM:    scroll of identify q:3, ring of slaying good_item no_uniq not_cursed
 ITEM:    cursed great sword ego:none, scroll of remove curse q:3
 KITEM:   p = potion of healing q:3
 KITEM:   m = potion of restore abilities q:3
 KITEM:   n = potion of degeneration q:3
 KITEM:   D = meat ration q:50
 KFEAT:   pmn = .
-KITEM:   o = wand of fireball
-KFEAT:   o = .
+KITEM:   G = wand of fireball
 KFEAT:   ABCDEFGHI = .
 COLOUR:  ABCDEFGHI = blue
 MARKER:  A = lua:tutorial.message( "You can chop up corpses with " .. tutorial.get_cmd("CMD_BUTCHER") .. " into edible meat chunks while standing over them. For that you'll need a sharp object, such as the axe over there.", "tutorial", "true" )
 MARKER:  d = lua:tutorial.message( "This axe was picked up automatically because you didn't have a butchering tool. Once you've " .. tutorial.get_cmd("CMD_FIRE") .. "hopped a corpse you're standing on, you can eat the resulting chunks with " .. tutorial.get_cmd("CMD_EAT") .. ", though only if you're hungry.", "tutorial", "true" )
-MARKER:  B = lua:tutorial.message( "This bread ration is permanent food. It will not rot, like the chunks from corpses. You can eat it with " .. tutorial.get_cmd("CMD_EAT") .. " or by <white>clicking</white> on it.", "tutorial", "true" )
-MARKER:  C = lua:tutorial.message( "Here is a scroll of identify and an unknown ring. Item properties are often hidden and you need to find out what they do by experimentation or identification. Try the scroll on the ring. (To do so, you can read it with " .. tutorial.get_cmd("CMD_READ") .. " or <white>click</white> on its tile.) You can put on jewellery with capital " .. tutorial.get_cmd("CMD_WEAR_JEWELLERY") .. " or by <white>clicking</white> on it in the inventory.", "tutorial", "true" )
+MARKER:  B = lua:tutorial.message_eat()
+MARKER:  C = lua:tutorial.message_identify()
 MARKER:  D = lua:tutorial.message( "These meat rations weigh too much. You can drop them with <white>d</white>. You can also drop e.g. only 10, by typing " .. tutorial.get_cmd("CMD_DROP") .. ", <white>10</white> and then selecting the meat rations.", "tutorial", "true" )
-MARKER:  E = lua:tutorial.message( "This sword is cursed. If you wield it, you can uncurse it by reading this remove curse scroll. Remove curse scrolls uncurses all the cursed items you have currently equipped. The other items in your inventory are not affected. Once the sword is uncursed, you can drop it with " .. tutorial.get_cmd("CMD_DROP") .. " or " .. tutorial.get_cmd("CMD_WIELD_WEAPON") .. "ield something else, also by <white>clicking</white>.", "tutorial", "true" )
-MARKER:  F = lua:tutorial.message( "Here are three stacks of unknown potions that you can quaff with " .. tutorial.get_cmd("CMD_QUAFF") .. " or by <white>clicking</white> in the inventory. Go ahead and experiment!", "tutorial", "true" )
-MARKER:  G = lua:tutorial.message( "You can evoke this wand with " .. tutorial.get_cmd("CMD_EVOKE") .. " or by <white>clicking</white> on it.", "tutorial", "true" )
+MARKER:  E = lua:tutorial.message( "This sword is cursed. If you wield it, you can uncurse it by reading this remove curse scroll. Remove curse scrolls uncurses all the cursed items you have currently equipped. The other items in your inventory are not affected. Once the sword is uncursed, you can drop it with " .. tutorial.get_cmd("CMD_DROP") .. " or wield something else with " .. tutorial.get_cmd("CMD_WIELD_WEAPON") .. ".", "tutorial", "true" )
+MARKER:  F = lua:tutorial.message_quaff()
+MARKER:  G = lua:tutorial.message_evoke()
 MARKER:  H = lua:tutorial.message( "Here's some gold that can be spent in shops. Note that they don't buy items from you, so there's no need to carry stuff around that you can't use. Gold is picked up automatically.", "tutorial", "true" )
-MARKER:  I = lua:tutorial.message( "You can read item descriptions from your " .. tutorial.get_cmd("CMD_DISPLAY_INVENTORY") .. "nventory or by doing a <white>mouseover</white> or <white>right-click</white> on the item tile.", "tutorial", "true")
+MARKER:  I = lua:tutorial.message_inventory()
 MONS:    rat, rat always_corpse
 MONS:    training dummy tile:mons_training_dummy ; stone q:30
 MAP
@@ -318,9 +443,9 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxx..3..xxxxxx....xxxx
 xx[.(xxxxxxxxxxxxxxlllllxxxxxx.$$.xx)x
 xxx{xxxxxxxxxxxxxxx..........H.$$..}.x
-xxxAxxxxxxxxxxxxxxx..o..xxxxxx.$$.xx]x
-xxx.xxxxxxxxxxxxxxxxxGxxxxxxxx....xxxx
-x.....xxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxx
+xxxAxxxxxxxxxxxxxxx.....xxxxxx.$$.xx]x
+xxx.xxxxxxxxxxxxxxxxx+xxxxxxxx....xxxx
+x.....xxxxxxxxxxxxxxxGxxxxxxxxxxxxxxxx
 x,....xxxxxxxxxxxxxxx.xx.....xxxxxxxxx
 x.1,1.xxxxxxxxxxxxxxx....pmn.xxxxxxxxx
 x..1.,xxxxxxxxxxxxxxxxxx.....xxxxxxxxx
@@ -358,10 +483,9 @@ MONS:    rat, rat always_corpse
 MONS:    training dummy tile:mons_training_dummy spells:blink;blink;blink;blink;blink;blink ; whip ego:reaching
 MARKER:  A = lua:tutorial.message( "You may have been poisoned from the trap. Drink a potion of healing, or rest with " .. tutorial.get_cmd("CMD_REST") .. " to try to wait it out.", "tutorial", "true" )
 MARKER:  B = lua:tutorial.message( "Look for the secret door in the glass wall. Either wait a single turn with " .. tutorial.get_cmd("CMD_SEARCH") .. " or <white>.</white>, or search longer with " .. tutorial.get_cmd("CMD_REST") .. ".", "tutorial", "true" )
-# TODO: Hax some piety for the player so that minor destruction is immediately usable.
-MARKER:  C = lua:tutorial.message( "Here's an altar to one of the gods in the game. You can pray on an altar with " .. tutorial.get_cmd("CMD_PRAY") .. " to start worshipping. Confirm your choice with a capital <white>Y</white>. Back in the game, you can then press " .. tutorial.get_cmd("CMD_DISPLAY_RELIGION") .. " (or <white>right-click</white> on your character) to read the description of whatever god you're worshipping at the time.", "tutorial", "true" )
+MARKER:  C = lua:tutorial.message_pray()
 MARKER:  D = lua:tutorial.message( "Makhleb accepts kills and corpse sacrifices. Kill these rats, and then pray over their corpses with " .. tutorial.get_cmd("CMD_PRAY") .. " to sacrifice them to Makhleb.", "tutorial", "true" )
-MARKER:  E = lua:tutorial.message( "Use the Minor Destruction " .. tutorial.get_cmd("CMD_USE_ABILITY") .. "bility to attack this annoying dummy.", "tutorial", "true" )
+MARKER:  E = lua:tutorial.message( "Use the god granted Minor Destruction ability with " .. tutorial.get_cmd("CMD_USE_ABILITY") .. " to attack this annoying dummy.", "tutorial", "true" )
 MARKER:  F = lua:tutorial.message( "Behind this door is Sigmund. He is a powerful unique monster, and is likely to kill you. In Crawl, running away is often a very important tactic. You might want to also try playing the game with enabled hints mode. Thanks for playing the tutorial!", "tutorial", "true" )
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -375,14 +499,40 @@ xxxxxxxxoo=ooxxxxxxxxxxxxxx+xx
 xxxxxxxx..C..xxxxxxx..3..xxFxx
 xxxxxxxx.._..xxxxxxx.....xx.xx
 xxxxxxxx.....xxxxxxx........xx
-xxxxxxxxxx.xxx..1..x..E..xxxxx
-xxxxxxxxxx.xxx....rxxx.xxxxxxx
+xxxxxxxxxx.xxx..1..x.....xxxxx
+xxxxxxxxxx.xxx....rxxxExxxxxxx
 xxxxxxxxxx..D+.....+...xxxxxxx
 xxxxxxxxxxxxxx.1..1xxxxxxxxxxx
 xxxxxxxxxxxxxx...2.xxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-# TODO: The game should end after dying to Sigm.. after managing to enter D:5
-# Could have a congratulatory map as D:5 with nice scenery.
+NAME:    tutorial_basic_5
+TAGS:    no_rotate no_monster_gen no_item_gen no_hmirror no_vmirror no_trap_gen no_shop_gen tutorial
+LFLAGS:  no_tele_control
+KMASK:   + = no_secret_doors
+ORIENT:  encompass
+PLACE:   D:5
+MONS:    pandemonium lord name:Plog name_replace spells:fire_storm;;haste;;;
+KFEAT:   ABC = .
+COLOUR:  ABC = blue
+MARKER:  A = lua:tutorial.message( "Congratulations, You have succeeded in defeating Sigmund! He is one of the many early game threats that you will face on your adventures.", "tutorial", "true" )
+MARKER:  B = lua:tutorial.message( "Death in Crawl is almost inevitable, sometimes you will get yourself in way over your head; often, you will die.", "tutorial", "true" )
+MARKER:  C = lua:tutorial.message( "How on earth did you manage to defeat or escape from that Pandemonium lord?", "tutorial", "true" )
+MAP
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+v{.(vvvvvv....vvvvvvvvvvvvvvv
+v.[.vvvvv.WWWW.vvvvvvvvvvvvvv
+vvAvvvvv.W....W.vvvvvvvvvvvvv
+vv.vvvv.W......W.vvvvvvvvvvvv
+vv.vvv.W..UwwU..W.vvvvvvv}.)v
+vv..B+.W..w1.w..W.=.....C.].v
+vv..B+.W..w..w..W.vvvvvvvvvvv
+vv.vvv.W..UwwU..W.vvvvvvvvvvv
+vvvvvvv.W......W.vvvvvvvvvvvv
+vvvvvvvv.W....W.vvvvvvvvvvvvv
+vvvvvvvvv.WWWW.vvvvvvvvvvvvvv
+vvvvvvvvvv....vvvvvvvvvvvvvvv
+vvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+ENDMAP
 

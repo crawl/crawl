@@ -76,6 +76,7 @@ struct MouseEvent
 };
 
 class FontWrapper;
+class crawl_view_buffer;
 
 class TilesFramework
 {
@@ -85,7 +86,7 @@ public:
 
     bool initialise();
     void shutdown();
-    void load_dungeon(unsigned int *tileb, const coord_def &gc);
+    void load_dungeon(const crawl_view_buffer &vbuf, const coord_def &gc);
     void load_dungeon(const coord_def &gc);
     int getch_ck();
     void resize();
@@ -118,7 +119,7 @@ public:
 
     const coord_def &get_cursor() const;
 
-    void add_overlay(const coord_def &gc, int idx);
+    void add_overlay(const coord_def &gc, tileidx_t idx);
     void clear_overlays();
 
     void draw_title();

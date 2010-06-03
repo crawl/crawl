@@ -7,12 +7,12 @@
 #ifndef TILETEX_H
 #define TILETEX_H
 
-#include "tiles.h"
-
 // The different texture types.
 enum TextureID
 {
-    TEX_DUNGEON, // dngn.png
+    TEX_FLOOR,   // floor.png
+    TEX_WALL,    // wall.png
+    TEX_FEAT,    // feat.png
     TEX_PLAYER,  // player.png
     TEX_DEFAULT, // main.png
     TEX_GUI,     // gui.png
@@ -28,13 +28,15 @@ enum MipMapOptions
 
 struct tile_def
 {
-    tile_def(int _tile, TextureID _tex, int _ymax = TILE_Y)
+    tile_def(tileidx_t _tile, TextureID _tex, int _ymax = TILE_Y)
             : tile(_tile), tex(_tex), ymax(_ymax){}
 
-    int tile;
+    tileidx_t tile;
     TextureID tex;
     int ymax;
 };
+
+TextureID get_dngn_tex(tileidx_t idx);
 
 // Arbitrary post-load texture processing
 typedef bool(*tex_proc_func)(unsigned char *pixels, unsigned int w,
@@ -75,8 +77,8 @@ public:
     TilesTexture();
 
     void set_info(int max, tile_info_func *info);
-    inline const tile_info &get_info(int idx) const;
-    inline bool get_coords(int idx, int ofs_x, int ofs_y,
+    inline const tile_info &get_info(tileidx_t idx) const;
+    inline bool get_coords(tileidx_t idx, int ofs_x, int ofs_y,
                            float &pos_sx, float &pos_sy,
                            float &pos_ex, float &pos_ey,
                            float &tex_sx, float &tex_sy,
@@ -89,13 +91,13 @@ protected:
     tile_info_func *m_info_func;
 };
 
-inline const tile_info &TilesTexture::get_info(int idx) const
+inline const tile_info &TilesTexture::get_info(tileidx_t idx) const
 {
     ASSERT(m_info_func);
     return m_info_func(idx);
 }
 
-inline bool TilesTexture::get_coords(int idx, int ofs_x, int ofs_y,
+inline bool TilesTexture::get_coords(tileidx_t idx, int ofs_x, int ofs_y,
                                      float &pos_sx, float &pos_sy,
                                      float &pos_ex, float &pos_ey,
                                      float &tex_sx, float &tex_sy,

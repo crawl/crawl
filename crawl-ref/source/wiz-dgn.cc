@@ -31,6 +31,9 @@
 #include "stairs.h"
 #include "stuff.h"
 #include "terrain.h"
+#ifdef USE_TILE
+ #include "tileview.h"
+#endif
 #include "travel.h"
 #include "traps.h"
 #include "view.h"
@@ -212,7 +215,7 @@ static void _wizard_go_to_level(const level_pos &pos)
     const bool newlevel = load(stair_taken, LOAD_ENTER_LEVEL, old_level_type,
         old_level, old_where);
 #ifdef USE_TILE
-    TileNewLevel(newlevel);
+    tile_new_level(newlevel);
 #else
     UNUSED(newlevel);
 #endif
@@ -631,7 +634,14 @@ static void debug_load_map_by_name(std::string name)
     }
 
     if (dgn_place_map(toplace, true, false, where))
+    {
         mprf("Successfully placed %s.", toplace->name.c_str());
+#ifdef USE_TILE
+        // Fix up doors from vaults and any changes to the default walls
+        // and floors from the vault.
+        tile_init_flavour();
+#endif
+    }
     else
         mprf("Failed to place %s.", toplace->name.c_str());
 }

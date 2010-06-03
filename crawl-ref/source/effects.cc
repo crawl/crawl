@@ -35,6 +35,7 @@
 #include "fight.h"
 #include "fprop.h"
 #include "food.h"
+#include "godpassive.h"
 #include "hiscores.h"
 #include "invent.h"
 #include "it_use2.h"
@@ -4004,6 +4005,9 @@ void handle_time()
     {
         jiyva_stat_action();
     }
+
+    if (you.religion == GOD_JIYVA && one_chance_in(25))
+        jiyva_eat_offlevel_items();
 }
 
 // Move monsters around to fake them walking around while player was
@@ -4619,8 +4623,9 @@ int spawn_corpse_mushrooms(item_def &corpse,
             {
                 // Going to explicitly override the die-off timer in
                 // this case (this condition means we got called from
-                // fungal_bloom() or similar, and are creating a lot of
-                // toadstools at once that should die off quickly).
+                // fedhas_fungal_bloom() or similar, and are creating a
+                // lot of toadstools at once that should die off
+                // quickly).
                 if (distance_as_time)
                 {
                     coord_def offset = corpse.pos - current;
@@ -4893,9 +4898,13 @@ void slime_wall_damage(actor* act, int delay)
     if (act->atype() == ACT_PLAYER)
     {
         ASSERT(act == &you);
-        splash_with_acid(strength, true,
-                         (walls > 1) ? "The walls burn you!"
-                                     : "The wall burns you!");
+
+        if (you.religion != GOD_JIYVA || you.penance[GOD_JIYVA])
+        {
+            splash_with_acid(strength, true,
+                             (walls > 1) ? "The walls burn you!"
+                                         : "The wall burns you!");
+        }
     }
     else
     {
