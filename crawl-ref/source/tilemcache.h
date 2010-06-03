@@ -11,6 +11,8 @@
 #include "debug.h"
 #include <vector>
 
+class dolls_data;
+
 // The monster cache is designed to hold extra information about monsters that
 // can't be contained in a single tile.  This is usually for equipment,
 // doll parts, or demon parts.
@@ -24,10 +26,10 @@ class tile_draw_info
 public:
     tile_draw_info() : idx(~0), ofs_x(0), ofs_y(0) {}
 
-    void set(unsigned int _idx, int _ofs_x = 0, int _ofs_y = 0)
+    void set(tileidx_t _idx, int _ofs_x = 0, int _ofs_y = 0)
         { idx = _idx; ofs_x = _ofs_x; ofs_y = _ofs_y; }
 
-    unsigned int idx;
+    tileidx_t idx;
     int ofs_x;
     int ofs_y;
 };
@@ -42,7 +44,13 @@ public:
     void dec_ref() { m_ref_count--; ASSERT(m_ref_count >= 0); }
     int ref_count() { return m_ref_count; }
 
-    virtual unsigned int info(tile_draw_info *dinfo) const { return 0; }
+    enum
+    {
+        // The maximum number of values written in the info function.
+        MAX_INFO_COUNT = 3
+    };
+
+    virtual int info(tile_draw_info *dinfo) const { return 0; }
     virtual const dolls_data *doll() const { return NULL; }
 
     virtual void construct(writer &th);
@@ -62,7 +70,7 @@ public:
     ~mcache_manager();
 
     unsigned int register_monster(const monsters *mon);
-    mcache_entry *get(unsigned int idx);
+    mcache_entry *get(tileidx_t idx);
 
     void clear_nonref();
     void clear_all();

@@ -1,17 +1,36 @@
 #ifndef VIEWGEOM_H
 #define VIEWGEOM_H
 
+struct screen_cell_t
+{
+    screen_buffer_t glyph;
+    screen_buffer_t colour;
+#ifdef USE_TILE
+    tileidx_t tile_fg;
+    tileidx_t tile_bg;
+#endif
+};
+
 class crawl_view_buffer
 {
 public:
     crawl_view_buffer();
+    crawl_view_buffer(const coord_def &sz);
     ~crawl_view_buffer();
-    void size(const coord_def &size);
-    operator screen_buffer_t * () { return (buffer); }
 
+    coord_def size() const { return m_size; }
+    void resize(const coord_def &sz);
+    bool empty() const;
+
+    operator screen_cell_t * () { return (m_buffer); }
+    operator const screen_cell_t * () const { return (m_buffer); }
+    const crawl_view_buffer & operator = (const crawl_view_buffer &rhs);
+
+    void clear();
     void draw();
 private:
-    screen_buffer_t *buffer;
+    coord_def m_size;
+    screen_cell_t *m_buffer;
 };
 
 struct crawl_view_geometry

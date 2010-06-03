@@ -85,24 +85,24 @@ void wizard_change_species( void )
     unsigned char prev_muts[NUM_MUTATIONS];
     for (i = 0; i < NUM_MUTATIONS; ++i)
     {
-        if (you.demon_pow[i] > 0)
+        if (you.innate_mutations[i] > 0)
         {
-            if (you.demon_pow[i] > you.mutation[i])
+            if (you.innate_mutations[i] > you.mutation[i])
                 you.mutation[i] = 0;
             else
-                you.mutation[i] -= you.demon_pow[i];
+                you.mutation[i] -= you.innate_mutations[i];
 
-            you.demon_pow[i] = 0;
+            you.innate_mutations[i] = 0;
         }
         prev_muts[i] = you.mutation[i];
     }
     give_basic_mutations(sp);
     for (i = 0; i < NUM_MUTATIONS; ++i)
     {
-        if (prev_muts[i] > you.demon_pow[i])
-            you.demon_pow[i] = 0;
+        if (prev_muts[i] > you.innate_mutations[i])
+            you.innate_mutations[i] = 0;
         else
-            you.demon_pow[i] -= prev_muts[i];
+            you.innate_mutations[i] -= prev_muts[i];
     }
 
     switch (sp)
@@ -139,7 +139,7 @@ void wizard_change_species( void )
                 continue;
 
             ++you.mutation[m];
-            ++you.demon_pow[m];
+            ++you.innate_mutations[m];
         }
         break;
     }

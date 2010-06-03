@@ -26,6 +26,9 @@
 #include "store.h"
 
 #ifdef USE_TILE
+
+#include "tiledef_defines.h"
+
 struct tile_flavour
 {
     // The floor tile to use.
@@ -43,11 +46,11 @@ class tile_fg_store
 {
 public:
     tile_fg_store() : m_tile(0) {}
-    tile_fg_store(unsigned int tile) : m_tile(tile) {}
-    operator unsigned int() { return m_tile; }
-    unsigned int operator=(unsigned int tile);
+    tile_fg_store(tileidx_t tile) : m_tile(tile) {}
+    operator tileidx_t() { return m_tile; }
+    tileidx_t operator=(tileidx_t tile);
 protected:
-    unsigned int m_tile;
+    tileidx_t m_tile;
 };
 
 

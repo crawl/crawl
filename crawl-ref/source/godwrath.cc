@@ -410,7 +410,7 @@ static bool _kikubaaqudgha_retribution()
     if (random2(you.experience_level) > 4)
     {
         // Either zombies, or corpse rot + skeletons.
-        receive_corpses(you.experience_level * 4, you.pos());
+        kiku_receive_corpses(you.experience_level * 4, you.pos());
 
         if (coinflip())
             corpse_rot();
@@ -990,7 +990,7 @@ static bool _fedhas_retribution()
     case 0:
         // Try and spawn some hostile giant spores, if none are created
         // fall through to the elemental miscast effects.
-        if (corpse_spores(BEH_HOSTILE, false))
+        if (fedhas_corpse_spores(BEH_HOSTILE, false))
         {
             simple_god_message(" produces spores.", GOD_FEDHAS);
             break;

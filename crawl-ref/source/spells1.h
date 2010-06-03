@@ -15,11 +15,6 @@ int cast_healing(int pow, bool divine_ability = false,
                  const coord_def& where = coord_def(0, 0),
                  bool not_self = false, targ_mode_type mode = TARG_NUM_MODES);
 
-void remove_divine_vigour();
-bool cast_divine_vigour();
-void remove_divine_stamina();
-bool cast_vitalisation();
-
 void big_cloud(cloud_type cl_type, kill_category whose, const coord_def& where,
                int pow, int size, int spread_rate = -1, int colour = -1,
                std::string name = "", std::string tile = "");
@@ -66,8 +61,5 @@ void stone_scales(int pow);
 void antimagic();
 void identify(int power, int item_slot = -1);
 void manage_fire_shield(int delay);
-void purification(void);
 void random_blink(bool, bool override_abyss = false);
-
-
 #endif

@@ -17,7 +17,8 @@
 #include "libutil.h"
 
 #ifdef USE_TILE
-#include "tilebuf.h"
+ #include "tilebuf.h"
+ #include "tiledoll.h"
 #endif
 
 class formatted_string;

@@ -58,7 +58,6 @@
 #include "env.h"
 #include "spells3.h"
 #include "stash.h"
-#include "tiles.h"
 #include "travel.h"
 #include "state.h"
 #include "terrain.h"
@@ -69,7 +68,9 @@
 #include "xom.h"
 
 #ifdef USE_TILE
-#include "tiledef-dngn.h"
+ #include "tilepick.h"
+ #include "tilepick-p.h"
+ #include "tileview.h"
 #endif
 
 //#define DEBUG_PANE_BOUNDS
@@ -403,8 +404,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 #ifdef USE_TILE
                 // Can't use set_map_knowledge_obj because that would
                 // overwrite the gmap.
-                env.tile_bk_bg(*ri) = tile_idx_unseen_terrain(ri->x, ri->y,
-                                                              grd(*ri));
+                env.tile_bk_bg(*ri) = tileidx_unseen_terrain(*ri, grd(*ri));
 #endif
             }
             else
@@ -774,119 +774,85 @@ static void player_view_update()
         deferred_exclude_update();
 }
 
+static void _draw_unseen(screen_cell_t *cell, const coord_def &gc)
+{
+    cell->glyph  = ' ';
+    cell->colour = DARKGREY;
 #ifdef USE_TILE
-void tile_draw_floor()
-{
-    for (int cy = 0; cy < env.tile_fg.height(); cy++)
-        for (int cx = 0; cx < env.tile_fg.width(); cx++)
-        {
-            const coord_def ep(cx, cy);
-            const coord_def gc = show2grid(ep);
-
-            int bg = TILE_DNGN_UNSEEN | tile_unseen_flag(gc);
-
-            if (you.see_cell(gc))
-            {
-                dungeon_feature_type feat = grid_appearance(gc);
-                bg = tileidx_feature(grd(gc), gc.x, gc.y);
-
-                if (feat == DNGN_DETECTED_SECRET_DOOR)
-                     bg |= TILE_FLAG_WAS_SECRET;
-                else if (is_unknown_stair(gc))
-                     bg |= TILE_FLAG_NEW_STAIR;
-            }
-
-
-            // init tiles
-            env.tile_bg[ep.x][ep.y] = bg;
-            env.tile_fg[ep.x][ep.y] = 0;
-        }
-}
-#endif
-
-static void draw_unseen(screen_buffer_t* buffy, const coord_def &gc)
-{
-#ifndef USE_TILE
-    buffy[0] = ' ';
-    buffy[1] = DARKGREY;
-#else
-    tileidx_unseen(buffy[0], buffy[1], ' ', gc);
+    tileidx_unseen(&cell->tile_fg, &cell->tile_bg, ' ', gc);
 #endif
 }
 
-static void draw_outside_los(screen_buffer_t* buffy, const coord_def &gc)
+static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc)
 {
-#ifndef USE_TILE
     // Outside the env.show area.
-    buffy[0] = get_map_knowledge_char(gc);
-    buffy[1] = DARKGREY;
-    if (Options.colour_map)
-        buffy[1] = real_colour(get_map_col(gc, false));
-#else
-    unsigned int bg = env.tile_bk_bg(gc);
-    unsigned int fg = env.tile_bk_fg(gc);
+    cell->glyph  = get_map_knowledge_char(gc);
+    cell->colour = Options.colour_map ? real_colour(get_map_col(gc, false))
+                                      : DARKGREY;
+#ifdef USE_TILE
+    tileidx_t bg = env.tile_bk_bg(gc);
+    tileidx_t fg = env.tile_bk_fg(gc);
     if (bg == 0 && fg == 0)
-        tileidx_unseen(fg, bg, get_map_knowledge_char(gc), gc);
+        tileidx_unseen(&fg, &bg, get_map_knowledge_char(gc), gc);
 
-    buffy[0] = fg;
-    buffy[1] = bg | tile_unseen_flag(gc);
+    cell->tile_fg = fg;
+    cell->tile_bg = bg | tileidx_unseen_flag(gc);
 #endif
 }
 
-static void draw_player(screen_buffer_t* buffy,
-                        const coord_def& gc, const coord_def& ep)
+static void _draw_player(screen_cell_t *cell,
+                         const coord_def &gc, const coord_def &ep)
 {
-#ifndef USE_TILE
     // Player overrides everything in cell.
-    buffy[0] = you.symbol;
-    buffy[1] = you.colour;
+    cell->glyph  = you.symbol;
+    cell->colour = you.colour;
     if (you.swimming())
     {
         if (grd(gc) == DNGN_DEEP_WATER)
-            buffy[1] = BLUE;
+            cell->colour = BLUE;
         else
-            buffy[1] = CYAN;
+            cell->colour = CYAN;
     }
     if (Options.use_fake_player_cursor)
-        buffy[1] |= COLFLAG_REVERSE;
-#else
-    buffy[0] = env.tile_fg(ep) = tileidx_player(you.char_class);
-    buffy[1] = env.tile_bg(ep);
+        cell->colour |= COLFLAG_REVERSE;
+
+#ifdef USE_TILE
+    cell->tile_fg = env.tile_fg(ep) = tileidx_player();
+    cell->tile_bg = env.tile_bg(ep);
+    tile_apply_animations(cell->tile_bg, &env.tile_flv(gc));
 #endif
 }
 
-static void draw_los(screen_buffer_t* buffy,
-                     const coord_def& gc, const coord_def& ep)
+static void _draw_los(screen_cell_t *cell,
+                      const coord_def &gc, const coord_def &ep)
 {
-#ifndef USE_TILE
     glyph g = get_show_glyph(env.show(ep));
-    buffy[0] = g.ch;
-    buffy[1] = g.col;
-#else
-    buffy[0] = env.tile_fg(ep);
-    buffy[1] = env.tile_bg(ep);
-    tile_apply_animations(buffy[1], &env.tile_flv(gc));
+    cell->glyph  = g.ch;
+    cell->colour = g.col;
+
+#ifdef USE_TILE
+    cell->tile_fg = env.tile_fg(ep);
+    cell->tile_bg = env.tile_bg(ep);
+    tile_apply_animations(cell->tile_bg, &env.tile_flv(gc));
 #endif
 }
 
-static void draw_los_backup(screen_buffer_t* buffy,
-                            const coord_def& gc, const coord_def& ep)
+static void _draw_los_backup(screen_cell_t *cell,
+                             const coord_def &gc, const coord_def &ep)
 {
-#ifndef USE_TILE
-    buffy[0] = get_map_knowledge_char(gc);
-    buffy[1] = DARKGREY;
-
-    if (Options.colour_map)
-        buffy[1] = real_colour(get_map_col(gc, false));
-#else
-    if (env.tile_bk_fg(gc) != 0
-        || env.tile_bk_bg(gc) != 0)
+    cell->glyph  = get_map_knowledge_char(gc);
+    cell->colour = Options.colour_map ? real_colour(get_map_col(gc, false))
+                                      : DARKGREY;
+#ifdef USE_TILE
+    tileidx_t bg = env.tile_bk_bg(gc);
+    tileidx_t fg = env.tile_bk_fg(gc);
+    if (bg != 0 || fg != 0)
     {
-        buffy[0] = env.tile_bk_fg(gc);
-        buffy[1] = env.tile_bk_bg(gc) | tile_unseen_flag(gc);
+        cell->tile_fg = fg;
+        cell->tile_bg = bg | tileidx_unseen_flag(gc);
     }
     else
-        tileidx_unseen(buffy[0], buffy[1], get_map_knowledge_char(gc), gc);
+        tileidx_unseen(&cell->tile_fg, &cell->tile_bg, cell->glyph, gc);
 #endif
 }
 
@@ -908,7 +874,7 @@ void viewwindow(bool monster_updates, bool show_updates)
     if (you.duration[DUR_TIME_STEP])
         return;
 
-    screen_buffer_t *buffy(crawl_view.vbuf);
+    screen_cell_t *cell(crawl_view.vbuf);
 
 #ifdef USE_TILE
     tiles.clear_text_tags(TAG_NAMED_MONSTER);
@@ -955,56 +921,57 @@ void viewwindow(bool monster_updates, bool show_updates)
 
     const coord_def &tl = crawl_view.viewp;
     const coord_def br  = tl + crawl_view.viewsz - coord_def(1,1);
-    int bufcount = 0;
-    for (rectangle_iterator ri(tl, br); ri; ++ri, bufcount += 2)
+    for (rectangle_iterator ri(tl, br); ri; ++ri)
     {
         // in grid coords
         const coord_def gc = view2grid(*ri);
         const coord_def ep = view2show(grid2view(gc));
 
         if (!map_bounds(gc))
-            draw_unseen(&buffy[bufcount], gc);
+            _draw_unseen(cell, gc);
         else if (!crawl_view.in_grid_los(gc))
-            draw_outside_los(&buffy[bufcount], gc);
+            _draw_outside_los(cell, gc);
         else if (gc == you.pos() && you.on_current_level && !_show_terrain
                  && !crawl_state.game_is_arena()
                  && !crawl_state.arena_suspended)
         {
-            draw_player(&buffy[bufcount], gc, ep);
+            _draw_player(cell, gc, ep);
         }
         else if (you.see_cell(gc) && you.on_current_level)
-            draw_los(&buffy[bufcount], gc, ep);
+            _draw_los(cell, gc, ep);
         else
-            draw_los_backup(&buffy[bufcount], gc, ep);
+            _draw_los_backup(cell, gc, ep);
 
         // Alter colour if flashing the characters vision.
         if (flash_colour)
         {
-#ifndef USE_TILE
-            buffy[bufcount + 1] = you.see_cell(gc) ? real_colour(flash_colour)
-                                                   : DARKGREY;
-#endif
+            cell->colour = you.see_cell(gc) ? real_colour(flash_colour)
+                                            : DARKGREY;
         }
         else if (crawl_state.darken_range >= 0)
         {
-            bool out_of_range = grid_distance(you.pos(), gc) >
-                                    crawl_state.darken_range
+            const int rsq = (crawl_state.darken_range
+                             * crawl_state.darken_range) + 1;
+            bool out_of_range = distance(you.pos(), gc) > rsq
                                 || !you.see_cell(gc);
-#ifndef USE_TILE
             if (out_of_range)
-                buffy[bufcount + 1] = DARKGREY;
-#else
-            if (out_of_range && you.see_cell(gc))
-                buffy[bufcount + 1] |= TILE_FLAG_OOR;
+            {
+                cell->colour = DARKGREY;
+#ifdef USE_TILE
+                if (you.see_cell(gc))
+                    cell->tile_bg |= TILE_FLAG_OOR;
 #endif
+            }
         }
 #ifdef USE_TILE
         // Grey out grids that cannot be reached due to beholders.
         else if (you.get_beholder(gc))
-            buffy[bufcount + 1] |= TILE_FLAG_OOR;
+            cell->tile_bg |= TILE_FLAG_OOR;
 
-        tile_apply_properties(gc, &buffy[bufcount], &buffy[bufcount + 1]);
+        tile_apply_properties(gc, &cell->tile_fg, &cell->tile_bg);
 #endif
+
+        cell++;
     }
 
     // Leaving it this way because short flashes can occur in long ones,
@@ -1012,14 +979,11 @@ void viewwindow(bool monster_updates, bool show_updates)
     you.flash_colour = BLACK;
 #ifndef USE_TILE
     you.last_view_update = you.num_turns;
-    puttext(crawl_view.viewp.x, crawl_view.viewp.y,
-            crawl_view.viewp.x + crawl_view.viewsz.x - 1,
-            crawl_view.viewp.y + crawl_view.viewsz.y - 1,
-            buffy);
+    puttext(crawl_view.viewp.x, crawl_view.viewp.y, crawl_view.vbuf);
     update_monster_pane();
 #else
     tiles.set_need_redraw(you.running ? Options.tile_runrest_rate : 0);
-    tiles.load_dungeon(&buffy[0], crawl_view.vgrdc);
+    tiles.load_dungeon(crawl_view.vbuf, crawl_view.vgrdc);
     tiles.update_inventory();
 #endif
 

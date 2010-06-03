@@ -30,6 +30,7 @@
 #include "terrain.h"
 #include "tiledef-main.h"
 #include "tilefont.h"
+#include "tilepick.h"
 #include "traps.h"
 #include "travel.h"
 #include "viewgeom.h"
@@ -48,20 +49,15 @@ DungeonRegion::~DungeonRegion()
 {
 }
 
-void DungeonRegion::load_dungeon(unsigned int* tileb, int cx_to_gx, int cy_to_gy)
+void DungeonRegion::load_dungeon(const crawl_view_buffer &vbuf,
+                                 const coord_def &gc)
 {
-    m_tileb.clear();
     m_dirty = true;
 
-    if (!tileb)
-        return;
+    m_cx_to_gx = gc.x - mx / 2;
+    m_cy_to_gy = gc.y - my / 2;
 
-    int len = 2 * crawl_view.viewsz.x * crawl_view.viewsz.y;
-    m_tileb.resize(len);
-    memcpy(&m_tileb[0], tileb, sizeof(unsigned int) * len);
-
-    m_cx_to_gx = cx_to_gx;
-    m_cy_to_gy = cy_to_gy;
+    m_vbuf = vbuf;
 
     place_cursor(CURSOR_TUTORIAL, m_cursor[CURSOR_TUTORIAL]);
 }
@@ -80,27 +76,27 @@ void DungeonRegion::pack_buffers()
 {
     m_buf_dngn.clear();
 
-    if (m_tileb.empty())
+    if (m_vbuf.empty())
         return;
 
-    int tile = 0;
+    screen_cell_t *vbuf_cell = m_vbuf;
     for (int y = 0; y < crawl_view.viewsz.y; ++y)
         for (int x = 0; x < crawl_view.viewsz.x; ++x)
         {
             coord_def gc(x + m_cx_to_gx, y + m_cy_to_gy);
 
-            packed_cell cell;
-            cell.bg = m_tileb[tile + 1];
-            cell.fg = m_tileb[tile];
-            if (in_bounds(gc))
+            packed_cell tile_cell;
+            tile_cell.bg = vbuf_cell->tile_bg;
+            tile_cell.fg = vbuf_cell->tile_fg;
+            if (map_bounds(gc))
             {
-                cell.flv = env.tile_flv(gc);
-                pack_waves(gc, &cell);
+                tile_cell.flv = env.tile_flv(gc);
+                pack_waves(gc, &tile_cell);
             }
 
-            m_buf_dngn.add(cell, x, y);
+            m_buf_dngn.add(tile_cell, x, y);
 
-            tile += 2;
+            vbuf_cell++;
         }
 
     pack_cursor(CURSOR_TUTORIAL, TILE_TUTORIAL_CURSOR);
@@ -122,7 +118,7 @@ void DungeonRegion::pack_buffers()
         if (!crawl_view.in_grid_los(m_overlays[i].gc))
             continue;
 
-        int idx = m_overlays[i].idx;
+        tileidx_t idx = m_overlays[i].idx;
         if (idx >= TILE_MAIN_MAX)
             continue;
 
@@ -217,7 +213,7 @@ void DungeonRegion::render()
 
             const coord_def gc = show2grid(ep);
             coord_def pc;
-            to_screen_coords(gc, pc);
+            to_screen_coords(gc, &pc);
             // center this coord, which is at the top left of gc's cell
             pc.x += dx / 2;
 
@@ -257,13 +253,13 @@ void DungeonRegion::draw_minibars()
         // that gives coords by pixel (the current one), one that gives
         // them by grid.
         coord_def player_on_screen;
-        to_screen_coords(you.pos(), player_on_screen);
+        to_screen_coords(you.pos(), &player_on_screen);
 
         static const float tile_width  = wx / mx;
         static const float tile_height = wy / my;
 
-        player_on_screen.x = player_on_screen.x / tile_width;
-        player_on_screen.y = player_on_screen.y / tile_height;
+        player_on_screen.x = player_on_screen.x / static_cast<int>(tile_width);
+        player_on_screen.y = player_on_screen.y / static_cast<int>(tile_height);
 
         if (Options.tile_show_minimagicbar && you.max_magic_points > 0)
         {
@@ -325,7 +321,7 @@ void DungeonRegion::draw_minibars()
 
 void DungeonRegion::clear()
 {
-    m_tileb.clear();
+    m_vbuf.clear();
 }
 
 void DungeonRegion::on_resize()
@@ -848,13 +844,13 @@ int tile_click_cell(const coord_def &gc, unsigned char mod)
     return (click_travel(gc, mod & MOD_CTRL));
 }
 
-void DungeonRegion::to_screen_coords(const coord_def &gc, coord_def &pc) const
+void DungeonRegion::to_screen_coords(const coord_def &gc, coord_def *pc) const
 {
     int cx = gc.x - m_cx_to_gx;
     int cy = gc.y - m_cy_to_gy;
 
-    pc.x = sx + ox + cx * dx;
-    pc.y = sy + oy + cy * dy;
+    pc->x = sx + ox + cx * dx;
+    pc->y = sy + oy + cy * dy;
 }
 
 bool DungeonRegion::on_screen(const coord_def &gc) const
@@ -863,16 +859,6 @@ bool DungeonRegion::on_screen(const coord_def &gc) const
     int y = gc.y - m_cy_to_gy;
 
     return (x >= 0 && x < mx && y >= 0 && y < my);
-}
-
-// Returns the index into m_tileb for the foreground tile.
-// This value may not be valid.  Check on_screen() first.
-// Add one to the return value to get the background tile idx.
-int DungeonRegion::get_buffer_index(const coord_def &gc)
-{
-    int x = gc.x - m_cx_to_gx;
-    int y = gc.y - m_cy_to_gy;
-    return 2 * (x + y * mx);
 }
 
 void DungeonRegion::place_cursor(cursor_type type, const coord_def &gc)
@@ -925,7 +911,44 @@ bool DungeonRegion::update_tip_text(std::string &tip)
     if (!map_bounds(m_cursor[CURSOR_MOUSE]))
         return (false);
 
-    return (tile_dungeon_tip(m_cursor[CURSOR_MOUSE], tip));
+    const coord_def gc = m_cursor[CURSOR_MOUSE];
+    bool ret = (tile_dungeon_tip(gc, tip));
+
+#ifdef WIZARD
+    if (you.wizard)
+    {
+        if (ret)
+            tip += "\n\n";
+
+        if (you.see_cell(gc))
+        {
+            const coord_def ep = view2show(grid2view(gc));
+
+            tip += make_stringf("GC(%d, %d) EP(%d, %d)\n\n",
+                                gc.x, gc.y, ep.x, ep.y);
+
+            tip += tile_debug_string(env.tile_fg(ep), env.tile_bg(ep), ' ');
+        }
+        else
+        {
+            tip += make_stringf("GC(%d, %d) [out of sight]\n\n", gc.x, gc.y);
+        }
+
+        tip += tile_debug_string(env.tile_bk_fg(gc), env.tile_bk_bg(gc), 'B');
+
+        if (!m_vbuf.empty())
+        {
+            const screen_cell_t *vbuf = m_vbuf;
+            const coord_def vc(gc.x - m_cx_to_gx, gc.y - m_cy_to_gy);
+            const screen_cell_t &cell = vbuf[crawl_view.viewsz.x * vc.y + vc.x];
+            tip += tile_debug_string(cell.tile_fg, cell.tile_bg, 'V');
+        }
+
+        ret = true;
+    }
+#endif
+
+    return (ret);
 }
 
 bool tile_dungeon_tip(const coord_def &gc, std::string &tip)

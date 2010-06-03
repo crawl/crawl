@@ -25,12 +25,13 @@
  #include "mon-util.h"
  #include "newgame.h"
  #include "terrain.h"
- #include "tiles.h"
  #include "tilebuf.h"
  #include "tilefont.h"
  #include "tiledef-dngn.h"
  #include "tiledef-main.h"
  #include "tiledef-player.h"
+ #include "tilepick.h"
+ #include "tilepick-p.h"
  #include "tilereg-crt.h"
  #include "tilereg-menu.h"
  #include "travel.h"
@@ -848,18 +849,18 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
 
     const bool      fake = m->props.exists("fake");
     const coord_def c  = m->pos();
-          int       ch = TILE_FLOOR_NORMAL;
+          tileidx_t ch = TILE_FLOOR_NORMAL;
 
     if (!fake)
     {
-       ch = tileidx_feature(grd(c), c.x, c.y);
+       ch = tileidx_feature(grd(c), c);
        if (ch == TILE_FLOOR_NORMAL)
            ch = env.tile_flv(c).floor;
        else if (ch == TILE_WALL_NORMAL)
            ch = env.tile_flv(c).wall;
     }
 
-    tileset.push_back(tile_def(ch, TEX_DUNGEON));
+    tileset.push_back(tile_def(ch, get_dngn_tex(ch)));
 
     if (m->type == MONS_DANCING_WEAPON)
     {
@@ -877,6 +878,13 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
 
         tileset.push_back(tile_def(tileidx_item(item), TEX_DEFAULT));
         tileset.push_back(tile_def(TILE_ANIMATED_WEAPON, TEX_DEFAULT));
+    }
+    else if (mons_is_draconian(m->type))
+    {
+        tileset.push_back(tile_def(tileidx_draco_base(m), TEX_PLAYER));
+        tileidx_t job = tileidx_draco_job(m);
+        if (job)
+            tileset.push_back(tile_def(job, TEX_PLAYER));
     }
     else if (mons_is_mimic(m->type))
         tileset.push_back(tile_def(tileidx_monster_base(m), TEX_DEFAULT));
@@ -952,8 +960,8 @@ bool FeatureMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
 
     MenuEntry::get_tiles(tileset);
 
-    tileset.push_back(tile_def(tileidx_feature(feat, pos.x, pos.y),
-                               TEX_DUNGEON));
+    tileidx_t tile = tileidx_feature(feat, pos);
+    tileset.push_back(tile_def(tile, get_dngn_tex(tile)));
 
     if (in_bounds(pos) && is_unknown_stair(pos))
         tileset.push_back(tile_def(TILE_NEW_STAIR, TEX_DEFAULT));
@@ -993,7 +1001,7 @@ bool PlayerMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
     };
 
     int flags[TILEP_PART_MAX];
-    tilep_calc_flags(equip_doll.parts, flags);
+    tilep_calc_flags(equip_doll, flags);
 
     // For skirts, boots go under the leg armour.  For pants, they go over.
     if (equip_doll.parts[TILEP_PART_LEG] < TILEP_LEG_SKIRT_OFS)
@@ -2654,7 +2662,7 @@ void SaveMenuItem::_pack_doll()
     };
 
     int flags[TILEP_PART_MAX];
-    tilep_calc_flags(m_save_doll.parts, flags);
+    tilep_calc_flags(m_save_doll, flags);
 
     // For skirts, boots go under the leg armour.  For pants, they go over.
     if (m_save_doll.parts[TILEP_PART_LEG] < TILEP_LEG_SKIRT_OFS)

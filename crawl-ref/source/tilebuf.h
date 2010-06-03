@@ -6,7 +6,6 @@
 #ifndef TILEBUF_H
 #define TILEBUF_H
 
-#include "tiles.h"
 #include "glwrapper.h"
 
 #include <string>
@@ -68,8 +67,9 @@ class TileBuffer : public VertBuffer
 public:
     TileBuffer(const TilesTexture *tex = NULL);
 
-    void add_unscaled(int idx, float x, float y, int ymax = TILE_Y);
-    void add(int idx, int x, int y, int ox = 0, int oy = 0, bool centre = true, int ymax = -1);
+    void add_unscaled(tileidx_t idx, float x, float y, int ymax = TILE_Y);
+    void add(tileidx_t idx, int x, int y,
+             int ox = 0, int oy = 0, bool centre = true, int ymax = -1);
 };
 
 class ColouredTileBuffer : public VertBuffer
@@ -77,7 +77,7 @@ class ColouredTileBuffer : public VertBuffer
 public:
     ColouredTileBuffer(const TilesTexture *tex = NULL);
 
-    void add(int idx, int x, int y, int z,
+    void add(tileidx_t idx, int x, int y, int z,
              int ox, int oy, int ymin, int ymax,
              int alpha_top, int alpha_bottom);
 };
@@ -88,7 +88,7 @@ class SubmergedTileBuffer
 public:
     SubmergedTileBuffer(const TilesTexture *tex, int water_level);
 
-    void add(int idx, int x, int y, int z = 0, bool submerged = false,
+    void add(tileidx_t idx, int x, int y, int z = 0, bool submerged = false,
              bool ghost = false, int ox = 0, int oy = 0, int ymax = -1);
 
     void draw() const;

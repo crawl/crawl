@@ -40,16 +40,17 @@ Gods:
 * Zin no longer objects to deaths of non-sentient allies, and
   takes collateral kills of unclean and chaotic monsters.
 * Zin has a new power: Imprison.
+* Elyvilon's Divine Vigour scales better in terms of power.
 * Yredelemnul no longer gifts vampires.
 * Sif Muna's piety is no longer unfair to skilled species.
 * Nemelex no longer takes gold sacrifices.
 * Fedhas can now evolve ballistomycetes into hyperactive
   ballistomycetes.
-* Jiyva now paralyses fellow slimes under prayer instead of
-  creating a jelly shield.
-* Jiyva's royal jelly effect now produces temporary friendly
-  slimes instead of permanent neutral ones.
-* Jiyva can now give the player unique slime-related mutations.
+* Jiyva now gives the player conservation and unique
+  slime-related mutations; paralyses fellow slimes under
+  prayer instead of creating a jelly shield; and produces
+  temporary friendly slimes instead of permanent neutral
+  ones via the royal jelly effect.
 
 Items:
 * Scrolls of holy word do more damage to susceptible monsters.

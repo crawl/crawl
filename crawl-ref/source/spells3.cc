@@ -235,7 +235,7 @@ bool detect_curse(int scroll, bool suppress_msg)
     return (true);
 }
 
-bool cast_smiting(int power, const coord_def& where)
+bool cast_smiting(int pow, const coord_def& where)
 {
     monsters *m = monster_at(where);
 
@@ -270,7 +270,7 @@ bool cast_smiting(int power, const coord_def& where)
         // Maxes out at around 40 damage at 27 Invocations, which is
         // plenty in my book (the old max damage was around 70,
         // which seems excessive).
-        m->hurt(&you, 7 + (random2(power) * 33 / 191));
+        m->hurt(&you, 7 + (random2(pow) * 33 / 191));
         if (m->alive())
             print_wounds(m);
     }
@@ -278,7 +278,7 @@ bool cast_smiting(int power, const coord_def& where)
     return (success);
 }
 
-int airstrike(int power, const dist &beam)
+int airstrike(int pow, const dist &beam)
 {
     bool success = false;
 
@@ -301,7 +301,7 @@ int airstrike(int power, const dist &beam)
                  monster->name(DESC_NOCAP_THE).c_str());
 
             behaviour_event(monster, ME_ANNOY, MHITYOU);
-            if (mons_is_mimic( monster->type ))
+            if (mons_is_mimic(monster->type))
                 mimic_alert(monster);
         }
 
@@ -309,8 +309,8 @@ int airstrike(int power, const dist &beam)
 
         if (success)
         {
-            int hurted = 8 + random2(random2(4) + (random2(power) / 6)
-                           + (random2(power) / 7));
+            int hurted = 8 + random2(random2(4) + (random2(pow) / 6)
+                           + (random2(pow) / 7));
 
             if (mons_flies(monster))
             {
@@ -320,8 +320,7 @@ int airstrike(int power, const dist &beam)
 
             hurted -= random2(1 + monster->ac);
 
-            if (hurted < 0)
-                hurted = 0;
+            hurted = std::max(0, hurted);
 
             monster->hurt(&you, hurted);
             if (monster->alive())
@@ -693,108 +692,6 @@ bool cast_summon_horrible_things(int pow, god_type god)
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return (count > 0);
-}
-
-bool receive_corpses(int pow, coord_def where)
-{
-    // pow = invocations * 4, ranges from 0 to 108
-    dprf("receive_corpses() power: %d", pow);
-
-    // Kiku gives branch-appropriate corpses (like shadow creatures).
-    int expected_extra_corpses = 3 + pow / 18; // 3 at 0 Inv, 9 at 27 Inv.
-    int corpse_delivery_radius = 1;
-
-    // We should get the same number of corpses
-    // in a hallway as in an open room.
-    int spaces_for_corpses = 0;
-    for (radius_iterator ri(where, corpse_delivery_radius, C_ROUND,
-                            you.get_los(), true);
-         ri; ++ri)
-    {
-        if (mons_class_can_pass(MONS_HUMAN, grd(*ri)))
-            spaces_for_corpses++;
-    }
-
-    int percent_chance_a_square_receives_extra_corpse = // can be > 100
-        int(float(expected_extra_corpses) / float(spaces_for_corpses) * 100.0);
-
-    int corpses_created = 0;
-
-    for (radius_iterator ri(where, corpse_delivery_radius, C_ROUND,
-                            you.get_los());
-         ri; ++ri)
-    {
-        bool square_is_walkable = mons_class_can_pass(MONS_HUMAN, grd(*ri));
-        bool square_is_player_square = (*ri == where);
-        bool square_gets_corpse =
-            (random2(100) < percent_chance_a_square_receives_extra_corpse)
-            || (square_is_player_square && random2(100) < 97);
-
-        if (!square_is_walkable || !square_gets_corpse)
-            continue;
-
-        corpses_created++;
-
-        // Find an appropriate monster corpse for level and power.
-        monster_type mon_type = MONS_PROGRAM_BUG;
-        int adjusted_power = 0;
-        for (int i = 0; i < 200 && !mons_class_can_be_zombified(mon_type); ++i)
-        {
-            adjusted_power = std::min(pow / 4, random2(random2(pow)));
-            mon_type = pick_local_zombifiable_monster(adjusted_power);
-        }
-
-        // Create corpse object.
-        monsters dummy;
-        dummy.type = mon_type;
-        int index_of_corpse_created = get_item_slot();
-
-        if (index_of_corpse_created == NON_ITEM)
-            break;
-
-        if (mons_genus(mon_type) == MONS_HYDRA)
-            dummy.number = random2(20) + 1;
-
-        int valid_corpse = fill_out_corpse(&dummy,
-                                           mitm[index_of_corpse_created],
-                                           false);
-        if (valid_corpse == -1)
-        {
-            mitm[index_of_corpse_created].clear();
-            continue;
-        }
-
-        mitm[index_of_corpse_created].props["DoNotDropHide"] = true;
-
-        ASSERT(valid_corpse >= 0);
-
-        // Higher piety means fresher corpses.  One out of ten corpses
-        // will always be rotten.
-        int rottedness = 200 -
-            (!one_chance_in(10) ? random2(200 - you.piety)
-                                : random2(100 + random2(75)));
-        mitm[index_of_corpse_created].special = rottedness;
-
-        // Place the corpse.
-        move_item_to_grid(&index_of_corpse_created, *ri);
-    }
-
-    if (corpses_created)
-    {
-        if (you.religion == GOD_KIKUBAAQUDGHA)
-        {
-            simple_god_message(corpses_created > 1 ? " delivers you corpses!"
-                                                   : " delivers you a corpse!");
-        }
-        maybe_update_stashes();
-        return (true);
-    }
-    else
-    {
-        if (you.religion == GOD_KIKUBAAQUDGHA)
-            simple_god_message(" can find no cadavers for you!");
-        return (false);
-    }
 }
 
 static bool _animatable_remains(const item_def& item)
@@ -1890,8 +1787,7 @@ void you_teleport_now(bool allow_control, bool new_abyss_area, bool wizard_tele)
     }
 }
 
-static bool _do_imprison(const int power, const coord_def& where,
-                         bool force_full)
+static bool _do_imprison(int pow, const coord_def& where, bool force_full)
 {
     // power guidelines:
     // powc is roughly 50 at Evoc 10 with no godly assistance, ranging
@@ -1941,7 +1837,7 @@ static bool _do_imprison(const int power, const coord_def& where,
     for (adjacent_iterator ai(where); ai; ++ai)
     {
         // This is where power comes in.
-        if (!force_full && one_chance_in(power / 5))
+        if (!force_full && one_chance_in(pow / 5))
             continue;
 
         // The tile is occupied.
@@ -1986,54 +1882,24 @@ static bool _do_imprison(const int power, const coord_def& where,
     return (number_built > 0);
 }
 
-bool entomb(const int power)
+bool entomb(int pow)
 {
-    return (_do_imprison(power, you.pos(), false));
+    return (_do_imprison(pow, you.pos(), false));
 }
 
-bool cast_imprison(const int power, monsters *monster)
+bool cast_imprison(int pow, monsters *monster)
 {
-    if (_do_imprison(power, monster->pos(), true))
+    if (_do_imprison(pow, monster->pos(), true))
     {
         monster->add_ench(mon_enchant(ENCH_ENTOMBED, 0, KC_YOU,
-                                      power * 10));
+                                      pow * 10));
         return (true);
     }
 
     return (false);
 }
 
-bool cast_sanctuary(const int power)
-{
-    // Casting is disallowed while previous sanctuary in effect.
-    // (Checked in abl-show.cc.)
-    if (env.sanctuary_time)
-        return (false);
-
-    // Yes, shamelessly stolen from NetHack...
-    if (!silenced(you.pos())) // How did you manage that?
-        mpr("You hear a choir sing!", MSGCH_SOUND);
-    else
-        mpr("You are suddenly bathed in radiance!");
-
-    flash_view(WHITE);
-
-    holy_word(100, HOLY_WORD_ZIN, you.pos(), true);
-
-#ifndef USE_TILE
-    // Allow extra time for the flash to linger.
-    delay(1000);
-#endif
-
-    // Pets stop attacking and converge on you.
-    you.pet_target = MHITYOU;
-
-    create_sanctuary(you.pos(), 7 + you.skills[SK_INVOCATIONS] / 2);
-
-    return (true);
-}
-
-bool project_noise(void)
+bool project_noise()
 {
     bool success = false;
 
@@ -2061,12 +1927,12 @@ bool project_noise(void)
             success = true;
         }
 
-        if (!silenced( you.pos() ))
+        if (!silenced(you.pos()))
         {
             if (success)
             {
                 mprf(MSGCH_SOUND, "You hear a %svoice call your name.",
-                     (!you.see_cell(pos) ? "distant " : "") );
+                     (!you.see_cell(pos) ? "distant " : ""));
             }
             else
                 mprf(MSGCH_SOUND, "You hear a dull thud.");
@@ -2078,7 +1944,7 @@ bool project_noise(void)
 
 // Type recalled:
 // 0 = anything
-// 1 = undead only (Kiku/Yred religion ability)
+// 1 = undead only (Yred religion ability)
 // 2 = orcs only (Beogh religion ability)
 bool recall(char type_recalled)
 {
@@ -2088,7 +1954,7 @@ bool recall(char type_recalled)
     int step_value     = 1;
     int end_count      = (MAX_MONSTERS - 1);
 
-    monsters *monster = 0;
+    monsters *monster = NULL;
 
     // someone really had to make life difficult {dlb}:
     // sometimes goes through monster list backwards
@@ -2129,7 +1995,7 @@ bool recall(char type_recalled)
 
         coord_def empty;
         if (empty_surrounds(you.pos(), DNGN_FLOOR, 3, false, empty)
-            && monster->move_to_pos( empty ) )
+            && monster->move_to_pos(empty))
         {
             // only informed if monsters recalled are visible {dlb}:
             if (simple_monster_message(monster, " is recalled."))

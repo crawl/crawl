@@ -1,7 +1,6 @@
 /*
  *  File:       libgui.cc
  *  Summary:    Functions that any display port needs to implement.
- *              Needed by makefile_tiles.mgw and makefile_tiles.unix.
  *  Written by: M.Itakura
  */
 
@@ -23,28 +22,10 @@
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
-#include "tiles.h"
 #include "tiledef-main.h"
 #include "travel.h"
 #include "viewgeom.h"
 #include "windowmanager.h"
-
-int tile_idx_unseen_terrain(int x, int y, int what)
-{
-    const coord_def gc(x,y);
-    dungeon_feature_type feature = grd(gc);
-
-    unsigned int t = tileidx_feature(feature, gc.x, gc.y);
-    if (t == TILE_ERROR || what == ' ')
-    {
-        unsigned int fg_dummy;
-        tileidx_unseen(fg_dummy, t, what, gc);
-    }
-
-    t |= tile_unseen_flag(gc);
-
-    return t;
-}
 
 int m_getch()
 {

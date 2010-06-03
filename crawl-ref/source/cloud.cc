@@ -99,8 +99,8 @@ static void _new_cloud( int cloud, cloud_type type, const coord_def& p,
 #ifdef USE_TILE
     if (!tile.empty())
     {
-        unsigned int index;
-        if (!tile_main_index(tile.c_str(), index))
+        tileidx_t index;
+        if (!tile_main_index(tile.c_str(), &index))
         {
             mprf(MSGCH_ERROR, "Invalid tile requested for cloud: '%s'.", tile.c_str());
             tile = "";

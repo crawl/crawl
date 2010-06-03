@@ -107,7 +107,7 @@ CXX = $(GXX)
 RM = rm -f
 COPY = cp
 COPY_R = cp -r
-STRIP = strip
+STRIP = strip -s
 WINDRES = windres
 CHMOD = chmod 2>/dev/null
 CHOWN = chown 2>/dev/null
@@ -190,6 +190,7 @@ ifeq ($(uname_S),DOS)
 	NO_RDYNAMIC = yes
 endif
 ifeq ($(uname_S),Darwin)
+	STRIP := strip -x
 	NEED_APPKIT = YesPlease
 	LIBNCURSES_IS_UNICODE = Yes
 	NO_PKGCONFIG = Yes
@@ -343,7 +344,7 @@ INCLUDES_L += -Iutil -I.
 
 ifdef APPLE_GCC
 
-ARCH := $(shell arch)
+ARCH := $(uname_M)
 
 ifeq ($(ARCH),ppc)
 	SDK_VER := 10.4
@@ -352,7 +353,11 @@ ifeq ($(ARCH),i386)
 	SDK_VER := 10.4
 endif
 ifeq ($(ARCH),x86_64)
+ifdef TILES
 	SDK_VER := 10.6
+else
+	SDK_VER := 10.5
+endif
 endif
 
 # Mac OS X 10.4 adds a 'u' on the end of the SDK name. Everything
@@ -504,7 +509,7 @@ SDL_INCLUDE := $(shell pkg-config sdl --cflags-only-I)
 SDL_CFLAGS  := $(shell pkg-config sdl --cflags-only-other)
 SDL_LDFLAGS := $(shell pkg-config sdl --libs-only-L) $(shell pkg-config sdl --libs-only-l)
 
-LIBS += -lSDL_image $(SDL_LDFLAGS) $(FREETYPE_LDFLAGS)
+LIBS += -pthread -lSDL_image $(SDL_LDFLAGS) $(FREETYPE_LDFLAGS)
 
 endif # pkg-config
 
@@ -747,18 +752,14 @@ endif
 endif
 
 ifdef TILES
-TILEDEFS = dngn main player gui unrand
+TILEIMAGEFILES := floor wall feat main player gui
+TILEDEFS = $(TILEIMAGEFILES) dngn unrand
 TILEDEFPRES = $(TILEDEFS:%=$(RLTILES)/tiledef-%)
-TILEDEFTXTS = $(TILEDEFPRES:%=%.txt)
 TILEDEFOBJS = $(TILEDEFPRES:%=%.o)
 TILEDEFSRCS = $(TILEDEFPRES:%=%.cc)
 TILEDEFHDRS = $(TILEDEFPRES:%=%.h)
 
-TILEFILES = \
-	main.png \
-	player.png \
-    dngn.png \
-    gui.png
+TILEFILES = $(TILEIMAGEFILES:%=%.png)
 ORIGTILEFILES = $(TILEFILES:%=$(RLTILES)/%)
 DESTTILEFILES = $(TILEFILES:%=dat/tiles/%)
 
@@ -838,6 +839,7 @@ test:
 
 
 ifeq (,$(findstring clean,$(MAKECMDGOALS)))
+ifeq (,$(findstring test,$(MAKECMDGOALS)))
 
 #
 # CFLAGS difference check
@@ -869,6 +871,7 @@ ifneq ($(DEPS),)
 -include $(DEPS)
 endif
 
+endif
 endif
 
 depend: $(OBJECTS:.o=.d)
@@ -939,7 +942,7 @@ ifeq ($(DESTDIR)$(prefix),)
 endif
 	[ -d $(prefix_fp)/$(bin_prefix) ] || mkdir -p $(prefix_fp)/$(bin_prefix)
 	$(COPY) $(GAME) $(prefix_fp)/$(bin_prefix)/
-	$(STRIP) -s $(prefix_fp)/$(bin_prefix)/$(GAME)
+	$(STRIP) $(prefix_fp)/$(bin_prefix)/$(GAME)
 	$(CHOWN) $(INSTALL_UGRP) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
 	$(CHMOD) $(MCHMOD) $(prefix_fp)/$(bin_prefix)/$(GAME) || true
 	mkdir -p $(datadir_fp)/dat/des

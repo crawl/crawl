@@ -17,15 +17,12 @@ bool burn_freeze(int pow, beam_type flavour, monsters *monster);
 
 void corpse_rot();
 
-
-class dist;
 bool vampiric_drain(int pow, const dist &vmove);
 int detect_creatures(int pow, bool telepathic = false);
 int detect_items(int pow);
 int detect_traps(int pow);
 void cast_refrigeration(int pow, bool non_player = false);
 void cast_toxic_radiance(bool non_player = false);
-void drain_life(int pow);
 
 bool summon_animals(int pow);
 bool cast_summon_butterflies(int pow, god_type god = GOD_NO_GOD);

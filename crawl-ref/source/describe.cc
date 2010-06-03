@@ -310,16 +310,19 @@ static std::vector<std::string> _randart_propnames( const item_def& item )
 
                 // these need special handling, so we don't give anything away
                 if (propanns[i].prop == ARTP_METABOLISM && val > 2
-                    || propanns[i].prop == ARTP_MUTAGENIC && val > 3
-                    || propanns[i].prop == ARTP_STEALTH && val > 20)
+                    || propanns[i].prop == ARTP_MUTAGENIC && val > 3)
                 {
                     work << "+";
                 }
-                else if (propanns[i].prop == ARTP_STEALTH && val < 0)
+                else if (propanns[i].prop == ARTP_STEALTH)
                 {
-                    if (val < -20)
+                    if (val > 20)
+                        work << "++";
+                    else if (val > 0)
+                        work << "+";
+                    else if (val < -20)
                         work << "--";
-                    else
+                    else if (val < 0)
                         work << "-";
                 }
                 break;
@@ -3845,7 +3848,7 @@ void describe_god( god_type which_god, bool give_title )
         }
         else if (which_god == GOD_JIYVA)
         {
-            if (jiyva_accepts_prayer())
+            if (jiyva_can_paralyse_jellies())
             {
                 have_any = true;
                 std::string buf = "Your slimes' item consumption is ";

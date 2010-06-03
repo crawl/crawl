@@ -40,10 +40,8 @@
 #include "mon-util.h"
 #include "options.h"
 #include "player.h"
-#include "player-stats.h"
 #include "religion.h"
 #include "godconduct.h"
-#include "skills2.h"
 #include "spells2.h"
 #include "spells3.h"
 #include "spells4.h"
@@ -721,20 +719,24 @@ static bool _mons_hostile(const monsters *mon)
     return (!mon->wont_attack() && !mon->neutral());
 }
 
-static bool _can_pacify_monster(const monsters *mon, const int healed)
+// Check whether this monster might be pacified.
+// Returns 0, if monster can be pacified but the attempt failed.
+// Returns 1, if monster is pacified.
+// Returns -1, if monster can never be pacified.
+static int _can_pacify_monster(const monsters *mon, const int healed)
 {
     if (you.religion != GOD_ELYVILON)
-        return (false);
+        return (-1);
 
     if (healed < 1)
-        return (false);
+        return (0);
 
     // I was thinking of jellies when I wrote this, but maybe we shouldn't
     // exclude zombies and such... (jpeg)
     if (mons_intel(mon) <= I_PLANT // no self-awareness
         || mon->type == MONS_KRAKEN_TENTACLE) // body part
     {
-        return (false);
+        return (-1);
     }
 
     const mon_holy_type holiness = mon->holiness();
@@ -744,14 +746,14 @@ static bool _can_pacify_monster(const monsters *mon, const int healed)
         && holiness != MH_DEMONIC
         && holiness != MH_NATURAL)
     {
-        return (false);
+        return (-1);
     }
 
     if (mons_is_stationary(mon)) // not able to leave the level
-        return (false);
+        return (-1);
 
     if (mon->asleep()) // not aware of what is happening
-        return (false);
+        return (0);
 
     const int factor = (mons_intel(mon) <= I_ANIMAL)       ? 3 : // animals
                        (is_player_same_species(mon->type)) ? 2   // same species
@@ -774,9 +776,9 @@ static bool _can_pacify_monster(const monsters *mon, const int healed)
          you.skills[SK_INVOCATIONS], healed, random_factor);
 
     if (mon->max_hit_points < factor * random_factor)
-        return (true);
+        return (1);
 
-    return (false);
+    return (0);
 }
 
 // Returns: 1 -- success, 0 -- failure, -1 -- cancel
@@ -829,22 +831,26 @@ static int _healing_spell(int healed, bool divine_ability,
         return (0);
     }
 
-    const bool can_pacify = _can_pacify_monster(monster, healed);
+    const int can_pacify = _can_pacify_monster(monster, healed);
     const bool is_hostile = _mons_hostile(monster);
 
     // Don't divinely heal a monster you can't pacify.
     if (divine_ability
         && you.religion == GOD_ELYVILON
-        && !can_pacify)
+        && can_pacify <= 0)
     {
-        canned_msg(MSG_NOTHING_HAPPENS);
+        if (can_pacify == 0)
+            canned_msg(MSG_NOTHING_HAPPENS);
+        else
+            mpr("You cannot pacify this monster!");
         return (0);
     }
 
     bool did_something = false;
 
     if (you.religion == GOD_ELYVILON
-        && can_pacify && is_hostile)
+        && can_pacify == 1
+        && is_hostile)
     {
         did_something = true;
 
@@ -927,152 +933,6 @@ int cast_healing(int pow, bool divine_ability, const coord_def& where,
                            not_self, mode));
 }
 
-void remove_divine_vigour()
-{
-    mpr("Your divine vigour fades away.", MSGCH_DURATION);
-    you.duration[DUR_DIVINE_VIGOUR] = 0;
-    you.attribute[ATTR_DIVINE_VIGOUR] = 0;
-    calc_hp();
-    calc_mp();
-}
-
-bool cast_divine_vigour()
-{
-    bool success = false;
-
-    if (!you.duration[DUR_DIVINE_VIGOUR])
-    {
-        mprf("%s grants you divine vigour.",
-             god_name(you.religion).c_str());
-
-        const int vigour_amt = 1 + (you.skills[SK_INVOCATIONS]/6);
-        const int old_hp_max = you.hp_max;
-        const int old_mp_max = you.max_magic_points;
-        you.attribute[ATTR_DIVINE_VIGOUR] = vigour_amt;
-        you.set_duration(DUR_DIVINE_VIGOUR,
-                         40 + (you.skills[SK_INVOCATIONS]*5)/2);
-
-        calc_hp();
-        inc_hp(you.hp_max - old_hp_max, false);
-        calc_mp();
-        inc_mp(you.max_magic_points - old_mp_max, false);
-
-        success = true;
-    }
-    else
-        canned_msg(MSG_NOTHING_HAPPENS);
-
-    return (success);
-}
-
-void remove_divine_stamina()
-{
-    mpr("Your divine stamina fades away.", MSGCH_DURATION);
-    notify_stat_change(STAT_STR, -you.attribute[ATTR_DIVINE_STAMINA],
-                true, "Zin's divine stamina running out");
-    notify_stat_change(STAT_INT, -you.attribute[ATTR_DIVINE_STAMINA],
-                true, "Zin's divine stamina running out");
-    notify_stat_change(STAT_DEX, -you.attribute[ATTR_DIVINE_STAMINA],
-                true, "Zin's divine stamina running out");
-    you.duration[DUR_DIVINE_STAMINA] = 0;
-    you.attribute[ATTR_DIVINE_STAMINA] = 0;
-}
-
-static bool _kill_duration(duration_type dur)
-{
-    const bool rc = (you.duration[dur] > 0);
-    you.duration[dur] = 0;
-    return (rc);
-}
-
-bool cast_vitalisation()
-{
-    bool success = false;
-    int type = 0;
-
-    // Remove negative afflictions.
-    if (you.disease || you.rotting || you.confused()
-        || you.duration[DUR_PARALYSIS] || you.duration[DUR_POISONING]
-        || you.petrified())
-    {
-        do
-        {
-            switch (random2(6))
-            {
-            case 0:
-                if (you.disease)
-                {
-                    success = true;
-                    you.disease = 0;
-                }
-                break;
-            case 1:
-                if (you.rotting)
-                {
-                    success = true;
-                    you.rotting = 0;
-                }
-                break;
-            case 2:
-                success = _kill_duration(DUR_CONF);
-                break;
-            case 3:
-                success = _kill_duration(DUR_PARALYSIS);
-                break;
-            case 4:
-                success = _kill_duration(DUR_POISONING);
-                break;
-            case 5:
-                success = _kill_duration(DUR_PETRIFIED);
-                break;
-            }
-        }
-        while (!success);
-    }
-    // Restore stats.
-    else if (you.strength() < you.max_strength()
-             || you.intel() < you.max_intel()
-             || you.dex() < you.max_dex())
-    {
-        type = 1;
-        restore_stat(STAT_RANDOM, 0, true);
-        success = true;
-    }
-    else
-    {
-        // Add divine stamina.
-        if (!you.duration[DUR_DIVINE_STAMINA])
-        {
-            success = true;
-            type = 2;
-
-            mprf("%s grants you divine stamina.",
-                 god_name(you.religion).c_str());
-
-            const int stamina_amt = 3;
-            you.attribute[ATTR_DIVINE_STAMINA] = stamina_amt;
-            you.set_duration(DUR_DIVINE_STAMINA,
-                             40 + (you.skills[SK_INVOCATIONS]*5)/2);
-
-            notify_stat_change(STAT_STR, stamina_amt, true, "");
-            notify_stat_change(STAT_INT, stamina_amt, true, "");
-            notify_stat_change(STAT_DEX, stamina_amt, true, "");
-        }
-    }
-
-    // If vitalisation has succeeded, display an appropriate message.
-    if (success)
-    {
-        mprf("You feel %s.", (type == 0) ? "better" :
-                             (type == 1) ? "renewed"
-                                         : "powerful");
-    }
-    else
-        canned_msg(MSG_NOTHING_HAPPENS);
-
-    return (success);
-}
-
 bool cast_revivification(int pow)
 {
     bool success = false;
@@ -1104,19 +964,6 @@ void cast_cure_poison(int pow)
         reduce_poison_player(2 + random2(pow) + random2(3));
     else
         canned_msg(MSG_NOTHING_HAPPENS);
-}
-
-void purification(void)
-{
-    mpr("You feel purified!");
-
-    you.disease = 0;
-    you.rotting = 0;
-    you.duration[DUR_POISONING] = 0;
-    you.duration[DUR_CONF] = 0;
-    you.duration[DUR_SLOW] = 0;
-    you.duration[DUR_PARALYSIS] = 0;          // can't currently happen -- bwr
-    you.duration[DUR_PETRIFIED] = 0;
 }
 
 int allowed_deaths_door_hp(void)

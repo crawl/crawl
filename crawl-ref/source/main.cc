@@ -64,6 +64,7 @@
 #include "files.h"
 #include "food.h"
 #include "godabil.h"
+#include "godpassive.h"
 #include "godprayer.h"
 #include "hiscores.h"
 #include "initfile.h"
@@ -136,9 +137,9 @@
 #include "xom.h"
 
 #ifdef USE_TILE
-#include "tiles.h"
-#include "tiledef-dngn.h"
-#include "tilereg.h"
+ #include "tiledef-dngn.h"
+ #include "tilepick.h"
+ #include "tilereg.h"
 #endif
 
 #ifdef DGL_SIMPLE_MESSAGING
@@ -566,6 +567,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 'D': wizard_detect_creatures();             break;
     case 'u': case 'U': wizard_level_travel(false);  break;
     case '%': case 'o': wizard_create_spec_object(); break;
+    case 'J': jiyva_eat_offlevel_items();            break;
 
     case 'x':
         you.experience = 1 + exp_needed(2 + you.experience_level);
@@ -1865,7 +1867,6 @@ static bool _decrement_a_duration(duration_type dur, int delay,
 
     const int midpoint = get_expiration_threshold(dur);
 
-
     int old_dur = you.duration[dur];
 
     you.duration[dur] -= delay;
@@ -1908,7 +1909,7 @@ static void _decrement_durations()
 
     if (you.duration[DUR_ICEMAIL_DEPLETED] > 0)
     {
-        if(delay > you.duration[DUR_ICEMAIL_DEPLETED])
+        if (delay > you.duration[DUR_ICEMAIL_DEPLETED])
             you.duration[DUR_ICEMAIL_DEPLETED] = 0;
         else
             you.duration[DUR_ICEMAIL_DEPLETED] -= delay;
@@ -1921,7 +1922,7 @@ static void _decrement_durations()
 
     if (you.duration[DUR_DEMONIC_GUARDIAN] > 0)
     {
-        if(delay > you.duration[DUR_DEMONIC_GUARDIAN])
+        if (delay > you.duration[DUR_DEMONIC_GUARDIAN])
             you.duration[DUR_DEMONIC_GUARDIAN] = 0;
         else
             you.duration[DUR_DEMONIC_GUARDIAN] -= delay;
@@ -2368,8 +2369,8 @@ static void _decrement_durations()
             resilience = resilience * 3 / 2;
 
         // Faster rotting when hungry.
-        for (int hs = you.hunger_state; hs < HS_SATIATED; hs++)
-            resilience = resilience * 2 / 3;
+        if (you.hunger_state < HS_SATIATED)
+            resilience >>= HS_SATIATED - you.hunger_state;
 
         if (one_chance_in(resilience))
         {
@@ -2406,11 +2407,11 @@ static void _decrement_durations()
         }
     }
 
-    if (_decrement_a_duration(DUR_DIVINE_VIGOUR, delay))
-        remove_divine_vigour();
-
     if (_decrement_a_duration(DUR_DIVINE_STAMINA, delay))
-        remove_divine_stamina();
+        zin_remove_divine_stamina();
+
+    if (_decrement_a_duration(DUR_DIVINE_VIGOUR, delay))
+        elyvilon_remove_divine_vigour();
 
     _decrement_a_duration(DUR_REPEL_STAIRS_MOVE, 1);
     _decrement_a_duration(DUR_REPEL_STAIRS_CLIMB, 1);

@@ -50,6 +50,9 @@
 #include "stuff.h"
 #include "env.h"
 #include "terrain.h"
+#ifdef USE_TILE
+#include "tilepick.h"
+#endif
 #include "transform.h"
 #include "hints.h"
 #include "view.h"
@@ -2709,6 +2712,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>|</w>      : create all predefined artefacts\n"
                        "<w>+</w>      : make randart from item\n"
                        "<w>'</w>      : list items\n"
+                       "<w>J</w>      : Jiyva off-level sacrifice\n"
                        "\n"
                        "<yellow>Debugging commands</yellow>\n"
                        "<w>f</w>      : player combat damage stats\n"

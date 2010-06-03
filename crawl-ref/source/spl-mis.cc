@@ -243,7 +243,8 @@ void MiscastEffect::init()
     if (cause.empty())
         cause = get_default_cause(false);
     beam.aux_source  = cause;
-    beam.beam_source = kill_source;
+    beam.beam_source = (0 <= kill_source && kill_source <= MHITYOU)
+                       ? kill_source : MHITNOT;
     beam.thrower     = kt;
 }
 
@@ -536,8 +537,6 @@ bool MiscastEffect::_ouch(int dam, beam_type flavour)
             else
                 method = KILLED_BY_DIVINE_WRATH;
         }
-        else if (!invalid_monster_index(source))
-            method = KILLED_BY_MONSTER;
         else
             method = KILLED_BY_SOMETHING;
 
@@ -1689,7 +1688,9 @@ void MiscastEffect::_necromancy(int severity)
                 }
             }
 
-            // If draining failed, just flow through...
+            // If we didn't do anything, just flow through...
+            if (did_msg)
+                break;
 
         case 2:
             if (target->res_torment())
@@ -1763,8 +1764,8 @@ void MiscastEffect::_necromancy(int severity)
                 break;
             }
 
-            // If draining failed, just flow through if it's the player...
-            if (target->atype() == ACT_MONSTER)
+            // If we didn't do anything, just flow through if it's the player.
+            if (target->atype() == ACT_MONSTER || did_msg)
                 break;
 
         case 5:

@@ -37,6 +37,7 @@
 
 #ifdef USE_TILE
 #include "tilereg.h"
+#include "tileview.h"
 #endif
 
 unsigned get_sightmap_char(dungeon_feature_type feat)
@@ -354,11 +355,12 @@ static int _get_number_of_lines_levelmap()
 static void _draw_level_map(int start_x, int start_y, bool travel_mode,
         bool on_level)
 {
-    int bufcount2 = 0;
-    screen_buffer_t buffer2[GYM * GXM * 2];
-
     const int num_lines = std::min(_get_number_of_lines_levelmap(), GYM);
     const int num_cols  = std::min(get_number_of_cols(),            GXM);
+
+    const coord_def extents(num_cols, num_lines);
+    crawl_view_buffer vbuf(extents);
+    screen_cell_t *cell= vbuf;
 
     cursor_control cs(false);
 
@@ -371,15 +373,14 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
 
             if (!map_bounds(c))
             {
-                buffer2[bufcount2 + 1] = DARKGREY;
-                buffer2[bufcount2] = 0;
+                cell->colour = DARKGREY;
+                cell->glyph  = 0;
             }
             else
             {
-                buffer2[bufcount2] =
+                cell->glyph =
                     env.map_knowledge(c).glyph(Options.clean_map);
-                buffer2[bufcount2 + 1] =
-                    real_colour(get_map_col(c, travel_mode));
+                cell->colour = real_colour(get_map_col(c, travel_mode));
 
                 if (c == you.pos() && !crawl_state.arena_suspended && on_level)
                 {
@@ -387,8 +388,8 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
                     // level-map. It's no longer saved into the
                     // env.map_knowledge, so we need to draw it
                     // directly.
-                    buffer2[bufcount2 + 1] = WHITE;
-                    buffer2[bufcount2]     = you.symbol;
+                    cell->colour = WHITE;
+                    cell->glyph  = you.symbol;
                 }
 
                 // If we've a waypoint on the current square, *and* the
@@ -397,20 +398,20 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
                 if (Options.show_waypoints)
                 {
                     // XXX: This is a horrible hack.
-                    screen_buffer_t &bc = buffer2[bufcount2];
+                    screen_buffer_t bc = cell->glyph;
                     unsigned char ch = is_waypoint(c);
                     if (ch && (bc == get_sightmap_char(DNGN_FLOOR)
                                || bc == get_magicmap_char(DNGN_FLOOR)))
                     {
-                        bc = ch;
+                        cell->glyph = ch;
                     }
                 }
             }
 
-            bufcount2 += 2;
+            cell++;
         }
 
-    puttext(1, top, num_cols, top + num_lines - 1, buffer2);
+    puttext(1, top, vbuf);
 }
 #endif // USE_TILE
 
@@ -568,7 +569,7 @@ public:
 #ifdef USE_TILE
         tiles.clear_minimap();
         level_excursion::go_to(next);
-        TileNewLevel(false);
+        tile_new_level(false);
 #else
         level_excursion::go_to(next);
 #endif

@@ -22,14 +22,13 @@ class dist;
 struct bolt;
 
 bool allow_control_teleport(bool quiet = false);
-int airstrike(int power, const dist &beam);
+int airstrike(int pow, const dist &beam);
 bool cast_bone_shards(int power, bolt &);
 
 bool cast_selective_amnesia(bool force);
 bool cast_smiting(int power, const coord_def& where);
-bool entomb(const int power);
-bool cast_imprison(const int power, monsters *monster);
-bool cast_sanctuary(const int power);
+bool entomb(int pow);
+bool cast_imprison(int pow, monsters *monster);
 bool project_noise();
 bool detect_curse(int scroll, bool suppress_msg);
 
@@ -52,8 +51,6 @@ bool cast_demonic_horde(int pow, god_type god = GOD_NO_GOD);
 bool cast_summon_greater_demon(int pow, god_type god = GOD_NO_GOD);
 bool cast_shadow_creatures(god_type god = GOD_NO_GOD);
 bool cast_summon_horrible_things(int pow, god_type god = GOD_NO_GOD);
-
-bool receive_corpses(int pow, coord_def where);
 
 void equip_undead(const coord_def &a, int corps, int monster, int monnum);
 int animate_remains(const coord_def &a, corpse_type class_allowed,

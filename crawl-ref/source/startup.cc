@@ -10,44 +10,47 @@
 #include "cio.h"
 #include "command.h"
 #include "ctest.h"
-#include "initfile.h"
-#include "itemname.h"
-#include "items.h"
 #include "database.h"
-#include "defines.h"
 #include "dbg-maps.h"
+#include "defines.h"
 #include "dlua.h"
 #include "dungeon.h"
 #include "env.h"
 #include "exclude.h"
 #include "files.h"
 #include "food.h"
+#include "hints.h"
+#include "initfile.h"
+#include "itemname.h"
+#include "items.h"
 #include "jobs.h"
 #include "lev-pand.h"
 #include "macro.h"
 #include "maps.h"
-#include "message.h"
 #include "menu.h"
+#include "message.h"
 #include "misc.h"
-#include "mon-util.h"
 #include "mon-cast.h"
+#include "mon-util.h"
 #include "mutation.h"
 #include "newgame.h"
-#include "ng-input.h"
 #include "ng-init.h"
+#include "ng-input.h"
 #include "ng-setup.h"
 #include "notes.h"
+#include "options.h"
 #include "output.h"
-#include "stairs.h"
 #include "skills2.h"
 #include "spl-book.h"
 #include "spl-util.h"
+#include "stairs.h"
 #include "startup.h"
 #include "state.h"
 #include "stuff.h"
-#include "options.h"
 #include "terrain.h"
-#include "hints.h"
+#ifdef USE_TILE
+ #include "tileview.h"
+#endif
 #include "view.h"
 #include "viewchar.h"
 
@@ -196,6 +199,7 @@ void _post_init(bool newc)
 
     calc_hp();
     calc_mp();
+    food_change(true);
 
     run_map_preludes();
 
@@ -287,7 +291,7 @@ void _post_init(bool newc)
 #ifdef USE_TILE
     tiles.initialise_items();
     // Must re-run as the feature table wasn't initialised yet.
-    TileNewLevel(newc);
+    tile_new_level(newc);
 #endif
 
     // This just puts the view up for the first turn.

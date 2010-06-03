@@ -14,7 +14,7 @@ struct dolls_data
     const dolls_data& operator=(const dolls_data& other);
     ~dolls_data();
 
-    int *parts;
+    tileidx_t *parts;
 };
 
 enum tile_doll_mode

@@ -1136,7 +1136,7 @@ int player_hunger_rate(void)
     int hunger = 3;
 
     if (player_in_bat_form())
-        return 1;
+        return (1);
 
     if (you.species == SP_TROLL)
         hunger += 3;            // in addition to the +3 for fast metabolism
@@ -1145,8 +1145,7 @@ int player_hunger_rate(void)
         hunger += 4;
 
     // If Cheibriados has slowed your life processes, you will hunger less.
-    if (GOD_CHEIBRIADOS == you.religion
-        && you.piety >= piety_breakpoint(0))
+    if (you.religion == GOD_CHEIBRIADOS && you.piety >= piety_breakpoint(0))
         hunger--;
 
     // Moved here from main.cc... maintaining the >= 40 behaviour.
@@ -1155,7 +1154,7 @@ int player_hunger_rate(void)
         if (you.duration[DUR_INVIS] > 0)
             hunger += 5;
 
-        // Berserk has its own food penalty -- excluding berserk haste.
+        // Berserk has its own food penalty - excluding berserk haste.
         if (you.duration[DUR_HASTE] > 0 && !you.berserk())
             hunger += 5;
     }
@@ -1198,14 +1197,16 @@ int player_hunger_rate(void)
 
     // rings
     if (you.hp < you.hp_max)
-        hunger += 3 * player_equip( EQ_RINGS, RING_REGENERATION );
-    hunger += 4 * player_equip( EQ_RINGS, RING_HUNGER );
-    hunger -= 2 * player_equip( EQ_RINGS, RING_SUSTENANCE );
+        hunger += 3 * player_equip(EQ_RINGS, RING_REGENERATION);
+    hunger += 4 * player_equip(EQ_RINGS, RING_HUNGER);
+    hunger -= 2 * player_equip(EQ_RINGS, RING_SUSTENANCE);
 
     // troll leather armour
     if (you.species != SP_TROLL && you.hp < you.hp_max)
-        if (player_equip( EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR ))
+    {
+        if (player_equip(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR))
             hunger += coinflip() ? 2 : 1;
+    }
 
     // randarts
     hunger += scan_artefacts(ARTP_METABOLISM);
@@ -1870,7 +1871,7 @@ int player_movement_speed(bool ignore_burden)
     // Mutations: -2, -3, -4, unless innate and shapechanged.
     // Not when swimming, since it is "cover the ground quickly".
     if (player_mutation_level(MUT_FAST) > 0
-        && (!you.demon_pow[MUT_FAST] || !player_is_shapechanged())
+        && (!you.innate_mutations[MUT_FAST] || !player_is_shapechanged())
         && !you.swimming())
     {
         mv -= player_mutation_level(MUT_FAST) + 1;
@@ -3261,8 +3262,6 @@ int check_stealth(void)
         else if ( !you.can_swim() && !you.extra_balanced() )
             stealth /= 2;       // splashy-splashy
     }
-    else if (player_mutation_level(MUT_HOOVES) >= 3)
-        stealth -= 10;  // clippety-clop
 
     // Radiating silence is the negative complement of shouting all the
     // time... a sudden change from background noise to no noise is going
@@ -3775,7 +3774,9 @@ void display_char_status()
 bool player_item_conserve(bool calc_unid)
 {
     return (player_equip(EQ_AMULET, AMU_CONSERVATION, calc_unid)
-            || player_equip_ego_type(EQ_CLOAK, SPARM_PRESERVATION));
+            || player_equip_ego_type(EQ_CLOAK, SPARM_PRESERVATION)
+            || (you.religion == GOD_JIYVA
+                && you.piety >= piety_breakpoint(4)));
 }
 
 int player_mental_clarity(bool calc_unid, bool items)
@@ -3812,7 +3813,9 @@ bool extrinsic_amulet_effect(jewellery_type amulet)
             return (true);
         // else fall-through
     case AMU_CONSERVATION:
-        return (player_equip_ego_type(EQ_CLOAK, SPARM_PRESERVATION) > 0);
+        return (player_equip_ego_type(EQ_CLOAK, SPARM_PRESERVATION) > 0
+                || (you.religion == GOD_JIYVA
+                     && you.piety > piety_breakpoint(4)));
     case AMU_THE_GOURMAND:
         return (player_mutation_level(MUT_GOURMAND) > 0);
     default:
@@ -3858,7 +3861,6 @@ static int _species_exp_mod(species_type species)
         case SP_DEEP_ELF:
         case SP_CENTAUR:
         case SP_MINOTAUR:
-        case SP_DEMONSPAWN:
         case SP_MUMMY:
             return 14;
         case SP_HIGH_ELF:
@@ -3866,6 +3868,7 @@ static int _species_exp_mod(species_type species)
         case SP_TROLL:
             return 15;
         case SP_DEMIGOD:
+        case SP_DEMONSPAWN:
             return 16;
         default:
             return 0;
@@ -4380,7 +4383,7 @@ int get_real_hp(bool trans, bool rotted)
 
     // Frail and robust mutations, divine vigour, and rugged scale mut.
     hitp *= 100 + (player_mutation_level(MUT_ROBUST) * 10)
-                + (you.attribute[ATTR_DIVINE_VIGOUR] * 10)
+                + (you.attribute[ATTR_DIVINE_VIGOUR] * 5)
                 + (player_mutation_level(MUT_RUGGED_BROWN_SCALES) ? player_mutation_level(MUT_RUGGED_BROWN_SCALES) * 2 + 1 : 0)
                 - (player_mutation_level(MUT_FRAIL) * 10);
     hitp /= 100;
@@ -5115,7 +5118,7 @@ void player::init()
     ability_letter_table.init(ABIL_NON_ABILITY);
 
     mutation.init(0);
-    demon_pow.init(0);
+    innate_mutations.init(0);
 
     demonic_traits.clear();
 

@@ -37,17 +37,23 @@ const int STR_REQ_THRESHOLD = 10;
 // Max ghosts on a level.
 const int MAX_GHOSTS = 10;
 
-// max size of monter array {dlb}:
-#define MAX_MONSTERS     350
+enum extra_monster_index_type
+{
+    MAX_MONSTERS = 350, // max size of monster array {dlb}
+    NON_MONSTER,        // no monster
+
+    MHITNOT = NON_MONSTER,
+    MHITYOU,
+
+    ZOT_TRAP_MISCAST,
+    WIELD_MISCAST,
+    MELEE_MISCAST,
+    MISC_KNOWN_MISCAST,
+    MISC_UNKNOWN_MISCAST
+};
+
 // number of monster enchantments
 #define NUM_MON_ENCHANTS 6
-// non-monster for mgrd[][] -- (MNST + 1) {dlb}:
-#define NON_MONSTER (MAX_MONSTERS + 1)
-
-// (MNG) -- for a reason! see usage {dlb}:
-#define MHITNOT (MAX_MONSTERS + 1)
-// (MNG + 1) -- for a reason! see usage {dlb}:
-#define MHITYOU (MAX_MONSTERS + 2)
 
 #define MAX_SUBTYPES    50
 

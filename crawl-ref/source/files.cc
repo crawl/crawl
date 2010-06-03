@@ -77,8 +77,9 @@
 #include "stuff.h"
 #include "tags.h"
 #ifdef USE_TILE
-#include "tiles.h"
-#include "tiledef-player.h"
+ #include "tiledef-player.h"
+ #include "tilepick-p.h"
+ #include "tileview.h"
 #endif
 #include "terrain.h"
 #include "travel.h"
@@ -766,9 +767,9 @@ static void _fill_player_doll(player_save_info &p, const std::string &dollfile)
         {
             tilep_scan_parts(fbuf, equip_doll, p.species, p.experience_level);
             tilep_race_default(p.species,
-                               get_gender_from_tile(equip_doll.parts),
+                               get_gender_from_tile(equip_doll),
                                p.experience_level,
-                               equip_doll.parts);
+                               &equip_doll);
             success = true;
 
             while (fscanf(fdoll, "%1023s", fbuf) != EOF)
@@ -787,7 +788,7 @@ static void _fill_player_doll(player_save_info &p, const std::string &dollfile)
             job = JOB_FIGHTER;
 
         int gender = coinflip();
-        tilep_job_default(job, gender, equip_doll.parts);
+        tilep_job_default(job, gender, &equip_doll);
     }
     p.doll = equip_doll;
 }
@@ -1404,7 +1405,8 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (load_mode != LOAD_VISITOR)
     {
         tiles.clear_minimap();
-        tiles.load_dungeon(NULL, crawl_view.vgrdc);
+        crawl_view_buffer empty_vbuf;
+        tiles.load_dungeon(empty_vbuf, crawl_view.vgrdc);
     }
 #endif
 
@@ -1534,7 +1536,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         // Tell stash-tracker and travel that we've changed levels.
         trackers_init_new_level(true);
 #ifdef USE_TILE
-        TileNewLevel(just_created_level);
+        tile_new_level(just_created_level);
 #endif
     }
 

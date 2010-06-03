@@ -16,6 +16,9 @@
 #include "showsymb.h"
 #include "stuff.h"
 #include "terrain.h"
+#ifdef USE_TILE
+ #include "tilepick.h"
+#endif
 #include "view.h"
 
 // These are hidden from the rest of the world... use the functions
@@ -238,17 +241,17 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
         // FIXME: shouldn't be referencing env.grid here.
         if (is_terrain_mapped(p))
         {
-            unsigned int fg;
-            unsigned int bg;
-            tileidx_unseen(fg, bg, get_feat_symbol(grd(p)), p);
+            tileidx_t fg;
+            tileidx_t bg;
+            tileidx_unseen(&fg, &bg, get_feat_symbol(grd(p)), p);
             env.tile_bk_bg(p) = bg;
             env.tile_bk_fg(p) = fg;
         }
         else
         {
             env.tile_bk_bg(p) = is_terrain_seen(p) ?
-                tile_idx_unseen_terrain(p.x, p.y, grd(p)) :
-                tileidx_feature(DNGN_UNSEEN, p.x, p.y);
+                tileidx_unseen_terrain(p, grd(p)) :
+                tileidx_feature(DNGN_UNSEEN, p);
             env.tile_bk_fg(p) = 0;
         }
 #endif

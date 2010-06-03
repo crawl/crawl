@@ -75,7 +75,6 @@
 #include "skills2.h"
 #include "spells1.h"
 #include "spells3.h"
-#include "spells4.h"
 #include "spl-book.h"
 #include "spl-mis.h"
 #include "sprint.h"
@@ -920,29 +919,6 @@ void dec_penance(int val)
     dec_penance(you.religion, val);
 }
 
-bool zin_sustenance(bool actual)
-{
-    return (you.piety >= piety_breakpoint(0)
-            && (!actual || you.hunger_state == HS_STARVING));
-}
-
-bool zin_remove_all_mutations()
-{
-    if (!how_mutated())
-    {
-        mpr("You have no mutations to be cured!");
-        return (false);
-    }
-
-    you.num_gifts[GOD_ZIN]++;
-    take_note(Note(NOTE_GOD_GIFT, you.religion));
-
-    simple_god_message(" draws all chaos from your body!");
-    delete_all_mutations();
-
-    return (true);
-}
-
 static bool _need_water_walking()
 {
     return (!you.airborne() && you.species != SP_MERFOLK
@@ -1010,7 +986,7 @@ static void _inc_penance(god_type god, int val)
         else if (god == GOD_ZIN)
         {
             if (you.duration[DUR_DIVINE_STAMINA])
-                remove_divine_stamina();
+                zin_remove_divine_stamina();
         }
         // Neither does TSO's halo or divine shield.
         else if (god == GOD_SHINING_ONE)
@@ -1019,7 +995,7 @@ static void _inc_penance(god_type god, int val)
                 mpr("Your divine halo fades away.");
 
             if (you.duration[DUR_DIVINE_SHIELD])
-                remove_divine_shield();
+                tso_remove_divine_shield();
 
             make_god_gifts_disappear(); // only on level
         }
@@ -1027,7 +1003,7 @@ static void _inc_penance(god_type god, int val)
         else if (god == GOD_ELYVILON)
         {
             if (you.duration[DUR_DIVINE_VIGOUR])
-                remove_divine_vigour();
+                elyvilon_remove_divine_vigour();
         }
         else if (god == GOD_JIYVA)
         {
@@ -2128,11 +2104,12 @@ bool do_god_gift(bool prayed_for, bool forced)
             break;
 
         case GOD_JIYVA:
-            if (prayed_for && jiyva_accepts_prayer())
+            if (prayed_for && jiyva_can_paralyse_jellies())
                 jiyva_paralyse_jellies();
-            else if (forced ||
-                     you.piety > 80 && random2(you.piety) > 50 && one_chance_in(4)
-                     && you.gift_timeout == 0 && you.can_safely_mutate())
+            else if (forced
+                     || you.piety > 80 && random2(you.piety) > 50
+                         && one_chance_in(4) && you.gift_timeout == 0
+                         && you.can_safely_mutate())
             {
                 if (_jiyva_mutate())
                 {
@@ -2148,7 +2125,6 @@ bool do_god_gift(bool prayed_for, bool forced)
         case GOD_KIKUBAAQUDGHA:
         case GOD_SIF_MUNA:
         case GOD_VEHUMET:
-
             // Break early if giving a gift now means it would be lost.
             if (!feat_has_solid_floor(grd(you.pos())))
                 break;
@@ -2662,115 +2638,6 @@ void gain_piety(int original_gain, bool force)
     do_god_gift();
 }
 
-// Is the destroyed weapon valuable enough to gain piety by doing so?
-// Unholy and evil weapons are handled specially.
-static bool _destroyed_valuable_weapon(int value, int type)
-{
-    // Artefacts, including most randarts.
-    if (random2(value) >= random2(250))
-        return (true);
-
-    // Medium valuable items are more likely to net piety at low piety,
-    // more so for missiles, since they're worth less as single items.
-    if (random2(value) >= random2((type == OBJ_MISSILES) ? 10 : 100)
-        && one_chance_in(1 + you.piety / 50))
-    {
-        return (true);
-    }
-
-    // If not for the above, missiles shouldn't yield piety.
-    if (type == OBJ_MISSILES)
-        return (false);
-
-    // Weapons, on the other hand, are always acceptable to boost low
-    // piety.
-    if (you.piety < piety_breakpoint(0) || player_under_penance())
-        return (true);
-
-    return (false);
-}
-
-bool ely_destroy_weapons()
-{
-    if (you.religion != GOD_ELYVILON)
-        return (false);
-
-    god_acting gdact;
-
-    bool success = false;
-    for (stack_iterator si(you.pos(), true); si; ++si)
-    {
-        item_def& item(*si);
-        if (item.base_type != OBJ_WEAPONS
-                && item.base_type != OBJ_MISSILES
-            || item_is_stationary(item)) // Held in a net?
-        {
-            continue;
-        }
-
-        if (!check_warning_inscriptions(item, OPER_DESTROY))
-        {
-            mpr("Won't destroy {!D} inscribed item.");
-            continue;
-        }
-
-        // item_value() multiplies by quantity.
-        const int value = item_value(item, true) / item.quantity;
-        dprf("Destroyed weapon value: %d", value);
-
-        piety_gain_t pgain = PIETY_NONE;
-        const bool unholy_weapon = is_unholy_item(item);
-        const bool evil_weapon = is_evil_item(item);
-
-        if (unholy_weapon || evil_weapon
-            || _destroyed_valuable_weapon(value, item.base_type))
-        {
-            pgain = PIETY_SOME;
-        }
-
-        if (get_weapon_brand(item) == SPWPN_HOLY_WRATH)
-        {
-            // Weapons blessed by TSO don't get destroyed but are instead
-            // returned whence they came. (jpeg)
-            simple_god_message(
-                make_stringf(" %sreclaims %s.",
-                             pgain == PIETY_SOME ? "gladly " : "",
-                             item.name(DESC_NOCAP_THE).c_str()).c_str(),
-                GOD_SHINING_ONE);
-        }
-        else
-        {
-            // Elyvilon doesn't care about item sacrifices at altars, so
-            // I'm stealing _Sacrifice_Messages.
-            print_sacrifice_message(GOD_ELYVILON, item, pgain);
-            if (unholy_weapon || evil_weapon)
-            {
-                const char *desc_weapon = evil_weapon ? "evil" : "unholy";
-
-                // Print this in addition to the above!
-                simple_god_message(
-                    make_stringf(" welcomes the destruction of %s %s "
-                                 "weapon%s.",
-                                 item.quantity == 1 ? "this" : "these",
-                                 desc_weapon,
-                                 item.quantity == 1 ? ""     : "s").c_str(),
-                    GOD_ELYVILON);
-            }
-        }
-
-        if (pgain == PIETY_SOME)
-            gain_piety(1);
-
-        destroy_item(si.link());
-        success = true;
-    }
-
-    if (!success)
-        mpr("There are no weapons here to destroy!");
-
-    return (success);
-}
-
 void lose_piety(int pgn)
 {
     if (pgn <= 0)
@@ -3006,7 +2873,7 @@ void excommunication(god_type new_god)
             mpr("Your divine halo fades away.");
 
         if (you.duration[DUR_DIVINE_SHIELD])
-            remove_divine_shield();
+            tso_remove_divine_shield();
 
         // Leaving TSO for a non-good god will make all your followers
         // abandon you.  Leaving him for a good god will make your holy
@@ -3025,7 +2892,7 @@ void excommunication(god_type new_god)
 
     case GOD_ZIN:
         if (you.duration[DUR_DIVINE_STAMINA])
-            remove_divine_stamina();
+            zin_remove_divine_stamina();
 
         if (env.sanctuary_time)
             remove_sanctuary();
@@ -3044,7 +2911,7 @@ void excommunication(god_type new_god)
 
     case GOD_ELYVILON:
         if (you.duration[DUR_DIVINE_VIGOUR])
-            remove_divine_vigour();
+            elyvilon_remove_divine_vigour();
 
         // Leaving Elyvilon for a non-good god will make all your
         // followers (originally from TSO) abandon you.

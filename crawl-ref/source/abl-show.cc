@@ -50,7 +50,6 @@
 #include "spells1.h"
 #include "spells2.h"
 #include "spells3.h"
-#include "spells4.h"
 #include "state.h"
 #include "stuff.h"
 #include "areas.h"
@@ -984,7 +983,7 @@ static bool _check_ability_possible(const ability_def& abil,
     {
     case ABIL_ZIN_RECITE:
     {
-        const int result = check_recital_audience();
+        const int result = zin_check_recite_to_monsters();
         if (result < 0)
         {
             mpr("There's no appreciative audience!");
@@ -997,6 +996,7 @@ static bool _check_ability_possible(const ability_def& abil,
         }
         return (true);
     }
+
     case ABIL_ZIN_CURE_ALL_MUTATIONS:
         return (how_mutated());
 
@@ -1304,7 +1304,7 @@ static bool _do_ability(const ability_def& abil)
         else
         {
             zapping(ZAP_SPIT_POISON, pow, beam);
-            you.set_duration(DUR_BREATH_WEAPON, 3 + random2(5) );
+            you.set_duration(DUR_BREATH_WEAPON, 3 + random2(5));
         }
         break;
     }
@@ -1469,7 +1469,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_EVOKE_TURN_INVISIBLE:     // ring, randarts, darkness items
         potion_effect(POT_INVISIBILITY, 2 * you.skills[SK_EVOCATIONS] + 5);
-        contaminate_player( 1 + random2(3), true );
+        contaminate_player(1 + random2(3), true);
         exercise(SK_EVOCATIONS, 1);
         break;
 
@@ -1500,17 +1500,12 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_ZIN_RECITE:
-    {
-        // up to (60 + 40)/2 = 50
-        const int pow = (2*skill_bump(SK_INVOCATIONS) + you.piety / 5) / 2;
-        start_delay(DELAY_RECITE, 3, pow, you.hp);
-
+        start_delay(DELAY_RECITE, 3, -1, you.hp);
         exercise(SK_INVOCATIONS, 2);
         break;
-    }
 
     case ABIL_ZIN_VITALISATION:
-        if (cast_vitalisation())
+        if (zin_vitalisation())
             exercise(SK_INVOCATIONS, (coinflip() ? 3 : 2));
         break;
 
@@ -1526,17 +1521,14 @@ static bool _do_ability(const ability_def& abil)
             return (false);
         }
 
-        const int retval = check_recital_monster_at(beam.target);
+        const int retval = zin_check_recite_to_single_monster(beam.target);
 
-        if (retval == 0)
+        if (retval <= 0)
         {
-            mpr("There is no monster there to imprison!");
-            return (false);
-        }
-
-        if (retval == -1)
-        {
-            mpr("You cannot imprison this monster!");
+            if (retval == 0)
+                mpr("There's no appreciative subject!");
+            else
+                mpr("There is no monster there to imprison!");
             return (false);
         }
 
@@ -1553,7 +1545,7 @@ static bool _do_ability(const ability_def& abil)
     }
 
     case ABIL_ZIN_SANCTUARY:
-        if (cast_sanctuary(you.skills[SK_INVOCATIONS] * 4))
+        if (zin_sanctuary())
             exercise(SK_INVOCATIONS, 5 + random2(8));
         break;
 
@@ -1562,7 +1554,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_TSO_DIVINE_SHIELD:
-        cast_divine_shield();
+        tso_divine_shield();
         exercise(SK_INVOCATIONS, (coinflip() ? 3 : 2));
         break;
 
@@ -1578,7 +1570,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_KIKU_RECEIVE_CORPSES:
-        receive_corpses(you.skills[SK_INVOCATIONS] * 4, you.pos());
+        kiku_receive_corpses(you.skills[SK_INVOCATIONS] * 4, you.pos());
         exercise(SK_INVOCATIONS, (coinflip() ? 3 : 2));
         break;
 
@@ -1611,7 +1603,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_YRED_DRAIN_LIFE:
-        drain_life(you.skills[SK_INVOCATIONS]);
+        yred_drain_life(you.skills[SK_INVOCATIONS]);
         exercise(SK_INVOCATIONS, 2 + random2(4));
         break;
 
@@ -1745,7 +1737,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_ELYVILON_DESTROY_WEAPONS:
-        if (!ely_destroy_weapons())
+        if (!elyvilon_destroy_weapons())
             return (false);
         break;
 
@@ -1764,8 +1756,9 @@ static bool _do_ability(const ability_def& abil)
         exercise(SK_INVOCATIONS, 1);
         break;
     }
+
     case ABIL_ELYVILON_PURIFICATION:
-        purification();
+        elyvilon_purification();
         exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
 
@@ -1784,6 +1777,7 @@ static bool _do_ability(const ability_def& abil)
         exercise(SK_INVOCATIONS, 3 + random2(5));
         break;
     }
+
     case ABIL_ELYVILON_RESTORATION:
         restore_stat(STAT_ALL, 0, false);
         unrot_hp(100);
@@ -1792,7 +1786,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_ELYVILON_DIVINE_VIGOUR:
-        if (!cast_divine_vigour())
+        if (!elyvilon_divine_vigour())
             return (false);
 
         exercise(SK_INVOCATIONS, 6 + random2(10));
@@ -1804,7 +1798,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_LUGONU_BEND_SPACE:
-        lugonu_bends_space();
+        lugonu_bend_space();
         exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
 
@@ -1907,7 +1901,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_FEDHAS_FUNGAL_BLOOM:
     {
-        int count = fungal_bloom();
+        const int count = fedhas_fungal_bloom();
 
         if (!count)
         {
@@ -1935,21 +1929,19 @@ static bool _do_ability(const ability_def& abil)
     }
 
     case ABIL_FEDHAS_SUNLIGHT:
-        sunlight();
+        fedhas_sunlight();
         exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
 
     case ABIL_FEDHAS_PLANT_RING:
-        if (!plant_ring_from_fruit())
-        {
+        if (!fedhas_plant_ring_from_fruit())
             return (false);
-        }
 
         exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
 
     case ABIL_FEDHAS_RAIN:
-        if (!rain(you.pos()))
+        if (!fedhas_rain(you.pos()))
         {
             canned_msg(MSG_NOTHING_HAPPENS);
             return (false);
@@ -1960,10 +1952,10 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_FEDHAS_SPAWN_SPORES:
     {
-        int rc = corpse_spores();
-        if (rc <= 0)
+        const int retval = fedhas_corpse_spores();
+        if (retval <= 0)
         {
-            if (rc == 0)
+            if (retval == 0)
                 mprf("No corpses are in range.");
             else
                 canned_msg(MSG_OK);
@@ -1975,7 +1967,7 @@ static bool _do_ability(const ability_def& abil)
     }
 
     case ABIL_FEDHAS_EVOLUTION:
-        if (!evolve_flora())
+        if (!fedhas_evolve_flora())
             return (false);
 
         exercise(SK_INVOCATIONS, 2 + random2(3));
@@ -2383,7 +2375,7 @@ std::vector<talent> your_talents(bool check_confused)
     }
 
     // And finally, the ability to opt-out of your faith {dlb}:
-    if (you.religion != GOD_NO_GOD && !silenced( you.pos() ))
+    if (you.religion != GOD_NO_GOD && !silenced( you.pos()))
         _add_talent(talents, ABIL_RENOUNCE_RELIGION, check_confused);
 
     //jmf: Check for breath weapons - they're exclusive of each other, I hope!
@@ -2419,9 +2411,9 @@ std::vector<talent> your_talents(bool check_confused)
     }
 
     // Note: This ability only applies to this counter.
-    if (player_equip( EQ_RINGS, RING_LEVITATION )
-        || player_equip_ego_type( EQ_BOOTS, SPARM_LEVITATION )
-        || scan_artefacts( ARTP_LEVITATE ))
+    if (player_equip(EQ_RINGS, RING_LEVITATION)
+        || player_equip_ego_type(EQ_BOOTS, SPARM_LEVITATION)
+        || scan_artefacts( ARTP_LEVITATE))
     {
         // Has no effect on permanently flying Kenku.
         if (!you.permanent_flight())
@@ -2436,10 +2428,8 @@ std::vector<talent> your_talents(bool check_confused)
         }
     }
 
-    if (player_equip( EQ_RINGS, RING_TELEPORTATION ))
-    {
+    if (player_equip(EQ_RINGS, RING_TELEPORTATION))
         _add_talent(talents, ABIL_EVOKE_TELEPORTATION, check_confused);
-    }
 
     // Find hotkeys for the non-hotkeyed talents.
     for (unsigned int i = 0; i < talents.size(); ++i)
@@ -2475,7 +2465,7 @@ std::vector<talent> your_talents(bool check_confused)
         // here (if you have 53 or more abilities simultaneously).
     }
 
-    return talents;
+    return (talents);
 }
 
 // Note: we're trying for a behaviour where the player gets

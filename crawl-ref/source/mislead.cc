@@ -7,13 +7,16 @@
 
 #include "enum.h"
 #include "env.h"
+#include "hints.h"
 #include "message.h"
 #include "monster.h"
 #include "mon-iter.h"
 #include "mon-util.h"
-#include "view.h"
 #include "random.h"
-#include "hints.h"
+#ifdef USE_TILE
+ #include "tilepick.h"
+#endif
+#include "view.h"
 #include "xom.h"
 
 bool unsuitable_misled_monster(monster_type mons)

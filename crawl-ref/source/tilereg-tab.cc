@@ -28,7 +28,7 @@ TabbedRegion::~TabbedRegion()
 {
 }
 
-void TabbedRegion::set_tab_region(int idx, GridRegion *reg, int tile_tab)
+void TabbedRegion::set_tab_region(int idx, GridRegion *reg, tileidx_t tile_tab)
 {
     ASSERT(idx >= 0);
     ASSERT(idx >= (int)m_tabs.size() || !m_tabs[idx].reg);
@@ -152,7 +152,7 @@ void TabbedRegion::pack_buffers()
         else
             ofs = TAB_OFS_UNSELECTED;
 
-        int tileidx = m_tabs[i].tile_tab + ofs;
+        tileidx_t tileidx = m_tabs[i].tile_tab + ofs;
         const tile_info &inf = tile_gui_info(tileidx);
         int offset_y = m_tabs[i].min_y;
         m_buf_gui.add(tileidx, 0, 0, -inf.width, offset_y, false);

@@ -56,7 +56,7 @@
 #include "areas.h"
 #include "stash.h"
 #ifdef USE_TILE
- #include "tiles.h"
+ #include "tileview.h"
  #include "tilereg.h"
 #endif
 #include "terrain.h"
@@ -423,7 +423,8 @@ static void _draw_ray_glyph(const coord_def &pos, int colour,
 {
     if (const monsters *mons = monster_at(pos))
     {
-        if (mons->alive() && mons->visible_to(&you))
+        if (mons->alive() && mons->visible_to(&you)
+            && !mons_is_unknown_mimic(mons))
         {
             glych  = get_screen_glyph(pos);
             colour = mcol;
@@ -468,7 +469,7 @@ static bool _mon_exposed(const monsters* mon)
 static bool _is_target_in_range(const coord_def& where, int range)
 {
     // range == -1 means that range doesn't matter.
-    return (range == -1 || grid_distance(you.pos(), where) <= range);
+    return (range == -1 || distance(you.pos(), where) <= range*range + 1);
 }
 
 targeting_behaviour direction_chooser::stock_behaviour;
@@ -1312,7 +1313,7 @@ void direction_chooser::draw_beam_if_needed()
 
 bool direction_chooser::in_range(const coord_def& p) const
 {
-    return (range < 0 || grid_distance(p, you.pos()) <= range);
+    return (range < 0 || distance(p, you.pos()) <= range*range + 1);
 }
 
 // Cycle to either the next (dir == 1) or previous (dir == -1) object

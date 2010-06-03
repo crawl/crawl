@@ -36,6 +36,9 @@
 #include "spells3.h"
 #include "stuff.h"
 #include "env.h"
+#ifdef USE_TILE
+ #include "tileview.h"
+#endif
 #include "travel.h"
 #include "transform.h"
 #include "traps.h"
@@ -575,6 +578,16 @@ dungeon_feature_type grid_secret_door_appearance(const coord_def &where)
     dungeon_feature_type feat;
     find_secret_door_info(where, &feat, NULL);
     return (feat);
+}
+
+bool slime_wall_neighbour(const coord_def& c, bool check_god)
+{
+    if (check_god && you.religion == GOD_JIYVA && !you.penance[GOD_JIYVA])
+        return (false);
+    for (adjacent_iterator ai(c); ai; ++ai)
+        if (env.grid(*ai) == DNGN_SLIMY_WALL)
+            return (true);
+    return (false);
 }
 
 bool feat_destroys_item(dungeon_feature_type feat, const item_def &item,

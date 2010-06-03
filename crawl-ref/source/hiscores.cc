@@ -891,7 +891,6 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
     {
         const monsters *monster = &menv[death_source];
 
-        death_source = monster->type;
         mon_num = monster->base_monster;
 
         // Previously the weapon was only used for dancing weapons,
@@ -934,8 +933,12 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             death_type == KILLED_BY_SPORE ? DESC_PLAIN : DESC_NOCAP_A;
 
         death_source_name = monster->name(desc, death);
+
         if (death || you.can_see(monster))
             death_source_name = monster->full_name(desc, true);
+
+        if (death && monster->type == MONS_MARA_FAKE)
+            death_source_name = "an illusion of Mara";
 
         if (monster->has_ench(ENCH_SHAPESHIFTER))
             death_source_name += " (shapeshifter)";
@@ -968,6 +971,11 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             indirectkiller = death_source_name;
             killerpath = "";
         }
+    }
+    else if (death_type == KILLED_BY_DISINT)
+    {
+        death_source_name = "you";
+        indirectkiller = killerpath = "";
     }
     else
     {
@@ -1297,19 +1305,7 @@ const char *scorefile_entry::damage_verb() const
 
 std::string scorefile_entry::death_source_desc() const
 {
-    if (death_type != KILLED_BY_MONSTER && death_type != KILLED_BY_BEAM
-        && death_type != KILLED_BY_DISINT)
-    {
-        return ("");
-    }
-
-    // XXX: Deals specially with Mara's clones.
-    if (death_source == MONS_MARA_FAKE)
-        return ("an illusion of Mara");
-
-    // XXX no longer handles mons_num correctly! FIXME
-    return (!death_source_name.empty() ?
-            death_source_name : mons_type_name(death_source, DESC_NOCAP_A));
+    return (death_source_name);
 }
 
 std::string scorefile_entry::damage_string(bool terse) const
@@ -1960,11 +1956,10 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
             desc += "disintegration";
         else
         {
-            desc += "Blown up";
-            if (death_source == NON_MONSTER)
-                desc += " themselves";
+            if (death_source_name == "you")
+                desc += "Blew themselves up";
             else
-                desc += " by " + death_source_desc();
+                desc += "Blown up by " + death_source_desc();
             needs_beam_cause_line = true;
         }
 

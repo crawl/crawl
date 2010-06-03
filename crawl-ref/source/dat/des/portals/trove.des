@@ -342,11 +342,11 @@ TAGS:   uniq_trove no_monster_gen
 COLOUR: . = blue
 COLOUR: G = blue
 MAP
-  G
- G.G
+ @G@
+@G.G@
 G.O.G
- G.G
-  G
+@G.G@
+ @G@
 ENDMAP
 
 NAME:   enter_trove_3

@@ -40,9 +40,9 @@
 #include "state.h"
 
 #ifdef USE_TILE
-#include "tiles.h"
-#include "tiledef-main.h"
-#include "tiledef-dngn.h"
+ #include "tiledef-main.h"
+ #include "tiledef-dngn.h"
+ #include "tilepick.h"
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -502,7 +502,7 @@ bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
     if (quantity <= 0)
         return (false);
 
-    int idx = tileidx_item(*item);
+    tileidx_t idx = tileidx_item(*item);
     if (!idx)
         return (false);
 
@@ -519,7 +519,7 @@ bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
         else if (item_known_cursed(*item))
             tileset.push_back(tile_def(TILE_ITEM_SLOT_CURSED, TEX_DEFAULT));
 
-        tileset.push_back(tile_def(TILE_ITEM_SLOT, TEX_DUNGEON));
+        tileset.push_back(tile_def(TILE_ITEM_SLOT, TEX_FEAT));
         tileset.push_back(tile_def(idx, TEX_DEFAULT));
 
         if (eq != EQ_NONE && you.melded[eq])
@@ -528,26 +528,28 @@ bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
     else
     {
         // Do we want to display the floor type or is that too distracting?
-        const coord_def c = item->pos;
-        int ch = -1;
+        const coord_def c = item->held_by_monster()
+            ? item->holding_monster()->pos()
+            : item->pos;
+        tileidx_t ch = 0;
         if (c.x == 0)
         {
             // Store items.
-            tileset.push_back(tile_def(TILE_ITEM_SLOT, TEX_DUNGEON));
+            tileset.push_back(tile_def(TILE_ITEM_SLOT, TEX_FEAT));
         }
         else if (c != coord_def())
         {
-            ch = tileidx_feature(grd(c), c.x, c.y);
+            ch = tileidx_feature(grd(c), c);
             if (ch == TILE_FLOOR_NORMAL)
                 ch = env.tile_flv(c).floor;
             else if (ch == TILE_WALL_NORMAL)
                 ch = env.tile_flv(c).wall;
 
-            tileset.push_back(tile_def(ch, TEX_DUNGEON));
+            tileset.push_back(tile_def(ch, get_dngn_tex(ch)));
         }
         tileset.push_back(tile_def(idx, TEX_DEFAULT));
 
-        if (ch != -1)
+        if (ch != 0)
         {
             // Needs to be displayed so as to not give away mimics in shallow water.
             if (ch == TILE_DNGN_SHALLOW_WATER)
@@ -565,13 +567,13 @@ bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
     if (item->base_type == OBJ_WEAPONS || item->base_type == OBJ_MISSILES
         || item->base_type == OBJ_ARMOUR)
     {
-        int brand = tile_known_brand(*item);
+        tileidx_t brand = tileidx_known_brand(*item);
         if (brand)
             tileset.push_back(tile_def(brand, TEX_DEFAULT));
     }
     else if (item->base_type == OBJ_CORPSES)
     {
-        int brand = tile_corpse_brand(*item);
+        tileidx_t brand = tileidx_corpse_brand(*item);
         if (brand)
             tileset.push_back(tile_def(brand, TEX_DEFAULT));
     }

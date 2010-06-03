@@ -479,6 +479,7 @@ static int _get_target_class(beam_type flavour)
 static bool _expose_invent_to_element(beam_type flavour, int strength)
 {
     int num_dest = 0;
+    int jiyva_block = 0;
 
     const int target_class = _get_target_class( flavour );
     if (target_class == OBJ_UNASSIGNED)
@@ -529,6 +530,13 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
                 continue;
             }
 
+            if (you.religion == GOD_JIYVA && !player_under_penance()
+                && x_chance_in_y(you.piety, MAX_PIETY))
+            {
+                ++jiyva_block;
+                continue;
+            }
+
             // Loop through all items in the stack.
             for (int j = 0; j < you.inv[i].quantity; ++j)
             {
@@ -546,6 +554,13 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
                 }
             }
         }
+    }
+
+    if (jiyva_block)
+    {
+        mprf("%s shields %s delectables from destruction.",
+             god_name(GOD_JIYVA).c_str(),
+             (num_dest > 0) ? "some of your" : "your");
     }
 
     if (!num_dest)
@@ -980,7 +995,7 @@ static void _maybe_spawn_jellies(int dam, const char* aux,
 }
 
 
-#ifdef WIZARD
+#if defined(WIZARD) || defined(DEBUG)
 static void _wizard_restore_life()
 {
     if (you.hp <= 0)
