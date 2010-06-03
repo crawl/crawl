@@ -3298,7 +3298,7 @@ void bolt::affect_player_enchantment()
         mpr("You are blasted!");
 
         if (aux_source.empty())
-            aux_source = "a disintegration bolt";
+            aux_source = "disintegration bolt";
 
         {
             int amt = damage.roll();
