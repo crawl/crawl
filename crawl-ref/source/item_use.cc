@@ -2918,10 +2918,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         }
     }
 
-    if (pbolt.flavour != BEAM_MISSILE)
-        // [dshaligram] Branded arrows are much stronger.
-        dice_mult = (dice_mult * 150) / 100;
-
     // Dexterity bonus, and possible skill increase for silly throwing.
     if (projected)
     {
