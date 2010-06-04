@@ -1329,7 +1329,7 @@ std::string item_def::name_aux(description_level_type desc,
         // you're quivering possibly branded ammo.
         // Ammo in quiver differs from weapon wielded since the latter
         // necessarily has a known brand.
-        if (terse && !know_brand
+        if (terse && !know_brand && !dbname
             && get_equip_desc(*this) == ISFLAG_RUNED
             && !testbits(ignore_flags, ISFLAG_RUNED))
         {
