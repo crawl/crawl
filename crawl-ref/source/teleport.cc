@@ -12,6 +12,7 @@
 #include "coordit.h"
 #include "env.h"
 #include "fprop.h"
+#include "item_use.h"
 #include "los.h"
 #include "monster.h"
 #include "mon-stuff.h"
@@ -29,12 +30,23 @@ bool player::blink_to(const coord_def& dest, bool quiet)
 
     if (dest == pos())
         return (false);
+
+    if (item_blocks_teleport(true, true))
+    {
+        if (!quiet)
+            canned_msg(MSG_STRANGE_STASIS);
+        return (false);
+    }
+
     if (!quiet)
         canned_msg(MSG_YOU_BLINK);
+
     const coord_def origin = pos();
     if (!move_player_to_grid(dest, false, true, true))
         return (false);
+
     place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), KC_YOU);
+
     return (true);
 }
 
@@ -113,11 +125,7 @@ void blink_other_close(actor* victim, const coord_def &target)
     coord_def dest = random_space_weighted(victim, caster, true);
     if (!in_bounds(dest))
         return;
-    bool success = victim->blink_to(dest);
-    ASSERT(success);
-#ifndef DEBUG
-    UNUSED(success);
-#endif
+    victim->blink_to(dest);
 }
 
 // Blink the monster away from its foe.
