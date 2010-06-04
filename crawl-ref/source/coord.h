@@ -19,6 +19,10 @@ inline bool map_bounds(const coord_def &p)
     return map_bounds(p.x, p.y);
 }
 
+// Checks that a given point is within the map, excluding 'margin' squares at
+// the edge of the map.
+bool map_bounds_with_margin(coord_def p, int margin);
+
 // Determines if the coordinate is within bounds of an LOS array.
 inline bool show_bounds(const coord_def &p)
 {

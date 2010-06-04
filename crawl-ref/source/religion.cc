@@ -458,6 +458,11 @@ bool is_priest_god(god_type god)
             || god == GOD_BEOGH);
 }
 
+bool is_unavailable_god(god_type god)
+{
+    return (god == GOD_JIYVA && jiyva_is_dead());
+}
+
 std::string get_god_powers(god_type which_god)
 {
     // Return early for the special cases.

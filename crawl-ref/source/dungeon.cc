@@ -7973,8 +7973,7 @@ coord_def dgn_random_point_from(const coord_def &c, int radius, int margin)
         const coord_def res =
             c + coord_def(static_cast<int>(radius * cos(angle)),
                           static_cast<int>(radius * sin(angle)));
-        if (res.x >= margin && res.x < GXM - margin - 1
-            && res.y >= margin && res.y < GYM - margin - 1)
+        if (map_bounds_with_margin(res, margin))
         {
             return res;
         }

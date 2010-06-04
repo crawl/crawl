@@ -3642,15 +3642,16 @@ static void _move_player(coord_def move)
         you.running = RMODE_CONTINUE;
 
     if (you.level_type == LEVEL_ABYSS
-        && (you.pos().x <= 15 || you.pos().x >= (GXM - 16)
-            || you.pos().y <= 15 || you.pos().y >= (GYM - 16)))
+        && !map_bounds_with_margin(you.pos(),
+                                   MAPGEN_BORDER + ABYSS_AREA_SHIFT_RADIUS + 1))
     {
-        area_shift();
+        dprf("Shifting abyss at (%d,%d)", you.pos().x, you.pos().y);
+
+        abyss_area_shift();
         if (you.pet_target != MHITYOU)
             you.pet_target = MHITNOT;
 
 #ifdef DEBUG_DIAGNOSTICS
-        mpr("Shifting.", MSGCH_DIAGNOSTICS);
         int j = 0;
         for (int i = 0; i < MAX_ITEMS; ++i)
             if (mitm[i].is_valid())
