@@ -82,6 +82,12 @@ bool map_bounds(int x, int y)
     return (map_bounds_x(x) && map_bounds_y(y));
 }
 
+bool map_bounds_with_margin(coord_def p, int margin)
+{
+    return (p.x >= X_BOUND_1 + margin && p.x <= X_BOUND_2 - margin
+            && p.y >= Y_BOUND_1 + margin && p.y <= Y_BOUND_2 - margin);
+}
+
 coord_def random_in_bounds()
 {
     if (crawl_state.game_is_arena())

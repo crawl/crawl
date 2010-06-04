@@ -253,6 +253,9 @@ struct coord_def
     }
 };
 
+const coord_def MAPGEN_TL(MAPGEN_BORDER, MAPGEN_BORDER);
+const coord_def MAPGEN_BR(GXM - 1 - MAPGEN_BORDER, GYM - 1 - MAPGEN_BORDER);
+
 typedef bool (*coord_predicate)(const coord_def &c);
 
 struct run_check_dir

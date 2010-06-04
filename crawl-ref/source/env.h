@@ -7,6 +7,8 @@
 #include "trap_def.h"
 
 typedef FixedArray<short, GXM, GYM> grid_heightmap;
+typedef unsigned long terrain_property_t;
+
 struct crawl_environment
 {
     unsigned char rock_colour;
@@ -16,7 +18,7 @@ struct crawl_environment
     FixedVector< monsters, MAX_MONSTERS >    mons;  // monster list
 
     feature_grid                             grid;  // terrain grid
-    FixedArray< unsigned long, GXM, GYM >    pgrid; // terrain properties
+    FixedArray<terrain_property_t, GXM, GYM> pgrid; // terrain properties
     FixedArray< unsigned short, GXM, GYM >   mgrid; // monster grid
     FixedArray< int, GXM, GYM >              igrid; // item grid
     FixedArray< unsigned short, GXM, GYM >   cgrid; // cloud grid

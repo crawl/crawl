@@ -44,9 +44,10 @@
 #include "dgnevent.h"
 #include "directn.h"
 #include "env.h"
-#include "fprop.h"
 #include "fight.h"
 #include "files.h"
+#include "flood_find.h"
+#include "fprop.h"
 #include "food.h"
 #include "godabil.h"
 #include "hiscores.h"
@@ -1221,18 +1222,8 @@ static void _spatter_neighbours(const coord_def& where, int chance)
     }
 }
 
-void generate_random_blood_spatter_on_level()
+void generate_random_blood_spatter_on_level(map_mask *susceptible_area)
 {
-    int startprob;
-
-    // startprob is used to initialise the chance for neighbours being
-    // spattered, which will be decreased by 1 per recursion round.
-    // We then use one_chance_in(chance) to determine whether to spatter a
-    // given grid or not. Thus, startprob = 1 means that initially all
-    // surrounding grids will be spattered (3x3), and the _higher_ startprob
-    // the _lower_ the overall chance for spattering and the _smaller_ the
-    // bloodshed area.
-
     const int max_cluster = 7 + random2(9);
 
     // Lower chances for large bloodshed areas if we have many clusters,
@@ -1251,8 +1242,20 @@ void generate_random_blood_spatter_on_level()
 
     for (int i = 0; i < max_cluster; ++i)
     {
-        coord_def c = random_in_bounds();
-        startprob = min_prob + random2(max_prob);
+        const coord_def c = random_in_bounds();
+
+        if (susceptible_area && !(*susceptible_area)(c))
+            continue;
+
+        // startprob is used to initialise the chance for neighbours
+        // being spattered, which will be decreased by 1 per recursion
+        // round. We then use one_chance_in(chance) to determine
+        // whether to spatter a given grid or not. Thus, startprob = 1
+        // means that initially all surrounding grids will be
+        // spattered (3x3), and the _higher_ startprob the _lower_ the
+        // overall chance for spattering and the _smaller_ the
+        // bloodshed area.
+        const int startprob = min_prob + random2(max_prob);
 
         maybe_bloodify_square(c);
 
