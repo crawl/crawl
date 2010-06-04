@@ -1316,6 +1316,12 @@ static int _acquirement_weapon_subtype(bool divine)
     // 0% or 100% in the above formula.  At skill 25 that's *3.5 .
     for (int i = 0; i < NUM_WEAPONS; ++i)
     {
+        int wskill = range_skill(OBJ_WEAPONS, i);
+        if (wskill == SK_THROWING)
+            wskill = weapon_skill(OBJ_WEAPONS, i);
+
+        if (wskill != skill)
+            continue;
         item_considered.sub_type = i;
 
         // Can't get blessed blades through acquirement, only from TSO
@@ -1350,11 +1356,7 @@ static int _acquirement_weapon_subtype(bool divine)
         if (!you.seen_weapon[i])
             acqweight *= 5; // strong emphasis on type variety, brands go only second
 
-        int wskill = range_skill(OBJ_WEAPONS, i);
-        if (wskill == SK_THROWING)
-            wskill = weapon_skill(OBJ_WEAPONS, i);
-
-        if (wskill == skill && x_chance_in_y(acqweight, count += acqweight))
+        if (x_chance_in_y(acqweight, count += acqweight))
             result = i;
     }
     return (result);
