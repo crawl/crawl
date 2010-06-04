@@ -2895,6 +2895,9 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                 exercise(SK_THROWING, 1);
                 break;
             }
+
+            if (ammo_brand == SPMSL_STEEL)
+                dice_mult = dice_mult * 150 / 100;
         }
 
         // exercise skill
