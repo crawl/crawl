@@ -53,6 +53,7 @@
 #include "xom.h"
 
 const coord_def ABYSS_CENTRE(45,35);
+const int ABYSSAL_RUNE_MAX_ROLL = 200;
 
 // If not_seen is true, don't place the feature where it can be seen from
 // the centre.
@@ -155,17 +156,30 @@ static int _abyssal_rune_roll()
     // Worshippers of Lugonu with decent piety will attract the rune
     // to themselves.
 
+    // In general, the base chance of an abyssal rune is 1/200 for
+    // every item roll (the item roll is 1/200 for every floor square
+    // in the abyss). Once the player has spent more than 500 turns on
+    // level, the abyss rune chance increases linearly every 228 turns
+    // up to a maximum of 34/200 (17%) per item roll after ~8000
+    // turns.
+
+    // For Lugonu worshippers, the base chance of an abyssal rune is 1
+    // in 200 as for other players, but the rune chance increases
+    // linearly after 50 turns on the level, up to the same 34/200
+    // (17%) chance after ~2000 turns.
+
     const bool lugonu_favoured =
         (you.religion == GOD_LUGONU && !player_under_penance()
          && you.piety > 120);
 
     const int cutoff = lugonu_favoured ? 50 : 500;
-    const int scale = lugonu_favoured ? 10 : 40;
+    const int scale = lugonu_favoured ? 57 : 228;
 
     const int odds =
-        std::max(200 - std::max((env.turns_on_level - cutoff) / scale, 0), 6);
+        std::min(1 + std::max((env.turns_on_level - cutoff) / scale, 0), 34);
 #ifdef DEBUG_ABYSS
-    mprf(MSGCH_DIAGNOSTICS, "Abyssal rune odds: 1 in %d", odds);
+    mprf(MSGCH_DIAGNOSTICS, "Abyssal rune odds: %d in %d (%.2f%%)",
+         odds, ABYSSAL_RUNE_MAX_ROLL, odds * 100.0 / ABYSSAL_RUNE_MAX_ROLL);
 #endif
     return (odds);
 }
@@ -280,7 +294,7 @@ static int _abyss_create_items(const map_mask &abyss_genlevel_mask,
                 if (!placed_abyssal_rune && !should_place_abyssal_rune
                     && abyssal_rune_roll != -1
                     && you.char_direction != GDT_GAME_START
-                    && one_chance_in(abyssal_rune_roll))
+                    && x_chance_in_y(abyssal_rune_roll, ABYSSAL_RUNE_MAX_ROLL))
                 {
                     should_place_abyssal_rune = true;
                 }
