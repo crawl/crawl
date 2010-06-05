@@ -1399,7 +1399,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         }
     }
 
-    if (make_changes)
+    if (load_mode == LOAD_ENTER_LEVEL)
         _do_lost_items(old_level_type);
 
 #ifdef USE_TILE
