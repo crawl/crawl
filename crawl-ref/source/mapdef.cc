@@ -13,6 +13,7 @@
 #include <cstdlib>
 #include <algorithm>
 
+#include "abyss.h"
 #include "artefact.h"
 #include "branch.h"
 #include "colour.h"
@@ -2386,14 +2387,51 @@ std::string map_def::validate_map_def()
             return err;
     }
 
+
+    // Abyssal vaults have additional size and orientation restrictions.
+    if (has_tag("abyss") || has_tag("abyss_rune"))
+    {
+        if (orient == MAP_ENCOMPASS)
+            return make_stringf(
+                "Map '%s' cannot use 'encompass' orientation in the abyss",
+                name.c_str());
+
+        const int max_abyss_map_width =
+            GXM / 2 - MAPGEN_BORDER - ABYSS_AREA_SHIFT_RADIUS;
+        const int max_abyss_map_height =
+            GYM / 2 - MAPGEN_BORDER - ABYSS_AREA_SHIFT_RADIUS;
+
+        if (map.width() > max_abyss_map_width
+            || map.height() > max_abyss_map_height)
+        {
+            return make_stringf(
+                "Map '%s' is too big for the Abyss: %dx%d - max %dx%d",
+                name.c_str(),
+                map.width(), map.height(),
+                max_abyss_map_width, max_abyss_map_height);
+        }
+
+        // Unless both height and width fit in the smaller dimension,
+        // map rotation will be disallowed.
+        const int dimension_lower_bound =
+            std::min(max_abyss_map_height, max_abyss_map_width);
+        if ((map.width() > dimension_lower_bound
+             || map.height() > dimension_lower_bound)
+            && !has_tag("no_rotate"))
+        {
+            tags += " no_rotate ";
+        }
+    }
+
     if (orient == MAP_FLOAT || is_minivault())
     {
         if (map.width() > GXM - MAPGEN_BORDER * 2
             || map.height() > GYM - MAPGEN_BORDER * 2)
         {
             return make_stringf(
-                     "%s is too big: %dx%d - max %dx%d",
+                     "%s '%s' is too big: %dx%d - max %dx%d",
                      is_minivault()? "Minivault" : "Float",
+                     name.c_str(),
                      map.width(), map.height(),
                      GXM - MAPGEN_BORDER * 2,
                      GYM - MAPGEN_BORDER * 2);
@@ -2405,7 +2443,8 @@ std::string map_def::validate_map_def()
             || map.height() > GYM)
         {
             return make_stringf(
-                     "Map is too big: %dx%d - max %dx%d",
+                     "Map '%s' is too big: %dx%d - max %dx%d",
+                     name.c_str(),
                      map.width(), map.height(),
                      GXM, GYM);
         }
