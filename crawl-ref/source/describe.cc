@@ -2939,7 +2939,7 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
     if (inf.title.empty())
         inf.title = mons.full_name(DESC_CAP_A, true);
 
-    std::string db_name = mons.base_name(DESC_DBNAME, force_seen);
+    const std::string db_name = mons.base_name(DESC_DBNAME, force_seen);
 
     // This is somewhat hackish, but it's a good way of over-riding monsters'
     // descriptions in Lua vaults by using MonPropsMarker. This is also the
@@ -3080,6 +3080,12 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
         inf.quote += "\n";
 
 #ifdef DEBUG_DIAGNOSTICS
+    const actor *mfoe = mons.get_foe();
+    inf.body << "\nMonster foe: "
+             << (mfoe? mfoe->name(DESC_PLAIN, true)
+                 : "(none)")
+             << "\n";
+
     if (mons.can_use_spells())
     {
         const monster_spells &hspell_pass = mons.spells;
