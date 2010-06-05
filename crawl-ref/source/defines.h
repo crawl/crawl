@@ -96,19 +96,6 @@ const int LABYRINTH_BORDER = 4;
 #define Y_BOUND_2               (GYM - BOUNDARY_BORDER)
 #define Y_WIDTH                 (Y_BOUND_2 - Y_BOUND_1 + 1)
 
-// these mark the center zone where the player moves without shifting
-#define ABYSS_SHIFT_RADIUS      10
-
-#define X_ABYSS_1               (X_BOUND_1 + ABYSS_SHIFT_RADIUS)
-#define X_ABYSS_2               (GXM - X_ABYSS_1)
-#define X_ABYSS_WIDTH           (X_ABYSS_2 - X_ABYSS_1 + 1)
-#define X_ABYSS_CENTER          (X_ABYSS_1 + X_ABYSS_WIDTH / 2)
-
-#define Y_ABYSS_1               (Y_BOUND_1 + ABYSS_SHIFT_RADIUS)
-#define Y_ABYSS_2               (GYM - Y_ABYSS_1)
-#define Y_ABYSS_WIDTH           (Y_ABYSS_2 - Y_ABYSS_1 + 1)
-#define Y_ABYSS_CENTER          (Y_ABYSS_1 + Y_ABYSS_WIDTH / 2)
-
 // default LOS radius
 #define LOS_RADIUS 8
 // default LOS radius squared, for comparison with distance()
