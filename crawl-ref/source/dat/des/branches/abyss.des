@@ -11,40 +11,23 @@
 # abyss random vaults
 
 ###############################################################################
+# Dummy vaults
+#
+NAME: abyss_furniture_dummy
+TAGS: abyss dummy
+CHANCE: 10 : 80%
+
+NAME: abyss_rune_dummy
+TAGS: abyss_rune dummy
+CHANCE: 10 : 70%
+
+###############################################################################
 NAME: abyss_furniture_001
 TAGS: abyss allow_dup
 MAP
 G.G
 .V.
 G.G
-ENDMAP
-
-NAME: abyss_furniture_002
-TAGS: abyss
-COLOUR: x = lightblue
-COLOUR: . = white
-MAP
-xxxxxVxxxxxVxxxxxVxx
-xxxxx.xxxxx.xxxxx.xx
-xxxxx.xxxxx.xxxxx.xx
-xxxxx.xxxxx.xxxxx.xx
-xxxxx.xxxxx.xxxxx.xx
-V..................V
-xxxxx.xxxxx.xxxxx.xx
-xxxxx.xxxxx.xxxxx.xx
-xxxxx.xxxxx.xxxxx.xx
-xxxxx.xxxxx.xxxxx.xx
-xxxxx.xxxxx.xxxxx.xx
-V..................V
-xxxxx.xxxxx.xxxxx.xx
-xxxxx.xxxxx.xxxxx.xx
-xxxxx.xxxxx.xxxxx.xx
-xxxxx.xxxxx.xxxxx.xx
-xxxxx.xxxxx.xxxxx.xx
-V..................V
-xxxxx.xxxxx.xxxxx.xx
-xxxxx.xxxxx.xxxxx.xx
-xxxxxVxxxxxVxxxxxVxx
 ENDMAP
 
 ###############################################################################

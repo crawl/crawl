@@ -7,11 +7,12 @@ Part III:  Advanced Methods
 
 Contents:  I. Conditionalising levels
            J. Validating levels
-           K. Portal vaults
-           L. Lua reference
-           M. Feature names
-           N. Map statistics
-           O. Map generation
+           K. Abyss vaults
+           L. Portal vaults
+           M. Lua reference
+           N. Feature names
+           O. Map statistics
+           P. Map generation
 
 This document describes the advanced features of vault making. This includes
 usage of lua and how to create portal vaults. Triggerables are covered in a separate document: triggerables.txt.
@@ -215,7 +216,39 @@ validate {{
 }}
 
 
-K.   Portal Vaults
+K.   Abyss Vaults
+=================
+
+Abyssal vaults have more limitations than vaults in the regular
+dungeon, because the Abyss is constantly shifting under the player.
+
+The abyss picks vaults by tag, using vaults tagged "abyss" as general
+decoration, and "abyss_rune" for abyssal rune vaults.
+
+When designing abyssal vaults, keep in mind that:
+
+a. Abyssal vaults must be small: no larger than 28x23. 23x23 or
+   smaller vaults are best so that they can be rotated and fit in
+   anywhere on the level.
+
+b. Unique abyssal vaults may never be seen. If you have a unique vault
+   (i.e. a vault without allow_dup), the chances are good that the
+   player will trigger an abyss shift before they meet your vault, and
+   that your vault will disappear, never to be recreated.
+
+c. Portal vaults that lead out of the abyss cannot return to the
+   abyss. If you place a bazaar portal or similar in the abyss, the
+   player will go straight back to the dungeon when exiting the
+   bazaar.
+
+d. Timers and other listeners in an abyssal vault may be discarded at
+   any time when the abyss shifts and the vault is destroyed. You can
+   still use timers to modify your vaults, but be aware that the timer
+   may be removed at any time as the abyss shifts away from your
+   vault.
+
+
+L.   Portal Vaults
 ==================
 
 Portal vaults are vaults accessed by portals in the dungeon (labyrinths
@@ -432,7 +465,7 @@ epilogues are only ran after the map is validated, that is, it ensures that
 the map was actually used.
 
 
-L.    Lua reference
+M.    Lua reference
 ===================
 
 How maps are processed
@@ -882,7 +915,7 @@ res_mutation, res_slowing, gourmand, levitating, flying, transform,
 stop_activity, floor_items, where, branch, subdepth, absdepth
 
 
-M.   Feature Names
+N.   Feature Names
 ==================
 
 These are the feature names usable in MARKER declarations:
@@ -917,7 +950,7 @@ fountain_sparkling, fountain_blood, dry_fountain_blue,
 dry_fountain_sparkling, dry_fountain_blood, permadry_fountain
 
 
-N.   Map Statistics
+O.   Map Statistics
 ===================
 
 Full-debug Crawl builds (this does not include normal Crawl builds
@@ -940,7 +973,7 @@ probabilities of the random map on each level, use:
 crawl -mapstat 1
 
 
-O.   Map Generation
+P.   Map Generation
 ===================
 
 Full-debug Crawl builds (see above for more information) include a test for
