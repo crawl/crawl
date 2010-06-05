@@ -586,7 +586,7 @@ BOOL:     noises
 DESC_END: This powerful staff used to belong to the leader of the Guild of
           Five Elements.
 
-NAME:    hand crossbow "Sniper"
+NAME:    crossbow "Sniper"
 APPEAR:  black crossbow
 OBJ:     OBJ_WEAPONS/WPN_CROSSBOW
 PLUS:    +10/+0
