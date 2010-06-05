@@ -3666,7 +3666,8 @@ void monster_teleport(monsters *monster, bool instan, bool silent)
         return;
     }
 
-    bool was_seen = you.can_see(monster) && !mons_is_lurking(monster);
+    bool was_seen = !silent
+        && you.can_see(monster) && !mons_is_lurking(monster);
 
     if (!silent)
         simple_monster_message(monster, " disappears!");
