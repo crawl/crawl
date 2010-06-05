@@ -9,7 +9,8 @@
 enum tag_minor_version
 {
     TAG_MINOR_RESET     = 0, // Minor tags were reset
-    TAG_MINOR_VERSION   = 0  // Current version.  (Keep equal to max.)
+    TAG_MINOR_OLD_POS   = 1, // Save old player position
+    TAG_MINOR_VERSION   = 1  // Current version.  (Keep equal to max.)
 };
 
 #endif

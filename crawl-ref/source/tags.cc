@@ -1805,6 +1805,7 @@ static void tag_construct_level(writer &th)
     marshallLong(th, env.level_flags);
 
     marshallLong(th, you.elapsed_time);
+    marshallCoord(th, you.pos());
 
     // Map grids.
     // how many X?
@@ -2207,6 +2208,10 @@ static void tag_read_level( reader &th, char minorVersion )
     env.level_flags  = (unsigned long) unmarshallLong(th);
 
     env.elapsed_time = unmarshallLong(th);
+    if (minorVersion >= TAG_MINOR_OLD_POS)
+        unmarshallCoord(th, env.old_player_pos);
+    else
+        env.old_player_pos.reset();
 
     // Map grids.
     // how many X?
