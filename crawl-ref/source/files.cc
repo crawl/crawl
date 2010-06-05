@@ -1502,6 +1502,12 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     if (load_mode == LOAD_START_GAME)
         just_created_level = true;
+    else if (load_mode == LOAD_ENTER_LEVEL)
+    {
+        // update corpses and fountains
+        if (env.elapsed_time && !just_created_level)
+            update_level(you.elapsed_time - env.elapsed_time);
+    }
 
     // Closes all the gates if you're on the way out.
     if (you.char_direction == GDT_ASCENDING
@@ -1565,14 +1571,6 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         // a new game, or reloading an existing game,
         // markers are activated in acr.cc.
         env.markers.activate_all();
-
-        // Draw view window. update_level may cause monsters to
-        // act and hence be redrawn.
-        viewwindow(false, true);
-
-        // update corpses and fountains
-        if (env.elapsed_time && !just_created_level)
-            update_level( you.elapsed_time - env.elapsed_time );
 
         // Centaurs have difficulty with stairs
         int timeval = ((you.species != SP_CENTAUR) ? player_movement_speed()
