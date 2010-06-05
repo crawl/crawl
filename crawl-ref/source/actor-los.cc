@@ -17,8 +17,12 @@ bool actor::observable() const
 bool actor::see_cell(const coord_def &p) const
 {
     los_type lt = LOS_DEFAULT;
+
     if (crawl_state.game_is_arena() && this == &you)
-        lt = LOS_ARENA;
+        lt = LOS_ARENA; // observer can see everything
+    else if (!in_bounds(pos()))
+        return (false); // actor is off the map
+
     return (cell_see_cell(pos(), p, lt));
 }
 
