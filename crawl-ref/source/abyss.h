@@ -8,7 +8,10 @@
 #ifndef ABYSS_H
 #define ABYSS_H
 
-const int ABYSS_AREA_SHIFT_RADIUS = 10;
+// When shifting areas in the abyss, shift the square containing player LOS
+// plus a little extra so that the player won't be disoriented by taking a
+// step backward after an abyss shift.
+const int ABYSS_AREA_SHIFT_RADIUS = LOS_RADIUS + 2;
 
 void generate_abyss();
 void abyss_area_shift();
