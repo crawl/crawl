@@ -11,5 +11,6 @@
 
 bool cast_iood(actor *caster, int pow, bolt *beam);
 bool iood_act(monsters &mon, bool no_trail = false);
+void iood_catchup(monsters *mon, int turns);
 
 #endif

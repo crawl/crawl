@@ -24,6 +24,7 @@
 #include "beam.h"
 #include "cloud.h"
 #include "colour.h"
+#include "coord.h"
 #include "coordit.h"
 #include "decks.h"
 #include "delay.h"
@@ -52,8 +53,8 @@
 #include "mon-iter.h"
 #include "mon-place.h"
 #include "mgen_data.h"
-#include "coord.h"
 #include "mon-pathfind.h"
+#include "mon-project.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "mutation.h"
@@ -4030,6 +4031,12 @@ static void _catchup_monster_moves(monsters *mon, int turns)
     // Don't shift giant spores since that would disrupt their trail.
     if (mon->type == MONS_GIANT_SPORE)
         return;
+
+    if (mon->type == MONS_ORB_OF_DESTRUCTION)
+    {
+        iood_catchup(mon, turns);
+        return;
+    }
 
     // Let sleeping monsters lie.
     if (mon->asleep() || mon->paralysed())
