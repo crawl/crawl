@@ -1970,7 +1970,7 @@ bool PrecisionMenu::process_key(int key)
                                                             focus_direction);
         if (find_object != NULL)
         {
-            m_active_object->set_active_item(-1);
+            m_active_object->set_active_item(NULL);
             m_active_object = find_object;
             if (focus_direction == PrecisionMenu::UP)
             {
@@ -2243,7 +2243,7 @@ void PrecisionMenu::set_active_object(MenuObject* object)
     if (find_val != m_attached_objects.end())
     {
         m_active_object = object;
-        m_active_object->set_active_item(0);
+        m_active_object->activate_first_item();
     }
 }
 
@@ -3004,7 +3004,7 @@ MenuObject::InputReturnValue MenuFreeform::handle_mouse(const MouseEvent& me)
     {
         if (m_active_item != NULL)
         {
-            set_active_item(-1);
+            _set_active_item_by_index(-1);
             return INPUT_FOCUS_LOST;
         }
         else
@@ -3022,7 +3022,7 @@ MenuObject::InputReturnValue MenuFreeform::handle_mouse(const MouseEvent& me)
         {
             if (m_active_item != NULL)
             {
-                set_active_item(-1);
+                _set_active_item_by_index(-1);
                 return INPUT_NO_ACTION;
             }
         }
@@ -3092,7 +3092,43 @@ MenuItem* MenuFreeform::get_active_item()
     return m_active_item;
 }
 
-void MenuFreeform::set_active_item(int index)
+// Predicate for std::find_if
+class _id_comparison : public std::binary_function<MenuItem*, int, bool>
+{
+public:
+    bool operator() (MenuItem* item, int ID) const
+    {
+        if (item->get_id() == ID)
+            return true;
+        return false;
+    }
+};
+
+/**
+ * Sets item by ID
+ * Clears active item if ID not found
+ */
+void MenuFreeform ::set_active_item(int ID)
+{
+    std::vector<MenuItem*>::iterator ret_val;
+    ret_val = std::find_if(m_entries.begin(), m_entries.end(),
+                           std::bind2nd(_id_comparison(), ID));
+    if (ret_val != m_entries.end())
+    {
+        m_active_item = *ret_val;
+        m_dirty = true;
+        return;
+    }
+    m_active_item = NULL;
+    m_dirty = true;
+    return;
+}
+
+/**
+ * Sets active item based on index
+ * This function is for internal use if object does not have ID set
+ */
+void MenuFreeform::_set_active_item_by_index(int index)
 {
     if (index >= 0 && index < static_cast<int> (m_entries.size()))
     {
@@ -3130,13 +3166,13 @@ void MenuFreeform::set_active_item(MenuItem* item)
 void MenuFreeform::activate_first_item()
 {
     if (m_entries.size() > 0)
-        set_active_item(0);
+        _set_active_item_by_index(0);
 }
 
 void MenuFreeform::activate_last_item()
 {
     if (m_entries.size() > 0)
-        set_active_item(m_entries.size() - 1);
+        _set_active_item_by_index(m_entries.size() - 1);
 }
 
 bool MenuFreeform::select_item(int index)
@@ -3335,7 +3371,7 @@ MenuObject::InputReturnValue MenuScroller::process_input(int key)
             {
                 if (m_entries.at(i)->can_be_highlighted())
                 {
-                    set_active_item(i);
+                    _set_active_item_by_index(i);
                     break;
                 }
             }
@@ -3419,7 +3455,7 @@ MenuObject::InputReturnValue MenuScroller::handle_mouse(const MouseEvent &me)
     {
         if (m_currently_active >= 0)
         {
-            set_active_item(-1);
+            _set_active_item_by_index(-1);
             return INPUT_FOCUS_LOST;
         }
         else
@@ -3438,7 +3474,7 @@ MenuObject::InputReturnValue MenuScroller::handle_mouse(const MouseEvent &me)
             if (m_currently_active >= 0)
             {
                 // Do not signal on cleared active events
-                set_active_item(-1);
+                _set_active_item_by_index(-1);
                 return INPUT_NO_ACTION;
             }
         }
@@ -3521,7 +3557,31 @@ MenuItem* MenuScroller::get_active_item()
     return NULL;
 }
 
-void MenuScroller::set_active_item(int index)
+void MenuScroller::set_active_item(int ID)
+{
+    if (m_currently_active >= 0)
+    {
+        if (m_entries.at(m_currently_active)->get_id() == ID)
+        {
+            // prevent useless _place_items
+            return;
+        }
+    }
+
+    std::vector<MenuItem*>::iterator ret_val;
+    ret_val = std::find_if(m_entries.begin(), m_entries.end(),
+                           std::bind2nd(_id_comparison(), ID));
+    if (ret_val != m_entries.end())
+    {
+        set_active_item(*ret_val);
+        return;
+    }
+    m_currently_active = NULL;
+    m_dirty = true;
+    return;
+}
+
+void MenuScroller::_set_active_item_by_index(int index)
 {
     // prevent useless _place_items
     if (index == m_currently_active)
@@ -3548,7 +3608,7 @@ void MenuScroller::set_active_item(MenuItem* item)
 {
     if (item == NULL)
     {
-        set_active_item(-1);
+        _set_active_item_by_index(-1);
         return;
     }
 
@@ -3556,11 +3616,11 @@ void MenuScroller::set_active_item(MenuItem* item)
     {
         if (item == m_entries.at(i))
         {
-            set_active_item(i);
+            _set_active_item_by_index(i);
             return;
         }
     }
-    set_active_item(-1);
+    _set_active_item_by_index(-1);
 }
 
 void MenuScroller::activate_first_item()
@@ -3568,14 +3628,14 @@ void MenuScroller::activate_first_item()
     if (m_entries.size() > 0)
     {
         m_topmost_visible = 0;
-        set_active_item(0);
+        _set_active_item_by_index(0);
     }
 }
 
 void MenuScroller::activate_last_item()
 {
     if (m_entries.size() > 0)
-        set_active_item(m_entries.size() - 1);
+        _set_active_item_by_index(m_entries.size() - 1);
 }
 
 bool MenuScroller::select_item(int index)

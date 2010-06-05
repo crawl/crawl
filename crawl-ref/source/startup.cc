@@ -578,7 +578,8 @@ static void _show_startup_menu(newgame_def* ng_choice,
     if (save != -1)
     {
         menu.set_active_object(save_games);
-        save_games->set_active_item(save);
+        // save game id is offset by NUM_GAME_TYPE
+        save_games->set_active_item(NUM_GAME_TYPE + save);
     }
     else if (defaults.type != NUM_GAME_TYPE)
     {
@@ -667,7 +668,8 @@ static void _show_startup_menu(newgame_def* ng_choice,
                 else
                 {
                     menu.set_active_object(save_games);
-                    save_games->set_active_item(i);
+                    // save game ID is offset by NUM_GAME_TYPE
+                    save_games->set_active_item(NUM_GAME_TYPE + i);
                 }
             }
             else
