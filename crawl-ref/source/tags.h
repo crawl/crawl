@@ -163,7 +163,7 @@ bool        unmarshallBoolean (reader &);
 int         unmarshallCString (reader &, char *data, int maxSize);
 std::string unmarshallString  (reader &, int maxSize = 1000);
 void        unmarshallString4 (reader &, std::string&);
-void        unmarshallCoord   (reader &, coord_def &c);
+coord_def   unmarshallCoord   (reader &);
 void        unmarshallItem    (reader &, item_def &item);
 void        unmarshallMonster (reader &, monsters &item);
 show_type   unmarshallShowtype (reader &);

@@ -9,6 +9,7 @@
 #define DUNGEON_H
 
 #include "fixedarray.h"
+#include "env.h"
 #include "externs.h"
 #include "terrain.h"
 #include "stuff.h"
@@ -17,8 +18,6 @@
 #include <vector>
 #include <set>
 #include <algorithm>
-
-class map_mask;
 
 #define BUILD_METHOD_KEY "build_method_key"
 #define LAYOUT_TYPE_KEY  "layout_type_key"
@@ -163,15 +162,34 @@ public:
     void draw_at(const coord_def &c);
 };
 
+class vault_place_iterator
+{
+public:
+    vault_place_iterator(const vault_placement &vp);
+    operator bool () const;
+    coord_def operator * () const;
+    const coord_def *operator -> () const;
+    vault_place_iterator &operator ++ ();
+    vault_place_iterator operator ++ (int);
+private:
+    const vault_placement &vault_place;
+    coord_def pos;
+    coord_def tl, br;
+};
+
+class unwind_vault_placement_mask
+{
+public:
+    unwind_vault_placement_mask(const map_mask *mask);
+    ~unwind_vault_placement_mask();
+private:
+    const map_mask *oldmask;
+};
+
 extern bool Generating_Level;
-extern std::string dgn_Layout_Type;
-extern std::string dgn_Build_Method;
-
-extern std::set<std::string> Level_Unique_Maps;
-extern std::set<std::string> Level_Unique_Tags;
-
-extern std::vector<vault_placement> Level_Vaults;
 extern std::vector<vault_placement> Temp_Vaults;
+
+extern const map_mask *Vault_Placement_Mask;
 
 void init_level_connectivity();
 void read_level_connectivity(reader &th);
@@ -180,6 +198,7 @@ void write_level_connectivity(writer &th);
 bool builder(int level_number, int level_type, bool enable_random_maps = true);
 void dgn_veto_level();
 
+void dgn_clear_vault_placements(vault_placement_refv &vps);
 void dgn_flush_map_memory();
 
 double dgn_degrees_to_radians(int degrees);
@@ -206,8 +225,10 @@ void dgn_place_stone_stairs();
 void dgn_set_colours_from_monsters();
 void dgn_set_grid_colour_at(const coord_def &c, int colour);
 
-bool dgn_place_map(const map_def *map, bool clobber, bool make_no_exits,
-                   const coord_def &pos = coord_def(-1, -1),
+bool dgn_place_map(const map_def *map,
+                   bool clobber,
+                   bool make_no_exits,
+                   const coord_def &pos = INVALID_COORD,
                    int rune_subst = -1);
 
 void level_clear_vault_memory();
@@ -313,7 +334,7 @@ inline int count_neighbours(const coord_def& p, dungeon_feature_type feat)
   return count_neighbours(p.x, p.y, feat);
 }
 
-void remember_vault_placement(std::string key, vault_placement &place);
+void remember_vault_placement(std::string key, const vault_placement &place);
 
 std::string dump_vault_maps();
 

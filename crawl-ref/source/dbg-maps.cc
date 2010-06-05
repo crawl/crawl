@@ -164,26 +164,24 @@ static bool mg_do_build_level(int niters)
         }
         if (_mg_is_disconnected_level())
         {
-            extern std::vector<vault_placement> Level_Vaults;
             std::string vaults;
-            for (int j = 0, size = Level_Vaults.size(); j < size; ++j)
+            for (int j = 0, size = env.level_vaults.size(); j < size; ++j)
             {
                 if (j && !vaults.empty())
                     vaults += ", ";
-                vaults += Level_Vaults[j].map.name;
+                vaults += env.level_vaults[j]->map.name;
             }
 
             if (!vaults.empty())
                 vaults = " (" + vaults + ")";
 
-            extern std::string dgn_Build_Method;
             mprf(MSGCH_ERROR,
                  "Bad (disconnected) level on %s%s",
                  level_id::current().describe().c_str(),
                  vaults.c_str());
             FILE *fp = fopen("map.dump", "w");
             fprintf(fp, "Bad (disconnected) level (%s) on %s%s.\n\n",
-                    dgn_Build_Method.c_str(),
+                    env.level_build_method.c_str(),
                     level_id::current().describe().c_str(),
                     vaults.c_str());
 

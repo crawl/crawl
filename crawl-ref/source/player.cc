@@ -382,6 +382,11 @@ bool player_in_branch(int branch)
     return (you.level_type == LEVEL_DUNGEON && you.where_are_you == branch);
 }
 
+bool player_in_level_area(level_area_type area)
+{
+    return (you.level_type == area);
+}
+
 bool player_in_hell(void)
 {
     // No real reason except to draw someone's attention here if they

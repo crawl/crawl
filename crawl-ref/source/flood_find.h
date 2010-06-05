@@ -9,11 +9,6 @@
 #include "terrain.h"
 #include "travel.h"
 
-// You can't forward declare typedefs, so do this instead.
-class map_mask : public FixedArray<unsigned short, GXM, GYM> {} ;
-
-extern map_mask dgn_Map_Mask;
-
 template <typename fgrd, typename bound_check>
 class flood_find : public travel_pathfind
 {

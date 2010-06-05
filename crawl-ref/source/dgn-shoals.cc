@@ -297,9 +297,9 @@ static void _shoals_furniture(int margin)
         }
 
         // Fixup pass to connect vaults.
-        for (int i = 0, size = Level_Vaults.size(); i < size; ++i)
+        for (int i = 0, size = env.level_vaults.size(); i < size; ++i)
         {
-            vault_placement &vp(Level_Vaults[i]);
+            vault_placement &vp(*env.level_vaults[i]);
             if (vp.map.has_tag(SHOAL_RUNE_HUT))
                 dgn_dig_vault_loose(vp);
         }
@@ -670,8 +670,8 @@ static void _shoals_generate_flora()
 
 void dgn_build_shoals_level(int level_number)
 {
-    dgn_Build_Method += make_stringf(" shoals+ [%d]", level_number);
-    dgn_Layout_Type   = "shoals";
+    env.level_build_method += make_stringf(" shoals+ [%d]", level_number);
+    env.level_layout_type   = "shoals";
 
     const int shoals_depth = level_id::current().depth - 1;
     dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL, DNGN_OPEN_SEA);
@@ -699,7 +699,7 @@ void shoals_postprocess_level()
     for (rectangle_iterator ri(1); ri; ++ri)
     {
         const coord_def c(*ri);
-        if (!(dgn_Map_Mask(c) & MMT_VAULT))
+        if (!(env.level_map_mask(c) & MMT_VAULT))
             continue;
 
         // Don't mess with tide immune squares at all.

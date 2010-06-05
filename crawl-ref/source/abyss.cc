@@ -16,10 +16,10 @@
 #include "cloud.h"
 #include "colour.h"
 #include "coordit.h"
-#include "flood_find.h"
 #include "los.h"
 #include "makeitem.h"
 #include "mapmark.h"
+#include "maps.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-iter.h"
@@ -95,10 +95,8 @@ static bool _place_feature_near(const coord_def &centre,
 // Public for abyss generation.
 void generate_abyss()
 {
-    extern std::string dgn_Build_Method;
-
-    dgn_Build_Method += " abyss";
-    dgn_Layout_Type   = "abyss";
+    env.level_build_method += " abyss";
+    env.level_layout_type   = "abyss";
 
 #ifdef DEBUG_ABYSS
     mprf(MSGCH_DIAGNOSTICS,
@@ -219,8 +217,24 @@ static void _abyss_create_rooms(const map_mask &abyss_genlevel_mask,
     }
 }
 
-static bool _abyss_place_rune(const map_mask &abyss_genlevel_mask)
+static bool _abyss_place_rune_vault(const map_mask &abyss_genlevel_mask)
 {
+    const map_def *map = random_map_for_tag("abyss_rune");
+    if (map)
+    {
+        unwind_vault_placement_mask vaultmask(&abyss_genlevel_mask);
+        return (dgn_place_map(map, false, false));
+    }
+    return (false);
+}
+
+static bool _abyss_place_rune(const map_mask &abyss_genlevel_mask,
+                              bool use_vaults)
+{
+    // Use a rune vault if there's one.
+    if (use_vaults && _abyss_place_rune_vault(abyss_genlevel_mask))
+        return (true);
+
     coord_def chosen_spot;
     int places_found = 0;
 
@@ -257,7 +271,8 @@ static bool _abyss_place_rune(const map_mask &abyss_genlevel_mask)
 }
 
 static int _abyss_create_items(const map_mask &abyss_genlevel_mask,
-                               bool placed_abyssal_rune)
+                               bool placed_abyssal_rune,
+                               bool use_vaults)
 {
     // During game start, number and level of items mustn't be higher than
     // that on level 1. Abyss in sprint games has no items.
@@ -277,6 +292,7 @@ static int _abyss_create_items(const map_mask &abyss_genlevel_mask,
 
     const int abyssal_rune_roll = _abyssal_rune_roll();
     bool should_place_abyssal_rune = false;
+    std::vector<coord_def> chosen_item_places;
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
     {
         if (abyss_genlevel_mask(*ri) && grd(*ri) == DNGN_FLOOR)
@@ -299,20 +315,25 @@ static int _abyss_create_items(const map_mask &abyss_genlevel_mask,
                     should_place_abyssal_rune = true;
                 }
 
-                int thing_created = items(1, OBJ_RANDOM, OBJ_RANDOM,
-                                          true, items_level, 250);
-                move_item_to_grid( &thing_created, *ri );
-
-                if (thing_created != NON_ITEM)
-                    items_placed++;
+                chosen_item_places.push_back(*ri);
             }
         }
     }
 
     if (!placed_abyssal_rune && should_place_abyssal_rune)
     {
-        if (_abyss_place_rune(abyss_genlevel_mask))
+        if (_abyss_place_rune(abyss_genlevel_mask, use_vaults))
             ++items_placed;
+    }
+
+    for (int i = 0, size = chosen_item_places.size(); i < size; ++i)
+    {
+        const coord_def place(chosen_item_places[i]);
+        int thing_created = items(1, OBJ_RANDOM, OBJ_RANDOM,
+                                  true, items_level, 250);
+        move_item_to_grid( &thing_created, place );
+        if (thing_created != NON_ITEM)
+            items_placed++;
     }
 
     return (items_placed);
@@ -443,8 +464,31 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask)
     }
 }
 
-static void _generate_area(map_mask &abyss_genlevel_mask,
-                           bool spatter = false)
+static int _abyss_place_vaults(const map_mask &abyss_genlevel_mask)
+{
+    unwind_vault_placement_mask vaultmask(&abyss_genlevel_mask);
+
+    int vaults_placed = 0;
+
+    const int maxvaults = 4;
+    for (int i = 0; i < maxvaults; ++i)
+    {
+        const map_def *map = random_map_for_tag("abyss");
+        if (!map)
+            break;
+
+        if (dgn_place_map(map, false, false)
+            && !one_chance_in(2 + (++vaults_placed)))
+        {
+            break;
+        }
+    }
+
+    return (vaults_placed);
+}
+
+static void _generate_area(const map_mask &abyss_genlevel_mask,
+                           bool use_vaults)
 {
     // Any rune on the floor prevents the abyssal rune from being generated.
     const bool placed_abyssal_rune =
@@ -460,7 +504,9 @@ static void _generate_area(map_mask &abyss_genlevel_mask,
     env.map_knowledge.init(map_cell());
     env.pgrid.init(0);
     _abyss_apply_terrain(abyss_genlevel_mask);
-    _abyss_create_items(abyss_genlevel_mask, placed_abyssal_rune);
+    if (use_vaults)
+        _abyss_place_vaults(abyss_genlevel_mask);
+    _abyss_create_items(abyss_genlevel_mask, placed_abyssal_rune, use_vaults);
     generate_random_blood_spatter_on_level(&abyss_genlevel_mask);
     setup_environment_effects();
 }
@@ -1118,7 +1164,7 @@ static void _corrupt_level_features(const crawl_environment &oenv)
 
 static bool _is_level_corrupted()
 {
-    if (you.level_type == LEVEL_ABYSS)
+    if (player_in_level_area(LEVEL_ABYSS))
         return (true);
 
     return (!!env.markers.find(MAT_CORRUPTION_NEXUS));
@@ -1169,7 +1215,7 @@ bool lugonu_corrupt_level(int power)
     abyss_genlevel_mask.init(true);
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
         grd(*ri) = DNGN_UNSEEN;
-    _generate_area(abyss_genlevel_mask);
+    _generate_area(abyss_genlevel_mask, false);
     los_changed();
 
     _corrupt_choose_colours();

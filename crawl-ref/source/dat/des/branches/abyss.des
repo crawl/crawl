@@ -1,0 +1,61 @@
+###############################################################################
+# abyss.des: abyss random minivaults and abyssal rune vaults.
+#
+# Abyss vaults are picked by tag.
+#
+# Abyssal vaults should usually be minivaults and floating vaults. Encompass
+# vaults will be rejected at compile time, and other orientations will produce
+# weird results.
+
+###############################################################################
+# abyss random vaults
+
+###############################################################################
+NAME: abyss_furniture_001
+TAGS: abyss allow_dup
+MAP
+G.G
+.V.
+G.G
+ENDMAP
+
+NAME: abyss_furniture_002
+TAGS: abyss
+COLOUR: x = lightblue
+COLOUR: . = white
+MAP
+xxxxxVxxxxxVxxxxxVxx
+xxxxx.xxxxx.xxxxx.xx
+xxxxx.xxxxx.xxxxx.xx
+xxxxx.xxxxx.xxxxx.xx
+xxxxx.xxxxx.xxxxx.xx
+V..................V
+xxxxx.xxxxx.xxxxx.xx
+xxxxx.xxxxx.xxxxx.xx
+xxxxx.xxxxx.xxxxx.xx
+xxxxx.xxxxx.xxxxx.xx
+xxxxx.xxxxx.xxxxx.xx
+V..................V
+xxxxx.xxxxx.xxxxx.xx
+xxxxx.xxxxx.xxxxx.xx
+xxxxx.xxxxx.xxxxx.xx
+xxxxx.xxxxx.xxxxx.xx
+xxxxx.xxxxx.xxxxx.xx
+V..................V
+xxxxx.xxxxx.xxxxx.xx
+xxxxx.xxxxx.xxxxx.xx
+xxxxxVxxxxxVxxxxxVxx
+ENDMAP
+
+###############################################################################
+# abyss rune vaults
+NAME: abyss_rune_001
+TAGS: abyss_rune allow_dup
+KITEM: O = abyssal rune of Zot
+MAP
+ww.ww
+ww.ww
+..O..
+ww.ww
+ww.ww
+ENDMAP

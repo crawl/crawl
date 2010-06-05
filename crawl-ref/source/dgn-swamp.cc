@@ -58,8 +58,8 @@ static void _swamp_apply_features(int margin)
 
 void dgn_build_swamp_level(int level)
 {
-    dgn_Build_Method += " swamp";
-    dgn_Layout_Type   = "swamp";
+    env.level_build_method += " swamp";
+    env.level_layout_type   = "swamp";
 
     const int swamp_depth = level_id::current().depth - 1;
     dgn_initialise_heightmap(-17);
@@ -76,8 +76,8 @@ void dgn_build_swamp_level(int level)
 #ifdef OLD_SWAMP_LAYOUT
 void dgn_prepare_swamp()
 {
-    dgn_Build_Method += " swamp";
-    dgn_Layout_Type   = "swamp";
+    env.level_build_method += " swamp";
+    env.level_layout_type   = "swamp";
 
     const int margin = 5;
 

@@ -252,9 +252,9 @@ static std::vector<std::string> _in_vaults(const coord_def &pos)
 {
     std::vector<std::string> out;
 
-    for (unsigned int i = 0; i < Level_Vaults.size(); ++i)
+    for (unsigned int i = 0; i < env.level_vaults.size(); ++i)
     {
-        const vault_placement &vault = Level_Vaults[i];
+        const vault_placement &vault = *env.level_vaults[i];
         if (_inside_vault(vault, pos))
             out.push_back(vault.map.name);
     }
@@ -458,7 +458,7 @@ void debug_mons_scan()
     }
 
     // No vaults to report on?
-    if (Level_Vaults.size() == 0 && Temp_Vaults.size() == 0)
+    if (env.level_vaults.empty() && Temp_Vaults.empty())
     {
         mpr("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", MSGCH_ERROR);
         // Force the dev to notice problems. :P

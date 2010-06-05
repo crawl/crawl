@@ -2047,7 +2047,7 @@ int map_def::glyph_at(const coord_def &c) const
     return map(c);
 }
 
-void map_def::write_full(writer& outf)
+void map_def::write_full(writer& outf) const
 {
     cache_offset = outf.tell();
     marshallShort(outf, MAP_CACHE_VERSION);   // Level indicator.
