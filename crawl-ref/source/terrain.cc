@@ -693,6 +693,65 @@ static bool _is_feature_shift_target(const coord_def &pos, void*)
     return (grd(pos) == DNGN_FLOOR && !dungeon_events.has_listeners_at(pos));
 }
 
+// Moves everything at src to dst.
+// Things that are moved:
+// 1. Dungeon terrain (set to DNGN_UNSEEN)
+// 2. Actors (including the player)
+// 3. Items
+// 4. Clouds
+// 5. Terrain properties
+// 6. Terrain colours
+// 7. Vault (map) mask
+// 8. Vault id mask
+// 9. Map markers, dungeon listeners, shopping list
+void dgn_move_entities_at(coord_def src, coord_def dst,
+                          bool move_player,
+                          bool move_monster,
+                          bool move_items)
+{
+    if (!in_bounds(dst) || !in_bounds(src) || src == dst)
+        return;
+
+    // Move terrain.
+    const dungeon_feature_type dfeat = (grd(dst) = grd(src));
+    if (dfeat == DNGN_ENTER_SHOP)
+    {
+        if (shop_struct *s = get_shop(src))
+            s->pos = dst;
+    }
+
+    if (move_monster)
+    {
+        if (monsters *mon = monster_at(src))
+        {
+            mon->moveto(dst);
+            mgrd(dst) = mgrd(src);
+            mgrd(src) = NON_MONSTER;
+        }
+    }
+
+    if (move_player && you.pos() == src)
+        you.shiftto(dst);
+
+    if (move_items)
+        move_item_stack_to_grid(src, dst);
+
+    move_cloud_to(src, dst);
+
+    // Move terrain colours and properties.
+    env.pgrid(dst) = env.pgrid(src);
+    env.grid_colours(dst) = env.grid_colours(src);
+
+    // Move vault masks.
+    env.level_map_mask(dst) = env.level_map_mask(src);
+    env.level_map_ids(dst) = env.level_map_ids(src);
+
+    // Move markers, dungeon listeners and shopping list.
+    env.markers.move(src, dst);
+    dungeon_events.move_listeners(src, dst);
+    shopping_list.move_things(src, dst);
+}
+
 static bool _dgn_shift_feature(const coord_def &pos)
 {
     const dungeon_feature_type dfeat = grd(pos);
@@ -702,18 +761,7 @@ static bool _dgn_shift_feature(const coord_def &pos)
     const coord_def dest =
         _dgn_find_nearest_square(pos, NULL, _is_feature_shift_target);
 
-    if (in_bounds(dest) && dest != pos)
-    {
-        grd(dest) = dfeat;
-
-        if (dfeat == DNGN_ENTER_SHOP)
-            if (shop_struct *s = get_shop(pos))
-                s->pos = dest;
-
-        env.markers.move(pos, dest);
-        dungeon_events.move_listeners(pos, dest);
-        shopping_list.move_things(pos, dest);
-    }
+    dgn_move_entities_at(pos, dest, false, false, false);
     return (true);
 }
 
