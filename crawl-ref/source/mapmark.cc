@@ -66,7 +66,7 @@ void map_marker::read(reader &inf)
 {
     // Don't read type! The type has to be read by someone who knows how
     // to look up the unmarshall function.
-    unmarshallCoord(inf, pos);
+    pos = unmarshallCoord(inf);
 }
 
 std::string map_marker::property(const std::string &pname) const

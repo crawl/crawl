@@ -1611,10 +1611,16 @@ LUAFN(_dgn_place_map)
         COORDS(c, 4, 5);
         where = c;
     }
-    if (dgn_place_map(map, clobber, no_exits, where) && !Level_Vaults.empty())
-        lua_pushlightuserdata(ls, &Level_Vaults[Level_Vaults.size() - 1]);
+    if (dgn_place_map(map, clobber, no_exits, where)
+        && !env.level_vaults.empty())
+    {
+        lua_pushlightuserdata(ls,
+                              env.level_vaults[env.level_vaults.size() - 1]);
+    }
     else
+    {
         lua_pushnil(ls);
+    }
     return (1);
 }
 
@@ -1622,7 +1628,7 @@ LUAFN(_dgn_in_vault)
 {
     GETCOORD(c, 1, 2, map_bounds);
     const int mask = lua_isnone(ls, 3) ? MMT_VAULT : lua_tointeger(ls, 3);
-    lua_pushboolean(ls, dgn_Map_Mask(c) & mask);
+    lua_pushboolean(ls, env.level_map_mask(c) & mask);
     return (1);
 }
 
@@ -1631,14 +1637,14 @@ LUAFN(_dgn_map_parameters)
     return clua_stringtable(ls, map_parameters);
 }
 
-int dgn_push_vault_placement(lua_State *ls, const vault_placement &vp)
+int dgn_push_vault_placement(lua_State *ls, const vault_placement *vp)
 {
-    return dlua_push_object_type(ls, VAULT_PLACEMENT_METATABLE, vp);
+    return dlua_push_object_type(ls, VAULT_PLACEMENT_METATABLE, *vp);
 }
 
 LUAFN(_dgn_maps_used_here)
 {
-    return clua_gentable(ls, Level_Vaults, dgn_push_vault_placement);
+    return clua_gentable(ls, env.level_vaults, dgn_push_vault_placement);
 }
 
 LUAFN(_dgn_find_marker_position_by_prop)
@@ -1764,8 +1770,7 @@ LUAFN(_dgn_reuse_map)
     if (!lua_isuserdata(ls, 1))
         luaL_argerror(ls, 1, "Expected vault_placement");
 
-    vault_placement &vp(
-                        *static_cast<vault_placement*>(lua_touserdata(ls, 1)));
+    vault_placement &vp(*static_cast<vault_placement*>(lua_touserdata(ls, 1)));
 
     COORDS(place, 2, 3);
 

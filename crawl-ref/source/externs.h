@@ -81,6 +81,7 @@ const int kPathLen = 256;
 #define NO_BERSERK_PENALTY    -1
 
 typedef FixedArray<dungeon_feature_type, GXM, GYM> feature_grid;
+typedef FixedArray<unsigned short, GXM, GYM> map_mask;
 
 struct item_def;
 struct coord_def;
@@ -252,9 +253,7 @@ struct coord_def
         return (xi == x && yi == y);
     }
 };
-
-const coord_def MAPGEN_TL(MAPGEN_BORDER, MAPGEN_BORDER);
-const coord_def MAPGEN_BR(GXM - 1 - MAPGEN_BORDER, GYM - 1 - MAPGEN_BORDER);
+const coord_def INVALID_COORD(-1, -1);
 
 typedef bool (*coord_predicate)(const coord_def &c);
 

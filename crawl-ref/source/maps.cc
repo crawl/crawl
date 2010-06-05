@@ -309,9 +309,24 @@ void fit_region_into_map_bounds(coord_def &pos, const coord_def &size,
 }
 
 // Used for placement of vaults.
-static bool _may_overwrite_feature(const dungeon_feature_type grid,
+static bool _may_overwrite_feature(const coord_def p,
                                    bool water_ok, bool wall_ok = true)
 {
+    // If there's a mask specifying where vaults can be placed, don't
+    // allow stepping outside it.
+    if (Vault_Placement_Mask && !(*Vault_Placement_Mask)(p))
+        return (false);
+
+    // If in the abyss, the placement mask is the only check necessary
+    // for terrain; we must still check that we're not overwriting
+    // items.
+    if (Vault_Placement_Mask && player_in_level_area(LEVEL_ABYSS))
+    {
+        return (igrd(p) == NON_ITEM);
+    }
+
+    const dungeon_feature_type grid = grd(p);
+
     // Deep water grids may be overwritten if water_ok == true.
     if (grid == DNGN_DEEP_WATER)
         return (water_ok);
@@ -343,8 +358,8 @@ bool map_safe_vault_place(const map_def &map,
 
     const bool water_ok =
         map.has_tag("water_ok") || player_in_branch(BRANCH_SWAMP);
-    const std::vector<std::string> &lines = map.map.get_lines();
 
+    const std::vector<std::string> &lines = map.map.get_lines();
     for (rectangle_iterator ri(c, c + size - 1); ri; ++ri)
     {
         const coord_def cp(*ri);
@@ -359,15 +374,13 @@ bool map_safe_vault_place(const map_def &map,
             for (int x = -1; x <= 1; ++x)
             {
                 const coord_def vp(x + cp.x, y + cp.y);
-                if (map_bounds(vp) && (dgn_Map_Mask(vp) & MMT_VAULT))
+                if (map_bounds(vp) && (env.level_map_mask(vp) & MMT_VAULT))
                     return (false);
             }
 
-        const dungeon_feature_type dfeat = grd(cp);
-
         // Don't overwrite features other than floor, rock wall, doors,
         // nor water, if !water_ok.
-        if (!_may_overwrite_feature(dfeat, water_ok))
+        if (!_may_overwrite_feature(cp, water_ok))
             return (false);
 
         // Don't overwrite monsters or items, either!
@@ -395,7 +408,7 @@ static bool _connected_minivault_place(const coord_def &c,
         if (lines[ci.y - c.y][ci.x - c.x] == ' ')
             continue;
 
-        if (_may_overwrite_feature(grd(ci), water_ok, false))
+        if (_may_overwrite_feature(ci, water_ok, false))
             return (true);
     }
 
@@ -544,19 +557,20 @@ static bool map_has_no_tags(const map_def &map, I begin, I end)
 static bool vault_unforbidden(const map_def &map)
 {
     return (you.uniq_map_names.find(map.name) == you.uniq_map_names.end()
-            && Level_Unique_Maps.find(map.name) == Level_Unique_Maps.end()
+            && (env.level_uniq_maps.find(map.name) ==
+                env.level_uniq_maps.end())
             && map_has_no_tags(map, you.uniq_map_tags.begin(),
                                you.uniq_map_tags.end())
-            && map_has_no_tags(map, Level_Unique_Tags.begin(),
-                               Level_Unique_Tags.end()));
+            && map_has_no_tags(map, env.level_uniq_map_tags.begin(),
+                               env.level_uniq_map_tags.end()));
 }
 
 static bool map_matches_layout_type(const map_def &map)
 {
-    if (dgn_Layout_Type.empty() || !map.has_tag_prefix("layout_"))
+    if (env.level_layout_type.empty() || !map.has_tag_prefix("layout_"))
         return (true);
 
-    return map.has_tag("layout_" + dgn_Layout_Type);
+    return map.has_tag("layout_" + env.level_layout_type);
 }
 
 const map_def *find_map_by_name(const std::string &name)

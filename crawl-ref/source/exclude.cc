@@ -649,8 +649,7 @@ void unmarshallExcludes(reader& inf, char minorVersion, exclude_set &excludes)
     {
         for (int i = 0; i < nexcludes; ++i)
         {
-            coord_def c;
-            unmarshallCoord(inf, c);
+            const coord_def c      = unmarshallCoord(inf);
             const int radius       = unmarshallShort(inf);
             const bool autoexcl    = unmarshallBoolean(inf);
             const std::string desc = unmarshallString(inf);

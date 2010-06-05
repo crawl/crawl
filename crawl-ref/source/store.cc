@@ -600,8 +600,7 @@ void CrawlStoreValue::read(reader &th)
 
     case SV_COORD:
     {
-        coord_def coord;
-        unmarshallCoord(th, coord);
+        const coord_def coord = unmarshallCoord(th);
         val.ptr = (void*) new coord_def(coord);
 
         break;

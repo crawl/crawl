@@ -164,8 +164,7 @@ void writer::write(const void *data, size_t size)
 
 long writer::tell()
 {
-    ASSERT(_file);
-    return ftell(_file);
+    return _file? ftell(_file) : _pbuf->size();
 }
 
 
@@ -433,10 +432,12 @@ void marshallCoord(writer &th, const coord_def &c)
     marshallShort(th, c.y);
 }
 
-void unmarshallCoord(reader &th, coord_def &c)
+coord_def unmarshallCoord(reader &th)
 {
+    coord_def c;
     c.x = unmarshallShort(th);
     c.y = unmarshallShort(th);
+    return (c);
 }
 
 template <typename marshall, typename grid>
@@ -1309,6 +1310,7 @@ static void marshall_item_list(writer &th, const i_transit_list &ilist)
     }
 }
 
+
 static m_transit_list unmarshall_follower_list(reader &th)
 {
     m_transit_list mlist;
@@ -1339,6 +1341,114 @@ static i_transit_list unmarshall_item_list(reader &th)
     }
 
     return (ilist);
+}
+
+static void marshall_level_map_masks(writer &th)
+{
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        marshallShort(th, env.level_map_mask(*ri));
+        marshallShort(th, env.level_map_ids(*ri));
+    }
+}
+
+static void unmarshall_level_map_masks(reader &th)
+{
+    for (rectangle_iterator ri(0); ri; ++ri)
+    {
+        env.level_map_mask(*ri) = unmarshallShort(th);
+        env.level_map_ids(*ri)  = unmarshallShort(th);
+    }
+}
+
+static void marshall_level_map_unique_ids(writer &th)
+{
+    marshallSet(th, env.level_uniq_maps, marshallStringNoMax);
+    marshallSet(th, env.level_uniq_map_tags, marshallStringNoMax);
+}
+
+static void unmarshall_level_map_unique_ids(reader &th)
+{
+    unmarshallSet(th, env.level_uniq_maps, unmarshallStringNoMax);
+    unmarshallSet(th, env.level_uniq_map_tags, unmarshallStringNoMax);
+}
+
+static void marshall_mapdef(writer &th, const map_def &map)
+{
+    marshallStringNoMax(th, map.name);
+    map.write_full(th);
+    map.write_index(th);
+}
+
+static map_def unmarshall_mapdef(reader &th)
+{
+    map_def map;
+    map.name = unmarshallStringNoMax(th);
+    map.read_full(th);
+    map.read_index(th);
+    return map;
+}
+
+static void marshall_vault_placement(writer &th, const vault_placement &vp)
+{
+    marshallCoord(th, vp.pos);
+    marshallCoord(th, vp.size);
+    marshallShort(th, vp.orient);
+    marshall_mapdef(th, vp.map);
+    marshall_iterator(th, vp.exits.begin(), vp.exits.end(), marshallCoord);
+    marshallShort(th, vp.level_number);
+    marshallShort(th, vp.rune_subst);
+}
+
+static vault_placement unmarshall_vault_placement(reader &th)
+{
+    vault_placement vp;
+    vp.pos = unmarshallCoord(th);
+    vp.size = unmarshallCoord(th);
+    vp.orient = unmarshallShort(th);
+    vp.map = unmarshall_mapdef(th);
+    unmarshall_vector(th, vp.exits, unmarshallCoord);
+    vp.level_number = unmarshallShort(th);
+    vp.rune_subst   = unmarshallShort(th);
+    return vp;
+}
+
+static void marshall_level_vault_placements(writer &th)
+{
+    marshallShort(th, env.level_vaults.size());
+    for (int i = 0, size = env.level_vaults.size(); i < size; ++i)
+        marshall_vault_placement(th, *env.level_vaults[i]);
+}
+
+static void unmarshall_level_vault_placements(reader &th)
+{
+    const int nvaults = unmarshallShort(th);
+    ASSERT(nvaults >= 0);
+    dgn_clear_vault_placements(env.level_vaults);
+    for (int i = 0; i < nvaults; ++i)
+    {
+        env.level_vaults.push_back(
+            new vault_placement(unmarshall_vault_placement(th)));
+    }
+}
+
+static void marshall_level_vault_data(writer &th)
+{
+    marshallStringNoMax(th, env.level_build_method);
+    marshallStringNoMax(th, env.level_layout_type);
+
+    marshall_level_map_masks(th);
+    marshall_level_map_unique_ids(th);
+    marshall_level_vault_placements(th);
+}
+
+static void unmarshall_level_vault_data(reader &th)
+{
+    env.level_build_method = unmarshallStringNoMax(th);
+    env.level_layout_type  = unmarshallStringNoMax(th);
+    unmarshall_level_map_masks(th);
+    unmarshall_level_map_unique_ids(th);
+    unmarshall_level_vault_placements(th);
 }
 
 static void tag_construct_lost_monsters(writer &th)
@@ -1877,6 +1987,7 @@ static void tag_construct_level(writer &th)
     }
 
     marshallLong(th, env.forest_awoken_until);
+    marshall_level_vault_data(th);
 }
 
 void marshallItem(writer &th, const item_def &item)
@@ -2209,7 +2320,7 @@ static void tag_read_level( reader &th, char minorVersion )
 
     env.elapsed_time = unmarshallLong(th);
     if (minorVersion >= TAG_MINOR_OLD_POS)
-        unmarshallCoord(th, env.old_player_pos);
+        env.old_player_pos = unmarshallCoord(th);
     else
         env.old_player_pos.reset();
 
@@ -2272,7 +2383,7 @@ static void tag_read_level( reader &th, char minorVersion )
         env.shop[i].level = unmarshallByte(th);
     }
 
-    unmarshallCoord(th, env.sanctuary_pos);
+    env.sanctuary_pos  = unmarshallCoord(th);
     env.sanctuary_time = unmarshallByte(th);
 
     env.spawn_random_rate = unmarshallLong(th);
@@ -2294,6 +2405,8 @@ static void tag_read_level( reader &th, char minorVersion )
     }
 
     env.forest_awoken_until = unmarshallLong(th);
+    if (minorVersion >= TAG_MINOR_LEVEL_VAULTS)
+        unmarshall_level_vault_data(th);
 }
 
 static void tag_read_level_items(reader &th, char minorVersion)
@@ -2305,7 +2418,7 @@ static void tag_read_level_items(reader &th, char minorVersion)
         env.trap[i].type =
             static_cast<trap_type>(
                 static_cast<unsigned char>(unmarshallByte(th)) );
-        unmarshallCoord(th, env.trap[i].pos);
+        env.trap[i].pos      = unmarshallCoord(th);
         env.trap[i].ammo_qty = unmarshallShort(th);
     }
 
@@ -2345,7 +2458,7 @@ void unmarshallMonster(reader &th, monsters &m)
     m.target.x        = unmarshallByte(th);
     m.target.y        = unmarshallByte(th);
 
-    unmarshallCoord(th, m.patrol_point);
+    m.patrol_point    = unmarshallCoord(th);
 
     int help = unmarshallByte(th);
     m.travel_target = static_cast<montravel_target_type>(help);
@@ -2353,9 +2466,7 @@ void unmarshallMonster(reader &th, monsters &m)
     const int len = unmarshallShort(th);
     for (int i = 0; i < len; ++i)
     {
-        coord_def c;
-        unmarshallCoord(th, c);
-        m.travel_path.push_back(c);
+        m.travel_path.push_back(unmarshallCoord(th));
     }
 
     m.flags      = unmarshallLong(th);

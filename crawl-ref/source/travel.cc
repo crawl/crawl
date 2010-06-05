@@ -3046,7 +3046,7 @@ void level_pos::save(writer& outf) const
 void level_pos::load(reader& inf)
 {
     id.load(inf);
-    unmarshallCoord(inf, pos);
+    pos = unmarshallCoord(inf);
 }
 
 void stair_info::save(writer& outf) const
@@ -3060,7 +3060,7 @@ void stair_info::save(writer& outf) const
 
 void stair_info::load(reader& inf)
 {
-    unmarshallCoord(inf, position);
+    position = unmarshallCoord(inf);
     grid = static_cast<dungeon_feature_type>(unmarshallShort(inf));
     destination.load(inf);
     guessed_pos = unmarshallByte(inf) != 0;

@@ -5,9 +5,15 @@
 #include "monster.h"
 #include "show.h"
 #include "trap_def.h"
+#include <set>
 
 typedef FixedArray<short, GXM, GYM> grid_heightmap;
 typedef unsigned long terrain_property_t;
+
+typedef std::set<std::string> string_set;
+
+struct vault_placement;
+typedef std::vector<vault_placement*> vault_placement_refv;
 
 struct crawl_environment
 {
@@ -23,6 +29,17 @@ struct crawl_environment
     FixedArray< int, GXM, GYM >              igrid; // item grid
     FixedArray< unsigned short, GXM, GYM >   cgrid; // cloud grid
     FixedArray< unsigned short, GXM, GYM >   grid_colours; // colour overrides
+
+    map_mask                                 level_map_mask;
+    map_mask                                 level_map_ids;
+
+    string_set                               level_uniq_maps;
+    string_set                               level_uniq_map_tags;
+
+    std::string                              level_build_method;
+    std::string                              level_layout_type;
+
+    vault_placement_refv                     level_vaults;
 
     std::auto_ptr<grid_heightmap>            heightmap;
 

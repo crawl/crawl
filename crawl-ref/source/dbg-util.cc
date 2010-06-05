@@ -76,9 +76,8 @@ void debug_dump_levgen()
     if (Generating_Level)
     {
         mpr("Currently generating level.");
-        extern std::string dgn_Build_Method;
-        method = dgn_Build_Method;
-        type   = dgn_Layout_Type;
+        method = env.level_build_method;
+        type   = env.level_layout_type;
     }
     else
     {
@@ -93,8 +92,8 @@ void debug_dump_levgen()
             type = props[LAYOUT_TYPE_KEY].get_string();
     }
 
-    mprf("dgn_Build_Method = %s", method.c_str());
-    mprf("dgn_Layout_Type  = %s", type.c_str());
+    mprf("level build method = %s", method.c_str());
+    mprf("level layout type  = %s", type.c_str());
 
     std::string extra;
 

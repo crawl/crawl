@@ -872,7 +872,7 @@ public:
 private:
     // This map has been loaded from an index, and not fully realised.
     bool            index_only;
-    long            cache_offset;
+    mutable long    cache_offset;
     std::string     file;
 
     typedef Matrix<bool> subvault_mask;
@@ -897,7 +897,7 @@ public:
     coord_def find_first_glyph(const std::string &glyphs) const;
 
     void write_index(writer&) const;
-    void write_full(writer&);
+    void write_full(writer&) const;
 
     void read_index(reader&);
     void read_full(reader&);

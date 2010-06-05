@@ -612,6 +612,7 @@ bool move_player_to_grid( const coord_def& p, bool stepped, bool allow_shift,
 
 bool player_in_mappable_area(void);
 bool player_in_branch(int branch);
+bool player_in_level_area(level_area_type area);
 bool player_in_hell(void);
 
 bool berserk_check_wielded_weapon(void);
