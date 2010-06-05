@@ -61,7 +61,12 @@ struct crawl_environment
     // 5 turns).  Set to 0 to stop random generation.
     int spawn_random_rate;
 
-    long elapsed_time; // used during level load
+    // Time when level was saved (hence we write out you.elapsed_time
+    // (but load it back to env.elapsed_tiem); used during level load
+    long elapsed_time;
+
+    // Which point did the player leave the level from?
+    coord_def old_player_pos;
 
     // Number of turns the player has spent on this level.
     int turns_on_level;
