@@ -2627,6 +2627,9 @@ void mark_interesting_monst(monsters* monster, beh_type behaviour)
     // If it's never going to attack us, then not interesting
     else if (behaviour == BEH_FRIENDLY)
         interesting = false;
+    // Jellies are never interesting to Jiyva.
+    else if (monster->type == MONS_JELLY && you.religion == GOD_JIYVA)
+        interesting = false;
     else if (you.where_are_you == BRANCH_MAIN_DUNGEON
              && you.level_type == LEVEL_DUNGEON
              && mons_level(monster->type) >= you.absdepth0 + _ood_limit()
