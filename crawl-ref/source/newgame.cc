@@ -819,7 +819,7 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
     // Did we have a previous background?
     if (menu.get_active_item() == NULL)
     {
-        freeform->set_active_item(0);
+        freeform->activate_first_item();
     }
 
 #ifdef USE_TILE
@@ -1179,7 +1179,7 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
     // Did we have a previous background?
     if (menu.get_active_item() == NULL)
     {
-        freeform->set_active_item(0);
+        freeform->activate_first_item();
     }
 
 #ifdef USE_TILE

@@ -717,7 +717,7 @@ public:
 #endif
     virtual void render() = 0;
 
-    virtual void set_active_item(int index) = 0;
+    virtual void set_active_item(int ID) = 0;
     virtual void set_active_item(MenuItem* item) = 0;
     virtual void activate_first_item() = 0;
     virtual void activate_last_item() = 0;
@@ -782,7 +782,7 @@ public:
 #endif
     virtual void render();
     virtual MenuItem* get_active_item();
-    virtual void set_active_item(int index);
+    virtual void set_active_item(int ID);
     virtual void set_active_item(MenuItem* item);
     virtual void activate_first_item();
     virtual void activate_last_item();
@@ -793,6 +793,7 @@ public:
 
 protected:
     virtual void _place_items();
+    virtual void _set_active_item_by_index(int index);
     virtual MenuItem* _find_item_by_direction(const MenuItem* start,
                                               MenuObject::Direction dir);
 
@@ -818,7 +819,7 @@ public:
 #endif
     virtual void render();
     virtual MenuItem* get_active_item();
-    virtual void set_active_item(int index);
+    virtual void set_active_item(int ID);
     virtual void set_active_item(MenuItem* item);
     virtual void activate_first_item();
     virtual void activate_last_item();
@@ -828,6 +829,7 @@ public:
     virtual bool attach_item(MenuItem* item);
 protected:
     virtual void _place_items();
+    virtual void _set_active_item_by_index(int index);
     virtual MenuItem* _find_item_by_direction(int start_index,
                                               MenuObject::Direction dir);
     virtual MenuItem* _find_item_by_direction(const MenuItem* start,
