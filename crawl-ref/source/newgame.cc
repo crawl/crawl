@@ -438,6 +438,10 @@ bool choose_game(newgame_def* ng, newgame_def* choice,
 
     _choose_char(ng, choice, defaults);
 
+    // Set these again, since _mark_fully_random may reset *ng.
+    ng->name = choice->name;
+    ng->type = choice->type;
+
 #ifndef DGAMELAUNCH
     // New: pick name _after_ character choices.
     if (choice->name.empty())
