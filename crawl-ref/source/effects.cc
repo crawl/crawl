@@ -4109,10 +4109,11 @@ static void _catchup_monster_moves(monsters *mon, int turns)
             // work.
             if (mon->pos() == mon->target)
             {
-                if (you.pos() != mon->pos())
+                if (in_bounds(env.old_player_pos)
+                    && env.old_player_pos != mon->pos())
                 {
-                    // Flee from player's position if different.
-                    mon->target = you.pos();
+                    // Flee from player's old position if different.
+                    mon->target = env.old_player_pos;
                 }
                 else
                 {
