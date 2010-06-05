@@ -103,9 +103,10 @@ static bool _in_front(float vx, float vy, float dx, float dy, float angle)
     return ((dx-vx)*(dx-vx) + (dy-vy)*(dy-vy) <= (angle*angle));
 }
 
-void _iood_dissipate(monsters &mon)
+static void _iood_dissipate(monsters &mon, bool msg = true)
 {
-    simple_monster_message(&mon, " dissipates.");
+    if (msg)
+        simple_monster_message(&mon, " dissipates.");
     dprf("iood: dissipating");
     monster_die(&mon, KILL_DISMISSED, NON_MONSTER);
 }
@@ -409,4 +410,86 @@ move_again:
     mon.props["iood_y"] = y;
 
     return (false);
+}
+
+// Reduced copy of iood_act to move the orb while the player
+// is off-level. Just goes straight and dissipates instead of
+// hitting anything.
+static bool _iood_catchup_move(monsters& mon)
+{
+    float x = mon.props["iood_x"];
+    float y = mon.props["iood_y"];
+    float vx = mon.props["iood_vx"];
+    float vy = mon.props["iood_vy"];
+
+    if (!vx && !vy) // not initialized
+    {
+        _iood_dissipate(mon, false);
+        return (true);
+    }
+
+    _normalize(vx, vy);
+
+    x += vx;
+    y += vy;
+
+    mon.props["iood_x"] = x;
+    mon.props["iood_y"] = y;
+    mon.props["iood_distance"].get_long()++;
+
+    const coord_def pos(static_cast<int>(round(x)), static_cast<int>(round(y)));
+    if (!in_bounds(pos))
+    {
+        _iood_dissipate(mon, true);
+        return (true);
+    }
+
+    if (pos == mon.pos())
+        return (false);
+
+    actor *victim = actor_at(pos);
+    if (cell_is_solid(pos) || victim)
+    {
+        // Just dissipate instead of hitting something.
+        _iood_dissipate(mon, true);
+        return (true);
+    }
+
+    if (!mon.move_to_pos(pos))
+    {
+        _iood_dissipate(mon);
+        return (true);
+    }
+
+    // move_to_pos() just trashed the coords, set them again
+    mon.props["iood_x"] = x;
+    mon.props["iood_y"] = y;
+
+    return (false);
+}
+
+void iood_catchup(monsters* mons, int pturns)
+{
+    monsters& mon = *mons;
+    ASSERT(mons_is_projectile(mon.type));
+
+    const int moves = pturns * mon.speed / BASELINE_DELAY;
+
+    if (moves > 50)
+    {
+        _iood_dissipate(mon, false);
+        return;
+    }
+
+    if (mon.props["iood_kc"].get_byte() == KC_YOU)
+    {
+        // Left player's vision.
+        _iood_dissipate(mon, false);
+        return;
+    }
+
+
+    for (int i = 0; i < moves; ++i)
+        if (_iood_catchup_move(mon))
+            return;
 }
