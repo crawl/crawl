@@ -2157,7 +2157,8 @@ int mons_base_damage_brand(const monsters *m)
 
 bool mons_att_wont_attack(mon_attitude_type fr)
 {
-    return (fr == ATT_FRIENDLY || fr == ATT_GOOD_NEUTRAL || fr == ATT_STRICT_NEUTRAL);
+    return (fr == ATT_FRIENDLY || fr == ATT_GOOD_NEUTRAL
+            || fr == ATT_STRICT_NEUTRAL);
 }
 
 mon_attitude_type mons_attitude(const monsters *m)

@@ -59,6 +59,20 @@ static void _guess_invis_foe_pos(monsters *mon, bool strict = true)
         mon->target = possibilities[random2(possibilities.size())];
 }
 
+static void _mon_check_foe_invalid(monsters *mon)
+{
+    if (mon->foe != MHITNOT && mon->foe != MHITYOU)
+    {
+        const monsters *foe_monster = mon->get_foe()->as_monster();
+        if (!foe_monster->alive()
+            || (mon->friendly() == foe_monster->friendly()
+                && mon->neutral() == foe_monster->neutral()))
+        {
+            mon->foe = MHITNOT;
+        }
+    }
+}
+
 //---------------------------------------------------------------
 //
 // handle_behaviour
@@ -148,14 +162,7 @@ void handle_behaviour(monsters *mon)
         (mons_amphibious(mon)) ? DNGN_DEEP_WATER : DNGN_SHALLOW_WATER;
 
     // Validate current target exists.
-    if (mon->foe != MHITNOT && mon->foe != MHITYOU)
-    {
-        const monsters& foe_monster = menv[mon->foe];
-        if (!foe_monster.alive())
-            mon->foe = MHITNOT;
-        if (foe_monster.friendly() == isFriendly)
-            mon->foe = MHITNOT;
-    }
+    _mon_check_foe_invalid(mon);
 
     // Change proxPlayer depending on invisibility and standing
     // in shallow water.
@@ -244,14 +251,7 @@ void handle_behaviour(monsters *mon)
     }
 
     // Validate current target again.
-    if (mon->foe != MHITNOT && mon->foe != MHITYOU)
-    {
-        const monsters& foe_monster = menv[mon->foe];
-        if (!foe_monster.alive())
-            mon->foe = MHITNOT;
-        if (foe_monster.friendly() == isFriendly)
-            mon->foe = MHITNOT;
-    }
+    _mon_check_foe_invalid(mon);
 
     while (changed)
     {
