@@ -1337,7 +1337,8 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
 {
     unwind_var<dungeon_feature_type> stair(
         you.transit_stair, stair_taken, DNGN_UNSEEN);
-    unwind_bool ylev(you.entering_level, true, false);
+
+    unwind_bool ylev(you.entering_level, load_mode != LOAD_VISITOR, false);
 
 #ifdef DEBUG_LEVEL_LOAD
     mprf(MSGCH_DIAGNOSTICS, "Loading... level type: %d, branch: %d, level: %d",
