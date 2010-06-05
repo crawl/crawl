@@ -3596,7 +3596,7 @@ void MenuScroller::set_active_item(int ID)
         set_active_item(*ret_val);
         return;
     }
-    m_currently_active = NULL;
+    m_currently_active = 0;
     m_dirty = true;
     return;
 }
