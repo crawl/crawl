@@ -465,75 +465,80 @@ static void _generate_area(map_mask &abyss_genlevel_mask,
     setup_environment_effects();
 }
 
-static int _abyss_exit_nearness()
+class xom_abyss_feature_amusement_check
 {
-    int nearness = INFINITE_DISTANCE;
+private:
+    int exit_was_near;
+    int rune_was_near;
 
-    // is_terrain_known() doesn't work on unmappable levels because
-    // mapping flags are not set on such levels.
-    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
-        if (grd(*ri) == DNGN_EXIT_ABYSS && get_screen_glyph(*ri) != ' ')
-            nearness = std::min(nearness, grid_distance(you.pos(), *ri));
-
-    return (nearness);
-}
-
-static int _abyss_rune_nearness()
-{
-    int nearness = INFINITE_DISTANCE;
-
-    // See above comment about is_terrain_known().
-    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
+private:
+    int abyss_exit_nearness() const
     {
-        if (get_screen_glyph(*ri) != ' ')
-        {
-            for (stack_iterator si(*ri); si; ++si)
-                if (is_rune(*si) && si->plus == RUNE_ABYSSAL)
-                    nearness = std::min(nearness, grid_distance(you.pos(),*ri));
-        }
+        int nearness = INFINITE_DISTANCE;
+        // is_terrain_known() doesn't work on unmappable levels because
+        // mapping flags are not set on such levels.
+        for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
+            if (grd(*ri) == DNGN_EXIT_ABYSS && get_screen_glyph(*ri) != ' ')
+                nearness = std::min(nearness, grid_distance(you.pos(), *ri));
+
+        return (nearness);
     }
-    return (nearness);
-}
 
-static int exit_was_near;
-static int rune_was_near;
+    int abyss_rune_nearness() const
+    {
+        int nearness = INFINITE_DISTANCE;
+        // See above comment about is_terrain_known().
+        for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
+        {
+            if (get_screen_glyph(*ri) != ' ')
+            {
+                for (stack_iterator si(*ri); si; ++si)
+                    if (is_rune(*si) && si->plus == RUNE_ABYSSAL)
+                        nearness = std::min(nearness,
+                                            grid_distance(you.pos(),*ri));
+            }
+        }
+        return (nearness);
+    }
 
-static void _xom_check_nearness_setup()
-{
-    exit_was_near = _abyss_exit_nearness();
-    rune_was_near = _abyss_rune_nearness();
-}
+public:
+    xom_abyss_feature_amusement_check()
+    {
+        exit_was_near = abyss_exit_nearness();
+        rune_was_near = abyss_rune_nearness();
+    }
 
-// If the player was almost to the exit when it disappeared, Xom is
-// extremely amused.  He's also extremely amused if the player winds
-// up right next to an exit when there wasn't one there before.  The
-// same applies to Abyssal runes.
-static void _xom_check_nearness()
-{
-    // Update known terrain
-    viewwindow(false);
+    // If the player was almost to the exit when it disappeared, Xom
+    // is extremely amused. He's also extremely amused if the player
+    // winds up right next to an exit when there wasn't one there
+    // before. The same applies to Abyssal runes.
+    ~xom_abyss_feature_amusement_check()
+    {
+        // Update known terrain
+        viewwindow(false);
 
-    int exit_is_near = _abyss_exit_nearness();
-    int rune_is_near = _abyss_rune_nearness();
+        const int exit_is_near = abyss_exit_nearness();
+        const int rune_is_near = abyss_rune_nearness();
 
-    if (exit_was_near < INFINITE_DISTANCE
+        if (exit_was_near < INFINITE_DISTANCE
             && exit_is_near == INFINITE_DISTANCE
-        || rune_was_near < INFINITE_DISTANCE
+            || rune_was_near < INFINITE_DISTANCE
             && rune_is_near == INFINITE_DISTANCE
             && you.attribute[ATTR_ABYSSAL_RUNES] == 0)
-    {
-        xom_is_stimulated(255, "Xom snickers loudly.", true);
-    }
+        {
+            xom_is_stimulated(255, "Xom snickers loudly.", true);
+        }
 
-    if (rune_was_near == INFINITE_DISTANCE
+        if (rune_was_near == INFINITE_DISTANCE
             && rune_is_near < INFINITE_DISTANCE
             && you.attribute[ATTR_ABYSSAL_RUNES] == 0
-        || exit_was_near == INFINITE_DISTANCE
+            || exit_was_near == INFINITE_DISTANCE
             && exit_is_near < INFINITE_DISTANCE)
-    {
-        xom_is_stimulated(255);
+        {
+            xom_is_stimulated(255);
+        }
     }
-}
+};
 
 static void _abyss_lose_monster(monsters &mons)
 {
@@ -736,25 +741,25 @@ void abyss_area_shift(void)
          you.pos().x, you.pos().y);
 #endif
 
-    _xom_check_nearness_setup();
+    {
+        xom_abyss_feature_amusement_check xomcheck;
 
-    // Preserve floor props around the player, primarily so that
-    // blood-splatter doesn't appear out of nowhere when doing an
-    // area shift.
-    const los_env_props_t los_env_props = _env_props_in_los();
+        // Preserve floor props around the player, primarily so that
+        // blood-splatter doesn't appear out of nowhere when doing an
+        // area shift.
+        const los_env_props_t los_env_props = _env_props_in_los();
 
-    // Use a map mask to track the areas that the shift destroys and
-    // that must be regenerated by _generate_area.
-    map_mask abyss_genlevel_mask;
-    _abyss_shift_level_contents_around_player(
-        ABYSS_AREA_SHIFT_RADIUS, ABYSS_CENTRE, abyss_genlevel_mask);
-    _generate_area(abyss_genlevel_mask, true);
+        // Use a map mask to track the areas that the shift destroys and
+        // that must be regenerated by _generate_area.
+        map_mask abyss_genlevel_mask;
+        _abyss_shift_level_contents_around_player(
+            ABYSS_AREA_SHIFT_RADIUS, ABYSS_CENTRE, abyss_genlevel_mask);
+        _generate_area(abyss_genlevel_mask, true);
 
-    // Update LOS at player's new abyssal vacation retreat.
-    los_changed();
-    _env_props_apply_to_los(los_env_props);
-
-    _xom_check_nearness();
+        // Update LOS at player's new abyssal vacation retreat.
+        los_changed();
+        _env_props_apply_to_los(los_env_props);
+    }
 
     // Place some monsters to keep the abyss party going.
     _abyss_generate_monsters(15);
@@ -799,39 +804,39 @@ static void _abyss_generate_new_area()
     place_transiting_items();
 }
 
-void abyss_teleport( bool new_area )
+static bool _abyss_teleport_within_level()
 {
-    _xom_check_nearness_setup();
-
-    if (!new_area)
+    // Try to find a good spot within the shift zone.
+    for (int i = 0; i < 100; i++)
     {
-        coord_def newspot;
-        bool found = false;
-        // Try to find a good spot within the shift zone.
-        for (int i = 0; i < 100 && !found; i++)
-        {
-            newspot.x = 16 + random2( GXM - 32 );
-            newspot.y = 16 + random2( GYM - 32 );
+        const coord_def newspot =
+            dgn_random_point_in_margin(MAPGEN_BORDER
+                                       + ABYSS_AREA_SHIFT_RADIUS
+                                       + 1);
 
-            if ((grd(newspot) == DNGN_FLOOR
-                    || grd(newspot) == DNGN_SHALLOW_WATER)
-                && !monster_at(newspot)
-                && env.cgrid(newspot) == EMPTY_CLOUD)
-            {
-                found = true;
-            }
-        }
-
-        if (found)
+        if ((grd(newspot) == DNGN_FLOOR
+             || grd(newspot) == DNGN_SHALLOW_WATER)
+            && !monster_at(newspot)
+            && env.cgrid(newspot) == EMPTY_CLOUD)
         {
 #ifdef DEBUG_ABYSS
-            mpr("Non-new area Abyss teleport.", MSGCH_DIAGNOSTICS);
+            mprf(MSGCH_DIAGNOSTICS,
+                 "Abyss same-area teleport to (%d,%d).",
+                 newspot.x, newspot.y);
 #endif
             you.moveto(newspot);
-            _xom_check_nearness();
-            return;
+            return (true);
         }
     }
+    return (false);
+}
+
+void abyss_teleport( bool new_area )
+{
+    xom_abyss_feature_amusement_check xomcheck;
+
+    if (!new_area && _abyss_teleport_within_level())
+        return;
 
 #ifdef DEBUG_ABYSS
     mpr("New area Abyss teleport.", MSGCH_DIAGNOSTICS);
@@ -839,8 +844,6 @@ void abyss_teleport( bool new_area )
 
     // Teleport to a new area of the abyss.
     _abyss_generate_new_area();
-
-    _xom_check_nearness();
 }
 
 //////////////////////////////////////////////////////////////////////////////
