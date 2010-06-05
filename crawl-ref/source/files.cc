@@ -1400,7 +1400,12 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     }
 
     if (load_mode == LOAD_ENTER_LEVEL)
+    {
         _do_lost_items(old_level_type);
+
+        // The player is now between levels.
+        you.position.reset();
+    }
 
 #ifdef USE_TILE
     if (load_mode != LOAD_VISITOR)
