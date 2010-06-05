@@ -1970,7 +1970,7 @@ bool PrecisionMenu::process_key(int key)
                                                             focus_direction);
         if (find_object != NULL)
         {
-            m_active_object->set_active_item(NULL);
+            m_active_object->set_active_item((MenuItem*)NULL);
             m_active_object = find_object;
             if (focus_direction == PrecisionMenu::UP)
             {
