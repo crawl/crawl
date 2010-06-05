@@ -883,21 +883,27 @@ static void _initialise_level_corrupt_seeds(int power)
     }
 }
 
+// Create a corruption spawn at the given position. Returns false if further
+// monsters should not be placed near this spot (overcrowding), true if
+// more monsters can fit in.
 static bool _spawn_corrupted_servant_near(const coord_def &pos)
 {
     const beh_type beh =
-        one_chance_in(5 + you.skills[SK_INVOCATIONS] / 4) ? BEH_HOSTILE
+        one_chance_in(2 + you.skills[SK_INVOCATIONS] / 4) ? BEH_HOSTILE
         : BEH_NEUTRAL;
 
-    // [ds] No longer summon hostiles.
+    // [ds] No longer summon hostiles -- don't create the monster if
+    // it would be hostile.
     if (beh == BEH_HOSTILE)
-        return false;
+        return (true);
 
     // Thirty tries for a place.
     for (int i = 0; i < 30; ++i)
     {
-        const coord_def p( pos.x + random2avg(4, 3) + random2(3),
-                           pos.y + random2avg(4, 3) + random2(3) );
+        const int offsetX = random2avg(4, 3) + random2(3);
+        const int offsetY = random2avg(4, 3) + random2(3);
+        const coord_def p( pos.x + (coinflip()? offsetX : -offsetX),
+                           pos.y + (coinflip()? offsetY : -offsetY) );
         if (!in_bounds(p) || actor_at(p)
             || !feat_compatible(DNGN_FLOOR, grd(p)))
         {
@@ -1153,8 +1159,13 @@ bool lugonu_corrupt_level(int power)
     _initialise_level_corrupt_seeds(power);
 
     std::auto_ptr<crawl_environment> backup(new crawl_environment(env));
+
+    // Set up genlevel mask and fill the level with DNGN_UNSEEN so
+    // _generate_area does its thing.
     map_mask abyss_genlevel_mask;
     abyss_genlevel_mask.init(true);
+    for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
+        grd(*ri) = DNGN_UNSEEN;
     _generate_area(abyss_genlevel_mask);
     los_changed();
 
