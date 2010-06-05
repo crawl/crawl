@@ -5633,7 +5633,7 @@ bool monsters::visible_to(const actor *looker) const
                        && mons_sense_invis(looker->as_monster());
     bool vis = !invisible() || looker->can_see_invisible()
                || sense_invis && adjacent(pos(), looker->pos());
-    return (vis && (this == looker || !has_ench(ENCH_SUBMERGED)));
+    return (vis && (this == looker || !submerged()));
 }
 
 bool monsters::mon_see_cell(const coord_def& p, bool reach) const
