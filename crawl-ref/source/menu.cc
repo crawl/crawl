@@ -3166,13 +3166,33 @@ void MenuFreeform::set_active_item(MenuItem* item)
 void MenuFreeform::activate_first_item()
 {
     if (m_entries.size() > 0)
-        _set_active_item_by_index(0);
+    {
+        // find the first activeable item
+        for (int i = 0; i < static_cast<int> (m_entries.size()); ++i)
+        {
+            if (m_entries.at(i)->can_be_highlighted())
+            {
+                _set_active_item_by_index(i);
+                break; // escape loop
+            }
+        }
+    }
 }
 
 void MenuFreeform::activate_last_item()
 {
     if (m_entries.size() > 0)
-        _set_active_item_by_index(m_entries.size() - 1);
+    {
+        // find the last activeable item
+        for (int i = m_entries.size() -1; i >= 0; --i)
+        {
+            if (m_entries.at(i)->can_be_highlighted())
+            {
+                _set_active_item_by_index(i);
+                break; // escape loop
+            }
+        }
+    }
 }
 
 bool MenuFreeform::select_item(int index)
@@ -3627,15 +3647,32 @@ void MenuScroller::activate_first_item()
 {
     if (m_entries.size() > 0)
     {
-        m_topmost_visible = 0;
-        _set_active_item_by_index(0);
+        // find the first activeable item
+        for (int i = 0; i < static_cast<int> (m_entries.size()); ++i)
+        {
+            if (m_entries.at(i)->can_be_highlighted())
+            {
+                _set_active_item_by_index(i);
+                break; // escape loop
+            }
+        }
     }
 }
 
 void MenuScroller::activate_last_item()
 {
     if (m_entries.size() > 0)
-        _set_active_item_by_index(m_entries.size() - 1);
+    {
+        // find the last activeable item
+        for (int i = m_entries.size() -1; i >= 0; --i)
+        {
+            if (m_entries.at(i)->can_be_highlighted())
+            {
+                _set_active_item_by_index(i);
+                break; // escape loop
+            }
+        }
+    }
 }
 
 bool MenuScroller::select_item(int index)
