@@ -1513,12 +1513,13 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
             _place_player_on_stair(old_level_type, old_branch, stair_taken);
         else
             you.moveto(coord_def(45, 35)); // FIXME: should be abyss_center
-    }
-    crawl_view.set_player_at(you.pos(), load_mode != LOAD_VISITOR);
 
-    // This should fix the "monster occurring under the player" bug?
-    if (make_changes && monster_at(you.pos()))
-        monster_teleport(monster_at(you.pos()), true, true);
+        // This should fix the "monster occurring under the player" bug.
+        if (monsters* mon = monster_at(you.pos()))
+            monster_teleport(mon, true, true);
+    }
+
+    crawl_view.set_player_at(you.pos(), load_mode != LOAD_VISITOR);
 
     // Actually "move" the followers if applicable.
     if (level_type_allows_followers(you.level_type)
