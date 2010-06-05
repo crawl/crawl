@@ -322,6 +322,13 @@ static void _maybe_leave_water(const cloud_struct& c)
     }
 }
 
+void delete_cloud_at(coord_def p)
+{
+    const int cloudno = env.cgrid(p);
+    if (cloudno != EMPTY_CLOUD)
+        delete_cloud(cloudno);
+}
+
 void delete_cloud( int cloud )
 {
     cloud_struct& c = env.cloud[cloud];
@@ -344,6 +351,12 @@ void delete_cloud( int cloud )
         c.pos.reset();
         env.cloud_no--;
     }
+}
+
+void move_cloud_to(coord_def src, coord_def dst)
+{
+    const int cloudno = env.cgrid(src);
+    move_cloud(cloudno, dst);
 }
 
 // The current use of this function is for shifting in the abyss, so

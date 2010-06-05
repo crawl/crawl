@@ -500,9 +500,8 @@ static void _generate_area(const map_mask &abyss_genlevel_mask,
          env.turns_on_level, placed_abyssal_rune? "yes" : "no");
 #endif
 
-    // Nuke map knowledge and properties.
+    // Nuke map knowledge.
     env.map_knowledge.init(map_cell());
-    env.pgrid.init(0);
     _abyss_apply_terrain(abyss_genlevel_mask);
     if (use_vaults)
         _abyss_place_vaults(abyss_genlevel_mask);
@@ -595,27 +594,6 @@ static void _abyss_lose_monster(monsters &mons)
     mons.reset();
 }
 
-typedef
-FixedArray<terrain_property_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER>
-los_env_props_t;
-
-// Get env props in player LOS.
-static los_env_props_t _env_props_in_los()
-{
-    los_env_props_t los_env_props(0);
-    const coord_def losoffset_youpos = you.pos() + ENV_SHOW_OFFSET;
-    for (radius_iterator ri(you.get_los()); ri; ++ri)
-        los_env_props(losoffset_youpos - *ri) = env.pgrid(*ri);
-    return los_env_props;
-}
-
-static void _env_props_apply_to_los(const los_env_props_t &los_env_props)
-{
-    const coord_def losoffset_youpos = you.pos() + ENV_SHOW_OFFSET;
-    for (radius_iterator ri(you.get_los()); ri; ++ri)
-        env.pgrid(*ri) = los_env_props(losoffset_youpos - *ri);
-}
-
 // If a sanctuary exists and is in LOS, moves it to keep it in the
 // same place relative to the player's location after a shift. If the
 // sanctuary is not in player LOS, removes it.
@@ -632,55 +610,72 @@ static void _abyss_move_sanctuary(const coord_def abyss_shift_start_centre,
     }
 }
 
-// Removes monsters, clouds, dungeon features, and items from the
-// level. If a non-negative preservation radius is specified, things
-// within that radius (as measured in movement distance from the
-// player's current position) will not be affected.
-static void _abyss_wipe_area(int preserved_radius_around_player,
-                             map_mask &abyss_destruction_mask)
+// Deletes everything on the level at the given position.
+// Things that are wiped:
+// 1. Dungeon terrain (set to DNGN_UNSEEN)
+// 2. Monsters (the player is unaffected)
+// 3. Items
+// 4. Clouds
+// 5. Terrain properties
+// 6. Terrain colours
+// 7. Vault (map) mask
+// 8. Vault id mask
+// 9. Map markers
+
+static void _abyss_wipe_square_at(coord_def p)
 {
-    const coord_def youpos = you.pos();
+    // Nuke terrain.
+    grd(p) = DNGN_UNSEEN;
 
-    // Remove non-nearby monsters.
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (grid_distance(mi->pos(), youpos) > preserved_radius_around_player)
-            _abyss_lose_monster(**mi);
-    }
-
-    for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
-    {
-        // Don't modify terrain by player.
-        if (grid_distance(*ri, you.pos()) <= preserved_radius_around_player)
-            continue;
-
-        abyss_destruction_mask(*ri) = true;
-
-        // Nuke terrain.
-        grd(*ri) = DNGN_UNSEEN;
-
-        // Nuke items.
+    // Nuke items.
 #ifdef DEBUG_ABYSS
-        if (igrd(*ri) != NON_ITEM)
-        {
-            const coord_def &p(*ri);
-            mprf(MSGCH_DIAGNOSTICS, "Nuke item stack at (%d, %d)", p.x, p.y);
-        }
+    if (igrd(p) != NON_ITEM)
+        mprf(MSGCH_DIAGNOSTICS, "Nuke item stack at (%d, %d)", p.x, p.y);
 #endif
-        lose_item_stack( *ri );
-    }
+    lose_item_stack(p);
 
-    for (int i = 0; i < MAX_CLOUDS; i++)
+    // Nuke monster.
+    if (monsters *mon = monster_at(p))
+        _abyss_lose_monster(*mon);
+
+    // Delete cloud.
+    delete_cloud_at(p);
+
+    env.pgrid(p)          = 0;
+    env.grid_colours(p)   = 0;
+
+    env.level_map_mask(p) = 0;
+    env.level_map_ids(p)  = INVALID_MAP_INDEX;
+
+    // Look for Lua markers on this square that are listening for
+    // non-positional events, (such as bazaar portals listening for
+    // turncount changes) and detach them manually from the dungeon
+    // event dispatcher.
+    const std::vector<map_marker *> markers = env.markers.get_markers_at(p);
+    for (int i = 0, size = markers.size(); i < size; ++i)
     {
-        if (env.cloud[i].type == CLOUD_NONE)
-            continue;
-
-        if (grid_distance(youpos, env.cloud[i].pos) >
-            preserved_radius_around_player)
-        {
-            delete_cloud( i );
-        }
+        if (markers[i]->get_type() == MAT_LUA_MARKER)
+            dungeon_events.remove_listener(
+                dynamic_cast<map_lua_marker*>(markers[i]));
     }
+
+    env.markers.remove_markers_at(p);
+    dungeon_events.clear_listeners_at(p);
+}
+
+// Removes monsters, clouds, dungeon features, and items from the
+// level, torching all squares for which the supplied mask is false.
+static void _abyss_wipe_unmasked_area(const map_mask &abyss_preserve_mask)
+{
+    for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
+        if (!abyss_preserve_mask(*ri))
+            _abyss_wipe_square_at(*ri);
+}
+
+// Moves everything at src to dst.
+static void _abyss_move_entities_at(coord_def src, coord_def dst)
+{
+    dgn_move_entities_at(src, dst, true, true, true);
 }
 
 // Moves the player, monsters, terrain and items in the square (circle
@@ -688,51 +683,122 @@ static void _abyss_wipe_area(int preserved_radius_around_player,
 // the square centred on target_centre.
 //
 // Assumes:
-// a) both areas are fully in bounds
-// b) source and target areas do not overlap
-// c) the target area is free of monsters, clouds and items.
-static void _abyss_move_entities(int radius, coord_def target_centre)
+// a) target can be truncated if not fully in bounds
+// b) source and target areas may overlap
+//
+static void _abyss_move_entities(coord_def target_centre,
+                                 map_mask *shift_area_mask)
 {
     const coord_def source_centre = you.pos();
+    const coord_def delta = (target_centre - source_centre).sgn();
 
-    // Shift all monsters and items to new area.
-    for (radius_iterator ri(source_centre, radius, C_SQUARE); ri; ++ri)
+    // When moving a region, walk backward to handle overlapping
+    // ranges correctly.
+    coord_def direction = -delta;
+
+    if (!direction.x)
+        direction.x = 1;
+    if (!direction.y)
+        direction.y = 1;
+
+    coord_def start(MAPGEN_BORDER, MAPGEN_BORDER);
+    coord_def end(GXM - 1 - MAPGEN_BORDER, GYM - 1 - MAPGEN_BORDER);
+
+    if (direction.x == -1)
+        std::swap(start.x, end.x);
+    if (direction.y == -1)
+        std::swap(start.y, end.y);
+
+    end += direction;
+
+    for (int y = start.y; y != end.y; y += direction.y)
     {
-        const coord_def newpos = target_centre + *ri - source_centre;
-
-        // Move terrain.
-        grd(newpos) = grd(*ri);
-
-        // Move item.
-#ifdef DEBUG_ABYSS
-        if (igrd(*ri) != NON_ITEM)
+        for (int x = start.x; x != end.x; x += direction.x)
         {
-            mprf(MSGCH_DIAGNOSTICS,
-                 "Move item stack from (%d, %d) to (%d, %d)",
-                 ri->x, ri->y, newpos.x, newpos.y);
-        }
-#endif
-        move_item_stack_to_grid(*ri, newpos);
+            const coord_def src(x, y);
+            if (!(*shift_area_mask)(src))
+                continue;
 
-        // Move monster.
-        if (monster_at(*ri))
-        {
-            menv[mgrd(*ri)].moveto(newpos);
-            mgrd(newpos) = mgrd(*ri);
-            mgrd(*ri) = NON_MONSTER;
-        }
+            (*shift_area_mask)(src) = false;
 
-        // Move cloud,
-        if (env.cgrid(*ri) != EMPTY_CLOUD)
-            move_cloud( env.cgrid(*ri), newpos );
+            const coord_def dst = src - source_centre + target_centre;
+            if (map_bounds_with_margin(dst, MAPGEN_BORDER))
+            {
+                (*shift_area_mask)(dst) = true;
+                // Wipe the dstination clean before dropping things on it.
+                _abyss_wipe_square_at(dst);
+                _abyss_move_entities_at(src, dst);
+            }
+            else
+            {
+                // Wipe the source clean even if the dst is not in bounds.
+                _abyss_wipe_square_at(src);
+            }
+        }
     }
-    you.shiftto(target_centre);
+}
+
+static void _abyss_expand_mask_to_cover_vault(map_mask *mask,
+                                              int map_index)
+{
+    dprf("Expanding mask to cover vault %d (nvaults: %d)",
+         map_index, env.level_vaults.size());
+    const vault_placement &vp = *env.level_vaults[map_index];
+    for (vault_place_iterator vpi(vp); vpi; ++vpi)
+        (*mask)(*vpi) = true;
+}
+
+// Identifies the smallest movement circle around the given source that can
+// be shifted without breaking up any vaults.
+static void _abyss_identify_area_to_shift(coord_def source, int radius,
+                                          map_mask *mask)
+{
+    mask->init(false);
+
+    std::set<int> affected_vault_indexes;
+    for (radius_iterator ri(source, radius, C_SQUARE); ri; ++ri)
+    {
+        if (!map_bounds_with_margin(*ri, MAPGEN_BORDER))
+            continue;
+
+        (*mask)(*ri) = true;
+
+        const int map_index = env.level_map_ids(*ri);
+        if (map_index != INVALID_MAP_INDEX)
+            affected_vault_indexes.insert(map_index);
+    }
+
+    for (std::set<int>::const_iterator i = affected_vault_indexes.begin();
+         i != affected_vault_indexes.end(); ++i)
+        _abyss_expand_mask_to_cover_vault(mask, *i);
+}
+
+static void _abyss_invert_mask(map_mask *mask)
+{
+    for (rectangle_iterator ri(0); ri; ++ri)
+        (*mask)(*ri) = !(*mask)(*ri);
 }
 
 // Moves everything in the given radius around the player (where radius=0 =>
 // only the player) to another part of the level, centred on target_centre.
 // Everything not in the given radius is wiped to DNGN_UNSEEN and the provided
 // map_mask is set to true for all wiped squares.
+//
+// Things that are moved:
+// 1. Dungeon terrain
+// 2. Actors (player + monsters)
+// 3. Items
+// 4. Clouds
+// 5. Terrain properties
+// 6. Terrain colours
+// 7. Vaults
+// 8. Vault (map) mask
+// 9. Vault id mask
+// 10. Map markers
+//
+// After the shift, any vaults that are no longer referenced in the id
+// mask will be discarded. If those vaults had any unique tags or
+// names, the tag/name will NOT be unregistered.
 //
 // Assumes:
 // a) radius >= LOS_RADIUS
@@ -748,26 +814,34 @@ static void _abyss_shift_level_contents_around_player(
     ASSERT(map_bounds_with_margin(source_centre, radius));
     ASSERT(map_bounds_with_margin(target_centre, radius));
 
+    _abyss_identify_area_to_shift(source_centre, radius,
+                                  &abyss_destruction_mask);
+
     // Shift sanctuary centre if it's close.
     _abyss_move_sanctuary(you.pos(), target_centre);
 
     // Zap everything except the area we're shifting, so that there's
     // nothing in the way of moving stuff.
-    _abyss_wipe_area(radius, abyss_destruction_mask);
+    _abyss_wipe_unmasked_area(abyss_destruction_mask);
 
     // Move stuff to its new home. This will also move the player.
-    _abyss_move_entities(radius, target_centre);
-
-    // Keep track of wiped areas. This discards the mask set by the
-    // last wipe, which is obsolete.
-    abyss_destruction_mask.init(false);
+    _abyss_move_entities(target_centre, &abyss_destruction_mask);
 
     // [ds] Rezap everything except the shifted area. NOTE: the old
     // code did not do this, leaving a repeated swatch of Abyss behind
     // at the old location for every shift; discussions between Linley
     // and dpeg on ##crawl confirm that this (repeated swatch of
     // terrain left behind) was not intentional.
-    _abyss_wipe_area(radius, abyss_destruction_mask);
+    _abyss_wipe_unmasked_area(abyss_destruction_mask);
+
+    // So far we've used the mask to track the portions of the level we're
+    // preserving. The inverse of the mask represents the area to be filled
+    // with brand new abyss:
+    _abyss_invert_mask(&abyss_destruction_mask);
+
+    // Update env.level_vaults to discard any vaults that are no longer in
+    // the picture.
+    dgn_erase_unused_vault_placements();
 }
 
 static void _abyss_generate_monsters(int nmonsters)
@@ -790,11 +864,6 @@ void abyss_area_shift(void)
     {
         xom_abyss_feature_amusement_check xomcheck;
 
-        // Preserve floor props around the player, primarily so that
-        // blood-splatter doesn't appear out of nowhere when doing an
-        // area shift.
-        const los_env_props_t los_env_props = _env_props_in_los();
-
         // Use a map mask to track the areas that the shift destroys and
         // that must be regenerated by _generate_area.
         map_mask abyss_genlevel_mask;
@@ -804,7 +873,6 @@ void abyss_area_shift(void)
 
         // Update LOS at player's new abyssal vacation retreat.
         los_changed();
-        _env_props_apply_to_los(los_env_props);
     }
 
     // Place some monsters to keep the abyss party going.
@@ -832,11 +900,13 @@ static void _abyss_generate_new_area()
     tile_init_flavour();
 #endif
 
-    map_mask abyss_genlevel_mask;
-    _abyss_wipe_area(-1, abyss_genlevel_mask);
+    map_mask abyss_genlevel_mask(false);
+    _abyss_wipe_unmasked_area(abyss_genlevel_mask);
+    dgn_erase_unused_vault_placements();
     ASSERT( env.cloud_no == 0 );
 
     you.moveto(ABYSS_CENTRE);
+    abyss_genlevel_mask.init(true);
     _generate_area(abyss_genlevel_mask, true);
     grd(you.pos()) = DNGN_FLOOR;
     if (one_chance_in(5))

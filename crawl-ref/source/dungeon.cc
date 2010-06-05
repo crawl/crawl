@@ -437,12 +437,70 @@ void dgn_clear_vault_placements(vault_placement_refv &vps)
     vps.clear();
 }
 
+// Removes vaults that are not referenced in the map index mask from
+// the level_vaults array.
+void dgn_erase_unused_vault_placements()
+{
+    std::set<int> referenced_vault_indexes;
+    for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
+    {
+        const int map_index = env.level_map_ids(*ri);
+        if (map_index != INVALID_MAP_INDEX)
+            referenced_vault_indexes.insert(map_index);
+    }
+
+    // Walk backwards and toss unused vaults.
+    std::map<int, int> new_vault_index_map;
+    const int nvaults = env.level_vaults.size();
+    for (int i = nvaults - 1; i >= 0; --i)
+    {
+        if (referenced_vault_indexes.find(i) == referenced_vault_indexes.end())
+        {
+            vault_placement *vp = env.level_vaults[i];
+            // Unreferenced vault, blow it away
+            dprf("Removing references to unused map #%d) '%s' (%d,%d) (%d,%d)",
+                 i, vp->map.name.c_str(), vp->pos.x, vp->pos.y,
+                 vp->size.x, vp->size.y);
+            delete vp;
+            env.level_vaults.erase(env.level_vaults.begin() + i);
+
+            // Fix new indexes for all higher indexed vaults that are
+            // still referenced.
+            for (int j = i + 1; j < nvaults; ++j)
+            {
+                std::map<int, int>::iterator imap =
+                    new_vault_index_map.find(j);
+                if (imap != new_vault_index_map.end())
+                    --imap->second;
+            }
+        }
+        else
+        {
+            // Vault is still referenced, make a note of this index.
+            new_vault_index_map[i] = i;
+        }
+    }
+
+    // Finally, update the index map.
+    for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
+    {
+        const int map_index = env.level_map_ids(*ri);
+        if (map_index != INVALID_MAP_INDEX)
+        {
+            std::map<int, int>::iterator imap =
+                new_vault_index_map.find(map_index);
+            if (imap != new_vault_index_map.end())
+                env.level_map_ids(*ri) = imap->second;
+        }
+    }
+}
+
 void level_clear_vault_memory()
 {
     dgn_clear_vault_placements(env.level_vaults);
     Temp_Vaults.clear();
     env.level_map_mask.init(0);
-    env.level_map_ids.init(-1);
+    env.level_map_ids.init(INVALID_MAP_INDEX);
 }
 
 void dgn_flush_map_memory()

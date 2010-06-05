@@ -45,6 +45,7 @@ enum portal_type
 };
 
 const int MAKE_GOOD_ITEM = 351;
+const unsigned short INVALID_MAP_INDEX = 10000;
 
 // Should be the larger of GXM/GYM
 #define MAP_SIDE ( (GXM) > (GYM) ? (GXM) : (GYM) )
@@ -199,6 +200,7 @@ bool builder(int level_number, int level_type, bool enable_random_maps = true);
 void dgn_veto_level();
 
 void dgn_clear_vault_placements(vault_placement_refv &vps);
+void dgn_erase_unused_vault_placements();
 void dgn_flush_map_memory();
 
 double dgn_degrees_to_radians(int degrees);

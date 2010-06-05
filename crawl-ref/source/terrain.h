@@ -84,6 +84,13 @@ void dungeon_terrain_changed(const coord_def &pos,
                              bool preserve_features = false,
                              bool preserve_items = false);
 
+// Moves everything on the level at src to dst.
+void dgn_move_entities_at(coord_def src,
+                          coord_def dst,
+                          bool move_player,
+                          bool move_monster,
+                          bool move_items);
+
 bool swap_features(const coord_def &pos1, const coord_def &pos2,
                    bool swap_everything = false, bool announce = true);
 
