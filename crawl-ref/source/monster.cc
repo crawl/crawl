@@ -3602,17 +3602,17 @@ int monsters::res_magic() const
     u /= 100;
 
     // ego armour resistance
-    const int armour = inv[MSLOT_ARMOUR];
+    const int _armour = inv[MSLOT_ARMOUR];
     const int _shield = inv[MSLOT_SHIELD];
 
-    if (armour != NON_ITEM
-        && get_armour_ego_type( mitm[armour] ) == SPARM_MAGIC_RESISTANCE )
+    if (_armour != NON_ITEM
+        && get_armour_ego_type(mitm[_armour]) == SPARM_MAGIC_RESISTANCE)
     {
         u += 30;
     }
 
     if (_shield != NON_ITEM
-        && get_armour_ego_type( mitm[_shield] ) == SPARM_MAGIC_RESISTANCE )
+        && get_armour_ego_type(mitm[_shield]) == SPARM_MAGIC_RESISTANCE)
     {
         u += 30;
     }
