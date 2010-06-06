@@ -1805,7 +1805,8 @@ void timeout_tombs(int duration)
         cmark->duration -= duration;
 
         // Tombs without monsters in them disappear early.
-        if (cmark->duration <= 0 || !monster_at(cmark->pos))
+        monsters *mon_entombed = monster_at(cmark->pos);
+        if (cmark->duration <= 0 || !mon_entombed)
         {
             _drop_tomb(cmark->pos);
 
@@ -1817,8 +1818,11 @@ void timeout_tombs(int duration)
                                                       : NULL;
 
             // Zin's Imprison ability.
-            if (cmark->source == -GOD_ZIN && mon_targ)
+            if (cmark->source == -GOD_ZIN && mon_targ
+                && mon_targ == mon_entombed)
+            {
                 zin_recite_to_single_monster(mon_targ->pos());
+            }
             // A monster's Tomb of Doroklohe spell.
             else if (mon_src)
                 mon_src->lose_energy(EUT_SPELL);
