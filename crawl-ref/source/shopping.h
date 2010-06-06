@@ -19,6 +19,9 @@ void shop();
 
 shop_struct *get_shop(const coord_def& where);
 
+void destroy_shop_at(coord_def p);
+void destroy_shop(shop_struct *shop);
+
 std::string shop_name(const coord_def& where);
 std::string shop_name(const coord_def& where, bool add_stop);
 

@@ -2080,6 +2080,22 @@ void shop()
         mpr("You can access your shopping list by pressing '$'.");
 }
 
+void destroy_shop(shop_struct *shop)
+{
+    if (shop)
+    {
+        unnotice_feature(level_pos(level_id::current(), shop->pos));
+
+        shop->pos  = coord_def(0, 0);
+        shop->type = SHOP_UNASSIGNED;
+    }
+}
+
+void destroy_shop_at(coord_def p)
+{
+    destroy_shop(get_shop(p));
+}
+
 shop_struct *get_shop(const coord_def& where)
 {
     if (grd(where) != DNGN_ENTER_SHOP)
