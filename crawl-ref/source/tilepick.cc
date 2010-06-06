@@ -329,6 +329,14 @@ tileidx_t tileidx_feature(dungeon_feature_type feat, const coord_def &gc)
     }
 }
 
+tileidx_t tileidx_out_of_bounds(int branch)
+{
+    if (branch == BRANCH_SHOALS)
+        return (TILE_DNGN_OPEN_SEA | TILE_FLAG_UNSEEN);
+    else
+        return (TILE_DNGN_UNSEEN | TILE_FLAG_UNSEEN);
+}
+
 static tileidx_t _get_random_monster_tile(const monsters *mon,
                                           tileidx_t base_tile)
 {

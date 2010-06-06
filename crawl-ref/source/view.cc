@@ -773,12 +773,13 @@ static void player_view_update()
         deferred_exclude_update();
 }
 
-static void _draw_unseen(screen_cell_t *cell, const coord_def &gc)
+static void _draw_out_of_bounds(screen_cell_t *cell)
 {
     cell->glyph  = ' ';
     cell->colour = DARKGREY;
 #ifdef USE_TILE
-    tileidx_unseen(&cell->tile_fg, &cell->tile_bg, ' ', gc);
+    cell->tile_fg = 0;
+    cell->tile_bg = tileidx_out_of_bounds(you.where_are_you);
 #endif
 }
 
@@ -927,7 +928,7 @@ void viewwindow(bool monster_updates, bool show_updates)
         const coord_def ep = view2show(grid2view(gc));
 
         if (!map_bounds(gc))
-            _draw_unseen(cell, gc);
+            _draw_out_of_bounds(cell);
         else if (!crawl_view.in_grid_los(gc))
             _draw_outside_los(cell, gc);
         else if (gc == you.pos() && you.on_current_level && !_show_terrain
