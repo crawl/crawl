@@ -340,16 +340,30 @@ formatted_string describe_mutations()
         break;
     }
 
-    // a bit more stuff
-    if (player_genus(GENPC_OGREISH) || you.species == SP_TROLL
-        || player_genus(GENPC_DRACONIAN) || you.species == SP_SPRIGGAN)
+    switch(you.body_size(PSIZE_TORSO, true))
     {
-        result += "Your body does not fit into most forms of armour.\n";
+    case SIZE_LITTLE:
+        result += "You are tiny and cannot use many weapons and most armour.\n";
         have_any = true;
+        break;
+    case SIZE_SMALL:
+        result += "You are small and have problems with some larger weapons.\n";
+        have_any = true;
+        break;
+    case SIZE_LARGE:
+        result += "You are too large for most types of armour.\n";
+        have_any = true;
+        break;
+    default:
+        ;
     }
 
     if (player_genus(GENPC_DRACONIAN))
     {
+        // Draconians are large for the purposes of armour, but only medium for
+        // weapons and carrying capacity.
+        result += "Your body does not fit into most forms of armour.\n";
+
         int ac = (you.experience_level < 8) ? 2 :
                  (you.species == SP_GREY_DRACONIAN)
                      ? (you.experience_level - 4) / 2 + 1 :
