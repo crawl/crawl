@@ -22,7 +22,6 @@
 #define BUILD_METHOD_KEY "build_method_key"
 #define LAYOUT_TYPE_KEY  "layout_type_key"
 #define LEVEL_VAULTS_KEY "level_vaults_key"
-#define TEMP_VAULTS_KEY  "temp_vaults_key"
 #define LEVEL_EXTRAS_KEY "level_extras_key"
 #define LEVEL_ID_KEY     "level_id_key"
 

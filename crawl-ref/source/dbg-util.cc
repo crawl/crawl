@@ -122,25 +122,6 @@ void debug_dump_levgen()
                  i->second.get_string().c_str());
     }
     mpr("");
-
-    mpr("Temp vaults:");
-    if (!props.exists(TEMP_VAULTS_KEY))
-        mpr("ABSENT");
-    else
-    {
-        const CrawlHashTable &vaults = props[TEMP_VAULTS_KEY].get_table();
-        if (!vaults.empty())
-        {
-            CrawlHashTable::const_iterator i = vaults.begin();
-
-            for (; i != vaults.end(); ++i)
-            {
-                mprf("    %s: %s", i->first.c_str(),
-                     i->second.get_string().c_str());
-            }
-        }
-    }
-    mpr("");
 }
 
 void error_message_to_player(void)
