@@ -428,20 +428,16 @@ void immolation(int pow, int caster, coord_def where, bool known,
     beam.explode();
 }
 
-static bool _conduct_electricity_hit(bolt& beam, actor* victim,
-                                     int dmg, int corpse)
+static bool _conduct_electricity_affects_actor(const bolt& beam,
+                                               const actor* victim)
 {
-    if (!victim->alive() || victim->res_elec() > 0 || victim->airborne())
-        return (false);
-
-    return (true);
+    return (victim->alive() && victim->res_elec() <= 0 && !victim->airborne());
 }
 
 static bool _conduct_electricity_damage(bolt &beam, actor* victim,
                                         int &dmg, std::string &dmg_msg)
 {
     dmg = (10 + random2(15)) / 2;
-
     return (false);
 }
 
@@ -470,8 +466,8 @@ void conduct_electricity(coord_def where, actor *attacker)
     beam.effect_known  = true;
     beam.affects_items = false;
     beam.aoe_funcs.push_back(_conduct_electricity_aoe);
-    beam.hit_funcs.push_back(_conduct_electricity_hit);
     beam.damage_funcs.push_back(_conduct_electricity_damage);
+    beam.affect_func   = _conduct_electricity_affects_actor;
 
     if (attacker == &you)
     {

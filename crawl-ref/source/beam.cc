@@ -469,24 +469,43 @@ static void _zappy(zap_type z_type, int power, bolt &pbolt)
         pbolt.loudness = zinfo->hit_loudness;
 }
 
-// Affect monster in wall unless it can shield itself using the wall.
-// The wall will always shield the monster if the beam bounces off the
+bool bolt::can_affect_actor(const actor *act) const
+{
+    // If there's a function that checks whether an actor is affected,
+    // bypass any generic beam-affects-X logic:
+    if (affect_func)
+        return (*affect_func)(*this, act);
+
+    return !act->submerged();
+}
+
+bool bolt::actor_wall_shielded(const actor *act) const
+{
+    return (act->atype() == ACT_PLAYER? false :
+            mons_wall_shielded(act->as_monster()));
+}
+
+// Affect actor in wall unless it can shield itself using the wall.
+// The wall will always shield the actor if the beam bounces off the
 // wall, and a monster can't use a metal wall to shield itself from
 // electricity.
-bool bolt::can_affect_wall_monster(const monsters* mon) const
+bool bolt::can_affect_wall_actor(const actor *act) const
 {
+    if (!can_affect_actor(act))
+        return (false);
+
     if (is_enchantment())
         return (true);
 
-    const bool superconductor = (grd(mon->pos()) == DNGN_METAL_WALL
+    const bool superconductor = (grd(act->pos()) == DNGN_METAL_WALL
                                  && flavour == BEAM_ELECTRICITY);
-    if (mons_wall_shielded(mon) && !superconductor)
+    if (actor_wall_shielded(act) && !superconductor)
         return (false);
 
     if (!is_explosion && !is_big_cloud)
         return (true);
 
-    if (is_bouncy(grd(mon->pos())))
+    if (is_bouncy(grd(act->pos())))
         return (false);
 
     return (false);
@@ -1170,15 +1189,15 @@ void bolt::affect_cell()
     if (was_solid)
     {
         // Some special casing.
-        if (monsters* mon = monster_at(pos()))
+        if (actor *act = actor_at(pos()))
         {
-            if (can_affect_wall_monster(mon))
-                affect_monster(mon);
+            if (can_affect_wall_actor(act))
+                affect_actor(act);
             else
             {
                 mprf("The %s protects %s from harm.",
-                     raw_feature_description(grd(mon->pos())).c_str(),
-                     mon->name(DESC_NOCAP_THE).c_str());
+                     raw_feature_description(grd(act->pos())).c_str(),
+                     act->name(DESC_NOCAP_THE).c_str());
             }
         }
 
@@ -1193,7 +1212,7 @@ void bolt::affect_cell()
     // If the player can ever walk through walls, this will need
     // special-casing too.
     bool hit_player = found_player();
-    if (hit_player)
+    if (hit_player && can_affect_actor(&you))
         affect_player();
 
     // We don't want to hit a monster in a wall square twice. Also,
@@ -1202,7 +1221,7 @@ void bolt::affect_cell()
     const bool still_wall = (was_solid && old_pos == pos());
     if ((!hit_player || is_beam || is_explosion) && !still_wall)
         if (monsters* m = monster_at(pos()))
-            if (!m->submerged())
+            if (can_affect_actor(m))
                 affect_monster(m);
 
     if (!feat_is_solid(grd(pos())))
@@ -1552,9 +1571,9 @@ int mons_adjust_flavoured(monsters *monster, bolt &pbolt, int hurted,
         else if (res <= 0 && doFlavouredEffects)
         {
             corrode_monster(monster);
-        } 
+        }
         break;
-    }    
+    }
 
     case BEAM_POISON:
     {
@@ -3379,6 +3398,13 @@ void bolt::affect_player_enchantment()
     extra_range_used += range_used_on_hit(&you);
 }
 
+void bolt::affect_actor(actor *act)
+{
+    if (act->atype() == ACT_MONSTER)
+        affect_monster(act->as_monster());
+    else
+        affect_player();
+}
 
 void bolt::affect_player()
 {
@@ -5376,14 +5402,16 @@ bolt::bolt() : origin_spell(SPELL_NO_SPELL),
                is_big_cloud(false), aimed_at_spot(false), aux_source(),
                affects_nothing(false), affects_items(true), effect_known(true),
                draw_delay(15), special_explosion(NULL), range_funcs(),
-               damage_funcs(), hit_funcs(), aoe_funcs(), obvious_effect(false),
-               seen(false), heard(false), path_taken(), extra_range_used(0),
-               is_tracer(false), aimed_at_feet(false), msg_generated(false),
+               damage_funcs(), hit_funcs(), aoe_funcs(), affect_func(NULL),
+               obvious_effect(false), seen(false), heard(false),
+               path_taken(), extra_range_used(0), is_tracer(false),
+               aimed_at_feet(false), msg_generated(false),
                passed_target(false), in_explosion_phase(false),
                smart_monster(false), can_see_invis(false),
                attitude(ATT_HOSTILE), foe_ratio(0), chose_ray(false),
-               beam_cancelled(false), dont_stop_player(false), bounces(false),
-               bounce_pos(), reflections(0), reflector(-1), auto_hit(false)
+               beam_cancelled(false), dont_stop_player(false),
+               bounces(false), bounce_pos(), reflections(0),
+               reflector(-1), auto_hit(false)
 {
 }
 
