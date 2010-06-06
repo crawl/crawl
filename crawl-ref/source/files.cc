@@ -1546,13 +1546,18 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
         place_transiting_items();
     }
 
-    if (load_mode != LOAD_VISITOR)
+    if (make_changes)
     {
         // Tell stash-tracker and travel that we've changed levels.
         trackers_init_new_level(true);
 #ifdef USE_TILE
         tile_new_level(just_created_level);
 #endif
+    }
+    else if (load_mode == LOAD_RESTART_GAME)
+    {
+        // Travel needs initialize some things on reload, too.
+        travel_init_load_level();
     }
 
     _redraw_all();
