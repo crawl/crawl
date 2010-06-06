@@ -378,11 +378,8 @@ static void _tile_exclude_gmap_update(const coord_def &p)
 
 static void _exclude_update()
 {
-    if (can_travel_interlevel())
-    {
-        LevelInfo &li = travel_cache.get_level_info(level_id::current());
-        li.update();
-    }
+    LevelInfo &li = travel_cache.get_level_info(level_id::current());
+    li.update();
     set_level_exclusion_annotation(curr_excludes.get_exclusion_desc());
 }
 
