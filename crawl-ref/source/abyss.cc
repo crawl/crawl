@@ -36,6 +36,7 @@
 #include "los.h"
 #include "random.h"
 #include "religion.h"
+#include "shopping.h"
 #include "showsymb.h"
 #include "sprint.h"
 #include "state.h"
@@ -625,6 +626,9 @@ static void _abyss_move_sanctuary(const coord_def abyss_shift_start_centre,
 static void _abyss_wipe_square_at(coord_def p)
 {
     // Nuke terrain.
+    destroy_shop_at(p);
+    destroy_trap(p);
+
     grd(p) = DNGN_UNSEEN;
 
     // Nuke items.

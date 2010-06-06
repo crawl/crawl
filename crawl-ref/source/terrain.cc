@@ -693,7 +693,10 @@ static bool _is_feature_shift_target(const coord_def &pos, void*)
     return (grd(pos) == DNGN_FLOOR && !dungeon_events.has_listeners_at(pos));
 }
 
-// Moves everything at src to dst.
+// Moves everything at src to dst. This is not a swap operation: src
+// will be left with the same feature it started with, and should be
+// overwritten with something new.
+//
 // Things that are moved:
 // 1. Dungeon terrain (set to DNGN_UNSEEN)
 // 2. Actors (including the player)
@@ -713,12 +716,21 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
         return;
 
     // Move terrain.
-    const dungeon_feature_type dfeat = (grd(dst) = grd(src));
+    move_notable_thing(src, dst);
+
+    const dungeon_feature_type dfeat = grd(src);
     if (dfeat == DNGN_ENTER_SHOP)
     {
         if (shop_struct *s = get_shop(src))
             s->pos = dst;
     }
+    else if (feat_is_trap(dfeat))
+    {
+        if (trap_def *trap = find_trap(src))
+            trap->pos = dst;
+    }
+
+    grd(dst) = dfeat;
 
     if (move_monster)
     {
