@@ -293,11 +293,6 @@ void set_terrain_seen( int x, int y )
         }
     }
 
-#ifdef USE_TILE
-    cell->flags &= ~(MAP_DETECTED_ITEM);
-    cell->flags &= ~(MAP_DETECTED_MONSTER);
-#endif
-
     cell->flags &= (~MAP_CHANGED_FLAG);
     cell->flags |= MAP_SEEN_FLAG;
     cell->object.colour = get_feature_def(cell->object).seen_colour;
