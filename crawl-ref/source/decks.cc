@@ -950,9 +950,7 @@ static void _describe_cards(std::vector<card_type> cards)
     formatted_string fs = formatted_string::parse_string(data.str());
     clrscr();
     fs.display();
-    if (getch() == 0)
-        getch();
-
+    wait_for_keypress();
     redraw_screen();
 }
 

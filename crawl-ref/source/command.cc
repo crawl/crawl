@@ -1304,7 +1304,8 @@ static bool _append_books(std::string &desc, item_def &item, std::string key)
     return (true);
 }
 
-static bool _do_description(std::string key, std::string type,
+// Does not wait for keypress; the caller must do that if necessary.
+static void _do_description(std::string key, std::string type,
                             std::string footer = "")
 {
     describe_info inf;
@@ -1373,8 +1374,8 @@ static bool _do_description(std::string key, std::string type,
             else
                 mon.base_monster = MONS_NO_MONSTER;
 
-            describe_monsters(mon, true);
-            return (false);
+            describe_monsters(mon, true, footer, false);
+            return;
         }
         else
         {
@@ -1446,7 +1447,6 @@ static bool _do_description(std::string key, std::string type,
     inf.title  = key;
 
     print_description(inf);
-    return (true);
 }
 
 // Reads all questions from database/FAQ.txt, outputs them in the form of
@@ -1516,23 +1516,22 @@ static bool _handle_FAQ()
             answer = "Q: " + getFAQ_Question(key) + "\n" + answer;
             linebreak_string2(answer, width - 1);
             print_description(answer);
-            if (getchm() == 0)
-                getchm();
+            wait_for_keypress();
         }
     }
 
     return (true);
 }
 
-static bool _find_description(bool &again, std::string& error_inout)
+static void _find_description(bool *again, std::string *error_inout)
 {
-    again = true;
+    *again = true;
 
     clrscr();
     viewwindow(false);
 
-    if (!error_inout.empty())
-        mpr(error_inout.c_str(), MSGCH_PROMPT);
+    if (!error_inout->empty())
+        mpr(error_inout->c_str(), MSGCH_PROMPT);
     mpr("Describe a (M)onster, (S)pell, s(K)ill, (I)tem, (F)eature, (G)od, "
         "(A)bility, (B)ranch, or (C)ard? ", MSGCH_PROMPT);
     int ch;
@@ -1610,9 +1609,9 @@ static bool _find_description(bool &again, std::string& error_inout)
         break;
 
     default:
-        error_inout = "Okay, then.";
-        again = false;
-        return (false);
+        *error_inout = "Okay, then.";
+        *again = false;
+        return;
     }
 
     std::string regex = "";
@@ -1627,8 +1626,8 @@ static bool _find_description(bool &again, std::string& error_inout)
         char buf[80];
         if (cancelable_get_line(buf, sizeof(buf)) || buf[0] == '\0')
         {
-            error_inout = "Okay, then.";
-            return (false);
+            *error_inout = "Okay, then.";
+            return;
         }
 
         if (strlen(buf) == 1)
@@ -1638,9 +1637,9 @@ static bool _find_description(bool &again, std::string& error_inout)
 
         if (regex.empty())
         {
-            error_inout = "Description must contain at least "
-                          "one non-space.";
-            return (false);
+            *error_inout = "Description must contain at least "
+                "one non-space.";
+            return;
         }
     }
 
@@ -1680,43 +1679,47 @@ static bool _find_description(bool &again, std::string& error_inout)
     {
         if (by_mon_symbol)
         {
-            error_inout  = "No monsters with symbol '";
-            error_inout += regex;
-            error_inout += "'.";
+            *error_inout  = "No monsters with symbol '";
+            *error_inout += regex;
+            *error_inout += "'.";
         }
         else if (by_item_symbol)
         {
-            error_inout  = "No items with symbol '";
-            error_inout += regex;
-            error_inout += "'.";
+            *error_inout  = "No items with symbol '";
+            *error_inout += regex;
+            *error_inout += "'.";
         }
         else
         {
-            error_inout  = "No matching ";
-            error_inout += pluralise(type);
-            error_inout += ".";
+            *error_inout  = "No matching ";
+            *error_inout += pluralise(type);
+            *error_inout += ".";
         }
-        return (false);
+        return;
     }
     else if (key_list.size() > 52)
     {
         if (by_mon_symbol)
         {
-            error_inout  = "Too many monsters with symbol '";
-            error_inout += regex;
-            error_inout += "' to display";
+            *error_inout  = "Too many monsters with symbol '";
+            *error_inout += regex;
+            *error_inout += "' to display";
         }
         else
         {
             std::ostringstream os;
             os << "Too many matching " << pluralise(type)
                << " (" << key_list.size() << ") to display.";
-            error_inout = os.str();
+            *error_inout = os.str();
         }
-        return (false);
+        return;
     }
     else if (key_list.size() == 1)
-        return _do_description(key_list[0], type);
+    {
+        _do_description(key_list[0], type);
+        wait_for_keypress();
+        return;
+    }
 
     if (exact_match)
     {
@@ -1725,9 +1728,8 @@ static bool _find_description(bool &again, std::string& error_inout)
         footer += "'.  To see non-exact matches, press space.";
 
         _do_description(regex, type, footer);
-
         if (getchm() != ' ')
-            return (false);
+            return;
     }
 
     if (want_sort)
@@ -1827,7 +1829,7 @@ static bool _find_description(bool &again, std::string& error_inout)
             if (doing_mons && desc_menu.getkey() == CONTROL('S'))
                 desc_menu.toggle_sorting();
             else
-                return (false);
+                return;
         }
         else
         {
@@ -1846,15 +1848,27 @@ static bool _find_description(bool &again, std::string& error_inout)
             else
                 key = *((std::string*) sel[0]->data);
 
-            if (_do_description(key, type))
-            {
-                if (getchm() == 0)
-                    getchm();
-            }
+            _do_description(key, type);
+            wait_for_keypress();
         }
     }
+}
 
-    return (false);
+static void _keyhelp_query_descriptions()
+{
+    bool again = false;
+    std::string error;
+    do
+    {
+        // resets 'again'
+        _find_description(&again, &error);
+
+        if (again)
+            mesclr();
+    }
+    while (again);
+
+    viewwindow(false);
 }
 
 static int _keyhelp_keyfilter(int ch)
@@ -1871,24 +1885,8 @@ static int _keyhelp_keyfilter(int ch)
         break;
 
     case '/':
-    {
-        bool again = false;
-        std::string error;
-        do
-        {
-            // resets 'again'
-            if (_find_description(again, error) && getchm() == 0)
-                getchm();
-
-            if (again)
-                mesclr();
-        }
-        while (again);
-
-        viewwindow(false);
-
+        _keyhelp_query_descriptions();
         return -1;
-    }
 
     case 'q':
     case 'Q':

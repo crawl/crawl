@@ -187,6 +187,13 @@ std::string &escape_path_spaces(std::string &s)
     return s;
 }
 
+void wait_for_keypress()
+{
+    // Double getchm() was necessary if first call returned zero; this
+    // should theoretically be needed only for DOS.
+    getchm() || getchm();
+}
+
 std::string &uppercase(std::string &s)
 {
     for (unsigned i = 0, sz = s.size(); i < sz; ++i)

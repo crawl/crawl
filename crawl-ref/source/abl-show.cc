@@ -862,9 +862,7 @@ static void _print_talent_description(const talent& tal)
         data << name << "\n\n" << lookup;
         print_description(data.str());
     }
-    if (getchm() == 0)
-        getchm();
-
+    wait_for_keypress();
     clrscr();
 }
 

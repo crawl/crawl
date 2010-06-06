@@ -32,6 +32,8 @@ std::string &lowercase(std::string &s);
 std::string &uppercase(std::string &s);
 std::string upcase_first(std::string);
 
+void wait_for_keypress();
+
 // Unscales a fixed-point number, rounding up.
 static inline int unscale_round_up(int number, int scale)
 {
