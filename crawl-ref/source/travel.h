@@ -411,6 +411,11 @@ public:
         return (i != levels.end()? &i->second : NULL);
     }
 
+    void erase_level_info(const level_id& lev)
+    {
+        levels.erase(lev);
+    }
+
     bool know_stair(const coord_def &c) const;
     bool know_level(const level_id &lev) const
     {

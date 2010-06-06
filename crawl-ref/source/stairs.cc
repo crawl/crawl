@@ -741,6 +741,11 @@ void up_stairs(dungeon_feature_type force_stair,
             }
         }
     }
+    else // !collect_travel_data
+    {
+        travel_cache.erase_level_info(old_level_id);
+    }
+
     request_autopickup();
 }
 

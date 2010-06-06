@@ -3666,27 +3666,12 @@ void TravelCache::save(writer& outf) const
     marshallByte(outf, TC_MAJOR_VERSION);
     marshallByte(outf, TC_MINOR_VERSION);
 
-    int level_count = 0;
-    for (travel_levels_map::const_iterator i = levels.begin();
-         i != levels.end(); ++i)
-    {
-        if (i->first.level_type == LEVEL_DUNGEON)
-            ++level_count;
-    }
+    // Write level count.
+    marshallShort(outf, levels.size());
 
-    // Write level count:
-    marshallShort(outf, level_count);
-
-    // Save all the LEVEL_DUNGEON levels we have
     std::map<level_id, LevelInfo>::const_iterator i = levels.begin();
     for ( ; i != levels.end(); ++i)
     {
-        // LevelInfos will also be created for levels in the Abyss and
-        // Pandemonium, but they shouldn't be saved because the
-        // information in them is useless.
-        if (i->first.level_type != LEVEL_DUNGEON)
-            continue;
-
         i->first.save(outf);
         i->second.save(outf);
     }
@@ -3710,11 +3695,21 @@ void TravelCache::load(reader& inf, char minorVersion)
     {
         level_id id;
         id.load(inf);
+
         LevelInfo linfo;
         // Must set id before load, or travel_hell_entry will not be
         // correctly set.
         linfo.id = id;
         linfo.load(inf, minorVersion);
+
+        // Non-dungeon levels aren't persistent, but we do
+        // save the current level.
+        if (id.level_type != LEVEL_DUNGEON && id != level_id::current())
+        {
+            ASSERT(false);
+            continue;
+        }
+
         levels[id] = linfo;
     }
 
@@ -3726,14 +3721,12 @@ void TravelCache::load(reader& inf, char minorVersion)
 
 void TravelCache::set_level_excludes()
 {
-    if (can_travel_interlevel())
-        get_level_info(level_id::current()).set_level_excludes();
+    get_level_info(level_id::current()).set_level_excludes();
 }
 
 void TravelCache::update()
 {
-    if (can_travel_interlevel())
-        get_level_info(level_id::current()).update();
+    get_level_info(level_id::current()).update();
 }
 
 void TravelCache::fixup_levels()
