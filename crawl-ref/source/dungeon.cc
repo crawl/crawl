@@ -4960,12 +4960,12 @@ int dgn_place_monster(mons_spec &mspec,
             int tries = 100;
             do
                 mg.cls = pick_random_monster(mspec.place, lev, lev, NULL);
-            while (mg.cls != MONS_NO_MONSTER
-                     && mons_class_is_zombified(mspec.monbase)
-                     && !mons_zombie_size(mg.cls)
-                     && tries-- > 0);
+            while (!invalid_monster_type(mg.cls)
+                   && mons_class_is_zombified(mspec.monbase)
+                   && !mons_zombie_size(mg.cls)
+                   && tries-- > 0);
 
-            if (mg.cls == MONS_NO_MONSTER
+            if (invalid_monster_type(mg.cls)
                 || (mons_class_is_zombified(mspec.monbase)
                     && !mons_zombie_size(mg.cls)))
             {

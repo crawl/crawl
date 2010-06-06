@@ -423,6 +423,8 @@ void spawn_random_monsters()
     // No random monsters in the Labyrinth.
 }
 
+// Caller must use !invalid_monster_type to check if the return value
+// is a real monster.
 monster_type pick_random_monster(const level_id &place,
                                  bool *chose_ood_monster)
 {
@@ -450,6 +452,8 @@ std::vector<monster_type> _find_valid_monster_types(const level_id &place)
     return (valid_monster_types);
 }
 
+// Caller must use !invalid_monster_type to check if the return value
+// is a real monster.
 monster_type pick_random_monster(const level_id &place, int power,
                                  int &lev_mons,
                                  bool *chose_ood_monster)
