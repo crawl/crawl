@@ -1824,8 +1824,11 @@ void timeout_tombs(int duration)
                 zin_recite_to_single_monster(mon_targ->pos());
             }
             // A monster's Tomb of Doroklohe spell.
-            else if (mon_src)
+            else if (mon_src
+                && mon_src == mon_entombed)
+            {
                 mon_src->lose_energy(EUT_SPELL);
+            }
 
             env.markers.remove(cmark);
         }
