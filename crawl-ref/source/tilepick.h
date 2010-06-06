@@ -18,6 +18,7 @@ class monsters;
 
 // Tile index lookup from Crawl data.
 tileidx_t tileidx_feature(dungeon_feature_type feat, const coord_def &gc);
+tileidx_t tileidx_out_of_bounds(int branch);
 
 tileidx_t tileidx_monster_base(const monsters *mon, bool detected = false);
 tileidx_t tileidx_monster(const monsters *mon, bool detected = false);
