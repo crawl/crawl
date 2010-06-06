@@ -90,7 +90,7 @@ CFOPTIMIZE := -O2
 
 endif # USE_ICC
 
-CFOTHERS := -fno-strict-aliasing -pipe $(EXTERNAL_FLAGS)
+CFOTHERS := -pipe $(EXTERNAL_FLAGS)
 CFOTHERS_L := -fsigned-char
 CFWARN := -Wall
 CFWARN_L := -Wundef
