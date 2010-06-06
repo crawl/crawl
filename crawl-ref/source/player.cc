@@ -208,7 +208,7 @@ static bool _check_moveto_trap(const coord_def& p)
              if (type != TRAP_SHAFT // Known shafts aren't traps
                  && (new_grid != DNGN_TRAP_MECHANICAL
                  || !clua.callbooleanfn(false, "ch_cross_trap",
-                                        "s", trap_name(p))))
+                                        "s", trap_name_at(p))))
 #endif
         {
             std::string prompt = make_stringf(
