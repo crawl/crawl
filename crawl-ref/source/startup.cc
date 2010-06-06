@@ -301,7 +301,8 @@ void _post_init(bool newc)
 
     // XXX: And run Lua map postludes for D:1. Kinda hacky, it shouldn't really
     // be here.
-    run_map_epilogues();
+    if (newc)
+        run_map_epilogues();
 }
 
 /**
