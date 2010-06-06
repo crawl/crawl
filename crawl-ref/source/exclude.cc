@@ -449,9 +449,7 @@ void del_exclude(const coord_def &p)
 void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl,
                  bool defer_updates)
 {
-    // Sanity checks; excludes can be set in Pan and regular dungeon
-    // levels only.
-    if (!player_in_mappable_area())
+    if (!player_in_mappable_area()) // currently only Abyss
         return;
 
     if (!in_bounds(p))
