@@ -3008,18 +3008,20 @@ int create_monster(mgen_data mg, bool fail_msg)
         if (mg.god != GOD_NO_GOD && mg.god != GOD_XOM)
         {
             monsters dummy;
+            const monster_type resistless_mon = MONS_HUMAN;
             // If the type isn't known yet assume no resists or anything.
-            dummy.type         = (mg.cls == RANDOM_MONSTER) ? MONS_HUMAN
+            dummy.type         = (mg.cls == RANDOM_MONSTER) ? resistless_mon
                                                             : mg.cls;
             dummy.base_monster = mg.base_type;
             dummy.god          = mg.god;
 
-            // FIXME: resistence checks use the ghost_demon member for
-            // monster types that use it, so a call to mons_avoids_cloud()
-            // will crash for dummy monsters which should have a
+            // Monsters that have resistance info in the ghost
+            // structure cannot be handled as dummies, so treat them
+            // as a known no-resist monster. mons_avoids_cloud() will
+            // crash for dummy monsters which should have a
             // ghost_demon setup.
             if (mons_is_ghost_demon(dummy.type))
-                return (-1);
+                dummy.type = resistless_mon;
 
             int tries = 0;
             while (tries++ < 50
