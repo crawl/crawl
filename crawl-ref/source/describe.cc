@@ -2202,8 +2202,7 @@ void describe_feature_wide(const coord_def& pos)
     if (Hints.hints_left)
         hints_describe_pos(pos.x, pos.y);
 
-    if (getchm() == 0)
-        getchm();
+    wait_for_keypress();
 }
 
 void set_feature_desc_long(const std::string &raw_name,
@@ -2369,8 +2368,10 @@ bool describe_item( item_def &item, bool allow_inscribe, bool shopping )
         cgotoxy(1, wherey() + 2);
         inscribe_item(item, false);
     }
-    else if (getchm() == 0)
-        getchm();
+    else
+    {
+        wait_for_keypress();
+    }
 
     return (true);
 }
@@ -3139,11 +3140,23 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
 #endif
 }
 
-void describe_monsters(const monsters& mons, bool force_seen)
+void describe_monsters(const monsters& mons, bool force_seen,
+                       const std::string &footer,
+                       bool wait_until_keypressed)
 {
     describe_info inf;
     bool has_stat_desc = false;
+
     get_monster_db_desc(mons, inf, has_stat_desc, force_seen);
+
+    if (!footer.empty())
+    {
+        if (inf.footer.empty())
+            inf.footer = footer;
+        else
+            inf.footer += "\n" + footer;
+    }
+
     print_description(inf);
 
     mouse_control mc(MOUSE_MODE_MORE);
@@ -3153,8 +3166,8 @@ void describe_monsters(const monsters& mons, bool force_seen)
     if (Hints.hints_left)
         hints_describe_monster(&mons, has_stat_desc);
 
-    if (getchm() == 0)
-        getchm();
+    if (wait_until_keypressed)
+        wait_for_keypress();
 }
 
 // Describes the current ghost's previous owner. The caller must
@@ -4039,8 +4052,7 @@ void describe_skill(int skill)
     data << get_skill_description(skill, true);
 
     print_description(data.str());
-    if (getchm() == 0)
-        getchm();
+    wait_for_keypress();
 }
 
 void alt_desc_proc::nextline()
