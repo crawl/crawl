@@ -1673,6 +1673,11 @@ public:
             // Then by decreasing number of matches
             return (lhs.matches > rhs.matches);
         }
+        else if (lhs.match != rhs.match)
+        {
+            // Then by name.
+            return (lhs.match < rhs.match);
+        }
         else
             return (false);
     }
