@@ -63,13 +63,18 @@ static void _mon_check_foe_invalid(monsters *mon)
 {
     if (mon->foe != MHITNOT && mon->foe != MHITYOU)
     {
-        const monsters *foe_monster = mon->get_foe()->as_monster();
-        if (!foe_monster->alive()
-            || (mon->friendly() == foe_monster->friendly()
-                && mon->neutral() == foe_monster->neutral()))
+        if (actor *foe = mon->get_foe())
         {
-            mon->foe = MHITNOT;
+            const monsters *foe_monster = foe->as_monster();
+            if (foe_monster->alive()
+                && (mon->friendly() != foe_monster->friendly()
+                    || mon->neutral() != foe_monster->neutral()))
+            {
+                return;
+            }
         }
+
+        mon->foe = MHITNOT;
     }
 }
 
