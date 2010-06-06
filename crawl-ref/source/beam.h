@@ -50,6 +50,7 @@ typedef bool (*beam_damage_func)(bolt& beam, actor* victim, int &dmg,
 typedef bool (*beam_hit_func)(bolt& beam, actor* victim, int dmg,
                               int corpse);
 typedef bool (*explosion_aoe_func)(bolt& beam, const coord_def& target);
+typedef bool (*beam_affect_func)(const bolt &beam, const actor *victim);
 
 struct bolt
 {
@@ -114,6 +115,9 @@ struct bolt
     std::vector<explosion_aoe_func> aoe_funcs; // Function for if the
                                                // explosion only affects
                                                // certain grid positions.
+
+    // Test if the beam can affect a particular actor.
+    beam_affect_func affect_func;
 
     // OUTPUT parameters (tracing, ID)
     bool        obvious_effect;        // did an 'obvious' effect happen?
@@ -190,6 +194,8 @@ public:
 
     bool visible() const;
 
+    bool can_affect_actor(const actor *act) const;
+
 private:
     void do_fire();
     coord_def pos() const;
@@ -200,8 +206,9 @@ private:
     bool is_superhot() const;
     bool is_fiery() const;
     maybe_bool affects_wall(dungeon_feature_type wall) const;
+    bool can_affect_wall_actor(const actor *act) const;
+    bool actor_wall_shielded(const actor *act) const;
     bool is_bouncy(dungeon_feature_type feat) const;
-    bool can_affect_wall_monster(const monsters* mon) const;
     bool stop_at_target() const;
     bool has_saving_throw() const;
     bool is_harmless(const monsters *mon) const;
@@ -233,6 +240,7 @@ private:
 public:
     void affect_cell();
     void affect_wall();
+    void affect_actor(actor *act);
     void affect_monster( monsters* m );
     void affect_player();
     void affect_ground();
