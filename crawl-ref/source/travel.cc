@@ -1263,6 +1263,14 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode)
     refdist = (Options.explore_item_greed > 0) ? &unexplored_dist
                                                : &greedy_dist;
 
+    // Zap out previous distances array: this must happen before the
+    // early exit checks below, since callers may want to inspect
+    // point_distance after this call returns.
+    //
+    // point_distance will hold the distance of all points from the starting
+    // point, i.e. the distance travelled to get there.
+    memset(point_distance, 0, sizeof(travel_distance_grid_t));
+
     // Abort run if we're trying to go someplace evil. Travel to traps is
     // specifically allowed here if the player insists on it.
     if (!floodout
@@ -1305,11 +1313,6 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode)
     // overwritten with newer ones. Since we count the number of points for
     // next round in next_iter_points, we don't even need to reset the array.
     circumference[circ_index][0] = start;
-
-    // Zap out previous distances array
-    // point_distance will hold the distance of all points from the starting
-    // point, i.e. the distance travelled to get there.
-    memset(point_distance, 0, sizeof(travel_distance_grid_t));
 
     for ( ; points > 0; ++traveled_distance, circ_index = !circ_index,
                         points = next_iter_points, next_iter_points = 0)
@@ -2559,6 +2562,7 @@ static int _find_transtravel_stair( const level_id &cur,
             continue;
 
         int deltadist = li.distance_between(this_stair, &si);
+
         if (!this_stair)
         {
             deltadist = travel_point_distance[si.position.x][si.position.y];
@@ -3116,31 +3120,40 @@ void LevelInfo::update()
     update_stair_distances();
 }
 
+void LevelInfo::set_distance_between_stairs(int a, int b, int dist)
+{
+    // Note dist == 0 is illegal because we can't have two stairs on
+    // the same square.
+    if (dist <= 0 && a != b)
+        dist = -1;
+    stair_distances[a * stairs.size() + b] = dist;
+    stair_distances[b * stairs.size() + a] = dist;
+}
+
 void LevelInfo::update_stair_distances()
 {
+    const int nstairs = stairs.size();
     // Now we update distances for all the stairs, relative to all other
     // stairs.
-    for (int s = 0, end = stairs.size(); s < end; ++s)
+    for (int s = 0; s < nstairs - 1; ++s)
     {
+        set_distance_between_stairs(s, s, 0);
+
         // For each stair, we need to ask travel to populate the distance
         // array.
         find_travel_pos(stairs[s].position, NULL, NULL, NULL);
 
-        for (int other = 0; other < end; ++other)
+        // Assume movement distance between stairs is commutative,
+        // i.e. going from a->b is the same distance as b->a.
+        for (int other = s + 1; other < nstairs; ++other)
         {
-            int ox = stairs[other].position.x,
-                oy = stairs[other].position.y;
-            int dist = travel_point_distance[ox][oy];
-
-            // Note dist == 0 is illegal because we can't have two stairs on
-            // the same square.
-            if (dist <= 0)
-                dist = -1;
-
-            stair_distances[ s * stairs.size() + other ] = dist;
-            stair_distances[ other * stairs.size() + s ] = dist;
+            const coord_def op = stairs[other].position;
+            const int dist = travel_point_distance[op.x][op.y];
+            set_distance_between_stairs(s, other, dist);
         }
     }
+    if (nstairs)
+        set_distance_between_stairs(nstairs - 1, nstairs - 1, 0);
 }
 
 void LevelInfo::update_stair(const coord_def& stairpos, const level_pos &p,
