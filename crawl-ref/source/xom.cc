@@ -2932,7 +2932,7 @@ static int _xom_lose_stats(bool debug = false)
     {
         // Make sure not to lower strength so much that the player
         // will die once might wears off.
-        char      vals[3] =
+        int vals[3] =
             {you.strength() - (you.duration[DUR_MIGHT] ? 5 : 0),
              you.dex() - (you.duration[DUR_AGILITY] ? 5 : 0),
              you.intel() - (you.duration[DUR_BRILLIANCE] ? 5 : 0)};
