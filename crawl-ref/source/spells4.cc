@@ -1942,6 +1942,8 @@ bool cast_apportation(int pow, const coord_def& where)
 
     // Actually move the item.
     move_top_item(where, you.pos());
+    // Mark the item as found now.
+    origin_set(you.pos());
 
     return (true);
 }
