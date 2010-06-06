@@ -65,9 +65,6 @@ void travel_init_new_level();
 unsigned char is_waypoint(const coord_def &p);
 command_type direction_to_command(char x, char y);
 bool is_resting(void);
-#ifdef CLUA_BINDINGS
-const char *trap_name(const coord_def &p);
-#endif
 void explore_pickup_event(int did_pickup, int tried_pickup);
 bool feat_is_traversable(dungeon_feature_type feat);
 bool is_unknown_stair(const coord_def &p);

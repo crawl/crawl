@@ -509,9 +509,10 @@ void debug_make_trap()
         }
     }
 
-    place_specific_trap(you.pos(), trap);
-
-    mprf("Created a %s trap, marked it undiscovered", trap_name(trap));
+    if (place_specific_trap(you.pos(), trap))
+        mprf("Created a %s trap, marked it undiscovered", trap_name(trap));
+    else
+        mpr("Could not create trap - too many traps on level.");
 
     if (trap == TRAP_SHAFT && !is_valid_shaft_level())
         mpr("NOTE: Shaft traps aren't valid on this level.");

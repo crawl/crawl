@@ -113,8 +113,6 @@ static coord_def explore_stopped_pos;
 // The place in the Vestibule of Hell where all portals to Hell land.
 static level_pos travel_hell_entry;
 
-static bool traps_inited = false;
-
 static std::string trans_travel_dest;
 
 // Array of points on the map, each value being the distance the character
@@ -124,10 +122,6 @@ static std::string trans_travel_dest;
 travel_distance_grid_t travel_point_distance;
 
 static unsigned char curr_waypoints[GXM][GYM];
-#ifdef CLUA_BINDINGS
-static signed char curr_traps[GXM][GYM];
-#endif
-
 static FixedArray< map_cell, GXM, GYM >  mapshadow;
 
 const signed char TRAVERSABLE = 1;
@@ -206,7 +200,7 @@ inline bool is_trap(const coord_def& c)
 inline bool _is_safe_trap (const coord_def& c)
 {
 #ifdef CLUA_BINDINGS
-    if (clua.callbooleanfn(false, "ch_cross_trap", "s", trap_name(c)))
+    if (clua.callbooleanfn(false, "ch_cross_trap", "s", trap_name_at(c)))
     {
         return  (true);
     }
@@ -259,37 +253,6 @@ bool is_unknown_stair(const coord_def &p)
     dungeon_feature_type feat = env.map_knowledge(p).feat();
     return (feat_is_travelable_stair(feat) && !travel_cache.know_stair(p));
 }
-
-#ifdef CLUA_BINDINGS
-static void _init_traps()
-{
-    memset(curr_traps, -1, sizeof curr_traps);
-    for (int i = 0; i < MAX_TRAPS; ++i)
-    {
-        int x = env.trap[i].pos.x,
-            y = env.trap[i].pos.y;
-
-        if (in_bounds(x,y))
-            curr_traps[x][y] = i;
-    }
-    traps_inited = true;
-}
-
-const char *trap_name(const coord_def& c)
-{
-    if (!traps_inited)
-        _init_traps();
-
-    const int ti = curr_traps[c.x][c.y];
-    if (ti != -1)
-    {
-        int type = env.trap[ti].type;
-        if (type >= 0 && type < NUM_TRAPS)
-            return (trap_name(trap_type(type)));
-    }
-    return ("");
-}
-#endif
 
 // Returns true if the character can cross this dungeon feature.
 bool feat_is_traversable(dungeon_feature_type grid)
@@ -493,7 +456,6 @@ void init_travel_terrain_check(bool check_race_equip)
 
 void travel_init_load_level()
 {
-    traps_inited = false;
     curr_excludes.clear();
     travel_cache.set_level_excludes();
     travel_cache.update_waypoints();
