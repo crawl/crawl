@@ -1035,7 +1035,7 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
 
         // Got a place, summon the beast.
         monster_type mons = pick_random_monster(level_id(LEVEL_ABYSS));
-        if (mons == MONS_PROGRAM_BUG)
+        if (invalid_monster_type(mons))
             return (false);
 
         mgen_data mg(mons, beh, 0, 5, 0, p);
