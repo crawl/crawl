@@ -1348,6 +1348,7 @@ void merfolk_stop_swimming()
 #endif
 }
 
+// Update the trackers after the player changed level.
 void trackers_init_new_level(bool transit)
 {
     travel_init_new_level();

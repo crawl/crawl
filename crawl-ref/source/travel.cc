@@ -491,6 +491,15 @@ void init_travel_terrain_check(bool check_race_equip)
     }
 }
 
+void travel_init_load_level()
+{
+    traps_inited = false;
+    curr_excludes.clear();
+    travel_cache.set_level_excludes();
+    travel_cache.update_waypoints();
+}
+
+// This is called after the player changes level.
 void travel_init_new_level()
 {
     // Clear run details, but preserve the runmode, because we might be in
@@ -499,10 +508,7 @@ void travel_init_new_level()
     you.running.clear();
     you.running = runmode;
 
-    traps_inited = false;
-    curr_excludes.clear();
-    travel_cache.set_level_excludes();
-    travel_cache.update_waypoints();
+    travel_init_load_level();
 
     explore_stopped_pos.reset();
 }

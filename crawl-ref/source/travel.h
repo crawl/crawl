@@ -59,6 +59,7 @@ enum run_mode_type
 void initialise_travel();
 void init_travel_terrain_check(bool check_race_equip = true);
 void stop_running(void);
+void travel_init_load_level();
 void travel_init_new_level();
 
 unsigned char is_waypoint(const coord_def &p);
