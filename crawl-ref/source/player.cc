@@ -2864,7 +2864,7 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_BASE_DRACONIAN:
-                if (you.experience_level == 7)
+                if (you.experience_level >= 7)
                 {
                     you.species = random_draconian_player_species();
 #ifdef USE_TILE
