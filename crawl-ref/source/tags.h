@@ -145,6 +145,9 @@ inline void marshallEnum(writer& wr, enm value)
     marshallEnumVal(wr, &enum_details<enm>::desc, static_cast<int>(value));
 }
 
+void marshallUnsigned(writer& th, uint64_t v);
+void marshallSigned(writer& th, int64_t v);
+
 /* ***********************************************************************
  * reader API
  * *********************************************************************** */
@@ -197,6 +200,20 @@ template<typename enm>
 inline enm unmarshallEnum(writer& wr)
 {
     return static_cast<enm>(unmarshallEnumVal(wr, &enum_details<enm>::desc));
+}
+
+uint64_t unmarshallUnsigned(reader& th);
+template<typename T>
+static inline void unmarshallUnsigned(reader& th, T& v)
+{
+    v = (T)unmarshallUnsigned(th);
+}
+
+int64_t unmarshallSigned(reader& th);
+template<typename T>
+static inline void unmarshallSigned(reader& th, T& v)
+{
+    v = (T)unmarshallSigned(th);
 }
 
 /* ***********************************************************************

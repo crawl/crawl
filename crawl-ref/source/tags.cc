@@ -351,6 +351,52 @@ int32_t unmarshallInt(reader &th)
     return data;
 }
 
+void marshallUnsigned(writer& th, uint64_t v)
+{
+    do
+    {
+        unsigned char b = (unsigned char)(v & 0x7f);
+        v >>= 7;
+        if(v)
+            b |= 0x80;
+        th.writeByte(b);
+    }
+    while(v);
+}
+
+uint64_t unmarshallUnsigned(reader& th)
+{
+    unsigned i = 0;
+    uint64_t v = 0;
+    for(;;)
+    {
+        unsigned char b = th.readByte();
+        v |= (uint64_t)(b & 0x7f) << i;
+        i += 7;
+        if(!(b & 0x80))
+            break;
+    }
+    return v;
+}
+
+void marshallSigned(writer& th, int64_t v)
+{
+    if(v < 0)
+        marshallUnsigned(th, (uint64_t)((-v - 1) << 1) | 1);
+    else
+        marshallUnsigned(th, (uint64_t)(v << 1));
+}
+
+int64_t unmarshallSigned(reader& th)
+{
+    uint64_t u;
+    unmarshallUnsigned(th, u);
+    if(u & 1)
+        return (int64_t)(-(u >> 1) - 1);
+    else
+        return (int64_t)(u >> 1);
+}
+
 // FIXME: Kill this abomination - it will break!
 template<typename T>
 void marshall_as_long(writer& th, const T& t)
