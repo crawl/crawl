@@ -29,9 +29,9 @@ struct generic_cost
     {
         return generic_cost(fixed, 0, 1);
     }
-    static generic_cost range(int low, int high, int rolls = 1)
+    static generic_cost range(int low, int high, int _rolls = 1)
     {
-        return generic_cost(low, high - low + 1, rolls);
+        return generic_cost(low, high - low + 1, _rolls);
     }
 
     int cost() const;
