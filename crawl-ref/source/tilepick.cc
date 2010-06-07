@@ -36,6 +36,12 @@
 // This should not be changed.
 COMPILE_CHECK(TILE_DNGN_UNSEEN == 0, c1);
 
+static tileidx_t _tileidx_monster_base(int type,
+                                       bool in_water = false,
+                                       int colour = 0,
+                                       int number = 0,
+                                       int tile_num_prop = 0);
+
 static tileidx_t _tileidx_trap(trap_type type)
 {
     switch (type)
@@ -358,16 +364,6 @@ tileidx_t tileidx_out_of_bounds(int branch)
         return (TILE_DNGN_UNSEEN | TILE_FLAG_UNSEEN);
 }
 
-static tileidx_t _get_random_monster_tile(const monsters *mon,
-                                          tileidx_t base_tile)
-{
-    if (!mon->props.exists("tile_num"))
-        return (base_tile);
-
-    const int variants = tile_player_count(base_tile);
-    return (base_tile + (mon->props["tile_num"].get_short() % variants));
-}
-
 static bool _is_skeleton(const int z_type)
 {
     return (z_type == MONS_SKELETON_SMALL || z_type == MONS_SKELETON_LARGE);
@@ -503,24 +499,31 @@ static int _bow_offset(const monsters *mon)
     }
 }
 
-tileidx_t tileidx_monster_base(const monsters *mon, bool detected)
+static tileidx_t _mon_mod(tileidx_t tile, int offset)
 {
-    bool in_water = feat_is_water(grd(mon->pos()));
-    const bool misled = (!crawl_state.game_is_arena() && you.misled());
+    int count = tile_player_count(tile);
+    return (tile + offset % count);
+}
 
-    int type = mon->type;
-    if (misled)
-        type = mon->get_mislead_type();
+static tileidx_t _mon_clamp(tileidx_t tile, int offset)
+{
+    int count = tile_player_count(tile);
+    return (tile + std::min(std::max(offset, 0), count - 1));
+}
 
-    // Show only base class for detected monsters.
-    if (detected)
-        type = mons_detected_base(mon->type);
-    else if (!misled && mons_is_zombified(mon))
-        return _tileidx_monster_zombified(mon);
+static tileidx_t _mon_random(tileidx_t tile)
+{
+    int count = tile_player_count(tile);
+    return (tile + random2(count));
+}
 
-    if (mon->props.exists("monster_tile"))
-        return int(mon->props["monster_tile"].get_short());
-
+// This function allows for getting a monster from "just" the type.
+// To avoid needless duplication of a cases in tileidx_monster, some
+// extra parameters that have reasonable defaults for monsters where
+// only the type is known are pushed here.
+static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
+                                       int number, int tile_num_prop)
+{
     switch (type)
     {
     // program bug
@@ -541,17 +544,17 @@ tileidx_t tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_GIANT_BAT:
         return TILEP_MONS_GIANT_BAT;
     case MONS_BUTTERFLY:
-        return TILEP_MONS_BUTTERFLY + ((mon->colour) % 7);
+        return _mon_mod(TILEP_MONS_BUTTERFLY, colour);
 
     // centaurs ('c')
     case MONS_CENTAUR:
-        return TILEP_MONS_CENTAUR + _bow_offset(mon);
+        return TILEP_MONS_CENTAUR;
     case MONS_CENTAUR_WARRIOR:
-        return TILEP_MONS_CENTAUR_WARRIOR + _bow_offset(mon);
+        return TILEP_MONS_CENTAUR_WARRIOR;
     case MONS_YAKTAUR:
-        return TILEP_MONS_YAKTAUR + _bow_offset(mon);
+        return TILEP_MONS_YAKTAUR;
     case MONS_YAKTAUR_CAPTAIN:
-        return TILEP_MONS_YAKTAUR_CAPTAIN + _bow_offset(mon);
+        return TILEP_MONS_YAKTAUR_CAPTAIN;
 
     // draconians ('d'):
     case MONS_DRACONIAN:
@@ -591,11 +594,9 @@ tileidx_t tileidx_monster_base(const monsters *mon, bool detected)
 
     // fungi ('f')
     case MONS_BALLISTOMYCETE:
-        if (!detected && mon->has_ench(ENCH_SPORE_PRODUCTION))
-            return TILEP_MONS_BALLISTOMYCETE_ACTIVE;
         return TILEP_MONS_BALLISTOMYCETE_INACTIVE;
     case MONS_TOADSTOOL:
-        return _get_random_monster_tile(mon, TILEP_MONS_TOADSTOOL);
+        return _mon_mod(TILEP_MONS_TOADSTOOL, tile_num_prop);
     case MONS_FUNGUS:
         return TILEP_MONS_FUNGUS;
     case MONS_WANDERING_MUSHROOM:
@@ -784,12 +785,8 @@ tileidx_t tileidx_monster_base(const monsters *mon, bool detected)
     {
         const tileidx_t ugly_tile = (type == MONS_VERY_UGLY_THING) ?
             TILEP_MONS_VERY_UGLY_THING : TILEP_MONS_UGLY_THING;
-        int colour_offset = ugly_thing_colour_offset(mon->colour);
-
-        if (detected || colour_offset == -1)
-            colour_offset = 0;
-
-        return (ugly_tile + colour_offset);
+        int colour_offset = ugly_thing_colour_offset(colour);
+        return _mon_clamp(ugly_tile, colour_offset);
     }
 
     // vortices ('v')
@@ -897,7 +894,7 @@ tileidx_t tileidx_monster_base(const monsters *mon, bool detected)
         return TILEP_MONS_DRAGON;
     case MONS_HYDRA:
         // Number of heads
-        return TILEP_MONS_HYDRA + std::min((int)mon->number, 7) - 1;
+        return _mon_clamp(TILEP_MONS_HYDRA, number - 1);
     case MONS_ICE_DRAGON:
         return TILEP_MONS_ICE_DRAGON;
     case MONS_STEAM_DRAGON:
@@ -977,8 +974,7 @@ tileidx_t tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_JELLY:
         return TILEP_MONS_JELLY;
     case MONS_SLIME_CREATURE:
-        ASSERT(mon->number <= 5);
-        return TILEP_MONS_SLIME_CREATURE + (mon->number ? mon->number - 1 : 0);
+        return _mon_clamp(TILEP_MONS_SLIME_CREATURE, number - 1);
     case MONS_PULSATING_LUMP:
         return TILEP_MONS_PULSATING_LUMP;
     case MONS_GIANT_AMOEBA:
@@ -1042,8 +1038,6 @@ tileidx_t tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_PLANT:
         return TILEP_MONS_PLANT;
     case MONS_BUSH:
-        if (cloud_type_at(mon->pos()) == CLOUD_FIRE)
-            return TILEP_MONS_BUSH_BURNING;
         return TILEP_MONS_BUSH;
     case MONS_OKLOB_PLANT:
         return TILEP_MONS_OKLOB_PLANT;
@@ -1114,7 +1108,7 @@ tileidx_t tileidx_monster_base(const monsters *mon, bool detected)
 
     // large abominations ('X')
     case MONS_ABOMINATION_LARGE:
-        return TILEP_MONS_ABOMINATION_LARGE + ((mon->colour) % 7);
+        return _mon_mod(TILEP_MONS_ABOMINATION_LARGE, colour);
     case MONS_TENTACLED_MONSTROSITY:
         return TILEP_MONS_TENTACLED_MONSTROSITY;
     case MONS_ORB_GUARDIAN:
@@ -1152,9 +1146,7 @@ tileidx_t tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_KRAKEN:
         return TILEP_MONS_KRAKEN_HEAD;
     case MONS_KRAKEN_TENTACLE:
-        // Pick a random tentacle tile.
-        return TILEP_MONS_KRAKEN_TENTACLE
-               + random2(tile_player_count(TILEP_MONS_KRAKEN_TENTACLE));
+        return _mon_random(TILEP_MONS_KRAKEN_TENTACLE);
 
     // lava monsters
     case MONS_LAVA_WORM:
@@ -1189,27 +1181,21 @@ tileidx_t tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_KILLER_KLOWN:
         return TILEP_MONS_KILLER_KLOWN;
     case MONS_SLAVE:
-        return _get_random_monster_tile(mon, TILEP_MONS_SLAVE);
+        return _mon_mod(TILEP_MONS_SLAVE, tile_num_prop);
 
     // mimics
     case MONS_GOLD_MIMIC:
+        return TILE_UNSEEN_GOLD;
     case MONS_WEAPON_MIMIC:
+        return TILE_UNSEEN_WEAPON;
     case MONS_ARMOUR_MIMIC:
+        return TILE_UNSEEN_ARMOUR;
     case MONS_SCROLL_MIMIC:
+        return TILE_UNSEEN_SCROLL;
     case MONS_POTION_MIMIC:
-    {
-        tileidx_t ch = tileidx_item(get_mimic_item(mon));
-        if (mons_is_known_mimic(mon))
-            ch |= TILE_FLAG_ANIM_WEP;
-        return (ch);
-    }
-
+        return TILE_UNSEEN_POTION;
     case MONS_DANCING_WEAPON:
-    {
-        // Use item tile.
-        item_def item = mitm[mon->inv[MSLOT_WEAPON]];
-        return tileidx_item(item) | TILE_FLAG_ANIM_WEP;
-    }
+        return TILE_UNSEEN_WEAPON;
 
     // '5' demons
     case MONS_IMP:
@@ -1340,9 +1326,7 @@ tileidx_t tileidx_monster_base(const monsters *mon, bool detected)
     case MONS_ORB_OF_FIRE:
         return TILEP_MONS_ORB_OF_FIRE;
     case MONS_ORB_OF_DESTRUCTION:
-        // Pick a random tile.
-        return TILEP_MONS_ORB_OF_DESTRUCTION
-               + random2(tile_player_count(TILEP_MONS_ORB_OF_DESTRUCTION));
+        return _mon_random(TILEP_MONS_ORB_OF_DESTRUCTION);
 
     // other symbols
     case MONS_VAPOUR:
@@ -1548,13 +1532,83 @@ tileidx_t tileidx_monster_base(const monsters *mon, bool detected)
     return TILEP_MONS_PROGRAM_BUG;
 }
 
-tileidx_t tileidx_monster(const monsters *mons, bool detected)
+static tileidx_t _tileidx_monster_no_props(const monsters *mon)
 {
-    tileidx_t ch = tileidx_monster_base(mons, detected);
-    // XXX: Treat this tile specially, as monsters normally
-    //      don't use tile sets.
-    if (ch == TILEP_MONS_STATUE_GUARDIAN)
-        ch += + random2(tile_player_count(ch));
+    bool in_water = feat_is_water(grd(mon->pos()));
+    const bool misled = (!crawl_state.game_is_arena() && you.misled());
+
+    // Show only base class for detected monsters.
+    if (!misled && mons_is_zombified(mon))
+        return _tileidx_monster_zombified(mon);
+    else if (mon->props.exists("monster_tile"))
+    {
+        tileidx_t t = mon->props["monster_tile"].get_short();
+        if (t == TILEP_MONS_STATUE_GUARDIAN)
+            return _mon_random(t);
+        else
+            return t;
+    }
+    else
+    {
+        int tile_num = 0;
+        if (mon->props.exists("tile_num"))
+            tile_num = mon->props["tile_num"].get_short();
+
+        int type = mon->type;
+        if (misled)
+            type = mon->get_mislead_type();
+
+        switch (type)
+        {
+        case MONS_CENTAUR:
+            return TILEP_MONS_CENTAUR + _bow_offset(mon);
+        case MONS_CENTAUR_WARRIOR:
+            return TILEP_MONS_CENTAUR_WARRIOR + _bow_offset(mon);
+        case MONS_YAKTAUR:
+            return TILEP_MONS_YAKTAUR + _bow_offset(mon);
+        case MONS_YAKTAUR_CAPTAIN:
+            return TILEP_MONS_YAKTAUR_CAPTAIN + _bow_offset(mon);
+        case MONS_BUSH:
+            if (cloud_type_at(mon->pos()) == CLOUD_FIRE)
+                return TILEP_MONS_BUSH_BURNING;
+            else
+                return TILEP_MONS_BUSH;
+        case MONS_BALLISTOMYCETE:
+            if (mon->has_ench(ENCH_SPORE_PRODUCTION))
+                return TILEP_MONS_BALLISTOMYCETE_ACTIVE;
+            else
+                return TILEP_MONS_BALLISTOMYCETE_INACTIVE;
+            break;
+
+        case MONS_GOLD_MIMIC:
+        case MONS_WEAPON_MIMIC:
+        case MONS_ARMOUR_MIMIC:
+        case MONS_SCROLL_MIMIC:
+        case MONS_POTION_MIMIC:
+            {
+                tileidx_t t = tileidx_item(get_mimic_item(mon));
+                if (mons_is_known_mimic(mon))
+                    t |= TILE_FLAG_ANIM_WEP;
+                return t;
+            }
+
+        case MONS_DANCING_WEAPON:
+            {
+                // Use item tile.
+                item_def item = mitm[mon->inv[MSLOT_WEAPON]];
+                return tileidx_item(item) | TILE_FLAG_ANIM_WEP;
+            }
+
+        default:
+            return _tileidx_monster_base(type, in_water, mon->colour,
+                                           mon->number, tile_num);
+        }
+    }
+}
+
+tileidx_t tileidx_monster(const monsters *mons)
+{
+    tileidx_t ch = _tileidx_monster_no_props(mons);
 
     if (mons_flies(mons))
         ch |= TILE_FLAG_FLYING;
@@ -1636,6 +1690,11 @@ tileidx_t tileidx_monster(const monsters *mons, bool detected)
     }
 
     return ch;
+}
+
+tileidx_t tileidx_monster_detected(const monsters *mons)
+{
+    return (_tileidx_monster_base(mons_detected_base(mons->type)));
 }
 
 tileidx_t tileidx_draco_base(const monsters *mon)
@@ -3631,7 +3690,7 @@ void tile_init_props(monsters *mon)
         return;
 
     // Only add the property for tiles that have several variants.
-    const int base_tile = tileidx_monster_base(mon);
+    const int base_tile = _tileidx_monster_base(mon->type);
     if (tile_player_count(base_tile) > 1)
         mon->props["tile_num"] = short(random2(256));
 }
