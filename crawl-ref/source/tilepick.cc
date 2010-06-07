@@ -364,6 +364,32 @@ tileidx_t tileidx_out_of_bounds(int branch)
         return (TILE_DNGN_UNSEEN | TILE_FLAG_UNSEEN);
 }
 
+void tileidx_from_show(tileidx_t *fg, tileidx_t *bg, const show_type &show)
+{
+    *bg = _tileidx_feature_base(show.feat);
+
+    switch (show.cls)
+    {
+    default:
+    case SH_NOTHING:
+    case SH_FEATURE:
+        *fg = 0;
+        break;
+    case SH_ITEM:
+        *fg = tileidx_show_item(show.item);
+        break;
+    case SH_CLOUD:
+        *fg = TILE_CLOUD_GREY_SMOKE;
+        break;
+    case SH_INVIS_EXPOSED:
+        *fg = TILE_UNSEEN_MONSTER;
+        break;
+    case SH_MONSTER:
+        *fg = _tileidx_monster_base(show.mons);
+        break;
+    }
+}
+
 void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, const coord_def& gc)
 {
     // Player memory.
@@ -3553,90 +3579,6 @@ tileidx_t tileidx_unseen_flag(const coord_def &gc)
     }
     else
         return (TILE_FLAG_UNSEEN);
-}
-
-void tileidx_unseen(tileidx_t *fg, tileidx_t *bg, screen_buffer_t ch,
-                    const coord_def &gc)
-{
-    ch &= 0xff;
-    if (ch < 32)
-        ch = 32;
-
-    tileidx_t flag = tileidx_unseen_flag(gc);
-    *fg = 0;
-    *bg = TILE_FLOOR_NORMAL | flag;
-
-    if (ch >= '@' && ch <= 'Z' || ch >= 'a' && ch <= 'z'
-        || ch == '&' || ch >= '1' && ch <= '5' || ch == ';')
-    {
-        *fg = TILE_UNSEEN_MONSTER;
-        return;
-    }
-
-    switch (ch)
-    {
-        //blank, walls, and floors first, since they are frequent
-        case ' ': *bg = TILE_DNGN_UNSEEN; break;
-        case 127: //old
-        case 176:
-        case 177: *bg = TILE_WALL_NORMAL; break;
-
-        case 130:
-        case ',':
-        case '.':
-        case 249:
-        case 250: *bg = TILE_FLOOR_NORMAL; break;
-
-        case 137: *bg = TILE_DNGN_WAX_WALL; break;
-        case 138: *bg = TILE_DNGN_STONE_WALL; break;
-        case 139: *bg = TILE_DNGN_METAL_WALL; break;
-        case 140: *bg = TILE_DNGN_GREEN_CRYSTAL_WALL; break;
-
-        // others
-        case '!': *fg = TILE_POTION_OFFSET + 13; break;
-        case '"': *fg = TILE_AMU_NORMAL_OFFSET + 2; break;
-        case '#': *fg = TILE_CLOUD_GREY_SMOKE; break;
-        case '$': *fg = TILE_GOLD; break;
-        case '%': *fg = TILE_FOOD_MEAT_RATION; break;
-        case 142: *fg = TILE_UNSEEN_CORPSE; break;
-
-        case '\'':
-        case 134: *bg = TILE_DNGN_OPEN_DOOR; break;
-        case '(':
-        case ')': *fg = TILE_UNSEEN_WEAPON; break;
-        case '*': *fg = TILE_WALL_NORMAL ; break;
-        case '+': *fg = TILE_BOOK_PAPER_OFFSET + 15; break;
-
-        case '/': *fg = TILE_WAND_OFFSET; break;
-        case '8': *fg = TILEP_MONS_SILVER_STATUE; break;
-        case '<': *bg = TILE_DNGN_STONE_STAIRS_UP; break;
-        case '=': *fg = TILE_RING_NORMAL_OFFSET + 1; break;
-        case '>': *bg = TILE_DNGN_STONE_STAIRS_DOWN; break;
-        case '~':
-        case '?': *fg = TILE_UNSEEN_ITEM; break;
-        case '[':
-        case ']': *fg = TILE_UNSEEN_ARMOUR; break;
-        case '\\': *fg = TILE_STAFF_OFFSET; break;
-        case '^': *bg = TILE_DNGN_TRAP_ARROW; break;
-        case '_':
-        case 220:
-        case 131: *bg = TILE_DNGN_UNSEEN_ALTAR; break;
-        case '{':
-        case 247:
-        case 135: *bg = TILE_DNGN_DEEP_WATER; break;
-        case 244:
-        case 133: *bg = TILE_DNGN_BLUE_FOUNTAIN; break;
-        case '}': *fg = TILE_MISC_CRYSTAL_BALL_OF_SEEING; break;
-        case 128: //old
-        case 254: *bg = TILE_DNGN_CLOSED_DOOR; break;
-        case 129: *bg = TILE_DNGN_RETURN; break;
-        case 239:
-        case 132: *bg = TILE_DNGN_UNSEEN_ENTRANCE; break;
-        case 136: *bg = TILE_DNGN_ENTER; break;
-        case 141: *bg = TILE_DNGN_LAVA; break;
-    }
-
-    *bg |= flag;
 }
 
 int enchant_to_int(const item_def &item)

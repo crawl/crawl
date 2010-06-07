@@ -15,10 +15,12 @@ struct cloud_struct;
 class coord_def;
 class item_def;
 class monsters;
+struct show_type;
 
 // Tile index lookup from Crawl data.
 tileidx_t tileidx_feature(const coord_def &gc);
 tileidx_t tileidx_out_of_bounds(int branch);
+void tileidx_from_show(tileidx_t *fg, tileidx_t *bg, const show_type &show);
 void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, const coord_def& gc);
 
 tileidx_t tileidx_monster(const monsters *mon);
@@ -39,8 +41,6 @@ tileidx_t tileidx_corpse_brand(const item_def &item);
 
 tileidx_t get_clean_map_idx(tileidx_t tile_idx);
 tileidx_t tileidx_unseen_flag(const coord_def &gc);
-void tileidx_unseen(tileidx_t *fg, tileidx_t *bg, screen_buffer_t ch,
-                    const coord_def& gc);
 
 
 // Return the level of enchantment as an int.  None is 0, Randart is 4.
