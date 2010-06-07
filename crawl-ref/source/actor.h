@@ -224,6 +224,7 @@ public:
     virtual bool is_evil() const = 0;
     virtual bool is_chaotic() const = 0;
     virtual bool is_insubstantial() const = 0;
+    virtual int res_acid() const = 0;
     virtual int res_fire() const = 0;
     virtual int res_steam() const = 0;
     virtual int res_cold() const = 0;
@@ -297,5 +298,6 @@ protected:
 // Identical to actor->kill_alignment(), but returns KC_OTHER if the actor
 // is NULL.
 kill_category actor_kill_alignment(const actor *actor);
+bool actor_slime_wall_immune(const actor *actor);
 
 #endif

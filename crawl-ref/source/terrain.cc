@@ -580,10 +580,44 @@ dungeon_feature_type grid_secret_door_appearance(const coord_def &where)
     return (feat);
 }
 
-bool slime_wall_neighbour(const coord_def& c, bool check_god)
+
+typedef FixedArray<bool, GXM, GYM> map_mask_boolean;
+static std::auto_ptr<map_mask_boolean> _slime_wall_precomputed_neighbour_mask;
+
+static void _precompute_slime_wall_neighbours()
 {
-    if (check_god && you.religion == GOD_JIYVA && !you.penance[GOD_JIYVA])
-        return (false);
+    map_mask_boolean &mask(*_slime_wall_precomputed_neighbour_mask.get());
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        if (grd(*ri) == DNGN_SLIMY_WALL)
+        {
+            for (adjacent_iterator ai(*ri); ai; ++ai)
+                mask(*ai) = true;
+        }
+    }
+}
+
+unwind_slime_wall_precomputer::unwind_slime_wall_precomputer(bool docompute)
+    : old_slime_mask(_slime_wall_precomputed_neighbour_mask)
+{
+    if (docompute)
+    {
+        _slime_wall_precomputed_neighbour_mask.reset(
+            new map_mask_boolean(false));
+        _precompute_slime_wall_neighbours();
+    }
+}
+
+unwind_slime_wall_precomputer::~unwind_slime_wall_precomputer()
+{
+    _slime_wall_precomputed_neighbour_mask = old_slime_mask;
+}
+
+bool slime_wall_neighbour(const coord_def& c)
+{
+    if (_slime_wall_precomputed_neighbour_mask.get())
+        return (*_slime_wall_precomputed_neighbour_mask)(c);
+
     for (adjacent_iterator ai(c); ai; ++ai)
         if (env.grid(*ai) == DNGN_SLIMY_WALL)
             return (true);

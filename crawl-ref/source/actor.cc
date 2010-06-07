@@ -219,3 +219,10 @@ kill_category actor_kill_alignment(const actor *act)
 {
     return (act? act->kill_alignment() : KC_OTHER);
 }
+
+bool actor_slime_wall_immune(const actor *act)
+{
+    return (act->atype() == ACT_PLAYER?
+              you.religion == GOD_JIYVA && !you.penance[GOD_JIYVA]
+            : act->res_acid() == 3);
+}

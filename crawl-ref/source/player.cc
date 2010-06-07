@@ -5668,6 +5668,11 @@ int player_mutation_level(mutation_type mut)
     return (0);
 }
 
+int player::res_acid() const
+{
+    return (player_res_acid());
+}
+
 int player::res_fire() const
 {
     return (player_res_fire());
