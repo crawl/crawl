@@ -631,19 +631,14 @@ void tile_place_item_marker(const coord_def &gc, const item_def &item)
 }
 
 // Called from show_def::_update_monster() in show.cc
-void tile_place_monster(const coord_def &gc, const monsters *mon,
-                        bool foreground, bool detected)
+void tile_place_monster(const coord_def &gc, const monsters *mon)
 {
     if (!mon)
         return;
 
     const coord_def ep = view2show(grid2view(gc));
 
-    tileidx_t t;
-    if (detected)
-        t = tileidx_monster_detected(mon);
-    else
-        t = tileidx_monster(mon);
+    tileidx_t t = tileidx_monster(mon);
     tileidx_t t0   = t & TILE_FLAG_MASK;
     tileidx_t flag = t & (~TILE_FLAG_MASK);
 
@@ -653,32 +648,17 @@ void tile_place_monster(const coord_def &gc, const monsters *mon,
         {
             // If necessary add item brand.
             if (you.visible_igrd(gc) != NON_ITEM)
-            {
-                if (foreground)
-                    t |= TILE_FLAG_S_UNDER;
-                else
-                    t0 |= TILE_FLAG_S_UNDER;
-            }
+                t |= TILE_FLAG_S_UNDER;
 
             if (item_needs_autopickup(get_mimic_item(mon)))
-            {
-                if (foreground)
-                    env.tile_bg(ep) |= TILE_FLAG_CURSOR3;
-                else
-                    env.tile_bk_bg(gc) |= TILE_FLAG_CURSOR3;
-            }
+                env.tile_bg(ep) |= TILE_FLAG_CURSOR3;
         }
     }
     else if (mons_is_stationary(mon))
     {
         // If necessary add item brand.
         if (you.visible_igrd(gc) != NON_ITEM)
-        {
-            if (foreground)
-                t |= TILE_FLAG_S_UNDER;
-            else
-                t0 |= TILE_FLAG_S_UNDER;
-        }
+            t |= TILE_FLAG_S_UNDER;
     }
     else
     {
@@ -686,55 +666,39 @@ void tile_place_monster(const coord_def &gc, const monsters *mon,
         t = flag | (mcache_idx ? mcache_idx : t0);
     }
 
-    if (foreground)
+    // Add name tags.
+    env.tile_fg(ep) = t;
+
+    if (!mon->visible_to(&you)
+        || mons_is_lurking(mon)
+        || mons_is_unknown_mimic(mon)
+        || mons_class_flag(mon->type, M_NO_EXP_GAIN))
     {
-        // Add name tags.
-        env.tile_fg(ep) = t;
-
-        if (!mon->visible_to(&you)
-            || mons_is_lurking(mon)
-            || mons_is_unknown_mimic(mon)
-            || mons_class_flag(mon->type, M_NO_EXP_GAIN))
-        {
-            return;
-        }
-
-        const tag_pref pref = Options.tile_tag_pref;
-        if (pref == TAGPREF_NONE)
-            return;
-        else if (pref == TAGPREF_TUTORIAL)
-        {
-            const long kills = you.kills->num_kills(mon);
-            const int limit  = 0;
-
-            if (!mon->is_named() && kills > limit)
-                return;
-        }
-        else if (!mon->is_named())
-            return;
-
-        if (pref != TAGPREF_NAMED && mon->friendly())
-            return;
-
-        // HACK.  Names cover up pan demons in a weird way.
-        if (mon->type == MONS_PANDEMONIUM_DEMON)
-            return;
-
-        tiles.add_text_tag(TAG_NAMED_MONSTER, mon);
+        return;
     }
-    else
+
+    const tag_pref pref = Options.tile_tag_pref;
+    if (pref == TAGPREF_NONE)
+        return;
+    else if (pref == TAGPREF_TUTORIAL)
     {
-        // Retain the magic mapped terrain, but don't give away the real
-        // features.
-        if (is_terrain_mapped(gc))
-        {
-            tileidx_t fg;
-            tileidx_t bg;
-            tileidx_unseen(&fg, &bg, get_feat_symbol(grd(gc)), gc);
-            env.tile_bk_bg(gc) = bg;
-        }
-        env.tile_bk_fg(gc) = t0;
+        const long kills = you.kills->num_kills(mon);
+        const int limit  = 0;
+
+        if (!mon->is_named() && kills > limit)
+            return;
     }
+    else if (!mon->is_named())
+        return;
+
+    if (pref != TAGPREF_NAMED && mon->friendly())
+        return;
+
+    // HACK.  Names cover up pan demons in a weird way.
+    if (mon->type == MONS_PANDEMONIUM_DEMON)
+        return;
+
+    tiles.add_text_tag(TAG_NAMED_MONSTER, mon);
 }
 
 void tile_place_cloud(const coord_def &gc, const cloud_struct &cl)

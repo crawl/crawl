@@ -338,7 +338,7 @@ void show_def::_update_monster(const monsters* mons)
     if (mons_is_unknown_mimic(mons))
     {
 #ifdef USE_TILE
-        tile_place_monster(mons->pos(), mons, true);
+        tile_place_monster(mons->pos(), mons);
 #endif
         return;
     }
@@ -399,7 +399,7 @@ void show_def::_update_monster(const monsters* mons)
     grid(e).colour = get_mons_glyph(mons, false).col;
 
 #ifdef USE_TILE
-    tile_place_monster(mons->pos(), mons, true);
+    tile_place_monster(mons->pos(), mons);
 #endif
 }
 
