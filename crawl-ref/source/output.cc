@@ -2384,13 +2384,11 @@ std::string _status_mut_abilities()
           break;
 
       case SP_MOTTLED_DRACONIAN:
-          if (you.experience_level > 6)
-              mutations.push_back("breathe sticky flames");
+          mutations.push_back("breathe sticky flames");
           break;
 
       case SP_PALE_DRACONIAN:
-          if (you.experience_level > 6)
-              mutations.push_back("breathe steam");
+          mutations.push_back("breathe steam");
           break;
 
       default:
