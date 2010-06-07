@@ -1045,11 +1045,6 @@ static bool _check_ability_possible(const ability_def& abil,
             mpr("You're already here!");
             return (false);
         }
-        else if (you.level_type == LEVEL_PANDEMONIUM)
-        {
-            mpr("That doesn't work from Pandemonium.");
-            return (false);
-        }
         return (true);
 
     case ABIL_SIF_MUNA_FORGET_SPELL:
