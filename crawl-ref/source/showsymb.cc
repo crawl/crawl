@@ -25,22 +25,39 @@
 #include "viewgeom.h"
 #include "coord.h"
 
-glyph get_show_glyph(show_type object)
+glyph get_cell_glyph(const map_cell& cell, bool clean_map)
 {
+    show_type object = cell.object;
     glyph g;
     g.col = object.colour;
 
-    if (object.cls < SH_MONSTER)
+    if (object.cls < SH_MONSTER || (clean_map && object.is_cleanable_monster()))
     {
         const feature_def &fdef = get_feature_def(object);
-        g.ch = fdef.symbol;
+        g.ch = cell.seen() ? fdef.symbol : fdef.magic_symbol;
         if (g.col == BLACK)
             g.col = fdef.colour;
+        if(!cell.visible() && object.cls == SH_FEATURE)
+        {
+            if(object.cls == SH_ITEM && cell.flags & MAP_DETECTED_ITEM)
+                g.col = Options.detected_item_colour;
+            else if(g.col == fdef.em_colour)
+                g.col = fdef.seen_em_colour;
+            else
+                g.col = fdef.seen_colour;
+        }
     }
     else
     {
         ASSERT(object.cls == SH_MONSTER);
         g.ch = mons_char(object.mons);
+        if(!cell.visible())
+        {
+            if(cell.flags & MAP_DETECTED_MONSTER)
+                g.col = Options.detected_monster_colour;
+            else
+                g.col = DARKGREY;
+        }
     }
 
     if (g.col)
@@ -131,16 +148,6 @@ glyph get_mons_glyph(const monster_info& mi, bool realcol)
     if (realcol)
         g.col = real_colour(g.col);
     return (g);
-}
-
-unsigned get_screen_glyph(const coord_def& p)
-{
-    const coord_def ep = view2show(grid2view(p));
-    show_type object = env.show(ep);
-    if (!object)
-        return get_map_knowledge_char(p.x, p.y);
-
-    return (get_show_glyph(object).ch);
 }
 
 std::string glyph_to_tagstr(const glyph& g)

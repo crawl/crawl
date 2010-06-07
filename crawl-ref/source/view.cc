@@ -77,11 +77,6 @@
 
 crawl_view_geometry crawl_view;
 
-bool is_notable_terrain(dungeon_feature_type ftype)
-{
-    return (get_feature_def(ftype).is_notable());
-}
-
 void handle_seen_interrupt(monsters* monster)
 {
     if (mons_is_unknown_mimic(monster))
@@ -364,10 +359,10 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                 continue;
         }
 
-        if (is_terrain_changed(*ri))
-            clear_map_knowledge_grid(*ri);
+        if (env.map_knowledge(*ri).changed())
+            env.map_knowledge(*ri).clear();
 
-        if (!wizard_map && (is_terrain_seen(*ri) || is_terrain_mapped(*ri)))
+        if (!wizard_map && (env.map_knowledge(*ri).seen() || env.map_knowledge(*ri).mapped()))
             continue;
 
         if (!wizard_map && !deterministic && !((*detectable)(*ri)))
@@ -395,7 +390,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         {
             if (wizard_map)
                 set_map_knowledge_obj(*ri, grd(*ri));
-            else if (!get_map_knowledge_obj(*ri))
+            else if (!env.map_knowledge(*ri).object)
                 set_map_knowledge_obj(*ri, magic_map_base_feat(grd(*ri)));
 
             if (wizard_map)
@@ -513,9 +508,8 @@ std::string screenshot(bool fullscreen)
 
             int ch =
                   (!map_bounds(gc))             ? 0 :
-                  (!crawl_view.in_grid_los(gc)) ? get_map_knowledge_char(gc) :
                   (gc == you.pos())             ? mons_char(you.symbol)
-                                                : get_screen_glyph(gc);
+                                                : get_cell_glyph(env.map_knowledge(gc)).ch;
 
             if (ch && !isprint(ch))
             {
@@ -585,20 +579,18 @@ void view_update_at(const coord_def &pos)
     if (pos == you.pos())
         return;
 
-    const coord_def vp = grid2view(pos);
-    const coord_def ep = view2show(vp);
-    env.show.update_at(pos, ep);
+    show_update_at(pos);
 
 #ifndef USE_TILE
-    show_type object = env.show(ep);
-    if (!object)
+    if (!env.map_knowledge(pos).visible())
         return;
-    glyph g = get_show_glyph(object);
+    glyph g = get_cell_glyph(env.map_knowledge(pos));
 
     int flash_colour = you.flash_colour;
     if (flash_colour == BLACK)
         flash_colour = _viewmap_flash_colour();
 
+    const coord_def vp = grid2view(pos);
     cgotoxy(vp.x, vp.y);
     put_colour_ch(flash_colour? real_colour(flash_colour) : g.col, g.ch);
 
@@ -702,7 +694,6 @@ enum update_flags
 // exclusion LOS might have been affected.
 static int player_view_update_at(const coord_def &gc)
 {
-    const coord_def ep = grid2show(gc);
     maybe_remove_autoexclusion(gc);
     int ret = 0;
 
@@ -733,16 +724,13 @@ static int player_view_update_at(const coord_def &gc)
     if (Hints.hints_left)
         hints_observe_cell(gc);
 
-    if (is_terrain_changed(gc) || !is_terrain_seen(gc))
+    if (env.map_knowledge(gc).changed() || !env.map_knowledge(gc).seen())
         ret |= UF_AFFECT_EXCLUDES;
 
-    if (!crawl_state.game_is_arena())
-        set_terrain_seen(gc);
-    set_map_knowledge_obj(gc, to_knowledge(env.show(ep)));
-    set_map_knowledge_detected_mons(gc, false);
-    set_map_knowledge_detected_item(gc, false);
+    set_terrain_visible(gc);
 
 #ifdef USE_TILE
+    const coord_def ep = grid2show(gc);
     if (!player_in_mappable_area())
         return (ret); // XXX: is this necessary?
 
@@ -790,9 +778,10 @@ static void _draw_out_of_bounds(screen_cell_t *cell)
 static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc)
 {
     // Outside the env.show area.
-    cell->glyph  = get_map_knowledge_char(gc);
-    cell->colour = Options.colour_map ? real_colour(get_map_col(gc, false))
-                                      : DARKGREY;
+    glyph g = get_cell_glyph(env.map_knowledge(gc));
+    cell->glyph  = g.ch;
+    cell->colour = g.col;
+
 #ifdef USE_TILE
     tileidx_out_of_los(&cell->tile_fg, &cell->tile_bg, gc);
 #endif
@@ -829,7 +818,7 @@ static void _draw_los(screen_cell_t *cell,
                       const coord_def &gc, const coord_def &ep,
                       bool anim_updates)
 {
-    glyph g = get_show_glyph(env.show(ep));
+    glyph g = get_cell_glyph(env.map_knowledge(gc));
     cell->glyph  = g.ch;
     cell->colour = g.col;
 
@@ -840,17 +829,6 @@ static void _draw_los(screen_cell_t *cell,
         tile_apply_animations(cell->tile_bg, &env.tile_flv(gc));
 #else
     UNUSED(anim_updates);
-#endif
-}
-
-static void _draw_los_backup(screen_cell_t *cell,
-                             const coord_def &gc, const coord_def &ep)
-{
-    cell->glyph  = get_map_knowledge_char(gc);
-    cell->colour = Options.colour_map ? real_colour(get_map_col(gc, false))
-                                      : DARKGREY;
-#ifdef USE_TILE
-    tileidx_out_of_los(&cell->tile_fg, &cell->tile_bg, gc);
 #endif
 }
 
@@ -891,7 +869,7 @@ void viewwindow(bool show_updates)
         tiles.clear_overlays();
 #endif
 
-        env.show.init(_show_terrain);
+        show_init(_show_terrain);
     }
 
     if (show_updates)
@@ -904,7 +882,7 @@ void viewwindow(bool show_updates)
     {
         // Reset env.show if we munged it.
         if (_show_terrain)
-            env.show.init();
+            show_init();
         return;
     }
 
@@ -935,7 +913,7 @@ void viewwindow(bool show_updates)
         else if (you.see_cell(gc) && you.on_current_level)
             _draw_los(cell, gc, ep, anim_updates);
         else
-            _draw_los_backup(cell, gc, ep);
+            _draw_outside_los(cell, gc);
 
         cell->flash_colour = BLACK;
 
@@ -987,7 +965,7 @@ void viewwindow(bool show_updates)
 
     // Reset env.show if we munged it.
     if (_show_terrain)
-        env.show.init();
+        show_init();
 
     _debug_pane_bounds();
 }

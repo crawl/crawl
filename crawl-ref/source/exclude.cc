@@ -112,9 +112,9 @@ public:
 
     opacity_type operator()(const coord_def& p) const
     {
-        if (!is_terrain_seen(p))
+        if (!env.map_knowledge(p).seen())
             return OPC_CLEAR;
-        else if (!is_terrain_changed(p))
+        else if (!env.map_knowledge(p).changed())
             return _feat_opacity(env.grid(p));
         else if (env.map_knowledge(p).object.cls == SH_FEATURE)
             return _feat_opacity(env.map_knowledge(p).object.feat);
@@ -481,11 +481,11 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl,
         {
             // Don't list a monster in the exclusion annotation if the
             // exclusion was triggered by e.g. the flamethrowers' lua check.
-            const show_type& obj = get_map_knowledge_obj(p);
+            const show_type& obj = env.map_knowledge(p).object;
             if (obj.cls == SH_MONSTER)
             {
                 desc = mons_type_name(obj.mons, DESC_PLAIN);
-                if (is_map_knowledge_detected_mons(p))
+                if (env.map_knowledge(p).detected_monster())
                     desc += " (detected)";
             }
             else

@@ -22,94 +22,9 @@
 #endif
 #include "view.h"
 
-// These are hidden from the rest of the world... use the functions
-// below to get information about the map grid.
-#define MAP_MAGIC_MAPPED_FLAG   0x01
-#define MAP_SEEN_FLAG           0x02
-#define MAP_CHANGED_FLAG        0x04 // FIXME: this doesn't belong here
-#define MAP_DETECTED_MONSTER    0x08
-#define MAP_DETECTED_ITEM       0x10
-#define MAP_GRID_KNOWN          0xFF
-
-unsigned map_cell::glyph(bool clean_map) const
-{
-    if (!object)
-        return (' ');
-    if ((clean_map && object.is_cleanable_monster())
-         || object.cls < SH_MONSTER)
-    {
-        const feature_def &fdef = get_feature_def(object);
-        return ((flags & MAP_SEEN_FLAG) ? fdef.symbol : fdef.magic_symbol);
-    }
-    else
-        return (mons_char(object.mons));
-}
-
-dungeon_feature_type map_cell::feat() const
-{
-    return (object.feat);
-}
-
-show_item_type map_cell::item() const
-{
-    return (object.item);
-}
-
-bool map_cell::known() const
-{
-    return (object && (flags & MAP_GRID_KNOWN));
-}
-
-bool map_cell::seen() const
-{
-    return (object && (flags & MAP_SEEN_FLAG));
-}
-
-unsigned get_map_knowledge_char(int x, int y)
-{
-    return env.map_knowledge[x][y].glyph(Options.clean_map);
-}
-
-show_type get_map_knowledge_obj(int x, int y)
-{
-    return (env.map_knowledge[x][y].object);
-}
-
-void set_map_knowledge_detected_item(int x, int y, bool detected)
-{
-    if (detected)
-    {
-        env.map_knowledge[x][y].flags |= MAP_DETECTED_ITEM;
-        env.map_knowledge[x][y].object.colour = Options.detected_item_colour;
-    }
-    else
-        env.map_knowledge[x][y].flags &= ~MAP_DETECTED_ITEM;
-}
-
-bool is_map_knowledge_detected_item(int x, int y)
-{
-    return (env.map_knowledge[x][y].flags & MAP_DETECTED_ITEM);
-}
-
-void set_map_knowledge_detected_mons(int x, int y, bool detected)
-{
-    if (detected)
-    {
-        env.map_knowledge[x][y].flags |= MAP_DETECTED_MONSTER;
-        env.map_knowledge[x][y].object.colour = Options.detected_monster_colour;
-    }
-    else
-        env.map_knowledge[x][y].flags &= ~MAP_DETECTED_MONSTER;
-}
-
-bool is_map_knowledge_detected_mons(int x, int y)
-{
-    return (env.map_knowledge[x][y].flags & MAP_DETECTED_MONSTER);
-}
-
 void map_knowledge_forget_mons(const coord_def& c)
 {
-    if (!is_map_knowledge_detected_mons(c))
+    if (!env.map_knowledge(c).detected_monster())
         return;
 
     env.map_knowledge(c).flags &= ~MAP_DETECTED_MONSTER;
@@ -124,46 +39,6 @@ void set_map_knowledge_obj(const coord_def& where, show_type obj)
 #ifdef USE_TILE
     tiles.update_minimap(where);
 #endif
-}
-
-bool is_map_knowledge_item(int x, int y)
-{
-    return (env.map_knowledge[x][y].object.cls == SH_ITEM);
-}
-
-bool is_map_knowledge_mons(int x, int y)
-{
-    return (env.map_knowledge[x][y].object.cls == SH_MONSTER);
-}
-
-int get_map_knowledge_col(const coord_def& p)
-{
-    return (env.map_knowledge[p.x][p.y].object.colour);
-}
-
-bool is_terrain_known( int x, int y )
-{
-    return (env.map_knowledge[x][y].known());
-}
-
-bool is_terrain_known(const coord_def &p)
-{
-    return (env.map_knowledge(p).known());
-}
-
-bool is_terrain_seen( int x, int y )
-{
-    return (env.map_knowledge[x][y].flags & MAP_SEEN_FLAG);
-}
-
-bool is_terrain_changed( int x, int y )
-{
-    return (env.map_knowledge[x][y].flags & MAP_CHANGED_FLAG);
-}
-
-bool is_terrain_mapped(const coord_def &p)
-{
-    return (env.map_knowledge(p).flags & MAP_MAGIC_MAPPED_FLAG);
 }
 
 // Used to mark dug out areas, unset when terrain is seen or mapped again.
@@ -197,10 +72,10 @@ int count_detected_mons()
         // Note: assumptions are being made here about how
         // terrain can change (eg it used to be solid, and
         // thus monster/item free).
-        if (is_terrain_changed(*ri))
+        if (env.map_knowledge(*ri).changed())
             continue;
 
-        if (is_map_knowledge_detected_mons(*ri))
+        if (env.map_knowledge(*ri).detected_monster())
             count++;
     }
 
@@ -212,13 +87,13 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
     for (rectangle_iterator ri(BOUNDARY_BORDER - 1); ri; ++ri)
     {
         const coord_def p = *ri;
-        if (!is_terrain_known(p))
+        if (!env.map_knowledge(p).known())
             continue;
-        if (is_map_knowledge_item(p))
+        if (env.map_knowledge(p).item() != SHOW_ITEM_NONE)
             continue;
-        if (!clear_detected_items && is_map_knowledge_detected_item(p))
+        if (!clear_detected_items && env.map_knowledge(p).detected_item())
             continue;
-        if (!clear_detected_monsters && is_map_knowledge_detected_mons(p))
+        if (!clear_detected_monsters && env.map_knowledge(p).detected_item())
             continue;
 
         show_type plain = env.map_knowledge(p).object;
@@ -233,9 +108,9 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
 #endif
         }
 
-        set_map_knowledge_obj(p, to_knowledge(plain));
-        set_map_knowledge_detected_mons(p, false);
-        set_map_knowledge_detected_item(p, false);
+        set_map_knowledge_obj(p, plain);
+        env.map_knowledge(p).set_detected_monster(false);
+        env.map_knowledge(p).set_detected_item(false);
     }
 }
 
@@ -296,15 +171,23 @@ void set_terrain_seen( int x, int y )
 
     cell->flags &= (~MAP_CHANGED_FLAG);
     cell->flags |= MAP_SEEN_FLAG;
-    cell->object.colour = get_feature_def(cell->object).seen_colour;
 }
 
-void clear_map_knowledge_grid( const coord_def& p )
+void set_terrain_visible(const coord_def &c)
 {
-    env.map_knowledge(p).clear();
+    map_cell* cell = &env.map_knowledge(c);
+    set_terrain_seen(c);
+    if(!(cell->flags & MAP_VISIBLE_FLAG))
+    {
+        cell->flags |= MAP_VISIBLE_FLAG;
+        env.visible.insert(c);
+    }
+    cell->flags &=~ (MAP_DETECTED_MONSTER | MAP_DETECTED_ITEM);
 }
 
-void clear_map_knowledge_grid( int x, int y )
+void clear_terrain_visibility()
 {
-    env.map_knowledge[x][y].clear();
+    for(std::set<coord_def>::iterator i = env.visible.begin(); i != env.visible.end(); ++i)
+        env.map_knowledge(*i).flags &=~ MAP_VISIBLE_FLAG;
+    env.visible.clear();
 }

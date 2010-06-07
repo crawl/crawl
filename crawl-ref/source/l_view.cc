@@ -22,10 +22,10 @@ coord_def player2show(const coord_def &s)
 LUAFN(view_feature_at)
 {
     COORDSHOW(s, 1, 2)
-    const coord_def p = player2show(s);
-    if (env.show(p))
+    const coord_def p = player2grid(s);
+    if (env.map_knowledge(p).object)
     {
-        dungeon_feature_type f = grid_appearance(s + you.pos());
+        dungeon_feature_type f = grid_appearance(p);
         lua_pushstring(ls, dungeon_feature_name(f));
     }
     return (1);

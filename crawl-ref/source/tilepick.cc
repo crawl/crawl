@@ -3753,8 +3753,8 @@ tileidx_t tileidx_unseen_flag(const coord_def &gc)
 {
     if (!map_bounds(gc))
         return (TILE_FLAG_UNSEEN);
-    else if (is_terrain_known(gc)
-                && !is_terrain_seen(gc)
+    else if (env.map_knowledge(gc).known()
+                && !env.map_knowledge(gc).seen()
              || is_map_knowledge_detected_item(gc)
              || is_map_knowledge_detected_mons(gc))
     {

@@ -554,7 +554,7 @@ void wizard_detect_creatures()
     {
         show_type obj(mi->type);
         set_map_knowledge_obj(mi->pos(), obj);
-        set_map_knowledge_detected_mons(mi->pos(), true);
+        env.map_knowledge(mi->pos()).set_detected_monster(true);
         env.map_knowledge(mi->pos()).object.colour = get_mons_glyph(*mi, false).col;
     }
 }

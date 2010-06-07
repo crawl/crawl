@@ -29,6 +29,7 @@
 #include "effects.h"
 #include "env.h"
 #include "map_knowledge.h"
+#include "feature.h"
 #include "fprop.h"
 #include "food.h"
 #include "goditem.h"
@@ -2712,7 +2713,7 @@ static bool _move_stairs(const actor* attacker, const actor* defender)
     // Don't move around notable terrain the player is aware of if it's
     // out of sight.
     if (is_notable_terrain(stair_feat)
-        && is_terrain_known(orig_pos.x, orig_pos.y) && !you.see_cell(orig_pos))
+        && env.map_knowledge(orig_pos).known() && !you.see_cell(orig_pos))
     {
         return (false);
     }
