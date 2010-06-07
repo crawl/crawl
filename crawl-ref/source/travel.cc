@@ -121,6 +121,9 @@ static std::string trans_travel_dest;
 // hostile terrain.
 travel_distance_grid_t travel_point_distance;
 
+// Apply slime wall checks when checking if squares are travelsafe.
+bool g_Slime_Wall_Check = true;
+
 static unsigned char curr_waypoints[GXM][GYM];
 static FixedArray< map_cell, GXM, GYM >  mapshadow;
 
@@ -316,10 +319,10 @@ static bool _is_reseedable(const coord_def& c)
 
     const dungeon_feature_type grid = env.map_knowledge(c).feat();
     return (feat_is_water(grid)
-               || grid == DNGN_LAVA
-               || is_trap(c)
-               || _is_monster_blocked(c)
-               || slime_wall_neighbour(c, true));
+            || grid == DNGN_LAVA
+            || is_trap(c)
+            || _is_monster_blocked(c)
+            || (g_Slime_Wall_Check && slime_wall_neighbour(c)));
 }
 
 // Returns true if the square at (x,y) is okay to travel over. If ignore_hostile
@@ -363,7 +366,7 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile)
     if (is_trap(c) && _is_safe_trap(c))
         return (true);
 
-    if (slime_wall_neighbour(c, true))
+    if (g_Slime_Wall_Check && slime_wall_neighbour(c))
         return (false);
 
     return (feat_is_traversable(grid));
@@ -1245,6 +1248,10 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode)
     // Nothing to do?
     if (!floodout && start == dest)
         return (start);
+
+    unwind_bool slime_wall_check(g_Slime_Wall_Check,
+                                 !actor_slime_wall_immune(&you));
+    unwind_slime_wall_precomputer slime_neighbours(g_Slime_Wall_Check);
 
     // How many points are we currently considering? We start off with just one
     // point, and spread outwards like a flood-filler.

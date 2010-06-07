@@ -475,6 +475,7 @@ public:
     bool is_evil() const;
     bool is_chaotic() const;
     bool is_insubstantial() const;
+    int res_acid() const;
     int res_fire() const;
     int res_steam() const;
     int res_cold() const;

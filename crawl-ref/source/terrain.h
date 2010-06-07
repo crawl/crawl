@@ -8,10 +8,23 @@
 #define TERRAIN_H
 
 #include "enum.h"
+#include <memory>
 
 class  actor;
 struct coord_def;
 
+typedef FixedArray<bool, GXM, GYM> map_mask_boolean;
+
+// Precomputes slime wall neighbours for all squares on the map. Handy if
+// you need to make a lot of slime wall checks (such as for travel).
+class unwind_slime_wall_precomputer
+{
+public:
+    unwind_slime_wall_precomputer(bool docompute = true);
+    ~unwind_slime_wall_precomputer();
+private:
+    std::auto_ptr<map_mask_boolean> old_slime_mask;
+};
 
 actor* actor_at(const coord_def& c);
 
@@ -64,9 +77,10 @@ void find_connected_range(const coord_def& d, dungeon_feature_type ft_min,
                           std::set<coord_def>& out);
 std::set<coord_def> connected_doors(const coord_def& d);
 
-bool slime_wall_neighbour(const coord_def& c, bool check_god = false);
+bool slime_wall_neighbour(const coord_def& c);
 
-void get_door_description(int door_size, const char** adjective, const char** noun);
+void get_door_description(int door_size, const char** adjective,
+                          const char** noun);
 // Returns info about the grid a secret door is mimicing.  Returns true
 // if it finds a grid position to mimic, which will be stored in gc.
 // feat will always be set, even if no square to mimic is found.
