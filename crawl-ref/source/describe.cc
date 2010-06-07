@@ -3237,8 +3237,7 @@ std::string get_ghost_description(const monsters &mons, bool concise)
     }
     else
     {
-        gstr << species_name(gspecies,
-                             ghost.xl)
+        gstr << species_name(gspecies)
              << " "
              << get_job_name(ghost.job);
     }
@@ -3541,7 +3540,7 @@ std::string god_title(god_type which_god, species_type which_species)
         title = divine_title[which_god][_piety_level()];
 
     title = replace_all(title, "%s",
-                        species_name(which_species, 1, true, false));
+                        species_name(which_species, true, false));
 
     return (title);
 }

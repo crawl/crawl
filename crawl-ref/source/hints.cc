@@ -248,7 +248,7 @@ void print_hints_menu(unsigned int type)
     }
 
     cprintf("%c - %s %s %s\n",
-            letter, species_name(_get_hints_species(type), 1).c_str(),
+            letter, species_name(_get_hints_species(type)).c_str(),
                     get_job_name(_get_hints_job(type)), desc);
 }
 
@@ -316,7 +316,7 @@ void hints_starting_screen()
 
     text  = "<white>Welcome to Dungeon Crawl!</white>\n\n";
     text += "Your object is to lead a <w>"
-         + species_name(you.species, 1) + " " + you.class_name
+         + species_name(you.species) + " " + you.class_name
          +
         "</w> safely through the depths of the dungeon, retrieving the "
         "fabled Orb of Zot and returning it to the surface. "
@@ -568,7 +568,7 @@ static formatted_string _hints_debug()
     result += "\n";
 
     snprintf(info, INFO_SIZE, "You are a %s %s, and the hint mode will reflect "
-             "that.", species_name(you.species, 1), you.class_name);
+             "that.", species_name(you.species), you.class_name);
 
     result += info;
 
@@ -1755,7 +1755,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
         if (you.species == SP_CENTAUR || you.species == SP_MINOTAUR)
         {
-            text << "\nNote that as a " << species_name(you.species, 1)
+            text << "\nNote that as a " << species_name(you.species)
                  << " you will be unable to wear "
                  << (you.species == SP_CENTAUR ? "boots" : "helmets")
                  << ".";

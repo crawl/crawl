@@ -276,7 +276,7 @@ int main(int argc, char *argv[])
     {
         msg::stream << "Welcome" << (game_start? "" : " back") << ", "
                     << you.your_name << " the "
-                    << species_name(you.species,you.experience_level)
+                    << species_name(you.species)
                     << " " << you.class_name << "."
                     << std::endl;
     }
@@ -455,7 +455,7 @@ static void _take_starting_note()
 {
     std::ostringstream notestr;
     notestr << you.your_name << ", the "
-            << species_name(you.species,you.experience_level) << " "
+            << species_name(you.species) << " "
             << you.class_name
             << ", began the quest for the Orb.";
     take_note(Note(NOTE_MESSAGE, 0, 0, notestr.str().c_str()));
@@ -1339,7 +1339,7 @@ static void _experience_check()
 {
     mprf("You are a level %d %s %s.",
          you.experience_level,
-         species_name(you.species,you.experience_level).c_str(),
+         species_name(you.species).c_str(),
          you.class_name);
 
     if (you.experience_level < 27)

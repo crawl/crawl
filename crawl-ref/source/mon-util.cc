@@ -3328,7 +3328,7 @@ static std::string _get_species_insult(const std::string &species,
 
 static std::string _pluralise_player_genus()
 {
-    std::string sp = species_name(you.species, 1, true, false);
+    std::string sp = species_name(you.species, true, false);
     if (player_genus(GENPC_ELVEN, you.species)
         || player_genus(GENPC_DWARVEN, you.species))
     {
@@ -3356,7 +3356,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         s_type = mons_shouts(monster->type);
 
     // FIXME: Handle player_genus in case it was not generalized to foe_genus.
-    msg = replace_all(msg, "@player_genus@", species_name(you.species, 1, true));
+    msg = replace_all(msg, "@player_genus@", species_name(you.species, true));
     msg = replace_all(msg, "@player_genus_plural@", _pluralise_player_genus());
 
     std::string foe_species;
@@ -3365,7 +3365,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         ;
     else if (foe->atype() == ACT_PLAYER)
     {
-        foe_species = species_name(you.species, 1, true);
+        foe_species = species_name(you.species, true);
 
         msg = replace_all(msg, " @to_foe@", "");
         msg = replace_all(msg, " @at_foe@", "");
@@ -3381,7 +3381,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         msg = replace_all(msg, "@Foe@", "You");
 
         msg = replace_all(msg, "@foe_name@", you.your_name);
-        msg = replace_all(msg, "@foe_species@", species_name(you.species, 1));
+        msg = replace_all(msg, "@foe_species@", species_name(you.species));
         msg = replace_all(msg, "@foe_genus@", foe_species);
         msg = replace_all(msg, "@foe_genus_plural@",
                           _pluralise_player_genus());

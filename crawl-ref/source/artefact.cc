@@ -261,7 +261,7 @@ static std::string _replace_name_parts(const std::string name_in,
     name = replace_all(name, "@player_name@", you.your_name);
 
     name = replace_all(name, "@player_species@",
-                 species_name(static_cast<species_type>(you.species), 1));
+                 species_name(static_cast<species_type>(you.species), true));
 
     if (name.find("@branch_name@", 0) != std::string::npos)
     {

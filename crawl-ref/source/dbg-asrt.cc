@@ -122,7 +122,7 @@ static void _dump_player(FILE *file)
     }
 
     fprintf(file, "Name:       [%s]\n", you.your_name.c_str());
-    fprintf(file, "Species:    %s\n", species_name(you.species, 27).c_str());
+    fprintf(file, "Species:    %s\n", species_name(you.species).c_str());
     fprintf(file, "Job:        %s\n\n", get_job_name(you.char_class));
     fprintf(file, "class_name: %s\n\n", you.class_name);
 

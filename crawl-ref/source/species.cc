@@ -95,7 +95,7 @@ int get_species_index_by_name(const char *name)
         const species_type real_sp = species_order[i];
 
         const std::string lowered_species =
-            lowercase_string(species_name(real_sp,1));
+            lowercase_string(species_name(real_sp));
         pos = lowered_species.find(lowered_buff);
         if (pos != std::string::npos)
         {
@@ -149,15 +149,15 @@ species_type str_to_species(const std::string &species)
     for (int i = 0; i < NUM_SPECIES; ++i)
     {
         sp = static_cast<species_type>(i);
-        if (species == species_name(sp, 1))
+        if (species == species_name(sp))
             return (sp);
     }
 
     return (SP_UNKNOWN);
 }
 
-std::string species_name(species_type speci, int level, bool genus, bool adj)
-// defaults:                                            false       false
+std::string species_name(species_type speci, bool genus, bool adj)
+// defaults:                                 false       false
 {
     std::string res;
 

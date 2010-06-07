@@ -5199,8 +5199,7 @@ std::string player_save_info::short_desc() const
 {
     std::ostringstream desc;
     desc << name << ", a level " << experience_level << ' '
-         << species_name(species, experience_level) << ' '
-         << class_name;
+         << species_name(species) << ' ' << class_name;
 
     if (religion == GOD_JIYVA)
         desc << " of " << god_name_jiyva(true);

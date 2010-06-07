@@ -48,8 +48,7 @@ void wizard_change_species( void )
     for (i = 0; i < NUM_SPECIES; ++i)
     {
         const species_type si = static_cast<species_type>(i);
-        const std::string sp_name =
-            lowercase_string(species_name(si, you.experience_level));
+        const std::string sp_name = lowercase_string(species_name(si));
 
         std::string::size_type pos = sp_name.find(specs);
         if (pos != std::string::npos)

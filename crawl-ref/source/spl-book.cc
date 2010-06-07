@@ -1500,7 +1500,7 @@ static bool _get_mem_list(spell_list &mem_spells,
     else if (num_race == total || (num_known + num_race) == total)
     {
         const bool lichform = (you.attribute[ATTR_TRANSFORMATION] == TRAN_LICH);
-        const std::string species = "a " + species_name(you.species, 0);
+        const std::string species = "a " + species_name(you.species);
         mprf(MSGCH_PROMPT,
              "You cannot memorise any of the available spells because you "
              "are %s %s.", lichform ? "in Lich form"
@@ -1808,7 +1808,7 @@ std::string desc_cannot_memorise_reason(bool undead)
     if (lichform)
         desc += "in Lich form";
     else
-        desc += "a " + lowercase_string(species_name(you.species, 0));
+        desc += "a " + lowercase_string(species_name(you.species));
 
     desc += ".";
 
