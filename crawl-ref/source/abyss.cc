@@ -604,7 +604,7 @@ private:
         // env.map_knowledge().known() doesn't work on unmappable levels because
         // mapping flags are not set on such levels.
         for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
-            if (grd(*ri) == DNGN_EXIT_ABYSS && get_cell_glyph(env.map_knowledge(*ri)).ch != ' ')
+            if (grd(*ri) == DNGN_EXIT_ABYSS && env.map_knowledge(*ri).seen())
                 nearness = std::min(nearness, grid_distance(you.pos(), *ri));
 
         return (nearness);
@@ -616,7 +616,7 @@ private:
         // See above comment about env.map_knowledge().known().
         for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
         {
-            if (get_cell_glyph(env.map_knowledge(*ri)).ch != ' ')
+            if (env.map_knowledge(*ri).seen())
             {
                 for (stack_iterator si(*ri); si; ++si)
                     if (item_is_rune(*si, RUNE_ABYSSAL))

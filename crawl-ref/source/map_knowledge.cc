@@ -27,18 +27,7 @@ void map_knowledge_forget_mons(const coord_def& c)
     if (!env.map_knowledge(c).detected_monster())
         return;
 
-    env.map_knowledge(c).flags &= ~MAP_DETECTED_MONSTER;
-    show_type* obj = &env.map_knowledge(c).object;
-    if (obj->cls == SH_MONSTER)
-        obj->cls = (obj->feat == DNGN_UNSEEN ? SH_NOTHING : SH_FEATURE);
-}
-
-void set_map_knowledge_obj(const coord_def& where, show_type obj)
-{
-    env.map_knowledge(where).object = obj;
-#ifdef USE_TILE
-    tiles.update_minimap(where);
-#endif
+    env.map_knowledge(c).clear_monster();
 }
 
 // Used to mark dug out areas, unset when terrain is seen or mapped again.
@@ -57,7 +46,6 @@ void set_terrain_mapped( int x, int y )
     map_cell* cell = &env.map_knowledge(gc);
     cell->flags &= (~MAP_CHANGED_FLAG);
     cell->flags |= MAP_MAGIC_MAPPED_FLAG;
-    cell->object.colour = get_feature_def(cell->object).map_colour;
 #ifdef USE_TILE
     tiles.update_minimap(gc);
 #endif
@@ -87,30 +75,16 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
     for (rectangle_iterator ri(BOUNDARY_BORDER - 1); ri; ++ri)
     {
         const coord_def p = *ri;
-        if (!env.map_knowledge(p).known())
-            continue;
-        if (env.map_knowledge(p).item() != SHOW_ITEM_NONE)
-            continue;
-        if (!clear_detected_items && env.map_knowledge(p).detected_item())
-            continue;
-        if (!clear_detected_monsters && env.map_knowledge(p).detected_item())
+        map_cell& cell = env.map_knowledge(p);
+        if (!cell.known() || cell.visible())
             continue;
 
-        show_type plain = env.map_knowledge(p).object;
+        if (!clear_detected_items || !cell.detected_item())
+            cell.clear_item();
 
-        // If it's an immobile monster or a feature, don't erase.
-        if ((plain.cls != SH_MONSTER || plain.is_cleanable_monster())
-            && plain.cls != SH_FEATURE)
-        {
-            plain = show_type(plain.feat);
-#ifdef USE_TILE
-            tile_clear_map(p);
-#endif
-        }
-
-        set_map_knowledge_obj(p, plain);
-        env.map_knowledge(p).set_detected_monster(false);
-        env.map_knowledge(p).set_detected_item(false);
+        if ((!clear_detected_monsters || !cell.detected_monster())
+                && !mons_class_is_stationary(cell.monster()))
+            cell.clear_monster();
     }
 }
 
@@ -171,6 +145,10 @@ void set_terrain_seen( int x, int y )
 
     cell->flags &= (~MAP_CHANGED_FLAG);
     cell->flags |= MAP_SEEN_FLAG;
+
+#ifdef USE_TILE
+    tiles.update_minimap(x, y);
+#endif
 }
 
 void set_terrain_visible(const coord_def &c)

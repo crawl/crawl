@@ -112,18 +112,15 @@ public:
 
     opacity_type operator()(const coord_def& p) const
     {
-        if (!env.map_knowledge(p).seen())
+        map_cell& cell = env.map_knowledge(p);
+        if (!cell.seen())
             return OPC_CLEAR;
-        else if (!env.map_knowledge(p).changed())
+        else if (!cell.changed())
             return _feat_opacity(env.grid(p));
-        else if (env.map_knowledge(p).object.cls == SH_FEATURE)
-            return _feat_opacity(env.map_knowledge(p).object.feat);
+        else if (cell.feat() != DNGN_UNSEEN)
+            return _feat_opacity(cell.feat());
         else
-        {
-            // If you have seen monsters, items or clouds there,
-            // it must have been passable.
             return OPC_CLEAR;
-        }
     }
 };
 static opacity_excl opc_excl;
@@ -481,17 +478,17 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl,
         {
             // Don't list a monster in the exclusion annotation if the
             // exclusion was triggered by e.g. the flamethrowers' lua check.
-            const show_type& obj = env.map_knowledge(p).object;
-            if (obj.cls == SH_MONSTER)
+            const map_cell& cell = env.map_knowledge(p);
+            if (cell.monster() != MONS_NO_MONSTER)
             {
-                desc = mons_type_name(obj.mons, DESC_PLAIN);
-                if (env.map_knowledge(p).detected_monster())
+                desc = mons_type_name(cell.monster(), DESC_PLAIN);
+                if (cell.detected_monster())
                     desc += " (detected)";
             }
             else
             {
                 // Maybe it's a door or staircase?
-                const dungeon_feature_type feat = env.map_knowledge(p).feat();
+                const dungeon_feature_type feat = cell.feat();
                 if (feat_is_door(feat))
                     desc = "door";
                 else

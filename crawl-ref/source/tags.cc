@@ -2098,10 +2098,8 @@ static void tag_construct_level(writer &th)
         for (int count_y = 0; count_y < GYM; count_y++)
         {
             marshallByte(th, grd[count_x][count_y]);
-            marshallShowtype(th, env.map_knowledge[count_x][count_y].object);
-            marshallShort(th, env.map_knowledge[count_x][count_y].flags &~ MAP_VISIBLE_FLAG);
+            marshallMapCell(th, env.map_knowledge[count_x][count_y]);
             marshallInt(th, env.pgrid[count_x][count_y]);
-            marshallShort(th, env.cgrid[count_x][count_y]);
         }
 
     run_length_encode(th, marshallByte, env.grid_colours, GXM, GYM);
@@ -2233,24 +2231,128 @@ void unmarshallItem(reader &th, item_def &item)
         artefact_fixup_props(item);
 }
 
-void marshallShowtype(writer &th, const show_type &obj)
+#define MAP_SERIALIZE_FLAGS_MASK 3
+#define MAP_SERIALIZE_FLAGS_8 1
+#define MAP_SERIALIZE_FLAGS_16 2
+#define MAP_SERIALIZE_FLAGS_32 3
+
+#define MAP_SERIALIZE_FEATURE 4
+#define MAP_SERIALIZE_FEATURE_COLOR 8
+#define MAP_SERIALIZE_ITEM 0x10
+#define MAP_SERIALIZE_CLOUD 0x20
+#define MAP_SERIALIZE_MONSTER 0x40
+
+void marshallMapCell(writer &th, const map_cell &cell)
 {
-    marshallByte(th, obj.cls);
-    marshallShort(th, obj.feat);
-    marshallShort(th, obj.item);
-    marshallShort(th, obj.mons);
-    marshallShort(th, obj.colour);
+    unsigned flags = 0;
+
+    if(cell.flags > 0xffff)
+        flags |= MAP_SERIALIZE_FLAGS_32;
+    else if(cell.flags > 0xff)
+        flags |= MAP_SERIALIZE_FLAGS_16;
+    else if(cell.flags)
+        flags |= MAP_SERIALIZE_FLAGS_8;
+
+    if(cell.feat() != DNGN_UNSEEN)
+        flags |= MAP_SERIALIZE_FEATURE;
+
+    if(cell.feat_colour())
+        flags |= MAP_SERIALIZE_FEATURE_COLOR;
+
+    if(cell.cloud() != CLOUD_NONE)
+        flags |= MAP_SERIALIZE_CLOUD;
+
+    if(cell.item())
+        flags |= MAP_SERIALIZE_ITEM;
+
+    if(cell.monster() != MONS_NO_MONSTER && !cell.detected_monster())
+        flags |= MAP_SERIALIZE_MONSTER;
+
+    marshallUnsigned(th, flags);
+
+    switch(flags & MAP_SERIALIZE_FLAGS_MASK)
+    {
+    case MAP_SERIALIZE_FLAGS_8:
+        marshallByte(th, cell.flags);
+        break;
+    case MAP_SERIALIZE_FLAGS_16:
+        marshallShort(th, cell.flags);
+        break;
+    case MAP_SERIALIZE_FLAGS_32:
+        marshallInt(th, cell.flags);
+        break;
+    }
+
+    if(flags & MAP_SERIALIZE_FEATURE)
+        marshallUnsigned(th, cell.feat());
+
+    if(flags & MAP_SERIALIZE_FEATURE_COLOR)
+        marshallUnsigned(th, cell.feat_colour());
+
+    if(flags & MAP_SERIALIZE_CLOUD)
+        marshallUnsigned(th, cell.cloud());
+
+    if(flags & MAP_SERIALIZE_ITEM)
+        marshallItem(th, *cell.item());
+
+    if(flags & MAP_SERIALIZE_MONSTER)
+        marshallMonsterInfo(th, *cell.monsterinfo());
+    else if(cell.detected_monster())
+        marshallUnsigned(th, cell.monster());
 }
 
-show_type unmarshallShowtype(reader &th)
+void unmarshallMapCell(reader &th, map_cell& cell)
 {
-    show_type obj;
-    obj.cls = static_cast<show_class>(unmarshallByte(th));
-    obj.feat = static_cast<dungeon_feature_type>(unmarshallShort(th));
-    obj.item = static_cast<show_item_type>(unmarshallShort(th));
-    obj.mons = static_cast<monster_type>(unmarshallShort(th));
-    obj.colour = unmarshallShort(th);
-    return (obj);
+    unsigned flags = unmarshallUnsigned(th);
+    unsigned cell_flags = 0;
+
+    cell.clear();
+
+    switch(flags & MAP_SERIALIZE_FLAGS_MASK)
+    {
+    case MAP_SERIALIZE_FLAGS_8:
+        cell_flags = unmarshallByte(th);
+        break;
+    case MAP_SERIALIZE_FLAGS_16:
+        cell_flags = unmarshallShort(th);
+        break;
+    case MAP_SERIALIZE_FLAGS_32:
+        cell_flags = unmarshallInt(th);
+        break;
+    }
+
+    dungeon_feature_type feature = DNGN_UNSEEN;
+    unsigned feat_colour = 0;
+
+    if(flags & MAP_SERIALIZE_FEATURE)
+        feature = (dungeon_feature_type)unmarshallUnsigned(th);
+
+    if(flags & MAP_SERIALIZE_FEATURE_COLOR)
+        feat_colour = unmarshallUnsigned(th);
+
+    cell.set_feature(feature, feat_colour);
+
+    if(flags & MAP_SERIALIZE_CLOUD)
+        cell.set_cloud((cloud_type)unmarshallUnsigned(th));
+
+    if(flags & MAP_SERIALIZE_ITEM)
+    {
+        item_def item;
+        unmarshallItem(th, item);
+        cell.set_item(item, false);
+    }
+
+    if(flags & MAP_SERIALIZE_MONSTER)
+    {
+        monster_info mi;
+        unmarshallMonsterInfo(th, mi);
+        cell.set_monster(mi);
+    }
+    else if(cell_flags & MAP_DETECTED_MONSTER)
+        cell.set_detected_monster((monster_type)unmarshallUnsigned(th));
+
+    // set this last so the other sets don't override this
+    cell.flags = cell_flags;
 }
 
 static void tag_construct_level_items(writer &th)
@@ -2552,8 +2654,8 @@ static void tag_read_level( reader &th, char minorVersion )
                 static_cast<dungeon_feature_type>(
                     static_cast<unsigned char>(unmarshallByte(th)) );
 
-            env.map_knowledge[i][j].object   = unmarshallShowtype(th);
-            env.map_knowledge[i][j].flags    = unmarshallShort(th);
+            unmarshallMapCell(th, env.map_knowledge[i][j]);
+            env.map_knowledge[i][j].flags &=~ MAP_VISIBLE_FLAG;
             env.pgrid[i][j] = unmarshallInt(th);
 
             mgrd[i][j] = NON_MONSTER;

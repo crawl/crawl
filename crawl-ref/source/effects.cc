@@ -4231,8 +4231,9 @@ static void _maybe_restart_fountain_flow(const coord_def& where,
         grd(where) = static_cast<dungeon_feature_type> (grid
                         - (DNGN_DRY_FOUNTAIN_BLUE - DNGN_FOUNTAIN_BLUE));
 
+        // XXX: why should the player magically know this?!
         if (env.map_knowledge(where).seen())
-            set_map_knowledge_obj(where, grd(where));
+            env.map_knowledge(where).set_feature(grd(where));
 
         // Clean bloody floor.
         if (is_bloodcovered(where))

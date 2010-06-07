@@ -79,11 +79,10 @@ int detect_items(int pow)
             continue;
 
         if (igrd(*ri) != NON_ITEM
-            && (!env.map_knowledge(*ri).object || env.map_knowledge(*ri).item() == SHOW_ITEM_NONE))
+            && !env.map_knowledge(*ri).item())
         {
             items_found++;
-            set_map_knowledge_obj(*ri, show_type(SHOW_ITEM_DETECTED));
-            env.map_knowledge(*ri).set_detected_item(true);
+            env.map_knowledge(*ri).set_detected_item();
         }
     }
 
@@ -145,8 +144,7 @@ static bool _mark_detected_creature(coord_def where, const monsters *mon,
             where = place;
     }
 
-    set_map_knowledge_obj(where, show_type(mons_detected_base(mon->type)));
-    env.map_knowledge(where).set_detected_monster(true);
+    env.map_knowledge(where).set_detected_monster(mons_detected_base(mon->type));
 
     return (found_good);
 }

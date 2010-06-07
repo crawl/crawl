@@ -766,7 +766,7 @@ int reveal_traps(const int range)
         {
             traps_found++;
             trap.reveal();
-            set_map_knowledge_obj(trap.pos, show_type(grd(trap.pos)));
+            env.map_knowledge(trap.pos).set_feature(grd(trap.pos));
             set_terrain_mapped(trap.pos);
         }
     }

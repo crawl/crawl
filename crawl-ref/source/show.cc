@@ -106,31 +106,6 @@ bool show_type::is_cleanable_monster() const
     return (cls == SH_MONSTER && !mons_class_is_stationary(mons));
 }
 
-static bool _show_bloodcovered(const coord_def& where)
-{
-    if (!is_bloodcovered(where))
-        return (false);
-
-    dungeon_feature_type feat = env.grid(where);
-
-    // Altars, stairs (of any kind) and traps should not be coloured red.
-    return (!is_critical_feature(feat) && !feat_is_trap(feat));
-}
-
-static bool _show_mold(const coord_def & where, unsigned char & mold_colour)
-{
-    if (!is_moldy(where))
-        return (false);
-
-    dungeon_feature_type feat = env.grid(where);
-
-    mold_colour = glowing_mold(where) ? LIGHTRED : LIGHTGREEN;
-
-    // Altars, stairs (of any kind) and traps should not be coloured red.
-    return (!is_critical_feature(feat) && !feat_is_trap(feat));
-
-}
-
 static unsigned short _tree_colour(const coord_def& where)
 {
     uint32_t h = where.x;
@@ -143,88 +118,54 @@ static unsigned short _tree_colour(const coord_def& where)
                    : LIGHTGREEN;
 }
 
-static unsigned short _feat_colour(const coord_def &where,
-                                   const dungeon_feature_type feat)
-{
-    unsigned short colour = BLACK;
-    const feature_def &fdef = get_feature_def(feat);
-    // TODO: consolidate with feat_is_stair etc.
-    bool excluded_stairs = (feat >= DNGN_STONE_STAIRS_DOWN_I
-                            && feat <= DNGN_ESCAPE_HATCH_UP
-                            && is_exclude_root(where));
-
-    unsigned char mold_colour;
-    if (excluded_stairs)
-        colour = Options.tc_excluded;
-    else if (feat >= DNGN_MINMOVE && you.get_beholder(where))
-    {
-        // Colour grids that cannot be reached due to beholders
-        // dark grey.
-        colour = DARKGREY;
-    }
-    else if (feat >= DNGN_MINMOVE && is_sanctuary(where))
-    {
-        if (testbits(env.pgrid(where), FPROP_SANCTUARY_1))
-            colour = YELLOW;
-        else if (testbits(env.pgrid(where), FPROP_SANCTUARY_2))
-        {
-            if (!one_chance_in(4))
-                colour = WHITE;     // 3/4
-            else if (!one_chance_in(3))
-                colour = LIGHTCYAN; // 1/6
-            else
-                colour = LIGHTGREY; // 1/12
-        }
-    }
-    else if (_show_bloodcovered(where))
-        colour = RED;
-    else if (_show_mold(where, mold_colour))
-        colour = mold_colour;
-    else if (slime_wall_neighbour(where))
-        colour = LIGHTGREEN;
-    else if (env.grid_colours(where))
-        colour = env.grid_colours(where);
-    else
-    {
-        colour = fdef.colour;
-        if (colour == BLACK && feat == DNGN_TREE)
-            colour = _tree_colour(where);
-
-        if (fdef.em_colour && fdef.em_colour != fdef.colour
-            && emphasise(where))
-        {
-            colour = fdef.em_colour;
-        }
-    }
-
-    // TODO: should be a feat_is_whatever(feat)
-    if (feat >= DNGN_FLOOR_MIN && feat <= DNGN_FLOOR_MAX
-        || feat == DNGN_UNDISCOVERED_TRAP)
-    {
-        if (haloed(where))
-        {
-            if (silenced(where))
-                colour = LIGHTCYAN;
-            else
-                colour = YELLOW;
-        }
-        else if (silenced(where))
-            colour = CYAN;
-    }
-    return (colour);
-}
-
 static void _update_feat_at(const coord_def &gp)
 {
-    env.map_knowledge(gp).object.cls = SH_FEATURE;
-    env.map_knowledge(gp).object.feat = grid_appearance(gp);
-    env.map_knowledge(gp).object.colour = _feat_colour(gp, env.map_knowledge(gp).object.feat);
+    dungeon_feature_type feat = grid_appearance(gp);
+    unsigned colour = env.grid_colours(gp);
+    if(feat == DNGN_TREE && !colour)
+        colour = _tree_colour(gp);
+    env.map_knowledge(gp).set_feature(feat, colour);
+
+    if(haloed(gp))
+        env.map_knowledge(gp).flags |= MAP_HALOED;
+
+    if(silenced(gp))
+        env.map_knowledge(gp).flags |= MAP_SILENCED;
+
+    if(is_sanctuary(gp))
+    {
+        if (testbits(env.pgrid(gp), FPROP_SANCTUARY_1))
+            env.map_knowledge(gp).flags |= MAP_SANCTUARY_1;
+        else if (testbits(env.pgrid(gp), FPROP_SANCTUARY_2))
+            env.map_knowledge(gp).flags |= MAP_SANCTUARY_2;
+    }
+
+    if(you.get_beholder(gp))
+        env.map_knowledge(gp).flags |= MAP_WITHHELD;
+
+    if(feat >= DNGN_STONE_STAIRS_DOWN_I
+                            && feat <= DNGN_ESCAPE_HATCH_UP
+                            && is_exclude_root(gp))
+        env.map_knowledge(gp).flags |= MAP_EXCLUDED_STAIRS;
+
+    if(is_bloodcovered(gp))
+        env.map_knowledge(gp).flags |= MAP_BLOODY;
+
+    if(is_moldy(gp))
+    {
+        env.map_knowledge(gp).flags |= MAP_MOLDY;
+        if(glowing_mold(gp))
+            env.map_knowledge(gp).flags |= MAP_GLOWING_MOLDY;
+    }
+
+    if(emphasise(gp))
+        env.map_knowledge(gp).flags |= MAP_EMPHASIZE;
 
     // Tell the world first.
     dungeon_events.fire_position_event(DET_PLAYER_IN_LOS, gp);
 
-    if (get_feature_def(env.map_knowledge(gp).object).is_notable())
-        seen_notable_thing(env.map_knowledge(gp).object.feat, gp);
+    if (is_notable_terrain(feat))
+        seen_notable_thing(feat, gp);
 
     dgn_seen_vault_at(gp);
 }
@@ -255,6 +196,7 @@ static show_item_type _item_to_show_code(const item_def &item)
 static void _update_item_at(const coord_def &gp)
 {
     const item_def *eitem;
+    bool more_items = false;
     // Check for mimics.
     const monsters* m = monster_at(gp);
     if (m && mons_is_unknown_mimic(m))
@@ -264,31 +206,13 @@ static void _update_item_at(const coord_def &gp)
     else
         return;
 
-    unsigned short &ecol  = env.map_knowledge(gp).object.colour;
+    // monster(mimic)-owned items have link = NON_ITEM+1+midx
+    if (eitem->link > NON_ITEM && you.visible_igrd(gp) != NON_ITEM)
+        more_items = true;
+    else if (eitem->link < NON_ITEM && !crawl_state.game_is_arena())
+        more_items = true;
 
-    glyph g = get_item_glyph(eitem);
-
-    const dungeon_feature_type feat = grd(gp);
-
-    if (Options.feature_item_brand && is_critical_feature(feat))
-        ecol |= COLFLAG_FEATURE_ITEM;
-    else if (Options.trap_item_brand && feat_is_trap(feat))
-        ecol |= COLFLAG_TRAP_ITEM;
-    else
-    {
-        ecol = g.col;
-
-        if (feat_is_water(feat))
-            ecol = _feat_colour(gp, feat);
-
-        // monster(mimic)-owned items have link = NON_ITEM+1+midx
-        if (eitem->link > NON_ITEM && you.visible_igrd(gp) != NON_ITEM)
-            ecol |= COLFLAG_ITEM_HEAP;
-        else if (eitem->link < NON_ITEM && !crawl_state.game_is_arena())
-            ecol |= COLFLAG_ITEM_HEAP;
-        env.map_knowledge(gp).object.cls = SH_ITEM;
-        env.map_knowledge(gp).object.item = _item_to_show_code(*eitem);
-    }
+    env.map_knowledge(gp).set_item(get_item_info(*eitem), more_items);
 
 #ifdef USE_TILE
     if (feat_is_stair(feat))
@@ -301,12 +225,8 @@ static void _update_item_at(const coord_def &gp)
 static void _update_cloud(int cloudno)
 {
     const coord_def gp = env.cloud[cloudno].pos;
-    int which_colour = get_cloud_colour(cloudno);
     cloud_type cloud = env.cloud[cloudno].type;
-    if (cloud != CLOUD_GLOOM)
-        env.map_knowledge(gp).object.cls = SH_CLOUD;
-
-    env.map_knowledge(gp).object.colour = which_colour;
+    env.map_knowledge(gp).set_cloud(cloud);
 
 #ifdef USE_TILE
     tile_place_cloud(gp, env.cloud[cloudno]);
@@ -352,55 +272,20 @@ static void _update_monster(const monsters* mons)
     if (!mons->visible_to(&you))
     {
         // ripple effect?
-        if (grd(gp) == DNGN_SHALLOW_WATER
+        if ((grd(gp) == DNGN_SHALLOW_WATER
             && !mons_flies(mons)
             && env.cgrid(gp) == EMPTY_CLOUD)
-        {
-            env.map_knowledge(gp).object.cls = SH_INVIS_EXPOSED;
-
-            // Translates between colours used for shallow and deep water,
-            // if not using the normal LIGHTCYAN / BLUE. The ripple uses
-            // the deep water colour.
-            unsigned short base_colour = env.grid_colours(gp);
-
-            static const unsigned short ripple_table[] =
-                {BLUE,          // BLACK        => BLUE (default)
-                 BLUE,          // BLUE         => BLUE
-                 GREEN,         // GREEN        => GREEN
-                 CYAN,          // CYAN         => CYAN
-                 RED,           // RED          => RED
-                 MAGENTA,       // MAGENTA      => MAGENTA
-                 BROWN,         // BROWN        => BROWN
-                 DARKGREY,      // LIGHTGREY    => DARKGREY
-                 DARKGREY,      // DARKGREY     => DARKGREY
-                 BLUE,          // LIGHTBLUE    => BLUE
-                 GREEN,         // LIGHTGREEN   => GREEN
-                 BLUE,          // LIGHTCYAN    => BLUE
-                 RED,           // LIGHTRED     => RED
-                 MAGENTA,       // LIGHTMAGENTA => MAGENTA
-                 BROWN,         // YELLOW       => BROWN
-                 LIGHTGREY};    // WHITE        => LIGHTGREY
-
-            env.map_knowledge(gp).object.colour = ripple_table[base_colour & 0x0f];
-        }
-        else if (is_opaque_cloud(env.cgrid(gp))
+            ||
+            (is_opaque_cloud(env.cgrid(gp))
                  && !mons->submerged()
                  && !mons->is_insubstantial())
-        {
-            env.map_knowledge(gp).object.cls = SH_INVIS_EXPOSED;
-            env.map_knowledge(gp).object.colour = get_cloud_colour(env.cgrid(gp));
-        }
+           )
+            env.map_knowledge(gp).set_invisible_monster();
         return;
     }
 
-    env.map_knowledge(gp).object.cls = SH_MONSTER;
-    if (!crawl_state.game_is_arena() && you.misled())
-        env.map_knowledge(gp).object.mons = mons->get_mislead_type();
-    else if (mons->type == MONS_SLIME_CREATURE && mons->number > 1)
-        env.map_knowledge(gp).object.mons = MONS_MERGED_SLIME_CREATURE;
-    else
-        env.map_knowledge(gp).object.mons = mons->type;
-    env.map_knowledge(gp).object.colour = get_mons_glyph(mons, false).col;
+    monster_info mi(mons);
+    env.map_knowledge(gp).set_monster(mi);
 
 #ifdef USE_TILE
     tile_place_monster(mons->pos(), mons);
@@ -409,7 +294,7 @@ static void _update_monster(const monsters* mons)
 
 void show_update_at(const coord_def &gp, bool terrain_only)
 {
-    env.map_knowledge(gp).object.cls = SH_NOTHING;
+    env.map_knowledge(gp).clear();
 
     // The sequence is grid, items, clouds, monsters.
     _update_feat_at(gp);

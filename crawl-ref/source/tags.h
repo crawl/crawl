@@ -14,6 +14,7 @@
 
 struct show_type;
 struct monster_info;
+struct map_cell;
 
 enum tag_type   // used during save/load process to identify data blocks
 {
@@ -137,7 +138,7 @@ void marshallCoord   (writer &, const coord_def &);
 void marshallItem    (writer &, const item_def &);
 void marshallMonster (writer &, const monsters &);
 void marshallMonsterInfo (writer &, const monster_info &);
-void marshallShowtype (writer &, const show_type &);
+void marshallMapCell (writer &, const map_cell &);
 
 void marshallEnumVal (writer &, const enum_info *, int);
 
@@ -195,7 +196,7 @@ coord_def   unmarshallCoord   (reader &);
 void        unmarshallItem    (reader &, item_def &item);
 void        unmarshallMonster (reader &, monsters &item);
 void        unmarshallMonsterInfo (reader &, monster_info &mi);
-show_type   unmarshallShowtype (reader &);
+void        unmarshallMapCell (reader &, map_cell& cell);
 
 int         unmarshallEnumVal (reader &, const enum_info *);
 

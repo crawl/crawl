@@ -551,12 +551,7 @@ void debug_stethoscope(int mon)
 void wizard_detect_creatures()
 {
     for (monster_iterator mi; mi; ++mi)
-    {
-        show_type obj(mi->type);
-        set_map_knowledge_obj(mi->pos(), obj);
-        env.map_knowledge(mi->pos()).set_detected_monster(true);
-        env.map_knowledge(mi->pos()).object.colour = get_mons_glyph(*mi, false).col;
-    }
+        env.map_knowledge(mi->pos()).set_monster(monster_info(*mi));
 }
 
 // Dismisses all monsters on the level or all monsters that match a user

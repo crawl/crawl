@@ -389,9 +389,9 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         if (open)
         {
             if (wizard_map)
-                set_map_knowledge_obj(*ri, grd(*ri));
-            else if (!env.map_knowledge(*ri).object)
-                set_map_knowledge_obj(*ri, magic_map_base_feat(grd(*ri)));
+                env.map_knowledge(*ri).set_feature(grd(*ri));
+            else if (!env.map_knowledge(*ri).feat())
+                env.map_knowledge(*ri).set_feature(magic_map_base_feat(grd(*ri)));
 
             if (wizard_map)
             {

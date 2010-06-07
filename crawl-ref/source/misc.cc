@@ -1630,7 +1630,7 @@ static bool _exposed_monsters_nearby(bool want_move)
 {
     const int radius = want_move ? 2 : 1;
     for (radius_iterator ri(you.pos(), radius); ri; ++ri)
-        if (env.map_knowledge(*ri).object.cls == SH_INVIS_EXPOSED)
+        if (env.map_knowledge(*ri).flags & MAP_INVISIBLE_MONSTER)
             return (true);
     return (false);
 }
