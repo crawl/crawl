@@ -1719,11 +1719,6 @@ tileidx_t tileidx_monster(const monsters *mons)
     return ch;
 }
 
-tileidx_t tileidx_monster_detected(const monsters *mons)
-{
-    return (_tileidx_monster_base(mons_detected_base(mons->type)));
-}
-
 tileidx_t tileidx_draco_base(const monsters *mon)
 {
     int draco = draco_subspecies(mon);

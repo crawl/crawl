@@ -22,7 +22,6 @@ tileidx_t tileidx_out_of_bounds(int branch);
 void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, const coord_def& gc);
 
 tileidx_t tileidx_monster(const monsters *mon);
-tileidx_t tileidx_monster_detected(const monsters *mon);
 tileidx_t tileidx_draco_base(const monsters *mon);
 tileidx_t tileidx_draco_job(const monsters *mon);
 
