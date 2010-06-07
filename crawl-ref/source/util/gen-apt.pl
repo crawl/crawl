@@ -69,6 +69,7 @@ sub fix_draco_species {
     else {
       $sp = sprintf("%*s", $$rseen, $flavour);
     }
+    $sp =~ s/ Base//;
   }
   $sp
 }
@@ -110,8 +111,6 @@ sub aptitude_table {
   my $text = '';
   my $seen_draconian_length;
   for my $sp (sort_species(@SPECIES)) {
-    next if $sp eq 'Base Draconian';
-
     my $line = '';
     $line .= fix_draco_species($sp, \$seen_draconian_length);
 

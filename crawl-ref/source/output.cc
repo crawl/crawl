@@ -2355,41 +2355,32 @@ std::string _status_mut_abilities()
           break;
 
       case SP_GREY_DRACONIAN:
-          if (you.experience_level > 6)
-              mutations.push_back("spiky tail");
+          mutations.push_back("spiky tail");
           break;
 
       case SP_GREEN_DRACONIAN:
-          if (you.experience_level > 6)
-              mutations.push_back("breathe poison");
+          mutations.push_back("breathe poison");
           break;
 
       case SP_RED_DRACONIAN:
-          if (you.experience_level > 6)
-              mutations.push_back("breathe fire");
+          mutations.push_back("breathe fire");
           break;
 
       case SP_WHITE_DRACONIAN:
-          if (you.experience_level > 6)
-              mutations.push_back("breathe frost");
+          mutations.push_back("breathe frost");
           break;
 
       case SP_BLACK_DRACONIAN:
-          if (you.experience_level > 6)
-              mutations.push_back("breathe lightning");
+          mutations.push_back("breathe lightning");
           break;
 
       case SP_YELLOW_DRACONIAN:
-          if (you.experience_level > 6)
-          {
-              mutations.push_back("spit acid");
-              mutations.push_back("acid resistance");
-          }
+          mutations.push_back("spit acid");
+          mutations.push_back("acid resistance");
           break;
 
       case SP_PURPLE_DRACONIAN:
-          if (you.experience_level > 6)
-              mutations.push_back("breathe power");
+          mutations.push_back("breathe power");
           break;
 
       case SP_MOTTLED_DRACONIAN:

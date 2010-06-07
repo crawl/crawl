@@ -29,7 +29,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_SPRIGGAN:
             case SP_NAGA:
             case SP_OGRE:
-            case SP_RED_DRACONIAN:
+            case SP_BASE_DRACONIAN:
             case SP_MUMMY:
             case SP_VAMPIRE:
                 return (CC_RESTRICTED);
@@ -49,7 +49,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_NAGA:
             case SP_CENTAUR:
             case SP_TROLL:
-            case SP_RED_DRACONIAN:
+            case SP_BASE_DRACONIAN:
             case SP_GHOUL:
             case SP_MUMMY:
                 return (CC_RESTRICTED);
@@ -70,7 +70,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_KOBOLD:
             case SP_SPRIGGAN:
             case SP_NAGA:
-            case SP_RED_DRACONIAN:
+            case SP_BASE_DRACONIAN:
             case SP_DEMIGOD:
             case SP_DEMONSPAWN:
             case SP_MUMMY:
@@ -93,7 +93,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_SPRIGGAN:
             case SP_NAGA:
             case SP_CENTAUR:
-            case SP_RED_DRACONIAN:
+            case SP_BASE_DRACONIAN:
             case SP_MUMMY:
             case SP_GHOUL:
             case SP_VAMPIRE:
@@ -217,7 +217,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_TROLL:
             case SP_MINOTAUR:
             case SP_KENKU:
-            case SP_RED_DRACONIAN:
+            case SP_BASE_DRACONIAN:
             case SP_DEMONSPAWN:
             case SP_MUMMY:
             case SP_GHOUL:
@@ -278,7 +278,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_TROLL:
             case SP_MINOTAUR:
             case SP_KENKU:
-            case SP_RED_DRACONIAN:
+            case SP_BASE_DRACONIAN:
             case SP_DEMONSPAWN:
             case SP_GHOUL:
             case SP_MUMMY:
@@ -301,7 +301,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_CENTAUR:
             case SP_TROLL:
             case SP_MINOTAUR:
-            case SP_RED_DRACONIAN:
+            case SP_BASE_DRACONIAN:
             case SP_DEMIGOD:
             case SP_DEMONSPAWN:
             case SP_GHOUL:
@@ -344,7 +344,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_TROLL:
             case SP_MINOTAUR:
             case SP_KENKU:
-            case SP_RED_DRACONIAN:
+            case SP_BASE_DRACONIAN:
             case SP_DEMONSPAWN:
             case SP_MUMMY:
             case SP_GHOUL:
@@ -369,7 +369,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_CENTAUR:
             case SP_MINOTAUR:
             case SP_KENKU:
-            case SP_RED_DRACONIAN:
+            case SP_BASE_DRACONIAN:
             case SP_DEMONSPAWN:
             case SP_MUMMY:
             case SP_GHOUL:
@@ -473,7 +473,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_TROLL:
             case SP_MINOTAUR:
             case SP_KENKU:
-            case SP_RED_DRACONIAN:
+            case SP_BASE_DRACONIAN:
             case SP_GHOUL:
             case SP_VAMPIRE:
                 return (CC_RESTRICTED);
@@ -510,7 +510,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_OGRE:
             case SP_TROLL:
             case SP_MINOTAUR:
-            case SP_RED_DRACONIAN:
+            case SP_BASE_DRACONIAN:
             case SP_MUMMY:
             case SP_GHOUL:
             case SP_VAMPIRE:
@@ -532,7 +532,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_OGRE:
             case SP_TROLL:
             case SP_MINOTAUR:
-            case SP_RED_DRACONIAN:
+            case SP_BASE_DRACONIAN:
                 return (CC_RESTRICTED);
             default:
                 return (CC_UNRESTRICTED);
@@ -544,7 +544,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             case SP_DEEP_DWARF:
             case SP_KOBOLD:
             case SP_NAGA:
-            case SP_RED_DRACONIAN:
+            case SP_BASE_DRACONIAN:
             case SP_MUMMY:
             case SP_GHOUL:
             case SP_VAMPIRE:

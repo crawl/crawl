@@ -1938,11 +1938,9 @@ int help_highlighter::entry_colour(const MenuEntry *entry) const
 // To highlight species in aptitudes list. ('?%')
 std::string help_highlighter::get_species_key() const
 {
-    if (player_genus(GENPC_DRACONIAN) && you.experience_level < 7)
-        return "";
-
     std::string result = species_name(you.species, you.experience_level);
-    if (player_genus(GENPC_DRACONIAN))
+    // The table doesn't repeat the word "Draconian".
+    if (you.species != SP_BASE_DRACONIAN && player_genus(GENPC_DRACONIAN))
     {
         strip_tag(result,
                   species_name(you.species, you.experience_level, true));

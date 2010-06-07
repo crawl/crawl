@@ -1541,10 +1541,6 @@ static void _setup_generic(const newgame_def& ng)
 
     strlcpy(you.class_name, get_job_name(you.char_class), sizeof(you.class_name));
 
-    // Pick random draconian type.
-    if (you.species == SP_RED_DRACONIAN)
-        you.species = random_draconian_player_species();
-
     _species_stat_init( you.species );     // must be down here {dlb}
 
     you.is_undead = get_undead_state(you.species);
