@@ -2519,8 +2519,8 @@ static int _find_transtravel_stair( const level_id &cur,
     {
         stair_info &si = stairs[i];
 
-        // Skip placeholders, since there are no real stairs there.
-        if (!si.can_travel())
+        // Skip placeholders and excluded stairs.
+        if (!si.can_travel() || is_excluded(si.position, li.get_excludes()))
             continue;
 
         int deltadist = li.distance_between(this_stair, &si);
