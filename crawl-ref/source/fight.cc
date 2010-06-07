@@ -1014,7 +1014,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
         else if (you.has_usable_claws())
         {
             aux_verb = "claw";
-            aux_damage += roll_dice(1, 3);
+            aux_damage += roll_dice(player_mutation_level(MUT_CLAWS), 3);
         }
 
         break;
@@ -5238,6 +5238,8 @@ void melee_attack::mons_do_spines()
         int ac = random2(1+attacker->as_monster()->armour_class());
 
         int hurt = dmg - ac - evp;
+
+        dprf("Spiny: dmg = %d ac = %d hurt = %d", dmg, ac, hurt);
 
         if (hurt <= 0)
             return;
