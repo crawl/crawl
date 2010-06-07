@@ -331,7 +331,7 @@ mcache_monster::mcache_monster(const monsters *mon)
 {
     ASSERT(mcache_monster::valid(mon));
 
-    m_mon_tile = tileidx_monster(mon, false) & TILE_FLAG_MASK;
+    m_mon_tile = tileidx_monster(mon) & TILE_FLAG_MASK;
 
     const int mon_wep = mon->inv[MSLOT_WEAPON];
     m_equ_tile = tilep_equ_weapon(mitm[mon_wep]);
@@ -566,7 +566,7 @@ bool mcache_monster::valid(const monsters *mon)
     if (mon_wep == NON_ITEM)
         return (false);
 
-    tileidx_t mon_tile = tileidx_monster(mon, false) & TILE_FLAG_MASK;
+    tileidx_t mon_tile = tileidx_monster(mon) & TILE_FLAG_MASK;
 
     int ox, oy;
     return get_weapon_offset(mon_tile, &ox, &oy);

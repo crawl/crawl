@@ -639,7 +639,11 @@ void tile_place_monster(const coord_def &gc, const monsters *mon,
 
     const coord_def ep = view2show(grid2view(gc));
 
-    tileidx_t t    = tileidx_monster(mon, detected);
+    tileidx_t t;
+    if (detected)
+        t = tileidx_monster_detected(mon);
+    else
+        t = tileidx_monster(mon);
     tileidx_t t0   = t & TILE_FLAG_MASK;
     tileidx_t flag = t & (~TILE_FLAG_MASK);
 

@@ -20,8 +20,8 @@ class monsters;
 tileidx_t tileidx_feature(const coord_def &gc);
 tileidx_t tileidx_out_of_bounds(int branch);
 
-tileidx_t tileidx_monster_base(const monsters *mon, bool detected = false);
-tileidx_t tileidx_monster(const monsters *mon, bool detected = false);
+tileidx_t tileidx_monster(const monsters *mon);
+tileidx_t tileidx_monster_detected(const monsters *mon);
 tileidx_t tileidx_draco_base(const monsters *mon);
 tileidx_t tileidx_draco_job(const monsters *mon);
 
