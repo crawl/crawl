@@ -1685,6 +1685,11 @@ static void tag_read_you(reader &th, char minorVersion)
 
     you.props.clear();
     you.props.read(th);
+
+#if TAG_MAJOR_VERSION == 25
+    if (player_genus(GENPC_DRACONIAN) && you.experience_level < 7)
+        you.species = SP_BASE_DRACONIAN;
+#endif
 }
 
 static void tag_read_you_items(reader &th, char minorVersion)
