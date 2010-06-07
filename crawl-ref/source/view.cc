@@ -790,13 +790,7 @@ static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc)
     cell->colour = Options.colour_map ? real_colour(get_map_col(gc, false))
                                       : DARKGREY;
 #ifdef USE_TILE
-    tileidx_t bg = env.tile_bk_bg(gc);
-    tileidx_t fg = env.tile_bk_fg(gc);
-    if (bg == 0 && fg == 0)
-        tileidx_unseen(&fg, &bg, get_map_knowledge_char(gc), gc);
-
-    cell->tile_fg = fg;
-    cell->tile_bg = bg | tileidx_unseen_flag(gc);
+    tileidx_out_of_los(&cell->tile_fg, &cell->tile_bg, gc);
 #endif
 }
 
@@ -844,15 +838,7 @@ static void _draw_los_backup(screen_cell_t *cell,
     cell->colour = Options.colour_map ? real_colour(get_map_col(gc, false))
                                       : DARKGREY;
 #ifdef USE_TILE
-    tileidx_t bg = env.tile_bk_bg(gc);
-    tileidx_t fg = env.tile_bk_fg(gc);
-    if (bg != 0 || fg != 0)
-    {
-        cell->tile_fg = fg;
-        cell->tile_bg = bg | tileidx_unseen_flag(gc);
-    }
-    else
-        tileidx_unseen(&cell->tile_fg, &cell->tile_bg, cell->glyph, gc);
+    tileidx_out_of_los(&cell->tile_fg, &cell->tile_bg, gc);
 #endif
 }
 
