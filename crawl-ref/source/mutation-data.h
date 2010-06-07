@@ -1312,9 +1312,9 @@
    "You are mostly covered in yellow scales (AC +2).",
    "You are completely covered in yellow scales (AC +3, rCorr)."},
 
-  {"Colorless scales grow over part of your body",
+  {"Colorless scales grow over part of your body.",
    "Your colorless scales turn yellow and spread over more of your body.",
-   "Yellow scales cover you completely"},
+   "Yellow scales cover you completely."},
 
   {"Your colorless scales disappear.",
    "Your yellow scales recede somewhat.",
