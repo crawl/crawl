@@ -3049,22 +3049,20 @@ KFEAT:   MNOQ = shallow_water
 SHUFFLE: M/N/O/P/Q
 SUBST:   P = MNO
 #
-# Player monsters (no vampire or ogre magi because they can get out of their
-# cells or create threats outside; no merfolk, alive or undead, because they
-# insist on having deep water in their cells, which annoys me; other player
-# species don't exist as monsters):
+# Player monsters:
 KMONS: M = human / elf / orc; nothing / naga; nothing / centaur; nothing / \
            draconian; nothing / ogre; nothing / minotaur / troll / kobold / \
-           mummy / ghoul
+           mummy / ghoul / spriggan; nothing / dwarf; nothing / vampire spells:.
 # Player monsters, zombie versions (ghouls drop out because they need sustenance
 # and can't be reanimated once starved):
 KMONS: N = human zombie / elf zombie / orc zombie / naga zombie / ogre zombie / \
            centaur zombie / draconian zombie / minotaur zombie / troll zombie / \
-           kobold zombie / mummy
+           kobold zombie / mummy / spriggan zombie / merfolk zombie / dwarf zombie
 # Player monsters, skeleton versions:
 KMONS: O = human skeleton / elf skeleton / orc skeleton / naga skeleton / \
            centaur skeleton / draconian skeleton / ogre skeleton / \
-           minotaur skeleton /troll skeleton / kobold skeleton / mummy
+           minotaur skeleton / troll skeleton / kobold skeleton / mummy / \
+           spriggan skeleton / dwarf skeleton / merfolk skeleton
 # And now for something completely different (if any of these turn out to be
 # able to escape or project spells out of their cells, they should be removed):
 KMONS: Q = orb of fire / ice dragon / shadow dragon / iron dragon / \
