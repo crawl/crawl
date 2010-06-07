@@ -949,6 +949,7 @@ public:
     std::vector<coord_def> anchor_points() const;
 
     bool is_minivault() const;
+    bool is_overwritable_layout() const;
     bool has_tag(const std::string &tag) const;
     bool has_tag_prefix(const std::string &tag) const;
     bool has_tag_suffix(const std::string &suffix) const;

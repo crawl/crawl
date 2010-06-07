@@ -207,12 +207,16 @@ static bool _build_secondary_vault(int level_number, const map_def *vault,
                                    bool clobber = false,
                                    bool make_no_exits = false,
                                    const coord_def &where = coord_def(-1, -1));
-static bool _build_vaults(int level_number,
-                          const map_def *vault,
-                          int rune_subst = -1, bool build_only = false,
-                          bool check_collisions = false,
-                          bool make_no_exits = false,
-                          const coord_def &where = coord_def(-1, -1));
+
+static bool _build_primary_vault(int level_number, const map_def *vault);
+
+static bool _build_vault_impl(int level_number,
+                              const map_def *vault,
+                              int rune_subst = -1, bool build_only = false,
+                              bool check_collisions = false,
+                              bool make_no_exits = false,
+                              const coord_def &where = coord_def(-1, -1));
+
 static void _vault_grid(vault_placement &,
                         int vgrid,
                         const coord_def& where,
@@ -908,20 +912,20 @@ static void _dgn_apply_map_index(const vault_placement &place, int map_index)
 
 void dgn_register_place(const vault_placement &place, bool register_vault)
 {
-    const int map_index    = env.level_vaults.size();
-    const bool layout      = place.map.has_tag("layout");
-    const bool transparent = place.map.has_tag("transparent");
+    const int  map_index    = env.level_vaults.size();
+    const bool overwritable = place.map.is_overwritable_layout();
+    const bool transparent  = place.map.has_tag("transparent");
 
     if (register_vault)
     {
         dgn_register_vault(place.map);
 
         // Identify each square in the map with its map_index.
-        if (!layout && !transparent)
+        if (!overwritable && !transparent)
             _dgn_apply_map_index(place, map_index);
     }
 
-    if (!layout)
+    if (!overwritable)
     {
         if (place.map.orient == MAP_ENCOMPASS)
         {
@@ -1888,7 +1892,9 @@ static void _build_overflow_temples(int level_number)
             // find the overflow temple map, so don't veto the level.
             return;
 
-        if (!dgn_ensure_vault_placed(_build_vaults(level_number, vault), false))
+        if (!dgn_ensure_vault_placed(
+                _build_secondary_vault(level_number, vault),
+                false))
         {
 #ifdef DEBUG_TEMPLES
             mprf(MSGCH_DIAGNOSTICS, "Couldn't place overflow temple '%s', "
@@ -2365,7 +2371,8 @@ static builder_rc_type _builder_by_type(int level_number, char level_type)
                     pandemon_level_names[which_demon]);
             }
 
-            dgn_ensure_vault_placed( _build_vaults(level_number, vault), true );
+            dgn_ensure_vault_placed( _build_primary_vault(level_number, vault),
+                                     true );
         }
         else
         {
@@ -2442,7 +2449,8 @@ static void _portal_vault_level(int level_number)
             dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL,
                              vault->border_fill_type);
 
-        dgn_ensure_vault_placed( _build_vaults(level_number, vault), true );
+        dgn_ensure_vault_placed( _build_primary_vault(level_number, vault),
+                                 true );
     }
     else
     {
@@ -2558,7 +2566,8 @@ static builder_rc_type _builder_by_branch(int level_number)
     if (vault)
     {
         env.level_build_method += " random_map_for_place";
-        _ensure_vault_placed_ex( _build_vaults(level_number, vault), vault );
+        _ensure_vault_placed_ex( _build_primary_vault(level_number, vault),
+                                 vault );
         if (!dgn_level_vetoed && player_in_branch(BRANCH_SWAMP))
             dgn_build_swamp_level(level_number);
         return BUILD_SKIP;
@@ -2663,7 +2672,8 @@ static builder_rc_type _builder_normal(int level_number, char level_type,
     if (vault)
     {
         env.level_build_method += " normal_random_map_for_place";
-        _ensure_vault_placed_ex( _build_vaults(level_number, vault), vault );
+        _ensure_vault_placed_ex( _build_primary_vault(level_number, vault),
+                                 vault );
         return BUILD_SKIP;
     }
 
@@ -4501,8 +4511,8 @@ static bool _build_secondary_vault(int level_number, const map_def *vault,
                                    int rune_subst, bool clobber,
                                    bool no_exits, const coord_def &where)
 {
-    if (_build_vaults(level_number, vault, rune_subst, true, !clobber,
-                      no_exits, where))
+    if (_build_vault_impl(level_number, vault, rune_subst, true, !clobber,
+                          no_exits, where))
     {
         if (!no_exits)
         {
@@ -4515,10 +4525,27 @@ static bool _build_secondary_vault(int level_number, const map_def *vault,
     return (false);
 }
 
-static bool _build_vaults(int level_number, const map_def *vault,
-                          int rune_subst,
-                          bool build_only, bool check_collisions,
-                          bool make_no_exits, const coord_def &where)
+// Builds a primary vault - i.e. a vault that is built before anything
+// else on the level. After placing the vault, rooms and corridors
+// will be constructed on the level and the vault exits will be
+// connected to corridors.
+//
+// If portions of the level are already generated at this point, use
+// _build_secondary_vault or dgn_place_map instead.
+//
+// NOTE: minivaults can never be placed as primary vaults.
+//
+static bool _build_primary_vault(int level_number, const map_def *vault)
+{
+    return _build_vault_impl(level_number, vault);
+}
+
+// Builds a vault or minivault. Do not use this function directly: always
+// prefer _build_secondary_vault or _build_primary_vault.
+static bool _build_vault_impl(int level_number, const map_def *vault,
+                              int rune_subst,
+                              bool build_only, bool check_collisions,
+                              bool make_no_exits, const coord_def &where)
 {
     FixedVector < char, 10 > stair_exist;
     char stx, sty;
@@ -4568,7 +4595,7 @@ static bool _build_vaults(int level_number, const map_def *vault,
         mapgen_report_map_use(place.map);
 #endif
 
-    bool is_layout = place.map.has_tag("layout");
+    const bool is_layout = place.map.has_tag("layout");
 
     // If the map takes the whole screen or we were only requested to
     // build the vault, our work is done.
@@ -6331,7 +6358,7 @@ static bool _plan_1(int level_number)
     const map_def *vault = find_map_by_name("layout_forbidden_donut");
     ASSERT(vault);
 
-    bool success = _build_vaults(level_number, vault);
+    bool success = _build_primary_vault(level_number, vault);
     dgn_ensure_vault_placed(success, false);
 
     return false;
@@ -6345,7 +6372,7 @@ static bool _plan_2(int level_number)
     const map_def *vault = find_map_by_name("layout_cross");
     ASSERT(vault);
 
-    bool success = _build_vaults(level_number, vault);
+    bool success = _build_primary_vault(level_number, vault);
     dgn_ensure_vault_placed(success, false);
 
     return false;
@@ -6359,7 +6386,7 @@ static bool _plan_3(int level_number)
     const map_def *vault = find_map_by_name("layout_rooms");
     ASSERT(vault);
 
-    bool success = _build_vaults(level_number, vault);
+    bool success = _build_primary_vault(level_number, vault);
     dgn_ensure_vault_placed(success, false);
 
     return true;
@@ -6503,7 +6530,7 @@ static bool _plan_6(int level_number)
     const map_def *vault = find_map_by_name("layout_big_octagon");
     ASSERT(vault);
 
-    bool success = _build_vaults(level_number, vault);
+    bool success = _build_primary_vault(level_number, vault);
     dgn_ensure_vault_placed(success, false);
 
     // This "back door" is often one of the easier ways to get out of
@@ -7294,7 +7321,7 @@ static void _city_level(int level_number)
     const map_def *vault = find_map_by_name("layout_city");
     ASSERT(vault);
 
-    bool success = _build_vaults(level_number, vault);
+    bool success = _build_primary_vault(level_number, vault);
     dgn_ensure_vault_placed(success, false);
 }
 
@@ -8836,7 +8863,7 @@ void remember_vault_placement(std::string key, const vault_placement &place)
     // hash table, so the information can be included in the character
     // dump when the player dies/quits/wins.
     if (you.level_type == LEVEL_DUNGEON
-        && !place.map.has_tag("layout")
+        && !place.map.is_overwritable_layout()
         && !place.map.has_tag_suffix("dummy")
         && !place.map.has_tag("no_dump"))
     {
