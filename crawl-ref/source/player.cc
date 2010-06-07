@@ -506,6 +506,7 @@ bool is_player_same_species(const int mon, bool transform)
         case SP_DEEP_DWARF:
             return (mons_genus(mon) == MONS_DWARF);
 
+        case SP_BASE_DRACONIAN:
         case SP_RED_DRACONIAN:
         case SP_WHITE_DRACONIAN:
         case SP_GREEN_DRACONIAN:
@@ -1339,7 +1340,7 @@ int player_res_steam(bool calc_unid, bool temp, bool items)
 {
     int res = 0;
 
-    if (you.species == SP_PALE_DRACONIAN && you.experience_level > 5)
+    if (you.species == SP_PALE_DRACONIAN)
         res += 2;
 
     if (items && player_equip(EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_ARMOUR))
@@ -1430,7 +1431,7 @@ int player_res_acid(bool calc_unid, bool items)
     int res = 0;
     if (!transform_changed_physiology())
     {
-        if (you.species == SP_YELLOW_DRACONIAN && you.experience_level > 6)
+        if (you.species == SP_YELLOW_DRACONIAN)
             res += 2;
     }
 
@@ -1504,10 +1505,6 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
         // randart weapons:
         re += scan_artefacts(ARTP_ELECTRICITY, calc_unid);
     }
-
-    // species:
-    if (you.species == SP_BLACK_DRACONIAN && you.experience_level > 17)
-        re++;
 
     // mutations:
     re += player_mutation_level(MUT_THIN_METALLIC_SCALES) == 3 ? 1 : 0;
@@ -1595,7 +1592,7 @@ int player_res_sticky_flame(bool calc_unid, bool temp, bool items)
 {
     int rsf = 0;
 
-    if (you.species == SP_MOTTLED_DRACONIAN && you.experience_level > 5)
+    if (you.species == SP_MOTTLED_DRACONIAN)
         rsf++;
 
     if (items && player_equip(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_ARMOUR))
@@ -2564,6 +2561,10 @@ static void _draconian_scale_colour_message()
         mpr("Your scales start taking on a golden yellow colour.",
             MSGCH_INTRINSIC_GAIN);
         break;
+    case SP_GREY_DRACONIAN:
+       mpr("Your scales start turning grey.",
+                        MSGCH_INTRINSIC_GAIN);
+        break;
     case SP_BLACK_DRACONIAN:
         mpr("Your scales start turning black.",
             MSGCH_INTRINSIC_GAIN);
@@ -2862,6 +2863,18 @@ void level_change(bool skip_attribute_increase)
                     modify_stat(STAT_STR, 1, false, "level gain");
                 break;
 
+            case SP_BASE_DRACONIAN:
+                if (you.experience_level == 7)
+                {
+                    you.species = random_draconian_player_species();
+#ifdef USE_TILE
+                    init_player_doll();
+#endif
+                    _draconian_scale_colour_message();
+#ifdef USE_TILE
+                    redraw_screen();
+#endif
+                }
             case SP_RED_DRACONIAN:
             case SP_WHITE_DRACONIAN:
             case SP_GREEN_DRACONIAN:
@@ -2871,18 +2884,6 @@ void level_change(bool skip_attribute_increase)
             case SP_PURPLE_DRACONIAN:
             case SP_MOTTLED_DRACONIAN:
             case SP_PALE_DRACONIAN:
-            case SP_BASE_DRACONIAN:
-                if (you.experience_level == 7)
-                {
-#ifdef USE_TILE
-                    init_player_doll();
-#endif
-                    _draconian_scale_colour_message();
-#ifdef USE_TILE
-                    redraw_screen();
-#endif
-                }
-
                 if (you.experience_level == 14)
                 {
                     switch (you.species)
@@ -2902,11 +2903,16 @@ void level_change(bool skip_attribute_increase)
                 {
                     perma_mutate(MUT_SHOCK_RESISTANCE, 1);
                 }
+                else if (you.species == SP_GREY_DRACONIAN
+                         && you.experience_level == 7)
+                {
+                    modify_stat(STAT_RANDOM, 1, false, "level gain");
+                }
 
                 if (!(you.experience_level % 3))
                     hp_adjust++;
 
-                if (you.experience_level > 7 && !(you.experience_level % 4))
+                if (!(you.experience_level % 4))
                 {
                     mpr("Your scales feel tougher.", MSGCH_INTRINSIC_GAIN);
                     you.redraw_armour_class = true;
@@ -2915,37 +2921,17 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_GREY_DRACONIAN:
-                if (you.experience_level == 7)
-                {
-#ifdef USE_TILE
-                    init_player_doll();
-#endif
-                    mpr("Your scales start turning grey.",
-                        MSGCH_INTRINSIC_GAIN);
-#ifdef USE_TILE
-                    redraw_screen();
-#endif
-                }
-
                 if (!(you.experience_level % 3))
-                {
-                    hp_adjust++;
+                    hp_adjust+=2;
 
-                    if (you.experience_level > 7)
-                        hp_adjust++;
-                }
-
-                if (you.experience_level > 7 && !(you.experience_level % 2))
+                if (!(you.experience_level % 2))
                 {
                     mpr("Your scales feel tougher.", MSGCH_INTRINSIC_GAIN);
                     you.redraw_armour_class = true;
                 }
 
-                if ((you.experience_level > 7 && !(you.experience_level % 3))
-                    || you.experience_level == 4 || you.experience_level == 7)
-                {
+                if (!(you.experience_level % 3)) // and levels 4, 7 while immature
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
-                }
                 break;
 
             case SP_CENTAUR:
@@ -6143,7 +6129,7 @@ int player::has_tail(bool allow_tran) const
     }
 
 
-    if (you.species == SP_GREY_DRACONIAN && you.experience_level >= 7)
+    if (you.species == SP_GREY_DRACONIAN)
         return (2);
 
     // XXX: Do merfolk in water belong under allow_tran?

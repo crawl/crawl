@@ -233,76 +233,49 @@ formatted_string describe_mutations()
         break;
 
     case SP_GREY_DRACONIAN:
-        if (you.experience_level > 6)
-        {
-            result += "Your tail is studded with spikes.\n";
-            have_any = true;
-        }
+        result += "Your tail is studded with spikes.\n";
+        have_any = true;
         break;
 
     case SP_GREEN_DRACONIAN:
-        if (you.experience_level > 6)
-        {
-            result += "You can breathe poison.\n";
-            have_any = true;
-        }
+        result += "You can breathe poison.\n";
+        have_any = true;
         break;
 
     case SP_RED_DRACONIAN:
-        if (you.experience_level > 6)
-        {
-            result += "You can breathe fire.\n";
-            have_any = true;
-        }
+        result += "You can breathe fire.\n";
+        have_any = true;
         break;
 
     case SP_WHITE_DRACONIAN:
-        if (you.experience_level > 6)
-        {
-            result += "You can breathe cold.\n";
-            have_any = true;
-        }
+        result += "You can breathe cold.\n";
+        have_any = true;
         break;
 
     case SP_BLACK_DRACONIAN:
-        if (you.experience_level > 6)
-        {
-            result += "You can breathe lightning.\n";
-            have_any = true;
-        }
+        result += "You can breathe lightning.\n";
+        have_any = true;
         break;
 
     case SP_YELLOW_DRACONIAN:
-        if (you.experience_level > 6)
-        {
-            result += "You can spit acid.\n";
-            result += "You are resistant to acid.\n";
-            have_any = true;
-        }
+        result += "You can spit acid.\n";
+        result += "You are resistant to acid.\n";
+        have_any = true;
         break;
 
     case SP_PURPLE_DRACONIAN:
-        if (you.experience_level > 6)
-        {
-            result += "You can breathe power.\n";
-            have_any = true;
-        }
+        result += "You can breathe power.\n";
+        have_any = true;
         break;
 
     case SP_MOTTLED_DRACONIAN:
-        if (you.experience_level > 6)
-        {
-            result += "You can breathe sticky flames.\n";
-            have_any = true;
-        }
+        result += "You can breathe sticky flames.\n";
+        have_any = true;
         break;
 
     case SP_PALE_DRACONIAN:
-        if (you.experience_level > 6)
-        {
-            result += "You can breathe steam.\n";
-            have_any = true;
-        }
+        result += "You can breathe steam.\n";
+        have_any = true;
         break;
 
     case SP_KOBOLD:

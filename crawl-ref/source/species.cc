@@ -30,7 +30,7 @@ static species_type species_order[] = {
     SP_NAGA,           SP_CENTAUR,
     SP_OGRE,           SP_TROLL,
     SP_MINOTAUR,       SP_KENKU,
-    SP_RED_DRACONIAN,
+    SP_BASE_DRACONIAN,
     // celestial species
     SP_DEMIGOD,        SP_DEMONSPAWN,
     // undead species
@@ -146,15 +146,6 @@ species_type str_to_species(const std::string &species)
     if (species.empty())
         return SP_UNKNOWN;
 
-    // first look for full name (e.g. Green Draconian)
-    for (int i = 0; i < NUM_SPECIES; ++i)
-    {
-        sp = static_cast<species_type>(i);
-        if (species == species_name(sp, 10))
-            return (sp);
-    }
-
-    // nothing found, try again with plain name
     for (int i = 0; i < NUM_SPECIES; ++i)
     {
         sp = static_cast<species_type>(i);
@@ -177,28 +168,22 @@ std::string species_name(species_type speci, int level, bool genus, bool adj)
             res = "Draconian";
         else
         {
-            if (level < 7)
-                res = "Draconian";
-            else
+            switch (speci)
             {
-                switch (speci)
-                {
-                case SP_RED_DRACONIAN:     res = "Red Draconian";     break;
-                case SP_WHITE_DRACONIAN:   res = "White Draconian";   break;
-                case SP_GREEN_DRACONIAN:   res = "Green Draconian";   break;
-                case SP_YELLOW_DRACONIAN:  res = "Yellow Draconian";  break;
-                case SP_GREY_DRACONIAN:    res = "Grey Draconian";    break;
-                case SP_BLACK_DRACONIAN:   res = "Black Draconian";   break;
-                case SP_PURPLE_DRACONIAN:  res = "Purple Draconian";  break;
-                case SP_MOTTLED_DRACONIAN: res = "Mottled Draconian"; break;
-                case SP_PALE_DRACONIAN:    res = "Pale Draconian";    break;
+            case SP_RED_DRACONIAN:     res = "Red Draconian";     break;
+            case SP_WHITE_DRACONIAN:   res = "White Draconian";   break;
+            case SP_GREEN_DRACONIAN:   res = "Green Draconian";   break;
+            case SP_YELLOW_DRACONIAN:  res = "Yellow Draconian";  break;
+            case SP_GREY_DRACONIAN:    res = "Grey Draconian";    break;
+            case SP_BLACK_DRACONIAN:   res = "Black Draconian";   break;
+            case SP_PURPLE_DRACONIAN:  res = "Purple Draconian";  break;
+            case SP_MOTTLED_DRACONIAN: res = "Mottled Draconian"; break;
+            case SP_PALE_DRACONIAN:    res = "Pale Draconian";    break;
 
-
-                case SP_BASE_DRACONIAN:
-                default:
-                    res = "Draconian";
-                    break;
-                }
+            case SP_BASE_DRACONIAN:
+            default:
+                res = "Draconian";
+                break;
             }
         }
         break;

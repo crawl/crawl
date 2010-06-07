@@ -2237,7 +2237,7 @@ std::vector<talent> your_talents(bool check_confused)
         _add_talent(talents, ABIL_SPIT_POISON, check_confused);
     }
 
-    if (player_genus(GENPC_DRACONIAN) && you.experience_level >= 7)
+    if (player_genus(GENPC_DRACONIAN))
     {
         ability_type ability = ABIL_NON_ABILITY;
         switch (you.species)

@@ -1303,12 +1303,6 @@ static const skill_type skill_display_order[] =
 static const int ndisplayed_skills =
             sizeof(skill_display_order) / sizeof(*skill_display_order);
 
-static bool _immature_draconian()
-{
-    return player_genus(GENPC_DRACONIAN) && you.max_level < 7;
-
-}
-
 static int species_apts(int skill, species_type species);
 
 static void _display_skill_table(bool show_aptitudes, bool show_description)
@@ -1901,9 +1895,6 @@ static int species_apts(int skill, species_type species)
         }
         spec_skills_initialised = true;
     }
-
-    if (_immature_draconian())
-        species = SP_BASE_DRACONIAN;
 
     return _spec_skills[species][skill];
 }

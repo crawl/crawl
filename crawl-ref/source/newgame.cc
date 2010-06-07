@@ -163,12 +163,11 @@ static bool _is_species_valid_choice(species_type species)
     if (species >= SP_ELF) // These are all invalid.
         return (false);
 
-    // No problem with these.
-    if (species <= SP_RED_DRACONIAN || species > SP_BASE_DRACONIAN)
-        return (true);
+    // Non-base draconians cannot be selected either.
+    if (species >= SP_RED_DRACONIAN && species < SP_BASE_DRACONIAN)
+        return (false);
 
-    // Draconians other than red return false.
-    return (false);
+    return (true);
 }
 
 #ifdef ASSERTS

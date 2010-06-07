@@ -559,8 +559,6 @@ static int _draconian_colour(int race, int level)
         case MONS_WHITE_DRACONIAN:  return (9);
         }
     }
-    if (level < 7)
-        return (0);
     switch (race)
     {
     case SP_BLACK_DRACONIAN:   return (1);
