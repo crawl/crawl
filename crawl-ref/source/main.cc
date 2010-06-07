@@ -3883,9 +3883,12 @@ static void _do_prev_cmd_again()
         return;
     }
 
-    ASSERT(!crawl_state.doing_prev_cmd_again
-           || (crawl_state.is_repeating_cmd()
-               && crawl_state.repeat_cmd == CMD_PREV_CMD_AGAIN));
+    if (crawl_state.doing_prev_cmd_again)
+    {
+        mpr("Trying to re-do re-do command, aborting.", MSGCH_ERROR);
+        crawl_state.cancel_cmd_all();
+        return;
+    }
 
     crawl_state.doing_prev_cmd_again = true;
 
