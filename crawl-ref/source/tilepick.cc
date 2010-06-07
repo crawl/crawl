@@ -103,15 +103,8 @@ static tileidx_t _tileidx_shop(coord_def where)
     }
 }
 
-tileidx_t tileidx_feature(dungeon_feature_type feat, const coord_def &gc)
+static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
 {
-    tileidx_t override = env.tile_flv(gc).feat;
-    bool can_override = !feat_is_door(grd(gc))
-                        && feat != DNGN_FLOOR
-                        && feat != DNGN_UNSEEN;
-    if (override && can_override)
-        return (override);
-
     switch (feat)
     {
     case DNGN_UNSEEN:
@@ -125,15 +118,9 @@ tileidx_t tileidx_feature(dungeon_feature_type feat, const coord_def &gc)
     case DNGN_OPEN_SEA:
         return TILE_DNGN_OPEN_SEA;
     case DNGN_SECRET_DOOR:
+        return TILE_WALL_NORMAL;
     case DNGN_DETECTED_SECRET_DOOR:
-    {
-        dungeon_feature_type dfeat;
-        coord_def door;
-        if (find_secret_door_info(gc, &dfeat, &door))
-            return tileidx_feature(dfeat, door);
-        else
-            return tileidx_feature(dfeat, gc);
-    }
+        return TILE_DNGN_CLOSED_DOOR;
     case DNGN_CLEAR_ROCK_WALL:
     case DNGN_CLEAR_STONE_WALL:
     case DNGN_CLEAR_PERMAROCK_WALL:
@@ -157,36 +144,9 @@ tileidx_t tileidx_feature(dungeon_feature_type feat, const coord_def &gc)
     case DNGN_LAVA:
         return TILE_DNGN_LAVA;
     case DNGN_DEEP_WATER:
-        if (env.grid_colours(gc) == GREEN
-            || env.grid_colours(gc) == LIGHTGREEN)
-        {
-            return TILE_DNGN_DEEP_WATER_MURKY;
-        }
-        else if (player_in_branch(BRANCH_SHOALS))
-            return TILE_SHOALS_DEEP_WATER;
-
         return TILE_DNGN_DEEP_WATER;
     case DNGN_SHALLOW_WATER:
-    {
-        tileidx_t t = TILE_DNGN_SHALLOW_WATER;
-        if (env.grid_colours(gc) == GREEN
-            || env.grid_colours(gc) == LIGHTGREEN)
-        {
-            t = TILE_DNGN_SHALLOW_WATER_MURKY;
-        }
-        else if (player_in_branch(BRANCH_SHOALS))
-            t = TILE_SHOALS_SHALLOW_WATER;
-
-        monsters *mon = monster_at(gc);
-        if (mon)
-        {
-            // Add disturbance to tile.
-            if (mon->submerged())
-                t += tile_dngn_count(t);
-        }
-
-        return (t);
-    }
+        return TILE_DNGN_SHALLOW_WATER;
     case DNGN_FLOOR:
     case DNGN_UNDISCOVERED_TRAP:
         return TILE_FLOOR_NORMAL;
@@ -195,11 +155,13 @@ tileidx_t tileidx_feature(dungeon_feature_type feat, const coord_def &gc)
     case DNGN_OPEN_DOOR:
         return TILE_DNGN_OPEN_DOOR;
     case DNGN_TRAP_MECHANICAL:
+        return TILE_DNGN_TRAP_DART;
     case DNGN_TRAP_MAGICAL:
+        return TILE_DNGN_TRAP_ZOT;
     case DNGN_TRAP_NATURAL:
-        return _tileidx_trap(get_trap_type(gc));
+        return TILE_DNGN_TRAP_SHAFT;
     case DNGN_ENTER_SHOP:
-        return _tileidx_shop(gc);
+        return TILE_SHOP_GENERAL;
     case DNGN_ABANDONED_SHOP:
         return TILE_DNGN_ABANDONED_SHOP;
     case DNGN_ENTER_LABYRINTH:
@@ -328,6 +290,65 @@ tileidx_t tileidx_feature(dungeon_feature_type feat, const coord_def &gc)
         return TILE_DNGN_ERROR;
     }
 }
+
+tileidx_t tileidx_feature(const coord_def &gc)
+{
+    dungeon_feature_type feat = grid_appearance(gc);
+
+    tileidx_t override = env.tile_flv(gc).feat;
+    bool can_override = !feat_is_door(grd(gc))
+                        && feat != DNGN_FLOOR
+                        && feat != DNGN_UNSEEN;
+    if (override && can_override)
+        return (override);
+
+    // Any grid-specific tiles.
+    switch (feat)
+    {
+    case DNGN_DETECTED_SECRET_DOOR:
+        return (_tileidx_feature_base(grid_secret_door_appearance(gc)));
+    case DNGN_TRAP_MECHANICAL:
+    case DNGN_TRAP_MAGICAL:
+    case DNGN_TRAP_NATURAL:
+        return (_tileidx_trap(get_trap_type(gc)));
+    case DNGN_ENTER_SHOP:
+        return (_tileidx_shop(gc));
+    case DNGN_DEEP_WATER:
+        if (env.grid_colours(gc) == GREEN
+            || env.grid_colours(gc) == LIGHTGREEN)
+        {
+            return (TILE_DNGN_DEEP_WATER_MURKY);
+        }
+        else if (player_in_branch(BRANCH_SHOALS))
+            return (TILE_SHOALS_DEEP_WATER);
+
+        return (TILE_DNGN_DEEP_WATER);
+    case DNGN_SHALLOW_WATER:
+        {
+            tileidx_t t = TILE_DNGN_SHALLOW_WATER;
+            if (env.grid_colours(gc) == GREEN
+                || env.grid_colours(gc) == LIGHTGREEN)
+            {
+                t = TILE_DNGN_SHALLOW_WATER_MURKY;
+            }
+            else if (player_in_branch(BRANCH_SHOALS))
+                t = TILE_SHOALS_SHALLOW_WATER;
+
+            monsters *mon = monster_at(gc);
+            if (mon)
+            {
+                // Add disturbance to tile.
+                if (mon->submerged())
+                    t += tile_dngn_count(t);
+            }
+
+            return (t);
+        }
+    default:
+        return (_tileidx_feature_base(feat));
+    }
+}
+
 
 tileidx_t tileidx_out_of_bounds(int branch)
 {

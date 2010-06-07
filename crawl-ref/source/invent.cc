@@ -539,7 +539,7 @@ bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
         }
         else if (c != coord_def())
         {
-            ch = tileidx_feature(grd(c), c);
+            ch = tileidx_feature(c);
             if (ch == TILE_FLOOR_NORMAL)
                 ch = env.tile_flv(c).floor;
             else if (ch == TILE_WALL_NORMAL)
