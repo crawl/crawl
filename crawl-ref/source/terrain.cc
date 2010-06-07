@@ -598,10 +598,11 @@ static void _precompute_slime_wall_neighbours()
 }
 
 unwind_slime_wall_precomputer::unwind_slime_wall_precomputer(bool docompute)
-    : old_slime_mask(_slime_wall_precomputed_neighbour_mask)
+    : did_compute_mask(false)
 {
-    if (docompute)
+    if (docompute && !_slime_wall_precomputed_neighbour_mask.get())
     {
+        did_compute_mask = true;
         _slime_wall_precomputed_neighbour_mask.reset(
             new map_mask_boolean(false));
         _precompute_slime_wall_neighbours();
@@ -610,7 +611,8 @@ unwind_slime_wall_precomputer::unwind_slime_wall_precomputer(bool docompute)
 
 unwind_slime_wall_precomputer::~unwind_slime_wall_precomputer()
 {
-    _slime_wall_precomputed_neighbour_mask = old_slime_mask;
+    if (did_compute_mask)
+        _slime_wall_precomputed_neighbour_mask.reset(NULL);
 }
 
 bool slime_wall_neighbour(const coord_def& c)
