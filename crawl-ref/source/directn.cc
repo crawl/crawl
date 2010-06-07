@@ -435,7 +435,7 @@ static void _draw_ray_glyph(const coord_def &pos, int colour,
         if (mons->alive() && mons->visible_to(&you)
             && !mons_is_unknown_mimic(mons))
         {
-            glych  = get_screen_glyph(pos);
+            glych  = get_cell_glyph(env.map_knowledge(pos)).ch;
             colour = mcol;
         }
     }
@@ -736,9 +736,7 @@ void full_describe_view()
             const coord_def c = list_features[i];
             std::string desc = "";
 #ifndef USE_TILE
-            const coord_def e  = c - you.pos() + coord_def(8,8);
-
-            glyph g = get_show_glyph(env.show(e));
+            glyph g = get_cell_glyph(env.map_knowledge(c));
             const std::string colour_str = colour_to_str(g.col);
             desc = "(<" + colour_str + ">";
             desc += stringize_glyph(g.ch);
@@ -1972,7 +1970,7 @@ std::string get_terse_square_desc(const coord_def &gc)
         desc = unseen_desc;
     else if (!you.see_cell(gc))
     {
-        if (is_terrain_seen(gc))
+        if (env.map_knowledge(gc).seen())
         {
             desc = "[" + feature_description(gc, false, DESC_PLAIN, false)
                        + "]";
@@ -2132,7 +2130,7 @@ static void _describe_oos_square(const coord_def& where)
 {
     mpr("You can't see that place.", MSGCH_EXAMINE_FILTER);
 
-    if (!in_bounds(where) || !is_terrain_seen(where))
+    if (!in_bounds(where) || !env.map_knowledge(where).seen())
         return;
 
     describe_stash(where);
@@ -2149,8 +2147,8 @@ bool in_vlos(int x, int y)
 
 bool in_vlos(const coord_def &pos)
 {
-    return (in_los_bounds(pos) && (env.show(view2show(pos))
-                                   || pos == grid2view(you.pos())));
+    return (in_los_bounds(pos) && env.map_knowledge(view2grid(pos)).visible()
+                                   || pos == grid2view(you.pos()));
 }
 
 bool in_los(int x, int y)
@@ -2345,7 +2343,7 @@ static bool _find_feature( const coord_def& where, int mode,
                            bool /* need_path */, int /* range */)
 {
     // The stair need not be in LOS if the square is mapped.
-    if (!in_los(where) && !is_terrain_seen(where))
+    if (!in_los(where) && !env.map_knowledge(where).seen())
         return (false);
 
     return is_feature(mode, where);
@@ -2657,7 +2655,7 @@ static char _find_square_wrapper(coord_def& mfp, char direction,
 
 static void _describe_feature(const coord_def& where, bool oos)
 {
-    if (oos && !is_terrain_seen(where))
+    if (oos && !env.map_knowledge(where).seen())
         return;
 
     dungeon_feature_type grid = grd(where);
@@ -3631,11 +3629,9 @@ static void _debug_describe_feature_at(const coord_def &where)
                              vp.size.x, vp.size.y);
     }
 
-    const coord_def showc = view2show(grid2view(where));
-    const bool in_show_bounds = show_bounds(showc);
     mprf(MSGCH_DIAGNOSTICS, "(%d,%d): %s - %s (%d/%s)%s%s%s%s",
          where.x, where.y,
-         in_show_bounds? stringize_glyph(get_screen_glyph(where)).c_str() : " ",
+         stringize_glyph(get_cell_glyph(env.map_knowledge(where)).ch).c_str(),
          feature_desc.c_str(),
          feat,
          dungeon_feature_name(feat),

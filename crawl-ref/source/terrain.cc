@@ -18,6 +18,7 @@
 #include "dgnevent.h"
 #include "directn.h"
 #include "map_knowledge.h"
+#include "feature.h"
 #include "fprop.h"
 #include "godabil.h"
 #include "itemprop.h"
@@ -1064,13 +1065,13 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     const dungeon_feature_type feat2 = grd(pos2);
 
     if (is_notable_terrain(feat1) && !you.see_cell(pos1)
-        && is_terrain_known(pos1))
+        && env.map_knowledge(pos1).known())
     {
         return (false);
     }
 
     if (is_notable_terrain(feat2) && !you.see_cell(pos2)
-        && is_terrain_known(pos2))
+        && env.map_knowledge(pos2).known())
     {
         return (false);
     }

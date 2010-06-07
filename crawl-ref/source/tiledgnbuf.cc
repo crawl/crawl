@@ -185,7 +185,7 @@ static void _pack_shoal_waves(const coord_def &gc, packed_cell *cell)
 
     for (radius_iterator ri(gc, 1, true, false, true); ri; ++ri)
     {
-        if (!is_terrain_seen(*ri) && !is_terrain_mapped(*ri))
+        if (!env.map_knowledge(*ri).seen() && !env.map_knowledge(*ri).mapped())
             continue;
 
         const bool ink = (cloud_type_at(coord_def(*ri)) == CLOUD_INK);

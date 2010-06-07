@@ -44,11 +44,9 @@ struct crawl_environment
 
     std::auto_ptr<grid_heightmap>            heightmap;
 
-    // Player-remembered terrain. TODO: move to class player.
+    // Player-remembered terrain and LOS
     FixedArray< map_cell, GXM, GYM >         map_knowledge;
-
-    // Objects that are in LOS, used for drawing.
-    show_def show;
+    std::set<coord_def> visible;
 
 #ifdef USE_TILE
     // indexed by grid coords

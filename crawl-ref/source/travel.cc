@@ -383,7 +383,7 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile)
                 : cell.safe);
     }
 
-    if (!is_terrain_known(c))
+    if (!env.map_knowledge(c).known())
         return (false);
 
     // In the Abyss, disallow travelling into unseen territory
@@ -395,7 +395,7 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile)
 
     // Also make note of what's displayed on the level map for
     // plant/fungus checks.
-    const show_type levelmap_object = get_map_knowledge_obj(c);
+    const show_type levelmap_object = env.map_knowledge(c).object;
 
     // Travel will not voluntarily cross squares blocked by immobile monsters.
     if (!ignore_hostile
@@ -658,7 +658,7 @@ static bool _is_valid_explore_target(const coord_def& where)
 {
     // If an adjacent square is unmapped, it's valid.
     for ( adjacent_iterator ai(where); ai; ++ai )
-        if (!is_terrain_seen(*ai))
+        if (!env.map_knowledge(*ai).seen())
             return (true);
 
     if (you.running == RMODE_EXPLORE_GREEDY)
@@ -786,7 +786,7 @@ static void _explore_find_target_square()
 
             // Has moving along the straight line found an unexplored
             // square?
-            if (!is_terrain_seen(target + delta) && target != you.pos()
+            if (!env.map_knowledge(target + delta).seen() && target != you.pos()
                 && target != whereto)
             {
                 // Auto-explore is only zigzagging if the prefered
@@ -913,7 +913,7 @@ command_type travel()
         for (rectangle_iterator ri(1); ri; ++ri)
         {
             const coord_def p(*ri);
-            if (!mapshadow(p).seen() && is_terrain_seen(p))
+            if (!mapshadow(p).seen() && env.map_knowledge(p).seen())
                 _check_interesting_square(p, discoveries);
         }
 
@@ -1116,12 +1116,12 @@ static void _fill_exclude_radius(const travel_exclude &exc)
     for (int y = c.y - radius; y <= c.y + radius; ++y)
         for (int x = c.x - radius; x <= c.x + radius; ++x)
         {
-            if (!map_bounds(x, y) || !is_terrain_known(x, y)
+            const coord_def p(x, y);
+            if (!map_bounds(x, y) || !env.map_knowledge(p).known()
                 || travel_point_distance[x][y])
             {
                 continue;
             }
-            const coord_def p(x, y);
 
             if (is_exclude_root(p))
                 travel_point_distance[x][y] = PD_EXCLUDED;
@@ -1495,7 +1495,7 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
     if (floodout
         && (runmode == RMODE_EXPLORE || runmode == RMODE_EXPLORE_GREEDY))
     {
-        if (!is_terrain_seen(dc))
+        if (!env.map_knowledge(dc).seen())
         {
             if (!need_for_greed)
             {
@@ -1694,7 +1694,7 @@ void find_travel_pos(const coord_def& youpos,
         coord_def unseen = coord_def();
         for (adjacent_iterator ai(dest); ai; ++ai)
             if (!you.see_cell(*ai)
-                && (!is_terrain_seen(*ai)
+                && (!env.map_knowledge(*ai).seen()
                     || !feat_is_wall(env.map_knowledge(*ai).feat())))
             {
                 unseen = *ai;
@@ -3422,7 +3422,7 @@ void LevelInfo::get_stairs(std::vector<coord_def> &st)
 
         if ((*ri == you.pos() || envc)
             && feat_is_travelable_stair(feat)
-            && (is_terrain_seen(*ri) || !is_branch_stair(*ri)))
+            && (env.map_knowledge(*ri).seen() || !is_branch_stair(*ri)))
         {
             st.push_back(*ri);
         }

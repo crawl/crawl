@@ -214,17 +214,17 @@ static unsigned short _feat_colour(const coord_def &where,
     return (colour);
 }
 
-void show_def::_update_feat_at(const coord_def &gp, const coord_def &ep)
+static void _update_feat_at(const coord_def &gp)
 {
-    grid(ep).cls = SH_FEATURE;
-    grid(ep).feat = grid_appearance(gp);
-    grid(ep).colour = _feat_colour(gp, grid(ep).feat);
+    env.map_knowledge(gp).object.cls = SH_FEATURE;
+    env.map_knowledge(gp).object.feat = grid_appearance(gp);
+    env.map_knowledge(gp).object.colour = _feat_colour(gp, env.map_knowledge(gp).object.feat);
 
     // Tell the world first.
     dungeon_events.fire_position_event(DET_PLAYER_IN_LOS, gp);
 
-    if (get_feature_def(grid(ep)).is_notable())
-        seen_notable_thing(grid(ep).feat, gp);
+    if (get_feature_def(env.map_knowledge(gp).object).is_notable())
+        seen_notable_thing(env.map_knowledge(gp).object.feat, gp);
 
     dgn_seen_vault_at(gp);
 }
@@ -252,7 +252,7 @@ static show_item_type _item_to_show_code(const item_def &item)
    }
 }
 
-void show_def::_update_item_at(const coord_def &gp, const coord_def &ep)
+static void _update_item_at(const coord_def &gp)
 {
     const item_def *eitem;
     // Check for mimics.
@@ -264,7 +264,7 @@ void show_def::_update_item_at(const coord_def &gp, const coord_def &ep)
     else
         return;
 
-    unsigned short &ecol  = grid(ep).colour;
+    unsigned short &ecol  = env.map_knowledge(gp).object.colour;
 
     glyph g = get_item_glyph(eitem);
 
@@ -286,8 +286,8 @@ void show_def::_update_item_at(const coord_def &gp, const coord_def &ep)
             ecol |= COLFLAG_ITEM_HEAP;
         else if (eitem->link < NON_ITEM && !crawl_state.game_is_arena())
             ecol |= COLFLAG_ITEM_HEAP;
-        grid(ep).cls = SH_ITEM;
-        grid(ep).item = _item_to_show_code(*eitem);
+        env.map_knowledge(gp).object.cls = SH_ITEM;
+        env.map_knowledge(gp).object.item = _item_to_show_code(*eitem);
     }
 
 #ifdef USE_TILE
@@ -298,18 +298,18 @@ void show_def::_update_item_at(const coord_def &gp, const coord_def &ep)
 #endif
 }
 
-void show_def::_update_cloud(int cloudno)
+static void _update_cloud(int cloudno)
 {
-    const coord_def e = grid2show(env.cloud[cloudno].pos);
+    const coord_def gp = env.cloud[cloudno].pos;
     int which_colour = get_cloud_colour(cloudno);
     cloud_type cloud = env.cloud[cloudno].type;
     if (cloud != CLOUD_GLOOM)
-        grid(e).cls = SH_CLOUD;
+        env.map_knowledge(gp).object.cls = SH_CLOUD;
 
-    grid(e).colour = which_colour;
+    env.map_knowledge(gp).object.colour = which_colour;
 
 #ifdef USE_TILE
-    tile_place_cloud(e, env.cloud[cloudno]);
+    tile_place_cloud(gp, env.cloud[cloudno]);
 #endif
 }
 
@@ -335,12 +335,11 @@ static void _check_monster_pos(const monsters* monster)
     }
 }
 
-void show_def::_update_monster(const monsters* mons)
+static void _update_monster(const monsters* mons)
 {
     _check_monster_pos(mons);
 
-    const coord_def pos = mons->pos();
-    const coord_def e = grid2show(pos);
+    const coord_def gp = mons->pos();
 
     if (mons_is_unknown_mimic(mons))
     {
@@ -353,16 +352,16 @@ void show_def::_update_monster(const monsters* mons)
     if (!mons->visible_to(&you))
     {
         // ripple effect?
-        if (grd(pos) == DNGN_SHALLOW_WATER
+        if (grd(gp) == DNGN_SHALLOW_WATER
             && !mons_flies(mons)
-            && env.cgrid(pos) == EMPTY_CLOUD)
+            && env.cgrid(gp) == EMPTY_CLOUD)
         {
-            grid(e).cls = SH_INVIS_EXPOSED;
+            env.map_knowledge(gp).object.cls = SH_INVIS_EXPOSED;
 
             // Translates between colours used for shallow and deep water,
             // if not using the normal LIGHTCYAN / BLUE. The ripple uses
             // the deep water colour.
-            unsigned short base_colour = env.grid_colours(pos);
+            unsigned short base_colour = env.grid_colours(gp);
 
             static const unsigned short ripple_table[] =
                 {BLUE,          // BLACK        => BLUE (default)
@@ -382,39 +381,38 @@ void show_def::_update_monster(const monsters* mons)
                  BROWN,         // YELLOW       => BROWN
                  LIGHTGREY};    // WHITE        => LIGHTGREY
 
-            grid(e).colour = ripple_table[base_colour & 0x0f];
+            env.map_knowledge(gp).object.colour = ripple_table[base_colour & 0x0f];
         }
-        else if (is_opaque_cloud(env.cgrid(pos))
+        else if (is_opaque_cloud(env.cgrid(gp))
                  && !mons->submerged()
                  && !mons->is_insubstantial())
         {
-            grid(e).cls = SH_INVIS_EXPOSED;
-            grid(e).colour = get_cloud_colour(env.cgrid(pos));
+            env.map_knowledge(gp).object.cls = SH_INVIS_EXPOSED;
+            env.map_knowledge(gp).object.colour = get_cloud_colour(env.cgrid(gp));
         }
         return;
     }
 
-    grid(e).cls = SH_MONSTER;
+    env.map_knowledge(gp).object.cls = SH_MONSTER;
     if (!crawl_state.game_is_arena() && you.misled())
-        grid(e).mons = mons->get_mislead_type();
+        env.map_knowledge(gp).object.mons = mons->get_mislead_type();
     else if (mons->type == MONS_SLIME_CREATURE && mons->number > 1)
-        grid(e).mons = MONS_MERGED_SLIME_CREATURE;
+        env.map_knowledge(gp).object.mons = MONS_MERGED_SLIME_CREATURE;
     else
-        grid(e).mons = mons->type;
-    grid(e).colour = get_mons_glyph(mons, false).col;
+        env.map_knowledge(gp).object.mons = mons->type;
+    env.map_knowledge(gp).object.colour = get_mons_glyph(mons, false).col;
 
 #ifdef USE_TILE
     tile_place_monster(mons->pos(), mons);
 #endif
 }
 
-void show_def::update_at(const coord_def &gp, const coord_def &ep,
-                         bool terrain_only)
+void show_update_at(const coord_def &gp, bool terrain_only)
 {
-    grid(ep).cls = SH_NOTHING;
+    env.map_knowledge(gp).object.cls = SH_NOTHING;
 
     // The sequence is grid, items, clouds, monsters.
-    _update_feat_at(gp, ep);
+    _update_feat_at(gp);
 
     if (terrain_only)
         return;
@@ -424,7 +422,7 @@ void show_def::update_at(const coord_def &gp, const coord_def &ep,
     if (!in_bounds(gp))
         return;
 
-    _update_item_at(gp, ep);
+    _update_item_at(gp);
 
     const int cloud = env.cgrid(gp);
     if (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_NONE
@@ -436,28 +434,13 @@ void show_def::update_at(const coord_def &gp, const coord_def &ep,
     const monsters *mons = monster_at(gp);
     if (mons && mons->alive())
         _update_monster(mons);
+
+    set_terrain_visible(gp);
 }
 
-void show_def::init(bool terrain_only)
+void show_init(bool terrain_only)
 {
-    grid.init(show_type());
-
+    clear_terrain_visibility();
     for (radius_iterator ri(you.get_los()); ri; ++ri)
-        update_at(*ri, grid2show(*ri), terrain_only);
-}
-
-show_type to_knowledge(show_type obj)
-{
-    if (Options.item_colour && obj.cls == SH_ITEM)
-        return (obj);
-    if (obj.cls == SH_MONSTER)
-    {
-        obj.colour = DARKGREY;
-        return (obj);
-    }
-    if (obj.cls == SH_CLOUD)
-        obj.cls = SH_FEATURE;
-    const feature_def& fdef = get_feature_def(obj);
-    obj.colour = fdef.seen_colour;
-    return (obj);
+        show_update_at(*ri, terrain_only);
 }

@@ -5725,7 +5725,7 @@ void dgn_replace_area( const coord_def& p1, const coord_def& p2,
         if (grd(*ri) == replace && unforbidden(*ri, mapmask))
         {
             grd(*ri) = feature;
-            if (needs_update && is_terrain_seen(*ri))
+            if (needs_update && env.map_knowledge(*ri).seen())
             {
                 set_map_knowledge_obj(*ri, feature);
 #ifdef USE_TILE

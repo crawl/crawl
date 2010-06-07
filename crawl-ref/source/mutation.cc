@@ -1929,7 +1929,7 @@ void check_antennae_detect()
             map_knowledge_forget_mons(*ri);
         else if (!mons_is_firewood(mon))
         {
-            show_type old_obj = get_map_knowledge_obj(*ri);
+            show_type old_obj = env.map_knowledge(*ri).object;
             show_type obj = show_type();
 
             obj.cls = SH_MONSTER;
@@ -1939,7 +1939,7 @@ void check_antennae_detect()
             obj.colour = 0;
 
             set_map_knowledge_obj(*ri, obj);
-            set_map_knowledge_detected_mons(*ri);
+            env.map_knowledge(*ri).set_detected_monster(true);
         }
     }
 }

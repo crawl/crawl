@@ -2099,8 +2099,9 @@ static void tag_construct_level(writer &th)
         {
             marshallByte(th, grd[count_x][count_y]);
             marshallShowtype(th, env.map_knowledge[count_x][count_y].object);
-            marshallShort(th, env.map_knowledge[count_x][count_y].flags);
+            marshallShort(th, env.map_knowledge[count_x][count_y].flags &~ MAP_VISIBLE_FLAG);
             marshallInt(th, env.pgrid[count_x][count_y]);
+            marshallShort(th, env.cgrid[count_x][count_y]);
         }
 
     run_length_encode(th, marshallByte, env.grid_colours, GXM, GYM);
