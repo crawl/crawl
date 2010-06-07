@@ -13,6 +13,16 @@ function test.map_assert(condition, message)
   return condition
 end
 
+function test.find_monsters(mname)
+  local monsters = { }
+  for mons in test.level_monster_iterator() do
+    if mons.name == mname then
+      table.insert(monsters, mons)
+    end
+  end
+  return monsters
+end
+
 function test.regenerate_level(place, use_random_maps)
   if place then
     debug.goto_place(place)
@@ -20,6 +30,16 @@ function test.regenerate_level(place, use_random_maps)
   debug.flush_map_memory()
   dgn.reset_level()
   debug.generate_level(use_random_maps)
+end
+
+function test.find_feature(feature)
+  local feat = dgn.fnum(feature)
+  local function find_feature(p)
+    return dgn.grid(p.x, p.y) == feat
+  end
+
+  local feature_points = dgn.find_points(find_feature)
+  return #feature_points > 0 and feature_points[1] or nil
 end
 
 function test.level_contains_item(item)

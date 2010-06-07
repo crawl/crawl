@@ -81,6 +81,12 @@ LUAFN(debug_generate_level)
     return (0);
 }
 
+LUAFN(debug_los_changed)
+{
+    los_changed();
+    return (0);
+}
+
 LUAFN(debug_dump_map)
 {
     const int pos = lua_isuserdata(ls, 1) ? 2 : 1;
@@ -291,11 +297,18 @@ LUAFN(debug_check_uniques)
     return (1);
 }
 
+LUAFN(debug_viewwindow)
+{
+    viewwindow(lua_toboolean(ls, 1), lua_toboolean(ls, 2));
+    return (0);
+}
+
 const struct luaL_reg debug_dlib[] =
 {
 { "goto_place", debug_goto_place },
 { "flush_map_memory", debug_flush_map_memory },
 { "generate_level", debug_generate_level },
+{ "los_changed", debug_los_changed },
 { "dump_map", debug_dump_map },
 { "test_explore", _debug_test_explore },
 { "bouncy_beam", debug_bouncy_beam },
@@ -308,5 +321,6 @@ const struct luaL_reg debug_dlib[] =
 { "randomize_uniques", debug_randomize_uniques },
 { "reset_uniques", debug_reset_uniques },
 { "check_uniques", debug_check_uniques },
+{ "viewwindow", debug_viewwindow },
 { NULL, NULL }
 };

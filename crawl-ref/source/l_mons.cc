@@ -7,6 +7,8 @@
 #include "dlua.h"
 #include "initfile.h"
 #include "libutil.h"
+#include "mon-act.h"
+#include "mon-behv.h"
 #include "mon-util.h"
 #include "mon-stuff.h"
 
@@ -228,8 +230,28 @@ static int l_mons_do_dismiss(lua_State *ls)
     }
     return (0);
 }
-
 MDEFN(dismiss, do_dismiss)
+
+// Run the monster AI code.
+static int l_mons_do_run_ai(lua_State *ls)
+{
+    ASSERT_DLUA;
+    monsters *mons = clua_get_lightuserdata<monsters>(ls, lua_upvalueindex(1));
+    if (mons->alive())
+        handle_monster_move(mons);
+    return (0);
+}
+MDEFN(run_ai, do_run_ai)
+
+static int l_mons_do_handle_behaviour(lua_State *ls)
+{
+    ASSERT_DLUA;
+    monsters *mons = clua_get_lightuserdata<monsters>(ls, lua_upvalueindex(1));
+    if (mons->alive())
+        handle_behaviour(mons);
+    return (0);
+}
+MDEFN(handle_behaviour, do_handle_behaviour)
 
 static int l_mons_do_random_teleport(lua_State *ls)
 {
@@ -393,6 +415,8 @@ static MonsAccessor mons_attrs[] =
     { "energy",          l_mons_energy          },
     { "add_energy",      l_mons_add_energy      },
     { "dismiss",         l_mons_dismiss         },
+    { "run_ai",          l_mons_run_ai          },
+    { "handle_behaviour",l_mons_handle_behaviour },
     { "experience",      l_mons_experience      },
     { "random_teleport", l_mons_random_teleport },
     { "set_prop",        l_mons_set_prop        },

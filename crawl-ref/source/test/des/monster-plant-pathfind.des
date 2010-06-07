@@ -1,0 +1,12 @@
+# In the buggy case, the monster oscillates between 1 and 2.
+NAME: monster_plant_pathfind
+ORIENT: encompass
+MONS: generate_awake hippogriff, nothing
+KMONS: P = plant
+MAP
+xxxxx
+xxP{x
+x2PPx
+x.1xx
+xxxxx
+ENDMAP
