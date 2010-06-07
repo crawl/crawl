@@ -399,6 +399,9 @@ human_slave
 human_monk_ghost MONS_HUMAN_MONK
 ## From the Cigotuvi wizlab
 deformed_human MONS_DEFORMED_HUMAN
+## From an entry vault
+halfling MONS_HALFLING
+demonspawn MONS_DEMONSPAWN
 
 ## Angels ('A')
 angel MONS_ANGEL
