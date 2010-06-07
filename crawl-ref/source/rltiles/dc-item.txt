@@ -230,7 +230,7 @@ effect/bolt5 MI_BOLT5
 effect/bolt6 MI_BOLT6
 effect/bolt7 MI_BOLT7
 
-dart1 MI_DART
+dart1 MI_DART UNSEEN_MISSILE
 dart2
 dart-p MI_DART_POISONED
 steel_dart1 MI_DART_STEEL
@@ -431,7 +431,7 @@ i-archery BRAND_ARM_ARCHERY
 
 ###########OBJ_WANDS
 %sdir item/wand
-gem_iron WAND_OFFSET /*iron*/
+gem_iron WAND_OFFSET UNSEEN_WAND
 gem_brass
 gem_bone
 gem_wood
@@ -472,7 +472,7 @@ i-disintegration WAND_DISINTEGRATION
 %back none
 #################OBJ_FOOD
 %sdir item/food
-meat_ration FOOD_MEAT_RATION
+meat_ration FOOD_MEAT_RATION UNSEEN_FOOD
 bread_ration FOOD_BREAD_RATION
 pear FOOD_PEAR
 apple FOOD_APPLE
@@ -521,7 +521,7 @@ chunk_brands/i-rotten FOOD_INEDIBLE
 #################OBJ_UNKNOWN_I
 ##################OBJ_SCROLLS
 %sdir item/scroll
-scroll SCROLL
+scroll SCROLL UNSEEN_SCROLL
 
 %back scroll
 %sdir item/scroll
@@ -556,7 +556,7 @@ i-silence SCR_SILENCE
 ##################OBJ_JEWELLERY
 ############ring
 %sdir item/ring
-wooden RING_NORMAL_OFFSET /*wood*/
+wooden RING_NORMAL_OFFSET UNSEEN_RING
 silver
 gold
 iron
@@ -619,7 +619,7 @@ i-c-teleport RING_TELEPORT_CONTROL
 
 ###amulets
 %sdir item/amulet
-crystal_white AMU_NORMAL_OFFSET /*zirconium*/
+crystal_white AMU_NORMAL_OFFSET UNSEEN_AMULET
 stone3_blue
 face1_gold
 stone3_green
@@ -670,7 +670,7 @@ i-stasis AMU_STASIS
 
 ####################OBJ_POTIONS
 %sdir item/potion
-clear POTION_OFFSET /*clear*/
+clear POTION_OFFSET UNSEEN_POTION
 brilliant_blue
 black
 silver
@@ -743,7 +743,7 @@ magenta
 yellow
 white
 ##########leather 8
-parchment BOOK_LEATHER_OFFSET
+parchment BOOK_LEATHER_OFFSET UNSEEN_BOOK
 leather
 tan
 plaid
@@ -774,7 +774,7 @@ thin
 
 #####################OBJ_STAVES
 %sdir item/staff
-staff00 STAFF_OFFSET /*curved*/
+staff00 STAFF_OFFSET UNSEEN_STAFF
 staff01
 staff02
 staff03
@@ -831,14 +831,14 @@ i-rod_venom ROD_VENOM
 
 #OBJ_ORBS
 %sdir item/misc
-misc_orb ORB
+misc_orb ORB UNSEEN_ORB
 misc_orb2
 
 #OBJ_MISCELLANY
 misc_bottle MISC_BOTTLED_EFREET
 misc_crystal MISC_CRYSTAL_BALL_OF_ENERGY
 misc_crystal MISC_CRYSTAL_BALL_OF_FIXATION
-misc_crystal MISC_CRYSTAL_BALL_OF_SEEING
+misc_crystal MISC_CRYSTAL_BALL_OF_SEEING UNSEEN_MISC
 misc_fan MISC_AIR_ELEMENTAL_FAN
 misc_lamp MISC_LAMP_OF_FIRE
 misc_stone MISC_STONE_OF_EARTH_ELEMENTALS
@@ -973,4 +973,4 @@ runes/rune_snake MISC_RUNE_SNAKE
 #handled in dc-corpse.txt
 
 #OBJ_GOLD
-gold_pile GOLD
+gold_pile GOLD UNSEEN_GOLD

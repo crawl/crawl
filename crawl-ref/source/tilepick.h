@@ -19,6 +19,7 @@ class monsters;
 // Tile index lookup from Crawl data.
 tileidx_t tileidx_feature(const coord_def &gc);
 tileidx_t tileidx_out_of_bounds(int branch);
+void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, const coord_def& gc);
 
 tileidx_t tileidx_monster(const monsters *mon);
 tileidx_t tileidx_monster_detected(const monsters *mon);
@@ -27,6 +28,7 @@ tileidx_t tileidx_draco_job(const monsters *mon);
 
 tileidx_t tileidx_item(const item_def &item);
 tileidx_t tileidx_item_throw(const item_def &item, int dx, int dy);
+tileidx_t tileidx_show_item(int show_item_type);
 
 tileidx_t tileidx_cloud(const cloud_struct &cl);
 tileidx_t tileidx_bolt(const bolt &bolt);
