@@ -108,7 +108,7 @@ static std::string _char_description(const newgame_def& ng)
     else if (_is_random_job(ng.job))
     {
         const std::string j = (ng.job == JOB_RANDOM ? "Random " : "Viable ");
-        return (j + species_name(ng.species, 1));
+        return (j + species_name(ng.species));
     }
     else if (_is_random_species(ng.species))
     {
@@ -117,14 +117,14 @@ static std::string _char_description(const newgame_def& ng)
         return (s + get_job_name(ng.job));
     }
     else
-        return (species_name(ng.species, 1) + " " + get_job_name(ng.job));
+        return (species_name(ng.species) + " " + get_job_name(ng.job));
 }
 
 static std::string _welcome(const newgame_def* ng)
 {
     std::string text;
     if (ng->species != SP_UNKNOWN)
-        text = species_name(ng->species, 1);
+        text = species_name(ng->species);
     if (ng->job != JOB_UNKNOWN)
     {
         if (!text.empty())
@@ -360,7 +360,7 @@ static bool _reroll_random(newgame_def* ng)
 {
     clrscr();
 
-    std::string specs = species_name(ng->species, 1);
+    std::string specs = species_name(ng->species);
     if (specs.length() > 79)
         specs = specs.substr(0, 79);
 
@@ -447,7 +447,7 @@ bool choose_game(newgame_def* ng, newgame_def* choice,
     {
         clrscr();
 
-        std::string specs = species_name(ng->species, 1);
+        std::string specs = species_name(ng->species);
         if (specs.length() > 79)
             specs = specs.substr(0, 79);
 
@@ -605,7 +605,7 @@ static void _construct_species_menu(const newgame_def* ng,
             && job_allowed(species, ng->job) == CC_BANNED)
         {
             text = "    ";
-            text += species_name(species, 1);
+            text += species_name(species);
             text += " N/A";
             tmp->set_fg_colour(DARKGRAY);
             tmp->set_highlight_colour(RED);
@@ -614,7 +614,7 @@ static void _construct_species_menu(const newgame_def* ng,
         {
             text = index_to_letter(i);
             text += " - ";
-            text += species_name(species, 1);
+            text += species_name(species);
         }
         // Fill to column width - 1
         text.append(COLUMN_WIDTH - text.size() - 1 , ' ');
@@ -627,7 +627,7 @@ static void _construct_species_menu(const newgame_def* ng,
 
         tmp->add_hotkey(index_to_letter(i));
         tmp->set_id(species);
-        tmp->set_description_text(getGameStartDescription(species_name(species, 1)));
+        tmp->set_description_text(getGameStartDescription(species_name(species)));
         menu->attach_item(tmp);
         tmp->set_visible(true);
         if (defaults.species == species)

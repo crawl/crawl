@@ -1002,7 +1002,7 @@ void redraw_skill(const std::string &your_name, const std::string &job_name)
     textcolor( YELLOW );
     cgotoxy(1, 2, GOTO_STAT);
     nowrap_eol_cprintf("Level %d %s", you.experience_level,
-                       species_name(you.species,you.experience_level).c_str());
+                       species_name(you.species).c_str());
     if (you.religion != GOD_NO_GOD)
     {
         nowrap_eol_cprintf(" of %s",
@@ -1525,7 +1525,7 @@ static std::string _overview_screen_title()
     char species_job[50];
     snprintf(species_job, sizeof species_job,
              "(%s %s)",
-             species_name(you.species, you.experience_level).c_str(),
+             species_name(you.species).c_str(),
              you.class_name);
 
     char time_turns[50] = "";

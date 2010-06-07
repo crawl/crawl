@@ -25,8 +25,7 @@ int get_species_index_by_abbrev(const char *abbrev);
 int get_species_index_by_name(const char *name);
 
 // from player.cc
-std::string species_name(species_type speci, int level, bool genus = false,
-                         bool adj = false);
+std::string species_name(species_type speci, bool genus = false, bool adj = false);
 species_type str_to_species(const std::string &species);
 
 

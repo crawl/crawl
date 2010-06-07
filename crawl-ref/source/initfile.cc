@@ -331,7 +331,7 @@ static std::string _species_to_str(species_type sp)
     else if (sp == SP_VIABLE)
         return "viable";
     else
-        return species_name(sp, 1);
+        return species_name(sp);
 }
 
 static species_type _str_to_species(const std::string &str)

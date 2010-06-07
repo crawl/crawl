@@ -1557,17 +1557,17 @@ int str_to_skill(const std::string &skill)
 
 static std::string _stk_adj_cap()
 {
-    return species_name(Skill_Species, 1, false, true);
+    return species_name(Skill_Species, false, true);
 }
 
 static std::string _stk_genus_cap()
 {
-    return species_name(Skill_Species, 1, true, false);
+    return species_name(Skill_Species, true, false);
 }
 
 static std::string _stk_genus_nocap()
 {
-    std::string s = species_name(Skill_Species, 1, true, false);
+    std::string s = species_name(Skill_Species, true, false);
     return (lowercase(s));
 }
 
