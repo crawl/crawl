@@ -325,11 +325,63 @@ static bool _is_reseedable(const coord_def& c)
             || (g_Slime_Wall_Check && slime_wall_neighbour(c)));
 }
 
+struct cell_travel_safety
+{
+    bool safe;
+    bool safe_if_ignoring_hostile_terrain;
+
+    cell_travel_safety() : safe(false), safe_if_ignoring_hostile_terrain(false)
+    {
+    }
+};
+
+typedef FixedArray<cell_travel_safety, GXM, GYM> travel_safe_grid;
+static std::auto_ptr<travel_safe_grid> _travel_safe_grid;
+
+class precompute_travel_safety_grid
+{
+private:
+    bool did_compute;
+
+public:
+    precompute_travel_safety_grid() : did_compute(false)
+    {
+        if (!_travel_safe_grid.get())
+        {
+            did_compute = true;
+            init_travel_terrain_check();
+            std::auto_ptr<travel_safe_grid> tsgrid(new travel_safe_grid);
+            travel_safe_grid &safegrid(*tsgrid);
+            for (rectangle_iterator ri(1); ri; ++ri)
+            {
+                const coord_def p(*ri);
+                cell_travel_safety &ts(safegrid(p));
+                ts.safe = is_travelsafe_square(p, false);
+                ts.safe_if_ignoring_hostile_terrain =
+                    is_travelsafe_square(p, true);
+            }
+            _travel_safe_grid = tsgrid;
+        }
+    }
+    ~precompute_travel_safety_grid()
+    {
+        if (did_compute)
+            _travel_safe_grid.reset(NULL);
+    }
+};
+
 // Returns true if the square at (x,y) is okay to travel over. If ignore_hostile
 // is true, returns true even for dungeon features the character can normally
 // not cross safely (deep water, lava, traps).
 bool is_travelsafe_square(const coord_def& c, bool ignore_hostile)
 {
+    if (_travel_safe_grid.get())
+    {
+        const cell_travel_safety &cell((*_travel_safe_grid)(c));
+        return (ignore_hostile? cell.safe_if_ignoring_hostile_terrain
+                : cell.safe);
+    }
+
     if (!is_terrain_known(c))
         return (false);
 
@@ -3091,6 +3143,7 @@ void LevelInfo::update()
     // neighbours of slimy walls now.
     unwind_slime_wall_precomputer slime_wall_neighbours(
         !actor_slime_wall_immune(&you));
+    precompute_travel_safety_grid travel_safety_calc;
     update_stair_distances();
 }
 
