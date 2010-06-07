@@ -1911,8 +1911,7 @@ void check_demonic_guardian()
 {
     const int mutlevel = player_mutation_level(MUT_DEMONIC_GUARDIAN);
     if (you.duration[DUR_DEMONIC_GUARDIAN] == 0
-        && one_chance_in(5-mutlevel)
-        && get_tension(GOD_NO_GOD) > mutlevel*3 + random2(mutlevel*2))
+        && get_tension(GOD_NO_GOD) > mutlevel*4 + random2(mutlevel*3))
     {
         const monster_type mt = static_cast<monster_type>(
                             MONS_WHITE_IMP + (mutlevel-1)*5 + random2(5));
