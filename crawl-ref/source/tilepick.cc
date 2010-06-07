@@ -1001,6 +1001,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_JELLY:
         return TILEP_MONS_JELLY;
     case MONS_SLIME_CREATURE:
+    case MONS_MERGED_SLIME_CREATURE:
         return _mon_clamp(TILEP_MONS_SLIME_CREATURE, number - 1);
     case MONS_PULSATING_LUMP:
         return TILEP_MONS_PULSATING_LUMP;
