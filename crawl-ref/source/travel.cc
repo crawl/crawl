@@ -3086,6 +3086,11 @@ void LevelInfo::update()
     correct_stair_list(stair_positions);
 
     sync_all_branch_stairs();
+
+    // If the player isn't immune to slimy walls, precalculate
+    // neighbours of slimy walls now.
+    unwind_slime_wall_precomputer slime_wall_neighbours(
+        !actor_slime_wall_immune(&you));
     update_stair_distances();
 }
 

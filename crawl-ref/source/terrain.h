@@ -23,7 +23,7 @@ public:
     unwind_slime_wall_precomputer(bool docompute = true);
     ~unwind_slime_wall_precomputer();
 private:
-    std::auto_ptr<map_mask_boolean> old_slime_mask;
+    bool did_compute_mask;
 };
 
 actor* actor_at(const coord_def& c);
