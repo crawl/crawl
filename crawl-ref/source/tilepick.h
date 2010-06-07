@@ -51,5 +51,7 @@ tileidx_t tileidx_enchant_equ(const item_def &item, tileidx_t tile);
 // return index, flag, and tile name as a printable string.
 std::string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix);
 
+void tile_init_props(monsters *mon);
+
 #endif
 #endif

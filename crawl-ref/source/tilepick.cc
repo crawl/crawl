@@ -3620,4 +3620,20 @@ std::string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix)
     return (tile_string);
 }
 
+void tile_init_props(monsters *mon)
+{
+    // Not necessary.
+    if (mon->props.exists("monster_tile") || mon->props.exists("tile_num"))
+        return;
+
+    // Special-case for monsters masquerading as items.
+    if (mon->type == MONS_DANCING_WEAPON || mons_is_mimic(mon->type))
+        return;
+
+    // Only add the property for tiles that have several variants.
+    const int base_tile = tileidx_monster_base(mon);
+    if (tile_player_count(base_tile) > 1)
+        mon->props["tile_num"] = short(random2(256));
+}
+
 #endif

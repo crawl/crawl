@@ -1233,26 +1233,6 @@ void mons_add_blame(monsters *mon, const std::string &blame_string)
     blame.get_vector().push_back(blame_string);
 }
 
-#ifdef USE_TILE
-// For some tiles, always use the fixed same variant out of a set
-// of tiles. (Where this is not handled by number or colour already.)
-static void _maybe_init_tilenum_props(monsters *mon)
-{
-    // Not necessary.
-    if (mon->props.exists("monster_tile") || mon->props.exists("tile_num"))
-        return;
-
-    // Special-case for monsters masquerading as items.
-    if (mon->type == MONS_DANCING_WEAPON || mons_is_mimic(mon->type))
-        return;
-
-    // Only add the property for tiles that have several variants.
-    const int base_tile = tileidx_monster_base(mon);
-    if (tile_player_count(base_tile) > 1)
-        mon->props["tile_num"] = short(random2(256));
-}
-#endif
-
 static int _place_monster_aux(const mgen_data &mg,
                               bool first_band_member, bool force_pos)
 {
@@ -1642,7 +1622,7 @@ static int _place_monster_aux(const mgen_data &mg,
     }
 
 #ifdef USE_TILE
-    _maybe_init_tilenum_props(mon);
+    tile_init_props(mon);
 #endif
 
     mark_interesting_monst(mon, mg.behaviour);
