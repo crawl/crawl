@@ -25,11 +25,11 @@ struct mon_attack_def
     mon_attack_flavour  flavour;
     int                 damage;
 
-    static mon_attack_def attk(int damage,
-                               mon_attack_type type = AT_HIT,
+    static mon_attack_def attk(int dam,
+                               mon_attack_type typ = AT_HIT,
                                mon_attack_flavour flav = AF_PLAIN)
     {
-        mon_attack_def def = { type, flav, damage };
+        mon_attack_def def = { typ, flav, dam };
         return (def);
     }
 };
