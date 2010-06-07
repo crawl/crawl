@@ -1,0 +1,75 @@
+-- [Mantis 591] Test to check that monsters don't vacillate between two
+-- squares when trying to reach the player but blocked by plants.
+
+local map = "monster_plant_pathfind"
+local FAILMAP = map .. ".map"
+
+debug.flush_map_memory()
+debug.goto_place("D:2")
+dgn.load_des_file("test/des/monster-plant-pathfind.des")
+dgn.reset_level()
+assert(dgn.place_map(dgn.map_by_name(map), true, true),
+       "Could not place " .. map)
+
+local stair = test.find_feature('stone_stairs_up_i')
+assert(stair, "Could not find stairs up")
+
+you.moveto(stair.x, stair.y)
+local you_x, you_y = you.pos()
+assert(you_x == stair.x and you_y == stair.y,
+       "Could not move player " .. dgn.point(you_x, you_y) ..
+         " to stair " .. stair)
+
+local monster = test.find_monsters("hippogriff")[1]
+
+local function monster_pos()
+  local p = dgn.point(monster.x, monster.y)
+  -- Monster position is relative to the player position:
+  p = p + stair
+  return p
+end
+
+debug.los_changed()
+
+assert(you.see_cell(monster_pos().x, monster_pos().y),
+       "Player at " .. stair .. " cannot see monster at "
+         .. monster_pos())
+assert(you.see_cell(you_x + 1, you_y),
+       "Player at " .. stair .. " cannot see cell at "
+         .. (stair + dgn.point(1, 0)))
+
+
+-- Assert if the monster moves back and forth between positions
+local function check_monster_moves_repeat(monster, nmoves)
+  local visited_points = { }
+
+  local function note_position(p)
+    local key = p.y * dgn.GXM + p.x
+    local visits = visited_points[key] or 0
+    visits = visits + 1
+    visited_points[key] = visits
+    debug.dump_map(FAILMAP)
+    assert(visits < 2,
+           "Monster revisited " .. p .. "; dumped map to " .. FAILMAP)
+  end
+
+  local oldpos = nil
+  for i = 1, nmoves do
+    local p = monster_pos()
+    crawl.message("Monster " .. monster.name .. " at " .. p)
+    if p ~= oldpos then
+      note_position(p)
+    end
+    oldpos = p
+
+    -- Draw the view to give the user something to look at, and to wake up
+    -- the monster and kick it into seek (hopefully).
+    debug.viewwindow(true, true)
+    monster.add_energy(10)
+    assert(monster.beh == "seek",
+           "Monster " .. monster.name .. " is not in seek mode")
+    monster.run_ai()
+  end
+end
+
+check_monster_moves_repeat(monster, 6)
