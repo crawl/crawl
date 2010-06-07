@@ -3032,6 +3032,79 @@ xx......xZzZxZzZx...xZzZxZzZx......xx
 ENDMAP
 
 #########################################
+# Representatives of all player genuses, locked up.
+NAME:    kb_entry_jail
+TAGS:    entry no_monster_gen no_item_gen
+ORIENT:  north
+SHUFFLE: ABCDEFGHIJKLMNOPQRST
+KFEAT:   ABCDEFGHIJKLMNOPQRST = floor
+KMONS:   A = human ; nothing
+KMONS:   B = elf ; nothing
+KMONS:   C = dwarf ; nothing
+KMONS:   D = orc ; nothing
+KMONS:   E = merfolk ; nothing
+KMONS:   F = human name:halfling n_rpl n_des tile:halfling ; nothing
+MARKER:  F = lua:MonPropsMarker:new { description="This is a degenerate human, " ..\
+               "both mentally and physically similar to a child of perhaps " ..\
+               "ten, perhaps thelve years of age, yet looking older. Its looks " ..\
+               "mischievious, as if prone to no good.\n" ..\
+               "It definitely deserves an axe to the head." }
+KMONS:   G = kobold ; nothing
+KMONS:   H = spriggan ; nothing
+KMONS:   I = naga ; nothing
+KMONS:   J = centaur ; nothing
+KMONS:   K = ogre ; nothing
+KMONS:   L = troll
+KMONS:   M = minotaur ; nothing
+KMONS:   N = human col:lightblue name:kenku n_rpl n_des ; nothing
+MARKER:  N = lua:MonPropsMarker:new { description="A bird-brained creature " ..\
+               "that looks at you with hatred." }
+KMONS:   O = draconian ; nothing
+KMONS:   P = human name:demonspawn n_rpl n_des tile:demonspawn ; nothing
+MARKER:  P = lua:MonPropsMarker:new { description="This fellow looks mostly " ..\
+               "like a human, yet you sense something evil about him." }
+KMONS:   Q = mummy
+KMONS:   R = elf ; nothing
+KMONS:   S = ghoul ; nothing
+KMONS:   T = vampire spells:. ; nothing
+COLOUR:  m = cyan
+TILE:    m = dngn_grate
+:           dgn.set_feature_desc_short("translucent rock wall",
+:                                      "iron grate")
+:           dgn.set_feature_desc_long("translucent rock wall",
+:                                     "This iron grate looks rusted, as if " ..
+:                                     "it could be disrupted with a spell " ..
+:                                     "or a wand quite easily. It's too " ..
+:                                     "strong to be breakable by hand, though.")
+MAP
+ccccccc
+c[.{.(c
+c.....c
+ccc+ccc
+cAm.mBc
+ccc.ccc
+cCm.mDc
+ccc.ccc
+cEm.mFc
+ccc.ccc
+cGm.mHc
+ccc.ccc
+cIm.mJc
+ccc.ccc
+cKm.mLc
+ccc.ccc
+cMm.mNc
+ccc.ccc
+cOm.mPc
+ccc.ccc
+cQm.mRc
+ccc.ccc
+cSm.mTc
+ccc+ccc
+  c@c
+ENDMAP
+
+#########################################
 # A horror show for the beginning adventurer
 NAME:    shiori_entry_whats_in_store_for_you
 TAGS:    entry no_monster_gen no_pool_fixup no_item_gen
