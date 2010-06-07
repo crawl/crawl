@@ -3250,7 +3250,7 @@ static void _open_door(coord_def move, bool check_confused)
         // door!
         if (env.map_knowledge(dc).seen())
         {
-            set_map_knowledge_obj(dc, DNGN_OPEN_DOOR);
+            env.map_knowledge(dc).set_feature(DNGN_OPEN_DOOR);
 #ifdef USE_TILE
             env.tile_bk_bg(dc) = TILE_DNGN_OPEN_DOOR;
 #endif
@@ -3475,7 +3475,7 @@ static void _close_door(coord_def move)
             // want the entire door to be updated.
             if (env.map_knowledge(dc).seen())
             {
-                set_map_knowledge_obj(dc, DNGN_CLOSED_DOOR);
+                env.map_knowledge(dc).set_feature(DNGN_CLOSED_DOOR);
 #ifdef USE_TILE
                 env.tile_bk_bg(dc) = TILE_DNGN_CLOSED_DOOR;
 #endif

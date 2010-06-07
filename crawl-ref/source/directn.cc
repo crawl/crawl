@@ -2359,7 +2359,7 @@ static bool _find_object(const coord_def& where, int mode,
     if (need_path && (!you.see_cell(where) || _blocked_ray(where)))
         return (false);
 
-    return (env.map_knowledge(where).item() != SHOW_ITEM_NONE
+    return (env.map_knowledge(where).item()
             || (you.see_cell(where) && top_item_at(where, true)));
 }
 

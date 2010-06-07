@@ -17,6 +17,9 @@ unsigned get_feat_symbol(dungeon_feature_type feat);
 unsigned get_item_symbol(show_item_type it);
 glyph get_item_glyph(const item_def *item);
 glyph get_mons_glyph(const monster_info& mi, bool realcol=true);
-glyph get_cell_glyph(const map_cell& cell, bool clean_map = false);
+
+show_class get_cell_show_class(const map_cell& cell, bool only_stationary_monsters = false);
+glyph get_cell_glyph(const map_cell& cell, bool only_stationary_monsters = false, int color_mode = 0);
+glyph get_cell_glyph_with_class(const map_cell& cell, show_class cls, int color_mode = 0);
 
 #endif

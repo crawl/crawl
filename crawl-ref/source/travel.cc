@@ -395,14 +395,15 @@ bool is_travelsafe_square(const coord_def& c, bool ignore_hostile)
 
     // Also make note of what's displayed on the level map for
     // plant/fungus checks.
-    const show_type levelmap_object = env.map_knowledge(c).object;
+    const map_cell& levelmap_cell = env.map_knowledge(c);
 
     // Travel will not voluntarily cross squares blocked by immobile monsters.
+    // TODO: do this properly based only on map_knowledge instead of this bizarre manner
     if (!ignore_hostile
-        && levelmap_object.cls == SH_MONSTER
+        && levelmap_cell.monster() != MONS_NO_MONSTER
         && _is_monster_blocked(c)
         // _is_monster_blocked can only return true if monster_at(c) != NULL
-        && monster_at(c)->type == levelmap_object.mons)
+        && monster_at(c)->type == levelmap_cell.monster())
     {
         return (false);
     }
@@ -3418,9 +3419,8 @@ void LevelInfo::get_stairs(std::vector<coord_def> &st)
     for (rectangle_iterator ri(1); ri; ++ri)
     {
         const dungeon_feature_type feat = grd(*ri);
-        const int envc = env.map_knowledge(*ri).object;
 
-        if ((*ri == you.pos() || envc)
+        if ((*ri == you.pos() || env.map_knowledge(*ri).known())
             && feat_is_travelable_stair(feat)
             && (env.map_knowledge(*ri).seen() || !is_branch_stair(*ri)))
         {

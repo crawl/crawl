@@ -3755,8 +3755,9 @@ tileidx_t tileidx_unseen_flag(const coord_def &gc)
         return (TILE_FLAG_UNSEEN);
     else if (env.map_knowledge(gc).known()
                 && !env.map_knowledge(gc).seen()
-             || is_map_knowledge_detected_item(gc)
-             || is_map_knowledge_detected_mons(gc))
+             || env.map_knowledge(gc).detected_item()
+             || env.map_knowledge(gc).detected_monster()
+             )
     {
         return (TILE_FLAG_MM_UNSEEN);
     }

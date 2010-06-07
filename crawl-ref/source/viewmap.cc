@@ -71,13 +71,23 @@ static bool _travel_colour_override(const coord_def& p)
 
     // [ds] Elaborate dance to get map colouring right if
     // Options.clean_map is set.
-    show_type obj = env.map_knowledge(p).object;
-    if (Options.clean_map && obj.is_cleanable_monster())
-        obj.cls = SH_FEATURE;
-    return (obj.cls == SH_FEATURE && (obj.feat == DNGN_FLOOR ||
-                                      obj.feat == DNGN_LAVA ||
-                                      obj.feat == DNGN_DEEP_WATER ||
-                                      obj.feat == DNGN_SHALLOW_WATER));
+    const map_cell& cell = env.map_knowledge(p);
+    show_class cls = get_cell_show_class(cell, Options.clean_map);
+    if(cls == SH_FEATURE)
+    {
+        switch(cell.feat())
+        {
+        case DNGN_FLOOR:
+        case DNGN_LAVA:
+        case DNGN_DEEP_WATER:
+        case DNGN_SHALLOW_WATER:
+            return true;
+        default:
+            return false;
+        }
+    }
+    else
+        return false;
 }
 
 
@@ -101,7 +111,7 @@ unsigned get_magicmap_char(dungeon_feature_type feat)
 // 5. Anything else will look for the exact same character in the level map.
 bool is_feature(int feature, const coord_def& where)
 {
-    if (!env.map_knowledge(where).object && !you.see_cell(where))
+    if (!env.map_knowledge(where).known() && !you.see_cell(where))
         return (false);
 
     dungeon_feature_type grid = grd(where);
@@ -230,7 +240,7 @@ bool is_feature(int feature, const coord_def& where)
 
 static bool _is_feature_fudged(int feature, const coord_def& where)
 {
-    if (!env.map_knowledge(where).object)
+    if (!env.map_knowledge(where).known())
         return (false);
 
     if (is_feature(feature, where))
@@ -419,7 +429,7 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
             }
             else
             {
-                glyph g = get_cell_glyph(env.map_knowledge(c), Options.clean_map);
+                glyph g = get_cell_glyph(env.map_knowledge(c), Options.clean_map, -1);
                 cell->glyph = g.ch;
                 cell->colour = g.col;
 
@@ -512,11 +522,7 @@ class feature_list
 
     group get_group(const coord_def& gc)
     {
-        show_type obj = env.map_knowledge(gc).object;
-        if (obj != SH_FEATURE)
-            return G_NONE;
-
-        dungeon_feature_type feat = obj.feat;
+        dungeon_feature_type feat = env.map_knowledge(gc).feat();
 
         if (feat_is_staircase(feat) || feat_is_escape_hatch(feat))
             return feat_dir(feat);
