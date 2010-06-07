@@ -2515,6 +2515,13 @@ bool map_def::is_minivault() const
     return (has_tag("minivault"));
 }
 
+// Returns true if the map is a layout that allows other vaults to be
+// built on it.
+bool map_def::is_overwritable_layout() const
+{
+    return (has_tag("layout") && !has_tag("sealed_layout"));
+}
+
 // Tries to dock a floating vault - push it to one edge of the level.
 // Docking will only succeed if two contiguous edges are all x/c/b/v
 // (other walls prevent docking). If the vault's width is > GXM*2/3,
