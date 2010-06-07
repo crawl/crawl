@@ -102,7 +102,6 @@ public:
     bool choose_direction();
 
 private:
-    bool choose_again();        // Used when replaying keys
     bool choose_compass();      // Used when we only need to choose a direction
 
     bool do_main_loop();
