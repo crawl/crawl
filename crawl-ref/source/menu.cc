@@ -853,7 +853,7 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
 
     if (!fake)
     {
-       ch = tileidx_feature(grd(c), c);
+       ch = tileidx_feature(c);
        if (ch == TILE_FLOOR_NORMAL)
            ch = env.tile_flv(c).floor;
        else if (ch == TILE_WALL_NORMAL)
@@ -960,7 +960,7 @@ bool FeatureMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
 
     MenuEntry::get_tiles(tileset);
 
-    tileidx_t tile = tileidx_feature(feat, pos);
+    tileidx_t tile = tileidx_feature(pos);
     tileset.push_back(tile_def(tile, get_dngn_tex(tile)));
 
     if (in_bounds(pos) && is_unknown_stair(pos))

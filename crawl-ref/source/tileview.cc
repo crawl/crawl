@@ -592,9 +592,9 @@ void tile_draw_floor()
 
             if (you.see_cell(gc))
             {
-                dungeon_feature_type feat = grid_appearance(gc);
-                bg = tileidx_feature(grd(gc), gc);
+                bg = tileidx_feature(gc);
 
+                dungeon_feature_type feat = grid_appearance(gc);
                 if (feat == DNGN_DETECTED_SECRET_DOOR)
                      bg |= TILE_FLAG_WAS_SECRET;
                 else if (is_unknown_stair(gc))
@@ -777,7 +777,7 @@ void tile_draw_rays(bool reset_count)
 
 void tile_wizmap_terrain(const coord_def &gc)
 {
-    env.tile_bk_bg(gc) = tileidx_feature(grd(gc), gc);
+    env.tile_bk_bg(gc) = tileidx_feature(gc);
 }
 
 // Updates the "flavour" of tiles that are animated.
