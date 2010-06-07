@@ -1715,9 +1715,6 @@ void _save_level(int level_saved, level_area_type old_ltype,
                                          where_were_you, old_ltype,
                                          false );
 
-    you.prev_targ     = MHITNOT;
-    you.prev_grd_targ.reset();
-
     FILE *saveFile = fopen(cha_fil.c_str(), "wb");
 
     if (saveFile == NULL)
