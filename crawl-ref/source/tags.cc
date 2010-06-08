@@ -768,6 +768,8 @@ time_t parse_date_string( char buff[20] )
 // tagId specifies what to write.
 void tag_write(tag_type tagID, FILE* outf)
 {
+    ASSERT(outf);
+
     std::vector<unsigned char> buf;
     writer th(&buf);
     switch (tagID)
