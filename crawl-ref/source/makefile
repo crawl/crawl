@@ -415,8 +415,6 @@ STRIP := $(CROSSHOST)-strip
 WINDRES := $(CROSSHOST)-windres
 
 endif
-GCC_GTE_4_0_0 := $(shell util/gcc-gte.pl $(GCC) 4.0.0)
-GCC_GTE_4_3_0 := $(shell util/gcc-gte.pl $(GCC) 4.3.0)
 
 # Define this to automatically generate code optimized for your machine
 # (GCC only as of now).
@@ -535,9 +533,8 @@ endif
 
 endif # TILES
 
-ifeq ($(GCC_GTE_4_3_0),1)
-CFWARN_L += -Wno-array-bounds
-endif
+# On clang, unknown -Wfoo is merely a warning, thus -Werror.
+CFWARN_L += $(shell w=-Wno-array-bounds;echo|$(GCC) -E - -Werror $$w >/dev/null 2>&1 && echo $$w)
 
 CFWARN_L += -Wno-parentheses -Wwrite-strings -Wshadow -pedantic -D_FORTIFY_SOURCE=0
 CFOTHERS_L = $(EXTERNAL_FLAGS_L) $(EXTRA_FLAGS) $(DEFINES) $(SDL_CFLAGS)
@@ -601,11 +598,7 @@ endif
 
 # Cygwin has a panic attack if we do this...
 ifndef NO_OPTIMIZE
-ifneq ($(GCC_GTE_4_0_0),0)
 CFWARN_L += -Wuninitialized
-else
-CFWARN_L += -Wno-uninitialized
-endif
 endif
 
 ifneq ($(strip $(chroot_prefix)),)
