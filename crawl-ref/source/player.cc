@@ -6531,7 +6531,7 @@ bool player::do_shaft()
         force_stair = DNGN_TRAP_NATURAL;
     }
 
-    down_stairs(absdepth0, force_stair);
+    down_stairs(force_stair);
 
     return (true);
 }

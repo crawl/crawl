@@ -592,7 +592,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         if (you.level_type != LEVEL_ABYSS)
             banished(DNGN_ENTER_ABYSS, "wizard command");
         else
-            down_stairs(you.absdepth0, DNGN_EXIT_ABYSS);
+            down_stairs(DNGN_EXIT_ABYSS);
         break;
 
     case CONTROL('A'):

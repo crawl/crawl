@@ -158,7 +158,7 @@ bool _take_portal_vault_stairs( const bool down )
     you.set_position(stair_pos);
 
     if (down)
-        down_stairs(you.absdepth0);
+        down_stairs();
     else
         up_stairs();
 
@@ -186,7 +186,7 @@ void wizard_level_travel( bool down )
     }
 
     if (down)
-        down_stairs(you.absdepth0, stairs);
+        down_stairs(stairs);
     else
         up_stairs(stairs);
 }
