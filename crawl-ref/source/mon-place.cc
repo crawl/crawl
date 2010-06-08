@@ -2731,8 +2731,11 @@ int mons_place(mgen_data mg)
         mg.cls    = _pick_zot_exit_defender();
         mg.flags |= MG_PERMIT_BANDS;
     }
-    else if (mg.cls == RANDOM_MONSTER || mg.level_type == LEVEL_PANDEMONIUM)
+    else if (mg.cls == RANDOM_MONSTER
+        || mg.level_type == LEVEL_PANDEMONIUM && !mg.summoned())
+    {
         mg.flags |= MG_PERMIT_BANDS;
+    }
 
     // Translate level_type.
     switch (mg.level_type)
