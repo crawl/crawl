@@ -1712,6 +1712,8 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
 void _save_level(const level_id& lid)
 {
+    travel_cache.get_level_info(lid).update();
+
     std::string cha_fil = _make_filename(you.your_name, lid);
 
     FILE *saveFile = fopen(cha_fil.c_str(), "wb");
