@@ -11,6 +11,8 @@ Unsorted:
 * New tutorial, old tutorial now a hints mode.
 * Aptitudes now on a scale +5 to -5.
 * Track the source of poison for death messages.
+* Magic mapping and Lugonu's self-banishment now work in
+  Pandemonium.
 * Remove Death Knights and Thieves.
 * Ghouls can no longer starve; they just rot faster.
 * New tiles monster list tab.
