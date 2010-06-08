@@ -47,6 +47,7 @@ void tile_place_monster(const coord_def &gc, const monsters *mons,
 void tile_place_cloud(const coord_def &gc, const cloud_struct &cl);
 void tile_place_ray(const coord_def &gc, bool in_range);
 void tile_draw_rays(bool reset_count);
+void tile_wizmap_terrain(const coord_def &gc);
 
 void tile_apply_animations(tileidx_t bg, tile_flavour *flv);
 void tile_apply_properties(const coord_def &gc, tileidx_t *fg,

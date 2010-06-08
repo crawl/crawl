@@ -402,9 +402,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 
                 set_terrain_seen(*ri);
 #ifdef USE_TILE
-                // Can't use set_map_knowledge_obj because that would
-                // overwrite the gmap.
-                env.tile_bk_bg(*ri) = tileidx_unseen_terrain(*ri, grd(*ri));
+                tile_wizmap_terrain(*ri);
 #endif
             }
             else
