@@ -2787,8 +2787,6 @@ w:50
 
 @The_monster@ says, "Nothing ever attacks me when I'm in the Abyss."
 
-@The_monster@ says, "So, why can't you enter the Abyss from Pandemonium? Bad signal?"
-
 @The_monster@ says, "You must be some kind of masochist."
 
 @The_monster@ says, "Why would a God hurt you out of love? I hate that."
