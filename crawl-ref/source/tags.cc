@@ -534,13 +534,15 @@ static void marshallStringNoMax(writer &th, const std::string &data)
 }
 
 // string -- unmarshall length & string data
-int unmarshallCString(reader &th, char *data, int maxSize)
+static int unmarshallCString(reader &th, char *data, int maxSize)
 {
+    ASSERT(maxSize > 0);
+
     // Get length.
     short len = unmarshallShort(th);
     int copylen = len;
 
-    if (len >= maxSize && maxSize > 0)
+    if (len >= maxSize)
         copylen = maxSize - 1;
 
     // Read the actual string and null terminate.
@@ -560,6 +562,7 @@ std::string unmarshallString(reader &th, int maxSize)
         return ("");
     *buffer = 0;
     const int slen = unmarshallCString(th, buffer, maxSize);
+    ASSERT(slen >= 0 && slen < maxSize);
     const std::string res(buffer, slen);
     delete [] buffer;
     return (res);
