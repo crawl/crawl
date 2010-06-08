@@ -16,7 +16,7 @@
 enum drop_mode_type
 {
     DM_SINGLE,
-    DM_MULTI
+    DM_MULTI,
 };
 
 god_type str_to_god(std::string god);

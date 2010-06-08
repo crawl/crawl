@@ -7,7 +7,7 @@ enum char_choice_restriction
 {
     CC_BANNED = 0,
     CC_RESTRICTED,
-    CC_UNRESTRICTED
+    CC_UNRESTRICTED,
 };
 
 char_choice_restriction job_allowed(species_type speci, job_type job);

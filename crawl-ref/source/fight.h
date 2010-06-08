@@ -21,7 +21,7 @@ enum unarmed_attack_type
     UNAT_BITE,
     UNAT_PSEUDOPODS,
     UNAT_FIRST_ATTACK = UNAT_KICK,
-    UNAT_LAST_ATTACK = UNAT_PSEUDOPODS
+    UNAT_LAST_ATTACK = UNAT_PSEUDOPODS,
 };
 
 enum unchivalric_attack_type
@@ -36,12 +36,12 @@ enum unchivalric_attack_type
     UCAT_PETRIFIED,
     UCAT_PARALYSED,
     UCAT_SLEEPING,
-    UCAT_ALLY
+    UCAT_ALLY,
 };
 
 enum attack_final_effect_flavor
 {
-    FINEFF_LIGHTNING_DISCHARGE
+    FINEFF_LIGHTNING_DISCHARGE,
 };
 struct attack_final_effect
 {

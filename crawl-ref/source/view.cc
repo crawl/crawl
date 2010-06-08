@@ -694,7 +694,7 @@ static void _debug_pane_bounds()
 enum update_flags
 {
     UF_AFFECT_EXCLUDES = (1 << 0),
-    UF_ADDED_EXCLUDE   = (1 << 1)
+    UF_ADDED_EXCLUDE   = (1 << 1),
 };
 
 // Do various updates when the player sees a cell. Returns whether

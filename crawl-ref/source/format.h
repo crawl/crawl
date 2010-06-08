@@ -16,7 +16,7 @@
 enum fs_op_type
 {
     FSOP_COLOUR,
-    FSOP_TEXT
+    FSOP_TEXT,
 };
 
 class formatted_string

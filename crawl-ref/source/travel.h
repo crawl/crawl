@@ -25,7 +25,7 @@ enum run_check_type
 {
     RCHECK_LEFT,
     RCHECK_FRONT,
-    RCHECK_RIGHT
+    RCHECK_RIGHT,
 };
 
 enum run_dir_type
@@ -38,7 +38,7 @@ enum run_dir_type
     RDIR_DOWN_LEFT,
     RDIR_LEFT,
     RDIR_UP_LEFT,
-    RDIR_REST
+    RDIR_REST,
 };
 
 enum run_mode_type
@@ -50,7 +50,7 @@ enum run_mode_type
     RMODE_NOT_RUNNING    = 0,  // must remain equal to 0
     RMODE_CONTINUE,
     RMODE_START,
-    RMODE_REST_DURATION = 100
+    RMODE_REST_DURATION = 100,
 };
 
 /* ***********************************************************************
@@ -124,7 +124,7 @@ enum translevel_prompt_flags
     TPF_SHOW_ALL_BRANCHES = 0x8,
 
     TPF_DEFAULT_OPTIONS   = TPF_ALLOW_WAYPOINTS | TPF_ALLOW_UPDOWN
-                                                | TPF_REMEMBER_TARGET
+                                                | TPF_REMEMBER_TARGET,
 };
 
 travel_target prompt_translevel_target(int prompt_flags,
@@ -194,7 +194,7 @@ enum explore_stop_type
     ES_PORTAL                    = 0x0400,
     ES_GLOWING_ITEM              = 0x0800,
     ES_ARTEFACT                  = 0x1000,
-    ES_RUNE                      = 0x2000
+    ES_RUNE                      = 0x2000,
 };
 
 ////////////////////////////////////////////////////////////////////////////
@@ -286,7 +286,7 @@ public:
     enum stair_type
     {
         PHYSICAL,
-        PLACEHOLDER
+        PLACEHOLDER,
     };
 
 public:

@@ -15,7 +15,7 @@ enum fog_machine_type
     FM_GEYSER,
     FM_SPREAD,
     FM_BROWNIAN,
-    NUM_FOG_MACHINE_TYPES
+    NUM_FOG_MACHINE_TYPES,
 };
 
 struct fog_machine_data

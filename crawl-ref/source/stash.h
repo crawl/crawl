@@ -31,7 +31,7 @@ enum STASH_TRACK_MODES
     STM_EXPLICIT,         // Only explicitly marked stashes are tracked
     STM_DROPPED,          // Dropped items and explicitly marked stashes are
                           // tracked
-    STM_ALL               // All seen items are tracked
+    STM_ALL,              // All seen items are tracked
 };
 
 struct stash_search_result;
@@ -310,7 +310,7 @@ public:
     enum stash_update_mode
     {
         ST_PASSIVE,             // Maintain existing stashes only.
-        ST_AGGRESSIVE           // Create stashes for each square containing
+        ST_AGGRESSIVE,          // Create stashes for each square containing
                                 // objects, even if those squares were not
                                 // previously marked as stashes.
     };

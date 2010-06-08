@@ -34,7 +34,7 @@ enum areaprop_flag
     APROP_SANCTUARY_1 = (1 << 0),
     APROP_SANCTUARY_2 = (1 << 1),
     APROP_SILENCE     = (1 << 2),
-    APROP_HALO        = (1 << 3)
+    APROP_HALO        = (1 << 3),
 };
 
 typedef FixedArray<unsigned long, GXM, GYM> propgrid_t;

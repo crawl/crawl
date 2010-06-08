@@ -114,7 +114,7 @@ enum ability_type
 
     ABIL_HARM_PROTECTION,
     ABIL_HARM_PROTECTION_II,                //  262
-    ABIL_RENOUNCE_RELIGION = 270            //  270
+    ABIL_RENOUNCE_RELIGION = 270,           //  270
 };
 
 enum activity_interrupt_type
@@ -144,7 +144,7 @@ enum actor_type
 {
     ACT_NONE = -1,
     ACT_PLAYER,
-    ACT_MONSTER
+    ACT_MONSTER,
 };
 
 enum attribute_type
@@ -369,14 +369,14 @@ enum builder_rc_type
 {
     BUILD_QUIT = -1,            // all done, don't continue
     BUILD_SKIP = 1,             // skip further generation
-    BUILD_CONTINUE = 0          // continue generation
+    BUILD_CONTINUE = 0,         // continue generation
 };
 
 enum burden_state_type          // you.burden_state
 {
     BS_UNENCUMBERED,            //    0
     BS_ENCUMBERED = 2,          //    2
-    BS_OVERLOADED = 5           //    5
+    BS_OVERLOADED = 5,          //    5
 };
 
 enum canned_message_type
@@ -398,7 +398,7 @@ enum canned_message_type
     MSG_STRANGE_STASIS,
     MSG_NO_SPELLS,
     MSG_MANA_INCREASE,
-    MSG_MANA_DECREASE
+    MSG_MANA_DECREASE,
 };
 
 enum char_set_type
@@ -415,7 +415,7 @@ enum cleansing_flame_source_type
     CLEANSING_FLAME_GENERIC    = -1,
     CLEANSING_FLAME_SPELL      = -2, // SPELL_FLAME_OF_CLEANSING
     CLEANSING_FLAME_INVOCATION = -3, // ABIL_TSO_CLEANSING_FLAME
-    CLEANSING_FLAME_TSO        = -4  // TSO effect
+    CLEANSING_FLAME_TSO        = -4, // TSO effect
 };
 
 enum cloud_type
@@ -445,7 +445,7 @@ enum cloud_type
     CLOUD_MUTAGENIC,
     CLOUD_MAGIC_TRAIL,
     CLOUD_RANDOM = 98,
-    CLOUD_DEBUGGING = 99    //   99: used once as 'nonexistent cloud' {dlb}
+    CLOUD_DEBUGGING = 99,   //   99: used once as 'nonexistent cloud' {dlb}
 };
 
 enum command_type
@@ -806,14 +806,14 @@ enum confirm_prompt_type
 {
     CONFIRM_CANCEL,             // automatically answer 'no', i.e. disallow
     CONFIRM_PROMPT,             // prompt
-    CONFIRM_NONE                // automatically answer 'yes'
+    CONFIRM_NONE,               // automatically answer 'yes'
 };
 
 enum confirm_level_type
 {
     CONFIRM_NONE_EASY,
     CONFIRM_SAFE_EASY,
-    CONFIRM_ALL_EASY
+    CONFIRM_ALL_EASY,
 };
 
 // When adding new delays, update their names in delay.cc, or bad things will
@@ -882,7 +882,7 @@ enum game_direction_type
 {
     GDT_GAME_START = 0,
     GDT_DESCENDING,
-    GDT_ASCENDING
+    GDT_ASCENDING,
 };
 
 enum game_type
@@ -901,7 +901,7 @@ enum level_flag_type
 
     LFLAG_NO_TELE_CONTROL = (1 << 0), // Teleport control not allowed.
     LFLAG_NOT_MAPPABLE    = (1 << 1), // Level not mappable (like Abyss).
-    LFLAG_NO_MAGIC_MAP    = (1 << 2)  // Level can't be magic mapped.
+    LFLAG_NO_MAGIC_MAP    = (1 << 2), // Level can't be magic mapped.
 };
 
 // NOTE: The order of these is very important to their usage!
@@ -1286,7 +1286,7 @@ enum enchant_retval
 {
     ERV_FAIL,
     ERV_NEW,
-    ERV_INCREASED
+    ERV_INCREASED,
 };
 
 enum energy_use_type
@@ -1298,7 +1298,7 @@ enum energy_use_type
     EUT_SPELL,
     EUT_SPECIAL,
     EUT_ITEM,
-    EUT_PICKUP
+    EUT_PICKUP,
 };
 
 enum equipment_type
@@ -1325,14 +1325,14 @@ enum equipment_type
     EQ_RINGS,                          // check both rings
     EQ_RINGS_PLUS,                     // check both rings and sum plus
     EQ_RINGS_PLUS2,                    // check both rings and sum plus2
-    EQ_ALL_ARMOUR                      // check all armour types
+    EQ_ALL_ARMOUR,                     // check all armour types
 };
 
 enum feature_flag_type
 {
     FFT_NONE          = 0,
     FFT_NOTABLE       = 0x1,           // should be noted for dungeon overview
-    FFT_EXAMINE_HINT  = 0x2            // could get an "examine-this" hint.
+    FFT_EXAMINE_HINT  = 0x2,           // could get an "examine-this" hint.
 };
 
 enum flush_reason_type
@@ -1379,7 +1379,7 @@ enum god_type
 
     GOD_RANDOM = 100,
     GOD_NAMELESS = 101,                // for monsters with non-player gods
-    GOD_VIABLE = 102
+    GOD_VIABLE = 102,
 };
 
 enum holy_word_source_type
@@ -1388,7 +1388,7 @@ enum holy_word_source_type
     HOLY_WORD_SCROLL      = -2,
     HOLY_WORD_SPELL       = -3,  // SPELL_HOLY_WORD
     HOLY_WORD_ZIN         = -4,  // Zin effect
-    HOLY_WORD_TSO         = -5   // TSO effect
+    HOLY_WORD_TSO         = -5,  // TSO effect
 };
 
 enum hunger_state                  // you.hunger_state
@@ -1400,7 +1400,7 @@ enum hunger_state                  // you.hunger_state
     HS_SATIATED,                       // "not hungry" state
     HS_FULL,
     HS_VERY_FULL,
-    HS_ENGORGED
+    HS_ENGORGED,
 };
 
 enum immolation_source_type
@@ -1408,7 +1408,7 @@ enum immolation_source_type
     IMMOLATION_GENERIC = -1,
     IMMOLATION_SCROLL  = -2,
     IMMOLATION_SPELL   = -3, // effect when fixing fire brand
-    IMMOLATION_TOME    = -4  // exploding Tome of Destruction
+    IMMOLATION_TOME    = -4, // exploding Tome of Destruction
 };
 
 enum item_status_flag_type  // per item flags: ie. ident status, cursed status
@@ -1453,7 +1453,7 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
 
     ISFLAG_BEEN_IN_INV       = 0x20000000,  // Item has been in inventory
     ISFLAG_SUMMONED          = 0x40000000,  // Item generated on a summon
-    ISFLAG_DROPPED_BY_ALLY   = 0x80000000   // Item was dropped by an ally
+    ISFLAG_DROPPED_BY_ALLY   = 0x80000000,  // Item was dropped by an ally
 };
 
 enum item_type_id_state_type
@@ -1462,7 +1462,7 @@ enum item_type_id_state_type
     ID_MON_TRIED_TYPE,
     ID_TRIED_TYPE,
     ID_TRIED_ITEM_TYPE,
-    ID_KNOWN_TYPE
+    ID_KNOWN_TYPE,
 };
 
 enum job_type
@@ -1499,7 +1499,7 @@ enum job_type
 
     JOB_UNKNOWN = 100,
     JOB_RANDOM  = 101,
-    JOB_VIABLE  = 102
+    JOB_VIABLE  = 102,
 };
 
 enum KeymapContext
@@ -1538,7 +1538,7 @@ enum killer_type                       // monster_die(), thing_thrown
     KILL_MISCAST,
     KILL_MISC,                         // miscellany
     KILL_RESET,                        // abjuration, etc.
-    KILL_DISMISSED                     // only on new game startup
+    KILL_DISMISSED,                    // only on new game startup
 };
 
 enum flight_type
@@ -1584,7 +1584,7 @@ enum map_marker_type
     MAT_WIZ_PROPS,
     MAT_TOMB,
     NUM_MAP_MARKER_TYPES,
-    MAT_ANY
+    MAT_ANY,
 };
 
 enum map_feature
@@ -1613,7 +1613,7 @@ enum map_feature
     MF_PLAYER,
     MF_MAX,
 
-    MF_SKIP
+    MF_SKIP,
 };
 
 enum menu_type
@@ -1623,7 +1623,7 @@ enum menu_type
     MT_INVLIST,                        // List inventory
     MT_DROP,
     MT_PICKUP,
-    MT_KNOW
+    MT_KNOW,
 };
 
 enum mon_holy_type
@@ -1633,7 +1633,7 @@ enum mon_holy_type
     MH_UNDEAD,
     MH_DEMONIC,
     MH_NONLIVING, // golems and other constructs
-    MH_PLANT
+    MH_PLANT,
 };
 
 enum targ_mode_type
@@ -2145,7 +2145,7 @@ enum monster_type                      // (int) menv[].type
     // Any random specialised draconian, such as a draconian knight.
     RANDOM_NONBASE_DRACONIAN,
 
-    WANDERING_MONSTER = 3500 // only used in monster placement routines - forced limit checks {dlb}
+    WANDERING_MONSTER = 3500, // only used in monster placement routines - forced limit checks {dlb}
 
 };
 
@@ -2167,7 +2167,7 @@ enum beh_type
     BEH_NEUTRAL,                       //  creation only
     BEH_HOSTILE,                       //  creation only
     BEH_GUARD,                         //  creation only - monster is guard
-    BEH_COPY                           //  creation only - copy from summoner
+    BEH_COPY,                          //  creation only - copy from summoner
 };
 
 enum mon_attitude_type
@@ -2176,7 +2176,7 @@ enum mon_attitude_type
     ATT_NEUTRAL,                       // neutral
     ATT_GOOD_NEUTRAL,                  // neutral, but won't attack friendlies
     ATT_STRICT_NEUTRAL,                // neutral, won't attack player. Used by Jiyva.
-    ATT_FRIENDLY                       // created friendly (or tamed?)
+    ATT_FRIENDLY,                      // created friendly (or tamed?)
 };
 
 // These are now saved in an unsigned long in the monsters struct.
@@ -2237,7 +2237,7 @@ enum monster_flag_type
     MF_NAME_DEFINITE      = 0x4000000,// give this monster the definite "the"
                                       // article, instead of the indefinite "a"
                                       // article.
-    MF_INTERLEVEL_FOLLOWER = 0x8000000// will travel with the player regardless
+    MF_INTERLEVEL_FOLLOWER = 0x8000000,// will travel with the player regardless
                                        // of where the monster is at on the level
 };
 
@@ -2494,7 +2494,7 @@ enum mutation_type
     RANDOM_GOOD_MUTATION,
     RANDOM_BAD_MUTATION,
     RANDOM_SLIME_MUTATION,
-    RANDOM_NON_SLIME_MUTATION
+    RANDOM_NON_SLIME_MUTATION,
 };
 
 enum object_class_type                 // mitm[].base_type
@@ -2518,7 +2518,7 @@ enum object_class_type                 // mitm[].base_type
     OBJ_GEMSTONES, // found in itemname.cc, labeled as miscellaneous in invent.cc {dlb}
     NUM_OBJECT_CLASSES,
     OBJ_UNASSIGNED = 100,              // must remain set to 100 {dlb}
-    OBJ_RANDOM = 255 // must remain set to 255 {dlb} - also used
+    OBJ_RANDOM = 255,// must remain set to 255 {dlb} - also used
                      // for blanket random sub_type .. see dungeon::items()
 };
 
@@ -2542,19 +2542,19 @@ enum operation_types
     OPER_DESTROY  = 'D',
     OPER_QUIVER   = 'Q',
     OPER_ATTACK   = 'a',
-    OPER_ANY      = 0
+    OPER_ANY      = 0,
 };
 
 enum orb_type
 {
-    ORB_ZOT
+    ORB_ZOT,
 };
 
 enum size_part_type
 {
     PSIZE_BODY,         // entire body size -- used for EV/size of target
     PSIZE_TORSO,        // torso only (hybrids -- size of parts that use equip)
-    PSIZE_PROFILE       // profile only (for stealth checks)
+    PSIZE_PROFILE,      // profile only (for stealth checks)
 };
 
 enum potion_type
@@ -2598,7 +2598,7 @@ enum pronoun_type
     PRONOUN_CAP_POSSESSIVE,
     PRONOUN_NOCAP_POSSESSIVE,
     PRONOUN_REFLEXIVE,                  // reflexive is always lowercase
-    PRONOUN_OBJECTIVE                   // objective is always lowercase
+    PRONOUN_OBJECTIVE,                  // objective is always lowercase
 };
 
 enum artefact_prop_type
@@ -2640,7 +2640,7 @@ enum score_format_type
 {
     SCORE_TERSE,                // one line
     SCORE_REGULAR,              // two lines (name, cause, blank)
-    SCORE_VERBOSE               // everything (dates, times, god, etc.)
+    SCORE_VERBOSE,              // everything (dates, times, god, etc.)
 };
 
 enum shop_type // (unsigned char) env.sh_type[], item_in_shop(), in_a_shop()
@@ -2659,7 +2659,7 @@ enum shop_type // (unsigned char) env.sh_type[], item_in_shop(), in_a_shop()
     SHOP_GENERAL,
     NUM_SHOPS, // must remain last 'regular' member {dlb}
     SHOP_UNASSIGNED = 100,             // keep set at 100 for now {dlb}
-    SHOP_RANDOM = 255                  // keep set at 255 for now {dlb}
+    SHOP_RANDOM = 255,                 // keep set at 255 for now {dlb}
 };
 
 // These are often addressed relative to each other (esp. delta SIZE_MEDIUM).
@@ -2674,7 +2674,7 @@ enum size_type
     SIZE_GIANT,             // giants
     SIZE_HUGE,              // dragons
     NUM_SIZE_LEVELS,
-    SIZE_CHARACTER          // transformations that don't change size
+    SIZE_CHARACTER,         // transformations that don't change size
 };
 
 // [dshaligram] If you add a new skill, update skills2.cc, specifically
@@ -2725,7 +2725,7 @@ enum skill_type
 
     SK_BLANK_LINE,                     // used for skill output
     SK_COLUMN_BREAK,                   // used for skill output
-    SK_NONE
+    SK_NONE,
 };
 
 // order is important on these (see player_speed())
@@ -2733,7 +2733,7 @@ enum speed_type
 {
     SPEED_SLOWED,
     SPEED_NORMAL,
-    SPEED_HASTED
+    SPEED_HASTED,
 };
 
 enum species_type
@@ -2779,7 +2779,7 @@ enum species_type
 
     SP_UNKNOWN  = 100,
     SP_RANDOM   = 101,
-    SP_VIABLE   = 102
+    SP_VIABLE   = 102,
 };
 
 enum spell_type
@@ -2995,7 +2995,7 @@ enum spell_type
 enum slot_select_mode
 {
     SS_FORWARD      = 0,
-    SS_BACKWARD     = 1
+    SS_BACKWARD     = 1,
 };
 
 enum stat_type
@@ -3005,7 +3005,7 @@ enum stat_type
   STAT_DEX,
   NUM_STATS, // added for increase_stats() {dlb}
   STAT_ALL, // must remain after NUM_STATS -- added to handle royal jelly, etc. {dlb}
-  STAT_RANDOM = 255 // leave at 255, added for increase_stats() handling {dlb}
+  STAT_RANDOM = 255, // leave at 255, added for increase_stats() handling {dlb}
 };
 
 enum targeting_type
@@ -3013,7 +3013,7 @@ enum targeting_type
     DIR_NONE,
     DIR_TARGET,
     DIR_DIR,
-    DIR_TARGET_OBJECT // New as of 27-August-2009, for item-targeting spells
+    DIR_TARGET_OBJECT, // New as of 27-August-2009, for item-targeting spells
 };
 
 enum torment_source_type
@@ -3024,7 +3024,7 @@ enum torment_source_type
     TORMENT_SCROLL        = -4,
     TORMENT_SPELL         = -5,   // SPELL_SYMBOL_OF_TORMENT
     TORMENT_XOM           = -6,   // Xom effect
-    TORMENT_KIKUBAAQUDGHA = -7    // Kikubaaqudgha effect
+    TORMENT_KIKUBAAQUDGHA = -7,   // Kikubaaqudgha effect
 };
 
 enum trap_type                         // env.trap_type[]
@@ -3045,7 +3045,7 @@ enum trap_type                         // env.trap_type[]
     TRAP_UNASSIGNED = 100,             // keep set at 100 for now {dlb}
     TRAP_INDEPTH = 253,                // Level-appropriate trap.
     TRAP_NONTELEPORT = 254,
-    TRAP_RANDOM = 255                  // set at 255 to avoid potential conflicts {dlb}
+    TRAP_RANDOM = 255,                 // set at 255 to avoid potential conflicts {dlb}
 };
 
 // Any change in this list warrants an increase in the version number in
@@ -3150,14 +3150,14 @@ enum undead_state_type                // you.is_undead
     US_ALIVE = 0,
     US_HUNGRY_DEAD,     // Ghouls
     US_UNDEAD,          // Mummies
-    US_SEMI_UNDEAD      // Vampires
+    US_SEMI_UNDEAD,     // Vampires
 };
 
 enum unique_item_status_type
 {
     UNIQ_NOT_EXISTS = 0,
     UNIQ_EXISTS = 1,
-    UNIQ_LOST_IN_ABYSS = 2
+    UNIQ_LOST_IN_ABYSS = 2,
 };
 
 enum friendly_pickup_type
@@ -3165,7 +3165,7 @@ enum friendly_pickup_type
     FRIENDLY_PICKUP_NONE = 0,
     FRIENDLY_PICKUP_FRIEND,
     FRIENDLY_PICKUP_PLAYER,
-    FRIENDLY_PICKUP_ALL
+    FRIENDLY_PICKUP_ALL,
 };
 
 enum zap_type
@@ -3251,21 +3251,21 @@ enum montravel_target_type
     MTRAV_SIREN,       // Sirens travelling towards deep water.
     MTRAV_WALL,        // Rock worms travelling towards a wall.
     MTRAV_UNREACHABLE, // Not travelling because target is unreachable.
-    MTRAV_KNOWN_UNREACHABLE // As above, and the player knows this.
+    MTRAV_KNOWN_UNREACHABLE, // As above, and the player knows this.
 };
 
 enum maybe_bool
 {
     B_FALSE,
     B_MAYBE,
-    B_TRUE
+    B_TRUE,
 };
 
 enum reach_type
 {
     REACH_NONE,
     REACH_KNIGHT,
-    REACH_TWO
+    REACH_TWO,
 };
 
 #ifdef USE_TILE
@@ -3273,7 +3273,7 @@ enum screen_mode
 {
     SCREENMODE_WINDOW = 0,
     SCREENMODE_FULL   = 1,
-    SCREENMODE_AUTO   = 2
+    SCREENMODE_AUTO   = 2,
 };
 
 enum cursor_type
@@ -3281,7 +3281,7 @@ enum cursor_type
     CURSOR_MOUSE,
     CURSOR_TUTORIAL,
     CURSOR_MAP,
-    CURSOR_MAX
+    CURSOR_MAX,
 };
 
 // Ordering of tags is important: higher values cover up lower ones.
@@ -3290,7 +3290,7 @@ enum text_tag_type
     TAG_NAMED_MONSTER = 0,
     TAG_TUTORIAL      = 1,
     TAG_CELL_DESC     = 2,
-    TAG_MAX
+    TAG_MAX,
 };
 
 enum tag_pref
@@ -3299,7 +3299,7 @@ enum tag_pref
     TAGPREF_TUTORIAL, // display text tags on "new" monsters
     TAGPREF_NAMED,    // display text tags on named monsters (incl. friendlies)
     TAGPREF_ENEMY,    // display text tags on enemy named monsters
-    TAGPREF_MAX
+    TAGPREF_MAX,
 };
 enum tile_flags
 {
@@ -3356,7 +3356,7 @@ enum tile_flags
     TILE_FLAG_SILENCED   = 0x10000000,
 
     // General
-    TILE_FLAG_MASK       = 0x000007FF
+    TILE_FLAG_MASK       = 0x000007FF,
 };
 
 enum tile_inventory_flags
@@ -3368,14 +3368,14 @@ enum tile_inventory_flags
     TILEI_FLAG_CURSE   = 0x1000,
     TILEI_FLAG_CURSOR  = 0x2000,
     TILEI_FLAG_MELDED  = 0x4000,
-    TILEI_FLAG_INVALID = 0x8000
+    TILEI_FLAG_INVALID = 0x8000,
 };
 
 enum tile_player_flags
 {
     TILEP_GENDER_FEMALE = 0,
     TILEP_GENDER_MALE   = 1,
-    TILEP_SHOW_EQUIP    = 0x1000
+    TILEP_SHOW_EQUIP    = 0x1000,
 };
 
 enum tile_player_flag_cut
@@ -3383,20 +3383,20 @@ enum tile_player_flag_cut
     TILEP_FLAG_HIDE,
     TILEP_FLAG_NORMAL,
     TILEP_FLAG_CUT_CENTAUR,
-    TILEP_FLAG_CUT_NAGA
+    TILEP_FLAG_CUT_NAGA,
 };
 
 // normal tile size in px
 enum
 {
     TILE_X = 32,
-    TILE_Y = 32
+    TILE_Y = 32,
 };
 
 // Don't change this without also modifying the data save/load routines.
 enum
 {
-    NUM_MAX_DOLLS = 10
+    NUM_MAX_DOLLS = 10,
 };
 
 #endif
@@ -3407,7 +3407,7 @@ enum wizard_option_type
 {
     WIZ_NEVER,                         // protect player from accidental wiz
     WIZ_NO,                            // don't start character in wiz mode
-    WIZ_YES                            // start character in wiz mode
+    WIZ_YES,                           // start character in wiz mode
 };
 
 #endif

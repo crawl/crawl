@@ -69,7 +69,7 @@ enum MenuOptions
     M_RANDOM = -6,
     M_VIABLE_CHAR = -7,
     M_RANDOM_CHAR = -8,
-    M_DEFAULT_CHOICE = -9
+    M_DEFAULT_CHOICE = -9,
 };
 
 static bool _is_random_species(species_type sp)

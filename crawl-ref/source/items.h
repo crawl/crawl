@@ -25,7 +25,7 @@ enum item_source_type
 
     // Empty space for new non-wizmode acquisition methods
 
-    AQ_WIZMODE    = 200
+    AQ_WIZMODE    = 200,
 };
 
 bool dec_inv_item_quantity(int obj, int amount, bool suppress_burden = false);

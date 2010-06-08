@@ -73,7 +73,7 @@ enum ability_flag_type
     ABFLAG_PERMANENT_MP   = 0x00000080, // costs permanent MPs
     ABFLAG_CONF_OK        = 0x00000100, // can use even if confused
     ABFLAG_FRUIT          = 0x00000200, // ability requires fruit
-    ABFLAG_VARIABLE_FRUIT = 0x00000400  // ability requires fruit or piety
+    ABFLAG_VARIABLE_FRUIT = 0x00000400, // ability requires fruit or piety
 };
 
 static int  _find_ability_slot( ability_type which_ability );

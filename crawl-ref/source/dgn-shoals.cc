@@ -65,13 +65,13 @@ enum shoals_height_thresholds
     SHT_STONE = 400,
     SHT_ROCK  = 135,
     SHT_FLOOR = 0,
-    SHT_SHALLOW_WATER = -30
+    SHT_SHALLOW_WATER = -30,
 };
 
 enum tide_direction
 {
     TIDE_RISING,
-    TIDE_FALLING
+    TIDE_FALLING,
 };
 
 static tide_direction _shoals_tide_direction;

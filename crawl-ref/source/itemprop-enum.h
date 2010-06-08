@@ -60,7 +60,7 @@ enum armour_type
 enum armour_property_type
 {
     PARM_AC,                           //    0
-    PARM_EVASION
+    PARM_EVASION,
 };
 
 enum boot_type          // used in pluses2
@@ -111,13 +111,13 @@ enum brand_type // equivalent to (you.inv[].special or mitm[].special) % 30
     SPWPN_ACID,    // acid bite only for the moment
     SPWPN_DEBUG_RANDART,
     NUM_SPECIAL_WEAPONS,
-    SPWPN_DUMMY_CRUSHING         // ONLY TEMPORARY USAGE -- converts to VORPAL
+    SPWPN_DUMMY_CRUSHING,        // ONLY TEMPORARY USAGE -- converts to VORPAL
 };
 
 enum corpse_type
 {
     CORPSE_BODY,                       //    0
-    CORPSE_SKELETON
+    CORPSE_SKELETON,
 };
 
 enum hands_reqd_type
@@ -126,7 +126,7 @@ enum hands_reqd_type
     HANDS_HALF,
     HANDS_TWO,
 
-    HANDS_DOUBLE        // not a level, marks double ended weapons (== half)
+    HANDS_DOUBLE,       // not a level, marks double ended weapons (== half)
 };
 
 enum helmet_desc_type
@@ -147,7 +147,7 @@ enum gloves_desc_type
 {
     TGLOV_DESC_GLOVES = 0,
     TGLOV_DESC_GAUNTLETS,
-    TGLOV_DESC_BRACERS
+    TGLOV_DESC_BRACERS,
 };
 
 enum jewellery_type
@@ -203,7 +203,7 @@ enum launch_retval
 {
     LRET_FUMBLED = 0,                  // must be left as 0
     LRET_LAUNCHED,
-    LRET_THROWN
+    LRET_THROWN,
 };
 
 enum misc_item_type
@@ -369,7 +369,7 @@ enum special_missile_type // to separate from weapons in general {dlb}
 enum special_ring_type // jewellery mitm[].special values
 {
     SPRING_RANDART = 200,
-    SPRING_UNRANDART = 201
+    SPRING_UNRANDART = 201,
 };
 
 enum stave_type
@@ -484,7 +484,7 @@ enum weapon_type
     WPN_UNARMED = 500,                 //  500
     WPN_UNKNOWN = 1000,                // 1000
     WPN_RANDOM,
-    WPN_VIABLE
+    WPN_VIABLE,
 };
 
 enum weapon_property_type
@@ -492,7 +492,7 @@ enum weapon_property_type
     PWPN_DAMAGE,                       //    0
     PWPN_HIT,
     PWPN_SPEED,
-    PWPN_ACQ_WEIGHT
+    PWPN_ACQ_WEIGHT,
 };
 
 enum vorpal_damage_type
@@ -530,7 +530,7 @@ enum vorpal_damage_type
     DAMV_STABBING       = DVORP_STABBING | DAM_PIERCE,
 
     DAM_MASK            = 0x0fff,       // strips vorpal specification
-    DAMV_MASK           = 0xf000        // strips non-vorpal specification
+    DAMV_MASK           = 0xf000,       // strips non-vorpal specification
 };
 
 enum wand_type
@@ -563,7 +563,7 @@ enum zap_count_type
     ZAPCOUNT_EMPTY       = -1,
     ZAPCOUNT_UNKNOWN     = -2,
     ZAPCOUNT_RECHARGED   = -3,
-    ZAPCOUNT_MAX_CHARGED = -4
+    ZAPCOUNT_MAX_CHARGED = -4,
 };
 
 #endif

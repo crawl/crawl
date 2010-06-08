@@ -20,7 +20,7 @@ enum mon_resist_type
     MON_RESIST,                 // monster resisted
     MON_UNAFFECTED,             // monster unaffected
     MON_AFFECTED,               // monster was affected
-    MON_OTHER                   // monster unaffected, but for other reasons
+    MON_OTHER,                  // monster unaffected, but for other reasons
 };
 
 class dist;

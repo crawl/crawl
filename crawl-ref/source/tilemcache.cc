@@ -22,7 +22,7 @@ enum mcache_type
     MCACHE_DEMON,
     MCACHE_MAX,
 
-    MCACHE_NULL
+    MCACHE_NULL,
 };
 
 struct demon_data

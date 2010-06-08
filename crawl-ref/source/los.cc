@@ -274,7 +274,7 @@ enum compare_type
 {
     C_SUBRAY,
     C_SUPERRAY,
-    C_NEITHER
+    C_NEITHER,
 };
 
 // Check whether one of the passed cellrays is a subray of the

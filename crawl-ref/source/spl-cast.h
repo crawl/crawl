@@ -38,8 +38,7 @@ enum spflag_type
                                                  // use by a priest/wizard
     SPFLAG_NOISY                = 0x100000,      // makes noise, even if innate
     SPFLAG_TESTING              = 0x200000,      // a testing/debugging spell
-    SPFLAG_CORPSE_VIOLATING     = 0x400000       // Conduct violation for Fedhas
-
+    SPFLAG_CORPSE_VIOLATING     = 0x400000,      // Conduct violation for Fedhas
 };
 
 enum spret_type
@@ -47,7 +46,7 @@ enum spret_type
     SPRET_ABORT = 0,            // should be left as 0
     SPRET_FAIL,
     SPRET_SUCCESS,
-    SPRET_NONE                  // spell was not handled
+    SPRET_NONE,                 // spell was not handled
 };
 
 typedef bool (*spell_selector)(spell_type spell);

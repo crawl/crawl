@@ -69,19 +69,19 @@ enum demon_class_type
     DEMON_LESSER,                      //    0: Class V
     DEMON_COMMON,                      //    1: Class II-IV
     DEMON_GREATER,                     //    2: Class I
-    DEMON_RANDOM                       //    any of the above
+    DEMON_RANDOM,                      //    any of the above
 };
 
 enum holy_being_class_type
 {
-    HOLY_BEING_WARRIOR                 //    0: Daeva or Angel
+    HOLY_BEING_WARRIOR,                //    0: Daeva or Angel
 };
 
 enum dragon_class_type
 {
     DRAGON_LIZARD,
     DRAGON_DRACONIAN,
-    DRAGON_DRAGON
+    DRAGON_DRAGON,
 };
 
 enum proximity_type   // proximity to player to create monster
@@ -89,7 +89,7 @@ enum proximity_type   // proximity to player to create monster
     PROX_ANYWHERE,
     PROX_CLOSE_TO_PLAYER,
     PROX_AWAY_FROM_PLAYER,
-    PROX_NEAR_STAIRS
+    PROX_NEAR_STAIRS,
 };
 
 enum mgen_flag_type
@@ -99,7 +99,7 @@ enum mgen_flag_type
     MG_FORCE_BEH    = 0x04,
     MG_PLAYER_MADE  = 0x08,
     MG_PATROLLING   = 0x10,
-    MG_BAND_MINION  = 0x20
+    MG_BAND_MINION  = 0x20,
 };
 
 #endif

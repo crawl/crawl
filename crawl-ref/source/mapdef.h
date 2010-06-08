@@ -500,7 +500,7 @@ private:
 
     enum
     {
-        SUBVAULT_GLYPH = 1
+        SUBVAULT_GLYPH = 1,
     };
 
     int map_width;
@@ -515,7 +515,7 @@ enum item_spec_type
     ISPEC_DAMAGED = -4,
     ISPEC_BAD     = -5,
     ISPEC_RANDART = -6,
-    ISPEC_ACQUIREMENT = -9
+    ISPEC_ACQUIREMENT = -9,
 };
 
 struct item_spec

@@ -23,7 +23,7 @@ enum MipMapOptions
 {
     MIPMAP_CREATE,
     MIPMAP_NONE,
-    MIPMAP_MAX
+    MIPMAP_MAX,
 };
 
 struct tile_def

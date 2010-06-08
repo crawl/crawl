@@ -12,7 +12,7 @@
 enum wm_endianness
 {
     WM_BIG_ENDIAN,
-    WM_LIL_ENDIAN
+    WM_LIL_ENDIAN,
 };
 
 enum wm_event_type

@@ -321,7 +321,7 @@ enum mbn_type
 {
     MBN_TERSE, // terse brand name
     MBN_NAME,  // brand name for item naming (adj for prefix, noun for postfix)
-    MBN_BRAND  // plain brand name
+    MBN_BRAND, // plain brand name
 };
 
 const char* missile_brand_name(special_missile_type brand, mbn_type t)

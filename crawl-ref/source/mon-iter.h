@@ -14,7 +14,7 @@ enum restr_type
     R_NONE,
     R_CIRC,
     R_LOS,
-    R_ACT
+    R_ACT,
 };
 
 class circle_def;

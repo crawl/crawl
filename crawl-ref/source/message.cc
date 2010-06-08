@@ -241,7 +241,7 @@ enum prefix_type
     P_NEW_CMD, // new command, but no new turn
     P_NEW_TURN,
     P_FULL_MORE,   // single-character more prompt (full window)
-    P_OTHER_MORE   // the other type of --more-- prompt
+    P_OTHER_MORE,  // the other type of --more-- prompt
 };
 
 // Could also go with coloured glyphs.

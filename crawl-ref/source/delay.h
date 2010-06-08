@@ -17,7 +17,7 @@ enum activity_interrupt_payload_type
     AIP_INT,
     AIP_STRING,
     AIP_MONSTER,
-    AIP_HP_LOSS
+    AIP_HP_LOSS,
 };
 
 struct activity_interrupt_data
