@@ -3018,10 +3018,10 @@ void level_change(bool skip_attribute_increase)
                             && you.demonic_traits[i].mutation
                                 != first_body_facet)
                         {
-                            if(you.experience_level == level)
-                                mpr("You feel monstrous as your "
-                                    "demonic heritage exerts itself.",
-                                    MSGCH_MUTATION);
+                            if (you.experience_level == level)
+                                 mpr("You feel monstrous as your "
+                                     "demonic heritage exerts itself.",
+                                     MSGCH_MUTATION);
 
                             i = you.demonic_traits.size();
                             break;
@@ -4938,7 +4938,7 @@ void dec_disease_player(int delay)
         }
 
         you.disease -= delay;
-        if(you.disease < 0)
+        if (you.disease < 0)
             you.disease = 0;
 
         // kobolds and regenerators recuperate quickly
