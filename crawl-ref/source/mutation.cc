@@ -1886,8 +1886,20 @@ void check_demonic_guardian()
     if (you.duration[DUR_DEMONIC_GUARDIAN] == 0
         && get_tension(GOD_NO_GOD) > mutlevel*4 + random2(mutlevel*3))
     {
-        const monster_type mt = static_cast<monster_type>(
-                            MONS_WHITE_IMP + (mutlevel-1)*5 + random2(5));
+        const monster_type disallowed[] = { MONS_NEQOXEC, MONS_YNOXINUL, MONS_HELLWING,
+                                            MONS_BLUE_DEATH, MONS_GREEN_DEATH,
+                                            MONS_CACODEMON };
+
+        monster_type mt;
+
+        do
+        {
+            mt = static_cast<monster_type>(MONS_WHITE_IMP +
+                                            (mutlevel-1)*5 + random2(5));
+        }
+        while (std::find(disallowed, disallowed + ARRAYSZ(disallowed), mt)
+                != disallowed + ARRAYSZ(disallowed));
+
         const int guardian = create_monster(mgen_data(mt, BEH_FRIENDLY, &you,
                                                       2, 0, you.pos(),
                                                       MHITYOU, MG_FORCE_BEH));
