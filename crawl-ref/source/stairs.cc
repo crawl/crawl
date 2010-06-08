@@ -1361,6 +1361,11 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
             new_level_info.update_stair(you.pos(), lp, true);
         }
     }
+    else // !collect_travel_data
+    {
+        travel_cache.erase_level_info(old_level_id);
+    }
+
     request_autopickup();
 }
 
