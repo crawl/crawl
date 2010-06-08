@@ -429,7 +429,7 @@ endif
 
 ifdef AUTO_OPT
 ifndef NO_AUTO_OPT
-CFOPTIMIZE += $(shell util/gcc-opt.pl $(GCC))
+CFOPTIMIZE += -march=native
 endif
 endif
 
