@@ -160,7 +160,6 @@ int16_t     unmarshallShort   (reader &);
 int32_t     unmarshallLong    (reader &);
 float       unmarshallFloat   (reader &);
 bool        unmarshallBoolean (reader &);
-int         unmarshallCString (reader &, char *data, int maxSize);
 std::string unmarshallString  (reader &, int maxSize = 1000);
 void        unmarshallString4 (reader &, std::string&);
 coord_def   unmarshallCoord   (reader &);
