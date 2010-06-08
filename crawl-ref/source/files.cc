@@ -191,42 +191,45 @@ bool save_exists(const std::string& name)
     return (file_exists(savename));
 }
 
-static bool _check_unpack_saved_game(const std::string& name)
-{
-    FILE *handle;
-
-    std::string basename = get_savedir_filename(name, "", "");
-    std::string savename = basename + ".chr";
-
 #ifdef LOAD_UNPACKAGE_CMD
-    std::string zipname = basename + PACKAGE_SUFFIX;
-    handle = fopen(zipname.c_str(), "rb+");
-    if (handle != NULL)
+void unpack_file(std::string basename)
+{
+    const std::string zipname = basename + PACKAGE_SUFFIX;
+
+    if (!file_exists(zipname))
+        return;
+
+    // Create command.
+    char cmd_buff[1024];
+
+    std::string directory = get_savedir();
+
+    escape_path_spaces(basename);
+    escape_path_spaces(directory);
+    snprintf(cmd_buff, sizeof(cmd_buff), LOAD_UNPACKAGE_CMD,
+             basename.c_str(), directory.c_str());
+
+    if (system(cmd_buff) != 0)
     {
-        fclose(handle);
-
-        // Create command.
-        char cmd_buff[1024];
-
-        std::string directory = get_savedir();
-
-        escape_path_spaces(basename);
-        escape_path_spaces(directory);
-        snprintf( cmd_buff, sizeof(cmd_buff), LOAD_UNPACKAGE_CMD,
-                  basename.c_str(), directory.c_str() );
-
-        if (system( cmd_buff ) != 0)
-        {
-            cprintf( "\nWarning: Zip command (LOAD_UNPACKAGE_CMD) "
-                         "returned non-zero value!\n" );
-        }
-
-        // Remove save game package.
-        unlink(zipname.c_str());
+        cprintf("\nWarning: Zip command (LOAD_UNPACKAGE_CMD) "
+                     "returned non-zero value!\n");
     }
+
+    // Remove save game package.
+    unlink(zipname.c_str());
+}
 #endif
 
-    handle = fopen(savename.c_str(), "rb+");
+static bool _check_unpack_saved_game(const std::string& name)
+{
+    const std::string basename = get_savedir_filename(name, "", "");
+
+#ifdef LOAD_UNPACKAGE_CMD
+    unpack_file(basename);
+#endif
+
+    const std::string savename = basename + ".chr";
+    FILE *handle = fopen(savename.c_str(), "rb+");
 
     if (handle != NULL)
     {
