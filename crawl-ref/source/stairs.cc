@@ -488,8 +488,7 @@ void up_stairs(dungeon_feature_type force_stair,
 {
     dungeon_feature_type stair_find = (force_stair ? force_stair
                                        : grd(you.pos()));
-    const branch_type     old_where      = you.where_are_you;
-    const level_area_type old_level_type = you.level_type;
+    const level_id  old_level = level_id::current();
 
     // Up and down both work for shops.
     if (stair_find == DNGN_ENTER_SHOP)
@@ -528,7 +527,7 @@ void up_stairs(dungeon_feature_type force_stair,
     // check before that one. -- bwr
     if (!you.airborne()
         && you.confused()
-        && old_level_type == LEVEL_DUNGEON
+        && old_level.level_type == LEVEL_DUNGEON
         && !feat_is_escape_hatch(stair_find)
         && coinflip())
     {
@@ -590,14 +589,9 @@ void up_stairs(dungeon_feature_type force_stair,
     // Checks are done, the character is committed to moving between levels.
     _leaving_level_now();
 
-    const int old_level  = you.absdepth0;
-
     // Interlevel travel data.
     const bool collect_travel_data = can_travel_interlevel();
-
-    level_id  old_level_id    = level_id::current();
-    LevelInfo &old_level_info = travel_cache.get_level_info(old_level_id);
-
+    LevelInfo &old_level_info    = travel_cache.get_level_info(old_level);
     if (collect_travel_data)
         old_level_info.update();
 
@@ -620,7 +614,7 @@ void up_stairs(dungeon_feature_type force_stair,
         ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_LEAVING);
     }
 
-    if (old_level_id.branch == BRANCH_VESTIBULE_OF_HELL
+    if (old_level.branch == BRANCH_VESTIBULE_OF_HELL
         && !player_in_branch( BRANCH_VESTIBULE_OF_HELL ))
     {
         mpr("Thank you for visiting Hell. Please come again soon.");
@@ -629,7 +623,7 @@ void up_stairs(dungeon_feature_type force_stair,
     // Fixup exits from the Hell branches.
     if (player_in_branch(BRANCH_VESTIBULE_OF_HELL))
     {
-        switch (old_level_id.branch)
+        switch (old_level.branch)
         {
         case BRANCH_COCYTUS:  stair_find = DNGN_ENTER_COCYTUS;  break;
         case BRANCH_DIS:      stair_find = DNGN_ENTER_DIS;      break;
@@ -646,11 +640,11 @@ void up_stairs(dungeon_feature_type force_stair,
     else if (you.flight_mode() == FL_FLY && !feat_is_gate(stair_find))
         mpr("You fly upwards.");
     else
-        _climb_message(stair_find, true, old_level_type);
+        _climb_message(stair_find, true, old_level.level_type);
 
     _exit_stair_message(stair_find, true);
 
-    if (old_where != you.where_are_you && you.level_type == LEVEL_DUNGEON)
+    if (old_level.branch != you.where_are_you && you.level_type == LEVEL_DUNGEON)
     {
         mprf("Welcome back to %s!",
              branches[you.where_are_you].longname);
@@ -658,10 +652,9 @@ void up_stairs(dungeon_feature_type force_stair,
 
     const coord_def stair_pos = you.pos();
 
-    load(stair_taken, LOAD_ENTER_LEVEL, old_level_type,
-         old_level, old_where);
+    load(stair_taken, LOAD_ENTER_LEVEL, old_level);
 
-    _set_entry_cause(entry_cause, old_level_type);
+    _set_entry_cause(entry_cause, old_level.level_type);
     entry_cause = you.entry_cause;
 
     you.turn_is_over = true;
@@ -717,7 +710,7 @@ void up_stairs(dungeon_feature_type force_stair,
             // and will confuse the dickens out of the player (well, it confused
             // the dickens out of me when it happened).
             if (new_level_id == BRANCH_MAIN_DUNGEON
-                && old_level_id == BRANCH_VESTIBULE_OF_HELL)
+                && old_level == BRANCH_VESTIBULE_OF_HELL)
             {
                 old_level_info.clear_stairs(DNGN_EXIT_HELL);
             }
@@ -735,7 +728,7 @@ void up_stairs(dungeon_feature_type force_stair,
                 // Set the new level's stair, assuming arbitrarily that going
                 // downstairs will land you on the same upstairs you took to
                 // begin with (not necessarily true).
-                lp.id = old_level_id;
+                lp.id = old_level;
                 lp.pos = stair_pos;
                 new_level_info.update_stair(you.pos(), lp, true);
             }
@@ -743,7 +736,7 @@ void up_stairs(dungeon_feature_type force_stair,
     }
     else // !collect_travel_data
     {
-        travel_cache.erase_level_info(old_level_id);
+        travel_cache.erase_level_info(old_level);
     }
 
     request_autopickup();
@@ -843,12 +836,9 @@ static int _runes_in_pack(std::vector<int> &runes)
 void down_stairs(dungeon_feature_type force_stair,
                  entry_cause_type entry_cause, const level_id* force_dest)
 {
-    const level_area_type  old_level_type = you.level_type;
-    const int old_level = you.absdepth0;
+    const level_id old_level = level_id::current();
     const dungeon_feature_type stair_find =
         force_stair? force_stair : grd(you.pos());
-
-    branch_type old_where = you.where_are_you;
 
     const bool shaft = (!force_stair
                             && get_trap_type(you.pos()) == TRAP_SHAFT
@@ -1052,8 +1042,7 @@ void down_stairs(dungeon_feature_type force_stair,
     // Interlevel travel data.
     const bool collect_travel_data = can_travel_interlevel();
 
-    const level_id  old_level_id = level_id::current();
-    LevelInfo &old_level_info    = travel_cache.get_level_info(old_level_id);
+    LevelInfo &old_level_info    = travel_cache.get_level_info(old_level);
     const coord_def stair_pos    = you.pos();
     if (collect_travel_data)
         old_level_info.update();
@@ -1094,8 +1083,8 @@ void down_stairs(dungeon_feature_type force_stair,
 
     // Did we enter a new branch.
     const bool entered_branch(
-        you.where_are_you != old_level_id.branch
-        && branches[you.where_are_you].parent_branch == old_level_id.branch);
+        you.where_are_you != old_level.branch
+        && branches[you.where_are_you].parent_branch == old_level.branch);
 
     if (stair_find == DNGN_EXIT_ABYSS || stair_find == DNGN_EXIT_PANDEMONIUM)
     {
@@ -1104,7 +1093,7 @@ void down_stairs(dungeon_feature_type force_stair,
             more();
     }
 
-    if (old_level_type != you.level_type && you.level_type == LEVEL_DUNGEON)
+    if (old_level.level_type != you.level_type && you.level_type == LEVEL_DUNGEON)
         mprf("Welcome back to %s!", branches[you.where_are_you].longname);
 
     if (!you.airborne()
@@ -1164,7 +1153,7 @@ void down_stairs(dungeon_feature_type force_stair,
         break;
 
     case LEVEL_PANDEMONIUM:
-        if (old_level_type == LEVEL_PANDEMONIUM)
+        if (old_level.level_type == LEVEL_PANDEMONIUM)
             mpr("You pass into a different region of Pandemonium.");
         else
         {
@@ -1177,7 +1166,7 @@ void down_stairs(dungeon_feature_type force_stair,
         if (shaft)
             handle_items_on_shaft(you.pos(), false);
         else
-            _climb_message(stair_find, false, old_level_type);
+            _climb_message(stair_find, false, old_level.level_type);
         break;
     }
 
@@ -1202,10 +1191,9 @@ void down_stairs(dungeon_feature_type force_stair,
             more();
     }
 
-    const bool newlevel = load(stair_taken, LOAD_ENTER_LEVEL, old_level_type,
-                               old_level, old_where);
+    const bool newlevel = load(stair_taken, LOAD_ENTER_LEVEL, old_level);
 
-    _set_entry_cause(entry_cause, old_level_type);
+    _set_entry_cause(entry_cause, old_level.level_type);
     entry_cause = you.entry_cause;
 
     if (newlevel)
@@ -1240,7 +1228,7 @@ void down_stairs(dungeon_feature_type force_stair,
         case LEVEL_PANDEMONIUM:
         {
             // Paranoia
-            if (old_level_type == you.level_type)
+            if (old_level.level_type == you.level_type)
                 break;
 
             PlaceInfo &place_info = you.get_place_info();
@@ -1293,7 +1281,7 @@ void down_stairs(dungeon_feature_type force_stair,
         break;
 
     case LEVEL_PANDEMONIUM:
-        if (old_level_type == LEVEL_PANDEMONIUM)
+        if (old_level.level_type == LEVEL_PANDEMONIUM)
         {
             init_pandemonium();
 
@@ -1363,14 +1351,14 @@ void down_stairs(dungeon_feature_type force_stair,
             // Then the new level's stair, assuming arbitrarily that going
             // upstairs will land you on the same downstairs you took to begin
             // with (not necessarily true).
-            lp.id = old_level_id;
+            lp.id = old_level;
             lp.pos = stair_pos;
             new_level_info.update_stair(you.pos(), lp, true);
         }
     }
     else // !collect_travel_data
     {
-        travel_cache.erase_level_info(old_level_id);
+        travel_cache.erase_level_info(old_level);
     }
 
     request_autopickup();

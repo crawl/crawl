@@ -210,10 +210,14 @@ void _post_init(bool newc)
         you.entry_cause = EC_UNKNOWN;
     }
 
+    // XXX: Any invalid level_id should do.
+    level_id old_level;
+    old_level.level_type = NUM_LEVEL_AREA_TYPES;
+
     load(you.entering_level ? you.transit_stair : DNGN_STONE_STAIRS_DOWN_I,
          you.entering_level ? LOAD_ENTER_LEVEL :
          newc               ? LOAD_START_GAME : LOAD_RESTART_GAME,
-         NUM_LEVEL_AREA_TYPES, -1, you.where_are_you);
+         old_level);
 
     if (newc && you.char_direction == GDT_GAME_START)
     {

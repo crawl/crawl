@@ -204,16 +204,13 @@ static void _wizard_go_to_level(const level_pos &pos)
         stair_taken = branches[pos.id.branch].entry_stairs;
     }
 
-    const int old_level = you.absdepth0;
-    const branch_type old_where = you.where_are_you;
-    const level_area_type old_level_type = you.level_type;
+    const level_id old_level = level_id::current();
 
     you.level_type    = LEVEL_DUNGEON;
     you.where_are_you = static_cast<branch_type>(pos.id.branch);
     you.absdepth0    = abs_depth;
 
-    const bool newlevel = load(stair_taken, LOAD_ENTER_LEVEL, old_level_type,
-        old_level, old_where);
+    const bool newlevel = load(stair_taken, LOAD_ENTER_LEVEL, old_level);
 #ifdef USE_TILE
     tile_new_level(newlevel);
 #else

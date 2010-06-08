@@ -87,9 +87,10 @@ void check_newer(const std::string &target,
                  void (*action)());
 
 
-bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
-           level_area_type old_level_type, char old_level,
-           branch_type where_were_you2 );
+class level_id;
+
+bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
+          const level_id& old_level);
 
 void save_game(bool leave_game, const char *bye = NULL);
 
@@ -102,8 +103,6 @@ bool save_exists(const std::string& name);
 void restore_game(const std::string& name);
 
 bool apply_to_all_dungeons(bool (*applicator)());
-
-class level_id;
 
 bool apply_to_level(const level_id &level, bool (*applicator)());
 
