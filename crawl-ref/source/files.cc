@@ -1358,10 +1358,8 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     bool just_created_level = false;
 
-    std::string cha_fil = make_filename( you.your_name, you.absdepth0,
-                                         you.where_are_you,
-                                         you.level_type,
-                                         false );
+    std::string cha_fil = _make_filename(you.your_name, level_id::current(),
+                                         false);
 
     if (you.level_type == LEVEL_DUNGEON && old_level.level_type == LEVEL_DUNGEON
         || load_mode == LOAD_START_GAME && you.char_direction != GDT_GAME_START)
@@ -1938,8 +1936,7 @@ static std::string _make_ghost_filename()
     }
     else
     {
-        return make_filename("bones", you.absdepth0, you.where_are_you,
-                             you.level_type, true);
+        return _make_filename("bones", level_id::current(), true);
     }
 }
 
