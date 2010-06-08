@@ -14,6 +14,7 @@
 #include "coordit.h"
 #include "dungeon.h"
 #include "env.h"
+#include "files.h"
 #include "initfile.h"
 #include "godwrath.h"
 #include "libutil.h"
@@ -24,6 +25,7 @@
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "place.h"
+#include "stairs.h"
 #ifdef USE_TILE
  #include "tileview.h"
 #endif
@@ -58,6 +60,21 @@ LUAFN(debug_goto_place)
     }
     return (0);
 }
+
+LUAFN(debug_enter_dungeon)
+{
+    init_level_connectivity();
+
+    you.absdepth0 = 0;
+    you.where_are_you = BRANCH_MAIN_DUNGEON;
+    you.level_type = LEVEL_DUNGEON;
+
+    load(DNGN_STONE_STAIRS_DOWN_I, LOAD_START_GAME, level_id());
+    return (0);
+}
+
+LUAWRAP(debug_down_stairs, down_stairs(DNGN_STONE_STAIRS_DOWN_I))
+LUAWRAP(debug_up_stairs, up_stairs(DNGN_STONE_STAIRS_UP_I))
 
 LUAFN(debug_flush_map_memory)
 {
@@ -306,6 +323,9 @@ LUAFN(debug_viewwindow)
 const struct luaL_reg debug_dlib[] =
 {
 { "goto_place", debug_goto_place },
+{ "enter_dungeon", debug_enter_dungeon },
+{ "down_stairs", debug_down_stairs },
+{ "up_stairs", debug_up_stairs },
 { "flush_map_memory", debug_flush_map_memory },
 { "generate_level", debug_generate_level },
 { "los_changed", debug_los_changed },
