@@ -103,8 +103,7 @@
 
 static std::vector<SavefileCallback::callback>* _callback_list = NULL;
 
-static void _save_level( int level_saved, level_area_type lt,
-                         branch_type where_were_you);
+static void _save_level(const level_id& lid);
 
 static bool _get_and_validate_version( FILE *restoreFile, char& major,
                                        char& minor, std::string* reason = 0);
@@ -949,15 +948,13 @@ std::string get_prefs_filename()
 #endif
 }
 
-static std::string _get_level_suffix(int level, branch_type where,
-                                     level_area_type lt)
+static std::string _get_level_suffix(const level_id& lid)
 {
-    switch (lt)
+    switch (lid.level_type)
     {
     default:
     case LEVEL_DUNGEON:
-        return (make_stringf("%02d%c", subdungeon_depth(where, level),
-                             where + 'a'));
+        return (make_stringf("%02d%c", lid.depth, lid.branch + 'a'));
     case LEVEL_LABYRINTH:
         return ("lab");
     case LEVEL_ABYSS:
@@ -969,12 +966,17 @@ static std::string _get_level_suffix(int level, branch_type where,
     }
 }
 
+static std::string _make_filename(std::string prefix, const level_id& lid,
+                                  bool isGhost = false)
+{
+    return get_savedir_filename(prefix, "", _get_level_suffix(lid), isGhost);
+}
+
 std::string make_filename(std::string prefix, int level, branch_type where,
                           level_area_type ltype, bool isGhost)
 {
-    return get_savedir_filename(prefix, "",
-                                _get_level_suffix(level, where, ltype),
-                                isGhost );
+    level_id lid(where, subdungeon_depth(where, level), ltype);
+    return _make_filename(prefix, lid, isGhost);
 }
 
 static void _write_version( FILE *dataFile, int majorVersion, int minorVersion,
@@ -1331,9 +1333,8 @@ static void _do_lost_items(level_area_type old_level_type)
     }
 }
 
-bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
-           level_area_type old_level_type, char old_level,
-           branch_type old_branch )
+bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
+          const level_id& old_level)
 {
     unwind_var<dungeon_feature_type> stair(
         you.transit_stair, stair_taken, DNGN_UNSEEN);
@@ -1362,7 +1363,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
                                          you.level_type,
                                          false );
 
-    if (you.level_type == LEVEL_DUNGEON && old_level_type == LEVEL_DUNGEON
+    if (you.level_type == LEVEL_DUNGEON && old_level.level_type == LEVEL_DUNGEON
         || load_mode == LOAD_START_GAME && you.char_direction != GDT_GAME_START)
     {
         const level_id current(level_id::current());
@@ -1388,20 +1389,20 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     dungeon_events.clear();
 
     // This block is to grab followers and save the old level to disk.
-    if (load_mode == LOAD_ENTER_LEVEL && old_level != -1)
+    if (load_mode == LOAD_ENTER_LEVEL && old_level.depth != -1)
     {
         _grab_followers();
 
-        if (old_level_type == LEVEL_DUNGEON
-            || old_level_type != you.level_type)
+        if (old_level.level_type == LEVEL_DUNGEON
+            || old_level.level_type != you.level_type)
         {
-            _save_level( old_level, old_level_type, old_branch);
+            _save_level(old_level);
         }
     }
 
     if (load_mode == LOAD_ENTER_LEVEL)
     {
-        _do_lost_items(old_level_type);
+        _do_lost_items(old_level.level_type);
 
         // The player is now between levels.
         you.position.reset();
@@ -1521,7 +1522,10 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     {
         _clear_clouds();
         if (you.level_type != LEVEL_ABYSS)
-            _place_player_on_stair(old_level_type, old_branch, stair_taken);
+        {
+            _place_player_on_stair(old_level.level_type,
+                                   old_level.branch, stair_taken);
+        }
         else
             you.moveto(coord_def(45, 35)); // FIXME: should be abyss_center
 
@@ -1601,7 +1605,7 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     // Save the created/updated level out to disk:
     if (make_changes)
-        _save_level( you.absdepth0, you.level_type, you.where_are_you );
+        _save_level(level_id::current());
 
     setup_environment_effects();
 
@@ -1628,8 +1632,8 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
 
         if (load_mode == LOAD_START_GAME
             || (load_mode == LOAD_ENTER_LEVEL
-                && (old_branch != you.where_are_you
-                    || old_level_type != you.level_type)))
+                && (old_level.branch != you.where_are_you
+                    || old_level.level_type != you.level_type)))
         {
             delta.num_visits++;
         }
@@ -1708,12 +1712,9 @@ bool load( dungeon_feature_type stair_taken, load_mode_type load_mode,
     return just_created_level;
 }
 
-void _save_level(int level_saved, level_area_type old_ltype,
-                 branch_type where_were_you)
+void _save_level(const level_id& lid)
 {
-    std::string cha_fil = make_filename( you.your_name, level_saved,
-                                         where_were_you, old_ltype,
-                                         false );
+    std::string cha_fil = _make_filename(you.your_name, lid);
 
     FILE *saveFile = fopen(cha_fil.c_str(), "wb");
 
@@ -1848,7 +1849,7 @@ static void _save_game_exit()
 
     // Must be exiting -- save level & goodbye!
     if (!you.entering_level)
-        _save_level(you.absdepth0, you.level_type, you.where_are_you);
+        _save_level(level_id::current());
 
     clrscr();
 
@@ -2217,8 +2218,7 @@ static void _load_level(const level_id &level)
     you.absdepth0 = level.dungeon_absdepth();
     you.level_type = level.level_type;
 
-    load(DNGN_STONE_STAIRS_DOWN_I, LOAD_VISITOR,
-         you.level_type, you.absdepth0, you.where_are_you);
+    load(DNGN_STONE_STAIRS_DOWN_I, LOAD_VISITOR, level_id::current());
 }
 
 // Given a level returns true if the level has been created already
@@ -2241,7 +2241,7 @@ void level_excursion::go_to(const level_id& next)
     {
         ever_changed_levels = true;
 
-        _save_level(you.absdepth0, you.level_type, you.where_are_you);
+        _save_level(level_id::current());
         _load_level(next);
 
         LevelInfo &li = travel_cache.get_level_info(next);
