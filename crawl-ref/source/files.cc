@@ -1023,30 +1023,6 @@ static void _write_tagged_file( FILE *outf, int fileType,
             tag_write(static_cast<tag_type>(i), outf);
 }
 
-bool travel_load_map( branch_type branch, int absdepth )
-{
-    // Try to open level savefile.
-    FILE *levelFile = fopen(make_filename(you.your_name, absdepth, branch,
-                                          LEVEL_DUNGEON, false).c_str(), "rb");
-    if (!levelFile)
-        return (false);
-
-    char majorVersion;
-    char minorVersion;
-
-    if (!_get_and_validate_version( levelFile, majorVersion, minorVersion ))
-    {
-        fclose(levelFile);
-        return (false);
-    }
-
-    tag_read(levelFile, minorVersion);
-
-    fclose( levelFile );
-
-    return (true);
-}
-
 static void _place_player_on_stair(level_area_type old_level_type,
                                    branch_type old_branch,
                                    int stair_taken)

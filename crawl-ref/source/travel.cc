@@ -2688,31 +2688,10 @@ static int _find_transtravel_stair( const level_id &cur,
 
 static bool _loadlev_populate_stair_distances(const level_pos &target)
 {
-    std::auto_ptr<crawl_environment> tmp(new crawl_environment(env));
-
-    bool loaded = false;
-    if (travel_load_map(target.id.branch,
-                        absdungeon_depth(target.id.branch, target.id.depth)))
-    {
-        exclude_set old_excludes = curr_excludes;
-
-        curr_excludes.clear();
-        LevelInfo &li = travel_cache.get_level_info(target.id);
-        li.set_level_excludes();
-
-        _populate_stair_distances(target);
-
-        curr_excludes = old_excludes;
-        loaded = !curr_stairs.empty();
-    }
-
-    env = *tmp;
-    // Clear references to freed markers.
-    dungeon_events.clear();
-    // Reactivate cloned markers.
-    env.markers.activate_all(false);
-
-    return (loaded);
+    level_excursion excursion;
+    excursion.go_to(target.id);
+    _populate_stair_distances(target);
+    return (true);
 }
 
 static void _populate_stair_distances(const level_pos &target)
