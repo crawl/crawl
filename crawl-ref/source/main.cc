@@ -1321,7 +1321,7 @@ static void _go_downstairs()
 
     if (shaft)
     {
-        start_delay(DELAY_DESCENDING_STAIRS, 0, you.absdepth0);
+        start_delay(DELAY_DESCENDING_STAIRS, 0);
     }
     else
     {
@@ -1330,8 +1330,7 @@ static void _go_downstairs()
 
         tag_followers(); // Only those beside us right now can follow.
         start_delay(DELAY_DESCENDING_STAIRS,
-                    1 + (you.burden_state > BS_UNENCUMBERED),
-                    you.absdepth0);
+                    1 + (you.burden_state > BS_UNENCUMBERED));
     }
 }
 
