@@ -90,9 +90,9 @@ class writer
 {
 public:
     writer(FILE* output)
-        : _file(output), _pbuf(0) {}
+        : _file(output), _pbuf(0)  { ASSERT(output); }
     writer(std::vector<unsigned char>* poutput)
-        : _file(0), _pbuf(poutput) {}
+        : _file(0), _pbuf(poutput) { ASSERT(poutput); }
 
     void writeByte(unsigned char byte);
     void write(const void *data, size_t size);
