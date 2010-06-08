@@ -62,8 +62,6 @@ std::string canonicalise_file_separator(const std::string &path);
 
 bool check_dir(const std::string &what, std::string &dir, bool silent = false);
 
-bool travel_load_map( branch_type branch, int absdepth );
-
 std::vector<player_save_info> find_saved_characters();
 
 std::string get_savedir();
