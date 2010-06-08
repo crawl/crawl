@@ -31,7 +31,7 @@ enum status_redraw_flag_type
     REDRAW_CONTAMINATED   = 0x00100000,
     REDRAW_SWIFTNESS      = 0x00200000,
     REDRAW_SPEED          = 0x00400000,
-    REDRAW_LINE_3_MASK    = 0x007f0000
+    REDRAW_LINE_3_MASK    = 0x007f0000,
 };
 
 #ifdef DGL_SIMPLE_MESSAGING

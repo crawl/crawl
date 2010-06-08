@@ -58,7 +58,7 @@ enum store_flag_type
     SFLAG_UNSET      = (1 << 0),
     SFLAG_CONST_VAL  = (1 << 1),
     SFLAG_CONST_TYPE = (1 << 2),
-    SFLAG_NO_ERASE   = (1 << 3)
+    SFLAG_NO_ERASE   = (1 << 3),
 };
 
 

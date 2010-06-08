@@ -22,7 +22,7 @@ enum item_origin_dump_selector
     IODS_RODS             = 32,
     IODS_STAVES           = 64,
     IODS_BOOKS            = 128,
-    IODS_EVERYTHING       = 0xFF
+    IODS_EVERYTHING       = 0xFF,
 };
 
 class scorefile_entry;

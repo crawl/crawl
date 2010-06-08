@@ -7,7 +7,7 @@ enum ev_ignore_type
 {
     EV_IGNORE_NONE       = 0,
     EV_IGNORE_HELPLESS   = 1,
-    EV_IGNORE_PHASESHIFT = 2
+    EV_IGNORE_PHASESHIFT = 2,
 };
 
 class actor

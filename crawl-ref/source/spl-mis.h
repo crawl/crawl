@@ -18,7 +18,7 @@ enum nothing_happens_when_type
 {
     NH_DEFAULT,
     NH_NEVER,
-    NH_ALWAYS
+    NH_ALWAYS,
 };
 
 class actor;

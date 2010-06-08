@@ -20,7 +20,7 @@ enum load_mode_type
     LOAD_START_GAME,            // game has just begun
     LOAD_RESTART_GAME,          // loaded savefile
     LOAD_ENTER_LEVEL,           // entered a level for the first time
-    LOAD_VISITOR                // Visitor pattern to see all levels
+    LOAD_VISITOR,               // Visitor pattern to see all levels
 };
 
 // referenced in files - newgame - ouch - dgn-overview:

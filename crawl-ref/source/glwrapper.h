@@ -87,7 +87,7 @@ struct GLW_3VF
 enum drawing_modes
 {
     GLW_LINES,
-    GLW_RECTANGLE
+    GLW_RECTANGLE,
 };
 
 // Convenience structure for passing around primitives (lines or quads)

@@ -20,7 +20,7 @@ enum branch_flag_type
     BFLAG_NO_MAGIC_MAP    = (1 << 2), // Branch levels can't be magic mapped.
     BFLAG_HAS_ORB         = (1 << 3), // Orb is on the floor in this branch
 
-    BFLAG_ISLANDED        = (1 << 4)  // May have isolated zones with no stairs.
+    BFLAG_ISLANDED        = (1 << 4), // May have isolated zones with no stairs.
 };
 
 struct Branch

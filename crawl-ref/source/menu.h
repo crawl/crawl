@@ -28,7 +28,7 @@ enum MenuEntryLevel
     MEL_NONE = -1,
     MEL_TITLE,
     MEL_SUBTITLE,
-    MEL_ITEM
+    MEL_ITEM,
 };
 
 struct menu_letter
@@ -233,7 +233,7 @@ enum MenuFlag
     MF_ALLOW_FORMATTING = 0x0100,   // Parse index for formatted-string
     MF_SHOW_PAGENUMBERS = 0x0200,   // Show "(page X of Y)" when appropriate
     MF_EASY_EXIT        = 0x1000,
-    MF_START_AT_END     = 0x2000
+    MF_START_AT_END     = 0x2000,
 };
 
 class MenuDisplay
@@ -696,7 +696,7 @@ public:
         INPUT_FOCUS_RELEASE_DOWN, // Selection went out of menu from down
         INPUT_FOCUS_RELEASE_LEFT, // Selection went out of menu from left
         INPUT_FOCUS_RELEASE_RIGHT,// Selection went out of menu from right
-        INPUT_FOCUS_LOST          // Eg. the user is moving his mouse somewhere else
+        INPUT_FOCUS_LOST,         // Eg. the user is moving his mouse somewhere else
     };
 
     MenuObject();
@@ -739,7 +739,7 @@ protected:
         UP,
         DOWN,
         LEFT,
-        RIGHT
+        RIGHT,
     };
     virtual void _place_items() = 0;
     virtual bool _is_mouse_in_bounds(const coord_def& pos);
@@ -1008,7 +1008,7 @@ public:
     enum SelectType
     {
         PRECISION_SINGLESELECT,
-        PRECISION_MULTISELECT
+        PRECISION_MULTISELECT,
     };
 
     PrecisionMenu();
@@ -1036,7 +1036,7 @@ protected:
         UP,
         DOWN,
         LEFT,
-        RIGHT
+        RIGHT,
     };
     void _clear_selections();
     MenuObject* _find_object_by_direction(const MenuObject* start, Direction dir);

@@ -28,7 +28,7 @@ enum deck_rarity_type
 {
     DECK_RARITY_COMMON,
     DECK_RARITY_RARE,
-    DECK_RARITY_LEGENDARY
+    DECK_RARITY_LEGENDARY,
 };
 
 enum deck_type
@@ -38,14 +38,14 @@ enum deck_type
     DECK_OF_DESTRUCTION,
     DECK_OF_DUNGEONS,
     DECK_OF_SUMMONING,
-    DECK_OF_WONDERS
+    DECK_OF_WONDERS,
 };
 
 enum card_flags_type
 {
     CFLAG_ODDITY = (1 << 0),
     CFLAG_SEEN   = (1 << 1),
-    CFLAG_MARKED = (1 << 2)
+    CFLAG_MARKED = (1 << 2),
 };
 
 enum card_type

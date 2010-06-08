@@ -17,7 +17,7 @@ class formatted_string;
 enum read_book_action_type
 {
     RBOOK_USE_STAFF,
-    RBOOK_READ_SPELL
+    RBOOK_READ_SPELL,
 };
 
 int  book_rarity(unsigned char which_book);

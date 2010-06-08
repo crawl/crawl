@@ -16,7 +16,7 @@ enum item_make_species_type
     MAKE_ITEM_ORCISH      = 3,
 
     MAKE_ITEM_NO_RACE     = 100,
-    MAKE_ITEM_RANDOM_RACE = 250
+    MAKE_ITEM_RANDOM_RACE = 250,
 };
 
 int items( int allow_uniques, object_class_type force_class, int force_type,

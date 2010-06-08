@@ -49,7 +49,7 @@ enum extra_monster_index_type
     WIELD_MISCAST,
     MELEE_MISCAST,
     MISC_KNOWN_MISCAST,
-    MISC_UNKNOWN_MISCAST
+    MISC_UNKNOWN_MISCAST,
 };
 
 // number of monster enchantments
@@ -252,7 +252,7 @@ enum CHAR_ATTRIBUTES
 
     CHATTR_ATTRMASK = 0xF,  /* 15 (well, obviously) */
 
-    CHATTR_COLMASK = 0xF00 // Mask with this to get extra colour info.
+    CHATTR_COLMASK = 0xF00, // Mask with this to get extra colour info.
 };
 
 #define PDESCS(colour) (colour)
@@ -283,7 +283,7 @@ enum GotoRegion
     GOTO_MSG,  // cprintf > message
     GOTO_STAT, // cprintf > character status
     GOTO_DNGN, // cprintf > dungeon screen
-    GOTO_MLIST // cprintf > monster list
+    GOTO_MLIST,// cprintf > monster list
 };
 
 // Mouse modes (for tiles)
@@ -296,7 +296,7 @@ enum mouse_mode
     MOUSE_MODE_TARGET_PATH,
     MOUSE_MODE_MORE,
     MOUSE_MODE_MACRO,
-    MOUSE_MODE_MAX
+    MOUSE_MODE_MAX,
 };
 
 #define PI 3.14159265359f

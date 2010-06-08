@@ -324,7 +324,7 @@ enum SpecialIdx
     SPECIAL_SW   = 5,
     SPECIAL_W    = 6,
     SPECIAL_NW   = 7,
-    SPECIAL_FULL = 8
+    SPECIAL_FULL = 8,
 };
 
 static int _jitter(SpecialIdx i)

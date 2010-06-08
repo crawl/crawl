@@ -28,7 +28,7 @@ enum unrand_special_type
 {
     UNRANDSPEC_EITHER,
     UNRANDSPEC_NORMAL,
-    UNRANDSPEC_SPECIAL
+    UNRANDSPEC_SPECIAL,
 };
 
 enum unrand_flag_type
@@ -41,7 +41,7 @@ enum unrand_flag_type
     UNRAND_FLAG_UNCLEAN          = 0x10,
     UNRAND_FLAG_CHAOTIC          = 0x20,
     UNRAND_FLAG_CORPSE_VIOLATING = 0x40,
-    UNRAND_FLAG_NOGEN            = 0x80
+    UNRAND_FLAG_NOGEN            = 0x80,
     // Warning!  Any further extension and you'll need to change the field from
     // a char.  What a loss of 82*sizeof() bytes...
 };
@@ -50,7 +50,7 @@ enum setup_missile_type
 {
     SM_CONTINUE,
     SM_FINISHED,
-    SM_CANCEL
+    SM_CANCEL,
 };
 
 // The following unrandart bits were taken from $pellbinder's mon-util

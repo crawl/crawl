@@ -78,12 +78,12 @@ my %field_type = (
     plus      => "num",
     plus2     => "num",
     base_type => "enum",
-    sub_type  => "enum"
+    sub_type  => "enum",
 );
 
 my %union_name = (
     melee_effect => "fight_func",
-    launch       => "fight_func"
+    launch       => "fight_func",
 );
 
 my @field_list = keys(%field_type);

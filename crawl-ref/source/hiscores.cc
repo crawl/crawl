@@ -607,7 +607,7 @@ static const char* _short_branch_name(int branch)
 enum old_job_type
 {
     OLD_JOB_THIEF        = -1,
-    OLD_JOB_DEATH_KNIGHT = -2
+    OLD_JOB_DEATH_KNIGHT = -2,
 };
 
 static const char* _job_name(int job)

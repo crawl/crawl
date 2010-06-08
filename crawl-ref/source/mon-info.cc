@@ -27,7 +27,7 @@ enum monster_info_brands
 {
     MB_STABBABLE,
     MB_DISTRACTED,
-    MB_BERSERK
+    MB_BERSERK,
 };
 
 monster_info::monster_info(const monsters *m, bool skip_safe)

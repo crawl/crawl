@@ -18,14 +18,14 @@ enum mon_dam_level_type
     MDAM_HEAVILY_DAMAGED,
     MDAM_SEVERELY_DAMAGED,
     MDAM_ALMOST_DEAD,
-    MDAM_DEAD
+    MDAM_DEAD,
 };
 
 enum mon_desc_type   // things that cross categorical lines {dlb}
 {
     MDSC_LEAVES_HIDE,                  //    0
     MDSC_REGENERATES,
-    MDSC_NOMSG_WOUNDS
+    MDSC_NOMSG_WOUNDS,
 };
 
 struct level_exit
@@ -66,7 +66,7 @@ beh_type actual_same_attitude(const monsters & base);
 enum poly_power_type {
     PPT_LESS,
     PPT_MORE,
-    PPT_SAME
+    PPT_SAME,
 };
 
 bool monster_polymorph(monsters *monster, monster_type targetc,

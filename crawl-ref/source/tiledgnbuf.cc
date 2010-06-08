@@ -131,7 +131,7 @@ enum wave_type
 {
     WV_NONE = 0,
     WV_SHALLOW,
-    WV_DEEP
+    WV_DEEP,
 };
 
 wave_type _get_wave_type(bool shallow)

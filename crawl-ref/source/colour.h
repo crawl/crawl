@@ -45,7 +45,7 @@ enum element_type
     ETC_GOLD,           // colour of gold
     ETC_IRON,           // colour of iron
     ETC_BONE,           // colour of bone
-    ETC_RANDOM          // any colour (except BLACK)
+    ETC_RANDOM,         // any colour (except BLACK)
 };
 
 int str_to_colour(const std::string &str, int default_colour = -1,

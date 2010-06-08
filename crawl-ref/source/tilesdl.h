@@ -37,7 +37,7 @@ enum key_mod
     MOD_NONE  = 0x0,
     MOD_SHIFT = 0x1,
     MOD_CTRL  = 0x2,
-    MOD_ALT   = 0x4
+    MOD_ALT   = 0x4,
 };
 
 struct MouseEvent
@@ -46,7 +46,7 @@ struct MouseEvent
     {
         PRESS,
         RELEASE,
-        MOVE
+        MOVE,
     };
 
     enum mouse_event_button
@@ -56,7 +56,7 @@ struct MouseEvent
         MIDDLE      = 0x02,
         RIGHT       = 0x04,
         SCROLL_UP   = 0x08,
-        SCROLL_DOWN = 0x10
+        SCROLL_DOWN = 0x10,
     };
 
     // Padding for ui_event
@@ -155,7 +155,7 @@ protected:
         TAB_SPELL,
         TAB_MEMORISE,
         TAB_MONSTER,
-        TAB_MAX
+        TAB_MAX,
     };
 
     enum LayerID
@@ -163,7 +163,7 @@ protected:
         LAYER_NORMAL,
         LAYER_CRT,
         LAYER_TILE_CONTROL,
-        LAYER_MAX
+        LAYER_MAX,
     };
 
     class Layer

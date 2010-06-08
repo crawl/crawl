@@ -6,7 +6,7 @@
 enum shape_type
 {
     SH_SQUARE,     // square around an origin
-    SH_CIRCLE      // circle around an origin
+    SH_CIRCLE,     // circle around an origin
 };
 
 // External interface to circle_def shapes.
@@ -15,7 +15,7 @@ enum circle_type
     C_SQUARE,
     C_CIRCLE,      // circle specified by pre-squared radius
     C_POINTY,      // circle with square radius r*r
-    C_ROUND        // circle with square radius r*r+1
+    C_ROUND,       // circle with square radius r*r+1
 };
 
 class rectangle_iterator;

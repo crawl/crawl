@@ -94,7 +94,7 @@ enum LOSSelect
     // or visible to hidden when going backwards.
     LOS_FLIPHV   = 0x40,
 
-    LOS_NONE     = 0xFFFF
+    LOS_NONE     = 0xFFFF,
 };
 
 #ifdef WIZARD

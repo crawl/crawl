@@ -91,7 +91,7 @@ struct c_mouse_event
         BUTTON4        = 0x40,
         BUTTON4_DBL    = 0x80,
         BUTTON_SCRL_UP = 0x100,
-        BUTTON_SCRL_DN = 0x200
+        BUTTON_SCRL_DN = 0x200,
     };
 
     c_mouse_event() : pos(-1, -1), bstate(0)
@@ -196,7 +196,7 @@ enum KEYS
     CK_MOUSE_B3,
     CK_MOUSE_B4,
     CK_MOUSE_B5,
-    CK_MOUSE_CLICK
+    CK_MOUSE_CLICK,
 };
 
 class cursor_control

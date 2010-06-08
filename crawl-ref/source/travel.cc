@@ -80,7 +80,7 @@ enum IntertravelDestination
     ID_REPEAT   = -101,
 
     // Cancel interlevel travel
-    ID_CANCEL   = -1000
+    ID_CANCEL   = -1000,
 };
 
 TravelCache travel_cache;
@@ -674,7 +674,7 @@ enum explore_status_type
 
     // Could not pick up interesting items because of hostile terrain. Note
     // that this and EST_PARTLY_EXPLORED are not mutually exclusive.
-    EST_GREED_UNFULFILLED = 2
+    EST_GREED_UNFULFILLED = 2,
 };
 
 // Determines if the level is fully explored.

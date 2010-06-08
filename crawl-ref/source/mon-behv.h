@@ -17,7 +17,7 @@ enum mon_event_type
     ME_ALERT,                           // alert to presence
     ME_WHACK,                           // physical attack
     ME_SCARE,                           // frighten monster
-    ME_CORNERED                         // cannot flee
+    ME_CORNERED,                        // cannot flee
 };
 
 class  monsters;

@@ -91,7 +91,7 @@ enum lua_persist_type
     LPT_STRING,
     LPT_FUNCTION,
     LPT_NIL,
-    LPT_BOOLEAN
+    LPT_BOOLEAN,
 };
 
 static int file_marshall_meta(lua_State *ls)

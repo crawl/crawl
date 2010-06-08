@@ -37,7 +37,7 @@ enum tag_file_type   // file types supported by tag system
     TAGTYPE_LEVEL,              // Foo.00a, .01a, etc.
     TAGTYPE_GHOST,              // bones.xxx
 
-    TAGTYPE_PLAYER_NAME         // Used only to read the player name
+    TAGTYPE_PLAYER_NAME,        // Used only to read the player name
 };
 
 struct enum_info

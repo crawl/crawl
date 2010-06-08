@@ -10,7 +10,7 @@ enum startup_book_type
     SBT_SUMM,
     SBT_NONE,
     SBT_RANDOM,
-    SBT_VIABLE
+    SBT_VIABLE,
 };
 
 enum startup_wand_type
@@ -24,7 +24,7 @@ enum startup_wand_type
     NUM_STARTUP_WANDS,
 
     SWT_NO_SELECTION = NUM_STARTUP_WANDS,
-    SWT_RANDOM
+    SWT_RANDOM,
 };
 
 // Either a character definition, with real species, job, and

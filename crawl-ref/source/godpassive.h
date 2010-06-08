@@ -17,8 +17,8 @@ enum che_boost_type
 
 enum che_change_type
 {
-    CB_PIETY,    // Change in piety_rank.
-    CB_PONDEROUS // Change in number of worn ponderous items.
+    CB_PIETY,     // Change in piety_rank.
+    CB_PONDEROUS, // Change in number of worn ponderous items.
 };
 
 int che_boost_level();

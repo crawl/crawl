@@ -21,14 +21,14 @@ enum corpse_effect_type
     CE_MUTAGEN_GOOD,    //    6 - may be worth implementing {dlb}
     CE_MUTAGEN_BAD,     //    7 - may be worth implementing {dlb}
     CE_RANDOM,          //    8 - not used, but may be worth implementing {dlb}
-    CE_ROTTEN = 50      //   50 - must remain at 50 for now {dlb}
+    CE_ROTTEN = 50,     //   50 - must remain at 50 for now {dlb}
 };
 
 enum gender_type
 {
     GENDER_NEUTER,
     GENDER_MALE,
-    GENDER_FEMALE
+    GENDER_FEMALE,
 };
 
 enum mon_attack_type
@@ -53,7 +53,7 @@ enum mon_attack_type
     AT_SHOOT,       // Attack representing missile damage for M_ARCHER.
     AT_WEAP_ONLY,   // Ranged weap: shoot point-blank like AT_SHOOT, melee weap:
                     //   use it, no weapon: stand there doing nothing.
-    AT_RANDOM       // Anything but AT_SHOOT and AT_WEAP_ONLY.
+    AT_RANDOM,      // Anything but AT_SHOOT and AT_WEAP_ONLY.
 };
 
 enum mon_attack_flavour
@@ -90,7 +90,7 @@ enum mon_attack_flavour
     AF_STEAL,
     AF_STEAL_FOOD,
     AF_CRUSH,
-    AF_REACH
+    AF_REACH,
 };
 
 // Non-spell "summoning" types to give to monsters::mark_summoned(), or
@@ -105,7 +105,7 @@ enum mon_summon_type
     MON_SUMM_MISCAST, // Spell miscast
     MON_SUMM_ZOT,     // Zot trap
     MON_SUMM_WRATH,   // Divine wrath
-    MON_SUMM_AID      // Divine aid
+    MON_SUMM_AID,     // Divine aid
 };
 
 // properties of the monster class (other than resists/vulnerabilities)
@@ -162,7 +162,7 @@ enum mons_class_flags
                                           // silenced
 
     M_NO_SKELETON       = (1<<30),        // boneless corpses
-    M_NO_EXP_GAIN       = (1<<31)         // worth 0 xp
+    M_NO_EXP_GAIN       = (1<<31),        // worth 0 xp
 };
 
 enum mon_intel_type             // Must be in increasing intelligence order
@@ -171,7 +171,7 @@ enum mon_intel_type             // Must be in increasing intelligence order
     I_INSECT,
     I_ANIMAL,
     I_NORMAL,
-    I_HIGH
+    I_HIGH,
 };
 
 enum habitat_type
@@ -246,7 +246,7 @@ enum mon_resist_flags
     // Immune to rotting.
     MR_RES_ROTTING       = (1<<18),
 
-    MR_RES_STEAM         = (1<<19)
+    MR_RES_STEAM         = (1<<19),
 };
 
 enum shout_type
@@ -284,7 +284,7 @@ enum zombie_size_type
 {
     Z_NOZOMBIE = 0,
     Z_SMALL,
-    Z_BIG
+    Z_BIG,
 };
 
 enum mon_body_shape
@@ -310,7 +310,7 @@ enum mon_body_shape
     MON_SHAPE_FUNGUS,
     MON_SHAPE_ORB,
     MON_SHAPE_BLOB,
-    MON_SHAPE_MISC
+    MON_SHAPE_MISC,
 };
 
 #endif

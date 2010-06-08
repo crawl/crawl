@@ -28,7 +28,7 @@ enum spschool_flag_type
   SPTYP_HOLY           = 1<<12, //jmf: moved to accommodate "random" miscast f/x
   SPTYP_LAST_EXPONENT  = 12,    //jmf: ``NUM_SPELL_TYPES'' kinda useless
   NUM_SPELL_TYPES      = 14,
-  SPTYP_RANDOM         = 1<<14
+  SPTYP_RANDOM         = 1<<14,
 };
 
 struct bolt;
@@ -45,8 +45,7 @@ enum spell_highlight_colours
     COL_FORBIDDEN    = LIGHTRED,    // The player's god hates this abilty
 
     COL_EMPOWERED    = LIGHTGREEN,  // The ability is made stronger by the player's status
-    COL_FAVORED      = GREEN        // the player's god likes this ability
-
+    COL_FAVORED      = GREEN,       // the player's god likes this ability
 };
 
 bool is_valid_spell(spell_type spell);
