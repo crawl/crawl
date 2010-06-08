@@ -2218,7 +2218,7 @@ static void _load_level(const level_id &level)
     you.absdepth0 = level.dungeon_absdepth();
     you.level_type = level.level_type;
 
-    load(DNGN_STONE_STAIRS_DOWN_I, LOAD_VISITOR, level_id::current());
+    load(DNGN_STONE_STAIRS_DOWN_I, LOAD_VISITOR, level_id());
 }
 
 // Given a level returns true if the level has been created already
