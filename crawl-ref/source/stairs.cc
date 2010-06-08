@@ -1343,8 +1343,12 @@ void down_stairs(dungeon_feature_type force_stair,
         // upstairs we're currently on.
         level_id  new_level_id    = level_id::current();
 
-        if (can_travel_interlevel())
+        if (can_travel_interlevel() && !force_dest)
         {
+            // XXX: Using force_dest to decide whether to save stair info.
+            //      Currently it's only used for Portal, where we don't
+            //      want to mark the destination known.
+
             LevelInfo &new_level_info =
                             travel_cache.get_level_info(new_level_id);
             new_level_info.update();
