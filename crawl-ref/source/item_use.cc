@@ -567,18 +567,19 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     const int sub_type = item.sub_type;
     const equipment_type slot = get_armour_slot(item);
 
-    if (you.species == SP_NAGA && sub_type == ARM_NAGA_BARDING
-        && (ignore_temporary || !player_is_shapechanged()))
+    if (sub_type == ARM_NAGA_BARDING || sub_type == ARM_CENTAUR_BARDING)
     {
-        // It fits.
-        return (true);
-    }
-    else if (you.species == SP_CENTAUR
-             && sub_type == ARM_CENTAUR_BARDING
-             && (ignore_temporary || !player_is_shapechanged()))
-    {
-        // It fits.
-        return (true);
+        if (you.species == SP_NAGA && sub_type == ARM_NAGA_BARDING
+            || you.species == SP_CENTAUR && sub_type == ARM_CENTAUR_BARDING)
+        {
+            if (ignore_temporary || !player_is_shapechanged())
+                return (true);
+            else if (verbose)
+                mpr("You can wear that only in your normal form.");
+        }
+        else if (verbose)
+            mpr("You can't wear that!");
+        return (false);
     }
 
     size_type player_size = you.body_size(PSIZE_TORSO, ignore_temporary);
