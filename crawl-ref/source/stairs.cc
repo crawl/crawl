@@ -505,7 +505,7 @@ void up_stairs(dungeon_feature_type force_stair,
         && stair_find != DNGN_RETURN_FROM_ZOT
         && stair_find != DNGN_EXIT_HELL)
     {
-        down_stairs(you.absdepth0, force_stair, entry_cause);
+        down_stairs(force_stair, entry_cause);
         return;
     }
     // Probably still need this check here (teleportation) -- bwr
@@ -840,10 +840,11 @@ static int _runes_in_pack(std::vector<int> &runes)
     return num_runes;
 }
 
-void down_stairs( int old_level, dungeon_feature_type force_stair,
-                  entry_cause_type entry_cause )
+void down_stairs(dungeon_feature_type force_stair,
+                 entry_cause_type entry_cause, const level_id* force_dest)
 {
     const level_area_type  old_level_type = you.level_type;
+    const int old_level = you.absdepth0;
     const dungeon_feature_type stair_find =
         force_stair? force_stair : grd(you.pos());
 
@@ -1021,7 +1022,9 @@ void down_stairs( int old_level, dungeon_feature_type force_stair,
     if (_marker_vetoes_level_change())
         return;
 
-    const level_id destination_override(_stair_destination_override());
+    level_id destination_override = _stair_destination_override();
+    if (force_dest)
+        destination_override = *force_dest;
 
     // All checks are done, the player is on the move now.
 

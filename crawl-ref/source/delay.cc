@@ -1169,7 +1169,7 @@ static void _finish_delay(const delay_queue_item &delay)
         break;
 
     case DELAY_DESCENDING_STAIRS:
-        down_stairs(you.absdepth0);
+        down_stairs();
         break;
 
     case DELAY_INTERRUPTIBLE:

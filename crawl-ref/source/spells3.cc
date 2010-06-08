@@ -2040,6 +2040,9 @@ int portal()
     mpr("Which direction ('<<' for up, '>' for down, 'x' to quit)? ",
         MSGCH_PROMPT);
 
+    level_id lid = level_id::current();
+    const int brdepth = branches[lid.branch].depth;
+
     int dir_sign = 0;
     while (dir_sign == 0)
     {
@@ -2047,14 +2050,14 @@ int portal()
         switch ( keyin )
         {
         case '<':
-            if (you.absdepth0 == 0)
+            if (lid.depth == 1)
                 mpr("You can't go any further upwards with this spell.");
             else
                 dir_sign = -1;
             break;
 
         case '>':
-            if (you.absdepth0 + 1 == your_branch().depth)
+            if (lid.depth == brdepth)
                 mpr("You can't go any further downwards with this spell.");
             else
                 dir_sign = 1;
@@ -2088,9 +2091,8 @@ int portal()
         "foot of a staircase.");
     more();
 
-    const int old_level = you.absdepth0;
-    you.absdepth0 = std::max(0, std::min(26, you.absdepth0 + amount)) - 1;
-    down_stairs(old_level, DNGN_STONE_STAIRS_DOWN_I);
+    lid.depth = std::max(1, std::min(brdepth, lid.depth + amount));
+    down_stairs(DNGN_STONE_STAIRS_DOWN_I, EC_UNKNOWN, &lid);
 
     return (1);
 }

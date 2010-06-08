@@ -678,7 +678,7 @@ void banished(dungeon_feature_type gate_type, const std::string &who)
         take_note(Note(NOTE_MESSAGE, 0, 0, what.c_str()), true);
     }
 
-    down_stairs(you.absdepth0, gate_type, you.entry_cause);  // heh heh
+    down_stairs(gate_type, you.entry_cause);  // heh heh
 }
 
 bool forget_spell(void)
