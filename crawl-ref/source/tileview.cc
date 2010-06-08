@@ -775,6 +775,11 @@ void tile_draw_rays(bool reset_count)
         num_tile_rays = 0;
 }
 
+void tile_wizmap_terrain(const coord_def &gc)
+{
+    env.tile_bk_bg(gc) = tileidx_feature(grd(gc), gc);
+}
+
 // Updates the "flavour" of tiles that are animated.
 void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
 {
