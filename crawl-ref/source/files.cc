@@ -179,27 +179,16 @@ bool is_packed_save(const std::string &name)
 
 bool save_exists(const std::string& name)
 {
-    FILE *handle;
-
-    std::string basename = get_savedir_filename(name, "", "");
-    std::string savename = basename + ".chr";
+    const std::string basename = get_savedir_filename(name, "", "");
 
 #ifdef LOAD_UNPACKAGE_CMD
-    std::string zipname = basename + PACKAGE_SUFFIX;
-    handle = fopen(zipname.c_str(), "rb+");
-    if (handle != NULL)
-    {
-        fclose(handle);
+    const std::string zipname = basename + PACKAGE_SUFFIX;
+    if (file_exists(zipname))
         return (true);
-    }
 #endif
-    handle = fopen(savename.c_str(), "rb+");
-    if (handle != NULL)
-    {
-        fclose(handle);
-        return (true);
-    }
-    return (false);
+
+    const std::string savename = basename + ".chr";
+    return (file_exists(savename));
 }
 
 static bool _check_unpack_saved_game(const std::string& name)
