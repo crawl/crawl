@@ -5230,10 +5230,16 @@ void melee_attack::mons_do_spines()
 
     if (you.mutation[MUT_SPINY]
         && attacker->alive()
-        && one_chance_in(evp + 1)
-        && test_melee_hit(6 * player_mutation_level(MUT_SPINY),
-                          defender->melee_evasion(attacker), r))
+        && one_chance_in(evp + 1))
     {
+        if (test_melee_hit(6 * player_mutation_level(MUT_SPINY),
+                          defender->melee_evasion(attacker), r))
+        {
+            simple_monster_message(attacker->as_monster(),
+                                   " dodges your spines!.");
+            return;
+        }
+
         int dmg = roll_dice(player_mutation_level(MUT_SPINY), 6);
         int ac = random2(1+attacker->as_monster()->armour_class());
 
