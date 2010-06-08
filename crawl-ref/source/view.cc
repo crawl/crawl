@@ -507,7 +507,8 @@ std::string screenshot(bool fullscreen)
         for (int count_x = 1; count_x <= crawl_view.viewsz.x; count_x++)
         {
             // in grid coords
-            const coord_def gc = view2grid(coord_def(count_x, count_y));
+            const coord_def gc = view2grid(crawl_view.viewp +
+                                     coord_def(count_x - 1, count_y - 1));
 
             int ch =
                   (!map_bounds(gc))             ? 0 :
