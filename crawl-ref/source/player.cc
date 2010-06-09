@@ -71,6 +71,9 @@
 #include "stuff.h"
 #include "tagstring.h"
 #include "terrain.h"
+#ifdef USE_TILE
+ #include "tileview.h"
+#endif
 #include "transform.h"
 #include "traps.h"
 #include "travel.h"
@@ -2482,9 +2485,7 @@ void forget_map(unsigned char chance_forgotten, bool force)
         {
             env.map_knowledge(*ri).clear();
 #ifdef USE_TILE
-            tiles.update_minimap(*ri);
-            env.tile_bk_fg(*ri) = 0;
-            env.tile_bk_bg(*ri) = 0;
+            tile_forget_map(*ri);
 #endif
         }
     }

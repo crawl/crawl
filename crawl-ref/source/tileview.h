@@ -53,6 +53,7 @@ void tile_apply_properties(const coord_def &gc, tileidx_t *fg,
                            tileidx_t *bg);
 
 void tile_clear_map(const coord_def &gc);
+void tile_forget_map(const coord_def &gc);
 
 #endif
 #endif
