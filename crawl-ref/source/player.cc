@@ -1202,8 +1202,12 @@ int player_hunger_rate(void)
     }
 
     // rings
-    if (you.hp < you.hp_max)
+    if (you.hp < you.hp_max
+        && player_mutation_level(MUT_SLOW_HEALING) < 3)
+    {
         hunger += 3 * player_equip(EQ_RINGS, RING_REGENERATION);
+    }
+
     hunger += 4 * player_equip(EQ_RINGS, RING_HUNGER);
     hunger -= 2 * player_equip(EQ_RINGS, RING_SUSTENANCE);
 
