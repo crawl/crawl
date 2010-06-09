@@ -205,7 +205,8 @@ leg_armor05 METAL_GREEN
 leg_armor04 LEGCHAIN_GRAY
 leg_armor02 LEGCHAIN_SILVER
 
-skirt_blue SKIRT_OFS
+# All items after this point cover up boots.
+skirt_blue SKIRT_BLUE SKIRT_OFS
 skirt_green SKIRT_GREEN
 skirt_white SKIRT_WHITE
 skirt_red
@@ -833,7 +834,8 @@ horns1 HORNS1
 horns2 HORNS2
 horns3 HORNS3
 
-iron1 HELM_OFS
+## All helmets below (HELM_OFS and greater) hide hair.
+iron1 HELM_IRON HELM_OFS
 helm_red HELM_RED
 horned HELM_HORNED
 helm_gimli HELM_GIMLI
@@ -852,7 +854,8 @@ black_horn BLACK_HORN
 full_gold FULL_GOLD
 chain CHAIN
 
-black_horn2 FHELM_OFS
+## All full helmets below (FHELM_OFS and greater) hide both hair and beard.
+black_horn2 FHELM_HORN_BLACK FHELM_OFS
 full_black FHELM_BLACK
 horn_gray FHELM_HORN_GRAY
 iron2 FHELM_GRAY
