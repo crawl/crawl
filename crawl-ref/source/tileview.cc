@@ -958,4 +958,11 @@ void tile_clear_map(const coord_def& gc)
     tiles.update_minimap(gc);
 }
 
+void tile_forget_map(const coord_def &gc)
+{
+    env.tile_bk_fg(gc) = 0;
+    env.tile_bk_bg(gc) = 0;
+    tiles.update_minimap(gc);
+}
+
 #endif
