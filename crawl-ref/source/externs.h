@@ -491,8 +491,9 @@ struct item_def
     short          plus2;          // +to dam, sub-sub type for boots/helms
     long           special;        // special stuff
     unsigned char  colour;         // item colour
-    unsigned long  flags;          // item status flags
+    unsigned char  rnd;            // random number, used for tile choice
     short          quantity;       // number of items
+    unsigned long  flags;          // item status flags
 
     coord_def pos;     // for inventory items == (-1, -1)
     short  link;       // link to next item;  for inventory items = slot
@@ -507,7 +508,7 @@ struct item_def
 
 public:
     item_def() : base_type(OBJ_UNASSIGNED), sub_type(0), plus(0), plus2(0),
-                 special(0L), colour(0), flags(0L), quantity(0),
+                 special(0L), colour(0), rnd(0), quantity(0), flags(0L),
                  pos(), link(NON_ITEM), slot(0), orig_place(0),
                  orig_monnum(0), inscription()
     {
