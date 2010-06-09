@@ -73,7 +73,7 @@ static void _finish_delay(const delay_queue_item &delay);
 
 static int _zin_recite_to_monsters(coord_def where, int pow, int, actor *)
 {
-    return (zin_recite_to_single_monster(where, pow));
+    return (zin_recite_to_single_monster(where, false, pow));
 }
 
 static std::string _get_zin_recite_speech(const std::string key, int weight)
