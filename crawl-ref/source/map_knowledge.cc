@@ -122,7 +122,7 @@ void set_map_knowledge_obj(const coord_def& where, show_type obj)
 {
     env.map_knowledge(where).object = obj;
 #ifdef USE_TILE
-    tiles.update_minimap(where.x, where.y);
+    tiles.update_minimap(where);
 #endif
 }
 
@@ -178,12 +178,13 @@ void set_terrain_changed( int x, int y )
 
 void set_terrain_mapped( int x, int y )
 {
-    map_cell* cell = &env.map_knowledge[x][y];
+    const coord_def gc(x, y);
+    map_cell* cell = &env.map_knowledge(gc);
     cell->flags &= (~MAP_CHANGED_FLAG);
     cell->flags |= MAP_MAGIC_MAPPED_FLAG;
     cell->object.colour = get_feature_def(cell->object).map_colour;
 #ifdef USE_TILE
-    tiles.update_minimap(x, y);
+    tiles.update_minimap(gc);
 #endif
 }
 

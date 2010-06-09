@@ -98,8 +98,8 @@ public:
     int get_number_of_lines();
     int get_number_of_cols();
 
-    void update_minimap(int gx, int gy);
-    void update_minimap(int gx, int gy, map_feature f);
+    void update_minimap(const coord_def &gc);
+    void update_minimap(const coord_def &gc, map_feature f);
     void clear_minimap();
     void update_minimap_bounds();
     void toggle_inventory_display();

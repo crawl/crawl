@@ -2482,7 +2482,7 @@ void forget_map(unsigned char chance_forgotten, bool force)
         {
             env.map_knowledge(*ri).clear();
 #ifdef USE_TILE
-            tiles.update_minimap(ri->x, ri->y);
+            tiles.update_minimap(*ri);
             env.tile_bk_fg(*ri) = 0;
             env.tile_bk_bg(*ri) = 0;
 #endif
