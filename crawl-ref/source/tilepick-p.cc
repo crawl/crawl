@@ -363,7 +363,7 @@ tileidx_t tilep_equ_helm(const item_def &item)
                         case 1:
                             return TILEP_HELM_HELM_GIMLI;
                         case 2:
-                            return TILEP_HELM_HELM_OFS; // urgh
+                            return TILEP_HELM_HELM_IRON;
                         case 3:
                             return TILEP_HELM_FHELM_GRAY2;
                         case 4:
@@ -383,7 +383,7 @@ tileidx_t tilep_equ_helm(const item_def &item)
                         case 3:
                             return TILEP_HELM_FHELM_HORN_YELLOW;
                         case 4:
-                            return TILEP_HELM_FHELM_OFS; // urgh
+                            return TILEP_HELM_FHELM_HORN_BLACK;
                     }
                 case THELM_DESC_CRESTED:
                     return TILEP_HELM_FHELM_ISILDUR;
@@ -797,7 +797,7 @@ void tilep_job_default(int job, int gender, dolls_data *doll)
         case JOB_CRUSADER:
             parts[TILEP_PART_BODY]  = TILEP_BODY_SHIRT_WHITE3;
             parts[TILEP_PART_LEG]   = TILEP_LEG_SKIRT_OFS;
-            parts[TILEP_PART_HELM]  = TILEP_HELM_HELM_OFS;
+            parts[TILEP_PART_HELM]  = TILEP_HELM_HELM_IRON;
             parts[TILEP_PART_ARM]   = TILEP_ARM_GLOVE_GRAY;
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_MIDDLE_GRAY;
             parts[TILEP_PART_CLOAK] = TILEP_CLOAK_BLUE;
@@ -806,7 +806,7 @@ void tilep_job_default(int job, int gender, dolls_data *doll)
         case JOB_PALADIN:
             parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_WHITE;
             parts[TILEP_PART_LEG]   = TILEP_LEG_PANTS_BROWN;
-            parts[TILEP_PART_HELM]  = TILEP_HELM_HELM_OFS;
+            parts[TILEP_PART_HELM]  = TILEP_HELM_HELM_IRON;
             parts[TILEP_PART_ARM]   = TILEP_ARM_GLOVE_GRAY;
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_MIDDLE_GRAY;
             parts[TILEP_PART_CLOAK] = TILEP_CLOAK_BLUE;
