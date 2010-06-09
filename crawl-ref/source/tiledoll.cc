@@ -439,8 +439,8 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll, int x, int 
     // For skirts, boots go under the leg armour.  For pants, they go over.
     if (doll.parts[TILEP_PART_LEG] < TILEP_LEG_SKIRT_OFS)
     {
-        p_order[6] = TILEP_PART_BOOTS;
-        p_order[7] = TILEP_PART_LEG;
+        p_order[7] = TILEP_PART_BOOTS;
+        p_order[6] = TILEP_PART_LEG;
     }
 
     // Special case bardings from being cut off.
