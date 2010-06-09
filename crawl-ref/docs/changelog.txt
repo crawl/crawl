@@ -1,3 +1,13 @@
+Stone Soup 0.6.1
+----------------
+* Fix instant starvation bug related to vampiric weapon butchery.
+* Fix Cheibriados excommunication permanent stat gain.
+* Reenable sound for mingw builds.
+* Xcode, Visual C++ and clang build fixes.
+* Fix save handling on BSD systems.
+* Fix Lua markers not being reactivated after viewing other levels.
+* Selected other bug fixes.
+
 Stone Soup 0.6 (20100326)
 -------------------------
 Disclaimer: These are merely the highlights, not an exhaustive list of changes.
