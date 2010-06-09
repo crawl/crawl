@@ -143,7 +143,8 @@ int zin_check_recite_to_monsters()
 }
 
 // Power is maximum 50.
-int zin_recite_to_single_monster(const coord_def& where, int pow)
+int zin_recite_to_single_monster(const coord_def& where,
+                                 bool imprisoned, int pow)
 {
     if (you.religion != GOD_ZIN)
         return (0);
@@ -157,7 +158,7 @@ int zin_recite_to_single_monster(const coord_def& where, int pow)
         return (0);
 
     // nothing happens
-    if (coinflip())
+    if (!imprisoned && coinflip())
         return (0);
 
     // up to (60 + 40)/2 = 50
@@ -183,7 +184,7 @@ int zin_recite_to_single_monster(const coord_def& where, int pow)
 
     if (pow <= 0) // Uh oh...
     {
-        if (one_chance_in(resist + 1))
+        if (!imprisoned && one_chance_in(resist + 1))
             return (0);  // nothing happens, whew!
 
         if (!one_chance_in(4)

@@ -1822,7 +1822,7 @@ void timeout_tombs(int duration)
             if (cmark->source == -GOD_ZIN && mon_targ
                 && mon_targ == mon_entombed)
             {
-                zin_recite_to_single_monster(mon_targ->pos());
+                zin_recite_to_single_monster(mon_targ->pos(), true);
             }
             // A monster's Tomb of Doroklohe spell.
             else if (mon_src
