@@ -351,7 +351,6 @@ force_more_message = You are starting to lose your buoyancy
 # flush.failure = false
 # flush.command = true
 # flush.message = true
-# macro_meta_entry = false
 
 ##### 4-t	Tile related Options ##################
 

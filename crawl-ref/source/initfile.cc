@@ -794,8 +794,6 @@ void game_options::reset_options()
 
     assign_item_slot       = SS_FORWARD;
 
-    macro_meta_entry       = true;
-
     // 10 was the cursor step default on Linux.
     level_map_cursor_step  = 7;
 #ifdef UNIX
@@ -2796,7 +2794,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else BOOL_OPTION(use_fake_cursor);
     else BOOL_OPTION(use_fake_player_cursor);
-    else BOOL_OPTION(macro_meta_entry);
     else if (key == "force_more_message")
     {
         std::vector<std::string> fragments = split_string(",", field);
