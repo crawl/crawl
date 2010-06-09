@@ -67,6 +67,7 @@
 #include "spells4.h"
 #include "state.h"
 #include "stuff.h"
+#include "transform.h"
 #include "hints.h"
 #include "view.h"
 #include "shout.h"
@@ -1334,6 +1335,26 @@ void end_game(scorefile_entry &se)
 
         case GOD_NEMELEX_XOBEH:
             nemelex_death_message();
+            break;
+
+        case GOD_KIKUBAAQUDGHA:
+            if (you.is_undead && you.attribute[ATTR_TRANSFORMATION] != TRAN_LICH)
+                simple_god_message(" rasps: \"You have failed me!"
+                                   " Welcome... oblivion!\"");
+            else
+                simple_god_message(" rasps: \"You have failed me!"
+                                   " Welcome... death!\"");
+            break;
+
+        case GOD_YREDELEMNUL:
+            if (se.get_death_type() != KILLED_BY_DISINT
+                && se.get_death_type() != KILLED_BY_LAVA
+                && !you.is_undead)
+            {
+                mpr("Your body raises from the dead as a mindless zombie.",
+                    MSGCH_GOD);
+            }
+            // No message if the corpse is lost.
             break;
 
         default:
