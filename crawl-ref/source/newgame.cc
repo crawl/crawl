@@ -561,6 +561,17 @@ static void _mark_fully_random(newgame_def* ng, newgame_def* ng_choice,
     }
 }
 
+// Set ng_choice to defaults without overwriting name and game type.
+static void _set_default_choice(newgame_def* ng_choice,
+                                const newgame_def& defaults)
+{
+    const std::string name = ng_choice->name;
+    const game_type type   = ng_choice->type;
+    *ng_choice = defaults;
+    ng_choice->name = name;
+    ng_choice->type = type;
+}
+
 /**
  * Helper function for _choose_species
  * Constructs the menu screen
@@ -879,7 +890,7 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
             case M_DEFAULT_CHOICE:
                 if (_char_defined(defaults))
                 {
-                    *ng_choice = defaults;
+                    _set_default_choice(ng_choice, defaults);
                     return;
                 }
                 else
@@ -1240,7 +1251,7 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
             case M_DEFAULT_CHOICE:
                 if (_char_defined(defaults))
                 {
-                    *ng_choice = defaults;
+                    _set_default_choice(ng_choice, defaults);
                     return;
                 }
                 else
