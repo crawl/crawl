@@ -2436,7 +2436,7 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
             // Only prompt once.
             if (thing.exists(REPLACE_PROMPTED_KEY))
                 continue;
-            thing[REPLACE_PROMPTED_KEY] = (bool)true;
+            thing[REPLACE_PROMPTED_KEY] = (bool) true;
 
             std::string prompt =
                 make_stringf("Shopping-list: replace %dgp %s with cheaper "
