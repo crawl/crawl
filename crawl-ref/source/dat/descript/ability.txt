@@ -173,7 +173,7 @@ Vitalise yourself. This will remove a negative affliction from you, or restore o
 %%%%
 Imprison
 
-Temporarily imprison a monster surrounded by empty space in rock. It only works on monsters receptive to Recite.
+Temporarily imprison a monster surrounded by empty space in rock. It only works on monsters receptive to Recite, as such monsters will feel the effects of Recite once the prison naturally disappears.
 %%%%
 Sanctuary
 
