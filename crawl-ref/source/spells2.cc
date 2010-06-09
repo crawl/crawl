@@ -49,10 +49,6 @@
 #include "godconduct.h"
 #include "stuff.h"
 #include "teleport.h"
-#ifdef USE_TILE
- #include "tiledef-main.h"
- #include "tileview.h"
-#endif
 #include "terrain.h"
 #include "traps.h"
 #include "view.h"
@@ -88,11 +84,6 @@ int detect_items(int pow)
             items_found++;
             set_map_knowledge_obj(*ri, show_type(SHOW_ITEM_DETECTED));
             set_map_knowledge_detected_item(*ri);
-#ifdef USE_TILE
-            // Don't replace previously seen items with an unseen one.
-            if (!is_terrain_seen(*ri) && !is_terrain_mapped(*ri))
-                env.tile_bk_fg(*ri) = TILE_UNSEEN_ITEM;
-#endif
         }
     }
 
