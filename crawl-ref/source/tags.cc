@@ -2010,6 +2010,7 @@ void marshallItem(writer &th, const item_def &item)
     marshallShort(th, item.quantity);
 
     marshallByte(th, item.colour);
+    marshallByte(th, item.rnd);
     marshallShort(th, item.pos.x);
     marshallShort(th, item.pos.y);
     marshallLong(th, item.flags);
@@ -2038,6 +2039,12 @@ void unmarshallItem(reader &th, item_def &item)
     item.special     = unmarshallLong(th);
     item.quantity    = unmarshallShort(th);
     item.colour      = (unsigned char) unmarshallByte(th);
+
+    if (th.getMinorVersion() >= TAG_MINOR_ITEM_TILE)
+        item.rnd = (unsigned char) unmarshallByte(th);
+    else
+        item.rnd = random2(256);
+
     item.pos.x       = unmarshallShort(th);
     item.pos.y       = unmarshallShort(th);
     item.flags       = (unsigned long) unmarshallLong(th);

@@ -777,11 +777,7 @@ void game_options::reset_options()
     detected_monster_colour= LIGHTRED;
     status_caption_colour  = BROWN;
 
-#ifdef USE_TILE
-    classic_item_colours   = true;
-#else
     classic_item_colours   = false;
-#endif
 
     easy_exit_menu         = true;
 #ifdef TARGET_OS_DOS

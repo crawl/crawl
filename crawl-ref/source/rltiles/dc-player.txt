@@ -121,8 +121,7 @@ sticky_flame STICKY_FLAME
 ###Cloak
 %parts_ctg CLOAK
 %sdir player/cloak
-ratskin RATSKIN_CLOAK
-red RED
+red RED FIRST_NORM
 blue BLUE
 magenta MAGENTA
 yellow YELLOW
@@ -131,14 +130,16 @@ gray GRAY
 brown LBROWN
 green GREEN
 cyan CYAN
-white WHITE
+white WHITE LAST_NORM
+#unrand
+ratskin RATSKIN_CLOAK
 %end_ctg
 
 ###Boots
 %parts_ctg BOOTS
 %sdir player/boots
 
-short_red SHORT_RED
+short_red SHORT_RED FIRST_NORM
 short_purple SHORT_PURPLE
 short_brown SHORT_BROWN
 short_brown2 SHORT_BROWN2
@@ -157,8 +158,11 @@ blue_gold BLUE_GOLD
 mesh_red MESH_RED
 mesh_black MESH_BLACK
 mesh_white MESH_WHITE
-mesh_blue MESH_BLUE
+mesh_blue MESH_BLUE LAST_NORM
+
+## Mutations
 hooves HOOVES
+## Bardings
 %rim 1
 %sdir player/barding
 naga_barding_blue NAGA_BARDING
@@ -209,8 +213,8 @@ leg_armor02 LEGCHAIN_SILVER
 skirt_blue SKIRT_BLUE SKIRT_OFS
 skirt_green SKIRT_GREEN
 skirt_white SKIRT_WHITE
-skirt_red
-skirt_white2
+skirt_red SKIRT_RED
+skirt_white2 SKIRT_SHORT
 
 metal_gray LOWARM1
 metal_green LOWARM2
@@ -221,7 +225,7 @@ pants16 LOWARM3
 %parts_ctg BODY
 %sdir player/body
 
-robe_blue ROBE_BLUE
+robe_blue ROBE_BLUE ROBE_FIRST_NORM
 robe_black ROBE_BLACK
 robe_white ROBE_WHITE
 robe_red ROBE_RED
@@ -230,20 +234,15 @@ robe_green ROBE_GREEN
 robe_yellow ROBE_YELLOW
 robe_brown ROBE_BROWN
 robe_cyan ROBE_CYAN
-robe_rainbow ROBE_RAINBOW
 gandalf_g GANDALF_G
 saruman SARUMAN
 robe_black_hood ROBE_BLACK_HOOD
-robe_of_night ROBE_OF_NIGHT
 monk_blue MONK_BLUE
 monk_black MONK_BLACK
-dress_green DRESS_GREEN
 robe_black_gold ROBE_BLACK_GOLD
 robe_white2 ROBE_WHITE2
-robe_red2 ROBE_RED2
 robe_white_red ROBE_WHITE_RED
 robe_white_green ROBE_WHITE_GREEN
-robe_white_blue ROBE_WHITE_BLUE
 robe_blue_white ROBE_BLUE_WHITE
 robe_red_gold ROBE_RED_GOLD
 robe_black_red ROBE_BLACK_RED
@@ -252,16 +251,22 @@ robe_red3 ROBE_RED3
 robe_brown2 ROBE_BROWN2
 robe_green_gold ROBE_GREEN_GOLD
 robe_brown3 ROBE_BROWN3
-robe_gray2 ROBE_GRAY2
-# dresses
-robe_misfortune ROBE_MISFORTUNE
-robe_clouds ROBE_CLOUDS
+robe_gray2 ROBE_GRAY2 ROBE_LAST_NORM
+#robes for the doll editor, but not picked randomly
+robe_rainbow ROBE_RAINBOW
+dress_green DRESS_GREEN
 dress_white DRESS_WHITE
 arwen ARWEN
 skirt_onep_grey SKIRT_ONEP_GREY
 bloody BLOODY
 leather_short LEATHER_SHORT
 china_red2 CHINA_RED2
+#unrand
+robe_misfortune ROBE_MISFORTUNE
+robe_clouds ROBE_CLOUDS
+robe_white_blue ROBE_AUGMENTATION
+robe_of_night ROBE_OF_NIGHT
+robe_red2 ROBE_FOLLY
 
 animal_skin ANIMAL_SKIN
 zhor ZHOR
@@ -373,7 +378,7 @@ lears_chain_mail LEARS_CHAIN_MAIL
 ### Arms
 %parts_ctg ARM
 %sdir player/gloves
-glove_red GLOVE_RED
+glove_red GLOVE_RED FIRST_NORM
 glove_gray GLOVE_GRAY
 glove_white GLOVE_WHITE
 glove_blue GLOVE_BLUE
@@ -392,7 +397,8 @@ glove_short_red GLOVE_SHORT_RED
 glove_short_white GLOVE_SHORT_WHITE
 glove_short_green GLOVE_SHORT_GREEN
 glove_short_blue GLOVE_SHORT_BLUE
-glove_short_gray GLOVE_SHORT_GRAY
+glove_short_gray GLOVE_SHORT_GRAY LAST_NORM
+## mutations
 claws CLAWS
 %end_ctg
 
@@ -788,36 +794,21 @@ pj PJ
 %parts_ctg HELM
 %sdir player/head
 
-bear BEAR
-cone_blue HAT_OFS
-cone_red CORN_RED
+## Caps
+cone_blue CONE_BLUE CAP_FIRST_NORM
 straw STRAW
-wizard_blue WIZARD_BLUE
 cap_blue CAP_BLUE
-bandana_ybrown BANDANA_YBROWN
-hat_black HAT_BLACK
-gandalf GANDALF
-crown_gold1 CROWN
-crown_gold2
-crown_gold3
-cap_black1 CAP_BLACK
-clown1 CLOWN
 feather_green FEATHER_GREEN
 feather_red FEATHER_RED
 feather_blue FEATHER_BLUE
 feather_yellow FEATHER_YELLOW
 feather_white FEATHER_WHITE
-band_white HEADBAND
-band_red
-band_yellow
-band_blue
-band_magenta
-taiso_blue TAISO
-taiso_magenta
-taiso_yellow
-taiso_red
-taiso_white
-dyrovepreva DYROVEPREVA
+bandana_ybrown BANDANA_YBROWN
+hat_black HAT_BLACK CAP_LAST_NORM
+
+## Wizard hats
+gandalf WIZARD_GRAY WHAT_FIRST_NORM
+wizard_blue WIZARD_BLUE
 wizard_purple WIZARD_PURPLE
 wizard_bluegreen WIZARD_BLUEGREEN
 wizard_darkgreen WIZARD_DARKGREEN
@@ -828,11 +819,34 @@ wizard_red WIZARD_RED
 wizard_white WIZARD_WHITE
 turban_white TURBAN_WHITE
 turban_brown TURBAN_BROWN
-turban_purple TURBAN_PURPLE
+turban_purple TURBAN_PURPLE WHAT_LAST_NORM
 
+## Mutations
 horns1 HORNS1
 horns2 HORNS2
 horns3 HORNS3
+
+## Doll editor tiles, but not randomly picked
+cone_red CONE_RED
+crown_gold1 CROWN
+crown_gold2
+crown_gold3
+cap_black1 CAP_BLACK
+clown1 CLOWN
+band_white HEADBAND
+band_red
+band_yellow
+band_blue
+band_magenta
+taiso_blue TAISO
+taiso_magenta
+taiso_yellow
+taiso_red
+taiso_white
+
+## Unrand caps
+bear BEAR
+dyrovepreva DYROVEPREVA
 
 ## All helmets below (HELM_OFS and greater) hide hair.
 iron1 HELM_IRON HELM_OFS

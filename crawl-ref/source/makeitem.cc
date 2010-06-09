@@ -810,6 +810,9 @@ void item_colour(item_def &item)
     default:
         break;
     }
+
+    // Compute random tile choice.
+    item.rnd = random2(256);
 }
 
 // Does Xom consider an item boring?

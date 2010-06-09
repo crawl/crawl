@@ -15,6 +15,11 @@
 #include "tilepick.h"
 #include "transform.h"
 
+static tileidx_t _modrng(int mod, tileidx_t first, tileidx_t last)
+{
+    return (first + mod % (last - first + 1));
+}
+
 tileidx_t tilep_equ_weapon(const item_def &item)
 {
     if (item.base_type == OBJ_STAVES)
@@ -181,27 +186,8 @@ tileidx_t tilep_equ_armour(const item_def &item)
     {
 
     case ARM_ROBE:
-        switch (item.colour)
-        {
-        // We've got a zillion robes; let's use 'em!
-        case BLACK:       return TILEP_BODY_ROBE_BLACK_RED;
-        case BLUE:        return TILEP_BODY_ROBE_BLUE;
-        case LIGHTBLUE:   return TILEP_BODY_ROBE_BLUE_WHITE;
-        case GREEN:       return TILEP_BODY_ROBE_GREEN;
-        case LIGHTGREEN:  return TILEP_BODY_ROBE_BLUE_GREEN;
-        case CYAN:        return TILEP_BODY_ROBE_WHITE_GREEN;
-        case LIGHTCYAN:   return TILEP_BODY_ROBE_CYAN;
-        case RED:         return TILEP_BODY_ROBE_RED;
-        case LIGHTRED:    return TILEP_BODY_ROBE_RED_GOLD;
-        case MAGENTA:     return TILEP_BODY_ROBE_MAGENTA;
-        case LIGHTMAGENTA:return TILEP_BODY_ROBE_RED3;
-        case BROWN:       return TILEP_BODY_ROBE_BROWN;
-        case YELLOW:      return TILEP_BODY_ROBE_YELLOW;
-        case LIGHTGREY:   return TILEP_BODY_ROBE_GRAY2;
-        case DARKGREY:    return TILEP_BODY_GANDALF_G;
-        case WHITE:       return TILEP_BODY_ROBE_WHITE;
-        default:          return 0;
-        }
+        return _modrng(item.rnd, TILEP_BODY_ROBE_FIRST_NORM,
+                       TILEP_BODY_ROBE_LAST_NORM);
 
     case ARM_LEATHER_ARMOUR:     return TILEP_BODY_LEATHER_ARMOUR3;
     case ARM_RING_MAIL:          return TILEP_BODY_RINGMAIL;
@@ -251,26 +237,7 @@ tileidx_t tilep_equ_cloak(const item_def &item)
             return tile;
     }
 
-    switch (item.colour)
-    {
-         case BLACK:
-         case BLUE:
-         case LIGHTBLUE:   return TILEP_CLOAK_BLUE;
-         case GREEN:
-         case LIGHTGREEN:  return TILEP_CLOAK_GREEN;
-         case CYAN:
-         case LIGHTCYAN:   return TILEP_CLOAK_CYAN;
-         case RED:
-         case LIGHTRED:    return TILEP_CLOAK_RED;
-         case MAGENTA:
-         case LIGHTMAGENTA:return TILEP_CLOAK_MAGENTA;
-         case BROWN:       return TILEP_CLOAK_LBROWN;
-         case YELLOW:      return TILEP_CLOAK_YELLOW;
-         case LIGHTGREY:   return TILEP_CLOAK_GRAY;
-         case DARKGREY:    return TILEP_CLOAK_BLACK;
-         case WHITE:       return TILEP_CLOAK_WHITE;
-         default:          return 0;
-    }
+    return _modrng(item.rnd, TILEP_CLOAK_FIRST_NORM, TILEP_CLOAK_LAST_NORM);
 }
 
 tileidx_t tilep_equ_helm(const item_def &item)
@@ -295,62 +262,12 @@ tileidx_t tilep_equ_helm(const item_def &item)
     switch (item.sub_type)
     {
         case ARM_CAP:
-            switch (item.colour)
-            {
-                case BLACK:
-                case BLUE:
-                case LIGHTBLUE:
-                    return TILEP_HELM_FEATHER_BLUE;
-                case GREEN:
-                case LIGHTGREEN:
-                case CYAN:
-                case LIGHTCYAN:
-                    return TILEP_HELM_FEATHER_GREEN;
-                case RED:
-                case LIGHTRED:
-                case MAGENTA:
-                case LIGHTMAGENTA:
-                    return TILEP_HELM_FEATHER_RED;
-                case BROWN:
-                case YELLOW:
-                    return TILEP_HELM_FEATHER_YELLOW;
-                case LIGHTGREY:
-                case DARKGREY:
-                case WHITE:
-                    return TILEP_HELM_FEATHER_WHITE;
-            }
-            return 0;
+            return _modrng(item.rnd, TILEP_HELM_CAP_FIRST_NORM,
+                           TILEP_HELM_CAP_LAST_NORM);
 
         case ARM_WIZARD_HAT:
-            switch (item.colour)
-            {
-                case MAGENTA:
-                case LIGHTMAGENTA:
-                case BLACK:
-                    return TILEP_HELM_WIZARD_BLACKRED;
-                case BLUE:
-                case LIGHTBLUE:
-                    return TILEP_HELM_WIZARD_BLUE;
-                case GREEN:
-                case LIGHTGREEN:
-                    return TILEP_HELM_WIZARD_DARKGREEN;
-                case CYAN:
-                    return TILEP_HELM_WIZARD_PURPLE;
-                case LIGHTCYAN:
-                    return TILEP_HELM_WIZARD_BLUEGREEN;
-                case RED:
-                case LIGHTRED:
-                    return TILEP_HELM_WIZARD_RED;
-                case BROWN:
-                    return TILEP_HELM_WIZARD_BROWN;
-                case YELLOW:
-                    return TILEP_HELM_WIZARD_BLACKGOLD;
-                case LIGHTGREY:
-                case DARKGREY:
-                case WHITE:
-                    return TILEP_HELM_WIZARD_WHITE;
-            }
-            return 0;
+            return _modrng(item.rnd, TILEP_HELM_WHAT_FIRST_NORM,
+                           TILEP_HELM_WHAT_LAST_NORM);
 
         case ARM_HELMET:
             switch (helmet_desc)
@@ -415,33 +332,7 @@ tileidx_t tilep_equ_gloves(const item_def &item)
             return tile;
     }
 
-    switch (enchant_to_int(item))
-    {
-        default:
-        case 0:
-            switch (item.colour)
-            {
-                case LIGHTBLUE:
-                    return TILEP_ARM_GLOVE_BLUE;
-                default:
-                case BROWN:
-                    return TILEP_ARM_GLOVE_BROWN;
-            }
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-            switch (item.colour)
-            {
-                case LIGHTBLUE:
-                default:
-                    return TILEP_ARM_GLOVE_CHUNLI;
-                case BROWN:
-                    return TILEP_ARM_GLOVE_GRAYFIST;
-            }
-    }
-
-    return 0;
+    return _modrng(item.rnd, TILEP_ARM_FIRST_NORM, TILEP_ARM_LAST_NORM);
 }
 
 tileidx_t tilep_equ_boots(const item_def &item)
@@ -469,34 +360,7 @@ tileidx_t tilep_equ_boots(const item_def &item)
             return tile;
     }
 
-    switch (etype)
-    {
-        default:
-        case 0:
-            return TILEP_BOOTS_MIDDLE_BROWN3;
-        case 1:
-        case 2:
-            switch (item.colour)
-            {
-                case BROWN:
-                default:
-                    return TILEP_BOOTS_MESH_RED;
-                case BLUE:
-                    return TILEP_BOOTS_MESH_BLUE;
-            }
-        case 3:
-        case 4:
-            switch (item.colour)
-            {
-                case BROWN:
-                    return TILEP_BOOTS_LONG_RED;
-                default:
-                case BLUE:
-                    return TILEP_BOOTS_BLUE_GOLD;
-            }
-    }
-
-    return 0;
+    return _modrng(item.rnd, TILEP_BOOTS_FIRST_NORM, TILEP_BOOTS_LAST_NORM);
 }
 
 tileidx_t tileidx_player()
@@ -858,7 +722,7 @@ void tilep_job_default(int job, int gender, dolls_data *doll)
             parts[TILEP_PART_HAND1] = TILEP_HAND1_GANDALF;
             parts[TILEP_PART_HAND2] = TILEP_HAND2_BOOK_CYAN_DIM;
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
-            parts[TILEP_PART_HELM]  = TILEP_HELM_GANDALF;
+            parts[TILEP_PART_HELM]  = TILEP_HELM_WIZARD_GRAY;
             break;
 
         case JOB_PRIEST:
@@ -926,7 +790,7 @@ void tilep_job_default(int job, int gender, dolls_data *doll)
 
         case JOB_CONJURER:
             parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_MAGENTA;
-            parts[TILEP_PART_HELM]  = TILEP_HELM_GANDALF;
+            parts[TILEP_PART_HELM]  = TILEP_HELM_WIZARD_GRAY;
             parts[TILEP_PART_HAND1] = TILEP_HAND1_STAFF_MAGE2;
             parts[TILEP_PART_HAND2] = TILEP_HAND2_BOOK_RED_DIM;
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
@@ -934,7 +798,7 @@ void tilep_job_default(int job, int gender, dolls_data *doll)
 
         case JOB_ENCHANTER:
             parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_YELLOW;
-            parts[TILEP_PART_HELM]  = TILEP_HELM_GANDALF;
+            parts[TILEP_PART_HELM]  = TILEP_HELM_WIZARD_GRAY;
             parts[TILEP_PART_HAND1] = TILEP_HAND1_STAFF_MAGE;
             parts[TILEP_PART_HAND2] = TILEP_HAND2_BOOK_BLUE_DIM;
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
@@ -942,7 +806,7 @@ void tilep_job_default(int job, int gender, dolls_data *doll)
 
         case JOB_SUMMONER:
             parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_BROWN;
-            parts[TILEP_PART_HELM]  = TILEP_HELM_GANDALF;
+            parts[TILEP_PART_HELM]  = TILEP_HELM_WIZARD_GRAY;
             parts[TILEP_PART_HAND1] = TILEP_HAND1_STAFF_RING_BLUE;
             parts[TILEP_PART_HAND2] = TILEP_HAND2_BOOK_YELLOW_DIM;
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
@@ -950,7 +814,7 @@ void tilep_job_default(int job, int gender, dolls_data *doll)
 
         case JOB_WARPER:
             parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_BROWN;
-            parts[TILEP_PART_HELM]  = TILEP_HELM_GANDALF;
+            parts[TILEP_PART_HELM]  = TILEP_HELM_WIZARD_GRAY;
             parts[TILEP_PART_HAND1] = TILEP_HAND1_SARUMAN;
             parts[TILEP_PART_HAND2] = TILEP_HAND2_BOOK_WHITE;
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
@@ -960,7 +824,7 @@ void tilep_job_default(int job, int gender, dolls_data *doll)
 
         case JOB_ARCANE_MARKSMAN:
             parts[TILEP_PART_BODY]  = TILEP_BODY_ROBE_BROWN;
-            parts[TILEP_PART_HELM]  = TILEP_HELM_GANDALF;
+            parts[TILEP_PART_HELM]  = TILEP_HELM_WIZARD_GRAY;
             parts[TILEP_PART_HAND1] = TILEP_HAND1_SARUMAN;
             parts[TILEP_PART_HAND2] = TILEP_HAND2_BOOK_WHITE;
             parts[TILEP_PART_BOOTS] = TILEP_BOOTS_SHORT_BROWN;
