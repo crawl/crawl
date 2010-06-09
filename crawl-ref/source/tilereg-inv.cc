@@ -135,7 +135,7 @@ int InventoryRegion::handle_mouse(MouseEvent &event)
 
     if (event.button == MouseEvent::LEFT)
     {
-        you.last_clicked_item = item_idx;
+        m_last_clicked_item = item_idx;
         tiles.set_need_redraw();
         if (on_floor)
         {
@@ -161,7 +161,7 @@ int InventoryRegion::handle_mouse(MouseEvent &event)
         {
             if (event.mod & MOD_SHIFT)
             {
-                you.last_clicked_item = item_idx;
+                m_last_clicked_item = item_idx;
                 tiles.set_need_redraw();
                 tile_item_eat_floor(idx);
             }
@@ -536,8 +536,8 @@ bool InventoryRegion::update_alt_text(std::string &alt)
     if (item_idx >= m_items.size() || m_items[item_idx].empty())
         return (false);
 
-    if (you.last_clicked_item >= 0
-        && item_idx == (unsigned int) you.last_clicked_item)
+    if (m_last_clicked_item >= 0
+        && item_idx == (unsigned int) m_last_clicked_item)
     {
         return (false);
     }

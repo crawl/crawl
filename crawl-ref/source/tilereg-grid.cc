@@ -12,7 +12,6 @@
 
 #include "libutil.h"
 #include "random.h"
-#include "player.h" // FIXME: Only needed because last_clicked is global.  :(
 #include "tiledef-main.h"
 #include "tilefont.h"
 
@@ -35,6 +34,7 @@ GridRegion::GridRegion(const TileRegionInit &init) :
     TileRegion(init),
     m_flavour(NULL),
     m_cursor(NO_CURSOR),
+    m_last_clicked_item(-1),
     m_buf(init.im)
 {
 }
@@ -77,7 +77,7 @@ void GridRegion::place_cursor(const coord_def &cursor)
     }
 
     if (m_cursor != cursor)
-        you.last_clicked_item = -1;
+        m_last_clicked_item = -1;
 
     m_cursor = cursor;
 

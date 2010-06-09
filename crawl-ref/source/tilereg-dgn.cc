@@ -39,6 +39,7 @@ DungeonRegion::DungeonRegion(const TileRegionInit &init) :
     TileRegion(init),
     m_cx_to_gx(0),
     m_cy_to_gy(0),
+    m_last_clicked_grid(coord_def()),
     m_buf_dngn(init.im)
 {
     for (int i = 0; i < CURSOR_MAX; i++)
@@ -700,7 +701,7 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
         && event.event == MouseEvent::PRESS
         && event.button == MouseEvent::LEFT)
     {
-        you.last_clicked_grid = m_cursor[CURSOR_MOUSE];
+        m_last_clicked_grid = m_cursor[CURSOR_MOUSE];
         return CK_MOUSE_CLICK;
     }
 
@@ -757,7 +758,7 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
         else if (event.event == MouseEvent::PRESS
                  && event.button == MouseEvent::LEFT && on_screen(gc))
         {
-            you.last_clicked_grid = m_cursor[CURSOR_MOUSE];
+            m_last_clicked_grid = m_cursor[CURSOR_MOUSE];
             return CK_MOUSE_CLICK;
         }
 
@@ -767,7 +768,7 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
     if (event.event != MouseEvent::PRESS)
         return 0;
 
-    you.last_clicked_grid = m_cursor[CURSOR_MOUSE];
+    m_last_clicked_grid = m_cursor[CURSOR_MOUSE];
 
     if (you.pos() == gc)
     {
@@ -892,7 +893,7 @@ void DungeonRegion::place_cursor(cursor_type type, const coord_def &gc)
         m_dirty = true;
         m_cursor[type] = result;
         if (type == CURSOR_MOUSE)
-            you.last_clicked_grid = coord_def();
+            m_last_clicked_grid = coord_def();
     }
 }
 
@@ -1110,7 +1111,7 @@ bool DungeonRegion::update_alt_text(std::string &alt)
         return (false);
     if (!is_terrain_seen(gc))
         return (false);
-    if (you.last_clicked_grid == gc)
+    if (m_last_clicked_grid == gc)
         return (false);
 
     describe_info inf;
