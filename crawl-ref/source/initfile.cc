@@ -999,11 +999,6 @@ void game_options::reset_options()
     named_options.clear();
 
     clear_cset_overrides();
-#ifdef USE_TILE
-    // HACK: For some reason, Tiles can't handle the default IBM book
-    //       character. Redefine with plain old '+', so it shows up correctly.
-    add_cset_override(CSET_IBM, dchar_by_name("item_book"), '+');
-#endif
 
     clear_feature_overrides();
     mon_glyph_overrides.clear();
