@@ -31,7 +31,7 @@ void tile_new_level(bool first_time)
 
     for (unsigned int x = 0; x < GXM; x++)
         for (unsigned int y = 0; y < GYM; y++)
-            tiles.update_minimap(x, y);
+            tiles.update_minimap(coord_def(x, y));
 
     if (first_time)
         tile_init_flavour();

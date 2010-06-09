@@ -50,7 +50,7 @@ public:
     virtual bool update_tip_text(std::string &tip);
 
     void init_colours();
-    void set(int gx, int gy, map_feature f);
+    void set(const coord_def &gc, map_feature f);
     void set_window(const coord_def &start, const coord_def &end);
     void update_bounds();
 

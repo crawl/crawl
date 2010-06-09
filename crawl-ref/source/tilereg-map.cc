@@ -168,19 +168,19 @@ void MapRegion::recenter()
 #endif
 }
 
-void MapRegion::set(int gx, int gy, map_feature f)
+void MapRegion::set(const coord_def &gc, map_feature f)
 {
     ASSERT((unsigned int)f <= (unsigned char)~0);
-    m_buf[gx + gy * mx] = f;
+    m_buf[gc.x + gc.y * mx] = f;
 
     if (f == MF_UNSEEN)
         return;
 
     // Get map extents
-    m_min_gx = std::min(m_min_gx, gx);
-    m_max_gx = std::max(m_max_gx, gx);
-    m_min_gy = std::min(m_min_gy, gy);
-    m_max_gy = std::max(m_max_gy, gy);
+    m_min_gx = std::min(m_min_gx, gc.x);
+    m_max_gx = std::max(m_max_gx, gc.x);
+    m_min_gy = std::min(m_min_gy, gc.y);
+    m_max_gy = std::max(m_max_gy, gc.y);
 
     recenter();
 }

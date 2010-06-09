@@ -367,11 +367,9 @@ static void _tile_exclude_gmap_update(const coord_def &p)
     for (int x = -8; x <= 8; x++)
         for (int y = -8; y <= 8; y++)
         {
-            int px = p.x+x, py = p.y+y;
-            if (in_bounds(coord_def(px,py)))
-            {
-                tiles.update_minimap(px, py);
-            }
+            const coord_def pc(p.x + x, p.y + y);
+            if (in_bounds(pc))
+                tiles.update_minimap(pc);
         }
 }
 #endif

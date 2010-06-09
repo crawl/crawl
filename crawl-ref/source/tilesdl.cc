@@ -1032,28 +1032,26 @@ void TilesFramework::redraw()
     m_last_tick_redraw = wm->get_ticks();
 }
 
-void TilesFramework::update_minimap(int gx, int gy)
+void TilesFramework::update_minimap(const coord_def &gc)
 {
     if (!player_in_mappable_area())
         return;
 
-    show_type object = env.map_knowledge[gx][gy].object;
+    show_type object = env.map_knowledge(gc).object;
     map_feature f = (object.cls == SH_MONSTER) ? MF_MONS_HOSTILE :
         get_feature_def(object).minimap;
 
     if (f == MF_SKIP)
-        f = get_feature_def(grd[gx][gy]).minimap;
+        f = get_feature_def(grd(gc)).minimap;
     ASSERT(f < MF_MAX);
 
-    tiles.update_minimap(gx, gy, f);
+    tiles.update_minimap(gc, f);
 }
 
-void TilesFramework::update_minimap(int gx, int gy, map_feature f)
+void TilesFramework::update_minimap(const coord_def &gc, map_feature f)
 {
     if (!player_in_mappable_area())
         return;
-
-    coord_def gc(gx, gy);
 
     if (!crawl_state.game_is_arena() && gc == you.pos() && you.on_current_level)
         f = MF_PLAYER;
@@ -1079,15 +1077,15 @@ void TilesFramework::update_minimap(int gx, int gy, map_feature f)
 
     if (f == MF_WALL || f == MF_FLOOR)
     {
-        if (is_terrain_known(gx, gy) && !is_terrain_seen(gx, gy)
-            || is_map_knowledge_detected_item(gx, gy)
-            || is_map_knowledge_detected_mons(gx, gy))
+        if (is_terrain_known(gc) && !is_terrain_seen(gc)
+            || is_map_knowledge_detected_item(gc)
+            || is_map_knowledge_detected_mons(gc))
         {
             f = (f == MF_WALL) ? MF_MAP_WALL : MF_MAP_FLOOR;
         }
     }
 
-    m_region_map->set(gx, gy, f);
+    m_region_map->set(gc, f);
 }
 
 void TilesFramework::clear_minimap()
