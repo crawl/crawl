@@ -119,8 +119,12 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
 {
     item_def& wpn = *you.weapon();
 
-    if (is_artefact(wpn) || (is_range_weapon(wpn) && brand != SPWPN_HOLY_WRATH))
+    if (wpn.base_type != OBJ_WEAPONS
+        || (is_range_weapon(wpn) && brand != SPWPN_HOLY_WRATH)
+        || is_artefact(wpn))
+    {
         return (false);
+    }
 
     std::string prompt = "Do you wish to have your weapon ";
     if (brand == SPWPN_PAIN)
