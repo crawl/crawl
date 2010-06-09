@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 #include "artefact.h"
+#include "itemname.h"
 #include "itemprop.h"
 #include "player.h"
 #include "tiledef-player.h"
@@ -18,10 +19,11 @@ tileidx_t tilep_equ_weapon(const item_def &item)
 {
     if (item.base_type == OBJ_STAVES)
     {
+        int desc = (item.special / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
         if (item_is_rod(item))
-            return TILEP_HAND1_ROD_BROWN + (item.special / 4) % 10;
+            return TILEP_HAND1_ROD_BROWN + desc;
         else
-            return TILEP_HAND1_STAFF_LARGE + (item.special / 4) % 10;
+            return TILEP_HAND1_STAFF_LARGE + desc;
     }
 
     if (item.base_type == OBJ_MISCELLANY)

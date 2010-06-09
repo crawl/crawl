@@ -1466,8 +1466,8 @@ std::string item_def::name_aux(description_level_type desc,
             buff << "wand of " << wand_type_name(item_typ);
         else
         {
-            buff << wand_secondary_string(this->special / 12)
-                 << wand_primary_string(this->special % 12)
+            buff << wand_secondary_string(this->special / NDSC_WAND_PRI)
+                 << wand_primary_string(this->special % NDSC_WAND_PRI)
                  << " wand";
         }
 
@@ -1642,14 +1642,14 @@ std::string item_def::name_aux(description_level_type desc,
         {
             if (jewellery_is_amulet(*this))
             {
-                buff << amulet_secondary_string(this->special / 13)
-                     << amulet_primary_string(this->special % 13)
+                buff << amulet_secondary_string(this->special / NDSC_JEWEL_PRI)
+                     << amulet_primary_string(this->special % NDSC_JEWEL_PRI)
                      << " amulet";
             }
             else  // i.e., a ring
             {
-                buff << ring_secondary_string(this->special / 13)
-                     << ring_primary_string(this->special % 13)
+                buff << ring_secondary_string(this->special / NDSC_JEWEL_PRI)
+                     << ring_primary_string(this->special % NDSC_JEWEL_PRI)
                      << " ring";
             }
         }
@@ -1724,8 +1724,8 @@ std::string item_def::name_aux(description_level_type desc,
                 buff << "ancient heavily glowing book";
             else
             {
-                buff << book_secondary_string(this->special / 10)
-                     << book_primary_string(this->special % 10)
+                buff << book_secondary_string(this->special / NDSC_BOOK_PRI)
+                     << book_primary_string(this->special % NDSC_BOOK_PRI)
                      << (item_typ == BOOK_MANUAL ? "manual" : "book");
             }
         }
@@ -1753,8 +1753,8 @@ std::string item_def::name_aux(description_level_type desc,
         {
             if (!basename)
             {
-                buff << staff_secondary_string(this->special / 4)
-                     << staff_primary_string(this->special % 4);
+                buff << staff_secondary_string(this->special / NDSC_STAVE_PRI)
+                     << staff_primary_string(this->special % NDSC_STAVE_PRI);
             }
 
             buff << (item_is_rod(*this) ? "rod" : "staff");

@@ -72,6 +72,22 @@ enum potion_description_qualifier_type
     PDQ_NQUALS
 };
 
+// Primary and secondary description counts for some types of items.
+// If you change these counts, update itemname.cc.
+enum
+{
+    NDSC_JEWEL_PRI  = 13,
+    NDSC_JEWEL_SEC  = 13,
+    NDSC_STAVE_PRI = 4,
+    NDSC_STAVE_SEC = 10,
+    NDSC_WAND_PRI  = 12,
+    NDSC_WAND_SEC  = 16,
+    NDSC_POT_PRI   = PDC_NCOLOURS,
+    NDSC_POT_SEC   = PDQ_NQUALS,
+    NDSC_BOOK_PRI  = 10,
+    NDSC_BOOK_SEC  = 8,
+};
+
 bool is_vowel( const char chr );
 int property( const item_def &item, int prop_type );
 

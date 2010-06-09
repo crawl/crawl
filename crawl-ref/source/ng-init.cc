@@ -267,14 +267,13 @@ void initialise_item_descriptions()
             // Pick a new description until it's good.
             while (true)
             {
-                // The numbers below are always secondary * primary,
-                // except for scrolls. (See itemname.cc.)
                 switch (i)
                 {
                 case IDESC_WANDS: // wands
-                    you.item_description[i][j] = random2( 16 * 12 );
+                    you.item_description[i][j] = random2(NDSC_WAND_PRI
+                                                         * NDSC_WAND_SEC);
                     if (coinflip())
-                        you.item_description[i][j] %= 12;
+                        you.item_description[i][j] %= NDSC_WAND_PRI;
                     break;
 
                 case IDESC_POTIONS: // potions
@@ -286,14 +285,16 @@ void initialise_item_descriptions()
                     you.item_description[i][j] = random2(151);
                     break;
 
-                case IDESC_RINGS: // rings
-                    you.item_description[i][j] = random2( 13 * 13 );
+                case IDESC_RINGS: // rings and amulets
+                    you.item_description[i][j] = random2(NDSC_JEWEL_PRI
+                                                         * NDSC_JEWEL_SEC);
                     if (coinflip())
-                        you.item_description[i][j] %= 13;
+                        you.item_description[i][j] %= NDSC_JEWEL_PRI;
                     break;
 
                 case IDESC_STAVES: // staves and rods
-                    you.item_description[i][j] = random2( 10 * 4 );
+                    you.item_description[i][j] = random2(NDSC_STAVE_PRI
+                                                         * NDSC_STAVE_SEC);
                     break;
                 }
 
