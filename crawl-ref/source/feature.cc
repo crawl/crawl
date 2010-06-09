@@ -94,11 +94,7 @@ void _init_feat(feature_def &f, dungeon_feature_type feat)
             break;
 
         case DNGN_OPEN_SEA:
-#ifdef USE_TILE
-            f.dchar        = DCHAR_WAVY;
-#else
             f.dchar        = DCHAR_WALL;
-#endif
             f.colour       = BLUE;
             f.minimap      = MF_WATER;
             break;
