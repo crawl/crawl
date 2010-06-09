@@ -139,7 +139,7 @@ bool monster_pathfind::start_pathfind(bool msg)
     //       If the surrounding squares also are not traversable, we return
     //       early that no path could be found.
 
-    max_length = min_length = grid_distance(pos.x, pos.y, target.x, target.y);
+    max_length = min_length = grid_distance(pos, target);
     for (int i = 0; i < GXM; i++)
         for (int j = 0; j < GYM; j++)
             dist[i][j] = INFINITE_DISTANCE;
