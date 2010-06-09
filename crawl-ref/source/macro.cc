@@ -765,46 +765,93 @@ void flush_input_buffer( int reason )
     }
 }
 
+static void _input_action_raw(keyseq* action)
+{
+    msgwin_prompt("Input macro action: ");
+    const int x = wherex();
+    const int y = wherey();
+    bool done = false;
+
+    while (!done)
+    {
+        cgotoxy(x, y);
+        cprintf("%s", vtostr(*action).c_str());
+
+        int input = m_getch();
+
+        switch (input)
+        {
+        case ESCAPE:
+            done = true;
+            *action = keyseq();
+            break;
+
+        case '\n':
+        case '\r':
+            done = true;
+            break;
+
+        default:
+            action->push_back(input);
+            break;
+        }
+    }
+
+    msgwin_reply(vtostr(*action));
+}
+
+static void _input_action_text(keyseq* action)
+{
+    char buff[1024];
+    msgwin_get_line_autohist("Input macro action: ", buff, sizeof(buff));
+    *action = parse_keyseq(buff);
+}
+
 void macro_add_query( void )
 {
     int input;
     bool keymap = false;
+    bool raw = false;
     KeymapContext keymc = KMC_DEFAULT;
 
     mesclr();
-    mpr("(m)acro, keymap "
+    mpr("(m)acro, (M)acro raw, keymap "
         "[(k) default, (x) level-map, (t)argeting, (c)onfirm, m(e)nu], "
         "(s)ave? ",
         MSGCH_PROMPT);
     input = m_getch();
-    input = tolower( input );
-    if (input == 'k')
+    int low = tolower( input );
+
+    if (low == 'k')
     {
         keymap = true;
         keymc  = KMC_DEFAULT;
     }
-    else if (input == 'x')
+    else if (low == 'x')
     {
         keymap = true;
         keymc  = KMC_LEVELMAP;
     }
-    else if (input == 't')
+    else if (low == 't')
     {
         keymap = true;
         keymc  = KMC_TARGETING;
     }
-    else if (input == 'c')
+    else if (low == 'c')
     {
         keymap = true;
         keymc  = KMC_CONFIRM;
     }
-    else if (input == 'e')
+    else if (low == 'e')
     {
         keymap = true;
         keymc  = KMC_MENU;
     }
-    else if (input == 'm')
+    else if (low == 'm')
+    {
         keymap = false;
+        raw = (input == 'M');
+    }
     else if (input == 's')
     {
         mpr("Saving macros.");
@@ -859,43 +906,14 @@ void macro_add_query( void )
         }
     }
 
-    msgwin_prompt("Input macro action: ");
-    const int x = wherex();
-    const int y = wherey();
     keyseq action;
-    bool done = false;
-
-    while (!done)
-    {
-        cgotoxy(x, y);
-        cprintf("%s", vtostr(action).c_str());
-
-        input = m_getch();
-
-        switch (input)
-        {
-        case ESCAPE:
-            done = true;
-            action = keyseq();
-            break;
-
-        case '\n':
-        case '\r':
-            done = true;
-            break;
-
-        default:
-            action.push_back(input);
-            break;
-        }
-    }
-
-    msgwin_reply(vtostr(action));
+    if (raw)
+        _input_action_raw(&action);
+    else
+        _input_action_text(&action);
 
     if (action.empty())
         macro_del(mapref, key);
-    else if (Options.macro_meta_entry)
-        macro_add(mapref, key, parse_keyseq(vtostr(action)));
     else
         macro_add(mapref, key, action);
 
