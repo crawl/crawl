@@ -1347,7 +1347,7 @@ static void _do_description(std::string key, std::string type,
         // will cause a crash.  Similarly for zombified monsters, since
         // they require a base monster.
         if (mon_num != MONS_PROGRAM_BUG && !mons_is_ghost_demon(mon_num)
-            && !mons_class_is_zombified(mon_num))
+            && !mons_class_is_zombified(mon_num) && !mons_is_mimic(mon_num))
         {
             monsters mon;
             mon.type = mon_num;
