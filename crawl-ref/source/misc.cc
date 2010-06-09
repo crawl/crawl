@@ -1786,7 +1786,12 @@ static void _drop_tomb(const coord_def& pos, bool premature)
             mprf("The walls disappear%s!",
                  premature ? " prematurely" : "");
         else
-            mpr("You hear a deep rumble.");
+        {
+            if (!silenced(you.pos()))
+                mpr("You hear a deep rumble.", MSGCH_SOUND);
+            else
+                mpr("You feel the ground shudder.");
+        }
     }
 }
 
