@@ -85,7 +85,7 @@ The contents of this text are:
                 autoinscribe, autoinscribe_artefacts, autoinscribe_cursed
 4-n     Macro related Options.
                 flush.failure, flush.command, flush.message,
-                macro_meta_entry, additional_macro_file, bindkey
+                additional_macro_file, bindkey
 4-o     Tiles Options.
                 tile_show_items, tile_title_screen, tile_menu_icons,
                 tile_player_col, tile_monster_col, tile_neutral_col,
@@ -1632,11 +1632,6 @@ flush.message = false
            failure -- when spells/abilities get miscast
            command -- whenever the game is about to get the next command
            message -- whenever the game outputs a non-mute message
-
-macro_meta_entry = true
-        macro_meta_entry lets you specify non-printable keycodes like
-        \{3} when creating a macro. For instance, if you want to keymap
-        0 to Escape, you'd use a target keycode of \{27}.
 
 additional_macro_file = path/to/filename
         Add an additional macro file to be loaded after macro.txt.
