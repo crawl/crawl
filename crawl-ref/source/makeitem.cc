@@ -419,7 +419,7 @@ void item_colour(item_def &item)
     case OBJ_WANDS:
         item.special = you.item_description[IDESC_WANDS][item.sub_type];
 
-        switch (item.special % 12)
+        switch (item.special % NDSC_WAND_PRI)
         {
         case 0:         //"iron wand"
             item.colour = CYAN;
@@ -448,7 +448,7 @@ void item_colour(item_def &item)
             break;
         }
 
-        if (item.special / 12 == 9) // "blackened foo wand"
+        if (item.special / NDSC_WAND_PRI == 9) // "blackened foo wand"
             item.colour = DARKGREY;
 
         break;
@@ -456,7 +456,7 @@ void item_colour(item_def &item)
     case OBJ_POTIONS:
         item.plus = you.item_description[IDESC_POTIONS][item.sub_type];
 
-        switch (item.plus % 14)
+        switch (item.plus % NDSC_POT_PRI)
         {
         case 0:         //"clear potion"
         default:
@@ -563,7 +563,7 @@ void item_colour(item_def &item)
         item.colour  = YELLOW;
         item.special = you.item_description[IDESC_RINGS][item.sub_type];
 
-        switchnum = item.special % 13;
+        switchnum = item.special % NDSC_JEWEL_PRI;
 
         switch (switchnum)
         {
@@ -638,7 +638,7 @@ void item_colour(item_def &item)
         }
 
         // blackened - same for both rings and amulets
-        if (item.special / 13 == 5)
+        if (item.special / NDSC_JEWEL_PRI == 5)
             item.colour = DARKGREY;
         break;
 
@@ -649,7 +649,7 @@ void item_colour(item_def &item)
         break;
 
     case OBJ_BOOKS:
-        switch (item.special % 10)
+        switch (item.special % NDSC_BOOK_PRI)
         {
         case 0:
         case 1:
@@ -2852,7 +2852,7 @@ static void _generate_book_item(item_def& item, int allow_uniques,
     item.special = random2(5);
 
     if (one_chance_in(10))
-        item.special += random2(8) * 10;
+        item.special += random2(NDSC_BOOK_SEC) * NDSC_BOOK_PRI;
 
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;

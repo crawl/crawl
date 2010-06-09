@@ -2856,7 +2856,7 @@ tileidx_t tileidx_item(const item_def &item)
             return TILE_WAND_FLAME + type;
         }
         else
-            return TILE_WAND_OFFSET + special % 12;
+            return TILE_WAND_OFFSET + special % NDSC_WAND_PRI;
 
     case OBJ_FOOD:
         return _tileidx_food(item);
@@ -2884,7 +2884,7 @@ tileidx_t tileidx_item(const item_def &item)
             }
             else
             {
-                return TILE_RING_NORMAL_OFFSET + special % 13;
+                return TILE_RING_NORMAL_OFFSET + special % NDSC_JEWEL_PRI;
             }
         }
         else
@@ -2900,7 +2900,7 @@ tileidx_t tileidx_item(const item_def &item)
             }
             else
             {
-                return TILE_AMU_NORMAL_OFFSET + special % 13;
+                return TILE_AMU_NORMAL_OFFSET + special % NDSC_JEWEL_PRI;
             }
         }
 
@@ -2912,7 +2912,7 @@ tileidx_t tileidx_item(const item_def &item)
         }
         else
         {
-            return TILE_POTION_OFFSET + item.plus % 14;
+            return TILE_POTION_OFFSET + item.plus % NDSC_POT_PRI;
         }
 
     case OBJ_BOOKS:
@@ -2922,16 +2922,16 @@ tileidx_t tileidx_item(const item_def &item)
             return TILE_BOOK_RANDART_OFFSET + offset;
         }
 
-        switch (special % 10)
+        switch (special % NDSC_BOOK_PRI)
         {
         default:
         case 0:
         case 1:
             return TILE_BOOK_PAPER_OFFSET + colour;
         case 2:
-            return TILE_BOOK_LEATHER_OFFSET + special/10;
+            return TILE_BOOK_LEATHER_OFFSET + special / NDSC_BOOK_PRI;
         case 3:
-            return TILE_BOOK_METAL_OFFSET + special/10;
+            return TILE_BOOK_METAL_OFFSET + special / NDSC_BOOK_PRI;
         case 4:
             return TILE_BOOK_PAPYRUS;
         }
@@ -2944,7 +2944,9 @@ tileidx_t tileidx_item(const item_def &item)
             {
                 return TILE_ROD_SMITING + type - STAFF_SMITING;
             }
-            return TILE_ROD_OFFSET + (special / 4) % 10;
+
+            int desc = (special / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
+            return TILE_ROD_OFFSET + desc;
         }
         else
         {
@@ -2953,7 +2955,9 @@ tileidx_t tileidx_item(const item_def &item)
             {
                 return TILE_STAFF_WIZARDRY + type;
             }
-            return TILE_STAFF_OFFSET + (special / 4) % 10;
+
+            int desc = (special / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
+            return TILE_STAFF_OFFSET + desc;
         }
 
     case OBJ_CORPSES:
