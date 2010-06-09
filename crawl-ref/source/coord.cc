@@ -13,34 +13,14 @@ int coord_def::distance_from(const coord_def &other) const
     return (grid_distance(*this, other));
 }
 
-int grid_distance( const coord_def& p1, const coord_def& p2 )
+int grid_distance(const coord_def& p1, const coord_def& p2)
 {
-    return grid_distance(p1.x, p1.y, p2.x, p2.y);
-}
-
-// More accurate than distance() given the actual movement geometry -- bwr
-int grid_distance( int x, int y, int x2, int y2 )
-{
-    const int dx = abs( x - x2 );
-    const int dy = abs( y - y2 );
-
-    // returns distance in terms of moves:
-    return ((dx > dy) ? dx : dy);
+    return ((p2 - p1).rdist());
 }
 
 int distance( const coord_def& p1, const coord_def& p2 )
 {
-    return distance(p1.x, p1.y, p2.x, p2.y);
-}
-
-int distance( int x, int y, int x2, int y2 )
-{
-    //jmf: now accurate, but remember to only compare vs. pre-squared distances
-    //     thus, next to == (distance(m1.x,m1.y, m2.x,m2.y) <= 2)
-    const int dx = x - x2;
-    const int dy = y - y2;
-
-    return ((dx * dx) + (dy * dy));
+    return ((p2 - p1).abs());
 }
 
 bool adjacent( const coord_def& p1, const coord_def& p2 )
