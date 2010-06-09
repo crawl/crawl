@@ -141,7 +141,7 @@ longbow WPN_LONGBOW
 %rim 0
 # The order of weapon brands must be identical to the one defined
 # in itemprop-enum.h.
-i-flaming BRAND_FLAMING
+i-flaming BRAND_FLAMING BRAND_WEP_FIRST
 i-freezing BRAND_FREEZING
 i-holy_wrath BRAND_HOLY_WRATH
 i-electrocution BRAND_ELECTROCUTION
@@ -163,7 +163,7 @@ i-chaos BRAND_CHAOS
 i-evasion BRAND_EVASION
 i-confusion BRAND_CONFUSION
 i-penetration BRAND_PENETRATION
-i-reaping BRAND_REAPING
+i-reaping BRAND_REAPING BRAND_WEP_LAST
 # missile-only brands, order doesn't matter
 i-dispersal BRAND_DISPERSAL
 i-explosion BRAND_EXPLOSION
@@ -405,7 +405,7 @@ boots4_green
 
 ### Armour brands
 %sdir item/armour/brands
-i-running BRAND_ARM_RUNNING
+i-running BRAND_ARM_RUNNING BRAND_ARM_FIRST
 i-fire-res BRAND_ARM_FIRE_RESISTANCE
 i-cold-res BRAND_ARM_COLD_RESISTANCE
 i-poison-res BRAND_ARM_POISON_RESISTANCE
@@ -427,7 +427,7 @@ i-archmagi BRAND_ARM_ARCHMAGI
 i-preservation BRAND_ARM_PRESERVATION
 i-reflection BRAND_ARM_REFLECTION
 i-spirit BRAND_ARM_SPIRIT_SHIELD
-i-archery BRAND_ARM_ARCHERY
+i-archery BRAND_ARM_ARCHERY BRAND_ARM_LAST
 
 ###########OBJ_WANDS
 %sdir item/wand
@@ -447,7 +447,7 @@ gem_plastic
 %shrink 0
 %sdir item/wand
 %back i-label
-i-flame WAND_FLAME
+i-flame WAND_FLAME WAND_ID_FIRST
 i-frost WAND_FROST
 i-slowing WAND_SLOWING
 i-hasting WAND_HASTING
@@ -466,7 +466,7 @@ i-polymorph_other WAND_POLYMORPH_OTHER
 i-enslavement WAND_ENSLAVEMENT
 i-draining WAND_DRAINING
 i-random_effects WAND_RANDOM_EFFECTS
-i-disintegration WAND_DISINTEGRATION
+i-disintegration WAND_DISINTEGRATION WAND_ID_LAST
 %shrink 1
 
 %back none
@@ -525,7 +525,7 @@ scroll SCROLL UNSEEN_SCROLL
 
 %back scroll
 %sdir item/scroll
-i-identify SCR_IDENTIFY
+i-identify SCR_IDENTIFY SCR_ID_FIRST
 i-teleportation SCR_TELEPORTATION
 i-fear SCR_FEAR
 i-noise SCR_NOISE
@@ -550,7 +550,7 @@ i-recharging SCR_RECHARGING
 i-enchant-weapon3 SCR_ENCHANT_WEAPON_III
 i-holy_word SCR_HOLY_WORD
 i-vulnerability SCR_VULNERABILITY
-i-silence SCR_SILENCE
+i-silence SCR_SILENCE SCR_ID_LAST
 %back none
 
 ##################OBJ_JEWELLERY
@@ -571,7 +571,7 @@ tiger_eye
 jade
 glass
 ###########random
-agate RING_RANDOM_OFFSET
+agate RING_RANDOM_OFFSET RING_COL_FIRST
 clay
 diamond
 emerald
@@ -585,12 +585,12 @@ plain_red
 plain_yellow
 plain_black
 bronze
-moonstone
+moonstone RING_COL_LAST
 
 #########ID-ed
 %rim 0
 %shrink 0
-i-regeneration RING_REGENERATION
+i-regeneration RING_REGENERATION RING_ID_FIRST
 i-protection RING_PROTECTION
 i-r-fire RING_PROTECTION_FROM_FIRE
 i-r-poison RING_POISON_RESISTANCE
@@ -613,7 +613,7 @@ i-life-protection RING_LIFE_PROTECTION
 i-r-magic RING_PROTECTION_FROM_MAGIC
 i-fire RING_FIRE
 i-ice RING_ICE
-i-c-teleport RING_TELEPORT_CONTROL
+i-c-teleport RING_TELEPORT_CONTROL RING_ID_LAST
 %rim 1
 %shrink 1
 
@@ -634,7 +634,7 @@ cylinder_gray
 ring_green
 ring_cyan
 ###random
-crystal_green AMU_RANDOM_OFFSET
+crystal_green AMU_RANDOM_OFFSET AMU_COL_FIRST
 cameo_orange
 celtic_blue
 eye_cyan
@@ -648,12 +648,12 @@ celtic_yellow
 stone1_green
 stone2_blue
 crystal_red
-eye_green
+eye_green AMU_COL_LAST
 
 %rim 0
 %shrink 0
 ### ID-ed amulet
-i-rage AMU_RAGE
+i-rage AMU_RAGE AMU_ID_FIRST
 i-clarity AMU_CLARITY
 i-warding AMU_WARDING
 i-r-corrosion AMU_RESIST_CORROSION
@@ -664,7 +664,7 @@ i-inaccuracy AMU_INACCURACY
 i-r-mutation AMU_RESIST_MUTATION
 i-spirit AMU_SPIRIT_SHIELD
 i-faith AMU_FAITH
-i-stasis AMU_STASIS
+i-stasis AMU_STASIS AMU_ID_LAST
 %rim 1
 %shrink 1
 
@@ -689,7 +689,7 @@ white
 %sdir item/potion
 %back i-label
 %rim 0
-i-heal POT_HEALING
+i-heal POT_HEALING POT_ID_FIRST
 i-heal-wounds POT_HEAL_WOUNDS
 i-speed POT_SPEED
 i-might POT_MIGHT
@@ -717,7 +717,7 @@ i-cure-mutation POT_CURE_MUTATION
 i-mutation POT_MUTATION
 i-resistance POT_RESISTANCE
 i-blood POT_BLOOD
-i-coagulated-blood POT_BLOOD_COAGULATED
+i-coagulated-blood POT_BLOOD_COAGULATED POT_ID_LAST
 %back none
 %rim 1
 %shrink 1
@@ -727,7 +727,7 @@ i-coagulated-blood POT_BLOOD_COAGULATED
 ###0paperback / hardback 16
 %sdir item/book
 book_of_the_dead BOOK_PAPER_OFFSET
-dark_blue
+dark_blue BOOK_COL_FIRST
 dark_green
 cyan
 red
@@ -741,7 +741,7 @@ turquoise
 pink
 magenta
 yellow
-white
+white BOOK_COL_LAST
 ##########leather 8
 parchment BOOK_LEATHER_OFFSET UNSEEN_BOOK
 leather
@@ -786,7 +786,7 @@ staff08
 staff09
 
 %shrink 0
-i-staff_wizardry STAFF_WIZARDRY
+i-staff_wizardry STAFF_WIZARDRY STAFF_ID_FIRST
 i-staff_power STAFF_POWER
 i-staff_fire STAFF_FIRE
 i-staff_cold STAFF_COLD
@@ -799,7 +799,7 @@ i-staff_summoning STAFF_SUMMONING
 i-staff_air STAFF_AIR
 i-staff_earth STAFF_EARTH
 %rim 0
-i-staff_channeling STAFF_CHANNELING
+i-staff_channeling STAFF_CHANNELING STAFF_ID_LAST
 %rim 1
 %shrink 1
 
@@ -816,7 +816,7 @@ rod08
 rod09
 
 %shrink 0
-i-rod_smiting ROD_SMITING
+i-rod_smiting ROD_SMITING ROD_ID_FIRST
 i-rod_summoning ROD_SUMMONING
 i-rod_destruction_fire ROD_DESTRUCTION_FIRE
 i-rod_destruction_ice ROD_DESTRUCTION_ICE
@@ -826,7 +826,7 @@ i-rod_warding ROD_WARDING
 i-rod_discovery ROD_DISCOVERY
 i-rod_demonology ROD_DEMONOLOGY
 i-rod_striking ROD_STRIKING
-i-rod_venom ROD_VENOM
+i-rod_venom ROD_VENOM ROD_ID_LAST
 %shrink 1
 
 #OBJ_ORBS
