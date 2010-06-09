@@ -2760,6 +2760,7 @@ void excommunication(god_type new_god)
 
     const bool was_haloed = you.haloed();
     const int  old_piety  = you.piety;
+    const int  old_piety_rank = piety_rank();
 
     god_acting gdact(old_god, true);
 
@@ -2767,9 +2768,12 @@ void excommunication(god_type new_god)
 
     you.duration[DUR_PRAYER] = 0;
     you.duration[DUR_PIETY_POOL] = 0; // your loss
-    you.religion = GOD_NO_GOD;
     you.piety = 0;
     you.piety_hysteresis = 0;
+
+    che_handle_change(CB_PIETY, piety_rank() - old_piety_rank);
+
+    you.religion = GOD_NO_GOD;
 
     redraw_skill(you.your_name, player_title());
 
