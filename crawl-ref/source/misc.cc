@@ -1758,7 +1758,7 @@ bool player_in_a_dangerous_place(bool *invis)
     return (gen_threat > logexp * 1.3 || hi_threat > logexp / 2);
 }
 
-static void _drop_tomb(const coord_def& pos)
+static void _drop_tomb(const coord_def& pos, bool premature)
 {
     int count = 0;
 
@@ -1783,7 +1783,8 @@ static void _drop_tomb(const coord_def& pos)
     if (count)
     {
         if (seen_change)
-            mpr("The walls disappear!");
+            mprf("The walls disappear%s!",
+                 premature ? " prematurely" : "");
         else
             mpr("You hear a deep rumble.");
     }
@@ -1809,7 +1810,7 @@ void timeout_tombs(int duration)
         monsters *mon_entombed = monster_at(cmark->pos);
         if (cmark->duration <= 0 || !mon_entombed)
         {
-            _drop_tomb(cmark->pos);
+            _drop_tomb(cmark->pos, !mon_entombed);
 
             monsters *mon_src =
                 !invalid_monster_index(cmark->source) ? &menv[cmark->source]
