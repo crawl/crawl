@@ -582,6 +582,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     // program bug
     case MONS_PROGRAM_BUG:
         return TILEP_MONS_PROGRAM_BUG;
+    case MONS_SENSED:
+        return TILE_UNSEEN_MONSTER;
 
     // insects ('a')
     case MONS_GIANT_COCKROACH:
