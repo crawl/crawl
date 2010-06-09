@@ -80,7 +80,7 @@ int MonsterRegion::handle_mouse(MouseEvent &event)
 
     if (event.button == MouseEvent::LEFT)
     {
-        you.last_clicked_item = item_idx;
+        m_last_clicked_item = item_idx;
         return (tile_click_cell(gc, event.mod));
     }
     else if (event.button == MouseEvent::RIGHT)
@@ -117,8 +117,8 @@ bool MonsterRegion::update_alt_text(std::string &alt)
         return (false);
 
     unsigned int item_idx = cursor_index();
-    if (you.last_clicked_item >= 0
-        && item_idx == (unsigned int) you.last_clicked_item)
+    if (m_last_clicked_item >= 0
+        && item_idx == (unsigned int) m_last_clicked_item)
     {
         return (false);
     }

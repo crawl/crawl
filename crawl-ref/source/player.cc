@@ -5158,11 +5158,6 @@ void player::init()
         non_branch_info[i].assert_validity();
     }
 
-#ifdef USE_TILE
-    last_clicked_grid = coord_def();
-    last_clicked_item = -1;
-#endif
-
     if (m_quiver)
         delete m_quiver;
     m_quiver = new player_quiver;

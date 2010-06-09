@@ -62,6 +62,7 @@ protected:
     int m_cx_to_gx;
     int m_cy_to_gy;
     coord_def m_cursor[CURSOR_MAX];
+    coord_def m_last_clicked_grid;
     std::vector<TextTag> m_tags[TAG_MAX];
 
     DungeonCellBuffer m_buf_dngn;

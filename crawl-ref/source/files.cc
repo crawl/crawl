@@ -1317,9 +1317,6 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
     // Going up/down stairs, going through a portal, or being banished
     // means the previous x/y movement direction is no longer valid.
     you.reset_prev_move();
-#ifdef USE_TILE
-    you.last_clicked_grid = coord_def();
-#endif
 
     const bool make_changes =
         (load_mode == LOAD_START_GAME || load_mode == LOAD_ENTER_LEVEL);

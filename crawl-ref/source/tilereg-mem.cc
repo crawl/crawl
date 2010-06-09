@@ -64,7 +64,7 @@ int MemoriseRegion::handle_mouse(MouseEvent &event)
     const spell_type spell = (spell_type) m_items[item_idx].idx;
     if (event.button == MouseEvent::LEFT)
     {
-        you.last_clicked_item = item_idx;
+        m_last_clicked_item = item_idx;
         tiles.set_need_redraw();
         if (learn_spell(spell, m_items[item_idx].special))
             tiles.update_inventory();

@@ -64,7 +64,7 @@ int SpellRegion::handle_mouse(MouseEvent &event)
     const spell_type spell = (spell_type) m_items[item_idx].idx;
     if (event.button == MouseEvent::LEFT)
     {
-        you.last_clicked_item = item_idx;
+        m_last_clicked_item = item_idx;
         tiles.set_need_redraw();
         if (!cast_a_spell(false, spell))
             flush_input_buffer( FLUSH_ON_FAILURE );
@@ -126,8 +126,8 @@ bool SpellRegion::update_alt_text(std::string &alt)
     if (item_idx >= m_items.size() || m_items[item_idx].empty())
         return (false);
 
-    if (you.last_clicked_item >= 0
-        && item_idx == (unsigned int) you.last_clicked_item)
+    if (m_last_clicked_item >= 0
+        && item_idx == (unsigned int) m_last_clicked_item)
     {
         return (false);
     }
