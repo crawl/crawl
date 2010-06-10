@@ -2017,6 +2017,43 @@ bool make_item_randart( item_def &item, bool force_mundane )
     return (true);
 }
 
+static void _make_faerie_armour(item_def &item)
+{
+    item_def doodad;
+    for (int i=0; i<100; i++)
+    {
+        doodad.clear();
+        doodad.base_type = item.base_type;
+        doodad.sub_type = item.sub_type;
+        if (!make_item_randart(doodad))
+        {
+            i--; // Forbidden props are not absolute, artefactness is.
+            continue;
+        }
+
+        // These make little sense for a casting mon.
+        if (artefact_wpn_property(doodad, ARTP_BERSERK)
+            || artefact_wpn_property(doodad, ARTP_ANGRY)
+            || artefact_wpn_property(doodad, ARTP_PREVENT_SPELLCASTING)
+            || artefact_wpn_property(doodad, ARTP_CAUSE_TELEPORTATION)
+            || artefact_wpn_property(doodad, ARTP_PREVENT_TELEPORTATION)
+            || artefact_wpn_property(doodad, ARTP_MUTAGENIC)
+            || artefact_wpn_property(doodad, ARTP_PONDEROUS))
+        {
+            continue;
+        }
+    }
+    ASSERT(is_artefact(doodad));
+    ASSERT(doodad.sub_type == item.sub_type);
+
+    doodad.props[ARTEFACT_NAME_KEY].get_string()
+        = item.props[ARTEFACT_NAME_KEY].get_string();
+    doodad.props[ARTEFACT_APPEAR_KEY].get_string()
+        = item.props[ARTEFACT_APPEAR_KEY].get_string();
+    item.props = doodad.props;
+    item.plus = 2 + random2(5);
+}
+
 bool make_item_unrandart( item_def &item, int unrand_index )
 {
     ASSERT(unrand_index > UNRAND_START);
@@ -2053,6 +2090,8 @@ bool make_item_unrandart( item_def &item, int unrand_index )
         item.plus  = random_range(-4, 16);
         item.plus2 = random_range(-4, 16);
     }
+    else if (unrand_index == UNRAND_FAERIE)
+        _make_faerie_armour(item);
 
     return (true);
 }
