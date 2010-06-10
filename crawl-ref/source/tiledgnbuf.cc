@@ -16,6 +16,7 @@
 #include "tiledef-player.h"
 #include "tiledoll.h"
 #include "tilemcache.h"
+#include "tilepick.h"
 #include "tilepick-p.h"
 
 DungeonCellBuffer::DungeonCellBuffer(ImageManager *im) :
@@ -92,11 +93,19 @@ void DungeonCellBuffer::add_dngn_tile(int tileidx, int x, int y)
 
 void DungeonCellBuffer::add_main_tile(int tileidx, int x, int y)
 {
+    tileidx_t base = tileidx_known_base_item(tileidx);
+    if (base)
+        m_buf_main.add(base, x, y);
+
     m_buf_main.add(tileidx, x, y);
 }
 
 void DungeonCellBuffer::add_main_tile(int tileidx, int x, int y, int ox, int oy)
 {
+    tileidx_t base = tileidx_known_base_item(tileidx);
+    if (base)
+        m_buf_main.add(base, x, y, ox, oy, false);
+
     m_buf_main.add(tileidx, x, y, ox, oy, false);
 }
 
@@ -394,10 +403,21 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
 
     if (fg_idx && fg_idx <= TILE_MAIN_MAX)
     {
+        const tileidx_t base_idx = tileidx_known_base_item(fg_idx);
+
         if (in_water)
+        {
+            if (base_idx)
+                m_buf_main_trans.add(base_idx, x, y, 0, true, false);
             m_buf_main_trans.add(fg_idx, x, y, 0, true, false);
+        }
         else
+        {
+            if (base_idx)
+                m_buf_main.add(base_idx, x, y);
+
             m_buf_main.add(fg_idx, x, y);
+        }
     }
 
     if (fg & TILE_FLAG_NET)

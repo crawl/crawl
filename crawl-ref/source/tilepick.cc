@@ -13,6 +13,7 @@
 #include "colour.h"
 #include "coord.h"
 #include "decks.h"
+#include "describe.h"
 #include "env.h"
 #include "food.h"
 #include "itemname.h"
@@ -3125,6 +3126,63 @@ tileidx_t tileidx_show_item(int show_item_type)
     case SHOW_ITEM_AMULET:     return (TILE_UNSEEN_AMULET);
     case SHOW_ITEM_DETECTED:   return (TILE_UNSEEN_ITEM);
     }
+}
+
+// For items with randomized descriptions, only the overlay label is
+// placed in the tile page.  This function looks up what the base item
+// is based on the randomized description.  It returns 0 if there is none.
+tileidx_t tileidx_known_base_item(tileidx_t label)
+{
+    if (label >= TILE_POT_ID_FIRST && label <= TILE_POT_ID_LAST)
+    {
+        int type = label - TILE_POT_ID_FIRST;
+        int desc = you.item_description[IDESC_POTIONS][type] % NDSC_POT_PRI;
+        return (TILE_POTION_OFFSET + desc);
+    }
+
+    if (label >= TILE_RING_ID_FIRST && label <= TILE_RING_ID_LAST)
+    {
+        int type = label - TILE_RING_ID_FIRST + RING_FIRST_RING;
+        int desc = you.item_description[IDESC_RINGS][type] % NDSC_JEWEL_PRI;
+        return (TILE_RING_NORMAL_OFFSET + desc);
+    }
+
+    if (label >= TILE_AMU_ID_FIRST && label <= TILE_AMU_ID_LAST)
+    {
+        int type = label - TILE_AMU_ID_FIRST + AMU_FIRST_AMULET;
+        int desc = you.item_description[IDESC_RINGS][type] % NDSC_JEWEL_PRI;
+        return (TILE_AMU_NORMAL_OFFSET + desc);
+    }
+
+    if (label >= TILE_SCR_ID_FIRST && label <= TILE_SCR_ID_LAST)
+    {
+        return (TILE_SCROLL);
+    }
+
+    if (label >= TILE_WAND_ID_FIRST && label <= TILE_WAND_ID_LAST)
+    {
+        int type = label - TILE_WAND_ID_FIRST;
+        int desc = you.item_description[IDESC_WANDS][type] % NDSC_WAND_PRI;
+        return (TILE_WAND_OFFSET + desc);
+    }
+
+    if (label >= TILE_STAFF_ID_FIRST && label <= TILE_STAFF_ID_LAST)
+    {
+        int type = label - TILE_STAFF_ID_FIRST;
+        int desc = you.item_description[IDESC_STAVES][type];
+        desc = (desc / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
+        return (TILE_STAFF_OFFSET + desc);
+    }
+
+    if (label >= TILE_ROD_ID_FIRST && label <= TILE_ROD_ID_LAST)
+    {
+        int type = label - TILE_ROD_ID_FIRST + STAFF_FIRST_ROD;
+        int desc = you.item_description[IDESC_STAVES][type];
+        desc = (desc / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
+        return (TILE_ROD_OFFSET + desc);
+    }
+
+    return (0);
 }
 
 tileidx_t tileidx_cloud(const cloud_struct &cl)

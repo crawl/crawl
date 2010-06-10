@@ -2,7 +2,6 @@
 
 #ifdef USE_TILE
 
-#include "describe.h"
 #include "files.h"
 #include "glwrapper.h"
 #include "tiledef-dngn.h"
