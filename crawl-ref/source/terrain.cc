@@ -894,7 +894,7 @@ void _dgn_check_terrain_player(const coord_def pos)
         monsters* mon = monster_at(pos);
         if (mon && !mon->submerged())
             monster_teleport(mon, true, false);
-        move_player_to_grid(pos, false, true, true);
+        move_player_to_grid(pos, false, true);
     }
     else
         you_teleport_now(true, false);
@@ -1326,7 +1326,7 @@ bool fall_into_a_pool( const coord_def& entry, bool allow_shift,
         if (in_bounds(empty) && !is_feat_dangerous(grd(empty)))
         {
             mpr("You manage to scramble free!");
-            move_player_to_grid( empty, false, false, true );
+            move_player_to_grid( empty, false, false);
 
             if (terrain == DNGN_LAVA)
                 expose_player_to_element( BEAM_LAVA, 14 );

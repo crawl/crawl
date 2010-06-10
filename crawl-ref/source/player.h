@@ -605,8 +605,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
                              const coord_def& old_pos=coord_def());
 
 bool check_moveto(const coord_def& p);
-bool move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift,
-                         bool force);
+void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift);
 
 bool player_in_mappable_area(void);
 bool player_in_branch(int branch);

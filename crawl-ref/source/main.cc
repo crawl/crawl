@@ -2327,7 +2327,7 @@ static void _decrement_durations()
             // Landing kills controlled flight.
             you.duration[DUR_CONTROLLED_FLIGHT] = 0;
             // Re-enter the terrain.
-            move_player_to_grid(you.pos(), false, true, true);
+            move_player_to_grid(you.pos(), false, true);
         }
     }
 
@@ -3609,7 +3609,7 @@ static void _move_player(coord_def move)
         you.time_taken *= player_movement_speed();
         you.time_taken /= 10;
 
-        move_player_to_grid(targ, true, false, true);
+        move_player_to_grid(targ, true, false);
 
         you.prev_move = move;
         move.reset();

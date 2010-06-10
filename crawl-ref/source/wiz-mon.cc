@@ -892,7 +892,7 @@ static void _move_player(const coord_def& where)
 {
     if (!you.can_pass_through_feat(grd(where)))
         grd(where) = DNGN_FLOOR;
-    move_player_to_grid(where, false, true, true);
+    move_player_to_grid(where, false, true);
 }
 
 static void _move_monster(const coord_def& where, int mid1)

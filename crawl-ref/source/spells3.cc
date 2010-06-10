@@ -1634,7 +1634,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
                 place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), KC_YOU);
 
                 // Controlling teleport contaminates the player. - bwr
-                move_player_to_grid(pos, false, true, true);
+                move_player_to_grid(pos, false, true);
                 if (!wizard_tele)
                     contaminate_player(1, true);
             }
@@ -1691,7 +1691,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
         // Leave a purple cloud.
         place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), KC_YOU);
 
-        move_player_to_grid(newpos, false, true, true);
+        move_player_to_grid(newpos, false, true);
     }
 
     _handle_teleport_update(large_change, check_ring_TC, old_pos);
@@ -1760,7 +1760,7 @@ bool you_teleport_to(const coord_def where_to, bool move_monsters)
 
     bool large_change = you.see_cell(where);
 
-    move_player_to_grid(where, false, true, true);
+    move_player_to_grid(where, false, true);
 
     _handle_teleport_update(large_change, check_ring_TC, old_pos);
     return (true);

@@ -2052,15 +2052,12 @@ static int _quadrant_blink(coord_def where, int pow, int, actor *)
         return(0);
 
     coord_def origin = you.pos();
-    int res = move_player_to_grid(target, false, true, true);
+    move_player_to_grid(target, false, true);
 
-    if (res)
-    {
-        // Leave a purple cloud.
-        place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), KC_YOU);
-    }
+    // Leave a purple cloud.
+    place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), KC_YOU);
 
-    return res;
+    return (1);
 }
 
 int cast_semi_controlled_blink(int pow)

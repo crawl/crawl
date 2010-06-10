@@ -42,8 +42,7 @@ bool player::blink_to(const coord_def& dest, bool quiet)
         canned_msg(MSG_YOU_BLINK);
 
     const coord_def origin = pos();
-    if (!move_player_to_grid(dest, false, true, true))
-        return (false);
+    move_player_to_grid(dest, false, true);
 
     place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), KC_YOU);
 

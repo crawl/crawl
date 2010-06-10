@@ -870,7 +870,7 @@ void disarm_trap(const coord_def& where)
                 if (coinflip())
                 {
                     mpr("You stumble into the trap!");
-                    move_player_to_grid(trap.pos, true, false, true);
+                    move_player_to_grid(trap.pos, true, false);
                 }
             }
             else
