@@ -180,7 +180,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink)
         {
             // Leave a purple cloud.
             place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), KC_YOU);
-            move_player_to_grid(beam.target, false, true, true);
+            move_player_to_grid(beam.target, false, true);
 
             // Controlling teleport contaminates the player. -- bwr
             if (!wizard_blink)
@@ -233,25 +233,19 @@ void random_blink(bool allow_partial_control, bool override_abyss)
 #endif
     else
     {
-        // Going to assume that move_player_to_grid() works.  (It should
-        // because terrain type, etc. was already checked.)  This could
-        // result in awkward messaging if it cancels for some reason,
-        // but it's probably better than getting the blink message after
-        // any Mf transform messages all the time. -cao
         canned_msg(MSG_YOU_BLINK);
         coord_def origin = you.pos();
-        success = move_player_to_grid(target, false, true, true);
-        if (success)
-        {
-            // Leave a purple cloud.
-            place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), KC_YOU);
+        move_player_to_grid(target, false, true);
+        success = true;
 
-            if (you.level_type == LEVEL_ABYSS)
-            {
-                abyss_teleport(false);
-                if (you.pet_target != MHITYOU)
-                    you.pet_target = MHITNOT;
-            }
+        // Leave a purple cloud.
+        place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), KC_YOU);
+
+        if (you.level_type == LEVEL_ABYSS)
+        {
+            abyss_teleport(false);
+            if (you.pet_target != MHITYOU)
+                you.pet_target = MHITNOT;
         }
     }
 

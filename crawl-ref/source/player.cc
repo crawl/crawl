@@ -327,9 +327,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
 //
 // stepped     - normal walking moves
 // allow_shift - allowed to scramble in any direction out of lava/water
-// force       - ignore safety checks, move must happen (traps, lava/water).
-bool move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift,
-                         bool force)
+void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift)
 {
     ASSERT(!crawl_state.game_is_arena());
     ASSERT(in_bounds(p));
@@ -347,21 +345,11 @@ bool move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift,
     ASSERT(!monster_at(p) || monster_at(p)->submerged()
            || fedhas_passthrough(monster_at(p)));
 
-    // Don't prompt if force is true or not stepping.
-    if (!force && stepped && !check_moveto(p))
-    {
-        stop_running();
-        you.turn_is_over = false;
-        return (false);
-    }
-
     // Move the player to new location.
     you.moveto(p);
     viewwindow(false);
 
     moveto_location_effects(old_grid, stepped, allow_shift, old_pos);
-
-    return (true);
 }
 
 bool is_feat_dangerous(dungeon_feature_type grid)

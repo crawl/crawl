@@ -1012,7 +1012,7 @@ static void _finish_delay(const delay_queue_item &delay)
                     monster_teleport(m, true, true);
             }
 
-            move_player_to_grid(pass, false, true, true);
+            move_player_to_grid(pass, false, true);
 
             // Wake the monster if it's asleep.
             if (m)

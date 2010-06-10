@@ -781,7 +781,7 @@ void untransform(bool skip_wielding, bool skip_move)
 
         // Re-enter the terrain, it might kill us.
         if (!skip_move && feat_is_water(grd(you.pos())))
-            move_player_to_grid(you.pos(), false, true, true);
+            move_player_to_grid(you.pos(), false, true);
 
         break;
 
@@ -811,7 +811,7 @@ void untransform(bool skip_wielding, bool skip_move)
 
     // Re-check terrain now that be may no longer be flying.
     if (!skip_move && old_flight && you.flight_mode() == FL_NONE)
-        move_player_to_grid(you.pos(), false, true, true);
+        move_player_to_grid(you.pos(), false, true);
 
     if (transform_can_butcher_barehanded(old_form))
         stop_butcher_delay();

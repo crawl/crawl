@@ -555,7 +555,7 @@ static bool _siren_movement_effect(const monsters *monster)
                     mprf("You swap places with %s.",
                          mon->name(DESC_NOCAP_THE).c_str());
                 }
-                move_player_to_grid(newpos, true, true, true);
+                move_player_to_grid(newpos, true, true);
 
                 if (swapping)
                     mon->apply_location_effects(newpos);
