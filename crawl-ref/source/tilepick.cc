@@ -2886,7 +2886,7 @@ tileidx_t tileidx_item(const item_def &item)
         if (id[ IDTYPE_WANDS ][type] == ID_KNOWN_TYPE
             ||  (item.flags &ISFLAG_KNOW_TYPE ))
         {
-            return TILE_WAND_FLAME + type;
+            return TILE_WAND_ID_FIRST + type;
         }
         else
             return TILE_WAND_OFFSET + special % NDSC_WAND_PRI;
@@ -2898,7 +2898,7 @@ tileidx_t tileidx_item(const item_def &item)
         if (id[ IDTYPE_SCROLLS ][type] == ID_KNOWN_TYPE
             ||  (item.flags &ISFLAG_KNOW_TYPE ))
         {
-            return TILE_SCR_IDENTIFY + type;
+            return TILE_SCR_ID_FIRST + type;
         }
         return TILE_SCROLL;
 
@@ -2915,7 +2915,7 @@ tileidx_t tileidx_item(const item_def &item)
             else if (id[ IDTYPE_JEWELLERY][type] == ID_KNOWN_TYPE
                      || (item.flags & ISFLAG_KNOW_TYPE))
             {
-                return TILE_RING_REGENERATION + type - RING_FIRST_RING;
+                return TILE_RING_ID_FIRST + type - RING_FIRST_RING;
             }
             else
             {
@@ -2929,7 +2929,7 @@ tileidx_t tileidx_item(const item_def &item)
             else if (id[ IDTYPE_JEWELLERY][type] == ID_KNOWN_TYPE
                      || (item.flags & ISFLAG_KNOW_TYPE))
             {
-                return TILE_AMU_RAGE + type - AMU_FIRST_AMULET;
+                return TILE_AMU_ID_FIRST + type - AMU_FIRST_AMULET;
             }
             else
             {
@@ -2941,7 +2941,7 @@ tileidx_t tileidx_item(const item_def &item)
         if (id[ IDTYPE_POTIONS ][type] == ID_KNOWN_TYPE
             ||  (item.flags &ISFLAG_KNOW_TYPE ))
         {
-            return TILE_POT_HEALING + type;
+            return TILE_POT_ID_FIRST + type;
         }
         else
         {
@@ -2975,7 +2975,7 @@ tileidx_t tileidx_item(const item_def &item)
             if (id[IDTYPE_STAVES][type] == ID_KNOWN_TYPE
                 ||  (item.flags & ISFLAG_KNOW_TYPE ))
             {
-                return TILE_ROD_SMITING + type - STAFF_SMITING;
+                return TILE_ROD_ID_FIRST + type - STAFF_SMITING;
             }
 
             int desc = (special / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
@@ -2986,7 +2986,7 @@ tileidx_t tileidx_item(const item_def &item)
             if (id[IDTYPE_STAVES][type] == ID_KNOWN_TYPE
                 ||  (item.flags & ISFLAG_KNOW_TYPE ))
             {
-                return TILE_STAFF_WIZARDRY + type;
+                return TILE_STAFF_ID_FIRST + type;
             }
 
             int desc = (special / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
