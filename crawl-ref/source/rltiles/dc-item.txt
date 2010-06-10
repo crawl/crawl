@@ -137,7 +137,6 @@ crossbow2
 longbow WPN_LONGBOW
 
 %sdir item/weapon/brands
-%shrink 0
 %rim 0
 # The order of weapon brands must be identical to the one defined
 # in itemprop-enum.h.
@@ -176,7 +175,6 @@ i-paralysis BRAND_PARALYSIS
 i-berserk-rage BRAND_RAGE
 i-sleep BRAND_SLEEP
 %rim 1
-%shrink 1
 %sdir item/weapon/ranged
 
 ######OBJ_MISSILES
@@ -444,7 +442,6 @@ gem_glass
 gem_lead
 gem_plastic
 
-%shrink 0
 %sdir item/wand
 %back i-label
 i-flame WAND_FLAME WAND_ID_FIRST
@@ -467,7 +464,6 @@ i-enslavement WAND_ENSLAVEMENT
 i-draining WAND_DRAINING
 i-random_effects WAND_RANDOM_EFFECTS
 i-disintegration WAND_DISINTEGRATION WAND_ID_LAST
-%shrink 1
 
 %back none
 #################OBJ_FOOD
@@ -509,14 +505,12 @@ chunk_brands/i-decay FOOD_CHUNK_ROTTEN_ROTTING
 chunk_brands/i-forbidden FOOD_CHUNK_ROTTEN_FORBIDDEN
 chunk_brands/i-sickness FOOD_CHUNK_ROTTEN_CONTAMINATED
 %back none
-%shrink 0
 chunk_brands/i-poison FOOD_POISONED
 chunk_brands/i-mutation FOOD_MUTAGENIC
 chunk_brands/i-decay FOOD_ROTTING
 chunk_brands/i-forbidden FOOD_FORBIDDEN
 chunk_brands/i-sickness FOOD_CONTAMINATED
 chunk_brands/i-rotten FOOD_INEDIBLE
-%shrink 1
 
 #################OBJ_UNKNOWN_I
 ##################OBJ_SCROLLS
@@ -589,7 +583,6 @@ moonstone RING_COL_LAST
 
 #########ID-ed
 %rim 0
-%shrink 0
 i-regeneration RING_REGENERATION RING_ID_FIRST
 i-protection RING_PROTECTION
 i-r-fire RING_PROTECTION_FROM_FIRE
@@ -615,7 +608,6 @@ i-fire RING_FIRE
 i-ice RING_ICE
 i-c-teleport RING_TELEPORT_CONTROL RING_ID_LAST
 %rim 1
-%shrink 1
 
 ###amulets
 %sdir item/amulet
@@ -651,7 +643,6 @@ crystal_red
 eye_green AMU_COL_LAST
 
 %rim 0
-%shrink 0
 ### ID-ed amulet
 i-rage AMU_RAGE AMU_ID_FIRST
 i-clarity AMU_CLARITY
@@ -666,7 +657,6 @@ i-spirit AMU_SPIRIT_SHIELD
 i-faith AMU_FAITH
 i-stasis AMU_STASIS AMU_ID_LAST
 %rim 1
-%shrink 1
 
 ####################OBJ_POTIONS
 %sdir item/potion
@@ -685,7 +675,6 @@ brown
 pink
 white
 
-%shrink 0
 %sdir item/potion
 %back i-label
 %rim 0
@@ -720,7 +709,6 @@ i-blood POT_BLOOD
 i-coagulated-blood POT_BLOOD_COAGULATED POT_ID_LAST
 %back none
 %rim 1
-%shrink 1
 
 ####################OBJ_UNKNOWN_II
 #####################OBJ_BOOKS
@@ -785,7 +773,6 @@ staff07
 staff08
 staff09
 
-%shrink 0
 i-staff_wizardry STAFF_WIZARDRY STAFF_ID_FIRST
 i-staff_power STAFF_POWER
 i-staff_fire STAFF_FIRE
@@ -801,7 +788,6 @@ i-staff_earth STAFF_EARTH
 %rim 0
 i-staff_channeling STAFF_CHANNELING STAFF_ID_LAST
 %rim 1
-%shrink 1
 
 %sdir item/rod
 rod00 ROD_OFFSET
@@ -815,7 +801,6 @@ rod07
 rod08
 rod09
 
-%shrink 0
 i-rod_smiting ROD_SMITING ROD_ID_FIRST
 i-rod_summoning ROD_SUMMONING
 i-rod_destruction_fire ROD_DESTRUCTION_FIRE
@@ -827,7 +812,6 @@ i-rod_discovery ROD_DISCOVERY
 i-rod_demonology ROD_DEMONOLOGY
 i-rod_striking ROD_STRIKING
 i-rod_venom ROD_VENOM ROD_ID_LAST
-%shrink 1
 
 #OBJ_ORBS
 %sdir item/misc

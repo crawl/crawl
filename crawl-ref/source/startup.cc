@@ -172,7 +172,6 @@ void _initialize()
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_TESTS)
 #ifdef USE_TILE
         init_player_doll();
-        tiles.initialise_items();
 #endif
         crawl_state.show_more_prompt = false;
         crawl_tests::run_tests(true);
@@ -293,8 +292,6 @@ void _post_init(bool newc)
     }
 
 #ifdef USE_TILE
-    tiles.initialise_items();
-    // Must re-run as the feature table wasn't initialised yet.
     tile_new_level(newc);
 #endif
 

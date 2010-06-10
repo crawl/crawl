@@ -1447,9 +1447,6 @@ static void _init_arena()
 {
     run_map_preludes();
     initialise_item_descriptions();
-#ifdef USE_TILE
-    tiles.initialise_items();
-#endif
 }
 
 void run_arena(const std::string& teams)
