@@ -520,6 +520,9 @@ bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
             tileset.push_back(tile_def(TILE_ITEM_SLOT_CURSED, TEX_DEFAULT));
 
         tileset.push_back(tile_def(TILE_ITEM_SLOT, TEX_FEAT));
+        tileidx_t base_item = tileidx_known_base_item(idx);
+        if (base_item)
+            tileset.push_back(tile_def(base_item, TEX_DEFAULT));
         tileset.push_back(tile_def(idx, TEX_DEFAULT));
 
         if (eq != EQ_NONE && you.melded[eq])
@@ -547,6 +550,10 @@ bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
 
             tileset.push_back(tile_def(ch, get_dngn_tex(ch)));
         }
+        tileidx_t base_item = tileidx_known_base_item(idx);
+        if (base_item)
+            tileset.push_back(tile_def(base_item, TEX_DEFAULT));
+
         tileset.push_back(tile_def(idx, TEX_DEFAULT));
 
         if (ch != 0)
