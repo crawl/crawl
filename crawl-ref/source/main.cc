@@ -3596,13 +3596,20 @@ static void _move_player(coord_def move)
 
     if (!attacking && targ_pass && moving && !beholder)
     {
-        you.time_taken *= player_movement_speed();
-        you.time_taken /= 10;
-        if (!move_player_to_grid(targ, true, false, false, swap))
+        if (!check_moveto(targ))
+        {
+            stop_running();
+            you.turn_is_over = false;
             return;
+        }
 
         if (swap)
             swap_places(targ_monst, mon_swap_dest);
+
+        you.time_taken *= player_movement_speed();
+        you.time_taken /= 10;
+
+        move_player_to_grid(targ, true, false, true);
 
         you.prev_move = move;
         move.reset();

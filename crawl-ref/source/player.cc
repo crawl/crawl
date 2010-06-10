@@ -252,7 +252,7 @@ static bool _check_moveto_terrain(const coord_def& p)
     return (_check_moveto_dangerous(p));
 }
 
-static bool _check_moveto(const coord_def& p)
+bool check_moveto(const coord_def& p)
 {
     return (_check_moveto_cloud(p)
             && _check_moveto_trap(p)
@@ -328,9 +328,8 @@ void moveto_location_effects(dungeon_feature_type old_feat,
 // stepped     - normal walking moves
 // allow_shift - allowed to scramble in any direction out of lava/water
 // force       - ignore safety checks, move must happen (traps, lava/water).
-// swapping    - player is swapping with a monster at (x,y)
 bool move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift,
-                         bool force, bool swapping)
+                         bool force)
 {
     ASSERT(!crawl_state.game_is_arena());
     ASSERT(in_bounds(p));
@@ -345,13 +344,11 @@ bool move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift,
     ASSERT(you.can_pass_through_feat(grd(p)));
 
     // Better not be an unsubmerged monster either.
-    ASSERT(swapping && monster_at(p)
-           || !swapping && (!monster_at(p)
-                            || monster_at(p)->submerged()
-                            || fedhas_passthrough(monster_at(p))));
+    ASSERT(!monster_at(p) || monster_at(p)->submerged()
+           || fedhas_passthrough(monster_at(p)));
 
     // Don't prompt if force is true or not stepping.
-    if (!force && stepped && !_check_moveto(p))
+    if (!force && stepped && !check_moveto(p))
     {
         stop_running();
         you.turn_is_over = false;
