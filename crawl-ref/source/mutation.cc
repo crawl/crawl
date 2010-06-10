@@ -7,6 +7,7 @@
 #include "AppHdr.h"
 #include "mutation.h"
 
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -34,6 +35,8 @@
 #include "menu.h"
 #include "mgen_data.h"
 #include "mon-place.h"
+#include "mon-iter.h"
+#include "mon-stuff.h"
 #include "mon-util.h"
 #include "notes.h"
 #include "ouch.h"
@@ -1630,7 +1633,7 @@ static std::vector<demon_mutation_info> _select_ds_mutations()
 {
     int NUM_BODY_SLOTS = 1;
     // 1 in 10 chance to create a monsterous set
-    if (true)
+    if (one_chance_in(10))
         NUM_BODY_SLOTS = 3;
 
 try_again:
@@ -1845,11 +1848,43 @@ int how_mutated(bool all, bool levels)
     return (j);
 }
 
+bool balance_demonic_guardian()
+{
+    const int mutlevel = player_mutation_level(MUT_DEMONIC_GUARDIAN);
+
+    int tension = get_tension(GOD_NO_GOD), mons_val = 0, total = 0;
+    monster_iterator mons;
+
+    if (tension*3/4 > mutlevel*6 + random2(mutlevel*mutlevel*2))
+        return (true);
+
+    for (int i = 0; mons && i <= 20/mutlevel; mons++)
+    {
+        mons_val = get_monster_tension(mons, GOD_NO_GOD);
+        const mon_attitude_type att = mons_attitude(*mons);
+
+        if (testbits(mons->flags, MF_DEMONIC_GUARDIAN)
+            && total < random2(mutlevel * 5)
+            && att == ATT_FRIENDLY && !one_chance_in(3))
+        {
+            mpr(mons->name(DESC_CAP_THE) + " "
+                + summoned_poof_msg(*mons), MSGCH_PLAIN);
+            monster_die(*mons, KILL_NONE, NON_MONSTER);
+        }
+        else
+        {
+            total += mons_val;
+        }
+    }
+
+    return (false);
+}
+
 void check_demonic_guardian()
 {
     const int mutlevel = player_mutation_level(MUT_DEMONIC_GUARDIAN);
     if (you.duration[DUR_DEMONIC_GUARDIAN] == 0
-        && get_tension(GOD_NO_GOD) > mutlevel*4 + random2(mutlevel*3))
+        && balance_demonic_guardian())
     {
         const monster_type disallowed[] = { MONS_NEQOXEC, MONS_YNOXINUL, MONS_HELLWING,
                                             MONS_BLUE_DEATH, MONS_GREEN_DEATH,
@@ -1873,8 +1908,9 @@ void check_demonic_guardian()
             return;
 
         menv[guardian].flags |= MF_NO_REWARD;
+        menv[guardian].flags |= MF_DEMONIC_GUARDIAN;
 
-        you.duration[DUR_DEMONIC_GUARDIAN] = random2(mutlevel)*5 + 10;
+        you.duration[DUR_DEMONIC_GUARDIAN] = mutlevel*5 + 10;
     }
 }
 

@@ -3837,6 +3837,95 @@ bool tso_unchivalric_attack_safe_monster(const monsters *mon)
             || !mon->is_holy() && holiness != MH_NATURAL);
 }
 
+int get_monster_tension(monster_iterator mons, god_type god)
+{
+    if (!mons->alive())
+        return 0;
+
+    if (you.see_cell(mons->pos()))
+    {
+        if (!mons_can_hurt_player(*mons))
+            return 0;
+    }
+
+    const mon_attitude_type att = mons_attitude(*mons);
+    if (att == ATT_GOOD_NEUTRAL || att == ATT_NEUTRAL)
+        return 0;
+
+    if (mons->cannot_act() || mons->asleep() || mons_is_fleeing(*mons))
+        return 0;
+
+    int exper = exper_value(*mons);
+    if (exper <= 0)
+        return 0;
+
+    // Almost dead monsters don't count as much.
+    exper *= mons->hit_points;
+    exper /= mons->max_hit_points;
+
+    bool gift = false;
+
+    if (god != GOD_NO_GOD)
+        gift = mons_is_god_gift(*mons, god);
+
+    if (att == ATT_HOSTILE)
+    {
+        // God is punishing you with a hostile gift, so it doesn't
+        // count towards tension.
+        if (gift)
+            return 0;
+    }
+    else if (att == ATT_FRIENDLY)
+    {
+        // Friendly monsters being around to help you reduce
+        // tension.
+        exper = -exper;
+
+        // If it's a god gift, it reduces tension even more, since
+        // the god is already helping you out.
+        if (gift)
+            exper *= 2;
+    }
+
+    if (att != ATT_FRIENDLY)
+    {
+        if (!you.visible_to(*mons))
+            exper /= 2;
+        if (!mons->visible_to(&you))
+            exper *= 2;
+    }
+
+    if (mons->confused() || mons->caught())
+        exper /= 2;
+
+    if (mons->has_ench(ENCH_SLOW))
+    {
+        exper *= 2;
+        exper /= 3;
+    }
+
+    if (mons->has_ench(ENCH_HASTE))
+    {
+        exper *= 3;
+        exper /= 2;
+    }
+
+    if (mons->has_ench(ENCH_MIGHT))
+    {
+        exper *= 5;
+        exper /= 4;
+    }
+
+    if (mons->berserk())
+    {
+        // in addition to haste and might bonuses above
+        exper *= 3;
+        exper /= 2;
+    }
+
+    return exper;
+}
+
 int get_tension(god_type god, bool count_travelling)
 {
     int total = 0;
@@ -3844,112 +3933,24 @@ int get_tension(god_type god, bool count_travelling)
     bool nearby_monster = false;
     for (monster_iterator mons; mons; ++mons)
     {
-        if (!mons->alive())
+        // Is the monster trying to get somewhere nearby?
+        coord_def    target;
+        unsigned int travel_size = mons->travel_path.size();
+
+        if (travel_size > 0)
+            target = mons->travel_path[travel_size - 1];
+        else
+            target = mons->target;
+
+        // Monster is neither nearby nor trying to get near us.
+        if (!in_bounds(target) || !you.see_cell(target) || travel_size > 3)
             continue;
 
-        if (you.see_cell(mons->pos()))
-        {
-            if (!mons_can_hurt_player(*mons))
-                continue;
+        int exper = get_monster_tension(mons, god);
 
-            // Monster is nearby.
-            if (!nearby_monster && !mons->wont_attack())
-                nearby_monster = true;
-        }
-        else if (count_travelling)
-        {
-            // Is the monster trying to get somewhere nearby?
-            coord_def    target;
-            unsigned int travel_size = mons->travel_path.size();
-
-            // If the monster is too far away, it doesn't count.
-            if (travel_size > 3)
-                continue;
-
-            if (travel_size > 0)
-                target = mons->travel_path[travel_size - 1];
-            else
-                target = mons->target;
-
-            // Monster is neither nearby nor trying to get near us.
-            if (!in_bounds(target) || !you.see_cell(target))
-                continue;
-        }
-
-        const mon_attitude_type att = mons_attitude(*mons);
-        if (att == ATT_GOOD_NEUTRAL || att == ATT_NEUTRAL)
-            continue;
-
-        if (mons->cannot_act() || mons->asleep() || mons_is_fleeing(*mons))
-            continue;
-
-        int exper = exper_value(*mons);
-        if (exper <= 0)
-            continue;
-
-        // Almost dead monsters don't count as much.
-        exper *= mons->hit_points;
-        exper /= mons->max_hit_points;
-
-        bool gift = false;
-
-        if (god != GOD_NO_GOD)
-            gift = mons_is_god_gift(*mons, god);
-
-        if (att == ATT_HOSTILE)
-        {
-            // God is punishing you with a hostile gift, so it doesn't
-            // count towards tension.
-            if (gift)
-                continue;
-        }
-        else if (att == ATT_FRIENDLY)
-        {
-            // Friendly monsters being around to help you reduce
-            // tension.
-            exper = -exper;
-
-            // If it's a god gift, it reduces tension even more, since
-            // the god is already helping you out.
-            if (gift)
-                exper *= 2;
-        }
-
-        if (att != ATT_FRIENDLY)
-        {
-            if (!you.visible_to(*mons))
-                exper /= 2;
-            if (!mons->visible_to(&you))
-                exper *= 2;
-        }
-
-        if (mons->confused() || mons->caught())
-            exper /= 2;
-
-        if (mons->has_ench(ENCH_SLOW))
-        {
-            exper *= 2;
-            exper /= 3;
-        }
-
-        if (mons->has_ench(ENCH_HASTE))
-        {
-            exper *= 3;
-            exper /= 2;
-        }
-
-        if (mons->has_ench(ENCH_MIGHT))
-        {
-            exper *= 5;
-            exper /= 4;
-        }
-
-        if (mons->berserk())
-        {
-            // in addition to haste and might bonuses above
-            exper *= 3;
-            exper /= 2;
-        }
+        // Monster is nearby.
+        if (!nearby_monster && !mons->wont_attack())
+            nearby_monster = true;
 
         total += exper;
     }

@@ -11,6 +11,7 @@
 #include "enum.h"
 #include "externs.h"
 #include "ouch.h"
+#include "mon-iter.h"
 #include "player.h"
 
 #include "religion-enum.h"
@@ -104,6 +105,7 @@ void religion_turn_start();
 void religion_turn_end();
 
 int get_tension(god_type god = you.religion, bool count_travelling = true);
+int get_monster_tension(monster_iterator mons, god_type god = you.religion);
 
 bool do_god_gift(bool prayed_for = false, bool forced = false);
 
