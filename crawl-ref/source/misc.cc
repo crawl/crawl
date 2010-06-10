@@ -2197,7 +2197,7 @@ void swap_with_monster(monsters *mon_to_swap)
     }
 
     // Move you to its previous location.
-    move_player_to_grid(newpos, false, true, true, false);
+    move_player_to_grid(newpos, false, true, true);
 
     if (mon_caught)
     {
