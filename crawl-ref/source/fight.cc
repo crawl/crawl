@@ -5236,7 +5236,7 @@ void melee_attack::mons_do_spines()
                           defender->melee_evasion(attacker), r))
         {
             simple_monster_message(attacker->as_monster(),
-                                   " dodges your spines!.");
+                                   " dodges your spines.");
             return;
         }
 
