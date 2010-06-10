@@ -254,6 +254,20 @@ void create_random_doll(dolls_data &rdoll)
         _fill_doll_part(rdoll, TILEP_PART_BEARD);
 }
 
+// Deterministically pick a pair of trousers for this character to use
+// for SHOW_EQUIP, as there's no corresponding item slot for this.
+static tileidx_t _random_trousers()
+{
+    int offset = static_cast<int>(you.species) * 9887
+                 + static_cast<int>(you.char_class) * 8719;
+    const char *name = you.your_name.c_str();
+    for (int i = 0; i < 8 && *name; ++i, ++name)
+        offset += name[i] * 4643;
+
+    const int range = TILEP_LEG_LAST_NORM - TILEP_LEG_FIRST_NORM + 1;
+    return (TILEP_LEG_FIRST_NORM + offset % range);
+}
+
 void fill_doll_equipment(dolls_data &result)
 {
     // Base tile.
@@ -332,6 +346,11 @@ void fill_doll_equipment(dolls_data &result)
         {
             result.parts[TILEP_PART_HELM] = 0;
         }
+    }
+    // Leg.
+    if (result.parts[TILEP_PART_LEG] == TILEP_SHOW_EQUIP)
+    {
+        result.parts[TILEP_PART_LEG] = _random_trousers();
     }
     // Boots.
     if (result.parts[TILEP_PART_BOOTS] == TILEP_SHOW_EQUIP)

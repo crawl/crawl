@@ -1,5 +1,5 @@
 MODE=LOADING
-NUM=02
+NUM=00
 #Legend:
 #***:equipment/123:index/000:none
 #Shadow/Base/Cloak/Boots/Legs/Body/Gloves/Weapon/Shield/Hair/Beard/Helmet/Halo/Enchant/DrcHead/DrcWing
