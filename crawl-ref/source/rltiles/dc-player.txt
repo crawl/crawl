@@ -179,15 +179,17 @@ centaur_barding_red CENTAUR_BARDING_RED
 ### Body armour
 %parts_ctg LEG
 %sdir player/legs
-
 bikini_red BIKINI_RED
 loincloth_red LOINCLOTH_RED
 belt_redbrown BELT_REDBROWN
-belt_gray BELT_GRAY
+pj PJ
+trouser_green PANTS_TROUSER_GREEN
+chunli PANTS_CHUN_LI
+
+belt_gray BELT_GRAY FIRST_NORM
 pants_orange PANTS_ORANGE
 pants_short_gray PANTS_SHORT_GRAY
-garter
-pj PJ
+garter PANTS_GARTER
 
 pants_black PANTS_BLACK
 pants_blue PANTS_BLUE
@@ -195,19 +197,17 @@ pants_darkgreen PANTS_DARKGREEN
 pants_brown PANTS_BROWN
 pants_short_darkbrown PANTS_SHORT_DARKBROWN
 pants_short_brown PANTS_SHORT_BROWN
-pants_short_brown3 PANTS_SHORT_BROWN3
-trouser_green
-pants_l_white
-long_red
-chunli
-pants_red
+pants_short_brown3 PANTS_SHORT_DARK_BROWN
+pants_l_white PANTS_LONG_WHITE
+long_red PANTS_LONG_RED
+pants_red PANTS_RED
 
 leg_armor00 METAL_RED
 leg_armor01 METAL_SILVER
 leg_armor03 METAL_GRAY
 leg_armor05 METAL_GREEN
 leg_armor04 LEGCHAIN_GRAY
-leg_armor02 LEGCHAIN_SILVER
+leg_armor02 LEGCHAIN_SILVER LAST_NORM
 
 # All items after this point cover up boots.
 skirt_blue SKIRT_BLUE SKIRT_OFS
