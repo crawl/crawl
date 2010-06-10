@@ -5522,6 +5522,15 @@ void melee_attack::mons_perform_attack_rounds()
             {
                 perceived_attack = perceived_attack || attacker_visible;
             }
+
+            if (attacker != defender &&
+                defender->atype() == ACT_PLAYER &&
+                (grid_distance(you.pos(), attacker->as_monster()->pos()) == 1
+                || attk.flavour == AF_REACH))
+            {
+                // Check for spiny mutation.
+                mons_do_spines();
+            }
         }
 
         if (check_unrand_effects())
@@ -5662,15 +5671,6 @@ void melee_attack::mons_perform_attack_rounds()
             && is_range_weapon(*weap))
         {
             set_ident_flags(*weap, ISFLAG_KNOW_CURSE);
-        }
-
-        if (!shield_blocked && attacker != defender &&
-            defender->atype() == ACT_PLAYER &&
-            (grid_distance(you.pos(), attacker->as_monster()->pos()) == 1
-            || attk.flavour == AF_REACH))
-        {
-            // Check for spiny mutation.
-            mons_do_spines();
         }
     }
 
