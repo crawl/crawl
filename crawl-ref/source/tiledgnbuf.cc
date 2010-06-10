@@ -53,7 +53,7 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
 {
     pack_background(x, y, cell);
 
-    const unsigned int fg_idx = cell.fg & TILE_FLAG_MASK;
+    const tileidx_t fg_idx = cell.fg & TILE_FLAG_MASK;
     const bool in_water = _in_water(cell);
 
     if (fg_idx >= TILEP_MCACHE_START)
@@ -341,8 +341,8 @@ void pack_waves(const coord_def &gc, packed_cell *cell)
 
 void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
 {
-    const unsigned int bg = cell.bg;
-    const unsigned int bg_idx = cell.bg & TILE_FLAG_MASK;
+    const tileidx_t bg = cell.bg;
+    const tileidx_t bg_idx = cell.bg & TILE_FLAG_MASK;
 
     if (bg_idx >= TILE_DNGN_WAX_WALL)
     {
@@ -396,9 +396,9 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
 
 void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
 {
-    const unsigned int fg = cell.fg;
-    const unsigned int bg = cell.bg;
-    const unsigned int fg_idx = cell.fg & TILE_FLAG_MASK;
+    const tileidx_t fg = cell.fg;
+    const tileidx_t bg = cell.bg;
+    const tileidx_t fg_idx = cell.fg & TILE_FLAG_MASK;
     const bool in_water = _in_water(cell);
 
     if (fg_idx && fg_idx <= TILE_MAIN_MAX)
@@ -511,7 +511,7 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
 
     if (fg & TILE_FLAG_MDAM_MASK)
     {
-        unsigned int mdam_flag = fg & TILE_FLAG_MDAM_MASK;
+        tileidx_t mdam_flag = fg & TILE_FLAG_MDAM_MASK;
         if (mdam_flag == TILE_FLAG_MDAM_LIGHT)
             m_buf_main.add(TILE_MDAM_LIGHTLY_DAMAGED, x, y);
         else if (mdam_flag == TILE_FLAG_MDAM_MOD)
@@ -526,7 +526,7 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
 
     if (fg & TILE_FLAG_DEMON)
     {
-        unsigned int demon_flag = fg & TILE_FLAG_DEMON;
+        tileidx_t demon_flag = fg & TILE_FLAG_DEMON;
         if (demon_flag == TILE_FLAG_DEMON_1)
             m_buf_main.add(TILE_DEMON_NUM1, x, y);
         else if (demon_flag == TILE_FLAG_DEMON_2)
