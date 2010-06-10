@@ -1588,80 +1588,50 @@ static int _rank_for_tier(const facet_def& facet, int tier)
     return (k);
 }
 
-static std::vector<demon_mutation_info> _select_monstrous_mutations()
+static bool _slot_is_unique(const mutation_type mut[],
+                            std::set<const facet_def *> facets_used)
 {
-    const int NUM_FACETS = 6;
-    const int NUM_BODY_FACETS = 3;
+    std::set<const facet_def *>::const_iterator iter;
+    equipment_type eq[ARRAYSZ(mut)];
 
-    std::vector<demon_mutation_info> ret;
-    std::set<mutation_type> mut_used;
-    std::set<equipment_type> eq_used;
-    int absfacet = 0;
-
-    facet_def facet;
-    body_facet_def body_facet;
-
-    for (int i = 0; i < NUM_BODY_FACETS; i++, absfacet++)
+    int k = 0;
+    // find the equipment slot(s) used by mut
+    for (unsigned i = 0; i < ARRAYSZ(_body_facets); i++)
     {
-        do
+        for (unsigned j = 0; j < ARRAYSZ(mut); j++)
         {
-            body_facet = RANDOM_ELEMENT(_body_facets);
+            if (_body_facets[i].mut == mut[j])
+                eq[k++] = _body_facets[i].eq;
         }
-        while (eq_used.find(body_facet.eq) != eq_used.end());
+    }
 
-        eq_used.insert(body_facet.eq);
+    if (k == 0)
+        return true;
 
-        for (unsigned j = 0; j < ARRAYSZ(_demon_facets); j++)
+    for (iter = facets_used.begin() ; iter != facets_used.end() ; iter++)
+    {
+        for (unsigned i = 0; i < ARRAYSZ(_body_facets); i++)
         {
-            if (_demon_facets[j].muts[0] == body_facet.mut)
+            if (_body_facets[i].mut == (*iter)->muts[0])
             {
-                mut_used.insert(_demon_facets[j].muts[0]);
-
-                ret.push_back(demon_mutation_info(body_facet.mut,
-                              _demon_facets[j].tiers[0], absfacet));
-                ret.push_back(demon_mutation_info(body_facet.mut,
-                              _demon_facets[j].tiers[1], absfacet));
-                ret.push_back(demon_mutation_info(body_facet.mut,
-                              _demon_facets[j].tiers[1], absfacet));
-
-                break;
+                for (unsigned j = 0; j < ARRAYSZ(eq); j++)
+                {
+                    if (_body_facets[i].eq == eq[j])
+                        return false;
+                }
             }
         }
     }
 
-    int i, tier;
-
-    for (i = 0, tier = 2; i < NUM_FACETS - NUM_BODY_FACETS;
-         i++, absfacet++, tier++)
-    {
-        do
-        {
-            facet = RANDOM_ELEMENT(_demon_facets);
-
-            // no body other body slot facets
-            for (unsigned j = 0; j < ARRAYSZ(_body_facets); j++)
-                if (_body_facets[j].mut == facet.muts[0])
-                    continue;
-        }
-        while (mut_used.find(facet.muts[0]) != mut_used.end()
-               && !_works_at_tier(facet, tier));
-
-        ret.push_back(demon_mutation_info(facet.muts[0], facet.tiers[0],
-                                          absfacet));
-        ret.push_back(demon_mutation_info(facet.muts[1], facet.tiers[1],
-                                          absfacet));
-        ret.push_back(demon_mutation_info(facet.muts[2], facet.tiers[2],
-                                          absfacet));
-    }
-
-    return ret;
+    return true;
 }
 
 static std::vector<demon_mutation_info> _select_ds_mutations()
 {
+    int NUM_BODY_SLOTS = 1;
     // 1 in 10 chance to create a monsterous set
-    if (one_chance_in(10))
-        return _select_monstrous_mutations();
+    if (true)
+        NUM_BODY_SLOTS = 3;
 
 try_again:
     std::vector<demon_mutation_info> ret;
@@ -1686,7 +1656,8 @@ try_again:
                 next_facet = &RANDOM_ELEMENT(_demon_facets);
             }
             while (!_works_at_tier(*next_facet, tier)
-                   || facets_used.find(next_facet) != facets_used.end());
+                   || facets_used.find(next_facet) != facets_used.end()
+                   || !_slot_is_unique(next_facet->muts, facets_used));
 
             facets_used.insert(next_facet);
 
@@ -1700,17 +1671,11 @@ try_again:
                 if (_is_covering(m))
                     ++scales;
 
-                if (m == MUT_SPIT_POISON
-                    || m == MUT_BREATHE_FLAMES)
-                {
+                if (i == 0 && (m == MUT_SPIT_POISON || m == MUT_BREATHE_FLAMES))
                     breath_weapons++;
-                }
 
-                if (m == MUT_COLD_RESISTANCE
-                    || m == MUT_THROW_FLAMES)
-                {
+                if (m == MUT_COLD_RESISTANCE || m == MUT_THROW_FLAMES)
                     elemental++;
-                }
 
                 if (m == MUT_CLAWS && i == 2
                     || m == MUT_HORNS && i == 0
@@ -1730,10 +1695,10 @@ try_again:
     if (scales > 3)
         goto try_again;
 
-    if (slots_lost != 1)
+    if (slots_lost != NUM_BODY_SLOTS)
         goto try_again;
 
-    if (breath_weapons > 3)
+    if (breath_weapons > 1)
         goto try_again;
 
     if (elemental > 1)
