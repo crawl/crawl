@@ -372,6 +372,7 @@ vanhel1 VANHEL
 
 maxwell MAXWELL
 lears_chain_mail LEARS_CHAIN_MAIL
+dragonarm_shimmer DRAGONARM_SHIMMER
 %end_ctg
 
 

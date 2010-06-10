@@ -333,6 +333,22 @@ VALUE:   1500
 BOOL:    tilerim, special, evil, nogen
 DESC_ID: It carries some of the powers of the arch-fiend Asmodeus.
 
+# Randomized properties, fixed appearance.
+# Reserved for the Enchantress.
+ENUM:    FAERIE
+NAME:    faerie dragon armour
+APPEAR:  faerie dragon armour
+OBJ:     OBJ_ARMOUR/ARM_MOTTLED_DRAGON_ARMOUR
+PLUS:    +3
+COLOUR:  ETC_JEWEL
+TILE:    urand_faerie
+TILE_EQ: dragonarm_shimmer
+BOOL:    nogen
+DESC:    Faerie dragons used to be a race of the same species as mottled ones.
+         Too bad, their vivid colours became their bane, as they alerted
+         potential prey. They are now extinct, and this prized relic is one of
+         last proofs they ever existed.
+
 ##################### End of old fixed arts.
 
 NAME:    long sword "Bloodbane"
