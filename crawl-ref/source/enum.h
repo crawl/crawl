@@ -2239,6 +2239,7 @@ enum monster_flag_type
                                       // article.
     MF_INTERLEVEL_FOLLOWER = 0x8000000,// will travel with the player regardless
                                        // of where the monster is at on the level
+    MF_DEMONIC_GUARDIAN = 0x10000000, // is a demonic_guardian
 };
 
 // Adding slots breaks saves. YHBW.
