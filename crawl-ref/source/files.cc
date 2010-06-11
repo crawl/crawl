@@ -1567,7 +1567,6 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
     else if (load_mode == LOAD_START_GAME)
     {
         env.markers.activate_all();
-        run_map_epilogues();
     }
 
     // Save the created/updated level out to disk:
