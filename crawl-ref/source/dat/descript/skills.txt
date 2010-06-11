@@ -126,7 +126,7 @@ Being skilled in a magical "school" makes it easier to learn and cast spells of 
 
 Translocations focus on spatial movement of beings or objects.
 %%%%
-Transmutation
+Transmutations
 
 Being skilled in a magical "school" makes it easier to learn and cast spells of this school. Many spells belong to a combination of several schools, in which case the average skill in these schools will decide on spellcasting success and power.
 
