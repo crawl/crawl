@@ -21,6 +21,10 @@ NAME: abyss_rune_dummy
 TAGS: abyss_rune dummy
 CHANCE: 10 : 70%
 
+NAME: abyss_exit_dummy
+TAGS: abyss_exit dummy
+CHANCE: 10 : 70%
+
 ###############################################################################
 NAME: abyss_furniture_001
 TAGS: abyss allow_dup
@@ -41,4 +45,14 @@ ww.ww
 ..O..
 ww.ww
 ww.ww
+ENDMAP
+
+###############################################################################
+# abyss exit vaults
+NAME: abyss_exit_001
+TAGS: abyss_exit allow_dup
+MAP
+l.l
+.O.
+l.l
 ENDMAP
