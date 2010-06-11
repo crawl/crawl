@@ -66,6 +66,7 @@ protected:
     std::vector<TextTag> m_tags[TAG_MAX];
 
     DungeonCellBuffer m_buf_dngn;
+    ShapeBuffer m_buf_flash;
 
     struct tile_overlay
     {

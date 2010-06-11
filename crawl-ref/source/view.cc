@@ -928,11 +928,14 @@ void viewwindow(bool monster_updates, bool show_updates)
         else
             _draw_los_backup(cell, gc, ep);
 
+        cell->flash_colour = BLACK;
+
         // Alter colour if flashing the characters vision.
         if (flash_colour)
         {
             cell->colour = you.see_cell(gc) ? real_colour(flash_colour)
                                             : DARKGREY;
+            cell->flash_colour = cell->colour;
         }
         else if (crawl_state.darken_range >= 0)
         {
