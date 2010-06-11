@@ -567,10 +567,9 @@ static bool vault_unforbidden(const map_def &map)
 
 static bool map_matches_layout_type(const map_def &map)
 {
-    if (env.level_layout_type.empty() || !map.has_tag_prefix("layout_"))
-        return (true);
-
-    return map.has_tag("layout_" + env.level_layout_type);
+    return (env.level_layout_type.empty()
+            || !map.has_tag_prefix("layout_")
+            || map.has_tag("layout_" + env.level_layout_type));
 }
 
 const map_def *find_map_by_name(const std::string &name)
@@ -689,26 +688,18 @@ bool map_selector::accept(const map_def &mapdef) const
     case PLACE:
         return (mapdef.is_minivault() == mini
                 && mapdef.place == place
-                && !mapdef.has_tag("layout")
-                && !mapdef.has_tag("place_unique")
                 && (!mapdef.has_tag("tutorial")
                     || crawl_state.game_is_tutorial())
-                && (!mapdef.has_tag_prefix("temple_")
-                    || mapdef.has_tag_prefix("uniq_altar_"))
                 && map_matches_layout_type(mapdef)
                 && vault_unforbidden(mapdef));
     case DEPTH:
         return (mapdef.is_minivault() == mini
                 && !mapdef.place.is_valid()
                 && mapdef.is_usable_in(place)
-                // Some tagged levels cannot be selected by depth. This is
-                // the only thing preventing Pandemonium demon vaults from
-                // showing up in the main dungeon.
+                // Some tagged levels cannot be selected as random
+                // maps in a specific depth:
                 && !mapdef.has_tag_suffix("entry")
-                && !mapdef.has_tag("pan")
                 && !mapdef.has_tag("unrand")
-                && !mapdef.has_tag("bazaar")
-                && !mapdef.has_tag("layout")
                 && !mapdef.has_tag("place_unique")
                 && !mapdef.has_tag("tutorial")
                 && (!mapdef.has_tag_prefix("temple_")
@@ -1140,7 +1131,7 @@ static void parse_maps(const std::string &s)
     extern FILE *yyin;
     yyin = dat;
 
-    size_t file_start = vdefs.size();
+    const size_t file_start = vdefs.size();
     yyparse();
     fclose(dat);
 
@@ -1161,7 +1152,6 @@ void read_maps()
     // Clean up cached environments.
     dlua.callfn("dgn_flush_map_environments", 0, 0);
     lc_loaded_maps.clear();
-
     sanity_check_maps();
 }
 
