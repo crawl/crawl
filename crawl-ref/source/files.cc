@@ -1538,10 +1538,9 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
         if (just_created_level)
             level_welcome_messages();
 
-        // Activate markers that want activating, but only when
-        // entering a new level in an existing game. If we're starting
-        // a new game, or reloading an existing game,
-        // markers are activated in acr.cc.
+        // Activate markers that want activating, but only when entering
+        // a new level. If we're reloading an existing game, markers are
+        // activated in main.cc.
         env.markers.activate_all();
 
         // Centaurs have difficulty with stairs
@@ -1561,10 +1560,15 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
             you.time_taken = timeval;
             handle_monsters();
         }
-    }
 
-    if (load_mode == LOAD_ENTER_LEVEL && just_created_level)
+        if (just_created_level)
+            run_map_epilogues();
+    }
+    else if (load_mode == LOAD_START_GAME)
+    {
+        env.markers.activate_all();
         run_map_epilogues();
+    }
 
     // Save the created/updated level out to disk:
     if (make_changes)
