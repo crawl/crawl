@@ -218,15 +218,22 @@ static void _abyss_create_rooms(const map_mask &abyss_genlevel_mask,
     }
 }
 
-static bool _abyss_place_rune_vault(const map_mask &abyss_genlevel_mask)
+static bool _abyss_place_vault_tagged(const map_mask &abyss_genlevel_mask,
+                                      const std::string &tag,
+                                      int rune_subst = -1)
 {
-    const map_def *map = random_map_for_tag("abyss_rune");
+    const map_def *map = random_map_for_tag(tag);
     if (map)
     {
         unwind_vault_placement_mask vaultmask(&abyss_genlevel_mask);
-        return (dgn_place_map(map, false, false));
+        return (dgn_place_map(map, false, false, INVALID_COORD, rune_subst));
     }
     return (false);
+}
+
+static bool _abyss_place_rune_vault(const map_mask &abyss_genlevel_mask)
+{
+    return _abyss_place_vault_tagged(abyss_genlevel_mask, "abyss_rune");
 }
 
 static bool _abyss_place_rune(const map_mask &abyss_genlevel_mask,
@@ -380,7 +387,8 @@ static int _abyss_exit_chance()
 static bool _abyss_check_place_feat(coord_def p,
                                     const int feat_chance,
                                     int *feats_wanted,
-                                    dungeon_feature_type which_feat)
+                                    dungeon_feature_type which_feat,
+                                    const map_mask &abyss_genlevel_mask)
 {
     if (!which_feat)
         return (false);
@@ -396,7 +404,15 @@ static bool _abyss_check_place_feat(coord_def p,
     if (place_feat || (feats_wanted && *feats_wanted > 0))
     {
         dprf("Placing abyss feature: %s.", dungeon_feature_name(which_feat));
-        grd(p) = which_feat;
+
+        // When placing Abyss exits, try to use a vault if we have one.
+        if (which_feat != DNGN_EXIT_ABYSS
+            || !_abyss_place_vault_tagged(abyss_genlevel_mask, "abyss_exit",
+                                          which_feat))
+        {
+            grd(p) = which_feat;
+        }
+
         if (feats_wanted)
             --*feats_wanted;
         return (true);
@@ -456,12 +472,16 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask)
             grd(p) = terrain_elements[random2(n_terrain_elements)];
 
         // Place abyss exits, stone arches, and altars to liven up the scene:
-        (_abyss_check_place_feat(p, exit_chance, &exits_wanted, DNGN_EXIT_ABYSS)
+        (_abyss_check_place_feat(p, exit_chance, &exits_wanted,
+                                 DNGN_EXIT_ABYSS,
+                                 abyss_genlevel_mask)
          ||
          _abyss_check_place_feat(p, altar_chance, &altars_wanted,
-                                 _abyss_pick_altar())
+                                 _abyss_pick_altar(),
+                                 abyss_genlevel_mask)
          ||
-         _abyss_check_place_feat(p, 10000, NULL, DNGN_STONE_ARCH));
+         _abyss_check_place_feat(p, 10000, NULL, DNGN_STONE_ARCH,
+                                 abyss_genlevel_mask));
     }
 }
 

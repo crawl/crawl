@@ -4563,6 +4563,10 @@ static bool _build_vault_impl(int level_number, const map_def *vault,
 
     const int gluggy = vault_main(place, vault, check_collisions);
 
+    dprf("Map: %s; placed ok: %s; place: (%d,%d), size: (%d,%d)",
+         vault->name.c_str(), gluggy != MAP_NONE? "yes" : "no",
+         place.pos.x, place.pos.y, place.size.x, place.size.y);
+
     if (gluggy == MAP_NONE)
         return (false);
 
