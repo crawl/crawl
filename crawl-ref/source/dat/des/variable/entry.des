@@ -3046,8 +3046,8 @@ KMONS:   E = merfolk ; nothing
 KMONS:   F = human name:halfling n_rpl n_des tile:halfling ; nothing
 MARKER:  F = lua:MonPropsMarker:new { description="This is a degenerate human, " ..\
                "both mentally and physically similar to a child of perhaps " ..\
-               "ten, perhaps thelve years of age, yet looking older. Its looks " ..\
-               "mischievious, as if prone to no good.\n" ..\
+               "ten, perhaps twelve years of age, yet looking older. It looks " ..\
+               "mischievous, as if prone to no good.\n" ..\
                "It definitely deserves an axe to the head." }
 KMONS:   G = kobold ; nothing
 KMONS:   H = spriggan ; nothing
