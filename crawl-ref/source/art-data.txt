@@ -3,7 +3,7 @@
 # art-data.h, and also updates the enumeration and NO_UNRANDARTS in
 # artefact.h.  C/C++ functions which give unrandarts non-standard
 # behaviour are in art-func.h; util/art-data.pl scans art-func.h and
-# puts the function names found into art-data.h
+# puts the function names found into art-data.h.
 #
 # Each artefact definition is separated by one or more blank lines.
 #
@@ -333,7 +333,7 @@ VALUE:   1500
 BOOL:    tilerim, special, evil, nogen
 DESC_ID: It carries some of the powers of the arch-fiend Asmodeus.
 
-# Randomized properties, fixed appearance.
+# Randomised properties, fixed appearance.
 # Reserved for the Enchantress.
 ENUM:    FAERIE
 NAME:    faerie dragon armour
@@ -347,7 +347,7 @@ BOOL:    nogen
 DESC:    Faerie dragons used to be a race of the same species as mottled ones.
          Too bad, their vivid colours became their bane, as they alerted
          potential prey. They are now extinct, and this prized relic is one of
-         last proofs they ever existed.
+         the last proofs they ever existed.
 
 ##################### End of old fixed arts.
 
