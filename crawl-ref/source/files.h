@@ -60,7 +60,8 @@ std::string get_path_relative_to(const std::string &referencefile,
 std::string catpath(const std::string &first, const std::string &second);
 std::string canonicalise_file_separator(const std::string &path);
 
-bool check_dir(const std::string &what, std::string &dir, bool silent = false);
+bool check_mkdir(const std::string &what, std::string *dir,
+                 bool silent = false);
 
 std::vector<player_save_info> find_saved_characters();
 
@@ -74,6 +75,7 @@ std::string get_savedir_filename(const std::string &pre,
                                  const std::string &ext,
                                  bool suppress_uid = false);
 std::string get_savedir_path(const std::string &shortpath);
+std::string savedir_versioned_path(const std::string &subdirs = "");
 std::string get_prefs_filename();
 std::string change_file_extension(const std::string &file,
                                   const std::string &ext);

@@ -697,26 +697,37 @@ std::string datafile_path(std::string basename,
     return ("");
 }
 
-bool check_dir(const std::string &whatdir, std::string &dir, bool silent)
+// Checks if directory 'dir' exists and tries to create it if it
+// doesn't exist, modifying 'dir' to its canonical form.
+//
+// If given an empty 'dir', returns true without modifying 'dir' or
+// performing any other checks.
+//
+// Otherwise, returns true if the directory already exists or was just
+// created. 'dir' will be modified to a canonical representation,
+// guaranteed to have the file separator appended to it, and with any
+// / and \ separators replaced with the one true FILE_SEPARATOR.
+//
+bool check_mkdir(const std::string &whatdir, std::string *dir, bool silent)
 {
-    if (dir.empty())
+    if (dir->empty())
         return (true);
 
     const std::string sep(1, FILE_SEPARATOR);
 
-    dir = replace_all_of(dir, "/", sep);
-    dir = replace_all_of(dir, "\\", sep);
+    *dir = replace_all_of(*dir, "/", sep);
+    *dir = replace_all_of(*dir, "\\", sep);
 
     // Suffix the separator if necessary
-    if (dir[dir.length() - 1] != FILE_SEPARATOR)
-        dir += FILE_SEPARATOR;
+    if ((*dir)[dir->length() - 1] != FILE_SEPARATOR)
+        *dir += FILE_SEPARATOR;
 
-    if (!dir_exists(dir) && !_create_dirs(dir))
+    if (!dir_exists(*dir) && !_create_dirs(*dir))
     {
         if (!silent)
             fprintf(stderr, "%s \"%s\" does not exist "
                     "and I can't create it.\n",
-                    whatdir.c_str(), dir.c_str());
+                    whatdir.c_str(), dir->c_str());
         return (false);
     }
 
@@ -735,6 +746,21 @@ std::string get_savedir_path(const std::string &shortpath)
 #else
     return (file);
 #endif
+}
+
+// Given a simple (relative) path, returns the path relative to the save
+// directory and subdirectory named with the game version. This is useful
+// when writing cache files and similar output that should not be shared
+// between different game versions.
+std::string savedir_versioned_path(const std::string &shortpath)
+{
+#ifdef SHORT_FILE_NAMES
+    const std::string versioned_dir = get_savedir_path();
+#else
+    const std::string versioned_dir =
+        get_savedir_path("cache." + Version::Long());
+#endif
+    return catpath(versioned_dir, shortpath);
 }
 
 #ifdef USE_TILE
