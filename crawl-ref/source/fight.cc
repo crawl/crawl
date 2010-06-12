@@ -5530,6 +5530,10 @@ void melee_attack::mons_perform_attack_rounds()
             {
                 // Check for spiny mutation.
                 mons_do_spines();
+
+                // Spines can kill!
+                if (!attacker->alive())
+                    break;
             }
         }
 
