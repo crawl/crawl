@@ -1356,7 +1356,7 @@ void end_game(scorefile_entry &se)
                 && se.get_death_type() != KILLED_BY_LAVA
                 && !you.is_undead)
             {
-                mpr("Your body raises from the dead as a mindless zombie.",
+                mpr("Your body rises from the dead as a mindless zombie.",
                     MSGCH_GOD);
             }
             // No message if the corpse is lost.
