@@ -1338,12 +1338,17 @@ void end_game(scorefile_entry &se)
             break;
 
         case GOD_KIKUBAAQUDGHA:
-            if (you.is_undead && you.attribute[ATTR_TRANSFORMATION] != TRAN_LICH)
+            if (you.is_undead
+                && you.attribute[ATTR_TRANSFORMATION] != TRAN_LICH)
+            {
                 simple_god_message(" rasps: \"You have failed me!"
                                    " Welcome... oblivion!\"");
+            }
             else
+            {
                 simple_god_message(" rasps: \"You have failed me!"
                                    " Welcome... death!\"");
+            }
             break;
 
         case GOD_YREDELEMNUL:
