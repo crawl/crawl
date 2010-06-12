@@ -1813,6 +1813,23 @@ void define_monster(monsters *mons)
     }
 }
 
+static const char *ugly_colour_names[] = {
+    "red", "brown", "green", "cyan", "purple", "white"
+};
+
+std::string ugly_thing_colour_name(const monsters *mon)
+{
+    int colour_offset = -1;
+
+    if (mon->type == MONS_UGLY_THING || mon->type == MONS_VERY_UGLY_THING)
+        colour_offset = ugly_thing_colour_offset(mon->colour);
+
+    if (colour_offset == -1)
+        return ("buggy");
+
+    return (ugly_colour_names[colour_offset]);
+}
+
 static const unsigned char ugly_colour_values[] = {
     RED, BROWN, GREEN, CYAN, MAGENTA, LIGHTGREY
 };
@@ -1820,6 +1837,16 @@ static const unsigned char ugly_colour_values[] = {
 unsigned char ugly_thing_random_colour()
 {
     return (RANDOM_ELEMENT(ugly_colour_values));
+}
+
+int str_to_ugly_thing_colour(const std::string &s)
+{
+    COMPILE_CHECK(ARRAYSZ(ugly_colour_values) == ARRAYSZ(ugly_colour_names),
+                  ugly_thing_colour_size_check);
+    for (int i = 0, size = ARRAYSZ(ugly_colour_values); i < size; ++i)
+        if (s == ugly_colour_names[i])
+            return ugly_colour_values[i];
+    return (BLACK);
 }
 
 int ugly_thing_colour_offset(const unsigned char colour)

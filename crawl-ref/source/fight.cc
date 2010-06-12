@@ -4636,10 +4636,11 @@ void melee_attack::mons_do_napalm()
             napalm_player(random2avg(7, 3) + 1);
         else
         {
-            napalm_monster(defender->as_monster(),
-                           attacker->as_monster()->friendly() ?
-                           KC_FRIENDLY : KC_OTHER,
-                           std::min(4, 1 + random2(attacker->get_experience_level())/2));
+            napalm_monster(
+                defender->as_monster(),
+                attacker->as_monster()->friendly() ?
+                KC_FRIENDLY : KC_OTHER,
+                std::min(4, 1 + random2(attacker->get_experience_level())/2));
         }
     }
 }
@@ -5327,7 +5328,7 @@ void melee_attack::mons_perform_attack_rounds()
         init_attack();
 
         mon_attack_def attk = mons_attack_spec(attacker->as_monster(),
-                                                     attack_number);
+                                               attack_number);
         if (attk.type == AT_WEAP_ONLY)
         {
             int weap = attacker->as_monster()->inv[MSLOT_WEAPON];

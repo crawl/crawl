@@ -2022,23 +2022,6 @@ bool monsters::has_base_name() const
     return (!mname.empty() && !ghost.get());
 }
 
-static const char *ugly_colour_names[] = {
-    "red", "brown", "green", "cyan", "purple", "white"
-};
-
-static std::string _ugly_thing_colour_name(const monsters *mon)
-{
-    int colour_offset = -1;
-
-    if (mon->type == MONS_UGLY_THING || mon->type == MONS_VERY_UGLY_THING)
-        colour_offset = ugly_thing_colour_offset(mon->colour);
-
-    if (colour_offset == -1)
-        return ("buggy");
-
-    return (ugly_colour_names[colour_offset]);
-}
-
 static std::string _invalid_monster_str(monster_type type)
 {
     std::string str = "INVALID MONSTER ";
@@ -2225,7 +2208,7 @@ static std::string _str_monam(const monsters& mon, description_level_type desc,
     {
     case MONS_UGLY_THING:
     case MONS_VERY_UGLY_THING:
-        result += _ugly_thing_colour_name(&mon) + " ";
+        result += ugly_thing_colour_name(&mon) + " ";
         break;
 
     case MONS_SPECTRAL_THING:
