@@ -950,13 +950,18 @@ void reset_map_parser()
 
 static bool checked_des_index_dir = false;
 
+static std::string _des_cache_dir(const std::string &relpath = "")
+{
+    return catpath(savedir_versioned_path("des"), relpath);
+}
+
 static void check_des_index_dir()
 {
     if (checked_des_index_dir)
         return;
 
-    std::string desdir = get_savedir_path("des");
-    if (!check_dir("Data file cache", desdir, true))
+    std::string desdir = _des_cache_dir();
+    if (!check_mkdir("Data file cache", &desdir, true))
         end(1, true, "Can't create data file cache: %s", desdir.c_str());
 
     checked_des_index_dir = true;
@@ -967,7 +972,7 @@ std::string get_descache_path(const std::string &file,
 {
     const std::string basename =
         change_file_extension(get_base_filename(file), ext);
-    return get_savedir_path("des/" + basename);
+    return _des_cache_dir(basename);
 }
 
 static bool verify_file_version(const std::string &file)

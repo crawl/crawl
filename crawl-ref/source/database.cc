@@ -57,7 +57,7 @@ static void _store_text_db(const std::string &in, const std::string &out);
 
 static TextDB AllDBs[] =
 {
-    TextDB( "db/descriptions",
+    TextDB( "descriptions",
             "descript/features.txt",
             "descript/items.txt",
             "descript/unident.txt",
@@ -70,12 +70,12 @@ static TextDB AllDBs[] =
             "descript/cards.txt",
             NULL),
 
-    TextDB( "db/gamestart",
+    TextDB( "gamestart",
             "descript/species.txt",
             "descript/backgrounds.txt",
             NULL),
 
-    TextDB( "db/randart",
+    TextDB( "randart",
             "database/randname.txt",
             "database/rand_wpn.txt", // mostly weapons
             "database/rand_arm.txt", // mostly armour
@@ -85,7 +85,7 @@ static TextDB AllDBs[] =
             "database/monname.txt",  // orcish names for Beogh to choose from
             NULL),
 
-    TextDB( "db/speak",
+    TextDB( "speak",
             "database/monspeak.txt", // monster speech
             "database/monspell.txt", // monster spellcasting speech
             "database/wpnnoise.txt", // noisy weapon speech
@@ -93,24 +93,24 @@ static TextDB AllDBs[] =
             "database/godspeak.txt", // god speech
             NULL),
 
-    TextDB( "db/shout",
+    TextDB( "shout",
             "database/shout.txt",
             "database/insult.txt",   // imp/demon taunts, again
             NULL),
 
-    TextDB( "db/misc",
+    TextDB( "misc",
             "database/miscname.txt", // names for miscellaneous things
             NULL),
 
-    TextDB( "db/quotes",
+    TextDB( "quotes",
             "database/quotes.txt",   // quotes for items and monsters
             NULL),
 
-    TextDB( "db/help",               // database for outsourced help texts
+    TextDB( "help",               // database for outsourced help texts
             "database/help.txt",
             NULL),
 
-    TextDB( "db/FAQ",                // database for Frequently Asked Questions
+    TextDB( "FAQ",                // database for Frequently Asked Questions
             "database/FAQ.txt",
             NULL),
 };
@@ -124,6 +124,11 @@ static TextDB& MiscDB        = AllDBs[5];
 static TextDB& QuotesDB      = AllDBs[6];
 static TextDB& HelpDB        = AllDBs[7];
 static TextDB& FAQDB         = AllDBs[8];
+
+static std::string _db_cache_path(const std::string &db)
+{
+    return savedir_versioned_path("db/" + db);
+}
 
 // ----------------------------------------------------------------------
 // TextDB
@@ -142,7 +147,8 @@ TextDB::TextDB(const char* db_name, ...)
         if (input_file == 0)
             break;
 
-        ASSERT( strstr(input_file, ".txt") != 0 );      // probably forgot the terminating 0
+        // probably forgot the terminating 0
+        ASSERT( strstr(input_file, ".txt") != 0 );
         _input_files.push_back(input_file);
     }
     va_end(args);
@@ -153,7 +159,7 @@ void TextDB::init()
     if (_needs_update())
         _regenerate_db();
 
-    const std::string full_db_path = get_savedir_path(_db_name);
+    const std::string full_db_path = _db_cache_path(_db_name);
     _db = dbm_open(full_db_path.c_str(), O_RDONLY, 0660);
 
     if (_db == NULL)
@@ -171,7 +177,7 @@ void TextDB::shutdown()
 
 bool TextDB::_needs_update() const
 {
-    std::string full_db_path = get_savedir_path(std::string(_db_name) + ".db");
+    std::string full_db_path = _db_cache_path(std::string(_db_name) + ".db");
     for (unsigned int i = 0; i < _input_files.size(); i++)
     {
         std::string full_input_path = datafile_path(_input_files[i], true);
@@ -183,12 +189,12 @@ bool TextDB::_needs_update() const
 
 void TextDB::_regenerate_db()
 {
-    std::string db_path = get_savedir_path(_db_name);
+    std::string db_path = _db_cache_path(_db_name);
     std::string full_db_path = db_path + ".db";
 
     {
         std::string output_dir = get_parent_directory(db_path);
-        if (!check_dir("DB directory", output_dir))
+        if (!check_mkdir("DB directory", &output_dir))
             end(1);
     }
 
