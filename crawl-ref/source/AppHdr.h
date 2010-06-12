@@ -233,6 +233,11 @@
     //
     #define DGL_CLEAR_SCREEN "\033[2J"
 
+    // Create .des and database cache files in a directory named with the
+    // game version so that multiple save-compatible Crawl versions can
+    // share the same savedir.
+    #define DGL_VERSIONED_CACHE_DIR
+
     #ifndef USE_MORE_SECURE_SEED
     #error DGAMELAUNCH builds should define USE_MORE_SECURE_SEED
     #endif

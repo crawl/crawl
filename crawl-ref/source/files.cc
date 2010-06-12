@@ -754,11 +754,11 @@ std::string get_savedir_path(const std::string &shortpath)
 // between different game versions.
 std::string savedir_versioned_path(const std::string &shortpath)
 {
-#ifdef SHORT_FILE_NAMES
-    const std::string versioned_dir = get_savedir_path();
-#else
+#ifdef DGL_VERSIONED_CACHE_DIR
     const std::string versioned_dir =
         get_savedir_path("cache." + Version::Long());
+#else
+    const std::string versioned_dir = get_savedir();
 #endif
     return catpath(versioned_dir, shortpath);
 }
