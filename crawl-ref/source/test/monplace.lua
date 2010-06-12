@@ -8,10 +8,15 @@ local function place_monster_on(x, y, monster, feature)
 end
 
 local function assert_place_monster_on(monster, feature)
+  feature = feature or 'floor'
   dgn.dismiss_monsters()
   crawl.message("Placing " .. monster .. " on " .. feature)
   assert(place_monster_on(place.x, place.y, monster, feature),
          "Could not place monster " .. monster .. " on " .. feature)
+
+  local realname = dgn.mons_at(place.x, place.y).name
+  assert(realname == monster,
+         "Monster placed is '" .. realname .. "', expected '" .. monster .. "'")
 end
 
 assert_place_monster_on("quokka", "floor")
@@ -22,3 +27,5 @@ assert_place_monster_on("rat", "shallow water")
 -- skulls and lava...
 assert_place_monster_on("flying skull", "lava")
 assert_place_monster_on("rock worm", "rock_wall")
+assert_place_monster_on("cyan ugly thing")
+assert_place_monster_on("purple very ugly thing")

@@ -3373,21 +3373,34 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             name = replace_all_of(name, "_", " ");
             mspec.monname = name;
 
-            if (strip_tag(mon_str, "name_suffix") || strip_tag(mon_str, "n_suf"))
+            if (strip_tag(mon_str, "name_suffix")
+                || strip_tag(mon_str, "n_suf"))
+            {
                 mspec.extra_monster_flags |= MF_NAME_SUFFIX;
-            else if (strip_tag(mon_str, "name_adjective") || strip_tag(mon_str, "n_adj"))
+            }
+            else if (strip_tag(mon_str, "name_adjective")
+                     || strip_tag(mon_str, "n_adj"))
+            {
                 mspec.extra_monster_flags |= MF_NAME_ADJECTIVE;
-            else if (strip_tag(mon_str, "name_replace") || strip_tag(mon_str, "n_rpl"))
+            }
+            else if (strip_tag(mon_str, "name_replace")
+                     || strip_tag(mon_str, "n_rpl"))
+            {
                 mspec.extra_monster_flags |= MF_NAME_REPLACE;
+            }
 
             // We should be able to combine this with name_replace.
-            if (strip_tag(mon_str, "name_descriptor") || strip_tag(mon_str, "n_des"))
+            if (strip_tag(mon_str, "name_descriptor")
+                || strip_tag(mon_str, "n_des"))
+            {
                 mspec.extra_monster_flags |= MF_NAME_DESCRIPTOR;
+            }
             // Reasoning for this setting both flags: it does nothing with the
             // description unless NAME_DESCRIPTOR is also set; thus, you end up
             // with bloated vault description lines akin to: "name:blah_blah
             // name_replace name_descrpitor name_definite".
-            if (strip_tag(mon_str, "name_definite") || strip_tag(mon_str, "n_the"))
+            if (strip_tag(mon_str, "name_definite")
+                || strip_tag(mon_str, "n_the"))
             {
                 mspec.extra_monster_flags |= MF_NAME_DEFINITE;
                 mspec.extra_monster_flags |= MF_NAME_DESCRIPTOR;
@@ -3432,6 +3445,8 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             mspec.mid     = nspec.mid;
             mspec.monbase = nspec.monbase;
             mspec.number  = nspec.number;
+            if (nspec.colour && !mspec.colour)
+                mspec.colour = nspec.colour;
         }
 
         if (mspec.items.size() > 0)
@@ -3752,6 +3767,20 @@ mons_spec mons_list::mons_by_name(std::string name) const
 
     if (ends_with(name, " slime creature"))
         return (get_slime_spec(name));
+
+    if (name.find(" ugly thing") != std::string::npos)
+    {
+        const std::string::size_type wordend = name.find(' ');
+        const std::string first_word = name.substr(0, wordend);
+
+        const int colour = str_to_ugly_thing_colour(first_word);
+        if (colour)
+        {
+            mons_spec spec = mons_by_name(name.substr(wordend + 1));
+            spec.colour = colour;
+            return (spec);
+        }
+    }
 
     mons_spec spec;
     get_zombie_type(name, spec);

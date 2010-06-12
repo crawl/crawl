@@ -380,7 +380,9 @@ bool monster_shover(const monsters *m);
 bool monster_senior(const monsters *first, const monsters *second,
                     bool fleeing = false);
 monster_type draco_subspecies(const monsters *mon);
+std::string ugly_thing_colour_name(const monsters *mon);
 unsigned char ugly_thing_random_colour();
+int str_to_ugly_thing_colour(const std::string &s);
 unsigned char random_monster_colour();
 int ugly_thing_colour_offset(const unsigned char colour);
 std::string  draconian_colour_name(monster_type mon_type);
