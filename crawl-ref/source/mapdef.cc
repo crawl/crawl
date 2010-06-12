@@ -2090,6 +2090,24 @@ void map_def::read_full(reader& inf)
     epilogue.read(inf);
 }
 
+void map_def::strip()
+{
+    if (index_only)
+        return;
+
+    index_only = true;
+    map.clear();
+    mons.clear();
+    items.clear();
+    random_mons.clear();
+    prelude.clear();
+    mapchunk.clear();
+    main.clear();
+    validate.clear();
+    veto.clear();
+    epilogue.clear();
+}
+
 void map_def::load()
 {
     if (!index_only)

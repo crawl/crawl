@@ -394,6 +394,9 @@ bool builder(int level_number, int level_type, bool enable_random_maps)
             env.level_uniq_map_tags.clear();
             _dgn_map_colour_fixup();
 
+            // Discard any Lua chunks we loaded.
+            strip_all_maps();
+
             return (true);
         }
 
