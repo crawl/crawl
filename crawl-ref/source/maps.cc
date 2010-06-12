@@ -581,6 +581,14 @@ const map_def *find_map_by_name(const std::string &name)
     return (NULL);
 }
 
+// Discards Lua code loaded by all maps to reduce memory use. If any stripped
+// map is reused, its data will be reloaded from the .dsc
+void strip_all_maps()
+{
+    for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
+        vdefs[i].strip();
+}
+
 std::vector<std::string> find_map_matches(const std::string &name)
 {
     std::vector<std::string> matches;
@@ -1093,7 +1101,11 @@ static void write_map_index(const std::string &filebase, size_t vs, size_t ve)
     marshallLong(outf, MAP_CACHE_VERSION);
     marshallShort(outf, ve > vs? ve - vs : 0);
     for (size_t i = vs; i < ve; ++i)
+    {
         vdefs[i].write_index(outf);
+        vdefs[i].place_loaded_from.clear();
+        vdefs[i].strip();
+    }
     fclose(fp);
 }
 
@@ -1153,6 +1165,7 @@ void read_maps()
     dlua.callfn("dgn_flush_map_environments", 0, 0);
     lc_loaded_maps.clear();
     sanity_check_maps();
+    dlua.gc();
 }
 
 void add_parsed_map( const map_def &md )

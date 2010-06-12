@@ -111,6 +111,11 @@ void CLua::getregistry(const char *name)
     _getregistry(state(), name);
 }
 
+void CLua::gc()
+{
+    lua_gc(state(), LUA_GCCOLLECT, 0);
+}
+
 void CLua::save(const char *file)
 {
     if (!_state)

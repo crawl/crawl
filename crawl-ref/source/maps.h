@@ -32,6 +32,7 @@ void fit_region_into_map_bounds(coord_def &pos, const coord_def &size,
                                 int margin = 0);
 
 const map_def *map_by_index(int index);
+void strip_all_maps();
 int map_count();
 int map_count_for_tag(const std::string &tag, bool check_depth = false);
 

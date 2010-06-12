@@ -887,6 +887,7 @@ public:
     void reinit();
 
     void load();
+    void strip();
 
     bool in_map(const coord_def &p) const;
 

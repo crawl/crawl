@@ -108,6 +108,7 @@ public:
     }
 
     void save(const char *filename);
+    void gc();
 
     void setglobal(const char *name);
     void getglobal(const char *name);
