@@ -982,8 +982,11 @@ bool backlight_monsters(coord_def where, int pow, int garbage)
         return (false);
 
     // Already glowing.
-    if (mons_class_flag(monster->type, M_GLOWS))
+    if (mons_class_flag(monster->type, M_GLOWS_LIGHT)
+        || mons_class_flag(monster->type, M_GLOWS_RADIATION))
+    {
         return (false);
+    }
 
     mon_enchant bklt = monster->get_ench(ENCH_CORONA);
     const int lvl = bklt.degree;
