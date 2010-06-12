@@ -4108,7 +4108,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_SUN_DEMON, '2', YELLOW, "sun demon",
-    M_SENSE_INVIS,
+    M_SENSE_INVIS | M_GLOWS,
     MR_RES_ELEC | MR_RES_POISON | MR_VUL_COLD | MR_RES_HELLFIRE,
     0, 14, MONS_SUN_DEMON, MONS_SUN_DEMON, MH_DEMONIC, -6,
     { {AT_HIT, AF_FIRE, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
