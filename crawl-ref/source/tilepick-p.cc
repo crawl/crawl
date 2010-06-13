@@ -115,7 +115,6 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_BLESSED_DOUBLE_SWORD: return TILEP_HAND1_DOUBLE_SWORD;
     case WPN_BLESSED_TRIPLE_SWORD: return TILEP_HAND1_TRIPLE_SWORD;
 
-
     // Axe
     case WPN_HAND_AXE:         return TILEP_HAND1_HAND_AXE;
     case WPN_BATTLEAXE:        return TILEP_HAND1_BATTLEAXE;
@@ -129,11 +128,11 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_HALBERD:       return TILEP_HAND1_HALBERD;
     case WPN_GLAIVE:        return TILEP_HAND1_GLAIVE;
     case WPN_QUARTERSTAFF:  return TILEP_HAND1_QUARTERSTAFF1;
+    case WPN_LAJATANG:      return TILEP_HAND1_DIRE_LAJATANG;
     case WPN_SCYTHE:        return TILEP_HAND1_SCYTHE;
     case WPN_HAMMER:        return TILEP_HAND1_HAMMER;
-    case WPN_DEMON_TRIDENT: return TILEP_HAND1_DEMON_TRIDENT;
     case WPN_TRIDENT:       return TILEP_HAND1_TRIDENT2;
-    case WPN_LAJATANG:      return TILEP_HAND1_DIRE_LAJATANG;;
+    case WPN_DEMON_TRIDENT: return TILEP_HAND1_DEMON_TRIDENT;
 
     // Ranged
     case WPN_SLING:         return TILEP_HAND1_SLING;
