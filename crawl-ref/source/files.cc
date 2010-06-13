@@ -32,6 +32,7 @@
 
 #include "externs.h"
 
+#include "abyss.h"
 #include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
@@ -1516,7 +1517,7 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
                                    old_level.branch, stair_taken);
         }
         else
-            you.moveto(coord_def(45, 35)); // FIXME: should be abyss_center
+            you.moveto(ABYSS_CENTRE);
 
         // This should fix the "monster occurring under the player" bug.
         if (monsters* mon = monster_at(you.pos()))

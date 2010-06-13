@@ -53,7 +53,6 @@
 #include "view.h"
 #include "xom.h"
 
-const coord_def ABYSS_CENTRE(GXM / 2, GYM / 2);
 const int ABYSSAL_RUNE_MAX_ROLL = 200;
 
 // If not_seen is true, don't place the feature where it can be seen from
