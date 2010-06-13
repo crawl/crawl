@@ -200,6 +200,7 @@ static void _update_replay_state();
 
 static void _show_commandline_options_help();
 static void _wanderer_startup_message();
+static void _announce_goal_message();
 static void _god_greeting_message(bool game_start);
 static void _take_starting_note();
 static void _startup_hints_mode();
@@ -274,10 +275,10 @@ int main(int argc, char *argv[])
 
     if (!crawl_state.game_is_tutorial())
     {
-        msg::stream << "Welcome" << (game_start? "" : " back") << ", "
+        msg::stream << "<yellow>Welcome" << (game_start? "" : " back") << ", "
                     << you.your_name << " the "
                     << species_name(you.species)
-                    << " " << you.class_name << "."
+                    << " " << you.class_name << ".</yellow>"
                     << std::endl;
     }
 
@@ -291,6 +292,9 @@ int main(int argc, char *argv[])
 
     if (game_start && you.char_class == JOB_WANDERER)
         _wanderer_startup_message();
+
+    if (!crawl_state.game_is_tutorial() and game_start)
+       _announce_goal_message();
 
     _god_greeting_message(game_start);
 
@@ -383,6 +387,36 @@ static void _wanderer_startup_message()
         // the player a message to warn them (and a reason why). - bwr
         mpr("You wake up in a daze, and can't recall much.");
     }
+}
+
+// A one-liner upon game start to mention the orb.
+static void _announce_goal_message()
+{
+    std::string msg;
+    switch (random2(5))
+    {
+    case 0:
+        msg = "Will you prevail where others failed? "
+              "Will you get the Orb of Zot?";
+        break;
+    case 1:
+        msg = "The bosom of this dungeon contains the most "
+              "powerful artefact, the Orb of Zot.";
+        break;
+    case 2:
+        msg = "Will you be the one to retrieve the fabulous "
+              "Orb of Zot from the depths?";
+        break;
+    case 3:
+        msg = "The destiny of this world depends on the Orb "
+              "of Zot. Go down and get it!";
+        break;
+    case 4:
+        msg = "They say that the Orb of Zot exists deep, deep "
+              "down but nobody ever got it.";
+        break;
+    }
+    mprf(MSGCH_PLAIN,"<yellow>%s</yellow>",msg.c_str());
 }
 
 static void _god_greeting_message(bool game_start)
