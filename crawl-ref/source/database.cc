@@ -199,13 +199,16 @@ void TextDB::_regenerate_db()
     }
 
     file_lock lock(db_path + ".lk", "wb");
-    unlink( full_db_path.c_str() );
+#ifndef DGL_REWRITE_PROTECT_DB_FILES
+    unlink(full_db_path.c_str());
+#endif
 
     for (unsigned int i = 0; i < _input_files.size(); i++)
     {
         std::string full_input_path = datafile_path(_input_files[i], true);
         _store_text_db(full_input_path, db_path);
     }
+    file_touch(full_db_path);
 
     DO_CHMOD_PRIVATE(full_db_path.c_str());
 }

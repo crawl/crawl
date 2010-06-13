@@ -26,6 +26,21 @@
 // Invalid heightmap height.
 static const int INVALID_HEIGHT = -31999;
 
+// Exception thrown when a map cannot be loaded from its .dsc file
+// because the .dsc file has changed under it.
+class map_load_exception : public std::exception
+{
+public:
+    map_load_exception(const std::string &_mapname) : mapname(_mapname) { }
+    ~map_load_exception() throw () { }
+    const char *what() const throw()
+    {
+        return mapname.c_str();
+    }
+private:
+    std::string mapname;
+};
+
 // [dshaligram] Maps can be mirrored; for every orientation, there must be
 // a suitable mirror.
 enum map_section_type                  // see maps.cc and dungeon.cc {dlb}

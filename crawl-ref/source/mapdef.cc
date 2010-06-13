@@ -2072,15 +2072,15 @@ void map_def::read_full(reader& inf)
     // point and let the player reload.
 
     const short fp_version = unmarshallShort(inf);
+
+    if (fp_version != MAP_CACHE_VERSION)
+        throw map_load_exception(name);
+
     std::string fp_name;
     unmarshallString4(inf, fp_name);
-    if (fp_version != MAP_CACHE_VERSION || fp_name != name)
-    {
-        save_game(true,
-                  make_stringf("Level file cache for %s is out-of-sync! "
-                               "Please reload your game.",
-                               file.c_str()).c_str());
-    }
+
+    if (fp_name != name)
+        throw map_load_exception(name);
 
     prelude.read(inf);
     mapchunk.read(inf);
@@ -2114,13 +2114,15 @@ void map_def::load()
         return;
 
     const std::string descache_base = get_descache_path(file, "");
+
     file_lock deslock(descache_base + ".lk", "rb", false);
     const std::string loadfile = descache_base + ".dsc";
-    FILE *fp = fopen(loadfile.c_str(), "rb");
-    fseek(fp, cache_offset, SEEK_SET);
-    reader inf(fp);
+
+    reader inf(loadfile);
+    if (!inf.valid())
+        throw map_load_exception(name);
+    inf.advance(cache_offset);
     read_full(inf);
-    fclose(fp);
 
     index_only = false;
 }
@@ -2168,7 +2170,8 @@ void map_def::read_index(reader& inf)
     place_loaded_from.lineno   = unmarshallLong(inf);
     orient       = static_cast<map_section_type>( unmarshallShort(inf) );
     // XXX: Hack. See the comment in l_dgn.cc.
-    border_fill_type = static_cast<dungeon_feature_type>( unmarshallShort(inf) );
+    border_fill_type =
+        static_cast<dungeon_feature_type>( unmarshallShort(inf) );
     chance_priority = unmarshallLong(inf);
     chance       = unmarshallLong(inf);
     weight       = unmarshallLong(inf);

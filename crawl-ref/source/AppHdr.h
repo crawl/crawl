@@ -132,6 +132,10 @@
     // curses implementations.
     #define CURSES_SET_ESCDELAY 20
 
+    // Have the utimes function to set access and modification time on
+    // a file.
+    #define HAVE_UTIMES
+
     // Use this to seed the PRNG with a bit more than just time()... turning
     // this off is perfectly okay, the game just becomes more exploitable
     // with a bit of hacking (ie only by people who know how).
@@ -237,6 +241,11 @@
     // game version so that multiple save-compatible Crawl versions can
     // share the same savedir.
     #define DGL_VERSIONED_CACHE_DIR
+
+    // Update (text) database files safely; when a Crawl process
+    // starts up and notices that a db file is out-of-date, it updates
+    // it in-place, instead of torching the old file.
+    #define DGL_REWRITE_PROTECT_DB_FILES
 
     #ifndef USE_MORE_SECURE_SEED
     #error DGAMELAUNCH builds should define USE_MORE_SECURE_SEED

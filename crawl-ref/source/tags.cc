@@ -110,6 +110,31 @@ level_id_set Generated_Levels;
 // The minor version for the tag currently being read.
 static int _tag_minor_version = -1;
 
+reader::reader(const std::string &filename, char minorVersion)
+    : _file(NULL), opened_file(false), _pbuf(NULL), _read_offset(0),
+      _minorVersion(minorVersion), seen_enums()
+{
+    _file       = fopen(filename.c_str(), "rb");
+    opened_file = !!_file;
+}
+
+reader::~reader()
+{
+    if (opened_file && _file)
+        fclose(_file);
+}
+
+void reader::advance(size_t offset)
+{
+    read(NULL, offset);
+}
+
+bool reader::valid() const
+{
+    return ((_file && !feof(_file)) ||
+            (_pbuf && _read_offset < _pbuf->size()));
+}
+
 // Reads input in network byte order, from a file or buffer.
 unsigned char reader::readByte()
 {
@@ -885,8 +910,9 @@ void tag_missing(int tag, char minorVersion)
             tag_missing_level_tiles();
             break;
         default:
-            perror("Tag is missing; file is likely corrupt.");
-            end(-1);
+            end(-1, false,
+                "Tag (%d) is missing, save file is probably corrupted",
+                tag);
     }
 }
 
@@ -897,7 +923,7 @@ void tag_set_expected(char tags[], int fileType)
 
     for (i = 0; i < NUM_TAGS; i++)
     {
-        tags[i] = -1;
+        tags[i] = 0;
         switch (fileType)
         {
             case TAGTYPE_PLAYER:
