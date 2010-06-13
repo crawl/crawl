@@ -1844,8 +1844,16 @@ bool direction_chooser::do_main_loop()
     if (!in_viewport_bounds(grid2view(target())))
         set_target(old_target);
 
-    if (loop_done && (just_looking || move_is_ok()))
-        return (true);
+    if (loop_done)
+    {
+        if (just_looking)
+            return (true);
+
+        if (move_is_ok())
+            return (true);
+        else
+            need_text_redraw = true;
+    }
 
     // Redraw whatever is necessary.
     if (old_target != target())
