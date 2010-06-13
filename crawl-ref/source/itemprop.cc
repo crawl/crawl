@@ -197,7 +197,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
         DAMV_SLASHING, 2 },
     { WPN_HOLY_SCOURGE,      "holy scourge",       13,  0, 11,  30,  2,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
-        DAMV_SLASHING, 2 },
+        DAMV_SLASHING, 0 },
     { WPN_SPIKED_FLAIL,      "spiked flail",       12, -2, 16, 190,  8,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_PIERCING | DAM_BLUDGEON, 10 },
