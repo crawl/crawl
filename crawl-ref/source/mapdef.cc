@@ -4126,21 +4126,15 @@ item_spec item_list::parse_single_spec(std::string s)
     }
 
     if (strip_tag(s, "damaged"))
-    {
         result.level = ISPEC_DAMAGED;
-    }
     if (strip_tag(s, "cursed"))
-    {
         result.level = ISPEC_BAD; // damaged + cursed, actually
-    }
     if (strip_tag(s, "randart"))
-    {
         result.level = ISPEC_RANDART;
-    }
     if (strip_tag(s, "not_cursed"))
-    {
         result.props["uncursed"] = bool(true);
-    }
+    if (strip_tag(s, "useful"))
+        result.props["useful"] = bool(true);
 
     if (strip_tag(s, "no_uniq"))
         result.allow_uniques = 0;
