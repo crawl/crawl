@@ -626,8 +626,19 @@ void game_options::reset_options()
 #if defined(DGAMELAUNCH)
     save_dir   = SAVE_DIR_PATH;
 #else
-    save_dir   = SAVE_DIR_PATH "/saves/";
-    morgue_dir = SAVE_DIR_PATH "/morgue/";
+    if (SAVE_DIR_PATH[0] != '~')
+    {
+        save_dir   = SAVE_DIR_PATH "/saves/";
+        morgue_dir = SAVE_DIR_PATH "/morgue/";
+    }
+    else
+    {
+        const char *home = getenv("HOME");
+        if (!home || !*home)
+            home = "./";
+        save_dir = (std::string)home + (SAVE_DIR_PATH + 1) + "/saves/";
+        morgue_dir = (std::string)home + (SAVE_DIR_PATH + 1) + "/morgue/";
+    }
 #endif
 #elif defined(TARGET_OS_MACOSX)
     std::string tmp_path_base = std::string(getenv("HOME")) + "/Library/Application Support/" CRAWL;

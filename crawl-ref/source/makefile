@@ -616,13 +616,18 @@ else
 endif
 
 ifneq ($(strip $(SAVEDIR)),)
-  ifeq ($(filter /%,$(SAVEDIR)),)
-    ifneq ($(prefix),)
+  ifeq ($(filter \~%,$(SAVEDIR)),)
+    CFOTHERS_L += -DSAVE_DIR_PATH=\"$(SAVEDIR)\"
+    savedir_fp :=
+  else
+    ifeq ($(filter /%,$(SAVEDIR)),)
+      ifneq ($(prefix),)
 	override SAVEDIR := $(strip $(prefix))/$(strip $(SAVEDIR))
+      endif
     endif
+    CFOTHERS_L += -DSAVE_DIR_PATH=\"$(abspath $(SAVEDIR))\"
+    savedir_fp := $(abspath $(strip $(DESTDIR))$(strip $(SAVEDIR)))
   endif
-  CFOTHERS_L += -DSAVE_DIR_PATH=\"$(abspath $(SAVEDIR))\"
-  savedir_fp := $(abspath $(strip $(DESTDIR))$(strip $(SAVEDIR)))
 endif
 
 ifneq ($(strip $(DATADIR)),)
@@ -972,7 +977,7 @@ endif
 ifeq ($(USE_DGAMELAUNCH),)
 	$(CHOWN) -R $(INSTALL_UGRP) $(datadir_fp) || true
 endif
-ifneq ($(SAVEDIR),)
+ifneq ($(savedir_fp),)
 	mkdir -p $(savedir_fp)/saves
 ifneq ($(patsubst /var/%,%,$(savedir_fp)),$(savedir_fp))
 # Only if we're being installed for real.  Installations to a staging dir
