@@ -2929,6 +2929,10 @@ bool is_useless_item(const item_def &item, bool temp)
         {
             return (false);
         }
+
+        if (is_fruit(item) && you.religion == GOD_FEDHAS)
+            return (false);
+
         return (true);
 
     case OBJ_CORPSES:
