@@ -38,6 +38,7 @@
 #include "directn.h"
 #include "dungeon.h"
 #include "files.h"
+#include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
 #include "l_defs.h"
@@ -4822,6 +4823,9 @@ static void _dgn_place_item_explicit(const item_spec &spec,
             base_type = RANDOM_ELEMENT(_acquirement_item_classes);
     }
 
+    int useless_tries = 0;
+retry:
+
     const int item_made =
         (acquire ?
          acquirement_create_item(base_type, spec.acquirement_source,
@@ -4870,6 +4874,11 @@ static void _dgn_place_item_explicit(const item_spec &spec,
 
         if (props.exists("uncursed"))
             do_uncurse_item(item);
+        if (props.exists("useful") && (useless_tries++ < 10)
+            && is_useless_item(item, false))
+        {
+            goto retry;
+        }
     }
 
     // [ds] Don't modify dungeon to accommodate items - vault
