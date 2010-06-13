@@ -196,8 +196,13 @@ void wait_for_keypress()
 
 bool key_is_escape(int key)
 {
-    // Accept escape keypresses and Emacs ^G.
-    return (key == ESCAPE || key == CONTROL('G') || key == -1);
+    switch (key)
+    {
+    CASE_ESCAPE
+        return (true);
+    default:
+        return (false);
+    }
 }
 
 std::string &uppercase(std::string &s)
