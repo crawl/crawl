@@ -133,20 +133,25 @@ inline void marshallEnum(writer& wr, enm value)
 class reader
 {
 public:
+    reader(const std::string &filename, char minorVersion = TAG_MINOR_VERSION);
     reader(FILE* input, char minorVersion = TAG_MINOR_VERSION)
-        : _file(input), _pbuf(0), _read_offset(0),
+        : _file(input), opened_file(false), _pbuf(0), _read_offset(0),
           _minorVersion(minorVersion) {}
     reader(const std::vector<unsigned char>& input,
            char minorVersion = TAG_MINOR_VERSION)
-        : _file(0), _pbuf(&input), _read_offset(0),
+        : _file(0), opened_file(false), _pbuf(&input), _read_offset(0),
           _minorVersion(minorVersion) {}
+    ~reader();
 
     unsigned char readByte();
     void read(void *data, size_t size);
+    void advance(size_t size);
     char getMinorVersion();
+    bool valid() const;
 
 private:
     FILE* _file;
+    bool  opened_file;
     const std::vector<unsigned char>* _pbuf;
     unsigned int _read_offset;
     char _minorVersion;

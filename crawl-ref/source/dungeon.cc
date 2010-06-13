@@ -110,6 +110,8 @@ coord_def spec_room::random_spot() const
 }
 
 // DUNGEON BUILDERS
+static bool _build_level_vetoable(int level_number, int level_type,
+                                  bool enable_random_maps);
 static void _build_dungeon_level(int level_number, int level_type);
 static bool _valid_dungeon_level(int level_number, int level_type);
 
@@ -320,84 +322,22 @@ bool builder(int level_number, int level_type, bool enable_random_maps)
     int tries = 50;
     while (tries-- > 0)
     {
-#ifdef DEBUG_DIAGNOSTICS
-        mapgen_report_map_build_start();
-#endif
-
-        dgn_reset_level(enable_random_maps);
-
-        if (player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
-            _setup_temple_altars(you.props);
-
         // If we're getting low on available retries, disable random vaults
         // and minivaults (special levels will still be placed).
         if (tries < 5)
-            use_random_maps = false;
+            enable_random_maps = false;
 
-        _build_dungeon_level(level_number, level_type);
-        _dgn_set_floor_colours();
-
-#ifdef DEBUG_DIAGNOSTICS
-        if (dgn_level_vetoed)
-            mapgen_report_map_veto();
-#endif
-
-        if ((!dgn_level_vetoed &&
-             _valid_dungeon_level(level_number, level_type)) ||
-            crawl_state.game_is_sprint())
+        try
         {
-#ifdef DEBUG_MONS_SCAN
-            // If debug_mons_scan() finds a problem while Generating_Level is
-            // still true then it will announce that a problem was caused
-            // during level generation.
-            debug_mons_scan();
-#endif
-
-            if (env.level_build_method.size() > 0 && env.level_build_method[0] == ' ')
-                env.level_build_method = env.level_build_method.substr(1);
-
-            // Save information in the level's properties hash table
-            // so we can inlcude it in crash reports.
-            env.properties[BUILD_METHOD_KEY] = env.level_build_method;
-            env.properties[LAYOUT_TYPE_KEY]  = env.level_layout_type;
-            env.properties[LEVEL_ID_KEY]     = level_id::current().describe();
-
-            // Save information in the player's properties has table so
-            // we can include it in the character dump.
-            if (!_you_vault_list.empty())
-            {
-                const std::string lev = level_id::current().describe();
-                CrawlHashTable &all_vaults =
-                    you.props[YOU_DUNGEON_VAULTS_KEY].get_table();
-
-                CrawlHashTable &this_level = all_vaults[lev].get_table();
-                this_level = _you_vault_list;
-            }
-            else if (!_portal_vault_map_name.empty())
-            {
-                CrawlVector &vault_maps =
-                    you.props[YOU_PORTAL_VAULT_MAPS_KEY].get_vector();
-                vault_maps.push_back(_portal_vault_map_name);
-            }
-
-            if (you.level_type == LEVEL_PORTAL_VAULT)
-            {
-                CrawlVector &vault_names =
-                    you.props[YOU_PORTAL_VAULT_NAMES_KEY].get_vector();
-                vault_names.push_back(you.level_type_name);
-            }
-
-            dgn_postprocess_level();
-
-            env.level_layout_type.clear();
-            env.level_uniq_maps.clear();
-            env.level_uniq_map_tags.clear();
-            _dgn_map_colour_fixup();
-
-            // Discard any Lua chunks we loaded.
-            strip_all_maps();
-
-            return (true);
+            if (_build_level_vetoable(level_number, level_type,
+                                      enable_random_maps))
+                return (true);
+        }
+        catch (map_load_exception &mload)
+        {
+            mprf(MSGCH_ERROR, "Failed to load map %s, reloading all maps",
+                 mload.what());
+            reread_maps();
         }
 
         you.uniq_map_tags  = uniq_tags;
@@ -413,6 +353,86 @@ bool builder(int level_number, int level_type, bool enable_random_maps)
     }
 
     env.level_layout_type.clear();
+    return (false);
+}
+
+static bool _build_level_vetoable(int level_number, int level_type,
+                                  bool enable_random_maps)
+{
+#ifdef DEBUG_DIAGNOSTICS
+    mapgen_report_map_build_start();
+#endif
+
+    dgn_reset_level(enable_random_maps);
+
+    if (player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
+        _setup_temple_altars(you.props);
+
+    _build_dungeon_level(level_number, level_type);
+    _dgn_set_floor_colours();
+
+#ifdef DEBUG_DIAGNOSTICS
+    if (dgn_level_vetoed)
+        mapgen_report_map_veto();
+#endif
+
+    if ((!dgn_level_vetoed &&
+         _valid_dungeon_level(level_number, level_type)) ||
+        crawl_state.game_is_sprint())
+    {
+#ifdef DEBUG_MONS_SCAN
+        // If debug_mons_scan() finds a problem while Generating_Level is
+        // still true then it will announce that a problem was caused
+        // during level generation.
+        debug_mons_scan();
+#endif
+
+        if (env.level_build_method.size() > 0 && env.level_build_method[0] == ' ')
+            env.level_build_method = env.level_build_method.substr(1);
+
+        // Save information in the level's properties hash table
+        // so we can inlcude it in crash reports.
+        env.properties[BUILD_METHOD_KEY] = env.level_build_method;
+        env.properties[LAYOUT_TYPE_KEY]  = env.level_layout_type;
+        env.properties[LEVEL_ID_KEY]     = level_id::current().describe();
+
+        // Save information in the player's properties has table so
+        // we can include it in the character dump.
+        if (!_you_vault_list.empty())
+        {
+            const std::string lev = level_id::current().describe();
+            CrawlHashTable &all_vaults =
+                you.props[YOU_DUNGEON_VAULTS_KEY].get_table();
+
+            CrawlHashTable &this_level = all_vaults[lev].get_table();
+            this_level = _you_vault_list;
+        }
+        else if (!_portal_vault_map_name.empty())
+        {
+            CrawlVector &vault_maps =
+                you.props[YOU_PORTAL_VAULT_MAPS_KEY].get_vector();
+            vault_maps.push_back(_portal_vault_map_name);
+        }
+
+        if (you.level_type == LEVEL_PORTAL_VAULT)
+        {
+            CrawlVector &vault_names =
+                you.props[YOU_PORTAL_VAULT_NAMES_KEY].get_vector();
+            vault_names.push_back(you.level_type_name);
+        }
+
+        dgn_postprocess_level();
+
+        env.level_layout_type.clear();
+        env.level_uniq_maps.clear();
+        env.level_uniq_map_tags.clear();
+        _dgn_map_colour_fixup();
+
+        // Discard any Lua chunks we loaded.
+        strip_all_maps();
+
+        return (true);
+    }
     return (false);
 }
 

@@ -27,6 +27,10 @@
 #include <io.h>
 #endif
 
+#ifdef HAVE_UTIMES
+#include <sys/time.h>
+#endif
+
 #include <sys/types.h>
 #include <sys/stat.h>
 
@@ -467,6 +471,15 @@ std::string change_file_extension(const std::string &filename,
     const std::string::size_type pos = filename.rfind('.');
     return ((pos == std::string::npos? filename : filename.substr(0, pos))
             + ext);
+}
+
+// Sets the access and modification times of the given file to the current
+// time. This is not yet implemented for every supported platform.
+void file_touch(const std::string &file)
+{
+#ifdef HAVE_UTIMES
+    utimes(file.c_str(), NULL);
+#endif
 }
 
 time_t file_modtime(const std::string &file)

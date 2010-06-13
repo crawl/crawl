@@ -1163,7 +1163,7 @@ void read_map(const std::string &file)
 
 void read_maps()
 {
-    if (dlua.execfile("clua/loadmaps.lua", true, true))
+    if (dlua.execfile("clua/loadmaps.lua", true, true, true))
         end(1, false, "Lua error: %s", dlua.error.c_str());
 
     // Clean up cached environments.
@@ -1171,6 +1171,22 @@ void read_maps()
     lc_loaded_maps.clear();
     sanity_check_maps();
     dlua.gc();
+}
+
+// If a .dsc file has been changed under the running Crawl, discard
+// all map knowledge and reload maps. This will not affect maps that
+// have already been used, but it might trigger exciting happenings if
+// the new maps fail sanity checks or remove maps that the game
+// expects to be present.
+void reread_maps()
+{
+    dprf("reread_maps:: discarding %lu existing maps",
+         (unsigned long)vdefs.size());
+
+    // BOOM!
+    vdefs.clear();
+    map_files_read.clear();
+    read_maps();
 }
 
 void add_parsed_map( const map_def &md )

@@ -80,6 +80,7 @@ std::string get_prefs_filename();
 std::string change_file_extension(const std::string &file,
                                   const std::string &ext);
 
+void file_touch(const std::string &file);
 time_t file_modtime(const std::string &file);
 bool is_newer(const std::string &a, const std::string &b);
 void check_newer(const std::string &target,
