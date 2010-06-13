@@ -904,7 +904,6 @@ command_type travel()
         // there are any squares of the shadow map that have just been
         // discovered and contain an item, or have an interesting dungeon
         // feature, stop exploring.
-
         explore_discoveries discoveries;
         for (rectangle_iterator ri(1); ri; ++ri)
         {
@@ -3952,8 +3951,8 @@ void runrest::clear()
 // explore_discoveries
 
 explore_discoveries::explore_discoveries()
-    : es_flags(0), current_level(NULL), items(), stairs(),
-      portals(), shops(), altars()
+    : can_autopickup(::can_autopickup()), es_flags(0), current_level(NULL),
+      items(), stairs(), portals(), shops(), altars()
 {
 }
 
@@ -4090,9 +4089,11 @@ void explore_discoveries::found_item(const coord_def &pos, const item_def &i)
         if (current_level)
         {
             const bool greed_inducing =
-                _is_greed_inducing_square(current_level, pos);
+                can_autopickup
+                && _is_greed_inducing_square(current_level, pos);
 
-            if (greed_inducing && (Options.explore_stop & ES_GREEDY_ITEM))
+            if (greed_inducing
+                && (Options.explore_stop & ES_GREEDY_ITEM))
                 ; // Stop for this conditions
             else if (!greed_inducing
                      && ((Options.explore_stop & ES_ITEM)
@@ -4111,9 +4112,9 @@ void explore_discoveries::found_item(const coord_def &pos, const item_def &i)
     } // if (you.running == RMODE_EXPLORE_GREEDY)
 
     add_item(i);
-    // MATT
-    es_flags |= (you.running == RMODE_EXPLORE_GREEDY) ? ES_GREEDY_PICKUP_MASK
-                                                      : ES_NONE;
+    es_flags |=
+        (you.running == RMODE_EXPLORE_GREEDY) ? ES_GREEDY_PICKUP_MASK :
+        (Options.explore_stop & ES_ITEM) ? ES_ITEM : ES_NONE;
 }
 
 // Expensive O(n^2) duplicate search, but we can live with that.
