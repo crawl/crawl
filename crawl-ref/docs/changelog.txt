@@ -1,4 +1,4 @@
-Stone Soup 0.6.1
+Stone Soup 0.6.1 (20100609)
 ----------------
 * Fix instant starvation bug related to vampiric weapon butchery.
 * Fix Cheibriados excommunication permanent stat gain.
