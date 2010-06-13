@@ -488,8 +488,7 @@ int line_reader::process_key(int ch)
 {
     switch (ch)
     {
-    case CONTROL('G'):
-    case CK_ESCAPE:
+    CASE_ESCAPE
         return (CK_ESCAPE);
     case CK_UP:
     case CK_DOWN:

@@ -1124,7 +1124,7 @@ void wizard_mod_tide()
         const int res =
             cancelable_get_line(buf, sizeof buf, NULL, _tidemod_keyfilter);
         mesclr(true);
-        if (res == ESCAPE)
+        if (key_is_escape(res))
             break;
         if (!res)
         {

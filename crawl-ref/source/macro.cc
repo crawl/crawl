@@ -781,7 +781,7 @@ static void _input_action_raw(keyseq* action)
 
         switch (input)
         {
-        case ESCAPE:
+        CASE_ESCAPE
             done = true;
             *action = keyseq();
             break;
@@ -892,7 +892,7 @@ void macro_add_query( void )
         input = m_getch();
 
         input = tolower( input );
-        if (input == 'a' || input == ESCAPE)
+        if (input == 'a' || key_is_escape(input))
         {
             mpr( "Aborting." );
             return;
@@ -1280,7 +1280,7 @@ static std::string _special_keys_to_string(int key)
     {
     case CK_ENTER:  cmd += "Enter"; break;
     case CK_BKSP:   cmd += "Backspace"; break;
-    case CK_ESCAPE: cmd += "Esc"; break;
+    CASE_ESCAPE     cmd += "Esc"; break;
     case CK_DELETE: cmd += "Del"; break;
     case CK_UP:     cmd += "Up"; break;
     case CK_DOWN:   cmd += "Down"; break;

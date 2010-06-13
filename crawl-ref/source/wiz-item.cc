@@ -119,7 +119,7 @@ void wizard_create_spec_object()
             class_wanted = OBJ_FOOD;
         else if (keyin == '$')
             class_wanted = OBJ_GOLD;
-        else if (keyin == ESCAPE || keyin == ' '
+        else if (key_is_escape(keyin) || keyin == ' '
                 || keyin == '\r' || keyin == '\n')
         {
             msgwin_reply("");
@@ -471,7 +471,7 @@ void wizard_tweak_object(void)
                 field_ptr = &(you.inv[item].quantity);
             else if (keyin == 'e')
                 field_ptr = &(you.inv[item].flags);
-            else if (keyin == ESCAPE || keyin == ' '
+            else if (key_is_escape(keyin) || keyin == ' '
                     || keyin == '\r' || keyin == '\n')
             {
                 canned_msg( MSG_OK );

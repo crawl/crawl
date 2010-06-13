@@ -370,7 +370,7 @@ static bool _reroll_random(newgame_def* ng)
 
     cprintf("\nDo you want to play this combination? (ynq) [y]");
     char c = getchm();
-    if (c == ESCAPE || tolower(c) == 'q')
+    if (key_is_escape(c) || tolower(c) == 'q')
         end(0);
     return (tolower(c) == 'n');
 }
@@ -855,7 +855,7 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
             switch (keyn)
             {
             case 'X':
-            case ESCAPE:
+            CASE_ESCAPE
                 cprintf("\nGoodbye!");
                 end(0);
                 return;
@@ -1216,7 +1216,7 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
             switch (keyn)
             {
             case 'X':
-            case ESCAPE:
+            CASE_ESCAPE
                 cprintf("\nGoodbye!");
                 end(0);
                 return;
@@ -1520,8 +1520,8 @@ static bool _prompt_weapon(const newgame_def* ng, newgame_def* ng_choice,
                 cprintf("\nGoodbye!");
                 end(0);
                 break;
-            case CK_ESCAPE:
             case ' ':
+            CASE_ESCAPE
                 return false;
             default:
                 // if we get this far, we did not get a significant selection
@@ -1949,8 +1949,8 @@ static bool _prompt_book(const newgame_def* ng, newgame_def* ng_choice,
                 cprintf("\nGoodbye!");
                 end(0);
                 break;
-            case CK_ESCAPE:
             case ' ':
+            CASE_ESCAPE
                 return false;
             default:
                 // if we get this far, we did not get a significant selection
@@ -2321,8 +2321,8 @@ static bool _prompt_god(const newgame_def* ng, newgame_def* ng_choice,
                 cprintf("\nGoodbye!");
                 end(0);
                 break;
-            case CK_ESCAPE:
             case ' ':
+            CASE_ESCAPE
                 return false;
             default:
                 // if we get this far, we did not get a significant selection
@@ -2703,8 +2703,8 @@ static bool _prompt_wand(const newgame_def* ng, newgame_def* ng_choice,
                 cprintf("\nGoodbye!");
                 end(0);
                 break;
-            case CK_ESCAPE:
             case ' ':
+            CASE_ESCAPE
                 return false;
             default:
                 // if we get this far, we did not get a significant selection
@@ -2804,7 +2804,7 @@ static void _prompt_sprint_map(const newgame_def* ng, newgame_def* ng_choice,
         // Should check that it actually occurs in maps.
         cprintf("; Enter - %s", defaults.map.c_str());
     }
- 
+
     const bool tab_enabled = (defaults.type == GAME_TYPE_SPRINT
                 && !defaults.map.empty()
                 && _char_defined(defaults));
@@ -2823,7 +2823,7 @@ static void _prompt_sprint_map(const newgame_def* ng, newgame_def* ng_choice,
         switch (keyin)
         {
         case 'X':
-        case CK_ESCAPE:
+        CASE_ESCAPE
             cprintf("\nGoodbye!");
             end(0);
             break;

@@ -116,7 +116,7 @@ static bool _read_player_name(std::string &name)
             return (true);
         }
 
-        if (ret == CK_ESCAPE)
+        if (key_is_escape(ret))
             return (false);
 
         // Go back and prompt the user.

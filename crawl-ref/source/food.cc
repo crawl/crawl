@@ -644,8 +644,8 @@ bool butchery(int which_corpse, bool bottle_blood)
                         butcher_all = true;
                     break;
 
-                case ESCAPE:
                 case 'q':
+                CASE_ESCAPE
                     canned_msg(MSG_OK);
                     _terminate_butchery(wpn_switch, removed_gloves, old_weapon,
                                         old_gloves);
@@ -1244,8 +1244,8 @@ int eat_from_floor(bool skip_chunks)
             int keyin = tolower(getchm(KMC_CONFIRM));
             switch (keyin)
             {
-            case ESCAPE:
             case 'q':
+            CASE_ESCAPE
                 canned_msg(MSG_OK);
                 return -1;
             case 'e':
@@ -1399,8 +1399,8 @@ bool eat_from_inventory()
             int keyin = tolower(getchm(KMC_CONFIRM));
             switch (keyin)
             {
-            case ESCAPE:
             case 'q':
+            CASE_ESCAPE
                 canned_msg(MSG_OK);
                 return (false);
             case 'e':
@@ -1569,8 +1569,8 @@ int prompt_eat_chunks()
             int keyin = autoeat ? 'y' : tolower(getchm(KMC_CONFIRM));
             switch (keyin)
             {
-            case ESCAPE:
             case 'q':
+            CASE_ESCAPE
                 canned_msg(MSG_OK);
                 return (-1);
             case 'i':

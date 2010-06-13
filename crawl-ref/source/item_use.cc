@@ -3149,11 +3149,11 @@ static int _prompt_ring_to_remove(int new_ring)
     do
         c = getchm();
     while (c != lslot && c != rslot && c != '<' && c != '>'
-           && c != ESCAPE && c != ' ');
+           && !key_is_escape(c) && c != ' ');
 
     mesclr();
 
-    if (c == ESCAPE || c == ' ')
+    if (key_is_escape(c) || c == ' ')
         return (-1);
 
     const int eqslot = (c == lslot || c == '<') ? EQ_LEFT_RING

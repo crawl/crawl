@@ -4,6 +4,7 @@
 
 #include "delay.h"
 #include "godpassive.h"
+#include "libutil.h"
 #include "macro.h"
 #include "mon-util.h"
 #include "monster.h"
@@ -75,8 +76,7 @@ void attribute_increase()
         switch (keyin)
         {
 #if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE) && defined(USE_CURSES)
-        case ESCAPE:
-        case -1:
+        CASE_ESCAPE
             // [ds] It's safe to save the game here; when the player
             // reloads, the game will re-prompt for their level-up
             // stat gain.
