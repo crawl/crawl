@@ -2681,7 +2681,7 @@ void world_reacts()
         // We could extend the counters to 64 bits, but in the light of the
         // above, it's an useless exercise.
         mpr("Outside, the world ends.");
-        mpr("Sorry, but your quest for the Orb is now rather pointless.  "
+        mpr("Sorry, but your quest for the Orb is now rather pointless. "
             "You quit...");
         ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_QUITTING);
     }
