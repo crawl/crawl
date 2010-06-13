@@ -861,6 +861,7 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
             // Make Escape => 'n' and stop run.
             explicit_keymap map;
             map[ESCAPE] = 'n';
+            map[CONTROL('G')] = 'n';
             if (yesno(prompt.c_str(), true, 'y', true, false, false, &map))
             {
                 mark_items_non_pickup_at(you.pos());
@@ -2050,7 +2051,7 @@ static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
         int keyin = get_ch();
         switch (keyin)
         {
-        case ESCAPE:
+        CASE_ESCAPE
             return (ID_CANCEL);
         case '?':
             show_interlevel_travel_branch_help();
@@ -2292,7 +2293,7 @@ static travel_target _prompt_travel_depth(const level_id &id,
         if (!response)
             return _parse_travel_target(buf, target);
 
-        if (response == ESCAPE)
+        if (key_is_escape(response))
             return travel_target(level_id(BRANCH_MAIN_DUNGEON, 0));
 
         _travel_depth_munge(response, buf, target);

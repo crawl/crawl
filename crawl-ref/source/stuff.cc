@@ -722,7 +722,7 @@ bool yesno(const char *str, bool safe, int safeanswer, bool clear_after,
             tmp = map->find(tmp)->second;
 
         if (safeanswer
-            && (tmp == ' ' || tmp == ESCAPE || tmp == CONTROL('G')
+            && (tmp == ' ' || key_is_escape(tmp)
                 || tmp == '\r' || tmp == '\n' || crawl_state.seen_hups))
         {
             tmp = safeanswer;
@@ -827,7 +827,7 @@ int yesnoquit( const char* str, bool safe, int safeanswer, bool allow_all,
 
         int tmp = getchm(KMC_CONFIRM);
 
-        if (tmp == CK_ESCAPE || tmp == CONTROL('G') || tmp == 'q' || tmp == 'Q'
+        if (key_is_escape(tmp) || tmp == 'q' || tmp == 'Q'
             || crawl_state.seen_hups)
         {
             return -1;
@@ -998,4 +998,3 @@ bool tobool(maybe_bool mb, bool def)
         return (def);
     }
 }
-

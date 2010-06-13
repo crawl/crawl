@@ -1227,7 +1227,7 @@ void pickup()
                 break;
             }
 
-            if (keyin == 'q' || keyin == ESCAPE || keyin == 'o')
+            if (keyin == 'q' || key_is_escape(keyin) || keyin == 'o')
                 break;
 
             if (keyin == 'y' || keyin == 'a')
@@ -3079,7 +3079,7 @@ static void _rune_from_specs(const char* _specs, item_def &item)
 
         int keyin = tolower( get_ch() );
 
-        if (keyin == ESCAPE  || keyin == ' '
+        if (key_is_escape(keyin) || keyin == ' '
             || keyin == '\r' || keyin == '\n')
         {
             canned_msg( MSG_OK );
@@ -3183,9 +3183,9 @@ static void _deck_from_specs(const char* _specs, item_def &item)
                 MSGCH_PROMPT);
             mpr("Which deck (ESC to exit)? ");
 
-            int keyin = tolower( get_ch() );
+            const int keyin = tolower( get_ch() );
 
-            if (keyin == ESCAPE  || keyin == ' '
+            if (key_is_escape(keyin) || keyin == ' '
                 || keyin == '\r' || keyin == '\n')
             {
                 canned_msg( MSG_OK );
@@ -3226,7 +3226,7 @@ static void _deck_from_specs(const char* _specs, item_def &item)
 
             int keyin = tolower( get_ch() );
 
-            if (keyin == ESCAPE  || keyin == ' '
+            if (key_is_escape(keyin) || keyin == ' '
                 || keyin == '\r' || keyin == '\n')
             {
                 canned_msg( MSG_OK );

@@ -204,8 +204,8 @@ void pick_hints(newgame_def* choice)
         switch (keyn)
         {
         case CK_BKSP:
-        case ESCAPE:
         case 'X':
+        CASE_ESCAPE
             cprintf("\nGoodbye!");
             end(0);
             return;

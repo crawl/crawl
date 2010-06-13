@@ -33,6 +33,9 @@ std::string &uppercase(std::string &s);
 std::string upcase_first(std::string);
 
 void wait_for_keypress();
+bool key_is_escape(int key);
+
+#define CASE_ESCAPE case ESCAPE: case CONTROL('G'): case -1:
 
 // Unscales a fixed-point number, rounding up.
 static inline int unscale_round_up(int number, int scale)

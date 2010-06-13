@@ -925,7 +925,7 @@ bool activate_ability()
                 return (false);
             }
         }
-        else if (keyin == ESCAPE || keyin == ' ' || keyin == '\r'
+        else if (key_is_escape(keyin) || keyin == ' ' || keyin == '\r'
                  || keyin == '\n')
         {
             canned_msg( MSG_OK );

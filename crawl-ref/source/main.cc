@@ -526,7 +526,7 @@ static void _startup_hints_mode()
 
     flush_prev_message();
     const int ch = getch_ck();
-    if (ch != ESCAPE)
+    if (!key_is_escape(ch))
         hints_starting_screen();
 }
 

@@ -133,7 +133,7 @@ static bool mg_do_build_level(int niters)
     no_messages mx;
     for (int i = 0; i < niters; ++i)
     {
-        if (kbhit() && getch() == ESCAPE)
+        if (kbhit() && key_is_escape(getch()))
             return (false);
 
         ++mg_levels_tried;
@@ -299,7 +299,7 @@ static void _mapgen_report_available_random_vaults(FILE *outf)
         mesclr();
         mprf("Examining random maps at %s", i->describe().c_str());
         mg_report_random_maps(outf, *i);
-        if (kbhit() && getch() == ESCAPE)
+        if (kbhit() && key_is_escape(getch()))
             break;
         fprintf(outf, "---------------------------------\n");
     }

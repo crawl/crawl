@@ -294,7 +294,7 @@ void adjust(void)
         _adjust_spells();
     else if (keyin == 'a')
         _adjust_ability();
-    else if (keyin == ESCAPE)
+    else if (key_is_escape(keyin))
         canned_msg(MSG_OK);
     else
         canned_msg(MSG_HUH);
@@ -416,7 +416,7 @@ static void _adjust_spells(void)
     {
         mpr("Adjust to which letter? ", MSGCH_PROMPT);
         keyin = get_ch();
-        if (keyin == ESCAPE)
+        if (key_is_escape(keyin))
         {
             canned_msg( MSG_OK );
             return;
@@ -463,7 +463,7 @@ static void _adjust_ability(void)
 
         if (keyin == '?' || keyin == '*')
             selected = choose_ability_menu(talents);
-        else if (keyin == ESCAPE || keyin == ' '
+        else if (key_is_escape(keyin) || keyin == ' '
                  || keyin == '\r' || keyin == '\n')
         {
             canned_msg(MSG_OK);

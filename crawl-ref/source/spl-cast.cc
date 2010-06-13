@@ -593,7 +593,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
                 if (!crawl_state.doing_prev_cmd_again)
                     redraw_screen();
 
-                if (isaalpha(keyin) || keyin == ESCAPE)
+                if (isaalpha(keyin) || key_is_escape(keyin))
                     break;
                 else
                     mesclr();
@@ -604,7 +604,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
                 break;
         }
 
-        if (keyin == ESCAPE)
+        if (key_is_escape(keyin))
         {
             canned_msg( MSG_OK );
             return (false);

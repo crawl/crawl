@@ -397,9 +397,9 @@ bool Menu::process_key( int keyin )
         return (true);
     case CK_ENTER:
         return (false);
-    case CK_ESCAPE:
     case CK_MOUSE_B2:
     case CK_MOUSE_CMD:
+    CASE_ESCAPE
         sel.clear();
         lastch = keyin;
         return (false);
@@ -1731,9 +1731,8 @@ bool formatted_scroller::process_key( int keyin )
     {
     case 0:
         return (true);
-    case -1:
-    case CK_ESCAPE:
     case CK_MOUSE_CMD:
+    CASE_ESCAPE
         return (false);
     case ' ': case '+': case '=': case CK_PGDN: case '>': case '\'':
     case CK_MOUSE_B5:

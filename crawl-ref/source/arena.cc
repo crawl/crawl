@@ -719,7 +719,7 @@ namespace arena
 
     void handle_keypress(int ch)
     {
-        if (ch == ESCAPE || tolower(ch) == 'q' || ch == CONTROL('G'))
+        if (key_is_escape(ch) || tolower(ch) == 'q')
         {
             contest_canceled = true;
             mpr("Canceled contest at user request");

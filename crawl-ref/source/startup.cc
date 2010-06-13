@@ -608,9 +608,9 @@ static void _show_startup_menu(newgame_def* ng_choice,
         cgotoxy(SCROLLER_MARGIN_X ,GAME_MODES_START_Y - 2);
         cprintf("%s", input_string.c_str());
 
-        int keyn = getch_ck();
+        const int keyn = getch_ck();
 
-        if (keyn == CK_ESCAPE)
+        if (key_is_escape(keyn))
         {
             // End the game
             end(0);

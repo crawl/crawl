@@ -488,7 +488,7 @@ static bool _in_a_shop( int shopidx, int &num_in_list )
                 _shop_more();
             }
         }
-        else if (key == 'x' || key == ESCAPE || key == CK_MOUSE_CMD)
+        else if (key == 'x' || key_is_escape(key) || key == CK_MOUSE_CMD)
             break;
         else if (key == '\r' || key == CK_MOUSE_CLICK)
         {

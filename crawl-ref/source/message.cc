@@ -1251,10 +1251,10 @@ static void readkey_more(bool user_forced)
     do
         keypress = getch_ck();
     while (keypress != ' ' && keypress != '\r' && keypress != '\n'
-           && keypress != ESCAPE && keypress != -1
+           && !key_is_escape(keypress)
            && (user_forced || keypress != CK_MOUSE_CLICK));
 
-    if (keypress == ESCAPE)
+    if (key_is_escape(keypress))
         set_more_autoclear(true);
 }
 

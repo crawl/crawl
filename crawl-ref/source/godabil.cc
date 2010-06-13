@@ -1638,7 +1638,7 @@ static bool _prompt_amount(int max, int& selected, const std::string& prompt)
         const unsigned char keyin = get_ch();
 
         // Cancel
-        if (keyin == ESCAPE || keyin == ' ' || keyin == '0')
+        if (key_is_escape(keyin) || keyin == ' ' || keyin == '0')
         {
             canned_msg(MSG_OK);
             return (false);

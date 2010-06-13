@@ -909,7 +909,7 @@ unsigned char InvMenu::getkey() const
 {
     unsigned char mkey = lastch;
     if (!isaalnum(mkey) && mkey != '$' && mkey != '-' && mkey != '?'
-        && mkey != '*' && mkey != ESCAPE && mkey != '\\')
+        && mkey != '*' && !key_is_escape(mkey) && mkey != '\\')
     {
         mkey = ' ';
     }
@@ -1293,15 +1293,15 @@ std::vector<SelItem> prompt_invent_items(
                         MF_MULTISELECT | MF_ALLOW_FILTER;
 
             // The "view inventory listing" mode.
-            int ch = invent_select( prompt,
-                                    mtype,
-                                    keyin == '*' ? OSEL_ANY : type_expect,
-                                    -1,
-                                    selmode,
-                                    titlefn, &items, select_filter, fn,
-                                    pre_select );
+            const int ch = invent_select( prompt,
+                                          mtype,
+                                          keyin == '*' ? OSEL_ANY : type_expect,
+                                          -1,
+                                          selmode,
+                                          titlefn, &items, select_filter, fn,
+                                          pre_select );
 
-            if ((selmode & MF_SINGLESELECT) || ch == ESCAPE)
+            if ((selmode & MF_SINGLESELECT) || key_is_escape(ch))
             {
                 keyin       = ch;
                 need_getch  = false;
@@ -1337,7 +1337,7 @@ std::vector<SelItem> prompt_invent_items(
             need_prompt = false;
             need_getch  = false;
         }
-        else if (keyin == ESCAPE
+        else if (key_is_escape(keyin)
                 || (Options.easy_quit_item_prompts
                     && allow_easy_quit
                     && keyin == ' '))
@@ -1768,7 +1768,7 @@ int prompt_invent_item( const char *prompt,
                     break;
             }
         }
-        else if (keyin == ESCAPE
+        else if (key_is_escape(keyin)
                  || (Options.easy_quit_item_prompts
                      && allow_easy_quit && keyin == ' '))
         {

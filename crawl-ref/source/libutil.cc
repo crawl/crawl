@@ -194,6 +194,12 @@ void wait_for_keypress()
     getchm() || getchm();
 }
 
+bool key_is_escape(int key)
+{
+    // Accept escape keypresses and Emacs ^G.
+    return (key == ESCAPE || key == CONTROL('G') || key == -1);
+}
+
 std::string &uppercase(std::string &s)
 {
     for (unsigned i = 0, sz = s.size(); i < sz; ++i)
