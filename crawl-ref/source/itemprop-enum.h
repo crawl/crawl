@@ -441,7 +441,6 @@ enum weapon_type
 
     WPN_BLOWGUN,
     WPN_CROSSBOW,
-    // Was hand crossbows, they are gone.
     WPN_BOW,
     WPN_LONGBOW,
     WPN_MAX_RACIAL = WPN_LONGBOW,
@@ -455,14 +454,14 @@ enum weapon_type
 
     WPN_KATANA,
     WPN_DEMON_BLADE,
-    WPN_DOUBLE_SWORD,                  //   40
+    WPN_DOUBLE_SWORD,
     WPN_TRIPLE_SWORD,
 
     WPN_DEMON_TRIDENT,
     WPN_SCYTHE,
 
     WPN_QUARTERSTAFF,
-    WPN_LAJATANG,                      //   45
+    WPN_LAJATANG,
 
     WPN_SLING,
 
@@ -471,7 +470,7 @@ enum weapon_type
     WPN_BLESSED_FALCHION,
     WPN_BLESSED_LONG_SWORD,
     WPN_BLESSED_SCIMITAR,
-    WPN_BLESSED_GREAT_SWORD,           //   50
+    WPN_BLESSED_GREAT_SWORD,
     WPN_BLESSED_KATANA,
     WPN_HOLY_BLADE,
     WPN_BLESSED_DOUBLE_SWORD,
