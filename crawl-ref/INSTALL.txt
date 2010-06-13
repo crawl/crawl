@@ -120,8 +120,9 @@ If you have untrusted local users, we highly recommend you do not install Crawl
 setgid or setuid. Just running "make install" will install Crawl setgid games,
 do *not* do this unless you're sure you trust your users.
 
-If you have untrusted users, the correct way to install a multiplayer Crawl is
-using a chrooted game launcher such as dgamelaunch.
+If you have untrusted users, you can use a chrooted game launcher such as
+dgamelaunch or compile with SAVEDIR=~/.crawl/, in which case each user has his
+or her own save directory and bones are not shared.
 
 
 To install or not to install:
