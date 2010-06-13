@@ -353,19 +353,43 @@ DEPTH:  Zot
 
 ###############################################################################
 # Crazy Yiuf! Only in his cottage.
-NAME:   uniq_crazy_yiuf_cottage
-DEPTH:  D:2-7
-TAGS:   place_unique no_monster_gen no_item_gen
-MONS:   Crazy Yiuf
-ITEM:   hammer
+NAME:    uniq_crazy_yiuf_cottage
+DEPTH:   D:2-7
+TAGS:    place_unique no_monster_gen no_item_gen
+MONS:    Crazy Yiuf
+MONS:    fungus / bush w:1
+ITEM:    hammer
+# Randomisation 1: Some chance for a gate. Very rarely secret doors.
+SHUFFLE: Bb/Aa
+SUBST:   B=;, b=;
+: if crawl.one_chance_in(3) then
+SUBST:   A:AAAa, a:+++=, A=x
+: else
+SUBST:   A:;;;x, a=;
+: end
+# Randomisation 2: Rarely, the cottage will have a door.
+SUBST:   C = +''''
+# Randomisation 3: Plants might be in the way -- Yiuf seems to be a bad
+#                  gardener. Sometimes.
+SUBST:   P:PQ;; , Q=2;
+NSUBST:  P=1:t / *:2;
+# Randomisation 4: Hammers. Hammers. Hammers.
+SUBST:   ; : .:100 ;:10 2:d
+SUBST:   ; = .:10 2:d
+: if crawl.one_chance_in(300) then
+SUBST:   t="
+: end
+SUBST:   ':.......' , "=' , ':d' , '=..d
+# Randomisation 5: trees or rock
+SUBST:   t : ttx
 MAP
  xxxxxxxxxxxxxxxx
  xxtttttttxxtttxx
  xxtttttttttttttx
- ....t.tttccccctx
-......t..tc...ctx
-@....tttt....1ctx
-....ttttttc..dctx
+ BAP't'tttccccctx
+;baPP't''tc'''ctx
+@baPPtttt'C''1ctx
+;BAPttttttc''dctx
  xxtttttttccccctx
  xxtttttttttttttx
  xxxxxttttttttxxx
