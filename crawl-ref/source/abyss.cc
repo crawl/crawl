@@ -225,7 +225,8 @@ static bool _abyss_place_vault_tagged(const map_mask &abyss_genlevel_mask,
     if (map)
     {
         unwind_vault_placement_mask vaultmask(&abyss_genlevel_mask);
-        return (dgn_place_map(map, false, false, INVALID_COORD, rune_subst));
+        return (dgn_safe_place_map(map, false, false, INVALID_COORD,
+                                   rune_subst));
     }
     return (false);
 }
@@ -497,7 +498,7 @@ static int _abyss_place_vaults(const map_mask &abyss_genlevel_mask)
         if (!map)
             break;
 
-        if (dgn_place_map(map, false, false)
+        if (dgn_safe_place_map(map, false, false)
             && !one_chance_in(2 + (++vaults_placed)))
         {
             break;

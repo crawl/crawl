@@ -2293,7 +2293,7 @@ static bool _trowel_card(int power, deck_rarity_type rarity)
         {
             {
                 no_messages n;
-                dgn_place_map(map, true, true, you.pos());
+                dgn_safe_place_map(map, true, true, you.pos());
             }
             mpr("A mystic portal forms.");
         }

@@ -4450,12 +4450,18 @@ void _fixup_after_vault()
 // clobber: If true, assumes the newly placed vault can clobber existing
 //          items and monsters (items may be destroyed, monsters may be
 //          teleported).
+//
+// Non-dungeon code should generally use dgn_safe_place_map instead of
+// this function to recover from map_load_exceptions.
 bool dgn_place_map(const map_def *mdef,
                    bool clobber,
                    bool make_no_exits,
                    const coord_def &where,
                    int rune_subst)
 {
+    if (!mdef)
+        return (false);
+
     const dgn_colour_override_manager colour_man;
 
     bool did_map = false;
@@ -4521,6 +4527,49 @@ bool dgn_place_map(const map_def *mdef,
     }
 
     return (did_map);
+}
+
+// Identical to dgn_place_map, but recovers gracefully from
+// map_load_exceptions. Prefer this function if placing maps *not*
+// during level generation time.
+//
+// Returns the map actually placed if the map was placed successfully.
+// This is usually the same as the map passed in, unless map load
+// failed and maps had to be reloaded.
+const map_def *dgn_safe_place_map(const map_def *mdef,
+                                  bool clobber,
+                                  bool make_no_exits,
+                                  const coord_def &where,
+                                  int rune_subst)
+{
+    const std::string mapname(mdef->name);
+    int retries = 10;
+    while (true)
+    {
+        try
+        {
+            const bool placed =
+                dgn_place_map(mdef, clobber, make_no_exits, where, rune_subst);
+            return (placed? mdef : NULL);
+        }
+        catch (map_load_exception &mload)
+        {
+            if (retries-- > 0)
+            {
+                mprf(MSGCH_ERROR,
+                     "Failed to load map %s in dgn_safe_place_map, "
+                     "reloading all maps",
+                     mload.what());
+                reread_maps();
+
+                mdef = find_map_by_name(mapname);
+            }
+            else
+            {
+                return (NULL);
+            }
+        }
+    }
 }
 
 void dgn_dig_vault_loose(vault_placement &vp)

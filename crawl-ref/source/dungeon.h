@@ -232,6 +232,12 @@ bool dgn_place_map(const map_def *map,
                    const coord_def &pos = INVALID_COORD,
                    int rune_subst = -1);
 
+const map_def *dgn_safe_place_map(const map_def *map,
+                                  bool clobber,
+                                  bool make_no_exits,
+                                  const coord_def &pos = INVALID_COORD,
+                                  int rune_subst = -1);
+
 void level_clear_vault_memory();
 void level_welcome_messages();
 void run_map_epilogues ();
