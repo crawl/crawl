@@ -986,16 +986,19 @@ struct target_monster
     }
 };
 
-static void _move_kraken_tentacles(monsters * kraken)
+void move_kraken_tentacles(monsters * kraken)
 {
-   // coord_def targ = kraken->target;
-    actor * foe = kraken->get_foe();
+    if (kraken->type != MONS_KRAKEN
+        || kraken->asleep())
+    {
+        return;
+    }
 
     coord_def targ;
-    if (!foe)
+    if (!kraken->near_foe())
         targ = kraken->pos();
     else
-        targ = foe->pos();
+        targ = kraken->get_foe()->pos();
 
     std::vector<monster_iterator> tentacles;
 
@@ -1127,12 +1130,6 @@ bool mon_special_ability(monsters *monster, bolt & beem)
     circle_def c;
     switch (mclass)
     {
-    // Move tentacles
-    case MONS_KRAKEN:
-        used = false;
-        _move_kraken_tentacles(monster);
-
-        break;
     case MONS_UGLY_THING:
     case MONS_VERY_UGLY_THING:
         // A (very) ugly thing's proximity to you if you're glowing, or
