@@ -1325,8 +1325,6 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 
             if (hooves && pre_ac_dmg > post_ac_dmg)
             {
-                ASSERT(pre_ac_dmg < post_ac_dmg);
-
                 const int dmg = bestroll(pre_ac_dmg - post_ac_dmg, hooves);
                 // do some of the previously ignored damage in extra-damage
                 damage_done += defender->hurt(&you, dmg, BEAM_MISSILE, false);
