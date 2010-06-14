@@ -389,6 +389,10 @@ bool noisy(int loudness, const coord_def& where, const char *msg, int who,
     if (loudness <= 0)
         return (false);
 
+    // [ds] Reduce noise propagation for Sprint.
+    if (crawl_state.game_is_sprint())
+        loudness = std::max(1, div_rand_round(loudness, 3));
+
     // If the origin is silenced there is no noise.
     if (silenced(where))
         return (false);
