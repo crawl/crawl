@@ -3008,10 +3008,14 @@ void level_change(bool skip_attribute_increase)
                             && you.demonic_traits[i].mutation
                                 != first_body_facet)
                         {
-                            if (you.experience_level == level)
-                                 mpr("You feel monstrous as your "
+                            if (you.experience_level == level) {
+                                mpr("You feel monstrous as your "
                                      "demonic heritage exerts itself.",
                                      MSGCH_MUTATION);
+
+                                mark_milestone("monstrous", "is a "
+                                               "monstrous demonspawn!");
+                            }
 
                             i = you.demonic_traits.size();
                             break;
