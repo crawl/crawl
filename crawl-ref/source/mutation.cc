@@ -750,7 +750,6 @@ static int _handle_conflicting_mutations(mutation_type mutation,
     // These are mutations which can't be traded off against each other,
     // so we just fail.
     const mutation_type fail_conflict[][2] = {
-        { MUT_REGENERATION, MUT_SLOW_METABOLISM },
         { MUT_FANGS,        MUT_BEAK            },
         { MUT_HOOVES,       MUT_TALONS          }
     };
@@ -1802,6 +1801,11 @@ bool perma_mutate(mutation_type which_mut, int how_much)
 
     how_much = std::min(static_cast<short>(how_much),
                         get_mutation_def(which_mut).levels);
+
+    int rc = 1;
+    // clear out conflicting mutations
+    while (rc == 1)
+        rc = _handle_conflicting_mutations(which_mut, true);
 
     while (how_much-- > 0)
         if (mutate(which_mut, false, true, false, false, true))
