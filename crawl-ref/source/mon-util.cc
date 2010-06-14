@@ -484,7 +484,9 @@ bool mons_is_stationary(const monsters *mon)
 bool mons_is_firewood(const monsters *mon)
 {
     return (mons_is_stationary(mon)
-            && mons_class_flag(mon->type, M_NO_EXP_GAIN));
+            && mons_class_flag(mon->type, M_NO_EXP_GAIN)
+            && mon->type != MONS_KRAKEN_TENTACLE
+            && mon->type != MONS_KRAKEN_CONNECTOR);
 }
 
 // "body" in a purely grammatical sense.
