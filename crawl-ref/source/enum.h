@@ -2069,6 +2069,7 @@ enum monster_type                      // (int) menv[].type
     MONS_WATER_ELEMENTAL,
     MONS_SWAMP_WORM,                   //  435
     MONS_SHARK,
+    MONS_KRAKEN_CONNECTOR,
 
     // Monsters which move through rock:
     MONS_ROCK_WORM = 440,
