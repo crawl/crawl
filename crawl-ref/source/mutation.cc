@@ -1094,10 +1094,6 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         return (false);
     }
 
-    // Saprovorous/gourmand can't be randomly acquired.
-    if ((mutat == MUT_SAPROVOROUS || mutat == MUT_GOURMAND) && !force_mutation)
-        return (false);
-
     if (you.species == SP_NAGA)
     {
         // gdl: Spit poison 'upgrades' to breathe poison.  Why not...
