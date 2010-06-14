@@ -1968,14 +1968,14 @@ std::string get_item_description( const item_def &item, bool verbose,
                     const int recharge_rate = short(item.props["rod_enchantment"]);
                     if (recharge_rate < max_recharge_rate)
                     {
-                        description << "\nIt's current recharge rate is "
+                        description << "\nIts current recharge rate is "
                                     << (recharge_rate >= 0 ? "+" : "")
                                     << recharge_rate << ". It can be magically "
                                     << "recharged up to +" << max_recharge_rate
                                     << ".";
                     }
                     else
-                        description << "\nIt's recharge rate is at maximum.";
+                        description << "\nIts recharge rate is at maximum.";
                 }
                 else
                 {
