@@ -49,7 +49,8 @@ private:
 class SQL_DBM
 {
 public:
-    SQL_DBM(const std::string &db = "", bool open = false);
+    SQL_DBM(const std::string &db = "", bool readonly = true,
+            bool open = false);
     ~SQL_DBM();
 
     bool is_open() const;
@@ -62,6 +63,7 @@ public:
 
     std::string query(const std::string &key);
     int insert(const std::string &key, const std::string &value);
+    int remove(const std::string &key);
 
 public:
     std::string error;
@@ -73,15 +75,22 @@ private:
     int init_query();
     int init_iterator();
     int init_insert();
+    int init_remove();
     int init_schema();
     int ec(int err);
+
+    int try_insert(const std::string &key, const std::string &value);
+    int do_insert(const std::string &key, const std::string &value);
+    int do_query(const std::string &key, std::string *result);
 
 private:
     sqlite3      *db;
     sqlite3_stmt *s_insert;
+    sqlite3_stmt *s_remove;
     sqlite3_stmt *s_query;
     sqlite3_stmt *s_iterator;
     std::string  dbfile;
+    bool readonly;
 };
 
 SQL_DBM  *dbm_open(const char *filename, int open_mode, int permissions);
