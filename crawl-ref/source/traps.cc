@@ -1383,8 +1383,10 @@ bool is_valid_shaft_level(const level_id &place)
 
     // Shafts are now allowed on the first two levels,
     // as they have a good chance of being detected.
-    /* if (place == BRANCH_MAIN_DUNGEON && you.absdepth0 < 2)
-        return (false); */
+    // 14-06-10: detection levels nohere near high enough
+    // to justify this. {due}
+    if (place == BRANCH_MAIN_DUNGEON && you.absdepth0 < 2)
+        return (false);
 
     // Don't generate shafts in branches where teleport control
     // is prevented.  Prevents player from going down levels without
