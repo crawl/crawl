@@ -46,6 +46,102 @@
 #include <queue>
 #include <set>
 
+struct position_node
+{
+    position_node()
+    {
+        pos.x=0;
+        pos.y=0;
+        last = NULL;
+    }
+
+    coord_def pos;
+    const position_node * last;
+    bool operator < (const position_node & right) const
+    {
+        unsigned idx = pos.x + pos.y * X_WIDTH;
+        unsigned other_idx = right.pos.x + right.pos.y * X_WIDTH;
+        return  idx < other_idx;
+    }
+};
+
+template<typename valid_T, typename connect_T>
+void search_dungeon2(const coord_def & start,
+                    valid_T & valid_target,
+                    connect_T & connecting_square,
+                    std::set<position_node> & visited,
+                    std::vector<std::set<position_node>::iterator> & candidates,
+                    bool exhaustive = true)
+{
+
+    int compass_idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
+
+    position_node temp_node;
+    temp_node.pos = start;
+    temp_node.last = NULL;
+
+
+    std::queue<std::set<position_node>::iterator > fringe;
+
+    std::set<position_node>::iterator current = visited.insert(temp_node).first;
+    fringe.push(current);
+
+
+    bool done = false;
+    while (!fringe.empty())
+    {
+        current = fringe.front();
+        fringe.pop();
+
+        std::random_shuffle(compass_idx, compass_idx + 8);
+
+        for (int i=0; i < 8; ++i)
+        {
+            coord_def adjacent = current->pos + Compass[compass_idx[i]];
+            if (in_bounds(adjacent))
+            {
+                temp_node.pos = adjacent;
+                temp_node.last = &(*current);
+                std::pair<std::set<position_node>::iterator, bool > res;
+                res = visited.insert(temp_node);
+
+                if (!res.second)
+                    continue;
+
+                if (valid_target(adjacent))
+                {
+                    candidates.push_back(res.first);
+                    if (!exhaustive)
+                    {
+                        done = true;
+                        break;
+                    }
+
+                }
+
+                if(connecting_square(adjacent))
+                {
+//                    if (res.second)
+                    fringe.push(res.first);
+                }
+            }
+        }
+        if (done)
+            break;
+    }
+}
+
+void search_dungeon(const coord_def & start,
+                    bool (*valid_target)(const coord_def & ),
+                    bool (*connecting_square)(const coord_def &),
+                    std::set<position_node> & visited,
+                    std::vector<std::set<position_node>::iterator> & candidates,
+                    bool exhaustive = true)
+{
+    search_dungeon2 (start, valid_target, connecting_square, visited, candidates, exhaustive);
+}
+
+
 bool ugly_thing_mutate(monsters *ugly, bool proximity)
 {
     bool success = false;
@@ -784,6 +880,225 @@ static inline void _mons_cast_abil(monsters *monster, bolt &pbolt,
     mons_cast(monster, pbolt, spell_cast, true, true);
 }
 
+static void _establish_connection(int tentacle,
+                                  int head,
+                                  std::set<position_node>::iterator path)
+{
+    const position_node * current = &(*path);
+
+    monsters * test = monster_at(current->pos);
+    if (!test)
+        mprf("no mons at start");
+    else if (test->type != MONS_KRAKEN)
+        mprf("wrong monster type at start (%d)", test->type);
+
+    const position_node * last;
+    int last_monster = head;
+
+    monsters * main = &env.mons[head];
+    while(current)
+    {
+        last = current;
+        current = current->last;
+
+
+        monsters * mons = monster_at(last->pos);
+
+        if (mons)
+        {
+            if  (mons->type == MONS_KRAKEN || mons->type == MONS_KRAKEN_TENTACLE)
+            {
+                last_monster = mons->mindex();
+                continue;
+            }
+        }
+
+         // place a connector
+        int connect = create_monster(
+            mgen_data(MONS_KRAKEN_CONNECTOR, SAME_ATTITUDE(main), main,
+                      0, 0, last->pos, main->foe,
+                      MG_FORCE_PLACE, main->god, MONS_NO_MONSTER, tentacle,
+                      main->colour, you.absdepth0, PROX_CLOSE_TO_PLAYER,
+                      you.level_type));
+
+        if (tentacle >= 0)
+        {
+            menv[connect].max_hit_points = menv[tentacle].max_hit_points;
+            menv[connect].hit_points = menv[tentacle].hit_points;
+
+            menv[connect].props["outwards"].get_long() = last_monster;
+            if (main->holiness() == MH_UNDEAD)
+            {
+                menv[connect].flags |= MF_HONORARY_UNDEAD;
+            }
+            if (monster_can_submerge(&menv[connect], env.grid(last->pos)))
+            {
+                menv[connect].add_ench(ENCH_SUBMERGED);
+            }
+
+        }
+
+    }
+}
+
+bool _kraken_head(const coord_def & pos)
+{
+    monsters * mons = monster_at(pos);
+
+    return (mons && mons->type == MONS_KRAKEN);
+}
+
+bool _kraken_tentacle(const coord_def & pos)
+{
+    monsters * mons = monster_at(pos);
+
+    return (mons && mons->type == MONS_KRAKEN_TENTACLE);
+}
+
+bool _open_area(const coord_def & pos)
+{
+    if (actor_at(pos))
+        return (false);
+
+    return (!feat_is_solid(env.grid(pos)) && env.grid(pos) != DNGN_LAVA);
+}
+
+struct hit_target
+{
+    coord_def base_pos;
+    bool operator()(const coord_def & pos)
+    {
+        return (pos == base_pos);
+    }
+};
+
+struct target_monster
+{
+    int target_mindex;
+
+    bool operator() (const coord_def & pos)
+    {
+        monsters * temp = monster_at(pos);
+        if (!temp || temp->mindex() != target_mindex)
+            return (false);
+        return (true);
+
+    }
+};
+
+static void _move_kraken_tentacles(monsters * kraken)
+{
+   // coord_def targ = kraken->target;
+    actor * foe = kraken->get_foe();
+
+    coord_def targ;
+    if (!foe)
+        targ = kraken->pos();
+    else
+        targ = foe->pos();
+
+    std::vector<monster_iterator> tentacles;
+
+    int headnum = kraken->mindex();
+
+
+    // Search from the target to the tentacles
+    std::set<position_node> visited;
+    std::vector<std::set<position_node>::iterator > tentacle_path;
+    std::vector<std::set<position_node>::iterator> candidates;
+
+    // Todo: check for tentacles w/o a path to target
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (int (mi->number) == headnum)
+        {
+            if (mi->type == MONS_KRAKEN_TENTACLE)
+            {
+                tentacles.push_back(mi);
+            }
+        }
+    }
+
+
+    // Move each tentacle in turn
+    for (unsigned i=0;i<tentacles.size();i++)
+    {
+        monsters * tentacle = monster_at(tentacles[i]->pos());
+        if (!tentacle)
+        {
+            mprf("missing tentacle in path");
+            continue;
+        }
+
+
+        int tentacle_idx = tentacle->mindex();
+
+        // Start by purging the connectors for this tentacle
+        for (monster_iterator mi; mi; ++mi)
+        {
+            if (int (mi->number) == tentacle_idx)
+            {
+                if (mi->type == MONS_KRAKEN_CONNECTOR)
+                {
+                    int hp = menv[mi->mindex()].hit_points;
+                    if (hp > 0 && hp < menv[tentacle_idx].hit_points)
+                        menv[tentacle_idx].hit_points = hp;
+
+                    monster_die(&env.mons[mi->mindex()],
+                            KILL_MISC, NON_MONSTER, true);
+                }
+
+            }
+        }
+
+        tentacle_path.clear();
+        target_monster current_target;
+        current_target.target_mindex = tentacle->mindex();
+        visited.clear();
+
+        search_dungeon2(targ, current_target, _open_area,
+                       visited, tentacle_path, false);
+
+        coord_def new_pos = tentacle->pos();
+        if (tentacle_path.empty()
+            || !tentacle_path[0]->last
+            || actor_at(tentacle_path[0]->last->pos))
+        {
+ //           mprf("no new path to target");
+        }
+        else
+            new_pos = tentacle_path[0]->last->pos;
+
+
+        mgrd(tentacle->pos()) = NON_MONSTER;
+
+        coord_def old_pos = tentacle->pos();
+
+        tentacle->set_position(new_pos);
+
+        mgrd(tentacle->pos()) = tentacle->mindex();
+
+        tentacle->check_redraw(old_pos);
+        tentacle->apply_location_effects(old_pos);
+
+        visited.clear();
+        candidates.clear();
+        // Find the tentacle -> head path
+        current_target.target_mindex = headnum;
+        search_dungeon2(tentacle->pos(), current_target, _open_area,
+                       visited, candidates, false);
+
+        if (candidates.size() != 1)
+        {
+            mprf("Error, %d kraken heads found!", candidates.size());
+            continue;
+        }
+
+        _establish_connection(tentacle_idx, kraken->mindex(),candidates[0]);
+
+    }
+}
+
 //---------------------------------------------------------------
 //
 // mon_special_ability
@@ -812,6 +1127,12 @@ bool mon_special_ability(monsters *monster, bolt & beem)
     circle_def c;
     switch (mclass)
     {
+    // Move tentacles
+    case MONS_KRAKEN:
+        used = false;
+        _move_kraken_tentacles(monster);
+
+        break;
     case MONS_UGLY_THING:
     case MONS_VERY_UGLY_THING:
         // A (very) ugly thing's proximity to you if you're glowing, or
@@ -1475,25 +1796,6 @@ void ballisto_on_move(monsters * monster, const coord_def & position)
     }
 }
 
-struct position_node
-{
-    position_node()
-    {
-        pos.x=0;
-        pos.y=0;
-        last = NULL;
-    }
-
-    coord_def pos;
-    const position_node * last;
-    bool operator < (const position_node & right) const
-    {
-        unsigned idx = pos.x + pos.y * X_WIDTH;
-        unsigned other_idx = right.pos.x + right.pos.y * X_WIDTH;
-        return  idx < other_idx;
-    }
-};
-
 bool _ballisto_at(const coord_def & target)
 {
     monsters * mons = monster_at(target);
@@ -1505,6 +1807,12 @@ bool _player_at(const coord_def & target)
 {
     return (you.pos() == target);
 }
+
+bool _mold_connected(const coord_def & target)
+{
+    return (is_moldy(target) || _ballisto_at(target));
+}
+
 
 // If 'monster' is a ballistomycete or spore, activate some number of
 // ballistomycetes on the level.
@@ -1551,16 +1859,10 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
 
     bool exhaustive = true;
     bool (*valid_target)(const coord_def & ) = _ballisto_at;
-    position_node temp_node;
-    temp_node.pos = origin;
-    temp_node.last = NULL;
+    bool (*connecting_square) (const coord_def &) = _mold_connected;
 
     std::set<position_node> visited;
     std::vector<std::set<position_node>::iterator > candidates;
-    std::queue<std::set<position_node>::iterator > fringe;
-
-    std::set<position_node>::iterator current = visited.insert(temp_node).first;
-    fringe.push(current);
 
     if (you.religion == GOD_FEDHAS)
     {
@@ -1579,34 +1881,8 @@ void activate_ballistomycetes(monsters * monster, const coord_def & origin,
         valid_target = _player_at;
     }
 
-    while (!fringe.empty())
-    {
-        current = fringe.front();
-        fringe.pop();
-
-        if (valid_target(current->pos))
-        {
-            candidates.push_back(current);
-            if (!exhaustive)
-                break;
-        }
-
-        for (adjacent_iterator adj_it(current->pos); adj_it; ++adj_it)
-        {
-            if (in_bounds(*adj_it)
-                && (is_moldy(*adj_it)
-                    || _ballisto_at(*adj_it)))
-            {
-                temp_node.pos = *adj_it;
-                temp_node.last = &(*current);
-
-                std::pair<std::set<position_node>::iterator, bool > res;
-                res = visited.insert(temp_node);
-                if (res.second)
-                    fringe.push(res.first);
-            }
-        }
-    }
+    search_dungeon(origin, valid_target, connecting_square, visited,
+                   candidates, exhaustive);
 
     if (candidates.empty())
     {
