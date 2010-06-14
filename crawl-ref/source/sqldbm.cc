@@ -12,9 +12,38 @@
 
 #ifdef USE_SQLITE_DBM
 
-SQL_DBM::SQL_DBM(const std::string &dbname, bool do_open)
-    : error(), errc(SQLITE_OK), db(NULL), s_insert(NULL),
-      s_query(NULL), s_iterator(NULL), dbfile(dbname)
+class sqlite_retry_iterator
+{
+public:
+    sqlite_retry_iterator(int _nretries = 50)
+        : nretries(_nretries)
+    {
+    }
+    operator bool () const
+    {
+        return nretries > 0;
+    }
+    void check(int errcode)
+    {
+        if (errcode == SQLITE_BUSY)
+        {
+            --nretries;
+            // Give the annoying process locking the db a little time
+            // to finish whatever it's up to before we retry.
+            usleep(1000);
+        }
+        else
+        {
+            nretries = 0;
+        }
+    }
+private:
+    int nretries;
+};
+
+SQL_DBM::SQL_DBM(const std::string &dbname, bool _readonly, bool do_open)
+    : error(), errc(SQLITE_OK), db(NULL), s_insert(NULL), s_remove(NULL),
+      s_query(NULL), s_iterator(NULL), dbfile(dbname), readonly(_readonly)
 {
     if (do_open && !dbfile.empty())
         open();
@@ -54,10 +83,15 @@ int SQL_DBM::open(const std::string &s)
         if (dbfile.find(".db") != dbfile.length() - 3)
             dbfile += ".db";
 
-        if (ec( sqlite3_open(dbfile.c_str(), &db) ) != SQLITE_OK)
+        if (ec( sqlite3_open_v2(
+                    dbfile.c_str(), &db,
+                    readonly? SQLITE_OPEN_READONLY :
+                    (SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE),
+                    NULL
+                    ) ) != SQLITE_OK)
         {
-            std::string saveerr = error;
-            int serrc = errc;
+            const std::string saveerr = error;
+            const int serrc = errc;
             close();
             error = saveerr;
             errc  = serrc;
@@ -83,7 +117,11 @@ int SQL_DBM::init_schema()
                   NULL));
 
     // Turn off auto-commit
-    sqlite3_exec(db, "BEGIN;", NULL, NULL, NULL);
+    if (!readonly)
+    {
+        for (sqlite_retry_iterator ri; ri;
+             ri.check(ec(sqlite3_exec(db, "BEGIN;", NULL, NULL, NULL))));
+    }
     return (err);
 }
 
@@ -91,8 +129,10 @@ void SQL_DBM::close()
 {
     if (db)
     {
-        sqlite3_exec(db, "COMMIT;", NULL, NULL, NULL);
+        if (!readonly)
+            sqlite3_exec(db, "COMMIT;", NULL, NULL, NULL);
         finalise_query(&s_insert);
+        finalise_query(&s_remove);
         finalise_query(&s_query);
         finalise_query(&s_iterator);
         sqlite3_close(db);
@@ -100,7 +140,7 @@ void SQL_DBM::close()
     }
 }
 
-int SQL_DBM::insert(const std::string &key, const std::string &value)
+int SQL_DBM::try_insert(const std::string &key, const std::string &value)
 {
     if (init_insert() != SQLITE_OK)
         return (errc);
@@ -118,31 +158,81 @@ int SQL_DBM::insert(const std::string &key, const std::string &value)
     return (errc);
 }
 
+int SQL_DBM::insert(const std::string &key, const std::string &value)
+{
+    for (sqlite_retry_iterator ri; ri;
+         ri.check(do_insert(key, value)));
+    return (errc);
+}
+
+int SQL_DBM::do_insert(const std::string &key, const std::string &value)
+{
+    try_insert(key, value);
+    if (errc != SQLITE_OK)
+    {
+        remove(key);
+        try_insert(key, value);
+    }
+    return (errc);
+}
+
 int SQL_DBM::init_insert()
 {
     return s_insert? SQLITE_OK :
         prepare_query(&s_insert, "INSERT INTO dbm VALUES (?, ?)");
 }
 
-std::string SQL_DBM::query(const std::string &key)
+int SQL_DBM::remove(const std::string &key)
+{
+    if (init_remove() != SQLITE_OK)
+        return (errc);
+
+    ec(sqlite3_bind_text(s_remove, 1, key.c_str(), -1, SQLITE_TRANSIENT));
+    if (errc != SQLITE_OK)
+        return (errc);
+
+    ec(sqlite3_step(s_remove));
+    sqlite3_reset(s_remove);
+
+    return (errc);
+}
+
+int SQL_DBM::init_remove()
+{
+    return s_remove? SQLITE_OK :
+        prepare_query(&s_remove, "DELETE FROM dbm WHERE key = ?");
+}
+
+int SQL_DBM::do_query(const std::string &key, std::string *result)
 {
     if (init_query() != SQLITE_OK)
-        return ("");
+        return (errc);
 
     if (ec(sqlite3_bind_text(s_query, 1, key.c_str(), -1, SQLITE_TRANSIENT))
         != SQLITE_OK)
     {
-        return ("");
+        return (errc);
     }
 
     int err = SQLITE_OK;
     std::string res;
     while ((err = ec(sqlite3_step(s_query))) == SQLITE_ROW)
-        res = (const char *) sqlite3_column_text(s_query, 0);
+        *result = (const char *) sqlite3_column_text(s_query, 0);
 
     sqlite3_reset(s_query);
 
-    return (res);
+    if (err == SQLITE_DONE)
+        err = SQLITE_OK;
+
+    return (ec(err));
+}
+
+std::string SQL_DBM::query(const std::string &key)
+{
+    std::string result;
+    for (sqlite_retry_iterator ri; ri;
+         ri.check(do_query(key, &result)));
+    return (result);
 }
 
 std::auto_ptr<std::string> SQL_DBM::firstkey()
@@ -278,9 +368,9 @@ std::string sql_datum::to_str() const
 
 ////////////////////////////////////////////////////////////////////////
 
-SQL_DBM *dbm_open(const char *filename, int, int)
+SQL_DBM *dbm_open(const char *filename, int mode, int)
 {
-    SQL_DBM *n = new SQL_DBM(filename, true);
+    SQL_DBM *n = new SQL_DBM(filename, mode == O_RDONLY, true);
     if (!n->is_open())
     {
         delete n;
