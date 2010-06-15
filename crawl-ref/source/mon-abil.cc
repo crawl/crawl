@@ -71,10 +71,19 @@ void search_dungeon2(const coord_def & start,
                     connect_T & connecting_square,
                     std::set<position_node> & visited,
                     std::vector<std::set<position_node>::iterator> & candidates,
-                    bool exhaustive = true)
+                    bool exhaustive = true,
+                    int connect_mode = 8)
 {
 
-    int compass_idx[] = {0, 1, 2, 3, 4, 5, 6, 7};
+    if (connect_mode < 1 || connect_mode > 8)
+        connect_mode = 8;
+
+    // Ordering the default compass index this way gives us the non
+    // diagonal directions as the first four elements - so by just
+    // using the first 4 elements instead of the whole array we
+    // can have 4-connectivity.
+    int compass_idx[] = {0, 2, 4, 6, 1, 3, 5, 7};
+
 
     position_node temp_node;
     temp_node.pos = start;
@@ -93,9 +102,9 @@ void search_dungeon2(const coord_def & start,
         current = fringe.front();
         fringe.pop();
 
-        std::random_shuffle(compass_idx, compass_idx + 8);
+        std::random_shuffle(compass_idx, compass_idx + connect_mode);
 
-        for (int i=0; i < 8; ++i)
+        for (int i=0; i < connect_mode; ++i)
         {
             coord_def adjacent = current->pos + Compass[compass_idx[i]];
             if (in_bounds(adjacent))
@@ -986,6 +995,16 @@ struct target_monster
     }
 };
 
+struct clear_and_seen
+{
+    monsters * base_monster;
+
+    bool operator() (const coord_def & pos)
+    {
+        return (base_monster->see_cell_no_trans(pos) && _open_area(pos));
+    }
+};
+
 void move_kraken_tentacles(monsters * kraken)
 {
     if (kraken->type != MONS_KRAKEN
@@ -993,6 +1012,7 @@ void move_kraken_tentacles(monsters * kraken)
     {
         return;
     }
+    int tentacle_connectivity = 8;
 
     coord_def targ;
     if (!kraken->near_foe())
@@ -1058,9 +1078,12 @@ void move_kraken_tentacles(monsters * kraken)
         target_monster current_target;
         current_target.target_mindex = tentacle->mindex();
         visited.clear();
+        clear_and_seen path_check;
+        path_check.base_monster = kraken;
 
-        search_dungeon2(targ, current_target, _open_area,
-                       visited, tentacle_path, false);
+        search_dungeon2(targ, current_target, path_check,
+                       visited, tentacle_path, false,
+                       tentacle_connectivity);
 
         coord_def new_pos = tentacle->pos();
         if (tentacle_path.empty()
@@ -1088,8 +1111,8 @@ void move_kraken_tentacles(monsters * kraken)
         candidates.clear();
         // Find the tentacle -> head path
         current_target.target_mindex = headnum;
-        search_dungeon2(tentacle->pos(), current_target, _open_area,
-                       visited, candidates, false);
+        search_dungeon2(tentacle->pos(), current_target, path_check,
+                       visited, candidates, false, tentacle_connectivity);
 
         if (candidates.size() != 1)
         {
