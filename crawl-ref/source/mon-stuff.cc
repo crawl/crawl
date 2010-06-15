@@ -1146,9 +1146,16 @@ void mons_relocated(monsters *monster)
         for (monster_iterator mi; mi; ++mi)
         {
             if (mi->type == MONS_KRAKEN_TENTACLE
-                && (int)mi->number == headnum
-                && _tentacle_too_far(monster, *mi))
+                && (int)mi->number == headnum)
             {
+                for (monster_iterator connect; connect; ++connect)
+                {
+                    if (connect->type == MONS_KRAKEN_CONNECTOR
+                        && (int) connect->number == mi->mindex())
+                    {
+                        monster_die(*connect, KILL_RESET, -1, true, false);
+                    }
+                }
                 monster_die(*mi, KILL_RESET, -1, true, false);
             }
         }
@@ -1156,12 +1163,55 @@ void mons_relocated(monsters *monster)
     else if (monster->type == MONS_KRAKEN_TENTACLE)
     {
         if (invalid_monster_index(monster->number)
-            || menv[monster->number].type != MONS_KRAKEN
-            || _tentacle_too_far(&menv[monster->number], monster))
+            || menv[monster->number].type != MONS_KRAKEN)
         {
+            for (monster_iterator connect; connect; ++connect)
+            {
+                if (connect->type == MONS_KRAKEN_CONNECTOR
+                    && (int) connect->number == monster->mindex())
+                {
+                    monster_die(*connect, KILL_RESET, -1, true, false);
+                }
+            }
+
             monster_die(monster, KILL_RESET, -1, true, false);
         }
     }
+}
+static int _destroy_tentacle(int tentacle_idx, monsters * origin)
+{
+    int seen = 0;
+
+    if (invalid_monster_index(tentacle_idx))
+        return (0);
+
+
+    // Some issue with using monster_die leading to DEAD_MONSTER
+    // or w/e. Using hurt seems to cause more problems though.
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->type == MONS_KRAKEN_CONNECTOR
+            && (int)mi->number == tentacle_idx
+            && mi->mindex() != origin->mindex() )
+        {
+            if (mons_near(*mi))
+                seen++;
+            //mi->hurt(*mi, INSTANT_DEATH);
+            monster_die(*mi, KILL_MISC, NON_MONSTER, true);
+        }
+    }
+
+    if (origin->mindex() != tentacle_idx)
+    {
+        if (mons_near(&menv[tentacle_idx]))
+            seen++;
+
+        //mprf("killing base, %d %d", origin->mindex(), tentacle_idx);
+        //menv[tentacle_idx].hurt(&menv[tentacle_idx], INSTANT_DEATH);
+        monster_die(&menv[tentacle_idx], KILL_MISC, NON_MONSTER, true);
+    }
+
+    return (seen);
 }
 
 static int _destroy_tentacles(monsters *head)
@@ -1177,6 +1227,14 @@ static int _destroy_tentacles(monsters *head)
         if (mi->type == MONS_KRAKEN_TENTACLE
             && (int)mi->number == headnum)
         {
+            for (monster_iterator connect; connect; ++connect)
+            {
+                if (connect->type == MONS_KRAKEN_CONNECTOR
+                    && (int) connect->number == mi->mindex())
+                {
+                    connect->hurt(*connect, INSTANT_DEATH);
+                }
+            }
             if (mons_near(*mi))
                 tent++;
             mi->hurt(*mi, INSTANT_DEATH);
@@ -1963,6 +2021,18 @@ int monster_die(monsters *monster, killer_type killer,
             mpr("The kraken is slain, and its tentacles slide "
                 "back into the water like the carrion they now are.");
         }
+    }
+    else if ((monster->type == MONS_KRAKEN_CONNECTOR
+                  || monster->type == MONS_KRAKEN_TENTACLE)
+              && killer != KILL_MISC)
+    {
+        int t_idx = monster->type == MONS_KRAKEN_TENTACLE
+                    ? monster->mindex() : monster->number;
+        if (_destroy_tentacle(t_idx, monster) && !in_transit)
+        {
+            //mprf("A tentacle died?");
+        }
+
     }
     else if (mons_is_elven_twin(monster) && mons_near(monster))
     {
@@ -3914,6 +3984,14 @@ void mons_att_changed(monsters *mon)
                 && (int)mi->number == headnum)
             {
                 mi->attitude = att;
+                for (monster_iterator connect; connect; ++connect)
+                {
+                    if (connect->type == MONS_KRAKEN_CONNECTOR
+                        && (int) connect->number == mi->mindex())
+                    {
+                        connect->attitude = att;
+                    }
+                }
             }
     }
 }
