@@ -2631,6 +2631,19 @@
 },
 
 {
+    SPELL_SUMMON_CANIFORMS, "Summon Caniforms",
+     SPTYP_SUMMONING,
+     SPFLAG_MONSTER,
+     6,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

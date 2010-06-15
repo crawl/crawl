@@ -867,6 +867,7 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     case SPELL_INK_CLOUD:
     case SPELL_SILENCE:
     case SPELL_AWAKEN_FOREST:
+    case SPELL_SUMMON_CANIFORMS:
         return (true);
     default:
         if (check_validity)
@@ -2215,6 +2216,28 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                               duration, spell_cast,
                               monster->pos(), monster->foe, 0, god));
             }
+        }
+        return;
+
+    case SPELL_SUMMON_CANIFORMS: // Bears and wolves
+        if (_mons_abjured(monster, monsterNearby))
+            return;
+
+        sumcount2 = 1 + random2(2) + random2(monster->hit_dice / 4 + 1);
+
+        duration  = std::min(2 + monster->hit_dice / 5, 6);
+        for (int i = 0; i < sumcount2; ++i)
+        {
+            create_monster(
+                mgen_data(static_cast<monster_type>(random_choose_weighted(
+                            10, MONS_WOLF,
+                             4, MONS_BEAR,
+                             1, MONS_GRIZZLY_BEAR,
+                             4, MONS_BLACK_BEAR,
+                             // no polar bears
+                          0)), SAME_ATTITUDE(monster),
+                          monster, duration, spell_cast, monster->pos(),
+                          monster->foe, 0, god));
         }
         return;
 
