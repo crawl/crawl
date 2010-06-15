@@ -4990,6 +4990,9 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
             }
         }
 
+        int useless_tries = 0;
+    retry:
+
         const int item_made = items( spec.allow_uniques, spec.base_type,
                                      spec.sub_type, true, item_level,
                                      spec.race, 0, spec.ego );
@@ -4997,6 +5000,13 @@ static void _dgn_give_mon_spec_items(mons_spec &mspec,
         if (item_made != NON_ITEM && item_made != -1)
         {
             item_def &item(mitm[item_made]);
+
+            if (spec.props.exists("useful") && (useless_tries++ < 10)
+                && is_useless_item(item, false))
+            {
+                destroy_item(item_made, true);
+                goto retry;
+            }
 
             // Mark items on summoned monsters as such.
             if (mspec.abjuration_duration != 0)
