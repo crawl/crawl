@@ -3009,7 +3009,8 @@ void level_change(bool skip_attribute_increase)
                             && you.demonic_traits[i].mutation
                                 != first_body_facet)
                         {
-                            if (you.experience_level == level) {
+                            if (you.experience_level == level)
+                            {
                                 mpr("You feel monstrous as your "
                                      "demonic heritage exerts itself.",
                                      MSGCH_MUTATION);
@@ -3046,11 +3047,11 @@ void level_change(bool skip_attribute_increase)
                         perma_mutate(you.demonic_traits[i].mutation, 1);
                     }
                 }
-            }
+
                 if (!(you.experience_level % 4))
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
-
                 break;
+            }
 
             case SP_GHOUL:
                 // lowered because of HD raise -- bwr
