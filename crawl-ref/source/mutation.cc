@@ -1868,13 +1868,11 @@ bool balance_demonic_guardian()
             && att == ATT_FRIENDLY && !one_chance_in(3))
         {
             mpr(mons->name(DESC_CAP_THE) + " "
-                + summoned_poof_msg(*mons), MSGCH_PLAIN);
+                + summoned_poof_msg(*mons) + "!", MSGCH_PLAIN);
             monster_die(*mons, KILL_NONE, NON_MONSTER);
         }
         else
-        {
             total += mons_val;
-        }
     }
 
     return (false);

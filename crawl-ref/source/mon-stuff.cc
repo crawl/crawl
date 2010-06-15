@@ -1105,8 +1105,7 @@ void _monster_die_cloud(const monsters* monster, bool corpse, bool silent,
         prefix = "'s corpse ";
     }
 
-    std::string msg = summoned_poof_msg(monster);
-    msg += "!";
+    std::string msg = summoned_poof_msg(monster) + "!";
 
     cloud_type cloud = CLOUD_NONE;
     if (msg.find("smoke") != std::string::npos)
