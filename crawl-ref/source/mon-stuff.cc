@@ -2000,7 +2000,8 @@ int monster_die(monsters *monster, killer_type killer,
     {
         const int pbd_dur = player_mutation_level(MUT_POWERED_BY_DEATH) * 8
                             + roll_dice(2, 8);
-        you.set_duration(DUR_POWERED_BY_DEATH, pbd_dur);
+        if (pbd_dur > you.duration[DUR_POWERED_BY_DEATH])
+            you.set_duration(DUR_POWERED_BY_DEATH, pbd_dur);
     }
 
     unsigned int exp_gain = 0, avail_gain = 0;
