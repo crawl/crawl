@@ -3540,7 +3540,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_KRAKEN_CONNECTOR, '*', BLACK, "tentacle2",
+    MONS_KRAKEN_CONNECTOR, '*', BLACK, "tentacle segment",
     M_COLD_BLOOD | M_NO_EXP_GAIN | M_STATIONARY | M_SUBMERGES,
     MR_RES_ASPHYX,
     0, 10, MONS_KRAKEN, MONS_KRAKEN_CONNECTOR, MH_NATURAL, MAG_IMMUNE,
