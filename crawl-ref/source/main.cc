@@ -390,6 +390,7 @@ static void _wanderer_startup_message()
 }
 
 // A one-liner upon game start to mention the orb.
+// TODO: source out the list of messages into a file, ideally with weights.
 static void _announce_goal_message()
 {
     std::string msg;
