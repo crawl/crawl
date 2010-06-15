@@ -475,6 +475,15 @@ void handle_behaviour(monsters *mon)
                         if (mi->type == MONS_KRAKEN_TENTACLE
                             && (int)mi->number == headnum)
                         {
+                            for (monster_iterator connect; connect; ++connect)
+                            {
+                                if (connect->type == MONS_KRAKEN_CONNECTOR
+                                    && (int) connect->number == mi->mindex())
+                                {
+                                    monster_die(*connect, KILL_MISC,
+                                                NON_MONSTER, true);
+                                }
+                            }
                             monster_die(*mi, KILL_MISC, NON_MONSTER, true);
                             tcount++;
                         }
@@ -923,6 +932,16 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
                 if (mi->type == MONS_KRAKEN_TENTACLE
                     && (int)mi->number == headnum)
                 {
+                    for (monster_iterator connect; connect; ++connect)
+                    {
+                        if (connect->type == MONS_KRAKEN_CONNECTOR
+                            && (int) connect->number == mi->mindex())
+                        {
+                            monster_die(*connect, KILL_MISC,
+                                        NON_MONSTER, true);
+                        }
+
+                    }
                     monster_die(*mi, KILL_MISC, NON_MONSTER, true);
                     tcount++;
                 }
