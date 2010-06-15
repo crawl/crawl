@@ -1550,3 +1550,20 @@ x111x
 x111x
 xx+xx
 ENDMAP
+
+NAME:   kilobyte_rumbling_trees
+DEPTH:  D:12-20, Elf, Lair
+MONS:   statue col:green spells:awaken_forest tile:mons_statue_mage
+MAP
+ttttt       tttt@t
+tttttt tt ttttt.tt
+t.tttttttttttt.ttt
+@t..ttttttttt.tttt
+tttt..t.ttt..tttt
+tttttt.1...ttttt
+ ttttt..tttttttt
+ tttt.ttttttttt
+tttt.tttttttt
+tttt.tttttt
+ tttt@ttt
+ENDMAP
