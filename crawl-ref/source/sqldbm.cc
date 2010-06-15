@@ -6,8 +6,10 @@
 
 #include "AppHdr.h"
 
+#include "libutil.h"
 #include "sqldbm.h"
 #include "stuff.h"
+#include <fcntl.h>
 #include <cstring>
 
 #ifdef USE_SQLITE_DBM
