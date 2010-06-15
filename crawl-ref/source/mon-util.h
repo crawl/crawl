@@ -253,6 +253,7 @@ int mons_real_base_speed(int mc);
 
 bool mons_class_can_regenerate(int mc);
 bool mons_can_regenerate(const monsters *mon);
+zombie_size_type zombie_class_size(monster_type cs);
 int mons_zombie_size(int mc);
 monster_type mons_zombie_base(const monsters *mon);
 bool mons_class_is_zombified(int mc);

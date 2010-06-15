@@ -5065,15 +5065,12 @@ int dgn_place_monster(mons_spec &mspec,
                 mg.cls = pick_random_monster(mspec.place, lev, lev, NULL);
             while (!invalid_monster_type(mg.cls)
                    && mons_class_is_zombified(mspec.monbase)
-                   && !mons_zombie_size(mg.cls)
-                   && tries-- > 0);
+                   && (!mons_zombie_size(mg.cls)
+                       || mons_zombie_size(mg.cls) != zombie_class_size(mspec.monbase))
+                   && --tries > 0);
 
-            if (invalid_monster_type(mg.cls)
-                || (mons_class_is_zombified(mspec.monbase)
-                    && !mons_zombie_size(mg.cls)))
-            {
+            if (!tries)
                 mg.cls = RANDOM_MONSTER;
-            }
         }
 
         mg.power     = monster_level;

@@ -987,6 +987,27 @@ bool mons_can_regenerate(const monsters *mon)
     return (mons_class_can_regenerate(mon->type));
 }
 
+// Size based on zombie class.
+zombie_size_type zombie_class_size(monster_type cs)
+{
+    switch (cs)
+    {
+        case MONS_ZOMBIE_SMALL:
+        case MONS_SIMULACRUM_SMALL:
+        case MONS_SKELETON_SMALL:
+            return (Z_SMALL);
+        case MONS_ZOMBIE_LARGE:
+        case MONS_SIMULACRUM_LARGE:
+        case MONS_SKELETON_LARGE:
+            return (Z_BIG);
+        case MONS_SPECTRAL_THING:
+            return (Z_NOZOMBIE);
+        default:
+            ASSERT(false);
+            return (Z_NOZOMBIE);
+    }
+}
+
 int mons_zombie_size(int mc)
 {
     ASSERT(smc);

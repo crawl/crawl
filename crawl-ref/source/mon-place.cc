@@ -1656,27 +1656,6 @@ monster_type pick_random_zombie()
     return (zombifiable[random2(zombifiable.size())]);
 }
 
-// Size based on zombie class.
-static zombie_size_type _zombie_class_size(monster_type cs)
-{
-    switch (cs)
-    {
-        case MONS_ZOMBIE_SMALL:
-        case MONS_SIMULACRUM_SMALL:
-        case MONS_SKELETON_SMALL:
-            return (Z_SMALL);
-        case MONS_ZOMBIE_LARGE:
-        case MONS_SIMULACRUM_LARGE:
-        case MONS_SKELETON_LARGE:
-            return (Z_BIG);
-        case MONS_SPECTRAL_THING:
-            return (Z_NOZOMBIE);
-        default:
-            ASSERT(false);
-            return (Z_NOZOMBIE);
-    }
-}
-
 // Check base monster class against zombie type and position
 // if set.
 static bool _good_zombie(monster_type base, monster_type cs,
@@ -1700,7 +1679,7 @@ static bool _good_zombie(monster_type base, monster_type cs,
     // Size must match, but you can make a spectral thing out
     // of anything.
     if (cs != MONS_SPECTRAL_THING
-        && mons_zombie_size(base) != _zombie_class_size(cs))
+        && mons_zombie_size(base) != zombie_class_size(cs))
     {
         return (false);
     }
@@ -1793,8 +1772,8 @@ static void _define_zombie(monsters* mon, monster_type ztype, monster_type cs,
     else
         base = mons_species(ztype);
 
-    ASSERT(_zombie_class_size(cs) == Z_NOZOMBIE
-           || _zombie_class_size(cs) == mons_zombie_size(base));
+    ASSERT(zombie_class_size(cs) == Z_NOZOMBIE
+           || zombie_class_size(cs) == mons_zombie_size(base));
 
     // Set type to the base type to calculate appropriate stats.
     mon->type = base;
