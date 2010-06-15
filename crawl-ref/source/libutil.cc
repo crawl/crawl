@@ -674,6 +674,15 @@ std::vector<std::string> split_string( const std::string &sep,
 // Good for systems like old versions of Solaris that don't have usleep.
 #ifdef NEED_USLEEP
 
+# ifdef TARGET_OS_WINDOWS
+void usleep(unsigned long time)
+{
+    ASSERT(time > 0);
+    ASSERT(!(time % 1000));
+    Sleep(time/1000);
+}
+# else
+
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/unistd.h>
@@ -687,6 +696,7 @@ void usleep(unsigned long time)
 
     select(0, NULL, NULL, NULL, &timer);
 }
+# endif
 #endif
 
 #ifndef USE_TILE
