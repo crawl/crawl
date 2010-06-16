@@ -339,6 +339,9 @@ public:
     std::string add_fheight(const std::string &arg);
     void clear_markers();
 
+    void write_maplines(writer &) const;
+    void read_maplines(reader&);
+
 #ifdef USE_TILE
     std::string add_floortile(const std::string &s);
     std::string add_rocktile(const std::string &s);
@@ -914,9 +917,11 @@ public:
 
     void write_index(writer&) const;
     void write_full(writer&) const;
+    void write_maplines(writer &) const;
 
     void read_index(reader&);
     void read_full(reader&);
+    void read_maplines(reader&);
 
     void set_file(const std::string &s);
     std::string run_lua(bool skip_main);
