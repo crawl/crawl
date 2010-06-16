@@ -1972,6 +1972,9 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_DEMON_TRIDENT:
         return TILE_WPN_DEMON_TRIDENT;
 
+    case WPN_HOLY_TRISHULA:
+        return TILE_WPN_HOLY_TRISHULA;
+
     case WPN_LONGBOW:
         return TILE_WPN_LONGBOW;
 
