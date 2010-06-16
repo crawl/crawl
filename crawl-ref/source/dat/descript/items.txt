@@ -1316,6 +1316,10 @@ triple sword
 
 A magical weapon with three great razor-sharp blades.
 %%%%
+trishula
+
+A blessed trident molded by cleansing flame, with three points symbolizing the combined might of the three holy gods.
+%%%%
 troll hide
 
 The stiff and knobbly hide of a troll. I suppose you could wear it if you really wanted to.

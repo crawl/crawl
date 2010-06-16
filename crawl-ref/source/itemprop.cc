@@ -317,6 +317,9 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_DEMON_TRIDENT,     "demon trident",      14,  1, 13, 160,  4,
         SK_POLEARMS,     HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
         DAMV_PIERCING, 2 },
+    { WPN_TRISHULA,          "trishula",           15,  0, 13, 160,  4,
+        SK_POLEARMS,     HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
+        DAMV_PIERCING, 2 },
     { WPN_GLAIVE,            "glaive",             15, -3, 18, 200,  6,
         SK_POLEARMS,     HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_CHOPPING, 10 },
@@ -429,7 +432,7 @@ void init_properties()
 {
     // Compare with enum comments, to catch changes.
     COMPILE_CHECK(NUM_ARMOURS  == 37, c1);
-    COMPILE_CHECK(NUM_WEAPONS  == 55, c2);
+    COMPILE_CHECK(NUM_WEAPONS  == 56, c2);
     COMPILE_CHECK(NUM_MISSILES ==  9, c3);
     COMPILE_CHECK(NUM_FOODS    == 22, c4);
 
@@ -1518,6 +1521,7 @@ bool is_blessed(const item_def &item)
         case WPN_BLESSED_GREAT_SWORD:
         case WPN_BLESSED_TRIPLE_SWORD:
         case WPN_HOLY_SCOURGE:
+        case WPN_TRISHULA:
             return (true);
 
         default:
@@ -1534,6 +1538,7 @@ bool is_blessed_convertible(const item_def &item)
             && (item.base_type == OBJ_WEAPONS
                 && (is_demonic(item)
                     || item.sub_type == WPN_HOLY_SCOURGE
+                    || item.sub_type == WPN_TRISHULA
                     || weapon_skill(item) == SK_LONG_BLADES)));
 }
 
@@ -1604,7 +1609,10 @@ bool convert2good(item_def &item, bool allow_blessed)
         break;
 
     case WPN_DEMON_TRIDENT:
-        item.sub_type = WPN_TRIDENT;
+        if (!allow_blessed)
+            item.sub_type = WPN_TRIDENT;
+        else
+            item.sub_type = WPN_TRISHULA;
         break;
     }
 
@@ -1658,6 +1666,10 @@ bool convert2bad(item_def &item)
 
     case WPN_HOLY_SCOURGE:
         item.sub_type = WPN_DEMON_WHIP;
+        break;
+
+    case WPN_TRISHULA:
+        item.sub_type = WPN_DEMON_TRIDENT;
         break;
     }
 

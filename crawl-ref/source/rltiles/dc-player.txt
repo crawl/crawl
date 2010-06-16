@@ -556,6 +556,7 @@ glaive3 GLAIVE3
 d_glaive D_GLAIVE
 pole_forked POLE_FORKED
 fork2 FORK2
+trishula TRISHULA
 
 ## staves
 
