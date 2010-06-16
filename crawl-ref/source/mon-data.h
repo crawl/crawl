@@ -5189,7 +5189,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_RUPERT, '@', RED, "Rupert",
+    MONS_RUPERT, '@', LIGHTRED, "Rupert",
     M_UNIQUE | M_SPELLCASTER | M_ACTUAL_SPELLS | M_WARM_BLOOD | M_SEE_INVIS
         | M_SPEAKS,
     MR_NO_FLAGS,
