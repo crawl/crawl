@@ -1553,7 +1553,8 @@ ENDMAP
 
 NAME:   kilobyte_rumbling_trees
 DEPTH:  D:12-20, Elf, Lair
-MONS:   statue col:green spells:awaken_forest tile:mons_statue_mage
+MONS:   patrolling spriggan druid
+FTILE:  .t1@ = floor_lair
 MAP
 ttttt       tttt@t
 tttttt tt ttttt.tt
