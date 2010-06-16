@@ -521,6 +521,17 @@ void dgn_erase_unused_vault_placements()
                 env.level_map_ids(*ri) = imap->second;
         }
     }
+
+#ifdef DEBUG_DIAGNOSTICS
+    dprf("Extant vaults on level: %d", (int) env.level_vaults.size());
+    for (int i = 0, size = env.level_vaults.size(); i < size; ++i)
+    {
+        const vault_placement &vp(*env.level_vaults[i]);
+        dprf("%d) %s (%d,%d) size (%d,%d)",
+             i, vp.map.name.c_str(), vp.pos.x, vp.pos.y,
+             vp.size.x, vp.size.y);
+    }
+#endif
 }
 
 void level_clear_vault_memory()

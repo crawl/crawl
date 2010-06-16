@@ -1409,6 +1409,7 @@ static void marshall_mapdef(writer &th, const map_def &map)
     marshallStringNoMax(th, map.name);
     map.write_full(th);
     map.write_index(th);
+    map.write_maplines(th);
 }
 
 static map_def unmarshall_mapdef(reader &th)
@@ -1417,6 +1418,8 @@ static map_def unmarshall_mapdef(reader &th)
     map.name = unmarshallStringNoMax(th);
     map.read_full(th);
     map.read_index(th);
+    if (_tag_minor_version >= TAG_MINOR_VAULT_MAPS)
+        map.read_maplines(th);
     return map;
 }
 

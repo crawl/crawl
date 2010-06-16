@@ -366,6 +366,24 @@ map_lines::map_lines(const map_lines &map)
     init_from(map);
 }
 
+void map_lines::write_maplines(writer &outf) const
+{
+    const int h = height();
+    marshallShort(outf, h);
+    for (int i = 0; i < h; ++i)
+        marshallString(outf, lines[i]);
+}
+
+void map_lines::read_maplines(reader &inf)
+{
+    clear();
+    const int h = unmarshallShort(inf);
+    ASSERT(h >= 0 && h <= GYM);
+
+    for (int i = 0; i < h; ++i)
+        add_line(unmarshallString(inf));
+}
+
 rectangle_iterator map_lines::get_iter() const
 {
     ASSERT(width() > 0);
@@ -400,7 +418,6 @@ bool map_lines::in_bounds(const coord_def &c) const
 {
     return (c.x >= 0 && c.y >= 0 && c.x < width() && c.y < height());
 }
-
 
 bool map_lines::in_map(const coord_def &c) const
 {
@@ -2142,6 +2159,11 @@ coord_def map_def::find_first_glyph(const std::string &s) const
     return map.find_first_glyph(s);
 }
 
+void map_def::write_maplines(writer &outf) const
+{
+    map.write_maplines(outf);
+}
+
 void map_def::write_index(writer& outf) const
 {
     if (!cache_offset)
@@ -2161,6 +2183,11 @@ void map_def::write_index(writer& outf) const
     place.save(outf);
     write_depth_ranges(outf);
     prelude.write(outf);
+}
+
+void map_def::read_maplines(reader &inf)
+{
+    map.read_maplines(inf);
 }
 
 void map_def::read_index(reader& inf)
