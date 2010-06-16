@@ -526,7 +526,7 @@ static std::string _get_altars(bool display)
 // Loops through gods, printing their altar status by color.
 static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
                                           bool print_unseen, bool display)
-{   
+{
     std::string disp;
     char buffer[100];
     int num_printed = 0;
