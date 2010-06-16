@@ -1318,7 +1318,7 @@ A magical weapon with three great razor-sharp blades.
 %%%%
 trishula
 
-A blessed trident molded by cleansing flame, with three points symbolizing the combined might of the three holy gods.
+A blessed weapon moulded by cleansing flame, with three points symbolising the combined might of the three holy gods.
 %%%%
 troll hide
 
