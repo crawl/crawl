@@ -1252,6 +1252,8 @@ std::string item_def::name_aux(description_level_type desc,
             buff << "Blessed ";
             if (weapon_skill(*this) == SK_MACES_FLAILS)
                 buff << "Scourge";
+            else if (weapon_skill(*this) == SK_POLEARMS)
+                buff << "Trishula";
             else
                 buff << "Blade";
             break;
