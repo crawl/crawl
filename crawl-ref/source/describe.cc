@@ -3378,8 +3378,8 @@ static std::string _religion_help(god_type god)
                 result += " ";
 
             result += "You can pray at an altar to have your weapon "
-                      "blessed, especially a long blade or a demon whip "
-                      "or trident.";
+                      "blessed, especially a long blade or demon "
+                      "weapon.";
         }
         break;
     }
