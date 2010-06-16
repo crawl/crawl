@@ -317,7 +317,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_DEMON_TRIDENT,     "demon trident",      14,  1, 13, 160,  4,
         SK_POLEARMS,     HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
         DAMV_PIERCING, 2 },
-    { WPN_TRISHULA,          "trishula",           15,  0, 13, 160,  4,
+    { WPN_HOLY_TRISHULA,     "holy trishula",      15,  0, 13, 160,  4,
         SK_POLEARMS,     HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
         DAMV_PIERCING, 0 },
     { WPN_GLAIVE,            "glaive",             15, -3, 18, 200,  6,
@@ -1332,7 +1332,7 @@ int weapon_rarity( int w_type )
     case WPN_BLESSED_GREAT_SWORD:
     case WPN_BLESSED_TRIPLE_SWORD:
     case WPN_HOLY_SCOURGE:
-    case WPN_TRISHULA:
+    case WPN_HOLY_TRISHULA:
         // Zero value weapons must be placed specially -- see make_item() {dlb}
         return (0);
 
@@ -1522,7 +1522,7 @@ bool is_blessed(const item_def &item)
         case WPN_BLESSED_GREAT_SWORD:
         case WPN_BLESSED_TRIPLE_SWORD:
         case WPN_HOLY_SCOURGE:
-        case WPN_TRISHULA:
+        case WPN_HOLY_TRISHULA:
             return (true);
 
         default:
@@ -1539,7 +1539,7 @@ bool is_blessed_convertible(const item_def &item)
             && (item.base_type == OBJ_WEAPONS
                 && (is_demonic(item)
                     || item.sub_type == WPN_HOLY_SCOURGE
-                    || item.sub_type == WPN_TRISHULA
+                    || item.sub_type == WPN_HOLY_TRISHULA
                     || weapon_skill(item) == SK_LONG_BLADES)));
 }
 
@@ -1613,7 +1613,7 @@ bool convert2good(item_def &item, bool allow_blessed)
         if (!allow_blessed)
             item.sub_type = WPN_TRIDENT;
         else
-            item.sub_type = WPN_TRISHULA;
+            item.sub_type = WPN_HOLY_TRISHULA;
         break;
     }
 
@@ -1669,7 +1669,7 @@ bool convert2bad(item_def &item)
         item.sub_type = WPN_DEMON_WHIP;
         break;
 
-    case WPN_TRISHULA:
+    case WPN_HOLY_TRISHULA:
         item.sub_type = WPN_DEMON_TRIDENT;
         break;
     }
