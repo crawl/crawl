@@ -3850,7 +3850,7 @@ void bolt::enchantment_affect_monster(monsters* mon)
     // Doing this here so that the player gets to see monsters
     // "flicker and vanish" when turning invisible....
     if (effect_known)
-        _ench_animation( real_flavour, mon );
+        _ench_animation(real_flavour, mon);
     else
         _zap_animation(-1, mon, false);
 
@@ -4743,7 +4743,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
                 mprf("%s flickers %s",
                      monster_name.c_str(),
                      mon->visible_to(&you) ? "for a moment."
-                                                 : "and vanishes!" );
+                                           : "and vanishes!");
 
                 if (!mon->visible_to(&you))
                     autotoggle_autopickup(true);
@@ -4775,7 +4775,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
 
     case BEAM_PORKALATOR:
     {
-        // Monster's which use the ghost structure can't be properly
+        // Monsters which use the ghost structure can't be properly
         // restored from hog form.
         if (mons_is_ghost_demon(mon->type))
             return (MON_UNAFFECTED);
