@@ -1251,11 +1251,11 @@ ENDMAP
 # And for now, something woody (1KB)
 NAME: forest_paths
 DEPTH: D, Lair
-FTILE:  . = floor_lair
-FTILE:  t = floor_lair
-FTILE:  0 = floor_lair
-FTILE:  @ = floor_lair
-FTILE:  * = floor_lair
+FTILE:  .t0@*12 = floor_lair
+: if you.absdepth()>15 then
+MONS:   spriggan, spriggan druid
+SUBST:  0=1
+: end
 MAP
         xxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxxxx
     xxxxxtttttttttttttttttt.tttttttttttttttttttttxx
@@ -1264,18 +1264,18 @@ xxttttttttttttttttttttttttttt..tttttttttttttt0}tttx
 xttttttttt.tt......ttttttttttt..tttttttttttt..ttttx
 xtttttttt.t...ttt.0.tttttttttt.tttttttttt...ttttttx
 xtt......tttttttt...ttttttttttt.tttttt...ttttttttxx
-xt.ttttttttttttttt....tttttttttt.tttt.tttttttttttxx
-@.ttttttttttttttt..tttttttttttt..tt...ttttttttttttx
-xttttttttttttttt..tttttttttttttt....ttttttttttttttx
+xt.ttttttttttttttt...1tttttttttt.tttt.tttttttttttxx
+@.ttttttttttttttt..tttttttttttt1.tt...ttttttttttttx
+xttttttttttttttt..tttttttttttttt2...ttttttttttttttx
 xtttttttttttttttt..ttttttttttttttt.tttttttttttttttx
-xtttttttttttttttt....tttttttttttt.tttttttttt...tttx
-xtttttttttttttttttt.....tttttttttt..ttttttt..*..ttx
-xttttttttttttttttttttt....ttttttttt.ttttttt.000.ttx
-xttttttttttttttttttttttt...tttttttt.ttttt......tttx
+xtttttttttttttttt1.1.tttttttttttt.tttttttttt...tttx
+xtttttttttttttttttt.1...tttttttttt..ttttttt.2*..ttx
+xttttttttttttttttttttt1...ttttttttt.ttttttt.000.ttx
+xttttttttttttttttttttttt...tttttttt.ttttt1....2tttx
 xttttttttttttttttttttttttt....tttt.ttttttt.tt.t0ttx
 xtttttttttttttttttttttttttttt.....tttttttt.tttttttx
-.....ttttttttttttttttttttttt...tttttttttt.ttttttttx
-@.....tttttttt...ttttttttttt...tttttttt..ttttttttxx
+.....ttttttttttttttttttttttt1..tttttttttt.ttttttttx
+@.....tttttttt...ttttttttttt1..tttttttt..ttttttttxx
 xttttt..ttt....tt...tt........0.ttttt..tttttttttxx
 xttttttt....ttttttt....ttttttt..ttt..ttttttttttxx
 xxxtttttttttttttttttttttttttttt....ttttttttttxxx
