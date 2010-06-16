@@ -4724,8 +4724,13 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
 
     case BEAM_INVISIBILITY:
     {
-        if (mons_is_mimic(mon->type))
+        // Mimic or already glowing.
+        if (mons_is_mimic(mon->type)
+            || mons_class_flag(mon->type, M_GLOWS_LIGHT)
+            || mons_class_flag(mon->type, M_GLOWS_RADIATION))
+        {
             return (MON_UNAFFECTED);
+        }
 
         // Store the monster name before it becomes an "it" -- bwr
         const std::string monster_name = mon->name(DESC_CAP_THE);
