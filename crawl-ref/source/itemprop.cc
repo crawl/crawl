@@ -319,7 +319,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
         DAMV_PIERCING, 2 },
     { WPN_TRISHULA,          "trishula",           15,  0, 13, 160,  4,
         SK_POLEARMS,     HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
-        DAMV_PIERCING, 2 },
+        DAMV_PIERCING, 0 },
     { WPN_GLAIVE,            "glaive",             15, -3, 18, 200,  6,
         SK_POLEARMS,     HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_CHOPPING, 10 },
@@ -1332,6 +1332,7 @@ int weapon_rarity( int w_type )
     case WPN_BLESSED_GREAT_SWORD:
     case WPN_BLESSED_TRIPLE_SWORD:
     case WPN_HOLY_SCOURGE:
+    case WPN_TRISHULA:
         // Zero value weapons must be placed specially -- see make_item() {dlb}
         return (0);
 
