@@ -1017,6 +1017,7 @@ unsigned int item_value(item_def item, bool ident)
         case WPN_BLESSED_GREAT_SWORD:
         case WPN_BLESSED_TRIPLE_SWORD:
         case WPN_HOLY_SCOURGE:
+        case WPN_TRISHULA:
         case WPN_LAJATANG:
             valued += 200;
             break;
