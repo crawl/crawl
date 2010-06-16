@@ -475,7 +475,6 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     case MONS_LOUISE:
     case MONS_NAGA:
     case MONS_NAGA_MAGE:
-    case MONS_RUPERT:
     case MONS_SKELETAL_WARRIOR:
     case MONS_PALE_DRACONIAN:
     case MONS_RED_DRACONIAN:
@@ -485,7 +484,6 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     case MONS_BLACK_DRACONIAN:
     case MONS_YELLOW_DRACONIAN:
     case MONS_PURPLE_DRACONIAN:
-    case MONS_TIAMAT:
         if (mons_genus(mon->type) == MONS_NAGA)
             item_race = MAKE_ITEM_NO_RACE;
 
@@ -499,6 +497,27 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
             9,  WPN_WAR_AXE,     9, WPN_FLAIL,
             1,  WPN_BROAD_AXE,   1, WPN_SPIKED_FLAIL,
             0);
+        break;
+
+    case MONS_TIAMAT:
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type = random_choose(WPN_BARDICHE, WPN_DEMON_TRIDENT,
+                                      WPN_GLAIVE, -1);
+        level = MAKE_GOOD_ITEM;
+        break;
+
+
+    case MONS_RUPERT:
+        item.base_type = OBJ_WEAPONS;
+        // Rupert favours big two-handers with visceral up-close
+        // effects, i.e. no polearms.
+        item.sub_type = random_choose_weighted(10, WPN_GREAT_MACE,
+                                               6, WPN_GREAT_SWORD,
+                                               2, WPN_TRIPLE_SWORD,
+                                               8, WPN_BATTLEAXE,
+                                               2, WPN_EXECUTIONERS_AXE,
+                                               0);
+        level = MAKE_GOOD_ITEM;
         break;
 
     case MONS_WAYNE:
