@@ -702,6 +702,29 @@ static void _abyss_move_entities_at(coord_def src, coord_def dst)
     dgn_move_entities_at(src, dst, true, true, true);
 }
 
+// Move all vaults within the mask by the specified delta.
+static void _abyss_move_masked_vaults_by_delta(const map_mask &mask,
+                                               const coord_def delta)
+{
+    std::set<int> vault_indexes;
+    for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
+    {
+        const int vi = env.level_map_ids(*ri);
+        if (vi != INVALID_MAP_INDEX)
+            vault_indexes.insert(vi);
+    }
+
+    for (std::set<int>::const_iterator i = vault_indexes.begin();
+         i != vault_indexes.end(); ++i)
+    {
+        vault_placement &vp(*env.level_vaults[*i]);
+        const coord_def oldp = vp.pos;
+        vp.pos += delta;
+        dprf("Moved vault (%s) from (%d,%d)-(%d,%d)",
+             vp.map.name.c_str(), oldp.x, oldp.y, vp.pos.x, vp.pos.y);
+    }
+}
+
 // Moves the player, monsters, terrain and items in the square (circle
 // in movement distance) around the player with the given radius to
 // the square centred on target_centre.
@@ -760,6 +783,9 @@ static void _abyss_move_entities(coord_def target_centre,
             }
         }
     }
+
+    _abyss_move_masked_vaults_by_delta(*shift_area_mask,
+                                       target_centre - source_centre);
 }
 
 static void _abyss_expand_mask_to_cover_vault(map_mask *mask,
