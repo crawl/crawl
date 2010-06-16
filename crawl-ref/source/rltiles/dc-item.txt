@@ -86,7 +86,7 @@ double_sword WPN_DOUBLE_SWORD
 triple_sword WPN_TRIPLE_SWORD
 demon_blade WPN_DEMON_BLADE
 %rim 0
-blessed_blade WPN_BLESSED_BLADE
+holy_blade WPN_HOLY_BLADE
 %rim 1
 
 ##Axe

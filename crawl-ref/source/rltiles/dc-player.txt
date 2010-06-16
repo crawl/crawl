@@ -465,7 +465,7 @@ short_sword2 SHORT_SWORD2
 sword_thief SWORD_THIEF
 long_sword LONG_SWORD
 long_sword_slant LONG_SWORD_SLANT
-blessed_blade BLESSED_BLADE
+holy_blade HOLY_BLADE
 great_sword GREAT_SWORD
 great_sword_slant GREAT_SWORD_SLANT
 katana KATANA
