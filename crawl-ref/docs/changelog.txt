@@ -63,8 +63,9 @@ Items:
   scrolls of enchant weapon II no longer work on them.
 * The "Sniper" unrandart is now a crossbow instead of a hand
   crossbow.
-* Flame and frost-branded darts no longer always mulch, and the
+* Flame- and frost-branded darts no longer always mulch, and the
   steel brand is properly applied for thrown weapons.
+* Demon tridents can be blessed by TSO.
 
 Monsters:
 * Anacondas are now amphibious.
@@ -84,6 +85,8 @@ Spells:
   of Callings, and is removed from the book of Summonings.
 * Summon Ugly Thing is nerfed: at full spell power, it now
   summons very ugly things only 33% of the time.
+* Invisibility no longer works on glowing monsters, as Corona
+  doesn't either.
 
 Technical:
 * LOS and areas recalculated on-demand.
