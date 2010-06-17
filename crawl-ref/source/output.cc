@@ -579,6 +579,12 @@ static void _get_status_lights(std::vector<status_light>& out)
     if (you.duration[DUR_TELEPORT])
         out.push_back(status_light(LIGHTBLUE, "Tele"));
 
+    if (you.duration[DUR_DEATHS_DOOR])
+    {
+        int color = _dur_colour(LIGHTGREY, dur_expiring(DUR_DEATHS_DOOR));
+        out.push_back(status_light(color, "DDoor"));
+    }
+
     if (you.duration[DUR_DEFLECT_MISSILES])
     {
         int color = _dur_colour( MAGENTA, dur_expiring(DUR_DEFLECT_MISSILES) );
@@ -735,6 +741,12 @@ static void _get_status_lights(std::vector<status_light>& out)
     {
         int color = _dur_colour( BLUE, dur_expiring(DUR_HASTE) );
         out.push_back(status_light(color, "Fast"));
+    }
+
+    if (you.duration[DUR_DEATH_CHANNEL])
+    {
+        int color = _dur_colour(MAGENTA, dur_expiring(DUR_DEATH_CHANNEL));
+        out.push_back(status_light(color, "DChan"));
     }
 
     if (you.duration[DUR_BREATH_WEAPON])
