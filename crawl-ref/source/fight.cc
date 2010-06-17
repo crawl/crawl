@@ -740,12 +740,15 @@ static bool _player_vampire_draws_blood(const monsters* mon, const int damage,
     // Now print message, need biting unless already done (never for bat form!)
     if (needs_bite_msg && !player_in_bat_form())
     {
-        mprf( "You bite %s, and draw %s blood!",
-              mon->name(DESC_NOCAP_THE, true).c_str(),
-              mon->pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str());
+        mprf("You bite %s, and draw %s blood!",
+             mon->name(DESC_NOCAP_THE, true).c_str(),
+             mon->pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str());
     }
     else
-        mprf( "You draw %s's blood!", mon->name(DESC_NOCAP_THE, true).c_str() );
+    {
+        mprf("You draw %s blood!",
+             apostrophise(mon->name(DESC_NOCAP_THE, true)).c_str());
+    }
 
     // Regain hp.
     if (you.hp < you.hp_max)
@@ -1209,6 +1212,7 @@ bool melee_attack::player_aux_test_hit()
         mprf("Your %s misses %s.", aux_attack.c_str(),
              defender->name(DESC_NOCAP_THE).c_str());
     }
+
     return (false);
 }
 
@@ -1469,6 +1473,7 @@ bool melee_attack::player_hits_monster()
 
     const int phaseless_evasion =
         defender->melee_evasion(attacker, EV_IGNORE_PHASESHIFT);
+
     if (to_hit >= phaseless_evasion && defender_visible)
         msg::stream << "Your attack passes through "
                     << defender->name(DESC_NOCAP_THE) << " as "
