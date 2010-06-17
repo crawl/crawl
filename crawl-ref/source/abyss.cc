@@ -278,6 +278,16 @@ static bool _abyss_place_rune(const map_mask &abyss_genlevel_mask,
     return (false);
 }
 
+// Returns true if items can be generated on the given square.
+static bool _abyss_square_accepts_items(const map_mask &abyss_genlevel_mask,
+                                        coord_def p)
+{
+    return (abyss_genlevel_mask(p)
+            && grd(p) == DNGN_FLOOR
+            && igrd(p) == NON_ITEM
+            && unforbidden(p, MMT_VAULT));
+}
+
 static int _abyss_create_items(const map_mask &abyss_genlevel_mask,
                                bool placed_abyssal_rune,
                                bool use_vaults)
@@ -303,7 +313,7 @@ static int _abyss_create_items(const map_mask &abyss_genlevel_mask,
     std::vector<coord_def> chosen_item_places;
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
     {
-        if (abyss_genlevel_mask(*ri) && grd(*ri) == DNGN_FLOOR)
+        if (_abyss_square_accepts_items(abyss_genlevel_mask, *ri))
         {
             if (items_placed < num_items && one_chance_in(200))
             {
@@ -337,11 +347,14 @@ static int _abyss_create_items(const map_mask &abyss_genlevel_mask,
     for (int i = 0, size = chosen_item_places.size(); i < size; ++i)
     {
         const coord_def place(chosen_item_places[i]);
-        int thing_created = items(1, OBJ_RANDOM, OBJ_RANDOM,
-                                  true, items_level, 250);
-        move_item_to_grid( &thing_created, place );
-        if (thing_created != NON_ITEM)
-            items_placed++;
+        if (_abyss_square_accepts_items(abyss_genlevel_mask, place))
+        {
+            int thing_created = items(1, OBJ_RANDOM, OBJ_RANDOM,
+                                      true, items_level, 250);
+            move_item_to_grid( &thing_created, place );
+            if (thing_created != NON_ITEM)
+                items_placed++;
+        }
     }
 
     return (items_placed);
