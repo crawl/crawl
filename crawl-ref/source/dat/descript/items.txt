@@ -503,6 +503,10 @@ empty ebony casket
 
 A magical box after its power is spent.
 %%%%
+eudemon blade
+
+A glorious blade from the forges of Heaven, possessed by a good spirit. It is a favoured weapon of the Shining One's servants.
+%%%%
 eveningstar
 
 The opposite of a morningstar.
@@ -574,10 +578,6 @@ A piece of metal headgear.
 helmet
 
 A piece of metal headgear.
-%%%%
-holy blade
-
-A glorious blade from the forges of Heaven. It is a favoured weapon of the Shining One's servants.
 %%%%
 holy scourge
 
