@@ -26,6 +26,7 @@ NAME:    david_lair_1
 TAGS:    lair_entry
 MONS:    crocodile / sheep, giant snail / elephant slug / nothing
 MONS:    nothing / yak / weight:2 death yak, plant / fungus / w:20 nothing
+MONS:    dire elephant name:elephant n_rpl n_des hd:10 tile:elephant
 SHUFFLE: 12
 ORIENT:  float
 MAP
@@ -34,7 +35,7 @@ xx.........xx
 x..42...44..x
 ..44..1......
 @....1O3....@
-...4......4..
+...4..5...4..
 x...4..2....x
 xx.........xx
 xxxx..@..xxxx
@@ -73,7 +74,8 @@ MONS:    w:100 nothing / w:20 iguana / w:20 crocodile /\
 MONS:    green rat / grey rat / orange rat / quokka / rat
 MONS:    w:90 nothing / w:30 giant frog / blink frog / giant toad /\
          spiny frog
-SHUFFLE: 12345
+MONS:    dire elephant name:elephant n_rpl n_des hd:10 tile:elephant / nothing
+SHUFFLE: 123456
 MAP
 111...@......
 111..........
