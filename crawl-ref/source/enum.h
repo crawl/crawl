@@ -2390,6 +2390,7 @@ enum mon_spellbook_type
     MST_FREDERICK,
     MST_WAYNE,
     MST_SPRIGGAN_DRUID,
+    MST_THE_ENCHANTRESS,
 
     MST_TEST_SPAWNER = 200,
     NUM_MSTYPES,
