@@ -1012,6 +1012,13 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         break;
 
     case MONS_SPRIGGAN_RIDER:
+        if (!melee_only && one_chance_in(4))
+        {
+            item.base_type = OBJ_WEAPONS;
+            item.sub_type  = WPN_BLOWGUN;
+            item_race = MAKE_ITEM_NO_RACE;
+            break;
+        }
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = WPN_SPEAR;
