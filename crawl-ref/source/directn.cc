@@ -3319,6 +3319,10 @@ static std::vector<std::string> _mon_enchantments_vector_string(
     if (paralysed)
         enchant_descriptors.push_back("paralysed");
 
+    // fake enchantment (permanent)
+    if (mons_class_flag(mon->type, M_DEFLECT_MISSILES))
+        enchant_descriptors.push_back("missile deflection");
+
     return enchant_descriptors;
 }
 
