@@ -545,6 +545,8 @@ bool you_can_wear(int eq, bool special_armour)
         {
             return (false);
         }
+        if (player_mutation_level(MUT_CLAWS) >= 3)
+            return (false);
         return (true);
 
     case EQ_BOOTS:
