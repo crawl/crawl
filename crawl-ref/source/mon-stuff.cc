@@ -350,8 +350,7 @@ monster_type fill_out_corpse(const monsters* monster, item_def& corpse,
     if (!monster->mname.empty())
     {
         corpse.props[CORPSE_NAME_KEY] = monster->mname;
-        corpse.props[CORPSE_NAME_TYPE_KEY]
-            = (long) (monster->flags & MF_NAME_MASK);
+        corpse.props[CORPSE_NAME_TYPE_KEY] = (long) monster->flags;
     }
     else if (mons_is_unique(monster->type))
     {

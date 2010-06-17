@@ -166,7 +166,7 @@ ENDMAP
 
 NAME:   african_american_sheep
 DEPTH:  Shoals
-MONS:   sheep, sheep name:black name_adjective col:darkgrey tile:mons_black_sheep
+MONS:   sheep, sheep name:black n_adj n_spe col:darkgrey tile:mons_black_sheep
 MAP
   ....
  ..11..

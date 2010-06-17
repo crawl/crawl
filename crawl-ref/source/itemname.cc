@@ -116,7 +116,11 @@ std::string item_def::name(description_level_type descrip,
     if (terse && descrip != DESC_DBNAME)
         descrip = DESC_PLAIN;
 
+    long corpse_flags;
+
     if (base_type == OBJ_CORPSES && is_named_corpse(*this)
+        && !(((corpse_flags = props[CORPSE_NAME_TYPE_KEY].get_long())
+             & MF_NAME_SPECIES) && !(corpse_flags & MF_NAME_DEFINITE))
         && !starts_with(get_corpse_name(*this), "shaped "))
     {
         switch (descrip)
@@ -1797,15 +1801,18 @@ std::string item_def::name_aux(description_level_type desc,
         if (food_is_rotten(*this) && !dbname)
             buff << "rotting ";
 
-        unsigned long name_type;
+        unsigned long name_type, name_flags;
 
-        const std::string _name  = get_corpse_name(*this, &name_type);
+        const std::string _name  = get_corpse_name(*this, &name_flags);
         const bool        shaped = starts_with(_name, "shaped ");
+        name_type = name_flags & MF_NAME_MASK;
 
         if (!_name.empty() && name_type == MF_NAME_ADJECTIVE)
             buff << _name << " ";
 
-        if (!dbname && !starts_with(_name, "the "))
+        if (name_flags & MF_NAME_SPECIES && name_type == MF_NAME_REPLACE)
+            buff << _name << " ";
+        else if (!dbname && !starts_with(_name, "the "))
         {
             buff << mons_type_name(it_plus, DESC_PLAIN) << ' ';
 
@@ -1820,7 +1827,8 @@ std::string item_def::name_aux(description_level_type desc,
         else
             buff << "corpse bug";
 
-        if (!_name.empty() && !shaped && name_type != MF_NAME_ADJECTIVE)
+        if (!_name.empty() && !shaped && name_type != MF_NAME_ADJECTIVE
+            && !(name_flags & MF_NAME_SPECIES))
         {
             if (name_type == MF_NAME_SUFFIX)
                 buff << " " << _name;
