@@ -41,7 +41,7 @@ troll_f TROLL
 troll_m
 
 # draconians
-draconian_f DRACONIAN
+draconian_f DRACONIAN DRACONIAN_FIRST
 draconian_m
 draconian_black_f DRACONIAN_BLACK
 draconian_black_m
@@ -60,7 +60,7 @@ draconian_purple_m
 draconian_red_f DRACONIAN_RED
 draconian_red_m
 draconian_white_f DRACONIAN_WHITE
-draconian_white_m
+draconian_white_m DRACONIAN_LAST
 
 centaur_lightgrey_f CENTAUR
 centaur_lightgrey_m
