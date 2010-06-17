@@ -3376,8 +3376,6 @@ enum tile_inventory_flags
 
 enum tile_player_flags
 {
-    TILEP_GENDER_FEMALE = 0,
-    TILEP_GENDER_MALE   = 1,
     TILEP_SHOW_EQUIP    = 0x1000,
 };
 
