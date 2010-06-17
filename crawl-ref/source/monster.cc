@@ -3099,6 +3099,10 @@ int monsters::melee_evasion(const actor *act, ev_ignore_type evit) const
 {
     int evasion = ev;
 
+    // Phase Shift EV is already included.
+    if (evit & EV_IGNORE_PHASESHIFT && mons_class_flag(type, M_PHASE_SHIFT))
+        evasion -= 8;
+
     if (evit & EV_IGNORE_HELPLESS)
         return (evasion);
 

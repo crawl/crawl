@@ -1193,12 +1193,23 @@ bool melee_attack::player_aux_test_hit()
 
     if (to_hit >= evasion || auto_hit)
         return (true);
+
+    const int phaseless_evasion =
+        defender->melee_evasion(attacker, EV_IGNORE_PHASESHIFT);
+
+    if (to_hit >= phaseless_evasion && defender_visible)
+    {
+        mprf("Your %s passes through %s as %s momentarily phases out.",
+            aux_attack.c_str(),
+            defender->name(DESC_NOCAP_THE).c_str(),
+            defender->pronoun(PRONOUN_NOCAP).c_str());
+    }
     else
     {
         mprf("Your %s misses %s.", aux_attack.c_str(),
              defender->name(DESC_NOCAP_THE).c_str());
-        return (false);
     }
+    return (false);
 }
 
 // Returns true to end the attack round.
@@ -1455,6 +1466,14 @@ bool melee_attack::player_hits_monster()
                         << " fails to dodge your attack." << std::endl;
         return (true);
     }
+
+    const int phaseless_evasion =
+        defender->melee_evasion(attacker, EV_IGNORE_PHASESHIFT);
+    if (to_hit >= phaseless_evasion && defender_visible)
+        msg::stream << "Your attack passes through "
+                    << defender->name(DESC_NOCAP_THE) << " as "
+                    << defender->pronoun(PRONOUN_NOCAP)
+                    << " momentarily phases out." << std::endl;
 
     return (false);
 }
@@ -5501,7 +5520,7 @@ void melee_attack::mons_perform_attack_rounds()
                          defender->name(DESC_CAP_THE).c_str(),
                          defender->conj_verb("phase").c_str(),
                          atk_name(DESC_NOCAP_ITS).c_str(),
-                         defender->pronoun(PRONOUN_NOCAP).c_str());
+                         defender->pronoun(PRONOUN_OBJECTIVE).c_str());
                 }
                 this_round_hit = false;
             }
