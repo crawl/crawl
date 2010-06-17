@@ -547,7 +547,7 @@ public:
     bool held_by_monster() const;
 
     bool defined() const;
-    bool is_really_valid() const;
+    bool is_valid() const;
 
     // Returns true if this item should be preserved as far as possible.
     bool is_critical() const;

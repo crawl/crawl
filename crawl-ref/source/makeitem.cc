@@ -3207,7 +3207,7 @@ int items(int allow_uniques,       // not just true-false,
         if (get_unique_item_status(force_ego) == UNIQ_NOT_EXISTS)
         {
             make_item_unrandart(mitm[p], force_ego);
-            ASSERT(mitm[p].is_really_valid());
+            ASSERT(mitm[p].is_valid());
             return (p);
         }
         // the base item otherwise
@@ -3331,7 +3331,7 @@ int items(int allow_uniques,       // not just true-false,
     }
 
     // Note that item might be invalidated now, since p could have changed.
-    ASSERT(mitm[p].is_really_valid());
+    ASSERT(mitm[p].is_valid());
     return (p);
 }
 
