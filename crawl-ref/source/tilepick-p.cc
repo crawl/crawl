@@ -834,10 +834,10 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
     for (unsigned i = 0; i < TILEP_PART_MAX; i++)
         flag[i] = TILEP_FLAG_NORMAL;
 
-    if (doll.parts[TILEP_PART_HELM] - 1 >= TILEP_HELM_HELM_OFS)
+    if (doll.parts[TILEP_PART_HELM] >= TILEP_HELM_HELM_OFS)
         flag[TILEP_PART_HAIR] = TILEP_FLAG_HIDE;
 
-    if (doll.parts[TILEP_PART_HELM] - 1 >= TILEP_HELM_FHELM_OFS)
+    if (doll.parts[TILEP_PART_HELM] >= TILEP_HELM_FHELM_OFS)
         flag[TILEP_PART_BEARD] = TILEP_FLAG_HIDE;
 
     if (is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_NAGA))
