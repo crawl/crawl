@@ -95,6 +95,12 @@ Edmund
 
 A jealous sibling of Sigmund (indeed, the youngest of nine brothers). He has none of Sigmund's skills in magic, but makes up for it with his skills in fighting and a canny head for money. He is eager to prove his superiority by killing hapless adventurers with his expensive flail and quick wit.
 %%%%
+the Enchantress
+
+A beautiful spriggan woman, the ruler of spriggans who live here. She wears an opalescent outfit made of dragon skin that shimmers with all colours.
+
+The air around her shows hints of many powerful enchantment spells she cast on herself.
+%%%%
 Ereshkigal
 
 A fearsome arch-fiend who rules the deathly netherworld of Tartarus.
@@ -623,6 +629,10 @@ dragon
 
 A great reptilian beast, covered in thick green scales and with two huge bat-like wings. Little trails of smoke spill from its toothy maw.
 %%%%
+dwarf
+
+A short stout fella with a beard.
+%%%%
 earth elemental
 
 A spirit drawn from the elemental plane of earth, which exists in this world by inhabiting a lump of earth and rocks.
@@ -752,6 +762,10 @@ A large brown cockroach. I call him 'Gregor'.
 giant eyeball
 
 A giant eyeball, with a captivating stare.
+%%%%
+giant firefly
+
+Unlike its mundane counterparts that are merely half an inch big, this enormous flying bug is large enough to be ridden by some spriggans. It's glow, though, is faint enough to be hardly visible.
 %%%%
 giant frog
 
@@ -1485,6 +1499,26 @@ A great black worm, its many-segmented body covered in spiky plates of chitinous
 spriggan
 
 A small humanoid, resembling a human or elf except for the size. They move at a great speed, and love playing dirty tricks on people.
+%%%%
+spriggan assassin
+
+These masters of stealth have mastered the art of delivering a quick blade right under your fifth rib as well.
+%%%%
+spriggan defender
+
+These elite spriggan warriors are known for their prowess with advanced weaponry and their unbelievable agility.
+%%%%
+spriggan druid
+
+Revelling nature, these protectors of forests are the doom of anyone who as much as snaps a twig.
+%%%%
+spriggan rider
+
+Mounted on giant fireflies, these guys make sure no one who dares to intrude the spriggan forests and cairns won't be able to just walk away.
+%%%%
+spriggan warper
+
+To confuse those accustomed to normal world's geometry, some spriggans love to turn space into a pretzel.
 %%%%
 steam dragon
 
