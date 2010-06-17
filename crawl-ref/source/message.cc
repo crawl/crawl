@@ -866,10 +866,12 @@ static void do_message_print(msg_channel_type channel, int param,
     va_copy(ap, argp);
     char buff[200];
     size_t len = vsnprintf( buff, sizeof( buff ), format, argp );
-    if (len < sizeof( buff )) {
+    if (len < sizeof( buff ))
+    {
         mpr( buff, channel, param );
     }
-    else {
+    else
+    {
         char *heapbuf = (char*)malloc( len + 1 );
         vsnprintf( heapbuf, len + 1, format, ap );
         mpr( heapbuf, channel, param );

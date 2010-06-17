@@ -1447,7 +1447,8 @@ int find_free_slot(const item_def &i)
             else
             {
                 if (slot + 1 < ENDOFPACK && you.inv[slot + 1].is_valid()
-                    && slot != disliked) {
+                    && slot != disliked)
+                {
                     return (slot);
                 }
             }

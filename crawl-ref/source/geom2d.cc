@@ -9,7 +9,8 @@
 
 #include <cmath>
 
-namespace geom {
+namespace geom
+{
 
 static bool double_is_zero(double d)
 {

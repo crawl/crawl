@@ -2512,7 +2512,8 @@ void gain_exp( unsigned int exp_gained, unsigned int* actual_gain,
         exp_gained /= 2;
     }
 
-    if (crawl_state.game_is_sprint()) {
+    if (crawl_state.game_is_sprint())
+    {
         exp_gained = sprint_modify_exp(exp_gained);
     }
 
@@ -3025,7 +3026,8 @@ void level_change(bool skip_attribute_increase)
                             break;
                         }
 
-                        if (first_body_facet == NUM_MUTATIONS) {
+                        if (first_body_facet == NUM_MUTATIONS)
+                        {
                             first_body_facet = you.demonic_traits[i].mutation;
                             level = you.demonic_traits[i].level_gained;
                         }

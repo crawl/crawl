@@ -720,7 +720,8 @@ void scorefile_entry::set_base_xlog_fields() const
         fields.reset(new xlog_fields);
 
     std::string score_version = SCORE_VERSION;
-    if (crawl_state.game_is_sprint()) {
+    if (crawl_state.game_is_sprint())
+    {
         /* XXX: hmmm, something better here? */
         score_version += "-sprint.1";
     }

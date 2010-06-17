@@ -1320,11 +1320,13 @@ static void _append_container(C1& container_base, const C2& container_append)
                           container_append.begin(), container_append.end());
 }
 
-std::string direction_chooser::target_sanctuary_description() const {
+std::string direction_chooser::target_sanctuary_description() const
+{
     return is_sanctuary(target()) ? "sanctuary" : "";
 }
 
-std::string direction_chooser::target_silence_description() const {
+std::string direction_chooser::target_silence_description() const
+{
     return silenced(target()) ? "silenced" : "";
 }
 

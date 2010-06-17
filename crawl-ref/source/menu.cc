@@ -1863,7 +1863,8 @@ void PrecisionMenu::set_select_type(SelectType flag)
 void PrecisionMenu::clear()
 {
     // release all the data reserved
-    if (m_attached_objects.size() == 0) {
+    if (m_attached_objects.size() == 0)
+    {
         return;
     }
     std::vector<MenuObject*>::iterator it;

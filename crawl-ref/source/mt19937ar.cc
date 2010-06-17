@@ -117,7 +117,8 @@ void init_by_array(unsigned long init_key[], int key_length)
     init_genrand(19650218UL);
     i=1; j=0;
     k = (N>key_length ? N : key_length);
-    for (; k; k--) {
+    for (; k; k--)
+    {
         mt[i] = (mt[i] ^ ((mt[i-1] ^ (mt[i-1] >> 30)) * 1664525UL))
           + init_key[j] + j; /* non linear */
         mt[i] &= 0xffffffffUL; /* for WORDSIZE > 32 machines */
@@ -125,7 +126,8 @@ void init_by_array(unsigned long init_key[], int key_length)
         if (i>=N) { mt[0] = mt[N-1]; i=1; }
         if (j>=key_length) j=0;
     }
-    for (k=N-1; k; k--) {
+    for (k=N-1; k; k--)
+    {
         mt[i] = (mt[i] ^ ((mt[i-1] ^ (mt[i-1] >> 30)) * 1566083941UL))
           - i; /* non linear */
         mt[i] &= 0xffffffffUL; /* for WORDSIZE > 32 machines */
@@ -219,12 +221,14 @@ int main(void)
     unsigned long init[4]={0x123, 0x234, 0x345, 0x456}, length=4;
     init_by_array(init, length);
     printf("1000 outputs of genrand_int32()\n");
-    for (i=0; i<1000; i++) {
+    for (i=0; i<1000; i++)
+    {
       printf("%10lu ", genrand_int32());
       if (i%5==4) printf("\n");
     }
     printf("\n1000 outputs of genrand_real2()\n");
-    for (i=0; i<1000; i++) {
+    for (i=0; i<1000; i++)
+    {
       printf("%10.8f ", genrand_real2());
       if (i%5==4) printf("\n");
     }

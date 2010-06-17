@@ -3568,7 +3568,8 @@ static void _vanish_orig_eq(monsters* mons)
     }
 }
 
-int dismiss_monsters(std::string pattern) {
+int dismiss_monsters(std::string pattern)
+{
     // Make all of the monsters' original equipment disappear unless "keepitem"
     // is found in the regex (except for fixed arts and unrand arts).
     const bool keep_item = strip_tag(pattern, "keepitem");
