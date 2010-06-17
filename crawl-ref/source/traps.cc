@@ -1504,7 +1504,7 @@ void handle_items_on_shaft(const coord_def& pos, bool open_shaft)
     {
         int next = mitm[o].link;
 
-        if (mitm[o].is_valid())
+        if (mitm[o].defined())
         {
             if (is_terrain_seen(pos))
             {

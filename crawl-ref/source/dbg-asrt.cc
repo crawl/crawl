@@ -261,7 +261,7 @@ static void _dump_player(FILE *file)
             item.quantity = orig_quant;
             continue;
         }
-        else if (!item.is_valid())
+        else if (!item.defined())
             continue;
 
         const std::string name = item.name(DESC_PLAIN, false, true);

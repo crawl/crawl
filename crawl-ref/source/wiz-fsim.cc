@@ -492,7 +492,7 @@ int fsim_kit_equip(const std::string &kit)
     {
         for (int i = 0; i < ENDOFPACK; ++i)
         {
-            if (!you.inv[i].is_valid())
+            if (!you.inv[i].defined())
                 continue;
 
             if (you.inv[i].name(DESC_PLAIN).find(weapon) != std::string::npos)
@@ -514,7 +514,7 @@ int fsim_kit_equip(const std::string &kit)
     {
         for (int i = 0; i < ENDOFPACK; ++i)
         {
-            if (!you.inv[i].is_valid())
+            if (!you.inv[i].defined())
                 continue;
 
             if (you.inv[i].name(DESC_PLAIN).find(missile) != std::string::npos)

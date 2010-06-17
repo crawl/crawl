@@ -275,7 +275,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
     {
         const item_def &item = mitm[idx];
 
-        if (!item.is_valid())
+        if (!item.defined())
             return (false);
 
         tip = "";
@@ -321,7 +321,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
     else
     {
         const item_def &item = you.inv[idx];
-        if (!item.is_valid())
+        if (!item.defined())
             return (false);
 
         tip = item.name(DESC_INVENTORY_EQUIP);
@@ -550,7 +550,7 @@ bool InventoryRegion::update_alt_text(std::string &alt)
     else
         item = &you.inv[idx];
 
-    if (!item->is_valid())
+    if (!item->defined())
         return (false);
 
     describe_info inf;
@@ -577,9 +577,9 @@ void InventoryRegion::draw_tag()
 
     bool floor = m_items[curs_index].flag & TILEI_FLAG_FLOOR;
 
-    if (floor && mitm[idx].is_valid())
+    if (floor && mitm[idx].defined())
         draw_desc(mitm[idx].name(DESC_PLAIN).c_str());
-    else if (!floor && you.inv[idx].is_valid())
+    else if (!floor && you.inv[idx].defined())
         draw_desc(you.inv[idx].name(DESC_INVENTORY_EQUIP).c_str());
 }
 
@@ -679,7 +679,7 @@ void InventoryRegion::update()
                 break;
 
             if (inv_shown[i]
-                || !you.inv[i].is_valid()
+                || !you.inv[i].defined()
                 || you.inv[i].quantity == 0
                 || (!show_any && you.inv[i].base_type != type))
             {

@@ -2322,7 +2322,7 @@ static bool _describe_spells(const item_def &item)
 //---------------------------------------------------------------
 bool describe_item( item_def &item, bool allow_inscribe, bool shopping )
 {
-    if (!item.is_valid())
+    if (!item.defined())
         return (true);
 
     while (true)

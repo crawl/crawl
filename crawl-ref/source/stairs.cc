@@ -247,7 +247,7 @@ static bool _check_carrying_orb()
     // So we did pick up the Orb. Now check whether we're carrying it.
     for (int i = 0; i < ENDOFPACK; i++)
     {
-        if (you.inv[i].is_valid()
+        if (you.inv[i].defined()
             && you.inv[i].base_type == OBJ_ORBS
             && you.inv[i].sub_type == ORB_ZOT)
         {
@@ -604,7 +604,7 @@ void up_stairs(dungeon_feature_type force_stair,
 
         for (int i = 0; i < ENDOFPACK; i++)
         {
-            if (you.inv[i].is_valid()
+            if (you.inv[i].defined()
                 && you.inv[i].base_type == OBJ_ORBS)
             {
                 ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_WINNING);
@@ -817,7 +817,7 @@ static int _runes_in_pack(std::vector<int> &runes)
 
     for (int i = 0; i < ENDOFPACK; i++)
     {
-        if (you.inv[i].is_valid()
+        if (you.inv[i].defined()
             && you.inv[i].base_type == OBJ_MISCELLANY
             && you.inv[i].sub_type == MISC_RUNE_OF_ZOT)
         {

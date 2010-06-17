@@ -33,7 +33,7 @@ static void _give_monster_item(monsters *mon, int thing,
         return;
 
     item_def &mthing = mitm[thing];
-    ASSERT(mthing.is_valid());
+    ASSERT(mthing.defined());
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
@@ -67,7 +67,7 @@ static void _give_monster_item(monsters *mon, int thing,
         destroy_item(thing, true);
         return;
     }
-    if (!mthing.is_valid()) // missiles merged into an existing stack
+    if (!mthing.defined()) // missiles merged into an existing stack
         return;
     ASSERT(mthing.holding_monster() == mon);
 

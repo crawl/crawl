@@ -546,7 +546,7 @@ public:
     // Returns true if a monster is holding this item.
     bool held_by_monster() const;
 
-    bool is_valid() const;
+    bool defined() const;
     bool is_really_valid() const;
 
     // Returns true if this item should be preserved as far as possible.

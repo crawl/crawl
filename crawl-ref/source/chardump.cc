@@ -796,7 +796,7 @@ static void _sdump_inventory(dump_params &par)
 
     for (i = 0; i < ENDOFPACK; i++)
     {
-        if (you.inv[i].is_valid())
+        if (you.inv[i].defined())
         {
             // adds up number of each class in invent.
             inv_class2[you.inv[i].base_type]++;
@@ -840,7 +840,7 @@ static void _sdump_inventory(dump_params &par)
 
                 for (j = 0; j < ENDOFPACK; j++)
                 {
-                    if (you.inv[j].is_valid() && you.inv[j].base_type == i)
+                    if (you.inv[j].defined() && you.inv[j].base_type == i)
                     {
                         text += " ";
                         text += you.inv[j].name(DESC_INVENTORY_EQUIP);

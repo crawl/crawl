@@ -1650,7 +1650,7 @@ static int _xom_swap_weapons(bool debug = false)
 
     int freeslot = find_free_slot(mitm[monwpn]);
     if (freeslot < 0 || freeslot >= ENDOFPACK
-        || you.inv[freeslot].is_valid())
+        || you.inv[freeslot].defined())
     {
         // Something is terribly wrong.
         return (XOM_DID_NOTHING);
@@ -2500,7 +2500,7 @@ static void _xom_zero_miscast()
     for (int i = 0; i < ENDOFPACK; ++i)
     {
         const item_def &item(you.inv[i]);
-        if (item.is_valid() && !item_is_equipped(item)
+        if (item.defined() && !item_is_equipped(item)
             && !item.is_critical())
         {
             inv_items.push_back(i);

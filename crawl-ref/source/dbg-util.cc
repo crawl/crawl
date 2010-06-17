@@ -267,7 +267,7 @@ void debug_dump_mon(const monsters* mon, bool recurse)
         }
         const item_def &item(mitm[idx]);
 
-        if (!item.is_valid())
+        if (!item.defined())
         {
             fprintf(stderr, "invalid item\n");
             continue;

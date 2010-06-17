@@ -1326,7 +1326,7 @@ static void _do_lost_items(level_area_type old_level_type)
     {
         item_def& item(mitm[i]);
 
-        if (!item.is_valid())
+        if (!item.defined())
             continue;
 
         // Item is in player inventory, so it's not lost.

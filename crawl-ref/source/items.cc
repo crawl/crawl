@@ -116,7 +116,7 @@ void link_items(void)
         if (mitm[i].held_by_monster())
             continue;
 
-        if (!mitm[i].is_valid())
+        if (!mitm[i].defined())
         {
             // Item is not assigned.  Ignore.
             mitm[i].link = NON_ITEM;
@@ -308,7 +308,7 @@ int get_item_slot( int reserve )
     int item = NON_ITEM;
 
     for (item = 0; item < (MAX_ITEMS - reserve); item++)
-        if (!mitm[item].is_valid())
+        if (!mitm[item].defined())
             break;
 
     if (item >= MAX_ITEMS - reserve)
@@ -339,7 +339,7 @@ void unlink_item( int dest )
 {
     // Don't destroy non-items, may be called after an item has been
     // reduced to zero quantity however.
-    if (dest == NON_ITEM || !mitm[dest].is_valid())
+    if (dest == NON_ITEM || !mitm[dest].defined())
         return;
 
     monsters* monster = mitm[dest].holding_monster();
@@ -395,7 +395,7 @@ void unlink_item( int dest )
         for (stack_iterator si(mitm[dest].pos); si; ++si)
         {
             // Find item linking to dest item.
-            if (si->is_valid() && si->link == dest)
+            if (si->defined() && si->link == dest)
             {
                 // unlink dest
                 si->link = mitm[dest].link;
@@ -429,7 +429,7 @@ void unlink_item( int dest )
     // Look through all items for links to this item.
     for (int c = 0; c < MAX_ITEMS; c++)
     {
-        if (mitm[c].is_valid() && mitm[c].link == dest)
+        if (mitm[c].defined() && mitm[c].link == dest)
         {
             // unlink item
             mitm[c].link = old_link;
@@ -470,7 +470,7 @@ void unlink_item( int dest )
 
 void destroy_item( item_def &item, bool never_created )
 {
-    if (!item.is_valid())
+    if (!item.defined())
         return;
 
     if (never_created)
@@ -487,7 +487,7 @@ void destroy_item( int dest, bool never_created )
     // Don't destroy non-items, but this function may be called upon
     // to remove items reduced to zero quantity, so we allow "invalid"
     // objects in.
-    if (dest == NON_ITEM || !mitm[dest].is_valid())
+    if (dest == NON_ITEM || !mitm[dest].defined())
         return;
 
     unlink_item( dest );
@@ -534,7 +534,7 @@ void lose_item_stack( const coord_def& where )
 {
     for (stack_iterator si(where); si; ++si)
     {
-        if (si ->is_valid()) // FIXME is this check necessary?
+        if (si ->defined()) // FIXME is this check necessary?
         {
             item_was_lost(*si);
             si->clear();
@@ -547,7 +547,7 @@ void destroy_item_stack( int x, int y, int cause )
 {
     for (stack_iterator si(coord_def(x,y)); si; ++si)
     {
-        if (si ->is_valid()) // FIXME is this check necessary?
+        if (si ->defined()) // FIXME is this check necessary?
         {
             item_was_destroyed( *si, cause);
             si->clear();
@@ -785,7 +785,7 @@ static void _pickup_menu(int item_link)
                     else
                         pickup_warning = "You can't carry that many items.";
 
-                    if (mitm[j].is_valid())
+                    if (mitm[j].defined())
                         mitm[j].flags = oldflags;
                 }
                 else
@@ -794,7 +794,7 @@ static void _pickup_menu(int item_link)
                     // If we deliberately chose to take only part of a
                     // pile, we consider the rest to have been
                     // "dropped."
-                    if (!take_all && mitm[j].is_valid())
+                    if (!take_all && mitm[j].defined())
                         mitm[j].flags |= ISFLAG_DROPPED;
                 }
             }
@@ -879,7 +879,7 @@ void origin_acquired(item_def &item, int agent)
 void origin_set_inventory(void (*oset)(item_def &item))
 {
     for (int i = 0; i < ENDOFPACK; ++i)
-        if (you.inv[i].is_valid())
+        if (you.inv[i].defined())
             oset(you.inv[i]);
 }
 
@@ -1141,7 +1141,7 @@ bool pickup_single_item(int link, int qty)
     unsigned long oldflags = mitm[link].flags;
     mitm[link].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
     int num = move_item_to_player( link, qty );
-    if (mitm[link].is_valid())
+    if (mitm[link].defined())
         mitm[link].flags = oldflags;
 
     if (num == -1)
@@ -1261,7 +1261,7 @@ void pickup()
 
 bool is_stackable_item( const item_def &item )
 {
-    if (!item.is_valid())
+    if (!item.defined())
         return (false);
 
     if (item.base_type == OBJ_MISSILES
@@ -1401,7 +1401,7 @@ static int _userdef_find_free_slot(const item_def &i)
 int find_free_slot(const item_def &i)
 {
 #define slotisfree(s) \
-            ((s) >= 0 && (s) < ENDOFPACK && !you.inv[s].is_valid())
+            ((s) >= 0 && (s) < ENDOFPACK && !you.inv[s].defined())
 
     bool searchforward = false;
     // If we're doing Lua, see if there's a Lua function that can give
@@ -1436,9 +1436,9 @@ int find_free_slot(const item_def &i)
         // available slot that does not leave a gap in the inventory.
         for (slot = ENDOFPACK - 1; slot >= 0; --slot)
         {
-            if (you.inv[slot].is_valid())
+            if (you.inv[slot].defined())
             {
-                if (slot + 1 < ENDOFPACK && !you.inv[slot + 1].is_valid()
+                if (slot + 1 < ENDOFPACK && !you.inv[slot + 1].defined()
                     && slot + 1 != disliked)
                 {
                     return (slot + 1);
@@ -1446,7 +1446,7 @@ int find_free_slot(const item_def &i)
             }
             else
             {
-                if (slot + 1 < ENDOFPACK && you.inv[slot + 1].is_valid()
+                if (slot + 1 < ENDOFPACK && you.inv[slot + 1].defined()
                     && slot != disliked)
                 {
                     return (slot);
@@ -1460,11 +1460,11 @@ int find_free_slot(const item_def &i)
 
     // Return first free slot
     for (slot = 0; slot < ENDOFPACK; ++slot)
-        if (slot != disliked && !you.inv[slot].is_valid())
+        if (slot != disliked && !you.inv[slot].defined())
             return slot;
 
     // If the least preferred slot is the only choice, so be it.
-    if (disliked != -1 && !you.inv[disliked].is_valid())
+    if (disliked != -1 && !you.inv[disliked].defined())
         return disliked;
 
     return (-1);
@@ -1638,7 +1638,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
 
     int freeslot = find_free_slot(mitm[obj]);
     if (freeslot < 0 || freeslot >= ENDOFPACK
-        || you.inv[freeslot].is_valid())
+        || you.inv[freeslot].defined())
     {
         // Something is terribly wrong.
         return (-1);
@@ -1741,7 +1741,7 @@ bool move_item_to_grid( int *const obj, const coord_def& p, bool silent )
 
     int& ob(*obj);
     // Must be a valid reference to a valid object.
-    if (ob == NON_ITEM || !mitm[ob].is_valid())
+    if (ob == NON_ITEM || !mitm[ob].defined())
         return (false);
 
     item_def& item(mitm[ob]);
@@ -2311,7 +2311,7 @@ static void _autoinscribe_floor_items()
 static void _autoinscribe_inventory()
 {
     for (int i = 0; i < ENDOFPACK; i++)
-        if (you.inv[i].is_valid())
+        if (you.inv[i].defined())
             _autoinscribe_item( you.inv[i] );
 }
 
@@ -2495,7 +2495,7 @@ static bool _item_different_than_inv(const item_def& pickup_item,
     {
         const item_def& inv_item(you.inv[i]);
 
-        if (!inv_item.is_valid())
+        if (!inv_item.defined())
             continue;
 
         if ( (*comparer)(pickup_item, inv_item) )
@@ -2719,7 +2719,7 @@ int inv_count(void)
     int count = 0;
 
     for (int i = 0; i < ENDOFPACK; i++)
-        if (you.inv[i].is_valid())
+        if (you.inv[i].defined())
             count++;
 
     return count;
@@ -2730,7 +2730,7 @@ item_def *find_floor_item(object_class_type cls, int sub_type)
     for (int y = 0; y < GYM; ++y)
         for (int x = 0; x < GXM; ++x)
             for (stack_iterator si(coord_def(x,y)); si; ++si)
-                if (si->is_valid()
+                if (si->defined()
                     && si->base_type == cls && si->sub_type == sub_type)
                 {
                     return (& (*si));
@@ -2970,7 +2970,7 @@ int item_def::index() const
 
 int item_def::armour_rating() const
 {
-    if (!this->is_valid() || base_type != OBJ_ARMOUR)
+    if (!this->defined() || base_type != OBJ_ARMOUR)
         return (0);
 
     return (property(*this, PARM_AC) + plus);
@@ -3005,7 +3005,7 @@ bool item_def::held_by_monster() const
 //        It shouldn't be used a a substitute for those cases
 //        which actually want to check the quantity (as the
 //        rules for unused objects might change).
-bool item_def::is_valid() const
+bool item_def::defined() const
 {
     return (base_type != OBJ_UNASSIGNED && quantity > 0);
 }
@@ -3015,7 +3015,7 @@ bool item_def::is_valid() const
 bool item_def::is_really_valid() const
 {
     const int max_sub = get_max_subtype(base_type);
-    return (is_valid()
+    return (defined()
             && (max_sub == -1 ||
                 sub_type < get_max_subtype(base_type)));
 }
@@ -3023,7 +3023,7 @@ bool item_def::is_really_valid() const
 // The Orb of Zot and unique runes are considered critical.
 bool item_def::is_critical() const
 {
-    if (!is_valid())
+    if (!defined())
         return (false);
 
     if (base_type == OBJ_ORBS)
