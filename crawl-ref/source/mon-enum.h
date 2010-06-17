@@ -49,6 +49,8 @@ enum mon_attack_type
     AT_TAIL_SLAP,
     AT_GORE,
     AT_CONSTRICT,
+    AT_TRAMPLE,
+    AT_TRUNK_SLAP,
 
     AT_SHOOT,       // Attack representing missile damage for M_ARCHER.
     AT_WEAP_ONLY,   // Ranged weap: shoot point-blank like AT_SHOOT, melee weap:
@@ -258,6 +260,7 @@ enum shout_type
     S_ROAR,                 // roar
     S_SCREAM,               // scream
     S_BELLOW,               // bellow (yaks)
+    S_TRUMPET,              // trumpets (elephants)
     S_SCREECH,              // screech
     S_BUZZ,                 // buzz
     S_MOAN,                 // moan

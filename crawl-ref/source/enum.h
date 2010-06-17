@@ -2114,6 +2114,7 @@ enum monster_type                      // (int) menv[].type
     MONS_MARA_FAKE,
     MONS_ALLIGATOR,
     MONS_BABY_ALLIGATOR,
+    MONS_ELEPHANT,
 
     // Spriggans:
     MONS_SPRIGGAN = 500,

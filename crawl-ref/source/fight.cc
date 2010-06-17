@@ -4483,7 +4483,9 @@ std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
         "tentacle-slap",
         "tail-slap",
         "gore",
-        "constrict"
+        "constrict",
+        "trample",
+        "trunk-slap"
     };
 
     ASSERT(attk.type <
@@ -5153,6 +5155,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
              defender->conj_verb("are").c_str(),
              special_attack_punctuation().c_str());
         break;
+
     }
 }
 
@@ -5364,6 +5367,8 @@ void melee_attack::mons_perform_attack_rounds()
             case AT_HEADBUTT:
             case AT_TENTACLE_SLAP:
             case AT_TAIL_SLAP:
+            case AT_TRAMPLE:
+            case AT_TRUNK_SLAP:
                 noise_factor = 150;
                 break;
 

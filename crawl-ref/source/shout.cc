@@ -87,6 +87,9 @@ void handle_monster_shouts(monsters* monster, bool force)
     case S_BELLOW:
         default_msg_key = "__BELLOW";
         break;
+    case S_TRUMPET:
+        default_msg_key = "__TRUMPET";
+        break;
     case S_SCREECH:
         default_msg_key = "__SCREECH";
         break;
