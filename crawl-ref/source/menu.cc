@@ -887,9 +887,15 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
             tileset.push_back(tile_def(job, TEX_PLAYER));
     }
     else if (mons_is_mimic(m->type))
-        tileset.push_back(tile_def(tileidx_monster(m), TEX_DEFAULT));
+    {
+        tileidx_t idx = tileidx_monster(m) & TILE_FLAG_MASK;
+        tileset.push_back(tile_def(idx, TEX_DEFAULT));
+    }
     else
-        tileset.push_back(tile_def(tileidx_monster(m), TEX_PLAYER));
+    {
+        tileidx_t idx = tileidx_monster(m) & TILE_FLAG_MASK;
+        tileset.push_back(tile_def(idx, TEX_PLAYER));
+    }
 
     // A fake monster might not have it's ghost member set up properly,
     // and mons_flies() looks at ghost.
