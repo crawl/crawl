@@ -8002,6 +8002,11 @@ static void _ruin_level(int ruination /* = 10 */, int plant_density /* = 5 */)
             continue;
         }
 
+        /* or vaults */
+        if (!unforbidden(*ri, MMT_VAULT)) {
+            continue;
+        }
+
         int floor_count = 0;
         for (adjacent_iterator ai(*ri); ai; ++ai)
         {
