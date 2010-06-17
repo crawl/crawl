@@ -1206,6 +1206,7 @@ static bool _try_give_plain_armour(item_def &arm)
     else if (arm.plus < -max_ench)
         arm.plus = -max_ench;
 
+    ASSERT(arm.is_really_valid());
     return (true);
 }
 
@@ -2131,6 +2132,7 @@ int acquirement_create_item(object_class_type class_wanted,
 
     // Easier to read this way.
     item_def& thing(mitm[thing_created]);
+    ASSERT(thing.is_really_valid());
 
     if (class_wanted == OBJ_WANDS)
         thing.plus = std::max((int) thing.plus, 3 + random2(3));
@@ -2301,6 +2303,7 @@ int acquirement_create_item(object_class_type class_wanted,
 
     move_item_to_grid( &thing_created, pos );
 
+    ASSERT(thing.is_really_valid());
     return (thing_created);
 }
 
