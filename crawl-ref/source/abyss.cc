@@ -459,11 +459,12 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask)
     int altars_wanted = 0;
 
     const int floor_density = random_range(30, 95);
+
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
     {
         const coord_def p(*ri);
 
-        if (!abyss_genlevel_mask(p))
+        if (!abyss_genlevel_mask(p) || !unforbidden(p, MMT_VAULT))
             continue;
 
         if (x_chance_in_y(floor_density, 100))
