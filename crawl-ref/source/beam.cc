@@ -4251,8 +4251,7 @@ void bolt::affect_monster(monsters* mon)
     // The beam hit.
     if (mons_near(mon))
     {
-        // Monsters don't currently use Phase Shift and are never currently
-        // helpless in ranged combat.
+        // Monsters are never currently helpless in ranged combat.
         if (hit_verb.empty())
             hit_verb = engulfs ? "engulfs" : "hits";
 
