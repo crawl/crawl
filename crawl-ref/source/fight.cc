@@ -1170,7 +1170,6 @@ bool melee_attack::player_aux_test_hit()
     const int helpful_evasion =
         defender->melee_evasion(attacker, EV_IGNORE_HELPLESS);
 
-    // No monster Phase Shift yet
     if (you.religion != GOD_ELYVILON
         && you.penance[GOD_ELYVILON]
         && god_hates_your_god(GOD_ELYVILON, you.religion)
@@ -1431,7 +1430,6 @@ bool melee_attack::player_hits_monster()
         defender->melee_evasion(attacker, EV_IGNORE_HELPLESS);
     dprf("your to-hit: %d; defender effective EV: %d", to_hit, evasion);
 
-    // No monster Phase Shift yet
     if (you.religion != GOD_ELYVILON
         && you.penance[GOD_ELYVILON]
         && god_hates_your_god(GOD_ELYVILON, you.religion)
@@ -5362,7 +5360,7 @@ void melee_attack::mons_perform_attack_rounds()
 
         if (weapon == NULL)
         {
-            switch(attk.type)
+            switch (attk.type)
             {
             case AT_HEADBUTT:
             case AT_TENTACLE_SLAP:
