@@ -1667,7 +1667,7 @@ static int _collect_fruit(std::vector<std::pair<int,int> >& available_fruit)
 
     for (int i = 0; i < ENDOFPACK; i++)
     {
-        if (you.inv[i].is_valid() && is_fruit(you.inv[i]))
+        if (you.inv[i].defined() && is_fruit(you.inv[i]))
         {
             total += you.inv[i].quantity;
             available_fruit.push_back(std::make_pair(you.inv[i].quantity, i));

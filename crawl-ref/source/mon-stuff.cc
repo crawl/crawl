@@ -196,7 +196,7 @@ bool curse_an_item( bool decay_potions, bool quiet )
 
     for (int i = 0; i < ENDOFPACK; i++)
     {
-        if (!you.inv[i].is_valid())
+        if (!you.inv[i].defined())
             continue;
 
         if (you.inv[i].base_type == OBJ_WEAPONS
@@ -276,10 +276,10 @@ void monster_drop_ething(monsters *monster, bool mark_item_origins,
             }
             else
             {
-                if (monster->friendly() && mitm[item].is_valid())
+                if (monster->friendly() && mitm[item].defined())
                     mitm[item].flags |= ISFLAG_DROPPED_BY_ALLY;
 
-                if (mark_item_origins && mitm[item].is_valid())
+                if (mark_item_origins && mitm[item].defined())
                     origin_set_monster(mitm[item], monster);
 
                 // If a monster is swimming, the items are ALREADY underwater
@@ -3581,7 +3581,7 @@ static void _vanish_orig_eq(monsters* mons)
 
         item_def &item(mitm[mons->inv[i]]);
 
-        if (!item.is_valid())
+        if (!item.defined())
             continue;
 
         if (item.orig_place != 0 || item.orig_monnum != 0

@@ -188,7 +188,7 @@ bool detect_curse(int scroll, bool suppress_msg)
     {
         item_def& item = you.inv[i];
 
-        if (!item.is_valid())
+        if (!item.defined())
             continue;
 
         if (item_count <= 1)

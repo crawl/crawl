@@ -473,7 +473,7 @@ static const bool _have_appropriate_evokable(const actor* target)
     {
         item_def &item(you.inv[i]);
 
-        if (!item.is_valid())
+        if (!item.defined())
             continue;
 
         if (_is_appropriate_evokable(item, target))
@@ -491,7 +491,7 @@ static item_def* _get_evokable_item(const actor* target)
     {
         item_def &item(you.inv[i]);
 
-        if (!item.is_valid())
+        if (!item.defined())
             continue;
 
         if (_is_appropriate_evokable(item, target))

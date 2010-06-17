@@ -234,7 +234,7 @@ static void _ely_dull_inventory_weapons()
 
     for (int i = 0; i < ENDOFPACK; ++i)
     {
-        if (!you.inv[i].is_valid())
+        if (!you.inv[i].defined())
             continue;
 
         if (you.inv[i].base_type == OBJ_WEAPONS

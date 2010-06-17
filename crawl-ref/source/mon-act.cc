@@ -1532,7 +1532,7 @@ static bool _handle_throw(monsters *monster, bolt & beem)
     const item_def *weapon = NULL;
     const int mon_item = mons_pick_best_missile(monster, &launcher);
 
-    if (mon_item == NON_ITEM || !mitm[mon_item].is_valid())
+    if (mon_item == NON_ITEM || !mitm[mon_item].defined())
         return (false);
 
     if (player_or_mon_in_sanct(monster))

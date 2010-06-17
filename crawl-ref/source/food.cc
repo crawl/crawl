@@ -147,7 +147,7 @@ void weapon_switch(int targ)
     else
     {
         // Possibly not valid anymore (dropped, etc.).
-        if (!you.inv[targ].is_valid())
+        if (!you.inv[targ].defined())
             return;
 
         // Already wielding this weapon?
@@ -231,7 +231,7 @@ static bool _find_butchering_implement(int &butcher_tool)
     for (int i = 0; i < ENDOFPACK; ++i)
     {
         item_def& tool(you.inv[i]);
-        if (tool.is_valid()
+        if (tool.defined()
             && tool.base_type == OBJ_WEAPONS
             && can_cut_meat( tool )
             && can_wield( &tool )
@@ -299,7 +299,7 @@ static bool _find_butchering_implement(int &butcher_tool)
         return (false);
     }
 
-    if (you.inv[item_slot].is_valid()
+    if (you.inv[item_slot].defined()
         && you.inv[item_slot].base_type == OBJ_WEAPONS
         && can_cut_meat(you.inv[item_slot]))
     {
@@ -404,7 +404,7 @@ int count_corpses_in_pack(bool blood_only)
     {
         item_def &obj(you.inv[i]);
 
-        if (!obj.is_valid())
+        if (!obj.defined())
             continue;
 
         // Only actually count corpses, not skeletons.
@@ -809,7 +809,7 @@ static bool _player_has_enough_food()
     for (unsigned slot = 0; slot < ENDOFPACK; ++slot)
     {
         item = you.inv[slot];
-        if (!item.is_valid())
+        if (!item.defined())
             continue;
 
         if (!can_ingest(item.base_type, item.sub_type, true, true, false))
@@ -1215,7 +1215,7 @@ int eat_from_floor(bool skip_chunks)
                 // Increase only if we're dealing with different subtypes.
                 // FIXME: Use a common check for herbivorous/carnivorous
                 //        dislikes, for e.g. "Blech! You need blood!"
-                ASSERT(wonteat.is_valid());
+                ASSERT(wonteat.defined());
                 if (wonteat.sub_type != si->sub_type)
                     inedible_food++;
             }
@@ -1295,7 +1295,7 @@ int eat_from_floor(bool skip_chunks)
         {
             if (inedible_food == 1)
             {
-                ASSERT(wonteat.is_valid());
+                ASSERT(wonteat.defined());
                 // Use the normal cannot ingest message.
                 if (can_ingest(wonteat.base_type, wonteat.sub_type, false))
                 {
@@ -1329,7 +1329,7 @@ bool eat_from_inventory()
     std::vector<item_def *> food_items;
     for (int i = 0; i < ENDOFPACK; ++i)
     {
-        if (!you.inv[i].is_valid())
+        if (!you.inv[i].defined())
             continue;
 
         item_def *item = &you.inv[i];
@@ -1371,7 +1371,7 @@ bool eat_from_inventory()
                 // Increase only if we're dealing with different subtypes.
                 // FIXME: Use a common check for herbivorous/carnivorous
                 //        dislikes, for e.g. "Blech! You need blood!"
-                ASSERT(wonteat->is_valid());
+                ASSERT(wonteat->defined());
                 if (wonteat->sub_type != item->sub_type)
                     inedible_food++;
             }
@@ -1435,7 +1435,7 @@ bool eat_from_inventory()
         {
             if (inedible_food == 1)
             {
-                ASSERT(wonteat->is_valid());
+                ASSERT(wonteat->defined());
                 // Use the normal cannot ingest message.
                 if (can_ingest(wonteat->base_type, wonteat->sub_type, false))
                 {
@@ -1502,7 +1502,7 @@ int prompt_eat_chunks()
     // Then search through the inventory.
     for (int i = 0; i < ENDOFPACK; ++i)
     {
-        if (!you.inv[i].is_valid())
+        if (!you.inv[i].defined())
             continue;
 
         item_def *item = &you.inv[i];

@@ -757,7 +757,7 @@ bool berserk_check_wielded_weapon()
         return (true);
 
     const item_def weapon = *you.weapon();
-    if (weapon.is_valid() && weapon.base_type != OBJ_STAVES
+    if (weapon.defined() && weapon.base_type != OBJ_STAVES
            && (weapon.base_type != OBJ_WEAPONS || is_range_weapon(weapon))
         || you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED])
     {

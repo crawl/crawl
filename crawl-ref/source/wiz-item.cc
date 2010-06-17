@@ -718,7 +718,7 @@ void wizard_identify_pack()
     for (int i = 0; i < ENDOFPACK; ++i)
     {
         item_def& item = you.inv[i];
-        if (item.is_valid())
+        if (item.defined())
         {
             set_ident_type(item, ID_KNOWN_TYPE);
             set_ident_flags(item, ISFLAG_IDENT_MASK);
@@ -736,7 +736,7 @@ void wizard_unidentify_pack()
     for (int i = 0; i < ENDOFPACK; ++i)
     {
         item_def& item = you.inv[i];
-        if (item.is_valid())
+        if (item.defined())
         {
             set_ident_type(item, ID_UNKNOWN_TYPE);
             unset_ident_flags(item, ISFLAG_IDENT_MASK);
@@ -757,7 +757,7 @@ void wizard_unidentify_pack()
 
             item_def &item = mitm[mon->inv[j]];
 
-            if (!item.is_valid())
+            if (!item.defined())
                 continue;
 
             set_ident_type(item, ID_UNKNOWN_TYPE);
@@ -795,7 +795,7 @@ void wizard_list_items()
     for (int i = 0; i < MAX_ITEMS; ++i)
     {
         item_def &item(mitm[i]);
-        if (!item.is_valid() || item.held_by_monster())
+        if (!item.defined() || item.held_by_monster())
             continue;
 
         if (item.link != NON_ITEM)
@@ -892,7 +892,7 @@ static void _debug_acquirement_stats(FILE *ostat)
 
         if (!acquirement(type, AQ_WIZMODE, true, &item_index, true)
             || item_index == NON_ITEM
-            || !mitm[item_index].is_valid())
+            || !mitm[item_index].defined())
         {
             mpr("Acquirement failed, stopping early.");
             break;

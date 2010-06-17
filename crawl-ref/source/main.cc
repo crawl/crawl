@@ -3696,7 +3696,7 @@ static void _move_player(coord_def move)
 #ifdef DEBUG_DIAGNOSTICS
         int j = 0;
         for (int i = 0; i < MAX_ITEMS; ++i)
-            if (mitm[i].is_valid())
+            if (mitm[i].defined())
                 ++j;
 
         mprf(MSGCH_DIAGNOSTICS, "Number of items present: %d", j);
