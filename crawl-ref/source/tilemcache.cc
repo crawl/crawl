@@ -643,11 +643,9 @@ mcache_ghost::mcache_ghost(const monsters *mon)
     const struct ghost_demon &ghost = *mon->ghost;
 
     unsigned int pseudo_rand = ghost.max_hp * 54321 * 54321;
-    int gender = (pseudo_rand >> 8) & 1;
 
-    tilep_race_default(ghost.species, gender,
-                       ghost.xl, &m_doll);
-    tilep_job_default(ghost.job, gender, &m_doll);
+    tilep_race_default(ghost.species, ghost.xl, &m_doll);
+    tilep_job_default(ghost.job, &m_doll);
 
     for (int p = TILEP_PART_CLOAK; p < TILEP_PART_MAX; p++)
     {
