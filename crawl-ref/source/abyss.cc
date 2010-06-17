@@ -1160,11 +1160,11 @@ static bool _is_grid_corruptible(const coord_def &c)
     switch (feat)
     {
     case DNGN_PERMAROCK_WALL:
-    case DNGN_GREEN_CRYSTAL_WALL:
         return (false);
 
     case DNGN_METAL_WALL:
-        return (one_chance_in(5));
+    case DNGN_GREEN_CRYSTAL_WALL:
+        return (one_chance_in(4));
 
     case DNGN_STONE_WALL:
         return (one_chance_in(3));
