@@ -166,6 +166,7 @@ enum mons_class_flags
 
     M_NO_SKELETON       = 1<<30,        // boneless corpses
     M_NO_EXP_GAIN       = 1<<31,        // worth 0 xp
+    M_DEFLECT_MISSILES  = (uint64_t)1<<32,// has a deflection effect
 };
 
 enum mon_intel_type             // Must be in increasing intelligence order
