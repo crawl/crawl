@@ -3453,6 +3453,12 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
                 mspec.extra_monster_flags |= MF_NAME_DEFINITE;
                 mspec.extra_monster_flags |= MF_NAME_DESCRIPTOR;
             }
+
+            if (strip_tag(mon_str, "name_species")
+                || strip_tag(mon_str, "n_spe"))
+            {
+                mspec.extra_monster_flags |= MF_NAME_SPECIES;
+            }
         }
 
         trim_string(mon_str);

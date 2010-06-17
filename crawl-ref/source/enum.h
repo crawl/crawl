@@ -2242,6 +2242,8 @@ enum monster_flag_type
     MF_INTERLEVEL_FOLLOWER = 0x8000000,// will travel with the player regardless
                                        // of where the monster is at on the level
     MF_DEMONIC_GUARDIAN = 0x10000000, // is a demonic_guardian
+    MF_NAME_SPECIES     = 0x20000000, // mname should be used for corpses as well,
+                                      // preventing "human corpse of halfling"
 };
 
 // Adding slots breaks saves. YHBW.
