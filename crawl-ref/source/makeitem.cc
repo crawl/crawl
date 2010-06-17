@@ -350,7 +350,7 @@ void item_colour(item_def &item)
     {
     case OBJ_WEAPONS:
         if (is_unrandom_artefact(item))
-            break;              // unrandarts already coloured
+            break;              // unrandarts have already been coloured
 
         if (is_demonic(item))
             item.colour = random_uncommon_colour();
