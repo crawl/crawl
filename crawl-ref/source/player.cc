@@ -3800,13 +3800,13 @@ bool extrinsic_amulet_effect(jewellery_type amulet)
     case AMU_CLARITY:
         return (player_mutation_level(MUT_CLARITY) > 0);
     case AMU_RESIST_CORROSION:
-        if (you.religion == GOD_JIYVA && you.piety > piety_breakpoint(2))
+        if (you.religion == GOD_JIYVA && you.piety >= piety_breakpoint(2))
             return (true);
         // else fall-through
     case AMU_CONSERVATION:
         return (player_equip_ego_type(EQ_CLOAK, SPARM_PRESERVATION) > 0
                 || (you.religion == GOD_JIYVA
-                     && you.piety > piety_breakpoint(4)));
+                     && you.piety >= piety_breakpoint(4)));
     case AMU_THE_GOURMAND:
         return (player_mutation_level(MUT_GOURMAND) > 0);
     default:
