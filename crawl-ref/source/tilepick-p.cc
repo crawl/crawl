@@ -505,6 +505,7 @@ void tilep_draconian_init(int sp, int level, tileidx_t *base,
 }
 
 // Set default parts of each race: body + optional beard, hair, etc.
+// This function needs to be entirely deterministic.
 void tilep_race_default(int sp, int level, dolls_data *doll)
 {
     tileidx_t *parts = doll->parts;
@@ -518,7 +519,7 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
     tileidx_t wing   = 0;
     tileidx_t head   = 0;
 
-    hair = coinflip() ? TILEP_HAIR_SHORT_BLACK : TILEP_HAIR_LONG_BLACK;
+    hair = TILEP_HAIR_SHORT_BLACK;
 
     switch (sp)
     {
@@ -602,6 +603,7 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
         parts[TILEP_PART_DRCWING] = wing;
 }
 
+// This function needs to be entirely deterministic.
 void tilep_job_default(int job, dolls_data *doll)
 {
     tileidx_t *parts = doll->parts;
