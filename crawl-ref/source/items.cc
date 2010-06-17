@@ -3012,7 +3012,7 @@ bool item_def::defined() const
 
 // Checks whether the item is actually a good one.
 // TODO: check brands, etc.
-bool item_def::is_really_valid() const
+bool item_def::is_valid() const
 {
     const int max_sub = get_max_subtype(base_type);
     return (defined()
