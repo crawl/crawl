@@ -631,7 +631,8 @@ int weight_map_vector (std::vector<map_def> maps)
     return (weights);
 }
 
-struct map_selector {
+struct map_selector
+{
 private:
     enum select_type
     {

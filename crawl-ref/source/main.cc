@@ -1480,7 +1480,8 @@ static void _toggle_friendly_pickup()
         type = tolower(getchm(KMC_DEFAULT));
     }
 
-    switch (type) {
+    switch (type)
+    {
     case 'd': you.friendly_pickup = Options.default_friendly_pickup; break;
     case 'n': you.friendly_pickup = FRIENDLY_PICKUP_NONE; break;
     case 'f': you.friendly_pickup = FRIENDLY_PICKUP_FRIEND; break;

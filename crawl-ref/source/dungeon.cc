@@ -1987,7 +1987,8 @@ static void _build_dungeon_level(int level_number, int level_type)
     if (player_in_branch(BRANCH_LAIR))
     {
         int depth = player_branch_depth() + 1;
-        do {
+        do
+        {
             _ruin_level(20 - depth, depth / 2 + 5);
             _add_plant_clumps(12 - depth, 18 - depth / 4, depth / 4 + 2);
             depth -= 3;
@@ -7998,12 +7999,14 @@ static void _ruin_level(int ruination /* = 10 */, int plant_density /* = 5 */)
         }
 
         /* don't mess with permarock */
-        if (grd(*ri) == DNGN_PERMAROCK_WALL) {
+        if (grd(*ri) == DNGN_PERMAROCK_WALL)
+        {
             continue;
         }
 
         /* or vaults */
-        if (!unforbidden(*ri, MMT_VAULT)) {
+        if (!unforbidden(*ri, MMT_VAULT))
+        {
             continue;
         }
 
@@ -8083,14 +8086,17 @@ static void _add_plant_clumps(int frequency /* = 10 */,
             monster_type type = menv[mgrd(*ri)].type;
             if ((type == MONS_PLANT  ||
                  type == MONS_FUNGUS ||
-                 type == MONS_BUSH) && one_chance_in(frequency)) {
+                 type == MONS_BUSH) && one_chance_in(frequency))
+                 {
                 mg.cls = type;
             }
-            else {
+            else
+            {
                 continue;
             }
         }
-        else {
+        else
+        {
             continue;
         }
 
@@ -8118,7 +8124,8 @@ static void _add_plant_clumps(int frequency /* = 10 */,
                     /* only place plants next to previously placed plants */
                     if (abs(rad->x - it->x) <= 1 && abs(rad->y - it->y) <= 1)
                     {
-                        if (one_chance_in(clump_density)) {
+                        if (one_chance_in(clump_density))
+                        {
                             more_to_place.push_back(*rad);
                         }
                     }

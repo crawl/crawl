@@ -193,7 +193,8 @@ static int dgn_change_level_flags(lua_State *ls)
 {
     map_flags flags;
 
-    try {
+    try
+    {
         flags = map_flags::parse(level_flag_names,
                                  luaL_checkstring(ls, 1));
     }
@@ -221,7 +222,8 @@ static int dgn_bflags(lua_State *ls)
 {
     MAP(ls, 1, map);
 
-    try {
+    try
+    {
         map->branch_flags = map_flags::parse(branch_flag_names,
                                              luaL_checkstring(ls, 2));
     }
@@ -237,7 +239,8 @@ static int dgn_change_branch_flags(lua_State *ls)
 {
     map_flags flags;
 
-    try {
+    try
+    {
         flags = map_flags::parse(branch_flag_names,
                                  luaL_checkstring(ls, 1));
     }

@@ -3459,7 +3459,8 @@ static void set_crawl_base_dir(const char *arg)
 // returns true if no unknown or malformed arguments were found.
 
 // Keep this in sync with the option names.
-enum commandline_option_type {
+enum commandline_option_type
+{
     CLO_SCORES,
     CLO_NAME,
     CLO_RACE,
@@ -3543,7 +3544,8 @@ static void _print_save_version(char *name)
 
     FILE *charf = fopen(name, "rb");
 
-    if (!charf) {
+    if (!charf)
+    {
 #ifdef LOAD_UNPACKAGE_CMD
         std::string zipfile = basename + PACKAGE_SUFFIX;
         FILE *handle = fopen(zipfile.c_str(), "rb+");
@@ -3584,16 +3586,19 @@ static void _print_save_version(char *name)
 #endif
         charf = fopen(filename.c_str(), "rb");
     }
-    if (!charf) {
+    if (!charf)
+    {
         fprintf(stderr, "Unable to open %s for reading!\n", filename.c_str());
         goto cleanup;
     }
 
     char major, minor;
-    if (!get_save_version(charf, major, minor)) {
+    if (!get_save_version(charf, major, minor))
+    {
         fprintf(stderr, "Save file is invalid.\n");
     }
-    else {
+    else
+    {
         printf("Save file version for %s is %d.%d\n", name, major, minor);
     }
 

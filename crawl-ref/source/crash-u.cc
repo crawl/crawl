@@ -42,10 +42,17 @@ typedef char **(*backtrace_symbols_t)(void * const *, int);
 
 // Used to convert from void* to function pointer (without a
 // compiler warning).
-template <typename TO, typename FROM> TO nasty_cast(FROM f) {
-    union {
-        FROM f; TO t;
-    } u; u.f = f; return u.t;
+template <typename TO, typename FROM> TO nasty_cast(FROM f)
+{
+    union
+    {
+        FROM f;
+        TO t;
+    } u;
+
+    u.f = f;
+
+    return u.t;
 }
 #endif // TARGET_OS_MACOSX
 
