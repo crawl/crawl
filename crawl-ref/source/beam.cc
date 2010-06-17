@@ -4203,6 +4203,14 @@ void bolt::affect_monster(monsters* mon)
                 msg::stream << mon->name(DESC_CAP_THE) << " deflects the "
                             << name << '!' << std::endl;
             }
+            else if (mons_class_flag(mon->type, M_PHASE_SHIFT)
+                     && _test_beam_hit(beam_hit, rand_ev - random2(8),
+                                       is_beam, false, false, r))
+            {
+                msg::stream << mon->name(DESC_CAP_THE) << " momentarily phases "
+                            << "out as the " << name << " passes through "
+                            << mon->pronoun(PRONOUN_OBJECTIVE) << ".\n";
+            }
             else
             {
                 msg::stream << "The " << name << " misses "
