@@ -74,7 +74,11 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
                        bool force_beh = false);
 
 int monster_die(monsters *monster, killer_type killer,
-                int killer_index, bool silent = false, bool wizard = false);
+                int killer_index, bool silent = false, bool wizard = false,
+                bool fake = false);
+
+int mounted_kill(monsters *daddy, monster_type mc, killer_type killer,
+                int killer_index);
 
 monster_type fill_out_corpse(const monsters* monster, item_def& corpse,
                              bool allow_weightless = false);

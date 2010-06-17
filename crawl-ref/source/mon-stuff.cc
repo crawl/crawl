@@ -1214,7 +1214,7 @@ static std::string _killer_type_name(killer_type killer)
 
 // Returns the slot of a possibly generated corpse or -1.
 int monster_die(monsters *monster, killer_type killer,
-                int killer_index, bool silent, bool wizard)
+                int killer_index, bool silent, bool wizard, bool fake)
 {
     if (invalid_monster(monster))
         return (-1);
@@ -1224,7 +1224,8 @@ int monster_die(monsters *monster, killer_type killer,
     if (you.level_type == LEVEL_ABYSS)
         monster->flags &= ~MF_BANISHED;
 
-    if (!silent && _monster_avoided_death(monster, killer, killer_index))
+    if (!silent && !fake
+        && _monster_avoided_death(monster, killer, killer_index))
     {
         monster->flags &= ~MF_EXPLODE_KILL;
         return (-1);
@@ -1984,11 +1985,19 @@ int monster_die(monsters *monster, killer_type killer,
         _monster_die_cloud(monster, !mons_reset, silent, summoned);
 
     int corpse = -1;
-    if (!mons_reset)
+    if (!mons_reset && !summoned)
     {
         // Have to add case for disintegration effect here? {dlb}
-        if (!summoned)
-            corpse = place_monster_corpse(monster, silent);
+        int corpse2 = -1;
+
+        if (monster->type == MONS_SPRIGGAN_RIDER)
+        {
+            corpse2 = mounted_kill(monster, MONS_FIREFLY, killer, killer_index);
+            monster->type = MONS_SPRIGGAN;
+        }
+        corpse = place_monster_corpse(monster, silent);
+        if (corpse == -1)
+            corpse = corpse2;
     }
 
     if ((killer == KILL_YOU
@@ -2031,6 +2040,12 @@ int monster_die(monsters *monster, killer_type killer,
 
         curr_PlaceInfo += delta;
         curr_PlaceInfo.assert_validity();
+    }
+
+    if (fake)
+    {
+        crawl_state.dec_mon_acting(monster);
+        return (corpse);
     }
 
     mons_remove_from_grid(monster);
@@ -2098,6 +2113,19 @@ void monster_cleanup(monsters *monster)
 
     if (you.pet_target == monster_killed)
         you.pet_target = MHITNOT;
+}
+
+int mounted_kill(monsters *daddy, monster_type mc, killer_type killer,
+                int killer_index)
+{
+    monsters mon;
+    mon.type = mc;
+    mon.moveto(daddy->pos());
+    define_monster(&mon);
+    mon.flags = daddy->flags;
+    mon.attitude = daddy->attitude;
+
+    return monster_die(&mon, killer, killer_index, false, false, true);
 }
 
 // If you're invis and throw/zap whatever, alerts menv to your position.

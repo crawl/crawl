@@ -6213,6 +6213,54 @@ void monsters::react_to_damage(const actor *oppressor, int damage,
         place_cloud(CLOUD_FIRE, pos(), 20+random2(15),
                     actor_kill_alignment(oppressor), 5);
     }
+    else if (type == MONS_SPRIGGAN_RIDER)
+    {
+        if (hit_points + damage > max_hit_points / 2)
+            damage = max_hit_points / 2 - hit_points;
+        if (damage > 0 && x_chance_in_y(damage, damage + hit_points))
+        {
+            bool fly_died = coinflip();
+            int old_hp                = hit_points;
+            unsigned long old_flags   = flags;
+            mon_enchant_list old_ench = enchantments;
+            char old_ench_countdown   = ench_countdown;
+
+            if (!fly_died)
+                monster_drop_ething(this, mons_aligned(oppressor, &you));
+
+            type = fly_died ? MONS_SPRIGGAN : MONS_FIREFLY;
+            define_monster(this);
+            hit_points = std::min(old_hp, hit_points);
+            flags          = old_flags;
+            enchantments   = old_ench;
+            ench_countdown = old_ench_countdown;
+
+            mounted_kill(this, fly_died ? MONS_FIREFLY : MONS_SPRIGGAN,
+                !oppressor ? KILL_MISC
+                : (oppressor->atype() == ACT_PLAYER)
+                  ? KILL_YOU : KILL_MON,
+                (oppressor && oppressor->atype() == ACT_MONSTER)
+                  ? oppressor->mindex() : NON_MONSTER);
+
+            if (fly_died && !is_habitable(pos()))
+            {
+                hit_points = 0;
+                if (observable())
+                    mprf("As %s mount dies, %s plunges down into %s!",
+                         pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str(),
+                         name(DESC_NOCAP_THE).c_str(),
+                         grd(pos()) == DNGN_LAVA ?
+                             "lava and is incinerated" :
+                             "deep water and drowns");
+            }
+            else if (fly_died)
+            {
+                mprf("%s jumps down from %s now dead mount.",
+                     name(DESC_CAP_THE).c_str(),
+                     pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str());
+            }
+        }
+    }
 }
 
 reach_type monsters::reach_range() const

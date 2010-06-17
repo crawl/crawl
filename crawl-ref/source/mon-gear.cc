@@ -1011,6 +1011,12 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
                                        WPN_SABRE, -1);
         break;
 
+    case MONS_SPRIGGAN_RIDER:
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = WPN_SPEAR;
+        break;
+
     case MONS_SPRIGGAN_DRUID:
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
@@ -1348,6 +1354,7 @@ void give_shield(monsters *mon, int level)
         }
         break;
     case MONS_SPRIGGAN:
+    case MONS_SPRIGGAN_RIDER:
         if (one_chance_in(4))
         {
             make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER,
