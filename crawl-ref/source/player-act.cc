@@ -528,6 +528,13 @@ bool player::can_go_berserk(bool intentional, bool potion) const
         return (false);
     }
 
+    if (duration[DUR_DEATHS_DOOR])
+    {
+        if (verbose)
+            mpr("Your body is effectively dead; that's not a shape for a blood rage.");
+        return (false);
+    }
+
     if (beheld())
     {
         if (verbose)
