@@ -409,14 +409,19 @@ void clear_excludes()
         return;
 
 #ifdef USE_TILE
-    exclude_set::iterator it;
-    //for (int i = curr_excludes.size()-1; i >= 0; i--)
-    for (it = curr_excludes.begin(); it != curr_excludes.end(); ++it)
-        _tile_exclude_gmap_update(it->second.pos);
+    // Tiles needs to update the minimap for each exclusion that is removed,
+    // but the exclusions need to be removed first.  Therefore, make a copy
+    // of the current set of exclusions and iterate through the copy below.
+    exclude_set excludes = curr_excludes;
 #endif
 
     curr_excludes.clear();
     clear_level_exclusion_annotation();
+
+#ifdef USE_TILE
+    for (exclude_set::iterator it = excludes.begin(); it != excludes.end(); ++it)
+        _tile_exclude_gmap_update(it->second.pos);
+#endif
 
     _exclude_update();
 }
