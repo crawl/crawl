@@ -308,7 +308,7 @@ int mons_piety(const monsters *mon)
     return (mon->hit_dice * 14);
 }
 
-bool mons_class_flag(int mc, int bf)
+bool mons_class_flag(int mc, uint64_t bf)
 {
     const monsterentry *me = smc;
 

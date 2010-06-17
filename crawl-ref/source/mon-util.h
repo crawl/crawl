@@ -8,6 +8,8 @@
 #ifndef MONUTIL_H
 #define MONUTIL_H
 
+#include "mon-util.h"
+
 #include "externs.h"
 #include "enum.h"
 #include "mon-enum.h"
@@ -213,7 +215,7 @@ mon_attack_def mons_attack_spec(const monsters *mon, int attk_number);
 
 corpse_effect_type mons_corpse_effect(int mc);
 
-bool mons_class_flag(int mc, int bf);
+bool mons_class_flag(int mc, uint64_t bf);
 
 int mons_unusable_items(const monsters *mon);
 
