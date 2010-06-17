@@ -1224,9 +1224,12 @@ static void _corrupt_square(const crawl_environment &oenv, const coord_def &c)
         feat = oenv.grid(c);
 
     if (feat_is_trap(feat, true)
-        || feat == DNGN_SECRET_DOOR || feat == DNGN_UNSEEN)
+        || feat == DNGN_SECRET_DOOR
+        || feat == DNGN_UNSEEN
+        || (feat_is_traversable(grd(c)) && !feat_is_traversable(feat)
+            && coinflip()))
     {
-        return;
+        feat = DNGN_FLOOR;
     }
 
     if (feat_is_traversable(grd(c)) && !feat_is_traversable(feat)
@@ -1235,8 +1238,11 @@ static void _corrupt_square(const crawl_environment &oenv, const coord_def &c)
         return;
     }
 
-    if (!feat_is_traversable(grd(c)) && feat_is_traversable(feat) && _is_sealed_square(c))
+    if (!feat_is_traversable(grd(c)) && feat_is_traversable(feat)
+        && _is_sealed_square(c))
+    {
         return;
+    }
 
     // What's this supposed to achieve? (jpeg)
     // I mean, won't exits from the Abyss only turn up in the Abyss itself?
@@ -1342,6 +1348,8 @@ bool lugonu_corrupt_level(int power)
     _initialise_level_corrupt_seeds(power);
 
     std::auto_ptr<crawl_environment> backup(new crawl_environment(env));
+    env.level_map_mask.init(0);
+    env.level_map_ids.init(INVALID_MAP_INDEX);
 
     // Set up genlevel mask and fill the level with DNGN_UNSEEN so
     // _generate_area does its thing.
