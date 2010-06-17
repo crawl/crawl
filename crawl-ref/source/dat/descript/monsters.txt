@@ -765,7 +765,7 @@ A giant eyeball, with a captivating stare.
 %%%%
 giant firefly
 
-Unlike its mundane counterparts that are merely half an inch big, this enormous flying bug is large enough to be ridden by some spriggans. It's glow, though, is faint enough to be hardly visible.
+Unlike its mundane counterparts that are merely half an inch big, this enormous flying bug is large enough to be ridden by some spriggans. Its glow, though, is faint enough to be hardly visible.
 %%%%
 giant frog
 
@@ -1514,11 +1514,11 @@ Revelling nature, these protectors of forests are the doom of anyone who as much
 %%%%
 spriggan rider
 
-Mounted on giant fireflies, these guys make sure no one who dares to intrude the spriggan forests and cairns won't be able to just walk away.
+Mounted on giant fireflies, these guys make sure no one who dares to intrude on the spriggan forests and cairns will be able to just walk away.
 %%%%
 spriggan warper
 
-To confuse those accustomed to normal world's geometry, some spriggans love to turn space into a pretzel.
+To confuse those accustomed to the normal world's geometry, some spriggans love to turn space into a pretzel.
 %%%%
 steam dragon
 
