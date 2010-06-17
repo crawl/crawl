@@ -111,6 +111,7 @@ bool is_existing_level(const level_id &level);
 
 class level_excursion
 {
+protected:
     level_id original;
     bool ever_changed_levels;
 
