@@ -115,6 +115,13 @@ void DungeonRegion::pack_buffers()
                 tile_cell.flv = env.tile_flv(gc);
                 pack_waves(gc, &tile_cell);
             }
+            else
+            {
+                tile_cell.flv.floor   = 0;
+                tile_cell.flv.wall    = 0;
+                tile_cell.flv.special = 0;
+                tile_cell.flv.feat    = 0;
+            }
 
             m_buf_dngn.add(tile_cell, x, y);
 
