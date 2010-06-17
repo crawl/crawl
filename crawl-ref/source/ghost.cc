@@ -894,13 +894,15 @@ void ghost_demon::find_extra_ghosts( std::vector<ghost_demon> &gs, int n )
 // Returns the number of extra ghosts allowed on the level.
 int ghost_demon::n_extra_ghosts()
 {
-    if (you.level_type == LEVEL_DUNGEON)
+    if (you.level_type != LEVEL_ABYSS
+        && you.level_type != LEVEL_PANDEMONIUM)
     {
         const int subdepth  = level_id::current().depth;
-        // Single ghosts-only: D:1-8, Lair:1, Orc:1
-        if (subdepth < 9 && player_in_branch(BRANCH_MAIN_DUNGEON)
-            || subdepth < 2 && player_in_branch(BRANCH_LAIR)
-            || subdepth < 2 && player_in_branch(BRANCH_ORCISH_MINES))
+        // Single ghosts-only: D:1-8, Lair:1, Orc:1, and non-dungeon
+        // areas at this depth, such as portal vaults.
+        if (subdepth < 9 && you.where_are_you == BRANCH_MAIN_DUNGEON
+            || subdepth < 2 && you.where_are_you == BRANCH_LAIR
+            || subdepth < 2 && you.where_are_you == BRANCH_ORCISH_MINES)
         {
             return (0);
         }
