@@ -932,8 +932,6 @@ int cast_healing(int pow, bool divine_ability, const coord_def& where,
 
 bool cast_revivification(int pow)
 {
-    bool success = false;
-
     if (you.hp == you.hp_max)
         canned_msg(MSG_NOTHING_HAPPENS);
     else if (you.hp_max < 21)
@@ -949,10 +947,18 @@ bool cast_revivification(int pow)
 
         dec_max_hp(loss);
         set_hp(you.hp_max, false);
-        success = true;
+
+        if (you.duration[DUR_DEATHS_DOOR])
+        {
+            mpr("Your life is in your own hands once again.", MSGCH_DURATION);
+            you.increase_duration(DUR_PARALYSIS, 5 + random2(5));
+            confuse_player(10 + random2(10));
+            you.duration[DUR_DEATHS_DOOR] = 0;
+        }
+        return (true);
     }
 
-    return (success);
+    return (false);
 }
 
 void cast_cure_poison(int pow)

@@ -1565,7 +1565,8 @@ int monster_die(monsters *monster, killer_type killer,
                     || you.religion == GOD_SHINING_ONE
                        && (monster->is_evil() || monster->is_unholy()))
                 && !player_under_penance()
-                && random2(you.piety) >= piety_breakpoint(0))
+                && random2(you.piety) >= piety_breakpoint(0)
+                && !you.duration[DUR_DEATHS_DOOR])
             {
                 if (you.hp < you.hp_max)
                 {
