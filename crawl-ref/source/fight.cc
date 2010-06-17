@@ -763,7 +763,7 @@ static bool _player_vampire_draws_blood(const monsters* mon, const int damage,
         if (player_in_bat_form())
             heal /= 2;
 
-        if (heal > 0)
+        if (heal > 0 && !you.duration[DUR_DEATHS_DOOR])
         {
             inc_hp(heal, false);
             mprf("You feel %sbetter.", (you.hp == you.hp_max) ? "much " : "");
@@ -1998,7 +1998,8 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
             && !defender->is_summoned()
             && damage_done > 0
             && you.hp < you.hp_max
-            && !one_chance_in(5))
+            && !one_chance_in(5)
+            && !you.duration[DUR_DEATHS_DOOR])
         {
             mpr("You feel better.");
 
@@ -3284,6 +3285,7 @@ bool melee_attack::apply_damage_brand()
             || attacker->stat_hp() == attacker->stat_maxhp()
             || defender->atype() != ACT_PLAYER
                && defender->as_monster()->is_summoned()
+            || attacker == &you && you.duration[DUR_DEATHS_DOOR]
             || one_chance_in(5))
         {
             break;

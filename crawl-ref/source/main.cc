@@ -2426,20 +2426,14 @@ static void _decrement_durations()
     {
         if (you.hp > allowed_deaths_door_hp())
         {
-            mpr("Your life is in your own hands once again.", MSGCH_DURATION);
-            you.increase_duration(DUR_PARALYSIS, 5 + random2(5));
-            confuse_player(10 + random2(10));
-            you.hp_max--;
-            deflate_hp(you.hp_max, false);
-            you.duration[DUR_DEATHS_DOOR] = 0;
+            you.hp = allowed_deaths_door_hp();
+            you.redraw_hit_points = true;
         }
-        else
-        {
-            _decrement_a_duration(DUR_DEATHS_DOOR, delay,
-                                  "Your life is in your own hands again!",
-                                  random2(6),
-                                  "Your time is quickly running out!");
-        }
+
+        _decrement_a_duration(DUR_DEATHS_DOOR, delay,
+                              "Your life is in your own hands again!",
+                              random2(6),
+                              "Your time is quickly running out!");
     }
 
     if (_decrement_a_duration(DUR_DIVINE_STAMINA, delay))

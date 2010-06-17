@@ -78,6 +78,8 @@ This spell uses the bones of a skeleton to dispense a lethal spray of slicing fr
 Borgnjor's Revivification
 
 This spell instantly heals any and all wounds suffered by the caster, but also permanently lessens his or her resilience to injury - to a degree dependent on (and inversely related to) magical skill.
+
+The spell is powerful enough to literally pull someone out of the Death's Door, albeit the shock will render the caster incapable for a while.
 %%%%
 Call Canine Familiar
 
@@ -150,7 +152,7 @@ This spell raises living creatures slain by the caster into a state of unliving 
 Death's Door
 
 This spell is extremely powerful, but carries a degree of risk. It renders living casters nigh invulnerable to harm for a brief period, but
-can bring them dangerously close to death. So close in fact, that the body believes itself to be dead - healing effects will confuse and paralyze the caster, while cancelling the spell.
+can bring them dangerously close to death. So close in fact, that the body believes itself to be dead - healing effects will do nothing.
 
 The caster will receive one warning shortly before the spell expires. Being more skilled at Necromancy leaves the caster more resilient. Undead cannot use this spell.
 %%%%
