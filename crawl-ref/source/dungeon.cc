@@ -4889,6 +4889,7 @@ retry:
         if (props.exists("useful") && (useless_tries++ < 10)
             && is_useless_item(item, false))
         {
+            destroy_item(item, true);
             goto retry;
         }
     }
