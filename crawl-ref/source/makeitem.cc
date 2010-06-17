@@ -3161,9 +3161,13 @@ int items(int allow_uniques,       // not just true-false,
 
     // determine base_type for item generated {dlb}:
     if (force_class != OBJ_RANDOM)
+    {
+        ASSERT(force_class < NUM_OBJECT_CLASSES);
         item.base_type = force_class;
+    }
     else
     {
+        ASSERT(force_type == OBJ_RANDOM);
         item.base_type = static_cast<object_class_type>(
             random_choose_weighted(  5, OBJ_STAVES,
                                     15, OBJ_BOOKS,
@@ -3192,6 +3196,9 @@ int items(int allow_uniques,       // not just true-false,
         }
     }
 
+    ASSERT(force_type == OBJ_RANDOM
+           || force_type < get_max_subtype(item.base_type));
+
     item.quantity = 1;          // generally the case
 
     if (force_ego < SP_FORBID_EGO)
@@ -3200,6 +3207,7 @@ int items(int allow_uniques,       // not just true-false,
         if (get_unique_item_status(force_ego) == UNIQ_NOT_EXISTS)
         {
             make_item_unrandart(mitm[p], force_ego);
+            ASSERT(mitm[p].is_really_valid());
             return (p);
         }
         // the base item otherwise
@@ -3323,7 +3331,7 @@ int items(int allow_uniques,       // not just true-false,
     }
 
     // Note that item might be invalidated now, since p could have changed.
-    ASSERT(mitm[p].is_valid());
+    ASSERT(mitm[p].is_really_valid());
     return (p);
 }
 

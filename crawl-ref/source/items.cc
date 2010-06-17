@@ -2801,19 +2801,8 @@ static bool _find_subtype_by_name(item_def &item,
     return (item.sub_type != OBJ_RANDOM);
 }
 
-// Returns an incomplete item_def with base_type and sub_type set correctly
-// for the given item name. If the name is not found, sets sub_type to
-// OBJ_RANDOM.
-item_def find_item_type(object_class_type base_type, std::string name)
+int get_max_subtype(object_class_type base_type)
 {
-    item_def item;
-    item.base_type = OBJ_RANDOM;
-    item.sub_type  = OBJ_RANDOM;
-    lowercase(name);
-
-    if (base_type == OBJ_RANDOM || base_type == OBJ_UNASSIGNED)
-        base_type = OBJ_UNASSIGNED;
-
     static int max_subtype[] =
     {
         NUM_WEAPONS,
@@ -2828,30 +2817,51 @@ item_def find_item_type(object_class_type base_type, std::string name)
         0,              // unknown II
         NUM_BOOKS,
         NUM_STAVES,
-        1,              // Orbs         -- only one, handled specially
+        1,              // Orbs         -- only one
         NUM_MISCELLANY,
-        0,              // corpses      -- handled specially
-        0,              // gold         -- handled specially
+        -1,              // corpses     -- handled specially
+        1,              // gold         -- handled specially
         0,              // "gemstones"  -- no items of type
     };
     COMPILE_CHECK(sizeof(max_subtype)/sizeof(int) == NUM_OBJECT_CLASSES, c1);
 
+    ASSERT(base_type < NUM_OBJECT_CLASSES);
+
+    return (max_subtype[base_type]);
+}
+
+// Returns an incomplete item_def with base_type and sub_type set correctly
+// for the given item name. If the name is not found, sets sub_type to
+// OBJ_RANDOM.
+item_def find_item_type(object_class_type base_type, std::string name)
+{
+    item_def item;
+    item.base_type = OBJ_RANDOM;
+    item.sub_type  = OBJ_RANDOM;
+    lowercase(name);
+
+    if (base_type == OBJ_RANDOM || base_type == OBJ_UNASSIGNED)
+        base_type = OBJ_UNASSIGNED;
+
     if (base_type == OBJ_UNASSIGNED)
     {
-        for (unsigned i = 0; i < ARRAYSZ(max_subtype); ++i)
+        for (unsigned i = 0; i < NUM_OBJECT_CLASSES; ++i)
         {
-            if (max_subtype[i] == 0)
+            object_class_type cls = static_cast<object_class_type>(i);
+            if (get_max_subtype(cls) == 0)
                 continue;
 
-            if (_find_subtype_by_name(item, static_cast<object_class_type>(i),
-                                      max_subtype[i], name))
+            if (_find_subtype_by_name(item, cls, get_max_subtype(cls), name))
             {
                 break;
             }
         }
     }
     else
-        _find_subtype_by_name(item, base_type, max_subtype[base_type], name);
+    {
+        _find_subtype_by_name(item, base_type,
+                              get_max_subtype(base_type), name);
+    }
 
     return (item);
 }
@@ -2998,6 +3008,16 @@ bool item_def::held_by_monster() const
 bool item_def::is_valid() const
 {
     return (base_type != OBJ_UNASSIGNED && quantity > 0);
+}
+
+// Checks whether the item is actually a good one.
+// TODO: check brands, etc.
+bool item_def::is_really_valid() const
+{
+    const int max_sub = get_max_subtype(base_type);
+    return (is_valid()
+            && (max_sub == -1 ||
+                sub_type < get_max_subtype(base_type)));
 }
 
 // The Orb of Zot and unique runes are considered critical.
@@ -3297,27 +3317,6 @@ static bool _book_from_spell(const char* specs, item_def &item)
 bool get_item_by_name(item_def *item, char* specs,
                       object_class_type class_wanted, bool create_for_real)
 {
-    static int max_subtype[] =
-    {
-        NUM_WEAPONS,
-        NUM_MISSILES,
-        NUM_ARMOURS,
-        NUM_WANDS,
-        NUM_FOODS,
-        0,              // unknown I
-        NUM_SCROLLS,
-        NUM_JEWELLERY,
-        NUM_POTIONS,
-        0,              // unknown II
-        NUM_BOOKS,
-        NUM_STAVES,
-        0,              // Orbs         -- only one, handled specially
-        NUM_MISCELLANY,
-        0,              // corpses      -- handled specially
-        0,              // gold         -- handled specially
-        0,              // "gemstones"  -- no items of type
-    };
-
     char           obj_name[ ITEMNAME_SIZE ];
     char*          ptr;
     int            best_index;
@@ -3354,7 +3353,7 @@ bool get_item_by_name(item_def *item, char* specs,
         type_wanted = -1;
         best_index  = 10000;
 
-        for (int i = 0; i < max_subtype[ item->base_type ]; ++i)
+        for (int i = 0; i < get_max_subtype(item->base_type); ++i)
         {
             item->sub_type = i;
             strlcpy(obj_name, item->name(DESC_PLAIN).c_str(), sizeof(obj_name));

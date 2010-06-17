@@ -3161,35 +3161,15 @@ static item_names_by_glyph_map item_names_by_glyph_cache;
 
 void init_item_name_cache()
 {
-    const int sub_type_limits[] = {
-        NUM_WEAPONS,
-        NUM_MISSILES,
-        NUM_ARMOURS,
-        NUM_WANDS,
-        NUM_FOODS,
-        0, // Unknown I
-        NUM_SCROLLS,
-        NUM_JEWELLERY,
-        NUM_POTIONS,
-        0, // Unknown II
-        NUM_BOOKS,
-        NUM_STAVES,
-        1, // Orbs
-        NUM_MISCELLANY,
-        0, // Corpses
-        1, // Gold
-        -1
-    };
-
     item_names_cache.clear();
     item_names_by_glyph_cache.clear();
 
-    for (int i = 0; sub_type_limits[i] != -1; i++)
+    for (int i = 0; i < NUM_OBJECT_CLASSES; i++)
     {
         object_class_type base_type = static_cast<object_class_type>(i);
-        unsigned char     num_sub_types = (unsigned char) sub_type_limits[i];
+        const int num_sub_types = get_max_subtype(base_type);
 
-        for (unsigned char sub_type = 0; sub_type < num_sub_types; sub_type++)
+        for (int sub_type = 0; sub_type < num_sub_types; sub_type++)
         {
             if (base_type == OBJ_BOOKS)
             {
