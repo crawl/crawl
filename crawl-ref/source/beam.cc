@@ -4187,7 +4187,8 @@ void bolt::affect_monster(monsters* mon)
 
     defer_rand r;
     int rand_ev = random2(mon->ev);
-    bool dmsl = mon->type == MONS_KIRKE;
+    // Should be a flag.
+    bool dmsl = mon->type == MONS_KIRKE || mon->type == MONS_THE_ENCHANTRESS;
 
     // FIXME: We're randomising mon->evasion, which is further
     // randomised inside test_beam_hit.  This is so we stay close to the

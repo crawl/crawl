@@ -1385,6 +1385,17 @@
       }
     },
 
+    { MST_THE_ENCHANTRESS,
+      {
+       SPELL_PARALYSE,
+       SPELL_SLEEP,
+       SPELL_HASTE,
+       SPELL_BANISHMENT,
+       SPELL_INVISIBILITY,
+       SPELL_TELEPORT_SELF
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,

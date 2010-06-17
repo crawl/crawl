@@ -1023,6 +1023,27 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         item.sub_type  = WPN_QUARTERSTAFF;
         break;
 
+    case MONS_SPRIGGAN_DEFENDER:
+    case MONS_THE_ENCHANTRESS:
+        // High end gear, but alas, with an extra chance for distortion.
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = random_choose(WPN_LAJATANG,    // best spriggan weapon
+                                       WPN_QUICK_BLADE, // overrated
+                                       WPN_SABRE,       // ordinary but popular
+                                       WPN_DEMON_WHIP,  // goodness
+                                       WPN_FLAIL,       // best ordinary 1.5-handed
+                                       -1);
+        level = MAKE_GOOD_ITEM;
+        if (one_chance_in(mon->type == MONS_THE_ENCHANTRESS ? 4 : 10))
+        {
+            force_item = true;
+            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_DISTORTION);
+            item.plus      = random2(5);
+            item.plus2     = random2(5);
+        }
+        break;
+
     default:
         break;
     }
@@ -1355,11 +1376,14 @@ void give_shield(monsters *mon, int level)
         break;
     case MONS_SPRIGGAN:
     case MONS_SPRIGGAN_RIDER:
-        if (one_chance_in(4))
-        {
-            make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER,
-                                  level, MAKE_ITEM_NO_RACE);
-        }
+        if (!one_chance_in(4))
+            break;
+    case MONS_SPRIGGAN_DEFENDER:
+    case MONS_THE_ENCHANTRESS:
+        make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER,
+                      mon->type == MONS_THE_ENCHANTRESS ? MAKE_GOOD_ITEM :
+                      mon->type == MONS_SPRIGGAN_DEFENDER ? level * 2 + 1 :
+                      level, MAKE_ITEM_NO_RACE);
         break;
     case MONS_NORRIS:
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER,
@@ -1671,6 +1695,7 @@ void give_armour(monsters *mon, int level)
     case MONS_MARA:
     case MONS_MERFOLK_AQUAMANCER:
     case MONS_SPRIGGAN:
+    case MONS_SPRIGGAN_DEFENDER:
         if (item_race == MAKE_ITEM_RANDOM_RACE)
             item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
@@ -1682,6 +1707,11 @@ void give_armour(monsters *mon, int level)
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ROBE;
         force_colour   = GREEN;
+        break;
+
+    case MONS_THE_ENCHANTRESS:
+        force_item = true;
+        make_item_unrandart(item, UNRAND_FAERIE);
         break;
 
     case MONS_TIAMAT:
