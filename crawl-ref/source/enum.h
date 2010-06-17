@@ -2120,10 +2120,11 @@ enum monster_type                      // (int) menv[].type
     MONS_SPRIGGAN = 500,
     MONS_SPRIGGAN_DRUID,
     MONS_SPRIGGAN_ASSASSIN,
-    MONS_SPRIGGAN_MAGE,
+    MONS_SPRIGGAN_RIDER,
     MONS_SPRIGGAN_WARPER,
     MONS_SPRIGGAN_DEFENDER,
     MONS_THE_ENCHANTRESS,
+    MONS_FIREFLY,
 
     // Testing monsters
     MONS_TEST_SPAWNER,
