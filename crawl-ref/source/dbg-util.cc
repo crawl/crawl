@@ -5,6 +5,8 @@
  */
 
 #include "AppHdr.h"
+#define __STDC_FORMAT_MACROS
+#include <inttypes.h>
 
 #include "dbg-util.h"
 
@@ -308,11 +310,11 @@ void debug_dump_mon(const monsters* mon, bool recurse)
         fprintf(stderr, "\n");
     }
 
-    fprintf(stderr, "attitude: %d, behaviour: %d, number: %d, flags: 0x%lx\n",
+    fprintf(stderr, "attitude: %d, behaviour: %d, number: %d, flags: 0x%"PRIx64"\n",
             mon->attitude, mon->behaviour, mon->number, mon->flags);
 
     fprintf(stderr, "colour: %d, foe_memory: %d, shield_blocks:%d, "
-                  "experience: %lu\n",
+                  "experience: %u\n",
             mon->colour, mon->foe_memory, mon->shield_blocks,
             mon->experience);
 
