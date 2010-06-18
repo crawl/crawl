@@ -887,6 +887,7 @@ enum game_direction_type
 
 enum game_type
 {
+    GAME_TYPE_UNSPECIFIED,
     GAME_TYPE_NORMAL,
     GAME_TYPE_TUTORIAL,
     GAME_TYPE_ARENA,

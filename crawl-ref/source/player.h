@@ -586,6 +586,8 @@ struct player_save_info
     std::string class_name;
     god_type religion;
     std::string second_god_name;
+    game_type saved_game_type;
+
 #ifdef USE_TILE
     dolls_data doll;
     bool held_in_net;

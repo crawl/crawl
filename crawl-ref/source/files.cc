@@ -162,7 +162,7 @@ static bool _is_uid_file(const std::string &name, const std::string &ext)
     uppercase(save_suffix);
 #endif
 
-    save_suffix = save_suffix.substr(Options.save_dir.length());
+    save_suffix = save_suffix.substr(get_savefile_directory().length());
 
     std::string::size_type suffix_pos = name.find(save_suffix);
     return (suffix_pos != std::string::npos
@@ -207,7 +207,7 @@ void unpack_file(std::string basename)
     // Create command.
     char cmd_buff[1024];
 
-    std::string directory = get_savedir();
+    std::string directory = get_savefile_directory();
 
     escape_path_spaces(basename);
     escape_path_spaces(directory);
@@ -259,6 +259,7 @@ player_save_info read_character_info(const std::string &savefile)
     {
         // Backup before we clobber "you".
         const player backup(you);
+        unwind_var<game_type> gtype(crawl_state.type);
 
         _restore_tagged_file(charf, TAGTYPE_PLAYER_NAME, minorVersion);
 
@@ -627,12 +628,9 @@ bool is_read_safe_path(const std::string &path)
 
 std::string canonicalise_file_separator(const std::string &path)
 {
-#if FILE_SEPARATOR != '/'
-    return (replace_all_of(path, "/", std::string(1, FILE_SEPARATOR)));
-#else
-    // No action needed here.
-    return (path);
-#endif
+    const std::string sep(1, FILE_SEPARATOR);
+    return (replace_all_of(replace_all_of(path, "/", sep),
+                           "\\", sep));
 }
 
 std::string datafile_path(std::string basename,
@@ -727,10 +725,7 @@ bool check_mkdir(const std::string &whatdir, std::string *dir, bool silent)
     if (dir->empty())
         return (true);
 
-    const std::string sep(1, FILE_SEPARATOR);
-
-    *dir = replace_all_of(*dir, "/", sep);
-    *dir = replace_all_of(*dir, "\\", sep);
+    *dir = canonicalise_file_separator(*dir);
 
     // Suffix the separator if necessary
     if ((*dir)[dir->length() - 1] != FILE_SEPARATOR)
@@ -748,31 +743,56 @@ bool check_mkdir(const std::string &whatdir, std::string *dir, bool silent)
     return (true);
 }
 
-// Given a simple (relative) name of a save file, returns the full path of
-// the file in the Crawl saves directory. You can use path segments in
-// shortpath (separated by /) and get_savedir_path will canonicalise them
-// to the platform's native file separator.
-std::string get_savedir_path(const std::string &shortpath)
+// Get the directory that contains save files for the current game
+// type. This will not be the same as get_base_savedir() for game
+// types such as Sprint.
+std::string get_savefile_directory(bool ignore_game_type)
 {
-    const std::string file = Options.save_dir + shortpath;
-#if FILE_SEPARATOR != '/'
-    return (replace_all(file, "/", std::string(1, FILE_SEPARATOR)));
-#else
-    return (file);
-#endif
+    std::string dir = Options.save_dir;
+    if (!ignore_game_type)
+        dir = catpath(dir, crawl_state.game_savedir_path());
+    check_mkdir("Save directory", &dir, false);
+    if (dir.empty())
+        dir = ".";
+    return (dir);
 }
 
-// Given a simple (relative) path, returns the path relative to the save
-// directory and subdirectory named with the game version. This is useful
-// when writing cache files and similar output that should not be shared
-// between different game versions.
+// Returns a subdirectory of the current savefile directory as returned by
+// get_savefile_directory.
+std::string get_savedir_path(const std::string &shortpath)
+{
+    return canonicalise_file_separator(
+        catpath(get_savefile_directory(), shortpath));
+}
+
+// Returns the base save directory that contains all saves and cache
+// directories. Save files for game type != GAME_TYPE_NORMAL may be
+// found in a subdirectory of this dir. Use get_savefile_directory()
+// if you want the directory that contains save games for the current
+// game type.
+std::string get_base_savedir()
+{
+    return Options.save_dir;
+}
+
+// Returns a subdirectory of the base save directory as returned by
+// get_base_savedir.
+std::string get_base_savedir_path(const std::string &shortpath)
+{
+    return canonicalise_file_separator(catpath(get_base_savedir(), shortpath));
+}
+
+// Given a simple (relative) path, returns the path relative to the
+// base save directory and a subdirectory named with the game version.
+// This is useful when writing cache files and similar output that
+// should not be shared between different game versions.
 std::string savedir_versioned_path(const std::string &shortpath)
 {
 #ifdef DGL_VERSIONED_CACHE_DIR
     const std::string versioned_dir =
-        get_savedir_path("cache." + Version::Long());
+        get_base_savedir_path("cache." + Version::Long());
 #else
-    const std::string versioned_dir = get_savedir();
+    const std::string versioned_dir = get_base_savedir_path();
 #endif
     return catpath(versioned_dir, shortpath);
 }
@@ -821,6 +841,29 @@ static void _fill_player_doll(player_save_info &p, const std::string &dollfile)
 }
 #endif
 
+std::vector<player_save_info> find_all_saved_characters()
+{
+    std::set<std::string> dirs;
+    std::vector<player_save_info> saved_characters;
+    for (int i = 0; i < NUM_GAME_TYPE; ++i)
+    {
+        unwind_var<game_type> gt(
+            crawl_state.type,
+            static_cast<game_type>(i));
+
+        const std::string savedir = get_savefile_directory();
+        if (dirs.find(savedir) != dirs.end())
+            continue;
+
+        dirs.insert(savedir);
+
+        std::vector<player_save_info> chars_in_dir = find_saved_characters();
+        saved_characters.insert(saved_characters.end(),
+                                chars_in_dir.begin(),
+                                chars_in_dir.end());
+    }
+    return (saved_characters);
+}
 
 /*
  * Returns a list of the names of characters that are already saved for the
@@ -831,7 +874,7 @@ std::vector<player_save_info> find_saved_characters()
 {
     std::vector<player_save_info> chars;
 #ifndef DISABLE_SAVEGAME_LISTS
-    std::string searchpath = Options.save_dir;
+    std::string searchpath = get_savefile_directory();
 
     if (searchpath.empty())
         searchpath = ".";
@@ -855,7 +898,7 @@ std::vector<player_save_info> find_saved_characters()
         filename = basename + ".chr";
         escape_path_spaces(filename);
 
-        std::string dir = get_savedir();
+        std::string dir = get_savefile_directory();
         escape_path_spaces(dir);
 
         char cmd_buff[1024];
@@ -914,19 +957,12 @@ std::vector<player_save_info> find_saved_characters()
     return (chars);
 }
 
-std::string get_savedir()
-{
-    const std::string &dir = Options.save_dir;
-    return (dir.empty() ? "." : dir);
-}
-
 std::string get_savedir_filename(const std::string &prefix,
                                  const std::string &suffix,
                                  const std::string &extension,
                                  bool suppress_uid)
 {
-    std::string result = Options.save_dir;
-
+    std::string result = get_savefile_directory();
     result += get_save_filename(prefix, suffix, extension, suppress_uid);
 
 #ifdef TARGET_OS_DOS
@@ -937,9 +973,9 @@ std::string get_savedir_filename(const std::string &prefix,
 }
 
 std::string get_save_filename(const std::string &prefix,
-                                 const std::string &suffix,
-                                 const std::string &extension,
-                                 bool suppress_uid)
+                              const std::string &suffix,
+                              const std::string &extension,
+                              bool suppress_uid)
 {
     std::string result = "";
 
@@ -972,7 +1008,7 @@ std::string get_prefs_filename()
     return get_savedir_filename("start-" + Options.game.name + "-",
                                 "ns", "prf", true);
 #else
-    return get_savedir_filename("start", "ns", "prf");
+    return get_savedir_filename("start", "-ns", "prf");
 #endif
 }
 
@@ -1738,7 +1774,7 @@ void _save_level(const level_id& lid)
     DO_CHMOD_PRIVATE(cha_fil.c_str());
 }
 
-// Stack allocated std::string's go in seperate function, so Valgrind doesn't
+// Stack allocated std::string's go in separate function, so Valgrind doesn't
 // complain.
 static void _save_game_base()
 {
@@ -1843,7 +1879,7 @@ static void _save_game_base()
     DO_CHMOD_PRIVATE(charFile.c_str());
 }
 
-// Stack allocated std::string's go in seperate function, so Valgrind doesn't
+// Stack allocated std::string's go in separate function, so Valgrind doesn't
 // complain.
 static void _save_game_exit()
 {
@@ -1858,7 +1894,7 @@ static void _save_game_exit()
     clrscr();
 
 #ifdef SAVE_PACKAGE_CMD
-    std::string dirname = get_savedir();
+    std::string dirname = get_savefile_directory();
     escape_path_spaces(dirname);
     std::string basename = get_save_filename(you.your_name, "", "");
     escape_path_spaces(basename);
@@ -1904,7 +1940,7 @@ void save_game(bool leave_game, const char *farewellmsg)
 
     SavefileCallback::pre_save();
 
-    // Stack allocated std::string's go in seperate function,
+    // Stack allocated std::string's go in separate function,
     // so Valgrind doesn't complain.
     _save_game_base();
 
@@ -1912,7 +1948,7 @@ void save_game(bool leave_game, const char *farewellmsg)
     if (!leave_game)
         return;
 
-    // Stack allocated std::string's go in seperate function,
+    // Stack allocated std::string's go in separate function,
     // so Valgrind doesn't complain.
     _save_game_exit();
 
@@ -2391,13 +2427,13 @@ static void _restore_tagged_file( FILE *restoreFile, int fileType,
 
     while (true)
     {
-        tag_type tt = tag_read(restoreFile, minorVersion);
+        tag_type tt = tag_read(restoreFile, minorVersion, tags);
+        if (tt == TAG_SKIP)
+            continue;
         if (tt == TAG_NO_TAG)
             break;
 
         tags[tt] = 0;                // tag read
-        if (fileType == TAGTYPE_PLAYER_NAME)
-            break;
     }
 
     // Go through and init missing tags.

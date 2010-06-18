@@ -487,7 +487,7 @@ static void _show_startup_menu(newgame_def* ng_choice,
                                GAME_MODES_START_Y + NUM_GAME_TYPE + 1),
                      "game modes");
 
-    std::vector<player_save_info> chars = find_saved_characters();
+    std::vector<player_save_info> chars = find_all_saved_characters();
     const int num_saves = chars.size();
 
     MenuScroller* save_games = new MenuScroller();
@@ -748,9 +748,10 @@ static void _show_startup_menu(newgame_def* ng_choice,
 
         default:
             // It was a savegame instead
-            int save_number = id - NUM_GAME_TYPE;
+            const int save_number = id - NUM_GAME_TYPE;
             // Save the savegame character name
             ng_choice->name = chars.at(save_number).name;
+            ng_choice->type = chars.at(save_number).saved_game_type;
             return;
         }
     }
@@ -790,11 +791,25 @@ bool startup_step()
     _initialize();
 
     newgame_def choice   = Options.game;
+
+    // Setup base game type *before* reading startup prefs -- the prefs file
+    // may be in a game-specific subdirectory.
+    crawl_state.type = choice.type;
+
     newgame_def defaults = read_startup_prefs();
+
+    // Set the crawl_state gametype to the requested game type. This must
+    // be done before looking for the savegame or the startup prefs file.
+    if (crawl_state.type == GAME_TYPE_UNSPECIFIED
+        && defaults.type != GAME_TYPE_UNSPECIFIED)
+    {
+        crawl_state.type = defaults.type;
+    }
 
     // Name from environment overwrites the one from command line.
     if (!SysEnv.crawl_name.empty())
         choice.name = SysEnv.crawl_name;
+
 
 #ifndef DGAMELAUNCH
     // We could also check whether game type has been set here,
@@ -804,6 +819,9 @@ bool startup_step()
         && choice.type != GAME_TYPE_ARENA)
     {
         _show_startup_menu(&choice, defaults);
+        // [ds] Must set game type here, or we won't be able to load
+        // Sprint saves.
+        crawl_state.type = choice.type;
     }
 #endif
 
@@ -811,7 +829,6 @@ bool startup_step()
     //       choose_game and setup_game
     if (choice.type == GAME_TYPE_ARENA)
     {
-        crawl_state.type = GAME_TYPE_ARENA;
         _choose_arena_teams(&choice, defaults);
         write_newgame_options_file(choice);
         run_arena(choice.arena_teams);

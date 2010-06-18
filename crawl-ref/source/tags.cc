@@ -839,15 +839,15 @@ void tag_write(tag_type tagID, FILE* outf)
 //
 // minorVersion is available for any sub-readers that need it
 // (like TAG_LEVEL_MONSTERS).
-tag_type tag_read(FILE *fp, char minorVersion)
+tag_type tag_read(FILE *fp, char minorVersion, char expected_tags[NUM_TAGS])
 {
     // Read header info and data
-    short tag_id;
+    short tag_id = NUM_TAGS;
     std::vector<unsigned char> buf;
     {
         reader tmp(fp, minorVersion);
         tag_id = unmarshallShort(tmp);
-        if (tag_id < 0)
+        if (tag_id < 0 || tag_id >= NUM_TAGS)
             return TAG_NO_TAG;
         const long data_size = unmarshallLong(tmp);
         if (data_size < 0)
@@ -857,6 +857,9 @@ tag_type tag_read(FILE *fp, char minorVersion)
         buf.resize(data_size);
         if (read2(fp, &buf[0], buf.size()) != (int)buf.size())
             return TAG_NO_TAG;
+
+        if (!expected_tags[tag_id])
+            return TAG_SKIP;
     }
 
     unwind_var<int> tag_minor_version(_tag_minor_version, minorVersion);
@@ -934,7 +937,7 @@ void tag_set_expected(char tags[], int fileType)
                 }
                 break;
             case TAGTYPE_PLAYER_NAME:
-                if (i == TAG_YOU)
+                if (i == TAG_YOU || i == TAG_GAME_STATE)
                     tags[i] = 1;
                 break;
             case TAGTYPE_LEVEL:
