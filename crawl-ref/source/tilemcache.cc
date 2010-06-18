@@ -397,6 +397,10 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = -2;
         *ofs_y = 0;
         break;
+    case TILEP_MONS_HILL_GIANT:
+        *ofs_x = -3;
+        *ofs_y = 0;
+        break;
     // Shift to the right.
     case TILEP_MONS_YAKTAUR_MELEE:
         *ofs_x = 2;
