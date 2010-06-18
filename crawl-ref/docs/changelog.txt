@@ -77,6 +77,8 @@ Monsters:
 * Glyph change for demonic crawlers.
 * Orange demons' poison can now drain any stat.
 * Hell hounds, hell hogs and demonic crawlers now leave corpses.
+* Hell knights have more HP and do more damage.
+* New monsters: elephant, dire elephant, hellephant.
 
 Spells:
 * Call Imp is buffed: it is now level 2, it takes spell power
