@@ -5179,6 +5179,10 @@ player_save_info player_save_info::operator=(const player& rhs)
     class_name       = rhs.class_name;
     religion         = rhs.religion;
     second_god_name  = rhs.second_god_name;
+
+    // [ds] Perhaps we should move game type to player?
+    saved_game_type  = crawl_state.type;
+
 #ifdef USE_TILE
     held_in_net      = false;
 #endif
@@ -5195,6 +5199,12 @@ bool player_save_info::operator<(const player_save_info& rhs) const
 std::string player_save_info::short_desc() const
 {
     std::ostringstream desc;
+
+    const std::string qualifier =
+        game_state::game_type_name_for(saved_game_type);
+    if (!qualifier.empty())
+        desc << "[" << qualifier << "] ";
+
     desc << name << ", a level " << experience_level << ' '
          << species_name(species) << ' ' << class_name;
 

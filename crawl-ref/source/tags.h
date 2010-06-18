@@ -28,7 +28,11 @@ enum tag_type   // used during save/load process to identify data blocks
     TAG_LOST_MONSTERS,                  // monsters in transit
     TAG_LEVEL_TILES,
     TAG_GAME_STATE,
-    NUM_TAGS
+    NUM_TAGS,
+
+    // Returned when a known tag was deliberately not read. This value is
+    // never saved and can safely be changed at any point.
+    TAG_SKIP
 };
 
 enum tag_file_type   // file types supported by tag system
@@ -184,7 +188,7 @@ inline enm unmarshallEnum(writer& wr)
  * Tag interface
  * *********************************************************************** */
 
-tag_type tag_read(FILE* inf, char minorVersion);
+tag_type tag_read(FILE* inf, char minorVersion, char expected_tags[NUM_TAGS]);
 void tag_write(tag_type tagID, FILE* outf);
 void tag_set_expected(char tags[], int fileType);
 void tag_missing(int tag, char minorVersion);

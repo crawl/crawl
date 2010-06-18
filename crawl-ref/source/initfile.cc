@@ -1382,6 +1382,28 @@ static void write_newgame_options(const newgame_def& prefs, FILE *f)
 void write_newgame_options_file(const newgame_def& prefs)
 {
 #ifndef DISABLE_STICKY_STARTUP_OPTIONS
+    // [ds] Saving startup prefs should work like this:
+    //
+    // 1. If the game is started without specifying a game type, always
+    //    save startup preferences in the base savedir.
+    // 2. If the game is started with a game type (Sprint), save startup
+    //    preferences in the game-specific savedir.
+    //
+    // The idea is that public servers can use one instance of Crawl
+    // but present Crawl and Sprint as two separate games in the
+    // server-specific game menu -- the startup prefs file for Crawl and
+    // Sprint should never collide, because the public server config will
+    // specify the game type on the command-line.
+    //
+    // For normal users, startup prefs should always be saved in the
+    // same base savedir so that when they start Crawl with "./crawl"
+    // or the equivalent, their last game choices will be remembered,
+    // even if they chose a Sprint game.
+    //
+    // Yes, this is unnecessarily complex. Better ideas welcome.
+    //
+    unwind_var<game_type> gt(crawl_state.type, Options.game.type);
+
     std::string fn = get_prefs_filename();
     FILE *f = fopen(fn.c_str(), "w");
     if (!f)
@@ -2295,10 +2317,15 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         game.arena_teams = field;
     }
+#ifndef DGAMELAUNCH
+    // [ds] For dgamelaunch setups, the player should *not* be able to
+    // set game type in their rc; the only way to set game type for
+    // DGL builds should be the command-line options.
     else if (key == "type")
     {
         game.type = _str_to_gametype(field);
     }
+#endif
     else if (key == "species" || key == "race")
     {
         game.species = _str_to_species(field);
@@ -3563,7 +3590,7 @@ static void _print_save_version(char *name)
             char cmd_buff[1024];
 
             std::string zipname = basename;
-            std::string directory = get_savedir();
+            std::string directory = get_savefile_directory();
             std::string savefile = filename;
             savefile.erase(0, savefile.rfind(FILE_SEPARATOR) + 1);
 

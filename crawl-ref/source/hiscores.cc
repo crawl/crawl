@@ -89,19 +89,14 @@ std::string score_file_name()
     else
         ret = Options.save_dir + "scores";
 
-    if (crawl_state.game_is_sprint())
-        ret += "-sprint";
-    if (crawl_state.game_is_tutorial())
-        ret += "-tutorial";
-    if (crawl_state.game_is_hints())
-        ret += "-hints";
+    ret += crawl_state.game_type_qualifier();
 
     return (ret);
 }
 
 std::string log_file_name()
 {
-    return (Options.save_dir + "logfile");
+    return (Options.save_dir + "logfile" + crawl_state.game_type_qualifier());
 }
 
 void hiscores_new_entry( const scorefile_entry &ne )
@@ -2318,7 +2313,9 @@ void mark_milestone(const std::string &type,
 {
     if (crawl_state.game_is_arena() || !crawl_state.need_save)
         return;
-    const std::string milestone_file = Options.save_dir + "milestones.txt";
+    const std::string milestone_file =
+        (Options.save_dir + "milestones" + crawl_state.game_type_qualifier()
+         + ".txt");
     if (FILE *fp = lk_open("a", milestone_file))
     {
         const scorefile_entry se(0, 0, KILL_MISC, NULL);
