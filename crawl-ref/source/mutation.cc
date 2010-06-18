@@ -1496,8 +1496,6 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
     return (result);
 }
 
-static int ct_of_tier[] = { 0, 2, 3, 1 };
-
 static const facet_def _demon_facets[] =
 {
     // Body Slot facets
@@ -1629,9 +1627,13 @@ static bool _slot_is_unique(const mutation_type mut[],
 static std::vector<demon_mutation_info> _select_ds_mutations()
 {
     int NUM_BODY_SLOTS = 1;
+    int ct_of_tier[] = { 0, 2, 3, 1 };
     // 1 in 10 chance to create a monsterous set
-    if (one_chance_in(10))
+    if (one_chance_in(10)) {
         NUM_BODY_SLOTS = 3;
+        ct_of_tier[1] = 1;
+        ct_of_tier[2] = 5;
+    }
 
 try_again:
     std::vector<demon_mutation_info> ret;
