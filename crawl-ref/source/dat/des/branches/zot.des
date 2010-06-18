@@ -289,10 +289,10 @@ DEPTH:  Zot:1-4
 ORIENT: float
 TAGS:   no_rotate no_hmirror no_monster_gen
 MONS:   killer klown
-MONS:   elephant slug
-MONS:   human ; whip | demon whip
+MONS:   elephant slug / w:5 dire elephant / w:2 hellephant
+MONS:   human ; ankus
 SUBST:  1 = 1 2:5 3:20
-SUBST:  2 = 2 .
+SUBST:  2 = 2 2 .
 SUBST:  % = !:20 ?:5 $ .:20
 KITEM:  ! = banana
 KITEM:  ? = wand of random effects
