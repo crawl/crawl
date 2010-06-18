@@ -1578,7 +1578,11 @@ static std::string _overview_screen_title()
     text += you.your_name;
     text += title;
     text += species_job;
-    text += std::string(get_number_of_cols() - linelength - 1, ' ');
+
+    const int num_spaces = get_number_of_cols() - linelength - 1;
+    if (num_spaces > 0)
+        text += std::string(num_spaces, ' ');
+
     text += time_turns;
     text += "</yellow>\n";
 
