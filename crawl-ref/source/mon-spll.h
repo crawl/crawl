@@ -1396,6 +1396,17 @@
       }
     },
 
+    {  MST_HELLEPHANT,
+      {
+       SPELL_FIRE_BREATH,
+       SPELL_NO_SPELL,
+       SPELL_BLINK,
+       SPELL_FIRE_BREATH,
+       SPELL_NO_SPELL,
+       SPELL_BLINK
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,
