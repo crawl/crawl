@@ -1213,7 +1213,11 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_DEATH_YAK:
         return TILEP_MONS_DEATH_YAK;
     case MONS_ELEPHANT:
+        return TILEP_MONS_ELEPHANT;
+    case MONS_DIRE_ELEPHANT:
         return TILEP_MONS_DIRE_ELEPHANT;
+    case MONS_HELLEPHANT:
+        return TILEP_MONS_HELLEPHANT;
 
     // large zombies etc. ('Z')
     case MONS_ZOMBIE_LARGE:

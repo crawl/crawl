@@ -649,6 +649,10 @@ electric eel
 
 A small and slimy eel, crackling with electrical discharge.
 %%%%
+elephant
+
+A large, thick-hided pachyderm. It crushes its foes and then thrashes them with its trunk.
+%%%%
 elephant slug
 
 A huge grey slug with folds of wrinkled skin.
@@ -900,6 +904,10 @@ A heavily armoured warrior, in league with the powers of Hell, usually accompani
 hell hog
 
 A large, fat and very ugly pig, suckled in the pits of Hell. Roast suckling pig technology will never be the same.
+%%%%
+hellephant
+
+An abhorrent pachyderm, descendant of demons, burning from within with the fires of Hell.
 %%%%
 hellion
 

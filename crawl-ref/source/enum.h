@@ -2115,6 +2115,8 @@ enum monster_type                      // (int) menv[].type
     MONS_ALLIGATOR,
     MONS_BABY_ALLIGATOR,
     MONS_ELEPHANT,
+    MONS_DIRE_ELEPHANT,
+    MONS_HELLEPHANT,
 
     // Spriggans:
     MONS_SPRIGGAN = 500,
@@ -2393,6 +2395,7 @@ enum mon_spellbook_type
     MST_WAYNE,
     MST_SPRIGGAN_DRUID,
     MST_THE_ENCHANTRESS,
+    MST_HELLEPHANT,
 
     MST_TEST_SPAWNER = 200,
     NUM_MSTYPES,
