@@ -1628,8 +1628,9 @@ static std::vector<demon_mutation_info> _select_ds_mutations()
 {
     int NUM_BODY_SLOTS = 1;
     int ct_of_tier[] = { 0, 2, 3, 1 };
-    // 1 in 10 chance to create a monsterous set
-    if (one_chance_in(10)) {
+    // 1 in 10 chance to create a monstrous set
+    if (one_chance_in(10))
+    {
         NUM_BODY_SLOTS = 3;
         ct_of_tier[1] = 1;
         ct_of_tier[2] = 5;
