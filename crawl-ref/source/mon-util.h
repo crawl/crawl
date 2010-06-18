@@ -114,7 +114,7 @@ struct monsterentry
     unsigned char showchar, colour;
     const char *name;
 
-    unsigned long bitfields;
+    uint64_t bitfields;
     mon_resist_def resists;
 
     short weight;
