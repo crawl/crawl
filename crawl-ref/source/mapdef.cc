@@ -2187,14 +2187,14 @@ void map_def::write_index(writer& outf) const
             name.c_str());
     marshallString4(outf, name);
     marshallString4(outf, place_loaded_from.filename);
-    marshallLong(outf, place_loaded_from.lineno);
+    marshallInt(outf, place_loaded_from.lineno);
     marshallShort(outf, orient);
     // XXX: This is a hack. See the comment in l_dgn.cc.
     marshallShort(outf, static_cast<short>(border_fill_type));
-    marshallLong(outf, chance_priority);
-    marshallLong(outf, chance);
-    marshallLong(outf, weight);
-    marshallLong(outf, cache_offset);
+    marshallInt(outf, chance_priority);
+    marshallInt(outf, chance);
+    marshallInt(outf, weight);
+    marshallInt(outf, cache_offset);
     marshallString4(outf, tags);
     place.save(outf);
     write_depth_ranges(outf);
@@ -2210,15 +2210,15 @@ void map_def::read_index(reader& inf)
 {
     unmarshallString4(inf, name);
     unmarshallString4(inf, place_loaded_from.filename);
-    place_loaded_from.lineno   = unmarshallLong(inf);
+    place_loaded_from.lineno   = unmarshallInt(inf);
     orient       = static_cast<map_section_type>( unmarshallShort(inf) );
     // XXX: Hack. See the comment in l_dgn.cc.
     border_fill_type =
         static_cast<dungeon_feature_type>( unmarshallShort(inf) );
-    chance_priority = unmarshallLong(inf);
-    chance       = unmarshallLong(inf);
-    weight       = unmarshallLong(inf);
-    cache_offset = unmarshallLong(inf);
+    chance_priority = unmarshallInt(inf);
+    chance       = unmarshallInt(inf);
+    weight       = unmarshallInt(inf);
+    cache_offset = unmarshallInt(inf);
     unmarshallString4(inf, tags);
     place.load(inf);
     read_depth_ranges(inf);

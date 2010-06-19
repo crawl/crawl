@@ -38,27 +38,27 @@ struct demon_data
 static void unmarshallDoll(reader &th, dolls_data &doll)
 {
     for (unsigned int i = 0; i < TILEP_PART_MAX; i++)
-        doll.parts[i] = unmarshallLong(th);
+        doll.parts[i] = unmarshallInt(th);
 }
 
 static void marshallDoll(writer &th, const dolls_data &doll)
 {
     for (unsigned int i = 0; i < TILEP_PART_MAX; i++)
-        marshallLong(th, doll.parts[i]);
+        marshallInt(th, doll.parts[i]);
 }
 
 static void unmarshallDemon(reader &th, demon_data &demon)
 {
-    demon.head = unmarshallLong(th);
-    demon.body = unmarshallLong(th);
-    demon.wings = unmarshallLong(th);
+    demon.head = unmarshallInt(th);
+    demon.body = unmarshallInt(th);
+    demon.wings = unmarshallInt(th);
 }
 
 static void marshallDemon(writer &th, const demon_data &demon)
 {
-    marshallLong(th, demon.head);
-    marshallLong(th, demon.body);
-    marshallLong(th, demon.wings);
+    marshallInt(th, demon.head);
+    marshallInt(th, demon.body);
+    marshallInt(th, demon.wings);
 }
 
 // Internal mcache classes.  The mcache_manager creates these internally.
@@ -248,7 +248,7 @@ mcache_entry *mcache_manager::get(tileidx_t tile)
 
 void mcache_manager::read(reader &th)
 {
-    unsigned int size = unmarshallLong(th);
+    unsigned int size = unmarshallInt(th);
     m_entries.reserve(size);
     m_entries.clear();
 
@@ -284,7 +284,7 @@ void mcache_manager::read(reader &th)
 
 void mcache_manager::construct(writer &th)
 {
-    marshallLong(th, m_entries.size());
+    marshallInt(th, m_entries.size());
     for (unsigned int i = 0; i < m_entries.size(); i++)
     {
         if (m_entries[i] == NULL)
@@ -316,12 +316,12 @@ void mcache_manager::construct(writer &th)
 
 mcache_entry::mcache_entry(reader &th)
 {
-    m_ref_count = unmarshallLong(th);
+    m_ref_count = unmarshallInt(th);
 }
 
 void mcache_entry::construct(writer &th)
 {
-    marshallLong(th, m_ref_count);
+    marshallInt(th, m_ref_count);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -574,16 +574,16 @@ bool mcache_monster::valid(const monsters *mon)
 
 mcache_monster::mcache_monster(reader &th) : mcache_entry(th)
 {
-    m_mon_tile = unmarshallLong(th);
-    m_equ_tile = unmarshallLong(th);
+    m_mon_tile = unmarshallInt(th);
+    m_equ_tile = unmarshallInt(th);
 }
 
 void mcache_monster::construct(writer &th)
 {
     mcache_entry::construct(th);
 
-    marshallLong(th, m_mon_tile);
-    marshallLong(th, m_equ_tile);
+    marshallInt(th, m_mon_tile);
+    marshallInt(th, m_equ_tile);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -619,18 +619,18 @@ bool mcache_draco::valid(const monsters *mon)
 
 mcache_draco::mcache_draco(reader &th) : mcache_entry(th)
 {
-    m_mon_tile = unmarshallLong(th);
-    m_job_tile = unmarshallLong(th);
-    m_equ_tile = unmarshallLong(th);
+    m_mon_tile = unmarshallInt(th);
+    m_job_tile = unmarshallInt(th);
+    m_equ_tile = unmarshallInt(th);
 }
 
 void mcache_draco::construct(writer &th)
 {
     mcache_entry::construct(th);
 
-    marshallLong(th, m_mon_tile);
-    marshallLong(th, m_job_tile);
-    marshallLong(th, m_equ_tile);
+    marshallInt(th, m_mon_tile);
+    marshallInt(th, m_job_tile);
+    marshallInt(th, m_equ_tile);
 }
 
 /////////////////////////////////////////////////////////////////////////////

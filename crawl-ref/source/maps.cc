@@ -982,7 +982,7 @@ static bool verify_file_version(const std::string &file)
     if (!fp)
         return (false);
     reader inf(fp);
-    const long ver = unmarshallLong(inf);
+    const long ver = unmarshallInt(inf);
     fclose(fp);
 
     return (ver == MAP_CACHE_VERSION);
@@ -1019,7 +1019,7 @@ static bool load_map_index(const std::string &base)
     reader inf(fp);
 
     // Discard version (it's been checked by verify_map_index).
-    (void) unmarshallLong(inf);
+    (void) unmarshallInt(inf);
     const int nmaps = unmarshallShort(inf);
     const int nexist = vdefs.size();
     vdefs.resize( nexist + nmaps, map_def() );
@@ -1090,7 +1090,7 @@ static void write_map_full(const std::string &filebase, size_t vs, size_t ve)
         end(1, true, "Unable to open %s for writing", cfile.c_str());
 
     writer outf(fp);
-    marshallLong(outf, MAP_CACHE_VERSION);
+    marshallInt(outf, MAP_CACHE_VERSION);
     for (size_t i = vs; i < ve; ++i)
         vdefs[i].write_full(outf);
     fclose(fp);
@@ -1104,7 +1104,7 @@ static void write_map_index(const std::string &filebase, size_t vs, size_t ve)
         end(1, true, "Unable to open %s for writing", cfile.c_str());
 
     writer outf(fp);
-    marshallLong(outf, MAP_CACHE_VERSION);
+    marshallInt(outf, MAP_CACHE_VERSION);
     marshallShort(outf, ve > vs? ve - vs : 0);
     for (size_t i = vs; i < ve; ++i)
     {

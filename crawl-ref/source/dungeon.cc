@@ -8679,7 +8679,7 @@ void read_level_connectivity(reader &th)
     for (int i = 0; i < NUM_BRANCHES; i++)
     {
         unsigned int depth = branches[i].depth > 0 ? branches[i].depth : 0;
-        unsigned int num_entries = unmarshallLong(th);
+        unsigned int num_entries = unmarshallInt(th);
         connectivity[i].resize(std::max(depth, num_entries));
 
         for (unsigned int e = 0; e < num_entries; e++)
@@ -8691,7 +8691,7 @@ void write_level_connectivity(writer &th)
 {
     for (int i = 0; i < NUM_BRANCHES; i++)
     {
-        marshallLong(th, connectivity[i].size());
+        marshallInt(th, connectivity[i].size());
         for (unsigned int e = 0; e < connectivity[i].size(); e++)
             connectivity[i][e].write(th);
     }

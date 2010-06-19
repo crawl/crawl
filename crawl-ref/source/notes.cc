@@ -463,11 +463,11 @@ void Note::check_milestone() const
 
 void Note::save(writer& outf) const
 {
-    marshallLong( outf, type );
-    marshallLong( outf, turn );
+    marshallInt( outf, type );
+    marshallInt( outf, turn );
     marshallShort( outf, packed_place );
-    marshallLong( outf, first );
-    marshallLong( outf, second );
+    marshallInt( outf, first );
+    marshallInt( outf, second );
     marshallString4( outf, name );
     marshallString4( outf, place_abbrev );
     marshallString4( outf, desc );
@@ -475,11 +475,11 @@ void Note::save(writer& outf) const
 
 void Note::load(reader& inf)
 {
-    type = static_cast<NOTE_TYPES>(unmarshallLong( inf ));
-    turn = unmarshallLong( inf );
+    type = static_cast<NOTE_TYPES>(unmarshallInt( inf ));
+    turn = unmarshallInt( inf );
     packed_place = unmarshallShort( inf );
-    first  = unmarshallLong( inf );
-    second = unmarshallLong( inf );
+    first  = unmarshallInt( inf );
+    second = unmarshallInt( inf );
     unmarshallString4( inf, name );
     unmarshallString4( inf, place_abbrev );
     unmarshallString4( inf, desc );
@@ -508,18 +508,18 @@ void activate_notes( bool active )
 
 void save_notes(writer& outf)
 {
-    marshallLong( outf, NOTES_VERSION_NUMBER );
-    marshallLong( outf, note_list.size() );
+    marshallInt( outf, NOTES_VERSION_NUMBER );
+    marshallInt( outf, note_list.size() );
     for (unsigned i = 0; i < note_list.size(); ++i)
         note_list[i].save(outf);
 }
 
 void load_notes(reader& inf)
 {
-    if ( unmarshallLong(inf) != NOTES_VERSION_NUMBER )
+    if ( unmarshallInt(inf) != NOTES_VERSION_NUMBER )
         return;
 
-    const long num_notes = unmarshallLong(inf);
+    const int num_notes = unmarshallInt(inf);
     for ( long i = 0; i < num_notes; ++i )
     {
         Note new_note;

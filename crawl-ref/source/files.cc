@@ -1067,7 +1067,7 @@ static void _write_version( FILE *dataFile, int majorVersion, int minorVersion,
 
         // Write the three remaining 32-bit words of padding.
         for (int i = 0; i < 3; ++i)
-            marshallLong(outf, 0);
+            marshallInt(outf, 0);
     }
 }
 
