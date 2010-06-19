@@ -66,7 +66,7 @@ struct position_node
 };
 
 template<typename valid_T, typename connect_T>
-void search_dungeon2(const coord_def & start,
+void search_dungeon(const coord_def & start,
                     valid_T & valid_target,
                     connect_T & connecting_square,
                     std::set<position_node> & visited,
@@ -139,17 +139,6 @@ void search_dungeon2(const coord_def & start,
             break;
     }
 }
-
-void search_dungeon(const coord_def & start,
-                    bool (*valid_target)(const coord_def & ),
-                    bool (*connecting_square)(const coord_def &),
-                    std::set<position_node> & visited,
-                    std::vector<std::set<position_node>::iterator> & candidates,
-                    bool exhaustive = true)
-{
-    search_dungeon2 (start, valid_target, connecting_square, visited, candidates, exhaustive);
-}
-
 
 bool ugly_thing_mutate(monsters *ugly, bool proximity)
 {
@@ -1081,7 +1070,7 @@ void move_kraken_tentacles(monsters * kraken)
         clear_and_seen path_check;
         path_check.base_monster = kraken;
 
-        search_dungeon2(targ, current_target, path_check,
+        search_dungeon(targ, current_target, path_check,
                        visited, tentacle_path, false,
                        tentacle_connectivity);
 
@@ -1111,7 +1100,7 @@ void move_kraken_tentacles(monsters * kraken)
         candidates.clear();
         // Find the tentacle -> head path
         current_target.target_mindex = headnum;
-        search_dungeon2(tentacle->pos(), current_target, path_check,
+        search_dungeon(tentacle->pos(), current_target, path_check,
                        visited, candidates, false, tentacle_connectivity);
 
         if (candidates.size() != 1)
