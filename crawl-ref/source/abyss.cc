@@ -400,6 +400,7 @@ static int _abyss_exit_chance()
 static bool _abyss_check_place_feat(coord_def p,
                                     const int feat_chance,
                                     int *feats_wanted,
+                                    bool *use_map,
                                     dungeon_feature_type which_feat,
                                     const map_mask &abyss_genlevel_mask)
 {
@@ -419,9 +420,14 @@ static bool _abyss_check_place_feat(coord_def p,
         dprf("Placing abyss feature: %s.", dungeon_feature_name(which_feat));
 
         // When placing Abyss exits, try to use a vault if we have one.
-        if (which_feat != DNGN_EXIT_ABYSS
-            || !_abyss_place_vault_tagged(abyss_genlevel_mask, "abyss_exit",
-                                          which_feat))
+        if (which_feat == DNGN_EXIT_ABYSS
+            && use_map && *use_map
+            && _abyss_place_vault_tagged(abyss_genlevel_mask, "abyss_exit",
+                                              which_feat))
+        {
+            *use_map = false;
+        }
+        else
         {
             grd(p) = which_feat;
         }
@@ -470,6 +476,7 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask)
     const int n_terrain_elements = terrain_elements.size();
     int exits_wanted  = 0;
     int altars_wanted = 0;
+    bool use_abyss_exit_map = true;
 
     const int floor_density = random_range(30, 95);
 
@@ -486,15 +493,20 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask)
             grd(p) = terrain_elements[random2(n_terrain_elements)];
 
         // Place abyss exits, stone arches, and altars to liven up the scene:
-        (_abyss_check_place_feat(p, exit_chance, &exits_wanted,
+        (_abyss_check_place_feat(p, exit_chance,
+                                 &exits_wanted,
+                                 &use_abyss_exit_map,
                                  DNGN_EXIT_ABYSS,
                                  abyss_genlevel_mask)
          ||
-         _abyss_check_place_feat(p, altar_chance, &altars_wanted,
+         _abyss_check_place_feat(p, altar_chance,
+                                 &altars_wanted,
+                                 NULL,
                                  _abyss_pick_altar(),
                                  abyss_genlevel_mask)
          ||
-         _abyss_check_place_feat(p, 10000, NULL, DNGN_STONE_ARCH,
+         _abyss_check_place_feat(p, 10000, NULL, NULL,
+                                 DNGN_STONE_ARCH,
                                  abyss_genlevel_mask));
     }
 }
