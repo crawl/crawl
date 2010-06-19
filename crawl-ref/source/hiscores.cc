@@ -2313,8 +2313,7 @@ void mark_milestone(const std::string &type,
     if (crawl_state.game_is_arena() || !crawl_state.need_save)
         return;
     const std::string milestone_file =
-        (Options.save_dir + "milestones" + crawl_state.game_type_qualifier()
-         + ".txt");
+        (Options.save_dir + "milestones" + crawl_state.game_type_qualifier());
     if (FILE *fp = lk_open("a", milestone_file))
     {
         const scorefile_entry se(0, 0, KILL_MISC, NULL);
