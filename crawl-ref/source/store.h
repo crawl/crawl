@@ -389,39 +389,4 @@ public:
     iterator begin();
     iterator end();
 };
-
-// A wrapper for non-heterogeneous hash tables, so that the values can
-// be accessed without using get_foo().  T needs to have both normal
-// and const type-cast operators defined by CrawlStoreValue for this
-// template to work.
-template <typename T, store_val_type TYPE>
-class CrawlTableWrapper
-{
-public:
-    CrawlTableWrapper();
-    CrawlTableWrapper(CrawlHashTable& table);
-    CrawlTableWrapper(CrawlHashTable* table);
-
-protected:
-    CrawlHashTable* table;
-
-public:
-    void wrap(CrawlHashTable& table);
-    void wrap(CrawlHashTable* table);
-
-    const CrawlHashTable* get_table() const;
-    const T operator[] (const std::string &key) const;
-
-    CrawlHashTable* get_table();
-    T& operator[] (const std::string &key);
-};
-
-typedef CrawlTableWrapper<bool, SV_BOOL>       CrawlBoolTable;
-typedef CrawlTableWrapper<char, SV_BYTE>       CrawlByteTable;
-typedef CrawlTableWrapper<short, SV_SHORT>     CrawlShortTable;
-typedef CrawlTableWrapper<long, SV_LONG>       CrawlLongTable;
-typedef CrawlTableWrapper<float, SV_FLOAT>     CrawlFloatTable;
-typedef CrawlTableWrapper<std::string, SV_STR> CrawlStringTable;
-typedef CrawlTableWrapper<coord_def, SV_COORD> CrawlCoordTable;
-
 #endif
