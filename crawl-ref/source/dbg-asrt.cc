@@ -220,7 +220,7 @@ static void _dump_player(FILE *file)
     fprintf(file, "Attributes:\n");
     for (int i = 0; i < NUM_ATTRIBUTES; ++i)
         if (you.attribute[i] != 0)
-            fprintf(file, "    #%d: %lu\n", i, you.attribute[i]);
+            fprintf(file, "    #%d: %d\n", i, you.attribute[i]);
 
     fprintf(file, "\n");
 

@@ -1546,7 +1546,7 @@ static std::string _overview_screen_title()
     {
         const time_t curr = you.real_time + (time(NULL) - you.start_time);
         snprintf(time_turns, sizeof time_turns,
-                 " Turns: %ld, Time: %s",
+                 " Turns: %d, Time: %s",
                  you.num_turns, make_time_string(curr, true).c_str() );
     }
 
@@ -1780,7 +1780,7 @@ static std::vector<formatted_string> _get_overview_stats()
 
     int xp_needed = (exp_needed(you.experience_level + 2) - you.experience) + 1;
     snprintf(buf, sizeof buf,
-             "Exp: %d/%lu (%d)%s\n"
+             "Exp: %d/%u (%d)%s\n"
              "God: %s\n"
              "Spells: %2d memorised, %2d level%s left\n",
              you.experience_level, you.experience, you.exp_available,
