@@ -485,6 +485,7 @@ ENDMAP
 
 # Little trap spiral
 NAME: minivault_13
+TAGS: abyss ruin_abyss
 SHUFFLE: AB, CD, EH/FG
 KFEAT: ACEH = any trap
 KITEM: ABCD = gold / nothing
@@ -543,7 +544,7 @@ MAP
 ENDMAP
 
 NAME: minivault_20
-TAGS: allow_dup extra luniq_mini
+TAGS: allow_dup extra luniq_mini abyss ruin_abyss
 MAP
 ............
 .xxxx..xxxx.
@@ -560,7 +561,7 @@ MAP
 ENDMAP
 
 NAME:    minivault_25_ag
-TAGS:    allow_dup extra luniq_mini
+TAGS:    allow_dup extra luniq_mini abyss ruin_abyss
 SHUFFLE: XY, ABCDE
 SUBST:   X=x, Y=+
 SUBST:   A=?, B=%%%*, C=T, D=0009, E=89
@@ -580,7 +581,7 @@ MAP
 ENDMAP
 
 NAME: minivault_28
-TAGS: allow_dup
+TAGS: allow_dup abyss ruin_abyss
 MAP
 ...........
 .xxxx.xxxx.
@@ -828,7 +829,7 @@ ENDMAP
 #ENDMAP
 
 NAME:    onia_ninara_dug_in_and_dangerous
-TAGS:    allow_dup
+TAGS:    allow_dup abyss ruin_abyss
 DEPTH:   D:8-26, Vault
 SHUFFLE: vcb, AB?/CD!, d<>, de
 SUBST:   A=9, B=8, C=1, D=9
