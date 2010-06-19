@@ -1022,7 +1022,7 @@ private:
     bool test_lua_boolchunk(dlua_chunk &, bool def = false, bool croak = false);
     std::string rewrite_chunk_errors(const std::string &s) const;
     std::string apply_subvault(string_spec &);
-    std::string map_def::validate_map_placeable();
+    std::string validate_map_placeable();
 };
 
 const int CHANCE_ROLL = 10000;
