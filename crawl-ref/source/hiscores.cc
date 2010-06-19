@@ -562,8 +562,7 @@ bool scorefile_entry::parse(const std::string &line)
     // Leading colon implies 4.0 style line:
     if (line[0] == ':')
     {
-        end(1, false, "Cannot read 4.0-style scorefiles");
-        // Keep gcc happy:
+        dprf("Corrupted xlog-line: %s", line.c_str());
         return (false);
     }
 
