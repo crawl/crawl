@@ -3868,7 +3868,7 @@ static int _species_exp_mod(species_type species)
     }
 }
 
-unsigned long exp_needed(int lev)
+unsigned int exp_needed(int lev)
 {
     lev--;
 

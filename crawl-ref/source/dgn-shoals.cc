@@ -1052,10 +1052,10 @@ void shoals_apply_tides(long turns_elapsed, bool force)
     while (turns_elapsed-- > 0)
         _shoals_run_tide(tide, acc);
 
-    props[PROPS_SHOALS_TIDE_KEY] = short(tide);
-    props[PROPS_SHOALS_TIDE_VEL] = short(acc);
-    props[PROPS_SHOALS_TIDE_UPDATE_TIME] = you.elapsed_time;
-    env.properties[PROPS_SHOALS_TIDE_KEY] = short(tide);
+    props[PROPS_SHOALS_TIDE_KEY].get_short() = tide;
+    props[PROPS_SHOALS_TIDE_VEL].get_short() = acc;
+    props[PROPS_SHOALS_TIDE_UPDATE_TIME].get_long() = you.elapsed_time;
+    env.properties[PROPS_SHOALS_TIDE_KEY].get_short() = tide;
 
     if (force
         || tide_caller
