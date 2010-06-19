@@ -3426,6 +3426,8 @@ MenuObject::InputReturnValue MenuScroller::process_input(int key)
         }
         break;
     case CK_UP:
+    case CONTROL('K'):
+    case CONTROL('P'):
         find_entry = _find_item_by_direction(m_currently_active, UP);
         if (find_entry != NULL)
         {
@@ -3438,6 +3440,8 @@ MenuObject::InputReturnValue MenuScroller::process_input(int key)
         }
         break;
     case CK_DOWN:
+    case CONTROL('J'):
+    case CONTROL('N'):
         find_entry = _find_item_by_direction(m_currently_active, DOWN);
         if (find_entry != NULL)
         {
