@@ -282,6 +282,7 @@ void init_dungeon_lua()
 
     dlua.execfile("clua/dungeon.lua", true, true);
     dlua.execfile("clua/luamark.lua", true, true);
+    dlua.execfile("clua/mapinit.lua", true, true);
 
     lua_getglobal(dlua, "dgn_run_map");
     luaopen_debug(dlua);
