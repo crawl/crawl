@@ -708,7 +708,7 @@ bool dgn_square_is_passable(const coord_def &c)
     // default) because vaults may choose to create isolated regions,
     // or otherwise cause connectivity issues even if the map terrain
     // is travel-passable.
-    return (!(env.level_map_mask(c) & MMT_OPAQUE) && (dgn_square_travel_ok(c)));
+    return (!(env.level_map_mask(c) & MMT_OPAQUE) && dgn_square_travel_ok(c));
 }
 
 static inline void _dgn_point_record_stub(const coord_def &) { }
@@ -895,6 +895,7 @@ int process_disconnected_zones(int x1, int y1, int x2, int y2,
     int nzones = 0;
     int ngood = 0;
     for (int y = y1; y <= y2 ; ++y)
+    {
         for (int x = x1; x <= x2; ++x)
         {
             if (!map_bounds(x, y)
@@ -904,13 +905,13 @@ int process_disconnected_zones(int x1, int y1, int x2, int y2,
                 continue;
             }
 
-            bool found_exit_stair =
+            const bool found_exit_stair =
                 _dgn_fill_zone(coord_def(x, y), ++nzones,
                                _dgn_point_record_stub,
-                               dgn_square_is_passable,
+                               dgn_square_travel_ok,
                                choose_stairless ? (at_branch_bottom() ?
-                               _is_bottom_exit_stair :
-                               _is_exit_stair) : NULL);
+                                                   _is_bottom_exit_stair :
+                                                   _is_exit_stair) : NULL);
 
             // If we want only stairless zones, screen out zones that did
             // have stairs.
@@ -920,18 +921,24 @@ int process_disconnected_zones(int x1, int y1, int x2, int y2,
             {
                 for (int fy = y1; fy <= y2 ; ++fy)
                     for (int fx = x1; fx <= x2; ++fx)
-                        if (travel_point_distance[fx][fy] == nzones)
+                        if (travel_point_distance[fx][fy] == nzones
+                            && unforbidden(coord_def(fx, fy), MMT_OPAQUE))
+                        {
                             grd[fx][fy] = fill;
+                        }
             }
         }
+    }
 
     return (nzones - ngood);
 }
 
-static int _dgn_count_disconnected_zones(bool choose_stairless)
+static int _dgn_count_disconnected_zones(
+    bool choose_stairless,
+    dungeon_feature_type fill = DNGN_UNSEEN)
 {
     return process_disconnected_zones(0, 0, GXM-1, GYM-1, choose_stairless,
-                                      (dungeon_feature_type)0);
+                                      fill);
 }
 
 static void _fixup_pandemonium_stairs()
