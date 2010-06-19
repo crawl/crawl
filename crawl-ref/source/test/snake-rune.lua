@@ -60,6 +60,7 @@ for i = 1, niters do
   crawl.message("Visiting Snake:$ the hard way")
   current_iter = i
   debug.flush_map_memory()
+  debug.goto_place("Snake:1", "Lair:" .. crawl.random_range(3, 7))
   visit_branch_end_from("D:1",
                         branch_entrance_feats,
                         thing_exists_fn("serpentine rune"))
