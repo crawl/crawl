@@ -13,7 +13,8 @@ enum tag_minor_version
     TAG_MINOR_LEVEL_VAULTS = 2, // Level vaults saved in level save.
     TAG_MINOR_ITEM_TILE    = 3, // Item tile "colour" kept separate.
     TAG_MINOR_VAULT_MAPS   = 4, // Vault maps are saved.
-    TAG_MINOR_VERSION      = 4, // Current version.  (Keep equal to max.)
+    TAG_MINOR_VAULT_SEEN   = 5, // Vault seen-state is saved.
+    TAG_MINOR_VERSION      = 5, // Current version.  (Keep equal to max.)
 };
 
 #endif

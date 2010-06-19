@@ -150,10 +150,13 @@ public:
     // If we're not placing runes, this is the substitute feature.
     int rune_subst;
 
+    // The PC has seen at least one square of this vault.
+    bool seen;
+
 public:
     vault_placement()
         : pos(-1, -1), size(0, 0), orient(0), map(),
-          exits(), level_number(0), rune_subst(-1)
+          exits(), level_number(0), rune_subst(-1), seen(false)
     {
     }
 
@@ -282,6 +285,9 @@ bool dgn_square_is_passable(const coord_def &c);
 
 void dgn_register_place(const vault_placement &place, bool register_vault);
 void dgn_register_vault(const map_def &map);
+void dgn_unregister_vault(const map_def &map);
+
+void dgn_seen_vault_at(coord_def p);
 
 struct spec_room
 {
@@ -327,6 +333,10 @@ coord_def dgn_random_direction();
 
 bool dgn_ensure_vault_placed(bool vault_success,
                              bool disable_further_vaults);
+
+
+vault_placement *dgn_vault_at(coord_def gp);
+void dgn_seen_vault_at(coord_def gp);
 
 inline int count_feature_in_box( const coord_def& p1, const coord_def& p2,
                           dungeon_feature_type feat )
