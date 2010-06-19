@@ -887,11 +887,17 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
             tileset.push_back(tile_def(job, TEX_PLAYER));
     }
     else if (mons_is_mimic(m->type))
-        tileset.push_back(tile_def(tileidx_monster(m), TEX_DEFAULT));
+    {
+        tileidx_t idx = tileidx_monster(m) & TILE_FLAG_MASK;
+        tileset.push_back(tile_def(idx, TEX_DEFAULT));
+    }
     else
-        tileset.push_back(tile_def(tileidx_monster(m), TEX_PLAYER));
+    {
+        tileidx_t idx = tileidx_monster(m) & TILE_FLAG_MASK;
+        tileset.push_back(tile_def(idx, TEX_PLAYER));
+    }
 
-    // A fake monster might not have it's ghost member set up properly,
+    // A fake monster might not have its ghost member set up properly,
     // and mons_flies() looks at ghost.
     if (!fake && !mons_flies(m))
     {
@@ -940,6 +946,8 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
 
     if (m->friendly())
         tileset.push_back(tile_def(TILE_HEART, TEX_DEFAULT));
+    else if (m->good_neutral())
+        tileset.push_back(tile_def(TILE_GOOD_NEUTRAL, TEX_DEFAULT));
     else if (m->neutral())
         tileset.push_back(tile_def(TILE_NEUTRAL, TEX_DEFAULT));
     else if (mons_looks_stabbable(m))
@@ -1863,7 +1871,8 @@ void PrecisionMenu::set_select_type(SelectType flag)
 void PrecisionMenu::clear()
 {
     // release all the data reserved
-    if (m_attached_objects.size() == 0) {
+    if (m_attached_objects.size() == 0)
+    {
         return;
     }
     std::vector<MenuObject*>::iterator it;
@@ -3417,6 +3426,8 @@ MenuObject::InputReturnValue MenuScroller::process_input(int key)
         }
         break;
     case CK_UP:
+    case CONTROL('K'):
+    case CONTROL('P'):
         find_entry = _find_item_by_direction(m_currently_active, UP);
         if (find_entry != NULL)
         {
@@ -3429,6 +3440,8 @@ MenuObject::InputReturnValue MenuScroller::process_input(int key)
         }
         break;
     case CK_DOWN:
+    case CONTROL('J'):
+    case CONTROL('N'):
         find_entry = _find_item_by_direction(m_currently_active, DOWN);
         if (find_entry != NULL)
         {

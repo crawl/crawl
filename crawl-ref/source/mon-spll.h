@@ -1379,9 +1379,31 @@
        SPELL_SUNRAY,
        SPELL_AWAKEN_FOREST,
        SPELL_NO_SPELL,
-       SPELL_SUMMON_MUSHROOMS,
+       SPELL_SUMMON_CANIFORMS,
        SPELL_NO_SPELL,
        SPELL_MINOR_HEALING
+      }
+    },
+
+    { MST_THE_ENCHANTRESS,
+      {
+       SPELL_PARALYSE,
+       SPELL_SLEEP,
+       SPELL_HASTE,
+       SPELL_BANISHMENT,
+       SPELL_INVISIBILITY,
+       SPELL_TELEPORT_SELF
+      }
+    },
+
+    {  MST_HELLEPHANT,
+      {
+       SPELL_FIRE_BREATH,
+       SPELL_NO_SPELL,
+       SPELL_BLINK,
+       SPELL_FIRE_BREATH,
+       SPELL_NO_SPELL,
+       SPELL_BLINK
       }
     },
 

@@ -58,7 +58,7 @@
 // Windows and Tiles
 #undef WM_KEYDOWN
 #undef WM_KEYUP
-
+#undef WM_QUIT
 #endif
 
 // Default Screen Settings

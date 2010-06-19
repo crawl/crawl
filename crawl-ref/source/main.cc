@@ -390,6 +390,7 @@ static void _wanderer_startup_message()
 }
 
 // A one-liner upon game start to mention the orb.
+// TODO: source out the list of messages into a file, ideally with weights.
 static void _announce_goal_message()
 {
     std::string msg;
@@ -1479,7 +1480,8 @@ static void _toggle_friendly_pickup()
         type = tolower(getchm(KMC_DEFAULT));
     }
 
-    switch (type) {
+    switch (type)
+    {
     case 'd': you.friendly_pickup = Options.default_friendly_pickup; break;
     case 'n': you.friendly_pickup = FRIENDLY_PICKUP_NONE; break;
     case 'f': you.friendly_pickup = FRIENDLY_PICKUP_FRIEND; break;
@@ -2424,20 +2426,14 @@ static void _decrement_durations()
     {
         if (you.hp > allowed_deaths_door_hp())
         {
-            mpr("Your life is in your own hands once again.", MSGCH_DURATION);
-            you.increase_duration(DUR_PARALYSIS, 5 + random2(5));
-            confuse_player(10 + random2(10));
-            you.hp_max--;
-            deflate_hp(you.hp_max, false);
-            you.duration[DUR_DEATHS_DOOR] = 0;
+            you.hp = allowed_deaths_door_hp();
+            you.redraw_hit_points = true;
         }
-        else
-        {
-            _decrement_a_duration(DUR_DEATHS_DOOR, delay,
-                                  "Your life is in your own hands again!",
-                                  random2(6),
-                                  "Your time is quickly running out!");
-        }
+
+        _decrement_a_duration(DUR_DEATHS_DOOR, delay,
+                              "Your life is in your own hands again!",
+                              random2(6),
+                              "Your time is quickly running out!");
     }
 
     if (_decrement_a_duration(DUR_DIVINE_STAMINA, delay))
@@ -3694,7 +3690,7 @@ static void _move_player(coord_def move)
 #ifdef DEBUG_DIAGNOSTICS
         int j = 0;
         for (int i = 0; i < MAX_ITEMS; ++i)
-            if (mitm[i].is_valid())
+            if (mitm[i].defined())
                 ++j;
 
         mprf(MSGCH_DIAGNOSTICS, "Number of items present: %d", j);
@@ -3970,7 +3966,7 @@ static void _compile_time_asserts()
     COMPILE_CHECK(SP_VAMPIRE == 30              , c3);
     COMPILE_CHECK(SPELL_DEBUGGING_RAY == 102    , c4);
     COMPILE_CHECK(SPELL_PETRIFY == 154          , c5);
-    COMPILE_CHECK(NUM_SPELLS == 202             , c6);
+    COMPILE_CHECK(NUM_SPELLS == 203             , c6);
 
     //jmf: NEW ASSERTS: we ought to do a *lot* of these
     COMPILE_CHECK(NUM_SPECIES < SP_UNKNOWN      , c7);

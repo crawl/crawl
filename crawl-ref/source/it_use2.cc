@@ -64,6 +64,12 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
     switch (pot_eff)
     {
     case POT_HEALING:
+        if (you.duration[DUR_DEATHS_DOOR])
+        {
+            mpr("You feel queasy.");
+            break;
+        }
+
         inc_hp((5 + random2(7)) / factor, false);
         mpr("You feel better.");
 
@@ -82,6 +88,12 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         break;
 
     case POT_HEAL_WOUNDS:
+        if (you.duration[DUR_DEATHS_DOOR])
+        {
+            mpr("You feel queasy.");
+            break;
+        }
+
         inc_hp((10 + random2avg(28, 3)) / factor, false);
         mpr("You feel much better.");
 

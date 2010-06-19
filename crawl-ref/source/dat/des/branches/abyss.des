@@ -15,15 +15,15 @@
 #
 NAME: abyss_furniture_dummy
 TAGS: abyss dummy
-CHANCE: 10 : 80%
+CHANCE: 10 : 90%
 
 NAME: abyss_rune_dummy
 TAGS: abyss_rune dummy
-CHANCE: 10 : 70%
+CHANCE: 10 : 90%
 
 NAME: abyss_exit_dummy
 TAGS: abyss_exit dummy
-CHANCE: 10 : 70%
+CHANCE: 10 : 90%
 
 ###############################################################################
 NAME: abyss_furniture_001
@@ -47,6 +47,26 @@ ww.ww
 ww.ww
 ENDMAP
 
+NAME: abyss_rune_due
+TAGS: abyss_rune allow_dup
+KITEM: O = abyssal rune of Zot
+KMONS: OL = lich / w:1 ancient lich
+SUBST: C = c+
+NSUBST: L = 1:O / *:L
+: colour("c = " .. dgn.random_colour() )
+: colour(". = " .. dgn.random_colour() )
+MAP
+  ccccc
+ ccccccc
+ccLcLcLcc
+cc+c+c+cc
+@C.....C@
+cc+c+c+cc
+ccLcLcLcc
+ ccccccc
+  ccccc
+ENDMAP
+
 ###############################################################################
 # abyss exit vaults
 NAME: abyss_exit_001
@@ -56,3 +76,35 @@ l.l
 .O.
 l.l
 ENDMAP
+
+###################################################################
+# Distorted/chaotic kobolds (abyss exit version!) (Jude)
+NAME:       due_exit_kobolds
+TAGS:       no_rotate abyss_exit allow_dup
+SUBST:      y  = c.
+COLOUR:     1. = random
+MARKER:     P  = lua:fog_machine { cloud_type="blue smoke", walk_dist=1, \
+            size=9, pow_max=20, delay=10, buildup_amnt=14, buildup_time=7, \
+            spread_rate=3, start_clouds=1, colour="blue" }
+KFEAT:      _ = altar_lugonu
+KFEAT:      P = enter_abyss
+KMONS:      1 = big kobold w:10 ; quick blade ego:distortion w:6 | sabre ego:distortion | \
+            short sword ego:distortion / big kobold w:80 ; short sword | sabre | \
+            quick blade w:3
+KFEAT:      P = exit_abyss
+MAP
+  ccccc
+ cc...cc
+cc..P..cc
+ cc...cc
+ ccc.cccc
+ccyy.yyyccc
+cy..111.yyc
+cc..1_1..cc
+cyy.111..yc
+cccyy..yycc
+  ccc..ccc
+    c++c
+     @@
+ENDMAP
+

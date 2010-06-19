@@ -166,7 +166,7 @@ std::vector<item_def> item_list_in_stash(const coord_def& pos)
 
 static void _fully_identify_item(item_def *item)
 {
-    if (!item || !item->is_valid())
+    if (!item || !item->defined())
         return;
 
     set_ident_flags( *item, ISFLAG_IDENT_MASK );
@@ -2079,7 +2079,7 @@ const ST_ItemIterator& ST_ItemIterator::operator ++ ()
         {
             const ShopInfo::shop_item &item = *m_shop_item_it++;
             m_item  = &(item.item);
-            ASSERT(m_item->is_valid());
+            ASSERT(m_item->defined());
             m_price = item.price;
             return (*this);
         }
@@ -2095,7 +2095,7 @@ const ST_ItemIterator& ST_ItemIterator::operator ++ ()
         if (m_stash_item_it != m_stash_it->second.items.end())
         {
             m_item = &(*m_stash_item_it++);
-            ASSERT(m_item->is_valid());
+            ASSERT(m_item->defined());
             return (*this);
         }
 
@@ -2133,7 +2133,7 @@ void ST_ItemIterator::new_level()
         if (m_stash_item_it != m_stash_it->second.items.end())
         {
             m_item = &(*m_stash_item_it++);
-            ASSERT(m_item->is_valid());
+            ASSERT(m_item->defined());
         }
     }
 
@@ -2148,7 +2148,7 @@ void ST_ItemIterator::new_level()
         {
             const ShopInfo::shop_item &item = *m_shop_item_it++;
             m_item  = &(item.item);
-            ASSERT(m_item->is_valid());
+            ASSERT(m_item->defined());
             m_price = item.price;
             m_shop  = &si;
         }

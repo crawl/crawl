@@ -522,37 +522,77 @@ void game_state::dump()
     }
 }
 
-bool game_state::player_is_dead()
+bool game_state::player_is_dead() const
 {
     return (updating_scores && !need_save);
 }
 
-bool game_state::game_is_normal()
+bool game_state::game_is_normal() const
 {
     ASSERT(type < NUM_GAME_TYPE);
-    return type == GAME_TYPE_NORMAL;
+    return (type == GAME_TYPE_NORMAL || type == GAME_TYPE_UNSPECIFIED);
 }
 
-bool game_state::game_is_tutorial()
+bool game_state::game_is_tutorial() const
 {
     ASSERT(type < NUM_GAME_TYPE);
     return type == GAME_TYPE_TUTORIAL;
 }
 
-bool game_state::game_is_arena()
+bool game_state::game_is_arena() const
 {
     ASSERT(type < NUM_GAME_TYPE);
     return type == GAME_TYPE_ARENA;
 }
 
-bool game_state::game_is_sprint()
+bool game_state::game_is_sprint() const
 {
     ASSERT(type < NUM_GAME_TYPE);
     return type == GAME_TYPE_SPRINT;
 }
 
-bool game_state::game_is_hints()
+bool game_state::game_is_hints() const
 {
     ASSERT(type < NUM_GAME_TYPE);
     return type == GAME_TYPE_HINTS;
+}
+
+std::string game_state::game_type_name() const
+{
+    return game_type_name_for(type);
+}
+
+std::string game_state::game_type_name_for(game_type type)
+{
+    switch (type)
+    {
+    case GAME_TYPE_UNSPECIFIED:
+    case GAME_TYPE_NORMAL:
+    case GAME_TYPE_HINTS:
+    default:
+        // No explicit game type name for default game.
+        return "";
+    case GAME_TYPE_TUTORIAL:
+        return "Tutorial";
+    case GAME_TYPE_ARENA:
+        return "Arena";
+    case GAME_TYPE_SPRINT:
+        return "Sprint";
+    }
+}
+
+std::string game_state::game_savedir_path() const
+{
+    return game_is_sprint()? "sprint/" : "";
+}
+
+std::string game_state::game_type_qualifier() const
+{
+    if (crawl_state.game_is_sprint())
+        return "-sprint";
+    if (crawl_state.game_is_tutorial())
+        return "-tutorial";
+    if (crawl_state.game_is_hints())
+        return "-hints";
+    return "";
 }

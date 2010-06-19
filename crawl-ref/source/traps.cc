@@ -1381,8 +1381,8 @@ bool is_valid_shaft_level(const level_id &place)
     if (place.level_type != LEVEL_DUNGEON)
         return (false);
 
-    // Shafts are now allowed on the first two levels,
-    // as they have a good chance of being detected.
+    // Shafts are now allowed on the first two levels, as they have a 
+    // good chance of being detected. You'll also fall less deep.
     /* if (place == BRANCH_MAIN_DUNGEON && you.absdepth0 < 2)
         return (false); */
 
@@ -1504,7 +1504,7 @@ void handle_items_on_shaft(const coord_def& pos, bool open_shaft)
     {
         int next = mitm[o].link;
 
-        if (mitm[o].is_valid())
+        if (mitm[o].defined())
         {
             if (is_terrain_seen(pos))
             {

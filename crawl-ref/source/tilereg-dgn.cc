@@ -35,6 +35,26 @@
 #include "travel.h"
 #include "viewgeom.h"
 
+static VColour _flash_colours[MAX_TERM_COLOUR] =
+{
+    VColour(  0,   0,   0,   0), // BLACK (transparent)
+    VColour(  0,   0, 128, 100), // BLUE
+    VColour(  0, 128,   0, 100), // GREEN
+    VColour(  0, 128, 128, 100), // CYAN
+    VColour(128,   0,   0, 100), // RED
+    VColour(150,   0, 150, 100), // MAGENTA
+    VColour(165,  91,   0, 100), // BROWN
+    VColour( 50,  50,  50, 150), // LIGHTGRAY
+    VColour(  0,   0,   0, 150), // DARKGRAY
+    VColour( 64,  64, 255, 100), // LIGHTBLUE
+    VColour( 64, 255,  64, 100), // LIGHTGREEN
+    VColour(  0, 255, 255, 100), // LIGHTCYAN
+    VColour(255,  64,  64, 100), // LIGHTRED
+    VColour(255,  64, 255, 100), // LIGHTMAGENTA
+    VColour(150, 150,   0, 100), // YELLOW
+    VColour(255, 255, 255, 100), // WHITE
+};
+
 DungeonRegion::DungeonRegion(const TileRegionInit &init) :
     TileRegion(init),
     m_cx_to_gx(0),
@@ -76,6 +96,7 @@ void DungeonRegion::pack_cursor(cursor_type type, unsigned int tile)
 void DungeonRegion::pack_buffers()
 {
     m_buf_dngn.clear();
+    m_buf_flash.clear();
 
     if (m_vbuf.empty())
         return;
@@ -94,8 +115,19 @@ void DungeonRegion::pack_buffers()
                 tile_cell.flv = env.tile_flv(gc);
                 pack_waves(gc, &tile_cell);
             }
+            else
+            {
+                tile_cell.flv.floor   = 0;
+                tile_cell.flv.wall    = 0;
+                tile_cell.flv.special = 0;
+                tile_cell.flv.feat    = 0;
+            }
 
             m_buf_dngn.add(tile_cell, x, y);
+
+            const int fcol = vbuf_cell->flash_colour;
+            if (fcol)
+                m_buf_flash.add(x, y, x + 1, y + 1, _flash_colours[fcol]);
 
             vbuf_cell++;
         }
@@ -152,16 +184,8 @@ void DungeonRegion::render()
 
     set_transform();
     m_buf_dngn.draw();
-
     draw_minibars();
-
-    if (you.berserk())
-    {
-        ShapeBuffer buff;
-        VColour red_film(130, 0, 0, 100);
-        buff.add(0, 0, mx, my, red_film);
-        buff.draw();
-    }
+    m_buf_flash.draw();
 
     FixedArray<tag_def, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tag_show;
 
@@ -449,7 +473,7 @@ static const bool _have_appropriate_evokable(const actor* target)
     {
         item_def &item(you.inv[i]);
 
-        if (!item.is_valid())
+        if (!item.defined())
             continue;
 
         if (_is_appropriate_evokable(item, target))
@@ -467,7 +491,7 @@ static item_def* _get_evokable_item(const actor* target)
     {
         item_def &item(you.inv[i]);
 
-        if (!item.is_valid())
+        if (!item.defined())
             continue;
 
         if (_is_appropriate_evokable(item, target))

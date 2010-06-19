@@ -63,9 +63,13 @@ std::string canonicalise_file_separator(const std::string &path);
 bool check_mkdir(const std::string &what, std::string *dir,
                  bool silent = false);
 
+// Find saved games for all game types.
+std::vector<player_save_info> find_all_saved_characters();
+
+// Find saved games for the current game type.
 std::vector<player_save_info> find_saved_characters();
 
-std::string get_savedir();
+std::string get_savefile_directory(bool ignore_game_type = false);
 std::string get_save_filename(const std::string &pre,
                               const std::string &suf,
                               const std::string &ext,
@@ -74,12 +78,14 @@ std::string get_savedir_filename(const std::string &pre,
                                  const std::string &suf,
                                  const std::string &ext,
                                  bool suppress_uid = false);
+std::string get_base_savedir_path(const std::string &subpath = "");
 std::string get_savedir_path(const std::string &shortpath);
 std::string savedir_versioned_path(const std::string &subdirs = "");
 std::string get_prefs_filename();
 std::string change_file_extension(const std::string &file,
                                   const std::string &ext);
 
+void file_touch(const std::string &file);
 time_t file_modtime(const std::string &file);
 bool is_newer(const std::string &a, const std::string &b);
 void check_newer(const std::string &target,
@@ -110,6 +116,7 @@ bool is_existing_level(const level_id &level);
 
 class level_excursion
 {
+protected:
     level_id original;
     bool ever_changed_levels;
 

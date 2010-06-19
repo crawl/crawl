@@ -87,6 +87,9 @@ void handle_monster_shouts(monsters* monster, bool force)
     case S_BELLOW:
         default_msg_key = "__BELLOW";
         break;
+    case S_TRUMPET:
+        default_msg_key = "__TRUMPET";
+        break;
     case S_SCREECH:
         default_msg_key = "__SCREECH";
         break;
@@ -388,6 +391,10 @@ bool noisy(int loudness, const coord_def& where, const char *msg, int who,
 
     if (loudness <= 0)
         return (false);
+
+    // [ds] Reduce noise propagation for Sprint.
+    if (crawl_state.game_is_sprint())
+        loudness = std::max(1, div_rand_round(loudness, 3));
 
     // If the origin is silenced there is no noise.
     if (silenced(where))

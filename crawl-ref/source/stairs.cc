@@ -159,7 +159,7 @@ static void _player_change_level_upstairs(dungeon_feature_type stair_find,
 
     if (player_in_branch( BRANCH_VESTIBULE_OF_HELL ))
     {
-        you.where_are_you = BRANCH_MAIN_DUNGEON;
+        you.where_are_you = you.hell_branch;
         you.absdepth0 = you.hell_exit;
     }
 
@@ -247,7 +247,7 @@ static bool _check_carrying_orb()
     // So we did pick up the Orb. Now check whether we're carrying it.
     for (int i = 0; i < ENDOFPACK; i++)
     {
-        if (you.inv[i].is_valid()
+        if (you.inv[i].defined()
             && you.inv[i].base_type == OBJ_ORBS
             && you.inv[i].sub_type == ORB_ZOT)
         {
@@ -604,7 +604,7 @@ void up_stairs(dungeon_feature_type force_stair,
 
         for (int i = 0; i < ENDOFPACK; i++)
         {
-            if (you.inv[i].is_valid()
+            if (you.inv[i].defined()
                 && you.inv[i].base_type == OBJ_ORBS)
             {
                 ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_WINNING);
@@ -766,6 +766,7 @@ static void _player_change_level_downstairs(dungeon_feature_type stair_find,
 
     if (stair_find == DNGN_ENTER_HELL)
     {
+        you.hell_branch = you.where_are_you;
         you.where_are_you = BRANCH_VESTIBULE_OF_HELL;
         you.hell_exit = you.absdepth0;
 
@@ -817,7 +818,7 @@ static int _runes_in_pack(std::vector<int> &runes)
 
     for (int i = 0; i < ENDOFPACK; i++)
     {
-        if (you.inv[i].is_valid()
+        if (you.inv[i].defined()
             && you.inv[i].base_type == OBJ_MISCELLANY
             && you.inv[i].sub_type == MISC_RUNE_OF_ZOT)
         {
@@ -1275,7 +1276,7 @@ void down_stairs(dungeon_feature_type force_stair,
 
         if (player_in_hell())
         {
-            you.where_are_you = BRANCH_MAIN_DUNGEON;
+            you.where_are_you = you.hell_branch;
             you.absdepth0    = you.hell_exit - 1;
         }
         break;

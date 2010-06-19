@@ -146,13 +146,20 @@ public:
     void      mon_gone(monsters* mon);
 
     void dump();
-    bool player_is_dead();
+    bool player_is_dead() const;
 
-    bool game_is_normal();
-    bool game_is_tutorial();
-    bool game_is_arena();
-    bool game_is_sprint();
-    bool game_is_hints();
+    bool game_is_normal() const;
+    bool game_is_tutorial() const;
+    bool game_is_arena() const;
+    bool game_is_sprint() const;
+    bool game_is_hints() const;
+
+    // Save subdirectory used for games such as Sprint.
+    std::string game_type_name() const;
+    std::string game_savedir_path() const;
+    std::string game_type_qualifier() const;
+
+    static std::string game_type_name_for(game_type gt);
 
     friend class mon_acting;
 };

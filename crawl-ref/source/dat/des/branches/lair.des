@@ -26,6 +26,7 @@ NAME:    david_lair_1
 TAGS:    lair_entry
 MONS:    crocodile / sheep, giant snail / elephant slug / nothing
 MONS:    nothing / yak / weight:2 death yak, plant / fungus / w:20 nothing
+MONS:    elephant
 SHUFFLE: 12
 ORIENT:  float
 MAP
@@ -34,7 +35,7 @@ xx.........xx
 x..42...44..x
 ..44..1......
 @....1O3....@
-...4......4..
+...4..5...4..
 x...4..2....x
 xx.........xx
 xxxx..@..xxxx
@@ -73,7 +74,8 @@ MONS:    w:100 nothing / w:20 iguana / w:20 crocodile /\
 MONS:    green rat / grey rat / orange rat / quokka / rat
 MONS:    w:90 nothing / w:30 giant frog / blink frog / giant toad /\
          spiny frog
-SHUFFLE: 12345
+MONS:    elephant
+SHUFFLE: 123456
 MAP
 111...@......
 111..........
@@ -649,4 +651,54 @@ MAP
  ;wwww..wwww;
   ;wwwwwwww;
    ;;wwww;;
+ENDMAP
+
+# Could do with some nice tiles, I guess. Does require elephant statue
+# tiles!
+NAME:   jungle_book
+ORIENT: north
+PLACE:  Lair:$
+TAGS:   no_pool_fixup no_wall_fixup no_monster_gen
+MONS:   plant, elephant
+SUBST:  X = xxx..
+SUBST:  P = 1.........
+SUBST:  T = tttxxc
+KFEAT:  S = deep_water
+KMONS:  S = anaconda
+# The anaconda's name is Kaa.
+MARKER: S = lua:MonPropsMarker:new { anaconda_guard="anaconda_guard" }
+KITEM:  U = superb_item
+KITEM:  Q = acquire any
+KFEAT:  o = granite_statue
+MARKER: o = lua:portal_desc { desc="elephant-shaped statue", \
+            desc_long="This worn granite statues depict elephants standing guard." }
+MARKER: G = lua:portal_desc { desc="elephant-shaped statue", \
+            desc_long="This worn granite statues depict elephants standing guard." }
+COLOUR: oG = green
+MARKER: o = lua:monster_on_death { \
+            target="anaconda_guard", new_monster="generate_awake dire elephant", \
+            message_seen="The elephant guardians awaken!", \
+            message_unseen="You hear a distant trumpeting.", \
+            master_name="elephant", \
+            veto_fragmentation="veto", veto_disintegrate="veto", \
+         }
+MARKER:  c = lua:portal_desc { desc="moss-covered stone wall", \
+             desc_lost="This stone wall is ancient, and covered in moss." }
+MAP
+  xxxxxxxxxxx
+ xxxxxXX.XXXxx
+xxxxXt....PPXxx
+xxttttt......Xxx                           xxxx
+xttttxx.X..X..Xxx                         xxT.xxx...@
+xtUttxccc+cc++ccccccccccccccccccccccccccccTT.TT.xxx..
+xtttxccco.Gc.....ccPWWcco.%|cccP..ccP....P.G.o.TTxxx.
+xttxcccc...c.P...=P.WwW+..%*Qc.....+.....c.c...TTTx..
+xxccccccPc.ccccP.c.WwwS+..%*|c.22..c.Pcccc.P.cTTccc..
+xccccccc+c.P.PccccPwwwwco.%|cc%22..cccc.P..c+ccccccc.
+xcc1...PPccccP.P.cWwWWPccccccc*%..PcP.PPccccPP1..%cc.
+xcc......cccccccPcccW.ccco.occcP.ccc.ccccccc......cc.
+xccP.1..%ccttTccP.PcccccG.V.GcccccP.PccTttcc1....Pcc.
+xxcccccccct....cccP.P.P1P...P1P.P.Pccc....tcccccccc.
+ TxTcccTt.......tcccccccc+++cccccccct.......tcccTt..@
+   @........@@...........@@@....T......@@..........@
 ENDMAP

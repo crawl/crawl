@@ -197,7 +197,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
         DAMV_SLASHING, 2 },
     { WPN_HOLY_SCOURGE,      "holy scourge",       13,  0, 11,  30,  2,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
-        DAMV_SLASHING, 2 },
+        DAMV_SLASHING, 0 },
     { WPN_SPIKED_FLAIL,      "spiked flail",       12, -2, 16, 190,  8,
         SK_MACES_FLAILS, HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_PIERCING | DAM_BLUDGEON, 10 },
@@ -262,7 +262,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_DEMON_BLADE,           "demon blade",           13, -1, 15, 200,  4,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 2 },
-    { WPN_HOLY_BLADE,            "holy blade",            14, -2, 14, 200,  4,
+    { WPN_EUDEMON_BLADE,         "eudemon blade",         14, -2, 14, 200,  4,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 0 },
     { WPN_DOUBLE_SWORD,          "double sword",          16, -1, 15, 220,  5,
@@ -317,6 +317,9 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_DEMON_TRIDENT,     "demon trident",      14,  1, 13, 160,  4,
         SK_POLEARMS,     HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
         DAMV_PIERCING, 2 },
+    { WPN_TRISHULA,          "trishula",           15,  0, 13, 160,  4,
+        SK_POLEARMS,     HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
+        DAMV_PIERCING, 0 },
     { WPN_GLAIVE,            "glaive",             15, -3, 18, 200,  6,
         SK_POLEARMS,     HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_CHOPPING, 10 },
@@ -429,7 +432,7 @@ void init_properties()
 {
     // Compare with enum comments, to catch changes.
     COMPILE_CHECK(NUM_ARMOURS  == 37, c1);
-    COMPILE_CHECK(NUM_WEAPONS  == 55, c2);
+    COMPILE_CHECK(NUM_WEAPONS  == 56, c2);
     COMPILE_CHECK(NUM_MISSILES ==  9, c3);
     COMPILE_CHECK(NUM_FOODS    == 22, c4);
 
@@ -1324,11 +1327,12 @@ int weapon_rarity( int w_type )
     case WPN_BLESSED_LONG_SWORD:
     case WPN_BLESSED_SCIMITAR:
     case WPN_BLESSED_KATANA:
-    case WPN_HOLY_BLADE:
+    case WPN_EUDEMON_BLADE:
     case WPN_BLESSED_DOUBLE_SWORD:
     case WPN_BLESSED_GREAT_SWORD:
     case WPN_BLESSED_TRIPLE_SWORD:
     case WPN_HOLY_SCOURGE:
+    case WPN_TRISHULA:
         // Zero value weapons must be placed specially -- see make_item() {dlb}
         return (0);
 
@@ -1513,11 +1517,12 @@ bool is_blessed(const item_def &item)
         case WPN_BLESSED_LONG_SWORD:
         case WPN_BLESSED_SCIMITAR:
         case WPN_BLESSED_KATANA:
-        case WPN_HOLY_BLADE:
+        case WPN_EUDEMON_BLADE:
         case WPN_BLESSED_DOUBLE_SWORD:
         case WPN_BLESSED_GREAT_SWORD:
         case WPN_BLESSED_TRIPLE_SWORD:
         case WPN_HOLY_SCOURGE:
+        case WPN_TRISHULA:
             return (true);
 
         default:
@@ -1534,6 +1539,7 @@ bool is_blessed_convertible(const item_def &item)
             && (item.base_type == OBJ_WEAPONS
                 && (is_demonic(item)
                     || item.sub_type == WPN_HOLY_SCOURGE
+                    || item.sub_type == WPN_TRISHULA
                     || weapon_skill(item) == SK_LONG_BLADES)));
 }
 
@@ -1569,7 +1575,7 @@ bool convert2good(item_def &item, bool allow_blessed)
         if (!allow_blessed)
             item.sub_type = WPN_SCIMITAR;
         else
-            item.sub_type = WPN_HOLY_BLADE;
+            item.sub_type = WPN_EUDEMON_BLADE;
         break;
 
     case WPN_KATANA:
@@ -1604,7 +1610,10 @@ bool convert2good(item_def &item, bool allow_blessed)
         break;
 
     case WPN_DEMON_TRIDENT:
-        item.sub_type = WPN_TRIDENT;
+        if (!allow_blessed)
+            item.sub_type = WPN_TRIDENT;
+        else
+            item.sub_type = WPN_TRISHULA;
         break;
     }
 
@@ -1636,7 +1645,7 @@ bool convert2bad(item_def &item)
         item.sub_type = WPN_SCIMITAR;
         break;
 
-    case WPN_HOLY_BLADE:
+    case WPN_EUDEMON_BLADE:
         item.sub_type = WPN_DEMON_BLADE;
         break;
 
@@ -1658,6 +1667,10 @@ bool convert2bad(item_def &item)
 
     case WPN_HOLY_SCOURGE:
         item.sub_type = WPN_DEMON_WHIP;
+        break;
+
+    case WPN_TRISHULA:
+        item.sub_type = WPN_DEMON_TRIDENT;
         break;
     }
 
@@ -2021,13 +2034,13 @@ bool ring_has_stackable_effect( const item_def &item )
 //
 bool food_is_meat(const item_def &item)
 {
-    ASSERT(item.is_valid() && item.base_type == OBJ_FOOD);
+    ASSERT(item.defined() && item.base_type == OBJ_FOOD);
     return (Food_prop[Food_index[item.sub_type]].carn_mod > 0);
 }
 
 bool food_is_veg( const item_def &item )
 {
-    ASSERT(item.is_valid() && item.base_type == OBJ_FOOD);
+    ASSERT(item.defined() && item.base_type == OBJ_FOOD);
     return (Food_prop[Food_index[item.sub_type]].herb_mod > 0);
 }
 
@@ -2043,7 +2056,7 @@ bool is_blood_potion(const item_def &item)
 // Returns food value for one turn of eating.
 int food_value(const item_def &item)
 {
-    ASSERT(item.is_valid() && item.base_type == OBJ_FOOD);
+    ASSERT(item.defined() && item.base_type == OBJ_FOOD);
 
     const int herb = player_mutation_level(MUT_HERBIVOROUS);
 
@@ -2062,7 +2075,7 @@ int food_value(const item_def &item)
 
 int food_turns(const item_def &item)
 {
-    ASSERT(item.is_valid() && item.base_type == OBJ_FOOD);
+    ASSERT(item.defined() && item.base_type == OBJ_FOOD);
     return (Food_prop[Food_index[item.sub_type]].turns);
 }
 

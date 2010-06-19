@@ -33,7 +33,7 @@ static void _give_monster_item(monsters *mon, int thing,
         return;
 
     item_def &mthing = mitm[thing];
-    ASSERT(mthing.is_valid());
+    ASSERT(mthing.defined());
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
@@ -67,7 +67,7 @@ static void _give_monster_item(monsters *mon, int thing,
         destroy_item(thing, true);
         return;
     }
-    if (!mthing.is_valid()) // missiles merged into an existing stack
+    if (!mthing.defined()) // missiles merged into an existing stack
         return;
     ASSERT(mthing.holding_monster() == mon);
 
@@ -475,7 +475,6 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     case MONS_LOUISE:
     case MONS_NAGA:
     case MONS_NAGA_MAGE:
-    case MONS_RUPERT:
     case MONS_SKELETAL_WARRIOR:
     case MONS_PALE_DRACONIAN:
     case MONS_RED_DRACONIAN:
@@ -485,7 +484,6 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
     case MONS_BLACK_DRACONIAN:
     case MONS_YELLOW_DRACONIAN:
     case MONS_PURPLE_DRACONIAN:
-    case MONS_TIAMAT:
         if (mons_genus(mon->type) == MONS_NAGA)
             item_race = MAKE_ITEM_NO_RACE;
 
@@ -499,6 +497,27 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
             9,  WPN_WAR_AXE,     9, WPN_FLAIL,
             1,  WPN_BROAD_AXE,   1, WPN_SPIKED_FLAIL,
             0);
+        break;
+
+    case MONS_TIAMAT:
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type = random_choose(WPN_BARDICHE, WPN_DEMON_TRIDENT,
+                                      WPN_GLAIVE, -1);
+        level = MAKE_GOOD_ITEM;
+        break;
+
+
+    case MONS_RUPERT:
+        item.base_type = OBJ_WEAPONS;
+        // Rupert favours big two-handers with visceral up-close
+        // effects, i.e. no polearms.
+        item.sub_type = random_choose_weighted(10, WPN_GREAT_MACE,
+                                               6, WPN_GREAT_SWORD,
+                                               2, WPN_TRIPLE_SWORD,
+                                               8, WPN_BATTLEAXE,
+                                               2, WPN_EXECUTIONERS_AXE,
+                                               0);
+        level = MAKE_GOOD_ITEM;
         break;
 
     case MONS_WAYNE:
@@ -749,7 +768,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         item.base_type = OBJ_WEAPONS;
         item.colour    = YELLOW;       // forced by force_item above {dlb}
 
-        item.sub_type  = (one_chance_in(4) ? WPN_HOLY_BLADE
+        item.sub_type  = (one_chance_in(4) ? WPN_EUDEMON_BLADE
                                            : WPN_LONG_SWORD);
 
         set_equip_desc(item, ISFLAG_GLOWING);
@@ -992,10 +1011,44 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
                                        WPN_SABRE, -1);
         break;
 
+    case MONS_SPRIGGAN_RIDER:
+        if (!melee_only && one_chance_in(4))
+        {
+            item.base_type = OBJ_WEAPONS;
+            item.sub_type  = WPN_BLOWGUN;
+            item_race = MAKE_ITEM_NO_RACE;
+            break;
+        }
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = WPN_SPEAR;
+        break;
+
     case MONS_SPRIGGAN_DRUID:
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = WPN_QUARTERSTAFF;
+        break;
+
+    case MONS_SPRIGGAN_DEFENDER:
+    case MONS_THE_ENCHANTRESS:
+        // High end gear, but alas, with an extra chance for distortion.
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = random_choose(WPN_LAJATANG,    // best spriggan weapon
+                                       WPN_QUICK_BLADE, // overrated
+                                       WPN_SABRE,       // ordinary but popular
+                                       WPN_DEMON_WHIP,  // goodness
+                                       WPN_FLAIL,       // best ordinary 1.5-handed
+                                       -1);
+        level = MAKE_GOOD_ITEM;
+        if (one_chance_in(mon->type == MONS_THE_ENCHANTRESS ? 4 : 10))
+        {
+            force_item = true;
+            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_DISTORTION);
+            item.plus      = random2(5);
+            item.plus2     = random2(5);
+        }
         break;
 
     default:
@@ -1329,11 +1382,15 @@ void give_shield(monsters *mon, int level)
         }
         break;
     case MONS_SPRIGGAN:
-        if (one_chance_in(4))
-        {
-            make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER,
-                                  level, MAKE_ITEM_NO_RACE);
-        }
+    case MONS_SPRIGGAN_RIDER:
+        if (!one_chance_in(4))
+            break;
+    case MONS_SPRIGGAN_DEFENDER:
+    case MONS_THE_ENCHANTRESS:
+        make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER,
+                      mon->type == MONS_THE_ENCHANTRESS ? MAKE_GOOD_ITEM :
+                      mon->type == MONS_SPRIGGAN_DEFENDER ? level * 2 + 1 :
+                      level, MAKE_ITEM_NO_RACE);
         break;
     case MONS_NORRIS:
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER,
@@ -1645,6 +1702,7 @@ void give_armour(monsters *mon, int level)
     case MONS_MARA:
     case MONS_MERFOLK_AQUAMANCER:
     case MONS_SPRIGGAN:
+    case MONS_SPRIGGAN_DEFENDER:
         if (item_race == MAKE_ITEM_RANDOM_RACE)
             item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
@@ -1656,6 +1714,11 @@ void give_armour(monsters *mon, int level)
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ROBE;
         force_colour   = GREEN;
+        break;
+
+    case MONS_THE_ENCHANTRESS:
+        force_item = true;
+        make_item_unrandart(item, UNRAND_FAERIE);
         break;
 
     case MONS_TIAMAT:

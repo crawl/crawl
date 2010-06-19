@@ -231,6 +231,7 @@ public:
   unsigned char normal_vision;        // how far the species gets to see
   unsigned char current_vision;       // current sight radius (cells)
 
+  branch_type   hell_branch;          // which branch the player goes to on hell exit
   unsigned char hell_exit;            // which level player goes to on hell exit
 
   // This field is here even in non-WIZARD compiles, since the
@@ -586,6 +587,8 @@ struct player_save_info
     std::string class_name;
     god_type religion;
     std::string second_god_name;
+    game_type saved_game_type;
+
 #ifdef USE_TILE
     dolls_data doll;
     bool held_in_net;

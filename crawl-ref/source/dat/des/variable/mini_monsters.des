@@ -8,6 +8,8 @@
 #           Maps for the Vault branch, including Vaults:8 are in vaults.des.
 ###############################################################################
 
+default-depth: D:9-27, Vault, Elf, Crypt
+
 # Sigmund has been educating the oppressed masses in guerrilla warfare.
 NAME:    sigmund_army
 DEPTH:   D:2-6
@@ -442,6 +444,27 @@ XXXXXXXXXX
 XXXXXXXXXX
 ENDMAP
 
+# Not Minivault 9 (or, elephant zoo)
+NAME:   not_minivault_9_due
+TAGS:   allow_dup
+CHANCE: 1
+DEPTH:  D:20-27, Elf:4-7, Vault:4-8
+MONS:   elephant, dire elephant, hellephant
+MARKER: X = lua: props_marker { connected_exclude="true" }
+SUBST:  X = =
+MAP
+XXXXXXXXXX
+XxXXXXXXXX
+XXXXXXXXXX
+XXX1112XXX
+XXX1321XXX
+XXX1221XXX
+XXX2111XXX
+XXXXXXXXXX
+XXXXXXXXXX
+XXXXXXXXXX
+ENDMAP
+
 # Closed-box minivault
 NAME:  minivault_12
 DEPTH: D:8-26
@@ -462,6 +485,7 @@ ENDMAP
 
 # Little trap spiral
 NAME: minivault_13
+TAGS: abyss ruin_abyss
 SHUFFLE: AB, CD, EH/FG
 KFEAT: ACEH = any trap
 KITEM: ABCD = gold / nothing
@@ -520,7 +544,7 @@ MAP
 ENDMAP
 
 NAME: minivault_20
-TAGS: allow_dup extra luniq_mini
+TAGS: allow_dup extra luniq_mini abyss ruin_abyss
 MAP
 ............
 .xxxx..xxxx.
@@ -537,7 +561,7 @@ MAP
 ENDMAP
 
 NAME:    minivault_25_ag
-TAGS:    allow_dup extra luniq_mini
+TAGS:    allow_dup extra luniq_mini abyss ruin_abyss
 SHUFFLE: XY, ABCDE
 SUBST:   X=x, Y=+
 SUBST:   A=?, B=%%%*, C=T, D=0009, E=89
@@ -557,7 +581,7 @@ MAP
 ENDMAP
 
 NAME: minivault_28
-TAGS: allow_dup
+TAGS: allow_dup abyss ruin_abyss
 MAP
 ...........
 .xxxx.xxxx.
@@ -805,7 +829,7 @@ ENDMAP
 #ENDMAP
 
 NAME:    onia_ninara_dug_in_and_dangerous
-TAGS:    allow_dup
+TAGS:    allow_dup abyss ruin_abyss
 DEPTH:   D:8-26, Vault
 SHUFFLE: vcb, AB?/CD!, d<>, de
 SUBST:   A=9, B=8, C=1, D=9
@@ -1251,32 +1275,32 @@ ENDMAP
 # And for now, something woody (1KB)
 NAME: forest_paths
 DEPTH: D, Lair
-FTILE:  . = floor_lair
-FTILE:  t = floor_lair
-FTILE:  0 = floor_lair
-FTILE:  @ = floor_lair
-FTILE:  * = floor_lair
+FTILE:  .t0@*12 = floor_lair
+: if you.absdepth()>15 then
+MONS:   spriggan, spriggan druid, spriggan rider
+SUBST:  0=1
+: end
 MAP
         xxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxxxx
     xxxxxtttttttttttttttttt.tttttttttttttttttttttxx
  xxxxtttttttttttttttttttttt...ttttttttttttttttttttx
 xxttttttttttttttttttttttttttt..tttttttttttttt0}tttx
 xttttttttt.tt......ttttttttttt..tttttttttttt..ttttx
-xtttttttt.t...ttt.0.tttttttttt.tttttttttt...ttttttx
+xtttttttt.t...ttt.0.tttttttttt.tttttttttt3..ttttttx
 xtt......tttttttt...ttttttttttt.tttttt...ttttttttxx
-xt.ttttttttttttttt....tttttttttt.tttt.tttttttttttxx
-@.ttttttttttttttt..tttttttttttt..tt...ttttttttttttx
-xttttttttttttttt..tttttttttttttt....ttttttttttttttx
+xt.ttttttttttttttt...1tttttttttt.tttt.tttttttttttxx
+@.ttttttttttttttt..tttttttttttt1.tt...ttttttttttttx
+xttttttttttttttt..tttttttttttttt2...ttttttttttttttx
 xtttttttttttttttt..ttttttttttttttt.tttttttttttttttx
-xtttttttttttttttt....tttttttttttt.tttttttttt...tttx
-xtttttttttttttttttt.....tttttttttt..ttttttt..*..ttx
-xttttttttttttttttttttt....ttttttttt.ttttttt.000.ttx
-xttttttttttttttttttttttt...tttttttt.ttttt......tttx
+xtttttttttttttttt1.1.tttttttttttt.tttttttttt...tttx
+xtttttttttttttttttt.1...tttttttttt..ttttttt.2*..ttx
+xttttttttttttttttttttt1...ttttttttt.ttttttt.000.ttx
+xttttttttttttttttttttttt...tttttttt.ttttt1..3.2tttx
 xttttttttttttttttttttttttt....tttt.ttttttt.tt.t0ttx
 xtttttttttttttttttttttttttttt.....tttttttt.tttttttx
-.....ttttttttttttttttttttttt...tttttttttt.ttttttttx
-@.....tttttttt...ttttttttttt...tttttttt..ttttttttxx
-xttttt..ttt....tt...tt........0.ttttt..tttttttttxx
+.....ttttttttttttttttttttttt1..tttttttttt.ttttttttx
+@.....tttttttt...ttttttttttt1..tttttttt..ttttttttxx
+xttttt..ttt....tt...tt.......30.ttttt..tttttttttxx
 xttttttt....ttttttt....ttttttt..ttt..ttttttttttxx
 xxxtttttttttttttttttttttttttttt....ttttttttttxxx
   xxxtttttttttttttttttttttttttttttttttttttxxxx
@@ -1549,4 +1573,22 @@ x111x
 x111x
 x111x
 xx+xx
+ENDMAP
+
+NAME:   kilobyte_rumbling_trees
+DEPTH:  D:12-20, Elf, Lair
+MONS:   patrolling spriggan druid
+FTILE:  .t1@ = floor_lair
+MAP
+ttttt       tttt@t
+tttttt tt ttttt.tt
+t.tttttttttttt.ttt
+@t..ttttttttt.tttt
+tttt..t.ttt..tttt
+tttttt.1...ttttt
+ ttttt..tttttttt
+ tttt.ttttttttt
+tttt.tttttttt
+tttt.tttttt
+ tttt@ttt
 ENDMAP

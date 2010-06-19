@@ -1968,14 +1968,14 @@ std::string get_item_description( const item_def &item, bool verbose,
                     const int recharge_rate = short(item.props["rod_enchantment"]);
                     if (recharge_rate < max_recharge_rate)
                     {
-                        description << "\nIt's current recharge rate is "
+                        description << "\nIts current recharge rate is "
                                     << (recharge_rate >= 0 ? "+" : "")
                                     << recharge_rate << ". It can be magically "
                                     << "recharged up to +" << max_recharge_rate
                                     << ".";
                     }
                     else
-                        description << "\nIt's recharge rate is at maximum.";
+                        description << "\nIts recharge rate is at maximum.";
                 }
                 else
                 {
@@ -2322,7 +2322,7 @@ static bool _describe_spells(const item_def &item)
 //---------------------------------------------------------------
 bool describe_item( item_def &item, bool allow_inscribe, bool shopping )
 {
-    if (!item.is_valid())
+    if (!item.defined())
         return (true);
 
     while (true)
@@ -3378,7 +3378,8 @@ static std::string _religion_help(god_type god)
                 result += " ";
 
             result += "You can pray at an altar to have your weapon "
-                      "blessed, especially a long blade or demon whip.";
+                      "blessed, especially a long blade or demon "
+                      "weapon.";
         }
         break;
     }
@@ -3879,6 +3880,13 @@ void describe_god( god_type which_god, bool give_title )
                 _print_final_god_abil_desc(which_god, buf,
                                            ABIL_JIYVA_JELLY_PARALYSE);
             }
+            const char *how = (you.piety >= 150) ? "carefully" :
+                              (you.piety >= 100) ? "often" :
+                              (you.piety >=  50) ? "sometimes" :
+                                                   "occasionally";
+
+            cprintf("%s %s shields you from corrosive effects.\n",
+                    god_name(which_god).c_str(), how);
         }
         else if (which_god == GOD_FEDHAS)
         {

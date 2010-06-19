@@ -373,6 +373,8 @@ ENDMAP
 
 # not finished!
 NAME: ziggurat_arena
+# Just to keep the map compiler happy:
+TAGS: ziggurat_arena
 MAP
 nnnnnnnnnnnnnn
 n...........An

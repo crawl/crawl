@@ -34,6 +34,8 @@
 #
 ###############################################################################
 
+default-depth: D
+
 ######################################
 # I    Temples (Multi-altar vaults)
 ######################################
@@ -482,6 +484,7 @@ ENDMAP
 ###############################################################################
 # Altars to the good gods by TGW.
 NAME:    tgw_good
+DEPTH:   5-27
 TAGS:    no_item_gen no_monster_gen
 SHUFFLE: XYZ
 KFEAT:   X = altar_shining_one
@@ -557,6 +560,7 @@ xxxxx
 ENDMAP
 
 NAME:  fedhas_bush_and_centaur_altar
+DEPTH: 3-27
 KFEAT: _ = altar_fedhas
 MONS:  centaur, bush
 MAP

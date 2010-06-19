@@ -35,6 +35,7 @@
 #include "godabil.h"
 #include "goditem.h"
 #include "godpassive.h"
+#include "hiscores.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
@@ -544,6 +545,8 @@ bool you_can_wear(int eq, bool special_armour)
         {
             return (false);
         }
+        if (player_mutation_level(MUT_CLAWS) >= 3)
+            return (false);
         return (true);
 
     case EQ_BOOTS:
@@ -754,7 +757,7 @@ bool berserk_check_wielded_weapon()
         return (true);
 
     const item_def weapon = *you.weapon();
-    if (weapon.is_valid() && weapon.base_type != OBJ_STAVES
+    if (weapon.defined() && weapon.base_type != OBJ_STAVES
            && (weapon.base_type != OBJ_WEAPONS || is_range_weapon(weapon))
         || you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED])
     {
@@ -2511,7 +2514,8 @@ void gain_exp( unsigned int exp_gained, unsigned int* actual_gain,
         exp_gained /= 2;
     }
 
-    if (crawl_state.game_is_sprint()) {
+    if (crawl_state.game_is_sprint())
+    {
         exp_gained = sprint_modify_exp(exp_gained);
     }
 
@@ -3009,15 +3013,23 @@ void level_change(bool skip_attribute_increase)
                                 != first_body_facet)
                         {
                             if (you.experience_level == level)
-                                 mpr("You feel monstrous as your "
+                            {
+                                mpr("You feel monstrous as your "
                                      "demonic heritage exerts itself.",
                                      MSGCH_MUTATION);
+
+#ifdef DGL_MILESTONES
+                                mark_milestone("monstrous", "is a "
+                                               "monstrous demonspawn!");
+#endif
+                            }
 
                             i = you.demonic_traits.size();
                             break;
                         }
 
-                        if (first_body_facet == NUM_MUTATIONS) {
+                        if (first_body_facet == NUM_MUTATIONS)
+                        {
                             first_body_facet = you.demonic_traits[i].mutation;
                             level = you.demonic_traits[i].level_gained;
                         }
@@ -3039,11 +3051,11 @@ void level_change(bool skip_attribute_increase)
                         perma_mutate(you.demonic_traits[i].mutation, 1);
                     }
                 }
-            }
+
                 if (!(you.experience_level % 4))
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
-
                 break;
+            }
 
             case SP_GHOUL:
                 // lowered because of HD raise -- bwr
@@ -3790,13 +3802,13 @@ bool extrinsic_amulet_effect(jewellery_type amulet)
     case AMU_CLARITY:
         return (player_mutation_level(MUT_CLARITY) > 0);
     case AMU_RESIST_CORROSION:
-        if (you.religion == GOD_JIYVA && you.piety > piety_breakpoint(2))
+        if (you.religion == GOD_JIYVA && you.piety >= piety_breakpoint(2))
             return (true);
         // else fall-through
     case AMU_CONSERVATION:
         return (player_equip_ego_type(EQ_CLOAK, SPARM_PRESERVATION) > 0
                 || (you.religion == GOD_JIYVA
-                     && you.piety > piety_breakpoint(4)));
+                     && you.piety >= piety_breakpoint(4)));
     case AMU_THE_GOURMAND:
         return (player_mutation_level(MUT_GOURMAND) > 0);
     default:
@@ -5167,6 +5179,10 @@ player_save_info player_save_info::operator=(const player& rhs)
     class_name       = rhs.class_name;
     religion         = rhs.religion;
     second_god_name  = rhs.second_god_name;
+
+    // [ds] Perhaps we should move game type to player?
+    saved_game_type  = crawl_state.type;
+
 #ifdef USE_TILE
     held_in_net      = false;
 #endif
@@ -5183,6 +5199,12 @@ bool player_save_info::operator<(const player_save_info& rhs) const
 std::string player_save_info::short_desc() const
 {
     std::ostringstream desc;
+
+    const std::string qualifier =
+        game_state::game_type_name_for(saved_game_type);
+    if (!qualifier.empty())
+        desc << "[" << qualifier << "] ";
+
     desc << name << ", a level " << experience_level << ' '
          << species_name(species) << ' ' << class_name;
 

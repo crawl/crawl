@@ -1212,6 +1212,12 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_YAK;
     case MONS_DEATH_YAK:
         return TILEP_MONS_DEATH_YAK;
+    case MONS_ELEPHANT:
+        return TILEP_MONS_ELEPHANT;
+    case MONS_DIRE_ELEPHANT:
+        return TILEP_MONS_DIRE_ELEPHANT;
+    case MONS_HELLEPHANT:
+        return TILEP_MONS_HELLEPHANT;
 
     // large zombies etc. ('Z')
     case MONS_ZOMBIE_LARGE:
@@ -1957,20 +1963,23 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_WHIP:
         return TILE_WPN_WHIP;
 
-    case WPN_HOLY_SCOURGE:
-        return TILE_WPN_HOLY_SCOURGE;
-
     case WPN_DEMON_BLADE:
         return TILE_WPN_DEMON_BLADE;
+
+    case WPN_EUDEMON_BLADE:
+        return TILE_WPN_BLESSED_BLADE;
 
     case WPN_DEMON_WHIP:
         return TILE_WPN_DEMON_WHIP;
 
+    case WPN_HOLY_SCOURGE:
+        return TILE_WPN_HOLY_SCOURGE;
+
     case WPN_DEMON_TRIDENT:
         return TILE_WPN_DEMON_TRIDENT;
 
-    case WPN_HOLY_BLADE:
-        return TILE_WPN_BLESSED_BLADE;
+    case WPN_TRISHULA:
+        return TILE_WPN_TRISHULA;
 
     case WPN_LONGBOW:
         return TILE_WPN_LONGBOW;

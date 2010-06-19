@@ -252,9 +252,10 @@ int CLua::loadfile(lua_State *ls, const char *filename, bool trusted,
     return (luaL_loadfile(ls, file.c_str()));
 }
 
-int CLua::execfile(const char *filename, bool trusted, bool die_on_fail)
+int CLua::execfile(const char *filename, bool trusted, bool die_on_fail,
+                   bool force)
 {
-    if (sourced_files.find(filename) != sourced_files.end())
+    if (!force && sourced_files.find(filename) != sourced_files.end())
         return 0;
 
     sourced_files.insert(filename);

@@ -322,9 +322,8 @@ void DollEditRegion::run()
 
     // Initialise job default.
     m_job_default = equip_doll;
-    tilep_race_default(you.species, doll_gender,
-                       you.experience_level, &m_job_default);
-    tilep_job_default(you.char_class, doll_gender, &m_job_default);
+    tilep_race_default(you.species, you.experience_level, &m_job_default);
+    tilep_job_default(you.char_class, &m_job_default);
 
     // Read predefined dolls from file.
     for (unsigned int i = 0; i < NUM_MAX_DOLLS; ++i)

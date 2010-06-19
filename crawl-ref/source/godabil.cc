@@ -651,9 +651,18 @@ bool vehumet_supports_spell(spell_type spell)
     if (spell_typematch(spell, SPTYP_CONJURATION | SPTYP_SUMMONING))
         return (true);
 
+    // Conjurations work by conjuring up a chunk of short-lived matter and
+    // propelling it towards the victim.  This is the most popular way, but
+    // by no means it has a monopoly for being destructive.
+    // Vehumet loves all direct physical destruction.
     if (spell == SPELL_SHATTER
-        || spell == SPELL_FRAGMENTATION
-        || spell == SPELL_SANDBLAST)
+        || spell == SPELL_FRAGMENTATION // LRD
+        || spell == SPELL_SANDBLAST
+        || spell == SPELL_AIRSTRIKE
+        || spell == SPELL_IGNITE_POISON
+        || spell == SPELL_OZOCUBUS_REFRIGERATION
+        // Toxic Radiance does no direct damage
+        || spell == SPELL_BONE_SHARDS)
     {
         return (true);
     }
@@ -1667,7 +1676,7 @@ static int _collect_fruit(std::vector<std::pair<int,int> >& available_fruit)
 
     for (int i = 0; i < ENDOFPACK; i++)
     {
-        if (you.inv[i].is_valid() && is_fruit(you.inv[i]))
+        if (you.inv[i].defined() && is_fruit(you.inv[i]))
         {
             total += you.inv[i].quantity;
             available_fruit.push_back(std::make_pair(you.inv[i].quantity, i));

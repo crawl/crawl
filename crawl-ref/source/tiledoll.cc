@@ -44,7 +44,6 @@ dolls_data::~dolls_data()
 }
 
 dolls_data player_doll;
-int doll_gender = -1;
 
 bool save_doll_data(int mode, int num, const dolls_data* dolls)
 {
@@ -141,11 +140,8 @@ bool load_doll_data(const char *fn, dolls_data *dolls, int max,
             // use the default/equipment setting.
             if (*mode != TILEP_MODE_LOADING)
             {
-                if (doll_gender == -1)
-                    doll_gender = coinflip();
-
                 if (*mode == TILEP_MODE_DEFAULT)
-                    tilep_job_default(you.char_class, doll_gender, &dolls[0]);
+                    tilep_job_default(you.char_class, &dolls[0]);
 
                 // If we don't need to load a doll, return now.
                 fclose(fp);
@@ -162,7 +158,6 @@ bool load_doll_data(const char *fn, dolls_data *dolls, int max,
                 {
                     tilep_scan_parts(fbuf, dolls[0], you.species,
                                      you.experience_level);
-                    doll_gender = get_gender_from_tile(dolls[0]);
                     break;
                 }
             }
@@ -199,22 +194,18 @@ void init_player_doll()
     if (mode == TILEP_MODE_LOADING)
     {
         player_doll = dolls[cur];
-        tilep_race_default(you.species, doll_gender, you.experience_level,
-                           &player_doll);
+        tilep_race_default(you.species, you.experience_level, &player_doll);
         return;
     }
 
-    if (doll_gender == -1)
-        doll_gender = coinflip();
-
     for (int i = 0; i < TILEP_PART_MAX; i++)
         player_doll.parts[i] = TILEP_SHOW_EQUIP;
-    tilep_race_default(you.species, doll_gender, you.experience_level, &player_doll);
+    tilep_race_default(you.species, you.experience_level, &player_doll);
 
     if (mode == TILEP_MODE_EQUIP)
         return;
 
-    tilep_job_default(you.char_class, doll_gender, &player_doll);
+    tilep_job_default(you.char_class, &player_doll);
 }
 
 static int _get_random_doll_part(int p)
@@ -249,8 +240,7 @@ void create_random_doll(dolls_data &rdoll)
     if (coinflip())
         _fill_doll_part(rdoll, TILEP_PART_HELM);
 
-    // Only male dolls get a chance at a beard.
-    if (get_gender_from_tile(rdoll) == TILEP_GENDER_MALE && one_chance_in(4))
+    if (one_chance_in(4))
         _fill_doll_part(rdoll, TILEP_PART_BEARD);
 }
 
@@ -273,10 +263,7 @@ void fill_doll_equipment(dolls_data &result)
     // Base tile.
     if (result.parts[TILEP_PART_BASE] == TILEP_SHOW_EQUIP)
     {
-        if (doll_gender == -1)
-            doll_gender = get_gender_from_tile(player_doll);
-        tilep_race_default(you.species, doll_gender, you.experience_level,
-                           &result);
+        tilep_race_default(you.species, you.experience_level, &result);
     }
 
     // Main hand.

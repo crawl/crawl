@@ -81,7 +81,7 @@ void debug_item_scan( void )
             }
 
             // Check for invalid (zero quantity) items that are linked in.
-            if (!mitm[obj].is_valid())
+            if (!mitm[obj].defined())
             {
                 mprf(MSGCH_ERROR, "Linked invalid item at (%d,%d)!",
                      ri->x, ri->y);
@@ -112,7 +112,7 @@ void debug_item_scan( void )
     // Now scan all the items on the level:
     for (i = 0; i < MAX_ITEMS; ++i)
     {
-        if (!mitm[i].is_valid())
+        if (!mitm[i].defined())
             continue;
 
         strlcpy(name, mitm[i].name(DESC_PLAIN).c_str(), sizeof(name));
@@ -388,7 +388,7 @@ void debug_mons_scan()
             }
             item_def &item(mitm[idx]);
 
-            if (!item.is_valid())
+            if (!item.defined())
             {
                 _announce_level_prob(warned);
                 warned = true;

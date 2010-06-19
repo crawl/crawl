@@ -12,8 +12,8 @@ struct packed_cell
 {
     packed_cell() : num_dngn_overlay(0) {}
 
-    unsigned int fg;
-    unsigned int bg;
+    tileidx_t fg;
+    tileidx_t bg;
     tile_flavour flv;
 
     // For anything that requires multiple dungeon tiles (such as waves)

@@ -70,7 +70,7 @@ static bool _wounded_damaged(monster_type mon_type);
 
 int _make_mimic_item(monster_type type)
 {
-    int it = items(0, OBJ_UNASSIGNED, 0, true, 0, 0);
+    int it = items(0, OBJ_RANDOM, OBJ_RANDOM, true, 0, 0);
 
     if (it == NON_ITEM)
         return NON_ITEM;
@@ -196,7 +196,7 @@ bool curse_an_item( bool decay_potions, bool quiet )
 
     for (int i = 0; i < ENDOFPACK; i++)
     {
-        if (!you.inv[i].is_valid())
+        if (!you.inv[i].defined())
             continue;
 
         if (you.inv[i].base_type == OBJ_WEAPONS
@@ -276,10 +276,10 @@ void monster_drop_ething(monsters *monster, bool mark_item_origins,
             }
             else
             {
-                if (monster->friendly() && mitm[item].is_valid())
+                if (monster->friendly() && mitm[item].defined())
                     mitm[item].flags |= ISFLAG_DROPPED_BY_ALLY;
 
-                if (mark_item_origins && mitm[item].is_valid())
+                if (mark_item_origins && mitm[item].defined())
                     origin_set_monster(mitm[item], monster);
 
                 // If a monster is swimming, the items are ALREADY underwater
@@ -350,8 +350,7 @@ monster_type fill_out_corpse(const monsters* monster, item_def& corpse,
     if (!monster->mname.empty())
     {
         corpse.props[CORPSE_NAME_KEY] = monster->mname;
-        corpse.props[CORPSE_NAME_TYPE_KEY]
-            = (long) (monster->flags & MF_NAME_MASK);
+        corpse.props[CORPSE_NAME_TYPE_KEY] = (long) monster->flags;
     }
     else if (mons_is_unique(monster->type))
     {
@@ -1105,8 +1104,7 @@ void _monster_die_cloud(const monsters* monster, bool corpse, bool silent,
         prefix = "'s corpse ";
     }
 
-    std::string msg = summoned_poof_msg(monster);
-    msg += "!";
+    std::string msg = summoned_poof_msg(monster) + "!";
 
     cloud_type cloud = CLOUD_NONE;
     if (msg.find("smoke") != std::string::npos)
@@ -1274,7 +1272,7 @@ static std::string _killer_type_name(killer_type killer)
 
 // Returns the slot of a possibly generated corpse or -1.
 int monster_die(monsters *monster, killer_type killer,
-                int killer_index, bool silent, bool wizard)
+                int killer_index, bool silent, bool wizard, bool fake)
 {
     if (invalid_monster(monster))
         return (-1);
@@ -1284,7 +1282,8 @@ int monster_die(monsters *monster, killer_type killer,
     if (you.level_type == LEVEL_ABYSS)
         monster->flags &= ~MF_BANISHED;
 
-    if (!silent && _monster_avoided_death(monster, killer, killer_index))
+    if (!silent && !fake
+        && _monster_avoided_death(monster, killer, killer_index))
     {
         monster->flags &= ~MF_EXPLODE_KILL;
         return (-1);
@@ -1625,7 +1624,8 @@ int monster_die(monsters *monster, killer_type killer,
                     || you.religion == GOD_SHINING_ONE
                        && (monster->is_evil() || monster->is_unholy()))
                 && !player_under_penance()
-                && random2(you.piety) >= piety_breakpoint(0))
+                && random2(you.piety) >= piety_breakpoint(0)
+                && !you.duration[DUR_DEATHS_DOOR])
             {
                 if (you.hp < you.hp_max)
                 {
@@ -2056,11 +2056,19 @@ int monster_die(monsters *monster, killer_type killer,
         _monster_die_cloud(monster, !mons_reset, silent, summoned);
 
     int corpse = -1;
-    if (!mons_reset)
+    if (!mons_reset && !summoned)
     {
         // Have to add case for disintegration effect here? {dlb}
-        if (!summoned)
-            corpse = place_monster_corpse(monster, silent);
+        int corpse2 = -1;
+
+        if (monster->type == MONS_SPRIGGAN_RIDER)
+        {
+            corpse2 = mounted_kill(monster, MONS_FIREFLY, killer, killer_index);
+            monster->type = MONS_SPRIGGAN;
+        }
+        corpse = place_monster_corpse(monster, silent);
+        if (corpse == -1)
+            corpse = corpse2;
     }
 
     if ((killer == KILL_YOU
@@ -2071,7 +2079,8 @@ int monster_die(monsters *monster, killer_type killer,
     {
         const int pbd_dur = player_mutation_level(MUT_POWERED_BY_DEATH) * 8
                             + roll_dice(2, 8);
-        you.set_duration(DUR_POWERED_BY_DEATH, pbd_dur);
+        if (pbd_dur > you.duration[DUR_POWERED_BY_DEATH])
+            you.set_duration(DUR_POWERED_BY_DEATH, pbd_dur);
     }
 
     unsigned int exp_gain = 0, avail_gain = 0;
@@ -2102,6 +2111,12 @@ int monster_die(monsters *monster, killer_type killer,
 
         curr_PlaceInfo += delta;
         curr_PlaceInfo.assert_validity();
+    }
+
+    if (fake)
+    {
+        crawl_state.dec_mon_acting(monster);
+        return (corpse);
     }
 
     mons_remove_from_grid(monster);
@@ -2169,6 +2184,19 @@ void monster_cleanup(monsters *monster)
 
     if (you.pet_target == monster_killed)
         you.pet_target = MHITNOT;
+}
+
+int mounted_kill(monsters *daddy, monster_type mc, killer_type killer,
+                int killer_index)
+{
+    monsters mon;
+    mon.type = mc;
+    mon.moveto(daddy->pos());
+    define_monster(&mon);
+    mon.flags = daddy->flags;
+    mon.attitude = daddy->attitude;
+
+    return monster_die(&mon, killer, killer_index, false, false, true);
 }
 
 // If you're invis and throw/zap whatever, alerts menv to your position.
@@ -3624,7 +3652,7 @@ static void _vanish_orig_eq(monsters* mons)
 
         item_def &item(mitm[mons->inv[i]]);
 
-        if (!item.is_valid())
+        if (!item.defined())
             continue;
 
         if (item.orig_place != 0 || item.orig_monnum != 0
@@ -3639,7 +3667,8 @@ static void _vanish_orig_eq(monsters* mons)
     }
 }
 
-int dismiss_monsters(std::string pattern) {
+int dismiss_monsters(std::string pattern)
+{
     // Make all of the monsters' original equipment disappear unless "keepitem"
     // is found in the regex (except for fixed arts and unrand arts).
     const bool keep_item = strip_tag(pattern, "keepitem");
@@ -3878,7 +3907,8 @@ std::string summoned_poof_msg(const monsters* monster, bool plural)
             msg = "dissolve%s into sparkling lights";
         }
 
-        if(mons_is_slime(monster) && monster->god == GOD_JIYVA)
+        if (mons_is_slime(monster)
+            && monster->god == GOD_JIYVA)
         {
             msg = "dissolve%s into a puddle of slime";
         }

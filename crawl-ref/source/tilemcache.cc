@@ -397,6 +397,10 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = -2;
         *ofs_y = 0;
         break;
+    case TILEP_MONS_HILL_GIANT:
+        *ofs_x = -3;
+        *ofs_y = 0;
+        break;
     // Shift to the right.
     case TILEP_MONS_YAKTAUR_MELEE:
         *ofs_x = 2;
@@ -643,11 +647,9 @@ mcache_ghost::mcache_ghost(const monsters *mon)
     const struct ghost_demon &ghost = *mon->ghost;
 
     unsigned int pseudo_rand = ghost.max_hp * 54321 * 54321;
-    int gender = (pseudo_rand >> 8) & 1;
 
-    tilep_race_default(ghost.species, gender,
-                       ghost.xl, &m_doll);
-    tilep_job_default(ghost.job, gender, &m_doll);
+    tilep_race_default(ghost.species, ghost.xl, &m_doll);
+    tilep_job_default(ghost.job, &m_doll);
 
     for (int p = TILEP_PART_CLOAK; p < TILEP_PART_MAX; p++)
     {

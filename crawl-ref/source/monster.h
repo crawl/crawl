@@ -2,6 +2,7 @@
 #define MONSTER_H
 
 #include "actor.h"
+#include <stdint.h>
 
 const int KRAKEN_TENTACLE_RANGE = 3;
 #define TIDE_CALL_TURN "tide-call-turn"
@@ -86,9 +87,9 @@ public:
     unsigned short foe;
     char ench_countdown;
     mon_enchant_list enchantments;
-    unsigned long flags;               // bitfield of boolean flags
+    uint64_t flags;                    // bitfield of boolean flags
 
-    unsigned long experience;
+    unsigned int experience;
     monster_type  base_monster;        // zombie base monster, draconian colour
     unsigned int  number;              // #heads (hydra), etc.
     int           colour;

@@ -155,26 +155,26 @@ struct mgen_data
 
     static mgen_data sleeper_at(monster_type what,
                                 const coord_def &where,
-                                unsigned flags = 0)
+                                unsigned nflags = 0)
     {
-        return mgen_data(what, BEH_SLEEP, 0, 0, 0, where, MHITNOT, flags);
+        return mgen_data(what, BEH_SLEEP, 0, 0, 0, where, MHITNOT, nflags);
     }
 
     static mgen_data hostile_at(monster_type mt,
-                                std::string summoner,
+                                std::string nsummoner,
                                 bool alert = false,
                                 int abj = 0,
                                 int st = 0,
                                 const coord_def &p = coord_def(-1, -1),
                                 unsigned monflags = 0,
-                                god_type god = GOD_NO_GOD,
+                                god_type ngod = GOD_NO_GOD,
                                 monster_type base = MONS_NO_MONSTER)
 
     {
         return mgen_data(mt, BEH_HOSTILE, 0, abj, st, p,
                          alert ? MHITYOU : MHITNOT,
-                         monflags, god, base, 0, BLACK, you.absdepth0,
-                         PROX_ANYWHERE, you.level_type, 0, 0, 0, "", summoner);
+                         monflags, ngod, base, 0, BLACK, you.absdepth0,
+                         PROX_ANYWHERE, you.level_type, 0, 0, 0, "", nsummoner);
     }
 };
 

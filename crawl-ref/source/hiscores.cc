@@ -89,19 +89,14 @@ std::string score_file_name()
     else
         ret = Options.save_dir + "scores";
 
-    if (crawl_state.game_is_sprint())
-        ret += "-sprint";
-    if (crawl_state.game_is_tutorial())
-        ret += "-tutorial";
-    if (crawl_state.game_is_hints())
-        ret += "-hints";
+    ret += crawl_state.game_type_qualifier();
 
     return (ret);
 }
 
 std::string log_file_name()
 {
-    return (Options.save_dir + "logfile");
+    return (Options.save_dir + "logfile" + crawl_state.game_type_qualifier());
 }
 
 void hiscores_new_entry( const scorefile_entry &ne )
@@ -567,8 +562,7 @@ bool scorefile_entry::parse(const std::string &line)
     // Leading colon implies 4.0 style line:
     if (line[0] == ':')
     {
-        end(1, false, "Cannot read 4.0-style scorefiles");
-        // Keep gcc happy:
+        dprf("Corrupted xlog-line: %s", line.c_str());
         return (false);
     }
 
@@ -720,7 +714,8 @@ void scorefile_entry::set_base_xlog_fields() const
         fields.reset(new xlog_fields);
 
     std::string score_version = SCORE_VERSION;
-    if (crawl_state.game_is_sprint()) {
+    if (crawl_state.game_is_sprint())
+    {
         /* XXX: hmmm, something better here? */
         score_version += "-sprint.1";
     }
@@ -1137,7 +1132,7 @@ void scorefile_entry::init()
     // Calculate value of pack and runes when character leaves dungeon
     for (int d = 0; d < ENDOFPACK; d++)
     {
-        if (you.inv[d].is_valid())
+        if (you.inv[d].defined())
         {
             if (calc_item_values)
                 points += item_value( you.inv[d], true );
@@ -2317,7 +2312,8 @@ void mark_milestone(const std::string &type,
 {
     if (crawl_state.game_is_arena() || !crawl_state.need_save)
         return;
-    const std::string milestone_file = Options.save_dir + "milestones.txt";
+    const std::string milestone_file =
+        (Options.save_dir + "milestones" + crawl_state.game_type_qualifier());
     if (FILE *fp = lk_open("a", milestone_file))
     {
         const scorefile_entry se(0, 0, KILL_MISC, NULL);

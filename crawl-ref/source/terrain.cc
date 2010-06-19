@@ -752,7 +752,8 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
         return;
 
     // Move terrain.
-    move_notable_thing(src, dst);
+    if (you.level_type == LEVEL_DUNGEON)
+        move_notable_thing(src, dst);
 
     const dungeon_feature_type dfeat = grd(src);
     if (dfeat == DNGN_ENTER_SHOP)

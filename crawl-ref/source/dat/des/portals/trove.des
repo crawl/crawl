@@ -435,9 +435,9 @@ WEIGHT:  60
 ORIENT:  encompass
 TAGS:    trove no_item_gen no_monster_gen allow_dup
 # Loot: 16 items.
-ITEM:   any good_item
-ITEM:   acquire jewellery / any good_item
-ITEM:   acquire weapon / acquire armour / any good_item
+ITEM:   any useful good_item
+ITEM:   acquire jewellery / any useful good_item
+ITEM:   acquire weapon / acquire armour / any useful good_item
 : trove.setup_features(_G)
 epilogue{{
 trove.milestone(_G)
@@ -493,9 +493,9 @@ MONS:    plant col:white
 MONS:    plant col:white / plant col:blue w:6
 MONS:    plant col:white / plant col:cyan w:3 / plant col:blue w:3
 #
-ITEM:    any good_item
-ITEM:    any jewellery good_item / any good_item
-ITEM:    any weapon good_item / any armour good_item / any good_item
+ITEM:    any useful good_item
+ITEM:    any useful jewellery good_item / any useful good_item
+ITEM:    any useful weapon good_item / any useful armour good_item / any useful good_item
 KFEAT:   w = W
 : trove.setup_features(_G)
 : trove.place_fog(_G, "blue smoke", 30)
@@ -584,7 +584,7 @@ WEIGHT: 20
 ORIENT: encompass
 TAGS:   trove no_item_gen no_monster_gen allow_dup
 # Loot: once again, 16 items.
-ITEM:   acquire jewellery / any jewellery good_item / any jewellery
+ITEM:   acquire jewellery / any useful jewellery good_item / any jewellery
 COLOUR: o = blue
 : trove.setup_features(_G)
 epilogue{{
@@ -613,7 +613,7 @@ WEIGHT: 20
 ORIENT: encompass
 TAGS:   trove no_item_gen no_monster_gen allow_dup
 # Loot: once again, 16 items.
-ITEM:   acquire jewellery / any jewellery good_item / any jewellery w:2
+ITEM:   acquire jewellery / any useful jewellery good_item / any jewellery w:2
 COLOUR: x = blue
 : trove.setup_features(_G)
 epilogue{{
@@ -640,7 +640,7 @@ ORIENT: encompass
 TAGS:   trove no_item_gen no_monster_gen allow_dup
 # Loot: once again, 16 items.
 COLOUR: o = blue
-ITEM:   acquire weapon / any weapon good_item / any weapon w:2
+ITEM:   acquire weapon / any useful weapon good_item / any weapon w:2
 : trove.setup_features(_G)
 MAP
 xxxxxxxx
@@ -670,7 +670,7 @@ ORIENT: encompass
 TAGS:   trove no_item_gen no_monster_gen allow_dup
 # Loot: once again, 16 items.
 COLOUR: x = blue
-ITEM:   acquire weapon / any weapon good_item / any weapon w:2
+ITEM:   acquire weapon / any useful weapon good_item / any weapon w:2
 : trove.setup_features(_G)
 epilogue{{
 trove.milestone(_G)
@@ -692,7 +692,7 @@ ORIENT: encompass
 TAGS:   trove no_item_gen no_monster_gen allow_dup
 # Loot: once again, 16 items.
 COLOUR: o = blue
-ITEM:   acquire armour / any armour good_item / any armour w:2
+ITEM:   acquire armour / any useful armour good_item / any armour w:2
 : trove.setup_features(_G)
 epilogue{{
 trove.milestone(_G)
@@ -721,7 +721,7 @@ ORIENT: encompass
 TAGS:   trove no_item_gen no_monster_gen allow_dup
 # Loot: once again, 16 items.
 COLOUR: x = blue
-ITEM:   acquire armour / any armour good_item / any armour w:2
+ITEM:   acquire armour / any useful armour good_item / any armour w:2
 : trove.setup_features(_G)
 epilogue{{
 trove.milestone(_G)
@@ -748,9 +748,9 @@ MONS:    storm dragon zombie
 MONS:    golden dragon zombie
 MONS:    dragon skeleton
 ITEM:    animal skin good_item / any armour good_item
-ITEM:    gold dragon hide / storm dragon hide / dragon hide / troll hide / any armour good_item
+ITEM:    gold dragon hide / storm dragon hide / dragon hide / troll hide / any useful armour good_item
 ITEM:    arrow good_item / dart good_item / bolt good_item / any missile good_item
-ITEM:    bow good_item / crossbow good_item / any weapon good_item
+ITEM:    bow good_item / crossbow good_item / any useful weapon good_item
 SHUFFLE: 123
 SHUFFLE: defg
 : trove.setup_features(_G)
@@ -782,9 +782,9 @@ COLOUR: = = blue
 # Rock is actually diggable for those people driven made by hatred.
 MONS:   vampire
 # 24 items, just because we're feeling generous.
-ITEM:   any good_item w:10 / any
-ITEM:   any jewellery good_item / any good_item
-ITEM:   acquire weapon / acquire armour / any good_item
+ITEM:   any useful good_item w:10 / any
+ITEM:   any useful jewellery good_item / any useful good_item
+ITEM:   acquire weapon / acquire armour / any useful good_item
 : trove.setup_features(_G)
 epilogue{{
 trove.milestone(_G)
@@ -812,9 +812,9 @@ COLOUR: = = blue
 KFEAT:  1 = deep_water
 KMONS:  1 = shining eye
 # 28 items, 'cos this one is *nasty*. The extra items are potions of cure mutation.
-ITEM:   any good_item / any
-ITEM:   any jewellery good_item / any good_item
-ITEM:   acquire weapon / acquire armour / any good_item
+ITEM:   any useful good_item / any
+ITEM:   any useful jewellery good_item / any useful good_item
+ITEM:   acquire weapon / acquire armour / any useful good_item
 ITEM:   potion of cure mutation
 : trove.setup_features(_G)
 : set_border_fill_type("deep_water")

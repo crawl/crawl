@@ -567,7 +567,7 @@ bool monsters::can_wield(const item_def& item, bool ignore_curse,
 bool monsters::could_wield(const item_def &item, bool ignore_brand,
                            bool /* ignore_transform */) const
 {
-    ASSERT(item.is_valid());
+    ASSERT(item.defined());
 
     // These *are* weapons, so they can't wield another weapon.
     if (type == MONS_DANCING_WEAPON)
@@ -1018,7 +1018,7 @@ void monsters::pickup_message(const item_def &item, int near)
 
 bool monsters::pickup(item_def &item, int slot, int near, bool force_merge)
 {
-    ASSERT(item.is_valid());
+    ASSERT(item.defined());
 
     const monsters *other_mon = item.holding_monster();
 
@@ -1265,7 +1265,7 @@ static bool _is_signature_weapon(monsters *monster, const item_def &weapon)
         return (weapon.sub_type == WPN_HOLY_SCOURGE);
 
     if (monster->type == MONS_DAEVA)
-        return (weapon.sub_type == WPN_HOLY_BLADE);
+        return (weapon.sub_type == WPN_EUDEMON_BLADE);
 
     // Some other uniques have a signature weapon, usually because they
     // always spawn with it, or because it is referenced in their speech
@@ -3098,6 +3098,10 @@ int monsters::armour_class() const
 int monsters::melee_evasion(const actor *act, ev_ignore_type evit) const
 {
     int evasion = ev;
+
+    // Phase Shift EV is already included.
+    if (evit & EV_IGNORE_PHASESHIFT && mons_class_flag(type, M_PHASE_SHIFT))
+        evasion -= 8;
 
     if (evit & EV_IGNORE_HELPLESS)
         return (evasion);
@@ -6238,6 +6242,54 @@ void monsters::react_to_damage(const actor *oppressor, int damage,
     {
         place_cloud(CLOUD_FIRE, pos(), 20+random2(15),
                     actor_kill_alignment(oppressor), 5);
+    }
+    else if (type == MONS_SPRIGGAN_RIDER)
+    {
+        if (hit_points + damage > max_hit_points / 2)
+            damage = max_hit_points / 2 - hit_points;
+        if (damage > 0 && x_chance_in_y(damage, damage + hit_points))
+        {
+            bool fly_died = coinflip();
+            int old_hp                = hit_points;
+            unsigned long old_flags   = flags;
+            mon_enchant_list old_ench = enchantments;
+            char old_ench_countdown   = ench_countdown;
+
+            if (!fly_died)
+                monster_drop_ething(this, mons_aligned(oppressor, &you));
+
+            type = fly_died ? MONS_SPRIGGAN : MONS_FIREFLY;
+            define_monster(this);
+            hit_points = std::min(old_hp, hit_points);
+            flags          = old_flags;
+            enchantments   = old_ench;
+            ench_countdown = old_ench_countdown;
+
+            mounted_kill(this, fly_died ? MONS_FIREFLY : MONS_SPRIGGAN,
+                !oppressor ? KILL_MISC
+                : (oppressor->atype() == ACT_PLAYER)
+                  ? KILL_YOU : KILL_MON,
+                (oppressor && oppressor->atype() == ACT_MONSTER)
+                  ? oppressor->mindex() : NON_MONSTER);
+
+            if (fly_died && !is_habitable(pos()))
+            {
+                hit_points = 0;
+                if (observable())
+                    mprf("As %s mount dies, %s plunges down into %s!",
+                         pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str(),
+                         name(DESC_NOCAP_THE).c_str(),
+                         grd(pos()) == DNGN_LAVA ?
+                             "lava and is incinerated" :
+                             "deep water and drowns");
+            }
+            else if (fly_died)
+            {
+                mprf("%s jumps down from %s now dead mount.",
+                     name(DESC_CAP_THE).c_str(),
+                     pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str());
+            }
+        }
     }
 }
 

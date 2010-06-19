@@ -28,7 +28,11 @@ enum tag_type   // used during save/load process to identify data blocks
     TAG_LOST_MONSTERS,                  // monsters in transit
     TAG_LEVEL_TILES,
     TAG_GAME_STATE,
-    NUM_TAGS
+    NUM_TAGS,
+
+    // Returned when a known tag was deliberately not read. This value is
+    // never saved and can safely be changed at any point.
+    TAG_SKIP
 };
 
 enum tag_file_type   // file types supported by tag system
@@ -133,20 +137,25 @@ inline void marshallEnum(writer& wr, enm value)
 class reader
 {
 public:
+    reader(const std::string &filename, char minorVersion = TAG_MINOR_VERSION);
     reader(FILE* input, char minorVersion = TAG_MINOR_VERSION)
-        : _file(input), _pbuf(0), _read_offset(0),
+        : _file(input), opened_file(false), _pbuf(0), _read_offset(0),
           _minorVersion(minorVersion) {}
     reader(const std::vector<unsigned char>& input,
            char minorVersion = TAG_MINOR_VERSION)
-        : _file(0), _pbuf(&input), _read_offset(0),
+        : _file(0), opened_file(false), _pbuf(&input), _read_offset(0),
           _minorVersion(minorVersion) {}
+    ~reader();
 
     unsigned char readByte();
     void read(void *data, size_t size);
+    void advance(size_t size);
     char getMinorVersion();
+    bool valid() const;
 
 private:
     FILE* _file;
+    bool  opened_file;
     const std::vector<unsigned char>* _pbuf;
     unsigned int _read_offset;
     char _minorVersion;
@@ -179,7 +188,7 @@ inline enm unmarshallEnum(writer& wr)
  * Tag interface
  * *********************************************************************** */
 
-tag_type tag_read(FILE* inf, char minorVersion);
+tag_type tag_read(FILE* inf, char minorVersion, char expected_tags[NUM_TAGS]);
 void tag_write(tag_type tagID, FILE* outf);
 void tag_set_expected(char tags[], int fileType);
 void tag_missing(int tag, char minorVersion);
