@@ -2145,8 +2145,7 @@ level_id find_up_level(level_id curr, bool up_branch)
                 return (parent);
             else if (curr.branch == BRANCH_VESTIBULE_OF_HELL)
             {
-                parent.branch = you.hell_branch;
-                parent.depth  = you.hell_exit + 1;
+                parent = branch_entry_level(curr.branch);
                 return (parent);
             }
         }
