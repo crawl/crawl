@@ -1123,6 +1123,7 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.normal_vision);
     marshallByte(th, you.current_vision);
     marshallByte(th, you.hell_exit);
+    marshallByte(th, you.hell_branch);
 
     // elapsed time
     marshallLong(th, you.elapsed_time);
@@ -1690,6 +1691,10 @@ static void tag_read_you(reader &th, char minorVersion)
     you.normal_vision  = unmarshallByte(th);
     you.current_vision = unmarshallByte(th);
     you.hell_exit      = unmarshallByte(th);
+    if (_tag_minor_version >= TAG_MINOR_HELL_BRANCH)
+        you.hell_branch = static_cast<branch_type>( unmarshallByte(th) );
+    else
+        you.hell_branch = BRANCH_MAIN_DUNGEON;
 
     // elapsed time
     you.elapsed_time   = unmarshallLong(th);

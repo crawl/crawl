@@ -28,7 +28,7 @@ level_id branch_entry_level(branch_type branch)
     // Hell and its subbranches need obnoxious special-casing:
     if (branch == BRANCH_VESTIBULE_OF_HELL)
     {
-        return level_id(BRANCH_MAIN_DUNGEON, you.hell_exit + 1);
+        return level_id(you.hell_branch, you.hell_exit + 1);
     }
     else if (is_hell_subbranch(branch))
     {
