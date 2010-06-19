@@ -45,7 +45,7 @@ CrawlStoreValue::CrawlStoreValue(const CrawlStoreValue &other)
     case SV_BOOL:
     case SV_BYTE:
     case SV_SHORT:
-    case SV_LONG:
+    case SV_INT:
     case SV_FLOAT:
         val = other.val;
         break;
@@ -159,10 +159,10 @@ CrawlStoreValue::CrawlStoreValue(const short &_val)
     get_short() = _val;
 }
 
-CrawlStoreValue::CrawlStoreValue(const long &_val)
-    : type(SV_LONG), flags(SFLAG_UNSET)
+CrawlStoreValue::CrawlStoreValue(const int &_val)
+    : type(SV_INT), flags(SFLAG_UNSET)
 {
-    get_long() = _val;
+    get_int() = _val;
 }
 
 CrawlStoreValue::CrawlStoreValue(const float &_val)
@@ -270,8 +270,8 @@ void CrawlStoreValue::unset(bool force)
         val._short = 0;
         break;
 
-    case SV_LONG:
-        val._long = 0;
+    case SV_INT:
+        val._int = 0;
         break;
 
     case SV_FLOAT:
@@ -393,7 +393,7 @@ CrawlStoreValue &CrawlStoreValue::operator = (const CrawlStoreValue &other)
     case SV_BOOL:
     case SV_BYTE:
     case SV_SHORT:
-    case SV_LONG:
+    case SV_INT:
     case SV_FLOAT:
         val = other.val;
         break;
@@ -482,8 +482,8 @@ void CrawlStoreValue::write(writer &th) const
         marshallShort(th, val._short);
         break;
 
-    case SV_LONG:
-        marshallInt(th, val._long);
+    case SV_INT:
+        marshallInt(th, val._int);
         break;
 
     case SV_FLOAT:
@@ -583,8 +583,8 @@ void CrawlStoreValue::read(reader &th)
         val._short = unmarshallShort(th);
         break;
 
-    case SV_LONG:
-        val._long = unmarshallInt(th);
+    case SV_INT:
+        val._int = unmarshallInt(th);
         break;
 
     case SV_FLOAT:
@@ -743,8 +743,8 @@ CrawlVector &CrawlStoreValue::new_vector(store_val_type _type,
             case SV_SHORT: \
                 field = (_type) val._short; \
                 break; \
-            case SV_LONG: \
-                field = (_type) val._long; \
+            case SV_INT: \
+                field = (_type) val._int; \
                 break; \
             case SV_FLOAT: \
                 field = (_type) val._float; \
@@ -794,9 +794,9 @@ short &CrawlStoreValue::get_short()
     GET_VAL(SV_SHORT, short, val._short, 0);
 }
 
-long &CrawlStoreValue::get_long()
+int &CrawlStoreValue::get_int()
 {
-    GET_VAL(SV_LONG, long, val._long, 0);
+    GET_VAL(SV_INT, int, val._int, 0);
 }
 
 float &CrawlStoreValue::get_float()
@@ -883,10 +883,10 @@ short CrawlStoreValue::get_short() const
     return val._short;
 }
 
-long CrawlStoreValue::get_long() const
+int CrawlStoreValue::get_int() const
 {
-    GET_CONST_SETUP(SV_LONG);
-    return val._long;
+    GET_CONST_SETUP(SV_INT);
+    return val._int;
 }
 
 float CrawlStoreValue::get_float() const
@@ -955,7 +955,7 @@ CrawlStoreValue::operator bool&()                  { return get_bool();       }
 CrawlStoreValue::operator char&()                  { return get_byte();       }
 CrawlStoreValue::operator short&()                 { return get_short();      }
 CrawlStoreValue::operator float&()                 { return get_float();      }
-CrawlStoreValue::operator long&()                  { return get_long();       }
+CrawlStoreValue::operator int&()                   { return get_int();        }
 CrawlStoreValue::operator std::string&()           { return get_string();     }
 CrawlStoreValue::operator coord_def&()             { return get_coord();      }
 CrawlStoreValue::operator CrawlHashTable&()        { return get_table();      }
@@ -980,8 +980,8 @@ CrawlStoreValue::operator bool() const
         return get_byte(); \
     case SV_SHORT: \
         return get_short(); \
-    case SV_LONG: \
-        return get_long(); \
+    case SV_INT: \
+        return get_int(); \
     default: \
         ASSERT(false); \
         return 0; \
@@ -997,7 +997,7 @@ CrawlStoreValue::operator short() const
     CONST_INT_CAST();
 }
 
-CrawlStoreValue::operator long() const
+CrawlStoreValue::operator int() const
 {
     CONST_INT_CAST();
 }
@@ -1047,9 +1047,9 @@ CrawlStoreValue &CrawlStoreValue::operator = (const short &_val)
     return (*this);
 }
 
-CrawlStoreValue &CrawlStoreValue::operator = (const long &_val)
+CrawlStoreValue &CrawlStoreValue::operator = (const int &_val)
 {
-    get_long() = _val;
+    get_int() = _val;
     return (*this);
 }
 
@@ -1137,9 +1137,9 @@ CrawlStoreValue &CrawlStoreValue::operator = (const dlua_chunk &_val)
         temp op; \
         return temp; \
     } \
-    case SV_LONG: \
+    case SV_INT: \
     { \
-        long &temp = get_long(); \
+        int &temp = get_int(); \
         temp op; \
         return temp; \
     } \
@@ -1150,23 +1150,23 @@ CrawlStoreValue &CrawlStoreValue::operator = (const dlua_chunk &_val)
     }
 
 // Prefix
-long CrawlStoreValue::operator ++ ()
+int CrawlStoreValue::operator ++ ()
 {
     INT_OPERATOR_UNARY(++);
 }
 
-long CrawlStoreValue::operator -- ()
+int CrawlStoreValue::operator -- ()
 {
     INT_OPERATOR_UNARY(--);
 }
 
 // Postfix
-long CrawlStoreValue::operator ++ (int)
+int CrawlStoreValue::operator ++ (int)
 {
     INT_OPERATOR_UNARY(++);
 }
 
-long CrawlStoreValue::operator -- (int)
+int CrawlStoreValue::operator -- (int)
 {
     INT_OPERATOR_UNARY(--);
 }

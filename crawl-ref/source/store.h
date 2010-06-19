@@ -39,7 +39,7 @@ enum store_val_type
     SV_BOOL,
     SV_BYTE,
     SV_SHORT,
-    SV_LONG,
+    SV_INT,
     SV_FLOAT,
     SV_STR,
     SV_COORD,
@@ -70,7 +70,7 @@ union StoreUnion
     bool  boolean;
     char  byte;
     short _short;
-    long  _long;
+    int   _int;
     float _float;
     void* ptr;
 };
@@ -88,7 +88,7 @@ public:
     CrawlStoreValue(const bool val);
     CrawlStoreValue(const char &val);
     CrawlStoreValue(const short &val);
-    CrawlStoreValue(const long &val);
+    CrawlStoreValue(const int &val);
     CrawlStoreValue(const float &val);
     CrawlStoreValue(const std::string &val);
     CrawlStoreValue(const char* val);
@@ -124,7 +124,7 @@ public:
     bool           &get_bool();
     char           &get_byte();
     short          &get_short();
-    long           &get_long();
+    int            &get_int();
     float          &get_float();
     std::string    &get_string();
     coord_def      &get_coord();
@@ -139,7 +139,7 @@ public:
     bool           get_bool()      const;
     char           get_byte()      const;
     short          get_short()     const;
-    long           get_long()      const;
+    int            get_int()       const;
     float          get_float()     const;
     std::string    get_string()    const;
     coord_def      get_coord()     const;
@@ -157,7 +157,7 @@ public:
     void set_bool(const bool val);
     void set_byte(const char val);
     void set_short(const short val);
-    void set_long(const long val);
+    void set_int(const int val);
     void set_float(const float val);
     void set_string(const std::string &val);
     void set_coord(const coord_def &val);
@@ -187,7 +187,7 @@ public:
     operator bool&();
     operator char&();
     operator short&();
-    operator long&();
+    operator int&();
     operator float&();
     operator std::string&();
     operator coord_def&();
@@ -202,7 +202,7 @@ public:
     operator bool()        const;
     operator char()        const;
     operator short()       const;
-    operator long()        const;
+    operator int()         const;
     operator float()       const;
     operator std::string() const;
     operator coord_def()   const;
@@ -213,7 +213,7 @@ public:
     CrawlStoreValue &operator = (const bool &val);
     CrawlStoreValue &operator = (const char &val);
     CrawlStoreValue &operator = (const short &val);
-    CrawlStoreValue &operator = (const long &val);
+    CrawlStoreValue &operator = (const int &val);
     CrawlStoreValue &operator = (const float &val);
     CrawlStoreValue &operator = (const std::string &val);
     CrawlStoreValue &operator = (const char* val);
@@ -230,12 +230,12 @@ public:
     std::string &operator += (const std::string &val);
 
     // Prefix
-    long operator ++ ();
-    long operator -- ();
+    int operator ++ ();
+    int operator -- ();
 
     // Postfix
-    long operator ++ (int);
-    long operator -- (int);
+    int operator ++ (int);
+    int operator -- (int);
 
 protected:
     CrawlStoreValue(const store_flags flags,

@@ -119,7 +119,7 @@ std::string item_def::name(description_level_type descrip,
     long corpse_flags;
 
     if (base_type == OBJ_CORPSES && is_named_corpse(*this)
-        && !(((corpse_flags = props[CORPSE_NAME_TYPE_KEY].get_long())
+        && !(((corpse_flags = props[CORPSE_NAME_TYPE_KEY].get_int())
              & MF_NAME_SPECIES) && !(corpse_flags & MF_NAME_DEFINITE))
         && !starts_with(get_corpse_name(*this), "shaped "))
     {
@@ -3271,7 +3271,7 @@ std::string get_corpse_name(const item_def &corpse, unsigned long *name_type)
     if (name_type != NULL)
     {
         *name_type
-            = (unsigned long) corpse.props[CORPSE_NAME_TYPE_KEY].get_long();
+            = (unsigned long) corpse.props[CORPSE_NAME_TYPE_KEY].get_int();
     }
 
     return (corpse.props[CORPSE_NAME_KEY].get_string());

@@ -415,7 +415,7 @@ static bool _in_a_shop( int shopidx, int &num_in_list )
                                                       id_stock);
 
                 unsigned int num = shopping_list.cull_identical_items(item,
-                                                             (long) cost);
+                                                                      cost);
                 if (num > 0)
                 {
                     in_list[i] = true;
@@ -675,7 +675,7 @@ static bool _in_a_shop( int shopidx, int &num_in_list )
                 // type-ID and once you can access the item (by buying it)
                 // you have its full ID anyway. Worst case, it won't get
                 // noted when you buy it.
-                const unsigned long old_flags = item.flags;
+                const uint64_t old_flags = item.flags;
                 if (id_stock)
                 {
                     item.flags |= (ISFLAG_IDENT_MASK | ISFLAG_NOTED_ID
@@ -2137,9 +2137,9 @@ std::string shop_name(const coord_def& where)
 
     const shop_type type = cshop->type;
 
-    unsigned long seed = static_cast<unsigned long>( cshop->keeper_name[0] )
-        | (static_cast<unsigned long>( cshop->keeper_name[1] ) << 8)
-        | (static_cast<unsigned long>( cshop->keeper_name[1] ) << 16);
+    uint32_t seed = static_cast<uint32_t>( cshop->keeper_name[0] )
+        | (static_cast<uint32_t>( cshop->keeper_name[1] ) << 8)
+        | (static_cast<uint32_t>( cshop->keeper_name[1] ) << 16);
 
     std::string sh_name = apostrophise(make_name(seed, false)) + " ";
 
@@ -2221,7 +2221,7 @@ ShoppingList::ShoppingList()
 
 #define SETUP_THING()                             \
     CrawlHashTable *thing = new CrawlHashTable();  \
-    (*thing)[SHOPPING_THING_COST_KEY] = (long) cost; \
+    (*thing)[SHOPPING_THING_COST_KEY] = cost; \
     (*thing)[SHOPPING_THING_POS_KEY]  = pos;
 
 bool ShoppingList::add_thing(const item_def &item, int cost,
@@ -2356,7 +2356,7 @@ bool ShoppingList::del_thing(std::string desc, const level_pos* _pos)
 // * If you collected enough spellbooks that all the spells in a
 //   shopping list book are covered, then auto-remove it.
 unsigned int ShoppingList::cull_identical_items(const item_def& item,
-                                                long cost)
+                                                int cost)
 {
     // Can't put items in Bazaar shops in the shopping list, so
     // don't bother transfering shopping list items to Bazaar shops.
@@ -2429,7 +2429,7 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
         // one on the shopping list.
         if (cost != -1)
         {
-            long list_cost = thing_cost(thing);
+            int list_cost = thing_cost(thing);
 
             if (cost >= list_cost)
                 continue;
@@ -2556,7 +2556,7 @@ void ShoppingList::gold_changed(int old_amount, int new_amount)
         for (unsigned int i = min_unbuyable_idx; i < list->size(); i++)
         {
             const CrawlHashTable &thing = (*list)[i];
-            const long           cost   = thing_cost(thing);
+            const int            cost   = thing_cost(thing);
 
             if (cost > new_amount)
             {
@@ -2607,7 +2607,7 @@ void ShoppingListMenu::draw_title()
 {
     if (title)
     {
-        const long total_cost = you.props[SHOPPING_LIST_COST_KEY];
+        const int total_cost = you.props[SHOPPING_LIST_COST_KEY];
 
         cgotoxy(1, 1);
         textcolor(title->colour);
@@ -2632,7 +2632,7 @@ void ShoppingList::fill_out_menu(Menu& shopmenu)
     {
         CrawlHashTable &thing = (*list)[i];
         level_pos      pos    = thing_pos(thing);
-        long           cost   = thing_cost(thing);
+        int            cost   = thing_cost(thing);
 
         std::string etitle =
             make_stringf("[%s] %s (%d gp)", short_place_name(pos.id).c_str(),
@@ -2711,7 +2711,7 @@ void ShoppingList::display()
 
         if (shopmenu.menu_action == Menu::ACT_EXECUTE)
         {
-            const long cost = thing_cost(*thing);
+            const int cost = thing_cost(*thing);
 
             if (cost > you.gold)
             {
@@ -2785,8 +2785,8 @@ bool _compare_shopping_things(const CrawlStoreValue& a,
     const CrawlHashTable& hash_a = a.get_table();
     const CrawlHashTable& hash_b = b.get_table();
 
-    const long a_cost = hash_a[SHOPPING_THING_COST_KEY];
-    const long b_cost = hash_b[SHOPPING_THING_COST_KEY];
+    const int a_cost = hash_a[SHOPPING_THING_COST_KEY];
+    const int b_cost = hash_b[SHOPPING_THING_COST_KEY];
 
     return (a_cost < b_cost);
 }
@@ -2804,13 +2804,13 @@ void ShoppingList::refresh()
     max_buyable_cost   = -1;
     max_buyable_idx    = -1;
 
-    long total_cost = 0;
+    int total_cost = 0;
 
     for (unsigned int i = 0; i < list->size(); i++)
     {
         const CrawlHashTable &thing = (*list)[i];
 
-        const long cost = thing_cost(thing);
+        const int cost = thing_cost(thing);
 
         if (cost <= you.gold)
         {
@@ -2824,7 +2824,7 @@ void ShoppingList::refresh()
         }
         total_cost += cost;
     }
-    you.props[SHOPPING_LIST_COST_KEY] = (long) total_cost;
+    you.props[SHOPPING_LIST_COST_KEY].get_int() = total_cost;
 }
 
 int ShoppingList::find_thing(const item_def &item,
@@ -2894,10 +2894,10 @@ std::string ShoppingList::get_thing_desc(const CrawlHashTable& thing)
     return (desc);
 }
 
-long ShoppingList::thing_cost(const CrawlHashTable& thing)
+int ShoppingList::thing_cost(const CrawlHashTable& thing)
 {
     ASSERT(thing.exists(SHOPPING_THING_COST_KEY));
-    return (thing[SHOPPING_THING_COST_KEY].get_long());
+    return (thing[SHOPPING_THING_COST_KEY].get_int());
 }
 
 level_pos ShoppingList::thing_pos(const CrawlHashTable& thing)
