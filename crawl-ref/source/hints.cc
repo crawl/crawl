@@ -86,7 +86,7 @@ hints_state Hints;
 
 void save_hints(writer& outf)
 {
-    marshallLong( outf, HINTS_VERSION);
+    marshallInt( outf, HINTS_VERSION);
     marshallShort( outf, Hints.hints_type);
     for (long i = 0; i < HINT_EVENTS_NUM; ++i)
         marshallBoolean( outf, Hints.hints_events[i] );
@@ -96,7 +96,7 @@ void load_hints(reader& inf)
 {
     Hints.hints_left = 0;
 
-    int version = unmarshallLong(inf);
+    int version = unmarshallInt(inf);
     if (version != HINTS_VERSION)
         return;
 

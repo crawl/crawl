@@ -1451,7 +1451,7 @@ bool dgl_unknown_timestamp_file(const std::string &filename)
     if (FILE *inh = fopen(filename.c_str(), "rb"))
     {
         reader r(inh);
-        const uint32_t file_version = unmarshallLong(r);
+        const uint32_t file_version = unmarshallInt(r);
         fclose(inh);
         return (file_version != DGL_TIMESTAMP_VERSION);
     }
@@ -1490,7 +1490,7 @@ void dgl_record_timestamp(unsigned long file_offset, time_t time)
             unsigned long ts_size = _file_size(ftimestamp);
             if (!ts_size)
             {
-                marshallLong(w, DGL_TIMESTAMP_VERSION);
+                marshallInt(w, DGL_TIMESTAMP_VERSION);
                 ts_size += sizeof(DGL_TIMESTAMP_VERSION);
             }
 
@@ -1508,14 +1508,14 @@ void dgl_record_timestamp(unsigned long file_offset, time_t time)
                 const int backlog =
                     (file_offset - ts_size) / TIMESTAMP_SIZE;
                 for (int i = 0; i < backlog; ++i)
-                    marshallLong(w, 0);
+                    marshallInt(w, 0);
             }
 
             timestamp_first_write = false;
         }
         fseek(ftimestamp, 0, SEEK_END);
         // [ds] FIXME: Eventually switch to 8 byte timestamps.
-        marshallLong(w, static_cast<uint32_t>(time));
+        marshallInt(w, static_cast<uint32_t>(time));
         fflush(ftimestamp);
     }
 }

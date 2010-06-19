@@ -450,8 +450,8 @@ void player_quiver::save(writer& outf) const
     marshallShort(outf, QUIVER_COOKIE);
 
     marshallItem(outf, m_last_weapon);
-    marshallLong(outf, m_last_used_type);
-    marshallLong(outf, ARRAYSZ(m_last_used_of_type));
+    marshallInt(outf, m_last_used_type);
+    marshallInt(outf, ARRAYSZ(m_last_used_of_type));
 
     for (unsigned int i = 0; i < ARRAYSZ(m_last_used_of_type); i++)
         marshallItem(outf, m_last_used_of_type[i]);
@@ -463,10 +463,10 @@ void player_quiver::load(reader& inf)
     ASSERT(cooky == QUIVER_COOKIE); (void)cooky;
 
     unmarshallItem(inf, m_last_weapon);
-    m_last_used_type = (ammo_t)unmarshallLong(inf);
+    m_last_used_type = (ammo_t)unmarshallInt(inf);
     ASSERT(m_last_used_type >= AMMO_THROW && m_last_used_type < NUM_AMMO);
 
-    const unsigned long count = unmarshallLong(inf);
+    const unsigned long count = unmarshallInt(inf);
     ASSERT(count <= ARRAYSZ(m_last_used_of_type));
 
     for (unsigned int i = 0; i < count; i++)

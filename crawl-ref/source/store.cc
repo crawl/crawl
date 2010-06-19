@@ -483,7 +483,7 @@ void CrawlStoreValue::write(writer &th) const
         break;
 
     case SV_LONG:
-        marshallLong(th, val._long);
+        marshallInt(th, val._long);
         break;
 
     case SV_FLOAT:
@@ -584,7 +584,7 @@ void CrawlStoreValue::read(reader &th)
         break;
 
     case SV_LONG:
-        val._long = unmarshallLong(th);
+        val._long = unmarshallInt(th);
         break;
 
     case SV_FLOAT:

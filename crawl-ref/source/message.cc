@@ -1341,14 +1341,14 @@ std::string get_last_messages(int mcount)
 void save_messages(writer& outf)
 {
     store_t msgs = messages.get_store();
-    marshallLong(outf, msgs.size());
+    marshallInt(outf, msgs.size());
     for (int i = 0; i < msgs.size(); ++i)
     {
         marshallString4(outf, msgs[i].text);
-        marshallLong(outf, msgs[i].channel);
-        marshallLong(outf, msgs[i].param);
-        marshallLong(outf, msgs[i].repeats);
-        marshallLong(outf, msgs[i].turn);
+        marshallInt(outf, msgs[i].channel);
+        marshallInt(outf, msgs[i].param);
+        marshallInt(outf, msgs[i].repeats);
+        marshallInt(outf, msgs[i].turn);
     }
 }
 
@@ -1356,16 +1356,16 @@ void load_messages(reader& inf)
 {
     unwind_var<bool> save_more(crawl_state.show_more_prompt, false);
 
-    int num = unmarshallLong(inf);
+    int num = unmarshallInt(inf);
     for (int i = 0; i < num; ++i)
     {
         std::string text;
         unmarshallString4(inf, text);
 
-        msg_channel_type channel = (msg_channel_type) unmarshallLong(inf);
-        int           param      = unmarshallLong(inf);
-        int           repeats    = unmarshallLong(inf);
-        int           turn       = unmarshallLong(inf);
+        msg_channel_type channel = (msg_channel_type) unmarshallInt(inf);
+        int           param      = unmarshallInt(inf);
+        int           repeats    = unmarshallInt(inf);
+        int           turn       = unmarshallInt(inf);
 
         message_item msg(message_item(text, channel, param, repeats, turn));
         if (msg)

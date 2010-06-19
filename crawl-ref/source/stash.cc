@@ -1550,7 +1550,7 @@ void StashTracker::write(std::ostream &os, bool identify) const
 void StashTracker::save(writer& outf) const
 {
     // Time of last corpse update.
-    marshallLong(outf, last_corpse_update);
+    marshallInt(outf, last_corpse_update);
 
     // How many levels have we?
     marshallShort(outf, (short) levels.size());
@@ -1564,7 +1564,7 @@ void StashTracker::save(writer& outf) const
 void StashTracker::load(reader& inf)
 {
     // Time of last corpse update.
-    last_corpse_update = unmarshallLong(inf);
+    last_corpse_update = unmarshallInt(inf);
 
     int count = unmarshallShort(inf);
 

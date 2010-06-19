@@ -76,7 +76,7 @@ void dlua_chunk::write(writer& outf) const
     }
 
     marshallString4(outf, file);
-    marshallLong(outf, first);
+    marshallInt(outf, first);
 }
 
 void dlua_chunk::read(reader& inf)
@@ -95,7 +95,7 @@ void dlua_chunk::read(reader& inf)
         break;
     }
     unmarshallString4(inf, file);
-    first = unmarshallLong(inf);
+    first = unmarshallInt(inf);
 }
 
 void dlua_chunk::clear()

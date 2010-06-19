@@ -112,7 +112,7 @@ private:
 
 void marshallByte    (writer &, const char& );
 void marshallShort   (writer &, int16_t );
-void marshallLong    (writer &, int32_t );
+void marshallInt    (writer &, int32_t );
 void marshallFloat   (writer &, float );
 void marshallBoolean (writer &, bool );
 void marshallString  (writer &, const std::string &, int maxSize = 0);
@@ -166,7 +166,7 @@ private:
 
 char        unmarshallByte    (reader &);
 int16_t     unmarshallShort   (reader &);
-int32_t     unmarshallLong    (reader &);
+int32_t     unmarshallInt    (reader &);
 float       unmarshallFloat   (reader &);
 bool        unmarshallBoolean (reader &);
 std::string unmarshallString  (reader &, int maxSize = 1000);

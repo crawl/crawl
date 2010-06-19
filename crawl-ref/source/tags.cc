@@ -288,7 +288,7 @@ int16_t unmarshallShort(reader &th)
     return data;
 }
 
-void marshallLong(std::vector<unsigned char>& buf, int32_t data)
+void marshallInt(std::vector<unsigned char>& buf, int32_t data)
 {
     buf.push_back((unsigned char) ((data & 0xFF000000) >> 24));
     buf.push_back((unsigned char) ((data & 0x00FF0000) >> 16));
@@ -297,7 +297,7 @@ void marshallLong(std::vector<unsigned char>& buf, int32_t data)
 }
 
 // Marshall 4 byte int in network order.
-void marshallLong(writer &th, int32_t data)
+void marshallInt(writer &th, int32_t data)
 {
     char b4 = (char) (data & 0x000000FF);
     char b3 = (char)((data & 0x0000FF00) >> 8);
@@ -311,7 +311,7 @@ void marshallLong(writer &th, int32_t data)
 }
 
 // Unmarshall 4 byte signed int in network order.
-int32_t unmarshallLong(reader &th)
+int32_t unmarshallInt(reader &th)
 {
     int32_t b1 = th.readByte();
     int32_t b2 = th.readByte();
@@ -327,14 +327,14 @@ int32_t unmarshallLong(reader &th)
 template<typename T>
 void marshall_as_long(writer& th, const T& t)
 {
-    marshallLong( th, static_cast<long>(t) );
+    marshallInt( th, static_cast<long>(t) );
 }
 
 template <typename data>
 void marshallSet(writer &th, const std::set<data> &s,
                  void (*marshall)(writer &, const data &))
 {
-    marshallLong( th, s.size() );
+    marshallInt( th, s.size() );
     typename std::set<data>::const_iterator i = s.begin();
     for ( ; i != s.end(); ++i)
         marshall(th, *i);
@@ -345,7 +345,7 @@ void marshallMap(writer &th, const std::map<key,value>& data,
                  void (*key_marshall)(writer&, const key&),
                  void (*value_marshall)(writer&, const value&))
 {
-    marshallLong( th, data.size() );
+    marshallInt( th, data.size() );
     typename std::map<key,value>::const_iterator ci;
     for (ci = data.begin(); ci != data.end(); ++ci)
     {
@@ -358,7 +358,7 @@ template<typename T_iter, typename T_marshall_t>
 static void marshall_iterator(writer &th, T_iter beg, T_iter end,
                               T_marshall_t T_marshall)
 {
-    marshallLong(th, std::distance(beg, end));
+    marshallInt(th, std::distance(beg, end));
     while ( beg != end )
     {
         T_marshall(th, *beg);
@@ -371,8 +371,8 @@ static void unmarshall_vector(reader& th, std::vector<T>& vec,
                               T (*T_unmarshall)(reader&))
 {
     vec.clear();
-    const long num_to_read = unmarshallLong(th);
-    for (long i = 0; i < num_to_read; ++i)
+    const int num_to_read = unmarshallInt(th);
+    for (int i = 0; i < num_to_read; ++i)
         vec.push_back( T_unmarshall(th) );
 }
 
@@ -381,8 +381,8 @@ static void unmarshall_container(reader &th, T_container &container,
                                  T_inserter inserter, T_unmarshall unmarshal)
 {
     container.clear();
-    const long num_to_read = unmarshallLong(th);
-    for (long i = 0; i < num_to_read; ++i)
+    const int num_to_read = unmarshallInt(th);
+    for (int i = 0; i < num_to_read; ++i)
         (container.*inserter)(unmarshal(th));
 }
 
@@ -390,15 +390,15 @@ static void unmarshall_container(reader &th, T_container &container,
 void marshall_level_id( writer& th, const level_id& id )
 {
     marshallByte(th, id.branch );
-    marshallLong(th, id.depth );
+    marshallInt(th, id.depth );
     marshallByte(th, id.level_type);
 }
 
 // XXX: Redundant with level_pos.save()/load().
 void marshall_level_pos( writer& th, const level_pos& lpos )
 {
-    marshallLong(th, lpos.pos.x);
-    marshallLong(th, lpos.pos.y);
+    marshallInt(th, lpos.pos.x);
+    marshallInt(th, lpos.pos.y);
     marshall_level_id(th, lpos.id);
 }
 
@@ -407,8 +407,8 @@ void unmarshallSet(reader &th, set &dset,
                    data (*data_unmarshall)(reader &))
 {
     dset.clear();
-    long len = unmarshallLong(th);
-    for (long i = 0L; i < len; ++i)
+    int len = unmarshallInt(th);
+    for (int i = 0; i < len; ++i)
         dset.insert(data_unmarshall(th));
 }
 
@@ -417,7 +417,7 @@ void unmarshallMap(reader& th, map& data,
                    key   (*key_unmarshall)  (reader&),
                    value (*value_unmarshall)(reader&) )
 {
-    long i, len = unmarshallLong(th);
+    int i, len = unmarshallInt(th);
     key k;
     for (i = 0; i < len; ++i)
     {
@@ -430,14 +430,14 @@ void unmarshallMap(reader& th, map& data,
 template<typename T>
 T unmarshall_long_as( reader& th )
 {
-    return static_cast<T>(unmarshallLong(th));
+    return static_cast<T>(unmarshallInt(th));
 }
 
 level_id unmarshall_level_id( reader& th )
 {
     level_id id;
     id.branch     = static_cast<branch_type>(unmarshallByte(th));
-    id.depth      = unmarshallLong(th);
+    id.depth      = unmarshallInt(th);
     id.level_type = static_cast<level_area_type>(unmarshallByte(th));
     return (id);
 }
@@ -445,8 +445,8 @@ level_id unmarshall_level_id( reader& th )
 level_pos unmarshall_level_pos( reader& th )
 {
     level_pos lpos;
-    lpos.pos.x = unmarshallLong(th);
-    lpos.pos.y = unmarshallLong(th);
+    lpos.pos.x = unmarshallInt(th);
+    lpos.pos.y = unmarshallInt(th);
     lpos.id    = unmarshall_level_id(th);
     return lpos;
 }
@@ -527,14 +527,14 @@ void marshallFloat(writer &th, float data)
 {
     float_marshall_kludge k;
     k.f_num = data;
-    marshallLong(th, k.l_num);
+    marshallInt(th, k.l_num);
 }
 
 // single precision float -- unmarshall in network order.
 float unmarshallFloat(reader &th)
 {
     float_marshall_kludge k;
-    k.l_num = unmarshallLong(th);
+    k.l_num = unmarshallInt(th);
     return k.f_num;
 }
 
@@ -602,12 +602,12 @@ static std::string unmarshallStringNoMax(reader &th)
 // string -- 4 byte length, non-terminated string data.
 void marshallString4(writer &th, const std::string &data)
 {
-    marshallLong(th, data.length());
+    marshallInt(th, data.length());
     th.write(data.c_str(), data.length());
 }
 void unmarshallString4(reader &th, std::string& s)
 {
-    const int len = unmarshallLong(th);
+    const int len = unmarshallInt(th);
     s.resize(len);
     if (len) th.read(&s.at(0), len);
 }
@@ -826,7 +826,7 @@ void tag_write(tag_type tagID, FILE* outf)
     {
         writer tmp(outf);
         marshallShort(tmp, tagID);
-        marshallLong(tmp, buf.size());
+        marshallInt(tmp, buf.size());
     }
 
     // Write tag data.
@@ -849,7 +849,7 @@ tag_type tag_read(FILE *fp, char minorVersion, char expected_tags[NUM_TAGS])
         tag_id = unmarshallShort(tmp);
         if (tag_id < 0 || tag_id >= NUM_TAGS)
             return TAG_NO_TAG;
-        const long data_size = unmarshallLong(tmp);
+        const int data_size = unmarshallInt(tmp);
         if (data_size < 0)
             return TAG_NO_TAG;
 
@@ -993,7 +993,7 @@ static void tag_construct_you(writer &th)
     marshallShort(th, you.unrand_reacts);
     marshallByte(th, you.berserk_penalty);
     marshallShort(th, you.sage_bonus_skill);
-    marshallLong(th, you.sage_bonus_degree);
+    marshallInt(th, you.sage_bonus_degree);
     marshallByte(th, you.level_type);
     marshallString(th, you.level_type_name);
     marshallString(th, you.level_type_name_abbrev);
@@ -1003,7 +1003,7 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.entry_cause);
     marshallByte(th, you.entry_cause_god);
 
-    marshallLong(th, you.disease);
+    marshallInt(th, you.disease);
     marshallByte(th, you.species);
 
     marshallShort(th, you.hp);
@@ -1033,12 +1033,12 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.magic_points_regeneration);
 
     marshallShort(th, you.hit_points_regeneration * 100);
-    marshallLong(th, you.experience);
-    marshallLong(th, you.gold);
+    marshallInt(th, you.experience);
+    marshallInt(th, you.gold);
 
     marshallByte(th, you.char_class);
     marshallByte(th, you.experience_level);
-    marshallLong(th, you.exp_available);
+    marshallInt(th, you.exp_available);
 
     marshallShort(th, you.base_hp);
     marshallShort(th, you.base_hp2);
@@ -1071,24 +1071,24 @@ static void tag_construct_you(writer &th)
     {
         marshallByte(th, you.skills[j]);
         marshallByte(th, you.practise_skill[j]);
-        marshallLong(th, you.skill_points[j]);
+        marshallInt(th, you.skill_points[j]);
         marshallByte(th, you.skill_order[j]);   // skills ordering
     }
 
     // how many durations?
     marshallByte(th, NUM_DURATIONS);
     for (j = 0; j < NUM_DURATIONS; ++j)
-        marshallLong(th, you.duration[j]);
+        marshallInt(th, you.duration[j]);
 
     // how many attributes?
     marshallByte(th, NUM_ATTRIBUTES);
     for (j = 0; j < NUM_ATTRIBUTES; ++j)
-        marshallLong(th, you.attribute[j]);
+        marshallInt(th, you.attribute[j]);
 
     // Sacrifice values.
     marshallByte(th, NUM_OBJECT_CLASSES);
     for (j = 0; j < NUM_OBJECT_CLASSES; ++j)
-        marshallLong(th, you.sacrifice_value[j]);
+        marshallInt(th, you.sacrifice_value[j]);
 
     // how many mutations/demon powers?
     marshallShort(th, NUM_MUTATIONS);
@@ -1126,7 +1126,7 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.hell_branch);
 
     // elapsed time
-    marshallLong(th, you.elapsed_time);
+    marshallInt(th, you.elapsed_time);
 
     // wizard mode used
     marshallByte(th, you.wizard);
@@ -1146,8 +1146,8 @@ static void tag_construct_you(writer &th)
         you.start_time = now;
     }
 
-    marshallLong( th, you.real_time );
-    marshallLong( th, you.num_turns );
+    marshallInt( th, you.real_time );
+    marshallInt( th, you.num_turns );
 
     marshallShort(th, you.magic_contamination);
 
@@ -1221,40 +1221,40 @@ static void tag_construct_you_items(writer &th)
 
     marshallShort(th, NUM_WEAPONS);
     for (j = 0; j < NUM_WEAPONS; ++j)
-        marshallLong(th,you.seen_weapon[j]);
+        marshallInt(th,you.seen_weapon[j]);
 
     marshallShort(th, NUM_ARMOURS);
     for (j = 0; j < NUM_ARMOURS; ++j)
-        marshallLong(th,you.seen_armour[j]);
+        marshallInt(th,you.seen_armour[j]);
 }
 
 static void marshallPlaceInfo(writer &th, PlaceInfo place_info)
 {
-    marshallLong(th, place_info.level_type);
-    marshallLong(th, place_info.branch);
+    marshallInt(th, place_info.level_type);
+    marshallInt(th, place_info.branch);
 
-    marshallLong(th, place_info.num_visits);
-    marshallLong(th, place_info.levels_seen);
+    marshallInt(th, place_info.num_visits);
+    marshallInt(th, place_info.levels_seen);
 
-    marshallLong(th, place_info.mon_kill_exp);
-    marshallLong(th, place_info.mon_kill_exp_avail);
+    marshallInt(th, place_info.mon_kill_exp);
+    marshallInt(th, place_info.mon_kill_exp_avail);
 
     for (int i = 0; i < KC_NCATEGORIES; i++)
-        marshallLong(th, place_info.mon_kill_num[i]);
+        marshallInt(th, place_info.mon_kill_num[i]);
 
-    marshallLong(th, place_info.turns_total);
-    marshallLong(th, place_info.turns_explore);
-    marshallLong(th, place_info.turns_travel);
-    marshallLong(th, place_info.turns_interlevel);
-    marshallLong(th, place_info.turns_resting);
-    marshallLong(th, place_info.turns_other);
+    marshallInt(th, place_info.turns_total);
+    marshallInt(th, place_info.turns_explore);
+    marshallInt(th, place_info.turns_travel);
+    marshallInt(th, place_info.turns_interlevel);
+    marshallInt(th, place_info.turns_resting);
+    marshallInt(th, place_info.turns_other);
 
-    marshallLong(th, place_info.elapsed_total);
-    marshallLong(th, place_info.elapsed_explore);
-    marshallLong(th, place_info.elapsed_travel);
-    marshallLong(th, place_info.elapsed_interlevel);
-    marshallLong(th, place_info.elapsed_resting);
-    marshallLong(th, place_info.elapsed_other);
+    marshallInt(th, place_info.elapsed_total);
+    marshallInt(th, place_info.elapsed_explore);
+    marshallInt(th, place_info.elapsed_travel);
+    marshallInt(th, place_info.elapsed_interlevel);
+    marshallInt(th, place_info.elapsed_resting);
+    marshallInt(th, place_info.elapsed_other);
 }
 
 static void tag_construct_you_dungeon(writer &th)
@@ -1268,8 +1268,8 @@ static void tag_construct_you_dungeon(writer &th)
     marshallByte(th, NUM_BRANCHES);
     for (int j = 0; j < NUM_BRANCHES; ++j)
     {
-        marshallLong(th, branches[j].startdepth);
-        marshallLong(th, branches[j].branch_flags);
+        marshallInt(th, branches[j].startdepth);
+        marshallInt(th, branches[j].branch_flags);
     }
 
     marshallSet(th, Generated_Levels, marshall_level_id);
@@ -1547,7 +1547,7 @@ static void tag_read_you(reader &th, char minorVersion)
     you.unrand_reacts     = unmarshallShort(th);
     you.berserk_penalty   = unmarshallByte(th);
     you.sage_bonus_skill  = static_cast<skill_type>(unmarshallShort(th));
-    you.sage_bonus_degree = unmarshallLong(th);
+    you.sage_bonus_degree = unmarshallInt(th);
     you.level_type        = static_cast<level_area_type>( unmarshallByte(th) );
     you.level_type_name   = unmarshallString(th);
 
@@ -1558,7 +1558,7 @@ static void tag_read_you(reader &th, char minorVersion)
 
     you.entry_cause     = static_cast<entry_cause_type>( unmarshallByte(th) );
     you.entry_cause_god = static_cast<god_type>( unmarshallByte(th) );
-    you.disease         = unmarshallLong(th);
+    you.disease         = unmarshallInt(th);
 
     you.species         = static_cast<species_type>(unmarshallByte(th));
     you.hp              = unmarshallShort(th);
@@ -1587,12 +1587,12 @@ static void tag_read_you(reader &th, char minorVersion)
     you.magic_points_regeneration = unmarshallByte(th);
 
     you.hit_points_regeneration   = unmarshallShort(th) / 100;
-    you.experience                = unmarshallLong(th);
-    you.gold                      = unmarshallLong(th);
+    you.experience                = unmarshallInt(th);
+    you.gold                      = unmarshallInt(th);
 
     you.char_class                = static_cast<job_type>(unmarshallByte(th));
     you.experience_level          = unmarshallByte(th);
-    you.exp_available             = unmarshallLong(th);
+    you.exp_available             = unmarshallInt(th);
 
     you.base_hp                   = unmarshallShort(th);
     you.base_hp2                  = unmarshallShort(th);
@@ -1635,7 +1635,7 @@ static void tag_read_you(reader &th, char minorVersion)
     {
         you.skills[j]         = unmarshallByte(th);
         you.practise_skill[j] = unmarshallByte(th);
-        you.skill_points[j]   = unmarshallLong(th);
+        you.skill_points[j]   = unmarshallInt(th);
         you.skill_order[j]    = unmarshallByte(th);
     }
 
@@ -1645,16 +1645,16 @@ static void tag_read_you(reader &th, char minorVersion)
     // how many durations?
     count_c = unmarshallByte(th);
     for (j = 0; j < count_c; ++j)
-        you.duration[j] = unmarshallLong(th);
+        you.duration[j] = unmarshallInt(th);
 
     // how many attributes?
     count_c = unmarshallByte(th);
     for (j = 0; j < count_c; ++j)
-        you.attribute[j] = unmarshallLong(th);
+        you.attribute[j] = unmarshallInt(th);
 
     count_c = unmarshallByte(th);
     for (j = 0; j < count_c; ++j)
-        you.sacrifice_value[j] = unmarshallLong(th);
+        you.sacrifice_value[j] = unmarshallInt(th);
 
     // how many mutations/demon powers?
     count_s = unmarshallShort(th);
@@ -1697,7 +1697,7 @@ static void tag_read_you(reader &th, char minorVersion)
         you.hell_branch = BRANCH_MAIN_DUNGEON;
 
     // elapsed time
-    you.elapsed_time   = unmarshallLong(th);
+    you.elapsed_time   = unmarshallInt(th);
 
     // wizard mode
     you.wizard         = (bool) unmarshallByte(th);
@@ -1706,8 +1706,8 @@ static void tag_read_you(reader &th, char minorVersion)
     unmarshallCString( th, buff, 20 );
     you.birth_time = parse_date_string( buff );
 
-    you.real_time  = unmarshallLong(th);
-    you.num_turns  = unmarshallLong(th);
+    you.real_time  = unmarshallInt(th);
+    you.num_turns  = unmarshallInt(th);
 
     you.magic_contamination = unmarshallShort(th);
 
@@ -1823,44 +1823,44 @@ static void tag_read_you_items(reader &th, char minorVersion)
     if (count_s > NUM_WEAPONS)
         count_s = NUM_WEAPONS;
     for (j = 0; j < count_s; ++j)
-        you.seen_weapon[j] = unmarshallLong(th);
+        you.seen_weapon[j] = unmarshallInt(th);
 
     count_s = unmarshallShort(th);
     if (count_s > NUM_ARMOURS)
         count_s = NUM_ARMOURS;
     for (j = 0; j < count_s; ++j)
-        you.seen_armour[j] = unmarshallLong(th);
+        you.seen_armour[j] = unmarshallInt(th);
 }
 
 static PlaceInfo unmarshallPlaceInfo(reader &th, char minorVersion)
 {
     PlaceInfo place_info;
 
-    place_info.level_type = (int) unmarshallLong(th);
-    place_info.branch     = (int) unmarshallLong(th);
+    place_info.level_type = unmarshallInt(th);
+    place_info.branch     = unmarshallInt(th);
 
-    place_info.num_visits  = (unsigned long) unmarshallLong(th);
-    place_info.levels_seen = (unsigned long) unmarshallLong(th);
+    place_info.num_visits  = unmarshallInt(th);
+    place_info.levels_seen = unmarshallInt(th);
 
-    place_info.mon_kill_exp       = (unsigned long) unmarshallLong(th);
-    place_info.mon_kill_exp_avail = (unsigned long) unmarshallLong(th);
+    place_info.mon_kill_exp       = unmarshallInt(th);
+    place_info.mon_kill_exp_avail = unmarshallInt(th);
 
     for (int i = 0; i < KC_NCATEGORIES; i++)
-        place_info.mon_kill_num[i] = (unsigned long) unmarshallLong(th);
+        place_info.mon_kill_num[i] = unmarshallInt(th);
 
-    place_info.turns_total      = unmarshallLong(th);
-    place_info.turns_explore    = unmarshallLong(th);
-    place_info.turns_travel     = unmarshallLong(th);
-    place_info.turns_interlevel = unmarshallLong(th);
-    place_info.turns_resting    = unmarshallLong(th);
-    place_info.turns_other      = unmarshallLong(th);
+    place_info.turns_total      = unmarshallInt(th);
+    place_info.turns_explore    = unmarshallInt(th);
+    place_info.turns_travel     = unmarshallInt(th);
+    place_info.turns_interlevel = unmarshallInt(th);
+    place_info.turns_resting    = unmarshallInt(th);
+    place_info.turns_other      = unmarshallInt(th);
 
-    place_info.elapsed_total      = unmarshallLong(th);
-    place_info.elapsed_explore    = unmarshallLong(th);
-    place_info.elapsed_travel     = unmarshallLong(th);
-    place_info.elapsed_interlevel = unmarshallLong(th);
-    place_info.elapsed_resting    = unmarshallLong(th);
-    place_info.elapsed_other      = unmarshallLong(th);
+    place_info.elapsed_total      = unmarshallInt(th);
+    place_info.elapsed_explore    = unmarshallInt(th);
+    place_info.elapsed_travel     = unmarshallInt(th);
+    place_info.elapsed_interlevel = unmarshallInt(th);
+    place_info.elapsed_resting    = unmarshallInt(th);
+    place_info.elapsed_other      = unmarshallInt(th);
 
     return place_info;
 }
@@ -1882,8 +1882,8 @@ static void tag_read_you_dungeon(reader &th, char minorVersion)
     count_c = unmarshallByte(th);
     for (int j = 0; j < count_c; ++j)
     {
-        branches[j].startdepth   = unmarshallLong(th);
-        branches[j].branch_flags = (unsigned long) unmarshallLong(th);
+        branches[j].startdepth   = unmarshallInt(th);
+        branches[j].branch_flags = unmarshallInt(th);
     }
 
     unmarshallSet(th, Generated_Levels, unmarshall_level_id);
@@ -1966,9 +1966,9 @@ static void tag_construct_level(writer &th)
     marshallByte(th, env.floor_colour);
     marshallByte(th, env.rock_colour);
 
-    marshallLong(th, env.level_flags);
+    marshallInt(th, env.level_flags);
 
-    marshallLong(th, you.elapsed_time);
+    marshallInt(th, you.elapsed_time);
     marshallCoord(th, you.pos());
 
     // Map grids.
@@ -1977,7 +1977,7 @@ static void tag_construct_level(writer &th)
     // how many Y?
     marshallShort(th, GYM);
 
-    marshallLong(th, env.turns_on_level);
+    marshallInt(th, env.turns_on_level);
 
     for (int count_x = 0; count_x < GXM; count_x++)
         for (int count_y = 0; count_y < GYM; count_y++)
@@ -1985,7 +1985,7 @@ static void tag_construct_level(writer &th)
             marshallByte(th, grd[count_x][count_y]);
             marshallShowtype(th, env.map_knowledge[count_x][count_y].object);
             marshallShort(th, env.map_knowledge[count_x][count_y].flags);
-            marshallLong(th, env.pgrid[count_x][count_y]);
+            marshallInt(th, env.pgrid[count_x][count_y]);
             marshallShort(th, env.cgrid[count_x][count_y]);
         }
 
@@ -2026,7 +2026,7 @@ static void tag_construct_level(writer &th)
     marshallCoord(th, env.sanctuary_pos);
     marshallByte(th, env.sanctuary_time);
 
-    marshallLong(th, env.spawn_random_rate);
+    marshallInt(th, env.spawn_random_rate);
 
     env.markers.write(th);
     env.properties.write(th);
@@ -2040,7 +2040,7 @@ static void tag_construct_level(writer &th)
             marshallShort(th, heightmap(*ri));
     }
 
-    marshallLong(th, env.forest_awoken_until);
+    marshallInt(th, env.forest_awoken_until);
     marshall_level_vault_data(th);
 }
 
@@ -2050,14 +2050,14 @@ void marshallItem(writer &th, const item_def &item)
     marshallByte(th, item.sub_type);
     marshallShort(th, item.plus);
     marshallShort(th, item.plus2);
-    marshallLong(th, item.special);
+    marshallInt(th, item.special);
     marshallShort(th, item.quantity);
 
     marshallByte(th, item.colour);
     marshallByte(th, item.rnd);
     marshallShort(th, item.pos.x);
     marshallShort(th, item.pos.y);
-    marshallLong(th, item.flags);
+    marshallInt(th, item.flags);
 
     marshallShort(th, item.link);
     if (item.pos.x >= 0 && item.pos.y >= 0)
@@ -2080,7 +2080,7 @@ void unmarshallItem(reader &th, item_def &item)
     item.sub_type    = (unsigned char) unmarshallByte(th);
     item.plus        = unmarshallShort(th);
     item.plus2       = unmarshallShort(th);
-    item.special     = unmarshallLong(th);
+    item.special     = unmarshallInt(th);
     item.quantity    = unmarshallShort(th);
     item.colour      = (unsigned char) unmarshallByte(th);
 
@@ -2091,7 +2091,7 @@ void unmarshallItem(reader &th, item_def &item)
 
     item.pos.x       = unmarshallShort(th);
     item.pos.y       = unmarshallShort(th);
-    item.flags       = (unsigned long) unmarshallLong(th);
+    item.flags       = unmarshallInt(th);
     item.link        = unmarshallShort(th);
 
     unmarshallShort(th);  // igrd[item.x][item.y] -- unused
@@ -2189,8 +2189,8 @@ void marshallMonster(writer &th, const monsters &m)
     for (unsigned int i = 0; i < m.travel_path.size(); i++)
         marshallCoord(th, m.travel_path[i]);
 
-    marshallLong(th, m.flags);
-    marshallLong(th, m.experience);
+    marshallInt(th, m.flags);
+    marshallInt(th, m.experience);
 
     marshallShort(th, m.enchantments.size());
     for (mon_enchant_list::const_iterator i = m.enchantments.begin();
@@ -2303,14 +2303,14 @@ void tag_construct_level_tiles(writer &th)
                 rle_count++;
                 if (rle_count == 0x100)
                 {
-                    marshallLong(th, last_tile);
+                    marshallInt(th, last_tile);
                     marshallByte(th, (char)0xFF);
                     rle_count = 1;
                 }
             }
             else
             {
-                marshallLong(th, last_tile);
+                marshallInt(th, last_tile);
                 // Note: the unsigned char tile count gets streamed
                 // as a signed char here.  It gets read back into
                 // an unsigned char in the read function.
@@ -2319,7 +2319,7 @@ void tag_construct_level_tiles(writer &th)
             }
         }
 
-    marshallLong(th, tile);
+    marshallInt(th, tile);
     marshallByte(th, rle_count);
 
     // fg
@@ -2336,20 +2336,20 @@ void tag_construct_level_tiles(writer &th)
                 rle_count++;
                 if (rle_count == 0x100)
                 {
-                    marshallLong(th, last_tile);
+                    marshallInt(th, last_tile);
                     marshallByte(th, (char)0xFF);
                     rle_count = 1;
                 }
             }
             else
             {
-                marshallLong(th, last_tile);
+                marshallInt(th, last_tile);
                 marshallByte(th, rle_count);
                 rle_count = 1;
             }
         }
 
-    marshallLong(th, tile);
+    marshallInt(th, tile);
     marshallByte(th, rle_count);
 
     // flavour
@@ -2377,9 +2377,9 @@ static void tag_read_level( reader &th, char minorVersion )
     env.floor_colour = unmarshallByte(th);
     env.rock_colour  = unmarshallByte(th);
 
-    env.level_flags  = (unsigned long) unmarshallLong(th);
+    env.level_flags  = unmarshallInt(th);
 
-    env.elapsed_time = unmarshallLong(th);
+    env.elapsed_time = unmarshallInt(th);
     if (minorVersion >= TAG_MINOR_OLD_POS)
         env.old_player_pos = unmarshallCoord(th);
     else
@@ -2391,7 +2391,7 @@ static void tag_read_level( reader &th, char minorVersion )
     // how many Y?
     const int gy = unmarshallShort(th);
 
-    env.turns_on_level = unmarshallLong(th);
+    env.turns_on_level = unmarshallInt(th);
 
     for (int i = 0; i < gx; i++)
         for (int j = 0; j < gy; j++)
@@ -2402,7 +2402,7 @@ static void tag_read_level( reader &th, char minorVersion )
 
             env.map_knowledge[i][j].object   = unmarshallShowtype(th);
             env.map_knowledge[i][j].flags    = unmarshallShort(th);
-            env.pgrid[i][j] = unmarshallLong(th);
+            env.pgrid[i][j] = unmarshallInt(th);
 
             mgrd[i][j] = NON_MONSTER;
             env.cgrid[i][j] = (unsigned short) unmarshallShort(th);
@@ -2447,7 +2447,7 @@ static void tag_read_level( reader &th, char minorVersion )
     env.sanctuary_pos  = unmarshallCoord(th);
     env.sanctuary_time = unmarshallByte(th);
 
-    env.spawn_random_rate = unmarshallLong(th);
+    env.spawn_random_rate = unmarshallInt(th);
 
     env.markers.read(th, minorVersion);
 
@@ -2465,7 +2465,7 @@ static void tag_read_level( reader &th, char minorVersion )
             heightmap(*ri) = unmarshallShort(th);
     }
 
-    env.forest_awoken_until = unmarshallLong(th);
+    env.forest_awoken_until = unmarshallInt(th);
     if (minorVersion >= TAG_MINOR_LEVEL_VAULTS)
         unmarshall_level_vault_data(th);
 }
@@ -2530,8 +2530,8 @@ void unmarshallMonster(reader &th, monsters &m)
         m.travel_path.push_back(unmarshallCoord(th));
     }
 
-    m.flags      = unmarshallLong(th);
-    m.experience = static_cast<unsigned long>(unmarshallLong(th));
+    m.flags      = unmarshallInt(th);
+    m.experience = unmarshallInt(th);
 
     m.enchantments.clear();
     const int nenchs = unmarshallShort(th);
@@ -2707,7 +2707,7 @@ void tag_read_level_tiles(reader &th)
         {
             if (rle_count == 0)
             {
-                tile      = unmarshallLong(th);
+                tile      = unmarshallInt(th);
                 rle_count = unmarshallByte(th);
             }
             env.tile_bk_bg[i][j] = tile;
@@ -2721,7 +2721,7 @@ void tag_read_level_tiles(reader &th)
         {
             if (rle_count == 0)
             {
-                tile      = unmarshallLong(th);
+                tile      = unmarshallInt(th);
                 rle_count = unmarshallByte(th);
             }
             env.tile_bk_fg[i][j] = tile;
