@@ -489,6 +489,13 @@ void dgn_erase_unused_vault_placements()
             dprf("Removing references to unused map #%d) '%s' (%d,%d) (%d,%d)",
                  i, vp->map.name.c_str(), vp->pos.x, vp->pos.y,
                  vp->size.x, vp->size.y);
+
+            if (!vp->seen)
+            {
+                dprf("Unregistering unseen vault: %s", vp->map.name.c_str());
+                dgn_unregister_vault(vp->map);
+            }
+
             delete vp;
             env.level_vaults.erase(env.level_vaults.begin() + i);
 
@@ -667,6 +674,22 @@ void dgn_register_vault(const map_def &map)
             you.uniq_map_tags.insert(tag);
         else if (tag.find("luniq_") == 0)
             env.level_uniq_map_tags.insert(tag);
+    }
+}
+
+void dgn_unregister_vault(const map_def &map)
+{
+    you.uniq_map_names.erase(map.name);
+    env.level_uniq_maps.erase(map.name);
+
+    std::vector<std::string> tags = split_string(" ", map.tags);
+    for (int t = 0, ntags = tags.size(); t < ntags; ++t)
+    {
+        const std::string &tag = tags[t];
+        if (tag.find("uniq_") == 0)
+            you.uniq_map_tags.erase(tag);
+        else if (tag.find("luniq_") == 0)
+            env.level_uniq_map_tags.erase(tag);
     }
 }
 
@@ -4581,6 +4604,26 @@ const map_def *dgn_safe_place_map(const map_def *mdef,
             {
                 return (NULL);
             }
+        }
+    }
+}
+
+vault_placement *dgn_vault_at(coord_def p)
+{
+    const int map_index = env.level_map_ids(p);
+    return (map_index == INVALID_MAP_INDEX? NULL : env.level_vaults[map_index]);
+}
+
+void dgn_seen_vault_at(coord_def p)
+{
+    if (vault_placement *vp = dgn_vault_at(p))
+    {
+        if (!vp->seen)
+        {
+            dprf("Vault %s (%d,%d)-(%d,%d) seen",
+                 vp->map.name.c_str(), vp->pos.x, vp->pos.y,
+                 vp->size.x, vp->size.y);
+            vp->seen = true;
         }
     }
 }

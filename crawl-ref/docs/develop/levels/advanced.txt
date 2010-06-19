@@ -231,10 +231,19 @@ a. Abyssal vaults must be small: no larger than 28x23. 23x23 or
    smaller vaults are best so that they can be rotated and fit in
    anywhere on the level.
 
-b. Unique abyssal vaults may never be seen. If you have a unique vault
-   (i.e. a vault without allow_dup), the chances are good that the
-   player will trigger an abyss shift before they meet your vault, and
-   that your vault will disappear, never to be recreated.
+b. The player may never get a chance to explore unique abyss vaults
+   (vaults without the "allow_dup" tag). The player may be teleported
+   away to a different area of the abyss, or never notice your vault
+   before it shifts away.
+
+   Unique vaults that the player never sees will be reused by the
+   abyss builder, but it is still possible for the player to see an
+   outer wall of your vault and not notice it, or for the player to
+   try to explore it and be teleported away by the abyss before they
+   can finish exploring it.
+
+   Once any square of a unique vault has been seen by the player in
+   the abyss, that vault cannot be reused.
 
 c. Portal vaults that lead out of the abyss cannot return to the
    abyss. If you place a bazaar portal or similar in the abyss, the
