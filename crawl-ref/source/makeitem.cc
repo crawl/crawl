@@ -350,7 +350,7 @@ void item_colour(item_def &item)
     {
     case OBJ_WEAPONS:
         if (is_unrandom_artefact(item))
-            break;              // unrandarts already coloured
+            break;              // unrandarts have already been coloured
 
         if (is_demonic(item))
             item.colour = random_uncommon_colour();
@@ -1512,11 +1512,12 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
         case WPN_BLESSED_LONG_SWORD:
         case WPN_BLESSED_SCIMITAR:
         case WPN_BLESSED_KATANA:
-        case WPN_HOLY_BLADE:
+        case WPN_EUDEMON_BLADE:
         case WPN_BLESSED_DOUBLE_SWORD:
         case WPN_BLESSED_GREAT_SWORD:
         case WPN_BLESSED_TRIPLE_SWORD:
         case WPN_HOLY_SCOURGE:
+        case WPN_TRISHULA:
             rc = SPWPN_HOLY_WRATH;
             break;
 
@@ -3160,9 +3161,13 @@ int items(int allow_uniques,       // not just true-false,
 
     // determine base_type for item generated {dlb}:
     if (force_class != OBJ_RANDOM)
+    {
+        ASSERT(force_class < NUM_OBJECT_CLASSES);
         item.base_type = force_class;
+    }
     else
     {
+        ASSERT(force_type == OBJ_RANDOM);
         item.base_type = static_cast<object_class_type>(
             random_choose_weighted(  5, OBJ_STAVES,
                                     15, OBJ_BOOKS,
@@ -3191,6 +3196,9 @@ int items(int allow_uniques,       // not just true-false,
         }
     }
 
+    ASSERT(force_type == OBJ_RANDOM
+           || force_type < get_max_subtype(item.base_type));
+
     item.quantity = 1;          // generally the case
 
     if (force_ego < SP_FORBID_EGO)
@@ -3199,6 +3207,7 @@ int items(int allow_uniques,       // not just true-false,
         if (get_unique_item_status(force_ego) == UNIQ_NOT_EXISTS)
         {
             make_item_unrandart(mitm[p], force_ego);
+            ASSERT(mitm[p].is_valid());
             return (p);
         }
         // the base item otherwise

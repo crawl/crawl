@@ -12,6 +12,7 @@
 # stairs are one-way; the player cannot return to a level once left.
 
 NAME: multilevel_portal_vault_entry
+DEPTH: D
 # Demo vault, disabled.
 WEIGHT: 0
 MARKER: O = lua:one_way_stair { \

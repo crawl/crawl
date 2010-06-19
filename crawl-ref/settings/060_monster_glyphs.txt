@@ -15,3 +15,6 @@ cset_unicode = invis_exposed:~
 
 # spiders and insects
 mon_glyph = demonic crawler : green 3
+
+# unique monsters
+mon_glyph = Rupert : red

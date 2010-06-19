@@ -528,7 +528,7 @@ void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
     const mon_attack_type att_types[] =
     {
         AT_BITE, AT_STING, AT_ENGULF, AT_CLAW, AT_PECK, AT_HEADBUTT, AT_PUNCH,
-        AT_KICK, AT_TENTACLE_SLAP, AT_TAIL_SLAP, AT_GORE, AT_CONSTRICT
+        AT_KICK, AT_TENTACLE_SLAP, AT_TAIL_SLAP, AT_GORE, AT_TRUNK_SLAP
     };
 
     att_type = RANDOM_ELEMENT(att_types);
@@ -821,6 +821,10 @@ std::vector<ghost_demon> ghost_demon::find_ghosts()
 {
     std::vector<ghost_demon> gs;
 
+    // No ghosts in the Temple.
+    if (player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
+        return (gs);
+
     if (!you.is_undead)
     {
         ghost_demon player;
@@ -890,40 +894,21 @@ void ghost_demon::find_extra_ghosts( std::vector<ghost_demon> &gs, int n )
 // Returns the number of extra ghosts allowed on the level.
 int ghost_demon::n_extra_ghosts()
 {
-    const int lev = you.absdepth0 + 1;
-    const int subdepth = subdungeon_depth(you.where_are_you, you.absdepth0);
-
-    if (you.level_type == LEVEL_PANDEMONIUM
-        || you.level_type == LEVEL_ABYSS
-        || (you.level_type == LEVEL_DUNGEON
-            && (you.where_are_you == BRANCH_CRYPT
-                || you.where_are_you == BRANCH_TOMB
-                || you.where_are_you == BRANCH_HALL_OF_ZOT
-                || player_in_hell()))
-        || lev > 22)
+    if (you.level_type != LEVEL_ABYSS
+        && you.level_type != LEVEL_PANDEMONIUM)
     {
-        return (MAX_GHOSTS - 1);
+        const int subdepth  = level_id::current().depth;
+        // Single ghosts-only: D:1-8, Lair:1, Orc:1, and non-dungeon
+        // areas at this depth, such as portal vaults.
+        if (subdepth < 9 && you.where_are_you == BRANCH_MAIN_DUNGEON
+            || subdepth < 2 && you.where_are_you == BRANCH_LAIR
+            || subdepth < 2 && you.where_are_you == BRANCH_ORCISH_MINES)
+        {
+            return (0);
+        }
     }
 
-    if (you.where_are_you == BRANCH_ECUMENICAL_TEMPLE)
-        return (0);
-
-    // No multiple ghosts until level 9 of the main dungeon.
-    if (lev < 9 && you.where_are_you == BRANCH_MAIN_DUNGEON
-        || subdepth < 2 && you.where_are_you == BRANCH_LAIR
-        || subdepth < 2 && you.where_are_you == BRANCH_ORCISH_MINES)
-    {
-        return (0);
-    }
-
-    if (you.where_are_you == BRANCH_LAIR
-        || you.where_are_you == BRANCH_ORCISH_MINES
-        || you.where_are_you == BRANCH_MAIN_DUNGEON && lev < 15)
-    {
-        return (1);
-    }
-
-    return (1 + x_chance_in_y(lev, 20) + x_chance_in_y(lev, 40));
+    return (MAX_GHOSTS - 1);
 }
 
 // Sanity checks for some ghost values.

@@ -658,7 +658,7 @@ void bolt::initialise_fire()
 
     ASSERT(in_bounds(source));
     ASSERT(flavour > BEAM_NONE && flavour < BEAM_FIRST_PSEUDO);
-    ASSERT(!drop_item || item && item->is_valid());
+    ASSERT(!drop_item || item && item->defined());
     ASSERT(range >= 0);
     ASSERT(!aimed_at_feet || source == target);
 
@@ -2329,7 +2329,7 @@ bool bolt::stop_at_target() const
 
 void bolt::drop_object()
 {
-    ASSERT( item != NULL && item->is_valid() );
+    ASSERT( item != NULL && item->defined() );
 
     // Conditions: beam is missile and not tracer.
     if (is_tracer || !was_missile)
@@ -3850,7 +3850,7 @@ void bolt::enchantment_affect_monster(monsters* mon)
     // Doing this here so that the player gets to see monsters
     // "flicker and vanish" when turning invisible....
     if (effect_known)
-        _ench_animation( real_flavour, mon );
+        _ench_animation(real_flavour, mon);
     else
         _zap_animation(-1, mon, false);
 
@@ -4187,7 +4187,7 @@ void bolt::affect_monster(monsters* mon)
 
     defer_rand r;
     int rand_ev = random2(mon->ev);
-    bool dmsl = mon->type == MONS_KIRKE;
+    bool dmsl = mons_class_flag(mon->type, M_DEFLECT_MISSILES);
 
     // FIXME: We're randomising mon->evasion, which is further
     // randomised inside test_beam_hit.  This is so we stay close to the
@@ -4202,6 +4202,14 @@ void bolt::affect_monster(monsters* mon)
             {
                 msg::stream << mon->name(DESC_CAP_THE) << " deflects the "
                             << name << '!' << std::endl;
+            }
+            else if (mons_class_flag(mon->type, M_PHASE_SHIFT)
+                     && _test_beam_hit(beam_hit, rand_ev - random2(8),
+                                       is_beam, false, false, r))
+            {
+                msg::stream << mon->name(DESC_CAP_THE) << " momentarily phases "
+                            << "out as the " << name << " passes through "
+                            << mon->pronoun(PRONOUN_OBJECTIVE) << ".\n";
             }
             else
             {
@@ -4243,8 +4251,7 @@ void bolt::affect_monster(monsters* mon)
     // The beam hit.
     if (mons_near(mon))
     {
-        // Monsters don't currently use Phase Shift and are never currently
-        // helpless in ranged combat.
+        // Monsters are never currently helpless in ranged combat.
         if (hit_verb.empty())
             hit_verb = engulfs ? "engulfs" : "hits";
 
@@ -4724,8 +4731,13 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
 
     case BEAM_INVISIBILITY:
     {
-        if (mons_is_mimic(mon->type))
+        // Mimic or already glowing.
+        if (mons_is_mimic(mon->type)
+            || mons_class_flag(mon->type, M_GLOWS_LIGHT)
+            || mons_class_flag(mon->type, M_GLOWS_RADIATION))
+        {
             return (MON_UNAFFECTED);
+        }
 
         // Store the monster name before it becomes an "it" -- bwr
         const std::string monster_name = mon->name(DESC_CAP_THE);
@@ -4743,7 +4755,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
                 mprf("%s flickers %s",
                      monster_name.c_str(),
                      mon->visible_to(&you) ? "for a moment."
-                                                 : "and vanishes!" );
+                                           : "and vanishes!");
 
                 if (!mon->visible_to(&you))
                     autotoggle_autopickup(true);
@@ -4775,7 +4787,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
 
     case BEAM_PORKALATOR:
     {
-        // Monster's which use the ghost structure can't be properly
+        // Monsters which use the ghost structure can't be properly
         // restored from hog form.
         if (mons_is_ghost_demon(mon->type))
             return (MON_UNAFFECTED);
@@ -5514,7 +5526,7 @@ std::string bolt::get_short_name() const
     if (!short_name.empty())
         return (short_name);
 
-    if (item != NULL && item->is_valid())
+    if (item != NULL && item->defined())
         return item->name(DESC_NOCAP_A, false, false, false, false,
                           ISFLAG_IDENT_MASK | ISFLAG_COSMETIC_MASK
                           | ISFLAG_RACIAL_MASK);

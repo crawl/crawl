@@ -39,7 +39,8 @@ void dgn_island_centred_at(const coord_def &c,
                               false);
         radius += 3;
     }
-    for (int i = 0; i < n_points; ++i) {
+    for (int i = 0; i < n_points; ++i)
+    {
         const int thisrad = random2(1 + radius);
         const coord_def p = dgn_random_point_from(c, thisrad, border_margin);
         if (!p.origin())
@@ -56,8 +57,10 @@ void dgn_smooth_height_at(coord_def c, int radius, int max_height)
     const int max_delta = radius * radius * 2 + 2;
     int divisor = 0;
     int total = 0;
-    for (int y = c.y - radius; y <= c.y + radius; ++y) {
-        for (int x = c.x - radius; x <= c.x + radius; ++x) {
+    for (int y = c.y - radius; y <= c.y + radius; ++y)
+    {
+        for (int x = c.x - radius; x <= c.x + radius; ++x)
+        {
             const coord_def p(x, y);
             if (!in_bounds(p))
                 continue;
@@ -139,7 +142,8 @@ void dgn_island_plan::build_island()
                           x_chance_in_y(atoll_roll, 100));
 
     const int additional_heights = resolve_range(n_aux_centres);
-    for (int i = 0; i < additional_heights; ++i) {
+    for (int i = 0; i < additional_heights; ++i)
+    {
         const int addition_offset = resolve_range(aux_centre_offset_range);
 
         const coord_def offsetC =

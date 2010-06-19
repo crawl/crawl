@@ -72,7 +72,7 @@ void lua_push_inv_items(lua_State *ls = NULL)
     int index = 0;
     for (unsigned slot = 0; slot < ENDOFPACK; ++slot)
     {
-        if (you.inv[slot].is_valid())
+        if (you.inv[slot].defined())
         {
             clua_push_item(ls, &you.inv[slot]);
             lua_rawseti(ls, -2, ++index);
@@ -105,7 +105,7 @@ static int l_item_do_wield(lua_State *ls)
     UDATA_ITEM(item);
 
     int slot = -1;
-    if (item && item->is_valid() && in_inventory(*item))
+    if (item && item->defined() && in_inventory(*item))
         slot = item->link;
     bool res = wield_weapon(true, slot);
     lua_pushboolean(ls, res);
@@ -439,7 +439,7 @@ IDEF(ininventory)
 
 IDEF(equip_type)
 {
-    if (!item || !item->is_valid())
+    if (!item || !item->defined())
         return (0);
 
     equipment_type eq = EQ_NONE;
@@ -466,7 +466,7 @@ IDEF(equip_type)
 
 IDEF(weap_skill)
 {
-    if (!item || !item->is_valid())
+    if (!item || !item->defined())
         return (0);
 
     int skill = range_skill(*item);
@@ -482,7 +482,7 @@ IDEF(weap_skill)
 
 IDEF(dropped)
 {
-    if (!item || !item->is_valid())
+    if (!item || !item->defined())
         return (0);
 
     lua_pushboolean(ls, item->flags & ISFLAG_DROPPED);
@@ -492,7 +492,7 @@ IDEF(dropped)
 
 IDEF(can_cut_meat)
 {
-    if (!item || !item->is_valid())
+    if (!item || !item->defined())
         return (0);
 
     lua_pushboolean(ls, can_cut_meat(*item));
@@ -502,7 +502,7 @@ IDEF(can_cut_meat)
 
 IDEF(artefact)
 {
-    if (!item || !item->is_valid())
+    if (!item || !item->defined())
         return (0);
 
     lua_pushboolean(ls, is_artefact(*item));
@@ -512,7 +512,7 @@ IDEF(artefact)
 
 IDEF(branded)
 {
-    if (!item || !item->is_valid() || !item_type_known(*item))
+    if (!item || !item->defined() || !item_type_known(*item))
         return (0);
 
     bool branded = false;
@@ -536,7 +536,7 @@ IDEF(branded)
 
 IDEF(snakable)
 {
-    if (!item || !item->is_valid())
+    if (!item || !item->defined())
         return (0);
 
     lua_pushboolean(ls, item_is_snakable(*item));
@@ -551,7 +551,7 @@ static int l_item_do_pluses (lua_State *ls)
 
     UDATA_ITEM(item);
 
-    if (!item || !item->is_valid() || !item_ident(*item, ISFLAG_KNOW_PLUSES))
+    if (!item || !item->defined() || !item_ident(*item, ISFLAG_KNOW_PLUSES))
     {
         lua_pushboolean(ls, false);
         return (1);
@@ -572,7 +572,7 @@ static int l_item_do_destroy (lua_State *ls)
 
     UDATA_ITEM(item);
 
-    if (!item || !item->is_valid())
+    if (!item || !item->defined())
     {
         lua_pushboolean(ls, false);
         return (0);
@@ -593,7 +593,7 @@ static int l_item_do_dec_quantity (lua_State *ls)
 
     UDATA_ITEM(item);
 
-    if (!item || !item->is_valid())
+    if (!item || !item->defined())
     {
         lua_pushboolean(ls, false);
         return (1);
@@ -621,7 +621,7 @@ static int l_item_do_inc_quantity (lua_State *ls)
 
     UDATA_ITEM(item);
 
-    if (!item || !item->is_valid())
+    if (!item || !item->defined())
     {
         lua_pushboolean(ls, false);
         return (1);
@@ -664,7 +664,7 @@ static int l_item_do_identified (lua_State *ls)
 
     UDATA_ITEM(item);
 
-    if (!item || !item->is_valid())
+    if (!item || !item->defined())
     {
         lua_pushnil(ls);
         return (1);
@@ -780,7 +780,7 @@ static int l_item_swap_slots(lua_State *ls)
     bool verbose = lua_toboolean(ls, 3);
     if (slot1 < 0 || slot1 >= ENDOFPACK
         || slot2 < 0 || slot2 >= ENDOFPACK
-        || slot1 == slot2 || !you.inv[slot1].is_valid())
+        || slot1 == slot2 || !you.inv[slot1].defined())
     {
         return (0);
     }
@@ -905,7 +905,7 @@ static int l_item_equipped_at(lua_State *ls)
 static int l_item_inslot(lua_State *ls)
 {
     int index = luaL_checkint(ls, 1);
-    if (index >= 0 && index < 52 && you.inv[index].is_valid())
+    if (index >= 0 && index < 52 && you.inv[index].defined())
         clua_push_item(ls, &you.inv[index]);
     else
         lua_pushnil(ls);

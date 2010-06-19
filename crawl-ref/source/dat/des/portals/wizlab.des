@@ -1779,7 +1779,8 @@ ENDMAP
 # TODO: Do.
 NAME:       wizlab_alistair
 ORIENT:     encompass
-#TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+WEIGHT:     0
 :           wizlab_setup(_G, "Alistair's Brewery")
 epilogue{{
             wizlab_milestone(_G, "Alistair's Brewery")
@@ -1793,7 +1794,8 @@ ENDMAP
 # TODO: Do.
 NAME:       wizlab_lee
 ORIENT:     encompass
-#TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+WEIGHT:     0
 :           wizlab_setup(_G, "Lee's Rapid Deconstructor")
 epilogue{{
             wizlab_milestone(_G, "Lee's Rapid Deconstructor")
@@ -1807,7 +1809,8 @@ ENDMAP
 # TODO: Do.
 NAME:       wizlab_lehudib
 ORIENT:     encompass
-#TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+WEIGHT:     0
 :           wizlab_setup(_G, "Lehudib's Crystal Spire")
 epilogue{{
             wizlab_milestone(_G, "Lehudib's Crystal Spire")
@@ -1821,7 +1824,8 @@ ENDMAP
 # TODO: Do.
 NAME:       wizlab_maxwell
 ORIENT:     encompass
-#TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+WEIGHT:     0
 :           wizlab_setup(_G, "Maxwell's Forge")
 epilogue{{
             wizlab_milestone(_G, "Maxwell's Forge")
@@ -1835,7 +1839,8 @@ ENDMAP
 # TODO: Do.
 NAME:       wizlab_olgreb
 ORIENT:     encompass
-#TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+WEIGHT:     0
 :           wizlab_setup(_G, "Olgreb's Toxic Laboratory")
 epilogue{{
             wizlab_milestone(_G, "Olgreb's Toxic Laboratory")
@@ -1849,7 +1854,8 @@ ENDMAP
 # TODO: Do.
 NAME:       wizlab_ozocubu
 ORIENT:     encompass
-#TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+WEIGHT:     0
 :           wizlab_setup(_G, "Ozocubu's Refrigerator")
 epilogue{{
             wizlab_milestone(_G, "Ozocubu's Refrigerator")
@@ -1863,7 +1869,8 @@ ENDMAP
 # TODO: Do.
 NAME:       wizlab_cekugob
 ORIENT:     encompass
-#TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+WEIGHT:     0
 :           wizlab_setup(_G, "Cekugob's Oubliette")
 epilogue{{
             wizlab_milestone(_G, "Cekugob's Oubliette")
@@ -1877,7 +1884,8 @@ ENDMAP
 # TODO: Do.
 NAME:       wizlab_botono
 ORIENT:     encompass
-#TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+WEIGHT:     0
 :           wizlab_setup(_G, "Botono's Bayou")
 epilogue{{
             wizlab_milestone(_G, "Botono's Bayou")
@@ -1891,7 +1899,8 @@ ENDMAP
 # TODO: Do.
 NAME:       wizlab_ukta
 ORIENT:     encompass
-#TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+WEIGHT:     0
 :           wizlab_setup(_G, "Ukta's Hut")
 epilogue{{
             wizlab_milestone(_G, "Ukta's Hut")
@@ -1905,7 +1914,8 @@ ENDMAP
 # TODO: Do.
 NAME:       wizlab_alchemist
 ORIENT:     encompass
-#TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
+WEIGHT:     0
 :           wizlab_setup(_G, "The Alchemist's Tower")
 epilogue{{
             wizlab_milestone(_G, "The Alchemist's Tower")

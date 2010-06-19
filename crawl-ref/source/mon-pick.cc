@@ -224,6 +224,7 @@ bool mons_abyss(int mcls)
     case MONS_GREEN_DEATH:
     case MONS_GUARDIAN_SERPENT:
     case MONS_HAIRY_DEVIL:
+    case MONS_HELLEPHANT:
     case MONS_HELLION:
     case MONS_HELLWING:
     case MONS_HELL_HOG:
@@ -467,6 +468,7 @@ int mons_rare_abyss(int mcls)
     case MONS_DRACONIAN_ANNIHILATOR:
     case MONS_DRACONIAN_ZEALOT:
     case MONS_DRACONIAN_SHIFTER:
+    case MONS_HELLEPHANT:
         return 3;
 
     case MONS_DANCING_WEAPON:

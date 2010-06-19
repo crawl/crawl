@@ -8,6 +8,8 @@
 #ifndef MONUTIL_H
 #define MONUTIL_H
 
+#include "mon-util.h"
+
 #include "externs.h"
 #include "enum.h"
 #include "mon-enum.h"
@@ -25,11 +27,11 @@ struct mon_attack_def
     mon_attack_flavour  flavour;
     int                 damage;
 
-    static mon_attack_def attk(int damage,
-                               mon_attack_type type = AT_HIT,
+    static mon_attack_def attk(int dam,
+                               mon_attack_type typ = AT_HIT,
                                mon_attack_flavour flav = AF_PLAIN)
     {
-        mon_attack_def def = { type, flav, damage };
+        mon_attack_def def = { typ, flav, dam };
         return (def);
     }
 };
@@ -112,7 +114,7 @@ struct monsterentry
     unsigned char showchar, colour;
     const char *name;
 
-    unsigned long bitfields;
+    uint64_t bitfields;
     mon_resist_def resists;
 
     short weight;
@@ -213,7 +215,7 @@ mon_attack_def mons_attack_spec(const monsters *mon, int attk_number);
 
 corpse_effect_type mons_corpse_effect(int mc);
 
-bool mons_class_flag(int mc, int bf);
+bool mons_class_flag(int mc, uint64_t bf);
 
 int mons_unusable_items(const monsters *mon);
 
@@ -253,6 +255,7 @@ int mons_real_base_speed(int mc);
 
 bool mons_class_can_regenerate(int mc);
 bool mons_can_regenerate(const monsters *mon);
+zombie_size_type zombie_class_size(monster_type cs);
 int mons_zombie_size(int mc);
 monster_type mons_zombie_base(const monsters *mon);
 bool mons_class_is_zombified(int mc);

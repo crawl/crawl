@@ -308,7 +308,7 @@ int mons_piety(const monsters *mon)
     return (mon->hit_dice * 14);
 }
 
-bool mons_class_flag(int mc, int bf)
+bool mons_class_flag(int mc, uint64_t bf)
 {
     const monsterentry *me = smc;
 
@@ -987,6 +987,27 @@ bool mons_can_regenerate(const monsters *mon)
         return (false);
 
     return (mons_class_can_regenerate(mon->type));
+}
+
+// Size based on zombie class.
+zombie_size_type zombie_class_size(monster_type cs)
+{
+    switch (cs)
+    {
+        case MONS_ZOMBIE_SMALL:
+        case MONS_SIMULACRUM_SMALL:
+        case MONS_SKELETON_SMALL:
+            return (Z_SMALL);
+        case MONS_ZOMBIE_LARGE:
+        case MONS_SIMULACRUM_LARGE:
+        case MONS_SKELETON_LARGE:
+            return (Z_BIG);
+        case MONS_SPECTRAL_THING:
+            return (Z_NOZOMBIE);
+        default:
+            ASSERT(false);
+            return (Z_NOZOMBIE);
+    }
 }
 
 int mons_zombie_size(int mc)
@@ -2982,6 +3003,7 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
         case MONS_NERGALLE:
         case MONS_KIRKE:
         case MONS_DUVESSA:
+        case MONS_THE_ENCHANTRESS:
             gender = GENDER_FEMALE;
             break;
         case MONS_ROYAL_JELLY:

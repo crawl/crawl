@@ -147,7 +147,8 @@ int exercise(int exsk, int deg)
 {
     int ret = 0;
 
-    if (crawl_state.game_is_sprint()) {
+    if (crawl_state.game_is_sprint())
+    {
         deg = sprint_modify_skills(deg);
     }
 

@@ -269,7 +269,7 @@ static void _compare_blood_quantity(item_def &stack, int timer_size)
 void maybe_coagulate_blood_potions_floor(int obj)
 {
     item_def &blood = mitm[obj];
-    ASSERT(blood.is_valid());
+    ASSERT(blood.defined());
     ASSERT(is_blood_potion(blood));
 
     CrawlHashTable &props = blood.props;
@@ -466,7 +466,7 @@ static void _potion_stack_changed_message(item_def &potion, int num_changed,
 // Also handles coagulation messages.
 bool maybe_coagulate_blood_potions_inv(item_def &blood)
 {
-    ASSERT(blood.is_valid());
+    ASSERT(blood.defined());
     ASSERT(is_blood_potion(blood));
 
     CrawlHashTable &props = blood.props;
@@ -573,7 +573,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     // Now that coagulating is necessary, check inventory for !coagulated blood.
     for (int m = 0; m < ENDOFPACK; m++)
     {
-        if (!you.inv[m].is_valid())
+        if (!you.inv[m].defined())
             continue;
 
         if (you.inv[m].base_type == OBJ_POTIONS
@@ -784,7 +784,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
 // Mostly used for (q)uaff, (f)ire, and Evaporate.
 long remove_oldest_blood_potion(item_def &stack)
 {
-    ASSERT(stack.is_valid());
+    ASSERT(stack.defined());
     ASSERT(is_blood_potion(stack));
 
     CrawlHashTable &props = stack.props;
@@ -805,7 +805,7 @@ long remove_oldest_blood_potion(item_def &stack)
 // Used whenever copies of blood potions have to be cleaned up.
 void remove_newest_blood_potion(item_def &stack, int quant)
 {
-    ASSERT(stack.is_valid());
+    ASSERT(stack.defined());
     ASSERT(is_blood_potion(stack));
 
     CrawlHashTable &props = stack.props;
@@ -840,7 +840,7 @@ void remove_newest_blood_potion(item_def &stack, int quant)
 
 void merge_blood_potion_stacks(item_def &source, item_def &dest, int quant)
 {
-    if (!source.is_valid() || !dest.is_valid())
+    if (!source.defined() || !dest.defined())
         return;
 
     ASSERT(quant > 0 && quant <= source.quantity);
@@ -975,7 +975,7 @@ void split_potions_into_decay( int obj, int amount, bool need_msg )
     ASSERT(obj != -1);
     item_def &potion = you.inv[obj];
 
-    ASSERT(potion.is_valid());
+    ASSERT(potion.defined());
     ASSERT(potion.base_type == OBJ_POTIONS);
     ASSERT(amount > 0);
     ASSERT(amount <= potion.quantity);
@@ -1027,7 +1027,7 @@ void split_potions_into_decay( int obj, int amount, bool need_msg )
     // Else, create new stack in inventory.
     int freeslot = find_free_slot(you.inv[obj]);
     if (freeslot >= 0 && freeslot < ENDOFPACK
-        && !you.inv[freeslot].is_valid())
+        && !you.inv[freeslot].defined())
     {
         item_def &item   = you.inv[freeslot];
         item.link        = freeslot;

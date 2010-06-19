@@ -503,7 +503,8 @@ void unixcurses_startup( void )
 
 #ifdef DGL_ENABLE_CORE_DUMP
     rlimit lim;
-    if (!getrlimit(RLIMIT_CORE, &lim)) {
+    if (!getrlimit(RLIMIT_CORE, &lim))
+    {
         lim.rlim_cur = RLIM_INFINITY;
         setrlimit(RLIMIT_CORE, &lim);
     }

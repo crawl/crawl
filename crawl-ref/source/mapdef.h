@@ -26,6 +26,21 @@
 // Invalid heightmap height.
 static const int INVALID_HEIGHT = -31999;
 
+// Exception thrown when a map cannot be loaded from its .dsc file
+// because the .dsc file has changed under it.
+class map_load_exception : public std::exception
+{
+public:
+    map_load_exception(const std::string &_mapname) : mapname(_mapname) { }
+    ~map_load_exception() throw () { }
+    const char *what() const throw()
+    {
+        return mapname.c_str();
+    }
+private:
+    std::string mapname;
+};
+
 // [dshaligram] Maps can be mirrored; for every orientation, there must be
 // a suitable mirror.
 enum map_section_type                  // see maps.cc and dungeon.cc {dlb}
@@ -323,6 +338,9 @@ public:
     std::string add_fproperty(const std::string &sub);
     std::string add_fheight(const std::string &arg);
     void clear_markers();
+
+    void write_maplines(writer &) const;
+    void read_maplines(reader&);
 
 #ifdef USE_TILE
     std::string add_floortile(const std::string &s);
@@ -899,9 +917,11 @@ public:
 
     void write_index(writer&) const;
     void write_full(writer&) const;
+    void write_maplines(writer &) const;
 
     void read_index(reader&);
     void read_full(reader&);
+    void read_maplines(reader&);
 
     void set_file(const std::string &s);
     std::string run_lua(bool skip_main);
@@ -915,7 +935,7 @@ public:
     // Executes post-generation lua code.
     bool run_lua_epilogue(bool croak = false);
 
-    std::string validate_map_def();
+    std::string validate_map_def(const depth_ranges &);
     std::string validate_temple_map();
     // Returns true if this map is in the middle of validation.
     bool is_validating() const { return (validating_map_flag); }
@@ -997,15 +1017,17 @@ public:
     };
 
 private:
-
     void write_depth_ranges(writer&) const;
     void read_depth_ranges(reader&);
     bool test_lua_boolchunk(dlua_chunk &, bool def = false, bool croak = false);
     std::string rewrite_chunk_errors(const std::string &s) const;
     std::string apply_subvault(string_spec &);
+    std::string validate_map_placeable();
 };
 
 const int CHANCE_ROLL = 10000;
+
+void map_register_flag(const std::string &flag);
 
 std::string escape_string(std::string in, const std::string &toesc,
                           const std::string &escapewith);

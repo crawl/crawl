@@ -1012,11 +1012,12 @@ unsigned int item_value(item_def item, bool ident)
         case WPN_DEMON_BLADE:
         case WPN_TRIPLE_SWORD:
         case WPN_BLESSED_KATANA:
-        case WPN_HOLY_BLADE:
+        case WPN_EUDEMON_BLADE:
         case WPN_BLESSED_DOUBLE_SWORD:
         case WPN_BLESSED_GREAT_SWORD:
         case WPN_BLESSED_TRIPLE_SWORD:
         case WPN_HOLY_SCOURGE:
+        case WPN_TRISHULA:
         case WPN_LAJATANG:
             valued += 200;
             break;
@@ -2226,7 +2227,7 @@ ShoppingList::ShoppingList()
 bool ShoppingList::add_thing(const item_def &item, int cost,
                              const level_pos* _pos)
 {
-    ASSERT(item.is_valid());
+    ASSERT(item.defined());
     ASSERT(cost > 0);
 
     SETUP_POS();
@@ -2880,7 +2881,7 @@ const item_def& ShoppingList::get_thing_item(const CrawlHashTable& thing)
     ASSERT(thing.exists(SHOPPING_THING_ITEM_KEY));
 
     const item_def &item = thing[SHOPPING_THING_ITEM_KEY].get_item();
-    ASSERT(item.is_valid());
+    ASSERT(item.defined());
 
     return (item);
 }

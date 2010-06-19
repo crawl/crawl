@@ -579,6 +579,12 @@ static void _get_status_lights(std::vector<status_light>& out)
     if (you.duration[DUR_TELEPORT])
         out.push_back(status_light(LIGHTBLUE, "Tele"));
 
+    if (you.duration[DUR_DEATHS_DOOR])
+    {
+        int color = _dur_colour(LIGHTGREY, dur_expiring(DUR_DEATHS_DOOR));
+        out.push_back(status_light(color, "DDoor"));
+    }
+
     if (you.duration[DUR_DEFLECT_MISSILES])
     {
         int color = _dur_colour( MAGENTA, dur_expiring(DUR_DEFLECT_MISSILES) );
@@ -735,6 +741,12 @@ static void _get_status_lights(std::vector<status_light>& out)
     {
         int color = _dur_colour( BLUE, dur_expiring(DUR_HASTE) );
         out.push_back(status_light(color, "Fast"));
+    }
+
+    if (you.duration[DUR_DEATH_CHANNEL])
+    {
+        int color = _dur_colour(MAGENTA, dur_expiring(DUR_DEATH_CHANNEL));
+        out.push_back(status_light(color, "DChan"));
     }
 
     if (you.duration[DUR_BREATH_WEAPON])
@@ -1566,7 +1578,11 @@ static std::string _overview_screen_title()
     text += you.your_name;
     text += title;
     text += species_job;
-    text += std::string(get_number_of_cols() - linelength - 1, ' ');
+
+    const int num_spaces = get_number_of_cols() - linelength - 1;
+    if (num_spaces > 0)
+        text += std::string(num_spaces, ' ');
+
     text += time_turns;
     text += "</yellow>\n";
 
@@ -1852,7 +1868,7 @@ static std::vector<formatted_string> _get_overview_resistances(
              "%sConserve   : %s\n"
              "%sRes.Corr.  : %s\n"
              "%sClarity    : %s\n"
-             "\n",
+             ,
              _determine_colour_string(rinvi, 1), itosym1(rinvi),
              _determine_colour_string(rward, 1), itosym1(rward),
              _determine_colour_string(rcons, 1), itosym1(rcons),
@@ -1860,17 +1876,25 @@ static std::vector<formatted_string> _get_overview_resistances(
              _determine_colour_string(rclar, 1), itosym1(rclar));
     cols.add_formatted(1, buf, false);
 
-    if (scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid))
+    const int stasis = wearing_amulet(AMU_STASIS, calc_unid);
+    const int notele = scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid);
+    if (notele && !stasis)
     {
-        snprintf(buf, sizeof buf, "\n%sPrev.Telep.: %s",
+        snprintf(buf, sizeof buf, "%sPrev.Telep.: %s",
                  _determine_colour_string(-1, 1), itosym1(1));
     }
     else
     {
-        const int rrtel = !!player_teleport(calc_unid);
-        snprintf(buf, sizeof buf, "\n%sRnd.Telep. : %s",
-                 _determine_colour_string(rrtel, 1), itosym1(rrtel));
+        snprintf(buf, sizeof buf, "%sStasis     : %s",
+                 _determine_colour_string(stasis, 1), itosym1(stasis));
     }
+    cols.add_formatted(1, buf, false);
+
+    // If you need extra space, rnd tele conflicts with stasis/-TELE;
+    // it currently shows separately to avoid the blank.
+    const int rrtel = !!player_teleport(calc_unid);
+    snprintf(buf, sizeof buf, "%sRnd.Telep. : %s",
+             _determine_colour_string(rrtel, 1), itosym1(rrtel));
     cols.add_formatted(1, buf, false);
 
     const int rctel = player_control_teleport(calc_unid);

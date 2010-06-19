@@ -110,6 +110,31 @@ level_id_set Generated_Levels;
 // The minor version for the tag currently being read.
 static int _tag_minor_version = -1;
 
+reader::reader(const std::string &filename, char minorVersion)
+    : _file(NULL), opened_file(false), _pbuf(NULL), _read_offset(0),
+      _minorVersion(minorVersion), seen_enums()
+{
+    _file       = fopen(filename.c_str(), "rb");
+    opened_file = !!_file;
+}
+
+reader::~reader()
+{
+    if (opened_file && _file)
+        fclose(_file);
+}
+
+void reader::advance(size_t offset)
+{
+    read(NULL, offset);
+}
+
+bool reader::valid() const
+{
+    return ((_file && !feof(_file)) ||
+            (_pbuf && _read_offset < _pbuf->size()));
+}
+
 // Reads input in network byte order, from a file or buffer.
 unsigned char reader::readByte()
 {
@@ -814,15 +839,15 @@ void tag_write(tag_type tagID, FILE* outf)
 //
 // minorVersion is available for any sub-readers that need it
 // (like TAG_LEVEL_MONSTERS).
-tag_type tag_read(FILE *fp, char minorVersion)
+tag_type tag_read(FILE *fp, char minorVersion, char expected_tags[NUM_TAGS])
 {
     // Read header info and data
-    short tag_id;
+    short tag_id = NUM_TAGS;
     std::vector<unsigned char> buf;
     {
         reader tmp(fp, minorVersion);
         tag_id = unmarshallShort(tmp);
-        if (tag_id < 0)
+        if (tag_id < 0 || tag_id >= NUM_TAGS)
             return TAG_NO_TAG;
         const long data_size = unmarshallLong(tmp);
         if (data_size < 0)
@@ -832,6 +857,9 @@ tag_type tag_read(FILE *fp, char minorVersion)
         buf.resize(data_size);
         if (read2(fp, &buf[0], buf.size()) != (int)buf.size())
             return TAG_NO_TAG;
+
+        if (!expected_tags[tag_id])
+            return TAG_SKIP;
     }
 
     unwind_var<int> tag_minor_version(_tag_minor_version, minorVersion);
@@ -885,8 +913,9 @@ void tag_missing(int tag, char minorVersion)
             tag_missing_level_tiles();
             break;
         default:
-            perror("Tag is missing; file is likely corrupt.");
-            end(-1);
+            end(-1, false,
+                "Tag (%d) is missing, save file is probably corrupted",
+                tag);
     }
 }
 
@@ -897,7 +926,7 @@ void tag_set_expected(char tags[], int fileType)
 
     for (i = 0; i < NUM_TAGS; i++)
     {
-        tags[i] = -1;
+        tags[i] = 0;
         switch (fileType)
         {
             case TAGTYPE_PLAYER:
@@ -908,7 +937,7 @@ void tag_set_expected(char tags[], int fileType)
                 }
                 break;
             case TAGTYPE_PLAYER_NAME:
-                if (i == TAG_YOU)
+                if (i == TAG_YOU || i == TAG_GAME_STATE)
                     tags[i] = 1;
                 break;
             case TAGTYPE_LEVEL:
@@ -1094,6 +1123,7 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.normal_vision);
     marshallByte(th, you.current_vision);
     marshallByte(th, you.hell_exit);
+    marshallByte(th, you.hell_branch);
 
     // elapsed time
     marshallLong(th, you.elapsed_time);
@@ -1383,6 +1413,7 @@ static void marshall_mapdef(writer &th, const map_def &map)
     marshallStringNoMax(th, map.name);
     map.write_full(th);
     map.write_index(th);
+    map.write_maplines(th);
 }
 
 static map_def unmarshall_mapdef(reader &th)
@@ -1391,6 +1422,8 @@ static map_def unmarshall_mapdef(reader &th)
     map.name = unmarshallStringNoMax(th);
     map.read_full(th);
     map.read_index(th);
+    if (_tag_minor_version >= TAG_MINOR_VAULT_MAPS)
+        map.read_maplines(th);
     return map;
 }
 
@@ -1403,6 +1436,7 @@ static void marshall_vault_placement(writer &th, const vault_placement &vp)
     marshall_iterator(th, vp.exits.begin(), vp.exits.end(), marshallCoord);
     marshallShort(th, vp.level_number);
     marshallShort(th, vp.rune_subst);
+    marshallByte(th, vp.seen);
 }
 
 static vault_placement unmarshall_vault_placement(reader &th)
@@ -1415,6 +1449,12 @@ static vault_placement unmarshall_vault_placement(reader &th)
     unmarshall_vector(th, vp.exits, unmarshallCoord);
     vp.level_number = unmarshallShort(th);
     vp.rune_subst   = unmarshallShort(th);
+
+    if (_tag_minor_version >= TAG_MINOR_VAULT_SEEN)
+        vp.seen = !!unmarshallByte(th);
+    else
+        vp.seen = false;
+
     return vp;
 }
 
@@ -1651,6 +1691,10 @@ static void tag_read_you(reader &th, char minorVersion)
     you.normal_vision  = unmarshallByte(th);
     you.current_vision = unmarshallByte(th);
     you.hell_exit      = unmarshallByte(th);
+    if (_tag_minor_version >= TAG_MINOR_HELL_BRANCH)
+        you.hell_branch = static_cast<branch_type>( unmarshallByte(th) );
+    else
+        you.hell_branch = BRANCH_MAIN_DUNGEON;
 
     // elapsed time
     you.elapsed_time   = unmarshallLong(th);

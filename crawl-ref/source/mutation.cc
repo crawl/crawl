@@ -750,7 +750,6 @@ static int _handle_conflicting_mutations(mutation_type mutation,
     // These are mutations which can't be traded off against each other,
     // so we just fail.
     const mutation_type fail_conflict[][2] = {
-        { MUT_REGENERATION, MUT_SLOW_METABOLISM },
         { MUT_FANGS,        MUT_BEAK            },
         { MUT_HOOVES,       MUT_TALONS          }
     };
@@ -902,8 +901,10 @@ static bool _physiology_mutation_conflict(mutation_type mutat)
             if (mutat == _body_facets[i].mut)
                 eq_type = _body_facets[i].eq;
 
-        if (eq_type != EQ_NONE) {
-            for (unsigned i = 0; i < ARRAYSZ(_body_facets); i++) {
+        if (eq_type != EQ_NONE)
+        {
+            for (unsigned i = 0; i < ARRAYSZ(_body_facets); i++)
+            {
                 if (eq_type == _body_facets[i].eq
                     && mutat != _body_facets[i].mut
                     && player_mutation_level(_body_facets[i].mut))
@@ -1093,10 +1094,6 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     {
         return (false);
     }
-
-    // Saprovorous/gourmand can't be randomly acquired.
-    if ((mutat == MUT_SAPROVOROUS || mutat == MUT_GOURMAND) && !force_mutation)
-        return (false);
 
     if (you.species == SP_NAGA)
     {
@@ -1499,8 +1496,6 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
     return (result);
 }
 
-static int ct_of_tier[] = { 0, 2, 3, 1 };
-
 static const facet_def _demon_facets[] =
 {
     // Body Slot facets
@@ -1632,9 +1627,14 @@ static bool _slot_is_unique(const mutation_type mut[],
 static std::vector<demon_mutation_info> _select_ds_mutations()
 {
     int NUM_BODY_SLOTS = 1;
-    // 1 in 10 chance to create a monsterous set
+    int ct_of_tier[] = { 0, 2, 3, 1 };
+    // 1 in 10 chance to create a monstrous set
     if (one_chance_in(10))
+    {
         NUM_BODY_SLOTS = 3;
+        ct_of_tier[1] = 1;
+        ct_of_tier[2] = 5;
+    }
 
 try_again:
     std::vector<demon_mutation_info> ret;
@@ -1807,6 +1807,11 @@ bool perma_mutate(mutation_type which_mut, int how_much)
     how_much = std::min(static_cast<short>(how_much),
                         get_mutation_def(which_mut).levels);
 
+    int rc = 1;
+    // clear out conflicting mutations
+    while (rc == 1)
+        rc = _handle_conflicting_mutations(which_mut, true);
+
     while (how_much-- > 0)
         if (mutate(which_mut, false, true, false, false, true))
             levels++;
@@ -1868,13 +1873,11 @@ bool balance_demonic_guardian()
             && att == ATT_FRIENDLY && !one_chance_in(3))
         {
             mpr(mons->name(DESC_CAP_THE) + " "
-                + summoned_poof_msg(*mons), MSGCH_PLAIN);
+                + summoned_poof_msg(*mons) + "!", MSGCH_PLAIN);
             monster_die(*mons, KILL_NONE, NON_MONSTER);
         }
         else
-        {
             total += mons_val;
-        }
     }
 
     return (false);

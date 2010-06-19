@@ -435,3 +435,14 @@ function dgn.point_in_radius(point1, point2, radius)
   return dgn.distance(point1.x, point1.y, point2.x, point2.y) <=
     (radius*radius)+1
 end
+
+-- Returns a random and uniform colour for use in vaultioneering
+function dgn.random_colour (colours)
+  if colours == nil or #colours == 0 then
+    colours = {"blue", "green", "cyan", "red", "magenta", "brown", "lightgray",
+               "darkgray", "lightblue", "lightgreen", "lightcyan", "lightmagenta",
+               "yellow", "white"}
+  end
+
+  return util.random_from(colours)
+end

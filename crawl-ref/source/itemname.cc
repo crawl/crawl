@@ -116,7 +116,11 @@ std::string item_def::name(description_level_type descrip,
     if (terse && descrip != DESC_DBNAME)
         descrip = DESC_PLAIN;
 
+    long corpse_flags;
+
     if (base_type == OBJ_CORPSES && is_named_corpse(*this)
+        && !(((corpse_flags = props[CORPSE_NAME_TYPE_KEY].get_long())
+             & MF_NAME_SPECIES) && !(corpse_flags & MF_NAME_DEFINITE))
         && !starts_with(get_corpse_name(*this), "shaped "))
     {
         switch (descrip)
@@ -1248,10 +1252,12 @@ std::string item_def::name_aux(description_level_type desc,
         else if (flags & ISFLAG_BLESSED_WEAPON && !dbname)
         {   // Since Angels and Daevas can get blessed base items, we
             // need a separate flag for this, so they can still have
-            // their holy scourges and holy blades.
+            // their holy weapons.
             buff << "Blessed ";
             if (weapon_skill(*this) == SK_MACES_FLAILS)
                 buff << "Scourge";
+            else if (weapon_skill(*this) == SK_POLEARMS)
+                buff << "Trishula";
             else
                 buff << "Blade";
             break;
@@ -1795,15 +1801,18 @@ std::string item_def::name_aux(description_level_type desc,
         if (food_is_rotten(*this) && !dbname)
             buff << "rotting ";
 
-        unsigned long name_type;
+        unsigned long name_type, name_flags;
 
-        const std::string _name  = get_corpse_name(*this, &name_type);
+        const std::string _name  = get_corpse_name(*this, &name_flags);
         const bool        shaped = starts_with(_name, "shaped ");
+        name_type = name_flags & MF_NAME_MASK;
 
         if (!_name.empty() && name_type == MF_NAME_ADJECTIVE)
             buff << _name << " ";
 
-        if (!dbname && !starts_with(_name, "the "))
+        if (name_flags & MF_NAME_SPECIES && name_type == MF_NAME_REPLACE)
+            buff << _name << " ";
+        else if (!dbname && !starts_with(_name, "the "))
         {
             buff << mons_type_name(it_plus, DESC_PLAIN) << ' ';
 
@@ -1818,7 +1827,8 @@ std::string item_def::name_aux(description_level_type desc,
         else
             buff << "corpse bug";
 
-        if (!_name.empty() && !shaped && name_type != MF_NAME_ADJECTIVE)
+        if (!_name.empty() && !shaped && name_type != MF_NAME_ADJECTIVE
+            && !(name_flags & MF_NAME_SPECIES))
         {
             if (name_type == MF_NAME_SUFFIX)
                 buff << " " << _name;
@@ -3159,35 +3169,15 @@ static item_names_by_glyph_map item_names_by_glyph_cache;
 
 void init_item_name_cache()
 {
-    const int sub_type_limits[] = {
-        NUM_WEAPONS,
-        NUM_MISSILES,
-        NUM_ARMOURS,
-        NUM_WANDS,
-        NUM_FOODS,
-        0, // Unknown I
-        NUM_SCROLLS,
-        NUM_JEWELLERY,
-        NUM_POTIONS,
-        0, // Unknown II
-        NUM_BOOKS,
-        NUM_STAVES,
-        1, // Orbs
-        NUM_MISCELLANY,
-        0, // Corpses
-        1, // Gold
-        -1
-    };
-
     item_names_cache.clear();
     item_names_by_glyph_cache.clear();
 
-    for (int i = 0; sub_type_limits[i] != -1; i++)
+    for (int i = 0; i < NUM_OBJECT_CLASSES; i++)
     {
         object_class_type base_type = static_cast<object_class_type>(i);
-        unsigned char     num_sub_types = (unsigned char) sub_type_limits[i];
+        const int num_sub_types = get_max_subtype(base_type);
 
-        for (unsigned char sub_type = 0; sub_type < num_sub_types; sub_type++)
+        for (int sub_type = 0; sub_type < num_sub_types; sub_type++)
         {
             if (base_type == OBJ_BOOKS)
             {

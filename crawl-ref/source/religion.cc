@@ -1098,7 +1098,7 @@ static const item_def* _find_missile_launcher(int skill)
 {
     for (int i = 0; i < ENDOFPACK; ++i)
     {
-        if (!you.inv[i].is_valid())
+        if (!you.inv[i].defined())
             continue;
 
         const item_def &item = you.inv[i];

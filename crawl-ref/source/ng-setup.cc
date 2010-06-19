@@ -354,7 +354,7 @@ void newgame_make_item(int slot, equipment_type eqslot,
 
         for (int i = 0; i < ENDOFPACK; ++i)
         {
-            if (!you.inv[i].is_valid())
+            if (!you.inv[i].defined())
             {
                 slot = i;
                 break;
@@ -1243,7 +1243,7 @@ void _setup_tutorial_miscs()
 static void _mark_starting_books()
 {
     for (int i = 0; i < ENDOFPACK; ++i)
-        if (you.inv[i].is_valid() && you.inv[i].base_type == OBJ_BOOKS)
+        if (you.inv[i].defined() && you.inv[i].base_type == OBJ_BOOKS)
             mark_had_book(you.inv[i]);
 }
 
@@ -1251,7 +1251,7 @@ static void _racialise_starting_equipment()
 {
     for (int i = 0; i < ENDOFPACK; ++i)
     {
-        if (you.inv[i].is_valid())
+        if (you.inv[i].defined())
         {
             // Don't change object type modifier unless it starts plain.
             if ((you.inv[i].base_type == OBJ_ARMOUR
@@ -1588,7 +1588,7 @@ static void _setup_generic(const newgame_def& ng)
     calc_total_skill_points();
 
     for (int i = 0; i < ENDOFPACK; ++i)
-        if (you.inv[i].is_valid())
+        if (you.inv[i].defined())
         {
             // XXX: Why is this here? Elsewhere it's only ever used for runes.
             you.inv[i].flags |= ISFLAG_BEEN_IN_INV;

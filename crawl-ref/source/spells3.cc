@@ -188,7 +188,7 @@ bool detect_curse(int scroll, bool suppress_msg)
     {
         item_def& item = you.inv[i];
 
-        if (!item.is_valid())
+        if (!item.defined())
             continue;
 
         if (item_count <= 1)
@@ -967,7 +967,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
         unsigned long name_type;
         std::string name = get_corpse_name(item, &name_type);
 
-        if (name_type == 0 || name_type == MF_NAME_REPLACE)
+        if (name_type == 0 || name_type & MF_NAME_MASK == MF_NAME_REPLACE)
             name_zombie(&menv[monster], monnum, name);
     }
 

@@ -346,11 +346,13 @@ static std::string _get_seen_branches(bool display)
 
     level_id dungeon_lid(branches[0].id, 0);
     dungeon_lid = find_deepest_explored(dungeon_lid);
-    if (crawl_state.game_is_sprint()) {
+    if (crawl_state.game_is_sprint())
+    {
         snprintf(buffer, sizeof(buffer),
                         "<yellow>Dungeon</yellow> <darkgrey>(1/1)</darkgrey>");
     }
-    else {
+    else
+    {
         snprintf(buffer, sizeof(buffer),
                 dungeon_lid.depth < 10 ?
                         "<yellow>Dungeon</yellow> <darkgrey>(%d/27)</darkgrey>            " :
@@ -402,18 +404,22 @@ static std::string _get_unseen_branches()
     {
         const branch_type branch = branches[i].id;
 
-        if (i != BRANCH_SWAMP && i != BRANCH_SNAKE_PIT && i != BRANCH_SHOALS) {
+        if (i != BRANCH_SWAMP && i != BRANCH_SNAKE_PIT && i != BRANCH_SHOALS)
+        {
             continue;
         }
 
-        if (stair_level.find(branch) != stair_level.end()) {
+        if (stair_level.find(branch) != stair_level.end())
+        {
             possibly_missing_lair_branches++;
         }
-        else {
+        else
+        {
             missing_lair_branch = i;
         }
     }
-    if (possibly_missing_lair_branches < 2) {
+    if (possibly_missing_lair_branches < 2)
+    {
         missing_lair_branch = -1;
     }
 
@@ -434,11 +440,13 @@ static std::string _get_unseen_branches()
     {
         const branch_type branch = branches[i].id;
 
-        if (i == missing_lair_branch) {
+        if (i == missing_lair_branch)
+        {
             continue;
         }
 
-        if (i == BRANCH_VESTIBULE_OF_HELL && found_portals[PORTAL_HELL]) {
+        if (i == BRANCH_VESTIBULE_OF_HELL && found_portals[PORTAL_HELL])
+        {
             continue;
         }
 
@@ -447,8 +455,10 @@ static std::string _get_unseen_branches()
             const branch_type parent_branch = branches[i].parent_branch;
             level_id lid(parent_branch, 0);
             lid = find_deepest_explored(lid);
-            if (lid.depth >= branches[branch].mindepth) {
-                if (branches[branch].mindepth != branches[branch].maxdepth) {
+            if (lid.depth >= branches[branch].mindepth)
+            {
+                if (branches[branch].mindepth != branches[branch].maxdepth)
+                {
                     snprintf(buffer, sizeof buffer,
                         "<darkgrey>%6s: %s:%d-%d</darkgrey>",
                             branches[branch].abbrevname,
@@ -456,7 +466,8 @@ static std::string _get_unseen_branches()
                             branches[branch].mindepth,
                             branches[branch].maxdepth);
                 }
-                else {
+                else
+                {
                     snprintf(buffer, sizeof buffer,
                         "<darkgrey>%6s: %s:%d</darkgrey>",
                             branches[branch].abbrevname,
@@ -476,14 +487,17 @@ static std::string _get_unseen_branches()
     }
 
     /* not actual branches, have to hardcode this stuff here */
-    if (find_deepest_explored(level_id(BRANCH_MAIN_DUNGEON, 0)).depth >= 21) {
-        if (!found_portals[PORTAL_PANDEMONIUM]) {
+    if (find_deepest_explored(level_id(BRANCH_MAIN_DUNGEON, 0)).depth >= 21)
+    {
+        if (!found_portals[PORTAL_PANDEMONIUM])
+        {
             disp += "<darkgrey>   Pan: D:21-27</darkgrey>";
             num_printed_branches++;
             disp += (num_printed_branches % 4) == 0
                 ? "\n" : "     ";
         }
-        if (!found_portals[PORTAL_ABYSS]) {
+        if (!found_portals[PORTAL_ABYSS])
+        {
             disp += "<darkgrey> Abyss: D:21-27</darkgrey>";
             num_printed_branches++;
             disp += (num_printed_branches % 4) == 0
@@ -526,7 +540,7 @@ static std::string _get_altars(bool display)
 // Loops through gods, printing their altar status by color.
 static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
                                           bool print_unseen, bool display)
-{   
+{
     std::string disp;
     char buffer[100];
     int num_printed = 0;

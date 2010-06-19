@@ -482,18 +482,18 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
     int num_dest = 0;
     int jiyva_block = 0;
 
-    const int target_class = _get_target_class( flavour );
+    const int target_class = _get_target_class(flavour);
     if (target_class == OBJ_UNASSIGNED)
         return (false);
 
     // Fedhas worshipers are exempt from the food destruction effect
     // of spores.
-    if(flavour == BEAM_SPORE
-       && you.religion == GOD_FEDHAS)
+    if (flavour == BEAM_SPORE
+        && you.religion == GOD_FEDHAS)
     {
         simple_god_message(" protects your food from the spores.",
                            GOD_FEDHAS);
-        return false;
+        return (false);
     }
 
     // Currently we test against each stack (and item in the stack)
@@ -502,7 +502,7 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
     // factor of junk (which might be more desirable for game play).
     for (int i = 0; i < ENDOFPACK; ++i)
     {
-        if (!you.inv[i].is_valid())
+        if (!you.inv[i].defined())
             continue;
 
         if (you.inv[i].base_type == target_class
@@ -617,7 +617,7 @@ bool expose_items_to_element(beam_type flavour, const coord_def& where,
 
     for (stack_iterator si(where); si; ++si)
     {
-        if (!si->is_valid())
+        if (!si->defined())
             continue;
 
         if (si->base_type == target_class

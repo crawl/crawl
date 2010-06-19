@@ -628,7 +628,7 @@ void handle_delay()
 
         case DELAY_BUTCHER:
         case DELAY_BOTTLE_BLOOD:
-            if (!mitm[delay.parm1].is_valid())
+            if (!mitm[delay.parm1].defined())
                 break;
 
             mprf(MSGCH_MULTITURN_ACTION, "You start %s the %s.",
@@ -683,7 +683,7 @@ void handle_delay()
         if (you.hunger_state == HS_ENGORGED
             || you.hunger_state > HS_SATIATED && player_in_bat_form()
             || you.hunger_state >= HS_SATIATED
-               && mitm[delay.parm1].is_valid()
+               && mitm[delay.parm1].defined()
                && is_poisonous(mitm[delay.parm1]))
         {
             // Messages handled in _food_change() in food.cc.
@@ -705,7 +705,7 @@ void handle_delay()
         // monster could die and create a corpse with the same ID number...
         // However, it would not be at the player's square like the
         // original and that's why we do it this way.
-        if (mitm[delay.parm1].is_valid()
+        if (mitm[delay.parm1].defined()
             && mitm[ delay.parm1 ].base_type == OBJ_CORPSES
             && mitm[ delay.parm1 ].pos == you.pos())
         {
@@ -775,7 +775,7 @@ void handle_delay()
         while (!items_for_multidrop.empty()
                // Don't look for gold in inventory
                && items_for_multidrop[0].slot != PROMPT_GOT_SPECIAL
-               && !you.inv[items_for_multidrop[0].slot].is_valid())
+               && !you.inv[items_for_multidrop[0].slot].defined())
         {
             items_for_multidrop.erase( items_for_multidrop.begin() );
         }
@@ -1027,7 +1027,7 @@ static void _finish_delay(const delay_queue_item &delay)
     case DELAY_BOTTLE_BLOOD:
     {
         item_def &item = mitm[delay.parm1];
-        if (item.is_valid() && item.base_type == OBJ_CORPSES)
+        if (item.defined() && item.base_type == OBJ_CORPSES)
         {
             if (item.sub_type == CORPSE_SKELETON)
             {
@@ -1139,7 +1139,7 @@ static void _finish_delay(const delay_queue_item &delay)
         // quantity (delay.parm2). -- bwr
 
         // Make sure item still exists.
-        if (!you.inv[delay.parm1].is_valid())
+        if (!you.inv[delay.parm1].defined())
             break;
 
         // Must handle unwield_item before we attempt to copy

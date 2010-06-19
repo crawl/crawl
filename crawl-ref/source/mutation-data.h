@@ -1028,7 +1028,7 @@
 },
 
 // Jiyva only mutations
-{ MUT_GELATINOUS_BODY,            0,  3, true, true,
+{ MUT_GELATINOUS_BODY,            0,  3, false, true,
   NULL,
 
   {"Your rubbery body absorbs attacks (AC +1).",
@@ -1046,7 +1046,7 @@
     "gelatinous body"
 },
 
-{ MUT_EYEBALLS,                   0,  3, true, true,
+{ MUT_EYEBALLS,                   0,  3, false, true,
   NULL,
 
   {"Your body is partially covered in golden eyeballs (Acc +3).",
@@ -1064,7 +1064,7 @@
     "eyeballs"
 },
 
-{ MUT_TRANSLUCENT_SKIN,           0,   3, true, true,
+{ MUT_TRANSLUCENT_SKIN,           0,   3, false, true,
   "translucent skin",
 
   {"Your skin is partially translucent.",
@@ -1082,7 +1082,7 @@
    "translucent skin"
 },
 
-{ MUT_PSEUDOPODS,                 0,    3, true, true,
+{ MUT_PSEUDOPODS,                 0,    3, false, true,
   "pseudopods",
 
   {"Armour fits poorly on your pseudopods.",
@@ -1100,7 +1100,7 @@
    "pseudopods"
 },
 
-{ MUT_FOOD_JELLY,                 0,    1, true, true,
+{ MUT_FOOD_JELLY,                 0,    1, false, true,
   "spawn jellies when eating",
 
   {"You occasionally spawn a jelly by eating.", "", ""},
@@ -1112,7 +1112,7 @@
   "jelly spawner"
 },
 
-{ MUT_ACIDIC_BITE,                0,     1, true, true,
+{ MUT_ACIDIC_BITE,                0,     1, false, true,
   "acidic bite",
 
   {"You have acidic saliva.", "", ""},

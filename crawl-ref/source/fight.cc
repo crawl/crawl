@@ -740,12 +740,15 @@ static bool _player_vampire_draws_blood(const monsters* mon, const int damage,
     // Now print message, need biting unless already done (never for bat form!)
     if (needs_bite_msg && !player_in_bat_form())
     {
-        mprf( "You bite %s, and draw %s blood!",
-              mon->name(DESC_NOCAP_THE, true).c_str(),
-              mon->pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str());
+        mprf("You bite %s, and draw %s blood!",
+             mon->name(DESC_NOCAP_THE, true).c_str(),
+             mon->pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str());
     }
     else
-        mprf( "You draw %s's blood!", mon->name(DESC_NOCAP_THE, true).c_str() );
+    {
+        mprf("You draw %s blood!",
+             apostrophise(mon->name(DESC_NOCAP_THE, true)).c_str());
+    }
 
     // Regain hp.
     if (you.hp < you.hp_max)
@@ -760,7 +763,7 @@ static bool _player_vampire_draws_blood(const monsters* mon, const int damage,
         if (player_in_bat_form())
             heal /= 2;
 
-        if (heal > 0)
+        if (heal > 0 && !you.duration[DUR_DEATHS_DOOR])
         {
             inc_hp(heal, false);
             mprf("You feel %sbetter.", (you.hp == you.hp_max) ? "much " : "");
@@ -1170,7 +1173,6 @@ bool melee_attack::player_aux_test_hit()
     const int helpful_evasion =
         defender->melee_evasion(attacker, EV_IGNORE_HELPLESS);
 
-    // No monster Phase Shift yet
     if (you.religion != GOD_ELYVILON
         && you.penance[GOD_ELYVILON]
         && god_hates_your_god(GOD_ELYVILON, you.religion)
@@ -1194,12 +1196,24 @@ bool melee_attack::player_aux_test_hit()
 
     if (to_hit >= evasion || auto_hit)
         return (true);
+
+    const int phaseless_evasion =
+        defender->melee_evasion(attacker, EV_IGNORE_PHASESHIFT);
+
+    if (to_hit >= phaseless_evasion && defender_visible)
+    {
+        mprf("Your %s passes through %s as %s momentarily phases out.",
+            aux_attack.c_str(),
+            defender->name(DESC_NOCAP_THE).c_str(),
+            defender->pronoun(PRONOUN_NOCAP).c_str());
+    }
     else
     {
         mprf("Your %s misses %s.", aux_attack.c_str(),
              defender->name(DESC_NOCAP_THE).c_str());
-        return (false);
     }
+
+    return (false);
 }
 
 // Returns true to end the attack round.
@@ -1431,7 +1445,6 @@ bool melee_attack::player_hits_monster()
         defender->melee_evasion(attacker, EV_IGNORE_HELPLESS);
     dprf("your to-hit: %d; defender effective EV: %d", to_hit, evasion);
 
-    // No monster Phase Shift yet
     if (you.religion != GOD_ELYVILON
         && you.penance[GOD_ELYVILON]
         && god_hates_your_god(GOD_ELYVILON, you.religion)
@@ -1457,6 +1470,15 @@ bool melee_attack::player_hits_monster()
                         << " fails to dodge your attack." << std::endl;
         return (true);
     }
+
+    const int phaseless_evasion =
+        defender->melee_evasion(attacker, EV_IGNORE_PHASESHIFT);
+
+    if (to_hit >= phaseless_evasion && defender_visible)
+        msg::stream << "Your attack passes through "
+                    << defender->name(DESC_NOCAP_THE) << " as "
+                    << defender->pronoun(PRONOUN_NOCAP)
+                    << " momentarily phases out." << std::endl;
 
     return (false);
 }
@@ -1976,7 +1998,8 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
             && !defender->is_summoned()
             && damage_done > 0
             && you.hp < you.hp_max
-            && !one_chance_in(5))
+            && !one_chance_in(5)
+            && !you.duration[DUR_DEATHS_DOOR])
         {
             mpr("You feel better.");
 
@@ -2748,7 +2771,7 @@ static void _find_remains(monsters* mon, int &corpse_class, int &corpse_index,
 
         item_def &item(mitm[idx]);
 
-        if (!item.is_valid() || item.pos != mon->pos())
+        if (!item.defined() || item.pos != mon->pos())
             continue;
 
         items.push_back(idx);
@@ -3262,6 +3285,7 @@ bool melee_attack::apply_damage_brand()
             || attacker->stat_hp() == attacker->stat_maxhp()
             || defender->atype() != ACT_PLAYER
                && defender->as_monster()->is_summoned()
+            || attacker == &you && you.duration[DUR_DEATHS_DOOR]
             || one_chance_in(5))
         {
             break;
@@ -4483,7 +4507,9 @@ std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
         "tentacle-slap",
         "tail-slap",
         "gore",
-        "constrict"
+        "constrict",
+        "trample",
+        "trunk-slap"
     };
 
     ASSERT(attk.type <
@@ -4702,7 +4728,7 @@ static void _steal_item_from_player(monsters *mon)
     int total_value = 0;
     for (int m = 0; m < ENDOFPACK; ++m)
     {
-        if (!you.inv[m].is_valid())
+        if (!you.inv[m].defined())
             continue;
 
         // Cannot unequip player.
@@ -5153,6 +5179,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
              defender->conj_verb("are").c_str(),
              special_attack_punctuation().c_str());
         break;
+
     }
 }
 
@@ -5359,11 +5386,13 @@ void melee_attack::mons_perform_attack_rounds()
 
         if (weapon == NULL)
         {
-            switch(attk.type)
+            switch (attk.type)
             {
             case AT_HEADBUTT:
             case AT_TENTACLE_SLAP:
             case AT_TAIL_SLAP:
+            case AT_TRAMPLE:
+            case AT_TRUNK_SLAP:
                 noise_factor = 150;
                 break;
 
@@ -5498,7 +5527,7 @@ void melee_attack::mons_perform_attack_rounds()
                          defender->name(DESC_CAP_THE).c_str(),
                          defender->conj_verb("phase").c_str(),
                          atk_name(DESC_NOCAP_ITS).c_str(),
-                         defender->pronoun(PRONOUN_NOCAP).c_str());
+                         defender->pronoun(PRONOUN_OBJECTIVE).c_str());
                 }
                 this_round_hit = false;
             }

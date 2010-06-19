@@ -1320,11 +1320,13 @@ static void _append_container(C1& container_base, const C2& container_append)
                           container_append.begin(), container_append.end());
 }
 
-std::string direction_chooser::target_sanctuary_description() const {
+std::string direction_chooser::target_sanctuary_description() const
+{
     return is_sanctuary(target()) ? "sanctuary" : "";
 }
 
-std::string direction_chooser::target_silence_description() const {
+std::string direction_chooser::target_silence_description() const
+{
     return silenced(target()) ? "silenced" : "";
 }
 
@@ -1961,7 +1963,7 @@ std::string get_terse_square_desc(const coord_def &gc)
     }
     else if (you.visible_igrd(gc) != NON_ITEM)
     {
-        if (mitm[you.visible_igrd(gc)].is_valid())
+        if (mitm[you.visible_igrd(gc)].defined())
             desc = mitm[you.visible_igrd(gc)].name(DESC_PLAIN);
     }
     else
@@ -2013,7 +2015,7 @@ void get_square_desc(const coord_def &c, describe_info &inf,
     {
         // Second priority: objects.
         // If examine_mons is true, use terse descriptions.
-        if (mitm[oid].is_valid())
+        if (mitm[oid].defined())
             get_item_desc(mitm[oid], inf, examine_mons);
     }
     else if (show_floor || grid_appearance(c) != DNGN_FLOOR
@@ -3316,6 +3318,10 @@ static std::vector<std::string> _mon_enchantments_vector_string(
     }
     if (paralysed)
         enchant_descriptors.push_back("paralysed");
+
+    // fake enchantment (permanent)
+    if (mons_class_flag(mon->type, M_DEFLECT_MISSILES))
+        enchant_descriptors.push_back("missile deflection");
 
     return enchant_descriptors;
 }

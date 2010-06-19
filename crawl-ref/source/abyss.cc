@@ -217,6 +217,35 @@ static void _abyss_create_rooms(const map_mask &abyss_genlevel_mask,
     }
 }
 
+static void _abyss_erase_stairs_from(const vault_placement *vp)
+{
+    for (vault_place_iterator vi(*vp); vi; ++vi)
+    {
+        const coord_def p(*vi);
+        const dungeon_feature_type feat(grd(p));
+        if (feat_is_stair(feat)
+            && feat != DNGN_EXIT_ABYSS
+            && feat != DNGN_ENTER_PORTAL_VAULT)
+        {
+            grd(p) = DNGN_FLOOR;
+        }
+    }
+}
+
+static bool _abyss_place_map(const map_def *mdef,
+                             bool clobber,
+                             bool make_no_exits = false,
+                             const coord_def &where = INVALID_COORD,
+                             int rune_subst = -1)
+{
+    const bool did_place = dgn_safe_place_map(mdef, clobber, make_no_exits,
+                                              where, rune_subst);
+    if (did_place)
+        _abyss_erase_stairs_from(env.level_vaults[env.level_vaults.size() - 1]);
+
+    return (did_place);
+}
+
 static bool _abyss_place_vault_tagged(const map_mask &abyss_genlevel_mask,
                                       const std::string &tag,
                                       int rune_subst = -1)
@@ -225,7 +254,8 @@ static bool _abyss_place_vault_tagged(const map_mask &abyss_genlevel_mask,
     if (map)
     {
         unwind_vault_placement_mask vaultmask(&abyss_genlevel_mask);
-        return (dgn_place_map(map, false, false, INVALID_COORD, rune_subst));
+        return (_abyss_place_map(map, false, false, INVALID_COORD,
+                                 rune_subst));
     }
     return (false);
 }
@@ -277,6 +307,16 @@ static bool _abyss_place_rune(const map_mask &abyss_genlevel_mask,
     return (false);
 }
 
+// Returns true if items can be generated on the given square.
+static bool _abyss_square_accepts_items(const map_mask &abyss_genlevel_mask,
+                                        coord_def p)
+{
+    return (abyss_genlevel_mask(p)
+            && grd(p) == DNGN_FLOOR
+            && igrd(p) == NON_ITEM
+            && unforbidden(p, MMT_VAULT));
+}
+
 static int _abyss_create_items(const map_mask &abyss_genlevel_mask,
                                bool placed_abyssal_rune,
                                bool use_vaults)
@@ -302,7 +342,7 @@ static int _abyss_create_items(const map_mask &abyss_genlevel_mask,
     std::vector<coord_def> chosen_item_places;
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
     {
-        if (abyss_genlevel_mask(*ri) && grd(*ri) == DNGN_FLOOR)
+        if (_abyss_square_accepts_items(abyss_genlevel_mask, *ri))
         {
             if (items_placed < num_items && one_chance_in(200))
             {
@@ -336,11 +376,14 @@ static int _abyss_create_items(const map_mask &abyss_genlevel_mask,
     for (int i = 0, size = chosen_item_places.size(); i < size; ++i)
     {
         const coord_def place(chosen_item_places[i]);
-        int thing_created = items(1, OBJ_RANDOM, OBJ_RANDOM,
-                                  true, items_level, 250);
-        move_item_to_grid( &thing_created, place );
-        if (thing_created != NON_ITEM)
-            items_placed++;
+        if (_abyss_square_accepts_items(abyss_genlevel_mask, place))
+        {
+            int thing_created = items(1, OBJ_RANDOM, OBJ_RANDOM,
+                                      true, items_level, 250);
+            move_item_to_grid( &thing_created, place );
+            if (thing_created != NON_ITEM)
+                items_placed++;
+        }
     }
 
     return (items_placed);
@@ -386,6 +429,7 @@ static int _abyss_exit_chance()
 static bool _abyss_check_place_feat(coord_def p,
                                     const int feat_chance,
                                     int *feats_wanted,
+                                    bool *use_map,
                                     dungeon_feature_type which_feat,
                                     const map_mask &abyss_genlevel_mask)
 {
@@ -405,9 +449,14 @@ static bool _abyss_check_place_feat(coord_def p,
         dprf("Placing abyss feature: %s.", dungeon_feature_name(which_feat));
 
         // When placing Abyss exits, try to use a vault if we have one.
-        if (which_feat != DNGN_EXIT_ABYSS
-            || !_abyss_place_vault_tagged(abyss_genlevel_mask, "abyss_exit",
-                                          which_feat))
+        if (which_feat == DNGN_EXIT_ABYSS
+            && use_map && *use_map
+            && _abyss_place_vault_tagged(abyss_genlevel_mask, "abyss_exit",
+                                              which_feat))
+        {
+            *use_map = false;
+        }
+        else
         {
             grd(p) = which_feat;
         }
@@ -456,13 +505,15 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask)
     const int n_terrain_elements = terrain_elements.size();
     int exits_wanted  = 0;
     int altars_wanted = 0;
+    bool use_abyss_exit_map = true;
 
     const int floor_density = random_range(30, 95);
+
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
     {
         const coord_def p(*ri);
 
-        if (!abyss_genlevel_mask(p))
+        if (!abyss_genlevel_mask(p) || !unforbidden(p, MMT_VAULT))
             continue;
 
         if (x_chance_in_y(floor_density, 100))
@@ -471,15 +522,20 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask)
             grd(p) = terrain_elements[random2(n_terrain_elements)];
 
         // Place abyss exits, stone arches, and altars to liven up the scene:
-        (_abyss_check_place_feat(p, exit_chance, &exits_wanted,
+        (_abyss_check_place_feat(p, exit_chance,
+                                 &exits_wanted,
+                                 &use_abyss_exit_map,
                                  DNGN_EXIT_ABYSS,
                                  abyss_genlevel_mask)
          ||
-         _abyss_check_place_feat(p, altar_chance, &altars_wanted,
+         _abyss_check_place_feat(p, altar_chance,
+                                 &altars_wanted,
+                                 NULL,
                                  _abyss_pick_altar(),
                                  abyss_genlevel_mask)
          ||
-         _abyss_check_place_feat(p, 10000, NULL, DNGN_STONE_ARCH,
+         _abyss_check_place_feat(p, 10000, NULL, NULL,
+                                 DNGN_STONE_ARCH,
                                  abyss_genlevel_mask));
     }
 }
@@ -497,7 +553,7 @@ static int _abyss_place_vaults(const map_mask &abyss_genlevel_mask)
         if (!map)
             break;
 
-        if (dgn_place_map(map, false, false)
+        if (_abyss_place_map(map, false, false)
             && !one_chance_in(2 + (++vaults_placed)))
         {
             break;
@@ -701,6 +757,29 @@ static void _abyss_move_entities_at(coord_def src, coord_def dst)
     dgn_move_entities_at(src, dst, true, true, true);
 }
 
+// Move all vaults within the mask by the specified delta.
+static void _abyss_move_masked_vaults_by_delta(const map_mask &mask,
+                                               const coord_def delta)
+{
+    std::set<int> vault_indexes;
+    for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
+    {
+        const int vi = env.level_map_ids(*ri);
+        if (vi != INVALID_MAP_INDEX)
+            vault_indexes.insert(vi);
+    }
+
+    for (std::set<int>::const_iterator i = vault_indexes.begin();
+         i != vault_indexes.end(); ++i)
+    {
+        vault_placement &vp(*env.level_vaults[*i]);
+        const coord_def oldp = vp.pos;
+        vp.pos += delta;
+        dprf("Moved vault (%s) from (%d,%d)-(%d,%d)",
+             vp.map.name.c_str(), oldp.x, oldp.y, vp.pos.x, vp.pos.y);
+    }
+}
+
 // Moves the player, monsters, terrain and items in the square (circle
 // in movement distance) around the player with the given radius to
 // the square centred on target_centre.
@@ -759,6 +838,9 @@ static void _abyss_move_entities(coord_def target_centre,
             }
         }
     }
+
+    _abyss_move_masked_vaults_by_delta(*shift_area_mask,
+                                       target_centre - source_centre);
 }
 
 static void _abyss_expand_mask_to_cover_vault(map_mask *mask,
@@ -1119,11 +1201,11 @@ static bool _is_grid_corruptible(const coord_def &c)
     switch (feat)
     {
     case DNGN_PERMAROCK_WALL:
-    case DNGN_GREEN_CRYSTAL_WALL:
         return (false);
 
     case DNGN_METAL_WALL:
-        return (one_chance_in(5));
+    case DNGN_GREEN_CRYSTAL_WALL:
+        return (one_chance_in(4));
 
     case DNGN_STONE_WALL:
         return (one_chance_in(3));
@@ -1183,9 +1265,12 @@ static void _corrupt_square(const crawl_environment &oenv, const coord_def &c)
         feat = oenv.grid(c);
 
     if (feat_is_trap(feat, true)
-        || feat == DNGN_SECRET_DOOR || feat == DNGN_UNSEEN)
+        || feat == DNGN_SECRET_DOOR
+        || feat == DNGN_UNSEEN
+        || (feat_is_traversable(grd(c)) && !feat_is_traversable(feat)
+            && coinflip()))
     {
-        return;
+        feat = DNGN_FLOOR;
     }
 
     if (feat_is_traversable(grd(c)) && !feat_is_traversable(feat)
@@ -1194,8 +1279,11 @@ static void _corrupt_square(const crawl_environment &oenv, const coord_def &c)
         return;
     }
 
-    if (!feat_is_traversable(grd(c)) && feat_is_traversable(feat) && _is_sealed_square(c))
+    if (!feat_is_traversable(grd(c)) && feat_is_traversable(feat)
+        && _is_sealed_square(c))
+    {
         return;
+    }
 
     // What's this supposed to achieve? (jpeg)
     // I mean, won't exits from the Abyss only turn up in the Abyss itself?
@@ -1301,6 +1389,8 @@ bool lugonu_corrupt_level(int power)
     _initialise_level_corrupt_seeds(power);
 
     std::auto_ptr<crawl_environment> backup(new crawl_environment(env));
+    env.level_map_mask.init(0);
+    env.level_map_ids.init(INVALID_MAP_INDEX);
 
     // Set up genlevel mask and fill the level with DNGN_UNSEEN so
     // _generate_area does its thing.

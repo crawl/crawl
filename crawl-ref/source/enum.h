@@ -887,6 +887,7 @@ enum game_direction_type
 
 enum game_type
 {
+    GAME_TYPE_UNSPECIFIED,
     GAME_TYPE_NORMAL,
     GAME_TYPE_TUTORIAL,
     GAME_TYPE_ARENA,
@@ -2115,15 +2116,19 @@ enum monster_type                      // (int) menv[].type
     MONS_MARA_FAKE,
     MONS_ALLIGATOR,
     MONS_BABY_ALLIGATOR,
+    MONS_ELEPHANT,
+    MONS_DIRE_ELEPHANT,
+    MONS_HELLEPHANT,
 
     // Spriggans:
     MONS_SPRIGGAN = 500,
     MONS_SPRIGGAN_DRUID,
     MONS_SPRIGGAN_ASSASSIN,
-    MONS_SPRIGGAN_MAGE,
+    MONS_SPRIGGAN_RIDER,
     MONS_SPRIGGAN_WARPER,
     MONS_SPRIGGAN_DEFENDER,
     MONS_THE_ENCHANTRESS,
+    MONS_FIREFLY,
 
     // Testing monsters
     MONS_TEST_SPAWNER,
@@ -2241,6 +2246,8 @@ enum monster_flag_type
     MF_INTERLEVEL_FOLLOWER = 0x8000000,// will travel with the player regardless
                                        // of where the monster is at on the level
     MF_DEMONIC_GUARDIAN = 0x10000000, // is a demonic_guardian
+    MF_NAME_SPECIES     = 0x20000000, // mname should be used for corpses as well,
+                                      // preventing "human corpse of halfling"
 };
 
 // Adding slots breaks saves. YHBW.
@@ -2389,6 +2396,8 @@ enum mon_spellbook_type
     MST_FREDERICK,
     MST_WAYNE,
     MST_SPRIGGAN_DRUID,
+    MST_THE_ENCHANTRESS,
+    MST_HELLEPHANT,
 
     MST_TEST_SPAWNER = 200,
     NUM_MSTYPES,
@@ -2990,6 +2999,7 @@ enum spell_type
     SPELL_MIGHT,
     SPELL_SUNRAY,
     SPELL_AWAKEN_FOREST,
+    SPELL_SUMMON_CANIFORMS,
 
     NUM_SPELLS
 };
@@ -3375,8 +3385,6 @@ enum tile_inventory_flags
 
 enum tile_player_flags
 {
-    TILEP_GENDER_FEMALE = 0,
-    TILEP_GENDER_MALE   = 1,
     TILEP_SHOW_EQUIP    = 0x1000,
 };
 

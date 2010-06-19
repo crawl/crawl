@@ -124,8 +124,10 @@ public:
     int loadstring(const char *str, const char *context);
     int execstring(const char *str, const char *context = "init.txt",
                    int nresults = 0);
-    int execfile(const char *filename, bool trusted = false,
-                 bool die_on_fail = false);
+    int execfile(const char *filename,
+                 bool trusted = false,
+                 bool die_on_fail = false,
+                 bool force = false);
 
     void pushglobal(const std::string &name);
 

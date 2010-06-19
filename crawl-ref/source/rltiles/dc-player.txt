@@ -13,35 +13,35 @@ dc-misc/cursor CURSOR
 %sdir player/base
 human_f HUMAN
 human_m
-elf_f ELF
-elf_m
+elf_m ELF
+elf_f
 deep_elf_f DEEP_ELF
 deep_elf_m
 dwarf_f DWARF
 dwarf_m
 gnome_f
 gnome_m
-halfling_f HALFLING
-halfling_m
+halfling_m HALFLING
+halfling_f
 orc_f ORC
 orc_m
-kobold_f KOBOLD
-kobold_m
-mummy_f MUMMY
-mummy_m
+kobold_m KOBOLD
+kobold_f
+mummy_m MUMMY
+mummy_f
 naga_f NAGA
 naga_m
 naga_darkgreen_f
 naga_darkgreen_m
 naga_lightgreen_f
 naga_lightgreen_m
-ogre_f OGRE
-ogre_m
+ogre_m OGRE
+ogre_f
 troll_f TROLL
 troll_m
 
 # draconians
-draconian_f DRACONIAN
+draconian_f DRACONIAN DRACONIAN_FIRST
 draconian_m
 draconian_black_f DRACONIAN_BLACK
 draconian_black_m
@@ -60,7 +60,7 @@ draconian_purple_m
 draconian_red_f DRACONIAN_RED
 draconian_red_m
 draconian_white_f DRACONIAN_WHITE
-draconian_white_m
+draconian_white_m DRACONIAN_LAST
 
 centaur_lightgrey_f CENTAUR
 centaur_lightgrey_m
@@ -74,28 +74,28 @@ centaur_lightbrown_f
 centaur_lightbrown_m
 demigod_f DEMIGOD
 demigod_m
-spriggan_f SPRIGGAN
-spriggan_m
-minotaur_f MINOTAUR
-minotaur_m
-demonspawn_black_f DEMONSPAWN
-demonspawn_black_m
-demonspawn_red_f
+spriggan_m SPRIGGAN
+spriggan_f
+minotaur_m MINOTAUR
+minotaur_f
+demonspawn_red_f DEMONSPAWN
 demonspawn_red_m
-ghoul_f GHOUL
-ghoul_m
+demonspawn_black_f
+demonspawn_black_m
+ghoul_m GHOUL
+ghoul_f
 kenku_winged_f KENKU
 kenku_winged_m
 kenku_wingless_f
 kenku_wingless_m
-merfolk_f MERFOLK
-merfolk_m
-merfolk_water_f MERFOLK_WATER
-merfolk_water_m
+merfolk_m MERFOLK
+merfolk_f
+merfolk_water_m MERFOLK_WATER
+merfolk_water_f
 vampire_f VAMPIRE
 vampire_m
-deep_dwarf_f DEEP_DWARF
-deep_dwarf_m
+deep_dwarf_m DEEP_DWARF
+deep_dwarf_f
 %end_ctg
 
 ###SHADOW
@@ -556,6 +556,7 @@ glaive3 GLAIVE3
 d_glaive D_GLAIVE
 pole_forked POLE_FORKED
 fork2 FORK2
+trishula TRISHULA
 
 ## staves
 

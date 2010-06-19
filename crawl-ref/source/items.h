@@ -28,6 +28,8 @@ enum item_source_type
     AQ_WIZMODE    = 200,
 };
 
+int get_max_subtype(object_class_type base_type);
+
 bool dec_inv_item_quantity(int obj, int amount, bool suppress_burden = false);
 bool dec_mitm_item_quantity(int obj, int amount);
 

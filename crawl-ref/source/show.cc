@@ -9,6 +9,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "dgn-overview.h"
+#include "dungeon.h"
 #include "env.h"
 #include "exclude.h"
 #include "fprop.h"
@@ -220,6 +221,8 @@ void show_def::_update_feat_at(const coord_def &gp, const coord_def &ep)
 
     if (get_feature_def(grid(ep)).is_notable())
         seen_notable_thing(grid(ep).feat, gp);
+
+    dgn_seen_vault_at(gp);
 }
 
 static show_item_type _item_to_show_code(const item_def &item)

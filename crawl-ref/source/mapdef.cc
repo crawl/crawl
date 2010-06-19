@@ -65,6 +65,8 @@ static const char *map_section_names[] = {
     "float",
 };
 
+static string_set Map_Flag_Names;
+
 // atoi that rejects strings containing non-numeric trailing characters.
 // returns defval for invalid input.
 template <typename V>
@@ -89,6 +91,20 @@ static int find_weight(std::string &s, int defweight = TAG_UNFOUND)
     if (weight == TAG_UNFOUND)
         weight = strip_number_tag(s, "w:");
     return (weight == TAG_UNFOUND? defweight : weight);
+}
+
+void map_register_flag(const std::string &flag)
+{
+    Map_Flag_Names.insert(flag);
+}
+
+bool map_tag_is_selectable(const std::string &tag)
+{
+    return (Map_Flag_Names.find(tag) == Map_Flag_Names.end()
+            && tag.find("luniq_") != 0
+            && tag.find("uniq_") != 0
+            && tag.find("ruin_") != 0
+            && tag.find("chance_") != 0);
 }
 
 std::string mapdef_split_key_item(const std::string &s,
@@ -366,6 +382,24 @@ map_lines::map_lines(const map_lines &map)
     init_from(map);
 }
 
+void map_lines::write_maplines(writer &outf) const
+{
+    const int h = height();
+    marshallShort(outf, h);
+    for (int i = 0; i < h; ++i)
+        marshallString(outf, lines[i]);
+}
+
+void map_lines::read_maplines(reader &inf)
+{
+    clear();
+    const int h = unmarshallShort(inf);
+    ASSERT(h >= 0 && h <= GYM);
+
+    for (int i = 0; i < h; ++i)
+        add_line(unmarshallString(inf));
+}
+
 rectangle_iterator map_lines::get_iter() const
 {
     ASSERT(width() > 0);
@@ -400,7 +434,6 @@ bool map_lines::in_bounds(const coord_def &c) const
 {
     return (c.x >= 0 && c.y >= 0 && c.x < width() && c.y < height());
 }
-
 
 bool map_lines::in_map(const coord_def &c) const
 {
@@ -2072,15 +2105,15 @@ void map_def::read_full(reader& inf)
     // point and let the player reload.
 
     const short fp_version = unmarshallShort(inf);
+
+    if (fp_version != MAP_CACHE_VERSION)
+        throw map_load_exception(name);
+
     std::string fp_name;
     unmarshallString4(inf, fp_name);
-    if (fp_version != MAP_CACHE_VERSION || fp_name != name)
-    {
-        save_game(true,
-                  make_stringf("Level file cache for %s is out-of-sync! "
-                               "Please reload your game.",
-                               file.c_str()).c_str());
-    }
+
+    if (fp_name != name)
+        throw map_load_exception(name);
 
     prelude.read(inf);
     mapchunk.read(inf);
@@ -2114,13 +2147,15 @@ void map_def::load()
         return;
 
     const std::string descache_base = get_descache_path(file, "");
+
     file_lock deslock(descache_base + ".lk", "rb", false);
     const std::string loadfile = descache_base + ".dsc";
-    FILE *fp = fopen(loadfile.c_str(), "rb");
-    fseek(fp, cache_offset, SEEK_SET);
-    reader inf(fp);
+
+    reader inf(loadfile);
+    if (!inf.valid())
+        throw map_load_exception(name);
+    inf.advance(cache_offset);
     read_full(inf);
-    fclose(fp);
 
     index_only = false;
 }
@@ -2138,6 +2173,11 @@ coord_def map_def::find_first_glyph(int glyph) const
 coord_def map_def::find_first_glyph(const std::string &s) const
 {
     return map.find_first_glyph(s);
+}
+
+void map_def::write_maplines(writer &outf) const
+{
+    map.write_maplines(outf);
 }
 
 void map_def::write_index(writer& outf) const
@@ -2161,6 +2201,11 @@ void map_def::write_index(writer& outf) const
     prelude.write(outf);
 }
 
+void map_def::read_maplines(reader &inf)
+{
+    map.read_maplines(inf);
+}
+
 void map_def::read_index(reader& inf)
 {
     unmarshallString4(inf, name);
@@ -2168,7 +2213,8 @@ void map_def::read_index(reader& inf)
     place_loaded_from.lineno   = unmarshallLong(inf);
     orient       = static_cast<map_section_type>( unmarshallShort(inf) );
     // XXX: Hack. See the comment in l_dgn.cc.
-    border_fill_type = static_cast<dungeon_feature_type>( unmarshallShort(inf) );
+    border_fill_type =
+        static_cast<dungeon_feature_type>( unmarshallShort(inf) );
     chance_priority = unmarshallLong(inf);
     chance       = unmarshallLong(inf);
     weight       = unmarshallLong(inf);
@@ -2384,7 +2430,31 @@ std::string map_def::validate_temple_map()
     return ("");
 }
 
-std::string map_def::validate_map_def()
+std::string map_def::validate_map_placeable()
+{
+    if (has_depth() || place.is_valid())
+        return ("");
+
+    // Ok, the map wants to be placed by tag. In this case it should have
+    // at least one tag that's not a map flag.
+    const std::vector<std::string> tag_pieces = split_string(" ", tags);
+    bool has_selectable_tag = false;
+    for (int i = 0, tsize = tag_pieces.size(); i < tsize; ++i)
+    {
+        if (map_tag_is_selectable(tag_pieces[i]))
+        {
+            has_selectable_tag = true;
+            break;
+        }
+    }
+
+    return (has_selectable_tag? "" :
+            make_stringf("Map '%s' has no DEPTH, no PLACE and no "
+                         "selectable tag in '%s'",
+                         name.c_str(), tags.c_str()));
+}
+
+std::string map_def::validate_map_def(const depth_ranges &default_depths)
 {
     unwind_bool valid_flag(validating_map_flag, true);
 
@@ -2396,6 +2466,10 @@ std::string map_def::validate_map_def()
     resolve();
     test_lua_validate(true);
 
+    if (!has_depth() && !lc_default_depths.empty())
+        add_depths(lc_default_depths.begin(),
+                   lc_default_depths.end());
+
     if ((place.branch == BRANCH_ECUMENICAL_TEMPLE
          && place.level_type == LEVEL_DUNGEON)
         || has_tag_prefix("temple_overflow_"))
@@ -2404,7 +2478,6 @@ std::string map_def::validate_map_def()
         if (!err.empty())
             return err;
     }
-
 
     // Abyssal vaults have additional size and orientation restrictions.
     if (has_tag("abyss") || has_tag("abyss_rune"))
@@ -2493,7 +2566,7 @@ std::string map_def::validate_map_def()
     }
 
     dlua_set_map dl(this);
-    return ("");
+    return (validate_map_placeable());
 }
 
 bool map_def::is_usable_in(const level_id &lid) const
@@ -3423,6 +3496,12 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
                 mspec.extra_monster_flags |= MF_NAME_DEFINITE;
                 mspec.extra_monster_flags |= MF_NAME_DESCRIPTOR;
             }
+
+            if (strip_tag(mon_str, "name_species")
+                || strip_tag(mon_str, "n_spe"))
+            {
+                mspec.extra_monster_flags |= MF_NAME_SPECIES;
+            }
         }
 
         trim_string(mon_str);
@@ -4123,21 +4202,15 @@ item_spec item_list::parse_single_spec(std::string s)
     }
 
     if (strip_tag(s, "damaged"))
-    {
         result.level = ISPEC_DAMAGED;
-    }
     if (strip_tag(s, "cursed"))
-    {
         result.level = ISPEC_BAD; // damaged + cursed, actually
-    }
     if (strip_tag(s, "randart"))
-    {
         result.level = ISPEC_RANDART;
-    }
     if (strip_tag(s, "not_cursed"))
-    {
         result.props["uncursed"] = bool(true);
-    }
+    if (strip_tag(s, "useful"))
+        result.props["useful"] = bool(true);
 
     if (strip_tag(s, "no_uniq"))
         result.allow_uniques = 0;

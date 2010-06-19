@@ -105,7 +105,7 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_KATANA:               return TILEP_HAND1_KATANA_SLANT;
     case WPN_DOUBLE_SWORD:         return TILEP_HAND1_DOUBLE_SWORD;
     case WPN_TRIPLE_SWORD:         return TILEP_HAND1_TRIPLE_SWORD;
-    case WPN_HOLY_BLADE:           return TILEP_HAND1_BLESSED_BLADE;
+    case WPN_EUDEMON_BLADE:        return TILEP_HAND1_BLESSED_BLADE;
     // new blessed weapons
     case WPN_BLESSED_LONG_SWORD:   return TILEP_HAND1_LONG_SWORD_SLANT;
     case WPN_BLESSED_GREAT_SWORD:  return TILEP_HAND1_GREAT_SWORD_SLANT;
@@ -114,7 +114,6 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_BLESSED_KATANA:       return TILEP_HAND1_KATANA_SLANT;
     case WPN_BLESSED_DOUBLE_SWORD: return TILEP_HAND1_DOUBLE_SWORD;
     case WPN_BLESSED_TRIPLE_SWORD: return TILEP_HAND1_TRIPLE_SWORD;
-
 
     // Axe
     case WPN_HAND_AXE:         return TILEP_HAND1_HAND_AXE;
@@ -129,11 +128,12 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_HALBERD:       return TILEP_HAND1_HALBERD;
     case WPN_GLAIVE:        return TILEP_HAND1_GLAIVE;
     case WPN_QUARTERSTAFF:  return TILEP_HAND1_QUARTERSTAFF1;
+    case WPN_LAJATANG:      return TILEP_HAND1_DIRE_LAJATANG;
     case WPN_SCYTHE:        return TILEP_HAND1_SCYTHE;
     case WPN_HAMMER:        return TILEP_HAND1_HAMMER;
-    case WPN_DEMON_TRIDENT: return TILEP_HAND1_DEMON_TRIDENT;
     case WPN_TRIDENT:       return TILEP_HAND1_TRIDENT2;
-    case WPN_LAJATANG:      return TILEP_HAND1_DIRE_LAJATANG;;
+    case WPN_DEMON_TRIDENT: return TILEP_HAND1_DEMON_TRIDENT;
+    case WPN_TRISHULA:      return TILEP_HAND1_TRISHULA;
 
     // Ranged
     case WPN_SLING:         return TILEP_HAND1_SLING;
@@ -390,18 +390,6 @@ tileidx_t tileidx_player()
     return ch;
 }
 
-int get_gender_from_tile(const dolls_data &doll)
-{
-    const tileidx_t *parts = doll.parts;
-    const int gender = (parts[TILEP_PART_BASE]
-                        - tile_player_part_start[TILEP_PART_BASE]) % 2;
-
-    if (gender == TILEP_GENDER_MALE || gender == TILEP_GENDER_FEMALE)
-        return gender;
-
-    return TILEP_GENDER_FEMALE;
-}
-
 bool is_player_tile(tileidx_t tile, tileidx_t base_tile)
 {
     return (tile >= base_tile
@@ -517,26 +505,21 @@ void tilep_draconian_init(int sp, int level, tileidx_t *base,
 }
 
 // Set default parts of each race: body + optional beard, hair, etc.
-void tilep_race_default(int sp, int gender, int level, dolls_data *doll)
+// This function needs to be entirely deterministic.
+void tilep_race_default(int sp, int level, dolls_data *doll)
 {
     tileidx_t *parts = doll->parts;
 
-    if (gender == -1)
-        gender = get_gender_from_tile(*doll);
-
     tileidx_t result = tilep_species_to_base_tile(sp, level);
     if (parts[TILEP_PART_BASE] != TILEP_SHOW_EQUIP)
-        result = (parts[TILEP_PART_BASE] - gender);
+        result = parts[TILEP_PART_BASE];
 
     tileidx_t hair   = 0;
     tileidx_t beard  = 0;
     tileidx_t wing   = 0;
     tileidx_t head   = 0;
 
-    if (gender == TILEP_GENDER_MALE)
-        hair = TILEP_HAIR_SHORT_BLACK;
-    else
-        hair = TILEP_HAIR_LONG_BLACK;
+    hair = TILEP_HAIR_SHORT_BLACK;
 
     switch (sp)
     {
@@ -550,16 +533,8 @@ void tilep_race_default(int sp, int gender, int level, dolls_data *doll)
             break;
         case SP_HILL_DWARF:
         case SP_MOUNTAIN_DWARF:
-            if (gender == TILEP_GENDER_MALE)
-            {
-                hair  = TILEP_HAIR_SHORT_RED;
-                beard = TILEP_BEARD_LONG_RED;
-            }
-            else
-            {
-                hair  = TILEP_HAIR_LONG_RED;
-                beard = TILEP_BEARD_SHORT_RED;
-            }
+            hair  = TILEP_HAIR_LONG_RED;
+            beard = TILEP_BEARD_LONG_RED;
             break;
         case SP_HILL_ORC:
             hair = 0;
@@ -602,29 +577,18 @@ void tilep_race_default(int sp, int gender, int level, dolls_data *doll)
                                     : TILEP_BASE_MERFOLK;
             break;
         case SP_VAMPIRE:
-            if (gender == TILEP_GENDER_MALE)
-                hair = TILEP_HAIR_ARAGORN;
-            else
-                hair = TILEP_HAIR_ARWEN;
+            hair = TILEP_HAIR_ARWEN;
             break;
         case SP_DEEP_DWARF:
-            if (gender == TILEP_GENDER_MALE)
-            {
-                hair  = TILEP_HAIR_SHORT_WHITE;
-                beard = TILEP_BEARD_LONG_WHITE;
-            }
-            else
-            {
-                hair  = TILEP_HAIR_FEM_WHITE;
-                beard = TILEP_BEARD_SHORT_WHITE;
-            }
+            hair  = TILEP_HAIR_SHORT_WHITE;
+            beard = TILEP_BEARD_LONG_WHITE;
             break;
         default:
             // nothing to do
             break;
     }
 
-    parts[TILEP_PART_BASE] = result + gender;
+    parts[TILEP_PART_BASE] = result;
 
     // Don't overwrite doll parts defined elsewhere.
     if (parts[TILEP_PART_HAIR] == TILEP_SHOW_EQUIP)
@@ -639,7 +603,8 @@ void tilep_race_default(int sp, int gender, int level, dolls_data *doll)
         parts[TILEP_PART_DRCWING] = wing;
 }
 
-void tilep_job_default(int job, int gender, dolls_data *doll)
+// This function needs to be entirely deterministic.
+void tilep_job_default(int job, dolls_data *doll)
 {
     tileidx_t *parts = doll->parts;
 
@@ -841,19 +806,9 @@ void tilep_job_default(int job, int gender, dolls_data *doll)
 
         case JOB_GLADIATOR:
             parts[TILEP_PART_HAND2] = TILEP_HAND2_SHIELD_ROUND2;
-
-            if (gender == TILEP_GENDER_MALE)
-            {
-                parts[TILEP_PART_BODY]  = TILEP_BODY_BELT1;
-                parts[TILEP_PART_LEG]   = TILEP_LEG_BELT_GRAY;
-                parts[TILEP_PART_BOOTS] = TILEP_BOOTS_MIDDLE_GRAY;
-            }
-            else
-            {
-                parts[TILEP_PART_BODY]  = TILEP_BODY_BIKINI_RED;
-                parts[TILEP_PART_LEG]   = TILEP_LEG_BIKINI_RED;
-                parts[TILEP_PART_BOOTS] = TILEP_BOOTS_LONG_RED;
-            }
+            parts[TILEP_PART_BODY]  = TILEP_BODY_BELT1;
+            parts[TILEP_PART_LEG]   = TILEP_LEG_BELT_GRAY;
+            parts[TILEP_PART_BOOTS] = TILEP_BOOTS_MIDDLE_GRAY;
             break;
 
         case JOB_MONK:
@@ -879,10 +834,10 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
     for (unsigned i = 0; i < TILEP_PART_MAX; i++)
         flag[i] = TILEP_FLAG_NORMAL;
 
-    if (doll.parts[TILEP_PART_HELM] - 1 >= TILEP_HELM_HELM_OFS)
+    if (doll.parts[TILEP_PART_HELM] >= TILEP_HELM_HELM_OFS)
         flag[TILEP_PART_HAIR] = TILEP_FLAG_HIDE;
 
-    if (doll.parts[TILEP_PART_HELM] - 1 >= TILEP_HELM_FHELM_OFS)
+    if (doll.parts[TILEP_PART_HELM] >= TILEP_HELM_FHELM_OFS)
         flag[TILEP_PART_BEARD] = TILEP_FLAG_HIDE;
 
     if (is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_NAGA))
@@ -901,8 +856,8 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
         flag[TILEP_PART_LEG]    = TILEP_FLAG_HIDE;
         flag[TILEP_PART_SHADOW] = TILEP_FLAG_HIDE;
     }
-    else if (doll.parts[TILEP_PART_BASE] >= TILEP_BASE_DRACONIAN
-             && doll.parts[TILEP_PART_BASE] <= TILEP_BASE_DRACONIAN_WHITE + 1)
+    else if (doll.parts[TILEP_PART_BASE] >= TILEP_BASE_DRACONIAN_FIRST
+             && doll.parts[TILEP_PART_BASE] <= TILEP_BASE_DRACONIAN_LAST)
     {
         flag[TILEP_PART_HAIR] = flag[TILEP_PART_HELM] = TILEP_FLAG_HIDE;
     }
@@ -990,7 +945,7 @@ void tilep_scan_parts(char *fbuf, dolls_data &doll, int species, int level)
         {
             const tileidx_t base_tile = tilep_species_to_base_tile(species, level);
             if (idx >= tile_player_count(base_tile))
-                doll.parts[p] = base_tile + (idx % 2);
+                doll.parts[p] = base_tile;
             else
                 doll.parts[p] = base_tile + idx;
         }

@@ -564,6 +564,12 @@ public:
     levelview_excursion(bool tm)
         : travel_mode(tm) {}
 
+    ~levelview_excursion()
+    {
+        if (!you.on_current_level)
+            go_to(original);
+    }
+
     void go_to(const level_id& next)
     {
 #ifdef USE_TILE

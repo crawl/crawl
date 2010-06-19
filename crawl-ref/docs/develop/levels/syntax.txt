@@ -362,6 +362,10 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              multiple layouts.  Current values for "foo" are: rooms, city,
              open, caves, cross, shoals, swamp, labyrinth (though currently
              random vaults aren't placed in the last three).
+          * "ruin": requests the level builder to damage the vault by
+             removing walls near the edges, making it look like a ruin.
+             You can request that a vault be ruined only in a particular
+             branch using "ruin_<branch>". For instance: "ruin_lair".
           * "trowel_portal": This vault can be created by the Trowel card.
              This tag should be used exclusively for the generic (one tile)
              entries to portal vaults, like bazaars and labyrinths. Other
@@ -463,6 +467,8 @@ ITEM:     (list of items, separated by comma)
             removed.
           * "any" by itself gives a random choice; you can combine "any" with
             "good_item."
+          * "useful" tries to select an item usable by the player, but may
+            give an useless one if it has trouble finding one
           * "star_item" by itself makes an item equivalent to the "*" glyph.
           * "superb_item" by itself makes an item equivallent to the "|" glyph.
           * "any book", "any misc" etc. gives a random item of that class.
@@ -680,11 +686,12 @@ MONS:     (list of monsters)
           name, as if the monster was a unique:
               MONS: kobold name:Durwent name_replace
 
-          Will result in "Durwent" rather than "Durwent the Kobold".
+          Will result in "Durwent" rather than "Durwent the Kobold".  The
+          corpse will still be a "kobold corpse of Durwent".
 
-          In combination with name_replace, there are two further tags that
-          can be used when renaming monsters, but not giving them an actual
-          "name": name_descriptor, and name_definite.
+          In combination with name_replace or name_species, there are two
+          further tags that can be used when renaming monsters, but not
+          giving them an actual "name": name_descriptor, and name_definite.
 
           For example:
               MONS: kobold name:goblin name_replace
@@ -704,12 +711,18 @@ MONS:     (list of monsters)
           Is exactly the same as:
               MONS: kobold name:goblin name_replace name_descriptor name_definite
 
-          This allows for shorter definitions. For instances where space in
-          definitions is limited, you can use abbreviated forms of these tags:
+          name_species will make use the name for corpses as-is, without
+          prefixing it with "kobold corpse of X" for name_replace; it will
+          also prevent turning articles into definite unless where forced by
+          name_definite or grammar.
+
+          For instances where space in definitions is limited, you can use
+          abbreviated forms of these tags:
 
               name_suffix     -> n_suf
               name_adjective  -> n_adj
               name_replace    -> n_rpl
+              name_species    -> n_spe
               name_descriptor -> n_des
               name_definite   -> n_the
 
