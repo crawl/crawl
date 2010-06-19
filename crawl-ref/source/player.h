@@ -231,6 +231,7 @@ public:
   unsigned char normal_vision;        // how far the species gets to see
   unsigned char current_vision;       // current sight radius (cells)
 
+  branch_type   hell_branch;          // which branch the player goes to on hell exit
   unsigned char hell_exit;            // which level player goes to on hell exit
 
   // This field is here even in non-WIZARD compiles, since the

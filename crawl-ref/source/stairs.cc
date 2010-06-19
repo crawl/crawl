@@ -159,7 +159,7 @@ static void _player_change_level_upstairs(dungeon_feature_type stair_find,
 
     if (player_in_branch( BRANCH_VESTIBULE_OF_HELL ))
     {
-        you.where_are_you = BRANCH_MAIN_DUNGEON;
+        you.where_are_you = you.hell_branch;
         you.absdepth0 = you.hell_exit;
     }
 
@@ -766,6 +766,7 @@ static void _player_change_level_downstairs(dungeon_feature_type stair_find,
 
     if (stair_find == DNGN_ENTER_HELL)
     {
+        you.hell_branch = you.where_are_you;
         you.where_are_you = BRANCH_VESTIBULE_OF_HELL;
         you.hell_exit = you.absdepth0;
 
@@ -1275,7 +1276,7 @@ void down_stairs(dungeon_feature_type force_stair,
 
         if (player_in_hell())
         {
-            you.where_are_you = BRANCH_MAIN_DUNGEON;
+            you.where_are_you = you.hell_branch;
             you.absdepth0    = you.hell_exit - 1;
         }
         break;
