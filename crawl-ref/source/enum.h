@@ -2247,6 +2247,8 @@ enum monster_flag_type
     MF_DEMONIC_GUARDIAN = 0x10000000, // is a demonic_guardian
     MF_NAME_SPECIES     = 0x20000000, // mname should be used for corpses as well,
                                       // preventing "human corpse of halfling"
+    // Note: at least name flags get passed in a 32-bit variable (fill_out_corpse()),
+    // and perhaps other flags as well.  Be careful when extending.
 };
 
 // Adding slots breaks saves. YHBW.

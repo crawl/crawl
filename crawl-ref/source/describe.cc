@@ -2026,7 +2026,7 @@ std::string get_item_description( const item_def &item, bool verbose,
                         << "        Timer size: " << (int) timer.size();
             description << "\nTimers:\n";
             for (int i = 0; i < timer.size(); ++i)
-                 description << (timer[i].get_long()) << "  ";
+                 description << (timer[i].get_int()) << "  ";
         }
 #endif
         if (item_type_known(item) && you.has_spell(SPELL_EVAPORATE))

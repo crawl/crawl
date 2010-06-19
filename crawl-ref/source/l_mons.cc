@@ -291,7 +291,7 @@ static int l_mons_do_set_prop(lua_State *ls)
     // NOTE: number has to be before string, or numbers will get converted
     // into strings.
     else if (lua_isnumber(ls, 2))
-        mons->props[prop_name] = luaL_checklong(ls, 2);
+        mons->props[prop_name].get_int() = luaL_checklong(ls, 2);
     else if (lua_isstring(ls, 2))
         mons->props[prop_name] = lua_tostring(ls, 2);
     else if (lua_isfunction(ls, 2))
@@ -342,7 +342,7 @@ static int l_mons_do_get_prop(lua_State *ls)
     case SV_BOOL: lua_pushboolean(ls, prop.get_bool()); break;
     case SV_BYTE: lua_pushboolean(ls, prop.get_byte()); break;
     case SV_SHORT: lua_pushnumber(ls, prop.get_short()); break;
-    case SV_LONG: lua_pushnumber(ls, prop.get_long()); break;
+    case SV_INT: lua_pushnumber(ls, prop.get_int()); break;
     case SV_FLOAT: lua_pushnumber(ls, prop.get_float()); break;
     case SV_STR: lua_pushstring(ls, prop.get_string().c_str()); break;
     case SV_COORD:
