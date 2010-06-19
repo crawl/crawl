@@ -217,6 +217,35 @@ static void _abyss_create_rooms(const map_mask &abyss_genlevel_mask,
     }
 }
 
+static void _abyss_erase_stairs_from(const vault_placement *vp)
+{
+    for (vault_place_iterator vi(*vp); vi; ++vi)
+    {
+        const coord_def p(*vi);
+        const dungeon_feature_type feat(grd(p));
+        if (feat_is_stair(feat)
+            && feat != DNGN_EXIT_ABYSS
+            && feat != DNGN_ENTER_PORTAL_VAULT)
+        {
+            grd(p) = DNGN_FLOOR;
+        }
+    }
+}
+
+static bool _abyss_place_map(const map_def *mdef,
+                             bool clobber,
+                             bool make_no_exits = false,
+                             const coord_def &where = INVALID_COORD,
+                             int rune_subst = -1)
+{
+    const bool did_place = dgn_safe_place_map(mdef, clobber, make_no_exits,
+                                              where, rune_subst);
+    if (did_place)
+        _abyss_erase_stairs_from(env.level_vaults[env.level_vaults.size() - 1]);
+
+    return (did_place);
+}
+
 static bool _abyss_place_vault_tagged(const map_mask &abyss_genlevel_mask,
                                       const std::string &tag,
                                       int rune_subst = -1)
@@ -225,8 +254,8 @@ static bool _abyss_place_vault_tagged(const map_mask &abyss_genlevel_mask,
     if (map)
     {
         unwind_vault_placement_mask vaultmask(&abyss_genlevel_mask);
-        return (dgn_safe_place_map(map, false, false, INVALID_COORD,
-                                   rune_subst));
+        return (_abyss_place_map(map, false, false, INVALID_COORD,
+                                 rune_subst));
     }
     return (false);
 }
@@ -524,7 +553,7 @@ static int _abyss_place_vaults(const map_mask &abyss_genlevel_mask)
         if (!map)
             break;
 
-        if (dgn_safe_place_map(map, false, false)
+        if (_abyss_place_map(map, false, false)
             && !one_chance_in(2 + (++vaults_placed)))
         {
             break;

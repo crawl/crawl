@@ -60,7 +60,8 @@ MAP
 ENDMAP
 
 NAME: columned_hall_lemuel
-TAGS: extra luniq_mini
+TAGS: extra luniq_mini ruin_lair
+DEPTH: D, Lair, Elf, Crypt
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 @...........................@
@@ -121,8 +122,9 @@ ENDMAP
 
 # Small intersection with statues (Eino)
 NAME:    small_statue_intersection
-DEPTH:   D:2-26, Elf, Crypt
+DEPTH:   D:2-26, Elf, Crypt, Lair
 TAGS:    mini_float allow_dup no_hmirror no_vmirror extra luniq_mini
+TAGS:    ruin_lair abyss ruin_abyss
 MAP
 xx.xx
 xG.Gx
@@ -170,6 +172,7 @@ ENDMAP
 
 # Another very classical vault.
 NAME:  fountainhead
+DEPTH: D, Elf, Crypt, Vault
 TAGS:  allow_dup extra luniq_mini
 SUBST: ?=TUV
 MAP
@@ -190,7 +193,8 @@ MAP
 ENDMAP
 
 NAME:  patterned_corridor
-DEPTH: D, Elf
+DEPTH: D, Elf, Lair
+TAGS:  abyss ruin_abyss ruin_lair
 SUBST: x : xxccv
 MAP
 xxxxxxxxxxxxxxxxxxxxxxx
@@ -457,8 +461,8 @@ xxxx
 ENDMAP
 
 NAME:   eino_small_chamber_without_monster
-TAGS:   mini_float allow_dup extra luniq_mini
-DEPTH:  D:4-27
+TAGS:   mini_float allow_dup extra luniq_mini ruin_lair abyss ruin_abyss
+DEPTH:  D:4-27, Lair
 MAP
  xxxxx
 xx...xx
@@ -497,7 +501,7 @@ ENDMAP
 #######################################################################
 
 NAME: minivault_1
-TAGS: allow_dup extra luniq_mini
+TAGS: allow_dup extra luniq_mini abyss ruin_abyss
 MAP
 ............
 ..xxxx=xxx..
@@ -514,7 +518,7 @@ MAP
 ENDMAP
 
 NAME: minivault_4
-TAGS: allow_dup extra luniq_mini
+TAGS: allow_dup extra luniq_mini abyss ruin_abyss
 MAP
 ............
 ....xwxx....
@@ -531,7 +535,7 @@ MAP
 ENDMAP
 
 NAME: minivault_5
-TAGS: allow_dup extra luniq_mini
+TAGS: allow_dup extra luniq_mini abyss ruin_abyss
 MAP
 ............
 .x.xxxxxxxx.
@@ -564,7 +568,8 @@ ENDMAP
 
 # Multicoloured onion
 NAME:    minivault_11
-TAGS:    extra luniq_mini
+DEPTH:   D, Elf, Vault, Crypt, Lair
+TAGS:    extra luniq_mini abyss ruin_abyss ruin_lair
 SHUFFLE: bcva
 MAP
 ............
@@ -600,7 +605,7 @@ MAP
 ENDMAP
 
 NAME: minivault_19
-TAGS: allow_dup extra luniq_mini
+TAGS: allow_dup extra luniq_mini abyss ruin_abyss
 MAP
 ............
 .xx......xx.
@@ -635,7 +640,7 @@ MAP
 ENDMAP
 
 NAME: minivault_22
-TAGS: allow_dup extra luniq_mini
+TAGS: allow_dup extra luniq_mini abyss ruin_abyss
 SUBST: $ : $ *:5
 MAP
 ............
@@ -653,7 +658,7 @@ MAP
 ENDMAP
 
 NAME: minivault_23
-TAGS: allow_dup extra luniq_mini
+TAGS: allow_dup extra luniq_mini abyss ruin_abyss
 MAP
 x.x.x.x.x.x.
 .x.x.x.x.x.x
@@ -670,7 +675,7 @@ x.x.x.x.x.x.
 ENDMAP
 
 NAME: minivault_24
-TAGS: allow_dup extra luniq_mini
+TAGS: allow_dup extra luniq_mini abyss ruin_abyss
 MAP
 ............
 ....xxxx....
@@ -687,7 +692,7 @@ MAP
 ENDMAP
 
 NAME: minivault_25
-TAGS: allow_dup extra luniq_mini
+TAGS: allow_dup extra luniq_mini abyss ruin_abyss
 SHUFFLE: XY
 SUBST: X=x, Y=+
 MAP
@@ -706,7 +711,7 @@ MAP
 ENDMAP
 
 NAME: minivault_26
-TAGS: allow_dup extra luniq_mini
+TAGS: allow_dup extra luniq_mini abyss ruin_abyss
 MAP
 c..........c
 .c...cc...c.
@@ -723,7 +728,7 @@ c..........c
 ENDMAP
 
 NAME: minivault_27
-TAGS: allow_dup extra luniq_mini
+TAGS: allow_dup extra luniq_mini abyss ruin_abyss
 MAP
 ............
 .x.xxxxxxxx.
@@ -751,7 +756,7 @@ ENDMAP
 
 NAME:   lemuel_flamethrower_3
 DEPTH:  D:12-27, Vault, Elf, Geh
-TAGS:   allow_dup
+TAGS:   allow_dup abyss ruin_abyss
 MARKER: * = lua:fog_machine { cloud_type="flame", \
             pow_min = 20, pow_max = 40, delay = 150, \
             size = 1, walk_dist = 0, spread_rate= 75 }
@@ -769,6 +774,7 @@ ENDMAP
 
 NAME:   lemuel_flamethrower_2
 DEPTH:  D:5-27, Vault, Elf, Geh
+TAGS:   abyss ruin_abyss
 MARKER: * = lua:fog_machine { cloud_type="flame", \
             pow_min = 20, pow_max = 40, delay_min = 100, delay_max=200, \
             size = 1, walk_dist = 0, spread_rate= 75 }
@@ -986,7 +992,8 @@ MAP
 ENDMAP
 
 NAME:    lemuel_firewalk_3
-TAGS:    uniq_firewalk
+DEPTH:   D:16-27
+TAGS:    uniq_firewalk abyss ruin_abyss
 WEIGHT:  2
 ORIENT:  float
 ITEM:    nothing, nothing, nothing
@@ -1067,7 +1074,7 @@ ENDMAP
 # No item generation for the sake of autoexplore.
 NAME:   lemuel_flamethrower_hall
 DEPTH:  D:9-27, Vault, Elf, Geh
-TAGS:   layout_rooms layout_city no_item_gen
+TAGS:   layout_rooms layout_city no_item_gen abyss ruin_abyss
 MARKER: * = lua:fog_machine { cloud_type="flame", \
             pow_min = 25, pow_max = 50, delay = 150, \
             size = 2, walk_dist = 0, spread_rate= 40 }
@@ -1097,6 +1104,7 @@ ENDMAP
 # it's still a gamble.
 NAME:  kilobyte_mutagenic_chamber
 DEPTH: D:15-, Elf, Vault
+TAGS:  abyss ruin_abyss
 MARKER:     U = lua:fog_machine { cloud_type = "mutagenic fog", \
                 pow_min = 10, pow_max = 30, delay = 5, \
                 size = 4, walk_dist = 0, spread_rate= 0 }

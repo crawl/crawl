@@ -362,6 +362,10 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              multiple layouts.  Current values for "foo" are: rooms, city,
              open, caves, cross, shoals, swamp, labyrinth (though currently
              random vaults aren't placed in the last three).
+          * "ruin": requests the level builder to damage the vault by
+             removing walls near the edges, making it look like a ruin.
+             You can request that a vault be ruined only in a particular
+             branch using "ruin_<branch>". For instance: "ruin_lair".
           * "trowel_portal": This vault can be created by the Trowel card.
              This tag should be used exclusively for the generic (one tile)
              entries to portal vaults, like bazaars and labyrinths. Other
