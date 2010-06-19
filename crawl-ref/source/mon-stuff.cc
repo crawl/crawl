@@ -70,7 +70,7 @@ static bool _wounded_damaged(monster_type mon_type);
 
 int _make_mimic_item(monster_type type)
 {
-    int it = items(0, OBJ_UNASSIGNED, 0, true, 0, 0);
+    int it = items(0, OBJ_RANDOM, OBJ_RANDOM, true, 0, 0);
 
     if (it == NON_ITEM)
         return NON_ITEM;
