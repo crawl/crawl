@@ -107,12 +107,10 @@ level           : name map_specs
                             yyerror( lc_global_prelude.orig_error().c_str() );
                     }
 
-                    std::string err = lc_map.validate_map_def();
+                    std::string err =
+                        lc_map.validate_map_def(lc_default_depths);
                     if (!err.empty())
                         yyerror(err.c_str());
-                    if (!lc_map.has_depth() && !lc_default_depths.empty())
-                        lc_map.add_depths(lc_default_depths.begin(),
-                                          lc_default_depths.end());
                     add_parsed_map(lc_map);
                 }
                 ;

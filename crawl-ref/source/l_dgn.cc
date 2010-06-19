@@ -160,11 +160,7 @@ static int dgn_tags_remove(lua_State *ls)
     for (int i = 2; i <= top; ++i)
     {
         const std::string axee = luaL_checkstring(ls, i);
-        const std::string::size_type pos = map->tags.find(axee);
-        if (pos != std::string::npos)
-            map->tags =
-            map->tags.substr(0, pos)
-            + map->tags.substr(pos + axee.length());
+        while (strip_tag(map->tags, axee));
     }
     PLUARET(string, map->tags.c_str());
 }
@@ -1453,6 +1449,12 @@ static int dgn_register_feature_marker(lua_State *ls)
     return (0);
 }
 
+static int _dgn_map_register_flag(lua_State *ls)
+{
+    map_register_flag(luaL_checkstring(ls, 1));
+    return (0);
+}
+
 static int dgn_register_lua_marker(lua_State *ls)
 {
     COORDS(c, 1, 2);
@@ -1909,6 +1911,7 @@ const struct luaL_reg dgn_dlib[] =
 
 { "is_passable", _dgn_is_passable },
 
+{ "map_register_flag", _dgn_map_register_flag },
 { "register_feature_marker", dgn_register_feature_marker },
 { "register_lua_marker", dgn_register_lua_marker },
 

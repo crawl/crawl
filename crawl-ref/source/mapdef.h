@@ -935,7 +935,7 @@ public:
     // Executes post-generation lua code.
     bool run_lua_epilogue(bool croak = false);
 
-    std::string validate_map_def();
+    std::string validate_map_def(const depth_ranges &);
     std::string validate_temple_map();
     // Returns true if this map is in the middle of validation.
     bool is_validating() const { return (validating_map_flag); }
@@ -1017,15 +1017,17 @@ public:
     };
 
 private:
-
     void write_depth_ranges(writer&) const;
     void read_depth_ranges(reader&);
     bool test_lua_boolchunk(dlua_chunk &, bool def = false, bool croak = false);
     std::string rewrite_chunk_errors(const std::string &s) const;
     std::string apply_subvault(string_spec &);
+    std::string map_def::validate_map_placeable();
 };
 
 const int CHANCE_ROLL = 10000;
+
+void map_register_flag(const std::string &flag);
 
 std::string escape_string(std::string in, const std::string &toesc,
                           const std::string &escapewith);

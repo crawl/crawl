@@ -65,6 +65,8 @@ static const char *map_section_names[] = {
     "float",
 };
 
+static string_set Map_Flag_Names;
+
 // atoi that rejects strings containing non-numeric trailing characters.
 // returns defval for invalid input.
 template <typename V>
@@ -89,6 +91,20 @@ static int find_weight(std::string &s, int defweight = TAG_UNFOUND)
     if (weight == TAG_UNFOUND)
         weight = strip_number_tag(s, "w:");
     return (weight == TAG_UNFOUND? defweight : weight);
+}
+
+void map_register_flag(const std::string &flag)
+{
+    Map_Flag_Names.insert(flag);
+}
+
+bool map_tag_is_selectable(const std::string &tag)
+{
+    return (Map_Flag_Names.find(tag) == Map_Flag_Names.end()
+            && tag.find("luniq_") != 0
+            && tag.find("uniq_") != 0
+            && tag.find("ruin_") != 0
+            && tag.find("chance_") != 0);
 }
 
 std::string mapdef_split_key_item(const std::string &s,
@@ -2414,7 +2430,31 @@ std::string map_def::validate_temple_map()
     return ("");
 }
 
-std::string map_def::validate_map_def()
+std::string map_def::validate_map_placeable()
+{
+    if (has_depth() || place.is_valid())
+        return ("");
+
+    // Ok, the map wants to be placed by tag. In this case it should have
+    // at least one tag that's not a map flag.
+    const std::vector<std::string> tag_pieces = split_string(" ", tags);
+    bool has_selectable_tag = false;
+    for (int i = 0, tsize = tag_pieces.size(); i < tsize; ++i)
+    {
+        if (map_tag_is_selectable(tag_pieces[i]))
+        {
+            has_selectable_tag = true;
+            break;
+        }
+    }
+
+    return (has_selectable_tag? "" :
+            make_stringf("Map '%s' has no DEPTH, no PLACE and no "
+                         "selectable tag in '%s'",
+                         name.c_str(), tags.c_str()));
+}
+
+std::string map_def::validate_map_def(const depth_ranges &default_depths)
 {
     unwind_bool valid_flag(validating_map_flag, true);
 
@@ -2426,6 +2466,10 @@ std::string map_def::validate_map_def()
     resolve();
     test_lua_validate(true);
 
+    if (!has_depth() && !lc_default_depths.empty())
+        add_depths(lc_default_depths.begin(),
+                   lc_default_depths.end());
+
     if ((place.branch == BRANCH_ECUMENICAL_TEMPLE
          && place.level_type == LEVEL_DUNGEON)
         || has_tag_prefix("temple_overflow_"))
@@ -2434,7 +2478,6 @@ std::string map_def::validate_map_def()
         if (!err.empty())
             return err;
     }
-
 
     // Abyssal vaults have additional size and orientation restrictions.
     if (has_tag("abyss") || has_tag("abyss_rune"))
@@ -2523,7 +2566,7 @@ std::string map_def::validate_map_def()
     }
 
     dlua_set_map dl(this);
-    return ("");
+    return (validate_map_placeable());
 }
 
 bool map_def::is_usable_in(const level_id &lid) const

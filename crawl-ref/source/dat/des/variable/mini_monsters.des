@@ -8,6 +8,8 @@
 #           Maps for the Vault branch, including Vaults:8 are in vaults.des.
 ###############################################################################
 
+default-depth: D:9-27, Vault, Elf, Crypt
+
 # Sigmund has been educating the oppressed masses in guerrilla warfare.
 NAME:    sigmund_army
 DEPTH:   D:2-6
