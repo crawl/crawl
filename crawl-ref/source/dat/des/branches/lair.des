@@ -653,6 +653,8 @@ MAP
    ;;wwww;;
 ENDMAP
 
+# Could do with some nice tiles, I guess. Does require elephant statue
+# tiles!
 NAME:   jungle_book
 ORIENT: north
 PLACE:  Lair:$
@@ -667,7 +669,6 @@ KMONS:  S = anaconda
 MARKER: S = lua:MonPropsMarker:new { anaconda_guard="anaconda_guard" }
 KITEM:  U = superb_item
 KITEM:  Q = acquire any
-KFEAT:  U = tree
 KFEAT:  o = granite_statue
 MARKER: o = lua:portal_desc { desc="elephant-shaped statue", \
             desc_long="This worn granite statues depict elephants standing guard." }
