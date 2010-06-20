@@ -83,7 +83,7 @@ public:
   bool redraw_quiver;         // redraw quiver
   bool received_weapon_warning;
 
-  int redraw_status_flags;
+  uint64_t redraw_status_flags;
 
   // PC's symbol (usually @) and colour.
   int symbol;

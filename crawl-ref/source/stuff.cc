@@ -161,7 +161,7 @@ std::string make_file_time(time_t when)
     return ("");
 }
 
-void set_redraw_status(unsigned long flags)
+void set_redraw_status(uint64_t flags)
 {
     you.redraw_status_flags |= flags;
 }

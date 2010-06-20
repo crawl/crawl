@@ -5797,7 +5797,7 @@ void monsters::apply_location_effects(const coord_def &oldpos,
             behaviour_event(this, ME_EVAL);
     }
 
-    unsigned long &prop = env.pgrid(pos());
+    terrain_property_t &prop = env.pgrid(pos());
 
     if (prop & FPROP_BLOODY)
     {

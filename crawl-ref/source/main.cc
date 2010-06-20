@@ -3985,6 +3985,8 @@ static void _compile_time_asserts()
     COMPILE_CHECK(NUM_SPECIAL_WEAPONS <= SP_UNKNOWN_BRAND, c13);
     COMPILE_CHECK(NUM_SPECIAL_ARMOURS <= SP_UNKNOWN_BRAND, c14);
     COMPILE_CHECK(sizeof(float) == sizeof(int32_t), c15);
+    COMPILE_CHECK(sizeof(feature_property_type) <= sizeof(terrain_property_t), c16);
+    COMPILE_CHECK(sizeof(level_flag_type) <= sizeof(int32_t), c17);
 
     // Also some runtime stuff; I don't know if the order of branches[]
     // needs to match the enum, but it currently does.

@@ -2184,7 +2184,7 @@ enum mon_attitude_type
     ATT_FRIENDLY,                      // created friendly (or tamed?)
 };
 
-// These are now saved in an unsigned long in the monsters struct.
+// These are now saved in an uint64_t in the monsters struct.
 enum monster_flag_type
 {
     MF_NO_REWARD          = 0x01,    // no benefit from killing

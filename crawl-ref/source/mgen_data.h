@@ -99,7 +99,7 @@ struct mgen_data
 
     // These flags will be appended to the monster's flags after placement.
     // These flags are MF_XXX, rather than MG_XXX flags.
-    unsigned long extra_flags;
+    uint64_t extra_flags;
 
     // XXX: Rather hackish.
     std::string     mname;
@@ -118,7 +118,7 @@ struct mgen_data
               int st = 0,
               const coord_def &p = coord_def(-1, -1),
               unsigned short mfoe = MHITNOT,
-              unsigned monflags = 0,
+              uint64_t monflags = 0,
               god_type which_god = GOD_NO_GOD,
               monster_type base = MONS_NO_MONSTER,
               int monnumber = 0,
@@ -127,7 +127,7 @@ struct mgen_data
               proximity_type prox = PROX_ANYWHERE,
               level_area_type ltype = you.level_type,
               int mhd = 0, int mhp = 0,
-              unsigned long mflags = 0,
+              uint64_t mflags = 0,
               std::string monname = "",
               std::string nas = "")
 
