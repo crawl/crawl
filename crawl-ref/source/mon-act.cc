@@ -1684,8 +1684,11 @@ void handle_monster_move(monsters *monster)
         if (!monster->alive())
             break;
 
-        if (old_pos != monster->pos() && monster->type == MONS_KRAKEN)
+        if (old_pos != monster->pos()
+            && mons_base_type(monster) == MONS_KRAKEN)
+        {
             move_kraken_tentacles(monster);
+        }
 
         old_pos = monster->pos();
 
@@ -2020,7 +2023,7 @@ void handle_monster_move(monsters *monster)
 
             // See if we move into (and fight) an unfriendly monster.
             monsters* targ = monster_at(monster->pos() + mmov);
-            if (monster->type == MONS_KRAKEN
+            if (mons_base_type(monster) == MONS_KRAKEN
                 && targ && targ->type == MONS_KRAKEN_CONNECTOR)
             {
                 // Just purge the connector. -cao
@@ -2684,7 +2687,7 @@ static bool _no_habitable_adjacent_grids(const monsters *mon)
 static bool _same_kraken_parts(const monsters * mpusher,
                                const monsters * mpushee)
 {
-    if (mpusher->type != MONS_KRAKEN)
+    if (mons_base_type(mpusher) != MONS_KRAKEN)
         return (false);
 
     if (mpushee->type == MONS_KRAKEN_TENTACLE
