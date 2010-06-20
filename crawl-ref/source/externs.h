@@ -490,7 +490,7 @@ struct item_def
     unsigned char  sub_type;       // type within that class (ie WPN_DAGGER)
     short          plus;           // +to hit, charges, corpse mon id
     short          plus2;          // +to dam, sub-sub type for boots/helms
-    long           special;        // special stuff
+    int            special;        // special stuff
     unsigned char  colour;         // item colour
     unsigned char  rnd;            // random number, used for tile choice
     short          quantity;       // number of items

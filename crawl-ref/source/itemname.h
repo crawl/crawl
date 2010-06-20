@@ -110,7 +110,7 @@ bool is_bad_item(const item_def &item, bool temp = false);
 bool is_dangerous_item( const item_def& item, bool temp = false);
 bool is_useless_item(const item_def &item, bool temp = false);
 
-std::string make_name(unsigned long seed, bool all_caps, int maxlen = -1,
+std::string make_name(uint32_t seed, bool all_caps, int maxlen = -1,
                       char start = 0);
 
 const char* weapon_brand_name(const item_def& item, bool terse);
@@ -147,7 +147,7 @@ const char* wand_type_name(int wandtype);
 
 bool        is_named_corpse(const item_def &corpse);
 std::string get_corpse_name(const item_def &corpse,
-                            unsigned long *name_type = NULL);
+                            uint64_t *name_type = NULL);
 std::string base_type_string (object_class_type type, bool known = true);
 std::string base_type_string (const item_def &item, bool known = true);
 
