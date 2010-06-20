@@ -1805,12 +1805,12 @@ std::string item_def::name_aux(description_level_type desc,
 
         const std::string _name  = get_corpse_name(*this, &name_flags);
         const bool        shaped = starts_with(_name, "shaped ");
-        name_type = name_flags & MF_NAME_MASK;
+        name_type = (name_flags & MF_NAME_MASK);
 
         if (!_name.empty() && name_type == MF_NAME_ADJECTIVE)
             buff << _name << " ";
 
-        if (name_flags & MF_NAME_SPECIES && name_type == MF_NAME_REPLACE)
+        if ((name_flags & MF_NAME_SPECIES) && name_type == MF_NAME_REPLACE)
             buff << _name << " ";
         else if (!dbname && !starts_with(_name, "the "))
         {
