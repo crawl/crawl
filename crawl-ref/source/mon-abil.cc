@@ -989,7 +989,7 @@ static void _establish_connection(int tentacle,
     // Tentacle is adjacent to the head, not much to do.
     if (!current)
     {
-        menv[tentacle].props["inwards"].get_long() = head;
+        menv[tentacle].props["inwards"].get_int() = head;
         return;
     }
 
@@ -1012,8 +1012,8 @@ static void _establish_connection(int tentacle,
         if (current_monster)
         {
             // Todo verify current monster type
-            menv[current_monster->mindex()].props["inwards"].get_long() = last_mon_idx;
-            menv[last_mon_idx].props["outwards"].get_long() = current_monster->mindex();
+            menv[current_monster->mindex()].props["inwards"].get_int() = last_mon_idx;
+            menv[last_mon_idx].props["outwards"].get_int() = current_monster->mindex();
             break;
         }
 
@@ -1030,11 +1030,11 @@ static void _establish_connection(int tentacle,
             menv[connect].max_hit_points = menv[tentacle].max_hit_points;
             menv[connect].hit_points = menv[tentacle].hit_points;
 
-            menv[connect].props["inwards"].get_long() = last_mon_idx;
-            menv[connect].props["outwards"].get_long() = -1;
+            menv[connect].props["inwards"].get_int() = last_mon_idx;
+            menv[connect].props["outwards"].get_int() = -1;
 
             if (last_mon->type == MONS_KRAKEN_CONNECTOR)
-                menv[last_mon_idx].props["outwards"].get_long() = connect;
+                menv[last_mon_idx].props["outwards"].get_int() = connect;
 
             if (main->holiness() == MH_UNDEAD)
             {

@@ -1949,7 +1949,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
             if (tentacle >= 0)
             {
                 created_count++;
-                menv[tentacle].props["inwards"].get_long() = kraken_index;
+                menv[tentacle].props["inwards"].get_int() = kraken_index;
                 if (monster->holiness() == MH_UNDEAD)
                 {
                     menv[tentacle].flags |= MF_HONORARY_UNDEAD;
