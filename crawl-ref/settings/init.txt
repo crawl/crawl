@@ -72,7 +72,7 @@
 # crawl_dir  = <path>
 # morgue_dir = morgue
 # save_dir   = saves
-macro_dir  = settings/
+# macro_dir  = settings/
 # sound = <regex>:<path to sound file>
 
 ##### 3-  Lua Files #################################################
