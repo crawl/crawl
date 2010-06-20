@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4CC5854F11CEC49300F91C00 /* Dungeon Crawl Stone Soup - ASCII in Resources */ = {isa = PBXBuildFile; fileRef = 4CC5854E11CEC49300F91C00 /* Dungeon Crawl Stone Soup - ASCII */; };
+		4CC5855011CEC49600F91C00 /* Dungeon Crawl Stone Soup - ASCII in Copy Wrapper Script */ = {isa = PBXBuildFile; fileRef = 4CC5854E11CEC49300F91C00 /* Dungeon Crawl Stone Soup - ASCII */; };
 		7B09F5441133D63E004F149D /* godconduct.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F53B1133D63E004F149D /* godconduct.cc */; };
 		7B09F5451133D63E004F149D /* godpassive.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F53D1133D63E004F149D /* godpassive.cc */; };
 		7B09F5461133D63E004F149D /* godprayer.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F53F1133D63E004F149D /* godprayer.cc */; };
@@ -337,7 +339,6 @@
 		B0F7DFEF1086F4F1008FFA70 /* libpng.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B0F7DFEE1086F4EA008FFA70 /* libpng.framework */; };
 		B0F7DFF01086F4F6008FFA70 /* libpng.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = B0F7DFEE1086F4EA008FFA70 /* libpng.framework */; };
 		D2A696BD0DA29D4E00FDDE82 /* Crawl.icns in Resources */ = {isa = PBXBuildFile; fileRef = D2A696BC0DA29D4E00FDDE82 /* Crawl.icns */; };
-		D2AE25F90DA262DD00E15489 /* crawl in Copy Wrapper Script */ = {isa = PBXBuildFile; fileRef = D2AE25EE0DA2624E00E15489 /* crawl */; };
 		D2F272350DA1C5AD00445FE9 /* dat in Resources */ = {isa = PBXBuildFile; fileRef = D2F271FE0DA1C5AD00445FE9 /* dat */; };
 		D2F2725B0DA1C61600445FE9 /* docs in Resources */ = {isa = PBXBuildFile; fileRef = D2F2723F0DA1C61600445FE9 /* docs */; };
 		E5D640BE10BD494500A99626 /* abl-show.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D63F5D10BD494300A99626 /* abl-show.cc */; };
@@ -772,7 +773,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 6;
 			files = (
-				D2AE25F90DA262DD00E15489 /* crawl in Copy Wrapper Script */,
+				4CC5855011CEC49600F91C00 /* Dungeon Crawl Stone Soup - ASCII in Copy Wrapper Script */,
 			);
 			name = "Copy Wrapper Script";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -780,6 +781,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4CC5854E11CEC49300F91C00 /* Dungeon Crawl Stone Soup - ASCII */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.perl; name = "Dungeon Crawl Stone Soup - ASCII"; path = "mac/Dungeon Crawl Stone Soup - ASCII"; sourceTree = "<group>"; };
 		7B09F53B1133D63E004F149D /* godconduct.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = godconduct.cc; sourceTree = "<group>"; };
 		7B09F53C1133D63E004F149D /* godconduct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = godconduct.h; sourceTree = "<group>"; };
 		7B09F53D1133D63E004F149D /* godpassive.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = godpassive.cc; sourceTree = "<group>"; };
@@ -1352,6 +1354,7 @@
 		08FB7794FE84155DC02AAC07 /* Crawl */ = {
 			isa = PBXGroup;
 			children = (
+				4CC5854E11CEC49300F91C00 /* Dungeon Crawl Stone Soup - ASCII */,
 				B0F7DFE61086F4EA008FFA70 /* libpng.xcodeproj */,
 				B0F7DF7B1086F0CB008FFA70 /* SDL_image.xcodeproj */,
 				B0F7DEF91086EE79008FFA70 /* SDL.xcodeproj */,
@@ -2327,6 +2330,7 @@
 				D2F272350DA1C5AD00445FE9 /* dat in Resources */,
 				D2F2725B0DA1C61600445FE9 /* docs in Resources */,
 				B09CCE6C108315B300623CFA /* settings in Resources */,
+				4CC5854F11CEC49300F91C00 /* Dungeon Crawl Stone Soup - ASCII in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -4,8 +4,8 @@
 # of building the mac distribution by hand.
 
 $script= $0;
-$script =~ /(.*)\/MacOS\/(\w+)/;
+$script =~ m{(.*)/MacOS/[^/]+$};
 $scriptdir = $1;
 $resdir = $scriptdir . "/Resources/";
 $executable = $resdir . "crawl";
-system "/usr/bin/open /Applications/Utilities/Terminal.app $executable";
+system qq{/usr/bin/open /Applications/Utilities/Terminal.app '$executable'};
