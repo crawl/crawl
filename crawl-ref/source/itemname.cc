@@ -1585,10 +1585,10 @@ std::string item_def::name_aux(description_level_type desc,
         }
         else
         {
-            const unsigned long sseed =
+            const uint32_t sseed =
                 this->special
-                + (static_cast<unsigned long>(it_plus) << 8)
-                + (static_cast<unsigned long>(OBJ_SCROLLS) << 16);
+                + (static_cast<uint32_t>(it_plus) << 8)
+                + (static_cast<uint32_t>(OBJ_SCROLLS) << 16);
             buff << "labeled " << make_name(sseed, true);
         }
         break;
@@ -1801,7 +1801,7 @@ std::string item_def::name_aux(description_level_type desc,
         if (food_is_rotten(*this) && !dbname)
             buff << "rotting ";
 
-        unsigned long name_type, name_flags;
+        uint64_t name_type, name_flags;
 
         const std::string _name  = get_corpse_name(*this, &name_flags);
         const bool        shaped = starts_with(_name, "shaped ");
@@ -2166,7 +2166,7 @@ bool check_item_knowledge(bool quiet)
 
 
 // Used for: Pandemonium demonlords, shopkeepers, scrolls, random artefacts
-std::string make_name(unsigned long seed, bool all_cap, int maxlen, char start)
+std::string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
 {
     char name[ITEMNAME_SIZE];
     int  numb[17]; // contains the random seeds used for the name
@@ -3261,7 +3261,7 @@ bool is_named_corpse(const item_def &corpse)
     return (corpse.props.exists(CORPSE_NAME_KEY));
 }
 
-std::string get_corpse_name(const item_def &corpse, unsigned long *name_type)
+std::string get_corpse_name(const item_def &corpse, uint64_t *name_type)
 {
     ASSERT(corpse.base_type == OBJ_CORPSES);
 
@@ -3269,10 +3269,7 @@ std::string get_corpse_name(const item_def &corpse, unsigned long *name_type)
         return ("");
 
     if (name_type != NULL)
-    {
-        *name_type
-            = (unsigned long) corpse.props[CORPSE_NAME_TYPE_KEY].get_int();
-    }
+        *name_type = corpse.props[CORPSE_NAME_TYPE_KEY].get_int();
 
     return (corpse.props[CORPSE_NAME_KEY].get_string());
 }
