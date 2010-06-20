@@ -2242,8 +2242,8 @@ void marshallMonster(writer &th, const monsters &m)
 static void tag_construct_level_monsters(writer &th)
 {
     // how many mons_alloc?
-    marshallByte(th, 20);
-    for (int i = 0; i < 20; ++i)
+    marshallByte(th, MAX_MONS_ALLOC);
+    for (int i = 0; i < MAX_MONS_ALLOC; ++i)
         marshallShort(th, env.mons_alloc[i]);
 
     // how many monsters?
@@ -2606,12 +2606,17 @@ static void tag_read_level_monsters(reader &th, char minorVersion)
 
     // how many mons_alloc?
     count = unmarshallByte(th);
-    ASSERT(count >= 0 && count <= MAX_MONSTERS);
-    for (i = 0; i < count; ++i)
+    ASSERT(count >= 0);
+    for (i = 0; i < count && i < MAX_MONS_ALLOC; ++i)
         env.mons_alloc[i] = static_cast<monster_type>( unmarshallShort(th) );
+    for (i = MAX_MONS_ALLOC; i < count; ++i)
+        unmarshallShort(th);
+    for (i = count; i < MAX_MONS_ALLOC; ++i)
+        env.mons_alloc[i] = MONS_NO_MONSTER;
 
     // how many monsters?
     count = unmarshallShort(th);
+    ASSERT(count >= 0 && count <= MAX_MONSTERS);
     // how many monster inventory slots?
     icount = unmarshallByte(th);
 
