@@ -421,10 +421,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = 0;
         *ofs_y = -2;
         break;
-    case TILEP_MONS_KOBOLD_DEMONOLOGIST:
-        *ofs_x = 0;
-        *ofs_y = -10;
-        break;
     // Shift downwards.
     case TILEP_MONS_DEEP_ELF_KNIGHT:
     case TILEP_MONS_NAGA:
@@ -473,7 +469,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         break;
     case TILEP_MONS_SONJA:
         *ofs_x = -2;
-        *ofs_y = -7;
+        *ofs_y = -2;
         break;
     case TILEP_MONS_OGRE_MAGE:
         *ofs_x = -4;
@@ -499,12 +495,12 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         break;
     // Shift downwards and to the right.
     case TILEP_MONS_BIG_KOBOLD:
-        *ofs_x = 2;
-        *ofs_y = 3;
+        *ofs_x = -1;
+        *ofs_y = 0;
         break;
     case TILEP_MONS_KOBOLD:
-        *ofs_x = 3;
-        *ofs_y = 4;
+        *ofs_x = 0;
+        *ofs_y = 0;
         break;
     case TILEP_MONS_ELF:
     case TILEP_MONS_ZOMBIE_LARGE:
