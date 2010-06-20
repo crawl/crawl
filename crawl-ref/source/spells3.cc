@@ -964,7 +964,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
 
     if (is_named_corpse(item))
     {
-        unsigned long name_type;
+        uint64_t name_type = 0;
         std::string name = get_corpse_name(item, &name_type);
 
         if (name_type == 0 || name_type & MF_NAME_MASK == MF_NAME_REPLACE)
