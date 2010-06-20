@@ -942,6 +942,9 @@ namespace arena
 
     void global_setup(const std::string& arena_teams)
     {
+        // [ds] Turning off view_lock crashes arena.
+        Options.view_lock_x = Options.view_lock_y = true;
+
         teams = arena_teams;
         // Set various options from the arena spec's tags
         try
