@@ -210,13 +210,10 @@ static void tag_read_game_state(reader &th);
 static void tag_construct_level(writer &th);
 static void tag_construct_level_items(writer &th);
 static void tag_construct_level_monsters(writer &th);
-static void tag_construct_level_attitude(writer &th);
 static void tag_construct_level_tiles(writer &th);
 static void tag_read_level(reader &th, char minorVersion);
 static void tag_read_level_items(reader &th, char minorVersion);
 static void tag_read_level_monsters(reader &th, char minorVersion);
-static void tag_read_level_attitude(reader &th);
-static void tag_missing_level_attitude();
 static void tag_read_level_tiles(reader &th);
 static void tag_missing_level_tiles();
 
@@ -806,7 +803,6 @@ void tag_write(tag_type tagID, FILE* outf)
     case TAG_LEVEL_ITEMS:    tag_construct_level_items(th);    break;
     case TAG_LEVEL_MONSTERS: tag_construct_level_monsters(th); break;
     case TAG_LEVEL_TILES:    tag_construct_level_tiles(th);    break;
-    case TAG_LEVEL_ATTITUDE: tag_construct_level_attitude(th); break;
     case TAG_GHOST:          tag_construct_ghost(th);          break;
     case TAG_LOST_MONSTERS:
         tag_construct_lost_monsters(th);
@@ -874,7 +870,6 @@ tag_type tag_read(FILE *fp, char minorVersion, char expected_tags[NUM_TAGS])
     case TAG_LEVEL:          tag_read_level(th, minorVersion);          break;
     case TAG_LEVEL_ITEMS:    tag_read_level_items(th, minorVersion);    break;
     case TAG_LEVEL_MONSTERS: tag_read_level_monsters(th, minorVersion); break;
-    case TAG_LEVEL_ATTITUDE: tag_read_level_attitude(th);               break;
     case TAG_LEVEL_TILES:    tag_read_level_tiles(th);                  break;
     case TAG_GHOST:          tag_read_ghost(th, minorVersion);          break;
     case TAG_LOST_MONSTERS:
@@ -906,9 +901,6 @@ void tag_missing(int tag, char minorVersion)
 {
     switch (tag)
     {
-        case TAG_LEVEL_ATTITUDE:
-            tag_missing_level_attitude();
-            break;
         case TAG_LEVEL_TILES:
             tag_missing_level_tiles();
             break;
@@ -941,7 +933,7 @@ void tag_set_expected(char tags[], int fileType)
                     tags[i] = 1;
                 break;
             case TAGTYPE_LEVEL:
-                if (i >= TAG_LEVEL && i <= TAG_LEVEL_ATTITUDE && i != TAG_GHOST)
+                if (i >= TAG_LEVEL && i < TAG_GHOST)
                     tags[i] = 1;
 #ifdef USE_TILE
                 if (i == TAG_LEVEL_TILES)
@@ -2228,6 +2220,8 @@ void marshallMonster(writer &th, const monsters &m)
 
     marshallSpells(th, m.spells);
     marshallByte(th, m.god);
+    marshallByte(th, m.attitude);
+    marshallShort(th, m.foe);
 
     if (mons_is_ghost_demon(m.type))
     {
@@ -2277,20 +2271,6 @@ static void tag_construct_level_monsters(writer &th)
         }
 #endif
         marshallMonster(th, m);
-    }
-}
-
-void tag_construct_level_attitude(writer &th)
-{
-    int i;
-
-    // how many monsters?
-    marshallShort(th, MAX_MONSTERS);
-
-    for (i = 0; i < MAX_MONSTERS; i++)
-    {
-        marshallByte(th, menv[i].attitude);
-        marshallShort(th, menv[i].foe);
     }
 }
 
@@ -2557,9 +2537,7 @@ void unmarshallMonster(reader &th, monsters &m)
 
     const int len = unmarshallShort(th);
     for (int i = 0; i < len; ++i)
-    {
         m.travel_path.push_back(unmarshallCoord(th));
-    }
 
     m.flags      = unmarshallInt(th);
     m.experience = unmarshallInt(th);
@@ -2585,7 +2563,9 @@ void unmarshallMonster(reader &th, monsters &m)
 
     unmarshallSpells(th, m.spells);
 
-    m.god = static_cast<god_type>( unmarshallByte(th) );
+    m.god      = static_cast<god_type>( unmarshallByte(th) );
+    m.attitude = static_cast<mon_attitude_type>(unmarshallByte(th));
+    m.foe      = unmarshallShort(th);
 
     if (mons_is_ghost_demon(m.type))
         m.set_ghost(unmarshallGhost(th, _tag_minor_version));
@@ -2650,69 +2630,6 @@ static void tag_read_level_monsters(reader &th, char minorVersion)
 #endif
             mgrd(m.pos()) = i;
         }
-    }
-}
-
-void tag_read_level_attitude(reader &th)
-{
-    int i, count;
-
-    // how many monsters?
-    count = unmarshallShort(th);
-
-    for (i = 0; i < count; i++)
-    {
-        menv[i].attitude = static_cast<mon_attitude_type>(unmarshallByte(th));
-        menv[i].foe      = unmarshallShort(th);
-    }
-}
-
-void tag_missing_level_attitude()
-{
-    // We don't really have to do a lot here, just set foe to MHITNOT;
-    // they'll pick up a foe first time through handle_monster() if
-    // there's one around.
-
-    // As for attitude, a couple simple checks can be used to determine
-    // friendly/good neutral/neutral/hostile.
-    int i;
-    bool is_friendly;
-    unsigned int new_beh = BEH_WANDER;
-
-    for (i = 0; i < MAX_MONSTERS; i++)
-    {
-        // only do actual monsters
-        if (menv[i].type < 0)
-            continue;
-
-        is_friendly = testbits(menv[i].flags, MF_NO_REWARD);
-
-        menv[i].foe = MHITNOT;
-
-        switch (menv[i].behaviour)
-        {
-            case 0:         // old BEH_SLEEP
-                new_beh = BEH_SLEEP;    // don't wake sleepers
-                break;
-            case 3:         // old BEH_FLEE
-            case 10:        // old BEH_FLEE_FRIEND
-                new_beh = BEH_FLEE;
-                break;
-            case 1:         // old BEH_CHASING_I
-            case 6:         // old BEH_FIGHT
-                new_beh = BEH_SEEK;
-                break;
-            case 7:         // old BEH_ENSLAVED
-                if (!menv[i].has_ench(ENCH_CHARM))
-                    is_friendly = true;
-                break;
-            default:
-                break;
-        }
-
-        menv[i].attitude = (is_friendly) ? ATT_FRIENDLY : ATT_HOSTILE;
-        menv[i].behaviour = static_cast<beh_type>(new_beh);
-        menv[i].foe_memory = 0;
     }
 }
 
