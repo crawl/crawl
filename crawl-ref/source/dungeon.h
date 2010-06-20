@@ -318,6 +318,13 @@ bool octa_room(spec_room &sr, int oblique_max,
 int count_feature_in_box(int x0, int y0, int x1, int y1,
                          dungeon_feature_type feat);
 
+// Count number of mutually isolated zones. If choose_stairless, only count
+// zones with no stairs in them. If fill is set to anything other than
+// DNGN_UNSEEN, chosen zones will be filled with the provided feature.
+int dgn_count_disconnected_zones(
+    bool choose_stairless,
+    dungeon_feature_type fill = DNGN_UNSEEN);
+
 void dgn_replace_area(const coord_def& p1, const coord_def& p2,
                       dungeon_feature_type replace,
                       dungeon_feature_type feature,

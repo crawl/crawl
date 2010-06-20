@@ -932,9 +932,8 @@ int process_disconnected_zones(int x1, int y1, int x2, int y2,
     return (nzones - ngood);
 }
 
-static int _dgn_count_disconnected_zones(
-    bool choose_stairless,
-    dungeon_feature_type fill = DNGN_UNSEEN)
+int dgn_count_disconnected_zones(bool choose_stairless,
+                                 dungeon_feature_type fill)
 {
     return process_disconnected_zones(0, 0, GXM-1, GYM-1, choose_stairless,
                                       fill);
@@ -1715,7 +1714,7 @@ static bool _add_connecting_escape_hatches()
         return (true);
 
     if (at_branch_bottom())
-        return (_dgn_count_disconnected_zones(true) == 0);
+        return (dgn_count_disconnected_zones(true) == 0);
 
     return (_add_feat_if_missing(_is_perm_down_stair, DNGN_ESCAPE_HATCH_DOWN));
 }
@@ -1746,7 +1745,7 @@ static void _dgn_verify_connectivity(unsigned nvaults)
     // disconnected.
     if (dgn_zones && nvaults != env.level_vaults.size())
     {
-        const int newzones = _dgn_count_disconnected_zones(false);
+        const int newzones = dgn_count_disconnected_zones(false);
 
 #ifdef DEBUG_DIAGNOSTICS
         std::ostringstream vlist;
@@ -1776,7 +1775,7 @@ static void _dgn_verify_connectivity(unsigned nvaults)
     // Also check for isolated regions that have no stairs.
     if (you.level_type == LEVEL_DUNGEON
         && !(branches[you.where_are_you].branch_flags & BFLAG_ISLANDED)
-        && _dgn_count_disconnected_zones(true) > 0)
+        && dgn_count_disconnected_zones(true) > 0)
     {
         dgn_level_vetoed = true;
 #ifdef DEBUG_DIAGNOSTICS
@@ -4795,7 +4794,7 @@ static bool _build_vault_impl(int level_number, const map_def *vault,
     char stx, sty;
 
     if (dgn_check_connectivity && !dgn_zones)
-        dgn_zones = _dgn_count_disconnected_zones(false);
+        dgn_zones = dgn_count_disconnected_zones(false);
 
     vault_placement place;
 

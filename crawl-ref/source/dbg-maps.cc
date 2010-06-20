@@ -52,40 +52,6 @@ void mapgen_report_map_veto()
     mapgen_map_builds[level_id::current()].second++;
 }
 
-static map_mask mg_MapMask;
-
-static bool _mg_region_flood(const coord_def &c, int region, bool flag)
-{
-    bool found_exit = false;
-
-    mg_MapMask(c) = region;
-
-    if (flag)
-    {
-        env.map_knowledge(c).flags = 0;
-        set_terrain_mapped(c.x, c.y);
-    }
-
-    const dungeon_feature_type ft = grd(c);
-    if (feat_is_travelable_stair(ft))
-        found_exit = true;
-
-    for (int yi = -1; yi <= 1; ++yi)
-        for (int xi = -1; xi <= 1; ++xi)
-        {
-            if (!xi && !yi)
-                continue;
-
-            coord_def ci = c + coord_def(xi, yi);
-            if (!in_bounds(ci) || mg_MapMask(ci) || !dgn_square_is_passable(ci))
-                continue;
-
-            if (_mg_region_flood(ci, region, flag))
-                found_exit = true;
-        }
-    return (found_exit);
-}
-
 static bool _mg_is_disconnected_level()
 {
     // Don't care about non-Dungeon levels.
@@ -93,28 +59,7 @@ static bool _mg_is_disconnected_level()
         || (branches[you.where_are_you].branch_flags & BFLAG_ISLANDED))
         return (false);
 
-    std::vector<coord_def> region_seeds;
-
-    mg_MapMask.init(0);
-
-    coord_def c;
-    int region = 0;
-    int good_regions = 0;
-    for (c.y = 0; c.y < GYM; ++c.y)
-        for (c.x = 0; c.x < GXM; ++c.x)
-            if (!mg_MapMask(c) && dgn_square_is_passable(c))
-            {
-                if (_mg_region_flood(c, ++region, false))
-                    ++good_regions;
-                else
-                    region_seeds.push_back(c);
-            }
-
-    mg_MapMask.init(0);
-    for (int i = 0, size = region_seeds.size(); i < size; ++i)
-        _mg_region_flood(region_seeds[i], 1, true);
-
-    return (good_regions < region);
+    return dgn_count_disconnected_zones(true);
 }
 
 static bool mg_do_build_level(int niters)
@@ -134,7 +79,10 @@ static bool mg_do_build_level(int niters)
     for (int i = 0; i < niters; ++i)
     {
         if (kbhit() && key_is_escape(getch()))
+        {
+            mprf(MSGCH_WARN, "User requested cancel");
             return (false);
+        }
 
         ++mg_levels_tried;
         if (!builder(you.absdepth0, you.level_type))
