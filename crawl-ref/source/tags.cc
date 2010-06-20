@@ -1993,9 +1993,11 @@ static void tag_construct_level(writer &th)
     marshallShort(th, nc);
     for (int i = 0; i < nc; i++)
     {
+        marshallByte(th, env.cloud[i].type);
+        if (env.cloud[i].type == CLOUD_NONE)
+            continue;
         marshallByte(th, env.cloud[i].pos.x);
         marshallByte(th, env.cloud[i].pos.y);
-        marshallByte(th, env.cloud[i].type);
         marshallShort(th, env.cloud[i].decay);
         marshallByte(th,  (char) env.cloud[i].spread_rate);
         marshallByte(th, env.cloud[i].whose);
@@ -2013,13 +2015,15 @@ static void tag_construct_level(writer &th)
     marshallByte(th, ns);
     for (int i = 0; i < ns; i++)
     {
+        marshallByte(th, env.shop[i].type);
+        if (env.shop[i].type == SHOP_UNASSIGNED)
+            continue;
         marshallByte(th, env.shop[i].keeper_name[0]);
         marshallByte(th, env.shop[i].keeper_name[1]);
         marshallByte(th, env.shop[i].keeper_name[2]);
         marshallByte(th, env.shop[i].pos.x);
         marshallByte(th, env.shop[i].pos.y);
         marshallByte(th, env.shop[i].greed);
-        marshallByte(th, env.shop[i].type);
         marshallByte(th, env.shop[i].level);
     }
 
@@ -2047,6 +2051,9 @@ static void tag_construct_level(writer &th)
 void marshallItem(writer &th, const item_def &item)
 {
     marshallByte(th, item.base_type);
+    if (item.base_type == OBJ_UNASSIGNED)
+        return;
+
     marshallByte(th, item.sub_type);
     marshallShort(th, item.plus);
     marshallShort(th, item.plus2);
@@ -2077,6 +2084,8 @@ void marshallItem(writer &th, const item_def &item)
 void unmarshallItem(reader &th, item_def &item)
 {
     item.base_type   = static_cast<object_class_type>(unmarshallByte(th));
+    if (item.base_type == OBJ_UNASSIGNED)
+        return;
     item.sub_type    = (unsigned char) unmarshallByte(th);
     item.plus        = unmarshallShort(th);
     item.plus2       = unmarshallShort(th);
@@ -2142,6 +2151,8 @@ static void tag_construct_level_items(writer &th)
     for (int i = 0; i < nt; ++i)
     {
         marshallByte(th, env.trap[i].type);
+        if (env.trap[i].type == TRAP_UNASSIGNED)
+            continue;
         marshallCoord(th, env.trap[i].pos);
         marshallShort(th, env.trap[i].ammo_qty);
     }
@@ -2178,6 +2189,10 @@ static mon_enchant unmarshall_mon_enchant(reader &th)
 
 void marshallMonster(writer &th, const monsters &m)
 {
+    marshallShort(th, m.type);
+    if (m.type == MONS_NO_MONSTER)
+        return;
+
     marshallString(th, m.mname);
     marshallByte(th, m.ac);
     marshallByte(th, m.ev);
@@ -2208,7 +2223,6 @@ void marshallMonster(writer &th, const monsters &m)
     }
     marshallByte(th, m.ench_countdown);
 
-    marshallShort(th, m.type);
     marshallShort(th, m.hit_points);
     marshallShort(th, m.max_hit_points);
     marshallShort(th, m.number);
@@ -2418,9 +2432,11 @@ static void tag_read_level( reader &th, char minorVersion )
     ASSERT(num_clouds >= 0 && num_clouds <= MAX_CLOUDS);
     for (int i = 0; i < num_clouds; i++)
     {
+        env.cloud[i].type  = static_cast<cloud_type>(unmarshallByte(th));
+        if (env.cloud[i].type == CLOUD_NONE)
+            continue;
         env.cloud[i].pos.x = unmarshallByte(th);
         env.cloud[i].pos.y = unmarshallByte(th);
-        env.cloud[i].type  = static_cast<cloud_type>(unmarshallByte(th));
         env.cloud[i].decay = unmarshallShort(th);
         env.cloud[i].spread_rate = (unsigned char) unmarshallByte(th);
         env.cloud[i].whose = static_cast<kill_category>(unmarshallByte(th));
@@ -2437,13 +2453,15 @@ static void tag_read_level( reader &th, char minorVersion )
     ASSERT(num_shops >= 0 && num_shops <= MAX_SHOPS);
     for (int i = 0; i < num_shops; i++)
     {
+        env.shop[i].type  = static_cast<shop_type>(unmarshallByte(th));
+        if (env.shop[i].type == SHOP_UNASSIGNED)
+            continue;
         env.shop[i].keeper_name[0] = unmarshallByte(th);
         env.shop[i].keeper_name[1] = unmarshallByte(th);
         env.shop[i].keeper_name[2] = unmarshallByte(th);
         env.shop[i].pos.x = unmarshallByte(th);
         env.shop[i].pos.y = unmarshallByte(th);
         env.shop[i].greed = unmarshallByte(th);
-        env.shop[i].type  = static_cast<shop_type>(unmarshallByte(th));
         env.shop[i].level = unmarshallByte(th);
     }
     for (int i = num_shops; i < MAX_SHOPS; ++i)
@@ -2485,6 +2503,8 @@ static void tag_read_level_items(reader &th, char minorVersion)
         env.trap[i].type =
             static_cast<trap_type>(
                 static_cast<unsigned char>(unmarshallByte(th)) );
+        if (env.trap[i].type == TRAP_UNASSIGNED)
+            continue;
         env.trap[i].pos      = unmarshallCoord(th);
         env.trap[i].ammo_qty = unmarshallShort(th);
     }
@@ -2515,6 +2535,10 @@ static void tag_read_level_items(reader &th, char minorVersion)
 void unmarshallMonster(reader &th, monsters &m)
 {
     m.reset();
+
+    m.type           = static_cast<monster_type>(unmarshallShort(th));
+    if (m.type == MONS_NO_MONSTER)
+        return;
 
     m.mname           = unmarshallString(th, 100);
     m.ac              = unmarshallByte(th);
@@ -2551,7 +2575,6 @@ void unmarshallMonster(reader &th, monsters &m)
     }
     m.ench_countdown = unmarshallByte(th);
 
-    m.type           = static_cast<monster_type>(unmarshallShort(th));
     m.hit_points     = unmarshallShort(th);
     m.max_hit_points = unmarshallShort(th);
     m.number         = unmarshallShort(th);
