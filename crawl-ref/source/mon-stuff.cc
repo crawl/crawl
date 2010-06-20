@@ -2773,14 +2773,14 @@ bool swap_check(monsters *monster, coord_def &loc, bool quiet)
     }
 
     // First try: move monster onto your position.
-    bool swap = _habitat_okay( monster, grd(loc) );
+    bool swap = !monster_at(loc) && _habitat_okay( monster, grd(loc) );
 
     // Choose an appropriate habitat square at random around the target.
     if (!swap)
     {
         int num_found = 0;
 
-        for (adjacent_iterator ai(you.pos()); ai; ++ai)
+        for (adjacent_iterator ai(monster->pos()); ai; ++ai)
             if (!monster_at(*ai) && _habitat_okay(monster, grd(*ai))
                 && one_chance_in(++num_found))
             {
