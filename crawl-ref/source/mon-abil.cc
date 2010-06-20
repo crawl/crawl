@@ -53,17 +53,118 @@ struct position_node
         pos.x=0;
         pos.y=0;
         last = NULL;
+        estimate = 0;
+        path_distance = 0;
     }
 
     coord_def pos;
     const position_node * last;
+
+    int estimate;
+    int path_distance;
+
     bool operator < (const position_node & right) const
     {
         unsigned idx = pos.x + pos.y * X_WIDTH;
         unsigned other_idx = right.pos.x + right.pos.y * X_WIDTH;
         return  idx < other_idx;
     }
+
+    int total_dist() const
+    {
+        return (estimate + path_distance);
+    }
 };
+
+struct path_less
+{
+    bool operator()(const std::set<position_node>::iterator & left,
+                    const std::set<position_node>::iterator & right)
+    {
+        return (left->total_dist() > right->total_dist());
+    }
+
+};
+
+static int _dummy_estimate(const coord_def & pos)
+{
+    return (0);
+}
+#define DISCONNECT_DIST (INT_MAX - 1000)
+
+template<typename valid_T, typename cost_T, typename est_T>
+void search_astar(const coord_def & start,
+                  valid_T & valid_target,
+                  cost_T & connection_cost,
+                  est_T & cost_estimate,
+                  std::set<position_node> & visited,
+                  std::vector<std::set<position_node>::iterator > & candidates,
+                  int connect_mode = 8)
+{
+    if (connect_mode < 1 || connect_mode > 8)
+        connect_mode = 8;
+
+    // Ordering the default compass index this way gives us the non
+    // diagonal directions as the first four elements - so by just
+    // using the first 4 elements instead of the whole array we
+    // can have 4-connectivity.
+    int compass_idx[] = {0, 2, 4, 6, 1, 3, 5, 7};
+
+
+    position_node temp_node;
+    temp_node.pos = start;
+    temp_node.last = NULL;
+
+    std::priority_queue<std::set<position_node>::iterator,
+                        std::vector<std::set<position_node>::iterator>,
+                        path_less  > fringe;
+
+    std::set<position_node>::iterator current = visited.insert(temp_node).first;
+    fringe.push(current);
+
+    bool done = false;
+    while (!fringe.empty())
+    {
+        current = fringe.top();
+        fringe.pop();
+
+        std::random_shuffle(compass_idx, compass_idx + connect_mode);
+
+        for (int i=0; i < connect_mode; ++i)
+        {
+            coord_def adjacent = current->pos + Compass[compass_idx[i]];
+
+            if (!in_bounds(adjacent))
+                continue;
+
+            temp_node.pos  = adjacent;
+            temp_node.last = &(*current);
+
+            int node_cost = connection_cost(adjacent);
+
+            temp_node.path_distance = current->path_distance + node_cost;
+            temp_node.estimate = cost_estimate(adjacent);
+
+            std::pair<std::set<position_node>::iterator, bool > res;
+            res = visited.insert(temp_node);
+
+            if (!res.second)
+                continue;
+
+            if (valid_target(adjacent))
+            {
+                candidates.push_back(res.first);
+                done = true;
+                break;
+            }
+            if (node_cost != DISCONNECT_DIST)
+                fringe.push(res.first);
+        }
+        if (done)
+            break;
+    }
+
+}
 
 template<typename valid_T, typename connect_T>
 void search_dungeon(const coord_def & start,
@@ -940,34 +1041,62 @@ static void _establish_connection(int tentacle,
     }
 }
 
-bool _kraken_head(const coord_def & pos)
+struct tentacle_attack_costs
 {
-    monsters * mons = monster_at(pos);
-
-    return (mons && mons_base_type(mons) == MONS_KRAKEN);
-}
-
-bool _kraken_tentacle(const coord_def & pos)
-{
-    monsters * mons = monster_at(pos);
-
-    return (mons && mons->type == MONS_KRAKEN_TENTACLE);
-}
-
-bool _open_area(const coord_def & pos)
-{
-    if (actor_at(pos))
-        return (false);
-
-    return (!feat_is_solid(env.grid(pos)) && env.grid(pos) != DNGN_LAVA);
-}
-
-struct hit_target
-{
-    coord_def base_pos;
-    bool operator()(const coord_def & pos)
+    monsters * kraken;
+    int operator()(const coord_def & pos)
     {
-        return (pos == base_pos);
+        if (feat_is_solid(env.grid(pos)) || env.grid(pos) == DNGN_LAVA
+            || !kraken->see_cell_no_trans(pos))
+        {
+            return (DISCONNECT_DIST);
+        }
+
+        actor * act_at = actor_at(pos);
+        monsters * mons_at = monster_at(pos);
+
+        if (!act_at)
+            return (1);
+
+        // Can still search through a firewood monster, just at a higher
+        // path cost.
+        if (mons_at && mons_is_firewood(mons_at)
+            && !mons_aligned(kraken, mons_at))
+        {
+            return (10);
+        }
+
+        // An actor we can't just chop through is there, if it's an
+        // actual target we can still give a disconnected path
+        // cost. -cao
+        return (DISCONNECT_DIST);
+
+    }
+};
+
+// We can't path through firewood going from the tentacle end back
+// to the main body.
+struct tentacle_connect_costs
+{
+    monsters * kraken;
+    int operator()(const coord_def & pos)
+    {
+        if (feat_is_solid(env.grid(pos)) || env.grid(pos) == DNGN_LAVA
+            || actor_at(pos) || !kraken->see_cell_no_trans(pos))
+        {
+            return (DISCONNECT_DIST);
+        }
+        return (1);
+    }
+};
+
+struct grid_distance_to_target
+{
+    coord_def target;
+
+    int operator() (const coord_def & pos)
+    {
+        return (grid_distance(pos, target));
     }
 };
 
@@ -1000,27 +1129,18 @@ struct target_or_enemy
         if (!temp)
             return (false);
 
-/*
         monsters * mons_targ = monster_at(pos);
 
+        // Don't explicitly target firewood, we will try to path
+        // around it instead.
         if (mons_targ && mons_is_firewood(mons_targ))
             return (false);
-            */
 
         return (!mons_aligned(temp, base_monster)
                 && base_monster->can_see(temp));
     }
 };
 
-struct clear_and_seen
-{
-    monsters * base_monster;
-
-    bool operator() (const coord_def & pos)
-    {
-        return (base_monster->see_cell_no_trans(pos) && _open_area(pos));
-    }
-};
 
 void move_kraken_tentacles(monsters * kraken)
 {
@@ -1112,11 +1232,15 @@ void move_kraken_tentacles(monsters * kraken)
         foe_check.target_square = targ;
 
         visited.clear();
-        clear_and_seen path_check;
-        path_check.base_monster = kraken;
 
-        search_dungeon(tentacle->pos(), foe_check, path_check,
-                       visited, tentacle_path, false, tentacle_connectivity);
+        tentacle_attack_costs attack_costs;
+        attack_costs.kraken = kraken;
+
+        search_astar(tentacle->pos(), foe_check, attack_costs, _dummy_estimate,
+                    visited,
+                    tentacle_path,
+                    tentacle_connectivity);
+
 
         coord_def new_pos = tentacle->pos();
         coord_def old_pos = tentacle->pos();
@@ -1164,15 +1288,27 @@ void move_kraken_tentacles(monsters * kraken)
 
         visited.clear();
         candidates.clear();
+
         // Find the tentacle -> head path
         target_monster current_target;
         current_target.target_mindex = headnum;
-        search_dungeon(tentacle->pos(), current_target, path_check,
-                       visited, candidates, false, tentacle_connectivity);
+
+        tentacle_connect_costs connect_cost;
+        connect_cost.kraken = kraken;
+        grid_distance_to_target head_estimate;
+        head_estimate.target =  kraken->pos();
+
+        search_astar(tentacle->pos(),
+                     current_target, connect_cost, head_estimate,
+                     visited, candidates, tentacle_connectivity);
 
         if (candidates.size() != 1)
         {
-            mprf("Error, %d kraken heads found!", candidates.size());
+            mprf("Error, %d kraken head paths found!", candidates.size());
+            // Well something went wrong, maybe we should just forget
+            // this tentacle.
+            monster_die(tentacle, KILL_MISC, NON_MONSTER, true);
+
             continue;
         }
 
