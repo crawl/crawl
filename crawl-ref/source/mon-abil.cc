@@ -985,6 +985,33 @@ struct target_monster
     }
 };
 
+struct target_or_enemy
+{
+    coord_def target_square;
+    monsters * base_monster;
+
+    bool operator() (const coord_def & pos)
+    {
+        if (pos == target_square)
+            return (true);
+
+        actor * temp = actor_at(pos);
+
+        if (!temp)
+            return (false);
+
+/*
+        monsters * mons_targ = monster_at(pos);
+
+        if (mons_targ && mons_is_firewood(mons_targ))
+            return (false);
+            */
+
+        return (!mons_aligned(temp, base_monster)
+                && base_monster->can_see(temp));
+    }
+};
+
 struct clear_and_seen
 {
     monsters * base_monster;
@@ -1005,11 +1032,11 @@ void move_kraken_tentacles(monsters * kraken)
     int tentacle_connectivity = 8;
 
     coord_def targ;
-    bool no_target = false;
+    bool no_foe = false;
     if (!kraken->near_foe())
     {
         targ = kraken->pos();
-        no_target = true;
+        no_foe = true;
     }
     else
         targ = kraken->get_foe()->pos();
@@ -1068,7 +1095,7 @@ void move_kraken_tentacles(monsters * kraken)
 
             }
         }
-        if (no_target
+        if (no_foe
             && grid_distance(tentacle->pos(), kraken->pos()) == 1)
         {
             // Drop the tentacle if no enemies are in sight and it is
@@ -1079,30 +1106,54 @@ void move_kraken_tentacles(monsters * kraken)
         }
 
         tentacle_path.clear();
-        target_monster current_target;
-        current_target.target_mindex = tentacle->mindex();
+
+        target_or_enemy foe_check;
+        foe_check.base_monster = kraken;
+        foe_check.target_square = targ;
+
         visited.clear();
         clear_and_seen path_check;
         path_check.base_monster = kraken;
 
-        search_dungeon(targ, current_target, path_check,
-                       visited, tentacle_path, false,
-                       tentacle_connectivity);
+        search_dungeon(tentacle->pos(), foe_check, path_check,
+                       visited, tentacle_path, false, tentacle_connectivity);
 
         coord_def new_pos = tentacle->pos();
-        if (tentacle_path.empty()
-            || !tentacle_path[0]->last
-            || actor_at(tentacle_path[0]->last->pos))
+        coord_def old_pos = tentacle->pos();
+
+        bool path_failed = false;
+        // Did we find a path?
+        if (!tentacle_path.empty())
         {
- //           mprf("no new path to target");
+            // The end position is the enemy or target square, we need
+            // to rewind the found path to find the next move
+
+            const position_node * current = &(*tentacle_path[0]);
+            const position_node * last;
+
+            // The last position in the chain is the base position,
+            // so we want to stop at the one before the last.
+            while (current && current->last)
+            {
+                last = current;
+                current = current->last;
+                new_pos = last->pos;
+            }
         }
         else
-            new_pos = tentacle_path[0]->last->pos;
+        {
+            path_failed = true;
+            mprf("path finding failed?");
+        }
 
+        actor * blocking_actor = actor_at(new_pos);
+        if (blocking_actor)
+        {
+            new_pos = old_pos;
+        }
 
         mgrd(tentacle->pos()) = NON_MONSTER;
 
-        coord_def old_pos = tentacle->pos();
 
         tentacle->set_position(new_pos);
 
@@ -1114,6 +1165,7 @@ void move_kraken_tentacles(monsters * kraken)
         visited.clear();
         candidates.clear();
         // Find the tentacle -> head path
+        target_monster current_target;
         current_target.target_mindex = headnum;
         search_dungeon(tentacle->pos(), current_target, path_check,
                        visited, candidates, false, tentacle_connectivity);
