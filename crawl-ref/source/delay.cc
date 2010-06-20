@@ -954,14 +954,19 @@ static void _finish_delay(const delay_queue_item &delay)
 
         vampire_nutrition_per_turn(item, 1);
 
-        if (mons_skeleton(item.plus) && one_chance_in(3))
-            turn_corpse_into_skeleton(item);
-        else
+        // Don't try to apply delay end effects if
+        // vampire_nutrition_per_turn did a stop_delay already:
+        if (is_vampire_feeding())
         {
-            if (delay.parm1)
-                dec_inv_item_quantity(delay.parm2, 1);
+            if (mons_skeleton(item.plus) && one_chance_in(3))
+                turn_corpse_into_skeleton(item);
             else
-                dec_mitm_item_quantity(delay.parm2, 1);
+            {
+                if (delay.parm1)
+                    dec_inv_item_quantity(delay.parm2, 1);
+                else
+                    dec_mitm_item_quantity(delay.parm2, 1);
+            }
         }
 
         if (was_orc)
