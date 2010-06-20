@@ -251,11 +251,11 @@ level_range level_range::parse(std::string s) throw (std::string)
         parse_partial(lr, s);
     else
     {
-        std::string branch = trimmed_string(s.substr(0, cpos));
-        std::string depth  = trimmed_string(s.substr(cpos + 1));
+        std::string br    = trimmed_string(s.substr(0, cpos));
+        std::string depth = trimmed_string(s.substr(cpos + 1));
         parse_depth_range(depth, &lr.shallowest, &lr.deepest);
 
-        lr.set(branch, lr.shallowest, lr.deepest);
+        lr.set(br, lr.shallowest, lr.deepest);
     }
 
     return (lr);

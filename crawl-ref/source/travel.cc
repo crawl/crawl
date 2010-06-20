@@ -2982,33 +2982,33 @@ std::string level_id::describe( bool long_name, bool with_number ) const
 level_id level_id::parse_level_id(const std::string &s) throw (std::string)
 {
     std::string::size_type cpos = s.find(':');
-    std::string branch = (cpos != std::string::npos? s.substr(0, cpos)  : s);
-    std::string depth  = (cpos != std::string::npos? s.substr(cpos + 1) : "");
+    std::string brname  = (cpos != std::string::npos? s.substr(0, cpos)  : s);
+    std::string brdepth = (cpos != std::string::npos? s.substr(cpos + 1) : "");
 
-    if (branch == "Abyss")
+    if (brname == "Abyss")
         return (level_id(LEVEL_ABYSS));
-    else if (branch == "Pan")
+    else if (brname == "Pan")
         return (level_id(LEVEL_PANDEMONIUM));
-    else if (branch == "Lab")
+    else if (brname == "Lab")
         return (level_id(LEVEL_LABYRINTH));
-    else if (branch == "Port")
+    else if (brname == "Port")
         return (level_id(LEVEL_PORTAL_VAULT));
 
-    const branch_type br = str_to_branch(branch);
+    const branch_type br = str_to_branch(brname);
     if (br == NUM_BRANCHES)
     {
         throw make_stringf("Invalid branch \"%s\" in spec \"%s\"",
-                           branch.c_str(), s.c_str());
+                           brname.c_str(), s.c_str());
     }
 
-    const int dep = (depth.empty() ? 1 :
-                     depth == "$"  ? branches[br].depth
-                                   : atoi(depth.c_str()));
+    const int dep = (brdepth.empty() ? 1 :
+                     brdepth == "$"  ? branches[br].depth
+                                     : atoi(brdepth.c_str()));
 
     if (dep < 0 || dep > branches[br].depth)
     {
         throw make_stringf("Invalid depth for %s in spec \"%s\"",
-                           branch.c_str(), s.c_str());
+                           brname.c_str(), s.c_str());
     }
 
     return level_id(br, dep);

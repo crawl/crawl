@@ -49,10 +49,10 @@ dlua_chunk::dlua_chunk(lua_State *ls)
     compiled = out.str();
 }
 
-dlua_chunk dlua_chunk::precompiled(const std::string &chunk)
+dlua_chunk dlua_chunk::precompiled(const std::string &_chunk)
 {
     dlua_chunk dchunk;
-    dchunk.compiled = chunk;
+    dchunk.compiled = _chunk;
     return (dchunk);
 }
 

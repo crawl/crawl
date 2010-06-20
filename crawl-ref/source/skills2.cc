@@ -46,9 +46,9 @@ public:
         Skill_Op_Map[k] = o;
     }
 
-    static std::string get(const std::string &key)
+    static std::string get(const std::string &_key)
     {
-        skill_op_map::const_iterator i = Skill_Op_Map.find(key);
+        skill_op_map::const_iterator i = Skill_Op_Map.find(_key);
         return (i == Skill_Op_Map.end()? std::string() : (i->second)());
     }
 private:

@@ -76,9 +76,9 @@ std::string map_marker::property(const std::string &pname) const
 
 map_marker *map_marker::read_marker(reader &inf)
 {
-    const map_marker_type type =
+    const map_marker_type mtype =
         static_cast<map_marker_type>(unmarshallShort(inf));
-    return readers[type]? (*readers[type])(inf, type) : NULL;
+    return readers[mtype]? (*readers[mtype])(inf, mtype) : NULL;
 }
 
 map_marker *map_marker::parse_marker(
