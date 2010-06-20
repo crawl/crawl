@@ -111,64 +111,7 @@ enum mon_summon_type
     MON_SUMM_AID,     // Divine aid
 };
 
-// properties of the monster class (other than resists/vulnerabilities)
-enum mons_class_flags
-{
-    M_NO_FLAGS          = 0,
-
-    M_SPELLCASTER       = 1<< 0,        // any non-physical-attack powers,
-    M_ACTUAL_SPELLS     = 1<< 1,        // monster is a wizard
-                                        // (hated by Trog, affected by silence)
-    M_PRIEST            = 1<< 2,        // monster is a priest
-    M_FIGHTER           = 1<< 3,        // monster is skilled fighter
-
-    M_NO_WAND           = 1<< 4,        // do not give (unique) a wand
-    M_NO_HT_WAND        = 1<< 5,        // do not give a high tier wand
-
-    M_INVIS             = 1<< 6,        // is created invis
-    M_SEE_INVIS         = 1<< 7,        // can see invis
-    M_SENSE_INVIS       = 1<< 8,        // can sense invisible things
-    M_SPEAKS            = 1<< 9,        // uses talking code
-    M_CONFUSED          = 1<<10,        // monster is perma-confused,
-    M_BATTY             = 1<<11,        // monster is batty
-    M_SPLITS            = 1<<12,        // monster can split
-    M_GLOWS_LIGHT       = 1<<13,        // monster glows with light
-    M_STATIONARY        = 1<<14,        // monster is stationary
-    M_BLOOD_SCENT       = 1<<15,        // monster can smell blood
-    M_COLD_BLOOD        = 1<<16,        // susceptible to cold,
-                                        // drainable by vampires
-    M_WARM_BLOOD        = 1<<17,        // no effect currently,
-                                        // drainable by vampires
-    M_GLOWS_RADIATION   = 1<<18,        // monster glows with radiation
-    M_BURROWS           = 1<<19,        // monster digs through rock
-
-    M_SUBMERGES         = 1<<20,        // monster can submerge
-
-    M_UNIQUE            = 1<<21,        // monster is a unique
-    M_ACID_SPLASH       = 1<<22,        // Passive acid splash when hit.
-
-    M_ARCHER            = 1<<23,        // gets various archery boosts
-
-    M_INSUBSTANTIAL     = 1<<24,        // is insubstantial
-
-    M_TWOWEAPON         = 1<<25,        // wields two weapons at once
-
-    M_SPECIAL_ABILITY   = 1<<26,        // XXX: eventually make these spells?
-    M_NO_REGEN          = 1<<27,        // cannot regenerate
-
-    M_SPELL_NO_SILENT   = 1<<28,        // cannot cast spells when silenced,
-                                        // even though it's not a priest or
-                                        // wizard
-
-    M_NOISY_SPELLS      = 1<<29,        // can cast spells when silenced, but
-                                        // casting makes noise when not
-                                        // silenced
-
-    M_NO_SKELETON       = 1<<30,        // boneless corpses
-    M_NO_EXP_GAIN       = 1<<31,        // worth 0 xp
-    M_DEFLECT_MISSILES  = (uint64_t)1<<32,// has a deflection effect
-    M_PHASE_SHIFT       = (uint64_t)1<<33,// phase shift (EV bonus not included)
-};
+#include "mon-class-flags.h"
 
 enum mon_intel_type             // Must be in increasing intelligence order
 {
@@ -320,4 +263,3 @@ enum mon_body_shape
 };
 
 #endif
-
