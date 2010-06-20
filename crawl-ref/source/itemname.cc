@@ -1801,7 +1801,7 @@ std::string item_def::name_aux(description_level_type desc,
         if (food_is_rotten(*this) && !dbname)
             buff << "rotting ";
 
-        uint64_t name_type, name_flags;
+        uint64_t name_type, name_flags = 0;
 
         const std::string _name  = get_corpse_name(*this, &name_flags);
         const bool        shaped = starts_with(_name, "shaped ");
