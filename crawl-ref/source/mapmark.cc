@@ -815,7 +815,7 @@ void map_markers::clear()
 static const long MARKERS_COOKY = 0x17742C32;
 void map_markers::write(writer &outf) const
 {
-    marshallLong(outf, MARKERS_COOKY);
+    marshallInt(outf, MARKERS_COOKY);
 
     std::vector<unsigned char> buf;
 
@@ -828,7 +828,7 @@ void map_markers::write(writer &outf) const
         i->second->write(tmp_outf);
 
         // Write the marker data, prefixed by a size
-        marshallLong(outf, buf.size());
+        marshallInt(outf, buf.size());
         for ( std::vector<unsigned char>::const_iterator bi = buf.begin();
               bi != buf.end(); ++bi )
         {
@@ -843,7 +843,7 @@ void map_markers::read(reader &inf, int minorVersion)
 
     clear();
 
-    const long cooky = unmarshallLong(inf);
+    const int cooky = unmarshallInt(inf);
     ASSERT(cooky == MARKERS_COOKY);
     UNUSED(cooky);
 
@@ -851,7 +851,7 @@ void map_markers::read(reader &inf, int minorVersion)
     for (int i = 0; i < nmarkers; ++i)
     {
         // used by tools
-        unmarshallLong(inf);
+        unmarshallInt(inf);
         if (map_marker *mark = map_marker::read_marker(inf))
         {
             add(mark);

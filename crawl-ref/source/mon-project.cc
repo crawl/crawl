@@ -167,7 +167,7 @@ bool _iood_hit(monsters &mon, const coord_def &pos, bool big_boom = false)
 
     int pow = mon.props["iood_pow"].get_short();
     pow = stepdown_value(pow, 30, 30, 200, -1);
-    const int dist = mon.props["iood_distance"].get_long();
+    const int dist = mon.props["iood_distance"].get_int();
     ASSERT(dist >= 0);
     if (dist < 4)
         pow = pow * (dist*2+3) / 10;
@@ -263,7 +263,7 @@ move_again:
 
     mon.props["iood_x"] = x;
     mon.props["iood_y"] = y;
-    mon.props["iood_distance"].get_long()++;
+    mon.props["iood_distance"].get_int()++;
 
     const coord_def pos(static_cast<int>(round(x)), static_cast<int>(round(y)));
     if (!in_bounds(pos))
@@ -435,7 +435,7 @@ static bool _iood_catchup_move(monsters& mon)
 
     mon.props["iood_x"] = x;
     mon.props["iood_y"] = y;
-    mon.props["iood_distance"].get_long()++;
+    mon.props["iood_distance"].get_int()++;
 
     const coord_def pos(static_cast<int>(round(x)), static_cast<int>(round(y)));
     if (!in_bounds(pos))

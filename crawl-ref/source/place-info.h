@@ -7,26 +7,26 @@ public:
     int level_type;     // enum level_area_type
     int branch;         // enum branch_type if LEVEL_DUNGEON; otherwise -1
 
-    unsigned long num_visits;
-    unsigned long levels_seen;
+    unsigned int num_visits;
+    unsigned int levels_seen;
 
-    unsigned long mon_kill_exp;
-    unsigned long mon_kill_exp_avail;
-    unsigned long mon_kill_num[KC_NCATEGORIES];
+    unsigned int mon_kill_exp;
+    unsigned int mon_kill_exp_avail;
+    unsigned int mon_kill_num[KC_NCATEGORIES];
 
-    long turns_total;
-    long turns_explore;
-    long turns_travel;
-    long turns_interlevel;
-    long turns_resting;
-    long turns_other;
+    int turns_total;
+    int turns_explore;
+    int turns_travel;
+    int turns_interlevel;
+    int turns_resting;
+    int turns_other;
 
-    long elapsed_total;
-    long elapsed_explore;
-    long elapsed_travel;
-    long elapsed_interlevel;
-    long elapsed_resting;
-    long elapsed_other;
+    int elapsed_total;
+    int elapsed_explore;
+    int elapsed_travel;
+    int elapsed_interlevel;
+    int elapsed_resting;
+    int elapsed_other;
     
 public:
     PlaceInfo();

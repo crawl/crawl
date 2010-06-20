@@ -8,7 +8,7 @@
 #include <set>
 
 typedef FixedArray<short, GXM, GYM> grid_heightmap;
-typedef unsigned long terrain_property_t;
+typedef uint32_t terrain_property_t;
 
 typedef std::set<std::string> string_set;
 
@@ -79,8 +79,8 @@ struct crawl_environment
     int spawn_random_rate;
 
     // Time when level was saved (hence we write out you.elapsed_time
-    // (but load it back to env.elapsed_tiem); used during level load
-    long elapsed_time;
+    // (but load it back to env.elapsed_time); used during level load
+    int elapsed_time;
 
     // Which point did the player leave the level from?
     coord_def old_player_pos;
@@ -90,11 +90,11 @@ struct crawl_environment
 
     // Flags for things like preventing teleport control; see
     // level_flag_type in enum.h
-    unsigned long level_flags;
+    uint32_t level_flags;
 
     coord_def sanctuary_pos;
     int sanctuary_time;
-    long forest_awoken_until;
+    int forest_awoken_until;
 };
 
 extern struct crawl_environment env;

@@ -3680,6 +3680,13 @@ bool parse_args( int argc, char **argv, bool rc_only )
 {
     COMPILE_CHECK(ARRAYSZ(cmd_ops) == CLO_NOPS, c1);
 
+    if (crawl_state.command_line_arguments.empty())
+    {
+        crawl_state.command_line_arguments.insert(
+            crawl_state.command_line_arguments.end(),
+            argv, argv + argc);
+    }
+
     std::string exe_path = find_executable_path();
 
     if (!exe_path.empty())

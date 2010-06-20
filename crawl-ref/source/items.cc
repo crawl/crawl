@@ -671,7 +671,7 @@ void item_check(bool verbose)
 
     std::vector<const item_def*> items;
 
-    item_list_on_square( items, you.visible_igrd(you.pos()), true );
+    item_list_on_square(items, you.visible_igrd(you.pos()), true);
 
     if (items.empty())
     {
@@ -680,7 +680,7 @@ void item_check(bool verbose)
         return;
     }
 
-    if (items.size() == 1 )
+    if (items.size() == 1)
     {
         item_def it(*items[0]);
         std::string name = get_menu_colour_prefix_tags(it, DESC_NOCAP_A);

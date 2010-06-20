@@ -350,13 +350,13 @@ monster_type fill_out_corpse(const monsters* monster, item_def& corpse,
     if (!monster->mname.empty())
     {
         corpse.props[CORPSE_NAME_KEY] = monster->mname;
-        corpse.props[CORPSE_NAME_TYPE_KEY] = (long) monster->flags;
+        corpse.props[CORPSE_NAME_TYPE_KEY].get_int() = monster->flags;
     }
     else if (mons_is_unique(monster->type))
     {
         corpse.props[CORPSE_NAME_KEY] = mons_type_name(monster->type,
                                                        DESC_PLAIN);
-        corpse.props[CORPSE_NAME_TYPE_KEY] = (long) 0;
+        corpse.props[CORPSE_NAME_TYPE_KEY].get_int() = 0;
     }
 
     return (corpse_class);
@@ -2403,7 +2403,7 @@ bool monster_polymorph(monsters *monster, monster_type targetc,
     _fire_monster_death_event(monster, KILL_MISC, NON_MONSTER, true);
 
     // the actual polymorphing:
-    unsigned long flags =
+    uint64_t flags =
         monster->flags & ~(MF_INTERESTING | MF_SEEN | MF_ATT_CHANGE_ATTEMPT
                            | MF_WAS_IN_VIEW | MF_BAND_MEMBER
                            | MF_HONORARY_UNDEAD | MF_KNOWN_MIMIC);
@@ -2844,14 +2844,14 @@ bool swap_check(monsters *monster, coord_def &loc, bool quiet)
     }
 
     // First try: move monster onto your position.
-    bool swap = _habitat_okay( monster, grd(loc) );
+    bool swap = !monster_at(loc) && _habitat_okay( monster, grd(loc) );
 
     // Choose an appropriate habitat square at random around the target.
     if (!swap)
     {
         int num_found = 0;
 
-        for (adjacent_iterator ai(you.pos()); ai; ++ai)
+        for (adjacent_iterator ai(monster->pos()); ai; ++ai)
             if (!monster_at(*ai) && _habitat_okay(monster, grd(*ai))
                 && one_chance_in(++num_found))
             {

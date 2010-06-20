@@ -165,7 +165,7 @@ void monster_grid_updates()
 
 void update_monsters_in_view()
 {
-    unsigned int num_hostile = 0;
+    int num_hostile = 0;
 
     for (monster_iterator mi; mi; ++mi)
     {

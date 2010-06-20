@@ -428,8 +428,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
     }
 
     // This must occur before the untransform() and the is_undead check.
-    if (you.attribute[ATTR_TRANSFORMATION]
-        == static_cast<unsigned>(which_trans))
+    if (you.attribute[ATTR_TRANSFORMATION] == which_trans)
     {
         if (you.duration[DUR_TRANSFORMATION] < 100 * BASELINE_DELAY)
         {

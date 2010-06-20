@@ -1571,8 +1571,11 @@ static int _place_monster_aux(const mgen_data &mg,
     }
     // NOTE: The summoner might be dead if the summoned is placed by a
     // beam which killed the summoner first (like fire vortexes placed
-    // by the Fire Storm spell).
-    else if (mg.summoner != NULL && mg.summoner->alive())
+    // by the Fire Storm spell); a deceased summoner's mindex might also
+    // be reused to create its summon, so make sure the summon doesn't
+    // think it has summoned itself.
+    else if (mg.summoner != NULL && mg.summoner->alive()
+             && mg.summoner != mon)
     {
         ASSERT(mg.summoner->alive());
         if (mg.summoner->atype() == ACT_PLAYER)
@@ -3211,9 +3214,9 @@ void set_vault_mon_list(const std::vector<mons_spec> &list)
         return;
     }
 
-    props[VAULT_MON_TYPES_KEY].new_vector(SV_LONG).resize(size);
-    props[VAULT_MON_BASES_KEY].new_vector(SV_LONG).resize(size);
-    props[VAULT_MON_WEIGHTS_KEY].new_vector(SV_LONG).resize(size);
+    props[VAULT_MON_TYPES_KEY].new_vector(SV_INT).resize(size);
+    props[VAULT_MON_BASES_KEY].new_vector(SV_INT).resize(size);
+    props[VAULT_MON_WEIGHTS_KEY].new_vector(SV_INT).resize(size);
 
     CrawlVector &type_vec   = props[VAULT_MON_TYPES_KEY].get_vector();
     CrawlVector &base_vec   = props[VAULT_MON_BASES_KEY].get_vector();
@@ -3227,17 +3230,17 @@ void set_vault_mon_list(const std::vector<mons_spec> &list)
         {
             ASSERT(spec.place.level_type != LEVEL_LABYRINTH
                    && spec.place.level_type != LEVEL_PORTAL_VAULT);
-            type_vec[i] = (long) -1;
-            base_vec[i] = (long) spec.place.packed_place();
+            type_vec[i] = -1;
+            base_vec[i] = spec.place.packed_place();
         }
         else
         {
             ASSERT(spec.mid != RANDOM_MONSTER
                    && spec.monbase != RANDOM_MONSTER);
-            type_vec[i] = (long) spec.mid;
-            base_vec[i] = (long) spec.monbase;
+            type_vec[i] = spec.mid;
+            base_vec[i] = spec.monbase;
         }
-        weight_vec[i] = (long) spec.genweight;
+        weight_vec[i] = spec.genweight;
     }
 
     setup_vault_mon_list();
@@ -3265,8 +3268,8 @@ void get_vault_mon_list(std::vector<mons_spec> &list)
     unsigned int size = type_vec.size();
     for (unsigned int i = 0; i < size; i++)
     {
-        int type = (long) type_vec[i];
-        int base = (long) base_vec[i];
+        int type = type_vec[i];
+        int base = base_vec[i];
 
         mons_spec spec;
 
@@ -3284,7 +3287,7 @@ void get_vault_mon_list(std::vector<mons_spec> &list)
             ASSERT(spec.mid != RANDOM_MONSTER
                    && spec.monbase != RANDOM_MONSTER);
         }
-        spec.genweight = (long) weight_vec[i];
+        spec.genweight = weight_vec[i];
 
         list.push_back(spec);
     }

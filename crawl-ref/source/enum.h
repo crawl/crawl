@@ -2185,7 +2185,7 @@ enum mon_attitude_type
     ATT_FRIENDLY,                      // created friendly (or tamed?)
 };
 
-// These are now saved in an unsigned long in the monsters struct.
+// These are now saved in an uint64_t in the monsters struct.
 enum monster_flag_type
 {
     MF_NO_REWARD          = 0x01,    // no benefit from killing
@@ -2248,6 +2248,8 @@ enum monster_flag_type
     MF_DEMONIC_GUARDIAN = 0x10000000, // is a demonic_guardian
     MF_NAME_SPECIES     = 0x20000000, // mname should be used for corpses as well,
                                       // preventing "human corpse of halfling"
+    // Note: at least name flags get passed in a 32-bit variable (fill_out_corpse()),
+    // and perhaps other flags as well.  Be careful when extending.
 };
 
 // Adding slots breaks saves. YHBW.
@@ -2508,7 +2510,12 @@ enum mutation_type
     RANDOM_NON_SLIME_MUTATION,
 };
 
-enum object_class_type                 // mitm[].base_type
+#ifndef TYPED_ENUMS
+typedef unsigned char object_class_type;
+enum object_class_t                    // mitm[].base_type
+#else
+enum object_class_type : unsigned char
+#endif
 {
     OBJ_WEAPONS,
     OBJ_MISSILES,

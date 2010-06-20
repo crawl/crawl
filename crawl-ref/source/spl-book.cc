@@ -765,10 +765,10 @@ spell_type which_spell_in_book(const item_def &book, int spl)
 
     const CrawlVector &spells = props[SPELL_LIST_KEY].get_vector();
 
-    ASSERT( spells.get_type() == SV_LONG );
+    ASSERT( spells.get_type() == SV_INT );
     ASSERT( spells.size() == SPELLBOOK_SIZE );
 
-    return static_cast<spell_type>(spells[spl].get_long());
+    return static_cast<spell_type>(spells[spl].get_int());
 }
 
 spell_type which_spell_in_book(int sbook_type, int spl)
@@ -1579,8 +1579,8 @@ std::vector<spell_type> get_mem_spell_list(std::vector<int> &books)
 
 static spell_type _choose_mem_spell(spell_list &spells,
                                     spells_to_books &book_hash,
-                                    unsigned long num_unreadable,
-                                    unsigned long num_race)
+                                    unsigned int num_unreadable,
+                                    unsigned int num_race)
 {
     std::sort(spells.begin(), spells.end(), _sort_mem_spells);
 
@@ -2426,13 +2426,13 @@ bool make_book_level_randart(item_def &book, int level, int num_spells,
 
     CrawlHashTable &props = book.props;
     props.erase(SPELL_LIST_KEY);
-    props[SPELL_LIST_KEY].new_vector(SV_LONG).resize(SPELLBOOK_SIZE);
+    props[SPELL_LIST_KEY].new_vector(SV_INT).resize(SPELLBOOK_SIZE);
 
     CrawlVector &spell_vec = props[SPELL_LIST_KEY].get_vector();
     spell_vec.set_max_size(SPELLBOOK_SIZE);
 
     for (int i = 0; i < SPELLBOOK_SIZE; i++)
-        spell_vec[i] = (long) chosen_spells[i];
+        spell_vec[i].get_int() = chosen_spells[i];
 
     bool has_owner = true;
     std::string name = "";
@@ -2759,7 +2759,7 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
     {
         // Store spell and owner for later use.
         if (incl_spell != SPELL_NO_SPELL)
-            book.props["spell"].get_long() = incl_spell;
+            book.props["spell"].get_int() = incl_spell;
         if (!owner.empty())
             book.props["owner"].get_string() = owner;
 
@@ -2811,7 +2811,7 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
 
     // Re-read spell and owner, if applicable.
     if (incl_spell == SPELL_NO_SPELL && book.props.exists("spell"))
-        incl_spell = (spell_type) book.props["spell"].get_long();
+        incl_spell = (spell_type) book.props["spell"].get_int();
 
     if (owner.empty() && book.props.exists("owner"))
         owner = book.props["owner"].get_string();
@@ -2874,7 +2874,7 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
 
     CrawlHashTable &props = book.props;
     props.erase(SPELL_LIST_KEY);
-    props[SPELL_LIST_KEY].new_vector(SV_LONG).resize(SPELLBOOK_SIZE);
+    props[SPELL_LIST_KEY].new_vector(SV_INT).resize(SPELLBOOK_SIZE);
 
     CrawlVector &spell_vec = props[SPELL_LIST_KEY].get_vector();
     spell_vec.set_max_size(SPELLBOOK_SIZE);
@@ -2949,7 +2949,7 @@ bool make_book_theme_randart(item_def &book, int disc1, int disc2,
     // Finally fill the spell vector.
     for (int i = 0; i < SPELLBOOK_SIZE; i++)
     {
-        spell_vec[i] = (long) chosen_spells[i];
+        spell_vec[i].get_int() = chosen_spells[i];
         int diff = spell_difficulty(chosen_spells[i]);
         if (diff > highest_level)
             highest_level = diff;

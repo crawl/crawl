@@ -13,7 +13,7 @@
 std::string make_time_string(time_t abs_time, bool terse = false);
 std::string make_file_time(time_t when);
 
-void set_redraw_status(unsigned long flags);
+void set_redraw_status(uint64_t flags);
 void tag_followers();
 void untag_followers();
 
@@ -78,7 +78,7 @@ int letter_to_index(int the_letter);
 int near_stairs(const coord_def &p, int max_dist,
                 dungeon_char_type &stair_type, branch_type &branch);
 
-inline bool testbits(unsigned long flags, unsigned long test)
+inline bool testbits(uint64_t flags, uint64_t test)
 {
     return ((flags & test) == test);
 }
