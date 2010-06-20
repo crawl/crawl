@@ -55,6 +55,9 @@ enum extra_monster_index_type
 // number of monster enchantments
 #define NUM_MON_ENCHANTS 6
 
+// size of Pan monster sets
+#define MAX_MONS_ALLOC 10
+
 #define MAX_SUBTYPES    50
 
 // max size of item list {dlb}:

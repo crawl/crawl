@@ -66,7 +66,7 @@ struct crawl_environment
     FixedVector< shop_struct, MAX_SHOPS >    shop;  // shop list
     FixedVector< trap_def, MAX_TRAPS >       trap;  // trap list
 
-    FixedVector< monster_type, 20 >          mons_alloc;
+    FixedVector< monster_type, MAX_MONS_ALLOC > mons_alloc;
     map_markers                              markers;
 
     // Place to associate arbitrary data with a particular level.
