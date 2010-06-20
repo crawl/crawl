@@ -622,6 +622,10 @@ void game_options::reset_options()
 
     set_default_activity_interrupts();
 
+#if !defined(DGAMELAUNCH)
+    macro_dir = "settings/";
+#endif
+
 #if defined(SAVE_DIR_PATH)
 #if defined(DGAMELAUNCH)
     save_dir   = SAVE_DIR_PATH;
@@ -644,6 +648,7 @@ void game_options::reset_options()
     std::string tmp_path_base = std::string(getenv("HOME")) + "/Library/Application Support/" CRAWL;
     save_dir   = tmp_path_base + "/saves/";
     morgue_dir = tmp_path_base + "/morgue/";
+    macro_dir  = tmp_path_base;
 #elif !defined(TARGET_OS_DOS)
     save_dir   = "saves/";
 #else
@@ -652,10 +657,6 @@ void game_options::reset_options()
 
 #if !defined(SHORT_FILE_NAMES) && !defined(SAVE_DIR_PATH) && !defined(TARGET_OS_MACOSX)
     morgue_dir = "morgue/";
-#endif
-
-#if !defined(DGAMELAUNCH)
-    macro_dir = "settings/";
 #endif
 
     additional_macro_files.clear();
