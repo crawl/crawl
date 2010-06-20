@@ -1048,7 +1048,7 @@ static armour_type _acquirement_armour_subtype(bool divine)
             // can give high-end ones as well.
             if (!divine && one_chance_in(5))
             {
-                static_cast<armour_type>(random_choose(
+                result = static_cast<armour_type>(random_choose(
                         ARM_DRAGON_ARMOUR,
                         ARM_ICE_DRAGON_ARMOUR,
                         ARM_STEAM_DRAGON_ARMOUR,
