@@ -3089,8 +3089,26 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
     const actor *mfoe = mons.get_foe();
     inf.body << "\nMonster foe: "
              << (mfoe? mfoe->name(DESC_PLAIN, true)
-                 : "(none)")
-             << "\n";
+                 : "(none)");
+
+    std::vector<std::string> attitude;
+    if (mons.friendly())
+        attitude.push_back("friendly");
+    if (mons.neutral())
+        attitude.push_back("neutral");
+    if (mons.good_neutral())
+        attitude.push_back("good_neutral");
+    if (mons.strict_neutral())
+        attitude.push_back("strict_neutral");
+    if (mons.pacified())
+        attitude.push_back("pacified");
+    if (mons.wont_attack())
+        attitude.push_back("wont_attack");
+    if (!attitude.empty())
+        inf.body << "; " << comma_separated_line(attitude.begin(),
+                                                 attitude.end(),
+                                                 "; ", "; ");
+    inf.body << "\n";
 
     if (mons.can_use_spells())
     {
