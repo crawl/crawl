@@ -562,9 +562,9 @@ std::string game_state::game_type_name() const
     return game_type_name_for(type);
 }
 
-std::string game_state::game_type_name_for(game_type type)
+std::string game_state::game_type_name_for(game_type _type)
 {
-    switch (type)
+    switch (_type)
     {
     case GAME_TYPE_UNSPECIFIED:
     case GAME_TYPE_NORMAL:

@@ -291,9 +291,9 @@ bool Stash::pickup_eligible() const
     return (false);
 }
 
-bool Stash::is_boring_feature(dungeon_feature_type feat)
+bool Stash::is_boring_feature(dungeon_feature_type feature)
 {
-    switch (feat)
+    switch (feature)
     {
     // Discard spammy dungeon features.
     case DNGN_SHALLOW_WATER:
@@ -313,7 +313,7 @@ bool Stash::is_boring_feature(dungeon_feature_type feat)
     case DNGN_UNDISCOVERED_TRAP:
         return (true);
     default:
-        return (feat_is_solid(feat));
+        return (feat_is_solid(feature));
     }
 }
 

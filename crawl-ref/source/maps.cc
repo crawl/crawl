@@ -650,22 +650,22 @@ public:
         return (sel == TAG || place.is_valid());
     }
 
-    static map_selector by_place(const level_id &place, bool mini)
+    static map_selector by_place(const level_id &_place, bool _mini)
     {
-        return map_selector(map_selector::PLACE, place, "", mini, false);
+        return map_selector(map_selector::PLACE, _place, "", _mini, false);
     }
 
-    static map_selector by_depth(const level_id &place, bool mini)
+    static map_selector by_depth(const level_id &_place, bool _mini)
     {
-        return map_selector(map_selector::DEPTH, place, "", mini, true);
+        return map_selector(map_selector::DEPTH, _place, "", _mini, true);
     }
 
-    static map_selector by_tag(const std::string &tag,
-                               bool check_depth,
-                               const level_id &place = level_id::current())
+    static map_selector by_tag(const std::string &_tag,
+                               bool _check_depth,
+                               const level_id &_place = level_id::current())
     {
-        return map_selector(map_selector::TAG, place, tag,
-                            false, check_depth);
+        return map_selector(map_selector::TAG, _place, _tag,
+                            false, _check_depth);
     }
 
 private:
