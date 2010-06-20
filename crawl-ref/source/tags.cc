@@ -2134,8 +2134,12 @@ show_type unmarshallShowtype(reader &th)
 static void tag_construct_level_items(writer &th)
 {
     // how many traps?
-    marshallShort(th, MAX_TRAPS);
+    int nt = 0;
     for (int i = 0; i < MAX_TRAPS; ++i)
+        if (env.trap[i].active())
+            nt = i + 1;
+    marshallShort(th, nt);
+    for (int i = 0; i < nt; ++i)
     {
         marshallByte(th, env.trap[i].type);
         marshallCoord(th, env.trap[i].pos);
@@ -2143,8 +2147,12 @@ static void tag_construct_level_items(writer &th)
     }
 
     // how many items?
-    marshallShort(th, MAX_ITEMS);
+    int ni = 0;
     for (int i = 0; i < MAX_ITEMS; ++i)
+        if (mitm[i].defined())
+            ni = i + 1;
+    marshallShort(th, ni);
+    for (int i = 0; i < ni; ++i)
         marshallItem(th, mitm[i]);
 }
 
@@ -2474,6 +2482,7 @@ static void tag_read_level_items(reader &th, char minorVersion)
 {
     // how many traps?
     const int trap_count = unmarshallShort(th);
+    ASSERT(trap_count >= 0 && trap_count <= MAX_TRAPS);
     for (int i = 0; i < trap_count; ++i)
     {
         env.trap[i].type =
@@ -2485,6 +2494,7 @@ static void tag_read_level_items(reader &th, char minorVersion)
 
     // how many items?
     const int item_count = unmarshallShort(th);
+    ASSERT(item_count >= 0 && item_count <= MAX_ITEMS);
     for (int i = 0; i < item_count; ++i)
         unmarshallItem(th, mitm[i]);
 
@@ -2575,6 +2585,7 @@ static void tag_read_level_monsters(reader &th, char minorVersion)
 
     // how many mons_alloc?
     count = unmarshallByte(th);
+    ASSERT(count >= 0 && count <= MAX_MONSTERS);
     for (i = 0; i < count; ++i)
         env.mons_alloc[i] = static_cast<monster_type>( unmarshallShort(th) );
 
