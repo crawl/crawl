@@ -2466,7 +2466,7 @@ static void tag_read_level( reader &th, char minorVersion )
         env.shop[i].type  = static_cast<shop_type>(unmarshallByte(th));
         env.shop[i].level = unmarshallByte(th);
     }
-    for (int i = num_shops; num_shops < MAX_SHOPS; ++i)
+    for (int i = num_shops; i < MAX_SHOPS; ++i)
         env.shop[i].type = SHOP_UNASSIGNED;
 
     env.sanctuary_pos  = unmarshallCoord(th);
