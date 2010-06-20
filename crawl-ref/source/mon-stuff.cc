@@ -1161,7 +1161,7 @@ void mons_relocated(monsters *monster)
     else if (monster->type == MONS_KRAKEN_TENTACLE)
     {
         if (invalid_monster_index(monster->number)
-            || menv[monster->number].type != MONS_KRAKEN)
+            || mons_base_type(&menv[monster->number]) != MONS_KRAKEN)
         {
             for (monster_iterator connect; connect; ++connect)
             {
@@ -4004,7 +4004,7 @@ beh_type actual_same_attitude(const monsters & base)
 // temporarily.
 void mons_att_changed(monsters *mon)
 {
-    if (mon->type == MONS_KRAKEN)
+    if (mons_base_type(mon) == MONS_KRAKEN)
     {
         const int headnum = mon->mindex();
         const mon_attitude_type att = mon->temp_attitude();

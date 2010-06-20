@@ -887,7 +887,7 @@ static void _establish_connection(int tentacle,
     monsters * test = monster_at(current->pos);
     if (!test)
         mprf("no mons at start");
-    else if (test->type != MONS_KRAKEN)
+    else if (mons_base_type(test) != MONS_KRAKEN)
         mprf("wrong monster type at start (%d)", test->type);
 
     const position_node * last;
@@ -904,7 +904,8 @@ static void _establish_connection(int tentacle,
 
         if (mons)
         {
-            if  (mons->type == MONS_KRAKEN || mons->type == MONS_KRAKEN_TENTACLE)
+            if  (mons_base_type(mons) == MONS_KRAKEN
+                 || mons->type == MONS_KRAKEN_TENTACLE)
             {
                 last_monster = mons->mindex();
                 continue;
@@ -943,7 +944,7 @@ bool _kraken_head(const coord_def & pos)
 {
     monsters * mons = monster_at(pos);
 
-    return (mons && mons->type == MONS_KRAKEN);
+    return (mons && mons_base_type(mons) == MONS_KRAKEN);
 }
 
 bool _kraken_tentacle(const coord_def & pos)
@@ -996,7 +997,7 @@ struct clear_and_seen
 
 void move_kraken_tentacles(monsters * kraken)
 {
-    if (kraken->type != MONS_KRAKEN
+    if (mons_base_type(kraken) != MONS_KRAKEN
         || kraken->asleep())
     {
         return;
