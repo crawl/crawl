@@ -3545,32 +3545,31 @@ static void _move_player(coord_def move)
     if (!in_bounds(targ))
         return;
 
-    const dungeon_feature_type targ_grid  =  grd(targ);
+    const dungeon_feature_type targ_grid = grd(targ);
+    monsters *targ_monst = monster_at(targ);
+    if (fedhas_passthrough(targ_monst))
+    {
+        // Moving on a plant takes 1.5 x normal move delay. We
+        // will print a message about it but only when moving
+        // from open space->plant (hopefully this will cut down
+        // on the message spam).
+        you.time_taken = div_rand_round(you.time_taken * 3, 2);
 
-          monsters*      targ_monst = monster_at(targ);
-          if (fedhas_passthrough(targ_monst))
-          {
-              // Moving on a plant takes 1.5 x normal move delay. We
-              // will print a message about it but only when moving
-              // from open space->plant (hopefully this will cut down
-              // on the message spam).
-              you.time_taken = div_rand_round(you.time_taken * 3, 2);
+        monsters * current = monster_at(you.pos());
+        if(!current || !fedhas_passthrough(current))
+        {
+            // Probably need better messages. -cao
+            if(mons_genus(targ_monst->type) == MONS_FUNGUS)
+            {
+                mprf("You walk carefully through the fungus.");
+            }
+            else
+                mprf("You walk carefully through the plants.");
+        }
+        targ_monst = NULL;
+    }
 
-              monsters * current = monster_at(you.pos());
-              if(!current || !fedhas_passthrough(current))
-              {
-                  // Probably need better messages. -cao
-                  if(mons_genus(targ_monst->type) == MONS_FUNGUS)
-                  {
-                      mprf("You walk carefully through the fungus.");
-                  }
-                  else
-                      mprf("You walk carefully through the plants.");
-              }
-              targ_monst = NULL;
-          }
-
-    const bool           targ_pass  = you.can_pass_through(targ);
+    const bool targ_pass = you.can_pass_through(targ);
 
     // You can swap places with a friendly or good neutral monster if
     // you're not confused, or if both of you are inside a sanctuary.
