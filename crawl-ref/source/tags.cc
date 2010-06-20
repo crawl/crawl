@@ -2247,11 +2247,15 @@ static void tag_construct_level_monsters(writer &th)
         marshallShort(th, env.mons_alloc[i]);
 
     // how many monsters?
-    marshallShort(th, MAX_MONSTERS);
+    int nm = 0;
+    for (int i = 0; i < MAX_MONSTERS; i++)
+        if (menv[i].type != MONS_NO_MONSTER)
+            nm = i + 1;
+    marshallShort(th, nm);
     // how many monster inventory slots?
     marshallByte(th, NUM_MONSTER_SLOTS);
 
-    for (int i = 0; i < MAX_MONSTERS; i++)
+    for (int i = 0; i < nm; i++)
     {
         monsters &m(menv[i]);
 
