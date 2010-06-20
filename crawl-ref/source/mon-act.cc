@@ -2044,8 +2044,9 @@ void handle_monster_move(monsters *monster)
                     continue;
                 }
                 // Figure out if they fight.
-                else if (!mons_is_firewood(targ)
-                         && monsters_fight(monster, targ))
+                else if ((!mons_is_firewood(targ)
+                          || monster->type == MONS_KRAKEN_TENTACLE)
+                              && monsters_fight(monster, targ))
                 {
                     if (mons_is_batty(monster))
                     {
