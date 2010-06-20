@@ -778,10 +778,13 @@ static bool _handle_reaching(monsters *monster)
         ret = true;
         monster_attack_actor(monster, foe, false);
 
-        // Player saw the item reach.
-        item_def *wpn = monster->weapon(0);
-        if (wpn && !is_artefact(*wpn) && you.can_see(monster))
-            set_ident_flags(*wpn, ISFLAG_KNOW_TYPE);
+        if (monster->alive())
+        {
+            // Player saw the item reach.
+            item_def *wpn = monster->weapon(0);
+            if (wpn && !is_artefact(*wpn) && you.can_see(monster))
+                set_ident_flags(*wpn, ISFLAG_KNOW_TYPE);
+        }
     }
 
     return (ret);
