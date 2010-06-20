@@ -983,61 +983,76 @@ static void _establish_connection(int tentacle,
                                   int head,
                                   std::set<position_node>::iterator path)
 {
-    const position_node * current = &(*path);
+    const position_node * last = &(*path);
+    const position_node * current = last->last;
 
-    monsters * test = monster_at(current->pos);
-    if (!test)
-        mprf("no mons at start");
-    else if (mons_base_type(test) != MONS_KRAKEN)
-        mprf("wrong monster type at start (%d)", test->type);
-
-    const position_node * last;
-    int last_monster = head;
+    // Tentacle is adjacent to the head, not much to do.
+    if (!current)
+    {
+        menv[tentacle].props["inwards"].get_long() = head;
+        return;
+    }
 
     monsters * main = &env.mons[head];
     while(current)
     {
-        last = current;
-        current = current->last;
 
-
-        monsters * mons = monster_at(last->pos);
-
-        if (mons)
+        // Last monster we visited or placed
+        monsters * last_mon = monster_at(last->pos);
+        if (!last_mon)
         {
-            if  (mons_base_type(mons) == MONS_KRAKEN
-                 || mons->type == MONS_KRAKEN_TENTACLE)
-            {
-                last_monster = mons->mindex();
-                continue;
-            }
+            // Should be something there, what to do if there isn't?
+            mprf("Error! failed to place monster in tentacle connect change");
+            break;
+        }
+        int last_mon_idx = last_mon->mindex();
+
+        // Monster at the current square, should be the end of the line if there
+        monsters * current_monster = monster_at(current->pos);
+        if (current_monster)
+        {
+            // Todo verify current monster type
+            menv[current_monster->mindex()].props["inwards"].get_long() = last_mon_idx;
+            menv[last_mon_idx].props["outwards"].get_long() = current_monster->mindex();
+            break;
         }
 
          // place a connector
         int connect = create_monster(
             mgen_data(MONS_KRAKEN_CONNECTOR, SAME_ATTITUDE(main), main,
-                      0, 0, last->pos, main->foe,
+                      0, 0, current->pos, main->foe,
                       MG_FORCE_PLACE, main->god, MONS_NO_MONSTER, tentacle,
                       main->colour, you.absdepth0, PROX_CLOSE_TO_PLAYER,
                       you.level_type));
 
-        if (tentacle >= 0)
+        if (connect >= 0)
         {
             menv[connect].max_hit_points = menv[tentacle].max_hit_points;
             menv[connect].hit_points = menv[tentacle].hit_points;
 
-            menv[connect].props["outwards"].get_long() = last_monster;
+            menv[connect].props["inwards"].get_long() = last_mon_idx;
+            menv[connect].props["outwards"].get_long() = -1;
+
+            if (last_mon->type == MONS_KRAKEN_CONNECTOR)
+                menv[last_mon_idx].props["outwards"].get_long() = connect;
+
             if (main->holiness() == MH_UNDEAD)
             {
                 menv[connect].flags |= MF_HONORARY_UNDEAD;
             }
-            if (monster_can_submerge(&menv[connect], env.grid(last->pos)))
+            if (monster_can_submerge(&menv[connect], env.grid(menv[connect].pos())))
             {
                 menv[connect].add_ench(ENCH_SUBMERGED);
             }
 
         }
+        else
+        {
+            // connector placement failed, what to do?
+        }
 
+        last = current;
+        current = current->last;
     }
 }
 
