@@ -283,7 +283,7 @@ travel_exclude* exclude_set::get_exclude_root(const coord_def &p)
     if (it != exclude_roots.end())
         return (&(it->second));
 
-    return  (false);
+    return (NULL);
 }
 
 size_t exclude_set::size() const
