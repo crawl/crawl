@@ -1414,8 +1414,7 @@ static map_def unmarshall_mapdef(reader &th)
     map.name = unmarshallStringNoMax(th);
     map.read_full(th);
     map.read_index(th);
-    if (_tag_minor_version >= TAG_MINOR_VAULT_MAPS)
-        map.read_maplines(th);
+    map.read_maplines(th);
     return map;
 }
 
@@ -1441,11 +1440,7 @@ static vault_placement unmarshall_vault_placement(reader &th)
     unmarshall_vector(th, vp.exits, unmarshallCoord);
     vp.level_number = unmarshallShort(th);
     vp.rune_subst   = unmarshallShort(th);
-
-    if (_tag_minor_version >= TAG_MINOR_VAULT_SEEN)
-        vp.seen = !!unmarshallByte(th);
-    else
-        vp.seen = false;
+    vp.seen = !!unmarshallByte(th);
 
     return vp;
 }
@@ -1683,10 +1678,7 @@ static void tag_read_you(reader &th, char minorVersion)
     you.normal_vision  = unmarshallByte(th);
     you.current_vision = unmarshallByte(th);
     you.hell_exit      = unmarshallByte(th);
-    if (_tag_minor_version >= TAG_MINOR_HELL_BRANCH)
-        you.hell_branch = static_cast<branch_type>( unmarshallByte(th) );
-    else
-        you.hell_branch = BRANCH_MAIN_DUNGEON;
+    you.hell_branch = static_cast<branch_type>( unmarshallByte(th) );
 
     // elapsed time
     you.elapsed_time   = unmarshallInt(th);
@@ -2089,11 +2081,7 @@ void unmarshallItem(reader &th, item_def &item)
     item.special     = unmarshallInt(th);
     item.quantity    = unmarshallShort(th);
     item.colour      = (unsigned char) unmarshallByte(th);
-
-    if (th.getMinorVersion() >= TAG_MINOR_ITEM_TILE)
-        item.rnd = (unsigned char) unmarshallByte(th);
-    else
-        item.rnd = random2(256);
+    item.rnd         = (unsigned char) unmarshallByte(th);
 
     item.pos.x       = unmarshallShort(th);
     item.pos.y       = unmarshallShort(th);
@@ -2391,10 +2379,7 @@ static void tag_read_level( reader &th, char minorVersion )
     env.level_flags  = unmarshallInt(th);
 
     env.elapsed_time = unmarshallInt(th);
-    if (minorVersion >= TAG_MINOR_OLD_POS)
-        env.old_player_pos = unmarshallCoord(th);
-    else
-        env.old_player_pos.reset();
+    env.old_player_pos = unmarshallCoord(th);
 
     // Map grids.
     // how many X?
@@ -2489,8 +2474,7 @@ static void tag_read_level( reader &th, char minorVersion )
     }
 
     env.forest_awoken_until = unmarshallInt(th);
-    if (minorVersion >= TAG_MINOR_LEVEL_VAULTS)
-        unmarshall_level_vault_data(th);
+    unmarshall_level_vault_data(th);
 }
 
 static void tag_read_level_items(reader &th, char minorVersion)
