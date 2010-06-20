@@ -2449,6 +2449,8 @@ static void tag_read_level( reader &th, char minorVersion )
         env.cloud[i].name = unmarshallString(th);
         env.cloud[i].tile = unmarshallString(th);
     }
+    for (int i = num_clouds; i < MAX_CLOUDS; i++)
+        env.cloud[i].type = CLOUD_NONE;
 
     // how many shops?
     const int num_shops = unmarshallByte(th);
@@ -2464,6 +2466,8 @@ static void tag_read_level( reader &th, char minorVersion )
         env.shop[i].type  = static_cast<shop_type>(unmarshallByte(th));
         env.shop[i].level = unmarshallByte(th);
     }
+    for (int i = num_shops; num_shops < MAX_SHOPS; ++i)
+        env.shop[i].type = SHOP_UNASSIGNED;
 
     env.sanctuary_pos  = unmarshallCoord(th);
     env.sanctuary_time = unmarshallByte(th);
@@ -2504,12 +2508,16 @@ static void tag_read_level_items(reader &th, char minorVersion)
         env.trap[i].pos      = unmarshallCoord(th);
         env.trap[i].ammo_qty = unmarshallShort(th);
     }
+    for (int i = trap_count; i < MAX_TRAPS; ++i)
+        env.trap[i].type = TRAP_UNASSIGNED;
 
     // how many items?
     const int item_count = unmarshallShort(th);
     ASSERT(item_count >= 0 && item_count <= MAX_ITEMS);
     for (int i = 0; i < item_count; ++i)
         unmarshallItem(th, mitm[i]);
+    for (int i = item_count; i < MAX_ITEMS; ++i)
+        mitm[i].clear();
 
 #ifdef DEBUG_ITEM_SCAN
     // There's no way to fix this, even with wizard commands, so get
