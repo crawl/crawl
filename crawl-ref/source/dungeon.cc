@@ -5820,7 +5820,7 @@ static bool _join_the_dots_rigorous(const coord_def &from,
 bool join_the_dots(const coord_def &from, const coord_def &to,
                    unsigned mapmask, bool early_exit)
 {
-    if (from == to)
+    if (from == to || !in_bounds(from))
         return (true);
 
     int join_count = 0;
@@ -5828,6 +5828,9 @@ bool join_the_dots(const coord_def &from, const coord_def &to,
     coord_def at = from;
     do
     {
+        if (!in_bounds(at))
+            return (false);
+
         join_count++;
 
         const dungeon_feature_type feat = grd(at);
