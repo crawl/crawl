@@ -1571,8 +1571,11 @@ static int _place_monster_aux(const mgen_data &mg,
     }
     // NOTE: The summoner might be dead if the summoned is placed by a
     // beam which killed the summoner first (like fire vortexes placed
-    // by the Fire Storm spell).
-    else if (mg.summoner != NULL && mg.summoner->alive())
+    // by the Fire Storm spell); a deceased summoner's mindex might also
+    // be reused to create its summon, so make sure the summon doesn't
+    // think it has summoned itself.
+    else if (mg.summoner != NULL && mg.summoner->alive()
+             && mg.summoner != mon)
     {
         ASSERT(mg.summoner->alive());
         if (mg.summoner->atype() == ACT_PLAYER)
