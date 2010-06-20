@@ -325,7 +325,7 @@ long Kills::get_kills(std::vector<kill_exp> &all_kills) const
 void Kills::save(writer& outf) const
 {
     // How many kill records do we have?
-    marshallLong(outf, kills.size());
+    marshallInt(outf, kills.size());
 
     for ( kill_map::const_iterator iter = kills.begin();
           iter != kills.end(); ++iter)
@@ -346,7 +346,7 @@ void Kills::save(writer& outf) const
 void Kills::load(reader& inf)
 {
     // How many kill records?
-    long kill_count = unmarshallLong(inf);
+    int kill_count = unmarshallInt(inf);
     kills.clear();
     for (long i = 0; i < kill_count; ++i)
     {

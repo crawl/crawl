@@ -210,7 +210,7 @@ void init_stack_blood_potions(item_def &stack, int age)
 
     CrawlHashTable &props = stack.props;
     props.clear(); // sanity measure
-    props["timer"].new_vector(SV_LONG, SFLAG_CONST_TYPE);
+    props["timer"].new_vector(SV_INT, SFLAG_CONST_TYPE);
     CrawlVector &timer = props["timer"].get_vector();
 
     if (age == -1)
@@ -221,7 +221,7 @@ void init_stack_blood_potions(item_def &stack, int age)
             age = 500;
     }
     // For a newly created stack, all potions use the same timer.
-    const long max_age = you.num_turns + age;
+    const int max_age = you.num_turns + age;
 #ifdef DEBUG_BLOOD_POTIONS
     mprf(MSGCH_DIAGNOSTICS, "newly created stack will time out at turn %d",
                             max_age);
@@ -234,13 +234,13 @@ void init_stack_blood_potions(item_def &stack, int age)
     props.assert_validity();
 }
 
-// Sort a CrawlVector<long>, should probably be done properly with templates.
-static void _long_sort(CrawlVector &vec)
+// Sort a CrawlVector<int>, should probably be done properly with templates.
+static void _int_sort(CrawlVector &vec)
 {
-    std::vector<long> help;
+    std::vector<int> help;
     while (!vec.empty())
     {
-        help.push_back(vec[vec.size()-1].get_long());
+        help.push_back(vec[vec.size()-1].get_int());
         vec.pop_back();
     }
 
@@ -289,11 +289,11 @@ void maybe_coagulate_blood_potions_floor(int obj)
     // First count whether coagulating is even necessary.
     int rot_count  = 0;
     int coag_count = 0;
-    std::vector<long> age_timer;
-    long current;
+    std::vector<int> age_timer;
+    int current;
     while (!timer.empty())
     {
-        current = timer[timer.size()-1].get_long();
+        current = timer[timer.size()-1].get_int();
         if (current > coag_limit
             || blood.sub_type == POT_BLOOD_COAGULATED && current > rot_limit)
         {
@@ -358,11 +358,11 @@ void maybe_coagulate_blood_potions_floor(int obj)
                 // Update timer -> push(pop).
                 while (!age_timer.empty())
                 {
-                    const long val = age_timer.back();
+                    const int val = age_timer.back();
                     age_timer.pop_back();
                     timer2.push_back(val);
                 }
-                _long_sort(timer2);
+                _int_sort(timer2);
                 inc_mitm_item_quantity(si.link(), coag_count);
                 ASSERT(timer2.size() == si->quantity);
                 dec_mitm_item_quantity(obj, rot_count + coag_count);
@@ -384,7 +384,7 @@ void maybe_coagulate_blood_potions_floor(int obj)
         item_colour(blood);
 
         // Re-fill vector.
-        long val;
+        int val;
         while (!age_timer.empty())
         {
             val = age_timer[age_timer.size() - 1];
@@ -412,10 +412,10 @@ void maybe_coagulate_blood_potions_floor(int obj)
     item_colour(item);
 
     CrawlHashTable &props_new = item.props;
-    props_new["timer"].new_vector(SV_LONG, SFLAG_CONST_TYPE);
+    props_new["timer"].new_vector(SV_INT, SFLAG_CONST_TYPE);
     CrawlVector &timer_new = props_new["timer"].get_vector();
 
-    long val;
+    int val;
     while (!age_timer.empty())
     {
         val = age_timer[age_timer.size() - 1];
@@ -486,12 +486,12 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     // First count whether coagulating is even necessary.
     int rot_count  = 0;
     int coag_count = 0;
-    std::vector<long> age_timer;
-    long current;
+    std::vector<int> age_timer;
+    int current;
     const int size = timer.size();
     for (int i = 0; i < size; i++)
     {
-        current = timer[timer.size()-1].get_long();
+        current = timer[timer.size()-1].get_int();
         if (current > coag_limit
             || blood.sub_type == POT_BLOOD_COAGULATED && current > rot_limit)
         {
@@ -602,7 +602,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
             }
 
             // Update timer -> push(pop).
-            long val;
+            int val;
             while (!age_timer.empty())
             {
                 val = age_timer[age_timer.size() - 1];
@@ -616,7 +616,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
                 mpr(you.inv[m].name(DESC_INVENTORY).c_str());
 
             // re-sort timer
-            _long_sort(timer2);
+            _int_sort(timer2);
 
             return (rot_count > 0);
         }
@@ -631,7 +631,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
         item_colour(blood);
 
         // Re-fill vector.
-        long val;
+        int val;
         while (!age_timer.empty())
         {
             val = age_timer[age_timer.size() - 1];
@@ -668,10 +668,10 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
         item_colour(item);
 
         CrawlHashTable &props_new = item.props;
-        props_new["timer"].new_vector(SV_LONG, SFLAG_CONST_TYPE);
+        props_new["timer"].new_vector(SV_INT, SFLAG_CONST_TYPE);
         CrawlVector &timer_new = props_new["timer"].get_vector();
 
-        long val;
+        int val;
         while (!age_timer.empty())
         {
             val = age_timer[age_timer.size() - 1];
@@ -710,14 +710,14 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
             ASSERT(timer2.size() == mitm[o].quantity);
 
             // Update timer -> push(pop).
-            long val;
+            int val;
             while (!age_timer.empty())
             {
                 val = age_timer[age_timer.size() - 1];
                 age_timer.pop_back();
                 timer2.push_back(val);
             }
-            _long_sort(timer2);
+            _int_sort(timer2);
 
             inc_mitm_item_quantity(o, coag_count);
             ASSERT(timer2.size() == mitm[o].quantity);
@@ -748,10 +748,10 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     item_colour(mitm[o]);
 
     CrawlHashTable &props_new = mitm[o].props;
-    props_new["timer"].new_vector(SV_LONG, SFLAG_CONST_TYPE);
+    props_new["timer"].new_vector(SV_INT, SFLAG_CONST_TYPE);
     CrawlVector &timer_new = props_new["timer"].get_vector();
 
-    long val;
+    int val;
     while (!age_timer.empty())
     {
         val = age_timer[age_timer.size() - 1];
@@ -782,7 +782,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
 
 // Removes the oldest timer of a stack of blood potions.
 // Mostly used for (q)uaff, (f)ire, and Evaporate.
-long remove_oldest_blood_potion(item_def &stack)
+int remove_oldest_blood_potion(item_def &stack)
 {
     ASSERT(stack.defined());
     ASSERT(is_blood_potion(stack));
@@ -795,7 +795,7 @@ long remove_oldest_blood_potion(item_def &stack)
     ASSERT(!timer.empty());
 
     // Assuming already sorted, and first (oldest) potion valid.
-    const long val = timer[timer.size() - 1].get_long();
+    const int val = timer[timer.size() - 1].get_int();
     timer.pop_back();
 
     // The quantity will be decreased elsewhere.
@@ -835,7 +835,7 @@ void remove_newest_blood_potion(item_def &stack, int quant)
         timer.pop_back();
 
     // ... and re-sort.
-    _long_sort(timer);
+    _int_sort(timer);
 }
 
 void merge_blood_potion_stacks(item_def &source, item_def &dest, int quant)
@@ -862,12 +862,12 @@ void merge_blood_potion_stacks(item_def &source, item_def &dest, int quant)
     // Update timer -> push(pop).
     for (int i = 0; i < quant; i++)
     {
-        timer2.push_back(timer[timer.size() - 1].get_long());
+        timer2.push_back(timer[timer.size() - 1].get_int());
         timer.pop_back();
     }
 
     // Re-sort timer.
-    _long_sort(timer2);
+    _int_sort(timer2);
 }
 
 bool check_blood_corpses_on_ground()

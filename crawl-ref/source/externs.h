@@ -17,6 +17,7 @@
 #include <deque>
 
 #include <time.h>
+#include <stdint.h>
 
 #include "defines.h"
 #include "enum.h"
@@ -489,11 +490,11 @@ struct item_def
     unsigned char  sub_type;       // type within that class (ie WPN_DAGGER)
     short          plus;           // +to hit, charges, corpse mon id
     short          plus2;          // +to dam, sub-sub type for boots/helms
-    long           special;        // special stuff
+    int            special;        // special stuff
     unsigned char  colour;         // item colour
     unsigned char  rnd;            // random number, used for tile choice
     short          quantity;       // number of items
-    unsigned long  flags;          // item status flags
+    uint64_t       flags;          // item status flags
 
     coord_def pos;     // for inventory items == (-1, -1)
     short  link;       // link to next item;  for inventory items = slot

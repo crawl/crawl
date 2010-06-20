@@ -1116,7 +1116,7 @@ void free_self_from_net()
    else
    {
         // You try to escape (takes at least 3 turns, and at most 10).
-        unsigned int escape = do_what;
+        int escape = do_what;
 
         if (you.duration[DUR_HASTE]) // extra bonus, also Berserk
             escape++;

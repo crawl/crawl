@@ -32,7 +32,7 @@ static int file_marshall(lua_State *ls)
         luaL_error(ls, "Need two arguments: tag header and value");
     writer &th(*static_cast<writer*>( lua_touserdata(ls, 1) ));
     if (lua_isnumber(ls, 2))
-        marshallLong(th, luaL_checklong(ls, 2));
+        marshallInt(th, luaL_checklong(ls, 2));
     else if (lua_isboolean(ls, 2))
         marshallByte(th, lua_toboolean(ls, 2));
     else if (lua_isstring(ls, 2))
@@ -59,7 +59,7 @@ static int file_unmarshall_number(lua_State *ls)
     if (lua_gettop(ls) != 1)
         luaL_error(ls, "Need reader as one argument");
     reader &th(*static_cast<reader*>( lua_touserdata(ls, 1) ));
-    lua_pushnumber(ls, unmarshallLong(th));
+    lua_pushnumber(ls, unmarshallInt(th));
     return (1);
 }
 

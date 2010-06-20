@@ -763,10 +763,13 @@ static bool _handle_reaching(monsters *monster)
         ret = true;
         monster_attack_actor(monster, foe, false);
 
-        // Player saw the item reach.
-        item_def *wpn = monster->weapon(0);
-        if (wpn && !is_artefact(*wpn) && you.can_see(monster))
-            set_ident_flags(*wpn, ISFLAG_KNOW_TYPE);
+        if (monster->alive())
+        {
+            // Player saw the item reach.
+            item_def *wpn = monster->weapon(0);
+            if (wpn && !is_artefact(*wpn) && you.can_see(monster))
+                set_ident_flags(*wpn, ISFLAG_KNOW_TYPE);
+        }
     }
 
     return (ret);
@@ -2841,7 +2844,7 @@ static bool _mon_can_move_to_pos(const monsters *monster,
         {
             return (true);
         }
- 
+
         if (!monster->friendly()
                 && you.see_cell(targ)
             || mon_enemies_around(monster))
@@ -3176,10 +3179,13 @@ static bool _do_move_monster(monsters *monster, const coord_def& delta)
 static bool _may_cutdown(monsters* mons, monsters* targ)
 {
     // Save friendly plants from allies.
-    bool bad_align = mons->attitude == ATT_GOOD_NEUTRAL
-                     && targ->attitude == ATT_FRIENDLY
-                  || mons->attitude == ATT_FRIENDLY
-                     && targ->attitude > ATT_HOSTILE;
+    // [ds] I'm deliberately making the alignment checks symmetric here.
+    // The previous check involved good-neutrals never attacking friendlies
+    // and friendlies never attacking anything other than hostiles.
+    const bool bad_align =
+        ((mons->friendly() || mons->good_neutral())
+         ==
+         (targ->friendly() || targ->good_neutral()));
     return (mons_is_firewood(targ) && !bad_align);
 }
 

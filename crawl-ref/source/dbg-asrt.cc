@@ -220,7 +220,7 @@ static void _dump_player(FILE *file)
     fprintf(file, "Attributes:\n");
     for (int i = 0; i < NUM_ATTRIBUTES; ++i)
         if (you.attribute[i] != 0)
-            fprintf(file, "    #%d: %lu\n", i, you.attribute[i]);
+            fprintf(file, "    #%d: %d\n", i, you.attribute[i]);
 
     fprintf(file, "\n");
 
@@ -491,6 +491,19 @@ static void _dump_ver_stuff(FILE* file)
 #endif
 }
 
+static void _dump_command_line(FILE *file)
+{
+    fprintf(file, "Command line:");
+    for (int i = 0, size = crawl_state.command_line_arguments.size();
+         i < size; ++i)
+    {
+        fprintf(file, " %s", crawl_state.command_line_arguments[i].c_str());
+    }
+    if (crawl_state.command_line_arguments.empty())
+        fprintf(file, " (unknown)");
+    fprintf(file, "\n\n");
+}
+
 // Defined in stuff.cc.  Not a part of crawl_state, since that's a
 // global C++ instance which is free'd by exit() hooks when exit()
 // is called, and we don't want to reference free'd memory.
@@ -550,6 +563,8 @@ void do_crash_dump()
 #endif
 
     _dump_ver_stuff(file);
+
+    _dump_command_line(file);
 
     // First get the immediate cause of the crash and the stack trace,
     // since that's most important and later attempts to get more information

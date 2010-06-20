@@ -50,7 +50,7 @@ public:
 
   unsigned short unrand_reacts;
 
-  long elapsed_time;        // total amount of elapsed time in the game
+  int elapsed_time;        // total amount of elapsed time in the game
 
   int disease;
 
@@ -83,7 +83,7 @@ public:
   bool redraw_quiver;         // redraw quiver
   bool received_weapon_warning;
 
-  unsigned long redraw_status_flags;
+  uint64_t redraw_status_flags;
 
   // PC's symbol (usually @) and colour.
   int symbol;
@@ -101,7 +101,7 @@ public:
   unsigned char hit_points_regeneration;
   unsigned char magic_points_regeneration;
 
-  unsigned long experience;
+  unsigned int experience;
   int experience_level;
   int gold;
   char class_name[30];
@@ -131,9 +131,9 @@ public:
 
   int berserk_penalty;                // penalty for moving while berserk
 
-  FixedVector<unsigned long, NUM_ATTRIBUTES> attribute;
+  FixedVector<int, NUM_ATTRIBUTES> attribute;
   FixedVector<unsigned char, NUM_AMMO> quiver; // default items for quiver
-  FixedVector<long, NUM_OBJECT_CLASSES> sacrifice_value;
+  FixedVector<int, NUM_OBJECT_CLASSES> sacrifice_value;
 
   undead_state_type is_undead;
 
@@ -240,10 +240,10 @@ public:
   time_t        birth_time;           // start time of game
 
   time_t        start_time;           // start time of session
-  long          real_time;            // real time played (in seconds)
-  long          num_turns;            // number of turns taken
+  int           real_time;            // real time played (in seconds)
+  int           num_turns;            // number of turns taken
 
-  long          last_view_update;     // what turn was the view last updated?
+  int           last_view_update;     // what turn was the view last updated?
 
   int           old_hunger;  // used for hunger delta-meter (see output.cc)
 
@@ -580,7 +580,7 @@ extern player you;
 struct player_save_info
 {
     std::string name;
-    unsigned long experience;
+    unsigned int experience;
     int experience_level;
     bool wizard;
     species_type species;
@@ -720,7 +720,7 @@ int scan_artefacts(artefact_prop_type which_property, bool calc_unid = true);
 
 int slaying_bonus(char which_affected, bool ranged = false);
 
-unsigned long exp_needed(int lev);
+unsigned int exp_needed(int lev);
 
 int get_expiration_threshold(duration_type dur);
 bool dur_expiring(duration_type dur);

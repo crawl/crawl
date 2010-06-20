@@ -988,13 +988,13 @@ static void _shoals_init_tide()
     CrawlHashTable &props = you.props;
     if (!props.exists(PROPS_SHOALS_TIDE_KEY))
     {
-        props[PROPS_SHOALS_TIDE_KEY] = short(0);
-        props[PROPS_SHOALS_TIDE_VEL] = short(PEAK_TIDE_VELOCITY);
-        props[PROPS_SHOALS_TIDE_UPDATE_TIME] = 0L;
+        props[PROPS_SHOALS_TIDE_KEY].get_short() = 0;
+        props[PROPS_SHOALS_TIDE_VEL].get_short() = PEAK_TIDE_VELOCITY;
+        props[PROPS_SHOALS_TIDE_UPDATE_TIME].get_int() = 0;
     }
     if (!env.properties.exists(PROPS_SHOALS_TIDE_KEY))
     {
-        env.properties[PROPS_SHOALS_TIDE_KEY] = short(0);
+        env.properties[PROPS_SHOALS_TIDE_KEY].get_short() = 0;
     }
 }
 
@@ -1023,7 +1023,7 @@ void shoals_apply_tides(long turns_elapsed, bool force)
     if (turns_elapsed > 1)
     {
         const long last_updated_time =
-            props[PROPS_SHOALS_TIDE_UPDATE_TIME].get_long();
+            props[PROPS_SHOALS_TIDE_UPDATE_TIME].get_int();
         const long turn_delta = (you.elapsed_time - last_updated_time) / 10;
         turns_elapsed = std::min(turns_elapsed, turn_delta);
     }
@@ -1037,7 +1037,7 @@ void shoals_apply_tides(long turns_elapsed, bool force)
                                              _shoals_find_tide_caller());
     if (tide_caller)
     {
-        tide_called_turns = tide_caller->props[TIDE_CALL_TURN].get_long();
+        tide_called_turns = tide_caller->props[TIDE_CALL_TURN].get_int();
         tide_called_turns = you.num_turns - tide_called_turns;
         if (tide_called_turns < 1L)
             tide_called_turns = 1L;
@@ -1052,10 +1052,10 @@ void shoals_apply_tides(long turns_elapsed, bool force)
     while (turns_elapsed-- > 0)
         _shoals_run_tide(tide, acc);
 
-    props[PROPS_SHOALS_TIDE_KEY] = short(tide);
-    props[PROPS_SHOALS_TIDE_VEL] = short(acc);
-    props[PROPS_SHOALS_TIDE_UPDATE_TIME] = you.elapsed_time;
-    env.properties[PROPS_SHOALS_TIDE_KEY] = short(tide);
+    props[PROPS_SHOALS_TIDE_KEY].get_short() = tide;
+    props[PROPS_SHOALS_TIDE_VEL].get_short() = acc;
+    props[PROPS_SHOALS_TIDE_UPDATE_TIME].get_int() = you.elapsed_time;
+    env.properties[PROPS_SHOALS_TIDE_KEY].get_short() = tide;
 
     if (force
         || tide_caller
