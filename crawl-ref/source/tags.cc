@@ -1994,8 +1994,12 @@ static void tag_construct_level(writer &th)
     marshallShort(th, env.cloud_no);
 
     // how many clouds?
-    marshallShort(th, MAX_CLOUDS);
+    int nc = 0;
     for (int i = 0; i < MAX_CLOUDS; i++)
+        if (env.cloud[i].type != CLOUD_NONE)
+            nc = i + 1;
+    marshallShort(th, nc);
+    for (int i = 0; i < nc; i++)
     {
         marshallByte(th, env.cloud[i].pos.x);
         marshallByte(th, env.cloud[i].pos.y);
@@ -2010,8 +2014,12 @@ static void tag_construct_level(writer &th)
     }
 
     // how many shops?
-    marshallByte(th, MAX_SHOPS);
+    int ns = 0;
     for (int i = 0; i < MAX_SHOPS; i++)
+        if (env.shop[i].type != SHOP_UNASSIGNED)
+            ns = i + 1;
+    marshallByte(th, ns);
+    for (int i = 0; i < ns; i++)
     {
         marshallByte(th, env.shop[i].keeper_name[0]);
         marshallByte(th, env.shop[i].keeper_name[1]);
@@ -2423,6 +2431,7 @@ static void tag_read_level( reader &th, char minorVersion )
 
     // how many clouds?
     const int num_clouds = unmarshallShort(th);
+    ASSERT(num_clouds >= 0 && num_clouds <= MAX_CLOUDS);
     for (int i = 0; i < num_clouds; i++)
     {
         env.cloud[i].pos.x = unmarshallByte(th);
@@ -2439,7 +2448,7 @@ static void tag_read_level( reader &th, char minorVersion )
 
     // how many shops?
     const int num_shops = unmarshallByte(th);
-    ASSERT(num_shops <= MAX_SHOPS);
+    ASSERT(num_shops >= 0 && num_shops <= MAX_SHOPS);
     for (int i = 0; i < num_shops; i++)
     {
         env.shop[i].keeper_name[0] = unmarshallByte(th);
