@@ -1978,12 +1978,9 @@ static void tag_construct_level(writer &th)
             marshallShowtype(th, env.map_knowledge[count_x][count_y].object);
             marshallShort(th, env.map_knowledge[count_x][count_y].flags);
             marshallInt(th, env.pgrid[count_x][count_y]);
-            marshallShort(th, env.cgrid[count_x][count_y]);
         }
 
     run_length_encode(th, marshallByte, env.grid_colours, GXM, GYM);
-
-    marshallShort(th, env.cloud_no);
 
     // how many clouds?
     int nc = 0;
@@ -2419,13 +2416,13 @@ static void tag_read_level( reader &th, char minorVersion )
             env.pgrid[i][j] = unmarshallInt(th);
 
             mgrd[i][j] = NON_MONSTER;
-            env.cgrid[i][j] = (unsigned short) unmarshallShort(th);
+            env.cgrid[i][j] = EMPTY_CLOUD;
         }
 
     env.grid_colours.init(BLACK);
     run_length_decode(th, unmarshallByte, env.grid_colours, GXM, GYM);
 
-    env.cloud_no = unmarshallShort(th);
+    env.cloud_no = 0;
 
     // how many clouds?
     const int num_clouds = unmarshallShort(th);
@@ -2444,6 +2441,9 @@ static void tag_read_level( reader &th, char minorVersion )
         env.cloud[i].colour = unmarshallShort(th);
         env.cloud[i].name = unmarshallString(th);
         env.cloud[i].tile = unmarshallString(th);
+        ASSERT(in_bounds(env.cloud[i].pos));
+        env.cgrid(env.cloud[i].pos) = i;
+        env.cloud_no++;
     }
     for (int i = num_clouds; i < MAX_CLOUDS; i++)
         env.cloud[i].type = CLOUD_NONE;
