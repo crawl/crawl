@@ -1004,8 +1004,12 @@ void move_kraken_tentacles(monsters * kraken)
     int tentacle_connectivity = 8;
 
     coord_def targ;
+    bool no_target = false;
     if (!kraken->near_foe())
+    {
         targ = kraken->pos();
+        no_target = true;
+    }
     else
         targ = kraken->get_foe()->pos();
 
@@ -1036,6 +1040,7 @@ void move_kraken_tentacles(monsters * kraken)
     for (unsigned i=0;i<tentacles.size();i++)
     {
         monsters * tentacle = monster_at(tentacles[i]->pos());
+
         if (!tentacle)
         {
             mprf("missing tentacle in path");
@@ -1061,6 +1066,15 @@ void move_kraken_tentacles(monsters * kraken)
                 }
 
             }
+        }
+        if (no_target
+            && grid_distance(tentacle->pos(), kraken->pos()) == 1)
+        {
+            // Drop the tentacle if no enemies are in sight and it is
+            // adjacent to the main body. This is to prevent players from
+            // just sniping tentacles while outside the kraken's fov.
+            monster_die(tentacle, KILL_MISC, NON_MONSTER, true);
+            continue;
         }
 
         tentacle_path.clear();
