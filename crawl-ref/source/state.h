@@ -28,6 +28,8 @@ public:
 // Track various aspects of Crawl game state.
 struct game_state
 {
+    std::vector<std::string> command_line_arguments;
+
     bool game_crashed;      // The game crashed and is now in the process of
                             // dumping crash info.
     bool mouse_enabled;     // True if mouse input is currently relevant.
