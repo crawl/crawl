@@ -1111,8 +1111,10 @@ mon_attack_def mons_attack_spec(const monsters *mon, int attk_number)
     if (mc == MONS_KRAKEN_TENTACLE
         && !invalid_monster_index(mon->number))
     {
-        // Use the zombie, etc info from the kraken
-        mon = &menv[mon->number];
+        // Use the zombie, etc info from the kraken if it's alive.
+        const monsters *body_kraken = &menv[mon->number];
+        if (body_kraken->alive())
+            mon = body_kraken;
     }
 
     const bool zombified = mons_is_zombified(mon);
