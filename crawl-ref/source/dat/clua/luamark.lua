@@ -16,6 +16,7 @@ require('clua/lm_monst.lua')
 require('clua/lm_mslav.lua')
 require('clua/lm_trove.lua')
 require('clua/lm_door.lua')
+require('clua/lm_items.lua')
 
 function dlua_marker_function(table, name)
   return table[name]

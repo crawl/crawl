@@ -291,46 +291,57 @@ void monster_drop_ething(monsters *monster, bool mark_item_origins,
     }
 }
 
-monster_type fill_out_corpse(const monsters* monster, item_def& corpse,
-                             bool allow_weightless)
+// Initializes a corpse item using the given monster and monster type.
+// The monster pointer is optional; you may pass in NULL to bypass
+// per-monster checks.
+//
+// force_corpse forces creation of the corpse item even if the monster
+// would not otherwise merit a corpse.
+monster_type fill_out_corpse(const monsters* monster,
+                             monster_type mtype,
+                             item_def& corpse,
+                             bool force_corpse)
 {
-    ASSERT(!invalid_monster_type(monster->type));
+    ASSERT(!invalid_monster_type(mtype));
     corpse.clear();
 
     int summon_type;
-    if (monster->is_summoned(NULL, &summon_type)
-        || (monster->flags & (MF_BANISHED | MF_HARD_RESET)))
+    if (monster && (monster->is_summoned(NULL, &summon_type)
+                    || (monster->flags & (MF_BANISHED | MF_HARD_RESET))))
     {
         return (MONS_NO_MONSTER);
     }
 
-    monster_type corpse_class = mons_species(monster->type);
+    monster_type corpse_class = mons_species(mtype);
 
-    // If this was a corpse that was temporarily animated then turn the
-    // monster back into a corpse.
-    if (mons_class_is_zombified(monster->type)
-        && (summon_type == SPELL_ANIMATE_DEAD
-            || summon_type == SPELL_ANIMATE_SKELETON
-            || summon_type == MON_SUMM_ANIMATE))
+    if (monster)
     {
-        corpse_class = mons_zombie_base(monster);
-    }
+        // If this was a corpse that was temporarily animated then turn the
+        // monster back into a corpse.
+        if (mons_class_is_zombified(monster->type)
+            && (summon_type == SPELL_ANIMATE_DEAD
+                || summon_type == SPELL_ANIMATE_SKELETON
+                || summon_type == MON_SUMM_ANIMATE))
+        {
+            corpse_class = mons_zombie_base(monster);
+        }
 
-    if (corpse_class == MONS_DRACONIAN)
-    {
-        if (monster->type == MONS_TIAMAT)
-            corpse_class = MONS_DRACONIAN;
-        else
-            corpse_class = draco_subspecies(monster);
-    }
+        if (monster && corpse_class == MONS_DRACONIAN)
+        {
+            if (monster->type == MONS_TIAMAT)
+                corpse_class = MONS_DRACONIAN;
+            else
+                corpse_class = draco_subspecies(monster);
+        }
 
-    if (monster->has_ench(ENCH_SHAPESHIFTER))
-        corpse_class = MONS_SHAPESHIFTER;
-    else if (monster->has_ench(ENCH_GLOWING_SHAPESHIFTER))
-        corpse_class = MONS_GLOWING_SHAPESHIFTER;
+        if (monster->has_ench(ENCH_SHAPESHIFTER))
+            corpse_class = MONS_SHAPESHIFTER;
+        else if (monster->has_ench(ENCH_GLOWING_SHAPESHIFTER))
+            corpse_class = MONS_GLOWING_SHAPESHIFTER;
+    }
 
     // Doesn't leave a corpse.
-    if (mons_weight(corpse_class) == 0 && !allow_weightless)
+    if (!mons_class_can_leave_corpse(corpse_class) && !force_corpse)
         return (MONS_NO_MONSTER);
 
     corpse.flags       = 0;
@@ -340,22 +351,38 @@ monster_type fill_out_corpse(const monsters* monster, item_def& corpse,
     corpse.sub_type    = CORPSE_BODY;
     corpse.special     = FRESHEST_CORPSE;  // rot time
     corpse.quantity    = 1;
-    corpse.orig_monnum = monster->type + 1;
-    corpse.props[MONSTER_NUMBER] = short(monster->number);
+    corpse.orig_monnum = mtype + 1;
+    if (monster)
+    {
+        corpse.props[MONSTER_NUMBER] = short(monster->number);
+    }
 
     corpse.colour = mons_class_colour(corpse_class);
     if (corpse.colour == BLACK)
-        corpse.colour = monster->colour;
+    {
+        if (monster)
+        {
+            corpse.colour = monster->colour;
+        }
+        else
+        {
+            // [ds] Ick: no easy way to get a monster's colour
+            // otherwise:
+            monsters mons;
+            mons.type = mtype;
+            define_monster(&mons);
+            corpse.colour = mons.colour;
+        }
+    }
 
-    if (!monster->mname.empty())
+    if (monster && !monster->mname.empty())
     {
         corpse.props[CORPSE_NAME_KEY] = monster->mname;
         corpse.props[CORPSE_NAME_TYPE_KEY].get_int() = monster->flags;
     }
-    else if (mons_is_unique(monster->type))
+    else if (mons_is_unique(mtype))
     {
-        corpse.props[CORPSE_NAME_KEY] = mons_type_name(monster->type,
-                                                       DESC_PLAIN);
+        corpse.props[CORPSE_NAME_KEY] = mons_type_name(mtype, DESC_PLAIN);
         corpse.props[CORPSE_NAME_TYPE_KEY].get_int() = 0;
     }
 
@@ -446,7 +473,8 @@ int place_monster_corpse(const monsters *monster, bool silent,
         return (-1);
 
     item_def corpse;
-    const monster_type corpse_class = fill_out_corpse(monster, corpse);
+    const monster_type corpse_class = fill_out_corpse(monster, monster->type,
+                                                      corpse);
 
     bool vault_forced = false;
 
@@ -460,8 +488,11 @@ int place_monster_corpse(const monsters *monster, bool silent,
     if (monster->props.exists("always_corpse"))
         vault_forced = true;
 
-    if (corpse_class == MONS_NO_MONSTER || (!force && !vault_forced && coinflip()))
+    if (corpse_class == MONS_NO_MONSTER
+        || (!force && !vault_forced && coinflip()))
+    {
         return (-1);
+    }
 
     int o = get_item_slot();
     if (o == NON_ITEM)

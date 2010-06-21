@@ -600,7 +600,8 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 'd': wizard_level_travel(true);             break;
     case 'D': wizard_detect_creatures();             break;
     case 'u': case 'U': wizard_level_travel(false);  break;
-    case '%': case 'o': wizard_create_spec_object(); break;
+    case 'o': wizard_create_spec_object();           break;
+    case '%': wizard_create_spec_object_by_name();   break;
     case 'J': jiyva_eat_offlevel_items();            break;
 
     case 'x':

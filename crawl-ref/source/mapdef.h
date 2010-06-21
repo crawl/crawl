@@ -547,6 +547,7 @@ struct item_spec
     int allow_uniques;
     int level;
     int race;
+    int item_special;
     int qty;
     int acquirement_source;
     level_id place;
@@ -556,10 +557,12 @@ struct item_spec
 
     item_spec() : genweight(10), base_type(OBJ_RANDOM), sub_type(OBJ_RANDOM),
         plus(-1), plus2(-1), ego(0), allow_uniques(1), level(-1),
-        race(MAKE_ITEM_RANDOM_RACE), qty(0), acquirement_source(0),
-        place(), props()
+        race(MAKE_ITEM_RANDOM_RACE), item_special(0), qty(0),
+        acquirement_source(0), place(), props()
     {
     }
+
+    bool corpselike() const;
 };
 typedef std::vector<item_spec> item_spec_list;
 
@@ -599,6 +602,9 @@ private:
     void parse_raw_name(std::string name, item_spec &spec);
     void parse_random_by_class(std::string c, item_spec &spec);
     item_spec pick_item(item_spec_slot &slot);
+    item_spec parse_corpse_spec(item_spec &result, std::string s);
+    bool monster_corpse_is_valid(monster_type *, const std::string &name,
+                                 bool corpse, bool skeleton, bool chunk);
 
 private:
     std::vector<item_spec_slot> items;

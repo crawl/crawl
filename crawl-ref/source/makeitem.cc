@@ -27,12 +27,37 @@
 #include "items.h"
 #include "libutil.h"
 #include "misc.h"
+#include "mon-stuff.h"
 #include "mon-util.h"
 #include "player.h"
 #include "random.h"
 #include "spl-book.h"
 #include "state.h"
 #include "travel.h"
+
+int create_item_named(std::string name, coord_def p,
+                      std::string *error)
+{
+    trim_string(name);
+
+    item_list ilist;
+    const std::string err = ilist.add_item(name, false);
+    if (!err.empty())
+    {
+        if (error)
+            *error = err;
+        return (NON_ITEM);
+    }
+
+    item_spec ispec = ilist.get_item(0);
+    int item = dgn_place_item(ispec, you.pos());
+    if (item != NON_ITEM)
+        link_items();
+    else if (error)
+        *error = "Failed to create item '" + name + "'";
+
+    return (item);
+}
 
 bool got_curare_roll(const int item_level)
 {
@@ -3332,6 +3357,60 @@ int items(int allow_uniques,       // not just true-false,
 
     // Note that item might be invalidated now, since p could have changed.
     ASSERT(mitm[p].is_valid());
+    return (p);
+}
+
+static bool _item_corpse_def(monster_type mons, item_def &item,
+                             const item_spec &ispec)
+{
+    const monster_type created_mons = fill_out_corpse(NULL, mons, item);
+
+    if (created_mons == MONS_NO_MONSTER)
+        return (false);
+
+    if (ispec.props.exists(CORPSE_NEVER_DECAYS))
+        item.props[CORPSE_NEVER_DECAYS].get_bool() =
+            ispec.props[CORPSE_NEVER_DECAYS].get_bool();
+
+    if (ispec.base_type == OBJ_CORPSES && ispec.sub_type == CORPSE_SKELETON)
+        turn_corpse_into_skeleton(item);
+    else if (ispec.base_type == OBJ_FOOD && ispec.sub_type == FOOD_CHUNK)
+        turn_corpse_into_chunks(item, false, false);
+
+    // Hydra heads:
+    if (ispec.plus2)
+        item.props[MONSTER_NUMBER].get_short() = ispec.plus2;
+
+    if (ispec.qty && ispec.base_type == OBJ_FOOD)
+        item.quantity = ispec.qty;
+
+    return (true);
+}
+
+// Creates a corpse item and returns its item index, or NON_ITEM if it
+// fails. The corpse is not linked into the item grid; nor is the
+// item's position set to anything meaningful.
+int item_corpse(monster_type monster, const item_spec &ispec)
+{
+    if (monster != MONS_NO_MONSTER)
+        monster = mons_species(monster);
+
+    if (monster == MONS_NO_MONSTER
+        || !mons_class_can_leave_corpse(monster))
+    {
+        return (NON_ITEM);
+    }
+
+    const int p = get_item_slot(10);
+    if (p == NON_ITEM)
+        return (NON_ITEM);
+
+    item_def &item(mitm[p]);
+    if (!_item_corpse_def(monster, item, ispec))
+    {
+        item.clear();
+        return (NON_ITEM);
+    }
     return (p);
 }
 

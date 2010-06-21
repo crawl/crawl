@@ -90,6 +90,108 @@ static int dgn_create_item(lua_State *ls)
     return (0);
 }
 
+static int dgn_item_property_remove(lua_State *ls)
+{
+    if (item_def *item = clua_get_item(ls, 1))
+    {
+        item->props.erase(luaL_checkstring(ls, 2));
+    }
+    return (0);
+}
+
+static int dgn_item_property_set(lua_State *ls)
+{
+    if (item_def *item = clua_get_item(ls, 1))
+    {
+        const std::string key = luaL_checkstring(ls, 2);
+        const std::string type = luaL_checkstring(ls, 3);
+        if (type.empty() || type.length() > 1)
+            luaL_error(ls, "Expected type: [BbSifsC], got: '%s'",
+                       type.c_str());
+
+        switch (type[0])
+        {
+        case 'B':
+            item->props[key].get_bool() = lua_toboolean(ls, 4);
+            break;
+        case 'b':
+            item->props[key].get_byte() = luaL_checkint(ls, 4);
+            break;
+        case 'S':
+            item->props[key].get_short() = luaL_checkint(ls, 4);
+            break;
+        case 'i':
+            item->props[key].get_int() = luaL_checkint(ls, 4);
+            break;
+        case 'f':
+            item->props[key].get_float() = luaL_checknumber(ls, 4);
+            break;
+        case 's':
+            item->props[key].get_string() = luaL_checkstring(ls, 4);
+            break;
+        case 'C':
+            item->props[key].get_coord() = coord_def(luaL_checkint(ls, 4),
+                                                     luaL_checkint(ls, 5));
+            break;
+        default:
+            luaL_error(ls, "Unknown type: '%s'", type.c_str());
+            break;
+        }
+    }
+    return (0);
+}
+
+static int dgn_item_property(lua_State *ls)
+{
+    if (item_def *item = clua_get_item(ls, 1))
+    {
+        const std::string key = luaL_checkstring(ls, 2);
+        const std::string type = luaL_checkstring(ls, 3);
+        if (type.empty() || type.length() > 1)
+            luaL_error(ls, "Expected type: [BbSifsC], got: '%s'",
+                       type.c_str());
+
+        if (!item->props.exists(key))
+        {
+            lua_pushnil(ls);
+            return (1);
+        }
+
+        switch (type[0])
+        {
+        case 'B':
+            lua_pushboolean(ls, item->props[key].get_byte());
+            break;
+        case 'b':
+            lua_pushnumber(ls, item->props[key].get_byte());
+            break;
+        case 'S':
+            lua_pushnumber(ls, item->props[key].get_short());
+            break;
+        case 'i':
+            lua_pushnumber(ls, item->props[key].get_int());
+            break;
+        case 'f':
+            lua_pushnumber(ls, item->props[key].get_float());
+            break;
+        case 's':
+            lua_pushstring(ls, item->props[key].get_string().c_str());
+            break;
+        case 'C':
+        {
+            const coord_def p(item->props[key].get_coord());
+            lua_pushnumber(ls, p.x);
+            lua_pushnumber(ls, p.y);
+            return (2);
+        }
+        default:
+            luaL_error(ls, "Unknown type: '%s'", type.c_str());
+            break;
+        }
+    }
+    return (1);
+}
+
 // Returns two arrays: one of floor items, one of shop items.
 static int dgn_stash_items(lua_State *ls)
 {
@@ -142,11 +244,14 @@ static int dgn_stash_items(lua_State *ls)
 
 const struct luaL_reg dgn_item_dlib[] =
 {
-{ "item_from_index", dgn_item_from_index },
-{ "items_at", dgn_items_at },
-{ "create_item", dgn_create_item },
-{ "item_spec", _dgn_item_spec },
-{ "stash_items", dgn_stash_items },
+    { "item_from_index", dgn_item_from_index },
+    { "items_at", dgn_items_at },
+    { "create_item", dgn_create_item },
+    { "item_property_remove", dgn_item_property_remove },
+    { "item_property_set", dgn_item_property_set },
+    { "item_property", dgn_item_property },
+    { "item_spec", _dgn_item_spec },
+    { "stash_items", dgn_stash_items },
 
-{ NULL, NULL }
+    { NULL, NULL }
 };

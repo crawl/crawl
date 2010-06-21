@@ -137,6 +137,8 @@ struct MonsterWrap
 
 // XXX: These are currently defined outside cluautil.cc.
 void push_monster(lua_State *ls, monsters* mons);
+void clua_push_item(lua_State *ls, item_def *item);
+item_def *clua_get_item(lua_State *ls, int ndx);
 void lua_push_floor_items(lua_State *ls, int link);
 dungeon_feature_type check_lua_feature(lua_State *ls, int idx);
 unsigned int get_tile_idx(lua_State *ls, int arg);

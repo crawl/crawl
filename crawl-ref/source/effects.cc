@@ -3461,6 +3461,10 @@ static bool _food_item_needs_time_check(item_def &item)
     if (item.base_type == OBJ_POTIONS && !is_blood_potion(item))
         return (false);
 
+    // The object specifically asks not to be checked:
+    if (item.props.exists(CORPSE_NEVER_DECAYS))
+        return (false);
+
     return (true);
 }
 
