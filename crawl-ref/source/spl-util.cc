@@ -1171,7 +1171,7 @@ bool spell_is_risky(spell_type spell)
 
 // This function attempts to determine if 'spell' is useless to
 // the player. if 'transient' is true, then it will include checks
-// for volitile or temporary states (such as status effects, mana, etc.)
+// for volatile or temporary states (such as status effects, mana, etc.)
 //
 // its notably used by 'spell_highlight_by_utility'
 bool spell_is_useless(spell_type spell, bool transient)
@@ -1222,6 +1222,10 @@ bool spell_is_useless(spell_type spell, bool transient)
         break;
     case SPELL_CONTROL_TELEPORT:
         if (transient && you.duration[DUR_CONTROL_TELEPORT] > 0)
+            return (true);
+        break;
+    case SPELL_SEE_INVISIBLE:
+        if (you.can_see_invisible(false, false))
             return (true);
         break;
     default:
