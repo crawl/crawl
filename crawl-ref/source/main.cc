@@ -126,7 +126,6 @@
 #include "shout.h"
 #include "stash.h"
 #include "view.h"
-#include "viewchar.h"
 #include "viewgeom.h"
 #include "viewmap.h"
 #include "wiz-dgn.h"
@@ -1244,9 +1243,7 @@ static void _go_upstairs()
         return;
     }
     // Up and down both work for portals.
-    else if (get_feature_dchar(ygrd) == DCHAR_ARCH
-             && feat_stair_direction(ygrd) != CMD_NO_CMD
-             && ygrd != DNGN_ENTER_ZOT)
+    else if (feat_is_bidirectional_portal(ygrd))
     {
         ;
     }
@@ -1316,9 +1313,7 @@ static void _go_downstairs()
         return;
     }
     // Up and down both work for portals.
-    else if (get_feature_dchar(ygrd) == DCHAR_ARCH
-             && feat_stair_direction(ygrd) != CMD_NO_CMD
-             && ygrd != DNGN_ENTER_ZOT)
+    else if (feat_is_bidirectional_portal(ygrd))
     {
         ;
     }

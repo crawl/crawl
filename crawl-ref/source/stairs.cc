@@ -39,7 +39,6 @@
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
-#include "viewchar.h"
 #include "xom.h"
 
 bool check_annotation_exclusion_warning()
@@ -498,11 +497,7 @@ void up_stairs(dungeon_feature_type force_stair,
     }
 
     // Up and down both work for portals.
-    if (get_feature_dchar(stair_find) == DCHAR_ARCH
-        && feat_stair_direction(stair_find) != CMD_NO_CMD
-        && stair_find != DNGN_ENTER_ZOT
-        && stair_find != DNGN_RETURN_FROM_ZOT
-        && stair_find != DNGN_EXIT_HELL)
+    if (feat_is_bidirectional_portal(stair_find))
     {
         down_stairs(force_stair, entry_cause);
         return;
@@ -855,11 +850,7 @@ void down_stairs(dungeon_feature_type force_stair,
     }
 
     // Up and down both work for portals.
-    if (get_feature_dchar(stair_find) == DCHAR_ARCH
-        && feat_stair_direction(stair_find) != CMD_NO_CMD
-        && stair_find != DNGN_ENTER_ZOT
-        && stair_find != DNGN_RETURN_FROM_ZOT
-        && stair_find != DNGN_EXIT_HELL)
+    if (feat_is_bidirectional_portal(stair_find))
     {
         ;
     }
