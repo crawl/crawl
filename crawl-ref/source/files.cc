@@ -2390,13 +2390,13 @@ static bool _get_and_validate_version(FILE *restoreFile, char &major,
             //        dynamically, but I think <major>.<minor> also
             //        covers 0.6.2. If not, it's not a problem. (jpeg)
             *reason = CRAWL " " + Version::Short() + " is not compatible with "
-                      "save files older than 0.6. You can continue your game "
+                      "save files older than 0.7. You can continue your game "
                       "with the appropriate older version, or you can delete "
                       "it and start a new game.";
         }
         else
         {
-            *reason = make_stringf("Major version mismatch: %d (want <= %d).",
+            *reason = make_stringf("Major version mismatch: %d (want %d).",
                                    major, TAG_MAJOR_VERSION);
         }
         return (false);
@@ -2411,7 +2411,8 @@ static bool _get_and_validate_version(FILE *restoreFile, char &major,
 
     if (minor > TAG_MINOR_VERSION)
     {
-        *reason = make_stringf("Minor version mismatch: %d (want <= %d).",
+        *reason = make_stringf("Minor version mismatch: %d (want <= %d). "
+                               "The save is from a newer version.",
                                minor, TAG_MINOR_VERSION);
         return (false);
     }
