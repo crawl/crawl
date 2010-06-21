@@ -754,3 +754,40 @@ MAP
  ttttttttttttttttttttttttttcccccccccccccllllllllllll
  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxllllllllllllllllll
 ENDMAP
+
+# Oh worms!
+NAME:   wormcave
+PLACE:  Lair:$
+WEIGHT: 500
+TAGS:   no_pool_fixup no_wall_fixup no_monster_gen no_rotate no_item_gen
+ORIENT: southeast
+MONS:   plant
+MONS:   spiny worm, brain worm, worm, giant leech, lindwurm, dragon
+KMONS:  8 = giant firefly
+SUBST:  X = x.
+SUBST:  P = 11.
+KITEM:  % = acquire any / star_item, any, any, any, any, any, \
+            any, any, any
+MAP
+            XXXXXxxXXxxXXxxxxXXxxxXXXxxx
+ @........@xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ ..PP.XX..Px..xxxxxxxxxxxxxxxxxX4xxxxxxx
+ ..PP.XX..PPxxxxxxxxXX88Xxxxxx4...xxxxxx
+ ...x.....PPP.xxxxxP...88XxxxX44..Xxxxxx
+ ..XxX........xxxxxX....88xxx244..xxxxxx
+ .PxxxX..x...xxxxxxx.....XxxxxX41.4xxxxx
+ @xxxxxxx..XPPxxxxxP11.XPxxxxxxxXPxxxxxx
+Xxxx$$xxxxxxx..xxxxxX1xxxxxxxxxxxx1xxxxx
+Xxx$$$$xxxxx...Xxxxxxx2xxxxxxxxxx.xxxxxx
+xxx$$$$$xxxx.Xxxxxxxxxx4..xxxxX.4xxxxxxx
+xxxx$7$$xxx..xxxxxxxxxxx2P.xX..xxxxxxxxx
+xxxxx$$xxxX.xxxxxxxxxxxxxx..4xxxxxxxxxxx
+xxxxxxx=xX..xxxxxxxxxxxx..P.xxxx.%.xxxxx
+xxxxxxxxP..xxxxxxxxxxxx..Xxxxxx5625.xxxx
+xxxxxxxX..xxxxxxxxxxx..4xxxxxxx.334xxxxx
+xxxxxxxxX.2xxxxxxxx...xx.xxxxxxxx5xxxxxx
+xxxxxxxxxX.xxxxxxx.4Xxx2xx.1xxxxxx.xxxxx
+xxxxxxxxxxx..xxx..Xxxxxx..xx.xx...xxxxxx
+xxxxxxxxxxxxx41.xxxxxxxxxxxxx...xxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
