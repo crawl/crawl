@@ -219,6 +219,9 @@ void show_def::_update_feat_at(const coord_def &gp, const coord_def &ep)
     grid(ep).feat = grid_appearance(gp);
     grid(ep).colour = _feat_colour(gp, grid(ep).feat);
 
+    // Tell the world first.
+    dungeon_events.fire_position_event(DET_PLAYER_IN_LOS, gp);
+
     if (get_feature_def(grid(ep)).is_notable())
         seen_notable_thing(grid(ep).feat, gp);
 
