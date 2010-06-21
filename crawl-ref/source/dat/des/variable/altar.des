@@ -823,7 +823,7 @@ MAP
 ENDMAP
 
 NAME:   fedhas_altar_4
-TAGS:   uniq_altar_fedhas temple_overflow_fedhas
+TAGS:   uniq_altar_fedhas temple_overflow_fedhas mini_float
 DEPTH:  D:2-20
 KFEAT:  C = altar_fedhas
 FTILE:  . = floor_lair
