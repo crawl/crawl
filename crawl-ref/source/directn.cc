@@ -2131,7 +2131,8 @@ static bool _mons_is_valid_target(const monsters *mon, int mode, int range)
     // monsters.
     if (mode != TARG_EVOLVABLE_PLANTS
         && mons_class_flag(mon->type, M_NO_EXP_GAIN)
-        && (mon->type != MONS_BALLISTOMYCETE || mon->number == 0))
+        && (mon->type != MONS_BALLISTOMYCETE || mon->number == 0)
+        && mon->type != MONS_KRAKEN_TENTACLE)
     {
         return (false);
     }
