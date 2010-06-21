@@ -2509,12 +2509,7 @@ enum mutation_type
     RANDOM_NON_SLIME_MUTATION,
 };
 
-#ifndef TYPED_ENUMS
-typedef unsigned char object_class_type;
-enum object_class_t                    // mitm[].base_type
-#else
-enum object_class_type : unsigned char
-#endif
+enum object_class_type                 // mitm[].base_type
 {
     OBJ_WEAPONS,
     OBJ_MISSILES,
