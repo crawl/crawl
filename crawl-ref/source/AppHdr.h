@@ -529,10 +529,6 @@
     #define MONOSPACED_FONT "VeraMono.ttf"
 #endif
 
-#if (__cplusplus > 200400) || defined(__GXX_EXPERIMENTAL_CXX0X__) || defined(_MSC_VER) && (_MSC_VER >= 1500)
-    #define TYPED_ENUMS
-#endif
-
 #ifdef __cplusplus
 
 
