@@ -2530,8 +2530,7 @@ enum object_class_type                 // mitm[].base_type
     OBJ_GEMSTONES, // found in itemname.cc, labeled as miscellaneous in invent.cc {dlb}
     NUM_OBJECT_CLASSES,
     OBJ_UNASSIGNED = 100,              // must remain set to 100 {dlb}
-    OBJ_RANDOM = 255,// must remain set to 255 {dlb} - also used
-                     // for blanket random sub_type .. see dungeon::items()
+    OBJ_RANDOM,      // used for blanket random sub_type .. see dungeon::items()
 };
 
 enum operation_types
