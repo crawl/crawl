@@ -1056,6 +1056,7 @@ bool kiku_receive_corpses(int pow, coord_def where)
             dummy.number = random2(20) + 1;
 
         int valid_corpse = fill_out_corpse(&dummy,
+                                           dummy.type,
                                            mitm[index_of_corpse_created],
                                            false);
         if (valid_corpse == -1)

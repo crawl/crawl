@@ -264,6 +264,12 @@ std::string dlua_chunk::get_chunk_prefix(const std::string &sorig) const
     return rewrite_chunk_prefix(sorig, true);
 }
 
+static void _dlua_register_constants(CLua &lua)
+{
+    lua_pushstring(lua, CORPSE_NEVER_DECAYS);
+    lua.setglobal("CORPSE_NEVER_DECAYS");
+}
+
 void init_dungeon_lua()
 {
     lua_stack_cleaner clean(dlua);
@@ -294,4 +300,6 @@ void init_dungeon_lua()
 
     register_itemlist(dlua);
     register_monslist(dlua);
+
+    _dlua_register_constants(dlua);
 }

@@ -2780,7 +2780,7 @@ static void _find_remains(monsters* mon, int &corpse_class, int &corpse_index,
     corpse_index = NON_ITEM;
     last_item    = NON_ITEM;
 
-    corpse_class = fill_out_corpse(mon, fake_corpse, true);
+    corpse_class = fill_out_corpse(mon, mon->type, fake_corpse, true);
     if (corpse_class == -1 || mons_weight(corpse_class) == 0)
         return;
 

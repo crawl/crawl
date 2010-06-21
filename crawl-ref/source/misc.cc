@@ -161,18 +161,19 @@ void turn_corpse_into_skeleton(item_def &item)
         return;
 
     item.sub_type = CORPSE_SKELETON;
-    item.special  = 200; // reset rotting counter
+    item.special  = FRESHEST_CORPSE; // reset rotting counter
     item.colour   = LIGHTGREY;
 }
 
-void turn_corpse_into_chunks(item_def &item)
+void turn_corpse_into_chunks(item_def &item, bool bloodspatter,
+                             bool make_hide)
 {
     ASSERT(item.base_type == OBJ_CORPSES && item.sub_type == CORPSE_BODY);
     const monster_type montype = static_cast<monster_type>(item.plus);
     const int max_chunks = get_max_corpse_chunks(item.plus);
 
     // Only fresh corpses bleed enough to colour the ground.
-    if (!food_is_rotten(item))
+    if (bloodspatter && !food_is_rotten(item))
         bleed_onto_floor(you.pos(), montype, max_chunks, true);
 
     item.base_type = OBJ_FOOD;
@@ -184,8 +185,11 @@ void turn_corpse_into_chunks(item_def &item)
         item.flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
 
     // Happens after the corpse has been butchered.
-    if (monster_descriptor(item.plus, MDSC_LEAVES_HIDE) && !one_chance_in(3))
+    if (make_hide && monster_descriptor(item.plus, MDSC_LEAVES_HIDE)
+        && !one_chance_in(3))
+    {
         _create_monster_hide(item);
+    }
 }
 
 void turn_corpse_into_skeleton_and_chunks(item_def &item)

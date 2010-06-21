@@ -19,9 +19,17 @@ enum item_make_species_type
     MAKE_ITEM_RANDOM_RACE = 250,
 };
 
+int create_item_named(std::string name, coord_def pos,
+                      std::string *error);
+
 int items( int allow_uniques, object_class_type force_class, int force_type,
            bool dont_place, int item_level, int item_race,
            unsigned mapmask = 0, int force_ego = 0, int agent = -1 );
+
+// Create a corpse item for the given monster with the supplied spec.
+class item_spec;
+enum monster_type;
+int item_corpse(monster_type monster, const item_spec &ispec);
 
 void item_colour(item_def &item);
 void init_rod_mp(item_def &item, int ncharges = -1, int item_level = -1);

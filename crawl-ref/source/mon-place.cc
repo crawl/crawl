@@ -816,6 +816,79 @@ static monster_type _resolve_monster_type(monster_type mon_type,
     return (mon_type);
 }
 
+monster_type pick_random_monster_for_place(const level_id &place,
+                                           monster_type zombie_monster,
+                                           bool moderate_ood,
+                                           bool super_ood,
+                                           bool want_corpse_capable)
+{
+    int lev = place.absdepth();
+
+    if (super_ood)
+        lev = 4 + lev * 2;
+
+    if (moderate_ood)
+        lev += 5;
+
+    int tries = 100;
+    monster_type chosen = MONS_NO_MONSTER;
+    const zombie_size_type wanted_zombie_size =
+        (zombie_monster != MONS_NO_MONSTER
+         && mons_class_is_zombified(zombie_monster))?
+        zombie_class_size(zombie_monster) : Z_NOZOMBIE;
+
+    do
+        chosen = pick_random_monster(place, lev, lev, NULL);
+    while (!invalid_monster_type(chosen)
+           && wanted_zombie_size != Z_NOZOMBIE
+           && mons_zombie_size(chosen) != wanted_zombie_size
+           && (!want_corpse_capable
+               || mons_class_can_leave_corpse(mons_species(chosen)))
+           && --tries > 0);
+
+    if (!tries)
+        chosen = MONS_NO_MONSTER;
+
+    return (chosen);
+}
+
+// Given a monster_type that includes meta-monster types such as
+// RANDOM_MONSTER, converts them into a level-appropriate monster.
+monster_type resolve_monster_type(monster_type mon_type,
+                                  dungeon_feature_type feat)
+{
+    monster_type base = MONS_NO_MONSTER;
+    coord_def dummy(GXM - 1, GYM - 1);
+    unwind_var<dungeon_feature_type> dummgrid(grd(dummy), feat);
+    dungeon_char_type stair_type = NUM_DCHAR_TYPES;
+    int level = you.absdepth0;
+    bool chose_ood = false;
+
+    return _resolve_monster_type(mon_type, PROX_ANYWHERE, base,
+                                 dummy, 0, &stair_type, &level,
+                                 &chose_ood);
+}
+
+// Converts a randomised monster_type into a concrete monster_type, optionally
+// choosing monsters suitable for generation at the supplied place.
+monster_type resolve_corpse_monster_type(monster_type mon_type,
+                                         dungeon_feature_type feat,
+                                         level_id place)
+{
+    if (mon_type == RANDOM_MONSTER && place.is_valid())
+        return (pick_random_monster_for_place(place, MONS_NO_MONSTER,
+                                              false, false, true));
+
+    for (int i = 0; i < 1000; ++i)
+    {
+        const monster_type mon = resolve_monster_type(mon_type, feat);
+        if (mons_class_can_leave_corpse(mons_species(mon)))
+            return (mon);
+    }
+
+    return (MONS_NO_MONSTER);
+}
+
 // A short function to check the results of near_stairs().
 // Returns 0 if the point is not near stairs.
 // Returns 1 if the point is near unoccupied stairs.

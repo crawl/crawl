@@ -260,6 +260,9 @@ int dgn_place_monster(mons_spec &mspec,
                       int monster_level, const coord_def& where,
                       bool force_pos = false, bool generate_awake = false,
                       bool patrolling = false);
+int dgn_place_item(const item_spec &spec,
+                   const coord_def &where,
+                   int level = INVALID_ABSDEPTH);
 
 dungeon_feature_type dgn_tree_base_feature_at(coord_def c);
 
