@@ -1235,13 +1235,6 @@ bool spell_is_useless(spell_type spell, bool transient)
     return (false);
 }
 
-bool spell_is_known(spell_type spell)
-{
-    for (int i = 0; i < 25; i++)
-        if(you.spells[i] == spell) return (true);
-    return (false);
-}
-
 // This function takes a spell, and determines what color it should be
 // highlighted with. You shouldn't have to touch this unless you want
 // to add new highlighting options.
@@ -1253,13 +1246,12 @@ bool spell_is_known(spell_type spell)
 //       spell_is_useful(spell)
 //       spell_is_useless(spell, transient)
 //       spell_is_risky(spell)
-//       spell_is_known(spell)
 int spell_highlight_by_utility(spell_type spell, int default_color,
                                bool transient, bool force_known, bool rod_spell)
 {
     // if Force_known is true, and the spell is
     // known, thats all that matters.
-    if (force_known && !spell_is_known(spell))
+    if (force_known && !you.has_spell(spell))
         return COL_UNMEMORIZED;
 
     // If your god hates the spell, that
