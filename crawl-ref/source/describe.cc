@@ -126,10 +126,10 @@ public:
 
     void nextline()
     {
-        if (wherey() <= height())
+        if (wherey() < height())
             cgotoxy(1, wherey() + 1);
         else
-            cgotoxy(1, wherey());
+            cgotoxy(1, height());
         // Otherwise cgotoxy asserts; let's just clobber the last line
         // instead, which should be noticable enough.
     }
