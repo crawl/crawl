@@ -61,6 +61,7 @@
 
 #include "artefact.h"
 #include "branch.h"
+#include "coord.h"
 #include "coordit.h"
 #include "describe.h"
 #include "dungeon.h"
@@ -87,10 +88,6 @@
  #include "tileview.h"
 #endif
 #include "travel.h"
-
-#if defined(DEBUG) || defined(DEBUG_MONS_SCAN)
-#include "coord.h"
-#endif
 
 // defined in dgn-overview.cc
 extern std::map<branch_type, level_id> stair_level;
