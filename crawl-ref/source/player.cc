@@ -2906,7 +2906,7 @@ void level_change(bool skip_attribute_increase)
                 if (!(you.experience_level % 3))
                     hp_adjust++;
 
-                if (!(you.experience_level % 4))
+                if (!(you.experience_level % 4) && you.experience_level > 7)
                 {
                     mpr("Your scales feel tougher.", MSGCH_INTRINSIC_GAIN);
                     you.redraw_armour_class = true;
