@@ -230,7 +230,9 @@ This spell temporarily infuses the weapon held by the caster with the essence of
 %%%%
 Extension
 
-This spell extends the duration of most magical effects influencing the caster. Be wary that using it slowly contaminates you with magical energy.
+This spell extends the duration of most spells influencing the caster. Be wary that using it slowly contaminates you with magical energy.
+
+You must know the inner workings of a spell to be able to extend it.
 %%%%
 Exploding Ammunition
 
