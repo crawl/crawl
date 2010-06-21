@@ -6218,7 +6218,7 @@ bool player::sicken(int amount)
     return (true);
 }
 
-bool player::can_see_invisible(bool calc_unid) const
+bool player::can_see_invisible(bool calc_unid, bool transient) const
 {
     int si = 0;
 
@@ -6238,7 +6238,7 @@ bool player::can_see_invisible(bool calc_unid) const
         si++;
 
     //jmf: added see_invisible spell
-    if (duration[DUR_SEE_INVISIBLE] > 0)
+    if (transient && duration[DUR_SEE_INVISIBLE] > 0)
         si++;
 
     // randart wpns
