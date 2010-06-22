@@ -2645,13 +2645,17 @@ void world_reacts()
 
     _decrement_durations();
 
+    int capped_time = you.time_taken;
+    if (you.walking && capped_time > BASELINE_DELAY)
+        capped_time = BASELINE_DELAY;
+
     int food_use = player_hunger_rate();
-    food_use = div_rand_round(food_use * you.time_taken, BASELINE_DELAY);
+    food_use = div_rand_round(food_use * capped_time, BASELINE_DELAY);
 
     if (food_use > 0 && you.hunger >= 40)
         make_hungry(food_use, true);
 
-    _regenerate_hp_and_mp(you.time_taken);
+    _regenerate_hp_and_mp(capped_time);
 
     // If you're wielding a rod, it'll gradually recharge.
     recharge_rods(you.time_taken, false);
