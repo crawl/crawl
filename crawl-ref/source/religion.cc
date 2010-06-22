@@ -3926,33 +3926,24 @@ int get_monster_tension(monster_iterator mons, god_type god)
     return exper;
 }
 
-int get_tension(god_type god, bool count_travelling)
+int get_tension(god_type god)
 {
     int total = 0;
 
     bool nearby_monster = false;
-    for (monster_iterator mons; mons; ++mons)
+    for (radius_iterator ri(you.pos(), radius); ri; ri++)
     {
-        // Is the monster trying to get somewhere nearby?
-        coord_def    target;
-        unsigned int travel_size = mons->travel_path.size();
+        monsters* mon = monster_at(*ri);
 
-        if (travel_size > 0)
-            target = mons->travel_path[travel_size - 1];
-        else
-            target = mons->target;
+        if(mon && you.can_see(*mon))
+        {
+            int exper = get_monster_tension(*mon, god);
 
-        // Monster is neither nearby nor trying to get near us.
-        if (!in_bounds(target) || !you.see_cell(target) || travel_size > 3)
-            continue;
+            if (!mon->wont_attack())
+                nearby_monster = true;
 
-        int exper = get_monster_tension(mons, god);
-
-        // Monster is nearby.
-        if (!nearby_monster && !mons->wont_attack())
-            nearby_monster = true;
-
-        total += exper;
+            total += exper;
+        }
     }
 
     // At least one monster has to be nearby, for tension to count.
