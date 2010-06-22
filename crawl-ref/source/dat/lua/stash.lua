@@ -15,7 +15,7 @@
 -- {stick} for items suitable for "sticks to snakes"
 -- {fruit} for fruit
 --
--- You can optionally disable annotate items with the item class name 
+-- You can optionally disable annotate items with the item class name
 -- (such as "weapon" for weapons) by setting
 --   annotate_item_class = false
 -- in your init.txt.

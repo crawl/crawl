@@ -18,7 +18,7 @@
 -- parameters, can be used to achieve different effects.
 --
 -- Fog machines can be "chained" together (activated at the same time) by using
--- the convenience function "chained_fog_machine" with the normal paramaters 
+-- the convenience function "chained_fog_machine" with the normal paramaters
 -- which are accepted by "fog_machine".
 --
 -- Marker parameters:

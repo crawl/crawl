@@ -17,8 +17,8 @@ _wrap_etags()
     rm $tmp
 }
 
-names () 
-{ 
+names ()
+{
     b=$(basename $1 .h);
     {
         _wrap_etags $1 \
@@ -33,8 +33,8 @@ names ()
 }
 
 # lists possible uses in $2 of names defined in $1
-mightuse () 
-{ 
+mightuse ()
+{
     for n in $(names $1);
     do
         if grep -F $n $2; then
@@ -45,8 +45,8 @@ mightuse ()
 }
 
 # checks whether source file $2 #include's $1
-includes () 
-{ 
+includes ()
+{
     grep '#include "'$1'"' $2
 }
 

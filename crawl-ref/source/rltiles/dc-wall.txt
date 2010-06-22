@@ -1,4 +1,4 @@
-%name wall 
+%name wall
 %prefix TILE
 %startvalue TILE_FLOOR_MAX tiledef-floor.h
 

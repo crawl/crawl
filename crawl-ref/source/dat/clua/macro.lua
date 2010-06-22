@@ -34,6 +34,6 @@ function c_macro(fn)
       return false
    end
    c_macro_name = fn
-   c_macro_coroutine = coroutine.create(_G[fn]) 
-   return c_macro() 
+   c_macro_coroutine = coroutine.create(_G[fn])
+   return c_macro()
 end

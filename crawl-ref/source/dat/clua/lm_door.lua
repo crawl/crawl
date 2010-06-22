@@ -35,7 +35,7 @@ function RestrictDoor:read(marker, th)
 
   self.props          = lmark.unmarshall_table(th)
 
-  setmetatable(self, RestrictDoor) 
+  setmetatable(self, RestrictDoor)
 
   return self
 end

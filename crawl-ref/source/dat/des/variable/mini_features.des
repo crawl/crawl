@@ -80,14 +80,14 @@ WEIGHT: 7
 SUBST:  F = G:100 F:1
 KMONS:  F = orange crystal statue / silver statue / ice statue
 MAP
-  xxxxxxx 
+  xxxxxxx
 xxxcccccx
 ...G...G@
 .G.F.G.G.
 .G.G.F.G.
 @G...G...
 xcccccxxx
-xxxxxxx 
+xxxxxxx
 ENDMAP
 
 NAME:   small_statue_alley_b
@@ -413,7 +413,7 @@ wwxdxwwxcxww
 ENDMAP
 
 ####################################################################
-# 
+#
 # Supply closet vaults (vaults with items and no risk).
 #
 ####################################################################
@@ -748,7 +748,7 @@ ENDMAP
 # Fog generator vaults. Most of these are very dangerous. But no monsters.
 #
 # Many of these vaults rely on status to halt autoexplore. If a dangerous
-# fog has been spotted by the player, autoexclusions will be placed. Note 
+# fog has been spotted by the player, autoexclusions will be placed. Note
 # that you may use some of these vaults to kill monsters, but there's some
 # risk involved and you won't get experience.
 #

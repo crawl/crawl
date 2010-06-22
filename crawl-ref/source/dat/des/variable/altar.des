@@ -962,10 +962,10 @@ ENDMAP
 
 ### Kikubaaqudgha overflow altars #############################################
 
-# This vault contains a caged human who is killed with miasma once you see it 
+# This vault contains a caged human who is killed with miasma once you see it
 # and then is turned into a zombie.
 #
-# The show's end is not clear: the chance for getting a corpse (and then a 
+# The show's end is not clear: the chance for getting a corpse (and then a
 # zombie) is 50%. Very rarely, the human survives -- this is also okay. All of
 # these shows still point out how Kikubaaqudgha enjoys suffering.
 NAME:   tgw_kikubaaqudgha
@@ -995,13 +995,13 @@ function kill_human (data, triggerable, triggerer, marker, ev)
       return
     end
         dgn.place_cloud(_x, _y, "foul pestilence", 4)
-        crawl.god_speaks("Kikubaaqudgha", 
+        crawl.god_speaks("Kikubaaqudgha",
                          "Miasma emanates from the human's flesh.")
     data.triggered = true
   end
 end
 
-local tm = TriggerableFunction:new{func=kill_human, repeated=true, 
+local tm = TriggerableFunction:new{func=kill_human, repeated=true,
                                    data={turns=you.turns(), tc=0, triggered=false} }
 tm:add_triggerer(DgnTriggerer:new{type="player_los"})
 lua_marker('_', tm)

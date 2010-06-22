@@ -130,7 +130,7 @@ lajatang2
 blowgun1 WPN_BLOWGUN
 blowgun2
 sling1 WPN_SLING
-sling2 
+sling2
 bow1 WPN_BOW
 bow2
 crossbow1 WPN_CROSSBOW
