@@ -27,9 +27,14 @@ wall/brick_dark-bnr1
 # torch (out)
 %weight 3
 wall/brick_dark-t0
-%weight 6
-# torch (lit, TODO animations)
+%weight 1
+# torches (lit)
 wall/brick_dark-t1
+%syn WALL_BRICK_TORCH_START
+wall/brick_dark-t2
+wall/brick_dark-t3
+wall/brick_dark-t4
+%syn WALL_BRICK_TORCH_END
 
 %weight 5
 wall/brick_brown0 WALL_NORMAL WALL_BRICK WALL_BRICK_BROWN
