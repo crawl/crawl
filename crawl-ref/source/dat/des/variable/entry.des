@@ -2576,20 +2576,19 @@ ENDMAP
 NAME:    onia_entry_handbag
 TAGS:    entry
 ORIENT:  float
-MONS:    w:30 rat / goblin / kobold
+MONS:    w:30 rat / ooze / small snake
 MONS:    giant bat / w:6 small snake / w:2 snake / w:2 jackal / w:4 giant cockroach
-SUBST:   ! = $ %:30
-SUBST:   ? = .:20 ~
-SHUFFLE: ({[<
+SUBST:   ! = $%%% , ? = ..~
+SHUFFLE: {[, [<(
 MAP
-................
-.xx..xx1x{x..xx.
+.......@........
+.xx..xx>x{x..xx.
 .....xxxxxx.....
 .xx1xx2?2?xx1xx.
 .(xx=2?!!2?=xx<.
 .xx1xx2?2?xx1xx.
 .....xxxxxx.....
-.xx..x[x1xx..xx.
+.xx..x[x>xx..xx.
 .......@........
 ENDMAP
 
@@ -3864,8 +3863,8 @@ NAME:    dpeg_cavernosity
 TAGS:    entry no_monster_gen no_rotate
 ORIENT:  float
 MONS:    fungus
-SHUFFLE: {[(, b:xxxbcv, UVW, XYZ
-SUBST:   '=.x, U==, V=x, W=x, X==, Y=x, Z=x
+SHUFFLE: {[(, UVW, XYZ
+SUBST:   '=.x, U==, V=x, W=x, X==, Y=x, Z=x, b:xxxbcv
 RTILE:   x = wall_vines
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
