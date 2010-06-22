@@ -4079,7 +4079,7 @@ void xom_death_message(const kill_method_type killed_by)
     if (you.religion != GOD_XOM && (!you.worshipped[GOD_XOM] || coinflip()))
         return;
 
-    const int death_tension = get_tension(GOD_XOM, false);
+    const int death_tension = get_tension(GOD_XOM);
 
     // "Normal" deaths with only down to -2 hp and comparatively low tension
     // are considered particularly boring.
@@ -4172,7 +4172,7 @@ bool xom_saves_your_life(const int dam, const int death_source,
         return (false);
 
     // In addition, the chance depends on the current tension and Xom's mood.
-    const int death_tension = get_tension(GOD_XOM, false);
+    const int death_tension = get_tension(GOD_XOM);
     if (death_tension < random2(5) || !xom_is_nice(death_tension))
         return (false);
 
