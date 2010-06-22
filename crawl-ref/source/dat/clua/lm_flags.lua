@@ -18,7 +18,7 @@
 --       to have its conditions met will cause the flags to change.
 --       This is useful if, for example, there are two magical fountains,
 --       and you only want the flags to change when both dry up.
---       
+--
 -- * msg: A message to give the user when the flags are changed; suppress
 --       any messages Crawl would normally give for the changes effected.
 --       The message is not given if nothing is changed (i.e., if all
@@ -118,7 +118,7 @@ function ChangeFlags:on_trigger(triggerer, marker, ev)
 
     return true, true
   end
-  
+
   return true, false
 end
 
@@ -139,7 +139,7 @@ function ChangeFlags:read(marker, th)
   self.msg          = file.unmarshall_string(th)
   self.props        = lmark.unmarshall_table(th)
 
-  setmetatable(self, ChangeFlags) 
+  setmetatable(self, ChangeFlags)
 
   return self
 end

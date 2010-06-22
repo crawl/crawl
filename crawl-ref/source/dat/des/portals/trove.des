@@ -17,7 +17,7 @@
 #    you have the money, you will just buy access to the trove. Therefore, we
 #    should remove the buying option.
 # b) It is a bug that troves hand out incredible sums of money (when they
-#    give money). 
+#    give money).
 # c) Paying a small sum upfront (thematically, to "lock" the trove) is just
 #    meant to get players emotionally invested into fulfilling the second
 #    trove condition. This may not have been my best idea -- here's another
@@ -26,13 +26,13 @@
 #    scrolls" type quests (i.e. where you have to collect some number of a
 #    common, useful item): you just ask for one or two scrolls of identify.
 #    We can also make it so that the player can take some time for the first
-#    payment -- but the longer it takes, the more the trove wants. (And the 
-#    trove will vanish if the total cost exceeds some threshold.) 
+#    payment -- but the longer it takes, the more the trove wants. (And the
+#    trove will vanish if the total cost exceeds some threshold.)
 #    For quests like "one  potion of acquirement" (where you have to part with
 #    very few, very good items), the trove would ask for items of the same
 #    type (scrolls, potions, wands) of sufficient worth: we wouldn't even need
 #    to tell the player the exact value.
-#    And for money demands (usually in the form of "bring me [shop randart]", 
+#    And for money demands (usually in the form of "bring me [shop randart]",
 #    the trove would ask for a sum of money.
 #
 ##############################################################################
@@ -180,8 +180,8 @@ function trove.get_trove_item(e, value, base_item)
        {scroll="enchant weapon I",   quantity=3+d(3)+d(2)},     --  3%
        {scroll="enchant weapon II",  quantity=3+d(3)+d(2)},     --  3%
        {scroll="enchant armour",     quantity=3+d(3)+d(2)},     --  3%
-       {scroll="enchant weapon III", quantity=d(2), weight=1},  --  1%, single  
-       {scroll="vorpalize weapon",   quantity=d(2), weight=1},  --  1%, single 
+       {scroll="enchant weapon III", quantity=d(2), weight=1},  --  1%, single
+       {scroll="vorpalize weapon",   quantity=d(2), weight=1},  --  1%, single
        {scroll="acquirement",        quantity=d(2), weight=1} } --  1%, single
 
   if not crawl.one_chance_in(3) then

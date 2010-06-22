@@ -1381,7 +1381,7 @@ bool is_valid_shaft_level(const level_id &place)
     if (place.level_type != LEVEL_DUNGEON)
         return (false);
 
-    // Shafts are now allowed on the first two levels, as they have a 
+    // Shafts are now allowed on the first two levels, as they have a
     // good chance of being detected. You'll also fall less deep.
     /* if (place == BRANCH_MAIN_DUNGEON && you.absdepth0 < 2)
         return (false); */

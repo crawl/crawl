@@ -172,7 +172,7 @@ SUBST:   _ = F 6 ~:30 .:30
 SUBST:   T = ~ .
 SUBST:   t = ~ .:50
 SUBST:   ' = ~ ':200
-SUBST:   ' = 5 .:100  
+SUBST:   ' = 5 .:100
 SUBST:   2 = 2 1:2 .
 SUBST:   1 = 1 2:3 .
 SUBST:   3 = 3., 4 = 4., 5 = 5.
@@ -277,7 +277,7 @@ SUBST:   ' = 1:5 2:5 3:1 .:89
 SUBST:   " = ~ ":50
 SUBST:   " = 2:3 3:1 .:96
 #
-# Number of ' symbols is 211+3=214, hence statistically in the lower 
+# Number of ' symbols is 211+3=214, hence statistically in the lower
 # circumference we'll have 10.7 mummies, another 10.7 guardian mummies
 # and 2.1 mummy priests.
 # Number of " symbols is 205+3=208, hence the upper circumference
