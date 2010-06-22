@@ -3931,13 +3931,13 @@ int get_tension(god_type god)
     int total = 0;
 
     bool nearby_monster = false;
-    for (radius_iterator ri(you.pos(), radius); ri; ri++)
+    for (radius_iterator ri(you.get_los()); ri; ri++)
     {
-        monsters* mon = monster_at(*ri);
+        const monsters *mon = monster_at(*ri);
 
-        if(mon && you.can_see(*mon))
+        if(mon && you.can_see(mon))
         {
-            int exper = get_monster_tension(*mon, god);
+            int exper = get_monster_tension(mon, god);
 
             if (!mon->wont_attack())
                 nearby_monster = true;
