@@ -636,7 +636,7 @@ public:
     ~xom_abyss_feature_amusement_check()
     {
         // Update known terrain
-        viewwindow(false);
+        viewwindow();
 
         const int exit_is_near = abyss_exit_nearness();
         const int rune_is_near = abyss_rune_nearness();

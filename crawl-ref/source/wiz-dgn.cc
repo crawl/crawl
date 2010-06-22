@@ -219,7 +219,8 @@ static void _wizard_go_to_level(const level_pos &pos)
     if (!crawl_state.test)
         save_game_state();
     new_level();
-    viewwindow(true);
+    seen_monsters_react();
+    viewwindow();
 
     // Tell stash-tracker and travel that we've changed levels.
     trackers_init_new_level(true);
@@ -675,7 +676,7 @@ static void _debug_kill_traps()
 
 static int _debug_time_explore()
 {
-    viewwindow(false);
+    viewwindow();
     start_explore(false);
 
     unwind_var<int> es(Options.explore_stop, 0);

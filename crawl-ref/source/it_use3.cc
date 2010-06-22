@@ -589,7 +589,7 @@ void tome_of_power(int slot)
     }
     else
     {
-        viewwindow(false);
+        viewwindow();
 
         int temp_rand = random2(23) + random2(you.skills[SK_EVOCATIONS] / 3);
 

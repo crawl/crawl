@@ -1367,7 +1367,7 @@ void end_game(scorefile_entry &se)
         }
 
         flush_prev_message();
-        viewwindow(false); // don't do for leaving/winning characters
+        viewwindow(); // don't do for leaving/winning characters
 
         if (Hints.hints_left)
             hints_death_screen();

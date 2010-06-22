@@ -1451,7 +1451,7 @@ void _handle_teleport_update (bool large_change, bool check_ring_TC,
 {
     if (large_change)
     {
-        viewwindow(false, true);
+        viewwindow();
         for (monster_iterator mi; mi; ++mi)
         {
             const bool see_cell = you.see_cell(mi->pos());
@@ -1509,7 +1509,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
     // Update what we can see at the current location as well as its stash,
     // in case something happened in the exact turn that we teleported
     // (like picking up/dropping an item).
-    viewwindow(false, true);
+    viewwindow();
     StashTrack.update_stash(you.pos());
 
     if (you.duration[DUR_CONDENSATION_SHIELD] > 0)

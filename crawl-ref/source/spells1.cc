@@ -292,7 +292,7 @@ bool cast_fire_storm(int pow, bolt &beam)
 
     beam.explode(false);
 
-    viewwindow(false);
+    viewwindow();
     return (true);
 }
 

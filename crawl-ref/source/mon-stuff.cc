@@ -1080,7 +1080,7 @@ static bool _spore_goes_pop(monsters *monster, killer_type killer,
     if (you.can_see(monster))
     {
         saw = true;
-        viewwindow(false);
+        viewwindow();
         if (is_sanctuary(monster->pos()))
             mpr(sanct_msg, MSGCH_GOD);
         else
@@ -1103,7 +1103,7 @@ static bool _spore_goes_pop(monsters *monster, killer_type killer,
     // Exploding kills the monster a bit earlier than normal.
     monster->hit_points = -16;
     if (saw)
-        viewwindow(false);
+        viewwindow();
 
     // FIXME: show_more == mons_near(monster)
     beam.explode();

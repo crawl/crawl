@@ -326,7 +326,7 @@ static void _hell_spawn_random_monsters()
         mg.proximity = (one_chance_in(10) ? PROX_NEAR_STAIRS
                                           : PROX_AWAY_FROM_PLAYER);
         mons_place(mg);
-        viewwindow(false);
+        viewwindow();
     }
 }
 
@@ -387,7 +387,7 @@ void spawn_random_monsters()
         mg.proximity = prox;
         mg.foe = (you.char_direction == GDT_ASCENDING) ? MHITYOU : MHITNOT;
         mons_place(mg);
-        viewwindow(false);
+        viewwindow();
         return;
     }
 
@@ -400,7 +400,7 @@ void spawn_random_monsters()
         && (you.religion != GOD_CHEIBRIADOS || coinflip()))
     {
         mons_place(mgen_data(WANDERING_MONSTER));
-        viewwindow(false);
+        viewwindow();
         return;
     }
 
@@ -408,7 +408,7 @@ void spawn_random_monsters()
     if (you.level_type == LEVEL_PANDEMONIUM && x_chance_in_y(5, rate))
     {
         pandemonium_mons();
-        viewwindow(false);
+        viewwindow();
         return;
     }
 
@@ -417,7 +417,7 @@ void spawn_random_monsters()
     if (you.level_type == LEVEL_PORTAL_VAULT && x_chance_in_y(5, rate))
     {
         mons_place(mgen_data(WANDERING_MONSTER));
-        viewwindow(false);
+        viewwindow();
     }
 
     // No random monsters in the Labyrinth.
@@ -1222,7 +1222,7 @@ int place_monster(mgen_data mg, bool force_pos)
 
         // Special case: must update the view for monsters created
         // in player LOS.
-        viewwindow(false);
+        viewwindow();
     }
 
     // Now, forget about banding if the first placement failed, or there are

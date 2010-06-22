@@ -2997,7 +2997,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     {
         // Fire beam in reverse.
         pbolt.setup_retrace();
-        viewwindow(false);
+        viewwindow();
         pbolt.fire();
 
         msg::stream << item.name(DESC_CAP_THE) << " returns to your pack!"

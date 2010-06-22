@@ -1970,7 +1970,7 @@ void reveal_secret_door(const coord_def& p)
     // until opened.
     grd(p) = feat_is_opaque(door) ? DNGN_DETECTED_SECRET_DOOR
                                   : DNGN_OPEN_DOOR;
-    viewwindow(false);
+    viewwindow();
     learned_something_new(HINT_FOUND_SECRET_DOOR, p);
 
     // If a transparent secret door was forced open to preserve LOS,

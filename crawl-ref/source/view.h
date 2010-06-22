@@ -15,6 +15,7 @@ void init_monsters_seens();
 
 bool mons_near(const monsters *monster);
 bool mon_enemies_around(const monsters *monster);
+void seen_monsters_react();
 
 void find_features(const std::vector<coord_def>& features,
         unsigned char feature, std::vector<coord_def> *found);
@@ -41,7 +42,7 @@ void flash_monster_colour(const monsters *mon, unsigned char fmc_colour,
                           int fmc_delay);
 #endif
 
-void viewwindow(bool monster_updates, bool show_updates = true);
+void viewwindow(bool show_updates = true);
 void update_monsters_in_view();
 void handle_seen_interrupt(monsters* monster);
 void flush_comes_into_view();

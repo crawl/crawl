@@ -316,7 +316,13 @@ LUAFN(debug_check_uniques)
 
 LUAFN(debug_viewwindow)
 {
-    viewwindow(lua_toboolean(ls, 1), lua_toboolean(ls, 2));
+    viewwindow(lua_toboolean(ls, 1));
+    return (0);
+}
+
+LUAFN(debug_seen_monsters_react)
+{
+    seen_monsters_react();
     return (0);
 }
 
@@ -342,5 +348,6 @@ const struct luaL_reg debug_dlib[] =
 { "reset_uniques", debug_reset_uniques },
 { "check_uniques", debug_check_uniques },
 { "viewwindow", debug_viewwindow },
+{ "seen_monsters_react", debug_seen_monsters_react },
 { NULL, NULL }
 };
