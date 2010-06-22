@@ -80,7 +80,8 @@ end
 default-depth: D:3-6
 
 NAME:   portal_sewer_entry_a
-TAGS:   uniq_sewer no_monster_gen mini_float
+TAGS:   uniq_sewer no_monster_gen mini_float chance_sewer
+CHANCE: 8%
 : sewer_portal(_G)
 COLOUR: W = green / cyan w:5
 SUBST:  1 = 11234444444444
@@ -101,7 +102,8 @@ MAP
 ENDMAP
 
 NAME:   portal_sewer_entry_b
-TAGS:   uniq_sewer no_monster_gen
+TAGS:   uniq_sewer no_monster_gen chance_sewer
+CHANCE: 8%
 ORIENT: float
 : sewer_portal(_G)
 SUBST:  '=W. , W=WW1
@@ -119,7 +121,8 @@ xW'...
 ENDMAP
 
 NAME:   portal_sewer_entry_c
-TAGS:   uniq_sewer no_monster_gen
+TAGS:   uniq_sewer no_monster_gen chance_sewer
+CHANCE: 8%
 WEIGHT: 4
 : sewer_portal(_G)
 NSUBST: c = 2:= / 2:n / *:c
@@ -141,7 +144,8 @@ MAP
 ENDMAP
 
 NAME:   portal_sewer_entry_d
-TAGS:   uniq_sewer no_monster_gen
+TAGS:   uniq_sewer no_monster_gen chance_sewer
+CHANCE: 8%
 : sewer_portal(_G)
 KMONS:  1 = big fish
 KFEAT:  1 = W
