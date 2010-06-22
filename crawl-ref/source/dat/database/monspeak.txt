@@ -3738,6 +3738,42 @@ VISUAL:@The_monster@'s eyestalks wobble, almost dislodging @possessive@ wizard h
 
 @The_monster@ gurgles, "I bet you'll be tasty."
 %%%%
+############ GRINDER ### An inefficient ex-torturer
+Grinder
+
+@_Grinder_common_@
+
+w:2
+@_Grinder_rare_@
+%%%%
+_Grinder_common_
+
+VISUAL:@The_monster@ grins, showing sharp teeth.
+
+@The_monster@ says, "You look like you could use a good racking."
+
+@The_monster@ says, "I used to sell toe-nails on the black market."
+
+@The_monster@ says, "There's only one good use for a tongue: cutting it out."
+
+@The_monster@ says, "Mostly I couldn't keep them alive."
+
+@The_monster@ says, "DUCK!"
+
+@The_monster@ says, "FISH!"
+
+@The_monster@ says, "Tell me all your secrets, or I'll kill you."
+%%%%
+_Grinder_rare_
+
+@The_monster@ says, "Are you a fish?"
+
+@The_monster@ says, "What is the universe for?"
+
+@The_monster@ says, "My boss said I was rubbish. His entrails said otherwise."
+
+VISUAL:@The_monster@ rolls his eyes.
+%%%%
 ############ GRUM ### A war dog-breeding gnoll
 Grum
 

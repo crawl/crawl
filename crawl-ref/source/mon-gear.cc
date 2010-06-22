@@ -344,6 +344,18 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         item.sub_type       = WPN_QUARTERSTAFF;
         break;
 
+    case MONS_GRINDER:
+        force_item = true; // guaranteed pain
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = random_choose_weighted(
+                30, WPN_CLUB,       20, WPN_HAMMER,
+                5, WPN_DAGGER,      5, WPN_WHIP,
+                0);
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_PAIN);
+
+        break;
+
+
     case MONS_ORC:
     case MONS_ORC_PRIEST:
         item_race = MAKE_ITEM_ORCISH;
