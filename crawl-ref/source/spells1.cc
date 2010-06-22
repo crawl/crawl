@@ -1224,8 +1224,11 @@ void extension(int pow)
     if (you.duration[DUR_REPEL_MISSILES] && _know_spell(SPELL_REPEL_MISSILES))
         missile_prot(pow);
 
-    if (you.duration[DUR_REGENERATION] && _know_spell(SPELL_REGENERATION))
+    if (you.duration[DUR_REGENERATION] && _know_spell(SPELL_REGENERATION)
+        && you.attribute[ATTR_TRANSFORMATION] != TRAN_LICH)
+    {
         cast_regen(pow);
+    }
 
     if (you.duration[DUR_DEFLECT_MISSILES]
         && _know_spell(SPELL_DEFLECT_MISSILES))
