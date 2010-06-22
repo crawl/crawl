@@ -758,7 +758,6 @@ ENDMAP
 # Oh worms!
 NAME:   wormcave
 PLACE:  Lair:$
-WEIGHT: 500
 TAGS:   no_pool_fixup no_wall_fixup no_monster_gen no_rotate no_item_gen
 ORIENT: southeast
 MONS:   plant
