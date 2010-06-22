@@ -1029,6 +1029,7 @@ static void _input()
     religion_turn_start();
     god_conduct_turn_start();
     you.update_beholders();
+    you.walking = 0;
 
     // Currently only set if Xom accidentally kills the player.
     you.reset_escaped_death();
@@ -3528,6 +3529,7 @@ static void _move_player(coord_def move)
         const coord_def& new_targ = you.pos() + move;
         if (!in_bounds(new_targ) || !you.can_pass_through(new_targ))
         {
+            you.walking = move.abs();
             you.turn_is_over = true;
             mpr("Ouch!");
             apply_berserk_penalty = true;
@@ -3638,6 +3640,7 @@ static void _move_player(coord_def move)
 
         move_player_to_grid(targ, true, false);
 
+        you.walking = move.abs();
         you.prev_move = move;
         move.reset();
         you.turn_is_over = true;

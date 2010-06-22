@@ -276,6 +276,10 @@ public:
   // When other levels are loaded (e.g. viewing), is the player on this level?
   bool on_current_level;
 
+  // Did you spent this turn walking (/flying)?
+  // 0 = no, 1 = cardinal move, 2 = diagonal move
+  int walking;
+
   // monsters mesmerising player; should be proteced, but needs to be saved
   // and restored.
   std::vector<int> beholders;
