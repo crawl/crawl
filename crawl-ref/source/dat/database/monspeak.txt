@@ -3006,7 +3006,7 @@ _generic_Donald_
 
 @The_monster@ says, "I hope I haven't come all this way for a glorified paperweight."
 
-@The_monster@ says, "I don't got what's so special about the number twenty-seven."
+@The_monster@ says, "I don't get what's so special about the number twenty-seven."
 
 @The_monster@ says, "The other people here are really rude."
 
