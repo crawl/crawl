@@ -5166,6 +5166,7 @@ void player::init()
     reset_escaped_death();
 
     on_current_level = true;
+    walking = 0;
 
 #if defined(WIZARD) || defined(DEBUG)
     you.never_die = false;
