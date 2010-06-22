@@ -4550,11 +4550,11 @@ item_spec item_list::parse_single_spec(std::string s)
         // it will be assigned among appropriate ones later
     }
     else if (result.base_type == OBJ_WEAPONS
-                && !is_weapon_brand_ok(result.sub_type, ego)
+                && !is_weapon_brand_ok(result.sub_type, ego, false)
              || result.base_type == OBJ_ARMOUR
-                && !is_armour_brand_ok(result.sub_type, ego)
+                && !is_armour_brand_ok(result.sub_type, ego, false)
              || result.base_type == OBJ_MISSILES
-                && !is_missile_brand_ok(result.sub_type, ego))
+                && !is_missile_brand_ok(result.sub_type, ego, false))
     {
         error = make_stringf("Ego '%s' is incompatible with item '%s'.",
                              ego_str.c_str(), s.c_str());
