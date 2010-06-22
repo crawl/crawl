@@ -1425,7 +1425,7 @@ static bool _mons_throw(monsters *monster, struct bolt &pbolt, int msl)
 
     // Redraw the screen before firing, in case the monster just
     // came into view and the screen hasn't been updated yet.
-    viewwindow(false);
+    viewwindow();
     pbolt.fire();
 
     // The item can be destroyed before returning.
@@ -1438,7 +1438,7 @@ static bool _mons_throw(monsters *monster, struct bolt &pbolt, int msl)
     {
         // Fire beam in reverse.
         pbolt.setup_retrace();
-        viewwindow(false);
+        viewwindow();
         pbolt.fire();
         msg::stream << "The weapon returns "
                     << (you.can_see(monster)?
@@ -2637,7 +2637,7 @@ static void _mons_open_door(monsters* monster, const coord_def &pos)
 
     if (was_seen)
     {
-        viewwindow(false);
+        viewwindow();
 
         if (was_secret)
         {
@@ -3092,7 +3092,7 @@ static bool _do_move_monster(monsters *monster, const coord_def& delta)
 
         if (you.see_cell(f))
         {
-            viewwindow(false);
+            viewwindow();
 
             if (!you.can_see(monster))
             {

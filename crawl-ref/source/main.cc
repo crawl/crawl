@@ -286,7 +286,7 @@ int main(int argc, char *argv[])
     env.markers.activate_all();
 
 #ifdef USE_TILE
-    viewwindow(false);
+    viewwindow();
 #endif
 
     if (game_start && you.char_class == JOB_WANDERER)
@@ -1877,7 +1877,7 @@ static void _prep_input()
     set_redraw_status(REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK);
     print_stats();
 
-    viewwindow(false, true);
+    viewwindow();
     maybe_update_stashes();
 }
 
@@ -2661,7 +2661,7 @@ void world_reacts()
     recharge_rods(you.time_taken, false);
 
     // Player stealth check.
-    viewwindow(true);
+    seen_monsters_react();
 
     handle_monsters();
 
@@ -2698,7 +2698,7 @@ void world_reacts()
 
     handle_starvation();
 
-    viewwindow(false);
+    viewwindow();
 
     if (you.cannot_act() && any_messages()
         && crawl_state.repeat_cmd != CMD_WIZARD)

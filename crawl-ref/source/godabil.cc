@@ -1744,7 +1744,7 @@ bool fedhas_plant_ring_from_fruit()
 
     // Screwing around with display code I don't really understand. -cao
     crawl_state.darken_range = 1;
-    viewwindow(false, false);
+    viewwindow(false);
 
     for (int i = 0; i < max_use; ++i)
     {
@@ -1764,7 +1764,7 @@ bool fedhas_plant_ring_from_fruit()
     {
         // User canceled at the prompt.
         crawl_state.darken_range = -1;
-        viewwindow(false, false);
+        viewwindow(false);
         return (false);
     }
 
@@ -1801,7 +1801,7 @@ bool fedhas_plant_ring_from_fruit()
         tiles.clear_overlays();
         for (int j = i + 1; j < target_count; ++j)
             tiles.add_overlay(adjacent[j], TILE_INDICATOR + j);
-        viewwindow(false, false);
+        viewwindow(false);
 #endif
         delay(200);
     }
@@ -1809,7 +1809,7 @@ bool fedhas_plant_ring_from_fruit()
     _decrease_amount(collected_fruit, created_count);
 
     crawl_state.darken_range = -1;
-    viewwindow(false, false);
+    viewwindow(false);
 
     return (created_count);
 }
@@ -1949,7 +1949,7 @@ int fedhas_corpse_spores(beh_type behavior, bool interactive)
         return (count);
 
     crawl_state.darken_range = 0;
-    viewwindow(false, false);
+    viewwindow(false);
     for (unsigned i = 0; i < positions.size(); ++i)
     {
 #ifndef USE_TILE
@@ -1971,7 +1971,7 @@ int fedhas_corpse_spores(beh_type behavior, bool interactive)
                                  true, 'y') <= 0)
     {
         crawl_state.darken_range = -1;
-        viewwindow(false, false);
+        viewwindow(false);
         return (-1);
     }
 
@@ -2004,7 +2004,7 @@ int fedhas_corpse_spores(beh_type behavior, bool interactive)
     }
 
     crawl_state.darken_range = -1;
-    viewwindow(false, false);
+    viewwindow(false);
 
     return (count);
 }

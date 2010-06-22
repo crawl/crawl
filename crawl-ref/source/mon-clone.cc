@@ -341,7 +341,7 @@ int clone_mons(const monsters* orig, bool quiet, bool* obvious,
     if (you.can_see(mons))
     {
         handle_seen_interrupt(mons);
-        viewwindow(false);
+        viewwindow();
     }
 
     if (crawl_state.game_is_arena())

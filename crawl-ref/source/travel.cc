@@ -3901,7 +3901,7 @@ void runrest::stop()
 #endif
 
     if (need_redraw)
-        viewwindow(false, true);
+        viewwindow();
 
     _reset_zigzag_info();
 }

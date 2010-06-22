@@ -162,7 +162,7 @@ static bool _check_moveto_trap(const coord_def& p)
             if (trap_def* ptrap = find_trap(p))
                 ptrap->reveal();
 
-            viewwindow(false);
+            viewwindow();
 
             mprf(MSGCH_WARN,
                  "Wait a moment, %s! Do you really want to step there?",
@@ -348,7 +348,7 @@ void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift)
 
     // Move the player to new location.
     you.moveto(p);
-    viewwindow(false);
+    viewwindow();
 
     moveto_location_effects(old_grid, stepped, allow_shift, old_pos);
 }

@@ -643,10 +643,10 @@ bool cast_a_spell(bool check_range, spell_type spell)
         if (Options.darken_beyond_range)
         {
             crawl_state.darken_range = calc_spell_range(spell);
-            viewwindow(false, false);
+            viewwindow(false);
             delay(50);
             crawl_state.darken_range = -1;
-            viewwindow(false, false);
+            viewwindow(false);
         }
         return (false);
     }

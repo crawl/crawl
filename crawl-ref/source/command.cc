@@ -1454,7 +1454,7 @@ static void _do_description(std::string key, std::string type,
 static bool _handle_FAQ()
 {
     clrscr();
-    viewwindow(false);
+    viewwindow();
 
     std::vector<std::string> question_keys = getAllFAQKeys();
     if (question_keys.empty())
@@ -1528,7 +1528,7 @@ static void _find_description(bool *again, std::string *error_inout)
     *again = true;
 
     clrscr();
-    viewwindow(false);
+    viewwindow();
 
     if (!error_inout->empty())
         mpr(error_inout->c_str(), MSGCH_PROMPT);
@@ -1868,7 +1868,7 @@ static void _keyhelp_query_descriptions()
     }
     while (again);
 
-    viewwindow(false);
+    viewwindow();
 }
 
 static int _keyhelp_keyfilter(int ch)

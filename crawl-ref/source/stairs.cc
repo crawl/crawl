@@ -658,7 +658,8 @@ void up_stairs(dungeon_feature_type force_stair,
 
     new_level();
 
-    viewwindow(true);
+    viewwindow();
+    seen_monsters_react();
 
     // Left Zot without enough runes to get back in (because they were
     // destroyed), but need to get back in Zot to get the Orb?
@@ -984,7 +985,7 @@ void down_stairs(dungeon_feature_type force_stair,
         mprf("You insert %s into the lock.",
              you.inv[runes[1]].name(DESC_NOCAP_THE).c_str());
         big_cloud(CLOUD_BLUE_SMOKE, KC_YOU, you.pos(), 20, 7 + random2(7));
-        viewwindow(false, true);
+        viewwindow();
         mpr("Heavy smoke blows from the lock!");
         more();
 
@@ -1314,7 +1315,7 @@ void down_stairs(dungeon_feature_type force_stair,
 
     trackers_init_new_level(true);
 
-    viewwindow(true);
+    viewwindow();
     maybe_update_stashes();
 
     if (collect_travel_data)

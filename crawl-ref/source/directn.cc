@@ -177,7 +177,7 @@ static void _wizard_make_friendly(monsters* m)
 
     // To update visual branding of friendlies. Only seems capabable
     // of adding bolding, not removing it, though.
-    viewwindow(false, true);
+    viewwindow();
 }
 #endif
 
@@ -934,7 +934,7 @@ range_view_annotator::range_view_annotator(int range)
     if (Options.darken_beyond_range && range >= 0)
     {
         crawl_state.darken_range = range;
-        viewwindow(false, false);
+        viewwindow(false);
     }
 }
 
@@ -943,7 +943,7 @@ range_view_annotator::~range_view_annotator()
     if (Options.darken_beyond_range && crawl_state.darken_range >= 0)
     {
         crawl_state.darken_range = -1;
-        viewwindow(false, false);
+        viewwindow(false);
     }
 }
 
@@ -1129,14 +1129,14 @@ void direction_chooser::draw_beam_if_needed()
     need_beam_redraw = false;
 
     // Clear the old beam if necessary.
-    viewwindow(false, false);
+    viewwindow(false);
 
     // If we don't have a new beam to show, we're done.
     if (!show_beam || !have_beam)
     {
 #ifdef USE_TILE
         // Clear the old beam if we're not drawing anything else.
-        viewwindow(false, true);
+        viewwindow();
 #endif
         return;
     }
@@ -1167,7 +1167,7 @@ void direction_chooser::draw_beam_if_needed()
     tile_place_ray(target(), in_range(ray.pos()));
 
     // In tiles, we need to refresh the window to get the beam drawn.
-    viewwindow(false, true);
+    viewwindow();
 #endif
 }
 
