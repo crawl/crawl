@@ -1407,6 +1407,17 @@
       }
     },
 
+    {  MST_GRINDER,
+      {
+       SPELL_PAIN,
+       SPELL_PARALYSE,
+       SPELL_BLINK,
+       SPELL_PAIN,
+       SPELL_BRAIN_FEED,
+       SPELL_BLINK
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,

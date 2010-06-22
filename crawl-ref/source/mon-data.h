@@ -5055,6 +5055,20 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_TINY
 },
 
+// numbers!
+
+{
+    MONS_GRINDER, '5', BLUE, "Grinder",
+    M_UNIQUE | M_SEE_INVIS | M_SPELLCASTER | M_SPEAKS,
+    MR_RES_POISON | mrd(MR_RES_COLD, 2),
+    0, 11, MONS_IMP, MONS_GRINDER, MH_DEMONIC, -3,
+    { {AT_HIT, AF_PLAIN, 11}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 6, 3, 5, 0 },
+    3, 11, MST_GRINDER, CE_NOCORPSE, Z_NOZOMBIE, S_SHOUT,
+    I_NORMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
+    MONUSE_STARTING_EQUIPMENT, MONEAT_NOTHING, SIZE_LITTLE
+},
+
 {
     // Roxanne obviously can't use items, but we want to equip her with
     // a spellbook, so MONUSE_STARTING_EQUIPMENT is necessary.
