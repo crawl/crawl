@@ -63,7 +63,7 @@ void place_cloud( cloud_type cl_type, const coord_def& ctarget,
 
 void manage_clouds(void);
 
-bool is_opaque_cloud(unsigned char cloud_idx);
+bool is_opaque_cloud(int cloud_idx);
 int steam_cloud_damage(const cloud_struct &cloud);
 int steam_cloud_damage(int decay);
 

@@ -216,6 +216,7 @@ public:
     int       get_experience_level() const;
     god_type  deity() const;
     bool      alive() const;
+    bool      defined() const { return alive(); }
     bool      swimming() const;
     bool      wants_submerge() const;
 

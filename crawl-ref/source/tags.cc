@@ -1935,6 +1935,15 @@ static void tag_read_game_state(reader &th)
     crawl_state.type = (game_type) unmarshallByte(th);
 }
 
+template <typename Z>
+static int _last_used_index(const Z &thinglist, int max_things)
+{
+    for (int i = max_things - 1; i >= 0; --i)
+        if (thinglist[i].defined())
+            return (i + 1);
+    return (0);
+}
+
 // ------------------------------- level tags ---------------------------- //
 
 static void tag_construct_level(writer &th)
@@ -1967,10 +1976,7 @@ static void tag_construct_level(writer &th)
     run_length_encode(th, marshallByte, env.grid_colours, GXM, GYM);
 
     // how many clouds?
-    int nc = 0;
-    for (int i = 0; i < MAX_CLOUDS; i++)
-        if (env.cloud[i].type != CLOUD_NONE)
-            nc = i + 1;
+    const int nc = _last_used_index(env.cloud, MAX_CLOUDS);
     marshallShort(th, nc);
     for (int i = 0; i < nc; i++)
     {
@@ -1989,11 +1995,8 @@ static void tag_construct_level(writer &th)
     }
 
     // how many shops?
-    int ns = 0;
-    for (int i = 0; i < MAX_SHOPS; i++)
-        if (env.shop[i].type != SHOP_UNASSIGNED)
-            ns = i + 1;
-    marshallByte(th, ns);
+    const int ns = _last_used_index(env.shop, MAX_SHOPS);
+    marshallShort(th, ns);
     for (int i = 0; i < ns; i++)
     {
         marshallByte(th, env.shop[i].type);
@@ -2120,10 +2123,7 @@ show_type unmarshallShowtype(reader &th)
 static void tag_construct_level_items(writer &th)
 {
     // how many traps?
-    int nt = 0;
-    for (int i = 0; i < MAX_TRAPS; ++i)
-        if (env.trap[i].active())
-            nt = i + 1;
+    const int nt = _last_used_index(env.trap, MAX_TRAPS);
     marshallShort(th, nt);
     for (int i = 0; i < nt; ++i)
     {
@@ -2135,10 +2135,7 @@ static void tag_construct_level_items(writer &th)
     }
 
     // how many items?
-    int ni = 0;
-    for (int i = 0; i < MAX_ITEMS; ++i)
-        if (mitm[i].defined())
-            ni = i + 1;
+    const int ni = _last_used_index(mitm, MAX_ITEMS);
     marshallShort(th, ni);
     for (int i = 0; i < ni; ++i)
         marshallItem(th, mitm[i]);
@@ -2232,10 +2229,7 @@ static void tag_construct_level_monsters(writer &th)
         marshallShort(th, env.mons_alloc[i]);
 
     // how many monsters?
-    int nm = 0;
-    for (int i = 0; i < MAX_MONSTERS; i++)
-        if (menv[i].type != MONS_NO_MONSTER)
-            nm = i + 1;
+    const int nm = _last_used_index(menv, MAX_MONSTERS);
     marshallShort(th, nm);
     // how many monster inventory slots?
     marshallByte(th, NUM_MONSTER_SLOTS);
@@ -2426,7 +2420,7 @@ static void tag_read_level( reader &th, char minorVersion )
         env.cloud[i].type = CLOUD_NONE;
 
     // how many shops?
-    const int num_shops = unmarshallByte(th);
+    const int num_shops = unmarshallShort(th);
     ASSERT(num_shops >= 0 && num_shops <= MAX_SHOPS);
     for (int i = 0; i < num_shops; i++)
     {
