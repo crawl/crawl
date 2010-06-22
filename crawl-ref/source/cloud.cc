@@ -536,7 +536,7 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
     }
 }
 
-bool is_opaque_cloud(unsigned char cloud_idx)
+bool is_opaque_cloud(int cloud_idx)
 {
     if (cloud_idx == EMPTY_CLOUD)
         return (false);

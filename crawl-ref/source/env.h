@@ -61,7 +61,7 @@ struct crawl_environment
 #endif
 
     FixedVector< cloud_struct, MAX_CLOUDS >  cloud; // cloud list
-    unsigned char cloud_no;
+    short cloud_no;
 
     FixedVector< shop_struct, MAX_SHOPS >    shop;  // shop list
     FixedVector< trap_def, MAX_TRAPS >       trap;  // trap list

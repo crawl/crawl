@@ -282,12 +282,13 @@ struct cloud_struct
     {
     }
 
+    bool defined() const { return type != CLOUD_NONE; }
+
     void set_whose(kill_category _whose);
     void set_killer(killer_type _killer);
 
     static kill_category killer_to_whose(killer_type killer);
     static killer_type   whose_to_killer(kill_category whose);
-
 };
 
 struct shop_struct
@@ -298,6 +299,8 @@ struct shop_struct
     unsigned char       level;
 
     FixedVector<unsigned char, 3> keeper_name;
+
+    bool defined() const { return type != SHOP_UNASSIGNED; }
 };
 
 
