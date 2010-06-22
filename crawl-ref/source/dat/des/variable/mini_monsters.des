@@ -426,7 +426,7 @@ ENDMAP
 # Not Minivault 9 (by Mu.)
 NAME:   not_minivault_9_mu
 TAGS:   allow_dup
-CHANCE: 1
+WEIGHT: 1
 DEPTH:  D:15-27, Elf, Vault
 MONS:   butterfly
 MARKER: X = lua: props_marker { connected_exclude="true" }
@@ -447,7 +447,7 @@ ENDMAP
 # Not Minivault 9 (or, elephant zoo)
 NAME:   not_minivault_9_due
 TAGS:   allow_dup
-CHANCE: 1
+WEIGHT: 1
 DEPTH:  D:20-27, Elf:4-7, Vault:4-8
 MONS:   elephant, dire elephant, hellephant
 MARKER: X = lua: props_marker { connected_exclude="true" }
