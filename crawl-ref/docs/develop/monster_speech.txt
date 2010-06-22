@@ -376,7 +376,7 @@ default friendly fleeing humanoid
 w:30
 VISUAL:@The_monster@ tries to hide somewhere.
 
-@The_monster@ @shouts@, "WAIT FOR ME, @player_name@!  Could you help me?"
+@The_monster@ @shouts@, "WAIT FOR ME, @player_name@! Could you help me?"
 
 ...
 
@@ -853,7 +853,7 @@ p   all ghosts, phantom, and shadow
 r   all rodents (rats of all colours, and quokka)
 s   arachnides (giant mite, giant centipede, scorpion, wolf spider,
                 redback, trapdoor spider)
-    also: giant cockroach
+    also: giant cockroach, demonic crawler
 t   (alligator) snapping turtle, crocodile, (baby) alligator
 u   (very) ugly thing
 v   all vortices, and insubstantial wisp
@@ -889,7 +889,7 @@ U   all bears
 V   all vampires
 W   all wraiths, wight, and spectral warrior/thing
 X   kraken, abomination, tentacled monstrosity, and Orb Guardian
-Y   all yaks, and sheep
+Y   all yaks, sheep and elephants
 Z   large zombie/skeleton/simulacrum
 
 Numbers:
@@ -899,8 +899,7 @@ Numbers:
 3   hellion, tormentor, blue/iron devil, neqoxec, ynoxinul,
     orange/shadow/smoke demon, chaos spawn, and demonic crawler
 4   red/rotting/hairy devil, sixfirhy, and hellwing
-5   all imps, and other minor demons (quasit, lemure, ufetubus, manes,
-                                      midge)
+5   all imps, and other minor demons (quasit, lemure, ufetubus, midge)
 8   all golems, and living statues
 9   all gargoyles
 
