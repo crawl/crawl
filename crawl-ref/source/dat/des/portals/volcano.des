@@ -437,7 +437,8 @@ MAP
 ENDMAP
 
 NAME:       enter_volcano_1
-TAGS:       uniq_volcano
+TAGS:       uniq_volcano chance_volcano
+CHANCE:     5%
 ORIENT:     float
 COLOUR:     X = red
 COLOUR:     S = red
@@ -453,7 +454,8 @@ xXXx.xx
 ENDMAP
 
 NAME:       enter_volcano_2
-TAGS:       uniq_volcano
+TAGS:       uniq_volcano chance_volcano
+CHANCE:     5%
 ORIENT:     float
 COLOUR:     X = red
 COLOUR:     S = red
@@ -469,7 +471,8 @@ xx.Sxx
 ENDMAP
 
 NAME:       enter_volcano_3
-TAGS:       uniq_volcano
+TAGS:       uniq_volcano chance_volcano
+CHANCE:     5%
 ORIENT:     float
 MONS:       patrolling fire drake
 #           His name is Robby.
@@ -490,7 +493,8 @@ ENDMAP
 
 # This is the "large" one. You might get a clear path, but then again...
 NAME:       enter_volcano_4
-TAGS:       uniq_volcano
+TAGS:       uniq_volcano chance_volcano
+CHANCE:     5%
 ORIENT:     float
 COLOUR:     X = red
 COLOUR:     S = red

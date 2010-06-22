@@ -148,7 +148,8 @@ default-depth: Vault:2-7, Crypt, D:22-27, Elf:5-7
 #
 # Todo: more, and better.
 NAME:       enter_wizlab_1
-TAGS:       uniq_wizlab
+TAGS:       uniq_wizlab chance_wizlab
+CHANCE:     5%
 ORIENT:     float
 TILE:       m = dngn_transparent_wall_green
 COLOUR:     m = lightgreen
@@ -169,7 +170,8 @@ ENDMAP
 # Basic Entrance 2 (by Mu.)
 #
 NAME:       enter_wizlab_2
-TAGS:       uniq_wizlab no_item_gen no_monster_gen
+TAGS:       uniq_wizlab no_item_gen no_monster_gen chance_wizlab
+CHANCE:     5%
 ORIENT:     float
 SHUFFLE:    tU
 TILE:       mn = dngn_transparent_wall_green
@@ -198,7 +200,8 @@ ENDMAP
 # Basic Entrance 3 (by Mu.)
 #
 NAME:       enter_wizlab_3
-TAGS:       uniq_wizlab no_item_gen no_monster_gen
+TAGS:       uniq_wizlab no_item_gen no_monster_gen chance_wizlab
+CHANCE:     5%
 ORIENT:     float
 :           wizlab_portal(_G)
 MARKER:     ! = lua:fog_machine { \
@@ -237,7 +240,8 @@ ENDMAP
 # Basic Entrance 4 (by Mu.)
 #
 NAME:       enter_wizlab_4
-TAGS:       uniq_wizlab no_item_gen no_monster_gen
+TAGS:       uniq_wizlab no_item_gen no_monster_gen chance_wizlab
+CHANCE:     5%
 ORIENT:     float
 :           wizlab_portal(_G)
 KFEAT:      ! = floor
@@ -260,7 +264,8 @@ ENDMAP
 # Basic Entrance 5 (by Mu.)
 #
 NAME:       enter_wizlab_5
-TAGS:       uniq_wizlab no_item_gen no_monster_gen
+TAGS:       uniq_wizlab no_item_gen no_monster_gen chance_wizlab
+CHANCE:     5%
 ORIENT:     float
 COLOUR:     U = random
 COLOUR:     W = mutagenic
@@ -287,7 +292,8 @@ ENDMAP
 # Basic Entrance 6 (by Mu.)
 #
 NAME:       enter_wizlab_6
-TAGS:       uniq_wizlab no_item_gen no_monster_gen
+TAGS:       uniq_wizlab no_item_gen no_monster_gen chance_wizlab
+CHANCE:     5%
 ORIENT:     float
 SUBST:      x = mc.
 TILE:       c = wall_stone_white
@@ -486,6 +492,12 @@ ENDMAP
 #          full link).
 #
 # TODO: Needs vine-covered statues, rose-covered archway.
+#       The map is too static. Some ideas by dpeg: loot behind plants or
+#       bushes, so you'll have to cut/burn your way there. With catastrophic
+#       effects, of course (plants turning into oklobs, fruits turning into
+#       spores or (if possible) animated weapons called like the fruit etc.)
+#       We could add a interesting little sub-game by having ballistos spawn
+#       on their own -- and these could be aggressive ballistos, too!
 NAME:       wizlab_eringya
 ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
