@@ -9,9 +9,11 @@
 #include "tiledgnbuf.h"
 
 #include "cloud.h"
+#include "coord.h"
 #include "coordit.h"
 #include "env.h"
 #include "player.h"
+#include "terrain.h"
 #include "tiledef-dngn.h"
 #include "tiledef-player.h"
 #include "tiledoll.h"
@@ -153,11 +155,8 @@ static void _pack_wave(int tileidx, packed_cell *cell)
     cell->dngn_overlay[cell->num_dngn_overlay++] = tileidx;
 }
 
-void pack_waves(const coord_def &gc, packed_cell *cell)
+static void _pack_shoal_waves(const coord_def &gc, packed_cell *cell)
 {
-    if (!player_in_branch(BRANCH_SHOALS))
-        return;
-
     // Add wave tiles on floor adjacent to shallow water.
     const dungeon_feature_type feat = env.map_knowledge(gc).feat();
     const bool feat_has_ink = (cloud_type_at(coord_def(gc)) == CLOUD_INK);
@@ -337,6 +336,50 @@ void pack_waves(const coord_def &gc, packed_cell *cell)
         if (inksw || inks || inkw)
             _pack_wave(TILE_WAVE_INK_CORNER_SW, cell);
     }
+}
+
+static bool _is_seen_land(coord_def gc)
+{
+    if (!map_bounds(gc))
+        return (false);
+
+    dungeon_feature_type feat = env.map_knowledge(gc).feat();
+    return (feat != DNGN_UNSEEN && !feat_is_water(feat) && feat != DNGN_LAVA);
+}
+
+static void _pack_default_waves(const coord_def &gc, packed_cell *cell)
+{
+    // Any tile on water with an adjacent solid tile will get an extra
+    // bit of shoreline.
+    const dungeon_feature_type feat = env.map_knowledge(gc).feat();
+    if (feat != DNGN_SHALLOW_WATER && feat != DNGN_DEEP_WATER)
+        return;
+
+    bool north = _is_seen_land(coord_def(gc.x, gc.y - 1));
+    bool west  = _is_seen_land(coord_def(gc.x - 1, gc.y));
+    bool east  = _is_seen_land(coord_def(gc.x + 1, gc.y));
+
+    if (!north && !west && !east)
+        return;
+
+    if (north)
+        _pack_wave(TILE_SHORE_N, cell);
+    if (west)
+        _pack_wave(TILE_SHORE_W, cell);
+    if (east)
+        _pack_wave(TILE_SHORE_E, cell);
+    if (north && west)
+        _pack_wave(TILE_SHORE_NW, cell);
+    if (north && east)
+        _pack_wave(TILE_SHORE_NE, cell);
+}
+
+void pack_waves(const coord_def &gc, packed_cell *cell)
+{
+    if (player_in_branch(BRANCH_SHOALS))
+        _pack_shoal_waves(gc, cell);
+    else
+        _pack_default_waves(gc, cell);
 }
 
 void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
