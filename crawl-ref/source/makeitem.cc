@@ -1552,13 +1552,13 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
         }
     }
 
-    ASSERT(is_weapon_brand_ok(item.sub_type, rc));
+    ASSERT(is_weapon_brand_ok(item.sub_type, rc, true));
     return (rc);
 }
 
 // Reject brands which are outright bad for the item.  Unorthodox combinations
 // are ok, since they can happen on randarts.
-bool is_weapon_brand_ok(int type, int brand)
+bool is_weapon_brand_ok(int type, int brand, bool strict)
 {
     item_def item;
     item.base_type = OBJ_WEAPONS;
@@ -1647,7 +1647,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
         for (i = 0; i < 1000; ++i)
         {
             item.sub_type = _determine_weapon_subtype(item_level);
-            if (is_weapon_brand_ok(item.sub_type, item.special))
+            if (is_weapon_brand_ok(item.sub_type, item.special, true))
                 goto brand_ok;
         }
         item.sub_type = SPWPN_NORMAL; // fall back to no brand
@@ -1949,31 +1949,49 @@ static special_missile_type _determine_missile_brand(const item_def& item,
     if (get_equip_race(item) == ISFLAG_ORCISH && one_chance_in(3))
         rc = SPMSL_POISONED;
 
-    ASSERT(is_missile_brand_ok(item.sub_type, rc));
+    ASSERT(is_missile_brand_ok(item.sub_type, rc, true));
 
     return rc;
 }
 
-bool is_missile_brand_ok(int type, int brand)
+bool is_missile_brand_ok(int type, int brand, bool strict)
 {
     // Stones can never be branded.
-    if ((type == MI_STONE || type == MI_LARGE_ROCK) && brand != SPMSL_NORMAL)
+    if ((type == MI_STONE || type == MI_LARGE_ROCK) && brand != SPMSL_NORMAL
+        && strict)
+    {
         return (false);
+    }
 
     // In contrast, needles should always be branded.
-    if (type == MI_NEEDLE)
+    // And all of these brands save poison are unique to needles.
+    switch (brand)
     {
-        switch (brand)
-        {
-        case SPMSL_POISONED: case SPMSL_CURARE: case SPMSL_PARALYSIS:
-        case SPMSL_SLOW: case SPMSL_SLEEP: case SPMSL_CONFUSION:
-        case SPMSL_SICKNESS: case SPMSL_RAGE: return (true);
-        default: return (false);
-        }
+    case SPMSL_POISONED:
+        if (type == MI_NEEDLE)
+            return (true);
+        break;
+
+    case SPMSL_CURARE:
+    case SPMSL_PARALYSIS:
+    case SPMSL_SLOW:
+    case SPMSL_SLEEP:
+    case SPMSL_CONFUSION:
+    case SPMSL_SICKNESS:
+    case SPMSL_RAGE:
+        return (type == MI_NEEDLE);
+
+    default:
+        if (type == MI_NEEDLE)
+            return (false);
     }
 
     // Everything else doesn't matter.
     if (brand == SPMSL_NORMAL)
+        return (true);
+
+    // In non-strict mode, everything other than needles is mostly ok.
+    if (!strict)
         return (true);
 
     // Not a missile?
@@ -2393,11 +2411,11 @@ static special_armour_type _determine_armour_ego(const item_def& item,
         break;
     }
 
-    ASSERT(is_armour_brand_ok(item.sub_type, rc));
+    ASSERT(is_armour_brand_ok(item.sub_type, rc, true));
     return (rc);
 }
 
-bool is_armour_brand_ok(int type, int brand)
+bool is_armour_brand_ok(int type, int brand, bool strict)
 {
     equipment_type slot = get_armour_slot((armour_type)type);
 
@@ -2478,7 +2496,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         for (i=0; i<1000; i++)
         {
             item.sub_type = get_random_armour_type(item_level);
-            if (is_armour_brand_ok(item.sub_type, item.special))
+            if (is_armour_brand_ok(item.sub_type, item.special, true))
                 break;
         }
     }
@@ -3313,11 +3331,11 @@ int items(int allow_uniques,       // not just true-false,
     }
 
     if (item.base_type == OBJ_WEAPONS
-          && !is_weapon_brand_ok(item.sub_type, item.special)
+          && !is_weapon_brand_ok(item.sub_type, item.special, false)
         || item.base_type == OBJ_ARMOUR
-          && !is_armour_brand_ok(item.sub_type, item.special)
+          && !is_armour_brand_ok(item.sub_type, item.special, false)
         || item.base_type == OBJ_MISSILES
-          && !is_missile_brand_ok(item.sub_type, item.special))
+          && !is_missile_brand_ok(item.sub_type, item.special, false))
     {
         mprf(MSGCH_ERROR, "Invalid brand on item %s, annulling.",
             item.name(DESC_PLAIN, false, true, false, false, ISFLAG_KNOW_PLUSES

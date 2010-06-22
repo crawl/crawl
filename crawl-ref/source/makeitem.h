@@ -40,9 +40,9 @@ armour_type get_random_body_armour_type(int level);
 armour_type get_random_armour_type(int item_level);
 void item_set_appearance(item_def &item);
 
-bool is_weapon_brand_ok(int type, int brand);
-bool is_armour_brand_ok(int type, int brand);
-bool is_missile_brand_ok(int type, int brand);
+bool is_weapon_brand_ok(int type, int brand, bool strict);
+bool is_armour_brand_ok(int type, int brand, bool strict);
+bool is_missile_brand_ok(int type, int brand, bool strict);
 
 bool got_curare_roll(const int item_level);
 void reroll_brand(item_def &item, int item_level);

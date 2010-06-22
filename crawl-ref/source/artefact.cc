@@ -812,7 +812,7 @@ void static _get_randart_properties(const item_def &item,
         else
             power_level++;
 
-        if (!is_weapon_brand_ok(atype, proprt[ARTP_BRAND]))
+        if (!is_weapon_brand_ok(atype, proprt[ARTP_BRAND], true))
         {
             proprt[ARTP_BRAND] = SPWPN_NORMAL;
             power_level--;
