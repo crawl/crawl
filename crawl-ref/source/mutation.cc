@@ -1913,7 +1913,7 @@ void check_demonic_guardian()
         menv[guardian].flags |= MF_NO_REWARD;
         menv[guardian].flags |= MF_DEMONIC_GUARDIAN;
 
-        you.duration[DUR_DEMONIC_GUARDIAN] = mutlevel*5 + 10;
+        you.duration[DUR_DEMONIC_GUARDIAN] = (mutlevel+1)*3*10;
     }
 }
 
