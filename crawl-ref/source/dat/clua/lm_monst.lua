@@ -88,7 +88,8 @@ function MonsterOnTrigger:on_trigger(triggerer, marker, ev)
     return
   end
 
-  if self.props.monster_place_feature ~= dgn.grid(x, y) then
+  local wanted_feat = self.props.monster_place_feature
+  if wanted_feat and wanted_feat ~= dgn.grid(x, y) then
     return
   end
 
