@@ -406,12 +406,41 @@ static void _pack_default_waves(const coord_def &gc, packed_cell *cell)
         _pack_wave(TILE_DNGN_WAVE_NW, cell);
 }
 
+static bool _is_seen_wall(coord_def gc)
+{
+    dungeon_feature_type feat = _safe_feat(gc);
+    return (feat != DNGN_UNSEEN && feat <= DNGN_MAXWALL);
+}
+
+static void _pack_wall_shadows(const coord_def &gc, packed_cell *cell)
+{
+    const dungeon_feature_type feat = env.map_knowledge(gc).feat();
+    if (feat < DNGN_FLOOR_MIN)
+        return;
+
+    if (_is_seen_wall(coord_def(gc.x - 1, gc.y)))
+        _pack_wave(TILE_DNGN_WALL_SHADOW_W, cell);
+    if (_is_seen_wall(coord_def(gc.x - 1, gc.y - 1)))
+        _pack_wave(TILE_DNGN_WALL_SHADOW_NW, cell);
+    if (_is_seen_wall(coord_def(gc.x, gc.y - 1)))
+        _pack_wave(TILE_DNGN_WALL_SHADOW_N, cell);
+    if (_is_seen_wall(coord_def(gc.x + 1, gc.y - 1)))
+        _pack_wave(TILE_DNGN_WALL_SHADOW_NE, cell);
+    if (_is_seen_wall(coord_def(gc.x + 1, gc.y)))
+        _pack_wave(TILE_DNGN_WALL_SHADOW_E, cell);
+}
+
 void pack_waves(const coord_def &gc, packed_cell *cell)
 {
     if (player_in_branch(BRANCH_SHOALS))
+    {
         _pack_shoal_waves(gc, cell);
+    }
     else
+    {
         _pack_default_waves(gc, cell);
+        _pack_wall_shadows(gc, cell);
+    }
 }
 
 void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
