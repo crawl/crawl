@@ -352,7 +352,7 @@ static void _pack_default_waves(const coord_def &gc, packed_cell *cell)
     // Any tile on water with an adjacent solid tile will get an extra
     // bit of shoreline.
     const dungeon_feature_type feat = env.map_knowledge(gc).feat();
-    if (feat != DNGN_SHALLOW_WATER && feat != DNGN_DEEP_WATER)
+    if (!feat_is_water(feat) && feat != DNGN_LAVA)
         return;
 
     bool north = _is_seen_land(coord_def(gc.x, gc.y - 1));
