@@ -601,8 +601,7 @@ function lugonu_item (data, triggerable, triggerer, marker, ev)
          Cheibriados="wand of hasting w:5 / potion of speed q:2-4 / potion of berserk rage q:2-4 \
          / good_item quick blade",
          Elyvilon="lantern of shadows/ rod of demonology / book of Necromancy w:5 \
-         / book of Death w:5 / book of Unlife w:5 / book of Callings w:5 / book of Summonings w:5 \
-         / book of Demonology w:3",
+         / book of Death w:5 / book of Unlife w:5 / book of Callings w:5 / book of Summonings w:5",
          Fedhas="book of Necromancy / book of Death / book of Unlife / good_item "
          .. weapon .. " ego:draining / good_item " .. weapon .. " ego:pain",
          Jiyva="no",
