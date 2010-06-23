@@ -673,10 +673,18 @@ MARKER: S = lua:MonPropsMarker:new { anaconda_guard="anaconda_guard" }
 KITEM:  U = superb_item
 KITEM:  Q = acquire any
 KFEAT:  o = granite_statue
-MARKER: o = lua:portal_desc { desc="elephant-shaped statue", \
-            desc_long="This worn granite statues depict elephants standing guard." }
-MARKER: G = lua:portal_desc { desc="elephant-shaped statue", \
-            desc_long="This worn granite statues depict elephants standing guard." }
+{{
+function elephant_statue()
+  return portal_desc {
+            desc="elephant-shaped statue",
+            desc_long=("This worn granite statue depicts" ..
+                       " elephants standing guard."),
+            slaved_to="elephant"
+         }
+end
+}}
+MARKER: o = lua:elephant_statue()
+MARKER: G = lua:elephant_statue()
 COLOUR: oG = green
 MARKER: o = lua:monster_on_death { \
             target="anaconda_guard", new_monster="generate_awake dire elephant", \
