@@ -4634,26 +4634,28 @@ bool dgn_place_map(const map_def *mdef,
     {
         const vault_placement &vp =
             *env.level_vaults[env.level_vaults.size() - 1];
-        for (int y = vp.pos.y; y < vp.pos.y + vp.size.y; ++y)
-            for (int x = vp.pos.x; x < vp.pos.x + vp.size.x; ++x)
-            {
-                std::vector<map_marker *> markers =
-                    env.markers.get_markers_at(coord_def(x, y));
-                std::vector<map_marker*> to_remove;
-                for (int i = 0, size = markers.size(); i < size; ++i)
-                {
-                    markers[i]->activate();
-                    const std::string prop =
-                        markers[i]->property("post_activate_remove");
-                    if (!prop.empty())
-                        to_remove.push_back(markers[i]);
-                }
-                for (unsigned int i = 0; i < to_remove.size(); i++)
-                    env.markers.remove(to_remove[i]);
+        for (vault_place_iterator vpi(vp); vpi; ++vpi)
+        {
+            const coord_def p = *vpi;
+            const std::vector<map_marker *> activatees =
+                env.markers.get_markers_at(p);
 
-                if (!you.see_cell(coord_def(x, y)))
-                    set_terrain_changed(x, y);
+            for (int i = 0, size = activatees.size(); i < size; ++i)
+                activatees[i]->activate();
+
+            const std::vector<map_marker *> active_markers =
+                env.markers.get_markers_at(p);
+            for (int i = 0, size = active_markers.size(); i < size; ++i)
+            {
+                const std::string prop =
+                    active_markers[i]->property("post_activate_remove");
+                if (!prop.empty())
+                    env.markers.remove(active_markers[i]);
             }
+
+            if (!you.see_cell(p))
+                set_terrain_changed(p);
+        }
 
         setup_environment_effects();
         dgn_postprocess_level();
