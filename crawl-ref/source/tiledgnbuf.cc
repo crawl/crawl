@@ -388,32 +388,22 @@ static void _pack_default_waves(const coord_def &gc, packed_cell *cell)
     if (feat != DNGN_DEEP_WATER)
         return;
 
-    {
-        bool north = _is_seen_shallow(coord_def(gc.x, gc.y - 1));
-        bool south = _is_seen_shallow(coord_def(gc.x, gc.y + 1));
-        bool east  = _is_seen_shallow(coord_def(gc.x + 1, gc.y));
-        bool west  = _is_seen_shallow(coord_def(gc.x - 1, gc.y));
-
-        if (north || south || east || west)
-        {
-            if (north)
-                _pack_wave(TILE_DNGN_WAVE_N, cell);
-            if (north && east)
-                _pack_wave(TILE_DNGN_WAVE_NE, cell);
-            if (east)
-                _pack_wave(TILE_DNGN_WAVE_E, cell);
-            if (south && east)
-                _pack_wave(TILE_DNGN_WAVE_SE, cell);
-            if (south)
-                _pack_wave(TILE_DNGN_WAVE_S, cell);
-            if (south && west)
-                _pack_wave(TILE_DNGN_WAVE_SW, cell);
-            if (west)
-                _pack_wave(TILE_DNGN_WAVE_W, cell);
-            if (north && west)
-                _pack_wave(TILE_DNGN_WAVE_NW, cell);
-        }
-    }
+    if (_is_seen_shallow(coord_def(gc.x, gc.y - 1)))
+        _pack_wave(TILE_DNGN_WAVE_N, cell);
+    if (_is_seen_shallow(coord_def(gc.x + 1, gc.y - 1)))
+        _pack_wave(TILE_DNGN_WAVE_NE, cell);
+    if (_is_seen_shallow(coord_def(gc.x + 1, gc.y)))
+        _pack_wave(TILE_DNGN_WAVE_E, cell);
+    if (_is_seen_shallow(coord_def(gc.x + 1, gc.y + 1)))
+        _pack_wave(TILE_DNGN_WAVE_SE, cell);
+    if (_is_seen_shallow(coord_def(gc.x, gc.y + 1)))
+        _pack_wave(TILE_DNGN_WAVE_S, cell);
+    if (_is_seen_shallow(coord_def(gc.x - 1, gc.y + 1)))
+        _pack_wave(TILE_DNGN_WAVE_SW, cell);
+    if (_is_seen_shallow(coord_def(gc.x - 1, gc.y)))
+        _pack_wave(TILE_DNGN_WAVE_W, cell);
+    if (_is_seen_shallow(coord_def(gc.x - 1, gc.y - 1)))
+        _pack_wave(TILE_DNGN_WAVE_NW, cell);
 }
 
 void pack_waves(const coord_def &gc, packed_cell *cell)
