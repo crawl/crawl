@@ -644,6 +644,11 @@ void map_markers::init_from(const map_markers &c)
     }
 }
 
+void map_markers::clear_need_activate()
+{
+    have_inactive_markers = false;
+}
+
 void map_markers::activate_all(bool verbose)
 {
     for (dgn_marker_map::iterator i = markers.begin();
@@ -662,11 +667,30 @@ void map_markers::activate_all(bool verbose)
         if (!marker->property("post_activate_remove").empty())
             remove(marker);
     }
+
+    have_inactive_markers = false;
+}
+
+void map_markers::activate_markers_at(coord_def p)
+{
+    const std::vector<map_marker *> activatees = get_markers_at(p);
+    for (int i = 0, size = activatees.size(); i < size; ++i)
+        activatees[i]->activate();
+
+    const std::vector<map_marker *> active_markers = get_markers_at(p);
+    for (int i = 0, size = active_markers.size(); i < size; ++i)
+    {
+        const std::string prop =
+            active_markers[i]->property("post_activate_remove");
+        if (!prop.empty())
+            remove(active_markers[i]);
+    }
 }
 
 void map_markers::add(map_marker *marker)
 {
     markers.insert(dgn_pos_marker(marker->pos, marker));
+    have_inactive_markers = true;
 }
 
 void map_markers::unlink_marker(const map_marker *marker)

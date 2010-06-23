@@ -634,7 +634,10 @@ public:
     map_markers &operator = (const map_markers &);
     ~map_markers();
 
+    bool need_activate() const { return have_inactive_markers; }
+    void clear_need_activate();
     void activate_all(bool verbose = true);
+    void activate_markers_at(coord_def p);
     void add(map_marker *marker);
     void remove(map_marker *marker);
     void remove_markers_at(const coord_def &c, map_marker_type type = MAT_ANY);
@@ -662,6 +665,7 @@ private:
 
 private:
     dgn_marker_map markers;
+    bool have_inactive_markers;
 };
 
 struct message_filter

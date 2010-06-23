@@ -4666,25 +4666,11 @@ bool dgn_place_map(const map_def *mdef,
         for (vault_place_iterator vpi(vp); vpi; ++vpi)
         {
             const coord_def p = *vpi;
-            const std::vector<map_marker *> activatees =
-                env.markers.get_markers_at(p);
-
-            for (int i = 0, size = activatees.size(); i < size; ++i)
-                activatees[i]->activate();
-
-            const std::vector<map_marker *> active_markers =
-                env.markers.get_markers_at(p);
-            for (int i = 0, size = active_markers.size(); i < size; ++i)
-            {
-                const std::string prop =
-                    active_markers[i]->property("post_activate_remove");
-                if (!prop.empty())
-                    env.markers.remove(active_markers[i]);
-            }
-
+            env.markers.activate_markers_at(p);
             if (!you.see_cell(p))
                 set_terrain_changed(p);
         }
+        env.markers.clear_need_activate();
 
         setup_environment_effects();
         dgn_postprocess_level();
