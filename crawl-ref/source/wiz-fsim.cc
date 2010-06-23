@@ -210,7 +210,8 @@ static bool _fsim_melee_combat(FILE *out, int wskill, int mi,
     const int hunger = you.hunger;
     for (long i = 0; i < iter_limit; ++i)
     {
-        mon = orig;
+        mon            = orig;
+        mon.hit_points = mon.max_hit_points;
         you.time_taken = player_speed();
         if (you_attack(mi, true))
             hits++;
@@ -545,6 +546,7 @@ void debug_fight_statistics(bool use_defaults, bool defence)
         mprf("Failed to create punching bag");
         return;
     }
+    menv[mindex].behaviour = BEH_SEEK;
 
     you.exp_available = 0;
 

@@ -525,7 +525,8 @@ bool melee_attack::attack()
 
     if (attacker->atype() == ACT_PLAYER && defender->atype() == ACT_MONSTER)
     {
-        if (stop_attack_prompt(defender->as_monster(), false, attacker->pos()))
+        if (stop_attack_prompt(defender->as_monster(), false,
+                               attacker->pos()))
         {
             cancel_attack = true;
             return (false);
@@ -4042,16 +4043,18 @@ random_var melee_attack::player_calc_attack_delay()
     random_var attack_delay = weapon ? player_weapon_speed()
                                      : player_unarmed_speed();
 
-    if (weapon && hands == HANDS_HALF)
+    if (player_shield_penalty)
     {
-        attack_delay += rv::min(rv::roll_dice(1, player_body_armour_penalty)
-                                + rv::roll_dice(1, player_shield_penalty),
-                                rv::roll_dice(1, player_body_armour_penalty)
-                                + rv::roll_dice(1, player_shield_penalty));
+        if (weapon && hands == HANDS_HALF)
+        {
+            attack_delay += rv::roll_dice(1, player_shield_penalty);
+        }
+        else
+        {
+            attack_delay += rv::min(rv::random2(1 + player_shield_penalty),
+                                    rv::random2(1 + player_shield_penalty));
+        }
     }
-    else if (player_body_armour_penalty)
-        attack_delay += rv::min(rv::roll_dice(1, player_body_armour_penalty),
-                                rv::roll_dice(1, player_body_armour_penalty));
 
     attack_delay = rv::max(attack_delay, constant(3));
 
@@ -4077,14 +4080,6 @@ random_var melee_attack::player_weapon_speed()
                    || weapon->base_type == OBJ_STAVES))
     {
         attack_delay = constant(property(*weapon, PWPN_SPEED));
-
-        if (player_body_armour_penalty)
-        {
-            attack_delay = rv::max(attack_delay,
-               rv::roll_dice(1, 10)
-               + rv::roll_dice(1, player_body_armour_penalty));
-        }
-
         attack_delay -= constant(you.skills[wpn_skill] / 2);
 
         min_delay = property( *weapon, PWPN_SPEED ) / 2;
