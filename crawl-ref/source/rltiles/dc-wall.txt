@@ -765,3 +765,10 @@ wall/dngn_green_crystal_wall DNGN_GREEN_CRYSTAL_WALL DNGN_CRYSTAL DNGN_CRYSTAL_G
 %desat 120
 %repeat DNGN_CRYSTAL DNGN_CRYSTAL_WHITE
 %resetcol
+
+%sdir dc-dngn/wall
+shadow_w DNGN_WALL_SHADOW_W
+shadow_nw DNGN_WALL_SHADOW_NW
+shadow_n DNGN_WALL_SHADOW_N
+shadow_ne DNGN_WALL_SHADOW_NE
+shadow_e DNGN_WALL_SHADOW_E
