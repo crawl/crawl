@@ -1226,8 +1226,11 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         mpr(mdef.gain[you.mutation[mutat]-1], MSGCH_MUTATION);
 
     // Do post-mutation effects.
-    if (mutat == MUT_FRAIL || mutat == MUT_ROBUST)
+    if (mutat == MUT_FRAIL || mutat == MUT_ROBUST
+        || mutat == MUT_RUGGED_BROWN_SCALES)
+    {
         calc_hp();
+    }
     if (mutat == MUT_LOW_MAGIC || mutat == MUT_HIGH_MAGIC)
         calc_mp();
     if (mutat == MUT_PASSIVE_MAPPING)
@@ -1302,8 +1305,11 @@ static bool _delete_single_mutation_level(mutation_type mutat)
         mpr(mdef.lose[you.mutation[mutat]], MSGCH_MUTATION);
 
     // Do post-mutation effects.
-    if (mutat == MUT_FRAIL || mutat == MUT_ROBUST)
+    if (mutat == MUT_FRAIL || mutat == MUT_ROBUST
+        || mutat == MUT_RUGGED_BROWN_SCALES)
+    {
         calc_hp();
+    }
     if (mutat == MUT_LOW_MAGIC || mutat == MUT_HIGH_MAGIC)
         calc_mp();
 
