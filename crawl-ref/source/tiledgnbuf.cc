@@ -338,13 +338,23 @@ static void _pack_shoal_waves(const coord_def &gc, packed_cell *cell)
     }
 }
 
-static bool _is_seen_land(coord_def gc)
+static dungeon_feature_type _safe_feat(coord_def gc)
 {
     if (!map_bounds(gc))
-        return (false);
+        return (DNGN_UNSEEN);
 
-    dungeon_feature_type feat = env.map_knowledge(gc).feat();
+    return (env.map_knowledge(gc).feat());
+}
+
+static bool _is_seen_land(coord_def gc)
+{
+    dungeon_feature_type feat = _safe_feat(gc);
     return (feat != DNGN_UNSEEN && !feat_is_water(feat) && feat != DNGN_LAVA);
+}
+
+static bool _is_seen_shallow(coord_def gc)
+{
+    return (_safe_feat(gc) == DNGN_SHALLOW_WATER);
 }
 
 static void _pack_default_waves(const coord_def &gc, packed_cell *cell)
@@ -355,23 +365,55 @@ static void _pack_default_waves(const coord_def &gc, packed_cell *cell)
     if (!feat_is_water(feat) && feat != DNGN_LAVA)
         return;
 
-    bool north = _is_seen_land(coord_def(gc.x, gc.y - 1));
-    bool west  = _is_seen_land(coord_def(gc.x - 1, gc.y));
-    bool east  = _is_seen_land(coord_def(gc.x + 1, gc.y));
+    {
+        bool north = _is_seen_land(coord_def(gc.x, gc.y - 1));
+        bool west  = _is_seen_land(coord_def(gc.x - 1, gc.y));
+        bool east  = _is_seen_land(coord_def(gc.x + 1, gc.y));
 
-    if (!north && !west && !east)
+        if (north || west || east)
+        {
+            if (north)
+                _pack_wave(TILE_SHORE_N, cell);
+            if (west)
+                _pack_wave(TILE_SHORE_W, cell);
+            if (east)
+                _pack_wave(TILE_SHORE_E, cell);
+            if (north && west)
+                _pack_wave(TILE_SHORE_NW, cell);
+            if (north && east)
+                _pack_wave(TILE_SHORE_NE, cell);
+        }
+    }
+
+    if (feat != DNGN_DEEP_WATER)
         return;
 
-    if (north)
-        _pack_wave(TILE_SHORE_N, cell);
-    if (west)
-        _pack_wave(TILE_SHORE_W, cell);
-    if (east)
-        _pack_wave(TILE_SHORE_E, cell);
-    if (north && west)
-        _pack_wave(TILE_SHORE_NW, cell);
-    if (north && east)
-        _pack_wave(TILE_SHORE_NE, cell);
+    {
+        bool north = _is_seen_shallow(coord_def(gc.x, gc.y - 1));
+        bool south = _is_seen_shallow(coord_def(gc.x, gc.y + 1));
+        bool east  = _is_seen_shallow(coord_def(gc.x + 1, gc.y));
+        bool west  = _is_seen_shallow(coord_def(gc.x - 1, gc.y));
+
+        if (north || south || east || west)
+        {
+            if (north)
+                _pack_wave(TILE_DNGN_WAVE_N, cell);
+            if (north && east)
+                _pack_wave(TILE_DNGN_WAVE_NE, cell);
+            if (east)
+                _pack_wave(TILE_DNGN_WAVE_E, cell);
+            if (south && east)
+                _pack_wave(TILE_DNGN_WAVE_SE, cell);
+            if (south)
+                _pack_wave(TILE_DNGN_WAVE_S, cell);
+            if (south && west)
+                _pack_wave(TILE_DNGN_WAVE_SW, cell);
+            if (west)
+                _pack_wave(TILE_DNGN_WAVE_W, cell);
+            if (north && west)
+                _pack_wave(TILE_DNGN_WAVE_NW, cell);
+        }
+    }
 }
 
 void pack_waves(const coord_def &gc, packed_cell *cell)
