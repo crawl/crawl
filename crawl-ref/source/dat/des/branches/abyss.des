@@ -34,6 +34,45 @@ G.G
 G.G
 ENDMAP
 
+#################################################################
+# Ecumenical Temple... (1KB)
+# 'cuz the fun haters removed overflow temples from the Abyss...
+NAME:    abyss_greek_temple
+TAGS:    no_rotate abyss
+NSUBST:  . = 3:1 / 2:2 / *:.
+SUBST:   ' = .
+COLOUR:  " : white w:5 / none
+SUBST:   " = .
+MONS:    plant, bush
+SHUFFLE: ABCDEFHIJKLMNO
+KFEAT:   A = altar_makhleb
+KFEAT:   B = altar_xom
+KFEAT:   C = altar_zin
+KFEAT:   D = altar_shining_one
+KFEAT:   E = altar_kikubaaqudgha
+KFEAT:   F = altar_yredelemnul
+KFEAT:   H = altar_vehumet
+KFEAT:   I = altar_okawaru
+KFEAT:   J = altar_sif_muna
+KFEAT:   K = altar_trog
+KFEAT:   L = altar_nemelex_xobeh
+KFEAT:   M = altar_elyvilon
+KFEAT:   N = altar_fedhas
+KFEAT:   O = altar_cheibriados
+MAP
+''''''...............
+''ccccccccccccccc....
+''G'c"""""""""""ctt..
+''''c"A"B"C"D"E"ctt..
+''G'c"""""""""""cttt.
+''''+"""F"H"I"J"ctt..
+''G'c"""""""""""ct...
+''''c"K"L"M"N"O"ct..t
+''G'c"""""""""""ct...
+''ccccccccccccccct...
+.......t......ttt....
+ENDMAP
+
 ###############################################################################
 # abyss rune vaults
 NAME: abyss_rune_001
@@ -107,4 +146,3 @@ cccyy..yycc
     c++c
      @@
 ENDMAP
-
