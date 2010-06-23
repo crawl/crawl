@@ -1857,7 +1857,7 @@ static void _build_dungeon_level(int level_number, int level_type)
     // Any further vaults must make sure not to disrupt level layout.
     dgn_check_connectivity = !player_in_branch(BRANCH_SHOALS);
 
-    if (you.where_are_you == BRANCH_MAIN_DUNGEON)
+    if (player_in_branch(BRANCH_MAIN_DUNGEON))
     {
         _build_overflow_temples(level_number);
 
