@@ -148,7 +148,7 @@ black_bear MONS_BLACK_BEAR
 grizzly_bear MONS_GRIZZLY_BEAR
 polar_bear MONS_POLAR_BEAR
 
-## Cattle ('Y')
+## Yaks, sheep and elephants ('Y')
 sheep MONS_SHEEP
 black_sheep MONS_BLACK_SHEEP
 yak MONS_YAK
