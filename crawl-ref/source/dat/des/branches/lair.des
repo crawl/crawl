@@ -795,3 +795,35 @@ xxxxxxxxxxx.......Xxxxxx..........xxxxxx
 xxxxxxxxxxXxx41.xxXxxxxxxxxx....xxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
+
+# Bear with us...
+NAME:   bearwithus
+PLACE:  Lair:$
+TAGS:   no_pool_fixup no_wall_fixup no_monster_gen no_rotate no_item_gen
+ORIENT: southeast
+MONS:   plant
+MONS:   bear, grizzly bear, polar bear, black bear
+SUBST:  X = xx.
+SUBST:  P = 1111.
+KITEM:  % = honeycomb, honeycomb, honeycomb
+MAP
+            xXXxxxXXXxxX
+       @...xxxxxxxxxxxxx
+       P..Pxxxxxxxxxxxxx
+      @...xxxxxxxxxxxxxx
+      P..PxxxxxxxxXxxxxx
+     @..PxxxXXxxxx34.%xx
+     P..2xxx2%xXx34..2xx
+    @....1x...2xxx...xxx
+    ...2P1....xxx..2xXxx
+   @..Pxxx........xxxxxx
+   P.2xxxxx2...xx..Xxxxx
+  @..PxxxxXX..xx43xxxxxx
+  P.Pxxxxxxxx..3.xxxxxxx
+ @..xxxxxxxxX2....xXxxxx
+ ..Pxxxxxxxxxx....%xxxxx
+ .PxxxxxxxxXx2....4xxxxx
+ Pxxxxxxxxxx3....4xXxxxx
+XxxxxxxxxxxXx3%.2xxxxxxx
+Xxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
