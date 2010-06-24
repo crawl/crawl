@@ -3423,7 +3423,7 @@ static monsterentry mondata[] = {
     MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_GIANT
 },
 
-// yaks and sheep and elephants ('Y')
+// yaks, sheep and elephants ('Y')
 {
     MONS_SHEEP, 'Y', LIGHTGREY, "sheep",
     M_WARM_BLOOD,

@@ -138,11 +138,13 @@ black_bear CORPSE_BLACK_BEAR
 grizzly_bear CORPSE_GRIZZLY_BEAR
 polar_bear CORPSE_POLAR_BEAR
 
-## Cattle ('Y')
+## Yaks, sheep and elephants ('Y')
 sheep CORPSE_SHEEP
 yak CORPSE_YAK
 death_yak CORPSE_DEATH_YAK
-
+elephant CORPSE_ELEPHANT
+elephant_dire CORPSE_DIRE_ELEPHANT
+elephant_demonic CORPSE_HELLEPHANT
 
 ### Non-animals
 %sdir dc-mon
