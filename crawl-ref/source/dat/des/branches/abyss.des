@@ -15,15 +15,15 @@
 #
 NAME: abyss_furniture_dummy
 TAGS: abyss dummy
-CHANCE: 10 : 90%
+CHANCE: 0 : 90%
 
 NAME: abyss_rune_dummy
 TAGS: abyss_rune dummy
-CHANCE: 10 : 90%
+CHANCE: 0 : 90%
 
 NAME: abyss_exit_dummy
 TAGS: abyss_exit dummy
-CHANCE: 10 : 90%
+CHANCE: 0 : 90%
 
 ###############################################################################
 NAME: abyss_furniture_001

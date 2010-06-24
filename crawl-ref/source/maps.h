@@ -17,6 +17,9 @@ class map_def;
 struct map_file_place;
 struct vault_placement;
 
+typedef std::vector<map_def> map_vector;
+typedef std::vector<const map_def *> mapref_vector;
+
 bool map_safe_vault_place(const map_def &md,
                           const coord_def &c,
                           const coord_def &size);
@@ -42,6 +45,8 @@ const map_def *random_map_in_depth(const level_id &lid,
                                    bool want_minivault = false);
 const map_def *random_map_for_tag(const std::string &tag,
                                   bool check_depth = false);
+mapref_vector random_chance_maps_in_depth(const level_id &place);
+
 void add_parsed_map(const map_def &md);
 
 std::vector<std::string> find_map_matches(const std::string &name);

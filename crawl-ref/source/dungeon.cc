@@ -136,6 +136,7 @@ static void _place_specific_stair(dungeon_feature_type stair,
                                   int dl = 0, bool vault_only = false);
 static void _place_branch_entrances(int dlevel, char level_type);
 static void _place_extra_vaults();
+static void _place_chance_vaults();
 static void _place_minivaults(const std::string &tag = "",
                               int fewest = -1, int most = -1,
                               bool force = false);
@@ -2146,6 +2147,7 @@ static void _build_dungeon_level(int level_number, int level_type)
     // no guarantees, seeing this is a minivault.
     if (!crawl_state.game_is_sprint() && !crawl_state.game_is_tutorial())
     {
+        _place_chance_vaults();
         _place_minivaults();
         _place_branch_entrances( level_number, level_type );
         _place_extra_vaults();
@@ -2756,6 +2758,19 @@ static builder_rc_type _builder_by_branch(int level_number)
         break;
     }
     return BUILD_CONTINUE;
+}
+
+// Place vaults with CHANCE: that want to be placed on this level.
+static void _place_chance_vaults()
+{
+    const mapref_vector maps = random_chance_maps_in_depth(level_id::current());
+    for (int i = 0, size = maps.size(); i < size; ++i)
+    {
+        const map_def *map = maps[i];
+        dprf("Placing CHANCE vault: %s (%d:%d)",
+             map->name.c_str(), map->chance_priority, map->chance);
+        _build_secondary_vault(you.absdepth0, map);
+    }
 }
 
 static void _place_minivaults(const std::string &tag, int lo, int hi,

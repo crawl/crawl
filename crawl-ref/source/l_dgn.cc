@@ -260,10 +260,13 @@ static int dgn_change_branch_flags(lua_State *ls)
 static int dgn_chance(lua_State *ls)
 {
     MAP(ls, 1, map);
-    if (!lua_isnil(ls, 2) && !lua_isnil(ls, 3))
+    if (lua_isnumber(ls, 2))
     {
-        const int chance_priority = luaL_checkint(ls, 2);
-        const int chance = luaL_checkint(ls, 3);
+        const bool has_priority = lua_isnumber(ls, 3);
+        const int chance_priority =
+            has_priority? luaL_checkint(ls, 2) : 100;
+        const int chance =
+            has_priority? luaL_checkint(ls, 3) : luaL_checkint(ls, 2);
         if (chance < 0 || chance > CHANCE_ROLL)
             luaL_argerror(ls, 2,
                           make_stringf("Chance must be in the range [0,%d]",

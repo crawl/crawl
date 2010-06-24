@@ -206,38 +206,32 @@ CHANCE:   <priority>:<roll> or <roll>
           Note that CHANCE accepts only integers, no fractions or
           decimals.
 
-          For any map with alternatives, a CHANCE influences how
-          likely the map is to be picked instead of the alternatives.
-          If a map has a CHANCE, Crawl will roll a random number in
-          the range 1-10000, and select the map if the CHANCE is >=
-          the rolled random number.
+          CHANCE is useful for random vaults with a DEPTH (or
+          default-depth) setting that want to ensure a certain chance
+          of being placed per level.
 
-          If there are multiple alternative maps with CHANCE, they
-          will be tested in an unspecified order; the first map that
-          makes the CHANCE roll will be used. If you'd like to specify
-          an order of testing CHANCEs, specify a CHANCE with a
-          priority:
+          If a map in the current depth range has a CHANCE, Crawl will
+          roll a random number in the range 1-10000, and select the
+          map if the CHANCE is >= the rolled random number.
 
-             CHANCE: 10 : 20%
+          Dummy vaults may also use CHANCE to specify an absolute chance
+          of using the dummy instead of a real map. For dummies, use
+          CHANCE with a priority of 0:
 
-          This specifies a CHANCE of 20%, with a priority of 10, which
-          means this vault will be checked before any other vault with
-          a lower priority (the default priority is 0).
+             CHANCE: 0 : 80%
 
-          If no map with a CHANCE is picked, Crawl will select a map
-          based on WEIGHT, ignoring vaults with a CHANCE set.
+          This specifies a CHANCE of 80%, which means the dummy will
+          be used in 80% of vault placement attempts.
 
-          Note that the Lua equivalent for CHANCE is a two-argument
-          function:
+          The Lua equivalent of the two CHANCE forms is:
 
+          : chance(<number>)
           : chance(<priority>, <number>)
 
           These lines are all equivalent:
           CHANCE: 5%
           CHANCE: 500
-          CHANCE: 0 : 5%
-          CHANCE: 0 : 500
-          : chance(0, 500)
+          : chance(500)
 
           A common case when using CHANCE is to assign a CHANCE to a
           set of maps. For instance, if you have a set of portal vault
