@@ -414,8 +414,7 @@ static bool _is_seen_wall(coord_def gc)
 
 static void _pack_wall_shadows(const coord_def &gc, packed_cell *cell)
 {
-    const dungeon_feature_type feat = env.map_knowledge(gc).feat();
-    if (feat < DNGN_FLOOR_MIN)
+    if (_is_seen_wall(gc))
         return;
 
     if (_is_seen_wall(coord_def(gc.x - 1, gc.y)))
