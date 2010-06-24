@@ -1091,8 +1091,11 @@ coord_def bolt::pos() const
 
 bool bolt::need_regress() const
 {
+    // XXX: The affects_wall check probably makes some of the
+    //      others obsolete.
     return ((is_explosion && !in_explosion_phase)
             || drop_item
+            || feat_is_solid(grd(pos())) && !affects_wall(grd(pos()))
             || origin_spell == SPELL_PRIMAL_WAVE);
 }
 
