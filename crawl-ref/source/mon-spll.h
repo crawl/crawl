@@ -1418,6 +1418,28 @@
       }
     },
 
+    {  MST_IRON_ELEMENTAL,
+      {
+       SPELL_IRON_SHOT,
+       SPELL_SLOW,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_METAL_SPLINTERS,
+       SPELL_NO_SPELL
+      }
+    },
+
+    {  MST_IRON_GIANT,
+      {
+       SPELL_IRON_SHOT,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_IRON_ELEMENTALS,
+       SPELL_NO_SPELL
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,

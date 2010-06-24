@@ -2119,6 +2119,10 @@ enum monster_type                      // (int) menv[].type
     MONS_DIRE_ELEPHANT,
     MONS_HELLEPHANT,
     MONS_GRINDER,
+    MONS_CHUCK,
+    MONS_IRON_GIANT,
+    MONS_NELLIE,
+    MONS_IRON_ELEMENTAL,
 
     // Spriggans:
     MONS_SPRIGGAN = 500,
@@ -2401,6 +2405,8 @@ enum mon_spellbook_type
     MST_THE_ENCHANTRESS,
     MST_HELLEPHANT,
     MST_GRINDER,
+    MST_IRON_GIANT,
+    MST_IRON_ELEMENTAL,
 
     MST_TEST_SPAWNER = 200,
     NUM_MSTYPES,
@@ -3002,6 +3008,7 @@ enum spell_type
     SPELL_SUNRAY,
     SPELL_AWAKEN_FOREST,
     SPELL_SUMMON_CANIFORMS,
+    SPELL_IRON_ELEMENTALS,
 
     NUM_SPELLS
 };

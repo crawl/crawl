@@ -652,6 +652,8 @@ bool monsters::could_wield(const item_def &item, bool ignore_brand,
 bool monsters::can_throw_large_rocks() const
 {
     return (type == MONS_STONE_GIANT
+            || type == MONS_POLYPHEMUS
+            || type == MONS_CHUCK
             || ::mons_species(type) == MONS_CYCLOPS
             || ::mons_species(type) == MONS_OGRE);
 }

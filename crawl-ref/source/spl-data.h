@@ -2475,6 +2475,19 @@
 },
 
 {
+    SPELL_IRON_ELEMENTALS, "Summon Iron Elementals",
+     SPTYP_SUMMONING,
+     SPFLAG_MONSTER,
+     5,
+     0,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
     SPELL_SLEEP, "Sleep",
      SPTYP_ENCHANTMENT,
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
