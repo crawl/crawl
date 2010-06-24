@@ -55,7 +55,7 @@ end
 
 -------------------------------------------------------------------------------
 -- This marker can be applied to a door to prevent the player from opening   --
--- it. By default, it will ask for three runes; this ca be modified by the   --
+-- it. By default, it will ask for three runes; this can be modified by the  --
 -- "veto_func" parameter.                                                    --
 -------------------------------------------------------------------------------
 
