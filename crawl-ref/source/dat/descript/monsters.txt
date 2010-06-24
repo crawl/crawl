@@ -1003,7 +1003,7 @@ A very heavy and apparently flightless dragon.
 %%%%
 iron elemental
 
-A rare and powerful spirit from the elemental plane of earth, it exists in this world by inhabiting a hulking mass of demonic iron.
+A rare and powerful spirit from the elemental plane of earth, it exists in this world by inhabiting a hulking mass of iron.
 %%%%
 The iron giant
 
