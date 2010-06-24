@@ -52,6 +52,10 @@ Cerebov
 
 A violent and wrathful demon, Cerebov appears as a giant human covered in shining golden armour and wielding a huge twisted sword.
 %%%%
+Chuck
+
+Chuck loves rocks, the bigger the better! Over the years, he has managed to amass quite the collection, including some rare, enchanted ones.
+%%%%
 Crazy Yiuf
 
 A withered old gnoll with a long silver beard, wielding a quarterstaff and wearing a cloak. He looks like a figure from mythology! Wait, is his beard held on to his ears with hooks?
@@ -228,6 +232,10 @@ A weirdly glowing figure, dancing through the twisted air of Pandemonium.
 Murray
 
 A demonic skull rolling along the dungeon floor.
+%%%%
+Nellie
+
+A highly intelligent elephant who tracvelled as part of a circus. One dark night, she slipped out of her chain and disappeared into the Pandemonium, never to be seen again.
 %%%%
 Nergalle
 
@@ -992,6 +1000,14 @@ A hideous humanoid figure with metal skin. While it lacks magical attacks and is
 iron dragon
 
 A very heavy and apparently flightless dragon.
+%%%%
+iron elemental
+
+A rare and powerful spirit from the elemental plane of earth, it exists in this world by inhabiting a hulking mass of demonic iron.
+%%%%
+Iron Giant
+
+Huge, lumbering, and particularly dull, this rusting monolith packs quite the punch. It is quite possibly the largest giant you have ever seen.
 %%%%
 iron golem
 

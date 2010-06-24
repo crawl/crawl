@@ -1725,6 +1725,49 @@ Boris unsummoned
 @The_monster@ says, "You can't fire me, I quit!"
 ## END Boris ##
 %%%%
+############ CHUCK ### An avid rock collector.
+Chuck
+
+@_chuck_generic_@
+
+w:2
+@_chuck_rare_@
+%%%%
+_chuck_generic_
+
+@The_monster@ grunts.
+
+@The_monster@ says, "Me like rocks."
+
+@The_monster@ says, "Me has lots rocks."
+
+@The_monster@ says, "Want to see my rocks?"
+
+@The_monster@ says, "You look bit like rock."
+
+@The_monster@ says, "Big rocks, small rocks, huge rocks! Magic rocks!"
+
+VISUAL:@The_monster@ drools a little bit.
+%%%%
+_chuck_rare_
+
+@The_monster@ says, "Me has best rocks."
+
+VISUAL:@The_monster@ inspects you suspiciously.
+
+@The_monster@ says, "No steal rocks!"
+
+@The_monster@ screams, "THIEF!"
+
+@The_monster@ says, "You took it. Me saw."
+
+@The_monster@ says, "Best rocks! Rocks!"
+
+@The_monster@ says, "ROCKS!"
+
+@The_monster@ says, "ME ROCKS!"
+### End CHUCK ###
+%%%%
 ############ CRAZY YIUF  ### A mad old gnoll!
 Crazy Yiuf
 
@@ -4449,6 +4492,40 @@ VISUAL:@The_monster@ seems to say something.
 
 VISUAL:@The_monster@ says something you can't hear. It was probably not a compliment. @player_only@
 ## END silenced Murray ##
+%%%%
+Nellie
+
+@_Nellie_common_@
+
+w:2
+@_Nellie_rare_@
+%%%%
+_Nellie_common_
+
+@The_monster@ says, "Can you balance on a beach ball? I can!"
+
+@The_monster@ says, "Circuses are really nothing more than prisons."
+
+@The_monster@ says, "I won't go back, never!"
+
+@The_monster@ says, "I'll never walk a tight-rope again!"
+
+@The_monster@ says, "Don't worry about being fed to the lions. Worry about being fed to me."
+
+VISUAL:@The_monster@ stomps the ground.
+
+VISUAL:@The_monster@ stares at you suspiciously.
+%%%%
+_Nellie_rare_
+
+w:2
+@The_monster@ says, "Do you know Lommy? A good friend!"
+
+@The_monster@ says, "I trampled a caravan once."
+
+@The_monster@ says, "No, I don't have a problem with mice."
+
+@The_monster@ says, "I think I remember you..."
 %%%%
 ############ NERGALLE ### ugly orc sorceress
 Nergalle

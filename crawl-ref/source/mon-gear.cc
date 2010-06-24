@@ -593,6 +593,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
 
     case MONS_TWO_HEADED_OGRE:
     case MONS_ETTIN:
+    case MONS_IRON_GIANT:
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = (one_chance_in(3) ? WPN_GIANT_SPIKED_CLUB
@@ -1235,6 +1236,12 @@ static void _give_ammo(monsters *mon, int level,
             qty = random_range(4, 7);
             break;
 
+        case MONS_CHUCK:
+            weap_type  = MI_LARGE_ROCK;
+            weap_class = OBJ_MISSILES;
+            qty = 2;
+            break;
+
         case MONS_MERFOLK_JAVELINEER:
             weap_class = OBJ_MISSILES;
             weap_type  = MI_JAVELIN;
@@ -1307,6 +1314,9 @@ static void _give_ammo(monsters *mon, int level,
             {
                 qty = 1;
             }
+
+            if (mon->type == MONS_CHUCK)
+                set_item_ego_type(w, OBJ_MISSILES, SPMSL_RETURNING);
 
             w.quantity = qty;
             _give_monster_item(mon, thing_created, false,

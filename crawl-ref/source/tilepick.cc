@@ -892,6 +892,9 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_FIRE_ELEMENTAL;
     case MONS_WATER_ELEMENTAL:
         return TILEP_MONS_WATER_ELEMENTAL;
+    // TODO
+    case MONS_IRON_ELEMENTAL:
+        return TILEP_MONS_EARTH_ELEMENTAL;
 
     // worms and larvae ('w')
     case MONS_KILLER_BEE_LARVA:
@@ -1487,6 +1490,12 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_POLYPHEMUS;
     case MONS_ANTAEUS:
         return TILEP_MONS_ANTAEUS;
+    // TODO
+    case MONS_CHUCK:
+        return TILEP_MONS_STONE_GIANT;
+    // TODO
+    case MONS_IRON_GIANT:
+        return TILEP_MONS_STONE_GIANT;
 
     // dragons and hydras ('D')
     case MONS_LERNAEAN_HYDRA:
@@ -1542,9 +1551,15 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_SNORG:
         return TILEP_MONS_SNORG;
 
+    // elephants etc
+    // TODO
+    case MONS_NELLIE:
+        return TILEP_MONS_HELLEPHANT;
+
     // imps ('5')
+    //TODO
     case MONS_GRINDER:
-        return TILE_TODO;
+        return TILEP_MONS_SHADOW_IMP;
 
     // statue ('8')
     case MONS_ROXANNE:

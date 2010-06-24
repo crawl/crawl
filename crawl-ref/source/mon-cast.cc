@@ -852,6 +852,7 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     case SPELL_FIRE_ELEMENTALS:
     case SPELL_AIR_ELEMENTALS:
     case SPELL_EARTH_ELEMENTALS:
+    case SPELL_IRON_ELEMENTALS:
     case SPELL_KRAKEN_TENTACLES:
     case SPELL_BLINK:
     case SPELL_CONTROLLED_BLINK:
@@ -1851,6 +1852,10 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     case SPELL_EARTH_ELEMENTALS:
         if (summon_type == MONS_NO_MONSTER)
             summon_type = MONS_EARTH_ELEMENTAL;
+        // Deliberate fall through
+    case SPELL_IRON_ELEMENTALS:
+        if (summon_type == MONS_NO_MONSTER)
+            summon_type = MONS_IRON_ELEMENTAL;
         // Deliberate fall through
     case SPELL_AIR_ELEMENTALS:
         if (summon_type == MONS_NO_MONSTER)

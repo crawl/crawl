@@ -3010,10 +3010,12 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
         case MONS_KIRKE:
         case MONS_DUVESSA:
         case MONS_THE_ENCHANTRESS:
+        case MONS_NELLIE:
             gender = GENDER_FEMALE;
             break;
         case MONS_ROYAL_JELLY:
         case MONS_LERNAEAN_HYDRA:
+        case MONS_IRON_GIANT:
             gender = GENDER_NEUTER;
             break;
         default:
