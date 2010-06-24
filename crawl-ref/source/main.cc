@@ -3019,6 +3019,20 @@ static void _open_door(coord_def move, bool check_confused)
         return;
     }
 
+    // Allow doors to be locked.
+    bool door_vetoed = env.markers.property_at(doorpos, MAT_ANY, "veto_open") == "veto";
+    const std::string door_veto_message = env.markers.property_at(doorpos, MAT_ANY,
+                                "veto_reason");
+    if (door_vetoed)
+    {
+        if (door_veto_message.empty())
+            mpr("The door is shut tight!");
+        else
+            mpr(door_veto_message.c_str());
+
+        return;
+    }
+
     // Finally, open the closed door!
     std::set<coord_def> all_door = connected_doors(doorpos);
     const char *adj, *noun;
