@@ -829,3 +829,32 @@ MAP
 XxxxxxxxxxxXx3%.2xxxxxxx
 Xxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
+
+# Who let the dogs out?
+NAME:   kennels
+PLACE:  Lair:$
+TAGS:   no_pool_fixup no_wall_fixup no_monster_gen no_rotate no_item_gen patrolling
+ORIENT: southeast
+MONS:   plant
+MONS:   jackal, hound, warg, wolf, war dog, hell hound
+SUBST:  X = xx.
+SUBST:  P = 1111.
+KITEM:  $ = gold, acquire any, superb_item
+MAP
+@   @  @  XXXXXxxxxXXxxxxxxxxxxxxxxx
+ ...P..Pxxxxxxxx.3xxxxxxxxxxxxxxxxxx
+ .P...Pxxxxxx.......xxxxxxx$x7xxxxxx
+@P...1xxxxxx3...xx....xxxxxx6.6..xxx
+ ...Px..xxxxx..xxx....xxxxx7.5.4.xxx
+ .Pxxx.2.xxx...5xxx..6.4xx.......xxx
+@Pxxx.22.xx....xxx.6...xx......xxxxx
+ xxxx.22.xxx....xxx66..4xx....xxxxxx
+ xxxxx..x3xx.....x.....xx5x..xxxxxxx
+Xxxxxxx..xx3x...xx....xxxxx..xxxxxxx
+Xxxxxx3...xx...xxxx.22x2xxx...xxxxxx
+Xxxxxxx...x4x..5xxxx2..xxxxx...xxxxx
+xxxxxx...3xx...xxxx2x...xxxxx...xxxx
+xxxxxxx..xxx...xxxxx2...xxx...xx5xxx
+xxxxxx3.......xxxxx2....23...xxxxxxx
+xxxxxxxx.....xxxxxxxxx.3....xxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
