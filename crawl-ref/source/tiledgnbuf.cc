@@ -365,45 +365,44 @@ static void _pack_default_waves(const coord_def &gc, packed_cell *cell)
     if (!feat_is_water(feat) && feat != DNGN_LAVA)
         return;
 
+    if (feat == DNGN_DEEP_WATER)
     {
-        bool north = _is_seen_land(coord_def(gc.x, gc.y - 1));
-        bool west  = _is_seen_land(coord_def(gc.x - 1, gc.y));
-        bool east  = _is_seen_land(coord_def(gc.x + 1, gc.y));
-
-        if (north || west || east)
-        {
-            if (north)
-                _add_overlay(TILE_SHORE_N, cell);
-            if (west)
-                _add_overlay(TILE_SHORE_W, cell);
-            if (east)
-                _add_overlay(TILE_SHORE_E, cell);
-            if (north && west)
-                _add_overlay(TILE_SHORE_NW, cell);
-            if (north && east)
-                _add_overlay(TILE_SHORE_NE, cell);
-        }
+        if (_is_seen_shallow(coord_def(gc.x, gc.y - 1)))
+            _add_overlay(TILE_DNGN_WAVE_N, cell);
+        if (_is_seen_shallow(coord_def(gc.x + 1, gc.y - 1)))
+            _add_overlay(TILE_DNGN_WAVE_NE, cell);
+        if (_is_seen_shallow(coord_def(gc.x + 1, gc.y)))
+            _add_overlay(TILE_DNGN_WAVE_E, cell);
+        if (_is_seen_shallow(coord_def(gc.x + 1, gc.y + 1)))
+            _add_overlay(TILE_DNGN_WAVE_SE, cell);
+        if (_is_seen_shallow(coord_def(gc.x, gc.y + 1)))
+            _add_overlay(TILE_DNGN_WAVE_S, cell);
+        if (_is_seen_shallow(coord_def(gc.x - 1, gc.y + 1)))
+            _add_overlay(TILE_DNGN_WAVE_SW, cell);
+        if (_is_seen_shallow(coord_def(gc.x - 1, gc.y)))
+            _add_overlay(TILE_DNGN_WAVE_W, cell);
+        if (_is_seen_shallow(coord_def(gc.x - 1, gc.y - 1)))
+            _add_overlay(TILE_DNGN_WAVE_NW, cell);
     }
 
-    if (feat != DNGN_DEEP_WATER)
-        return;
 
-    if (_is_seen_shallow(coord_def(gc.x, gc.y - 1)))
-        _add_overlay(TILE_DNGN_WAVE_N, cell);
-    if (_is_seen_shallow(coord_def(gc.x + 1, gc.y - 1)))
-        _add_overlay(TILE_DNGN_WAVE_NE, cell);
-    if (_is_seen_shallow(coord_def(gc.x + 1, gc.y)))
-        _add_overlay(TILE_DNGN_WAVE_E, cell);
-    if (_is_seen_shallow(coord_def(gc.x + 1, gc.y + 1)))
-        _add_overlay(TILE_DNGN_WAVE_SE, cell);
-    if (_is_seen_shallow(coord_def(gc.x, gc.y + 1)))
-        _add_overlay(TILE_DNGN_WAVE_S, cell);
-    if (_is_seen_shallow(coord_def(gc.x - 1, gc.y + 1)))
-        _add_overlay(TILE_DNGN_WAVE_SW, cell);
-    if (_is_seen_shallow(coord_def(gc.x - 1, gc.y)))
-        _add_overlay(TILE_DNGN_WAVE_W, cell);
-    if (_is_seen_shallow(coord_def(gc.x - 1, gc.y - 1)))
-        _add_overlay(TILE_DNGN_WAVE_NW, cell);
+    bool north = _is_seen_land(coord_def(gc.x, gc.y - 1));
+    bool west  = _is_seen_land(coord_def(gc.x - 1, gc.y));
+    bool east  = _is_seen_land(coord_def(gc.x + 1, gc.y));
+
+    if (north || west || east)
+    {
+        if (north)
+            _add_overlay(TILE_SHORE_N, cell);
+        if (west)
+            _add_overlay(TILE_SHORE_W, cell);
+        if (east)
+            _add_overlay(TILE_SHORE_E, cell);
+        if (north && west)
+            _add_overlay(TILE_SHORE_NW, cell);
+        if (north && east)
+            _add_overlay(TILE_SHORE_NE, cell);
+    }
 }
 
 static bool _is_seen_wall(coord_def gc)
