@@ -13,7 +13,7 @@ TAGS:   luniq_lab chance_lab transparent trowel_portal allow_dup extra
 # Nominal chance for labs was 1 chance in 15, but making it eligible as a
 # random vault gives this vault more opportunities to be placed, so dropping
 # chance to 2.85%.
-CHANCE: 50 : 285
+CHANCE: 285
 DEPTH:  12-27
 {{
   local messager =
