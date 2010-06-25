@@ -280,9 +280,13 @@ public:
   // 0 = no, 1 = cardinal move, 2 = diagonal move
   int walking;
 
-  // monsters mesmerising player; should be proteced, but needs to be saved
+  // monsters mesmerising player; should be protected, but needs to be saved
   // and restored.
   std::vector<int> beholders;
+
+  // Delayed level actions.  This array is never trimmed, as usually D:1 won't
+  // be loaded again until the very end.
+  std::vector<daction_type> dactions;
 
 #if defined(WIZARD) || defined(DEBUG)
   // If set to true, then any call to ouch() which would cuase the player

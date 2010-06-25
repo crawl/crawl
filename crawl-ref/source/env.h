@@ -92,6 +92,9 @@ struct crawl_environment
     // level_flag_type in enum.h
     uint32_t level_flags;
 
+    // Index into the delayed actions array.
+    unsigned int dactions_done;
+
     coord_def sanctuary_pos;
     int sanctuary_time;
     int forest_awoken_until;
