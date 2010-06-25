@@ -39,6 +39,7 @@
 
 #include "cio.h"
 #include "externs.h"
+#include "files.h"
 #include "libutil.h"
 #include "options.h"
 #include "message.h"
@@ -856,13 +857,14 @@ void macro_add_query( void )
  */
 static void _read_macros_from(const char* filename)
 {
+    if (!file_exists(filename))
+        return;
+
     std::string s;
-    std::ifstream f;
+    std::ifstream f(filename);
     keyseq key, action;
     bool keymap = false;
     KeymapContext keymc = KMC_DEFAULT;
-
-    f.open( filename );
 
     while (f >> s)
     {

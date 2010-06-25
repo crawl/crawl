@@ -431,7 +431,7 @@ bool file_exists(const std::string &name)
 #ifdef HAVE_STAT
     struct stat st;
     const int err = ::stat(name.c_str(), &st);
-    return (!err);
+    return (!err && S_ISREG(st.st_mode));
 #else
     FILE *f = fopen(name.c_str(), "r");
     const bool exists = !!f;
