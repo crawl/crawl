@@ -585,6 +585,12 @@ static void _get_status_lights(std::vector<status_light>& out)
         out.push_back(status_light(color, "DDoor"));
     }
 
+    if (you.duration[DUR_QUAD_DAMAGE])
+    {
+        int color = _dur_colour(BLUE, dur_expiring(DUR_QUAD_DAMAGE));
+        out.push_back(status_light(color, "Quad"));
+    }
+
     if (you.duration[DUR_DEFLECT_MISSILES])
     {
         int color = _dur_colour( MAGENTA, dur_expiring(DUR_DEFLECT_MISSILES) );

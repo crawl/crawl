@@ -3746,6 +3746,13 @@ int monsters::hurt(const actor *agent, int amount, beam_type flavour,
         else if (amount <= 0 && hit_points <= max_hit_points)
             return (0);
 
+        if (agent == &you && you.duration[DUR_QUAD_DAMAGE])
+        {
+            amount *= 4;
+            if (amount > hit_points + 50)
+                flags |= MF_EXPLODE_KILL;
+        }
+
         amount = std::min(amount, hit_points);
         hit_points -= amount;
 

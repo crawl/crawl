@@ -3363,6 +3363,9 @@ int get_expiration_threshold(duration_type dur)
 {
     switch (dur)
     {
+    case DUR_QUAD_DAMAGE:
+        return (3 * BASELINE_DELAY); // per client.qc
+
     case DUR_FIRE_SHIELD:
     case DUR_SILENCE: // no message
         return (5 * BASELINE_DELAY);
@@ -6349,7 +6352,7 @@ bool player::visible_to(const actor *looker) const
 bool player::backlit(bool check_haloed, bool self_halo) const
 {
     if (get_contamination_level() > 0 || duration[DUR_CORONA]
-        || duration[DUR_LIQUID_FLAMES])
+        || duration[DUR_LIQUID_FLAMES] || duration[DUR_QUAD_DAMAGE])
     {
         return (true);
     }

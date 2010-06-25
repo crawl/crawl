@@ -1223,6 +1223,7 @@ enum duration_type
     DUR_TIME_STEP,
     DUR_ICEMAIL_DEPLETED,     // Wait this many turns for full Icemail
     DUR_MISLED,
+    DUR_QUAD_DAMAGE,
 
     NUM_DURATIONS
 };
