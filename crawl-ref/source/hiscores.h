@@ -84,6 +84,7 @@ private:
     std::string indirectkiller;     // the effect or real monster that summoned
     std::string killerpath;         // colon-separated intermediate killers
     char        dlvl;               // dungeon level (relative)
+    short       absdepth;           // 1-based absolute depth
     level_area_type level_type;     // what kind of level died on..
     branch_type branch;             // dungeon branch
     int         final_hp;           // actual current HPs (probably <= 0)
