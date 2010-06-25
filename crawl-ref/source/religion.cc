@@ -33,6 +33,7 @@
 #include "decks.h"
 #include "delay.h"
 #include "describe.h"
+#include "dgn-actions.h"
 #include "dgnevent.h"
 #include "dlua.h"
 #include "effects.h"
@@ -877,7 +878,7 @@ void dec_penance(god_type god, int val)
                 god);
 
             if (dead_jiyva)
-                remove_all_jiyva_altars();
+                add_daction(DACT_REMOVE_JIYVA_ALTARS);
 
             take_note(Note(NOTE_MOLLIFY_GOD, god));
 
@@ -934,26 +935,6 @@ bool jiyva_is_dead()
 {
     return (you.royal_jelly_dead
             && you.religion != GOD_JIYVA && !you.penance[GOD_JIYVA]);
-}
-
-static bool _remove_jiyva_altars()
-{
-    bool success = false;
-    for (rectangle_iterator ri(1); ri; ++ri)
-    {
-        if (grd(*ri) == DNGN_ALTAR_JIYVA)
-        {
-            grd(*ri) = DNGN_FLOOR;
-            success = true;
-        }
-    }
-
-    return (success);
-}
-
-bool remove_all_jiyva_altars()
-{
-    return (apply_to_all_dungeons(_remove_jiyva_altars));
 }
 
 static void _inc_penance(god_type god, int val)
