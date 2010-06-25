@@ -32,6 +32,7 @@ decks.o \
 delay.o \
 describe.o \
 dgl-message.o \
+dgn-actions.o \
 dgn-height.o \
 dgn-overview.o \
 dgn-shoals.o \

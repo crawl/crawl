@@ -1159,6 +1159,10 @@ static void tag_construct_you(writer &th)
     marshallShort(th, you.transit_stair);
     marshallByte(th, you.entering_level);
 
+    marshallInt(th, you.dactions.size());
+    for(unsigned int k = 0; k < you.dactions.size(); k++)
+        marshallByte(th, you.dactions[k]);
+
     // List of currently beholding monsters (usually empty).
     marshallShort(th, you.beholders.size());
     for (unsigned int k = 0; k < you.beholders.size(); k++)
@@ -1711,6 +1715,20 @@ static void tag_read_you(reader &th, char minorVersion)
     you.transit_stair  = static_cast<dungeon_feature_type>(unmarshallShort(th));
     you.entering_level = unmarshallByte(th);
 
+#if TAG_MAJOR_VERSION == 27
+    if (minorVersion < TAG_MINOR_DACTIONS)
+        you.dactions.clear();
+    else
+    {
+#endif
+    int n_dact = unmarshallInt(th);
+    you.dactions.resize(n_dact, NUM_DACTIONS);
+    for (i = 0; i < n_dact; i++)
+        you.dactions[i] = static_cast<daction_type>(unmarshallByte(th));
+#if TAG_MAJOR_VERSION == 27
+    }
+#endif
+
     // List of currently beholding monsters (usually empty).
     count_c = unmarshallShort(th);
     for (i = 0; i < count_c; i++)
@@ -2034,6 +2052,8 @@ static void tag_construct_level(writer &th)
 
     env.markers.write(th);
     env.properties.write(th);
+
+    marshallInt(th, you.dactions.size());
 
     // Save heightmap, if present.
     marshallByte(th, !!env.heightmap.get());
@@ -2466,6 +2486,13 @@ static void tag_read_level( reader &th, char minorVersion )
 
     env.properties.clear();
     env.properties.read(th);
+
+#if TAG_MAJOR_VERSION == 27
+    if (minorVersion < TAG_MINOR_DACTIONS)
+        env.dactions_done = you.dactions.size();
+    else
+#endif
+    env.dactions_done = unmarshallInt(th);
 
     // Restore heightmap
     env.heightmap.reset(NULL);
