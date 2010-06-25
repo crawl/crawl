@@ -509,6 +509,7 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     indirectkiller    = se.indirectkiller;
     killerpath        = se.killerpath;
     dlvl              = se.dlvl;
+    absdepth          = se.absdepth;
     level_type        = se.level_type;
     branch            = se.branch;
     final_hp          = se.final_hp;
@@ -674,6 +675,7 @@ void scorefile_entry::init_with_fields()
 
     branch     = str_to_branch(fields->str_field("br"), BRANCH_MAIN_DUNGEON);
     dlvl       = fields->int_field("lvl");
+    absdepth   = fields->int_field("absdepth");
     level_type = str_to_level_area_type(fields->str_field("ltyp"));
 
     final_hp         = fields->int_field("hp");
@@ -745,6 +747,7 @@ void scorefile_entry::set_base_xlog_fields() const
     // can be read back by future versions of Crawl.
     fields->add_field("br",   "%s", _short_branch_name(branch));
     fields->add_field("lvl",  "%d", dlvl);
+    fields->add_field("absdepth", "%d", absdepth);
     fields->add_field("ltyp", "%s", level_area_type_name(level_type));
 
     fields->add_field("hp",   "%d", final_hp);
@@ -1017,6 +1020,7 @@ void scorefile_entry::reset()
     indirectkiller.clear();
     killerpath.clear();
     dlvl                 = 0;
+    absdepth             = 1;
     level_type           = LEVEL_DUNGEON;
     branch               = BRANCH_MAIN_DUNGEON;
     final_hp             = -1;
@@ -1223,6 +1227,8 @@ void scorefile_entry::init()
     dlvl       = player_branch_depth();
     branch     = you.where_are_you;  // no adjustments necessary.
     level_type = you.level_type;     // pandemonium, labyrinth, dungeon..
+
+    absdepth   = you.absdepth0 + 1;  // 1-based absolute depth.
 
     birth_time = you.birth_time;     // start time of game
     death_time = time( NULL );       // end time of game
@@ -1529,7 +1535,8 @@ std::string scorefile_entry::death_place(death_desc_verbosity verbosity) const
     if (verbosity == DDV_ONELINE || verbosity == DDV_TERSE)
     {
         return (make_stringf(" (%s)",
-                             place_name(get_packed_place(branch, dlvl, level_type),
+                             place_name(
+                                 get_packed_place(branch, dlvl, level_type),
                              false, true).c_str()));
     }
 
