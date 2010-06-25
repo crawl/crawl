@@ -3292,6 +3292,8 @@ enum reach_type
 enum daction_type
 {
     DACT_SHUFFLE_DECKS,
+    DACT_REAUTOMAP,
+    DACT_REMOVE_JIYVA_ALTARS,
     NUM_DACTIONS,
 };
 

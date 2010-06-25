@@ -25,9 +25,9 @@
 #include "coordit.h"
 #include "delay.h"
 #include "defines.h"
+#include "dgn-actions.h"
 #include "effects.h"
 #include "env.h"
-#include "files.h"
 #include "format.h"
 #include "godabil.h"
 #include "itemprop.h"
@@ -918,12 +918,6 @@ static bool _physiology_mutation_conflict(mutation_type mutat)
     return (false);
 }
 
-static bool _reautomap_callback()
-{
-    reautomap_level();
-    return true;
-}
-
 static const char* _stat_mut_desc(mutation_type mut, bool gain)
 {
     stat_type stat = STAT_STR;
@@ -1234,7 +1228,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     if (mutat == MUT_LOW_MAGIC || mutat == MUT_HIGH_MAGIC)
         calc_mp();
     if (mutat == MUT_PASSIVE_MAPPING)
-        apply_to_all_dungeons(_reautomap_callback);
+        add_daction(DACT_REAUTOMAP);
 
     // Amusement value will be 16 * (11-rarity) * Xom's-sense-of-humor.
     xom_is_stimulated(_calc_mutation_amusement_value(mutat));
