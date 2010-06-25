@@ -16,6 +16,7 @@
 #include "colour.h"
 #include "coordit.h"
 #include "database.h"
+#include "debug.h"
 #include "directn.h"
 #include "env.h"
 #include "fprop.h"
@@ -3689,6 +3690,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         "roars",
         "screams",
         "bellows",
+        "trumpets",
         "screeches",
         "buzzes",
         "moans",
@@ -3705,6 +3707,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         "shouts",       // S_LOUD
         "screams"       // S_VERY_LOUD
     };
+    COMPILE_CHECK(ARRAYSZ(sound_list) == NUM_LOUDNESS, shout_list);
 
     if (s_type < 0 || s_type >= NUM_LOUDNESS || s_type == NUM_SHOUTS)
     {
