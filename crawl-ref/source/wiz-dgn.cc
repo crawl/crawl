@@ -205,6 +205,7 @@ static void _wizard_go_to_level(const level_pos &pos)
     }
 
     const level_id old_level = level_id::current();
+    const bool keep_travel_data = can_travel_interlevel();
 
     you.level_type    = LEVEL_DUNGEON;
     you.where_are_you = static_cast<branch_type>(pos.id.branch);
@@ -222,6 +223,8 @@ static void _wizard_go_to_level(const level_pos &pos)
     seen_monsters_react();
     viewwindow();
 
+    if (!keep_travel_data)
+        travel_cache.erase_level_info(old_level);
     // Tell stash-tracker and travel that we've changed levels.
     trackers_init_new_level(true);
 }
