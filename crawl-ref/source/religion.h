@@ -67,7 +67,6 @@ bool god_likes_spell(spell_type spell, god_type god);
 bool god_hates_spell(spell_type spell, god_type god);
 harm_protection_type god_protects_from_harm(god_type god, bool actual = true);
 bool jiyva_is_dead();
-bool remove_all_jiyva_altars();
 bool fedhas_protects(const monsters * target);
 bool fedhas_protects_species(int mc);
 bool fedhas_neutralises(const monsters * target);

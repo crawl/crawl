@@ -17,6 +17,7 @@
 #include "coordit.h"
 #include "database.h"
 #include "delay.h"
+#include "dgn-actions.h"
 #include "dgnevent.h"
 #include "directn.h"
 #include "dlua.h"
@@ -865,7 +866,7 @@ static void _jiyva_died()
     if (you.religion == GOD_JIYVA)
         return;
 
-    remove_all_jiyva_altars();
+    add_daction(DACT_REMOVE_JIYVA_ALTARS);
 
     if (!player_in_branch(BRANCH_SLIME_PITS))
         return;
