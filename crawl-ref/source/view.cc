@@ -798,7 +798,8 @@ static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc)
 }
 
 static void _draw_player(screen_cell_t *cell,
-                         const coord_def &gc, const coord_def &ep)
+                         const coord_def &gc, const coord_def &ep,
+                         bool anim_updates)
 {
     // Player overrides everything in cell.
     cell->glyph  = you.symbol;
@@ -816,12 +817,16 @@ static void _draw_player(screen_cell_t *cell,
 #ifdef USE_TILE
     cell->tile_fg = env.tile_fg(ep) = tileidx_player();
     cell->tile_bg = env.tile_bg(ep);
-    tile_apply_animations(cell->tile_bg, &env.tile_flv(gc));
+    if (anim_updates)
+        tile_apply_animations(cell->tile_bg, &env.tile_flv(gc));
+#else
+    UNUSED(anim_updates);
 #endif
 }
 
 static void _draw_los(screen_cell_t *cell,
-                      const coord_def &gc, const coord_def &ep)
+                      const coord_def &gc, const coord_def &ep,
+                      bool anim_updates)
 {
     glyph g = get_show_glyph(env.show(ep));
     cell->glyph  = g.ch;
@@ -830,7 +835,10 @@ static void _draw_los(screen_cell_t *cell,
 #ifdef USE_TILE
     cell->tile_fg = env.tile_fg(ep);
     cell->tile_bg = env.tile_bg(ep);
-    tile_apply_animations(cell->tile_bg, &env.tile_flv(gc));
+    if (anim_updates)
+        tile_apply_animations(cell->tile_bg, &env.tile_flv(gc));
+#else
+    UNUSED(anim_updates);
 #endif
 }
 
@@ -861,6 +869,9 @@ void viewwindow(bool show_updates)
         return;
 
     screen_cell_t *cell(crawl_view.vbuf);
+
+    // Update the animation of cells only once per turn.
+    const bool anim_updates = (you.last_view_update != you.num_turns);
 
 #ifdef USE_TILE
     tiles.clear_text_tags(TAG_NAMED_MONSTER);
@@ -918,10 +929,10 @@ void viewwindow(bool show_updates)
                  && !crawl_state.game_is_arena()
                  && !crawl_state.arena_suspended)
         {
-            _draw_player(cell, gc, ep);
+            _draw_player(cell, gc, ep, anim_updates);
         }
         else if (you.see_cell(gc) && you.on_current_level)
-            _draw_los(cell, gc, ep);
+            _draw_los(cell, gc, ep, anim_updates);
         else
             _draw_los_backup(cell, gc, ep);
 
@@ -963,8 +974,8 @@ void viewwindow(bool show_updates)
     // Leaving it this way because short flashes can occur in long ones,
     // and this simply works without requiring a stack.
     you.flash_colour = BLACK;
-#ifndef USE_TILE
     you.last_view_update = you.num_turns;
+#ifndef USE_TILE
     puttext(crawl_view.viewp.x, crawl_view.viewp.y, crawl_view.vbuf);
     update_monster_pane();
 #else
