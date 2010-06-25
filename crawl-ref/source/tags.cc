@@ -2163,10 +2163,13 @@ static mon_enchant unmarshall_mon_enchant(reader &th)
 
 void marshallMonster(writer &th, const monsters &m)
 {
-    marshallShort(th, m.type);
-    if (m.type == MONS_NO_MONSTER)
+    if (!m.alive())
+    {
+        marshallShort(th, MONS_NO_MONSTER);
         return;
+    }
 
+    marshallShort(th, m.type);
     marshallString(th, m.mname);
     marshallByte(th, m.ac);
     marshallByte(th, m.ev);
