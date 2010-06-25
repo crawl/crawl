@@ -47,6 +47,7 @@
 #include "coordit.h"
 #include "debug.h"
 #include "delay.h"
+#include "dgn-actions.h"
 #include "dgn-overview.h"
 #include "directn.h"
 #include "dungeon.h"
@@ -1551,6 +1552,12 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
     {
         _close_level_gates();
     }
+
+    // Apply all delayed actions, if any.
+    if (just_created_level)
+        env.dactions_done = you.dactions.size();
+    else
+        catchup_dactions();
 
     // Here's the second cloud clearing, on load (see above).
     if (make_changes)

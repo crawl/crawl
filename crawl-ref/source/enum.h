@@ -3289,6 +3289,12 @@ enum reach_type
     REACH_TWO,
 };
 
+enum daction_type
+{
+    DACT_SHUFFLE_DECKS,
+    NUM_DACTIONS,
+};
+
 #ifdef USE_TILE
 enum screen_mode
 {
