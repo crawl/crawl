@@ -734,7 +734,8 @@ static const char* dur_names[] =
     "slimify",
     "time step",
     "icemail depleted",
-    "misled"
+    "misled",
+    "quad damage",
 };
 
 void wizard_edit_durations( void )

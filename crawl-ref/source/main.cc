@@ -2223,6 +2223,8 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_SLIMIFY, delay, "You feel less slimy.",
                           coinflip(), "Your slime is starting to congeal.");
     _decrement_a_duration(DUR_MISLED, delay, "Your thoughts are your own once more.");
+    _decrement_a_duration(DUR_QUAD_DAMAGE, delay, NULL, 0,
+                          "Quad Damage is wearing off.");
 
     if (you.duration[DUR_PARALYSIS] || you.petrified())
     {

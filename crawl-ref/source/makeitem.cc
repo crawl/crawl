@@ -817,6 +817,10 @@ void item_colour(item_def &item)
             item.colour = DARKGREY;
             break;
 
+        case MISC_QUAD_DAMAGE:
+            item.colour = ETC_DARK;
+            break;
+
         default:
             item.colour = random_colour();
             break;

@@ -866,6 +866,10 @@ potion of water
 
 A unique substance, vital for the existence of most life.
 %%%%
+quad damage
+
+A mysterious item resembling a rune of some kind. Once evoked, it will make the user glow blue and add a reverb to all sound... and there may be other effects as well.
+%%%%
 quarterstaff
 
 A sturdy wooden pole.
