@@ -9,6 +9,7 @@
 #include "dgn-actions.h"
 
 #include "debug.h"
+#include "decks.h"
 #include "env.h"
 #include "player.h"
 
@@ -32,6 +33,15 @@ void _apply_daction(daction_type act)
 {
     ASSERT(act >= 0 && act < NUM_DACTIONS);
     dprf("applying delayed action: %s", daction_names[act]);
+
+    switch(act)
+    {
+    case DACT_SHUFFLE_DECKS:
+        shuffle_all_decks_on_level();
+        break;
+    case NUM_DACTIONS:
+        ;
+    }
 }
 
 void catchup_dactions()
