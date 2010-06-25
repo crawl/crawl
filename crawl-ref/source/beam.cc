@@ -2698,6 +2698,9 @@ void bolt::internal_ouch(int dam)
 
     const char *what = aux_source.empty() ? name.c_str() : aux_source.c_str();
 
+    if (YOU_KILL(thrower) && you.duration[DUR_QUAD_DAMAGE])
+        dam *= 4;
+
     // The order of this is important.
     if (monst && (monst->type == MONS_GIANT_SPORE
                   || monst->type == MONS_BALL_LIGHTNING))
