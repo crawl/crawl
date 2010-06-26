@@ -17,6 +17,7 @@
 #include "coordit.h"
 #include "database.h"
 #include "delay.h"
+#include "dgn-actions.h"
 #include "directn.h"
 #include "effects.h"
 #include "env.h"
@@ -878,48 +879,11 @@ void yred_drain_life(int pow)
     }
 }
 
-static bool _is_yred_enslaved_soul(const monsters* mon)
-{
-    return (mon->alive() && mons_enslaved_soul(mon));
-}
-
-static bool _yred_enslaved_souls_on_level_disappear()
-{
-    bool success = false;
-
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (_is_yred_enslaved_soul(*mi))
-        {
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Undead soul disappearing: %s on level %d, branch %d",
-                 mi->name(DESC_PLAIN).c_str(),
-                 static_cast<int>(you.absdepth0),
-                 static_cast<int>(you.where_are_you));
-#endif
-
-            simple_monster_message(*mi, " is freed.");
-
-            // The monster disappears.
-            monster_die(*mi, KILL_DISMISSED, NON_MONSTER);
-
-            success = true;
-        }
-    }
-
-    return (success);
-}
-
-static bool _yred_souls_disappear()
-{
-    return (apply_to_all_dungeons(_yred_enslaved_souls_on_level_disappear));
-}
-
 void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
                              bool quiet, bool unrestricted)
 {
     if (!unrestricted)
-        _yred_souls_disappear();
+        add_daction(DACT_OLD_ENSLAVED_SOULS_POOF);
 
     const int type = mon->type;
     monster_type soul_type = mons_species(type);

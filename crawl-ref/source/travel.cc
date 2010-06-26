@@ -21,6 +21,7 @@
 #include "clua.h"
 #include "delay.h"
 #include "describe.h"
+#include "dgn-actions.h"
 #include "dgn-overview.h"
 #include "dgnevent.h"
 #include "directn.h"
@@ -3120,6 +3121,8 @@ void LevelInfo::update()
         !actor_slime_wall_immune(&you));
     precompute_travel_safety_grid travel_safety_calc;
     update_stair_distances();
+
+    update_da_counters(this);
 }
 
 void LevelInfo::set_distance_between_stairs(int a, int b, int dist)
@@ -3438,6 +3441,10 @@ void LevelInfo::save(writer& outf) const
     }
 
     marshallExcludes(outf, excludes);
+
+    marshallByte(outf, NUM_DA_COUNTERS);
+    for (int i = 0; i < NUM_DA_COUNTERS; i++)
+        marshallShort(outf, da_counters[i]);
 }
 
 void LevelInfo::load(reader& inf, char minorVersion)
@@ -3468,6 +3475,18 @@ void LevelInfo::load(reader& inf, char minorVersion)
     }
 
     unmarshallExcludes(inf, minorVersion, excludes);
+
+#if TAG_MAJOR_VERSION == 27
+    if (minorVersion >= TAG_MINOR_DA_MSTATS)
+    {
+#endif
+    int n_count = unmarshallByte(inf);
+    ASSERT(n_count >= 0 && n_count <= NUM_DA_COUNTERS);
+    for (int i = 0; i < n_count; i++)
+        da_counters[i] = unmarshallShort(inf);
+#if TAG_MAJOR_VERSION == 27
+    }
+#endif
 }
 
 void LevelInfo::fixup()
@@ -3750,11 +3769,48 @@ void TravelCache::update()
     get_level_info(level_id::current()).update();
 }
 
+void TravelCache::update_da_counters()
+{
+    ::update_da_counters(find_level_info(level_id::current()));
+}
+
+unsigned int TravelCache::query_da_counter(daction_type c)
+{
+    // other levels are up to date, the current one not necessarily so
+    update_da_counters();
+
+    unsigned int sum = 0;
+
+    std::map<level_id, LevelInfo>::const_iterator i = levels.begin();
+    for ( ; i != levels.end(); ++i)
+        sum += i->second.da_counters[c];
+
+    return (sum);
+}
+
+void TravelCache::clear_da_counter(daction_type c)
+{
+    std::map<level_id, LevelInfo>::iterator i = levels.begin();
+    for ( ; i != levels.end(); ++i)
+        i->second.da_counters[c] = 0;
+}
+
 void TravelCache::fixup_levels()
 {
     std::map<level_id, LevelInfo>::iterator i = levels.begin();
     for ( ; i != levels.end(); ++i)
         i->second.fixup();
+}
+
+std::vector<level_id> TravelCache::known_levels() const
+{
+    std::vector<level_id> levs;
+
+    std::map<level_id, LevelInfo>::const_iterator i = levels.begin();
+    for ( ; i != levels.end(); ++i)
+        levs.push_back(i->first);
+
+    return (levs);
 }
 
 bool can_travel_to(const level_id &id)

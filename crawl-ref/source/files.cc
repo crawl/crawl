@@ -2275,7 +2275,7 @@ bool is_existing_level(const level_id &level)
 }
 
 // This class provides a way to walk the dungeon with a bit more flexibility
-// than you get with apply_to_all_dungeons.
+// than you used to get with apply_to_all_dungeons.
 level_excursion::level_excursion()
     : original(level_id::current()), ever_changed_levels(false)
 {
@@ -2311,52 +2311,6 @@ level_excursion::~level_excursion()
         // Reactivate markers.
         env.markers.activate_all();
     }
-}
-
-
-// Applies an operation (applicator) after switching to the specified level.
-// Will reload the original level after modifying the target level.
-//
-// If the target level has not already been visited by the player, this
-// function will assert.
-bool apply_to_level(const level_id &level, bool (*applicator)())
-{
-    ASSERT(is_existing_level(level));
-
-    level_excursion le;
-
-    le.go_to(level);
-
-    return applicator();
-}
-
-bool apply_to_all_dungeons(bool (*applicator)())
-{
-    level_excursion le;
-    level_id original(level_id::current());
-
-    bool success = applicator();
-
-    for (int i = 0; i < MAX_LEVELS; ++i)
-        for (int j = 0; j < NUM_BRANCHES; ++j)
-        {
-            const branch_type br = static_cast<branch_type>(j);
-            const level_id thislevel(br, subdungeon_depth(br, i));
-
-            if (!is_existing_level(thislevel))
-                continue;
-
-            // Don't apply to the original level - already done up top.
-            if (original == thislevel)
-                continue;
-
-            le.go_to(thislevel);
-
-            if (applicator())
-                success = true;
-        }
-
-    return (success);
 }
 
 bool get_save_version(FILE *file, char &major, char &minor)
