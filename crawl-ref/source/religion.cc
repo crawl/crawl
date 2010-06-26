@@ -3542,7 +3542,10 @@ harm_protection_type god_protects_from_harm(god_type god, bool actual)
 // Returns true if the player can use the good gods' passive piety gain.
 static bool _need_free_piety()
 {
-    return (you.piety < 150 || you.gift_timeout || you.penance[you.religion]);
+    return (!crawl_state.game_is_sprint()
+            && (you.piety < 150
+                || you.gift_timeout
+                || you.penance[you.religion]));
 }
 
 //jmf: moved stuff from effects::handle_time()
