@@ -19,6 +19,7 @@
 #include "externs.h"
 
 #include "beam.h"
+#include "coord.h"
 #include "coordit.h"
 #include "directn.h"
 #include "debug.h"
@@ -695,6 +696,9 @@ void apply_area_cloud( cloud_func func, const coord_def& where,
                        int spread_rate, int colour, std::string name,
                        std::string tile)
 {
+    if (!in_bounds(where))
+        return;
+
     int good_squares = 0;
     int neighbours[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
@@ -924,7 +928,9 @@ static bool _cloud_helper(cloud_func func, const coord_def& where,
                           killer_type killer, int colour, std::string name,
                           std::string tile)
 {
-    if (!feat_is_solid(grd(where)) && env.cgrid(where) == EMPTY_CLOUD)
+    if (in_bounds(where)
+        && !feat_is_solid(grd(where))
+        && env.cgrid(where) == EMPTY_CLOUD)
     {
         func(where, pow, spread_rate, ctype, whose, killer, colour, name,
              tile);
@@ -1330,4 +1336,3 @@ bool spell_no_hostile_in_range(spell_type spell, int minRange)
 
     return (false);
 }
-
