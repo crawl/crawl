@@ -165,18 +165,34 @@ char reader::getMinorVersion()
     return _minorVersion;
 }
 
+void writer::check_ok(bool ok)
+{
+    if (!ok && !failed)
+    {
+        failed = true;
+        if (!_ignore_errors)
+            end(1, true, "Error writing to %s", _filename.c_str());
+    }
+}
+
 void writer::writeByte(unsigned char ch)
 {
+    if (failed)
+        return;
+
     if (_file)
-        fputc(ch, _file);
+        check_ok(fputc(ch, _file) != EOF);
     else
         _pbuf->push_back(ch);
 }
 
 void writer::write(const void *data, size_t size)
 {
+    if (failed)
+        return;
+
     if (_file)
-        fwrite(data, 1, size, _file);
+        check_ok(fwrite(data, 1, size, _file) == size);
     else
     {
         const unsigned char* cdata = static_cast<const unsigned char*>(data);
@@ -785,7 +801,7 @@ time_t parse_date_string( char buff[20] )
 
 // Write a tagged chunk of data to the FILE*.
 // tagId specifies what to write.
-void tag_write(tag_type tagID, FILE* outf)
+void tag_write(const std::string &filename, tag_type tagID, FILE* outf)
 {
     ASSERT(outf);
 
@@ -817,7 +833,7 @@ void tag_write(tag_type tagID, FILE* outf)
 
     // Write tag header.
     {
-        writer tmp(outf);
+        writer tmp(filename, outf);
         marshallShort(tmp, tagID);
         marshallInt(tmp, buf.size());
     }

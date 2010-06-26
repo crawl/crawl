@@ -313,6 +313,7 @@ static std::string _gametype_to_str(game_type type)
     }
 }
 
+#ifndef DGAMELAUNCH
 static game_type _str_to_gametype(const std::string& s)
 {
     for (int i = 0; i < NUM_GAME_TYPE; ++i)
@@ -323,6 +324,7 @@ static game_type _str_to_gametype(const std::string& s)
     }
     return (NUM_GAME_TYPE);
 }
+#endif
 
 static std::string _species_to_str(species_type sp)
 {
