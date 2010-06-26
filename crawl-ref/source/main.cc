@@ -292,7 +292,7 @@ int main(int argc, char *argv[])
     if (game_start && you.char_class == JOB_WANDERER)
         _wanderer_startup_message();
 
-    if (!crawl_state.game_is_tutorial() and game_start)
+    if (!crawl_state.game_is_tutorial() && !crawl_state.game_is_sprint() && game_start)
        _announce_goal_message();
 
     _god_greeting_message(game_start);
