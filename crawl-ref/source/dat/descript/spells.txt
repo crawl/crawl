@@ -198,7 +198,7 @@ This spell violently rends apart anything in a small volume of space. It can be 
 %%%%
 Dispel Undead
 
-This spell inflicts a great deal of damage on an undead creature.
+This spell uses the very forces that bind an undead creature together to inflict a great deal of damage on it.
 %%%%
 Dispersal
 
@@ -458,7 +458,7 @@ This spell is greatly prized by summoners and necromancers, as it allows the cas
 %%%%
 Regeneration
 
-This spell dramatically but temporarily increases the caster's recuperative abilities, while also increasing the rate of food consumption.
+This spell reanimates parts of the caster's wounds. This unholy act dramatically but temporarily increases the caster's recuperative abilities, while also increasing the rate of food consumption.
 %%%%
 Repel Missiles
 
