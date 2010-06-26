@@ -65,9 +65,6 @@
 #include <dos.h>
 #endif
 
-#define TC_MAJOR_VERSION ((unsigned char) 4)
-#define TC_MINOR_VERSION ((unsigned char) 9)
-
 enum IntertravelDestination
 {
     // Go down a level
@@ -3690,8 +3687,8 @@ bool TravelCache::is_known_branch(unsigned char branch) const
 void TravelCache::save(writer& outf) const
 {
     // Travel cache version information
-    marshallByte(outf, TC_MAJOR_VERSION);
-    marshallByte(outf, TC_MINOR_VERSION);
+    marshallByte(outf, TAG_MAJOR_VERSION);
+    marshallByte(outf, TAG_MINOR_VERSION);
 
     // Write level count.
     marshallShort(outf, levels.size());
@@ -3714,8 +3711,8 @@ void TravelCache::load(reader& inf, char minorVersion)
     // Check version. If not compatible, we just ignore the file altogether.
     unsigned char major = unmarshallByte(inf),
                   minor = unmarshallByte(inf);
-    if (major != TC_MAJOR_VERSION || minor != TC_MINOR_VERSION)
-        return ;
+    if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION)
+        return;
 
     int level_count = unmarshallShort(inf);
     for (int i = 0; i < level_count; ++i)
