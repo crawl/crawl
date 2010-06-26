@@ -90,7 +90,6 @@ Monsters:
 * Wayne is now capable of laying a major smackdown.
 
 Spells:
-
 * Call Imp is buffed: it is now level 2, it takes spell power into account,
   and it can summon iron imps.
 * Call Canine Familiar replaces Summon Elemental in the book of Callings,
