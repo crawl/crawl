@@ -1290,7 +1290,7 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
 // Producing helpful potions would break game balance here...
 // and producing more than one potion from a corpse, or not
 // using up the corpse might also lead to game balance problems. - bwr
-bool cast_fulsome_distillation(int /*pow*/)
+bool cast_fulsome_distillation(int pow, bool check_range)
 {
     int num_corpses = 0;
     int corpse = -1;
@@ -1310,6 +1310,13 @@ bool cast_fulsome_distillation(int /*pow*/)
     switch (num_corpses)
     {
         case 0:
+            // Allow using Z to victory dance fulsome.
+            if (!check_range)
+            {
+                mpr("The spell fizzles.");
+                return (true);
+            }
+
             mpr("There aren't any corpses here!");
             return (false);
         case 1:
