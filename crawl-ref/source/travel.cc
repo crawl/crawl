@@ -2298,6 +2298,9 @@ static travel_target _prompt_travel_depth(const level_id &id,
 
 bool travel_kill_monster(const monsters * monster)
 {
+    if (monster->type != MONS_TOADSTOOL)
+        return (false);
+
     if (!wielded_weapon_check(you.weapon(), true))
         return (false);
 
@@ -2305,7 +2308,7 @@ bool travel_kill_monster(const monsters * monster)
     if (player_mutation_level(MUT_BERSERK) || scan_artefacts(ARTP_ANGRY))
         return (false);
 
-    return (monster->type == MONS_TOADSTOOL);
+    return (true);
 }
 
 travel_target prompt_translevel_target(int prompt_flags,
