@@ -1190,7 +1190,7 @@ static void write_map_prelude(const std::string &filebase)
     }
 
     FILE *fp = fopen(luafile.c_str(), "wb");
-    writer outf(fp);
+    writer outf(luafile, fp);
     lc_global_prelude.write(outf);
     fclose(fp);
 }
@@ -1202,7 +1202,7 @@ static void write_map_full(const std::string &filebase, size_t vs, size_t ve)
     if (!fp)
         end(1, true, "Unable to open %s for writing", cfile.c_str());
 
-    writer outf(fp);
+    writer outf(cfile, fp);
     marshallInt(outf, MAP_CACHE_VERSION);
     for (size_t i = vs; i < ve; ++i)
         vdefs[i].write_full(outf);
@@ -1216,7 +1216,7 @@ static void write_map_index(const std::string &filebase, size_t vs, size_t ve)
     if (!fp)
         end(1, true, "Unable to open %s for writing", cfile.c_str());
 
-    writer outf(fp);
+    writer outf(cfile, fp);
     marshallInt(outf, MAP_CACHE_VERSION);
     marshallShort(outf, ve > vs? ve - vs : 0);
     for (size_t i = vs; i < ve; ++i)

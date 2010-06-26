@@ -92,18 +92,34 @@ template<typename enm> struct enum_details;
 class writer
 {
 public:
-    writer(FILE* output)
-        : _file(output), _pbuf(0)  { ASSERT(output); }
+    writer(const std::string &filename, FILE* output,
+           bool ignore_errors = false)
+        : _filename(filename), _file(output),
+          _ignore_errors(ignore_errors), _pbuf(0), failed(false)
+    {
+        ASSERT(output);
+    }
     writer(std::vector<unsigned char>* poutput)
-        : _file(0), _pbuf(poutput) { ASSERT(poutput); }
+        : _filename(), _file(0), _ignore_errors(false),
+          _pbuf(poutput), failed(false) { ASSERT(poutput); }
 
     void writeByte(unsigned char byte);
     void write(const void *data, size_t size);
     long tell();
 
+    bool succeeded() const { return !failed; }
+
 private:
+    void check_ok(bool ok);
+
+private:
+    std::string _filename;
     FILE* _file;
+    bool _ignore_errors;
+
     std::vector<unsigned char>* _pbuf;
+
+    bool failed;
 
     std::map<const enum_info*, enum_write_state> used_enums;
     friend void marshallEnumVal(writer&, const enum_info*, int);
@@ -188,7 +204,7 @@ inline enm unmarshallEnum(writer& wr)
  * *********************************************************************** */
 
 tag_type tag_read(FILE* inf, char minorVersion, char expected_tags[NUM_TAGS]);
-void tag_write(tag_type tagID, FILE* outf);
+void tag_write(const std::string &filename, tag_type tagID, FILE* outf);
 void tag_set_expected(char tags[], int fileType);
 void tag_missing(int tag, char minorVersion);
 
