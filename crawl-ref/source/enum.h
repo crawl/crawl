@@ -3291,6 +3291,23 @@ enum reach_type
 
 enum daction_type
 {
+    DACT_ALLY_HOLY,
+    DACT_ALLY_UNHOLY_EVIL,
+    DACT_ALLY_UNCLEAN_CHAOTIC,
+    DACT_ALLY_SPELLCASTER,
+    DACT_ALLY_YRED_SLAVE,
+    DACT_ALLY_BEOGH, // both orcies and demons summoned by sorcerers
+    DACT_ALLY_SLIME,
+    DACT_ALLY_PLANT,
+
+    NUM_DA_COUNTERS,
+
+    // Leave space for new counters, as they need to be at the start.
+    DACT_OLD_ENSLAVED_SOULS_POOF = 16,
+    DACT_HOLY_NEW_ATTEMPT,
+    DACT_HOLY_PETS_GO_NEUTRAL,
+    DACT_ALLY_TROG,
+
     DACT_SHUFFLE_DECKS,
     DACT_REAUTOMAP,
     DACT_REMOVE_JIYVA_ALTARS,

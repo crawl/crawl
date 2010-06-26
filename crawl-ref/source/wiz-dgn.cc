@@ -13,6 +13,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "delay.h"
+#include "dgn-actions.h"
 #include "dungeon.h"
 #include "effects.h"
 #include "env.h"
@@ -752,5 +753,38 @@ void debug_shift_labyrinth()
         return;
     }
     change_labyrinth(true);
+}
+
+void wizard_list_levels()
+{
+    travel_cache.update_da_counters();
+
+    std::vector<level_id> levs = travel_cache.known_levels();
+
+    mpr("Known levels:");
+    for(unsigned int i = 0; i < levs.size(); i++)
+    {
+        const LevelInfo* lv = travel_cache.find_level_info(levs[i]);
+        ASSERT(lv);
+
+        std::string cnts = "";
+        for(int j = 0; j < NUM_DA_COUNTERS; j++)
+        {
+            char num[20];
+            sprintf(num, "%d/", lv->da_counters[j]);
+            cnts += num;
+        }
+        mprf(MSGCH_DIAGNOSTICS, i+1, // inhibit merging
+             "%-10s : %s", levs[i].describe().c_str(), cnts.c_str());
+    }
+
+    std::string cnts = "";
+    for(int j = 0; j < NUM_DA_COUNTERS; j++)
+    {
+        char num[20];
+        sprintf(num, "%d/", query_da_counter((daction_type)j));
+        cnts += num;
+    }
+    mprf("%-10s : %s", "`- total", cnts.c_str());
 }
 #endif

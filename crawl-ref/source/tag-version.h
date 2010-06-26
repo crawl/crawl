@@ -10,7 +10,8 @@ enum tag_minor_version
 {
     TAG_MINOR_RESET        = 0, // Minor tags were reset
     TAG_MINOR_DACTIONS     = 1, // Delayed level functions.
-    TAG_MINOR_VERSION      = 1, // Current version.  (Keep equal to max.)
+    TAG_MINOR_DA_MSTATS    = 2, // Counts of monsters affectable by dactions.
+    TAG_MINOR_VERSION      = 2, // Current version.  (Keep equal to max.)
 };
 
 #endif

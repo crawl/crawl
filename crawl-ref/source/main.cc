@@ -590,6 +590,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case '(': wizard_create_feature();               break;
     case ')': wizard_mod_tide();                     break;
     case ':': wizard_list_branches();                break;
+    case ';': wizard_list_levels();                  break;
     case '{': wizard_map_level();                    break;
     case '}': wizard_reveal_traps();                 break;
     case '@': wizard_set_stats();                    break;
