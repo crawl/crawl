@@ -859,7 +859,7 @@ void game_options::reset_options()
     pizza.clear();
 
 #ifdef WIZARD
-    fsim_rounds = 40000L;
+    fsim_rounds = 4000L;
     fsim_mons   = "worm";
     fsim_str = fsim_int = fsim_dex = 15;
     fsim_xl  = 10;
