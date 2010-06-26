@@ -2713,7 +2713,7 @@ void world_reacts()
 
     if (you.num_turns != -1)
     {
-        if (you.num_turns < LONG_MAX)
+        if (you.num_turns < INT_MAX)
             you.num_turns++;
         if (env.turns_on_level < INT_MAX)
             env.turns_on_level++;
