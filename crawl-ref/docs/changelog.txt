@@ -5,6 +5,10 @@ Balancing 0.6 features:
   relative to skill.
 * Make heavy armour guaranteed damage reduction percentage
   independent of armour skill.
+* Heavy armour doesn't affect weapon speed anymore.
+* Shields, however, do; one-handed weapons work a lot worse than before,
+  while 1.5-handed ones work slightly worse.
+* Nagas and worshippers of Cheibriados don't suffer from as much hunger.
 
 Unsorted:
 * New mini-game, Dungeon Crawl Sprint.
@@ -39,6 +43,8 @@ Game:
   fitting the ghost.
 * Monster equipment can be corroded by acid.
 * Lost stats are now recovered one point at a time.
+* Magic contamination effects are more than twice as harsh.
+* The Abyss may now include hand-made structures.
 
 Gods:
 * Zin no longer objects to deaths of non-sentient allies, and
@@ -68,6 +74,10 @@ Items:
   steel brand is properly applied for thrown weapons.
 * Demon tridents can be blessed by TSO.
 
+Backgrounds:
+* Thieves and Death Knights are no more.
+* Warpers receive darts of dispersion.
+
 Monsters:
 * Anacondas are now amphibious.
 * Skeletal dragons are renamed to bone dragons.
@@ -79,7 +89,11 @@ Monsters:
 * Orange demons' poison can now drain any stat.
 * Hell hounds, hell hogs and demonic crawlers now leave corpses.
 * Hell knights have more HP and do more damage.
-* New monsters: elephant, dire elephant, hellephant.
+* Blink frogs have phase shift.
+* New monsters: elephant, dire elephant, hellephant, spriggan,
+  spriggan druid, spriggan firefly rider.
+* New unique: Grinder the shadow imp.
+* Wayne is now capable of laying a major smackdown.
 
 Spells:
 * Call Imp is buffed: it is now level 2, it takes spell power
@@ -91,6 +105,9 @@ Spells:
 * Invisibility no longer works on glowing monsters, as Corona
   doesn't either.
 * Extension is nerfed: it now only extends spells that you know.
+* Death's Door doesn't paralyze you anymore, it just blocks healing effects
+  -- except for Borgnjor's Revification.
+* Summon Ugly Things is level 6, Haunt is level 7.
 
 Technical:
 * LOS and areas recalculated on-demand.
