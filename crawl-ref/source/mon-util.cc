@@ -2940,8 +2940,13 @@ bool mons_has_ranged_spell(const monsters *mon, bool attack_only,
 
 bool mons_has_ranged_ability(const monsters *mon)
 {
-    if (mon->type == MONS_ELECTRIC_EEL || mon->type == MONS_LAVA_SNAKE)
+    // [ds] FIXME: Get rid of special abilities and remove this.
+    if (mon->type == MONS_ELECTRIC_EEL
+        || mon->type == MONS_LAVA_SNAKE
+        || mon->type == MONS_OKLOB_PLANT)
+    {
         return (true);
+    }
 
     return (false);
 }

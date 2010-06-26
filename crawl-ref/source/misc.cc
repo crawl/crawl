@@ -1519,8 +1519,13 @@ bool mons_can_hurt_player(const monsters *mon, const bool want_move)
 
     // Even if the monster can not actually reach the player it might
     // still use some ranged form of attack.
-    if (you.see_cell_no_trans(mon->pos()) && mons_has_ranged_ability(mon))
+    if (you.see_cell_no_trans(mon->pos())
+        && (mons_has_ranged_attack(mon)
+            || mons_has_ranged_ability(mon)
+            || mons_has_ranged_spell(mon)))
+    {
         return (true);
+    }
 
     return (false);
 }
@@ -1545,11 +1550,11 @@ bool mons_is_safe(const monsters *mon, const bool want_move,
                        // Only seen through glass walls or within water?
                        // Assuming that there are no water-only/lava-only
                        // monsters capable of throwing or zapping wands.
-                    || (!you.see_cell_no_trans(mon->pos())
-                            || mons_class_habitat(mon->type) == HT_WATER
-                            || mons_class_habitat(mon->type) == HT_LAVA
-                            || mons_is_stationary(mon))
-                        && !mons_can_hurt_player(mon, want_move));
+                    || ((!you.see_cell_no_trans(mon->pos())
+                         || mons_class_habitat(mon->type) == HT_WATER
+                         || mons_class_habitat(mon->type) == HT_LAVA
+                         || mons_is_stationary(mon))
+                        && !mons_can_hurt_player(mon, want_move)));
 
 #ifdef CLUA_BINDINGS
     if (consider_user_options)
