@@ -1693,6 +1693,8 @@ static tileidx_t _tileidx_monster_no_props(const monsters *mon)
             else
                 return TILEP_MONS_BALLISTOMYCETE_INACTIVE;
             break;
+        case MONS_HYPERACTIVE_BALLISTOMYCETE:
+            return TILEP_MONS_HYPERACTIVE_BALLISTOMYCETE;
 
         case MONS_GOLD_MIMIC:
         case MONS_WEAPON_MIMIC:
