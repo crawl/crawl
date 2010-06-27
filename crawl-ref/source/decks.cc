@@ -2284,7 +2284,7 @@ static bool _trowel_card(int power, deck_rarity_type rarity)
     if (power_level >= 2)
     {
         // Generate a portal to something.
-        const map_def *map = random_map_for_tag("trowel_portal", false);
+        const map_def *map = random_map_for_tag("trowel_portal");
         if (!map)
         {
             mpr("A buggy portal flickers into view, then vanishes.");

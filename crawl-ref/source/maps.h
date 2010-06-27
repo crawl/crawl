@@ -44,7 +44,8 @@ const map_def *random_map_for_place(const level_id &place, bool minivault);
 const map_def *random_map_in_depth(const level_id &lid,
                                    bool want_minivault = false);
 const map_def *random_map_for_tag(const std::string &tag,
-                                  bool check_depth = false);
+                                  bool check_depth = false,
+                                  bool check_chance = false);
 mapref_vector random_chance_maps_in_depth(const level_id &place);
 
 void add_parsed_map(const map_def &md);
