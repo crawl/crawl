@@ -2764,6 +2764,7 @@ static void _generate_potion_item(item_def& item, int force_type,
     else
     {
         int stype;
+        int tries = 500;
         do
         {
             // total weight is NOT 10000
@@ -2798,7 +2799,8 @@ static void _generate_potion_item(item_def& item, int force_type,
         }
         while (stype == POT_POISON && item_level < 1
                || stype == POT_STRONG_POISON && item_level < 11
-               || agent == GOD_XOM && _is_boring_item(OBJ_POTIONS, stype));
+               || (agent == GOD_XOM && _is_boring_item(OBJ_POTIONS, stype)
+                   && --tries > 0));
 
         if (stype == POT_GAIN_STRENGTH || stype == POT_GAIN_DEXTERITY
             || stype == POT_GAIN_INTELLIGENCE || stype == POT_EXPERIENCE
@@ -2823,19 +2825,15 @@ static void _generate_scroll_item(item_def& item, int force_type,
     else
     {
         const int depth_mod = random2(1 + item_level);
-
+        int tries = 500;
         do
         {
             // total weight: 10000
             item.sub_type = random_choose_weighted(
                 1797, SCR_IDENTIFY,
                 1305, SCR_REMOVE_CURSE,
-                // [Cha] don't generate teleportation scrolls if in sprint
-		(crawl_state.game_is_sprint() ? 0 : 802), SCR_TELEPORTATION,
                  642, SCR_DETECT_CURSE,
                  331, SCR_FEAR,
-                // [Cha] don't generate noise scrolls if in sprint
-                (crawl_state.game_is_sprint() ? 0 : 331), SCR_NOISE,
                  331, SCR_MAGIC_MAPPING,
                  331, SCR_FOG,
                  331, SCR_RANDOM_USELESSNESS,
@@ -2866,9 +2864,21 @@ static void _generate_scroll_item(item_def& item, int force_type,
                  // Balanced by rarity.
                  10, SCR_SILENCE,
 
+                // [ds] Zero-weights should always be at the end,
+                // since random_choose_weighted stops at the first
+                // zero weight.
+
+                // [Cha] don't generate teleportation scrolls if in sprint
+                (crawl_state.game_is_sprint() ? 0 : 802), SCR_TELEPORTATION,
+
+                // [Cha] don't generate noise scrolls if in sprint
+                (crawl_state.game_is_sprint() ? 0 : 331), SCR_NOISE,
+
                  0);
         }
-        while (agent == GOD_XOM && _is_boring_item(OBJ_SCROLLS, item.sub_type));
+        while (agent == GOD_XOM
+               && _is_boring_item(OBJ_SCROLLS, item.sub_type)
+               && --tries > 0);
     }
 
     // determine quantity
@@ -3069,13 +3079,15 @@ static void _generate_jewellery_item(item_def& item, bool allow_uniques,
         item.sub_type = force_type;
     else
     {
+        int tries = 500;
         do
         {
             item.sub_type = (one_chance_in(4) ? get_random_amulet_type()
                                               : get_random_ring_type());
         }
         while (agent == GOD_XOM
-               && _is_boring_item(OBJ_JEWELLERY, item.sub_type));
+               && _is_boring_item(OBJ_JEWELLERY, item.sub_type)
+               && --tries > 0);
     }
 
     // Everything begins as uncursed, unenchanted jewellery {dlb}:
