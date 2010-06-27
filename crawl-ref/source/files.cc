@@ -93,12 +93,15 @@
 #include "view.h"
 #include "viewgeom.h"
 
-#ifdef TARGET_COMPILER_VC
-#include <direct.h>
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#else
-#include <dirent.h>
+#ifdef TARGET_OS_WINDOWS
+# ifdef TARGET_COMPILER_VC
+#  include <direct.h>
+# else
+#  include <dirent.h>
+# endif
+# define WIN32_LEAN_AND_MEAN
+# include <windows.h>
+# define rename(foo,bar) !MoveFileEx(foo, bar, MOVEFILE_REPLACE_EXISTING)
 #endif
 
 #ifndef HAVE_STAT
