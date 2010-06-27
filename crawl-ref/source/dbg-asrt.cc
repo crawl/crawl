@@ -99,7 +99,6 @@ static void _dump_player(FILE *file)
 
     // Arena mode can change behavior of the rest of the code and/or lead
     // to asserts.
-    crawl_state.type            = GAME_TYPE_NORMAL;
     crawl_state.arena_suspended = false;
 
     fprintf(file, "Player:\n");
@@ -483,6 +482,8 @@ static void _dump_ver_stuff(FILE* file)
 #endif // UNIX
 
     fprintf(file, "Bits: %d\n", (int)sizeof(void*)*8);
+    fprintf(file, "Game mode: %s\n",
+            gametype_to_str(crawl_state.type).c_str());
 
 #ifdef USE_TILE
     fprintf(file, "Tiles: yes\n\n");
