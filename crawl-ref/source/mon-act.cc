@@ -3504,6 +3504,7 @@ static void _mons_in_cloud(monsters *monster)
 {
     int wc = env.cgrid(monster->pos());
     int hurted = 0;
+    int resist = 0;
     bolt beam;
 
     const int speed = ((monster->speed > 0) ? monster->speed : 10);
@@ -3648,6 +3649,26 @@ static void _mons_in_cloud(monsters *monster)
             if (monster->mutate())
                 wake = true;
         }
+        break;
+
+    case CLOUD_HOLY_FLAMES:
+
+        simple_monster_message(monster, " is engulfed in blessed fire!");
+
+        if (monster->is_holy())
+            resist = 3;
+        if (monster->is_evil() || monster->is_unholy())
+            resist = -1;
+
+        hurted +=
+            resist_adjust_damage( monster,
+                                  BEAM_HOLY_FLAME,
+                                  resist,
+                                  ((random2avg(16, 3) + 6) * 10) / speed );
+
+        dprf("Pain: %d, resist: %d", hurted, resist);
+
+        hurted -= random2(1 + monster->ac);
         break;
 
     default:                // 'harmless' clouds -- colored smoke, etc {dlb}.

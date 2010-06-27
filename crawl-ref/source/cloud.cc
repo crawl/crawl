@@ -936,10 +936,36 @@ void in_a_cloud()
         break;
 
     case CLOUD_HOLY_FLAMES:
-        mprf("You are engulfed in %s!", !name.empty() ? name.c_str() : "cleansing flames");
+        mprf("You are engulfed in %s!", !name.empty() ? name.c_str() : "blessed fire");
 
-        // TODO: Fill this in.
+        // Stats are the same for fire, except resists are based on holiness.
+        // Damage is reduced if you are holy, increased if you are evil.
+        if (you.is_evil())
+            resist = -1;
+        else if (you.is_holy())
+            resist = 3;
 
+        if (resist <= 0)
+        {
+            hurted += ((random2avg(23, 3) + 10) * you.time_taken) / 10;
+
+            if (resist < 0)
+                hurted += ((random2avg(14, 2) + 3) * you.time_taken) / 10;
+
+            hurted -= random2(you.armour_class());
+
+            if (hurted < 0)
+                hurted = 0;
+            else
+                ouch(hurted, cl, KILLED_BY_CLOUD, "blessed fire");
+        }
+        else
+        {
+            canned_msg(MSG_YOU_RESIST);
+            hurted += ((random2avg(23, 3) + 10) * you.time_taken) / 10;
+            hurted /= resist_fraction(resist);
+            ouch(hurted, cl, KILLED_BY_CLOUD, "blessed fire");
+        }
         break;
 
     default:
@@ -1078,7 +1104,7 @@ std::string cloud_name(cloud_type type)
     case CLOUD_INK:
         return "ink";
     case CLOUD_HOLY_FLAMES:
-        return "cleansing flame";
+        return "blessed fire";
     default:
         return "buggy goodness";
     }

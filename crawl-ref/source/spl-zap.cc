@@ -102,8 +102,6 @@ zap_type spell_to_zap(spell_type spell)
         return ZAP_DIGGING;
     case SPELL_LIGHT_BEAM:
         return ZAP_LIGHT_BEAM;
-    case SPELL_HOLY_BREATH:
-        return ZAP_HOLY_BREATH;
     case SPELL_DEBUGGING_RAY:
         return ZAP_DEBUGGING_RAY;
     default:
