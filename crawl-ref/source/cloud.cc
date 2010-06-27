@@ -609,6 +609,8 @@ cloud_type beam2cloud(beam_type flavour)
         return CLOUD_RANDOM;
     case BEAM_INK:
         return CLOUD_INK;
+    case BEAM_HOLY_FLAME:
+        return CLOUD_HOLY_FLAMES;
     }
 }
 
@@ -634,6 +636,7 @@ beam_type cloud2beam(cloud_type flavour)
     case CLOUD_MUTAGENIC:    return BEAM_POTION_MUTAGENIC;
     case CLOUD_GLOOM:        return BEAM_GLOOM;
     case CLOUD_INK:          return BEAM_INK;
+    case CLOUD_HOLY_FLAMES:  return BEAM_HOLY_FLAME;
     case CLOUD_RANDOM:       return BEAM_RANDOM;
     }
 }
@@ -932,6 +935,13 @@ void in_a_cloud()
 
         break;
 
+    case CLOUD_HOLY_FLAMES:
+        mprf("You are engulfed in %s!", !name.empty() ? name.c_str() : "cleansing flames");
+
+        // TODO: Fill this in.
+
+        break;
+
     default:
         break;
     }
@@ -964,7 +974,8 @@ bool is_damaging_cloud(cloud_type type, bool temp)
         return (!you.res_rotting());
     case CLOUD_MUTAGENIC:
         return (you.can_mutate());
-
+    case CLOUD_HOLY_FLAMES:
+        return (you.is_evil());
     default:
         // Smoke, never harmful.
         return (false);
@@ -1066,6 +1077,8 @@ std::string cloud_name(cloud_type type)
         return "gloom";
     case CLOUD_INK:
         return "ink";
+    case CLOUD_HOLY_FLAMES:
+        return "cleansing flame";
     default:
         return "buggy goodness";
     }
@@ -1206,6 +1219,10 @@ int get_cloud_colour(int cloudno)
 
     case CLOUD_MAGIC_TRAIL:
         which_colour = ETC_MAGIC;
+        break;
+
+    case CLOUD_HOLY_FLAMES:
+        which_colour = ETC_HOLY;
         break;
 
     default:
