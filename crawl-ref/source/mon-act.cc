@@ -2027,7 +2027,8 @@ void handle_monster_move(monsters *monster)
             // See if we move into (and fight) an unfriendly monster.
             monsters* targ = monster_at(monster->pos() + mmov);
             if (mons_base_type(monster) == MONS_KRAKEN
-                && targ && targ->type == MONS_KRAKEN_CONNECTOR)
+                && targ && targ->type == MONS_KRAKEN_CONNECTOR
+                && env.grid(targ->pos()) == DNGN_DEEP_WATER)
             {
                 // Just purge the connector. -cao
                 monster_die(targ,
