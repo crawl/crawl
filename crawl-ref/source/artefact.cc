@@ -336,7 +336,7 @@ static std::string _replace_name_parts(const std::string name_in,
 // Functions defined in art-func.h are referenced in art-data.h
 #include "art-func.h"
 
-static unrandart_entry unranddata[UNRAND_LAST] = {
+static unrandart_entry unranddata[] = {
 #include "art-data.h"
 };
 
@@ -812,7 +812,7 @@ void static _get_randart_properties(const item_def &item,
         else
             power_level++;
 
-        if (!is_weapon_brand_ok(atype, proprt[ARTP_BRAND]))
+        if (!is_weapon_brand_ok(atype, proprt[ARTP_BRAND], true))
         {
             proprt[ARTP_BRAND] = SPWPN_NORMAL;
             power_level--;
@@ -1704,6 +1704,7 @@ int get_unrandart_num( const char *name )
     std::string quoted = "\"";
     quoted += name;
     quoted += "\"";
+    lowercase(quoted);
 
     for (unsigned int i = 0; i < ARRAYSZ(unranddata); ++i)
     {

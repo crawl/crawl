@@ -49,7 +49,7 @@ function MonsterOnTrigger:new(pars)
   mot.message_unseen  = pars.message_unseen
   mot.death_monster   = pars.death_monster
   mot.new_monster     = pars.new_monster
-  mot.props           = util.append( mot.props, pars)
+  mot.props           = util.cathash(mot.props or { }, pars)
 
   return mot
 end
@@ -71,7 +71,7 @@ function MonsterOnTrigger:read(marker, th)
   self.new_monster    = file.unmarshall_string(th)
   self.props          = lmark.unmarshall_table(th)
 
-  setmetatable(self, MonsterOnTrigger) 
+  setmetatable(self, MonsterOnTrigger)
 
   return self
 end
@@ -85,6 +85,11 @@ function MonsterOnTrigger:on_trigger(triggerer, marker, ev)
   end
 
   if dgn.mons_at(x, y) then
+    return
+  end
+
+  local wanted_feat = self.props.monster_place_feature
+  if wanted_feat and wanted_feat ~= dgn.grid(x, y) then
     return
   end
 

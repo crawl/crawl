@@ -161,18 +161,19 @@ void turn_corpse_into_skeleton(item_def &item)
         return;
 
     item.sub_type = CORPSE_SKELETON;
-    item.special  = 200; // reset rotting counter
+    item.special  = FRESHEST_CORPSE; // reset rotting counter
     item.colour   = LIGHTGREY;
 }
 
-void turn_corpse_into_chunks(item_def &item)
+void turn_corpse_into_chunks(item_def &item, bool bloodspatter,
+                             bool make_hide)
 {
     ASSERT(item.base_type == OBJ_CORPSES && item.sub_type == CORPSE_BODY);
     const monster_type montype = static_cast<monster_type>(item.plus);
     const int max_chunks = get_max_corpse_chunks(item.plus);
 
     // Only fresh corpses bleed enough to colour the ground.
-    if (!food_is_rotten(item))
+    if (bloodspatter && !food_is_rotten(item))
         bleed_onto_floor(you.pos(), montype, max_chunks, true);
 
     item.base_type = OBJ_FOOD;
@@ -184,8 +185,11 @@ void turn_corpse_into_chunks(item_def &item)
         item.flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
 
     // Happens after the corpse has been butchered.
-    if (monster_descriptor(item.plus, MDSC_LEAVES_HIDE) && !one_chance_in(3))
+    if (make_hide && monster_descriptor(item.plus, MDSC_LEAVES_HIDE)
+        && !one_chance_in(3))
+    {
         _create_monster_hide(item);
+    }
 }
 
 void turn_corpse_into_skeleton_and_chunks(item_def &item)
@@ -1515,8 +1519,13 @@ bool mons_can_hurt_player(const monsters *mon, const bool want_move)
 
     // Even if the monster can not actually reach the player it might
     // still use some ranged form of attack.
-    if (you.see_cell_no_trans(mon->pos()) && mons_has_ranged_ability(mon))
+    if (you.see_cell_no_trans(mon->pos())
+        && (mons_has_ranged_attack(mon)
+            || mons_has_ranged_ability(mon)
+            || mons_has_ranged_spell(mon)))
+    {
         return (true);
+    }
 
     return (false);
 }
@@ -1541,11 +1550,11 @@ bool mons_is_safe(const monsters *mon, const bool want_move,
                        // Only seen through glass walls or within water?
                        // Assuming that there are no water-only/lava-only
                        // monsters capable of throwing or zapping wands.
-                    || (!you.see_cell_no_trans(mon->pos())
-                            || mons_class_habitat(mon->type) == HT_WATER
-                            || mons_class_habitat(mon->type) == HT_LAVA
-                            || mons_is_stationary(mon))
-                        && !mons_can_hurt_player(mon, want_move));
+                    || ((!you.see_cell_no_trans(mon->pos())
+                         || mons_class_habitat(mon->type) == HT_WATER
+                         || mons_class_habitat(mon->type) == HT_LAVA
+                         || mons_is_stationary(mon))
+                        && !mons_can_hurt_player(mon, want_move)));
 
 #ifdef CLUA_BINDINGS
     if (consider_user_options)
@@ -1966,7 +1975,7 @@ void reveal_secret_door(const coord_def& p)
     // until opened.
     grd(p) = feat_is_opaque(door) ? DNGN_DETECTED_SECRET_DOOR
                                   : DNGN_OPEN_DOOR;
-    viewwindow(false);
+    viewwindow();
     learned_something_new(HINT_FOUND_SECRET_DOOR, p);
 
     // If a transparent secret door was forced open to preserve LOS,

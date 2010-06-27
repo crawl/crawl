@@ -854,6 +854,7 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     case SPELL_FIRE_ELEMENTALS:
     case SPELL_AIR_ELEMENTALS:
     case SPELL_EARTH_ELEMENTALS:
+    case SPELL_IRON_ELEMENTALS:
     case SPELL_KRAKEN_TENTACLES:
     case SPELL_BLINK:
     case SPELL_CONTROLLED_BLINK:
@@ -1854,6 +1855,10 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         if (summon_type == MONS_NO_MONSTER)
             summon_type = MONS_EARTH_ELEMENTAL;
         // Deliberate fall through
+    case SPELL_IRON_ELEMENTALS:
+        if (summon_type == MONS_NO_MONSTER)
+            summon_type = MONS_IRON_ELEMENTAL;
+        // Deliberate fall through
     case SPELL_AIR_ELEMENTALS:
         if (summon_type == MONS_NO_MONSTER)
             summon_type = MONS_AIR_ELEMENTAL;
@@ -2548,7 +2553,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
 
     // If a monster just came into view and immediately cast a spell,
     // we need to refresh the screen before drawing the beam.
-    viewwindow(false);
+    viewwindow();
     if (spell_is_direct_explosion(spell_cast))
     {
         const actor *foe = monster->get_foe();

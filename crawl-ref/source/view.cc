@@ -127,8 +127,11 @@ void flush_comes_into_view()
     handle_seen_interrupt(mon);
 }
 
-void monster_grid_updates()
+void seen_monsters_react()
 {
+    if (you.duration[DUR_TIME_STEP] || crawl_state.game_is_arena())
+        return;
+
     for (monster_iterator mi(you.get_los()); mi; ++mi)
     {
         if ((mi->asleep() || mons_is_wandering(*mi))
@@ -631,7 +634,7 @@ bool view_update()
 {
     if (you.num_turns > you.last_view_update)
     {
-        viewwindow(false);
+        viewwindow();
         return (true);
     }
     return (false);
@@ -640,7 +643,7 @@ bool view_update()
 void flash_view(int colour)
 {
     you.flash_colour = colour;
-    viewwindow(false, false);
+    viewwindow(false);
 }
 
 void flash_view_delay(int colour, long flash_delay)
@@ -849,13 +852,10 @@ static bool _show_terrain = false;
 // Draws the main window using the character set returned
 // by get_show_glyph().
 //
-// If monster_updates is set, stealth and conversion checks
-// take place. Should be set once per turn.
-//
 // If show_updates is set, env.show and dependent structures
 // are updated. Should be set if anything in view has changed.
 //---------------------------------------------------------------
-void viewwindow(bool monster_updates, bool show_updates)
+void viewwindow(bool show_updates)
 {
     if (you.duration[DUR_TIME_STEP])
         return;
@@ -881,9 +881,6 @@ void viewwindow(bool monster_updates, bool show_updates)
 
         env.show.init(_show_terrain);
     }
-
-    if (monster_updates && !crawl_state.game_is_arena())
-        monster_grid_updates();
 
     if (show_updates)
         player_view_update();

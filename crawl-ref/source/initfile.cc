@@ -313,6 +313,7 @@ static std::string _gametype_to_str(game_type type)
     }
 }
 
+#ifndef DGAMELAUNCH
 static game_type _str_to_gametype(const std::string& s)
 {
     for (int i = 0; i < NUM_GAME_TYPE; ++i)
@@ -323,6 +324,7 @@ static game_type _str_to_gametype(const std::string& s)
     }
     return (NUM_GAME_TYPE);
 }
+#endif
 
 static std::string _species_to_str(species_type sp)
 {
@@ -622,6 +624,10 @@ void game_options::reset_options()
 
     set_default_activity_interrupts();
 
+#if !defined(DGAMELAUNCH)
+    macro_dir = "settings/";
+#endif
+
 #if defined(SAVE_DIR_PATH)
 #if defined(DGAMELAUNCH)
     save_dir   = SAVE_DIR_PATH;
@@ -644,6 +650,7 @@ void game_options::reset_options()
     std::string tmp_path_base = std::string(getenv("HOME")) + "/Library/Application Support/" CRAWL;
     save_dir   = tmp_path_base + "/saves/";
     morgue_dir = tmp_path_base + "/morgue/";
+    macro_dir  = tmp_path_base;
 #elif !defined(TARGET_OS_DOS)
     save_dir   = "saves/";
 #else
@@ -652,10 +659,6 @@ void game_options::reset_options()
 
 #if !defined(SHORT_FILE_NAMES) && !defined(SAVE_DIR_PATH) && !defined(TARGET_OS_MACOSX)
     morgue_dir = "morgue/";
-#endif
-
-#if !defined(DGAMELAUNCH)
-    macro_dir = "settings/";
 #endif
 
     additional_macro_files.clear();
@@ -858,7 +861,7 @@ void game_options::reset_options()
     pizza.clear();
 
 #ifdef WIZARD
-    fsim_rounds = 40000L;
+    fsim_rounds = 4000L;
     fsim_mons   = "worm";
     fsim_str = fsim_int = fsim_dex = 15;
     fsim_xl  = 10;

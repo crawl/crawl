@@ -1048,7 +1048,7 @@ static armour_type _acquirement_armour_subtype(bool divine)
             // can give high-end ones as well.
             if (!divine && one_chance_in(5))
             {
-                static_cast<armour_type>(random_choose(
+                result = static_cast<armour_type>(random_choose(
                         ARM_DRAGON_ARMOUR,
                         ARM_ICE_DRAGON_ARMOUR,
                         ARM_STEAM_DRAGON_ARMOUR,
@@ -3461,6 +3461,10 @@ static bool _food_item_needs_time_check(item_def &item)
     if (item.base_type == OBJ_POTIONS && !is_blood_potion(item))
         return (false);
 
+    // The object specifically asks not to be checked:
+    if (item.props.exists(CORPSE_NEVER_DECAYS))
+        return (false);
+
     return (true);
 }
 
@@ -3791,21 +3795,17 @@ void handle_time()
     // Only check for badness once every other turn.
     if (coinflip())
     {
-        // [ds] Be less harsh with glow mutation; Brent and Mark Mackey note
-        // that the commented out random2(X) <= MC check was a bug. I've
-        // uncommented it but dropped the roll sharply from 150. (Brent used
-        // the original roll of 150 for 4.1.2, but I think players are
-        // sufficiently used to beta 26's unkindness that we can use a lower
-        // roll.)
-        if (is_sanctuary(you.pos())
-            && you.magic_contamination > 5
-            && x_chance_in_y(you.magic_contamination + 1, 25))
+        // [ds] Move magic contamination effects closer to b26 again.
+        const bool glow_effect =
+            (you.magic_contamination > 5
+             && x_chance_in_y(you.magic_contamination, 12));
+
+        if (glow_effect && is_sanctuary(you.pos()))
         {
             mpr("Your body momentarily shudders from a surge of wild "
                 "energies until Zin's power calms it.", MSGCH_GOD);
         }
-        else if (you.magic_contamination > 5
-                 && x_chance_in_y(you.magic_contamination + 1, 25))
+        else if (glow_effect)
         {
             mpr("Your body shudders with the violent release "
                 "of wild energies!", MSGCH_WARN);

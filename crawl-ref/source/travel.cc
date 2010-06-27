@@ -21,6 +21,7 @@
 #include "clua.h"
 #include "delay.h"
 #include "describe.h"
+#include "dgn-actions.h"
 #include "dgn-overview.h"
 #include "dgnevent.h"
 #include "directn.h"
@@ -64,9 +65,6 @@
 #ifdef TARGET_OS_DOS
 #include <dos.h>
 #endif
-
-#define TC_MAJOR_VERSION ((unsigned char) 4)
-#define TC_MINOR_VERSION ((unsigned char) 9)
 
 enum IntertravelDestination
 {
@@ -2300,6 +2298,9 @@ static travel_target _prompt_travel_depth(const level_id &id,
 
 bool travel_kill_monster(const monsters * monster)
 {
+    if (monster->type != MONS_TOADSTOOL)
+        return (false);
+
     if (!wielded_weapon_check(you.weapon(), true))
         return (false);
 
@@ -2307,7 +2308,7 @@ bool travel_kill_monster(const monsters * monster)
     if (player_mutation_level(MUT_BERSERK) || scan_artefacts(ARTP_ANGRY))
         return (false);
 
-    return (monster->type == MONS_TOADSTOOL);
+    return (true);
 }
 
 travel_target prompt_translevel_target(int prompt_flags,
@@ -2982,33 +2983,33 @@ std::string level_id::describe( bool long_name, bool with_number ) const
 level_id level_id::parse_level_id(const std::string &s) throw (std::string)
 {
     std::string::size_type cpos = s.find(':');
-    std::string branch = (cpos != std::string::npos? s.substr(0, cpos)  : s);
-    std::string depth  = (cpos != std::string::npos? s.substr(cpos + 1) : "");
+    std::string brname  = (cpos != std::string::npos? s.substr(0, cpos)  : s);
+    std::string brdepth = (cpos != std::string::npos? s.substr(cpos + 1) : "");
 
-    if (branch == "Abyss")
+    if (brname == "Abyss")
         return (level_id(LEVEL_ABYSS));
-    else if (branch == "Pan")
+    else if (brname == "Pan")
         return (level_id(LEVEL_PANDEMONIUM));
-    else if (branch == "Lab")
+    else if (brname == "Lab")
         return (level_id(LEVEL_LABYRINTH));
-    else if (branch == "Port")
+    else if (brname == "Port")
         return (level_id(LEVEL_PORTAL_VAULT));
 
-    const branch_type br = str_to_branch(branch);
+    const branch_type br = str_to_branch(brname);
     if (br == NUM_BRANCHES)
     {
         throw make_stringf("Invalid branch \"%s\" in spec \"%s\"",
-                           branch.c_str(), s.c_str());
+                           brname.c_str(), s.c_str());
     }
 
-    const int dep = (depth.empty() ? 1 :
-                     depth == "$"  ? branches[br].depth
-                                   : atoi(depth.c_str()));
+    const int dep = (brdepth.empty() ? 1 :
+                     brdepth == "$"  ? branches[br].depth
+                                     : atoi(brdepth.c_str()));
 
     if (dep < 0 || dep > branches[br].depth)
     {
         throw make_stringf("Invalid depth for %s in spec \"%s\"",
-                           branch.c_str(), s.c_str());
+                           brname.c_str(), s.c_str());
     }
 
     return level_id(br, dep);
@@ -3123,6 +3124,8 @@ void LevelInfo::update()
         !actor_slime_wall_immune(&you));
     precompute_travel_safety_grid travel_safety_calc;
     update_stair_distances();
+
+    update_da_counters(this);
 }
 
 void LevelInfo::set_distance_between_stairs(int a, int b, int dist)
@@ -3441,6 +3444,10 @@ void LevelInfo::save(writer& outf) const
     }
 
     marshallExcludes(outf, excludes);
+
+    marshallByte(outf, NUM_DA_COUNTERS);
+    for (int i = 0; i < NUM_DA_COUNTERS; i++)
+        marshallShort(outf, da_counters[i]);
 }
 
 void LevelInfo::load(reader& inf, char minorVersion)
@@ -3471,6 +3478,18 @@ void LevelInfo::load(reader& inf, char minorVersion)
     }
 
     unmarshallExcludes(inf, minorVersion, excludes);
+
+#if TAG_MAJOR_VERSION == 27
+    if (minorVersion >= TAG_MINOR_DA_MSTATS)
+    {
+#endif
+    int n_count = unmarshallByte(inf);
+    ASSERT(n_count >= 0 && n_count <= NUM_DA_COUNTERS);
+    for (int i = 0; i < n_count; i++)
+        da_counters[i] = unmarshallShort(inf);
+#if TAG_MAJOR_VERSION == 27
+    }
+#endif
 }
 
 void LevelInfo::fixup()
@@ -3687,8 +3706,8 @@ bool TravelCache::is_known_branch(unsigned char branch) const
 void TravelCache::save(writer& outf) const
 {
     // Travel cache version information
-    marshallByte(outf, TC_MAJOR_VERSION);
-    marshallByte(outf, TC_MINOR_VERSION);
+    marshallByte(outf, TAG_MAJOR_VERSION);
+    marshallByte(outf, TAG_MINOR_VERSION);
 
     // Write level count.
     marshallShort(outf, levels.size());
@@ -3711,8 +3730,8 @@ void TravelCache::load(reader& inf, char minorVersion)
     // Check version. If not compatible, we just ignore the file altogether.
     unsigned char major = unmarshallByte(inf),
                   minor = unmarshallByte(inf);
-    if (major != TC_MAJOR_VERSION || minor != TC_MINOR_VERSION)
-        return ;
+    if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION)
+        return;
 
     int level_count = unmarshallShort(inf);
     for (int i = 0; i < level_count; ++i)
@@ -3753,11 +3772,48 @@ void TravelCache::update()
     get_level_info(level_id::current()).update();
 }
 
+void TravelCache::update_da_counters()
+{
+    ::update_da_counters(find_level_info(level_id::current()));
+}
+
+unsigned int TravelCache::query_da_counter(daction_type c)
+{
+    // other levels are up to date, the current one not necessarily so
+    update_da_counters();
+
+    unsigned int sum = 0;
+
+    std::map<level_id, LevelInfo>::const_iterator i = levels.begin();
+    for ( ; i != levels.end(); ++i)
+        sum += i->second.da_counters[c];
+
+    return (sum);
+}
+
+void TravelCache::clear_da_counter(daction_type c)
+{
+    std::map<level_id, LevelInfo>::iterator i = levels.begin();
+    for ( ; i != levels.end(); ++i)
+        i->second.da_counters[c] = 0;
+}
+
 void TravelCache::fixup_levels()
 {
     std::map<level_id, LevelInfo>::iterator i = levels.begin();
     for ( ; i != levels.end(); ++i)
         i->second.fixup();
+}
+
+std::vector<level_id> TravelCache::known_levels() const
+{
+    std::vector<level_id> levs;
+
+    std::map<level_id, LevelInfo>::const_iterator i = levels.begin();
+    for ( ; i != levels.end(); ++i)
+        levs.push_back(i->first);
+
+    return (levs);
 }
 
 bool can_travel_to(const level_id &id)
@@ -3901,7 +3957,7 @@ void runrest::stop()
 #endif
 
     if (need_redraw)
-        viewwindow(false, true);
+        viewwindow();
 
     _reset_zigzag_info();
 }

@@ -23,7 +23,7 @@ end
 
 function show_sorted_list(list, baseindent, sortfn)
     baseindent = baseindent or "    "
-    sortfn = sortfn or 
+    sortfn = sortfn or
                function (x, y)
                    return kills.exp(x) > kills.exp(y) or
                    (kills.exp(x) == kills.exp(y) and
@@ -39,7 +39,7 @@ end
 function group_kills(a, namemap, keys, selector)
     local count = 0
     for i, key in ipairs(keys) do
-        local selected = kill_filter(a, 
+        local selected = kill_filter(a,
             function (k)
                 return selector(key, k)
             end
@@ -66,16 +66,16 @@ function holiness_list(a)
         nonliving = "Non-Living Monsters",
         plant   = "Plants",
     }
-    local holysort = { "strange", "unique", 
+    local holysort = { "strange", "unique",
                        "natural", "nonliving",
                        "undead", "demonic", "plant" }
     kills.rawwrite("  Monster Nature")
-    group_kills( a, holies, holysort, 
+    group_kills( a, holies, holysort,
         function ( key, kill )
-            return (kills.holiness(kill) == key and not kills.isunique(kill)) 
-                or 
+            return (kills.holiness(kill) == key and not kills.isunique(kill))
+                or
                    (key == "unique" and kills.isunique(kill))
-        end 
+        end
     )
     kills.rawwrite("  " .. kills.summary(a))
 end
@@ -115,8 +115,8 @@ function symbol_list(a)
         if i > 1 then
             kills.rawwrite("")
         end
-        
-        local symlist = kill_filter(a, 
+
+        local symlist = kill_filter(a,
                 function (k)
                     return kills.symbol(k) == sym
                 end
@@ -151,7 +151,7 @@ end
 -----------------------------------------------------------------------------
 -- This is the function that Crawl calls when it wants to dump the kill list
 -- The parameter "a" is the list (Lua table) of kills, initially sorted in
--- descending order of experience. Kill entries must be inspected using 
+-- descending order of experience. Kill entries must be inspected using
 -- kills.foo(ke).
 --
 -- NOTE: Comment out the kill lists that you don't like!
@@ -160,7 +160,7 @@ end
 --  * Direct player kills
 --  * Monsters killed by friendlies
 --  * Monsters killed by other things (traps, etc.)
---  
+--
 -- For each category, the game calls c_kill_list, with a table of killed
 -- monsters, and the killer (who). The killer will be nil for direct player
 -- kills, and a string ("collateral kills", "others") otherwise.
@@ -217,7 +217,7 @@ function c_kill_list(a, who, needsep)
     -- Filter out zombies and skeletons and display the rest
     classic_list(
         "  Kills minus zombies and skeletons",
-        kill_filter(a, 
+        kill_filter(a,
             function (k)
                 return kills.modifier(k) ~= "zombie" and
                        kills.modifier(k) ~= "skeleton"
@@ -230,7 +230,7 @@ function c_kill_list(a, who, needsep)
     -- Show only monsters with 3 digit kill count
     classic_list(
         "  The 3-digit Club",
-        kill_filter(a, 
+        kill_filter(a,
             function (k)
                 return kills.nkills(k) > 99
             end

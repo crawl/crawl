@@ -16,6 +16,7 @@
 #include "cio.h"
 #include "coordit.h"
 #include "database.h"
+#include "dgn-actions.h"
 #include "dungeon.h"
 #include "effects.h"
 #include "env.h"
@@ -2284,7 +2285,7 @@ static bool _trowel_card(int power, deck_rarity_type rarity)
     if (power_level >= 2)
     {
         // Generate a portal to something.
-        const map_def *map = random_map_for_tag("trowel_portal", false);
+        const map_def *map = random_map_for_tag("trowel_portal");
         if (!map)
         {
             mpr("A buggy portal flickers into view, then vanishes.");
@@ -3062,10 +3063,8 @@ static void _unmark_and_shuffle_deck(item_def& deck)
     }
 }
 
-static bool _shuffle_all_decks_on_level()
+void shuffle_all_decks_on_level()
 {
-    bool success = false;
-
     for (int i = 0; i < MAX_ITEMS; ++i)
     {
         item_def& item(mitm[i]);
@@ -3078,12 +3077,8 @@ static bool _shuffle_all_decks_on_level()
                  static_cast<int>(you.where_are_you));
 #endif
             _unmark_and_shuffle_deck(item);
-
-            success = true;
         }
     }
-
-    return success;
 }
 
 static bool _shuffle_inventory_decks()
@@ -3110,14 +3105,11 @@ static bool _shuffle_inventory_decks()
 
 void nemelex_shuffle_decks()
 {
-    bool success = false;
+    add_daction(DACT_SHUFFLE_DECKS);
+    _shuffle_inventory_decks();
 
-    if (apply_to_all_dungeons(_shuffle_all_decks_on_level))
-        success = true;
-
-    if (_shuffle_inventory_decks())
-        success = true;
-
-    if (success)
+    // Wildly inaccurate, but of similar quality as the old code which
+    // was triggered by the presence of any deck anywhere.
+    if (you.num_gifts[GOD_NEMELEX_XOBEH])
         god_speaks(GOD_NEMELEX_XOBEH, "You hear Nemelex Xobeh chuckle.");
 }

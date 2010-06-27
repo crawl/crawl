@@ -6,7 +6,7 @@
 --   lua_file = lua/runrest.lua
 --
 -- What it does:
--- 
+--
 --  * Any message in runrest_ignore_message will *not* stop your run.
 --  * Poison damage of x will be ignored if you have at least y hp if you've
 --    defined a runrest_ignore_poison = x:y option.
@@ -77,12 +77,12 @@ function rr_handle_hploss(hplost, source)
     if hplost <= g_rr_hplmax and you.hp() >= g_rr_yhpmin then
         return nil
     end
-    
+
     return false
 end
 
 function rr_check_params()
-    if ( not g_rr_hplmax or not g_rr_yhpmin ) 
+    if ( not g_rr_hplmax or not g_rr_yhpmin )
             and options.runrest_ignore_poison
     then
         local opt = options.runrest_ignore_poison

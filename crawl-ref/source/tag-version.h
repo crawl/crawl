@@ -3,19 +3,15 @@
 
 // Let CDO updaters know if the syntax changes.
 #define TAG_MAJOR_START     5
-#define TAG_MAJOR_VERSION  25
+#define TAG_MAJOR_VERSION  27
 
 // Minor version will be reset to zero when major version changes.
 enum tag_minor_version
 {
     TAG_MINOR_RESET        = 0, // Minor tags were reset
-    TAG_MINOR_OLD_POS      = 1, // Save old player position
-    TAG_MINOR_LEVEL_VAULTS = 2, // Level vaults saved in level save.
-    TAG_MINOR_ITEM_TILE    = 3, // Item tile "colour" kept separate.
-    TAG_MINOR_VAULT_MAPS   = 4, // Vault maps are saved.
-    TAG_MINOR_VAULT_SEEN   = 5, // Vault seen-state is saved.
-    TAG_MINOR_HELL_BRANCH  = 6, // Hell entry branch is saved.
-    TAG_MINOR_VERSION      = 6, // Current version.  (Keep equal to max.)
+    TAG_MINOR_DACTIONS     = 1, // Delayed level functions.
+    TAG_MINOR_DA_MSTATS    = 2, // Counts of monsters affectable by dactions.
+    TAG_MINOR_VERSION      = 2, // Current version.  (Keep equal to max.)
 };
 
 #endif

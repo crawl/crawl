@@ -3,6 +3,8 @@ NAME: monster_plant_pathfind
 ORIENT: encompass
 MONS: generate_awake hippogriff, nothing
 KMONS: P = plant
+# Just to shut up level compiler sanity checks.
+TAGS: monster_plant_pathfind
 MAP
 xxxxx
 xxP{x

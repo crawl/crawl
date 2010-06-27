@@ -13,6 +13,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "delay.h"
+#include "dgn-actions.h"
 #include "dungeon.h"
 #include "effects.h"
 #include "env.h"
@@ -205,6 +206,7 @@ static void _wizard_go_to_level(const level_pos &pos)
     }
 
     const level_id old_level = level_id::current();
+    const bool keep_travel_data = can_travel_interlevel();
 
     you.level_type    = LEVEL_DUNGEON;
     you.where_are_you = static_cast<branch_type>(pos.id.branch);
@@ -219,8 +221,11 @@ static void _wizard_go_to_level(const level_pos &pos)
     if (!crawl_state.test)
         save_game_state();
     new_level();
-    viewwindow(true);
+    seen_monsters_react();
+    viewwindow();
 
+    if (!keep_travel_data)
+        travel_cache.erase_level_info(old_level);
     // Tell stash-tracker and travel that we've changed levels.
     trackers_init_new_level(true);
 }
@@ -675,7 +680,7 @@ static void _debug_kill_traps()
 
 static int _debug_time_explore()
 {
-    viewwindow(false);
+    viewwindow();
     start_explore(false);
 
     unwind_var<int> es(Options.explore_stop, 0);
@@ -748,5 +753,38 @@ void debug_shift_labyrinth()
         return;
     }
     change_labyrinth(true);
+}
+
+void wizard_list_levels()
+{
+    travel_cache.update_da_counters();
+
+    std::vector<level_id> levs = travel_cache.known_levels();
+
+    mpr("Known levels:");
+    for(unsigned int i = 0; i < levs.size(); i++)
+    {
+        const LevelInfo* lv = travel_cache.find_level_info(levs[i]);
+        ASSERT(lv);
+
+        std::string cnts = "";
+        for(int j = 0; j < NUM_DA_COUNTERS; j++)
+        {
+            char num[20];
+            sprintf(num, "%d/", lv->da_counters[j]);
+            cnts += num;
+        }
+        mprf(MSGCH_DIAGNOSTICS, i+1, // inhibit merging
+             "%-10s : %s", levs[i].describe().c_str(), cnts.c_str());
+    }
+
+    std::string cnts = "";
+    for(int j = 0; j < NUM_DA_COUNTERS; j++)
+    {
+        char num[20];
+        sprintf(num, "%d/", query_da_counter((daction_type)j));
+        cnts += num;
+    }
+    mprf("%-10s : %s", "`- total", cnts.c_str());
 }
 #endif

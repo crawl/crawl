@@ -19,6 +19,7 @@
 #include "externs.h"
 
 #include "beam.h"
+#include "coord.h"
 #include "coordit.h"
 #include "directn.h"
 #include "debug.h"
@@ -695,6 +696,9 @@ void apply_area_cloud( cloud_func func, const coord_def& where,
                        int spread_rate, int colour, std::string name,
                        std::string tile)
 {
+    if (!in_bounds(where))
+        return;
+
     int good_squares = 0;
     int neighbours[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
 
@@ -924,7 +928,9 @@ static bool _cloud_helper(cloud_func func, const coord_def& where,
                           killer_type killer, int colour, std::string name,
                           std::string tile)
 {
-    if (!feat_is_solid(grd(where)) && env.cgrid(where) == EMPTY_CLOUD)
+    if (in_bounds(where)
+        && !feat_is_solid(grd(where))
+        && env.cgrid(where) == EMPTY_CLOUD)
     {
         func(where, pow, spread_rate, ctype, whose, killer, colour, name,
              tile);
@@ -1171,7 +1177,7 @@ bool spell_is_risky(spell_type spell)
 
 // This function attempts to determine if 'spell' is useless to
 // the player. if 'transient' is true, then it will include checks
-// for volitile or temporary states (such as status effects, mana, etc.)
+// for volatile or temporary states (such as status effects, mana, etc.)
 //
 // its notably used by 'spell_highlight_by_utility'
 bool spell_is_useless(spell_type spell, bool transient)
@@ -1224,17 +1230,14 @@ bool spell_is_useless(spell_type spell, bool transient)
         if (transient && you.duration[DUR_CONTROL_TELEPORT] > 0)
             return (true);
         break;
+    case SPELL_SEE_INVISIBLE:
+        if (you.can_see_invisible(false, false))
+            return (true);
+        break;
     default:
         break; // quash unhandled constants warnings
     }
 
-    return (false);
-}
-
-bool spell_is_known(spell_type spell)
-{
-    for (int i = 0; i < 25; i++)
-        if(you.spells[i] == spell) return (true);
     return (false);
 }
 
@@ -1249,13 +1252,12 @@ bool spell_is_known(spell_type spell)
 //       spell_is_useful(spell)
 //       spell_is_useless(spell, transient)
 //       spell_is_risky(spell)
-//       spell_is_known(spell)
 int spell_highlight_by_utility(spell_type spell, int default_color,
                                bool transient, bool force_known, bool rod_spell)
 {
     // if Force_known is true, and the spell is
     // known, thats all that matters.
-    if (force_known && !spell_is_known(spell))
+    if (force_known && !you.has_spell(spell))
         return COL_UNMEMORIZED;
 
     // If your god hates the spell, that
@@ -1334,4 +1336,3 @@ bool spell_no_hostile_in_range(spell_type spell, int minRange)
 
     return (false);
 }
-

@@ -310,7 +310,7 @@ bool brand_weapon(brand_type which_brand, int power)
         if (weapon.sub_type == WPN_SLING)
             missile = MI_SLING_BULLET;
 
-        if (!is_missile_brand_ok(missile, _convert_to_missile(which_brand)))
+        if (!is_missile_brand_ok(missile, _convert_to_missile(which_brand), true))
             return (false);
 
         // If the brand isn't appropriate for that launcher, also say no.

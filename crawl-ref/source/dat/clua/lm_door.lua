@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 -- lm_door.lua
--- Disallow monsters form using certain doors.
+--  Markers for doors.
 -------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ function RestrictDoor:read(marker, th)
 
   self.props          = lmark.unmarshall_table(th)
 
-  setmetatable(self, RestrictDoor) 
+  setmetatable(self, RestrictDoor)
 
   return self
 end
@@ -51,4 +51,90 @@ function restrict_door(props)
   rd:add_triggerer(DgnTriggerer:new{type = "door_opened"})
 
   return rd
+end
+
+-------------------------------------------------------------------------------
+-- This marker can be applied to a door to prevent the player from opening   --
+-- it. By default, it will ask for three runes; this can be modified by the  --
+-- "veto_func" parameter.                                                    --
+-------------------------------------------------------------------------------
+
+require("clua/lm_pdesc.lua")
+
+LockDoor       = util.subclass(PortalDescriptor)
+LockDoor.CLASS = "LockDoor"
+
+function LockDoor:new(props)
+  props = props or { }
+  local ld = self.super.new(self)
+
+  ld.props = props
+
+  return ld
+end
+
+function LockDoor:property (marker, pname)
+  if pname == "veto_open" then
+     return self:check_veto(marker, pname)
+  end
+
+  return self.super.property(self, marker, pname)
+end
+
+function LockDoor:check_veto (marker, pname, dry_run)
+  local iter_table = items.inventory()
+  local rune_count = 0
+  for it in iter.invent_iterator:new(iter_table) do
+    if dry_run ~= nil then crawl.mpr("Checking " .. it.sub_type()) end
+    local sub_type = it.sub_type
+    if sub_type == "rune of Zot" then
+      if dry_run ~= nil then crawl.mpr("Got " .. it.quantity .. " rune of zot") end
+      rune_count = rune_count + it.quantity
+    end
+  end
+
+  if dry_run ~= nil then crawl.mpr("Got " .. rune_count .. " runes") end
+  if rune_count < 3 then
+    return "veto"
+  else
+    if self.props.opened_message ~= nil then
+      crawl.mpr(self.props.opened_message)
+    end
+
+    if self.props.opened_function ~= nil then
+      self.props.opened_function()
+    end
+
+    -- set always_lock to permanently lock (if you close it and drop your runes
+    -- it will be locked.
+    if self.props.always_lock == nil then
+      dgn.remove_marker(marker)
+    end
+
+    return ""
+  end
+end
+
+function LockDoor:debug_portal (marker)
+  self:check_veto (marker, "", true)
+end
+
+function LockDoor:write(marker, th)
+  LockDoor.super.write(self, marker, th)
+
+  lmark.marshall_table(th, self.props)
+end
+
+function LockDoor:read(marker, th)
+  LockDoor.super.read(self, marker, th)
+
+  self.props          = lmark.unmarshall_table(th)
+
+  setmetatable(self, LockDoor)
+
+  return self
+end
+
+function lock_door(props)
+  return LockDoor:new(props)
 end

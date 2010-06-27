@@ -643,10 +643,10 @@ bool cast_a_spell(bool check_range, spell_type spell)
         if (Options.darken_beyond_range)
         {
             crawl_state.darken_range = calc_spell_range(spell);
-            viewwindow(false, false);
+            viewwindow(false);
             delay(50);
             crawl_state.darken_range = -1;
-            viewwindow(false, false);
+            viewwindow(false);
         }
         return (false);
     }
@@ -664,7 +664,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         random_uselessness();
     else
     {
-        const spret_type cast_result = your_spells(spell);
+        const spret_type cast_result = your_spells(spell, 0, true, check_range);
         if (cast_result == SPRET_ABORT)
         {
             crawl_state.zero_turns_taken();
@@ -1023,7 +1023,8 @@ static void _maybe_cancel_repeat(spell_type spell)
 
 static spret_type _do_cast(spell_type spell, int powc,
                            const dist& spd, bolt& beam,
-                           god_type god, int potion);
+                           god_type god, int potion,
+                           bool check_range = false);
 
 // Returns SPRET_SUCCESS if spell is successfully cast for purposes of
 // exercising, SPRET_FAIL otherwise, or SPRET_ABORT if the player canceled
@@ -1031,7 +1032,7 @@ static spret_type _do_cast(spell_type spell, int powc,
 // Not all of these are actually real spells; invocations, decks, rods or misc.
 // effects might also land us here.
 // Others are currently unused or unimplemented.
-spret_type your_spells(spell_type spell, int powc, bool allow_fail)
+spret_type your_spells(spell_type spell, int powc, bool allow_fail, bool check_range)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -1240,7 +1241,7 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail)
     if (crawl_state.prev_cmd == CMD_CAST_SPELL && god == GOD_NO_GOD)
         _maybe_cancel_repeat(spell);
 
-    switch (_do_cast(spell, powc, spd, beam, god, potion))
+    switch (_do_cast(spell, powc, spd, beam, god, potion, check_range))
     {
     case SPRET_SUCCESS:
         _spellcasting_side_effects(spell);
@@ -1299,7 +1300,8 @@ static void _spell_zap_effect(spell_type spell)
 // Returns SPRET_SUCCESS, SPRET_ABORT or SPRET_NONE (not a player spell).
 static spret_type _do_cast(spell_type spell, int powc,
                            const dist& spd, bolt& beam,
-                           god_type god, int potion)
+                           god_type god, int potion,
+                           bool check_range)
 {
     // First handle the zaps.
     zap_type zap = spell_to_zap(spell);
@@ -1916,7 +1918,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_FULSOME_DISTILLATION:
-        if (!cast_fulsome_distillation(powc))
+        if (!cast_fulsome_distillation(powc, check_range))
             return (SPRET_ABORT);
         break;
 

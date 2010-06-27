@@ -61,12 +61,12 @@ struct crawl_environment
 #endif
 
     FixedVector< cloud_struct, MAX_CLOUDS >  cloud; // cloud list
-    unsigned char cloud_no;
+    short cloud_no;
 
     FixedVector< shop_struct, MAX_SHOPS >    shop;  // shop list
     FixedVector< trap_def, MAX_TRAPS >       trap;  // trap list
 
-    FixedVector< monster_type, 20 >          mons_alloc;
+    FixedVector< monster_type, MAX_MONS_ALLOC > mons_alloc;
     map_markers                              markers;
 
     // Place to associate arbitrary data with a particular level.
@@ -91,6 +91,9 @@ struct crawl_environment
     // Flags for things like preventing teleport control; see
     // level_flag_type in enum.h
     uint32_t level_flags;
+
+    // Index into the delayed actions array.
+    unsigned int dactions_done;
 
     coord_def sanctuary_pos;
     int sanctuary_time;

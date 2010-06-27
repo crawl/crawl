@@ -67,7 +67,6 @@ bool god_likes_spell(spell_type spell, god_type god);
 bool god_hates_spell(spell_type spell, god_type god);
 harm_protection_type god_protects_from_harm(god_type god, bool actual = true);
 bool jiyva_is_dead();
-bool remove_all_jiyva_altars();
 bool fedhas_protects(const monsters * target);
 bool fedhas_protects_species(int mc);
 bool fedhas_neutralises(const monsters * target);
@@ -104,7 +103,7 @@ void get_pure_deck_weights(int weights[]);
 void religion_turn_start();
 void religion_turn_end();
 
-int get_tension(god_type god = you.religion, bool count_travelling = true);
+int get_tension(god_type god = you.religion);
 int get_monster_tension(monster_iterator mons, god_type god = you.religion);
 
 bool do_god_gift(bool prayed_for = false, bool forced = false);

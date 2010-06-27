@@ -177,6 +177,10 @@ NAME:   uniq_grum
 DEPTH:  8-9, 10-13, !Lair, !Slime
 : place_unique(_G, "Grum band")
 
+NAME:   uniq_grinder
+DEPTH:  6-10, !Lair, !Slime
+: place_unique(_G, "Grinder")
+
 NAME:   uniq_harold
 DEPTH:  10-13, 14-16, !Slime
 : place_unique(_G, "Harold")

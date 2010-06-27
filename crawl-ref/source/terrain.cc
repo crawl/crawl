@@ -43,6 +43,7 @@
 #include "transform.h"
 #include "traps.h"
 #include "view.h"
+#include "viewchar.h"
 
 actor* actor_at(const coord_def& c)
 {
@@ -428,6 +429,15 @@ bool feat_is_branch_stairs(dungeon_feature_type feat)
 {
     return ((feat >= DNGN_ENTER_FIRST_BRANCH && feat <= DNGN_ENTER_LAST_BRANCH)
             || (feat >= DNGN_ENTER_DIS && feat <= DNGN_ENTER_TARTARUS));
+}
+
+bool feat_is_bidirectional_portal(dungeon_feature_type feat)
+{
+    return (get_feature_dchar(feat) == DCHAR_ARCH
+            && feat_stair_direction(feat) != CMD_NO_CMD
+            && feat != DNGN_ENTER_ZOT
+            && feat != DNGN_RETURN_FROM_ZOT
+            && feat != DNGN_EXIT_HELL);
 }
 
 // Find all connected cells containing ft, starting at d.
@@ -1174,12 +1184,12 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
     if (pos1 == you.pos())
     {
         you.set_position(pos2);
-        viewwindow(false);
+        viewwindow();
     }
     else if (pos2 == you.pos())
     {
         you.set_position(pos1);
-        viewwindow(false);
+        viewwindow();
     }
 
     set_terrain_changed(pos1);

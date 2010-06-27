@@ -1454,7 +1454,7 @@ static void _do_description(std::string key, std::string type,
 static bool _handle_FAQ()
 {
     clrscr();
-    viewwindow(false);
+    viewwindow();
 
     std::vector<std::string> question_keys = getAllFAQKeys();
     if (question_keys.empty())
@@ -1528,7 +1528,7 @@ static void _find_description(bool *again, std::string *error_inout)
     *again = true;
 
     clrscr();
-    viewwindow(false);
+    viewwindow();
 
     if (!error_inout->empty())
         mpr(error_inout->c_str(), MSGCH_PROMPT);
@@ -1868,7 +1868,7 @@ static void _keyhelp_query_descriptions()
     }
     while (again);
 
-    viewwindow(false);
+    viewwindow();
 }
 
 static int _keyhelp_keyfilter(int ch)
@@ -2674,6 +2674,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>~</w>      : go to a specific level\n"
                        "<w>:</w>      : find branches and overflow\n"
                        "         temples in the dungeon\n"
+                       "<w>;</w>      : list known levels and counters\n"
                        "<w>{</w>      : magic mapping\n"
                        "<w>}</w>      : detect all traps on level\n"
                        "<w>)</w>      : change Shoals' tide speed\n",

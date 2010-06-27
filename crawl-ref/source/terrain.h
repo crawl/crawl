@@ -70,6 +70,7 @@ bool feat_is_altar(dungeon_feature_type feat);
 bool feat_is_player_altar(dungeon_feature_type grid);
 
 bool feat_is_branch_stairs(dungeon_feature_type feat);
+bool feat_is_bidirectional_portal(dungeon_feature_type feat);
 void find_connected_identical(const coord_def& d, dungeon_feature_type ft,
                               std::set<coord_def>& out);
 void find_connected_range(const coord_def& d, dungeon_feature_type ft_min,

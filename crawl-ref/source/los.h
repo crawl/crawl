@@ -19,14 +19,17 @@ bool double_is_zero(const double x);
 void set_los_radius(int r);
 int get_los_radius_sq(); // XXX
 
+// Default bounds that tracks global LOS radius.
 #define BDS_DEFAULT (circle_def())
+// Default bounds for find_ray, used for beams.
+#define BDS_CONSTANT (circle_def(LOS_MAX_RANGE, C_ROUND))
 
 bool find_ray(const coord_def& source, const coord_def& target,
               ray_def& ray, const opacity_func &opc = opc_solid,
-              const circle_def &bds = BDS_DEFAULT, bool cycle = false);
+              const circle_def &bds = BDS_CONSTANT, bool cycle = false);
 bool exists_ray(const coord_def& source, const coord_def& target,
                 const opacity_func &opc = opc_solid,
-                const circle_def &bds = BDS_DEFAULT);
+                const circle_def &bds = BDS_CONSTANT);
 dungeon_feature_type ray_blocker(const coord_def& source, const coord_def& target);
 
 void fallback_ray(const coord_def& source, const coord_def& target,

@@ -27,12 +27,37 @@
 #include "items.h"
 #include "libutil.h"
 #include "misc.h"
+#include "mon-stuff.h"
 #include "mon-util.h"
 #include "player.h"
 #include "random.h"
 #include "spl-book.h"
 #include "state.h"
 #include "travel.h"
+
+int create_item_named(std::string name, coord_def p,
+                      std::string *error)
+{
+    trim_string(name);
+
+    item_list ilist;
+    const std::string err = ilist.add_item(name, false);
+    if (!err.empty())
+    {
+        if (error)
+            *error = err;
+        return (NON_ITEM);
+    }
+
+    item_spec ispec = ilist.get_item(0);
+    int item = dgn_place_item(ispec, you.pos());
+    if (item != NON_ITEM)
+        link_items();
+    else if (error)
+        *error = "Failed to create item '" + name + "'";
+
+    return (item);
+}
 
 bool got_curare_roll(const int item_level)
 {
@@ -1527,13 +1552,13 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
         }
     }
 
-    ASSERT(is_weapon_brand_ok(item.sub_type, rc));
+    ASSERT(is_weapon_brand_ok(item.sub_type, rc, true));
     return (rc);
 }
 
 // Reject brands which are outright bad for the item.  Unorthodox combinations
 // are ok, since they can happen on randarts.
-bool is_weapon_brand_ok(int type, int brand)
+bool is_weapon_brand_ok(int type, int brand, bool strict)
 {
     item_def item;
     item.base_type = OBJ_WEAPONS;
@@ -1622,7 +1647,7 @@ static void _generate_weapon_item(item_def& item, bool allow_uniques,
         for (i = 0; i < 1000; ++i)
         {
             item.sub_type = _determine_weapon_subtype(item_level);
-            if (is_weapon_brand_ok(item.sub_type, item.special))
+            if (is_weapon_brand_ok(item.sub_type, item.special, true))
                 goto brand_ok;
         }
         item.sub_type = SPWPN_NORMAL; // fall back to no brand
@@ -1924,31 +1949,49 @@ static special_missile_type _determine_missile_brand(const item_def& item,
     if (get_equip_race(item) == ISFLAG_ORCISH && one_chance_in(3))
         rc = SPMSL_POISONED;
 
-    ASSERT(is_missile_brand_ok(item.sub_type, rc));
+    ASSERT(is_missile_brand_ok(item.sub_type, rc, true));
 
     return rc;
 }
 
-bool is_missile_brand_ok(int type, int brand)
+bool is_missile_brand_ok(int type, int brand, bool strict)
 {
     // Stones can never be branded.
-    if ((type == MI_STONE || type == MI_LARGE_ROCK) && brand != SPMSL_NORMAL)
+    if ((type == MI_STONE || type == MI_LARGE_ROCK) && brand != SPMSL_NORMAL
+        && strict)
+    {
         return (false);
+    }
 
     // In contrast, needles should always be branded.
-    if (type == MI_NEEDLE)
+    // And all of these brands save poison are unique to needles.
+    switch (brand)
     {
-        switch (brand)
-        {
-        case SPMSL_POISONED: case SPMSL_CURARE: case SPMSL_PARALYSIS:
-        case SPMSL_SLOW: case SPMSL_SLEEP: case SPMSL_CONFUSION:
-        case SPMSL_SICKNESS: case SPMSL_RAGE: return (true);
-        default: return (false);
-        }
+    case SPMSL_POISONED:
+        if (type == MI_NEEDLE)
+            return (true);
+        break;
+
+    case SPMSL_CURARE:
+    case SPMSL_PARALYSIS:
+    case SPMSL_SLOW:
+    case SPMSL_SLEEP:
+    case SPMSL_CONFUSION:
+    case SPMSL_SICKNESS:
+    case SPMSL_RAGE:
+        return (type == MI_NEEDLE);
+
+    default:
+        if (type == MI_NEEDLE)
+            return (false);
     }
 
     // Everything else doesn't matter.
     if (brand == SPMSL_NORMAL)
+        return (true);
+
+    // In non-strict mode, everything other than needles is mostly ok.
+    if (!strict)
         return (true);
 
     // Not a missile?
@@ -2368,11 +2411,11 @@ static special_armour_type _determine_armour_ego(const item_def& item,
         break;
     }
 
-    ASSERT(is_armour_brand_ok(item.sub_type, rc));
+    ASSERT(is_armour_brand_ok(item.sub_type, rc, true));
     return (rc);
 }
 
-bool is_armour_brand_ok(int type, int brand)
+bool is_armour_brand_ok(int type, int brand, bool strict)
 {
     equipment_type slot = get_armour_slot((armour_type)type);
 
@@ -2453,7 +2496,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         for (i=0; i<1000; i++)
         {
             item.sub_type = get_random_armour_type(item_level);
-            if (is_armour_brand_ok(item.sub_type, item.special))
+            if (is_armour_brand_ok(item.sub_type, item.special, true))
                 break;
         }
     }
@@ -3288,11 +3331,11 @@ int items(int allow_uniques,       // not just true-false,
     }
 
     if (item.base_type == OBJ_WEAPONS
-          && !is_weapon_brand_ok(item.sub_type, item.special)
+          && !is_weapon_brand_ok(item.sub_type, item.special, false)
         || item.base_type == OBJ_ARMOUR
-          && !is_armour_brand_ok(item.sub_type, item.special)
+          && !is_armour_brand_ok(item.sub_type, item.special, false)
         || item.base_type == OBJ_MISSILES
-          && !is_missile_brand_ok(item.sub_type, item.special))
+          && !is_missile_brand_ok(item.sub_type, item.special, false))
     {
         mprf(MSGCH_ERROR, "Invalid brand on item %s, annulling.",
             item.name(DESC_PLAIN, false, true, false, false, ISFLAG_KNOW_PLUSES
@@ -3332,6 +3375,60 @@ int items(int allow_uniques,       // not just true-false,
 
     // Note that item might be invalidated now, since p could have changed.
     ASSERT(mitm[p].is_valid());
+    return (p);
+}
+
+static bool _item_corpse_def(monster_type mons, item_def &item,
+                             const item_spec &ispec)
+{
+    const monster_type created_mons = fill_out_corpse(NULL, mons, item);
+
+    if (created_mons == MONS_NO_MONSTER)
+        return (false);
+
+    if (ispec.props.exists(CORPSE_NEVER_DECAYS))
+        item.props[CORPSE_NEVER_DECAYS].get_bool() =
+            ispec.props[CORPSE_NEVER_DECAYS].get_bool();
+
+    if (ispec.base_type == OBJ_CORPSES && ispec.sub_type == CORPSE_SKELETON)
+        turn_corpse_into_skeleton(item);
+    else if (ispec.base_type == OBJ_FOOD && ispec.sub_type == FOOD_CHUNK)
+        turn_corpse_into_chunks(item, false, false);
+
+    // Hydra heads:
+    if (ispec.plus2)
+        item.props[MONSTER_NUMBER].get_short() = ispec.plus2;
+
+    if (ispec.qty && ispec.base_type == OBJ_FOOD)
+        item.quantity = ispec.qty;
+
+    return (true);
+}
+
+// Creates a corpse item and returns its item index, or NON_ITEM if it
+// fails. The corpse is not linked into the item grid; nor is the
+// item's position set to anything meaningful.
+int item_corpse(monster_type monster, const item_spec &ispec)
+{
+    if (monster != MONS_NO_MONSTER)
+        monster = mons_species(monster);
+
+    if (monster == MONS_NO_MONSTER
+        || !mons_class_can_leave_corpse(monster))
+    {
+        return (NON_ITEM);
+    }
+
+    const int p = get_item_slot(10);
+    if (p == NON_ITEM)
+        return (NON_ITEM);
+
+    item_def &item(mitm[p]);
+    if (!_item_corpse_def(monster, item, ispec))
+    {
+        item.clear();
+        return (NON_ITEM);
+    }
     return (p);
 }
 

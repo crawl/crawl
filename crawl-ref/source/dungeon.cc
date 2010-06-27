@@ -136,6 +136,7 @@ static void _place_specific_stair(dungeon_feature_type stair,
                                   int dl = 0, bool vault_only = false);
 static void _place_branch_entrances(int dlevel, char level_type);
 static void _place_extra_vaults();
+static void _place_chance_vaults();
 static void _place_minivaults(const std::string &tag = "",
                               int fewest = -1, int most = -1,
                               bool force = false);
@@ -2133,7 +2134,7 @@ static void _build_dungeon_level(int level_number, int level_type)
     // Any further vaults must make sure not to disrupt level layout.
     dgn_check_connectivity = !player_in_branch(BRANCH_SHOALS);
 
-    if (you.where_are_you == BRANCH_MAIN_DUNGEON
+    if (player_in_branch(BRANCH_MAIN_DUNGEON)
         && !crawl_state.game_is_tutorial())
     {
         _build_overflow_temples(level_number);
@@ -2146,6 +2147,7 @@ static void _build_dungeon_level(int level_number, int level_type)
     // no guarantees, seeing this is a minivault.
     if (!crawl_state.game_is_sprint() && !crawl_state.game_is_tutorial())
     {
+        _place_chance_vaults();
         _place_minivaults();
         _place_branch_entrances( level_number, level_type );
         _place_extra_vaults();
@@ -2756,6 +2758,19 @@ static builder_rc_type _builder_by_branch(int level_number)
         break;
     }
     return BUILD_CONTINUE;
+}
+
+// Place vaults with CHANCE: that want to be placed on this level.
+static void _place_chance_vaults()
+{
+    const mapref_vector maps = random_chance_maps_in_depth(level_id::current());
+    for (int i = 0, size = maps.size(); i < size; ++i)
+    {
+        const map_def *map = maps[i];
+        dprf("Placing CHANCE vault: %s (%d:%d)",
+             map->name.c_str(), map->chance_priority, map->chance);
+        _build_secondary_vault(you.absdepth0, map);
+    }
 }
 
 static void _place_minivaults(const std::string &tag, int lo, int hi,
@@ -4634,26 +4649,28 @@ bool dgn_place_map(const map_def *mdef,
     {
         const vault_placement &vp =
             *env.level_vaults[env.level_vaults.size() - 1];
-        for (int y = vp.pos.y; y < vp.pos.y + vp.size.y; ++y)
-            for (int x = vp.pos.x; x < vp.pos.x + vp.size.x; ++x)
-            {
-                std::vector<map_marker *> markers =
-                    env.markers.get_markers_at(coord_def(x, y));
-                std::vector<map_marker*> to_remove;
-                for (int i = 0, size = markers.size(); i < size; ++i)
-                {
-                    markers[i]->activate();
-                    const std::string prop =
-                        markers[i]->property("post_activate_remove");
-                    if (!prop.empty())
-                        to_remove.push_back(markers[i]);
-                }
-                for (unsigned int i = 0; i < to_remove.size(); i++)
-                    env.markers.remove(to_remove[i]);
+        for (vault_place_iterator vpi(vp); vpi; ++vpi)
+        {
+            const coord_def p = *vpi;
+            const std::vector<map_marker *> activatees =
+                env.markers.get_markers_at(p);
 
-                if (!you.see_cell(coord_def(x, y)))
-                    set_terrain_changed(x, y);
+            for (int i = 0, size = activatees.size(); i < size; ++i)
+                activatees[i]->activate();
+
+            const std::vector<map_marker *> active_markers =
+                env.markers.get_markers_at(p);
+            for (int i = 0, size = active_markers.size(); i < size; ++i)
+            {
+                const std::string prop =
+                    active_markers[i]->property("post_activate_remove");
+                if (!prop.empty())
+                    env.markers.remove(active_markers[i]);
             }
+
+            if (!you.see_cell(p))
+                set_terrain_changed(p);
+        }
 
         setup_environment_effects();
         dgn_postprocess_level();
@@ -4955,13 +4972,16 @@ static const object_class_type _acquirement_item_classes[] = {
     OBJ_MISCELLANY
 };
 
-static void _dgn_place_item_explicit(const item_spec &spec,
-                                     const coord_def& where,
-                                     int level)
+int dgn_place_item(const item_spec &spec,
+                   const coord_def &where,
+                   int level)
 {
     // Dummy object?
     if (spec.base_type == OBJ_UNASSIGNED)
-        return;
+        return (NON_ITEM);
+
+    if (level == INVALID_ABSDEPTH)
+        level = you.absdepth0;
 
     object_class_type base_type = spec.base_type;
     bool acquire = false;
@@ -4999,10 +5019,18 @@ static void _dgn_place_item_explicit(const item_spec &spec,
     int useless_tries = 0;
 retry:
 
+    const monster_type corpse_mons =
+        spec.corpselike()?
+        resolve_corpse_monster_type(static_cast<monster_type>(spec.plus),
+                                    grd(where),
+                                    spec.place)
+        : MONS_NO_MONSTER;
+
     const int item_made =
         (acquire ?
          acquirement_create_item(base_type, spec.acquirement_source,
                                  true, where)
+         : spec.corpselike() ? item_corpse(corpse_mons, spec)
          : items( spec.allow_uniques, base_type,
                   spec.sub_type, true, level, spec.race, 0,
                   spec.ego ));
@@ -5026,14 +5054,19 @@ retry:
 
         // Remove unsuitable inscriptions such as {god gift}.
         item.inscription.clear();
-        // And wipe item origin to remove "this is a god gift!" from there.
-        origin_reset(item);
+        // And wipe item origin to remove "this is a god gift!" from there,
+        // unless we're dealing with a corpse.
+        if (!spec.corpselike())
+            origin_reset(item);
         if (is_stackable_item(item) && spec.qty > 0)
         {
             item.quantity = spec.qty;
             if (is_blood_potion(item))
                 init_stack_blood_potions(item);
         }
+
+        if (spec.item_special)
+            item.special = spec.item_special;
 
         if (spec.plus >= 0
             && (item.base_type == OBJ_BOOKS
@@ -5053,10 +5086,10 @@ retry:
             destroy_item(item, true);
             goto retry;
         }
+        return (item_made);
     }
 
-    // [ds] Don't modify dungeon to accommodate items - vault
-    // designers need more flexibility here.
+    return (NON_ITEM);
 }
 
 void dgn_place_multiple_items(item_list &list,
@@ -5064,7 +5097,7 @@ void dgn_place_multiple_items(item_list &list,
 {
     const int size = list.size();
     for (int i = 0; i < size; ++i)
-        _dgn_place_item_explicit(list.get_item(i), where, level);
+        dgn_place_item(list.get_item(i), where, level);
 }
 
 static void _dgn_place_item_explicit(int index, const coord_def& where,
@@ -5076,15 +5109,11 @@ static void _dgn_place_item_explicit(int index, const coord_def& where,
     if ((index < 0 || index >= static_cast<int>(sitems.size())) &&
         !crawl_state.game_is_sprint())
     {
-        // Non-fatal, but we warn even in non-debug mode so there's incentive
-        // to fix the problem.
-        mprf(MSGCH_DIAGNOSTICS, "Map '%s' requested invalid item index: %d",
-             place.map.name.c_str(), index);
         return;
     }
 
     const item_spec spec = sitems.get_item(index);
-    _dgn_place_item_explicit(spec, where, level);
+    dgn_place_item(spec, where, level);
 }
 
 static void _dgn_give_mon_spec_items(mons_spec &mspec,
@@ -5246,24 +5275,12 @@ int dgn_place_monster(mons_spec &mspec,
 
         if (mg.cls == RANDOM_MONSTER && mspec.place.is_valid())
         {
-            int lev = mspec.place.absdepth();
-
-            if (mlev == -8)
-                lev = 4 + lev * 2;
-            else if (mlev == -9)
-                lev += 5;
-
-            int tries = 100;
-            do
-                mg.cls = pick_random_monster(mspec.place, lev, lev, NULL);
-            while (!invalid_monster_type(mg.cls)
-                   && mons_class_is_zombified(mspec.monbase)
-                   && (!mons_zombie_size(mg.cls)
-                       || mons_zombie_size(mg.cls) != zombie_class_size(mspec.monbase))
-                   && --tries > 0);
-
-            if (!tries)
-                mg.cls = RANDOM_MONSTER;
+            const monster_type mon =
+                pick_random_monster_for_place(mspec.place, mspec.monbase,
+                                              mlev == -9,
+                                              mlev == -8,
+                                              false);
+            mg.cls = mon == MONS_NO_MONSTER? RANDOM_MONSTER : mon;
         }
 
         mg.power     = monster_level;
@@ -9142,6 +9159,8 @@ std::string dump_vault_maps()
 vault_place_iterator::vault_place_iterator(const vault_placement &vp)
     : vault_place(vp), pos(vp.pos), tl(vp.pos), br(vp.pos + vp.size - 1)
 {
+    --pos.x;
+    ++*this;
 }
 
 vault_place_iterator::operator bool () const

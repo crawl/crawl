@@ -525,7 +525,8 @@ bool melee_attack::attack()
 
     if (attacker->atype() == ACT_PLAYER && defender->atype() == ACT_MONSTER)
     {
-        if (stop_attack_prompt(defender->as_monster(), false, attacker->pos()))
+        if (stop_attack_prompt(defender->as_monster(), false,
+                               attacker->pos()))
         {
             cancel_attack = true;
             return (false);
@@ -2780,7 +2781,7 @@ static void _find_remains(monsters* mon, int &corpse_class, int &corpse_index,
     corpse_index = NON_ITEM;
     last_item    = NON_ITEM;
 
-    corpse_class = fill_out_corpse(mon, fake_corpse, true);
+    corpse_class = fill_out_corpse(mon, mon->type, fake_corpse, true);
     if (corpse_class == -1 || mons_weight(corpse_class) == 0)
         return;
 
@@ -4042,16 +4043,18 @@ random_var melee_attack::player_calc_attack_delay()
     random_var attack_delay = weapon ? player_weapon_speed()
                                      : player_unarmed_speed();
 
-    if (weapon && hands == HANDS_HALF)
+    if (player_shield_penalty)
     {
-        attack_delay += rv::min(rv::roll_dice(1, player_body_armour_penalty)
-                                + rv::roll_dice(1, player_shield_penalty),
-                                rv::roll_dice(1, player_body_armour_penalty)
-                                + rv::roll_dice(1, player_shield_penalty));
+        if (weapon && hands == HANDS_HALF)
+        {
+            attack_delay += rv::roll_dice(1, player_shield_penalty);
+        }
+        else
+        {
+            attack_delay += rv::min(rv::random2(1 + player_shield_penalty),
+                                    rv::random2(1 + player_shield_penalty));
+        }
     }
-    else if (player_body_armour_penalty)
-        attack_delay += rv::min(rv::roll_dice(1, player_body_armour_penalty),
-                                rv::roll_dice(1, player_body_armour_penalty));
 
     attack_delay = rv::max(attack_delay, constant(3));
 
@@ -4077,14 +4080,6 @@ random_var melee_attack::player_weapon_speed()
                    || weapon->base_type == OBJ_STAVES))
     {
         attack_delay = constant(property(*weapon, PWPN_SPEED));
-
-        if (player_body_armour_penalty)
-        {
-            attack_delay = rv::max(attack_delay,
-               rv::roll_dice(1, 10)
-               + rv::roll_dice(1, player_body_armour_penalty));
-        }
-
         attack_delay -= constant(you.skills[wpn_skill] / 2);
 
         min_delay = property( *weapon, PWPN_SPEED ) / 2;
@@ -5880,8 +5875,11 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
     if (!travel_kill_monster(defender))
         interrupt_activity(AI_HIT_MONSTER, defender);
 
-    // Check if the player is fighting with something unsuitable.
-    if (you.can_see(defender) && !wielded_weapon_check(attk.weapon))
+    // Check if the player is fighting with something unsuitable,
+    // or someone unsuitable.
+    if (you.can_see(defender)
+        && (!mons_is_mimic(defender->type) || mons_is_known_mimic(defender))
+        && !wielded_weapon_check(attk.weapon))
     {
         you.turn_is_over = false;
         return (false);

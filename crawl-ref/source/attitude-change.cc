@@ -142,175 +142,9 @@ void fedhas_neutralise(monsters* monster)
     }
 }
 
-static bool _holy_beings_on_level_attitude_change()
-{
-    bool success = false;
-
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (!mi->is_holy())
-            continue;
-
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Holy attitude changing: %s on level %d, branch %d",
-             mi->name(DESC_PLAIN).c_str(),
-             static_cast<int>(you.absdepth0),
-             static_cast<int>(you.where_are_you));
-#endif
-
-        // If you worship a good god, you get another chance to make
-        // neutral and hostile holy beings good neutral.
-        if (is_good_god(you.religion) && !mi->wont_attack())
-        {
-            if (testbits(mi->flags, MF_ATT_CHANGE_ATTEMPT))
-            {
-                mi->flags &= ~MF_ATT_CHANGE_ATTEMPT;
-
-                success = true;
-            }
-        }
-        // If you don't worship a good god, you make all friendly
-        // and good neutral holy beings that worship a good god
-        // hostile.
-        else if (!is_good_god(you.religion) && mi->wont_attack()
-            && is_good_god(mi->god))
-        {
-            mi->attitude = ATT_HOSTILE;
-            mi->del_ench(ENCH_CHARM, true);
-            behaviour_event(*mi, ME_ALERT, MHITYOU);
-            // For now CREATED_FRIENDLY/WAS_NEUTRAL stays.
-            mons_att_changed(*mi);
-
-            success = true;
-        }
-    }
-
-    return (success);
-}
-
-bool holy_beings_attitude_change()
-{
-    return (apply_to_all_dungeons(_holy_beings_on_level_attitude_change));
-}
-
-static bool _unholy_and_evil_beings_on_level_attitude_change()
-{
-    bool success = false;
-
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (!mi->is_unholy() && !mi->is_evil())
-            continue;
-
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Unholy/evil attitude changing: %s "
-             "on level %d, branch %d",
-             mi->name(DESC_PLAIN, true).c_str(),
-             static_cast<int>(you.absdepth0),
-             static_cast<int>(you.where_are_you));
-#endif
-
-        // If you worship a good god, you make all friendly and good
-        // neutral unholy and evil beings hostile.
-        if (is_good_god(you.religion) && mi->wont_attack())
-        {
-            mi->attitude = ATT_HOSTILE;
-            mi->del_ench(ENCH_CHARM, true);
-            behaviour_event(*mi, ME_ALERT, MHITYOU);
-            // For now CREATED_FRIENDLY/WAS_NEUTRAL stays.
-            mons_att_changed(*mi);
-
-            success = true;
-        }
-    }
-
-    return (success);
-}
-
-bool unholy_and_evil_beings_attitude_change()
-{
-    return (apply_to_all_dungeons(_unholy_and_evil_beings_on_level_attitude_change));
-}
-
-static bool _unclean_and_chaotic_beings_on_level_attitude_change()
-{
-    bool success = false;
-
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (!mi->is_unclean() && !mi->is_chaotic())
-            continue;
-
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Unclean/chaotic attitude changing: %s on level %d, branch %d",
-             mi->name(DESC_PLAIN).c_str(),
-             static_cast<int>(you.absdepth0),
-             static_cast<int>(you.where_are_you));
-#endif
-
-        // If you worship Zin, you make all friendly and good neutral
-        // unclean and chaotic beings hostile.
-        if (you.religion == GOD_ZIN && mi->wont_attack())
-        {
-            mi->attitude = ATT_HOSTILE;
-            mi->del_ench(ENCH_CHARM, true);
-            behaviour_event(*mi, ME_ALERT, MHITYOU);
-            // For now CREATED_FRIENDLY/WAS_NEUTRAL stays.
-            mons_att_changed(*mi);
-
-            success = true;
-        }
-    }
-    return (success);
-}
-
-bool unclean_and_chaotic_beings_attitude_change()
-{
-    return (apply_to_all_dungeons(_unclean_and_chaotic_beings_on_level_attitude_change));
-}
-
-static bool _spellcasters_on_level_attitude_change()
-{
-    bool success = false;
-
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (!mi->is_actual_spellcaster())
-            continue;
-
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Spellcaster attitude changing: %s on level %d, branch %d",
-             mi->name(DESC_PLAIN).c_str(),
-             static_cast<int>(you.absdepth0),
-             static_cast<int>(you.where_are_you));
-#endif
-
-        // If you worship Trog, you make all friendly and good neutral
-        // magic users hostile.
-        if (you.religion == GOD_TROG && mi->wont_attack())
-        {
-            mi->attitude = ATT_HOSTILE;
-            mi->del_ench(ENCH_CHARM, true);
-            behaviour_event(*mi, ME_ALERT, MHITYOU);
-            // For now CREATED_FRIENDLY/WAS_NEUTRAL stays.
-            mons_att_changed(*mi);
-
-            success = true;
-        }
-    }
-
-    return (success);
-}
-
-bool spellcasters_attitude_change()
-{
-    return (apply_to_all_dungeons(_spellcasters_on_level_attitude_change));
-}
-
 // Make summoned (temporary) god gifts disappear on penance or when
-// abandoning the god in question.  If seen, only count monsters where
-// the player can see the change, and output a message.
-static bool _make_god_gifts_on_level_disappear(bool seen = false)
+// abandoning the god in question (Trog or TSO).
+bool make_god_gifts_disappear()
 {
     const god_type god =
         (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
@@ -323,7 +157,7 @@ static bool _make_god_gifts_on_level_disappear(bool seen = false)
             && mi->has_ench(ENCH_ABJ)
             && mons_is_god_gift(*mi, god))
         {
-            if (!seen || simple_monster_message(*mi, " abandons you!"))
+            if (simple_monster_message(*mi, " abandons you!"))
                 count++;
 
             // The monster disappears.
@@ -334,334 +168,56 @@ static bool _make_god_gifts_on_level_disappear(bool seen = false)
     return (count);
 }
 
-static bool _god_gifts_disappear_wrapper()
-{
-    return (_make_god_gifts_on_level_disappear());
-}
-
-// Make god gifts disappear on all levels, or on only the current one.
-bool make_god_gifts_disappear(bool level_only)
-{
-    bool success = _make_god_gifts_on_level_disappear(true);
-
-    if (level_only)
-        return (success);
-
-    return (apply_to_all_dungeons(_god_gifts_disappear_wrapper) || success);
-}
-
-// When abandoning the god in question, turn holy god gifts good
-// neutral.  If seen, only count monsters where the player can see the
-// change, and output a message.
-static bool _make_holy_god_gifts_on_level_good_neutral(bool seen = false)
-{
-    const god_type god =
-        (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
-                                      : GOD_NO_GOD;
-    int count = 0;
-
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (is_follower(*mi)
-            && !mi->has_ench(ENCH_CHARM)
-            && mi->is_holy()
-            && mons_is_god_gift(*mi, god))
-        {
-            // monster changes attitude
-            mi->attitude = ATT_GOOD_NEUTRAL;
-            mons_att_changed(*mi);
-
-            if (!seen || simple_monster_message(*mi, " becomes indifferent."))
-                count++;
-        }
-    }
-
-    return (count);
-}
-
-static bool _holy_god_gifts_good_neutral_wrapper()
-{
-    return (_make_holy_god_gifts_on_level_good_neutral());
-}
-
-// Make holy god gifts turn good neutral on all levels, or on only the
-// current one.
-bool make_holy_god_gifts_good_neutral(bool level_only)
-{
-    bool success = _make_holy_god_gifts_on_level_good_neutral(true);
-
-    if (level_only)
-        return (success);
-
-    return (apply_to_all_dungeons(_holy_god_gifts_good_neutral_wrapper) || success);
-}
-
-// When abandoning the god in question, turn god gifts hostile.  If
-// seen, only count monsters where the player can see the change, and
-// output a message.
-static bool _make_god_gifts_on_level_hostile(bool seen = false)
-{
-    const god_type god =
-        (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
-                                      : GOD_NO_GOD;
-    int count = 0;
-
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (is_follower(*mi)
-            && mons_is_god_gift(*mi, god))
-        {
-            // monster changes attitude and behaviour
-            mi->attitude = ATT_HOSTILE;
-            mi->del_ench(ENCH_CHARM, true);
-            behaviour_event(*mi, ME_ALERT, MHITYOU);
-            mons_att_changed(*mi);
-
-            if (!seen || simple_monster_message(*mi, " turns against you!"))
-                count++;
-        }
-    }
-
-    return (count);
-}
-
-static bool _god_gifts_hostile_wrapper()
-{
-    return (_make_god_gifts_on_level_hostile());
-}
-
-// Make god gifts turn hostile on all levels, or on only the current
-// one.
-bool make_god_gifts_hostile(bool level_only)
-{
-    bool success = _make_god_gifts_on_level_hostile(true);
-
-    if (level_only)
-        return (success);
-
-    return (apply_to_all_dungeons(_god_gifts_hostile_wrapper) || success);
-}
-
-static bool _is_yred_enslaved_body_and_soul(const monsters* mon)
-{
-    return (mon->alive() && mons_enslaved_body_and_soul(mon));
-}
-
-static bool _yred_slaves_on_level_abandon_you()
-{
-    bool success = false;
-
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (_is_yred_enslaved_body_and_soul(*mi))
-        {
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Undead soul abandoning: %s on level %d, branch %d",
-                 mi->name(DESC_PLAIN).c_str(),
-                 static_cast<int>(you.absdepth0),
-                 static_cast<int>(you.where_are_you));
-#endif
-
-            yred_make_enslaved_soul(*mi, true, true, true);
-
-            success = true;
-        }
-        else if (is_yred_undead_slave(*mi))
-        {
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Undead abandoning: %s on level %d, branch %d",
-                 mi->name(DESC_PLAIN).c_str(),
-                 static_cast<int>(you.absdepth0),
-                 static_cast<int>(you.where_are_you));
-#endif
-
-            mi->attitude = ATT_HOSTILE;
-            behaviour_event(*mi, ME_ALERT, MHITYOU);
-            // For now CREATED_FRIENDLY stays.
-            mons_att_changed(*mi);
-
-            success = true;
-        }
-    }
-
-    return (success);
-}
-
-static bool _beogh_followers_on_level_abandon_you()
-{
-    bool success = false;
-
-    // Note that orc high priests' summons are gifts of Beogh, so we
-    // can't use is_orcish_follower() here.
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (mons_is_god_gift(*mi, GOD_BEOGH))
-        {
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Orc abandoning: %s on level %d, branch %d",
-                 mi->name(DESC_PLAIN).c_str(),
-                 static_cast<int>(you.absdepth0),
-                 static_cast<int>(you.where_are_you));
-#endif
-
-            mi->attitude = ATT_HOSTILE;
-            behaviour_event(*mi, ME_ALERT, MHITYOU);
-            // For now CREATED_FRIENDLY stays.
-            mons_att_changed(*mi);
-
-            success = true;
-        }
-    }
-
-    return (success);
-}
-
-static bool _jiyva_slimes_on_level_abandon_you()
-{
-    bool success = false;
-
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (is_fellow_slime(*mi))
-        {
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Slime abandoning: %s on level %d, branch %d",
-                 mi->name(DESC_PLAIN).c_str(),
-                 static_cast<int>(you.absdepth0),
-                 static_cast<int>(you.where_are_you));
-#endif
-
-            mi->attitude = ATT_HOSTILE;
-            behaviour_event(*mi, ME_ALERT, MHITYOU);
-            // For now WAS_NEUTRAL stays.
-            mons_att_changed(*mi);
-
-            success = true;
-        }
-    }
-
-    return (success);
-}
-
-// Upon excommunication, ex-Yredelemnulites lose all their undead
-// slaves.  When under penance, Yredelemnulites can lose all undead
-// slaves in sight.
+// When under penance, Yredelemnulites can lose all undead slaves in sight.
 bool yred_slaves_abandon_you()
 {
-    bool reclaim = false;
     int num_reclaim = 0;
     int num_slaves = 0;
 
-    if (you.religion != GOD_YREDELEMNUL)
-        reclaim = apply_to_all_dungeons(_yred_slaves_on_level_abandon_you);
-    else
+    for (radius_iterator ri(you.pos(), 9); ri; ++ri)
     {
-        for (radius_iterator ri(you.pos(), 9); ri; ++ri)
-        {
-            monsters *monster = monster_at(*ri);
-            if (monster == NULL)
-                continue;
+        monsters *monster = monster_at(*ri);
+        if (monster == NULL)
+            continue;
 
-            if (_is_yred_enslaved_body_and_soul(monster)
-                || is_yred_undead_slave(monster))
+        if (is_yred_undead_slave(monster))
+        {
+            num_slaves++;
+
+            const int hd = monster->hit_dice;
+
+            // During penance, followers get a saving throw.
+            if (random2((you.piety - you.penance[GOD_YREDELEMNUL]) / 18)
+                + random2(you.skills[SK_INVOCATIONS] - 6)
+                > random2(hd) + hd + random2(5))
             {
-                num_slaves++;
-
-                const int hd = monster->hit_dice;
-
-                // During penance, followers get a saving throw.
-                if (random2((you.piety - you.penance[GOD_YREDELEMNUL]) / 18)
-                    + random2(you.skills[SK_INVOCATIONS] - 6)
-                    > random2(hd) + hd + random2(5))
-                {
-                    continue;
-                }
-
-
-                if (_is_yred_enslaved_body_and_soul(monster))
-                    yred_make_enslaved_soul(monster, true, true, true);
-                else
-                {
-                    monster->attitude = ATT_HOSTILE;
-                    behaviour_event(monster, ME_ALERT, MHITYOU);
-                    // For now CREATED_FRIENDLY stays.
-                    mons_att_changed(monster);
-                }
-
-                num_reclaim++;
-
-                reclaim = true;
+                continue;
             }
+
+            monster->attitude = ATT_HOSTILE;
+            behaviour_event(monster, ME_ALERT, MHITYOU);
+            // For now CREATED_FRIENDLY stays.
+            mons_att_changed(monster);
+
+            num_reclaim++;
         }
     }
 
-    if (reclaim)
+    if (num_reclaim > 0)
     {
-        if (you.religion != GOD_YREDELEMNUL)
-        {
-            simple_god_message(" reclaims all of your granted undead slaves!",
-                               GOD_YREDELEMNUL);
-        }
-        else if (num_reclaim > 0)
-        {
-            if (num_reclaim == 1 && num_slaves > 1)
-                simple_god_message(" reclaims one of your granted undead slaves!");
-            else if (num_reclaim == num_slaves)
-                simple_god_message(" reclaims your granted undead slaves!");
-            else
-                simple_god_message(" reclaims some of your granted undead slaves!");
-        }
-
+        if (num_reclaim == 1 && num_slaves > 1)
+            simple_god_message(" reclaims one of your granted undead slaves!");
+        else if (num_reclaim == num_slaves)
+            simple_god_message(" reclaims your granted undead slaves!");
+        else
+            simple_god_message(" reclaims some of your granted undead slaves!");
         return (true);
     }
 
     return (false);
 }
 
-static bool _fedhas_plants_on_level_hostile()
-{
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (mi->alive() && mons_is_plant(*mi))
-        {
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Plant hostility: %s on level %d, branch %d",
-                 mi->name(DESC_PLAIN).c_str(),
-                 static_cast<int>(you.absdepth0),
-                 static_cast<int>(you.where_are_you));
-#endif
-
-            // You can potentially turn an oklob or whatever neutral
-            // again by going back to Fedhas.
-            if (testbits(mi->flags, MF_ATT_CHANGE_ATTEMPT))
-                mi->flags &= ~MF_ATT_CHANGE_ATTEMPT;
-
-            mi->attitude = ATT_HOSTILE;
-            mi->del_ench(ENCH_CHARM, true);
-            behaviour_event(*mi, ME_ALERT, MHITYOU);
-            mons_att_changed(*mi);
-            set_auto_exclude(*mi);
-            // For now WAS_NEUTRAL stays.
-        }
-    }
-
-    return (true);
-}
-
-bool fedhas_plants_hostile()
-{
-    if (apply_to_all_dungeons(_fedhas_plants_on_level_hostile))
-    {
-        mpr("The plants of the dungeon turn on you!", MSGCH_GOD);
-        return (true);
-    }
-
-    return (false);
-}
-
-// Upon excommunication, ex-Beoghites lose all their orcish followers,
-// plus all monsters created by their priestly orcish followers.  When
-// under penance, Beoghites can lose all orcish followers in sight,
+// When under penance, Beoghites can lose all orcish followers in sight,
 // subject to a few limitations.
 bool beogh_followers_abandon_you()
 {
@@ -669,50 +225,42 @@ bool beogh_followers_abandon_you()
     int num_reconvert = 0;
     int num_followers = 0;
 
-    if (you.religion != GOD_BEOGH)
+    for (radius_iterator ri(you.pos(), 9); ri; ++ri)
     {
-        reconvert =
-            apply_to_all_dungeons(_beogh_followers_on_level_abandon_you);
-    }
-    else
-    {
-        for (radius_iterator ri(you.pos(), 9); ri; ++ri)
+        monsters *monster = monster_at(*ri);
+        if (monster == NULL)
+            continue;
+
+        // Note that orc high priests' summons are gifts of Beogh,
+        // so we can't use is_orcish_follower() here.
+        if (mons_is_god_gift(monster, GOD_BEOGH))
         {
-            monsters *monster = monster_at(*ri);
-            if (monster == NULL)
-                continue;
+            num_followers++;
 
-            // Note that orc high priests' summons are gifts of Beogh,
-            // so we can't use is_orcish_follower() here.
-            if (mons_is_god_gift(monster, GOD_BEOGH))
+            if (you.visible_to(monster)
+                && !monster->asleep()
+                && !mons_is_confused(monster)
+                && !monster->cannot_act())
             {
-                num_followers++;
+                const int hd = monster->hit_dice;
 
-                if (you.visible_to(monster)
-                    && !monster->asleep()
-                    && !mons_is_confused(monster)
-                    && !monster->cannot_act())
+                // During penance, followers get a saving throw.
+                if (random2((you.piety - you.penance[GOD_BEOGH]) / 18)
+                    + random2(you.skills[SK_INVOCATIONS] - 6)
+                    > random2(hd) + hd + random2(5))
                 {
-                    const int hd = monster->hit_dice;
-
-                    // During penance, followers get a saving throw.
-                    if (random2((you.piety - you.penance[GOD_BEOGH]) / 18)
-                        + random2(you.skills[SK_INVOCATIONS] - 6)
-                        > random2(hd) + hd + random2(5))
-                    {
-                        continue;
-                    }
-
-                    monster->attitude = ATT_HOSTILE;
-                    behaviour_event(monster, ME_ALERT, MHITYOU);
-                    // For now CREATED_FRIENDLY stays.
-                    mons_att_changed(monster);
-
-                    if (you.can_see(monster))
-                        num_reconvert++; // Only visible ones.
-
-                    reconvert = true;
+                    continue;
                 }
+
+                monster->attitude = ATT_HOSTILE;
+                behaviour_event(monster, ME_ALERT, MHITYOU);
+                // For now CREATED_FRIENDLY stays.
+                mons_att_changed(monster);
+
+                if (you.can_see(monster))
+                    num_reconvert++; // Only visible ones.
+
+                reconvert = true;
             }
         }
     }
@@ -724,9 +272,7 @@ bool beogh_followers_abandon_you()
 
         std::ostream& chan = msg::streams(MSGCH_MONSTER_ENCHANT);
 
-        if (you.religion != GOD_BEOGH)
-            chan << "All of your followers decide to abandon you.";
-        else if (num_reconvert > 0)
+        if (num_reconvert > 0)
         {
             if (num_reconvert == 1 && num_followers > 1)
                 chan << "One of your followers decides to abandon you.";
@@ -737,21 +283,6 @@ bool beogh_followers_abandon_you()
         }
 
         chan << std::endl;
-
-        return (true);
-    }
-
-    return (false);
-}
-
-// Upon excommunication, ex-Jiyvaites lose all their fellow slimes.
-bool jiyva_slimes_abandon_you()
-{
-    if (apply_to_all_dungeons(_jiyva_slimes_on_level_abandon_you))
-    {
-        std::ostream& chan = msg::streams(MSGCH_MONSTER_ENCHANT);
-
-        chan << "All of your fellow slimes turn on you." << std::endl;
 
         return (true);
     }

@@ -321,6 +321,7 @@ struct LevelInfo
 {
     LevelInfo() : stairs(), excludes(), stair_distances(), id()
     {
+        da_counters.init(0);
     }
 
     void save(writer&) const;
@@ -362,6 +363,8 @@ struct LevelInfo
     // Returns true if the given branch is known to be accessible from the
     // current level.
     bool is_known_branch(unsigned char branch) const;
+
+    FixedVector<int, NUM_DA_COUNTERS> da_counters;
 
 private:
     // Gets a list of coordinates of all player-known stairs on the current
@@ -421,6 +424,7 @@ public:
     {
         return levels.find(lev) != levels.end();
     }
+    std::vector<level_id> known_levels() const;
 
     const level_pos &get_waypoint(int number) const
     {
@@ -444,6 +448,11 @@ public:
     void load(reader&, char minorVersion);
 
     bool is_known_branch(unsigned char branch) const;
+
+    void update_da_counters(); // of the current level
+
+    unsigned int query_da_counter(daction_type c);
+    void clear_da_counter(daction_type c);
 
 private:
     void fixup_levels();

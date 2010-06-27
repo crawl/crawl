@@ -76,9 +76,9 @@ std::string map_marker::property(const std::string &pname) const
 
 map_marker *map_marker::read_marker(reader &inf)
 {
-    const map_marker_type type =
+    const map_marker_type mtype =
         static_cast<map_marker_type>(unmarshallShort(inf));
-    return readers[type]? (*readers[type])(inf, type) : NULL;
+    return readers[mtype]? (*readers[mtype])(inf, mtype) : NULL;
 }
 
 map_marker *map_marker::parse_marker(
@@ -646,18 +646,22 @@ void map_markers::init_from(const map_markers &c)
 
 void map_markers::activate_all(bool verbose)
 {
-    std::vector<map_marker*> to_remove;
-
     for (dgn_marker_map::iterator i = markers.begin();
-         i != markers.end(); ++i)
+         i != markers.end(); )
     {
-        i->second->activate(verbose);
-        if (i->second->property("post_activate_remove") != "")
-            to_remove.push_back(i->second);
+        map_marker *marker = i->second;
+        ++i;
+        marker->activate(verbose);
     }
 
-    for (unsigned int i = 0; i < to_remove.size(); i++)
-        remove(to_remove[i]);
+    for (dgn_marker_map::iterator i = markers.begin();
+         i != markers.end(); )
+    {
+        map_marker *marker = i->second;
+        ++i;
+        if (!marker->property("post_activate_remove").empty())
+            remove(marker);
+    }
 }
 
 void map_markers::add(map_marker *marker)

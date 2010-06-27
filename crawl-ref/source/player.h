@@ -276,9 +276,17 @@ public:
   // When other levels are loaded (e.g. viewing), is the player on this level?
   bool on_current_level;
 
-  // monsters mesmerising player; should be proteced, but needs to be saved
+  // Did you spent this turn walking (/flying)?
+  // 0 = no, 1 = cardinal move, 2 = diagonal move
+  int walking;
+
+  // monsters mesmerising player; should be protected, but needs to be saved
   // and restored.
   std::vector<int> beholders;
+
+  // Delayed level actions.  This array is never trimmed, as usually D:1 won't
+  // be loaded again until the very end.
+  std::vector<daction_type> dactions;
 
 #if defined(WIZARD) || defined(DEBUG)
   // If set to true, then any call to ouch() which would cuase the player
@@ -327,7 +335,7 @@ public:
     bool invisible() const;
     bool misled() const;
     bool can_see_invisible() const;
-    bool can_see_invisible(bool unid) const;
+    bool can_see_invisible(bool unid, bool transient = true) const;
     bool visible_to(const actor *looker) const;
     bool can_see(const actor* a) const;
 

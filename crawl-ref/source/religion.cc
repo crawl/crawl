@@ -33,6 +33,7 @@
 #include "decks.h"
 #include "delay.h"
 #include "describe.h"
+#include "dgn-actions.h"
 #include "dgnevent.h"
 #include "dlua.h"
 #include "effects.h"
@@ -877,7 +878,7 @@ void dec_penance(god_type god, int val)
                 god);
 
             if (dead_jiyva)
-                remove_all_jiyva_altars();
+                add_daction(DACT_REMOVE_JIYVA_ALTARS);
 
             take_note(Note(NOTE_MOLLIFY_GOD, god));
 
@@ -901,7 +902,7 @@ void dec_penance(god_type god, int val)
             // When you've worked through all your penance, you get
             // another chance to make hostile holy beings good neutral.
             if (is_good_god(you.religion))
-                holy_beings_attitude_change();
+                add_daction(DACT_HOLY_NEW_ATTEMPT);
         }
         else if (god == GOD_NEMELEX_XOBEH && you.penance[god] > 100)
         { // Nemelex's penance works actively only until 100
@@ -934,26 +935,6 @@ bool jiyva_is_dead()
 {
     return (you.royal_jelly_dead
             && you.religion != GOD_JIYVA && !you.penance[GOD_JIYVA]);
-}
-
-static bool _remove_jiyva_altars()
-{
-    bool success = false;
-    for (rectangle_iterator ri(1); ri; ++ri)
-    {
-        if (grd(*ri) == DNGN_ALTAR_JIYVA)
-        {
-            grd(*ri) = DNGN_FLOOR;
-            success = true;
-        }
-    }
-
-    return (success);
-}
-
-bool remove_all_jiyva_altars()
-{
-    return (apply_to_all_dungeons(_remove_jiyva_altars));
 }
 
 static void _inc_penance(god_type god, int val)
@@ -1938,7 +1919,7 @@ static void _delayed_gift_callback(const mgen_data &mg, int &midx,
         return;
 
     // Make sure monsters are shown.
-    viewwindow(false);
+    viewwindow();
     more();
     _inc_gift_timeout(4 + random2avg(7, 2));
     you.num_gifts[you.religion]++;
@@ -2586,7 +2567,7 @@ void gain_piety(int original_gain, bool force)
             // When you gain a piety level, you get another chance to
             // make hostile holy beings good neutral.
             if (is_good_god(you.religion))
-                holy_beings_attitude_change();
+                add_daction(DACT_HOLY_NEW_ATTEMPT);
         }
     }
 
@@ -2637,7 +2618,7 @@ void gain_piety(int original_gain, bool force)
         // When you gain piety of more than 160, you get another chance
         // to make hostile holy beings good neutral.
         if (is_good_god(you.religion))
-            holy_beings_attitude_change();
+            add_daction(DACT_HOLY_NEW_ATTEMPT);
     }
 
     do_god_gift();
@@ -2812,7 +2793,12 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_YREDELEMNUL:
-        yred_slaves_abandon_you();
+        if (query_da_counter(DACT_ALLY_YRED_SLAVE))
+        {
+            simple_god_message(" reclaims all of your granted undead slaves!",
+                               GOD_YREDELEMNUL);
+            add_daction(DACT_ALLY_YRED_SLAVE);
+        }
 
         MiscastEffect(&you, -old_god, SPTYP_NECROMANCY,
                       5 + you.experience_level, random2avg(88, 3),
@@ -2840,7 +2826,7 @@ void excommunication(god_type new_god)
         if (you.attribute[ATTR_DIVINE_REGENERATION])
             remove_regen(true);
 
-        make_god_gifts_hostile(false);
+        add_daction(DACT_ALLY_TROG);
 
         // Penance has to come before retribution to prevent "mollify"
         _inc_penance(old_god, 50);
@@ -2848,7 +2834,14 @@ void excommunication(god_type new_god)
         break;
 
     case GOD_BEOGH:
-        beogh_followers_abandon_you(); // friendly orcs around turn hostile
+        if (query_da_counter(DACT_ALLY_BEOGH))
+        {
+            simple_god_message("'s voice booms out, \"Who do you think you "
+                               "are?\"", GOD_BEOGH);
+            mpr("All of your followers decide to abandon you.",
+                MSGCH_MONSTER_ENCHANT);
+            add_daction(DACT_ALLY_BEOGH);
+        }
 
         // You might have lost water walking at a bad time...
         if (_need_water_walking())
@@ -2892,10 +2885,10 @@ void excommunication(god_type new_god)
         if (!is_good_god(new_god))
         {
             _inc_penance(old_god, 50);
-            make_god_gifts_hostile(false);
+            add_daction(DACT_ALLY_HOLY);
         }
         else
-            make_holy_god_gifts_good_neutral(false);
+            add_daction(DACT_HOLY_PETS_GO_NEUTRAL);
 
         break;
 
@@ -2912,9 +2905,7 @@ void excommunication(god_type new_god)
         {
             _inc_penance(old_god, 25);
 
-            god_acting good_gdact(GOD_SHINING_ONE, true);
-
-            make_god_gifts_hostile(false);
+            add_daction(DACT_ALLY_HOLY);
         }
         break;
 
@@ -2928,14 +2919,16 @@ void excommunication(god_type new_god)
         {
             _inc_penance(old_god, 30);
 
-            god_acting good_gdact(GOD_SHINING_ONE, true);
-
-            make_god_gifts_hostile(false);
+            add_daction(DACT_ALLY_HOLY);
         }
         break;
 
     case GOD_JIYVA:
-        jiyva_slimes_abandon_you();
+        if (query_da_counter(DACT_ALLY_SLIME))
+        {
+            mpr("All of your fellow slimes turn on you.", MSGCH_MONSTER_ENCHANT);
+            add_daction(DACT_ALLY_SLIME);
+        }
 
         if (you.duration[DUR_SLIMIFY])
             you.duration[DUR_SLIMIFY] = 0;
@@ -2951,7 +2944,11 @@ void excommunication(god_type new_god)
         _inc_penance(old_god, 30);
         break;
     case GOD_FEDHAS:
-        fedhas_plants_hostile();
+        if (query_da_counter(DACT_ALLY_PLANT))
+        {
+            mpr("The plants of the dungeon turn on you!", MSGCH_GOD, GOD_FEDHAS);
+            add_daction(DACT_ALLY_PLANT);
+        }
         _inc_penance(old_god, 30);
         divine_retribution(old_god);
         break;
@@ -2964,8 +2961,11 @@ void excommunication(god_type new_god)
 
     // When you start worshipping a non-good god, or no god, you make
     // all non-hostile holy beings that worship a good god hostile.
-    if (!is_good_god(new_god) && holy_beings_attitude_change())
+    if (!is_good_god(new_god) && query_da_counter(DACT_ALLY_HOLY))
+    {
         mpr("The divine host forsakes you.", MSGCH_MONSTER_ENCHANT);
+        add_daction(DACT_ALLY_HOLY);
+    }
 
     // Evil hack.
     learned_something_new(HINT_EXCOMMUNICATE,
@@ -3280,13 +3280,25 @@ void god_pitch(god_type which_god)
     // you make all non-hostile unclean and chaotic beings hostile; and
     // when you start worshipping Trog, you make all non-hostile magic
     // users hostile.
-    if (is_good_god(you.religion) && unholy_and_evil_beings_attitude_change())
+    if (is_good_god(you.religion)
+        && query_da_counter(DACT_ALLY_UNHOLY_EVIL))
+    {
+        add_daction(DACT_ALLY_UNHOLY_EVIL);
         mpr("Your unholy and evil allies forsake you.", MSGCH_MONSTER_ENCHANT);
+    }
 
-    if (you.religion == GOD_ZIN && unclean_and_chaotic_beings_attitude_change())
+    if (you.religion == GOD_ZIN
+        && query_da_counter(DACT_ALLY_UNCLEAN_CHAOTIC))
+    {
+        add_daction(DACT_ALLY_UNCLEAN_CHAOTIC);
         mpr("Your unclean and chaotic allies forsake you.", MSGCH_MONSTER_ENCHANT);
-    else if (you.religion == GOD_TROG && spellcasters_attitude_change())
+    }
+    else if (you.religion == GOD_TROG
+             && query_da_counter(DACT_ALLY_SPELLCASTER))
+    {
+        add_daction(DACT_ALLY_SPELLCASTER);
         mpr("Your magic-using allies forsake you.", MSGCH_MONSTER_ENCHANT);
+    }
 
     if (you.religion == GOD_ELYVILON)
     {
@@ -3542,7 +3554,10 @@ harm_protection_type god_protects_from_harm(god_type god, bool actual)
 // Returns true if the player can use the good gods' passive piety gain.
 static bool _need_free_piety()
 {
-    return (you.piety < 150 || you.gift_timeout || you.penance[you.religion]);
+    return (!crawl_state.game_is_sprint()
+            && (you.piety < 150
+                || you.gift_timeout
+                || you.penance[you.religion]));
 }
 
 //jmf: moved stuff from effects::handle_time()
@@ -3926,33 +3941,24 @@ int get_monster_tension(monster_iterator mons, god_type god)
     return exper;
 }
 
-int get_tension(god_type god, bool count_travelling)
+int get_tension(god_type god)
 {
     int total = 0;
 
     bool nearby_monster = false;
-    for (monster_iterator mons; mons; ++mons)
+    for (radius_iterator ri(you.get_los()); ri; ri++)
     {
-        // Is the monster trying to get somewhere nearby?
-        coord_def    target;
-        unsigned int travel_size = mons->travel_path.size();
+        const monsters *mon = monster_at(*ri);
 
-        if (travel_size > 0)
-            target = mons->travel_path[travel_size - 1];
-        else
-            target = mons->target;
+        if(mon && you.can_see(mon))
+        {
+            int exper = get_monster_tension(mon, god);
 
-        // Monster is neither nearby nor trying to get near us.
-        if (!in_bounds(target) || !you.see_cell(target) || travel_size > 3)
-            continue;
+            if (!mon->wont_attack())
+                nearby_monster = true;
 
-        int exper = get_monster_tension(mons, god);
-
-        // Monster is nearby.
-        if (!nearby_monster && !mons->wont_attack())
-            nearby_monster = true;
-
-        total += exper;
+            total += exper;
+        }
     }
 
     // At least one monster has to be nearby, for tension to count.

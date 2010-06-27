@@ -126,7 +126,6 @@
 #include "shout.h"
 #include "stash.h"
 #include "view.h"
-#include "viewchar.h"
 #include "viewgeom.h"
 #include "viewmap.h"
 #include "wiz-dgn.h"
@@ -287,13 +286,13 @@ int main(int argc, char *argv[])
     env.markers.activate_all();
 
 #ifdef USE_TILE
-    viewwindow(false);
+    viewwindow();
 #endif
 
     if (game_start && you.char_class == JOB_WANDERER)
         _wanderer_startup_message();
 
-    if (!crawl_state.game_is_tutorial() and game_start)
+    if (!crawl_state.game_is_tutorial() && !crawl_state.game_is_sprint() && game_start)
        _announce_goal_message();
 
     _god_greeting_message(game_start);
@@ -591,6 +590,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case '(': wizard_create_feature();               break;
     case ')': wizard_mod_tide();                     break;
     case ':': wizard_list_branches();                break;
+    case ';': wizard_list_levels();                  break;
     case '{': wizard_map_level();                    break;
     case '}': wizard_reveal_traps();                 break;
     case '@': wizard_set_stats();                    break;
@@ -601,7 +601,8 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 'd': wizard_level_travel(true);             break;
     case 'D': wizard_detect_creatures();             break;
     case 'u': case 'U': wizard_level_travel(false);  break;
-    case '%': case 'o': wizard_create_spec_object(); break;
+    case 'o': wizard_create_spec_object();           break;
+    case '%': wizard_create_spec_object_by_name();   break;
     case 'J': jiyva_eat_offlevel_items();            break;
 
     case 'x':
@@ -1029,6 +1030,7 @@ static void _input()
     religion_turn_start();
     god_conduct_turn_start();
     you.update_beholders();
+    you.walking = 0;
 
     // Currently only set if Xom accidentally kills the player.
     you.reset_escaped_death();
@@ -1244,9 +1246,7 @@ static void _go_upstairs()
         return;
     }
     // Up and down both work for portals.
-    else if (get_feature_dchar(ygrd) == DCHAR_ARCH
-             && feat_stair_direction(ygrd) != CMD_NO_CMD
-             && ygrd != DNGN_ENTER_ZOT)
+    else if (feat_is_bidirectional_portal(ygrd))
     {
         ;
     }
@@ -1316,9 +1316,7 @@ static void _go_downstairs()
         return;
     }
     // Up and down both work for portals.
-    else if (get_feature_dchar(ygrd) == DCHAR_ARCH
-             && feat_stair_direction(ygrd) != CMD_NO_CMD
-             && ygrd != DNGN_ENTER_ZOT)
+    else if (feat_is_bidirectional_portal(ygrd))
     {
         ;
     }
@@ -1880,7 +1878,7 @@ static void _prep_input()
     set_redraw_status(REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK);
     print_stats();
 
-    viewwindow(false, true);
+    viewwindow();
     maybe_update_stashes();
 }
 
@@ -2648,17 +2646,23 @@ void world_reacts()
 
     _decrement_durations();
 
-    const int food_use = player_hunger_rate();
+    int capped_time = you.time_taken;
+    if (you.walking && capped_time > BASELINE_DELAY)
+        capped_time = BASELINE_DELAY;
+
+    int food_use = player_hunger_rate();
+    food_use = div_rand_round(food_use * capped_time, BASELINE_DELAY);
+
     if (food_use > 0 && you.hunger >= 40)
         make_hungry(food_use, true);
 
-    _regenerate_hp_and_mp(you.time_taken);
+    _regenerate_hp_and_mp(capped_time);
 
     // If you're wielding a rod, it'll gradually recharge.
     recharge_rods(you.time_taken, false);
 
     // Player stealth check.
-    viewwindow(true);
+    seen_monsters_react();
 
     handle_monsters();
 
@@ -2695,7 +2699,7 @@ void world_reacts()
 
     handle_starvation();
 
-    viewwindow(false);
+    viewwindow();
 
     if (you.cannot_act() && any_messages()
         && crawl_state.repeat_cmd != CMD_WIZARD)
@@ -2710,7 +2714,7 @@ void world_reacts()
 
     if (you.num_turns != -1)
     {
-        if (you.num_turns < LONG_MAX)
+        if (you.num_turns < INT_MAX)
             you.num_turns++;
         if (env.turns_on_level < INT_MAX)
             env.turns_on_level++;
@@ -3013,6 +3017,20 @@ static void _open_door(coord_def move, bool check_confused)
             break;
         }
         // Don't lose a turn.
+        return;
+    }
+
+    // Allow doors to be locked.
+    bool door_vetoed = env.markers.property_at(doorpos, MAT_ANY, "veto_open") == "veto";
+    const std::string door_veto_message = env.markers.property_at(doorpos, MAT_ANY,
+                                "veto_reason");
+    if (door_vetoed)
+    {
+        if (door_veto_message.empty())
+            mpr("The door is shut tight!");
+        else
+            mpr(door_veto_message.c_str());
+
         return;
     }
 
@@ -3530,6 +3548,7 @@ static void _move_player(coord_def move)
         const coord_def& new_targ = you.pos() + move;
         if (!in_bounds(new_targ) || !you.can_pass_through(new_targ))
         {
+            you.walking = move.abs();
             you.turn_is_over = true;
             mpr("Ouch!");
             apply_berserk_penalty = true;
@@ -3640,6 +3659,7 @@ static void _move_player(coord_def move)
 
         move_player_to_grid(targ, true, false);
 
+        you.walking = move.abs();
         you.prev_move = move;
         move.reset();
         you.turn_is_over = true;
@@ -3965,7 +3985,7 @@ static void _compile_time_asserts()
     COMPILE_CHECK(SP_VAMPIRE == 30              , c3);
     COMPILE_CHECK(SPELL_DEBUGGING_RAY == 102    , c4);
     COMPILE_CHECK(SPELL_PETRIFY == 154          , c5);
-    COMPILE_CHECK(NUM_SPELLS == 203             , c6);
+    COMPILE_CHECK(NUM_SPELLS == 204             , c6);
 
     //jmf: NEW ASSERTS: we ought to do a *lot* of these
     COMPILE_CHECK(NUM_SPECIES < SP_UNKNOWN      , c7);

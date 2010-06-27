@@ -9,7 +9,7 @@
 #include "mon-info.h"
 #include "tilereg-grid.h"
 
-class MonsterRegion : public GridRegion 
+class MonsterRegion : public GridRegion
 {
 public:
     MonsterRegion(const TileRegionInit &init);

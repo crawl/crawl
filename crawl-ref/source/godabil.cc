@@ -17,6 +17,7 @@
 #include "coordit.h"
 #include "database.h"
 #include "delay.h"
+#include "dgn-actions.h"
 #include "directn.h"
 #include "effects.h"
 #include "env.h"
@@ -878,48 +879,11 @@ void yred_drain_life(int pow)
     }
 }
 
-static bool _is_yred_enslaved_soul(const monsters* mon)
-{
-    return (mon->alive() && mons_enslaved_soul(mon));
-}
-
-static bool _yred_enslaved_souls_on_level_disappear()
-{
-    bool success = false;
-
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (_is_yred_enslaved_soul(*mi))
-        {
-#ifdef DEBUG_DIAGNOSTICS
-            mprf(MSGCH_DIAGNOSTICS, "Undead soul disappearing: %s on level %d, branch %d",
-                 mi->name(DESC_PLAIN).c_str(),
-                 static_cast<int>(you.absdepth0),
-                 static_cast<int>(you.where_are_you));
-#endif
-
-            simple_monster_message(*mi, " is freed.");
-
-            // The monster disappears.
-            monster_die(*mi, KILL_DISMISSED, NON_MONSTER);
-
-            success = true;
-        }
-    }
-
-    return (success);
-}
-
-static bool _yred_souls_disappear()
-{
-    return (apply_to_all_dungeons(_yred_enslaved_souls_on_level_disappear));
-}
-
 void yred_make_enslaved_soul(monsters *mon, bool force_hostile,
                              bool quiet, bool unrestricted)
 {
     if (!unrestricted)
-        _yred_souls_disappear();
+        add_daction(DACT_OLD_ENSLAVED_SOULS_POOF);
 
     const int type = mon->type;
     monster_type soul_type = mons_species(type);
@@ -1056,6 +1020,7 @@ bool kiku_receive_corpses(int pow, coord_def where)
             dummy.number = random2(20) + 1;
 
         int valid_corpse = fill_out_corpse(&dummy,
+                                           dummy.type,
                                            mitm[index_of_corpse_created],
                                            false);
         if (valid_corpse == -1)
@@ -1743,7 +1708,7 @@ bool fedhas_plant_ring_from_fruit()
 
     // Screwing around with display code I don't really understand. -cao
     crawl_state.darken_range = 1;
-    viewwindow(false, false);
+    viewwindow(false);
 
     for (int i = 0; i < max_use; ++i)
     {
@@ -1763,7 +1728,7 @@ bool fedhas_plant_ring_from_fruit()
     {
         // User canceled at the prompt.
         crawl_state.darken_range = -1;
-        viewwindow(false, false);
+        viewwindow(false);
         return (false);
     }
 
@@ -1800,7 +1765,7 @@ bool fedhas_plant_ring_from_fruit()
         tiles.clear_overlays();
         for (int j = i + 1; j < target_count; ++j)
             tiles.add_overlay(adjacent[j], TILE_INDICATOR + j);
-        viewwindow(false, false);
+        viewwindow(false);
 #endif
         delay(200);
     }
@@ -1808,7 +1773,7 @@ bool fedhas_plant_ring_from_fruit()
     _decrease_amount(collected_fruit, created_count);
 
     crawl_state.darken_range = -1;
-    viewwindow(false, false);
+    viewwindow(false);
 
     return (created_count);
 }
@@ -1948,7 +1913,7 @@ int fedhas_corpse_spores(beh_type behavior, bool interactive)
         return (count);
 
     crawl_state.darken_range = 0;
-    viewwindow(false, false);
+    viewwindow(false);
     for (unsigned i = 0; i < positions.size(); ++i)
     {
 #ifndef USE_TILE
@@ -1970,7 +1935,7 @@ int fedhas_corpse_spores(beh_type behavior, bool interactive)
                                  true, 'y') <= 0)
     {
         crawl_state.darken_range = -1;
-        viewwindow(false, false);
+        viewwindow(false);
         return (-1);
     }
 
@@ -2003,7 +1968,7 @@ int fedhas_corpse_spores(beh_type behavior, bool interactive)
     }
 
     crawl_state.darken_range = -1;
-    viewwindow(false, false);
+    viewwindow(false);
 
     return (count);
 }

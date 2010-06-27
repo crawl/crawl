@@ -139,9 +139,9 @@
 { MUT_DEMONIC_GUARDIAN,            0,  3, false, false,
   "demonic guardian",
 
-  {"You are protected by a weak demonic guardian.",
-   "You are protected by a demonic guardian.",
-   "You are protected by a powerful demonic guardian."},
+  {"A weak demonic guardian rushes to your aid.",
+   "A demonic guardian rushes to your aid.",
+   "A powerful demonic guardian rushes to your aid."},
 
   {"You feel the presence of a demonic guardian.",
    "Your guardian grows in power.",

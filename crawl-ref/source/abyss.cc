@@ -250,7 +250,7 @@ static bool _abyss_place_vault_tagged(const map_mask &abyss_genlevel_mask,
                                       const std::string &tag,
                                       int rune_subst = -1)
 {
-    const map_def *map = random_map_for_tag(tag);
+    const map_def *map = random_map_for_tag(tag, false, true);
     if (map)
     {
         unwind_vault_placement_mask vaultmask(&abyss_genlevel_mask);
@@ -549,7 +549,7 @@ static int _abyss_place_vaults(const map_mask &abyss_genlevel_mask)
     const int maxvaults = 4;
     for (int i = 0; i < maxvaults; ++i)
     {
-        const map_def *map = random_map_for_tag("abyss");
+        const map_def *map = random_map_for_tag("abyss", false, true);
         if (!map)
             break;
 
@@ -636,7 +636,7 @@ public:
     ~xom_abyss_feature_amusement_check()
     {
         // Update known terrain
-        viewwindow(false);
+        viewwindow();
 
         const int exit_is_near = abyss_exit_nearness();
         const int rune_is_near = abyss_rune_nearness();

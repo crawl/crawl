@@ -536,7 +536,7 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
     }
 }
 
-bool is_opaque_cloud(unsigned char cloud_idx)
+bool is_opaque_cloud(int cloud_idx)
 {
     if (cloud_idx == EMPTY_CLOUD)
         return (false);
@@ -1074,9 +1074,9 @@ std::string cloud_name(cloud_type type)
 ////////////////////////////////////////////////////////////////////////
 // cloud_struct
 
-kill_category cloud_struct::killer_to_whose(killer_type killer)
+kill_category cloud_struct::killer_to_whose(killer_type _killer)
 {
-    switch (killer)
+    switch (_killer)
     {
         case KILL_YOU:
         case KILL_YOU_MISSILE:
@@ -1094,9 +1094,9 @@ kill_category cloud_struct::killer_to_whose(killer_type killer)
     return (KC_OTHER);
 }
 
-killer_type cloud_struct::whose_to_killer(kill_category whose)
+killer_type cloud_struct::whose_to_killer(kill_category _whose)
 {
-    switch (whose)
+    switch (_whose)
     {
         case KC_YOU:         return(KILL_YOU_MISSILE);
         case KC_FRIENDLY:    return(KILL_MON_MISSILE);

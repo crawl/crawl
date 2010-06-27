@@ -93,7 +93,7 @@ local function report_monster_counts_at(place, mcount_map)
         return a[2].etotal > b[2].etotal
     end
   end)
-                         
+
   local total = 0
   for _, monster_pop in ipairs(monster_counts) do
     if monster_pop[1] ~= 'TOTAL' then
