@@ -5641,6 +5641,8 @@ std::string beam_type_name(beam_type type)
     case BEAM_DEVOUR_FOOD:          return ("devour food");
     case BEAM_GLOOM:                return ("gloom");
     case BEAM_INK:                  return ("ink");
+    case BEAM_HOLY_FLAME:           return ("cleansing flame");
+    case BEAM_HOLY_LIGHT:           return ("holy light");
 
     case NUM_BEAMS:                 DEBUGSTR("invalid beam type");
                                     return ("INVALID");

@@ -256,6 +256,8 @@ enum beam_type                  // beam[].flavour
     BEAM_POTION_RAIN,
     BEAM_GLOOM,
     BEAM_INK,
+    BEAM_HOLY_FLAME,
+    BEAM_HOLY_LIGHT,
     BEAM_POTION_RANDOM,
 
     BEAM_LAST_REAL = BEAM_POTION_RANDOM,
@@ -3290,10 +3292,7 @@ enum zap_type
     ZAP_PRIMAL_WAVE,
     ZAP_IOOD,
     ZAP_SUNRAY,
-    ZAP_RESURRECT,
     ZAP_LIGHT_BEAM,
-    ZAP_HEAL_OTHER,
-    ZAP_SACRIFICE,
     ZAP_HOLY_FLAMES,
     ZAP_HOLY_BREATH,
 
