@@ -686,6 +686,16 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
         beam.is_beam    = true;
         break;
 
+    case SPELL_HOLY_BREATH:
+        beam.name     = "blast of cleansing flame";
+        beam.damage   = dice_def( 3, (mons->hit_dice * 2) );
+        beam.colour   = ETC_HOLY;
+        beam.flavour  = BEAM_HOLY;
+        beam.hit      = 18 + power / 25;
+        beam.is_beam  = true;
+        beam.is_big_cloud = true;
+        break;
+
     case SPELL_DRACONIAN_BREATH:
         beam.damage      = dice_def( 3, (mons->hit_dice * 2) );
         beam.hit         = 30;
@@ -772,6 +782,9 @@ static bool _los_free_spell(spell_type spell_cast)
         || spell_cast == SPELL_HAUNT
         || spell_cast == SPELL_FIRE_STORM
         || spell_cast == SPELL_AIRSTRIKE
+        || spell_cast == SPELL_RESURRECT
+        || spell_cast == SPELL_SACRIFICE
+        || spell_cast == SPELL_HOLY_FLAMES
         || spell_cast == SPELL_MISLEAD);
 }
 
@@ -808,7 +821,10 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         case SPELL_BRAIN_FEED:
         case SPELL_MISLEAD:
         case SPELL_SMITING:
+        case SPELL_RESURRECT:
+        case SPELL_SACRIFICE:
         case SPELL_AIRSTRIKE:
+        case SPELL_HOLY_FLAMES:
             return (true);
         default:
             // Other spells get normal setup:
@@ -844,6 +860,7 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_HORRIBLE_THINGS:
     case SPELL_HAUNT:
     case SPELL_SYMBOL_OF_TORMENT:
+    case SPELL_HOLY_WORD:
     case SPELL_SUMMON_GREATER_DEMON:
     case SPELL_CANTRIP:
     case SPELL_BERSERKER_RAGE:
@@ -869,6 +886,8 @@ bool setup_mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
     case SPELL_SILENCE:
     case SPELL_AWAKEN_FOREST:
     case SPELL_SUMMON_CANIFORMS:
+    case SPELL_SUMMON_HOLIES:
+    case SPELL_SUMMON_GREATER_HOLY:
         return (true);
     default:
         if (check_validity)
@@ -1261,9 +1280,13 @@ bool handle_mon_spell(monsters *monster, bolt &beem)
                 // Setup the spell.
                 setup_mons_cast(monster, beem, spell_cast);
 
-                // Try to find a nearby ally to haste
-                if (spell_cast == SPELL_HASTE_OTHER
-                    && !_set_allied_target(monster, beem))
+                // Try to find a nearby ally to haste, heal
+                // resurrect, or sacrifice itself for.
+                if ((spell_cast == SPELL_HASTE_OTHER
+                     || spell_cast == SPELL_HEAL_OTHER
+                     || spell_cast == SPELL_RESURRECT
+                     || spell_cast == SPELL_SACRIFICE)
+                        && !_set_allied_target(monster, beem))
                 {
                     spell_cast = SPELL_NO_SPELL;
                     continue;
