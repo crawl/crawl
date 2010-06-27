@@ -2303,7 +2303,10 @@ int acquirement_create_item(object_class_type class_wanted,
 
     move_item_to_grid( &thing_created, pos );
 
-    ASSERT(thing.is_valid());
+    if (thing_created != NON_ITEM)
+    {
+        ASSERT(mitm[thing_created].is_valid());
+    }
     return (thing_created);
 }
 
