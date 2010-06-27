@@ -668,10 +668,13 @@ public:
 
     static map_selector by_tag(const std::string &_tag,
                                bool _check_depth,
+                               bool _check_chance,
                                const level_id &_place = level_id::current())
     {
-        return map_selector(map_selector::TAG, _place, _tag,
-                            false, _check_depth);
+        map_selector msel = map_selector(map_selector::TAG, _place, _tag,
+                                         false, _check_depth);
+        msel.ignore_chance = !_check_chance;
+        return (msel);
     }
 
 private:
@@ -683,7 +686,7 @@ private:
           mini(_mini), check_depth(_check_depth),
           check_layout(sel == DEPTH && place == level_id::current())
     {
-        if (_typ == PLACE || _typ == TAG)
+        if (_typ == PLACE)
             ignore_chance = true;
     }
 
@@ -882,6 +885,7 @@ static const map_def *_resolve_chance_vault(const map_selector &sel,
     {
         map_selector msel = map_selector::by_tag(chance_tag,
                                                  sel.check_depth,
+                                                 false,
                                                  sel.place);
         return _random_map_by_selector(msel);
     }
@@ -1012,10 +1016,11 @@ mapref_vector random_chance_maps_in_depth(const level_id &place)
 }
 
 const map_def *random_map_for_tag(const std::string &tag,
-                                  bool check_depth)
+                                  bool check_depth,
+                                  bool check_chance)
 {
     return _random_map_by_selector(
-        map_selector::by_tag(tag, check_depth));
+        map_selector::by_tag(tag, check_depth, check_chance));
 }
 
 int map_count()
@@ -1027,7 +1032,7 @@ int map_count_for_tag(const std::string &tag,
                       bool check_depth)
 {
     return _eligible_maps_for_selector(
-        map_selector::by_tag(tag, check_depth)).size();
+        map_selector::by_tag(tag, check_depth, false)).size();
 }
 
 /////////////////////////////////////////////////////////////////////////////
