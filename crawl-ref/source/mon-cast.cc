@@ -2191,6 +2191,14 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         torment(monster->mindex(), monster->pos());
         return;
 
+    case SPELL_HOLY_WORD:
+        // friendly holies don't care if you are friendly
+        if (!monsterNearby)
+            return;
+
+        holy_word(0, monster->mindex(), monster->pos());
+        return;
+
     case SPELL_SUMMON_GREATER_DEMON:
         if (_mons_abjured(monster, monsterNearby))
             return;
