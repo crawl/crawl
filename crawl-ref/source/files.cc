@@ -96,13 +96,12 @@
 #ifdef TARGET_OS_WINDOWS
 # ifdef TARGET_COMPILER_VC
 #  include <direct.h>
-# else
-#  include <dirent.h>
 # endif
 # define WIN32_LEAN_AND_MEAN
 # include <windows.h>
 # define rename(foo,bar) !MoveFileEx(foo, bar, MOVEFILE_REPLACE_EXISTING)
 #endif
+#include <dirent.h>
 
 #ifndef HAVE_STAT
 #if defined(UNIX) || defined(TARGET_COMPILER_MINGW) || defined(TARGET_OS_DOS)
