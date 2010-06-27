@@ -9159,6 +9159,8 @@ std::string dump_vault_maps()
 vault_place_iterator::vault_place_iterator(const vault_placement &vp)
     : vault_place(vp), pos(vp.pos), tl(vp.pos), br(vp.pos + vp.size - 1)
 {
+    --pos.x;
+    ++*this;
 }
 
 vault_place_iterator::operator bool () const
