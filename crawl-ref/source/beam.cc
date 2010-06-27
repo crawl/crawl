@@ -2316,6 +2316,9 @@ void bolt::affect_endpoint()
     if (name == "blast of poison")
         big_cloud(CLOUD_POISON, whose_kill(), killer(), pos(), 0, 7+random2(5));
 
+    if (origin_spell == SPELL_HOLY_BREATH)
+        big_cloud(CLOUD_HOLY_FLAMES, whose_kill(), killer(), pos(), 0, 7+random2(5));
+
     if (name == "foul vapour")
     {
         // death drake; swamp drakes handled earlier
@@ -2558,6 +2561,9 @@ void bolt::affect_place_clouds()
 
     if (name == "blast of poison")
         place_cloud(CLOUD_POISON, p, random2(4) + 2, whose_kill(), killer());
+
+    if (origin_spell == SPELL_HOLY_BREATH)
+        place_cloud(CLOUD_HOLY_FLAMES, p, random2(4) + 2, whose_kill(), killer());
 
     // Fire/cold over water/lava
     if (feat == DNGN_LAVA && flavour == BEAM_COLD
