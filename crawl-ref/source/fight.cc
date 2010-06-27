@@ -5319,7 +5319,8 @@ void melee_attack::mons_perform_attack_rounds()
             bool end = true;
             for (adjacent_iterator i(attacker->pos()); i; ++i)
             {
-                if (*i == you.pos() && !attacker->as_monster()->friendly())
+                if (*i == you.pos()
+                    && !mons_aligned(attacker, &you))
                 {
                     attacker->as_monster()->foe = MHITYOU;
                     attacker->as_monster()->target = you.pos();
