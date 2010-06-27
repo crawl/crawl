@@ -611,593 +611,611 @@ static level_pos _stair_dest(const coord_def& p, command_type dir)
 bool show_map(level_pos &lpos,
               bool travel_mode, bool allow_esc, bool allow_offlevel)
 {
-    levelview_excursion le(travel_mode);
-    level_id original(level_id::current());
-
-    if (!lpos.id.is_valid() || !allow_offlevel)
-        lpos.id = level_id::current();
-
-    cursor_control ccon(!Options.use_fake_cursor);
-    int i, j;
-
-    int move_x = 0, move_y = 0, scroll_y = 0;
-
-    bool new_level = true;
-
-    // Vector to track all features we can travel to, in order of distance.
-    std::vector<coord_def> features;
-    // List of all interesting features for display in the (console) title.
-    feature_list feats;
-
-    int min_x = INT_MAX, max_x = INT_MIN, min_y = INT_MAX, max_y = INT_MIN;
-    const int num_lines   = _get_number_of_lines_levelmap();
-    const int half_screen = (num_lines - 1) / 2;
-
-    const int top = 1 + Options.level_map_title;
-
-    int map_lines = 0;
-
-    int start_x = -1;                                         // no x scrolling
-    const int block_step = Options.level_map_cursor_step;
-    int start_y;                                              // y does scroll
-
-    int screen_y = -1;
-
-    int curs_x = -1, curs_y = -1;
-    int search_found = 0, anchor_x = -1, anchor_y = -1;
-
-    bool map_alive  = true;
-    bool redraw_map = true;
     bool chose      = false;
+    {
+        levelview_excursion le(travel_mode);
+        level_id original(level_id::current());
+
+        if (!lpos.id.is_valid() || !allow_offlevel)
+            lpos.id = level_id::current();
+
+        cursor_control ccon(!Options.use_fake_cursor);
+        int i, j;
+
+        int move_x = 0, move_y = 0, scroll_y = 0;
+
+        bool new_level = true;
+
+        // Vector to track all features we can travel to, in order of distance.
+        std::vector<coord_def> features;
+        // List of all interesting features for display in the (console) title.
+        feature_list feats;
+
+        int min_x = INT_MAX, max_x = INT_MIN, min_y = INT_MAX, max_y = INT_MIN;
+        const int num_lines   = _get_number_of_lines_levelmap();
+        const int half_screen = (num_lines - 1) / 2;
+
+        const int top = 1 + Options.level_map_title;
+
+        int map_lines = 0;
+
+        // no x scrolling
+        int start_x = -1;
+        const int block_step = Options.level_map_cursor_step;
+
+        // y does scroll
+        int start_y;
+
+        int screen_y = -1;
+
+        int curs_x = -1, curs_y = -1;
+        int search_found = 0, anchor_x = -1, anchor_y = -1;
+
+        bool map_alive  = true;
+        bool redraw_map = true;
 
 #ifndef USE_TILE
-    clrscr();
+        clrscr();
 #endif
-    textcolor(DARKGREY);
+        textcolor(DARKGREY);
 
-    bool on_level = false;
+        bool on_level = false;
 
-    while (map_alive)
-    {
-        if (lpos.id != level_id::current())
+        while (map_alive)
         {
-            le.go_to(lpos.id);
-            new_level = true;
-        }
+            if (lpos.id != level_id::current())
+            {
+                le.go_to(lpos.id);
+                new_level = true;
+            }
 
-        if (new_level)
-        {
-            on_level = (level_id::current() == original);
+            if (new_level)
+            {
+                on_level = (level_id::current() == original);
 
-            move_x = 0, move_y = 0, scroll_y = 0;
+                move_x = 0, move_y = 0, scroll_y = 0;
 
-            // Vector to track all features we can travel to, in order of distance.
-            if (travel_mode)
-                _reset_travel_colours(features, on_level);
+                // Vector to track all features we can travel to, in
+                // order of distance.
+                if (travel_mode)
+                    _reset_travel_colours(features, on_level);
 
-            feats.init();
+                feats.init();
 
-            min_x = GXM, max_x = 0, min_y = 0, max_y = 0;
-            bool found_y = false;
+                min_x = GXM, max_x = 0, min_y = 0, max_y = 0;
+                bool found_y = false;
 
-            for (j = 0; j < GYM; j++)
-                for (i = 0; i < GXM; i++)
-                {
-                    if (env.map_knowledge[i][j].known())
+                for (j = 0; j < GYM; j++)
+                    for (i = 0; i < GXM; i++)
                     {
-                        if (!found_y)
+                        if (env.map_knowledge[i][j].known())
                         {
-                            found_y = true;
-                            min_y = j;
+                            if (!found_y)
+                            {
+                                found_y = true;
+                                min_y = j;
+                            }
+
+                            max_y = j;
+
+                            if (i < min_x)
+                                min_x = i;
+
+                            if (i > max_x)
+                                max_x = i;
                         }
+                    }
 
-                        max_y = j;
+                map_lines = max_y - min_y + 1;
 
-                        if (i < min_x)
-                            min_x = i;
+                start_x = min_x + (max_x - min_x + 1) / 2 - 40;           // no x scrolling
+                start_y = 0;                                              // y does scroll
 
-                        if (i > max_x)
-                            max_x = i;
+                if (lpos.id != level_id::current()
+                    || !map_bounds(lpos.pos))
+                {
+                    lpos.id = level_id::current();
+                    if (on_level)
+                        lpos.pos = you.pos();
+                    else
+                    {
+                        lpos.pos.x = min_x + (max_x - min_x + 1) / 2;
+                        lpos.pos.y = min_y + (max_y - min_y + 1) / 2;
                     }
                 }
 
-            map_lines = max_y - min_y + 1;
+                screen_y = lpos.pos.y;
 
-            start_x = min_x + (max_x - min_x + 1) / 2 - 40;           // no x scrolling
-            start_y = 0;                                              // y does scroll
-
-            if (lpos.id != level_id::current()
-                || !map_bounds(lpos.pos))
-            {
-                lpos.id = level_id::current();
-                if (on_level)
-                    lpos.pos = you.pos();
-                else
+                // If close to top of known map, put min_y on top
+                // else if close to bottom of known map, put max_y on bottom.
+                //
+                // The num_lines comparisons are done to keep things neat, by
+                // keeping things at the top of the screen.  By shifting an
+                // additional one in the num_lines > map_lines case, we can
+                // keep the top line clear... which makes things look a whole
+                // lot better for small maps.
+                if (num_lines > map_lines)
                 {
-                    lpos.pos.x = min_x + (max_x - min_x + 1) / 2;
-                    lpos.pos.y = min_y + (max_y - min_y + 1) / 2;
+                    screen_y = min_y + half_screen - 1;
                 }
-            }
-
-            screen_y = lpos.pos.y;
-
-            // If close to top of known map, put min_y on top
-            // else if close to bottom of known map, put max_y on bottom.
-            //
-            // The num_lines comparisons are done to keep things neat, by
-            // keeping things at the top of the screen.  By shifting an
-            // additional one in the num_lines > map_lines case, we can
-            // keep the top line clear... which makes things look a whole
-            // lot better for small maps.
-            if (num_lines > map_lines)
-                screen_y = min_y + half_screen - 1;
-            else if (num_lines == map_lines || screen_y - half_screen < min_y)
-                screen_y = min_y + half_screen;
-            else if (screen_y + half_screen > max_y)
-                screen_y = max_y - half_screen;
-
-            curs_x = lpos.pos.x - start_x + 1;
-            curs_y = lpos.pos.y - screen_y + half_screen + 1;
-            search_found = 0, anchor_x = -1, anchor_y = -1;
-
-            redraw_map = true;
-            new_level = false;
-        }
-
-#if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE) && defined(USE_CURSES)
-        // If we've received a HUP signal then the user can't choose a
-        // location, so indicate this by returning an invalid position.
-        if (crawl_state.seen_hups)
-        {
-            lpos = level_pos();
-            chose = false;
-        }
-#endif
-
-        start_y = screen_y - half_screen;
-
-        move_x = move_y = 0;
-
-        if (redraw_map)
-        {
-#ifdef USE_TILE
-            // Note: Tile versions just center on the current cursor
-            // location.  It silently ignores everything else going
-            // on in this function.  --Enne
-            tiles.load_dungeon(lpos.pos);
-#else
-            _draw_title(lpos.pos, feats);
-            _draw_level_map(start_x, start_y, travel_mode, on_level);
-#endif // USE_TILE
-        }
-#ifndef USE_TILE
-        cursorxy(curs_x, curs_y + top - 1);
-#endif
-        redraw_map = true;
-
-        c_input_reset(true);
-        int key = unmangle_direction_keys(getchm(KMC_LEVELMAP), KMC_LEVELMAP,
-                                          false, false);
-        command_type cmd = key_to_command(key, KMC_LEVELMAP);
-        if (cmd < CMD_MIN_OVERMAP || cmd > CMD_MAX_OVERMAP)
-            cmd = CMD_NO_CMD;
-
-        if (key == CK_MOUSE_CLICK)
-        {
-            const c_mouse_event cme = get_mouse_event();
-            const coord_def grdp =
-                cme.pos + coord_def(start_x - 1, start_y - top);
-
-            if (cme.left_clicked() && in_bounds(grdp))
-            {
-                lpos       = level_pos(level_id::current(), grdp);
-                chose      = true;
-                map_alive  = false;
-            }
-            else if (cme.scroll_up())
-                scroll_y = -block_step;
-            else if (cme.scroll_down())
-                scroll_y = block_step;
-            else if (cme.right_clicked())
-            {
-                const coord_def delta = grdp - lpos.pos;
-                move_y = delta.y;
-                move_x = delta.x;
-            }
-        }
-
-        c_input_reset(false);
-
-        switch (cmd)
-        {
-        case CMD_MAP_HELP:
-            show_levelmap_help();
-            break;
-
-        case CMD_MAP_CLEAR_MAP:
-            clear_map();
-            break;
-
-        case CMD_MAP_FORGET:
-            forget_map(100, true);
-            break;
-
-        case CMD_MAP_ADD_WAYPOINT:
-            travel_cache.add_waypoint(lpos.pos.x, lpos.pos.y);
-            // We need to do this all over again so that the user can jump
-            // to the waypoint he just created.
-            _reset_travel_colours(features, on_level);
-            feats.init();
-            break;
-
-        // Cycle the radius of an exclude.
-        case CMD_MAP_EXCLUDE_AREA:
-        {
-            if (you.level_type == LEVEL_LABYRINTH)
-                break;
-
-            cycle_exclude_radius(lpos.pos);
-
-            _reset_travel_colours(features, on_level);
-            feats.init();
-            break;
-        }
-
-        case CMD_MAP_CLEAR_EXCLUDES:
-            clear_excludes();
-            _reset_travel_colours(features, on_level);
-            feats.init();
-            break;
-
-#ifdef WIZARD
-        case CMD_MAP_EXCLUDE_RADIUS:
-        {
-            set_exclude(lpos.pos, getchm() - '0');
-
-            _reset_travel_colours(features, on_level);
-            feats.init();
-            break;
-        }
-#endif
-
-        case CMD_MAP_MOVE_DOWN_LEFT:
-            move_x = -1;
-            move_y = 1;
-            break;
-
-        case CMD_MAP_MOVE_DOWN:
-            move_y = 1;
-            move_x = 0;
-            break;
-
-        case CMD_MAP_MOVE_UP_RIGHT:
-            move_x = 1;
-            move_y = -1;
-            break;
-
-        case CMD_MAP_MOVE_UP:
-            move_y = -1;
-            move_x = 0;
-            break;
-
-        case CMD_MAP_MOVE_UP_LEFT:
-            move_y = -1;
-            move_x = -1;
-            break;
-
-        case CMD_MAP_MOVE_LEFT:
-            move_x = -1;
-            move_y = 0;
-            break;
-
-        case CMD_MAP_MOVE_DOWN_RIGHT:
-            move_y = 1;
-            move_x = 1;
-            break;
-
-        case CMD_MAP_MOVE_RIGHT:
-            move_x = 1;
-            move_y = 0;
-            break;
-
-        case CMD_MAP_PREV_LEVEL:
-        case CMD_MAP_NEXT_LEVEL:
-        {
-            if (!allow_offlevel)
-                break;
-
-            const bool up = (cmd == CMD_MAP_PREV_LEVEL);
-            level_pos dest =
-                _stair_dest(lpos.pos, up ? CMD_GO_UPSTAIRS : CMD_GO_DOWNSTAIRS);
-
-            if (!dest.id.is_valid())
-            {
-                dest.id = up ? find_up_level(level_id::current())
-                             : find_down_level(level_id::current());
-                dest.pos = coord_def(-1, -1);
-            }
-
-            if (dest.id.is_valid() && dest.id != level_id::current()
-                && is_existing_level(dest.id))
-            {
-                lpos = dest;
-            }
-            continue;
-        }
-
-        case CMD_MAP_GOTO_LEVEL:
-        {
-            if (!allow_offlevel)
-                break;
-
-            std::string name;
-            const level_pos pos
-                = prompt_translevel_target(TPF_DEFAULT_OPTIONS, name).p;
-
-            if (pos.id.depth < 1 || pos.id.depth > branches[pos.id.branch].depth
-                    || !is_existing_level(pos.id))
-            {
-                canned_msg(MSG_OK);
-                redraw_map = true;
-                break;
-            }
-
-            lpos = pos;
-            continue;
-        }
-
-        case CMD_MAP_JUMP_DOWN_LEFT:
-            move_x = -block_step;
-            move_y = block_step;
-            break;
-
-        case CMD_MAP_JUMP_DOWN:
-            move_y = block_step;
-            move_x = 0;
-            break;
-
-        case CMD_MAP_JUMP_UP_RIGHT:
-            move_x = block_step;
-            move_y = -block_step;
-            break;
-
-        case CMD_MAP_JUMP_UP:
-            move_y = -block_step;
-            move_x = 0;
-            break;
-
-        case CMD_MAP_JUMP_UP_LEFT:
-            move_y = -block_step;
-            move_x = -block_step;
-            break;
-
-        case CMD_MAP_JUMP_LEFT:
-            move_x = -block_step;
-            move_y = 0;
-            break;
-
-        case CMD_MAP_JUMP_DOWN_RIGHT:
-            move_y = block_step;
-            move_x = block_step;
-            break;
-
-        case CMD_MAP_JUMP_RIGHT:
-            move_x = block_step;
-            move_y = 0;
-            break;
-
-        case CMD_MAP_SCROLL_DOWN:
-            move_y = 20;
-            move_x = 0;
-            scroll_y = 20;
-            break;
-
-        case CMD_MAP_SCROLL_UP:
-            move_y = -20;
-            move_x = 0;
-            scroll_y = -20;
-            break;
-
-        case CMD_MAP_FIND_YOU:
-            if (on_level)
-            {
-                move_x = you.pos().x - lpos.pos.x;
-                move_y = you.pos().y - lpos.pos.y;
-            }
-            break;
-
-        case CMD_MAP_FIND_UPSTAIR:
-        case CMD_MAP_FIND_DOWNSTAIR:
-        case CMD_MAP_FIND_PORTAL:
-        case CMD_MAP_FIND_TRAP:
-        case CMD_MAP_FIND_ALTAR:
-        case CMD_MAP_FIND_EXCLUDED:
-        case CMD_MAP_FIND_F:
-        case CMD_MAP_FIND_WAYPOINT:
-        case CMD_MAP_FIND_STASH:
-        case CMD_MAP_FIND_STASH_REVERSE:
-        {
-            bool forward = (cmd != CMD_MAP_FIND_STASH_REVERSE);
-
-            int getty;
-            switch (cmd)
-            {
-            case CMD_MAP_FIND_UPSTAIR:
-                getty = '<';
-                break;
-            case CMD_MAP_FIND_DOWNSTAIR:
-                getty = '>';
-                break;
-            case CMD_MAP_FIND_PORTAL:
-                getty = '\t';
-                break;
-            case CMD_MAP_FIND_TRAP:
-                getty = '^';
-                break;
-            case CMD_MAP_FIND_ALTAR:
-                getty = '_';
-                break;
-            case CMD_MAP_FIND_EXCLUDED:
-                getty = 'E';
-                break;
-            case CMD_MAP_FIND_F:
-                getty = 'F';
-                break;
-            case CMD_MAP_FIND_WAYPOINT:
-                getty = 'W';
-                break;
-            default:
-            case CMD_MAP_FIND_STASH:
-            case CMD_MAP_FIND_STASH_REVERSE:
-                getty = 'I';
-                break;
-            }
-
-            if (anchor_x == -1)
-            {
-                anchor_x = lpos.pos.x;
-                anchor_y = lpos.pos.y;
-            }
-            if (travel_mode)
-            {
-                search_found = _find_feature(features, getty, curs_x, curs_y,
-                                             start_x, start_y,
-                                             search_found,
-                                             &move_x, &move_y,
-                                             forward);
-            }
-            else
-            {
-                search_found = _find_feature(getty, curs_x, curs_y,
-                                             start_x, start_y,
-                                             anchor_x, anchor_y,
-                                             search_found, &move_x, &move_y);
-            }
-            break;
-        }
-
-        case CMD_MAP_GOTO_TARGET:
-        {
-            if (travel_mode && on_level && lpos.pos == you.pos())
-            {
-                if (you.travel_x > 0 && you.travel_y > 0)
+                else if (num_lines == map_lines
+                         || screen_y - half_screen < min_y)
                 {
-                    move_x = you.travel_x - lpos.pos.x;
-                    move_y = you.travel_y - lpos.pos.y;
-                }
-                break;
-            }
-            else
-            {
-                chose = true;
-                map_alive = false;
-                break;
-            }
-        }
-
-#ifdef WIZARD
-        case CMD_MAP_WIZARD_TELEPORT:
-        {
-            if (!you.wizard)
-                break;
-            if (!on_level)
-                break;
-            if (!in_bounds(lpos.pos))
-                break;
-            you.moveto(lpos.pos);
-            map_alive = false;
-            break;
-        }
-#endif
-
-        case CMD_MAP_EXIT_MAP:
-            if (allow_esc)
-            {
-                lpos = level_pos();
-                map_alive = false;
-                break;
-            }
-        default:
-            if (travel_mode)
-            {
-                map_alive = false;
-                break;
-            }
-            redraw_map = false;
-            continue;
-        }
-
-        if (!map_alive)
-            break;
-
-#ifdef USE_TILE
-        {
-            const coord_def oldp = lpos.pos;
-            lpos.pos.x += move_x;
-            lpos.pos.y += move_y;
-            lpos.pos.x = std::min(std::max(lpos.pos.x, 1), GXM);
-            lpos.pos.y = std::min(std::max(lpos.pos.y, 1), GYM);
-            curs_x += lpos.pos.x - oldp.x;
-            curs_y += lpos.pos.y - oldp.y;
-        }
-#else
-        if (curs_x + move_x < 1 || curs_x + move_x > crawl_view.termsz.x)
-            move_x = 0;
-
-        curs_x += move_x;
-
-        if (num_lines < map_lines)
-        {
-            // Scrolling only happens when we don't have a large enough
-            // display to show the known map.
-            if (scroll_y != 0)
-            {
-                const int old_screen_y = screen_y;
-                screen_y += scroll_y;
-                if (scroll_y < 0)
-                    screen_y = std::max(screen_y, min_y + half_screen);
-                else
-                    screen_y = std::min(screen_y, max_y - half_screen);
-                curs_y -= (screen_y - old_screen_y);
-                scroll_y = 0;
-            }
-
-            if (curs_y + move_y < 1)
-            {
-                screen_y += move_y;
-
-                if (screen_y < min_y + half_screen)
-                {
-                    move_y   = screen_y - (min_y + half_screen);
                     screen_y = min_y + half_screen;
                 }
-                else
-                    move_y = 0;
-            }
-
-            if (curs_y + move_y > num_lines)
-            {
-                screen_y += move_y;
-
-                if (screen_y > max_y - half_screen)
+                else if (screen_y + half_screen > max_y)
                 {
-                    move_y   = screen_y - (max_y - half_screen);
                     screen_y = max_y - half_screen;
                 }
-                else
-                    move_y = 0;
+
+                curs_x = lpos.pos.x - start_x + 1;
+                curs_y = lpos.pos.y - screen_y + half_screen + 1;
+                search_found = 0, anchor_x = -1, anchor_y = -1;
+
+                redraw_map = true;
+                new_level = false;
             }
-        }
-        start_y = screen_y - half_screen;
 
-        if (curs_y + move_y < 1 || curs_y + move_y > num_lines)
-            move_y = 0;
-
-        curs_y += move_y;
-
-        lpos.pos.x = start_x + curs_x - 1;
-        lpos.pos.y = start_y + curs_y - 1;
+#if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE) && defined(USE_CURSES)
+            // If we've received a HUP signal then the user can't choose a
+            // location, so indicate this by returning an invalid position.
+            if (crawl_state.seen_hups)
+            {
+                lpos = level_pos();
+                chose = false;
+            }
 #endif
+
+            start_y = screen_y - half_screen;
+
+            move_x = move_y = 0;
+
+            if (redraw_map)
+            {
+#ifdef USE_TILE
+                // Note: Tile versions just center on the current cursor
+                // location.  It silently ignores everything else going
+                // on in this function.  --Enne
+                tiles.load_dungeon(lpos.pos);
+#else
+                _draw_title(lpos.pos, feats);
+                _draw_level_map(start_x, start_y, travel_mode, on_level);
+#endif // USE_TILE
+            }
+#ifndef USE_TILE
+            cursorxy(curs_x, curs_y + top - 1);
+#endif
+            redraw_map = true;
+
+            c_input_reset(true);
+            const int key = unmangle_direction_keys(getchm(KMC_LEVELMAP),
+                                                    KMC_LEVELMAP,
+                                                    false, false);
+            command_type cmd = key_to_command(key, KMC_LEVELMAP);
+            if (cmd < CMD_MIN_OVERMAP || cmd > CMD_MAX_OVERMAP)
+                cmd = CMD_NO_CMD;
+
+            if (key == CK_MOUSE_CLICK)
+            {
+                const c_mouse_event cme = get_mouse_event();
+                const coord_def grdp =
+                    cme.pos + coord_def(start_x - 1, start_y - top);
+
+                if (cme.left_clicked() && in_bounds(grdp))
+                {
+                    lpos       = level_pos(level_id::current(), grdp);
+                    chose      = true;
+                    map_alive  = false;
+                }
+                else if (cme.scroll_up())
+                    scroll_y = -block_step;
+                else if (cme.scroll_down())
+                    scroll_y = block_step;
+                else if (cme.right_clicked())
+                {
+                    const coord_def delta = grdp - lpos.pos;
+                    move_y = delta.y;
+                    move_x = delta.x;
+                }
+            }
+
+            c_input_reset(false);
+
+            switch (cmd)
+            {
+            case CMD_MAP_HELP:
+                show_levelmap_help();
+                break;
+
+            case CMD_MAP_CLEAR_MAP:
+                clear_map();
+                break;
+
+            case CMD_MAP_FORGET:
+                forget_map(100, true);
+                break;
+
+            case CMD_MAP_ADD_WAYPOINT:
+                travel_cache.add_waypoint(lpos.pos.x, lpos.pos.y);
+                // We need to do this all over again so that the user can jump
+                // to the waypoint he just created.
+                _reset_travel_colours(features, on_level);
+                feats.init();
+                break;
+
+                // Cycle the radius of an exclude.
+            case CMD_MAP_EXCLUDE_AREA:
+            {
+                if (you.level_type == LEVEL_LABYRINTH)
+                    break;
+
+                cycle_exclude_radius(lpos.pos);
+
+                _reset_travel_colours(features, on_level);
+                feats.init();
+                break;
+            }
+
+            case CMD_MAP_CLEAR_EXCLUDES:
+                clear_excludes();
+                _reset_travel_colours(features, on_level);
+                feats.init();
+                break;
+
+#ifdef WIZARD
+            case CMD_MAP_EXCLUDE_RADIUS:
+            {
+                set_exclude(lpos.pos, getchm() - '0');
+
+                _reset_travel_colours(features, on_level);
+                feats.init();
+                break;
+            }
+#endif
+
+            case CMD_MAP_MOVE_DOWN_LEFT:
+                move_x = -1;
+                move_y = 1;
+                break;
+
+            case CMD_MAP_MOVE_DOWN:
+                move_y = 1;
+                move_x = 0;
+                break;
+
+            case CMD_MAP_MOVE_UP_RIGHT:
+                move_x = 1;
+                move_y = -1;
+                break;
+
+            case CMD_MAP_MOVE_UP:
+                move_y = -1;
+                move_x = 0;
+                break;
+
+            case CMD_MAP_MOVE_UP_LEFT:
+                move_y = -1;
+                move_x = -1;
+                break;
+
+            case CMD_MAP_MOVE_LEFT:
+                move_x = -1;
+                move_y = 0;
+                break;
+
+            case CMD_MAP_MOVE_DOWN_RIGHT:
+                move_y = 1;
+                move_x = 1;
+                break;
+
+            case CMD_MAP_MOVE_RIGHT:
+                move_x = 1;
+                move_y = 0;
+                break;
+
+            case CMD_MAP_PREV_LEVEL:
+            case CMD_MAP_NEXT_LEVEL:
+            {
+                if (!allow_offlevel)
+                    break;
+
+                const bool up = (cmd == CMD_MAP_PREV_LEVEL);
+                level_pos dest =
+                    _stair_dest(lpos.pos,
+                                up ? CMD_GO_UPSTAIRS : CMD_GO_DOWNSTAIRS);
+
+                if (!dest.id.is_valid())
+                {
+                    dest.id = up ? find_up_level(level_id::current())
+                        : find_down_level(level_id::current());
+                    dest.pos = coord_def(-1, -1);
+                }
+
+                if (dest.id.is_valid() && dest.id != level_id::current()
+                    && is_existing_level(dest.id))
+                {
+                    lpos = dest;
+                }
+                continue;
+            }
+
+            case CMD_MAP_GOTO_LEVEL:
+            {
+                if (!allow_offlevel)
+                    break;
+
+                std::string name;
+                const level_pos pos
+                    = prompt_translevel_target(TPF_DEFAULT_OPTIONS, name).p;
+
+                if (pos.id.depth < 1
+                    || pos.id.depth > branches[pos.id.branch].depth
+                    || !is_existing_level(pos.id))
+                {
+                    canned_msg(MSG_OK);
+                    redraw_map = true;
+                    break;
+                }
+
+                lpos = pos;
+                continue;
+            }
+
+            case CMD_MAP_JUMP_DOWN_LEFT:
+                move_x = -block_step;
+                move_y = block_step;
+                break;
+
+            case CMD_MAP_JUMP_DOWN:
+                move_y = block_step;
+                move_x = 0;
+                break;
+
+            case CMD_MAP_JUMP_UP_RIGHT:
+                move_x = block_step;
+                move_y = -block_step;
+                break;
+
+            case CMD_MAP_JUMP_UP:
+                move_y = -block_step;
+                move_x = 0;
+                break;
+
+            case CMD_MAP_JUMP_UP_LEFT:
+                move_y = -block_step;
+                move_x = -block_step;
+                break;
+
+            case CMD_MAP_JUMP_LEFT:
+                move_x = -block_step;
+                move_y = 0;
+                break;
+
+            case CMD_MAP_JUMP_DOWN_RIGHT:
+                move_y = block_step;
+                move_x = block_step;
+                break;
+
+            case CMD_MAP_JUMP_RIGHT:
+                move_x = block_step;
+                move_y = 0;
+                break;
+
+            case CMD_MAP_SCROLL_DOWN:
+                move_y = 20;
+                move_x = 0;
+                scroll_y = 20;
+                break;
+
+            case CMD_MAP_SCROLL_UP:
+                move_y = -20;
+                move_x = 0;
+                scroll_y = -20;
+                break;
+
+            case CMD_MAP_FIND_YOU:
+                if (on_level)
+                {
+                    move_x = you.pos().x - lpos.pos.x;
+                    move_y = you.pos().y - lpos.pos.y;
+                }
+                break;
+
+            case CMD_MAP_FIND_UPSTAIR:
+            case CMD_MAP_FIND_DOWNSTAIR:
+            case CMD_MAP_FIND_PORTAL:
+            case CMD_MAP_FIND_TRAP:
+            case CMD_MAP_FIND_ALTAR:
+            case CMD_MAP_FIND_EXCLUDED:
+            case CMD_MAP_FIND_F:
+            case CMD_MAP_FIND_WAYPOINT:
+            case CMD_MAP_FIND_STASH:
+            case CMD_MAP_FIND_STASH_REVERSE:
+            {
+                bool forward = (cmd != CMD_MAP_FIND_STASH_REVERSE);
+
+                int getty;
+                switch (cmd)
+                {
+                case CMD_MAP_FIND_UPSTAIR:
+                    getty = '<';
+                    break;
+                case CMD_MAP_FIND_DOWNSTAIR:
+                    getty = '>';
+                    break;
+                case CMD_MAP_FIND_PORTAL:
+                    getty = '\t';
+                    break;
+                case CMD_MAP_FIND_TRAP:
+                    getty = '^';
+                    break;
+                case CMD_MAP_FIND_ALTAR:
+                    getty = '_';
+                    break;
+                case CMD_MAP_FIND_EXCLUDED:
+                    getty = 'E';
+                    break;
+                case CMD_MAP_FIND_F:
+                    getty = 'F';
+                    break;
+                case CMD_MAP_FIND_WAYPOINT:
+                    getty = 'W';
+                    break;
+                default:
+                case CMD_MAP_FIND_STASH:
+                case CMD_MAP_FIND_STASH_REVERSE:
+                    getty = 'I';
+                    break;
+                }
+
+                if (anchor_x == -1)
+                {
+                    anchor_x = lpos.pos.x;
+                    anchor_y = lpos.pos.y;
+                }
+                if (travel_mode)
+                {
+                    search_found = _find_feature(features, getty,
+                                                 curs_x, curs_y,
+                                                 start_x, start_y,
+                                                 search_found,
+                                                 &move_x, &move_y,
+                                                 forward);
+                }
+                else
+                {
+                    search_found = _find_feature(getty, curs_x, curs_y,
+                                                 start_x, start_y,
+                                                 anchor_x, anchor_y,
+                                                 search_found,
+                                                 &move_x, &move_y);
+                }
+                break;
+            }
+
+            case CMD_MAP_GOTO_TARGET:
+            {
+                if (travel_mode && on_level && lpos.pos == you.pos())
+                {
+                    if (you.travel_x > 0 && you.travel_y > 0)
+                    {
+                        move_x = you.travel_x - lpos.pos.x;
+                        move_y = you.travel_y - lpos.pos.y;
+                    }
+                    break;
+                }
+                else
+                {
+                    chose = true;
+                    map_alive = false;
+                    break;
+                }
+            }
+
+#ifdef WIZARD
+            case CMD_MAP_WIZARD_TELEPORT:
+            {
+                if (!you.wizard)
+                    break;
+                if (!on_level)
+                    break;
+                if (!in_bounds(lpos.pos))
+                    break;
+                you.moveto(lpos.pos);
+                map_alive = false;
+                break;
+            }
+#endif
+
+            case CMD_MAP_EXIT_MAP:
+                if (allow_esc)
+                {
+                    lpos = level_pos();
+                    map_alive = false;
+                    break;
+                }
+            default:
+                if (travel_mode)
+                {
+                    map_alive = false;
+                    break;
+                }
+                redraw_map = false;
+                continue;
+            }
+
+            if (!map_alive)
+                break;
+
+#ifdef USE_TILE
+            {
+                const coord_def oldp = lpos.pos;
+                lpos.pos.x += move_x;
+                lpos.pos.y += move_y;
+                lpos.pos.x = std::min(std::max(lpos.pos.x, 1), GXM);
+                lpos.pos.y = std::min(std::max(lpos.pos.y, 1), GYM);
+                curs_x += lpos.pos.x - oldp.x;
+                curs_y += lpos.pos.y - oldp.y;
+            }
+#else
+            if (curs_x + move_x < 1 || curs_x + move_x > crawl_view.termsz.x)
+                move_x = 0;
+
+            curs_x += move_x;
+
+            if (num_lines < map_lines)
+            {
+                // Scrolling only happens when we don't have a large enough
+                // display to show the known map.
+                if (scroll_y != 0)
+                {
+                    const int old_screen_y = screen_y;
+                    screen_y += scroll_y;
+                    if (scroll_y < 0)
+                        screen_y = std::max(screen_y, min_y + half_screen);
+                    else
+                        screen_y = std::min(screen_y, max_y - half_screen);
+                    curs_y -= (screen_y - old_screen_y);
+                    scroll_y = 0;
+                }
+
+                if (curs_y + move_y < 1)
+                {
+                    screen_y += move_y;
+
+                    if (screen_y < min_y + half_screen)
+                    {
+                        move_y   = screen_y - (min_y + half_screen);
+                        screen_y = min_y + half_screen;
+                    }
+                    else
+                        move_y = 0;
+                }
+
+                if (curs_y + move_y > num_lines)
+                {
+                    screen_y += move_y;
+
+                    if (screen_y > max_y - half_screen)
+                    {
+                        move_y   = screen_y - (max_y - half_screen);
+                        screen_y = max_y - half_screen;
+                    }
+                    else
+                        move_y = 0;
+                }
+            }
+            start_y = screen_y - half_screen;
+
+            if (curs_y + move_y < 1 || curs_y + move_y > num_lines)
+                move_y = 0;
+
+            curs_y += move_y;
+
+            lpos.pos.x = start_x + curs_x - 1;
+            lpos.pos.y = start_y + curs_y - 1;
+#endif
+        }
     }
 
 #ifdef USE_TILE
