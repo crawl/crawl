@@ -2277,6 +2277,47 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         }
         return;
 
+    case SPELL_SUMMON_HOLIES: // Holy monsters.
+        if (_mons_abjured(monster, monsterNearby))
+            return;
+
+        sumcount2 = 1 + random2(2) + random2(monster->hit_dice / 4 + 1);
+
+        duration  = std::min(2 + monster->hit_dice / 5, 6);
+        for (int i = 0; i < sumcount2; ++i)
+        {
+            create_monster(
+                mgen_data(static_cast<monster_type>(random_choose_weighted(
+                            40, MONS_CHERUB,    20, MONS_SILVER_STAR,
+                            20, MONS_SPIRIT,    10, MONS_OPHAN,
+                            8,  MONS_SHEDU,     4,  MONS_PALADIN,
+                            2,  MONS_PHOENIX,   1,  MONS_APIS,
+                            // No holy dragons
+                          0)), SAME_ATTITUDE(monster),
+                          monster, duration, spell_cast, monster->pos(),
+                          monster->foe, 0, god));
+        }
+        return;
+
+    case SPELL_SUMMON_GREATER_HOLY: // Holy monsters.
+        if (_mons_abjured(monster, monsterNearby))
+            return;
+
+        sumcount2 = 1 + random2(2) + random2(monster->hit_dice / 4 + 1);
+
+        duration  = std::min(2 + monster->hit_dice / 5, 6);
+        create_monster(
+            mgen_data(static_cast<monster_type>(random_choose_weighted(
+                        10, MONS_SILVER_STAR, 10, MONS_PHOENIX,
+                        10, MONS_APIS,        5,  MONS_DAEVA,
+                        2,  MONS_HOLY_DRAGON,
+                        // No holy dragons
+                      0)), SAME_ATTITUDE(monster),
+                      monster, duration, spell_cast, monster->pos(),
+                      monster->foe, 0, god));
+
+        return;
+
     // TODO: Outsource the cantrip messages and allow specification of
     //       special cantrip spells per monster, like for speech, both as
     //       "self buffs" and "player enchantments".
