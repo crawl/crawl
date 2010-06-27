@@ -139,6 +139,10 @@ static std::string _get_monster_desc(const monsters *mon);
 static std::vector<std::string> _mon_enchantments_vector_string(
     const monsters* mon);
 
+#ifdef DEBUG_DIAGNOSTICS
+static void _debug_describe_feature_at(const coord_def &where);
+#endif
+
 #ifdef WIZARD
 static void _wizard_make_friendly(monsters* m)
 {
@@ -1445,8 +1449,13 @@ void direction_chooser::print_floor_description(bool boring_too) const
     if (!boring_too && (feat == DNGN_FLOOR || feat == DNGN_FLOOR_SPECIAL))
         return;
 
+#ifdef DEBUG_DIAGNOSTICS
+    // [ds] Be more verbose in debug mode.
+    _debug_describe_feature_at(target());
+#else
     mprf(MSGCH_EXAMINE_FILTER, "%s",
          feature_description(target(), true).c_str());
+#endif
 }
 
 void direction_chooser::reinitialize_move_flags()
@@ -2102,6 +2111,9 @@ static void _describe_oos_square(const coord_def& where)
 
     describe_stash(where);
     _describe_feature(where, true);
+#ifdef DEBUG_DIAGNOSTICS
+    _debug_describe_feature_at(where);
+#endif
 }
 
 bool in_vlos(int x, int y)
@@ -3697,6 +3709,49 @@ static void _print_cloud_desc(const coord_def where, bool &cloud_described)
     }
 }
 
+#ifdef DEBUG_DIAGNOSTICS
+static void _debug_describe_feature_at(const coord_def &where)
+{
+    const std::string feature_desc = feature_description(where, true);
+    std::string marker;
+    if (map_marker *mark = env.markers.find(where, MAT_ANY))
+    {
+        std::string desc = mark->debug_describe();
+        if (desc.empty())
+            desc = "?";
+        marker = " (" + desc + ")";
+    }
+    const std::string traveldest = _stair_destination_description(where);
+    std::string height_desc;
+    if (env.heightmap.get())
+        height_desc = make_stringf(" (height: %d)", (*env.heightmap)(where));
+    const dungeon_feature_type feat = grd(where);
+
+    std::string vault;
+    const int map_index = env.level_map_ids(where);
+    if (map_index != INVALID_MAP_INDEX)
+    {
+        const vault_placement &vp(*env.level_vaults[map_index]);
+        const coord_def br = vp.pos + vp.size - 1;
+        vault = make_stringf(" [Vault: %s (%d,%d)-(%d,%d) (%dx%d)]",
+                             vp.map.name.c_str(),
+                             vp.pos.x, vp.pos.y,
+                             br.x, br.y,
+                             vp.size.x, vp.size.y);
+    }
+    mprf(MSGCH_DIAGNOSTICS, "(%d,%d): %s - %s (%d/%s)%s%s%s%s",
+         where.x, where.y,
+         stringize_glyph(get_screen_glyph(where)).c_str(),
+         feature_desc.c_str(),
+         feat,
+         dungeon_feature_name(feat),
+         marker.c_str(),
+         traveldest.c_str(),
+         height_desc.c_str(),
+         vault.c_str());
+}
+#endif
+
 // Describe a cell, guaranteed to be in view.
 static void _describe_cell(const coord_def& where, bool in_range)
 {
@@ -3799,31 +3854,10 @@ static void _describe_cell(const coord_def& where, bool in_range)
         item_described = true;
     }
 
-    std::string feature_desc = feature_description(where, true);
 #ifdef DEBUG_DIAGNOSTICS
-    std::string marker;
-    if (map_marker *mark = env.markers.find(where, MAT_ANY))
-    {
-        std::string desc = mark->debug_describe();
-        if (desc.empty())
-            desc = "?";
-        marker = " (" + desc + ")";
-    }
-    const std::string traveldest = _stair_destination_description(where);
-    std::string height_desc;
-    if (env.heightmap.get())
-        height_desc = make_stringf(" (height: %d)", (*env.heightmap)(where));
-    const dungeon_feature_type feat = grd(where);
-    mprf(MSGCH_DIAGNOSTICS, "(%d,%d): %s - %s (%d/%s)%s%s%s",
-         where.x, where.y,
-         stringize_glyph(get_screen_glyph(where)).c_str(),
-         feature_desc.c_str(),
-         feat,
-         dungeon_feature_name(feat),
-         marker.c_str(),
-         traveldest.c_str(),
-         height_desc.c_str());
+    _debug_describe_feature_at(where);
 #else
+    std::string feature_desc = feature_description(where, true);
     const bool bloody = is_bloodcovered(where);
     if (Hints.hints_left && hints_pos_interesting(where.x, where.y))
     {
