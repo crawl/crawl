@@ -2430,6 +2430,7 @@ enum mon_spellbook_type
     MST_OPHAN,
     MST_SPIRIT,
     MST_PALADIN,
+    MST_HOLY_DRAGON,
 
     MST_TEST_SPAWNER = 200,
     NUM_MSTYPES,

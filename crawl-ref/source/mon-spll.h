@@ -1440,6 +1440,17 @@
       }
     },
 
+    {  MST_HOLY_DRAGON,
+      {
+       SPELL_HOLY_BREATH,
+       SPELL_HOLY_BREATH,
+       SPELL_NO_SPELL,
+       SPELL_HOLY_BREATH,
+       SPELL_HOLY_BREATH,
+       SPELL_NO_SPELL
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,
