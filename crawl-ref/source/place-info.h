@@ -27,15 +27,15 @@ public:
     int elapsed_interlevel;
     int elapsed_resting;
     int elapsed_other;
-    
+
 public:
     PlaceInfo();
-    
+
     bool is_global() const;
     void make_global();
-    
+
     void assert_validity() const;
-    
+
     const std::string short_name() const;
 
     const PlaceInfo &operator += (const PlaceInfo &other);
@@ -43,6 +43,6 @@ public:
     PlaceInfo operator + (const PlaceInfo &other) const;
     PlaceInfo operator - (const PlaceInfo &other) const;
 };
-    
+
 #endif
 

@@ -25,9 +25,9 @@
 #include "coordit.h"
 #include "delay.h"
 #include "defines.h"
+#include "dgn-actions.h"
 #include "effects.h"
 #include "env.h"
-#include "files.h"
 #include "format.h"
 #include "godabil.h"
 #include "itemprop.h"
@@ -918,12 +918,6 @@ static bool _physiology_mutation_conflict(mutation_type mutat)
     return (false);
 }
 
-static bool _reautomap_callback()
-{
-    reautomap_level();
-    return true;
-}
-
 static const char* _stat_mut_desc(mutation_type mut, bool gain)
 {
     stat_type stat = STAT_STR;
@@ -1226,12 +1220,15 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         mpr(mdef.gain[you.mutation[mutat]-1], MSGCH_MUTATION);
 
     // Do post-mutation effects.
-    if (mutat == MUT_FRAIL || mutat == MUT_ROBUST)
+    if (mutat == MUT_FRAIL || mutat == MUT_ROBUST
+        || mutat == MUT_RUGGED_BROWN_SCALES)
+    {
         calc_hp();
+    }
     if (mutat == MUT_LOW_MAGIC || mutat == MUT_HIGH_MAGIC)
         calc_mp();
     if (mutat == MUT_PASSIVE_MAPPING)
-        apply_to_all_dungeons(_reautomap_callback);
+        add_daction(DACT_REAUTOMAP);
 
     // Amusement value will be 16 * (11-rarity) * Xom's-sense-of-humor.
     xom_is_stimulated(_calc_mutation_amusement_value(mutat));
@@ -1302,8 +1299,11 @@ static bool _delete_single_mutation_level(mutation_type mutat)
         mpr(mdef.lose[you.mutation[mutat]], MSGCH_MUTATION);
 
     // Do post-mutation effects.
-    if (mutat == MUT_FRAIL || mutat == MUT_ROBUST)
+    if (mutat == MUT_FRAIL || mutat == MUT_ROBUST
+        || mutat == MUT_RUGGED_BROWN_SCALES)
+    {
         calc_hp();
+    }
     if (mutat == MUT_LOW_MAGIC || mutat == MUT_HIGH_MAGIC)
         calc_mp();
 
@@ -1913,7 +1913,7 @@ void check_demonic_guardian()
         menv[guardian].flags |= MF_NO_REWARD;
         menv[guardian].flags |= MF_DEMONIC_GUARDIAN;
 
-        you.duration[DUR_DEMONIC_GUARDIAN] = mutlevel*5 + 10;
+        you.duration[DUR_DEMONIC_GUARDIAN] = (mutlevel+1)*3*10;
     }
 }
 

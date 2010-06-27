@@ -3,7 +3,7 @@
 -- DgnTriggerers and triggerables:
 --
 -- This is similar to the observable/observer design pattern: a triggerable
--- class which does something and a triggerrer which sets it off.  As an
+-- class which does something and a triggerer which sets it off.  As an
 -- example, the ChangeFlags class (clua/lm_flags.lua), rather than having
 -- three subclasses (for monster death, feature change and item pickup)
 -- needs no subclasses, but is just one class which is given triggerers
@@ -155,7 +155,7 @@ end
 
 function Triggerable:remove(marker)
   if self.removed then
-    crawl.mpr("ERROR: Trigerrable already removed", "error")
+    crawl.mpr("ERROR: Triggerable already removed", "error")
     return
   end
 
@@ -178,7 +178,7 @@ end
 
 function Triggerable:activate(marker)
   if self.removed then
-    error("Can't activate, trigerrable removed")
+    error("Can't activate, triggerable removed")
   end
 
   if #self.triggerers == 0 then
@@ -411,7 +411,7 @@ end
 -- A simple class to invoke an arbitrary Lua function.  Should be split out
 -- into own file if/when it becomes more complex.
 
-TriggerableFunction       = util.subclass(Triggerable) 
+TriggerableFunction       = util.subclass(Triggerable)
 TriggerableFunction.CLASS = "TriggerableFunction"
 
 function TriggerableFunction:new(pars)
@@ -456,26 +456,35 @@ function TriggerableFunction:read(marker, th)
   self.repeated = file.unmarshall_meta(th)
   self.data     = lmark.unmarshall_table(th)
 
-  setmetatable(self, TriggerableFunction) 
+  setmetatable(self, TriggerableFunction)
 
   return self
 end
 
-function function_at_spot(func, data, repeated, props)
-  local tf = TriggerableFunction:new 
-      { func = func, data = data, repeated = repeated, props = props }
+function triggerable_function_constructor(trigger_type)
+  return function (func, data, repeated, props)
+           local tf = TriggerableFunction:new {
+             func = func,
+             data = data,
+             repeated = repeated,
+             props = props
+           }
 
-  tf:add_triggerer( DgnTriggerer:new { type   = "player_move" } )
+           tf:add_triggerer( DgnTriggerer:new { type = trigger_type } )
 
-  return tf
+           return tf
+         end
 end
+
+function_at_spot = triggerable_function_constructor('player_move')
+function_in_los  = triggerable_function_constructor('player_los')
 
 --------------------------
 
 -- A simple class to give out messages.  Should be split out into own
 -- file if/when it becomes more complex.
 
-TriggerableMessage       = util.subclass(Triggerable) 
+TriggerableMessage       = util.subclass(Triggerable)
 TriggerableMessage.CLASS = "TriggerableMessage"
 
 function TriggerableMessage:new(pars)
@@ -523,13 +532,13 @@ function TriggerableMessage:read(marker, th)
   self.channel  = file.unmarshall_string(th)
   self.repeated = file.unmarshall_meta(th)
 
-  setmetatable(self, TriggerableMessage) 
+  setmetatable(self, TriggerableMessage)
 
   return self
 end
 
 function message_at_spot(msg, channel, repeated, props)
-  local tm = TriggerableMessage:new 
+  local tm = TriggerableMessage:new
       { msg = msg, channel = channel, repeated = repeated, props = props }
 
   tm:add_triggerer( DgnTriggerer:new { type   = "player_move" } )
@@ -575,9 +584,8 @@ end
 -- * player_move: Wait for the player to move to a cell.  The
 --      triggerable/marker must be placed on top of cell in question.
 --
--- * player_los: Wait for the player to come into LOS of a cell, which
---      must contain a notable feature..  The triggerable/marker must be
---      placed on top of cell in question.
+-- * player_los: Wait for the player to come into LOS of a cell. The
+--      triggerable/marker must be placed on top of cell in question.
 --
 -- * turn: Called once for each player turn that passes.
 --

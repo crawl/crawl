@@ -16,6 +16,7 @@
 #include "colour.h"
 #include "coordit.h"
 #include "database.h"
+#include "debug.h"
 #include "directn.h"
 #include "env.h"
 #include "fprop.h"
@@ -1039,6 +1040,11 @@ monster_type mons_base_type(const monsters *mon)
     return mons_is_zombified(mon) ? mon->base_monster : mon->type;
 }
 
+bool mons_class_can_leave_corpse(monster_type mc)
+{
+    return (mons_weight(mc) > 0);
+}
+
 bool mons_class_can_be_zombified(int mc)
 {
     monster_type ms = mons_species(mc);
@@ -1171,8 +1177,10 @@ mon_attack_def mons_attack_spec(const monsters *mon, int attk_number)
     if (mc == MONS_KRAKEN_TENTACLE
         && !invalid_monster_index(mon->number))
     {
-        // Use the zombie, etc info from the kraken
-        mon = &menv[mon->number];
+        // Use the zombie, etc info from the kraken if it's alive.
+        const monsters *body_kraken = &menv[mon->number];
+        if (body_kraken->alive())
+            mon = body_kraken;
     }
 
     const bool zombified = mons_is_zombified(mon);
@@ -2193,8 +2201,9 @@ bool mons_wields_two_weapons(const monsters *mon)
 
 bool mons_self_destructs(const monsters *m)
 {
-    return (m->type == MONS_GIANT_SPORE || m->type == MONS_BALL_LIGHTNING
-        || m->type == MONS_ORB_OF_DESTRUCTION);
+    return (m->type == MONS_GIANT_SPORE
+            || m->type == MONS_BALL_LIGHTNING
+            || m->type == MONS_ORB_OF_DESTRUCTION);
 }
 
 int mons_base_damage_brand(const monsters *m)
@@ -2933,8 +2942,13 @@ bool mons_has_ranged_spell(const monsters *mon, bool attack_only,
 
 bool mons_has_ranged_ability(const monsters *mon)
 {
-    if (mon->type == MONS_ELECTRIC_EEL || mon->type == MONS_LAVA_SNAKE)
+    // [ds] FIXME: Get rid of special abilities and remove this.
+    if (mon->type == MONS_ELECTRIC_EEL
+        || mon->type == MONS_LAVA_SNAKE
+        || mon->type == MONS_OKLOB_PLANT)
+    {
         return (true);
+    }
 
     return (false);
 }
@@ -3004,10 +3018,12 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
         case MONS_KIRKE:
         case MONS_DUVESSA:
         case MONS_THE_ENCHANTRESS:
+        case MONS_NELLIE:
             gender = GENDER_FEMALE;
             break;
         case MONS_ROYAL_JELLY:
         case MONS_LERNAEAN_HYDRA:
+        case MONS_IRON_GIANT:
             gender = GENDER_NEUTER;
             break;
         default:
@@ -3681,6 +3697,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         "roars",
         "screams",
         "bellows",
+        "trumpets",
         "screeches",
         "buzzes",
         "moans",
@@ -3697,6 +3714,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         "shouts",       // S_LOUD
         "screams"       // S_VERY_LOUD
     };
+    COMPILE_CHECK(ARRAYSZ(sound_list) == NUM_LOUDNESS, shout_list);
 
     if (s_type < 0 || s_type >= NUM_LOUDNESS || s_type == NUM_SHOUTS)
     {

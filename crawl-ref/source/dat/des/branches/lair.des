@@ -673,10 +673,18 @@ MARKER: S = lua:MonPropsMarker:new { anaconda_guard="anaconda_guard" }
 KITEM:  U = superb_item
 KITEM:  Q = acquire any
 KFEAT:  o = granite_statue
-MARKER: o = lua:portal_desc { desc="elephant-shaped statue", \
-            desc_long="This worn granite statues depict elephants standing guard." }
-MARKER: G = lua:portal_desc { desc="elephant-shaped statue", \
-            desc_long="This worn granite statues depict elephants standing guard." }
+{{
+function elephant_statue()
+  return portal_desc {
+            desc="elephant-shaped statue",
+            desc_long=("This worn granite statue depicts" ..
+                       " elephants standing guard."),
+            slaved_to="elephant"
+         }
+end
+}}
+MARKER: o = lua:elephant_statue()
+MARKER: G = lua:elephant_statue()
 COLOUR: oG = green
 MARKER: o = lua:monster_on_death { \
             target="anaconda_guard", new_monster="generate_awake dire elephant", \
@@ -697,8 +705,8 @@ xtUttxccc+cc++ccccccccccccccccccccccccccccTT.TT.xxx..
 xtttxccco.Gc.....ccPWWcco.%|cccP..ccP....P.G.o.TTxxx.
 xttxcccc...c.P...=P.WwW+..%*Qc.....+.....c.c...TTTx..
 xxccccccPc.ccccP.c.WwwS+..%*|c.22..c.Pcccc.P.cTTccc..
-xccccccc+c.P.PccccPwwwwco.%|cc%22..cccc.P..c+ccccccc.
-xcc1...PPccccP.P.cWwWWPccccccc*%..PcP.PPccccPP1..%cc.
+xccccccc+c.P.PccccPwwwwco.%|cc.22..cccc.P..c+ccccccc.
+xcc1...PPccccP.P.cWwWWPccccccc%...PcP.PPccccPP1..%cc.
 xcc......cccccccPcccW.ccco.occcP.ccc.ccccccc......cc.
 xccP.1..%ccttTccP.PcccccG.V.GcccccP.PccTttcc1....Pcc.
 xxcccccccct....cccP.P.P1P...P1P.P.Pccc....tcccccccc.
@@ -724,9 +732,8 @@ MONS:   red devil / rotting devil / hairy devil / hellwing w:50
 MONS:   orange demon
 MONS:   sun demon
 MONS:   hydra / fire drake / dire elephant
-MONS:   wizard col:red
-KITEM:  / = gold, acquire any / star_item, any, any, any, any, any, \
-            any, any, any
+MONS:   wizard col:red hd:13 name:crazed n_adj
+KITEM:  / = acquire any / star_item
 MARKER: = = lua:restrict_door {}
 MAP
    ...TTTT....  .............................
@@ -753,4 +760,102 @@ MAP
  ..Ttttttttttttttttttttttttc:::::::6c;;;;2llllllllll
  ttttttttttttttttttttttttttcccccccccccccllllllllllll
  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxllllllllllllllllll
+ENDMAP
+
+# Oh worms!
+NAME:   wormcave
+PLACE:  Lair:$
+TAGS:   no_pool_fixup no_wall_fixup no_monster_gen no_rotate no_item_gen
+ORIENT: southeast
+MONS:   plant
+MONS:   spiny worm, brain worm, worm, giant leech, lindwurm, dragon
+KMONS:  8 = giant firefly
+KMONS:  9 = rock worm
+KFEAT:  9 = rock_wall
+SUBST:  X = x.
+SUBST:  P = 11.
+MAP
+            XXXXXxxXXxxXXxxxxXXxxxXXXxxx
+ @........@xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ ..PP.XX..Px..xxxxxxxxxxxxxxxxxX4x9xxxxx
+ ..PP.XX..PPxxxxxxxxXX88Xxxxxx4%..xxxxxx
+ ...x.....PPP.xxxxxP...88XxxxX44..Xxxxxx
+ ..XxX........xxxxxX....88xxx244..xxxxxx
+ .PxxxX..x...xxxxxxx....%XxxxxX41.4xxxxx
+ @xxxxxxx..XPPxxxxxP11.XPxxxxxxxXP.xxxxx
+Xxxx$$xxxxxxx..xxxxxX1..xXxxxxXxx.1xxxxx
+Xxx$$$$xxxxx...Xxxxxxx2..x9xxxx...xxxxxx
+xxx$$$$$xxxx..xxxxxxxXx4..xXxx..4xxxxxxx
+xxxx$7$$xxx..x9xxxxxxxxx2P..X...xXxxxxxx
+xxxxx$$xxxX..Xxxxxxxxxxx....4.xxxxxxxxxx
+xxxxxxx=xX..xxxxxxxxxXx...P.xxxx236xxxxx
+xxxxxxxxP..xxxxxxxxxXx...Xx9Xxx5625%xxxx
+xxxxxxxX..xxXxxxxXxx...4xxxxxxx%334xxxxx
+xxxxxxxxX.2.xxxx9x....x..xxxxxxxx5.xxxxx
+xxxxxxxxxX...xXx...4Xxx2...1xxxx...xxxxx
+xxxxxxxxxxx.......Xxxxxx..........xxxxxx
+xxxxxxxxxxXxx41.xxXxxxxxxxxx....xxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# Bear with us...
+NAME:   bearwithus
+PLACE:  Lair:$
+TAGS:   no_pool_fixup no_wall_fixup no_monster_gen no_rotate no_item_gen
+ORIENT: southeast
+MONS:   plant
+MONS:   bear, grizzly bear, polar bear, black bear
+SUBST:  X = xx.
+SUBST:  P = 1111.
+KITEM:  % = honeycomb, honeycomb, honeycomb
+MAP
+            xXXxxxXXXxxX
+       @...xxxxxxxxxxxxx
+       P..Pxxxxxxxxxxxxx
+      @...xxxxxxxxxxxxxx
+      P..PxxxxxxxxXxxxxx
+     @..PxxxXXxxxx34.%xx
+     P..2xxx2%xXx34..2xx
+    @....1x...2xxx...xxx
+    ...2P1....xxx..2xXxx
+   @..Pxxx........xxxxxx
+   P.2xxxxx2...xx..Xxxxx
+  @..PxxxxXX..xx43xxxxxx
+  P.Pxxxxxxxx..3.xxxxxxx
+ @..xxxxxxxxX2....xXxxxx
+ ..Pxxxxxxxxxx....%xxxxx
+ .PxxxxxxxxXx2....4xxxxx
+ Pxxxxxxxxxx3....4xXxxxx
+XxxxxxxxxxxXx3%.2xxxxxxx
+Xxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# Who let the dogs out?
+NAME:   kennels
+PLACE:  Lair:$
+TAGS:   no_pool_fixup no_wall_fixup no_monster_gen no_rotate no_item_gen patrolling
+ORIENT: southeast
+MONS:   plant
+MONS:   jackal, hound, warg, wolf, war dog, hell hound
+SUBST:  X = xx.
+SUBST:  P = 1111.
+KITEM:  $ = gold, acquire any, superb_item
+MAP
+@   @  @  XXXXXxxxxXXxxxxxxxxxxxxxxx
+ ...P..Pxxxxxxxx.3xxxxxxxxxxxxxxxxxx
+ .P...Pxxxxxx.......xxxxxxx$x7xxxxxx
+@P...1xxxxxx3...xx....xxxxxx6.6..xxx
+ ...Px..xxxxx..xxx....xxxxx7.5.4.xxx
+ .Pxxx.2.xxx...5xxx..6.4xx.......xxx
+@Pxxx.22.xx....xxx.6...xx......xxxxx
+ xxxx.22.xxx....xxx66..4xx....xxxxxx
+ xxxxx..x3xx.....x.....xx5x..xxxxxxx
+Xxxxxxx..xx3x...xx....xxxxx..xxxxxxx
+Xxxxxx3...xx...xxxx.22x2xxx...xxxxxx
+Xxxxxxx...x4x..5xxxx2..xxxxx...xxxxx
+xxxxxx...3xx...xxxx2x...xxxxx...xxxx
+xxxxxxx..xxx...xxxxx2...xxx...xx5xxx
+xxxxxx3.......xxxxx2....23...xxxxxxx
+xxxxxxxx.....xxxxxxxxx.3....xxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP

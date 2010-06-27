@@ -74,9 +74,6 @@ static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
 
 void seen_notable_thing(dungeon_feature_type which_thing, const coord_def& pos)
 {
-    // Tell the world first.
-    dungeon_events.fire_position_event(DET_PLAYER_IN_LOS, pos);
-
     // Don't record in temporary terrain
     if (you.level_type != LEVEL_DUNGEON)
         return;

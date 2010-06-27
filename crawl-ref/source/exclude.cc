@@ -79,7 +79,7 @@ void set_auto_exclude(const monsters *mon)
              mon->name(DESC_NOCAP_THE).c_str());
 
 #ifdef USE_TILE
-        viewwindow(false);
+        viewwindow();
 #endif
         learned_something_new(HINT_AUTO_EXCLUSION, mon->pos());
     }
@@ -93,7 +93,7 @@ void remove_auto_exclude(const monsters *mon, bool sleepy)
     {
         del_exclude(mon->pos());
 #ifdef USE_TILE
-        viewwindow(false);
+        viewwindow();
 #endif
     }
 }
@@ -283,7 +283,7 @@ travel_exclude* exclude_set::get_exclude_root(const coord_def &p)
     if (it != exclude_roots.end())
         return (&(it->second));
 
-    return  (false);
+    return (NULL);
 }
 
 size_t exclude_set::size() const

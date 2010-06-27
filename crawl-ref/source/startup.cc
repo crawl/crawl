@@ -296,7 +296,7 @@ void _post_init(bool newc)
 #endif
 
     // This just puts the view up for the first turn.
-    viewwindow(false);
+    viewwindow();
 
     activate_notes(true);
 

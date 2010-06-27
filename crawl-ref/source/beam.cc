@@ -1091,8 +1091,11 @@ coord_def bolt::pos() const
 
 bool bolt::need_regress() const
 {
+    // XXX: The affects_wall check probably makes some of the
+    //      others obsolete.
     return ((is_explosion && !in_explosion_phase)
             || drop_item
+            || feat_is_solid(grd(pos())) && !affects_wall(grd(pos()))
             || origin_spell == SPELL_PRIMAL_WAVE);
 }
 
@@ -1373,8 +1376,13 @@ void bolt::do_fire()
                 break;
         }
 
+        // Weapons of returning should find an inverse ray
+        // through find_ray and setup_retrace, but they didn't
+        // always in the past, and we don't want to crash
+        // if they accidentally pass through a corner.
         ASSERT(!feat_is_solid(grd(pos()))
-               || is_tracer && affects_wall(grd(pos())));
+               || is_tracer && affects_wall(grd(pos()))
+               || affects_nothing); // returning weapons
 
         const bool was_seen = seen;
         if (!was_seen && range > 0 && visible() && you.see_cell(pos()))

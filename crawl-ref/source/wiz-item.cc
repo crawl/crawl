@@ -16,6 +16,7 @@
 #include "cio.h"
 #include "dbg-util.h"
 #include "decks.h"
+#include "dungeon.h"
 #include "effects.h"
 #include "env.h"
 #include "itemprop.h"
@@ -24,6 +25,7 @@
 #include "it_use2.h"
 #include "invent.h"
 #include "makeitem.h"
+#include "mapdef.h"
 #include "mon-iter.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
@@ -60,6 +62,25 @@ static void _make_all_books()
         set_ident_flags(book, ISFLAG_IDENT_MASK);
 
         mprf("%s", book.name(DESC_PLAIN).c_str());
+    }
+}
+
+void wizard_create_spec_object_by_name()
+{
+    char buf[500];
+    mprf(MSGCH_PROMPT, "Enter name of item: ");
+    if (cancelable_get_line(buf, sizeof buf) || !*buf)
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
+
+    std::string error;
+    create_item_named(buf, you.pos(), &error);
+    if (!error.empty())
+    {
+        mprf(MSGCH_ERROR, "Error: %s", error.c_str());
+        return;
     }
 }
 
@@ -188,7 +209,8 @@ void wizard_create_spec_object()
         if (mons_genus(mon) == MONS_HYDRA)
             dummy.number = debug_prompt_for_int("How many heads? ", false);
 
-        if (fill_out_corpse(&dummy, mitm[thing_created], true) == -1)
+        if (fill_out_corpse(&dummy, dummy.type,
+                            mitm[thing_created], true) == -1)
         {
             mpr("Failed to create corpse.");
             mitm[thing_created].clear();

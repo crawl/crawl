@@ -47,6 +47,7 @@
 #include "coordit.h"
 #include "debug.h"
 #include "delay.h"
+#include "dgn-actions.h"
 #include "dgn-overview.h"
 #include "directn.h"
 #include "dungeon.h"
@@ -511,7 +512,7 @@ bool file_exists(const std::string &name)
 #ifdef HAVE_STAT
     struct stat st;
     const int err = ::stat(name.c_str(), &st);
-    return (!err);
+    return (!err && S_ISREG(st.st_mode));
 #else
     FILE *f = fopen(name.c_str(), "r");
     const bool exists = !!f;
@@ -1043,11 +1044,13 @@ std::string make_filename(std::string prefix, int level, branch_type where,
     return _make_filename(prefix, lid, isGhost);
 }
 
-static void _write_version( FILE *dataFile, int majorVersion, int minorVersion,
+static void _write_version( const std::string &filename,
+                            FILE *dataFile,
+                            int majorVersion, int minorVersion,
                             bool extended_version )
 {
     // write version
-    writer outf(dataFile);
+    writer outf(filename, dataFile);
 
     marshallByte(outf, majorVersion);
     marshallByte(outf, minorVersion);
@@ -1071,20 +1074,92 @@ static void _write_version( FILE *dataFile, int majorVersion, int minorVersion,
     }
 }
 
-static void _write_tagged_file( FILE *outf, int fileType,
+class safe_file_writer
+{
+public:
+    safe_file_writer(const std::string &filename,
+                     const char *mode = "wb",
+                     bool _lock = false)
+        : target_filename(filename), tmp_filename(target_filename),
+          filemode(mode), lock(_lock), filep(NULL)
+    {
+#ifndef SHORT_FILE_NAMES
+        tmp_filename = target_filename + ".tmp";
+#endif
+    }
+
+    ~safe_file_writer()
+    {
+        close();
+        if (tmp_filename != target_filename)
+        {
+            if (rename(tmp_filename.c_str(), target_filename.c_str()))
+                end(1, true, "failed to rename %s -> %s",
+                    tmp_filename.c_str(), target_filename.c_str());
+        }
+        DO_CHMOD_PRIVATE(target_filename.c_str());
+    }
+
+    FILE *open()
+    {
+        if (!filep)
+        {
+            filep = (lock? lk_open(filemode, tmp_filename)
+                     : fopen(tmp_filename.c_str(), filemode));
+            if (!filep)
+                end(-1, true,
+                    "Failed to open \"%s\" (%s; locking:%s)",
+                    tmp_filename.c_str(),
+                    filemode,
+                    lock? "YES" : "no");
+        }
+        return (filep);
+    }
+
+    void close()
+    {
+        if (filep)
+        {
+            if (lock)
+                lk_close(filep, filemode, tmp_filename);
+            else
+                fclose(filep);
+            filep = NULL;
+        }
+    }
+
+private:
+    std::string target_filename, tmp_filename;
+    const char *filemode;
+    bool lock;
+
+    FILE *filep;
+};
+
+static void _write_tagged_file( const std::string &filename,
+                                FILE *outf, int fileType,
                                 bool extended_version = false )
 {
     // find all relevant tags
     char tags[NUM_TAGS];
     tag_set_expected(tags, fileType);
 
-    _write_version( outf, TAG_MAJOR_VERSION, TAG_MINOR_VERSION,
+    _write_version( filename, outf, TAG_MAJOR_VERSION, TAG_MINOR_VERSION,
                     extended_version );
 
     // all other tags
     for (int i = 1; i < NUM_TAGS; i++)
         if (tags[i] == 1)
-            tag_write(static_cast<tag_type>(i), outf);
+            tag_write(filename, static_cast<tag_type>(i), outf);
+}
+
+static void _safe_write_tagged_file(const std::string &filename,
+                                    int tag,
+                                    bool lock = false,
+                                    bool extended_version = false)
+{
+    safe_file_writer writer(filename, "wb", lock);
+    _write_tagged_file(filename, writer.open(), tag, extended_version);
 }
 
 static void _place_player_on_stair(level_area_type old_level_type,
@@ -1552,6 +1627,12 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
         _close_level_gates();
     }
 
+    // Apply all delayed actions, if any.
+    if (just_created_level)
+        env.dactions_done = you.dactions.size();
+    else
+        catchup_dactions();
+
     // Here's the second cloud clearing, on load (see above).
     if (make_changes)
     {
@@ -1754,106 +1835,64 @@ void _save_level(const level_id& lid)
 {
     travel_cache.get_level_info(lid).update();
 
-    std::string cha_fil = _make_filename(you.your_name, lid);
-
-    FILE *saveFile = fopen(cha_fil.c_str(), "wb");
-
-    if (saveFile == NULL)
-    {
-        end(-1, true, "Unable to open \"%s\" for writing",
-                 cha_fil.c_str());
-    }
+    const std::string cha_fil = _make_filename(you.your_name, lid);
 
     // Nail all items to the ground.
     fix_item_coordinates();
 
-    _write_tagged_file( saveFile, TAGTYPE_LEVEL );
-
-    fclose(saveFile);
-
-    DO_CHMOD_PRIVATE(cha_fil.c_str());
+    _safe_write_tagged_file(cha_fil, TAGTYPE_LEVEL);
 }
+
+#define SAVEFILE(file, savefn) \
+    do                        \
+    {                         \
+        safe_file_writer fwriter(file);  \
+        writer w(file, fwriter.open());  \
+        savefn(w);                       \
+    } while (false)
 
 // Stack allocated std::string's go in separate function, so Valgrind doesn't
 // complain.
 static void _save_game_base()
 {
     /* Stashes */
-    std::string stashFile = get_savedir_filename(you.your_name, "", "st");
-    FILE *stashf = fopen(stashFile.c_str(), "wb");
-    if (stashf)
-    {
-        writer outf(stashf);
-        StashTrack.save(outf);
-        fclose(stashf);
-        DO_CHMOD_PRIVATE(stashFile.c_str());
-    }
+    const std::string stashfile = get_savedir_filename(you.your_name, "", "st");
+    SAVEFILE(stashfile, StashTrack.save);
 
 #ifdef CLUA_BINDINGS
     /* lua */
-    std::string luaFile = get_savedir_filename(you.your_name, "", "lua");
-    clua.save(luaFile.c_str());
+    const std::string lua_file = get_savedir_filename(you.your_name, "", "lua");
+    clua.save(lua_file.c_str());
     // Note that luaFile may not exist.
-    DO_CHMOD_PRIVATE(luaFile.c_str());
+    DO_CHMOD_PRIVATE(lua_file.c_str());
 #endif
 
     /* kills */
-    std::string killFile = get_savedir_filename(you.your_name, "", "kil");
-    FILE *killf = fopen(killFile.c_str(), "wb");
-    if (killf)
-    {
-        writer outf(killf);
-        you.kills->save(outf);
-        fclose(killf);
-        DO_CHMOD_PRIVATE(killFile.c_str());
-    }
+    const std::string kill_file =
+        get_savedir_filename(you.your_name, "", "kil");
+    SAVEFILE(kill_file, you.kills->save);
 
     /* travel cache */
-    std::string travelCacheFile = get_savedir_filename(you.your_name,"","tc");
-    FILE *travelf = fopen(travelCacheFile.c_str(), "wb");
-    if (travelf)
-    {
-        writer outf(travelf);
-        travel_cache.save(outf);
-        fclose(travelf);
-        DO_CHMOD_PRIVATE(travelCacheFile.c_str());
-    }
+    const std::string travel_cache_file =
+        get_savedir_filename(you.your_name,"","tc");
+    SAVEFILE(travel_cache_file, travel_cache.save);
 
     /* notes */
-    std::string notesFile = get_savedir_filename(you.your_name, "", "nts");
-    FILE *notesf = fopen(notesFile.c_str(), "wb");
-    if (notesf)
-    {
-        writer outf(notesf);
-        save_notes(outf);
-        fclose(notesf);
-        DO_CHMOD_PRIVATE(notesFile.c_str());
-    }
+    const std::string notes_file =
+        get_savedir_filename(you.your_name, "", "nts");
+    SAVEFILE(notes_file, save_notes);
 
     /* hints mode */
     if (Hints.hints_left)
     {
-        std::string tutorFile = get_savedir_filename(you.your_name, "", "tut");
-        FILE *tutorf = fopen(tutorFile.c_str(), "wb");
-        if (tutorf)
-        {
-            writer outf(tutorf);
-            save_hints(outf);
-            fclose(tutorf);
-            DO_CHMOD_PRIVATE(tutorFile.c_str());
-        }
+        const std::string tutor_file =
+            get_savedir_filename(you.your_name, "", "tut");
+        SAVEFILE(tutor_file, save_hints);
     }
 
     /* messages */
-    std::string msgFile = get_savedir_filename(you.your_name, "", "msg");
-    FILE *msgf = fopen(msgFile.c_str(), "wb");
-    if (msgf)
-    {
-        writer outf(msgf);
-        save_messages(outf);
-        fclose(msgf);
-        DO_CHMOD_PRIVATE(msgFile.c_str());
-    }
+    const std::string msg_file = get_savedir_filename(you.your_name, "", "msg");
+    SAVEFILE(msg_file, save_messages);
 
     /* tile dolls (empty for ASCII)*/
 #ifdef USE_TILE
@@ -1868,15 +1907,8 @@ static void _save_game_base()
     }
 #endif
 
-    std::string charFile = get_savedir_filename(you.your_name, "", "chr");
-    FILE *charf = fopen(charFile.c_str(), "wb");
-    if (!charf)
-        end(-1, true, "Unable to open \"%s\" for writing!\n", charFile.c_str());
-
-    _write_tagged_file( charf, TAGTYPE_PLAYER );
-
-    fclose(charf);
-    DO_CHMOD_PRIVATE(charFile.c_str());
+    const std::string charFile = get_savedir_filename(you.your_name, "", "chr");
+    _safe_write_tagged_file(charFile, TAGTYPE_PLAYER);
 }
 
 // Stack allocated std::string's go in separate function, so Valgrind doesn't
@@ -2268,7 +2300,7 @@ bool is_existing_level(const level_id &level)
 }
 
 // This class provides a way to walk the dungeon with a bit more flexibility
-// than you get with apply_to_all_dungeons.
+// than you used to get with apply_to_all_dungeons.
 level_excursion::level_excursion()
     : original(level_id::current()), ever_changed_levels(false)
 {
@@ -2304,52 +2336,6 @@ level_excursion::~level_excursion()
         // Reactivate markers.
         env.markers.activate_all();
     }
-}
-
-
-// Applies an operation (applicator) after switching to the specified level.
-// Will reload the original level after modifying the target level.
-//
-// If the target level has not already been visited by the player, this
-// function will assert.
-bool apply_to_level(const level_id &level, bool (*applicator)())
-{
-    ASSERT(is_existing_level(level));
-
-    level_excursion le;
-
-    le.go_to(level);
-
-    return applicator();
-}
-
-bool apply_to_all_dungeons(bool (*applicator)())
-{
-    level_excursion le;
-    level_id original(level_id::current());
-
-    bool success = applicator();
-
-    for (int i = 0; i < MAX_LEVELS; ++i)
-        for (int j = 0; j < NUM_BRANCHES; ++j)
-        {
-            const branch_type br = static_cast<branch_type>(j);
-            const level_id thislevel(br, subdungeon_depth(br, i));
-
-            if (!is_existing_level(thislevel))
-                continue;
-
-            // Don't apply to the original level - already done up top.
-            if (original == thislevel)
-                continue;
-
-            le.go_to(thislevel);
-
-            if (applicator())
-                success = true;
-        }
-
-    return (success);
 }
 
 bool get_save_version(FILE *file, char &major, char &minor)
@@ -2390,13 +2376,13 @@ static bool _get_and_validate_version(FILE *restoreFile, char &major,
             //        dynamically, but I think <major>.<minor> also
             //        covers 0.6.2. If not, it's not a problem. (jpeg)
             *reason = CRAWL " " + Version::Short() + " is not compatible with "
-                      "save files older than 0.6. You can continue your game "
+                      "save files older than 0.7. You can continue your game "
                       "with the appropriate older version, or you can delete "
                       "it and start a new game.";
         }
         else
         {
-            *reason = make_stringf("Major version mismatch: %d (want <= %d).",
+            *reason = make_stringf("Major version mismatch: %d (want %d).",
                                    major, TAG_MAJOR_VERSION);
         }
         return (false);
@@ -2411,7 +2397,8 @@ static bool _get_and_validate_version(FILE *restoreFile, char &major,
 
     if (minor > TAG_MINOR_VERSION)
     {
-        *reason = make_stringf("Minor version mismatch: %d (want <= %d).",
+        *reason = make_stringf("Minor version mismatch: %d (want <= %d). "
+                               "The save is from a newer version.",
                                minor, TAG_MINOR_VERSION);
         return (false);
     }
@@ -2529,28 +2516,15 @@ void save_ghost( bool force )
             mpr("Could not find any ghosts for this level.",
                 MSGCH_DIAGNOSTICS);
 #endif
-         return;
-    }
-
-    gfile = lk_open("wb", cha_fil);
-
-    if (gfile == NULL)
-    {
-        mprf(MSGCH_ERROR, "Error creating ghost file: %s", cha_fil.c_str());
-        more();
         return;
     }
 
-    _write_tagged_file( gfile, TAGTYPE_GHOST, true );
-
-    lk_close(gfile, "wb", cha_fil);
+    _safe_write_tagged_file(cha_fil, TAGTYPE_GHOST, true, true);
 
 #ifdef BONES_DIAGNOSTICS
     if (do_diagnostics)
         mprf(MSGCH_DIAGNOSTICS, "Saved ghost (%s).", cha_fil.c_str() );
 #endif
-
-    DO_CHMOD_PRIVATE(cha_fil.c_str());
 }
 
 ////////////////////////////////////////////////////////////////////////////

@@ -41,5 +41,5 @@ function ch_cross_trap(trap)
    local hp = you.hp()
 
    -- finally compare current hp with safe limit
-   return hp >= safe_hp	
+   return hp >= safe_hp
 end

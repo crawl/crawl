@@ -825,7 +825,7 @@ namespace arena
 
     void do_fight()
     {
-        viewwindow(false);
+        viewwindow();
         mesclr(true);
         {
             cursor_control coff(false);
@@ -848,7 +848,7 @@ namespace arena
                 if ((turns++ % 100) == 0)
                     count_foes();
 
-                viewwindow(false);
+                viewwindow();
                 you.time_taken = 10;
                 // Make sure we don't starve.
                 you.hunger = 10999;
@@ -863,7 +863,7 @@ namespace arena
                 dump_messages();
                 ASSERT(you.pet_target == MHITNOT);
             }
-            viewwindow(false);
+            viewwindow();
         }
 
         mesclr();

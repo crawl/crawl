@@ -162,7 +162,8 @@ end
 default-depth: D:7-16, Orc
 
 NAME:   bailey_entry_dummy
-TAGS:   bailey_entry transparent trowel_portal allow_dup
+TAGS:   bailey_entry transparent trowel_portal allow_dup chance_bailey
+CHANCE: 5%
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
 :   bailey_portal_axe(_G)
@@ -174,8 +175,9 @@ O
 ENDMAP
 
 NAME:   enter_bailey_1
+TAGS: uniq_bailey chance_bailey
+CHANCE: 5%
 WEIGHT: 1
-TAGS: uniq_bailey
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
 :   bailey_portal_axe(_G)
@@ -187,7 +189,8 @@ O
 ENDMAP
 
 NAME: enter_bailey_2
-TAGS: uniq_bailey
+TAGS: uniq_bailey chance_bailey
+CHANCE: 5%
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
 ITEM: hand axe
@@ -205,7 +208,8 @@ MAP
 ENDMAP
 
 NAME: enter_bailey_3
-TAGS: uniq_bailey
+TAGS: uniq_bailey chance_bailey
+CHANCE: 5%
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
 MONS: goblin ; hand axe
@@ -227,8 +231,9 @@ MAP
 ENDMAP
 
 NAME:   enter_bailey_4
+TAGS:   uniq_bailey chance_bailey
+CHANCE: 5%
 WEIGHT: 5
-TAGS:   uniq_bailey
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
 MONS:   goblin ; hand axe / hobgoblin ; hand axe / orc ; hand axe race:orcish
@@ -255,7 +260,8 @@ MAP
 ENDMAP
 
 NAME: enter_bailey_5
-TAGS: uniq_bailey
+TAGS: uniq_bailey chance_bailey
+CHANCE: 5%
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
 MONS: goblin ; hand axe ego:returning
@@ -278,7 +284,8 @@ NAME:   enter_bailey_6
 WEIGHT: 3
 COLOUR: ; : red / lightred
 SUBST:  ; = .
-TAGS:   uniq_bailey no_rotate
+TAGS:   uniq_bailey no_rotate chance_bailey
+CHANCE: 5%
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
 ITEM:   war axe / battleaxe
@@ -305,6 +312,8 @@ ENDMAP
 
 # They were just having a party.
 NAME:   enter_bailey_7
+TAGS:   uniq_bailey no_rotate chance_bailey
+CHANCE: 5%
 WEIGHT: 3
 : local rnd = crawl.random2(2)
 : if rnd == 0 then
@@ -330,6 +339,8 @@ x@x  xxxxxxx
 ENDMAP
 
 NAME:   enter_bailey_8
+TAGS:   uniq_bailey no_rotate chance_bailey
+CHANCE: 5%
 WEIGHT: 3
 COLOUR: n = red
 : local rnd = crawl.random2(2)
@@ -634,7 +645,7 @@ TAGS:   bailey_axe no_item_gen no_monster_gen
 # Loot consists of 16 good potions and scrolls in the last outer room, with a
 # lot of gold and especially good items in the (very dangerous) center room.
 #
-# The secret door does not work well, it will always be open. I also believe 
+# The secret door does not work well, it will always be open. I also believe
 # that loot is a bit much, but other baileys suffer from that as well... added
 # the warlord in an attempt to make it more even. --dpeg
 ITEM:   potion of healing / potion of heal wounds / potion of resistance w:5 / \

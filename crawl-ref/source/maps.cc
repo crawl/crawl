@@ -58,7 +58,6 @@ point_vector map_anchor_points;
 //////////////////////////////////////////////////////////////////////////
 // New style vault definitions
 
-typedef std::vector<map_def> map_vector;
 static map_vector vdefs;
 
 // Parameter array that vault code can use.
@@ -638,34 +637,44 @@ private:
     {
         PLACE,
         DEPTH,
-        TAG
+        DEPTH_AND_CHANCE,
+        TAG,
     };
 
 public:
     bool accept(const map_def &md) const;
-    void announce(int vault) const;
+    void announce(const map_def *map) const;
 
     bool valid() const
     {
         return (sel == TAG || place.is_valid());
     }
 
-    static map_selector by_place(const level_id &place, bool mini)
+    static map_selector by_place(const level_id &_place, bool _mini)
     {
-        return map_selector(map_selector::PLACE, place, "", mini, false);
+        return map_selector(map_selector::PLACE, _place, "", _mini, false);
     }
 
-    static map_selector by_depth(const level_id &place, bool mini)
+    static map_selector by_depth(const level_id &_place, bool _mini)
     {
-        return map_selector(map_selector::DEPTH, place, "", mini, true);
+        return map_selector(map_selector::DEPTH, _place, "", _mini, true);
     }
 
-    static map_selector by_tag(const std::string &tag,
-                               bool check_depth,
-                               const level_id &place = level_id::current())
+    static map_selector by_depth_chance(const level_id &_place)
     {
-        return map_selector(map_selector::TAG, place, tag,
-                            false, check_depth);
+        return map_selector(map_selector::DEPTH_AND_CHANCE, _place, "", false,
+                            true);
+    }
+
+    static map_selector by_tag(const std::string &_tag,
+                               bool _check_depth,
+                               bool _check_chance,
+                               const level_id &_place = level_id::current())
+    {
+        map_selector msel = map_selector(map_selector::TAG, _place, _tag,
+                                         false, _check_depth);
+        msel.ignore_chance = !_check_chance;
+        return (msel);
     }
 
 private:
@@ -677,7 +686,11 @@ private:
           mini(_mini), check_depth(_check_depth),
           check_layout(sel == DEPTH && place == level_id::current())
     {
+        if (_typ == PLACE)
+            ignore_chance = true;
     }
+
+    bool depth_selectable(const map_def &) const;
 
 public:
     bool ignore_chance;
@@ -690,6 +703,21 @@ public:
     const bool check_layout;
 };
 
+bool map_selector::depth_selectable(const map_def &mapdef) const
+{
+    return (!mapdef.place.is_valid()
+            && mapdef.is_usable_in(place)
+            // Some tagged levels cannot be selected as random
+            // maps in a specific depth:
+            && !mapdef.has_tag_suffix("entry")
+            && !mapdef.has_tag("unrand")
+            && !mapdef.has_tag("place_unique")
+            && !mapdef.has_tag("tutorial")
+            && (!mapdef.has_tag_prefix("temple_")
+                || mapdef.has_tag_prefix("uniq_altar_"))
+            && (!check_layout || map_matches_layout_type(mapdef)));
+}
+
 bool map_selector::accept(const map_def &mapdef) const
 {
     switch (sel)
@@ -701,51 +729,56 @@ bool map_selector::accept(const map_def &mapdef) const
                     || crawl_state.game_is_tutorial())
                 && map_matches_layout_type(mapdef)
                 && vault_unforbidden(mapdef));
+
     case DEPTH:
         return (mapdef.is_minivault() == mini
-                && !mapdef.place.is_valid()
-                && mapdef.is_usable_in(place)
-                // Some tagged levels cannot be selected as random
-                // maps in a specific depth:
-                && !mapdef.has_tag_suffix("entry")
-                && !mapdef.has_tag("unrand")
-                && !mapdef.has_tag("place_unique")
-                && !mapdef.has_tag("tutorial")
-                && (!mapdef.has_tag_prefix("temple_")
-                    || mapdef.has_tag_prefix("uniq_altar_"))
-                && (!check_layout || map_matches_layout_type(mapdef))
+                && (!mapdef.chance || !mapdef.chance_priority)
+                && depth_selectable(mapdef)
                 && vault_unforbidden(mapdef));
+
+    case DEPTH_AND_CHANCE:
+        return (// Only vaults with valid chance and chance priority
+                (mapdef.chance > 0 && mapdef.chance_priority > 0)
+                && depth_selectable(mapdef)
+                && vault_unforbidden(mapdef));
+
     case TAG:
         return (mapdef.has_tag(tag)
                 && (!check_depth || !mapdef.has_depth()
                     || mapdef.is_usable_in(place))
                 && map_matches_layout_type(mapdef)
                 && vault_unforbidden(mapdef));
+
     default:
         return (false);
     }
 }
 
-void map_selector::announce(int vault) const
+void map_selector::announce(const map_def *vault) const
 {
 #ifdef DEBUG_DIAGNOSTICS
-    if (vault != -1)
+    if (vault)
     {
-        const char *format =
-            sel == PLACE? "[PLACE] Found map %s for %s" :
-            sel == DEPTH? "[DEPTH] Found random map %s for %s" :
-                          "[TAG] Found map %s tagged '%s'";
+        if (sel == DEPTH_AND_CHANCE)
+        {
+            mprf(MSGCH_DIAGNOSTICS,
+                 "[CHANCE+DEPTH] Found map %s for %s (%d:%d)",
+                 vault->name.c_str(), place.describe().c_str(),
+                 vault->chance_priority, vault->chance);
+        }
+        else
+        {
+            const char *format =
+                sel == PLACE? "[PLACE] Found map %s for %s" :
+                sel == DEPTH? "[DEPTH] Found random map %s for %s" :
+                "[TAG] Found map %s tagged '%s'";
 
-        mprf(MSGCH_DIAGNOSTICS, format,
-             vdefs[vault].name.c_str(),
-             sel == TAG? tag.c_str() : place.describe().c_str());
+            mprf(MSGCH_DIAGNOSTICS, format,
+                 vault->name.c_str(),
+                 sel == TAG? tag.c_str() : place.describe().c_str());
+        }
     }
 #endif
-}
-
-static bool _compare_vault_chance_priority(int a, int b)
-{
-    return (vdefs[b].chance_priority < vdefs[a].chance_priority);
 }
 
 static std::string _vault_chance_tag(const map_def &map)
@@ -779,17 +812,93 @@ static vault_indices _eligible_maps_for_selector(const map_selector &sel)
 }
 
 static const map_def *_random_map_by_selector(const map_selector &sel);
-static const map_def *_random_map_in_list(const map_selector &sel,
-                                          const vault_indices &filtered)
+
+static bool _vault_chance_new(const map_def &map,
+                              std::set<std::string> &chance_tags)
 {
-    int mapindex = -1;
-    int rollsize = 0;
+    if (map.chance > 0)
+    {
+        // There may be several alternatives for a portal
+        // vault that want to be governed by one common
+        // CHANCE. In this case each vault will use a
+        // CHANCE, and a common chance_xxx tag. Pick the
+        // first such vault for the chance roll. Note that
+        // at this point we ignore chance_priority.
+        const std::string tag = _vault_chance_tag(map);
+        if (chance_tags.find(tag) == chance_tags.end())
+        {
+            if (!tag.empty())
+                chance_tags.insert(tag);
+            return (true);
+        }
+    }
+    return (false);
+}
 
-    // First build a list of vaults that could be used:
-    vault_indices eligible;
+class vault_chance_roll_iterator
+{
+public:
+    vault_chance_roll_iterator(const mapref_vector &_maps)
+        : maps(_maps), current(_maps.begin()), end(_maps.end())
+    {
+        find_valid();
+    }
 
+    operator bool () const { return current != end; }
+    const map_def *operator * () const { return *current; }
+    const map_def *operator -> () const { return *current; }
+
+    vault_chance_roll_iterator &operator ++ ()
+    {
+        ++current;
+        find_valid();
+        return (*this);
+    }
+
+    vault_chance_roll_iterator operator ++ (int)
+    {
+        vault_chance_roll_iterator copy(*this);
+        operator ++ ();
+        return (copy);
+    }
+
+private:
+    void find_valid()
+    {
+        while (current != end && random2(CHANCE_ROLL) >= (*current)->chance)
+            ++current;
+    }
+
+private:
+    const std::vector<const map_def *> &maps;
+    mapref_vector::const_iterator current;
+    mapref_vector::const_iterator end;
+};
+
+static const map_def *_resolve_chance_vault(const map_selector &sel,
+                                            const map_def *map)
+{
+    const std::string chance_tag = _vault_chance_tag(*map);
+    // If this map has a chance_ tag, convert the search into
+    // a lookup for that tag.
+    if (!chance_tag.empty())
+    {
+        map_selector msel = map_selector::by_tag(chance_tag,
+                                                 sel.check_depth,
+                                                 false,
+                                                 sel.place);
+        return _random_map_by_selector(msel);
+    }
+    return (map);
+}
+
+static mapref_vector
+_random_chance_maps_in_list(const map_selector &sel,
+                            const vault_indices &filtered)
+{
     // Vaults that are eligible and have >0 chance.
-    vault_indices chance;
+    mapref_vector chance;
+    mapref_vector chosen_chances;
 
     typedef std::set<std::string> tag_set;
     tag_set chance_tags;
@@ -797,65 +906,67 @@ static const map_def *_random_map_in_list(const map_selector &sel,
     for (unsigned f = 0, size = filtered.size(); f < size; ++f)
     {
         const int i = filtered[f];
-        if (!sel.ignore_chance && vdefs[i].chance > 0)
+        if (!sel.ignore_chance && _vault_chance_new(vdefs[i], chance_tags))
+            chance.push_back(&vdefs[i]);
+    }
+
+    for (vault_chance_roll_iterator vc(chance); vc; ++vc)
+        if (const map_def *chosen = _resolve_chance_vault(sel, *vc))
         {
-            // There may be several alternatives for a portal
-            // vault that want to be governed by one common
-            // CHANCE. In this case each vault will use a
-            // CHANCE, and a common chance_xxx tag. Pick the
-            // first such vault for the chance roll. Note that
-            // at this point we ignore chance_priority.
-            const std::string tag = _vault_chance_tag(vdefs[i]);
-            if (chance_tags.find(tag) == chance_tags.end())
-            {
-                if (!tag.empty())
-                    chance_tags.insert(tag);
-                chance.push_back(i);
-            }
+            chosen_chances.push_back(chosen);
+            sel.announce(chosen);
+        }
+
+    return (chosen_chances);
+}
+
+static const map_def *
+_random_map_in_list(const map_selector &sel,
+                    const vault_indices &filtered)
+{
+    const map_def *chosen_map = NULL;
+    int rollsize = 0;
+
+    // First build a list of vaults that could be used:
+    mapref_vector eligible;
+
+    // Vaults that are eligible and have >0 chance.
+    mapref_vector chance;
+
+    typedef std::set<std::string> tag_set;
+    tag_set chance_tags;
+
+    for (unsigned f = 0, size = filtered.size(); f < size; ++f)
+    {
+        const int i = filtered[f];
+        if (!sel.ignore_chance && vdefs[i].chance)
+        {
+            if (_vault_chance_new(vdefs[i], chance_tags))
+                chance.push_back(&vdefs[i]);
         }
         else
         {
-            eligible.push_back(i);
+            eligible.push_back(&vdefs[i]);
         }
     }
 
-    // Sort chances by priority, high priority first.
-    std::sort(chance.begin(), chance.end(), _compare_vault_chance_priority);
-
-    // Check CHANCEs.
-    for (vault_indices::const_iterator i = chance.begin();
-         i != chance.end(); ++i)
-    {
-        const map_def &map(vdefs[*i]);
-        if (random2(CHANCE_ROLL) < map.chance)
+    for (vault_chance_roll_iterator vc(chance); vc; ++vc)
+        if (const map_def *chosen = _resolve_chance_vault(sel, *vc))
         {
-            const std::string chance_tag = _vault_chance_tag(map);
-            // If this map has a chance_ tag, convert the search into
-            // a lookup for that tag.
-            if (!chance_tag.empty())
-            {
-                map_selector msel = map_selector::by_tag(chance_tag,
-                                                         sel.check_depth,
-                                                         sel.place);
-                msel.ignore_chance = true;
-                return _random_map_by_selector(msel);
-            }
-
-            mapindex = *i;
+            chosen_map = chosen;
             break;
         }
-    }
 
-    if (mapindex == -1)
+    if (!chosen_map)
     {
         int absdepth = 0;
         if (sel.place.level_type == LEVEL_DUNGEON && sel.place.is_valid())
             absdepth = sel.place.absdepth();
 
-        for (vault_indices::const_iterator i = eligible.begin();
+        for (mapref_vector::const_iterator i = eligible.begin();
              i != eligible.end(); ++i)
         {
-            const map_def &map(vdefs[*i]);
+            const map_def &map(**i);
             const int weight = map.weight
                 + absdepth * map.weight_depth_mult / map.weight_depth_div;
 
@@ -865,19 +976,18 @@ static const map_def *_random_map_in_list(const map_selector &sel,
             rollsize += weight;
 
             if (rollsize && x_chance_in_y(weight, rollsize))
-                mapindex = *i;
+                chosen_map = &map;
         }
     }
 
-    if (!sel.preserve_dummy && mapindex != -1
-        && vdefs[mapindex].has_tag("dummy"))
+    if (!sel.preserve_dummy && chosen_map
+        && chosen_map->has_tag("dummy"))
     {
-        mapindex = -1;
+        chosen_map = NULL;
     }
 
-    sel.announce(mapindex);
-
-    return (mapindex == -1? NULL : &vdefs[mapindex]);
+    sel.announce(chosen_map);
+    return (chosen_map);
 }
 
 static const map_def *_random_map_by_selector(const map_selector &sel)
@@ -898,11 +1008,19 @@ const map_def *random_map_in_depth(const level_id &place, bool want_minivault)
         map_selector::by_depth(place, want_minivault));
 }
 
+mapref_vector random_chance_maps_in_depth(const level_id &place)
+{
+    map_selector sel = map_selector::by_depth_chance(place);
+    const vault_indices eligible = _eligible_maps_for_selector(sel);
+    return _random_chance_maps_in_list(sel, eligible);
+}
+
 const map_def *random_map_for_tag(const std::string &tag,
-                                  bool check_depth)
+                                  bool check_depth,
+                                  bool check_chance)
 {
     return _random_map_by_selector(
-        map_selector::by_tag(tag, check_depth));
+        map_selector::by_tag(tag, check_depth, check_chance));
 }
 
 int map_count()
@@ -914,7 +1032,7 @@ int map_count_for_tag(const std::string &tag,
                       bool check_depth)
 {
     return _eligible_maps_for_selector(
-        map_selector::by_tag(tag, check_depth)).size();
+        map_selector::by_tag(tag, check_depth, false)).size();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1077,7 +1195,7 @@ static void write_map_prelude(const std::string &filebase)
     }
 
     FILE *fp = fopen(luafile.c_str(), "wb");
-    writer outf(fp);
+    writer outf(luafile, fp);
     lc_global_prelude.write(outf);
     fclose(fp);
 }
@@ -1089,7 +1207,7 @@ static void write_map_full(const std::string &filebase, size_t vs, size_t ve)
     if (!fp)
         end(1, true, "Unable to open %s for writing", cfile.c_str());
 
-    writer outf(fp);
+    writer outf(cfile, fp);
     marshallInt(outf, MAP_CACHE_VERSION);
     for (size_t i = vs; i < ve; ++i)
         vdefs[i].write_full(outf);
@@ -1103,7 +1221,7 @@ static void write_map_index(const std::string &filebase, size_t vs, size_t ve)
     if (!fp)
         end(1, true, "Unable to open %s for writing", cfile.c_str());
 
-    writer outf(fp);
+    writer outf(cfile, fp);
     marshallInt(outf, MAP_CACHE_VERSION);
     marshallShort(outf, ve > vs? ve - vs : 0);
     for (size_t i = vs; i < ve; ++i)

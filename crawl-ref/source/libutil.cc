@@ -272,6 +272,17 @@ extern "C" int stricmp(const char *str1, const char *str2)
 }
 #endif
 
+bool strip_suffix(std::string &s, const std::string &suffix)
+{
+    if (ends_with(s, suffix))
+    {
+        s.erase(s.length() - suffix.length(), suffix.length());
+        trim_string(s);
+        return (true);
+    }
+    return false;
+}
+
 // Returns true if s contains tag 'tag', and strips out tag from s.
 bool strip_tag(std::string &s, const std::string &tag, bool skip_padding)
 {

@@ -80,6 +80,7 @@ size_t strlcpy(char *dst, const char *src, size_t n);
 // String "tags"
 #define TAG_UNFOUND -20404
 bool strip_tag(std::string &s, const std::string &tag, bool nopad = false);
+bool strip_suffix(std::string &s, const std::string &suffix);
 int strip_number_tag(std::string &s, const std::string &tagprefix);
 bool strip_bool_tag(std::string &s, const std::string &name,
                     bool defval = false);

@@ -1,22 +1,23 @@
 Balancing 0.6 features:
-* Monster double actions due to energy randomisation always
-  include a move.
-* Greatly accelerate armour training when armour is heavy
-  relative to skill.
-* Make heavy armour guaranteed damage reduction percentage
-  independent of armour skill.
+* Monster double actions due to energy randomisation always include a move.
+* Greatly accelerate armour training when armour is heavy relative to skill.
+* Make heavy armour guaranteed damage reduction percentage independent of
+  armour skill.
+* Heavy armour doesn't affect weapon speed anymore.
+* Shields reduce attack speed.
+* Nagas and worshippers of Cheibriados don't suffer from as much hunger.
 
 Unsorted:
 * New mini-game, Dungeon Crawl Sprint.
 * New tutorial, old tutorial now a hints mode.
 * Aptitudes now on a scale +5 to -5.
 * Track the source of poison for death messages.
-* Magic mapping and Lugonu's self-banishment now work in
-  Pandemonium.
+* Magic mapping and Lugonu's self-banishment now work in Pandemonium.
 * Remove Death Knights and Thieves.
 * Ghouls can no longer starve; they just rot faster.
 * New tiles monster list tab.
 * Player body size is now described on the "A" screen.
+* Warpers now start with a few darts of dispersal.
 
 Interface:
 * New starting menus, mouse-operable in tiles builds.
@@ -34,61 +35,72 @@ Game:
 * Make Shoals monsters generate on land.
 * Reduced missile enchantment effect on mulching.
 * New maps.
-* Fix old player ghost speech, and add player ghost speech
-  fitting the ghost.
+* Fix old player ghost speech, and add player ghost speech fitting the
+  ghost.
 * Monster equipment can be corroded by acid.
 * Lost stats are now recovered one point at a time.
+* Magic contamination effects are more than twice as harsh.
+* The Abyss may now include hand-made structures.
 
 Gods:
-* Zin no longer objects to deaths of non-sentient allies, and
-  takes collateral kills of unclean and chaotic monsters.
+* Zin no longer objects to deaths of non-sentient allies, and takes
+  collateral kills of unclean and chaotic monsters.
 * Zin's Recite has been adjusted to be less harsh.
 * Zin has a new power: Imprison.
 * Elyvilon's Divine Vigour scales better in terms of power.
 * Yredelemnul no longer gifts vampires.
-* Kikubaaqudgha no longer protects from torment if the torment
-  is from pain-branding a weapon.
+* Kikubaaqudgha no longer protects from torment if the torment is from
+  pain-branding a weapon.
 * Sif Muna's piety is no longer unfair to skilled species.
 * Nemelex no longer takes gold sacrifices.
-* Fedhas can now evolve ballistomycetes into hyperactive
-  ballistomycetes.
-* Jiyva now gives the player conservation and unique
-  slime-related mutations, and produces temporary friendly
-  slimes instead of permanent neutral ones via the royal
-  jelly effect.
+* Fedhas can now evolve ballistomycetes into hyperactive ballistomycetes.
+* Jiyva now gives the player conservation and unique slime-related
+  mutations, and produces temporary friendly slimes instead of permanent
+  neutral ones via the royal jelly effect.
 
 Items:
 * Scrolls of holy word do more damage to susceptible monsters.
-* Blowguns no longer show damage, as they do none; accordingly,
-  scrolls of enchant weapon II no longer work on them.
-* The "Sniper" unrandart is now a crossbow instead of a hand
-  crossbow.
-* Flame- and frost-branded darts no longer always mulch, and the
-  steel brand is properly applied for thrown weapons.
+* Blowguns no longer show damage, as they do none; accordingly, scrolls of
+  enchant weapon II no longer work on them.
+* The "Sniper" unrandart is now a crossbow instead of a hand crossbow.
+* Flame- and frost-branded darts no longer always mulch, and the steel brand
+  is properly applied for thrown weapons.
 * Demon tridents can be blessed by TSO.
+
+Backgrounds:
+* Thieves and Death Knights are no more.
+* Warpers receive darts of dispersion.
 
 Monsters:
 * Anacondas are now amphibious.
 * Skeletal dragons are renamed to bone dragons.
 * Manes are now iron imps, with stat tweaks.
-* Imps lose see invisible while shadow imps gain it, and white
-  imps resist poison but are vulnerable to fire.
+* Imps lose see invisible while shadow imps gain it, and white imps resist
+  poison but are vulnerable to fire.
 * (Very) ugly things are no longer amphibious.
 * Glyph change for demonic crawlers.
 * Orange demons' poison can now drain any stat.
 * Hell hounds, hell hogs and demonic crawlers now leave corpses.
 * Hell knights have more HP and do more damage.
-* New monsters: elephant, dire elephant, hellephant.
+* Blink frogs have phase shift.
+* New monsters: elephant, dire elephant, hellephant, spriggan, spriggan
+  druid, spriggan firefly rider.
+* New unique: Grinder the shadow imp.
+* Wayne is now capable of laying a major smackdown.
 
 Spells:
-* Call Imp is buffed: it is now level 2, it takes spell power
-  into account, and it can summon iron imps.
-* Call Canine Familiar replaces Summon Elemental in the book
-  of Callings, and is removed from the book of Summonings.
-* Summon Ugly Thing is nerfed: at full spell power, it now
-  summons very ugly things only 33% of the time.
-* Invisibility no longer works on glowing monsters, as Corona
-  doesn't either.
+* Call Imp is buffed: it is now level 2, it takes spell power into account,
+  and it can summon iron imps.
+* Call Canine Familiar replaces Summon Elemental in the book of Callings,
+  and is removed from the book of Summonings.
+* Summon Ugly Thing is nerfed: at full spell power, it now summons very ugly
+  things only 33% of the time.
+* Invisibility no longer works on glowing monsters, as Corona doesn't
+  either.
+* Extension is nerfed: it now only extends spells that you know.
+* Death's Door doesn't paralyze you anymore, it just blocks healing effects
+  -- except for Borgnjor's Revification.
+* Summon Ugly Things is level 6, Haunt is level 7.
 
 Technical:
 * LOS and areas recalculated on-demand.

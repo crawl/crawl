@@ -8,6 +8,7 @@
 #define WIZITEM_H
 
 void wizard_create_spec_object(void);
+void wizard_create_spec_object_by_name();
 void wizard_tweak_object(void);
 void wizard_make_object_randart(void);
 void wizard_value_artefact();

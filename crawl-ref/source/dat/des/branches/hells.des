@@ -698,7 +698,7 @@ MARKER:  o = lua:monster_on_death { \
             death_monster="Dispater", new_monster="generate_awake iron golem", \
             message_seen="The iron statue comes to life!", \
             message_unseen="You hear a grinding sound.", \
-            master_name="dispater", \
+            monster_place_feature=dgn.fnum("granite_statue"), \
             veto_fragmentation="veto", veto_disintegrate="veto", \
          }
 MAP

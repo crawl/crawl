@@ -83,7 +83,8 @@ end
 # Entries ##########################################
 
 NAME:   portal_spiders_nest_entry_a
-TAGS:   uniq_spiders_nest patrolling no_monster_gen
+TAGS:   uniq_spiders_nest patrolling no_monster_gen chance_spider
+CHANCE: 1%
 DEPTH:  Lair
 : spiders_nest_portal(_G)
 MAP

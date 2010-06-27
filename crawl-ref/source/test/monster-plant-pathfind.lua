@@ -62,9 +62,10 @@ local function check_monster_moves_repeat(monster, nmoves)
     end
     oldpos = p
 
-    -- Draw the view to give the user something to look at, and to wake up
-    -- the monster and kick it into seek (hopefully).
-    debug.viewwindow(true, true)
+    -- Wake up the monster and kick it into seek (hopefully).
+    debug.seen_monsters_react()
+    -- Draw the view to give the user something to look at.
+    debug.viewwindow(true)
     monster.add_energy(10)
     assert(monster.beh == "seek",
            "Monster " .. monster.name .. " is not in seek mode")

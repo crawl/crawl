@@ -37,10 +37,12 @@ const int STR_REQ_THRESHOLD = 10;
 // Max ghosts on a level.
 const int MAX_GHOSTS = 10;
 
+#define NON_ENTITY 27000
+
 enum extra_monster_index_type
 {
-    MAX_MONSTERS = 350, // max size of monster array {dlb}
-    NON_MONSTER,        // no monster
+    MAX_MONSTERS = 700,         // max size of monster array {dlb}
+    NON_MONSTER  = NON_ENTITY,  // no monster
 
     MHITNOT = NON_MONSTER,
     MHITYOU,
@@ -55,18 +57,29 @@ enum extra_monster_index_type
 // number of monster enchantments
 #define NUM_MON_ENCHANTS 6
 
+// size of Pan monster sets
+#define MAX_MONS_ALLOC 10
+
 #define MAX_SUBTYPES    50
 
 // max size of item list {dlb}:
-#define MAX_ITEMS 600
+#define MAX_ITEMS 1000
 // non-item -- (ITEMS + 1) {dlb}
-#define NON_ITEM 601
+#define NON_ITEM  NON_ENTITY
+
+#if NON_ITEM <= MAX_ITEMS
+#error NON_ITEM must be > MAX_ITEMS
+#endif
 
 // max size of cloud array {dlb}:
-#define MAX_CLOUDS 180
+#define MAX_CLOUDS 600
 
 // empty cloud -- (CLOUDS + 1) {dlb}:
-#define EMPTY_CLOUD (MAX_CLOUDS + 1)
+#define EMPTY_CLOUD NON_ENTITY
+
+#if EMPTY_CLOUD <= MAX_CLOUDS
+#error EMPTY_CLOUD must be > MAX_CLOUDS
+#endif
 
 // max x-bound for level generation {dlb}
 #define GXM 80
@@ -116,10 +129,10 @@ const int LABYRINTH_BORDER = 4;
 #define MSG_MIN_HEIGHT  5
 
 // max traps per level
-#define MAX_TRAPS 100
+#define MAX_TRAPS         400
 
 // max shops per level
-#define MAX_SHOPS         25
+#define MAX_SHOPS         100
 
 // max shops randomly generated in a level.
 // changing this affects the total number of shops in a game
@@ -176,6 +189,8 @@ const int MAX_SEC_ENCHANT = 2;
 
 // The time (in aut) for a staff of power to decay 1 mp.
 #define POWER_DECAY 50
+
+const int INVALID_ABSDEPTH = -1000;
 
 const int DEPTH_ABYSS = 51;
 const int DEPTH_PAN   = 52;
@@ -270,6 +285,7 @@ enum CHAR_ATTRIBUTES
 #define RANDOM_ELEMENT(x) (x[random2(ARRAYSZ(x))])
 
 const char * const MONSTER_NUMBER = "monster-number";
+const char * const CORPSE_NEVER_DECAYS = "corpse-no-decay";
 
 // Synthetic keys:
 #define KEY_MACRO_MORE_PROTECT -10

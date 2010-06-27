@@ -1410,7 +1410,7 @@ static bool _mons_throw(monsters *monster, struct bolt &pbolt, int msl)
 
     // Redraw the screen before firing, in case the monster just
     // came into view and the screen hasn't been updated yet.
-    viewwindow(false);
+    viewwindow();
     pbolt.fire();
 
     // The item can be destroyed before returning.
@@ -1423,7 +1423,7 @@ static bool _mons_throw(monsters *monster, struct bolt &pbolt, int msl)
     {
         // Fire beam in reverse.
         pbolt.setup_retrace();
-        viewwindow(false);
+        viewwindow();
         pbolt.fire();
         msg::stream << "The weapon returns "
                     << (you.can_see(monster)?
@@ -2641,7 +2641,7 @@ static void _mons_open_door(monsters* monster, const coord_def &pos)
 
     if (was_seen)
     {
-        viewwindow(false);
+        viewwindow();
 
         if (was_secret)
         {
@@ -3123,7 +3123,7 @@ static bool _do_move_monster(monsters *monster, const coord_def& delta)
 
         if (you.see_cell(f))
         {
-            viewwindow(false);
+            viewwindow();
 
             if (!you.can_see(monster))
             {
@@ -3524,6 +3524,13 @@ static bool _monster_move(monsters *monster)
     return (ret);
 }
 
+static bool _mephitic_cloud_roll(const monsters *monster)
+{
+    const int meph_hd_cap = 21;
+    return (monster->hit_dice >= meph_hd_cap? one_chance_in(50)
+            : !x_chance_in_y(monster->hit_dice, meph_hd_cap));
+}
+
 static void _mons_in_cloud(monsters *monster)
 {
     int wc = env.cgrid(monster->pos());
@@ -3582,7 +3589,7 @@ static void _mons_in_cloud(monsters *monster)
             beam.beam_source = ANON_FRIENDLY_MONSTER;
 
         if (mons_class_is_confusable(monster->type)
-            && 1 + random2(27) >= monster->hit_dice)
+            && _mephitic_cloud_roll(monster))
         {
             beam.apply_enchantment_to_monster(monster);
         }

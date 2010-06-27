@@ -1,6 +1,6 @@
 ##############################################################################
 # mini.des, mini_features, mini_monsters:
-#           These are the places where minivaults should go. Minivaults are 
+#           These are the places where minivaults should go. Minivaults are
 #           vaults without any ORIENT line. General vaults with ORIENT lines
 #           are stored in either float.des or large.des. For specific branch
 #           vaults or altars, there are separate files. In particular, maps

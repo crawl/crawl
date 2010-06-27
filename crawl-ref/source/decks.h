@@ -126,6 +126,7 @@ bool deck_mark();
 bool deck_stack();
 bool choose_deck_and_draw();
 void nemelex_shuffle_decks();
+void shuffle_all_decks_on_level();
 
 // Return true if it was a "genuine" draw, false otherwise.
 bool card_effect(card_type which_card, deck_rarity_type rarity,

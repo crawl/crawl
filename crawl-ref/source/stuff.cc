@@ -493,7 +493,7 @@ void redraw_screen(void)
     update_turn_count();
     activate_notes(note_status);
 
-    viewwindow(false);
+    viewwindow();
 
     // Display the message window at the end because it places
     // the cursor behind possible prompts.

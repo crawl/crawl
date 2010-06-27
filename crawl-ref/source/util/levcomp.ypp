@@ -598,14 +598,14 @@ chance          : CHANCE INTEGER COLON INTEGER PERC
                 {
                     lc_map.main.add(
                         yylineno,
-                        make_stringf("chance(0, %d)", $2 * 100));
+                        make_stringf("chance(%d)", $2 * 100));
                 }
                 |
                 CHANCE INTEGER
                 {
                     lc_map.main.add(
                         yylineno,
-                        make_stringf("chance(0, %d)", $2));
+                        make_stringf("chance(%d)", $2));
                 }
                 ;
 

@@ -1751,7 +1751,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 # You will either need to get through a rock wall (but there is a wand shop),
-# or you will have to teleport into the room, possibly randomly. In that case, 
+# or you will have to teleport into the room, possibly randomly. In that case,
 # inner area=13*11=143, outer area=104 or 148, making chances for teleporation
 # to land inside either 57% or 49%.
 NAME:    minmay_bazaar_challenge
@@ -1893,7 +1893,7 @@ bazaar_milestone(_G)
 MAP
 xxxxx
 x...xxx
-x.!..~x      xxx 
+x.!..~x      xxx
 x...xxx      x~x
 xxxxx       xx.xx
       xxxxx x...x

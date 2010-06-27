@@ -407,7 +407,7 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe,
     // If we're going to prompt then update the window so the player can
     // see what the monsters are.
     if (prompt)
-        viewwindow(false);
+        viewwindow();
 
     if (delay == DELAY_WEAPON_SWAP)
     {
@@ -649,7 +649,7 @@ void handle_delay()
             mprf(MSGCH_PLAIN, "You %s",
                  _get_zin_recite_speech("start", you.num_turns + delay.duration).c_str());
             if (apply_area_visible(_zin_recite_to_monsters, delay.parm1))
-                viewwindow(false);
+                viewwindow();
             break;
 
         default:
@@ -855,7 +855,7 @@ void handle_delay()
             mprf(MSGCH_MULTITURN_ACTION, "You continue %s.",
                  _get_zin_recite_speech("other", you.num_turns + delay.duration+1).c_str());
             if (apply_area_visible(_zin_recite_to_monsters, delay.parm1))
-                viewwindow(false);
+                viewwindow();
             break;
 
         case DELAY_MULTIDROP:
@@ -954,14 +954,19 @@ static void _finish_delay(const delay_queue_item &delay)
 
         vampire_nutrition_per_turn(item, 1);
 
-        if (mons_skeleton(item.plus) && one_chance_in(3))
-            turn_corpse_into_skeleton(item);
-        else
+        // Don't try to apply delay end effects if
+        // vampire_nutrition_per_turn did a stop_delay already:
+        if (is_vampire_feeding())
         {
-            if (delay.parm1)
-                dec_inv_item_quantity(delay.parm2, 1);
+            if (mons_skeleton(item.plus) && one_chance_in(3))
+                turn_corpse_into_skeleton(item);
             else
-                dec_mitm_item_quantity(delay.parm2, 1);
+            {
+                if (delay.parm1)
+                    dec_inv_item_quantity(delay.parm2, 1);
+                else
+                    dec_mitm_item_quantity(delay.parm2, 1);
+            }
         }
 
         if (was_orc)

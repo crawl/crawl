@@ -39,7 +39,6 @@
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
-#include "viewchar.h"
 #include "xom.h"
 
 bool check_annotation_exclusion_warning()
@@ -498,11 +497,7 @@ void up_stairs(dungeon_feature_type force_stair,
     }
 
     // Up and down both work for portals.
-    if (get_feature_dchar(stair_find) == DCHAR_ARCH
-        && feat_stair_direction(stair_find) != CMD_NO_CMD
-        && stair_find != DNGN_ENTER_ZOT
-        && stair_find != DNGN_RETURN_FROM_ZOT
-        && stair_find != DNGN_EXIT_HELL)
+    if (feat_is_bidirectional_portal(stair_find))
     {
         down_stairs(force_stair, entry_cause);
         return;
@@ -663,7 +658,8 @@ void up_stairs(dungeon_feature_type force_stair,
 
     new_level();
 
-    viewwindow(true);
+    viewwindow();
+    seen_monsters_react();
 
     // Left Zot without enough runes to get back in (because they were
     // destroyed), but need to get back in Zot to get the Orb?
@@ -855,11 +851,7 @@ void down_stairs(dungeon_feature_type force_stair,
     }
 
     // Up and down both work for portals.
-    if (get_feature_dchar(stair_find) == DCHAR_ARCH
-        && feat_stair_direction(stair_find) != CMD_NO_CMD
-        && stair_find != DNGN_ENTER_ZOT
-        && stair_find != DNGN_RETURN_FROM_ZOT
-        && stair_find != DNGN_EXIT_HELL)
+    if (feat_is_bidirectional_portal(stair_find))
     {
         ;
     }
@@ -993,7 +985,7 @@ void down_stairs(dungeon_feature_type force_stair,
         mprf("You insert %s into the lock.",
              you.inv[runes[1]].name(DESC_NOCAP_THE).c_str());
         big_cloud(CLOUD_BLUE_SMOKE, KC_YOU, you.pos(), 20, 7 + random2(7));
-        viewwindow(false, true);
+        viewwindow();
         mpr("Heavy smoke blows from the lock!");
         more();
 
@@ -1323,7 +1315,7 @@ void down_stairs(dungeon_feature_type force_stair,
 
     trackers_init_new_level(true);
 
-    viewwindow(true);
+    viewwindow();
     maybe_update_stashes();
 
     if (collect_travel_data)

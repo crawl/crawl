@@ -162,7 +162,7 @@ static bool _check_moveto_trap(const coord_def& p)
             if (trap_def* ptrap = find_trap(p))
                 ptrap->reveal();
 
-            viewwindow(false);
+            viewwindow();
 
             mprf(MSGCH_WARN,
                  "Wait a moment, %s! Do you really want to step there?",
@@ -348,7 +348,7 @@ void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift)
 
     // Move the player to new location.
     you.moveto(p);
-    viewwindow(false);
+    viewwindow();
 
     moveto_location_effects(old_grid, stepped, allow_shift, old_pos);
 }
@@ -1152,8 +1152,11 @@ int player_hunger_rate(void)
             hunger += 5;
 
         // Berserk has its own food penalty - excluding berserk haste.
+        // Doubling the hunger cost for haste so that the per turn hunger
+        // is consistent now that a hasted turn causes 50% the normal hunger
+        // -cao
         if (you.duration[DUR_HASTE] > 0 && !you.berserk())
-            hunger += 5;
+            hunger += 10;
     }
 
     if (you.species == SP_VAMPIRE)
@@ -2016,6 +2019,8 @@ bool player_is_shapechanged(void)
     return (true);
 }
 
+// An evasion factor based on the player's body size, smaller == higher
+// evasion size factor.
 int player_evasion_size_factor()
 {
     // XXX: you.body_size() implementations are incomplete, fix.
@@ -2037,18 +2042,45 @@ int player_adjusted_shield_evasion_penalty(int scale)
                      / (5 + player_evasion_size_factor())));
 }
 
-// The EV penalty to the player for their worn body armour.
-int player_adjusted_body_armour_evasion_penalty(int scale)
+int player_raw_body_armour_evasion_penalty()
 {
     const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, false);
     if (!body_armour)
         return (0);
 
     const int base_ev_penalty = -property(*body_armour, PARM_EVASION);
+    return base_ev_penalty;
+}
+
+int player_size_adjusted_body_armour_evasion_penalty(int scale)
+{
+    const int base_ev_penalty = player_raw_body_armour_evasion_penalty();
     if (!base_ev_penalty)
         return (0);
 
-    return ((base_ev_penalty + std::max(0, 3 * base_ev_penalty - you.strength()))
+    const int size = you.body_size(PSIZE_BODY);
+
+    const int size_bonus_factor =
+        (size < SIZE_SMALL || size > SIZE_LARGE)?
+        (size - SIZE_MEDIUM) * scale / 4 : 0;
+
+    const int size_adjusted_penalty =
+        std::max(0,
+                 scale * base_ev_penalty
+                 - size_bonus_factor * base_ev_penalty);
+
+    return (size_adjusted_penalty);
+}
+
+// The EV penalty to the player for their worn body armour.
+int player_adjusted_body_armour_evasion_penalty(int scale)
+{
+    const int base_ev_penalty = player_raw_body_armour_evasion_penalty();
+    if (!base_ev_penalty)
+        return (0);
+
+    return ((base_ev_penalty
+             + std::max(0, 3 * base_ev_penalty - you.strength()))
             * (45 - you.skills[SK_ARMOUR])
             * scale
             / 45);
@@ -2192,15 +2224,30 @@ int player_evasion(ev_ignore_type evit)
     const int ev_dex = stepdown_value(you.dex(), 10, 24, 72, 72);
 
     const int dodge_bonus =
-        (7 + you.skills[SK_DODGING] * ev_dex) * scale * scale
-        / (20 * scale + adjusted_evasion_penalty - size_factor * scale);
+        (7 + you.skills[SK_DODGING] * ev_dex) * scale
+        / (20 - size_factor);
+
+    // [ds] Dodging penalty for being in high EVP armour, almost
+    // identical to v0.5/4.1 penalty, but with the EVP discount being
+    // 1 instead of 0.5 so that leather armour is fully discounted.
+    // The 1 EVP of leather armour may still incur an
+    // adjusted_evasion_penalty, however.
+    const int armour_dodge_penalty =
+        std::max(0,
+                 (30 * player_size_adjusted_body_armour_evasion_penalty(scale)
+                  - 30 * scale)
+                 / std::max(1, (int) you.strength()));
+
+    // Adjust dodge bonus for the effects of being suited up in armour.
+    const int armour_adjusted_dodge_bonus =
+        std::max(0, dodge_bonus - armour_dodge_penalty);
 
     const int adjusted_shield_penalty =
         player_adjusted_shield_evasion_penalty(scale);
 
     const int prestepdown_evasion =
         size_base_ev
-        + dodge_bonus
+        + armour_adjusted_dodge_bonus
         - adjusted_evasion_penalty
         - adjusted_shield_penalty;
 
@@ -2906,7 +2953,7 @@ void level_change(bool skip_attribute_increase)
                 if (!(you.experience_level % 3))
                     hp_adjust++;
 
-                if (!(you.experience_level % 4))
+                if (!(you.experience_level % 4) && you.experience_level > 7)
                 {
                     mpr("Your scales feel tougher.", MSGCH_INTRINSIC_GAIN);
                     you.redraw_armour_class = true;
@@ -5163,6 +5210,7 @@ void player::init()
     reset_escaped_death();
 
     on_current_level = true;
+    walking = 0;
 
 #if defined(WIZARD) || defined(DEBUG)
     you.never_die = false;
@@ -5429,9 +5477,9 @@ int player::armour_class() const
         const int ac_value     = property(item, PARM_AC ) * 100;
         const int racial_bonus = _player_armour_racial_bonus(item);
 
-        // [ds] effectively: ac_value * (23 + Arm) / 23, where Arm =
+        // [ds] effectively: ac_value * (22 + Arm) / 22, where Arm =
         // Armour Skill + racial_skill_bonus / 2.
-        AC += ac_value * (46 + 2 * skills[SK_ARMOUR] + racial_bonus) / 46;
+        AC += ac_value * (44 + 2 * skills[SK_ARMOUR] + racial_bonus) / 44;
         AC += item.plus * 100;
 
         // The deformed don't fit into body armour very well.
@@ -6218,7 +6266,7 @@ bool player::sicken(int amount)
     return (true);
 }
 
-bool player::can_see_invisible(bool calc_unid) const
+bool player::can_see_invisible(bool calc_unid, bool transient) const
 {
     int si = 0;
 
@@ -6238,7 +6286,7 @@ bool player::can_see_invisible(bool calc_unid) const
         si++;
 
     //jmf: added see_invisible spell
-    if (duration[DUR_SEE_INVISIBLE] > 0)
+    if (transient && duration[DUR_SEE_INVISIBLE] > 0)
         si++;
 
     // randart wpns

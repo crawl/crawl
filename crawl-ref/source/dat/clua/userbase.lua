@@ -17,10 +17,10 @@ function c_save(file)
     if not chk_lua_save then
         return
     end
-    
+
     for i, fn in ipairs(chk_lua_save) do
         fn(file)
-    end    
+    end
 end
 
 -- This function returns true to tell Crawl not to process the option further
@@ -46,10 +46,10 @@ function c_interrupt_macro(iname, cause, extra)
     return chk_interrupt_macro[c_macro_name](iname, cause, extra)
 end
 
--- Notice that c_interrupt_activity defaults to *false* whereas 
+-- Notice that c_interrupt_activity defaults to *false* whereas
 -- c_interrupt_macro defaults to *true*. This is because "false" really just
--- means "go ahead and use the default logic to kill this activity" here, 
--- whereas false is interpreted as "no, don't stop this macro" for 
+-- means "go ahead and use the default logic to kill this activity" here,
+-- whereas false is interpreted as "no, don't stop this macro" for
 -- c_interrupt_macro.
 --
 -- If c_interrupt_activity, or one of the individual hooks wants to ensure that

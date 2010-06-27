@@ -7,7 +7,7 @@ NAME: primary_dummy
 TAGS: dummy
 DEPTH: 1-100, Pan, Abyss, !Swamp
 ORIENT: float
-CHANCE: 10 : 8888
+CHANCE: 0 : 8888
 MAP
 x
 ENDMAP
@@ -16,7 +16,7 @@ ENDMAP
 NAME: primary_mini_dummy
 TAGS: dummy
 DEPTH: 1-100, Pan, Abyss, !Swamp
-CHANCE: 10 : 6666
+CHANCE: 0 : 6666
 MAP
 x
 ENDMAP
@@ -25,7 +25,7 @@ ENDMAP
 NAME: primary_mini_dummy_swamp
 TAGS: dummy
 DEPTH: Swamp
-CHANCE: 10 : 3333
+CHANCE: 0 : 3333
 MAP
 x
 ENDMAP

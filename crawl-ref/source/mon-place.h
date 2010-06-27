@@ -51,6 +51,30 @@ monster_type pick_local_zombifiable_monster(int power,
                                             monster_type cs = MONS_NO_MONSTER,
                                             const coord_def& pos = coord_def());
 
+// Converts a monster_type involving RANDOM_MONSTER and similar into an
+// explicit monster type usable on the current level.
+monster_type resolve_monster_type(monster_type mon_type,
+                                  dungeon_feature_type feat);
+
+// Picks a monster eligible for random generation at the given place,
+// optionally picking monsters that can be zombified into the target zombie,
+// and optionally increasing monster level by the provided OOD factors.
+//
+// If want_corpse_capable is true, only monsters that can leave corpses
+// will be considered.
+monster_type pick_random_monster_for_place(const level_id &place,
+                                           monster_type zombie_monster,
+                                           bool moderate_ood,
+                                           bool super_ood,
+                                           bool want_corpse_capable);
+
+// Converts a randomised monster_type into a concrete monster_type, optionally
+// choosing monsters suitable for generation at the supplied place.
+monster_type resolve_corpse_monster_type(monster_type mon_type,
+                                         dungeon_feature_type feat,
+                                         level_id place);
+
+
 class level_id;
 
 monster_type pick_random_monster(const level_id &place,

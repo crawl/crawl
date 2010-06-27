@@ -69,7 +69,7 @@ bool maybe_identify_staff( item_def &item, spell_type spell = SPELL_NO_SPELL );
 void inspect_spells();
 void do_cast_spell_cmd(bool force);
 
-spret_type your_spells(spell_type spell, int powc = 0, bool allow_fail = true);
+spret_type your_spells(spell_type spell, int powc = 0, bool allow_fail = true, bool check_range = true);
 
 const char* failure_rate_to_string( int fail );
 

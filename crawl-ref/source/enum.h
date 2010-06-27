@@ -2119,6 +2119,11 @@ enum monster_type                      // (int) menv[].type
     MONS_ELEPHANT,
     MONS_DIRE_ELEPHANT,
     MONS_HELLEPHANT,
+    MONS_GRINDER,
+    MONS_CHUCK,
+    MONS_IRON_GIANT,
+    MONS_NELLIE,
+    MONS_IRON_ELEMENTAL,
 
     // Spriggans:
     MONS_SPRIGGAN = 500,
@@ -2400,6 +2405,9 @@ enum mon_spellbook_type
     MST_SPRIGGAN_DRUID,
     MST_THE_ENCHANTRESS,
     MST_HELLEPHANT,
+    MST_GRINDER,
+    MST_IRON_GIANT,
+    MST_IRON_ELEMENTAL,
 
     MST_TEST_SPAWNER = 200,
     NUM_MSTYPES,
@@ -2510,12 +2518,7 @@ enum mutation_type
     RANDOM_NON_SLIME_MUTATION,
 };
 
-#ifndef TYPED_ENUMS
-typedef unsigned char object_class_type;
-enum object_class_t                    // mitm[].base_type
-#else
-enum object_class_type : unsigned char
-#endif
+enum object_class_type                 // mitm[].base_type
 {
     OBJ_WEAPONS,
     OBJ_MISSILES,
@@ -2536,8 +2539,7 @@ enum object_class_type : unsigned char
     OBJ_GEMSTONES, // found in itemname.cc, labeled as miscellaneous in invent.cc {dlb}
     NUM_OBJECT_CLASSES,
     OBJ_UNASSIGNED = 100,              // must remain set to 100 {dlb}
-    OBJ_RANDOM = 255,// must remain set to 255 {dlb} - also used
-                     // for blanket random sub_type .. see dungeon::items()
+    OBJ_RANDOM,      // used for blanket random sub_type .. see dungeon::items()
 };
 
 enum operation_types
@@ -3007,6 +3009,7 @@ enum spell_type
     SPELL_SUNRAY,
     SPELL_AWAKEN_FOREST,
     SPELL_SUMMON_CANIFORMS,
+    SPELL_IRON_ELEMENTALS,
 
     NUM_SPELLS
 };
@@ -3285,6 +3288,31 @@ enum reach_type
     REACH_NONE,
     REACH_KNIGHT,
     REACH_TWO,
+};
+
+enum daction_type
+{
+    DACT_ALLY_HOLY,
+    DACT_ALLY_UNHOLY_EVIL,
+    DACT_ALLY_UNCLEAN_CHAOTIC,
+    DACT_ALLY_SPELLCASTER,
+    DACT_ALLY_YRED_SLAVE,
+    DACT_ALLY_BEOGH, // both orcies and demons summoned by sorcerers
+    DACT_ALLY_SLIME,
+    DACT_ALLY_PLANT,
+
+    NUM_DA_COUNTERS,
+
+    // Leave space for new counters, as they need to be at the start.
+    DACT_OLD_ENSLAVED_SOULS_POOF = 16,
+    DACT_HOLY_NEW_ATTEMPT,
+    DACT_HOLY_PETS_GO_NEUTRAL,
+    DACT_ALLY_TROG,
+
+    DACT_SHUFFLE_DECKS,
+    DACT_REAUTOMAP,
+    DACT_REMOVE_JIYVA_ALTARS,
+    NUM_DACTIONS,
 };
 
 #ifdef USE_TILE

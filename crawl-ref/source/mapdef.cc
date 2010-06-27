@@ -26,6 +26,7 @@
 #include "dgn-height.h"
 #include "exclude.h"
 #include "files.h"
+#include "food.h"
 #include "initfile.h"
 #include "invent.h"
 #include "items.h"
@@ -119,7 +120,8 @@ std::string mapdef_split_key_item(const std::string &s,
 
     const std::string::size_type sep = norm < fixe? norm : fixe;
     if (sep == std::string::npos)
-        return ("malformed declaration - must use = or :");
+        return make_stringf("malformed declaration - must use = or : in '%s'",
+                            s.c_str());
 
     *key = trimmed_string(s.substr(0, sep));
     std::string substitute    = trimmed_string(s.substr(sep + 1));
@@ -251,11 +253,11 @@ level_range level_range::parse(std::string s) throw (std::string)
         parse_partial(lr, s);
     else
     {
-        std::string branch = trimmed_string(s.substr(0, cpos));
-        std::string depth  = trimmed_string(s.substr(cpos + 1));
+        std::string br    = trimmed_string(s.substr(0, cpos));
+        std::string depth = trimmed_string(s.substr(cpos + 1));
         parse_depth_range(depth, &lr.shallowest, &lr.deepest);
 
-        lr.set(branch, lr.shallowest, lr.deepest);
+        lr.set(br, lr.shallowest, lr.deepest);
     }
 
     return (lr);
@@ -3893,6 +3895,13 @@ mons_spec mons_list::mons_by_name(std::string name) const
 //////////////////////////////////////////////////////////////////////
 // item_list
 
+bool item_spec::corpselike() const
+{
+    return ((base_type == OBJ_CORPSES && (sub_type == CORPSE_BODY
+                                          || sub_type == CORPSE_SKELETON))
+            || (base_type == OBJ_FOOD && sub_type == FOOD_CHUNK));
+}
+
 void item_list::clear()
 {
     items.clear();
@@ -4125,6 +4134,92 @@ int item_list::parse_acquirement_source(const std::string &source)
     return (god);
 }
 
+bool item_list::monster_corpse_is_valid(monster_type *mons,
+                                        const std::string &name,
+                                        bool corpse,
+                                        bool skeleton,
+                                        bool chunk)
+{
+    if (*mons == RANDOM_NONBASE_DRACONIAN)
+    {
+        error = "Can't use non-base draconian for corpse/chunk items";
+        return (false);
+    }
+
+    // Accept randomised types without further checks:
+    if (*mons >= NUM_MONSTERS)
+        return (true);
+
+    // Convert to the monster species:
+    *mons = mons_species(*mons);
+
+    if (!mons_class_can_leave_corpse(*mons))
+    {
+        error = make_stringf("'%s' cannot leave corpses", name.c_str());
+        return (false);
+    }
+
+    if (skeleton && !mons_skeleton(*mons))
+    {
+        error = make_stringf("'%s' has no skeleton", name.c_str());
+        return (false);
+    }
+
+    // We're ok.
+    return (true);
+}
+
+item_spec item_list::parse_corpse_spec(item_spec &result, std::string s)
+{
+    const bool never_decay = strip_tag(s, "never_decay");
+
+    if (never_decay)
+        result.props[CORPSE_NEVER_DECAYS].get_bool() = true;
+
+    const bool corpse = strip_suffix(s, "corpse");
+    const bool skeleton = !corpse && strip_suffix(s, "skeleton");
+    const bool chunk = !corpse && !skeleton && strip_suffix(s, "chunk");
+
+    result.base_type = chunk? OBJ_FOOD : OBJ_CORPSES;
+    result.sub_type  = (chunk  ? static_cast<int>(FOOD_CHUNK) :
+                        static_cast<int>(corpse ? CORPSE_BODY :
+                                         CORPSE_SKELETON));
+
+    // [ds] We're stuffing the corpse monster into the .plus field to
+    // match what we'll eventually do to the corpse item, in the grand
+    // WTF-is-this Crawl tradition.
+
+    // Is the caller happy with any corpse?
+    if (s == "any")
+    {
+        result.plus = RANDOM_MONSTER;
+        return (result);
+    }
+
+    // The caller wants a specific monster, no doubt with the best of
+    // motives. Let's indulge them:
+    mons_list mlist;
+    const std::string mons_parse_err = mlist.add_mons(s, true);
+    if (!mons_parse_err.empty())
+    {
+        error = mons_parse_err;
+        return (result);
+    }
+
+    // Get the actual monster spec:
+    mons_spec spec = mlist.get_monster(0);
+    monster_type mtype = static_cast<monster_type>(spec.mid);
+    if (!monster_corpse_is_valid(&mtype, s, corpse, skeleton, chunk))
+        return (result);
+
+    // Ok, looking good, the caller can have their requested toy.
+    result.plus = mtype;
+    if (spec.number)
+        result.plus2 = spec.number;
+
+    return (result);
+}
+
 item_spec item_list::parse_single_spec(std::string s)
 {
     item_spec result;
@@ -4145,6 +4240,29 @@ item_spec item_list::parse_single_spec(std::string s)
     const int qty = strip_number_tag(s, "q:");
     if (qty != TAG_UNFOUND)
         result.qty = qty;
+
+    const int fresh = strip_number_tag(s, "fresh:");
+    if (fresh != TAG_UNFOUND)
+        result.item_special = fresh;
+    const int special = strip_number_tag(s, "special:");
+    if (special != TAG_UNFOUND)
+        result.item_special = special;
+
+    // When placing corpses, use place:Elf:7 to choose monsters
+    // appropriate for that level, as an example.
+    const std::string place = strip_tag_prefix(s, "place:");
+    if (!place.empty())
+    {
+        try
+        {
+            result.place = level_id::parse_level_id(place);
+        }
+        catch (const std::string &err)
+        {
+            error = err;
+            return (result);
+        }
+    }
 
     const std::string acquirement_source = strip_tag_prefix(s, "acquire:");
     if (!acquirement_source.empty() || strip_tag(s, "acquire"))
@@ -4365,6 +4483,13 @@ item_spec item_list::parse_single_spec(std::string s)
 
     error.clear();
 
+    // Look for corpses, chunks, skeletons:
+    if (ends_with(s, "corpse") || ends_with(s, "chunk")
+        || ends_with(s, "skeleton"))
+    {
+        return parse_corpse_spec(result, s);
+    }
+
     // Check for "any objclass"
     if (s.find("any ") == 0)
         parse_random_by_class(s.substr(4), result);
@@ -4425,11 +4550,11 @@ item_spec item_list::parse_single_spec(std::string s)
         // it will be assigned among appropriate ones later
     }
     else if (result.base_type == OBJ_WEAPONS
-                && !is_weapon_brand_ok(result.sub_type, ego)
+                && !is_weapon_brand_ok(result.sub_type, ego, false)
              || result.base_type == OBJ_ARMOUR
-                && !is_armour_brand_ok(result.sub_type, ego)
+                && !is_armour_brand_ok(result.sub_type, ego, false)
              || result.base_type == OBJ_MISSILES
-                && !is_missile_brand_ok(result.sub_type, ego))
+                && !is_missile_brand_ok(result.sub_type, ego, false))
     {
         error = make_stringf("Ego '%s' is incompatible with item '%s'.",
                              ego_str.c_str(), s.c_str());
