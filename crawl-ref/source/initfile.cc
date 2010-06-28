@@ -1001,6 +1001,7 @@ void game_options::reset_options()
     menu_colour_mappings.clear();
     menu_colour_prefix_class = true;
     menu_colour_shops = true;
+    menu_cursor = false;
     message_colour_mappings.clear();
     drop_filter.clear();
     map_file_name.clear();
@@ -2993,6 +2994,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION_NAMED("menu_color_prefix_class", menu_colour_prefix_class);
     else BOOL_OPTION(menu_colour_shops);
     else BOOL_OPTION_NAMED("menu_color_shops", menu_colour_shops);
+    else BOOL_OPTION(menu_cursor);
     else if (key == "message_colour" || key == "message_color")
     {
         add_message_colour_mappings(field);
