@@ -296,7 +296,7 @@ static fire_type _str_to_fire_types( const std::string &str )
     return (FIRE_NONE);
 }
 
-static std::string _gametype_to_str(game_type type)
+std::string gametype_to_str(game_type type)
 {
     switch (type)
     {
@@ -319,7 +319,7 @@ static game_type _str_to_gametype(const std::string& s)
     for (int i = 0; i < NUM_GAME_TYPE; ++i)
     {
         game_type t = static_cast<game_type>(i);
-        if (s == _gametype_to_str(t))
+        if (s == gametype_to_str(t))
             return (t);
     }
     return (NUM_GAME_TYPE);
@@ -1353,7 +1353,7 @@ newgame_def read_startup_prefs()
 static void write_newgame_options(const newgame_def& prefs, FILE *f)
 {
     if (prefs.type != NUM_GAME_TYPE)
-        fprintf(f, "type = %s\n", _gametype_to_str(prefs.type).c_str());
+        fprintf(f, "type = %s\n", gametype_to_str(prefs.type).c_str());
     if (!prefs.map.empty())
         fprintf(f, "map = %s\n", prefs.map.c_str());
     if (!prefs.arena_teams.empty())

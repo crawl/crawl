@@ -4,8 +4,7 @@ Balancing 0.6 features:
 * Make heavy armour guaranteed damage reduction percentage independent of
   armour skill.
 * Heavy armour doesn't affect weapon speed anymore.
-* Shields, however, do; one-handed weapons work a lot worse than before,
-  while 1.5-handed ones work slightly worse.
+* Shields reduce attack speed.
 * Nagas and worshippers of Cheibriados don't suffer from as much hunger.
 
 Unsorted:

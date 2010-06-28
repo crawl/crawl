@@ -431,6 +431,7 @@ bool choose_game(newgame_def* ng, newgame_def* choice,
 
     ng->name = choice->name;
     ng->type = choice->type;
+    ng->map  = choice->map;
 
     if (ng->type == GAME_TYPE_SPRINT)
         _choose_sprint_map(ng, choice, defaults);
@@ -440,6 +441,8 @@ bool choose_game(newgame_def* ng, newgame_def* choice,
     // Set these again, since _mark_fully_random may reset *ng.
     ng->name = choice->name;
     ng->type = choice->type;
+    if (!choice->map.empty())
+        ng->map  = choice->map;
 
 #ifndef DGAMELAUNCH
     // New: pick name _after_ character choices.
