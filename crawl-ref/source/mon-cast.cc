@@ -2288,9 +2288,9 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
         {
             create_monster(
                 mgen_data(static_cast<monster_type>(random_choose_weighted(
-                            40, MONS_CHERUB,    20, MONS_SILVER_STAR,
-                            20, MONS_SPIRIT,    10, MONS_OPHAN,
-                            8,  MONS_SHEDU,     4,  MONS_PALADIN,
+                            90, MONS_CHERUB,    5, MONS_SILVER_STAR,
+                            20, MONS_SPIRIT,    5, MONS_OPHAN,
+                            8,  MONS_SHEDU,     20,  MONS_PALADIN,
                             2,  MONS_PHOENIX,   1,  MONS_APIS,
                             // No holy dragons
                           0)), SAME_ATTITUDE(monster),
