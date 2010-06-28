@@ -240,6 +240,7 @@ void Menu::clear()
     for (int i = 0, count = items.size(); i < count; ++i)
         delete items[i];
     items.clear();
+    last_selected = -1;
 }
 
 void Menu::set_maxpagesize(int max)
