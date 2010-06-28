@@ -35,6 +35,7 @@
 
 #include "branch.h"
 #include "files.h"
+#include "dungeon.h"
 #include "hiscores.h"
 #include "initfile.h"
 #include "itemname.h"
@@ -512,6 +513,8 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     absdepth          = se.absdepth;
     level_type        = se.level_type;
     branch            = se.branch;
+    map               = se.map;
+    mapdesc           = se.mapdesc;
     final_hp          = se.final_hp;
     final_max_hp      = se.final_max_hp;
     final_max_max_hp  = se.final_max_max_hp;
@@ -678,6 +681,9 @@ void scorefile_entry::init_with_fields()
     absdepth   = fields->int_field("absdepth");
     level_type = str_to_level_area_type(fields->str_field("ltyp"));
 
+    map        = fields->str_field("map");
+    mapdesc    = fields->str_field("mapdesc");
+
     final_hp         = fields->int_field("hp");
     final_max_hp     = fields->int_field("mhp");
     final_max_max_hp = fields->int_field("mmhp");
@@ -808,6 +814,13 @@ void scorefile_entry::set_score_fields() const
         fields->add_field("pen", "%d", penance);
 
     fields->add_field("end", "%s", make_date_string(death_time).c_str());
+
+    if (!map.empty())
+    {
+        fields->add_field("map", "%s", map.c_str());
+        if (!mapdesc.empty())
+            fields->add_field("mapdesc", "%s", mapdesc.c_str());
+    }
 
 #ifdef DGL_EXTENDED_LOGFILES
     const std::string short_msg = short_kill_message();
@@ -1023,6 +1036,8 @@ void scorefile_entry::reset()
     absdepth             = 1;
     level_type           = LEVEL_DUNGEON;
     branch               = BRANCH_MAIN_DUNGEON;
+    map.clear();
+    mapdesc.clear();
     final_hp             = -1;
     final_max_hp         = -1;
     final_max_max_hp     = -1;
@@ -1229,6 +1244,12 @@ void scorefile_entry::init()
     level_type = you.level_type;     // pandemonium, labyrinth, dungeon..
 
     absdepth   = you.absdepth0 + 1;  // 1-based absolute depth.
+
+    if (const vault_placement *vp = dgn_vault_at(you.pos()))
+    {
+        map     = vp->map.name;
+        mapdesc = vp->map.description;
+    }
 
     birth_time = you.birth_time;     // start time of game
     death_time = time( NULL );       // end time of game
@@ -1534,10 +1555,9 @@ std::string scorefile_entry::death_place(death_desc_verbosity verbosity) const
 
     if (verbosity == DDV_ONELINE || verbosity == DDV_TERSE)
     {
-        return (make_stringf(" (%s)",
-                             place_name(
-                                 get_packed_place(branch, dlvl, level_type),
-                             false, true).c_str()));
+        const std::string pname =
+            place_name(get_packed_place(branch, dlvl, level_type), false, true);
+        return make_stringf(" (%s)", pname.c_str());
     }
 
     if (verbose && death_type != KILLED_BY_QUITTING)
@@ -1554,6 +1574,9 @@ std::string scorefile_entry::death_place(death_desc_verbosity verbosity) const
         place += " in ";
 
     place += placename;
+
+    if (!mapdesc.empty())
+        place += make_stringf(" (%s)", mapdesc.c_str());
 
     if (verbose && death_time
         && !_hiscore_same_day( birth_time, death_time ))

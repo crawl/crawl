@@ -55,7 +55,7 @@ level_range set_range(const char *s, int start, int end)
 %token <i>      NAME DEPTH ORIENT PLACE CHANCE WEIGHT MONS ITEM MARKER COLOUR
 %token <i>      PRELUDE MAIN VALIDATE VETO EPILOGUE NSUBST WELCOME LFLAGS BFLAGS
 %token <i>      LFLOORCOL LROCKCOL LFLOORTILE LROCKTILE FTILE RTILE TILE
-%token <i>      SUBVAULT FHEIGHT
+%token <i>      SUBVAULT FHEIGHT DESC
 
 %token <i>      COMMA COLON PERC INTEGER CHARACTER
 
@@ -148,6 +148,7 @@ name            : NAME STRING
                 ;
 
 metaline        : place
+                | desc
                 | depth
                 | chance
                 | weight
@@ -566,6 +567,15 @@ place           : PLACE STRING
                     lc_map.main.add(
                         yylineno,
                         make_stringf("place(\"%s\")",
+                            quote_lua_string($2).c_str()));
+                }
+                ;
+
+desc            : DESC STRING
+                {
+                    lc_map.main.add(
+                        yylineno,
+                        make_stringf("desc(\"%s\")",
                             quote_lua_string($2).c_str()));
                 }
                 ;
