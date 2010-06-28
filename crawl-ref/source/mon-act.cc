@@ -2030,7 +2030,13 @@ void handle_monster_move(monsters *monster)
                 && targ && targ->type == MONS_KRAKEN_CONNECTOR
                 && env.grid(targ->pos()) == DNGN_DEEP_WATER)
             {
-                // Just purge the connector. -cao
+                bool basis = targ->props.exists("outwards");
+                int out_idx = basis ? targ->props["outwards"].get_int() : -1;
+                if (out_idx != -1)
+                {
+                    menv[out_idx].props["inwards"].get_int() = monster->mindex();
+                }
+
                 monster_die(targ,
                             KILL_MISC, NON_MONSTER, true);
                 targ = NULL;

@@ -44,10 +44,21 @@
 
 #include <algorithm>
 #include <queue>
+#include <map>
 #include <set>
+
 
 struct position_node
 {
+    position_node(const position_node & existing)
+    {
+        pos = existing.pos;
+        last = existing.last;
+        estimate = existing.estimate;
+        path_distance = existing.path_distance;
+        connect_level = existing.connect_level;
+    }
+
     position_node()
     {
         pos.x=0;
@@ -55,6 +66,7 @@ struct position_node
         last = NULL;
         estimate = 0;
         path_distance = 0;
+        connect_level = 0;
     }
 
     coord_def pos;
@@ -62,12 +74,14 @@ struct position_node
 
     int estimate;
     int path_distance;
+    int connect_level;
 
     bool operator < (const position_node & right) const
     {
-        unsigned idx = pos.x + pos.y * X_WIDTH;
-        unsigned other_idx = right.pos.x + right.pos.y * X_WIDTH;
-        return  idx < other_idx;
+        if (pos.x == right.pos.x)
+            return pos.y < right.pos.y;
+
+        return pos.x < right.pos.x;
     }
 
     int total_dist() const
@@ -92,6 +106,125 @@ static int _dummy_estimate(const coord_def & pos)
 }
 #define DISCONNECT_DIST (INT_MAX - 1000)
 
+template<typename cost_T, typename est_T>
+struct simple_connect
+{
+    cost_T cost_function;
+    est_T estimate_function;
+
+    int connect;
+    int compass_idx[8];
+
+    simple_connect()
+    {
+        for (unsigned i=0; i<8; i++)
+        {
+            compass_idx[i] = i;
+        }
+    }
+
+    void operator()(const position_node & node,
+                    std::vector<position_node> & expansion)
+    {
+        std::random_shuffle(compass_idx, compass_idx + connect);
+
+        for (int i=0; i < connect; i++)
+        {
+            position_node temp;
+            temp.pos = node.pos + Compass[compass_idx[i]];
+            if (!in_bounds(temp.pos))
+                continue;
+
+            int cost = cost_function(temp.pos);
+//            if (cost == DISCONNECT_DIST)
+  //              continue;
+            temp.path_distance = node.path_distance + cost;
+
+            temp.estimate = estimate_function(temp.pos);
+            expansion.push_back(temp);
+            // leaving last undone for now, don't want to screw the pointer up.
+        }
+    }
+};
+
+struct coord_wrapper
+{
+    coord_wrapper( int (*input) (const coord_def & pos))
+    {
+        test = input;
+    }
+    int (*test) (const coord_def & pos);
+    int  operator()(const coord_def & pos)
+    {
+        return (test(pos));
+    }
+
+    coord_wrapper()
+    {
+
+    }
+};
+
+template<typename valid_T, typename expand_T>
+void search_astar(const coord_def & start,
+                  valid_T & valid_target,
+                  expand_T & expand_node,
+                  std::set<position_node> & visited,
+                  std::vector<std::set<position_node>::iterator > & candidates)
+{
+    position_node temp_node;
+    temp_node.pos = start;
+    temp_node.last = NULL;
+    temp_node.path_distance = 0;
+
+    std::priority_queue<std::set<position_node>::iterator,
+                        std::vector<std::set<position_node>::iterator>,
+                        path_less  > fringe;
+
+    std::set<position_node>::iterator current = visited.insert(temp_node).first;
+    fringe.push(current);
+
+
+    bool done = false;
+    while (!fringe.empty())
+    {
+        current = fringe.top();
+        fringe.pop();
+
+        std::vector<position_node> expansion;
+        expand_node(*current, expansion);
+
+        for (unsigned i=0;i < expansion.size(); ++i)
+        {
+            expansion[i].last = &(*current);
+
+            std::pair<std::set<position_node>::iterator, bool > res;
+            res = visited.insert(expansion[i]);
+
+            if (!res.second)
+            {
+                continue;
+            }
+
+            if (valid_target(res.first->pos))
+            {
+                candidates.push_back(res.first);
+                done = true;
+                break;
+            }
+
+            if (res.first->path_distance < DISCONNECT_DIST)
+            {
+                fringe.push(res.first);
+            }
+        }
+        if (done)
+            break;
+    }
+
+
+}
+
 template<typename valid_T, typename cost_T, typename est_T>
 void search_astar(const coord_def & start,
                   valid_T & valid_target,
@@ -104,66 +237,12 @@ void search_astar(const coord_def & start,
     if (connect_mode < 1 || connect_mode > 8)
         connect_mode = 8;
 
-    // Ordering the default compass index this way gives us the non
-    // diagonal directions as the first four elements - so by just
-    // using the first 4 elements instead of the whole array we
-    // can have 4-connectivity.
-    int compass_idx[] = {0, 2, 4, 6, 1, 3, 5, 7};
+    simple_connect<cost_T, est_T> connect;
+    connect.connect = connect_mode;
+    connect.cost_function = connection_cost;
+    connect.estimate_function = cost_estimate;
 
-
-    position_node temp_node;
-    temp_node.pos = start;
-    temp_node.last = NULL;
-
-    std::priority_queue<std::set<position_node>::iterator,
-                        std::vector<std::set<position_node>::iterator>,
-                        path_less  > fringe;
-
-    std::set<position_node>::iterator current = visited.insert(temp_node).first;
-    fringe.push(current);
-
-    bool done = false;
-    while (!fringe.empty())
-    {
-        current = fringe.top();
-        fringe.pop();
-
-        std::random_shuffle(compass_idx, compass_idx + connect_mode);
-
-        for (int i=0; i < connect_mode; ++i)
-        {
-            coord_def adjacent = current->pos + Compass[compass_idx[i]];
-
-            if (!in_bounds(adjacent))
-                continue;
-
-            temp_node.pos  = adjacent;
-            temp_node.last = &(*current);
-
-            int node_cost = connection_cost(adjacent);
-
-            temp_node.path_distance = current->path_distance + node_cost;
-            temp_node.estimate = cost_estimate(adjacent);
-
-            std::pair<std::set<position_node>::iterator, bool > res;
-            res = visited.insert(temp_node);
-
-            if (!res.second)
-                continue;
-
-            if (valid_target(adjacent))
-            {
-                candidates.push_back(res.first);
-                done = true;
-                break;
-            }
-            if (node_cost != DISCONNECT_DIST)
-                fringe.push(res.first);
-        }
-        if (done)
-            break;
-    }
-
+    search_astar(start, valid_target, connect, visited, candidates);
 }
 
 template<typename valid_T, typename connect_T>
@@ -1105,6 +1184,90 @@ struct tentacle_connect_costs
     }
 };
 
+
+struct tentacle_connect_constraints
+{
+    monsters * kraken;
+    std::map<coord_def, std::set<int> > connection_constraints;
+
+
+    tentacle_connect_constraints()
+    {
+        for (int i=0; i<8; i++)
+        {
+            connect_idx[i] = i;
+        }
+    }
+
+    int connect_idx[8];
+    void operator()(const position_node & node,
+                    std::vector<position_node> & expansion)
+    {
+        std::random_shuffle(connect_idx, connect_idx + 8);
+
+        for (unsigned i=0; i < 8; i++)
+        {
+            position_node temp;
+
+            temp.pos = node.pos + Compass[connect_idx[i]];
+
+            if (!in_bounds(temp.pos))
+                continue;
+
+            std::map<coord_def, std::set<int> >::iterator probe
+                        = connection_constraints.find(temp.pos);
+
+            if (feat_is_solid(env.grid(temp.pos))
+                || env.grid(temp.pos) == DNGN_LAVA
+                || actor_at(temp.pos)
+                || !kraken->see_cell_no_trans(temp.pos))
+            {
+                temp.path_distance = DISCONNECT_DIST;
+            }
+            else
+                temp.path_distance = 1 + node.path_distance;
+
+            if (probe == connection_constraints.end()
+                || probe->second.find(node.connect_level) == probe->second.end())
+            {
+                continue;
+            }
+
+
+            temp.estimate = grid_distance(temp.pos, kraken->pos());
+            int test_level = node.connect_level;
+
+            for (std::set<int>::iterator j = probe->second.begin();
+                 j!= probe->second.end();
+                 j++)
+            {
+                if (*j == (test_level + 1))
+                    test_level++;
+            }
+            temp.connect_level = test_level;
+
+            expansion.push_back(temp);
+            /*
+            for (std::set<int>::iterator j = probe->second.begin();
+                 j!=probe->second.end();
+                 j++)
+            {
+                int dist = *j - test_level;
+                if (dist <=1 && dist >= 0)
+                {
+                    position_node clone(temp);
+                    clone.connect_level = *j;
+                    expansion.push_back(clone);
+                    test_level = *j;
+
+                }
+            }
+            */
+        }
+    }
+
+};
+
 struct grid_distance_to_target
 {
     coord_def target;
@@ -1210,6 +1373,36 @@ void move_kraken_tentacles(monsters * kraken)
             continue;
         }
 
+        tentacle_connect_constraints connect_costs;
+        connect_costs.kraken = kraken;
+
+        monsters * current_mon =tentacle;
+        int current_count = 0;
+        while (current_mon)
+        {
+            for (adjacent_iterator adj_it(current_mon->pos(), false);
+                 adj_it; ++adj_it)
+            {
+                connect_costs.connection_constraints[*adj_it].insert(current_count);
+            }
+
+
+            //current_mon->props.
+            bool basis = current_mon->props.exists("inwards");
+            int next_idx = basis ? current_mon->props["inwards"].get_int() : -1;
+
+            if (next_idx != -1 && menv[next_idx].alive()
+                && (menv[next_idx].type == MONS_KRAKEN_CONNECTOR
+                    || menv[next_idx].type == MONS_KRAKEN))
+            {
+                current_mon = &menv[next_idx];
+            }
+            else
+            {
+                current_mon = NULL;
+            }
+            current_count++;
+        }
 
         int tentacle_idx = tentacle->mindex();
 
@@ -1251,7 +1444,8 @@ void move_kraken_tentacles(monsters * kraken)
         tentacle_attack_costs attack_costs;
         attack_costs.kraken = kraken;
 
-        search_astar(tentacle->pos(), foe_check, attack_costs, _dummy_estimate,
+        coord_wrapper wrapper_temp(_dummy_estimate);
+        search_astar(tentacle->pos(), foe_check, attack_costs, wrapper_temp,
                     visited,
                     tentacle_path,
                     tentacle_connectivity);
@@ -1285,6 +1479,8 @@ void move_kraken_tentacles(monsters * kraken)
             mprf("path finding failed?");
         }
 
+        bool pos_shift = old_pos != new_pos;
+
         actor * blocking_actor = actor_at(new_pos);
         if (blocking_actor)
         {
@@ -1303,19 +1499,22 @@ void move_kraken_tentacles(monsters * kraken)
 
         visited.clear();
         candidates.clear();
+        if (pos_shift)
+        {
+            for (adjacent_iterator adj_it(new_pos); adj_it; ++adj_it)
+            {
+                //connect_costs.connection_constraints(*adj_it).insert(0);
+                connect_costs.connection_constraints[*adj_it].insert(0);
+            }
+        }
 
         // Find the tentacle -> head path
         target_monster current_target;
         current_target.target_mindex = headnum;
 
-        tentacle_connect_costs connect_cost;
-        connect_cost.kraken = kraken;
-        grid_distance_to_target head_estimate;
-        head_estimate.target =  kraken->pos();
-
         search_astar(tentacle->pos(),
-                     current_target, connect_cost, head_estimate,
-                     visited, candidates, tentacle_connectivity);
+                     current_target, connect_costs,
+                     visited, candidates);
 
         if (candidates.size() != 1)
         {
