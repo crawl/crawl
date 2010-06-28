@@ -807,7 +807,9 @@ public:
 };
 
 class map_def;
-dungeon_feature_type map_feature_at(map_def *map, const coord_def &c, int rawfeat);
+dungeon_feature_type map_feature_at(map_def *map,
+                                    const coord_def &c,
+                                    int rawfeat);
 
 struct map_file_place
 {
@@ -855,6 +857,8 @@ class map_def
 {
 public:
     std::string     name;
+    // Description for the map that can be shown to players.
+    std::string     description;
     std::string     tags;
     level_id        place;
 

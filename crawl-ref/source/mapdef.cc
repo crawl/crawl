@@ -1984,6 +1984,7 @@ void map_def::init()
 {
     orient = MAP_NONE;
     name.clear();
+    description.clear();
     tags.clear();
     place.clear();
     depths.clear();
@@ -2003,6 +2004,7 @@ void map_def::init()
 
 void map_def::reinit()
 {
+    description.clear();
     items.clear();
     random_mons.clear();
     level_flags.clear();

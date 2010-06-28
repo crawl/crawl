@@ -123,6 +123,20 @@ a comma. See the end of this section for examples.
 NAME:     a_string
           Each map must have a unique name. Underscores and digits are ok.
 
+DESC:     readable name
+          A map may optionally have a description. If provided, and if
+          the character dies in the vault, the map description will be
+          shown along with the place at end of game. For instance,
+          Cerebov's castle has DESC: Cerebov's castle, resulting
+          in deaths being described as:
+
+             Killed from afar by a Balrug (32 damage)
+             ... with a bolt of fire
+             ... in Pandemonium (Cerebov's castle).
+
+          Map descriptions are also written to scores and logfile
+          entries.
+
 ORIENT:   (float |encompass | north | northwest | ... | southeast)
 
           Some kind of ORIENT: line is mandatory for vaults; skipping
@@ -532,7 +546,7 @@ ITEM:     (list of items, separated by comma)
           player enters LOS of the square in question. When triggered,
           it clears the "never_decay" property, allowing the item to
           start decaying normally.
-          
+
 
           Randart spell books
           -------------------
