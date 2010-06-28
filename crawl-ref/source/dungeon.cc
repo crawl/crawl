@@ -3863,8 +3863,15 @@ static void _place_aquatic_monsters(int level_number, char level_type)
     // [ds] Shoals relies on normal monster generation to place its monsters.
     // Given the amount of water area in the Shoals, placing water creatures
     // explicitly explodes the Shoals' xp budget.
-    if (player_in_branch(BRANCH_SHOALS))
+    //
+    // Also disallow water creatures below D:6.
+    //
+    if (player_in_branch(BRANCH_SHOALS)
+        || (player_in_branch(BRANCH_MAIN_DUNGEON)
+            && you.absdepth0 < 5))
+    {
         return;
+    }
 
     // Count the number of lava and water tiles {dlb}:
     for (int x = 0; x < GXM; x++)
