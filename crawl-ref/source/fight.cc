@@ -5337,7 +5337,8 @@ void melee_attack::mons_perform_attack_rounds()
             bool end = true;
             for (adjacent_iterator i(attacker->pos()); i; ++i)
             {
-                if (*i == you.pos() && !attacker->as_monster()->friendly())
+                if (*i == you.pos()
+                    && !mons_aligned(attacker, &you))
                 {
                     attacker->as_monster()->foe = MHITYOU;
                     attacker->as_monster()->target = you.pos();
@@ -5896,7 +5897,7 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
     // Check if the player is fighting with something unsuitable,
     // or someone unsuitable.
     if (you.can_see(defender)
-        && mons_is_known_mimic(defender)
+        && (!mons_is_mimic(defender->type) || mons_is_known_mimic(defender))
         && !wielded_weapon_check(attk.weapon))
     {
         you.turn_is_over = false;
