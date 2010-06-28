@@ -3087,6 +3087,7 @@ static bool _do_move_monster(monsters *monster, const coord_def& delta)
     else if (mons_can_eat_door(monster, f))
     {
         grd(f) = DNGN_FLOOR;
+        set_terrain_changed(f);
 
         _jelly_grows(monster);
 

@@ -76,16 +76,17 @@
      TILE = 292,
      SUBVAULT = 293,
      FHEIGHT = 294,
-     COMMA = 295,
-     COLON = 296,
-     PERC = 297,
-     INTEGER = 298,
-     CHARACTER = 299,
-     STRING = 300,
-     MAP_LINE = 301,
-     MONSTER_NAME = 302,
-     ITEM_INFO = 303,
-     LUA_LINE = 304
+     DESC = 295,
+     COMMA = 296,
+     COLON = 297,
+     PERC = 298,
+     INTEGER = 299,
+     CHARACTER = 300,
+     STRING = 301,
+     MAP_LINE = 302,
+     MONSTER_NAME = 303,
+     ITEM_INFO = 304,
+     LUA_LINE = 305
    };
 #endif
 /* Tokens.  */
@@ -126,16 +127,17 @@
 #define TILE 292
 #define SUBVAULT 293
 #define FHEIGHT 294
-#define COMMA 295
-#define COLON 296
-#define PERC 297
-#define INTEGER 298
-#define CHARACTER 299
-#define STRING 300
-#define MAP_LINE 301
-#define MONSTER_NAME 302
-#define ITEM_INFO 303
-#define LUA_LINE 304
+#define DESC 295
+#define COMMA 296
+#define COLON 297
+#define PERC 298
+#define INTEGER 299
+#define CHARACTER 300
+#define STRING 301
+#define MAP_LINE 302
+#define MONSTER_NAME 303
+#define ITEM_INFO 304
+#define LUA_LINE 305
 
 
 
@@ -154,7 +156,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 158 "levcomp.tab.h"
+#line 160 "levcomp.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
