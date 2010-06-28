@@ -343,6 +343,24 @@ void Menu::do_menu()
     }
 }
 
+int Menu::get_cursor() const
+{
+    if (last_selected == -1)
+        return (-1);
+
+    unsigned int next = last_selected + 1;
+    if (next == item_count())
+        next = 0;
+
+    if (items[next]->level != MEL_ITEM)
+        next++;
+
+    if (next >= item_count())
+        return (-1);
+
+    return (next);
+}
+
 bool Menu::is_set(int flag) const
 {
     return (flags & flag) == flag;
