@@ -136,6 +136,19 @@ static int dgn_place(lua_State *ls)
     PLUARET(string, map->place.describe().c_str());
 }
 
+static int dgn_desc(lua_State *ls)
+{
+    MAP(ls, 1, map);
+    if (lua_gettop(ls) > 1)
+    {
+        if (lua_isnil(ls, 2))
+            map->description.clear();
+        else
+            map->description = trimmed_string(luaL_checkstring(ls, 2));
+    }
+    PLUARET(string, map->description.c_str());
+}
+
 static int dgn_tags(lua_State *ls)
 {
     MAP(ls, 1, map);
@@ -1850,6 +1863,7 @@ const struct luaL_reg dgn_dlib[] =
 { "name", dgn_name },
 { "depth", dgn_depth },
 { "place", dgn_place },
+{ "desc", dgn_desc },
 { "tags",  dgn_tags },
 { "tags_remove", dgn_tags_remove },
 { "lflags", dgn_lflags },
