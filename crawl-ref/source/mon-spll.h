@@ -1451,6 +1451,17 @@
       }
     },
 
+    {  MST_BLESSED_TOE,
+      {
+       SPELL_SUMMON_HOLIES,
+       SPELL_SUMMON_HOLIES,
+       SPELL_NO_SPELL,
+       SPELL_HOLY_WORD,
+       SPELL_SUMMON_HOLIES,
+       SPELL_NO_SPELL
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,
