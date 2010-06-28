@@ -201,8 +201,6 @@ void stop_delay( bool stop_stair_travel )
 
     delay_queue_item delay = you.delay_queue.front();
 
-    ASSERT(!crawl_state.is_repeating_cmd() || delay.type == DELAY_MACRO);
-
     // At the very least we can remove any queued delays, right
     // now there is no problem with doing this... note that
     // any queuing here can only happen from a single command,
