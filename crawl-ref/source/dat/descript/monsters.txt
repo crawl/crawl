@@ -424,6 +424,10 @@ black mamba
 
 A large tropical snake with the deadliest of all venoms.
 %%%%
+blessed toe
+
+All that remains of a pious Saint. It shines with a divine light.
+%%%%
 blink frog
 
 A weird-looking frog, constantly blinking in and out of reality.
@@ -487,6 +491,10 @@ A hybrid with the torso of a human atop the body of a large horse. It looks stro
 Chaos spawn
 
 A being of pure chaos, its form is constantly shifting, growing and then losing eyes, mouths, claws and tentacles.
+%%%%
+cherub
+
+A lower class of angel, but still a formidable foe; a follower of the Good Gods.
 %%%%
 clay golem
 
@@ -945,6 +953,10 @@ hog
 
 A large, fat and very ugly pig.
 %%%%
+holy dragon
+
+A dragon imbued with the power of the Gods, it breathes blessed fire and claws with the sear of holy wrath.
+%%%%
 hound
 
 A fearsome hunting dog, lithe and alert. Its master must be long gone, for it looks dishevelled, and has a lean and hungry look.
@@ -1209,6 +1221,10 @@ ooze
 
 A disgusting glob of grey sludge.
 %%%%
+ophan
+
+This strange creature consits of a wheel nested inside another, both of these covered in eyes, and a strange flame flickering across its surface.
+%%%%
 orange crystal statue
 
 An intricately carved statue of glittering orange crystal. Its eyes fix on yours with a piercing gaze.
@@ -1274,6 +1290,10 @@ Powerful demons inhabiting the endless halls of Pandemonium, each is different, 
 phantom
 
 A transparent man-like undead spirit.
+%%%%
+phoenix
+
+A bird of myth and legend, said to die in flames and be reborn from the ashes.
 %%%%
 pile of gold coins
 
@@ -1426,6 +1446,10 @@ shapeshifter
 
 A disturbing creature with the power to change its form. It is very rarely observed alive in its natural state.
 %%%%
+shedu
+
+A divine guardians that travels always as a pair, it has the ability to resurrect its mate from death.
+%%%%
 sheep
 
 A stupid woolly animal, with murder in its eyes. It looks surprised.
@@ -1433,6 +1457,10 @@ A stupid woolly animal, with murder in its eyes. It looks surprised.
 shining eye
 
 A huge and strangely deformed eyeball, pulsating with energy. Beauty is certainly nowhere to be found in this beholder.
+%%%%
+silver star
+
+An orb of divine energy pulsating with blinding light.
 %%%%
 silver statue
 
@@ -1523,6 +1551,10 @@ Although slightly smaller than the giant toad, the spiny frog makes up for lack 
 spiny worm
 
 A great black worm, its many-segmented body covered in spiky plates of chitinous armour. Acidic venom drips from its toothy maw.
+%%%%
+spirit
+
+The soul of a holy creature, reft from its body. It is a timid creature, but as something divine, is sure to be protected.
 %%%%
 spriggan
 
