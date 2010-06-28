@@ -7,6 +7,7 @@
 
 #include "spl-summoning.h"
 
+#include "areas.h"
 #include "artefact.h"
 #include "cloud.h"
 #include "coord.h"
@@ -31,6 +32,7 @@
 #include "mon-behv.h"
 #include "mon-iter.h"
 #include "mon-place.h"
+#include "mon-speak.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "player-equip.h"
@@ -1174,6 +1176,14 @@ static bool _summon_demon_wrapper(int pow, god_type god, int spell,
         {
             mpr(charmed ? "You don't feel so good about this..."
                         : "It doesn't look very happy.");
+        }
+        else if (friendly && mons_genus(mon) == MONS_IMP)
+        {
+            std::string msg = getSpeakString("_friendly_imp_greeting");
+            if (msg == "__NONE")
+                msg.clear();
+            mons_speaks_msg(&menv[mons], msg, MSGCH_TALK,
+                            silenced(menv[mons].pos()));
         }
     }
 
