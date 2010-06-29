@@ -240,6 +240,7 @@ void Menu::clear()
     for (int i = 0, count = items.size(); i < count; ++i)
         delete items[i];
     items.clear();
+    last_selected = -1;
 }
 
 void Menu::set_maxpagesize(int max)
@@ -340,6 +341,22 @@ void Menu::do_menu()
         if (!process_key( keyin ))
             return;
     }
+}
+
+int Menu::get_cursor() const
+{
+    if (last_selected == -1)
+        return (-1);
+
+    if (!Options.menu_cursor)
+        return (-1);
+
+    unsigned int next = (last_selected + 1) % item_count();
+
+    if (items[next]->level != MEL_ITEM)
+        next = (next + 1) % item_count();
+
+    return (next);
 }
 
 bool Menu::is_set(int flag) const
@@ -1079,7 +1096,9 @@ void Menu::select_item_index(int idx, int qty, bool draw_cursor)
 {
     const int old_cursor = get_cursor();
 
-    last_selected = idx;
+    if (Options.menu_cursor)
+        last_selected = idx;
+
     items[idx]->select( qty );
     draw_item( idx );
 

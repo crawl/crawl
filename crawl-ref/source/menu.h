@@ -323,6 +323,7 @@ public:
     void set_title( MenuEntry *e, bool first = true );
     void add_entry( MenuEntry *entry );
     void get_selected( std::vector<MenuEntry*> *sel ) const;
+    virtual int get_cursor() const;
 
     void set_maxpagesize(int max);
     int maxpagesize() const { return max_pagesize; }
@@ -386,25 +387,6 @@ protected:
     int last_selected;
 
     MenuDisplay *mdisplay;
-
-public:
-    virtual int get_cursor()
-    {
-        if (last_selected == -1)
-            return (-1);
-
-        unsigned int next = last_selected + 1;
-        if (next == item_count())
-            next = 0;
-
-        if (items[next]->level != MEL_ITEM)
-            next++;
-
-        if (next >= item_count())
-            return (-1);
-
-        return (next);
-    }
 
 protected:
     void check_add_formatted_line(int firstcol, int nextcol,
