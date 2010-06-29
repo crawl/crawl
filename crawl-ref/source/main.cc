@@ -292,8 +292,11 @@ int main(int argc, char *argv[])
     if (game_start && you.char_class == JOB_WANDERER)
         _wanderer_startup_message();
 
-    if (!crawl_state.game_is_tutorial() && !crawl_state.game_is_sprint() && game_start)
+    if (!crawl_state.game_is_tutorial()
+        && !crawl_state.game_is_sprint() && game_start)
+    {
        _announce_goal_message();
+    }
 
     _god_greeting_message(game_start);
 
@@ -345,11 +348,13 @@ static void _show_commandline_options_help()
     puts("  -macro <dir>          directory to save/find macro.txt");
     puts("  -version              Crawl version (and compilation info)");
     puts("  -save-version <name>  Save file version for the given player");
+    puts("  -sprint               select Sprint");
+    puts("  -sprint-map <name>    preselect a Sprint map");
     puts("");
+
     puts("Command line options override init file options, which override");
     puts("environment options (CRAWL_NAME, CRAWL_DIR, CRAWL_RC).");
     puts("");
-
     puts("  -extra-opt-first optname=optval");
     puts("  -extra-opt-last  optname=optval");
     puts("");
