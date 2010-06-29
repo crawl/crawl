@@ -675,17 +675,18 @@ KITEM:  Q = acquire any
 KFEAT:  o = granite_statue
 {{
 function elephant_statue()
-  return portal_desc {
-            desc="elephant-shaped statue",
-            desc_long=("This worn granite statue depicts" ..
-                       " elephants standing guard."),
-            slaved_to="elephant"
-         }
+  return 
 end
 }}
-MARKER: o = lua:elephant_statue()
-MARKER: G = lua:elephant_statue()
+MARKER: o = lua:portal_desc { desc="elephant-shaped statue", \
+            desc_long=("This worn granite statue depicts" .. \
+                       " elephants standing guard."), \
+            slaved_to="elephant" }
+MARKER: G = lua:portal_desc { desc="elephant-shaped statue", \
+            desc_long=("This worn granite statue depicts" .. \
+                       " elephants standing guard.") }
 COLOUR: oG = green
+TILE:   oG = dngn_elephant_statue
 MARKER: o = lua:monster_on_death { \
             target="anaconda_guard", new_monster="generate_awake dire elephant", \
             message_seen="The elephant guardians awaken!", \

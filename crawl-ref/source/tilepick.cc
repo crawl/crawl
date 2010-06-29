@@ -1552,9 +1552,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_SNORG;
 
     // elephants etc
-    // TODO
     case MONS_NELLIE:
-        return TILEP_MONS_HELLEPHANT;
+        return TILEP_MONS_NELLIE;
 
     // imps ('5')
     //TODO
