@@ -376,6 +376,10 @@ ant larva
 
 A baby ant. Isn't it cute?
 %%%%
+apis
+
+A placid, sacred bull of Elyvilon. Beware, evildoers, as surely it will turn on you!
+%%%%
 azure jelly
 
 A frosty blob of bright blue cytoplasm.
@@ -1282,6 +1286,10 @@ While orcs are generally quite stupid, occasionally one develops an aptitude for
 pale draconian
 
 Before you stands a draconian.
+%%%%
+paladin
+
+A pious, armoured warrior fighting for the forces of good.
 %%%%
 pandemonium lord
 
