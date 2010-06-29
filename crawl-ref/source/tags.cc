@@ -962,6 +962,7 @@ static void tag_construct_you(writer &th)
     int i, j;
 
     marshallString(th, you.your_name, kNameLen);
+    marshallString(th, Version::Long());
 
     marshallByte(th, you.religion);
     marshallString(th, you.second_god_name);
@@ -1514,6 +1515,11 @@ static void tag_read_you(reader &th, char minorVersion)
     short count_s;
 
     you.your_name         = unmarshallString(th, kNameLen);
+    if (minorVersion >= TAG_MINOR_SAVEVER)
+    {
+        const std::string old_version = unmarshallString(th);
+        dprf("Last save Crawl version: %s", old_version.c_str());
+    }
 
     you.religion          = static_cast<god_type>(unmarshallByte(th));
 
