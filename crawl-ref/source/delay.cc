@@ -64,7 +64,18 @@
 
 extern std::vector<SelItem> items_for_multidrop;
 
-static int  _interrupts_blocked = 0;
+class interrupt_block
+{
+public:
+    interrupt_block() { ++interrupts_blocked; }
+    ~interrupt_block() { --interrupts_blocked; }
+
+    static bool blocked() { return interrupts_blocked > 0; }
+private:
+    static int interrupts_blocked;
+};
+
+int interrupt_block::interrupts_blocked = 0;
 
 static void _xom_check_corpse_waste();
 static void _handle_run_delays(const delay_queue_item &delay);
@@ -160,8 +171,6 @@ void start_delay( delay_type type, int turns, int parm1, int parm2 )
     if (type == DELAY_MEMORISE && already_learning_spell(parm1))
         return;
 
-    _interrupts_blocked = 0; // Just to be safe
-
     delay_queue_item delay;
 
     delay.type     = type;
@@ -190,8 +199,6 @@ static void _maybe_interrupt_swap();
 
 void stop_delay( bool stop_stair_travel )
 {
-    _interrupts_blocked = 0; // Just to be safe
-
     if (you.delay_queue.empty())
         return;
 
@@ -1409,14 +1416,6 @@ static maybe_bool _userdef_interrupt_activity(const delay_queue_item &idelay,
     return (B_MAYBE);
 }
 
-static void _block_interruptions(bool block)
-{
-    if (block)
-        _interrupts_blocked++;
-    else
-        _interrupts_blocked--;
-}
-
 // Returns true if the activity should be interrupted, false otherwise.
 static bool _should_stop_activity(const delay_queue_item &item,
                                   activity_interrupt_type ai,
@@ -1569,13 +1568,14 @@ void autotoggle_autopickup(bool off)
     }
 }
 
-// Returns true if any activity was stopped.
+// Returns true if any activity was stopped. Not reentrant.
 bool interrupt_activity( activity_interrupt_type ai,
                          const activity_interrupt_data &at )
 {
-    if (_interrupts_blocked > 0)
+    if (interrupt_block::blocked())
         return (false);
 
+    const interrupt_block block_recursive_interrupts;
     if (ai == AI_HIT_MONSTER || ai == AI_MONSTER_ATTACKS)
     {
         const monsters* mon = static_cast<const monsters*>(at.data);
@@ -1596,13 +1596,10 @@ bool interrupt_activity( activity_interrupt_type ai,
     // First try to stop the current delay.
     const delay_queue_item &item = you.delay_queue.front();
 
-    // No recursive interruptions from messages (AI_MESSAGE)
-    _block_interruptions(true);
     if (ai == AI_FULL_HP)
         mpr("HP restored.");
     else if (ai == AI_FULL_MP)
         mpr("Magic restored.");
-    _block_interruptions(false);
 
     if (_should_stop_activity(item, ai, at))
     {
