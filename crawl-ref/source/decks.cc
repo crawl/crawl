@@ -1412,6 +1412,12 @@ static void _portal_card(int power, deck_rarity_type rarity)
 
 static void _warp_card(int power, deck_rarity_type rarity)
 {
+    if (item_blocks_teleport(true, true))
+    {
+        canned_msg(MSG_STRANGE_STASIS);
+        return;
+    }
+
     const int control_level = get_power_level(power, rarity);
     if (control_level >= 2)
         blink(1000, false);
