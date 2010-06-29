@@ -156,6 +156,8 @@ death_yak MONS_DEATH_YAK
 elephant MONS_ELEPHANT
 elephant_dire MONS_DIRE_ELEPHANT
 elephant_demonic MONS_HELLEPHANT
+%sdir dc-mon/unique
+nellie MONS_NELLIE
 
 ### Elemental monsters
 %sdir dc-mon/nonliving
