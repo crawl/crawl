@@ -169,7 +169,8 @@ static bool _set_allied_target(monsters * caster, bolt & pbolt)
     for (monster_iterator targ(caster); targ; ++targ)
     {
         if (*targ != caster
-            && mons_genus(targ->type) == caster_genus
+            && (mons_genus(targ->type) == caster_genus
+                || targ->is_holy() && caster->is_holy())
             && mons_aligned(*targ, caster)
             && !targ->has_ench(ENCH_CHARM)
             && _flavour_benefits_monster(pbolt.flavour, **targ))
@@ -459,6 +460,7 @@ bolt mons_spells( monsters *mons, spell_type spell_cast, int power,
                                                    : dice_def(3, 15);
         break;
 
+    case SPELL_HEAL_OTHER:
     case SPELL_MINOR_HEALING:
         beam.flavour  = BEAM_HEALING;
         beam.hit      = 25 + (power / 5);
