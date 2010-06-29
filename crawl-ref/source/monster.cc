@@ -6294,7 +6294,8 @@ static const char *enchant_names[] =
     "sleepy", "held", "battle_frenzy", "temp_pacif", "petrifying",
     "petrified", "lowered_mr", "soul_ripe", "slowly_dying", "eat_items",
     "aquatic_land", "spore_production", "slouch", "swift", "tide",
-    "insane", "silenced", "awaken_forest", "exploding", "buggy",
+    "insane", "silenced", "awaken_forest", "exploding", "fading_away",
+    "preparing_resurrect", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -6454,6 +6455,15 @@ int mon_enchant::calc_duration(const monsters *mons,
         // This is used as a simple timer, when the enchantment runs out
         // the monster will create a giant spore.
         return (random_range(475, 525) * 10);
+
+    case ENCH_FADING_AWAY:
+        // Also used as a simple timer. When it runs out, it will summon a
+        // greater holy being.
+        return (random_range(800, 1300) * 10);
+
+    case ENCH_PREPARING_RESURRECT:
+        // A timer. When it runs out, the creature will cast resurrect.
+        return (random_range(1, 3) * 10);
 
     case ENCH_EXPLODING:
         return (random_range(3,7) * 10);
