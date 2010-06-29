@@ -1278,6 +1278,10 @@ static void parse_maps(const std::string &s)
 void read_map(const std::string &file)
 {
     parse_maps( lc_desfile = datafile_path(file) );
+    // Clean up cached environments.
+    dlua.callfn("dgn_flush_map_environments", 0, 0);
+    // Force GC to prevent heap from swelling unnecessarily.
+    dlua.gc();
 }
 
 void read_maps()
@@ -1285,11 +1289,8 @@ void read_maps()
     if (dlua.execfile("clua/loadmaps.lua", true, true, true))
         end(1, false, "Lua error: %s", dlua.error.c_str());
 
-    // Clean up cached environments.
-    dlua.callfn("dgn_flush_map_environments", 0, 0);
     lc_loaded_maps.clear();
     sanity_check_maps();
-    dlua.gc();
 }
 
 // If a .dsc file has been changed under the running Crawl, discard
