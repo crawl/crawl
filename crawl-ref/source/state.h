@@ -61,6 +61,8 @@ struct game_state
 
     bool show_more_prompt;  // Set to false to disable --more-- prompts.
 
+    std::string sprint_map; // Sprint map set on command line, if any.
+
     std::string (*glyph2strfn)(unsigned glyph);
     int  (*multibyte_strlen)(const std::string &s);
     void (*terminal_resize_handler)();

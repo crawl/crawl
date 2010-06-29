@@ -2868,7 +2868,7 @@ static void _prompt_sprint_map(const newgame_def* ng, newgame_def* ng_choice,
 static void _resolve_sprint_map(newgame_def* ng, const newgame_def* ng_choice,
                                 const std::vector<std::string>& maps)
 {
-    if (ng_choice->map == "random")
+    if (ng_choice->map == "random" || ng_choice->map.empty())
         ng->map = maps[random2(maps.size())];
     else
         ng->map = ng_choice->map;
@@ -2883,7 +2883,9 @@ static void _choose_sprint_map(newgame_def* ng, newgame_def* ng_choice,
 
     if (ng_choice->map.empty())
     {
-        if (maps.size() > 1)
+        if (!crawl_state.sprint_map.empty())
+            ng_choice->map = crawl_state.sprint_map;
+        else if (maps.size() > 1)
             _prompt_sprint_map(ng, ng_choice, defaults, maps);
         else
             ng_choice->map = maps[0];
