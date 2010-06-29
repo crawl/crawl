@@ -6,7 +6,6 @@ pick-up
 You will pick up and drop items very often. There are four ways to do this:
 
 * Single items
-* Cursored mode
 * Category shortcuts
 * Regular expressions
 
@@ -16,18 +15,6 @@ Note that selecting an already selected item will deselect it.
 <h>Item letters</h>
 
 Pressing an item's letter key will select the item.
-
-
-<h>Cursored mode</h>
-
-When you want to pick up or drop several items at once, it can be convenient
-to use the cursor, rather than pressing each item's key. The cursor looks
-like <w>[</w>-<w>]</w> and selecting an item via its letter key will move the cursor
-to the item after it. You can select items with the cursor as follows:
-<w>Down</w>   moves the cursor to the next item without change
-<w>Right</w>  selects the cursored item and moves the cursor down
-<w>Up</w>     moves the cursor up, without changing selection
-<w>Left</w>   selects the cursored item and moves the cursor up
 
 
 <h>Regular expressions</h>
