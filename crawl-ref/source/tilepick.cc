@@ -1556,9 +1556,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_NELLIE;
 
     // imps ('5')
-    //TODO
     case MONS_GRINDER:
-        return TILEP_MONS_SHADOW_IMP;
+        return TILEP_MONS_GRINDER;
 
     // statue ('8')
     case MONS_ROXANNE:

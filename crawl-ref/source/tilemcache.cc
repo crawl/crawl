@@ -377,6 +377,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_MERFOLK_AQUAMANCER_WATER:
     case TILEP_MONS_MERMAID:
     case TILEP_MONS_MERMAID_WATER:
+    case TILEP_MONS_SHADOW_IMP:
     case TILEP_MONS_SIREN:
     case TILEP_MONS_SIREN_WATER:
     case TILEP_MONS_ILSUIW:
