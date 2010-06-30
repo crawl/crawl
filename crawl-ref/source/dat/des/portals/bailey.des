@@ -638,7 +638,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxx...xxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:   minmay_bailey_axe_hex_keep
+NAME:   bailey_minmay_axe_hex_keep
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   bailey_axe no_item_gen no_monster_gen
