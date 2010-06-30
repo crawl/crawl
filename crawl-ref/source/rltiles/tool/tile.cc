@@ -221,7 +221,7 @@ void tile::corpsify(int corpse_width, int corpse_height,
 
             // Ignore rims, shadows, and transparent pixels.
             if (mapped == tile_colour::black
-                || mapped == tile_colour::transparent)
+                || mapped.is_transparent())
             {
                 continue;
             }
@@ -249,7 +249,7 @@ void tile::corpsify(int corpse_width, int corpse_height,
         for (int x = 1; x < corpse_width; x++)
         {
             if (!flags(x, y) && flags(x-1, y-1)
-                && get_pixel(x,y) == tile_colour::transparent)
+                && get_pixel(x,y).is_transparent())
             {
                 get_pixel(x, y) = tile_colour::black;
             }
