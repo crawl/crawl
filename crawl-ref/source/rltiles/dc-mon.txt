@@ -36,6 +36,7 @@ hell_hog MONS_HELL_HOG
 killer_bee MONS_KILLER_BEE
 bumblebee MONS_BUMBLEBEE
 queen_bee MONS_QUEEN_BEE
+giant_firefly MONS_FIREFLY
 
 ## Lizards ('l')
 giant_newt MONS_GIANT_NEWT
@@ -645,6 +646,17 @@ goblin MONS_GOBLIN
 hobgoblin MONS_HOBGOBLIN
 gnoll MONS_GNOLL
 boggart MONS_BOGGART
+
+## Spriggans ('i')
+%sdir dc-mon/spriggan
+spriggan MONS_SPRIGGAN
+spriggan_rider MONS_SPRIGGAN_RIDER
+spriggan_druid MONS_SPRIGGAN_DRUID
+spriggan_defender MONS_SPRIGGAN_DEFENDER
+%start
+%compose dc-mon/unique/enchantress
+%compose player/hand1/enchantress_dagger
+%finish MONS_THE_ENCHANTRESS
 
 ## Merfolk ('m')
 %sdir dc-mon/unique
