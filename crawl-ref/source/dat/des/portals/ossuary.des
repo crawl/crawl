@@ -390,7 +390,7 @@ ENDMAP
 
 # Scorpions, and lots of them. Hope you weren't expecting to breeze through
 # the ossuary just because you found a mace of holy wrath!
-NAME:   minmay_ossuary_scorpions
+NAME:   ossuary_minmay_scorpions
 WEIGHT: 20
 ORIENT: encompass
 TAGS:   ossuary no_item_gen no_monster_gen
@@ -436,7 +436,7 @@ ccccccccccccccccccccccccc
 ENDMAP
 
 # Another ossuary (loosely) based on Tomb:2
-NAME:    minmay_ossuary_tomb_2a
+NAME:    ossuary_minmay_tomb_2a
 WEIGHT:  20
 ORIENT:  encompass
 TAGS:    ossuary no_item_gen no_monster_gen no_rotate
@@ -851,7 +851,7 @@ ENDMAP
 #
 # Stealthy players can close the doors without the mummy noticing. This is
 # probably okay, but may turn out to be too easy.... -- dpeg
-NAME:   minmay_ossuary_four_chambers
+NAME:   ossuary_minmay_four_chambers
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   ossuary no_item_gen no_monster_gen
@@ -894,7 +894,7 @@ ENDMAP
 
 # The intent is that the mummies chase the player through the whole ossuary,
 # forcing the player to either move quickly or soak up some death curses.
-NAME:   minmay_ossuary_chase
+NAME:   ossuary_minmay_chase
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   ossuary no_item_gen no_monster_gen
