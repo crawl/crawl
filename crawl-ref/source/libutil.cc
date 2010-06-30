@@ -502,11 +502,11 @@ std::string pluralise(const std::string &name,
     }
     else if (name == "foot")
         return "feet";
-    else if (name == "ophan")
+    else if (name == "ophan" || name == "cherub")
     {
         // unlike "angel" which is fully assimilated and "cherub" which may be
         // pluralized both ways, "ophan" always uses hebrew pluralization
-        return "ophanim";
+        return name + "im";
     }
 
     return name + "s";
