@@ -38,6 +38,7 @@ hell_hog CORPSE_HELL_HOG
 killer_bee CORPSE_KILLER_BEE
 bumblebee CORPSE_BUMBLEBEE
 queen_bee CORPSE_QUEEN_BEE
+giant_firefly CORPSE_FIREFLY
 
 ## Lizards ('l')
 %back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
@@ -160,6 +161,9 @@ elf CORPSE_ELF
 goblin CORPSE_GOBLIN
 hobgoblin CORPSE_HOBGOBLIN
 gnoll CORPSE_GNOLL
+
+## Spriggans ('i')
+dc-mon/spriggan/spriggan CORPSE_SPRIGGAN
 
 ## Merfolk ('m')
 merfolk_plain_water CORPSE_MERFOLK
