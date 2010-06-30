@@ -743,7 +743,7 @@ void in_a_cloud()
 {
     int cl = env.cgrid(you.pos());
     int hurted = 0;
-    int resist;
+    int resist = 0;
     std::string name = env.cloud[cl].name;
 
     switch (env.cloud[cl].type)
@@ -939,8 +939,8 @@ void in_a_cloud()
         mprf("You are engulfed in %s!", !name.empty() ? name.c_str() : "blessed fire");
 
         // Stats are the same for fire, except resists are based on holiness.
-        // Damage is reduced if you are holy, increased if you are evil.
-        if (you.is_evil())
+        // Damage is reduced if you are holy, increased if you are evil/unholy.
+        if (you.is_evil() || you.is_unholy())
             resist = -1;
         else if (you.is_holy())
             resist = 3;
