@@ -486,8 +486,11 @@ int place_monster_corpse(const monsters *monster, bool silent,
 
     // "always_corpse" forces monsters to always generate a corpse upon
     // their deaths.
-    if (monster->props.exists("always_corpse"))
+    if (monster->props.exists("always_corpse") || mons_class_flag(monster->type,
+            M_ALWAYS_CORPSE))
+    {
         vault_forced = true;
+    }
 
     if (corpse_class == MONS_NO_MONSTER
         || (!force && !vault_forced && coinflip()))

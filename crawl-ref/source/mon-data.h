@@ -2721,7 +2721,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_PHOENIX, 'H', ETC_FIRE, "phoenix",
-    M_WARM_BLOOD,
+    M_WARM_BLOOD | M_ALWAYS_CORPSE,
     MR_RES_POISON,
     480, 9, MONS_PHOENIX, MONS_PHOENIX, MH_HOLY, -3,
     { {AT_CLAW, AF_HOLY, 19}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -2733,7 +2733,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_SHEDU, 'H', WHITE, "shedu",
-    M_WARM_BLOOD,
+    M_WARM_BLOOD | M_ALWAYS_CORPSE,
     MR_RES_POISON,
     480, 9, MONS_PHOENIX, MONS_SHEDU, MH_HOLY, -3,
     { {AT_CLAW, AF_HOLY, 19}, {AT_CLAW, AF_HOLY, 23}, AT_NO_ATK, AT_NO_ATK },
