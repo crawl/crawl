@@ -77,6 +77,7 @@ private:
 private:
     int find_thing(const item_def &item, const level_pos &pos) const;
     int find_thing(const std::string &desc, const level_pos &pos) const;
+    void del_thing_at_index(int idx);
 
     void fill_out_menu(Menu& shopmenu);
 

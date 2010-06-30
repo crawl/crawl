@@ -1300,6 +1300,10 @@ int monster_die(monsters *monster, killer_type killer,
 
     you.remove_beholder(monster);
 
+    // Monsters haloes should be removed when they die.
+    if (monster->holiness() == MH_HOLY)
+        invalidate_agrid();
+
     // Clear auto exclusion now the monster is killed -- if we know about it.
     if (mons_near(monster) || wizard)
         remove_auto_exclude(monster);

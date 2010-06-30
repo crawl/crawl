@@ -2313,13 +2313,15 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     // no_dark_brand applies here as well.
     else CURSES_OPTION(heap_brand);
     else COLOUR_OPTION(status_caption_colour);
-    else if (key == "map")
-    {
-        game.map = field;
-    }
     else if (key == "arena_teams")
     {
         game.arena_teams = field;
+    }
+    // [ds] Allow changing map only if the map hasn't been set on the
+    // command-line.
+    else if (key == "map" && crawl_state.sprint_map.empty())
+    {
+        game.map = field;
     }
 #ifndef DGAMELAUNCH
     // [ds] For dgamelaunch setups, the player should *not* be able to
@@ -3518,6 +3520,7 @@ enum commandline_option_type
     CLO_SPRINT,
     CLO_EXTRA_OPT_FIRST,
     CLO_EXTRA_OPT_LAST,
+    CLO_SPRINT_MAP,
 
     CLO_NOPS
 };
@@ -3526,7 +3529,8 @@ static const char *cmd_ops[] = {
     "scores", "name", "species", "background", "plain", "dir", "rc",
     "rcdir", "tscores", "vscores", "scorefile", "morgue", "macro",
     "mapstat", "arena", "test", "script", "builddb", "help", "version",
-    "seed", "save-version", "sprint", "extra-opt-first", "extra-opt-last"
+    "seed", "save-version", "sprint", "extra-opt-first", "extra-opt-last",
+    "sprint-map"
 };
 
 const int num_cmd_ops = CLO_NOPS;
@@ -3982,6 +3986,15 @@ bool parse_args( int argc, char **argv, bool rc_only )
         case CLO_SPRINT:
             if (!rc_only)
                 Options.game.type = GAME_TYPE_SPRINT;
+            break;
+
+        case CLO_SPRINT_MAP:
+            if (!next_is_param)
+                return (false);
+
+            nextUsed               = true;
+            crawl_state.sprint_map = next_arg;
+            Options.game.map       = next_arg;
             break;
 
         case CLO_EXTRA_OPT_FIRST:

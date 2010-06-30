@@ -11,6 +11,7 @@
 #include "mon-place.h"
 #include "mgen_data.h"
 
+#include "areas.h"
 #include "arena.h"
 #include "branch.h"
 #include "coord.h"
@@ -1449,6 +1450,10 @@ static int _place_monster_aux(const mgen_data &mg,
         if (mg.level_type == LEVEL_ABYSS && !one_chance_in(7))
             mon->god = GOD_LUGONU;
     }
+
+    // Holy monsters need their halo!
+    if (mon->holiness() == MH_HOLY)
+        invalidate_agrid();
 
     // If the caller requested a specific colour for this monster, apply
     // it now.
