@@ -493,7 +493,7 @@ A magical armour, made from the scales of a fire-breathing dragon. It provides g
 %%%%
 dragon hide
 
-The scaly skin of a dragon. I suppose you could wear it if you really wanted to.
+The scaly skin of a dragon. It can be fashioned into proper armour, but even it in its raw form, it provides great protectiom from the effects of fire but renders its wearer susceptible to cold.
 %%%%
 eggplant
 
@@ -541,7 +541,7 @@ A magical armour made from the golden scales of a golden dragon. It is extremely
 %%%%
 gold dragon hide
 
-The extremely tough and heavy skin of a golden dragon, covered in shimmering golden scales. I suppose you could wear it if you really wanted to.
+The extremely tough and heavy skin of a golden dragon, covered in shimmering golden scales. It confers resistances to fire, cold and poison to its wearer, but does not provide almost any of its fabled protection against blows unless enchanted.
 %%%%
 gold piece
 
@@ -597,7 +597,7 @@ A magical armour, made from the scales of a cold-breathing dragon. It provides g
 %%%%
 ice dragon hide
 
-The scaly skin of a dragon. I suppose you could wear it if you really wanted to.
+The scaly skin of a dragon. It can be fashioned into proper armour, but even it in its raw form, it provides great protectiom from the effects of cold but renders its wearer susceptible to fire.
 %%%%
 javelin
 
@@ -704,7 +704,7 @@ A magical armour made from the scales of a mottled dragon. Although unlike the a
 %%%%
 mottled dragon hide
 
-The weirdly-patterned scaly skin of a mottled dragon. I suppose you could wear it if you really wanted to.
+The weirdly-patterned scaly skin of a mottled dragon. It may be turned into proper armour with magical means.
 %%%%
 naga barding
 
@@ -1250,7 +1250,7 @@ A magical armour, made from the scales of a steam-breathing dragon. Although unl
 %%%%
 steam dragon hide
 
-The soft and supple scaly skin of a steam dragon. I suppose you could wear it if you really wanted to.
+The soft and supple scaly skin of a steam dragon. It may be turned into proper armour using magical means.
 %%%%
 stone
 
@@ -1266,7 +1266,7 @@ A magical armour made from the scales of a lightning-breathing dragon. It is hea
 %%%%
 storm dragon hide
 
-The hide of a storm dragon, covered in extremely hard blue scales. I suppose you could wear it if you really wanted to.
+The hide of a storm dragon, covered in extremely hard blue scales. In its raw form, it does not provide much protection except for the resistance to electrical discharges, but with magical means, it may be used to make excellent armour.
 %%%%
 strawberry
 
@@ -1289,7 +1289,7 @@ if you.can_smell() then
 else
     return ""
 end
-}} skin of a swamp-dwelling dragon. I suppose you could wear it if you really wanted to.
+}} skin of a swamp-dwelling dragon. It confers resistance to poison on its wearer, and it may be turned into proper armour using magical means.
 %%%%
 throwing net
 
