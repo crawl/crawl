@@ -1054,6 +1054,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_HARPY;
     case MONS_MINOTAUR:
         return TILEP_MONS_MINOTAUR;
+    case MONS_SHEDU:
+        return TILEP_MONS_SHEDU;
 
     // ice beast ('I')
     case MONS_ICE_BEAST:
