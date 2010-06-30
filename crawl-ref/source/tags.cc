@@ -1659,32 +1659,40 @@ static void tag_read_you(reader &th, char minorVersion)
 
     // how many durations?
     count_c = unmarshallByte(th);
+    ASSERT(count_c >= 0 && count_c <= NUM_DURATIONS);
     for (j = 0; j < count_c; ++j)
         you.duration[j] = unmarshallInt(th);
 
     // how many attributes?
     count_c = unmarshallByte(th);
+    ASSERT(count_c >= 0 && count_c <= NUM_ATTRIBUTES);
     for (j = 0; j < count_c; ++j)
         you.attribute[j] = unmarshallInt(th);
 
     count_c = unmarshallByte(th);
+    ASSERT(count_c == NUM_OBJECT_CLASSES);
     for (j = 0; j < count_c; ++j)
         you.sacrifice_value[j] = unmarshallInt(th);
 
     // how many mutations/demon powers?
     count_s = unmarshallShort(th);
+    ASSERT(count_s >= 0 && count_s <= NUM_MUTATIONS);
     for (j = 0; j < count_s; ++j)
     {
         you.mutation[j]  = unmarshallByte(th);
         you.innate_mutations[j] = unmarshallByte(th);
     }
+    for (j = count_s; j < NUM_MUTATIONS; ++j)
+        you.mutation[j] = you.innate_mutations[j] = 0;
 
     count_c = unmarshallByte(th);
+    ASSERT(count_c >= 0);
     you.demonic_traits.clear();
     for (j = 0; j < count_c; ++j)
     {
         player::demon_trait dt;
         dt.level_gained = unmarshallByte(th);
+        ASSERT(dt.level_gained > 1 && dt.level_gained <= 27);
         dt.mutation = static_cast<mutation_type>(unmarshallShort(th));
         you.demonic_traits.push_back(dt);
     }
