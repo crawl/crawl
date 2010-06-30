@@ -78,12 +78,12 @@ spriggan_m SPRIGGAN
 spriggan_f
 minotaur_m MINOTAUR
 minotaur_f
-demonspawn_red_f DEMONSPAWN
+demonspawn_pink DEMONSPAWN
+demonspawn_red_f
 demonspawn_red_m
 demonspawn_black_f
 demonspawn_black_m
-ghoul_m GHOUL
-ghoul_f
+ghoul GHOUL
 kenku_winged_f KENKU
 kenku_winged_m
 kenku_wingless_f
