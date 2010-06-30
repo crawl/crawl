@@ -347,7 +347,6 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     {
     // No shift necessary.
     case TILEP_MONS_VAULT_GUARD:
-    case TILEP_MONS_HOBGOBLIN:
     case TILEP_MONS_DEEP_ELF_MASTER_ARCHER:
     case TILEP_MONS_DEEP_ELF_BLADEMASTER:
     case TILEP_MONS_IMP:
@@ -393,6 +392,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = -1;
         *ofs_y = 0;
         break;
+    case TILEP_MONS_HOBGOBLIN:
     case TILEP_MONS_TIAMAT:
         *ofs_x = -2;
         *ofs_y = 0;

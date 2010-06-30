@@ -2304,6 +2304,13 @@ bool ShoppingList::is_on_list(std::string desc,
     return (find_thing(desc, pos) != -1);
 }
 
+void ShoppingList::del_thing_at_index(int idx)
+{
+    ASSERT(idx >= 0 && idx < list->size());
+    list->erase(idx);
+    refresh();
+}
+
 bool ShoppingList::del_thing(const item_def &item,
                              const level_pos* _pos)
 {
@@ -2318,9 +2325,7 @@ bool ShoppingList::del_thing(const item_def &item,
         return (false);
     }
 
-    list->erase(idx);
-    refresh();
-
+    del_thing_at_index(idx);
     return (true);
 }
 
@@ -2337,9 +2342,7 @@ bool ShoppingList::del_thing(std::string desc, const level_pos* _pos)
         return (false);
     }
 
-    list->erase(idx);
-    refresh();
-
+    del_thing_at_index(idx);
     return (true);
 }
 
@@ -2538,6 +2541,7 @@ void ShoppingList::forget_pos(const level_pos &pos)
             i--;
         }
     }
+    refresh();
 }
 
 void ShoppingList::gold_changed(int old_amount, int new_amount)
@@ -2766,7 +2770,7 @@ void ShoppingList::display()
                 continue;
             }
 
-            list->erase(index);
+            del_thing_at_index(index);
             if (list->size() == 0)
                 break;
 
