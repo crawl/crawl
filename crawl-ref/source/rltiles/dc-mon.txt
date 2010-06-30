@@ -475,6 +475,9 @@ manticore MONS_MANTICORE
 griffon MONS_GRIFFON
 harpy MONS_HARPY
 sphinx MONS_SPHINX
+%sdir dc-mon/holy
+shedu MONS_SHEDU
+%sdir dc-mon
 
 ## Ice beast only
 ice_beast MONS_ICE_BEAST /*'I'*/
