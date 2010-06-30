@@ -240,6 +240,10 @@ lemure MONS_LEMURE
 iron_imp MONS_IRON_IMP
 midge MONS_MIDGE
 shadow_imp MONS_SHADOW_IMP
+%start
+%compose dc-mon/unique/grinder
+%compose dc-mon/unique/grinder_cleaver
+%finish MONS_GRINDER
 ufetubus MONS_UFETUBUS
 white_imp MONS_WHITE_IMP
 
