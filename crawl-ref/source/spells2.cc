@@ -1483,9 +1483,9 @@ static bool _summon_holy_being_wrapper(int pow, god_type god, int spell,
     if (!quiet)
     {
         mprf("You are momentarily dazzled by a brilliant %slight.",
-             (mon == MONS_DAEVA) ? "golden " :
-             (mon == MONS_ANGEL) ? "white "
-                                 : "");
+             (mon == MONS_DAEVA)  ? "golden " :
+             (mon == MONS_CHERUB) ? "white "
+                                  : "");
     }
 
     player_angers_monster(&menv[monster]);

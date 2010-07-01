@@ -414,7 +414,7 @@ halfling MONS_HALFLING
 demonspawn MONS_DEMONSPAWN
 
 ## Angels ('A')
-angel MONS_ANGEL
+cherub MONS_CHERUB
 daeva MONS_DAEVA
 
 ## Giants ('C')
