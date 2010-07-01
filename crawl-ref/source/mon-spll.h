@@ -1473,6 +1473,16 @@
       }
     },
 
+    {  MST_OPHAN,
+      {
+       SPELL_BOLT_OF_FIRE,
+       SPELL_HOLY_FLAMES,
+       SPELL_NO_SPELL,
+       SPELL_BOLT_OF_FIRE,
+       SPELL_HOLY_FLAMES,
+       SPELL_NO_SPELL
+      }
+    },
 
     {  MST_TEST_SPAWNER,
       {

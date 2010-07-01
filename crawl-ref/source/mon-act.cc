@@ -3653,7 +3653,6 @@ static void _mons_in_cloud(monsters *monster)
         break;
 
     case CLOUD_HOLY_FLAMES:
-
         simple_monster_message(monster, " is engulfed in blessed fire!");
 
         if (monster->is_holy())

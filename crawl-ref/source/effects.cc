@@ -68,6 +68,7 @@
 #include "skills2.h"
 #include "spells2.h"
 #include "spells3.h"
+#include "spells4.h"
 #include "spl-book.h"
 #include "spl-mis.h"
 #include "spl-util.h"
@@ -794,6 +795,17 @@ void direct_effect(monsters *source, spell_type spell,
             mons_cast_mislead(source);
         else
             defender->confuse(source, source->hit_dice * 12);
+        break;
+
+    case SPELL_HOLY_FLAMES:
+        if (holy_flames(source, defender))
+        {
+            if (!def)
+                mpr("Blessed fire suddenly surrounds you!");
+            else
+                simple_monster_message(def, " is surrounded by blessed fire!");
+        }
+
         break;
 
     default:

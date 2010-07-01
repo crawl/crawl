@@ -50,4 +50,7 @@ bool cast_portal_projectile(int pow);
 //returns true if it slowed the monster
 bool do_slow_monster(monsters* mon, kill_category whose_kill);
 
+int holy_flames (monsters* caster, actor* defender);
+
+
 #endif
