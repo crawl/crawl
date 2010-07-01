@@ -93,7 +93,7 @@ static bool _place_feature_near(const coord_def &centre,
 //#define DEBUG_ABYSS
 
 // Returns a feature suitable for use in the proto-Abyss level.
-dungeon_feature_type _abyss_proto_feature()
+static dungeon_feature_type _abyss_proto_feature()
 {
     return static_cast<dungeon_feature_type>(
         random_choose_weighted(3000, DNGN_FLOOR,
