@@ -531,7 +531,7 @@ ENDMAP
 ###############################################################################
 # A sewer opening to sea by st_.
 #
-NAME:   st__sewer_sea
+NAME:   sewer_sea
 TAGS:   sewer no_item_gen no_monster_gen no_rotate no_pool_fixup
 ORIENT: encompass
 MONS:   rat w:3 / grey rat w:1 / nothing w:1, rat / grey rat / green rat
@@ -600,7 +600,7 @@ ENDMAP
 ############################################################################
 # Sewer in the shape of the letter W. Sort of.
 #
-NAME:    minmay_sewer_w
+NAME:    sewer_minmay_w
 TAGS:    sewer no_item_gen no_monster_gen no_pool_fixup
 WEIGHT:  30
 ORIENT:  encompass
@@ -662,7 +662,7 @@ ENDMAP
 ############################################################################
 # Water treatment center, staffed by kobolds
 #
-NAME:   minmay_sewer_treatment
+NAME:   sewer_minmay_treatment
 TAGS:   sewer no_item_gen no_monster_gen no_pool_fixup
 WEIGHT: 20
 ORIENT: encompass

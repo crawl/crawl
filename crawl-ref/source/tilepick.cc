@@ -733,6 +733,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_BUMBLEBEE;
     case MONS_QUEEN_BEE:
         return TILEP_MONS_QUEEN_BEE;
+    case MONS_FIREFLY:
+        return TILEP_MONS_FIREFLY;
 
     // lizards ('l')
     case MONS_GIANT_NEWT:
@@ -1462,6 +1464,18 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_GRUM:
         return TILEP_MONS_GRUM;
 
+    // spriggans ('i')
+    case MONS_SPRIGGAN:
+        return TILEP_MONS_SPRIGGAN;
+    case MONS_SPRIGGAN_RIDER:
+        return TILEP_MONS_SPRIGGAN_RIDER;
+    case MONS_SPRIGGAN_DRUID:
+        return TILEP_MONS_SPRIGGAN_DRUID;
+    case MONS_SPRIGGAN_DEFENDER:
+        return TILEP_MONS_SPRIGGAN_DEFENDER;
+    case MONS_THE_ENCHANTRESS:
+        return TILEP_MONS_THE_ENCHANTRESS;
+
     // slug ('j')
     case MONS_GASTRONOK:
         return TILEP_MONS_GASTRONOK;
@@ -1558,9 +1572,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_NELLIE;
 
     // imps ('5')
-    //TODO
     case MONS_GRINDER:
-        return TILEP_MONS_SHADOW_IMP;
+        return TILEP_MONS_GRINDER;
 
     // statue ('8')
     case MONS_ROXANNE:
@@ -2435,6 +2448,10 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     case MONS_HELL_HOG:
         return TILE_CORPSE_HELL_HOG;
 
+    // spriggans ('i')
+    case MONS_SPRIGGAN:
+        return TILE_CORPSE_SPRIGGAN;
+
     // slugs ('j')
     case MONS_ELEPHANT_SLUG:
         return TILE_CORPSE_ELEPHANT_SLUG;
@@ -2450,6 +2467,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_BUMBLEBEE;
     case MONS_QUEEN_BEE:
         return TILE_CORPSE_QUEEN_BEE;
+    case MONS_FIREFLY:
+        return TILE_CORPSE_FIREFLY;
 
     // lizards ('l')
     case MONS_GIANT_NEWT:

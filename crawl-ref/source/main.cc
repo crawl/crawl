@@ -3648,7 +3648,7 @@ static void _move_player(coord_def move)
 
     if (!attacking && targ_pass && moving && !beholder)
     {
-        if (!check_moveto(targ))
+        if (!you.confused() && !check_moveto(targ))
         {
             stop_running();
             you.turn_is_over = false;

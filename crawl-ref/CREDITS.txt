@@ -28,33 +28,34 @@ Lawrence Ramsey, Robert Vollmert, Enne Walker) would like to thank:
 We'd also like to thank members of the Dungeon Crawl community who have
 contributed to Dungeon Crawl Stone Soup:
 
-Warwick Allison            Sophie Hamilton           nyra
-Juha Arpiainen             Chris Hamons              Dylan O'Donnell
-Roy Axenov                 R. Dan Henry              Yuuma Oohara
-Max Bane                   Brendan Hickey            Pedro
-Bill Beher                 Benoit Hudson             Arlen Phillips
-Alexander Beisig           Sylvia 'Onia' Hörnke      Lemuel Pitkin
-Stu Black                  Iainuki                   Derek Ray
-Erik Inge Bolsø            Ilyak                     Remsleep
-Peter Borgmann             Matthew Ince              Will Rogers
-Daniel Mark Brownrigg      Mitsuhiro Itakura         David Rose
-Trent W. Buck              Mikko Juola               Sebastian Salman
-Joe Buzzelli               Jarmo Kielosto            Brett Scarborough
-Terje Bø                   Kornel Kisielewicz        Robert Shimmin
-Henry Cipolla              Daniel Klein              Sigurd
-Aaron Curtis               Vambola Kotkas            Edgar Simo
-Denzi                      Ryan Kusnery              Alex Smith
-Mike Drinen                Jukka Kuusisto            Solf
-Kieron Dunbar              Maciej Lapinski           Michael Spang
-Micha Elsner               Jordan Lewis              Johan Strandell
-Christopher Evenstar       Icy Lich                  Roman Sêk
-Brett Foster               Markus Maier              William Tanksley, Jr.
-Chris Galardi              Arien Malec               Jared 'Twinge' Tinney
-Ben Goetter                Paul Maloney              Matt Titus
-Rob Grant                  Andrew Minton             Steven Wheeler
-John Greenberg             Shawn M Moore             Thomas Willem
-GreyKnight                 Eva Myers                 Evan Williams
-Joshua Gross               Wille Mäntylä             Jeremey Wilson
-Brian Haase                Erkki Nurmi               Yelve Yakut
-Shayne Halvorson           Mattias Nyberg            Zooko
+Warwick Allison              Sophie Hamilton           Dylan O'Donnell
+Juha Arpiainen               Chris Hamons              Yuuma Oohara
+John 'Poor Yurik' Attea      R. Dan Henry              Pedro
+Roy Axenov                   Brendan Hickey            Arlen Phillips
+Max Bane                     Benoit Hudson             Lemuel Pitkin
+Bill Beher                   Sylvia 'Onia' Hörnke      Derek Ray
+Alexander Beisig             Iainuki                   Remsleep
+Stu Black                    Ilyak                     Will Rogers
+Erik Inge Bolsø              Matthew Ince              David Rose
+Peter Borgmann               Mitsuhiro Itakura         Sebastian Salman
+Daniel Mark Brownrigg        Mikko Juola               Brett Scarborough
+Trent W. Buck                Jarmo Kielosto            Robert Shimmin
+Joe Buzzelli                 Kornel Kisielewicz        Sigurd
+Terje Bø                     Daniel Klein              Edgar Simo
+Henry Cipolla                Vambola Kotkas            Alex Smith
+Aaron Curtis                 Ryan Kusnery              Solf
+Denzi                        Jukka Kuusisto            Michael Spang
+Mike Drinen                  Maciej Lapinski           Johan Strandell
+Kieron Dunbar                Jordan Lewis              Roman Sêk
+Micha Elsner                 Icy Lich                  William Tanksley, Jr.
+Christopher Evenstar         Markus Maier              Jared 'Twinge' Tinney
+Brett Foster                 Arien Malec               Matt Titus
+Chris Galardi                Paul Maloney              Steven Wheeler
+Ben Goetter                  Andrew Minton             Thomas Willem
+Rob Grant                    Shawn M Moore             Evan Williams
+John Greenberg               Eva Myers                 Jeremey Wilson
+GreyKnight                   Wille Mäntylä             Yelve Yakut
+Joshua Gross                 Erkki Nurmi               Zooko
+Brian Haase                  Mattias Nyberg
+Shayne Halvorson             nyra
 
