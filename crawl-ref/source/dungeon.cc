@@ -5700,6 +5700,7 @@ bool seen_replace_feat(dungeon_feature_type old_feat,
         if (grd(*ri) == old_feat)
         {
             grd(*ri) = new_feat;
+            set_terrain_changed(*ri);
             if (you.see_cell(*ri))
                 seen = true;
         }
