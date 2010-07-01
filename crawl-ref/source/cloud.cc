@@ -668,6 +668,16 @@ int max_cloud_damage(cloud_type cl_type, int power)
         resist = player_res_fire();
 
         // Intentional fall-through
+    case CLOUD_HOLY_FLAMES:
+        if (resist == 0)
+        {
+            if (you.is_evil() || you.is_unholy())
+                resist = -1;
+            else if (you.is_holy())
+                resist = 3;
+        }
+
+        // Intentional fall through
     case CLOUD_COLD:
         if (you.mutation[MUT_PASSIVE_FREEZE])
             return (0);
@@ -1001,7 +1011,10 @@ bool is_damaging_cloud(cloud_type type, bool temp)
     case CLOUD_MUTAGENIC:
         return (you.can_mutate());
     case CLOUD_HOLY_FLAMES:
-        return (you.is_evil());
+        if (you.is_holy())
+            return (false);
+
+        return (true);
     default:
         // Smoke, never harmful.
         return (false);
