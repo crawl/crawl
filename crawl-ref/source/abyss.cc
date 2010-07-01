@@ -92,7 +92,21 @@ static bool _place_feature_near(const coord_def &centre,
 
 //#define DEBUG_ABYSS
 
-// Public for abyss generation.
+// Returns a feature suitable for use in the proto-Abyss level.
+dungeon_feature_type _abyss_proto_feature()
+{
+    return static_cast<dungeon_feature_type>(
+        random_choose_weighted(3000, DNGN_FLOOR,
+                               600, DNGN_ROCK_WALL,
+                               300, DNGN_STONE_WALL,
+                               100, DNGN_METAL_WALL,
+                               1, DNGN_CLOSED_DOOR,
+                               0));
+}
+
+// Generate the initial (proto) Abyss level. The proto Abyss is where
+// the player lands when they arrive in the Abyss from elsewhere.
+// _generate_area generates all other Abyss areas.
 void generate_abyss()
 {
     env.level_build_method += " abyss";
@@ -104,17 +118,7 @@ void generate_abyss()
 #endif
 
     for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
-    {
-        grd(*ri) =
-            static_cast<dungeon_feature_type>(
-                random_choose_weighted(3000, DNGN_FLOOR,
-                                        600, DNGN_ROCK_WALL,
-                                        300, DNGN_STONE_WALL,
-                                        100, DNGN_METAL_WALL,
-                                          1, DNGN_CLOSED_DOOR,
-                                          0));
-    }
-
+        grd(*ri) = _abyss_proto_feature();
 
     // If we're starting out in the Abyss, make sure the starting grid is
     // an altar to Lugonu and there's an exit near-by.
@@ -1070,6 +1074,12 @@ void abyss_teleport( bool new_area )
 //////////////////////////////////////////////////////////////////////////////
 // Abyss effects in other levels, courtesy Lugonu.
 
+struct corrupt_env
+{
+    int rock_colour, floor_colour;
+    corrupt_env(): rock_colour(BLACK), floor_colour(BLACK) { }
+};
+
 static void _place_corruption_seed(const coord_def &pos, int duration)
 {
     env.markers.add(new map_corruption_marker(pos, duration));
@@ -1201,6 +1211,7 @@ static bool _is_grid_corruptible(const coord_def &c)
     switch (feat)
     {
     case DNGN_PERMAROCK_WALL:
+    case DNGN_CLEAR_PERMAROCK_WALL:
         return (false);
 
     case DNGN_METAL_WALL:
@@ -1208,9 +1219,11 @@ static bool _is_grid_corruptible(const coord_def &c)
         return (one_chance_in(4));
 
     case DNGN_STONE_WALL:
+    case DNGN_CLEAR_STONE_WALL:
         return (one_chance_in(3));
 
     case DNGN_ROCK_WALL:
+    case DNGN_CLEAR_ROCK_WALL:
         return (!one_chance_in(3));
 
     default:
@@ -1249,7 +1262,7 @@ static bool _is_sealed_square(const coord_def &c)
     return (true);
 }
 
-static void _corrupt_square(const crawl_environment &oenv, const coord_def &c)
+static void _corrupt_square(const corrupt_env &cenv, const coord_def &c)
 {
     // To prevent the destruction of, say, branch entries.
     bool preserve_feat = true;
@@ -1262,7 +1275,7 @@ static void _corrupt_square(const crawl_environment &oenv, const coord_def &c)
             feat = DNGN_ALTAR_LUGONU;
     }
     else
-        feat = oenv.grid(c);
+        feat = _abyss_proto_feature();
 
     if (feat_is_trap(feat, true)
         || feat == DNGN_SECRET_DOOR
@@ -1285,16 +1298,14 @@ static void _corrupt_square(const crawl_environment &oenv, const coord_def &c)
         return;
     }
 
-    // What's this supposed to achieve? (jpeg)
-    // I mean, won't exits from the Abyss only turn up in the Abyss itself?
     if (feat == DNGN_EXIT_ABYSS)
         feat = DNGN_ENTER_ABYSS;
 
     dungeon_terrain_changed(c, feat, true, preserve_feat, true);
     if (feat == DNGN_ROCK_WALL)
-        env.grid_colours(c) = oenv.rock_colour;
+        env.grid_colours(c) = cenv.rock_colour;
     else if (feat == DNGN_FLOOR)
-        env.grid_colours(c) = oenv.floor_colour;
+        env.grid_colours(c) = cenv.floor_colour;
 
 #ifdef USE_TILE
     if (feat == DNGN_ROCK_WALL)
@@ -1310,7 +1321,7 @@ static void _corrupt_square(const crawl_environment &oenv, const coord_def &c)
 #endif
 }
 
-static void _corrupt_level_features(const crawl_environment &oenv)
+static void _corrupt_level_features(const corrupt_env &cenv)
 {
     std::vector<coord_def> corrupt_seeds;
     std::vector<map_marker*> corrupt_markers =
@@ -1339,7 +1350,7 @@ static void _corrupt_level_features(const crawl_environment &oenv)
             std::max(1, 100 - (idistance2 - ground_zero_radius2) * 70 / 57);
 
         if (random2(100) < corrupt_perc_chance && _is_grid_corruptible(*ri))
-            _corrupt_square(oenv, *ri);
+            _corrupt_square(cenv, *ri);
     }
 }
 
@@ -1362,19 +1373,19 @@ bool is_level_incorruptible()
     return (false);
 }
 
-static void _corrupt_choose_colours()
+static void _corrupt_choose_colours(corrupt_env *cenv)
 {
     int colour = BLACK;
     do
         colour = random_uncommon_colour();
     while (colour == env.rock_colour || colour == LIGHTGREY || colour == WHITE);
-    env.rock_colour = colour;
+    cenv->rock_colour = colour;
 
     do
         colour = random_uncommon_colour();
     while (colour == env.floor_colour || colour == LIGHTGREY
            || colour == WHITE);
-    env.floor_colour = colour;
+    cenv->floor_colour = colour;
 }
 
 bool lugonu_corrupt_level(int power)
@@ -1388,28 +1399,9 @@ bool lugonu_corrupt_level(int power)
 
     _initialise_level_corrupt_seeds(power);
 
-    std::auto_ptr<crawl_environment> backup(new crawl_environment(env));
-    env.level_map_mask.init(0);
-    env.level_map_ids.init(INVALID_MAP_INDEX);
-
-    // Set up genlevel mask and fill the level with DNGN_UNSEEN so
-    // _generate_area does its thing.
-    map_mask abyss_genlevel_mask;
-    abyss_genlevel_mask.init(true);
-    for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
-        grd(*ri) = DNGN_UNSEEN;
-    _generate_area(abyss_genlevel_mask, false);
-    los_changed();
-
-    _corrupt_choose_colours();
-
-    std::auto_ptr<crawl_environment> abyssal(new crawl_environment(env));
-    env = *backup;
-    backup.reset(NULL);
-    dungeon_events.clear();
-    env.markers.activate_all(false);
-
-    _corrupt_level_features(*abyssal);
+    corrupt_env cenv;
+    _corrupt_choose_colours(&cenv);
+    _corrupt_level_features(cenv);
     run_corruption_effects(300);
 
 #ifndef USE_TILE
