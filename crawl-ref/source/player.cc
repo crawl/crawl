@@ -1285,6 +1285,9 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         rf += 2 * player_equip( EQ_BODY_ARMOUR, ARM_DRAGON_ARMOUR );
         rf += player_equip( EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_ARMOUR );
         rf -= player_equip( EQ_BODY_ARMOUR, ARM_ICE_DRAGON_ARMOUR );
+        rf += 2 * player_equip( EQ_BODY_ARMOUR, ARM_DRAGON_HIDE );
+        rf += player_equip( EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_HIDE );
+        rf -= player_equip( EQ_BODY_ARMOUR, ARM_ICE_DRAGON_HIDE );
 
         // ego armours
         rf += player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_FIRE_RESISTANCE );
@@ -1344,6 +1347,9 @@ int player_res_steam(bool calc_unid, bool temp, bool items)
     if (items && player_equip(EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_ARMOUR))
         res += 2;
 
+    if (items && player_equip(EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_HIDE))
+        res += 2;
+
     return (res + player_res_fire(calc_unid, temp, items) / 2);
 }
 
@@ -1399,6 +1405,9 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
         rc += 2 * player_equip( EQ_BODY_ARMOUR, ARM_ICE_DRAGON_ARMOUR );
         rc += player_equip( EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_ARMOUR );
         rc -= player_equip( EQ_BODY_ARMOUR, ARM_DRAGON_ARMOUR );
+        rc += 2 * player_equip( EQ_BODY_ARMOUR, ARM_ICE_DRAGON_HIDE );
+        rc += player_equip( EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_HIDE );
+        rc -= player_equip( EQ_BODY_ARMOUR, ARM_DRAGON_HIDE );
 
         // ego armours
         rc += player_equip_ego_type( EQ_ALL_ARMOUR, SPARM_COLD_RESISTANCE );
@@ -1499,6 +1508,7 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
 
         // body armour:
         re += player_equip( EQ_BODY_ARMOUR, ARM_STORM_DRAGON_ARMOUR );
+        re += player_equip( EQ_BODY_ARMOUR, ARM_STORM_DRAGON_HIDE );
 
         // randart weapons:
         re += scan_artefacts(ARTP_ELECTRICITY, calc_unid);
@@ -1549,6 +1559,8 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
         // body armour:
         rp += player_equip( EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_ARMOUR );
         rp += player_equip( EQ_BODY_ARMOUR, ARM_SWAMP_DRAGON_ARMOUR );
+        rp += player_equip( EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_HIDE );
+        rp += player_equip( EQ_BODY_ARMOUR, ARM_SWAMP_DRAGON_HIDE );
 
         // randart weapons:
         rp += scan_artefacts(ARTP_POISON, calc_unid);
@@ -1594,6 +1606,8 @@ int player_res_sticky_flame(bool calc_unid, bool temp, bool items)
         rsf++;
 
     if (items && player_equip(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_ARMOUR))
+        rsf++;
+    if (items && player_equip(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_HIDE))
         rsf++;
 
     if (rsf > 1)
@@ -5616,7 +5630,7 @@ int player::melee_evasion(const actor *act, ev_ignore_type evit) const
                 || (evit & EV_IGNORE_HELPLESS)) ? 0 : 10)
             - (you_are_delayed()
                && !(evit & EV_IGNORE_HELPLESS)
-               && !is_run_delay(current_delay_action())? 5 : 0));
+               && !delay_is_run(current_delay_action())? 5 : 0));
 }
 
 bool player::heal(int amount, bool max_too)

@@ -1560,7 +1560,7 @@ bool mons_is_safe(const monsters *mon, const bool want_move,
     if (consider_user_options)
     {
         bool moving = (!you.delay_queue.empty()
-                          && is_run_delay(you.delay_queue.front().type)
+                          && delay_is_run(you.delay_queue.front().type)
                           && you.delay_queue.front().type != DELAY_REST
                        || you.running < RMODE_NOT_RUNNING
                        || want_move);

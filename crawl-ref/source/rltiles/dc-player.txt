@@ -372,7 +372,7 @@ vanhel1 VANHEL
 
 maxwell MAXWELL
 lears_chain_mail LEARS_CHAIN_MAIL
-dragonarm_shimmer DRAGONARM_SHIMMER
+faerie_dragon_armour FAERIE_DRAGON_ARMOUR
 %end_ctg
 
 
@@ -488,6 +488,7 @@ sword3 SWORD3
 sword_breaker SWORD_BREAKER
 sword_jag SWORD_JAG
 demonblade DEMON_BLADE
+enchantress_dagger ENCHANTRESS_DAGGER
 
 ## blunt
 club CLUB
@@ -701,6 +702,7 @@ shield_shaman SHIELD_SHAMAN
 shield_of_resistance SHIELD_OF_RESISTANCE
 shield_of_ignorance SHIELD_OF_IGNORANCE
 gil-galad SHIELD_GILGALAD
+shield_spriggan SHIELD_SPRIGGAN
 
 ## books
 %sdir player/hand2/misc

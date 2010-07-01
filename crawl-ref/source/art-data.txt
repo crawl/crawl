@@ -342,7 +342,7 @@ OBJ:     OBJ_ARMOUR/ARM_MOTTLED_DRAGON_ARMOUR
 PLUS:    +3
 COLOUR:  ETC_JEWEL
 TILE:    urand_faerie
-TILE_EQ: dragonarm_shimmer
+TILE_EQ: faerie_dragon_armour
 BOOL:    nogen
 DESC:    Faerie dragons used to be a race of the same species as mottled ones.
          Too bad, their vivid colours became their bane, as they alerted
