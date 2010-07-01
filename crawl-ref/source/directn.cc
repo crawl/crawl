@@ -1145,6 +1145,10 @@ void direction_chooser::draw_beam_if_needed()
         return;
     }
 
+    // If the target is not in LOS, don't even try.
+    if (!in_los(target()))
+        return;
+
     // Work with a copy in order not to mangle anything.
     ray_def ray = beam;
 
