@@ -1508,7 +1508,10 @@ void direction_chooser::toggle_beam()
     need_beam_redraw = true;
 
     if (show_beam)
-        have_beam = find_ray(you.pos(), target(), beam);
+    {
+        have_beam = find_ray(you.pos(), target(), beam,
+                             opc_solid, BDS_DEFAULT);
+    }
 }
 
 bool direction_chooser::select_previous_target()
@@ -1873,7 +1876,8 @@ bool direction_chooser::do_main_loop()
     // Redraw whatever is necessary.
     if (old_target != target())
     {
-        have_beam = show_beam && find_ray(you.pos(), target(), beam);
+        have_beam = show_beam && find_ray(you.pos(), target(), beam,
+                                          opc_solid, BDS_DEFAULT);
         need_text_redraw   = true;
         need_beam_redraw   = true;
         need_cursor_redraw = true;
@@ -1926,7 +1930,11 @@ bool direction_chooser::choose_direction()
 
     // If requested, show the beam on startup.
     if (show_beam)
-        need_beam_redraw = have_beam = find_ray(you.pos(), target(), beam);
+    {
+        have_beam = find_ray(you.pos(), target(), beam,
+                             opc_solid, BDS_DEFAULT);
+        need_beam_redraw = have_beam;
+    }
 
     mesclr();
     msgwin_set_temporary(true);
