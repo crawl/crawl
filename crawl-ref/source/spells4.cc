@@ -2159,8 +2159,7 @@ int holy_flames (monsters* caster, actor* defender)
             continue;
         }
 
-        place_cloud(CLOUD_HOLY_FLAMES, *ai, caster->hit_dice * 5,
-                    caster->kill_alignment());
+        place_cloud(CLOUD_HOLY_FLAMES, *ai, caster->hit_dice * 5, KILL_MON);
 
         cloud_count++;
     }

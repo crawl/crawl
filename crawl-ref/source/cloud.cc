@@ -35,7 +35,7 @@
 #endif
 #include "mutation.h"
 
-static int _actual_spread_rate(cloud_type type, int spread_rate)
+int actual_spread_rate(cloud_type type, int spread_rate)
 {
     if (spread_rate >= 0)
         return spread_rate;
@@ -65,11 +65,12 @@ static bool _killer_whose_match(kill_category whose, killer_type killer)
             return (killer == KILL_YOU_MISSILE || killer == KILL_YOU_CONF);
 
         case KC_FRIENDLY:
-            return (killer == KILL_MON_MISSILE || killer == KILL_YOU_CONF);
+            return (killer == KILL_MON_MISSILE || killer == KILL_YOU_CONF 
+                    || killer == KILL_MON);
 
         case KC_OTHER:
             return (killer == KILL_MON_MISSILE || killer == KILL_MISCAST
-                    || killer == KILL_MISC);
+                    || killer == KILL_MISC || killer == KILL_MON);
 
         case KC_NCATEGORIES:
             ASSERT(false);
@@ -490,7 +491,7 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
             return;
     }
 
-    const int spread_rate = _actual_spread_rate(cl_type, _spread_rate);
+    const int spread_rate = actual_spread_rate(cl_type, _spread_rate);
 
     // Too many clouds.
     if (env.cloud_no >= MAX_CLOUDS)
