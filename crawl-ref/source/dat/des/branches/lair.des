@@ -810,7 +810,7 @@ SUBST:  X = xx.
 SUBST:  P = 1111.
 KITEM:  % = honeycomb, honeycomb, honeycomb
 MAP
-            xXXxxxXXXxxX
+            xXXxxxXXXxxx
        @...xxxxxxxxxxxxx
        P..Pxxxxxxxxxxxxx
       @...xxxxxxxxxxxxxx
@@ -828,7 +828,7 @@ MAP
  .PxxxxxxxxXx2....4xxxxx
  Pxxxxxxxxxx3....4xXxxxx
 XxxxxxxxxxxXx3%.2xxxxxxx
-Xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 # Who let the dogs out?
