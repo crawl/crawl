@@ -1295,8 +1295,9 @@ static void _handle_run_delays(const delay_queue_item &delay)
 
     command_type cmd = CMD_NO_CMD;
 
-    bool want_move = delay.type == DELAY_RUN || delay.type == DELAY_TRAVEL;
-    if (!i_feel_safe(true, want_move))
+    const bool want_move =
+        delay.type == DELAY_RUN || delay.type == DELAY_TRAVEL;
+    if (you.confused() || !i_feel_safe(true, want_move))
         stop_running();
     else
     {
