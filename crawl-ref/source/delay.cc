@@ -159,7 +159,7 @@ static void _clear_pending_delays()
 
         you.delay_queue.pop_back();
 
-        if (is_run_delay(delay.type) && you.running)
+        if (delay_is_run(delay.type) && you.running)
             stop_running();
     }
 }
@@ -277,7 +277,7 @@ void stop_delay( bool stop_stair_travel )
         // Note that runrest::stop() will turn around and call stop_delay()
         // again, but that's okay because the delay is already popped off
         // the queue.
-        if (is_run_delay(delay.type) && you.running)
+        if (delay_is_run(delay.type) && you.running)
             stop_running();
 
         // There's no special action needed for macros - if we don't call out
@@ -364,7 +364,7 @@ void stop_delay( bool stop_stair_travel )
         break;
     }
 
-    if (is_run_delay(delay.type))
+    if (delay_is_run(delay.type))
         update_turn_count();
 }
 
@@ -518,7 +518,7 @@ delay_type current_delay_action( void )
                               : DELAY_NOT_DELAYED);
 }
 
-bool is_run_delay(int delay)
+bool delay_is_run(delay_type delay)
 {
     return (delay == DELAY_RUN || delay == DELAY_REST || delay == DELAY_TRAVEL);
 }
@@ -665,7 +665,7 @@ void handle_delay()
     }
 
     // Run delays and Lua delays don't have a specific end time.
-    if (is_run_delay(delay.type))
+    if (delay_is_run(delay.type))
     {
         _handle_run_delays(delay);
         return;
@@ -1326,7 +1326,7 @@ static void _handle_run_delays(const delay_queue_item &delay)
     // If you.running has gone to zero, and the run delay was not
     // removed, remove it now. This is needed to clean up after
     // find_travel_pos() function in travel.cc.
-    if (!you.running && is_run_delay(current_delay_action()))
+    if (!you.running && delay_is_run(current_delay_action()))
     {
         _pop_delay();
         update_turn_count();
@@ -1457,11 +1457,11 @@ static bool _should_stop_activity(const delay_queue_item &item,
 
 inline static void _monster_warning(activity_interrupt_type ai,
                                     const activity_interrupt_data &at,
-                                    int atype)
+                                    delay_type atype)
 {
     if (ai != AI_SEE_MONSTER)
         return;
-    if (!is_run_delay(atype) && !_is_butcher_delay(atype))
+    if (!delay_is_run(atype) && !_is_butcher_delay(atype))
         return;
 
     const monsters* mon = static_cast<const monsters*>(at.data);
@@ -1623,7 +1623,7 @@ bool interrupt_activity( activity_interrupt_type ai,
             // so that stop running Lua notifications happen.
             for (int j = i; j < size; ++j)
             {
-                if (is_run_delay(you.delay_queue[j].type))
+                if (delay_is_run(you.delay_queue[j].type))
                 {
                     _monster_warning(ai, at, you.delay_queue[j].type);
                     stop_delay(ai == AI_TELEPORT);
