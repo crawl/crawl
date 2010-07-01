@@ -2538,8 +2538,7 @@ void gain_piety(int original_gain, bool force)
         pgn = sprint_modify_piety(pgn);
     }
 
-    you.piety += pgn;
-    you.piety = std::min<int>(MAX_PIETY, you.piety);
+    you.piety += std::min<int>(MAX_PIETY - you.piety, pgn);
 
     for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
     {
