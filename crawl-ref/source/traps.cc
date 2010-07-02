@@ -782,9 +782,27 @@ void destroy_trap( const coord_def& pos )
 
 trap_def* find_trap(const coord_def& pos)
 {
+    if (!feat_is_trap(grd(pos), true))
+        return (NULL);
+
+    unsigned short t = env.tgrid(pos);
+    if (t != NON_ENTITY && t < MAX_TRAPS
+        && env.trap[t].pos == pos && env.trap[t].type != TRAP_UNASSIGNED)
+    {
+        return (&env.trap[t]);
+    }
+
+    // For now, we don't trust tgrid and re-check.  FIXME after release.
     for (int i = 0; i < MAX_TRAPS; ++i)
         if (env.trap[i].pos == pos && env.trap[i].type != TRAP_UNASSIGNED)
+        {
+            env.tgrid(pos) = i;
             return (&env.trap[i]);
+        }
+
+    // But we do remove invalid traps.
+    grd(pos) = DNGN_FLOOR;
+
     return (NULL);
 }
 
