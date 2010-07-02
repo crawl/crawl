@@ -37,25 +37,25 @@ Bill Beher                   Sylvia 'Onia' Hörnke      Derek Ray
 Alexander Beisig             Iainuki                   Remsleep
 Stu Black                    Ilyak                     Will Rogers
 Erik Inge Bolsø              Matthew Ince              David Rose
-Peter Borgmann               Mitsuhiro Itakura         Sebastian Salman
-Daniel Mark Brownrigg        Mikko Juola               Brett Scarborough
-Trent W. Buck                Jarmo Kielosto            Robert Shimmin
-Joe Buzzelli                 Kornel Kisielewicz        Sigurd
-Terje Bø                     Daniel Klein              Edgar Simo
-Henry Cipolla                Vambola Kotkas            Alex Smith
-Aaron Curtis                 Ryan Kusnery              Solf
-Denzi                        Jukka Kuusisto            Michael Spang
-Mike Drinen                  Maciej Lapinski           Johan Strandell
-Kieron Dunbar                Jordan Lewis              Roman Sêk
-Micha Elsner                 Icy Lich                  William Tanksley, Jr.
-Christopher Evenstar         Markus Maier              Jared 'Twinge' Tinney
-Brett Foster                 Arien Malec               Matt Titus
-Chris Galardi                Paul Maloney              Steven Wheeler
-Ben Goetter                  Andrew Minton             Thomas Willem
-Rob Grant                    Shawn M Moore             Evan Williams
-John Greenberg               Eva Myers                 Jeremey Wilson
-GreyKnight                   Wille Mäntylä             Yelve Yakut
-Joshua Gross                 Erkki Nurmi               Zooko
-Brian Haase                  Mattias Nyberg
+Peter Borgmann               Mitsuhiro Itakura         Risto Saarelma
+Daniel Mark Brownrigg        Mikko Juola               Sebastian Salman
+Trent W. Buck                Jarmo Kielosto            Brett Scarborough
+Joe Buzzelli                 Kornel Kisielewicz        Robert Shimmin
+Terje Bø                     Daniel Klein              Sigurd
+Henry Cipolla                Vambola Kotkas            Edgar Simo
+Aaron Curtis                 Ryan Kusnery              Alex Smith
+Denzi                        Jukka Kuusisto            Solf
+Mike Drinen                  Maciej Lapinski           Michael Spang
+Kieron Dunbar                Jordan Lewis              Johan Strandell
+Micha Elsner                 Icy Lich                  Roman Sêk
+Christopher Evenstar         Markus Maier              William Tanksley, Jr.
+Brett Foster                 Arien Malec               Jared 'Twinge' Tinney
+Chris Galardi                Paul Maloney              Matt Titus
+Ben Goetter                  Andrew Minton             Steven Wheeler
+Rob Grant                    Shawn M Moore             Thomas Willem
+John Greenberg               Eva Myers                 Evan Williams
+GreyKnight                   Wille Mäntylä             Jeremey Wilson
+Joshua Gross                 Erkki Nurmi               Yelve Yakut
+Brian Haase                  Mattias Nyberg            Zooko
 Shayne Halvorson             nyra
 
