@@ -3851,25 +3851,25 @@ bool tso_unchivalric_attack_safe_monster(const monsters *mon)
             || !mon->is_holy() && holiness != MH_NATURAL);
 }
 
-int get_monster_tension(monster_iterator mons, god_type god)
+int get_monster_tension(const monsters *mons, god_type god)
 {
     if (!mons->alive())
         return 0;
 
     if (you.see_cell(mons->pos()))
     {
-        if (!mons_can_hurt_player(*mons))
+        if (!mons_can_hurt_player(mons))
             return 0;
     }
 
-    const mon_attitude_type att = mons_attitude(*mons);
+    const mon_attitude_type att = mons_attitude(mons);
     if (att == ATT_GOOD_NEUTRAL || att == ATT_NEUTRAL)
         return 0;
 
-    if (mons->cannot_act() || mons->asleep() || mons_is_fleeing(*mons))
+    if (mons->cannot_act() || mons->asleep() || mons_is_fleeing(mons))
         return 0;
 
-    int exper = exper_value(*mons);
+    int exper = exper_value(mons);
     if (exper <= 0)
         return 0;
 
@@ -3880,7 +3880,7 @@ int get_monster_tension(monster_iterator mons, god_type god)
     bool gift = false;
 
     if (god != GOD_NO_GOD)
-        gift = mons_is_god_gift(*mons, god);
+        gift = mons_is_god_gift(mons, god);
 
     if (att == ATT_HOSTILE)
     {
@@ -3903,7 +3903,7 @@ int get_monster_tension(monster_iterator mons, god_type god)
 
     if (att != ATT_FRIENDLY)
     {
-        if (!you.visible_to(*mons))
+        if (!you.visible_to(mons))
             exper /= 2;
         if (!mons->visible_to(&you))
             exper *= 2;
@@ -3949,7 +3949,7 @@ int get_tension(god_type god)
     {
         const monsters *mon = monster_at(*ri);
 
-        if(mon && you.can_see(mon))
+        if (mon && mon->alive() && you.can_see(mon))
         {
             int exper = get_monster_tension(mon, god);
 
