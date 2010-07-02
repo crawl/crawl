@@ -2886,6 +2886,194 @@ xxxxx[{(<.....xxx
 xxxxxxxxxxxxxxxxx
 ENDMAP
 
+##############################################################
+# There's a large version (with WEIGHT 2) in the huge maps section.
+NAME:   minmay_entry_arboretum_small
+WEIGHT: 8
+TAGS:   entry no_monster_gen no_item_gen
+ORIENT: float
+MONS:   plant / bush w:3, fungus col:any, fungus col:yellow, fungus col:red
+MONS:   fungus col:white, fungus col:magenta, fungus col:darkgrey
+KPROP:  ' = no_rtele_into
+SUBST:  ' = ...111t, 1:1112, 2=1111112, 2:234567
+FTILE:  .1234567t = floor_lair
+COLOUR: . = green
+SUBST:  " = .
+MAP
+xxxxxxxxxxxxxxxxx
+x'''''''''''''''x
+x'''''''''''''''x
+x'''''''''''''''x
+x'''''''''''''''x
+x'''''''''''''''x
+x'''''''''''''''x
+x'''''''''''''''x
+x'''''''''''''''x
+xxxxmmmmmmmmmxxxx
+"""""""""""""""""
+@""""{""[""(""""@
+"""""""""""""""""
+ENDMAP
+
+##############################################################
+NAME:    minmay_entry_cross
+TAGS:    entry no_monster_gen
+ORIENT:  float
+SUBST:   x : x:10 c:2 v:1
+SHUFFLE: ABC
+SUBST:   A=+, B=+x, C=+xx
+MAP
+xxxxxxx+xxxxxxx
+xxxxxx...xxxxxx
+xxxxxx...xxxxxx
+xxxxxx...xxxxxx
+xxxx{.....[xxxx
+xxxx.......xxxx
+x.............x
+A......T......B
+x.............x
+xxxx.......xxxx
+xxxx>.....(xxxx
+xxxxxx...xxxxxx
+xxxxxx...xxxxxx
+xxxxxx...xxxxxx
+xxxxxxxCxxxxxxx
+ENDMAP
+
+##############################################################
+NAME:   minmay_entry_open_corners
+TAGS:   entry no_monster_gen
+ORIENT: float
+SUBST:  x : x:10 c:2 v:1 m:1
+MAP
+xxx...xxx...xxx
+x.............x
+x.............x
+...xxx...xxx...
+...x(.....[x...
+...x.......x...
+x.............x
+x......b......x
+x.............x
+...x.......x...
+...x{.....>x...
+...xxx...xxx...
+x.............x
+x.............x
+xxx...xxx...xxx
+ENDMAP
+
+##############################################################
+# Background for the Abyss portals: someone made them, probably with
+# an evil mind. The upright citizens and adventurers were not able
+# to destroy those portals, so they sealed them instead.
+NAME:   minmay_entry_glassed_features
+TAGS:   entry no_monster_gen
+ORIENT: float
+KPROP:  'I = no_rtele_into
+SUBST:  I : G T I:4 A:1
+KFEAT:  A = enter_abyss
+MAP
+mmmmm.....mmmmm
+m'''m.....m'''m
+m'I'm.....m'I'm
+m'''m.....m'''m
+mmmmm.....mmmmm
+...............
+...............
+......({[......
+...............
+...............
+mmmmm.....mmmmm
+m'''m.....m'''m
+m'I'm.....m'I'm
+m'''m.....m'''m
+mmmmm.....mmmmm
+ENDMAP
+
+##############################################################
+# This map provides no space to run around/away, so there is
+# either some staircase or a known shaft.
+NAME:   minmay_entry_hallway
+TAGS:   entry no_monster_gen
+ORIENT: float
+SUBST:  x : x:10 c:2 v:1
+SUBST:  a : ab
+NSUBST: a = 1:< / 1:> / *:.
+NSUBST: b = 1:b / 1:b. / *:.
+KFEAT:  b = known shaft trap
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx
+@..xxx...xxx...xxx...xxx
+@..xxx.a.xxx.a.xxx.{.xxx
+@..xxx...xxx...xxx...xxx
+@....................xxx
+@..................[.xxx
+@....................xxx
+@..xxx...xxx...xxx...xxx
+@..xxx.a.xxx.a.xxx.(.xxx
+@..xxx...xxx...xxx...xxx
+xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################
+# The map can make it hard to get away, so reduced weight.
+NAME:    minmay_entry_floating_metal
+TAGS:    entry no_monster_gen
+WEIGHT:  3
+ORIENT:  southeast
+SHUFFLE: {(
+NSUBST:  V = 2:= / 2=v= / *:v
+NSUBST:  U = 2:= / 2=v= / *:v
+SUBST:   ' = .W
+MAP
+  '''''''''@'''''x
+ ''wwwwwwwwWwwwwwx
+''wwwwwvvvv+vwwwwx
+'wvvvvwv....vwwwwx
+@W+(>vwv.{>.vwwwwx
+'wvvvvwv....vwwwwx
+'wwwwwwvvvvvvwwwwx
+'wwwwwwwwwwwwwvvwx
+'wwwvvwwwwwwwwvvwx
+'wwwvvwwwwwwwwwwwx
+'wwwwwwwwwwwwwwwwx
+'wwwwwwwwwVVVVwwwx
+'WwwUUUwwwV<>Vwwwx
+'WwwU<UwwwVVVVwwwx
+'WwwU>Uwwwwwwwwwwx
+'wwwUUUwwwwwwwwwwx
+'wwwwWwwwwwwwwwwwx
+xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################
+# Net traps aren't going to kill you.
+NAME:   minmay_entry_trapped
+TAGS:   entry no_monster_gen
+ORIENT: float
+NSUBST: ~ = 3:~ / *=~.....
+SUBST:  ~ : ~^..
+KFEAT:  ~ = net trap
+KFEAT:  ^ = net trap / dart trap
+MAP
+    x+x
+    x~x
+    x~x
+   xx~xx
+xxxx..(xxxx
++~~~.{.~~~+
+xxxx[..xxxx
+   xx~xx
+    x~x
+    x~x
+    x+x
+ENDMAP
+
 
 ##############################################################################
 # -2- Twisted maps.
@@ -3389,7 +3577,7 @@ KMONS:   1 = orc / nothing
 KMONS:   2 = orc wizard / orc / nothing
 : elseif rnd == 1 then
 KFEAT:   C = altar_lugonu
-KFEAT:   D = enter_abyss
+KFEAT:   D = enter_abys
 KMONS:   1 = imp / quasit / iron imp / lemure / ufetubus / demonic crawler w:5
 SUBST:   t : U....
 : elseif rnd == 2 then
@@ -4210,4 +4398,44 @@ MAP
         ..!!!!???.???!!!!..
          ...!!!!!+!!!!!...
            ......@......
+ENDMAP
+
+##############################################################
+# 23x17
+# The large aboretum
+NAME:   minmay_entry_arboretum_large
+WEIGHT: 2
+TAGS:   entry no_monster_gen no_item_gen
+ORIENT: float
+MONS:   plant / bush w:3, fungus col:any, fungus col:yellow, fungus col:red
+MONS:   fungus col:white, fungus col:magenta, fungus col:darkgrey
+KPROP:  ' = no_rtele_into
+SUBST:  ' = ...111t, 1:1112, 2=1111112, 2:234567
+FTILE:  .1234567t = floor_lair
+COLOUR: . = green
+SUBST:  " = .
+MAP
+xxxxxxxxxxxxxxxxx
+x'''''''''''''''x
+x'''''''''''''''x
+x'''''''''''''''x
+x'''''''''''''''x
+x'''''''''''''''x
+x'''''''''''''''x
+x'''''''''''''''x
+x'''''''''''''''x
+xxxxmmmmmmmmmxxxx
+"""""""""""""""""
+@""""{""[""(""""@
+"""""""""""""""""
+xxxxmmmmmmmmmxxxx
+x'''''''''''''''x
+x'''''''''''''''x
+x'''''''''''''''x
+x'''''''''''''''x
+x'''''''''''''''x
+x'''''''''''''''x
+x'''''''''''''''x
+x'''''''''''''''x
+xxxxxxxxxxxxxxxxx
 ENDMAP
