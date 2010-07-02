@@ -4074,7 +4074,7 @@ void melee_attack::player_apply_attack_delay()
 
 random_var melee_attack::player_weapon_speed()
 {
-    random_var attack_delay = constant(0);
+    random_var attack_delay = constant(15);
 
     if (weapon && (weapon->base_type == OBJ_WEAPONS
                    || weapon->base_type == OBJ_STAVES))
