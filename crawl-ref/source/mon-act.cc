@@ -3155,8 +3155,7 @@ static bool _may_cutdown(monsters* mons, monsters* targ)
     // and friendlies never attacking anything other than hostiles.
     const bool bad_align =
         ((mons->friendly() || mons->good_neutral())
-         ==
-         (targ->friendly() || targ->good_neutral()));
+         && (targ->friendly() || targ->good_neutral()));
     return (mons_is_firewood(targ) && !bad_align);
 }
 
