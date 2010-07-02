@@ -1214,6 +1214,7 @@ void dgn_reset_level(bool enable_random_maps)
 
     mgrd.init(NON_MONSTER);
     igrd.init(NON_ITEM);
+    env.tgrid.init(NON_ENTITY);
 
     // Reset all shops.
     for (int shcount = 0; shcount < MAX_SHOPS; shcount++)
