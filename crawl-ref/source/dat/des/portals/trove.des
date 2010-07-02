@@ -28,7 +28,7 @@
 #    We can also make it so that the player can take some time for the first
 #    payment -- but the longer it takes, the more the trove wants. (And the
 #    trove will vanish if the total cost exceeds some threshold.)
-#    For quests like "one  potion of acquirement" (where you have to part with
+#    For quests like "one potion of acquirement" (where you have to part with
 #    very few, very good items), the trove would ask for items of the same
 #    type (scrolls, potions, wands) of sufficient worth: we wouldn't even need
 #    to tell the player the exact value.
@@ -276,7 +276,7 @@ The secrets of the gateways died with him when his fellow thieves, disgusted at 
 end
 
 -- Use the following line in destination maps after all SUBSTs
--- : trove_setup_features(_G)
+-- : trove.setup_features(_G)
 -- Note that the function also defines < to be the exit portal.
 function trove.setup_features(e)
     e.kfeat("< = exit_portal_vault")
@@ -882,4 +882,294 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwww
+ENDMAP
+
+###################################
+#
+# minmay's troves
+#
+# A severe exaggeration of the "game-changing or junk" aspect of treasure 
+# troves. Three items, very likely to be unrandarts, and generally either 
+# extremely useful or extremely useless.
+#
+NAME:    trove_artefacts
+TAGS:    trove no_item_gen no_monster_gen allow_dup
+WEIGHT:  1
+ORIENT:  encompass
+######## There should be a better way than listing all of the unrandarts...
+ITEM:    chain mail unrand:lears_chain_mail                                  /\
+ randart plate mail w:50                                                     /\ 
+         plate mail unrand:maxwells_patent_armour                            /\
+ randart dragon armour                                                       /\ 
+         gold dragon armour unrand:armour_of_the_dragon_king                 /\
+ randart crystal plate mail                                                  /\
+ randart robe w:50                                                           /\
+         leather armour unrand:salamander_hide_armour / robe unrand:robe_of_night /\
+         robe unrand:robe_of_misfortune / animal skin unrand:skin_of_zhor    /\
+         robe unrand:robe_of_augmentation / robe unrand:robe_of_folly        /\
+ randart buckler / randart shield / randart large shield                     /\
+         shield unrand:shield_of_resistance / shield unrand:bullseye         /\
+         shield unrand:shield_of_ignorance                                   /\
+ randart cloak w:25                                                          /\
+         cloak unrand:cloak_of_flash / cloak unrand:cloak_of_starlight       /\
+         cloak unrand:cloak_of_the_thief
+ITEM:    ring of evasion unrand:ring_of_shaolin / any randart jewellery w:60 /\
+         ring of protection unrand:ring_of_robustness                        /\
+         ring of invisibility unrand:ring_of_shadows                         /\
+         amulet of controlled flight unrand:amulet_of_the_air                /\
+         amulet of clarity unrand:amulet_of_the_four_winds                   /\
+         amulet of warding unrand:amulet_of_cekugob                          /\
+         amulet of warding unrand:brooch_of_shielding                        /\
+         amulet of rage unrand:necklace_of_bloodlust                         /\
+         helmet unrand:crown_of_dyrovepreva / randart helmet / randart cap   /\
+         cap unrand:mask_of_the_dragon / randart wizard hat                  /\
+         wizard hat unrand:hat_of_the_alchemist / randart pair of gloves     /\
+         wizard hat unrand:hat_of_pondering / randart pair of boots          /\
+         pair of boots unrand:boots_of_the_assassin                          /\
+         pair of gloves unrand:gauntlets_of_war                              /\
+         pair of gloves unrand:fencers_gloves
+ITEM:    dagger unrand:vampires_tooth / dagger unrand:dagger_of_chilly_death /\
+         knife unrand:spriggans_knife / long sword unrand:sword_of_jihad     /\
+         dagger unrand:morg / great sword unrand:sword_of_the_doom_knight    /\
+         great sword unrand:sword_of_power / long sword unrand:bloodbane     /\
+         scimitar unrand:scimitar_of_flaming_death / war axe unrand:arga     /\
+         dagger unrand:knife_of_accuracy / long sword unrand:plutonium_sword /\
+         demon blade unrand:leech / long sword unrand:sword_of_zonguldrok    /\
+         staff of poison unrand:staff_of_olgreb / scythe unrand:finisher     /\
+         quarterstaff unrand:elemental_staff / glaive unrand:glaive_of_prune /\
+         battleaxe unrand:wrath_of_trog / glaive unrand:glaive_of_the_guard  /\
+         trident unrand:trident_of_the_octopus_king / spear unrand:wyrmbane  /\
+         scythe unrand:scythe_of_curses / giant club unrand:skullcrusher     /\
+         great mace unrand:undeadhunter / whip unrand:serpent-scourge        /\
+         mace unrand:sceptre_of_torment / mace unrand:mace_of_variability    /\
+         sling unrand:punk / bow unrand:bow_of_krishna_"sharnga"             /\
+         crossbow unrand:hellfire / longbow unrand:piercer / randart katana  /\
+         blowgun unrand:blowgun_of_the_assassin
+SHUFFLE: def
+: trove.setup_features(_G)
+epilogue{{
+trove.milestone(_G)
+}}
+MAP
+xxxxxxx
+xG...Gx
+x.....x
+x.A.<.x
+x.....x
+xG...Gx
+xxx+xxx
+ xdefx
+ xxxxx
+ENDMAP
+
+# Alchemist's storehouse, has 14-26 desirable potions
+NAME:    trove_alchemists_storehouse
+TAGS:    trove no_item_gen no_monster_gen allow_dup
+WEIGHT:  5
+ORIENT:  encompass
+ITEM:    potion of healing / potion of heal wounds / \
+         potion of healing q:2 / potion of heal wounds q:2
+ITEM:    potion of experience / potion of gain strength / \
+         potion of gain intelligence / potion of gain dexterity
+ITEM:    potion of might / potion of resistance / \
+         potion of magic / potion of speed / \
+         potion of might q:2 / potion of resistance q:2 / \
+         potion of magic q:2 / potion of speed q:2
+ITEM:    potion of cure mutation
+#  / potion of experience
+SHUFFLE: df
+SHUFFLE: eg
+: trove.setup_features(_G)
+epilogue{{
+trove.milestone(_G)
+}}
+MAP
+      xxx xxx xxx
+      xdx xfx xfx
+xxxxx xdx xfx xfx
+x.A.xxx+xxx+xxx+xxxxxx
+x...+.............+egx
+x.<.xxx+xxx+xxx+xxxxxx
+xxxxx xdx xfx xfx
+      xdx xfx xfx
+      xxx xxx xxx
+ENDMAP
+
+# 20 items, but you have to dig for them.  Wand is included.
+NAME:    trove_dig
+TAGS:    trove no_item_gen no_monster_gen allow_dup
+WEIGHT:  5
+ORIENT:  encompass
+ITEM:    acquire armour / any useful armour good_item / any armour w:2
+ITEM:    acquire weapon / any useful weapon good_item / any weapon w:2
+ITEM:    acquire jewellery / any useful jewellery good_item / any jewellery w:2
+: trove.good_scroll(_G)
+ITEM:   wand of digging
+SHUFFLE: defg
+: trove.setup_features(_G)
+epilogue{{
+trove.milestone(_G)
+}}
+MAP
+  vvvvv
+vvv...vvv
+vem.<.mfv
+vvv...vvv
+vem...mfv
+vvv...vvv
+vem...mfv
+vvv...vvv
+vem...mfv
+vvv...vvv
+vem...mfv
+vvv.h.vvv
+vdm...mgv
+vvv...vvv
+vdm...mgv
+vvv...vvv
+vdm...mgv
+vvv...vvv
+vdm...mgv
+vvv...vvv
+vdm.A.mgv
+vvv...vvv
+  vvvvv
+ENDMAP
+
+# 16 pieces of armour
+NAME:   trove_armour_six_rooms
+TAGS:   trove no_item_gen no_monster_gen allow_dup
+ORIENT: encompass
+ITEM:   acquire armour / any armour good_item / any armour w:2
+: trove.setup_features(_G)
+epilogue{{
+trove.milestone(_G)
+}}
+MAP
+xxxxxxxxxx
+xdd+ddx.Ax
+xddxdd+..x
+x+xxxxxxxx
+xddxdd+..x
+xdd+ddx.<x
+xxxxxxxxxx
+ENDMAP
+
+# 16 weapons
+NAME:   trove_weapons_four_rooms
+TAGS:   trove no_item_gen no_monster_gen allow_dup
+ORIENT: encompass
+ITEM:   acquire weapon / any weapon good_item / any weapon w:2
+NSUBST: " = 16:d / *:.
+: trove.setup_features(_G)
+epilogue{{
+trove.milestone(_G)
+}}
+MAP
+xxxxxxxxxxxxxxx
+xA............x
+x.ccccc.ccccc.x
+x.c"""c.c"""c.x
+x.c"T"c.c"T"c.x
+x.c"""c.c"""c.x
+x.cc+cc.cc+cc.x
+x.............x
+x.cc+cc.cc+cc.x
+x.c"""c.c"""c.x
+x.c"T"c.c"T"c.x
+x.c"""c.c"""c.x
+x.ccccc.ccccc.x
+x............<x
+xxxxxxxxxxxxxxx
+ENDMAP
+
+# 16 pieces of jewellery
+NAME:   trove_jewellery_lava
+TAGS:   trove no_item_gen no_monster_gen allow_dup
+ORIENT: encompass
+ITEM:   acquire jewellery / any jewellery good_item / any jewellery w:2
+: trove.setup_features(_G)
+epilogue{{
+trove.milestone(_G)
+}}
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xlllllllllllllllllllllllllx
+xlllllllllllllllllllllllllx
+xlllllllllllllllllllllllllx
+xlllllllllllllllllllllllllx
+xlllllllllllllllllllllllllx
+xlllllllllllllllllllllllllx
+xlllllllllllllllllllllllllx
+xlllllllllllllllllllllllllx
+xllllllllxxxmmmxxxllllllllx
+xllllllllxA.ddd.Axllllllllx
+xllllllllx...d...xllllllllx
+xllllllllmd.....dmllllllllx
+xllllllllmdd.<.ddmllllllllx
+xllllllllmd.....dmllllllllx
+xllllllllx...d...xllllllllx
+xllllllllxA.ddd.Axllllllllx
+xllllllllxxxmmmxxxllllllllx
+xlllllllllllllllllllllllllx
+xlllllllllllllllllllllllllx
+xlllllllllllllllllllllllllx
+xlllllllllllllllllllllllllx
+xlllllllllllllllllllllllllx
+xlllllllllllllllllllllllllx
+xlllllllllllllllllllllllllx
+xlllllllllllllllllllllllllx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# 16 scrolls and books
+NAME:   trove_books_scrolls
+TAGS:   trove no_item_gen no_monster_gen allow_dup
+ORIENT: encompass
+ITEM:   acquire staff / acquire book / acquire:sif_muna book / any book
+SUBST:  d = de
+: trove.good_scroll(_G)
+: trove.setup_features(_G)
+epilogue{{
+trove.milestone(_G)
+}}
+MAP
+     xxxxx
+     xd.dx
+     xx.xx
+     xd.dx
+    xxx+xxx
+xxxxx.....xxxxx
+xdxdx.....xdxdx
+x...+.A.<.+...x
+xdxdx.....xdxdx
+xxxxx.....xxxxx
+    xxx+xxx
+     xd.dx
+     xx.xx
+     xd.dx
+     xxxxx
+ENDMAP
+
+# 16 scrolls and wands
+NAME:   trove_wands_scrolls
+TAGS:   trove no_item_gen no_monster_gen allow_dup
+ORIENT: encompass
+ITEM:   acquire wand
+SUBST:  e = eeed
+: trove.good_scroll(_G)
+: trove.setup_features(_G)
+epilogue{{
+trove.milestone(_G)
+}}
+MAP
+xxxxx
+x...xxxx
+x.A.eeexxxx
+x...exe...xxxx
+xxxxeee.x.eeexxxx
+   xxxx...exe...x
+      xxxxeee.<.x
+         xxxx...x
+            xxxxx
 ENDMAP
