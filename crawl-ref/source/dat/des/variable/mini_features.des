@@ -449,6 +449,24 @@ xddx
 xx+x
 ENDMAP
 
+NAME:    minmay_variable_closet
+TAGS:    extra mini_float allow_dup luniq_mini
+DEPTH:   D:9-27, Vault
+ITEM:    any weapon, any missile, any armour, any food, any scroll
+ITEM:    any jewellery, any potion, any book
+SUBST:   + = +=, $ : $ZYXW
+SUBST:   $ : $%defghijk
+SUBST:   W = $%defghijk
+SUBST:   Z = def
+SUBST:   Y = hj
+SUBST:   X = ik
+MAP
+x+xx
+x$$x
+x$$x
+xxxx
+ENDMAP
+
 NAME:   secret_library_closet
 DEPTH:  1-27, !Swamp
 TAGS:   mini_float allow_dup extra luniq_mini
