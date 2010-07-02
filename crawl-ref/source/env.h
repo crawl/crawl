@@ -29,6 +29,7 @@ struct crawl_environment
     FixedArray< int, GXM, GYM >              igrid; // item grid
     FixedArray< unsigned short, GXM, GYM >   cgrid; // cloud grid
     FixedArray< unsigned short, GXM, GYM >   grid_colours; // colour overrides
+    FixedArray< unsigned short, GXM, GYM >   tgrid; // traps, shops
 
     map_mask                                 level_map_mask;
     map_mask                                 level_map_ids;

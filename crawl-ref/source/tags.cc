@@ -2446,6 +2446,7 @@ static void tag_read_level( reader &th, char minorVersion )
 
             mgrd[i][j] = NON_MONSTER;
             env.cgrid[i][j] = EMPTY_CLOUD;
+            env.tgrid[i][j] = NON_ENTITY;
         }
 
     env.grid_colours.init(BLACK);
@@ -2492,6 +2493,7 @@ static void tag_read_level( reader &th, char minorVersion )
         env.shop[i].pos.y = unmarshallByte(th);
         env.shop[i].greed = unmarshallByte(th);
         env.shop[i].level = unmarshallByte(th);
+        env.tgrid(env.shop[i].pos) = i;
     }
     for (int i = num_shops; i < MAX_SHOPS; ++i)
         env.shop[i].type = SHOP_UNASSIGNED;
@@ -2542,6 +2544,7 @@ static void tag_read_level_items(reader &th, char minorVersion)
             continue;
         env.trap[i].pos      = unmarshallCoord(th);
         env.trap[i].ammo_qty = unmarshallShort(th);
+        env.tgrid(env.trap[i].pos) = i;
     }
     for (int i = trap_count; i < MAX_TRAPS; ++i)
         env.trap[i].type = TRAP_UNASSIGNED;
