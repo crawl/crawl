@@ -1040,7 +1040,7 @@ ENDMAP
 NAME:   trove_armour_six_rooms
 TAGS:   trove no_item_gen no_monster_gen allow_dup
 ORIENT: encompass
-ITEM:   acquire armour / any armour good_item / any armour w:2
+ITEM:   acquire armour / any useful armour good_item / any armour w:2
 : trove.setup_features(_G)
 epilogue{{
 trove.milestone(_G)
@@ -1059,7 +1059,7 @@ ENDMAP
 NAME:   trove_weapons_four_rooms
 TAGS:   trove no_item_gen no_monster_gen allow_dup
 ORIENT: encompass
-ITEM:   acquire weapon / any weapon good_item / any weapon w:2
+ITEM:   acquire weapon / any useful weapon good_item / any weapon w:2
 NSUBST: " = 16:d / *:.
 : trove.setup_features(_G)
 epilogue{{
@@ -1087,7 +1087,7 @@ ENDMAP
 NAME:   trove_jewellery_lava
 TAGS:   trove no_item_gen no_monster_gen allow_dup
 ORIENT: encompass
-ITEM:   acquire jewellery / any jewellery good_item / any jewellery w:2
+ITEM:   acquire jewellery / any useful jewellery good_item / any jewellery w:2
 : trove.setup_features(_G)
 epilogue{{
 trove.milestone(_G)
