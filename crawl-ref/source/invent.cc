@@ -183,8 +183,10 @@ std::string InvEntry::get_filter_text() const
     return (filtering_item_prefix(*item) + " " + get_text());
 }
 
-std::string InvEntry::get_text(const bool need_cursor) const
+std::string InvEntry::get_text(bool need_cursor) const
 {
+    need_cursor = need_cursor && Options.menu_cursor;
+
     std::ostringstream tstr;
 
     tstr << ' ' << static_cast<char>(hotkeys[0]);
