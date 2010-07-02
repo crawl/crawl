@@ -1904,6 +1904,102 @@ MAP
   .... . . . ..
 ENDMAP
 
+###############################################################################
+# A plain guardian serpent vault. (nrook)
+#
+NAME:  nrook_guardian_serpent_ordinary
+DEPTH: D:9-27, Snake, Crypt
+TAGS:  no_monster_gen no_item_gen
+: if you.branch() == "Crypt" then
+MONS:  patrolling spectral guardian serpent
+: else
+MONS:  patrolling guardian serpent
+: end
+MAP
+......
+.xxxx.
+.x**x.
+.x**x.
+.xx=x.
+...1..
+ENDMAP
+
+###############################################################################
+# Guardian serpents guard a snake-like passage. (nrook)
+#
+NAME:    guardian_serpent_snake_passage
+ORIENT:  float
+DEPTH:   D:9-27
+TAGS:    no_monster_gen no_rotate
+MONS:    patrolling guardian serpent
+SHUFFLE: yY/zZ
+SUBST:   y=., Y==, Z=x, z=b
+COLOUR:  *. = lightgreen
+SUBST:   ' = .
+MAP
+            xxxxxxxxxxxxxxx
+            xxxxbbbbbbbbxxx'
+            xxbbb..*...bbbx'
+            xbb...bbbb...yY1
+            xb..bbbbbbbbbbx@
+            xb.bbxxxxxxxxxx'
+            xb..bbbbxx
+            xbb.*..bbx
+            xxbbbb..bx
+ xxxxxxxxxxxxxxxxbb.bx
+'xbbbbxxxxxxxxxxxbb.bx
+1Zz..bbbxxxxxxxbbb..bx
+@xbb...bbbbbbbbb.*.bbx
+'xxbbb...*.......bbbxx
+ xxxxbbbbbbbbbbbbbxxxx
+ENDMAP
+
+###############################################################################
+# A real vault behind a false one. (nrook)
+# 
+NAME:  nrook_guardian_serpent_double
+DEPTH: D:9-27, Snake
+TAGS:  no_monster_gen
+MONS:  patrolling guardian serpent
+KPROP: *| = no_rtele_into
+SUBST: C = ===c
+MAP
+.......
+.ccccc.
+.c*|*c.
+.ccCcc.
+.n%%%n.
+.n%%%n.
+.cc=cc.
+...1...
+ENDMAP
+
+###############################################################################
+# Kobold demonologist guarded by invisible demons. (nrook)
+# Added "evil rite" looking colours, so players expect some nastiness.
+#
+NAME:   nrook_kobold_shadow_demons
+DEPTH:  D:14-27
+MONS:   kobold demonologist
+COLOUR: 123 = darkgrey
+COLOUR: ' = white
+# On average, there will be 5 demons from "2", and 1 from "3".
+MONS:   w:9 shadow demon / w:1 Lorocyproca / w:10 nothing
+MONS:   w:2 shadow demon / w:40 nothing
+MAP
+    ...    
+  .'''''.  
+ .'33333'. 
+ '3322233' 
+.'3222223'.
+.'3221223'.
+.'3222223'.
+ '3322233' 
+ .'33333'. 
+  .'''''.  
+    ...    
+ENDMAP
+
 
 ################################################################
 #
