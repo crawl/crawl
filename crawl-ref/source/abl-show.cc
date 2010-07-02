@@ -1519,9 +1519,9 @@ static bool _do_ability(const ability_def& abil)
         if (retval <= 0)
         {
             if (retval == 0)
-                mpr("There's no appreciative subject!");
-            else
                 mpr("There is no monster there to imprison!");
+            else
+                mpr("There's no appreciative subject!");
             return (false);
         }
 
