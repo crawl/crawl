@@ -974,7 +974,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_DEMIGOD,         SK_EARTH_MAGIC,    -1),
     APT(SP_DEMIGOD,         SK_POISON_MAGIC,   -1),
     APT(SP_DEMIGOD,         SK_INVOCATIONS,     0),
-    APT(SP_DEMIGOD,         SK_EVOCATIONS,      0),
+    APT(SP_DEMIGOD,         SK_EVOCATIONS,     -1),
 
     // SP_SPRIGGAN
     APT(SP_SPRIGGAN,        SK_FIGHTING,       -2),
@@ -1070,7 +1070,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_DEMONSPAWN,      SK_NECROMANCY,      1),
     APT(SP_DEMONSPAWN,      SK_TRANSLOCATIONS, -1),
     APT(SP_DEMONSPAWN,      SK_TRANSMUTATIONS, -1),
-    APT(SP_DEMONSPAWN,      SK_FIRE_MAGIC,      0),
+    APT(SP_DEMONSPAWN,      SK_FIRE_MAGIC,     -1),
     APT(SP_DEMONSPAWN,      SK_ICE_MAGIC,      -1),
     APT(SP_DEMONSPAWN,      SK_AIR_MAGIC,      -1),
     APT(SP_DEMONSPAWN,      SK_EARTH_MAGIC,    -1),
