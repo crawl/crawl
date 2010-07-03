@@ -394,34 +394,9 @@ static void _wanderer_startup_message()
 }
 
 // A one-liner upon game start to mention the orb.
-// TODO: source out the list of messages into a file, ideally with weights.
 static void _announce_goal_message()
 {
-    std::string msg;
-    switch (random2(5))
-    {
-    case 0:
-        msg = "Will you prevail where others failed? "
-              "Will you get the Orb of Zot?";
-        break;
-    case 1:
-        msg = "The bosom of this dungeon contains the most "
-              "powerful artefact, the Orb of Zot.";
-        break;
-    case 2:
-        msg = "Will you be the one to retrieve the fabulous "
-              "Orb of Zot from the depths?";
-        break;
-    case 3:
-        msg = "The destiny of this world depends on the Orb "
-              "of Zot. Go down and get it!";
-        break;
-    case 4:
-        msg = "They say that the Orb of Zot exists deep, deep "
-              "down but nobody ever got it.";
-        break;
-    }
-    mprf(MSGCH_PLAIN,"<yellow>%s</yellow>",msg.c_str());
+    mprf(MSGCH_PLAIN,"<yellow>%s</yellow>", getMiscString("welcome_spam").c_str());
 }
 
 static void _god_greeting_message(bool game_start)
