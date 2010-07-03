@@ -1670,8 +1670,8 @@ MAP
 ...............
 ENDMAP
 
-# This vault can be highly OOD, which is why lindwürmer are used in the
-# first place; unlike most dragon-types, lindürmer are flightless.
+# This vault can be highly OOD, which is why lindwurms are used in the
+# first place; unlike most dragon-types, lindwurms are flightless.
 NAME:   minmay_lindwurm_lava
 TAGS:   no_monster_gen
 DEPTH:  D:8-18, Lair:2-
