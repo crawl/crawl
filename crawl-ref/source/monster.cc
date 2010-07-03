@@ -4295,6 +4295,10 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
             learned_something_new(HINT_MONSTER_FRIENDLY, pos());
         break;
 
+    case ENCH_SILENCE:
+        invalidate_agrid(true);
+        break;
+
     default:
         break;
     }
