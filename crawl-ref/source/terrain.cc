@@ -780,7 +780,7 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
         else // Destroy invalid shops.
             dfeat = DNGN_FLOOR;
     }
-    else if (feat_is_trap(dfeat))
+    else if (feat_is_trap(dfeat, true))
     {
         if (trap_def *trap = find_trap(src))
         {
