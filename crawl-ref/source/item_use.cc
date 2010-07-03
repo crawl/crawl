@@ -3718,8 +3718,9 @@ void zap_wand(int slot)
         }
     }
 
-    int tracer_range = (alreadyknown && wand.sub_type != WAND_RANDOM_EFFECTS) ?
-                        _wand_range(type_zapped) : _max_wand_range();
+    const int tracer_range =
+        (alreadyknown && wand.sub_type != WAND_RANDOM_EFFECTS) ?
+        _wand_range(type_zapped) : _max_wand_range();
     const std::string zap_title =
         "Zapping: " + get_menu_colour_prefix_tags(wand, DESC_INVENTORY);
     direction_chooser_args args;
@@ -3759,11 +3760,9 @@ void zap_wand(int slot)
         return;
     }
 
-
     if (you.confused())
     {
-        zap_wand.target = you.pos() + coord_def(random_range(-6, 6),
-                                                random_range(-6, 6));
+        zap_wand.confusion_fuzz();
     }
 
     if (wand.sub_type == WAND_RANDOM_EFFECTS)
