@@ -2606,8 +2606,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
 
 #ifndef _MSC_VER
-	// break if-else chain on broken Microsoft compilers with stupid nesting limits
-	else
+    // break if-else chain on broken Microsoft compilers with stupid nesting limits
+    else
 #endif
 
     if (key == "autoinscribe")

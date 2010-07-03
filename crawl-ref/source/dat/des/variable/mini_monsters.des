@@ -1670,7 +1670,7 @@ MAP
 ...............
 ENDMAP
 
-# This vault can be highly OOD, which is why lindwürmer are used in the 
+# This vault can be highly OOD, which is why lindwürmer are used in the
 # first place; unlike most dragon-types, lindürmer are flightless.
 NAME:   minmay_lindwurm_lava
 TAGS:   no_monster_gen
@@ -1956,7 +1956,7 @@ ENDMAP
 
 ###############################################################################
 # A real vault behind a false one. (nrook)
-# 
+#
 NAME:  nrook_guardian_serpent_double
 DEPTH: D:9-27, Snake
 TAGS:  no_monster_gen
@@ -1987,24 +1987,24 @@ COLOUR: ' = white
 MONS:   w:9 shadow demon / w:1 Lorocyproca / w:10 nothing
 MONS:   w:2 shadow demon / w:40 nothing
 MAP
-    ...    
-  .'''''.  
- .'33333'. 
- '3322233' 
+    ...
+  .'''''.
+ .'33333'.
+ '3322233'
 .'3222223'.
 .'3221223'.
 .'3222223'.
- '3322233' 
- .'33333'. 
-  .'''''.  
-    ...    
+ '3322233'
+ .'33333'.
+  .'''''.
+    ...
 ENDMAP
 
 
 ################################################################
 #
 # Minivaults with monsters guarding a thematic item.
-# 
+#
 # A series begun by minmay. More entries welcome!
 # minmay: "Depths begin intentionally shallow; players should not
 #          be able to beat these right away, but should be able

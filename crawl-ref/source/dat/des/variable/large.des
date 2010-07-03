@@ -1259,7 +1259,7 @@ occcccccccccccccccccccccccccccc
 ENDMAP
 
 ##############################################################################
-# Shadows. 
+# Shadows.
 # For Crypt and Tartarus -- should it be moved to another des file?
 #
 NAME:   minmay_shadows
