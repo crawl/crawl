@@ -2863,7 +2863,7 @@ static void _construct_sprint_map_menu(const std::vector<std::string>& maps,
     tmp = new TextItem();
     tmp->set_text("* - Random map");
     min_coord.x = X_MARGIN + COLUMN_WIDTH;
-    min_coord.y = SPECIAL_KEYS_START_Y;
+    min_coord.y = SPECIAL_KEYS_START_Y + 1;
     max_coord.x = min_coord.x + tmp->get_text().size();
     max_coord.y = min_coord.y + 1;
     tmp->set_bounds(min_coord, max_coord);
@@ -2875,21 +2875,22 @@ static void _construct_sprint_map_menu(const std::vector<std::string>& maps,
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
+    // TODO: let players escape back to first screen menu
     // Adjust the end marker to align the - because Bksp text is longer by 3
-    tmp = new TextItem();
-    tmp->set_text("Bksp - Return to character menu");
-    tmp->set_description_text("Lets you return back to Character choice menu");
-    min_coord.x = X_MARGIN + COLUMN_WIDTH - 3;
-    min_coord.y = SPECIAL_KEYS_START_Y + 1;
-    max_coord.x = min_coord.x + tmp->get_text().size();
-    max_coord.y = min_coord.y + 1;
-    tmp->set_bounds(min_coord, max_coord);
-    tmp->set_fg_colour(BROWN);
-    tmp->add_hotkey(CK_BKSP);
-    tmp->set_id(M_ABORT);
-    tmp->set_highlight_colour(LIGHTGRAY);
-    menu->attach_item(tmp);
-    tmp->set_visible(true);
+    //tmp = new TextItem();
+    //tmp->set_text("Bksp - Return to character menu");
+    //tmp->set_description_text("Lets you return back to Character choice menu");
+    //min_coord.x = X_MARGIN + COLUMN_WIDTH - 3;
+    //min_coord.y = SPECIAL_KEYS_START_Y + 1;
+    //max_coord.x = min_coord.x + tmp->get_text().size();
+    //max_coord.y = min_coord.y + 1;
+    //tmp->set_bounds(min_coord, max_coord);
+    //tmp->set_fg_colour(BROWN);
+    //tmp->add_hotkey(CK_BKSP);
+    //tmp->set_id(M_ABORT);
+    //tmp->set_highlight_colour(LIGHTGRAY);
+    //menu->attach_item(tmp);
+    //tmp->set_visible(true);
 
     // Only add tab entry if we have a previous wand choice
     if (defaults.type == GAME_TYPE_SPRINT
