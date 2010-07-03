@@ -69,9 +69,6 @@ void areas_actor_moved(const actor* act, const coord_def& oldpos)
 
 static void _update_agrid()
 {
-    if (_agrid_valid)
-        return;
-
     _agrid.init(0);
 
     for (actor_iterator ai; ai; ++ai)
@@ -350,7 +347,8 @@ bool silenced(const coord_def& p)
 {
     if (!map_bounds(p))
         return (false);
-    _update_agrid();
+    if (!_agrid_valid)
+        _update_agrid();
     return (_check_agrid_flag(p, APROP_SILENCE));
 }
 
@@ -361,7 +359,8 @@ bool haloed(const coord_def& p)
 {
     if (!map_bounds(p))
         return (false);
-    _update_agrid();
+    if (!_agrid_valid)
+        _update_agrid();
     return (_check_agrid_flag(p, APROP_HALO));
 }
 
