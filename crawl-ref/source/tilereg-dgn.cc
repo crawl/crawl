@@ -757,7 +757,7 @@ int DungeonRegion::handle_mouse(MouseEvent &event)
             if (cloudidx != EMPTY_CLOUD)
             {
                 std::string terrain_desc = desc;
-                desc = cloud_name(cloudidx);
+                desc = cloud_name_at_index(cloudidx);
 
                 if (!terrain_desc.empty())
                     desc += "\n" + terrain_desc;
