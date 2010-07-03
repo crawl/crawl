@@ -3577,7 +3577,7 @@ KMONS:   1 = orc / nothing
 KMONS:   2 = orc wizard / orc / nothing
 : elseif rnd == 1 then
 KFEAT:   C = altar_lugonu
-KFEAT:   D = enter_abys
+KFEAT:   D = enter_abyss
 KMONS:   1 = imp / quasit / iron imp / lemure / ufetubus / demonic crawler w:5
 SUBST:   t : U....
 : elseif rnd == 2 then
