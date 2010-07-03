@@ -83,15 +83,7 @@ end
 
 function LockDoor:check_veto (marker, pname, dry_run)
   local iter_table = items.inventory()
-  local rune_count = 0
-  for it in iter.invent_iterator:new(iter_table) do
-    if dry_run ~= nil then crawl.mpr("Checking " .. it.sub_type()) end
-    local sub_type = it.sub_type
-    if sub_type == "rune of Zot" then
-      if dry_run ~= nil then crawl.mpr("Got " .. it.quantity .. " rune of zot") end
-      rune_count = rune_count + it.quantity
-    end
-  end
+  local rune_count, rune_table = you.num_runes()
 
   if dry_run ~= nil then crawl.mpr("Got " .. rune_count .. " runes") end
   if rune_count < 3 then
