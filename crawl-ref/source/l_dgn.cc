@@ -995,7 +995,7 @@ static int dgn_cloud_at (lua_State *ls)
     if (cloudno == EMPTY_CLOUD)
         lua_pushstring(ls, "none");
     else
-        lua_pushstring(ls, cloud_name(cloudno).c_str());
+        lua_pushstring(ls, cloud_name_at_index(cloudno).c_str());
 
     return (1);
 }
@@ -1239,7 +1239,7 @@ static cloud_type dgn_cloud_name_to_type(std::string name)
         return (CLOUD_DEBUGGING);
 
     for (int i = CLOUD_NONE; i < CLOUD_RANDOM; i++)
-        if (cloud_name(static_cast<cloud_type>(i)) == name)
+        if (cloud_type_name(static_cast<cloud_type>(i)) == name)
             return static_cast<cloud_type>(i);
 
     return (CLOUD_NONE);

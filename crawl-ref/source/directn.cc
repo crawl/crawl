@@ -1322,7 +1322,7 @@ std::string direction_chooser::target_cloud_description() const
 {
     const int cloud = env.cgrid(target());
     if (cloud != EMPTY_CLOUD)
-        return cloud_name(cloud);
+        return cloud_name_at_index(cloud);
     else
         return "";
 }
@@ -2055,7 +2055,7 @@ void get_square_desc(const coord_def &c, describe_info &inf,
     const int cloudidx = env.cgrid(c);
     if (cloudidx != EMPTY_CLOUD)
     {
-        inf.prefix = "There is a cloud of " + cloud_name(cloudidx)
+        inf.prefix = "There is a cloud of " + cloud_name_at_index(cloudidx)
                      + " here.\n\n";
     }
 }
@@ -3721,7 +3721,7 @@ static void _print_cloud_desc(const coord_def where, bool &cloud_described)
         const int cloud_inspected = env.cgrid(where);
 
         mprf(MSGCH_EXAMINE, "There is a cloud of %s here.",
-             cloud_name(cloud_inspected).c_str());
+             cloud_name_at_index(cloud_inspected).c_str());
 
         cloud_described = true;
     }

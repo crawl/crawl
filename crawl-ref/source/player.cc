@@ -134,7 +134,7 @@ static bool _check_moveto_cloud(const coord_def& p)
         {
             std::string prompt = make_stringf(
                                     "Really step into that cloud of %s?",
-                                    cloud_name(cloud).c_str());
+                                    cloud_name_at_index(cloud).c_str());
 
             if (!yesno(prompt.c_str(), false, 'n'))
             {

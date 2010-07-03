@@ -41,6 +41,8 @@ public:
     int       wpn_skill, hands;
     bool      hand_half_bonus;
 
+    bool      skip_chaos_message;
+
     // If weapon is an artefact, its properties.
     artefact_properties_t art_props;
 
@@ -83,6 +85,8 @@ public:
 
     int  calc_to_hit(bool random = true);
     random_var player_calc_attack_delay();
+
+    static void chaos_affect_actor(actor *victim);
 
     static std::string anon_name(description_level_type desc,
                                  bool actor_invisible);

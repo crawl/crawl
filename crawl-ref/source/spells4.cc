@@ -1121,7 +1121,7 @@ std::string get_evaporate_result_list(int potion)
         if (new_cloud == CLOUD_BLUE_SMOKE)
             clouds_list.push_back("coloured smoke");
         else
-            clouds_list.push_back(cloud_name((cloud_type) new_cloud));
+            clouds_list.push_back(cloud_type_name((cloud_type) new_cloud));
 
         old_cloud = new_cloud;
     }
