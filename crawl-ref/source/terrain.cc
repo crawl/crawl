@@ -770,8 +770,11 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
     {
         if (shop_struct *s = get_shop(src))
         {
-            env.tgrid(dst) = env.tgrid(s->pos);
+            env.tgrid(dst)    = env.tgrid(s->pos);
             env.tgrid(s->pos) = NON_ENTITY;
+            // Can't leave the source square as a shop now that all
+            // the bookkeeping data has moved.
+            grd(src)          = DNGN_FLOOR;
             s->pos = dst;
         }
         else // Destroy invalid shops.
@@ -783,6 +786,9 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
         {
             env.tgrid(dst) = env.tgrid(trap->pos);
             env.tgrid(trap->pos) = NON_ENTITY;
+            // Can't leave the source square as a trap now that all
+            // the bookkeeping data has moved.
+            grd(src)          = DNGN_FLOOR;
             trap->pos = dst;
         }
         else // Destroy invalid traps.
