@@ -1223,6 +1223,9 @@ void dgn_reset_level(bool enable_random_maps)
     // Clear all markers.
     env.markers.clear();
 
+    // Lose all listeners.
+    dungeon_events.clear();
+
     // Set default level flags.
     if (player_in_level_area(LEVEL_DUNGEON))
         env.level_flags = branches[you.where_are_you].default_level_flags;
