@@ -2103,27 +2103,10 @@ shop_struct *get_shop(const coord_def& where)
         return (NULL);
 
     unsigned short t = env.tgrid(where);
-    if (t != NON_ENTITY && t < MAX_SHOPS
-        && env.shop[t].pos == where && env.shop[t].type != SHOP_UNASSIGNED)
-    {
-        return (&env.shop[t]);
-    }
+    ASSERT(t != NON_ENTITY && t < MAX_SHOPS);
+    ASSERT(env.shop[t].pos == where && env.shop[t].type != SHOP_UNASSIGNED);
 
-    // For now, we don't trust tgrid and re-check.  FIXME after release.
-    for (int i = 0; i < MAX_SHOPS; i ++)
-    {
-        shop_struct& shop = env.shop[i];
-        // A little bit of paranoia.
-        if (shop.pos == where && shop.type != SHOP_UNASSIGNED)
-        {
-            env.tgrid(where) = i;
-            return (&shop);
-        }
-    }
-
-    // Delete the invalid shop.
-    grd(where) = DNGN_FLOOR;
-    return (NULL);
+    return (&env.shop[t]);
 }
 
 std::string shop_name(const coord_def& where, bool add_stop)
