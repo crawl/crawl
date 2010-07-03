@@ -2789,10 +2789,21 @@ static void _construct_sprint_map_menu(const mapref_vector& maps,
                                        MenuFreeform* menu)
 {
     static const int ITEMS_START_Y = 5;
+    static const int SPRINT_COLUMN_WIDTH = get_number_of_cols();
     TextItem* tmp = NULL;
     std::string text;
     coord_def min_coord(0,0);
     coord_def max_coord(0,0);
+
+    unsigned int padding_width = 0;
+    for (int i = 0; i < static_cast<int> (maps.size()); i++)
+    {
+        if (padding_width < maps.at(i)->desc_or_name().length())
+        {
+            padding_width = maps.at(i)->desc_or_name().length();
+        }
+    }
+    padding_width += 4; // Count the letter and " - "
 
     for (int i = 0; i < static_cast<int> (maps.size()); i++)
     {
@@ -2807,11 +2818,14 @@ static void _construct_sprint_map_menu(const mapref_vector& maps,
         text += " - ";
 
         text += maps[i]->desc_or_name();
-        if (static_cast<int>(text.length()) > COLUMN_WIDTH - 1)
-            text = text.substr(0, COLUMN_WIDTH - 1);
+        if (static_cast<int>(text.length()) > SPRINT_COLUMN_WIDTH - 1)
+            text = text.substr(0, SPRINT_COLUMN_WIDTH - 1);
 
         // Add padding
-        text.append(COLUMN_WIDTH - text.size() - 1 , ' ');
+        if (padding_width > text.size())
+        {
+            text.append(padding_width - text.size(), ' ');
+        }
         tmp->set_text(text);
 
         tmp->add_hotkey(letter);
