@@ -1,7 +1,7 @@
 #ifndef AREAS_H
 #define AREAS_H
 
-void invalidate_agrid();
+void invalidate_agrid(bool recheck_new = false);
 
 class actor;
 void areas_actor_moved(const actor* act, const coord_def& oldpos);

@@ -1777,7 +1777,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_SILENCE:
         monster->add_ench(ENCH_SILENCE);
-        invalidate_agrid();
+        invalidate_agrid(true);
         mpr("Everything around you gets eerily quiet.");
         return;
 
