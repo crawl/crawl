@@ -1659,9 +1659,11 @@ static void tag_read_you(reader &th, char minorVersion)
 
     // how many durations?
     count_c = unmarshallByte(th);
-    ASSERT(count_c >= 0 && count_c <= NUM_DURATIONS);
-    for (j = 0; j < count_c; ++j)
+    ASSERT(count_c >= 0);
+    for (j = 0; j < count_c && j < NUM_DURATIONS; ++j)
         you.duration[j] = unmarshallInt(th);
+    for (j = NUM_DURATIONS; j < count_c; ++j)
+        unmarshallInt(th);
 
     // how many attributes?
     count_c = unmarshallByte(th);
