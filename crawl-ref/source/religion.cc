@@ -897,6 +897,7 @@ void dec_penance(god_type god, int val)
                 && you.piety >= piety_breakpoint(0))
             {
                 mpr("Your divine halo returns!");
+                invalidate_agrid(true);
             }
 
             // When you've worked through all your penance, you get
@@ -2585,7 +2586,7 @@ void gain_piety(int original_gain, bool force)
     if (you.religion == GOD_SHINING_ONE)
     {
         // Piety change affects halo radius.
-        invalidate_agrid();
+        invalidate_agrid(true);
     }
 
     if (you.piety > 160 && old_piety <= 160)
