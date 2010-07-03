@@ -18,6 +18,7 @@
 #include "jobs.h"
 #include "macro.h"
 #include "makeitem.h"
+#include "maps.h"
 #include "menu.h"
 #include "ng-init.h"
 #include "ng-input.h"
@@ -2783,7 +2784,7 @@ static bool _choose_wand(newgame_def* ng, newgame_def* ng_choice,
     return (true);
 }
 
-static void _construct_sprint_map_menu(const std::vector<std::string>& maps,
+static void _construct_sprint_map_menu(const mapref_vector& maps,
                                        const newgame_def& defaults,
                                        MenuFreeform* menu)
 {
@@ -2804,7 +2805,10 @@ static void _construct_sprint_map_menu(const std::vector<std::string>& maps,
         const char letter = 'a' + i;
         text += letter;
         text += " - ";
-        text += maps.at(i);
+
+        text += maps[i]->desc_or_name();
+        if (static_cast<int>(text.length()) > COLUMN_WIDTH - 1)
+            text = text.substr(0, COLUMN_WIDTH - 1);
 
         // Add padding
         text.append(COLUMN_WIDTH - text.size() - 1 , ' ');
@@ -2822,7 +2826,7 @@ static void _construct_sprint_map_menu(const std::vector<std::string>& maps,
         menu->attach_item(tmp);
         tmp->set_visible(true);
         // Is this item our default sprint map?
-        if (defaults.map.compare(maps.at(i)) == 0)
+        if (defaults.map == maps[i]->name)
         {
             menu->set_active_item(tmp);
         }
@@ -2919,7 +2923,7 @@ static void _construct_sprint_map_menu(const std::vector<std::string>& maps,
 
 static void _prompt_sprint_map(const newgame_def* ng, newgame_def* ng_choice,
                                const newgame_def& defaults,
-                               const std::vector<std::string>& maps)
+                               const mapref_vector &maps)
 {
     PrecisionMenu menu;
     menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
@@ -3010,17 +3014,17 @@ static void _prompt_sprint_map(const newgame_def* ng, newgame_def* ng_choice,
             return;
         default:
             // We got an item selection
-            ng_choice->map = maps.at(selection_ID);
+            ng_choice->map = maps.at(selection_ID)->name;
             return;
         }
     }
 }
 
 static void _resolve_sprint_map(newgame_def* ng, const newgame_def* ng_choice,
-                                const std::vector<std::string>& maps)
+                                const mapref_vector& maps)
 {
     if (ng_choice->map == "random" || ng_choice->map.empty())
-        ng->map = maps[random2(maps.size())];
+        ng->map = maps[random2(maps.size())]->name;
     else
         ng->map = ng_choice->map;
 }
@@ -3028,7 +3032,7 @@ static void _resolve_sprint_map(newgame_def* ng, const newgame_def* ng_choice,
 static void _choose_sprint_map(newgame_def* ng, newgame_def* ng_choice,
                                const newgame_def& defaults)
 {
-    std::vector<std::string> maps = get_sprint_maps();
+    const mapref_vector maps = get_sprint_maps();
     if (maps.empty())
         end(1, true, "No sprint maps found.");
 
@@ -3039,7 +3043,7 @@ static void _choose_sprint_map(newgame_def* ng, newgame_def* ng_choice,
         else if (maps.size() > 1)
             _prompt_sprint_map(ng, ng_choice, defaults, maps);
         else
-            ng_choice->map = maps[0];
+            ng_choice->map = maps[0]->name;
     }
 
     _resolve_sprint_map(ng, ng_choice, maps);
