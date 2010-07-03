@@ -1972,9 +1972,9 @@ dlua_set_map::~dlua_set_map()
 //
 
 map_def::map_def()
-    : name(), tags(), place(), depths(), orient(), chance(), weight(),
-      weight_depth_mult(), weight_depth_div(), welcome_messages(), map(),
-      mons(), items(), random_mons(), prelude("dlprelude"),
+    : name(), description(), tags(), place(), depths(), orient(), chance(),
+      weight(), weight_depth_mult(), weight_depth_div(), welcome_messages(),
+      map(), mons(), items(), random_mons(), prelude("dlprelude"),
       mapchunk("dlmapchunk"), main("dlmain"),
       validate("dlvalidate"), veto("dlveto"), epilogue("dlepilogue"),
       rock_colour(BLACK), floor_colour(BLACK), rock_tile(0), floor_tile(0),
@@ -2087,6 +2087,11 @@ bool map_def::in_map(const coord_def &c) const
 int map_def::glyph_at(const coord_def &c) const
 {
     return map(c);
+}
+
+std::string map_def::desc_or_name() const
+{
+    return (description.empty()? name : description);
 }
 
 void map_def::write_full(writer& outf) const

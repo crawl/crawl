@@ -911,6 +911,9 @@ private:
 
 public:
     map_def();
+
+    std::string desc_or_name() const;
+
     void init();
     void reinit();
 
