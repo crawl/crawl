@@ -3007,7 +3007,8 @@ static void _prompt_sprint_map(const newgame_def* ng, newgame_def* ng_choice,
             *ng_choice = defaults;
             return;
         case M_RANDOM:
-            ng_choice->map = "random";
+            // FIXME setting this to "random" is broken
+            ng_choice->map.clear();
             return;
         default:
             // We got an item selection
