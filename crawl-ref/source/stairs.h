@@ -13,6 +13,7 @@ void down_stairs(dungeon_feature_type force_stair = DNGN_UNSEEN,
 void up_stairs(dungeon_feature_type force_stair = DNGN_UNSEEN,
                entry_cause_type entry_cause = EC_UNKNOWN);
 void new_level();
+int runes_in_pack(std::vector<int> &runes);
 
 #endif
 
