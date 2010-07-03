@@ -4660,6 +4660,12 @@ int dgn_place_monster(mons_spec &mspec,
             if (mspec.props.exists("always_corpse"))
                 mons.props["always_corpse"] = true;
 
+            if (mspec.props.exists("corpse_name"))
+                mons.props["corpse_name"] =
+                    mspec.props["corpse_name"].get_string();
+            if (mspec.props.exists("corpse_mons"))
+                mons.props["corpse_mons"] =
+                    mspec.props["corpse_mons"].get_short();
             // These are applied earlier to prevent issues with renamed monsters
             // and "<monster> comes into view" (see delay.cc:_monster_warning).
             //mons.flags |= mspec.extra_monster_flags;

@@ -414,6 +414,10 @@ monster_type fill_out_corpse(const monster* mons,
             corpse_class = MONS_SHAPESHIFTER;
         else if (mons->has_ench(ENCH_GLOWING_SHAPESHIFTER))
             corpse_class = MONS_GLOWING_SHAPESHIFTER;
+
+        if (mons->props.exists("corpse_mons"))
+            corpse_class = static_cast<monster_type>
+                               (mons->props["corpse_mons"].get_short());
     }
 
     // Doesn't leave a corpse.
@@ -456,7 +460,12 @@ monster_type fill_out_corpse(const monster* mons,
         }
     }
 
-    if (mons && !mons->mname.empty())
+    if (mons->props.exists("corpse_name"))
+    {
+        corpse.props[CORPSE_NAME_KEY] = mons->props["corpse_name"].get_string();
+        corpse.props[CORPSE_NAME_TYPE_KEY].get_int() = mons->flags;
+    }
+    else if (mons && !mons->mname.empty())
     {
         corpse.props[CORPSE_NAME_KEY] = mons->mname;
         corpse.props[CORPSE_NAME_TYPE_KEY].get_int() = mons->flags;

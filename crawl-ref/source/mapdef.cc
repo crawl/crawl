@@ -3410,6 +3410,15 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         if (strip_tag(mon_str, "always_corpse"))
             mspec.props["always_corpse"] = true;
 
+        const std::string c_name = strip_tag_prefix(mon_str, "corpse_name:");
+        if (!c_name.empty())
+        {
+            mspec.props["corpse_name"] = replace_all_of(c_name, "_", " ");
+            const mons_spec ms = mons_by_name(c_name);
+            if (ms.mid != MONS_PROGRAM_BUG)
+                mspec.props["corpse_mons"].get_short() = ms.mid;
+        }
+
         if (!mon_str.empty() && isadigit(mon_str[0]))
         {
             // Look for space after initial digits.
