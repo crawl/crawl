@@ -1141,6 +1141,10 @@ void map_lines::merge_subvault(const coord_def &mtl, const coord_def &mbr,
         if (mm->pos.x >= vtl.x && mm->pos.x <= vbr.x
             && mm->pos.y >= vtl.y && mm->pos.y <= vbr.y)
         {
+            const coord_def maskc = mm->pos - mtl;
+            if (!mask(maskc.x, maskc.y))
+                continue;
+
             // Erase this marker.
             markers[i] = markers[markers.size() - 1];
             markers.resize(markers.size() - 1);
