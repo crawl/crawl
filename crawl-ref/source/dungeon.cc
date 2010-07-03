@@ -2993,6 +2993,7 @@ static builder_rc_type _builder_basic(int level_number)
             ts.pos.x = xend;
             ts.pos.y = yend;
             grd[xend][yend] = DNGN_UNDISCOVERED_TRAP;
+            env.tgrid[xend][yend] = 0;
             if (shaft_known(level_number, false))
                 ts.reveal();
             dprf("Trail ends in shaft.");
@@ -3190,6 +3191,7 @@ static void _place_traps(int level_number)
         }
 
         grd(ts.pos) = DNGN_UNDISCOVERED_TRAP;
+        env.tgrid(ts.pos) = i;
         if (ts.type == TRAP_SHAFT && shaft_known(level_number, true))
             ts.reveal();
         ts.prepare_ammo();
@@ -6385,6 +6387,7 @@ void place_spec_shop( int level_number,
     }
 
     env.shop[i].pos = where;
+    env.tgrid(where) = i;
 
     grd(where) = DNGN_ENTER_SHOP;
 
@@ -8061,6 +8064,7 @@ bool place_specific_trap(const coord_def& where, trap_type spec_type)
             env.trap[tcount].type = spec_type;
             env.trap[tcount].pos  = where;
             grd(where)            = DNGN_UNDISCOVERED_TRAP;
+            env.tgrid(where)      = tcount;
             env.trap[tcount].prepare_ammo();
             return (true);
         }
