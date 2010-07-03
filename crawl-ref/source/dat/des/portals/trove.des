@@ -888,8 +888,8 @@ ENDMAP
 #
 # minmay's troves
 #
-# A severe exaggeration of the "game-changing or junk" aspect of treasure 
-# troves. Three items, very likely to be unrandarts, and generally either 
+# A severe exaggeration of the "game-changing or junk" aspect of treasure
+# troves. Three items, very likely to be unrandarts, and generally either
 # extremely useful or extremely useless.
 #
 NAME:    trove_artefacts
@@ -898,9 +898,9 @@ WEIGHT:  1
 ORIENT:  encompass
 ######## There should be a better way than listing all of the unrandarts...
 ITEM:    chain mail unrand:lears_chain_mail                                  /\
- randart plate mail w:50                                                     /\ 
+ randart plate mail w:50                                                     /\
          plate mail unrand:maxwells_patent_armour                            /\
- randart dragon armour                                                       /\ 
+ randart dragon armour                                                       /\
          gold dragon armour unrand:armour_of_the_dragon_king                 /\
  randart crystal plate mail                                                  /\
  randart robe w:50                                                           /\
