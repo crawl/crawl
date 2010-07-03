@@ -765,16 +765,28 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
     if (you.level_type == LEVEL_DUNGEON)
         move_notable_thing(src, dst);
 
-    const dungeon_feature_type dfeat = grd(src);
+    dungeon_feature_type dfeat = grd(src);
     if (dfeat == DNGN_ENTER_SHOP)
     {
         if (shop_struct *s = get_shop(src))
+        {
+            env.tgrid(dst) = env.tgrid(s->pos);
+            env.tgrid(s->pos) = NON_ENTITY;
             s->pos = dst;
+        }
+        else // Destroy invalid shops.
+            dfeat = DNGN_FLOOR;
     }
     else if (feat_is_trap(dfeat))
     {
         if (trap_def *trap = find_trap(src))
+        {
+            env.tgrid(dst) = env.tgrid(trap->pos);
+            env.tgrid(trap->pos) = NON_ENTITY;
             trap->pos = dst;
+        }
+        else // Destroy invalid traps.
+            dfeat = DNGN_FLOOR;
     }
 
     grd(dst) = dfeat;
