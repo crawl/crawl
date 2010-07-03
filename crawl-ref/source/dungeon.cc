@@ -2658,19 +2658,20 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
     if (!minivault && player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
     {
         // Temple vault determined at new game tiem.
-        std::string name = you.props[TEMPLE_MAP_KEY];
+        const std::string name = you.props[TEMPLE_MAP_KEY];
 
         // Tolerate this for a little while, for old games.
         if (!name.empty())
         {
             const map_def *vault = find_map_by_name(name);
 
-            if (vault == NULL)
-            {
-                end(1, false, "Unable to place Temple vault '%s'",
-                    name.c_str());
-            }
-            return (vault);
+            if (vault)
+                return (vault);
+
+            mprf(MSGCH_ERROR, "Unable to find Temple vault '%s'",
+                 name.c_str());
+
+            // Fall through and use a different Temple map instead.
         }
     }
 
