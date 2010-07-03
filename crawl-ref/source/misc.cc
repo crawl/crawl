@@ -1649,7 +1649,7 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters, int range)
                 if (announce)
                 {
                     mprf(MSGCH_WARN, "You're standing in a cloud of %s!",
-                         cloud_name(cloudidx).c_str());
+                         cloud_name_at_index(cloudidx).c_str());
                 }
                 return (false);
             }

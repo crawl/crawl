@@ -19,6 +19,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "dungeon.h"
+#include "fight.h"
 #include "fprop.h"
 #include "los.h"
 #include "mapmark.h"
@@ -741,17 +742,17 @@ void in_a_cloud()
     int cl = env.cgrid(you.pos());
     int hurted = 0;
     int resist;
-    std::string name = env.cloud[cl].name;
 
-    switch (env.cloud[cl].type)
+    const cloud_struct &cloud(env.cloud[cl]);
+
+    switch (cloud.type)
     {
     case CLOUD_FIRE:
     case CLOUD_FOREST_FIRE:
         if (you.duration[DUR_FIRE_SHIELD])
             return;
 
-        mprf("You are engulfed in %s!", !name.empty() ? name.c_str() : "roaring flames");
-
+        cloud.announce_actor_engulfed(&you);
         resist = player_res_fire();
 
         if (resist <= 0)
@@ -779,8 +780,7 @@ void in_a_cloud()
         break;
 
     case CLOUD_STINK:
-        // If you don't have to breathe, unaffected
-        mprf("You are engulfed in %s!", !name.empty() ? name.c_str() : "noxious fumes");
+        cloud.announce_actor_engulfed(&you);
 
         if (player_res_poison())
             break;
@@ -805,8 +805,7 @@ void in_a_cloud()
         if (you.mutation[MUT_PASSIVE_FREEZE])
             break;
 
-        mprf("You are engulfed in %s!", !name.empty() ? name.c_str() : "freezing vapours");
-
+        cloud.announce_actor_engulfed(&you);
         resist = player_res_cold();
 
         if (resist <= 0)
@@ -834,14 +833,13 @@ void in_a_cloud()
 
     case CLOUD_POISON:
         // If you don't have to breathe, unaffected
-        mprf("You are engulfed in %s!", !name.empty() ? name.c_str() : "poison gas");
-
+        cloud.announce_actor_engulfed(&you);
         if (!player_res_poison())
         {
             ouch((random2(10) * you.time_taken) / 10, cl, KILLED_BY_CLOUD,
                  "poison gas");
             // We don't track the source of the cloud so we can't assign blame.
-            poison_player(1, "", name.empty() ? "poison gas" : name);
+            poison_player(1, "", cloud.cloud_name("poison gas"));
         }
         break;
 
@@ -850,14 +848,12 @@ void in_a_cloud()
     case CLOUD_TLOC_ENERGY:
     case CLOUD_PURPLE_SMOKE:
     case CLOUD_BLACK_SMOKE:
-        mprf("You are engulfed in %s!", !name.empty() ? name.c_str() : "a cloud of smoke");
-
+        cloud.announce_actor_engulfed(&you);
         break;
 
     case CLOUD_STEAM:
     {
-        mprf("You are engulfed in %s!", !name.empty() ? name.c_str() : "a cloud of scalding steam");
-
+        cloud.announce_actor_engulfed(&you);
         if (player_res_steam() > 0)
         {
             mpr("It doesn't seem to affect you.");
@@ -881,13 +877,12 @@ void in_a_cloud()
     }
 
     case CLOUD_MIASMA:
-        mprf("You are engulfed in %s!", !name.empty() ? name.c_str() : "a dark miasma");
-
+        cloud.announce_actor_engulfed(&you);
         if (you.res_rotting())
             return;
 
         // We'd want to blame it to a specific monster...
-        miasma_player(!name.empty() ? name.c_str() : "a cloud of dark miasma");
+        miasma_player(cloud.cloud_name("a cloud of dark miasma"));
 
         hurted += (random2avg(12, 3) * you.time_taken) / 10;    // 3
 
@@ -907,16 +902,17 @@ void in_a_cloud()
             you.duration[DUR_MISLED] = 0;
         }
 
-        if (name.empty() || name == "the rain")
-            mpr("You are standing in the rain.");
-        else
-            mprf("You are engulfed in %s.", name.c_str());
-
+        {
+            const std::string rainname = cloud.cloud_name("the rain");
+            if (rainname == "the rain")
+                mpr("You are standing in the rain.");
+            else
+                cloud.announce_actor_engulfed(&you);
+        }
         break;
 
     case CLOUD_MUTAGENIC:
-        mprf("You are engulfed in %s!", !name.empty() ? name.c_str() : "a mutagenic fog");
-
+        cloud.announce_actor_engulfed(&you);
         if (coinflip())
         {
             mpr("Strange energies course through your body.");
@@ -928,8 +924,15 @@ void in_a_cloud()
         break;
 
     case CLOUD_GLOOM:
-        mprf("You are engulfed in %s!", !name.empty() ? name.c_str() : "a thick gloom");
+        cloud.announce_actor_engulfed(&you);
+        break;
 
+    case CLOUD_CHAOS:
+        if (coinflip())
+        {
+            cloud.announce_actor_engulfed(&you);
+            chaos_affect_actor(&you);
+        }
         break;
 
     default:
@@ -1016,59 +1019,48 @@ cloud_type in_what_cloud()
     return (env.cloud[cl].type);
 }
 
-std::string cloud_name(int cloudno)
+std::string cloud_name_at_index(int cloudno)
 {
     if (!env.cloud[cloudno].name.empty())
         return (env.cloud[cloudno].name);
     else
-        return cloud_name(env.cloud[cloudno].type);
+        return cloud_type_name(env.cloud[cloudno].type);
 }
 
-std::string cloud_name(cloud_type type)
+// [ds] XXX: Some of these aren't so terse and some of the verbose
+// names aren't very verbose. Be warned that names in
+// _terse_cloud_names may be referenced by fog machines.
+static const char *_terse_cloud_names[] =
 {
-    switch (type)
-    {
-    case CLOUD_FIRE:
-        return "flame";
-    case CLOUD_FOREST_FIRE:
-        return "fire";
-    case CLOUD_STINK:
-        return "noxious fumes";
-    case CLOUD_COLD:
-        return "freezing vapour";
-    case CLOUD_POISON:
-        return "poison gases";
-    case CLOUD_GREY_SMOKE:
-        return "grey smoke";
-    case CLOUD_BLUE_SMOKE:
-        return "blue smoke";
-    case CLOUD_PURPLE_SMOKE:
-        return "purple smoke";
-    case CLOUD_TLOC_ENERGY:
-        return "translocational energy";
-    case CLOUD_STEAM:
-        return "steam";
-    case CLOUD_MIASMA:
-        return "foul pestilence";
-    case CLOUD_BLACK_SMOKE:
-        return "black smoke";
-    case CLOUD_MIST:
-        return "thin mist";
-    case CLOUD_CHAOS:
-        return "seething chaos";
-    case CLOUD_RAIN:
-        return "rain";
-    case CLOUD_MUTAGENIC:
-        return "mutagenic fog";
-    case CLOUD_MAGIC_TRAIL:
-        return "magical condensation";
-    case CLOUD_GLOOM:
-        return "gloom";
-    case CLOUD_INK:
-        return "ink";
-    default:
-        return "buggy goodness";
-    }
+    "?",
+    "flame", "noxious fumes", "freezing vapour", "poison gases",
+    "black smoke", "grey smoke", "blue smoke",
+    "purple smoke", "translocational energy", "fire",
+    "steam", "gloom", "ink", "foul pestilence", "thin mist",
+    "seething chaos", "rain", "mutagenic fog", "magical condensation",
+};
+
+static const char *_verbose_cloud_names[] =
+{
+    "?",
+    "roaring flames", "noxious fumes", "freezing vapours", "poison gas",
+    "black smoke", "grey smoke", "blue smoke",
+    "purple smoke", "translocational energy", "roaring flames",
+    "a cloud of scalding steam", "a thick gloom", "ink", "a dark miasma",
+    "thin mist", "seething chaos", "the rain", "a mutagenic fog",
+    "magical condensation",
+};
+
+std::string cloud_type_name(cloud_type type, bool terse)
+{
+    COMPILE_CHECK(ARRAYSZ(_terse_cloud_names) == NUM_CLOUD_TYPES,
+                  check_terse_cloud_names);
+    COMPILE_CHECK(ARRAYSZ(_verbose_cloud_names) == NUM_CLOUD_TYPES,
+                  check_verbose_cloud_names);
+
+    return (type <= CLOUD_NONE || type >= NUM_CLOUD_TYPES
+            ? "buggy goodness"
+            : (terse? _terse_cloud_names : _verbose_cloud_names)[type]);
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -1130,6 +1122,24 @@ void cloud_struct::set_killer(killer_type _killer)
         default:
             break;
      }
+}
+
+std::string cloud_struct::cloud_name(const std::string &defname) const
+{
+    return (!name.empty()    ? name :
+            !defname.empty() ? defname :
+                               cloud_type_name(type, false));
+}
+
+void cloud_struct::announce_actor_engulfed(const actor *act) const
+{
+    if (you.can_see(act))
+    {
+        mprf("%s %s engulfed in %s.",
+             act->name(DESC_CAP_THE).c_str(),
+             act->conj_verb("are").c_str(),
+             cloud_name().c_str());
+    }
 }
 
 int get_cloud_colour(int cloudno)
@@ -1237,7 +1247,7 @@ void place_fog_machine(fog_machine_type fm_type, cloud_type cl_type,
     {
         char buf [160];
         snprintf(buf, sizeof(buf), "lua_mapless:fog_machine_%s(\"%s\", %d, %d)",
-                fog_types[fm_type], cloud_name(cl_type).c_str(),
+                fog_types[fm_type], cloud_type_name(cl_type).c_str(),
                 size, power);
 
         map_marker *mark = map_lua_marker::parse_marker(buf, "");
