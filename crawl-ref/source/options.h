@@ -282,6 +282,8 @@ public:
 
     int         assign_item_slot;   // How free slots are assigned
 
+    bool        restart_after_game; // If true, Crawl will not close on game-end
+
     std::vector<text_pattern> drop_filter;
 
     FixedArray<bool, NUM_DELAYS, NUM_AINTERRUPTS> activity_interrupts;

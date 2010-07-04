@@ -97,6 +97,7 @@ private:
 
 void save_messages(writer& outf);
 void load_messages(reader& inf);
+void clear_message_store();
 
 // Have any messages been printed since the last clear?
 bool any_messages();

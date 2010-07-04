@@ -1416,7 +1416,8 @@ void end_game(scorefile_entry &se)
     // just to pause, actual value returned does not matter {dlb}
     if (!crawl_state.seen_hups)
         get_ch();
-    end(0);
+
+    game_ended();
 }
 
 int actor_to_death_source(const actor* agent)

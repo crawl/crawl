@@ -141,6 +141,9 @@ static mon_name_map Mon_Name_Cache;
 
 void init_mon_name_cache()
 {
+    if (!Mon_Name_Cache.empty())
+        return;
+
     for (unsigned i = 0; i < sizeof(mondata) / sizeof(*mondata); ++i)
     {
         std::string name = mondata[i].name;
