@@ -933,7 +933,7 @@ public:
     void write_maplines(writer &) const;
 
     void read_index(reader&);
-    void read_full(reader&);
+    void read_full(reader&, bool check_cache_version);
     void read_maplines(reader&);
 
     void set_file(const std::string &s);
