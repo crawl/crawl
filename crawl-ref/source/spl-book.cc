@@ -823,14 +823,9 @@ int spellbook_contents( item_def &book, read_book_action_type action,
         int colour = DARKGREY;
         if (action == RBOOK_USE_STAFF)
         {
-            if (book.base_type == OBJ_BOOKS ?
-                   (you.experience_level >= level_diff
-                    && you.magic_points >= level_diff
-                    && player_can_memorise_from_spellbook(book))
-                : book.plus >= level_diff * ROD_CHARGE_MULT)
-            {
+            ASSERT(book.base_type == OBJ_STAVES);
+            if (book.plus >= level_diff * ROD_CHARGE_MULT)
                 colour = spell_highlight_by_utility(stype, COL_UNKNOWN, false, false, true);
-            }
             else
                 colour = COL_USELESS;
         }
