@@ -234,6 +234,8 @@ int zin_recite_to_single_monster(const coord_def& where,
         case 6:
         case 7:
         case 8:
+            if (!mon->can_hibernate())
+                return (0);
             mon->hibernate();
             simple_monster_message(mon, " falls asleep!");
             break;
