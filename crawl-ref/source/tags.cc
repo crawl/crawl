@@ -1431,7 +1431,7 @@ static map_def unmarshall_mapdef(reader &th)
 {
     map_def map;
     map.name = unmarshallStringNoMax(th);
-    map.read_full(th);
+    map.read_full(th, false);
     map.read_index(th);
     map.read_maplines(th);
     if (_tag_minor_version >= TAG_MINOR_MAPDESC)
