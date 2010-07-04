@@ -289,6 +289,7 @@ static void _launch_game_loop()
             crawl_state.type = GAME_TYPE_UNSPECIFIED;
             clear_message_store();
             you.reset();
+            msg::deinitialise_mpr_streams();
 #ifdef USE_TILE
             // [ds] Don't show the title screen again, just go back to
             // the menu.
