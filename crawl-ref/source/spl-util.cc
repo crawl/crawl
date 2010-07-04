@@ -1198,13 +1198,8 @@ bool spell_is_useless(spell_type spell, bool transient)
 //       spell_is_empowered(spell)
 //       spell_is_useless(spell, transient)
 int spell_highlight_by_utility(spell_type spell, int default_color,
-                               bool transient, bool force_known, bool rod_spell)
+                               bool transient, bool rod_spell)
 {
-    // if Force_known is true, and the spell is
-    // known, thats all that matters.
-    if (force_known && !you.has_spell(spell))
-        return COL_UNMEMORIZED;
-
     // If your god hates the spell, that
     // overrides all other concerns
     if (god_hates_spell(spell, you.religion))
