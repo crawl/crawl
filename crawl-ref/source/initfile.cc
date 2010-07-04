@@ -623,6 +623,12 @@ void game_options::reset_options()
 
     set_default_activity_interrupts();
 
+#if defined(USE_TILE)
+    restart_after_game = true;
+#else
+    restart_after_game = false;
+#endif
+
 #if !defined(DGAMELAUNCH)
     macro_dir = "settings/";
 #endif
@@ -2192,6 +2198,9 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         else if (field == "all")
             default_friendly_pickup = FRIENDLY_PICKUP_ALL;
     }
+#ifndef DGAMELAUNCH
+    else BOOL_OPTION(restart_after_game);
+#endif
     else BOOL_OPTION(show_inventory_weights);
     else BOOL_OPTION(suppress_startup_errors);
     else BOOL_OPTION(clean_map);

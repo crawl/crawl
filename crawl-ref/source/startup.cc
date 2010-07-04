@@ -141,7 +141,8 @@ static void _initialize()
     if (crawl_state.build_db)
         end(0);
 
-    cio_init();
+    if (!crawl_state.io_inited)
+        cio_init();
 
     // System initialisation stuff.
     textbackground(0);
@@ -762,6 +763,8 @@ static void _choose_arena_teams(newgame_def* choice,
 {
     if (!choice->arena_teams.empty())
         return;
+
+    clear_message_store();
     clrscr();
 
     cprintf("Enter your choice of teams:\n");

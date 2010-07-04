@@ -5082,6 +5082,11 @@ void player::copy_from(const player &other)
 // player struct initialization
 void player::init()
 {
+    turn_is_over     = false;
+
+    prev_targ        = 0;
+    prev_grd_targ.reset();
+
     birth_time       = time( NULL );
     real_time        = 0;
     num_turns        = 0L;
@@ -5093,7 +5098,7 @@ void player::init()
     wizard = false;
 #endif
 
-    your_name = "";
+    your_name.clear();
 
     banished = false;
     banished_by.clear();
@@ -5115,6 +5120,13 @@ void player::init()
     base_magic_points  = 5000;
     base_magic_points2 = 5000;
     max_magic_points   = 0;
+
+    hit_points_regeneration = 0;
+    magic_points_regeneration = 0;
+
+    stat_loss.init(0);
+    base_stats.init(0);
+    stat_zero.init(0);
 
     magic_points_regeneration = 0;
     base_stats.init(0);
@@ -5236,6 +5248,11 @@ void player::init()
 #if defined(WIZARD) || defined(DEBUG)
     you.never_die = false;
 #endif
+}
+
+void player::reset()
+{
+    copy_from(player());
 }
 
 player_save_info player_save_info::operator=(const player& rhs)
