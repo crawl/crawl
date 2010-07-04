@@ -232,3 +232,15 @@ Your vision is obscured by outlandish glyphs which seem to writhe squamously and
 
 You feel inexorably dogged by some nameless and implacable gloom.
 %%%%
+welcome_spam
+
+Will you prevail where others failed? Will you get the Orb of Zot?
+
+The bosom of this dungeon contains the most powerful artefact, the Orb of Zot.
+
+Will you be the one to retrieve the fabulous Orb of Zot from the depths?
+
+The destiny of this world depends on the Orb of Zot. Go down and get it!
+
+They say that the Orb of Zot exists deep, deep down but nobody ever got it.
+%%%%

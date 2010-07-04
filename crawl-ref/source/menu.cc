@@ -348,9 +348,6 @@ int Menu::get_cursor() const
     if (last_selected == -1)
         return (-1);
 
-    if (!Options.menu_cursor)
-        return (-1);
-
     unsigned int next = (last_selected + 1) % item_count();
 
     if (items[next]->level != MEL_ITEM)
@@ -1096,9 +1093,7 @@ void Menu::select_item_index(int idx, int qty, bool draw_cursor)
 {
     const int old_cursor = get_cursor();
 
-    if (Options.menu_cursor)
-        last_selected = idx;
-
+    last_selected = idx;
     items[idx]->select( qty );
     draw_item( idx );
 

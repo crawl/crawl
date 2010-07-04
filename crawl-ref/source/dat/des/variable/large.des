@@ -1257,3 +1257,66 @@ occcccc.cc..1..cccccccWc.2.2$cc
 occcccccccccccccccccccccccccccc
  cccccccccccccccccccccccccccccc
 ENDMAP
+
+##############################################################################
+# Shadows.
+# For Crypt and Tartarus -- should it be moved to another des file?
+#
+NAME:   minmay_shadows
+ORIENT: northwest
+DEPTH:  Crypt, Tar
+MONS:   shadow, soul eater
+ITEM:   lantern of shadows
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x1.......1xxx2.2xxx1.......1x
+x....1....xxx.d.xxx....1....x
+x.........xxx2.2xxx.........x
+x...xxx...xxx.1.xxx...xxx...x
+x.1.xxx.2.xxx...xxx.2.xxx.1.x
+x...xxx...xxx1.1xxx...xxx...x
+x...xxx....1.....1....xxx...x
+x1..xxx..1....1....1..xxx..1x
+x...xxx1....1...1....1xxx...x
+x...xxxxxxxxxxxxxxxxxxxxx...x
+x.2.xxxxxxxxxxxxxxxxxxxxx.2.x
+x...xxxxxxxxxxxxxxxxxxxxx...x
+x...xxx....1.....1....xxx...x
+x1..xxx1.............1xxx..1x
+x...xxx...............xxx...x
+x...xxx...xxx...xxx...xxx...x
+x.1.xxx...xxx.1.xxx...xxx.1.x
+x...xxx...xxx...xxx...xxx...x
+x.........xxx1.1xxx.........x
+x....1....xxx...xxx....1....x
+x.........xxx...xxx.........x
+xxxxxxxxxxxxx.@.xxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Gold mine. Can come up in the dungeon and in Orc.
+#
+NAME:   minmay_goldmine
+ORIENT: southeast
+DEPTH:  D:8-16, Orc
+MONS:   orc / orc wizard w:3 / orc priest w:2 / orc warrior w:2
+SUBST:  X = xxxZ
+KPROP:  Z = no_rtele_into
+SUBST:  Z = .$
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+xXXXXXXXXXXXXXXXXXXXXXXXx
+.XXX1XXXXXXXXXXXXXXXXXXXx
+@..XX..XXXXXXXXXXXXXXXXXx
+x.X..X1XXXXXX.XXXXXXXXXXx
+xXXXX.XXXXXXX.X1XXXXXXXXx
+xXX1.X.XXXXXXX.XXXX.XXXXx
+xXXXXX..XXXXX1XXXXXX1XXXx
+xXXXX.XX1XXX...XXXX..XXXx
+xXXXX.XXX..X.XX.XX.XX1XXx
+xXXX1XXXX.X1XXXX.1XXX.XXx
+xXXXXXXXXXXXXXXXXXXX.XXXx
+xXXXXXXXXXXXXXXXXXXXXXXXx
+xXXXXXXXXXXXXXXXXXXXXXXXx
+xxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP

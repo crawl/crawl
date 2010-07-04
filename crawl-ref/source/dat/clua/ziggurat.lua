@@ -333,7 +333,24 @@ mset(with_props("place:Slime:$", { jelly_protect = true }),
      with_props("place:Geh:$", { weight = 5 }),
      with_props("place:Dis:$", { weight = 5 }),
      with_props("place:Tar:$", { weight = 5 }),
-     with_props("daeva / angel", { weight = 2 }))
+     with_props("daeva / angel", { weight = 2 }),
+     with_props("hill giant / cyclops / stone giant / fire giant / " ..
+                "frost giant / titan", { weight = 2 }),
+     with_props("fire elemental / fire drake / hell hound / efreet / " ..
+                "dragon / fire giant / orb of fire", { weight = 2 }),
+     with_props("ice beast / polar bear / freezing wraith / ice dragon / " ..
+                "frost giant / ice devil / ice fiend / place:D:$ simulacrum", { weight = 2 }),
+     with_props("insubstantial wisp / air elemental / vapour / titan / " ..
+                "storm dragon / electric golem", { weight = 2 }),
+     with_props("clay golem / earth elemental / stone golem / iron golem / " ..
+                "crystal golem / stone giant / iron dragon", { weight = 1 }),
+     with_props("swamp drake / fire drake / death drake / steam dragon / " ..
+                "swamp dragon / dragon / ice dragon / storm dragon / " ..
+                "iron dragon / shadow dragon / quicksilver dragon / " ..
+                "golden dragon / mottled dragon / wyvern / hydra", { weight = 2 }),
+     with_props("centaur / yaktaur / centaur warrior / yaktaur captain / " ..
+                "cyclops / stone giant / merfolk javelineer / " ..
+                "deep elf master archer", { weight = 2 }))
 
 -- spec_fn can be used to wrap a function that returns a monster spec.
 -- This is useful if you want to adjust monster weights in the spec

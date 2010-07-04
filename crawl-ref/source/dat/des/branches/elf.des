@@ -242,20 +242,89 @@ MARKER: d = lua:fog_machine { cloud_type = "flame", \
              pow_min = 10, pow_max = 10, delay = 10, \
              size = 1, walk_dist = 0, spread_rate= 0 }
 MAP
-xx@@@xx
-xx...xx
-xx...xx
-xx.d.xx
-xx...xx
-xx...xx
-xx...xx
-xx...xx
-xx...xx
-xx...xx
-xx...xx
-xx.{.xx
-xxxxxxx
+xxxxxxxxxxxxx
+xxxxxxxxxxxxx
+@...........x
+@..d.......{x
+@...........x
+xxxxxxxxxxxxx
+xxxxxxxxxxxxx
 ENDMAP
+
+NAME:   minmay_elf_arrival_circle
+ORIENT: float
+PLACE:  Elf:1
+TAGS:   patrolling
+MONS:   deep elf soldier / deep elf fighter, deep elf mage / deep elf summoner
+SUBST:  B : b.
+MAP
+       xx+xx
+    xxxx...xxxx
+   xx....2....xx
+  xx...........xx
+ xx.............xx
+ x...BbB...BbB...x
+ x...bbb...bbb...x
+xx...BbB...BbB...xx
+x.................x
++.1......{......1.+
+x.................x
+xx...BbB...BbB...xx
+ x...bbb...bbb...x
+ x...BbB...BbB...x
+ xx.............xx
+  xx...........xx
+   xx....2....xx
+    xxxx...xxxx
+       xx+xx
+ENDMAP
+
+NAME:   minmay_elf_arrival_plus
+ORIENT: float
+PLACE:  Elf:1
+TAGS:   patrolling
+MONS:   deep elf soldier / deep elf fighter / deep elf mage / \
+        deep elf summoner / deep elf priest / deep elf conjurer / nothing w:40
+MAP
+     x@...@x
+     x.....x
+     x.1T1.x
+     x.....x
+    xx.....xx
+xxxxxmmm=mmmxxxxx
+@....m.....m....@
+..1..m.....m..1..
+..T..=.({[.=..T..
+..1..m.....m..1..
+@....m.....m....@
+xxxxxmmm=mmmxxxxx
+    xx.....xx
+     x.....x
+     x.1T1.x
+     x.....x
+     x@...@x
+ENDMAP
+
+NAME:   minmay_elf_arrival_summoners
+ORIENT: float
+PLACE:  Elf:1
+TAGS:   patrolling
+MONS:   deep elf summoner / deep elf mage / deep elf priest
+MAP
+  xxxxxxx
+  x.....x
+  x.({[.x
+xxx.....xxx
+@1m.....m1@
+xxx.....xxx
+@1m.....m1@
+xxx.....xxx
+@1m.....m1@
+xxx.....xxx
+  x.....x
+  x@...@x
+ENDMAP
+
 
 ##############################################################################
 # Elf:7 branch endings
@@ -380,8 +449,6 @@ ccccccccccccWWcccccccccccc
 xxxxxxxxxxxx@@xxxxxxxxxxxx
 ENDMAP
 
-##############################################################################
-
 NAME:    elf_hall_gauntlet_narrow
 PLACE:   Elf:7
 TAGS:    no_pool_fixup no_rotate
@@ -441,6 +508,70 @@ ccccccccccclllccccccccccc
 cccccccccc..c..cccccccccc
 Yyyyyyyyyy.ccc.zzzzzzzzzZ
 xxxxxxxxxxNncnNxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+## minmay's Elf hall
+
+NAME:    minmay_elf_hall
+PLACE:   Elf:7
+ORIENT:  southwest
+TAGS:    no_rotate
+LFLAGS:  no_tele_control
+MONS:    deep elf high priest, deep elf demonologist, deep elf annihilator
+MONS:    deep elf sorcerer, deep elf death mage
+MONS:    deep elf blademaster, deep elf master archer
+SUBST:   1=11., 2=22., 3=33., 4=44., 5=543, 6=66., 7=77.
+SHUFFLE: 12, 34, 67
+KMONS:   $ = weight:450 nothing / deep elf sorcerer / deep elf annihilator
+KMONS:   * = weight:300 nothing / deep elf annihilator / deep elf death mage
+KMONS:   | = weight:600 nothing / deep elf demonologist / deep elf death mage
+KFEAT:   $ = $
+KFEAT:   * = *
+KFEAT:   | = |
+SUBST:   | = | *:2
+SUBST:   $ = $:20 *:4 |:1
+SUBST:   * = * |:3
+MARKER:  U = lua:feat_change_change_flags { \
+            level_flags="!no_tele_control", final_feat="dry_fountain", \
+            group="fountain" \
+         }
+MAP
+xxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxc.cxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxc.cxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxc.cxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxc.cxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxc.cxxxxxxxxxxxxxxxxx
+xxxcccccxxxxxxxxxc.cxxxxxxxxxcccccxxx
+xccc...cccxxxxxccc.cccxxxxxccc...cccx
+cc.......cccxccc.....cccxccc.......cc
+c3.........ccc.........ccc.........4c
+c....6......5...........5......6....c
+c3.................................4c
+cc......3.........7.........3......cc
+xcc...............n...............ccx
+xxc5............6nnn6............5cxx
+xcc...............n...............ccx
+cc.......4........7........4.......cc
+c1.................................2c
+c....7......5...........5......7....c
+c1.........ccc.........ccc.........2c
+cc.......cccxccc.....cccxccc.......cc
+xccc...cccxxxxxccc.cccxxxxxccc...cccx
+xxxcc+ccxxxxxxxxxc.cxxxxxxxxxcc+ccxxx
+xxxc$*|xxxxxxxxxxc.cxxxxxxxxxc|*$cxxx
+xxxc|*$cxxxxxxxxxc.cxxxxxxxxxc$*|cxxx
+xxxcccccxxxxxxxxxc.cxxxxxxxxxcccccxxx
+xxxxxxxxxxxxxxxxxc.cxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxc.cxxxxxxxxxxxxxxxxx
+xxxxxxxcccccxxxccc.cccxxxcccccxxxxxxx
+xxxxcccc|$*ccccc6...6ccccc*||ccccxxxx
+xxccc*|$*|$$|+....U....+|$$|*$*$cccxx
+xcc*$$*|$$|$$ccc7...7ccc|*|$$$||*$ccx
+cc$*|*|*|*|cccxcccccccxccc$*$$*$$$|cc
+c|*|$$|*ccccxxxxxxxxxxxxxcccc|*$||$*c
+cccccccccxxxxxxxxxxxxxxxxxxxccccccccc
 ENDMAP
 
 

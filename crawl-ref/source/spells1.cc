@@ -1096,7 +1096,7 @@ bool _know_spell(spell_type spell)
     if (!you.has_spell(spell))
     {
         mprf("You don't know how to extend %s.", spell_title(spell));
-	return (false);
+        return (false);
     }
 
     int fail = spell_fail(spell);

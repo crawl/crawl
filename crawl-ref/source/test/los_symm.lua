@@ -15,7 +15,9 @@ local function test_losight_symmetry()
     for x = -8, 8 do
       if x ~= 0 or y ~= 0 then
         local px, py = x + you_x, y + you_y
-        if you.see_cell(px, py) then
+        -- It makes sense to check visibility of a cell on the border, but
+        -- we'd be unable to test the reverse.
+        if dgn.in_bounds(px, py) and you.see_cell(px, py) then
           table.insert(visible_spots, { px, py })
         end
       end

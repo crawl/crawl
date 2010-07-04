@@ -52,9 +52,9 @@ void add_parsed_map(const map_def &md);
 
 std::vector<std::string> find_map_matches(const std::string &name);
 
-std::vector<map_def> find_maps_for_tag (const std::string tag,
-                                          bool check_depth = false,
-                                          bool check_used = true);
+mapref_vector find_maps_for_tag (const std::string tag,
+                                 bool check_depth = false,
+                                 bool check_used = true);
 
 int weight_map_vector (std::vector<map_def> maps);
 
@@ -89,7 +89,7 @@ extern point_vector      map_anchor_points;
 // Use dgn_map_parameters to modify:
 extern string_vector     map_parameters;
 
-const int              MAP_CACHE_VERSION = 1013;
+const int              MAP_CACHE_VERSION = 1014;
 
 class dgn_map_parameters
 {
