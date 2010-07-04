@@ -2107,7 +2107,7 @@ void map_def::write_full(writer& outf) const
     epilogue.write(outf);
 }
 
-void map_def::read_full(reader& inf)
+void map_def::read_full(reader& inf, bool check_cache_version)
 {
     // There's a potential race-condition here:
     // - If someone modifies a .des file while there are games in progress,
@@ -2119,7 +2119,7 @@ void map_def::read_full(reader& inf)
 
     const short fp_version = unmarshallShort(inf);
 
-    if (fp_version != MAP_CACHE_VERSION)
+    if (check_cache_version && fp_version != MAP_CACHE_VERSION)
         throw map_load_exception(name);
 
     std::string fp_name;
@@ -2168,7 +2168,7 @@ void map_def::load()
     if (!inf.valid())
         throw map_load_exception(name);
     inf.advance(cache_offset);
-    read_full(inf);
+    read_full(inf, true);
 
     index_only = false;
 }
