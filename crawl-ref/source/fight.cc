@@ -293,8 +293,8 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     aux_damage(0), stab_attempt(false), stab_bonus(0), min_delay(0),
     final_attack_delay(0), noise_factor(0), extra_noise(0), weapon(NULL),
     damage_brand(SPWPN_NORMAL), wpn_skill(SK_UNARMED_COMBAT), hands(HANDS_ONE),
-    hand_half_bonus(false), art_props(0), unrand_entry(NULL),
-    attack_verb("bug"), verb_degree(),
+    hand_half_bonus(false), skip_chaos_message(false), art_props(0),
+    unrand_entry(NULL), attack_verb("bug"), verb_degree(),
     no_damage_message(), special_damage_message(), aux_attack(), aux_verb(),
     special_damage_flavour(BEAM_NONE),
     shield(NULL), defender_shield(NULL),
@@ -2426,7 +2426,7 @@ void melee_attack::chaos_affects_defender()
         miscast_chance *= 2;
 
         // Inform player that something is up.
-        if (you.see_cell(defender->pos()))
+        if (!skip_chaos_message && you.see_cell(defender->pos()))
         {
             if (defender->atype() == ACT_PLAYER)
                 mpr("You give off a flash of multicoloured light!");
@@ -4074,7 +4074,7 @@ void melee_attack::player_apply_attack_delay()
 
 random_var melee_attack::player_weapon_speed()
 {
-    random_var attack_delay = constant(0);
+    random_var attack_delay = constant(15);
 
     if (weapon && (weapon->base_type == OBJ_WEAPONS
                    || weapon->base_type == OBJ_STAVES))
@@ -5825,6 +5825,20 @@ int melee_attack::mons_to_hit()
     return (mhit);
 }
 
+void melee_attack::chaos_affect_actor(actor *victim)
+{
+    melee_attack attk(victim, victim);
+    attk.weapon = NULL;
+    attk.skip_chaos_message = true;
+    attk.chaos_affects_defender();
+    attk.do_miscast();
+    if (!attk.special_damage_message.empty()
+        && you.can_see(victim))
+    {
+        mprf("%s", attk.special_damage_message.c_str());
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////
 
 bool wielded_weapon_check(item_def *weapon, bool no_message)
@@ -6148,4 +6162,9 @@ static void stab_message(actor *defender, int stab_bonus)
               defender->pronoun(PRONOUN_REFLEXIVE).c_str() );
         break;
     }
+}
+
+void chaos_affect_actor(actor *victim)
+{
+    melee_attack::chaos_affect_actor(victim);
 }

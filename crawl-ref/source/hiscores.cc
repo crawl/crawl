@@ -2335,13 +2335,27 @@ std::string xlog_fields::xlog_line() const
 // Milestones
 
 #ifdef DGL_MILESTONES
-
 void mark_milestone(const std::string &type,
                     const std::string &milestone,
                     bool report_origin_level)
 {
-    if (crawl_state.game_is_arena() || !crawl_state.need_save)
+    static std::string lasttype, lastmilestone;
+    static long lastturn = -1;
+
+    if (crawl_state.game_is_arena()
+        || !crawl_state.need_save
+        // Suppress duplicate milestones on the same turn.
+        || (lastturn == you.num_turns
+            && lasttype == type
+            && lastmilestone == milestone))
+    {
         return;
+    }
+
+    lasttype      = type;
+    lastmilestone = milestone;
+    lastturn      = you.num_turns;
+
     const std::string milestone_file =
         (Options.save_dir + "milestones" + crawl_state.game_type_qualifier());
     if (FILE *fp = lk_open("a", milestone_file))

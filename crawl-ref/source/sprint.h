@@ -8,8 +8,9 @@ int sprint_modify_piety(int piety);
 int sprint_modify_abyss_exit_chance(int exit_chance);
 bool sprint_veto_random_abyss_monster(monster_type type);
 
+class map_def;
 // All available maps.
-std::vector<std::string> get_sprint_maps();
+std::vector<const map_def *> get_sprint_maps();
 
 // Set and get the current map. Used to transfer
 // map choice from game choice to level gen.

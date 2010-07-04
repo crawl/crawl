@@ -212,9 +212,9 @@ bool player::_possible_beholder(const monsters *mon) const
     if (crawl_state.game_is_arena())
         return (false);
 
-    return (!silenced(pos()) && !silenced(mon->pos())
+    return (mon->alive() && mons_genus(mon->type) == MONS_MERMAID
+         && !silenced(pos()) && !silenced(mon->pos())
          && see_cell(mon->pos()) && mon->see_cell(pos())
-         && mon->alive() && mons_genus(mon->type) == MONS_MERMAID
          && !mon->submerged() && !mon->confused()
          && !mon->asleep() && !mon->cannot_move()
          && !mon->wont_attack() && !mon->pacified()

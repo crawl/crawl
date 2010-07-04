@@ -1141,6 +1141,10 @@ void map_lines::merge_subvault(const coord_def &mtl, const coord_def &mbr,
         if (mm->pos.x >= vtl.x && mm->pos.x <= vbr.x
             && mm->pos.y >= vtl.y && mm->pos.y <= vbr.y)
         {
+            const coord_def maskc = mm->pos - mtl;
+            if (!mask(maskc.x, maskc.y))
+                continue;
+
             // Erase this marker.
             markers[i] = markers[markers.size() - 1];
             markers.resize(markers.size() - 1);
@@ -1968,9 +1972,9 @@ dlua_set_map::~dlua_set_map()
 //
 
 map_def::map_def()
-    : name(), tags(), place(), depths(), orient(), chance(), weight(),
-      weight_depth_mult(), weight_depth_div(), welcome_messages(), map(),
-      mons(), items(), random_mons(), prelude("dlprelude"),
+    : name(), description(), tags(), place(), depths(), orient(), chance(),
+      weight(), weight_depth_mult(), weight_depth_div(), welcome_messages(),
+      map(), mons(), items(), random_mons(), prelude("dlprelude"),
       mapchunk("dlmapchunk"), main("dlmain"),
       validate("dlvalidate"), veto("dlveto"), epilogue("dlepilogue"),
       rock_colour(BLACK), floor_colour(BLACK), rock_tile(0), floor_tile(0),
@@ -2085,6 +2089,11 @@ int map_def::glyph_at(const coord_def &c) const
     return map(c);
 }
 
+std::string map_def::desc_or_name() const
+{
+    return (description.empty()? name : description);
+}
+
 void map_def::write_full(writer& outf) const
 {
     cache_offset = outf.tell();
@@ -2098,7 +2107,7 @@ void map_def::write_full(writer& outf) const
     epilogue.write(outf);
 }
 
-void map_def::read_full(reader& inf)
+void map_def::read_full(reader& inf, bool check_cache_version)
 {
     // There's a potential race-condition here:
     // - If someone modifies a .des file while there are games in progress,
@@ -2110,7 +2119,7 @@ void map_def::read_full(reader& inf)
 
     const short fp_version = unmarshallShort(inf);
 
-    if (fp_version != MAP_CACHE_VERSION)
+    if (check_cache_version && fp_version != MAP_CACHE_VERSION)
         throw map_load_exception(name);
 
     std::string fp_name;
@@ -2159,7 +2168,7 @@ void map_def::load()
     if (!inf.valid())
         throw map_load_exception(name);
     inf.advance(cache_offset);
-    read_full(inf);
+    read_full(inf, true);
 
     index_only = false;
 }

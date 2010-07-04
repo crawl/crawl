@@ -1297,7 +1297,7 @@ static void _handle_run_delays(const delay_queue_item &delay)
 
     const bool want_move =
         delay.type == DELAY_RUN || delay.type == DELAY_TRAVEL;
-    if (you.confused() || !i_feel_safe(true, want_move))
+    if ((want_move && you.confused()) || !i_feel_safe(true, want_move))
         stop_running();
     else
     {

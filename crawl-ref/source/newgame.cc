@@ -18,6 +18,7 @@
 #include "jobs.h"
 #include "macro.h"
 #include "makeitem.h"
+#include "maps.h"
 #include "menu.h"
 #include "ng-init.h"
 #include "ng-input.h"
@@ -441,8 +442,6 @@ bool choose_game(newgame_def* ng, newgame_def* choice,
     // Set these again, since _mark_fully_random may reset *ng.
     ng->name = choice->name;
     ng->type = choice->type;
-    if (!choice->map.empty())
-        ng->map  = choice->map;
 
 #ifndef DGAMELAUNCH
     // New: pick name _after_ character choices.
@@ -2785,91 +2784,261 @@ static bool _choose_wand(newgame_def* ng, newgame_def* ng_choice,
     return (true);
 }
 
+static void _construct_sprint_map_menu(const mapref_vector& maps,
+                                       const newgame_def& defaults,
+                                       MenuFreeform* menu)
+{
+    static const int ITEMS_START_Y = 5;
+    static const int SPRINT_COLUMN_WIDTH = get_number_of_cols();
+    TextItem* tmp = NULL;
+    std::string text;
+    coord_def min_coord(0,0);
+    coord_def max_coord(0,0);
+
+    unsigned int padding_width = 0;
+    for (int i = 0; i < static_cast<int> (maps.size()); i++)
+    {
+        if (padding_width < maps.at(i)->desc_or_name().length())
+        {
+            padding_width = maps.at(i)->desc_or_name().length();
+        }
+    }
+    padding_width += 4; // Count the letter and " - "
+
+    for (int i = 0; i < static_cast<int> (maps.size()); i++)
+    {
+        tmp = new TextItem();
+        text.clear();
+
+        tmp->set_fg_colour(LIGHTGREY);
+        tmp->set_highlight_colour(GREEN);
+
+        const char letter = 'a' + i;
+        text += letter;
+        text += " - ";
+
+        text += maps[i]->desc_or_name();
+        if (static_cast<int>(text.length()) > SPRINT_COLUMN_WIDTH - 1)
+            text = text.substr(0, SPRINT_COLUMN_WIDTH - 1);
+
+        // Add padding
+        if (padding_width > text.size())
+        {
+            text.append(padding_width - text.size(), ' ');
+        }
+        tmp->set_text(text);
+
+        tmp->add_hotkey(letter);
+        tmp->set_id(i); // ID corresponds to location in vector
+
+        min_coord.x = X_MARGIN;
+        min_coord.y = ITEMS_START_Y + i;
+        max_coord.x = min_coord.x + text.size();
+        max_coord.y = min_coord.y + 1;
+        tmp->set_bounds(min_coord, max_coord);
+
+        menu->attach_item(tmp);
+        tmp->set_visible(true);
+        // Is this item our default sprint map?
+        if (defaults.map == maps[i]->name)
+        {
+            menu->set_active_item(tmp);
+        }
+    }
+
+    tmp = new TextItem();
+    tmp->set_text("% - List aptitudes");
+    min_coord.x = X_MARGIN;
+    min_coord.y = SPECIAL_KEYS_START_Y + 1;
+    max_coord.x = min_coord.x + tmp->get_text().size();
+    max_coord.y = min_coord.y + 1;
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->set_fg_colour(BROWN);
+    tmp->add_hotkey('%');
+    tmp->set_id(M_APTITUDES);
+    tmp->set_highlight_colour(LIGHTGRAY);
+    tmp->set_description_text("Lists the numerical skill train aptitudes for all races");
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
+
+    tmp = new TextItem();
+    tmp->set_text("? - Help");
+    min_coord.x = X_MARGIN;
+    min_coord.y = SPECIAL_KEYS_START_Y + 2;
+    max_coord.x = min_coord.x + tmp->get_text().size();
+    max_coord.y = min_coord.y + 1;
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->set_fg_colour(BROWN);
+    tmp->add_hotkey('?');
+    tmp->set_id(M_HELP);
+    tmp->set_highlight_colour(LIGHTGRAY);
+    tmp->set_description_text("Opens the help screen");
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
+
+    tmp = new TextItem();
+    tmp->set_text("* - Random map");
+    min_coord.x = X_MARGIN + COLUMN_WIDTH;
+    min_coord.y = SPECIAL_KEYS_START_Y + 1;
+    max_coord.x = min_coord.x + tmp->get_text().size();
+    max_coord.y = min_coord.y + 1;
+    tmp->set_bounds(min_coord, max_coord);
+    tmp->set_fg_colour(BROWN);
+    tmp->add_hotkey('*');
+    tmp->set_id(M_RANDOM);
+    tmp->set_highlight_colour(LIGHTGRAY);
+    tmp->set_description_text("Picks a random sprint map");
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
+
+    // TODO: let players escape back to first screen menu
+    // Adjust the end marker to align the - because Bksp text is longer by 3
+    //tmp = new TextItem();
+    //tmp->set_text("Bksp - Return to character menu");
+    //tmp->set_description_text("Lets you return back to Character choice menu");
+    //min_coord.x = X_MARGIN + COLUMN_WIDTH - 3;
+    //min_coord.y = SPECIAL_KEYS_START_Y + 1;
+    //max_coord.x = min_coord.x + tmp->get_text().size();
+    //max_coord.y = min_coord.y + 1;
+    //tmp->set_bounds(min_coord, max_coord);
+    //tmp->set_fg_colour(BROWN);
+    //tmp->add_hotkey(CK_BKSP);
+    //tmp->set_id(M_ABORT);
+    //tmp->set_highlight_colour(LIGHTGRAY);
+    //menu->attach_item(tmp);
+    //tmp->set_visible(true);
+
+    // Only add tab entry if we have a previous wand choice
+    if (defaults.type == GAME_TYPE_SPRINT
+        && !defaults.map.empty() && _char_defined(defaults))
+    {
+        tmp = new TextItem();
+        text.clear();
+        text += "Tab - ";
+        text += defaults.map;
+
+        // Adjust the end marker to aling the - because
+        // Tab text is longer by 2
+        tmp->set_text(text);
+        min_coord.x = X_MARGIN + COLUMN_WIDTH - 2;
+        min_coord.y = SPECIAL_KEYS_START_Y + 2;
+        max_coord.x = min_coord.x + tmp->get_text().size();
+        max_coord.y = min_coord.y + 1;
+        tmp->set_bounds(min_coord, max_coord);
+        tmp->set_fg_colour(BROWN);
+        tmp->add_hotkey('\t');
+        tmp->set_id(M_DEFAULT_CHOICE);
+        tmp->set_highlight_colour(LIGHTGRAY);
+        tmp->set_description_text("Select your previous sprint map and character");
+        menu->attach_item(tmp);
+        tmp->set_visible(true);
+    }
+}
+
 static void _prompt_sprint_map(const newgame_def* ng, newgame_def* ng_choice,
                                const newgame_def& defaults,
-                               const std::vector<std::string>& maps)
+                               const mapref_vector &maps)
 {
+    PrecisionMenu menu;
+    menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
+    MenuFreeform* freeform = new MenuFreeform();
+    freeform->init(coord_def(1,1), coord_def(get_number_of_cols(),
+                   get_number_of_lines()), "freeform");
+    menu.attach_object(freeform);
+    menu.set_active_object(freeform);
+
+    _construct_sprint_map_menu(maps, defaults, freeform);
+
+    BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
+    highlighter->init(coord_def(0,0), coord_def(0,0), "highlighter");
+    menu.attach_object(highlighter);
+
+    // Did we have a previous sprint map?
+    if (menu.get_active_item() == NULL)
+    {
+        freeform->activate_first_item();
+    }
+    _print_character_info(ng); // calls clrscr() so needs to be before attach()
+
+#ifdef USE_TILE
+    tiles.get_crt()->attach_menu(&menu);
+#endif
+
+    freeform->set_visible(true);
+    highlighter->set_visible(true);
+
     textcolor(CYAN);
     cprintf("\nYou have a choice of maps:\n\n");
 
-    textcolor(LIGHTGREY);
-    for (unsigned int i = 0; i < maps.size(); i++)
-    {
-        const char letter = 'a' + i;
-        cprintf("%c - %s\n", letter, maps[i].c_str());
-    }
-
-    textcolor(BROWN);
-    cprintf("\n* - Random choice; X - Quit");
-
-    if (!defaults.map.empty())
-    {
-        // Should check that it actually occurs in maps.
-        cprintf("; Enter - %s", defaults.map.c_str());
-    }
-
-    const bool tab_enabled = (defaults.type == GAME_TYPE_SPRINT
-                && !defaults.map.empty()
-                && _char_defined(defaults));
-    // TODO: Should describe choice here: char + map.
-    if (tab_enabled)
-        cprintf("; Tab - %s", "last game's choice");
-
-    cprintf("\n");
-
     while (true)
     {
-        textcolor(LIGHTGREY);
+        menu.draw_menu();
 
-        int keyin = getch_ck();
+        int keyn = getch_ck();
 
-        switch (keyin)
+        // First process menu entries
+        if (!menu.process_key(keyn))
         {
-        case 'X':
-        CASE_ESCAPE
-            cprintf("\nGoodbye!");
-            end(0);
-            break;
-        case '\r':
-        case '\n':
-            if (!defaults.map.empty())
+            // Process all the keys that are not attached to items
+            switch (keyn)
             {
-                ng_choice->map = defaults.map;
+            case 'X':
+                cprintf("\nGoodbye!");
+                end(0);
+                break;
+            case ' ':
+            CASE_ESCAPE
                 return;
-            }
-            else
+            default:
+                // if we get this far, we did not get a significant selection
+                // from the menu, nor did we get an escape character
+                // continue the while loop from the beginning and poll a new key
                 continue;
-        case '\t':
-            if (tab_enabled)
-            {
-                *ng_choice = defaults;
-                return;
             }
-            else
-                continue;
-        case '%':
+        }
+        // We have a significant key input!
+        // Construct selection vector
+        std::vector<MenuItem*> selection = menu.get_selected_items();
+        // There should only be one selection, otherwise something broke
+        if (selection.size() != 1)
+        {
+            // poll a new key
+            continue;
+        }
+
+        // Get the stored id from the selection
+        int selection_ID = selection.at(0)->get_id();
+        switch (selection_ID)
+        {
+        case M_ABORT:
+            // TODO: fix
+            return;
+        case M_APTITUDES:
             list_commands('%');
             return _prompt_sprint_map(ng, ng_choice, defaults, maps);
-        case '*':
-            ng_choice->map = "random";
+        case M_HELP:
+            list_commands('?');
+            return _prompt_sprint_map(ng, ng_choice, defaults, maps);
+        case M_DEFAULT_CHOICE:
+            *ng_choice = defaults;
+            return;
+        case M_RANDOM:
+            // FIXME setting this to "random" is broken
+            ng_choice->map.clear();
             return;
         default:
-            if (keyin - 'a' >= 0 && keyin - 'a' < (int)maps.size())
-            {
-                ng_choice->map = maps[keyin - 'a'];
-                return;
-            }
-            else
-                continue;
+            // We got an item selection
+            ng_choice->map = maps.at(selection_ID)->name;
+            return;
         }
     }
 }
 
 static void _resolve_sprint_map(newgame_def* ng, const newgame_def* ng_choice,
-                                const std::vector<std::string>& maps)
+                                const mapref_vector& maps)
 {
     if (ng_choice->map == "random" || ng_choice->map.empty())
-        ng->map = maps[random2(maps.size())];
+        ng->map = maps[random2(maps.size())]->name;
     else
         ng->map = ng_choice->map;
 }
@@ -2877,7 +3046,7 @@ static void _resolve_sprint_map(newgame_def* ng, const newgame_def* ng_choice,
 static void _choose_sprint_map(newgame_def* ng, newgame_def* ng_choice,
                                const newgame_def& defaults)
 {
-    std::vector<std::string> maps = get_sprint_maps();
+    const mapref_vector maps = get_sprint_maps();
     if (maps.empty())
         end(1, true, "No sprint maps found.");
 
@@ -2888,7 +3057,7 @@ static void _choose_sprint_map(newgame_def* ng, newgame_def* ng_choice,
         else if (maps.size() > 1)
             _prompt_sprint_map(ng, ng_choice, defaults, maps);
         else
-            ng_choice->map = maps[0];
+            ng_choice->map = maps[0]->name;
     }
 
     _resolve_sprint_map(ng, ng_choice, maps);

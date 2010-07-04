@@ -4,6 +4,7 @@
 #include "l_libs.h"
 
 #include "abl-show.h"
+#include "areas.h"
 #include "branch.h"
 #include "chardump.h"
 #include "coord.h"
@@ -17,14 +18,14 @@
 #include "mon-util.h"
 #include "jobs.h"
 #include "ouch.h"
+#include "religion.h"
 #include "shopping.h"
 #include "species.h"
-#include "religion.h"
+#include "stairs.h"
 #include "skills2.h"
 #include "spells3.h"
 #include "spl-util.h"
 #include "stuff.h"
-#include "areas.h"
 #include "transform.h"
 #include "travel.h"
 
@@ -275,6 +276,34 @@ static int _you_uniques(lua_State *ls)
     return (1);
 }
 
+static int _you_num_runes (lua_State *ls)
+{
+    std::vector<int> runes;
+    const int num_runes = runes_in_pack(runes);
+
+    lua_pushnumber(ls, num_runes);
+
+    if (num_runes > 0)
+    {
+        lua_newtable(ls);
+
+        int index = 0;
+
+        for (unsigned slot = 0; slot < runes.size(); ++slot)
+        {
+            if (you.inv[runes[slot]].defined())
+            {
+                clua_push_item(ls, &you.inv[runes[slot]]);
+                lua_rawseti(ls, -2, ++index);
+            }
+        }
+
+        return (2);
+    }
+    else
+        return (1);
+}
+
 static int _you_gold(lua_State *ls)
 {
     if (lua_gettop(ls) >= 1)
@@ -372,6 +401,7 @@ static const struct luaL_reg you_dlib[] =
 { "teleport_to",        you_teleport_to },
 { "gold",               _you_gold },
 { "uniques",            _you_uniques },
+{ "num_runes",          _you_num_runes },
 { "die",                _you_die },
 { "piety",              you_piety },
 { "in_branch",          you_in_branch },

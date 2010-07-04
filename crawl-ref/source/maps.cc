@@ -598,25 +598,25 @@ std::vector<std::string> find_map_matches(const std::string &name)
     return (matches);
 }
 
-std::vector<map_def> find_maps_for_tag (const std::string tag, bool check_depth,
-                                          bool check_used)
+mapref_vector find_maps_for_tag(const std::string tag,
+                                bool check_depth,
+                                bool check_used)
 {
-    std::vector<map_def> maps;
+    mapref_vector maps;
     level_id place = level_id::current();
 
     for (unsigned i = 0, size = vdefs.size(); i < size; ++i)
     {
-        map_def mapdef = vdefs[i];
+        const map_def &mapdef = vdefs[i];
         if (mapdef.has_tag(tag)
             && !mapdef.has_tag("dummy")
             && (!check_depth || !mapdef.has_depth()
-                 || mapdef.is_usable_in(place))
+                || mapdef.is_usable_in(place))
             && (!check_used || vault_unforbidden(mapdef)))
         {
-                maps.push_back(mapdef);
+            maps.push_back(&mapdef);
         }
     }
-
     return (maps);
 }
 
@@ -1145,6 +1145,8 @@ static bool load_map_index(const std::string &base)
     {
         map_def &vdef(vdefs[nexist + i]);
         vdef.read_index(inf);
+        vdef.description = unmarshallString(inf);
+
         vdef.set_file(base);
         lc_loaded_maps[vdef.name] = vdef.place_loaded_from;
         vdef.place_loaded_from.clear();
@@ -1227,6 +1229,7 @@ static void write_map_index(const std::string &filebase, size_t vs, size_t ve)
     for (size_t i = vs; i < ve; ++i)
     {
         vdefs[i].write_index(outf);
+        marshallString(outf, vdefs[i].description);
         vdefs[i].place_loaded_from.clear();
         vdefs[i].strip();
     }

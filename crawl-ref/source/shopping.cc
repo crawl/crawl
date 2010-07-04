@@ -2102,15 +2102,11 @@ shop_struct *get_shop(const coord_def& where)
     if (grd(where) != DNGN_ENTER_SHOP)
         return (NULL);
 
-    // Check all shops for one at the correct position.
-    for (int i = 0; i < MAX_SHOPS; i ++)
-    {
-        shop_struct& shop = env.shop[i];
-        // A little bit of paranoia.
-        if (shop.pos == where && shop.type != SHOP_UNASSIGNED)
-            return (&shop);
-    }
-    return (NULL);
+    unsigned short t = env.tgrid(where);
+    ASSERT(t != NON_ENTITY && t < MAX_SHOPS);
+    ASSERT(env.shop[t].pos == where && env.shop[t].type != SHOP_UNASSIGNED);
+
+    return (&env.shop[t]);
 }
 
 std::string shop_name(const coord_def& where, bool add_stop)

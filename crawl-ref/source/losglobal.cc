@@ -8,9 +8,10 @@
 #include "los_def.h"
 
 typedef unsigned char losfield_t;
-typedef FixedArray<losfield_t, LOS_MAX_RANGE+1, 2*LOS_MAX_RANGE+1> halflos_t;
-const coord_def o_half(0, LOS_MAX_RANGE);
-typedef FixedArray<halflos_t, GXM, GYM> globallos_t;
+typedef losfield_t halflos_t[LOS_MAX_RANGE+1][2*LOS_MAX_RANGE+1];
+const int o_half_x = 0;
+const int o_half_y = LOS_MAX_RANGE;
+typedef halflos_t globallos_t[GXM][GYM];
 
 globallos_t globallos;
 
@@ -23,9 +24,9 @@ static losfield_t* _lookup_globallos(const coord_def& p, const coord_def& q)
         return (NULL);
     // p < q iff p.x < q.x || p.x == q.x && p.y < q.y
     if (diff < coord_def(0, 0))
-        return (&globallos(q)(-diff+o_half));
+        return (&globallos[q.x][q.y][-diff.x + o_half_x][-diff.y + o_half_y]);
     else
-        return (&globallos(p)(diff+o_half));
+        return (&globallos[p.x][p.y][ diff.x + o_half_x][ diff.y + o_half_y]);
 }
 
 static void _save_los(los_def* los, los_type l)
@@ -54,13 +55,13 @@ void invalidate_los_around(const coord_def& p)
     // We're wiping out a little more than required here.
     for (rectangle_iterator ri(tl, br); ri; ++ri)
         if (map_bounds(*ri))
-            globallos(*ri).init(LOS_FLAG_INVALID);
+            memset(globallos[ri->x][ri->y], LOS_FLAG_INVALID, sizeof(halflos_t));
 }
 
 void invalidate_los()
 {
     for (rectangle_iterator ri(0); ri; ++ri)
-        globallos(*ri).init(LOS_FLAG_INVALID);
+        memset(globallos[ri->x][ri->y], LOS_FLAG_INVALID, sizeof(halflos_t));
 }
 
 static void _update_globallos_at(const coord_def& p)
