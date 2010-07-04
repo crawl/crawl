@@ -40,8 +40,6 @@ enum spell_highlight_colours
     COL_UNMEMORIZED  = LIGHTBLUE,   // spell hasn't been memorized (used reading spellbooks)
     COL_USELESS      = DARKGRAY,    // ability would have no useful effect
     COL_INAPPLICABLE = COL_USELESS, // ability cannot be meanifully applied (eg, no targets)
-    COL_USEFUL       = YELLOW,      // the players status makes this ability notably more useful
-    COL_RISKY        = MAGENTA,     // The Ability is inherently risky
     COL_FORBIDDEN    = LIGHTRED,    // The player's god hates this abilty
 
     COL_EMPOWERED    = LIGHTGREEN,  // The ability is made stronger by the player's status
