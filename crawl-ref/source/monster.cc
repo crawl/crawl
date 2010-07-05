@@ -4291,6 +4291,7 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
             // point; they're supposed to follow you now.
             patrol_point.reset();
         }
+        mons_att_changed(this);
         if (you.can_see(this))
             learned_something_new(HINT_MONSTER_FRIENDLY, pos());
         break;
@@ -4563,6 +4564,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             // in case they were on order to wait.
             patrol_point.reset();
         }
+        mons_att_changed(this);
 
         // Reevaluate behaviour.
         behaviour_event(this, ME_EVAL);
