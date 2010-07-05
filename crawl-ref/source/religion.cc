@@ -2452,7 +2452,7 @@ int piety_scale(int piety)
     return (piety);
 }
 
-void gain_piety(int original_gain, bool force)
+void gain_piety(int original_gain, bool force, bool should_scale_piety)
 {
     if (original_gain <= 0)
         return;
@@ -2464,7 +2464,7 @@ void gain_piety(int original_gain, bool force)
     if (you.religion == GOD_NO_GOD || you.religion == GOD_XOM)
         return;
 
-    int pgn = piety_scale(original_gain);
+    int pgn = should_scale_piety? piety_scale(original_gain) : original_gain;
 
     // check to see if we owe anything first
     if (you.penance[you.religion] > 0)
@@ -2534,7 +2534,7 @@ void gain_piety(int original_gain, bool force)
 
     int old_piety = you.piety;
 
-    if (crawl_state.game_is_sprint())
+    if (crawl_state.game_is_sprint() && should_scale_piety)
     {
         pgn = sprint_modify_piety(pgn);
     }
@@ -3270,7 +3270,7 @@ void god_pitch(god_type which_god)
     if (crawl_state.game_is_tutorial())
     {
         // Tutorial needs minor destruction usable.
-        gain_piety(35, true);
+        gain_piety(35, true, false);
     }
 
     god_welcome_identify_gear();
@@ -3335,7 +3335,7 @@ void god_pitch(god_type which_god)
     {
         // Give a piety bonus when switching between good gods.
         if (good_god_switch && old_piety > 15)
-            gain_piety(std::min(30, old_piety - 15));
+            gain_piety(std::min(30, old_piety - 15), true, false);
     }
     else if (is_evil_god(you.religion))
     {
@@ -3351,7 +3351,7 @@ void god_pitch(god_type which_god)
 
     // Note that you.worshipped[] has already been incremented.
     if (you.religion == GOD_LUGONU && you.worshipped[GOD_LUGONU] == 1)
-        gain_piety(20);         // allow instant access to first power
+        gain_piety(20, true, false);  // allow instant access to first power
 
     // Complimentary jelly upon joining.
     if (you.religion == GOD_JIYVA)
