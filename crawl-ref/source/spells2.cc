@@ -219,7 +219,7 @@ void corpse_rot()
 
 // We need to know what brands equate with what missile brands to know if
 // we should disallow temporary branding or not.
-special_missile_type _convert_to_missile(brand_type which_brand)
+static special_missile_type _convert_to_missile(brand_type which_brand)
 {
     switch (which_brand)
     {
@@ -237,7 +237,7 @@ special_missile_type _convert_to_missile(brand_type which_brand)
 }
 
 // Some launchers need to convert different brands.
-brand_type _convert_to_launcher(brand_type which_brand)
+static brand_type _convert_to_launcher(brand_type which_brand)
 {
     switch (which_brand)
     {
@@ -246,7 +246,7 @@ brand_type _convert_to_launcher(brand_type which_brand)
     }
 }
 
-bool _ok_for_launchers(brand_type which_brand)
+static bool _ok_for_launchers(brand_type which_brand)
 {
     switch (which_brand)
     {
@@ -1138,7 +1138,7 @@ bool cast_call_canine_familiar(int pow, god_type god)
     return (success);
 }
 
-int _count_summons(monster_type type)
+static int _count_summons(monster_type type)
 {
     int cnt = 0;
 

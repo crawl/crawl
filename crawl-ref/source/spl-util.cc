@@ -940,7 +940,7 @@ static bool _cloud_helper(cloud_func func, const coord_def& where,
     return (false);
 }
 
-bool _spell_range_varies(spell_type spell)
+static bool _spell_range_varies(spell_type spell)
 {
     int minrange = _seekspell(spell)->min_range;
     int maxrange = _seekspell(spell)->max_range;

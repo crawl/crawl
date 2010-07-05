@@ -339,7 +339,7 @@ bool cast_hellfire_burst(int pow, bolt &beam)
     return (true);
 }
 
-bool _lightning_los(const coord_def& source, const coord_def& target)
+static bool _lightning_los(const coord_def& source, const coord_def& target)
 {
     // XXX: currently bounded by circular LOS radius;
     // XXX: adapt opacity -- allow passing clouds.
@@ -1088,7 +1088,7 @@ void antimagic()
     contaminate_player(-1 * (1 + random2(5)));
 }
 
-bool _know_spell(spell_type spell)
+static bool _know_spell(spell_type spell)
 {
     if (spell == NUM_SPELLS)
         return (false);
@@ -1111,7 +1111,7 @@ bool _know_spell(spell_type spell)
     return (true);
 }
 
-spell_type _brand_spell()
+static spell_type _brand_spell()
 {
     const item_def *wpn = you.weapon();
 
@@ -1148,7 +1148,7 @@ spell_type _brand_spell()
     }
 }
 
-spell_type _transform_spell()
+static spell_type _transform_spell()
 {
     switch(you.attribute[ATTR_TRANSFORMATION])
     {

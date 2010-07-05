@@ -801,7 +801,7 @@ static void _player_change_level_downstairs(dungeon_feature_type stair_find,
     }
 }
 
-void _maybe_destroy_trap(const coord_def &p)
+static void _maybe_destroy_trap(const coord_def &p)
 {
     trap_def* trap = find_trap(p);
     if (trap)

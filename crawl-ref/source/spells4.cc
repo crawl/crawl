@@ -888,7 +888,7 @@ int make_a_normal_cloud(coord_def where, int pow, int spread_rate,
     return 1;
 }
 
-bool _feat_is_passwallable(dungeon_feature_type feat)
+static bool _feat_is_passwallable(dungeon_feature_type feat)
 {
     // Irony: you can passwall through a secret door but not a door.
     // Worked stone walls are out, they're not diggable and

@@ -875,7 +875,7 @@ void equip_undead(const coord_def &a, int corps, int monster, int monnum)
 }
 
 //Displays message when raising dead with Animate Skeleton or Animate Dead
-void _display_undead_motions(int motions)
+static void _display_undead_motions(int motions)
 {
     std::vector<std::string> motions_list;
 
@@ -1410,7 +1410,7 @@ void you_teleport(void)
 }
 
 // Should return true if we don't want anyone to teleport here.
-bool _cell_vetoes_teleport (const coord_def cell, bool  check_monsters = true)
+static bool _cell_vetoes_teleport (const coord_def cell, bool  check_monsters = true)
 {
     // Monsters always veto teleport.
     if (monster_at(cell) && check_monsters)
@@ -1446,8 +1446,8 @@ bool _cell_vetoes_teleport (const coord_def cell, bool  check_monsters = true)
     }
 }
 
-void _handle_teleport_update (bool large_change, bool check_ring_TC,
-                            const coord_def old_pos)
+static void _handle_teleport_update (bool large_change, bool check_ring_TC,
+                                     const coord_def old_pos)
 {
     if (large_change)
     {

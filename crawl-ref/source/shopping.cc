@@ -2779,8 +2779,8 @@ void ShoppingList::display()
     redraw_screen();
 }
 
-bool _compare_shopping_things(const CrawlStoreValue& a,
-                              const CrawlStoreValue& b)
+static bool _compare_shopping_things(const CrawlStoreValue& a,
+                                     const CrawlStoreValue& b)
 {
     const CrawlHashTable& hash_a = a.get_table();
     const CrawlHashTable& hash_b = b.get_table();

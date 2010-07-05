@@ -137,7 +137,7 @@ static void _fuzz_direction(monsters &mon, int pow)
 }
 
 // Alas, too much differs to reuse beam shield blocks :(
-bool _iood_shielded(monsters &mon, actor &victim)
+static bool _iood_shielded(monsters &mon, actor &victim)
 {
     if (!victim.shield() || victim.incapacitated())
         return (false);
@@ -149,7 +149,7 @@ bool _iood_shielded(monsters &mon, actor &victim)
     return (pro_block >= con_block);
 }
 
-bool _iood_hit(monsters &mon, const coord_def &pos, bool big_boom = false)
+static bool _iood_hit(monsters &mon, const coord_def &pos, bool big_boom = false)
 {
     bolt beam;
     beam.name = "orb of destruction";

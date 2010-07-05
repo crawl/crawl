@@ -1619,7 +1619,7 @@ static bool _blessed_hit_victim(bolt &beam, actor* victim, int &dmg,
     return (false);
 }
 
-int _blowgun_power_roll(bolt &beam)
+static int _blowgun_power_roll(bolt &beam)
 {
     actor* agent = beam.agent();
     if (!agent)
@@ -1649,7 +1649,7 @@ int _blowgun_power_roll(bolt &beam)
     return (base_power + blowgun->plus);
 }
 
-bool _blowgun_check(bolt &beam, actor* victim, bool message = true)
+static bool _blowgun_check(bolt &beam, actor* victim, bool message = true)
 {
     actor* agent = beam.agent();
 
@@ -2158,7 +2158,7 @@ static void identify_floor_missiles_matching(item_def mitem, int idflags)
             }
 }
 
-void _merge_ammo_in_inventory(int slot)
+static void _merge_ammo_in_inventory(int slot)
 {
     if (!you.inv[slot].defined())
         return;
@@ -3585,15 +3585,15 @@ bool remove_ring(int slot, bool announce)
     return (true);
 }
 
-int _wand_range(zap_type ztype)
+static int _wand_range(zap_type ztype)
 {
     // FIXME: Eventually we should have sensible values here.
-    return (8);
+    return (LOS_RADIUS);
 }
 
-int _max_wand_range()
+static int _max_wand_range()
 {
-    return (8);
+    return (LOS_RADIUS);
 }
 
 static bool _dont_use_invis()

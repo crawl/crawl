@@ -2549,8 +2549,9 @@ static void _append_spell_stats(const spell_type spell,
 }
 
 // Returns true if you can memorise the spell.
-bool _get_spell_description(const spell_type spell, std::string &description,
-                            const item_def* item = NULL)
+static bool _get_spell_description(const spell_type spell,
+                                   std::string &description,
+                                   const item_def* item = NULL)
 {
     description.reserve(500);
 

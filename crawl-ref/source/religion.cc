@@ -1329,7 +1329,7 @@ bool is_neutral_plant(const monsters* mon)
             && mon->attitude == ATT_GOOD_NEUTRAL);
 }
 
-bool _has_jelly()
+static bool _has_jelly()
 {
     ASSERT(you.religion == GOD_JIYVA);
 

@@ -135,7 +135,7 @@ void wizard_place_stairs( bool down )
 
 // Try to find and use stairs already in the portal vault level,
 // since this might be a multi-level portal vault like a ziggurat.
-bool _take_portal_vault_stairs( const bool down )
+static bool _take_portal_vault_stairs( const bool down )
 {
     ASSERT(you.level_type == LEVEL_PORTAL_VAULT);
 

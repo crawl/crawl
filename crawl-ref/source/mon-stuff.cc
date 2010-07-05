@@ -69,7 +69,7 @@
 
 static bool _wounded_damaged(monster_type mon_type);
 
-int _make_mimic_item(monster_type type)
+static int _make_mimic_item(monster_type type)
 {
     int it = items(0, OBJ_RANDOM, OBJ_RANDOM, true, 0, 0);
 
@@ -992,7 +992,7 @@ static void _mummy_curse(monsters* monster, killer_type killer, int index)
     }
 }
 
-void _setup_base_explosion(bolt & beam, const monsters & origin)
+static void _setup_base_explosion(bolt & beam, const monsters & origin)
 {
     beam.is_tracer    = false;
     beam.is_explosion = true;
@@ -1114,7 +1114,7 @@ static bool _spore_goes_pop(monsters *monster, killer_type killer,
     return (true);
 }
 
-void _monster_die_cloud(const monsters* monster, bool corpse, bool silent,
+static void _monster_die_cloud(const monsters* monster, bool corpse, bool silent,
                         bool summoned)
 {
     // Chaos spawn always leave behind a cloud of chaos.

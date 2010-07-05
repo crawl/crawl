@@ -437,7 +437,7 @@ monster_type pick_random_monster(const level_id &place,
     return pick_random_monster(place, level, level, chose_ood_monster);
 }
 
-std::vector<monster_type> _find_valid_monster_types(const level_id &place)
+static std::vector<monster_type> _find_valid_monster_types(const level_id &place)
 {
     static std::vector<monster_type> valid_monster_types;
     static level_id last_monster_type_place;

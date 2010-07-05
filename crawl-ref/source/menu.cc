@@ -1843,7 +1843,7 @@ int ToggleableMenu::pre_process(int key)
  *           |          |
  *           ------------end(x,y)
  */
-bool _AABB_intersection(const coord_def& item_start,
+static bool _AABB_intersection(const coord_def& item_start,
                               const coord_def& item_end,
                               const coord_def& aabb_start,
                               const coord_def& aabb_end)
