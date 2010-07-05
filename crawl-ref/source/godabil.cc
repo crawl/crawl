@@ -166,17 +166,20 @@ int zin_recite_to_single_monster(const coord_def& where,
     if (pow == -1)
         pow = (2 * skill_bump(SK_INVOCATIONS) + you.piety / 5) / 2;
 
+    int resist;
     const mon_holy_type holiness = mon->holiness();
 
-    int resist = std::min(mon->res_magic(), 11);
     if (mon->is_holy())
-        resist -= 2 + random2(3);
-    else if (holiness == MH_UNDEAD)
-        resist += 2 + random2(3);
-    else if (holiness == MH_DEMONIC)
-        resist += 3 + random2(5);
-    resist -= random2(you.skills[SK_INVOCATIONS]);
-    resist = std::max(0, resist);
+        resist = std::max(0, 7 - random2(you.skills[SK_INVOCATIONS]));
+    else
+    {
+        resist = mon->res_magic();
+
+        if (holiness == MH_UNDEAD)
+            pow -= 2 + random2(3);
+        else if (holiness == MH_DEMONIC)
+            pow -= 3 + random2(5);
+    }
 
     pow -= resist;
 
