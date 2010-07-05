@@ -498,6 +498,7 @@ bool Menu::process_key( int keyin )
             {
                 select_index(next);
                 get_selected(&sel);
+                draw_select_count( sel.size() );
                 if (get_cursor() < next)
                 {
                     first_entry = 0;
