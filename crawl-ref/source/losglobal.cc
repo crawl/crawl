@@ -29,6 +29,8 @@ static losfield_t* _lookup_globallos(const coord_def& p, const coord_def& q)
         return (&globallos[p.x][p.y][ diff.x + o_half_x][ diff.y + o_half_y]);
 }
 
+static bool _los_completely_invalid;
+
 static void _save_los(los_def* los, los_type l)
 {
     const coord_def o = los->get_center();
@@ -45,11 +47,14 @@ static void _save_los(los_def* los, los_type l)
         else
             *flags &= ~l;
     }
+    _los_completely_invalid = false;
 }
 
 // Opacity at p has changed.
 void invalidate_los_around(const coord_def& p)
 {
+    if (_los_completely_invalid)
+        return;
     const coord_def tl = p - coord_def(LOS_MAX_RANGE, LOS_MAX_RANGE);
     const coord_def br = p + coord_def(0, LOS_MAX_RANGE);
     // We're wiping out a little more than required here.
@@ -60,8 +65,11 @@ void invalidate_los_around(const coord_def& p)
 
 void invalidate_los()
 {
+    if (_los_completely_invalid)
+        return;
     for (rectangle_iterator ri(0); ri; ++ri)
         memset(globallos[ri->x][ri->y], LOS_FLAG_INVALID, sizeof(halflos_t));
+    _los_completely_invalid = true;
 }
 
 static void _update_globallos_at(const coord_def& p)
