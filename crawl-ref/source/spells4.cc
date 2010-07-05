@@ -346,7 +346,7 @@ void cast_phase_shift(int pow)
 void cast_see_invisible(int pow)
 {
     if (you.can_see_invisible())
-        mpr("Nothing seems to happen.");
+        mpr("You feel as though your vision will be sharpened longer.");
     else
     {
         mpr("Your vision seems to sharpen.");
