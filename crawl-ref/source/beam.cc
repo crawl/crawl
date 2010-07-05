@@ -4781,8 +4781,10 @@ mon_resist_type bolt::apply_enchantment_to_monster(monsters* mon)
             return (MON_OTHER);
         }
 
-        if (mon->friendly())
-            return (MON_UNAFFECTED);
+        // Being a puppet on magic strings is a nasty thing.
+        // Mindless creatures shouldn't probably mind, but because of complex
+        // behaviour of enslaved neutrals, let's disallow that for now.
+        mon->attitude = ATT_HOSTILE;
 
         // XXX: Another hackish thing for Pikel's band neutrality.
         if (mons_is_pikel(mon))
@@ -5347,10 +5349,6 @@ bool bolt::nasty_to(const monsters *mon) const
     // Positive effects.
     if (nice_to(mon))
         return (false);
-
-    // No charming holy beings!
-    if (flavour == BEAM_CHARM)
-        return (mon->is_holy());
 
     // Friendly and good neutral monsters don't mind being teleported.
     if (flavour == BEAM_TELEPORT)
