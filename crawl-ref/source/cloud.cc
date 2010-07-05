@@ -79,21 +79,12 @@ static bool _killer_whose_match(kill_category whose, killer_type killer)
 }
 #endif
 
-// For maps that have a lot of cloud action, we invalidate
-// LOS entirely at the start of manage_clouds, so that
-// we don't do too much work for LOS invalidation.
-const int CLOUD_LOS_INVALIDATE_LIMIT = 10;
-static int _los_change_count = 0;
-
 static bool _is_opaque_cloud(cloud_type ctype);
 
 static void _los_cloud_changed(const coord_def& p, cloud_type t)
 {
     if (_is_opaque_cloud(t))
-    {
-        _los_change_count++;
         invalidate_los_around(p);
-    }
 }
 
 static void _new_cloud( int cloud, cloud_type type, const coord_def& p,
@@ -268,9 +259,6 @@ static void _dissipate_cloud(int cloudidx, int dissipate)
 
 void manage_clouds()
 {
-    if (_los_change_count > CLOUD_LOS_INVALIDATE_LIMIT)
-        invalidate_los();
-    _los_change_count = 0;
     for (int i = 0; i < MAX_CLOUDS; ++i)
     {
         cloud_struct& cloud = env.cloud[i];
