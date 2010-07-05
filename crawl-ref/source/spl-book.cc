@@ -823,20 +823,17 @@ int spellbook_contents( item_def &book, read_book_action_type action,
         int colour = DARKGREY;
         if (action == RBOOK_USE_STAFF)
         {
-            if (book.base_type == OBJ_BOOKS ?
-                   (you.experience_level >= level_diff
-                    && you.magic_points >= level_diff
-                    && player_can_memorise_from_spellbook(book))
-                : book.plus >= level_diff * ROD_CHARGE_MULT)
-            {
-                colour = spell_highlight_by_utility(stype, COL_UNKNOWN, false, false, true);
-            }
+            ASSERT(book.base_type == OBJ_STAVES);
+            if (book.plus >= level_diff * ROD_CHARGE_MULT)
+                colour = spell_highlight_by_utility(stype, COL_UNKNOWN, false, true);
             else
                 colour = COL_USELESS;
         }
         else
         {
-            if (you_cannot_memorise(stype)
+            if (you.has_spell(stype))
+                colour = COL_MEMORIZED;
+            else if (you_cannot_memorise(stype)
                 || you.experience_level < level_diff
                 || spell_levels < levels_req
                 || !spell_skills
@@ -845,9 +842,10 @@ int spellbook_contents( item_def &book, read_book_action_type action,
             {
                 colour = COL_USELESS;
             }
+            else if (!you.has_spell(stype))
+                colour = COL_UNMEMORIZED;
             else
-                colour = spell_highlight_by_utility(stype, COL_UNKNOWN,
-                                                    false, true);
+                colour = spell_highlight_by_utility(stype);
         }
 
         out.textcolor( colour );

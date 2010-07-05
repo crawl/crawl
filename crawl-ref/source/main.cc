@@ -176,6 +176,9 @@ const struct coord_def Compass[8] =
 };
 
 // Functions in main module
+static void _launch_game_loop();
+static void _launch_game();
+
 static void _do_berserk_no_combat_penalty(void);
 static void _input(void);
 static void _move_player(int move_x, int move_y);
@@ -264,9 +267,46 @@ int main(int argc, char *argv[])
         return -1;
 #endif
 
+    _launch_game_loop();
+    end(0);
+
+    return 0;
+}
+
+static void _launch_game_loop()
+{
+    bool game_ended = false;
+    do
+    {
+        try
+        {
+            game_ended = false;
+            _launch_game();
+        }
+        catch (game_ended_condition &ge)
+        {
+            game_ended = true;
+            crawl_state.type = GAME_TYPE_UNSPECIFIED;
+            clear_message_store();
+            you.reset();
+            msg::deinitialise_mpr_streams();
+#ifdef USE_TILE
+            // [ds] Don't show the title screen again, just go back to
+            // the menu.
+            Options.tile_title_screen = false;
+#endif
+        }
+    } while (Options.restart_after_game
+             && game_ended
+             && !crawl_state.seen_hups);
+}
+
+static void _launch_game()
+{
     const bool game_start = startup_step();
 
     // Attach the macro key recorder
+    remove_key_recorder(&repeat_again_rec);
     add_key_recorder(&repeat_again_rec);
 
     // Override some options when playing in hints mode.
@@ -328,8 +368,6 @@ int main(int argc, char *argv[])
         _input();
 
     clear_globals_on_exit();
-
-    return 0;
 }
 
 static void _show_commandline_options_help()

@@ -70,6 +70,8 @@ void initialise_branch_depths()
 
     if (crawl_state.game_is_sprint())
         branches[BRANCH_MAIN_DUNGEON].depth = 1;
+    else
+        branches[BRANCH_MAIN_DUNGEON].depth = BRANCH_DUNGEON_DEPTH;
 }
 
 #define MAX_OVERFLOW_LEVEL 9

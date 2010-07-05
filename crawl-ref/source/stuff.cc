@@ -419,6 +419,39 @@ void end(int exit_code, bool print_error, const char *format, ...)
     exit(exit_code);
 }
 
+void game_ended()
+{
+    if (!crawl_state.seen_hups)
+        throw game_ended_condition();
+    else
+        end(0);
+}
+
+void game_ended_with_error(const std::string &message)
+{
+    if (crawl_state.seen_hups)
+        end(1);
+
+    if (Options.restart_after_game)
+    {
+        if (crawl_state.io_inited)
+        {
+            mprf(MSGCH_ERROR, "%s", message.c_str());
+            more();
+        }
+        else
+        {
+            fprintf(stderr, "%s\nHit Enter to continue...\n", message.c_str());
+            getchar();
+        }
+        game_ended();
+    }
+    else
+    {
+        end(1, false, "%s", message.c_str());
+    }
+}
+
 // Print error message on the screen.
 // Ugly, but better than not showing anything at all. (jpeg)
 void print_error_screen(const char *message, ...)

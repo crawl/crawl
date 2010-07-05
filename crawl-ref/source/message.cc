@@ -196,6 +196,13 @@ class circ_vec
 public:
     circ_vec() : end(0) {}
 
+    void clear()
+    {
+        end = 0;
+        for (int i = 0; i < SIZE; ++i)
+            data[i] = T();
+    }
+
     int size() const
     {
         return SIZE;
@@ -668,6 +675,14 @@ public:
     const store_t& get_store()
     {
         return msgs;
+    }
+
+    void clear()
+    {
+        msgs.clear();
+        prev_msg = message_item();
+        last_of_turn = false;
+        temp = 0;
     }
 };
 
@@ -1307,6 +1322,11 @@ static bool is_channel_dumpworthy(msg_channel_type channel)
     return (channel != MSGCH_EQUIPMENT
             && channel != MSGCH_DIAGNOSTICS
             && channel != MSGCH_TUTORIAL);
+}
+
+void clear_message_store()
+{
+    messages.clear();
 }
 
 std::string get_last_messages(int mcount)

@@ -16,7 +16,8 @@ The contents of this text are:
 1-  Starting Screen.
                 name, remember_name, weapon, book, wand,
                 chaos_knight, priest,
-                species, background, random_pick, good_random
+                species, background, random_pick, good_random,
+                restart_after_game
 2-  File System and Sound.
                 crawl_dir, morgue_dir, save_dir, macro_dir, sound
 3-  Lua files.
@@ -306,6 +307,11 @@ good_random = true
         Whenever random_pick is used, species or background are set
         random, or a remembered random choice is executed in the
         character selection, the game will only pick good combinations.
+
+restart_after_game = true/false
+        When a game ends, Crawl will return to the main menu if
+        restart_after_game is set. This option is enabled by default
+        for tiles builds and disabled by default for other builds.
 
 2-  File System.
 ================
