@@ -49,6 +49,7 @@
 #include "flood_find.h"
 #include "fprop.h"
 #include "food.h"
+#include "ghost.h"
 #include "godabil.h"
 #include "hiscores.h"
 #include "itemname.h"
@@ -2137,6 +2138,11 @@ bool is_orckind(const actor *act)
         {
             return (true);
         }
+        if (mons_is_ghost_demon(mon->type)
+            && mon->ghost->species == SP_HILL_ORC)
+        {
+            return (true);
+        }
     }
 
     return (false);
@@ -2162,6 +2168,12 @@ bool is_dragonkind(const actor *act)
     if (mons_is_zombified(mon)
         && (mons_genus(mon->base_monster) == MONS_DRAGON
             || mons_genus(mon->base_monster) == MONS_DRACONIAN))
+    {
+        return (true);
+    }
+
+    if (mons_is_ghost_demon(mon->type)
+        && species_genus(mon->ghost->species) == GENPC_DRACONIAN)
     {
         return (true);
     }
