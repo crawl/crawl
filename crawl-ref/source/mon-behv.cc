@@ -204,7 +204,8 @@ void handle_behaviour(monsters *mon)
     }
 
     // Instead, berserkers attack nearest monsters.
-    if ((mon->berserk() || mon->type == MONS_GIANT_SPORE)
+    if (mon->behaviour != BEH_SLEEP
+        && (mon->berserk() || mon->type == MONS_GIANT_SPORE)
         && (mon->foe == MHITNOT || isFriendly && mon->foe == MHITYOU))
     {
         // Intelligent monsters prefer to attack the player,
