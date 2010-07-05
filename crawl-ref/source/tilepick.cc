@@ -3043,7 +3043,8 @@ tileidx_t tileidx_item(const item_def &item)
                 return TILE_STAFF_ID_FIRST + type;
             }
 
-            int desc = (special / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
+            int orig_spec = you.item_description[IDESC_STAVES][item.sub_type];
+            int desc = (orig_spec/ NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
             return TILE_STAFF_OFFSET + desc;
         }
 
