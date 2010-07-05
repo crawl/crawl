@@ -1622,7 +1622,8 @@ int melee_attack::player_stab_weapon_bonus(int damage)
         && (weapon->sub_type == WPN_CLUB
             || weapon->sub_type == WPN_SPEAR
             || weapon->sub_type == WPN_TRIDENT
-            || weapon->sub_type == WPN_DEMON_TRIDENT))
+            || weapon->sub_type == WPN_DEMON_TRIDENT
+            || weapon->sub_type == WPN_TRISHULA))
     {
         goto ok_weaps;
     }
