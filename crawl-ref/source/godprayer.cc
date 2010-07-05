@@ -464,7 +464,7 @@ static int _gold_to_donation(int gold)
     return static_cast<int>((gold * log((float)gold)) / MAX_PIETY);
 }
 
-void _zin_donate_gold()
+static void _zin_donate_gold()
 {
     if (you.gold == 0)
     {

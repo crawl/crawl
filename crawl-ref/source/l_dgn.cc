@@ -1018,7 +1018,7 @@ static int lua_dgn_set_lt_callback(lua_State *ls)
     return (0);
 }
 
-bool _valid_border_feat (dungeon_feature_type feat)
+static bool _valid_border_feat (dungeon_feature_type feat)
 {
     return ((feat <= DNGN_MAXWALL && feat >= DNGN_MINWALL)
             || (feat == DNGN_TREE || feat == DNGN_OPEN_SEA

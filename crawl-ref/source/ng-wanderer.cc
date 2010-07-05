@@ -535,7 +535,7 @@ static void _wanderer_random_evokable(int & slot)
     slot++;
 }
 
-void _wanderer_good_equipment(skill_type & skill, int & slot)
+static void _wanderer_good_equipment(skill_type & skill, int & slot)
 {
     const skill_type combined_weapon_skills[] =
         { SK_AXES, SK_MACES_FLAILS, SK_BOWS, SK_CROSSBOWS,
@@ -687,9 +687,9 @@ static void _give_wanderer_spell(skill_type skill)
     add_spell_to_memory(spell);
 }
 
-void _wanderer_decent_equipment(skill_type & skill,
-                                std::set<skill_type> & gift_skills,
-                                int & slot)
+static void _wanderer_decent_equipment(skill_type & skill,
+                                       std::set<skill_type> & gift_skills,
+                                       int & slot)
 {
     const skill_type combined_weapon_skills[] =
         { SK_AXES, SK_MACES_FLAILS, SK_BOWS, SK_CROSSBOWS,

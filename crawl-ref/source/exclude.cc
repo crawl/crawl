@@ -98,7 +98,7 @@ void remove_auto_exclude(const monsters *mon, bool sleepy)
     }
 }
 
-opacity_type _feat_opacity(dungeon_feature_type feat)
+static opacity_type _feat_opacity(dungeon_feature_type feat)
 {
     return (feat_is_opaque(feat) ? OPC_OPAQUE : OPC_CLEAR);
 }
@@ -318,7 +318,7 @@ exclude_set::iterator exclude_set::end()
 
 /////////////////////////////////////////////////////////////////////////
 
-void _mark_excludes_non_updated(const coord_def &p)
+static void _mark_excludes_non_updated(const coord_def &p)
 {
     for (exclude_set::iterator it = curr_excludes.begin();
          it != curr_excludes.end(); ++it)

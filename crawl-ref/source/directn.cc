@@ -1020,7 +1020,7 @@ static bool _blocked_ray(const coord_def &where,
     return (true);
 }
 
-std::string _targ_mode_name(targ_mode_type mode)
+static std::string _targ_mode_name(targ_mode_type mode)
 {
     switch (mode)
     {
@@ -1041,7 +1041,7 @@ std::string _targ_mode_name(targ_mode_type mode)
 }
 
 #ifndef USE_TILE
-void _update_mlist(bool enable)
+static void _update_mlist(bool enable)
 {
     crawl_state.mlist_targeting = enable;
     const int full_info = update_monster_pane();

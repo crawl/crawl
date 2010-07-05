@@ -53,7 +53,7 @@ void apply_feature_overrides()
     }
 }
 
-void _init_feat(feature_def &f, dungeon_feature_type feat)
+static void _init_feat(feature_def &f, dungeon_feature_type feat)
 {
     switch(feat)
     {
@@ -633,7 +633,7 @@ void _init_feat(feature_def &f, dungeon_feature_type feat)
     }
 }
 
-void _init_item(feature_def &f, show_item_type item)
+static void _init_item(feature_def &f, show_item_type item)
 {
     f.minimap = MF_ITEM;
     switch (item)

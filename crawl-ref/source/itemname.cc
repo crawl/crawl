@@ -301,7 +301,7 @@ std::string item_def::name(description_level_type descrip,
     return buff.str();
 }
 
-bool _missile_brand_is_prefix(special_missile_type brand)
+static bool _missile_brand_is_prefix(special_missile_type brand)
 {
     switch (brand)
     {
@@ -316,7 +316,7 @@ bool _missile_brand_is_prefix(special_missile_type brand)
     }
 }
 
-bool _missile_brand_is_postfix(special_missile_type brand)
+static bool _missile_brand_is_postfix(special_missile_type brand)
 {
     return (brand != SPMSL_NORMAL && !_missile_brand_is_prefix(brand));
 }

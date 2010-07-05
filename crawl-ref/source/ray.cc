@@ -109,7 +109,7 @@ coord_def ray_def::pos() const
     return (floor_vec(r.start));
 }
 
-void _round_to_corner(geom::ray *r)
+static void _round_to_corner(geom::ray *r)
 {
     geom::vector v = 2.0 * r->start;
     v.x = round(v.x);
@@ -118,7 +118,7 @@ void _round_to_corner(geom::ray *r)
     r->start = 0.5 * v;
 }
 
-void _round_to_grid(geom::ray *r)
+static void _round_to_grid(geom::ray *r)
 {
     // x + y or x - y is of the form 0.5+k
     geom::vector v = r->start;
@@ -181,7 +181,7 @@ bool ray_def::_valid() const
             || !on_corner && in_diamond_int(r.start));
 }
 
-geom::vector _normalize(const geom::vector &v)
+static geom::vector _normalize(const geom::vector &v)
 {
     double n = sqrt(v.x*v.x + v.y*v.y);
     return ((1.0 / n) * v);
@@ -308,7 +308,7 @@ static geom::line _choose_reflect_line(bool rx, bool ry, bool rxy)
     return (l);
 }
 
-geom::vector _fudge_corner(const geom::vector &w, const reflect_grid &rg)
+static geom::vector _fudge_corner(const geom::vector &w, const reflect_grid &rg)
 {
     geom::vector v = w;
     if (double_is_integral(v.x))
@@ -333,7 +333,7 @@ geom::vector _fudge_corner(const geom::vector &w, const reflect_grid &rg)
 // Bounce a ray leaving (0,0) through the positive side
 // along a diagonal corridor between (0,1) and (1,0) until
 // it's inside (1,1).
-geom::ray _bounce_diag_corridor(const geom::ray &rorig)
+static geom::ray _bounce_diag_corridor(const geom::ray &rorig)
 {
     geom::ray r = rorig;
     geom::form wall(1, -1);
@@ -356,7 +356,7 @@ geom::ray _bounce_diag_corridor(const geom::ray &rorig)
 // of the diamond.
 // r is positioned on the edge already, and side says which
 // side this is.
-geom::ray _bounce_noncorner(const geom::ray &r, const coord_def &side,
+static geom::ray _bounce_noncorner(const geom::ray &r, const coord_def &side,
                             const reflect_grid &rg)
 {
     // Mirror r to have it leave through the positive side.
@@ -408,7 +408,7 @@ geom::ray _bounce_noncorner(const geom::ray &r, const coord_def &side,
     return (_mirror(rmirr, side));
 }
 
-geom::form _corner_wall(const coord_def &side, const reflect_grid &rg)
+static geom::form _corner_wall(const coord_def &side, const reflect_grid &rg)
 {
     coord_def e;
     if (side.x == 0)
@@ -437,7 +437,7 @@ geom::form _corner_wall(const coord_def &side, const reflect_grid &rg)
 // Bounce a ray that leaves cell (0,0) through a corner. We could
 // just fudge it a little, but want to be consistent for rays
 // shot in cardinal directions.
-geom::ray _bounce_corner(const geom::ray &rorig, const coord_def &side,
+static geom::ray _bounce_corner(const geom::ray &rorig, const coord_def &side,
                          const reflect_grid &rg)
 {
     geom::ray r = rorig;

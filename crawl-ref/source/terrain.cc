@@ -904,7 +904,7 @@ static void _dgn_check_terrain_covering(const coord_def &pos,
     }
 }
 
-void _dgn_check_terrain_player(const coord_def pos)
+static void _dgn_check_terrain_player(const coord_def pos)
 {
     if (pos != you.pos())
         return;

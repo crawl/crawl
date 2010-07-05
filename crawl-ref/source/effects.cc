@@ -1211,8 +1211,8 @@ static bool _try_give_plain_armour(item_def &arm)
 }
 
 // Write results into arguments.
-void _acquirement_determine_food(int& type_wanted, int& quantity,
-                                 const has_vector& already_has)
+static void _acquirement_determine_food(int& type_wanted, int& quantity,
+                                        const has_vector& already_has)
 {
     // Food is a little less predictable now. - bwr
     if (you.species == SP_GHOUL)
@@ -1919,7 +1919,7 @@ static int _failed_acquirement(bool quiet)
     return (NON_ITEM);
 }
 
-int _weapon_brand_quality(int brand, bool range)
+static int _weapon_brand_quality(int brand, bool range)
 {
     switch(brand)
     {

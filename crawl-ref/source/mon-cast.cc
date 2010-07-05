@@ -2654,7 +2654,7 @@ static unsigned int _noise_keys(std::vector<std::string>& key_list,
     return num_spell_keys;
 }
 
-std::string _noise_message(const std::vector<std::string>& key_list,
+static std::string _noise_message(const std::vector<std::string>& key_list,
                            unsigned int num_spell_keys,
                            bool silent, bool unseen)
 {
@@ -2714,7 +2714,7 @@ std::string _noise_message(const std::vector<std::string>& key_list,
     return (msg);
 }
 
-void _noise_fill_target(std::string& targ_prep, std::string& target,
+static void _noise_fill_target(std::string& targ_prep, std::string& target,
                         const monsters* monster, const bolt& pbolt,
                         bool gestured)
 {
