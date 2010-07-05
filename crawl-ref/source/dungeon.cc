@@ -4589,7 +4589,7 @@ static dungeon_feature_type _dgn_find_rune_subst_tags(const std::string &tags)
     return (DNGN_FLOOR);
 }
 
-void _fixup_after_vault()
+static void _fixup_after_vault()
 {
     link_items();
     env.markers.activate_all();

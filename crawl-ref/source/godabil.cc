@@ -1998,8 +1998,8 @@ struct monster_conversion
 // fedhas_evolve_flora() can upgrade it, and set up a monster_conversion
 // structure for it.  Return true (and fill in possible_monster) if the
 // monster can be upgraded, and return false otherwise.
-bool _possible_evolution(const monsters * input,
-                         monster_conversion & possible_monster)
+static bool _possible_evolution(const monsters * input,
+                                monster_conversion & possible_monster)
 {
     switch (input->type)
     {
@@ -2035,21 +2035,6 @@ bool mons_is_evolvable(const monsters * mon)
 {
     monster_conversion temp;
     return (_possible_evolution(mon, temp));
-}
-
-void _collect_adjacent_monsters(std::vector<monster_conversion>& available,
-                                const coord_def& center)
-{
-    for (adjacent_iterator adjacent(center, false); adjacent; ++adjacent)
-    {
-        monsters* candidate = monster_at(*adjacent);
-        monster_conversion monster_upgrade;
-        if (candidate && _possible_evolution(candidate, monster_upgrade))
-        {
-            monster_upgrade.base_monster = candidate;
-            available.push_back(monster_upgrade);
-        }
-    }
 }
 
 static bool _place_ballisto(const coord_def & pos)

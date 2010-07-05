@@ -1207,7 +1207,7 @@ static bool _activate_talent(const talent& tal)
     return (success);
 }
 
-int _calc_breath_ability_range(ability_type ability)
+static int _calc_breath_ability_range(ability_type ability)
 {
     // Following monster draconian abilities.
     switch (ability)

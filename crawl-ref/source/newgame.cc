@@ -1698,7 +1698,7 @@ static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice,
     return (true);
 }
 
-startup_book_type _fixup_book(startup_book_type book, int numbooks)
+static startup_book_type _fixup_book(startup_book_type book, int numbooks)
 {
     if (book == SBT_RANDOM)
         return (SBT_RANDOM);
@@ -1710,7 +1710,7 @@ startup_book_type _fixup_book(startup_book_type book, int numbooks)
         return (SBT_NONE);
 }
 
-std::string _startup_book_name(startup_book_type book)
+static std::string _startup_book_name(startup_book_type book)
 {
     switch (book)
     {

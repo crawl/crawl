@@ -403,7 +403,7 @@ void init_zap_index()
         zap_index[zap_data[i].ztype] = i;
 }
 
-const zap_info* _seek_zap(zap_type z_type)
+static const zap_info* _seek_zap(zap_type z_type)
 {
     if (zap_index[z_type] == -1)
         return (NULL);
@@ -4382,7 +4382,7 @@ bool bolt::has_saving_throw() const
     }
 }
 
-bool _ench_flavour_affects_monster(beam_type flavour, const monsters* mon)
+static bool _ench_flavour_affects_monster(beam_type flavour, const monsters* mon)
 {
     bool rc = true;
     switch (flavour)

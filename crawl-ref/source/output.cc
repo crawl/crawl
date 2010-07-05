@@ -363,7 +363,7 @@ static void _print_stats_hp(int x, int y)
         HP_Bar.draw(19, y, you.hp, you.hp_max);
 }
 
-short _get_stat_colour(stat_type stat)
+static short _get_stat_colour(stat_type stat)
 {
     if (you.stat_zero[stat] > 0)
         return (LIGHTRED);
@@ -1915,7 +1915,7 @@ static std::vector<formatted_string> _get_overview_resistances(
 }
 
 // New scrollable status overview screen, including stats, mutations etc.
-char _get_overview_screen_results()
+static char _get_overview_screen_results()
 {
     bool calc_unid = false;
     formatted_scroller overview;
@@ -2007,7 +2007,7 @@ void print_overview_screen()
     }
 }
 
-std::string _get_expiration_string(duration_type dur, const char* msg)
+static std::string _get_expiration_string(duration_type dur, const char* msg)
 {
     std::string help = msg;
     if (dur_expiring(dur))

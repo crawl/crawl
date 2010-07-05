@@ -183,7 +183,7 @@ static void _remove_equipment(const std::set<equipment_type>& removed,
 }
 
 // FIXME: merge this with you_can_wear(), can_wear_armour(), etc.
-bool _mutations_prevent_wearing(const item_def& item)
+static bool _mutations_prevent_wearing(const item_def& item)
 {
     const equipment_type eqslot = get_armour_slot(item);
 
@@ -325,7 +325,7 @@ static bool _check_for_cursed_equipment(const std::set<equipment_type> &remove,
 
 // Returns true if the player got prompted by an inscription warning and
 // chose to opt out.
-bool _check_transformation_inscription_warning(
+static bool _check_transformation_inscription_warning(
             const std::set<equipment_type> &remove)
 {
     // Check over all items to be removed or melded.
