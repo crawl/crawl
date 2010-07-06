@@ -2705,7 +2705,7 @@ std::vector<talent> your_talents(bool check_confused)
     {
         if (you.experience_level >= 1)
             _add_talent(talents, ABIL_MAKE_DART_TRAP, check_confused);
-        if (you.experience_level >= 1)
+        if (you.experience_level >= 2)
             _add_talent(talents, ABIL_MAKE_OKLOB_SAPLING, check_confused);
         if (you.experience_level >= 3)
             _add_talent(talents, ABIL_MAKE_ARROW_TRAP, check_confused);
