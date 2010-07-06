@@ -722,7 +722,7 @@ static bool _mons_check_foe(monsters *mon, const coord_def& p,
             && (friendly || !is_sanctuary(p))
             && (foe->friendly() != friendly
                 || neutral && !foe->neutral())
-            && !mons_is_firewood(foe))
+            && (game_is_zotdef() || !mons_is_firewood(foe)))    // Zotdef allies take out firewood
         {
             return (true);
         }
