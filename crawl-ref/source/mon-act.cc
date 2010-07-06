@@ -3542,7 +3542,7 @@ static bool _monster_move(monsters *monster)
 
         // zotdef: sometimes seem to get gridlock. Reset travel path
         // if we can't move, occasionally
-        if (game_is_zotdef() && one_chance_in(50)) 
+        if (game_is_zotdef() && one_chance_in(20)) 
         {
              monster->travel_path.clear();
              monster->travel_target = MTRAV_NONE;
