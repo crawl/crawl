@@ -13,7 +13,5 @@ void good_god_holy_attitude_change(monsters *holy);
 void good_god_holy_fail_attitude_change(monsters *holy);
 void beogh_convert_orc(monsters *orc, bool emergency,
                        bool converted_by_follower = false);
-void jiyva_convert_slime(monsters* slime);
-void fedhas_neutralise_plant(monsters *plant);
 
 #endif

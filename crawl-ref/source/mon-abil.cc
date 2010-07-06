@@ -46,6 +46,8 @@
 #include <queue>
 #include <set>
 
+static bool _slime_split_merge(monsters *thing);
+
 bool ugly_thing_mutate(monsters *ugly, bool proximity)
 {
     bool success = false;
@@ -468,7 +470,7 @@ static bool _slime_split(monsters *thing)
 }
 
 // See if a given slime creature can split or merge.
-bool slime_split_merge(monsters *thing)
+static bool _slime_split_merge(monsters *thing)
 {
     // No merging/splitting shapeshifters.
     if (!thing
@@ -823,7 +825,7 @@ bool mon_special_ability(monsters *monster, bolt & beem)
     case MONS_SLIME_CREATURE:
         // Slime creatures may split or merge depending on the
         // situation.
-        used = slime_split_merge(monster);
+        used = _slime_split_merge(monster);
         if (!monster->alive())
             return (true);
         break;

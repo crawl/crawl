@@ -475,7 +475,7 @@ bool complexity_lt( const std::pair<int,int>& lhs,
 }
 
 // Cast all rays
-void raycast()
+static void raycast()
 {
     static bool done_raycast = false;
     if (done_raycast)
