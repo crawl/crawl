@@ -273,6 +273,22 @@ int main(int argc, char *argv[])
     return 0;
 }
 
+static void _reset_game()
+{
+    crawl_state.type = GAME_TYPE_UNSPECIFIED;
+    clear_message_store();
+    you.reset();
+    StashTrack = StashTracker();
+    travel_cache = TravelCache();
+    msg::deinitialise_mpr_streams();
+
+#ifdef USE_TILE
+    // [ds] Don't show the title screen again, just go back to
+    // the menu.
+    Options.tile_title_screen = false;
+#endif
+}
+
 static void _launch_game_loop()
 {
     bool game_ended = false;
@@ -286,15 +302,7 @@ static void _launch_game_loop()
         catch (game_ended_condition &ge)
         {
             game_ended = true;
-            crawl_state.type = GAME_TYPE_UNSPECIFIED;
-            clear_message_store();
-            you.reset();
-            msg::deinitialise_mpr_streams();
-#ifdef USE_TILE
-            // [ds] Don't show the title screen again, just go back to
-            // the menu.
-            Options.tile_title_screen = false;
-#endif
+            _reset_game();
         }
     } while (Options.restart_after_game
              && game_ended
