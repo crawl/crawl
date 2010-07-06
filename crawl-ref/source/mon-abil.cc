@@ -1490,7 +1490,7 @@ void mon_nearby_ability(monsters *monster)
 // off of.
 void ballisto_on_move(monsters * monster, const coord_def & position)
 {
-    if (monster->type == MONS_GIANT_SPORE)
+    if (monster->type == MONS_GIANT_SPORE && !game_is_zotdef())
     {
         dungeon_feature_type ftype = env.grid(monster->pos());
 
