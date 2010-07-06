@@ -794,7 +794,7 @@ static bool _beogh_forcibly_convert_orc(monsters *monster, killer_type killer,
         && mons_species(monster->type) == MONS_ORC
         && !monster->is_summoned() && !monster->is_shapeshifter()
         && !player_under_penance() && you.piety >= piety_breakpoint(2)
-        && mons_near(monster))
+        && mons_near(monster) && !mons_is_god_gift(monster))
     {
         bool convert = false;
 
