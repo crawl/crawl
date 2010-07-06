@@ -677,16 +677,35 @@ static monster_type _resolve_monster_type(monster_type mon_type,
         // Respect destination level for staircases.
         if (proximity == PROX_NEAR_STAIRS)
         { 
-	    if (find_mon_place_near_stairs(pos, stair_type, place.branch))
-	    {
+            if (find_mon_place_near_stairs(pos, stair_type, place.branch))
+            {
                 // No monsters spawned in the Temple.
                 if (branches[place.branch].id == BRANCH_ECUMENICAL_TEMPLE)
+                {
                     proximity = PROX_AWAY_FROM_PLAYER;
+                }
+                else
+                {
+                    if (*stair_type == DCHAR_STAIRS_DOWN) // deeper level
+                       ++*lev_mons;
+                    else if (*stair_type == DCHAR_STAIRS_UP) // higher level
+                    {
+                       // Monsters don't come from outside the dungeon.
+                       if (*lev_mons <= 0)
+                       {
+                           proximity = PROX_AWAY_FROM_PLAYER;
+                           // In that case lev_mons stays as it is.
+                       }
+                       else
+                           --*lev_mons;
+                    }
+                }
+
             }
-	    else
-	    {
-		proximity = PROX_AWAY_FROM_PLAYER;
-	    }
+            else
+            {
+                proximity = PROX_AWAY_FROM_PLAYER;
+            }
 
         } // end proximity check
 
@@ -894,15 +913,17 @@ int place_monster(mgen_data mg, bool force_pos)
              get_monster_data(mg.cls)->name);
         create_band = false;
     }
-    // Re-check for PROX_NEAR_STAIRS here
-    if (mg.proximity == PROX_NEAR_STAIRS)
-    {
-	branch_type b;
-	if (!find_mon_place_near_stairs(mg.pos, &stair_type, b))
-	{
-	    mg.proximity = PROX_AWAY_FROM_PLAYER;
-	}
 
+    // Re-check for PROX_NEAR_STAIRS here - if original monster
+    // type wasn't RANDOM_MONSTER then the position won't
+    // have been set.
+    if (mg.proximity == PROX_NEAR_STAIRS && mg.pos.origin())
+    {
+        branch_type b;
+        if (!find_mon_place_near_stairs(mg.pos, &stair_type, b))
+        {
+            mg.proximity = PROX_AWAY_FROM_PLAYER;
+        }
     } // end proximity check
 
 
@@ -947,10 +968,17 @@ int place_monster(mgen_data mg, bool force_pos)
 
     // Returns 2 if the monster is placed near player-occupied stairs.
     int pval = _is_near_stairs(mg.pos);
-    // For some cases disallow monsters on stairs.
-    if (mg.proximity == PROX_NEAR_STAIRS && mons_class_is_stationary( mg.cls ))
+    if (mg.proximity == PROX_NEAR_STAIRS)
     {
-        return -1;
+        // For some cases disallow monsters on stairs.
+        if (mons_class_is_stationary(mg.cls)
+            || (pval == 2 // Stairs occupied by player.
+                && (mons_class_base_speed(mg.cls) == 0
+                    || grd(mg.pos) == DNGN_LAVA
+                    || grd(mg.pos) == DNGN_DEEP_WATER)))
+        {
+            mg.proximity = PROX_AWAY_FROM_PLAYER;
+        }
     }
 
     // (4) For first monster, choose location.  This is pretty intensive.
@@ -1124,8 +1152,8 @@ int place_monster(mgen_data mg, bool force_pos)
     // Zotdef change - banding allowed on stairs for extra challenge!
     // Frequency reduced, though, and only after 2K turns.
     if (id >= MAX_MONSTERS - 30 
-	|| ( mg.proximity == PROX_NEAR_STAIRS && coinflip())
-	|| you.num_turns<2000
+	|| ( mg.proximity == PROX_NEAR_STAIRS && !game_is_zotdef() && coinflip())
+	|| (game_is_zotdef() && you.num_turns<2000)
 	)
         return (id);
 
@@ -2775,7 +2803,9 @@ int mons_place(mgen_data mg)
         break;
     case LEVEL_DUNGEON:
     default:
-        mg.power =  you.num_turns/(CYCLE_LENGTH * 3);
+        mg.power = you.absdepth0;
+        if (game_is_zotdef())
+            mg.power =  you.num_turns/(CYCLE_LENGTH * 3);
         break;
     }
 
