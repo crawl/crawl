@@ -4448,9 +4448,12 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_SILENCE:
-        if (!quiet && !silenced(pos()))
-            simple_monster_message(this, " becomes audible again.");
         invalidate_agrid();
+        if (!quiet && !silenced(pos()))
+            if (alive())
+                simple_monster_message(this, " becomes audible again.");
+            else
+                mprf("As %s dies, the sound returns.", name(DESC_NOCAP_THE).c_str());
         break;
 
     case ENCH_MIGHT:
