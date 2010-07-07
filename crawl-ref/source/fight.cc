@@ -5245,6 +5245,7 @@ void melee_attack::mons_do_eyeball_confusion()
 void melee_attack::mons_do_spines()
 {
     const item_def *body = you.slot_item(EQ_BODY_ARMOUR, false);
+    const int mut = player_mutation_level(MUT_SPINY);
     int evp = 0;
     defer_rand r;
 
@@ -5255,15 +5256,14 @@ void melee_attack::mons_do_spines()
         && attacker->alive()
         && one_chance_in(evp + 1))
     {
-        if (test_melee_hit(6 * player_mutation_level(MUT_SPINY),
-                          defender->melee_evasion(attacker), r))
+        if (!test_melee_hit(2+ 4 * mut, attacker->melee_evasion(defender), r))
         {
             simple_monster_message(attacker->as_monster(),
                                    " dodges your spines.");
             return;
         }
 
-        int dmg = roll_dice(player_mutation_level(MUT_SPINY), 6);
+        int dmg = roll_dice(mut, 6);
         int ac = random2(1+attacker->as_monster()->armour_class());
 
         int hurt = dmg - ac - evp;
