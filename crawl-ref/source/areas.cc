@@ -41,6 +41,7 @@ typedef FixedArray<unsigned long, GXM, GYM> propgrid_t;
 
 static propgrid_t _agrid;
 static bool _agrid_valid = false;
+static bool no_areas = false;
 
 static void _set_agrid_flag(const coord_def& p, areaprop_flag f)
 {
@@ -52,9 +53,11 @@ static bool _check_agrid_flag(const coord_def& p, areaprop_flag f)
     return (_agrid(p) & f);
 }
 
-void invalidate_agrid()
+void invalidate_agrid(bool recheck_new)
 {
     _agrid_valid = false;
+    if (recheck_new)
+        no_areas = false;
 }
 
 void areas_actor_moved(const actor* act, const coord_def& oldpos)
@@ -63,31 +66,43 @@ void areas_actor_moved(const actor* act, const coord_def& oldpos)
         (you.entering_level
          || act->halo_radius2() > -1 || act->silence_radius2() > -1))
     {
-        invalidate_agrid();
+        // Not necessarily new, but certainly potentially interesting.
+        invalidate_agrid(true);
     }
 }
 
 static void _update_agrid()
 {
-    if (_agrid_valid)
+    if (no_areas)
+    {
+        _agrid_valid = true;
         return;
+    }
 
     _agrid.init(0);
+
+    no_areas = true;
 
     for (actor_iterator ai; ai; ++ai)
     {
         int r;
 
         if ((r = ai->silence_radius2()) >= 0)
+        {
             for (radius_iterator ri(ai->pos(), r, C_CIRCLE); ri; ++ri)
                 _set_agrid_flag(*ri, APROP_SILENCE);
+            no_areas = false;
+        }
 
         if ((r = ai->halo_radius2()) >= 0)
+        {
             for (radius_iterator ri(ai->pos(), r, C_CIRCLE, ai->get_los());
                  ri; ++ri)
             {
                 _set_agrid_flag(*ri, APROP_HALO);
             }
+            no_areas = false;
+        }
     }
 
     // TODO: update sanctuary here.
@@ -350,7 +365,8 @@ bool silenced(const coord_def& p)
 {
     if (!map_bounds(p))
         return (false);
-    _update_agrid();
+    if (!_agrid_valid)
+        _update_agrid();
     return (_check_agrid_flag(p, APROP_SILENCE));
 }
 
@@ -361,7 +377,8 @@ bool haloed(const coord_def& p)
 {
     if (!map_bounds(p))
         return (false);
-    _update_agrid();
+    if (!_agrid_valid)
+        _update_agrid();
     return (_check_agrid_flag(p, APROP_HALO));
 }
 

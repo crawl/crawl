@@ -200,6 +200,13 @@ bool dist::isMe() const
                 || (target.origin() && delta.origin())));
 }
 
+void dist::confusion_fuzz()
+{
+    target   = you.pos() + coord_def(random_range(-6, 6),
+                                     random_range(-6, 6));
+    choseRay = false;
+}
+
 bool direction_chooser::choose_compass()
 {
     // Reinitialize moves.
@@ -1013,7 +1020,7 @@ static bool _blocked_ray(const coord_def &where,
     return (true);
 }
 
-std::string _targ_mode_name(targ_mode_type mode)
+static std::string _targ_mode_name(targ_mode_type mode)
 {
     switch (mode)
     {
@@ -1034,7 +1041,7 @@ std::string _targ_mode_name(targ_mode_type mode)
 }
 
 #ifndef USE_TILE
-void _update_mlist(bool enable)
+static void _update_mlist(bool enable)
 {
     crawl_state.mlist_targeting = enable;
     const int full_info = update_monster_pane();
@@ -1144,6 +1151,9 @@ void direction_chooser::draw_beam_if_needed()
 #endif
         return;
     }
+
+    // We shouldn't ever get a beam to an out-of-LOS target.
+    ASSERT(in_los(target()));
 
     // Work with a copy in order not to mangle anything.
     ray_def ray = beam;
@@ -1312,7 +1322,7 @@ std::string direction_chooser::target_cloud_description() const
 {
     const int cloud = env.cgrid(target());
     if (cloud != EMPTY_CLOUD)
-        return cloud_name(cloud);
+        return cloud_name_at_index(cloud);
     else
         return "";
 }
@@ -1504,7 +1514,10 @@ void direction_chooser::toggle_beam()
     need_beam_redraw = true;
 
     if (show_beam)
-        have_beam = find_ray(you.pos(), target(), beam);
+    {
+        have_beam = find_ray(you.pos(), target(), beam,
+                             opc_solid, BDS_DEFAULT);
+    }
 }
 
 bool direction_chooser::select_previous_target()
@@ -1869,7 +1882,8 @@ bool direction_chooser::do_main_loop()
     // Redraw whatever is necessary.
     if (old_target != target())
     {
-        have_beam = show_beam && find_ray(you.pos(), target(), beam);
+        have_beam = show_beam && find_ray(you.pos(), target(), beam,
+                                          opc_solid, BDS_DEFAULT);
         need_text_redraw   = true;
         need_beam_redraw   = true;
         need_cursor_redraw = true;
@@ -1922,7 +1936,11 @@ bool direction_chooser::choose_direction()
 
     // If requested, show the beam on startup.
     if (show_beam)
-        need_beam_redraw = have_beam = find_ray(you.pos(), target(), beam);
+    {
+        have_beam = find_ray(you.pos(), target(), beam,
+                             opc_solid, BDS_DEFAULT);
+        need_beam_redraw = have_beam;
+    }
 
     mesclr();
     msgwin_set_temporary(true);
@@ -2037,7 +2055,7 @@ void get_square_desc(const coord_def &c, describe_info &inf,
     const int cloudidx = env.cgrid(c);
     if (cloudidx != EMPTY_CLOUD)
     {
-        inf.prefix = "There is a cloud of " + cloud_name(cloudidx)
+        inf.prefix = "There is a cloud of " + cloud_name_at_index(cloudidx)
                      + " here.\n\n";
     }
 }
@@ -3703,7 +3721,7 @@ static void _print_cloud_desc(const coord_def where, bool &cloud_described)
         const int cloud_inspected = env.cgrid(where);
 
         mprf(MSGCH_EXAMINE, "There is a cloud of %s here.",
-             cloud_name(cloud_inspected).c_str());
+             cloud_name_at_index(cloud_inspected).c_str());
 
         cloud_described = true;
     }
@@ -3739,9 +3757,12 @@ static void _debug_describe_feature_at(const coord_def &where)
                              br.x, br.y,
                              vp.size.x, vp.size.y);
     }
+
+    const coord_def showc = view2show(grid2view(where));
+    const bool in_show_bounds = show_bounds(showc);
     mprf(MSGCH_DIAGNOSTICS, "(%d,%d): %s - %s (%d/%s)%s%s%s%s",
          where.x, where.y,
-         stringize_glyph(get_screen_glyph(where)).c_str(),
+         in_show_bounds? stringize_glyph(get_screen_glyph(where)).c_str() : " ",
          feature_desc.c_str(),
          feat,
          dungeon_feature_name(feat),

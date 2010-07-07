@@ -293,8 +293,8 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     aux_damage(0), stab_attempt(false), stab_bonus(0), min_delay(0),
     final_attack_delay(0), noise_factor(0), extra_noise(0), weapon(NULL),
     damage_brand(SPWPN_NORMAL), wpn_skill(SK_UNARMED_COMBAT), hands(HANDS_ONE),
-    hand_half_bonus(false), art_props(0), unrand_entry(NULL),
-    attack_verb("bug"), verb_degree(),
+    hand_half_bonus(false), skip_chaos_message(false), art_props(0),
+    unrand_entry(NULL), attack_verb("bug"), verb_degree(),
     no_damage_message(), special_damage_message(), aux_attack(), aux_verb(),
     special_damage_flavour(BEAM_NONE),
     shield(NULL), defender_shield(NULL),
@@ -1622,7 +1622,8 @@ int melee_attack::player_stab_weapon_bonus(int damage)
         && (weapon->sub_type == WPN_CLUB
             || weapon->sub_type == WPN_SPEAR
             || weapon->sub_type == WPN_TRIDENT
-            || weapon->sub_type == WPN_DEMON_TRIDENT))
+            || weapon->sub_type == WPN_DEMON_TRIDENT
+            || weapon->sub_type == WPN_TRISHULA))
     {
         goto ok_weaps;
     }
@@ -2426,7 +2427,7 @@ void melee_attack::chaos_affects_defender()
         miscast_chance *= 2;
 
         // Inform player that something is up.
-        if (you.see_cell(defender->pos()))
+        if (!skip_chaos_message && you.see_cell(defender->pos()))
         {
             if (defender->atype() == ACT_PLAYER)
                 mpr("You give off a flash of multicoloured light!");
@@ -4074,7 +4075,7 @@ void melee_attack::player_apply_attack_delay()
 
 random_var melee_attack::player_weapon_speed()
 {
-    random_var attack_delay = constant(0);
+    random_var attack_delay = constant(15);
 
     if (weapon && (weapon->base_type == OBJ_WEAPONS
                    || weapon->base_type == OBJ_STAVES))
@@ -5245,6 +5246,7 @@ void melee_attack::mons_do_eyeball_confusion()
 void melee_attack::mons_do_spines()
 {
     const item_def *body = you.slot_item(EQ_BODY_ARMOUR, false);
+    const mut = player_mutation_level(MUT_SPINY);
     int evp = 0;
     defer_rand r;
 
@@ -5255,15 +5257,15 @@ void melee_attack::mons_do_spines()
         && attacker->alive()
         && one_chance_in(evp + 1))
     {
-        if (test_melee_hit(6 * player_mutation_level(MUT_SPINY),
-                          defender->melee_evasion(attacker), r))
+        if (test_melee_hit((random2(6 - evp) + 2) * mut,
+                           defender->melee_evasion(attacker), r))
         {
             simple_monster_message(attacker->as_monster(),
                                    " dodges your spines.");
             return;
         }
 
-        int dmg = roll_dice(player_mutation_level(MUT_SPINY), 6);
+        int dmg = roll_dice(mut, 6);
         int ac = random2(1+attacker->as_monster()->armour_class());
 
         int hurt = dmg - ac - evp;
@@ -5319,7 +5321,8 @@ void melee_attack::mons_perform_attack_rounds()
             bool end = true;
             for (adjacent_iterator i(attacker->pos()); i; ++i)
             {
-                if (*i == you.pos() && !attacker->as_monster()->friendly())
+                if (*i == you.pos()
+                    && !mons_aligned(attacker, &you))
                 {
                     attacker->as_monster()->foe = MHITYOU;
                     attacker->as_monster()->target = you.pos();
@@ -5806,6 +5809,20 @@ int melee_attack::mons_to_hit()
     return (mhit);
 }
 
+void melee_attack::chaos_affect_actor(actor *victim)
+{
+    melee_attack attk(victim, victim);
+    attk.weapon = NULL;
+    attk.skip_chaos_message = true;
+    attk.chaos_affects_defender();
+    attk.do_miscast();
+    if (!attk.special_damage_message.empty()
+        && you.can_see(victim))
+    {
+        mprf("%s", attk.special_damage_message.c_str());
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////
 
 bool wielded_weapon_check(item_def *weapon, bool no_message)
@@ -6129,4 +6146,9 @@ static void stab_message(actor *defender, int stab_bonus)
               defender->pronoun(PRONOUN_REFLEXIVE).c_str() );
         break;
     }
+}
+
+void chaos_affect_actor(actor *victim)
+{
+    melee_attack::chaos_affect_actor(victim);
 }

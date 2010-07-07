@@ -940,7 +940,7 @@ static bool _cloud_helper(cloud_func func, const coord_def& where,
     return (false);
 }
 
-bool _spell_range_varies(spell_type spell)
+static bool _spell_range_varies(spell_type spell)
 {
     int minrange = _seekspell(spell)->min_range;
     int maxrange = _seekspell(spell)->max_range;
@@ -1122,59 +1122,6 @@ bool spell_is_empowered(spell_type spell)
     return (false);
 }
 
-bool spell_is_useful(spell_type spell)
-{
-    if (you_cannot_memorise(spell) || god_hates_spell(spell, you.religion))
-        return (false);
-    if (you.duration[DUR_CONF] > 0)
-        return (false);
-    if (spell_is_empowered(spell))
-        return (true);
-
-    // due to the way this function is used, you should generally try to be
-    // fairly specific about the circumstances in which a spell is "useful".
-    switch (spell)
-    {
-    case SPELL_CONTROL_TELEPORT:
-        if (you.duration[DUR_TELEPORT] > 0
-            && you.duration[DUR_CONTROL_TELEPORT] < 1)
-        {
-            return (true);
-        }
-        break;
-    case SPELL_HASTE:
-        if (you.duration[DUR_SLOW] > 0
-            && you.duration[DUR_HASTE] <= 0)
-        {
-            return (true);
-        }
-    case SPELL_BLINK:
-    case SPELL_CONTROLLED_BLINK:
-    case SPELL_TELEPORT_SELF:
-        return (true);
-    default: // quash unhandled constants warnings
-        break;
-    }
-
-    return (false);
-}
-
-bool spell_is_risky(spell_type spell)
-{
-    if (god_hates_spell(spell, you.religion))
-        return (true);
-
-    switch (spell)
-    {
-    case SPELL_ALTER_SELF:
-        return (true);
-    default:
-        break;
-    };
-
-    return (false);
-}
-
 // This function attempts to determine if 'spell' is useless to
 // the player. if 'transient' is true, then it will include checks
 // for volatile or temporary states (such as status effects, mana, etc.)
@@ -1249,34 +1196,18 @@ bool spell_is_useless(spell_type spell, bool transient)
 //       god_hates_spell(spell, god)
 //       god_likes_spell(spell, god)
 //       spell_is_empowered(spell)
-//       spell_is_useful(spell)
 //       spell_is_useless(spell, transient)
-//       spell_is_risky(spell)
 int spell_highlight_by_utility(spell_type spell, int default_color,
-                               bool transient, bool force_known, bool rod_spell)
+                               bool transient, bool rod_spell)
 {
-    // if Force_known is true, and the spell is
-    // known, thats all that matters.
-    if (force_known && !you.has_spell(spell))
-        return COL_UNMEMORIZED;
-
     // If your god hates the spell, that
     // overrides all other concerns
     if (god_hates_spell(spell, you.religion))
         return (COL_FORBIDDEN);
 
-    // NOTE: if you only want the forbidden brand,
-    // comment out the rest of the function.
-    if (god_likes_spell(spell, you.religion) && !rod_spell)
-        default_color = COL_FAVORED;
-
     if (spell_is_empowered(spell) && !rod_spell)
         default_color = COL_EMPOWERED;
-    else if (spell_is_useful(spell) && !rod_spell)
-        default_color = COL_USEFUL;
 
-    if (spell_is_risky(spell) && !rod_spell)
-        default_color = COL_RISKY;
     if (spell_is_useless(spell, transient))
         default_color = COL_USELESS;
 

@@ -346,7 +346,7 @@ void cast_phase_shift(int pow)
 void cast_see_invisible(int pow)
 {
     if (you.can_see_invisible())
-        mpr("Nothing seems to happen.");
+        mpr("You feel as though your vision will be sharpened longer.");
     else
     {
         mpr("Your vision seems to sharpen.");
@@ -743,7 +743,7 @@ void cast_silence(int pow)
     you.attribute[ATTR_WAS_SILENCED] = 1;
 
     you.increase_duration(DUR_SILENCE, 10 + random2avg(pow, 2), 100);
-    invalidate_agrid();
+    invalidate_agrid(true);
 
     if (you.beheld())
         you.update_beholders();
@@ -888,7 +888,7 @@ int make_a_normal_cloud(coord_def where, int pow, int spread_rate,
     return 1;
 }
 
-bool _feat_is_passwallable(dungeon_feature_type feat)
+static bool _feat_is_passwallable(dungeon_feature_type feat)
 {
     // Irony: you can passwall through a secret door but not a door.
     // Worked stone walls are out, they're not diggable and
@@ -1121,7 +1121,7 @@ std::string get_evaporate_result_list(int potion)
         if (new_cloud == CLOUD_BLUE_SMOKE)
             clouds_list.push_back("coloured smoke");
         else
-            clouds_list.push_back(cloud_name((cloud_type) new_cloud));
+            clouds_list.push_back(cloud_type_name((cloud_type) new_cloud));
 
         old_cloud = new_cloud;
     }

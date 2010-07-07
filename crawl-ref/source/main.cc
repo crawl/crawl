@@ -176,6 +176,9 @@ const struct coord_def Compass[8] =
 };
 
 // Functions in main module
+static void _launch_game_loop();
+static void _launch_game();
+
 static void _do_berserk_no_combat_penalty(void);
 static void _input(void);
 static void _move_player(int move_x, int move_y);
@@ -264,9 +267,54 @@ int main(int argc, char *argv[])
         return -1;
 #endif
 
+    _launch_game_loop();
+    end(0);
+
+    return 0;
+}
+
+static void _reset_game()
+{
+    crawl_state.type = GAME_TYPE_UNSPECIFIED;
+    clear_message_store();
+    you.reset();
+    StashTrack = StashTracker();
+    travel_cache = TravelCache();
+    msg::deinitialise_mpr_streams();
+
+#ifdef USE_TILE
+    // [ds] Don't show the title screen again, just go back to
+    // the menu.
+    Options.tile_title_screen = false;
+#endif
+}
+
+static void _launch_game_loop()
+{
+    bool game_ended = false;
+    do
+    {
+        try
+        {
+            game_ended = false;
+            _launch_game();
+        }
+        catch (game_ended_condition &ge)
+        {
+            game_ended = true;
+            _reset_game();
+        }
+    } while (Options.restart_after_game
+             && game_ended
+             && !crawl_state.seen_hups);
+}
+
+static void _launch_game()
+{
     const bool game_start = startup_step();
 
     // Attach the macro key recorder
+    remove_key_recorder(&repeat_again_rec);
     add_key_recorder(&repeat_again_rec);
 
     // Override some options when playing in hints mode.
@@ -292,8 +340,11 @@ int main(int argc, char *argv[])
     if (game_start && you.char_class == JOB_WANDERER)
         _wanderer_startup_message();
 
-    if (!crawl_state.game_is_tutorial() && !crawl_state.game_is_sprint() && game_start)
+    if (!crawl_state.game_is_tutorial()
+        && !crawl_state.game_is_sprint() && game_start)
+    {
        _announce_goal_message();
+    }
 
     _god_greeting_message(game_start);
 
@@ -325,8 +376,6 @@ int main(int argc, char *argv[])
         _input();
 
     clear_globals_on_exit();
-
-    return 0;
 }
 
 static void _show_commandline_options_help()
@@ -345,11 +394,13 @@ static void _show_commandline_options_help()
     puts("  -macro <dir>          directory to save/find macro.txt");
     puts("  -version              Crawl version (and compilation info)");
     puts("  -save-version <name>  Save file version for the given player");
+    puts("  -sprint               select Sprint");
+    puts("  -sprint-map <name>    preselect a Sprint map");
     puts("");
+
     puts("Command line options override init file options, which override");
     puts("environment options (CRAWL_NAME, CRAWL_DIR, CRAWL_RC).");
     puts("");
-
     puts("  -extra-opt-first optname=optval");
     puts("  -extra-opt-last  optname=optval");
     puts("");
@@ -389,34 +440,9 @@ static void _wanderer_startup_message()
 }
 
 // A one-liner upon game start to mention the orb.
-// TODO: source out the list of messages into a file, ideally with weights.
 static void _announce_goal_message()
 {
-    std::string msg;
-    switch (random2(5))
-    {
-    case 0:
-        msg = "Will you prevail where others failed? "
-              "Will you get the Orb of Zot?";
-        break;
-    case 1:
-        msg = "The bosom of this dungeon contains the most "
-              "powerful artefact, the Orb of Zot.";
-        break;
-    case 2:
-        msg = "Will you be the one to retrieve the fabulous "
-              "Orb of Zot from the depths?";
-        break;
-    case 3:
-        msg = "The destiny of this world depends on the Orb "
-              "of Zot. Go down and get it!";
-        break;
-    case 4:
-        msg = "They say that the Orb of Zot exists deep, deep "
-              "down but nobody ever got it.";
-        break;
-    }
-    mprf(MSGCH_PLAIN,"<yellow>%s</yellow>",msg.c_str());
+    mprf(MSGCH_PLAIN,"<yellow>%s</yellow>", getMiscString("welcome_spam").c_str());
 }
 
 static void _god_greeting_message(bool game_start)
@@ -1549,7 +1575,6 @@ static void _do_display_map()
 
     level_pos pos;
     const bool travel = show_map(pos, true, true, true);
-    redraw_screen();
 
 #ifdef USE_TILE
     mpr("Returning to the game...");
@@ -2340,7 +2365,7 @@ static void _decrement_durations()
         && one_chance_in(5))
     {
         you.duration[DUR_PIETY_POOL]--;
-        gain_piety(1, true);
+        gain_piety(1, 1, true);
 
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_SACRIFICE) || defined(DEBUG_PIETY)
         mpr("Piety increases by 1 due to piety pool.", MSGCH_DIAGNOSTICS);
@@ -3644,7 +3669,7 @@ static void _move_player(coord_def move)
 
     if (!attacking && targ_pass && moving && !beholder)
     {
-        if (!check_moveto(targ))
+        if (!you.confused() && !check_moveto(targ))
         {
             stop_running();
             you.turn_is_over = false;

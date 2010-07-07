@@ -1064,8 +1064,6 @@ void remove_key_recorder(key_recorder* recorder)
             recorders.erase(i);
             return;
         }
-
-    end(1, true, "remove_key_recorder(): recorder not found\n");
 }
 
 int get_macro_buf_size()

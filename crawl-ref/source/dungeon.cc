@@ -1214,6 +1214,7 @@ void dgn_reset_level(bool enable_random_maps)
 
     mgrd.init(NON_MONSTER);
     igrd.init(NON_ITEM);
+    env.tgrid.init(NON_ENTITY);
 
     // Reset all shops.
     for (int shcount = 0; shcount < MAX_SHOPS; shcount++)
@@ -1221,6 +1222,9 @@ void dgn_reset_level(bool enable_random_maps)
 
     // Clear all markers.
     env.markers.clear();
+
+    // Lose all listeners.
+    dungeon_events.clear();
 
     // Set default level flags.
     if (player_in_level_area(LEVEL_DUNGEON))
@@ -2654,19 +2658,20 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
     if (!minivault && player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
     {
         // Temple vault determined at new game tiem.
-        std::string name = you.props[TEMPLE_MAP_KEY];
+        const std::string name = you.props[TEMPLE_MAP_KEY];
 
         // Tolerate this for a little while, for old games.
         if (!name.empty())
         {
             const map_def *vault = find_map_by_name(name);
 
-            if (vault == NULL)
-            {
-                end(1, false, "Unable to place Temple vault '%s'",
-                    name.c_str());
-            }
-            return (vault);
+            if (vault)
+                return (vault);
+
+            mprf(MSGCH_ERROR, "Unable to find Temple vault '%s'",
+                 name.c_str());
+
+            // Fall through and use a different Temple map instead.
         }
     }
 
@@ -2992,6 +2997,7 @@ static builder_rc_type _builder_basic(int level_number)
             ts.pos.x = xend;
             ts.pos.y = yend;
             grd[xend][yend] = DNGN_UNDISCOVERED_TRAP;
+            env.tgrid[xend][yend] = 0;
             if (shaft_known(level_number, false))
                 ts.reveal();
             dprf("Trail ends in shaft.");
@@ -3189,6 +3195,7 @@ static void _place_traps(int level_number)
         }
 
         grd(ts.pos) = DNGN_UNDISCOVERED_TRAP;
+        env.tgrid(ts.pos) = i;
         if (ts.type == TRAP_SHAFT && shaft_known(level_number, true))
             ts.reveal();
         ts.prepare_ammo();
@@ -3765,7 +3772,7 @@ static int _place_uniques(int level_number, char level_type)
         // placed or available. Then there is a chance of uniques_available /
         // B; this only triggers on levels that have less than B uniques to be
         // placed.
-        const std::vector<map_def> uniques_available =
+        const mapref_vector uniques_available =
             find_maps_for_tag("place_unique", true, true);
 
         if (random2(B) >= std::min(B, int(uniques_available.size())))
@@ -3863,8 +3870,15 @@ static void _place_aquatic_monsters(int level_number, char level_type)
     // [ds] Shoals relies on normal monster generation to place its monsters.
     // Given the amount of water area in the Shoals, placing water creatures
     // explicitly explodes the Shoals' xp budget.
-    if (player_in_branch(BRANCH_SHOALS))
+    //
+    // Also disallow water creatures below D:6.
+    //
+    if (player_in_branch(BRANCH_SHOALS)
+        || (player_in_branch(BRANCH_MAIN_DUNGEON)
+            && you.absdepth0 < 5))
+    {
         return;
+    }
 
     // Count the number of lava and water tiles {dlb}:
     for (int x = 0; x < GXM; x++)
@@ -4575,7 +4589,7 @@ static dungeon_feature_type _dgn_find_rune_subst_tags(const std::string &tags)
     return (DNGN_FLOOR);
 }
 
-void _fixup_after_vault()
+static void _fixup_after_vault()
 {
     link_items();
     env.markers.activate_all();
@@ -5693,6 +5707,7 @@ bool seen_replace_feat(dungeon_feature_type old_feat,
         if (grd(*ri) == old_feat)
         {
             grd(*ri) = new_feat;
+            set_terrain_changed(*ri);
             if (you.see_cell(*ri))
                 seen = true;
         }
@@ -6376,6 +6391,7 @@ void place_spec_shop( int level_number,
     }
 
     env.shop[i].pos = where;
+    env.tgrid(where) = i;
 
     grd(where) = DNGN_ENTER_SHOP;
 
@@ -8052,6 +8068,7 @@ bool place_specific_trap(const coord_def& where, trap_type spec_type)
             env.trap[tcount].type = spec_type;
             env.trap[tcount].pos  = where;
             grd(where)            = DNGN_UNDISCOVERED_TRAP;
+            env.tgrid(where)      = tcount;
             env.trap[tcount].prepare_ammo();
             return (true);
         }

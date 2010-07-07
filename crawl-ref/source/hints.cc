@@ -4619,7 +4619,7 @@ static void _hints_describe_cloud(int x, int y)
     if (ctype == CLOUD_NONE)
         return;
 
-    std::string cname = cloud_name(env.cgrid(coord_def(x, y)));
+    std::string cname = cloud_name_at_index(env.cgrid(coord_def(x, y)));
 
     std::ostringstream ostr;
 

@@ -473,7 +473,7 @@ xxxxxxxxxxxxxxxxBxxxxxxxxxxxDxxxxxxxxxxxFxxxxxxxxxxxHxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:    jpeg_bazaar_circle_common
+NAME:    bazaar_jpeg_circle_common
 WEIGHT:  20
 TAGS:    bazaar no_rotate
 ORIENT:  encompass
@@ -514,7 +514,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 # 2 good shops or 3 shops
-NAME:    jpeg_bazaar_cross
+NAME:    bazaar_jpeg_cross
 TAGS:    bazaar no_rotate
 WEIGHT:  20
 ORIENT:  encompass
@@ -562,7 +562,7 @@ xxxxxxxxxxxxxx...xxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:      minmay_bazaar_generic_island
+NAME:      bazaar_minmay_generic_island
 TAGS:      bazaar no_rotate
 ORIENT:    encompass
 WEIGHT:    20
@@ -626,7 +626,7 @@ xxxxxxxxxxxxxxxwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:    minmay_bazaar_row
+NAME:    bazaar_minmay_row
 TAGS:    bazaar no_rotate
 ORIENT:  encompass
 WEIGHT:  20
@@ -661,7 +661,7 @@ xx..c.........c..xx
        xxxxx
 ENDMAP
 
-NAME:   minmay_bazaar_cross
+NAME:   bazaar_minmay_cross
 TAGS:   bazaar no_rotate
 ORIENT: encompass
 WEIGHT: 20
@@ -748,7 +748,7 @@ xxxxxxxxx
 ENDMAP
 
 # 4 random shops
-NAME:    jpeg_bazaar_oval
+NAME:    bazaar_jpeg_oval
 TAGS:    bazaar no_rotate
 WEIGHT:  5
 ORIENT:  encompass
@@ -856,7 +856,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 # 5 shops, total weight of jpeg's rare circle vaults is 5
-NAME:    jpeg_bazaar_circle_rare_1
+NAME:    bazaar_jpeg_circle_rare_1
 WEIGHT:  1
 TAGS:    bazaar no_rotate
 ORIENT:  encompass
@@ -895,7 +895,7 @@ xx...xxxxxxxxxxxxxxxxxxxxxxxxx...xx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:    jpeg_bazaar_circle_rare_2
+NAME:    bazaar_jpeg_circle_rare_2
 WEIGHT:  1
 TAGS:    bazaar no_rotate
 ORIENT:  encompass
@@ -934,7 +934,7 @@ xx...xxxxxxxxxxxxxxxxxxxxxxxxx...xx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:    jpeg_bazaar_circle_rare_3
+NAME:    bazaar_jpeg_circle_rare_3
 WEIGHT:  1
 TAGS:    bazaar no_rotate
 ORIENT:  encompass
@@ -973,7 +973,7 @@ xx...xxxxxxxxxxxxxxxxxxxxxxxxx...xx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:    jpeg_bazaar_circle_rare_4
+NAME:    bazaar_jpeg_circle_rare_4
 WEIGHT:  1
 TAGS:    bazaar no_rotate
 ORIENT:  encompass
@@ -1012,7 +1012,7 @@ xx...xxxxxxxxxxxxxxxxxxxxxxxxx...xx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:    jpeg_bazaar_circle_rare_5
+NAME:    bazaar_jpeg_circle_rare_5
 WEIGHT:  1
 TAGS:    bazaar no_rotate
 ORIENT:  encompass
@@ -1050,7 +1050,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 # 4 shops
-NAME:    jpeg_bazaar_honeycomb
+NAME:    bazaar_jpeg_honeycomb
 TAGS:    bazaar no_rotate
 ORIENT:  encompass
 MONS:    plant
@@ -1091,7 +1091,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 # 4 shops
-NAME:    jpeg_bazaar_ribbon
+NAME:    bazaar_jpeg_ribbon
 TAGS:    bazaar no_rotate
 ORIENT:  encompass
 SHUFFLE: zZ
@@ -1138,7 +1138,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 # 5 shops, total weight of jpeg's nineroom vaults is 5
-NAME:    jpeg_bazaar_ninerooms_1
+NAME:    bazaar_jpeg_ninerooms_1
 TAGS:    bazaar no_rotate
 WEIGHT:  1
 ORIENT:  encompass
@@ -1178,7 +1178,7 @@ xk.......kxxxxxxxxxk.......kxxxxxxxxxk.......kx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:    jpeg_bazaar_ninerooms_2
+NAME:    bazaar_jpeg_ninerooms_2
 TAGS:    bazaar no_rotate
 WEIGHT:  1
 ORIENT:  encompass
@@ -1218,7 +1218,7 @@ xk.......kxxxxxxxxxk.......kxxxxxxxxxk.......kx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:    jpeg_bazaar_ninerooms_3
+NAME:    bazaar_jpeg_ninerooms_3
 TAGS:    bazaar no_rotate
 WEIGHT:  1
 ORIENT:  encompass
@@ -1259,7 +1259,7 @@ xk.......kxxxxxxxxxk.......kxxxxxxxxxk.......kx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:    jpeg_bazaar_ninerooms_4
+NAME:    bazaar_jpeg_ninerooms_4
 TAGS:    bazaar no_rotate
 WEIGHT:  1
 ORIENT:  encompass
@@ -1300,7 +1300,7 @@ xk.......kxxxxxxxxxk.......kxxxxxxxxxk.......kx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:    jpeg_bazaar_ninerooms_5
+NAME:    bazaar_jpeg_ninerooms_5
 TAGS:    bazaar no_rotate
 WEIGHT:  1
 ORIENT:  encompass
@@ -1340,7 +1340,7 @@ xk.......kxxxxxxxxxk.......kxxxxxxxxxk.......kx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:   minmay_bazaar_generic_box
+NAME:   bazaar_minmay_generic_box
 TAGS:   bazaar no_rotate
 WEIGHT: 5
 ORIENT: encompass
@@ -1366,7 +1366,7 @@ ENDMAP
 # it almost exceeds the maximum level size.
 # Can't find a way to fix this without
 # ruining the look of the vault.
-NAME:      minmay_bazaar_generic_d
+NAME:      bazaar_minmay_generic_d
 TAGS:      bazaar no_rotate
 WEIGHT:    5
 ORIENT:    encompass
@@ -1452,7 +1452,7 @@ ll...lllllllllllllllll"""llllllllllll
 lllllllllllllllllllllllllllllllllllll
 ENDMAP
 
-NAME:      minmay_bazaar_trees
+NAME:      bazaar_minmay_trees
 TAGS:      bazaar no_rotate
 WEIGHT:    5
 ORIENT:    encompass
@@ -1482,7 +1482,7 @@ ttttttttttttttt
 ttttttttttttttt
 ENDMAP
 
-NAME:   minmay_bazaar_armour_weapon
+NAME:   bazaar_minmay_armour_weapon
 TAGS:   bazaar no_rotate
 WEIGHT: 5
 ORIENT: encompass
@@ -1524,7 +1524,7 @@ xx...xx...xx...xx
       xxxxx
 ENDMAP
 
-NAME:   minmay_bazaar_snake
+NAME:   bazaar_minmay_snake
 TAGS:   bazaar no_rotate
 WEIGHT: 5
 ORIENT: encompass
@@ -1572,7 +1572,7 @@ xx...xxxxxxxxxxx...xxxxxxxxxxx...xx
  xxxxx         xxxxx         xxxxx
 ENDMAP
 
-NAME:      minmay_bazaar_plants
+NAME:      bazaar_minmay_plants
 TAGS:      bazaar no_rotate
 WEIGHT:    5
 ORIENT:    encompass
@@ -1626,7 +1626,7 @@ ENDMAP
 ##########################################################################
 
 # 4.4 shops
-NAME:    jpeg_bazaar_triangles
+NAME:    bazaar_jpeg_triangles
 TAGS:    bazaar no_rotate
 ORIENT:  encompass
 WEIGHT:  1
@@ -1651,7 +1651,7 @@ xxxA............+...xxxD...........Dxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:    jpeg_bazaar_hexagon
+NAME:    bazaar_jpeg_hexagon
 TAGS:    bazaar no_rotate
 ORIENT:  encompass
 WEIGHT:  1
@@ -1681,7 +1681,7 @@ xxxxxxxxx.xxx.................xxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:    jpeg_bazaar_triangle_bulge
+NAME:    bazaar_jpeg_triangle_bulge
 TAGS:    bazaar no_rotate
 ORIENT:  encompass
 WEIGHT:  1
@@ -1754,7 +1754,7 @@ ENDMAP
 # or you will have to teleport into the room, possibly randomly. In that case,
 # inner area=13*11=143, outer area=104 or 148, making chances for teleporation
 # to land inside either 57% or 49%.
-NAME:    minmay_bazaar_challenge
+NAME:    bazaar_minmay_challenge
 TAGS:    bazaar no_rotate
 WEIGHT:  1
 ORIENT:  encompass
@@ -1801,7 +1801,7 @@ xxxxxxxx'''...'''xxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:   minmay_bazaar_oklob
+NAME:   bazaar_minmay_oklob
 TAGS:   bazaar no_rotate
 WEIGHT: 1
 ORIENT: encompass
@@ -1839,7 +1839,7 @@ xxxxxxxxx.........xxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-NAME:   minmay_bazaar_mutagenic_fog
+NAME:   bazaar_minmay_mutagenic_fog
 TAGS:   bazaar no_rotate
 ORIENT: encompass
 WEIGHT: 1
@@ -1880,7 +1880,7 @@ xxxxxxxxx     xxxxxxxxx
 ENDMAP
 
 # Perhaps we should announce the number of shops when entering the vault?
-NAME:   minmay_bazaar_jumpy
+NAME:   bazaar_minmay_jumpy
 TAGS:   bazaar no_rotate
 ORIENT: encompass
 WEIGHT: 1

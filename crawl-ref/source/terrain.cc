@@ -765,16 +765,34 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
     if (you.level_type == LEVEL_DUNGEON)
         move_notable_thing(src, dst);
 
-    const dungeon_feature_type dfeat = grd(src);
+    dungeon_feature_type dfeat = grd(src);
     if (dfeat == DNGN_ENTER_SHOP)
     {
         if (shop_struct *s = get_shop(src))
+        {
+            env.tgrid(dst)    = env.tgrid(s->pos);
+            env.tgrid(s->pos) = NON_ENTITY;
+            // Can't leave the source square as a shop now that all
+            // the bookkeeping data has moved.
+            grd(src)          = DNGN_FLOOR;
             s->pos = dst;
+        }
+        else // Destroy invalid shops.
+            dfeat = DNGN_FLOOR;
     }
-    else if (feat_is_trap(dfeat))
+    else if (feat_is_trap(dfeat, true))
     {
         if (trap_def *trap = find_trap(src))
+        {
+            env.tgrid(dst) = env.tgrid(trap->pos);
+            env.tgrid(trap->pos) = NON_ENTITY;
+            // Can't leave the source square as a trap now that all
+            // the bookkeeping data has moved.
+            grd(src)          = DNGN_FLOOR;
             trap->pos = dst;
+        }
+        else // Destroy invalid traps.
+            dfeat = DNGN_FLOOR;
     }
 
     grd(dst) = dfeat;
@@ -892,7 +910,7 @@ static void _dgn_check_terrain_covering(const coord_def &pos,
     }
 }
 
-void _dgn_check_terrain_player(const coord_def pos)
+static void _dgn_check_terrain_player(const coord_def pos)
 {
     if (pos != you.pos())
         return;

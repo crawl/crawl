@@ -39,6 +39,8 @@ public:
     unsigned char &operator[](int idx);
     unsigned char operator[](int idx) const;
 
+    bool is_transparent() const { return (a == 0); }
+
     // Get the HSV/HSL hue, from 0..360.
     int get_hue() const;
     // Set the hue, from 0..360.

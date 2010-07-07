@@ -1779,7 +1779,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_SILENCE:
         monster->add_ench(ENCH_SILENCE);
-        invalidate_agrid();
+        invalidate_agrid(true);
         mpr("Everything around you gets eerily quiet.");
         return;
 
@@ -2682,7 +2682,7 @@ static unsigned int _noise_keys(std::vector<std::string>& key_list,
     return num_spell_keys;
 }
 
-std::string _noise_message(const std::vector<std::string>& key_list,
+static std::string _noise_message(const std::vector<std::string>& key_list,
                            unsigned int num_spell_keys,
                            bool silent, bool unseen)
 {
@@ -2742,7 +2742,7 @@ std::string _noise_message(const std::vector<std::string>& key_list,
     return (msg);
 }
 
-void _noise_fill_target(std::string& targ_prep, std::string& target,
+static void _noise_fill_target(std::string& targ_prep, std::string& target,
                         const monsters* monster, const bolt& pbolt,
                         bool gestured)
 {

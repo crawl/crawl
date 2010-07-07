@@ -801,14 +801,14 @@ static void _player_change_level_downstairs(dungeon_feature_type stair_find,
     }
 }
 
-void _maybe_destroy_trap(const coord_def &p)
+static void _maybe_destroy_trap(const coord_def &p)
 {
     trap_def* trap = find_trap(p);
     if (trap)
         trap->destroy();
 }
 
-static int _runes_in_pack(std::vector<int> &runes)
+int runes_in_pack(std::vector<int> &runes)
 {
     int num_runes = 0;
 
@@ -952,7 +952,7 @@ void down_stairs(dungeon_feature_type force_stair,
     if (stair_find == DNGN_ENTER_ZOT && !you.opened_zot)
     {
         std::vector<int> runes;
-        const int num_runes = _runes_in_pack(runes);
+        const int num_runes = runes_in_pack(runes);
 
         if (num_runes < NUMBER_OF_RUNES_NEEDED)
         {

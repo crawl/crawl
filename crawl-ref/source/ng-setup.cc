@@ -316,7 +316,7 @@ void give_basic_mutations(species_type speci)
         you.innate_mutations[i] = you.mutation[i];
 }
 
-void _newgame_make_item_tutorial(int slot, equipment_type eqslot,
+static void _newgame_make_item_tutorial(int slot, equipment_type eqslot,
                                  object_class_type base,
                                  int sub_type, int replacement = -1,
                                  int qty = 1, int plus = 0, int plus2 = 0)
@@ -1222,7 +1222,7 @@ static void _give_starting_food()
     you.inv[slot]  = item;       // will ASSERT if couldn't find free slot
 }
 
-void _setup_tutorial_miscs()
+static void _setup_tutorial_miscs()
 {
     // Give him spellcasting
     you.skills[SK_SPELLCASTING] = 3;

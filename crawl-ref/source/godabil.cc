@@ -166,17 +166,20 @@ int zin_recite_to_single_monster(const coord_def& where,
     if (pow == -1)
         pow = (2 * skill_bump(SK_INVOCATIONS) + you.piety / 5) / 2;
 
+    int resist;
     const mon_holy_type holiness = mon->holiness();
 
-    int resist = std::min(mon->res_magic(), 11);
     if (mon->is_holy())
-        resist -= 2 + random2(3);
-    else if (holiness == MH_UNDEAD)
-        resist += 2 + random2(3);
-    else if (holiness == MH_DEMONIC)
-        resist += 3 + random2(5);
-    resist -= random2(you.skills[SK_INVOCATIONS]);
-    resist = std::max(0, resist);
+        resist = std::max(0, 7 - random2(you.skills[SK_INVOCATIONS]));
+    else
+    {
+        resist = mon->res_magic();
+
+        if (holiness == MH_UNDEAD)
+            pow -= 2 + random2(3);
+        else if (holiness == MH_DEMONIC)
+            pow -= 3 + random2(5);
+    }
 
     pow -= resist;
 
@@ -234,6 +237,8 @@ int zin_recite_to_single_monster(const coord_def& where,
         case 6:
         case 7:
         case 8:
+            if (!mon->can_hibernate())
+                return (0);
             mon->hibernate();
             simple_monster_message(mon, " falls asleep!");
             break;
@@ -1993,8 +1998,8 @@ struct monster_conversion
 // fedhas_evolve_flora() can upgrade it, and set up a monster_conversion
 // structure for it.  Return true (and fill in possible_monster) if the
 // monster can be upgraded, and return false otherwise.
-bool _possible_evolution(const monsters * input,
-                         monster_conversion & possible_monster)
+static bool _possible_evolution(const monsters * input,
+                                monster_conversion & possible_monster)
 {
     switch (input->type)
     {
@@ -2030,21 +2035,6 @@ bool mons_is_evolvable(const monsters * mon)
 {
     monster_conversion temp;
     return (_possible_evolution(mon, temp));
-}
-
-void _collect_adjacent_monsters(std::vector<monster_conversion>& available,
-                                const coord_def& center)
-{
-    for (adjacent_iterator adjacent(center, false); adjacent; ++adjacent)
-    {
-        monsters* candidate = monster_at(*adjacent);
-        monster_conversion monster_upgrade;
-        if (candidate && _possible_evolution(candidate, monster_upgrade))
-        {
-            monster_upgrade.base_monster = candidate;
-            available.push_back(monster_upgrade);
-        }
-    }
 }
 
 static bool _place_ballisto(const coord_def & pos)

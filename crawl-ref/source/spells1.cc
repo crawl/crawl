@@ -339,7 +339,7 @@ bool cast_hellfire_burst(int pow, bolt &beam)
     return (true);
 }
 
-bool _lightning_los(const coord_def& source, const coord_def& target)
+static bool _lightning_los(const coord_def& source, const coord_def& target)
 {
     // XXX: currently bounded by circular LOS radius;
     // XXX: adapt opacity -- allow passing clouds.
@@ -858,12 +858,11 @@ static int _healing_spell(int healed, bool divine_ability,
 
         int pgain = 0;
         if (!is_holy && !is_summoned && you.piety < MAX_PIETY)
-        {
-            pgain = random2(1 + random2(monster->max_hit_points /
-                            (2 + you.piety / 20)));
-        }
+            pgain = random2(monster->max_hit_points / (2 + you.piety / 20));
 
-        if (pgain > 0)
+        // The feedback no longer tells you if you gained any piety this time,
+        // it tells you merely the general rate.
+        if (random2(1 + pgain))
             simple_god_message(" approves of your offer of peace.");
         else
             mpr("Elyvilon supports your offer of peace.");
@@ -876,8 +875,7 @@ static int _healing_spell(int healed, bool divine_ability,
             mons_pacify(monster, ATT_NEUTRAL);
 
             // Give a small piety return.
-            if (pgain > 0)
-                gain_piety(pgain);
+            gain_piety(pgain, 2);
         }
     }
 
@@ -893,24 +891,14 @@ static int _healing_spell(int healed, bool divine_ability,
 
         if (you.religion == GOD_ELYVILON && !is_hostile)
         {
-            int pgain = 0;
-            if (one_chance_in(8) && you.piety < MAX_PIETY)
-                pgain = 1;
-
-            if (pgain > 0)
-            {
+            if (one_chance_in(8))
                 simple_god_message(" approves of your healing of a fellow "
                                    "creature.");
-            }
             else
-            {
-                mpr("Elyvilon appreciates your healing of a fellow "
-                    "creature.");
-            }
+                mpr("Elyvilon appreciates your healing of a fellow creature.");
 
             // Give a small piety return.
-            if (pgain > 0)
-                gain_piety(pgain);
+            gain_piety(1, 8);
         }
     }
 
@@ -1089,7 +1077,7 @@ void antimagic()
     contaminate_player(-1 * (1 + random2(5)));
 }
 
-bool _know_spell(spell_type spell)
+static bool _know_spell(spell_type spell)
 {
     if (spell == NUM_SPELLS)
         return (false);
@@ -1097,7 +1085,7 @@ bool _know_spell(spell_type spell)
     if (!you.has_spell(spell))
     {
         mprf("You don't know how to extend %s.", spell_title(spell));
-	return (false);
+        return (false);
     }
 
     int fail = spell_fail(spell);
@@ -1112,7 +1100,7 @@ bool _know_spell(spell_type spell)
     return (true);
 }
 
-spell_type _brand_spell()
+static spell_type _brand_spell()
 {
     const item_def *wpn = you.weapon();
 
@@ -1149,7 +1137,7 @@ spell_type _brand_spell()
     }
 }
 
-spell_type _transform_spell()
+static spell_type _transform_spell()
 {
     switch(you.attribute[ATTR_TRANSFORMATION])
     {

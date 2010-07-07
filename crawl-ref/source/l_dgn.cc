@@ -136,6 +136,19 @@ static int dgn_place(lua_State *ls)
     PLUARET(string, map->place.describe().c_str());
 }
 
+static int dgn_desc(lua_State *ls)
+{
+    MAP(ls, 1, map);
+    if (lua_gettop(ls) > 1)
+    {
+        if (lua_isnil(ls, 2))
+            map->description.clear();
+        else
+            map->description = trimmed_string(luaL_checkstring(ls, 2));
+    }
+    PLUARET(string, map->description.c_str());
+}
+
 static int dgn_tags(lua_State *ls)
 {
     MAP(ls, 1, map);
@@ -982,7 +995,7 @@ static int dgn_cloud_at (lua_State *ls)
     if (cloudno == EMPTY_CLOUD)
         lua_pushstring(ls, "none");
     else
-        lua_pushstring(ls, cloud_name(cloudno).c_str());
+        lua_pushstring(ls, cloud_name_at_index(cloudno).c_str());
 
     return (1);
 }
@@ -1005,7 +1018,7 @@ static int lua_dgn_set_lt_callback(lua_State *ls)
     return (0);
 }
 
-bool _valid_border_feat (dungeon_feature_type feat)
+static bool _valid_border_feat (dungeon_feature_type feat)
 {
     return ((feat <= DNGN_MAXWALL && feat >= DNGN_MINWALL)
             || (feat == DNGN_TREE || feat == DNGN_OPEN_SEA
@@ -1226,7 +1239,7 @@ static cloud_type dgn_cloud_name_to_type(std::string name)
         return (CLOUD_DEBUGGING);
 
     for (int i = CLOUD_NONE; i < CLOUD_RANDOM; i++)
-        if (cloud_name(static_cast<cloud_type>(i)) == name)
+        if (cloud_type_name(static_cast<cloud_type>(i)) == name)
             return static_cast<cloud_type>(i);
 
     return (CLOUD_NONE);
@@ -1850,6 +1863,7 @@ const struct luaL_reg dgn_dlib[] =
 { "name", dgn_name },
 { "depth", dgn_depth },
 { "place", dgn_place },
+{ "desc", dgn_desc },
 { "tags",  dgn_tags },
 { "tags_remove", dgn_tags_remove },
 { "lflags", dgn_lflags },

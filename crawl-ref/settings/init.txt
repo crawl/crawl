@@ -68,6 +68,7 @@
 # job     = (Fighter |...| Wanderer | random)
 # random_pick = true
 # good_random = false
+# restart_after_game = true
 
 ##### 2-  File System ###############################################
 #
@@ -231,6 +232,7 @@ stash_filter = ring of hunger, amulet of inaccuracy
 # easy_exit_menu         = false
 # sort_menus = pickup: true : art, ego, basename, qualname, curse, qty
 sort_menus = inv: true : equipped, freshness, charged
+# menu_cursor            = true
 
 ##### 4-j	Messages and Display Enhancements #####
 #

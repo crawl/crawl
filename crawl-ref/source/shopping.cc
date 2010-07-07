@@ -2102,15 +2102,11 @@ shop_struct *get_shop(const coord_def& where)
     if (grd(where) != DNGN_ENTER_SHOP)
         return (NULL);
 
-    // Check all shops for one at the correct position.
-    for (int i = 0; i < MAX_SHOPS; i ++)
-    {
-        shop_struct& shop = env.shop[i];
-        // A little bit of paranoia.
-        if (shop.pos == where && shop.type != SHOP_UNASSIGNED)
-            return (&shop);
-    }
-    return (NULL);
+    unsigned short t = env.tgrid(where);
+    ASSERT(t != NON_ENTITY && t < MAX_SHOPS);
+    ASSERT(env.shop[t].pos == where && env.shop[t].type != SHOP_UNASSIGNED);
+
+    return (&env.shop[t]);
 }
 
 std::string shop_name(const coord_def& where, bool add_stop)
@@ -2304,6 +2300,13 @@ bool ShoppingList::is_on_list(std::string desc,
     return (find_thing(desc, pos) != -1);
 }
 
+void ShoppingList::del_thing_at_index(int idx)
+{
+    ASSERT(idx >= 0 && idx < list->size());
+    list->erase(idx);
+    refresh();
+}
+
 bool ShoppingList::del_thing(const item_def &item,
                              const level_pos* _pos)
 {
@@ -2318,9 +2321,7 @@ bool ShoppingList::del_thing(const item_def &item,
         return (false);
     }
 
-    list->erase(idx);
-    refresh();
-
+    del_thing_at_index(idx);
     return (true);
 }
 
@@ -2337,9 +2338,7 @@ bool ShoppingList::del_thing(std::string desc, const level_pos* _pos)
         return (false);
     }
 
-    list->erase(idx);
-    refresh();
-
+    del_thing_at_index(idx);
     return (true);
 }
 
@@ -2538,6 +2537,7 @@ void ShoppingList::forget_pos(const level_pos &pos)
             i--;
         }
     }
+    refresh();
 }
 
 void ShoppingList::gold_changed(int old_amount, int new_amount)
@@ -2766,7 +2766,7 @@ void ShoppingList::display()
                 continue;
             }
 
-            list->erase(index);
+            del_thing_at_index(index);
             if (list->size() == 0)
                 break;
 
@@ -2779,8 +2779,8 @@ void ShoppingList::display()
     redraw_screen();
 }
 
-bool _compare_shopping_things(const CrawlStoreValue& a,
-                              const CrawlStoreValue& b)
+static bool _compare_shopping_things(const CrawlStoreValue& a,
+                                     const CrawlStoreValue& b)
 {
     const CrawlHashTable& hash_a = a.get_table();
     const CrawlHashTable& hash_b = b.get_table();

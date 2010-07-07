@@ -51,6 +51,8 @@ void cio_cleanup();
 void clear_globals_on_exit();
 void end(int exit_code, bool print_err = false,
          const char *format = NULL, ...);
+void game_ended();
+void game_ended_with_error(const std::string &message);
 
 void print_error_screen(const char *message, ...);
 void redraw_screen();
@@ -91,5 +93,9 @@ int random_rod_subtype();
 maybe_bool frombool(bool b);
 bool tobool(maybe_bool mb, bool def);
 bool tobool(maybe_bool mb);
+
+class game_ended_condition : public std::exception
+{
+};
 
 #endif

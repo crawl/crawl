@@ -257,6 +257,8 @@ public:
 
     std::vector<menu_sort_condition> sort_menus;
 
+    bool       menu_cursor;         // Use item selection cursor in menus.
+
     int         dump_kill_places;   // How to dump place information for kills.
     int         dump_message_count; // How many old messages to dump
 
@@ -279,6 +281,8 @@ public:
     bool        easy_exit_menu;     // Menus are easier to get out of
 
     int         assign_item_slot;   // How free slots are assigned
+
+    bool        restart_after_game; // If true, Crawl will not close on game-end
 
     std::vector<text_pattern> drop_filter;
 

@@ -21,6 +21,7 @@ enum drop_mode_type
 
 god_type str_to_god(std::string god);
 int str_to_summon_type (const std::string &str);
+std::string gametype_to_str(game_type type);
 
 std::string read_init_file(bool runscript = false);
 

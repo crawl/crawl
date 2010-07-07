@@ -8,7 +8,7 @@
 #           Maps for the Vault branch, including Vaults:8 are in vaults.des.
 ###############################################################################
 
-default-depth: D:9-27, Vault, Elf, Crypt
+default-depth: D:9-27, Vault, Elf
 
 # Sigmund has been educating the oppressed masses in guerrilla warfare.
 NAME:    sigmund_army
@@ -1591,4 +1591,514 @@ tttttt.1...ttttt
 tttt.tttttttt
 tttt.tttttt
  tttt@ttt
+ENDMAP
+
+# Fire demons vs. ice demons
+NAME:   minmay_fire_ice_demons
+TAGS:   no_monster_gen
+DEPTH:  D:4-, Coc, Geh
+: if you.absdepth() > 24 then
+MONS:   fiend / balrug w:5
+MONS:   ice fiend / blue death w:5
+MONS:   sun demon / smoke demon / hellion
+MONS:   ice devil / blue devil w:5
+MONS:   red devil / imp
+MONS:   ufetubus / white imp w:5
+SUBST:  " = |
+SUBST:  ' = |
+: elseif you.absdepth() > 18 then
+MONS:   sun demon / hellion w:5
+MONS:   ice devil
+MONS:   red devil / smoke demon w:5
+MONS:   blue devil / white imp w:5
+MONS:   imp
+MONS:   ufetubus
+SUBST:  " = |
+SUBST:  ' = *
+: elseif you.absdepth() > 12 then
+MONS:   smoke demon, blue devil, imp, white imp
+SUBST:  " = *
+SUBST:  ' = %
+SUBST:  5 = .
+SUBST:  6 = .
+: else
+MONS:   imp, white imp
+SUBST:  " = %
+SUBST:  ' = .
+SUBST:  3 = .
+SUBST:  4 = .
+SUBST:  5 = .
+SUBST:  6 = .
+: end
+MAP
+...........................
+..ccccccc.........ccccccc..
+.cc'3553ccc.....ccc4664'cc.
+.c"'lll..5cc...cc6..www'"c.
+.c1lllll..5.....6..wwwww2c.
+.c"'lll..5cc...cc6..www'"c.
+.cc'3553ccc.....ccc4664'cc.
+..ccccccc.........ccccccc..
+...........................
+ENDMAP
+
+NAME:  minmay_layered_prison
+DEPTH: D:2-, Vault, Crypt
+TAGS:  no_monster_gen no_item_gen
+KPROP: 789. = no_rtele_into
+KITEM: 8 = acquire any
+KMONS: 8 = 8
+KITEM: 9 = |
+KMONS: 9 = 9
+KITEM: 7 = %
+KMONS: 7 = random
+MAP
+...............
+.mmmmmmmmmmmmm.
+.m7....7....7m.
+.m.bbbbbbbbb.m.
+.m.b9..9..9b.m.
+.m.b.vvvvv.b.m.
+.m.b.v888v.b.m.
+.m7b9v888v9b7m.
+.m.b.v888v.b.m.
+.m.b.vvvvv.b.m.
+.m.b9..9..9b.m.
+.m.bbbbbbbbb.m.
+.m7....7....7m.
+.mmmmmmmmmmmmm.
+...............
+ENDMAP
+
+# This vault can be highly OOD, which is why lindwurms are used in the
+# first place; unlike most dragon-types, lindwurms are flightless.
+NAME:   minmay_lindwurm_lava
+TAGS:   no_monster_gen
+DEPTH:  D:8-18, Lair:2-
+KMONS:  1 = lindwurm
+KITEM:  1 = *
+SUBST:  ' : ..'l
+SUBST:  ' = ..l
+MAP
+     .....''.....
+   ....'''ll'''....
+  ...''llllllll''...
+ ...'llllllllllll'...
+ ..'llllllllllllll'..
+..'llllllllllllllll'..
+..'llllll....llllll'..
+.'lllll...xx...lllll'.
+.'lllll..xxxx..lllll'.
+.'llll..x.1*.x..llll'.
+'lllll.xx*||1xx.lllll'
+'lllll.xx1||*xx.lllll'
+.'llll..x.*1.x..llll'.
+.'lllll..xxxx..lllll'.
+.'lllll...xx...lllll'.
+..'llllll....llllll'..
+..'llllllllllllllll'..
+ ..'llllllllllllll'..
+ ...'llllllllllll'...
+  ...''llllllll''...
+   ....'''ll'''....
+     .....''.....
+ENDMAP
+
+NAME:   minmay_hunger
+TAGS:   mini_float
+DEPTH:  D:10-16
+WEIGHT: 5
+MONS:   hungry ghost
+ITEM:   ring of hunger / any jewellery
+MAP
+ccc+ccc
+c.1.1.c
+c1c1c1c
++.1d1.+
+c1c1c1c
+c.1.1.c
+ccc+ccc
+ENDMAP
+
+NAME:  minmay_rats_cheese
+TAGS:  mini_float
+DEPTH: D:2-3
+MONS:  rat
+ITEM:  cheese
+MAP
+xxxxx+xxxxxxx
+x1....xd1111x
+x.1..xxx1111x
+x..1xxxxx111x
+x..xxxxxxx11x
+x.xxxxxxxxx1x
+x+xxxxxxxxx+x
+x.xxxxxxxxx1x
+x1.xxxxxxx1.x
+x.1.xxxxx1.1x
+x1.1.xxx1.1.x
+x.1.1.+1.1.1x
+xxxxxxxxxxxxx
+ENDMAP
+
+NAME:  minmay_rock_worms
+DEPTH: D:16-26
+KMONS: 1 = generate_awake rock worm
+KFEAT: 1 = rock_wall
+MAP
+xxxxx
+x111x
+x111x
+xxxxx
+ENDMAP
+
+NAME:  minmay_archer_statue_crystal
+TAGS:  mini_float
+DEPTH: D:10-, Vault, Elf
+MONS:  statue name:archer tile:mons_statue_archer name_adjective; \
+       longbow ego:frost | longbow ego:flame . arrow q:40
+MAP
+xx@xxx@xx
+xb.bbb.bx
+@.......@
+xb.....bx
+xb..1..bx
+xb.....bx
+@.......@
+xb.bbb.bx
+xx@xxx@xx
+ENDMAP
+
+NAME:  minmay_archer_statue_bushes
+DEPTH: D:8-, Vault, Elf
+MONS:  statue name:archer tile:mons_statue_archer name_adjective; \
+       longbow . arrow q:40
+MONS:  bush
+MAP
+.....
+.222.
+.212.
+.222.
+.....
+ENDMAP
+
+NAME:  minmay_more_statues
+TAGS:  mini_float
+DEPTH: D:12-26
+MONS:  ice statue w:5 / silver statue / orange crystal statue
+MAP
+cccbcccccbcccccbccc
+c.....c%*|*%c.....c
+c.................c
+b..1.....G.....1..b
+c.................c
+c.....c.....c.....c
+cccbcccc.@.ccccbccc
+ENDMAP
+
+NAME:    minmay_room_of_horrors
+TAGS:    mini_float
+DEPTH:   D:16-
+MONS:    small abomination, large abomination, unseen horror / chaos spawn
+KFEAT:   _ = enter_abyss
+SHUFFLE: 1234
+MAP
+xxxxxx
+x3113x
++1221x
+x1221x
+x311_x
+xxxxxx
+ENDMAP
+
+NAME:  minmay_orc_keep
+TAGS:  mini_float
+DEPTH: D:8-, Orc
+: if you.absdepth() > 24 then
+MONS:  orc knight, orc warlord, orc sorcerer / orc high priest
+SUBST: % = |
+: elseif you.absdepth() > 18 then
+MONS:  orc warrior, orc knight / orc warlord, orc sorcerer / orc high priest
+SUBST: % = *|
+: elseif you.absdepth() > 12 then
+MONS:  orc / orc warrior w:5, orc knight / orc warrior, orc wizard / orc priest \
+       / orc sorcerer w:2 / orc high priest w:1
+SUBST: % = %*
+: else
+MONS:  orc, orc warrior / orc, orc wizard / orc priest
+: end
+MAP
+www.@.www
+wcc+++ccw
+wc1...1cw
+wc.....cw
+wc2...2cw
+wc%3%3%cw
+wc1%3%1cw
+wcccccccw
+wwwwwwwww
+ENDMAP
+
+NAME:   minmay_ogre_servants
+DEPTH:  D:3-6
+TAGS:   mini_float
+MONS:   ogre
+NSUBST: " = 6:" / *:'
+KITEM:  ' = meat ration
+KMONS: "' = goblin
+MAP
+xxxxx
+x"1"x
+x"""x
+x"""x
+xx+xx
+ENDMAP
+
+# Darts of dispersal
+NAME:   minmay_kobolds_dispersive
+DEPTH:  D:6-12
+TAGS:   mini_float
+WEIGHT: 5
+MONS:   kobold; dart ego:dispersal q:2 / w:3 big kobold; dart ego:dispersal q:4
+MAP
+xx+xx
+x111x
+x111x
+xx+xx
+ENDMAP
+
+# Darts of explosion
+NAME:   minmay_kobolds_explosive
+DEPTH:  D:8-14
+TAGS:   mini_float
+WEIGHT: 5
+MONS:   kobold; dart ego:exploding q:2 / w:3 big kobold; dart ego:exploding q:4
+MAP
+xx+xx
+x111x
+x111x
+xx+xx
+ENDMAP
+
+NAME:   minmay_another_anthill
+DEPTH:  D:10-21, Lair:3-, Hive, Snake:1-3
+MONS:   patrolling ant larva, giant ant, soldier ant, patrolling queen ant
+SUBST:  a = 1223........x
+MAP
+  .. .... .. .
+ .xx.xxxx.xx.x.
+.xx.xaxxaxxax.x.
+.x..xaaaaxaaaxx.
+ .xxaaxaaaaxxax.
+.x.xaaaaaaaaxx.
+.xxaaaaaxaaaaxx.
+.x.xxaa4aaaaax.
+.x.aaaaaaaaax.x.
+ .xaxaaaxxaaa.x.
+.x.xaaaaaxaaaxx.
+ ..xaaxaaaaax.x.
+.xxaxaaaaaaaax.
+.x.xaaaxxaxaaxx.
+.xx.x.xax.xax.x.
+ .xxxx.x.x.x.xx.
+  .... . . . ..
+ENDMAP
+
+###############################################################################
+# A plain guardian serpent vault. (nrook)
+#
+NAME:  nrook_guardian_serpent_ordinary
+DEPTH: D:9-27, Snake, Crypt
+TAGS:  no_monster_gen no_item_gen
+: if you.branch() == "Crypt" then
+MONS:  patrolling spectral guardian serpent
+: else
+MONS:  patrolling guardian serpent
+: end
+MAP
+......
+.xxxx.
+.x**x.
+.x**x.
+.xx=x.
+...1..
+ENDMAP
+
+###############################################################################
+# Guardian serpents guard a snake-like passage. (nrook)
+#
+NAME:    guardian_serpent_snake_passage
+ORIENT:  float
+DEPTH:   D:9-27
+TAGS:    no_monster_gen no_rotate
+MONS:    patrolling guardian serpent
+SHUFFLE: yY/zZ
+SUBST:   y=., Y==, Z=x, z=b
+COLOUR:  *. = lightgreen
+SUBST:   ' = .
+MAP
+            xxxxxxxxxxxxxxx
+            xxxxbbbbbbbbxxx'
+            xxbbb..*...bbbx'
+            xbb...bbbb...yY1
+            xb..bbbbbbbbbbx@
+            xb.bbxxxxxxxxxx'
+            xb..bbbbxx
+            xbb.*..bbx
+            xxbbbb..bx
+ xxxxxxxxxxxxxxxxbb.bx
+'xbbbbxxxxxxxxxxxbb.bx
+1Zz..bbbxxxxxxxbbb..bx
+@xbb...bbbbbbbbb.*.bbx
+'xxbbb...*.......bbbxx
+ xxxxbbbbbbbbbbbbbxxxx
+ENDMAP
+
+###############################################################################
+# A real vault behind a false one. (nrook)
+#
+NAME:  nrook_guardian_serpent_double
+DEPTH: D:9-27, Snake
+TAGS:  no_monster_gen
+MONS:  patrolling guardian serpent
+KPROP: *| = no_rtele_into
+SUBST: C = ===c
+MAP
+.......
+.ccccc.
+.c*|*c.
+.ccCcc.
+.n%%%n.
+.n%%%n.
+.cc=cc.
+...1...
+ENDMAP
+
+###############################################################################
+# Kobold demonologist guarded by invisible demons. (nrook)
+# Added "evil rite" looking colours, so players expect some nastiness.
+#
+NAME:   nrook_kobold_shadow_demons
+DEPTH:  D:14-27
+MONS:   kobold demonologist
+COLOUR: 123 = darkgrey
+COLOUR: ' = white
+# On average, there will be 5 demons from "2", and 1 from "3".
+MONS:   w:9 shadow demon / w:1 Lorocyproca / w:10 nothing
+MONS:   w:2 shadow demon / w:40 nothing
+MAP
+    ...
+  .'''''.
+ .'33333'.
+ '3322233'
+.'3222223'.
+.'3221223'.
+.'3222223'.
+ '3322233'
+ .'33333'.
+  .'''''.
+    ...
+ENDMAP
+
+
+################################################################
+#
+# Minivaults with monsters guarding a thematic item.
+#
+# A series begun by minmay. More entries welcome!
+# minmay: "Depths begin intentionally shallow; players should not
+#          be able to beat these right away, but should be able
+#          to flee. I'd like to see what other people can come up
+#          with for more of these vaults!
+#          I suggest low weights (they'll be pretty uninteresting
+#          the second time), OOD monsters that can be easily
+#          escaped, and not using overpowered/useless unrandarts.
+################################################################
+
+# Piercer
+#
+NAME:   minmay_guarded_unrand_piercer
+DEPTH:  D:10-, Vault
+WEIGHT: 3
+MONS:   statue name:archer tile:mons_statue_archer name_adjective; \
+        good_item longbow . good_item arrow q:20
+MONS:   statue name:archer tile:mons_statue_archer name_adjective; \
+        longbow unrand:piercer . good_item arrow q:20
+NSUBST: 1 = 1:2 / *:1
+MAP
+       ...
+    .........
+   ...........
+  .............
+ ...............
+ ...............
+ ...............
+.......1.1.......
+.................
+.......1.1.......
+ ...............
+ ...............
+ ...............
+  .............
+   ...........
+    .........
+       ...
+ENDMAP
+
+# Robustness
+#
+NAME:   minmay_guarded_unrand_robustness
+DEPTH:  D:10-, Vault
+TAGS:   no_monster_gen no_item_gen
+WEIGHT: 3
+# Iron golems are speed 7, so even a naga can outrun them.
+MONS:   patrolling iron golem
+ITEM:   ring of protection unrand:ring_of_robustness
+MAP
+...............
+.vvvvv.@.vvvvv.
+.v1.........1v.
+.v.vvvvvvvvv.v.
+.v.v1..1..1v.v.
+.v.v.vv.vv.v.v.
+.v...v1.1v...v.
+.v.1.v.d.v.1.v.
+.v...v1.1v...v.
+.v.v.vv.vv.v.v.
+.v.v1..1..1v.v.
+.v.vvvvvvvvv.v.
+.v1.........1v.
+.vvvvv.@.vvvvv.
+...............
+ENDMAP
+
+# Zonguldrok
+#
+NAME:   minmay_guarded_unrand_zonguldrok
+DEPTH:  D:12-, Crypt
+TAGS:   no_monster_gen no_item_gen
+WEIGHT: 3
+# Is there a better way to do this?
+: if you.absdepth() > 16 then
+MONS:   place:D:27 zombie / place:D:27 skeleton, bone dragon
+: else
+MONS:   place:D:18 zombie / place:D:18 skeleton, bone dragon
+: end
+ITEM:   long sword unrand:sword_of_zonguldrok
+MAP
+...............
+.cc+cccccccccc.
+.c...c1..c1.1c.
+.c...c...+...c.
+.c1.1c1..c...c.
+.cc+ccc+ccc+cc.
+.c...c1.1c1.1c.
+.c...c.2.c...c.
+.c1.1c1d1c...c.
+.cc+ccccccc+cc.
+.c...c..1c..1c.
+.c...+...+...c.
+.c1.1c..1c..1c.
+.ccccccccccccc.
+...............
 ENDMAP

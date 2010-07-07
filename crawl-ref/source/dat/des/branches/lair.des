@@ -614,9 +614,9 @@ ENDMAP
 # Stranded yaks
 #
 NAME:   Lemuel_yak_island_a
+WEIGHT: 5
 DEPTH:  Lair
 TAGS:   no_pool_fixup uniq_yak_island
-WEIGHT: 5
 MONS:   yak / w:5 sheep / w:3 death yak
 SUBST:  ; : .wW
 SUBST:  . : . W:2
@@ -635,9 +635,9 @@ MAP
 ENDMAP
 
 NAME:   Lemuel_yak_island_b
+WEIGHT: 5
 DEPTH:  Swamp, Shoals
 TAGS:   no_pool_fixup uniq_yak_island
-WEIGHT: 5
 MONS:   yak / w:5 sheep / w:3 death yak
 SUBST:  ; = wW
 SUBST:  . : . W:2
@@ -653,9 +653,78 @@ MAP
    ;;wwww;;
 ENDMAP
 
+
+################################################################################
+# Oklob tunnel
+#
+NAME:   minmay_lair_oklob_tunnel
+ORIENT: southwest
+DEPTH:  Lair
+MONS:   plant / oklob plant w:1 / nothing w:15
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xllllllllxxxxxxxxxxxxxxxxxxx11xxx111....
+xlllllllxxxxxxxxxxxxxx111xxxx111xx111..@
+xlllllxxxx111xxx11xxxxx111111111111111..x
+xllxxxxxx11xxxx11xxxx111111111111111111xx
+xllllxxxx1xxxxxx11111111111111111111x1xx
+xllxxxxxx11xx1111111111111xxx11111xxxxxx
+xllx11xx1111111111111111111xxxxxx111x
+xlxxx1111111111111xx111xxx11xxxxxxxxx
+xlx%+11111111111xxxxxx11xxxxx
+xlx%xxx11111xxx11xxxxxxxxxx
+xlx|xx11xxx11xxxxx
+xlxxxxxxxxxx111xx
+xllllllxxxxxxxxx
+xxxlllxxxx
+xxxxxxxx
+ENDMAP
+
+################################################################################
+# Hidden items, with an oklob, naturally
+#
+NAME:   minmay_lair_hidden_items
+DEPTH:  Lair
+ORIENT: float
+MONS:   plant / fungus w:3 / bush w:5
+KMONS:  | = oklob plant
+KITEM:  | = |
+SUBST:  X = xx.
+SUBST:  % = ....%%%%**
+MAP
+XXXXXXXXX
+Xxxxxxxxx.
+Xx%%%1.x1@
+Xx%%%xx1x.
+Xx|%%xxxx
+XxxxxxXXX
+XXXXXXX
+ENDMAP
+
+################################################################################
+# Goldilocks: three bears
+#
+NAME:   minmay_lair_goldilocks
+WEIGHT: 5
+DEPTH:  Lair
+MONS:   black bear, bear, grizzly bear
+ITEM:   potion of porridge / honeycomb
+MAP
+.......
+.xxxxx.
+.xdddx.
+.x321x.
+.xx+xx.
+.......
+ENDMAP
+
+
 ###############################################################################
 # Lair endings
+###############################################################################
 
+#######################################################################
+# Vaguely Jungle Book (R. Kipling) inspired. Map by due.
 # Could do with some nice tiles, I guess. Does require elephant statue
 # tiles!
 NAME:   jungle_book
@@ -675,17 +744,18 @@ KITEM:  Q = acquire any
 KFEAT:  o = granite_statue
 {{
 function elephant_statue()
-  return portal_desc {
-            desc="elephant-shaped statue",
-            desc_long=("This worn granite statue depicts" ..
-                       " elephants standing guard."),
-            slaved_to="elephant"
-         }
+  return
 end
 }}
-MARKER: o = lua:elephant_statue()
-MARKER: G = lua:elephant_statue()
+MARKER: o = lua:portal_desc { desc="elephant-shaped statue", \
+            desc_long=("This worn granite statue depicts" .. \
+                       " elephants standing guard."), \
+            slaved_to="elephant" }
+MARKER: G = lua:portal_desc { desc="elephant-shaped statue", \
+            desc_long=("This worn granite statue depicts" .. \
+                       " elephants standing guard.") }
 COLOUR: oG = green
+TILE:   oG = dngn_elephant_statue
 MARKER: o = lua:monster_on_death { \
             target="anaconda_guard", new_monster="generate_awake dire elephant", \
             message_seen="The elephant guardians awaken!", \
@@ -714,6 +784,7 @@ xxcccccccct....cccP.P.P1P...P1P.P.Pccc....tcccccccc.
    @........@@...........@@@....T......@@..........@
 ENDMAP
 
+#######################################################################
 NAME:   evil_forest
 PLACE:  Lair:$
 TAGS:   no_pool_fixup no_wall_fixup no_monster_gen no_rotate no_item_gen
@@ -762,6 +833,7 @@ MAP
  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxllllllllllllllllll
 ENDMAP
 
+#######################################################################
 # Oh worms!
 NAME:   wormcave
 PLACE:  Lair:$
@@ -798,6 +870,7 @@ xxxxxxxxxxXxx41.xxXxxxxxxxxx....xxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+#######################################################################
 # Bear with us...
 NAME:   bearwithus
 PLACE:  Lair:$
@@ -809,7 +882,7 @@ SUBST:  X = xx.
 SUBST:  P = 1111.
 KITEM:  % = honeycomb, honeycomb, honeycomb
 MAP
-            xXXxxxXXXxxX
+            xXXxxxXXXxxx
        @...xxxxxxxxxxxxx
        P..Pxxxxxxxxxxxxx
       @...xxxxxxxxxxxxxx
@@ -827,9 +900,10 @@ MAP
  .PxxxxxxxxXx2....4xxxxx
  Pxxxxxxxxxx3....4xXxxxx
 XxxxxxxxxxxXx3%.2xxxxxxx
-Xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+#######################################################################
 # Who let the dogs out?
 NAME:   kennels
 PLACE:  Lair:$
@@ -859,3 +933,49 @@ xxxxxx3.......xxxxx2....23...xxxxxxx
 xxxxxxxx.....xxxxxxxxx.3....xxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
+
+#######################################################################
+# Frog pound
+#
+NAME:   minmay_lair_end_frog_pond
+PLACE:  Lair:$
+ORIENT: float
+MONS:   giant frog / giant toad / spiny frog
+MONS:   blink frog
+MONS:   giant mosquito w:40 / giant blowfly
+MONS:   plant
+SUBST:  p = 44W2
+SUBST:  w = W:40 w:10 1:2 3:1 4:5
+SUBST:  . = .:40 W:10 1:2 3:1 4:5
+SUBST:  % = %*|
+KFEAT:  W = W
+KMONS:  W = giant leech / nothing w:1000
+MAP
+          ..............
+       ....................
+   .........wwwww.............
+ ........wwwwwwwwwwwwwww.......
+.......wwwwwwwwwwwwwwwwwww.....
+.....wwwwwwwwwwwwwwwwwwwwww.....
+....wwwwwwwwwwwwwwwwwwwwwwww....
+...wwwwwwwwwwwwwwwwwwwwwwwww....
+...wwwwwwwwwwwwwwwwwwwwwwwwww...
+..wwwwwwwwwwwwwppwwwwwwwwwwww...
+..wwwwwwwwwwppppppwwwwwwwwwww...
+..wwwwwwwwwwpp%%ppwwwwwwwwwww...
+..wwwwwwwwwpp%%%%ppwwwwwwwwwww..
+..wwwwwwwwwpp%%%pppwwwwwwwwwww..
+.wwwwwwwwwwwpppppwwwwwwwwwwwww..
+.wwwwwwwwwwwwwppwwwwwwwwwwwwww..
+.wwwwwwwwwwwwwwwwwwwwwwwwwwww...
+.wwwwwwwwwwwwwwwwwwwwwwwwwwww...
+..wwwwwwwwwwwwwwwwwwwwwwwwww....
+..wwwwwwwwwwwwwwwwwwwwwwwww....
+...wwwwwwwwwwwwwwwwwwwwww......
+....wwwwwwwwwwwwwwwwwww.......
+ .....wwwwwwwwwwwwww.........
+  .........wwwwww.........
+    ...................
+        ...........
+ENDMAP
+

@@ -155,10 +155,9 @@ function tutorial.message_melee_attack ()
   local text = "To attack monsters, "
 
   if crawl.is_tiles() then
-    text = text .. "move adjacent to and then <white>click</white> on it."
-  else
-    text = text .. "simply walk into it."
+    text = text .. "move adjacent to and then <white>click</white> on it or "
   end
+  text = text .. "simply walk into it."
 
   return tutorial.message(text, "tutorial", true)
 end
@@ -446,24 +445,24 @@ xxx{xxxxxxxxxxxxxxx..........H.$$..}.x
 xxxAxxxxxxxxxxxxxxx.....xxxxxx.$$.xx]x
 xxx.xxxxxxxxxxxxxxxxx+xxxxxxxx....xxxx
 x.....xxxxxxxxxxxxxxxGxxxxxxxxxxxxxxxx
-x,....xxxxxxxxxxxxxxx.xx.....xxxxxxxxx
-x.1,1.xxxxxxxxxxxxxxx....pmn.xxxxxxxxx
-x..1.,xxxxxxxxxxxxxxxxxx.....xxxxxxxxx
-xd.,2.xxxxxxxxxxxxxxxxxxxxFxxxxxxxxxxx
-xxx.xxxxxxxxxxxxxxx.....xx.xxxxxxxxxxx
-xxx.x.....xxxxxxxxx...h.xx.xxxxxxxxxxx
-xxx.x.....xxxxx.....E......xxxxxxxxxxx
-xxx...B.e...xxx.xxx...i.xxxxxxxxxxxxxx
-xxxxx.....x.xxx.xxx.....xxxxxxxxxxxxxx
+x,....xxxxxxxxxxxxxxx.xxx.....xxxxxxxx
+x.1,1.xxxxxxxxxxxxxxx.....pmn.xxxxxxxx
+x..1.,xxxxxxxxxxxxxxxxxxx.....xxxxxxxx
+xd.,2.xxxxxxxxxxxxxxxxxxxxxFxxxxxxxxxx
+xxx.xxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxx
+xxx.x.....xxxxxxxxx.......x.xxxxxxxxxx
+xxx.x.....xxxxx.....E.h.i...xxxxxxxxxx
+xxx...B.e...xxx.xxx.......xxxxxxxxxxxx
+xxxxx.....x.xxx.xxxxxxxxxxxxxxxxxxxxxx
 xxxxx.....x.x.....xxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxx.x.....xxxxxxxxxxxxxxxxxxxx
-xxxxx.....x.x..D..xxxxxxxxxxxxxxxxxxxx
-xxxxx.f...x.x.....xxxxxxxxxxxxxxxxxxxx
-xxxxx...C...x.....xxxxxxxxxxxxxxxxxxxx
-xxxxx.g...xxxxx.xxxxxxxxxxxxxxxxxxxxxx
-xxxxx.....xxxxx.xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxx.x..D..xxxxxxxxxxxxxxxxxxxx
+xxx.......x.x.....xxxxxxxxxxxxxxxxxxxx
+xxx.f.g.C...x.....xxxxxxxxxxxxxxxxxxxx
+xxx.......xxxxx.xxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxIxxxxxxx.xxxxxxxxxxxxxxxxxxxxxx
 xxxxxxx.........xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 

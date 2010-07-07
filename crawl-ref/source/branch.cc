@@ -201,7 +201,8 @@ Branch branches[] = {
     //  num_traps_function, rand_trap_function, num_fogs_function, rand_fog_function
     //  altar chance (in %), travel shortcut, upstairs exit branch, dangerous branch end
 
-    { BRANCH_MAIN_DUNGEON, BRANCH_MAIN_DUNGEON, -1, -1, 27, -1, 0, 0,
+    { BRANCH_MAIN_DUNGEON, BRANCH_MAIN_DUNGEON, -1, -1,
+      BRANCH_DUNGEON_DEPTH, -1, 0, 0,
       NUM_FEATURES, NUM_FEATURES,  // sentinel values
       "Dungeon", "the Dungeon", "D",
       NULL,
