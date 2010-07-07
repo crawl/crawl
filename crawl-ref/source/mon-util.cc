@@ -141,6 +141,9 @@ static mon_name_map Mon_Name_Cache;
 
 void init_mon_name_cache()
 {
+    if (!Mon_Name_Cache.empty())
+        return;
+
     for (unsigned i = 0; i < sizeof(mondata) / sizeof(*mondata); ++i)
     {
         std::string name = mondata[i].name;
@@ -3067,7 +3070,7 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
 
 // Checks if the monster can use smiting/torment to attack without
 // unimpeded LOS to the player.
-bool mons_has_smite_attack(const monsters *monster)
+static bool _mons_has_smite_attack(const monsters *monster)
 {
     if (monster->type == MONS_FIEND)
         return (true);
@@ -3116,7 +3119,7 @@ bool monster_shover(const monsters *m)
         return (false);
 
     // Smiters profit from staying back and smiting.
-    if (mons_has_smite_attack(m))
+    if (_mons_has_smite_attack(m))
         return (false);
 
     int mchar = me->showchar;

@@ -205,8 +205,12 @@ namespace arena
                 const int imon = dgn_place_monster(spec, you.absdepth0,
                                                    loc, false, true, false);
                 if (imon == -1)
-                    end(1, false, "Failed to create monster at (%d,%d) grd: %s",
-                        loc.x, loc.y, dungeon_feature_name(grd(loc)));
+                {
+                    game_ended_with_error(
+                        make_stringf(
+                            "Failed to create monster at (%d,%d) grd: %s",
+                            loc.x, loc.y, dungeon_feature_name(grd(loc))));
+                }
                 list_eq(imon);
                 to_respawn[imon] = i;
             }
@@ -954,7 +958,7 @@ namespace arena
         catch (const std::string &error)
         {
             write_error(error);
-            end(0, false, "%s", error.c_str());
+            game_ended_with_error(error);
         }
 
         if (file != NULL)
@@ -1029,7 +1033,7 @@ namespace arena
             catch (const std::string &error)
             {
                 write_error(error);
-                end(0, false, "%s", error.c_str());
+                game_ended_with_error(error);
             }
             do_fight();
 
@@ -1089,8 +1093,9 @@ monster_type arena_pick_random_monster(const level_id &place, int power,
         return (type);
     }
 
-    end(1, false, "No random monsters for place '%s'",
-        arena::place.describe().c_str());
+    game_ended_with_error(
+        make_stringf("No random monsters for place '%s'",
+                     arena::place.describe().c_str()));
     return (NUM_MONSTERS);
 }
 
@@ -1259,7 +1264,7 @@ void arena_monster_died(monsters *monster, killer_type killer,
              && arena::faction_b.active_members <= 0)
     {
         if (monster->flags & MF_HARD_RESET && !MON_KILL(killer))
-            end(1, false, "Last arena monster was dismissed.");
+            game_ended_with_error("Last arena monster was dismissed.");
         // If all monsters are dead, and the last one to die is a giant
         // spore or ball lightning, then that monster's faction is the
         // winner, since self-destruction is their purpose.  But if a
@@ -1466,4 +1471,5 @@ void run_arena(const std::string& teams)
     arena::global_setup(teams);
     arena::simulate();
     arena::global_shutdown();
+    game_ended();
 }

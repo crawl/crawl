@@ -333,6 +333,102 @@ n3n
 nnn
 ENDMAP
 
+NAME: ziggurat_pillar_centre_monster
+TAGS: ziggurat_pillar centered
+MONS: curse skull / ice statue / orange crystal statue / silver statue
+MAP
+1
+ENDMAP
+
+NAME:  ziggurat_pillar_centre_d
+TAGS:  ziggurat_pillar centered
+SUBST: x : bcmvxG
+MAP
+x.x
+...
+x.x
+ENDMAP
+
+NAME:  ziggurat_pillar_centre_e
+TAGS:  ziggurat_pillar centered
+SUBST: x : bcmvxG
+MAP
+x.x.x
+.....
+x.x.x
+.....
+x.x.x
+ENDMAP
+
+NAME:  ziggurat_pillar_centre_f
+TAGS:  ziggurat_pillar centered
+SUBST: x : bcmvxG
+MAP
+x.x
+.x.
+x.x
+ENDMAP
+
+NAME:  ziggurat_pillar_centre_g
+TAGS:  ziggurat_pillar
+SUBST: x : bcvx
+MAP
+ xxx
+xxxxx
+xxxxx
+xxxxx
+ xxx
+ENDMAP
+
+NAME: ziggurat_pillar_centre_h
+TAGS: ziggurat_pillar centered
+MAP
+ccncc
+c...c
+n...n
+c...c
+ccncc
+ENDMAP
+
+NAME: ziggurat_pillar_centre_i
+TAGS: ziggurat_pillar centered
+MAP
+vlv
+lvl
+vlv
+ENDMAP
+
+NAME:  ziggurat_pillar_centre_j
+TAGS:  ziggurat_pillar centered
+SUBST: x : abcmvxG
+MAP
+ x
+xxx
+ x
+ENDMAP
+
+NAME: ziggurat_pillar_centre_k
+TAGS: ziggurat_pillar centered
+MONS: boring beetle, boulder beetle
+MAP
+xxxxx
+xx2xx
+x212x
+xx2xx
+xxxxx
+ENDMAP
+
+NAME: ziggurat_pillar_centre_oklobs
+TAGS: ziggurat_pillar centered
+MONS: plant / oklob plant / nothing w:20
+MAP
+ 111
+11111
+11111
+11111
+ 111
+ENDMAP
+
 
 ########################################################################
 # Ziggurat loot chamber (needs work).

@@ -841,7 +841,7 @@ void origin_set_startequip(item_def &item)
     }
 }
 
-void _origin_set_portal_vault(item_def &item)
+static void _origin_set_portal_vault(item_def &item)
 {
     if (you.level_type != LEVEL_PORTAL_VAULT)
         return;

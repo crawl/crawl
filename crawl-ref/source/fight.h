@@ -72,4 +72,6 @@ random_var calc_your_attack_delay();
 unchivalric_attack_type is_unchivalric_attack(const actor *attacker,
                                               const actor *defender);
 
+void chaos_affect_actor(actor *victim);
+
 #endif

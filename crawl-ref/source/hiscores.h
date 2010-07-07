@@ -87,6 +87,8 @@ private:
     short       absdepth;           // 1-based absolute depth
     level_area_type level_type;     // what kind of level died on..
     branch_type branch;             // dungeon branch
+    std::string map;                // the vault (if any) the player is in
+    std::string mapdesc;            // DESC: of the vault the player is in.
     int         final_hp;           // actual current HPs (probably <= 0)
     int         final_max_hp;       // net HPs after rot
     int         final_max_max_hp;   // gross HPs before rot

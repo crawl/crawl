@@ -344,21 +344,7 @@ void elven_twins_pacify (monsters *twin)
         return;
 
     if (you.religion == GOD_ELYVILON)
-    {
-        // Deal with extra piety gain here, too.
-        const bool is_holy     = monster->is_holy();
-        const bool is_summoned = monster->is_summoned();
-
-        int pgain = 0;
-        if (!is_holy && !is_summoned && you.piety < MAX_PIETY)
-        {
-            pgain = random2(1 + random2(monster->max_hit_points /
-                            (2 + you.piety / 20)));
-        }
-
-        if (pgain > 0)
-            gain_piety(pgain);
-    }
+        gain_piety(random2(monster->max_hit_points / (2 + you.piety / 20)), 2);
 
     if (mons_near(monster))
         simple_monster_message(monster, " likewise turns neutral.");

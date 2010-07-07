@@ -75,14 +75,9 @@ bool sprint_veto_random_abyss_monster(monster_type type)
     return random2(20) > (int)get_monster_data(type)->hpdice[0];
 }
 
-std::vector<std::string> get_sprint_maps()
+mapref_vector get_sprint_maps()
 {
-    // TODO: provide descriptions?
-    std::vector<map_def> mapdefs = find_maps_for_tag("sprint");
-    std::vector<std::string> maps;
-    for (unsigned int i = 0; i < mapdefs.size(); ++i)
-        maps.push_back(mapdefs[i].name);
-    return (maps);
+    return find_maps_for_tag("sprint");
 }
 
 // We could save this in crawl_state instead.

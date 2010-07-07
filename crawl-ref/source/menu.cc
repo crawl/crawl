@@ -240,6 +240,7 @@ void Menu::clear()
     for (int i = 0, count = items.size(); i < count; ++i)
         delete items[i];
     items.clear();
+    last_selected = -1;
 }
 
 void Menu::set_maxpagesize(int max)
@@ -340,6 +341,19 @@ void Menu::do_menu()
         if (!process_key( keyin ))
             return;
     }
+}
+
+int Menu::get_cursor() const
+{
+    if (last_selected == -1)
+        return (-1);
+
+    unsigned int next = (last_selected + 1) % item_count();
+
+    if (items[next]->level != MEL_ITEM)
+        next = (next + 1) % item_count();
+
+    return (next);
 }
 
 bool Menu::is_set(int flag) const
@@ -484,6 +498,7 @@ bool Menu::process_key( int keyin )
             {
                 select_index(next);
                 get_selected(&sel);
+                draw_select_count( sel.size() );
                 if (get_cursor() < next)
                 {
                     first_entry = 0;
@@ -1828,7 +1843,7 @@ int ToggleableMenu::pre_process(int key)
  *           |          |
  *           ------------end(x,y)
  */
-bool _AABB_intersection(const coord_def& item_start,
+static bool _AABB_intersection(const coord_def& item_start,
                               const coord_def& item_end,
                               const coord_def& aabb_start,
                               const coord_def& aabb_end)

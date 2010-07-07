@@ -296,7 +296,7 @@ static fire_type _str_to_fire_types( const std::string &str )
     return (FIRE_NONE);
 }
 
-static std::string _gametype_to_str(game_type type)
+std::string gametype_to_str(game_type type)
 {
     switch (type)
     {
@@ -319,7 +319,7 @@ static game_type _str_to_gametype(const std::string& s)
     for (int i = 0; i < NUM_GAME_TYPE; ++i)
     {
         game_type t = static_cast<game_type>(i);
-        if (s == _gametype_to_str(t))
+        if (s == gametype_to_str(t))
             return (t);
     }
     return (NUM_GAME_TYPE);
@@ -623,6 +623,12 @@ void game_options::reset_options()
     line_num     = -1;
 
     set_default_activity_interrupts();
+
+#if defined(USE_TILE)
+    restart_after_game = true;
+#else
+    restart_after_game = false;
+#endif
 
 #if !defined(DGAMELAUNCH)
     macro_dir = "settings/";
@@ -1003,6 +1009,7 @@ void game_options::reset_options()
     menu_colour_mappings.clear();
     menu_colour_prefix_class = true;
     menu_colour_shops = true;
+    menu_cursor = false;
     message_colour_mappings.clear();
     drop_filter.clear();
     map_file_name.clear();
@@ -1353,7 +1360,7 @@ newgame_def read_startup_prefs()
 static void write_newgame_options(const newgame_def& prefs, FILE *f)
 {
     if (prefs.type != NUM_GAME_TYPE)
-        fprintf(f, "type = %s\n", _gametype_to_str(prefs.type).c_str());
+        fprintf(f, "type = %s\n", gametype_to_str(prefs.type).c_str());
     if (!prefs.map.empty())
         fprintf(f, "map = %s\n", prefs.map.c_str());
     if (!prefs.arena_teams.empty())
@@ -2186,6 +2193,9 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         else if (field == "all")
             default_friendly_pickup = FRIENDLY_PICKUP_ALL;
     }
+#ifndef DGAMELAUNCH
+    else BOOL_OPTION(restart_after_game);
+#endif
     else BOOL_OPTION(show_inventory_weights);
     else BOOL_OPTION(suppress_startup_errors);
     else BOOL_OPTION(clean_map);
@@ -2312,13 +2322,15 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     // no_dark_brand applies here as well.
     else CURSES_OPTION(heap_brand);
     else COLOUR_OPTION(status_caption_colour);
-    else if (key == "map")
-    {
-        game.map = field;
-    }
     else if (key == "arena_teams")
     {
         game.arena_teams = field;
+    }
+    // [ds] Allow changing map only if the map hasn't been set on the
+    // command-line.
+    else if (key == "map" && crawl_state.sprint_map.empty())
+    {
+        game.map = field;
     }
 #ifndef DGAMELAUNCH
     // [ds] For dgamelaunch setups, the player should *not* be able to
@@ -2603,8 +2615,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
 
 #ifndef _MSC_VER
-	// break if-else chain on broken Microsoft compilers with stupid nesting limits
-	else
+    // break if-else chain on broken Microsoft compilers with stupid nesting limits
+    else
 #endif
 
     if (key == "autoinscribe")
@@ -2995,6 +3007,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION_NAMED("menu_color_prefix_class", menu_colour_prefix_class);
     else BOOL_OPTION(menu_colour_shops);
     else BOOL_OPTION_NAMED("menu_color_shops", menu_colour_shops);
+    else BOOL_OPTION(menu_cursor);
     else if (key == "message_colour" || key == "message_color")
     {
         add_message_colour_mappings(field);
@@ -3516,6 +3529,7 @@ enum commandline_option_type
     CLO_SPRINT,
     CLO_EXTRA_OPT_FIRST,
     CLO_EXTRA_OPT_LAST,
+    CLO_SPRINT_MAP,
 
     CLO_NOPS
 };
@@ -3524,7 +3538,8 @@ static const char *cmd_ops[] = {
     "scores", "name", "species", "background", "plain", "dir", "rc",
     "rcdir", "tscores", "vscores", "scorefile", "morgue", "macro",
     "mapstat", "arena", "test", "script", "builddb", "help", "version",
-    "seed", "save-version", "sprint", "extra-opt-first", "extra-opt-last"
+    "seed", "save-version", "sprint", "extra-opt-first", "extra-opt-last",
+    "sprint-map"
 };
 
 const int num_cmd_ops = CLO_NOPS;
@@ -3980,6 +3995,15 @@ bool parse_args( int argc, char **argv, bool rc_only )
         case CLO_SPRINT:
             if (!rc_only)
                 Options.game.type = GAME_TYPE_SPRINT;
+            break;
+
+        case CLO_SPRINT_MAP:
+            if (!next_is_param)
+                return (false);
+
+            nextUsed               = true;
+            crawl_state.sprint_map = next_arg;
+            Options.game.map       = next_arg;
             break;
 
         case CLO_EXTRA_OPT_FIRST:

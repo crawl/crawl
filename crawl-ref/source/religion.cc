@@ -897,6 +897,7 @@ void dec_penance(god_type god, int val)
                 && you.piety >= piety_breakpoint(0))
             {
                 mpr("Your divine halo returns!");
+                invalidate_agrid(true);
             }
 
             // When you've worked through all your penance, you get
@@ -1328,7 +1329,7 @@ bool is_neutral_plant(const monsters* mon)
             && mon->attitude == ATT_GOOD_NEUTRAL);
 }
 
-bool _has_jelly()
+static bool _has_jelly()
 {
     ASSERT(you.religion == GOD_JIYVA);
 
@@ -2451,7 +2452,7 @@ int piety_scale(int piety)
     return (piety);
 }
 
-void gain_piety(int original_gain, bool force)
+void gain_piety(int original_gain, int denominator, bool force, bool should_scale_piety)
 {
     if (original_gain <= 0)
         return;
@@ -2463,7 +2464,14 @@ void gain_piety(int original_gain, bool force)
     if (you.religion == GOD_NO_GOD || you.religion == GOD_XOM)
         return;
 
-    int pgn = piety_scale(original_gain);
+    int pgn = should_scale_piety? piety_scale(original_gain) : original_gain;
+
+    if (crawl_state.game_is_sprint() && should_scale_piety)
+        pgn = sprint_modify_piety(pgn);
+
+    pgn = div_rand_round(pgn, denominator);
+    if (pgn <= 0)
+        return;
 
     // check to see if we owe anything first
     if (you.penance[you.religion] > 0)
@@ -2533,13 +2541,7 @@ void gain_piety(int original_gain, bool force)
 
     int old_piety = you.piety;
 
-    if (crawl_state.game_is_sprint())
-    {
-        pgn = sprint_modify_piety(pgn);
-    }
-
-    you.piety += pgn;
-    you.piety = std::min<int>(MAX_PIETY, you.piety);
+    you.piety += std::min<int>(MAX_PIETY - you.piety, pgn);
 
     for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
     {
@@ -2586,7 +2588,7 @@ void gain_piety(int original_gain, bool force)
     if (you.religion == GOD_SHINING_ONE)
     {
         // Piety change affects halo radius.
-        invalidate_agrid();
+        invalidate_agrid(true);
     }
 
     if (you.piety > 160 && old_piety <= 160)
@@ -3270,7 +3272,7 @@ void god_pitch(god_type which_god)
     if (crawl_state.game_is_tutorial())
     {
         // Tutorial needs minor destruction usable.
-        gain_piety(35, true);
+        gain_piety(35, 1, true, false);
     }
 
     god_welcome_identify_gear();
@@ -3335,7 +3337,7 @@ void god_pitch(god_type which_god)
     {
         // Give a piety bonus when switching between good gods.
         if (good_god_switch && old_piety > 15)
-            gain_piety(std::min(30, old_piety - 15));
+            gain_piety(std::min(30, old_piety - 15), 1, true, false);
     }
     else if (is_evil_god(you.religion))
     {
@@ -3351,7 +3353,7 @@ void god_pitch(god_type which_god)
 
     // Note that you.worshipped[] has already been incremented.
     if (you.religion == GOD_LUGONU && you.worshipped[GOD_LUGONU] == 1)
-        gain_piety(20);         // allow instant access to first power
+        gain_piety(20, 1, true, false);  // allow instant access to first power
 
     // Complimentary jelly upon joining.
     if (you.religion == GOD_JIYVA)
@@ -3622,18 +3624,18 @@ void handle_god_time()
 
         // These gods like long-standing worshippers.
         case GOD_ELYVILON:
-            if (_need_free_piety() && one_chance_in(20))
-                gain_piety(1);
+            if (_need_free_piety())
+                gain_piety(1, 20);
             return;
 
         case GOD_SHINING_ONE:
-            if (_need_free_piety() && one_chance_in(15))
-                gain_piety(1);
+            if (_need_free_piety())
+                gain_piety(1, 15);
             return;
 
         case GOD_ZIN:
-            if (_need_free_piety() && one_chance_in(12))
-                gain_piety(1);
+            if (_need_free_piety())
+                gain_piety(1, 12);
             return;
 
         // All the rest will excommunicate you if piety goes below 1.
@@ -3852,25 +3854,25 @@ bool tso_unchivalric_attack_safe_monster(const monsters *mon)
             || !mon->is_holy() && holiness != MH_NATURAL);
 }
 
-int get_monster_tension(monster_iterator mons, god_type god)
+int get_monster_tension(const monsters *mons, god_type god)
 {
     if (!mons->alive())
         return 0;
 
     if (you.see_cell(mons->pos()))
     {
-        if (!mons_can_hurt_player(*mons))
+        if (!mons_can_hurt_player(mons))
             return 0;
     }
 
-    const mon_attitude_type att = mons_attitude(*mons);
+    const mon_attitude_type att = mons_attitude(mons);
     if (att == ATT_GOOD_NEUTRAL || att == ATT_NEUTRAL)
         return 0;
 
-    if (mons->cannot_act() || mons->asleep() || mons_is_fleeing(*mons))
+    if (mons->cannot_act() || mons->asleep() || mons_is_fleeing(mons))
         return 0;
 
-    int exper = exper_value(*mons);
+    int exper = exper_value(mons);
     if (exper <= 0)
         return 0;
 
@@ -3881,7 +3883,7 @@ int get_monster_tension(monster_iterator mons, god_type god)
     bool gift = false;
 
     if (god != GOD_NO_GOD)
-        gift = mons_is_god_gift(*mons, god);
+        gift = mons_is_god_gift(mons, god);
 
     if (att == ATT_HOSTILE)
     {
@@ -3904,7 +3906,7 @@ int get_monster_tension(monster_iterator mons, god_type god)
 
     if (att != ATT_FRIENDLY)
     {
-        if (!you.visible_to(*mons))
+        if (!you.visible_to(mons))
             exper /= 2;
         if (!mons->visible_to(&you))
             exper *= 2;
@@ -3950,7 +3952,7 @@ int get_tension(god_type god)
     {
         const monsters *mon = monster_at(*ri);
 
-        if(mon && you.can_see(mon))
+        if (mon && mon->alive() && you.can_see(mon))
         {
             int exper = get_monster_tension(mon, god);
 

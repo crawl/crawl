@@ -232,6 +232,7 @@ SPACE [\ \t\r]
 
 NAME:               { CBEGIN(ARGUMENT); return NAME; }
 default-depth:      { CBEGIN(ARGUMENT); return DEFAULT_DEPTH; }
+DESC:               { CBEGIN(ARGUMENT); return DESC; }
 DEPTH:              { CBEGIN(ARGUMENT); return DEPTH; }
 ORIENT:             { CBEGIN(ARGUMENT); return ORIENT; }
 PLACE:              { CBEGIN(ARGUMENT); return PLACE; }

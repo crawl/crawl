@@ -964,7 +964,7 @@ static void _try_monster_cast(spell_type spell, int powc,
 }
 #endif // WIZARD
 
-beam_type _spell_to_beam_type(spell_type spell)
+static beam_type _spell_to_beam_type(spell_type spell)
 {
     switch (spell)
     {
@@ -974,7 +974,7 @@ beam_type _spell_to_beam_type(spell_type spell)
     return BEAM_NONE;
 }
 
-int _setup_evaporate_cast()
+static int _setup_evaporate_cast()
 {
     int rc = prompt_invent_item("Throw which potion?", MT_INVLIST, OBJ_POTIONS);
 

@@ -127,6 +127,7 @@ ENDMAP
 #
 NAME:      cerebov
 TAGS:      cerebov
+DESC:      Cerebov's castle
 ORIENT:    northeast
 LFLOORCOL: red
 LROCKCOL:  red

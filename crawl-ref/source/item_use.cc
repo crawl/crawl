@@ -1619,7 +1619,7 @@ static bool _blessed_hit_victim(bolt &beam, actor* victim, int &dmg,
     return (false);
 }
 
-int _blowgun_power_roll(bolt &beam)
+static int _blowgun_power_roll(bolt &beam)
 {
     actor* agent = beam.agent();
     if (!agent)
@@ -1649,7 +1649,7 @@ int _blowgun_power_roll(bolt &beam)
     return (base_power + blowgun->plus);
 }
 
-bool _blowgun_check(bolt &beam, actor* victim, bool message = true)
+static bool _blowgun_check(bolt &beam, actor* victim, bool message = true)
 {
     actor* agent = beam.agent();
 
@@ -2158,7 +2158,7 @@ static void identify_floor_missiles_matching(item_def mitem, int idflags)
             }
 }
 
-void _merge_ammo_in_inventory(int slot)
+static void _merge_ammo_in_inventory(int slot)
 {
     if (!you.inv[slot].defined())
         return;
@@ -3585,15 +3585,15 @@ bool remove_ring(int slot, bool announce)
     return (true);
 }
 
-int _wand_range(zap_type ztype)
+static int _wand_range(zap_type ztype)
 {
     // FIXME: Eventually we should have sensible values here.
-    return (8);
+    return (LOS_RADIUS);
 }
 
-int _max_wand_range()
+static int _max_wand_range()
 {
-    return (8);
+    return (LOS_RADIUS);
 }
 
 static bool _dont_use_invis()
@@ -3718,8 +3718,9 @@ void zap_wand(int slot)
         }
     }
 
-    int tracer_range = (alreadyknown && wand.sub_type != WAND_RANDOM_EFFECTS) ?
-                        _wand_range(type_zapped) : _max_wand_range();
+    const int tracer_range =
+        (alreadyknown && wand.sub_type != WAND_RANDOM_EFFECTS) ?
+        _wand_range(type_zapped) : _max_wand_range();
     const std::string zap_title =
         "Zapping: " + get_menu_colour_prefix_tags(wand, DESC_INVENTORY);
     direction_chooser_args args;
@@ -3759,11 +3760,9 @@ void zap_wand(int slot)
         return;
     }
 
-
     if (you.confused())
     {
-        zap_wand.target = you.pos() + coord_def(random_range(-6, 6),
-                                                random_range(-6, 6));
+        zap_wand.confusion_fuzz();
     }
 
     if (wand.sub_type == WAND_RANDOM_EFFECTS)

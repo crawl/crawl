@@ -74,8 +74,8 @@ int resist_fraction(int resist, int bonus_res = 0);
 int  max_cloud_damage(cloud_type cl_type, int power = -1);
 void in_a_cloud(void);
 
-std::string cloud_name(int cloudno);
-std::string cloud_name(cloud_type type);
+std::string cloud_name_at_index(int cloudno);
+std::string cloud_type_name(cloud_type type, bool terse = true);
 int get_cloud_colour(int cloudno);
 
 bool is_damaging_cloud(cloud_type type, bool temp = false);

@@ -712,6 +712,79 @@ MAP
 1..11..
 ENDMAP
 
+NAME:   minmay_temple_entry_crystal_x
+TAGS:   temple_entry
+ORIENT: float
+WEIGHT: 5
+MAP
+.......
+.b...b.
+..b.b..
+...O...
+..b.b..
+.b...b.
+.......
+ENDMAP
+
+NAME:   minmay_temple_entry_junction2
+TAGS:   temple_entry
+ORIENT: float
+WEIGHT: 5
+SUBST:  x : xccbbmv
+SUBST:  T = T:39 V U:1
+KMASK:  TU = no_monster_gen
+MAP
+...........
+...x...x...
+...x.T.x...
+.xxx...xxx.
+...........
+..T..O..T..
+...........
+.xxx...xxx.
+...x.T.x...
+...x...x...
+...........
+ENDMAP
+
+NAME:   minmay_temple_entry_water_ring
+TAGS:   temple_entry
+ORIENT: float
+WEIGHT: 3
+KMONS:  1 = big fish
+KFEAT:  1 = W
+KMASK:  W = no_monster_gen
+NSUBST: W = 1:1
+SUBST:  x : xxcccvvbt
+MAP
+.............
+.xxx.....xxx.
+.xWWWWWWWWWx.
+.xWx.....xWx.
+..W.......W..
+..W.......W..
+..W...O...W..
+..W.......W..
+..W.......W..
+.xWx.....xWx.
+.xWWWWWWWWWx.
+.xxx.....xxx.
+.............
+ENDMAP
+
+NAME:   minmay_temple_entry_statues
+TAGS:   temple_entry
+ORIENT: float
+WEIGHT: 5
+MAP
+GGGGG
+G...G
+G.O.@
+G...G
+GGGGG
+ENDMAP
+
+
 ##############################################################################
 # Temple maps
 ##############################################################################
@@ -1090,8 +1163,7 @@ xxxxxxxxxxxxxxxxxxxx.......xxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-##########################################################################
-# Eino's temples. 12 gods.
+# 12 gods
 NAME:    temple_eino_lava_a
 PLACE:   Temple
 TAGS:    no_rotate
@@ -1127,7 +1199,7 @@ cccccccclccccccclcccccccc
 ccccccccccccccccccccccccc
 ENDMAP
 
-# 8 gods.
+# 8 gods
 NAME:    temple_eino_lava_b
 PLACE:   Temple
 TAGS:    no_rotate
@@ -1157,7 +1229,7 @@ cccccccclccccccclcccccccc
 ccccccccccccccccccccccccc
 ENDMAP
 
-# 12 gods.
+# 12 gods
 NAME:    temple_eino_water
 PLACE:   Temple
 TAGS:    no_pool_fixup no_rotate
@@ -1227,7 +1299,7 @@ PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
 SHUFFLE: {([
-WEIGHT:  3
+WEIGHT:  2
 MAP
 bbbbbbbbbbbbbbbbbbbbbbbbbbbbb
 bbbbbbbbbbbbb...bbbbbbbbbbbbb
@@ -1264,7 +1336,7 @@ bbbbbbbbbbbbb...bbbbbbbbbbbbb
 bbbbbbbbbbbbbbbbbbbbbbbbbbbbb
 ENDMAP
 
-# 12 gods.
+# 12 gods
 NAME:    temple_eino_crystal_narrow_b
 PLACE:   Temple
 TAGS:    no_rotate
@@ -1307,7 +1379,7 @@ bbbbbbbbbbbbbbb...bbbbbbbbbbbbbbb
 bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
 ENDMAP
 
-# 10 gods.
+# 10 gods
 NAME:    temple_eino_crystal_wide_a
 PLACE:   Temple
 TAGS:    no_rotate
@@ -1362,8 +1434,8 @@ bbbbb.B....bb...bb....B.bbbbb
             bbbbb
 ENDMAP
 
-# 12 gods.
-NAME:    temple_eino_006a
+# 12 gods
+NAME:    temple_eino_scatter_a
 PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
@@ -1392,7 +1464,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 # 10 gods
-NAME:    temple_eino_006b
+NAME:    temple_eino_scatter_b
 PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
@@ -1421,12 +1493,12 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 
-# 8 gods.
+# 8 gods
 NAME:    temple_eino_rhombus_a
 PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
-WEIGHT:  3
+WEIGHT:  2
 SHUFFLE: {([
 MAP
             xxxxx     xxxxx
@@ -1460,12 +1532,12 @@ xx...x...x.x...x.x.x.x.x...x.x...x...xx
             xxxxx     xxxxx
 ENDMAP
 
-# 14 gods.
+# 14 gods
 NAME:    temple_eino_rhombus_b
 PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
-WEIGHT:  3
+WEIGHT:  2
 SHUFFLE: {([
 MAP
                   xxx
@@ -1501,12 +1573,12 @@ xx..x.x..x.x..x.x..x..x.x..x.x..x.x..xx
             xxxxx     xxxxx
 ENDMAP
 
-# 12 gods.
+# 12 gods
 NAME:    temple_eino_rhombus_c
 PLACE:   Temple
 TAGS:    no_rotate
 ORIENT:  encompass
-WEIGHT:  4
+WEIGHT:  2
 SHUFFLE: {([
 MAP
              xxx
@@ -1577,6 +1649,269 @@ tttttttttttttttttttttttttttt...........t.........ttttttttttt
 ttttttttttttttttttttttttttttttt..............ttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
+ENDMAP
+
+# 12 gods
+NAME:    temple_minmay_many_rooms
+TAGS:    no_rotate
+PLACE:   Temple
+WEIGHT:  2
+ORIENT:  encompass
+SUBST:   c : cccb
+MAP
+ccccccccccccccccccccccccc
+c.....c.....c.....c.....c
+c.....c.....c.....c.....c
+c..B..+..B..+..B..+..B..c
+c.....c.....c.....c.....c
+c.....c.....c.....c.....c
+ccc+ccccc+ccccc+ccccc+ccc
+c.....c.....c.....c.....c
+c.....c.....c.....c.....c
+c..B..+..B..+..B..+..B..c
+c.....c.....c.....c.....c
+c.....c.....c.....c.....c
+ccc+ccccc+ccccc+ccccc+ccc
+c.....c.....c.....c.....c
+c.....c.....c.....c.....c
+c..B..+..B..+..B..+..B..c
+c.....c.....c.....c.....c
+c.....c.....c.....c.....c
+ccccccccc+ccccc+ccccccccc
+      c...........c
+      c.{.T.[.T.(.c
+      c...........c
+      ccccccccccccc
+ENDMAP
+
+# 12 gods
+NAME:    temple_minmay_telebubbles
+TAGS:    no_rotate
+PLACE:   Temple
+WEIGHT:  3
+ORIENT:  encompass
+KFEAT:   ^ = teleport trap
+SUBST:   c : cccb
+MAP
+     ccccc         ccccc
+   ccc...ccc     ccc...ccc
+  cc.......cc   cc.......cc
+ cc....B....cc cc....B....cc
+ c...........c c...........c
+cc...........ccc...........cc
+c.............c.............c
+c..B...T...B..c..B...[...B..c
+c.............c.............c
+cc...........ccc...........cc
+ c...........c c...........c
+ cc.........cc cc.........cc
+  cc.......ccccccc.......cc
+   ccc...cccc^^^cccc...ccc
+     cc+cc  c^{^c  cc+cc
+   ccc...cccc^^^cccc...ccc
+  cc.......ccccccc.......cc
+ cc.........cc cc.........cc
+ c...........c c...........c
+cc...........ccc...........cc
+c.............c.............c
+c..B...(...B..c..B...T...B..c
+c.............c.............c
+cc...........ccc...........cc
+ c...........c c...........c
+ cc....B....cc cc....B....cc
+  cc.......cc   cc.......cc
+   ccc...ccc     ccc...ccc
+     ccccc         ccccc
+ENDMAP
+
+# 12 gods
+NAME:    temple_minmay_crystal_snake
+TAGS:    no_rotate
+PLACE:   Temple
+WEIGHT:  3
+ORIENT:  encompass
+MAP
+        bbb   bbb   bbb
+       bb.bb bb.bb bb.bb
+      bb...bbb...bbb...bb
+      b..B.....B.....(..b
+      bb...bbb...bbb...bb
+       bb.bb bb.bb bb.bb
+  bbb   b.b   bbb   b.b
+ bb.bb bb.bb       bb.bb
+bb...bbb...bb     bb...bb
+b..B.....B..b     b..B..b
+bb...bbb...bb     bb...bb
+ bb.bb bb.bb       bb.bb
+  bbb   bbb   bbb   b.b
+             bb.bb bb.bb
+            bb...bbb...bb
+            b..B.....B..b
+            bb...bbb...bb
+             bb.bb bb.bb
+        bbb   b.b   bbb
+       bb.bb bb.bb
+      bb...bbb...bb
+      b..[.....B..b
+      bb...bbb...bb
+       bb.bb bb.bb
+        b.b   bbb   bbb
+       bb.bb       bb.bb
+      bb...bb     bb...bb
+      b..B..b     b..{..b
+      bb...bb     bb...bb
+       bb.bb       bb.bb
+        b.b   bbb   b.b
+       bb.bb bb.bb bb.bb
+      bb...bbb...bbb...bb
+      b..B.....B.....B..b
+      bb...bbb...bbb...bb
+       bb.bb bb.bb bb.bb
+        bbb   bbb   bbb
+ENDMAP
+
+# 12 gods
+NAME:    temple_minmay_floating_metal
+TAGS:    no_rotate no_pool_fixup
+PLACE:   Temple
+WEIGHT:  3
+ORIENT:  encompass
+MAP
+cccccccccccccccccccccccccccccccccc
+cwwwwwwwwwwwwwwwwwvvvvwwwwwwwwwwwc
+cwwwvvwwwwwwwwwwwwvvvvwwwwwwwwwwwc
+cwwwvvwwwwwwwwwwwwvvvvwwwwwwwwwwwc
+cwwwwwwwwwwwwwwwwwvvvvwwwwwwwwwwwc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+cwwwwwwwwvwwwwwwwwwwwwwwwwwwwwwwwc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+cwwwwwwwwwwwwwwB..Bwwwwwwwwwvwwwwc
+cwwwwwwwwwwww........wwwwwwwwwwwwc
+cwwwwwwwwwwB......vv..Bwwwwwvvwwwc
+cwwwwwwwwww.......vv...wwwwwvvwwwc
+cwwwwwwwww..vvv.........wwwwwwwwwc
+cwwwvvvwww..vvv.........wwwwwwwwwc
+cwwwvvvwwB..vvv...vvvvv.Bwwwwwvwwc
+cwwwvvvww.........v..[v..wwwwwwwwc
+cwwwwwwww.........+..{v..wwwwwwwwc
+cwwwwwwwwB........v..(v.Bwwwwwwwwc
+cwwwwwwwww...vv...vvvvv.wwwwwwwwwc
+cwwwwwwwww...vv.........wwwwwwwwwc
+cwwwwwwwwww........v...wwwwwwwwwwc
+cwwwwwwwwwwB..........Bwwwwwwwwwwc
+cwwvvvvwwwwww........wwwwwwvvvvvwc
+cwwvvvvwwwwwwwwB..Bwwwwwwwwvvvvvwc
+cwwvvvvwwwwwwwwwwwwwwwwwwwwvvvvvwc
+cwwvvvvwwwwwwwwwwwwwwwvwwwwvvvvvwc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwvvvvvwc
+cwwwwwwwwwwwwvvvwwwwwwwwwwwwwwwwwc
+cwwwwwwwwwwwwvvvwwwwwwwwwwwwwwwwwc
+cwwwwwvwwwwwwvvvwwwwwwwwwwwwwwwwwc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwvwwwc
+cwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwc
+cccccccccccccccccccccccccccccccccc
+ENDMAP
+
+# 12 gods
+NAME:    temple_minmay_simple_box
+TAGS:    no_rotate
+PLACE:   Temple
+WEIGHT:  3
+ORIENT:  encompass
+SUBST:   T = TV
+SUBST:   c : cccb
+MAP
+ccccccccccccccccc
+c...............c
+c.B..T..B..T..B.c
+c...............c
+c...ccc...ccc...c
+c.T.c.......c.T.c
+c...c.B...B.c...c
+c...............c
+c.B...[.{.(...B.c
+c...............c
+c...c.B...B.c...c
+c.T.c.......c.T.c
+c...ccc...ccc...c
+c...............c
+c.B..T..B..T..B.c
+c...............c
+ccccccccccccccccc
+ENDMAP
+
+# 12 gods
+NAME:    temple_minmay_freezing_vapour
+TAGS:    no_rotate
+PLACE:   Temple
+WEIGHT:  3
+ORIENT:  encompass
+MARKER:  d = lua:fog_machine { cloud_type = "freezing vapour", \
+             pow_min = 3, pow_max = 5, delay = 5, start_clouds = 3, \
+             size = 1, spread_rate= 0 }
+MAP
+bbbbbbbbbbbbbbb
+b.............b
+b.d.d.d.d.d.d.b
+b.............b
+b.d.B.B.B.B.d.b
+b.............b
+b.d.B..[..B.d.b
+b.............b
+b.d.B.{.(.B.d.b
+b.............b
+b.d.B.B.B.B.d.b
+b.............b
+b.d.d.d.d.d.d.b
+b.............b
+bbbbbbbbbbbbbbb
+ENDMAP
+
+# 12 gods
+NAME:    temple_minmay_crystal_spiral
+TAGS:    no_rotate
+PLACE:   Temple
+WEIGHT:  3
+ORIENT:  encompass
+MAP
+                        bbbbbbb
+                        b.....b
+                        b.....b
+                        b..B..b
+                       bb.....bb
+                      bb.......bb
+                  bbbbb...bbb...bbbbb
+                  b......bb bb......b
+                  b.....bb   bb.....b
+                  b..B..b     b..B..b
+                 bb.....b     b.....bb
+                bb......b     b......bb
+bbbbbbb     bbbbb...bbbbbbbbbbbbbbb...bbbbb
+b.....b     b......bb   b.....b   bb......b
+b..{..b     b.....bb    b.....b    bb.....b
+b.....b     b..B..b     b..B..b     b..B..b
+b.[.(.bb    b.....bb   bb.....b    bb.....b
+b......bb   b......bb bb......b   bb......b
+bbbbb...bbbbbbbbb...bbb...bbbbbbbbb...bbbbb
+    bb......b   bb.......bb   b......bb
+     bb.....b    bb.....bb    b.....bb
+      b..B..b     b..B..b     b..B..b
+      b.....bb    b.....b    bb.....b
+      b......bb   b.....b   bb......b
+      bbbbb...bbbbbbbbbbbbbbb...bbbbb
+          bb......b     b......bb
+           bb.....b     b.....bb
+            b..B..b     b..B..b
+            b.....bb   bb.....b
+            b......bb bb......b
+            bbbbb...bbb...bbbbb
+                bb.......bb
+                 bb.....bb
+                  b..B..b
+                  b.....b
+                  b.....b
+                  bbbbbbb
 ENDMAP
 
 # 2 gods (plus Lugonu and possibly more)

@@ -281,7 +281,7 @@ static int _stat_mult(skill_type exsk, int skill_inc)
     return (skill_inc * std::max<int>(5, stat) / 10);
 }
 
-void _gain_skill_level(skill_type exsk)
+static void _gain_skill_level(skill_type exsk)
 {
     skill_type old_best_skill = best_skill(SK_FIGHTING, (NUM_SKILLS - 1), 99);
 

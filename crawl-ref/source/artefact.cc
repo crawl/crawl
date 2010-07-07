@@ -1375,7 +1375,7 @@ int artefact_known_wpn_property( const item_def &item,
         return (0);
 }
 
-int _artefact_num_props( const artefact_properties_t &proprt )
+static int _artefact_num_props( const artefact_properties_t &proprt )
 {
     int num = 0;
 

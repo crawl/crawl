@@ -204,7 +204,8 @@ void handle_behaviour(monsters *mon)
     }
 
     // Instead, berserkers attack nearest monsters.
-    if ((mon->berserk() || mon->type == MONS_GIANT_SPORE)
+    if (mon->behaviour != BEH_SLEEP
+        && (mon->berserk() || mon->type == MONS_GIANT_SPORE)
         && (mon->foe == MHITNOT || isFriendly && mon->foe == MHITYOU))
     {
         // Intelligent monsters prefer to attack the player,
@@ -843,6 +844,17 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
         // Avoid moving friendly giant spores out of BEH_WANDER.
         if (mon->friendly() && mon->type == MONS_GIANT_SPORE)
             break;
+
+        // [ds] Neutral monsters don't react to your presence.
+        // XXX: Neutral monsters are a tangled mess of arbitrary logic.
+        // It's not even clear any more what behaviours are intended for
+        // neutral monsters and what are merely accidents of the code.
+        if (mon->neutral() && mon->attitude == ATT_NEUTRAL)
+        {
+            if (mon->asleep())
+                mon->behaviour = BEH_WANDER;
+            break;
+        }
 
         if (mon->asleep() && mons_near(mon))
             remove_auto_exclude(mon, true);

@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 #include "artefact.h"
+#include "describe.h"
 #include "itemname.h"
 #include "itemprop.h"
 #include "player.h"
@@ -24,7 +25,10 @@ tileidx_t tilep_equ_weapon(const item_def &item)
 {
     if (item.base_type == OBJ_STAVES)
     {
-        int desc = (item.special / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
+        // Can't just use item.special here as STAFF_POWER abuses
+        // item.special for storing the MP in case of quick re-wield.
+        int orig_special = you.item_description[IDESC_STAVES][item.sub_type];
+        int desc = (orig_special / NDSC_STAVE_PRI) % NDSC_STAVE_SEC;
         if (item_is_rod(item))
             return TILEP_HAND1_ROD_BROWN + desc;
         else

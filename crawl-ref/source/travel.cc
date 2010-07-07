@@ -193,12 +193,12 @@ static bool _is_greed_inducing_square(const LevelStashes *ls,
 // Returns true if there is a known trap at (x,y). Returns false for non-trap
 // squares as also for undiscovered traps.
 //
-inline bool is_trap(const coord_def& c)
+static inline bool is_trap(const coord_def& c)
 {
     return feat_is_trap(env.map_knowledge(c).feat());
 }
 
-inline bool _is_safe_trap (const coord_def& c)
+static inline bool _is_safe_trap (const coord_def& c)
 {
 #ifdef CLUA_BINDINGS
     if (clua.callbooleanfn(false, "ch_cross_trap", "s", trap_name_at(c)))
@@ -430,11 +430,15 @@ static bool _is_safe_move(const coord_def& c)
     if (const monsters *mon = monster_at(c))
     {
         // Stop before wasting energy on plants and fungi,
-        // unless a worshipping Fedhas.
-        if (you.can_see(mon) && mons_class_flag(mon->type, M_NO_EXP_GAIN)
+        // unless worshipping Fedhas.
+        if (you.can_see(mon)
+            && mons_class_flag(mon->type, M_NO_EXP_GAIN)
+            && mons_is_stationary(mon)
             && !fedhas_passthrough(mon)
             && !travel_kill_monster(mon))
+        {
             return (false);
+        }
 
         // If this is any *other* monster, it'll be visible and
         // a) Friendly, in which case we'll displace it, no problem.

@@ -7,8 +7,8 @@
 
 namespace msg
 {
-    mpr_stream_buf* msbuf = new mpr_stream_buf(MSGCH_PLAIN);
-    std::ostream stream(msbuf);
+    mpr_stream_buf msbuf(MSGCH_PLAIN);
+    std::ostream stream(&msbuf);
     std::vector<std::ostream*> stream_ptrs;
     std::vector<mpr_stream_buf*> stream_buffers;
 
@@ -35,7 +35,6 @@ namespace msg
 
     void deinitialise_mpr_streams()
     {
-        delete msbuf;
         for (unsigned int i = 0; i < stream_ptrs.size(); ++i)
             delete stream_ptrs[i];
         stream_ptrs.clear();

@@ -4291,8 +4291,13 @@ void monsters::add_enchantment_effect(const mon_enchant &ench, bool quiet)
             // point; they're supposed to follow you now.
             patrol_point.reset();
         }
+        mons_att_changed(this);
         if (you.can_see(this))
             learned_something_new(HINT_MONSTER_FRIENDLY, pos());
+        break;
+
+    case ENCH_SILENCE:
+        invalidate_agrid(true);
         break;
 
     default:
@@ -4443,9 +4448,12 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_SILENCE:
-        if (!quiet && !silenced(pos()))
-            simple_monster_message(this, " becomes audible again.");
         invalidate_agrid();
+        if (!quiet && !silenced(pos()))
+            if (alive())
+                simple_monster_message(this, " becomes audible again.");
+            else
+                mprf("As %s dies, the sound returns.", name(DESC_NOCAP_THE).c_str());
         break;
 
     case ENCH_MIGHT:
@@ -4560,6 +4568,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             // in case they were on order to wait.
             patrol_point.reset();
         }
+        mons_att_changed(this);
 
         // Reevaluate behaviour.
         behaviour_event(this, ME_EVAL);
@@ -4631,7 +4640,7 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
 
         if (you.can_see(this))
         {
-            if (!mons_is_safe(this) && is_run_delay(current_delay_action()))
+            if (!mons_is_safe(this) && delay_is_run(current_delay_action()))
             {
                 // Already set somewhere else.
                 if (!seen_context.empty())

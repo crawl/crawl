@@ -59,7 +59,7 @@
 #endif
 
 // Initialise a whole lot of stuff...
-void _initialize()
+static void _initialize()
 {
     Options.fixup_options();
 
@@ -141,7 +141,8 @@ void _initialize()
     if (crawl_state.build_db)
         end(0);
 
-    cio_init();
+    if (!crawl_state.io_inited)
+        cio_init();
 
     // System initialisation stuff.
     textbackground(0);
@@ -186,7 +187,7 @@ void _initialize()
     }
 }
 
-void _post_init(bool newc)
+static void _post_init(bool newc)
 {
     // Fix the mutation definitions for the species we're playing.
     fixup_mutations();
@@ -310,7 +311,7 @@ void _post_init(bool newc)
  * Helper for show_startup_menu()
  * constructs the game modes section
  */
-void _construct_game_modes_menu(MenuScroller* menu)
+static void _construct_game_modes_menu(MenuScroller* menu)
 {
     TextItem* tmp = NULL;
     std::string text;
@@ -762,6 +763,8 @@ static void _choose_arena_teams(newgame_def* choice,
 {
     if (!choice->arena_teams.empty())
         return;
+
+    clear_message_store();
     clrscr();
 
     cprintf("Enter your choice of teams:\n");

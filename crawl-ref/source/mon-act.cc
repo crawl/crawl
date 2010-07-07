@@ -3124,6 +3124,7 @@ static bool _do_move_monster(monsters *monster, const coord_def& delta)
     else if (mons_can_eat_door(monster, f))
     {
         grd(f) = DNGN_FLOOR;
+        set_terrain_changed(f);
 
         _jelly_grows(monster);
 
@@ -3191,8 +3192,7 @@ static bool _may_cutdown(monsters* mons, monsters* targ)
     // and friendlies never attacking anything other than hostiles.
     const bool bad_align =
         ((mons->friendly() || mons->good_neutral())
-         ==
-         (targ->friendly() || targ->good_neutral()));
+         && (targ->friendly() || targ->good_neutral()));
     return (mons_is_firewood(targ) && !bad_align);
 }
 
@@ -3571,8 +3571,7 @@ static void _mons_in_cloud(monsters *monster)
             return;
         }
 
-        simple_monster_message(monster, " is engulfed in flames!");
-
+        cloud.announce_actor_engulfed(monster);
         hurted +=
             resist_adjust_damage( monster,
                                   BEAM_FIRE,
@@ -3583,8 +3582,7 @@ static void _mons_in_cloud(monsters *monster)
         break;
 
     case CLOUD_STINK:
-        simple_monster_message(monster, " is engulfed in noxious gasses!");
-
+        cloud.announce_actor_engulfed(monster);
         if (monster->res_poison() > 0)
             return;
 
@@ -3604,8 +3602,7 @@ static void _mons_in_cloud(monsters *monster)
         break;
 
     case CLOUD_COLD:
-        simple_monster_message(monster, " is engulfed in freezing vapours!");
-
+        cloud.announce_actor_engulfed(monster);
         hurted +=
             resist_adjust_damage( monster,
                                   BEAM_COLD,
@@ -3616,8 +3613,7 @@ static void _mons_in_cloud(monsters *monster)
         break;
 
     case CLOUD_POISON:
-        simple_monster_message(monster, " is engulfed in a cloud of poison!");
-
+        cloud.announce_actor_engulfed(monster);
         if (monster->res_poison() > 0)
             return;
 
@@ -3634,9 +3630,7 @@ static void _mons_in_cloud(monsters *monster)
     case CLOUD_STEAM:
     {
         // FIXME: couldn't be bothered coding for armour of res fire
-
-        simple_monster_message(monster, " is engulfed in steam!");
-
+        cloud.announce_actor_engulfed(monster);
         const int steam_base_damage = steam_cloud_damage(cloud);
         hurted +=
             resist_adjust_damage(
@@ -3650,8 +3644,7 @@ static void _mons_in_cloud(monsters *monster)
     }
 
     case CLOUD_MIASMA:
-        simple_monster_message(monster, " is engulfed in a dark miasma!");
-
+        cloud.announce_actor_engulfed(monster);
         if (monster->res_rotting())
             return;
 
@@ -3674,8 +3667,7 @@ static void _mons_in_cloud(monsters *monster)
         break;
 
     case CLOUD_MUTAGENIC:
-        simple_monster_message(monster, " is engulfed in a mutagenic fog!");
-
+        cloud.announce_actor_engulfed(monster);
         // Will only polymorph a monster if they're not magic immune, can
         // mutate, aren't res asphyx, and pass the same check as meph cloud.
         if (monster->can_mutate() && !mons_immune_magic(monster)
@@ -3684,6 +3676,15 @@ static void _mons_in_cloud(monsters *monster)
         {
             if (monster->mutate())
                 wake = true;
+        }
+        break;
+
+    case CLOUD_CHAOS:
+        if (coinflip())
+        {
+            cloud.announce_actor_engulfed(monster);
+            chaos_affect_actor(monster);
+            wake = true;
         }
         break;
 

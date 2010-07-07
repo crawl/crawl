@@ -98,7 +98,7 @@ void remove_auto_exclude(const monsters *mon, bool sleepy)
     }
 }
 
-opacity_type _feat_opacity(dungeon_feature_type feat)
+static opacity_type _feat_opacity(dungeon_feature_type feat)
 {
     return (feat_is_opaque(feat) ? OPC_OPAQUE : OPC_CLEAR);
 }
@@ -318,7 +318,7 @@ exclude_set::iterator exclude_set::end()
 
 /////////////////////////////////////////////////////////////////////////
 
-void _mark_excludes_non_updated(const coord_def &p)
+static void _mark_excludes_non_updated(const coord_def &p)
 {
     for (exclude_set::iterator it = curr_excludes.begin();
          it != curr_excludes.end(); ++it)
@@ -462,10 +462,9 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl,
     {
         if (exc->desc.empty() && defer_updates)
         {
-            int cl = env.cgrid(p);
-
+            const int cl = env.cgrid(p);
             if (env.cgrid(p) != EMPTY_CLOUD)
-                exc->desc = cloud_name(cl) + " cloud";
+                exc->desc = cloud_name_at_index(cl) + " cloud";
         }
         else if (exc->radius == radius)
             return;
@@ -506,10 +505,9 @@ void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl,
         }
         else
         {
-            int cl = env.cgrid(p);
-
+            const int cl = env.cgrid(p);
             if (env.cgrid(p) != EMPTY_CLOUD)
-                desc = cloud_name(cl) + " cloud";
+                desc = cloud_name_at_index(cl) + " cloud";
         }
 
         curr_excludes.add_exclude(p, radius, autoexcl, desc, vaultexcl);

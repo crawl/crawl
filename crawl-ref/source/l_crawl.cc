@@ -733,7 +733,7 @@ LUAFN(_crawl_millis)
 }
 #endif
 
-std::string _crawl_make_name(lua_State *ls)
+static std::string _crawl_make_name(lua_State *ls)
 {
     // A quick wrapper around itemname:make_name. Seed is random_int().
     // Possible parameters: all caps, max length, char start. By default

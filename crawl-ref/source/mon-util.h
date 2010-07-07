@@ -359,8 +359,6 @@ void mons_stop_fleeing_from_sanctuary(monsters *monster);
 
 bool mons_landlubbers_in_reach(const monsters *monster);
 
-bool mons_has_smite_attack(const monsters *monster);
-
 bool mons_class_is_confusable(int mc);
 bool mons_class_is_slowable(int mc);
 bool mons_class_is_stationary(int mc);

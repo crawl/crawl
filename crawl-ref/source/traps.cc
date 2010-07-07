@@ -782,10 +782,14 @@ void destroy_trap( const coord_def& pos )
 
 trap_def* find_trap(const coord_def& pos)
 {
-    for (int i = 0; i < MAX_TRAPS; ++i)
-        if (env.trap[i].pos == pos && env.trap[i].type != TRAP_UNASSIGNED)
-            return (&env.trap[i]);
-    return (NULL);
+    if (!feat_is_trap(grd(pos), true))
+        return (NULL);
+
+    unsigned short t = env.tgrid(pos);
+    ASSERT(t != NON_ENTITY && t < MAX_TRAPS);
+    ASSERT(env.trap[t].pos == pos && env.trap[t].type != TRAP_UNASSIGNED);
+
+    return (&env.trap[t]);
 }
 
 trap_type get_trap_type(const coord_def& pos)

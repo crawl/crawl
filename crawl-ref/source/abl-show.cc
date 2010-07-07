@@ -1207,7 +1207,7 @@ static bool _activate_talent(const talent& tal)
     return (success);
 }
 
-int _calc_breath_ability_range(ability_type ability)
+static int _calc_breath_ability_range(ability_type ability)
 {
     // Following monster draconian abilities.
     switch (ability)
@@ -1519,9 +1519,9 @@ static bool _do_ability(const ability_def& abil)
         if (retval <= 0)
         {
             if (retval == 0)
-                mpr("There's no appreciative subject!");
-            else
                 mpr("There is no monster there to imprison!");
+            else
+                mpr("There's no appreciative subject!");
             return (false);
         }
 
@@ -1905,19 +1905,14 @@ static bool _do_ability(const ability_def& abil)
         simple_god_message(" appreciates your contribution to the "
                            "ecosystem.", GOD_FEDHAS);
 
-        // We are following the blood god sacrifice piety gain model, given as:
-        // if (random2(level + 10) > 5)
-        //    piety_change = 1;
-        //  where level = 10
-        // so the chance of gaining 1 piety from a corpse sacrifice to a blood
-        // god is (14/20 == 70/100)
-        //
         // Doubling the expected value per sacrifice to approximate the
         // extra piety gain blood god worshipers get for the initial kill.
         // -cao
 
-        int piety_gain = binomial_generator(count*2, 70);
-        gain_piety(piety_gain);
+        int piety_gain = 0;
+        for (int i = 0; i < count * 2; i++)
+            piety_gain += random2(15); // avg 1.4 piety per corpse
+        gain_piety(piety_gain, 10);
         break;
     }
 

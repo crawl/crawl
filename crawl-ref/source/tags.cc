@@ -978,6 +978,7 @@ static void tag_construct_you(writer &th)
     int i, j;
 
     marshallString(th, you.your_name, kNameLen);
+    marshallString(th, Version::Long());
 
     marshallByte(th, you.religion);
     marshallString(th, you.second_god_name);
@@ -1423,15 +1424,20 @@ static void marshall_mapdef(writer &th, const map_def &map)
     map.write_full(th);
     map.write_index(th);
     map.write_maplines(th);
+    marshallString(th, map.description);
 }
 
 static map_def unmarshall_mapdef(reader &th)
 {
     map_def map;
     map.name = unmarshallStringNoMax(th);
-    map.read_full(th);
+    map.read_full(th, false);
     map.read_index(th);
     map.read_maplines(th);
+    if (_tag_minor_version >= TAG_MINOR_MAPDESC)
+        map.description = unmarshallString(th);
+    else
+        map.description.clear();
     return map;
 }
 
@@ -1525,6 +1531,11 @@ static void tag_read_you(reader &th, char minorVersion)
     short count_s;
 
     you.your_name         = unmarshallString(th, kNameLen);
+    if (minorVersion >= TAG_MINOR_SAVEVER)
+    {
+        const std::string old_version = unmarshallString(th);
+        dprf("Last save Crawl version: %s", old_version.c_str());
+    }
 
     you.religion          = static_cast<god_type>(unmarshallByte(th));
 
@@ -1648,32 +1659,42 @@ static void tag_read_you(reader &th, char minorVersion)
 
     // how many durations?
     count_c = unmarshallByte(th);
-    for (j = 0; j < count_c; ++j)
+    ASSERT(count_c >= 0);
+    for (j = 0; j < count_c && j < NUM_DURATIONS; ++j)
         you.duration[j] = unmarshallInt(th);
+    for (j = NUM_DURATIONS; j < count_c; ++j)
+        unmarshallInt(th);
 
     // how many attributes?
     count_c = unmarshallByte(th);
+    ASSERT(count_c >= 0 && count_c <= NUM_ATTRIBUTES);
     for (j = 0; j < count_c; ++j)
         you.attribute[j] = unmarshallInt(th);
 
     count_c = unmarshallByte(th);
+    ASSERT(count_c == NUM_OBJECT_CLASSES);
     for (j = 0; j < count_c; ++j)
         you.sacrifice_value[j] = unmarshallInt(th);
 
     // how many mutations/demon powers?
     count_s = unmarshallShort(th);
+    ASSERT(count_s >= 0 && count_s <= NUM_MUTATIONS);
     for (j = 0; j < count_s; ++j)
     {
         you.mutation[j]  = unmarshallByte(th);
         you.innate_mutations[j] = unmarshallByte(th);
     }
+    for (j = count_s; j < NUM_MUTATIONS; ++j)
+        you.mutation[j] = you.innate_mutations[j] = 0;
 
     count_c = unmarshallByte(th);
+    ASSERT(count_c >= 0);
     you.demonic_traits.clear();
     for (j = 0; j < count_c; ++j)
     {
         player::demon_trait dt;
         dt.level_gained = unmarshallByte(th);
+        ASSERT(dt.level_gained > 1 && dt.level_gained <= 27);
         dt.mutation = static_cast<mutation_type>(unmarshallShort(th));
         you.demonic_traits.push_back(dt);
     }
@@ -2427,6 +2448,7 @@ static void tag_read_level( reader &th, char minorVersion )
 
             mgrd[i][j] = NON_MONSTER;
             env.cgrid[i][j] = EMPTY_CLOUD;
+            env.tgrid[i][j] = NON_ENTITY;
         }
 
     env.grid_colours.init(BLACK);
@@ -2473,6 +2495,7 @@ static void tag_read_level( reader &th, char minorVersion )
         env.shop[i].pos.y = unmarshallByte(th);
         env.shop[i].greed = unmarshallByte(th);
         env.shop[i].level = unmarshallByte(th);
+        env.tgrid(env.shop[i].pos) = i;
     }
     for (int i = num_shops; i < MAX_SHOPS; ++i)
         env.shop[i].type = SHOP_UNASSIGNED;
@@ -2523,6 +2546,7 @@ static void tag_read_level_items(reader &th, char minorVersion)
             continue;
         env.trap[i].pos      = unmarshallCoord(th);
         env.trap[i].ammo_qty = unmarshallShort(th);
+        env.tgrid(env.trap[i].pos) = i;
     }
     for (int i = trap_count; i < MAX_TRAPS; ++i)
         env.trap[i].type = TRAP_UNASSIGNED;
