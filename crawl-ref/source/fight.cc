@@ -5257,7 +5257,7 @@ void melee_attack::mons_do_spines()
         && attacker->alive()
         && one_chance_in(evp + 1))
     {
-        if (test_melee_hit((random2(6 - evp) + 2) * mut,
+        if (test_melee_hit((random2(7 - evp) + 2) * mut,
                            defender->melee_evasion(attacker), r))
         {
             simple_monster_message(attacker->as_monster(),
