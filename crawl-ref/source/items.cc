@@ -3014,10 +3014,10 @@ bool item_def::defined() const
 // TODO: check brands, etc.
 bool item_def::is_valid() const
 {
+    if (!defined())
+        return (false);
     const int max_sub = get_max_subtype(base_type);
-    return (defined()
-            && (max_sub == -1 ||
-                sub_type < get_max_subtype(base_type)));
+    return (max_sub == -1 || sub_type < max_sub);
 }
 
 // The Orb of Zot and unique runes are considered critical.
