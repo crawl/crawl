@@ -293,7 +293,7 @@ public:
   // to die automatically returns without ending the game.
   bool never_die;
 #endif
-  bool dead;
+  bool dead; // ... but pending revival
   int lives;
   int deaths;
 

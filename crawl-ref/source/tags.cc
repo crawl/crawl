@@ -1012,7 +1012,7 @@ static void tag_construct_you(writer &th)
     marshallInt(th, you.disease);
     marshallByte(th, you.species);
 
-    marshallShort(th, you.hp);
+    marshallShort(th, you.dead ? 0 : you.hp);
 
     marshallShort(th, you.hunger);
 
@@ -1160,8 +1160,8 @@ static void tag_construct_you(writer &th)
     marshallShort(th, you.transit_stair);
     marshallByte(th, you.entering_level);
 
-    marshallByte(th, 0);
-    marshallByte(th, 0);
+    marshallByte(th, you.deaths);
+    marshallByte(th, you.lives);
 
     marshallInt(th, you.dactions.size());
     for(unsigned int k = 0; k < you.dactions.size(); k++)
@@ -1740,11 +1740,12 @@ static void tag_read_you(reader &th, char minorVersion)
     you.entering_level = unmarshallByte(th);
 
 #if TAG_MAJOR_VERSION == 27
-    if (minorVersion >= TAG_MINOR_RESERVED)
+    if (minorVersion >= TAG_MINOR_CAT_LIVES)
     {
 #endif
-    unmarshallByte(th);
-    unmarshallByte(th);
+    you.deaths = unmarshallByte(th);
+    you.lives = unmarshallByte(th);
+    you.dead = !you.hp;
 
 #if TAG_MAJOR_VERSION == 27
     }
