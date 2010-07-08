@@ -5246,7 +5246,7 @@ void melee_attack::mons_do_eyeball_confusion()
 void melee_attack::mons_do_spines()
 {
     const item_def *body = you.slot_item(EQ_BODY_ARMOUR, false);
-    const mut = player_mutation_level(MUT_SPINY);
+    const int mut = player_mutation_level(MUT_SPINY);
     int evp = 0;
     defer_rand r;
 
