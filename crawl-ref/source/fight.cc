@@ -6130,7 +6130,8 @@ static void stab_message(actor *defender, int stab_bonus)
     case 6:     // big melee, monster surrounded/not paying attention
         if (coinflip())
         {
-            mprf( "You strike %s from a blind spot!",
+            mprf( "You %s %s from a blind spot!",
+                  (you.species == SP_CAT) ? "pounce on" : "strike",
                   defender->name(DESC_NOCAP_THE).c_str() );
         }
         else
@@ -6147,12 +6148,19 @@ static void stab_message(actor *defender, int stab_bonus)
         }
         else
         {
-            mprf( "You strike %s from behind!",
+            mprf( "You %s %s from behind!",
+                  (you.species == SP_CAT) ? "pounce on" : "strike",
                   defender->name(DESC_NOCAP_THE).c_str() );
         }
         break;
     case 2:
     case 1:
+        if (you.species == SP_CAT && coinflip())
+        {
+            mprf("You pounce on the unaware %s!",
+                 defender->name(DESC_PLAIN).c_str());
+            break;
+        }
         mprf( "%s fails to defend %s.",
               defender->name(DESC_CAP_THE).c_str(),
               defender->pronoun(PRONOUN_REFLEXIVE).c_str() );
