@@ -1994,6 +1994,11 @@ void exercise_spell(spell_type spell, bool spc, bool success)
         exer      += exercise_amount;
     }
 
+    // Avoid doubly rewarding spell practise in sprint
+    // (by inflated XP and inflated piety gain)
+    if (crawl_state.game_is_sprint())
+        exer = sprint_modify_exp_inverse(exer);
+
     if (exer)
         did_god_conduct(DID_SPELL_PRACTISE, exer);
 }
