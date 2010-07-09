@@ -2516,7 +2516,7 @@ maybe_bool bolt::affects_wall(dungeon_feature_type wall) const
     }
 
     // Lee's Rapid Deconstruction
-    if (flavour == BEAM_FRAG)
+    if (flavour == BEAM_FRAG && origin_spell == SPELL_FRAGMENTATION)
         return (B_TRUE); // smite targetting, we don't care
 
     return (B_FALSE);
