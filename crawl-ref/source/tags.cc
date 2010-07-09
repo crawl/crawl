@@ -1160,6 +1160,9 @@ static void tag_construct_you(writer &th)
     marshallShort(th, you.transit_stair);
     marshallByte(th, you.entering_level);
 
+    marshallByte(th, 0);
+    marshallByte(th, 0);
+
     marshallInt(th, you.dactions.size());
     for(unsigned int k = 0; k < you.dactions.size(); k++)
         marshallByte(th, you.dactions[k]);
@@ -1737,6 +1740,14 @@ static void tag_read_you(reader &th, char minorVersion)
     you.entering_level = unmarshallByte(th);
 
 #if TAG_MAJOR_VERSION == 27
+    if (minorVersion >= TAG_MINOR_RESERVED)
+    {
+#endif
+    unmarshallByte(th);
+    unmarshallByte(th);
+
+#if TAG_MAJOR_VERSION == 27
+    }
     if (minorVersion < TAG_MINOR_DACTIONS)
         you.dactions.clear();
     else
