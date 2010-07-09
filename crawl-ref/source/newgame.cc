@@ -60,6 +60,16 @@ newgame_def::newgame_def()
 {
 }
 
+void newgame_def::clear_character()
+{
+    species  = SP_UNKNOWN;
+    job      = JOB_UNKNOWN;
+    weapon   = WPN_UNKNOWN;
+    book     = SBT_NONE;
+    religion = GOD_NO_GOD;
+    wand     = SWT_NO_SELECTION;
+}
+
 enum MenuOptions
 {
     M_QUIT = -1,
@@ -544,11 +554,22 @@ void make_rod(item_def &item, stave_type rod_type, int ncharges)
     init_rod_mp(item, ncharges);
 }
 
+// Set ng_choice to defaults without overwriting name and game type.
+static void _set_default_choice(newgame_def* ng_choice,
+                                const newgame_def& defaults)
+{
+    const std::string name = ng_choice->name;
+    const game_type type   = ng_choice->type;
+    *ng_choice = defaults;
+    ng_choice->name = name;
+    ng_choice->type = type;
+}
+
 static void _mark_fully_random(newgame_def* ng, newgame_def* ng_choice,
                                bool viable)
 {
     // Reset *ng so _resolve_species_job will work properly.
-    *ng = newgame_def();
+    ng->clear_character();
 
     ng_choice->fully_random = true;
     if (viable)
@@ -561,17 +582,6 @@ static void _mark_fully_random(newgame_def* ng, newgame_def* ng_choice,
         ng_choice->species = SP_RANDOM;
         ng_choice->job = JOB_RANDOM;
     }
-}
-
-// Set ng_choice to defaults without overwriting name and game type.
-static void _set_default_choice(newgame_def* ng_choice,
-                                const newgame_def& defaults)
-{
-    const std::string name = ng_choice->name;
-    const game_type type   = ng_choice->type;
-    *ng_choice = defaults;
-    ng_choice->name = name;
-    ng_choice->type = type;
 }
 
 /**
@@ -3026,7 +3036,7 @@ static void _prompt_sprint_map(const newgame_def* ng, newgame_def* ng_choice,
             list_commands('?');
             return _prompt_sprint_map(ng, ng_choice, defaults, maps);
         case M_DEFAULT_CHOICE:
-            *ng_choice = defaults;
+            _set_default_choice(ng_choice, defaults);
             return;
         case M_RANDOM:
             // FIXME setting this to "random" is broken
