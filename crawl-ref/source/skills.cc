@@ -152,13 +152,15 @@ int exercise(int exsk, int deg)
         deg = sprint_modify_skills(deg);
     }
 
-    for (int i = 0; i < deg; ++i)
+    while (deg > 0)
     {
         if (you.exp_available <= 0 || you.skills[exsk] >= 27)
             break;
 
         if (you.practise_skill[exsk] || one_chance_in(4))
             ret += _exercise2(exsk);
+
+        deg--;
     }
 
     if (ret)
