@@ -2935,9 +2935,14 @@ static void _construct_sprint_map_menu(const mapref_vector& maps,
     }
 }
 
+static bool _cmp_map_by_name(const map_def* m1, const map_def* m2)
+{
+    return (m1->desc_or_name() < m2->desc_or_name());
+}
+
 static void _prompt_sprint_map(const newgame_def* ng, newgame_def* ng_choice,
                                const newgame_def& defaults,
-                               const mapref_vector &maps)
+                               mapref_vector maps)
 {
     PrecisionMenu menu;
     menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
@@ -2947,6 +2952,7 @@ static void _prompt_sprint_map(const newgame_def* ng, newgame_def* ng_choice,
     menu.attach_object(freeform);
     menu.set_active_object(freeform);
 
+    std::sort(maps.begin(), maps.end(), _cmp_map_by_name);
     _construct_sprint_map_menu(maps, defaults, freeform);
 
     BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
