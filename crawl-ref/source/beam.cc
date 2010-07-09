@@ -1362,6 +1362,9 @@ void bolt::do_fire()
         if (!affects_nothing)
             affect_cell();
 
+        if (range_used() > range)
+            break;
+
         if (beam_cancelled)
             return;
 
