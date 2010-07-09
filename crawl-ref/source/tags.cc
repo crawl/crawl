@@ -2139,6 +2139,17 @@ void unmarshallItem(reader &th, item_def &item)
     if (item.base_type == OBJ_UNASSIGNED)
         return;
     item.sub_type    = (unsigned char) unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 27
+    if (th.getMinorVersion() < TAG_MINOR_NO_ROD_DISCO
+        && item.base_type == OBJ_STAVES)
+    {
+        // Remove staves of discovery.
+        if (item.sub_type == STAFF_DEMONOLOGY)
+            item.sub_type = STAFF_WIZARDRY; // not a rod
+        else if (item.sub_type > STAFF_DEMONOLOGY)
+            item.sub_type--;
+    }
+#endif
     item.plus        = unmarshallShort(th);
     item.plus2       = unmarshallShort(th);
     item.special     = unmarshallInt(th);
