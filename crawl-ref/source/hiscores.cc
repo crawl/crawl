@@ -1442,6 +1442,20 @@ std::string scorefile_entry::single_cdesc() const
                          race_class_name.c_str(), lvl, (wiz_mode == 1) ? "W" : "" );
 }
 
+
+static std::string _append_sentence_delimiter(const std::string &sentence,
+                                              const std::string &delimiter)
+{
+    if (sentence.empty())
+        return (sentence);
+
+    const char lastch = sentence[sentence.length() - 1];
+    if (lastch == '!' || lastch == '.')
+        return (sentence);
+
+    return (sentence + delimiter);
+}
+
 std::string
 scorefile_entry::character_description(death_desc_verbosity verbosity) const
 {
@@ -1506,7 +1520,7 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
             desc += scratch;
         }
 
-        desc += ".";
+        desc = _append_sentence_delimiter(desc, ".");
         desc += _hiscore_newline_string();
 
         if (race != SP_DEMIGOD && god != -1)
@@ -1586,7 +1600,7 @@ std::string scorefile_entry::death_place(death_desc_verbosity verbosity) const
         place += scratch;
     }
 
-    place += ".";
+    place = _append_sentence_delimiter(place, ".");
     place += _hiscore_newline_string();
 
     return (place);
@@ -2081,11 +2095,11 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
                     desc += scratch;
                 }
 
-                desc += "!";
+                desc = _append_sentence_delimiter(desc, "!");
                 desc += _hiscore_newline_string();
             }
             else
-                desc += ".";
+                desc = _append_sentence_delimiter(desc, ".");
         }
         else if (death_type != KILLED_BY_QUITTING)
         {
@@ -2168,10 +2182,8 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
             // TODO: strcat "after reaching level %d"; for LEAVING
             if (verbosity == DDV_NORMAL)
             {
-                if (num_runes > 0)
-                    desc += "!";
-                else
-                    desc += ".";
+                desc = _append_sentence_delimiter(desc,
+                                                  num_runes > 0? "!" : ".");
             }
             desc += _hiscore_newline_string();
         }

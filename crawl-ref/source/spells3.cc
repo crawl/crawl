@@ -1490,7 +1490,8 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
 {
     bool is_controlled = (allow_control && !you.confused()
                           && player_control_teleport()
-                          && allow_control_teleport());
+                          && allow_control_teleport()
+                          && !you.berserk());
 
     // All wizard teleports are automatically controlled.
     if (wizard_tele)
