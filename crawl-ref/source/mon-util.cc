@@ -2023,10 +2023,10 @@ bool give_monster_proper_name(monsters *mon, bool orcs_only)
 }
 
 // See mons_init for initialization of mon_entry array.
-monsterentry *get_monster_data(int p_monsterid)
+monsterentry *get_monster_data(int mc)
 {
-    if (p_monsterid >= 0 && p_monsterid < NUM_MONSTERS)
-        return (&mondata[mon_entry[p_monsterid]]);
+    if (mc >= 0 && mc < NUM_MONSTERS)
+        return (&mondata[mon_entry[mc]]);
     else
         return (NULL);
 }
