@@ -4250,6 +4250,7 @@ static std::string _get_and_discard_word(std::string* s) {
 
 static deck_rarity_type _rarity_string_to_rarity(const std::string& s) {
     if (s == "common")    return DECK_RARITY_COMMON;
+    if (s == "plain")     return DECK_RARITY_COMMON; // synonym
     if (s == "rare")      return DECK_RARITY_RARE;
     if (s == "ornate")    return DECK_RARITY_RARE; // synonym
     if (s == "legendary") return DECK_RARITY_LEGENDARY;
