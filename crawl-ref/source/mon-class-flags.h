@@ -110,4 +110,7 @@ const uint64_t M_DEFLECT_MISSILES  = (uint64_t)1<<32;
 // phase shift (EV bonus not included)
 const uint64_t M_PHASE_SHIFT       = (uint64_t)1<<33;
 
+// not a valid polymorph target (but can be polymorphed)
+const uint64_t M_NO_POLY_TO        = (uint64_t)1<<34;
+
 #endif

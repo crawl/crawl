@@ -183,7 +183,7 @@ static monsterentry mondata[] = {
     // id, glyph, colour, name
     MONS_PROGRAM_BUG, 'B', LIGHTRED, "program bug",
     // monster flags
-    M_NO_EXP_GAIN,
+    M_NO_EXP_GAIN | M_NO_POLY_TO,
     // resistance flags
     MR_NO_FLAGS,
     // mass, xp modifier, genus, species, holiness, magic resistance
@@ -1522,7 +1522,7 @@ static monsterentry mondata[] = {
 // never spawned as a monster.
 {
     MONS_PLAYER, '@', LIGHTGREY, "player",
-    M_SPEAKS,
+    M_SPEAKS | M_NO_POLY_TO,
     MR_NO_FLAGS,
     0, 15, MONS_PLAYER_ILLUSION, MONS_PLAYER_ILLUSION, MH_NATURAL, -5,
     { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -2745,7 +2745,7 @@ static monsterentry mondata[] = {
 
 {   // not an actual monster, it's here just to allow recoloring
     MONS_MERGED_SLIME_CREATURE, 'J', LIGHTGREEN, "merged slime creature",
-    M_NO_FLAGS,
+    M_NO_POLY_TO,
     MR_RES_POISON | MR_RES_ASPHYX,
     0, 5, MONS_JELLY, MONS_SLIME_CREATURE, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 22}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3450,7 +3450,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_ORB_GUARDIAN, 'X', MAGENTA, "Orb Guardian",
-    M_FIGHTER | M_SEE_INVIS,
+    M_FIGHTER | M_SEE_INVIS | M_NO_POLY_TO,
     MR_NO_FLAGS,
     0, 20, MONS_ORB_GUARDIAN, MONS_ORB_GUARDIAN, MH_NATURAL, -6,
     { {AT_HIT, AF_PLAIN, 45}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -3655,7 +3655,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_KRAKEN_TENTACLE, 'w', BLACK, "tentacle",
-    M_COLD_BLOOD | M_NO_EXP_GAIN,
+    M_COLD_BLOOD | M_NO_EXP_GAIN | M_NO_POLY_TO,
     MR_RES_ASPHYX,
     0, 10, MONS_KRAKEN_TENTACLE, MONS_KRAKEN_TENTACLE, MH_NATURAL, MAG_IMMUNE,
     { {AT_TENTACLE_SLAP, AF_PLAIN, 29}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -5610,7 +5610,7 @@ static monsterentry mondata[] = {
 // over and over.
 {
     MONS_TEST_SPAWNER, 'X', WHITE, "test spawner",
-    M_SPELLCASTER | M_STATIONARY | M_INSUBSTANTIAL,
+    M_SPELLCASTER | M_STATIONARY | M_INSUBSTANTIAL | M_NO_POLY_TO,
     mrd(MR_RES_ELEC | MR_RES_POISON | MR_RES_FIRE | MR_RES_HELLFIRE
         | MR_RES_COLD | MR_RES_ACID | MR_RES_STICKY_FLAME | MR_RES_STEAM, 127),
     0, 15, MONS_TEST_SPAWNER, MONS_TEST_SPAWNER, MH_NONLIVING, MAG_IMMUNE,
@@ -5624,7 +5624,7 @@ static monsterentry mondata[] = {
 // an unspecified monster
 {
     MONS_SENSED, '{', LIGHTRED, "sensed monster",
-    M_NO_FLAGS,
+    M_NO_POLY_TO,
     MR_NO_FLAGS,
     0, 0, MONS_SENSED, MONS_SENSED, MH_NONLIVING, 0,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
