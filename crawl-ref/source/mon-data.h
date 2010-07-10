@@ -294,6 +294,18 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_TINY
 },
 
+{
+    MONS_VAMPIRE_BAT, 'b', DARKGREY, "vampire bat",
+    M_SENSE_INVIS | M_WARM_BLOOD | M_BATTY,
+    MR_NO_FLAGS,
+    150, 8, MONS_GIANT_BAT, MONS_VAMPIRE_BAT, MH_NATURAL, -1,
+    { {AT_HIT, AF_DRAIN_XP, 3}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 3, 2, 3, 0 },
+    1, 14, MST_NO_SPELLS, CE_CLEAN, Z_SMALL, S_SILENT,
+    I_ANIMAL, HT_LAND, FL_FLY, 30, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_TINY
+},
+
 // centaurs ('c')
 {
     MONS_CENTAUR, 'c', BROWN, "centaur",
@@ -1505,6 +1517,19 @@ static monsterentry mondata[] = {
     12, 10, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
     I_ANIMAL, HT_LAND, FL_LEVITATE, 10, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_SMALL
+},
+
+// never spawned as a monster.
+{
+    MONS_PLAYER, '@', LIGHTGREY, "player",
+    M_SPEAKS,
+    MR_NO_FLAGS,
+    0, 15, MONS_PLAYER_ILLUSION, MONS_PLAYER_ILLUSION, MH_NATURAL, -5,
+    { {AT_HIT, AF_PLAIN, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 4, 2, 3, 0 },
+    0, 10, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SHOUT,
+    I_HIGH /*uh huh, sure sure*/, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
+    MONUSE_MAGIC_ITEMS, MONEAT_NOTHING, SIZE_MEDIUM
 },
 
 // rodents ('r')
