@@ -24,17 +24,20 @@ wall/brick_dark6
 # banner
 %weight 3
 wall/brick_dark-bnr1
+
+%back wall/brick_dark0
 # torch (out)
 %weight 3
-wall/brick_dark-t0
+wall/torches/torch0
 %weight 1
 # torches (lit)
-wall/brick_dark-t1
+wall/torches/torch1
 %syn WALL_BRICK_TORCH_START
-wall/brick_dark-t2
-wall/brick_dark-t3
-wall/brick_dark-t4
+wall/torches/torch2
+wall/torches/torch3
+wall/torches/torch4
 %syn WALL_BRICK_TORCH_END
+%back none
 
 %weight 5
 wall/brick_brown0 WALL_BRICK WALL_BRICK_BROWN
