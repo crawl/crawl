@@ -51,6 +51,7 @@
 #ifdef USE_TILE
  #include "tileview.h"
 #endif
+#include "transform.h"
 #include "view.h"
 #include "viewchar.h"
 
@@ -63,8 +64,7 @@ static void _initialize()
 {
     Options.fixup_options();
 
-    you.symbol = '@';
-    you.colour = LIGHTGREY;
+    you.symbol = MONS_PLAYER;
 
     if (Options.seed)
         seed_rng(Options.seed);
@@ -265,6 +265,7 @@ static void _post_init(bool newc)
 
     tiles.resize();
 #endif
+    you.symbol = transform_mons();
 
     draw_border();
     new_level();

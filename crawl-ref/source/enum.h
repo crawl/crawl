@@ -1672,7 +1672,7 @@ enum monster_type                      // (int) menv[].type
     MONS_QUASIT,
     MONS_RAT,
     MONS_SCORPION,
-    MONS_DWARF, // only for corpses
+    MONS_DWARF,
     MONS_UGLY_THING,                   //   20
     MONS_FIRE_VORTEX,
     MONS_WORM,
@@ -1747,8 +1747,8 @@ enum monster_type                      // (int) menv[].type
     MONS_MERGED_SLIME_CREATURE, // used only for recoloring
     MONS_GHOST,                 // common genus for monster and player ghosts
     MONS_SENSED,                // dummy monster for unspecified sensed mons
-    //
-    // 95
+    MONS_PLAYER,                // a certain ugly creature
+    MONS_VAMPIRE_BAT,           // for recolouring
     //
     //
     MONS_GLOWING_SHAPESHIFTER = 98,    //   98
@@ -2145,7 +2145,6 @@ enum monster_type                      // (int) menv[].type
     // MONS_NO_MONSTER can get put in savefiles, so it shouldn't change
     // when NUM_MONSTERS increases.
     MONS_NO_MONSTER = 1000,
-    MONS_PLAYER,
 
     RANDOM_MONSTER = 2000, // used to distinguish between a random monster and using program bugs for error trapping {dlb}
 

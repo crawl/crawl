@@ -86,8 +86,7 @@ public:
   uint64_t redraw_status_flags;
 
   // PC's symbol (usually @) and colour.
-  int symbol;
-  int colour;
+  monster_type symbol;
 
   bool redraw_hit_points;
   bool redraw_magic_points;

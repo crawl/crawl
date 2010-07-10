@@ -514,7 +514,7 @@ std::string screenshot(bool fullscreen)
             int ch =
                   (!map_bounds(gc))             ? 0 :
                   (!crawl_view.in_grid_los(gc)) ? get_map_knowledge_char(gc) :
-                  (gc == you.pos())             ? you.symbol
+                  (gc == you.pos())             ? mons_char(you.symbol)
                                                 : get_screen_glyph(gc);
 
             if (ch && !isprint(ch))
@@ -802,8 +802,8 @@ static void _draw_player(screen_cell_t *cell,
                          bool anim_updates)
 {
     // Player overrides everything in cell.
-    cell->glyph  = you.symbol;
-    cell->colour = you.colour;
+    cell->glyph  = mons_char(you.symbol);
+    cell->colour = mons_class_colour(you.symbol);
     if (you.swimming())
     {
         if (grd(gc) == DNGN_DEEP_WATER)
