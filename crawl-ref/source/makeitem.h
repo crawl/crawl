@@ -7,6 +7,7 @@
 #ifndef MAKEITEM_H
 #define MAKEITEM_H
 
+#include "decks.h"
 #include "itemprop-enum.h"
 
 enum item_make_species_type
@@ -46,6 +47,8 @@ bool is_missile_brand_ok(int type, int brand, bool strict);
 
 bool got_curare_roll(const int item_level);
 void reroll_brand(item_def &item, int item_level);
+
+deck_rarity_type random_deck_rarity();
 
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_TESTS)
 void makeitem_tests();
