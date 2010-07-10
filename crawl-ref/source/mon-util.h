@@ -161,7 +161,7 @@ struct monsterentry
 habitat_type grid2habitat(dungeon_feature_type grid);
 dungeon_feature_type habitat2grid(habitat_type ht);
 
-monsterentry *get_monster_data(int p_monsterid);
+monsterentry *get_monster_data(int mc);
 const mon_resist_def &get_mons_class_resists(int mc);
 mon_resist_def get_mons_resists(const monsters *mon);
 
