@@ -59,6 +59,7 @@
 #include "spl-mis.h"
 #include "spl-util.h"
 #include "spl-zap.h"
+#include "sprint.h"
 #include "state.h"
 #include "stuff.h"
 #ifdef USE_TILE
@@ -1993,6 +1994,11 @@ void exercise_spell(spell_type spell, bool spc, bool success)
                             : random2(1 + random2(diff)));
         exer      += exercise_amount;
     }
+
+    // Avoid doubly rewarding spell practise in sprint
+    // (by inflated XP and inflated piety gain)
+    if (crawl_state.game_is_sprint())
+        exer = sprint_modify_exp_inverse(exer);
 
     if (exer)
         did_god_conduct(DID_SPELL_PRACTISE, exer);

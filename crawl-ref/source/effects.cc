@@ -2779,24 +2779,35 @@ bool forget_inventory(bool quiet)
     return (items_forgotten > 0);
 }
 
+inline static dungeon_feature_type _vitrified_feature(dungeon_feature_type feat)
+{
+    switch (feat)
+    {
+    case DNGN_ROCK_WALL:
+        return DNGN_CLEAR_ROCK_WALL;
+    case DNGN_STONE_WALL:
+        return DNGN_CLEAR_STONE_WALL;
+    case DNGN_PERMAROCK_WALL:
+        return DNGN_CLEAR_PERMAROCK_WALL;
+    default:
+        return feat;
+    }
+}
+
 // Returns true if there was a visible change.
 bool vitrify_area(int radius)
 {
     if (radius < 2)
         return (false);
 
-    // This hinges on clear wall types having the same order as non-clear ones!
-    const int clear_plus = DNGN_CLEAR_ROCK_WALL - DNGN_ROCK_WALL;
     bool something_happened = false;
     for (radius_iterator ri(you.pos(), radius, C_POINTY); ri; ++ri)
     {
         const dungeon_feature_type grid = grd(*ri);
-
-        if (grid == DNGN_ROCK_WALL
-            || grid == DNGN_STONE_WALL
-            || grid == DNGN_PERMAROCK_WALL)
+        const dungeon_feature_type newgrid = _vitrified_feature(grid);
+        if (newgrid != grid)
         {
-            grd(*ri) = static_cast<dungeon_feature_type>(grid + clear_plus);
+            grd(*ri) = newgrid;
             set_terrain_changed(ri->x, ri->y);
             something_happened = true;
         }

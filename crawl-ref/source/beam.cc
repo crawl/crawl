@@ -1351,7 +1351,6 @@ void bolt::do_fire()
     {
         if (range_used() > range)
         {
-            // previous step was still < range, but end point
             ray.regress();
             extra_range_used++;
             ASSERT(range_used() >= range);
@@ -1363,7 +1362,7 @@ void bolt::do_fire()
         if (!affects_nothing)
             affect_cell();
 
-        if (range_used() >= range)
+        if (range_used() > range)
             break;
 
         if (beam_cancelled)

@@ -2332,15 +2332,17 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         game.map = field;
     }
-#ifndef DGAMELAUNCH
     // [ds] For dgamelaunch setups, the player should *not* be able to
     // set game type in their rc; the only way to set game type for
     // DGL builds should be the command-line options.
     else if (key == "type")
     {
+#if defined(DGAMELAUNCH)
+        game.type = Options.game.type;
+#else
         game.type = _str_to_gametype(field);
-    }
 #endif
+    }
     else if (key == "species" || key == "race")
     {
         game.species = _str_to_species(field);

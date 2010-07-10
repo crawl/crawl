@@ -645,6 +645,14 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                 }
             }
         }
+        else if (strcmp(arg, "syn") == 0)
+        {
+            // Add a synonym without resetting the enum count.
+            CHECK_ARG(1);
+
+            for (int i = 1; i < m_args.size(); ++i)
+                m_page.add_synonym(m_page.m_tiles.size() - 1, m_args[i]);
+        }
         else
         {
             fprintf(stderr, "Error (%s:%d): unknown command '%%%s'\n",

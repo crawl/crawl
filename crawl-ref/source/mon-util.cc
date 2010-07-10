@@ -3232,6 +3232,9 @@ bool mons_can_open_door(const monsters* mon, const coord_def& pos)
 // However, they don't realise that secret doors make good eating.
 bool mons_can_eat_door(const monsters* mon, const coord_def& pos)
 {
+    if (env.markers.property_at(pos, MAT_ANY, "door_restrict") == "veto")
+        return (false);
+
     if (mons_itemeat(mon) != MONEAT_ITEMS)
         return (false);
 
