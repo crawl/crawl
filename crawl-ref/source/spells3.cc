@@ -1497,7 +1497,9 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
     if (wizard_tele)
         is_controlled = true;
 
-    if (item_blocks_teleport(true, true) && !wizard_tele)
+    if (crawl_state.game_is_sprint()
+        || item_blocks_teleport(true, true)
+        && !wizard_tele)
     {
         canned_msg(MSG_STRANGE_STASIS);
         return (false);

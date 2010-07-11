@@ -2416,7 +2416,7 @@ std::vector<talent> your_talents(bool check_confused)
         }
     }
 
-    if (player_equip(EQ_RINGS, RING_TELEPORTATION))
+    if (player_equip(EQ_RINGS, RING_TELEPORTATION) && !crawl_state.game_is_sprint())
         _add_talent(talents, ABIL_EVOKE_TELEPORTATION, check_confused);
 
     // Find hotkeys for the non-hotkeyed talents.
