@@ -450,73 +450,14 @@ bool is_player_same_species(const int mon, bool transform)
         }
     }
 
-    switch (you.species)
-    {
-        case SP_HUMAN:
-            return (mons_genus(mon) == MONS_HUMAN);
+    // Genus would include necrophage and rotting hulk.
+    if (you.species == SP_GHOUL)
+        return (mons_species(mon) == MONS_GHOUL);
 
-        case SP_CENTAUR:
-            return (mons_genus(mon) == MONS_CENTAUR);
+    if (you.species == SP_MERFOLK && mons_genus(mon) == MONS_MERMAID)
+        return (true);
 
-        case SP_OGRE:
-            return (mons_genus(mon) == MONS_OGRE);
-
-        case SP_TROLL:
-            return (mons_genus(mon) == MONS_TROLL);
-
-        case SP_MUMMY:
-            return (mons_genus(mon) == MONS_MUMMY);
-
-        case SP_GHOUL: // Genus would include necrophage and rotting hulk.
-            return (mons_species(mon) == MONS_GHOUL);
-
-        case SP_VAMPIRE:
-            return (mons_genus(mon) == MONS_VAMPIRE);
-
-        case SP_MINOTAUR:
-            return (mons_genus(mon) == MONS_MINOTAUR);
-
-        case SP_NAGA:
-            return (mons_genus(mon) == MONS_NAGA);
-
-        case SP_HILL_ORC:
-            return (mons_genus(mon) == MONS_ORC);
-
-        case SP_MERFOLK:
-            return (mons_genus(mon) == MONS_MERFOLK
-                    || mons_genus(mon) == MONS_MERMAID);
-
-        case SP_HIGH_ELF:
-        case SP_DEEP_ELF:
-        case SP_SLUDGE_ELF:
-            return (mons_genus(mon) == MONS_ELF);
-
-        case SP_MOUNTAIN_DWARF:
-        case SP_DEEP_DWARF:
-            return (mons_genus(mon) == MONS_DWARF);
-
-        case SP_BASE_DRACONIAN:
-        case SP_RED_DRACONIAN:
-        case SP_WHITE_DRACONIAN:
-        case SP_GREEN_DRACONIAN:
-        case SP_YELLOW_DRACONIAN:
-        case SP_GREY_DRACONIAN:
-        case SP_BLACK_DRACONIAN:
-        case SP_PURPLE_DRACONIAN:
-        case SP_MOTTLED_DRACONIAN:
-        case SP_PALE_DRACONIAN:
-            return (mons_genus(mon) == MONS_DRACONIAN);
-
-        case SP_KOBOLD:
-            return (mons_genus(mon) == MONS_KOBOLD);
-
-        case SP_SPRIGGAN:
-            return (mons_genus(mon) == MONS_SPRIGGAN);
-
-        default: // no monster equivalent
-            return (false);
-
-    }
+    return (mons_genus(mon) == mons_genus(player_mons()));
 }
 
 monster_type player_mons()
