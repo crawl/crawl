@@ -1035,6 +1035,10 @@ int player_teleport(bool calc_unid)
 {
     ASSERT(!crawl_state.game_is_arena());
 
+    // Don't allow any form of teleportation in Sprint.
+    if (crawl_state.game_is_sprint())
+        return 0;
+
     int tp = 0;
 
     // rings
