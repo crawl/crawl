@@ -2577,6 +2577,8 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
     {
         // Every piety level change also affects AC from orcish gear.
         you.redraw_armour_class = true;
+        // Or the player's symbol.
+        you.symbol = transform_mons();
     }
 
     if (you.religion == GOD_CHEIBRIADOS)

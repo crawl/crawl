@@ -13,7 +13,7 @@
 #include <stdlib.h>
 
 #include "externs.h"
-
+#include "hints.h"
 #include "itemprop.h"
 #include "notes.h"
 #include "output.h"
@@ -23,7 +23,7 @@
 #include "spl-cast.h"
 #include "sprint.h"
 #include "state.h"
-#include "hints.h"
+#include "transform.h"
 
 
 // MAX_COST_LIMIT is the maximum XP amount it will cost to raise a skill
@@ -344,6 +344,9 @@ static void _gain_skill_level(skill_type exsk)
 
     if (you.weapon() && item_is_staff(*you.weapon()))
         maybe_identify_staff(*you.weapon());
+
+    // Ogres -> ogre mages.
+    you.symbol = transform_mons();
 }
 
 static int _exercise2(int exski)

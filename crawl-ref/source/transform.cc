@@ -21,6 +21,7 @@
 #include "item_use.h"
 #include "itemprop.h"
 #include "items.h"
+#include "options.h"
 #include "output.h"
 #include "player.h"
 #include "player-equip.h"
@@ -415,6 +416,8 @@ monster_type transform_mons()
         return MONS_HOG;
     case TRAN_BLADE_HANDS:
     case TRAN_NONE:
+        if (Options.show_player_species)
+            return player_mons();
         return MONS_PLAYER;
     }
     ASSERT(!"unknown transformation");
