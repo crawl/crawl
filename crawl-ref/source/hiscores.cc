@@ -1207,7 +1207,7 @@ void scorefile_entry::init()
     fixup_char_name();
 
     lvl            = you.experience_level;
-    best_skill     = ::best_skill( SK_FIGHTING, NUM_SKILLS - 1, 99 );
+    best_skill     = ::best_skill(SK_FIGHTING, NUM_SKILLS - 1);
     best_skill_lvl = you.skills[ best_skill ];
 
     // Note all skills at level 27.

@@ -283,7 +283,7 @@ static int _stat_mult(skill_type exsk, int skill_inc)
 
 static void _gain_skill_level(skill_type exsk)
 {
-    skill_type old_best_skill = best_skill(SK_FIGHTING, (NUM_SKILLS - 1), 99);
+    skill_type old_best_skill = best_skill(SK_FIGHTING, (NUM_SKILLS - 1));
 
     you.skills[exsk]++;
 
@@ -331,14 +331,14 @@ static void _gain_skill_level(skill_type exsk)
     }
 
     const skill_type best_spell = best_skill(SK_SPELLCASTING,
-                                             SK_POISON_MAGIC, 99);
+                                             SK_POISON_MAGIC);
     if (exsk == SK_SPELLCASTING
         && you.skills[exsk] == 1 && best_spell == SK_SPELLCASTING)
     {
         mpr("You're starting to get the hang of this magic thing.");
     }
 
-    const skill_type best = best_skill(SK_FIGHTING, (NUM_SKILLS - 1), 99);
+    const skill_type best = best_skill(SK_FIGHTING, (NUM_SKILLS - 1));
     if (best != old_best_skill || old_best_skill == exsk)
         redraw_skill(you.your_name, player_title());
 
