@@ -2178,6 +2178,10 @@ mon_glyph = <monster name or symbol> : <colour> <glyph>
              sensed monster
              merged slime creature
              vampire bat
+             kenku
+             demonspawn
+             demigod
+             halfling
 
 pizza = <topping name>
         The player's choice of pizza topping.

@@ -1268,6 +1268,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     // humans ('@')
     case MONS_HUMAN:
     case MONS_DWARF:
+    case MONS_DEMIGOD:
         return TILEP_MONS_HUMAN;
     case MONS_HELL_KNIGHT:
         return TILEP_MONS_HELL_KNIGHT;
@@ -1285,6 +1286,10 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_KILLER_KLOWN;
     case MONS_SLAVE:
         return _mon_mod(TILEP_MONS_SLAVE, tile_num_prop);
+    case MONS_DEMONSPAWN:
+        return TILEP_MONS_DEMONSPAWN;
+    case MONS_HALFLING:
+        return TILEP_MONS_HALFLING;
 
     // mimics
     case MONS_GOLD_MIMIC:

@@ -603,9 +603,17 @@ deep troll
 
 A stooped troll.
 %%%%
+demigod
+
+While this fellow looks like any of the human-like races, the aura of power betrays some divine ancestry. And with the good gods (at least officially) decrying fornication, betting on the good nature of this individual may be unwise...
+%%%%
 demonic crawler
 
 A long and bloated body, supported by dozens of short legs and topped with an evil-looking head.
+%%%%
+demonspawn
+
+This fellow looks mostly like a human, yet you sense something evil about him.
 %%%%
 dire elephant
 
@@ -907,6 +915,12 @@ hairy devil
 
 A small humanoid demon covered in brown hair. Watch out - it may have fleas!
 %%%%
+halfling
+
+This is a degenerate human, both mentally and physically similar to a child of perhaps ten, perhaps twelve years of age, yet looking older. It looks mischievous, as if prone to no good.
+
+It definitely deserves an axe to the head.
+%%%%
 harpy
 
 Harpies have roamed these coasts as long as seafarers can remember. They strike fear in the hearts of all sentient beings, but not for their claws. It is their way to devour the food of the unwary, causing many a man to starve to death.
@@ -1038,6 +1052,10 @@ A pulsating mass of acidic protoplasm. It can and will eat almost anything, and 
 jellyfish
 
 A pulsating glob of transparent flesh, waiting just below the surface to sting you with its many tentacles.
+%%%%
+kenku
+
+A bird-brained creature that looks at you with hatred.
 %%%%
 killer bee
 
