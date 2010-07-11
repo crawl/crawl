@@ -776,6 +776,7 @@ static item_make_species_type _give_weapon(monsters *mon, int level,
         break;
 
     case MONS_DAEVA:
+    case MONS_MENNAS:
         force_item     = true;
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
@@ -1366,6 +1367,7 @@ void give_shield(monsters *mon, int level)
     switch (mon->type)
     {
     case MONS_DAEVA:
+    case MONS_MENNAS:
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_LARGE_SHIELD,
                               level * 2 + 1, MAKE_ITEM_NO_RACE, 1);
         break;
