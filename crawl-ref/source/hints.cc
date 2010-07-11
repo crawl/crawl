@@ -3624,13 +3624,13 @@ void hints_describe_item(const item_def &item)
                 {
                     // Then only compare with other launcher skills.
                     curr_wpskill = range_skill(item);
-                    best_wpskill = best_skill(SK_SLINGS, SK_THROWING, 99);
+                    best_wpskill = best_skill(SK_SLINGS, SK_THROWING);
                 }
                 else
                 {
                     // Compare with other melee weapons.
                     curr_wpskill = weapon_skill(item);
-                    best_wpskill = best_skill(SK_SHORT_BLADES, SK_STAVES, 99);
+                    best_wpskill = best_skill(SK_SHORT_BLADES, SK_STAVES);
                     // Maybe unarmed is better.
                     if (you.skills[SK_UNARMED_COMBAT] > you.skills[best_wpskill])
                         best_wpskill = SK_UNARMED_COMBAT;
