@@ -1440,6 +1440,17 @@
       }
     },
 
+    {  MST_MENNAS,
+      {
+       SPELL_NO_SPELL,
+       SPELL_CONFUSE,
+       SPELL_SILENCE,
+       SPELL_NO_SPELL,
+       SPELL_MINOR_HEALING,
+       SPELL_MINOR_HEALING
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,

@@ -4406,6 +4406,21 @@ __NONE
 w:5
 @The_monster@ sings off-key, "You got some money for me?"
 %%%%
+############ MENNAS ### A silenct Angel.
+Mennas
+
+VISUAL:@The_monster@ gestures at you. @player_only@
+
+VISUAL:@The_monster@ looks to the heavens.
+
+VISUAL:@The_monster@ shakes his head sadly.
+
+VISUAL:@The_monster@ is caught in a moment of prayer.
+%%%%
+silenced Mennas
+
+@Mennas@
+%%%%
 ############ MENKAURE ### A mummy whose rest you've disturbed
 Menkaure
 

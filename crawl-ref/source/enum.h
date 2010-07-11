@@ -2135,6 +2135,7 @@ enum monster_type                      // (int) menv[].type
     MONS_SPRIGGAN_DEFENDER,
     MONS_THE_ENCHANTRESS,
     MONS_FIREFLY,
+    MONS_MENNAS,
 
     // Testing monsters
     MONS_TEST_SPAWNER,
@@ -2409,6 +2410,7 @@ enum mon_spellbook_type
     MST_GRINDER,
     MST_IRON_GIANT,
     MST_IRON_ELEMENTAL,
+    MST_MENNAS,
 
     MST_TEST_SPAWNER = 200,
     NUM_MSTYPES,
