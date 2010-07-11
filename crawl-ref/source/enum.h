@@ -1749,9 +1749,9 @@ enum monster_type                      // (int) menv[].type
     MONS_SENSED,                // dummy monster for unspecified sensed mons
     MONS_PLAYER,                // a certain ugly creature
     MONS_VAMPIRE_BAT,           // for recolouring
-    //
-    //
-    MONS_GLOWING_SHAPESHIFTER = 98,    //   98
+    MONS_DEMIGOD,               // for recolouring
+    MONS_DEMONSPAWN,            // for recolouring... but there are FRs
+    MONS_GLOWING_SHAPESHIFTER,
     MONS_SHAPESHIFTER,
     MONS_GIANT_MITE,                   //  100
     MONS_STEAM_DRAGON,
@@ -1837,8 +1837,7 @@ enum monster_type                      // (int) menv[].type
     MONS_BLINK_FROG,
     MONS_GIANT_COCKROACH,
     MONS_SMALL_SNAKE,
-    //jmf: new monsters
-    MONS_SHUGGOTH,                     //  XXX: not used
+    MONS_KENKU,
     MONS_WOLF,     //jmf: added
     MONS_WARG,     //jmf: added for orc mines
     MONS_BEAR,     //jmf: added bears!
@@ -1866,6 +1865,7 @@ enum monster_type                      // (int) menv[].type
     MONS_SEA_SNAKE,
 
     MONS_HYPERACTIVE_BALLISTOMYCETE,
+    MONS_HALFLING,              // for recolouring only.  And let's remove them!
 
     //jmf: end new monsters
     MONS_WHITE_IMP = 220,              //  220
