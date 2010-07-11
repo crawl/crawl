@@ -2172,6 +2172,13 @@ mon_glyph = <monster name or symbol> : <colour> <glyph>
 
              mon_glyph = player ghost : \_
 
+        You can also redefine several "pseudo" monsters, them being:
+
+             player
+             sensed monster
+             merged slime creature
+             vampire bat
+
 pizza = <topping name>
         The player's choice of pizza topping.
 
