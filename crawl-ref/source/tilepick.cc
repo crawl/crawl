@@ -535,6 +535,7 @@ static tileidx_t _tileidx_monster_zombified(const monsters *mon)
 
         z_tile = TILEP_MONS_ZOMBIE_BAT;
         break;
+    case MON_SHAPE_SNAIL:
     case MON_SHAPE_SNAKE:
         if (_is_skeleton(z_type))
             return TILEP_MONS_SKELETON_SNAKE;
@@ -547,6 +548,7 @@ static tileidx_t _tileidx_monster_zombified(const monsters *mon)
 
         z_tile = TILEP_MONS_ZOMBIE_FISH;
         break;
+    case MON_SHAPE_CENTIPEDE:
     case MON_SHAPE_INSECT:
         z_tile = TILEP_MONS_ZOMBIE_BEETLE;
         break;
