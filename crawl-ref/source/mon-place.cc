@@ -2234,6 +2234,7 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
     case MONS_YELLOW_DRACONIAN:
     case MONS_BLACK_DRACONIAN:
     case MONS_GREEN_DRACONIAN:
+    case MONS_GREY_DRACONIAN:
     case MONS_PALE_DRACONIAN:
         if (power > 18 && one_chance_in(3) && you.level_type == LEVEL_DUNGEON)
         {
@@ -2582,23 +2583,24 @@ static monster_type _band_member(band_type band, int power)
         break;
     case BAND_DRACONIAN:
     {
-        temp_rand = random2( (power < 24) ? 24 : 37 );
+        temp_rand = random2( (power < 24) ? 27 : 40 );
         mon_type =
-                ((temp_rand > 35) ? MONS_DRACONIAN_CALLER :     // 1 in 34
-                 (temp_rand > 33) ? MONS_DRACONIAN_KNIGHT :     // 2 in 34
-                 (temp_rand > 31) ? MONS_DRACONIAN_MONK :       // 2 in 34
-                 (temp_rand > 29) ? MONS_DRACONIAN_SHIFTER :    // 2 in 34
-                 (temp_rand > 27) ? MONS_DRACONIAN_ANNIHILATOR :// 2 in 34
-                 (temp_rand > 25) ? MONS_DRACONIAN_SCORCHER :   // 2 in 34
-                 (temp_rand > 23) ? MONS_DRACONIAN_ZEALOT :     // 2 in 34
-                 (temp_rand > 20) ? MONS_YELLOW_DRACONIAN :     // 3 in 34
-                 (temp_rand > 17) ? MONS_GREEN_DRACONIAN :      // 3 in 34
-                 (temp_rand > 14) ? MONS_BLACK_DRACONIAN :      // 3 in 34
-                 (temp_rand > 11) ? MONS_WHITE_DRACONIAN :      // 3 in 34
-                 (temp_rand >  8) ? MONS_PALE_DRACONIAN :       // 3 in 34
-                 (temp_rand >  5) ? MONS_PURPLE_DRACONIAN :     // 3 in 34
-                 (temp_rand >  2) ? MONS_MOTTLED_DRACONIAN :    // 3 in 34
-                                    MONS_RED_DRACONIAN );       // 3 in 34
+                ((temp_rand > 38) ? MONS_DRACONIAN_CALLER :     // 1
+                 (temp_rand > 36) ? MONS_DRACONIAN_KNIGHT :     // 2
+                 (temp_rand > 34) ? MONS_DRACONIAN_MONK :       // 2
+                 (temp_rand > 32) ? MONS_DRACONIAN_SHIFTER :    // 2
+                 (temp_rand > 30) ? MONS_DRACONIAN_ANNIHILATOR :// 2
+                 (temp_rand > 28) ? MONS_DRACONIAN_SCORCHER :   // 2
+                 (temp_rand > 26) ? MONS_DRACONIAN_ZEALOT :     // 2
+                 (temp_rand > 23) ? MONS_GREY_DRACONIAN :       // 3
+                 (temp_rand > 20) ? MONS_YELLOW_DRACONIAN :     // 3
+                 (temp_rand > 17) ? MONS_GREEN_DRACONIAN :      // 3
+                 (temp_rand > 14) ? MONS_BLACK_DRACONIAN :      // 3
+                 (temp_rand > 11) ? MONS_WHITE_DRACONIAN :      // 3
+                 (temp_rand >  8) ? MONS_PALE_DRACONIAN :       // 3
+                 (temp_rand >  5) ? MONS_PURPLE_DRACONIAN :     // 3
+                 (temp_rand >  2) ? MONS_MOTTLED_DRACONIAN :    // 3
+                                    MONS_RED_DRACONIAN );       // 3
         break;
     }
     case BAND_ILSUIW:
@@ -3241,14 +3243,7 @@ monster_type summon_any_dragon(dragon_class_type dct)
         break;
 
     case DRAGON_DRACONIAN:
-        temp_rand = random2(70);
-        mon = ((temp_rand > 60) ? MONS_YELLOW_DRACONIAN :
-               (temp_rand > 50) ? MONS_BLACK_DRACONIAN :
-               (temp_rand > 40) ? MONS_PALE_DRACONIAN :
-               (temp_rand > 30) ? MONS_GREEN_DRACONIAN :
-               (temp_rand > 20) ? MONS_PURPLE_DRACONIAN :
-               (temp_rand > 10) ? MONS_RED_DRACONIAN
-                                : MONS_WHITE_DRACONIAN);
+        mon = random_draconian_monster_species();
         break;
 
     case DRAGON_DRAGON:

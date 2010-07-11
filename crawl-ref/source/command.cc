@@ -1363,6 +1363,7 @@ static void _do_description(std::string key, std::string type,
                 case MONS_PURPLE_DRACONIAN:
                 case MONS_RED_DRACONIAN:
                 case MONS_WHITE_DRACONIAN:
+                case MONS_GREY_DRACONIAN:
                 case MONS_PALE_DRACONIAN:
                     mon.base_monster = mon_num;
                     break;

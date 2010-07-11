@@ -503,7 +503,7 @@ monster_type player_mons()
     case SP_YELLOW_DRACONIAN:
         return MONS_YELLOW_DRACONIAN;
     case SP_GREY_DRACONIAN:
-        return MONS_DRACONIAN; // FIXME!
+        return MONS_GREY_DRACONIAN;
     case SP_BLACK_DRACONIAN:
         return MONS_BLACK_DRACONIAN;
     case SP_PURPLE_DRACONIAN:

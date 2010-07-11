@@ -1972,19 +1972,20 @@ enum monster_type                      // (int) menv[].type
     // mon-util.cc.
     MONS_BLACK_DRACONIAN,               // Should always be first colour.
     MONS_MOTTLED_DRACONIAN,
-    MONS_YELLOW_DRACONIAN,              //  315
+    MONS_YELLOW_DRACONIAN,
     MONS_GREEN_DRACONIAN,
     MONS_PURPLE_DRACONIAN,
     MONS_RED_DRACONIAN,
     MONS_WHITE_DRACONIAN,
-    MONS_PALE_DRACONIAN,                //  320 Should always be last colour.
+    MONS_GREY_DRACONIAN,
+    MONS_PALE_DRACONIAN,                //  Should always be last colour.
 
     // Sync up with mon-place.cc's draconian selection if adding more.
     MONS_DRACONIAN_CALLER,
     MONS_DRACONIAN_MONK,
     MONS_DRACONIAN_ZEALOT,
     MONS_DRACONIAN_SHIFTER,
-    MONS_DRACONIAN_ANNIHILATOR,         //  325
+    MONS_DRACONIAN_ANNIHILATOR,
     MONS_DRACONIAN_KNIGHT,
     MONS_DRACONIAN_SCORCHER,
 
@@ -1993,7 +1994,7 @@ enum monster_type                      // (int) menv[].type
     MONS_MURRAY,
     MONS_TIAMAT,
 
-    MONS_DEEP_ELF_BLADEMASTER,         //  330
+    MONS_DEEP_ELF_BLADEMASTER,
     MONS_DEEP_ELF_MASTER_ARCHER,
 
     // The Lords of Hell (also unique):
@@ -2124,7 +2125,7 @@ enum monster_type                      // (int) menv[].type
     MONS_CHUCK,
     MONS_IRON_GIANT,
     MONS_NELLIE,
-    MONS_IRON_ELEMENTAL,
+    MONS_IRON_ELEMENTAL,               // 488
 
     // Spriggans:
     MONS_SPRIGGAN = 500,

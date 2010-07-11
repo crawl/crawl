@@ -2606,6 +2606,11 @@ void unmarshallMonster(reader &th, monsters &m)
     if (m.type == MONS_NO_MONSTER)
         return;
 
+#if TAG_MAJOR_VERSION == 27
+    if (th.getMinorVersion() < TAG_MINOR_GREY_DRACS)
+        if (m.type >= MONS_GREY_DRACONIAN && m.type < MONS_DEEP_ELF_MASTER_ARCHER)
+            m.type = (monster_type)(m.type + 1);
+#endif
     m.mname           = unmarshallString(th, 100);
     m.ac              = unmarshallByte(th);
     m.ev              = unmarshallByte(th);
