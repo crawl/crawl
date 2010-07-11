@@ -407,6 +407,7 @@ note_monsters = orb of fire, ancient lich, Sigmund
 # colour.yellow    = brown
 #
 # pizza            = Sausage
+# show_player_species = true
 
 # See options_guide.txt for the options
 # cset_ascii, cset_ibm, cset_dec, cset_unicode, cset_any,

@@ -818,6 +818,7 @@ void game_options::reset_options()
     use_fake_cursor        = false;
 #endif
     use_fake_player_cursor = true;
+    show_player_species    = false;
 
     stash_tracking         = STM_ALL;
 
@@ -2840,6 +2841,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else BOOL_OPTION(use_fake_cursor);
     else BOOL_OPTION(use_fake_player_cursor);
+    else BOOL_OPTION(show_player_species);
     else if (key == "force_more_message")
     {
         std::vector<std::string> fragments = split_string(",", field);

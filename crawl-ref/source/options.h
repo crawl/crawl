@@ -297,6 +297,8 @@ public:
                                     // on the term's own cursor.
     bool        use_fake_player_cursor;
 
+    bool        show_player_species;
+
     int         level_map_cursor_step;  // The cursor increment in the level
                                         // map.
 
