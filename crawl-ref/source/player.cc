@@ -5932,6 +5932,7 @@ int player::res_magic() const
         break;
     case SP_PURPLE_DRACONIAN:
     case SP_DEEP_DWARF:
+    case SP_CAT:
         rm = experience_level * 6;
         break;
     case SP_SPRIGGAN:
