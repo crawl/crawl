@@ -126,8 +126,8 @@ void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
     switch (br)
     {
     case BRANCH_MAIN_DUNGEON:
-        flv.wall  = TILE_WALL_NORMAL;
-        flv.floor = TILE_FLOOR_NORMAL;
+        flv.wall    = TILE_WALL_NORMAL;
+        flv.floor   = TILE_FLOOR_NORMAL;
         return;
 
     case BRANCH_HIVE:
@@ -749,6 +749,7 @@ void tile_wizmap_terrain(const coord_def &gc)
 }
 
 // Updates the "flavour" of tiles that are animated.
+// Unfortunately, these are all hard-coded for now.
 void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
 {
     tileidx_t bg_idx = bg & TILE_FLAG_MASK;
@@ -760,6 +761,14 @@ void tile_apply_animations(tileidx_t bg, tile_flavour *flv)
              || bg_idx == TILE_DNGN_ALTAR_CHEIBRIADOS)
     {
         flv->special = (flv->special + 1) % tile_dngn_count(bg_idx);
+    }
+    else if (bg_idx == TILE_WALL_NORMAL
+             && flv->wall >= TILE_WALL_BRICK_TORCH_START
+             && flv->wall <= TILE_WALL_BRICK_TORCH_END)
+    {
+        flv->wall += 1;
+        if (flv->wall > TILE_WALL_BRICK_TORCH_END)
+            flv->wall = TILE_WALL_BRICK_TORCH_START;
     }
 }
 

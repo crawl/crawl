@@ -1778,7 +1778,7 @@ std::string skill_title( unsigned char best_skill, unsigned char skill_lev,
 
 std::string player_title()
 {
-    const unsigned char best = best_skill( SK_FIGHTING, (NUM_SKILLS - 1), 99 );
+    const unsigned char best = best_skill(SK_FIGHTING, (NUM_SKILLS - 1));
     return (skill_title( best, you.skills[ best ] ));
 }
 

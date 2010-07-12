@@ -2804,6 +2804,8 @@ bool is_useless_item(const item_def &item, bool temp)
         case SCR_RANDOM_USELESSNESS:
         case SCR_NOISE:
             return (true);
+        case SCR_TELEPORTATION:
+            return (crawl_state.game_is_sprint());
         case SCR_RECHARGING:
             return (you.species == SP_CAT);
         default:
@@ -2924,7 +2926,11 @@ bool is_useless_item(const item_def &item, bool temp)
             return (you.religion == GOD_TROG);
 
         case RING_TELEPORT_CONTROL:
-            return (player_control_teleport(true, temp, false));
+            return (player_control_teleport(true, temp, false)
+                    || crawl_state.game_is_sprint());
+
+        case RING_TELEPORTATION:
+            return (crawl_state.game_is_sprint());
 
         case RING_INVISIBILITY:
             return (temp && you.backlit(true));

@@ -2214,11 +2214,7 @@ static bool _valid_morph(monsters *monster, monster_type new_mclass)
         // smart enough to handle.
         || mons_is_ghost_demon(new_mclass)
 
-        // Only for use by game testers or in the arena.
-        || new_mclass == MONS_TEST_SPAWNER
-
         // Other poly-unsuitable things.
-        || new_mclass == MONS_ORB_GUARDIAN
         || mons_is_statue(new_mclass)
         || mons_is_projectile(new_mclass)
 

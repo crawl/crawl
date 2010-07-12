@@ -1265,36 +1265,13 @@ void down_stairs(dungeon_feature_type force_stair,
         grd(you.pos()) = DNGN_FLOOR;
 
         init_pandemonium();     // colours only
-
-        if (player_in_hell())
-        {
-            you.where_are_you = you.hell_branch;
-            you.absdepth0    = you.hell_exit - 1;
-        }
         break;
 
     case LEVEL_PANDEMONIUM:
-        if (old_level.level_type == LEVEL_PANDEMONIUM)
-        {
-            init_pandemonium();
+        init_pandemonium();
 
-            for (pc = 0; pc < pt; pc++)
-                pandemonium_mons();
-        }
-        else
-        {
-            init_pandemonium();
-
-            for (pc = 0; pc < pt; pc++)
-                pandemonium_mons();
-
-            if (player_in_hell())
-            {
-                you.where_are_you = BRANCH_MAIN_DUNGEON;
-                you.hell_exit  = 26;
-                you.absdepth0 = 26;
-            }
-        }
+        for (pc = 0; pc < pt; pc++)
+            pandemonium_mons();
         break;
 
     default:

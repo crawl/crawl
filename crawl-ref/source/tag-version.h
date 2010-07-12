@@ -15,7 +15,8 @@ enum tag_minor_version
     TAG_MINOR_SAVEVER      = 4, // Save full game version into .chr file.
     TAG_MINOR_CAT_LIVES    = 5, // Let cats accumulate lives.
     TAG_MINOR_NO_ROD_DISCO = 6, // Remove rods of discovery.
-    TAG_MINOR_VERSION      = 6, // Current version.  (Keep equal to max.)
+    TAG_MINOR_GREY_DRACS   = 7, // Add monster grey draconians.
+    TAG_MINOR_VERSION      = 7, // Current version.  (Keep equal to max.)
 };
 
 #endif

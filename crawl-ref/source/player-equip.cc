@@ -24,6 +24,7 @@
 #include "skills2.h"
 #include "spl-cast.h"
 #include "spl-mis.h"
+#include "state.h"
 #include "stuff.h"
 #include "transform.h"
 #include "xom.h"
@@ -1193,7 +1194,10 @@ static void _equip_jewellery_effect(item_def &item)
         break;
 
     case RING_TELEPORTATION:
-        mpr("You feel slightly jumpy.");
+        if (crawl_state.game_is_sprint())
+            mpr("You feel a slight, muted jump rush through you.");
+        else
+            mpr("You feel slightly jumpy.");
         if (artefact)
             fake_rap = ARTP_CAUSE_TELEPORTATION;
         else

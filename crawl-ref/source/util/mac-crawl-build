@@ -1,0 +1,232 @@
+#! /usr/bin/env perl
+#
+# Runs the Mac Crawl tiles and ASCII builds and uploads them to CDO. Needs
+# to be run as a user with a suitable ssh key for CDO.
+#
+# WARNING: Will do git clean -fdx in the current tree automatically;
+# don't run this in a tree you're using for real work.
+
+use strict;
+use warnings;
+
+use Cwd;
+
+my $CRAWLDIR;
+
+$ENV{PATH} = "$ENV{PATH}:/opt/local/bin";
+my $LASTVERFILE = "crawl-ref/last-mac-build.version";
+
+my $COMPILEDIR = "crawl-ref/source";
+my $BUILDDIR = "crawl-ref/source/build/Release";
+my @APPS = ("Dungeon Crawl Stone Soup.app",
+            "Dungeon Crawl Stone Soup - ASCII.app");
+my $ZIPNAMEFMT = 'crawl_%sosx-%s.zip';
+my $REMOTE_HOST = 'crawl@crawl.develz.org';
+my $SCP_PATH = "$REMOTE_HOST:/var/www/crawl.develz.org/htdocs/trunk";
+my $CURRENTVERSION;
+
+sub main() {
+  $CRAWLDIR = discover_crawl_dir();
+  goto_dir($CRAWLDIR);
+
+  my $last_build_version = last_build_version();
+  update_git();
+  $CURRENTVERSION = current_version();
+  if (!$last_build_version || $last_build_version ne $CURRENTVERSION) {
+    if ($last_build_version) {
+      say("[INFO] Last build: $last_build_version; current: $CURRENTVERSION");
+    }
+    else {
+      say("[INFO] Current version: $CURRENTVERSION");
+    }
+    build_crawl();
+    my @binaries = package_build();
+    upload_binaries(@binaries);
+
+    save_build_version($CURRENTVERSION);
+  }
+  else {
+    say("[INFO] $CURRENTVERSION already built, nothing to do");
+  }
+}
+
+sub directory_has_paths(@) {
+  my @paths = @_;
+  for my $path (@paths) {
+    my $dir = $path =~ s{/$}{};
+    return undef unless ($dir? -d($path) : -r($path));
+  }
+  1
+}
+
+sub find_parent_directory_containing($@) {
+  my ($failmsg, @paths) = @_;
+  my $current_dir = getcwd();
+  while (1) {
+    return $current_dir if directory_has_paths(@paths);
+
+    chdir("..") or die "$failmsg\n";
+    my $parent = getcwd();
+    die "$failmsg\n" if $parent eq $current_dir;
+    $current_dir = $parent;
+  }
+}
+
+sub discover_crawl_dir() {
+  find_parent_directory_containing(
+    "[ERR] Couldn't find crawl-ref repository top-level directory",
+    ".git/", "crawl-ref/git-hooks/",
+    "crawl-ref/source/", "crawl-ref/source/rltiles/")
+}
+
+sub last_build_version() {
+  open my $inf, '<', $LASTVERFILE or return;
+  chomp(my $lastver = <$inf>);
+  close $inf;
+  $lastver
+}
+
+sub save_build_version($) {
+  my $version = shift;
+  open my $outf, '>', $LASTVERFILE or die "Can't write $LASTVERFILE: $!\n";
+  print $outf "$version\n";
+  close $outf;
+}
+
+sub say($) {
+  my $msg = shift;
+  warn("$msg\n") if -t STDIN;
+}
+
+sub clean_crawl() {
+  sys_check("git clean -dfx");
+}
+
+sub in_dir($$) {
+  my ($dir, $task) = @_;
+  my $start_dir = getcwd();
+  goto_dir($dir);
+  eval {
+    $task->();
+  };
+  my $err = $@;
+  goto_dir($start_dir);
+  die $err if $err;
+}
+
+sub build_crawl_target($) {
+  my $target = shift;
+  in_dir($COMPILEDIR,
+         sub {
+           sys_check("xcodebuild -target '$target' -configuration 'Release'");
+         });
+}
+
+sub build_crawl() {
+  clean_crawl();
+  build_crawl_target("Crawl Tiles");
+  build_crawl_target("Crawl ASCII");
+}
+
+sub assert_app_bundles_exist() {
+  for my $app (@APPS) {
+    -d("$BUILDDIR/$app") or die "[ERR] $app was not built\n";
+  }
+}
+
+sub zip_name_for_app($) {
+  my $app = shift;
+  my $tiles = $app !~ /ASCII/;
+  my $qualifier = $tiles ? "tiles_" : "";
+  sprintf($ZIPNAMEFMT, $qualifier, $CURRENTVERSION)
+}
+
+sub create_app_zips() {
+  my $cd = getcwd();
+  goto_dir($BUILDDIR);
+
+  my @zips;
+  for my $app (@APPS) {
+    my $zipname = zip_name_for_app($app);
+    unlink($zipname) if -f $zipname;
+    sys_check("zip -r $zipname '$app'");
+    push @zips, $zipname;
+  }
+
+  goto_dir($cd);
+
+  return map("$BUILDDIR/$_", @zips);
+}
+
+sub package_build() {
+  assert_app_bundles_exist();
+  return create_app_zips();
+}
+
+sub scp($$) {
+  my ($src, $targ) = @_;
+  sys_check("scp $src $targ");
+}
+
+sub upload_binary($) {
+  my $zip = shift;
+  scp($zip, $SCP_PATH);
+}
+
+sub update_trunk_page() {
+  sys_check("ssh $REMOTE_HOST bin/update-trunk-indices.py");
+}
+
+sub upload_binaries(@) {
+  my @zips = @_;
+  for my $zip (@zips) {
+    die "[ERR] Zip $zip does not exist\n" unless -f $zip;
+    upload_binary($zip);
+  }
+  update_trunk_page();
+}
+
+sub current_version() {
+  chomp(my $ver = qx/git describe --long/);
+  die "[ERR] git describe failed\n" if ($? >> 8) || !$ver;
+  $ver
+}
+
+sub goto_dir($) {
+  my $dir = shift;
+  say("[CD] $dir");
+  chdir($dir) or die "Can't chdir to $dir: $!\n";
+}
+
+sub retry_until_success($$$) {
+  my ($tries, $desc, $task) = @_;
+
+  while ($tries-- > 0) {
+    last if $task->();
+  }
+  die "ERR: $desc failed\n" if $tries < 0;
+}
+
+sub sys_retry_until_success($$) {
+  my ($tries, $command) = @_;
+  my $task = sub { !sys_do($command) };
+  retry_until_success($tries, $command, $task);
+}
+
+sub sys_do($) {
+  my $command = shift;
+  say("[SYSTEM] $command");
+  system($command)
+}
+
+sub sys_check($) {
+  my $command = shift;
+  !sys_do($command) or die "[ERR] $command failed\n";
+}
+
+sub update_git() {
+  sys_retry_until_success(200, "git pull");
+  sys_retry_until_success(200, "git submodule update --init");
+}
+
+main();

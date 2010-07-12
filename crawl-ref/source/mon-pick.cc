@@ -298,6 +298,7 @@ bool mons_abyss(int mcls)
     case MONS_PURPLE_DRACONIAN:
     case MONS_PALE_DRACONIAN:
     case MONS_GREEN_DRACONIAN:
+    case MONS_GREY_DRACONIAN:
     case MONS_DRACONIAN_CALLER:
     case MONS_DRACONIAN_MONK:
     case MONS_DRACONIAN_SCORCHER:
@@ -461,6 +462,7 @@ int mons_rare_abyss(int mcls)
     case MONS_PURPLE_DRACONIAN:
     case MONS_PALE_DRACONIAN:
     case MONS_GREEN_DRACONIAN:
+    case MONS_GREY_DRACONIAN:
     case MONS_DRACONIAN_CALLER:
     case MONS_DRACONIAN_MONK:
     case MONS_DRACONIAN_SCORCHER:
@@ -2272,6 +2274,7 @@ int mons_hallzot_level(int mcls)
     case MONS_PURPLE_DRACONIAN:
     case MONS_PALE_DRACONIAN:
     case MONS_GREEN_DRACONIAN:
+    case MONS_GREY_DRACONIAN:
     case MONS_DRACONIAN_CALLER:
     case MONS_DRACONIAN_MONK:
     case MONS_DRACONIAN_SCORCHER:
@@ -2329,6 +2332,7 @@ int mons_hallzot_rare(int mcls)
     case MONS_PURPLE_DRACONIAN:
     case MONS_PALE_DRACONIAN:
     case MONS_GREEN_DRACONIAN:
+    case MONS_GREY_DRACONIAN:
         return 18;
 
     case MONS_DRACONIAN_CALLER:

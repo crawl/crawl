@@ -3154,6 +3154,7 @@ static void _generate_misc_item(item_def& item, int force_type, int item_race)
             (item.sub_type == MISC_RUNE_OF_ZOT
              || item.sub_type == MISC_HORN_OF_GERYON
              || item.sub_type == MISC_DECK_OF_PUNISHMENT
+             || item.sub_type == MISC_QUAD_DAMAGE
              // Pure decks are rare in the dungeon.
              || (item.sub_type == MISC_DECK_OF_ESCAPE
                     || item.sub_type == MISC_DECK_OF_DESTRUCTION
@@ -3170,13 +3171,19 @@ static void _generate_misc_item(item_def& item, int force_type, int item_race)
     if ( is_deck(item) )
     {
         item.plus = 4 + random2(10);
-        item.special = random_choose_weighted( 8, DECK_RARITY_LEGENDARY,
-                                              20, DECK_RARITY_RARE,
-                                              72, DECK_RARITY_COMMON,
-                                               0);
+        item.special = random_deck_rarity();
         init_deck(item);
     }
 }
+
+deck_rarity_type random_deck_rarity() {
+  return static_cast<deck_rarity_type>
+    (random_choose_weighted(8, DECK_RARITY_LEGENDARY,
+                            20, DECK_RARITY_RARE,
+                            72, DECK_RARITY_COMMON,
+                            0));
+}
+
 
 // Returns item slot or NON_ITEM if it fails.
 int items(int allow_uniques,       // not just true-false,
