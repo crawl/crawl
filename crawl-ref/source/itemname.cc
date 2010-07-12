@@ -2655,6 +2655,7 @@ bool is_bad_item(const item_def &item, bool temp)
         case RING_HUNGER:
             // Even Vampires can use this ring.
             return (!you.is_undead);
+        case RING_EVASION:
         case RING_PROTECTION:
         case RING_STRENGTH:
         case RING_DEXTERITY:
