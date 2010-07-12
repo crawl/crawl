@@ -616,7 +616,7 @@ else
 endif
 
 ifneq ($(strip $(SAVEDIR)),)
-  ifneq ($(filter \~%,$(SAVEDIR)),)
+  ifneq ($(filter ~%,$(SAVEDIR)),)
     CFOTHERS_L += -DSAVE_DIR_PATH=\"$(SAVEDIR)\"
     savedir_fp :=
   else
