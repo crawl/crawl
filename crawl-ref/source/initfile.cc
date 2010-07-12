@@ -52,6 +52,7 @@
 #ifdef TARGET_OS_WINDOWS
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <shlwapi.h>
 #elif defined ( __APPLE__ )
 extern char **NXArgv;
 #elif defined ( __linux__ )
@@ -645,9 +646,15 @@ void game_options::reset_options()
     }
     else
     {
+#ifdef TARGET_OS_WINDOWS
+        char home[MAX_PATH];
+        if (SHGetFolderPath(0, CSIDL_APPDATA, 0, 0, home))
+            strcpy(home, "./");
+#else
         const char *home = getenv("HOME");
         if (!home || !*home)
             home = "./";
+#endif
         save_dir = (std::string)home + (SAVE_DIR_PATH + 1) + "/saves/";
         morgue_dir = (std::string)home + (SAVE_DIR_PATH + 1) + "/morgue/";
     }
