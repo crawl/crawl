@@ -534,6 +534,8 @@ monster_type player_mons()
         return MONS_VAMPIRE;
     case SP_DEEP_DWARF:
         return MONS_DWARF; // until/if DD monsters are added
+    case SP_CAT:
+        return MONS_WITCHS_CAT;
     case SP_ELF:
     case SP_HILL_DWARF:
     case SP_OGRE_MAGE:
