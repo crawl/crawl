@@ -1302,7 +1302,7 @@ std::string scorefile_entry::game_time(death_desc_verbosity verbosity) const
                 }
             }
 #endif
-            snprintf(scratch, INFO_SIZE, "%s game lasted %s (%ld turns).",
+            snprintf(scratch, INFO_SIZE, "%s game lasted %s (%d turns).",
                      username, make_time_string(real_time).c_str(),
                      num_turns);
 
@@ -1438,7 +1438,7 @@ std::string scorefile_entry::single_cdesc() const
     if (scname.length() > 10)
         scname = scname.substr(0, 10);
 
-    return make_stringf( "%8ld %-10s %s-%02d%s", points, scname.c_str(),
+    return make_stringf( "%8d %-10s %s-%02d%s", points, scname.c_str(),
                          race_class_name.c_str(), lvl, (wiz_mode == 1) ? "W" : "" );
 }
 
@@ -1472,7 +1472,7 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
     // Please excuse the following bit of mess in the name of flavour ;)
     if (verbose)
     {
-        snprintf( buf, HIGHSCORE_SIZE, "%8ld %s the %s (level %d",
+        snprintf( buf, HIGHSCORE_SIZE, "%8d %s the %s (level %d",
                   points, name.c_str(),
                   skill_title( best_skill, best_skill_lvl,
                                race, str, dex, god ).c_str(), lvl );
@@ -1480,7 +1480,7 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
     }
     else
     {
-        snprintf( buf, HIGHSCORE_SIZE, "%8ld %s the %s %s (level %d",
+        snprintf( buf, HIGHSCORE_SIZE, "%8d %s the %s %s (level %d",
                   points, name.c_str(),
                   species_name(static_cast<species_type>(race)).c_str(),
                   _job_name(job), lvl );
