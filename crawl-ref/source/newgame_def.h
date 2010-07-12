@@ -56,7 +56,7 @@ struct newgame_def
     bool fully_random;
 
     newgame_def();
+    void clear_character();
 };
 
 #endif
-

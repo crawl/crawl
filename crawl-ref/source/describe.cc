@@ -2690,6 +2690,8 @@ static std::string _describe_draconian_colour(int species)
         return "Smoke pours from its nostrils.";
     case MONS_WHITE_DRACONIAN:
         return "Frost pours from its nostrils.";
+    case MONS_GREY_DRACONIAN:
+        return "Its scales seem rigid and its tail muscular.";
     case MONS_PALE_DRACONIAN:
         return "It is cloaked in a pall of superheated steam.";
     }
@@ -2716,6 +2718,7 @@ static std::string _describe_draconian(const monsters *mon)
     case MONS_PURPLE_DRACONIAN:     description += "purple-";  break;
     case MONS_RED_DRACONIAN:        description += "red-";     break;
     case MONS_WHITE_DRACONIAN:      description += "white-";   break;
+    case MONS_GREY_DRACONIAN:       description += "grey-";    break;
     case MONS_PALE_DRACONIAN:       description += "pale-";    break;
     default:
         break;
@@ -3012,6 +3015,7 @@ void get_monster_db_desc(const monsters& mons, describe_info &inf,
     case MONS_BLACK_DRACONIAN:
     case MONS_YELLOW_DRACONIAN:
     case MONS_PURPLE_DRACONIAN:
+    case MONS_GREY_DRACONIAN:
     case MONS_DRACONIAN_SHIFTER:
     case MONS_DRACONIAN_SCORCHER:
     case MONS_DRACONIAN_ZEALOT:

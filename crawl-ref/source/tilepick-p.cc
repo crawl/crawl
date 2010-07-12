@@ -409,6 +409,7 @@ static int _draconian_colour(int race, int level)
         case MONS_DRACONIAN:        return (0);
         case MONS_BLACK_DRACONIAN:  return (1);
         case MONS_YELLOW_DRACONIAN: return (2);
+        case MONS_GREY_DRACONIAN:   return (3);
         case MONS_GREEN_DRACONIAN:  return (4);
         case MONS_MOTTLED_DRACONIAN:return (5);
         case MONS_PALE_DRACONIAN:   return (6);

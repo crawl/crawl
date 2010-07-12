@@ -984,8 +984,10 @@ static void tag_construct_you(writer &th)
     marshallString(th, you.second_god_name);
     marshallByte(th, you.piety);
     marshallByte(th, you.rotting);
-    marshallByte(th, you.symbol);
-    marshallByte(th, you.colour);
+#if TAG_MAJOR_VERSION == 27
+    marshallByte(th, mons_char(you.symbol));
+    marshallByte(th, mons_class_colour(you.symbol));
+#endif
     marshallShort(th, you.pet_target);
 
     marshallByte(th, you.max_level);
@@ -1546,8 +1548,10 @@ static void tag_read_you(reader &th, char minorVersion)
 
     you.piety             = unmarshallByte(th);
     you.rotting           = unmarshallByte(th);
-    you.symbol            = unmarshallByte(th);
-    you.colour            = unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 27
+    unmarshallByte(th);
+    unmarshallByte(th);
+#endif
     you.pet_target        = unmarshallShort(th);
 
     you.max_level         = unmarshallByte(th);
@@ -2603,6 +2607,11 @@ void unmarshallMonster(reader &th, monsters &m)
     if (m.type == MONS_NO_MONSTER)
         return;
 
+#if TAG_MAJOR_VERSION == 27
+    if (th.getMinorVersion() < TAG_MINOR_GREY_DRACS)
+        if (m.type >= MONS_GREY_DRACONIAN && m.type < MONS_DEEP_ELF_MASTER_ARCHER)
+            m.type = (monster_type)(m.type + 1);
+#endif
     m.mname           = unmarshallString(th, 100);
     m.ac              = unmarshallByte(th);
     m.ev              = unmarshallByte(th);

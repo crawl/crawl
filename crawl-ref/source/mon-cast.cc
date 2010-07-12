@@ -123,6 +123,7 @@ static spell_type _draco_type_to_breath(int drac_type)
     case MONS_PURPLE_DRACONIAN:  return SPELL_ISKENDERUNS_MYSTIC_BLAST;
     case MONS_RED_DRACONIAN:     return SPELL_FIRE_BREATH;
     case MONS_WHITE_DRACONIAN:   return SPELL_COLD_BREATH;
+    case MONS_GREY_DRACONIAN:    return SPELL_NO_SPELL;
     case MONS_PALE_DRACONIAN:    return SPELL_STEAM_BALL;
 
     // Handled later.
@@ -970,6 +971,8 @@ static spell_type _get_draconian_breath_spell( monsters *monster )
         {
         case MONS_DRACONIAN:
         case MONS_YELLOW_DRACONIAN:     // already handled as ability
+            break;
+        case MONS_GREY_DRACONIAN:       // no breath
             break;
         default:
             draco_breath = SPELL_DRACONIAN_BREATH;

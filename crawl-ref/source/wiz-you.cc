@@ -28,6 +28,7 @@
 #include "spl-util.h"
 #include "stuff.h"
 #include "terrain.h"
+#include "transform.h"
 #include "xom.h"
 
 #ifdef WIZARD
@@ -147,6 +148,7 @@ void wizard_change_species( void )
         break;
     }
 
+    you.symbol = transform_mons();
 #ifdef USE_TILE
     init_player_doll();
 #endif

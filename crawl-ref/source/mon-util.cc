@@ -808,6 +808,8 @@ monster_type draco_subspecies(const monsters *mon)
             return MONS_MOTTLED_DRACONIAN;
         case SP_PALE_DRACONIAN:
             return MONS_PALE_DRACONIAN;
+        case SP_GREY_DRACONIAN:
+            return MONS_GREY_DRACONIAN;
         default:
             return MONS_DRACONIAN;
         }
@@ -1893,7 +1895,7 @@ int ugly_thing_colour_offset(const unsigned char colour)
 }
 
 static const char *drac_colour_names[] = {
-    "black", "mottled", "yellow", "green", "purple", "red", "white", "pale"
+    "black", "mottled", "yellow", "green", "purple", "red", "white", "grey", "pale"
 };
 
 std::string draconian_colour_name(monster_type mon_type)
@@ -2023,10 +2025,10 @@ bool give_monster_proper_name(monsters *mon, bool orcs_only)
 }
 
 // See mons_init for initialization of mon_entry array.
-monsterentry *get_monster_data(int p_monsterid)
+monsterentry *get_monster_data(int mc)
 {
-    if (p_monsterid >= 0 && p_monsterid < NUM_MONSTERS)
-        return (&mondata[mon_entry[p_monsterid]]);
+    if (mc >= 0 && mc < NUM_MONSTERS)
+        return (&mondata[mon_entry[mc]]);
     else
         return (NULL);
 }
@@ -3232,6 +3234,9 @@ bool mons_can_open_door(const monsters* mon, const coord_def& pos)
 // However, they don't realise that secret doors make good eating.
 bool mons_can_eat_door(const monsters* mon, const coord_def& pos)
 {
+    if (env.markers.property_at(pos, MAT_ANY, "door_restrict") == "veto")
+        return (false);
+
     if (mons_itemeat(mon) != MONEAT_ITEMS)
         return (false);
 

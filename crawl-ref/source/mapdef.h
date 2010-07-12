@@ -597,6 +597,7 @@ private:
 private:
     item_spec item_by_specifier(const std::string &spec);
     item_spec_slot parse_item_spec(std::string spec);
+    void build_deck_spec(std::string s, item_spec* spec);
     item_spec parse_single_spec(std::string s);
     int parse_acquirement_source(const std::string &source);
     void parse_raw_name(std::string name, item_spec &spec);

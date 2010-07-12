@@ -17,6 +17,7 @@ public:
 
     int find(const std::string &enumname) const;
     bool add_synonym(const std::string &enumname, const std::string &syn);
+    bool add_synonym(int idx, const std::string &syn);
     void add_variation(int var_idx, int base_idx, int colour);
 
     std::vector<tile*> m_tiles;
