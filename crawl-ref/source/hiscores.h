@@ -68,9 +68,9 @@ private:
     std::string raw_line;
 
     std::string version;
-    long        points;
+    int         points;
     std::string name;
-    long        uid;                // for multiuser systems
+    uint32_t    uid;                // for multiuser systems
     species_type race;
     int         job;                // job_type + legacy values
     std::string race_class_name;    // overrides race & cls if non-empty.
@@ -102,11 +102,11 @@ private:
     char        wiz_mode;           // character used wiz mode
     time_t      birth_time;         // start time of character
     time_t      death_time;         // end time of character
-    long        real_time;          // real playing time in seconds
-    long        num_turns;          // number of turns taken
+    time_t      real_time;          // real playing time in seconds
+    int         num_turns;          // number of turns taken
     int         num_diff_runes;     // number of rune types in inventory
     int         num_runes;          // total number of runes in inventory
-    long        kills;              // number of monsters killed
+    int         kills;              // number of monsters killed
     std::string maxed_skills;       // comma-separated list of skills
                                     // at level 27
     int         gold;               // Remaining gold.
@@ -148,7 +148,7 @@ public:
     std::string death_place(death_desc_verbosity) const;
     std::string game_time(death_desc_verbosity) const;
 
-    long   get_score() const      { return points; }
+    int    get_score() const      { return points; }
     int    get_death_type() const { return death_type; }
     time_t get_death_time() const { return death_time; }
     xlog_fields get_fields() const;
