@@ -527,7 +527,7 @@ bool file_exists(const std::string &name)
 // Low-tech existence check.
 bool dir_exists(const std::string &dir)
 {
-#ifdef TARGET_COMPILER_VC
+#ifdef TARGET_OS_WINDOWS
     DWORD lAttr = GetFileAttributes(dir.c_str());
     return (lAttr != INVALID_FILE_ATTRIBUTES
             && (lAttr & FILE_ATTRIBUTE_DIRECTORY));
