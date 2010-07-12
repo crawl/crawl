@@ -5077,6 +5077,27 @@ void monster::apply_enchantment(const mon_enchant &me)
 
             dprf("sticky flame damage: %d", dam);
 
+            if (type == MONS_SHEEP)
+            {
+                for (adjacent_iterator ai(pos()); ai; ++ai)
+                {
+                    monster *mon = monster_at(*ai);
+                    if (mon && mon->type == MONS_SHEEP
+                        && !mon->has_ench(ENCH_STICKY_FLAME)
+                        && coinflip())
+                    {
+                        mprf("%s catches on fire!", mon->name(DESC_CAP_A).c_str());
+                        const int dur = me.degree/2 + 1 + random2(me.degree);
+                        mon->add_ench(mon_enchant(ENCH_STICKY_FLAME, dur,
+                                                  me.who));
+                        mon->add_ench(mon_enchant(ENCH_FEAR, dur + random2(20),
+                                                  me.who));
+                        behaviour_event(mon, ME_SCARE, me.who);
+                        xom_is_stimulated(128);
+                    }
+                }
+            }
+
             // Credit the kill.
             if (hit_points < 1)
             {
