@@ -520,6 +520,7 @@ int TilesFramework::getch_ck()
     wm->set_timer(res, &_timer_callback);
 
     m_tooltip.clear();
+    std::string prev_alt = m_region_msg->alt_text();
     m_region_msg->alt_text().clear();
 
     if (need_redraw())
@@ -552,9 +553,14 @@ int TilesFramework::getch_ck()
                             continue;
                         if (reg->update_alt_text(m_region_msg->alt_text()))
                         {
-                            set_need_redraw();
                             break;
                         }
+                    }
+
+                    if (prev_alt != m_region_msg->alt_text())
+                    {
+                        prev_alt = m_region_msg->alt_text();
+                        set_need_redraw();
                     }
                 }
             }
@@ -630,7 +636,7 @@ int TilesFramework::getch_ck()
                     // Stay within this input loop until the mouse moves
                     // to a semantically different location.  Crawl doesn't
                     // care about small mouse movements.
-                    if (last_loc == m_cur_loc)
+                    if (!need_redraw() && last_loc == m_cur_loc)
                         continue;
 
                     key = mouse_key;
