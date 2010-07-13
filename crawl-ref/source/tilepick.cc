@@ -332,7 +332,7 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
 
 tileidx_t tileidx_feature(const coord_def &gc)
 {
-    dungeon_feature_type feat = grid_appearance(gc);
+    dungeon_feature_type feat = env.grid(gc);
 
     tileidx_t override = env.tile_flv(gc).feat;
     bool can_override = !feat_is_door(grd(gc))
@@ -344,8 +344,20 @@ tileidx_t tileidx_feature(const coord_def &gc)
     // Any grid-specific tiles.
     switch (feat)
     {
+    case DNGN_SECRET_DOOR:
     case DNGN_DETECTED_SECRET_DOOR:
-        return (_tileidx_feature_base(grid_secret_door_appearance(gc)));
+        {
+            coord_def door;
+            dungeon_feature_type door_feat;
+            find_secret_door_info(gc, &door_feat, &door);
+
+            // If surrounding tiles from a secret door are using tile
+            // overrides, then use that tile for the secret door.
+            if (env.tile_flv(door).feat)
+                return (env.tile_flv(door).feat);
+            else
+                return (_tileidx_feature_base(door_feat));
+        }
     case DNGN_TRAP_MECHANICAL:
     case DNGN_TRAP_MAGICAL:
     case DNGN_TRAP_NATURAL:
