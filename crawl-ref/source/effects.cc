@@ -1514,6 +1514,7 @@ static int _acquirement_misc_subtype()
            || result == MISC_RUNE_OF_ZOT
            || result == MISC_CRYSTAL_BALL_OF_FIXATION
            || result == MISC_EMPTY_EBONY_CASKET
+           || result == MISC_QUAD_DAMAGE
            || result == MISC_DECK_OF_PUNISHMENT);
 
     return (result);
