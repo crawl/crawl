@@ -251,10 +251,12 @@ std::string item_def::name(description_level_type descrip,
                     buff << " (worn)";
                     break;
                 case EQ_LEFT_RING:
-                    buff << " (left hand)";
+                    buff << (you.species != SP_CAT ? " (left hand)"
+                                                   : " (left paw)");
                     break;
                 case EQ_RIGHT_RING:
-                    buff << " (right hand)";
+                    buff << (you.species != SP_CAT ? " (right hand)"
+                                                   : " (right paw)");
                     break;
                 case EQ_AMULET:
                     buff << " (around neck)";
