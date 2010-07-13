@@ -1276,13 +1276,13 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_CAT,             SK_NECROMANCY,      0),
     APT(SP_CAT,             SK_TRANSLOCATIONS,  1),
     APT(SP_CAT,             SK_TRANSMUTATIONS,  3),
-    APT(SP_CAT,             SK_FIRE_MAGIC,     -3),
-    APT(SP_CAT,             SK_ICE_MAGIC,      -2),
+    APT(SP_CAT,             SK_FIRE_MAGIC,     -1),
+    APT(SP_CAT,             SK_ICE_MAGIC,      -1),
     APT(SP_CAT,             SK_AIR_MAGIC,      -1),
-    APT(SP_CAT,             SK_EARTH_MAGIC,    -3),
-    APT(SP_CAT,             SK_POISON_MAGIC,   -3),
+    APT(SP_CAT,             SK_EARTH_MAGIC,    -1),
+    APT(SP_CAT,             SK_POISON_MAGIC,   -1),
     APT(SP_CAT,             SK_INVOCATIONS,    -1),
-    APT(SP_CAT,             SK_EVOCATIONS,      0),
+    APT(SP_CAT,             SK_EVOCATIONS,     -1),
 };
 
 // Traditionally, Spellcasting and In/Evocations formed the exceptions here:
