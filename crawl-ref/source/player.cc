@@ -5447,7 +5447,10 @@ std::string player::shout_verb() const
         return "squeak";
     case TRAN_PIG:
         return "squeal";
-    default: // depends on SCREAM mutation
+    default:
+        if (you.species == SP_CAT)
+            return coinflip() ? "meow" : "yowl";
+        // depends on SCREAM mutation
         int level = player_mutation_level(MUT_SCREAM);
         if (level <= 1)
             return "shout";
