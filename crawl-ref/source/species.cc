@@ -246,7 +246,7 @@ std::string species_name(species_type speci, bool genus, bool adj)
         case SP_GHOUL:      res = (adj ? "Ghoulish"   : "Ghoul");      break;
         case SP_MERFOLK:    res = (adj ? "Merfolkian" : "Merfolk");    break;
         case SP_VAMPIRE:    res = (adj ? "Vampiric"   : "Vampire");    break;
-        case SP_CAT:        res = (adj ? "Feline"     : "Cat");        break;
+        case SP_CAT:        res = (adj ? "Feline"     : "Witch's Cat");break;
         default:            res = (adj ? "Yakish"     : "Yak");        break;
         }
     }
