@@ -237,8 +237,10 @@ std::string item_def::name(description_level_type descrip,
                 case EQ_WEAPON:
                     if (this->base_type == OBJ_WEAPONS || item_is_staff(*this))
                         buff << " (weapon)";
-                    else
+                    else if (you.species != SP_CAT)
                         buff << " (in hand)";
+                    else
+                        buff << " (in mouth)";
                     break;
                 case EQ_CLOAK:
                 case EQ_HELMET:

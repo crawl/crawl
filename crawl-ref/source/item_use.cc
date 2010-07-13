@@ -357,7 +357,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             you.time_taken /= 10;
         }
         else
-            mpr("You are already empty-handed.");
+            canned_msg(MSG_EMPTY_HANDED);
 
         return (true);
     }
