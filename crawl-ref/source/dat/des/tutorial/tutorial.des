@@ -331,7 +331,7 @@ MARKER:  I = lua:tutorial.message_log()
 MARKER:  J = lua:tutorial.message_monster_description()
 KFEAT:   ABCDEFGHQIJ = .
 COLOUR:  ABCDEFGHQIJ = blue
-#TILE:    ABCDEFGH = tutorial_message_tile_name_here
+FTILE:   ABCDEFGHQIJ = tutorial_pad
 MONS:    training dummy tile:mons_training_dummy hp:20 ; club ego:none
 epilogue{{
   tutorial.messagestart()
@@ -376,6 +376,7 @@ ITEM:    randbook disc:conjuration numspells:1 slevels:1 spell:magic_dart \
                   owner:Newbie
 KFEAT:   ABCDEF = .
 COLOUR:  ABCDEF = blue
+FTILE:   ABCDEF = tutorial_pad
 MARKER:  [ = lua:tutorial.message_upstairs()
 MARKER:  A = lua:tutorial.message_wield_ranged()
 # TODO: Targetting needs tutorial messages; these can't be done on the map side.
@@ -425,6 +426,7 @@ KFEAT:   pmn = .
 KITEM:   G = wand of fireball
 KFEAT:   ABCDEFGHI = .
 COLOUR:  ABCDEFGHI = blue
+FTILE:   ABCDEFGHI = tutorial_pad
 MARKER:  A = lua:tutorial.message( "You can chop up corpses with " .. tutorial.get_cmd("CMD_BUTCHER") .. " into edible meat chunks while standing over them. For that you'll need a sharp object, such as the axe over there.", "tutorial", "true" )
 MARKER:  d = lua:tutorial.message( "This axe was picked up automatically because you didn't have a butchering tool. Once you've " .. tutorial.get_cmd("CMD_BUTCHER") .. "hopped a corpse you're standing on, you can eat the resulting chunks with " .. tutorial.get_cmd("CMD_EAT") .. ", though only if you're hungry.", "tutorial", "true" )
 MARKER:  B = lua:tutorial.message_eat()
@@ -478,6 +480,7 @@ KMONS:   S = Sigmund
 KFEAT:   S = .
 KFEAT:   ABCDEF = .
 COLOUR:  ABCDEF = blue
+FTILE:   ABCDEF = tutorial_pad
 MONS:    rat, rat always_corpse
 MONS:    training dummy tile:mons_training_dummy spells:blink;blink;blink;blink;blink;blink ; whip ego:reaching
 MARKER:  A = lua:tutorial.message( "You may have been poisoned from the trap. Drink a potion of healing, or rest with " .. tutorial.get_cmd("CMD_REST") .. " to try to wait it out.", "tutorial", "true" )
@@ -515,6 +518,7 @@ PLACE:   D:5
 MONS:    pandemonium lord name:Plog name_replace spells:fire_storm;;haste;;;
 KFEAT:   ABC = .
 COLOUR:  ABC = blue
+FTILE:   ABC = tutorial_pad
 MARKER:  A = lua:tutorial.message( "Congratulations, You have succeeded in defeating Sigmund! He is one of the many early game threats that you will face on your adventures.", "tutorial", "true" )
 MARKER:  B = lua:tutorial.message( "Death in Crawl is almost inevitable, sometimes you will get yourself in way over your head; often, you will die.", "tutorial", "true" )
 MARKER:  C = lua:tutorial.message( "How on earth did you manage to defeat or escape from that Pandemonium lord?", "tutorial", "true" )
