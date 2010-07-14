@@ -1968,6 +1968,29 @@ bool item_is_staff( const item_def &item )
 }
 
 //
+// Macguffins
+//
+bool item_is_rune(const item_def &item, rune_type which_rune)
+{
+    return (item.base_type == OBJ_MISCELLANY
+            && item.sub_type == MISC_RUNE_OF_ZOT
+            && (which_rune == NUM_RUNE_TYPES || item.plus == which_rune));
+}
+
+bool item_is_unique_rune(const item_def &item)
+{
+    return (item.base_type == OBJ_MISCELLANY
+            && item.sub_type == MISC_RUNE_OF_ZOT
+            && item.plus != RUNE_DEMONIC
+            && item.plus != RUNE_ABYSSAL);
+}
+
+bool item_is_orb(const item_def &item)
+{
+    return (item.base_type == OBJ_ORBS && item.sub_type == ORB_ZOT);
+}
+
+//
 // Ring functions:
 
 // Returns number of pluses on jewellery (always none for amulets yet).

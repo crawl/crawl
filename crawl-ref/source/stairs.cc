@@ -933,11 +933,9 @@ void down_stairs(dungeon_feature_type force_stair,
         }
         shaft_level = absdungeon_depth(shaft_dest.branch, shaft_dest.depth);
 
-#ifdef DGL_MILESTONES
         if (!known_trap && shaft_level - you.absdepth0 > 1)
             mark_milestone("shaft", "fell down a shaft to " +
                                     short_place_name(shaft_dest) + ".");
-#endif
 
         if (you.flight_mode() != FL_FLY || force_stair)
             mpr("You fall through a shaft!");
@@ -1017,7 +1015,6 @@ void down_stairs(dungeon_feature_type force_stair,
     // Fire level-leaving trigger.
     _leaving_level_now();
 
-#ifdef DGL_MILESTONES
     if (!force_stair && !crawl_state.game_is_arena())
     {
         // Not entirely accurate - the player could die before
@@ -1030,7 +1027,6 @@ void down_stairs(dungeon_feature_type force_stair,
             mark_milestone("abyss.exit", "escaped from the Abyss!");
         }
     }
-#endif
 
     // Interlevel travel data.
     const bool collect_travel_data = can_travel_interlevel();
@@ -1127,9 +1123,7 @@ void down_stairs(dungeon_feature_type force_stair,
         // Are these too long?
         mpr("As you enter the labyrinth, previously moving walls settle noisily into place.");
         mpr("You hear the metallic echo of a distant snort before it fades into the rock.");
-#ifdef DGL_MILESTONES
         mark_milestone("br.enter", "entered a Labyrinth.");
-#endif
         break;
 
     case LEVEL_ABYSS:

@@ -3112,10 +3112,8 @@ void level_change(bool skip_attribute_increase)
                                      "demonic heritage exerts itself.",
                                      MSGCH_MUTATION);
 
-#ifdef DGL_MILESTONES
                                 mark_milestone("monstrous", "is a "
                                                "monstrous demonspawn!");
-#endif
                             }
 
                             i = you.demonic_traits.size();

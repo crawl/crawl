@@ -540,7 +540,6 @@ void banished(dungeon_feature_type gate_type, const std::string &who)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-#ifdef DGL_MILESTONES
     if (gate_type == DNGN_ENTER_ABYSS)
     {
         mark_milestone("abyss.enter",
@@ -551,7 +550,6 @@ void banished(dungeon_feature_type gate_type, const std::string &who)
         mark_milestone("abyss.exit",
                        "escaped from the Abyss!" + _who_banished(who));
     }
-#endif
 
     std::string cast_into;
 

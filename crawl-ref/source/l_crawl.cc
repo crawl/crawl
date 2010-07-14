@@ -687,11 +687,9 @@ LUAFN(_crawl_args)
 
 LUAFN(_crawl_milestone)
 {
-#ifdef DGL_MILESTONES
     mark_milestone(luaL_checkstring(ls, 1),
                    luaL_checkstring(ls, 2),
                    lua_toboolean(ls, 3));
-#endif
     return (0);
 }
 
