@@ -2346,11 +2346,11 @@ std::string xlog_fields::xlog_line() const
 ///////////////////////////////////////////////////////////////////////////////
 // Milestones
 
-#ifdef DGL_MILESTONES
 void mark_milestone(const std::string &type,
                     const std::string &milestone,
                     bool report_origin_level)
 {
+#ifdef DGL_MILESTONES
     static std::string lasttype, lastmilestone;
     static long lastturn = -1;
 
@@ -2385,8 +2385,8 @@ void mark_milestone(const std::string &type,
         fprintf(fp, "%s\n", xl.xlog_line().c_str());
         lk_close(fp, "a", milestone_file);
     }
-}
 #endif // DGL_MILESTONES
+}
 
 #ifdef DGL_WHEREIS
 std::string xlog_status_line()

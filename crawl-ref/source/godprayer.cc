@@ -806,9 +806,9 @@ void offer_items()
     {
         ASSERT(disliked_item);
 
-        if (disliked_item->base_type == OBJ_ORBS)
+        if (item_is_orb(*disliked_item))
             simple_god_message(" wants the Orb's power used on the surface!");
-        else if (is_rune(*disliked_item))
+        else if (item_is_rune(*disliked_item))
             simple_god_message(" wants the runes to be proudly displayed.");
         else if (disliked_item->base_type == OBJ_MISCELLANY
                  && disliked_item->sub_type == MISC_HORN_OF_GERYON)

@@ -429,7 +429,6 @@ Note::Note( NOTE_TYPES t, int f, int s, const char* n, const char* d ) :
 
 void Note::check_milestone() const
 {
-#ifdef DGL_MILESTONES
     if (crawl_state.game_is_arena())
         return;
 
@@ -458,7 +457,6 @@ void Note::check_milestone() const
             }
         }
     }
-#endif
 }
 
 void Note::save(writer& outf) const
