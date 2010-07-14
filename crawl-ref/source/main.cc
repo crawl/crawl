@@ -275,6 +275,7 @@ int main(int argc, char *argv[])
 
 static void _reset_game()
 {
+    clrscr();
     crawl_state.type = GAME_TYPE_UNSPECIFIED;
     clear_message_store();
     you.reset();
@@ -286,6 +287,7 @@ static void _reset_game()
     // [ds] Don't show the title screen again, just go back to
     // the menu.
     Options.tile_title_screen = false;
+    tiles.clear_text_tags(TAG_NAMED_MONSTER);
 #endif
 }
 
