@@ -841,6 +841,7 @@ test:
 
 ifeq (,$(findstring clean,$(MAKECMDGOALS)))
 ifeq (,$(findstring test,$(MAKECMDGOALS)))
+ifeq (,$(filter %-windows,$(MAKECMDGOALS)))
 
 #
 # CFLAGS difference check
@@ -872,6 +873,7 @@ ifneq ($(DEPS),)
 -include $(DEPS)
 endif
 
+endif
 endif
 endif
 
