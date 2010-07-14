@@ -16,15 +16,11 @@ SetCompressor /SOLID lzma
 
 Name "${DCSS} ${VERSION}"
 Outfile "crawl-${VERSION}.setup.exe"
-InstallDir "$PROGRAMFILES\Crawl"
-InstallDirRegKey HKCU "Software\Crawl" "InstallDir"
-RequestExecutionLevel user
 XPStyle on
 !define MUI_ICON util\crawl.ico
 
 !define MUI_ABORTWARNING
 
-!insertmacro MUI_PAGE_WELCOME
 !insertmacro MULTIUSER_PAGE_INSTALLMODE
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
@@ -45,8 +41,9 @@ Section ""
   WriteRegStr SHCTX "Software\Crawl" "" $INSTDIR
 
   CreateDirectory "$SMPROGRAMS\${DCSS}"
-  CreateShortCut "$SMPROGRAMS\${DCSS}\Dungeon Crawl - console.lnk" "$INSTDIR\crawl.exe"
+  # the order matters -- only the first shortcut is advertised by Win 7
   CreateShortCut "$SMPROGRAMS\${DCSS}\Dungeon Crawl - tiles.lnk" "$INSTDIR\crawl-tiles.exe"
+  CreateShortCut "$SMPROGRAMS\${DCSS}\Dungeon Crawl - console.lnk" "$INSTDIR\crawl.exe"
   CreateShortCut "$SMPROGRAMS\${DCSS}\Uninstall DCSS.lnk" "$INSTDIR\uninst.exe"
 
   WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Crawl" "DisplayName" "${DCSS}"
