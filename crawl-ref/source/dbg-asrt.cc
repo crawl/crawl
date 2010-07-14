@@ -34,10 +34,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "travel.h"
-
-#ifdef DGL_MILESTONES
 #include "hiscores.h"
-#endif
 
 #ifdef ASSERTS
 static std::string _assert_msg;
@@ -636,9 +633,7 @@ void do_crash_dump()
 
     set_msg_dump_file(NULL);
 
-#ifdef DGL_MILESTONES
     mark_milestone("crash", _assert_msg);
-#endif
 
     if (file != stderr)
         fclose(file);

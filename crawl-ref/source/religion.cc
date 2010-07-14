@@ -865,10 +865,8 @@ void dec_penance(god_type god, int val)
         {
             you.penance[god] = 0;
 
-#ifdef DGL_MILESTONES
             mark_milestone("god.mollify",
                            "mollified " + god_name(god) + ".");
-#endif
 
             const bool dead_jiyva = (god == GOD_JIYVA && jiyva_is_dead());
 
@@ -909,10 +907,8 @@ void dec_penance(god_type god, int val)
         { // Nemelex's penance works actively only until 100
             if ((you.penance[god] -= val) > 100)
                 return;
-#ifdef DGL_MILESTONES
             mark_milestone("god.mollify",
                            "partially mollified " + god_name(god) + ".");
-#endif
             simple_god_message(" seems mollified... mostly.", god);
             take_note(Note(NOTE_MOLLIFY_GOD, god));
         }
@@ -2768,9 +2764,7 @@ void excommunication(god_type new_god)
     mpr("You have lost your religion!");
     more();
 
-#ifdef DGL_MILESTONES
     mark_milestone("god.renounce", "abandoned " + god_name(old_god) + ".");
-#endif
 
     if (god_hates_your_god(old_god, new_god))
     {
@@ -3132,7 +3126,7 @@ bool god_likes_item(god_type god, const item_def& item)
     case GOD_NEMELEX_XOBEH:
         return (!is_deck(item)
                 && !item.is_critical()
-                && !is_rune(item)
+                && !item_is_rune(item)
                 && item.base_type != OBJ_GOLD
                 && (item.base_type != OBJ_MISCELLANY
                     || item.sub_type != MISC_HORN_OF_GERYON
@@ -3260,10 +3254,8 @@ void god_pitch(god_type which_god)
     whereis_record();
 #endif
 
-#ifdef DGL_MILESTONES
     mark_milestone("god.worship", "became a worshipper of "
                    + god_name(you.religion) + ".");
-#endif
 
     simple_god_message(
         make_stringf(" welcomes you%s!",

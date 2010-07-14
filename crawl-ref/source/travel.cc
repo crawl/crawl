@@ -4161,7 +4161,7 @@ void explore_discoveries::found_item(const coord_def &pos, const item_def &i)
                          || ((Options.explore_stop & ES_ARTEFACT)
                              && (i.flags & ISFLAG_ARTEFACT_MASK))
                          || ((Options.explore_stop & ES_RUNE)
-                             && is_rune(i)) ))
+                             && item_is_rune(i)) ))
             {
                 ; // More conditions to stop for
             }

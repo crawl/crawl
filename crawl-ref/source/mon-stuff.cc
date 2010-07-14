@@ -544,7 +544,6 @@ static void _hints_inspect_kill()
         learned_something_new(HINT_KILLED_MONSTER);
 }
 
-#ifdef DGL_MILESTONES
 static std::string _milestone_kill_verb(killer_type killer)
 {
     return (killer == KILL_RESET ? "banished " : "killed ");
@@ -574,7 +573,6 @@ static void _check_kill_milestone(const monsters *mons,
                        + ".");
     }
 }
-#endif // DGL_MILESTONES
 
 static void _give_monster_experience(monsters *victim,
                                      int killer_index, int experience,
@@ -1324,10 +1322,8 @@ int monster_die(monsters *monster, killer_type killer,
 
     bool in_transit          = false;
 
-#ifdef DGL_MILESTONES
     if (!crawl_state.game_is_arena())
         _check_kill_milestone(monster, killer, killer_index);
-#endif
 
     // Award experience for suicide if the suicide was caused by the
     // player.

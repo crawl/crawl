@@ -143,7 +143,7 @@ std::string item_def::name(description_level_type descrip,
         }
     }
 
-    if (this->base_type == OBJ_ORBS
+    if (item_is_orb(*this)
         || (ident || item_type_known( *this ))
             && (this->base_type == OBJ_MISCELLANY
                    && this->sub_type == MISC_HORN_OF_GERYON

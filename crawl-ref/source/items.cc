@@ -132,7 +132,7 @@ void link_items(void)
 static bool _item_ok_to_clean(int item)
 {
     // Never clean food or Orbs.
-    if (mitm[item].base_type == OBJ_FOOD || mitm[item].base_type == OBJ_ORBS)
+    if (mitm[item].base_type == OBJ_FOOD || item_is_orb(mitm[item]))
         return (false);
 
     // Never clean runes.
@@ -504,11 +504,11 @@ static void _handle_gone_item(const item_def &item)
             set_unique_item_status(item, UNIQ_LOST_IN_ABYSS);
     }
 
-    if (is_rune(item))
+    if (item_is_rune(item))
     {
         if ((item.flags & ISFLAG_BEEN_IN_INV))
         {
-            if (is_unique_rune(item))
+            if (item_is_unique_rune(item))
                 you.attribute[ATTR_UNIQUE_RUNES] -= item.quantity;
             else if (item.plus == RUNE_ABYSSAL)
                 you.attribute[ATTR_ABYSSAL_RUNES] -= item.quantity;
@@ -896,7 +896,6 @@ static int _first_corpse_monnum(const coord_def& where)
     return (0);
 }
 
-#ifdef DGL_MILESTONES
 static std::string _milestone_rune(const item_def &item)
 {
     return std::string("found ") + item.name(DESC_NOCAP_A) + ".";
@@ -904,24 +903,18 @@ static std::string _milestone_rune(const item_def &item)
 
 static void _milestone_check(const item_def &item)
 {
-    if (item.base_type == OBJ_MISCELLANY
-        && item.sub_type == MISC_RUNE_OF_ZOT)
-    {
+    if (item_is_rune(item))
         mark_milestone("rune", _milestone_rune(item));
-    }
-    else if (item.base_type == OBJ_ORBS && item.sub_type == ORB_ZOT)
-    {
+    else if (item_is_orb(item))
         mark_milestone("orb", "found the Orb of Zot!");
-    }
 }
-#endif // DGL_MILESTONES
 
 static void _check_note_item(item_def &item)
 {
     if (item.flags & (ISFLAG_NOTED_GET | ISFLAG_NOTED_ID))
         return;
 
-    if (is_rune(item) || item.base_type == OBJ_ORBS || is_artefact(item))
+    if (item_is_rune(item) || item_is_orb(item) || is_artefact(item))
     {
         take_note(Note(NOTE_GET_ITEM, 0, 0, item.name(DESC_NOCAP_A).c_str(),
                        origin_desc(item).c_str()));
@@ -947,10 +940,7 @@ void origin_set(const coord_def& where)
             si->orig_monnum = static_cast<short>( monnum );
         si->orig_place  = pplace;
         _origin_set_portal_vault(*si);
-
-#ifdef DGL_MILESTONES
         _milestone_check(*si);
-#endif
     }
 }
 
@@ -969,10 +959,7 @@ static void _origin_freeze(item_def &item, const coord_def& where)
         item.orig_place = get_packed_place();
         _origin_set_portal_vault(item);
         _check_note_item(item);
-
-#ifdef DGL_MILESTONES
         _milestone_check(item);
-#endif
     }
 }
 
@@ -997,25 +984,11 @@ static std::string _origin_place_desc(const item_def &item)
     return prep_branch_level_name(item.orig_place);
 }
 
-bool is_rune(const item_def &item)
-{
-    return (item.base_type == OBJ_MISCELLANY
-            && item.sub_type == MISC_RUNE_OF_ZOT);
-}
-
-bool is_unique_rune(const item_def &item)
-{
-    return (item.base_type == OBJ_MISCELLANY
-            && item.sub_type == MISC_RUNE_OF_ZOT
-            && item.plus != RUNE_DEMONIC
-            && item.plus != RUNE_ABYSSAL);
-}
-
 bool origin_describable(const item_def &item)
 {
     return (origin_known(item)
             && (item.orig_place != 0xFFFFU || item.orig_monnum == -1)
-            && (!is_stackable_item(item) || is_rune(item))
+            && (!is_stackable_item(item) || item_is_rune(item))
             && item.quantity == 1
             && item.base_type != OBJ_CORPSES
             && (item.base_type != OBJ_FOOD || item.sub_type != FOOD_CHUNK));
@@ -1476,13 +1449,13 @@ static void _got_item(item_def& item, int quant)
     seen_item(item);
     shopping_list.cull_identical_items(item);
 
-    if (!is_rune(item))
+    if (!item_is_rune(item))
         return;
 
     // Picking up the rune for the first time.
     if (!(item.flags & ISFLAG_BEEN_IN_INV))
     {
-        if (is_unique_rune(item))
+        if (item_is_unique_rune(item))
             you.attribute[ATTR_UNIQUE_RUNES] += quant;
         else if (item.plus == RUNE_ABYSSAL)
             you.attribute[ATTR_ABYSSAL_RUNES] += quant;
@@ -2590,7 +2563,7 @@ static bool _interesting_explore_pickup(const item_def& item)
         // Intentional fall-through.
     case OBJ_MISCELLANY:
         // Runes are always interesting.
-        if (is_rune(item))
+        if (item_is_rune(item))
             return (true);
 
         // Decks always start out unidentified.
@@ -3518,7 +3491,7 @@ bool get_item_by_name(item_def *item, char* specs,
         break;
 
     case OBJ_MISCELLANY:
-        if (!is_rune(*item) && !is_deck(*item))
+        if (!item_is_rune(*item) && !is_deck(*item))
             item->plus = 50;
         break;
 
