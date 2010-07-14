@@ -111,6 +111,8 @@ private:
     int         gold_found;         // Gold found.
     int         gold_spent;         // Gold spent shopping.
 
+    uint32_t    fruit_found_mask;   // Mask of fruits found.
+
     mutable std::auto_ptr<xlog_fields> fields;
 
 public:

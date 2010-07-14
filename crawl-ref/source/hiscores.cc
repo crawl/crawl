@@ -537,6 +537,7 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     gold              = se.gold;
     gold_spent        = se.gold_spent;
     gold_found        = se.gold_found;
+    fruit_found_mask  = se.fruit_found_mask;
     fixup_char_name();
 }
 
@@ -712,6 +713,7 @@ void scorefile_entry::init_with_fields()
     gold       = fields->int_field("gold");
     gold_found = fields->int_field("goldfound");
     gold_spent = fields->int_field("goldspent");
+    fruit_found_mask = fields->int_field("fruit");
 
     fixup_char_name();
 }
@@ -788,6 +790,8 @@ void scorefile_entry::set_base_xlog_fields() const
     fields->add_field("gold", "%d", gold);
     fields->add_field("goldfound", "%d", gold_found);
     fields->add_field("goldspent", "%d", gold_spent);
+    if (fruit_found_mask)
+        fields->add_field("fruit", "%d", fruit_found_mask);
 }
 
 void scorefile_entry::set_score_fields() const
@@ -1060,6 +1064,7 @@ void scorefile_entry::reset()
     gold                 = 0;
     gold_found           = 0;
     gold_spent           = 0;
+    fruit_found_mask     = 0;
 }
 
 static int _award_modified_experience()
@@ -1264,6 +1269,8 @@ void scorefile_entry::init()
     gold       = you.gold;
     gold_found = you.attribute[ATTR_GOLD_FOUND];
     gold_spent = you.attribute[ATTR_PURCHASES];
+
+    fruit_found_mask = you.attribute[ATTR_FRUIT_FOUND];
 
     wiz_mode = (you.wizard ? 1 : 0);
 }

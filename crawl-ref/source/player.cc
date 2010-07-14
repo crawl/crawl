@@ -5196,6 +5196,7 @@ void player::init()
     had_book.init(false);
 
     unique_items.init(UNIQ_NOT_EXISTS);
+    unique_creatures.init(false);
 
     skills.init(0);
     skill_points.init(0);
