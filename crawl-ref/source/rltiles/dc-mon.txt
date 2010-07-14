@@ -481,6 +481,7 @@ manticore MONS_MANTICORE
 griffon MONS_GRIFFON
 harpy MONS_HARPY
 sphinx MONS_SPHINX
+kenku MONS_KENKU
 
 ## Ice beast only
 ice_beast MONS_ICE_BEAST /*'I'*/
