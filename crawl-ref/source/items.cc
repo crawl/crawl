@@ -1482,6 +1482,7 @@ void note_inscribe_item(item_def &item)
 {
     _autoinscribe_item(item);
     _origin_freeze(item, you.pos());
+    you.attribute[ATTR_FRUIT_FOUND] |= item_fruit_mask(item);
     _check_note_item(item);
 }
 

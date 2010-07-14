@@ -16,7 +16,8 @@ enum tag_minor_version
     TAG_MINOR_RESERVED     = 5, // Reserved for a secret project.
     TAG_MINOR_NO_ROD_DISCO = 6, // Remove rods of discovery.
     TAG_MINOR_GREY_DRACS   = 7, // Add monster grey draconians.
-    TAG_MINOR_VERSION      = 7, // Current version.  (Keep equal to max.)
+    TAG_MINOR_VAR_ATTRS    = 8, // Flexible loading for you.attribute
+    TAG_MINOR_VERSION      = 8, // Current version.  (Keep equal to max.)
 };
 
 #endif
