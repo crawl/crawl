@@ -158,6 +158,7 @@ bool can_cut_meat(const item_def &item);
 bool food_is_rotten(const item_def &item);
 int corpse_freshness(const item_def &item);
 bool is_fruit(const item_def & item);
+uint32_t item_fruit_mask(const item_def &item);
 
 // generic item property functions:
 int property(const item_def &item, int prop_type);

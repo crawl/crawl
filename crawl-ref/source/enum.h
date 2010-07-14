@@ -176,6 +176,7 @@ enum attribute_type
                                // player has seen.
     ATTR_NOISES,               // A noisy artefact is equipped.
     ATTR_SHADOWS,              // Lantern of shadows effect.
+    ATTR_FRUIT_FOUND,          // Mask of fruit types found.
     NUM_ATTRIBUTES
 };
 

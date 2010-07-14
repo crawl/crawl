@@ -1674,9 +1674,13 @@ static void tag_read_you(reader &th, char minorVersion)
 
     // how many attributes?
     count_c = unmarshallByte(th);
-    ASSERT(count_c >= 0 && count_c <= NUM_ATTRIBUTES);
-    for (j = 0; j < count_c; ++j)
+    ASSERT(count_c >= 0);
+    for (j = 0; j < count_c && j < NUM_ATTRIBUTES; ++j)
         you.attribute[j] = unmarshallInt(th);
+    for (j = count_c; j < NUM_ATTRIBUTES; ++j)
+        you.attribute[j] = 0;
+    for (j = NUM_ATTRIBUTES; j < count_c; ++j)
+        unmarshallInt(th);
 
     count_c = unmarshallByte(th);
     ASSERT(count_c == NUM_OBJECT_CLASSES);

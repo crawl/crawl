@@ -381,6 +381,12 @@ static missile_def Missile_prop[NUM_MISSILES] =
     { MI_THROWING_NET,  "throwing net",  0,   30, true  },
 };
 
+enum food_flag_type
+{
+    FFL_NONE  = 0x00,
+    FFL_FRUIT = 0x01,
+};
+
 struct food_def
 {
     int         id;
@@ -390,6 +396,7 @@ struct food_def
     int         herb_mod;
     int         mass;
     int         turns;
+    uint32_t    flags;
 };
 
 // NOTE: Any food with special random messages or side effects
@@ -400,30 +407,31 @@ struct food_def
 static int Food_index[NUM_FOODS];
 static food_def Food_prop[NUM_FOODS] =
 {
-    { FOOD_MEAT_RATION,  "meat ration",  5000,   500, -1500,  80, 4 },
-    { FOOD_SAUSAGE,      "sausage",      1500,   150,  -400,  40, 1 },
-    { FOOD_CHUNK,        "chunk",        1000,   100,  -500, 100, 3 },
-    { FOOD_BEEF_JERKY,   "beef jerky",    800,   100,  -250,  20, 1 },
+    { FOOD_MEAT_RATION,  "meat ration",  5000,   500, -1500,  80, 4, FFL_NONE },
+    { FOOD_SAUSAGE,      "sausage",      1500,   150,  -400,  40, 1, FFL_NONE },
+    { FOOD_CHUNK,        "chunk",        1000,   100,  -500, 100, 3, FFL_NONE },
+    { FOOD_BEEF_JERKY,   "beef jerky",    800,   100,  -250,  20, 1, FFL_NONE },
 
-    { FOOD_BREAD_RATION, "bread ration", 4400, -1500,   750,  80, 4 },
-    { FOOD_SNOZZCUMBER,  "snozzcumber",  1500,  -500,   500,  50, 1 },
-    { FOOD_ORANGE,       "orange",       1000,  -350,   400,  20, 1 },
-    { FOOD_BANANA,       "banana",       1000,  -350,   400,  20, 1 },
-    { FOOD_LEMON,        "lemon",        1000,  -350,   400,  20, 1 },
-    { FOOD_PEAR,         "pear",          700,  -250,   300,  20, 1 },
-    { FOOD_APPLE,        "apple",         700,  -250,   300,  20, 1 },
-    { FOOD_APRICOT,      "apricot",       700,  -250,   300,  15, 1 },
-    { FOOD_CHOKO,        "choko",         600,  -200,   250,  30, 1 },
-    { FOOD_RAMBUTAN,     "rambutan",      600,  -200,   250,  10, 1 },
-    { FOOD_LYCHEE,       "lychee",        600,  -200,   250,  10, 1 },
-    { FOOD_STRAWBERRY,   "strawberry",    200,   -80,   100,   5, 1 },
-    { FOOD_GRAPE,        "grape",         100,   -40,    50,   2, 1 },
-    { FOOD_SULTANA,      "sultana",        70,   -30,    30,   1, 1 },
+    { FOOD_BREAD_RATION, "bread ration", 4400, -1500,   750,  80, 4, FFL_NONE },
+    { FOOD_SNOZZCUMBER,  "snozzcumber",  1500,  -500,   500,  50, 1, FFL_NONE },
 
-    { FOOD_ROYAL_JELLY,  "royal jelly",  4000,     0,     0,  55, 1 },
-    { FOOD_HONEYCOMB,    "honeycomb",    2000,     0,     0,  40, 1 },
-    { FOOD_PIZZA,        "pizza",        1500,     0,     0,  40, 1 },
-    { FOOD_CHEESE,       "cheese",       1200,     0,     0,  40, 1 },
+    { FOOD_ORANGE,       "orange",       1000,  -350,   400,  20, 1, FFL_FRUIT},
+    { FOOD_BANANA,       "banana",       1000,  -350,   400,  20, 1, FFL_FRUIT},
+    { FOOD_LEMON,        "lemon",        1000,  -350,   400,  20, 1, FFL_FRUIT},
+    { FOOD_PEAR,         "pear",          700,  -250,   300,  20, 1, FFL_FRUIT},
+    { FOOD_APPLE,        "apple",         700,  -250,   300,  20, 1, FFL_FRUIT},
+    { FOOD_APRICOT,      "apricot",       700,  -250,   300,  15, 1, FFL_FRUIT},
+    { FOOD_CHOKO,        "choko",         600,  -200,   250,  30, 1, FFL_FRUIT},
+    { FOOD_RAMBUTAN,     "rambutan",      600,  -200,   250,  10, 1, FFL_FRUIT},
+    { FOOD_LYCHEE,       "lychee",        600,  -200,   250,  10, 1, FFL_FRUIT},
+    { FOOD_STRAWBERRY,   "strawberry",    200,   -80,   100,   5, 1, FFL_FRUIT},
+    { FOOD_GRAPE,        "grape",         100,   -40,    50,   2, 1, FFL_FRUIT},
+    { FOOD_SULTANA,      "sultana",        70,   -30,    30,   1, 1, FFL_FRUIT},
+
+    { FOOD_ROYAL_JELLY,  "royal jelly",  4000,     0,     0,  55, 1, FFL_NONE },
+    { FOOD_HONEYCOMB,    "honeycomb",    2000,     0,     0,  40, 1, FFL_NONE },
+    { FOOD_PIZZA,        "pizza",        1500,     0,     0,  40, 1, FFL_NONE },
+    { FOOD_CHEESE,       "cheese",       1200,     0,     0,  40, 1, FFL_NONE },
 };
 
 // Must call this functions early on so that the above tables can
@@ -2112,25 +2120,14 @@ bool is_fruit(const item_def & item)
     if (item.base_type != OBJ_FOOD)
         return (false);
 
-    switch (item.sub_type)
-    {
-    case FOOD_APPLE:
-    case FOOD_APRICOT:
-    case FOOD_BANANA:
-    case FOOD_CHOKO:
-    case FOOD_GRAPE:
-    case FOOD_LEMON:
-    case FOOD_LYCHEE:
-    case FOOD_ORANGE:
-    case FOOD_PEAR:
-    case FOOD_RAMBUTAN:
-    case FOOD_STRAWBERRY:
-    case FOOD_SULTANA:
-        return (true);
-    };
-
-    return (false);
+    return (Food_prop[Food_index[item.sub_type]].flags & FFL_FRUIT);
 }
+
+uint32_t item_fruit_mask(const item_def &item)
+{
+    return (is_fruit(item)? (1 << Food_index[item.sub_type]) : 0);
+}
+
 bool food_is_rotten(const item_def &item)
 {
     return (item.special < 100) && (item.base_type == OBJ_CORPSES
