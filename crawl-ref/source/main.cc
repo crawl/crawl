@@ -2656,8 +2656,9 @@ void world_reacts()
 
     if (!crawl_state.game_is_arena() && one_chance_in(10))
     {
+        const int teleportitis_level = player_teleport();
         // this is instantaneous
-        if (player_teleport() > 0 && one_chance_in(100 / player_teleport()))
+        if (teleportitis_level > 0 && one_chance_in(100 / teleportitis_level))
             you_teleport_now(true);
         else if (you.level_type == LEVEL_ABYSS && one_chance_in(30))
             you_teleport_now(false, true); // to new area of the Abyss

@@ -1486,7 +1486,8 @@ static void _handle_teleport_update (bool large_change, bool check_ring_TC,
 #endif
 }
 
-static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizard_tele)
+static
+bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizard_tele)
 {
     bool is_controlled = (allow_control && !you.confused()
                           && player_control_teleport()
@@ -1497,9 +1498,9 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area, bool wizar
     if (wizard_tele)
         is_controlled = true;
 
-    if (crawl_state.game_is_sprint()
-        || item_blocks_teleport(true, true)
-        && !wizard_tele)
+    if (!wizard_tele
+        && ((!new_abyss_area && crawl_state.game_is_sprint())
+            || item_blocks_teleport(true, true)))
     {
         canned_msg(MSG_STRANGE_STASIS);
         return (false);
