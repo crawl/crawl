@@ -2,7 +2,6 @@
 #define TAG_VERSION_H
 
 // Let CDO updaters know if the syntax changes.
-#define TAG_MAJOR_START     5
 #define TAG_MAJOR_VERSION  28
 
 // Minor version will be reset to zero when major version changes.

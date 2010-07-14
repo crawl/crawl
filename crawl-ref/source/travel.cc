@@ -3483,17 +3483,10 @@ void LevelInfo::load(reader& inf, char minorVersion)
 
     unmarshallExcludes(inf, minorVersion, excludes);
 
-#if TAG_MAJOR_VERSION == 27
-    if (minorVersion >= TAG_MINOR_DA_MSTATS)
-    {
-#endif
     int n_count = unmarshallByte(inf);
     ASSERT(n_count >= 0 && n_count <= NUM_DA_COUNTERS);
     for (int i = 0; i < n_count; i++)
         da_counters[i] = unmarshallShort(inf);
-#if TAG_MAJOR_VERSION == 27
-    }
-#endif
 }
 
 void LevelInfo::fixup()
