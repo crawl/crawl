@@ -3041,7 +3041,7 @@ KMONS:   B = elf ; nothing
 KMONS:   C = dwarf ; nothing
 KMONS:   D = orc ; nothing
 KMONS:   E = merfolk ; nothing
-KMONS:   F = human name:halfling n_rpl n_spe n_des tile:halfling ; nothing
+KMONS:   F = human name:halfling n_rpl n_spe n_des tile:mons_halfling ; nothing
 MARKER:  F = lua:MonPropsMarker:new { description="This is a degenerate human, " ..\
                "both mentally and physically similar to a child of perhaps " ..\
                "ten, perhaps twelve years of age, yet looking older. It looks " ..\
@@ -3054,11 +3054,11 @@ KMONS:   J = centaur ; nothing
 KMONS:   K = ogre ; nothing
 KMONS:   L = troll
 KMONS:   M = minotaur ; nothing
-KMONS:   N = human col:lightblue name:kenku n_rpl n_spe n_des ; nothing
+KMONS:   N = human col:lightblue name:kenku n_rpl n_spe n_des tile:mons_kenku ; nothing
 MARKER:  N = lua:MonPropsMarker:new { description="A bird-brained creature " ..\
                "that looks at you with hatred." }
 KMONS:   O = draconian ; nothing
-KMONS:   P = human name:demonspawn n_rpl n_spe n_des tile:demonspawn ; nothing
+KMONS:   P = human name:demonspawn n_rpl n_spe n_des tile:mons_demonspawn ; nothing
 MARKER:  P = lua:MonPropsMarker:new { description="This fellow looks mostly " ..\
                "like a human, yet you sense something evil about him." }
 KMONS:   Q = mummy

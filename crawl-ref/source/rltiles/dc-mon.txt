@@ -413,6 +413,7 @@ deformed_human MONS_DEFORMED_HUMAN
 ## From an entry vault
 halfling MONS_HALFLING
 demonspawn MONS_DEMONSPAWN
+kenku MONS_KENKU
 
 ## Angels ('A')
 angel MONS_ANGEL
