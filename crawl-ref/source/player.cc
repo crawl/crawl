@@ -5248,6 +5248,8 @@ void player::init()
 #if defined(WIZARD) || defined(DEBUG)
     you.never_die = false;
 #endif
+
+    flash_colour = BLACK;
 }
 
 void player::reset()
