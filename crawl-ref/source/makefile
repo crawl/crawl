@@ -830,7 +830,8 @@ SRC_PKG_TAR   := $(PKG_SRC_DIR).tar.bz2
 SRC_PKG_TAR_NODEPS := $(PKG_SRC_DIR)-nodeps.tar.bz2
 SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
 
-.PHONY: all test install clean clean-contrib distclean debug profile wizard package-source source
+.PHONY: all test install clean clean-contrib distclean debug profile wizard package-source source \
+        build-windows package-windows
 
 all: $(GENERATED_FILES) $(GAME) $(GENERATED_DOCS)
 
@@ -1140,3 +1141,24 @@ source: removeold
 removeold:
 	if [ -f ../../$(SRC_PKG_TAR) ]; then $(RM) ../../$(SRC_PKG_TAR); fi
 	if [ -f ../../$(SRC_PKG_ZIP) ]; then $(RM) ../../$(SRC_PKG_ZIP); fi
+
+#############################################################################
+# Building the unified Windows package.
+#
+
+# You need to have NSIS installed.
+package-windows:
+ifneq (x$(SRC_VERSION_SHORT),x$(shell cat crawl-win/version.txt 2>/dev/null))
+	+$(MAKE) build-windows
+endif
+	makensis -NOCD -DVERSION=$(SRC_VERSION_SHORT) util/crawl.nsi
+
+build-windows:
+ifneq ($(GAME),crawl.exe)
+	@echo "This is only for Windows; please specify CROSSHOST.";false
+endif
+	rm -rf crawl-win
+	+$(MAKE) TILES=y DESTDIR=crawl-win SAVEDIR='~/crawl' install
+	mv crawl-win/crawl.exe crawl-win/crawl-tiles.exe
+	+$(MAKE) TILES=  DESTDIR=crawl-win SAVEDIR='~/crawl' install
+	echo $(SRC_VERSION_SHORT) >crawl-win/version.txt
