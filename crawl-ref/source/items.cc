@@ -524,9 +524,20 @@ void item_was_lost(const item_def &item)
     xom_check_lost_item( item );
 }
 
+static void _note_item_destruction(const item_def &item)
+{
+    if (item_is_orb(item))
+    {
+        mprf(MSGCH_WARN, "A great rumbling fills the air... "
+             "the Orb of Zot has been destroyed!");
+        mark_milestone("orb.destroy", "destroyed the Orb of Zot");
+    }
+}
+
 void item_was_destroyed(const item_def &item, int cause)
 {
     _handle_gone_item( item );
+    _note_item_destruction(item);
     xom_check_destroyed_item( item, cause );
 }
 
