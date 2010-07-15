@@ -460,11 +460,18 @@ static const int GAME_MODES_WIDTH   = 60;
 // and there's enough space.
 static int _misc_text_start_y(int num)
 {
-    if (num <= 2)
+    if (num <= 1)
         return MISC_TEXT_START_Y;
 
+#ifdef USE_TILE
+    // reserve extra space for the save items in tiles
+    static float line_multiplier = 1.6f;
+    return std::min(MISC_TEXT_START_Y + static_cast<int> (num * line_multiplier) - 1,
+                    get_number_of_lines() -5);
+#else
     return std::min(MISC_TEXT_START_Y + num - 1,
                     get_number_of_lines() - 5);
+#endif
 }
 
 /**
