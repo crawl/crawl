@@ -633,7 +633,9 @@ void do_crash_dump()
 
     set_msg_dump_file(NULL);
 
+#ifdef ASSERTS
     mark_milestone("crash", _assert_msg);
+#endif
 
     if (file != stderr)
         fclose(file);
