@@ -2628,7 +2628,7 @@ void ShoppingListMenu::draw_title()
 
         cgotoxy(1, 1);
         textcolor(title->colour);
-        cprintf("%d %s%s, total cost %ld gp",
+        cprintf("%d %s%s, total cost %d gp",
                 title->quantity, title->text.c_str(),
                 title->quantity > 1? "s" : "",
                 total_cost);

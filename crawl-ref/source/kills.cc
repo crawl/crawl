@@ -104,16 +104,16 @@ void KillMaster::record_kill(const monsters *mon, int killer, bool ispet)
     categorized_kills[kc].record_kill(mon);
 }
 
-long KillMaster::total_kills() const
+int KillMaster::total_kills() const
 {
-    long grandtotal = 0L;
+    int grandtotal = 0;
     for (int i = KC_YOU; i < KC_NCATEGORIES; ++i)
     {
         if (categorized_kills[i].empty())
             continue;
 
         std::vector<kill_exp> kills;
-        long count = categorized_kills[i].get_kills(kills);
+        int count = categorized_kills[i].get_kills(kills);
         grandtotal += count;
     }
     return (grandtotal);
@@ -128,7 +128,7 @@ std::string KillMaster::kill_info() const
 
     bool needseparator = false;
     int categories = 0;
-    long grandtotal = 0L;
+    int grandtotal = 0;
 
     Kills catkills[KC_NCATEGORIES];
     for (int i = 0; i < KC_NCATEGORIES; ++i)
@@ -144,7 +144,7 @@ std::string KillMaster::kill_info() const
 
         categories++;
         std::vector<kill_exp> kills;
-        long count = catkills[i].get_kills(kills);
+        int count = catkills[i].get_kills(kills);
         grandtotal += count;
 
         add_kill_info( killtext,
@@ -161,7 +161,7 @@ std::string KillMaster::kill_info() const
     {
         char buf[200];
         snprintf(buf, sizeof buf,
-                "Grand Total: %ld creatures vanquished",
+                "Grand Total: %d creatures vanquished",
                 grandtotal);
         grandt = buf;
     }
@@ -186,7 +186,7 @@ std::string KillMaster::kill_info() const
 
 void KillMaster::add_kill_info(std::string &killtext,
                                std::vector<kill_exp> &kills,
-                               long count,
+                               int count,
                                const char *category,
                                bool separator) const
 {
@@ -234,21 +234,21 @@ void KillMaster::add_kill_info(std::string &killtext,
         {
             char numbuf[100];
             snprintf(numbuf, sizeof numbuf,
-                    "%ld creature%s vanquished." "\n", count,
+                    "%d creature%s vanquished." "\n", count,
                     count > 1? "s" : "");
             killtext += numbuf;
         }
     }
 }
 
-long KillMaster::num_kills(const monsters *mon, kill_category cat) const
+int KillMaster::num_kills(const monsters *mon, kill_category cat) const
 {
     return categorized_kills[cat].num_kills(mon);
 }
 
-long KillMaster::num_kills(const monsters *mon) const
+int KillMaster::num_kills(const monsters *mon) const
 {
-    long total = 0;
+    int total = 0;
     for (int cat = 0; cat < KC_NCATEGORIES; cat++)
         total += categorized_kills[cat].num_kills(mon);
 
@@ -299,9 +299,9 @@ void Kills::record_kill(const monsters *mon)
         k = kill_def(mon);
 }
 
-long Kills::get_kills(std::vector<kill_exp> &all_kills) const
+int Kills::get_kills(std::vector<kill_exp> &all_kills) const
 {
-    long count = 0;
+    int count = 0;
     kill_map::const_iterator iter = kills.begin();
     for (; iter != kills.end(); ++iter)
     {
@@ -348,7 +348,7 @@ void Kills::load(reader& inf)
     // How many kill records?
     int kill_count = unmarshallInt(inf);
     kills.clear();
-    for (long i = 0; i < kill_count; ++i)
+    for (int i = 0; i < kill_count; ++i)
     {
         kill_monster_desc md;
         md.load(inf);
@@ -948,7 +948,7 @@ static int kill_lualc_summary(lua_State *ls)
         return 0;
     }
 
-    unsigned long count = 0;
+    unsigned int count = 0;
     for (int i = 1; ; ++i)
     {
         lua_rawgeti(ls, 1, i);
@@ -972,7 +972,7 @@ static int kill_lualc_summary(lua_State *ls)
     char buf[120];
     *buf = 0;
     if (count)
-        snprintf(buf, sizeof buf, "%lu creature%s vanquished.",
+        snprintf(buf, sizeof buf, "%u creature%s vanquished.",
                 count, count > 1? "s" : "");
     lua_pushstring(ls, buf);
     return 1;

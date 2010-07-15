@@ -156,8 +156,8 @@ static void _dump_player(FILE *file)
 
     if (you.delay_queue.size() > 0)
     {
-        fprintf(file, "Delayed (%lu):\n",
-                (unsigned long) you.delay_queue.size());
+        fprintf(file, "Delayed (%u):\n",
+                (unsigned int)you.delay_queue.size());
         for (unsigned int i = 0; i < you.delay_queue.size(); ++i)
         {
             const delay_queue_item &item = you.delay_queue[i];

@@ -4070,7 +4070,7 @@ static void _catchup_monster_moves(monsters *mon, int turns)
     // probably too annoying even for DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
          "mon #%d: range %d; "
-         "pos (%d,%d); targ %d(%d,%d); flags %ld",
+         "pos (%d,%d); targ %d(%d,%d); flags %"PRIx64,
          mon->mindex(), range, mon->pos().x, mon->pos().y,
          mon->foe, mon->target.x, mon->target.y, mon->flags );
 #endif

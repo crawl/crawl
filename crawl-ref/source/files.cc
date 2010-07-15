@@ -2105,7 +2105,7 @@ bool load_ghost(bool creating_level)
 #ifdef BONES_DIAGNOSTICS
     if (do_diagnostics)
     {
-        mprf(MSGCH_DIAGNOSTICS, "Loaded ghost file with %lu ghost(s)",
+        mprf(MSGCH_DIAGNOSTICS, "Loaded ghost file with %u ghost(s)",
              ghosts.size());
     }
 #endif
@@ -2153,7 +2153,7 @@ bool load_ghost(bool creating_level)
 #ifdef BONES_DIAGNOSTICS
     if (do_diagnostics && unplaced_ghosts > 0)
     {
-        mprf(MSGCH_DIAGNOSTICS, "Unable to place %lu ghost(s)",
+        mprf(MSGCH_DIAGNOSTICS, "Unable to place %u ghost(s)",
              ghosts.size());
         ghost_errors = true;
     }

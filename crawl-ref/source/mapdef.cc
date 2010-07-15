@@ -2415,7 +2415,7 @@ std::string map_def::validate_temple_map()
         {
             if ( ( (unsigned long) num ) != altars.size() )
             {
-                return make_stringf("Temple should contain %lu altars, but "
+                return make_stringf("Temple should contain %u altars, but "
                                     "has %d.", altars.size(), num);
             }
         }
@@ -2738,7 +2738,7 @@ coord_def map_def::float_aligned_place() const
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS,
-         "Aligning floating vault with %lu points vs %lu reference points",
+         "Aligning floating vault with %u points vs %u reference points",
          our_anchors.size(), map_anchor_points.size());
 #endif
 
