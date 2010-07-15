@@ -1,4 +1,6 @@
-Balancing 0.6 features:
+Stone Soup 0.7
+--------------
+Balance fixes
 * Monster double actions due to energy randomisation always include a move.
 * Greatly accelerate armour training when armour is heavy relative to skill.
 * Make heavy armour guaranteed damage reduction percentage independent of
