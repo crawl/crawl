@@ -282,6 +282,7 @@ static void _reset_game()
     you.reset();
     StashTrack = StashTracker();
     travel_cache = TravelCache();
+    overview_clear();
     msg::deinitialise_mpr_streams();
 
 #ifdef USE_TILE

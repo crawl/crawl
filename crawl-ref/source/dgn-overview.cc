@@ -72,6 +72,19 @@ static std::string _get_notes();
 static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
                                           bool print_unseen, bool display);
 
+void overview_clear()
+{
+    stair_level.clear();
+    shops_present.clear();
+    altars_present.clear();
+    portals_present.clear();
+    portal_vaults_present.clear();
+    portal_vault_notes.clear();
+    portal_vault_colours.clear();
+    level_annotations.clear();
+    level_exclusions.clear();
+}
+
 void seen_notable_thing(dungeon_feature_type which_thing, const coord_def& pos)
 {
     // Don't record in temporary terrain
