@@ -347,6 +347,7 @@ INCLUDES_L += -Iutil -I.
 ifdef APPLE_GCC
 
 ARCH := $(uname_M)
+export ARCH
 
 ifeq ($(ARCH),ppc)
 	SDK_VER := 10.4
