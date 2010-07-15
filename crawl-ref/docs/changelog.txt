@@ -10,8 +10,8 @@ Balance fixes
 * Nagas and worshippers of Cheibriados don't suffer from as much hunger.
 
 Unsorted:
-* New mini-game, Dungeon Crawl Sprint.
-* New tutorial, old tutorial now a hints mode.
+* New mini-game, Dungeon Sprint.
+* New tutorial, old tutorial is now a hints mode.
 * Aptitudes now on a scale +5 to -5.
 * Track the source of poison for death messages.
 * Magic mapping and Lugonu's self-banishment now work in Pandemonium.
@@ -47,7 +47,6 @@ Game:
 Gods:
 * Zin no longer objects to deaths of non-sentient allies, and takes
   collateral kills of unclean and chaotic monsters.
-* Zin's Recite has been adjusted to be less harsh.
 * Zin has a new power: Imprison.
 * Elyvilon's Divine Vigour scales better in terms of power.
 * Yredelemnul no longer gifts vampires.
