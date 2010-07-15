@@ -3531,6 +3531,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					OSX,
 					WIZARD,
+					ASSERTS,
 				);
 				GCC_VERSION_i386 = 4.0;
 				GCC_VERSION_ppc = 4.0;
