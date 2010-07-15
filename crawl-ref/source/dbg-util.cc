@@ -5,8 +5,6 @@
  */
 
 #include "AppHdr.h"
-#define __STDC_FORMAT_MACROS
-#include <inttypes.h>
 
 #include "dbg-util.h"
 
@@ -237,8 +235,8 @@ void debug_dump_mon(const monsters* mon, bool recurse)
     {
         fprintf(stderr, "\nTravelling:\n");
         fprintf(stderr, "    travel_target      = %d\n", mon->travel_target);
-        fprintf(stderr, "    travel_path.size() = %lu\n",
-                (unsigned long) mon->travel_path.size());
+        fprintf(stderr, "    travel_path.size() = %u\n",
+                (unsigned int)mon->travel_path.size());
 
         if (mon->travel_path.size() > 0)
         {

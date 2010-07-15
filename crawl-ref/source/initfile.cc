@@ -724,13 +724,13 @@ void game_options::reset_options()
 #endif
 
     // set it to the .crawlrc default
-    autopickups = ((1L << 15) | // gold
-                   (1L <<  6) | // scrolls
-                   (1L <<  8) | // potions
-                   (1L << 10) | // books
-                   (1L <<  7) | // jewellery
-                   (1L <<  3) | // wands
-                   (1L <<  4)); // food
+    autopickups = ((1 << 15) | // gold
+                   (1 <<  6) | // scrolls
+                   (1 <<  8) | // potions
+                   (1 << 10) | // books
+                   (1 <<  7) | // jewellery
+                   (1 <<  3) | // wands
+                   (1 <<  4)); // food
 
     suppress_startup_errors = false;
 
@@ -2100,7 +2100,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "autopickup")
     {
         // clear out autopickup
-        autopickups = 0L;
+        autopickups = 0;
 
         for (size_t i = 0; i < field.length(); i++)
         {
@@ -2136,7 +2136,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                 ;
 
             if (j < obj_syms_len)
-                autopickups |= (1L << j);
+                autopickups |= (1 << j);
             else
             {
                 report_error (
@@ -3998,7 +3998,7 @@ bool parse_args( int argc, char **argv, bool rc_only )
             if (!next_is_param)
                 return (false);
 
-            if (!sscanf(next_arg, "%lx", &Options.seed))
+            if (!sscanf(next_arg, "%x", &Options.seed))
                 return (false);
             nextUsed = true;
             break;
@@ -4065,21 +4065,6 @@ int game_options::o_int(const char *name, int def) const
     if (i != named_options.end())
     {
         val = atoi(i->second.c_str());
-    }
-    return (val);
-}
-
-long game_options::o_long(const char *name, long def) const
-{
-    long val = def;
-    opt_map::const_iterator i = named_options.find(name);
-    if (i != named_options.end())
-    {
-        const char *s = i->second.c_str();
-        char *es = NULL;
-        long num = strtol(s, &es, 10);
-        if (s != (const char *) es && es)
-            val = num;
     }
     return (val);
 }

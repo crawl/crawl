@@ -774,8 +774,8 @@ void scorefile_entry::set_base_xlog_fields() const
         fields->add_field("wiz", "%d", wiz_mode);
 
     fields->add_field("start", "%s", make_date_string(birth_time).c_str());
-    fields->add_field("dur",   "%ld", real_time);
-    fields->add_field("turn",  "%ld", num_turns);
+    fields->add_field("dur",   "%d", real_time);
+    fields->add_field("turn",  "%d", num_turns);
 
     if (num_diff_runes)
         fields->add_field("urune", "%d", num_diff_runes);
@@ -783,7 +783,7 @@ void scorefile_entry::set_base_xlog_fields() const
     if (num_runes)
         fields->add_field("nrune", "%d", num_runes);
 
-    fields->add_field("kills", "%ld", kills);
+    fields->add_field("kills", "%d", kills);
     if (!maxed_skills.empty())
         fields->add_field("maxskills", "%s", maxed_skills.c_str());
 
@@ -803,7 +803,7 @@ void scorefile_entry::set_score_fields() const
 
     set_base_xlog_fields();
 
-    fields->add_field("sc", "%ld", points);
+    fields->add_field("sc", "%d", points);
     fields->add_field("ktyp", ::kill_method_name(kill_method_type(death_type)));
     fields->add_field("killer", death_source_desc().c_str());
     fields->add_field("dam", "%d", damage);

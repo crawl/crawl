@@ -9,8 +9,6 @@
 #include "wiz-item.h"
 
 #include <errno.h>
-#define __STDC_FORMAT_MACROS
-#include <inttypes.h>
 
 #include "artefact.h"
 #include "coordit.h"
