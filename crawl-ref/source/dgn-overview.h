@@ -11,6 +11,8 @@
 #include "stash.h"
 #include <vector>
 
+void overview_clear();
+
 void seen_notable_thing(dungeon_feature_type which_thing, const coord_def& pos);
 bool move_notable_thing(const coord_def& orig, const coord_def& dest);
 bool overview_knows_portal(dungeon_feature_type portal);
