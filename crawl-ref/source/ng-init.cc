@@ -136,7 +136,7 @@ void initialise_temples()
     }
 
 #ifdef DEBUG_TEMPLES
-    mprf(MSGCH_DIAGNOSTICS, "Chose main temple %s, size %lu",
+    mprf(MSGCH_DIAGNOSTICS, "Chose main temple %s, size %u",
          main_temple->name.c_str(), main_temple_size);
 #endif
 
@@ -156,7 +156,7 @@ void initialise_temples()
     }
 
 #ifdef DEBUG_TEMPLES
-    mprf(MSGCH_DIAGNOSTICS, "%lu overflow altars", overflow_gods.size());
+    mprf(MSGCH_DIAGNOSTICS, "%u overflow altars", overflow_gods.size());
 #endif
 
     CrawlVector &temple_gods

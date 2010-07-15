@@ -406,7 +406,7 @@ void wizard_list_branches()
             }
         }
 
-        mprf(MSGCH_DIAGNOSTICS, "%lu on D:%lu (%s)", temples.size(),
+        mprf(MSGCH_DIAGNOSTICS, "%u on D:%u (%s)", temples.size(),
              i + 1,
              comma_separated_line( god_names.begin(),
                                    god_names.end() ).c_str()

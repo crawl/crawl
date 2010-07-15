@@ -231,7 +231,7 @@ void update_turn_count()
 
     // Show the turn count starting from 1. You can still quit on turn 0.
     textcolor(HUD_VALUE_COLOUR);
-    cprintf("%ld", you.num_turns);
+    cprintf("%d", you.num_turns);
     textcolor(LIGHTGREY);
 }
 
