@@ -1586,6 +1586,12 @@ int linebreak_string2( std::string& s, int maxcol )
     size_t loc = 0;
     int xpos = 0, spaceloc = 0;
     int breakcount = 0;
+
+    // [ds] Don't loop forever if the user is playing silly games with
+    // their term size.
+    if (!maxcol)
+        return 0;
+
     while ( loc < s.size() )
     {
         if ( s[loc] == '<' )    // tag
