@@ -1917,7 +1917,11 @@ static bool _do_ability(const ability_def& abil)
     }
 
     case ABIL_FEDHAS_SUNLIGHT:
-        fedhas_sunlight();
+        if (!fedhas_sunlight())
+        {
+            canned_msg(MSG_OK);
+            return (false);
+        }
         exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
 
