@@ -465,10 +465,14 @@ static int _misc_text_start_y(int num)
 {
     const int max_lines = get_number_of_lines() - NUM_MISC_LINES;
 
+#ifdef USE_TILE
+    return (max_lines);
+#else
     if (num <= 2)
         return (MISC_TEXT_START_Y);
 
     return (std::min(MISC_TEXT_START_Y + num - 1, max_lines));
+#endif
 }
 
 /**
