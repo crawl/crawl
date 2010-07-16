@@ -2130,7 +2130,8 @@ uint32_t item_fruit_mask(const item_def &item)
 
 bool food_is_rotten(const item_def &item)
 {
-    return (item.special < 100) && (item.base_type == OBJ_CORPSES
+    return (item.special <= ROTTING_CORPSE)
+                                    && (item.base_type == OBJ_CORPSES
                                        && item.sub_type == CORPSE_BODY
                                     || item.base_type == OBJ_FOOD
                                        && item.sub_type == FOOD_CHUNK);
