@@ -580,6 +580,8 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
         case SP_MERFOLK:
             result = you.in_water() ? TILEP_BASE_MERFOLK_WATER
                                     : TILEP_BASE_MERFOLK;
+            hair = TILEP_HAIR_GREEN;
+            beard = TILEP_BEARD_SHORT_GREEN;
             break;
         case SP_VAMPIRE:
             hair = TILEP_HAIR_ARWEN;
@@ -587,6 +589,10 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
         case SP_DEEP_DWARF:
             hair  = TILEP_HAIR_SHORT_WHITE;
             beard = TILEP_BEARD_LONG_WHITE;
+            break;
+        case SP_SPRIGGAN:
+            hair = 0;
+            beard = TILEP_BEARD_LONG_GREEN;
             break;
         default:
             // nothing to do
