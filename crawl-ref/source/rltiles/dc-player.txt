@@ -777,6 +777,7 @@ ponytail_yellow PONYTAIL_YELLOW
 knot_red KNOT_RED
 brown1 BROWN1
 brown2 BROWN2
+green GREEN
 %end_ctg
 
 ###Beard
@@ -787,10 +788,12 @@ short_black SHORT_BLACK
 short_red SHORT_RED
 short_yellow SHORT_YELLOW
 short_white SHORT_WHITE
+short_green SHORT_GREEN
 long_black LONG_BLACK
 long_red LONG_RED
 long_yellow LONG_YELLOW
 long_white LONG_WHITE
+long_green LONG_GREEN
 pj PJ
 %end_ctg
 
