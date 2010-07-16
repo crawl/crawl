@@ -855,14 +855,6 @@ static void _draw_los_backup(screen_cell_t *cell,
 
 static bool _show_terrain = false;
 
-inline static bool _coord_out_of_view(const coord_def &c)
-{
-    return (c.x < 1
-            || c.y < 1
-            || c.x > get_number_of_cols()
-            || c.y > get_number_of_lines());
-}
-
 //---------------------------------------------------------------
 //
 // Draws the main window using the character set returned
@@ -873,7 +865,7 @@ inline static bool _coord_out_of_view(const coord_def &c)
 //---------------------------------------------------------------
 void viewwindow(bool show_updates)
 {
-    if (you.duration[DUR_TIME_STEP] || _coord_out_of_view(crawl_view.viewp))
+    if (you.duration[DUR_TIME_STEP])
         return;
 
     screen_cell_t *cell(crawl_view.vbuf);
