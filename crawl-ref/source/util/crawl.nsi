@@ -33,8 +33,15 @@ XPStyle on
 
 Section ""
   SetOutPath $INSTDIR
-  File /r /x "*~" "crawl-win\*"
-  #%NSIS_INSTALL_FILES
+  File /r /x "*~" "build-win\*"
+  File ..\README.txt
+  File ..\README.pdf
+  File ..\CREDITS.txt
+  File /oname=LICENCE.txt ..\licence.txt
+
+  # clean after previous versions; crawl-console.exe used to be named crawl.exe
+  # but that made sense on Unix but not really on Windows.
+  Delete crawl.exe
 
   WriteUninstaller $INSTDIR\uninst.exe
 
@@ -43,13 +50,13 @@ Section ""
   CreateDirectory "$SMPROGRAMS\${DCSS}"
   # the order matters -- only the first shortcut is advertised by Win 7
   CreateShortCut "$SMPROGRAMS\${DCSS}\Dungeon Crawl - tiles.lnk" "$INSTDIR\crawl-tiles.exe"
-  CreateShortCut "$SMPROGRAMS\${DCSS}\Dungeon Crawl - console.lnk" "$INSTDIR\crawl.exe"
+  CreateShortCut "$SMPROGRAMS\${DCSS}\Dungeon Crawl - console.lnk" "$INSTDIR\crawl-console.exe"
   CreateShortCut "$SMPROGRAMS\${DCSS}\Uninstall DCSS.lnk" "$INSTDIR\uninst.exe"
 
   WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Crawl" "DisplayName" "${DCSS}"
   WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Crawl" "DisplayVersion" "${VERSION}"
   WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Crawl" "UninstallString" "$INSTDIR\uninst.exe"
-  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Crawl" "DisplayIcon" "$INSTDIR\crawl.exe"
+  WriteRegStr SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Crawl" "DisplayIcon" "$INSTDIR\crawl-tiles.exe"
   WriteRegDWORD SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Crawl" "NoModify" 1
   WriteRegDWORD SHCTX "Software\Microsoft\Windows\CurrentVersion\Uninstall\Crawl" "NoRepair" 1
 SectionEnd
@@ -60,7 +67,19 @@ FunctionEnd
 
 Section "Uninstall"
   Delete $INSTDIR\uninst.exe
-  RMDir /r $INSTDIR
+  Delete $INSTDIR\crawl-tiles.exe
+  Delete $INSTDIR\crawl-console.exe
+  Delete $INSTDIR\version.txt
+  Delete $INSTDIR\README.txt
+  Delete $INSTDIR\README.pdf
+  Delete $INSTDIR\CREDITS.txt
+  Delete $INSTDIR\LICENCE.txt
+  RMDir /r $INSTDIR\dat
+  RMDir /r $INSTDIR\docs
+  RMDir /r $INSTDIR\settings
+  # Crafty players may try sticking their saves here, so we remove things from
+  # the top dir by hand.
+  RMDir $INSTDIR
 
   Delete "$SMPROGRAMS\${DCSS}\Uninstall DCSS.lnk"
   Delete "$SMPROGRAMS\${DCSS}\Dungeon Crawl - console.lnk"
