@@ -1559,7 +1559,7 @@ std::string item_def::name_aux(description_level_type desc,
         case FOOD_CHUNK:
             if (!basename && !dbname)
             {
-                if (food_is_rotten(*this))
+                if (food_is_rotten(*this) && it_plus != MONS_ROTTING_HULK)
                     buff << "rotting ";
 
                 buff << "chunk of "
@@ -1799,7 +1799,7 @@ std::string item_def::name_aux(description_level_type desc,
 
     case OBJ_CORPSES:
     {
-        if (food_is_rotten(*this) && !dbname)
+        if (food_is_rotten(*this) && !dbname && it_plus != MONS_ROTTING_HULK)
             buff << "rotting ";
 
         uint64_t name_type, name_flags = 0;

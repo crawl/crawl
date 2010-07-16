@@ -3571,7 +3571,7 @@ static void _rot_inventory_food(long time_delta)
         item.special -= (time_delta / 20);
 
         if (food_is_rotten(item)
-            && (item.special + (time_delta / 20) >= 100))
+            && (item.special + (time_delta / 20) > ROTTING_CORPSE))
         {
             rotten_items.push_back(index_to_letter(i));
             if (you.equip[EQ_WEAPON] == i)
