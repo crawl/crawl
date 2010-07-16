@@ -181,7 +181,7 @@ function trove.get_trove_item(e, value, base_item)
        {scroll="enchant weapon II",  quantity=3+d(3)+d(2)},     --  3%
        {scroll="enchant armour",     quantity=3+d(3)+d(2)},     --  3%
        {scroll="enchant weapon III", quantity=d(2), weight=1},  --  1%, single
-       {scroll="vorpalize weapon",   quantity=d(2), weight=1},  --  1%, single
+       {scroll="vorpalise weapon",   quantity=d(2), weight=1},  --  1%, single
        {scroll="acquirement",        quantity=d(2), weight=1} } --  1%, single
 
   if not crawl.one_chance_in(3) then
