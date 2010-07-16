@@ -743,9 +743,8 @@ void cgotoxy(int x, int y, GotoRegion region)
     const coord_def tl = cgettopleft(region);
     const coord_def sz = cgetsize(region);
 
-    // [ds] Don't crash for users who make their terminals super-tiny.
-    if (x < 1 || x > sz.x || y < 1 || y > sz.y)
-        return;
+    ASSERT(x >= 1 && x <= sz.x);
+    ASSERT(y >= 1 && y <= sz.y);
 
     gotoxy_sys(tl.x + x - 1, tl.y + y - 1);
 }
