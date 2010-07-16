@@ -775,7 +775,11 @@ static void _print_status_lights(int y)
     const size_t line_end = crawl_view.hudsz.y+1;
 
     cgotoxy(1, line_cur, GOTO_STAT);
-    ASSERT(wherex()-crawl_view.hudp.x == 0);
+
+    // [ds] This can happen if the user resizes their term down really small.
+    // Just return, don't ASSERT.
+    if (wherex() != crawl_view.hudp.x)
+        return;
 
     size_t i_light = 0;
     while (true)
