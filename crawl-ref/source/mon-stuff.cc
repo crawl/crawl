@@ -353,6 +353,10 @@ monster_type fill_out_corpse(const monsters* monster,
     corpse.special     = FRESHEST_CORPSE;  // rot time
     corpse.quantity    = 1;
     corpse.orig_monnum = mtype + 1;
+
+    if (mtype == MONS_ROTTING_HULK)
+        corpse.special = ROTTING_CORPSE;
+
     if (monster)
     {
         corpse.props[MONSTER_NUMBER] = short(monster->number);
