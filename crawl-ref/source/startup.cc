@@ -450,20 +450,24 @@ static bool _game_defined(const newgame_def& ng)
 }
 
 static const int SCROLLER_MARGIN_X  = 18;
+static const int NAME_START_Y       = 5;
 static const int GAME_MODES_START_Y = 7;
 static const int SAVE_GAMES_START_Y = GAME_MODES_START_Y + 2 + NUM_GAME_TYPE;
 static const int MISC_TEXT_START_Y  = 19;
 static const int GAME_MODES_WIDTH   = 60;
+static const int NUM_HELP_LINES     = 3;
+static const int NUM_MISC_LINES     = 5;
 
 // Display more than just two saved characters if more are available
 // and there's enough space.
 static int _misc_text_start_y(int num)
 {
-    if (num <= 2)
-        return MISC_TEXT_START_Y;
+    const int max_lines = get_number_of_lines() - NUM_MISC_LINES;
 
-    return std::min(MISC_TEXT_START_Y + num - 1,
-                    get_number_of_lines() - 5);
+    if (num <= 2)
+        return (MISC_TEXT_START_Y);
+
+    return (std::min(MISC_TEXT_START_Y + num - 1, max_lines));
 }
 
 /**
@@ -472,14 +476,20 @@ static int _misc_text_start_y(int num)
 static void _show_startup_menu(newgame_def* ng_choice,
                                const newgame_def& defaults)
 {
+    std::vector<player_save_info> chars = find_all_saved_characters();
+    const int num_saves = chars.size();
+
+    const int max_col    = get_number_of_cols() - 1;
+    const int max_line   = get_number_of_lines() - 1;
+    const int help_start = _misc_text_start_y(num_saves);
+    const int help_end   = help_start + NUM_HELP_LINES + 1;
+    const int desc_y     = help_end;
+
     clrscr();
     PrecisionMenu menu;
     menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
     MenuFreeform* freeform = new MenuFreeform();
-    freeform->init(coord_def(1, 1),
-                   coord_def(get_number_of_cols() - 1,
-                             get_number_of_lines() - 1),
-                   "freeform");
+    freeform->init(coord_def(1, 1), coord_def(max_col, max_line), "freeform");
     // This freeform will only containt unfocusable texts
     freeform->allow_focus(false);
     MenuScroller* game_modes = new MenuScroller();
@@ -488,21 +498,17 @@ static void _show_startup_menu(newgame_def* ng_choice,
                                GAME_MODES_START_Y + NUM_GAME_TYPE + 1),
                      "game modes");
 
-    std::vector<player_save_info> chars = find_all_saved_characters();
-    const int num_saves = chars.size();
-
     MenuScroller* save_games = new MenuScroller();
     save_games->init(coord_def(SCROLLER_MARGIN_X, SAVE_GAMES_START_Y),
-                     coord_def(get_number_of_cols() - 1,
-                               _misc_text_start_y(num_saves) - 1),
+                     coord_def(max_col, help_start - 1),
                      "save games");
     _construct_game_modes_menu(game_modes);
     _construct_save_games_menu(save_games, chars);
 
     NoSelectTextItem* tmp = new NoSelectTextItem();
     tmp->set_text("Enter your name:");
-    tmp->set_bounds(coord_def(1, GAME_MODES_START_Y - 2),
-                    coord_def(SCROLLER_MARGIN_X, GAME_MODES_START_Y - 1));
+    tmp->set_bounds(coord_def(1, NAME_START_Y),
+                    coord_def(SCROLLER_MARGIN_X, NAME_START_Y + 1));
     freeform->attach_item(tmp);
     tmp->set_visible(true);
 
@@ -531,9 +537,7 @@ static void _show_startup_menu(newgame_def* ng_choice,
         text += ", Tab to repeat the last game's choice";
     text += ".\n";
     tmp->set_text(text);
-    tmp->set_bounds(coord_def(1, _misc_text_start_y(num_saves)),
-                    coord_def(get_number_of_cols() - 2,
-                              _misc_text_start_y(num_saves) + 4));
+    tmp->set_bounds(coord_def(1, help_start), coord_def(max_col - 1, help_end));
     freeform->attach_item(tmp);
     tmp->set_visible(true);
 
@@ -542,9 +546,7 @@ static void _show_startup_menu(newgame_def* ng_choice,
     menu.attach_object(save_games);
 
     MenuDescriptor* descriptor = new MenuDescriptor(&menu);
-    descriptor->init(coord_def(1, _misc_text_start_y(num_saves) + 4),
-                     coord_def(get_number_of_cols() - 1,
-                               _misc_text_start_y(num_saves) + 5),
+    descriptor->init(coord_def(1, desc_y), coord_def(max_col, desc_y + 1),
                      "descriptor");
     menu.attach_object(descriptor);
 
@@ -604,9 +606,9 @@ static void _show_startup_menu(newgame_def* ng_choice,
     {
         menu.draw_menu();
         textcolor(WHITE);
-        cgotoxy(SCROLLER_MARGIN_X ,GAME_MODES_START_Y - 2);
+        cgotoxy(SCROLLER_MARGIN_X, NAME_START_Y);
         clear_to_end_of_line();
-        cgotoxy(SCROLLER_MARGIN_X ,GAME_MODES_START_Y - 2);
+        cgotoxy(SCROLLER_MARGIN_X, NAME_START_Y);
         cprintf("%s", input_string.c_str());
 
         const int keyn = getch_ck();
