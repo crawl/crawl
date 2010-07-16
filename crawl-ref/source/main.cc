@@ -278,6 +278,7 @@ static void _reset_game()
     clrscr();
     crawl_state.type = GAME_TYPE_UNSPECIFIED;
     clear_message_store();
+    macro_clear_buffers();
     you.reset();
     StashTrack = StashTracker();
     travel_cache = TravelCache();
