@@ -161,8 +161,8 @@ static void _merge_ench_durations(monsters *initial_slime, monsters *merge_to)
     {
         // Does the other slime have this enchantment as well?
         mon_enchant temp = merge_to->get_ench(i->first);
-        // If not, use duration 0 for their part of the average.
-        int duration = temp.ench == ENCH_NONE ? 0 : temp.duration;
+        bool no_initial = temp.ench == ENCH_NONE;        // If not, use duration 0 for their part of the average.
+        int duration = no_initial ? 0 : temp.duration;
 
         i->second.duration = (i->second.duration * initial_count
                               + duration * merge_to_count)/total_count;
@@ -170,14 +170,17 @@ static void _merge_ench_durations(monsters *initial_slime, monsters *merge_to)
         if (!i->second.duration)
             i->second.duration = 1;
 
-        merge_to->add_ench(i->second);
+        if(no_initial)
+            merge_to->add_ench(i->second);
+        else
+            merge_to->update_ench(i->second);
     }
 
     for (i = merge_to->enchantments.begin();
          i != merge_to->enchantments.end(); ++i)
     {
         if (initial_slime->enchantments.find(i->first)
-                != initial_slime->enchantments.end()
+                == initial_slime->enchantments.end()
             && i->second.duration > 1)
         {
             i->second.duration = (merge_to_count * i->second.duration)
