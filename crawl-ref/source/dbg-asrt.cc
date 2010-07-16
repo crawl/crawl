@@ -669,9 +669,12 @@ static void _BreakStrToDebugger(const char *mesg)
 // AssertFailed
 //
 //---------------------------------------------------------------
-void AssertFailed(const char *expr, const char *file, int line)
+void AssertFailed(const char *expr, const char *file, int line, bool save_game)
 {
     char mesg[512];
+
+    if (save_game)
+        crawl_state.game_wants_emergency_save = true;
 
     const char *fileName = file + strlen(file); // strip off path
 
