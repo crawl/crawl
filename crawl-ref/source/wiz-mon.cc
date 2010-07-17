@@ -265,7 +265,7 @@ void debug_list_monsters()
 
     std::sort(mon_nums, mon_nums + MAX_MONSTERS, _sort_monster_list);
 
-    long total_exp = 0, total_adj_exp = 0, total_nonuniq_exp = 0;
+    int total_exp = 0, total_adj_exp = 0, total_nonuniq_exp = 0;
 
     std::string prev_name = "";
     int         count     = 0;
@@ -325,12 +325,12 @@ void debug_list_monsters()
 
     if (total_adj_exp == total_exp)
     {
-        mprf("%d monsters, %ld total exp value (%ld non-uniq)",
+        mprf("%d monsters, %d total exp value (%d non-uniq)",
              nfound, total_exp, total_nonuniq_exp);
     }
     else
     {
-        mprf("%d monsters, %ld total exp value (%ld non-uniq, %ld adjusted)",
+        mprf("%d monsters, %d total exp value (%d non-uniq, %d adjusted)",
              nfound, total_exp, total_nonuniq_exp, total_adj_exp);
     }
 }
@@ -454,8 +454,8 @@ void debug_stethoscope(int mon)
 
     // Print stats and other info.
     mprf(MSGCH_DIAGNOSTICS,
-         "HD=%d (%lu) HP=%d/%d AC=%d EV=%d MR=%d SP=%d "
-         "energy=%d%s%s num=%d flags=%04lx",
+         "HD=%d (%u) HP=%d/%d AC=%d EV=%d MR=%d SP=%d "
+         "energy=%d%s%s num=%d flags=%04"PRIx64,
          mons.hit_dice,
          mons.experience,
          mons.hit_points, mons.max_hit_points,

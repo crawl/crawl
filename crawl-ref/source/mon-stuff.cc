@@ -353,6 +353,10 @@ monster_type fill_out_corpse(const monsters* monster,
     corpse.special     = FRESHEST_CORPSE;  // rot time
     corpse.quantity    = 1;
     corpse.orig_monnum = mtype + 1;
+
+    if (mtype == MONS_ROTTING_HULK)
+        corpse.special = ROTTING_CORPSE;
+
     if (monster)
     {
         corpse.props[MONSTER_NUMBER] = short(monster->number);
@@ -544,7 +548,6 @@ static void _hints_inspect_kill()
         learned_something_new(HINT_KILLED_MONSTER);
 }
 
-#ifdef DGL_MILESTONES
 static std::string _milestone_kill_verb(killer_type killer)
 {
     return (killer == KILL_RESET ? "banished " : "killed ");
@@ -574,7 +577,6 @@ static void _check_kill_milestone(const monsters *mons,
                        + ".");
     }
 }
-#endif // DGL_MILESTONES
 
 static void _give_monster_experience(monsters *victim,
                                      int killer_index, int experience,
@@ -999,8 +1001,8 @@ static void _setup_base_explosion(bolt & beam, const monsters & origin)
     beam.beam_source  = origin.mindex();
     beam.glyph        = dchar_glyph(DCHAR_FIRED_BURST);
     beam.source       = origin.pos();
+    beam.source_name  = origin.base_name(DESC_BASENAME);
     beam.target       = origin.pos();
-    beam.source_name  = "ball lightning";
 
     if (!crawl_state.game_is_arena() && origin.attitude == ATT_FRIENDLY
         && !origin.is_summoned())
@@ -1383,10 +1385,8 @@ int monster_die(monsters *monster, killer_type killer,
 
     bool in_transit          = false;
 
-#ifdef DGL_MILESTONES
     if (!crawl_state.game_is_arena())
         _check_kill_milestone(monster, killer, killer_index);
-#endif
 
     // Award experience for suicide if the suicide was caused by the
     // player.
@@ -2285,11 +2285,7 @@ static bool _valid_morph(monsters *monster, monster_type new_mclass)
         // smart enough to handle.
         || mons_is_ghost_demon(new_mclass)
 
-        // Only for use by game testers or in the arena.
-        || new_mclass == MONS_TEST_SPAWNER
-
         // Other poly-unsuitable things.
-        || new_mclass == MONS_ORB_GUARDIAN
         || mons_is_statue(new_mclass)
         || mons_is_projectile(new_mclass)
 

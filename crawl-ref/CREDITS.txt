@@ -28,34 +28,34 @@ Lawrence Ramsey, Robert Vollmert, Enne Walker) would like to thank:
 We'd also like to thank members of the Dungeon Crawl community who have
 contributed to Dungeon Crawl Stone Soup:
 
-Warwick Allison              Sophie Hamilton           Dylan O'Donnell
-Juha Arpiainen               Chris Hamons              Yuuma Oohara
-John 'Poor Yurik' Attea      R. Dan Henry              Pedro
-Roy Axenov                   Brendan Hickey            Arlen Phillips
-Max Bane                     Benoit Hudson             Lemuel Pitkin
-Bill Beher                   Sylvia 'Onia' Hörnke      Derek Ray
-Alexander Beisig             Iainuki                   Remsleep
-Stu Black                    Ilyak                     Will Rogers
-Erik Inge Bolsø              Matthew Ince              David Rose
-Peter Borgmann               Mitsuhiro Itakura         Risto Saarelma
-Daniel Mark Brownrigg        Mikko Juola               Sebastian Salman
-Trent W. Buck                Jarmo Kielosto            Brett Scarborough
-Joe Buzzelli                 Kornel Kisielewicz        Robert Shimmin
-Terje Bø                     Daniel Klein              Sigurd
-Henry Cipolla                Vambola Kotkas            Edgar Simo
-Aaron Curtis                 Ryan Kusnery              Alex Smith
-Denzi                        Jukka Kuusisto            Solf
-Mike Drinen                  Maciej Lapinski           Michael Spang
-Kieron Dunbar                Jordan Lewis              Johan Strandell
-Micha Elsner                 Icy Lich                  Roman Sêk
-Christopher Evenstar         Markus Maier              William Tanksley, Jr.
-Brett Foster                 Arien Malec               Jared 'Twinge' Tinney
-Chris Galardi                Paul Maloney              Matt Titus
-Ben Goetter                  Andrew Minton             Steven Wheeler
-Rob Grant                    Shawn M Moore             Thomas Willem
-John Greenberg               Eva Myers                 Evan Williams
-GreyKnight                   Wille Mäntylä             Jeremey Wilson
-Joshua Gross                 Erkki Nurmi               Yelve Yakut
-Brian Haase                  Mattias Nyberg            Zooko
-Shayne Halvorson             nyra
+Warwick Allison              Sophie Hamilton           nyra
+Juha Arpiainen               Chris Hamons              Dylan O'Donnell
+John 'Poor Yurik' Attea      R. Dan Henry              Yuuma Oohara
+Roy Axenov                   Brendan Hickey            Pedro
+Max Bane                     Benoit Hudson             Arlen Phillips
+Bill Beher                   Sylvia 'Onia' Hörnke      Lemuel Pitkin
+Alexander Beisig             Iainuki                   Derek Ray
+Stu Black                    Ilyak                     Remsleep
+Erik Inge Bolsø              Matthew Ince              Will Rogers
+Peter Borgmann               Mitsuhiro Itakura         David Rose
+Daniel Mark Brownrigg        Mikko Juola               Risto Saarelma
+Trent W. Buck                Jarmo Kielosto            Sebastian Salman
+Joe Buzzelli                 Kornel Kisielewicz        Brett Scarborough
+Terje Bø                     Daniel Klein              Robert Shimmin
+Henry Cipolla                Ilkka Koskela             Sigurd
+Aaron Curtis                 Vambola Kotkas            Edgar Simo
+Denzi                        Ryan Kusnery              Alex Smith
+Mike Drinen                  Jukka Kuusisto            Solf
+Kieron Dunbar                Maciej Lapinski           Michael Spang
+Micha Elsner                 Jordan Lewis              Johan Strandell
+Christopher Evenstar         Icy Lich                  Roman Sêk
+Brett Foster                 Markus Maier              William Tanksley, Jr.
+Chris Galardi                Arien Malec               Jared 'Twinge' Tinney
+Ben Goetter                  Paul Maloney              Matt Titus
+Rob Grant                    Andrew Minton             Steven Wheeler
+John Greenberg               Shawn M Moore             Thomas Willem
+GreyKnight                   Eva Myers                 Evan Williams
+Joshua Gross                 Wille Mäntylä             Jeremey Wilson
+Brian Haase                  Erkki Nurmi               Yelve Yakut
+Shayne Halvorson             Mattias Nyberg            Zooko
 

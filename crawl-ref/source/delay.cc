@@ -1321,7 +1321,8 @@ static void _handle_run_delays(const delay_queue_item &delay)
             mesclr();
         process_command(cmd);
     }
-    else
+
+    if (!you.turn_is_over)
         you.time_taken = 0;
 
     // If you.running has gone to zero, and the run delay was not

@@ -25,6 +25,9 @@ dc-unrand.txt
 *.orig
 *.rej
 
+# From mac-crawl-build
+last-mac-build.version
+
 # Text editor generated junk (backup files and such)
 DEADJOE
 \#*
@@ -115,6 +118,9 @@ makefile.dep
 /source/debian/crawl-tiles
 /source/debian/crawl
 /source/debian/files
+
+# Windows packaging
+/source/crawl-win
 
 # Windows thumbnail files
 Thumbs.db

@@ -24,7 +24,8 @@
 #include "hints.h"
 
 game_state::game_state()
-    : game_crashed(false), mouse_enabled(false), waiting_for_command(false),
+    : game_crashed(false), game_wants_emergency_save(false),
+      mouse_enabled(false), waiting_for_command(false),
       terminal_resized(false), io_inited(false), need_save(false),
       saving_game(false), updating_scores(false), seen_hups(0),
       map_stat_gen(false), type(GAME_TYPE_NORMAL), arena_suspended(false), build_db(false),

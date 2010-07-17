@@ -52,6 +52,7 @@
 #ifdef TARGET_OS_WINDOWS
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <shlwapi.h>
 #elif defined ( __APPLE__ )
 extern char **NXArgv;
 #elif defined ( __linux__ )
@@ -645,9 +646,15 @@ void game_options::reset_options()
     }
     else
     {
+#ifdef TARGET_OS_WINDOWS
+        char home[MAX_PATH];
+        if (SHGetFolderPath(0, CSIDL_APPDATA, 0, 0, home))
+            strcpy(home, "./");
+#else
         const char *home = getenv("HOME");
         if (!home || !*home)
             home = "./";
+#endif
         save_dir = (std::string)home + (SAVE_DIR_PATH + 1) + "/saves/";
         morgue_dir = (std::string)home + (SAVE_DIR_PATH + 1) + "/morgue/";
     }
@@ -717,13 +724,13 @@ void game_options::reset_options()
 #endif
 
     // set it to the .crawlrc default
-    autopickups = ((1L << 15) | // gold
-                   (1L <<  6) | // scrolls
-                   (1L <<  8) | // potions
-                   (1L << 10) | // books
-                   (1L <<  7) | // jewellery
-                   (1L <<  3) | // wands
-                   (1L <<  4)); // food
+    autopickups = ((1 << 15) | // gold
+                   (1 <<  6) | // scrolls
+                   (1 <<  8) | // potions
+                   (1 << 10) | // books
+                   (1 <<  7) | // jewellery
+                   (1 <<  3) | // wands
+                   (1 <<  4)); // food
 
     suppress_startup_errors = false;
 
@@ -818,6 +825,7 @@ void game_options::reset_options()
     use_fake_cursor        = false;
 #endif
     use_fake_player_cursor = true;
+    show_player_species    = false;
 
     stash_tracking         = STM_ALL;
 
@@ -2092,7 +2100,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "autopickup")
     {
         // clear out autopickup
-        autopickups = 0L;
+        autopickups = 0;
 
         for (size_t i = 0; i < field.length(); i++)
         {
@@ -2128,7 +2136,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                 ;
 
             if (j < obj_syms_len)
-                autopickups |= (1L << j);
+                autopickups |= (1 << j);
             else
             {
                 report_error (
@@ -2332,15 +2340,17 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         game.map = field;
     }
-#ifndef DGAMELAUNCH
     // [ds] For dgamelaunch setups, the player should *not* be able to
     // set game type in their rc; the only way to set game type for
     // DGL builds should be the command-line options.
     else if (key == "type")
     {
+#if defined(DGAMELAUNCH)
+        game.type = Options.game.type;
+#else
         game.type = _str_to_gametype(field);
-    }
 #endif
+    }
     else if (key == "species" || key == "race")
     {
         game.species = _str_to_species(field);
@@ -2838,6 +2848,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else BOOL_OPTION(use_fake_cursor);
     else BOOL_OPTION(use_fake_player_cursor);
+    else BOOL_OPTION(show_player_species);
     else if (key == "force_more_message")
     {
         std::vector<std::string> fragments = split_string(",", field);
@@ -3987,7 +3998,7 @@ bool parse_args( int argc, char **argv, bool rc_only )
             if (!next_is_param)
                 return (false);
 
-            if (!sscanf(next_arg, "%lx", &Options.seed))
+            if (!sscanf(next_arg, "%x", &Options.seed))
                 return (false);
             nextUsed = true;
             break;
@@ -4054,21 +4065,6 @@ int game_options::o_int(const char *name, int def) const
     if (i != named_options.end())
     {
         val = atoi(i->second.c_str());
-    }
-    return (val);
-}
-
-long game_options::o_long(const char *name, long def) const
-{
-    long val = def;
-    opt_map::const_iterator i = named_options.find(name);
-    if (i != named_options.end())
-    {
-        const char *s = i->second.c_str();
-        char *es = NULL;
-        long num = strtol(s, &es, 10);
-        if (s != (const char *) es && es)
-            val = num;
     }
     return (val);
 }

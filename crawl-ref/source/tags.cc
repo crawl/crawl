@@ -984,8 +984,6 @@ static void tag_construct_you(writer &th)
     marshallString(th, you.second_god_name);
     marshallByte(th, you.piety);
     marshallByte(th, you.rotting);
-    marshallByte(th, you.symbol);
-    marshallByte(th, you.colour);
     marshallShort(th, you.pet_target);
 
     marshallByte(th, you.max_level);
@@ -1159,6 +1157,10 @@ static void tag_construct_you(writer &th)
 
     marshallShort(th, you.transit_stair);
     marshallByte(th, you.entering_level);
+
+    // Reserved space for unknown porpoises.
+    marshallByte(th, 0);
+    marshallByte(th, 0);
 
     marshallInt(th, you.dactions.size());
     for(unsigned int k = 0; k < you.dactions.size(); k++)
@@ -1434,10 +1436,7 @@ static map_def unmarshall_mapdef(reader &th)
     map.read_full(th, false);
     map.read_index(th);
     map.read_maplines(th);
-    if (_tag_minor_version >= TAG_MINOR_MAPDESC)
-        map.description = unmarshallString(th);
-    else
-        map.description.clear();
+    map.description = unmarshallString(th);
     return map;
 }
 
@@ -1531,11 +1530,8 @@ static void tag_read_you(reader &th, char minorVersion)
     short count_s;
 
     you.your_name         = unmarshallString(th, kNameLen);
-    if (minorVersion >= TAG_MINOR_SAVEVER)
-    {
-        const std::string old_version = unmarshallString(th);
-        dprf("Last save Crawl version: %s", old_version.c_str());
-    }
+    const std::string old_version = unmarshallString(th);
+    dprf("Last save Crawl version: %s", old_version.c_str());
 
     you.religion          = static_cast<god_type>(unmarshallByte(th));
 
@@ -1543,8 +1539,6 @@ static void tag_read_you(reader &th, char minorVersion)
 
     you.piety             = unmarshallByte(th);
     you.rotting           = unmarshallByte(th);
-    you.symbol            = unmarshallByte(th);
-    you.colour            = unmarshallByte(th);
     you.pet_target        = unmarshallShort(th);
 
     you.max_level         = unmarshallByte(th);
@@ -1667,9 +1661,13 @@ static void tag_read_you(reader &th, char minorVersion)
 
     // how many attributes?
     count_c = unmarshallByte(th);
-    ASSERT(count_c >= 0 && count_c <= NUM_ATTRIBUTES);
-    for (j = 0; j < count_c; ++j)
+    ASSERT(count_c >= 0);
+    for (j = 0; j < count_c && j < NUM_ATTRIBUTES; ++j)
         you.attribute[j] = unmarshallInt(th);
+    for (j = count_c; j < NUM_ATTRIBUTES; ++j)
+        you.attribute[j] = 0;
+    for (j = NUM_ATTRIBUTES; j < count_c; ++j)
+        unmarshallInt(th);
 
     count_c = unmarshallByte(th);
     ASSERT(count_c == NUM_OBJECT_CLASSES);
@@ -1736,19 +1734,14 @@ static void tag_read_you(reader &th, char minorVersion)
     you.transit_stair  = static_cast<dungeon_feature_type>(unmarshallShort(th));
     you.entering_level = unmarshallByte(th);
 
-#if TAG_MAJOR_VERSION == 27
-    if (minorVersion < TAG_MINOR_DACTIONS)
-        you.dactions.clear();
-    else
-    {
-#endif
+    // Reserved space for unknown porpoises.
+    unmarshallByte(th);
+    unmarshallByte(th);
+
     int n_dact = unmarshallInt(th);
     you.dactions.resize(n_dact, NUM_DACTIONS);
     for (i = 0; i < n_dact; i++)
         you.dactions[i] = static_cast<daction_type>(unmarshallByte(th));
-#if TAG_MAJOR_VERSION == 27
-    }
-#endif
 
     // List of currently beholding monsters (usually empty).
     count_c = unmarshallShort(th);
@@ -2510,11 +2503,6 @@ static void tag_read_level( reader &th, char minorVersion )
     env.properties.clear();
     env.properties.read(th);
 
-#if TAG_MAJOR_VERSION == 27
-    if (minorVersion < TAG_MINOR_DACTIONS)
-        env.dactions_done = you.dactions.size();
-    else
-#endif
     env.dactions_done = unmarshallInt(th);
 
     // Restore heightmap

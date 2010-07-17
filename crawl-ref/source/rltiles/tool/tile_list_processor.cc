@@ -538,8 +538,8 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                     if (val < 0 || val > 255)
                     {
                         fprintf(stderr,
-                                "Error (%s:%d): Arg %lu must be 0-255.\n",
-                                list_file, line, (unsigned long)i);
+                                "Error (%s:%d): Arg %u must be 0-255.\n",
+                                list_file, line, i);
                     }
 
                     cols[col_idx][comp_idx++] = static_cast<unsigned char>(val);
@@ -644,6 +644,14 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                     m_page.add_synonym(m_args[2], m_args[i]);
                 }
             }
+        }
+        else if (strcmp(arg, "syn") == 0)
+        {
+            // Add a synonym without resetting the enum count.
+            CHECK_ARG(1);
+
+            for (int i = 1; i < m_args.size(); ++i)
+                m_page.add_synonym(m_page.m_tiles.size() - 1, m_args[i]);
         }
         else
         {

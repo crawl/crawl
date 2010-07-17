@@ -348,6 +348,7 @@ INCLUDES_L += -Iutil -I.
 ifdef APPLE_GCC
 
 ARCH := $(uname_M)
+export ARCH
 
 ifeq ($(ARCH),ppc)
 	SDK_VER := 10.4
@@ -617,7 +618,7 @@ else
 endif
 
 ifneq ($(strip $(SAVEDIR)),)
-  ifneq ($(filter \~%,$(SAVEDIR)),)
+  ifneq ($(filter ~%,$(SAVEDIR)),)
     CFOTHERS_L += -DSAVE_DIR_PATH=\"$(SAVEDIR)\"
     savedir_fp :=
   else
@@ -816,10 +817,10 @@ GENERATED_FILES := art-data.h $(RLTILES)/dc-unrand.txt
 
 GAME_DEPENDS  := $(DESTTILEFILES) $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS)
 SRC_PKG_BASE  := stone_soup
-SRC_VERSION   := $(shell git describe --tags --long 2>/dev/null || cat util/release_ver)
+SRC_VERSION   := $(shell git describe --tags --long $(MERGE_BASE) 2>/dev/null || cat util/release_ver)
 
 # when making release builds, use just the bare tag
-SRC_VERSION_SHORT := $(shell git describe --tags 2>/dev/null || cat util/release_ver)
+SRC_VERSION_SHORT := $(shell git describe --tags $(MERGE_BASE) 2>/dev/null || cat util/release_ver)
 ifneq (,$(SRC_VERSION_SHORT))
   ifeq (,$(findstring -,$(SRC_VERSION_SHORT)))
     SRC_VERSION := $(SRC_VERSION_SHORT)
@@ -831,7 +832,8 @@ SRC_PKG_TAR   := $(PKG_SRC_DIR).tar.bz2
 SRC_PKG_TAR_NODEPS := $(PKG_SRC_DIR)-nodeps.tar.bz2
 SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
 
-.PHONY: all test install clean clean-contrib distclean debug profile wizard package-source source
+.PHONY: all test install clean clean-contrib distclean debug profile wizard package-source source \
+        build-windows package-windows
 
 all: $(GENERATED_FILES) $(GAME) $(GENERATED_DOCS)
 
@@ -841,6 +843,7 @@ test:
 
 ifeq (,$(findstring clean,$(MAKECMDGOALS)))
 ifeq (,$(findstring test,$(MAKECMDGOALS)))
+ifeq (,$(filter %-windows,$(MAKECMDGOALS)))
 
 #
 # CFLAGS difference check
@@ -872,6 +875,7 @@ ifneq ($(DEPS),)
 -include $(DEPS)
 endif
 
+endif
 endif
 endif
 
@@ -1002,6 +1006,7 @@ clean:
 	+$(MAKE) -C $(UTIL) clean
 	+$(MAKE) -C $(RLTILES) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o libunix.o $(OBJECTS) $(OBJECTS:.o=.d) *.ixx build.h compflag.h .contrib-libs .cflags
+	$(RM) -r build-win
 
 clean-contrib:
 	+$(MAKE) -C contrib clean
@@ -1141,3 +1146,25 @@ source: removeold
 removeold:
 	if [ -f ../../$(SRC_PKG_TAR) ]; then $(RM) ../../$(SRC_PKG_TAR); fi
 	if [ -f ../../$(SRC_PKG_ZIP) ]; then $(RM) ../../$(SRC_PKG_ZIP); fi
+
+#############################################################################
+# Building the unified Windows package.
+#
+
+# You need to have NSIS installed.
+package-windows:
+ifneq (x$(SRC_VERSION_SHORT),x$(shell cat build-win/version.txt 2>/dev/null))
+	+$(MAKE) build-windows
+endif
+	makensis -NOCD -DVERSION=$(SRC_VERSION_SHORT) util/crawl.nsi
+
+build-windows:
+ifneq ($(GAME),crawl.exe)
+	@echo "This is only for Windows; please specify CROSSHOST.";false
+endif
+	+$(MAKE) clean
+	+$(MAKE) TILES=y DESTDIR=build-win SAVEDIR='~/crawl' install
+	mv build-win/crawl.exe build-win/crawl-tiles.exe
+	+$(MAKE) TILES=  DESTDIR=build-win SAVEDIR='~/crawl' install
+	mv build-win/crawl.exe build-win/crawl-console.exe
+	echo $(SRC_VERSION_SHORT) >build-win/version.txt

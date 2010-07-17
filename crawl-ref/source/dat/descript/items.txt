@@ -866,6 +866,10 @@ potion of water
 
 A unique substance, vital for the existence of most life.
 %%%%
+quad damage
+
+A mysterious item resembling a rune of some kind. Once evoked, it will make the user glow blue and add a reverb to all sound... and there may be other effects as well.
+%%%%
 quarterstaff
 
 A sturdy wooden pole.
@@ -990,10 +994,6 @@ This rod contains spells of summoning, some of which can unleash demons unto thi
 rod of destruction
 
 This rod contains spells of mayhem and destruction.
-%%%%
-rod of discovery
-
-This rod contains spells which reveal various aspects of an explorer's surroundings to them.
 %%%%
 rod of smiting
 

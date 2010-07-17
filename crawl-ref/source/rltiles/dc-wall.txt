@@ -7,8 +7,42 @@
 # Multiple tile definitions are STATIC, that is they may change between
 # saves but are otherwise fixed.
 
+%weight 35
+wall/brick_dark0 WALL_BRICK_DARK WALL_NORMAL
+wall/brick_dark1
+wall/brick_dark2
+wall/brick_dark3
+# sewer grate
+%weight 3
+wall/brick_dark4
+# bones
+%weight 1
+wall/brick_dark5
+# vines
 %weight 5
-wall/brick_brown0 WALL_NORMAL WALL_BRICK WALL_BRICK_BROWN
+wall/brick_dark6
+# banner
+%weight 3
+%back wall/brick_dark1
+wall/banners/banner1
+%back none
+
+%back wall/brick_dark0
+# torch (out)
+%weight 3
+wall/torches/torch0
+%weight 1
+# torches (lit)
+wall/torches/torch1
+%syn WALL_BRICK_TORCH_START
+wall/torches/torch2
+wall/torches/torch3
+wall/torches/torch4
+%syn WALL_BRICK_TORCH_END
+%back none
+
+%weight 5
+wall/brick_brown0 WALL_BRICK WALL_BRICK_BROWN
 wall/brick_brown1
 wall/brick_brown2
 wall/brick_brown4
@@ -736,3 +770,10 @@ wall/dngn_green_crystal_wall DNGN_GREEN_CRYSTAL_WALL DNGN_CRYSTAL DNGN_CRYSTAL_G
 %desat 120
 %repeat DNGN_CRYSTAL DNGN_CRYSTAL_WHITE
 %resetcol
+
+%sdir dc-dngn/wall
+shadow_w DNGN_WALL_SHADOW_W
+shadow_nw DNGN_WALL_SHADOW_NW
+shadow_n DNGN_WALL_SHADOW_N
+shadow_ne DNGN_WALL_SHADOW_NE
+shadow_e DNGN_WALL_SHADOW_E

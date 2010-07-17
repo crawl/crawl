@@ -952,6 +952,13 @@ bool evoke_item(int slot)
                 pract = (coinflip() ? 2 : 1), ident = true;
             break;
 
+        case MISC_QUAD_DAMAGE:
+            mpr("QUAD DAMAGE!");
+            you.duration[DUR_QUAD_DAMAGE] = 30 * BASELINE_DELAY;
+            ASSERT(in_inventory(item));
+            dec_inv_item_quantity(item.link, 1);
+            break;
+
         default:
             did_work = false;
             unevokable = true;

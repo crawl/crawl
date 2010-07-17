@@ -18,6 +18,8 @@
 
 #include <time.h>
 #include <stdint.h>
+#define __STDC_FORMAT_MACROS
+#include <inttypes.h>
 
 #include "defines.h"
 #include "enum.h"

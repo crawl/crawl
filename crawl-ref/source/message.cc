@@ -1036,6 +1036,14 @@ void mpr(std::string text, msg_channel_type channel, int param, bool nojoin)
     bool domore = check_more(text, channel);
     bool join = !domore && !nojoin && check_join(text, channel);
 
+    if (you.duration[DUR_QUAD_DAMAGE])
+    {
+        // No sound, so we simulate the reverb with all caps.
+        formatted_string fs = formatted_string::parse_string(text);
+        fs.all_caps();
+        text = fs.to_colour_string();
+    }
+
     std::string col = colour_to_str(colour_msg(colour));
     text = "<" + col + ">" + text + "</" + col + ">"; // XXX
     message_item msg = message_item(text, channel, param, join);
