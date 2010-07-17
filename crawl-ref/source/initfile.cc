@@ -660,7 +660,13 @@ void game_options::reset_options()
 
 #if !defined(DGAMELAUNCH)
     if (macro_dir.empty())
+    {
+#ifdef UNIX
         macro_dir = _user_home_crawl_subpath("");
+#else
+        macro_dir = "settings/";
+#endif
+    }
 #endif
 
 #if defined(SAVE_DIR_PATH)
@@ -674,8 +680,10 @@ void game_options::reset_options()
     }
     else
     {
-        save_dir = _user_home_subpath((SAVE_DIR_PATH + 1) + "/saves/");
-        morgue_dir = _user_home_subpath((SAVE_DIR_PATH + 1) + "/morgue/");
+        save_dir = _user_home_subpath(std::string(SAVE_DIR_PATH + 1)
+                                      + "/saves/");
+        morgue_dir = _user_home_subpath(std::string(SAVE_DIR_PATH + 1)
+                                        + "/morgue/");
     }
 #endif
 #elif defined(TARGET_OS_MACOSX)
