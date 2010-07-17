@@ -143,7 +143,7 @@ std::string item_def::name(description_level_type descrip,
         }
     }
 
-    if (this->base_type == OBJ_ORBS
+    if (item_is_orb(*this)
         || (ident || item_type_known( *this ))
             && (this->base_type == OBJ_MISCELLANY
                    && this->sub_type == MISC_HORN_OF_GERYON
@@ -835,6 +835,7 @@ static const char* misc_type_name(int type, bool known)
         case MISC_BOTTLED_EFREET:           return "bottled efreet";
         case MISC_STONE_OF_EARTH_ELEMENTALS:
             return "stone of earth elementals";
+        case MISC_QUAD_DAMAGE:              return "quad damage";
 
         case MISC_RUNE_OF_ZOT:
         case NUM_MISCELLANY:
@@ -869,6 +870,7 @@ static const char* misc_type_name(int type, bool known)
         case MISC_DISC_OF_STORMS:            return "grey disc";
         case MISC_STONE_OF_EARTH_ELEMENTALS: return "nondescript stone";
         case MISC_BOTTLED_EFREET:            return "sealed bronze flask";
+        case MISC_QUAD_DAMAGE:               return "quad damage";
 
         case MISC_RUNE_OF_ZOT:
         case NUM_MISCELLANY:
@@ -1021,7 +1023,6 @@ static const char* staff_type_name(int stafftype)
     case STAFF_SPELL_SUMMONING: return "summoning";
     case STAFF_CHANNELING:      return "channeling";
     case STAFF_WARDING:         return "warding";
-    case STAFF_DISCOVERY:       return "discovery";
     case STAFF_SMITING:         return "smiting";
     case STAFF_STRIKING:        return "striking";
     case STAFF_DEMONOLOGY:      return "demonology";
@@ -1558,7 +1559,7 @@ std::string item_def::name_aux(description_level_type desc,
         case FOOD_CHUNK:
             if (!basename && !dbname)
             {
-                if (food_is_rotten(*this))
+                if (food_is_rotten(*this) && it_plus != MONS_ROTTING_HULK)
                     buff << "rotting ";
 
                 buff << "chunk of "
@@ -1798,7 +1799,7 @@ std::string item_def::name_aux(description_level_type desc,
 
     case OBJ_CORPSES:
     {
-        if (food_is_rotten(*this) && !dbname)
+        if (food_is_rotten(*this) && !dbname && it_plus != MONS_ROTTING_HULK)
             buff << "rotting ";
 
         uint64_t name_type, name_flags = 0;
@@ -2653,6 +2654,7 @@ bool is_bad_item(const item_def &item, bool temp)
         case RING_HUNGER:
             // Even Vampires can use this ring.
             return (!you.is_undead);
+        case RING_EVASION:
         case RING_PROTECTION:
         case RING_STRENGTH:
         case RING_DEXTERITY:
@@ -2797,6 +2799,8 @@ bool is_useless_item(const item_def &item, bool temp)
         case SCR_RANDOM_USELESSNESS:
         case SCR_NOISE:
             return (true);
+        case SCR_TELEPORTATION:
+            return (crawl_state.game_is_sprint());
         default:
             return (false);
         }
@@ -2914,7 +2918,11 @@ bool is_useless_item(const item_def &item, bool temp)
             return (you.religion == GOD_TROG);
 
         case RING_TELEPORT_CONTROL:
-            return (player_control_teleport(true, temp, false));
+            return (player_control_teleport(true, temp, false)
+                    || crawl_state.game_is_sprint());
+
+        case RING_TELEPORTATION:
+            return (crawl_state.game_is_sprint());
 
         case RING_INVISIBILITY:
             return (temp && you.backlit(true));

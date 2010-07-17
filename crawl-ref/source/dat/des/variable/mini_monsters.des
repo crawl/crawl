@@ -1072,10 +1072,11 @@ MAP
 ENDMAP
 
 ##### Hairy devils (4) and bears.
-NAME: hairy_minivault
-TAGS: patrolling
-MONS: hairy devil / nothing w:20
-MONS: black bear w:20 / grizzly bear / nothing w:20
+NAME:  hairy_minivault
+DEPTH: D:9-27
+TAGS:  patrolling
+MONS:  hairy devil / nothing w:20
+MONS:  black bear w:20 / grizzly bear / nothing w:20
 MAP
 xxxxxxxxxxxxx
 @.....xxxxxxx

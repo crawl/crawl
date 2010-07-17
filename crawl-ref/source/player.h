@@ -86,8 +86,7 @@ public:
   uint64_t redraw_status_flags;
 
   // PC's symbol (usually @) and colour.
-  int symbol;
-  int colour;
+  monster_type symbol;
 
   bool redraw_hit_points;
   bool redraw_magic_points;
@@ -755,6 +754,7 @@ void level_change(bool skip_attribute_increase = false);
 bool player_genus( genus_type which_genus,
                    species_type species = SP_UNKNOWN );
 bool is_player_same_species( const int mon, bool = false );
+monster_type player_mons();
 
 bool you_can_wear( int eq, bool special_armour = false );
 bool player_has_feet(void);

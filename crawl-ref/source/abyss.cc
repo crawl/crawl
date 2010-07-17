@@ -30,6 +30,7 @@
 #include "mon-transit.h"
 #include "player.h"
 #include "dungeon.h"
+#include "itemprop.h"
 #include "items.h"
 #include "l_defs.h"
 #include "lev-pand.h"
@@ -618,7 +619,7 @@ private:
             if (get_screen_glyph(*ri) != ' ')
             {
                 for (stack_iterator si(*ri); si; ++si)
-                    if (is_rune(*si) && si->plus == RUNE_ABYSSAL)
+                    if (item_is_rune(*si, RUNE_ABYSSAL))
                         nearness = std::min(nearness,
                                             grid_distance(you.pos(),*ri));
             }

@@ -3992,14 +3992,14 @@ void xom_check_lost_item(const item_def& item)
         xom_is_stimulated(255, "Xom laughs nastily.", true);
     else if (is_special_unrandom_artefact(item))
         xom_is_stimulated(128, "Xom snickers.", true);
-    else if (is_rune(item))
+    else if (item_is_rune(item))
     {
         // If you'd dropped it, check if that means you'd dropped your
         // third rune, and now you don't have enough to get into Zot.
         if (item.flags & ISFLAG_BEEN_IN_INV)
             _xom_check_less_runes(item.quantity);
 
-        if (is_unique_rune(item))
+        if (item_is_unique_rune(item))
             xom_is_stimulated(255, "Xom snickers loudly.", true);
         else if (you.entry_cause == EC_SELF_EXPLICIT
                  && !(item.flags & ISFLAG_BEEN_IN_INV))
@@ -4037,11 +4037,11 @@ void xom_check_destroyed_item(const item_def& item, int cause)
     }
     else if (is_special_unrandom_artefact(item))
         xom_is_stimulated(128, "Xom snickers.", true);
-    else if (is_rune(item))
+    else if (item_is_rune(item))
     {
         _xom_check_less_runes(item.quantity);
 
-        if (is_unique_rune(item) || item.plus == RUNE_ABYSSAL)
+        if (item_is_unique_rune(item) || item.plus == RUNE_ABYSSAL)
             amusement = 255;
         else
             amusement = 64 * item.quantity;

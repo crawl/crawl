@@ -176,6 +176,7 @@ enum attribute_type
                                // player has seen.
     ATTR_NOISES,               // A noisy artefact is equipped.
     ATTR_SHADOWS,              // Lantern of shadows effect.
+    ATTR_FRUIT_FOUND,          // Mask of fruit types found.
     NUM_ATTRIBUTES
 };
 
@@ -1224,6 +1225,7 @@ enum duration_type
     DUR_TIME_STEP,
     DUR_ICEMAIL_DEPLETED,     // Wait this many turns for full Icemail
     DUR_MISLED,
+    DUR_QUAD_DAMAGE,
 
     NUM_DURATIONS
 };
@@ -1671,7 +1673,7 @@ enum monster_type                      // (int) menv[].type
     MONS_QUASIT,
     MONS_RAT,
     MONS_SCORPION,
-    MONS_DWARF, // only for corpses
+    MONS_DWARF,
     MONS_UGLY_THING,                   //   20
     MONS_FIRE_VORTEX,
     MONS_WORM,
@@ -1746,11 +1748,11 @@ enum monster_type                      // (int) menv[].type
     MONS_MERGED_SLIME_CREATURE, // used only for recoloring
     MONS_GHOST,                 // common genus for monster and player ghosts
     MONS_SENSED,                // dummy monster for unspecified sensed mons
-    //
-    // 95
-    //
-    //
-    MONS_GLOWING_SHAPESHIFTER = 98,    //   98
+    MONS_PLAYER,                // a certain ugly creature
+    MONS_VAMPIRE_BAT,           // for recolouring
+    MONS_DEMIGOD,               // for recolouring
+    MONS_DEMONSPAWN,            // for recolouring... but there are FRs
+    MONS_GLOWING_SHAPESHIFTER,
     MONS_SHAPESHIFTER,
     MONS_GIANT_MITE,                   //  100
     MONS_STEAM_DRAGON,
@@ -1836,8 +1838,7 @@ enum monster_type                      // (int) menv[].type
     MONS_BLINK_FROG,
     MONS_GIANT_COCKROACH,
     MONS_SMALL_SNAKE,
-    //jmf: new monsters
-    MONS_SHUGGOTH,                     //  XXX: not used
+    MONS_KENKU,
     MONS_WOLF,     //jmf: added
     MONS_WARG,     //jmf: added for orc mines
     MONS_BEAR,     //jmf: added bears!
@@ -1865,6 +1866,7 @@ enum monster_type                      // (int) menv[].type
     MONS_SEA_SNAKE,
 
     MONS_HYPERACTIVE_BALLISTOMYCETE,
+    MONS_HALFLING,              // for recolouring only.  And let's remove them!
 
     //jmf: end new monsters
     MONS_WHITE_IMP = 220,              //  220
@@ -1971,19 +1973,20 @@ enum monster_type                      // (int) menv[].type
     // mon-util.cc.
     MONS_BLACK_DRACONIAN,               // Should always be first colour.
     MONS_MOTTLED_DRACONIAN,
-    MONS_YELLOW_DRACONIAN,              //  315
+    MONS_YELLOW_DRACONIAN,
     MONS_GREEN_DRACONIAN,
     MONS_PURPLE_DRACONIAN,
     MONS_RED_DRACONIAN,
     MONS_WHITE_DRACONIAN,
-    MONS_PALE_DRACONIAN,                //  320 Should always be last colour.
+    MONS_GREY_DRACONIAN,
+    MONS_PALE_DRACONIAN,                //  Should always be last colour.
 
     // Sync up with mon-place.cc's draconian selection if adding more.
     MONS_DRACONIAN_CALLER,
     MONS_DRACONIAN_MONK,
     MONS_DRACONIAN_ZEALOT,
     MONS_DRACONIAN_SHIFTER,
-    MONS_DRACONIAN_ANNIHILATOR,         //  325
+    MONS_DRACONIAN_ANNIHILATOR,
     MONS_DRACONIAN_KNIGHT,
     MONS_DRACONIAN_SCORCHER,
 
@@ -1992,7 +1995,7 @@ enum monster_type                      // (int) menv[].type
     MONS_MURRAY,
     MONS_TIAMAT,
 
-    MONS_DEEP_ELF_BLADEMASTER,         //  330
+    MONS_DEEP_ELF_BLADEMASTER,
     MONS_DEEP_ELF_MASTER_ARCHER,
 
     // The Lords of Hell (also unique):
@@ -2124,7 +2127,7 @@ enum monster_type                      // (int) menv[].type
     MONS_CHUCK,
     MONS_IRON_GIANT,
     MONS_NELLIE,
-    MONS_IRON_ELEMENTAL,
+    MONS_IRON_ELEMENTAL,               // 488
 
     // Spriggans:
     MONS_SPRIGGAN = 500,
@@ -2135,6 +2138,7 @@ enum monster_type                      // (int) menv[].type
     MONS_SPRIGGAN_DEFENDER,
     MONS_THE_ENCHANTRESS,
     MONS_FIREFLY,
+    MONS_MENNAS,
 
     // Testing monsters
     MONS_TEST_SPAWNER,
@@ -2144,7 +2148,6 @@ enum monster_type                      // (int) menv[].type
     // MONS_NO_MONSTER can get put in savefiles, so it shouldn't change
     // when NUM_MONSTERS increases.
     MONS_NO_MONSTER = 1000,
-    MONS_PLAYER,
 
     RANDOM_MONSTER = 2000, // used to distinguish between a random monster and using program bugs for error trapping {dlb}
 
@@ -2409,6 +2412,7 @@ enum mon_spellbook_type
     MST_GRINDER,
     MST_IRON_GIANT,
     MST_IRON_ELEMENTAL,
+    MST_MENNAS,
 
     MST_TEST_SPAWNER = 200,
     NUM_MSTYPES,

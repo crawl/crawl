@@ -155,6 +155,22 @@ dngn_shallow_water_murky DNGN_SHALLOW_WATER_MURKY
 dngn_shallow_water_murky2
 dngn_shallow_water_murky_disturbance DNGN_SHALLOW_WATER_MURKY_DISTURBANCE
 dngn_shallow_water_murky_disturbance2
+
+grey_dirt_bb SHORE_N
+grey_dirt_bl SHORE_W
+grey_dirt_br SHORE_E
+grey_dirt_bcl SHORE_NW
+grey_dirt_bcr SHORE_NE
+
+dngn_shallow_bord_top DNGN_WAVE_N
+dngn_shallow_bord_tr DNGN_WAVE_NE
+dngn_shallow_bord_rgt DNGN_WAVE_E
+dngn_shallow_bord_br DNGN_WAVE_SE
+dngn_shallow_bord_btm DNGN_WAVE_S
+dngn_shallow_bord_bl DNGN_WAVE_SW
+dngn_shallow_bord_lft DNGN_WAVE_W
+dngn_shallow_bord_tl DNGN_WAVE_NW
+
 # Make all base variants equally likely, but their special ones less so.
 %weight 4
 dngn_shoals_deep_water1 SHOALS_DEEP_WATER

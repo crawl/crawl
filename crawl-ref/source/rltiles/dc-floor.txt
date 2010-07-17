@@ -6,6 +6,18 @@
 dngn_unseen DNGN_UNSEEN
 dc-misc/error DNGN_ERROR
 
+%weight 6
+floor/grey_dirt0 FLOOR_GREY_DIRT FLOOR_NORMAL
+floor/grey_dirt1
+floor/grey_dirt2
+floor/grey_dirt3
+floor/grey_dirt4
+floor/grey_dirt5
+%weight 3
+floor/grey_dirt6
+%weight 1
+floor/grey_dirt7
+
 # Multiple tile definitions are STATIC, that is they may change between
 # saves but are otherwise fixed.
 
@@ -15,7 +27,7 @@ dc-misc/error DNGN_ERROR
 %desat 28
 %desat 29
 %desat 30
-floor/pebble_brown0 FLOOR_PEBBLE FLOOR_PEBBLE_LIGHTGRAY FLOOR_NORMAL
+floor/pebble_brown0 FLOOR_PEBBLE FLOOR_PEBBLE_LIGHTGRAY
 floor/pebble_brown1
 floor/pebble_brown2
 floor/pebble_brown3
@@ -478,3 +490,5 @@ floor/dirt_sw
 floor/dirt_w
 floor/dirt_nw
 floor/dirt_full
+
+floor/tutorial_pad TUTORIAL_PAD

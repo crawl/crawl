@@ -139,6 +139,11 @@ launch_retval is_launched(const actor *actor, const item_def *launcher,
 bool item_is_rod( const item_def &item );
 bool item_is_staff( const item_def &item );
 
+// Macguffins
+bool item_is_rune(const item_def &item, rune_type which_rune = NUM_RUNE_TYPES);
+bool item_is_unique_rune(const item_def &item);
+bool item_is_orb(const item_def &orb);
+
 // ring functions:
 int  ring_has_pluses( const item_def &item );
 bool ring_has_stackable_effect( const item_def &item );
@@ -153,6 +158,7 @@ bool can_cut_meat(const item_def &item);
 bool food_is_rotten(const item_def &item);
 int corpse_freshness(const item_def &item);
 bool is_fruit(const item_def & item);
+uint32_t item_fruit_mask(const item_def &item);
 
 // generic item property functions:
 int property(const item_def &item, int prop_type);

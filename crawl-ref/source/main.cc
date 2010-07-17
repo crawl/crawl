@@ -275,17 +275,21 @@ int main(int argc, char *argv[])
 
 static void _reset_game()
 {
+    clrscr();
     crawl_state.type = GAME_TYPE_UNSPECIFIED;
     clear_message_store();
+    macro_clear_buffers();
     you.reset();
     StashTrack = StashTracker();
     travel_cache = TravelCache();
+    overview_clear();
     msg::deinitialise_mpr_streams();
 
 #ifdef USE_TILE
     // [ds] Don't show the title screen again, just go back to
     // the menu.
     Options.tile_title_screen = false;
+    tiles.clear_text_tags(TAG_NAMED_MONSTER);
 #endif
 }
 
@@ -1403,7 +1407,7 @@ static void _experience_check()
     if (you.experience_level < 27)
     {
         int xp_needed = (exp_needed(you.experience_level+2)-you.experience)+1;
-        mprf("Level %d requires %ld experience (%d point%s to go!)",
+        mprf("Level %d requires %d experience (%d point%s to go!)",
               you.experience_level + 1,
               exp_needed(you.experience_level + 2) + 1,
               xp_needed,
@@ -2223,6 +2227,8 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_SLIMIFY, delay, "You feel less slimy.",
                           coinflip(), "Your slime is starting to congeal.");
     _decrement_a_duration(DUR_MISLED, delay, "Your thoughts are your own once more.");
+    _decrement_a_duration(DUR_QUAD_DAMAGE, delay, NULL, 0,
+                          "Quad Damage is wearing off.");
 
     if (you.duration[DUR_PARALYSIS] || you.petrified())
     {
@@ -2652,8 +2658,9 @@ void world_reacts()
 
     if (!crawl_state.game_is_arena() && one_chance_in(10))
     {
+        const int teleportitis_level = player_teleport();
         // this is instantaneous
-        if (player_teleport() > 0 && one_chance_in(100 / player_teleport()))
+        if (teleportitis_level > 0 && one_chance_in(100 / teleportitis_level))
             you_teleport_now(true);
         else if (you.level_type == LEVEL_ABYSS && one_chance_in(30))
             you_teleport_now(false, true); // to new area of the Abyss

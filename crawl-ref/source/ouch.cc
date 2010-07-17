@@ -778,18 +778,18 @@ bool drain_exp(bool announce_full)
         return (true);
     }
 
-    unsigned long total_exp = exp_needed(you.experience_level + 2)
+    unsigned int total_exp = exp_needed(you.experience_level + 2)
                                   - exp_needed(you.experience_level + 1);
-    unsigned long exp_drained = (total_exp * (10 + random2(11))) / 100;
-    unsigned long pool_drained = std::min(exp_drained,
-                                     (unsigned long)you.exp_available);
+    unsigned int exp_drained = (total_exp * (10 + random2(11))) / 100;
+    unsigned int pool_drained = std::min(exp_drained,
+                                     (unsigned int)you.exp_available);
 
     // TSO's protection.
     if (you.religion == GOD_SHINING_ONE && you.piety > protection * 50)
     {
-        unsigned long undrained = std::min(exp_drained,
+        unsigned int undrained = std::min(exp_drained,
                                       (you.piety * exp_drained) / 150);
-        unsigned long pool_undrained = std::min(pool_drained,
+        unsigned int pool_undrained = std::min(pool_drained,
                                            (you.piety * pool_drained) / 150);
 
         if (undrained > 0 || pool_undrained > 0)
@@ -817,7 +817,7 @@ bool drain_exp(bool announce_full)
 
         you.exp_available = std::max(0, you.exp_available);
 
-        dprf("You lose %ld experience points, %ld from pool.",
+        dprf("You lose %d experience points, %d from pool.",
              exp_drained, pool_drained);
 
         you.redraw_experience = true;

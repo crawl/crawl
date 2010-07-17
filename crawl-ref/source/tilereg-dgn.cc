@@ -113,7 +113,7 @@ void DungeonRegion::pack_buffers()
             if (map_bounds(gc))
             {
                 tile_cell.flv = env.tile_flv(gc);
-                pack_waves(gc, &tile_cell);
+                pack_cell_overlays(gc, &tile_cell);
             }
             else
             {

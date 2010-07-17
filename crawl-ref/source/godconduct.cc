@@ -975,9 +975,9 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 // since a Beogh worshipper zapping an orc with lightning might cause it to
 // become a follower on the first hit, and the second hit would be
 // against a friendly orc.
-static FixedVector<bool, NUM_MONSTERS> _first_attack_conduct;
-static FixedVector<bool, NUM_MONSTERS> _first_attack_was_unchivalric;
-static FixedVector<bool, NUM_MONSTERS> _first_attack_was_friendly;
+static FixedVector<bool, MAX_MONSTERS> _first_attack_conduct;
+static FixedVector<bool, MAX_MONSTERS> _first_attack_was_unchivalric;
+static FixedVector<bool, MAX_MONSTERS> _first_attack_was_friendly;
 
 void god_conduct_turn_start()
 {

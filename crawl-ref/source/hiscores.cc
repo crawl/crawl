@@ -537,6 +537,7 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     gold              = se.gold;
     gold_spent        = se.gold_spent;
     gold_found        = se.gold_found;
+    fruit_found_mask  = se.fruit_found_mask;
     fixup_char_name();
 }
 
@@ -712,6 +713,7 @@ void scorefile_entry::init_with_fields()
     gold       = fields->int_field("gold");
     gold_found = fields->int_field("goldfound");
     gold_spent = fields->int_field("goldspent");
+    fruit_found_mask = fields->int_field("fruit");
 
     fixup_char_name();
 }
@@ -772,8 +774,8 @@ void scorefile_entry::set_base_xlog_fields() const
         fields->add_field("wiz", "%d", wiz_mode);
 
     fields->add_field("start", "%s", make_date_string(birth_time).c_str());
-    fields->add_field("dur",   "%ld", real_time);
-    fields->add_field("turn",  "%ld", num_turns);
+    fields->add_field("dur",   "%d", real_time);
+    fields->add_field("turn",  "%d", num_turns);
 
     if (num_diff_runes)
         fields->add_field("urune", "%d", num_diff_runes);
@@ -781,13 +783,15 @@ void scorefile_entry::set_base_xlog_fields() const
     if (num_runes)
         fields->add_field("nrune", "%d", num_runes);
 
-    fields->add_field("kills", "%ld", kills);
+    fields->add_field("kills", "%d", kills);
     if (!maxed_skills.empty())
         fields->add_field("maxskills", "%s", maxed_skills.c_str());
 
     fields->add_field("gold", "%d", gold);
     fields->add_field("goldfound", "%d", gold_found);
     fields->add_field("goldspent", "%d", gold_spent);
+    if (fruit_found_mask)
+        fields->add_field("fruit", "%d", fruit_found_mask);
 }
 
 void scorefile_entry::set_score_fields() const
@@ -799,7 +803,7 @@ void scorefile_entry::set_score_fields() const
 
     set_base_xlog_fields();
 
-    fields->add_field("sc", "%ld", points);
+    fields->add_field("sc", "%d", points);
     fields->add_field("ktyp", ::kill_method_name(kill_method_type(death_type)));
     fields->add_field("killer", death_source_desc().c_str());
     fields->add_field("dam", "%d", damage);
@@ -1060,6 +1064,7 @@ void scorefile_entry::reset()
     gold                 = 0;
     gold_found           = 0;
     gold_spent           = 0;
+    fruit_found_mask     = 0;
 }
 
 static int _award_modified_experience()
@@ -1207,7 +1212,7 @@ void scorefile_entry::init()
     fixup_char_name();
 
     lvl            = you.experience_level;
-    best_skill     = ::best_skill( SK_FIGHTING, NUM_SKILLS - 1, 99 );
+    best_skill     = ::best_skill(SK_FIGHTING, NUM_SKILLS - 1);
     best_skill_lvl = you.skills[ best_skill ];
 
     // Note all skills at level 27.
@@ -1265,6 +1270,8 @@ void scorefile_entry::init()
     gold_found = you.attribute[ATTR_GOLD_FOUND];
     gold_spent = you.attribute[ATTR_PURCHASES];
 
+    fruit_found_mask = you.attribute[ATTR_FRUIT_FOUND];
+
     wiz_mode = (you.wizard ? 1 : 0);
 }
 
@@ -1302,7 +1309,7 @@ std::string scorefile_entry::game_time(death_desc_verbosity verbosity) const
                 }
             }
 #endif
-            snprintf(scratch, INFO_SIZE, "%s game lasted %s (%ld turns).",
+            snprintf(scratch, INFO_SIZE, "%s game lasted %s (%d turns).",
                      username, make_time_string(real_time).c_str(),
                      num_turns);
 
@@ -1438,8 +1445,22 @@ std::string scorefile_entry::single_cdesc() const
     if (scname.length() > 10)
         scname = scname.substr(0, 10);
 
-    return make_stringf( "%8ld %-10s %s-%02d%s", points, scname.c_str(),
+    return make_stringf( "%8d %-10s %s-%02d%s", points, scname.c_str(),
                          race_class_name.c_str(), lvl, (wiz_mode == 1) ? "W" : "" );
+}
+
+
+static std::string _append_sentence_delimiter(const std::string &sentence,
+                                              const std::string &delimiter)
+{
+    if (sentence.empty())
+        return (sentence);
+
+    const char lastch = sentence[sentence.length() - 1];
+    if (lastch == '!' || lastch == '.')
+        return (sentence);
+
+    return (sentence + delimiter);
 }
 
 std::string
@@ -1458,7 +1479,7 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
     // Please excuse the following bit of mess in the name of flavour ;)
     if (verbose)
     {
-        snprintf( buf, HIGHSCORE_SIZE, "%8ld %s the %s (level %d",
+        snprintf( buf, HIGHSCORE_SIZE, "%8d %s the %s (level %d",
                   points, name.c_str(),
                   skill_title( best_skill, best_skill_lvl,
                                race, str, dex, god ).c_str(), lvl );
@@ -1466,7 +1487,7 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
     }
     else
     {
-        snprintf( buf, HIGHSCORE_SIZE, "%8ld %s the %s %s (level %d",
+        snprintf( buf, HIGHSCORE_SIZE, "%8d %s the %s %s (level %d",
                   points, name.c_str(),
                   species_name(static_cast<species_type>(race)).c_str(),
                   _job_name(job), lvl );
@@ -1506,7 +1527,7 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
             desc += scratch;
         }
 
-        desc += ".";
+        desc = _append_sentence_delimiter(desc, ".");
         desc += _hiscore_newline_string();
 
         if (race != SP_DEMIGOD && god != -1)
@@ -1586,7 +1607,7 @@ std::string scorefile_entry::death_place(death_desc_verbosity verbosity) const
         place += scratch;
     }
 
-    place += ".";
+    place = _append_sentence_delimiter(place, ".");
     place += _hiscore_newline_string();
 
     return (place);
@@ -2081,11 +2102,11 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
                     desc += scratch;
                 }
 
-                desc += "!";
+                desc = _append_sentence_delimiter(desc, "!");
                 desc += _hiscore_newline_string();
             }
             else
-                desc += ".";
+                desc = _append_sentence_delimiter(desc, ".");
         }
         else if (death_type != KILLED_BY_QUITTING)
         {
@@ -2168,10 +2189,8 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
             // TODO: strcat "after reaching level %d"; for LEAVING
             if (verbosity == DDV_NORMAL)
             {
-                if (num_runes > 0)
-                    desc += "!";
-                else
-                    desc += ".";
+                desc = _append_sentence_delimiter(desc,
+                                                  num_runes > 0? "!" : ".");
             }
             desc += _hiscore_newline_string();
         }
@@ -2334,11 +2353,11 @@ std::string xlog_fields::xlog_line() const
 ///////////////////////////////////////////////////////////////////////////////
 // Milestones
 
-#ifdef DGL_MILESTONES
 void mark_milestone(const std::string &type,
                     const std::string &milestone,
                     bool report_origin_level)
 {
+#ifdef DGL_MILESTONES
     static std::string lasttype, lastmilestone;
     static long lastturn = -1;
 
@@ -2373,8 +2392,8 @@ void mark_milestone(const std::string &type,
         fprintf(fp, "%s\n", xl.xlog_line().c_str());
         lk_close(fp, "a", milestone_file);
     }
-}
 #endif // DGL_MILESTONES
+}
 
 #ifdef DGL_WHEREIS
 std::string xlog_status_line()

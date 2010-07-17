@@ -34,10 +34,7 @@
 #include "spl-util.h"
 #include "state.h"
 #include "travel.h"
-
-#ifdef DGL_MILESTONES
 #include "hiscores.h"
-#endif
 
 #ifdef ASSERTS
 static std::string _assert_msg;
@@ -159,8 +156,8 @@ static void _dump_player(FILE *file)
 
     if (you.delay_queue.size() > 0)
     {
-        fprintf(file, "Delayed (%lu):\n",
-                (unsigned long) you.delay_queue.size());
+        fprintf(file, "Delayed (%u):\n",
+                (unsigned int)you.delay_queue.size());
         for (unsigned int i = 0; i < you.delay_queue.size(); ++i)
         {
             const delay_queue_item &item = you.delay_queue[i];
@@ -636,7 +633,7 @@ void do_crash_dump()
 
     set_msg_dump_file(NULL);
 
-#ifdef DGL_MILESTONES
+#ifdef ASSERTS
     mark_milestone("crash", _assert_msg);
 #endif
 
@@ -672,9 +669,12 @@ static void _BreakStrToDebugger(const char *mesg)
 // AssertFailed
 //
 //---------------------------------------------------------------
-void AssertFailed(const char *expr, const char *file, int line)
+void AssertFailed(const char *expr, const char *file, int line, bool save_game)
 {
     char mesg[512];
+
+    if (save_game)
+        crawl_state.game_wants_emergency_save = true;
 
     const char *fileName = file + strlen(file); // strip off path
 

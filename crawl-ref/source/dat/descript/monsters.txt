@@ -221,6 +221,12 @@ Maurice
 
 A sly, conniving thief.
 %%%%
+Mennas
+
+There was once a human priest named Mennas. He travelled far and wide preaching of Zin to any who would listen, going even so far as to travel into Orcish lands, preaching to orcs about laws and mercy. By all accounts the orcs were not happy with Mennas. They demanded he swear Beogh was the one true god, and when Mennas remained silent they cut out his tongue.
+
+Quite whether or not this angel is that same Mennas is something of a mystery, as he seems to have difficulty speaking.
+%%%%
 Menkaure
 
 A fair and noble ruler of an ancient and mighty kingdom, mummified after an early death. His faithful priests subsequently infused him with great and powerful magic, seeking to grant him eternal life. Now he is forgotten and reduced to mouldering bandages and dry, brittle bones.
@@ -597,9 +603,17 @@ deep troll
 
 A stooped troll.
 %%%%
+demigod
+
+While this fellow looks like any of the human-like races, the aura of power betrays some divine ancestry. And with the good gods (at least officially) decrying fornication, betting on the good nature of this individual may be unwise...
+%%%%
 demonic crawler
 
 A long and bloated body, supported by dozens of short legs and topped with an evil-looking head.
+%%%%
+demonspawn
+
+This fellow looks mostly like a human, yet you sense something evil about him.
 %%%%
 dire elephant
 
@@ -901,6 +915,12 @@ hairy devil
 
 A small humanoid demon covered in brown hair. Watch out - it may have fleas!
 %%%%
+halfling
+
+This is a degenerate human, both mentally and physically similar to a child of perhaps ten, perhaps twelve years of age, yet looking older. It looks mischievous, as if prone to no good.
+
+It definitely deserves an axe to the head.
+%%%%
 harpy
 
 Harpies have roamed these coasts as long as seafarers can remember. They strike fear in the hearts of all sentient beings, but not for their claws. It is their way to devour the food of the unwary, causing many a man to starve to death.
@@ -1032,6 +1052,10 @@ A pulsating mass of acidic protoplasm. It can and will eat almost anything, and 
 jellyfish
 
 A pulsating glob of transparent flesh, waiting just below the surface to sting you with its many tentacles.
+%%%%
+kenku
+
+A bird-brained creature that looks at you with hatred.
 %%%%
 killer bee
 

@@ -231,7 +231,7 @@ void update_turn_count()
 
     // Show the turn count starting from 1. You can still quit on turn 0.
     textcolor(HUD_VALUE_COLOUR);
-    cprintf("%ld", you.num_turns);
+    cprintf("%d", you.num_turns);
     textcolor(LIGHTGREY);
 }
 
@@ -585,6 +585,12 @@ static void _get_status_lights(std::vector<status_light>& out)
         out.push_back(status_light(color, "DDoor"));
     }
 
+    if (you.duration[DUR_QUAD_DAMAGE])
+    {
+        int color = _dur_colour(BLUE, dur_expiring(DUR_QUAD_DAMAGE));
+        out.push_back(status_light(color, "Quad"));
+    }
+
     if (you.duration[DUR_DEFLECT_MISSILES])
     {
         int color = _dur_colour( MAGENTA, dur_expiring(DUR_DEFLECT_MISSILES) );
@@ -769,7 +775,7 @@ static void _print_status_lights(int y)
     const size_t line_end = crawl_view.hudsz.y+1;
 
     cgotoxy(1, line_cur, GOTO_STAT);
-    ASSERT(wherex()-crawl_view.hudp.x == 0);
+    ASSERT_SAVE(wherex() == crawl_view.hudp.x);
 
     size_t i_light = 0;
     while (true)

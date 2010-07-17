@@ -1351,7 +1351,6 @@ void bolt::do_fire()
     {
         if (range_used() > range)
         {
-            // previous step was still < range, but end point
             ray.regress();
             extra_range_used++;
             ASSERT(range_used() >= range);
@@ -1363,7 +1362,7 @@ void bolt::do_fire()
         if (!affects_nothing)
             affect_cell();
 
-        if (range_used() >= range)
+        if (range_used() > range)
             break;
 
         if (beam_cancelled)
@@ -2698,9 +2697,13 @@ void bolt::internal_ouch(int dam)
 
     const char *what = aux_source.empty() ? name.c_str() : aux_source.c_str();
 
+    if (YOU_KILL(thrower) && you.duration[DUR_QUAD_DAMAGE])
+        dam *= 4;
+
     // The order of this is important.
     if (monst && (monst->type == MONS_GIANT_SPORE
-                  || monst->type == MONS_BALL_LIGHTNING))
+                  || monst->type == MONS_BALL_LIGHTNING
+                  || monst->type == MONS_HYPERACTIVE_BALLISTOMYCETE))
     {
         ouch(dam, beam_source, KILLED_BY_SPORE, aux_source.c_str(), true,
              source_name.empty() ? NULL : source_name.c_str());

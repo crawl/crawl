@@ -127,8 +127,6 @@ bool need_to_autopickup();
 void autopickup();
 
 int find_free_slot(const item_def &i);
-bool is_rune(const item_def &item);
-bool is_unique_rune(const item_def &item);
 
 bool need_to_autoinscribe();
 void request_autoinscribe(bool do_inscribe = true);

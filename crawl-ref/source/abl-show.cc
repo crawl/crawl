@@ -1917,7 +1917,11 @@ static bool _do_ability(const ability_def& abil)
     }
 
     case ABIL_FEDHAS_SUNLIGHT:
-        fedhas_sunlight();
+        if (!fedhas_sunlight())
+        {
+            canned_msg(MSG_OK);
+            return (false);
+        }
         exercise(SK_INVOCATIONS, 2 + random2(3));
         break;
 
@@ -2416,7 +2420,7 @@ std::vector<talent> your_talents(bool check_confused)
         }
     }
 
-    if (player_equip(EQ_RINGS, RING_TELEPORTATION))
+    if (player_equip(EQ_RINGS, RING_TELEPORTATION) && !crawl_state.game_is_sprint())
         _add_talent(talents, ABIL_EVOKE_TELEPORTATION, check_confused);
 
     // Find hotkeys for the non-hotkeyed talents.

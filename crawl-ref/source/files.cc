@@ -527,7 +527,7 @@ bool file_exists(const std::string &name)
 // Low-tech existence check.
 bool dir_exists(const std::string &dir)
 {
-#ifdef TARGET_COMPILER_VC
+#ifdef TARGET_OS_WINDOWS
     DWORD lAttr = GetFileAttributes(dir.c_str());
     return (lAttr != INVALID_FILE_ATTRIBUTES
             && (lAttr & FILE_ATTRIBUTE_DIRECTORY));
@@ -1918,8 +1918,13 @@ static void _save_game_base()
 static void _save_game_exit()
 {
     // Prompt for saving macros.
-    if (crawl_state.unsaved_macros && yesno("Save macros?", true, 'n'))
+    if (crawl_state.unsaved_macros
+        && !crawl_state.seen_hups
+        && !crawl_state.game_wants_emergency_save
+        && yesno("Save macros?", true, 'n'))
+    {
         macro_save();
+    }
 
     // Must be exiting -- save level & goodbye!
     if (!you.entering_level)
@@ -1986,8 +1991,13 @@ void save_game(bool leave_game, const char *farewellmsg)
     // so Valgrind doesn't complain.
     _save_game_exit();
 
-    end(0, false, farewellmsg? "%s" : "See you soon, %s!",
-        farewellmsg? farewellmsg : you.your_name.c_str());
+    // Exit unless this is an emergency save, in which case let the
+    // crash handler re-raise the crashy signal.
+    if (!crawl_state.game_wants_emergency_save)
+    {
+        end(0, false, farewellmsg? "%s" : "See you soon, %s!",
+            farewellmsg? farewellmsg : you.your_name.c_str());
+    }
 }
 
 // Saves the game without exiting.
@@ -2130,7 +2140,7 @@ bool load_ghost(bool creating_level)
 #ifdef BONES_DIAGNOSTICS
     if (do_diagnostics)
     {
-        mprf(MSGCH_DIAGNOSTICS, "Loaded ghost file with %lu ghost(s)",
+        mprf(MSGCH_DIAGNOSTICS, "Loaded ghost file with %u ghost(s)",
              ghosts.size());
     }
 #endif
@@ -2178,7 +2188,7 @@ bool load_ghost(bool creating_level)
 #ifdef BONES_DIAGNOSTICS
     if (do_diagnostics && unplaced_ghosts > 0)
     {
-        mprf(MSGCH_DIAGNOSTICS, "Unable to place %lu ghost(s)",
+        mprf(MSGCH_DIAGNOSTICS, "Unable to place %u ghost(s)",
              ghosts.size());
         ghost_errors = true;
     }

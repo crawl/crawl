@@ -508,6 +508,13 @@ void formatted_string::swap(formatted_string& other)
     ops.swap(other.ops);
 }
 
+void formatted_string::all_caps()
+{
+    for (unsigned int i = 0; i < ops.size(); i++)
+        if (ops[i].type == FSOP_TEXT)
+            uppercase(ops[i].text);
+}
+
 int count_linebreaks(const formatted_string& fs)
 {
     std::string::size_type where = 0;

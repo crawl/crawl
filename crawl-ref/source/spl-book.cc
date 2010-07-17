@@ -710,18 +710,7 @@ static spell_type spellbook_template_array[][SPELLBOOK_SIZE] =
      SPELL_NO_SPELL,
      },
 
-    // Rod of discovery
-    {SPELL_DETECT_SECRET_DOORS,
-     SPELL_DETECT_TRAPS,
-     SPELL_DETECT_ITEMS,
-     SPELL_NO_SPELL,
-     SPELL_NO_SPELL,
-     SPELL_NO_SPELL,
-     SPELL_NO_SPELL,
-     SPELL_NO_SPELL,
-     },
-
-    // Rod of demonology
+   // Rod of demonology
     {SPELL_CALL_IMP,
      SPELL_ABJURATION,
      SPELL_RECALL,

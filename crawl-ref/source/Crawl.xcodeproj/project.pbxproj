@@ -7,6 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4C59B09011E7964700760867 /* hints.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4C59B08A11E7964700760867 /* hints.cc */; };
+		4C59B09111E7964700760867 /* tiledgnbuf.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4C59B08B11E7964700760867 /* tiledgnbuf.cc */; };
+		4C59B09211E7964700760867 /* tilepick-p.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4C59B08C11E7964700760867 /* tilepick-p.cc */; };
+		4C59B09311E7964700760867 /* tilereg-mon.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4C59B08D11E7964700760867 /* tilereg-mon.cc */; };
+		4C59B09411E7964700760867 /* tileview.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4C59B08E11E7964700760867 /* tileview.cc */; };
+		4C59B0AD11E798C400760867 /* tiledef-feat.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4C59B0AA11E798C400760867 /* tiledef-feat.cc */; };
+		4C59B0AE11E798C400760867 /* tiledef-floor.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4C59B0AB11E798C400760867 /* tiledef-floor.cc */; };
+		4C59B0AF11E798C400760867 /* tiledef-wall.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4C59B0AC11E798C400760867 /* tiledef-wall.cc */; };
+		4C59B0BF11E79BB100760867 /* dgn-actions.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4C59B08911E7964700760867 /* dgn-actions.cc */; };
+		4C59B0C011E79BB600760867 /* dgn-actions.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4C59B08911E7964700760867 /* dgn-actions.cc */; };
+		4C59B0D611E79F6800760867 /* hints.cc in Sources */ = {isa = PBXBuildFile; fileRef = 4C59B08A11E7964700760867 /* hints.cc */; };
+		4C59B0E711E7A06D00760867 /* feat.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C59B0E411E7A06D00760867 /* feat.png */; };
+		4C59B0E811E7A06D00760867 /* floor.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C59B0E511E7A06D00760867 /* floor.png */; };
+		4C59B0E911E7A06D00760867 /* wall.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C59B0E611E7A06D00760867 /* wall.png */; };
 		7B09F5441133D63E004F149D /* godconduct.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F53B1133D63E004F149D /* godconduct.cc */; };
 		7B09F5451133D63E004F149D /* godpassive.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F53D1133D63E004F149D /* godpassive.cc */; };
 		7B09F5461133D63E004F149D /* godprayer.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F53F1133D63E004F149D /* godprayer.cc */; };
@@ -181,7 +195,6 @@
 		7B09F6201133D6AB004F149D /* transform.cc in Sources */ = {isa = PBXBuildFile; fileRef = 7B09F55B1133D66C004F149D /* transform.cc */; };
 		7B09F6211133D6AB004F149D /* traps.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D640A210BD494500A99626 /* traps.cc */; };
 		7B09F6221133D6AB004F149D /* travel.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D640A410BD494500A99626 /* travel.cc */; };
-		7B09F6231133D6AB004F149D /* tutorial.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D640A610BD494500A99626 /* tutorial.cc */; };
 		7B09F6241133D6AB004F149D /* version.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D640A810BD494500A99626 /* version.cc */; };
 		7B09F6251133D6AB004F149D /* view.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D640AA10BD494500A99626 /* view.cc */; };
 		7B09F6261133D6AB004F149D /* viewchar.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D640AC10BD494500A99626 /* viewchar.cc */; };
@@ -543,7 +556,6 @@
 		E5D6416110BD494500A99626 /* terrain.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D6409E10BD494500A99626 /* terrain.cc */; };
 		E5D6416310BD494500A99626 /* traps.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D640A210BD494500A99626 /* traps.cc */; };
 		E5D6416410BD494500A99626 /* travel.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D640A410BD494500A99626 /* travel.cc */; };
-		E5D6416510BD494500A99626 /* tutorial.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D640A610BD494500A99626 /* tutorial.cc */; };
 		E5D6416610BD494500A99626 /* version.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D640A810BD494500A99626 /* version.cc */; };
 		E5D6416710BD494500A99626 /* view.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D640AA10BD494500A99626 /* view.cc */; };
 		E5D6416810BD494500A99626 /* viewchar.cc in Sources */ = {isa = PBXBuildFile; fileRef = E5D640AC10BD494500A99626 /* viewchar.cc */; };
@@ -569,7 +581,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = B0C9CF45108DF1AF00E7FA35 /* tilegen */;
+			remoteGlobalIDString = B0C9CF45108DF1AF00E7FA35;
 			remoteInfo = tilegen;
 		};
 		B032D520106C019C0002D70D /* PBXContainerItemProxy */ = {
@@ -821,6 +833,23 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4C59B08711E7964700760867 /* dgn-actions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dgn-actions.h"; sourceTree = "<group>"; };
+		4C59B08811E7964700760867 /* hints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hints.h; sourceTree = "<group>"; };
+		4C59B08911E7964700760867 /* dgn-actions.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "dgn-actions.cc"; sourceTree = "<group>"; };
+		4C59B08A11E7964700760867 /* hints.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hints.cc; sourceTree = "<group>"; };
+		4C59B08B11E7964700760867 /* tiledgnbuf.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tiledgnbuf.cc; sourceTree = "<group>"; };
+		4C59B08C11E7964700760867 /* tilepick-p.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "tilepick-p.cc"; sourceTree = "<group>"; };
+		4C59B08D11E7964700760867 /* tilereg-mon.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "tilereg-mon.cc"; sourceTree = "<group>"; };
+		4C59B08E11E7964700760867 /* tileview.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tileview.cc; sourceTree = "<group>"; };
+		4C59B0A711E798C400760867 /* tiledef-feat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "tiledef-feat.h"; path = "rltiles/tiledef-feat.h"; sourceTree = "<group>"; };
+		4C59B0A811E798C400760867 /* tiledef-floor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "tiledef-floor.h"; path = "rltiles/tiledef-floor.h"; sourceTree = "<group>"; };
+		4C59B0A911E798C400760867 /* tiledef-wall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "tiledef-wall.h"; path = "rltiles/tiledef-wall.h"; sourceTree = "<group>"; };
+		4C59B0AA11E798C400760867 /* tiledef-feat.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "tiledef-feat.cc"; path = "rltiles/tiledef-feat.cc"; sourceTree = "<group>"; };
+		4C59B0AB11E798C400760867 /* tiledef-floor.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "tiledef-floor.cc"; path = "rltiles/tiledef-floor.cc"; sourceTree = "<group>"; };
+		4C59B0AC11E798C400760867 /* tiledef-wall.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "tiledef-wall.cc"; path = "rltiles/tiledef-wall.cc"; sourceTree = "<group>"; };
+		4C59B0E411E7A06D00760867 /* feat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = feat.png; path = rltiles/feat.png; sourceTree = "<group>"; };
+		4C59B0E511E7A06D00760867 /* floor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = floor.png; path = rltiles/floor.png; sourceTree = "<group>"; };
+		4C59B0E611E7A06D00760867 /* wall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = wall.png; path = rltiles/wall.png; sourceTree = "<group>"; };
 		7B09F53B1133D63E004F149D /* godconduct.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = godconduct.cc; sourceTree = "<group>"; };
 		7B09F53C1133D63E004F149D /* godconduct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = godconduct.h; sourceTree = "<group>"; };
 		7B09F53D1133D63E004F149D /* godpassive.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = godpassive.cc; sourceTree = "<group>"; };
@@ -1377,8 +1406,6 @@
 		E5D640A310BD494500A99626 /* traps.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = traps.h; sourceTree = "<group>"; };
 		E5D640A410BD494500A99626 /* travel.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = travel.cc; sourceTree = "<group>"; };
 		E5D640A510BD494500A99626 /* travel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = travel.h; sourceTree = "<group>"; };
-		E5D640A610BD494500A99626 /* tutorial.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tutorial.cc; sourceTree = "<group>"; };
-		E5D640A710BD494500A99626 /* tutorial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tutorial.h; sourceTree = "<group>"; };
 		E5D640A810BD494500A99626 /* version.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = version.cc; sourceTree = "<group>"; };
 		E5D640A910BD494500A99626 /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
 		E5D640AA10BD494500A99626 /* view.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = view.cc; sourceTree = "<group>"; };
@@ -1578,6 +1605,9 @@
 		7B352EF00B001F5B00CABB32 /* Crawl */ = {
 			isa = PBXGroup;
 			children = (
+				4C59B08711E7964700760867 /* dgn-actions.h */,
+				4C59B08811E7964700760867 /* hints.h */,
+				4C59B08A11E7964700760867 /* hints.cc */,
 				E5D63F5D10BD494300A99626 /* abl-show.cc */,
 				E5D63F5E10BD494300A99626 /* abl-show.h */,
 				E5D63F5F10BD494300A99626 /* abyss.cc */,
@@ -1651,6 +1681,7 @@
 				E5D63FA610BD494400A99626 /* describe.h */,
 				7B51659911859D30005B23ED /* dgl-message.cc */,
 				7B51659A11859D30005B23ED /* dgl-message.h */,
+				4C59B08911E7964700760867 /* dgn-actions.cc */,
 				7B09F6371133D823004F149D /* dgn-height.cc */,
 				7B09F6381133D823004F149D /* dgn-height.h */,
 				7B09F6391133D823004F149D /* dgn-overview.cc */,
@@ -1964,8 +1995,11 @@
 				E5D6409D10BD494500A99626 /* teleport.h */,
 				E5D6409E10BD494500A99626 /* terrain.cc */,
 				E5D6409F10BD494500A99626 /* terrain.h */,
+				4C59B08B11E7964700760867 /* tiledgnbuf.cc */,
+				4C59B08E11E7964700760867 /* tileview.cc */,
 				7B51655D11859CD6005B23ED /* tiledoll.cc */,
 				7B51655E11859CD6005B23ED /* tiledoll.h */,
+				4C59B08C11E7964700760867 /* tilepick-p.cc */,
 				7B51655F11859CD6005B23ED /* tilereg-crt.cc */,
 				7B51656011859CD6005B23ED /* tilereg-crt.h */,
 				7B51656111859CD6005B23ED /* tilereg-dgn.cc */,
@@ -1977,6 +2011,7 @@
 				7B51656711859CD6005B23ED /* tilereg-inv.cc */,
 				7B51656811859CD6005B23ED /* tilereg-inv.h */,
 				7B51656911859CD6005B23ED /* tilereg-map.cc */,
+				4C59B08D11E7964700760867 /* tilereg-mon.cc */,
 				7B51656A11859CD6005B23ED /* tilereg-map.h */,
 				7B51656B11859CD6005B23ED /* tilereg-mem.cc */,
 				7B51656C11859CD6005B23ED /* tilereg-mem.h */,
@@ -2002,8 +2037,6 @@
 				E5D640A410BD494500A99626 /* travel.cc */,
 				E5D640A510BD494500A99626 /* travel.h */,
 				7B09F55E1133D66C004F149D /* travel_defs.h */,
-				E5D640A610BD494500A99626 /* tutorial.cc */,
-				E5D640A710BD494500A99626 /* tutorial.h */,
 				7B09F55F1133D66C004F149D /* unwind.h */,
 				E5D640A810BD494500A99626 /* version.cc */,
 				E5D640A910BD494500A99626 /* version.h */,
@@ -2049,10 +2082,13 @@
 			children = (
 				D2F271FE0DA1C5AD00445FE9 /* dat */,
 				B090C2EE10671F8900AE855D /* dngn.png */,
+				4C59B0E411E7A06D00760867 /* feat.png */,
+				4C59B0E511E7A06D00760867 /* floor.png */,
 				D2F2723F0DA1C61600445FE9 /* docs */,
 				B090C2EF10671F8900AE855D /* gui.png */,
 				B090C2F010671F8900AE855D /* main.png */,
 				B090C2F110671F8900AE855D /* player.png */,
+				4C59B0E611E7A06D00760867 /* wall.png */,
 				B09CCE5A1083159100623CFA /* settings */,
 			);
 			name = Resources;
@@ -2150,6 +2186,12 @@
 		D25C917A0FF035D100D9E8AD /* rltiles */ = {
 			isa = PBXGroup;
 			children = (
+				4C59B0A711E798C400760867 /* tiledef-feat.h */,
+				4C59B0A811E798C400760867 /* tiledef-floor.h */,
+				4C59B0A911E798C400760867 /* tiledef-wall.h */,
+				4C59B0AA11E798C400760867 /* tiledef-feat.cc */,
+				4C59B0AB11E798C400760867 /* tiledef-floor.cc */,
+				4C59B0AC11E798C400760867 /* tiledef-wall.cc */,
 				D2660C000FF0749200986331 /* dc-dngn.txt */,
 				D2660C010FF0749200986331 /* dc-main.txt */,
 				D2660C020FF0749200986331 /* dc-player.txt */,
@@ -2493,6 +2535,9 @@
 				B032D6FB106C02540002D70D /* dat in Resources */,
 				B032D6FC106C02540002D70D /* docs in Resources */,
 				B09CCE671083159100623CFA /* settings in Resources */,
+				4C59B0E711E7A06D00760867 /* feat.png in Resources */,
+				4C59B0E811E7A06D00760867 /* floor.png in Resources */,
+				4C59B0E911E7A06D00760867 /* wall.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2536,7 +2581,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd \"$PROJECT_DIR\"\nutil/art-data.pl\ncd \"$PROJECT_DIR/rltiles\"\nfor a in main dngn player gui; do\n\tif [ ! -f tiledef-$a.cc ]; then\n\t\t\"$CONFIGURATION_BUILD_DIR/$FULL_PRODUCT_NAME/Contents/MacOS/$PRODUCT_NAME\" dc-$a.txt\n\tfi\ndone";
+			shellScript = "cd \"$PROJECT_DIR\"\nutil/art-data.pl\ncd \"$PROJECT_DIR/rltiles\"\nfor a in main dngn player gui floor wall feat; do\n\tif [ ! -f tiledef-$a.cc ]; then\n\t\t\"$CONFIGURATION_BUILD_DIR/$FULL_PRODUCT_NAME/Contents/MacOS/$PRODUCT_NAME\" dc-$a.txt\n\tfi\ndone";
 		};
 		B0C9CFB4108DFA1200E7FA35 /* Generate Headers */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2810,7 +2855,6 @@
 				7B09F6201133D6AB004F149D /* transform.cc in Sources */,
 				7B09F6211133D6AB004F149D /* traps.cc in Sources */,
 				7B09F6221133D6AB004F149D /* travel.cc in Sources */,
-				7B09F6231133D6AB004F149D /* tutorial.cc in Sources */,
 				7B09F6241133D6AB004F149D /* version.cc in Sources */,
 				7B09F6251133D6AB004F149D /* view.cc in Sources */,
 				7B09F6261133D6AB004F149D /* viewchar.cc in Sources */,
@@ -2822,6 +2866,8 @@
 				7B09F62C1133D6AB004F149D /* wiz-mon.cc in Sources */,
 				7B09F62D1133D6AB004F149D /* wiz-you.cc in Sources */,
 				7B09F62E1133D6AB004F149D /* xom.cc in Sources */,
+				4C59B0C011E79BB600760867 /* dgn-actions.cc in Sources */,
+				4C59B0D611E79F6800760867 /* hints.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3056,7 +3102,6 @@
 				7B09F5661133D66C004F149D /* transform.cc in Sources */,
 				E5D6416310BD494500A99626 /* traps.cc in Sources */,
 				E5D6416410BD494500A99626 /* travel.cc in Sources */,
-				E5D6416510BD494500A99626 /* tutorial.cc in Sources */,
 				E5D6416610BD494500A99626 /* version.cc in Sources */,
 				E5D6416710BD494500A99626 /* view.cc in Sources */,
 				E5D6416810BD494500A99626 /* viewchar.cc in Sources */,
@@ -3069,6 +3114,15 @@
 				E5D6416E10BD494500A99626 /* wiz-mon.cc in Sources */,
 				E5D6416F10BD494500A99626 /* wiz-you.cc in Sources */,
 				E5D6417010BD494500A99626 /* xom.cc in Sources */,
+				4C59B09011E7964700760867 /* hints.cc in Sources */,
+				4C59B09111E7964700760867 /* tiledgnbuf.cc in Sources */,
+				4C59B09211E7964700760867 /* tilepick-p.cc in Sources */,
+				4C59B09311E7964700760867 /* tilereg-mon.cc in Sources */,
+				4C59B09411E7964700760867 /* tileview.cc in Sources */,
+				4C59B0AD11E798C400760867 /* tiledef-feat.cc in Sources */,
+				4C59B0AE11E798C400760867 /* tiledef-floor.cc in Sources */,
+				4C59B0AF11E798C400760867 /* tiledef-wall.cc in Sources */,
+				4C59B0BF11E79BB100760867 /* dgn-actions.cc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3223,7 +3277,7 @@
 				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
 				GCC_WARN_MISSING_PARENTHESES = YES;
 				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
-				GCC_WARN_PEDANTIC = YES;
+				GCC_WARN_PEDANTIC = NO;
 				GCC_WARN_SHADOW = YES;
 				GCC_WARN_SIGN_COMPARE = NO;
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
@@ -3343,6 +3397,7 @@
 					DEBUG_ITEM_SCAN,
 					WIZARD,
 				);
+				GCC_TREAT_NONCONFORMANT_CODE_ERRORS_AS_WARNINGS = NO;
 				GCC_VERSION_i386 = 4.0;
 				GCC_VERSION_ppc = 4.0;
 				GCC_VERSION_x86_64 = 4.2;
@@ -3353,7 +3408,7 @@
 				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
 				GCC_WARN_MISSING_PARENTHESES = YES;
 				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
-				GCC_WARN_PEDANTIC = YES;
+				GCC_WARN_PEDANTIC = NO;
 				GCC_WARN_SHADOW = YES;
 				GCC_WARN_SIGN_COMPARE = NO;
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
@@ -3421,7 +3476,7 @@
 				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
 				GCC_WARN_MISSING_PARENTHESES = YES;
 				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
-				GCC_WARN_PEDANTIC = YES;
+				GCC_WARN_PEDANTIC = NO;
 				GCC_WARN_SHADOW = YES;
 				GCC_WARN_SIGN_COMPARE = NO;
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
@@ -3473,7 +3528,11 @@
 				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = "x86_64 i386 ppc";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 2;
-				GCC_PREPROCESSOR_DEFINITIONS = OSX;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					OSX,
+					WIZARD,
+					ASSERTS,
+				);
 				GCC_VERSION_i386 = 4.0;
 				GCC_VERSION_ppc = 4.0;
 				GCC_VERSION_x86_64 = 4.2;
@@ -3484,7 +3543,7 @@
 				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
 				GCC_WARN_MISSING_PARENTHESES = YES;
 				GCC_WARN_NON_VIRTUAL_DESTRUCTOR = YES;
-				GCC_WARN_PEDANTIC = YES;
+				GCC_WARN_PEDANTIC = NO;
 				GCC_WARN_SHADOW = YES;
 				GCC_WARN_SIGN_COMPARE = NO;
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
@@ -3561,6 +3620,10 @@
 					"$(inherited)",
 					USE_TILE,
 					CLUA_BINDINGS,
+					USE_SDL,
+					USE_GL,
+					USE_TILE,
+					USE_FT,
 				);
 				GCC_VERSION = 4.0;
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
@@ -3722,6 +3785,7 @@
 					SQLITE_OMIT_TCL_VARIABLE,
 					SQLITE_OMIT_LOAD_EXTENSION,
 					"THREADSAFE=0",
+					"SQLITE_ENABLE_LOCKING_STYLE=0",
 				);
 				INSTALL_PATH = /usr/local/lib;
 				OTHER_LDFLAGS = (

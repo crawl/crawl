@@ -332,7 +332,7 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
 
 tileidx_t tileidx_feature(const coord_def &gc)
 {
-    dungeon_feature_type feat = grid_appearance(gc);
+    dungeon_feature_type feat = env.grid(gc);
 
     tileidx_t override = env.tile_flv(gc).feat;
     bool can_override = !feat_is_door(grd(gc))
@@ -344,8 +344,20 @@ tileidx_t tileidx_feature(const coord_def &gc)
     // Any grid-specific tiles.
     switch (feat)
     {
+    case DNGN_SECRET_DOOR:
     case DNGN_DETECTED_SECRET_DOOR:
-        return (_tileidx_feature_base(grid_secret_door_appearance(gc)));
+        {
+            coord_def door;
+            dungeon_feature_type door_feat;
+            find_secret_door_info(gc, &door_feat, &door);
+
+            // If surrounding tiles from a secret door are using tile
+            // overrides, then use that tile for the secret door.
+            if (env.tile_flv(door).feat)
+                return (env.tile_flv(door).feat);
+            else
+                return (_tileidx_feature_base(door_feat));
+        }
     case DNGN_TRAP_MECHANICAL:
     case DNGN_TRAP_MAGICAL:
     case DNGN_TRAP_NATURAL:
@@ -535,6 +547,7 @@ static tileidx_t _tileidx_monster_zombified(const monsters *mon)
 
         z_tile = TILEP_MONS_ZOMBIE_BAT;
         break;
+    case MON_SHAPE_SNAIL:
     case MON_SHAPE_SNAKE:
         if (_is_skeleton(z_type))
             return TILEP_MONS_SKELETON_SNAKE;
@@ -547,6 +560,7 @@ static tileidx_t _tileidx_monster_zombified(const monsters *mon)
 
         z_tile = TILEP_MONS_ZOMBIE_FISH;
         break;
+    case MON_SHAPE_CENTIPEDE:
     case MON_SHAPE_INSECT:
         z_tile = TILEP_MONS_ZOMBIE_BEETLE;
         break;
@@ -894,9 +908,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_FIRE_ELEMENTAL;
     case MONS_WATER_ELEMENTAL:
         return TILEP_MONS_WATER_ELEMENTAL;
-    // TODO
     case MONS_IRON_ELEMENTAL:
-        return TILEP_MONS_EARTH_ELEMENTAL;
+        return TILEP_MONS_IRON_ELEMENTAL;
 
     // worms and larvae ('w')
     case MONS_KILLER_BEE_LARVA:
@@ -955,6 +968,9 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_ANGEL;
     case MONS_DAEVA:
         return TILEP_MONS_DAEVA;
+    //TODO
+    case MONS_MENNAS:
+        return TILEP_MONS_ANGEL;
 
     // beetles ('B')
     case MONS_GIANT_BEETLE:
@@ -1056,6 +1072,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_HARPY;
     case MONS_MINOTAUR:
         return TILEP_MONS_MINOTAUR;
+    case MONS_KENKU:
+        return TILEP_MONS_KENKU;
 
     // ice beast ('I')
     case MONS_ICE_BEAST:
@@ -1264,7 +1282,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
 
     // humans ('@')
     case MONS_HUMAN:
-    case MONS_DWARF:
+    case MONS_DEMIGOD:
         return TILEP_MONS_HUMAN;
     case MONS_HELL_KNIGHT:
         return TILEP_MONS_HELL_KNIGHT;
@@ -1280,8 +1298,14 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_GLOWING_SHAPESHIFTER;
     case MONS_KILLER_KLOWN:
         return TILEP_MONS_KILLER_KLOWN;
+    case MONS_DWARF:
+        return TILEP_MONS_DWARF;
     case MONS_SLAVE:
         return _mon_mod(TILEP_MONS_SLAVE, tile_num_prop);
+    case MONS_DEMONSPAWN:
+        return TILEP_MONS_DEMONSPAWN;
+    case MONS_HALFLING:
+        return TILEP_MONS_HALFLING;
 
     // mimics
     case MONS_GOLD_MIMIC:

@@ -524,9 +524,18 @@ static void _draw_title(const coord_def& cpos, const feature_list& feats)
     if (!Options.level_map_title)
         return;
 
+    const int columns = get_number_of_cols();
     const formatted_string help =
         formatted_string::parse_string("(Press <w>?</w> for help)");
     const int helplen = std::string(help).length();
+
+    if (columns < helplen)
+        return;
+
+    const formatted_string title = feats.format();
+    const int titlelen = title.length();
+    if (columns < titlelen)
+        return;
 
     std::string pstr = "";
 #ifdef WIZARD
@@ -542,16 +551,15 @@ static void _draw_title(const coord_def& cpos, const feature_list& feats)
     textcolor(WHITE);
 
     cprintf("%-*s",
-            get_number_of_cols() - helplen,
+            columns - helplen,
             (upcase_first(place_name(
                     get_packed_place(), true, true)) + pstr).c_str());
 
-    formatted_string s = feats.format();
-    cgotoxy((get_number_of_cols() - s.length()) / 2, 1);
-    s.display();
+    cgotoxy(std::max(1, (columns - titlelen) / 2), 1);
+    title.display();
 
     textcolor(LIGHTGREY);
-    cgotoxy(get_number_of_cols() - helplen + 1, 1);
+    cgotoxy(std::max(1, columns - helplen + 1), 1);
     help.display();
 }
 #endif

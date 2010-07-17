@@ -35,6 +35,7 @@
 #include "menu.h"
 #include "message.h"
 #include "mon-pick.h"
+#include "mon-stuff.h"
 #include "mon-util.h"
 #include "ouch.h"
 #include "place.h"
@@ -1363,6 +1364,7 @@ static void _do_description(std::string key, std::string type,
                 case MONS_PURPLE_DRACONIAN:
                 case MONS_RED_DRACONIAN:
                 case MONS_WHITE_DRACONIAN:
+                case MONS_GREY_DRACONIAN:
                 case MONS_PALE_DRACONIAN:
                     mon.base_monster = mon_num;
                     break;
@@ -1762,6 +1764,11 @@ static void _find_description(bool *again, std::string *error_inout)
             // have something valid to refer to.
             monsters     fake_mon;
             monster_type m_type = get_monster_by_name(str, true);
+
+            // Not worth the effort handling the item; also, it would
+            // puzzle the players.  Thus, only unique matches work.
+            if (mons_is_mimic(m_type))
+                continue;
 
             // NOTE: Initializing the demon_ghost part of (very) ugly
             // things and player ghosts is taken care of in define_monster().
