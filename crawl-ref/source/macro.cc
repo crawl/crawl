@@ -215,7 +215,11 @@ static std::string get_macro_file()
 
 #if defined(DGL_MACRO_ABSOLUTE_PATH)
     return (dir.empty()? "macro.txt" : dir);
-#elif defined(DGL_NAMED_MACRO_FILE)
+#endif
+
+    check_mkdir("Macro directory", &dir, true);
+
+#if defined(DGL_NAMED_MACRO_FILE)
     return (dir + strip_filename_unsafe_chars(you.your_name) + "-macro.txt");
 #else
     return (dir + "macro.txt");
