@@ -48,6 +48,7 @@ public:
     std::vector<std::string> rcdirs;   // Directories to search for includes.
 
     std::string morgue_dir;
+    std::string macro_dir;
     std::string crawl_base;        // Directory from argv[0], may be used to
                                    // locate datafiles.
     std::string crawl_exe;         // File from argv[0].

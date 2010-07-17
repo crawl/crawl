@@ -60,6 +60,7 @@ extern char **NXArgv;
 #endif
 
 const std::string game_options::interrupt_prefix = "interrupt_";
+system_environment SysEnv;
 game_options Options;
 
 const static char *obj_syms = ")([/%.?=!.+\\0}X$";
@@ -631,8 +632,11 @@ void game_options::reset_options()
     restart_after_game = false;
 #endif
 
+    macro_dir = SysEnv.macro_dir;
+
 #if !defined(DGAMELAUNCH)
-    macro_dir = "settings/";
+    if (macro_dir.empty())
+        macro_dir = "settings/";
 #endif
 
 #if defined(SAVE_DIR_PATH)
@@ -663,7 +667,8 @@ void game_options::reset_options()
     std::string tmp_path_base = std::string(getenv("HOME")) + "/Library/Application Support/" CRAWL;
     save_dir   = tmp_path_base + "/saves/";
     morgue_dir = tmp_path_base + "/morgue/";
-    macro_dir  = tmp_path_base;
+    if (SysEnv.macro_dir.empty())
+        macro_dir  = tmp_path_base;
 #elif !defined(TARGET_OS_DOS)
     save_dir   = "saves/";
 #else
@@ -3896,7 +3901,7 @@ bool parse_args( int argc, char **argv, bool rc_only )
             if (!next_is_param)
                 return (false);
             if (!rc_only)
-                Options.macro_dir = next_arg;
+                SysEnv.macro_dir = next_arg;
             nextUsed = true;
             break;
 
