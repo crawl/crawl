@@ -21,6 +21,7 @@ public:
 
     void resize(int mx, int my);
     void place(int sx, int sy, int margin);
+    void place(int sx, int sy, int ex, int ey, int margin);
     void place(int sx, int sy);
     void resize_to_fit(int wx, int wy);
 

@@ -1589,7 +1589,7 @@ int linebreak_string2( std::string& s, int maxcol )
 
     // [ds] Don't loop forever if the user is playing silly games with
     // their term size.
-    if (!maxcol)
+    if (maxcol < 1)
         return 0;
 
     while ( loc < s.size() )
