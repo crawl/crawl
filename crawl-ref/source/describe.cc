@@ -3319,7 +3319,7 @@ static bool _print_god_abil_desc(int god, int numpower)
     return (true);
 }
 
-static std::string _describe_favour_generic(god_type which_god)
+static const std::string _describe_favour_generic(god_type which_god)
 {
     const std::string godname = god_name(which_god);
     return (you.piety > 130) ? "A prized avatar of " + godname + ".":
