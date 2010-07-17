@@ -171,12 +171,14 @@ void search_astar(const coord_def & start,
                   valid_T & valid_target,
                   expand_T & expand_node,
                   std::set<position_node> & visited,
-                  std::vector<std::set<position_node>::iterator > & candidates)
+                  std::vector<std::set<position_node>::iterator > & candidates,
+                  int start_level = 0)
 {
     position_node temp_node;
     temp_node.pos = start;
     temp_node.last = NULL;
     temp_node.path_distance = 0;
+    temp_node.connect_level = start_level;
 
     std::priority_queue<std::set<position_node>::iterator,
                         std::vector<std::set<position_node>::iterator>,
@@ -1503,12 +1505,25 @@ void move_kraken_tentacles(monsters * kraken)
 
         visited.clear();
         candidates.clear();
+
+        int start_level = 0;
         if (pos_shift)
         {
+            /*
             for (adjacent_iterator adj_it(new_pos); adj_it; ++adj_it)
             {
                 //connect_costs.connection_constraints(*adj_it).insert(0);
                 connect_costs.connection_constraints[*adj_it].insert(0);
+            }
+            */
+            std::map<coord_def, std::set<int> >::iterator it = connect_costs.connection_constraints.find(tentacle->pos());
+            // This condition should never miss
+            if (it != connect_costs.connection_constraints.end())
+            {
+                while (it->second.find(start_level + 1) != it->second.end())
+                {
+                    start_level++;
+                }
             }
         }
 
@@ -1518,7 +1533,8 @@ void move_kraken_tentacles(monsters * kraken)
 
         search_astar(tentacle->pos(),
                      current_target, connect_costs,
-                     visited, candidates);
+                     visited, candidates,
+                     start_level);
 
         if (candidates.size() != 1)
         {
