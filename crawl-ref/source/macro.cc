@@ -215,7 +215,11 @@ static std::string get_macro_file()
 
 #if defined(DGL_MACRO_ABSOLUTE_PATH)
     return (dir.empty()? "macro.txt" : dir);
-#elif defined(DGL_NAMED_MACRO_FILE)
+#endif
+
+    check_mkdir("Macro directory", &dir, true);
+
+#if defined(DGL_NAMED_MACRO_FILE)
     return (dir + strip_filename_unsafe_chars(you.your_name) + "-macro.txt");
 #else
     return (dir + "macro.txt");
@@ -674,7 +678,8 @@ void macro_save()
         return;
     }
 
-    f << "# WARNING: This file is entirely auto-generated." << std::endl
+    f << "# " CRAWL " " << Version::Long() << " macro file" << std::endl
+      << "# WARNING: This file is entirely auto-generated." << std::endl
       << std::endl << "# Key Mappings:" << std::endl;
     for (int mc = KMC_DEFAULT; mc < KMC_CONTEXT_COUNT; ++mc)
     {

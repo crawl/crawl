@@ -60,6 +60,7 @@ extern char **NXArgv;
 #endif
 
 const std::string game_options::interrupt_prefix = "interrupt_";
+system_environment SysEnv;
 game_options Options;
 
 const static char *obj_syms = ")([/%.?=!.+\\0}X$";
@@ -617,6 +618,30 @@ void game_options::set_activity_interrupt(const std::string &activity_name,
     eints[AI_FORCE_INTERRUPT] = true;
 }
 
+static std::string _user_home_dir()
+{
+#ifdef TARGET_OS_WINDOWS
+    char home[MAX_PATH];
+    if (SHGetFolderPath(0, CSIDL_APPDATA, 0, 0, home))
+        strcpy(home, "./");
+#else
+    const char *home = getenv("HOME");
+    if (!home || !*home)
+        home = "./";
+#endif
+    return (home);
+}
+
+static std::string _user_home_subpath(const std::string subpath)
+{
+    return catpath(_user_home_dir(), subpath);
+}
+
+static std::string _user_home_crawl_subpath(const std::string subpath)
+{
+    return _user_home_subpath(catpath(".crawl", subpath));
+}
+
 void game_options::reset_options()
 {
     filename     = "unknown";
@@ -631,8 +656,17 @@ void game_options::reset_options()
     restart_after_game = false;
 #endif
 
+    macro_dir = SysEnv.macro_dir;
+
 #if !defined(DGAMELAUNCH)
-    macro_dir = "settings/";
+    if (macro_dir.empty())
+    {
+#ifdef UNIX
+        macro_dir = _user_home_crawl_subpath("");
+#else
+        macro_dir = "settings/";
+#endif
+    }
 #endif
 
 #if defined(SAVE_DIR_PATH)
@@ -646,24 +680,19 @@ void game_options::reset_options()
     }
     else
     {
-#ifdef TARGET_OS_WINDOWS
-        char home[MAX_PATH];
-        if (SHGetFolderPath(0, CSIDL_APPDATA, 0, 0, home))
-            strcpy(home, "./");
-#else
-        const char *home = getenv("HOME");
-        if (!home || !*home)
-            home = "./";
-#endif
-        save_dir = (std::string)home + (SAVE_DIR_PATH + 1) + "/saves/";
-        morgue_dir = (std::string)home + (SAVE_DIR_PATH + 1) + "/morgue/";
+        save_dir = _user_home_subpath(std::string(SAVE_DIR_PATH + 1)
+                                      + "/saves/");
+        morgue_dir = _user_home_subpath(std::string(SAVE_DIR_PATH + 1)
+                                        + "/morgue/");
     }
 #endif
 #elif defined(TARGET_OS_MACOSX)
-    std::string tmp_path_base = std::string(getenv("HOME")) + "/Library/Application Support/" CRAWL;
+    const std::string tmp_path_base =
+        _user_home_subpath("Library/Application Support/" CRAWL);
     save_dir   = tmp_path_base + "/saves/";
     morgue_dir = tmp_path_base + "/morgue/";
-    macro_dir  = tmp_path_base;
+    if (SysEnv.macro_dir.empty())
+        macro_dir  = tmp_path_base;
 #elif !defined(TARGET_OS_DOS)
     save_dir   = "saves/";
 #else
@@ -3896,7 +3925,7 @@ bool parse_args( int argc, char **argv, bool rc_only )
             if (!next_is_param)
                 return (false);
             if (!rc_only)
-                Options.macro_dir = next_arg;
+                SysEnv.macro_dir = next_arg;
             nextUsed = true;
             break;
 
