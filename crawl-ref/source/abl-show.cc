@@ -2067,13 +2067,27 @@ static bool _do_ability(const ability_def& abil)
     return (true);
 }
 
+// [ds] Increase piety cost for god abilities that are particularly
+// overpowered in Sprint. Yes, this is a hack. No, I don't care.
+static int _scale_piety_cost(ability_type abil, int original_cost)
+{
+    // Abilities that have aroused our ire earn 2.5x their classic
+    // Crawl piety cost.
+    return ((crawl_state.game_is_sprint()
+             && (abil == ABIL_TROG_BROTHERS_IN_ARMS
+                 || abil == ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB))
+            ? div_rand_round(original_cost * 5, 2)
+            : original_cost);
+}
+
 static void _pay_ability_costs(const ability_def& abil)
 {
     // currently only delayed fireball is instantaneous -- bwr
     you.turn_is_over = !(abil.flags & ABFLAG_INSTANT);
 
     const int food_cost  = abil.food_cost + random2avg(abil.food_cost, 2);
-    const int piety_cost = abil.piety_cost.cost();
+    const int piety_cost =
+        _scale_piety_cost(abil.ability, abil.piety_cost.cost());
     const int hp_cost    = abil.hp_cost.cost(you.hp_max);
 
     dprf("Cost: mp=%d; hp=%d; food=%d; piety=%d",
