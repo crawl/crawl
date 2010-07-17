@@ -1384,6 +1384,9 @@ void move_kraken_tentacles(monsters * kraken)
 
         monsters * current_mon =tentacle;
         int current_count = 0;
+        bool retract_found = false;
+        coord_def retract_pos(-1, -1);
+
         while (current_mon)
         {
             for (adjacent_iterator adj_it(current_mon->pos(), false);
@@ -1402,6 +1405,11 @@ void move_kraken_tentacles(monsters * kraken)
                     || menv[next_idx].type == MONS_KRAKEN))
             {
                 current_mon = &menv[next_idx];
+                if (!retract_found && current_mon->type == MONS_KRAKEN_CONNECTOR)
+                {
+                    retract_pos = current_mon->pos();
+                    retract_found = true;
+                }
             }
             else
             {
@@ -1441,48 +1449,56 @@ void move_kraken_tentacles(monsters * kraken)
 
         tentacle_path.clear();
 
-        target_or_enemy foe_check;
-        foe_check.base_monster = kraken;
-        foe_check.target_square = targ;
-
-        visited.clear();
-
-        tentacle_attack_costs attack_costs;
-        attack_costs.kraken = kraken;
-
-        coord_wrapper wrapper_temp(_dummy_estimate);
-        search_astar(tentacle->pos(), foe_check, attack_costs, wrapper_temp,
-                    visited,
-                    tentacle_path,
-                    tentacle_connectivity);
-
-
         coord_def new_pos = tentacle->pos();
         coord_def old_pos = tentacle->pos();
 
-        bool path_failed = false;
-        // Did we find a path?
-        if (!tentacle_path.empty())
+
+        if (!no_foe)
         {
-            // The end position is the enemy or target square, we need
-            // to rewind the found path to find the next move
+            target_or_enemy foe_check;
+            foe_check.base_monster = kraken;
+            foe_check.target_square = targ;
 
-            const position_node * current = &(*tentacle_path[0]);
-            const position_node * last;
+            visited.clear();
 
-            // The last position in the chain is the base position,
-            // so we want to stop at the one before the last.
-            while (current && current->last)
+            tentacle_attack_costs attack_costs;
+            attack_costs.kraken = kraken;
+
+            coord_wrapper wrapper_temp(_dummy_estimate);
+            search_astar(tentacle->pos(), foe_check, attack_costs, wrapper_temp,
+                        visited,
+                        tentacle_path,
+                        tentacle_connectivity);
+
+            bool path_failed = false;
+            // Did we find a path?
+            if (!tentacle_path.empty())
             {
-                last = current;
-                current = current->last;
-                new_pos = last->pos;
+                // The end position is the enemy or target square, we need
+                // to rewind the found path to find the next move
+
+                const position_node * current = &(*tentacle_path[0]);
+                const position_node * last;
+
+                // The last position in the chain is the base position,
+                // so we want to stop at the one before the last.
+                while (current && current->last)
+                {
+                    last = current;
+                    current = current->last;
+                    new_pos = last->pos;
+                }
             }
+            else if (retract_found)
+            {
+                path_failed = true;
+                mprf("path finding failed?");
+            }
+
         }
         else
         {
-            path_failed = true;
-            mprf("path finding failed?");
+            new_pos = retract_pos;
         }
 
         bool pos_shift = old_pos != new_pos;
