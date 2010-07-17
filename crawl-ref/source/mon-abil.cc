@@ -1240,7 +1240,10 @@ struct tentacle_connect_constraints
             }
 
 
-            temp.estimate = grid_distance(temp.pos, kraken->pos());
+            //temp.estimate = grid_distance(temp.pos, kraken->pos());
+            // Don't bother with an estimate, the search is highly constrained
+            // so it's not really going to help
+            temp.estimate = 0;
             int test_level = node.connect_level;
 
             for (std::set<int>::iterator j = probe->second.begin();
