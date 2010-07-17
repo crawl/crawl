@@ -674,7 +674,8 @@ void macro_save()
         return;
     }
 
-    f << "# WARNING: This file is entirely auto-generated." << std::endl
+    f << "# " CRAWL " " << Version::Long() << " macro file" << std::endl
+      << "# WARNING: This file is entirely auto-generated." << std::endl
       << std::endl << "# Key Mappings:" << std::endl;
     for (int mc = KMC_DEFAULT; mc < KMC_CONTEXT_COUNT; ++mc)
     {
