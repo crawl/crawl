@@ -650,11 +650,7 @@ void game_options::reset_options()
 
     set_default_activity_interrupts();
 
-#if defined(USE_TILE)
-    restart_after_game = true;
-#else
     restart_after_game = false;
-#endif
 
     macro_dir = SysEnv.macro_dir;
 
