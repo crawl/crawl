@@ -2129,7 +2129,9 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
             {
                 if (!semiverbose)
                 {
-                    desc += (is_vowel( auxkilldata[0] )) ? "... with an "
+                    if (auxkilldata == "angry trees")
+                        desc += "... awoken ";
+                    else desc += (is_vowel( auxkilldata[0] )) ? "... with an "
                         : "... with a ";
                     desc += auxkilldata;
                     desc += _hiscore_newline_string();

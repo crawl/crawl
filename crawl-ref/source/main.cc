@@ -87,6 +87,7 @@
 #include "mon-cast.h"
 #include "mon-iter.h"
 #include "mon-stuff.h"
+#include "mon-transit.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "newgame.h"
@@ -152,7 +153,13 @@
 CLua clua(true);
 CLua dlua(false);      // Lua interpreter for the dungeon builder.
 crawl_environment env; // Requires dlua.
+
 player you;
+
+// A clean player struct to use to reset the game. This wouldn't be
+// necessary if player had a real constructor.
+const player you_ref;
+
 game_state crawl_state;
 
 std::string init_file_error;    // externed in newgame.cc
@@ -276,7 +283,8 @@ static void _reset_game()
     crawl_state.type = GAME_TYPE_UNSPECIFIED;
     clear_message_store();
     macro_clear_buffers();
-    you.reset();
+    transit_lists_clear();
+    you.copy_from(you_ref);
     StashTrack = StashTracker();
     travel_cache = TravelCache();
     overview_clear();

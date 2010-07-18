@@ -148,7 +148,7 @@ static const char *describe_xom_mood()
                              : "a very special plaything of Xom.";
 }
 
-const char *describe_xom_favour(bool upper)
+const std::string describe_xom_favour(bool upper)
 {
     std::string favour;
     if (you.religion != GOD_XOM)
@@ -161,7 +161,7 @@ const char *describe_xom_favour(bool upper)
     if (upper)
         favour = uppercase_first(favour);
 
-    return (favour.c_str());
+    return (favour);
 }
 
 static std::string _get_xom_speech(const std::string key)
@@ -4237,7 +4237,7 @@ static bool _sort_xom_effects(const xom_effect_count &a,
     return (a.count > b.count);
 }
 
-static const char* _xom_effect_to_name(int effect)
+static const std::string _xom_effect_to_name(int effect)
 {
     ASSERT(effect < XOM_PLAYER_DEAD);
 
@@ -4270,7 +4270,7 @@ static const char* _xom_effect_to_name(int effect)
     }
     result += _xom_effect_names[effect];
 
-    return (result.c_str());
+    return (result);
 }
 
 static char* _list_exploration_estimate()

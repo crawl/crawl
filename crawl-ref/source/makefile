@@ -135,6 +135,11 @@ LIBLUA := contrib/install/lib/liblua.a
 endif
 LIBZ := contrib/install/lib/libz.a
 
+LUA_INCLUDE_DIR := /usr/include/lua5.1
+LUA_LIB := -llua5.1
+SQLITE_INCLUDE_DIR := /usr/include
+SQLITE_LIB := -lsqlite3
+
 #
 # Platform Detection
 #
@@ -433,9 +438,9 @@ endif
 endif
 
 ifndef BUILD_LUA
-  ifneq (,$(wildcard /usr/include/lua5.1))
-    INCLUDES_L += -I/usr/include/lua5.1
-    LIBS += -llua5.1
+  ifneq (,$(wildcard $(LUA_INCLUDE_DIR)/lua.h))
+    INCLUDES_L += -I$(LUA_INCLUDE_DIR)
+    LIBS += $(LUA_LIB)
   else
     ifneq (,$(wildcard /usr/include/lua.h))
       LIBS += -llua
@@ -446,10 +451,11 @@ ifndef BUILD_LUA
 endif
 
 ifndef BUILD_SQLITE
-  ifneq ($(shell grep -q sqlite3_prepare_v2 /usr/include/sqlite3.h 2>/dev/null && echo yes),yes)
-    BUILD_SQLITE = yes
+  ifeq ($(shell grep -q sqlite3_prepare_v2 $(SQLITE_INCLUDE_DIR)/sqlite3.h 2>/dev/null && echo yes),yes)
+    INCLUDES_L += -I$(SQLITE_INCLUDE_DIR)
+    LIBS += $(SQLITE_LIB)
   else
-    LIBS += -lsqlite3
+    BUILD_SQLITE = yes
   endif
 endif
 
