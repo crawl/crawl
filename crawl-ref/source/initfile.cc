@@ -3925,8 +3925,7 @@ bool parse_args( int argc, char **argv, bool rc_only )
         case CLO_MACRO:
             if (!next_is_param)
                 return (false);
-            if (!rc_only)
-                SysEnv.macro_dir = next_arg;
+            SysEnv.macro_dir = next_arg;
             nextUsed = true;
             break;
 
