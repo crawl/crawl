@@ -4048,7 +4048,7 @@ void forest_damage(const actor *mon)
                         "A tree reaches out and hits you!",
                         "A root smacks you from below.",
                         0));
-                    ouch(damage, mon->mindex(), KILLED_BY_MONSTER,
+                    ouch(damage, mon->mindex(), KILLED_BY_BEAM,
                          "angry trees", true);
                 }
                 else
