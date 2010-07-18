@@ -24,6 +24,12 @@
 monsters_in_transit the_lost_ones;
 items_in_transit    transiting_items;
 
+void transit_lists_clear()
+{
+    the_lost_ones.clear();
+    transiting_items.clear();
+}
+
 static void level_place_lost_monsters(m_transit_list &m);
 static void level_place_followers(m_transit_list &m);
 

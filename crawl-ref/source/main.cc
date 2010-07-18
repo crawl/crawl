@@ -87,6 +87,7 @@
 #include "mon-cast.h"
 #include "mon-iter.h"
 #include "mon-stuff.h"
+#include "mon-transit.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "newgame.h"
@@ -276,6 +277,7 @@ static void _reset_game()
     crawl_state.type = GAME_TYPE_UNSPECIFIED;
     clear_message_store();
     macro_clear_buffers();
+    transit_lists_clear();
     you.reset();
     StashTrack = StashTracker();
     travel_cache = TravelCache();
