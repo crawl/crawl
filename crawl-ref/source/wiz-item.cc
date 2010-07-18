@@ -462,7 +462,7 @@ void wizard_tweak_object(void)
 
     while (true)
     {
-        int64_t old_val; // flags are uint64_t, but they don't care
+        int64_t old_val = 0; // flags are uint64_t, but they don't care
 
         while (true)
         {
