@@ -439,7 +439,7 @@ endif
 
 ifndef BUILD_LUA
   ifneq (,$(wildcard $(LUA_INCLUDE_DIR)/lua.h))
-    INCLUDES_L += -I$(LUA_SYSTEM_DIR)
+    INCLUDES_L += -I$(LUA_INCLUDE_DIR)
     LIBS += $(LUA_LIB)
   else
     BUILD_LUA = yes
@@ -448,6 +448,7 @@ endif
 
 ifndef BUILD_SQLITE
   ifeq ($(shell grep -q sqlite3_prepare_v2 $(SQLITE_INCLUDE_DIR)/sqlite3.h 2>/dev/null && echo yes),yes)
+    INCLUDES_L += -I$(SQLITE_INCLUDE_DIR)
     LIBS += $(SQLITE_LIB)
   else
     BUILD_SQLITE = yes
