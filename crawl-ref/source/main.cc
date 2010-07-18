@@ -153,7 +153,13 @@
 CLua clua(true);
 CLua dlua(false);      // Lua interpreter for the dungeon builder.
 crawl_environment env; // Requires dlua.
+
 player you;
+
+// A clean player struct to use to reset the game. This wouldn't be
+// necessary if player had a real constructor.
+const player you_ref;
+
 game_state crawl_state;
 
 std::string init_file_error;    // externed in newgame.cc
@@ -278,7 +284,7 @@ static void _reset_game()
     clear_message_store();
     macro_clear_buffers();
     transit_lists_clear();
-    you.reset();
+    you.copy_from(you_ref);
     StashTrack = StashTracker();
     travel_cache = TravelCache();
     overview_clear();

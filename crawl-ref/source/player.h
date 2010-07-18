@@ -307,9 +307,6 @@ public:
 
     void init();
 
-    // Reset player data for a new game.
-    void reset();
-
     // Set player position without updating view geometry.
     void set_position(const coord_def &c);
     // Low-level move the player. Use this instead of changing pos directly.
