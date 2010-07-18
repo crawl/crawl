@@ -5280,11 +5280,6 @@ void player::init()
     flash_colour = BLACK;
 }
 
-void player::reset()
-{
-    copy_from(player());
-}
-
 player_save_info player_save_info::operator=(const player& rhs)
 {
     name             = rhs.your_name;
