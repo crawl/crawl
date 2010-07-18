@@ -1143,6 +1143,7 @@ static void _establish_connection(int tentacle,
 
 struct tentacle_attack_costs
 {
+    std::map<coord_def, std::set<int> > * connection_data;
     monsters * kraken;
     int operator()(const coord_def & pos)
     {
@@ -1151,6 +1152,13 @@ struct tentacle_attack_costs
         {
             return (DISCONNECT_DIST);
         }
+        std::map<coord_def, std::set<int> >::iterator test = connection_data->find(pos);
+        if (test != connection_data->end()
+            && test->second.find(0) == test->second.end() )
+        {
+            return (DISCONNECT_DIST);
+        }
+
 
         actor * act_at = actor_at(pos);
         monsters * mons_at = monster_at(pos);
@@ -1194,7 +1202,7 @@ struct tentacle_connect_costs
 struct tentacle_connect_constraints
 {
     monsters * kraken;
-    std::map<coord_def, std::set<int> > connection_constraints;
+    std::map<coord_def, std::set<int> > * connection_constraints;
 
 
     tentacle_connect_constraints()
@@ -1221,7 +1229,7 @@ struct tentacle_connect_constraints
                 continue;
 
             std::map<coord_def, std::set<int> >::iterator probe
-                        = connection_constraints.find(temp.pos);
+                        = connection_constraints->find(temp.pos);
 
             if (feat_is_solid(env.grid(temp.pos))
                 || env.grid(temp.pos) == DNGN_LAVA
@@ -1234,7 +1242,7 @@ struct tentacle_connect_constraints
             else
                 temp.path_distance = 1 + node.path_distance;
 
-            if (probe == connection_constraints.end()
+            if (probe == connection_constraints->end()
                 || probe->second.find(node.connect_level) == probe->second.end())
             {
                 continue;
@@ -1339,7 +1347,8 @@ struct target_or_enemy
 
 // returns pathfinding success/failure
 bool tentacle_pathfind(monsters * kraken, monsters * tentacle, actor * foe,
-                       coord_def & new_position)
+                       coord_def & new_position,
+                       std::map<coord_def, std::set<int> > & connect_data )
 {
     target_or_enemy foe_check;
     foe_check.base_monster = kraken;
@@ -1352,6 +1361,7 @@ bool tentacle_pathfind(monsters * kraken, monsters * tentacle, actor * foe,
 
     tentacle_attack_costs attack_costs;
     attack_costs.kraken = kraken;
+    attack_costs.connection_data = &connect_data;
 
     int tentacle_connectivity = 8;
 
@@ -1392,17 +1402,15 @@ bool try_tentacle_connect(const coord_def & new_pos, int headnum,
                           tentacle_connect_constraints & connect_costs)
 {
     int start_level = 0;
-    std::map<coord_def, std::set<int> >::iterator it = connect_costs.connection_constraints.find(new_pos);
+    std::map<coord_def, std::set<int> >::iterator it
+                    = connect_costs.connection_constraints->find(new_pos);
 
-//    if (shift)
+    // This condition should never miss
+    if (it != connect_costs.connection_constraints->end())
     {
-        // This condition should never miss
-        if (it != connect_costs.connection_constraints.end())
+        while (it->second.find(start_level + 1) != it->second.end())
         {
-            while (it->second.find(start_level + 1) != it->second.end())
-            {
-                start_level++;
-            }
+            start_level++;
         }
     }
 
@@ -1476,6 +1484,8 @@ void move_kraken_tentacles(monsters * kraken)
         }
 
         tentacle_connect_constraints connect_costs;
+        std::map<coord_def, std::set<int> > connection_data;
+
         connect_costs.kraken = kraken;
 
         monsters * current_mon = tentacle;
@@ -1488,7 +1498,8 @@ void move_kraken_tentacles(monsters * kraken)
             for (adjacent_iterator adj_it(current_mon->pos(), false);
                  adj_it; ++adj_it)
             {
-                connect_costs.connection_constraints[*adj_it].insert(current_count);
+                //connect_costs.connection_constraints[*adj_it].insert(current_count);
+                connection_data[*adj_it].insert(current_count);
             }
 
 
@@ -1549,7 +1560,8 @@ void move_kraken_tentacles(monsters * kraken)
         bool path_found = false;
         if (!no_foe)
         {
-            path_found = tentacle_pathfind(kraken, tentacle, foe, new_pos);
+            path_found = tentacle_pathfind(kraken, tentacle, foe, new_pos,
+                                           connection_data);
         }
 
         if (no_foe || !path_found)
@@ -1583,6 +1595,7 @@ void move_kraken_tentacles(monsters * kraken)
         tentacle->set_position(new_pos);
         mgrd(tentacle->pos()) = tentacle->mindex();
 
+        connect_costs.connection_constraints = &connection_data;
         bool connected = try_tentacle_connect(new_pos, headnum, tentacle_idx, connect_costs);
 
         // Something went wrong with connecting, can we fall back to a retract?
