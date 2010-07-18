@@ -1226,7 +1226,8 @@ struct tentacle_connect_constraints
             if (feat_is_solid(env.grid(temp.pos))
                 || env.grid(temp.pos) == DNGN_LAVA
                 || actor_at(temp.pos)
-                || !kraken->see_cell_no_trans(temp.pos))
+                )
+//                || !kraken->see_cell_no_trans(temp.pos))
             {
                 temp.path_distance = DISCONNECT_DIST;
             }
@@ -1246,13 +1247,21 @@ struct tentacle_connect_constraints
             temp.estimate = 0;
             int test_level = node.connect_level;
 
+            int max = 0;
             for (std::set<int>::iterator j = probe->second.begin();
                  j!= probe->second.end();
                  j++)
             {
                 if (*j == (test_level + 1))
                     test_level++;
+
+                if (*j > max)
+                    max = *j;
             }
+
+            if (test_level < max)
+                continue;
+
             temp.connect_level = test_level;
 
             expansion.push_back(temp);
@@ -1328,6 +1337,96 @@ struct target_or_enemy
     }
 };
 
+// returns pathfinding success/failure
+bool tentacle_pathfind(monsters * kraken, monsters * tentacle, actor * foe,
+                       coord_def & new_position)
+{
+    target_or_enemy foe_check;
+    foe_check.base_monster = kraken;
+    foe_check.target_square = foe->pos();
+
+    std::vector<std::set<position_node>::iterator > tentacle_path;
+
+    std::set<position_node> visited;
+    visited.clear();
+
+    tentacle_attack_costs attack_costs;
+    attack_costs.kraken = kraken;
+
+    int tentacle_connectivity = 8;
+
+    coord_wrapper wrapper_temp(_dummy_estimate);
+    search_astar(tentacle->pos(), foe_check, attack_costs, wrapper_temp,
+                visited,
+                tentacle_path,
+                tentacle_connectivity);
+
+
+    bool path_found = false;
+    // Did we find a path?
+    if (!tentacle_path.empty())
+    {
+        // The end position is the enemy or target square, we need
+        // to rewind the found path to find the next move
+
+        const position_node * current = &(*tentacle_path[0]);
+        const position_node * last;
+
+
+        // The last position in the chain is the base position,
+        // so we want to stop at the one before the last.
+        while (current && current->last)
+        {
+            last = current;
+            current = current->last;
+            new_position = last->pos;
+            path_found = true;
+        }
+    }
+
+    return (path_found);
+}
+
+bool try_tentacle_connect(const coord_def & new_pos, int headnum,
+                          int tentacle_idx,
+                          tentacle_connect_constraints & connect_costs)
+{
+    int start_level = 0;
+    std::map<coord_def, std::set<int> >::iterator it = connect_costs.connection_constraints.find(new_pos);
+
+//    if (shift)
+    {
+        // This condition should never miss
+        if (it != connect_costs.connection_constraints.end())
+        {
+            while (it->second.find(start_level + 1) != it->second.end())
+            {
+                start_level++;
+            }
+        }
+    }
+
+    // Find the tentacle -> head path
+    target_monster current_target;
+    current_target.target_mindex = headnum;
+
+    std::set<position_node> visited;
+    std::vector<std::set<position_node>::iterator> candidates;
+
+    search_astar(new_pos,
+                 current_target, connect_costs,
+                 visited, candidates,
+                 start_level);
+
+    if (candidates.empty())
+    {
+        return (false);
+    }
+
+    _establish_connection(tentacle_idx, headnum,candidates[0]);
+
+    return (true);
+}
 
 void move_kraken_tentacles(monsters * kraken)
 {
@@ -1336,29 +1435,23 @@ void move_kraken_tentacles(monsters * kraken)
     {
         return;
     }
-    int tentacle_connectivity = 8;
 
-    coord_def targ;
+
     bool no_foe = false;
+    actor * foe = NULL;
     if (!kraken->near_foe())
     {
-        targ = kraken->pos();
         no_foe = true;
     }
     else
-        targ = kraken->get_foe()->pos();
+        foe = kraken->get_foe();
 
     std::vector<monster_iterator> tentacles;
 
     int headnum = kraken->mindex();
 
 
-    // Search from the target to the tentacles
-    std::set<position_node> visited;
-    std::vector<std::set<position_node>::iterator > tentacle_path;
-    std::vector<std::set<position_node>::iterator> candidates;
 
-    // Todo: check for tentacles w/o a path to target
     for (monster_iterator mi; mi; ++mi)
     {
         if (int (mi->number) == headnum)
@@ -1385,7 +1478,7 @@ void move_kraken_tentacles(monsters * kraken)
         tentacle_connect_constraints connect_costs;
         connect_costs.kraken = kraken;
 
-        monsters * current_mon =tentacle;
+        monsters * current_mon = tentacle;
         int current_count = 0;
         bool retract_found = false;
         coord_def retract_pos(-1, -1);
@@ -1450,62 +1543,32 @@ void move_kraken_tentacles(monsters * kraken)
             continue;
         }
 
-        tentacle_path.clear();
-
         coord_def new_pos = tentacle->pos();
         coord_def old_pos = tentacle->pos();
 
-
+        bool path_found = false;
         if (!no_foe)
         {
-            target_or_enemy foe_check;
-            foe_check.base_monster = kraken;
-            foe_check.target_square = targ;
-
-            visited.clear();
-
-            tentacle_attack_costs attack_costs;
-            attack_costs.kraken = kraken;
-
-            coord_wrapper wrapper_temp(_dummy_estimate);
-            search_astar(tentacle->pos(), foe_check, attack_costs, wrapper_temp,
-                        visited,
-                        tentacle_path,
-                        tentacle_connectivity);
-
-            bool path_failed = false;
-            // Did we find a path?
-            if (!tentacle_path.empty())
-            {
-                // The end position is the enemy or target square, we need
-                // to rewind the found path to find the next move
-
-                const position_node * current = &(*tentacle_path[0]);
-                const position_node * last;
-
-                // The last position in the chain is the base position,
-                // so we want to stop at the one before the last.
-                while (current && current->last)
-                {
-                    last = current;
-                    current = current->last;
-                    new_pos = last->pos;
-                }
-            }
-            else if (retract_found)
-            {
-                path_failed = true;
-                mprf("path finding failed?");
-            }
-
+            path_found = tentacle_pathfind(kraken, tentacle, foe, new_pos);
         }
-        else
+
+        if (no_foe || !path_found)
         {
-            new_pos = retract_pos;
+            if (retract_found)
+            {
+                new_pos = retract_pos;
+            }
+            else
+            {
+                // What happened here? Usually retract found should be true
+                // or we should get pruned (due to being adjacent to the
+                // head), in any case just stay here.
+            }
         }
 
-        bool pos_shift = old_pos != new_pos;
+        //bool pos_shift = old_pos != new_pos;
 
+        // Did we path into a target?
         actor * blocking_actor = actor_at(new_pos);
         if (blocking_actor)
         {
@@ -1514,58 +1577,38 @@ void move_kraken_tentacles(monsters * kraken)
 
         mgrd(tentacle->pos()) = NON_MONSTER;
 
-
+        // Why do I have to do this move? I don't get it.
+        // specifically, if tentacle isn't registered at its new position on mgrd
+        // the search fails (sometimes), Don't know why. -cao
         tentacle->set_position(new_pos);
-
         mgrd(tentacle->pos()) = tentacle->mindex();
 
-        tentacle->check_redraw(old_pos);
-        tentacle->apply_location_effects(old_pos);
+        bool connected = try_tentacle_connect(new_pos, headnum, tentacle_idx, connect_costs);
 
-        visited.clear();
-        candidates.clear();
-
-        int start_level = 0;
-        if (pos_shift)
+        // Something went wrong with connecting, can we fall back to a retract?
+        if (!connected && retract_found && new_pos != retract_pos)
         {
-            /*
-            for (adjacent_iterator adj_it(new_pos); adj_it; ++adj_it)
-            {
-                //connect_costs.connection_constraints(*adj_it).insert(0);
-                connect_costs.connection_constraints[*adj_it].insert(0);
-            }
-            */
-            std::map<coord_def, std::set<int> >::iterator it = connect_costs.connection_constraints.find(tentacle->pos());
-            // This condition should never miss
-            if (it != connect_costs.connection_constraints.end())
-            {
-                while (it->second.find(start_level + 1) != it->second.end())
-                {
-                    start_level++;
-                }
-            }
+            mgrd(tentacle->pos()) = NON_MONSTER;
+
+            new_pos = retract_pos;
+            tentacle->set_position(new_pos);
+            mgrd(tentacle->pos()) = tentacle->mindex();
+
+            connected = try_tentacle_connect(new_pos, headnum, tentacle_idx, connect_costs);
         }
 
-        // Find the tentacle -> head path
-        target_monster current_target;
-        current_target.target_mindex = headnum;
-
-        search_astar(tentacle->pos(),
-                     current_target, connect_costs,
-                     visited, candidates,
-                     start_level);
-
-        if (candidates.size() != 1)
+        // Really can't connect
+        if (!connected)
         {
-            mprf("Error, %d kraken head paths found!", candidates.size());
-            // Well something went wrong, maybe we should just forget
-            // this tentacle.
+            mprf("Tentacle connect failed!");
+            mgrd(tentacle->pos()) = tentacle->mindex();
             monster_die(tentacle, KILL_MISC, NON_MONSTER, true);
 
             continue;
         }
 
-        _establish_connection(tentacle_idx, kraken->mindex(),candidates[0]);
+        tentacle->check_redraw(old_pos);
+        tentacle->apply_location_effects(old_pos);
 
     }
 }
