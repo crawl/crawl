@@ -19,12 +19,12 @@ void opening_screen(void)
     "<brown>(c) Copyright 1997-2002 Linley Henzell, "
     "2002-2010 Crawl DevTeam\n"
     "Read the instructions for legal details."
-    "</brown>" ;
+    "</brown> " ;
 
     const bool init_found = init_file_error.empty();
 
     if (!init_found)
-        msg += "<lightred>No init file ";
+        msg += "<lightred>(No init file ";
     else
         msg += "<lightgrey>(Read options from ";
 
@@ -43,7 +43,7 @@ void opening_screen(void)
     else
     {
         msg += init_file_error;
-        msg += ", using defaults.";
+        msg += ", using defaults.)";
     }
 
     msg += "\n";

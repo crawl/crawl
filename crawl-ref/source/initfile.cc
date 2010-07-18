@@ -1276,6 +1276,7 @@ static std::string _find_crawlrc()
 #ifndef DATA_DIR_PATH
         { "", "init.txt" },
         { "..", "init.txt" },
+        { "../settings", "init.txt" },
 #endif
         { NULL, NULL }                // placeholder to mark end
     };
@@ -1369,8 +1370,8 @@ std::string read_init_file(bool runscript)
         Options.read_option_line(SysEnv.extra_opts_last[i], false);
     }
 
-    Options.filename     = "unknown";
-    Options.basefilename = "unknown";
+    Options.filename     = init_file_name;
+    Options.basefilename = get_base_filename(init_file_name);
     Options.line_num     = -1;
 
     return ("");
