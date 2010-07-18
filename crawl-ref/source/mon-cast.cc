@@ -53,6 +53,9 @@
 
 #include <algorithm>
 
+// kraken stuff
+const int MAX_ACTIVE_KRAKEN_TENTACLES = 4;
+
 static bool _valid_mon_spells[NUM_SPELLS];
 
 void init_mons_spells()
@@ -1918,7 +1921,7 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
             }
         }
 
-        int possible_count = 4 - tentacle_count;
+        int possible_count = MAX_ACTIVE_KRAKEN_TENTACLES - tentacle_count;
 
         if (possible_count <= 0)
             return;
