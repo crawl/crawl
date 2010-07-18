@@ -442,7 +442,11 @@ ifndef BUILD_LUA
     INCLUDES_L += -I$(LUA_INCLUDE_DIR)
     LIBS += $(LUA_LIB)
   else
-    BUILD_LUA = yes
+    ifneq (,$(wildcard /usr/include/lua.h))
+      LIBS += -llua
+    else
+      BUILD_LUA = yes
+    endif
   endif
 endif
 
