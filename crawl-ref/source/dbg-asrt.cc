@@ -502,6 +502,15 @@ static void _dump_command_line(FILE *file)
     fprintf(file, "\n\n");
 }
 
+// Dump any game options that could affect stability.
+static void _dump_options(FILE *file)
+{
+    fprintf(file, "RC options:\n");
+    fprintf(file, "restart_after_game = %s\n",
+            Options.restart_after_game? "true" : "false");
+    fprintf(file, "\n\n");
+}
+
 // Defined in stuff.cc.  Not a part of crawl_state, since that's a
 // global C++ instance which is free'd by exit() hooks when exit()
 // is called, and we don't want to reference free'd memory.
@@ -563,6 +572,8 @@ void do_crash_dump()
     _dump_ver_stuff(file);
 
     _dump_command_line(file);
+
+    _dump_options(file);
 
     // First get the immediate cause of the crash and the stack trace,
     // since that's most important and later attempts to get more information
