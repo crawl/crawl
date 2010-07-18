@@ -5274,7 +5274,7 @@ void player::init()
     walking = 0;
 
 #if defined(WIZARD) || defined(DEBUG)
-    you.never_die = false;
+    never_die = false;
 #endif
 
     flash_colour = BLACK;
