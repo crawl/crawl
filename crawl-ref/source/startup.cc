@@ -644,8 +644,11 @@ static void _show_startup_menu(newgame_def* ng_choice,
                     full_name = false;
                     input_string = "";
                 }
-                input_string += static_cast<char> (keyn);
-                changed_name = true;
+                if ((int) input_string.length() < kNameLen)
+                {
+                    input_string += static_cast<char> (keyn);
+                    changed_name = true;
+                }
             }
             else if (keyn == CK_BKSP)
             {
