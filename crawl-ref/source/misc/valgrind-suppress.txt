@@ -22,3 +22,27 @@
 	fun:X11_DispatchEvent
 	obj:*
 }
+
+# ncurses keep some structures even after endwin() to 1. make flipping back
+# faster, and 2. to allow some functions to work even then.  It's an O(1)
+# leak and thus harmless.
+{
+   ncurses_alloc_once_leak
+   Memcheck:Leak
+   fun:calloc
+   fun:_nc_makenew
+   fun:newwin
+   fun:_nc_setupscreen
+   fun:newterm
+   fun:initscr
+}
+
+{
+   ncurses_alloc_once_leak2
+   Memcheck:Leak
+   fun:calloc
+   fun:newwin
+   fun:_nc_setupscreen
+   fun:newterm
+   fun:initscr
+}
