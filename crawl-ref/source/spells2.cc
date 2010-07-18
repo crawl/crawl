@@ -293,6 +293,7 @@ bool brand_weapon(brand_type which_brand, int power)
     const int wpn_type = get_vorpal_type(weapon);
     if (which_brand == SPWPN_VENOM && wpn_type == DVORP_CRUSHING
         || which_brand == SPWPN_VORPAL && wpn_type != DVORP_SLICING
+                                       && wpn_type != DVORP_STABBING
         || which_brand == SPWPN_DUMMY_CRUSHING && wpn_type != DVORP_CRUSHING)
     {
         return (false);
