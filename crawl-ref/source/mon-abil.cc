@@ -114,10 +114,6 @@ struct path_less
 
 };
 
-static int _dummy_estimate(const coord_def & pos)
-{
-    return (0);
-}
 #define DISCONNECT_DIST (INT_MAX - 1000)
 
 template<typename cost_T, typename est_T>
@@ -1160,64 +1156,6 @@ static void _establish_connection(int tentacle,
     }
 }
 
-struct tentacle_attack_costs
-{
-    std::map<coord_def, std::set<int> > * connection_data;
-    monsters * kraken;
-    int operator()(const coord_def & pos)
-    {
-        if (feat_is_solid(env.grid(pos)) || env.grid(pos) == DNGN_LAVA
-            || !kraken->see_cell_no_trans(pos))
-        {
-            return (DISCONNECT_DIST);
-        }
-        std::map<coord_def, std::set<int> >::iterator test = connection_data->find(pos);
-        if (test != connection_data->end()
-            && test->second.find(0) == test->second.end() )
-        {
-            return (DISCONNECT_DIST);
-        }
-
-
-        actor * act_at = actor_at(pos);
-        monsters * mons_at = monster_at(pos);
-
-        if (!act_at)
-            return (1);
-
-        // Can still search through a firewood monster, just at a higher
-        // path cost.
-        if (mons_at && mons_is_firewood(mons_at)
-            && !mons_aligned(kraken, mons_at))
-        {
-            return (10);
-        }
-
-        // An actor we can't just chop through is there, if it's an
-        // actual target we can still give a disconnected path
-        // cost. -cao
-        return (DISCONNECT_DIST);
-
-    }
-};
-
-
-// We can't path through firewood going from the tentacle end back
-// to the main body.
-struct tentacle_connect_costs
-{
-    monsters * kraken;
-    int operator()(const coord_def & pos)
-    {
-        if (feat_is_solid(env.grid(pos)) || env.grid(pos) == DNGN_LAVA
-            || actor_at(pos) || !kraken->see_cell_no_trans(pos))
-        {
-            return (DISCONNECT_DIST);
-        }
-        return (1);
-    }
-};
-
 struct tentacle_attack_constraints
 {
     std::map<coord_def, std::set<int> > * connection_constraints;
@@ -1405,16 +1343,6 @@ struct tentacle_connect_constraints
 
 };
 
-struct grid_distance_to_target
-{
-    coord_def target;
-
-    int operator() (const coord_def & pos)
-    {
-        return (grid_distance(pos, target));
-    }
-};
-
 struct target_monster
 {
     int target_mindex;
@@ -1485,21 +1413,6 @@ bool tentacle_pathfind(monsters * kraken, monsters * tentacle, actor * foe,
     search_astar(temp,
                  foe_check, attack_constraints,
                  visited, tentacle_path);
-
-
-/*    tentacle_attack_costs attack_costs;
-    attack_costs.kraken = kraken;
-    attack_costs.connection_data = &connect_data;
-
-    int tentacle_connectivity = 8;
-
-    coord_wrapper wrapper_temp(_dummy_estimate);
-    search_astar(tentacle->pos(), foe_check, attack_costs, wrapper_temp,
-                visited,
-                tentacle_path,
-                tentacle_connectivity);
-                */
-
 
     bool path_found = false;
     // Did we find a path?
