@@ -1348,7 +1348,8 @@ struct target_or_enemy
 // returns pathfinding success/failure
 bool tentacle_pathfind(monsters * kraken, monsters * tentacle, actor * foe,
                        coord_def & new_position,
-                       std::map<coord_def, std::set<int> > & connect_data )
+                       std::map<coord_def, std::set<int> > & connect_data,
+                       int total_length)
 {
     target_or_enemy foe_check;
     foe_check.base_monster = kraken;
@@ -1436,6 +1437,41 @@ bool try_tentacle_connect(const coord_def & new_pos, int headnum,
     return (true);
 }
 
+void collect_tentacles(int headnum, std::vector<monster_iterator> & tentacles)
+{
+    // TODO: reorder tentacles based on distance to head or something.
+    for (monster_iterator mi; mi; ++mi)
+     {
+         if (int (mi->number) == headnum)
+         {
+             if (mi->type == MONS_KRAKEN_TENTACLE)
+             {
+                 tentacles.push_back(mi);
+             }
+         }
+     }
+}
+
+void purge_connectors(int tentacle_idx)
+{
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (int (mi->number) == tentacle_idx)
+        {
+            if (mi->type == MONS_KRAKEN_CONNECTOR)
+            {
+                int hp = menv[mi->mindex()].hit_points;
+                if (hp > 0 && hp < menv[tentacle_idx].hit_points)
+                    menv[tentacle_idx].hit_points = hp;
+
+                monster_die(&env.mons[mi->mindex()],
+                        KILL_MISC, NON_MONSTER, true);
+            }
+
+        }
+    }
+}
+
 void move_kraken_tentacles(monsters * kraken)
 {
     if (mons_base_type(kraken) != MONS_KRAKEN
@@ -1458,18 +1494,8 @@ void move_kraken_tentacles(monsters * kraken)
 
     int headnum = kraken->mindex();
 
+    collect_tentacles(headnum, tentacles);
 
-
-    for (monster_iterator mi; mi; ++mi)
-    {
-        if (int (mi->number) == headnum)
-        {
-            if (mi->type == MONS_KRAKEN_TENTACLE)
-            {
-                tentacles.push_back(mi);
-            }
-        }
-    }
 
 
     // Move each tentacle in turn
@@ -1498,12 +1524,9 @@ void move_kraken_tentacles(monsters * kraken)
             for (adjacent_iterator adj_it(current_mon->pos(), false);
                  adj_it; ++adj_it)
             {
-                //connect_costs.connection_constraints[*adj_it].insert(current_count);
                 connection_data[*adj_it].insert(current_count);
             }
 
-
-            //current_mon->props.
             bool basis = current_mon->props.exists("inwards");
             int next_idx = basis ? current_mon->props["inwards"].get_int() : -1;
 
@@ -1527,23 +1550,8 @@ void move_kraken_tentacles(monsters * kraken)
 
         int tentacle_idx = tentacle->mindex();
 
-        // Start by purging the connectors for this tentacle
-        for (monster_iterator mi; mi; ++mi)
-        {
-            if (int (mi->number) == tentacle_idx)
-            {
-                if (mi->type == MONS_KRAKEN_CONNECTOR)
-                {
-                    int hp = menv[mi->mindex()].hit_points;
-                    if (hp > 0 && hp < menv[tentacle_idx].hit_points)
-                        menv[tentacle_idx].hit_points = hp;
+        purge_connectors(tentacle_idx);
 
-                    monster_die(&env.mons[mi->mindex()],
-                            KILL_MISC, NON_MONSTER, true);
-                }
-
-            }
-        }
         if (no_foe
             && grid_distance(tentacle->pos(), kraken->pos()) == 1)
         {
@@ -1561,7 +1569,7 @@ void move_kraken_tentacles(monsters * kraken)
         if (!no_foe)
         {
             path_found = tentacle_pathfind(kraken, tentacle, foe, new_pos,
-                                           connection_data);
+                                           connection_data, current_count);
         }
 
         if (no_foe || !path_found)
@@ -1577,8 +1585,6 @@ void move_kraken_tentacles(monsters * kraken)
                 // head), in any case just stay here.
             }
         }
-
-        //bool pos_shift = old_pos != new_pos;
 
         // Did we path into a target?
         actor * blocking_actor = actor_at(new_pos);
