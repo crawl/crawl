@@ -1156,16 +1156,6 @@ static void _monster_die_cloud(const monsters* monster, bool corpse, bool silent
     }
 }
 
-static int _tentacle_too_far(monsters *head, monsters *tentacle)
-{
-    // The Shoals produce no disjoint bodies of water.
-    // If this ever changes, we'd need to check if the head and tentacle
-    // are still in the same pool.
-    // XXX: Actually, using Fedhas' Sunlight power you can separate pools...
-    //return grid_distance(head->pos(), tentacle->pos()) > KRAKEN_TENTACLE_RANGE;
-    return false;
-}
-
 void mons_relocated(monsters *monster)
 {
     if (mons_base_type(monster) == MONS_KRAKEN)
