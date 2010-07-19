@@ -6331,6 +6331,9 @@ bool player::sicken(int amount)
 
 bool player::can_see_invisible(bool calc_unid, bool transient) const
 {
+    if (crawl_state.game_is_arena())
+        return (true);
+
     int si = 0;
 
     si += player_equip( EQ_RINGS, RING_SEE_INVISIBLE, calc_unid );

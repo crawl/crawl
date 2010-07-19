@@ -736,7 +736,8 @@ static int player_view_update_at(const coord_def &gc)
     if (is_terrain_changed(gc) || !is_terrain_seen(gc))
         ret |= UF_AFFECT_EXCLUDES;
 
-    set_terrain_seen(gc);
+    if (!crawl_state.game_is_arena())
+        set_terrain_seen(gc);
     set_map_knowledge_obj(gc, to_knowledge(env.show(ep)));
     set_map_knowledge_detected_mons(gc, false);
     set_map_knowledge_detected_item(gc, false);

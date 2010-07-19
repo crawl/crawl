@@ -1708,11 +1708,10 @@ static int _place_monster_aux(const mgen_data &mg,
 
     mark_interesting_monst(mon, mg.behaviour);
 
-    if (!Generating_Level && you.can_see(mon))
-        handle_seen_interrupt(mon);
-
     if (crawl_state.game_is_arena())
         arena_placed_monster(mon);
+    else if (!Generating_Level && you.can_see(mon))
+        handle_seen_interrupt(mon);
 
     return (mon->mindex());
 }
