@@ -2028,6 +2028,7 @@ void handle_monster_move(monsters *monster)
             monsters* targ = monster_at(monster->pos() + mmov);
             if (mons_base_type(monster) == MONS_KRAKEN
                 && targ && targ->type == MONS_KRAKEN_CONNECTOR
+                && targ->props.exists("inwards") && targ->props["inwards"].get_int() == monster->mindex()
                 && env.grid(targ->pos()) == DNGN_DEEP_WATER)
             {
                 bool basis = targ->props.exists("outwards");
@@ -2708,7 +2709,8 @@ static bool _same_kraken_parts(const monsters * mpusher,
     }
 
     if (mpushee->type == MONS_KRAKEN_CONNECTOR
-        && int(menv[mpushee->number].number) == mpusher->mindex())
+        && int(menv[mpushee->number].number) == mpusher->mindex()
+        && mpushee->props.exists("inwards") && mpushee->props["inwards"].get_int() == mpusher->mindex())
     {
         return (true);
     }
