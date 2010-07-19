@@ -1196,7 +1196,7 @@ struct tentacle_attack_constraints
             position_node temp;
 
             temp.pos = node.pos + Compass[connect_idx[i]];
-            temp.string_distance = node.string_distance + 1;
+            temp.string_distance = node.string_distance;
             temp.departure = node.departure;
             temp.connect_level = node.connect_level;
             temp.path_distance = node.path_distance;
@@ -1260,8 +1260,7 @@ struct tentacle_attack_constraints
                     temp.connect_level = connect_level;
                     if (delta)
                     {
-                        // Extra 1 since we already increased the string distance
-                        temp.string_distance -= delta + 1;
+                        temp.string_distance -= delta;
                     }
                 }
 
@@ -1272,9 +1271,11 @@ struct tentacle_attack_constraints
             else
             {
                 // We stopped retracting
-                if (!temp.departure)
-                    temp.departure = true;
+                temp.departure = true;
             }
+
+            if (temp.departure)
+                temp.string_distance++;
 
             if (temp.string_distance > MAX_KRAKEN_TENTACLE_DIST)
                 temp.path_distance = DISCONNECT_DIST;
@@ -1714,6 +1715,7 @@ void move_kraken_tentacles(monsters * kraken)
         if (!connected)
         {
          //   mprf("Tentacle connect failed!");
+            mprf("CONNECT FAILED, PURGING TENTACLE");
             mgrd(tentacle->pos()) = tentacle->mindex();
             monster_die(tentacle, KILL_MISC, NON_MONSTER, true);
 
