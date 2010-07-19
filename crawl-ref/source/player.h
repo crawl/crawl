@@ -582,6 +582,9 @@ protected:
     bool _possible_beholder(const monsters *mon) const;
 };
 
+#ifdef DEBUG_GLOBALS
+#define you (*real_you)
+#endif
 extern player you;
 
 struct player_save_info

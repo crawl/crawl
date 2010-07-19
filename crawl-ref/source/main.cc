@@ -150,8 +150,15 @@
 // Globals whose construction/destruction order needs to be managed
 // ----------------------------------------------------------------------
 
+#ifdef DEBUG_GLOBALS
+#define you_ref (*real_you_ref)
+
+CLua clua;
+CLua dlua;
+#else
 CLua clua(true);
 CLua dlua(false);      // Lua interpreter for the dungeon builder.
+#endif
 crawl_environment env; // Requires dlua.
 
 player you;
@@ -224,6 +231,14 @@ static void _compile_time_asserts();
 
 int main(int argc, char *argv[])
 {
+#ifdef DEBUG_GLOBALS
+    real_you = new player();
+    real_you_ref = new player();
+    real_clua = new CLua(true);
+    real_dlua = new CLua(false);
+    real_crawl_state = new game_state();
+    real_env = new crawl_environment();
+#endif
     _compile_time_asserts();  // Just to quiet "unused static function" warning.
 
     init_crash_handler();
