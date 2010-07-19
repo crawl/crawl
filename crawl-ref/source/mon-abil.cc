@@ -87,13 +87,13 @@ struct position_node
 
     bool operator < (const position_node & right) const
     {
-//        if (pos == right.pos)
-  //          return string_distance < right.string_distance;
+        if (pos == right.pos)
+            return string_distance < right.string_distance;
 
         return pos < right.pos;
 
-//        if (pos.x == right.pos.x)
-  //          return pos.y < right.pos.y;
+  //      if (pos.x == right.pos.x)
+//            return pos.y < right.pos.y;
 
 //        return pos.x < right.pos.x;
     }
@@ -1158,6 +1158,8 @@ static void _establish_connection(int tentacle,
 
 struct tentacle_attack_constraints
 {
+    std::vector<coord_def> * target_positions;
+
     std::map<coord_def, std::set<int> > * connection_constraints;
     monsters * kraken;
     int connect_idx[8];
@@ -1170,12 +1172,25 @@ struct tentacle_attack_constraints
         }
     }
 
+    int min_dist(const coord_def & pos)
+    {
+        int min = INT_MAX;
+        for (unsigned i = 0; i < target_positions->size(); ++i)
+        {
+            int dist = grid_distance(pos, target_positions->at(i));
+
+            if (dist < min)
+                min = dist;
+        }
+        return min;
+    }
 
     void operator()(const position_node & node,
                     std::vector<position_node> & expansion)
     {
         std::random_shuffle(connect_idx, connect_idx + 8);
 
+//        mprf("expanding %d %d, string dist %d", node.pos.x, node.pos.y, node.string_distance);
         for (unsigned i=0; i < 8; i++)
         {
             position_node temp;
@@ -1183,6 +1198,9 @@ struct tentacle_attack_constraints
             temp.pos = node.pos + Compass[connect_idx[i]];
             temp.string_distance = node.string_distance + 1;
             temp.departure = node.departure;
+            temp.connect_level = node.connect_level;
+            temp.path_distance = node.path_distance;
+            temp.estimate = 0;
 
             if (!in_bounds(temp.pos))
                 continue;
@@ -1199,14 +1217,14 @@ struct tentacle_attack_constraints
 
                 if (!act_at)
                 {
-                    temp.path_distance = 1;
+                    temp.path_distance += 1;
                 }
                 // Can still search through a firewood monster, just at a higher
                 // path cost.
                 else if (mons_at && mons_is_firewood(mons_at)
                     && !mons_aligned(kraken, mons_at))
                 {
-                    temp.path_distance = 10;
+                    temp.path_distance += 10;
                 }
                 // An actor we can't path through is there
                 else
@@ -1216,14 +1234,20 @@ struct tentacle_attack_constraints
 
             }
 
-            int connect_level = node.connect_level;
+            int connect_level = temp.connect_level;
             int base_connect_level = connect_level;
 
             std::map<coord_def, std::set<int> >::iterator probe
                         = connection_constraints->find(temp.pos);
 
-            if (probe != connection_constraints->end() )
+
+            if (probe != connection_constraints->end())
             {
+                int max_val = probe->second.empty() ? INT_MAX : *probe->second.rbegin();
+
+                if (max_val < connect_level)
+                    temp.departure = true;
+
                 // If we can still feasibly retract (haven't left connect range)
                 if (!temp.departure)
                 {
@@ -1233,31 +1257,30 @@ struct tentacle_attack_constraints
                     }
 
                     int delta = connect_level - base_connect_level;
+                    temp.connect_level = connect_level;
                     if (delta)
                     {
-                     //   mprf("string dist is %d", temp.string_distance);
-                        // Extra 1 to counteract the initial increment of string_distance
+                        // Extra 1 since we already increased the string distance
                         temp.string_distance -= delta + 1;
-                       // mprf("cut to %d", temp.string_distance);
-
                     }
                 }
 
-                int max_val = probe->second.empty() ? INT_MAX : *probe->second.rbegin();
 
                 if (connect_level < max_val)
-                    temp.path_distance = DISCONNECT_DIST;
+                   temp.path_distance = DISCONNECT_DIST;
             }
             else
             {
-                // We are no longer retracting if we leave tentacle connector
-                // range even once.
+                // We stopped retracting
                 if (!temp.departure)
                     temp.departure = true;
             }
 
             if (temp.string_distance > MAX_KRAKEN_TENTACLE_DIST)
                 temp.path_distance = DISCONNECT_DIST;
+
+            if (temp.path_distance != DISCONNECT_DIST)
+                temp.estimate = min_dist(temp.pos);
 
             expansion.push_back(temp);
         }
@@ -1357,42 +1380,32 @@ struct target_monster
     }
 };
 
-struct target_or_enemy
+struct multi_target
 {
-    coord_def target_square;
-    monsters * base_monster;
+    std::vector<coord_def> * targets;
 
     bool operator() (const coord_def & pos)
     {
-        if (pos == target_square)
-            return (true);
-
-        actor * temp = actor_at(pos);
-
-        if (!temp)
-            return (false);
-
-        monsters * mons_targ = monster_at(pos);
-
-        // Don't explicitly target firewood, we will try to path
-        // around it instead.
-        if (mons_targ && mons_is_firewood(mons_targ))
-            return (false);
-
-        return (!mons_aligned(temp, base_monster)
-                && base_monster->can_see(temp));
+        for (unsigned i = 0; i < targets->size(); ++i)
+        {
+            if (pos == targets->at(i))
+                return (true);
+        }
+        return (false);
     }
+
+
 };
 
 // returns pathfinding success/failure
-bool tentacle_pathfind(monsters * kraken, monsters * tentacle, actor * foe,
+bool tentacle_pathfind(monsters * kraken, monsters * tentacle,
+                       std::vector<coord_def> & target_positions,
                        coord_def & new_position,
                        std::map<coord_def, std::set<int> > & connect_data,
                        int total_length)
 {
-    target_or_enemy foe_check;
-    foe_check.base_monster = kraken;
-    foe_check.target_square = foe->pos();
+    multi_target foe_check;
+    foe_check.targets = &target_positions;
 
     std::vector<std::set<position_node>::iterator > tentacle_path;
 
@@ -1402,10 +1415,16 @@ bool tentacle_pathfind(monsters * kraken, monsters * tentacle, actor * foe,
     tentacle_attack_constraints attack_constraints;
     attack_constraints.kraken = kraken;
     attack_constraints.connection_constraints = &connect_data;
+    attack_constraints.target_positions = &target_positions;
 
     position_node temp;
     temp.pos = tentacle->pos();
-    temp.connect_level = 1;
+
+    std::map<coord_def, std::set<int> >::iterator probe = connect_data.find(temp.pos);
+    temp.connect_level = 0;
+    while (probe->second.find(temp.connect_level + 1 ) != probe->second.end())
+        temp.connect_level++;
+
     temp.departure = false;
     temp.string_distance = total_length;
 
@@ -1435,6 +1454,7 @@ bool tentacle_pathfind(monsters * kraken, monsters * tentacle, actor * foe,
             path_found = true;
         }
     }
+
 
     return (path_found);
 }
@@ -1516,6 +1536,29 @@ void purge_connectors(int tentacle_idx)
     }
 }
 
+void collect_foe_positions(monsters * kraken, std::vector<coord_def> & foe_positions)
+{
+    coord_def foe_pos(-1, -1);
+    if (kraken->near_foe())
+    {
+        foe_positions.push_back(kraken->get_foe()->pos());
+        foe_pos = foe_positions.back();
+    }
+
+    for (monster_iterator mi; mi; ++mi)
+    {
+        monsters * test = &menv[mi->mindex()];
+        if (!mons_is_firewood(test)
+            && !mons_aligned(test, kraken)
+            && test->pos() != foe_pos
+            && kraken->can_see(test))
+        {
+            foe_positions.push_back(test->pos());
+        }
+    }
+}
+
+
 void move_kraken_tentacles(monsters * kraken)
 {
     if (mons_base_type(kraken) != MONS_KRAKEN
@@ -1527,7 +1570,12 @@ void move_kraken_tentacles(monsters * kraken)
 
     bool no_foe = false;
     actor * foe = NULL;
-    if (!kraken->near_foe())
+
+    std::vector<coord_def> foe_positions;
+    collect_foe_positions(kraken, foe_positions);
+
+    //if (!kraken->near_foe())
+    if (foe_positions.empty())
     {
         no_foe = true;
     }
@@ -1612,7 +1660,7 @@ void move_kraken_tentacles(monsters * kraken)
         bool path_found = false;
         if (!no_foe)
         {
-            path_found = tentacle_pathfind(kraken, tentacle, foe, new_pos,
+            path_found = tentacle_pathfind(kraken, tentacle, foe_positions, new_pos,
                                            connection_data, current_count);
         }
 
@@ -1660,10 +1708,12 @@ void move_kraken_tentacles(monsters * kraken)
             connected = try_tentacle_connect(new_pos, headnum, tentacle_idx, connect_costs);
         }
 
-        // Really can't connect
+        // Really can't connect, usually another tentacle got in the way, or
+        // the head moved and invalidated our position in some way. Should look
+        // into this more at some point -cao
         if (!connected)
         {
-            mprf("Tentacle connect failed!");
+         //   mprf("Tentacle connect failed!");
             mgrd(tentacle->pos()) = tentacle->mindex();
             monster_die(tentacle, KILL_MISC, NON_MONSTER, true);
 
