@@ -675,6 +675,8 @@ void scorefile_entry::init_with_fields()
     death_source_name = fields->str_field("killer");
     auxkilldata       = fields->str_field("kaux");
     indirectkiller    = fields->str_field("ikiller");
+    if (indirectkiller.empty())
+        indirectkiller = death_source_name;
     killerpath        = fields->str_field("kpath");
 
     branch     = str_to_branch(fields->str_field("br"), BRANCH_MAIN_DUNGEON);
@@ -805,12 +807,18 @@ void scorefile_entry::set_score_fields() const
 
     fields->add_field("sc", "%d", points);
     fields->add_field("ktyp", ::kill_method_name(kill_method_type(death_type)));
-    fields->add_field("killer", death_source_desc().c_str());
+
+    const std::string killer = death_source_desc();
+    fields->add_field("killer", "%s", killer.c_str());
     fields->add_field("dam", "%d", damage);
 
     fields->add_field("kaux", "%s", auxkilldata.c_str());
-    fields->add_field("ikiller", "%s", indirectkiller.c_str());
-    fields->add_field("kpath", "%s", killerpath.c_str());
+
+    if (indirectkiller != killer)
+        fields->add_field("ikiller", "%s", indirectkiller.c_str());
+
+    if (!killerpath.empty())
+        fields->add_field("kpath", "%s", killerpath.c_str());
 
     if (piety > 0)
         fields->add_field("piety", "%d", piety);
