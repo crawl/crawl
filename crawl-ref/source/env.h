@@ -101,6 +101,9 @@ struct crawl_environment
     int forest_awoken_until;
 };
 
+#ifdef DEBUG_GLOBALS
+#define env (*real_env)
+#endif
 extern struct crawl_environment env;
 
 #endif
