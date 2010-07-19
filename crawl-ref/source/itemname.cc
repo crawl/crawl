@@ -3197,23 +3197,17 @@ void init_item_name_cache()
                 }
             }
 
-            int o = items(0, base_type, sub_type, true, 1,
-                          MAKE_ITEM_NO_RACE);
-
-            if (o == NON_ITEM)
-                continue;
-
-            item_def       &item(mitm[o]);
-            item_types_pair pair = {base_type, sub_type};
-
-            // Make sure item isn't an artefact.
-            item.flags  &= ~ISFLAG_ARTEFACT_MASK;
-            item.special = 0;
-
-            std::string    name = item.name(DESC_DBNAME, true, true);
-            glyph g = get_item_glyph(&item);
-            destroy_item(o, true);
+            item_def item;
+            item.base_type = base_type;
+            item.sub_type = sub_type;
+            if (is_deck(item))
+            {
+                item.plus = 1;
+                init_deck(item);
+            }
+            std::string name = item.name(DESC_DBNAME, true, true);
             lowercase(name);
+            glyph g = get_item_glyph(&item);
 
             if (base_type == OBJ_JEWELLERY && name == "buggy jewellery")
                 continue;
@@ -3226,7 +3220,7 @@ void init_item_name_cache()
 
             if (item_names_cache.find(name) == item_names_cache.end())
             {
-                item_names_cache[name] = pair;
+                item_names_cache[name] = (item_types_pair){base_type, sub_type};
                 if (g.ch)
                     item_names_by_glyph_cache[g.ch].push_back(name);
             }
