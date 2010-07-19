@@ -893,7 +893,7 @@ void set_random_slime_target(monsters* mon)
     for (radius_iterator ri(mon->get_los()); ri; ++ri)
     {
         // XXX: an iterator that spirals out would be nice.
-        if (distance(pos, *ri) >= mindist)
+        if (!in_bounds(*ri) || distance(pos, *ri) >= mindist)
             continue;
         for (stack_iterator si(*ri); si; ++si)
         {
