@@ -1625,7 +1625,7 @@ void move_kraken_tentacles(monsters * kraken)
 
             if (next_idx != -1 && menv[next_idx].alive()
                 && (menv[next_idx].type == MONS_KRAKEN_CONNECTOR
-                    || menv[next_idx].type == MONS_KRAKEN))
+                    || mons_base_type(&menv[next_idx]) == MONS_KRAKEN))
             {
                 current_mon = &menv[next_idx];
                 if (!retract_found && current_mon->type == MONS_KRAKEN_CONNECTOR)
