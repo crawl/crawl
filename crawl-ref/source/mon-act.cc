@@ -1681,6 +1681,7 @@ void handle_monster_move(monsters *monster)
 #endif
     coord_def old_pos = monster->pos();
 
+    coord_def kraken_last_update = monster->pos();
     while (monster->has_action_energy())
     {
         // The continues & breaks are WRT this.
@@ -1691,6 +1692,7 @@ void handle_monster_move(monsters *monster)
             && mons_base_type(monster) == MONS_KRAKEN)
         {
             move_kraken_tentacles(monster);
+            kraken_last_update = monster->pos();
         }
 
         old_pos = monster->pos();
@@ -2094,7 +2096,14 @@ void handle_monster_move(monsters *monster)
         }
     }
 
-    move_kraken_tentacles(monster);
+    if (mons_base_type(monster) == MONS_KRAKEN)
+    {
+        if (monster->pos() != kraken_last_update)
+        {
+            move_kraken_tentacles(monster);
+        }
+        move_kraken_tentacles(monster);
+    }
 
     if (monster->type != MONS_NO_MONSTER && monster->hit_points < 1)
         monster_die(monster, KILL_MISC, NON_MONSTER);

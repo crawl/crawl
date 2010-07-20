@@ -1576,7 +1576,9 @@ void move_kraken_tentacles(monsters * kraken)
     collect_foe_positions(kraken, foe_positions);
 
     //if (!kraken->near_foe())
-    if (foe_positions.empty())
+    if (foe_positions.empty()
+        || kraken->behaviour == BEH_FLEE
+        || kraken->behaviour == BEH_WANDER )
     {
         no_foe = true;
     }
