@@ -115,9 +115,8 @@ void handle_behaviour(monsters *mon)
     bool isNeutral  = mon->neutral();
     bool wontAttack = mon->wont_attack();
 
-    // Whether the player is in LOS of the monster and can see
-    // or has guessed the player's location.
-    bool proxPlayer = mons_near(mon) && !crawl_state.game_is_arena();
+    // Whether the player position is in LOS of the monster.
+    bool proxPlayer = !crawl_state.game_is_arena() && mon->see_cell(you.pos());
 
 #ifdef WIZARD
     // If stealth is greater than actually possible (wizmode level)
