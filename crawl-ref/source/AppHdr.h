@@ -57,6 +57,11 @@
 //
 // #define DISABLE_STICKY_STARTUP_OPTIONS
 
+// Uncomment to let valgrind debug unitialized uses of global classes
+// (you, env, clua, dlua, crawl_state).
+//
+// #define DEBUG_GLOBALS
+
 //
 // Define 'UNIX' if the target OS is UNIX-like.
 // Unknown OSes are assumed to be here.

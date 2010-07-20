@@ -238,6 +238,9 @@ private:
 };
 
 // Defined in acr.cc
+#ifdef DEBUG_GLOBALS
+#define clua (*real_clua)
+#endif
 extern CLua clua;
 
 void lua_set_exclusive_item(const item_def *item = NULL);
