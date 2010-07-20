@@ -549,6 +549,8 @@ static void _normalize_stat(stat_type stat)
 #define STAT_ZERO_START 10
 // Number of turns of stat at zero you can survive.
 #define STAT_DEATH_TURNS 100
+// Number of turns of stat at zero after which random paralysis starts.
+#define STAT_DEATH_START_PARA 50
 
 static void _handle_stat_change(stat_type stat, const char* cause, bool see_source)
 {
@@ -593,6 +595,8 @@ static void _handle_stat_change(const char* aux, bool see_source)
 // Called once per turn.
 void update_stat_zero()
 {
+    stat_type para_stat = NUM_STATS;
+    int num_para = 0;
     for (int i = 0; i < NUM_STATS; ++i)
     {
         stat_type s = static_cast<stat_type>(i);
@@ -610,5 +614,32 @@ void update_stat_zero()
 
         if (you.stat_zero[i] > STAT_DEATH_TURNS)
             ouch(INSTANT_DEATH, NON_MONSTER, _statloss_killtype(s));
+
+        int paramax = STAT_DEATH_TURNS - STAT_DEATH_START_PARA;
+        int paradiff = std::max(you.stat_zero[i] - STAT_DEATH_START_PARA, 0);
+        if (x_chance_in_y(paradiff*paradiff, paramax*paramax))
+        {
+            para_stat = s;
+            num_para++;
+        }
+    }
+
+    switch (num_para)
+    {
+    case 0:
+        break;
+    case 1:
+        if (you.duration[DUR_PARALYSIS])
+            break;
+        mprf(MSGCH_WARN, "You faint for lack of %s.",
+                         stat_desc(para_stat, SD_NAME));
+        you.increase_duration(DUR_PARALYSIS, 1 + roll_dice(1,3));
+        break;
+    default:
+        if (you.duration[DUR_PARALYSIS])
+            break;
+        mprf(MSGCH_WARN, "Your lost attributes cause you to faint.");
+        you.increase_duration(DUR_PARALYSIS, 1 + roll_dice(num_para, 3));
+        break;
     }
 }
