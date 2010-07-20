@@ -3008,19 +3008,30 @@ void make_mons_leave_level(monsters *mon)
 bool can_go_straight(const coord_def& p1, const coord_def& p2,
                      dungeon_feature_type allowed)
 {
+    if (p1 == p2)
+        return (true);
+
     if (distance(p1, p2) > get_los_radius_sq())
         return (false);
 
     // XXX: Hack to improve results for now. See FIXME above.
-    if (!exists_ray(p1, p2, opc_immob))
+    ray_def ray;
+    if (!find_ray(p1, p2, ray, opc_immob))
         return (false);
 
     dungeon_feature_type max_disallowed = DNGN_MAXOPAQUE;
     if (allowed != DNGN_UNSEEN)
         max_disallowed = static_cast<dungeon_feature_type>(allowed - 1);
 
-    return (!num_feats_between(p1, p2, DNGN_UNSEEN, max_disallowed,
-                               true, true));
+    for (ray.advance(); ray.pos() != p2; ray.advance())
+    {
+        ASSERT(map_bounds(ray.pos()));
+        dungeon_feature_type feat = env.grid(ray.pos());
+        if (feat >= DNGN_UNSEEN && feat <= max_disallowed)
+            return (false);
+    }
+
+    return (true);
 }
 
 // The default suitable() function for choose_random_nearby_monster().
