@@ -847,7 +847,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
             break;
 
         case SPARM_POSITIVE_ENERGY:
-            mpr("Your life-force is being protected.");
+            mpr("Your life force is being protected.");
             break;
 
         case SPARM_ARCHMAGI:
