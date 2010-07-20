@@ -1819,7 +1819,7 @@ void move_item_stack_to_grid( const coord_def& from, const coord_def& to )
 }
 
 
-// Returns false iff no items could be dropped.
+// Returns false if no items could be dropped.
 bool copy_item_to_grid( const item_def &item, const coord_def& p,
                         int quant_drop, bool mark_dropped, bool silent )
 {
