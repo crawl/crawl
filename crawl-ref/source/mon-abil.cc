@@ -1683,6 +1683,17 @@ void move_kraken_tentacles(monsters * kraken)
         actor * blocking_actor = actor_at(new_pos);
         if (blocking_actor)
         {
+            tentacle->target = new_pos;
+            monsters * mtemp = monster_at(new_pos);
+            if (mtemp)
+            {
+                tentacle->foe = mtemp->mindex();
+            }
+            else if (new_pos == you.pos())
+            {
+                tentacle->foe = MHITYOU;
+            }
+
             new_pos = old_pos;
         }
 
@@ -1697,25 +1708,12 @@ void move_kraken_tentacles(monsters * kraken)
         connect_costs.connection_constraints = &connection_data;
         bool connected = try_tentacle_connect(new_pos, headnum, tentacle_idx, connect_costs);
 
-        // Something went wrong with connecting, can we fall back to a retract?
-        if (!connected && retract_found && new_pos != retract_pos)
-        {
-            mgrd(tentacle->pos()) = NON_MONSTER;
 
-            new_pos = retract_pos;
-            tentacle->set_position(new_pos);
-            mgrd(tentacle->pos()) = tentacle->mindex();
-
-            connected = try_tentacle_connect(new_pos, headnum, tentacle_idx, connect_costs);
-        }
-
-        // Really can't connect, usually another tentacle got in the way, or
-        // the head moved and invalidated our position in some way. Should look
-        // into this more at some point -cao
+        // Can't connect, usually the head moved and invalidated our position
+        // in some way. Should look into this more at some point -cao
         if (!connected)
         {
-         //   mprf("Tentacle connect failed!");
-            mprf("CONNECT FAILED, PURGING TENTACLE");
+            //mprf("CONNECT FAILED, PURGING TENTACLE");
             mgrd(tentacle->pos()) = tentacle->mindex();
             monster_die(tentacle, KILL_MISC, NON_MONSTER, true);
 
