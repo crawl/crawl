@@ -338,6 +338,9 @@ public:
     bool visible_to(const actor *looker) const;
     bool can_see(const actor* a) const;
 
+    bool see_cell(const coord_def& p) const;
+    const los_base* get_los();
+
     // Is c in view but behind a transparent wall?
     bool trans_wall_blocking(const coord_def &c) const;
 
