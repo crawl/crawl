@@ -5275,6 +5275,7 @@ void player::init()
 
 #if defined(WIZARD) || defined(DEBUG)
     never_die = false;
+    xray_vision = false;
 #endif
 
     flash_colour = BLACK;
