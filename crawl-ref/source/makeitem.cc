@@ -1462,8 +1462,6 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
                 rc = SPWPN_FLAME;
             else if (tmp < 730)
                 rc = SPWPN_FROST;
-            else if (tmp < 880 && (item.sub_type == WPN_BOW || item.sub_type == WPN_LONGBOW))
-                rc = SPWPN_REAPING;
             else if (tmp < 880)
                 rc = SPWPN_EVASION;
             else if (tmp < 990)
@@ -1897,7 +1895,7 @@ static special_missile_type _determine_missile_brand(const item_def& item,
     case MI_DART:
         rc = static_cast<special_missile_type>(
                          random_choose_weighted(30, SPMSL_FLAME, 30, SPMSL_FROST,
-                                                20, SPMSL_POISONED, 12, SPMSL_REAPING,
+                                                20, SPMSL_POISONED,
                                                 12, SPMSL_SILVER, 12, SPMSL_STEEL,
                                                 12, SPMSL_DISPERSAL, 20, SPMSL_EXPLODING,
                                                 nw, SPMSL_NORMAL,
@@ -1906,7 +1904,7 @@ static special_missile_type _determine_missile_brand(const item_def& item,
     case MI_ARROW:
         rc = static_cast<special_missile_type>(
                         random_choose_weighted(30, SPMSL_FLAME, 30, SPMSL_FROST,
-                                               20, SPMSL_POISONED, 15, SPMSL_REAPING,
+                                               20, SPMSL_POISONED,
                                                15, SPMSL_DISPERSAL,
                                                nw, SPMSL_NORMAL,
                                                0));
