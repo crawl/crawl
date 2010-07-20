@@ -1158,6 +1158,8 @@ static void _monster_die_cloud(const monsters* monster, bool corpse, bool silent
 
 void mons_relocated(monsters *monster)
 {
+
+    // If the main body teleports get rid of the tentacles
     if (mons_base_type(monster) == MONS_KRAKEN)
     {
         int headnum = monster->mindex();
@@ -1182,24 +1184,34 @@ void mons_relocated(monsters *monster)
             }
         }
     }
-    else if (monster->type == MONS_KRAKEN_TENTACLE)
+    // If a tentacle/segment is relocated just kill the tentacle
+    else if (monster->type == MONS_KRAKEN_TENTACLE
+             || monster->type == MONS_KRAKEN_CONNECTOR)
     {
-        if (invalid_monster_index(monster->number)
-            || mons_base_type(&menv[monster->number]) != MONS_KRAKEN)
-        {
-            for (monster_iterator connect; connect; ++connect)
-            {
-                if (connect->type == MONS_KRAKEN_CONNECTOR
-                    && (int) connect->number == monster->mindex())
-                {
-                    monster_die(*connect, KILL_RESET, -1, true, false);
-                }
-            }
+        int base_id = monster->mindex();
 
-            monster_die(monster, KILL_RESET, -1, true, false);
+        if (monster->type == MONS_KRAKEN_CONNECTOR)
+        {
+            base_id = monster->number;
+        }
+
+        for (monster_iterator connect; connect; ++connect)
+        {
+            if (connect->type == MONS_KRAKEN_CONNECTOR
+                && (int) connect->number == base_id)
+            {
+                monster_die(*connect, KILL_RESET, -1, true, false);
+            }
+        }
+
+        if (!::invalid_monster_index(base_id)
+            && menv[base_id].type == MONS_KRAKEN_TENTACLE)
+        {
+            monster_die(&menv[base_id], KILL_RESET, -1, true, false);
         }
     }
 }
+
 static int _destroy_tentacle(int tentacle_idx, monsters * origin)
 {
     int seen = 0;
