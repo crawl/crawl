@@ -4386,8 +4386,7 @@ void set_hp(int new_amount, bool max_too)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (you.hp != new_amount)
-        you.hp = new_amount;
+    you.hp = new_amount;
 
     if (max_too && you.hp_max != new_amount)
     {
@@ -4411,8 +4410,7 @@ void set_mp(int new_amount, bool max_too)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (you.magic_points != new_amount)
-        you.magic_points = new_amount;
+    you.magic_points = new_amount;
 
     if (max_too && you.max_magic_points != new_amount)
     {
