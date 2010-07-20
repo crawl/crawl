@@ -604,8 +604,7 @@ static bool _choose_random_patrol_target_grid(monsters *mon)
         return (false);
 
     // Can the monster see the patrol point from its current position?
-    const bool patrol_seen = mon->mon_see_cell(mon->patrol_point,
-                                 habitat2grid(mons_primary_habitat(mon)));
+    const bool patrol_seen = mon->see_cell(mon->patrol_point);
 
     if (intel == I_PLANT && !patrol_seen)
     {

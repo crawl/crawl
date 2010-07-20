@@ -771,9 +771,7 @@ static bool _handle_reaching(monsters *monster)
         // And with no dungeon furniture in the way of the reaching
         // attack; if the middle square is empty, skip the LOS check.
         && (grd(middle) > DNGN_MAX_NONREACH
-            || (monster->foe == MHITYOU?
-                you.see_cell_no_trans(monster->pos())
-                : monster->mon_see_cell(foepos, true))))
+            || monster->see_cell_no_trans(foepos)))
     {
         ret = true;
         monster_attack_actor(monster, foe, false);
