@@ -206,6 +206,19 @@ long writer::tell()
 }
 
 
+#ifdef DEBUG_GLOBALS
+// Force a conditional jump valgrind may pick up, no matter the optimizations.
+static volatile uint32_t hashroll;
+static void CHECK_INITIALIZED(uint32_t x)
+{
+    hashroll = 0;
+    if ((hashroll += x) & 1)
+        hashroll += 2;
+}
+#else
+#define CHECK_INITIALIZED(x)
+#endif
+
 // static helpers
 static void tag_construct_you(writer &th);
 static void tag_construct_you_items(writer &th);
@@ -265,6 +278,7 @@ int read2(FILE * file, void *buffer, unsigned int count)
 
 void marshallByte(writer &th, const char& data)
 {
+    CHECK_INITIALIZED(data);
     th.writeByte(data);
 }
 
@@ -275,6 +289,7 @@ char unmarshallByte(reader &th)
 
 void marshallShort(std::vector<unsigned char>& buf, short data)
 {
+    CHECK_INITIALIZED(data);
     COMPILE_CHECK(sizeof(data) == 2, c1);
     buf.push_back((unsigned char) ((data & 0xFF00) >> 8));
     buf.push_back((unsigned char) ((data & 0x00FF)     ));
@@ -283,6 +298,7 @@ void marshallShort(std::vector<unsigned char>& buf, short data)
 // Marshall 2 byte short in network order.
 void marshallShort(writer &th, short data)
 {
+    CHECK_INITIALIZED(data);
     const char b2 = (char)(data & 0x00FF);
     const char b1 = (char)((data & 0xFF00) >> 8);
     th.writeByte(b1);
@@ -300,6 +316,7 @@ int16_t unmarshallShort(reader &th)
 
 void marshallInt(std::vector<unsigned char>& buf, int32_t data)
 {
+    CHECK_INITIALIZED(data);
     buf.push_back((unsigned char) ((data & 0xFF000000) >> 24));
     buf.push_back((unsigned char) ((data & 0x00FF0000) >> 16));
     buf.push_back((unsigned char) ((data & 0x0000FF00) >>  8));
@@ -309,6 +326,7 @@ void marshallInt(std::vector<unsigned char>& buf, int32_t data)
 // Marshall 4 byte int in network order.
 void marshallInt(writer &th, int32_t data)
 {
+    CHECK_INITIALIZED(data);
     char b4 = (char) (data & 0x000000FF);
     char b3 = (char)((data & 0x0000FF00) >> 8);
     char b2 = (char)((data & 0x00FF0000) >> 16);
