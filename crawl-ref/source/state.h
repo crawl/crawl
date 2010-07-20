@@ -173,6 +173,9 @@ public:
     friend class mon_acting;
 };
 
+#ifdef DEBUG_GLOBALS
+#define crawl_state (*real_crawl_state)
+#endif
 extern game_state crawl_state;
 
 class god_acting

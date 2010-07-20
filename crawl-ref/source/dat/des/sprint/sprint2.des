@@ -60,7 +60,7 @@ cmBBBBBBBBmWAAAAAAAAAAAAA..IIII''GGGGoDDDDDDDDoOOOOO'XPPPPPPPP
 cmBBBBBBBBmWAAAAAAAAAAAAA..IIII''GGGGoDDDDDDDDoOOOOO'XPPPPPPPP
 cmBBBBBBBB+WAAAAAAAAAAAAA..IIII''GGGGoDDDDDDDDoOOOOO'XPPPPPPPP
 cmBBBBBBBBmWAAAAAAAAAAAAA....III''GGGooooooo+ooOOOOO'XPPPPPPPP
-cmmmmmmmmmmWAAAAAAAAAAAAA1.....WWWWWWWWWWWWW...wwwXUUUUUUUUccc
+cooooooommmWAAAAAAAAAAAAA1.....WWWWWWWWWWWWW...wwwXUUUUUUUUccc
 ccLLLLLccccWWAAAAAAAAAAAWW.....Wm+mmmmmmmmWccc.w5wXUUUUUUUcc
 ccLLLLLLLLccWWWAAAAAAAWWWWWWW..WmCCCCCCCCmWW4ccwwwXUUUUUUcc
 ccLLLLLLm+cc+cWAAAAAAAWWWWWWWW3WmCCCCCCCCmW4wwccccXXXXXWcc
@@ -92,20 +92,20 @@ SHUFFLE: de
 LFLOORCOL: magenta
 COLOUR: x = magenta
 COLOUR: + = magenta
-MAP             
-    xx+xx    
-   xxDDDxx   
-   xDDDDDx   
- xxxxDDDxxxx  
-xxAxxx+xxxBxx 
-xAAAxx.xxBBBx 
-+AAA+{[(+BBB+ 
-xAAAxx.xxBBBx 
-xxAxxx+xxxBxx 
- xxxxbbbxxxx  
-   xbbbbbx    
-   xxbbbxx    
-    xx+xx     
+MAP
+    xx+xx
+   xxDDDxx
+   xDDDDDx
+ xxxxDDDxxxx
+xxAxxx+xxxBxx
+xAAAxx.xxBBBx
++AAA+{[(+BBB+
+xAAAxx.xxBBBx
+xxAxxx+xxxBxx
+ xxxxbbbxxxx
+   xbbbbbx
+   xxbbbxx
+    xx+xx
 ENDMAP
 
 NAME:   sprint2_early_2
@@ -114,9 +114,9 @@ MONS:   mermaid
 KITEM:  $ = gold q:243
 COLOUR: x = magenta
 MAP
- ... 
+ ...
 .1x..
- .$. 
+ .$.
 ENDMAP
 
 NAME:   sprint2_early_3
@@ -125,9 +125,9 @@ MONS:   necrophage
 KITEM:  $ = gold q:243
 COLOUR: x = magenta
 MAP
- .x. 
+ .x.
 11x11
- .$. 
+ .$.
 ENDMAP
 
 NAME:   sprint2_early_5
@@ -136,9 +136,9 @@ MONS:   giant snail
 KITEM:  $ = gold q:243
 COLOUR: x = magenta
 MAP
- .x. 
+ .x.
 11xx1
- .$x 
+ .$x
 ENDMAP
 
 NAME:   sprint2_early_6
@@ -147,9 +147,9 @@ MONS:   brain worm
 KITEM:  $ = gold q:243
 COLOUR: x = magenta
 MAP
- .xx 
+ .xx
 1xx11
- 1$. 
+ 1$.
 ENDMAP
 
 NAME:   sprint2_early_7
@@ -158,9 +158,9 @@ MONS:   boulder beetle
 KITEM:  $ = gold q:243
 COLOUR: x = magenta
 MAP
- .x. 
+ .x.
 .1x1.
- .x$ 
+ .x$
 ENDMAP
 
 NAME:   sprint2_early_8
@@ -169,9 +169,9 @@ MONS:   hippogriff
 KITEM:  $ = gold q:243
 COLOUR: x = magenta
 MAP
- .x. 
+ .x.
 1xxx1
- .x$ 
+ .x$
 ENDMAP
 
 NAME:   sprint2_early_9
@@ -180,9 +180,9 @@ MONS:   giant centipede
 KITEM:  $ = gold q:243
 COLOUR: x = magenta
 MAP
- .x. 
+ .x.
 11x11
- x$x 
+ x$x
 ENDMAP
 
 NAME:   sprint2_temple
@@ -267,11 +267,11 @@ MARKER: a = lua:fog_machine { \
              cloud_type= "foul pestilence" }
 KFEAT:  a = lava
 MAP
-  lllllll  
- lllllllll 
+  lllllll
+ lllllllll
 lllllalllll
- lllllllll 
-  lllllll  
+ lllllllll
+  lllllll
 ENDMAP
 
 NAME:   sprint2_obstacle_2
@@ -283,11 +283,11 @@ MARKER: a = lua:fog_machine { \
              size = 4, walk_dist = 8, spread_rate= -1, \
              cloud_type= "freezing vapour" }
 MAP
-  wwwwwww  
- wwwwwwwww 
+  wwwwwww
+ wwwwwwwww
 wwwwwawwwww
- wwwwwwwww 
-  wwwwwww  
+ wwwwwwwww
+  wwwwwww
 ENDMAP
 
 NAME:   sprint2_obstacle_3
@@ -299,11 +299,11 @@ MARKER: a = lua:fog_machine { \
              size = 4, walk_dist = 8, spread_rate= -1, \
              cloud_type= "poison gases" }
 MAP
-  lllllll  
- lllllllll 
+  lllllll
+ lllllllll
 lllllalllll
- lllllllll 
-  lllllll  
+ lllllllll
+  lllllll
 ENDMAP
 
 NAME:   sprint2_obstacle_4
@@ -314,11 +314,11 @@ MARKER: a = lua:fog_machine { \
              size = 4, walk_dist = 8, spread_rate= -1, \
              cloud_type= "mutagenic fog" }
 MAP
-  lllllll  
- lllllllll 
+  lllllll
+ lllllllll
 lllllalllll
- lllllllll 
-  lllllll  
+ lllllllll
+  lllllll
 ENDMAP
 
 NAME:   sprint2_obstacle_5
@@ -330,11 +330,11 @@ MARKER: a = lua:fog_machine { \
              size = 4, walk_dist = 8, spread_rate= -1, \
              cloud_type= "flame" }
 MAP
-  lllllll  
- lllllllll 
+  lllllll
+ lllllllll
 lllllalllll
- lllllllll 
-  lllllll  
+ lllllllll
+  lllllll
 ENDMAP
 
 NAME:   sprint2_obstacle_6
@@ -346,11 +346,11 @@ MARKER: a = lua:fog_machine { \
              size = 4, walk_dist = 8, spread_rate= -1, \
              cloud_type= "rain" }
 MAP
-  lllllll  
- lllllllll 
+  lllllll
+ lllllllll
 lllllalllll
- lllllllll 
-  lllllll  
+ lllllllll
+  lllllll
 ENDMAP
 
 NAME:   sprint2_obstacle_7
@@ -363,11 +363,11 @@ MARKER: a = lua:fog_machine { \
              size = 4, walk_dist = 8, spread_rate= -1, \
              cloud_type= "rain" }
 MAP
-  lllllll  
- lllllllll 
+  lllllll
+ lllllllll
 lllllalllll
- lllllllll 
-  lllllll  
+ lllllllll
+  lllllll
 ENDMAP
 
 
@@ -415,17 +415,17 @@ COLOUR: x = magenta
 COLOUR: y = magenta
 COLOUR: z = magenta
 MAP
-cc. 
+cc.
 cxcc
 c11c
 ca1c
 cmcc
-cccc. 
+cccc.
 ||cycc
 ||c22c
 ||cb3c
 ||ccnc
-...czc. 
+...czc.
 .k.coccc
 ...=p45c
 X+XXXd6c
@@ -778,6 +778,7 @@ ENDMAP
 NAME:   sprint2_mutation_trap_area_1
 TAGS:   sprint2_mutation_trap_area no_item_gen no_trap_gen no_pool_fixup
 FLAGS:  no_rotate no_hmirror no_vmirror
+MARKER: + = lua:restrict_door()
 MONS:   giant eyeball, shining eye
 NSUBST: | = 1:a / *:|
 KITEM:  a = potion of mutation q:27

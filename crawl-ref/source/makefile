@@ -732,7 +732,7 @@ YACC_CFLAGS  := $(ALL_CFLAGS) -w -DYYENABLE_NLS=0 -DYYLTYPE_IS_TRIVIAL=0
 
 UTIL = util/
 
-EXTRA_OBJECTS += $(UTIL)levcomp.tab.o $(UTIL)levcomp.lex.o
+EXTRA_OBJECTS += $(YACC_OBJECTS)
 
 LEX := $(shell which flex 2> /dev/null)
 YACC := $(shell which bison 2> /dev/null)
@@ -874,7 +874,7 @@ TRACK_CFLAGS = $(subst ','\'',$(CC) $(CXX) $(ALL_CFLAGS))           # (stray ' f
 ##########################################################################
 # Dependencies
 
-DEPS := $(shell ls $(OBJECTS:.o=.d) 2> /dev/null)
+DEPS := $(shell ls $(OBJECTS:.o=.d) $(YACC_OBJECTS:.o=.d) 2> /dev/null)
 
 ifneq ($(DEPS),)
 -include $(DEPS)
@@ -884,7 +884,7 @@ endif
 endif
 endif
 
-depend: $(OBJECTS:.o=.d)
+depend: $(OBJECTS:.o=.d) $(YACC_OBJECTS:.o=.d)
 
 # This information is included in crash reports, and is printed with
 # "crawl -version"
@@ -907,8 +907,7 @@ $(DOC_BASE)/aptitudes.txt: $(DOC_TEMPLATES)/apt-tmpl.txt player.cc skills2.cc \
 # The level compiler
 #
 
-$(UTIL)levcomp.tab.o: $(CONTRIB_LIBS)
-$(UTIL)levcomp.lex.o: $(CONTRIB_LIBS)
+$(YACC_OBJECTS): $(CONTRIB_LIBS)
 
 ifndef NO_YACC
 
@@ -1010,7 +1009,9 @@ endif
 clean:
 	+$(MAKE) -C $(UTIL) clean
 	+$(MAKE) -C $(RLTILES) clean
-	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o libunix.o $(OBJECTS) $(OBJECTS:.o=.d) *.ixx build.h compflag.h .contrib-libs .cflags
+	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
+	    libunix.o $(OBJECTS) $(OBJECTS:.o=.d) $(YACC_OBJECTS:.o=.d) *.ixx  \
+	    build.h compflag.h .contrib-libs .cflags
 	$(RM) -r build-win
 
 clean-contrib:
@@ -1048,7 +1049,7 @@ endif
 $(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS) $(CONTRIB_LIBS)
 
 ifdef NO_INLINE_DEPGEN
-$(OBJECTS): $(OBJECTS:%.o=%.d)
+$(OBJECTS): $(OBJECTS:%.o=%.d) $(YACC_OBJECTS:%.o=%.d)
 endif
 
 %.d: %.cc .cflags $(GENERATED_FILES)

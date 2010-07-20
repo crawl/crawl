@@ -150,8 +150,15 @@
 // Globals whose construction/destruction order needs to be managed
 // ----------------------------------------------------------------------
 
+#ifdef DEBUG_GLOBALS
+#define you_ref (*real_you_ref)
+
+CLua clua;
+CLua dlua;
+#else
 CLua clua(true);
 CLua dlua(false);      // Lua interpreter for the dungeon builder.
+#endif
 crawl_environment env; // Requires dlua.
 
 player you;
@@ -224,6 +231,14 @@ static void _compile_time_asserts();
 
 int main(int argc, char *argv[])
 {
+#ifdef DEBUG_GLOBALS
+    real_you = new player();
+    real_you_ref = new player();
+    real_clua = new CLua(true);
+    real_dlua = new CLua(false);
+    real_crawl_state = new game_state();
+    real_env = new crawl_environment();
+#endif
     _compile_time_asserts();  // Just to quiet "unused static function" warning.
 
     init_crash_handler();
@@ -2608,6 +2623,87 @@ static void _update_mold()
     }
 }
 
+static void _player_reacts()
+{
+    if (!you.cannot_act() && !player_mutation_level(MUT_BLURRY_VISION)
+        && x_chance_in_y(you.skills[SK_TRAPS_DOORS], 50))
+    {
+        search_around(false); // Check nonadjacent squares too.
+    }
+
+    stealth = check_stealth();
+
+#ifdef DEBUG_STEALTH
+    // Too annoying for regular diagnostics.
+    mprf(MSGCH_DIAGNOSTICS, "stealth: %d", stealth);
+#endif
+
+    if (you.attribute[ATTR_NOISES])
+        noisy_equipment();
+
+    if (you.attribute[ATTR_SHADOWS])
+        shadow_lantern_effect();
+
+    if (player_mutation_level(MUT_DEMONIC_GUARDIAN))
+        check_demonic_guardian();
+
+    if (you.unrand_reacts != 0)
+        unrand_reacts();
+
+    if (one_chance_in(10))
+    {
+        const int teleportitis_level = player_teleport();
+        // this is instantaneous
+        if (teleportitis_level > 0 && one_chance_in(100 / teleportitis_level))
+            you_teleport_now(true);
+        else if (you.level_type == LEVEL_ABYSS && one_chance_in(30))
+            you_teleport_now(false, true); // to new area of the Abyss
+    }
+
+    if (env.cgrid(you.pos()) != EMPTY_CLOUD)
+        in_a_cloud();
+
+    slime_wall_damage(&you, you.time_taken);
+
+    if (you.level_type == LEVEL_DUNGEON && you.duration[DUR_TELEPATHY])
+        detect_creatures(1 + you.duration[DUR_TELEPATHY] /
+                         (2 * BASELINE_DELAY), true);
+
+    _decrement_durations();
+
+    int capped_time = you.time_taken;
+    if (you.walking && capped_time > BASELINE_DELAY)
+        capped_time = BASELINE_DELAY;
+
+    int food_use = player_hunger_rate();
+    food_use = div_rand_round(food_use * capped_time, BASELINE_DELAY);
+
+    if (food_use > 0 && you.hunger >= 40)
+        make_hungry(food_use, true);
+
+    _regenerate_hp_and_mp(capped_time);
+
+    // If you're wielding a rod, it'll gradually recharge.
+    recharge_rods(you.time_taken, false);
+
+    // Player stealth check.
+    seen_monsters_react();
+
+    update_stat_zero();
+}
+
+// Ran after monsters and clouds get to act.
+static void _player_reacts_to_monsters()
+{
+    if (you.duration[DUR_FIRE_SHIELD] > 0)
+        manage_fire_shield(you.time_taken);
+
+    if (player_mutation_level(MUT_ANTENNAE))
+        check_antennae_detect();
+
+    handle_starvation();
+}
+
 void world_reacts()
 {
     reset_show_terrain();
@@ -2635,71 +2731,8 @@ void world_reacts()
 
     run_environment_effects();
 
-    if (!you.cannot_act() && !player_mutation_level(MUT_BLURRY_VISION)
-        && x_chance_in_y(you.skills[SK_TRAPS_DOORS], 50))
-    {
-        search_around(false); // Check nonadjacent squares too.
-    }
-
     if (!crawl_state.game_is_arena())
-        stealth = check_stealth();
-
-#ifdef DEBUG_STEALTH
-    // Too annoying for regular diagnostics.
-    mprf(MSGCH_DIAGNOSTICS, "stealth: %d", stealth);
-#endif
-
-    if (you.attribute[ATTR_NOISES])
-        noisy_equipment();
-
-    if (you.attribute[ATTR_SHADOWS])
-        shadow_lantern_effect();
-
-    if (player_mutation_level(MUT_DEMONIC_GUARDIAN))
-        check_demonic_guardian();
-
-    if (you.unrand_reacts != 0)
-        unrand_reacts();
-
-    if (!crawl_state.game_is_arena() && one_chance_in(10))
-    {
-        const int teleportitis_level = player_teleport();
-        // this is instantaneous
-        if (teleportitis_level > 0 && one_chance_in(100 / teleportitis_level))
-            you_teleport_now(true);
-        else if (you.level_type == LEVEL_ABYSS && one_chance_in(30))
-            you_teleport_now(false, true); // to new area of the Abyss
-    }
-
-    if (!crawl_state.game_is_arena() && env.cgrid(you.pos()) != EMPTY_CLOUD)
-        in_a_cloud();
-
-    if (!crawl_state.game_is_arena())
-        slime_wall_damage(&you, you.time_taken);
-
-    if (you.level_type == LEVEL_DUNGEON && you.duration[DUR_TELEPATHY])
-        detect_creatures(1 + you.duration[DUR_TELEPATHY] /
-                         (2 * BASELINE_DELAY), true);
-
-    _decrement_durations();
-
-    int capped_time = you.time_taken;
-    if (you.walking && capped_time > BASELINE_DELAY)
-        capped_time = BASELINE_DELAY;
-
-    int food_use = player_hunger_rate();
-    food_use = div_rand_round(food_use * capped_time, BASELINE_DELAY);
-
-    if (food_use > 0 && you.hunger >= 40)
-        make_hungry(food_use, true);
-
-    _regenerate_hp_and_mp(capped_time);
-
-    // If you're wielding a rod, it'll gradually recharge.
-    recharge_rods(you.time_taken, false);
-
-    // Player stealth check.
-    seen_monsters_react();
+        _player_reacts();
 
     handle_monsters();
 
@@ -2724,17 +2757,11 @@ void world_reacts()
     }
 
     handle_time();
-    update_stat_zero();
     manage_clouds();
     _update_mold();
 
-    if (you.duration[DUR_FIRE_SHIELD] > 0)
-        manage_fire_shield(you.time_taken);
-
-    if (player_mutation_level(MUT_ANTENNAE))
-        check_antennae_detect();
-
-    handle_starvation();
+    if (!crawl_state.game_is_arena())
+        _player_reacts_to_monsters();
 
     viewwindow();
 
