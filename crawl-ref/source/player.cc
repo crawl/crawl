@@ -5877,8 +5877,9 @@ int player::res_magic() const
     // rings of magic resistance
     rm += 40 * player_equip(EQ_RINGS, RING_PROTECTION_FROM_MAGIC);
 
-    // Enchantment skill
-    rm += 2 * skills[SK_ENCHANTMENTS];
+    // Enchantment skill through staff of enchantment (up to 90).
+    if (player_equip(EQ_STAFF, STAFF_ENCHANTMENT))
+        rm += 3 * (3 + skills[SK_ENCHANTMENTS]);
 
     // Mutations
     rm += 30 * player_mutation_level(MUT_MAGIC_RESISTANCE);
