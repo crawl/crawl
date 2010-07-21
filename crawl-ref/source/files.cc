@@ -760,6 +760,17 @@ std::string get_savefile_directory(bool ignore_game_type)
     return (dir);
 }
 
+std::string get_bonefile_directory(bool ignore_game_type)
+{
+    std::string dir = Options.shared_dir;
+    if (!ignore_game_type)
+        dir = catpath(dir, crawl_state.game_savedir_path());
+    check_mkdir("Bones directory", &dir, false);
+    if (dir.empty())
+        dir = ".";
+    return (dir);
+}
+
 // Returns a subdirectory of the current savefile directory as returned by
 // get_savefile_directory.
 std::string get_savedir_path(const std::string &shortpath)
@@ -2009,15 +2020,12 @@ static std::string _make_portal_vault_ghost_suffix()
 
 static std::string _make_ghost_filename()
 {
+    std::string suffix;
     if (you.level_type == LEVEL_PORTAL_VAULT)
-    {
-        const std::string suffix = _make_portal_vault_ghost_suffix();
-        return get_savedir_filename("bones", "", suffix, true);
-    }
+        suffix = _make_portal_vault_ghost_suffix();
     else
-    {
-        return _make_filename("bones", level_id::current(), true);
-    }
+        suffix = _get_level_suffix(level_id::current());
+    return get_bonefile_directory() + "bones." + suffix;
 }
 
 #define BONES_DIAGNOSTICS (defined(WIZARD) || defined(DEBUG_BONES) | defined(DEBUG_DIAGNOSTICS))

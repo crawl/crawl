@@ -88,7 +88,7 @@ std::string score_file_name()
     if (!SysEnv.scorefile.empty())
         ret = SysEnv.scorefile;
     else
-        ret = Options.save_dir + "scores";
+        ret = Options.shared_dir + "scores";
 
     ret += crawl_state.game_type_qualifier();
 
@@ -97,7 +97,7 @@ std::string score_file_name()
 
 std::string log_file_name()
 {
-    return (Options.save_dir + "logfile" + crawl_state.game_type_qualifier());
+    return (Options.shared_dir + "logfile" + crawl_state.game_type_qualifier());
 }
 
 void hiscores_new_entry( const scorefile_entry &ne )

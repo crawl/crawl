@@ -642,6 +642,20 @@ static std::string _user_home_crawl_subpath(const std::string subpath)
     return _user_home_subpath(catpath(".crawl", subpath));
 }
 
+#if defined(SAVE_DIR_PATH) || defined(SHARED_DIR_PATH)
+static std::string _resolve_dir(const char* path, const char* suffix)
+{
+#if defined(DGAMELAUNCH)
+    return path;
+#else
+    if (path[0] != '~')
+        return std::string(path) + suffix;
+    else
+        return _user_home_subpath(std::string(path + 1) + suffix);
+#endif
+}
+#endif
+
 void game_options::reset_options()
 {
     filename     = "unknown";
@@ -670,22 +684,8 @@ void game_options::reset_options()
 #endif
 
 #if defined(SAVE_DIR_PATH)
-#if defined(DGAMELAUNCH)
-    save_dir   = SAVE_DIR_PATH;
-#else
-    if (SAVE_DIR_PATH[0] != '~')
-    {
-        save_dir   = SAVE_DIR_PATH "/saves/";
-        morgue_dir = SAVE_DIR_PATH "/morgue/";
-    }
-    else
-    {
-        save_dir = _user_home_subpath(std::string(SAVE_DIR_PATH + 1)
-                                      + "/saves/");
-        morgue_dir = _user_home_subpath(std::string(SAVE_DIR_PATH + 1)
-                                        + "/morgue/");
-    }
-#endif
+    save_dir   = _resolve_dir(SAVE_DIR_PATH, "/saves/");
+    morgue_dir = _resolve_dir(SAVE_DIR_PATH, "/morgue/");
 #elif defined(TARGET_OS_MACOSX)
     const std::string tmp_path_base =
         _user_home_subpath("Library/Application Support/" CRAWL);
@@ -701,6 +701,12 @@ void game_options::reset_options()
 
 #if !defined(SHORT_FILE_NAMES) && !defined(SAVE_DIR_PATH) && !defined(TARGET_OS_MACOSX)
     morgue_dir = "morgue/";
+#endif
+
+#if defined(SHARED_DIR_PATH)
+    shared_dir = _resolve_dir(SHARED_DIR_PATH, "/");
+#else
+    shared_dir = save_dir;
 #endif
 
     additional_macro_files.clear();
