@@ -338,10 +338,6 @@ static void _launch_game()
                     << std::endl;
     }
 
-    // Activate markers only after the welcome message, so the
-    // player can see any resulting messages.
-    env.markers.activate_all();
-
 #ifdef USE_TILE
     viewwindow();
 #endif

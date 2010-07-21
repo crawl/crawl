@@ -1539,10 +1539,13 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     los_changed();
 
-    if (load_mode == LOAD_START_GAME)
-        just_created_level = true;
-    else if (load_mode == LOAD_ENTER_LEVEL)
+    if (make_changes)
     {
+        // Markers must be activated early, since they may rely on
+        // events issued later, e.g. DET_ENTERING_LEVEL or
+        // the DET_TURN_ELAPSED from update_level.
+        env.markers.activate_all();
+
         // update corpses and fountains
         if (env.elapsed_time && !just_created_level)
             update_level(you.elapsed_time - env.elapsed_time);
@@ -1619,11 +1622,6 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
         if (just_created_level)
             level_welcome_messages();
 
-        // Activate markers that want activating, but only when entering
-        // a new level. If we're reloading an existing game, markers are
-        // activated in main.cc.
-        env.markers.activate_all();
-
         // Centaurs have difficulty with stairs
         int timeval = ((you.species != SP_CENTAUR) ? player_movement_speed()
                                                    : 15);
@@ -1644,10 +1642,6 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
         if (just_created_level)
             run_map_epilogues();
-    }
-    else if (load_mode == LOAD_START_GAME)
-    {
-        env.markers.activate_all();
     }
 
     // Save the created/updated level out to disk:
