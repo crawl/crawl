@@ -730,6 +730,7 @@ static void _show_startup_menu(newgame_def* ng_choice,
         case GAME_TYPE_TUTORIAL:
         case GAME_TYPE_SPRINT:
         case GAME_TYPE_HINTS:
+            trim_string(input_string);
             if (is_good_name(input_string, true, false))
             {
                 ng_choice->type = static_cast<game_type>(id);
