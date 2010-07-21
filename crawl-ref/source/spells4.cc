@@ -337,7 +337,7 @@ void cast_phase_shift(int pow)
     if (!you.duration[DUR_PHASE_SHIFT])
         mpr("You feel the strange sensation of being on two planes at once.");
     else
-        mpr("Your feel the material plane grow further away.");
+        mpr("You feel the material plane grow further away.");
 
     you.increase_duration(DUR_PHASE_SHIFT, 5 + random2(pow), 30);
     you.redraw_evasion = true;
