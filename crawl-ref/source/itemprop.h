@@ -144,6 +144,8 @@ bool item_is_rune(const item_def &item, rune_type which_rune = NUM_RUNE_TYPES);
 bool item_is_unique_rune(const item_def &item);
 bool item_is_orb(const item_def &orb);
 
+bool item_is_corpse(const item_def &item);
+
 // ring functions:
 int  ring_has_pluses( const item_def &item );
 bool ring_has_stackable_effect( const item_def &item );
