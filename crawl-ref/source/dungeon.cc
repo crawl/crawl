@@ -9054,7 +9054,7 @@ void vault_placement::apply_grid()
                 const dungeon_feature_type newgrid = grd(*ri);
                 grd(*ri) = oldgrid;
                 dungeon_terrain_changed(*ri, newgrid, true, true);
-                env.markers.remove_markers_at(*ri, MAT_ANY);
+                remove_markers_and_listeners_at(*ri);
             }
             env.pgrid(*ri) |= FPROP_VAULT;
         }

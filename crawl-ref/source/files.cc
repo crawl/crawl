@@ -1267,8 +1267,8 @@ static void _close_level_gates()
         {
             if (feat_sealable_portal(grd(*ri)))
             {
+                remove_markers_and_listeners_at(*ri);
                 grd(*ri) = DNGN_STONE_ARCH;
-                env.markers.remove_markers_at(*ri, MAT_ANY);
             }
         }
     }
