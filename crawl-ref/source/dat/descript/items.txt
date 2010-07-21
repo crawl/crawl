@@ -1118,7 +1118,7 @@ It is easy to be blinded to the essential uselessness of this scroll by the sens
 %%%%
 scroll of recharging
 
-This scroll restores the charges of any magical wand or rod chosen by its reader, and can also be used to increase the damage dealt by weapons of electrocution.
+This scroll restores the charges of any magical wand or rod chosen by its reader.
 %%%%
 scroll of remove curse
 
