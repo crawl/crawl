@@ -1503,8 +1503,8 @@ static bool _get_mem_list(spell_list &mem_spells,
         const std::string species = "a " + species_name(you.species);
         mprf(MSGCH_PROMPT,
              "You cannot memorise any of the available spells because you "
-             "are %s %s.", lichform ? "in Lich form"
-                                    : lowercase_string(species).c_str());
+             "are %s.", lichform ? "in Lich form"
+                                 : lowercase_string(species).c_str());
     }
     else if (num_low_levels > 0 || num_low_xl > 0)
     {
