@@ -1541,6 +1541,13 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     if (make_changes)
     {
+        // Closes all the gates if you're on the way out.
+        if (you.char_direction == GDT_ASCENDING
+            && you.level_type != LEVEL_PANDEMONIUM)
+        {
+            _close_level_gates();
+        }
+
         // Markers must be activated early, since they may rely on
         // events issued later, e.g. DET_ENTERING_LEVEL or
         // the DET_TURN_ELAPSED from update_level.
@@ -1549,13 +1556,6 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
         // update corpses and fountains
         if (env.elapsed_time && !just_created_level)
             update_level(you.elapsed_time - env.elapsed_time);
-    }
-
-    // Closes all the gates if you're on the way out.
-    if (you.char_direction == GDT_ASCENDING
-        && you.level_type != LEVEL_PANDEMONIUM)
-    {
-        _close_level_gates();
     }
 
     // Apply all delayed actions, if any.
