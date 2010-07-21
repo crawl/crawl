@@ -70,6 +70,7 @@ std::vector<player_save_info> find_all_saved_characters();
 std::vector<player_save_info> find_saved_characters();
 
 std::string get_savefile_directory(bool ignore_game_type = false);
+std::string get_bonefile_directory(bool ignore_game_type = false);
 std::string get_save_filename(const std::string &pre,
                               const std::string &suf,
                               const std::string &ext,

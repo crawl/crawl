@@ -44,6 +44,9 @@ public:
     std::string macro_dir;      // Directory containing macro.txt
     std::string morgue_dir;     // Directory where character dumps and morgue
                                 // dumps are saved. Overrides crawl_dir.
+    std::string shared_dir;     // Directory where the logfile, scores and bones
+                                // are stored.  On a multi-user system, this dir
+                                // should be accessible by different people.
     std::vector<std::string> additional_macro_files;
 
     uint32_t    seed;   // Non-random games.

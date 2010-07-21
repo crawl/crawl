@@ -25,12 +25,19 @@
 #    DATADIR       -- place to hold immutable files.  Can be either relative to
 #                     "prefix" or absolute.
 #    SAVEDIR       -- place to hold writeable data (saves, database, morgue
-#                     dumps).  Can be relative to "prefix" or absolute.
+#                     dumps).  Can be relative to "prefix", absolute or placed
+#                     in the user's home dir (~).  Remember to protect the ~
+#                     from your shell!
+#    SHAREDDIR     -- place to hold site-wide writeable data (scores, the
+#                     logfile, ghosts).  Will be placed insite the SAVEDIR if
+#                     not specified.
 #       Layout examples:
 #         prefix=~/crawl DATADIR=data/ SAVEDIR=saves/
 #                  -- everything under ~/crawl
 #         prefix=/usr/local
-#                  -- a typical multiuser installation
+#                  -- a typical old-style multiuser installation
+#         prefix=/usr/local SAVEDIR='~/.crawl' SHAREDDIR=/var/games/crawl
+#                  -- multiuser installation with secure saves
 #
 #    V             -- set to anything to enable verbose build
 #
@@ -635,6 +642,22 @@ ifneq ($(strip $(SAVEDIR)),)
     CFOTHERS_L += -DSAVE_DIR_PATH=\"$(abspath $(SAVEDIR))\"
     savedir_fp := $(abspath $(strip $(DESTDIR))$(strip $(SAVEDIR)))
   endif
+  shareddir_fp := $(savedir_fp)/saves
+endif
+
+ifneq ($(strip $(SHAREDDIR)),)
+  ifneq ($(filter ~%,$(SHAREDDIR)),)
+    CFOTHERS_L += -DSHARED_DIR_PATH=\"$(SHAREDDIR)\"
+    shareddir_fp :=
+  else
+    ifeq ($(filter /%,$(SHAREDDIR)),)
+      ifneq ($(prefix),)
+	override SHAREDDIR := $(strip $(prefix))/$(strip $(SHAREDDIR))
+      endif
+    endif
+    CFOTHERS_L += -DSHARED_DIR_PATH=\"$(abspath $(SHAREDDIR))\"
+    shareddir_fp := $(abspath $(strip $(DESTDIR))$(strip $(SHAREDDIR)))
+  endif
 endif
 
 ifneq ($(strip $(DATADIR)),)
@@ -988,21 +1011,28 @@ ifeq ($(USE_DGAMELAUNCH),)
 endif
 ifneq ($(savedir_fp),)
 	mkdir -p $(savedir_fp)/saves
-ifneq ($(patsubst /var/%,%,$(savedir_fp)),$(savedir_fp))
-# Only if we're being installed for real.  Installations to a staging dir
-# which are then packaged would trample existing files; these need to be
-# handled by packagers themselves.
-	touch $(savedir_fp)/saves/logfile
-	touch $(savedir_fp)/saves/scores
-endif
 	mkdir -p $(savedir_fp)/morgue
 ifeq ($(USE_DGAMELAUNCH),)
 	$(CHOWN) -R $(INSTALL_UGRP) $(savedir_fp) || true
 	$(CHMOD) $(MCHMOD_SAVEDIR) $(savedir_fp) || true
 	$(CHMOD) $(MCHMOD_SAVEDIR) $(savedir_fp)/saves || true
-	$(CHMOD) $(MCHMOD_LOGS) $(savedir_fp)/saves/logfile || true
-	$(CHMOD) $(MCHMOD_LOGS) $(savedir_fp)/saves/scores || true
 	$(CHMOD) $(MCHMOD_SAVEDIR) $(savedir_fp)/morgue || true
+endif
+endif
+ifneq ($(shareddir_fp),)
+	mkdir -p $(shareddir_fp)
+ifneq ($(patsubst /var/%,%,$(shareddir_fp)),$(shareddir_fp))
+# Only if we're being installed for real.  Installations to a staging dir
+# which are then packaged would trample existing files; these need to be
+# handled by packagers themselves.
+	touch $(shareddir_fp)/logfile
+	touch $(shareddir_fp)/scores
+endif
+ifeq ($(USE_DGAMELAUNCH),)
+	$(CHOWN) -R $(INSTALL_UGRP) $(shareddir_fp) || true
+	$(CHMOD) $(MCHMOD_SAVEDIR) $(shareddir_fp) || true
+	$(CHMOD) $(MCHMOD_LOGS) $(shareddir_fp)/logfile || true
+	$(CHMOD) $(MCHMOD_LOGS) $(shareddir_fp)/scores || true
 endif
 endif
 
