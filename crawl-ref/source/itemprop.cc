@@ -1120,8 +1120,7 @@ bool check_armour_size( const item_def &item, size_type size )
     return (fit_armour_size( item, size ) == 0);
 }
 
-// Returns whether a wand or rod can be charged, or a weapon of electrocution
-// enchanted.
+// Returns whether a wand or rod can be charged.
 // If hide_charged is true, wands known to be full will return false.
 // (This distinction is necessary because even full wands/rods give a message.)
 bool item_is_rechargeable(const item_def &it, bool hide_charged, bool weapons)
@@ -1154,22 +1153,6 @@ bool item_is_rechargeable(const item_def &it, bool hide_charged, bool weapons)
                     || short(it.props["rod_enchantment"]) < MAX_WPN_ENCHANT);
         }
         return (true);
-    }
-    else if (it.base_type == OBJ_WEAPONS)
-    {
-        // Might be electrocution.
-        if (weapons && !item_type_known(it))
-            return (true);
-
-        // Weapons of electrocution can get +1 to-dam this way.
-        if (!is_artefact(it)
-            && get_weapon_brand(it) == SPWPN_ELECTROCUTION
-            && item_type_known(it)
-            && (!item_ident(it, ISFLAG_KNOW_PLUSES)
-                || it.plus2 < MAX_WPN_ENCHANT))
-        {
-            return (true);
-        }
     }
 
     return (false);

@@ -2395,27 +2395,6 @@ bool recharge_wand(int item_slot)
             continue;
         }
 
-        // Weapons of electrocution can be "charged", i.e. gain +1 damage.
-        if (wand.base_type == OBJ_WEAPONS)
-        {
-            if (get_weapon_brand(wand) == SPWPN_ELECTROCUTION)
-            {
-                // Might fail because of already high enchantment.
-                if (enchant_weapon( ENCHANT_TO_DAM, false, wand ))
-                {
-                    you.wield_change = true;
-
-                    if (!item_ident(wand, ISFLAG_KNOW_TYPE))
-                        set_ident_flags(wand, ISFLAG_KNOW_TYPE);
-
-                    return (true);
-                }
-                return (false);
-            }
-            else
-                canned_msg( MSG_NOTHING_HAPPENS );
-        }
-
         if (wand.base_type != OBJ_WANDS && !item_is_rod(wand))
             return (false);
 
