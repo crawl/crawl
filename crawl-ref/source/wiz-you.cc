@@ -921,7 +921,9 @@ void wizard_get_god_gift (void)
 
 void wizard_toggle_xray_vision()
 {
+#ifdef WIZARD
     you.xray_vision = !you.xray_vision;
+#endif
     viewwindow(true);
 }
 
