@@ -69,6 +69,7 @@ function bailey_setup(e)
   e.lfloorcol("white")
   e.tile("c = wall_stone_brick")
   e.lfloortile("floor_cobble_blood")
+  e.lrocktile("wall_brick_brown")
 end
 
 function bailey_milestone(e)
