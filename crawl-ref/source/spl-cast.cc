@@ -34,6 +34,7 @@
 #include "item_use.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "items.h"
 #include "macro.h"
 #include "map_knowledge.h"
 #include "menu.h"
@@ -1027,13 +1028,41 @@ static spret_type _do_cast(spell_type spell, int powc,
                            god_type god, int potion,
                            bool check_range = false);
 
+static bool _spellcasting_aborted(spell_type spell,
+                                  bool check_range_usability,
+                                  bool wiz_cast)
+{
+    std::string msg;
+    if (!wiz_cast && spell_is_uncastable(spell, msg))
+    {
+        mpr(msg);
+        return (true);
+    }
+
+    if (is_prevented_teleport(spell)
+        && !yesno("You cannot teleport right now. Cast anyway?", true, 'n'))
+    {
+        return (true);
+    }
+
+    if (check_range_usability
+        && spell == SPELL_FULSOME_DISTILLATION
+        && !corpse_at(you.pos()))
+    {
+        mpr("There aren't any corpses here.");
+        return (true);
+    }
+    return (false);
+}
+
 // Returns SPRET_SUCCESS if spell is successfully cast for purposes of
 // exercising, SPRET_FAIL otherwise, or SPRET_ABORT if the player canceled
 // the casting.
 // Not all of these are actually real spells; invocations, decks, rods or misc.
 // effects might also land us here.
 // Others are currently unused or unimplemented.
-spret_type your_spells(spell_type spell, int powc, bool allow_fail, bool check_range)
+spret_type your_spells(spell_type spell, int powc,
+                       bool allow_fail, bool check_range)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -1045,19 +1074,8 @@ spret_type your_spells(spell_type spell, int powc, bool allow_fail, bool check_r
 
     // [dshaligram] Any action that depends on the spellcasting attempt to have
     // succeeded must be performed after the switch().
-
-    std::string msg;
-    if (!wiz_cast && spell_is_uncastable(spell, msg))
-    {
-        mpr(msg);
+    if (_spellcasting_aborted(spell, check_range, wiz_cast))
         return (SPRET_ABORT);
-    }
-
-    if (is_prevented_teleport(spell)
-        && !yesno("You cannot teleport right now. Cast anyway?", true, 'n'))
-    {
-        return (SPRET_ABORT);
-    }
 
     const unsigned int flags = get_spell_flags(spell);
 
