@@ -14,6 +14,9 @@ void newgame_make_item(int slot, equipment_type eqslot,
                        int qty = 1, int plus = 0, int plus2 = 0,
                        bool force_tutorial = false);
 
+void newgame_give_item(object_class_type base, int sub_type,
+                       int qty = 1, int plus = 0, int plus2 = 0);
+
 struct newgame_def;
 void setup_game(const newgame_def& ng);
 
