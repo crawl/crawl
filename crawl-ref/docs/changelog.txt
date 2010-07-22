@@ -47,8 +47,6 @@ Gods:
 * Zin has a new power: Imprison.
 * Elyvilon's Divine Vigour scales better in terms of power.
 * Yredelemnul no longer gifts vampires.
-* Kikubaaqudgha no longer protects from torment if the torment is from
-  pain-branding a weapon.
 * Sif Muna's piety is no longer unfair to skilled species.
 * Nemelex no longer takes gold sacrifices.
 * Fedhas can now evolve ballistomycetes into hyperactive ballistomycetes.
@@ -60,7 +58,6 @@ Items:
 * Scrolls of holy word do more damage to susceptible monsters.
 * Blowguns no longer show damage, as they do none; accordingly, scrolls of
   enchant weapon II no longer work on them.
-* The "Sniper" unrandart is now a crossbow instead of a hand crossbow.
 * Flame- and frost-branded darts no longer always mulch, and the steel brand
   is properly applied for thrown weapons.
 * Demon tridents can be blessed by TSO.
