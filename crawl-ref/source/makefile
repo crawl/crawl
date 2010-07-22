@@ -633,6 +633,7 @@ ifneq ($(strip $(SAVEDIR)),)
   ifneq ($(filter ~%,$(SAVEDIR)),)
     CFOTHERS_L += -DSAVE_DIR_PATH=\"$(SAVEDIR)\"
     savedir_fp :=
+    shareddir_fp :=
   else
     ifeq ($(filter /%,$(SAVEDIR)),)
       ifneq ($(prefix),)
@@ -641,8 +642,8 @@ ifneq ($(strip $(SAVEDIR)),)
     endif
     CFOTHERS_L += -DSAVE_DIR_PATH=\"$(abspath $(SAVEDIR))\"
     savedir_fp := $(abspath $(strip $(DESTDIR))$(strip $(SAVEDIR)))
+    shareddir_fp := $(savedir_fp)/saves
   endif
-  shareddir_fp := $(savedir_fp)/saves
 endif
 
 ifneq ($(strip $(SHAREDDIR)),)
