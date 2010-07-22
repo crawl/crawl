@@ -37,6 +37,7 @@
 #include "output.h"
 #include "religion.h"
 #include "shout.h"
+#include "showsymb.h"
 #include "spells2.h"
 #include "spl-mis.h"
 #include "spl-util.h"
@@ -549,15 +550,12 @@ void debug_stethoscope(int mon)
 // Detects all monsters on the level, using their exact positions.
 void wizard_detect_creatures()
 {
-    const int prev_detected = count_detected_mons();
-    const int num_creatures = detect_creatures(60, true);
-
-    if (!num_creatures)
-        mpr("You detect nothing.");
-    else if (num_creatures == prev_detected)
-        mpr("You detect no further creatures.");
-    else
-        mpr("You detect creatures!");
+    for (monster_iterator mi; mi; ++mi)
+    {
+        show_type obj(mi->type);
+        obj.colour = get_mons_glyph(*mi, false).col;
+        set_map_knowledge_obj(mi->pos(), obj);
+    }
 }
 
 // Dismisses all monsters on the level or all monsters that match a user
