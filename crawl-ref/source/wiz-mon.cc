@@ -555,6 +555,7 @@ void wizard_detect_creatures()
         show_type obj(mi->type);
         obj.colour = get_mons_glyph(*mi, false).col;
         set_map_knowledge_obj(mi->pos(), obj);
+        set_map_knowledge_detected_mons(mi->pos(), true);
     }
 }
 
