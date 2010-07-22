@@ -452,8 +452,11 @@ std::string catpath(const std::string &first, const std::string &second)
         return (second);
 
     std::string directory = first;
-    if (directory[directory.length() - 1] != FILE_SEPARATOR)
+    if (directory[directory.length() - 1] != FILE_SEPARATOR
+        && (second.empty() || second[0] != FILE_SEPARATOR))
+    {
         directory += FILE_SEPARATOR;
+    }
     directory += second;
 
     return (directory);
