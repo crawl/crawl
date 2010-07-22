@@ -88,17 +88,14 @@ Monsters:
 * Wayne is now capable of laying a major smackdown.
 
 Spells:
-* Call Imp is buffed: it is now level 2, it takes spell power into account,
-  and it can summon iron imps.
+* Call Imp is now level 2, takes spell power into account, and can summon
+  iron imps.
 * Call Canine Familiar replaces Summon Elemental in the book of Callings,
   and is removed from the book of Summonings.
-* Summon Ugly Thing is nerfed: at full spell power, it now summons very ugly
-  things only 33% of the time.
-* Invisibility no longer works on glowing monsters, as Corona doesn't
-  either.
-* Extension is nerfed: it now only extends spells that you know.
-* Death's Door doesn't paralyze you anymore, it just blocks healing effects
-  -- except for Borgnjor's Revification.
+* Summon Ugly Thing summons very ugly things less often at high power.
+* Invisibility no longer works on glowing monsters.
+* Extension only extends spells that you know.
+* Death's Door only blocks healing, paralysis only for Revivification.
 * Summon Ugly Things is level 6, Haunt is level 7.
 
 Technical:
