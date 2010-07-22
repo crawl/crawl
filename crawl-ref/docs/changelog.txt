@@ -15,11 +15,9 @@ Unsorted:
 * Aptitudes now on a scale +5 to -5.
 * Track the source of poison for death messages.
 * Magic mapping and Lugonu's self-banishment now work in Pandemonium.
-* Remove Death Knights and Thieves.
 * Ghouls can no longer starve; they just rot faster.
 * New tiles monster list tab.
 * Player body size is now described on the "A" screen.
-* Warpers now start with a few darts of dispersal.
 
 Interface:
 * New starting menus, mouse-operable in tiles builds.
@@ -70,7 +68,7 @@ Items:
 
 Backgrounds:
 * Thieves and Death Knights are no more.
-* Warpers receive darts of dispersion.
+* Warpers receive darts of dispersal.
 
 Monsters:
 * Anacondas are now amphibious.
