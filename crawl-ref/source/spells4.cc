@@ -1294,12 +1294,14 @@ bool cast_fulsome_distillation(int pow, bool check_range)
 {
     int num_corpses = 0;
     item_def *corpse = corpse_at(you.pos(), &num_corpses);
+    if (num_corpses && you.flight_mode() == FL_LEVITATE)
+        num_corpses = -1;
 
     // If there is only one corpse, distill it; otherwise, ask the player
     // which corpse to use.
     switch (num_corpses)
     {
-        case 0:
+        case 0: case -1:
             // Allow using Z to victory dance fulsome.
             if (!check_range)
             {
@@ -1307,7 +1309,10 @@ bool cast_fulsome_distillation(int pow, bool check_range)
                 return (true);
             }
 
-            mpr("There aren't any corpses here.");
+            if (num_corpses == -1)
+                mpr("You can't reach the corpse!");
+            else
+                mpr("There aren't any corpses here.");
             return (false);
         case 1:
             // Use the only corpse available without prompting.
