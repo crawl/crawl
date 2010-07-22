@@ -1193,8 +1193,9 @@ static bool _try_give_plain_armour(item_def &arm)
     default:
         return (false);
     }
-    // Clear the description flag.
-    set_equip_desc(arm, ISFLAG_NO_DESC);
+    arm.clear();
+    arm.quantity = 1;
+    arm.base_type = OBJ_ARMOUR;
     arm.sub_type = _pick_wearable_armour(result);
     arm.plus = random2(5) - 2;
 
