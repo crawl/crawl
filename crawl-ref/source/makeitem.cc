@@ -2622,6 +2622,8 @@ static monster_type _choose_random_monster_corpse()
     for (int count = 0; count < 1000; ++count)
     {
         monster_type spc = mons_species(random2(NUM_MONSTERS));
+        if (mons_class_flag(spc, M_NO_POLY_TO))
+            continue;
         if (mons_weight(spc) > 0)        // drops a corpse
             return spc;
     }
