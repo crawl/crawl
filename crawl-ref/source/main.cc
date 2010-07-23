@@ -151,8 +151,6 @@
 // ----------------------------------------------------------------------
 
 #ifdef DEBUG_GLOBALS
-#define you_ref (*real_you_ref)
-
 CLua clua;
 CLua dlua;
 #else
@@ -162,10 +160,6 @@ CLua dlua(false);      // Lua interpreter for the dungeon builder.
 crawl_environment env; // Requires dlua.
 
 player you;
-
-// A clean player struct to use to reset the game. This wouldn't be
-// necessary if player had a real constructor.
-const player you_ref;
 
 game_state crawl_state;
 
@@ -233,7 +227,6 @@ int main(int argc, char *argv[])
 {
 #ifdef DEBUG_GLOBALS
     real_you = new player();
-    real_you_ref = new player();
     real_clua = new CLua(true);
     real_dlua = new CLua(false);
     real_crawl_state = new game_state();
@@ -299,7 +292,7 @@ static void _reset_game()
     clear_message_store();
     macro_clear_buffers();
     transit_lists_clear();
-    you.copy_from(you_ref);
+    you.init();
     StashTrack = StashTracker();
     travel_cache = TravelCache();
     overview_clear();
