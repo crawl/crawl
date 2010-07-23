@@ -381,38 +381,36 @@ void handle_behaviour(monsters *mon)
                                 mon->foe_memory = 0;
                         }
                     }
-
-                    // Either keep chasing, or start wandering.
-                    if (mon->foe_memory < 2)
-                    {
-                        mon->foe_memory = 0;
-                        new_beh = BEH_WANDER;
-                    }
-                    break;
                 }
 
-                ASSERT(mon->foe_memory == 0);
-                // Hack: smarter monsters will tend to pursue the player longer.
-                switch (mons_intel(mon))
-                {
-                case I_HIGH:
-                    mon->foe_memory = 100 + random2(200);
-                    break;
-                case I_NORMAL:
-                    mon->foe_memory = 50 + random2(100);
-                    break;
-                case I_ANIMAL:
-                case I_INSECT:
-                    mon->foe_memory = 25 + random2(75);
-                    break;
-                case I_PLANT:
-                    mon->foe_memory = 10 + random2(50);
-                    break;
-                }
-                break;  // switch/case BEH_SEEK
+
+                if (mon->foe_memory <= 0)
+                    new_beh = BEH_WANDER;
+
+                break;
             }
 
             ASSERT(proxFoe && mon->foe != MHITNOT);
+
+            // Monster can see foe: set memory in case it loses sight.
+            // Hack: smarter monsters will tend to pursue the player longer.
+            switch (mons_intel(mon))
+            {
+            case I_HIGH:
+                mon->foe_memory = 100 + random2(200);
+                break;
+            case I_NORMAL:
+                mon->foe_memory = 50 + random2(100);
+                break;
+            case I_ANIMAL:
+            case I_INSECT:
+                mon->foe_memory = 25 + random2(75);
+                break;
+            case I_PLANT:
+                mon->foe_memory = 10 + random2(50);
+                break;
+            }
+
             // Monster can see foe: continue 'tracking'
             // by updating target x,y.
             if (mon->foe == MHITYOU)
