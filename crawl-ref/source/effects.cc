@@ -4200,6 +4200,8 @@ void update_level(long elapsedTime)
 
         _catchup_monster_moves(*mi, turns);
 
+        mi->foe_memory = std::max(mi->foe_memory - turns, 0);
+
         if (turns >= 10 && mi->alive())
             mi->timeout_enchantments(turns / 10);
     }
