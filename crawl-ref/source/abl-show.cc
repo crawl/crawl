@@ -1426,7 +1426,7 @@ static bool _do_ability(const ability_def& abil)
             exercise(SK_EVOCATIONS, 1);
         break;
 
-    // Fly (kenku) - eventually becomes permanent (see acr.cc).
+    // Fly (kenku) - eventually becomes permanent (see main.cc).
     case ABIL_FLY:
         cast_fly(you.experience_level * 4);
 

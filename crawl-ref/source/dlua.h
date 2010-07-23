@@ -9,7 +9,7 @@
 
 #include "clua.h"
 
-// Defined in acr.cc
+// Defined in main.cc
 #ifdef DEBUG_GLOBALS
 #define dlua (*real_dlua)
 #endif
