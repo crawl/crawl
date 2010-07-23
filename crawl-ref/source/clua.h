@@ -237,7 +237,7 @@ private:
     static std::string new_fn_name();
 };
 
-// Defined in acr.cc
+// Defined in main.cc
 #ifdef DEBUG_GLOBALS
 #define clua (*real_clua)
 #endif
