@@ -28,7 +28,8 @@ game_state::game_state()
       mouse_enabled(false), waiting_for_command(false),
       terminal_resized(false), io_inited(false), need_save(false),
       saving_game(false), updating_scores(false), seen_hups(0),
-      map_stat_gen(false), type(GAME_TYPE_NORMAL), arena_suspended(false), build_db(false),
+      map_stat_gen(false), type(GAME_TYPE_NORMAL), arena_suspended(false),
+      test(false), script(false), build_db(false), tests_selected(),
       unicode_ok(false), show_more_prompt(true),
       glyph2strfn(NULL), multibyte_strlen(NULL),
       terminal_resize_handler(NULL), terminal_resize_check(NULL),
@@ -38,7 +39,7 @@ game_state::game_state()
 #ifndef USE_TILE
       mlist_targeting(false),
 #endif
-      darken_range(-1), unsaved_macros(false)
+      darken_range(-1), unsaved_macros(false), mon_act(NULL)
 {
     reset_cmd_repeat();
     reset_cmd_again();
