@@ -1606,8 +1606,8 @@ bool cast_tukimas_dance(int pow, god_type god, bool force_hostile)
     conduct_type why = good_god_hates_item_handling(*wpn);
     if (!why)
         why = god_hates_item_handling(*wpn);
-    // FIXME: Replace this with a call to a proper destructor.
-    wpn->quantity = 0;
+
+    wpn->clear();
 
     monsters& dancing_weapon = menv[monster];
 
