@@ -708,10 +708,17 @@ void map_markers::unlink_marker(const map_marker *marker)
     }
 }
 
+void map_markers::check_empty()
+{
+    if (markers.empty())
+        have_inactive_markers = false;
+}
+
 void map_markers::remove(map_marker *marker)
 {
     unlink_marker(marker);
     delete marker;
+    check_empty();
 }
 
 void map_markers::remove_markers_at(const coord_def &c,
@@ -728,6 +735,7 @@ void map_markers::remove_markers_at(const coord_def &c,
             markers.erase(todel);
         }
     }
+    check_empty();
 }
 
 map_marker *map_markers::find(const coord_def &c, map_marker_type type)
@@ -839,6 +847,7 @@ void map_markers::clear()
          i != markers.end(); ++i)
         delete i->second;
     markers.clear();
+    check_empty();
 }
 
 static const long MARKERS_COOKY = 0x17742C32;
