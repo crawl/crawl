@@ -350,6 +350,7 @@ struct LevelInfo
     // or does not exist in our list of stairs, returns 0.
     int distance_between(const stair_info *s1, const stair_info *s2) const;
 
+    void update_excludes();
     void update();              // Update LevelInfo to be correct for the
                                 // current level.
 
@@ -441,7 +442,7 @@ public:
     void list_waypoints() const;
     void update_waypoints() const;
 
-
+    void update_excludes();
     void update();
 
     void save(writer&) const;
