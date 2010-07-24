@@ -662,6 +662,7 @@ private:
 
     void init_from(const map_markers &);
     void unlink_marker(const map_marker *);
+    void check_empty();
 
 private:
     dgn_marker_map markers;
