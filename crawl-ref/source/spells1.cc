@@ -1197,7 +1197,7 @@ void extension(int pow)
     if (you.duration[DUR_LEVITATION] && !you.duration[DUR_CONTROLLED_FLIGHT]
         && _know_spell(SPELL_LEVITATION))
     {
-        potion_effect(POT_LEVITATION, pow);
+        levitate_player(pow);
     }
 
     if (you.duration[DUR_INVIS] && _know_spell(SPELL_INVISIBILITY))

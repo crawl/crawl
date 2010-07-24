@@ -2391,18 +2391,32 @@ static void _decrement_durations()
 #endif
     }
 
-    if (!you.permanent_levitation() && !you.permanent_flight())
+    if (you.duration[DUR_LEVITATION])
     {
-        if (_decrement_a_duration(DUR_LEVITATION, delay,
-                                  "You float gracefully downwards.",
-                                  random2(6),
-                                  "You are starting to lose your buoyancy!"))
+        if (!you.permanent_levitation() && !you.permanent_flight())
         {
-            burden_change();
-            // Landing kills controlled flight.
-            you.duration[DUR_CONTROLLED_FLIGHT] = 0;
-            // Re-enter the terrain.
-            move_player_to_grid(you.pos(), false, true);
+            if (_decrement_a_duration(DUR_LEVITATION, delay,
+                                      "You float gracefully downwards.",
+                                      random2(6),
+                                      "You are starting to lose your buoyancy!"))
+            {
+                burden_change();
+                // Landing kills controlled flight.
+                you.duration[DUR_CONTROLLED_FLIGHT] = 0;
+                you.attribute[ATTR_LEV_UNCANCELLABLE] = 0;
+                // Re-enter the terrain.
+                move_player_to_grid(you.pos(), false, true);
+            }
+        }
+        else
+        {
+            // Just time out potions/spells/miscasts.
+            if ((you.duration[DUR_LEVITATION] -= delay) <= 0)
+            {
+                you.attribute[ATTR_LEV_UNCANCELLABLE] = 0;
+                // permanent_levitation() has a hack that requires >1
+                you.duration[DUR_LEVITATION] = 2;
+            }
         }
     }
 

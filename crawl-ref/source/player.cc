@@ -5050,6 +5050,42 @@ void dec_disease_player(int delay)
     }
 }
 
+void levitate_player(int pow)
+{
+    bool standing = !you.airborne();
+    mprf(MSGCH_DURATION,
+         "You feel %s buoyant.", standing ? "very" : "more");
+
+    if (standing)
+        mpr("You gently float upwards from the floor.");
+
+    // Amulet of Controlled Flight can auto-ID.
+    if (!you.duration[DUR_LEVITATION]
+        && wearing_amulet(AMU_CONTROLLED_FLIGHT)
+        && !extrinsic_amulet_effect(AMU_CONTROLLED_FLIGHT))
+    {
+        item_def& amu(you.inv[you.equip[EQ_AMULET]]);
+        if (!is_artefact(amu) && !item_type_known(amu))
+        {
+            set_ident_type(amu.base_type, amu.sub_type, ID_KNOWN_TYPE);
+            set_ident_flags(amu, ISFLAG_KNOW_PROPERTIES);
+            mprf("You are wearing: %s",
+                 amu.name(DESC_INVENTORY_EQUIP).c_str());
+        }
+    }
+
+    you.increase_duration(DUR_LEVITATION, 25 + random2(pow), 100);
+
+    // Merfolk boots unmeld if levitation takes us out of water.
+    if (standing && you.species == SP_MERFOLK
+        && feat_is_water(grd(you.pos())))
+    {
+        unmeld_one_equip(EQ_BOOTS);
+    }
+
+    burden_change();
+}
+
 int count_worn_ego(int which_ego)
 {
     int result = 0;
