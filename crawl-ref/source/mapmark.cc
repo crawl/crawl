@@ -643,6 +643,7 @@ void map_markers::init_from(const map_markers &c)
     {
         add( i->second->clone() );
     }
+    have_inactive_markers = c.have_inactive_markers;
 }
 
 void map_markers::clear_need_activate()
@@ -761,6 +762,7 @@ map_marker *map_markers::find(map_marker_type type)
 
 void map_markers::move(const coord_def &from, const coord_def &to)
 {
+    unwind_bool inactive(have_inactive_markers);
     std::pair<dgn_marker_map::iterator, dgn_marker_map::iterator>
         els = markers.equal_range(from);
 
@@ -782,6 +784,7 @@ void map_markers::move(const coord_def &from, const coord_def &to)
 
 void map_markers::move_marker(map_marker *marker, const coord_def &to)
 {
+    unwind_bool inactive(have_inactive_markers);
     unlink_marker(marker);
     marker->pos = to;
     add(marker);
