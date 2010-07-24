@@ -705,6 +705,10 @@ eye of draining
 
 These hovering horrors are especially loathed by wizards.
 %%%%
+felid
+
+This feline has been given sentience with magic. It uses the gift of speech to demand milk, treats and catnip.
+%%%%
 fiend
 
 One of the most fearsome denizens of any Hell. A huge and powerful demon wreathed in hellfire, with great scaly wings.
@@ -1719,10 +1723,6 @@ A small and mischievous minor demon covered in frost.
 wight
 
 An ancient warrior, kept in a state of undeath by its will to live.
-%%%%
-witch's cat
-
-This feline has been given sentience with magic. It uses the gift of speech to demand milk, treats and catnip.
 %%%%
 wizard
 

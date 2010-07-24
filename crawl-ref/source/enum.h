@@ -1866,7 +1866,7 @@ enum monster_type                      // (int) menv[].type
 
     MONS_HYPERACTIVE_BALLISTOMYCETE,
     MONS_HALFLING,              // for recolouring only.  And let's remove them!
-    MONS_WITCHS_CAT,            // for recolouring only.  Miaow!
+    MONS_FELID,                 // for recolouring only.  Miaow!
 
     //jmf: end new monsters
     MONS_WHITE_IMP = 220,              //  220
