@@ -1788,7 +1788,8 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_LEVITATION:
-        potion_effect(POT_LEVITATION, powc);
+        you.attribute[ATTR_LEV_UNCANCELLABLE] = 1;
+        levitate_player(powc);
         break;
 
     case SPELL_FLY:

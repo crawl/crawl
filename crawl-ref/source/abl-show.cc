@@ -1472,11 +1472,12 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_EVOKE_LEVITATE:           // ring, boots, randarts
-        potion_effect(POT_LEVITATION, 2 * you.skills[SK_EVOCATIONS] + 30);
+        levitate_player(2 * you.skills[SK_EVOCATIONS] + 30);
         exercise(SK_EVOCATIONS, 1);
         break;
 
     case ABIL_EVOKE_STOP_LEVITATING:
+        ASSERT(!you.attribute[ATTR_LEV_UNCANCELLABLE]);
         mpr("You feel heavy.");
         you.duration[DUR_LEVITATION] = 1;
         break;
@@ -2422,7 +2423,7 @@ std::vector<talent> your_talents(bool check_confused)
         || scan_artefacts( ARTP_LEVITATE))
     {
         // Has no effect on permanently flying Kenku.
-        if (!you.permanent_flight())
+        if (!you.permanent_flight() && !you.attribute[ATTR_LEV_UNCANCELLABLE])
         {
             // Now you can only turn levitation off if you have an
             // activatable item.  Potions and miscast effects will
