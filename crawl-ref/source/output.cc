@@ -627,7 +627,8 @@ static void _get_status_lights(std::vector<status_light>& out)
         }
         else
         {
-            int color = _dur_colour(BLUE, expiring);
+            int color = _dur_colour(you.attribute[ATTR_LEV_UNCANCELLABLE] ?
+                                    GREEN : BLUE, expiring);
             out.push_back(status_light(color, "Lev"));
         }
     }
