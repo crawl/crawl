@@ -377,6 +377,7 @@ static void _tile_exclude_gmap_update(const coord_def &p)
 static void _exclude_update()
 {
     set_level_exclusion_annotation(curr_excludes.get_exclusion_desc());
+    travel_cache.update_excludes();
 }
 
 static void _exclude_update(const coord_def &p)

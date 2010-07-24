@@ -3108,6 +3108,11 @@ bool LevelInfo::empty() const
     return (stairs.empty() && excludes.empty());
 }
 
+void LevelInfo::update_excludes()
+{
+    excludes = curr_excludes;
+}
+
 void LevelInfo::update()
 {
     // First, set excludes, so that stair distances will be correctly populated.
@@ -3769,6 +3774,11 @@ void TravelCache::load(reader& inf, char minorVersion)
 void TravelCache::set_level_excludes()
 {
     get_level_info(level_id::current()).set_level_excludes();
+}
+
+void TravelCache::update_excludes()
+{
+    get_level_info(level_id::current()).update_excludes();
 }
 
 void TravelCache::update()
