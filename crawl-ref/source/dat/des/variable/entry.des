@@ -3245,7 +3245,7 @@ KMONS:   R = elf ; nothing
 KMONS:   S = ghoul ; nothing
 KMONS:   T = vampire spells:. ; nothing
 KMONS:   U = demigod ; nothing
-KMONS:   V = witch's cat
+KMONS:   V = felid
 COLOUR:  m = cyan
 TILE:    m = dngn_grate
 :           dgn.set_feature_desc_short("translucent rock wall",
