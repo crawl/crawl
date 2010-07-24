@@ -4518,7 +4518,8 @@ void monsters::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             // This should only happen because of fleeing sanctuary
             snprintf(info, INFO_SIZE, " stops retreating.");
         }
-        else if (type != MONS_KRAKEN_TENTACLE)
+        else if (type != MONS_KRAKEN_TENTACLE
+                 && type != MONS_KRAKEN_CONNECTOR)
         {
             snprintf(info, INFO_SIZE, " seems to regain %s courage.",
                      pronoun(PRONOUN_NOCAP_POSSESSIVE, true).c_str());
@@ -5571,7 +5572,8 @@ int monsters::foe_distance() const
 
 bool monsters::can_go_berserk() const
 {
-    if (holiness() != MH_NATURAL || type == MONS_KRAKEN_TENTACLE)
+    if (holiness() != MH_NATURAL || type == MONS_KRAKEN_TENTACLE
+        || type == MONS_KRAKEN_CONNECTOR)
         return (false);
 
     if (mons_intel(this) == I_PLANT)
@@ -6216,6 +6218,30 @@ void monsters::react_to_damage(const actor *oppressor, int damage,
             {
                 type = MONS_KRAKEN_TENTACLE;
                 hit_points = -1;
+            }
+        }
+    }
+    else if (type == MONS_KRAKEN_CONNECTOR)
+    {
+        if (!invalid_monster_index(number)
+            && mons_base_type(&menv[number]) == MONS_KRAKEN_TENTACLE)
+        {
+
+            // If we aare going to die, monster_die hook will handle
+            // purging the tentacle.
+            if (hit_points < menv[number].hit_points
+                && this->hit_points > 0)
+            {
+                int pass_damage = menv[number].hit_points -  hit_points;
+                menv[number].hurt(oppressor, pass_damage, flavour);
+
+                // We could be removed, undo this or certain post-hit
+                // effects will cry.
+                if (invalid_monster(this))
+                {
+                    type = MONS_KRAKEN_CONNECTOR;
+                    hit_points = -1;
+                }
             }
         }
     }
