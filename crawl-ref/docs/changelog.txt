@@ -1,5 +1,5 @@
-Stone Soup 0.7
---------------
+Stone Soup 0.7 (20100724)
+-------------------------
 Balance fixes
 * Monster double actions due to energy randomisation always include a move.
 * Greatly accelerate armour training when armour is heavy relative to skill.
