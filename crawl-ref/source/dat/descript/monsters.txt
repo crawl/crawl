@@ -829,6 +829,10 @@ giant orange brain
 
 A huge wrinkled brain, floating just off the floor. Every now and then it seems to pulsate.
 %%%%
+giant scorpion
+
+A bigger and deadlier relative of the deadly dungeon scorpion.
+%%%%
 giant slug
 
 A huge and disgusting gastropod.
