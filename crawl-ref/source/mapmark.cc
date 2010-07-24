@@ -611,11 +611,12 @@ std::string map_tomb_marker::debug_describe() const
 //////////////////////////////////////////////////////////////////////////
 // Map markers in env.
 
-map_markers::map_markers() : markers()
+map_markers::map_markers() : markers(), have_inactive_markers(false)
 {
 }
 
-map_markers::map_markers(const map_markers &c) : markers()
+map_markers::map_markers(const map_markers &c)
+  : markers(), have_inactive_markers(false)
 {
     init_from(c);
 }
