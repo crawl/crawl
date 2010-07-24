@@ -1,3 +1,8 @@
+Stone Soup 0.7.1 (20100724)
+---------------------------
+* Fix travel excludes not being saved.
+* Fix map markers not being activated on game reload.
+
 Stone Soup 0.7 (20100724)
 -------------------------
 Balance fixes
