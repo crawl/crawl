@@ -3118,10 +3118,8 @@ void level_change(bool skip_attribute_increase)
                                      "demonic heritage exerts itself.",
                                      MSGCH_MUTATION);
 
-#ifdef DGL_MILESTONES
                                 mark_milestone("monstrous", "is a "
                                                "monstrous demonspawn!");
-#endif
                             }
 
                             i = you.demonic_traits.size();
@@ -4423,8 +4421,7 @@ void set_hp(int new_amount, bool max_too)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (you.hp != new_amount)
-        you.hp = new_amount;
+    you.hp = new_amount;
 
     if (max_too && you.hp_max != new_amount)
     {
@@ -4448,8 +4445,7 @@ void set_mp(int new_amount, bool max_too)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (you.magic_points != new_amount)
-        you.magic_points = new_amount;
+    you.magic_points = new_amount;
 
     if (max_too && you.max_magic_points != new_amount)
     {
@@ -5089,6 +5085,42 @@ void dec_disease_player(int delay)
     }
 }
 
+void levitate_player(int pow)
+{
+    bool standing = !you.airborne();
+    mprf(MSGCH_DURATION,
+         "You feel %s buoyant.", standing ? "very" : "more");
+
+    if (standing)
+        mpr("You gently float upwards from the floor.");
+
+    // Amulet of Controlled Flight can auto-ID.
+    if (!you.duration[DUR_LEVITATION]
+        && wearing_amulet(AMU_CONTROLLED_FLIGHT)
+        && !extrinsic_amulet_effect(AMU_CONTROLLED_FLIGHT))
+    {
+        item_def& amu(you.inv[you.equip[EQ_AMULET]]);
+        if (!is_artefact(amu) && !item_type_known(amu))
+        {
+            set_ident_type(amu.base_type, amu.sub_type, ID_KNOWN_TYPE);
+            set_ident_flags(amu, ISFLAG_KNOW_PROPERTIES);
+            mprf("You are wearing: %s",
+                 amu.name(DESC_INVENTORY_EQUIP).c_str());
+        }
+    }
+
+    you.increase_duration(DUR_LEVITATION, 25 + random2(pow), 100);
+
+    // Merfolk boots unmeld if levitation takes us out of water.
+    if (standing && you.species == SP_MERFOLK
+        && feat_is_water(grd(you.pos())))
+    {
+        unmeld_one_equip(EQ_BOOTS);
+    }
+
+    burden_change();
+}
+
 int count_worn_ego(int which_ego)
 {
     int result = 0;
@@ -5105,19 +5137,19 @@ int count_worn_ego(int which_ego)
 }
 
 player::player()
-    : m_quiver(0)
+    : kills(0), m_quiver(0)
 {
     init();
-    kills = new KillMaster();   // why isn't this done in init()?
 }
 
 player::player(const player &other)
-    : m_quiver(0)
+    : kills(0), m_quiver(0)
 {
     init();
 
     // why doesn't this do a copy_from?
     player_quiver* saved_quiver = m_quiver;
+    delete kills;
     *this = other;
     m_quiver = saved_quiver;
 
@@ -5146,145 +5178,219 @@ void player::copy_from(const player &other)
 // player struct initialization
 void player::init()
 {
-    turn_is_over     = false;
-
-    prev_targ        = 0;
-    prev_grd_targ.reset();
-
-    birth_time       = time( NULL );
-    real_time        = 0;
-    num_turns        = 0L;
-    last_view_update = 0L;
+    // Permanent data:
+    your_name.clear();
+    species          = SP_UNKNOWN;
+    char_class       = JOB_UNKNOWN;
+    class_name[0]    = 0;
 
 #ifdef WIZARD
     wizard = (Options.wiz_mode == WIZ_YES) ? true : false;
 #else
     wizard = false;
 #endif
+    birth_time       = time(0);
 
-    your_name.clear();
+    // Long-term state:
+    elapsed_time     = 0;
 
-    banished = false;
-    banished_by.clear();
+    hp               = 0;
+    hp_max           = 0;
+    base_hp          = 5000;
+    base_hp2         = 5000;
 
-    entering_level = false;
-    transit_stair  = DNGN_UNSEEN;
-
-    berserk_penalty = 0;
-    disease         = 0;
-    elapsed_time    = 0;
-    rotting         = 0;
-    unrand_reacts   = 0;
-
-    magic_contamination = 0;
-
-    base_hp  = 5000;
-    base_hp2 = 5000;
-    hp_max   = 0;
+    magic_points       = 0;
+    max_magic_points   = 0;
     base_magic_points  = 5000;
     base_magic_points2 = 5000;
-    max_magic_points   = 0;
-
-    hit_points_regeneration = 0;
-    magic_points_regeneration = 0;
 
     stat_loss.init(0);
     base_stats.init(0);
     stat_zero.init(0);
+    last_chosen        = STAT_RANDOM;
 
+    hunger          = 6000;
+    hunger_state    = HS_SATIATED;
+    disease         = 0;
+    max_level       = 1;
+    hit_points_regeneration   = 0;
     magic_points_regeneration = 0;
-    base_stats.init(0);
     experience       = 0;
     experience_level = 1;
-    max_level        = 1;
-    char_class       = JOB_UNKNOWN;
-    species          = SP_UNKNOWN;
-
-    hunger       = 6000;
-    hunger_state = HS_SATIATED;
-
-    wield_change            = false;
-    redraw_quiver           = false;
-    received_weapon_warning = false;
-
-    gold = 0;
-    // speed = 10;             // 0.75;  // unused
-
-    burden       = 0;
-    burden_state = BS_UNENCUMBERED;
-
-    spell_no = 0;
-
-    absdepth0        = 0;
-    level_type       = LEVEL_DUNGEON;
-    entry_cause      = EC_SELF_EXPLICIT;
-    entry_cause_god  = GOD_NO_GOD;
-    where_are_you    = BRANCH_MAIN_DUNGEON;
-    char_direction   = GDT_DESCENDING;
-    opened_zot       = false;
-    royal_jelly_dead = false;
-
-    prev_targ  = MHITNOT;
-    pet_target = MHITNOT;
-
-    prev_grd_targ.reset();
-    position.reset();
-    prev_move.reset();
-
-    running.clear();
-    travel_x = 0;
-    travel_y = 0;
-    travel_z = level_id();
-
-    religion         = GOD_NO_GOD;
-    piety            = 0;
-    piety_hysteresis = 0;
-
-    gift_timeout     = 0;
-
-    penance.init(0);
-    worshipped.init(0);
-    num_gifts.init(0);
+    gold             = 0;
 
     equip.init(-1);
     melded.init(false);
+    unrand_reacts   = 0;
 
+    symbol          = MONS_PLAYER;;
+
+    for (int i = 0; i < ENDOFPACK; i++)
+        inv[i].clear();
+
+    burden          = 0;
+    burden_state    = BS_UNENCUMBERED;
     spells.init(SPELL_NO_SPELL);
+    spell_no        = 0;
+    char_direction  = GDT_DESCENDING;
+    opened_zot      = false;
+    royal_jelly_dead = false;
+    transform_uncancellable = false;
 
-    spell_letter_table.init(-1);
-    ability_letter_table.init(ABIL_NON_ABILITY);
+    pet_target      = MHITNOT;
 
-    mutation.init(0);
-    innate_mutations.init(0);
+    absdepth0       = 0;
 
-    demonic_traits.clear();
-
-    had_book.init(false);
-
-    unique_items.init(UNIQ_NOT_EXISTS);
-
-    skills.init(0);
-    skill_points.init(0);
-    skill_order.init(MAX_SKILL_ORDER);
-    practise_skill.init(true);
-
-    skill_cost_level   = 1;
-    total_skill_points = 0;
+    duration.init(0);
+    rotting         = 0;
+    berserk_penalty = 0;
 
     attribute.init(0);
     quiver.init(ENDOFPACK);
     sacrifice_value.init(0);
 
-    for (int i = 0; i < ENDOFPACK; i++)
-        inv[i].clear();
+    is_undead       = US_ALIVE;
 
-    duration.init(0);
+    friendly_pickup = 0;
+#if defined(WIZARD) || defined(DEBUG)
+    never_die = false;
+    xray_vision = false;
+#endif
+    dead = false;
+    lives = 0;
+    deaths = 0;
 
-    exp_available = 25;
+    skills.init(0);
+    practise_skill.init(true);
+    skill_points.init(0);
+    skill_order.init(MAX_SKILL_ORDER);
 
+    sage_bonus_skill = NUM_SKILLS;
+    sage_bonus_degree = 0;
+
+    skill_cost_level = 1;
+    total_skill_points = 0;
+    exp_available    = 25;
+
+    item_description.init(255);
+    unique_items.init(UNIQ_NOT_EXISTS);
+    unique_creatures.init(false);
+
+    if (kills)
+        delete kills;
+    kills = new KillMaster();
+
+    level_type       = LEVEL_DUNGEON;
+    level_type_name.clear();
+    level_type_ext.clear();
+    level_type_name_abbrev.clear();
+    level_type_origin.clear();
+    level_type_tag.clear();
+
+    where_are_you    = BRANCH_MAIN_DUNGEON;
+
+    branch_stairs.init(0);
+
+    religion         = GOD_NO_GOD;
+    second_god_name.clear();
+    piety            = 0;
+    piety_hysteresis = 0;
+    gift_timeout     = 0;
+    penance.init(0);
+    worshipped.init(0);
+    num_gifts.init(0);
+
+    mutation.init(0);
+    innate_mutations.init(0);
+    demonic_traits.clear();
+
+    magic_contamination = 0;
+
+    had_book.init(false);
+    seen_spell.init(false);
+    seen_weapon.init(0);
+    seen_armour.init(0);
+
+    normal_vision    = LOS_RADIUS;
+    current_vision   = LOS_RADIUS;
+
+    hell_branch      = NUM_BRANCHES;
+    hell_exit        = 0;
+
+    real_time        = 0;
+    num_turns        = 0;
+
+    last_view_update = 0;
+
+    spell_letter_table.init(-1);
+    ability_letter_table.init(ABIL_NON_ABILITY);
+
+    uniq_map_tags.clear();
+    uniq_map_names.clear();
+
+    global_info = PlaceInfo();
     global_info.make_global();
     global_info.assert_validity();
 
+   if (m_quiver)
+        delete m_quiver;
+    m_quiver = new player_quiver;
+
+    props.clear();
+
+    beholders.clear();
+    dactions.clear();
+
+
+    // Non-saved UI state:
+    prev_targ        = MHITNOT;
+    prev_grd_targ.reset();
+    prev_move.reset();
+
+    travel_x         = 0;
+    travel_y         = 0;
+    travel_z         = level_id();
+
+    running.clear();
+    received_weapon_warning = false;
+
+    delay_queue.clear();
+
+    start_time       = time(0);
+
+
+    // Volatile (same-turn) state:
+    turn_is_over     = false;
+    banished         = false;
+    banished_by.clear();
+
+    wield_change     = false;
+    redraw_quiver    = false;
+    redraw_status_flags = 0;
+    redraw_hit_points   = false;
+    redraw_magic_points = false;
+    redraw_stats.init(false);
+    redraw_experience   = false;
+    redraw_armour_class = false;
+    redraw_evasion      = false;
+
+    flash_colour        = BLACK;
+
+    time_taken          = 0;
+    shield_blocks       = 0;
+
+    entry_cause         = EC_SELF_EXPLICIT;
+    entry_cause_god     = GOD_NO_GOD;
+
+    old_hunger          = hunger;
+    transit_stair       = DNGN_UNSEEN;
+    entering_level      = false;
+
+    reset_escaped_death();
+    on_current_level    = true;
+    walking             = 0;
+
+    // Protected fields:
     for (int i = 0; i < NUM_BRANCHES; i++)
     {
         branch_info[i].level_type = LEVEL_DUNGEON;
@@ -5298,28 +5404,6 @@ void player::init()
         non_branch_info[i].branch     = -1;
         non_branch_info[i].assert_validity();
     }
-
-    if (m_quiver)
-        delete m_quiver;
-    m_quiver = new player_quiver;
-
-    // Currently only set if Xom accidentally kills the player.
-    reset_escaped_death();
-
-    on_current_level = true;
-    walking = 0;
-
-#if defined(WIZARD) || defined(DEBUG)
-    you.never_die = false;
-#endif
-    dead = false;
-    lives = 0;
-    deaths = 0;
-}
-
-void player::reset()
-{
-    copy_from(player());
 }
 
 player_save_info player_save_info::operator=(const player& rhs)
@@ -5952,8 +6036,9 @@ int player::res_magic() const
     // rings of magic resistance
     rm += 40 * player_equip(EQ_RINGS, RING_PROTECTION_FROM_MAGIC);
 
-    // Enchantment skill
-    rm += 2 * skills[SK_ENCHANTMENTS];
+    // Enchantment skill through staff of enchantment (up to 90).
+    if (player_equip(EQ_STAFF, STAFF_ENCHANTMENT))
+        rm += 3 * (3 + skills[SK_ENCHANTMENTS]);
 
     // Mutations
     rm += 30 * player_mutation_level(MUT_MAGIC_RESISTANCE);
@@ -6381,6 +6466,9 @@ bool player::sicken(int amount)
 
 bool player::can_see_invisible(bool calc_unid, bool transient) const
 {
+    if (crawl_state.game_is_arena())
+        return (true);
+
     int si = 0;
 
     si += player_equip( EQ_RINGS, RING_SEE_INVISIBLE, calc_unid );

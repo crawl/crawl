@@ -26,41 +26,20 @@
 class player : public actor
 {
 public:
-  bool turn_is_over; // flag signaling that player has performed a timed action
-
-  // If true, player is headed to the Abyss.
-  bool banished;
-  std::string banished_by;
-
-  int  friendly_pickup;       // pickup setting for allies
-
-  unsigned short prev_targ;
-  coord_def      prev_grd_targ;
-
+  // Permanent data:
   std::string your_name;
   species_type species;
   job_type char_class;
+  char class_name[30];
 
-  // Coordinates of last travel target; note that this is never used by
-  // travel itself, only by the level-map to remember the last travel target.
-  short travel_x, travel_y;
-  level_id travel_z;
+  // This field is here even in non-WIZARD compiles, since the
+  // player might have been playing previously under wiz mode.
+  bool          wizard;               // true if player has entered wiz mode.
+  time_t        birth_time;           // start time of game
 
-  runrest running;            // Nonzero if running/traveling.
 
-  unsigned short unrand_reacts;
-
+  // Long-term state:
   int elapsed_time;        // total amount of elapsed time in the game
-
-  int disease;
-
-  char max_level;
-
-  coord_def prev_move;
-
-  int hunger;
-  FixedVector<signed char, NUM_EQUIP> equip;
-  FixedVector<bool, NUM_EQUIP> melded;
 
   int hp;
   int hp_max;
@@ -77,36 +56,22 @@ public:
   FixedVector<int, NUM_STATS> stat_zero;
   stat_type last_chosen;
 
+  int hunger;
   char hunger_state;
-
-  bool wield_change;          // redraw weapon
-  bool redraw_quiver;         // redraw quiver
-  bool received_weapon_warning;
-
-  uint64_t redraw_status_flags;
-
-  // PC's symbol (usually @) and colour.
-  monster_type symbol;
-
-  bool redraw_hit_points;
-  bool redraw_magic_points;
-  FixedVector<bool, NUM_STATS> redraw_stats;
-  bool redraw_experience;
-  bool redraw_armour_class;
-  bool redraw_evasion;
-
-  unsigned char flash_colour;
-
+  int disease;
+  char max_level;
   unsigned char hit_points_regeneration;
   unsigned char magic_points_regeneration;
-
   unsigned int experience;
   int experience_level;
   int gold;
-  char class_name[30];
-  int time_taken;
 
-  int shield_blocks;         // number of shield blocks since last action
+  FixedVector<signed char, NUM_EQUIP> equip;
+  FixedVector<bool, NUM_EQUIP> melded;
+  unsigned short unrand_reacts;
+
+  // PC's symbol (usually @) and colour.
+  monster_type symbol;
 
   FixedVector< item_def, ENDOFPACK > inv;
 
@@ -123,11 +88,8 @@ public:
 
   int absdepth0; // offset by one (-1 == 0, 0 == 1, etc.) for display
 
-  // durational things
   FixedVector<int, NUM_DURATIONS> duration;
-
   int rotting;
-
   int berserk_penalty;                // penalty for moving while berserk
 
   FixedVector<int, NUM_ATTRIBUTES> attribute;
@@ -136,7 +98,16 @@ public:
 
   undead_state_type is_undead;
 
-  delay_queue_type delay_queue;       // pending actions
+  int  friendly_pickup;       // pickup setting for allies
+#if defined(WIZARD) || defined(DEBUG)
+  // If set to true, then any call to ouch() which would cuase the player
+  // to die automatically returns without ending the game.
+  bool never_die;
+  bool xray_vision;
+#endif
+  bool dead; // ... but pending revival
+  int lives;
+  int deaths;
 
   FixedVector<unsigned char, 50>  skills;
   FixedVector<bool, 50>  practise_skill;
@@ -190,9 +161,6 @@ public:
   // .des file tag for portal vault
   std::string level_type_tag;
 
-  entry_cause_type entry_cause;
-  god_type         entry_cause_god;
-
   branch_type where_are_you;
 
   FixedVector<unsigned char, 30> branch_stairs;
@@ -206,7 +174,6 @@ public:
   FixedVector<unsigned char, MAX_NUM_GODS>  worshipped;
   FixedVector<short,         MAX_NUM_GODS>  num_gifts;
 
-
   FixedVector<unsigned char, NUM_MUTATIONS> mutation;
   FixedVector<unsigned char, NUM_MUTATIONS> innate_mutations;
 
@@ -217,8 +184,6 @@ public:
   };
 
   std::vector<demon_trait> demonic_traits;
-
-  std::vector<item_def> powered_by_death_corpses;
 
   unsigned char magic_contamination;
 
@@ -233,23 +198,10 @@ public:
   branch_type   hell_branch;          // which branch the player goes to on hell exit
   unsigned char hell_exit;            // which level player goes to on hell exit
 
-  // This field is here even in non-WIZARD compiles, since the
-  // player might have been playing previously under wiz mode.
-  bool          wizard;               // true if player has entered wiz mode.
-  time_t        birth_time;           // start time of game
-
-  time_t        start_time;           // start time of session
   int           real_time;            // real time played (in seconds)
   int           num_turns;            // number of turns taken
 
   int           last_view_update;     // what turn was the view last updated?
-
-  int           old_hunger;  // used for hunger delta-meter (see output.cc)
-
-  // Set when the character is going to a new level, to guard against levgen
-  // failures
-  dungeon_feature_type transit_stair;
-  bool entering_level;
 
   // Warning: these two are quite different.
   //
@@ -267,17 +219,7 @@ public:
   PlaceInfo global_info;
   player_quiver* m_quiver;
 
-  int         escaped_death_cause;
-  std::string escaped_death_aux;
-
   CrawlHashTable props;
-
-  // When other levels are loaded (e.g. viewing), is the player on this level?
-  bool on_current_level;
-
-  // Did you spent this turn walking (/flying)?
-  // 0 = no, 1 = cardinal move, 2 = diagonal move
-  int walking;
 
   // monsters mesmerising player; should be protected, but needs to be saved
   // and restored.
@@ -287,14 +229,69 @@ public:
   // be loaded again until the very end.
   std::vector<daction_type> dactions;
 
-#if defined(WIZARD) || defined(DEBUG)
-  // If set to true, then any call to ouch() which would cuase the player
-  // to die automatically returns without ending the game.
-  bool never_die;
-#endif
-  bool dead; // ... but pending revival
-  int lives;
-  int deaths;
+
+  // Non-saved UI state:
+  unsigned short prev_targ;
+  coord_def      prev_grd_targ;
+  coord_def      prev_move;
+
+  // Coordinates of last travel target; note that this is never used by
+  // travel itself, only by the level-map to remember the last travel target.
+  short travel_x, travel_y;
+  level_id travel_z;
+
+  runrest running;            // Nonzero if running/traveling.
+  bool received_weapon_warning;
+
+  delay_queue_type delay_queue;       // pending actions
+
+  time_t        start_time;           // start time of session
+
+
+  // Volatile (same-turn) state:
+  bool turn_is_over; // flag signaling that player has performed a timed action
+
+  // If true, player is headed to the Abyss.
+  bool banished;
+  std::string banished_by;
+
+  bool wield_change;          // redraw weapon
+  bool redraw_quiver;         // redraw quiver
+  uint64_t redraw_status_flags;
+
+  bool redraw_hit_points;
+  bool redraw_magic_points;
+  FixedVector<bool, NUM_STATS> redraw_stats;
+  bool redraw_experience;
+  bool redraw_armour_class;
+  bool redraw_evasion;
+
+  unsigned char flash_colour;
+
+  int time_taken;
+
+  int shield_blocks;         // number of shield blocks since last action
+
+  entry_cause_type entry_cause;
+  god_type         entry_cause_god;
+
+  int           old_hunger;  // used for hunger delta-meter (see output.cc)
+
+  // Set when the character is going to a new level, to guard against levgen
+  // failures
+  dungeon_feature_type transit_stair;
+  bool entering_level;
+
+  int         escaped_death_cause;
+  std::string escaped_death_aux;
+
+  // When other levels are loaded (e.g. viewing), is the player on this level?
+  bool on_current_level;
+
+  // Did you spent this turn walking (/flying)?
+  // 0 = no, 1 = cardinal move, 2 = diagonal move
+  int walking;
+
 
 protected:
     FixedVector<PlaceInfo, NUM_BRANCHES>             branch_info;
@@ -308,9 +305,6 @@ public:
     void copy_from(const player &other);
 
     void init();
-
-    // Reset player data for a new game.
-    void reset();
 
     // Set player position without updating view geometry.
     void set_position(const coord_def &c);
@@ -343,6 +337,9 @@ public:
     bool can_see_invisible(bool unid, bool transient = true) const;
     bool visible_to(const actor *looker) const;
     bool can_see(const actor* a) const;
+
+    bool see_cell(const coord_def& p) const;
+    const los_base* get_los();
 
     // Is c in view but behind a transparent wall?
     bool trans_wall_blocking(const coord_def &c) const;
@@ -588,6 +585,9 @@ protected:
     bool _possible_beholder(const monsters *mon) const;
 };
 
+#ifdef DEBUG_GLOBALS
+#define you (*real_you)
+#endif
 extern player you;
 
 struct player_save_info
@@ -816,6 +816,7 @@ void dec_exhaust_player(int delay);
 
 bool haste_player(int turns);
 void dec_haste_player(int delay);
+void levitate_player(int pow);
 
 void dec_disease_player(int delay);
 

@@ -490,3 +490,5 @@ floor/dirt_sw
 floor/dirt_w
 floor/dirt_nw
 floor/dirt_full
+
+floor/tutorial_pad TUTORIAL_PAD

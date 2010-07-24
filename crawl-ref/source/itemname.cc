@@ -143,7 +143,7 @@ std::string item_def::name(description_level_type descrip,
         }
     }
 
-    if (this->base_type == OBJ_ORBS
+    if (item_is_orb(*this)
         || (ident || item_type_known( *this ))
             && (this->base_type == OBJ_MISCELLANY
                    && this->sub_type == MISC_HORN_OF_GERYON
@@ -1563,7 +1563,7 @@ std::string item_def::name_aux(description_level_type desc,
         case FOOD_CHUNK:
             if (!basename && !dbname)
             {
-                if (food_is_rotten(*this))
+                if (food_is_rotten(*this) && it_plus != MONS_ROTTING_HULK)
                     buff << "rotting ";
 
                 buff << "chunk of "
@@ -1803,7 +1803,7 @@ std::string item_def::name_aux(description_level_type desc,
 
     case OBJ_CORPSES:
     {
-        if (food_is_rotten(*this) && !dbname)
+        if (food_is_rotten(*this) && !dbname && it_plus != MONS_ROTTING_HULK)
             buff << "rotting ";
 
         uint64_t name_type, name_flags = 0;
@@ -2658,6 +2658,7 @@ bool is_bad_item(const item_def &item, bool temp)
         case RING_HUNGER:
             // Even Vampires can use this ring.
             return (!you.is_undead);
+        case RING_EVASION:
         case RING_PROTECTION:
         case RING_STRENGTH:
         case RING_DEXTERITY:
@@ -3211,23 +3212,17 @@ void init_item_name_cache()
                 }
             }
 
-            int o = items(0, base_type, sub_type, true, 1,
-                          MAKE_ITEM_NO_RACE);
-
-            if (o == NON_ITEM)
-                continue;
-
-            item_def       &item(mitm[o]);
-            item_types_pair pair = {base_type, sub_type};
-
-            // Make sure item isn't an artefact.
-            item.flags  &= ~ISFLAG_ARTEFACT_MASK;
-            item.special = 0;
-
-            std::string    name = item.name(DESC_DBNAME, true, true);
-            glyph g = get_item_glyph(&item);
-            destroy_item(o, true);
+            item_def item;
+            item.base_type = base_type;
+            item.sub_type = sub_type;
+            if (is_deck(item))
+            {
+                item.plus = 1;
+                init_deck(item);
+            }
+            std::string name = item.name(DESC_DBNAME, true, true);
             lowercase(name);
+            glyph g = get_item_glyph(&item);
 
             if (base_type == OBJ_JEWELLERY && name == "buggy jewellery")
                 continue;
@@ -3240,7 +3235,7 @@ void init_item_name_cache()
 
             if (item_names_cache.find(name) == item_names_cache.end())
             {
-                item_names_cache[name] = pair;
+                item_names_cache[name] = (item_types_pair){base_type, sub_type};
                 if (g.ch)
                     item_names_by_glyph_cache[g.ch].push_back(name);
             }

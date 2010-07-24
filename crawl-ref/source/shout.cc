@@ -306,6 +306,11 @@ void force_monster_shout(monsters* monster)
 
 bool check_awaken(monsters* monster)
 {
+    // Usually redundant because we iterate over player LOS,
+    // but e.g. for you.xray_vision.
+    if (!monster->see_cell(you.pos()))
+        return (false);
+
     // Monsters put to sleep by ensorcelled hibernation will sleep
     // at least one turn.
     if (monster->has_ench(ENCH_SLEEPY))

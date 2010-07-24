@@ -63,6 +63,3 @@
 
 # tile_show_minihealthbar = false
 # tile_show_minimagicbar  = false
-
-# tile_better_transparency = true
-

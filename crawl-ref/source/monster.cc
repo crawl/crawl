@@ -5647,22 +5647,6 @@ bool monsters::visible_to(const actor *looker) const
     return (vis && (this == looker || !submerged()));
 }
 
-bool monsters::mon_see_cell(const coord_def& p, bool reach) const
-{
-    if (p == pos())
-        return (true);
-    if (distance(pos(), p) > LOS_RADIUS * LOS_RADIUS + 1)
-        return (false);
-
-    dungeon_feature_type max_disallowed = DNGN_MAXOPAQUE;
-    if (reach)
-        max_disallowed = DNGN_MAX_NONREACH;
-
-    // XXX: Ignoring clouds for now.
-    return (!num_feats_between(pos(), p, DNGN_UNSEEN, max_disallowed,
-                               true, true));
-}
-
 bool monsters::near_foe() const
 {
     const actor *afoe = get_foe();

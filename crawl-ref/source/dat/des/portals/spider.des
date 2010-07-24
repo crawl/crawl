@@ -56,8 +56,8 @@ function spiders_nest_colours(e)
   e.tile("< = dngn_portal")
   e.lrockcol("yellow")
   e.lfloorcol("brown")
---e.lrocktile("wall_ice")
---e.lfloortile("floor_ice")
+  e.lrocktile("wall_yellow_rock")
+  e.lfloortile("floor_hive")
 end
 }}
 

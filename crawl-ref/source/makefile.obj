@@ -246,3 +246,7 @@ endif
 ifdef FT
 OBJECTS += fontwrapper-ft.o
 endif
+
+YACC_OBJECTS = \
+util/levcomp.tab.o \
+util/levcomp.lex.o

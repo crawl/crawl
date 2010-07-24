@@ -3108,6 +3108,11 @@ bool LevelInfo::empty() const
     return (stairs.empty() && excludes.empty());
 }
 
+void LevelInfo::update_excludes()
+{
+    excludes = curr_excludes;
+}
+
 void LevelInfo::update()
 {
     // First, set excludes, so that stair distances will be correctly populated.
@@ -3483,17 +3488,10 @@ void LevelInfo::load(reader& inf, char minorVersion)
 
     unmarshallExcludes(inf, minorVersion, excludes);
 
-#if TAG_MAJOR_VERSION == 27
-    if (minorVersion >= TAG_MINOR_DA_MSTATS)
-    {
-#endif
     int n_count = unmarshallByte(inf);
     ASSERT(n_count >= 0 && n_count <= NUM_DA_COUNTERS);
     for (int i = 0; i < n_count; i++)
         da_counters[i] = unmarshallShort(inf);
-#if TAG_MAJOR_VERSION == 27
-    }
-#endif
 }
 
 void LevelInfo::fixup()
@@ -3769,6 +3767,11 @@ void TravelCache::load(reader& inf, char minorVersion)
 void TravelCache::set_level_excludes()
 {
     get_level_info(level_id::current()).set_level_excludes();
+}
+
+void TravelCache::update_excludes()
+{
+    get_level_info(level_id::current()).update_excludes();
 }
 
 void TravelCache::update()
@@ -4161,7 +4164,7 @@ void explore_discoveries::found_item(const coord_def &pos, const item_def &i)
                          || ((Options.explore_stop & ES_ARTEFACT)
                              && (i.flags & ISFLAG_ARTEFACT_MASK))
                          || ((Options.explore_stop & ES_RUNE)
-                             && is_rune(i)) ))
+                             && item_is_rune(i)) ))
             {
                 ; // More conditions to stop for
             }

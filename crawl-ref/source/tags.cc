@@ -206,6 +206,19 @@ long writer::tell()
 }
 
 
+#ifdef DEBUG_GLOBALS
+// Force a conditional jump valgrind may pick up, no matter the optimizations.
+static volatile uint32_t hashroll;
+static void CHECK_INITIALIZED(uint32_t x)
+{
+    hashroll = 0;
+    if ((hashroll += x) & 1)
+        hashroll += 2;
+}
+#else
+#define CHECK_INITIALIZED(x)
+#endif
+
 // static helpers
 static void tag_construct_you(writer &th);
 static void tag_construct_you_items(writer &th);
@@ -265,6 +278,7 @@ int read2(FILE * file, void *buffer, unsigned int count)
 
 void marshallByte(writer &th, const char& data)
 {
+    CHECK_INITIALIZED(data);
     th.writeByte(data);
 }
 
@@ -275,6 +289,7 @@ char unmarshallByte(reader &th)
 
 void marshallShort(std::vector<unsigned char>& buf, short data)
 {
+    CHECK_INITIALIZED(data);
     COMPILE_CHECK(sizeof(data) == 2, c1);
     buf.push_back((unsigned char) ((data & 0xFF00) >> 8));
     buf.push_back((unsigned char) ((data & 0x00FF)     ));
@@ -283,6 +298,7 @@ void marshallShort(std::vector<unsigned char>& buf, short data)
 // Marshall 2 byte short in network order.
 void marshallShort(writer &th, short data)
 {
+    CHECK_INITIALIZED(data);
     const char b2 = (char)(data & 0x00FF);
     const char b1 = (char)((data & 0xFF00) >> 8);
     th.writeByte(b1);
@@ -300,6 +316,7 @@ int16_t unmarshallShort(reader &th)
 
 void marshallInt(std::vector<unsigned char>& buf, int32_t data)
 {
+    CHECK_INITIALIZED(data);
     buf.push_back((unsigned char) ((data & 0xFF000000) >> 24));
     buf.push_back((unsigned char) ((data & 0x00FF0000) >> 16));
     buf.push_back((unsigned char) ((data & 0x0000FF00) >>  8));
@@ -309,6 +326,7 @@ void marshallInt(std::vector<unsigned char>& buf, int32_t data)
 // Marshall 4 byte int in network order.
 void marshallInt(writer &th, int32_t data)
 {
+    CHECK_INITIALIZED(data);
     char b4 = (char) (data & 0x000000FF);
     char b3 = (char)((data & 0x0000FF00) >> 8);
     char b2 = (char)((data & 0x00FF0000) >> 16);
@@ -984,10 +1002,6 @@ static void tag_construct_you(writer &th)
     marshallString(th, you.second_god_name);
     marshallByte(th, you.piety);
     marshallByte(th, you.rotting);
-#if TAG_MAJOR_VERSION == 27
-    marshallByte(th, mons_char(you.symbol));
-    marshallByte(th, mons_class_colour(you.symbol));
-#endif
     marshallShort(th, you.pet_target);
 
     marshallByte(th, you.max_level);
@@ -1439,10 +1453,7 @@ static map_def unmarshall_mapdef(reader &th)
     map.read_full(th, false);
     map.read_index(th);
     map.read_maplines(th);
-    if (_tag_minor_version >= TAG_MINOR_MAPDESC)
-        map.description = unmarshallString(th);
-    else
-        map.description.clear();
+    map.description = unmarshallString(th);
     return map;
 }
 
@@ -1536,11 +1547,8 @@ static void tag_read_you(reader &th, char minorVersion)
     short count_s;
 
     you.your_name         = unmarshallString(th, kNameLen);
-    if (minorVersion >= TAG_MINOR_SAVEVER)
-    {
-        const std::string old_version = unmarshallString(th);
-        dprf("Last save Crawl version: %s", old_version.c_str());
-    }
+    const std::string old_version = unmarshallString(th);
+    dprf("Last save Crawl version: %s", old_version.c_str());
 
     you.religion          = static_cast<god_type>(unmarshallByte(th));
 
@@ -1548,10 +1556,6 @@ static void tag_read_you(reader &th, char minorVersion)
 
     you.piety             = unmarshallByte(th);
     you.rotting           = unmarshallByte(th);
-#if TAG_MAJOR_VERSION == 27
-    unmarshallByte(th);
-    unmarshallByte(th);
-#endif
     you.pet_target        = unmarshallShort(th);
 
     you.max_level         = unmarshallByte(th);
@@ -1674,9 +1678,13 @@ static void tag_read_you(reader &th, char minorVersion)
 
     // how many attributes?
     count_c = unmarshallByte(th);
-    ASSERT(count_c >= 0 && count_c <= NUM_ATTRIBUTES);
-    for (j = 0; j < count_c; ++j)
+    ASSERT(count_c >= 0);
+    for (j = 0; j < count_c && j < NUM_ATTRIBUTES; ++j)
         you.attribute[j] = unmarshallInt(th);
+    for (j = count_c; j < NUM_ATTRIBUTES; ++j)
+        you.attribute[j] = 0;
+    for (j = NUM_ATTRIBUTES; j < count_c; ++j)
+        unmarshallInt(th);
 
     count_c = unmarshallByte(th);
     ASSERT(count_c == NUM_OBJECT_CLASSES);
@@ -1743,28 +1751,14 @@ static void tag_read_you(reader &th, char minorVersion)
     you.transit_stair  = static_cast<dungeon_feature_type>(unmarshallShort(th));
     you.entering_level = unmarshallByte(th);
 
-#if TAG_MAJOR_VERSION == 27
-    if (minorVersion >= TAG_MINOR_CAT_LIVES)
-    {
-#endif
     you.deaths = unmarshallByte(th);
     you.lives = unmarshallByte(th);
     you.dead = !you.hp;
 
-#if TAG_MAJOR_VERSION == 27
-    }
-    if (minorVersion < TAG_MINOR_DACTIONS)
-        you.dactions.clear();
-    else
-    {
-#endif
     int n_dact = unmarshallInt(th);
     you.dactions.resize(n_dact, NUM_DACTIONS);
     for (i = 0; i < n_dact; i++)
         you.dactions[i] = static_cast<daction_type>(unmarshallByte(th));
-#if TAG_MAJOR_VERSION == 27
-    }
-#endif
 
     // List of currently beholding monsters (usually empty).
     count_c = unmarshallShort(th);
@@ -2144,17 +2138,6 @@ void unmarshallItem(reader &th, item_def &item)
     if (item.base_type == OBJ_UNASSIGNED)
         return;
     item.sub_type    = (unsigned char) unmarshallByte(th);
-#if TAG_MAJOR_VERSION == 27
-    if (th.getMinorVersion() < TAG_MINOR_NO_ROD_DISCO
-        && item.base_type == OBJ_STAVES)
-    {
-        // Remove staves of discovery.
-        if (item.sub_type == STAFF_DEMONOLOGY)
-            item.sub_type = STAFF_WIZARDRY; // not a rod
-        else if (item.sub_type > STAFF_DEMONOLOGY)
-            item.sub_type--;
-    }
-#endif
     item.plus        = unmarshallShort(th);
     item.plus2       = unmarshallShort(th);
     item.special     = unmarshallInt(th);
@@ -2537,11 +2520,6 @@ static void tag_read_level( reader &th, char minorVersion )
     env.properties.clear();
     env.properties.read(th);
 
-#if TAG_MAJOR_VERSION == 27
-    if (minorVersion < TAG_MINOR_DACTIONS)
-        env.dactions_done = you.dactions.size();
-    else
-#endif
     env.dactions_done = unmarshallInt(th);
 
     // Restore heightmap
@@ -2607,11 +2585,6 @@ void unmarshallMonster(reader &th, monsters &m)
     if (m.type == MONS_NO_MONSTER)
         return;
 
-#if TAG_MAJOR_VERSION == 27
-    if (th.getMinorVersion() < TAG_MINOR_GREY_DRACS)
-        if (m.type >= MONS_GREY_DRACONIAN && m.type < MONS_DEEP_ELF_MASTER_ARCHER)
-            m.type = (monster_type)(m.type + 1);
-#endif
     m.mname           = unmarshallString(th, 100);
     m.ac              = unmarshallByte(th);
     m.ev              = unmarshallByte(th);

@@ -30,6 +30,7 @@
 #include "mon-transit.h"
 #include "player.h"
 #include "dungeon.h"
+#include "itemprop.h"
 #include "items.h"
 #include "l_defs.h"
 #include "lev-pand.h"
@@ -618,7 +619,7 @@ private:
             if (get_screen_glyph(*ri) != ' ')
             {
                 for (stack_iterator si(*ri); si; ++si)
-                    if (is_rune(*si) && si->plus == RUNE_ABYSSAL)
+                    if (item_is_rune(*si, RUNE_ABYSSAL))
                         nearness = std::min(nearness,
                                             grid_distance(you.pos(),*ri));
             }
@@ -730,20 +731,7 @@ static void _abyss_wipe_square_at(coord_def p)
     env.level_map_mask(p) = 0;
     env.level_map_ids(p)  = INVALID_MAP_INDEX;
 
-    // Look for Lua markers on this square that are listening for
-    // non-positional events, (such as bazaar portals listening for
-    // turncount changes) and detach them manually from the dungeon
-    // event dispatcher.
-    const std::vector<map_marker *> markers = env.markers.get_markers_at(p);
-    for (int i = 0, size = markers.size(); i < size; ++i)
-    {
-        if (markers[i]->get_type() == MAT_LUA_MARKER)
-            dungeon_events.remove_listener(
-                dynamic_cast<map_lua_marker*>(markers[i]));
-    }
-
-    env.markers.remove_markers_at(p);
-    dungeon_events.clear_listeners_at(p);
+    remove_markers_and_listeners_at(p);
 }
 
 // Removes monsters, clouds, dungeon features, and items from the

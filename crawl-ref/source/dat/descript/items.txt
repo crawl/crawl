@@ -1118,7 +1118,7 @@ It is easy to be blinded to the essential uselessness of this scroll by the sens
 %%%%
 scroll of recharging
 
-This scroll restores the charges of any magical wand or rod chosen by its reader, and can also be used to increase the damage dealt by weapons of electrocution.
+This scroll restores the charges of any magical wand or rod chosen by its reader.
 %%%%
 scroll of remove curse
 
@@ -1218,7 +1218,7 @@ This staff increases the power of earth spells cast by its wielder. It can crush
 %%%%
 staff of enchantment
 
-This staff increases the power of enchantments cast by its wielder.
+This staff increases the power of enchantments cast by its wielder, and increases their resistance to hostile enchantments.
 %%%%
 staff of energy
 

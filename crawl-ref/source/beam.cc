@@ -2702,7 +2702,8 @@ void bolt::internal_ouch(int dam)
 
     // The order of this is important.
     if (monst && (monst->type == MONS_GIANT_SPORE
-                  || monst->type == MONS_BALL_LIGHTNING))
+                  || monst->type == MONS_BALL_LIGHTNING
+                  || monst->type == MONS_HYPERACTIVE_BALLISTOMYCETE))
     {
         ouch(dam, beam_source, KILLED_BY_SPORE, aux_source.c_str(), true,
              source_name.empty() ? NULL : source_name.c_str());

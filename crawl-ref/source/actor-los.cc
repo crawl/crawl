@@ -16,14 +16,21 @@ bool actor::observable() const
 
 bool actor::see_cell(const coord_def &p) const
 {
-    los_type lt = LOS_DEFAULT;
-
-    if (crawl_state.game_is_arena() && this == &you)
-        lt = LOS_ARENA; // observer can see everything
-    else if (!in_bounds(pos()))
+    if (!in_bounds(pos()))
         return (false); // actor is off the map
 
-    return (cell_see_cell(pos(), p, lt));
+    return (cell_see_cell(pos(), p, LOS_DEFAULT));
+}
+
+bool player::see_cell(const coord_def &p) const
+{
+    if (crawl_state.game_is_arena() && this == &you)
+        return (true);
+#ifdef WIZARD
+    else if (xray_vision)
+        return (grid_distance(pos(), p) <= LOS_MAX_RANGE);
+#endif
+    return (actor::see_cell(p));
 }
 
 bool actor::can_see(const actor *target) const
@@ -43,15 +50,29 @@ bool player::trans_wall_blocking(const coord_def &p) const
 
 const los_base* actor::get_los()
 {
-    if (crawl_state.game_is_arena())
+    los = los_glob(pos(), LOS_DEFAULT);
+    return (&los);
+}
+
+const los_base* player::get_los()
+{
+    if (crawl_state.game_is_arena() && this == &you)
     {
         // env.show.init iterates over these bounds for arena
         los = los_glob(crawl_view.vgrdc, LOS_ARENA,
                        circle_def(LOS_MAX_RANGE, C_SQUARE));
+        return (&los);
     }
+#ifdef WIZARD
+    else if (xray_vision)
+    {
+        los = los_glob(pos(), LOS_ARENA,
+                       circle_def(LOS_MAX_RANGE, C_SQUARE));
+        return (&los);
+    }
+#endif
     else
-        los = los_glob(pos(), LOS_DEFAULT);
-    return (&los);
+        return (actor::get_los());
 }
 
 const los_base* actor::get_los_no_trans()
@@ -60,11 +81,14 @@ const los_base* actor::get_los_no_trans()
     return (&los_no_trans);
 }
 
-// Player LOS overrides for arena.
 bool player::can_see(const actor* a) const
 {
     if (crawl_state.game_is_arena() || crawl_state.arena_suspended)
         return (see_cell(a->pos()));
+#ifdef WIZARD
+    else if (xray_vision)
+        return(see_cell(a->pos()));
+#endif
     else
         return (actor::can_see(a));
 }
