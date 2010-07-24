@@ -457,25 +457,6 @@ void handle_behaviour(monsters *mon)
             {
                 new_beh = BEH_FLEE;
 
-                // This is here instead of in the BEH_FLEE section of the switch
-                // for handle_behaviour, as it only needs to happen once per
-                // fleeing.
-                if (mon->type == MONS_KRAKEN)
-                {
-                    int tcount = 0;
-                    int headnum = mon->mindex();
-                    for (monster_iterator mi; mi; ++mi)
-                        if (mi->type == MONS_KRAKEN_TENTACLE
-                            && (int)mi->number == headnum)
-                        {
-                            monster_die(*mi, KILL_MISC, NON_MONSTER, true);
-                            tcount++;
-                        }
-
-                    if (tcount > 0)
-                        mpr("The kraken's tentacles slip beneath the water.",
-                            MSGCH_WARN);
-                }
             }
             break;
 
@@ -918,22 +899,6 @@ void behaviour_event(monsters *mon, mon_event_type event, int src,
 
         if (you.see_cell(mon->pos()))
             learned_something_new(HINT_FLEEING_MONSTER);
-
-        if (mon->type == MONS_KRAKEN)
-        {
-            int tcount = 0;
-            int headnum = mon->mindex();
-            for (monster_iterator mi; mi; ++mi)
-                if (mi->type == MONS_KRAKEN_TENTACLE
-                    && (int)mi->number == headnum)
-                {
-                    monster_die(*mi, KILL_MISC, NON_MONSTER, true);
-                    tcount++;
-                }
-
-            if (tcount > 0)
-                mpr("The kraken's tentacles slip beneath the water.", MSGCH_WARN);
-        }
 
         break;
 

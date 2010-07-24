@@ -1156,17 +1156,10 @@ static void _monster_die_cloud(const monsters* monster, bool corpse, bool silent
     }
 }
 
-static int _tentacle_too_far(monsters *head, monsters *tentacle)
-{
-    // The Shoals produce no disjoint bodies of water.
-    // If this ever changes, we'd need to check if the head and tentacle
-    // are still in the same pool.
-    // XXX: Actually, using Fedhas' Sunlight power you can separate pools...
-    return grid_distance(head->pos(), tentacle->pos()) > KRAKEN_TENTACLE_RANGE;
-}
-
 void mons_relocated(monsters *monster)
 {
+
+    // If the main body teleports get rid of the tentacles
     if (mons_base_type(monster) == MONS_KRAKEN)
     {
         int headnum = monster->mindex();
@@ -1177,22 +1170,82 @@ void mons_relocated(monsters *monster)
         for (monster_iterator mi; mi; ++mi)
         {
             if (mi->type == MONS_KRAKEN_TENTACLE
-                && (int)mi->number == headnum
-                && _tentacle_too_far(monster, *mi))
+                && (int)mi->number == headnum)
             {
+                for (monster_iterator connect; connect; ++connect)
+                {
+                    if (connect->type == MONS_KRAKEN_CONNECTOR
+                        && (int) connect->number == mi->mindex())
+                    {
+                        monster_die(*connect, KILL_RESET, -1, true, false);
+                    }
+                }
                 monster_die(*mi, KILL_RESET, -1, true, false);
             }
         }
     }
-    else if (monster->type == MONS_KRAKEN_TENTACLE)
+    // If a tentacle/segment is relocated just kill the tentacle
+    else if (monster->type == MONS_KRAKEN_TENTACLE
+             || monster->type == MONS_KRAKEN_CONNECTOR)
     {
-        if (invalid_monster_index(monster->number)
-            || menv[monster->number].type != MONS_KRAKEN
-            || _tentacle_too_far(&menv[monster->number], monster))
+        int base_id = monster->mindex();
+
+        if (monster->type == MONS_KRAKEN_CONNECTOR)
         {
-            monster_die(monster, KILL_RESET, -1, true, false);
+            base_id = monster->number;
+        }
+
+        for (monster_iterator connect; connect; ++connect)
+        {
+            if (connect->type == MONS_KRAKEN_CONNECTOR
+                && (int) connect->number == base_id)
+            {
+                monster_die(*connect, KILL_RESET, -1, true, false);
+            }
+        }
+
+        if (!::invalid_monster_index(base_id)
+            && menv[base_id].type == MONS_KRAKEN_TENTACLE)
+        {
+            monster_die(&menv[base_id], KILL_RESET, -1, true, false);
         }
     }
+}
+
+static int _destroy_tentacle(int tentacle_idx, monsters * origin)
+{
+    int seen = 0;
+
+    if (invalid_monster_index(tentacle_idx))
+        return (0);
+
+
+    // Some issue with using monster_die leading to DEAD_MONSTER
+    // or w/e. Using hurt seems to cause more problems though.
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi->type == MONS_KRAKEN_CONNECTOR
+            && (int)mi->number == tentacle_idx
+            && mi->mindex() != origin->mindex() )
+        {
+            if (mons_near(*mi))
+                seen++;
+            //mi->hurt(*mi, INSTANT_DEATH);
+            monster_die(*mi, KILL_MISC, NON_MONSTER, true);
+        }
+    }
+
+    if (origin->mindex() != tentacle_idx)
+    {
+        if (mons_near(&menv[tentacle_idx]))
+            seen++;
+
+        //mprf("killing base, %d %d", origin->mindex(), tentacle_idx);
+        //menv[tentacle_idx].hurt(&menv[tentacle_idx], INSTANT_DEATH);
+        monster_die(&menv[tentacle_idx], KILL_MISC, NON_MONSTER, true);
+    }
+
+    return (seen);
 }
 
 static int _destroy_tentacles(monsters *head)
@@ -1208,6 +1261,14 @@ static int _destroy_tentacles(monsters *head)
         if (mi->type == MONS_KRAKEN_TENTACLE
             && (int)mi->number == headnum)
         {
+            for (monster_iterator connect; connect; ++connect)
+            {
+                if (connect->type == MONS_KRAKEN_CONNECTOR
+                    && (int) connect->number == mi->mindex())
+                {
+                    connect->hurt(*connect, INSTANT_DEATH);
+                }
+            }
             if (mons_near(*mi))
                 tent++;
             mi->hurt(*mi, INSTANT_DEATH);
@@ -2001,6 +2062,18 @@ int monster_die(monsters *monster, killer_type killer,
             mpr("The kraken is slain, and its tentacles slide "
                 "back into the water like the carrion they now are.");
         }
+    }
+    else if ((monster->type == MONS_KRAKEN_CONNECTOR
+                  || monster->type == MONS_KRAKEN_TENTACLE)
+              && killer != KILL_MISC)
+    {
+        int t_idx = monster->type == MONS_KRAKEN_TENTACLE
+                    ? monster->mindex() : monster->number;
+        if (_destroy_tentacle(t_idx, monster) && !in_transit)
+        {
+            //mprf("A tentacle died?");
+        }
+
     }
     else if (mons_is_elven_twin(monster) && mons_near(monster))
     {
@@ -3980,7 +4053,7 @@ beh_type actual_same_attitude(const monsters & base)
 // temporarily.
 void mons_att_changed(monsters *mon)
 {
-    if (mon->type == MONS_KRAKEN)
+    if (mons_base_type(mon) == MONS_KRAKEN)
     {
         const int headnum = mon->mindex();
         const mon_attitude_type att = mon->temp_attitude();
@@ -3990,6 +4063,14 @@ void mons_att_changed(monsters *mon)
                 && (int)mi->number == headnum)
             {
                 mi->attitude = att;
+                for (monster_iterator connect; connect; ++connect)
+                {
+                    if (connect->type == MONS_KRAKEN_CONNECTOR
+                        && (int) connect->number == mi->mindex())
+                    {
+                        connect->attitude = att;
+                    }
+                }
             }
     }
 }

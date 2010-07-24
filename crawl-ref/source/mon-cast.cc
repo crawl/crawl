@@ -51,6 +51,11 @@
 #include "viewchar.h"
 #include "xom.h"
 
+#include <algorithm>
+
+// kraken stuff
+const int MAX_ACTIVE_KRAKEN_TENTACLES = 4;
+
 static bool _valid_mon_spells[NUM_SPELLS];
 
 void init_mons_spells()
@@ -1905,42 +1910,68 @@ void mons_cast(monsters *monster, bolt &pbolt, spell_type spell_cast,
                 MSGCH_ERROR);
             return;
         }
-        sumcount2 = std::max(random2(9), random2(9)); // up to eight tentacles
-        if (sumcount2 == 0)
-            return;
+        int tentacle_count = 0;
 
-        for (sumcount = 0; sumcount < MAX_MONSTERS; ++sumcount)
-            if (menv[sumcount].type == MONS_KRAKEN_TENTACLE
-                && (int)menv[sumcount].number == kraken_index)
-            {
-                // Reduce by tentacles already placed.
-                sumcount2--;
-            }
-
-        for (sumcount = sumcount2; sumcount > 0; --sumcount)
+        for (monster_iterator mi; mi; ++mi)
         {
-            // Tentacles aren't really summoned (controlled by spell_cast
-            // being passed to summon_type), so I'm not sure what the
-            // abjuration value (3) is doing there. (jpeg)
-            int tentacle = create_monster(
-                mgen_data(MONS_KRAKEN_TENTACLE, SAME_ATTITUDE(monster), monster,
-                          3, spell_cast, monster->pos(), monster->foe, 0, god,
-                          MONS_NO_MONSTER, kraken_index, monster->colour,
-                          you.absdepth0, PROX_CLOSE_TO_PLAYER,
-                          you.level_type));
-
-            if (tentacle < 0)
+            if (int (mi->number) == kraken_index
+                    && mi->type == MONS_KRAKEN_TENTACLE)
             {
-                sumcount2--;
-            }
-            else if (monster->holiness() == MH_UNDEAD)
-            {
-                menv[tentacle].flags |= MF_HONORARY_UNDEAD;
+                tentacle_count++;
             }
         }
-        if (sumcount2 == 1)
+
+        int possible_count = MAX_ACTIVE_KRAKEN_TENTACLES - tentacle_count;
+
+        if (possible_count <= 0)
+            return;
+
+        std::vector<coord_def> adj_squares;
+
+        // collect open adjacent squares, candidate squares must be
+        // water and not already occupied.
+        for (adjacent_iterator adj_it(monster->pos()); adj_it; ++adj_it)
+        {
+            if (!monster_at(*adj_it)
+                && feat_is_water(env.grid(*adj_it))
+                && env.grid(*adj_it) != DNGN_OPEN_SEA)
+            {
+                adj_squares.push_back(*adj_it);
+            }
+        }
+
+        if (unsigned(possible_count) > adj_squares.size())
+            possible_count = adj_squares.size();
+        else if (adj_squares.size() > unsigned(possible_count))
+            std::random_shuffle(adj_squares.begin(), adj_squares.end());
+
+
+        int created_count = 0;
+
+        for (int i=0;i<possible_count;++i)
+        {
+            int tentacle = create_monster(
+                mgen_data(MONS_KRAKEN_TENTACLE, SAME_ATTITUDE(monster), monster,
+                          0, 0, adj_squares[i], monster->foe,
+                          MG_FORCE_PLACE, god, MONS_NO_MONSTER, kraken_index,
+                          monster->colour, you.absdepth0, PROX_CLOSE_TO_PLAYER,
+                          you.level_type));
+
+            if (tentacle >= 0)
+            {
+                created_count++;
+                menv[tentacle].props["inwards"].get_int() = kraken_index;
+                if (monster->holiness() == MH_UNDEAD)
+                {
+                    menv[tentacle].flags |= MF_HONORARY_UNDEAD;
+                }
+            }
+        }
+
+
+        if (created_count == 1)
             mpr("A tentacle rises from the water!");
-        else if (sumcount2 > 1)
+        else if (created_count > 1)
             mpr("Tentacles burst out of the water!");
         return;
     }
