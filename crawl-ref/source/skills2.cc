@@ -1598,12 +1598,14 @@ static std::string _stk_adj_cap()
 
 static std::string _stk_genus_cap()
 {
+    if (Skill_Species == SP_CAT)
+        return "Cat";
     return species_name(Skill_Species, true, false);
 }
 
 static std::string _stk_genus_nocap()
 {
-    std::string s = species_name(Skill_Species, true, false);
+    std::string s = _stk_genus_cap();
     return (lowercase(s));
 }
 
