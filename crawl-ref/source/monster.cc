@@ -2486,7 +2486,7 @@ std::string monsters::hand_name(bool plural, bool *can_plural) const
     case MON_SHAPE_QUADRUPED_TAILLESS:
     case MON_SHAPE_QUADRUPED_WINGED:
     case MON_SHAPE_ARACHNID:
-        if (type == MONS_SCORPION || rand && one_chance_in(4))
+        if (mons_genus(type) == MONS_SCORPION || rand && one_chance_in(4))
             str = "pincer";
         else
         {

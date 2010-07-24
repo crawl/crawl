@@ -64,6 +64,7 @@ orange_rat MONS_ORANGE_RAT
 giant_centipede MONS_GIANT_CENTIPEDE
 giant_mite MONS_GIANT_MITE
 scorpion MONS_SCORPION
+giant_scorpion MONS_GIANT_SCORPION
 wolf_spider MONS_WOLF_SPIDER
 trapdoor_spider MONS_TRAPDOOR_SPIDER
 redback MONS_REDBACK
