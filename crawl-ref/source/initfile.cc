@@ -3889,7 +3889,10 @@ bool parse_args( int argc, char **argv, bool rc_only )
 
         case CLO_ARENA:
             if (!rc_only)
+            {
                 Options.game.type = GAME_TYPE_ARENA;
+                Options.restart_after_game = false;
+            }
             if (next_is_param)
             {
                 if (!rc_only)
