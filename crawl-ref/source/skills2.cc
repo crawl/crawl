@@ -1609,7 +1609,9 @@ static std::string _stk_genus_nocap()
 
 static std::string _stk_genus_short_cap()
 {
-    return (Skill_Species == SP_DEMIGOD ? "God" : _stk_genus_cap());
+    return (Skill_Species == SP_DEMIGOD ? "God" :
+            Skill_Species == SP_CAT     ? "Cat" :
+            _stk_genus_cap());
 }
 
 static std::string _stk_walker()
